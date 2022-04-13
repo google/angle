@@ -9,8 +9,7 @@
     ],
     "features": [
         {
-            "name": "loseContextOnOutOfMemory",
-            "display_name": "lose_context_on_out_of_memory",
+            "name": "lose_context_on_out_of_memory",
             "category": "Workarounds",
             "description": [
                 "Some users rely on a lost context notification if a GL_OUT_OF_MEMORY error occurs"
@@ -18,8 +17,7 @@
         },
 
         {
-            "name": "disableProgramCachingForTransformFeedback",
-            "display_name": "disable_program_caching_for_transform_feedback",
+            "name": "disable_program_caching_for_transform_feedback",
             "category": "Workarounds",
             "description": [
                 "On some GPUs, program binaries don't contain transform feedback varyings"
@@ -27,8 +25,7 @@
         },
 
         {
-            "name": "scalarizeVecAndMatConstructorArgs",
-            "display_name": "scalarize_vec_and_mat_constructor_args",
+            "name": "scalarize_vec_and_mat_constructor_args",
             "category": "Workarounds",
             "description": [
                 "Always rewrite vec/mat constructors to be consistent"
@@ -37,8 +34,7 @@
         },
 
         {
-            "name": "disableProgramBinary",
-            "display_name": "disable_program_binary",
+            "name": "disable_program_binary",
             "category": "Features",
             "description": [
                 "Disable support for GL_OES_get_program_binary"
@@ -47,8 +43,7 @@
         },
 
         {
-            "name": "disableAnisotropicFiltering",
-            "display_name": "disable_anisotropic_filtering",
+            "name": "disable_anisotropic_filtering",
             "category": "Workarounds",
             "description": [
                 "Disable support for anisotropic filtering"
@@ -56,8 +51,7 @@
         },
 
         {
-            "name": "allowCompressedFormats",
-            "display_name": "allow_compressed_formats",
+            "name": "allow_compressed_formats",
             "category": "Workarounds",
             "description": [
                 "Allow compressed formats"
@@ -65,8 +59,7 @@
         },
 
         {
-            "name": "captureLimits",
-            "display_name": "enable_capture_limits",
+            "name": "enable_capture_limits",
             "category": "Features",
             "description": [
                 "Set the context limits like frame capturing was enabled"
@@ -75,8 +68,7 @@
         },
 
         {
-            "name": "enableCompressingPipelineCacheInThreadPool",
-            "display_name": "enableCompressingPipelineCacheInThreadPool",
+            "name": "enable_compressing_pipeline_cache_in_thread_pool",
             "category": "Workarounds",
             "description": [
                 "Enable compressing pipeline cache in thread pool."
@@ -85,8 +77,7 @@
         },
 
         {
-            "name": "forceRobustResourceInit",
-            "display_name": "forceRobustResourceInit",
+            "name": "force_robust_resource_init",
             "category": "Features",
             "description": [
                 "Force-enable robust resource init"
@@ -95,8 +86,7 @@
         },
 
         {
-            "name": "forceInitShaderVariables",
-            "display_name": "forceInitShaderVariables",
+            "name": "force_init_shader_variables",
             "category": "Features",
             "description": [
                 "Force-enable shader variable initialization"
@@ -104,8 +94,7 @@
         },
 
         {
-            "name": "enableProgramBinaryForCapture",
-            "display_name": "enableProgramBinaryForCapture",
+            "name": "enable_program_binary_for_capture",
             "category": "Features",
             "description": [
                 "Even if FrameCapture is enabled, enable GL_OES_get_program_binary"

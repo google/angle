@@ -73,10 +73,11 @@ class VulkanPerformanceCounterTest : public ANGLETest
             ASSERT_NE(featureName, nullptr);
             ASSERT_NE(featureStatus, nullptr);
 
-            const bool isStoreOpNoneQCOM =
-                strcmp(featureName, "supportsRenderPassStoreOpNoneQCOM") == 0;
+            const bool isStoreOpNone =
+                strcmp(featureName, GetFeatureName(Feature::SupportsRenderPassStoreOpNone)) == 0;
             const bool isLoadStoreOpNoneEXT =
-                strcmp(featureName, "supportsRenderPassLoadStoreOpNone") == 0;
+                strcmp(featureName, GetFeatureName(Feature::SupportsRenderPassLoadStoreOpNone)) ==
+                0;
             const bool isEnabled  = strcmp(featureStatus, angle::kFeatureStatusEnabled) == 0;
             const bool isDisabled = strcmp(featureStatus, angle::kFeatureStatusDisabled) == 0;
             ASSERT_TRUE(isEnabled || isDisabled);
@@ -88,7 +89,7 @@ class VulkanPerformanceCounterTest : public ANGLETest
                 mLoadOpNoneSupport = isSupported;
             }
 
-            if (isStoreOpNoneQCOM || isLoadStoreOpNoneEXT)
+            if (isStoreOpNone || isLoadStoreOpNoneEXT)
             {
                 if (mStoreOpNoneSupport == ANGLEFeature::Unknown ||
                     mStoreOpNoneSupport == ANGLEFeature::Unsupported)
@@ -97,7 +98,8 @@ class VulkanPerformanceCounterTest : public ANGLETest
                 }
             }
 
-            if (strcmp(featureName, "preferDrawClearOverVkCmdClearAttachments") == 0)
+            if (strcmp(featureName,
+                       GetFeatureName(Feature::PreferDrawClearOverVkCmdClearAttachments)) == 0)
             {
                 mPreferDrawOverClearAttachments = isSupported;
             }

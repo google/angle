@@ -21,77 +21,77 @@ struct FeaturesMtl : FeatureSetBase
     ~FeaturesMtl();
 
     FeatureInfo hasBaseVertexInstancedDraw = {
-        "has_base_vertex_instanced_draw",
+        "hasBaseVertexInstancedDraw",
         FeatureCategory::MetalFeatures,
         "The renderer supports base vertex instanced draw",
         &members,
     };
 
     FeatureInfo hasExplicitMemBarrier = {
-        "has_explicit_mem_barrier_mtl",
+        "hasExplicitMemBarrier",
         FeatureCategory::MetalFeatures,
         "The renderer supports explicit memory barrier",
         &members,
     };
 
     FeatureInfo hasCheapRenderPass = {
-        "has_cheap_render_pass_mtl",
+        "hasCheapRenderPass",
         FeatureCategory::MetalFeatures,
         "The renderer can cheaply break a render pass.",
         &members,
     };
 
     FeatureInfo hasNonUniformDispatch = {
-        "has_non_uniform_dispatch",
+        "hasNonUniformDispatch",
         FeatureCategory::MetalFeatures,
         "The renderer supports non uniform compute shader dispatch's group size",
         &members,
     };
 
-    FeatureInfo hasStencilOutput = {
-        "has_shader_stencil_output",
+    FeatureInfo hasShaderStencilOutput = {
+        "hasShaderStencilOutput",
         FeatureCategory::MetalFeatures,
         "The renderer supports stencil output from fragment shader",
         &members,
     };
 
     FeatureInfo hasTextureSwizzle = {
-        "has_texture_swizzle",
+        "hasTextureSwizzle",
         FeatureCategory::MetalFeatures,
         "The renderer supports texture swizzle",
         &members,
     };
 
     FeatureInfo hasDepthAutoResolve = {
-        "has_msaa_depth_auto_resolve",
+        "hasDepthAutoResolve",
         FeatureCategory::MetalFeatures,
         "The renderer supports MSAA depth auto resolve at the end of render pass",
         &members,
     };
 
     FeatureInfo hasStencilAutoResolve = {
-        "has_msaa_stencil_auto_resolve",
+        "hasStencilAutoResolve",
         FeatureCategory::MetalFeatures,
         "The renderer supports MSAA stencil auto resolve at the end of render pass",
         &members,
     };
 
     FeatureInfo hasEvents = {
-        "has_mtl_events",
+        "hasEvents",
         FeatureCategory::MetalFeatures,
         "The renderer supports MTL(Shared)Event",
         &members,
     };
 
     FeatureInfo allowInlineConstVertexData = {
-        "allow_inline_const_vertex_data",
+        "allowInlineConstVertexData",
         FeatureCategory::MetalFeatures,
         "The renderer supports using inline constant data for small client vertex data",
         &members,
     };
 
-    FeatureInfo allowSeparatedDepthStencilBuffers = {
-        "allow_separate_depth_stencil_buffers",
+    FeatureInfo allowSeparateDepthStencilBuffers = {
+        "allowSeparateDepthStencilBuffers",
         FeatureCategory::MetalFeatures,
         "Some Apple platforms such as iOS allows separate depth and stencil buffers, "
         "whereas others such as macOS don't",
@@ -99,56 +99,56 @@ struct FeaturesMtl : FeatureSetBase
     };
 
     FeatureInfo allowRuntimeSamplerCompareMode = {
-        "allow_runtime_sampler_compare_mode",
+        "allowRuntimeSamplerCompareMode",
         FeatureCategory::MetalFeatures,
         "The renderer supports changing sampler's compare mode outside shaders",
         &members,
     };
 
     FeatureInfo allowSamplerCompareGradient = {
-        "allow_sampler_compare_gradient",
+        "allowSamplerCompareGradient",
         FeatureCategory::MetalFeatures,
         "The renderer supports sample_compare with gradients",
         &members,
     };
 
     FeatureInfo allowSamplerCompareLod = {
-        "allow_sampler_compare_lod",
+        "allowSamplerCompareLod",
         FeatureCategory::MetalFeatures,
         "The renderer supports sample_compare with lod",
         &members,
     };
 
     FeatureInfo allowBufferReadWrite = {
-        "allow_buffer_read_write",
+        "allowBufferReadWrite",
         FeatureCategory::MetalFeatures,
         "The renderer supports buffer read and write in the same shader",
         &members,
     };
 
     FeatureInfo allowMultisampleStoreAndResolve = {
-        "allow_msaa_store_and_resolve",
+        "allowMultisampleStoreAndResolve",
         FeatureCategory::MetalFeatures,
         "The renderer supports MSAA store and resolve in the same pass",
         &members,
     };
 
     FeatureInfo allowGenMultipleMipsPerPass = {
-        "gen_multiple_mips_per_pass",
+        "allowGenMultipleMipsPerPass",
         FeatureCategory::MetalFeatures,
         "The renderer supports generating multiple mipmaps per pass",
         &members,
     };
 
     FeatureInfo forceD24S8AsUnsupported = {
-        "force_d24s8_as_unsupported",
+        "forceD24S8AsUnsupported",
         FeatureCategory::MetalFeatures,
         "Force Depth24Stencil8 format as unsupported.",
         &members,
     };
 
     FeatureInfo forceBufferGPUStorage = {
-        "force_buffer_gpu_storage",
+        "forceBufferGPUStorage",
         FeatureCategory::MetalFeatures,
         "On systems that support both buffer' memory allocation on GPU and shared memory (such as "
         "macOS), force using GPU memory allocation for buffers everytime or not.",
@@ -160,7 +160,7 @@ struct FeaturesMtl : FeatureSetBase
                                          "http://anglebug.com/5505"};
 
     FeatureInfo forceNonCSBaseMipmapGeneration = {
-        "force_non_cs_mipmap_gen",
+        "forceNonCSBaseMipmapGeneration",
         FeatureCategory::MetalFeatures,
         "Turn this feature on to disallow Compute Shader based mipmap generation. Compute Shader "
         "based mipmap generation might cause GPU hang on some older iOS devices.",
@@ -175,14 +175,14 @@ struct FeaturesMtl : FeatureSetBase
     };
 
     FeatureInfo rewriteRowMajorMatrices = {
-        "rewrite_row_major_matrices",
+        "rewriteRowMajorMatrices",
         FeatureCategory::MetalFeatures,
         "Rewrite row major matrices in shaders as column major.",
         &members,
     };
 
     FeatureInfo intelExplicitBoolCastWorkaround = {
-        "intel_explicit_bool_cast_workaround",
+        "intelExplicitBoolCastWorkaround",
         FeatureCategory::MetalWorkarounds,
         "Insert explicit casts for float/double/unsigned/signed int on macOS 10.15 with Intel "
         "driver",
@@ -190,19 +190,19 @@ struct FeaturesMtl : FeatureSetBase
     };
 
     FeatureInfo intelDisableFastMath = {
-        "intel_disable_fast_math",
+        "intelDisableFastMath",
         FeatureCategory::MetalWorkarounds,
         "Disable fast math in atan and invariance cases when running below macOS 12.0",
         &members,
     };
 
     FeatureInfo multisampleColorFormatShaderReadWorkaround = {
-        "multisample_color_format_shader_read_workaround", FeatureCategory::MetalWorkarounds,
+        "multisampleColorFormatShaderReadWorkaround", FeatureCategory::MetalWorkarounds,
         "Add shaderRead usage to some multisampled texture formats", &members,
         "http://anglebug.com/7049"};
 
     FeatureInfo copyIOSurfaceToNonIOSurfaceForReadOptimization = {
-        "copy_iosurface_to_non_iosurface_for_read_optimization", FeatureCategory::MetalWorkarounds,
+        "copyIOSurfaceToNonIOSurfaceForReadOptimization", FeatureCategory::MetalWorkarounds,
         "some GPUs are faster to read an IOSurface texture by first copying the texture to a "
         "non-IOSurface texture",
         &members, "http://anglebug.com/7117"};

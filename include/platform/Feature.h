@@ -176,24 +176,8 @@ struct FeatureSetBase
     FeatureMap members = FeatureMap();
 
   public:
-    void overrideFeatures(const std::vector<std::string> &featureNames, bool enabled)
-    {
-        for (const std::string &name : featureNames)
-        {
-            if (members.find(name) != members.end())
-            {
-                members[name]->enabled = enabled;
-            }
-        }
-    }
-
-    void populateFeatureList(FeatureList *features) const
-    {
-        for (FeatureMap::const_iterator it = members.begin(); it != members.end(); it++)
-        {
-            features->push_back(it->second);
-        }
-    }
+    void overrideFeatures(const std::vector<std::string> &featureNames, bool enabled);
+    void populateFeatureList(FeatureList *features) const;
 
     const FeatureMap &getFeatures() const { return members; }
 };

@@ -8,8 +8,7 @@
     ],
     "features": [
         {
-            "name": "hasBaseVertexInstancedDraw",
-            "display_name": "has_base_vertex_instanced_draw",
+            "name": "has_base_vertex_instanced_draw",
             "category": "Features",
             "description": [
                 "The renderer supports base vertex instanced draw"
@@ -17,8 +16,7 @@
         },
 
         {
-            "name": "hasExplicitMemBarrier",
-            "display_name": "has_explicit_mem_barrier_mtl",
+            "name": "has_explicit_mem_barrier",
             "category": "Features",
             "description": [
                 "The renderer supports explicit memory barrier"
@@ -26,8 +24,7 @@
         },
 
         {
-            "name": "hasCheapRenderPass",
-            "display_name": "has_cheap_render_pass_mtl",
+            "name": "has_cheap_render_pass",
             "category": "Features",
             "description": [
                 "The renderer can cheaply break a render pass."
@@ -35,8 +32,7 @@
         },
 
         {
-            "name": "hasNonUniformDispatch",
-            "display_name": "has_non_uniform_dispatch",
+            "name": "has_non_uniform_dispatch",
             "category": "Features",
             "description": [
                 "The renderer supports non uniform compute shader dispatch's group size"
@@ -44,8 +40,7 @@
         },
 
         {
-            "name": "hasStencilOutput",
-            "display_name": "has_shader_stencil_output",
+            "name": "has_shader_stencil_output",
             "category": "Features",
             "description": [
                 "The renderer supports stencil output from fragment shader"
@@ -53,8 +48,7 @@
         },
 
         {
-            "name": "hasTextureSwizzle",
-            "display_name": "has_texture_swizzle",
+            "name": "has_texture_swizzle",
             "category": "Features",
             "description": [
                 "The renderer supports texture swizzle"
@@ -62,8 +56,7 @@
         },
 
         {
-            "name": "hasDepthAutoResolve",
-            "display_name": "has_msaa_depth_auto_resolve",
+            "name": "has_depth_auto_resolve",
             "category": "Features",
             "description": [
                 "The renderer supports MSAA depth auto resolve at the end of render pass"
@@ -71,8 +64,7 @@
         },
 
         {
-            "name": "hasStencilAutoResolve",
-            "display_name": "has_msaa_stencil_auto_resolve",
+            "name": "has_stencil_auto_resolve",
             "category": "Features",
             "description": [
                 "The renderer supports MSAA stencil auto resolve at the end of render pass"
@@ -80,8 +72,7 @@
         },
 
         {
-            "name": "hasEvents",
-            "display_name": "has_mtl_events",
+            "name": "has_events",
             "category": "Features",
             "description": [
                 "The renderer supports MTL(Shared)Event"
@@ -89,8 +80,7 @@
         },
 
         {
-            "name": "allowInlineConstVertexData",
-            "display_name": "allow_inline_const_vertex_data",
+            "name": "allow_inline_const_vertex_data",
             "category": "Features",
             "description": [
                 "The renderer supports using inline constant data for small client vertex data"
@@ -98,8 +88,7 @@
         },
 
         {
-            "name": "allowSeparatedDepthStencilBuffers",
-            "display_name": "allow_separate_depth_stencil_buffers",
+            "name": "allow_separate_depth_stencil_buffers",
             "category": "Features",
             "description": [
                 "Some Apple platforms such as iOS allows separate depth and stencil buffers, ",
@@ -108,8 +97,7 @@
         },
 
         {
-            "name": "allowRuntimeSamplerCompareMode",
-            "display_name": "allow_runtime_sampler_compare_mode",
+            "name": "allow_runtime_sampler_compare_mode",
             "category": "Features",
             "description": [
                 "The renderer supports changing sampler's compare mode outside shaders"
@@ -117,8 +105,7 @@
         },
 
         {
-            "name": "allowSamplerCompareGradient",
-            "display_name": "allow_sampler_compare_gradient",
+            "name": "allow_sampler_compare_gradient",
             "category": "Features",
             "description": [
                 "The renderer supports sample_compare with gradients"
@@ -126,8 +113,7 @@
         },
 
         {
-            "name": "allowSamplerCompareLod",
-            "display_name": "allow_sampler_compare_lod",
+            "name": "allow_sampler_compare_lod",
             "category": "Features",
             "description": [
                 "The renderer supports sample_compare with lod"
@@ -135,8 +121,7 @@
         },
 
         {
-            "name": "allowBufferReadWrite",
-            "display_name": "allow_buffer_read_write",
+            "name": "allow_buffer_read_write",
             "category": "Features",
             "description": [
                 "The renderer supports buffer read and write in the same shader"
@@ -144,8 +129,7 @@
         },
 
         {
-            "name": "allowMultisampleStoreAndResolve",
-            "display_name": "allow_msaa_store_and_resolve",
+            "name": "allow_multisample_store_and_resolve",
             "category": "Features",
             "description": [
                 "The renderer supports MSAA store and resolve in the same pass"
@@ -153,8 +137,7 @@
         },
 
         {
-            "name": "allowGenMultipleMipsPerPass",
-            "display_name": "gen_multiple_mips_per_pass",
+            "name": "allow_gen_multiple_mips_per_pass",
             "category": "Features",
             "description": [
                 "The renderer supports generating multiple mipmaps per pass"
@@ -162,8 +145,7 @@
         },
 
         {
-            "name": "forceD24S8AsUnsupported",
-            "display_name": "force_d24s8_as_unsupported",
+            "name": "force_D24S8_as_unsupported",
             "category": "Features",
             "description": [
                 "Force Depth24Stencil8 format as unsupported."
@@ -171,8 +153,7 @@
         },
 
         {
-            "name": "forceBufferGPUStorage",
-            "display_name": "force_buffer_gpu_storage",
+            "name": "force_buffer_GPU_storage",
             "category": "Features",
             "description": [
                 "On systems that support both buffer' memory allocation on GPU and shared memory (such as ",
@@ -181,8 +162,7 @@
         },
 
         {
-            "name": "directMetalGeneration",
-            "display_name": "directMetalGeneration",
+            "name": "direct_metal_generation",
             "category": "Features",
             "description": [
                 "Direct translation to Metal."
@@ -191,8 +171,7 @@
         },
 
         {
-            "name": "forceNonCSBaseMipmapGeneration",
-            "display_name": "force_non_cs_mipmap_gen",
+            "name": "force_non_CS_base_mipmap_generation",
             "category": "Features",
             "description": [
                 "Turn this feature on to disallow Compute Shader based mipmap generation. Compute Shader ",
@@ -201,8 +180,7 @@
         },
 
         {
-            "name": "emulateTransformFeedback",
-            "display_name": "emulateTransformFeedback",
+            "name": "emulate_transform_feedback",
             "category": "Features",
             "description": [
                 "Turn this on to allow transform feedback in Metal using a 2-pass VS for GLES3."
@@ -210,8 +188,7 @@
         },
 
         {
-            "name": "rewriteRowMajorMatrices",
-            "display_name": "rewrite_row_major_matrices",
+            "name": "rewrite_row_major_matrices",
             "category": "Features",
             "description": [
                 "Rewrite row major matrices in shaders as column major."
@@ -219,8 +196,7 @@
         },
 
         {
-            "name": "intelExplicitBoolCastWorkaround",
-            "display_name": "intel_explicit_bool_cast_workaround",
+            "name": "intel_explicit_bool_cast_workaround",
             "category": "Workarounds",
             "description": [
                 "Insert explicit casts for float/double/unsigned/signed int on macOS 10.15 with Intel ",
@@ -229,8 +205,7 @@
         },
 
         {
-            "name": "intelDisableFastMath",
-            "display_name": "intel_disable_fast_math",
+            "name": "intel_disable_fast_math",
             "category": "Workarounds",
             "description": [
                 "Disable fast math in atan and invariance cases when running below macOS 12.0"
@@ -238,8 +213,7 @@
         },
 
         {
-            "name": "multisampleColorFormatShaderReadWorkaround",
-            "display_name": "multisample_color_format_shader_read_workaround",
+            "name": "multisample_color_format_shader_read_workaround",
             "category": "Workarounds",
             "description": [
                 "Add shaderRead usage to some multisampled texture formats"
@@ -248,8 +222,7 @@
         },
 
         {
-            "name": "copyIOSurfaceToNonIOSurfaceForReadOptimization",
-            "display_name": "copy_iosurface_to_non_iosurface_for_read_optimization",
+            "name": "copy_IOSurface_to_non_IOSurface_for_read_optimization",
             "category": "Workarounds",
             "description": [
                 "some GPUs are faster to read an IOSurface texture by first copying the texture to a ",

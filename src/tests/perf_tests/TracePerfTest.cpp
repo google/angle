@@ -2068,7 +2068,7 @@ void RegisterTraceTests()
         if (gTraceTestValidation)
         {
             // Enable limits when validating traces because we usually turn off capture.
-            overrideParams.eglParameters.enable(Feature::CaptureLimits);
+            overrideParams.eglParameters.enable(Feature::EnableCaptureLimits);
 
             // This feature should also be enabled in capture to mirror the replay.
             overrideParams.eglParameters.enable(Feature::ForceInitShaderVariables);

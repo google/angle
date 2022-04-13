@@ -7,6 +7,7 @@
 #include "test_utils/angle_test_configs.h"
 
 #include "common/platform.h"
+#include "common/string_utils.h"
 #include "util/util_gl.h"
 
 #include <algorithm>
@@ -26,7 +27,9 @@ void AppendCapitalizedFeature(std::ostream &stream, Feature feature)
         return;
     }
 
-    stream << static_cast<char>(std::toupper(name[0])) << (name + 1);
+    const std::string camelCase = angle::ToCamelCase(name);
+
+    stream << static_cast<char>(std::toupper(camelCase[0])) << (camelCase.c_str() + 1);
 }
 
 bool HasFeatureOverride(const std::vector<Feature> &overrides, Feature feature)

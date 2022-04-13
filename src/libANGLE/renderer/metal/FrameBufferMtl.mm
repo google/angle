@@ -487,7 +487,7 @@ angle::Result FramebufferMtl::blitWithDraw(const gl::Context *context,
             dsBlitParams.srcLevel   = srcStencilRt->getLevelIndex();
             dsBlitParams.srcLayer   = srcStencilRt->getLayerIndex();
 
-            if (!contextMtl->getDisplay()->getFeatures().hasStencilOutput.enabled &&
+            if (!contextMtl->getDisplay()->getFeatures().hasShaderStencilOutput.enabled &&
                 mStencilRenderTarget)
             {
                 // Directly writing to stencil in shader is not supported, use temporary copy buffer
@@ -551,7 +551,7 @@ gl::FramebufferStatus FramebufferMtl::checkStatus(const gl::Context *context) co
     }
 
     ContextMtl *contextMtl = mtl::GetImpl(context);
-    if (!contextMtl->getDisplay()->getFeatures().allowSeparatedDepthStencilBuffers.enabled &&
+    if (!contextMtl->getDisplay()->getFeatures().allowSeparateDepthStencilBuffers.enabled &&
         mState.hasSeparateDepthAndStencilAttachments())
     {
         return gl::FramebufferStatus::Incomplete(

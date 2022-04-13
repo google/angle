@@ -584,7 +584,7 @@ DebugMessageReport ShouldReportDebugMessage(RendererVk *renderer,
     // Then check with syncval messages:
     const bool isStoreOpNoneSupported =
         renderer->getFeatures().supportsRenderPassLoadStoreOpNone.enabled ||
-        renderer->getFeatures().supportsRenderPassStoreOpNoneQCOM.enabled;
+        renderer->getFeatures().supportsRenderPassStoreOpNone.enabled;
     const bool isFramebufferFetchUsed = renderer->isFramebufferFetchUsed();
     for (const SkippedSyncvalMessage &msg : kSkippedSyncvalMessages)
     {
@@ -2238,7 +2238,7 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     {
         mEnabledDeviceExtensions.push_back(VK_EXT_LOAD_STORE_OP_NONE_EXTENSION_NAME);
     }
-    else if (getFeatures().supportsRenderPassStoreOpNoneQCOM.enabled)
+    else if (getFeatures().supportsRenderPassStoreOpNone.enabled)
     {
         mEnabledDeviceExtensions.push_back(VK_QCOM_RENDER_PASS_STORE_OPS_EXTENSION_NAME);
     }
@@ -3038,7 +3038,7 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
         ExtensionFound(VK_EXT_LOAD_STORE_OP_NONE_EXTENSION_NAME, deviceExtensionNames));
 
     ANGLE_FEATURE_CONDITION(
-        &mFeatures, supportsRenderPassStoreOpNoneQCOM,
+        &mFeatures, supportsRenderPassStoreOpNone,
         !mFeatures.supportsRenderPassLoadStoreOpNone.enabled &&
             ExtensionFound(VK_QCOM_RENDER_PASS_STORE_OPS_EXTENSION_NAME, deviceExtensionNames));
 
@@ -3275,7 +3275,7 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     // Android prevents creating swapchain images with VK_FORMAT_R8G8B8_UNORM.
     // Do this for all platforms, since few (none?) IHVs support 24-bit formats with their HW
     // natively anyway.
-    ANGLE_FEATURE_CONDITION(&mFeatures, overrideSurfaceFormatRGB8toRGBA8, true);
+    ANGLE_FEATURE_CONDITION(&mFeatures, overrideSurfaceFormatRGB8ToRGBA8, true);
 
     // http://anglebug.com/6872
     // On ARM hardware, framebuffer-fetch-like behavior on Vulkan is already coherent, so we can
@@ -3319,7 +3319,7 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     ANGLE_FEATURE_CONDITION(&mFeatures, bottomLeftOriginPresentRegionRectangles, IsAndroid());
 
     // Retain debug info in SPIR-V blob.
-    ANGLE_FEATURE_CONDITION(&mFeatures, retainSpirvDebugInfo, getEnableValidationLayers());
+    ANGLE_FEATURE_CONDITION(&mFeatures, retainSPIRVDebugInfo, getEnableValidationLayers());
 
     ANGLE_FEATURE_CONDITION(&mFeatures, generateSPIRVThroughGlslang, kUseSpirvGenThroughGlslang);
 

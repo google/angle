@@ -8,8 +8,7 @@
     ],
     "features": [
         {
-            "name": "basicGLLineRasterization",
-            "display_name": "basicGLLineRasterization",
+            "name": "basic_GL_line_rasterization",
             "category": "Features",
             "description": [
                 "Enable the use of pixel shader patching to implement OpenGL basic line ",
@@ -18,8 +17,7 @@
         },
 
         {
-            "name": "bresenhamLineRasterization",
-            "display_name": "bresenhamLineRasterization",
+            "name": "bresenham_line_rasterization",
             "category": "Features",
             "description": [
                 "Enable Bresenham line rasterization via VK_EXT_line_rasterization extension"
@@ -27,8 +25,7 @@
         },
 
         {
-            "name": "provokingVertex",
-            "display_name": "provokingVertex",
+            "name": "provoking_vertex",
             "category": "Features",
             "description": [
                 "Enable provoking vertex mode via VK_EXT_provoking_vertex extension"
@@ -36,8 +33,7 @@
         },
 
         {
-            "name": "forceFallbackFormat",
-            "display_name": "forceFallbackFormat",
+            "name": "force_fallback_format",
             "category": "Workarounds",
             "description": [
                 "Force a fallback format for angle_end2end_tests"
@@ -45,8 +41,7 @@
         },
 
         {
-            "name": "clampPointSize",
-            "display_name": "clamp_point_size",
+            "name": "clamp_point_size",
             "category": "Workarounds",
             "description": [
                 "The point size range reported from the API is inconsistent with the actual behavior"
@@ -55,8 +50,7 @@
         },
 
         {
-            "name": "depthClamping",
-            "display_name": "depth_clamping",
+            "name": "depth_clamping",
             "category": "Workarounds",
             "description": [
                 "The depth value is not clamped to [0,1] for floating point depth buffers."
@@ -65,8 +59,7 @@
         },
 
         {
-            "name": "supportsRenderpass2",
-            "display_name": "supportsRenderpass2",
+            "name": "supports_renderpass2",
             "category": "Features",
             "description": [
                 "VkDevice supports the VK_KHR_create_renderpass2 extension"
@@ -74,8 +67,7 @@
         },
 
         {
-            "name": "supportsIncrementalPresent",
-            "display_name": "supportsIncrementalPresent",
+            "name": "supports_incremental_present",
             "category": "Features",
             "description": [
                 "VkDevice supports the VK_KHR_incremental_present extension"
@@ -83,8 +75,7 @@
         },
 
         {
-            "name": "supportsAndroidHardwareBuffer",
-            "display_name": "supportsAndroidHardwareBuffer",
+            "name": "supports_android_hardware_buffer",
             "category": "Features",
             "description": [
                 "VkDevice supports the VK_ANDROID_external_memory_android_hardware_buffer extension"
@@ -92,8 +83,7 @@
         },
 
         {
-            "name": "supportsGGPFrameToken",
-            "display_name": "supportsGGPFrameToken",
+            "name": "supports_GGP_frame_token",
             "category": "Features",
             "description": [
                 "VkDevice supports the VK_GGP_frame_token extension"
@@ -101,8 +91,7 @@
         },
 
         {
-            "name": "supportsExternalMemoryFd",
-            "display_name": "supportsExternalMemoryFd",
+            "name": "supports_external_memory_fd",
             "category": "Features",
             "description": [
                 "VkDevice supports the VK_KHR_external_memory_fd extension"
@@ -110,8 +99,7 @@
         },
 
         {
-            "name": "supportsExternalMemoryFuchsia",
-            "display_name": "supportsExternalMemoryFuchsia",
+            "name": "supports_external_memory_fuchsia",
             "category": "Features",
             "description": [
                 "VkDevice supports the VK_FUCHSIA_external_memory extension"
@@ -119,8 +107,7 @@
         },
 
         {
-            "name": "supportsFilteringPrecision",
-            "display_name": "supportsFilteringPrecision",
+            "name": "supports_filtering_precision",
             "category": "Features",
             "description": [
                 "VkDevice supports the VK_GOOGLE_sampler_filtering_precision extension"
@@ -128,8 +115,7 @@
         },
 
         {
-            "name": "supportsExternalFenceCapabilities",
-            "display_name": "supportsExternalFenceCapabilities",
+            "name": "supports_external_fence_capabilities",
             "category": "Features",
             "description": [
                 "VkInstance supports the VK_KHR_external_fence_capabilities extension"
@@ -137,8 +123,7 @@
         },
 
         {
-            "name": "supportsExternalSemaphoreCapabilities",
-            "display_name": "supportsExternalSemaphoreCapabilities",
+            "name": "supports_external_semaphore_capabilities",
             "category": "Features",
             "description": [
                 "VkInstance supports the VK_KHR_external_semaphore_capabilities extension"
@@ -146,8 +131,7 @@
         },
 
         {
-            "name": "supportsExternalSemaphoreFd",
-            "display_name": "supportsExternalSemaphoreFd",
+            "name": "supports_external_semaphore_fd",
             "category": "Features",
             "description": [
                 "VkDevice supports the VK_KHR_external_semaphore_fd extension"
@@ -155,8 +139,7 @@
         },
 
         {
-            "name": "supportsExternalSemaphoreFuchsia",
-            "display_name": "supportsExternalSemaphoreFuchsia",
+            "name": "supports_external_semaphore_fuchsia",
             "category": "Features",
             "description": [
                 "VkDevice supports the VK_FUCHSIA_external_semaphore extension"
@@ -164,8 +147,7 @@
         },
 
         {
-            "name": "supportsExternalFenceFd",
-            "display_name": "supportsExternalFenceFd",
+            "name": "supports_external_fence_fd",
             "category": "Features",
             "description": [
                 "VkDevice supports the VK_KHR_external_fence_fd extension"
@@ -174,8 +156,7 @@
         },
 
         {
-            "name": "supportsAndroidNativeFenceSync",
-            "display_name": "supportsAndroidNativeFenceSync",
+            "name": "supports_android_native_fence_sync",
             "category": "Features",
             "description": [
                 "VkDevice supports the EGL_ANDROID_native_fence_sync extension"
@@ -184,8 +165,7 @@
         },
 
         {
-            "name": "supportsImageCubeArray",
-            "display_name": "supportsImageCubeArray",
+            "name": "supports_image_cube_array",
             "category": "Features",
             "description": [
                 "VkDevice supports the imageCubeArray feature properly"
@@ -194,8 +174,7 @@
         },
 
         {
-            "name": "supportsPipelineStatisticsQuery",
-            "display_name": "supportsPipelineStatisticsQuery",
+            "name": "supports_pipeline_statistics_query",
             "category": "Features",
             "description": [
                 "VkDevice supports the pipelineStatisticsQuery feature"
@@ -204,8 +183,7 @@
         },
 
         {
-            "name": "supportsShaderStencilExport",
-            "display_name": "supportsShaderStencilExport",
+            "name": "supports_shader_stencil_export",
             "category": "Features",
             "description": [
                 "VkDevice supports the VK_EXT_shader_stencil_export extension"
@@ -213,8 +191,7 @@
         },
 
         {
-            "name": "supportsYUVSamplerConversion",
-            "display_name": "supportsYUVSamplerConversion",
+            "name": "supports_YUV_sampler_conversion",
             "category": "Features",
             "description": [
                 "VkDevice supports the VK_KHR_sampler_ycbcr_conversion extension"
@@ -222,8 +199,7 @@
         },
 
         {
-            "name": "emulateTransformFeedback",
-            "display_name": "emulateTransformFeedback",
+            "name": "emulate_transform_feedback",
             "category": "Features",
             "description": [
                 "Emulate transform feedback as the VK_EXT_transform_feedback is not present."
@@ -232,8 +208,7 @@
         },
 
         {
-            "name": "supportsTransformFeedbackExtension",
-            "display_name": "supportsTransformFeedbackExtension",
+            "name": "supports_transform_feedback_extension",
             "category": "Features",
             "description": [
                 "Transform feedback uses the VK_EXT_transform_feedback extension."
@@ -242,8 +217,7 @@
         },
 
         {
-            "name": "supportsGeometryStreamsCapability",
-            "display_name": "supportsGeometryStreamsCapability",
+            "name": "supports_geometry_streams_capability",
             "category": "Features",
             "description": [
                 "Implementation supports the GeometryStreams SPIR-V capability."
@@ -252,8 +226,7 @@
         },
 
         {
-            "name": "supportsIndexTypeUint8",
-            "display_name": "supportsIndexTypeUint8",
+            "name": "supports_index_type_uint8",
             "category": "Features",
             "description": [
                 "VkDevice supports the VK_EXT_index_type_uint8 extension"
@@ -262,8 +235,7 @@
         },
 
         {
-            "name": "supportsCustomBorderColor",
-            "display_name": "supportsCustomBorderColor",
+            "name": "supports_custom_border_color",
             "category": "Features",
             "description": [
                 "VkDevice supports the VK_EXT_custom_border_color extension"
@@ -272,8 +244,7 @@
         },
 
         {
-            "name": "supportsMultiDrawIndirect",
-            "display_name": "supportsMultiDrawIndirect",
+            "name": "supports_multi_draw_indirect",
             "category": "Features",
             "description": [
                 "VkDevice supports the multiDrawIndirect extension"
@@ -282,8 +253,7 @@
         },
 
         {
-            "name": "supportsDepthStencilResolve",
-            "display_name": "supportsDepthStencilResolve",
+            "name": "supports_depth_stencil_resolve",
             "category": "Features",
             "description": [
                 "VkDevice supports the VK_KHR_depth_stencil_resolve ",
@@ -293,8 +263,7 @@
         },
 
         {
-            "name": "supportsMultisampledRenderToSingleSampled",
-            "display_name": "supportsMultisampledRenderToSingleSampled",
+            "name": "supports_multisampled_render_to_single_sampled",
             "category": "Features",
             "description": [
                 "VkDevice supports the VK_EXT_multisampled_render_to_single_sampled extension"
@@ -303,8 +272,7 @@
         },
 
         {
-            "name": "supportsMultiview",
-            "display_name": "supportsMultiview",
+            "name": "supports_multiview",
             "category": "Features",
             "description": [
                 "VkDevice supports the VK_KHR_multiview extension"
@@ -313,8 +281,7 @@
         },
 
         {
-            "name": "disableFifoPresentMode",
-            "display_name": "disableFifoPresentMode",
+            "name": "disable_fifo_present_mode",
             "category": "Workarounds",
             "description": [
                 "VK_PRESENT_MODE_FIFO_KHR causes random timeouts"
@@ -323,8 +290,7 @@
         },
 
         {
-            "name": "bindEmptyForUnusedDescriptorSets",
-            "display_name": "bindEmptyForUnusedDescriptorSets",
+            "name": "bind_empty_for_unused_descriptor_sets",
             "category": "Workarounds",
             "description": [
                 "Gaps in bound descriptor set indices causes the post-gap sets to misbehave"
@@ -333,8 +299,7 @@
         },
 
         {
-            "name": "forceD16TexFilter",
-            "display_name": "forceD16TexFilter",
+            "name": "force_D16_tex_filter",
             "category": "Workarounds",
             "description": [
                 "VK_FORMAT_D16_UNORM does not support VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT, ",
@@ -344,8 +309,7 @@
         },
 
         {
-            "name": "disableFlippingBlitWithCommand",
-            "display_name": "disableFlippingBlitWithCommand",
+            "name": "disable_flipping_blit_with_command",
             "category": "Workarounds",
             "description": [
                 "vkCmdBlitImage with flipped coordinates blits incorrectly."
@@ -354,8 +318,7 @@
         },
 
         {
-            "name": "perFrameWindowSizeQuery",
-            "display_name": "perFrameWindowSizeQuery",
+            "name": "per_frame_window_size_query",
             "category": "Workarounds",
             "description": [
                 "Vulkan swapchain is not returning VK_ERROR_OUT_OF_DATE when window resizing"
@@ -364,8 +327,7 @@
         },
 
         {
-            "name": "disallowSeamfulCubeMapEmulation",
-            "display_name": "disallowSeamfulCubeMapEmulation",
+            "name": "disallow_seamful_cube_map_emulation",
             "category": "Workarounds",
             "description": [
                 "Seamful cube map emulation misbehaves on some drivers, so it's disallowed"
@@ -374,8 +336,7 @@
         },
 
         {
-            "name": "padBuffersToMaxVertexAttribStride",
-            "display_name": "padBuffersToMaxVertexAttribStride",
+            "name": "pad_buffers_to_max_vertex_attrib_stride",
             "category": "Workarounds",
             "description": [
                 "Vulkan considers vertex attribute accesses to count up to the last multiple of the ",
@@ -389,8 +350,7 @@
         },
 
         {
-            "name": "supportsExternalMemoryDmaBufAndModifiers",
-            "display_name": "supportsExternalMemoryDmaBufAndModifiers",
+            "name": "supports_external_memory_dma_buf_and_modifiers",
             "category": "Features",
             "description": [
                 "VkDevice supports the VK_EXT_external_memory_dma_buf and VK_EXT_image_drm_format_modifier ",
@@ -400,8 +360,7 @@
         },
 
         {
-            "name": "supportsExternalMemoryHost",
-            "display_name": "supportsExternalMemoryHost",
+            "name": "supports_external_memory_host",
             "category": "Features",
             "description": [
                 "VkDevice supports the VK_EXT_external_memory_host extension"
@@ -409,8 +368,7 @@
         },
 
         {
-            "name": "allocateNonZeroMemory",
-            "display_name": "allocateNonZeroMemory",
+            "name": "allocate_non_zero_memory",
             "category": "Features",
             "description": [
                 "Fill new allocations with non-zero values to flush out errors."
@@ -419,8 +377,7 @@
         },
 
         {
-            "name": "logMemoryReportCallbacks",
-            "display_name": "logMemoryReportCallbacks",
+            "name": "log_memory_report_callbacks",
             "category": "Features",
             "description": [
                 "Log each callback from VK_EXT_device_memory_report"
@@ -428,8 +385,7 @@
         },
 
         {
-            "name": "logMemoryReportStats",
-            "display_name": "logMemoryReportStats",
+            "name": "log_memory_report_stats",
             "category": "Features",
             "description": [
                 "Log stats from VK_EXT_device_memory_report each swap"
@@ -437,8 +393,7 @@
         },
 
         {
-            "name": "shadowBuffers",
-            "display_name": "shadowBuffers",
+            "name": "shadow_buffers",
             "category": "Features",
             "description": [
                 "Allocate a shadow buffer for GL buffer objects to reduce glMap* latency."
@@ -447,8 +402,7 @@
         },
 
         {
-            "name": "preferCPUForBufferSubData",
-            "display_name": "preferCPUForBufferSubData",
+            "name": "prefer_CPU_for_buffer_sub_data",
             "category": "Features",
             "description": [
                 "Prefer use CPU to do bufferSubData instead of staged update."
@@ -457,8 +411,7 @@
         },
 
         {
-            "name": "persistentlyMappedBuffers",
-            "display_name": "persistentlyMappedBuffers",
+            "name": "persistently_mapped_buffers",
             "category": "Features",
             "description": [
                 "Persistently map buffer memory to reduce map/unmap IOCTL overhead."
@@ -467,8 +420,7 @@
         },
 
         {
-            "name": "enablePreRotateSurfaces",
-            "display_name": "enablePreRotateSurfaces",
+            "name": "enable_pre_rotate_surfaces",
             "category": "Features",
             "description": [
                 "Enable Android pre-rotation for landscape applications"
@@ -477,8 +429,7 @@
         },
 
         {
-            "name": "enablePrecisionQualifiers",
-            "display_name": "enablePrecisionQualifiers",
+            "name": "enable_precision_qualifiers",
             "category": "Features",
             "description": [
                 "Enable precision qualifiers in shaders"
@@ -487,8 +438,7 @@
         },
 
         {
-            "name": "preferAggregateBarrierCalls",
-            "display_name": "preferAggregateBarrierCalls",
+            "name": "prefer_aggregate_barrier_calls",
             "category": "Workarounds",
             "description": [
                 "Single barrier call is preferred over multiple calls with ",
@@ -498,8 +448,7 @@
         },
 
         {
-            "name": "preferSkippingInvalidateForEmulatedFormats",
-            "display_name": "preferSkippingInvalidateForEmulatedFormats",
+            "name": "prefer_skipping_invalidate_for_emulated_formats",
             "category": "Workarounds",
             "description": [
                 "Skipping invalidate is preferred for emulated formats that have extra channels over ",
@@ -509,8 +458,7 @@
         },
 
         {
-            "name": "asyncCommandQueue",
-            "display_name": "asyncCommandQueue",
+            "name": "async_command_queue",
             "category": "Features",
             "description": [
                 "Use CommandQueue worker thread to dispatch work to GPU."
@@ -519,8 +467,7 @@
         },
 
         {
-            "name": "supportsShaderFloat16",
-            "display_name": "supportsShaderFloat16",
+            "name": "supports_shader_float16",
             "category": "Features",
             "description": [
                 "VkDevice supports the VK_KHR_shader_float16_int8 extension ",
@@ -530,8 +477,7 @@
         },
 
         {
-            "name": "allowGenerateMipmapWithCompute",
-            "display_name": "allowGenerateMipmapWithCompute",
+            "name": "allow_GenerateMipmap_with_compute",
             "category": "Features",
             "description": [
                 "Use the compute path to generate mipmaps on devices that meet the minimum requirements, ",
@@ -541,8 +487,7 @@
         },
 
         {
-            "name": "supportsRenderPassStoreOpNoneQCOM",
-            "display_name": "supportsRenderPassStoreOpNoneQCOM",
+            "name": "supports_render_pass_store_op_none",
             "category": "Features",
             "description": [
                 "VkDevice supports VK_QCOM_render_pass_store_ops extension."
@@ -551,8 +496,7 @@
         },
 
         {
-            "name": "supportsRenderPassLoadStoreOpNone",
-            "display_name": "supportsRenderPassLoadStoreOpNone",
+            "name": "supports_render_pass_load_store_op_none",
             "category": "Features",
             "description": [
                 "VkDevice supports VK_EXT_load_store_op_none extension."
@@ -561,8 +505,7 @@
         },
 
         {
-            "name": "supportsDepthClipControl",
-            "display_name": "supportsDepthClipControl",
+            "name": "supports_depth_clip_control",
             "category": "Features",
             "description": [
                 "VkDevice supports VK_EXT_depth_clip_control extension."
@@ -571,8 +514,7 @@
         },
 
         {
-            "name": "supportsBlendOperationAdvanced",
-            "display_name": "supportsBlendOperationAdvanced",
+            "name": "supports_blend_operation_advanced",
             "category": "Features",
             "description": [
                 "VkDevice supports VK_EXT_blend_operation_advanced extension."
@@ -581,8 +523,7 @@
         },
 
         {
-            "name": "forceMaxUniformBufferSize16KB",
-            "display_name": "forceMaxUniformBufferSize16KB",
+            "name": "force_max_uniform_buffer_size_16KB",
             "category": "Workarounds",
             "description": [
                 "Force max uniform buffer size to 16K on some device due to bug"
@@ -591,8 +532,7 @@
         },
 
         {
-            "name": "supportsImageFormatList",
-            "display_name": "supportsImageFormatList",
+            "name": "supports_image_format_list",
             "category": "Features",
             "description": [
                 "Enable VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT by default for ICDs ",
@@ -602,8 +542,7 @@
         },
 
         {
-            "name": "enableMultisampledRenderToTexture",
-            "display_name": "enableMultisampledRenderToTexture",
+            "name": "enable_multisampled_render_to_texture",
             "category": "Workarounds",
             "description": [
                 "Expose EXT_multisampled_render_to_texture"
@@ -612,8 +551,7 @@
         },
 
         {
-            "name": "deferFlushUntilEndRenderPass",
-            "display_name": "deferFlushUntilEndRenderPass",
+            "name": "defer_flush_until_end_render_pass",
             "category": "Workarounds",
             "description": [
                 "Allow glFlush to be deferred until renderpass ends"
@@ -622,8 +560,7 @@
         },
 
         {
-            "name": "waitIdleBeforeSwapchainRecreation",
-            "display_name": "waitIdleBeforeSwapchainRecreation",
+            "name": "wait_idle_before_swapchain_recreation",
             "category": "Workarounds",
             "description": [
                 "Before passing an oldSwapchain to VkSwapchainCreateInfoKHR, wait for queue to be idle. ",
@@ -633,8 +570,7 @@
         },
 
         {
-            "name": "forceTextureLodOffset1",
-            "display_name": "force_texture_lod_offset_1",
+            "name": "force_texture_lod_offset_1",
             "category": "Workarounds",
             "description": [
                 "Increase the minimum texture level-of-detail by 1 when sampling."
@@ -642,8 +578,7 @@
         },
 
         {
-            "name": "forceTextureLodOffset2",
-            "display_name": "force_texture_lod_offset_2",
+            "name": "force_texture_lod_offset_2",
             "category": "Workarounds",
             "description": [
                 "Increase the minimum texture level-of-detail by 2 when sampling."
@@ -651,8 +586,7 @@
         },
 
         {
-            "name": "forceTextureLodOffset3",
-            "display_name": "force_texture_lod_offset_3",
+            "name": "force_texture_lod_offset_3",
             "category": "Workarounds",
             "description": [
                 "Increase the minimum texture level-of-detail by 3 when sampling."
@@ -660,8 +594,7 @@
         },
 
         {
-            "name": "forceTextureLodOffset4",
-            "display_name": "force_texture_lod_offset_4",
+            "name": "force_texture_lod_offset_4",
             "category": "Workarounds",
             "description": [
                 "Increase the minimum texture level-of-detail by 4 when sampling."
@@ -669,8 +602,7 @@
         },
 
         {
-            "name": "forceNearestFiltering",
-            "display_name": "force_nearest_filtering",
+            "name": "force_nearest_filtering",
             "category": "Workarounds",
             "description": [
                 "Force nearest filtering when sampling."
@@ -678,8 +610,7 @@
         },
 
         {
-            "name": "forceNearestMipFiltering",
-            "display_name": "forceNearestMipFiltering",
+            "name": "force_nearest_mip_filtering",
             "category": "Workarounds",
             "description": [
                 "Force nearest mip filtering when sampling."
@@ -687,8 +618,7 @@
         },
 
         {
-            "name": "compressVertexData",
-            "display_name": "compress_vertex_data",
+            "name": "compress_vertex_data",
             "category": "Workarounds",
             "description": [
                 "Compress vertex data to smaller data types when ",
@@ -697,8 +627,7 @@
         },
 
         {
-            "name": "preferDrawClearOverVkCmdClearAttachments",
-            "display_name": "preferDrawClearOverVkCmdClearAttachments",
+            "name": "prefer_draw_clear_over_vkCmdClearAttachments",
             "category": "Workarounds",
             "description": [
                 "On some hardware, clear using a draw call instead of vkCmdClearAttachments in the middle ",
@@ -708,8 +637,7 @@
         },
 
         {
-            "name": "emulatedPrerotation90",
-            "display_name": "emulatedPrerotation90",
+            "name": "emulated_prerotation_90",
             "category": "Features",
             "description": [
                 "Emulate 90-degree prerotation."
@@ -718,8 +646,7 @@
         },
 
         {
-            "name": "emulatedPrerotation180",
-            "display_name": "emulatedPrerotation180",
+            "name": "emulated_prerotation_180",
             "category": "Features",
             "description": [
                 "Emulate 180-degree prerotation."
@@ -728,8 +655,7 @@
         },
 
         {
-            "name": "emulatedPrerotation270",
-            "display_name": "emulatedPrerotation270",
+            "name": "emulated_prerotation_270",
             "category": "Features",
             "description": [
                 "Emulate 270-degree prerotation."
@@ -738,8 +664,7 @@
         },
 
         {
-            "name": "generateSPIRVThroughGlslang",
-            "display_name": "generateSPIRVThroughGlslang",
+            "name": "generate_SPIRV_through_glslang",
             "category": "Features",
             "description": [
                 "Translate SPIR-V through glslang."
@@ -748,8 +673,7 @@
         },
 
         {
-            "name": "forceDriverUniformOverSpecConst",
-            "display_name": "forceDriverUniformOverSpecConst",
+            "name": "force_driver_uniform_over_spec_const",
             "category": "Workarounds",
             "description": [
                 "Forces using driver uniforms instead of specialization constants."
@@ -758,8 +682,7 @@
         },
 
         {
-            "name": "exposeNonConformantExtensionsAndVersions",
-            "display_name": "exposeNonConformantExtensionsAndVersions",
+            "name": "expose_non_conformant_extensions_and_versions",
             "category": "Workarounds",
             "description": [
                 "Expose GLES versions and extensions that are not conformant."
@@ -768,8 +691,7 @@
         },
 
         {
-            "name": "emulateR32fImageAtomicExchange",
-            "display_name": "emulateR32fImageAtomicExchange",
+            "name": "emulate_R32f_image_atomic_exchange",
             "category": "Workarounds",
             "description": [
                 "Emulate r32f images with r32ui to support imageAtomicExchange."
@@ -778,8 +700,7 @@
         },
 
         {
-            "name": "supportsNegativeViewport",
-            "display_name": "supportsNegativeViewport",
+            "name": "supports_negative_viewport",
             "category": "Features",
             "description": [
                 "The driver supports inverting the viewport with a negative height."
@@ -787,8 +708,7 @@
         },
 
         {
-            "name": "forceFragmentShaderPrecisionHighpToMediump",
-            "display_name": "forceFragmentShaderPrecisionHighpToMediump",
+            "name": "force_fragment_shader_precision_highp_to_mediump",
             "category": "Workarounds",
             "description": [
                 "Forces highp precision in fragment shader to mediump."
@@ -797,8 +717,7 @@
         },
 
         {
-            "name": "preferSubmitAtFBOBoundary",
-            "display_name": "preferSubmitAtFBOBoundary",
+            "name": "prefer_submit_at_FBO_boundary",
             "category": "Workarounds",
             "description": [
                 "Submit commands to driver at each FBO boundary for performance improvements."
@@ -807,8 +726,7 @@
         },
 
         {
-            "name": "useMultipleDescriptorsForExternalFormats",
-            "display_name": "useMultipleDescriptorsForExternalFormats",
+            "name": "use_multiple_descriptors_for_external_formats",
             "category": "Workarounds",
             "description": [
                 "Return a default descriptor count for external formats."
@@ -817,8 +735,7 @@
         },
 
         {
-            "name": "supportsProtectedMemory",
-            "display_name": "supportsProtectedMemory",
+            "name": "supports_protected_memory",
             "category": "Features",
             "description": [
                 "VkDevice supports protected memory"
@@ -827,8 +744,7 @@
         },
 
         {
-            "name": "supportsHostQueryReset",
-            "display_name": "supportsHostQueryReset",
+            "name": "supports_host_query_reset",
             "category": "Features",
             "description": [
                 "VkDevice supports VK_EXT_host_query_reset extension"
@@ -837,8 +753,7 @@
         },
 
         {
-            "name": "supportsSurfaceCapabilities2Extension",
-            "display_name": "supportsSurfaceCapabilities2Extension",
+            "name": "supports_surface_capabilities2_extension",
             "category": "Features",
             "description": [
                 "VkInstance supports the VK_KHR_get_surface_capabilities2 extension"
@@ -846,8 +761,7 @@
         },
 
         {
-            "name": "supportsSurfaceProtectedCapabilitiesExtension",
-            "display_name": "supportsSurfaceProtectedCapabilitiesExtension",
+            "name": "supports_surface_protected_capabilities_extension",
             "category": "Features",
             "description": [
                 "VkInstance supports the VK_KHR_surface_protected_capabilities extension"
@@ -855,8 +769,7 @@
         },
 
         {
-            "name": "supportsSurfacelessQueryExtension",
-            "display_name": "supportsSurfacelessQueryExtension",
+            "name": "supports_surfaceless_query_extension",
             "category": "Features",
             "description": [
                 "VkInstance supports the VK_GOOGLE_surfaceless_query extension"
@@ -864,8 +777,7 @@
         },
 
         {
-            "name": "supportsSurfaceProtectedSwapchains",
-            "display_name": "supportsSurfaceProtectedSwapchains",
+            "name": "supports_surface_protected_swapchains",
             "category": "Features",
             "description": [
                 "VkSurface supportsProtected for protected swapchains"
@@ -873,8 +785,7 @@
         },
 
         {
-            "name": "overrideSurfaceFormatRGB8toRGBA8",
-            "display_name": "overrideSurfaceFormatRGB8toRGBA8",
+            "name": "override_surface_format_RGB8_to_RGBA8",
             "category": "Workarounds",
             "description": [
                 "Override surface format GL_RGB8 to GL_RGBA8"
@@ -883,8 +794,7 @@
         },
 
         {
-            "name": "supportsSharedPresentableImageExtension",
-            "display_name": "supportsSharedPresentableImageExtension",
+            "name": "supports_shared_presentable_image_extension",
             "category": "Features",
             "description": [
                 "VkSurface supports the VK_KHR_shared_presentable_images extension"
@@ -892,8 +802,7 @@
         },
 
         {
-            "name": "supportsShaderFramebufferFetch",
-            "display_name": "supportsShaderFramebufferFetch",
+            "name": "supports_shader_framebuffer_fetch",
             "category": "Features",
             "description": [
                 "Whether the Vulkan backend supports coherent framebuffer fetch"
@@ -901,8 +810,7 @@
         },
 
         {
-            "name": "supportsShaderFramebufferFetchNonCoherent",
-            "display_name": "supportsShaderFramebufferFetchNonCoherent",
+            "name": "supports_shader_framebuffer_fetch_non_coherent",
             "category": "Features",
             "description": [
                 "Whether the Vulkan backend supports non-coherent framebuffer fetch"
@@ -910,8 +818,7 @@
         },
 
         {
-            "name": "supportsLockSurfaceExtension",
-            "display_name": "supportsLockSurfaceExtension",
+            "name": "supports_lock_surface_extension",
             "category": "Features",
             "description": [
                 "Surface supports the EGL_KHR_lock_surface3 extension"
@@ -919,8 +826,7 @@
         },
 
         {
-            "name": "swapbuffersOnFlushOrFinishWithSingleBuffer",
-            "display_name": "swapbuffersOnFlushOrFinishWithSingleBuffer",
+            "name": "swapbuffers_on_flush_or_finish_with_single_buffer",
             "category": "Features",
             "description": [
                 "Bypass deferredFlush with calling swapbuffers on flush or finish when in Shared Present ",
@@ -930,8 +836,7 @@
         },
 
         {
-            "name": "emulateDithering",
-            "display_name": "emulateDithering",
+            "name": "emulate_dithering",
             "category": "Features",
             "description": [
                 "Emulate OpenGL dithering"
@@ -940,8 +845,7 @@
         },
 
         {
-            "name": "emulateAdvancedBlendEquations",
-            "display_name": "emulateAdvancedBlendEquations",
+            "name": "emulate_advanced_blend_equations",
             "category": "Features",
             "description": [
                 "Emulate GL_KHR_blend_equation_advanced"
@@ -950,8 +854,7 @@
         },
 
         {
-            "name": "bottomLeftOriginPresentRegionRectangles",
-            "display_name": "bottomLeftOriginPresentRegionRectangles",
+            "name": "bottom_left_origin_present_region_rectangles",
             "category": "Workarounds",
             "description": [
                 "On some platforms present region rectangles are expected to have a bottom-left origin, ",
@@ -960,8 +863,7 @@
         },
 
         {
-            "name": "forceSubmitImmutableTextureUpdates",
-            "display_name": "forceSubmitImmutableTextureUpdates",
+            "name": "force_submit_immutable_texture_updates",
             "category": "AppWorkarounds",
             "description": [
                 "Force submit updates to immutable textures"
@@ -970,8 +872,7 @@
         },
 
         {
-            "name": "retainSpirvDebugInfo",
-            "display_name": "retainSpirvDebugInfo",
+            "name": "retain_SPIRV_debug_info",
             "category": "Features",
             "description": [
                 "Retain debug info in SPIR-V blob."
@@ -980,8 +881,7 @@
         },
 
         {
-            "name": "createPipelineDuringLink",
-            "display_name": "createPipelineDuringLink",
+            "name": "create_pipeline_during_link",
             "category": "Features",
             "description": [
                 "Create pipeline with default state during glLinkProgram"

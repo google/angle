@@ -8,8 +8,7 @@
     ],
     "features": [
         {
-            "name": "mrtPerfWorkaround",
-            "display_name": "mrt_perf_workaround",
+            "name": "mrt_perf_workaround",
             "category": "Workarounds",
             "description": [
                 "Some drivers have a bug where they ignore null render targets"
@@ -17,8 +16,7 @@
         },
 
         {
-            "name": "setDataFasterThanImageUpload",
-            "display_name": "set_data_faster_than_image_upload",
+            "name": "set_data_faster_than_image_upload",
             "category": "Workarounds",
             "description": [
                 "Set data faster than image upload"
@@ -26,8 +24,7 @@
         },
 
         {
-            "name": "zeroMaxLodWorkaround",
-            "display_name": "zero_max_lod",
+            "name": "zero_max_lod_workaround",
             "category": "Workarounds",
             "description": [
                 "Missing an option to disable mipmaps on a mipmapped texture"
@@ -35,8 +32,7 @@
         },
 
         {
-            "name": "useInstancedPointSpriteEmulation",
-            "display_name": "use_instanced_point_sprite_emulation",
+            "name": "use_instanced_point_sprite_emulation",
             "category": "Workarounds",
             "description": [
                 "Some D3D11 renderers do not support geometry shaders for pointsprite emulation"
@@ -44,8 +40,7 @@
         },
 
         {
-            "name": "depthStencilBlitExtraCopy",
-            "display_name": "depth_stencil_blit_extra_copy",
+            "name": "depth_stencil_blit_extra_copy",
             "category": "Workarounds",
             "description": [
                 "Bug in some drivers triggers a TDR when using CopySubresourceRegion from a staging ",
@@ -55,8 +50,7 @@
         },
 
         {
-            "name": "expandIntegerPowExpressions",
-            "display_name": "expand_integer_pow_expressions",
+            "name": "expand_integer_pow_expressions",
             "category": "Workarounds",
             "description": [
                 "The HLSL optimizer has a bug with optimizing 'pow' in certain integer-valued expressions"
@@ -64,8 +58,7 @@
         },
 
         {
-            "name": "flushAfterEndingTransformFeedback",
-            "display_name": "flush_after_ending_transform_feedback",
+            "name": "flush_after_ending_transform_feedback",
             "category": "Workarounds",
             "description": [
                 "Some drivers sometimes write out-of-order results to StreamOut buffers when transform ",
@@ -74,8 +67,7 @@
         },
 
         {
-            "name": "getDimensionsIgnoresBaseLevel",
-            "display_name": "get_dimensions_ignores_base_level",
+            "name": "get_dimensions_ignores_base_level",
             "category": "Workarounds",
             "description": [
                 "Some drivers do not take into account the base level of the ",
@@ -84,8 +76,7 @@
         },
 
         {
-            "name": "preAddTexelFetchOffsets",
-            "display_name": "pre_add_texel_fetch_offsets",
+            "name": "pre_add_texel_fetch_offsets",
             "category": "Workarounds",
             "description": [
                 "HLSL's function texture.Load returns 0 when the parameter Location is negative, even if ",
@@ -94,8 +85,7 @@
         },
 
         {
-            "name": "emulateTinyStencilTextures",
-            "display_name": "emulate_tiny_stencil_textures",
+            "name": "emulate_tiny_stencil_textures",
             "category": "Workarounds",
             "description": [
                 "1x1 and 2x2 mips of depth/stencil textures aren't sampled correctly"
@@ -103,8 +93,7 @@
         },
 
         {
-            "name": "disableB5G6R5Support",
-            "display_name": "disable_b5g6r5_support",
+            "name": "disable_B5G6R5_support",
             "category": "Workarounds",
             "description": [
                 "Textures with the format ",
@@ -113,8 +102,7 @@
         },
 
         {
-            "name": "rewriteUnaryMinusOperator",
-            "display_name": "rewrite_unary_minus_operator",
+            "name": "rewrite_unary_minus_operator",
             "category": "Workarounds",
             "description": [
                 "Evaluating unary minus operator on integer may get wrong answer in vertex shaders"
@@ -122,8 +110,7 @@
         },
 
         {
-            "name": "emulateIsnanFloat",
-            "display_name": "emulate_isnan_float",
+            "name": "emulate_isnan_float",
             "category": "Workarounds",
             "description": [
                 "Using isnan() on highp float will get wrong answer"
@@ -132,8 +119,7 @@
         },
 
         {
-            "name": "callClearTwice",
-            "display_name": "call_clear_twice",
+            "name": "call_clear_twice",
             "category": "Workarounds",
             "description": [
                 "Using clear() may not take effect"
@@ -142,8 +128,7 @@
         },
 
         {
-            "name": "useSystemMemoryForConstantBuffers",
-            "display_name": "use_system_memory_for_constant_buffers",
+            "name": "use_system_memory_for_constant_buffers",
             "category": "Workarounds",
             "description": [
                 "Copying from staging storage to constant buffer ",
@@ -153,8 +138,7 @@
         },
 
         {
-            "name": "selectViewInGeometryShader",
-            "display_name": "select_view_in_geometry_shader",
+            "name": "select_view_in_geometry_shader",
             "category": "Workarounds",
             "description": [
                 "The viewport or render target slice will be selected in the geometry shader stage for ",
@@ -163,8 +147,7 @@
         },
 
         {
-            "name": "addMockTextureNoRenderTarget",
-            "display_name": "add_mock_texture_no_render_target",
+            "name": "add_mock_texture_no_render_target",
             "category": "Workarounds",
             "description": [
                 "On some drivers when rendering with no render target, two bugs lead to incorrect behavior"
@@ -173,8 +156,7 @@
         },
 
         {
-            "name": "skipVSConstantRegisterZero",
-            "display_name": "skip_vs_constant_register_zero",
+            "name": "skip_VS_constant_register_zero",
             "category": "Workarounds",
             "description": [
                 "In specific cases the driver doesn't handle constant register zero correctly"
@@ -182,8 +164,7 @@
         },
 
         {
-            "name": "forceAtomicValueResolution",
-            "display_name": "force_atomic_value_resolution",
+            "name": "force_atomic_value_resolution",
             "category": "Workarounds",
             "description": [
                 "On some drivers the return value from RWByteAddressBuffer.InterlockedAdd does not resolve ",
@@ -193,8 +174,7 @@
         },
 
         {
-            "name": "allowClearForRobustResourceInit",
-            "display_name": "allow_clear_for_robust_resource_init",
+            "name": "allow_clear_for_robust_resource_init",
             "category": "Workarounds",
             "description": [
                 "Some drivers corrupt texture data when clearing for robust resource initialization."
@@ -203,8 +183,7 @@
         },
 
         {
-            "name": "allowTranslateUniformBlockToStructuredBuffer",
-            "display_name": "allow_translate_uniform_block_to_structured_buffer",
+            "name": "allow_translate_uniform_block_to_structured_buffer",
             "category": "Workarounds",
             "description": [
                 "There is a slow fxc compile performance issue with dynamic uniform indexing if ",
@@ -214,8 +193,7 @@
         },
 
         {
-            "name": "allowES3OnFL10_0",
-            "display_name": "allowES3OnFL10_0",
+            "name": "allow_ES3_on_FL10_0",
             "category": "Workarounds",
             "description": [
                 "Allow ES3 on 10.0 devices"

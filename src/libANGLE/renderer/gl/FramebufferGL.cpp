@@ -847,7 +847,7 @@ angle::Result FramebufferGL::blit(const gl::Context *context,
     gl::Rectangle finalSourceArea(sourceArea);
     gl::Rectangle finalDestArea(destArea);
 
-    if (features.adjustSrcDstRegionBlitFramebuffer.enabled)
+    if (features.adjustSrcDstRegionForBlitFramebuffer.enabled)
     {
         angle::Result result = adjustSrcDstRegion(context, finalSourceArea, finalDestArea,
                                                   &finalSourceArea, &finalDestArea);
@@ -856,7 +856,7 @@ angle::Result FramebufferGL::blit(const gl::Context *context,
             return result;
         }
     }
-    if (features.clipSrcRegionBlitFramebuffer.enabled)
+    if (features.clipSrcRegionForBlitFramebuffer.enabled)
     {
         angle::Result result = clipSrcRegion(context, finalSourceArea, finalDestArea,
                                              &finalSourceArea, &finalDestArea);

@@ -1062,7 +1062,7 @@ void DisplayMtl::initializeFeatures()
 
     // http://anglebug.com/4919
     // Stencil blit shader is not compiled on Intel & NVIDIA, need investigation.
-    ANGLE_FEATURE_CONDITION((&mFeatures), hasStencilOutput,
+    ANGLE_FEATURE_CONDITION((&mFeatures), hasShaderStencilOutput,
                             isMetal2_1 && !isIntel() && !isNVIDIA());
 
     ANGLE_FEATURE_CONDITION((&mFeatures), hasTextureSwizzle,
@@ -1085,7 +1085,7 @@ void DisplayMtl::initializeFeatures()
     ANGLE_FEATURE_CONDITION((&mFeatures), hasNonUniformDispatch,
                             isOSX || isCatalyst || supportsAppleGPUFamily(4));
 
-    ANGLE_FEATURE_CONDITION((&mFeatures), allowSeparatedDepthStencilBuffers,
+    ANGLE_FEATURE_CONDITION((&mFeatures), allowSeparateDepthStencilBuffers,
                             !isOSX && !isCatalyst && !isSimulator);
     ANGLE_FEATURE_CONDITION((&mFeatures), rewriteRowMajorMatrices, true);
     ANGLE_FEATURE_CONDITION((&mFeatures), emulateTransformFeedback, true);

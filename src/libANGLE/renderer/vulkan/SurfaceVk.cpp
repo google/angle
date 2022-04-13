@@ -148,7 +148,7 @@ angle::Result InitImageHelper(DisplayVk *displayVk,
 
     angle::FormatID renderableFormatId = vkFormat.getActualRenderableImageFormatID();
     // For devices that don't support creating swapchain images with RGB8, emulate with RGBA8.
-    if (rendererVk->getFeatures().overrideSurfaceFormatRGB8toRGBA8.enabled &&
+    if (rendererVk->getFeatures().overrideSurfaceFormatRGB8ToRGBA8.enabled &&
         renderableFormatId == angle::FormatID::R8G8B8_UNORM)
     {
         renderableFormatId = angle::FormatID::R8G8B8A8_UNORM;
@@ -1013,7 +1013,7 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk)
     VkFormat nativeFormat    = format.getActualRenderableImageVkFormat();
     RendererVk *rendererVk   = displayVk->getRenderer();
     // For devices that don't support creating swapchain images with RGB8, emulate with RGBA8.
-    if (rendererVk->getFeatures().overrideSurfaceFormatRGB8toRGBA8.enabled &&
+    if (rendererVk->getFeatures().overrideSurfaceFormatRGB8ToRGBA8.enabled &&
         nativeFormat == VK_FORMAT_R8G8B8_UNORM)
     {
         nativeFormat = VK_FORMAT_R8G8B8A8_UNORM;
@@ -1261,7 +1261,7 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context,
     angle::FormatID intendedFormatID = format.getIntendedFormatID();
 
     // For devices that don't support creating swapchain images with RGB8, emulate with RGBA8.
-    if (renderer->getFeatures().overrideSurfaceFormatRGB8toRGBA8.enabled &&
+    if (renderer->getFeatures().overrideSurfaceFormatRGB8ToRGBA8.enabled &&
         intendedFormatID == angle::FormatID::R8G8B8_UNORM)
     {
         actualFormatID = angle::FormatID::R8G8B8A8_UNORM;

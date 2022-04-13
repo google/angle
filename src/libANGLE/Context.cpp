@@ -4006,7 +4006,7 @@ void Context::initCaps()
     // If we're capturing application calls for replay, apply some feature limits to increase
     // portability of the trace.
     if (getShareGroup()->getFrameCaptureShared()->enabled() ||
-        getFrontendFeatures().captureLimits.enabled)
+        getFrontendFeatures().enableCaptureLimits.enabled)
     {
         INFO() << "Limit some features because "
                << (getShareGroup()->getFrameCaptureShared()->enabled()

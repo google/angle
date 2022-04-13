@@ -97,7 +97,7 @@ SurfaceMtl::SurfaceMtl(DisplayMtl *display,
 
     if (depthBits && stencilBits)
     {
-        if (display->getFeatures().allowSeparatedDepthStencilBuffers.enabled)
+        if (display->getFeatures().allowSeparateDepthStencilBuffers.enabled)
         {
             mDepthFormat   = display->getPixelFormat(kDefaultFrameBufferDepthFormatId);
             mStencilFormat = display->getPixelFormat(kDefaultFrameBufferStencilFormatId);

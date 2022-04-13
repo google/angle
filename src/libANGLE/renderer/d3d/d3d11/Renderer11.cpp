@@ -1085,7 +1085,7 @@ void Renderer11::populateRenderer11DeviceCaps()
                                  &mRenderer11DeviceCaps.B5G6R5maxSamples);
     }
 
-    if (getFeatures().allowES3OnFL10_0.enabled)
+    if (getFeatures().allowES3OnFL100.enabled)
     {
         mRenderer11DeviceCaps.allowES3OnFL10_0 = true;
     }

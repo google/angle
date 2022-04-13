@@ -8,8 +8,7 @@
     ],
     "features": [
         {
-            "name": "avoid1BitAlphaTextureFormats",
-            "display_name": "avoid_1_bit_alpha_texture_formats",
+            "name": "avoid_1_bit_alpha_texture_formats",
             "category": "Workarounds",
             "description": [
                 "Issue with 1-bit alpha framebuffer formats"
@@ -17,8 +16,7 @@
         },
 
         {
-            "name": "rgba4IsNotSupportedForColorRendering",
-            "display_name": "rgba4_is_not_supported_for_color_rendering",
+            "name": "RGBA4_is_not_supported_for_color_rendering",
             "category": "Workarounds",
             "description": [
                 "GL_RGBA4 is not color renderable"
@@ -26,8 +24,7 @@
         },
 
         {
-            "name": "allowEtcFormats",
-            "display_name": "allow_etc_formats",
+            "name": "allow_ETC_formats",
             "category": "Workarounds",
             "description": [
                 "Enable ETC2/EAC on desktop OpenGL"
@@ -35,8 +32,7 @@
         },
 
         {
-            "name": "doesSRGBClearsOnLinearFramebufferAttachments",
-            "display_name": "does_srgb_clears_on_linear_framebuffer_attachments",
+            "name": "does_SRGB_clears_on_linear_framebuffer_attachments",
             "category": "Workarounds",
             "description": [
                 "Issue clearing framebuffers with linear attachments when GL_FRAMEBUFFER_SRGB is enabled"
@@ -44,8 +40,7 @@
         },
 
         {
-            "name": "doWhileGLSLCausesGPUHang",
-            "display_name": "do_while_glsl_causes_gpu_hang",
+            "name": "do_while_GLSL_causes_GPU_hang",
             "category": "Workarounds",
             "description": [
                 "Some GLSL constructs involving do-while loops cause GPU hangs"
@@ -54,8 +49,7 @@
         },
 
         {
-            "name": "addBaseVertexToVertexID",
-            "display_name": "vertex_id_does_not_include_base_vertex",
+            "name": "vertex_ID_does_not_include_base_vertex",
             "category": "Workarounds",
             "description": [
                 "gl_VertexID in GLSL vertex shader doesn't include base vertex value"
@@ -63,8 +57,7 @@
         },
 
         {
-            "name": "finishDoesNotCauseQueriesToBeAvailable",
-            "display_name": "finish_does_not_cause_queries_to_be_available",
+            "name": "finish_does_not_cause_queries_to_be_available",
             "category": "Workarounds",
             "description": [
                 "glFinish doesn't cause all queries to report available result"
@@ -72,8 +65,7 @@
         },
 
         {
-            "name": "alwaysCallUseProgramAfterLink",
-            "display_name": "always_call_use_program_after_link",
+            "name": "always_call_use_program_after_link",
             "category": "Workarounds",
             "description": [
                 "Always call useProgram after a successful link to avoid a driver bug"
@@ -82,8 +74,7 @@
         },
 
         {
-            "name": "unpackOverlappingRowsSeparatelyUnpackBuffer",
-            "display_name": "unpack_overlapping_rows_separately_unpack_buffer",
+            "name": "unpack_overlapping_rows_separately_unpack_buffer",
             "category": "Workarounds",
             "description": [
                 "In the case of unpacking from a pixel unpack buffer, unpack overlapping rows row by row"
@@ -91,8 +82,7 @@
         },
 
         {
-            "name": "packOverlappingRowsSeparatelyPackBuffer",
-            "display_name": "pack_overlapping_rows_separately_pack_buffer",
+            "name": "pack_overlapping_rows_separately_pack_buffer",
             "category": "Workarounds",
             "description": [
                 "In the case of packing to a pixel pack buffer, pack overlapping rows row by row"
@@ -100,8 +90,7 @@
         },
 
         {
-            "name": "initializeCurrentVertexAttributes",
-            "display_name": "initialize_current_vertex_attributes",
+            "name": "initialize_current_vertex_attributes",
             "category": "Workarounds",
             "description": [
                 "During initialization, assign the current vertex attributes to the spec-mandated defaults"
@@ -109,8 +98,7 @@
         },
 
         {
-            "name": "emulateAbsIntFunction",
-            "display_name": "emulate_abs_int_function",
+            "name": "emulate_abs_int_function",
             "category": "Workarounds",
             "description": [
                 "abs(i) where i is an integer returns unexpected result"
@@ -119,8 +107,7 @@
         },
 
         {
-            "name": "addAndTrueToLoopCondition",
-            "display_name": "add_and_true_to_loop_condition",
+            "name": "add_and_true_to_loop_condition",
             "category": "Workarounds",
             "description": [
                 "Calculation of loop conditions in for and while loop has bug"
@@ -128,8 +115,7 @@
         },
 
         {
-            "name": "unpackLastRowSeparatelyForPaddingInclusion",
-            "display_name": "unpack_last_row_separately_for_padding_inclusion",
+            "name": "unpack_last_row_separately_for_padding_inclusion",
             "category": "Workarounds",
             "description": [
                 "When uploading textures from an unpack buffer, some drivers count an extra row padding"
@@ -138,8 +124,7 @@
         },
 
         {
-            "name": "packLastRowSeparatelyForPaddingInclusion",
-            "display_name": "pack_last_row_separately_for_padding_inclusion",
+            "name": "pack_last_row_separately_for_padding_inclusion",
             "category": "Workarounds",
             "description": [
                 "When uploading textures from an pack buffer, some drivers count an extra row padding"
@@ -148,8 +133,7 @@
         },
 
         {
-            "name": "emulateIsnanFloat",
-            "display_name": "emulate_isnan_float",
+            "name": "emulate_isnan_float",
             "category": "Workarounds",
             "description": [
                 "Using isnan() on highp float will get wrong answer"
@@ -158,8 +142,7 @@
         },
 
         {
-            "name": "useUnusedBlocksWithStandardOrSharedLayout",
-            "display_name": "use_unused_blocks_with_standard_or_shared_layout",
+            "name": "use_unused_blocks_with_standard_or_shared_layout",
             "category": "Workarounds",
             "description": [
                 "Unused std140 or shared uniform blocks will be treated as inactive"
@@ -167,8 +150,7 @@
         },
 
         {
-            "name": "removeInvariantAndCentroidForESSL3",
-            "display_name": "remove_invarient_and_centroid_for_essl3",
+            "name": "remove_invariant_and_centroid_for_ESSL3",
             "category": "Workarounds",
             "description": [
                 "Fix spec difference between GLSL 4.1 or lower and ESSL3"
@@ -176,8 +158,7 @@
         },
 
         {
-            "name": "rewriteFloatUnaryMinusOperator",
-            "display_name": "rewrite_float_unary_minus_operator",
+            "name": "rewrite_float_unary_minus_operator",
             "category": "Workarounds",
             "description": [
                 "Using '-<float>' will get wrong answer"
@@ -186,8 +167,7 @@
         },
 
         {
-            "name": "emulateAtan2Float",
-            "display_name": "emulate_atan_2_float",
+            "name": "emulate_atan_2_float",
             "category": "Workarounds",
             "description": [
                 "atan(y, x) may return a wrong answer"
@@ -196,8 +176,7 @@
         },
 
         {
-            "name": "reapplyUBOBindingsAfterUsingBinaryProgram",
-            "display_name": "reapply_ubo_bindings_after_using_binary_program",
+            "name": "reapply_UBO_bindings_after_using_binary_program",
             "category": "Workarounds",
             "description": [
                 "Some drivers forget about UBO bindings when using program binaries"
@@ -206,8 +185,7 @@
         },
 
         {
-            "name": "emulateMaxVertexAttribStride",
-            "display_name": "emulate_max_vertex_attrib_stride",
+            "name": "emulate_max_vertex_attrib_stride",
             "category": "Workarounds",
             "description": [
                 "Some drivers return 0 when MAX_VERTEX_ATTRIB_STRIED queried"
@@ -216,8 +194,7 @@
         },
 
         {
-            "name": "dontInitializeUninitializedLocals",
-            "display_name": "dont_initialize_uninitialized_locals",
+            "name": "dont_initialize_uninitialized_locals",
             "category": "Workarounds",
             "description": [
                 "Initializing uninitialized locals caused odd behavior in a few WebGL 2 tests"
@@ -226,8 +203,7 @@
         },
 
         {
-            "name": "clampPointSize",
-            "display_name": "clamp_point_size",
+            "name": "clamp_point_size",
             "category": "Workarounds",
             "description": [
                 "The point size range reported from the API is inconsistent with the actual behavior"
@@ -235,8 +211,7 @@
         },
 
         {
-            "name": "dontUseLoopsToInitializeVariables",
-            "display_name": "dont_use_loops_to_initialize_variables",
+            "name": "dont_use_loops_to_initialize_variables",
             "category": "Workarounds",
             "description": [
                 "For loops used to initialize variables hit native GLSL compiler bugs"
@@ -245,8 +220,7 @@
         },
 
         {
-            "name": "clampFragDepth",
-            "display_name": "clamp_frag_depth",
+            "name": "clamp_frag_depth",
             "category": "Workarounds",
             "description": [
                 "gl_FragDepth is not clamped correctly when rendering to a floating point depth buffer"
@@ -254,8 +228,7 @@
         },
 
         {
-            "name": "rewriteRepeatedAssignToSwizzled",
-            "display_name": "rewrite_repeated_assign_to_swizzled",
+            "name": "rewrite_repeated_assign_to_swizzled",
             "category": "Workarounds",
             "description": [
                 "Repeated assignment to swizzled values inside a ",
@@ -264,8 +237,7 @@
         },
 
         {
-            "name": "disableBlendFuncExtended",
-            "display_name": "disable_blend_func_extended",
+            "name": "disable_blend_func_extended",
             "category": "Workarounds",
             "description": [
                 "ARB_blend_func_extended does not pass the tests"
@@ -274,8 +246,7 @@
         },
 
         {
-            "name": "unsizedsRGBReadPixelsDoesntTransform",
-            "display_name": "unsized_srgb_read_pixels_doesnt_transform",
+            "name": "unsized_SRGB_read_pixels_doesnt_transform",
             "category": "Workarounds",
             "description": [
                 "Drivers returning raw sRGB values instead of linearized values when calling glReadPixels ",
@@ -285,8 +256,7 @@
         },
 
         {
-            "name": "queryCounterBitsGeneratesErrors",
-            "display_name": "query_counter_bits_generates_errors",
+            "name": "query_counter_bits_generates_errors",
             "category": "Workarounds",
             "description": [
                 "Drivers generate errors when querying the number of bits in timer queries"
@@ -295,8 +265,7 @@
         },
 
         {
-            "name": "dontRelinkProgramsInParallel",
-            "display_name": "dont_relink_programs_in_parallel",
+            "name": "dont_relink_programs_in_parallel",
             "category": "Workarounds",
             "description": [
                 "Relinking a program in parallel is buggy"
@@ -305,8 +274,7 @@
         },
 
         {
-            "name": "disableWorkerContexts",
-            "display_name": "disable_worker_contexts",
+            "name": "disable_worker_contexts",
             "category": "Workarounds",
             "description": [
                 "Some tests have been seen to fail using worker contexts"
@@ -315,8 +283,7 @@
         },
 
         {
-            "name": "limitMaxTextureSizeTo4096",
-            "display_name": "max_texture_size_limit_4096",
+            "name": "limit_max_texture_size_to_4096",
             "category": "Workarounds",
             "description": [
                 "Limit max texture size to 4096 to avoid frequent ",
@@ -326,8 +293,7 @@
         },
 
         {
-            "name": "limitMaxMSAASamplesTo4",
-            "display_name": "max_msaa_sample_count_4",
+            "name": "limit_max_MSAA_samples_to_4",
             "category": "Workarounds",
             "description": [
                 "Various rendering bugs have been observed when using higher MSAA counts"
@@ -336,8 +302,7 @@
         },
 
         {
-            "name": "allowClearForRobustResourceInit",
-            "display_name": "allow_clear_for_robust_resource_init",
+            "name": "allow_clear_for_robust_resource_init",
             "category": "Workarounds",
             "description": [
                 "Using glClear for robust resource initialization is buggy on some drivers and leads to ",
@@ -347,8 +312,7 @@
         },
 
         {
-            "name": "clampArrayAccess",
-            "display_name": "clamp_array_access",
+            "name": "clamp_array_access",
             "category": "Workarounds",
             "description": [
                 "Clamp uniform array access to avoid reading invalid memory."
@@ -357,8 +321,7 @@
         },
 
         {
-            "name": "resetTexImage2DBaseLevel",
-            "display_name": "reset_teximage2d_base_level",
+            "name": "reset_TexImage2D_base_level",
             "category": "Workarounds",
             "description": [
                 "Reset texture base level before calling glTexImage2D to ",
@@ -368,8 +331,7 @@
         },
 
         {
-            "name": "clearToZeroOrOneBroken",
-            "display_name": "clear_to_zero_or_one_broken",
+            "name": "clear_to_zero_or_one_broken",
             "category": "Workarounds",
             "description": [
                 "Clears when the clear color is all zeros or ones do not work."
@@ -378,8 +340,7 @@
         },
 
         {
-            "name": "limitMax3dArrayTextureSizeTo1024",
-            "display_name": "max_3d_array_texture_size_1024",
+            "name": "limit_max_3d_array_texture_size_to_1024",
             "category": "Workarounds",
             "description": [
                 "Limit max 3d texture size and max array texture layers to 1024 to avoid system hang"
@@ -388,8 +349,7 @@
         },
 
         {
-            "name": "adjustSrcDstRegionBlitFramebuffer",
-            "display_name": "adjust_src_dst_region_for_blitframebuffer",
+            "name": "adjust_src_dst_region_for_BlitFramebuffer",
             "category": "Workarounds",
             "description": [
                 "Many platforms have issues with blitFramebuffer when the parameters are large."
@@ -398,8 +358,7 @@
         },
 
         {
-            "name": "clipSrcRegionBlitFramebuffer",
-            "display_name": "clip_src_region_for_blitframebuffer",
+            "name": "clip_src_region_for_BlitFramebuffer",
             "category": "Workarounds",
             "description": [
                 "Issues with blitFramebuffer when the parameters don't match the framebuffer size."
@@ -408,8 +367,7 @@
         },
 
         {
-            "name": "rgbDXT1TexturesSampleZeroAlpha",
-            "display_name": "rgb_dxt1_textures_sample_zero_alpha",
+            "name": "RGB_DXT1_textures_sample_zero_alpha",
             "category": "Workarounds",
             "description": [
                 "Sampling BLACK texels from RGB DXT1 textures returns transparent black on Mac."
@@ -418,8 +376,7 @@
         },
 
         {
-            "name": "unfoldShortCircuits",
-            "display_name": "unfold_short_circuits",
+            "name": "unfold_short_circuits",
             "category": "Workarounds",
             "description": [
                 "Mac incorrectly executes both sides of && and || expressions when they should ",
@@ -429,8 +386,7 @@
         },
 
         {
-            "name": "emulatePrimitiveRestartFixedIndex",
-            "display_name": "emulate_primitive_restart_fixed_index",
+            "name": "emulate_primitive_restart_fixed_index",
             "category": "Workarounds",
             "description": [
                 "When GL_PRIMITIVE_RESTART_FIXED_INDEX is not available, emulate it with ",
@@ -440,8 +396,7 @@
         },
 
         {
-            "name": "setPrimitiveRestartFixedIndexForDrawArrays",
-            "display_name": "set_primitive_restart_fixed_index_for_draw_arrays",
+            "name": "set_primitive_restart_fixed_index_for_draw_arrays",
             "category": "Workarounds",
             "description": [
                 "Some drivers discard vertex data in DrawArrays calls when the fixed primitive restart ",
@@ -451,8 +406,7 @@
         },
 
         {
-            "name": "removeDynamicIndexingOfSwizzledVector",
-            "display_name": "remove_dynamic_indexing_of_swizzled_vector",
+            "name": "remove_dynamic_indexing_of_swizzled_vector",
             "category": "Workarounds",
             "description": [
                 "Dynamic indexing of swizzled l-values doesn't work correctly on various platforms."
@@ -461,8 +415,7 @@
         },
 
         {
-            "name": "preAddTexelFetchOffsets",
-            "display_name": "pre_add_texel_fetch_offsets",
+            "name": "pre_add_texel_fetch_offsets",
             "category": "Workarounds",
             "description": [
                 "Intel Mac drivers mistakenly consider the parameter position of nagative vaule as invalid ",
@@ -474,8 +427,7 @@
         },
 
         {
-            "name": "regenerateStructNames",
-            "display_name": "regenerate_struct_names",
+            "name": "regenerate_struct_names",
             "category": "Workarounds",
             "description": [
                 "All Mac drivers do not handle struct scopes correctly. This workaround overwrites a struct",
@@ -485,8 +437,7 @@
         },
 
         {
-            "name": "readPixelsUsingImplementationColorReadFormatForNorm16",
-            "display_name": "read_pixels_using_implementation_color_read_format",
+            "name": "read_pixels_using_implementation_color_read_format_for_norm16",
             "category": "Workarounds",
             "description": [
                 "Quite some OpenGL ES drivers don't implement readPixels for RGBA/UNSIGNED_SHORT from ",
@@ -496,8 +447,7 @@
         },
 
         {
-            "name": "flushBeforeDeleteTextureIfCopiedTo",
-            "display_name": "flush_before_delete_texture_if_copied_to",
+            "name": "flush_before_delete_texture_if_copied_to",
             "category": "Workarounds",
             "description": [
                 "Some drivers track CopyTex{Sub}Image texture dependencies incorrectly. Flush",
@@ -507,8 +457,7 @@
         },
 
         {
-            "name": "rewriteRowMajorMatrices",
-            "display_name": "rewrite_row_major_matrices",
+            "name": "rewrite_row_major_matrices",
             "category": "Workarounds",
             "description": [
                 "Rewrite row major matrices in shaders as column major as a driver bug workaround"
@@ -517,8 +466,7 @@
         },
 
         {
-            "name": "disableDrawBuffersIndexed",
-            "display_name": "disable_draw_buffers_indexed",
+            "name": "disable_draw_buffers_indexed",
             "category": "Workarounds",
             "description": [
                 "Disable OES_draw_buffers_indexed extension."
@@ -526,8 +474,7 @@
         },
 
         {
-            "name": "disableSemaphoreFd",
-            "display_name": "disable_semaphore_fd",
+            "name": "disable_semaphore_fd",
             "category": "Workarounds",
             "description": [
                 "Disable GL_EXT_semaphore_fd extension"
@@ -536,8 +483,7 @@
         },
 
         {
-            "name": "disableTimestampQueries",
-            "display_name": "disable_timestamp_queries",
+            "name": "disable_timestamp_queries",
             "category": "Workarounds",
             "description": [
                 "Disable GL_EXT_disjoint_timer_query extension"
@@ -546,8 +492,7 @@
         },
 
         {
-            "name": "encodeAndDecodeSRGBForGenerateMipmap",
-            "display_name": "decode_encode_srgb_for_generatemipmap",
+            "name": "decode_encode_SRGB_for_GenerateMipmap",
             "category": "Workarounds",
             "description": [
                 "Decode and encode before generateMipmap for srgb format textures."
@@ -556,8 +501,7 @@
         },
 
         {
-            "name": "emulateCopyTexImage2DFromRenderbuffers",
-            "display_name": "emulate_copyteximage2d_from_renderbuffers",
+            "name": "emulate_CopyTexImage2D_from_renderbuffers",
             "category": "Workarounds",
             "description": [
                 "CopyTexImage2D spuriously returns errors on iOS when copying from renderbuffers."
@@ -566,8 +510,7 @@
         },
 
         {
-            "name": "disableGPUSwitchingSupport",
-            "display_name": "disable_gpu_switching_support",
+            "name": "disable_GPU_switching_support",
             "category": "Workarounds",
             "description": [
                 "Disable GPU switching support (use only the low-power GPU) on older MacBook Pros."
@@ -576,8 +519,7 @@
         },
 
         {
-            "name": "disableNativeParallelCompile",
-            "display_name": "disable_native_parallel_compile",
+            "name": "disable_native_parallel_compile",
             "category": "Workarounds",
             "description": [
                 "Do not use native KHR_parallel_shader_compile even when available."
@@ -586,8 +528,7 @@
         },
 
         {
-            "name": "emulatePackSkipRowsAndPackSkipPixels",
-            "display_name": "emulate_pack_skip_rows_and_pack_skip_pixels",
+            "name": "emulate_pack_skip_rows_and_pack_skip_pixels",
             "category": "Workarounds",
             "description": [
                 "GL_PACK_SKIP_ROWS and GL_PACK_SKIP_PIXELS are ignored in Apple's OpenGL driver."
@@ -596,8 +537,7 @@
         },
 
         {
-            "name": "clampMscRate",
-            "display_name": "clamp_msc_rate",
+            "name": "clamp_msc_rate",
             "category": "Workarounds",
             "description": [
                 "Some drivers return bogus values for GetMscRate, so we clamp it to 30Hz"
@@ -606,8 +546,7 @@
         },
 
         {
-            "name": "bindTransformFeedbackBufferBeforeBindBufferRange",
-            "display_name": "bind_transform_feedback_buffer_before_bind_buffer_range",
+            "name": "bind_transform_feedback_buffer_before_bind_buffer_range",
             "category": "Workarounds",
             "description": [
                 "Bind transform feedback buffers to the generic binding point before calling ",
@@ -617,8 +556,7 @@
         },
 
         {
-            "name": "disableSyncControlSupport",
-            "display_name": "disable_sync_control_support",
+            "name": "disable_sync_control_support",
             "category": "Workarounds",
             "description": [
                 "Speculative fix for issues on Linux/Wayland where exposing GLX_OML_sync_control renders ",
@@ -628,8 +566,7 @@
         },
 
         {
-            "name": "keepBufferShadowCopy",
-            "display_name": "keep_buffer_shadow_copy",
+            "name": "keep_buffer_shadow_copy",
             "category": "Workarounds",
             "description": [
                 "Maintain a shadow copy of buffer data when the GL API does not permit reading data back."
@@ -637,8 +574,7 @@
         },
 
         {
-            "name": "setZeroLevelBeforeGenerateMipmap",
-            "display_name": "set_zero_level_before_generating_mipmap",
+            "name": "set_zero_level_before_GenerateMipmap",
             "category": "Workarounds",
             "description": [
                 "glGenerateMipmap fails if the zero texture level is not set on some Mac drivers."
@@ -646,8 +582,7 @@
         },
 
         {
-            "name": "promotePackedFormatsTo8BitPerChannel",
-            "display_name": "promote_packed_formats_to_8_bit_per_channel",
+            "name": "promote_packed_formats_to_8_bit_per_channel",
             "category": "Workarounds",
             "description": [
                 "Packed color formats are buggy on Macs with AMD GPUs"
@@ -656,8 +591,7 @@
         },
 
         {
-            "name": "initFragmentOutputVariables",
-            "display_name": "init_fragment_output_variables",
+            "name": "init_fragment_output_variables",
             "category": "Workarounds",
             "description": [
                 "No init gl_FragColor causes context lost"
@@ -666,8 +600,7 @@
         },
 
         {
-            "name": "shiftInstancedArrayDataWithExtraOffset",
-            "display_name": "shift_instanced_array_data_with_offset",
+            "name": "shift_instanced_array_data_with_offset",
             "category": "Workarounds",
             "description": [
                 "glDrawArraysInstanced is buggy on certain new Mac Intel GPUs"
@@ -676,8 +609,7 @@
         },
 
         {
-            "name": "syncVertexArraysToDefault",
-            "display_name": "sync_vertex_arrays_to_default",
+            "name": "sync_vertex_arrays_to_default",
             "category": "Workarounds",
             "description": [
                 "Only use the default VAO because of missing support or driver bugs"
@@ -686,8 +618,7 @@
         },
 
         {
-            "name": "sanitizeAmdGpuRendererString",
-            "display_name": "sanitize_amdgpu_renderer_string",
+            "name": "sanitize_AMDGPU_renderer_string",
             "category": "Workarounds",
             "description": [
                 "Strip precise kernel and DRM version information from amdgpu renderer strings."
@@ -696,8 +627,7 @@
         },
 
         {
-            "name": "unbindFBOOnContextSwitch",
-            "display_name": "unbind_fbo_before_switching_context",
+            "name": "unbind_FBO_before_switching_context",
             "category": "Workarounds",
             "description": [
                 "Imagination GL drivers are buggy with context switching."
@@ -706,8 +636,7 @@
         },
 
         {
-            "name": "flushOnFramebufferChange",
-            "display_name": "flush_on_framebuffer_change",
+            "name": "flush_on_framebuffer_change",
             "category": "Workarounds",
             "description": [
                 "Switching framebuffers without a flush can lead to ",
@@ -717,8 +646,7 @@
         },
 
         {
-            "name": "disableMultisampledRenderToTexture",
-            "display_name": "disable_mutlisampled_render_to_texture",
+            "name": "disable_multisampled_render_to_texture",
             "category": "Workarounds",
             "description": [
                 "Many drivers have bugs when using GL_EXT_multisampled_render_to_texture"
@@ -727,8 +655,7 @@
         },
 
         {
-            "name": "uploadTextureDataInChunks",
-            "display_name": "chunked_texture_upload",
+            "name": "upload_texture_data_in_chunks",
             "category": "Workarounds",
             "description": [
                 "Upload texture data in <120kb chunks to work around Mac driver hangs and crashes."
@@ -737,8 +664,7 @@
         },
 
         {
-            "name": "emulateImmutableCompressedTexture3D",
-            "display_name": "emulate_immutable_compressed_texture_3d",
+            "name": "emulate_immutable_compressed_texture_3D",
             "category": "Workarounds",
             "description": [
                 "Use non-immutable texture allocation to work around a driver bug."
@@ -747,8 +673,7 @@
         },
 
         {
-            "name": "emulateRGB10",
-            "display_name": "emulate_rgb10",
+            "name": "emulate_RGB10",
             "category": "Workarounds",
             "description": [
                 "Emulate RGB10 support using RGB10_A2."
@@ -757,8 +682,7 @@
         },
 
         {
-            "name": "alwaysUnbindFramebufferTexture2D",
-            "display_name": "always_unbind_framebuffer_texture_2d",
+            "name": "always_unbind_framebuffer_texture_2D",
             "category": "Workarounds",
             "description": [
                 "Force unbind framebufferTexture2D before binding renderbuffer to work around driver bug."

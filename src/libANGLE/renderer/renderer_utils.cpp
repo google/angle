@@ -24,6 +24,75 @@
 #include "platform/Feature.h"
 
 #include <string.h>
+#include <cctype>
+
+namespace angle
+{
+namespace
+{
+// For the sake of feature name matching, underscore is ignored, and the names are matched
+// case-insensitive.  This allows feature names to be overriden both in snake_case (previously used
+// by ANGLE) and camelCase.
+bool FeatureNameMatch(const std::string &a, const std::string &b)
+{
+    size_t ai = 0;
+    size_t bi = 0;
+
+    while (ai < a.size() && bi < b.size())
+    {
+        if (a[ai] == '_')
+        {
+            ++ai;
+        }
+        if (b[bi] == '_')
+        {
+            ++bi;
+        }
+        if (std::tolower(a[ai++]) != std::tolower(b[bi++]))
+        {
+            return false;
+        }
+    }
+
+    return ai == a.size() && bi == b.size();
+}
+
+// Search for a feature by name, matching it loosely so that both snake_case and camelCase names are
+// matched.
+FeatureInfo *FindFeatureByName(FeatureMap *features, const std::string &name)
+{
+    for (auto iter : *features)
+    {
+        if (FeatureNameMatch(iter.first, name))
+        {
+            return iter.second;
+        }
+    }
+    return nullptr;
+}
+}  // anonymous namespace
+
+// FeatureSetBase implementation
+void FeatureSetBase::overrideFeatures(const std::vector<std::string> &featureNames, bool enabled)
+{
+    for (const std::string &name : featureNames)
+    {
+        FeatureInfo *feature = FindFeatureByName(&members, name);
+        if (feature != nullptr)
+        {
+            feature->enabled = enabled;
+        }
+    }
+}
+
+void FeatureSetBase::populateFeatureList(FeatureList *features) const
+{
+    for (FeatureMap::const_iterator it = members.begin(); it != members.end(); it++)
+    {
+        features->push_back(it->second);
+    }
+}
+}  // namespace angle
 
 namespace rx
 {
@@ -225,7 +294,6 @@ void SetFloatUniformMatrixFast(unsigned int arrayElementOffset,
 
     memcpy(targetData, valueData, matrixSize * count);
 }
-
 }  // anonymous namespace
 
 void RotateRectangle(const SurfaceRotation rotation,
@@ -1012,6 +1080,7 @@ void ApplyFeatureOverrides(angle::FeatureSetBase *features, const egl::DisplaySt
     std::vector<std::string> overridesDisabled =
         angle::GetCachedStringsFromEnvironmentVarOrAndroidProperty(
             kAngleFeatureOverridesDisabledEnvName, kAngleFeatureOverridesDisabledPropertyName, ":");
+
     features->overrideFeatures(overridesEnabled, true);
     LogFeatureStatus(*features, overridesEnabled, true);
 
