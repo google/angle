@@ -41,12 +41,6 @@ class ShareGroupVk : public ShareGroupImpl
     {
         mResourceUseLists.emplace_back(std::move(resourceUseList));
     }
-    void copyResourceUseList(vk::ResourceUseList &resourceUseList)
-    {
-        vk::ResourceUseList copyResourceUseList;
-        copyResourceUseList.copy(resourceUseList);
-        mResourceUseLists.emplace_back(std::move(copyResourceUseList));
-    }
 
     vk::BufferPool *getDefaultBufferPool(RendererVk *renderer,
                                          VkDeviceSize size,
