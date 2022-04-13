@@ -64,4 +64,16 @@ angle::Result WindowSurfaceVkWayland::getCurrentWindowSize(vk::Context *context,
     return angle::Result::Continue;
 }
 
+egl::Error WindowSurfaceVkWayland::getUserWidth(const egl::Display *display, EGLint *value) const
+{
+    *value = getWidth();
+    return egl::NoError();
+}
+
+egl::Error WindowSurfaceVkWayland::getUserHeight(const egl::Display *display, EGLint *value) const
+{
+    *value = getHeight();
+    return egl::NoError();
+}
+
 }  // namespace rx
