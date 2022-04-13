@@ -563,7 +563,7 @@ const char *ValidateProgramDrawAdvancedBlendState(const Context *context, Progra
     const State &state = context->getState();
     const BlendEquationBitSet &supportedBlendEquations =
         program->getExecutable().getAdvancedBlendEquations();
-    const DrawBufferMask &enabledDrawBufferMask = state.getBlendStateExt().mEnabledMask;
+    const DrawBufferMask &enabledDrawBufferMask = state.getBlendStateExt().getEnabledMask();
 
     for (size_t blendEnabledBufferIndex : enabledDrawBufferMask)
     {
@@ -4135,17 +4135,17 @@ const char *ValidateDrawStates(const Context *context)
 
     // Advanced blend equation can only be enabled for a single render target.
     const BlendStateExt &blendStateExt = state.getBlendStateExt();
-    if (blendStateExt.mUsesAdvancedBlendEquationMask.any())
+    if (blendStateExt.getUsesAdvancedBlendEquationMask().any())
     {
         const size_t drawBufferCount            = framebuffer->getDrawbufferStateCount();
         uint32_t advancedBlendRenderTargetCount = 0;
 
-        for (size_t drawBufferIndex : blendStateExt.mUsesAdvancedBlendEquationMask)
+        for (size_t drawBufferIndex : blendStateExt.getUsesAdvancedBlendEquationMask())
         {
             if (drawBufferIndex < drawBufferCount &&
                 framebuffer->getDrawBufferState(drawBufferIndex) != GL_NONE &&
-                blendStateExt.mEnabledMask.test(drawBufferIndex) &&
-                blendStateExt.mUsesAdvancedBlendEquationMask.test(drawBufferIndex))
+                blendStateExt.getEnabledMask().test(drawBufferIndex) &&
+                blendStateExt.getUsesAdvancedBlendEquationMask().test(drawBufferIndex))
             {
                 ++advancedBlendRenderTargetCount;
             }

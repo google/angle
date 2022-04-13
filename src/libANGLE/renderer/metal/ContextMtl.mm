@@ -1910,7 +1910,7 @@ void ContextMtl::updateBlendDescArray(const gl::BlendStateExt &blendStateExt)
     for (size_t i = 0; i < mBlendDescArray.size(); i++)
     {
         mtl::BlendDesc &blendDesc = mBlendDescArray[i];
-        if (blendStateExt.mEnabledMask.test(i))
+        if (blendStateExt.getEnabledMask().test(i))
         {
             blendDesc.blendingEnabled = true;
 

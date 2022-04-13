@@ -301,7 +301,7 @@ vk::ResourceAccess GetColorAccess(const gl::State &state,
 
     const gl::BlendStateExt &blendStateExt = state.getBlendStateExt();
     uint8_t colorMask                      = gl::BlendStateExt::ColorMaskStorage::GetValueIndexed(
-        colorIndexGL, blendStateExt.mColorMask);
+        colorIndexGL, blendStateExt.getColorMaskBits());
     if (emulatedAlphaMask[colorIndexGL])
     {
         colorMask &= ~VK_COLOR_COMPONENT_A_BIT;
@@ -3841,7 +3841,7 @@ void ContextVk::updateColorMasks()
 {
     const gl::BlendStateExt &blendStateExt = mState.getBlendStateExt();
 
-    mClearColorMasks = blendStateExt.mColorMask;
+    mClearColorMasks = blendStateExt.getColorMaskBits();
 
     FramebufferVk *framebufferVk = vk::GetImpl(mState.getDrawFramebuffer());
     mGraphicsPipelineDesc->updateColorWriteMasks(&mGraphicsPipelineTransition, mClearColorMasks,
@@ -4262,8 +4262,8 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 updateDepthRange(glState.getNearPlane(), glState.getFarPlane());
                 break;
             case gl::State::DIRTY_BIT_BLEND_ENABLED:
-                mGraphicsPipelineDesc->updateBlendEnabled(&mGraphicsPipelineTransition,
-                                                          glState.getBlendStateExt().mEnabledMask);
+                mGraphicsPipelineDesc->updateBlendEnabled(
+                    &mGraphicsPipelineTransition, glState.getBlendStateExt().getEnabledMask());
                 updateDither();
                 break;
             case gl::State::DIRTY_BIT_BLEND_COLOR:
@@ -5668,7 +5668,7 @@ angle::Result ContextVk::handleDirtyGraphicsDriverUniforms(DirtyBits::Iterator *
         // Pass the advanced blend equation to shader as-is.  If the equation is not one of the
         // advanced ones, 0 is expected.
         const gl::BlendStateExt &blendStateExt = mState.getBlendStateExt();
-        if (blendStateExt.mUsesAdvancedBlendEquationMask.test(0))
+        if (blendStateExt.getUsesAdvancedBlendEquationMask().test(0))
         {
             advancedBlendEquation = static_cast<uint32_t>(gl::FromGLenum<gl::BlendEquationType>(
                 getState().getBlendStateExt().getEquationColorIndexed(0)));
