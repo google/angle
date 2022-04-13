@@ -243,9 +243,6 @@ if (is_win || is_linux || is_chromeos || is_android || is_fuchsia || is_apple) {
     if (angle_use_x11) {
       sources += [ "egl_tests/EGLX11VisualTest.cpp" ]
     }
-    if (angle_use_wayland) {
-      sources += [ "egl_tests/EGLWaylandTest.cpp" ]
-    }
 
     configs += [ "${angle_root}:libANGLE_config" ]
 
