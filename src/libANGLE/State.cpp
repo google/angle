@@ -799,7 +799,7 @@ bool State::anyActiveDrawBufferChannelMasked() const
 {
     // Compare current color mask with all-enabled color mask, while ignoring disabled draw
     // buffers.
-    return (mBlendStateExt.compareColorMask(mBlendStateExt.mMaxColorMask) &
+    return (mBlendStateExt.compareColorMask(mBlendStateExt.mAllColorMask) &
             mDrawFramebuffer->getDrawBufferMask())
         .any();
 }

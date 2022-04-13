@@ -49,7 +49,7 @@ TEST(BlendStateExt, Init)
         const gl::BlendStateExt blendStateExt = gl::BlendStateExt(1);
         ASSERT_EQ(blendStateExt.mMaxDrawBuffers, 1u);
         ASSERT_EQ(blendStateExt.mMaxEnabledMask.to_ulong(), 1u);
-        ASSERT_EQ(blendStateExt.mMaxColorMask, is64Bit ? 0xFFu : 0xFu);
+        ASSERT_EQ(blendStateExt.mAllColorMask, 0xFu);
         ASSERT_EQ(blendStateExt.mMaxEquationMask, 0xFFu);
         ASSERT_EQ(blendStateExt.mMaxFactorMask, 0xFFu);
         checkInitState(blendStateExt);
@@ -59,7 +59,7 @@ TEST(BlendStateExt, Init)
         const gl::BlendStateExt blendStateExt = gl::BlendStateExt(4);
         ASSERT_EQ(blendStateExt.mMaxDrawBuffers, 4u);
         ASSERT_EQ(blendStateExt.mMaxEnabledMask.to_ulong(), 0xFu);
-        ASSERT_EQ(blendStateExt.mMaxColorMask, is64Bit ? 0xFFFFFFFFu : 0xFFFFu);
+        ASSERT_EQ(blendStateExt.mAllColorMask, is64Bit ? 0x0F0F0F0Fu : 0xFFFFu);
         ASSERT_EQ(blendStateExt.mMaxEquationMask, 0xFFFFFFFFu);
         ASSERT_EQ(blendStateExt.mMaxFactorMask, 0xFFFFFFFFu);
         checkInitState(blendStateExt);
@@ -69,7 +69,7 @@ TEST(BlendStateExt, Init)
         const gl::BlendStateExt blendStateExt = gl::BlendStateExt(8);
         ASSERT_EQ(blendStateExt.mMaxDrawBuffers, 8u);
         ASSERT_EQ(blendStateExt.mMaxEnabledMask.to_ulong(), 0xFFu);
-        ASSERT_EQ(blendStateExt.mMaxColorMask, is64Bit ? 0xFFFFFFFFFFFFFFFFu : 0xFFFFFFFFu);
+        ASSERT_EQ(blendStateExt.mAllColorMask, is64Bit ? 0x0F0F0F0F0F0F0F0Fu : 0xFFFFFFFFu);
         ASSERT_EQ(blendStateExt.mMaxEquationMask, 0xFFFFFFFFFFFFFFFFu);
         ASSERT_EQ(blendStateExt.mMaxFactorMask, 0xFFFFFFFFFFFFFFFFu);
         checkInitState(blendStateExt);
@@ -118,6 +118,17 @@ TEST(BlendStateExt, ColorMask)
 
     const gl::DrawBufferMask diff = blendStateExt.compareColorMask(otherColorMask);
     ASSERT_EQ(diff.to_ulong(), 23u);
+}
+
+// Test that all-enabled color mask correctly compares with the current color mask
+TEST(BlendStateExt, MaxColorMask)
+{
+    gl::BlendStateExt blendStateExt = gl::BlendStateExt(4);
+
+    blendStateExt.setColorMaskIndexed(2, true, false, true, false);
+
+    const gl::DrawBufferMask diff = blendStateExt.compareColorMask(blendStateExt.mAllColorMask);
+    ASSERT_EQ(diff.to_ulong(), 4u);
 }
 
 // Test blend equations manipulations
