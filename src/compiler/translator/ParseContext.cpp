@@ -1427,7 +1427,8 @@ void TParseContext::checkIsParameterQualifierValid(
     TType *type)
 {
     // The only parameter qualifiers a parameter can have are in, out, inout or const.
-    TTypeQualifier typeQualifier = typeQualifierBuilder.getParameterTypeQualifier(mDiagnostics);
+    TTypeQualifier typeQualifier =
+        typeQualifierBuilder.getParameterTypeQualifier(type->getBasicType(), mDiagnostics);
 
     if (typeQualifier.qualifier == EvqParamOut || typeQualifier.qualifier == EvqParamInOut)
     {
