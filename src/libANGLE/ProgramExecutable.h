@@ -137,6 +137,11 @@ class ProgramExecutable final : public angle::Subject
         return mLinkedShaderStages[shaderType];
     }
     size_t getLinkedShaderStageCount() const { return mLinkedShaderStages.count(); }
+    bool hasLinkedGraphicsShader() const
+    {
+        return mLinkedShaderStages.any() &&
+               mLinkedShaderStages != gl::ShaderBitSet{gl::ShaderType::Compute};
+    }
     bool hasLinkedTessellationShader() const
     {
         return mLinkedShaderStages[ShaderType::TessEvaluation];
@@ -342,10 +347,12 @@ class ProgramExecutable final : public angle::Subject
                       std::vector<UnusedUniform> *unusedUniforms,
                       std::vector<VariableLocation> *uniformLocationsOutOrNull);
 
-    void copyShaderBuffersFromProgram(const ProgramState &programState);
+    void copyInputsFromProgram(const ProgramState &programState);
+    void copyShaderBuffersFromProgram(const ProgramState &programState, ShaderType shaderType);
     void clearSamplerBindings();
     void copySamplerBindingsFromProgram(const ProgramState &programState);
     void copyImageBindingsFromProgram(const ProgramState &programState);
+    void copyOutputsFromProgram(const ProgramState &programState);
     void copyUniformsFromProgramMap(const ShaderMap<Program *> &programs);
 
   private:

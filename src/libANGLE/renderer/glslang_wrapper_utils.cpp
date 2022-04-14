@@ -213,7 +213,7 @@ ShaderInterfaceVariableInfo *SetXfbInfo(ShaderInterfaceVariableInfoMap *infoMap,
 }
 
 void AssignTransformFeedbackEmulationBindings(gl::ShaderType shaderType,
-                                              const gl::ProgramState &programState,
+                                              const gl::ProgramExecutable &programExecutable,
                                               bool isTransformFeedbackStage,
                                               GlslangProgramInterfaceInfo *programInterfaceInfo,
                                               ShaderInterfaceVariableInfoMap *variableInfoMapOut)
@@ -221,10 +221,11 @@ void AssignTransformFeedbackEmulationBindings(gl::ShaderType shaderType,
     size_t bufferCount = 0;
     if (isTransformFeedbackStage)
     {
-        ASSERT(!programState.getLinkedTransformFeedbackVaryings().empty());
+        ASSERT(!programExecutable.getLinkedTransformFeedbackVaryings().empty());
         const bool isInterleaved =
-            programState.getTransformFeedbackBufferMode() == GL_INTERLEAVED_ATTRIBS;
-        bufferCount = isInterleaved ? 1 : programState.getLinkedTransformFeedbackVaryings().size();
+            programExecutable.getTransformFeedbackBufferMode() == GL_INTERLEAVED_ATTRIBS;
+        bufferCount =
+            isInterleaved ? 1 : programExecutable.getLinkedTransformFeedbackVaryings().size();
     }
 
     // Add entries for the transform feedback buffers to the info map, so they can have correct
@@ -297,12 +298,11 @@ void AssignAttributeLocations(const gl::ProgramExecutable &programExecutable,
     }
 }
 
-void AssignSecondaryOutputLocations(const gl::ProgramState &programState,
+void AssignSecondaryOutputLocations(const gl::ProgramExecutable &programExecutable,
                                     ShaderInterfaceVariableInfoMap *variableInfoMapOut)
 {
-    const auto &secondaryOutputLocations =
-        programState.getExecutable().getSecondaryOutputLocations();
-    const auto &outputVariables = programState.getExecutable().getOutputVariables();
+    const auto &secondaryOutputLocations = programExecutable.getSecondaryOutputLocations();
+    const auto &outputVariables          = programExecutable.getOutputVariables();
 
     // Handle EXT_blend_func_extended secondary outputs (ones with index=1)
     for (const gl::VariableLocation &outputLocation : secondaryOutputLocations)
@@ -331,11 +331,12 @@ void AssignSecondaryOutputLocations(const gl::ProgramState &programState,
         }
     }
     // Handle secondary outputs for ESSL version less than 3.00
-    gl::Shader *fragmentShader = programState.getAttachedShader(gl::ShaderType::Fragment);
-    if (fragmentShader && fragmentShader->getShaderVersion() == 100)
+    if (programExecutable.hasLinkedShaderStage(gl::ShaderType::Fragment) &&
+        programExecutable.getLinkedShaderVersion(gl::ShaderType::Fragment) == 100)
     {
-        const auto &shaderOutputs = fragmentShader->getActiveOutputVariables();
-        for (const auto &outputVar : shaderOutputs)
+        const std::vector<sh::ShaderVariable> &shaderOutputs =
+            programExecutable.getOutputVariables();
+        for (const sh::ShaderVariable &outputVar : shaderOutputs)
         {
             if (outputVar.name == "gl_SecondaryFragColorEXT")
             {
@@ -353,14 +354,13 @@ void AssignSecondaryOutputLocations(const gl::ProgramState &programState,
     }
 }
 
-void AssignOutputLocations(const gl::ProgramState &programState,
+void AssignOutputLocations(const gl::ProgramExecutable &programExecutable,
                            const gl::ShaderType shaderType,
                            ShaderInterfaceVariableInfoMap *variableInfoMapOut)
 {
     // Assign output locations for the fragment shader.
     ASSERT(shaderType == gl::ShaderType::Fragment);
 
-    const gl::ProgramExecutable &programExecutable   = programState.getExecutable();
     const auto &outputLocations                      = programExecutable.getOutputLocations();
     const auto &outputVariables                      = programExecutable.getOutputVariables();
     const std::array<std::string, 3> implicitOutputs = {"gl_FragDepth", "gl_SampleMask",
@@ -391,7 +391,7 @@ void AssignOutputLocations(const gl::ProgramState &programState,
         }
     }
 
-    AssignSecondaryOutputLocations(programState, variableInfoMapOut);
+    AssignSecondaryOutputLocations(programExecutable, variableInfoMapOut);
 
     // When no fragment output is specified by the shader, the translator outputs webgl_FragColor or
     // webgl_FragData.  Add an entry for these.  Even though the translator is already assigning
@@ -4772,7 +4772,7 @@ std::string GetXfbBufferName(const uint32_t bufferIndex)
 }
 
 void GlslangAssignLocations(const GlslangSourceOptions &options,
-                            const gl::ProgramState &programState,
+                            const gl::ProgramExecutable &programExecutable,
                             const gl::ProgramVaryingPacking &varyingPacking,
                             const gl::ShaderType shaderType,
                             const gl::ShaderType frontShaderType,
@@ -4781,13 +4781,11 @@ void GlslangAssignLocations(const GlslangSourceOptions &options,
                             UniformBindingIndexMap *uniformBindingIndexMapOut,
                             ShaderInterfaceVariableInfoMap *variableInfoMapOut)
 {
-    const gl::ProgramExecutable &programExecutable = programState.getExecutable();
-
     // Assign outputs to the fragment shader, if any.
     if ((shaderType == gl::ShaderType::Fragment) &&
         programExecutable.hasLinkedShaderStage(gl::ShaderType::Fragment))
     {
-        AssignOutputLocations(programState, gl::ShaderType::Fragment, variableInfoMapOut);
+        AssignOutputLocations(programExecutable, gl::ShaderType::Fragment, variableInfoMapOut);
     }
 
     // Assign attributes to the vertex shader, if any.
@@ -4797,7 +4795,7 @@ void GlslangAssignLocations(const GlslangSourceOptions &options,
         AssignAttributeLocations(programExecutable, gl::ShaderType::Vertex, variableInfoMapOut);
     }
 
-    if (!programExecutable.hasLinkedShaderStage(gl::ShaderType::Compute))
+    if (programExecutable.hasLinkedGraphicsShader())
     {
         const gl::VaryingPacking &inputPacking  = varyingPacking.getInputPacking(shaderType);
         const gl::VaryingPacking &outputPacking = varyingPacking.getOutputPacking(shaderType);
@@ -4839,13 +4837,14 @@ void GlslangAssignLocations(const GlslangSourceOptions &options,
         isTransformFeedbackStage =
             isTransformFeedbackStage && options.enableTransformFeedbackEmulation;
 
-        AssignTransformFeedbackEmulationBindings(shaderType, programState, isTransformFeedbackStage,
-                                                 programInterfaceInfo, variableInfoMapOut);
+        AssignTransformFeedbackEmulationBindings(shaderType, programExecutable,
+                                                 isTransformFeedbackStage, programInterfaceInfo,
+                                                 variableInfoMapOut);
     }
 }
 
 void GlslangAssignTransformFeedbackLocations(gl::ShaderType shaderType,
-                                             const gl::ProgramState &programState,
+                                             const gl::ProgramExecutable &programExecutable,
                                              bool isTransformFeedbackStage,
                                              GlslangProgramInterfaceInfo *programInterfaceInfo,
                                              ShaderInterfaceVariableInfoMap *variableInfoMapOut)
@@ -4854,7 +4853,7 @@ void GlslangAssignTransformFeedbackLocations(gl::ShaderType shaderType,
     // captured through ANGLEXfbPosition.
 
     const std::vector<gl::TransformFeedbackVarying> &tfVaryings =
-        programState.getLinkedTransformFeedbackVaryings();
+        programExecutable.getLinkedTransformFeedbackVaryings();
 
     bool capturesPosition = false;
 
@@ -4901,29 +4900,30 @@ void GlslangGetShaderSpirvCode(const GlslangSourceOptions &options,
         (*spirvBlobsOut)[shaderType] = glShader ? &glShader->getCompiledBinary() : nullptr;
     }
 
+    const gl::ProgramExecutable &programExecutable = programState.getExecutable();
     gl::ShaderType xfbStage        = programState.getAttachedTransformFeedbackStage();
     gl::ShaderType frontShaderType = gl::ShaderType::InvalidEnum;
 
     // This should be done before assigning varying location. Otherwise, We can encounter shader
     // interface mismatching problem in case the transformFeedback stage is not Vertex stage.
-    for (const gl::ShaderType shaderType : programState.getExecutable().getLinkedShaderStages())
+    for (const gl::ShaderType shaderType : programExecutable.getLinkedShaderStages())
     {
         // Assign location to varyings generated for transform feedback capture
-        const bool isXfbStage =
-            shaderType == xfbStage && !programState.getLinkedTransformFeedbackVaryings().empty();
+        const bool isXfbStage = shaderType == xfbStage &&
+                                !programExecutable.getLinkedTransformFeedbackVaryings().empty();
         if (options.supportsTransformFeedbackExtension &&
             gl::ShaderTypeSupportsTransformFeedback(shaderType))
         {
-            GlslangAssignTransformFeedbackLocations(shaderType, programState, isXfbStage,
+            GlslangAssignTransformFeedbackLocations(shaderType, programExecutable, isXfbStage,
                                                     programInterfaceInfo, variableInfoMapOut);
         }
     }
     UniformBindingIndexMap uniformBindingIndexMap;
-    for (const gl::ShaderType shaderType : programState.getExecutable().getLinkedShaderStages())
+    for (const gl::ShaderType shaderType : programExecutable.getLinkedShaderStages())
     {
-        const bool isXfbStage =
-            shaderType == xfbStage && !programState.getLinkedTransformFeedbackVaryings().empty();
-        GlslangAssignLocations(options, programState, resources.varyingPacking, shaderType,
+        const bool isXfbStage = shaderType == xfbStage &&
+                                !programExecutable.getLinkedTransformFeedbackVaryings().empty();
+        GlslangAssignLocations(options, programExecutable, resources.varyingPacking, shaderType,
                                frontShaderType, isXfbStage, programInterfaceInfo,
                                &uniformBindingIndexMap, variableInfoMapOut);
 

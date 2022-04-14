@@ -167,6 +167,20 @@ RangeUI AddUniforms(const ShaderMap<Program *> &programs,
     }
     return RangeUI(startRange, static_cast<unsigned int>(outputUniforms.size()));
 }
+
+template <typename BlockT>
+void AppendActiveBlocks(ShaderType shaderType,
+                        const std::vector<BlockT> &blocksIn,
+                        std::vector<BlockT> &blocksOut)
+{
+    for (const BlockT &block : blocksIn)
+    {
+        if (block.isActive(shaderType))
+        {
+            blocksOut.push_back(block);
+        }
+    }
+}
 }  // anonymous namespace
 
 ProgramExecutable::ProgramExecutable()
@@ -1665,16 +1679,17 @@ bool ProgramExecutable::linkAtomicCounterBuffers(const Context *context, InfoLog
     return true;
 }
 
-void ProgramExecutable::copyShaderBuffersFromProgram(const ProgramState &programState)
+void ProgramExecutable::copyInputsFromProgram(const ProgramState &programState)
 {
-    const std::vector<InterfaceBlock> &ubos = programState.getUniformBlocks();
-    mUniformBlocks.insert(mUniformBlocks.end(), ubos.begin(), ubos.end());
+    mProgramInputs = programState.getProgramInputs();
+}
 
-    const std::vector<InterfaceBlock> &ssbos = programState.getShaderStorageBlocks();
-    mShaderStorageBlocks.insert(mShaderStorageBlocks.end(), ssbos.begin(), ssbos.end());
-
-    const std::vector<AtomicCounterBuffer> &atomics = programState.getAtomicCounterBuffers();
-    mAtomicCounterBuffers.insert(mAtomicCounterBuffers.end(), atomics.begin(), atomics.end());
+void ProgramExecutable::copyShaderBuffersFromProgram(const ProgramState &programState,
+                                                     ShaderType shaderType)
+{
+    AppendActiveBlocks(shaderType, programState.getUniformBlocks(), mUniformBlocks);
+    AppendActiveBlocks(shaderType, programState.getShaderStorageBlocks(), mShaderStorageBlocks);
+    AppendActiveBlocks(shaderType, programState.getAtomicCounterBuffers(), mAtomicCounterBuffers);
 }
 
 void ProgramExecutable::clearSamplerBindings()
@@ -1692,6 +1707,13 @@ void ProgramExecutable::copyImageBindingsFromProgram(const ProgramState &program
 {
     const std::vector<ImageBinding> &bindings = programState.getImageBindings();
     mImageBindings.insert(mImageBindings.end(), bindings.begin(), bindings.end());
+}
+
+void ProgramExecutable::copyOutputsFromProgram(const ProgramState &programState)
+{
+    mOutputVariables          = programState.getOutputVariables();
+    mOutputLocations          = programState.getOutputLocations();
+    mSecondaryOutputLocations = programState.getSecondaryOutputLocations();
 }
 
 void ProgramExecutable::copyUniformsFromProgramMap(const ShaderMap<Program *> &programs)
