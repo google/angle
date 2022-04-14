@@ -338,13 +338,13 @@ void Overlay::initOverlayWidgets()
             widget->color[2]  = 0.29411764705882354f;
             widget->color[3]  = 0.7843137254901961f;
         }
-        mState.mOverlayWidgets[WidgetId::VulkanShaderBufferDSHitRate].reset(widget);
+        mState.mOverlayWidgets[WidgetId::VulkanShaderResourceDSHitRate].reset(widget);
         {
             const int32_t fontSize = GetFontSize(kFontMipSmall, kLargeFont);
             const int32_t offsetX =
-                mState.mOverlayWidgets[WidgetId::VulkanShaderBufferDSHitRate]->coords[0];
+                mState.mOverlayWidgets[WidgetId::VulkanShaderResourceDSHitRate]->coords[0];
             const int32_t offsetY =
-                mState.mOverlayWidgets[WidgetId::VulkanShaderBufferDSHitRate]->coords[1];
+                mState.mOverlayWidgets[WidgetId::VulkanShaderResourceDSHitRate]->coords[1];
             const int32_t width  = 40 * (kFontGlyphWidth >> fontSize);
             const int32_t height = (kFontGlyphHeight >> fontSize);
 

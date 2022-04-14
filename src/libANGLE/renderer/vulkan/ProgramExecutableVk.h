@@ -171,7 +171,7 @@ class ProgramExecutableVk
         vk::BufferHelper *emptyBuffer,
         vk::ResourceUseList *resourceUseList,
         FramebufferVk *framebufferVk,
-        const vk::DescriptorSetDesc &shaderBuffersDesc);
+        const vk::DescriptorSetDesc &shaderResourcesDesc);
     angle::Result updateUniformsAndXfbDescriptorSet(vk::Context *context,
                                                     UpdateDescriptorSetsBuilder *updateBuilder,
                                                     vk::ResourceUseList *resourceUseList,
@@ -294,13 +294,13 @@ class ProgramExecutableVk
     angle::Result allocateShaderResourcesDescriptorSet(
         vk::Context *context,
         vk::ResourceUseList *resourceUseList,
-        const vk::DescriptorSetDesc *shaderBuffersDesc);
+        const vk::DescriptorSetDesc *shaderResourcesDesc);
     angle::Result updateBuffersDescriptorSet(vk::Context *context,
                                              UpdateDescriptorSetsBuilder *updateBuilder,
                                              vk::BufferHelper *emptyBuffer,
                                              vk::ResourceUseList *resourceUseList,
                                              gl::ShaderType shaderType,
-                                             const vk::DescriptorSetDesc &shaderBuffersDesc,
+                                             const vk::DescriptorSetDesc &shaderResourcesDesc,
                                              const gl::BufferVector &buffers,
                                              const std::vector<gl::InterfaceBlock> &blocks,
                                              ShaderVariableType variableType,
@@ -315,7 +315,7 @@ class ProgramExecutableVk
         const gl::BufferVector &atomicCounterBufferBindings,
         const gl::ProgramExecutable &executable,
         gl::ShaderType shaderType,
-        const vk::DescriptorSetDesc &shaderBuffersDesc,
+        const vk::DescriptorSetDesc &shaderResourcesDesc,
         bool cacheHit);
     angle::Result updateImagesDescriptorSet(vk::Context *context,
                                             vk::ResourceUseList *resourceUseList,

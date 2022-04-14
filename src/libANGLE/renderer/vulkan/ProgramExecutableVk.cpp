@@ -1261,13 +1261,13 @@ void ProgramExecutableVk::updateDefaultUniformsDescriptorSet(
 angle::Result ProgramExecutableVk::allocateShaderResourcesDescriptorSet(
     vk::Context *context,
     vk::ResourceUseList *resourceUseList,
-    const vk::DescriptorSetDesc *shaderBuffersDesc)
+    const vk::DescriptorSetDesc *shaderResourcesDesc)
 {
     bool newPoolAllocated = false;
     ANGLE_TRY(allocateDescriptorSetAndGetInfo(
         context, resourceUseList, DescriptorSetIndex::ShaderResource, &newPoolAllocated));
 
-    if (shaderBuffersDesc)
+    if (shaderResourcesDesc)
     {
         // Clear descriptor set cache. It may no longer be valid.
         if (newPoolAllocated)
@@ -1276,7 +1276,7 @@ angle::Result ProgramExecutableVk::allocateShaderResourcesDescriptorSet(
         }
 
         mShaderBufferDescriptorsCache.insert(
-            *shaderBuffersDesc, mDescriptorSets[DescriptorSetIndex::ShaderResource],
+            *shaderResourcesDesc, mDescriptorSets[DescriptorSetIndex::ShaderResource],
             &mPerfCounters.cacheStats[DescriptorSetIndex::ShaderResource]);
     }
     return angle::Result::Continue;
@@ -1288,7 +1288,7 @@ angle::Result ProgramExecutableVk::updateBuffersDescriptorSet(
     vk::BufferHelper *emptyBuffer,
     vk::ResourceUseList *resourceUseList,
     gl::ShaderType shaderType,
-    const vk::DescriptorSetDesc &shaderBuffersDesc,
+    const vk::DescriptorSetDesc &shaderResourcesDesc,
     const gl::BufferVector &buffers,
     const std::vector<gl::InterfaceBlock> &blocks,
     ShaderVariableType variableType,
@@ -1389,7 +1389,7 @@ angle::Result ProgramExecutableVk::updateAtomicCounterBuffersDescriptorSet(
     const gl::BufferVector &atomicCounterBufferBindings,
     const gl::ProgramExecutable &executable,
     gl::ShaderType shaderType,
-    const vk::DescriptorSetDesc &shaderBuffersDesc,
+    const vk::DescriptorSetDesc &shaderResourcesDesc,
     bool cacheHit)
 {
     const std::vector<gl::AtomicCounterBuffer> &atomicCounterBuffers =
@@ -1585,7 +1585,7 @@ angle::Result ProgramExecutableVk::updateShaderResourcesDescriptorSet(
     vk::BufferHelper *emptyBuffer,
     vk::ResourceUseList *resourceUseList,
     FramebufferVk *framebufferVk,
-    const vk::DescriptorSetDesc &shaderBuffersDesc)
+    const vk::DescriptorSetDesc &shaderResourcesDesc)
 {
     // Reset the descriptor set handles so we only allocate a new one when necessary.
     mDescriptorSets[DescriptorSetIndex::ShaderResource]      = VK_NULL_HANDLE;
@@ -1603,7 +1603,7 @@ angle::Result ProgramExecutableVk::updateShaderResourcesDescriptorSet(
     {
         VkDescriptorSet descriptorSet = VK_NULL_HANDLE;
         if (mShaderBufferDescriptorsCache.get(
-                shaderBuffersDesc, &descriptorSet,
+                shaderResourcesDesc, &descriptorSet,
                 &mPerfCounters.cacheStats[DescriptorSetIndex::ShaderResource]))
         {
             mDescriptorSets[DescriptorSetIndex::ShaderResource] = descriptorSet;
@@ -1616,7 +1616,7 @@ angle::Result ProgramExecutableVk::updateShaderResourcesDescriptorSet(
         else
         {
             ANGLE_TRY(allocateShaderResourcesDescriptorSet(contextVk, resourceUseList,
-                                                           &shaderBuffersDesc));
+                                                           &shaderResourcesDesc));
         }
     }
     else
@@ -1640,17 +1640,17 @@ angle::Result ProgramExecutableVk::updateShaderResourcesDescriptorSet(
     for (gl::ShaderType shaderType : executable->getLinkedShaderStages())
     {
         ANGLE_TRY(updateBuffersDescriptorSet(
-            contextVk, updateBuilder, emptyBuffer, resourceUseList, shaderType, shaderBuffersDesc,
+            contextVk, updateBuilder, emptyBuffer, resourceUseList, shaderType, shaderResourcesDesc,
             uniformBuffers, executable->getUniformBlocks(), ShaderVariableType::UniformBuffer,
             mUniformBufferDescriptorType, limits.maxUniformBufferRange, cacheHit));
         ANGLE_TRY(updateBuffersDescriptorSet(
-            contextVk, updateBuilder, emptyBuffer, resourceUseList, shaderType, shaderBuffersDesc,
+            contextVk, updateBuilder, emptyBuffer, resourceUseList, shaderType, shaderResourcesDesc,
             storageBuffers, executable->getShaderStorageBlocks(),
             ShaderVariableType::ShaderStorageBuffer, kStorageBufferDescriptorType,
             limits.maxStorageBufferRange, cacheHit));
         ANGLE_TRY(updateAtomicCounterBuffersDescriptorSet(
             contextVk, updateBuilder, emptyBuffer, resourceUseList, atomicCounterBufferBindings,
-            *executable, shaderType, shaderBuffersDesc, cacheHit));
+            *executable, shaderType, shaderResourcesDesc, cacheHit));
         ANGLE_TRY(updateImagesDescriptorSet(contextVk, resourceUseList, updateBuilder, activeImages,
                                             glState.getImageUnits(), *executable, shaderType));
         ANGLE_TRY(updateInputAttachmentDescriptorSet(contextVk, resourceUseList, updateBuilder,

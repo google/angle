@@ -447,15 +447,15 @@ void AppendWidgetDataHelper::AppendVulkanDescriptorSetAllocations(const overlay:
     AppendRunningGraphCommon(widget, imageExtent, textWidget, graphWidget, widgetCounts, format);
 }
 
-void AppendWidgetDataHelper::AppendVulkanShaderBufferDSHitRate(const overlay::Widget *widget,
-                                                               const gl::Extents &imageExtent,
-                                                               TextWidgetData *textWidget,
-                                                               GraphWidgetData *graphWidget,
-                                                               OverlayWidgetCounts *widgetCounts)
+void AppendWidgetDataHelper::AppendVulkanShaderResourceDSHitRate(const overlay::Widget *widget,
+                                                                 const gl::Extents &imageExtent,
+                                                                 TextWidgetData *textWidget,
+                                                                 GraphWidgetData *graphWidget,
+                                                                 OverlayWidgetCounts *widgetCounts)
 {
     auto format = [](size_t maxValue) {
         std::ostringstream text;
-        text << "Shader Buffer DS Hit Rate (Max: " << maxValue << "%)";
+        text << "Shader Resource DS Hit Rate (Max: " << maxValue << "%)";
         return text.str();
     };
 
