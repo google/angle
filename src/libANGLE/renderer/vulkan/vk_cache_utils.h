@@ -1118,6 +1118,12 @@ struct ImageOrBufferViewSubresourceSerial
     ImageSubresourceRange subresource;
 };
 
+inline bool operator==(const ImageOrBufferViewSubresourceSerial &a,
+                       const ImageOrBufferViewSubresourceSerial &b)
+{
+    return a.viewSerial == b.viewSerial && a.subresource == b.subresource;
+}
+
 constexpr ImageOrBufferViewSubresourceSerial kInvalidImageOrBufferViewSubresourceSerial = {
     kInvalidImageOrBufferViewSerial, kInvalidImageSubresourceRange};
 
@@ -1481,11 +1487,14 @@ struct hash<rx::vk::SamplerDesc>
 };
 
 // See Resource Serial types defined in vk_utils.h.
-#define ANGLE_HASH_VK_SERIAL(Type)                                                          \
-    template <>                                                                             \
-    struct hash<rx::vk::Type##Serial>                                                       \
-    {                                                                                       \
-        size_t operator()(const rx::vk::Type##Serial &key) const { return key.getValue(); } \
+#define ANGLE_HASH_VK_SERIAL(Type)                               \
+    template <>                                                  \
+    struct hash<rx::vk::Type##Serial>                            \
+    {                                                            \
+        size_t operator()(const rx::vk::Type##Serial &key) const \
+        {                                                        \
+            return key.getValue();                               \
+        }                                                        \
     };
 
 ANGLE_VK_SERIAL_OP(ANGLE_HASH_VK_SERIAL)

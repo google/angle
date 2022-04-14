@@ -56,6 +56,7 @@
 6286 : ImageTest.UpdatedData/* = FAIL
 
 6180 : PbufferTest.BindTexImage/* = FAIL
+6180 : PbufferTest.BindTexImageAfterTexImage/* = FAIL
 6180 : PbufferTest.ClearAndBindTexImageSrgb/* = FAIL
 6180 : PbufferTest.ClearAndBindTexImageSrgbSkipDecode/* = FAIL
 6180 : PbufferTest.Clearing/* = FAIL
