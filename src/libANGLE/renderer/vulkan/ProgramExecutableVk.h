@@ -256,8 +256,7 @@ class ProgramExecutableVk
                                                   vk::ResourceUseList *resourceUseList,
                                                   DescriptorSetIndex descriptorSetIndex,
                                                   bool *newPoolAllocatedOut);
-    void addInterfaceBlockDescriptorSetDesc(const gl::ProgramExecutable &glExecutable,
-                                            const std::vector<gl::InterfaceBlock> &blocks,
+    void addInterfaceBlockDescriptorSetDesc(const std::vector<gl::InterfaceBlock> &blocks,
                                             gl::ShaderType shaderType,
                                             ShaderVariableType variableType,
                                             VkDescriptorType descType,
@@ -302,7 +301,6 @@ class ProgramExecutableVk
                                              gl::ShaderType shaderType,
                                              const vk::DescriptorSetDesc &shaderBuffersDesc,
                                              const gl::BufferVector &buffers,
-                                             const gl::ProgramExecutable &glExecutable,
                                              const std::vector<gl::InterfaceBlock> &blocks,
                                              ShaderVariableType variableType,
                                              VkDescriptorType descriptorType,
@@ -418,8 +416,6 @@ class ProgramExecutableVk
     gl::ShaderVector<uint32_t> mDynamicUniformDescriptorOffsets;
     std::vector<uint32_t> mDynamicShaderBufferDescriptorOffsets;
 
-    // TODO: http://anglebug.com/4524: Need a different hash key than a string,
-    // since that's slow to calculate.
     ShaderInterfaceVariableInfoMap mVariableInfoMap;
 
     // We store all permutations of surface rotation and transformed SPIR-V programs here. We may

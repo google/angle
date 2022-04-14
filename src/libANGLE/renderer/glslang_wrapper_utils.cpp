@@ -807,12 +807,13 @@ void AssignInterfaceBlockBindings(const GlslangSourceOptions &options,
                                   UniformBindingIndexMap *uniformBindingIndexMapOut,
                                   ShaderInterfaceVariableInfoMap *variableInfoMapOut)
 {
-    for (const gl::InterfaceBlock &block : blocks)
+    for (uint32_t blockIndex = 0; blockIndex < blocks.size(); ++blockIndex)
     {
-        if (!block.isArray || block.arrayElement == 0)
+        const gl::InterfaceBlock &block = blocks[blockIndex];
+        // TODO: http://anglebug.com/4523: All blocks should be active
+        if (programExecutable.hasLinkedShaderStage(shaderType) && block.isActive(shaderType))
         {
-            // TODO: http://anglebug.com/4523: All blocks should be active
-            if (programExecutable.hasLinkedShaderStage(shaderType) && block.isActive(shaderType))
+            if (!block.isArray || block.arrayElement == 0)
             {
                 AddAndUpdateResourceMaps(shaderType, variableType, block.mappedName,
                                          &(programInterfaceInfo->currentShaderResourceBindingIndex),
@@ -820,6 +821,8 @@ void AssignInterfaceBlockBindings(const GlslangSourceOptions &options,
                                          programInterfaceInfo->shaderResourceDescriptorSetIndex,
                                          uniformBindingIndexMapOut, variableInfoMapOut);
             }
+            variableInfoMapOut->mapIndexedResourceByName(shaderType, variableType, blockIndex,
+                                                         block.mappedName);
         }
     }
 }
@@ -859,11 +862,10 @@ void AssignImageBindings(const GlslangSourceOptions &options,
     for (unsigned int uniformIndex : imageUniformRange)
     {
         const gl::LinkedUniform &imageUniform = uniforms[uniformIndex];
-
-        std::string name = imageUniform.mappedName;
-        if (GetImageNameWithoutIndices(&name))
+        if (programExecutable.hasLinkedShaderStage(shaderType))
         {
-            if (programExecutable.hasLinkedShaderStage(shaderType))
+            std::string name = imageUniform.mappedName;
+            if (GetImageNameWithoutIndices(&name))
             {
                 bool updateFrontShaderType = false;
                 if ((*uniformBindingIndexMapOut).count(name) > 0)
@@ -878,6 +880,9 @@ void AssignImageBindings(const GlslangSourceOptions &options,
                                          programInterfaceInfo->shaderResourceDescriptorSetIndex,
                                          uniformBindingIndexMapOut, variableInfoMapOut);
             }
+            uint32_t imageIndex = uniformIndex - imageUniformRange.low();
+            variableInfoMapOut->mapIndexedResourceByName(shaderType, ShaderVariableType::Image,
+                                                         imageIndex, name);
         }
     }
 }
@@ -931,26 +936,27 @@ void AssignTextureBindings(const GlslangSourceOptions &options,
     {
         const gl::LinkedUniform &samplerUniform = uniforms[uniformIndex];
 
-        if (gl::SamplerNameContainsNonZeroArrayElement(samplerUniform.name))
+        // TODO: http://anglebug.com/4523: All uniforms should be active
+        if (!programExecutable.hasLinkedShaderStage(shaderType) ||
+            !samplerUniform.isActive(shaderType))
         {
             continue;
         }
 
-        if (UniformNameIsIndexZero(samplerUniform.name))
+        // Samplers in structs are extracted and renamed.
+        const std::string samplerName = GlslangGetMappedSamplerName(samplerUniform.name);
+        if (!gl::SamplerNameContainsNonZeroArrayElement(samplerUniform.name))
         {
-            // Samplers in structs are extracted and renamed.
-            const std::string samplerName = GlslangGetMappedSamplerName(samplerUniform.name);
-
-            // TODO: http://anglebug.com/4523: All uniforms should be active
-            if (programExecutable.hasLinkedShaderStage(shaderType) &&
-                samplerUniform.isActive(shaderType))
-            {
-                AddAndUpdateResourceMaps(shaderType, ShaderVariableType::Texture, samplerName,
-                                         &(programInterfaceInfo->currentTextureBindingIndex), true,
-                                         false, programInterfaceInfo->textureDescriptorSetIndex,
-                                         uniformBindingIndexMapOut, variableInfoMapOut);
-            }
+            ASSERT(UniformNameIsIndexZero(samplerUniform.name));
+            AddAndUpdateResourceMaps(shaderType, ShaderVariableType::Texture, samplerName,
+                                     &(programInterfaceInfo->currentTextureBindingIndex), true,
+                                     false, programInterfaceInfo->textureDescriptorSetIndex,
+                                     uniformBindingIndexMapOut, variableInfoMapOut);
         }
+
+        uint32_t textureIndex = uniformIndex - programExecutable.getSamplerUniformRange().low();
+        variableInfoMapOut->mapIndexedResourceByName(shaderType, ShaderVariableType::Texture,
+                                                     textureIndex, samplerName);
     }
 }
 
@@ -4694,19 +4700,11 @@ bool HasAliasingAttributes(const ShaderInterfaceVariableInfoMap &variableInfoMap
 {
     gl::AttributesMask isLocationAssigned;
 
-    for (const auto &infoIter :
-         variableInfoMap.getIterator(gl::ShaderType::Vertex, ShaderVariableType::Attribute))
+    for (const ShaderInterfaceVariableInfo &info : variableInfoMap.getAttributes())
     {
-        const ShaderInterfaceVariableInfo &info = infoIter.second;
-
-        // Ignore non attribute ids.
-        if (info.attributeComponentCount == 0)
-        {
-            continue;
-        }
-
         ASSERT(info.activeStages[gl::ShaderType::Vertex]);
         ASSERT(info.location != ShaderInterfaceVariableInfo::kInvalid);
+        ASSERT(info.attributeComponentCount > 0);
         ASSERT(info.attributeLocationCount > 0);
 
         for (uint8_t offset = 0; offset < info.attributeLocationCount; ++offset)
@@ -4744,14 +4742,12 @@ bool GetImageNameWithoutIndices(std::string *name)
         return true;
     }
 
-    if (!UniformNameIsIndexZero(*name))
-    {
-        return false;
-    }
+    bool isIndexZero = UniformNameIsIndexZero(*name);
 
     // Strip all indices
     *name = name->substr(0, name->find('['));
-    return true;
+
+    return isIndexZero;
 }
 
 std::string GlslangGetMappedSamplerName(const std::string &originalName)
