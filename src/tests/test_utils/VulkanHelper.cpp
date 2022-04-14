@@ -163,10 +163,14 @@ void ImageMemoryBarrier(VkCommandBuffer commandBuffer,
 
 }  // namespace
 
-VulkanHelper::VulkanHelper() {}
+VulkanHelper::VulkanHelper() = default;
 
 VulkanHelper::~VulkanHelper()
 {
+    // Call glFinish() before any Vulkan commands so that all GL commands are
+    // submitted on async command queue to prevent a data race on VkQueue.
+    glFinish();
+
     if (mDevice != VK_NULL_HANDLE)
     {
         vkDeviceWaitIdle(mDevice);
