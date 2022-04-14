@@ -426,6 +426,8 @@
 7140 PIXEL4ORXL VULKAN : DrawBuffersTest.MidRenderPassClearWithGaps/* = SKIP
 7140 PIXEL4ORXL VULKAN : DrawBuffersTest.MidRenderPassClearWithGapsRGB/* = SKIP
 
+7207 PIXEL4ORXL VULKAN : VulkanPerformanceCounterTest.InRenderpassFlushShouldNotBreakRenderpass/* = SKIP
+
 6167 NEXUS5X GLES : DepthStencilTestES3.FramebufferClearThenStencilAttachedThenStencilTestState/* = SKIP
 6167 NEXUS5X GLES : DepthStencilTestES3.FramebufferClearThenStencilTestStateThenStencilAttached/* = SKIP
 6167 NEXUS5X GLES : DepthStencilTestES3.StencilTestStateThenFramebufferClearThenStencilAttached/* = SKIP

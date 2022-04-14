@@ -1566,6 +1566,12 @@ class CacheStats final : angle::NonCopyable
         mSize      = 0;
     }
 
+    void resetHitAndMissCount()
+    {
+        mHitCount  = 0;
+        mMissCount = 0;
+    }
+
   private:
     uint64_t mHitCount;
     uint64_t mMissCount;

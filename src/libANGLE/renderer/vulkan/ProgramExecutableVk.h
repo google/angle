@@ -211,7 +211,8 @@ class ProgramExecutableVk
     }
 
     void accumulateCacheStats(VulkanCacheType cacheType, const CacheStats &cacheStats);
-    ProgramExecutablePerfCounters getAndResetObjectPerfCounters();
+    ProgramExecutablePerfCounters getDescriptorSetPerfCounters();
+    void resetDescriptorSetPerfCounters();
 
     size_t getDefaultUniformAlignedSize(vk::Context *context, gl::ShaderType shaderType) const
     {

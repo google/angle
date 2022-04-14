@@ -2035,8 +2035,9 @@ template angle::Result ProgramExecutableVk::updateDescriptorSets<vk::VulkanSecon
     vk::VulkanSecondaryCommandBuffer *commandBuffer,
     PipelineType pipelineType);
 
-ProgramExecutablePerfCounters ProgramExecutableVk::getAndResetObjectPerfCounters()
+ProgramExecutablePerfCounters ProgramExecutableVk::getDescriptorSetPerfCounters()
 {
+    mPerfCounters.descriptorSetCacheKeySizesBytes = {};
     mPerfCounters.descriptorSetCacheKeySizesBytes[DescriptorSetIndex::UniformsAndXfb] =
         static_cast<uint32_t>(mUniformsAndXfbDescriptorsCache.getTotalCacheKeySizeBytes());
     mPerfCounters.descriptorSetCacheKeySizesBytes[DescriptorSetIndex::Texture] =
@@ -2044,9 +2045,15 @@ ProgramExecutablePerfCounters ProgramExecutableVk::getAndResetObjectPerfCounters
     mPerfCounters.descriptorSetCacheKeySizesBytes[DescriptorSetIndex::ShaderResource] =
         static_cast<uint32_t>(mShaderBufferDescriptorsCache.getTotalCacheKeySizeBytes());
 
-    ProgramExecutablePerfCounters counters        = mPerfCounters;
-    mPerfCounters.descriptorSetCacheKeySizesBytes = {};
-    return counters;
+    return mPerfCounters;
+}
+
+void ProgramExecutableVk::resetDescriptorSetPerfCounters()
+{
+    for (CacheStats &cacheStats : mPerfCounters.cacheStats)
+    {
+        cacheStats.resetHitAndMissCount();
+    }
 }
 
 void ProgramExecutableVk::setAllDefaultUniformsDirty(const gl::ProgramExecutable &executable)
