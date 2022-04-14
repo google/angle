@@ -459,11 +459,10 @@ angle::Result SpirvCodeToMsl(Context *context,
     angle::HashMap<uint32_t, uint32_t> xfbOriginalBindings;
     for (uint32_t bufferIdx = 0; bufferIdx < kMaxShaderXFBs; ++bufferIdx)
     {
-        std::string bufferName = rx::GetXfbBufferName(bufferIdx);
-        if (xfbVSVariableInfoMap.contains(gl::ShaderType::Vertex, bufferName))
+        if (xfbVSVariableInfoMap.hasTransformFeedbackInfo(gl::ShaderType::Vertex, bufferIdx))
         {
             const ShaderInterfaceVariableInfo &info =
-                xfbVSVariableInfoMap.get(gl::ShaderType::Vertex, bufferName);
+                xfbVSVariableInfoMap.getTransformFeedbackInfo(gl::ShaderType::Vertex, bufferIdx);
             xfbOriginalBindings[info.binding] = bufferIdx;
         }
     }

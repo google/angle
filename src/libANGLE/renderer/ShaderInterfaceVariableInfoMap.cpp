@@ -20,60 +20,100 @@ ShaderInterfaceVariableInfoMap::~ShaderInterfaceVariableInfoMap() = default;
 
 void ShaderInterfaceVariableInfoMap::clear()
 {
-    for (VariableNameToInfoMap &shaderMap : mData)
+    for (gl::ShaderType shaderType : gl::AllShaderTypes())
     {
-        shaderMap.clear();
+        for (VariableNameToInfoMap &typeMap : mData[shaderType])
+        {
+            typeMap.clear();
+        }
+        mNameToTypeMap[shaderType].clear();
     }
-}
-
-bool ShaderInterfaceVariableInfoMap::contains(gl::ShaderType shaderType,
-                                              const std::string &variableName) const
-{
-    return mData[shaderType].find(variableName) != mData[shaderType].end();
 }
 
 const ShaderInterfaceVariableInfo &ShaderInterfaceVariableInfoMap::get(
     gl::ShaderType shaderType,
+    ShaderVariableType variableType,
     const std::string &variableName) const
 {
-    auto it = mData[shaderType].find(variableName);
-    ASSERT(it != mData[shaderType].end());
+    auto it = mData[shaderType][variableType].find(variableName);
+    ASSERT(it != mData[shaderType][variableType].end());
     return it->second;
 }
 
-ShaderInterfaceVariableInfo &ShaderInterfaceVariableInfoMap::get(gl::ShaderType shaderType,
-                                                                 const std::string &variableName)
+void ShaderInterfaceVariableInfoMap::setActiveStages(gl::ShaderType shaderType,
+                                                     ShaderVariableType variableType,
+                                                     const std::string &variableName,
+                                                     gl::ShaderBitSet activeStages)
 {
-    auto it = mData[shaderType].find(variableName);
-    ASSERT(it != mData[shaderType].end());
+    auto it = mData[shaderType][variableType].find(variableName);
+    ASSERT(it != mData[shaderType][variableType].end());
+    it->second.activeStages = activeStages;
+}
+
+ShaderInterfaceVariableInfo &ShaderInterfaceVariableInfoMap::getMutable(
+    gl::ShaderType shaderType,
+    ShaderVariableType variableType,
+    const std::string &variableName)
+{
+    auto it = mData[shaderType][variableType].find(variableName);
+    ASSERT(it != mData[shaderType][variableType].end());
     return it->second;
 }
 
 void ShaderInterfaceVariableInfoMap::markAsDuplicate(gl::ShaderType shaderType,
+                                                     ShaderVariableType variableType,
                                                      const std::string &variableName)
 {
-    ASSERT(contains(shaderType, variableName));
-    mData[shaderType][variableName].isDuplicate = true;
+    ASSERT(hasVariable(shaderType, variableName));
+    mData[shaderType][variableType][variableName].isDuplicate = true;
 }
 
 ShaderInterfaceVariableInfo &ShaderInterfaceVariableInfoMap::add(gl::ShaderType shaderType,
+                                                                 ShaderVariableType variableType,
                                                                  const std::string &variableName)
 {
-    ASSERT(!contains(shaderType, variableName));
-    return mData[shaderType][variableName];
+    ASSERT(!hasVariable(shaderType, variableName));
+    mNameToTypeMap[shaderType][variableName] = variableType;
+    return mData[shaderType][variableType][variableName];
 }
 
 ShaderInterfaceVariableInfo &ShaderInterfaceVariableInfoMap::addOrGet(
     gl::ShaderType shaderType,
+    ShaderVariableType variableType,
     const std::string &variableName)
 {
-    return mData[shaderType][variableName];
+    mNameToTypeMap[shaderType][variableName] = variableType;
+    return mData[shaderType][variableType][variableName];
 }
 
 ShaderInterfaceVariableInfoMap::Iterator ShaderInterfaceVariableInfoMap::getIterator(
-    gl::ShaderType shaderType) const
+    gl::ShaderType shaderType,
+    ShaderVariableType variableType) const
 {
-    return Iterator(mData[shaderType].begin(), mData[shaderType].end());
+    return Iterator(mData[shaderType][variableType].begin(), mData[shaderType][variableType].end());
 }
 
+bool ShaderInterfaceVariableInfoMap::hasVariable(gl::ShaderType shaderType,
+                                                 const std::string &variableName) const
+{
+    auto iter = mNameToTypeMap[shaderType].find(variableName);
+    return (iter != mNameToTypeMap[shaderType].end());
+}
+
+const ShaderInterfaceVariableInfo &ShaderInterfaceVariableInfoMap::getVariableByName(
+    gl::ShaderType shaderType,
+    const std::string &variableName) const
+{
+    auto iter = mNameToTypeMap[shaderType].find(variableName);
+    ASSERT(iter != mNameToTypeMap[shaderType].end());
+    ShaderVariableType variableType = iter->second;
+    return get(shaderType, variableType, variableName);
+}
+
+bool ShaderInterfaceVariableInfoMap::hasTransformFeedbackInfo(gl::ShaderType shaderType,
+                                                              uint32_t bufferIndex) const
+{
+    std::string bufferName = rx::GetXfbBufferName(bufferIndex);
+    return hasVariable(shaderType, bufferName);
+}
 }  // namespace rx
