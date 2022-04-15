@@ -1143,6 +1143,60 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::cyan);
 }
 
+// Verify that previous draws are not affected when a buffer is respecified with null data
+// and updated by calling map.
+TEST_P(BufferDataTestES3, BufferDataWithNullFollowedByMap)
+{
+    // Draw without using drawQuad.
+    glUseProgram(mProgram);
+
+    // Set up position attribute
+    const auto &quadVertices = GetQuadVertices();
+    GLint positionLocation   = glGetAttribLocation(mProgram, "position");
+    ASSERT_NE(-1, positionLocation);
+    GLBuffer positionBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, positionBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * quadVertices.size() * 3, quadVertices.data(),
+                 GL_DYNAMIC_DRAW);
+    glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(positionLocation);
+    EXPECT_GL_NO_ERROR();
+
+    // Set up "in_attrib" attribute
+    const std::vector<GLfloat> kData(6, 1.0f);
+    glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * kData.size(), kData.data(), GL_STATIC_DRAW);
+    glVertexAttribPointer(mAttribLocation, 1, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(mAttribLocation);
+    EXPECT_GL_NO_ERROR();
+
+    // This draw (draw_0) renders red to the entire window.
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    EXPECT_GL_NO_ERROR();
+
+    // Respecify buffer bound to "in_attrib" attribute then map it and fill it with zeroes.
+    const std::vector<GLfloat> kZeros(6, 0.0f);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * kZeros.size(), nullptr, GL_STATIC_DRAW);
+    uint8_t *mapPtr = reinterpret_cast<uint8_t *>(
+        glMapBufferRange(GL_ARRAY_BUFFER, 0, sizeof(GLfloat) * kZeros.size(),
+                         GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT));
+    ASSERT_NE(nullptr, mapPtr);
+    ASSERT_GL_NO_ERROR();
+    memcpy(mapPtr, kZeros.data(), sizeof(GLfloat) * kZeros.size());
+    glUnmapBuffer(GL_ARRAY_BUFFER);
+    ASSERT_GL_NO_ERROR();
+
+    // This draw (draw_1) renders black to the upper right triangle.
+    glDrawArrays(GL_TRIANGLES, 3, 3);
+    EXPECT_GL_NO_ERROR();
+
+    // Respecification and data update of mBuffer should not have affected draw_0.
+    // Expect bottom left to be red and top right to be black.
+    EXPECT_PIXEL_COLOR_EQ(1, 1, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() - 1, getWindowHeight() - 1, GLColor::black);
+    EXPECT_GL_NO_ERROR();
+}
+
 class BufferStorageTestES3 : public BufferDataTest
 {};
 

@@ -714,10 +714,8 @@ void VertexArray::onSubjectStateChange(angle::SubjectIndex index, angle::Subject
             break;
 
         case angle::SubjectMessage::InternalMemoryAllocationChanged:
-            setDependentDirtyBit(false, index);
-            break;
-
         case angle::SubjectMessage::BufferVkStorageChanged:
+            setDependentDirtyBit(false, index);
             break;
 
         default:

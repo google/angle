@@ -365,11 +365,12 @@ angle::Result BufferVk::setDataWithMemoryType(const gl::Context *context,
         return angle::Result::Continue;
     }
 
-    const bool wholeSize = size == static_cast<size_t>(mState.getSize());
+    const bool bufferSizeChanged              = size != static_cast<size_t>(mState.getSize());
+    const bool inUseAndRespecifiedWithoutData = (data == nullptr && isCurrentlyInUse(contextVk));
 
-    // BufferData call is re-specifying the entire buffer
-    // Release and init a new mBuffer with this new size
-    if (!wholeSize)
+    // The entire buffer is being respecified, possibly with null data.
+    // Release and init a new mBuffer with requested size.
+    if (bufferSizeChanged || inUseAndRespecifiedWithoutData)
     {
         // Release and re-create the memory and buffer.
         release(contextVk);
@@ -383,8 +384,8 @@ angle::Result BufferVk::setDataWithMemoryType(const gl::Context *context,
     if (data)
     {
         // Treat full-buffer updates as SubData calls.
-        BufferUpdateType updateType =
-            wholeSize ? BufferUpdateType::ContentsUpdate : BufferUpdateType::StorageRedefined;
+        BufferUpdateType updateType = bufferSizeChanged ? BufferUpdateType::StorageRedefined
+                                                        : BufferUpdateType::ContentsUpdate;
 
         ANGLE_TRY(setDataImpl(contextVk, static_cast<const uint8_t *>(data), size, 0, updateType));
     }
