@@ -231,8 +231,7 @@ BufferVk::BufferVk(const gl::BufferState &state)
       mMemoryTypeIndex(0),
       mMemoryPropertyFlags(0),
       mIsStagingBufferMapped(false),
-      mHasValidData(false),
-      mHasBeenReferencedByGPU(false)
+      mHasValidData(false)
 {}
 
 BufferVk::~BufferVk() {}
@@ -443,7 +442,6 @@ angle::Result BufferVk::copySubData(const gl::Context *context,
                                      static_cast<VkDeviceSize>(size)};
 
     commandBuffer->copyBuffer(sourceBuffer.getBuffer(), mBuffer.getBuffer(), 1, &copyRegion);
-    mHasBeenReferencedByGPU = true;
 
     // The new destination buffer data may require a conversion for the next draw, so mark it dirty.
     onDataChanged();
@@ -497,8 +495,6 @@ angle::Result BufferVk::flushStagingBuffer(ContextVk *contextVk,
     // Enqueue a copy command on the GPU.
     VkBufferCopy copyRegion = {mStagingBuffer.getOffset(), mBuffer.getOffset() + offset, size};
     ANGLE_TRY(mBuffer.copyFromBuffer(contextVk, &mStagingBuffer, 1, &copyRegion));
-
-    mHasBeenReferencedByGPU = true;
 
     return angle::Result::Continue;
 }
@@ -915,7 +911,6 @@ angle::Result BufferVk::acquireAndUpdate(ContextVk *contextVk,
     {
         ANGLE_TRY(mBuffer.copyFromBuffer(contextVk, &src, static_cast<uint32_t>(copyRegions.size()),
                                          copyRegions.data()));
-        mHasBeenReferencedByGPU = true;
     }
 
     if (src.valid())
@@ -1034,8 +1029,7 @@ angle::Result BufferVk::acquireBufferHelper(ContextVk *contextVk,
 
 bool BufferVk::isCurrentlyInUse(ContextVk *contextVk) const
 {
-    return mHasBeenReferencedByGPU &&
-           mBuffer.isCurrentlyInUse(contextVk->getLastCompletedQueueSerial());
+    return mBuffer.isCurrentlyInUse(contextVk->getLastCompletedQueueSerial());
 }
 
 }  // namespace rx

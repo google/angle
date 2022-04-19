@@ -106,10 +106,6 @@ class BufferVk : public BufferImpl
     vk::BufferHelper &getBuffer()
     {
         ASSERT(isBufferValid());
-        // Always mark the BufferHelper as referenced by the GPU, whether or not there's a pending
-        // submission, since this function is only called when trying to get the underlying
-        // BufferHelper object so it can be used in a command.
-        mHasBeenReferencedByGPU = true;
         return mBuffer;
     }
 
@@ -221,14 +217,6 @@ class BufferVk : public BufferImpl
 
     // Tracks if BufferVk object has valid data or not.
     bool mHasValidData;
-
-    // TODO: https://issuetracker.google.com/201826021 Remove this once we have a full fix.
-    // Tracks if BufferVk's data is ever been referenced by GPU since new storage has been
-    // allocated. Due to sub-allocation, we may get a new sub-allocated range in the same
-    // BufferHelper object. Because we track GPU progress by the BufferHelper object, this flag will
-    // help us to avoid detecting we are still GPU busy even though no one has used it yet since
-    // we got last sub-allocation.
-    bool mHasBeenReferencedByGPU;
 };
 
 }  // namespace rx
