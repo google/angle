@@ -586,3 +586,6 @@
 7029 NVIDIA GLES : GLSLTest.SwizzledChainedAssignIncrement/* = SKIP
 
 7085 : VulkanPerformanceCounterTest.DepthStencilInvalidateDrawDisable/* = SKIP
+
+// Flaking due to threading usage of the queue
+7204 : VulkanImageTest.PreInitializedOnGLImport/ES3_Vulkan_SwiftShader_AsyncCommandQueue = SKIP
