@@ -930,7 +930,7 @@ ContextVk::~ContextVk() = default;
 void ContextVk::onDestroy(const gl::Context *context)
 {
     // Remove context from the share group
-    mShareGroupVk->getContexts()->erase(this);
+    mShareGroupVk->removeContext(this);
 
     // This will not destroy any resources. It will release them to be collected after finish.
     mIncompleteTextures.onDestroy(context);
@@ -1151,7 +1151,7 @@ angle::Result ContextVk::initialize()
     ANGLE_TRY(mEmptyBuffer.init(this, emptyBufferInfo, kMemoryType));
 
     // Add context into the share group
-    mShareGroupVk->getContexts()->insert(this);
+    mShareGroupVk->addContext(this);
 
     return angle::Result::Continue;
 }

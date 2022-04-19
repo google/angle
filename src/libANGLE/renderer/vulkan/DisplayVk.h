@@ -34,7 +34,7 @@ class ShareGroupVk : public ShareGroupImpl
     // synchronous update to the caches.
     PipelineLayoutCache &getPipelineLayoutCache() { return mPipelineLayoutCache; }
     DescriptorSetLayoutCache &getDescriptorSetLayoutCache() { return mDescriptorSetLayoutCache; }
-    ContextVkSet *getContexts() { return &mContexts; }
+    const ContextVkSet &getContexts() const { return mContexts; }
 
     void releaseResourceUseLists(const Serial &submitSerial);
     void acquireResourceUseList(vk::ResourceUseList &&resourceUseList)
@@ -47,6 +47,9 @@ class ShareGroupVk : public ShareGroupImpl
                                          uint32_t memoryTypeIndex);
     void pruneDefaultBufferPools(RendererVk *renderer);
     bool isDueForBufferPoolPrune();
+
+    void addContext(ContextVk *contextVk);
+    void removeContext(ContextVk *contextVk);
 
   private:
     // ANGLE uses a PipelineLayout cache to store compatible pipeline layouts.

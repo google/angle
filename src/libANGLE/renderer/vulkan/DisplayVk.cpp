@@ -412,6 +412,16 @@ ShareGroupVk::ShareGroupVk()
     mLastPruneTime = angle::GetCurrentSystemTime();
 }
 
+void ShareGroupVk::addContext(ContextVk *contextVk)
+{
+    mContexts.insert(contextVk);
+}
+
+void ShareGroupVk::removeContext(ContextVk *contextVk)
+{
+    mContexts.erase(contextVk);
+}
+
 void ShareGroupVk::onDestroy(const egl::Display *display)
 {
     RendererVk *renderer = vk::GetImpl(display)->getRenderer();
