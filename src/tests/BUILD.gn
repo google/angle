@@ -26,7 +26,7 @@ if (is_android) {
     ]
 
     deps = [
-      "//build/android:native_libraries_java",
+      "//build/android:build_java",
       "//build/android/gtest_apk:native_test_instrumentation_test_runner_java",
     ]
   }
