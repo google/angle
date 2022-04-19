@@ -51,6 +51,7 @@ DEFAULT_SCREENSHOT_PREFIX = 'angle_vulkan_'
 SWIFTSHADER_SCREENSHOT_PREFIX = 'angle_vulkan_swiftshader_'
 DEFAULT_BATCH_SIZE = 5
 DEFAULT_LOG = 'info'
+DEFAULT_GOLD_INSTANCE = 'angle'
 
 # Filters out stuff like: " I   72.572s run_tests_on_device(96071FFAZ00096) "
 ANDROID_LOGGING_PREFIX = r'I +\d+.\d+s \w+\(\w+\)  '
@@ -294,7 +295,7 @@ def _run_tests(args, tests, extra_flags, env, screenshot_dir, results, test_resu
         gold_properties = angle_skia_gold_properties.ANGLESkiaGoldProperties(args)
         gold_session_manager = angle_skia_gold_session_manager.ANGLESkiaGoldSessionManager(
             skia_gold_temp_dir, gold_properties)
-        gold_session = gold_session_manager.GetSkiaGoldSession(keys)
+        gold_session = gold_session_manager.GetSkiaGoldSession(keys, instance=args.instance)
 
         traces = [trace.split(' ')[0] for trace in tests]
 
@@ -404,6 +405,13 @@ def main():
     parser.add_argument(
         '-l', '--log', help='Log output level. Default is %s.' % DEFAULT_LOG, default=DEFAULT_LOG)
     parser.add_argument('--swiftshader', help='Test with SwiftShader.', action='store_true')
+    parser.add_argument(
+        '-i',
+        '--instance',
+        '--gold-instance',
+        '--skia-gold-instance',
+        help='Skia Gold instance. Default is "%s".' % DEFAULT_GOLD_INSTANCE,
+        default=DEFAULT_GOLD_INSTANCE)
 
     add_skia_gold_args(parser)
 
