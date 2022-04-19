@@ -107,6 +107,7 @@ class SurfaceMtl : public SurfaceImpl
     bool mAutoResolveMSColorTexture = false;
 
     bool mRobustResourceInit = false;
+    bool mContentInitialized = false;
 
     mtl::Format mColorFormat;
     mtl::Format mDepthFormat;
@@ -154,8 +155,6 @@ class WindowSurfaceMtl : public SurfaceMtl
                                             FramebufferAttachmentRenderTarget **rtOut) override;
 
     angle::Result ensureCurrentDrawableObtained(const gl::Context *context);
-    angle::Result ensureCurrentDrawableObtained(const gl::Context *context,
-                                                bool *newDrawableOut /** nullable */);
 
     // Ensure the the texture returned from getColorTexture() is ready for glReadPixels(). This
     // implicitly calls ensureCurrentDrawableObtained().

@@ -687,6 +687,26 @@ angle::Result FramebufferMtl::getSamplePosition(const gl::Context *context,
     return angle::Result::Stop;
 }
 
+bool FramebufferMtl::prepareForUse(const gl::Context *context) const
+{
+    if (mBackbuffer)
+    {
+        // Backbuffer might obtain new drawable, which means it might change the
+        // the native texture used as the target of the render pass.
+        // We need to call this before creating render encoder.
+        if (IsError(mBackbuffer->ensureCurrentDrawableObtained(context)))
+        {
+            return false;
+        }
+
+        if (mBackbuffer->hasRobustResourceInit())
+        {
+            (void)mBackbuffer->initializeContents(context, gl::ImageIndex::Make2D(0));
+        }
+    }
+    return true;
+}
+
 RenderTargetMtl *FramebufferMtl::getColorReadRenderTarget(const gl::Context *context) const
 {
     if (mState.getReadIndex() >= mColorRenderTargets.size())
@@ -694,18 +714,9 @@ RenderTargetMtl *FramebufferMtl::getColorReadRenderTarget(const gl::Context *con
         return nullptr;
     }
 
-    if (mBackbuffer)
+    if (!prepareForUse(context))
     {
-        bool isNewDrawable = false;
-        if (IsError(mBackbuffer->ensureCurrentDrawableObtained(context, &isNewDrawable)))
-        {
-            return nullptr;
-        }
-
-        if (isNewDrawable && mBackbuffer->hasRobustResourceInit())
-        {
-            (void)mBackbuffer->initializeContents(context, gl::ImageIndex::Make2D(0));
-        }
+        return nullptr;
     }
 
     return mColorRenderTargets[mState.getReadIndex()];
@@ -761,22 +772,9 @@ mtl::RenderCommandEncoder *FramebufferMtl::ensureRenderPassStarted(const gl::Con
 {
     ContextMtl *contextMtl = mtl::GetImpl(context);
 
-    if (mBackbuffer)
+    if (!prepareForUse(context))
     {
-        // Backbuffer might obtain new drawable, which means it might change the
-        // the native texture used as the target of the render pass.
-        // We need to call this before creating render encoder.
-        bool isNewDrawable;
-        if (IsError(mBackbuffer->ensureCurrentDrawableObtained(context, &isNewDrawable)))
-        {
-            return nullptr;
-        }
-
-        if (isNewDrawable && mBackbuffer->hasRobustResourceInit())
-        {
-            // Apply robust resource initialization on newly obtained drawable.
-            (void)mBackbuffer->initializeContents(context, gl::ImageIndex::Make2D(0));
-        }
+        return nullptr;
     }
 
     // Only support ensureRenderPassStarted() with different load & store options only. The

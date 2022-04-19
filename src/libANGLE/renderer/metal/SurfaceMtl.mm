@@ -255,6 +255,12 @@ angle::Result SurfaceMtl::initializeContents(const gl::Context *context,
                                              const gl::ImageIndex &imageIndex)
 {
     ASSERT(mColorTexture);
+
+    if (mContentInitialized)
+    {
+        return angle::Result::Continue;
+    }
+
     ContextMtl *contextMtl = mtl::GetImpl(context);
 
     // Use loadAction=clear
@@ -279,6 +285,7 @@ angle::Result SurfaceMtl::initializeContents(const gl::Context *context,
     }
     mtl::RenderCommandEncoder *encoder = contextMtl->getRenderPassCommandEncoder(rpDesc);
     encoder->setStoreAction(MTLStoreActionStore);
+    mContentInitialized = true;
 
     return angle::Result::Continue;
 }
@@ -499,14 +506,7 @@ EGLint WindowSurfaceMtl::getSwapBehavior() const
 angle::Result WindowSurfaceMtl::initializeContents(const gl::Context *context,
                                                    const gl::ImageIndex &imageIndex)
 {
-    bool newDrawable;
-    ANGLE_TRY(ensureCurrentDrawableObtained(context, &newDrawable));
-
-    if (!newDrawable)
-    {
-        return angle::Result::Continue;
-    }
-
+    ANGLE_TRY(ensureCurrentDrawableObtained(context));
     return SurfaceMtl::initializeContents(context, imageIndex);
 }
 
@@ -516,7 +516,7 @@ angle::Result WindowSurfaceMtl::getAttachmentRenderTarget(const gl::Context *con
                                                           GLsizei samples,
                                                           FramebufferAttachmentRenderTarget **rtOut)
 {
-    ANGLE_TRY(ensureCurrentDrawableObtained(context, nullptr));
+    ANGLE_TRY(ensureCurrentDrawableObtained(context));
     ANGLE_TRY(ensureCompanionTexturesSizeCorrect(context));
 
     return SurfaceMtl::getAttachmentRenderTarget(context, binding, imageIndex, samples, rtOut);
@@ -524,16 +524,6 @@ angle::Result WindowSurfaceMtl::getAttachmentRenderTarget(const gl::Context *con
 
 angle::Result WindowSurfaceMtl::ensureCurrentDrawableObtained(const gl::Context *context)
 {
-    return ensureCurrentDrawableObtained(context, nullptr);
-}
-angle::Result WindowSurfaceMtl::ensureCurrentDrawableObtained(const gl::Context *context,
-                                                              bool *newDrawableOut)
-{
-    if (newDrawableOut)
-    {
-        *newDrawableOut = !mCurrentDrawable;
-    }
-
     if (!mCurrentDrawable)
     {
         ANGLE_TRY(obtainNextDrawable(context));
@@ -556,7 +546,7 @@ angle::Result WindowSurfaceMtl::ensureCompanionTexturesSizeCorrect(const gl::Con
 
 angle::Result WindowSurfaceMtl::ensureColorTextureReadyForReadPixels(const gl::Context *context)
 {
-    ANGLE_TRY(ensureCurrentDrawableObtained(context, nullptr));
+    ANGLE_TRY(ensureCurrentDrawableObtained(context));
 
     if (mMSColorTexture)
     {
@@ -632,6 +622,7 @@ angle::Result WindowSurfaceMtl::obtainNextDrawable(const gl::Context *context)
             mMetalLayer.get().allowsNextDrawableTimeout = NO;
             mCurrentDrawable.retainAssign([mMetalLayer nextDrawable]);
             mMetalLayer.get().allowsNextDrawableTimeout = YES;
+            mContentInitialized                         = false;
         }
 
         if (!mColorTexture)
