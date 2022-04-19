@@ -6165,9 +6165,9 @@ angle::Result ContextVk::flushAndGetSerial(const vk::Semaphore *signalSemaphore,
     if ((renderPassClosureReason == RenderPassClosureReason::GLFlush ||
          renderPassClosureReason == RenderPassClosureReason::GLFinish ||
          renderPassClosureReason == RenderPassClosureReason::EGLSwapBuffers) &&
-        isDueForBufferPoolPrune())
+        mShareGroupVk->isDueForBufferPoolPrune())
     {
-        pruneDefaultBufferPools();
+        mShareGroupVk->pruneDefaultBufferPools(mRenderer);
     }
 
     return angle::Result::Continue;
@@ -7220,23 +7220,6 @@ uint32_t UpdateDescriptorSetsBuilder::flushDescriptorSetUpdates(VkDevice device)
     mDescriptorImageInfos.clear();
 
     return retVal;
-}
-bool ContextVk::isDueForBufferPoolPrune() const
-{
-    if (mState.hasDisplayTextureShareGroup())
-    {
-        return mRenderer->isDueForBufferPoolPrune();
-    }
-    return mShareGroupVk->isDueForBufferPoolPrune();
-}
-
-void ContextVk::pruneDefaultBufferPools()
-{
-    if (mState.hasDisplayTextureShareGroup())
-    {
-        return mRenderer->pruneDefaultBufferPools();
-    }
-    return mShareGroupVk->pruneDefaultBufferPools(mRenderer);
 }
 
 void ContextVk::resetPerFramePerfCounters()

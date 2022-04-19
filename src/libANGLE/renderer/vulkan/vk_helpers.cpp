@@ -2959,12 +2959,20 @@ angle::Result BufferPool::allocateBuffer(Context *context,
     return angle::Result::Continue;
 }
 
-void BufferPool::destroy(RendererVk *renderer)
+void BufferPool::destroy(RendererVk *renderer, bool orphanNonEmptyBufferBlock)
 {
     for (std::unique_ptr<BufferBlock> &block : mBufferBlocks)
     {
-        ASSERT(block->isEmpty());
-        block->destroy(renderer);
+        if (block->isEmpty())
+        {
+            block->destroy(renderer);
+        }
+        else
+        {
+            // When orphan is not allowed, all BufferBlocks must be empty.
+            ASSERT(orphanNonEmptyBufferBlock);
+            renderer->addBufferBlockToOrphanList(block.release());
+        }
     }
     mBufferBlocks.clear();
 }

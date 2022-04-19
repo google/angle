@@ -70,9 +70,14 @@ class ShareGroupVk : public ShareGroupImpl
 
     // The pool dedicated for small allocations that uses faster buddy algorithm
     std::unique_ptr<vk::BufferPool> mSmallBufferPool;
+    static constexpr VkDeviceSize kMaxSizeToUseSmallBufferPool = 256;
 
     // The system time when last pruneEmptyBuffer gets called.
     double mLastPruneTime;
+
+    // If true, it is expected that a BufferBlock may still in used by textures that outlived
+    // ShareGroup. The non-empty BufferBlock will be put into RendererVk's orphan list instead.
+    bool mOrphanNonEmptyBufferBlock;
 };
 
 class DisplayVk : public DisplayImpl, public vk::Context
