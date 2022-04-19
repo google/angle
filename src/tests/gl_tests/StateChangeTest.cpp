@@ -4770,6 +4770,114 @@ void main()
     glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 }
 
+// Tests that writing to an SSBO in the vertex shader before and after a change to the drawbuffers
+// still works
+TEST_P(SimpleStateChangeTestES31, VertWriteSSBOThenChangeDrawbuffersThenWriteSSBO)
+{
+    GLint maxVertexShaderStorageBlocks;
+    glGetIntegerv(GL_MAX_VERTEX_SHADER_STORAGE_BLOCKS, &maxVertexShaderStorageBlocks);
+
+    ANGLE_SKIP_TEST_IF(maxVertexShaderStorageBlocks < 1);
+
+    constexpr GLsizei kSize = 1;
+
+    GLTexture color;
+    glBindTexture(GL_TEXTURE_2D, color);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kSize, kSize);
+    EXPECT_GL_NO_ERROR();
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color, 0);
+    EXPECT_GL_NO_ERROR();
+
+    constexpr std::array<float, 4> kBufferInitValue = {0.125f, 0.25f, 0.5f, 1.0f};
+    GLBuffer buffer;
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, buffer);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(kBufferInitValue), kBufferInitValue.data(),
+                 GL_STATIC_DRAW);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, buffer);
+
+    // Create a program that writes to the SSBO in the vertex shader.
+    constexpr char kVS[] = R"(#version 310 es
+in vec4 a_position;
+uniform vec4 value;
+layout(binding = 0, std430) buffer Output {
+    vec4 value;
+} b;
+void main()
+{
+    b.value = value;
+    gl_Position = a_position;
+})";
+
+    GLuint vs = CompileShader(GL_VERTEX_SHADER, kVS);
+    GLuint fs = CompileShader(GL_FRAGMENT_SHADER, essl31_shaders::fs::Green());
+
+    const GLuint program = glCreateProgram();
+    glAttachShader(program, vs);
+    glAttachShader(program, fs);
+    glLinkProgram(program);
+    CheckLinkStatusAndReturnProgram(program, true);
+
+    // Detach the shaders, so any draw-time shader rewriting won't be able to use them.
+    glDetachShader(program, vs);
+    glDetachShader(program, fs);
+
+    glUseProgram(program);
+    GLint positionLoc = glGetAttribLocation(program, essl31_shaders::PositionAttrib());
+    ASSERT_NE(-1, positionLoc);
+    GLint valueLoc = glGetUniformLocation(program, "value");
+    ASSERT_NE(-1, valueLoc);
+
+    const std::array<Vector3, 6> &quadVertices = GetQuadVertices();
+    const size_t posBufferSize                 = quadVertices.size() * sizeof(Vector3);
+
+    GLBuffer posBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, posBuffer);
+    glBufferData(GL_ARRAY_BUFFER, posBufferSize, quadVertices.data(), GL_STATIC_DRAW);
+    glVertexAttribPointer(positionLoc, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(positionLoc);
+
+    glUseProgram(program);
+    constexpr float kValue1[4] = {0.1f, 0.2f, 0.3f, 0.4f};
+
+    glUniform4fv(valueLoc, 1, kValue1);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
+    EXPECT_GL_NO_ERROR();
+
+    // Verify that the program wrote the SSBO correctly.
+    const float *ptr = reinterpret_cast<const float *>(
+        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, sizeof(kBufferInitValue), GL_MAP_READ_BIT));
+
+    for (int i = 0; i < 4; ++i)
+    {
+        EXPECT_NEAR(ptr[i], kValue1[i], 0.001);
+    }
+
+    glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+
+    GLenum drawBuffers[] = {GL_NONE};
+    glDrawBuffers(1, drawBuffers);
+
+    constexpr float kValue2[4] = {0.5f, 0.6f, 0.7f, 0.9f};
+    glUniform4fv(valueLoc, 1, kValue2);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
+    EXPECT_GL_NO_ERROR();
+    // Verify that the program wrote the SSBO correctly.
+    ptr = reinterpret_cast<const float *>(
+        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, sizeof(kBufferInitValue), GL_MAP_READ_BIT));
+
+    for (int i = 0; i < 4; ++i)
+    {
+        EXPECT_NEAR(ptr[i], kValue2[i], 0.001);
+    }
+
+    glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+}
+
 // Tests that rendering to a texture in one draw call followed by sampling from it in a dispatch
 // call works correctly.  This requires an implicit barrier in between the calls.
 TEST_P(SimpleStateChangeTestES31, DrawThenSampleWithCompute)

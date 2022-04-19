@@ -157,7 +157,8 @@ class DynamicHLSL : angle::NonCopyable
         const std::vector<PixelShaderOutputVariable> &outputVariables,
         bool usesFragDepth,
         const std::vector<GLenum> &outputLayout,
-        const std::vector<rx::ShaderStorageBlock> &shaderStorageBlocks) const;
+        const std::vector<rx::ShaderStorageBlock> &shaderStorageBlocks,
+        size_t baseUAVRegister) const;
     std::string generateShaderForImage2DBindSignature(
         const d3d::Context *context,
         ProgramD3D &programD3D,

@@ -841,7 +841,7 @@ void StateManager11::setUnorderedAccessViewInternal(gl::ShaderType shaderType,
             case gl::ShaderType::Vertex:
             case gl::ShaderType::Fragment:
             {
-                UINT baseUAVRegister = static_cast<UINT>(mProgramD3D->getNumPixelShaderOutputs());
+                UINT baseUAVRegister = static_cast<UINT>(mProgramD3D->getPixelShaderKey().size());
                 deviceContext->OMSetRenderTargetsAndUnorderedAccessViews(
                     D3D11_KEEP_RENDER_TARGETS_AND_DEPTH_STENCIL, nullptr, nullptr,
                     baseUAVRegister + resourceSlot, 1, &uavPtr, nullptr);

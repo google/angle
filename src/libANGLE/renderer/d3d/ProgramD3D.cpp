@@ -1544,7 +1544,8 @@ angle::Result ProgramD3D::getPixelExecutableForCachedOutputLayout(
 
     std::string finalPixelHLSL = mDynamicHLSL->generatePixelShaderForOutputSignature(
         mShaderHLSL[gl::ShaderType::Fragment], mPixelShaderKey, mUsesFragDepth,
-        mPixelShaderOutputLayoutCache, mShaderStorageBlocks[gl::ShaderType::Fragment]);
+        mPixelShaderOutputLayoutCache, mShaderStorageBlocks[gl::ShaderType::Fragment],
+        mPixelShaderKey.size());
 
     // Generate new pixel executable
     ShaderExecutableD3D *pixelExecutable = nullptr;
@@ -1588,7 +1589,7 @@ angle::Result ProgramD3D::getVertexExecutableForCachedInputLayout(
     // Generate new dynamic layout with attribute conversions
     std::string finalVertexHLSL = mDynamicHLSL->generateVertexShaderForInputLayout(
         mShaderHLSL[gl::ShaderType::Vertex], mCachedInputLayout, mState.getProgramInputs(),
-        mShaderStorageBlocks[gl::ShaderType::Vertex], getNumPixelShaderOutputs());
+        mShaderStorageBlocks[gl::ShaderType::Vertex], mPixelShaderKey.size());
 
     // Generate new vertex executable
     ShaderExecutableD3D *vertexExecutable = nullptr;
