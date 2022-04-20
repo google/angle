@@ -774,19 +774,27 @@ TEST_P(VulkanPerformanceCounterTest, IndependentBufferCopiesShareSingleBarrier)
     // Step 1: Set up four buffers for two copies.
     GLBuffer srcA;
     glBindBuffer(GL_COPY_READ_BUFFER, srcA);
-    glBufferData(GL_COPY_READ_BUFFER, sizeof(srcDataA), srcDataA, GL_STATIC_COPY);
+    // Note: We can't use GL_STATIC_COPY. Using STATIC will cause driver to allocate a host
+    // invisible memory and issue a copyToBuffer, which will trigger outsideRenderPassCommandBuffer
+    // flush when glCopyBufferSubData is called due to read after write. That will break the
+    // expectations and cause test to fail.
+    glBufferData(GL_COPY_READ_BUFFER, sizeof(srcDataA), srcDataA, GL_DYNAMIC_COPY);
 
     GLBuffer dstA;
     glBindBuffer(GL_COPY_WRITE_BUFFER, dstA);
-    glBufferData(GL_COPY_WRITE_BUFFER, sizeof(srcDataA[0]) * 2, nullptr, GL_STATIC_COPY);
+    // Note: We can't use GL_STATIC_COPY. Using STATIC will cause driver to allocate a host
+    // invisible memory and issue a copyToBuffer, which will trigger outsideRenderPassCommandBuffer
+    // flush when glCopyBufferSubData is called due to write after write. That will break the
+    // expectations and cause test to fail.
+    glBufferData(GL_COPY_WRITE_BUFFER, sizeof(srcDataA[0]) * 2, nullptr, GL_DYNAMIC_COPY);
 
     GLBuffer srcB;
     glBindBuffer(GL_COPY_READ_BUFFER, srcB);
-    glBufferData(GL_COPY_READ_BUFFER, sizeof(srcDataB), srcDataB, GL_STATIC_COPY);
+    glBufferData(GL_COPY_READ_BUFFER, sizeof(srcDataB), srcDataB, GL_DYNAMIC_COPY);
 
     GLBuffer dstB;
     glBindBuffer(GL_COPY_WRITE_BUFFER, dstB);
-    glBufferData(GL_COPY_WRITE_BUFFER, sizeof(srcDataB[0]) * 2, nullptr, GL_STATIC_COPY);
+    glBufferData(GL_COPY_WRITE_BUFFER, sizeof(srcDataB[0]) * 2, nullptr, GL_DYNAMIC_COPY);
 
     // We expect that ANGLE generate zero additional command buffers.
     uint32_t expectedFlushCount = getPerfCounters().flushedOutsideRenderPassCommandBuffers;

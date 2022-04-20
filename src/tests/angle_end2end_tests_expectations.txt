@@ -499,9 +499,24 @@
 1224996 WIN AMD VULKAN : GLSLTest_ES3.InitGlobalComplexConstant/* = SKIP
 1224996 WIN AMD VULKAN : GLSLTest_ES31.TypesUsedInDifferentBlockStorages/* = SKIP
 7144 WIN AMD VULKAN : GLSLTest.AliasingFunctionOutParamAndGlobal/* = SKIP
-
 // Test is disabled as it only pertains to desktop GLSL
 6197 : GLSLTest_ES31.InterpolateAtWithSwizzle/* = SKIP
+// The following tests are disabled because of AMD vulkan driver crash on compiling compute shader for convertIndexBufferGPU
+7227 WIN AMD VULKAN : DrawElementsTest.PartOfIndexBufferThenAll/* = SKIP
+7227 WIN AMD VULKAN : GLSLTest_ES3.GLVertexIDIntegerTextureDrawElementsU8/* = SKIP
+7227 WIN AMD VULKAN : IndexedPointsTestUByte.* = SKIP
+7227 WIN AMD VULKAN : InstancingTest.IndexedAttrib0TriFanBuffer* = SKIP
+7227 WIN AMD VULKAN : InstancingTest.IndexedAttrib1TriFanBuffer* = SKIP
+7227 WIN AMD VULKAN : MultisampleTest.ContentPresevedAfterInterruption/* = SKIP
+7227 WIN AMD VULKAN : RobustResourceInitTest.OutOfBoundsIndexBuffers/* = SKIP
+7227 WIN AMD VULKAN : SimpleStateChangeTest.DrawElementsThenDrawElementsNewIndexBuffer/* = SKIP
+7227 WIN AMD VULKAN : SimpleStateChangeTest.DrawElementsUBYTEX2ThenDrawElementsUSHORT/* = SKIP
+7227 WIN AMD VULKAN : SimpleStateChangeTest.UpdateBoundElementArrayBuffer/* = SKIP
+7227 WIN AMD VULKAN : TriangleFanDrawTest.DrawTriangleFanElements/* = SKIP
+7227 WIN AMD VULKAN : TriangleFanDrawTest.DrawTriangleFanPrimitiveRestartAt* = SKIP
+7227 WIN AMD VULKAN : WebGLCompatibilityTest.DrawElementsBufferOutOfBoundsInIndexBuffer/* = SKIP
+7227 WIN AMD VULKAN : WebGLCompatibilityTest.DrawElementsBufferOutOfBoundsInVertexBuffer/* = SKIP
+7227 WIN AMD VULKAN : WebGLCompatibilityTest.DrawElementsOffsetRestriction/* = SKIP
 
 // Slow tests
 5076 : GLSLTest.VerifyMaxVertexUniformVectors* = TIMEOUT

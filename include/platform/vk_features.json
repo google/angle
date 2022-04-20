@@ -887,6 +887,15 @@
                 "Create pipeline with default state during glLinkProgram"
             ],
             "issue": "http://anglebug.com/7046"
+        },
+
+        {
+            "name": "prefer_device_local_memory_host_visible",
+            "category": "Features",
+            "description": [
+                "Prefer adding HOST_VISIBLE flag for DEVICE_LOCAL memory when picking memory types"
+            ],
+            "issue": "http://anglebug.com/7047"
         }
     ]
 }

@@ -167,6 +167,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::PreAddTexelFetchOffsets, "preAddTexelFetchOffsets"},
     {Feature::PreferAggregateBarrierCalls, "preferAggregateBarrierCalls"},
     {Feature::PreferCPUForBufferSubData, "preferCPUForBufferSubData"},
+    {Feature::PreferDeviceLocalMemoryHostVisible, "preferDeviceLocalMemoryHostVisible"},
     {Feature::PreferDrawClearOverVkCmdClearAttachments, "preferDrawClearOverVkCmdClearAttachments"},
     {Feature::PreferSkippingInvalidateForEmulatedFormats,
      "preferSkippingInvalidateForEmulatedFormats"},

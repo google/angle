@@ -159,6 +159,7 @@ enum class Feature
     PreAddTexelFetchOffsets,
     PreferAggregateBarrierCalls,
     PreferCPUForBufferSubData,
+    PreferDeviceLocalMemoryHostVisible,
     PreferDrawClearOverVkCmdClearAttachments,
     PreferSkippingInvalidateForEmulatedFormats,
     PreferSubmitAtFBOBoundary,

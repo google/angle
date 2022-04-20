@@ -523,7 +523,7 @@ void main()
     glDispatchCompute(1, 1, 1);
     glMemoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT);
     mappedBuffer =
-        glMapBufferRange(GL_ATOMIC_COUNTER_BUFFER, 0, sizeof(GLuint) * 3, GL_MAP_READ_BIT);
+        glMapBufferRange(GL_ATOMIC_COUNTER_BUFFER, 0, sizeof(GLuint) * 3, GL_MAP_WRITE_BIT);
 
     memcpy(mappedBuffer, expectedBufferData, sizeof(expectedBufferData));
     glUnmapBuffer(GL_ATOMIC_COUNTER_BUFFER);

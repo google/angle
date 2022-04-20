@@ -217,6 +217,16 @@ class BufferVk : public BufferImpl
 
     // Tracks if BufferVk object has valid data or not.
     bool mHasValidData;
+
+    // True if the buffer is currently mapped for CPU write access. If the map call is originated
+    // from OpenGLES API call, then this should be consistent with mState.getAccessFlags() bits.
+    // Otherwise it is mapped from ANGLE internal and will not be consistent with mState access
+    // bits, so we have to keep record of it.
+    bool mIsMappedForWrite;
+    // Similar as mIsMappedForWrite, this maybe different from mState's getMapOffset/getMapLength if
+    // mapped from angle internal.
+    VkDeviceSize mMappedOffset;
+    VkDeviceSize mMappedLength;
 };
 
 }  // namespace rx

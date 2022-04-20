@@ -9659,12 +9659,16 @@ void InitBuffer(GLuint program,
 template <typename T>
 bool VerifyBuffer(GLuint buffer, const T data[], uint32_t dataSize)
 {
+    uint32_t sizeInBytes = dataSize * sizeof(*data);
+
+    glMemoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT);
+
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, buffer);
 
     const T *ptr = reinterpret_cast<const T *>(
-        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, dataSize, GL_MAP_READ_BIT));
+        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, sizeInBytes, GL_MAP_READ_BIT));
 
-    bool isCorrect = memcmp(ptr, data, dataSize * sizeof(*data)) == 0;
+    bool isCorrect = memcmp(ptr, data, sizeInBytes) == 0;
     glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 
     return isCorrect;

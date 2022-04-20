@@ -593,6 +593,11 @@ struct FeaturesVk : FeatureSetBase
         "createPipelineDuringLink", FeatureCategory::VulkanFeatures,
         "Create pipeline with default state during glLinkProgram", &members,
         "http://anglebug.com/7046"};
+
+    FeatureInfo preferDeviceLocalMemoryHostVisible = {
+        "preferDeviceLocalMemoryHostVisible", FeatureCategory::VulkanFeatures,
+        "Prefer adding HOST_VISIBLE flag for DEVICE_LOCAL memory when picking memory types",
+        &members, "http://anglebug.com/7047"};
 };
 
 inline FeaturesVk::FeaturesVk()  = default;
