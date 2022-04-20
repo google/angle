@@ -1292,24 +1292,27 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
 {
     bool canLoadDebugUtils = true;
 #if defined(ANGLE_SHARED_LIBVULKAN)
-    mLibVulkanLibrary = angle::vk::OpenLibVulkan();
-    ANGLE_VK_CHECK(displayVk, mLibVulkanLibrary, VK_ERROR_INITIALIZATION_FAILED);
-
-    PFN_vkGetInstanceProcAddr vulkanLoaderGetInstanceProcAddr =
-        reinterpret_cast<PFN_vkGetInstanceProcAddr>(
-            angle::GetLibrarySymbol(mLibVulkanLibrary, "vkGetInstanceProcAddr"));
-
-    // Set all vk* function ptrs
-    volkInitializeCustom(vulkanLoaderGetInstanceProcAddr);
-
-    uint32_t ver = volkGetInstanceVersion();
-    if (!IsAndroid() && VK_API_VERSION_MAJOR(ver) == 1 &&
-        (VK_API_VERSION_MINOR(ver) < 1 ||
-         (VK_API_VERSION_MINOR(ver) == 1 && VK_API_VERSION_PATCH(ver) < 91)))
     {
-        // http://crbug.com/1205999 - non-Android Vulkan Loader versions before 1.1.91 have a bug
-        // which prevents loading VK_EXT_debug_utils function pointers.
-        canLoadDebugUtils = false;
+        ANGLE_SCOPED_DISABLE_MSAN();
+        mLibVulkanLibrary = angle::vk::OpenLibVulkan();
+        ANGLE_VK_CHECK(displayVk, mLibVulkanLibrary, VK_ERROR_INITIALIZATION_FAILED);
+
+        PFN_vkGetInstanceProcAddr vulkanLoaderGetInstanceProcAddr =
+            reinterpret_cast<PFN_vkGetInstanceProcAddr>(
+                angle::GetLibrarySymbol(mLibVulkanLibrary, "vkGetInstanceProcAddr"));
+
+        // Set all vk* function ptrs
+        volkInitializeCustom(vulkanLoaderGetInstanceProcAddr);
+
+        uint32_t ver = volkGetInstanceVersion();
+        if (!IsAndroid() && VK_API_VERSION_MAJOR(ver) == 1 &&
+            (VK_API_VERSION_MINOR(ver) < 1 ||
+             (VK_API_VERSION_MINOR(ver) == 1 && VK_API_VERSION_PATCH(ver) < 91)))
+        {
+            // http://crbug.com/1205999 - non-Android Vulkan Loader versions before 1.1.91 have a
+            // bug which prevents loading VK_EXT_debug_utils function pointers.
+            canLoadDebugUtils = false;
+        }
     }
 #endif  // defined(ANGLE_SHARED_LIBVULKAN)
 
@@ -1324,6 +1327,7 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     uint32_t instanceLayerCount = 0;
     {
         ANGLE_SCOPED_DISABLE_LSAN();
+        ANGLE_SCOPED_DISABLE_MSAN();
         ANGLE_VK_TRY(displayVk, vkEnumerateInstanceLayerProperties(&instanceLayerCount, nullptr));
     }
 
@@ -1331,6 +1335,7 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     if (instanceLayerCount > 0)
     {
         ANGLE_SCOPED_DISABLE_LSAN();
+        ANGLE_SCOPED_DISABLE_MSAN();
         ANGLE_VK_TRY(displayVk, vkEnumerateInstanceLayerProperties(&instanceLayerCount,
                                                                    instanceLayerProps.data()));
     }
@@ -1354,6 +1359,7 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     uint32_t instanceExtensionCount = 0;
     {
         ANGLE_SCOPED_DISABLE_LSAN();
+        ANGLE_SCOPED_DISABLE_MSAN();
         ANGLE_VK_TRY(displayVk, vkEnumerateInstanceExtensionProperties(
                                     nullptr, &instanceExtensionCount, nullptr));
     }
@@ -1362,6 +1368,7 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     if (instanceExtensionCount > 0)
     {
         ANGLE_SCOPED_DISABLE_LSAN();
+        ANGLE_SCOPED_DISABLE_MSAN();
         ANGLE_VK_TRY(displayVk,
                      vkEnumerateInstanceExtensionProperties(nullptr, &instanceExtensionCount,
                                                             instanceExtensionProps.data()));
@@ -1374,12 +1381,14 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
         uint32_t instanceLayerExtensionCount = 0;
         {
             ANGLE_SCOPED_DISABLE_LSAN();
+            ANGLE_SCOPED_DISABLE_MSAN();
             ANGLE_VK_TRY(displayVk, vkEnumerateInstanceExtensionProperties(
                                         layerName, &instanceLayerExtensionCount, nullptr));
         }
         instanceExtensionProps.resize(previousExtensionCount + instanceLayerExtensionCount);
         {
             ANGLE_SCOPED_DISABLE_LSAN();
+            ANGLE_SCOPED_DISABLE_MSAN();
             ANGLE_VK_TRY(displayVk, vkEnumerateInstanceExtensionProperties(
                                         layerName, &instanceLayerExtensionCount,
                                         instanceExtensionProps.data() + previousExtensionCount));
@@ -1485,6 +1494,7 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
         uint32_t apiVersion = VK_API_VERSION_1_0;
         {
             ANGLE_SCOPED_DISABLE_LSAN();
+            ANGLE_SCOPED_DISABLE_MSAN();
             ANGLE_VK_TRY(displayVk, enumerateInstanceVersion(&apiVersion));
         }
         if ((VK_VERSION_MAJOR(apiVersion) > 1) || (VK_VERSION_MINOR(apiVersion) >= 1))
@@ -1536,11 +1546,14 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
         vk::AddToPNextChain(&instanceInfo, &validationFeatures);
     }
 
-    ANGLE_VK_TRY(displayVk, vkCreateInstance(&instanceInfo, nullptr, &mInstance));
+    {
+        ANGLE_SCOPED_DISABLE_MSAN();
+        ANGLE_VK_TRY(displayVk, vkCreateInstance(&instanceInfo, nullptr, &mInstance));
 #if defined(ANGLE_SHARED_LIBVULKAN)
-    // Load volk if we are linking dynamically
-    volkLoadInstance(mInstance);
+        // Load volk if we are linking dynamically
+        volkLoadInstance(mInstance);
 #endif  // defined(ANGLE_SHARED_LIBVULKAN)
+    }
 
     if (mEnableDebugUtils)
     {
