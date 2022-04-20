@@ -99,8 +99,9 @@
 // Generates invalid errors when compiling the shader in the GL backend
 6172 NVIDIA OpenGL : GLSLTest_ES31.TypesUsedInDifferentBlockStorages/* = SKIP
 6172 NVIDIA GLES : GLSLTest_ES31.TypesUsedInDifferentBlockStorages/* = SKIP
-6977 NVIDIA OpenGL : MipmapTestES31.UpdateBaseLevel/* = SKIP
-6977 NVIDIA GLES : MipmapTestES31.UpdateBaseLevel/* = SKIP
+6977 NVIDIA OpenGL : MipmapTestES31.GenerateMipmapWithDraw/* = SKIP
+6977 NVIDIA GLES : MipmapTestES31.GenerateMipmapWithDraw/* = SKIP
+6977 LINUX NVIDIA OpenGL : MipmapTestES31.GenerateLowerMipsWithDraw/* = SKIP
 
 // Intel Vulkan
 
