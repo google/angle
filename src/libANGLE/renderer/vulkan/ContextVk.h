@@ -447,6 +447,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
                                                vk::ImageViewHelper *colorImageView,
                                                vk::ImageHelper *colorImage,
                                                vk::ImageHelper *colorImageMS,
+                                               VkPresentModeKHR presentMode,
                                                bool *imageResolved);
 
     vk::DynamicQueryPool *getQueryPool(gl::QueryType queryType);

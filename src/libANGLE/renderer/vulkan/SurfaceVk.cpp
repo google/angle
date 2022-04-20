@@ -1698,9 +1698,9 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
     bool imageResolved = false;
     if (currentFramebuffer.valid() && !overlayHasEnabledWidget(contextVk))
     {
-        ANGLE_TRY(contextVk->optimizeRenderPassForPresent(currentFramebuffer.getHandle(),
-                                                          &image.imageViews, &image.image,
-                                                          &mColorImageMS, &imageResolved));
+        ANGLE_TRY(contextVk->optimizeRenderPassForPresent(
+            currentFramebuffer.getHandle(), &image.imageViews, &image.image, &mColorImageMS,
+            mSwapchainPresentMode, &imageResolved));
     }
 
     // Because the color attachment defers layout changes until endRenderPass time, we must call
@@ -1909,21 +1909,34 @@ angle::Result WindowSurfaceVk::doDeferredAcquireNextImage(const gl::Context *con
         ANGLE_VK_TRY(contextVk, result);
     }
 
-    if (mState.swapBehavior == EGL_BUFFER_DESTROYED && mBufferAgeQueryFrameNumber == 0)
+    // Auto-invalidate the contents of the surface.  According to EGL, on swap:
+    //
+    // - When EGL_BUFFER_DESTROYED is specified, the contents of the color image can be
+    //   invalidated.
+    //    * This is disabled with buffer age has been queried to work around a dEQP test bug.
+    // - Depth/Stencil can always be invalidated
+    //
+    // In all cases, when the present mode is DEMAND_REFRESH, swap is implicit and the swap behavior
+    // doesn't apply so no invalidation is done.
+    if (mSwapchainPresentMode != VK_PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR)
     {
-        mSwapchainImages[mCurrentSwapchainImageIndex].image.invalidateSubresourceContent(
-            contextVk, gl::LevelIndex(0), 0, 1, nullptr);
-        if (mColorImageMS.valid())
+        if (mState.swapBehavior == EGL_BUFFER_DESTROYED && mBufferAgeQueryFrameNumber == 0)
         {
-            mColorImageMS.invalidateSubresourceContent(contextVk, gl::LevelIndex(0), 0, 1, nullptr);
+            mSwapchainImages[mCurrentSwapchainImageIndex].image.invalidateSubresourceContent(
+                contextVk, gl::LevelIndex(0), 0, 1, nullptr);
+            if (mColorImageMS.valid())
+            {
+                mColorImageMS.invalidateSubresourceContent(contextVk, gl::LevelIndex(0), 0, 1,
+                                                           nullptr);
+            }
         }
-    }
-    if (mDepthStencilImage.valid())
-    {
-        mDepthStencilImage.invalidateSubresourceContent(contextVk, gl::LevelIndex(0), 0, 1,
-                                                        nullptr);
-        mDepthStencilImage.invalidateSubresourceStencilContent(contextVk, gl::LevelIndex(0), 0, 1,
-                                                               nullptr);
+        if (mDepthStencilImage.valid())
+        {
+            mDepthStencilImage.invalidateSubresourceContent(contextVk, gl::LevelIndex(0), 0, 1,
+                                                            nullptr);
+            mDepthStencilImage.invalidateSubresourceStencilContent(contextVk, gl::LevelIndex(0), 0,
+                                                                   1, nullptr);
+        }
     }
 
     return angle::Result::Continue;

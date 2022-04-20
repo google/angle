@@ -3522,6 +3522,7 @@ angle::Result ContextVk::optimizeRenderPassForPresent(VkFramebuffer framebufferH
                                                       vk::ImageViewHelper *colorImageView,
                                                       vk::ImageHelper *colorImage,
                                                       vk::ImageHelper *colorImageMS,
+                                                      VkPresentModeKHR presentMode,
                                                       bool *imageResolved)
 {
     if (!mRenderPassCommands->started())
@@ -3574,10 +3575,15 @@ angle::Result ContextVk::optimizeRenderPassForPresent(VkFramebuffer framebufferH
         onImageRenderPassWrite(gl::LevelIndex(0), 0, 1, VK_IMAGE_ASPECT_COLOR_BIT,
                                vk::ImageLayout::ColorAttachment, colorImage);
 
-        const gl::Rectangle invalidateArea(0, 0, colorImageMS->getExtents().width,
-                                           colorImageMS->getExtents().height);
-        commandBufferHelper.invalidateRenderPassColorAttachment(
-            mState, 0, vk::PackedAttachmentIndex(0), invalidateArea);
+        // Invalidate the surface.  See comment in WindowSurfaceVk::doDeferredAcquireNextImage on
+        // why this is not done when in DEMAND_REFRESH mode.
+        if (presentMode != VK_PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR)
+        {
+            const gl::Rectangle invalidateArea(0, 0, colorImageMS->getExtents().width,
+                                               colorImageMS->getExtents().height);
+            commandBufferHelper.invalidateRenderPassColorAttachment(
+                mState, 0, vk::PackedAttachmentIndex(0), invalidateArea);
+        }
 
         ANGLE_TRY(
             flushCommandsAndEndRenderPass(RenderPassClosureReason::AlreadySpecifiedElsewhere));
