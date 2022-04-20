@@ -706,25 +706,25 @@ class BlendStateExt final
 
     ///////// Data Members /////////
 
-    const FactorStorage::Type mMaxFactorMask;
+    FactorStorage::Type mMaxFactorMask;
     FactorStorage::Type mSrcColor;
     FactorStorage::Type mDstColor;
     FactorStorage::Type mSrcAlpha;
     FactorStorage::Type mDstAlpha;
 
-    const EquationStorage::Type mMaxEquationMask;
+    EquationStorage::Type mMaxEquationMask;
     EquationStorage::Type mEquationColor;
     EquationStorage::Type mEquationAlpha;
 
-    const ColorMaskStorage::Type mAllColorMask;
+    ColorMaskStorage::Type mMaxColorMask;
     ColorMaskStorage::Type mColorMask;
 
-    const DrawBufferMask mMaxEnabledMask;
+    DrawBufferMask mMaxEnabledMask;
     DrawBufferMask mEnabledMask;
     // Cache of whether the blend equation for each index is from KHR_blend_equation_advanced.
     DrawBufferMask mUsesAdvancedBlendEquationMask;
 
-    const size_t mMaxDrawBuffers;
+    size_t mMaxDrawBuffers;
 };
 
 // Used in StateCache
