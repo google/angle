@@ -2455,8 +2455,7 @@ bool ValidateCreateWindowSurface(const ValidationContext *val,
                     case EGL_BACK_BUFFER:
                         break;
                     case EGL_SINGLE_BUFFER:
-                        val->setError(EGL_BAD_MATCH);
-                        return false;  // Rendering directly to front buffer not supported
+                        break;
                     default:
                         val->setError(EGL_BAD_ATTRIBUTE);
                         return false;

@@ -1077,6 +1077,14 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk)
     ANGLE_VK_CHECK(displayVk, (mSurfaceCaps.supportedCompositeAlpha & mCompositeAlpha) != 0,
                    VK_ERROR_INITIALIZATION_FAILED);
 
+    // Single buffer, if supported
+    if ((mState.attributes.getAsInt(EGL_RENDER_BUFFER, EGL_BACK_BUFFER) == EGL_SINGLE_BUFFER) &&
+        supportsPresentMode(VK_PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR))
+    {
+        std::vector<VkPresentModeKHR> presentModes = {VK_PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR};
+        mDesiredSwapchainPresentMode               = GetDesiredPresentMode(presentModes, 0);
+    }
+
     ANGLE_TRY(createSwapChain(displayVk, extents, VK_NULL_HANDLE));
 
     // Create the semaphores that will be used for vkAcquireNextImageKHR.
