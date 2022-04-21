@@ -593,7 +593,7 @@
 7085 : VulkanPerformanceCounterTest.DepthStencilInvalidateDrawDisable/* = SKIP
 
 // Flaking due to threading usage of the queue
-7204 : VulkanImageTest.PreInitializedOnGLImport/ES3_Vulkan_SwiftShader_AsyncCommandQueue = SKIP
+7204 : VulkanImageTest.PreInitializedOnGLImport/*Vulkan_SwiftShader_AsyncCommandQueue = SKIP
 
 // Causes incompatible error in GL back-end.
 7218 OPENGL : TransformFeedbackTest.DrawAfterDeletingPausedBuffer/* = SKIP
