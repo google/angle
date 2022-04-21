@@ -141,7 +141,7 @@ ShaderInterfaceVariableInfo *AddLocationInfo(ShaderInterfaceVariableInfoMap *inf
     if (info.location != ShaderInterfaceVariableInfo::kInvalid)
     {
         // TODO: Correctly support in and out interface variables with identical name.
-        // anglebug.com/4524
+        // anglebug.com/7220
         ASSERT(info.location == location);
         ASSERT(info.component == component);
     }
