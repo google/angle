@@ -187,6 +187,7 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
                                         bool fixedSampleLocations) override;
 
     angle::Result initializeContents(const gl::Context *context,
+                                     GLenum binding,
                                      const gl::ImageIndex &imageIndex) override;
 
     const vk::ImageHelper &getImage() const

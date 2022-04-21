@@ -798,7 +798,7 @@ Result SerializeRenderbuffer(const gl::Context *context,
     SerializeRenderbufferState(json, renderbuffer->getState());
     json->addString("Label", renderbuffer->getLabel());
 
-    if (renderbuffer->initState(gl::ImageIndex()) == gl::InitState::Initialized)
+    if (renderbuffer->initState(GL_NONE, gl::ImageIndex()) == gl::InitState::Initialized)
     {
         if (renderbuffer->getSamples() > 1 && renderbuffer->getFormat().info->depthBits > 0)
         {

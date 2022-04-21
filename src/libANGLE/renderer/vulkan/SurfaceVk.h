@@ -74,6 +74,7 @@ class OffscreenSurfaceVk : public SurfaceVk
     EGLint getSwapBehavior() const override;
 
     angle::Result initializeContents(const gl::Context *context,
+                                     GLenum binding,
                                      const gl::ImageIndex &imageIndex) override;
 
     vk::ImageHelper *getColorAttachmentImage();
@@ -247,6 +248,7 @@ class WindowSurfaceVk : public SurfaceVk
     EGLint getSwapBehavior() const override;
 
     angle::Result initializeContents(const gl::Context *context,
+                                     GLenum binding,
                                      const gl::ImageIndex &imageIndex) override;
 
     vk::Framebuffer &chooseFramebuffer(const SwapchainResolveMode swapchainResolveMode);

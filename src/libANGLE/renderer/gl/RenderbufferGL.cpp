@@ -121,6 +121,7 @@ GLuint RenderbufferGL::getRenderbufferID() const
 }
 
 angle::Result RenderbufferGL::initializeContents(const gl::Context *context,
+                                                 GLenum binding,
                                                  const gl::ImageIndex &imageIndex)
 {
     BlitGL *blitter = GetBlitGL(context);

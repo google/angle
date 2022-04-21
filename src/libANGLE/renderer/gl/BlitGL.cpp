@@ -1010,13 +1010,17 @@ angle::Result BlitGL::clearRenderbuffer(const gl::Context *context,
     return angle::Result::Continue;
 }
 
-angle::Result BlitGL::clearFramebuffer(const gl::Context *context, FramebufferGL *source)
+angle::Result BlitGL::clearFramebuffer(const gl::Context *context,
+                                       bool colorClear,
+                                       bool depthClear,
+                                       bool stencilClear,
+                                       FramebufferGL *source)
 {
     // initializeResources skipped because no local state is used
 
     // Clear all attachments
     GLbitfield clearMask = 0;
-    ANGLE_TRY(SetClearState(mStateManager, true, true, true, &clearMask));
+    ANGLE_TRY(SetClearState(mStateManager, colorClear, depthClear, stencilClear, &clearMask));
 
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, source->getFramebufferID());
     ANGLE_GL_TRY(context, mFunctions->clear(clearMask));

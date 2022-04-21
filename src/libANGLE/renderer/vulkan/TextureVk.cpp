@@ -2761,6 +2761,7 @@ angle::Result TextureVk::syncState(const gl::Context *context,
 }
 
 angle::Result TextureVk::initializeContents(const gl::Context *context,
+                                            GLenum binding,
                                             const gl::ImageIndex &imageIndex)
 {
     ContextVk *contextVk      = vk::GetImpl(context);

@@ -2020,6 +2020,7 @@ gl::TextureType TextureGL::getType() const
 }
 
 angle::Result TextureGL::initializeContents(const gl::Context *context,
+                                            GLenum binding,
                                             const gl::ImageIndex &imageIndex)
 {
     ContextGL *contextGL              = GetImplAs<ContextGL>(context);

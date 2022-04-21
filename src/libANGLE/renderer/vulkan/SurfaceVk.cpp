@@ -606,20 +606,29 @@ EGLint OffscreenSurfaceVk::getSwapBehavior() const
 }
 
 angle::Result OffscreenSurfaceVk::initializeContents(const gl::Context *context,
+                                                     GLenum binding,
                                                      const gl::ImageIndex &imageIndex)
 {
     ContextVk *contextVk = vk::GetImpl(context);
 
-    if (mColorAttachment.image.valid())
+    switch (binding)
     {
-        mColorAttachment.image.stageRobustResourceClear(imageIndex);
-        ANGLE_TRY(mColorAttachment.image.flushAllStagedUpdates(contextVk));
-    }
+        case GL_BACK:
+            ASSERT(mColorAttachment.image.valid());
+            mColorAttachment.image.stageRobustResourceClear(imageIndex);
+            ANGLE_TRY(mColorAttachment.image.flushAllStagedUpdates(contextVk));
+            break;
 
-    if (mDepthStencilAttachment.image.valid())
-    {
-        mDepthStencilAttachment.image.stageRobustResourceClear(imageIndex);
-        ANGLE_TRY(mDepthStencilAttachment.image.flushAllStagedUpdates(contextVk));
+        case GL_DEPTH:
+        case GL_STENCIL:
+            ASSERT(mDepthStencilAttachment.image.valid());
+            mDepthStencilAttachment.image.stageRobustResourceClear(imageIndex);
+            ANGLE_TRY(mDepthStencilAttachment.image.flushAllStagedUpdates(contextVk));
+            break;
+
+        default:
+            UNREACHABLE();
+            break;
     }
     return angle::Result::Continue;
 }
@@ -2305,6 +2314,7 @@ const vk::Semaphore *WindowSurfaceVk::getAndResetAcquireImageSemaphore()
 }
 
 angle::Result WindowSurfaceVk::initializeContents(const gl::Context *context,
+                                                  GLenum binding,
                                                   const gl::ImageIndex &imageIndex)
 {
     ContextVk *contextVk = vk::GetImpl(context);
@@ -2321,15 +2331,26 @@ angle::Result WindowSurfaceVk::initializeContents(const gl::Context *context,
     ASSERT(mSwapchainImages.size() > 0);
     ASSERT(mCurrentSwapchainImageIndex < mSwapchainImages.size());
 
-    vk::ImageHelper *image =
-        isMultiSampled() ? &mColorImageMS : &mSwapchainImages[mCurrentSwapchainImageIndex].image;
-    image->stageRobustResourceClear(imageIndex);
-    ANGLE_TRY(image->flushAllStagedUpdates(contextVk));
-
-    if (mDepthStencilImage.valid())
+    switch (binding)
     {
-        mDepthStencilImage.stageRobustResourceClear(gl::ImageIndex::Make2D(0));
-        ANGLE_TRY(mDepthStencilImage.flushAllStagedUpdates(contextVk));
+        case GL_BACK:
+        {
+            vk::ImageHelper *image = isMultiSampled()
+                                         ? &mColorImageMS
+                                         : &mSwapchainImages[mCurrentSwapchainImageIndex].image;
+            image->stageRobustResourceClear(imageIndex);
+            ANGLE_TRY(image->flushAllStagedUpdates(contextVk));
+            break;
+        }
+        case GL_DEPTH:
+        case GL_STENCIL:
+            ASSERT(mDepthStencilImage.valid());
+            mDepthStencilImage.stageRobustResourceClear(gl::ImageIndex::Make2D(0));
+            ANGLE_TRY(mDepthStencilImage.flushAllStagedUpdates(contextVk));
+            break;
+        default:
+            UNREACHABLE();
+            break;
     }
 
     return angle::Result::Continue;

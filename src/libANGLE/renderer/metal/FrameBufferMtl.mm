@@ -701,7 +701,11 @@ bool FramebufferMtl::prepareForUse(const gl::Context *context) const
 
         if (mBackbuffer->hasRobustResourceInit())
         {
-            (void)mBackbuffer->initializeContents(context, gl::ImageIndex::Make2D(0));
+            (void)mBackbuffer->initializeContents(context, GL_BACK, gl::ImageIndex::Make2D(0));
+            if (mBackbuffer->hasDepthStencil())
+            {
+                (void)mBackbuffer->initializeContents(context, GL_DEPTH, gl::ImageIndex::Make2D(0));
+            }
         }
     }
     return true;

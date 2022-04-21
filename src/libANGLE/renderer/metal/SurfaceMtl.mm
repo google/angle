@@ -252,6 +252,7 @@ EGLint SurfaceMtl::getSwapBehavior() const
 }
 
 angle::Result SurfaceMtl::initializeContents(const gl::Context *context,
+                                             GLenum binding,
                                              const gl::ImageIndex &imageIndex)
 {
     ASSERT(mColorTexture);
@@ -265,23 +266,38 @@ angle::Result SurfaceMtl::initializeContents(const gl::Context *context,
 
     // Use loadAction=clear
     mtl::RenderPassDesc rpDesc;
-    rpDesc.sampleCount         = mColorTexture->samples();
-    rpDesc.numColorAttachments = 1;
+    rpDesc.sampleCount = mColorTexture->samples();
 
-    mColorRenderTarget.toRenderPassAttachmentDesc(&rpDesc.colorAttachments[0]);
-    rpDesc.colorAttachments[0].loadAction = MTLLoadActionClear;
-    MTLClearColor black                   = {};
-    rpDesc.colorAttachments[0].clearColor =
-        mtl::EmulatedAlphaClearColor(black, mColorTexture->getColorWritableMask());
-    if (mDepthTexture)
+    switch (binding)
     {
-        mDepthRenderTarget.toRenderPassAttachmentDesc(&rpDesc.depthAttachment);
-        rpDesc.depthAttachment.loadAction = MTLLoadActionClear;
-    }
-    if (mStencilTexture)
-    {
-        mStencilRenderTarget.toRenderPassAttachmentDesc(&rpDesc.stencilAttachment);
-        rpDesc.stencilAttachment.loadAction = MTLLoadActionClear;
+        case GL_BACK:
+        {
+            rpDesc.numColorAttachments = 1;
+            mColorRenderTarget.toRenderPassAttachmentDesc(&rpDesc.colorAttachments[0]);
+            rpDesc.colorAttachments[0].loadAction = MTLLoadActionClear;
+            MTLClearColor black                   = {};
+            rpDesc.colorAttachments[0].clearColor =
+                mtl::EmulatedAlphaClearColor(black, mColorTexture->getColorWritableMask());
+            break;
+        }
+        case GL_DEPTH:
+        case GL_STENCIL:
+        {
+            if (mDepthTexture)
+            {
+                mDepthRenderTarget.toRenderPassAttachmentDesc(&rpDesc.depthAttachment);
+                rpDesc.depthAttachment.loadAction = MTLLoadActionClear;
+            }
+            if (mStencilTexture)
+            {
+                mStencilRenderTarget.toRenderPassAttachmentDesc(&rpDesc.stencilAttachment);
+                rpDesc.stencilAttachment.loadAction = MTLLoadActionClear;
+            }
+            break;
+        }
+        default:
+            UNREACHABLE();
+            break;
     }
     mtl::RenderCommandEncoder *encoder = contextMtl->getRenderPassCommandEncoder(rpDesc);
     encoder->setStoreAction(MTLStoreActionStore);
@@ -504,10 +520,11 @@ EGLint WindowSurfaceMtl::getSwapBehavior() const
 }
 
 angle::Result WindowSurfaceMtl::initializeContents(const gl::Context *context,
+                                                   GLenum binding,
                                                    const gl::ImageIndex &imageIndex)
 {
     ANGLE_TRY(ensureCurrentDrawableObtained(context));
-    return SurfaceMtl::initializeContents(context, imageIndex);
+    return SurfaceMtl::initializeContents(context, binding, imageIndex);
 }
 
 angle::Result WindowSurfaceMtl::getAttachmentRenderTarget(const gl::Context *context,

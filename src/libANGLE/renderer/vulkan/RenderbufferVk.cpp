@@ -263,6 +263,7 @@ angle::Result RenderbufferVk::getAttachmentRenderTarget(const gl::Context *conte
 }
 
 angle::Result RenderbufferVk::initializeContents(const gl::Context *context,
+                                                 GLenum binding,
                                                  const gl::ImageIndex &imageIndex)
 {
     // Note: stageSubresourceRobustClear only uses the intended format to count channels.

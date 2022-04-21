@@ -155,6 +155,7 @@ class TextureMtl : public TextureImpl
                                         bool fixedSampleLocations) override;
 
     angle::Result initializeContents(const gl::Context *context,
+                                     GLenum binding,
                                      const gl::ImageIndex &imageIndex) override;
 
     // The texture's data is initially initialized and stored in an array

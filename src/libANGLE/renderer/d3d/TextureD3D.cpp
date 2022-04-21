@@ -732,6 +732,7 @@ void TextureD3D::onDestroy(const gl::Context *context)
 }
 
 angle::Result TextureD3D::initializeContents(const gl::Context *context,
+                                             GLenum binding,
                                              const gl::ImageIndex &imageIndex)
 {
     ContextD3D *contextD3D = GetImplAs<ContextD3D>(context);
@@ -754,7 +755,7 @@ angle::Result TextureD3D::initializeContents(const gl::Context *context,
             gl::ImageIndexIterator::Make2DArray(levelIndex, levelIndex + 1, tempLayerCounts.data());
         while (iterator.hasNext())
         {
-            ANGLE_TRY(initializeContents(context, iterator.next()));
+            ANGLE_TRY(initializeContents(context, GL_NONE, iterator.next()));
         }
         return angle::Result::Continue;
     }
@@ -768,7 +769,7 @@ angle::Result TextureD3D::initializeContents(const gl::Context *context,
             gl::ImageIndexIterator::Make2DMultisampleArray(tempLayerCounts.data());
         while (iterator.hasNext())
         {
-            ANGLE_TRY(initializeContents(context, iterator.next()));
+            ANGLE_TRY(initializeContents(context, GL_NONE, iterator.next()));
         }
         return angle::Result::Continue;
     }
@@ -1080,7 +1081,7 @@ angle::Result TextureD3D_2D::copyImage(const gl::Context *context,
     // Same thing for robust resource init.
     if (outside && (context->isWebGL() || context->isRobustResourceInitEnabled()))
     {
-        ANGLE_TRY(initializeContents(context, index));
+        ANGLE_TRY(initializeContents(context, GL_NONE, index));
     }
 
     gl::Rectangle clippedArea;
@@ -1835,7 +1836,7 @@ angle::Result TextureD3D_Cube::copyImage(const gl::Context *context,
     // Same thing for robust resource init.
     if (outside && (context->isWebGL() || context->isRobustResourceInitEnabled()))
     {
-        ANGLE_TRY(initializeContents(context, index));
+        ANGLE_TRY(initializeContents(context, GL_NONE, index));
     }
 
     gl::Rectangle clippedArea;

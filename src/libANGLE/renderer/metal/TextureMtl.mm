@@ -1111,7 +1111,7 @@ angle::Result TextureMtl::copyImage(const gl::Context *context,
     gl::Rectangle fbRect(0, 0, fbSize.width, fbSize.height);
     if (context->isWebGL() && !fbRect.encloses(sourceArea))
     {
-        ANGLE_TRY(initializeContents(context, index));
+        ANGLE_TRY(initializeContents(context, GL_NONE, index));
     }
 
     return copySubImageImpl(context, index, gl::Offset(0, 0, 0), sourceArea, internalFormatInfo,
@@ -2018,6 +2018,7 @@ angle::Result TextureMtl::checkForEmulatedChannels(const gl::Context *context,
 }
 
 angle::Result TextureMtl::initializeContents(const gl::Context *context,
+                                             GLenum binding,
                                              const gl::ImageIndex &index)
 {
     if (index.isLayered())
@@ -2038,7 +2039,7 @@ angle::Result TextureMtl::initializeContents(const gl::Context *context,
         while (ite.hasNext())
         {
             gl::ImageIndex layerIndex = ite.next();
-            ANGLE_TRY(initializeContents(context, layerIndex));
+            ANGLE_TRY(initializeContents(context, GL_NONE, layerIndex));
         }
         return angle::Result::Continue;
     }
@@ -2049,7 +2050,7 @@ angle::Result TextureMtl::initializeContents(const gl::Context *context,
             int layerIdx = layer + index.getLayerIndex();
             gl::ImageIndex layerIndex =
                 gl::ImageIndex::MakeFromType(index.getType(), index.getLevelIndex(), layerIdx);
-            ANGLE_TRY(initializeContents(context, layerIndex));
+            ANGLE_TRY(initializeContents(context, GL_NONE, layerIndex));
         }
         return angle::Result::Continue;
     }

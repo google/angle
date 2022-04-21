@@ -114,6 +114,7 @@ class TextureD3D : public TextureImpl, public angle::ObserverInterface
                             gl::Command source) override;
 
     angle::Result initializeContents(const gl::Context *context,
+                                     GLenum binding,
                                      const gl::ImageIndex &imageIndex) override;
 
     GLsizei getRenderToTextureSamples();
