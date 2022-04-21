@@ -2608,6 +2608,9 @@ angle::CallCapture CaptureFramebufferTextureMultiviewOVR(const State &glState,
 
 // GL_OVR_multiview2
 
+// GL_QCOM_shading_rate
+angle::CallCapture CaptureShadingRateQCOM(const State &glState, bool isCallValid, GLenum rate);
+
 // Parameter Captures
 
 void CaptureDeletePerfMonitorsAMD_monitors(const State &glState,

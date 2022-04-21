@@ -216,6 +216,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::SupportsExternalSemaphoreFd, "supportsExternalSemaphoreFd"},
     {Feature::SupportsExternalSemaphoreFuchsia, "supportsExternalSemaphoreFuchsia"},
     {Feature::SupportsFilteringPrecision, "supportsFilteringPrecision"},
+    {Feature::SupportsFragmentShadingRate, "supportsFragmentShadingRate"},
     {Feature::SupportsGeometryStreamsCapability, "supportsGeometryStreamsCapability"},
     {Feature::SupportsGGPFrameToken, "supportsGGPFrameToken"},
     {Feature::SupportsHostQueryReset, "supportsHostQueryReset"},

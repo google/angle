@@ -598,6 +598,11 @@ struct FeaturesVk : FeatureSetBase
         "preferDeviceLocalMemoryHostVisible", FeatureCategory::VulkanFeatures,
         "Prefer adding HOST_VISIBLE flag for DEVICE_LOCAL memory when picking memory types",
         &members, "http://anglebug.com/7047"};
+
+    FeatureInfo supportsFragmentShadingRate = {
+        "supportsFragmentShadingRate", FeatureCategory::VulkanFeatures,
+        "VkDevice supports VK_KHR_fragment_shading_rate extension", &members,
+        "http://anglebug.com/7172"};
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

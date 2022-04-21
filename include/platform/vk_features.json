@@ -896,6 +896,15 @@
                 "Prefer adding HOST_VISIBLE flag for DEVICE_LOCAL memory when picking memory types"
             ],
             "issue": "http://anglebug.com/7047"
+        },
+
+        {
+            "name": "supports_fragment_shading_rate",
+            "category": "Features",
+            "description": [
+                "VkDevice supports VK_KHR_fragment_shading_rate extension"
+            ],
+            "issue": "http://anglebug.com/7172"
         }
     ]
 }

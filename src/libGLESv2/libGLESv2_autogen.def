@@ -1152,6 +1152,9 @@ EXPORTS
 
     ; GL_OVR_multiview2
 
+    ; GL_QCOM_shading_rate
+    glShadingRateQCOM
+
     ; EGL 1.0
     EGL_ChooseConfig
     EGL_CopyBuffers

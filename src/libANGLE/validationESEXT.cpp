@@ -3030,4 +3030,9 @@ bool ValidateSelectPerfMonitorCountersAMD(const Context *context,
     UNIMPLEMENTED();
     return false;
 }
+
+bool ValidateShadingRateQCOM(const Context *context, angle::EntryPoint entryPoint, GLenum rate)
+{
+    return false;
+}
 }  // namespace gl

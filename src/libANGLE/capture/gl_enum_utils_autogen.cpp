@@ -3668,6 +3668,31 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
             }
         }
 
+        case GLenumGroup::ShadingRate:
+        {
+            switch (value)
+            {
+                case 0x96A4:
+                    return "GL_SHADING_RATE_QCOM";
+                case 0x96A5:
+                    return "GL_SHADING_RATE_PRESERVE_ASPECT_RATIO_QCOM";
+                case 0x96A6:
+                    return "GL_SHADING_RATE_1X1_PIXELS_QCOM";
+                case 0x96A7:
+                    return "GL_SHADING_RATE_1X2_PIXELS_QCOM";
+                case 0x96A8:
+                    return "GL_SHADING_RATE_2X1_PIXELS_QCOM";
+                case 0x96A9:
+                    return "GL_SHADING_RATE_2X2_PIXELS_QCOM";
+                case 0x96AC:
+                    return "GL_SHADING_RATE_4X2_PIXELS_QCOM";
+                case 0x96AE:
+                    return "GL_SHADING_RATE_4X4_PIXELS_QCOM";
+                default:
+                    return UnknownGLenumToString(value);
+            }
+        }
+
         case GLenumGroup::StencilFaceDirection:
         {
             switch (value)

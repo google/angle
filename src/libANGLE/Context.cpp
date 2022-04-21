@@ -5864,6 +5864,11 @@ void Context::scissor(GLint x, GLint y, GLsizei width, GLsizei height)
     mState.setScissorParams(x, y, width, height);
 }
 
+void Context::shadingRateQCOM(GLenum rate)
+{
+    return;
+}
+
 void Context::stencilFuncSeparate(GLenum face, GLenum func, GLint ref, GLuint mask)
 {
     GLint clampedRef = gl::clamp(ref, 0, std::numeric_limits<uint8_t>::max());

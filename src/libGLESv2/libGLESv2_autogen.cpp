@@ -5738,4 +5738,11 @@ void GL_APIENTRY glFramebufferTextureMultiviewOVR(GLenum target,
 }
 
 // GL_OVR_multiview2
+
+// GL_QCOM_shading_rate
+void GL_APIENTRY glShadingRateQCOM(GLenum rate)
+{
+    return GL_ShadingRateQCOM(rate);
+}
+
 }  // extern "C"
