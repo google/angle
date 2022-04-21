@@ -219,14 +219,11 @@ bool IOSurfaceSurfaceMtl::ValidateAttributes(EGLClientBuffer buffer,
         return false;
     }
 
-    // FIXME: Check that the format matches this IOSurface plane for pixel formats that we know of.
-    // We could map IOSurfaceGetPixelFormat to expected type plane and format type.
-    // However, the caller might supply us non-public pixel format, which makes exhaustive checks
-    // problematic.
+    // Check that the format matches this IOSurface plane
     if (IOSurfaceGetBytesPerElementOfPlane(ioSurface, plane) !=
         kIOSurfaceFormats[formatIndex].componentBytes)
     {
-        WARN() << "IOSurface bytes per elements does not match the pbuffer internal format.";
+        return false;
     }
 
     return true;
