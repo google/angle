@@ -3012,6 +3012,14 @@ bool ValidateStateQuery(const Context *context,
             }
             break;
 
+        case GL_SHADING_RATE_QCOM:
+            if (!context->getExtensions().shadingRateQCOM)
+            {
+                context->validationError(entryPoint, GL_INVALID_ENUM, kExtensionNotEnabled);
+                return false;
+            }
+            break;
+
         default:
             break;
     }

@@ -1127,6 +1127,9 @@ void RendererVk::ensureCapsInitialized() const
 
     // GL_KHR_parallel_shader_compile
     mNativeExtensions.parallelShaderCompileKHR = false;
+
+    // GL_QCOM_shading_rate
+    mNativeExtensions.shadingRateQCOM = mFeatures.supportsFragmentShadingRate.enabled;
 }
 
 namespace vk

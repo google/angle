@@ -632,6 +632,8 @@ bool ValidCap(const Context *context, GLenum cap, bool queryOnly)
             break;
         case GL_SAMPLE_SHADING:
             return context->getExtensions().sampleShadingOES;
+        case GL_SHADING_RATE_PRESERVE_ASPECT_RATIO_QCOM:
+            return context->getExtensions().shadingRateQCOM;
     }
 
     // GLES1 emulation: GLES1-specific caps after this point

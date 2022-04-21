@@ -5866,7 +5866,7 @@ void Context::scissor(GLint x, GLint y, GLsizei width, GLsizei height)
 
 void Context::shadingRateQCOM(GLenum rate)
 {
-    return;
+    mState.setShadingRate(rate);
 }
 
 void Context::stencilFuncSeparate(GLenum face, GLenum func, GLint ref, GLuint mask)

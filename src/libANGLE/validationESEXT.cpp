@@ -3033,6 +3033,18 @@ bool ValidateSelectPerfMonitorCountersAMD(const Context *context,
 
 bool ValidateShadingRateQCOM(const Context *context, angle::EntryPoint entryPoint, GLenum rate)
 {
-    return false;
+    if (!context->getExtensions().shadingRateQCOM)
+    {
+        context->validationError(entryPoint, GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    if (gl::FromGLenum<gl::ShadingRate>(rate) == gl::ShadingRate::InvalidEnum)
+    {
+        context->validationError(entryPoint, GL_INVALID_ENUM, kInvalidShadingRate);
+        return false;
+    }
+
+    return true;
 }
 }  // namespace gl

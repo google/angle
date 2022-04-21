@@ -3336,6 +3336,14 @@ bool GetQueryParameterInfo(const State &glState,
             *type      = GL_FLOAT;
             *numParams = 8;
             return true;
+        case GL_SHADING_RATE_QCOM:
+            if (!extensions.shadingRateQCOM)
+            {
+                return false;
+            }
+            *type      = GL_INT;
+            *numParams = 1;
+            return true;
     }
 
     if (clientType == EGL_OPENGL_API ||
