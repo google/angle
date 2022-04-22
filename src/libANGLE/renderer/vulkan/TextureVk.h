@@ -240,22 +240,7 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
     angle::Result ensureImageInitialized(ContextVk *contextVk, ImageMipLevels mipLevels);
 
     vk::ImageOrBufferViewSubresourceSerial getImageViewSubresourceSerial(
-        const gl::SamplerState &samplerState) const
-    {
-        if (samplerState.getSRGBDecode() == GL_DECODE_EXT)
-        {
-            ASSERT(getImageViewSubresourceSerialImpl(GL_DECODE_EXT) ==
-                   mCachedImageViewSubresourceSerialSRGBDecode);
-            return mCachedImageViewSubresourceSerialSRGBDecode;
-        }
-        else
-        {
-            ASSERT(getImageViewSubresourceSerialImpl(GL_SKIP_DECODE_EXT) ==
-                   mCachedImageViewSubresourceSerialSkipDecode);
-            return mCachedImageViewSubresourceSerialSkipDecode;
-        }
-    }
-
+        const gl::SamplerState &samplerState) const;
     vk::ImageOrBufferViewSubresourceSerial getBufferViewSerial() const;
 
     GLenum getColorReadFormat(const gl::Context *context) override;
@@ -518,11 +503,6 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
 
     void stageSelfAsSubresourceUpdates(ContextVk *contextVk);
 
-    vk::ImageOrBufferViewSubresourceSerial getImageViewSubresourceSerialImpl(
-        GLenum srgbDecode) const;
-
-    void updateCachedImageViewSerials();
-
     bool mOwnsImage;
     bool mRequiresMutableStorage;
     vk::ImageAccess mRequiredImageAccess;
@@ -605,10 +585,6 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
     // Saved between updates.
     gl::LevelIndex mCurrentBaseLevel;
     gl::LevelIndex mCurrentMaxLevel;
-
-    // Cached subresource indexes.
-    vk::ImageOrBufferViewSubresourceSerial mCachedImageViewSubresourceSerialSRGBDecode;
-    vk::ImageOrBufferViewSubresourceSerial mCachedImageViewSubresourceSerialSkipDecode;
 };
 
 }  // namespace rx
