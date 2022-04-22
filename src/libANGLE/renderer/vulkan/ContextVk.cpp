@@ -1192,7 +1192,7 @@ angle::Result ContextVk::finish(const gl::Context *context)
         ANGLE_TRY(finishImpl(RenderPassClosureReason::GLFinish));
     }
 
-    syncObjectPerfCounters();
+    syncObjectPerfCounters(mRenderer->getCommandQueuePerfCounters());
     return angle::Result::Continue;
 }
 
@@ -2537,7 +2537,7 @@ angle::Result ContextVk::handleDirtyDescriptorSetsImpl(CommandBufferHelperT *com
                                               pipelineType);
 }
 
-void ContextVk::syncObjectPerfCounters()
+void ContextVk::syncObjectPerfCounters(const angle::VulkanPerfCounters &commandQueuePerfCounters)
 {
     mPerfCounters.descriptorSetCacheTotalSize                = 0;
     mPerfCounters.descriptorSetCacheKeySizeBytes             = 0;
@@ -2604,7 +2604,12 @@ void ContextVk::syncObjectPerfCounters()
     }
 
     // Update perf counters from the renderer as well
-    mPerfCounters.submittedCommands = mRenderer->getCommandQueuePerfCounters().submittedCommands;
+    mPerfCounters.commandQueueSubmitCallsTotal =
+        commandQueuePerfCounters.commandQueueSubmitCallsTotal;
+    mPerfCounters.commandQueueSubmitCallsPerFrame =
+        commandQueuePerfCounters.commandQueueSubmitCallsPerFrame;
+    mPerfCounters.vkQueueSubmitCallsTotal    = commandQueuePerfCounters.vkQueueSubmitCallsTotal;
+    mPerfCounters.vkQueueSubmitCallsPerFrame = commandQueuePerfCounters.vkQueueSubmitCallsPerFrame;
 }
 
 void ContextVk::updateOverlayOnPresent()
@@ -2612,7 +2617,8 @@ void ContextVk::updateOverlayOnPresent()
     const gl::OverlayType *overlay = mState.getOverlay();
     ASSERT(overlay->isEnabled());
 
-    syncObjectPerfCounters();
+    angle::VulkanPerfCounters commandQueuePerfCounters = mRenderer->getCommandQueuePerfCounters();
+    syncObjectPerfCounters(commandQueuePerfCounters);
 
     // Update overlay if active.
     {
@@ -2669,6 +2675,22 @@ void ContextVk::updateOverlayOnPresent()
         gl::RunningGraphWidget *dynamicBufferAllocations =
             overlay->getRunningGraphWidget(gl::WidgetId::VulkanDynamicBufferAllocations);
         dynamicBufferAllocations->add(mPerfCounters.dynamicBufferAllocations);
+    }
+
+    {
+        // A submission will follow the overlay rendering, so the per-frame submit calls are
+        // incremented by one to account for that submission.
+
+        gl::RunningGraphWidget *attemptedSubmissionsWidget =
+            overlay->getRunningGraphWidget(gl::WidgetId::VulkanAttemptedSubmissions);
+        attemptedSubmissionsWidget->add(commandQueuePerfCounters.commandQueueSubmitCallsPerFrame +
+                                        1);
+        attemptedSubmissionsWidget->next();
+
+        gl::RunningGraphWidget *actualSubmissionsWidget =
+            overlay->getRunningGraphWidget(gl::WidgetId::VulkanActualSubmissions);
+        actualSubmissionsWidget->add(commandQueuePerfCounters.vkQueueSubmitCallsPerFrame + 1);
+        actualSubmissionsWidget->next();
     }
 }
 
@@ -7217,7 +7239,7 @@ ProgramExecutableVk *ContextVk::getExecutable() const
 
 const angle::PerfMonitorCounterGroups &ContextVk::getPerfMonitorCounters()
 {
-    syncObjectPerfCounters();
+    syncObjectPerfCounters(mRenderer->getCommandQueuePerfCounters());
 
     angle::PerfMonitorCounters &counters =
         angle::GetPerfMonitorCounterGroup(mPerfMonitorCounters, "vulkan").counters;
@@ -7341,5 +7363,7 @@ void ContextVk::resetPerFramePerfCounters()
         ProgramVk *programVk = vk::GetImpl(program);
         programVk->getExecutable().resetDescriptorSetPerfCounters();
     }
+
+    mRenderer->resetCommandQueuePerFrameCounters();
 }
 }  // namespace rx

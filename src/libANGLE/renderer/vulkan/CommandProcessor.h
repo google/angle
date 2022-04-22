@@ -426,6 +426,7 @@ class CommandQueue final : public CommandQueueInterface
     VkQueue getQueue(egl::ContextPriority priority) { return mQueueMap[priority]; }
 
     const angle::VulkanPerfCounters &getPerfCounters() const { return mPerfCounters; }
+    void resetPerFramePerfCounters();
 
   private:
     void releaseToCommandBatch(bool hasProtectedContent,
@@ -578,6 +579,7 @@ class CommandProcessor final : public Context, public CommandQueueInterface
     {
         return mCommandQueue.getPerfCounters();
     }
+    void resetPerFramePerfCounters() { mCommandQueue.resetPerFramePerfCounters(); }
 
   private:
     bool hasPendingError() const

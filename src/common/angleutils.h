@@ -131,8 +131,11 @@ struct PerfMonitorTriplet
 };
 
 #define ANGLE_VK_PERF_COUNTERS_X(FN)               \
+    FN(commandQueueSubmitCallsTotal)               \
+    FN(commandQueueSubmitCallsPerFrame)            \
+    FN(vkQueueSubmitCallsTotal)                    \
+    FN(vkQueueSubmitCallsPerFrame)                 \
     FN(renderPasses)                               \
-    FN(submittedCommands)                          \
     FN(writeDescriptorSets)                        \
     FN(flushedOutsideRenderPassCommandBuffers)     \
     FN(swapchainResolveInSubpass)                  \

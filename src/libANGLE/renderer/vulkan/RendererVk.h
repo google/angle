@@ -405,6 +405,18 @@ class RendererVk : angle::NonCopyable
             return mCommandQueue.getPerfCounters();
         }
     }
+    void resetCommandQueuePerFrameCounters()
+    {
+        vk::ScopedCommandQueueLock lock(this, mCommandQueueMutex);
+        if (isAsyncCommandQueueEnabled())
+        {
+            mCommandProcessor.resetPerFramePerfCounters();
+        }
+        else
+        {
+            mCommandQueue.resetPerFramePerfCounters();
+        }
+    }
 
     egl::Display *getDisplay() const { return mDisplay; }
 
