@@ -56,25 +56,21 @@ def _FindAdb():
     return adb
 
 
-class Adb(object):
-
-    def __init__(self):
-        self._adb_path = _FindAdb()
-
-    def Run(self, args):
-        return _Run([self._adb_path] + args)
-
-    def Shell(self, cmd):
-        return _Run([self._adb_path, 'shell', cmd])
+def _AdbRun(args):
+    return _Run([_FindAdb()] + args)
 
 
-def _GetAdbRoot(adb):
-    adb.Run(['root'])
+def _AdbShell(cmd):
+    return _Run([_FindAdb(), 'shell', cmd])
+
+
+def _GetAdbRoot():
+    _AdbRun(['root'])
 
     for _ in range(20):
         time.sleep(0.5)
         try:
-            id_out = adb.Shell(adb_path, 'id').decode('ascii')
+            id_out = _AdbShell('id').decode('ascii')
             if 'uid=0(root)' in id_out:
                 return
         except Exception:
@@ -82,20 +78,20 @@ def _GetAdbRoot(adb):
     raise Exception("adb root failed")
 
 
-def _ReadDeviceFile(adb, device_path):
-    out_wc = adb.Shell('cat %s | wc -c' % device_path)
+def _ReadDeviceFile(device_path):
+    out_wc = _AdbShell('cat %s | wc -c' % device_path)
     expected_size = int(out_wc.decode('ascii').strip())
-    out = adb.Run(['exec-out', 'cat %s' % device_path])
+    out = _AdbRun(['exec-out', 'cat %s' % device_path])
     assert len(out) == expected_size, 'exec-out mismatch'
     return out
 
 
-def _RemoveDeviceFile(adb, device_path):
-    adb.Shell('rm -f ' + device_path + ' || true')  # ignore errors
+def _RemoveDeviceFile(device_path):
+    _AdbShell('rm -f ' + device_path + ' || true')  # ignore errors
 
 
-def _AddRestrictedTracesJson(adb):
-    adb.Shell('mkdir -p /sdcard/chromium_tests_root/')
+def _AddRestrictedTracesJson():
+    _AdbShell('mkdir -p /sdcard/chromium_tests_root/')
 
     def add(tar, fn):
         assert (fn.startswith('../../'))
@@ -106,37 +102,39 @@ def _AddRestrictedTracesJson(adb):
             for f in glob.glob('../../src/tests/restricted_traces/*/*.json', recursive=True):
                 add(tar, f)
             add(tar, '../../src/tests/restricted_traces/restricted_traces.json')
-        adb.Run(['push', tempfile_path, '/sdcard/chromium_tests_root/t.tar'])
+        _AdbRun(['push', tempfile_path, '/sdcard/chromium_tests_root/t.tar'])
 
-    adb.Shell('r=/sdcard/chromium_tests_root; tar -xf $r/t.tar -C $r/ && rm $r/t.tar')
+    _AdbShell('r=/sdcard/chromium_tests_root; tar -xf $r/t.tar -C $r/ && rm $r/t.tar')
 
 
-def PrepareTestSuite(adb, suite_name):
+def PrepareTestSuite(suite_name):
+    _GetAdbRoot()
+
     apk_path = _ApkPath(suite_name)
     logging.info('Installing apk path=%s size=%s' % (apk_path, os.path.getsize(apk_path)))
 
-    adb.Run(['install', '-r', '-d', apk_path])
+    _AdbRun(['install', '-r', '-d', apk_path])
 
     permissions = [
         'android.permission.CAMERA', 'android.permission.CHANGE_CONFIGURATION',
         'android.permission.READ_EXTERNAL_STORAGE', 'android.permission.RECORD_AUDIO',
         'android.permission.WRITE_EXTERNAL_STORAGE'
     ]
-    adb.Shell('p=com.android.angle.test;'
+    _AdbShell('p=com.android.angle.test;'
               'for q in %s;do pm grant "$p" "$q";done;' % ' '.join(permissions))
 
     if suite_name == 'angle_perftests':
-        _AddRestrictedTracesJson(adb)
+        _AddRestrictedTracesJson()
 
 
-def PrepareRestrictedTraces(adb, traces):
+def PrepareRestrictedTraces(traces):
     start = time.time()
     total_size = 0
     for trace in traces:
         path_from_root = 'src/tests/restricted_traces/' + trace + '/' + trace + '.angledata.gz'
         local_path = '../../' + path_from_root
         total_size += os.path.getsize(local_path)
-        adb.Run(['push', local_path, '/sdcard/chromium_tests_root/' + path_from_root])
+        _AdbRun(['push', local_path, '/sdcard/chromium_tests_root/' + path_from_root])
 
     logging.info('Pushed %d trace files (%.1fMB) in %.1fs', len(traces), total_size / 1e6,
                  time.time() - start)
@@ -147,22 +145,22 @@ def _RandomHex():
 
 
 @contextlib.contextmanager
-def _TempDeviceDir(adb):
+def _TempDeviceDir():
     path = '/sdcard/Download/temp_dir-%s' % _RandomHex()
-    adb.Shell('mkdir -p ' + path)
+    _AdbShell('mkdir -p ' + path)
     try:
         yield path
     finally:
-        adb.Shell('rm -rf ' + path)
+        _AdbShell('rm -rf ' + path)
 
 
 @contextlib.contextmanager
-def _TempDeviceFile(adb):
+def _TempDeviceFile():
     path = '/sdcard/Download/temp_file-%s' % _RandomHex()
     try:
         yield path
     finally:
-        adb.Shell('rm -f ' + path)
+        _AdbShell('rm -f ' + path)
 
 
 @contextlib.contextmanager
@@ -175,8 +173,8 @@ def _TempLocalFile():
         os.remove(path)
 
 
-def _RunInstrumentation(adb, flags):
-    with _TempDeviceFile(adb) as temp_device_file:
+def _RunInstrumentation(flags):
+    with _TempDeviceFile() as temp_device_file:
         cmd = ' '.join([
             'p=com.android.angle.test;',
             'ntr=org.chromium.native_test.NativeTestInstrumentationTestRunner;',
@@ -188,39 +186,39 @@ def _RunInstrumentation(adb, flags):
             '"$p"/org.chromium.build.gtest_apk.NativeTestInstrumentationTestRunner',
         ])
 
-        adb.Shell(cmd)
-        return _ReadDeviceFile(adb, temp_device_file)
+        _AdbShell(cmd)
+        return _ReadDeviceFile(temp_device_file)
 
 
-def AngleSystemInfo(adb, args):
-    PrepareTestSuite(adb, 'angle_system_info_test')
+def AngleSystemInfo(args):
+    PrepareTestSuite('angle_system_info_test')
 
-    with _TempDeviceDir(adb) as temp_dir:
-        _RunInstrumentation(adb, args + ['--render-test-output-dir=' + temp_dir])
+    with _TempDeviceDir() as temp_dir:
+        _RunInstrumentation(args + ['--render-test-output-dir=' + temp_dir])
         output_file = posixpath.join(temp_dir, 'angle_system_info.json')
-        return json.loads(_ReadDeviceFile(adb, output_file))
+        return json.loads(_ReadDeviceFile(output_file))
 
 
-def ListTests(adb):
-    out_lines = _RunInstrumentation(adb, ["--list-tests"]).decode('ascii').split('\n')
+def ListTests():
+    out_lines = _RunInstrumentation(["--list-tests"]).decode('ascii').split('\n')
 
     start = out_lines.index('Tests list:')
     end = out_lines.index('End tests list.')
     return out_lines[start + 1:end]
 
 
-def _PullDir(adb, device_dir, local_dir):
-    files = adb.Shell('ls -1 %s' % device_dir).decode('ascii').split('\n')
+def _PullDir(device_dir, local_dir):
+    files = _AdbShell('ls -1 %s' % device_dir).decode('ascii').split('\n')
     for f in files:
         f = f.strip()
         if f:
-            adb.Run(['pull', posixpath.join(device_dir, f), posixpath.join(local_dir, f)])
+            _AdbRun(['pull', posixpath.join(device_dir, f), posixpath.join(local_dir, f)])
 
 
-def RunTests(adb, test_suite, args, stdoutfile, output_dir):
-    with _TempDeviceDir(adb) as temp_dir:
-        output = _RunInstrumentation(adb, args + ['--render-test-output-dir=' + temp_dir])
+def RunTests(test_suite, args, stdoutfile, output_dir):
+    with _TempDeviceDir() as temp_dir:
+        output = _RunInstrumentation(args + ['--render-test-output-dir=' + temp_dir])
         with open(stdoutfile, 'wb') as f:
             f.write(output)
             logging.info(output.decode())
-        _PullDir(adb, temp_dir, output_dir)
+        _PullDir(temp_dir, output_dir)

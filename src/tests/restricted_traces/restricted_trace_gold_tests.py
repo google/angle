@@ -12,6 +12,7 @@
 import argparse
 import contextlib
 import fnmatch
+import functools
 import json
 import logging
 import os
@@ -119,11 +120,9 @@ def add_skia_gold_args(parser):
         'pre-authenticated. Meant for testing locally instead of on the bots.')
 
 
-def _adb_if_android(args):
-    if android_helper.ApkFileExists(args.test_suite):
-        return android_helper.Adb()
-
-    return None
+@functools.lru_cache()
+def _use_adb(test_suite):
+    return android_helper.ApkFileExists(test_suite)
 
 
 def run_wrapper(test_suite, cmd_args, args, env, stdoutfile, output_dir=None):
@@ -134,10 +133,9 @@ def run_wrapper(test_suite, cmd_args, args, env, stdoutfile, output_dir=None):
     if args.xvfb:
         return xvfb.run_executable(cmd, env, stdoutfile=stdoutfile)
     else:
-        adb = _adb_if_android(args)
-        if adb:
+        if _use_adb(args.test_suite):
             try:
-                android_helper.RunTests(adb, test_suite, cmd_args, stdoutfile, output_dir)
+                android_helper.RunTests(test_suite, cmd_args, stdoutfile, output_dir)
                 return 0
             except Exception as e:
                 logging.exception(e)
@@ -194,9 +192,8 @@ def get_skia_gold_keys(args, env):
     if args.swiftshader:
         sysinfo_args.append('--swiftshader')
 
-    adb = _adb_if_android(args)
-    if adb:
-        json_data = android_helper.AngleSystemInfo(adb, sysinfo_args)
+    if _use_adb(args.test_suite):
+        json_data = android_helper.AngleSystemInfo(sysinfo_args)
         logging.info(json_data)
     else:
         json_data = run_angle_system_info_test(sysinfo_args, args, env)
@@ -321,9 +318,8 @@ def _get_gtest_filter_for_batch(args, batch):
 def _run_tests(args, tests, extra_flags, env, screenshot_dir, results, test_results):
     keys = get_skia_gold_keys(args, env)
 
-    adb = _adb_if_android(args)
-    if adb:
-        android_helper.PrepareTestSuite(adb, args.test_suite)
+    if _use_adb(args.test_suite):
+        android_helper.PrepareTestSuite(args.test_suite)
 
     with temporary_dir('angle_skia_gold_') as skia_gold_temp_dir:
         gold_properties = angle_skia_gold_properties.ANGLESkiaGoldProperties(args)
@@ -348,8 +344,8 @@ def _run_tests(args, tests, extra_flags, env, screenshot_dir, results, test_resu
         batches = _get_batches(traces, args.batch_size)
 
         for batch in batches:
-            if adb:
-                android_helper.PrepareRestrictedTraces(adb, batch)
+            if _use_adb(args.test_suite):
+                android_helper.PrepareRestrictedTraces(batch)
 
             for iteration in range(0, args.flaky_retries + 1):
                 with common.temporary_file() as tempfile_path:
