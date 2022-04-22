@@ -1327,6 +1327,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     std::vector<GpuEventQuery> mInFlightGpuEventQueries;
     // A list of gpu events since the last clock sync.
     std::vector<GpuEvent> mGpuEvents;
+    // The current frame index, used to generate a submission-encompassing event tagged with it.
+    uint32_t mPrimaryBufferEventCounter;
 
     // Cached value of the color attachment mask of the current draw framebuffer.  This is used to
     // know which attachment indices have their blend state set in |mGraphicsPipelineDesc|, and

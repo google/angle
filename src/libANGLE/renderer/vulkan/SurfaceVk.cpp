@@ -1922,7 +1922,7 @@ angle::Result WindowSurfaceVk::doDeferredAcquireNextImage(const gl::Context *con
     //
     // - When EGL_BUFFER_DESTROYED is specified, the contents of the color image can be
     //   invalidated.
-    //    * This is disabled with buffer age has been queried to work around a dEQP test bug.
+    //    * This is disabled when buffer age has been queried to work around a dEQP test bug.
     // - Depth/Stencil can always be invalidated
     //
     // In all cases, when the present mode is DEMAND_REFRESH, swap is implicit and the swap behavior

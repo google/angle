@@ -393,6 +393,19 @@ class RendererVk : angle::NonCopyable
         }
     }
 
+    angle::VulkanPerfCounters getCommandQueuePerfCounters()
+    {
+        vk::ScopedCommandQueueLock lock(this, mCommandQueueMutex);
+        if (isAsyncCommandQueueEnabled())
+        {
+            return mCommandProcessor.getPerfCounters();
+        }
+        else
+        {
+            return mCommandQueue.getPerfCounters();
+        }
+    }
+
     egl::Display *getDisplay() const { return mDisplay; }
 
     VkResult getLastPresentResult(VkSwapchainKHR swapchain)

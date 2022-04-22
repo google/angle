@@ -4910,6 +4910,58 @@ TEST_P(VulkanPerformanceCounterTest, InvalidateThenRepeatedClearThenReadbackThen
     compareColorOpCounters(getPerfCounters(), expected);
 }
 
+// Ensure that glFlush doesn't lead to vkQueueSubmit if there's nothing to submit.
+TEST_P(VulkanPerformanceCounterTest, UnnecessaryFlushDoesntCauseSubmission)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled(kPerfMonitorExtensionName));
+    initANGLEFeatures();
+
+    swapBuffers();
+    uint32_t expectedSubmittedCommands = getPerfCounters().submittedCommands;
+
+    glFlush();
+    glFlush();
+    glFlush();
+
+    // Nothing was recorded, so there shouldn't be anything to flush.
+    glFinish();
+    EXPECT_EQ(getPerfCounters().submittedCommands, expectedSubmittedCommands);
+
+    glClearColor(1, 0, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // One submission for the above readback
+    ++expectedSubmittedCommands;
+
+    glFinish();
+    EXPECT_EQ(getPerfCounters().submittedCommands, expectedSubmittedCommands);
+
+    glFlush();
+    glFlush();
+    glFlush();
+
+    // No addional submissions since last one
+    glFinish();
+    EXPECT_EQ(getPerfCounters().submittedCommands, expectedSubmittedCommands);
+}
+
+// Ensure that glFenceSync doesn't lead to vkQueueSubmit if there's nothing to submit.
+TEST_P(VulkanPerformanceCounterTest, SyncWihtoutCommandsDoesntCauseSubmission)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled(kPerfMonitorExtensionName));
+    initANGLEFeatures();
+
+    swapBuffers();
+    uint32_t expectedSubmittedCommands = getPerfCounters().submittedCommands;
+
+    glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
+
+    // Nothing was recorded, so there shouldn't be anything to flush.
+    glFinish();
+    EXPECT_EQ(getPerfCounters().submittedCommands, expectedSubmittedCommands);
+}
+
 ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest, ES3_VULKAN(), ES3_VULKAN_SWIFTSHADER());
 ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest_ES31, ES31_VULKAN(), ES31_VULKAN_SWIFTSHADER());
 ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest_MSAA, ES3_VULKAN(), ES3_VULKAN_SWIFTSHADER());

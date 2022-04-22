@@ -760,6 +760,7 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
       mRenderPassCommands(nullptr),
       mQueryEventType(GraphicsEventCmdBuf::NotInQueryCmd),
       mGpuEventsEnabled(false),
+      mPrimaryBufferEventCounter(0),
       mHasDeferredFlush(false),
       mGpuClockSync{std::numeric_limits<double>::max(), std::numeric_limits<double>::max()},
       mGpuEventTimestampOrigin(0),
@@ -1119,9 +1120,7 @@ angle::Result ContextVk::initialize()
                                           vk::kDefaultTimestampQueryPoolSize));
         ANGLE_TRY(synchronizeCpuGpuTime());
 
-        mPerfCounters.primaryBuffers++;
-
-        EventName eventName = GetTraceEventName("Primary", mPerfCounters.primaryBuffers);
+        EventName eventName = GetTraceEventName("Primary", mPrimaryBufferEventCounter);
         ANGLE_TRY(traceGpuEvent(&mOutsideRenderPassCommands->getCommandBuffer(),
                                 TRACE_EVENT_PHASE_BEGIN, eventName));
     }
@@ -1181,10 +1180,15 @@ angle::Result ContextVk::finish(const gl::Context *context)
     if (mRenderer->getFeatures().swapbuffersOnFlushOrFinishWithSingleBuffer.enabled &&
         (mCurrentWindowSurface != nullptr) && mCurrentWindowSurface->isSharedPresentMode())
     {
-        return mCurrentWindowSurface->onSharedPresentContextFlush(context);
+        ANGLE_TRY(mCurrentWindowSurface->onSharedPresentContextFlush(context));
+    }
+    else
+    {
+        ANGLE_TRY(finishImpl(RenderPassClosureReason::GLFinish));
     }
 
-    return finishImpl(RenderPassClosureReason::GLFinish);
+    syncObjectPerfCounters();
+    return angle::Result::Continue;
 }
 
 angle::Result ContextVk::setupDraw(const gl::Context *context,
@@ -2524,6 +2528,9 @@ void ContextVk::syncObjectPerfCounters()
     {
         mPerfCounters.descriptorSetCacheTotalSize += driverSet.descriptorSetCache.getSize();
     }
+
+    // Update perf counters from the renderer as well
+    mPerfCounters.submittedCommands = mRenderer->getCommandQueuePerfCounters().submittedCommands;
 }
 
 void ContextVk::updateOverlayOnPresent()
@@ -2687,7 +2694,6 @@ angle::Result ContextVk::submitCommands(const vk::Semaphore *signalSemaphore,
         ANGLE_TRY(checkCompletedGpuEvents());
     }
 
-    mPerfCounters.submittedCommands++;
     resetTotalBufferToImageCopySize();
 
     return angle::Result::Continue;
@@ -6127,7 +6133,7 @@ angle::Result ContextVk::flushAndGetSerial(const vk::Semaphore *signalSemaphore,
 
     if (mGpuEventsEnabled)
     {
-        EventName eventName = GetTraceEventName("Primary", mPerfCounters.primaryBuffers);
+        EventName eventName = GetTraceEventName("Primary", mPrimaryBufferEventCounter);
         ANGLE_TRY(traceGpuEvent(&mOutsideRenderPassCommands->getCommandBuffer(),
                                 TRACE_EVENT_PHASE_END, eventName));
     }
@@ -6157,11 +6163,9 @@ angle::Result ContextVk::flushAndGetSerial(const vk::Semaphore *signalSemaphore,
     ASSERT(mWaitSemaphores.empty());
     ASSERT(mWaitSemaphoreStageMasks.empty());
 
-    mPerfCounters.primaryBuffers++;
-
     if (mGpuEventsEnabled)
     {
-        EventName eventName = GetTraceEventName("Primary", mPerfCounters.primaryBuffers);
+        EventName eventName = GetTraceEventName("Primary", ++mPrimaryBufferEventCounter);
         ANGLE_TRY(traceGpuEvent(&mOutsideRenderPassCommands->getCommandBuffer(),
                                 TRACE_EVENT_PHASE_BEGIN, eventName));
     }
