@@ -15,23 +15,22 @@ import json
 import logging
 import time
 import os
+import pathlib
 import re
 import subprocess
 import sys
 
-# Add //src/testing into sys.path for importing xvfb and test_env, and
-# //src/testing/scripts for importing common.
-d = os.path.dirname
-THIS_DIR = d(os.path.abspath(__file__))
-ANGLE_DIR = d(d(THIS_DIR))
-sys.path.append(os.path.join(ANGLE_DIR, 'testing'))
-sys.path.append(os.path.join(ANGLE_DIR, 'testing', 'scripts'))
+PY_UTILS = str(pathlib.Path(__file__).resolve().parent / 'py_utils')
+if PY_UTILS not in sys.path:
+    os.stat(PY_UTILS) and sys.path.insert(0, PY_UTILS)
+import angle_path_util
 
+angle_path_util.AddDepsDirToPath('testing/scripts')
 import common
 import test_env
 import xvfb
 
-sys.path.append(os.path.join(ANGLE_DIR, 'third_party', 'catapult', 'tracing'))
+angle_path_util.AddDepsDirToPath('third_party/catapult/tracing')
 from tracing.value import histogram
 from tracing.value import histogram_set
 from tracing.value import merge_histograms

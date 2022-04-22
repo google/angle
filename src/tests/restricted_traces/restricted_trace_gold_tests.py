@@ -15,6 +15,7 @@ import fnmatch
 import json
 import logging
 import os
+import pathlib
 import platform
 import re
 import shutil
@@ -24,12 +25,9 @@ import time
 import traceback
 
 
-def _AddToPathIfNeeded(path):
-    if path not in sys.path:
-        sys.path.insert(0, path)
-
-
-_AddToPathIfNeeded(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'py_utils')))
+PY_UTILS = str(pathlib.Path(__file__).resolve().parents[1] / 'py_utils')
+if PY_UTILS not in sys.path:
+    os.stat(PY_UTILS) and sys.path.insert(0, PY_UTILS)
 import android_helper
 import angle_path_util
 from skia_gold import angle_skia_gold_properties

@@ -3,15 +3,11 @@
 # found in the LICENSE file.
 
 import os
+import pathlib
 import posixpath
 import sys
 
-ANGLE_ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
-
-
-def _AddToPathIfNeeded(path):
-    if path not in sys.path:
-        sys.path.insert(0, path)
+ANGLE_ROOT_DIR = str(pathlib.Path(__file__).resolve().parents[3])
 
 
 def AddDepsDirToPath(posixpath_from_root):
@@ -23,4 +19,5 @@ def AddDepsDirToPath(posixpath_from_root):
         full_path = os.path.join(chromium_root_dir, relative_path)
         assert os.path.exists(full_path)
 
-    _AddToPathIfNeeded(full_path)
+    if full_path not in sys.path:
+        sys.path.insert(0, full_path)

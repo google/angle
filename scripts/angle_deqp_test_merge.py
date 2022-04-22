@@ -6,16 +6,13 @@
 """ Merges dEQP sharded test results in the ANGLE testing infrastucture."""
 
 import os
+import pathlib
 import sys
 
 
-def _AddToPathIfNeeded(path):
-    if path not in sys.path:
-        sys.path.insert(0, path)
-
-
-_AddToPathIfNeeded(
-    os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src', 'tests', 'py_utils')))
+PY_UTILS = str(pathlib.Path(__file__).resolve().parents[1] / 'src' / 'tests' / 'py_utils')
+if PY_UTILS not in sys.path:
+    os.stat(PY_UTILS) and sys.path.insert(0, PY_UTILS)
 import angle_path_util
 
 angle_path_util.AddDepsDirToPath('testing/merge_scripts')
