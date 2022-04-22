@@ -40,6 +40,16 @@ VkBufferUsageFlags GetDefaultBufferUsageFlags(RendererVk *renderer)
 
 namespace
 {
+constexpr VkMemoryPropertyFlags kDeviceLocalFlags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
+constexpr VkMemoryPropertyFlags kDeviceLocalHostCoherentFlags =
+    (VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT | VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT |
+     VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+constexpr VkMemoryPropertyFlags kHostCachedFlags =
+    (VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT |
+     VK_MEMORY_PROPERTY_HOST_CACHED_BIT);
+constexpr VkMemoryPropertyFlags kHostUncachedFlags =
+    (VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+
 // Vertex attribute buffers are used as storage buffers for conversion in compute, where access to
 // the buffer is made in 4-byte chunks.  Assume the size of the buffer is 4k+n where n is in [0, 3).
 // On some hardware, reading 4 bytes from address 4k returns 0, making it impossible to read the
@@ -58,16 +68,6 @@ ANGLE_INLINE VkMemoryPropertyFlags GetPreferredMemoryType(RendererVk *renderer,
                                                           gl::BufferBinding target,
                                                           gl::BufferUsage usage)
 {
-    constexpr VkMemoryPropertyFlags kDeviceLocalFlags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
-    constexpr VkMemoryPropertyFlags kDeviceLocalHostVisibleFlags =
-        (VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT |
-         VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
-    constexpr VkMemoryPropertyFlags kHostCachedFlags =
-        (VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT |
-         VK_MEMORY_PROPERTY_HOST_CACHED_BIT);
-    constexpr VkMemoryPropertyFlags kHostUncachedFlags =
-        (VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
-
     if (target == gl::BufferBinding::PixelUnpack)
     {
         return kHostCachedFlags;
@@ -80,7 +80,7 @@ ANGLE_INLINE VkMemoryPropertyFlags GetPreferredMemoryType(RendererVk *renderer,
         case gl::BufferUsage::StaticRead:
             // For static usage, request a device local memory
             return renderer->getFeatures().preferDeviceLocalMemoryHostVisible.enabled
-                       ? kDeviceLocalHostVisibleFlags
+                       ? kDeviceLocalHostCoherentFlags
                        : kDeviceLocalFlags;
         case gl::BufferUsage::DynamicDraw:
         case gl::BufferUsage::StreamDraw:
@@ -103,37 +103,28 @@ ANGLE_INLINE VkMemoryPropertyFlags GetStorageMemoryType(RendererVk *renderer,
                                                         GLbitfield storageFlags,
                                                         bool externalBuffer)
 {
-    constexpr VkMemoryPropertyFlags kDeviceLocalFlags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
-    constexpr VkMemoryPropertyFlags kDeviceLocalHostVisibleFlags =
-        (VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT | VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
-    constexpr VkMemoryPropertyFlags kDeviceLocalHostCoherentFlags =
-        (VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT | VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT |
-         VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+    const bool hasMapAccess =
+        (storageFlags & (GL_MAP_READ_BIT | GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT_EXT)) != 0;
 
-    const bool hasMapAccess = (storageFlags & (GL_MAP_READ_BIT | GL_MAP_WRITE_BIT)) != 0;
-    if (!renderer->getFeatures().preferDeviceLocalMemoryHostVisible.enabled && !hasMapAccess)
+    if (renderer->getFeatures().preferDeviceLocalMemoryHostVisible.enabled)
     {
-        // Don't use host visible bit if buffer is not going to be accessed via map and feature bits
-        // also don't prefer.
+        const bool canUpdate = (storageFlags & GL_DYNAMIC_STORAGE_BIT_EXT) != 0;
+        if (canUpdate || hasMapAccess || externalBuffer)
+        {
+            // We currently allocate coherent memory for persistently mapped buffers.
+            // GL_EXT_buffer_storage allows non-coherent memory, but currently the implementation of
+            // |glMemoryBarrier(CLIENT_MAPPED_BUFFER_BARRIER_BIT_EXT)| relies on the mapping being
+            // coherent.
+            //
+            // If persistently mapped buffers ever use non-coherent memory, then said
+            // |glMemoryBarrier| call must result in |vkInvalidateMappedMemoryRanges| for all
+            // persistently mapped buffers.
+            return kDeviceLocalHostCoherentFlags;
+        }
         return kDeviceLocalFlags;
     }
 
-    const bool isCoherentMap   = (storageFlags & GL_MAP_COHERENT_BIT_EXT) != 0;
-    const bool isPersistentMap = (storageFlags & GL_MAP_PERSISTENT_BIT_EXT) != 0;
-
-    if (isCoherentMap || isPersistentMap || externalBuffer)
-    {
-        // We currently allocate coherent memory for persistently mapped buffers.
-        // GL_EXT_buffer_storage allows non-coherent memory, but currently the implementation of
-        // |glMemoryBarrier(CLIENT_MAPPED_BUFFER_BARRIER_BIT_EXT)| relies on the mapping being
-        // coherent.
-        //
-        // If persistently mapped buffers ever use non-coherent memory, then said |glMemoryBarrier|
-        // call must result in |vkInvalidateMappedMemoryRanges| for all persistently mapped buffers.
-        return kDeviceLocalHostCoherentFlags;
-    }
-
-    return kDeviceLocalHostVisibleFlags;
+    return hasMapAccess ? kHostCachedFlags : kDeviceLocalFlags;
 }
 
 ANGLE_INLINE bool ShouldAllocateNewMemoryForUpdate(ContextVk *contextVk,
