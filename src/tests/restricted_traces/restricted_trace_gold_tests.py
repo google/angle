@@ -125,23 +125,16 @@ def _use_adb(test_suite):
     return android_helper.ApkFileExists(test_suite)
 
 
-def run_wrapper(test_suite, cmd_args, args, env, stdoutfile, output_dir=None):
+def run_wrapper(test_suite, cmd_args, args, env, stdoutfile):
+    if _use_adb(args.test_suite):
+        return android_helper.RunTests(test_suite, cmd_args, stdoutfile)[0]
+
     cmd = [get_binary_name(test_suite)] + cmd_args
-    if output_dir:
-        cmd += ['--render-test-output-dir=%s' % output_dir]
 
     if args.xvfb:
         return xvfb.run_executable(cmd, env, stdoutfile=stdoutfile)
     else:
-        if _use_adb(args.test_suite):
-            try:
-                android_helper.RunTests(test_suite, cmd_args, stdoutfile, output_dir)
-                return 0
-            except Exception as e:
-                logging.exception(e)
-                return 1
-        else:
-            return test_env.run_command_with_output(cmd, env=env, stdoutfile=stdoutfile)
+        return test_env.run_command_with_output(cmd, env=env, stdoutfile=stdoutfile)
 
 
 def run_angle_system_info_test(sysinfo_args, args, env):
@@ -362,14 +355,10 @@ def _run_tests(args, tests, extra_flags, env, screenshot_dir, results, test_resu
                         '--one-frame-only',
                         '--verbose-logging',
                         '--enable-all-trace-tests',
+                        '--render-test-output-dir=%s' % screenshot_dir,
                     ] + extra_flags
-                    batch_result = PASS if run_wrapper(
-                        args.test_suite,
-                        cmd_args,
-                        args,
-                        env,
-                        tempfile_path,
-                        output_dir=screenshot_dir) == 0 else FAIL
+                    batch_result = PASS if run_wrapper(args.test_suite, cmd_args, args, env,
+                                                       tempfile_path) == 0 else FAIL
 
                     with open(tempfile_path) as f:
                         test_output = f.read() + '\n'
