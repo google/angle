@@ -745,16 +745,12 @@ std::string ProgramExecutable::getInfoLogString() const
 
 bool ProgramExecutable::isAttribLocationActive(size_t attribLocation) const
 {
-    // TODO(timvp): http://anglebug.com/3570: Enable this assert here somehow.
-    //    ASSERT(!mLinkingState);
     ASSERT(attribLocation < mActiveAttribLocationsMask.size());
     return mActiveAttribLocationsMask[attribLocation];
 }
 
 AttributesMask ProgramExecutable::getAttributesMask() const
 {
-    // TODO(timvp): http://anglebug.com/3570: Enable this assert here somehow.
-    //    ASSERT(!mLinkingState);
     return mAttributesMask;
 }
 

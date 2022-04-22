@@ -356,8 +356,6 @@ class ProgramExecutable final : public angle::Subject
     void copyUniformsFromProgramMap(const ShaderMap<Program *> &programs);
 
   private:
-    // TODO(timvp): http://anglebug.com/3570: Investigate removing these friend
-    // class declarations and accessing the necessary members with getters/setters.
     friend class Program;
     friend class ProgramPipeline;
     friend class ProgramState;
