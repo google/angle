@@ -126,6 +126,11 @@ bool DisplayImpl::isX11() const
     return false;
 }
 
+bool DisplayImpl::isWayland() const
+{
+    return false;
+}
+
 bool DisplayImpl::supportsDmaBufFormat(EGLint format) const
 {
     UNREACHABLE();

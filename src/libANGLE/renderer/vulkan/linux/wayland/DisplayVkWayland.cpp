@@ -199,6 +199,11 @@ const char *DisplayVkWayland::getWSIExtension() const
     return VK_KHR_WAYLAND_SURFACE_EXTENSION_NAME;
 }
 
+bool DisplayVkWayland::isWayland() const
+{
+    return true;
+}
+
 bool IsVulkanWaylandDisplayAvailable()
 {
     wl_display *display = wl_display_connect(nullptr);

@@ -35,6 +35,8 @@ class DisplayVkWayland : public DisplayVkLinux
 
     const char *getWSIExtension() const override;
 
+    bool isWayland() const override;
+
     bool supportsDmaBufFormat(EGLint format) const override;
     egl::Error queryDmaBufFormats(EGLint maxFormats, EGLint *formats, EGLint *numFormats) override;
     egl::Error queryDmaBufModifiers(EGLint format,
