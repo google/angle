@@ -3,10 +3,12 @@
 # found in the LICENSE file.
 
 import contextlib
+import functools
 import glob
 import json
 import logging
 import os
+import pathlib
 import posixpath
 import random
 import subprocess
@@ -37,13 +39,27 @@ def _Run(cmd):
     return output
 
 
+@functools.lru_cache()
+def _FindAdb():
+    platform_tools = (
+        pathlib.Path(angle_path_util.ANGLE_ROOT_DIR) / 'third_party' / 'android_sdk' / 'public' /
+        'platform-tools')
+
+    if platform_tools.exists():
+        adb = str(platform_tools / 'adb')
+    else:
+        adb = 'adb'
+
+    adb_info = subprocess.check_output([adb, '--version']).decode()
+    logging.info('adb --version: %s', adb_info)
+
+    return adb
+
+
 class Adb(object):
 
-    def __init__(self, adb_path=None):
-        if not adb_path:
-            adb_path = os.path.join(angle_path_util.ANGLE_ROOT_DIR,
-                                    'third_party/android_sdk/public/platform-tools/adb')
-        self._adb_path = adb_path
+    def __init__(self):
+        self._adb_path = _FindAdb()
 
     def Run(self, args):
         return _Run([self._adb_path] + args)
