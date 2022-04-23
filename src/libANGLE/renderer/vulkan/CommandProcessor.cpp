@@ -33,7 +33,7 @@ void InitializeSubmitInfo(VkSubmitInfo *submitInfo,
     submitInfo->commandBufferCount = commandBuffer.valid() ? 1 : 0;
     submitInfo->pCommandBuffers    = commandBuffer.ptr();
     submitInfo->waitSemaphoreCount = static_cast<uint32_t>(waitSemaphores.size());
-    submitInfo->pWaitSemaphores    = waitSemaphores.data();
+    submitInfo->pWaitSemaphores    = waitSemaphores.empty() ? nullptr : waitSemaphores.data();
     submitInfo->pWaitDstStageMask  = waitSemaphoreStageMasks.data();
 
     if (signalSemaphore)
