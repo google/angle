@@ -2678,18 +2678,14 @@ void ContextVk::updateOverlayOnPresent()
     }
 
     {
-        // A submission will follow the overlay rendering, so the per-frame submit calls are
-        // incremented by one to account for that submission.
-
         gl::RunningGraphWidget *attemptedSubmissionsWidget =
             overlay->getRunningGraphWidget(gl::WidgetId::VulkanAttemptedSubmissions);
-        attemptedSubmissionsWidget->add(commandQueuePerfCounters.commandQueueSubmitCallsPerFrame +
-                                        1);
+        attemptedSubmissionsWidget->add(commandQueuePerfCounters.commandQueueSubmitCallsPerFrame);
         attemptedSubmissionsWidget->next();
 
         gl::RunningGraphWidget *actualSubmissionsWidget =
             overlay->getRunningGraphWidget(gl::WidgetId::VulkanActualSubmissions);
-        actualSubmissionsWidget->add(commandQueuePerfCounters.vkQueueSubmitCallsPerFrame + 1);
+        actualSubmissionsWidget->add(commandQueuePerfCounters.vkQueueSubmitCallsPerFrame);
         actualSubmissionsWidget->next();
     }
 }
@@ -3651,6 +3647,12 @@ angle::Result ContextVk::optimizeRenderPassForPresent(VkFramebuffer framebufferH
             dsState, mRenderPassCommands->getRenderArea());
     }
 
+    // Use finalLayout instead of extra barrier for layout change to present
+    if (colorImage != nullptr)
+    {
+        mRenderPassCommands->setImageOptimizeForPresent(colorImage);
+    }
+
     // Resolve the multisample image
     if (colorImageMS->valid())
     {
@@ -3698,11 +3700,6 @@ angle::Result ContextVk::optimizeRenderPassForPresent(VkFramebuffer framebufferH
         mPerfCounters.swapchainResolveInSubpass++;
     }
 
-    // Use finalLayout instead of extra barrier for layout change to present
-    if (colorImage != nullptr)
-    {
-        mRenderPassCommands->setImageOptimizeForPresent(colorImage);
-    }
     return angle::Result::Continue;
 }
 

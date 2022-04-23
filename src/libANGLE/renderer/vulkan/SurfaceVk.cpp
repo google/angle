@@ -1695,8 +1695,6 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
     SwapchainImage &image               = mSwapchainImages[mCurrentSwapchainImageIndex];
     vk::Framebuffer &currentFramebuffer = chooseFramebuffer(SwapchainResolveMode::Disabled);
 
-    updateOverlay(contextVk);
-
     // Make sure deferred clears are applied, if any.
     ANGLE_TRY(
         image.image.flushStagedUpdates(contextVk, gl::LevelIndex(0), gl::LevelIndex(1), 0, 1, {}));
@@ -1705,7 +1703,7 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
     // swapchain image. MSAA resolve and overlay will insert another renderpass which disqualifies
     // the optimization.
     bool imageResolved = false;
-    if (currentFramebuffer.valid() && !overlayHasEnabledWidget(contextVk))
+    if (currentFramebuffer.valid())
     {
         ANGLE_TRY(contextVk->optimizeRenderPassForPresent(
             currentFramebuffer.getHandle(), &image.imageViews, &image.image, &mColorImageMS,
@@ -1745,12 +1743,6 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
         contextVk->getPerfCounters().swapchainResolveOutsideSubpass++;
     }
 
-    if (overlayHasEnabledWidget(contextVk))
-    {
-        ANGLE_TRY(drawOverlay(contextVk, &image));
-        ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer({}, &commandBuffer));
-    }
-
     // This does nothing if it's already in the requested layout
     image.image.recordReadBarrier(contextVk, VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::Present,
                                   commandBuffer);
@@ -1776,8 +1768,20 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
     // present can be destroyed.
     presentHistory.oldSwapchains = std::move(mOldSwapchains);
 
-    ANGLE_TRY(contextVk->flushAndGetSerial(presentSemaphore, swapSerial,
-                                           RenderPassClosureReason::EGLSwapBuffers));
+    // The overlay is drawn after this.  This ensures that drawing the overlay does not interfere
+    // with other functionality, especially counters used to validate said functionality.
+    const bool shouldDrawOverlay = overlayHasEnabledWidget(contextVk);
+
+    ANGLE_TRY(contextVk->flushAndGetSerial(shouldDrawOverlay ? nullptr : presentSemaphore,
+                                           swapSerial, RenderPassClosureReason::EGLSwapBuffers));
+
+    if (shouldDrawOverlay)
+    {
+        updateOverlay(contextVk);
+        ANGLE_TRY(drawOverlay(contextVk, &image));
+        ANGLE_TRY(contextVk->flushAndGetSerial(presentSemaphore, swapSerial,
+                                               RenderPassClosureReason::AlreadySpecifiedElsewhere));
+    }
 
     VkPresentInfoKHR presentInfo   = {};
     presentInfo.sType              = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
