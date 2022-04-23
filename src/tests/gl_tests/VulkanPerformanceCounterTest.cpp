@@ -426,6 +426,15 @@ class VulkanPerformanceCounterTest_MSAA : public VulkanPerformanceCounterTest
     }
 };
 
+class VulkanPerformanceCounterTest_SingleBuffer : public VulkanPerformanceCounterTest
+{
+  protected:
+    VulkanPerformanceCounterTest_SingleBuffer() : VulkanPerformanceCounterTest()
+    {
+        setMutableRenderBuffer(true);
+    }
+};
+
 void VulkanPerformanceCounterTest::maskedFramebufferFetchDraw(const GLColor &clearColor,
                                                               GLBuffer &buffer)
 {
@@ -4993,8 +5002,55 @@ TEST_P(VulkanPerformanceCounterTest, SyncWihtoutCommandsDoesntCauseSubmission)
     EXPECT_EQ(getPerfCounters().vkQueueSubmitCallsTotal, expectedVkQueueSubmitCalls);
 }
 
+// In single-buffer mode, ensure that unnecessary eglSwapBuffers is completely ignored (i.e. doesn't
+// lead to a command queue submission, consuming a submission serial).  Used to verify an
+// optimization that ensures CPU throttling doesn't incur GPU bubbles with unnecessary
+// eglSwapBuffers calls.
+TEST_P(VulkanPerformanceCounterTest_SingleBuffer, SwapBuffersAfterFlushIgnored)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled(kPerfMonitorExtensionName));
+    initANGLEFeatures();
+
+    // Set mode to single buffer
+    EXPECT_EGL_TRUE(eglSurfaceAttrib(getEGLWindow()->getDisplay(), getEGLWindow()->getSurface(),
+                                     EGL_RENDER_BUFFER, EGL_SINGLE_BUFFER));
+
+    // Swap buffers so mode switch takes effect.
+    swapBuffers();
+    uint32_t expectedCommandQueueSubmitCalls = getPerfCounters().commandQueueSubmitCallsTotal;
+
+    // Further swap buffers should be ineffective.
+    swapBuffers();
+    swapBuffers();
+    swapBuffers();
+    swapBuffers();
+
+    EXPECT_EQ(getPerfCounters().commandQueueSubmitCallsTotal, expectedCommandQueueSubmitCalls);
+
+    // Issue commands and flush them.
+    glClearColor(1, 0, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // One submission for the above readback
+    ++expectedCommandQueueSubmitCalls;
+    EXPECT_EQ(getPerfCounters().commandQueueSubmitCallsTotal, expectedCommandQueueSubmitCalls);
+
+    // Further swap buffers should again be ineffective.
+    swapBuffers();
+    swapBuffers();
+    swapBuffers();
+    swapBuffers();
+    swapBuffers();
+
+    EXPECT_EQ(getPerfCounters().commandQueueSubmitCallsTotal, expectedCommandQueueSubmitCalls);
+}
+
 ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest, ES3_VULKAN(), ES3_VULKAN_SWIFTSHADER());
 ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest_ES31, ES31_VULKAN(), ES31_VULKAN_SWIFTSHADER());
 ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest_MSAA, ES3_VULKAN(), ES3_VULKAN_SWIFTSHADER());
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(VulkanPerformanceCounterTest_SingleBuffer);
+ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest_SingleBuffer, ES3_VULKAN());
 
 }  // anonymous namespace

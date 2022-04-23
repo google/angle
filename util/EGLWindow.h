@@ -54,6 +54,7 @@ struct ANGLE_UTIL_EXPORT ConfigParameters
     bool bindGeneratesResource;
     bool clientArraysEnabled;
     bool robustAccess;
+    bool mutableRenderBuffer;
     EGLint samples;
     Optional<bool> contextProgramCacheEnabled;
     EGLenum resetStrategy;
@@ -67,6 +68,7 @@ enum class GLWindowResult
 {
     NoError,
     NoColorspaceSupport,
+    NoMutableRenderBufferSupport,
     Error,
 };
 

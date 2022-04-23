@@ -36,6 +36,7 @@ ConfigParameters::ConfigParameters()
       bindGeneratesResource(true),
       clientArraysEnabled(true),
       robustAccess(false),
+      mutableRenderBuffer(false),
       samples(-1),
       resetStrategy(EGL_NO_RESET_NOTIFICATION_EXT),
       colorSpace(EGL_COLORSPACE_LINEAR),
@@ -285,9 +286,18 @@ GLWindowResult EGLWindow::initializeSurface(OSWindow *osWindow,
     mConfigParams                 = params;
     const char *displayExtensions = eglQueryString(mDisplay, EGL_EXTENSIONS);
 
+    bool hasMutableRenderBuffer =
+        strstr(displayExtensions, "EGL_KHR_mutable_render_buffer") != nullptr;
+    if (mConfigParams.mutableRenderBuffer && !hasMutableRenderBuffer)
+    {
+        fprintf(stderr, "Mising EGL_KHR_mutable_render_buffer.\n");
+        destroyGL();
+        return GLWindowResult::NoMutableRenderBufferSupport;
+    }
+
     std::vector<EGLint> configAttributes = {
         EGL_SURFACE_TYPE,
-        EGL_WINDOW_BIT,
+        EGL_WINDOW_BIT | (params.mutableRenderBuffer ? EGL_MUTABLE_RENDER_BUFFER_BIT_KHR : 0),
         EGL_RED_SIZE,
         (mConfigParams.redBits >= 0) ? mConfigParams.redBits : EGL_DONT_CARE,
         EGL_GREEN_SIZE,
