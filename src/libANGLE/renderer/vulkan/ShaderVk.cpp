@@ -12,7 +12,7 @@
 #include "common/debug.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/renderer/vulkan/ContextVk.h"
-#include "platform/FeaturesVk.h"
+#include "platform/FeaturesVk_autogen.h"
 
 namespace rx
 {

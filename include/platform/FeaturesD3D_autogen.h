@@ -5,7 +5,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// FeaturesD3D.h: Features and workarounds for D3D driver bugs and other issues.
+// FeaturesD3D_autogen.h: Features and workarounds for D3D driver bugs and other issues.
 
 #ifndef ANGLE_PLATFORM_FEATURESD3D_H_
 #define ANGLE_PLATFORM_FEATURESD3D_H_

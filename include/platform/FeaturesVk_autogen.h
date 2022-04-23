@@ -5,7 +5,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// FeaturesVk.h: Optional features for the Vulkan renderer.
+// FeaturesVk_autogen.h: Optional features for the Vulkan renderer.
 
 #ifndef ANGLE_PLATFORM_FEATURESVK_H_
 #define ANGLE_PLATFORM_FEATURESVK_H_

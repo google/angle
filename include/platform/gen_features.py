@@ -15,11 +15,11 @@ import re
 import sys
 
 feature_files = {
-    'd3d_features.json': ('D3D', 'FeaturesD3D.h'),
-    'frontend_features.json': ('Frontend', 'FrontendFeatures.h'),
-    'gl_features.json': ('OpenGL', 'FeaturesGL.h'),
-    'mtl_features.json': ('Metal', 'FeaturesMtl.h'),
-    'vk_features.json': ('Vulkan', 'FeaturesVk.h'),
+    'd3d_features.json': ('D3D', 'FeaturesD3D'),
+    'frontend_features.json': ('Frontend', 'FrontendFeatures'),
+    'gl_features.json': ('OpenGL', 'FeaturesGL'),
+    'mtl_features.json': ('Metal', 'FeaturesMtl'),
+    'vk_features.json': ('Vulkan', 'FeaturesVk'),
 }
 feature_list_header_file = '../../util/angle_features_autogen.h'
 feature_list_source_file = '../../util/angle_features_autogen.cpp'
@@ -127,7 +127,12 @@ template_feature_string = u"""{{Feature::{VarName}, "{display_name}"}},"""
 
 
 def make_camel_case(json_name):
+    assert '_' in json_name, 'feature names in the json file are expected to be in snake_case'
     return re.sub('_(.)', lambda m: m.group(1).upper(), json_name)
+
+
+def make_header_name(class_name):
+    return class_name + '_autogen.h'
 
 
 def main():
@@ -135,13 +140,14 @@ def main():
         print(','.join(list(feature_files.keys())))
         return
     if len(sys.argv) == 2 and sys.argv[1] == 'outputs':
-        print(','.join([header for (_, header) in feature_files.values()]) + ',' +
+        print(','.join(
+            [make_header_name(class_name) for (_, class_name) in feature_files.values()]) + ',' +
               feature_list_header_file + ',' + feature_list_source_file)
         return
 
     name_map = {}
 
-    for src_file, (category_prefix, header_file) in feature_files.items():
+    for src_file, (category_prefix, class_name) in feature_files.items():
         with open(src_file) as fin:
             src = json.loads(fin.read())
 
@@ -169,14 +175,14 @@ def main():
             name_map[var_name] = display_name
 
         description = '\n'.join(['// ' + line for line in src['description']])
-        name = header_file[:-2]
+        header_file = make_header_name(class_name)
 
         header = template_header.format(
             script_name=os.path.basename(__file__),
             input_file_name=src_file,
             description=description.replace(src_file, header_file),
-            name=name,
-            NAME=name.upper(),
+            name=class_name,
+            NAME=class_name.upper(),
             features='\n'.join(features))
 
         with open(header_file, 'w') as fout:

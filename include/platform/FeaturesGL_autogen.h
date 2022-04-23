@@ -5,7 +5,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// FeaturesGL.h: angle::Features and workarounds for GL driver bugs and other issues.
+// FeaturesGL_autogen.h: angle::Features and workarounds for GL driver bugs and other issues.
 
 #ifndef ANGLE_PLATFORM_FEATURESGL_H_
 #define ANGLE_PLATFORM_FEATURESGL_H_

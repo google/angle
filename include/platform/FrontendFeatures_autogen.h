@@ -5,7 +5,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// FrontendFeatures.h: Features/workarounds for driver bugs and other behaviors seen
+// FrontendFeatures_autogen.h: Features/workarounds for driver bugs and other behaviors seen
 // on all platforms.
 
 #ifndef ANGLE_PLATFORM_FRONTENDFEATURES_H_

@@ -27,7 +27,7 @@
 #include "libANGLE/Observer.h"
 #include "libANGLE/Version.h"
 #include "platform/Feature.h"
-#include "platform/FrontendFeatures.h"
+#include "platform/FrontendFeatures_autogen.h"
 
 namespace angle
 {

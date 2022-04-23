@@ -8,7 +8,7 @@
 //
 
 #include "test_utils/MultiviewTest.h"
-#include "platform/FeaturesD3D.h"
+#include "platform/FeaturesD3D_autogen.h"
 #include "test_utils/gl_raii.h"
 
 namespace angle

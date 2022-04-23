@@ -5,7 +5,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// FeaturesMtl.h: Optional features for the Metal renderer.
+// FeaturesMtl_autogen.h: Optional features for the Metal renderer.
 
 #ifndef ANGLE_PLATFORM_FEATURESMTL_H_
 #define ANGLE_PLATFORM_FEATURESMTL_H_
