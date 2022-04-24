@@ -103,6 +103,10 @@
 6977 NVIDIA GLES : MipmapTestES31.GenerateMipmapWithDraw/* = SKIP
 6977 LINUX NVIDIA OpenGL : MipmapTestES31.GenerateLowerMipsWithDraw/* = SKIP
 
+// Nvidia Vulkan
+7236 NVIDIA VULKAN : GLSLTest_ES31.TessellationControlShaderMatrixCopyBug/* = SKIP
+7236 NVIDIA VULKAN : GLSLTest_ES31.TessellationControlShaderMatrixMultiplicationBug/* = SKIP
+
 // Intel Vulkan
 
 // On Intel/Vulkan/Linux, The following image is produced, failing the test on the corner of the
