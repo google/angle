@@ -245,7 +245,7 @@ deps = {
   },
 
   'third_party/android_sdk': {
-    'url': '{chromium_git}/chromium/src/third_party/android_sdk@5f109f3c4191f99cafc03e0dbcd5946859430174',
+    'url': '{chromium_git}/chromium/src/third_party/android_sdk@70efa78e78cdfc98399924720750ebfd04266671',
     'condition': 'checkout_android and not build_with_chromium',
   },
 
@@ -263,10 +263,6 @@ deps = {
           {
               'package': 'chromium/third_party/android_sdk/public/emulator',
               'version': Var('android_sdk_emulator_version'),
-          },
-          {
-              'package': 'chromium/third_party/android_sdk/public/extras',
-              'version': Var('android_sdk_extras_version'),
           },
           {
               'package': 'chromium/third_party/android_sdk/public/patcher',
