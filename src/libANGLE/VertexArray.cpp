@@ -215,6 +215,7 @@ bool VertexArray::detachBuffer(const Context *context, BufferID bufferID)
     {
         if (isBound && mState.mElementArrayBuffer.get())
             mState.mElementArrayBuffer->onNonTFBindingChanged(-1);
+        mState.mElementArrayBuffer->removeContentsObserver(this, kElementArrayBufferIndex);
         mState.mElementArrayBuffer.bind(context, nullptr);
         mDirtyBits.set(DIRTY_BIT_ELEMENT_ARRAY_BUFFER);
         anyBufferDetached = true;

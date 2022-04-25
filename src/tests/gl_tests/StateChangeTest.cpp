@@ -8282,6 +8282,24 @@ TEST_P(SimpleStateChangeTestES3, MaxLevelChange)
     EXPECT_PIXEL_COLOR_EQ(0, 2, GLColor::blue);
     EXPECT_PIXEL_COLOR_EQ(2, 2, GLColor::yellow);
 }
+
+// Tests a bug when removing an element array buffer bound to two vertex arrays.
+TEST_P(SimpleStateChangeTestES3, DeleteDoubleBoundBufferAndVertexArray)
+{
+    std::vector<uint8_t> bufData(100, 0);
+    GLBuffer buffer;
+    GLVertexArray vao;
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
+    glBindVertexArray(vao);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
+    buffer.reset();
+    vao.reset();
+
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, bufData.size(), bufData.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, bufData.size(), bufData.data(), GL_STATIC_DRAW);
+    ASSERT_GL_NO_ERROR();
+}
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST_ES2(StateChangeTest);
