@@ -14,6 +14,7 @@ int GetANGLERevision();
 const char *GetANGLEVersionString();
 const char *GetANGLECommitHash();
 int GetANGLECommitHashSize();
+const char *GetANGLEUnknownHash();
 }  // namespace angle
 
 #endif  // COMMON_VERSION_H_

@@ -28,4 +28,9 @@ int GetANGLECommitHashSize()
 {
     return ANGLE_COMMIT_HASH_SIZE;
 }
+
+const char *GetANGLEUnknownHash()
+{
+    return ANGLE_COMMIT_HASH_UNKNOWN;
+}
 }  // namespace angle
