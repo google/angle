@@ -80,11 +80,10 @@ def _GetAdbRoot():
 
 
 def _ReadDeviceFile(device_path):
-    out_wc = _AdbShell('cat %s | wc -c' % device_path)
-    expected_size = int(out_wc.decode('ascii').strip())
-    out = _AdbRun(['exec-out', 'cat %s' % device_path])
-    assert len(out) == expected_size, 'exec-out mismatch'
-    return out
+    with _TempLocalFile() as tempfile_path:
+        _AdbRun(['pull', device_path, tempfile_path])
+        with open(tempfile_path, 'rb') as f:
+            return f.read()
 
 
 def _RemoveDeviceFile(device_path):
