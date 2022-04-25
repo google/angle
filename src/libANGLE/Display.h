@@ -181,7 +181,7 @@ class Display final : public LabeledObject,
                               const AttributeMap &attribs,
                               Surface **outSurface);
 
-    Error createImage(gl::Context *context,
+    Error createImage(const gl::Context *context,
                       EGLenum target,
                       EGLClientBuffer buffer,
                       const AttributeMap &attribs,
