@@ -418,6 +418,7 @@ def main():
             steps_per_trial = _get_results_from_output(calibrate_output, 'steps_to_run')
             if not steps_per_trial:
                 logging.warning('Skipping test %s' % test)
+                results.result_skip(test)
                 continue
             assert (len(steps_per_trial) == 1)
             steps_per_trial = int(steps_per_trial[0])
@@ -501,6 +502,10 @@ def main():
                     histograms.Merge(merged_histogram)
             else:
                 logging.error('Test %s failed to record some samples' % test)
+                results.result_fail(test)
+
+    for test in tests:
+        assert results.has_result(test)
 
     if args.isolated_script_test_output:
         results.save_to_output_file(args.test_suite, args.isolated_script_test_output)
