@@ -516,7 +516,7 @@
             }
           ],
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
-          "shards": 20
+          "shards": 6
         },
         "test_id_prefix": "ninja://src/tests:angle_perftests/"
       },
