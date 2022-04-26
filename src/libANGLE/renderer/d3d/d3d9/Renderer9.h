@@ -444,6 +444,8 @@ class Renderer9 : public RendererD3D
 
     void initializeFeatures(angle::FeaturesD3D *features) const override;
 
+    void initializeFrontendFeatures(angle::FrontendFeatures *features) const override;
+
     angle::Result setBlendDepthRasterStates(const gl::Context *context, gl::PrimitiveMode drawMode);
 
     void release();

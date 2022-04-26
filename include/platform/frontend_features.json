@@ -59,6 +59,15 @@
         },
 
         {
+            "name": "force_depth_attachment_init_on_clear",
+            "category": "Workarounds",
+            "description": [
+                "Force depth attachment initialization on clear ops"
+            ],
+            "issue": "https://anglebug.com/7246"
+        },
+
+        {
             "name": "enable_capture_limits",
             "category": "Features",
             "description": [

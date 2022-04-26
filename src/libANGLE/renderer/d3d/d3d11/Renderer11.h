@@ -501,6 +501,8 @@ class Renderer11 : public RendererD3D
 
     void initializeFeatures(angle::FeaturesD3D *features) const override;
 
+    void initializeFrontendFeatures(angle::FrontendFeatures *features) const override;
+
     angle::Result drawLineLoop(const gl::Context *context,
                                GLuint count,
                                gl::DrawElementsType type,

@@ -113,6 +113,7 @@ enum class Feature
     ForceBufferGPUStorage,
     ForceD16TexFilter,
     ForceD24S8AsUnsupported,
+    ForceDepthAttachmentInitOnClear,
     ForceDriverUniformOverSpecConst,
     ForceFallbackFormat,
     ForceFragmentShaderPrecisionHighpToMediump,

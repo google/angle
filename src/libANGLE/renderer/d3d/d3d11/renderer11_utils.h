@@ -323,6 +323,9 @@ void InitializeFeatures(const Renderer11DeviceCaps &deviceCaps,
                         const DXGI_ADAPTER_DESC &adapterDesc,
                         angle::FeaturesD3D *features);
 
+void InitializeFrontendFeatures(const DXGI_ADAPTER_DESC &adapterDesc,
+                                angle::FrontendFeatures *features);
+
 enum ReservedConstantBufferSlot
 {
     RESERVED_CONSTANT_BUFFER_SLOT_DEFAULT_UNIFORM_BLOCK = 0,

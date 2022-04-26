@@ -2507,6 +2507,14 @@ void InitializeFeatures(const Renderer11DeviceCaps &deviceCaps,
                             IsWin10OrGreater());
 }
 
+void InitializeFrontendFeatures(const DXGI_ADAPTER_DESC &adapterDesc,
+                                angle::FrontendFeatures *features)
+{
+    bool isAMD = IsAMD(adapterDesc.VendorId);
+
+    ANGLE_FEATURE_CONDITION(features, forceDepthAttachmentInitOnClear, isAMD);
+}
+
 void InitConstantBufferDesc(D3D11_BUFFER_DESC *constantBufferDescription, size_t byteWidth)
 {
     constantBufferDescription->ByteWidth           = static_cast<UINT>(byteWidth);

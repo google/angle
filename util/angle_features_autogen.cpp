@@ -119,6 +119,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::ForceBufferGPUStorage, "forceBufferGPUStorage"},
     {Feature::ForceD16TexFilter, "forceD16TexFilter"},
     {Feature::ForceD24S8AsUnsupported, "forceD24S8AsUnsupported"},
+    {Feature::ForceDepthAttachmentInitOnClear, "forceDepthAttachmentInitOnClear"},
     {Feature::ForceDriverUniformOverSpecConst, "forceDriverUniformOverSpecConst"},
     {Feature::ForceFallbackFormat, "forceFallbackFormat"},
     {Feature::ForceFragmentShaderPrecisionHighpToMediump,
