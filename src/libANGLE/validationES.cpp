@@ -2046,7 +2046,7 @@ bool ValidateGenerateMipmapBase(const Context *context,
     TextureTarget baseTarget = (target == TextureType::CubeMap)
                                    ? TextureTarget::CubeMapPositiveX
                                    : NonCubeTextureTypeToTarget(target);
-    const auto &format = *(texture->getFormat(baseTarget, effectiveBaseLevel).info);
+    const auto &format       = *(texture->getFormat(baseTarget, effectiveBaseLevel).info);
     if (format.sizedInternalFormat == GL_NONE || format.compressed || format.depthBits > 0 ||
         format.stencilBits > 0)
     {
@@ -3606,8 +3606,8 @@ bool ValidateCopyFormatCompatible(const InternalFormat &srcFormatInfo,
     {
         GLenum uncompressedFormat = (!srcFormatInfo.compressed) ? srcFormatInfo.internalFormat
                                                                 : dstFormatInfo.internalFormat;
-        GLenum compressedFormat = (srcFormatInfo.compressed) ? srcFormatInfo.internalFormat
-                                                             : dstFormatInfo.internalFormat;
+        GLenum compressedFormat   = (srcFormatInfo.compressed) ? srcFormatInfo.internalFormat
+                                                               : dstFormatInfo.internalFormat;
 
         return ValidateCopyMixedFormatCompatible(uncompressedFormat, compressedFormat);
     }
@@ -3790,6 +3790,13 @@ bool ValidateCopyTexImageParametersBase(const Context *context,
         std::numeric_limits<GLsizei>::max() - yoffset < height)
     {
         context->validationError(entryPoint, GL_INVALID_VALUE, kOffsetOverflow);
+        return false;
+    }
+
+    if (std::numeric_limits<GLint>::max() - width < x ||
+        std::numeric_limits<GLint>::max() - height < y)
+    {
+        context->validationError(entryPoint, GL_INVALID_VALUE, kIntegerOverflow);
         return false;
     }
 

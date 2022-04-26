@@ -1355,7 +1355,7 @@ TEST_P(CopyTextureTest, CopyOutsideMipmap)
     ANGLE_SKIP_TEST_IF(IsLinux() && IsNVIDIA() && IsOpenGL());
 
     // http://anglebug.com/5246
-    ANGLE_SKIP_TEST_IF(IsWindows7() && IsNVIDIA() && IsOpenGLES());
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsNVIDIA() && IsOpenGL());
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
