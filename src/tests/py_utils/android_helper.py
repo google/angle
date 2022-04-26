@@ -177,6 +177,7 @@ def _TempLocalFile():
 def _DumpLogcat(since_time):
     output = _AdbRun(['logcat', '-t', since_time]).decode()
     logging.info('logcat:\n%s', output)
+    return output
 
 
 @contextlib.contextmanager
@@ -185,7 +186,15 @@ def _DumpLogcatIfNotDoneAfter(seconds):
 
     def stuck():
         logging.warning('%d seconds elapsed, dumping logcat', seconds)
-        _DumpLogcat(since_time=initial_time)
+        logcat_output = _DumpLogcat(since_time=initial_time)
+
+        pid_lines = [
+            ln for ln in logcat_output.split('\n')
+            if 'org.chromium.native_test.NativeTest.StdoutFile' in ln
+        ]
+        if pid_lines:
+            debuggerd_output = _AdbShell('debuggerd %s' % pid_lines[-1].split(' ')[2]).decode()
+            logging.warning('debuggerd output:\n%s', debuggerd_output)
 
     t = threading.Timer(seconds, stuck)
     t.start()
