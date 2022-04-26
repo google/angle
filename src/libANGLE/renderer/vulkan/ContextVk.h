@@ -707,8 +707,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     // Keeping track of the buffer copy size. Used to determine when to submit the outside command
     // buffer.
     angle::Result onCopyUpdate(VkDeviceSize size);
-    void resetTotalBufferToImageCopySize() { mTotalBufferToImageCopySize = 0; }
-    VkDeviceSize getTotalBufferToImageCopySize() const { return mTotalBufferToImageCopySize; }
 
     // Implementation of MultisampleTextureInitializer
     angle::Result initializeMultisampleTextureToBlack(const gl::Context *context,
@@ -1354,7 +1352,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     // The size of copy commands issued between buffers and images. Used to submit the command
     // buffer for the outside render pass.
-    VkDeviceSize mTotalBufferToImageCopySize = 0;
+    VkDeviceSize mTotalBufferToImageCopySize;
 
     // Semaphores that must be waited on in the next submission.
     std::vector<VkSemaphore> mWaitSemaphores;

@@ -763,6 +763,7 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
       mPrimaryBufferEventCounter(0),
       mHasDeferredFlush(false),
       mHasAnyCommandsPendingSubmission(false),
+      mTotalBufferToImageCopySize(0),
       mGpuClockSync{std::numeric_limits<double>::max(), std::numeric_limits<double>::max()},
       mGpuEventTimestampOrigin(0),
       mContextPriority(renderer->getDriverPriority(GetContextPriority(state))),
@@ -2796,18 +2797,18 @@ angle::Result ContextVk::submitCommands(const vk::Semaphore *signalSemaphore,
         ANGLE_TRY(checkCompletedGpuEvents());
     }
 
-    resetTotalBufferToImageCopySize();
+    mTotalBufferToImageCopySize = 0;
 
     return angle::Result::Continue;
 }
 
 angle::Result ContextVk::onCopyUpdate(VkDeviceSize size)
 {
-    mTotalBufferToImageCopySize += size;
     ANGLE_TRACE_EVENT0("gpu.angle", "ContextVk::onCopyUpdate");
+
+    mTotalBufferToImageCopySize += size;
     // If the copy size exceeds the specified threshold, submit the outside command buffer.
-    VkDeviceSize copySize = getTotalBufferToImageCopySize();
-    if (copySize >= kMaxBufferToImageCopySize)
+    if (mTotalBufferToImageCopySize >= kMaxBufferToImageCopySize)
     {
         ANGLE_TRY(submitOutsideRenderPassCommandsImpl());
     }
