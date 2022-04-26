@@ -15,6 +15,7 @@ import re
 import subprocess
 import tarfile
 import tempfile
+import threading
 import time
 
 import angle_path_util
@@ -173,6 +174,27 @@ def _TempLocalFile():
         os.remove(path)
 
 
+def _DumpLogcat(since_time):
+    output = _AdbRun(['logcat', '-t', since_time]).decode()
+    logging.info('logcat:\n%s', output)
+
+
+@contextlib.contextmanager
+def _DumpLogcatIfNotDoneAfter(seconds):
+    initial_time = _AdbShell('date +"%F %T.%3N"').decode().strip()
+
+    def stuck():
+        logging.warning('%d seconds elapsed, dumping logcat', seconds)
+        _DumpLogcat(since_time=initial_time)
+
+    t = threading.Timer(seconds, stuck)
+    t.start()
+    try:
+        yield
+    finally:
+        t.cancel()
+
+
 def _RunInstrumentation(flags):
     with _TempDeviceFile() as temp_device_file:
         cmd = ' '.join([
@@ -248,7 +270,8 @@ def RunTests(test_suite, args, stdoutfile=None, output_dir=None, log_output=True
                 device_output_dir = stack.enter_context(_TempDeviceDir())
                 args.append('--render-test-output-dir=' + device_output_dir)
 
-            output = _RunInstrumentation(args)
+            with _DumpLogcatIfNotDoneAfter(seconds=10 * 60):
+                output = _RunInstrumentation(args)
 
             test_output = _ReadDeviceFile(device_test_output_path)
             if test_output_path:
