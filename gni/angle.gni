@@ -121,6 +121,10 @@ declare_args() {
 }
 
 declare_args() {
+  angle_enable_msl_through_spirv = is_mac && angle_debug_layers_enabled
+}
+
+declare_args() {
   # By default, ANGLE is using a thread pool for parallel compilation.
   # Activating the delegate worker results in posting the tasks using the
   # embedder API. In Chromium code base, it results in sending tasks to the
@@ -143,7 +147,7 @@ declare_args() {
       ((is_win && !angle_is_winuwp) ||
        ((is_linux || is_chromeos) &&
         (angle_use_x11 || angle_use_wayland || angle_use_vulkan_display)) ||
-       is_android || is_fuchsia || is_ggp || is_mac)
+       is_android || is_fuchsia || is_ggp || angle_enable_msl_through_spirv)
 
   # When set to true, ANGLE will not use VK_KHR_surface and VK_KHR_swapchain
   # extensions. Content can be rendered only off-screen.
@@ -200,7 +204,7 @@ declare_args() {
   # the SPIR-V generation path, but leave it disabled on release.  It's still used by the metal
   # backend nevertheless.
   angle_enable_spirv_gen_through_glslang =
-      is_debug || angle_assert_always_on || angle_enable_metal ||
+      is_debug || angle_assert_always_on || angle_enable_msl_through_spirv ||
       angle_use_spirv_gen_through_glslang
 
   # ISpriteVisual windows cannot be validated and can lead to crashes if an invalid window is
