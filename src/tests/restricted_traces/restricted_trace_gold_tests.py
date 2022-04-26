@@ -31,6 +31,7 @@ if PY_UTILS not in sys.path:
     os.stat(PY_UTILS) and sys.path.insert(0, PY_UTILS)
 import android_helper
 import angle_path_util
+import angle_test_util
 from skia_gold import angle_skia_gold_properties
 from skia_gold import angle_skia_gold_session_manager
 
@@ -441,7 +442,7 @@ def main():
     add_skia_gold_args(parser)
 
     args, extra_flags = parser.parse_known_args()
-    logging.basicConfig(level=args.log.upper())
+    angle_test_util.setupLogging(args.log.upper())
 
     env = os.environ.copy()
 

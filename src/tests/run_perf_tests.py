@@ -26,6 +26,7 @@ if PY_UTILS not in sys.path:
     os.stat(PY_UTILS) and sys.path.insert(0, PY_UTILS)
 import android_helper
 import angle_path_util
+import angle_test_util
 
 angle_path_util.AddDepsDirToPath('testing/scripts')
 import common
@@ -321,8 +322,7 @@ def main():
 
     args, extra_flags = parser.parse_known_args()
 
-    importlib.reload(logging)
-    logging.basicConfig(level=args.log.upper())
+    angle_test_util.setupLogging(args.log.upper())
 
     start_time = time.time()
 
