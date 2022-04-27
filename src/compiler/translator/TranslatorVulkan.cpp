@@ -159,8 +159,8 @@ bool DeclareDefaultUniforms(TCompiler *compiler,
     TLayoutQualifier layoutQualifier = TLayoutQualifier::Create();
     layoutQualifier.blockStorage     = EbsStd140;
     const TVariable *uniformBlock    = DeclareInterfaceBlock(
-        root, symbolTable, uniformList, EvqUniform, layoutQualifier, TMemoryQualifier::Create(), 0,
-        ImmutableString(kDefaultUniformNames[shaderType]), ImmutableString(""));
+           root, symbolTable, uniformList, EvqUniform, layoutQualifier, TMemoryQualifier::Create(), 0,
+           ImmutableString(kDefaultUniformNames[shaderType]), ImmutableString(""));
 
     // Create a map from the uniform variables to new variables that reference the fields of the
     // block.
@@ -1245,7 +1245,8 @@ bool TranslatorVulkan::translateImpl(TInfoSinkBase &sink,
                 }
             }
 
-            if (!EmulateDithering(this, root, &getSymbolTable(), specConst, driverUniforms))
+            if (!EmulateDithering(this, compileOptions, root, &getSymbolTable(), specConst,
+                                  driverUniforms))
             {
                 return false;
             }

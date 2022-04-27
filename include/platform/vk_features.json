@@ -845,6 +845,15 @@
         },
 
         {
+            "name": "round_output_after_dithering",
+            "category": "Workarounds",
+            "description": [
+                "Round output after dithering to workaround a driver bug that rounds the output up"
+            ],
+            "issue": "http://anglebug.com/6953"
+        },
+
+        {
             "name": "emulate_advanced_blend_equations",
             "category": "Features",
             "description": [

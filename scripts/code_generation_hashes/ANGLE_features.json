@@ -6,7 +6,7 @@
   "include/platform/FeaturesMtl_autogen.h":
     "a71a6361a40f0c0471604a192c810d48",
   "include/platform/FeaturesVk_autogen.h":
-    "76694d576e396463bb00390dbce9b3a9",
+    "fc192c3047b4649281e3552ae9982590",
   "include/platform/FrontendFeatures_autogen.h":
     "95ba012012ae6a2de2a9237ab9d081f7",
   "include/platform/d3d_features.json":
@@ -20,9 +20,9 @@
   "include/platform/mtl_features.json":
     "6703cf8790325cf33b98eb7dc0472e48",
   "include/platform/vk_features.json":
-    "aaab06cd9b5cdefdaf093d659e747fa7",
+    "f4447cae3e9e90f53afb7a9d4f72ab15",
   "util/angle_features_autogen.cpp":
-    "a033f798a05dc5863d214cc19abd1d8b",
+    "72d06f67c79931526fb75e290972c0ed",
   "util/angle_features_autogen.h":
-    "9eacb6c51fcf74837915b5c2d0fe1134"
+    "57bcc3276d5543099f69d1fd4f29bd95"
 }

@@ -191,6 +191,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::RewriteUnaryMinusOperator, "rewriteUnaryMinusOperator"},
     {Feature::RGBA4IsNotSupportedForColorRendering, "RGBA4IsNotSupportedForColorRendering"},
     {Feature::RGBDXT1TexturesSampleZeroAlpha, "RGBDXT1TexturesSampleZeroAlpha"},
+    {Feature::RoundOutputAfterDithering, "roundOutputAfterDithering"},
     {Feature::SanitizeAMDGPURendererString, "sanitizeAMDGPURendererString"},
     {Feature::ScalarizeVecAndMatConstructorArgs, "scalarizeVecAndMatConstructorArgs"},
     {Feature::SelectViewInGeometryShader, "selectViewInGeometryShader"},

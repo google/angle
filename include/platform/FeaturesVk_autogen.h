@@ -569,6 +569,11 @@ struct FeaturesVk : FeatureSetBase
                                     "Emulate OpenGL dithering", &members,
                                     "http://anglebug.com/6755"};
 
+    FeatureInfo roundOutputAfterDithering = {
+        "roundOutputAfterDithering", FeatureCategory::VulkanWorkarounds,
+        "Round output after dithering to workaround a driver bug that rounds the output up",
+        &members, "http://anglebug.com/6953"};
+
     FeatureInfo emulateAdvancedBlendEquations = {
         "emulateAdvancedBlendEquations", FeatureCategory::VulkanFeatures,
         "Emulate GL_KHR_blend_equation_advanced", &members, "http://anglebug.com/3586"};

@@ -180,6 +180,7 @@ enum class Feature
     RewriteUnaryMinusOperator,
     RGBA4IsNotSupportedForColorRendering,
     RGBDXT1TexturesSampleZeroAlpha,
+    RoundOutputAfterDithering,
     SanitizeAMDGPURendererString,
     ScalarizeVecAndMatConstructorArgs,
     SelectViewInGeometryShader,
