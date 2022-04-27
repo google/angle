@@ -246,6 +246,10 @@ declare_args() {
   angle_has_histograms = angle_has_build
 }
 
+declare_args() {
+  angle_enable_renderdoc = angle_enable_vulkan_validation_layers
+}
+
 if (!defined(angle_zlib_compression_utils_dir)) {
   angle_zlib_compression_utils_dir = "//third_party/zlib/google"
 }
@@ -298,7 +302,8 @@ set_defaults("angle_test") {
   configs = angle_common_configs - [
               "$angle_root:constructor_and_destructor_warnings",
               "$angle_root:extra_warnings",
-            ] + [ "$angle_root/src/tests:angle_maybe_has_histograms" ]
+            ] + [ "$angle_root/src/tests:angle_maybe_has_histograms" ] +
+            [ "$angle_root/src/tests:angle_enable_renderdoc" ]
 
   public_configs = []
   public_deps = []

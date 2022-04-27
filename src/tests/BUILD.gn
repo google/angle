@@ -419,6 +419,12 @@ if (is_win || is_linux || is_chromeos || is_android || is_apple) {
   }
 }
 
+config("angle_enable_renderdoc") {
+  if (angle_enable_renderdoc) {
+    defines = [ "ANGLE_TEST_ENABLE_RENDERDOC_CAPTURE" ]
+  }
+}
+
 if (build_angle_perftests) {
   import("angle_perftests.gni")
 

@@ -971,11 +971,6 @@ angle_source_set("libANGLE_base") {
     defines += [ "ANGLE_GENERATE_SHADER_DEBUG_INFO" ]
   }
 
-  # If VVL are enabled, enable RenderDoc capture as well.
-  if (angle_enable_vulkan_validation_layers) {
-    defines += [ "ANGLE_TEST_ENABLE_RENDERDOC_CAPTURE" ]
-  }
-
   configs += [ ":debug_annotations_config" ]
   public_configs += [
     ":libANGLE_config",
