@@ -314,6 +314,8 @@ def _run_tests(args, tests, extra_flags, env, screenshot_dir, results, test_resu
 
     if _use_adb(args.test_suite):
         android_helper.PrepareTestSuite(args.test_suite)
+        if args.test_suite == DEFAULT_TEST_SUITE:
+            android_helper.RunSmokeTest()
 
     with temporary_dir('angle_skia_gold_') as skia_gold_temp_dir:
         gold_properties = angle_skia_gold_properties.ANGLESkiaGoldProperties(args)

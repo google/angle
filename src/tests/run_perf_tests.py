@@ -350,6 +350,8 @@ def main():
     if _use_adb(args.test_suite):
         android_helper.PrepareTestSuite(args.test_suite)
         tests = android_helper.ListTests()
+        if args.test_suite == DEFAULT_TEST_SUITE:
+            android_helper.RunSmokeTest()
     else:
         cmd = [get_binary_name(args.test_suite), '--list-tests', '--verbose']
         exit_code, lines = _run_and_get_output(args, cmd, env, [])
