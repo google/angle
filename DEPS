@@ -1267,6 +1267,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_traces',
   },
+  'src/tests/restricted_traces/jetpack_joyride': {
+      'packages': [
+        {
+            'package': 'angle/traces/jetpack_joyride',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_traces',
+  },
   'src/tests/restricted_traces/junes_journey': {
       'packages': [
         {
