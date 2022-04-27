@@ -363,7 +363,6 @@ class RendererVk : angle::NonCopyable
         }
         else
         {
-            vk::ScopedCommandQueueLock lock(this, mCommandQueueMutex);
             return mCommandQueue.getLastCompletedQueueSerial();
         }
     }
