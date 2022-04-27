@@ -1449,7 +1449,7 @@ ANGLE_INLINE bool UseLineRaster(const ContextVk *contextVk, gl::PrimitiveMode mo
 #define ANGLE_VK_PERF_WARNING(contextVk, severity, ...)                         \
     do                                                                          \
     {                                                                           \
-        char ANGLE_MESSAGE[100];                                                \
+        char ANGLE_MESSAGE[200];                                                \
         snprintf(ANGLE_MESSAGE, sizeof(ANGLE_MESSAGE), __VA_ARGS__);            \
         ANGLE_PERF_WARNING(contextVk->getDebug(), severity, ANGLE_MESSAGE);     \
                                                                                 \
@@ -1460,7 +1460,7 @@ ANGLE_INLINE bool UseLineRaster(const ContextVk *contextVk, gl::PrimitiveMode mo
 #define ANGLE_VK_TRACE_EVENT_AND_MARKER(contextVk, ...)                         \
     do                                                                          \
     {                                                                           \
-        char ANGLE_MESSAGE[100];                                                \
+        char ANGLE_MESSAGE[200];                                                \
         snprintf(ANGLE_MESSAGE, sizeof(ANGLE_MESSAGE), __VA_ARGS__);            \
         ANGLE_TRACE_EVENT0("gpu.angle", ANGLE_MESSAGE);                         \
                                                                                 \

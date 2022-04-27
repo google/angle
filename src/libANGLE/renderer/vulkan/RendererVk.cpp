@@ -194,53 +194,10 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-vkCmdDrawIndexed-None-06538",
 };
 
-struct SkippedSyncvalMessage
-{
-    const char *messageId;
-    const char *messageContents1;
-    const char *messageContents2                      = "";
-    bool resolvedWithStoreOpNone                      = false;
-    bool isDueToNonConformantCoherentFramebufferFetch = false;
-};
-constexpr SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
-    // This error is generated for multiple reasons:
-    //
-    // - http://anglebug.com/6411
-    // - http://anglebug.com/5371: This is resolved with storeOp=NONE
-    {
-        "SYNC-HAZARD-WRITE_AFTER_WRITE",
-        "Access info (usage: SYNC_IMAGE_LAYOUT_TRANSITION, prior_usage: "
-        "SYNC_LATE_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE, write_barriers: 0, command: "
-        "vkCmdEndRenderPass",
-    },
-    // http://anglebug.com/6411
-    {
-        "SYNC-HAZARD-WRITE_AFTER_WRITE",
-        "aspect depth during load with loadOp VK_ATTACHMENT_LOAD_OP_DONT_CARE. Access info (usage: "
-        "SYNC_EARLY_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE, prior_usage: "
-        "SYNC_IMAGE_LAYOUT_TRANSITION, write_barriers: "
-        "SYNC_EARLY_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_READ|SYNC_LATE_FRAGMENT_TESTS_DEPTH_"
-        "STENCIL_ATTACHMENT_READ, command: vkCmdPipelineBarrier",
-    },
-    {
-        "SYNC-HAZARD-WRITE_AFTER_WRITE",
-        "aspect stencil during load with loadOp VK_ATTACHMENT_LOAD_OP_DONT_CARE. Access info "
-        "(usage: "
-        "SYNC_EARLY_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE, prior_usage: "
-        "SYNC_IMAGE_LAYOUT_TRANSITION, write_barriers: "
-        "SYNC_EARLY_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_READ|SYNC_LATE_FRAGMENT_TESTS_DEPTH_"
-        "STENCIL_ATTACHMENT_READ, command: vkCmdPipelineBarrier",
-    },
-    // http://angkebug.com/6584
-    {
-        "SYNC-HAZARD-WRITE_AFTER_WRITE",
-        "aspect depth during load with loadOp VK_ATTACHMENT_LOAD_OP_DONT_CARE. Access info (usage: "
-        "SYNC_EARLY_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE, prior_usage: "
-        "SYNC_IMAGE_LAYOUT_TRANSITION, write_barriers: "
-        "SYNC_EARLY_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_READ|SYNC_LATE_FRAGMENT_TESTS_DEPTH_"
-        "STENCIL_ATTACHMENT_READ|SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_READ|SYNC_COLOR_"
-        "ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_WRITE, command: vkCmdPipelineBarrier",
-    },
+// Some syncval errors are resolved in the presence of the NONE load or store render pass ops.  For
+// those, ANGLE makes no further attempt to resolve them and expects vendor support for the
+// extensions instead.  The list of skipped messages is split based on this support.
+constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
     // http://anglebug.com/6416
     // http://anglebug.com/6421
     {
@@ -248,63 +205,6 @@ constexpr SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
         "Access info (usage: SYNC_IMAGE_LAYOUT_TRANSITION, prior_usage: "
         "SYNC_IMAGE_LAYOUT_TRANSITION, "
         "write_barriers: 0, command: vkCmdEndRenderPass",
-    },
-    // These errors are generated when simultaneously using a read-only depth/stencil attachment as
-    // sampler.  This is valid Vulkan.
-    //
-    // When storeOp=NONE is not present, ANGLE uses storeOp=STORE, but considers the image read-only
-    // and produces a hazard.  ANGLE relies on storeOp=NONE and so this is not expected to be worked
-    // around.
-    //
-    // With storeOp=NONE, there is another bug where a depth/stencil attachment may use storeOp=NONE
-    // for depth while storeOp=DONT_CARE for stencil, and the latter causes a synchronization error
-    // (similarly to the previous case as DONT_CARE is also a write operation).
-    // http://anglebug.com/5962
-    {"SYNC-HAZARD-WRITE_AFTER_READ",
-     "depth aspect during store with storeOp VK_ATTACHMENT_STORE_OP_STORE. Access info (usage: "
-     "SYNC_LATE_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE, prior_usage: "
-     "SYNC_FRAGMENT_SHADER_SHADER_STORAGE_READ, read_barriers: VK_PIPELINE_STAGE_2_NONE, "
-     "command: vkCmdDraw",
-     "", true},
-    {"SYNC-HAZARD-READ_AFTER_WRITE",
-     "type: VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, imageLayout: "
-     "VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL, binding ",
-     "Access info (usage: "
-     "SYNC_FRAGMENT_SHADER_SHADER_STORAGE_READ, prior_usage: "
-     "SYNC_LATE_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE, write_barriers: 0, command: "
-     "vkCmdEndRenderPass",
-     true},
-    {"SYNC-HAZARD-READ_AFTER_WRITE",
-     "type: VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, imageLayout: "
-     "VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL, binding ",
-     "Access info (usage: "
-     "SYNC_FRAGMENT_SHADER_SHADER_STORAGE_READ, prior_usage: "
-     "SYNC_LATE_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE, write_barriers: "
-     "SYNC_EARLY_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_READ|SYNC_EARLY_FRAGMENT_TESTS_DEPTH_"
-     "STENCIL_ATTACHMENT_WRITE|SYNC_LATE_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_READ|SYNC_LATE_"
-     "FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE, command: "
-     "vkCmdEndRenderPass",
-     true},
-    {
-        "SYNC-HAZARD-WRITE_AFTER_WRITE",
-        "aspect stencil during load with loadOp VK_ATTACHMENT_LOAD_OP_DONT_CARE. Access info "
-        "(usage: "
-        "SYNC_EARLY_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE, prior_usage: "
-        "SYNC_IMAGE_LAYOUT_TRANSITION, write_barriers: "
-        "SYNC_EARLY_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_READ|SYNC_FRAGMENT_SHADER_SHADER_"
-        "SAMPLED_"
-        "READ|SYNC_FRAGMENT_SHADER_SHADER_STORAGE_READ|SYNC_FRAGMENT_SHADER_UNIFORM_READ|SYNC_LATE_"
-        "FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_READ, command: vkCmdPipelineBarrier",
-    },
-    {
-        "SYNC-HAZARD-WRITE_AFTER_WRITE",
-        "aspect stencil during load with loadOp VK_ATTACHMENT_LOAD_OP_DONT_CARE. Access info "
-        "(usage: "
-        "SYNC_EARLY_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE, prior_usage: "
-        "SYNC_IMAGE_LAYOUT_TRANSITION, write_barriers: "
-        "SYNC_EARLY_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_READ|SYNC_LATE_FRAGMENT_TESTS_DEPTH_"
-        "STENCIL_ATTACHMENT_READ|SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_READ|SYNC_COLOR_"
-        "ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_WRITE, command: vkCmdPipelineBarrier",
     },
     // http://anglebug.com/6422
     {
@@ -441,7 +341,7 @@ constexpr SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
         "SYNC_IMAGE_LAYOUT_TRANSITION",
     },
     // From various tests. The validation layer does not calculate the exact vertexCounts that's
-    // been accessed. http://anglebug.com/6725
+    // being accessed. http://anglebug.com/6725
     {
         "SYNC-HAZARD-READ_AFTER_WRITE",
         "vkCmdDrawIndexed: Hazard READ_AFTER_WRITE for vertex",
@@ -526,13 +426,13 @@ constexpr SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
      "aspect color during load with loadOp VK_ATTACHMENT_LOAD_OP_LOAD. Access info (usage: "
      "SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_READ, prior_usage: "
      "SYNC_IMAGE_LAYOUT_TRANSITION, write_barriers: 0, command: vkCmdEndRenderPass",
-     false, true},
+     true},
     {"SYNC-HAZARD-WRITE_AFTER_WRITE",
      "vkCmdBeginRenderPass: Hazard WRITE_AFTER_WRITE in subpass 0 for attachment ",
      "image layout transition (old_layout: VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, new_layout: "
      "VK_IMAGE_LAYOUT_GENERAL). Access info (usage: SYNC_IMAGE_LAYOUT_TRANSITION, prior_usage: "
      "SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_WRITE, write_barriers:",
-     false, true},
+     true},
     // http://anglebug.com/7070
     {
         "SYNC-HAZARD-READ_AFTER_WRITE",
@@ -552,6 +452,121 @@ constexpr SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
         "Access info (usage: SYNC_IMAGE_LAYOUT_TRANSITION, prior_usage: "
         "SYNC_FRAGMENT_SHADER_SHADER_STORAGE_READ, read_barriers: "
         "VK_PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT, command: vkCmdDrawIndexed",
+    },
+};
+
+// Messages that shouldn't be generated if storeOp=NONE is supported, otherwise they are expected.
+constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessagesWithoutStoreOpNone[] = {
+    // These errors are generated when simultaneously using a read-only depth/stencil attachment as
+    // sampler.  This is valid Vulkan.
+    //
+    // When storeOp=NONE is not present, ANGLE uses storeOp=STORE, but considers the image read-only
+    // and produces a hazard.  ANGLE relies on storeOp=NONE and so this is not expected to be worked
+    // around.
+    //
+    // With storeOp=NONE, there is another bug where a depth/stencil attachment may use storeOp=NONE
+    // for depth while storeOp=DONT_CARE for stencil, and the latter causes a synchronization error
+    // (similarly to the previous case as DONT_CARE is also a write operation).
+    // http://anglebug.com/5962
+    {
+        "SYNC-HAZARD-WRITE_AFTER_READ",
+        "depth aspect during store with storeOp VK_ATTACHMENT_STORE_OP_STORE. Access info (usage: "
+        "SYNC_LATE_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE, prior_usage: "
+        "SYNC_FRAGMENT_SHADER_SHADER_STORAGE_READ, read_barriers: VK_PIPELINE_STAGE_2_NONE, "
+        "command: vkCmdDraw",
+        "",
+    },
+    {
+        "SYNC-HAZARD-READ_AFTER_WRITE",
+        "type: VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, imageLayout: "
+        "VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL, binding ",
+        "Access info (usage: "
+        "SYNC_FRAGMENT_SHADER_SHADER_STORAGE_READ, prior_usage: "
+        "SYNC_LATE_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE, write_barriers: 0, command: "
+        "vkCmdEndRenderPass",
+    },
+    {
+        "SYNC-HAZARD-READ_AFTER_WRITE",
+        "type: VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, imageLayout: "
+        "VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL, binding ",
+        "Access info (usage: "
+        "SYNC_FRAGMENT_SHADER_SHADER_STORAGE_READ, prior_usage: "
+        "SYNC_LATE_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE, write_barriers: "
+        "SYNC_EARLY_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_READ|SYNC_EARLY_FRAGMENT_TESTS_DEPTH_"
+        "STENCIL_ATTACHMENT_WRITE|SYNC_LATE_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_READ|SYNC_LATE_"
+        "FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE, command: "
+        "vkCmdEndRenderPass",
+    },
+};
+
+// Messages that shouldn't be generated if both loadOp=NONE and storeOp=NONE are supported,
+// otherwise they are expected.
+constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessagesWithoutLoadStoreOpNone[] = {
+    // This error is generated for multiple reasons:
+    //
+    // - http://anglebug.com/6411
+    // - http://anglebug.com/5371: This is resolved with storeOp=NONE
+    {
+        "SYNC-HAZARD-WRITE_AFTER_WRITE",
+        "Access info (usage: SYNC_IMAGE_LAYOUT_TRANSITION, prior_usage: "
+        "SYNC_LATE_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE, write_barriers: 0, command: "
+        "vkCmdEndRenderPass",
+        "",
+    },
+    // http://anglebug.com/6411
+    {
+        "SYNC-HAZARD-WRITE_AFTER_WRITE",
+        "aspect depth during load with loadOp VK_ATTACHMENT_LOAD_OP_DONT_CARE. Access info (usage: "
+        "SYNC_EARLY_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE, prior_usage: "
+        "SYNC_IMAGE_LAYOUT_TRANSITION, write_barriers: "
+        "SYNC_EARLY_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_READ|SYNC_LATE_FRAGMENT_TESTS_DEPTH_"
+        "STENCIL_ATTACHMENT_READ, command: vkCmdPipelineBarrier",
+        "",
+    },
+    {
+        "SYNC-HAZARD-WRITE_AFTER_WRITE",
+        "aspect stencil during load with loadOp VK_ATTACHMENT_LOAD_OP_DONT_CARE. Access info "
+        "(usage: "
+        "SYNC_EARLY_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE, prior_usage: "
+        "SYNC_IMAGE_LAYOUT_TRANSITION, write_barriers: "
+        "SYNC_EARLY_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_READ|SYNC_LATE_FRAGMENT_TESTS_DEPTH_"
+        "STENCIL_ATTACHMENT_READ, command: vkCmdPipelineBarrier",
+        "",
+    },
+    // http://anglebug.com/6584
+    {
+        "SYNC-HAZARD-WRITE_AFTER_WRITE",
+        "aspect depth during load with loadOp VK_ATTACHMENT_LOAD_OP_DONT_CARE. Access info (usage: "
+        "SYNC_EARLY_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE, prior_usage: "
+        "SYNC_IMAGE_LAYOUT_TRANSITION, write_barriers: "
+        "SYNC_EARLY_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_READ|SYNC_LATE_FRAGMENT_TESTS_DEPTH_"
+        "STENCIL_ATTACHMENT_READ|SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_READ|SYNC_COLOR_"
+        "ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_WRITE, command: vkCmdPipelineBarrier",
+        "",
+    },
+    // http://anglebug.com/5962
+    {
+        "SYNC-HAZARD-WRITE_AFTER_WRITE",
+        "aspect stencil during load with loadOp VK_ATTACHMENT_LOAD_OP_DONT_CARE. Access info "
+        "(usage: "
+        "SYNC_EARLY_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE, prior_usage: "
+        "SYNC_IMAGE_LAYOUT_TRANSITION, write_barriers: "
+        "SYNC_EARLY_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_READ|SYNC_FRAGMENT_SHADER_SHADER_"
+        "SAMPLED_"
+        "READ|SYNC_FRAGMENT_SHADER_SHADER_STORAGE_READ|SYNC_FRAGMENT_SHADER_UNIFORM_READ|SYNC_LATE_"
+        "FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_READ, command: vkCmdPipelineBarrier",
+        "",
+    },
+    {
+        "SYNC-HAZARD-WRITE_AFTER_WRITE",
+        "aspect stencil during load with loadOp VK_ATTACHMENT_LOAD_OP_DONT_CARE. Access info "
+        "(usage: "
+        "SYNC_EARLY_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE, prior_usage: "
+        "SYNC_IMAGE_LAYOUT_TRANSITION, write_barriers: "
+        "SYNC_EARLY_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_READ|SYNC_LATE_FRAGMENT_TESTS_DEPTH_"
+        "STENCIL_ATTACHMENT_READ|SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_READ|SYNC_COLOR_"
+        "ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_WRITE, command: vkCmdPipelineBarrier",
+        "",
     },
 };
 
@@ -581,24 +596,15 @@ DebugMessageReport ShouldReportDebugMessage(RendererVk *renderer,
     }
 
     // Then check with syncval messages:
-    const bool isStoreOpNoneSupported =
-        renderer->getFeatures().supportsRenderPassLoadStoreOpNone.enabled ||
-        renderer->getFeatures().supportsRenderPassStoreOpNone.enabled;
     const bool isFramebufferFetchUsed = renderer->isFramebufferFetchUsed();
-    for (const SkippedSyncvalMessage &msg : kSkippedSyncvalMessages)
+
+    for (const vk::SkippedSyncvalMessage &msg : renderer->getSkippedSyncvalMessages())
     {
         if (strstr(messageId, msg.messageId) == nullptr ||
             strstr(message, msg.messageContents1) == nullptr ||
             strstr(message, msg.messageContents2) == nullptr)
         {
             continue;
-        }
-
-        // If storeOp=NONE is supported, we expected the error to be resolved by it, and yet we
-        // still get this error, report it.
-        if (msg.resolvedWithStoreOpNone && isStoreOpNoneSupported)
-        {
-            return DebugMessageReport::Print;
         }
 
         // If the error is due to exposing coherent framebuffer fetch, but framebuffer fetch has not
@@ -608,8 +614,7 @@ DebugMessageReport ShouldReportDebugMessage(RendererVk *renderer,
             return DebugMessageReport::Print;
         }
 
-        // Otherwise ignore the message; they are either not resolved by storeOp=NONE, or they are
-        // but the platform doesn't support the extension yet.
+        // Otherwise ignore the message
         return DebugMessageReport::Ignore;
     }
 
@@ -2641,6 +2646,26 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
         unsupportedStages |= VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT;
     }
     mSupportedVulkanPipelineStageMask = ~unsupportedStages;
+
+    // Build the list of syncval errors that are currently expected and should be skipped.
+    mSkippedSyncvalMessages.insert(mSkippedSyncvalMessages.end(), kSkippedSyncvalMessages,
+                                   kSkippedSyncvalMessages + ArraySize(kSkippedSyncvalMessages));
+    if (!getFeatures().supportsRenderPassStoreOpNone.enabled &&
+        !getFeatures().supportsRenderPassLoadStoreOpNone.enabled)
+    {
+        mSkippedSyncvalMessages.insert(mSkippedSyncvalMessages.end(),
+                                       kSkippedSyncvalMessagesWithoutStoreOpNone,
+                                       kSkippedSyncvalMessagesWithoutStoreOpNone +
+                                           ArraySize(kSkippedSyncvalMessagesWithoutStoreOpNone));
+    }
+    if (!getFeatures().supportsRenderPassLoadStoreOpNone.enabled)
+    {
+        mSkippedSyncvalMessages.insert(
+            mSkippedSyncvalMessages.end(), kSkippedSyncvalMessagesWithoutLoadStoreOpNone,
+            kSkippedSyncvalMessagesWithoutLoadStoreOpNone +
+                ArraySize(kSkippedSyncvalMessagesWithoutLoadStoreOpNone));
+    }
+
     return angle::Result::Continue;
 }
 
