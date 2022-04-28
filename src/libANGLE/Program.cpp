@@ -1550,6 +1550,9 @@ angle::Result Program::loadBinary(const Context *context,
     unlink();
     InfoLog &infoLog = mState.mExecutable->getInfoLog();
 
+#if ANGLE_PROGRAM_BINARY_LOAD != ANGLE_ENABLED
+    return angle::Result::Continue;
+#else
     ASSERT(binaryFormat == GL_PROGRAM_BINARY_ANGLE);
     if (binaryFormat != GL_PROGRAM_BINARY_ANGLE)
     {
@@ -1601,6 +1604,7 @@ angle::Result Program::loadBinary(const Context *context,
     mLinkingState = std::move(linkingState);
 
     return result;
+#endif  // #if ANGLE_PROGRAM_BINARY_LOAD == ANGLE_ENABLED
 }
 
 angle::Result Program::saveBinary(Context *context,
@@ -3671,12 +3675,6 @@ angle::Result Program::deserialize(const Context *context,
 {
     std::vector<uint8_t> commitString(angle::GetANGLECommitHashSize(), 0);
     stream.readBytes(commitString.data(), commitString.size());
-    if (memcmp(commitString.data(), angle::GetANGLEUnknownHash(), commitString.size()) == 0)
-    {
-        infoLog << "Binary program loading is disabled due to unknown program binary version";
-        return angle::Result::Stop;
-    }
-
     if (memcmp(commitString.data(), angle::GetANGLECommitHash(), commitString.size()) != 0)
     {
         infoLog << "Invalid program binary version.";
