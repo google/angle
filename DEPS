@@ -1027,6 +1027,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_traces',
   },
+  'src/tests/restricted_traces/driver_overhead_2': {
+      'packages': [
+        {
+            'package': 'angle/traces/driver_overhead_2',
+            'version': 'version:2',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_traces',
+  },
   'src/tests/restricted_traces/efootball_pes_2021': {
       'packages': [
         {
