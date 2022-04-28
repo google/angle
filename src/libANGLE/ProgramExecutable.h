@@ -113,7 +113,7 @@ class ProgramExecutable final : public angle::Subject
     ProgramExecutable(const ProgramExecutable &other);
     ~ProgramExecutable() override;
 
-    void reset();
+    void reset(bool clearInfoLog);
 
     void save(bool isSeparable, gl::BinaryOutputStream *stream) const;
     void load(bool isSeparable, gl::BinaryInputStream *stream);
