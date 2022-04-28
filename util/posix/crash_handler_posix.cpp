@@ -404,7 +404,7 @@ void CallAddr2Line(const Addr2LineCommandLine &commandLine)
         // Child process executes addr2line
         //
         // See comment in test_utils_posix.cpp::PosixProcess regarding const_cast.
-        execv(commandLine[0], const_cast<char *const *>(commandLine.data()));
+        execvp(commandLine[0], const_cast<char *const *>(commandLine.data()));
         std::cerr << "Error: Child process returned from exevc()" << std::endl;
         _exit(EXIT_FAILURE);  // exec never returns
     }
@@ -461,12 +461,7 @@ void PrintStackBacktrace()
     // Child process executes addr2line
     constexpr size_t kAddr2LineFixedParametersCount = 6;
     Addr2LineCommandLine commandLineArgs            = {
-        "/usr/bin/addr2line",  // execv requires an absolute path to find addr2line
-        "-s",
-        "-p",
-        "-f",
-        "-C",
-        "-e",
+                   "addr2line", "-s", "-p", "-f", "-C", "-e",
     };
     const char *currentModule = "";
     std::string resolvedModule;
