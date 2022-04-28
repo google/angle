@@ -53,10 +53,11 @@ struct Renderer11DeviceCaps
     bool supportsConstantBufferOffsets;           // Support for Constant buffer offset
     bool supportsVpRtIndexWriteFromVertexShader;  // VP/RT can be selected in the Vertex Shader
                                                   // stage.
-    bool supportsMultisampledDepthStencilSRVs;  // D3D feature level 10.0 no longer allows creation
-                                                // of textures with both the bind SRV and DSV flags
-                                                // when multisampled.  Textures will need to be
-                                                // resolved before reading. crbug.com/656989
+    bool supportsMultisampledDepthStencilSRVs;   // D3D feature level 10.0 no longer allows creation
+                                                 // of textures with both the bind SRV and DSV flags
+                                                 // when multisampled.  Textures will need to be
+                                                 // resolved before reading. crbug.com/656989
+    bool supportsTypedUAVLoadAdditionalFormats;  //
     bool allowES3OnFL10_0;
     UINT B5G6R5support;     // Bitfield of D3D11_FORMAT_SUPPORT values for DXGI_FORMAT_B5G6R5_UNORM
     UINT B5G6R5maxSamples;  // Maximum number of samples supported by DXGI_FORMAT_B5G6R5_UNORM
@@ -276,6 +277,10 @@ class Renderer11 : public RendererD3D
                                                       int samples,
                                                       bool fixedSampleLocations,
                                                       const std::string &label) override;
+
+    TextureStorage *createTextureStorageBuffer(const gl::OffsetBindingPointer<gl::Buffer> &buffer,
+                                               GLenum internalFormat,
+                                               const std::string &label) override;
     TextureStorage *createTextureStorage2DMultisampleArray(GLenum internalformat,
                                                            GLsizei width,
                                                            GLsizei height,
@@ -552,6 +557,7 @@ class Renderer11 : public RendererD3D
 
     // Make sure that the raw buffer is the latest buffer.
     angle::Result markRawBufferUsage(const gl::Context *context);
+    angle::Result markTypedBufferUsage(const gl::Context *context);
     angle::Result markTransformFeedbackUsage(const gl::Context *context);
     angle::Result drawWithGeometryShaderAndTransformFeedback(Context11 *context11,
                                                              gl::PrimitiveMode mode,

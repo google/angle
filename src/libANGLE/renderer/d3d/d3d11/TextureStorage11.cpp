@@ -20,6 +20,7 @@
 #include "libANGLE/renderer/d3d/EGLImageD3D.h"
 #include "libANGLE/renderer/d3d/TextureD3D.h"
 #include "libANGLE/renderer/d3d/d3d11/Blit11.h"
+#include "libANGLE/renderer/d3d/d3d11/Buffer11.h"
 #include "libANGLE/renderer/d3d/d3d11/Context11.h"
 #include "libANGLE/renderer/d3d/d3d11/Image11.h"
 #include "libANGLE/renderer/d3d/d3d11/RenderTarget11.h"
@@ -451,6 +452,7 @@ angle::Result TextureStorage11::getCachedOrCreateUAVForImage(const gl::Context *
     ANGLE_TRY(getResource(context, &texture));
     DXGI_FORMAT format =
         d3d11::Format::Get(key.format, mRenderer->getRenderer11DeviceCaps()).uavFormat;
+    ASSERT(format != DXGI_FORMAT_UNKNOWN);
     d3d11::SharedUAV uav;
     ANGLE_TRY(createUAVForImage(context, key.level, format, *texture, &uav));
     const auto &insertIt = mUavCacheForImage.insert(std::make_pair(key, std::move(uav)));
@@ -4137,6 +4139,182 @@ angle::Result TextureStorage11_2DMultisampleArray::ensureDropStencilTexture(
 }
 
 void TextureStorage11_2DMultisampleArray::onLabelUpdate()
+{
+    if (mTexture.valid())
+    {
+        mTexture.setKHRDebugLabel(&mTextureLabel);
+    }
+}
+
+TextureStorage11_Buffer::TextureStorage11_Buffer(Renderer11 *renderer,
+                                                 const gl::OffsetBindingPointer<gl::Buffer> &buffer,
+                                                 GLenum internalFormat,
+                                                 const std::string &label)
+    : TextureStorage11(renderer,
+                       D3D11_BIND_UNORDERED_ACCESS | D3D11_BIND_SHADER_RESOURCE,
+                       0,
+                       internalFormat,
+                       label),
+      mTexture(),
+      mBuffer(buffer),
+      mDataSize(GetBoundBufferAvailableSize(buffer))
+{
+    unsigned int bytesPerPixel =
+        static_cast<unsigned int>(d3d11::GetDXGIFormatSizeInfo(mFormatInfo.srvFormat).pixelBytes);
+    mMipLevels     = 1;
+    mTextureWidth  = static_cast<unsigned int>(mDataSize / bytesPerPixel);
+    mTextureHeight = 1;
+    mTextureDepth  = 1;
+}
+
+TextureStorage11_Buffer::~TextureStorage11_Buffer() {}
+
+angle::Result TextureStorage11_Buffer::initTexture(const gl::Context *context)
+{
+    if (!mTexture.valid())
+    {
+        ID3D11Buffer *buffer = nullptr;
+        Buffer11 *buffer11   = GetImplAs<Buffer11>(mBuffer.get());
+        ANGLE_TRY(buffer11->getBuffer(context, rx::BufferUsage::BUFFER_USAGE_TYPED_UAV, &buffer));
+        mTexture.set(buffer, mFormatInfo);
+        mTexture.get()->AddRef();
+    }
+    return angle::Result::Continue;
+}
+
+angle::Result TextureStorage11_Buffer::getResource(const gl::Context *context,
+                                                   const TextureHelper11 **outResource)
+{
+    ANGLE_TRY(initTexture(context));
+    *outResource = &mTexture;
+    return angle::Result::Continue;
+}
+
+angle::Result TextureStorage11_Buffer::getMippedResource(const gl::Context *context,
+                                                         const TextureHelper11 **)
+{
+    ANGLE_HR_UNREACHABLE(GetImplAs<Context11>(context));
+    return angle::Result::Stop;
+}
+
+angle::Result TextureStorage11_Buffer::findRenderTarget(const gl::Context *context,
+                                                        const gl::ImageIndex &index,
+                                                        GLsizei samples,
+                                                        RenderTargetD3D **outRT) const
+{
+    ANGLE_HR_UNREACHABLE(GetImplAs<Context11>(context));
+    return angle::Result::Stop;
+}
+
+angle::Result TextureStorage11_Buffer::getRenderTarget(const gl::Context *context,
+                                                       const gl::ImageIndex &index,
+                                                       GLsizei samples,
+                                                       RenderTargetD3D **outRT)
+{
+    ANGLE_HR_UNREACHABLE(GetImplAs<Context11>(context));
+    return angle::Result::Stop;
+}
+
+angle::Result TextureStorage11_Buffer::getSwizzleTexture(const gl::Context *context,
+                                                         const TextureHelper11 **outTexture)
+{
+    ANGLE_HR_UNREACHABLE(GetImplAs<Context11>(context));
+    return angle::Result::Stop;
+}
+
+angle::Result TextureStorage11_Buffer::getSwizzleRenderTarget(
+    const gl::Context *context,
+    int mipLevel,
+    const d3d11::RenderTargetView **outRTV)
+{
+    ANGLE_HR_UNREACHABLE(GetImplAs<Context11>(context));
+    return angle::Result::Stop;
+}
+
+angle::Result TextureStorage11_Buffer::createSRVForSampler(const gl::Context *context,
+                                                           int baseLevel,
+                                                           int mipLevels,
+                                                           DXGI_FORMAT format,
+                                                           const TextureHelper11 &texture,
+                                                           d3d11::SharedSRV *outSRV)
+{
+    ASSERT(baseLevel == 0);
+    ASSERT(mipLevels == 1);
+    ASSERT(outSRV);
+    ANGLE_TRY(initTexture(context));
+    UINT bytesPerPixel = static_cast<UINT>(d3d11::GetDXGIFormatSizeInfo(format).pixelBytes);
+    D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+    srvDesc.Format        = format;
+    srvDesc.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;
+    ASSERT(mBuffer.getOffset() % bytesPerPixel == 0);
+    srvDesc.Buffer.FirstElement = static_cast<UINT>(mBuffer.getOffset() / bytesPerPixel);
+    srvDesc.Buffer.NumElements  = static_cast<UINT>(mDataSize / bytesPerPixel);
+
+    ANGLE_TRY(
+        mRenderer->allocateResource(GetImplAs<Context11>(context), srvDesc, texture.get(), outSRV));
+    outSRV->setLabels("TexBuffer.SRV", &mTextureLabel);
+
+    return angle::Result::Continue;
+}
+
+angle::Result TextureStorage11_Buffer::createSRVForImage(const gl::Context *context,
+                                                         int level,
+                                                         DXGI_FORMAT format,
+                                                         const TextureHelper11 &texture,
+                                                         d3d11::SharedSRV *outSRV)
+{
+    ANGLE_TRY(initTexture(context));
+    UINT bytesPerPixel = static_cast<UINT>(d3d11::GetDXGIFormatSizeInfo(format).pixelBytes);
+    D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+    srvDesc.Format        = format;
+    srvDesc.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;
+    ASSERT(mBuffer.getOffset() % bytesPerPixel == 0);
+    srvDesc.Buffer.FirstElement = static_cast<UINT>(mBuffer.getOffset() / bytesPerPixel);
+    srvDesc.Buffer.NumElements  = static_cast<UINT>(mDataSize / bytesPerPixel);
+
+    ANGLE_TRY(
+        mRenderer->allocateResource(GetImplAs<Context11>(context), srvDesc, texture.get(), outSRV));
+    outSRV->setLabels("TexBuffer.SRVForImage", &mTextureLabel);
+
+    return angle::Result::Continue;
+}
+angle::Result TextureStorage11_Buffer::createUAVForImage(const gl::Context *context,
+                                                         int level,
+                                                         DXGI_FORMAT format,
+                                                         const TextureHelper11 &texture,
+                                                         d3d11::SharedUAV *outUAV)
+{
+    ANGLE_TRY(initTexture(context));
+    unsigned bytesPerPixel = d3d11::GetDXGIFormatSizeInfo(format).pixelBytes;
+    D3D11_UNORDERED_ACCESS_VIEW_DESC uavDesc;
+    uavDesc.Format        = format;
+    uavDesc.ViewDimension = D3D11_UAV_DIMENSION_BUFFER;
+    ASSERT(mBuffer.getOffset() % bytesPerPixel == 0);
+    uavDesc.Buffer.FirstElement = static_cast<UINT>(mBuffer.getOffset() / bytesPerPixel);
+    uavDesc.Buffer.NumElements  = static_cast<UINT>(mDataSize / bytesPerPixel);
+    uavDesc.Buffer.Flags        = 0;
+
+    ANGLE_TRY(
+        mRenderer->allocateResource(GetImplAs<Context11>(context), uavDesc, texture.get(), outUAV));
+    outUAV->setLabels("TexBuffer.UAVForImage", &mTextureLabel);
+
+    return angle::Result::Continue;
+}
+
+void TextureStorage11_Buffer::associateImage(Image11 *image, const gl::ImageIndex &index) {}
+void TextureStorage11_Buffer::disassociateImage(const gl::ImageIndex &index, Image11 *expectedImage)
+{}
+void TextureStorage11_Buffer::verifyAssociatedImageValid(const gl::ImageIndex &index,
+                                                         Image11 *expectedImage)
+{}
+angle::Result TextureStorage11_Buffer::releaseAssociatedImage(const gl::Context *context,
+                                                              const gl::ImageIndex &index,
+                                                              Image11 *incomingImage)
+{
+    return angle::Result::Continue;
+}
+
+void TextureStorage11_Buffer::onLabelUpdate()
 {
     if (mTexture.valid())
     {

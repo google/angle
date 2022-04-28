@@ -2887,6 +2887,15 @@ TextureStorage *Renderer9::createTextureStorageEGLImage(EGLImageD3D *eglImage,
                                         label);
 }
 
+TextureStorage *Renderer9::createTextureStorageBuffer(
+    const gl::OffsetBindingPointer<gl::Buffer> &buffer,
+    GLenum internalFormat,
+    const std::string &label)
+{
+    UNREACHABLE();
+    return nullptr;
+}
+
 TextureStorage *Renderer9::createTextureStorageExternal(
     egl::Stream *stream,
     const egl::Stream::GLTextureDescription &desc,

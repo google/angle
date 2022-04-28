@@ -186,6 +186,12 @@ angle::Result TextureD3D::setStorageMultisample(const gl::Context *context,
     return angle::Result::Continue;
 }
 
+angle::Result TextureD3D::setBuffer(const gl::Context *context, GLenum internalFormat)
+{
+    ANGLE_HR_UNREACHABLE(GetImplAs<ContextD3D>(context));
+    return angle::Result::Continue;
+}
+
 angle::Result TextureD3D::setStorageExternalMemory(const gl::Context *context,
                                                    gl::TextureType type,
                                                    size_t levels,
@@ -4388,6 +4394,215 @@ angle::Result TextureD3D_2DMultisampleArray::initMipmapImages(const gl::Context 
 bool TextureD3D_2DMultisampleArray::isImageComplete(const gl::ImageIndex &index) const
 {
     return true;
+}
+
+TextureD3D_Buffer::TextureD3D_Buffer(const gl::TextureState &state, RendererD3D *renderer)
+    : TextureD3D(state, renderer), mInternalFormat(GL_INVALID_ENUM)
+{}
+
+TextureD3D_Buffer::~TextureD3D_Buffer() {}
+
+angle::Result TextureD3D_Buffer::setImage(const gl::Context *context,
+                                          const gl::ImageIndex &index,
+                                          GLenum internalFormat,
+                                          const gl::Extents &size,
+                                          GLenum format,
+                                          GLenum type,
+                                          const gl::PixelUnpackState &unpack,
+                                          gl::Buffer *unpackBuffer,
+                                          const uint8_t *pixels)
+{
+    ANGLE_HR_UNREACHABLE(GetImplAs<ContextD3D>(context));
+    return angle::Result::Continue;
+}
+
+angle::Result TextureD3D_Buffer::setSubImage(const gl::Context *context,
+                                             const gl::ImageIndex &index,
+                                             const gl::Box &area,
+                                             GLenum format,
+                                             GLenum type,
+                                             const gl::PixelUnpackState &unpack,
+                                             gl::Buffer *unpackBuffer,
+                                             const uint8_t *pixels)
+{
+    ANGLE_HR_UNREACHABLE(GetImplAs<ContextD3D>(context));
+    return angle::Result::Continue;
+}
+
+angle::Result TextureD3D_Buffer::setCompressedImage(const gl::Context *context,
+                                                    const gl::ImageIndex &index,
+                                                    GLenum internalFormat,
+                                                    const gl::Extents &size,
+                                                    const gl::PixelUnpackState &unpack,
+                                                    size_t imageSize,
+                                                    const uint8_t *pixels)
+{
+    ANGLE_HR_UNREACHABLE(GetImplAs<ContextD3D>(context));
+    return angle::Result::Continue;
+}
+
+angle::Result TextureD3D_Buffer::setCompressedSubImage(const gl::Context *context,
+                                                       const gl::ImageIndex &index,
+                                                       const gl::Box &area,
+                                                       GLenum format,
+                                                       const gl::PixelUnpackState &unpack,
+                                                       size_t imageSize,
+                                                       const uint8_t *pixels)
+{
+    ANGLE_HR_UNREACHABLE(GetImplAs<ContextD3D>(context));
+    return angle::Result::Continue;
+}
+
+angle::Result TextureD3D_Buffer::copyImage(const gl::Context *context,
+                                           const gl::ImageIndex &index,
+                                           const gl::Rectangle &sourceArea,
+                                           GLenum internalFormat,
+                                           gl::Framebuffer *source)
+{
+    ANGLE_HR_UNREACHABLE(GetImplAs<ContextD3D>(context));
+    return angle::Result::Continue;
+}
+
+angle::Result TextureD3D_Buffer::copySubImage(const gl::Context *context,
+                                              const gl::ImageIndex &index,
+                                              const gl::Offset &destOffset,
+                                              const gl::Rectangle &sourceArea,
+                                              gl::Framebuffer *source)
+{
+    ANGLE_HR_UNREACHABLE(GetImplAs<ContextD3D>(context));
+    return angle::Result::Continue;
+}
+
+angle::Result TextureD3D_Buffer::bindTexImage(const gl::Context *context, egl::Surface *surface)
+{
+    ANGLE_HR_UNREACHABLE(GetImplAs<ContextD3D>(context));
+    return angle::Result::Continue;
+}
+
+angle::Result TextureD3D_Buffer::releaseTexImage(const gl::Context *context)
+{
+    ANGLE_HR_UNREACHABLE(GetImplAs<ContextD3D>(context));
+    return angle::Result::Continue;
+}
+
+GLsizei TextureD3D_Buffer::getLayerCount(int level) const
+{
+    return 1;
+}
+
+angle::Result TextureD3D_Buffer::initMipmapImages(const gl::Context *context)
+{
+    ANGLE_HR_UNREACHABLE(GetImplAs<ContextD3D>(context));
+    return angle::Result::Stop;
+}
+
+bool TextureD3D_Buffer::isImageComplete(const gl::ImageIndex &index) const
+{
+    return (index.getLevelIndex() == 0) ? (mTexStorage != nullptr) : false;
+}
+
+angle::Result TextureD3D_Buffer::initializeStorage(const gl::Context *context, bool renderTarget)
+{
+    ASSERT(mTexStorage);
+    return angle::Result::Continue;
+}
+
+angle::Result TextureD3D_Buffer::createCompleteStorage(const gl::Context *context,
+                                                       bool renderTarget,
+                                                       TexStoragePointer *outStorage) const
+{
+    ANGLE_HR_UNREACHABLE(GetImplAs<ContextD3D>(context));
+    return angle::Result::Continue;
+}
+
+angle::Result TextureD3D_Buffer::setCompleteTexStorage(const gl::Context *context,
+                                                       TextureStorage *newCompleteTexStorage)
+{
+    ANGLE_TRY(releaseTexStorage(context, gl::TexLevelMask()));
+    mTexStorage = newCompleteTexStorage;
+    mTexStorageObserverBinding.bind(mTexStorage);
+
+    mDirtyImages = true;
+
+    return angle::Result::Continue;
+}
+
+angle::Result TextureD3D_Buffer::updateStorage(const gl::Context *context)
+{
+    ASSERT(mTexStorage);
+    return angle::Result::Continue;
+}
+
+gl::ImageIndexIterator TextureD3D_Buffer::imageIterator() const
+{
+    return gl::ImageIndexIterator::MakeBuffer();
+}
+
+gl::ImageIndex TextureD3D_Buffer::getImageIndex(GLint mip, GLint layer) const
+{
+    return gl::ImageIndex::MakeBuffer();
+}
+
+bool TextureD3D_Buffer::isValidIndex(const gl::ImageIndex &index) const
+{
+    return (mTexStorage && index.getType() == gl::TextureType::Buffer &&
+            index.getLevelIndex() == 0);
+}
+
+void TextureD3D_Buffer::markAllImagesDirty()
+{
+    UNREACHABLE();
+}
+
+angle::Result TextureD3D_Buffer::setEGLImageTarget(const gl::Context *context,
+                                                   gl::TextureType type,
+                                                   egl::Image *image)
+{
+    ANGLE_HR_UNREACHABLE(GetImplAs<ContextD3D>(context));
+    return angle::Result::Continue;
+}
+
+angle::Result TextureD3D_Buffer::getRenderTarget(const gl::Context *context,
+                                                 const gl::ImageIndex &index,
+                                                 GLsizei samples,
+                                                 RenderTargetD3D **outRT)
+{
+    ANGLE_HR_UNREACHABLE(GetImplAs<ContextD3D>(context));
+    return angle::Result::Continue;
+}
+
+ImageD3D *TextureD3D_Buffer::getImage(const gl::ImageIndex &index) const
+{
+    return nullptr;
+}
+
+angle::Result TextureD3D_Buffer::setBuffer(const gl::Context *context, GLenum internalFormat)
+{
+    ASSERT(mState.getType() == gl::TextureType::Buffer);
+    TexStoragePointer storage;
+    storage.reset(mRenderer->createTextureStorageBuffer(mState.getBuffer(), internalFormat,
+                                                        mState.getLabel()));
+    ANGLE_TRY(setCompleteTexStorage(context, storage.get()));
+    storage.release();
+    mInternalFormat = internalFormat;
+    mImmutable      = false;
+    return angle::Result::Continue;
+}
+
+angle::Result TextureD3D_Buffer::syncState(const gl::Context *context,
+                                           const gl::Texture::DirtyBits &dirtyBits,
+                                           gl::Command source)
+{
+    ASSERT(mState.getType() == gl::TextureType::Buffer);
+    if (dirtyBits.test(gl::Texture::DirtyBitType::DIRTY_BIT_IMPLEMENTATION) &&
+        mState.getBuffer().get() != nullptr)
+    {
+        // buffer data have been changed. Buffer data may out of sync
+        // give up the old TexStorage, create a new one.
+        // this may not efficient, since staging buffer may be patially updated.
+        ANGLE_TRY(setBuffer(context, mInternalFormat));
+    }
+    return angle::Result::Continue;
 }
 
 }  // namespace rx

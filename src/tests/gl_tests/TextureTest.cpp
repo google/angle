@@ -10319,6 +10319,8 @@ void main()
                                           GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT);
     memcpy(mappedBuffer, kUpdateData.data(), sizeof(kInitialData));
 
+    glUnmapBuffer(GL_TEXTURE_BUFFER);
+
     // Draw with the updated buffer data.
     ANGLE_GL_PROGRAM(updateSamplerBuffer, essl31_shaders::vs::Simple(), kSamplerBuffer);
     drawQuad(updateSamplerBuffer, essl31_shaders::PositionAttrib(), 0.5);

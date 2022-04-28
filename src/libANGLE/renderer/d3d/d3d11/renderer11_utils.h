@@ -383,6 +383,7 @@ class TextureHelper11 : public Resource11Base<ID3D11Resource, std::shared_ptr, G
     TextureHelper11 &operator=(TextureHelper11 &&other);
     TextureHelper11 &operator=(const TextureHelper11 &other);
 
+    bool isBuffer() const { return mData->resourceType == ResourceType::Buffer; }
     bool is2D() const { return mData->resourceType == ResourceType::Texture2D; }
     bool is3D() const { return mData->resourceType == ResourceType::Texture3D; }
     ResourceType getTextureType() const { return mData->resourceType; }
@@ -424,10 +425,12 @@ class TextureHelper11 : public Resource11Base<ID3D11Resource, std::shared_ptr, G
 
     void getDesc(D3D11_TEXTURE2D_DESC *desc) const;
     void getDesc(D3D11_TEXTURE3D_DESC *desc) const;
+    void getDesc(D3D11_BUFFER_DESC *desc) const;
 
   private:
     void initDesc(const D3D11_TEXTURE2D_DESC &desc2D);
     void initDesc(const D3D11_TEXTURE3D_DESC &desc3D);
+    void initDesc(const D3D11_BUFFER_DESC &descBuffer);
 
     const d3d11::Format *mFormatSet;
     gl::Extents mExtents;

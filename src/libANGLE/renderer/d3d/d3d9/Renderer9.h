@@ -280,9 +280,15 @@ class Renderer9 : public RendererD3D
     TextureStorage *createTextureStorageEGLImage(EGLImageD3D *eglImage,
                                                  RenderTargetD3D *renderTargetD3D,
                                                  const std::string &label) override;
+
+    TextureStorage *createTextureStorageBuffer(const gl::OffsetBindingPointer<gl::Buffer> &buffer,
+                                               GLenum internalFormat,
+                                               const std::string &label) override;
+
     TextureStorage *createTextureStorageExternal(egl::Stream *stream,
                                                  const egl::Stream::GLTextureDescription &desc,
                                                  const std::string &label) override;
+
     TextureStorage *createTextureStorage2D(GLenum internalformat,
                                            bool renderTarget,
                                            GLsizei width,
