@@ -656,7 +656,7 @@ EGLBoolean SwapInterval(Thread *thread, Display *display, EGLint interval)
     Surface *drawSurface        = static_cast<Surface *>(thread->getCurrentDrawSurface());
     const Config *surfaceConfig = drawSurface->getConfig();
     EGLint clampedInterval      = std::min(std::max(interval, surfaceConfig->minSwapInterval),
-                                      surfaceConfig->maxSwapInterval);
+                                           surfaceConfig->maxSwapInterval);
 
     drawSurface->setSwapInterval(clampedInterval);
 
