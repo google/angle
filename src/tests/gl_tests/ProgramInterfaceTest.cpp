@@ -196,7 +196,7 @@ TEST_P(ProgramInterfaceTestES31, GetResourceLocation)
         "#version 310 es\n"
         "precision highp float;\n"
         "uniform vec4 color;\n"
-        "layout(location = 2) out vec4 oColor[4];\n"
+        "layout(location = 1) out vec4 oColor[3];\n"
         "void main()\n"
         "{\n"
         "    oColor[0] = color;\n"
@@ -230,13 +230,13 @@ TEST_P(ProgramInterfaceTestES31, GetResourceLocation)
 
     location = glGetProgramResourceLocation(program, GL_PROGRAM_OUTPUT, "oColor");
     EXPECT_GL_NO_ERROR();
-    EXPECT_EQ(2, location);
+    EXPECT_EQ(1, location);
     location = glGetProgramResourceLocation(program, GL_PROGRAM_OUTPUT, "oColor[0]");
     EXPECT_GL_NO_ERROR();
-    EXPECT_EQ(2, location);
-    location = glGetProgramResourceLocation(program, GL_PROGRAM_OUTPUT, "oColor[3]");
+    EXPECT_EQ(1, location);
+    location = glGetProgramResourceLocation(program, GL_PROGRAM_OUTPUT, "oColor[2]");
     EXPECT_GL_NO_ERROR();
-    EXPECT_EQ(5, location);
+    EXPECT_EQ(3, location);
 }
 
 // Tests glGetProgramResource.
@@ -255,7 +255,7 @@ TEST_P(ProgramInterfaceTestES31, GetResource)
         "#version 310 es\n"
         "precision highp float;\n"
         "uniform vec4 color;\n"
-        "layout(location = 2) out vec4 oColor[4];\n"
+        "layout(location = 1) out vec4 oColor[3];\n"
         "void main()\n"
         "{\n"
         "    oColor[0] = color;\n"
@@ -300,8 +300,8 @@ TEST_P(ProgramInterfaceTestES31, GetResource)
     EXPECT_GL_NO_ERROR();
     EXPECT_EQ(propCount - 1, length);
     EXPECT_EQ(GL_FLOAT_VEC4, params[0]);  // type
-    EXPECT_EQ(4, params[1]);              // array_size
-    EXPECT_EQ(2, params[2]);              // location
+    EXPECT_EQ(3, params[1]);              // array_size
+    EXPECT_EQ(1, params[2]);              // location
     EXPECT_EQ(10, params[3]);             // name_length
     EXPECT_EQ(0, params[4]);              // referenced_by_vertex_shader
     EXPECT_EQ(1, params[5]);              // referenced_by_fragment_shader
