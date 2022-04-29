@@ -81,6 +81,6 @@ adb shell am start -a android.intent.action.MAIN -n org.chromium.native_test/.Na
 ```
 After the tests finish, get the results with
 ```
-adb pull /sdcard/chromium_tests_root/gen/vk_gl_cts_data/data/TestResults.qpa .
+adb pull /data/data/com.android.angle.test/TestResults.qpa .
 ```
 Note: this location might change, one can double-check with `adb logcat -d | grep qpa`.
