@@ -940,9 +940,9 @@ void TypePrecision::get(GLint *returnRange, GLint *returnPrecision) const
     *returnPrecision = precision;
 }
 
-Caps::Caps()                  = default;
-Caps::Caps(const Caps &other) = default;
-Caps::~Caps()                 = default;
+Caps::Caps()                             = default;
+Caps::Caps(const Caps &other)            = default;
+Caps::~Caps()                            = default;
 Caps &Caps::operator=(const Caps &other) = default;
 
 Caps GenerateMinimumCaps(const Version &clientVersion, const Extensions &extensions)
