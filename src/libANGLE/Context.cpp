@@ -4101,6 +4101,11 @@ void Context::initCaps()
                << maxShaderStorageBufferBindings;
         ANGLE_LIMIT_CAP(mState.mCaps.maxShaderStorageBufferBindings,
                         maxShaderStorageBufferBindings);
+        for (gl::ShaderType shaderType : gl::AllShaderTypes())
+        {
+            ANGLE_LIMIT_CAP(mState.mCaps.maxShaderStorageBlocks[shaderType],
+                            maxShaderStorageBufferBindings);
+        }
     }
 
     // Disable support for OES_get_program_binary
