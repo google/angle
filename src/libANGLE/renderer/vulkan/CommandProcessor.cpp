@@ -974,7 +974,8 @@ angle::Result CommandQueue::retireFinishedCommands(Context *context, size_t fini
         }
     }
 
-    return angle::Result::Continue;
+    // Now clean up RendererVk garbage
+    return renderer->cleanupGarbage(getLastCompletedQueueSerial());
 }
 
 void CommandQueue::releaseToCommandBatch(bool hasProtectedContent,
@@ -1323,9 +1324,7 @@ angle::Result CommandQueue::queueSubmit(Context *context,
 
     ++mPerfCounters.vkQueueSubmitCallsTotal;
     ++mPerfCounters.vkQueueSubmitCallsPerFrame;
-
-    // Now that we've submitted work, clean up RendererVk garbage
-    return renderer->cleanupGarbage(getLastCompletedQueueSerial());
+    return angle::Result::Continue;
 }
 
 void CommandQueue::resetPerFramePerfCounters()
