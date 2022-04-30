@@ -856,6 +856,10 @@ class BufferPool : angle::NonCopyable
 
     bool valid() const { return mSize != 0; }
 
+    void addStats(std::ostringstream *out) const;
+    size_t getBufferCount() const { return mBufferBlocks.size(); }
+    VkDeviceSize getMemorySize() const { return mTotalMemorySize; }
+
   private:
     angle::Result allocateNewBuffer(Context *context, VkDeviceSize sizeInBytes);
 
@@ -864,6 +868,7 @@ class BufferPool : angle::NonCopyable
     bool mHostVisible;
     VkDeviceSize mSize;
     uint32_t mMemoryTypeIndex;
+    VkDeviceSize mTotalMemorySize;
     BufferBlockPointerVector mBufferBlocks;
     // When pruneDefaultBufferPools gets called, we do not immediately free all empty buffers. Only
     // buffers that we found are empty for kMaxCountRemainsEmpty number of times consecutively, or

@@ -660,6 +660,7 @@ class VirtualBlock final : public WrappedObject<VirtualBlock, VmaVirtualBlock>
 
     VkResult allocate(VkDeviceSize size, VkDeviceSize alignment, VkDeviceSize *offsetOut);
     void free(VkDeviceSize offset);
+    void calculateStats(vma::StatInfo *pStatInfo) const;
 };
 
 // CommandPool implementation.
@@ -1856,6 +1857,11 @@ ANGLE_INLINE VkResult VirtualBlock::allocate(VkDeviceSize size,
 ANGLE_INLINE void VirtualBlock::free(VkDeviceSize offset)
 {
     vma::VirtualFree(mHandle, offset);
+}
+
+ANGLE_INLINE void VirtualBlock::calculateStats(vma::StatInfo *pStatInfo) const
+{
+    vma::CalculateVirtualBlockStats(mHandle, pStatInfo);
 }
 }  // namespace vk
 }  // namespace rx

@@ -27,6 +27,8 @@ namespace rx
 {
 // Time interval in seconds that we should try to prune default buffer pools.
 constexpr double kTimeElapsedForPruneDefaultBufferPool = 0.25;
+// Set to true will log bufferpool stats into INFO stream
+#define ANGLE_ENABLE_BUFFER_POOL_STATS_LOGGING 0
 
 DisplayVk::DisplayVk(const egl::DisplayState &state)
     : DisplayImpl(state),
@@ -520,11 +522,59 @@ void ShareGroupVk::pruneDefaultBufferPools(RendererVk *renderer)
     {
         mSmallBufferPool->pruneEmptyBuffers(renderer);
     }
+
+#if ANGLE_ENABLE_BUFFER_POOL_STATS_LOGGING
+    logBufferPools();
+#endif
 }
 
 bool ShareGroupVk::isDueForBufferPoolPrune()
 {
     double timeElapsed = angle::GetCurrentSystemTime() - mLastPruneTime;
     return timeElapsed > kTimeElapsedForPruneDefaultBufferPool;
+}
+
+void ShareGroupVk::calculateTotalBufferCount(size_t *bufferCount, VkDeviceSize *totalSize) const
+{
+    *bufferCount = 0;
+    *totalSize   = 0;
+    for (const std::unique_ptr<vk::BufferPool> &pool : mDefaultBufferPools)
+    {
+        if (pool)
+        {
+            *bufferCount += pool->getBufferCount();
+            *totalSize += pool->getMemorySize();
+        }
+    }
+    if (mSmallBufferPool)
+    {
+        *bufferCount += mSmallBufferPool->getBufferCount();
+        *totalSize += mSmallBufferPool->getMemorySize();
+    }
+}
+
+void ShareGroupVk::logBufferPools() const
+{
+    size_t totalBufferCount;
+    VkDeviceSize totalMemorySize;
+    calculateTotalBufferCount(&totalBufferCount, &totalMemorySize);
+
+    INFO() << "BufferBlocks count:" << totalBufferCount << " memorySize:" << totalMemorySize / 1024
+           << " UnusedBytes/memorySize (KBs):";
+    for (const std::unique_ptr<vk::BufferPool> &pool : mDefaultBufferPools)
+    {
+        if (pool && pool->getBufferCount() > 0)
+        {
+            std::ostringstream log;
+            pool->addStats(&log);
+            INFO() << "\t" << log.str();
+        }
+    }
+    if (mSmallBufferPool && mSmallBufferPool->getBufferCount() > 0)
+    {
+        std::ostringstream log;
+        mSmallBufferPool->addStats(&log);
+        INFO() << "\t" << log.str();
+    }
 }
 }  // namespace rx

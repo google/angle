@@ -48,6 +48,9 @@ class ShareGroupVk : public ShareGroupImpl
     void pruneDefaultBufferPools(RendererVk *renderer);
     bool isDueForBufferPoolPrune();
 
+    void calculateTotalBufferCount(size_t *bufferCount, VkDeviceSize *totalSize) const;
+    void logBufferPools() const;
+
     void addContext(ContextVk *contextVk);
     void removeContext(ContextVk *contextVk);
 

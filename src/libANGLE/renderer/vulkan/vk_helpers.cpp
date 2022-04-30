@@ -2745,7 +2745,8 @@ BufferPool::BufferPool()
       mUsage(0),
       mHostVisible(false),
       mSize(0),
-      mMemoryTypeIndex(0)
+      mMemoryTypeIndex(0),
+      mTotalMemorySize(0)
 {}
 
 BufferPool::BufferPool(BufferPool &&other)
@@ -2805,6 +2806,7 @@ void BufferPool::pruneEmptyBuffers(RendererVk *renderer)
         if ((*iter)->getMemorySize() < mSize || countRemainsEmpty >= kMaxCountRemainsEmpty ||
             emptyBufferCount >= kMaxEmptyBufferCount)
         {
+            mTotalMemorySize -= (*iter)->getMemorySize();
             (*iter)->destroy(renderer);
             (*iter).reset();
             ++freedBufferCount;
@@ -2884,6 +2886,7 @@ angle::Result BufferPool::allocateNewBuffer(Context *context, VkDeviceSize sizeI
         ANGLE_VK_TRY(context, block->map(context->getDevice()));
     }
 
+    mTotalMemorySize += block->getMemorySize();
     // Append the bufferBlock into the pool
     mBufferBlocks.push_back(std::move(block));
     context->getPerfCounters().allocateNewBufferBlockCalls++;
@@ -2990,6 +2993,23 @@ void BufferPool::destroy(RendererVk *renderer, bool orphanNonEmptyBufferBlock)
         }
     }
     mBufferBlocks.clear();
+}
+
+void BufferPool::addStats(std::ostringstream *out) const
+{
+    VkDeviceSize totalUnusedBytes = 0;
+    VkDeviceSize totalMemorySize  = 0;
+    *out << "[ ";
+    for (const std::unique_ptr<BufferBlock> &block : mBufferBlocks)
+    {
+        vma::StatInfo statInfo;
+        block->calculateStats(&statInfo);
+        *out << statInfo.unusedBytes / 1024 << "/" << block->getMemorySize() / 1024 << " ";
+        totalUnusedBytes += statInfo.unusedBytes;
+        totalMemorySize += block->getMemorySize();
+    }
+    *out << "]"
+         << " total: " << totalUnusedBytes << "/" << totalMemorySize;
 }
 
 // DescriptorPoolHelper implementation.

@@ -211,9 +211,9 @@ angle::Result AllocateBufferOrImageMemory(vk::Context *context,
 constexpr char kVkKhronosValidationLayerName[]  = "VK_LAYER_KHRONOS_validation";
 constexpr char kVkStandardValidationLayerName[] = "VK_LAYER_LUNARG_standard_validation";
 const char *kVkValidationLayerNames[]           = {
-    "VK_LAYER_GOOGLE_threading", "VK_LAYER_LUNARG_parameter_validation",
-    "VK_LAYER_LUNARG_object_tracker", "VK_LAYER_LUNARG_core_validation",
-    "VK_LAYER_GOOGLE_unique_objects"};
+              "VK_LAYER_GOOGLE_threading", "VK_LAYER_LUNARG_parameter_validation",
+              "VK_LAYER_LUNARG_object_tracker", "VK_LAYER_LUNARG_core_validation",
+              "VK_LAYER_GOOGLE_unique_objects"};
 
 bool HasValidationLayer(const std::vector<VkLayerProperties> &layerProps, const char *layerName)
 {
@@ -1682,6 +1682,12 @@ void BufferBlock::free(VkDeviceSize offset)
 int32_t BufferBlock::getAndIncrementEmptyCounter()
 {
     return ++mCountRemainsEmpty;
+}
+
+void BufferBlock::calculateStats(vma::StatInfo *pStatInfo) const
+{
+    std::lock_guard<ConditionalMutex> lock(mVirtualBlockMutex);
+    mVirtualBlock.calculateStats(pStatInfo);
 }
 
 // BufferSuballocation implementation.
