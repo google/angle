@@ -380,12 +380,6 @@
 // This fails on pre-release Android T drivers as of 3/25/22:
 5430 PIXEL6 VULKAN : dEQP-GLES31.functional.geometry_shading.query.primitives_generated_* = FAIL
 
-// Fails on Android 13 DP2
-6876 PIXEL6 VULKAN : dEQP-GLES31.functional.shaders.multisample_interpolation.sample_qualifier.multisample_*1 = FAIL
-6876 PIXEL6 VULKAN : dEQP-GLES31.functional.shaders.multisample_interpolation.sample_qualifier.multisample_*2 = FAIL
-6876 PIXEL6 VULKAN : dEQP-GLES31.functional.shaders.multisample_interpolation.sample_qualifier.multisample_*4 = FAIL
-6876 PIXEL6 VULKAN : dEQP-GLES31.functional.shaders.multisample_interpolation.sample_qualifier.multisample_*8 = FAIL
-
 // ASAN Test bugs
 6678 ASAN : dEQP-GLES31.functional.ssbo.array_length.* = SKIP
 6678 ASAN : dEQP-GLES31.functional.debug.negative_coverage.*.texparameter*v = SKIP

@@ -379,6 +379,7 @@ void ProgramPipeline::updateUsesEarlyFragmentTestsOptimization()
     const ProgramExecutable &fragmentExecutable = fragmentProgram->getExecutable();
     mState.mExecutable->mUsesEarlyFragmentTestsOptimization =
         fragmentExecutable.mUsesEarlyFragmentTestsOptimization;
+    mState.mExecutable->mEnablesPerSampleShading = fragmentExecutable.mEnablesPerSampleShading;
 }
 
 void ProgramPipeline::updateLinkedVaryings()

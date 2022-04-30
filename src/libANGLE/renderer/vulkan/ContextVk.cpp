@@ -4128,9 +4128,23 @@ void ContextVk::updateSampleShadingWithRasterizationSamples(const uint32_t raste
 {
     bool sampleShadingEnable =
         (rasterizationSamples <= 1 ? false : mState.isSampleShadingEnabled());
+    float minSampleShading = mState.getMinSampleShading();
+
+    // If sample shading is not enabled, check if it should be implicitly enabled according to the
+    // program.  Normally the driver should do this, but some drivers don't.
+    if (rasterizationSamples > 1 && !sampleShadingEnable &&
+        getFeatures().explicitlyEnablePerSampleShading.enabled)
+    {
+        const gl::ProgramExecutable *executable = mState.getProgramExecutable();
+        if (executable && executable->enablesPerSampleShading())
+        {
+            sampleShadingEnable = true;
+            minSampleShading    = 1.0;
+        }
+    }
 
     mGraphicsPipelineDesc->updateSampleShading(&mGraphicsPipelineTransition, sampleShadingEnable,
-                                               mState.getMinSampleShading());
+                                               minSampleShading);
 }
 
 // If the target is switched between a single-sampled and multisample, the dependency related to the
@@ -4622,6 +4636,15 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                               "Dirty bit order");
                 iter.setLaterBit(gl::State::DIRTY_BIT_ATOMIC_COUNTER_BUFFER_BINDING);
                 ANGLE_TRY(invalidateProgramExecutableHelper(context));
+
+                static_assert(
+                    gl::State::DIRTY_BIT_SAMPLE_SHADING > gl::State::DIRTY_BIT_PROGRAM_EXECUTABLE,
+                    "Dirty bit order");
+                if (getFeatures().explicitlyEnablePerSampleShading.enabled)
+                {
+                    iter.setLaterBit(gl::State::DIRTY_BIT_SAMPLE_SHADING);
+                }
+
                 break;
             }
             case gl::State::DIRTY_BIT_SAMPLER_BINDINGS:

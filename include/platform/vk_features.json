@@ -812,6 +812,15 @@
                 "VkDevice supports VK_KHR_fragment_shading_rate extension"
             ],
             "issue": "http://anglebug.com/7172"
+        },
+        {
+            "name": "explicitly_enable_per_sample_shading",
+            "category": "Workarounds",
+            "description": [
+                "Explicitly enable per-sample shading if the fragment shader contains the ",
+                "sample qualifier"
+            ],
+            "issue": "http://anglebug.com/6876"
         }
     ]
 }

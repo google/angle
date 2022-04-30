@@ -1343,6 +1343,8 @@ angle::Result Program::linkImpl(const Context *context)
 
             mState.mExecutable->mUsesEarlyFragmentTestsOptimization =
                 fragmentShader->hasEarlyFragmentTestsOptimization();
+            mState.mExecutable->mEnablesPerSampleShading =
+                fragmentShader->enablesPerSampleShading();
             mState.mExecutable->mAdvancedBlendEquations =
                 fragmentShader->getAdvancedBlendEquations();
             mState.mSpecConstUsageBits |= fragmentShader->getSpecConstUsageBits();
