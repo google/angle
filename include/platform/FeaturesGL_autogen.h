@@ -214,12 +214,6 @@ struct FeaturesGL : FeatureSetBase
                                          "Some tests have been seen to fail using worker contexts",
                                          &members, "http://crbug.com/849576"};
 
-    FeatureInfo limitMaxTextureSizeTo4096 = {"limitMaxTextureSizeTo4096",
-                                             FeatureCategory::OpenGLWorkarounds,
-                                             "Limit max texture size to 4096 to avoid frequent "
-                                             "out-of-memory errors",
-                                             &members, "http://crbug.com/927470"};
-
     FeatureInfo limitMaxMSAASamplesTo4 = {
         "limitMaxMSAASamplesTo4", FeatureCategory::OpenGLWorkarounds,
         "Various rendering bugs have been observed when using higher MSAA counts", &members,

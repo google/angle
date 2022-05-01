@@ -148,7 +148,6 @@ enum class Feature
     KeepBufferShadowCopy,
     LimitMax3dArrayTextureSizeTo1024,
     LimitMaxMSAASamplesTo4,
-    LimitMaxTextureSizeTo4096,
     LogMemoryReportCallbacks,
     LogMemoryReportStats,
     LoseContextOnOutOfMemory,
