@@ -21,24 +21,42 @@ namespace sh
 namespace
 {
 
-void DisambiguateFunctionNameForParameterType(const TType &paramType,
-                                              TString *disambiguatingStringOut)
+// Parameter types are only added to function names if they are ambiguous according to the
+// native HLSL compiler. Other parameter types are not added to function names to avoid
+// making function names longer.
+bool FunctionParameterNeedsDisambiguation(const TType &paramType)
 {
-    // Parameter types are only added to function names if they are ambiguous according to the
-    // native HLSL compiler. Other parameter types are not added to function names to avoid
-    // making function names longer.
     if (paramType.getObjectSize() == 4 && paramType.getBasicType() == EbtFloat)
     {
         // Disambiguation is needed for float2x2 and float4 parameters. These are the only
         // built-in types that HLSL thinks are identical. float2x3 and float3x2 are different
         // types, for example.
-        *disambiguatingStringOut += "_" + TypeString(paramType);
+        return true;
     }
-    else if (paramType.getBasicType() == EbtStruct)
+
+    if (paramType.getBasicType() == EbtUInt || paramType.getBasicType() == EbtInt)
+    {
+        // The HLSL compiler can't always tell the difference between int and uint types when an
+        // expression is passed as a function parameter
+        return true;
+    }
+
+    if (paramType.getBasicType() == EbtStruct)
     {
         // Disambiguation is needed for struct parameters, since HLSL thinks that structs with
         // the same fields but a different name are identical.
         ASSERT(paramType.getStruct()->symbolType() != SymbolType::Empty);
+        return true;
+    }
+
+    return false;
+}
+
+void DisambiguateFunctionNameForParameterType(const TType &paramType,
+                                              TString *disambiguatingStringOut)
+{
+    if (FunctionParameterNeedsDisambiguation(paramType))
+    {
         *disambiguatingStringOut += "_" + TypeString(paramType);
     }
 }
