@@ -33,8 +33,7 @@
               "pool": "chromium.tests.gpu"
             }
           ],
-          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
-          "shards": 4
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
         },
         "test": "angle_deqp_egl_tests",
         "test_id_prefix": "ninja://src/tests:angle_deqp_egl_tests/",
@@ -328,8 +327,7 @@
               "pool": "chromium.tests.gpu"
             }
           ],
-          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
-          "shards": 2
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
         },
         "test": "angle_deqp_khr_gles31_tests",
         "test_id_prefix": "ninja://src/tests:angle_deqp_khr_gles31_tests/",
@@ -401,8 +399,7 @@
               "pool": "chromium.tests.gpu"
             }
           ],
-          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
-          "shards": 2
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
         },
         "test": "angle_deqp_khr_gles3_tests",
         "test_id_prefix": "ninja://src/tests:angle_deqp_khr_gles3_tests/",
@@ -440,7 +437,7 @@
             }
           ],
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
-          "shards": 4
+          "shards": 8
         },
         "test": "angle_end2end_tests",
         "test_id_prefix": "ninja://src/tests:angle_end2end_tests/",
@@ -824,8 +821,7 @@
             }
           ],
           "expiration": 21600,
-          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
-          "shards": 2
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
         },
         "test": "angle_deqp_khr_gles31_tests",
         "test_id_prefix": "ninja://src/tests:angle_deqp_khr_gles31_tests/",
@@ -899,8 +895,7 @@
             }
           ],
           "expiration": 21600,
-          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
-          "shards": 2
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
         },
         "test": "angle_deqp_khr_gles3_tests",
         "test_id_prefix": "ninja://src/tests:angle_deqp_khr_gles3_tests/",

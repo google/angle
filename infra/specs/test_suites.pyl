@@ -54,9 +54,6 @@
           '-v',
           '--shard-timeout=500',
         ],
-        'android_swarming': {
-          'shards': 4,
-        },
         'merge': {
           'script': '//scripts/angle_deqp_test_merge.py',
         },
@@ -519,9 +516,6 @@
           '-v',
           '--shard-timeout=500',
         ],
-        'android_swarming': {
-          'shards': 2,
-        },
         'desktop_args': [
           '--bot-mode',
         ],
@@ -564,9 +558,6 @@
           '-v',
           '--shard-timeout=500',
         ],
-        'android_swarming': {
-          'shards': 2,
-        },
         'desktop_args': [
           '--bot-mode',
         ],
@@ -587,7 +578,7 @@
           '--render-test-output-dir=${ISOLATED_OUTDIR}',
         ],
         'android_swarming': {
-          'shards': 4,
+          'shards': 8,
         },
         'args': [
           'angle_end2end_tests',
