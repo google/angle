@@ -857,11 +857,12 @@ class BufferPool : angle::NonCopyable
     bool valid() const { return mSize != 0; }
 
     void addStats(std::ostringstream *out) const;
-    size_t getBufferCount() const { return mBufferBlocks.size(); }
+    size_t getBufferCount() const { return mBufferBlocks.size() + mEmptyBufferBlocks.size(); }
     VkDeviceSize getMemorySize() const { return mTotalMemorySize; }
 
   private:
     angle::Result allocateNewBuffer(Context *context, VkDeviceSize sizeInBytes);
+    VkDeviceSize getTotalEmptyMemorySize() const;
 
     vma::VirtualBlockCreateFlags mVirtualBlockCreateFlags;
     VkBufferUsageFlags mUsage;
@@ -870,13 +871,10 @@ class BufferPool : angle::NonCopyable
     uint32_t mMemoryTypeIndex;
     VkDeviceSize mTotalMemorySize;
     BufferBlockPointerVector mBufferBlocks;
-    // When pruneDefaultBufferPools gets called, we do not immediately free all empty buffers. Only
-    // buffers that we found are empty for kMaxCountRemainsEmpty number of times consecutively, or
-    // we have more than kMaxEmptyBufferCount number of empty buffers, we will actually free it.
-    // That way we avoid the situation that a buffer just becomes empty and gets freed right after
-    // and only to find out that we have to allocate a new one next frame.
-    static constexpr int32_t kMaxCountRemainsEmpty = 4;
-    static constexpr int32_t kMaxEmptyBufferCount  = 16;
+    BufferBlockPointerVector mEmptyBufferBlocks;
+    // Tracks the number of new buffers needed for suballocation since last pruneEmptyBuffers call.
+    // We will use this heuristic information to decide how many empty buffers to keep around.
+    size_t mNumberOfNewBuffersNeededSinceLastPrune;
     // max size to go down the suballocation code path. Any allocation greater or equal this size
     // will call into vulkan directly to allocate a dedicated VkDeviceMemory.
     static constexpr size_t kMaxBufferSizeForSuballocation = 4 * 1024 * 1024;
