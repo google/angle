@@ -20,6 +20,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::AddMockTextureNoRenderTarget, "addMockTextureNoRenderTarget"},
     {Feature::AdjustSrcDstRegionForBlitFramebuffer, "adjustSrcDstRegionForBlitFramebuffer"},
     {Feature::AllocateNonZeroMemory, "allocateNonZeroMemory"},
+    {Feature::AllowAstcFormats, "allowAstcFormats"},
     {Feature::AllowBufferReadWrite, "allowBufferReadWrite"},
     {Feature::AllowClearForRobustResourceInit, "allowClearForRobustResourceInit"},
     {Feature::AllowCompressedFormats, "allowCompressedFormats"},

@@ -29,6 +29,14 @@
             ]
         },
         {
+            "name": "allow_astc_formats",
+            "category": "Workarounds",
+            "description": [
+                "Enable ASTC on desktop OpenGL"
+            ]
+        },
+
+        {
             "name": "does_SRGB_clears_on_linear_framebuffer_attachments",
             "category": "Workarounds",
             "description": [

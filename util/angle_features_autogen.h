@@ -20,6 +20,7 @@ enum class Feature
     AddMockTextureNoRenderTarget,
     AdjustSrcDstRegionForBlitFramebuffer,
     AllocateNonZeroMemory,
+    AllowAstcFormats,
     AllowBufferReadWrite,
     AllowClearForRobustResourceInit,
     AllowCompressedFormats,
