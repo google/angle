@@ -3152,6 +3152,7 @@ void Context::detachTransformFeedback(TransformFeedbackID transformFeedback)
     if (mState.removeTransformFeedbackBinding(this, transformFeedback))
     {
         bindTransformFeedback(GL_TRANSFORM_FEEDBACK, {0});
+        mStateCache.onActiveTransformFeedbackChange(this);
     }
 }
 
