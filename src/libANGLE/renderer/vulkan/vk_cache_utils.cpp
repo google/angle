@@ -1052,7 +1052,7 @@ angle::Result InitializeRenderPassFromDesc(ContextVk *contextVk,
                                            RenderPassHelper *renderPassHelper)
 {
     constexpr VkAttachmentReference kUnusedAttachment   = {VK_ATTACHMENT_UNUSED,
-                                                         VK_IMAGE_LAYOUT_UNDEFINED};
+                                                           VK_IMAGE_LAYOUT_UNDEFINED};
     constexpr VkAttachmentReference2 kUnusedAttachment2 = {
         VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2_KHR, nullptr, VK_ATTACHMENT_UNUSED,
         VK_IMAGE_LAYOUT_UNDEFINED, 0};
@@ -1112,9 +1112,9 @@ angle::Result InitializeRenderPassFromDesc(ContextVk *contextVk,
         VkAttachmentReference colorRef;
         colorRef.attachment = attachmentCount.get();
         colorRef.layout     = needInputAttachments
-                              ? VK_IMAGE_LAYOUT_GENERAL
-                              : ConvertImageLayoutToVkImageLayout(
-                                    static_cast<ImageLayout>(ops[attachmentCount].initialLayout));
+                                  ? VK_IMAGE_LAYOUT_GENERAL
+                                  : ConvertImageLayoutToVkImageLayout(
+                                        static_cast<ImageLayout>(ops[attachmentCount].initialLayout));
         colorAttachmentRefs.push_back(colorRef);
 
         UnpackAttachmentDesc(&attachmentDescs[attachmentCount.get()], attachmentFormatID,
@@ -1149,7 +1149,7 @@ angle::Result InitializeRenderPassFromDesc(ContextVk *contextVk,
 
         depthStencilAttachmentRef.attachment = attachmentCount.get();
         depthStencilAttachmentRef.layout     = ConvertImageLayoutToVkImageLayout(
-            static_cast<ImageLayout>(ops[attachmentCount].initialLayout));
+                static_cast<ImageLayout>(ops[attachmentCount].initialLayout));
 
         UnpackAttachmentDesc(&attachmentDescs[attachmentCount.get()], attachmentFormatID,
                              attachmentSamples, ops[attachmentCount]);
@@ -1272,8 +1272,8 @@ angle::Result InitializeRenderPassFromDesc(ContextVk *contextVk,
     applicationSubpass->colorAttachmentCount = static_cast<uint32_t>(colorAttachmentRefs.size());
     applicationSubpass->pColorAttachments    = colorAttachmentRefs.data();
     applicationSubpass->pResolveAttachments  = attachmentCount.get() > nonResolveAttachmentCount
-                                                  ? colorResolveAttachmentRefs.data()
-                                                  : nullptr;
+                                                   ? colorResolveAttachmentRefs.data()
+                                                   : nullptr;
     applicationSubpass->pDepthStencilAttachment =
         (depthStencilAttachmentRef.attachment != VK_ATTACHMENT_UNUSED ? &depthStencilAttachmentRef
                                                                       : nullptr);
@@ -3223,8 +3223,8 @@ FramebufferDesc::FramebufferDesc()
     reset();
 }
 
-FramebufferDesc::~FramebufferDesc()                            = default;
-FramebufferDesc::FramebufferDesc(const FramebufferDesc &other) = default;
+FramebufferDesc::~FramebufferDesc()                                       = default;
+FramebufferDesc::FramebufferDesc(const FramebufferDesc &other)            = default;
 FramebufferDesc &FramebufferDesc::operator=(const FramebufferDesc &other) = default;
 
 void FramebufferDesc::update(uint32_t index, ImageOrBufferViewSubresourceSerial serial)
@@ -3369,6 +3369,11 @@ void YcbcrConversionDesc::reset()
     mReserved           = 0;
 }
 
+void YcbcrConversionDesc::updateChromaFilter(VkFilter filter)
+{
+    SetBitField(mChromaFilter, filter);
+}
+
 void YcbcrConversionDesc::update(RendererVk *rendererVk,
                                  uint64_t externalFormat,
                                  VkSamplerYcbcrModelConversion conversionModel,
@@ -3395,6 +3400,41 @@ void YcbcrConversionDesc::update(RendererVk *rendererVk,
     SetBitField(mGSwizzle, components.g);
     SetBitField(mBSwizzle, components.b);
     SetBitField(mASwizzle, components.a);
+}
+
+angle::Result YcbcrConversionDesc::init(Context *context,
+                                        SamplerYcbcrConversion *conversionOut) const
+{
+    // Create the VkSamplerYcbcrConversion
+    VkSamplerYcbcrConversionCreateInfo samplerYcbcrConversionInfo = {};
+    samplerYcbcrConversionInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO;
+    samplerYcbcrConversionInfo.format =
+        getExternalFormat() == 0 ? static_cast<VkFormat>(mExternalOrVkFormat) : VK_FORMAT_UNDEFINED;
+    samplerYcbcrConversionInfo.xChromaOffset = static_cast<VkChromaLocation>(mXChromaOffset);
+    samplerYcbcrConversionInfo.yChromaOffset = static_cast<VkChromaLocation>(mYChromaOffset);
+    samplerYcbcrConversionInfo.ycbcrModel =
+        static_cast<VkSamplerYcbcrModelConversion>(mConversionModel);
+    samplerYcbcrConversionInfo.ycbcrRange   = static_cast<VkSamplerYcbcrRange>(mColorRange);
+    samplerYcbcrConversionInfo.chromaFilter = static_cast<VkFilter>(mChromaFilter);
+    samplerYcbcrConversionInfo.components   = {
+          static_cast<VkComponentSwizzle>(mRSwizzle), static_cast<VkComponentSwizzle>(mGSwizzle),
+          static_cast<VkComponentSwizzle>(mBSwizzle), static_cast<VkComponentSwizzle>(mASwizzle)};
+
+#ifdef VK_USE_PLATFORM_ANDROID_KHR
+    VkExternalFormatANDROID externalFormat = {};
+    if (getExternalFormat() != 0)
+    {
+        externalFormat.sType             = VK_STRUCTURE_TYPE_EXTERNAL_FORMAT_ANDROID;
+        externalFormat.externalFormat    = mExternalOrVkFormat;
+        samplerYcbcrConversionInfo.pNext = &externalFormat;
+    }
+#else
+    // We do not support external format for any platform other than Android.
+    ASSERT(mIsExternalFormat == 0);
+#endif  // VK_USE_PLATFORM_ANDROID_KHR
+
+    ANGLE_VK_TRY(context, conversionOut->init(context->getDevice(), samplerYcbcrConversionInfo));
+    return angle::Result::Continue;
 }
 
 // SamplerDesc implementation.
@@ -4068,7 +4108,7 @@ angle::Result SamplerYcbcrConversionCache::getSamplerYcbcrConversion(
     ASSERT(vkSamplerYcbcrConversionOut);
 
     SamplerYcbcrConversionMap &payload =
-        (ycbcrConversionDesc.mIsExternalFormat) ? mExternalFormatPayload : mVkFormatPayload;
+        (ycbcrConversionDesc.getExternalFormat() != 0) ? mExternalFormatPayload : mVkFormatPayload;
     const auto iter = payload.find(ycbcrConversionDesc);
     if (iter != payload.end())
     {
@@ -4081,43 +4121,8 @@ angle::Result SamplerYcbcrConversionCache::getSamplerYcbcrConversion(
     mCacheStats.miss();
 
     // Create the VkSamplerYcbcrConversion
-    VkSamplerYcbcrConversionCreateInfo samplerYcbcrConversionInfo = {};
-    samplerYcbcrConversionInfo.sType  = VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO;
-    samplerYcbcrConversionInfo.format = static_cast<VkFormat>(
-        (ycbcrConversionDesc.mIsExternalFormat) ? VK_FORMAT_UNDEFINED
-                                                : ycbcrConversionDesc.mExternalOrVkFormat);
-    samplerYcbcrConversionInfo.xChromaOffset =
-        static_cast<VkChromaLocation>(ycbcrConversionDesc.mXChromaOffset);
-    samplerYcbcrConversionInfo.yChromaOffset =
-        static_cast<VkChromaLocation>(ycbcrConversionDesc.mYChromaOffset);
-    samplerYcbcrConversionInfo.ycbcrModel =
-        static_cast<VkSamplerYcbcrModelConversion>(ycbcrConversionDesc.mConversionModel);
-    samplerYcbcrConversionInfo.ycbcrRange =
-        static_cast<VkSamplerYcbcrRange>(ycbcrConversionDesc.mColorRange);
-    samplerYcbcrConversionInfo.chromaFilter =
-        static_cast<VkFilter>(ycbcrConversionDesc.mChromaFilter);
-    samplerYcbcrConversionInfo.components = {
-        static_cast<VkComponentSwizzle>(ycbcrConversionDesc.mRSwizzle),
-        static_cast<VkComponentSwizzle>(ycbcrConversionDesc.mGSwizzle),
-        static_cast<VkComponentSwizzle>(ycbcrConversionDesc.mBSwizzle),
-        static_cast<VkComponentSwizzle>(ycbcrConversionDesc.mASwizzle)};
-
-#ifdef VK_USE_PLATFORM_ANDROID_KHR
-    VkExternalFormatANDROID externalFormat = {};
-    if (ycbcrConversionDesc.mIsExternalFormat)
-    {
-        externalFormat.sType             = VK_STRUCTURE_TYPE_EXTERNAL_FORMAT_ANDROID;
-        externalFormat.externalFormat    = ycbcrConversionDesc.mExternalOrVkFormat;
-        samplerYcbcrConversionInfo.pNext = &externalFormat;
-    }
-#else
-    // We do not support external format for any platform other than Android.
-    ASSERT(ycbcrConversionDesc.mIsExternalFormat == 0);
-#endif  // VK_USE_PLATFORM_ANDROID_KHR
-
     vk::SamplerYcbcrConversion wrappedSamplerYcbcrConversion;
-    ANGLE_VK_TRY(context, wrappedSamplerYcbcrConversion.init(context->getDevice(),
-                                                             samplerYcbcrConversionInfo));
+    ANGLE_TRY(ycbcrConversionDesc.init(context, &wrappedSamplerYcbcrConversion));
 
     auto insertedItem = payload.emplace(
         ycbcrConversionDesc, vk::SamplerYcbcrConversion(std::move(wrappedSamplerYcbcrConversion)));

@@ -3032,10 +3032,15 @@ angle::Result TextureVk::initImageViews(ContextVk *contextVk,
     // Use this as a proxy for the SRGB override & skip decode settings.
     bool createExtraSRGBViews = mRequiresMutableStorage;
 
-    ANGLE_TRY(getImageViews().initReadViews(
-        contextVk, mState.getType(), *mImage, format, formatSwizzle, readSwizzle, baseLevelVk,
-        levelCount, baseLayer, layerCount, createExtraSRGBViews,
-        mImageUsageFlags & ~VK_IMAGE_USAGE_STORAGE_BIT, mState.getSamplerState()));
+    if (mImage->hasImmutableSampler())
+    {
+        mImage->updateImmutableSamplerState(mState.getSamplerState());
+    }
+
+    ANGLE_TRY(getImageViews().initReadViews(contextVk, mState.getType(), *mImage, format,
+                                            formatSwizzle, readSwizzle, baseLevelVk, levelCount,
+                                            baseLayer, layerCount, createExtraSRGBViews,
+                                            mImageUsageFlags & ~VK_IMAGE_USAGE_STORAGE_BIT));
 
     updateCachedImageViewSerials();
 

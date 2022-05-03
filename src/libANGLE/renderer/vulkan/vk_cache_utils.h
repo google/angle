@@ -855,8 +855,9 @@ static_assert(sizeof(PipelineLayoutDesc) == sizeof(DescriptorSetArray<Descriptor
                                                 sizeof(PackedPushConstantRange) + sizeof(uint32_t),
               "Unexpected Size");
 
-struct YcbcrConversionDesc final
+class YcbcrConversionDesc final
 {
+  public:
     YcbcrConversionDesc();
     ~YcbcrConversionDesc();
     YcbcrConversionDesc(const YcbcrConversionDesc &other);
@@ -876,7 +877,12 @@ struct YcbcrConversionDesc final
                 VkFilter chromaFilter,
                 VkComponentMapping components,
                 angle::FormatID intendedFormatID);
+    void updateChromaFilter(VkFilter filter);
+    uint64_t getExternalFormat() const { return mIsExternalFormat ? mExternalOrVkFormat : 0; }
 
+    angle::Result init(Context *context, SamplerYcbcrConversion *conversionOut) const;
+
+  private:
     // If the sampler needs to convert the image content (e.g. from YUV to RGB) then
     // mExternalOrVkFormat will be non-zero. The value is either the external format
     // as returned by vkGetAndroidHardwareBufferPropertiesANDROID or a YUV VkFormat.
