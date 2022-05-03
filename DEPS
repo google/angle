@@ -34,7 +34,7 @@ vars = {
   'checkout_android_native_support': 'checkout_android or checkout_chromeos',
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '929311ac629881f1f4abfab3f1e13dafb1af5630',
+  'chromium_revision': '55c89a3a09acf774b2d9d93b8b38e4171dae95e7',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -79,7 +79,7 @@ vars = {
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling catapult
   # and whatever else without interference from each other.
-  'catapult_revision': '9ba02ee5ca009b67a48adae40fd01aa58a94e0c2',
+  'catapult_revision': 'eebb0a0e637f95a79da9f8d2b0cd7f227005c425',
 
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling luci-go
@@ -119,7 +119,7 @@ vars = {
 deps = {
 
   'build': {
-    'url': '{chromium_git}/chromium/src/build.git@35387279e41ed871ec4a43f8733778b193a8e1d6',
+    'url': '{chromium_git}/chromium/src/build.git@a6ea5816b11a976d6dba52c51f4c9fd62c594214',
     'condition': 'not build_with_chromium',
   },
 
@@ -166,7 +166,7 @@ deps = {
   },
 
   'buildtools/third_party/libunwind/trunk': {
-    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libunwind.git@d8a47466e35c62c83847d609b4acef64c5bfe56e',
+    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libunwind.git@393e3eee998d163753894939ab574dc57b08c7f3',
     'condition': 'not build_with_chromium',
   },
 
@@ -182,7 +182,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@6039be79b9568358419c1837aaf952bcd8a7bdee',
+    'url': '{chromium_git}/chromium/src/testing@ee8a311434900e1ea20ca6c360b1d7a67e04ea77',
     'condition': 'not build_with_chromium',
   },
 
@@ -230,7 +230,7 @@ deps = {
   },
 
   'third_party/android_deps': {
-    'url': '{chromium_git}/chromium/src/third_party/android_deps@61ba3de9aa186cbf435f045873df8d4bd05915fd',
+    'url': '{chromium_git}/chromium/src/third_party/android_deps@933a62529e6e824459acf8621731677f3f3db09c',
     'condition': 'checkout_android and not build_with_chromium',
   },
 
@@ -240,7 +240,7 @@ deps = {
   },
 
   'third_party/android_platform': {
-    'url': '{chromium_git}/chromium/src/third_party/android_platform@36c15805b91b9cd876330d9971253ad4f5960468',
+    'url': '{chromium_git}/chromium/src/third_party/android_platform@5ecb4635f03307cc461051c2d90b1e2397483f49',
     'condition': 'checkout_android and not build_with_chromium',
   },
 
@@ -328,7 +328,7 @@ deps = {
   },
 
   'third_party/depot_tools': {
-    'url': '{chromium_git}/chromium/tools/depot_tools.git@fccf35cb8eb262e17526e34d6a17683bdfd9eaf9',
+    'url': '{chromium_git}/chromium/tools/depot_tools.git@e06e30775077e195581f58170455e4f59f5839ae',
     'condition': 'not build_with_chromium',
   },
 
@@ -500,7 +500,7 @@ deps = {
       'packages': [
           {
               'package': 'chromium/third_party/turbine',
-              'version': 'y4x80kUnDOxC5QyG48MlVoiRIEn09eaHcIJQFavlqgMC',
+              'version': 'zB1ls771w8S0URcjvMWxOHJ33pmUKq5Zr8zkbIMfvcsC',
           },
       ],
       'condition': 'checkout_android and not build_with_chromium',
@@ -527,7 +527,7 @@ deps = {
   },
 
   'third_party/zlib': {
-    'url': '{chromium_git}/chromium/src/third_party/zlib@e53d3f018a7d98811fae1cd0af05a3aefbd9430d',
+    'url': '{chromium_git}/chromium/src/third_party/zlib@b55552138c566f8f861eadb0b6cb44deea5d24fe',
     'condition': 'not build_with_chromium',
   },
 
@@ -568,7 +568,7 @@ deps = {
   },
 
   'tools/mb': {
-    'url': '{chromium_git}/chromium/src/tools/mb@12653c4be0564c157f2e4a3a180e81b31154658e',
+    'url': '{chromium_git}/chromium/src/tools/mb@85c62c07aac942edb4ed53aa30ab26808198021a',
     'condition': 'not build_with_chromium',
   },
 
@@ -578,7 +578,7 @@ deps = {
   },
 
   'tools/memory': {
-    'url': '{chromium_git}/chromium/src/tools/memory@ca7c1ec42aae70d6b04972c99020467314a90187',
+    'url': '{chromium_git}/chromium/src/tools/memory@c8563c1c1da2834c62c7652e78478274febd0960',
     'condition': 'not build_with_chromium',
   },
 
