@@ -34,11 +34,11 @@ GLenum DrmFourCCFormatToGLInternalFormat(int fourccFormat, bool *isYUV)
         case DRM_FORMAT_ABGR8888:
             return GL_RGBA8;
         case DRM_FORMAT_XBGR8888:
-            return GL_RGB8;
+            return GL_RGBX8_ANGLE;
         case DRM_FORMAT_ARGB8888:
             return GL_BGRA8_EXT;
         case DRM_FORMAT_XRGB8888:
-            return GL_RGB8;
+            return GL_BGRX8_ANGLEX;
         case DRM_FORMAT_ABGR2101010:
         case DRM_FORMAT_ARGB2101010:
             return GL_RGB10_A2_EXT;
