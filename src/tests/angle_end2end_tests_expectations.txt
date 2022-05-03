@@ -577,6 +577,8 @@
 6965 ASAN WIN VULKAN SWIFTSHADER : MipmapTest* = SKIP
 6968 ASAN WIN VULKAN SWIFTSHADER : MultithreadingTest.MultiContextDrawWithSwapBuffers/ES3_Vulkan_SwiftShader = SKIP
 7160 ASAN WIN VULKAN SWIFTSHADER : GeometryShaderTest.LayeredFramebufferMidRenderClear3DColor/ES3_1_Vulkan_SwiftShader = SKIP
+7261 ASAN WIN VULKAN SWIFTSHADER : MemoryBarrierBufferTest.VertexAtrribArrayBitWriteThenVertexRead/ES3_1_Vulkan_SwiftShader* = SKIP
+7262 ASAN WIN VULKAN SWIFTSHADER : TimerQueriesTest.TimeElapsed/*_Vulkan_SwiftShader_AsyncCommandQueue = SKIP
 
 // Regression after a buffer change.
 6881 INTEL VULKAN LINUX : Texture2DTest.TexStorageWithPBOMiddlePixelDifferent/* = SKIP
