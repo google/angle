@@ -6306,7 +6306,7 @@ angle::Result ContextVk::flushAndGetSerial(const vk::Semaphore *signalSemaphore,
     if ((renderPassClosureReason == RenderPassClosureReason::GLFlush ||
          renderPassClosureReason == RenderPassClosureReason::GLFinish ||
          renderPassClosureReason == RenderPassClosureReason::EGLSwapBuffers) &&
-        mShareGroupVk->isDueForBufferPoolPrune())
+        mShareGroupVk->isDueForBufferPoolPrune(mRenderer))
     {
         mShareGroupVk->pruneDefaultBufferPools(mRenderer);
     }

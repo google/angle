@@ -1127,6 +1127,7 @@ RendererVk::RendererVk()
       mDefaultUniformBufferSize(kPreferredDefaultUniformBufferSize),
       mDevice(VK_NULL_HANDLE),
       mDeviceLost(false),
+      mSuballocationGarbageDestroyed(0),
       mCoherentStagingBufferMemoryTypeIndex(kInvalidMemoryTypeIndex),
       mNonCoherentStagingBufferMemoryTypeIndex(kInvalidMemoryTypeIndex),
       mStagingBufferAlignment(1),
@@ -1213,7 +1214,7 @@ void RendererVk::onDestroy(vk::Context *context)
     }
 
     // Assigns an infinite "last completed" serial to force garbage to delete.
-    (void)cleanupGarbage(Serial::Infinite());
+    cleanupGarbage(Serial::Infinite());
     ASSERT(!hasSharedGarbage());
 
     for (PendingOneOffCommands &pending : mPendingOneOffCommands)
@@ -3822,7 +3823,7 @@ void RendererVk::pruneOrphanedBufferBlocks()
     }
 }
 
-angle::Result RendererVk::cleanupGarbage(Serial lastCompletedQueueSerial)
+void RendererVk::cleanupGarbage(Serial lastCompletedQueueSerial)
 {
     std::lock_guard<std::mutex> lock(mGarbageMutex);
 
@@ -3838,15 +3839,20 @@ angle::Result RendererVk::cleanupGarbage(Serial lastCompletedQueueSerial)
     }
 
     // Clean up suballocation garbages
+    VkDeviceSize suballocationBytesDestroyed = 0;
     while (!mSuballocationGarbage.empty())
     {
         vk::SharedBufferSuballocationGarbage &garbage = mSuballocationGarbage.front();
+        VkDeviceSize garbageSize                      = garbage.getSize();
         if (!garbage.destroyIfComplete(this, lastCompletedQueueSerial))
         {
             break;
         }
+        // Actually destroyed.
         mSuballocationGarbage.pop();
+        suballocationBytesDestroyed += garbageSize;
     }
+    mSuballocationGarbageDestroyed += suballocationBytesDestroyed;
 
     // Note: do this after clean up mSuballocationGarbage so that we will have more chances to find
     // orphaned blocks being empty.
@@ -3854,13 +3860,11 @@ angle::Result RendererVk::cleanupGarbage(Serial lastCompletedQueueSerial)
     {
         pruneOrphanedBufferBlocks();
     }
-
-    return angle::Result::Continue;
 }
 
 void RendererVk::cleanupCompletedCommandsGarbage()
 {
-    (void)cleanupGarbage(getLastCompletedQueueSerial());
+    cleanupGarbage(getLastCompletedQueueSerial());
 }
 
 void RendererVk::cleanupPendingSubmissionGarbage()

@@ -975,7 +975,9 @@ angle::Result CommandQueue::retireFinishedCommands(Context *context, size_t fini
     }
 
     // Now clean up RendererVk garbage
-    return renderer->cleanupGarbage(getLastCompletedQueueSerial());
+    renderer->cleanupGarbage(getLastCompletedQueueSerial());
+
+    return angle::Result::Continue;
 }
 
 void CommandQueue::releaseToCommandBatch(bool hasProtectedContent,

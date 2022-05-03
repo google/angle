@@ -4465,18 +4465,8 @@ void BufferHelper::release(RendererVk *renderer)
 
     if (mSuballocation.valid())
     {
-        if (mReadOnlyUse.isCurrentlyInUse(renderer->getLastCompletedQueueSerial()))
-        {
-            renderer->collectSuballocationGarbage(std::move(mReadOnlyUse),
-                                                  std::move(mSuballocation),
-                                                  std::move(mBufferForVertexArray));
-            mReadOnlyUse.init();
-        }
-        else
-        {
-            mBufferForVertexArray.destroy(renderer->getDevice());
-            mSuballocation.destroy(renderer);
-        }
+        renderer->collectSuballocationGarbage(mReadOnlyUse, std::move(mSuballocation),
+                                              std::move(mBufferForVertexArray));
 
         if (mReadWriteUse.isCurrentlyInUse(renderer->getLastCompletedQueueSerial()))
         {
