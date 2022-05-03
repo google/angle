@@ -37,10 +37,6 @@ class ShareGroupVk;
 static constexpr uint32_t kMaxGpuEventNameLen = 32;
 using EventName                               = std::array<char, kMaxGpuEventNameLen>;
 
-// If the total size of copyBufferToImage commands in the outside command buffer reaches the
-// threshold below, the latter is flushed.
-static constexpr VkDeviceSize kMaxBufferToImageCopySize = 1 << 28;
-
 using ContextVkDescriptorSetList = angle::PackedEnumMap<PipelineType, uint32_t>;
 
 enum class GraphicsEventCmdBuf

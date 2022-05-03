@@ -584,7 +584,7 @@ TEST_P(VulkanPerformanceCounterTest, SubmittingOutsideCommandBufferDoesNotBreakR
     initANGLEFeatures();
     // http://anglebug.com/6354
 
-    size_t kMaxBufferToImageCopySize     = 1 << 28;
+    size_t kMaxBufferToImageCopySize     = 64 * 1024 * 1024;
     uint32_t kNumSubmits                 = 2;
     uint32_t expectedRenderPassCount     = getPerfCounters().renderPasses + 1;
     uint32_t expectedSubmitCommandsCount = getPerfCounters().vkQueueSubmitCallsTotal + kNumSubmits;

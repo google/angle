@@ -54,6 +54,9 @@ constexpr size_t kDescriptorBufferInfosInitialSize = 8;
 constexpr size_t kDescriptorImageInfosInitialSize  = 4;
 constexpr size_t kDescriptorWriteInfosInitialSize =
     kDescriptorBufferInfosInitialSize + kDescriptorImageInfosInitialSize;
+// If the total size of copyBufferToImage commands in the outside command buffer reaches the
+// threshold below, the latter is flushed.
+static constexpr VkDeviceSize kMaxBufferToImageCopySize = 64 * 1024 * 1024;
 
 // For shader uniforms such as gl_DepthRange and the viewport size.
 struct GraphicsDriverUniforms
