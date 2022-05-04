@@ -185,6 +185,7 @@ class TracePerfTest : public ANGLERenderTest
     GLuint mDrawFramebufferBinding                                      = 0;
     GLuint mReadFramebufferBinding                                      = 0;
     uint32_t mCurrentFrame                                              = 0;
+    uint32_t mCurrentIteration                                          = 0;
     uint32_t mOffscreenFrameCount                                       = 0;
     uint32_t mTotalFrameCount                                           = 0;
     bool mScreenshotSaved                                               = false;
@@ -1375,7 +1376,8 @@ void TracePerfTest::initializeBenchmark()
         mWindowWidth  = mTestParams.windowWidth;
         mWindowHeight = mTestParams.windowHeight;
     }
-    mCurrentFrame = mStartFrame;
+    mCurrentFrame     = mStartFrame;
+    mCurrentIteration = mStartFrame;
 
     if (IsAndroid())
     {
@@ -1599,6 +1601,9 @@ void TracePerfTest::drawBenchmark()
     {
         mCurrentFrame++;
     }
+
+    // Always iterated for saving screenshots after reset
+    mCurrentIteration++;
 
     // Process any running queries once per iteration.
     for (size_t queryIndex = 0; queryIndex < mRunningQueries.size();)
@@ -2004,7 +2009,7 @@ void TracePerfTest::swap()
 {
     // Capture a screenshot if enabled.
     if (gScreenShotDir != nullptr && !mScreenshotSaved &&
-        static_cast<uint32_t>(gScreenShotFrame) == mCurrentFrame)
+        static_cast<uint32_t>(gScreenShotFrame) == mCurrentIteration)
     {
         std::stringstream screenshotNameStr;
         screenshotNameStr << gScreenShotDir << GetPathSeparator() << "angle" << mBackend << "_"
