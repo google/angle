@@ -39,10 +39,12 @@ if (angle_has_build) {
     angle_vulkan_display_mode = "headless"
   }
 
-  angle_use_x11 = ozone_platform_x11 && !is_ggp && is_linux && !is_chromecast
-  angle_use_wayland =
-      ozone_platform_wayland && !is_ggp && is_linux && !is_chromecast
-  angle_use_vulkan_display = (is_linux || is_chromeos) && !is_ggp
+  declare_args() {
+    angle_use_x11 = ozone_platform_x11 && !is_ggp && is_linux && !is_chromecast
+    angle_use_wayland =
+        ozone_platform_wayland && !is_ggp && is_linux && !is_chromecast
+    angle_use_vulkan_display = (is_linux || is_chromeos) && !is_ggp
+  }
 } else {
   declare_args() {
     is_ubsan = false
