@@ -177,7 +177,7 @@ void Format::initBufferFallback(RendererVk *renderer,
     {
         size_t skip = renderer->getFeatures().forceFallbackFormat.enabled ? 1 : 0;
         int i       = FindSupportedFormat(renderer, info, skip, compressedStartIndex,
-                                    HasFullBufferFormatSupport);
+                                          HasFullBufferFormatSupport);
 
         mActualBufferFormatID         = info[i].format;
         mVkBufferFormatIsPacked       = info[i].vkFormatIsPacked;
@@ -431,9 +431,7 @@ gl::SwizzleState ApplySwizzle(const gl::SwizzleState &formatSwizzle,
     return result;
 }
 
-gl::SwizzleState GetFormatSwizzle(const ContextVk *contextVk,
-                                  const angle::Format &angleFormat,
-                                  const bool sized)
+gl::SwizzleState GetFormatSwizzle(const angle::Format &angleFormat, const bool sized)
 {
     gl::SwizzleState internalSwizzle;
 

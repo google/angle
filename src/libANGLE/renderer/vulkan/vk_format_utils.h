@@ -245,9 +245,7 @@ bool HasFullTextureFormatSupport(RendererVk *renderer, angle::FormatID formatID)
 bool HasNonRenderableTextureFormatSupport(RendererVk *renderer, angle::FormatID formatID);
 
 // Get the swizzle state based on format's requirements and emulations.
-gl::SwizzleState GetFormatSwizzle(const ContextVk *contextVk,
-                                  const angle::Format &angleFormat,
-                                  const bool sized);
+gl::SwizzleState GetFormatSwizzle(const angle::Format &angleFormat, const bool sized);
 
 // Apply application's swizzle to the swizzle implied by format as received from GetFormatSwizzle.
 gl::SwizzleState ApplySwizzle(const gl::SwizzleState &formatSwizzle,
