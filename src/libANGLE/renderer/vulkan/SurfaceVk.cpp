@@ -85,14 +85,14 @@ VkPresentModeKHR GetDesiredPresentMode(const std::vector<VkPresentModeKHR> &pres
         }
     }
 
-    if (immediateAvailable)
-    {
-        return VK_PRESENT_MODE_IMMEDIATE_KHR;
-    }
-
     if (mailboxAvailable)
     {
         return VK_PRESENT_MODE_MAILBOX_KHR;
+    }
+
+    if (immediateAvailable)
+    {
+        return VK_PRESENT_MODE_IMMEDIATE_KHR;
     }
 
     if (sharedPresent)
