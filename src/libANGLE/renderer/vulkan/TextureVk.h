@@ -455,7 +455,6 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
                                           const vk::Format &format,
                                           gl::TexLevelMask skipLevelsMask);
     angle::Result initImageViews(ContextVk *contextVk,
-                                 const angle::Format &format,
                                  const bool sized,
                                  uint32_t levelCount,
                                  uint32_t layerCount);
