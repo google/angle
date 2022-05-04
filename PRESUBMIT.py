@@ -382,10 +382,44 @@ def _CheckNonAsciiInSourceFiles(input_api, output_api):
     return []
 
 
+def _CheckCommentBeforeTestInTestFiles(input_api, output_api):
+    """Require a comment before TEST_P() tests. """
+
+    def test_files(f):
+        return input_api.FilterSourceFile(f, files_to_check=(r'^src\/tests\/.+\.cpp$',))
+
+    tests_with_no_comment = []
+    for f in input_api.AffectedSourceFiles(test_files):
+        diff = f.GenerateScmDiff()
+        last_line_was_comment = False
+        for line in diff.splitlines():
+            # Skip removed lines
+            if line.startswith('-'):
+                continue
+
+            new_line_is_comment = line.startswith(' //') or line.startswith('+//')
+            new_line_is_test_declaration = line.startswith('+TEST_P(')
+
+            if new_line_is_test_declaration and not last_line_was_comment:
+                tests_with_no_comment.append(line[1:])
+
+            last_line_was_comment = new_line_is_comment
+
+    if tests_with_no_comment:
+        return [
+            output_api.PresubmitError(
+                'Tests without comment.',
+                items=sorted(tests_with_no_comment),
+                long_text='ANGLE requires a comment describing what a test does.')
+        ]
+    return []
+
+
 def CheckChangeOnUpload(input_api, output_api):
     results = []
     results.extend(_CheckTabsInSourceFiles(input_api, output_api))
     results.extend(_CheckNonAsciiInSourceFiles(input_api, output_api))
+    results.extend(_CheckCommentBeforeTestInTestFiles(input_api, output_api))
     results.extend(_CheckCodeGeneration(input_api, output_api))
     results.extend(_CheckChangeHasBugField(input_api, output_api))
     results.extend(input_api.canned_checks.CheckChangeHasDescription(input_api, output_api))
