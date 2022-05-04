@@ -1239,6 +1239,10 @@ TracePerfTest::TracePerfTest(const TracePerfParams &params)
     {
         addExtensionPrerequisite("GL_KHR_texture_compression_astc_ldr");
     }
+    if (traceNameIs("mortal_kombat"))
+    {
+        addExtensionPrerequisite("GL_EXT_texture_buffer");
+    }
 
     ASSERT(mParams.surfaceType == SurfaceType::Window || gEnableAllTraceTests);
     ASSERT(mParams.eglParameters.deviceType == EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE ||
