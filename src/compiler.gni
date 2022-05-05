@@ -351,6 +351,8 @@ angle_translator_lib_vulkan_sources = [
   "src/compiler/translator/tree_ops/vulkan/EmulateDithering.h",
   "src/compiler/translator/tree_ops/vulkan/EmulateFragColorData.cpp",
   "src/compiler/translator/tree_ops/vulkan/EmulateFragColorData.h",
+  "src/compiler/translator/tree_ops/vulkan/EmulateYUVBuiltIns.cpp",
+  "src/compiler/translator/tree_ops/vulkan/EmulateYUVBuiltIns.h",
   "src/compiler/translator/tree_ops/vulkan/FlagSamplersWithTexelFetch.cpp",
   "src/compiler/translator/tree_ops/vulkan/FlagSamplersWithTexelFetch.h",
   "src/compiler/translator/tree_ops/vulkan/ReplaceForShaderFramebufferFetch.cpp",

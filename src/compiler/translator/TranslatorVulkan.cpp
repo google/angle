@@ -35,6 +35,7 @@
 #include "compiler/translator/tree_ops/vulkan/EmulateAdvancedBlendEquations.h"
 #include "compiler/translator/tree_ops/vulkan/EmulateDithering.h"
 #include "compiler/translator/tree_ops/vulkan/EmulateFragColorData.h"
+#include "compiler/translator/tree_ops/vulkan/EmulateYUVBuiltIns.h"
 #include "compiler/translator/tree_ops/vulkan/FlagSamplersWithTexelFetch.h"
 #include "compiler/translator/tree_ops/vulkan/ReplaceForShaderFramebufferFetch.h"
 #include "compiler/translator/tree_ops/vulkan/RewriteInterpolateAtOffset.h"
@@ -872,10 +873,9 @@ bool TranslatorVulkan::translateImpl(TInfoSinkBase &sink,
     }
 
     // Remove declarations of inactive shader interface variables so glslang wrapper doesn't need to
-    // replace them.  Note: this is done before extracting samplers from structs, as removing such
-    // inactive samplers is not yet supported.  Note also that currently, CollectVariables marks
-    // every field of an active uniform that's of struct type as active, i.e. no extracted sampler
-    // is inactive.
+    // replace them.  Note that currently, CollectVariables marks every field of an active uniform
+    // that's of struct type as active, i.e. no extracted sampler is inactive, so this can be done
+    // before extracting samplers from structs.
     if (!RemoveInactiveInterfaceVariables(this, root, &getSymbolTable(), getAttributes(),
                                           getInputVaryings(), getOutputVariables(), getUniforms(),
                                           getInterfaceBlocks(), true))
@@ -1240,6 +1240,14 @@ bool TranslatorVulkan::translateImpl(TInfoSinkBase &sink,
                         ImmutableString("gl_NumSamples"), getShaderVersion()));
                 TIntermTyped *numSamples = driverUniforms->getNumSamplesRef();
                 if (!ReplaceVariableWithTyped(this, root, numSamplesVar, numSamples))
+                {
+                    return false;
+                }
+            }
+
+            if (IsExtensionEnabled(getExtensionBehavior(), TExtension::EXT_YUV_target))
+            {
+                if (!EmulateYUVBuiltIns(this, root, &getSymbolTable()))
                 {
                     return false;
                 }
