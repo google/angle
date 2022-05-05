@@ -2156,7 +2156,7 @@ class ImageHelper final : public Resource, public angle::Subject
     ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
     struct ClearUpdate
     {
-        bool operator==(const ClearUpdate &rhs)
+        bool operator==(const ClearUpdate &rhs) const
         {
             return memcmp(this, &rhs, sizeof(ClearUpdate)) == 0;
         }
