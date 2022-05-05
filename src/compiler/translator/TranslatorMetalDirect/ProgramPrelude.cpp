@@ -3719,9 +3719,16 @@ void ProgramPrelude::visitOperator(TOperator op,
             break;
 
         case TOperator::EOpDivAssign:
-            if (argType0->isMatrix() && argType1->isMatrix())
+            if (argType0->isMatrix())
             {
-                componentWiseDivideAssign();
+                if (argType1->isMatrix())
+                {
+                    componentWiseDivideAssign();
+                }
+                else if (argType1->isScalar())
+                {
+                    divMatrixScalarAssign();
+                }
             }
             break;
 
