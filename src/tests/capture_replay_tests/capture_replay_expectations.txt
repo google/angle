@@ -193,5 +193,3 @@
 7088 : VulkanPerformanceCounterTest* = SKIP_FOR_CAPTURE
 
 7111 : ImageTestES3.Source2DTarget2DStorageOrphan/* = FAIL
-
-7186 : FramebufferTest_ES3.FramebufferChangeTest/* = SKIP_FOR_CAPTURE
