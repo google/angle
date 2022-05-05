@@ -165,6 +165,8 @@ done
 extra_removal_files=(
    # build/linux is hundreds of megs that aren't needed.
    "build/linux"
+   # Debuggable APKs cannot be merged into AOSP as a prebuilt
+   "build/android/CheckInstallApk-debug.apk"
    # Remove Android.mk files to prevent automated CLs:
    #   "[LSC] Add LOCAL_LICENSE_KINDS to external/angle"
    "Android.mk"
