@@ -155,6 +155,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::KeepBufferShadowCopy, "keepBufferShadowCopy"},
     {Feature::LimitMax3dArrayTextureSizeTo1024, "limitMax3dArrayTextureSizeTo1024"},
     {Feature::LimitMaxMSAASamplesTo4, "limitMaxMSAASamplesTo4"},
+    {Feature::LimitMaxTextureSizeTo4096, "limitMaxTextureSizeTo4096"},
     {Feature::LogMemoryReportCallbacks, "logMemoryReportCallbacks"},
     {Feature::LogMemoryReportStats, "logMemoryReportStats"},
     {Feature::LoseContextOnOutOfMemory, "loseContextOnOutOfMemory"},
