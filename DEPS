@@ -21,7 +21,7 @@ vars = {
   'build_with_chromium': False,
 
   # By default, download the fuchsia sdk from the public sdk directory.
-  'fuchsia_sdk_cipd_prefix': 'fuchsia/sdk/core/',
+  'fuchsia_sdk_cipd_prefix': 'fuchsia/sdk/gn/',
 
   # We don't use location metadata in our test isolates.
   'generate_location_tags': False,
