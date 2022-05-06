@@ -3563,6 +3563,8 @@ angle::Result Renderer11::packPixels(const gl::Context *context,
 angle::Result Renderer11::blitRenderbufferRect(const gl::Context *context,
                                                const gl::Rectangle &readRectIn,
                                                const gl::Rectangle &drawRectIn,
+                                               UINT readLayer,
+                                               UINT drawLayer,
                                                RenderTargetD3D *readRenderTarget,
                                                RenderTargetD3D *drawRenderTarget,
                                                GLenum filter,
@@ -3748,14 +3750,15 @@ angle::Result Renderer11::blitRenderbufferRect(const gl::Context *context,
     {
         UINT dstX = drawRect.x;
         UINT dstY = drawRect.y;
+        UINT dstZ = drawLayer;
 
         D3D11_BOX readBox;
         readBox.left   = readRect.x;
         readBox.right  = readRect.x + readRect.width;
         readBox.top    = readRect.y;
         readBox.bottom = readRect.y + readRect.height;
-        readBox.front  = 0;
-        readBox.back   = 1;
+        readBox.front  = readLayer;
+        readBox.back   = readLayer + 1;
 
         if (scissorNeeded)
         {
@@ -3785,9 +3788,9 @@ angle::Result Renderer11::blitRenderbufferRect(const gl::Context *context,
 
         // D3D11 needs depth-stencil CopySubresourceRegions to have a NULL pSrcBox
         // We also require complete framebuffer copies for depth-stencil blit.
-        D3D11_BOX *pSrcBox = wholeBufferCopy ? nullptr : &readBox;
+        D3D11_BOX *pSrcBox = wholeBufferCopy && readLayer == 0 ? nullptr : &readBox;
 
-        mDeviceContext->CopySubresourceRegion(drawTexture.get(), drawSubresource, dstX, dstY, 0,
+        mDeviceContext->CopySubresourceRegion(drawTexture.get(), drawSubresource, dstX, dstY, dstZ,
                                               readTexture.get(), readSubresource, pSrcBox);
     }
     else

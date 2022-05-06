@@ -954,7 +954,7 @@ angle::Result TextureStorage11::getMultisampledRenderTarget(const gl::Context *c
 
         // blit SS -> MS
         // mask: GL_COLOR_BUFFER_BIT, filter: GL_NEAREST
-        ANGLE_TRY(mRenderer->blitRenderbufferRect(context, area, area, readRenderTarget,
+        ANGLE_TRY(mRenderer->blitRenderbufferRect(context, area, area, 0, 0, readRenderTarget,
                                                   drawRenderTarget, GL_NEAREST, nullptr, true,
                                                   false, false));
         mMSTexInfo = std::make_unique<MultisampledRenderToTextureInfo>(samples, index, indexMS);
@@ -1257,9 +1257,9 @@ angle::Result TextureStorage11_2D::ensureTextureExists(const gl::Context *contex
 {
     // If mMipLevels = 1 then always use mTexture rather than mLevelZeroTexture.
     ANGLE_TRY(resolveTexture(context));
-    bool useLevelZeroTexture = mRenderer->getFeatures().zeroMaxLodWorkaround.enabled
-                                   ? (mipLevels == 1) && (mMipLevels > 1)
-                                   : false;
+    bool useLevelZeroTexture       = mRenderer->getFeatures().zeroMaxLodWorkaround.enabled
+                                         ? (mipLevels == 1) && (mMipLevels > 1)
+                                         : false;
     TextureHelper11 *outputTexture = useLevelZeroTexture ? &mLevelZeroTexture : &mTexture;
 
     // if the width or height is not positive this should be treated as an incomplete texture
@@ -2395,9 +2395,9 @@ angle::Result TextureStorage11_Cube::ensureTextureExists(const gl::Context *cont
 {
     // If mMipLevels = 1 then always use mTexture rather than mLevelZeroTexture.
     ANGLE_TRY(resolveTexture(context));
-    bool useLevelZeroTexture = mRenderer->getFeatures().zeroMaxLodWorkaround.enabled
-                                   ? (mipLevels == 1) && (mMipLevels > 1)
-                                   : false;
+    bool useLevelZeroTexture       = mRenderer->getFeatures().zeroMaxLodWorkaround.enabled
+                                         ? (mipLevels == 1) && (mMipLevels > 1)
+                                         : false;
     TextureHelper11 *outputTexture = useLevelZeroTexture ? &mLevelZeroTexture : &mTexture;
 
     // if the size is not positive this should be treated as an incomplete texture
@@ -3113,10 +3113,6 @@ angle::Result TextureStorage11_3D::getRenderTarget(const gl::Context *context,
         const TextureHelper11 *texture = nullptr;
         ANGLE_TRY(getResource(context, &texture));
 
-        // TODO, what kind of SRV is expected here?
-        const d3d11::SharedSRV srv;
-        const d3d11::SharedSRV blitSRV;
-
         D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
         rtvDesc.Format                = mFormatInfo.rtvFormat;
         rtvDesc.ViewDimension         = D3D11_RTV_DIMENSION_TEXTURE3D;
@@ -3124,12 +3120,18 @@ angle::Result TextureStorage11_3D::getRenderTarget(const gl::Context *context,
         rtvDesc.Texture3D.FirstWSlice = layer;
         rtvDesc.Texture3D.WSize       = 1;
 
+        const d3d11::SharedSRV *srv = nullptr;
+        ANGLE_TRY(getSRVLevel(context, mipLevel, false, &srv));
+
+        const d3d11::SharedSRV *blitSRV = nullptr;
+        ANGLE_TRY(getSRVLevel(context, mipLevel, true, &blitSRV));
+
         d3d11::RenderTargetView rtv;
         ANGLE_TRY(mRenderer->allocateResource(context11, rtvDesc, texture->get(), &rtv));
         rtv.setLabels("TexStorage3D.LayerRTV", &mTextureLabel);
 
         mLevelLayerRenderTargets[key].reset(new TextureRenderTarget11(
-            std::move(rtv), *texture, srv, blitSRV, mFormatInfo.internalFormat, getFormatSet(),
+            std::move(rtv), *texture, *srv, *blitSRV, mFormatInfo.internalFormat, getFormatSet(),
             getLevelWidth(mipLevel), getLevelHeight(mipLevel), 1, 0));
     }
 
