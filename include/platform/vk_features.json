@@ -821,6 +821,14 @@
                 "sample qualifier"
             ],
             "issue": "http://anglebug.com/6876"
+        },
+        {
+            "name": "force_continuous_refresh_on_shared_present",
+            "category": "Features",
+            "description": [
+                "Force to create vulkan swapchain with continuous refresh on shared present"
+            ],
+            "issue": "https://issuetracker.google.com/229267970"
         }
     ]
 }

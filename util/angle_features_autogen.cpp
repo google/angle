@@ -119,6 +119,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::FlushOnFramebufferChange, "flushOnFramebufferChange"},
     {Feature::ForceAtomicValueResolution, "forceAtomicValueResolution"},
     {Feature::ForceBufferGPUStorage, "forceBufferGPUStorage"},
+    {Feature::ForceContinuousRefreshOnSharedPresent, "forceContinuousRefreshOnSharedPresent"},
     {Feature::ForceD16TexFilter, "forceD16TexFilter"},
     {Feature::ForceD24S8AsUnsupported, "forceD24S8AsUnsupported"},
     {Feature::ForceDepthAttachmentInitOnClear, "forceDepthAttachmentInitOnClear"},

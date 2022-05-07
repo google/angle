@@ -614,6 +614,11 @@ struct FeaturesVk : FeatureSetBase
         "Explicitly enable per-sample shading if the fragment shader contains the "
         "sample qualifier",
         &members, "http://anglebug.com/6876"};
+
+    FeatureInfo forceContinuousRefreshOnSharedPresent = {
+        "forceContinuousRefreshOnSharedPresent", FeatureCategory::VulkanFeatures,
+        "Force to create vulkan swapchain with continuous refresh on shared present", &members,
+        "https://issuetracker.google.com/229267970"};
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

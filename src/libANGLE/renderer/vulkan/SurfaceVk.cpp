@@ -1340,6 +1340,13 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context,
     if (mDesiredSwapchainPresentMode == VK_PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR)
     {
         swapchainInfo.minImageCount = 1;
+
+        // This feature is by default disabled, and only affects Android platform wsi behavior
+        // transparent to angle internal tracking for shared present.
+        if (renderer->getFeatures().forceContinuousRefreshOnSharedPresent.enabled)
+        {
+            swapchainInfo.presentMode = VK_PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR;
+        }
     }
 
     // On Android, vkCreateSwapchainKHR destroys lastSwapchain, which is incorrect.  Wait idle in

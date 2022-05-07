@@ -113,6 +113,7 @@ enum class Feature
     FlushOnFramebufferChange,
     ForceAtomicValueResolution,
     ForceBufferGPUStorage,
+    ForceContinuousRefreshOnSharedPresent,
     ForceD16TexFilter,
     ForceD24S8AsUnsupported,
     ForceDepthAttachmentInitOnClear,
