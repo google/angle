@@ -202,7 +202,6 @@ EGLDisplay GetPlatformDisplayEXT(Thread *thread,
     switch (platform)
     {
         case EGL_PLATFORM_ANGLE_ANGLE:
-        case EGL_PLATFORM_GBM_KHR:
         {
             return egl::Display::GetDisplayFromNativeDisplay(
                 platform, gl::bitCast<EGLNativeDisplayType>(native_display), attribMap);
