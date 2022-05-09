@@ -319,8 +319,10 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
                        const void *data);
 
     void setEvent(VkEvent event, VkPipelineStageFlags stageMask);
-    void setViewport(uint32_t firstViewport, uint32_t viewportCount, const VkViewport *viewports);
+    void setFragmentShadingRate(const VkExtent2D *fragmentSize,
+                                VkFragmentShadingRateCombinerOpKHR ops[2]);
     void setScissor(uint32_t firstScissor, uint32_t scissorCount, const VkRect2D *scissors);
+    void setViewport(uint32_t firstViewport, uint32_t viewportCount, const VkViewport *viewports);
     VkResult reset();
     void resetEvent(VkEvent event, VkPipelineStageFlags stageMask);
     void resetQueryPool(const QueryPool &queryPool, uint32_t firstQuery, uint32_t queryCount);
@@ -344,7 +346,6 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
     void writeTimestamp(VkPipelineStageFlagBits pipelineStage,
                         const QueryPool &queryPool,
                         uint32_t query);
-    void setShadingRate(const VkExtent2D *fragmentSize, VkFragmentShadingRateCombinerOpKHR ops[2]);
 
     // VK_EXT_transform_feedback
     void beginTransformFeedback(uint32_t firstCounterBuffer,
@@ -955,12 +956,11 @@ ANGLE_INLINE void CommandBuffer::setEvent(VkEvent event, VkPipelineStageFlags st
     vkCmdSetEvent(mHandle, event, stageMask);
 }
 
-ANGLE_INLINE void CommandBuffer::setViewport(uint32_t firstViewport,
-                                             uint32_t viewportCount,
-                                             const VkViewport *viewports)
+ANGLE_INLINE void CommandBuffer::setFragmentShadingRate(const VkExtent2D *fragmentSize,
+                                                        VkFragmentShadingRateCombinerOpKHR ops[2])
 {
-    ASSERT(valid() && viewports != nullptr);
-    vkCmdSetViewport(mHandle, firstViewport, viewportCount, viewports);
+    ASSERT(valid() && fragmentSize != nullptr);
+    vkCmdSetFragmentShadingRateKHR(mHandle, fragmentSize, ops);
 }
 
 ANGLE_INLINE void CommandBuffer::setScissor(uint32_t firstScissor,
@@ -969,6 +969,14 @@ ANGLE_INLINE void CommandBuffer::setScissor(uint32_t firstScissor,
 {
     ASSERT(valid() && scissors != nullptr);
     vkCmdSetScissor(mHandle, firstScissor, scissorCount, scissors);
+}
+
+ANGLE_INLINE void CommandBuffer::setViewport(uint32_t firstViewport,
+                                             uint32_t viewportCount,
+                                             const VkViewport *viewports)
+{
+    ASSERT(valid() && viewports != nullptr);
+    vkCmdSetViewport(mHandle, firstViewport, viewportCount, viewports);
 }
 
 ANGLE_INLINE void CommandBuffer::resetEvent(VkEvent event, VkPipelineStageFlags stageMask)
@@ -1034,13 +1042,6 @@ ANGLE_INLINE void CommandBuffer::writeTimestamp(VkPipelineStageFlagBits pipeline
 {
     ASSERT(valid());
     vkCmdWriteTimestamp(mHandle, pipelineStage, queryPool.getHandle(), query);
-}
-
-ANGLE_INLINE void CommandBuffer::setShadingRate(const VkExtent2D *fragmentSize,
-                                                VkFragmentShadingRateCombinerOpKHR ops[2])
-{
-    ASSERT(valid() && fragmentSize != nullptr);
-    vkCmdSetFragmentShadingRateKHR(mHandle, fragmentSize, ops);
 }
 
 ANGLE_INLINE void CommandBuffer::draw(uint32_t vertexCount,

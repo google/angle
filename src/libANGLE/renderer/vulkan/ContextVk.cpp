@@ -809,14 +809,18 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
     {
         mNewGraphicsCommandBufferDirtyBits.set(DIRTY_BIT_TRANSFORM_FEEDBACK_BUFFERS);
     }
-    if (getFeatures().supportsFragmentShadingRate.enabled)
-    {
-        mNewGraphicsCommandBufferDirtyBits.set(DIRTY_BIT_SHADING_RATE);
-    }
 
     mNewComputeCommandBufferDirtyBits =
         DirtyBits{DIRTY_BIT_PIPELINE_BINDING, DIRTY_BIT_TEXTURES, DIRTY_BIT_SHADER_RESOURCES,
                   DIRTY_BIT_DESCRIPTOR_SETS, DIRTY_BIT_DRIVER_UNIFORMS_BINDING};
+
+    mDynamicStateDirtyBits = DirtyBits{DIRTY_BIT_VIEWPORT, DIRTY_BIT_SCISSOR};
+    if (getFeatures().supportsFragmentShadingRate.enabled)
+    {
+        mDynamicStateDirtyBits.set(DIRTY_BIT_FRAGMENT_SHADING_RATE);
+    }
+
+    mNewGraphicsCommandBufferDirtyBits |= mDynamicStateDirtyBits;
 
     mGraphicsDirtyBitHandlers[DIRTY_BIT_MEMORY_BARRIER] =
         &ContextVk::handleDirtyGraphicsMemoryBarrier;
@@ -864,9 +868,10 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
     mGraphicsDirtyBitHandlers[DIRTY_BIT_DESCRIPTOR_SETS] =
         &ContextVk::handleDirtyGraphicsDescriptorSets;
 
-    mGraphicsDirtyBitHandlers[DIRTY_BIT_VIEWPORT]     = &ContextVk::handleDirtyGraphicsViewport;
-    mGraphicsDirtyBitHandlers[DIRTY_BIT_SCISSOR]      = &ContextVk::handleDirtyGraphicsScissor;
-    mGraphicsDirtyBitHandlers[DIRTY_BIT_SHADING_RATE] = &ContextVk::handleDirtyGraphicsShadingRate;
+    mGraphicsDirtyBitHandlers[DIRTY_BIT_VIEWPORT] = &ContextVk::handleDirtyGraphicsViewport;
+    mGraphicsDirtyBitHandlers[DIRTY_BIT_SCISSOR]  = &ContextVk::handleDirtyGraphicsScissor;
+    mGraphicsDirtyBitHandlers[DIRTY_BIT_FRAGMENT_SHADING_RATE] =
+        &ContextVk::handleDirtyGraphicsFragmentShadingRate;
 
     mComputeDirtyBitHandlers[DIRTY_BIT_MEMORY_BARRIER] =
         &ContextVk::handleDirtyComputeMemoryBarrier;
@@ -2441,8 +2446,9 @@ angle::Result ContextVk::handleDirtyGraphicsScissor(DirtyBits::Iterator *dirtyBi
     return angle::Result::Continue;
 }
 
-angle::Result ContextVk::handleDirtyGraphicsShadingRate(DirtyBits::Iterator *dirtyBitsIterator,
-                                                        DirtyBits dirtyBitMask)
+angle::Result ContextVk::handleDirtyGraphicsFragmentShadingRate(
+    DirtyBits::Iterator *dirtyBitsIterator,
+    DirtyBits dirtyBitMask)
 {
     gl::ShadingRate shadingRate     = getState().getShadingRate();
     const bool shadingRateSupported = mRenderer->isShadingRateSupported(shadingRate);
@@ -2505,7 +2511,7 @@ angle::Result ContextVk::handleDirtyGraphicsShadingRate(DirtyBits::Iterator *dir
     }
 
     ASSERT(hasStartedRenderPass());
-    mRenderPassCommandBuffer->setShadingRate(&fragmentSize, shadingRateCombinerOp);
+    mRenderPassCommandBuffer->setFragmentShadingRate(&fragmentSize, shadingRateCombinerOp);
 
     return angle::Result::Continue;
 }
@@ -4751,7 +4757,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                             EXTENDED_DIRTY_BIT_SHADER_DERIVATIVE_HINT:
                             break;
                         case gl::State::ExtendedDirtyBitType::EXTENDED_DIRTY_BIT_SHADING_RATE:
-                            mGraphicsDirtyBits.set(DIRTY_BIT_SHADING_RATE);
+                            mGraphicsDirtyBits.set(DIRTY_BIT_FRAGMENT_SHADING_RATE);
                             break;
                         default:
                             UNREACHABLE();
@@ -5402,10 +5408,9 @@ void ContextVk::invalidateComputeDescriptorSet(DescriptorSetIndex usedDescriptor
     }
 }
 
-void ContextVk::invalidateViewportAndScissor()
+void ContextVk::invalidateAllDynamicState()
 {
-    mGraphicsDirtyBits.set(DIRTY_BIT_VIEWPORT);
-    mGraphicsDirtyBits.set(DIRTY_BIT_SCISSOR);
+    mGraphicsDirtyBits |= mDynamicStateDirtyBits;
 }
 
 angle::Result ContextVk::dispatchCompute(const gl::Context *context,

@@ -434,7 +434,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     void invalidateComputePipelineBinding();
     void invalidateGraphicsDescriptorSet(DescriptorSetIndex usedDescriptorSet);
     void invalidateComputeDescriptorSet(DescriptorSetIndex usedDescriptorSet);
-    void invalidateViewportAndScissor();
+    void invalidateAllDynamicState();
     angle::Result updateRenderPassDepthFeedbackLoopMode(
         UpdateDepthFeedbackLoopReason depthReason,
         UpdateDepthFeedbackLoopReason stencilReason);
@@ -784,10 +784,14 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         DIRTY_BIT_DESCRIPTOR_SETS,
         DIRTY_BIT_FRAMEBUFFER_FETCH_BARRIER,
         DIRTY_BIT_BLEND_BARRIER,
-        // Dynamic viewport/scissor/shading rate
+
+        // Dynamic state
+        // - In core Vulkan 1.0
         DIRTY_BIT_VIEWPORT,
         DIRTY_BIT_SCISSOR,
-        DIRTY_BIT_SHADING_RATE,
+        // - In VK_KHR_fragment_shading_rate
+        DIRTY_BIT_FRAGMENT_SHADING_RATE,
+
         DIRTY_BIT_MAX,
     };
 
@@ -844,7 +848,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
                   "Render pass using dirty bit must be handled after the render pass dirty bit");
     static_assert(DIRTY_BIT_SCISSOR > DIRTY_BIT_RENDER_PASS,
                   "Render pass using dirty bit must be handled after the render pass dirty bit");
-    static_assert(DIRTY_BIT_SHADING_RATE > DIRTY_BIT_RENDER_PASS,
+    static_assert(DIRTY_BIT_FRAGMENT_SHADING_RATE > DIRTY_BIT_RENDER_PASS,
                   "Render pass using dirty bit must be handled after the render pass dirty bit");
 
     using DirtyBits = angle::BitSet<DIRTY_BIT_MAX>;
@@ -1040,8 +1044,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
                                               DirtyBits dirtyBitMask);
     angle::Result handleDirtyGraphicsScissor(DirtyBits::Iterator *dirtyBitsIterator,
                                              DirtyBits dirtyBitMask);
-    angle::Result handleDirtyGraphicsShadingRate(DirtyBits::Iterator *dirtyBitsIterator,
-                                                 DirtyBits dirtyBitMask);
+    angle::Result handleDirtyGraphicsFragmentShadingRate(DirtyBits::Iterator *dirtyBitsIterator,
+                                                         DirtyBits dirtyBitMask);
 
     // Handlers for compute pipeline dirty bits.
     angle::Result handleDirtyComputeMemoryBarrier();
@@ -1214,6 +1218,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     DirtyBits mIndexedDirtyBitsMask;
     DirtyBits mNewGraphicsCommandBufferDirtyBits;
     DirtyBits mNewComputeCommandBufferDirtyBits;
+    DirtyBits mDynamicStateDirtyBits;
     static constexpr DirtyBits kColorAccessChangeDirtyBits{DIRTY_BIT_COLOR_ACCESS};
     static constexpr DirtyBits kDepthStencilAccessChangeDirtyBits{
         DIRTY_BIT_READ_ONLY_DEPTH_FEEDBACK_LOOP_MODE, DIRTY_BIT_DEPTH_STENCIL_ACCESS};

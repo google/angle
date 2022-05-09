@@ -1042,6 +1042,24 @@ void UpdateDepthStencilAccess(ContextVk *contextVk,
     }
 }
 
+void ResetDynamicState(ContextVk *contextVk, vk::RenderPassCommandBuffer *commandBuffer)
+{
+    // Reset all dynamic state for simplicity.  Scissor and viewport is always set by the UtilsVk
+    // functions, so those are skipped.  Ideally, dynamic state that will be set by any UtilsVk
+    // functions wouldn't be reset here.  However, until such time as extensive transition tests are
+    // written, this approach is less bug-prone.
+    if (contextVk->getFeatures().supportsFragmentShadingRate.enabled)
+    {
+        VkExtent2D fragmentSize                                     = {1, 1};
+        VkFragmentShadingRateCombinerOpKHR shadingRateCombinerOp[2] = {
+            VK_FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR,
+            VK_FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR};
+        commandBuffer->setFragmentShadingRate(&fragmentSize, shadingRateCombinerOp);
+    }
+
+    // Let ContextVk know that it should refresh all dynamic state.
+    contextVk->invalidateAllDynamicState();
+}
 }  // namespace
 
 UtilsVk::ConvertVertexShaderParams::ConvertVertexShaderParams() = default;
@@ -1539,6 +1557,8 @@ angle::Result UtilsVk::setupGraphicsProgram(ContextVk *contextVk,
         commandBuffer->pushConstants(pipelineLayout.get(), VK_SHADER_STAGE_FRAGMENT_BIT, 0,
                                      static_cast<uint32_t>(pushConstantsSize), pushConstants);
     }
+
+    ResetDynamicState(contextVk, commandBuffer);
 
     return angle::Result::Continue;
 }
@@ -2114,8 +2134,6 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
     const VkRect2D scissor = gl_vk::GetRect(params.clearArea);
     commandBuffer->setScissor(0, 1, &scissor);
 
-    contextVk->invalidateViewportAndScissor();
-
     vk::ShaderLibrary &shaderLibrary                    = contextVk->getShaderLibrary();
     vk::RefCounted<vk::ShaderAndSerial> *vertexShader   = nullptr;
     vk::RefCounted<vk::ShaderAndSerial> *fragmentShader = nullptr;
@@ -2226,8 +2244,6 @@ angle::Result UtilsVk::clearImage(ContextVk *contextVk,
 
     VkRect2D scissor = gl_vk::GetRect(renderArea);
     commandBuffer->setScissor(0, 1, &scissor);
-
-    contextVk->invalidateViewportAndScissor();
 
     contextVk->onImageRenderPassWrite(dst->toGLLevel(params.dstMip), params.dstLayer, 1,
                                       VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::ColorAttachment,
@@ -2456,8 +2472,6 @@ angle::Result UtilsVk::blitResolveImpl(ContextVk *contextVk,
 
     VkRect2D scissor = gl_vk::GetRect(params.blitArea);
     commandBuffer->setScissor(0, 1, &scissor);
-
-    contextVk->invalidateViewportAndScissor();
 
     contextVk->onImageRenderPassRead(src->getAspectFlags(), vk::ImageLayout::FragmentShaderReadOnly,
                                      src);
@@ -2890,8 +2904,6 @@ angle::Result UtilsVk::copyImage(ContextVk *contextVk,
 
     VkRect2D scissor = gl_vk::GetRect(renderArea);
     commandBuffer->setScissor(0, 1, &scissor);
-
-    contextVk->invalidateViewportAndScissor();
 
     // Change source layout inside render pass.
     contextVk->onImageRenderPassRead(VK_IMAGE_ASPECT_COLOR_BIT,
@@ -3352,8 +3364,6 @@ angle::Result UtilsVk::unresolve(ContextVk *contextVk,
     VkRect2D scissor = gl_vk::GetRect(completeRenderArea);
     commandBuffer->setScissor(0, 1, &scissor);
 
-    contextVk->invalidateViewportAndScissor();
-
     VkDescriptorSet descriptorSet;
     vk::RefCountedDescriptorPoolBinding descriptorPoolBinding;
     ANGLE_TRY(allocateDescriptorSet(contextVk,
@@ -3482,8 +3492,6 @@ angle::Result UtilsVk::drawOverlay(ContextVk *contextVk,
 
     VkRect2D scissor = gl_vk::GetRect(renderArea);
     commandBuffer->setScissor(0, 1, &scissor);
-
-    contextVk->invalidateViewportAndScissor();
 
     textWidgetsBuffer->retainReadOnly(
         &contextVk->getStartedRenderPassCommands().getResourceUseList());
