@@ -1510,17 +1510,16 @@ angle::Result ContextMtl::memoryBarrierByRegion(const gl::Context *context, GLbi
 
 // override mtl::ErrorHandler
 void ContextMtl::handleError(GLenum glErrorCode,
+                             const char *message,
                              const char *file,
                              const char *function,
                              unsigned int line)
 {
-    std::stringstream errorStream;
-    errorStream << "Metal backend encountered an error. Code=" << glErrorCode << ".";
-
-    mErrors->handleError(glErrorCode, errorStream.str().c_str(), file, function, line);
+    mErrors->handleError(glErrorCode, message, file, function, line);
 }
 
 void ContextMtl::handleError(NSError *nserror,
+                             const char *message,
                              const char *file,
                              const char *function,
                              unsigned int line)
@@ -1530,11 +1529,7 @@ void ContextMtl::handleError(NSError *nserror,
         return;
     }
 
-    std::stringstream errorStream;
-    errorStream << "Metal backend encountered an error: \n"
-                << nserror.localizedDescription.UTF8String;
-
-    mErrors->handleError(GL_INVALID_OPERATION, errorStream.str().c_str(), file, function, line);
+    mErrors->handleError(GL_INVALID_OPERATION, message, file, function, line);
 }
 
 void ContextMtl::invalidateState(const gl::Context *context)
@@ -1772,14 +1767,11 @@ mtl::RenderCommandEncoder *ContextMtl::getRenderPassCommandEncoder(const mtl::Re
                 ComputeTotalSizeUsedForMTLRenderPassDescriptor(objCDesc, this, metalDevice);
             if (renderTargetSize > maxSize)
             {
-                NSString *errorString = [NSString
-                    stringWithFormat:@"This set of render targets requires %lu bytes of "
-                                     @"pixel storage. This device supports %lu bytes.",
-                                     (unsigned long)renderTargetSize, (unsigned long)maxSize];
-                NSError *err          = [NSError errorWithDomain:@"MTLValidationError"
-                                                   code:-1
-                                               userInfo:@{NSLocalizedDescriptionKey : errorString}];
-                this->handleError(err, __FILE__, ANGLE_FUNCTION, __LINE__);
+                std::stringstream errorStream;
+                errorStream << "This set of render targets requires " << renderTargetSize
+                            << " bytes of pixel storage. This device supports " << maxSize
+                            << " bytes.";
+                ANGLE_MTL_HANDLE_ERROR(this, errorStream.str().c_str(), GL_INVALID_OPERATION);
                 return nil;
             }
         }
