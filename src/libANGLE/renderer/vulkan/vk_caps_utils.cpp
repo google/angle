@@ -964,6 +964,9 @@ void RendererVk::ensureCapsInitialized() const
     // GL_EXT_clip_control
     mNativeExtensions.clipControlEXT = true;
 
+    // GL_ANGLE_read_only_depth_stencil_feedback_loops
+    mNativeExtensions.readOnlyDepthStencilFeedbackLoopsANGLE = true;
+
     // Enable GL_EXT_texture_buffer and OES variant.  Nearly all formats required for this extension
     // are also required to have the UNIFORM_TEXEL_BUFFER feature bit in Vulkan, except for
     // R32G32B32_SFLOAT/UINT/SINT which are optional.  For many formats, the STORAGE_TEXEL_BUFFER
