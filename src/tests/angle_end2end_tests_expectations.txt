@@ -62,7 +62,6 @@
 4092 WIN GLES : BufferDataOverflowTest.VertexBufferIntegerOverflow/* = SKIP
 6064 WIN D3D11 : SimpleStateChangeTestES31.DrawThenChangeFBOThenDrawThenFlushInAnotherThreadThenDrawIndexed/* = SKIP
 6101 WIN OPENGL INTEL : BlitFramebufferTest.OOBWrite/* = SKIP
-6123 WIN AMD VULKAN : GLSLTestLoops.DoWhileContinueInSwitch/* = SKIP
 1229184 WIN NVIDIA VULKAN : SimpleStateChangeTest.RedefineFramebufferTexture/* = SKIP
 6173 WIN INTEL OPENGL : GLSLTest_ES31.BoolInInterfaceBlocks/* = SKIP
 6217 WIN INTEL OPENGL : GLSLTest_ES31.StorageBufferBoolVectorPassedToFunctions/* = SKIP
@@ -494,37 +493,8 @@
 7158 PIXEL6 VULKAN : ImageTestES3.SourceAHBMipTarget2DMip/* = SKIP
 7158 PIXEL6 VULKAN : ImageTestES3.SourceAHBMipTarget2DMipGenerateMipmap/* = SKIP
 
-// AMD windows failures.  The GPU and driver on our bots are very old and buggy.
-// http://crbug.com/1224996
-1224996 WIN AMD VULKAN : BootAnimationTest.DefaultBootAnimation/* = SKIP
-1224996 WIN AMD VULKAN : DrawTextureTest.Basic/* = SKIP
-1224996 WIN AMD VULKAN : DrawTextureTest.ColorArrayNotUsed/* = SKIP
-1224996 WIN AMD VULKAN : DrawTextureTest.CorrectNdcForOddViewportDimensions/* = SKIP
-1224996 WIN AMD VULKAN : DrawTextureTest.VertexAttributesNoCrash/* = SKIP
-1224996 WIN AMD VULKAN : GLSLTest.StructWithInitializer/* = SKIP
-1224996 WIN AMD VULKAN : GLSLTest.StructWithUniformInitializer/* = SKIP
-1224996 WIN AMD VULKAN : GLSLTest_ES3.ValidIndexClampES300/* = SKIP
-1224996 WIN AMD VULKAN : GLSLTest_ES3.InitGlobalComplexConstant/* = SKIP
-1224996 WIN AMD VULKAN : GLSLTest_ES31.TypesUsedInDifferentBlockStorages/* = SKIP
-7144 WIN AMD VULKAN : GLSLTest.AliasingFunctionOutParamAndGlobal/* = SKIP
 // Test is disabled as it only pertains to desktop GLSL
 6197 : GLSLTest_ES31.InterpolateAtWithSwizzle/* = SKIP
-// The following tests are disabled because of AMD vulkan driver crash on compiling compute shader for convertIndexBufferGPU
-7227 WIN AMD VULKAN : DrawElementsTest.PartOfIndexBufferThenAll/* = SKIP
-7227 WIN AMD VULKAN : GLSLTest_ES3.GLVertexIDIntegerTextureDrawElementsU8/* = SKIP
-7227 WIN AMD VULKAN : IndexedPointsTestUByte.* = SKIP
-7227 WIN AMD VULKAN : InstancingTest.IndexedAttrib0TriFanBuffer* = SKIP
-7227 WIN AMD VULKAN : InstancingTest.IndexedAttrib1TriFanBuffer* = SKIP
-7227 WIN AMD VULKAN : MultisampleTest.ContentPresevedAfterInterruption/* = SKIP
-7227 WIN AMD VULKAN : RobustResourceInitTest.OutOfBoundsIndexBuffers/* = SKIP
-7227 WIN AMD VULKAN : SimpleStateChangeTest.DrawElementsThenDrawElementsNewIndexBuffer/* = SKIP
-7227 WIN AMD VULKAN : SimpleStateChangeTest.DrawElementsUBYTEX2ThenDrawElementsUSHORT/* = SKIP
-7227 WIN AMD VULKAN : SimpleStateChangeTest.UpdateBoundElementArrayBuffer/* = SKIP
-7227 WIN AMD VULKAN : TriangleFanDrawTest.DrawTriangleFanElements/* = SKIP
-7227 WIN AMD VULKAN : TriangleFanDrawTest.DrawTriangleFanPrimitiveRestartAt* = SKIP
-7227 WIN AMD VULKAN : WebGLCompatibilityTest.DrawElementsBufferOutOfBoundsInIndexBuffer/* = SKIP
-7227 WIN AMD VULKAN : WebGLCompatibilityTest.DrawElementsBufferOutOfBoundsInVertexBuffer/* = SKIP
-7227 WIN AMD VULKAN : WebGLCompatibilityTest.DrawElementsOffsetRestriction/* = SKIP
 
 // Slow tests
 5076 : GLSLTest.VerifyMaxVertexUniformVectors* = TIMEOUT
@@ -560,9 +530,6 @@
 6652 MAC INTEL OPENGL : DrawTextureTest.VertexAttributesNoCrash/* = SKIP
 6652 MAC INTEL OPENGL : DrawTextureTest.ColorArrayNotUsed/* = SKIP
 6652 MAC INTEL OPENGL : DrawTextureTest.CorrectNdcForOddViewportDimensions/* = SKIP
-6652 WIN AMD VULKAN : BasicDrawTest.EnableDisableTexture/* = SKIP
-6652 WIN AMD VULKAN : DrawTextureTest.ColorArrayDifferentTypes/* = SKIP
-6652 WIN AMD VULKAN : PointSpriteTest.TrianglesNotTreatedAsPointSprites/* = SKIP
 
 // Indexed indirect draw offset bug
 6751 METAL : MultiDrawIndirectTest.MultiDrawElementsIndirect* = SKIP

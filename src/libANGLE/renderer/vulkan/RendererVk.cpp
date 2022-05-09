@@ -3198,9 +3198,6 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     ANGLE_FEATURE_CONDITION(&mFeatures, perFrameWindowSizeQuery,
                             isIntel || (IsWindows() && isAMD) || IsFuchsia() || isSamsung);
 
-    // Disabled on AMD/windows due to buggy behavior.
-    ANGLE_FEATURE_CONDITION(&mFeatures, disallowSeamfulCubeMapEmulation, IsWindows() && isAMD);
-
     ANGLE_FEATURE_CONDITION(&mFeatures, padBuffersToMaxVertexAttribStride, isAMD || isSamsung);
     mMaxVertexAttribStride = std::min(static_cast<uint32_t>(gl::limits::kMaxVertexAttribStride),
                                       mPhysicalDeviceProperties.limits.maxVertexInputBindingStride);

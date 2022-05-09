@@ -75,7 +75,6 @@ enum class Feature
     DisableSyncControlSupport,
     DisableTimestampQueries,
     DisableWorkerContexts,
-    DisallowSeamfulCubeMapEmulation,
     DoesSRGBClearsOnLinearFramebufferAttachments,
     DontInitializeUninitializedLocals,
     DontRelinkProgramsInParallel,

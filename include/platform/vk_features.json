@@ -290,14 +290,6 @@
             "issue": "http://anglebug.com/3623, http://anglebug.com/3624, http://anglebug.com/3625"
         },
         {
-            "name": "disallow_seamful_cube_map_emulation",
-            "category": "Workarounds",
-            "description": [
-                "Seamful cube map emulation misbehaves on some drivers, so it's disallowed"
-            ],
-            "issue": "http://anglebug.com/3243"
-        },
-        {
             "name": "pad_buffers_to_max_vertex_attrib_stride",
             "category": "Workarounds",
             "description": [

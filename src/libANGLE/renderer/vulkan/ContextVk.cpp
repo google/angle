@@ -6489,11 +6489,6 @@ bool ContextVk::shouldEmulateSeamfulCubeMapSampling() const
         return false;
     }
 
-    if (mRenderer->getFeatures().disallowSeamfulCubeMapEmulation.enabled)
-    {
-        return false;
-    }
-
     return true;
 }
 

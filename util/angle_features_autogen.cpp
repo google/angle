@@ -79,7 +79,6 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::DisableSyncControlSupport, "disableSyncControlSupport"},
     {Feature::DisableTimestampQueries, "disableTimestampQueries"},
     {Feature::DisableWorkerContexts, "disableWorkerContexts"},
-    {Feature::DisallowSeamfulCubeMapEmulation, "disallowSeamfulCubeMapEmulation"},
     {Feature::DoesSRGBClearsOnLinearFramebufferAttachments,
      "doesSRGBClearsOnLinearFramebufferAttachments"},
     {Feature::DontInitializeUninitializedLocals, "dontInitializeUninitializedLocals"},
