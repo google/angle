@@ -2749,6 +2749,7 @@ BufferPool::BufferPool()
       mHostVisible(false),
       mSize(0),
       mMemoryTypeIndex(0),
+      mTotalMemorySize(0),
       mNumberOfNewBuffersNeededSinceLastPrune(0)
 {}
 
