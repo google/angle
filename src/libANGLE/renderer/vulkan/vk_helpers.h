@@ -1576,16 +1576,6 @@ class ImageHelper final : public Resource, public angle::Subject
                                      uint32_t baseArrayLayer,
                                      uint32_t layerCount,
                                      gl::SrgbWriteControlMode mode) const;
-    angle::Result initLayerImageViewWithFormat(Context *context,
-                                               gl::TextureType textureType,
-                                               VkFormat imageFormat,
-                                               VkImageAspectFlags aspectMask,
-                                               const gl::SwizzleState &swizzleMap,
-                                               ImageView *imageViewOut,
-                                               LevelIndex baseMipLevelVk,
-                                               uint32_t levelCount,
-                                               uint32_t baseArrayLayer,
-                                               uint32_t layerCount) const;
     angle::Result initReinterpretedLayerImageView(Context *context,
                                                   gl::TextureType textureType,
                                                   VkImageAspectFlags aspectMask,
@@ -2313,18 +2303,17 @@ class ImageHelper final : public Resource, public angle::Subject
     const LevelContentDefinedMask &getLevelContentDefined(LevelIndex level) const;
     const LevelContentDefinedMask &getLevelStencilContentDefined(LevelIndex level) const;
 
-    angle::Result initLayerImageViewImpl(
-        Context *context,
-        gl::TextureType textureType,
-        VkImageAspectFlags aspectMask,
-        const gl::SwizzleState &swizzleMap,
-        ImageView *imageViewOut,
-        LevelIndex baseMipLevelVk,
-        uint32_t levelCount,
-        uint32_t baseArrayLayer,
-        uint32_t layerCount,
-        VkFormat imageFormat,
-        const VkImageViewUsageCreateInfo *imageViewUsageCreateInfo) const;
+    angle::Result initLayerImageViewImpl(Context *context,
+                                         gl::TextureType textureType,
+                                         VkImageAspectFlags aspectMask,
+                                         const gl::SwizzleState &swizzleMap,
+                                         ImageView *imageViewOut,
+                                         LevelIndex baseMipLevelVk,
+                                         uint32_t levelCount,
+                                         uint32_t baseArrayLayer,
+                                         uint32_t layerCount,
+                                         VkFormat imageFormat,
+                                         VkImageUsageFlags usageFlags) const;
 
     bool canCopyWithTransformForReadPixels(const PackPixelsParams &packPixelsParams,
                                            const angle::Format *readFormat);
