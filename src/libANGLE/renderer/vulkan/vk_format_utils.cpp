@@ -234,9 +234,7 @@ FormatTable::FormatTable() {}
 
 FormatTable::~FormatTable() {}
 
-void FormatTable::initialize(RendererVk *renderer,
-                             gl::TextureCapsMap *outTextureCapsMap,
-                             std::vector<GLenum> *outCompressedTextureFormats)
+void FormatTable::initialize(RendererVk *renderer, gl::TextureCapsMap *outTextureCapsMap)
 {
     for (size_t formatIndex = 0; formatIndex < angle::kNumANGLEFormats; ++formatIndex)
     {
@@ -257,11 +255,6 @@ void FormatTable::initialize(RendererVk *renderer,
         if (format.mActualSampleOnlyImageFormatID == angle::FormatID::NONE)
         {
             continue;
-        }
-
-        if (intendedAngleFormat.isBlock)
-        {
-            outCompressedTextureFormats->push_back(format.mIntendedGLFormat);
         }
 
         if (format.mActualRenderableImageFormatID == angle::FormatID::NONE)

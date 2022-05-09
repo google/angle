@@ -654,11 +654,6 @@ void GenerateCaps(const FunctionsGL *functions,
         gl::TextureCaps textureCaps =
             GenerateTextureFormatCaps(functions, features, internalFormat, maxSupportedESVersion);
         textureCapsMap->insert(internalFormat, textureCaps);
-
-        if (gl::GetSizedInternalFormatInfo(internalFormat).compressed)
-        {
-            caps->compressedTextureFormats.push_back(internalFormat);
-        }
     }
 
     // Table 6.28, implementation dependent values

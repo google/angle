@@ -984,8 +984,7 @@ void DisplayMtl::initializeTextureCaps() const
 {
     mNativeTextureCaps.clear();
 
-    mFormatTable.generateTextureCaps(this, &mNativeTextureCaps,
-                                     &mNativeCaps.compressedTextureFormats);
+    mFormatTable.generateTextureCaps(this, &mNativeTextureCaps);
 
     // Re-verify texture extensions.
     mNativeExtensions.setTextureExtensionSupport(mNativeTextureCaps);

@@ -209,9 +209,7 @@ class FormatTable final : angle::NonCopyable
     ~FormatTable();
 
     // Also initializes the TextureCapsMap and the compressedTextureCaps in the Caps instance.
-    void initialize(RendererVk *renderer,
-                    gl::TextureCapsMap *outTextureCapsMap,
-                    std::vector<GLenum> *outCompressedTextureFormats);
+    void initialize(RendererVk *renderer, gl::TextureCapsMap *outTextureCapsMap);
 
     ANGLE_INLINE const Format &operator[](GLenum internalFormat) const
     {
