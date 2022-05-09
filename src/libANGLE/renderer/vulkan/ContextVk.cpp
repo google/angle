@@ -3894,7 +3894,7 @@ angle::Result ContextVk::optimizeRenderPassForPresent(VkFramebuffer framebufferH
                                                       vk::ImageViewHelper *colorImageView,
                                                       vk::ImageHelper *colorImage,
                                                       vk::ImageHelper *colorImageMS,
-                                                      VkPresentModeKHR presentMode,
+                                                      vk::PresentMode presentMode,
                                                       bool *imageResolved)
 {
     if (!mRenderPassCommands->started())
@@ -3958,7 +3958,7 @@ angle::Result ContextVk::optimizeRenderPassForPresent(VkFramebuffer framebufferH
 
         // Invalidate the surface.  See comment in WindowSurfaceVk::doDeferredAcquireNextImage on
         // why this is not done when in DEMAND_REFRESH mode.
-        if (presentMode != VK_PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR)
+        if (presentMode != vk::PresentMode::SharedDemandRefreshKHR)
         {
             commandBufferHelper.invalidateRenderPassColorAttachment(
                 mState, 0, vk::PackedAttachmentIndex(0), invalidateArea);

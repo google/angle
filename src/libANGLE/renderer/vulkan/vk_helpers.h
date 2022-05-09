@@ -3122,6 +3122,23 @@ class LineLoopHelper final : angle::NonCopyable
     BufferHelper mDynamicIndexBuffer;
     BufferHelper mDynamicIndirectBuffer;
 };
+
+enum class PresentMode
+{
+    ImmediateKHR               = VK_PRESENT_MODE_IMMEDIATE_KHR,
+    MailboxKHR                 = VK_PRESENT_MODE_MAILBOX_KHR,
+    FifoKHR                    = VK_PRESENT_MODE_FIFO_KHR,
+    FifoRelaxedKHR             = VK_PRESENT_MODE_FIFO_RELAXED_KHR,
+    SharedDemandRefreshKHR     = VK_PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR,
+    SharedContinuousRefreshKHR = VK_PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR,
+
+    InvalidEnum,
+    EnumCount = InvalidEnum,
+};
+
+VkPresentModeKHR ConvertPresentModeToVkPresentMode(PresentMode presentMode);
+PresentMode ConvertVkPresentModeToPresentMode(VkPresentModeKHR vkPresentMode);
+
 }  // namespace vk
 }  // namespace rx
 
