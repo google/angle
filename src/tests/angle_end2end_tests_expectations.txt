@@ -301,6 +301,7 @@
 7213 WIN D3D11 : BufferDataTestES3.BufferDataWithNullFollowedByMap/* = SKIP
 7293 WIN INTEL D3D11 : StateChangeTestES3.PolygonOffset/* = SKIP
 7294 WIN D3D11 : StateChangeTestES3.StencilCompareMask/* = SKIP
+7294 WIN D3D11 : StateChangeTestES3.StencilWriteMask/* = SKIP
 
 // Android
 6095 ANDROID GLES : GLSLTest_ES3.InitGlobalComplexConstant/* = SKIP

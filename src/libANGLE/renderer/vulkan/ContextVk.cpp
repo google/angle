@@ -815,8 +815,9 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
                   DIRTY_BIT_DESCRIPTOR_SETS, DIRTY_BIT_DRIVER_UNIFORMS_BINDING};
 
     mDynamicStateDirtyBits = DirtyBits{
-        DIRTY_BIT_VIEWPORT,   DIRTY_BIT_SCISSOR,         DIRTY_BIT_LINE_WIDTH,
-        DIRTY_BIT_DEPTH_BIAS, DIRTY_BIT_BLEND_CONSTANTS, DIRTY_BIT_STENCIL_COMPARE_MASK,
+        DIRTY_BIT_VIEWPORT,           DIRTY_BIT_SCISSOR,         DIRTY_BIT_LINE_WIDTH,
+        DIRTY_BIT_DEPTH_BIAS,         DIRTY_BIT_BLEND_CONSTANTS, DIRTY_BIT_STENCIL_COMPARE_MASK,
+        DIRTY_BIT_STENCIL_WRITE_MASK,
     };
     if (getFeatures().supportsFragmentShadingRate.enabled)
     {
@@ -879,6 +880,8 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
         &ContextVk::handleDirtyGraphicsBlendConstants;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_STENCIL_COMPARE_MASK] =
         &ContextVk::handleDirtyGraphicsStencilCompareMask;
+    mGraphicsDirtyBitHandlers[DIRTY_BIT_STENCIL_WRITE_MASK] =
+        &ContextVk::handleDirtyGraphicsStencilWriteMask;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_FRAGMENT_SHADING_RATE] =
         &ContextVk::handleDirtyGraphicsFragmentShadingRate;
 
@@ -2487,6 +2490,23 @@ angle::Result ContextVk::handleDirtyGraphicsStencilCompareMask(
     const gl::DepthStencilState &depthStencilState = mState.getDepthStencilState();
     mRenderPassCommandBuffer->setStencilCompareMask(depthStencilState.stencilMask,
                                                     depthStencilState.stencilBackMask);
+    return angle::Result::Continue;
+}
+
+angle::Result ContextVk::handleDirtyGraphicsStencilWriteMask(DirtyBits::Iterator *dirtyBitsIterator,
+                                                             DirtyBits dirtyBitMask)
+{
+    const gl::DepthStencilState &depthStencilState = mState.getDepthStencilState();
+    const gl::Framebuffer *drawFramebuffer         = mState.getDrawFramebuffer();
+    uint32_t frontWritemask                        = 0;
+    uint32_t backWritemask                         = 0;
+    if (drawFramebuffer->hasStencil())
+    {
+        frontWritemask = depthStencilState.stencilWritemask;
+        backWritemask  = depthStencilState.stencilBackWritemask;
+    }
+
+    mRenderPassCommandBuffer->setStencilWriteMask(frontWritemask, backWritemask);
     return angle::Result::Continue;
 }
 
@@ -4169,10 +4189,7 @@ void ContextVk::updateDepthStencil(const gl::State &glState)
                                                    drawFramebuffer);
     mGraphicsPipelineDesc->updateStencilTestEnabled(&mGraphicsPipelineTransition, depthStencilState,
                                                     drawFramebuffer);
-    mGraphicsPipelineDesc->updateStencilFrontWriteMask(&mGraphicsPipelineTransition,
-                                                       depthStencilState, drawFramebuffer);
-    mGraphicsPipelineDesc->updateStencilBackWriteMask(&mGraphicsPipelineTransition,
-                                                      depthStencilState, drawFramebuffer);
+    mGraphicsDirtyBits.set(DIRTY_BIT_STENCIL_WRITE_MASK);
 }
 
 // If the target is a single-sampled target, sampleShading should be disabled, to use Bresenham line
@@ -4528,15 +4545,8 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 onDepthStencilAccessChange();
                 break;
             case gl::State::DIRTY_BIT_STENCIL_WRITEMASK_FRONT:
-                mGraphicsPipelineDesc->updateStencilFrontWriteMask(&mGraphicsPipelineTransition,
-                                                                   glState.getDepthStencilState(),
-                                                                   glState.getDrawFramebuffer());
-                onDepthStencilAccessChange();
-                break;
             case gl::State::DIRTY_BIT_STENCIL_WRITEMASK_BACK:
-                mGraphicsPipelineDesc->updateStencilBackWriteMask(&mGraphicsPipelineTransition,
-                                                                  glState.getDepthStencilState(),
-                                                                  glState.getDrawFramebuffer());
+                mGraphicsDirtyBits.set(DIRTY_BIT_STENCIL_WRITE_MASK);
                 onDepthStencilAccessChange();
                 break;
             case gl::State::DIRTY_BIT_CULL_FACE_ENABLED:

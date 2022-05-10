@@ -85,6 +85,7 @@ enum class CommandID : uint16_t
     SetLineWidth,
     SetScissor,
     SetStencilCompareMask,
+    SetStencilWriteMask,
     SetViewport,
     WaitEvents,
     WriteTimestamp,
@@ -462,6 +463,13 @@ struct SetStencilCompareMaskParams
 };
 VERIFY_4_BYTE_ALIGNMENT(SetStencilCompareMaskParams)
 
+struct SetStencilWriteMaskParams
+{
+    uint16_t writeFrontMask;
+    uint16_t writeBackMask;
+};
+VERIFY_4_BYTE_ALIGNMENT(SetStencilWriteMaskParams)
+
 struct SetViewportParams
 {
     VkViewport viewport;
@@ -723,6 +731,8 @@ class SecondaryCommandBuffer final : angle::NonCopyable
     void setScissor(uint32_t firstScissor, uint32_t scissorCount, const VkRect2D *scissors);
 
     void setStencilCompareMask(uint32_t compareFrontMask, uint32_t compareBackMask);
+
+    void setStencilWriteMask(uint32_t writeFrontMask, uint32_t writeBackMask);
 
     void setViewport(uint32_t firstViewport, uint32_t viewportCount, const VkViewport *viewports);
 
@@ -1563,6 +1573,15 @@ ANGLE_INLINE void SecondaryCommandBuffer::setStencilCompareMask(uint32_t compare
         initCommand<SetStencilCompareMaskParams>(CommandID::SetStencilCompareMask);
     paramStruct->compareFrontMask = static_cast<uint16_t>(compareFrontMask);
     paramStruct->compareBackMask  = static_cast<uint16_t>(compareBackMask);
+}
+
+ANGLE_INLINE void SecondaryCommandBuffer::setStencilWriteMask(uint32_t writeFrontMask,
+                                                              uint32_t writeBackMask)
+{
+    SetStencilWriteMaskParams *paramStruct =
+        initCommand<SetStencilWriteMaskParams>(CommandID::SetStencilWriteMask);
+    paramStruct->writeFrontMask = static_cast<uint16_t>(writeFrontMask);
+    paramStruct->writeBackMask  = static_cast<uint16_t>(writeBackMask);
 }
 
 ANGLE_INLINE void SecondaryCommandBuffer::setViewport(uint32_t firstViewport,

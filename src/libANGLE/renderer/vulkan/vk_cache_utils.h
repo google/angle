@@ -420,12 +420,10 @@ static_assert(kStencilOpsSize == 2, "Size check failed");
 struct PackedStencilOpState final
 {
     StencilOps ops;
-    uint8_t padding;
-    uint8_t writeMask;
 };
 
 constexpr size_t kPackedStencilOpSize = sizeof(PackedStencilOpState);
-static_assert(kPackedStencilOpSize == 4, "Size check failed");
+static_assert(kPackedStencilOpSize == 2, "Size check failed");
 
 struct DepthStencilEnableFlags final
 {
@@ -465,7 +463,7 @@ struct PackedDepthStencilStateInfo final
 };
 
 constexpr size_t kPackedDepthStencilStateSize = sizeof(PackedDepthStencilStateInfo);
-static_assert(kPackedDepthStencilStateSize == 20, "Size check failed");
+static_assert(kPackedDepthStencilStateSize == 16, "Size check failed");
 static_assert(static_cast<int>(SurfaceRotation::EnumCount) <= 8, "Size check failed");
 
 struct LogicOpState final
@@ -690,12 +688,6 @@ class GraphicsPipelineDesc final
                                const gl::DepthStencilState &depthStencilState);
     void updateStencilBackOps(GraphicsPipelineTransitionBits *transition,
                               const gl::DepthStencilState &depthStencilState);
-    void updateStencilFrontWriteMask(GraphicsPipelineTransitionBits *transition,
-                                     const gl::DepthStencilState &depthStencilState,
-                                     const gl::Framebuffer *drawFramebuffer);
-    void updateStencilBackWriteMask(GraphicsPipelineTransitionBits *transition,
-                                    const gl::DepthStencilState &depthStencilState,
-                                    const gl::Framebuffer *drawFramebuffer);
 
     // Depth offset.
     void updatePolygonOffsetFillEnabled(GraphicsPipelineTransitionBits *transition, bool enabled);

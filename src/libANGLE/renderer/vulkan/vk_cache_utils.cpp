@@ -314,7 +314,7 @@ void UnpackStencilState(const PackedStencilOpState &packedState,
     stateOut->depthFailOp = static_cast<VkStencilOp>(packedState.ops.depthFail);
     stateOut->compareOp   = static_cast<VkCompareOp>(packedState.ops.compare);
     stateOut->compareMask = 0;
-    stateOut->writeMask   = packedState.writeMask;
+    stateOut->writeMask   = 0;
     stateOut->reference   = stencilReference;
 }
 
@@ -1849,15 +1849,11 @@ void GraphicsPipelineDesc::initDefaults(const ContextVk *contextVk)
     SetBitField(mDepthStencilStateInfo.front.ops.pass, VK_STENCIL_OP_KEEP);
     SetBitField(mDepthStencilStateInfo.front.ops.depthFail, VK_STENCIL_OP_KEEP);
     SetBitField(mDepthStencilStateInfo.front.ops.compare, VK_COMPARE_OP_ALWAYS);
-    SetBitField(mDepthStencilStateInfo.front.padding, 0);
-    SetBitField(mDepthStencilStateInfo.front.writeMask, 0xFF);
     mDepthStencilStateInfo.frontStencilReference = 0;
     SetBitField(mDepthStencilStateInfo.back.ops.fail, VK_STENCIL_OP_KEEP);
     SetBitField(mDepthStencilStateInfo.back.ops.pass, VK_STENCIL_OP_KEEP);
     SetBitField(mDepthStencilStateInfo.back.ops.depthFail, VK_STENCIL_OP_KEEP);
     SetBitField(mDepthStencilStateInfo.back.ops.compare, VK_COMPARE_OP_ALWAYS);
-    SetBitField(mDepthStencilStateInfo.back.padding, 0);
-    SetBitField(mDepthStencilStateInfo.back.writeMask, 0xFF);
     mDepthStencilStateInfo.backStencilReference = 0;
 
     mDepthStencilStateInfo.depthCompareOpAndSurfaceRotation.surfaceRotation =
@@ -2300,13 +2296,14 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     }
 
     // Dynamic state
-    angle::FixedVector<VkDynamicState, 7> dynamicStateList;
+    angle::FixedVector<VkDynamicState, 8> dynamicStateList;
     dynamicStateList.push_back(VK_DYNAMIC_STATE_VIEWPORT);
     dynamicStateList.push_back(VK_DYNAMIC_STATE_SCISSOR);
     dynamicStateList.push_back(VK_DYNAMIC_STATE_LINE_WIDTH);
     dynamicStateList.push_back(VK_DYNAMIC_STATE_DEPTH_BIAS);
     dynamicStateList.push_back(VK_DYNAMIC_STATE_BLEND_CONSTANTS);
     dynamicStateList.push_back(VK_DYNAMIC_STATE_STENCIL_COMPARE_MASK);
+    dynamicStateList.push_back(VK_DYNAMIC_STATE_STENCIL_WRITE_MASK);
     if (contextVk->getFeatures().supportsFragmentShadingRate.enabled)
     {
         dynamicStateList.push_back(VK_DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR);
@@ -2707,16 +2704,6 @@ void GraphicsPipelineDesc::setStencilBackOps(VkStencilOp failOp,
     SetBitField(mDepthStencilStateInfo.back.ops.depthFail, depthFailOp);
 }
 
-void GraphicsPipelineDesc::setStencilFrontWriteMask(uint8_t mask)
-{
-    mDepthStencilStateInfo.front.writeMask = mask;
-}
-
-void GraphicsPipelineDesc::setStencilBackWriteMask(uint8_t mask)
-{
-    mDepthStencilStateInfo.back.writeMask = mask;
-}
-
 void GraphicsPipelineDesc::updateDepthTestEnabled(GraphicsPipelineTransitionBits *transition,
                                                   const gl::DepthStencilState &depthStencilState,
                                                   const gl::Framebuffer *drawFramebuffer)
@@ -2803,28 +2790,6 @@ void GraphicsPipelineDesc::updateStencilBackOps(GraphicsPipelineTransitionBits *
     setStencilBackOps(PackGLStencilOp(depthStencilState.stencilBackFail),
                       PackGLStencilOp(depthStencilState.stencilBackPassDepthPass),
                       PackGLStencilOp(depthStencilState.stencilBackPassDepthFail));
-    transition->set(ANGLE_GET_TRANSITION_BIT(mDepthStencilStateInfo, back));
-}
-
-void GraphicsPipelineDesc::updateStencilFrontWriteMask(
-    GraphicsPipelineTransitionBits *transition,
-    const gl::DepthStencilState &depthStencilState,
-    const gl::Framebuffer *drawFramebuffer)
-{
-    // Don't write to stencil buffers that should not exist
-    setStencilFrontWriteMask(static_cast<uint8_t>(
-        drawFramebuffer->hasStencil() ? depthStencilState.stencilWritemask : 0));
-    transition->set(ANGLE_GET_TRANSITION_BIT(mDepthStencilStateInfo, front));
-}
-
-void GraphicsPipelineDesc::updateStencilBackWriteMask(
-    GraphicsPipelineTransitionBits *transition,
-    const gl::DepthStencilState &depthStencilState,
-    const gl::Framebuffer *drawFramebuffer)
-{
-    // Don't write to stencil buffers that should not exist
-    setStencilBackWriteMask(static_cast<uint8_t>(
-        drawFramebuffer->hasStencil() ? depthStencilState.stencilBackWritemask : 0));
     transition->set(ANGLE_GET_TRANSITION_BIT(mDepthStencilStateInfo, back));
 }
 
