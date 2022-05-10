@@ -815,7 +815,7 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
                   DIRTY_BIT_DESCRIPTOR_SETS, DIRTY_BIT_DRIVER_UNIFORMS_BINDING};
 
     mDynamicStateDirtyBits = DirtyBits{DIRTY_BIT_VIEWPORT, DIRTY_BIT_SCISSOR, DIRTY_BIT_LINE_WIDTH,
-                                       DIRTY_BIT_DEPTH_BIAS};
+                                       DIRTY_BIT_DEPTH_BIAS, DIRTY_BIT_BLEND_CONSTANTS};
     if (getFeatures().supportsFragmentShadingRate.enabled)
     {
         mDynamicStateDirtyBits.set(DIRTY_BIT_FRAGMENT_SHADING_RATE);
@@ -873,6 +873,8 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
     mGraphicsDirtyBitHandlers[DIRTY_BIT_SCISSOR]    = &ContextVk::handleDirtyGraphicsScissor;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_LINE_WIDTH] = &ContextVk::handleDirtyGraphicsLineWidth;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_DEPTH_BIAS] = &ContextVk::handleDirtyGraphicsDepthBias;
+    mGraphicsDirtyBitHandlers[DIRTY_BIT_BLEND_CONSTANTS] =
+        &ContextVk::handleDirtyGraphicsBlendConstants;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_FRAGMENT_SHADING_RATE] =
         &ContextVk::handleDirtyGraphicsFragmentShadingRate;
 
@@ -2463,6 +2465,14 @@ angle::Result ContextVk::handleDirtyGraphicsDepthBias(DirtyBits::Iterator *dirty
     // Note: depth bias clamp is only exposed in EXT_polygon_offset_clamp.
     mRenderPassCommandBuffer->setDepthBias(rasterState.polygonOffsetUnits, 0,
                                            rasterState.polygonOffsetFactor);
+    return angle::Result::Continue;
+}
+
+angle::Result ContextVk::handleDirtyGraphicsBlendConstants(DirtyBits::Iterator *dirtyBitsIterator,
+                                                           DirtyBits dirtyBitMask)
+{
+    const gl::ColorF &color = mState.getBlendColor();
+    mRenderPassCommandBuffer->setBlendConstants(color.data());
     return angle::Result::Continue;
 }
 
@@ -4415,8 +4425,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 updateDither();
                 break;
             case gl::State::DIRTY_BIT_BLEND_COLOR:
-                mGraphicsPipelineDesc->updateBlendColor(&mGraphicsPipelineTransition,
-                                                        glState.getBlendColor());
+                mGraphicsDirtyBits.set(DIRTY_BIT_BLEND_CONSTANTS);
                 break;
             case gl::State::DIRTY_BIT_BLEND_FUNCS:
                 mGraphicsPipelineDesc->updateBlendFuncs(

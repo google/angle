@@ -318,6 +318,7 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
                        uint32_t size,
                        const void *data);
 
+    void setBlendConstants(const float blendConstants[4]);
     void setDepthBias(float depthBiasConstantFactor,
                       float depthBiasClamp,
                       float depthBiasSlopeFactor);
@@ -952,6 +953,12 @@ ANGLE_INLINE void CommandBuffer::pushConstants(const PipelineLayout &layout,
     ASSERT(valid() && layout.valid());
     ASSERT(offset == 0);
     vkCmdPushConstants(mHandle, layout.getHandle(), flag, 0, size, data);
+}
+
+ANGLE_INLINE void CommandBuffer::setBlendConstants(const float blendConstants[4])
+{
+    ASSERT(valid());
+    vkCmdSetBlendConstants(mHandle, blendConstants);
 }
 
 ANGLE_INLINE void CommandBuffer::setDepthBias(float depthBiasConstantFactor,

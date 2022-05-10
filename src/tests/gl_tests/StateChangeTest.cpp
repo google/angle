@@ -8370,6 +8370,8 @@ void main()
     EXPECT_PIXEL_RECT_EQ(0, 3 * h / 4 - 1, w, 1, GLColor::black);
     EXPECT_PIXEL_RECT_EQ(0, 3 * h / 4, w, 1, GLColor::blue);
     EXPECT_PIXEL_RECT_EQ(0, 3 * h / 4 + 1, w, 1, GLColor::black);
+
+    ASSERT_GL_NO_ERROR();
 }
 
 // Tests state change for glPolygonOffset.
@@ -8454,6 +8456,38 @@ void main()
     EXPECT_PIXEL_RECT_EQ(0, 0, w / 2 - 1, h, GLColor::blue);
     EXPECT_PIXEL_RECT_EQ(w / 2 + 1, 0, w / 4 - 1, h, GLColor::green);
     EXPECT_PIXEL_RECT_EQ(3 * w / 4 + 1, 0, w / 4 - 1, h, GLColor::red);
+
+    ASSERT_GL_NO_ERROR();
+}
+
+// Tests state change for glBlendColor.
+TEST_P(StateChangeTestES3, BlendColor)
+{
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+    glUseProgram(program);
+
+    GLint colorLoc = glGetUniformLocation(program, angle::essl1_shaders::ColorUniform());
+    ASSERT_NE(colorLoc, -1);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_CONSTANT_COLOR, GL_ZERO);
+    glBlendColor(0.498, 0.498, 0, 1);
+    glUniform4f(colorLoc, 1, 1, 1, 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f);
+
+    const int w = getWindowWidth();
+    const int h = getWindowHeight();
+
+    glEnable(GL_SCISSOR_TEST);
+    glScissor(0, 0, w / 2, h);
+    glBlendColor(0, 1, 0.498, 1);
+    glUniform4f(colorLoc, 1, 0.247, 1, 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f);
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, w / 2, h, GLColor(0, 63, 127, 255));
+    EXPECT_PIXEL_RECT_EQ(w / 2, 0, w / 2, h, GLColor(127, 127, 0, 255));
+
+    ASSERT_GL_NO_ERROR();
 }
 }  // anonymous namespace
 

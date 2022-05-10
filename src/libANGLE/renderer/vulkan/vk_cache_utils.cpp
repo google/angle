@@ -1865,12 +1865,8 @@ void GraphicsPipelineDesc::initDefaults(const ContextVk *contextVk)
 
     PackedInputAssemblyAndColorBlendStateInfo &inputAndBlend = mInputAssemblyAndColorBlendStateInfo;
     inputAndBlend.logic.opEnable                             = 0;
-    inputAndBlend.logic.op          = static_cast<uint32_t>(VK_LOGIC_OP_CLEAR);
-    inputAndBlend.blendEnableMask   = 0;
-    inputAndBlend.blendConstants[0] = 0.0f;
-    inputAndBlend.blendConstants[1] = 0.0f;
-    inputAndBlend.blendConstants[2] = 0.0f;
-    inputAndBlend.blendConstants[3] = 0.0f;
+    inputAndBlend.logic.op        = static_cast<uint32_t>(VK_LOGIC_OP_CLEAR);
+    inputAndBlend.blendEnableMask = 0;
 
     VkFlags allColorBits = (VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT |
                             VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT);
@@ -2256,11 +2252,6 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
             static_cast<uint32_t>(mRenderPassDesc.getColorUnresolveAttachmentMask().count());
     }
 
-    for (int i = 0; i < 4; i++)
-    {
-        blendState.blendConstants[i] = inputAndBlend.blendConstants[i];
-    }
-
     const gl::DrawBufferMask blendEnableMask(inputAndBlend.blendEnableMask);
 
     // Zero-init all states.
@@ -2309,11 +2300,12 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     }
 
     // Dynamic state
-    angle::FixedVector<VkDynamicState, 5> dynamicStateList;
+    angle::FixedVector<VkDynamicState, 6> dynamicStateList;
     dynamicStateList.push_back(VK_DYNAMIC_STATE_VIEWPORT);
     dynamicStateList.push_back(VK_DYNAMIC_STATE_SCISSOR);
     dynamicStateList.push_back(VK_DYNAMIC_STATE_LINE_WIDTH);
     dynamicStateList.push_back(VK_DYNAMIC_STATE_DEPTH_BIAS);
+    dynamicStateList.push_back(VK_DYNAMIC_STATE_BLEND_CONSTANTS);
     if (contextVk->getFeatures().supportsFragmentShadingRate.enabled)
     {
         dynamicStateList.push_back(VK_DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR);
@@ -2506,23 +2498,6 @@ void GraphicsPipelineDesc::updateSampleShading(GraphicsPipelineTransitionBits *t
     transition->set(ANGLE_GET_TRANSITION_BIT(mRasterizationAndMultisampleStateInfo, bits));
     transition->set(
         ANGLE_GET_TRANSITION_BIT(mRasterizationAndMultisampleStateInfo, minSampleShading));
-}
-
-void GraphicsPipelineDesc::updateBlendColor(GraphicsPipelineTransitionBits *transition,
-                                            const gl::ColorF &color)
-{
-    mInputAssemblyAndColorBlendStateInfo.blendConstants[0] = color.red;
-    mInputAssemblyAndColorBlendStateInfo.blendConstants[1] = color.green;
-    mInputAssemblyAndColorBlendStateInfo.blendConstants[2] = color.blue;
-    mInputAssemblyAndColorBlendStateInfo.blendConstants[3] = color.alpha;
-    constexpr size_t kSizeBits = sizeof(mInputAssemblyAndColorBlendStateInfo.blendConstants[0]) * 8;
-
-    for (int index = 0; index < 4; ++index)
-    {
-        const size_t kBit = ANGLE_GET_INDEXED_TRANSITION_BIT(mInputAssemblyAndColorBlendStateInfo,
-                                                             blendConstants, index, kSizeBits);
-        transition->set(kBit);
-    }
 }
 
 void GraphicsPipelineDesc::setSingleBlend(uint32_t colorIndexGL,

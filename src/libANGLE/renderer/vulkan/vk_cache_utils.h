@@ -504,7 +504,6 @@ struct PackedInputAssemblyAndColorBlendStateInfo final
 {
     uint8_t colorWriteMaskBits[gl::IMPLEMENTATION_MAX_DRAW_BUFFERS / 2];
     PackedColorBlendAttachmentState attachments[gl::IMPLEMENTATION_MAX_DRAW_BUFFERS];
-    float blendConstants[4];
     LogicOpState logic;
     uint8_t blendEnableMask;
     PrimitiveState primitive;
@@ -526,7 +525,7 @@ struct PackedDither final
 
 constexpr size_t kPackedInputAssemblyAndColorBlendStateSize =
     sizeof(PackedInputAssemblyAndColorBlendStateInfo);
-static_assert(kPackedInputAssemblyAndColorBlendStateSize == 56, "Size check failed");
+static_assert(kPackedInputAssemblyAndColorBlendStateSize == 40, "Size check failed");
 
 constexpr size_t kGraphicsPipelineDescSumOfSizes =
     kVertexInputAttributesSize + kRenderPassDescSize + kPackedRasterizationAndMultisampleStateSize +
@@ -639,7 +638,6 @@ class GraphicsPipelineDesc final
                         VkBlendFactor dstFactor);
     void updateBlendEnabled(GraphicsPipelineTransitionBits *transition,
                             gl::DrawBufferMask blendEnabledMask);
-    void updateBlendColor(GraphicsPipelineTransitionBits *transition, const gl::ColorF &color);
     void updateBlendFuncs(GraphicsPipelineTransitionBits *transition,
                           const gl::BlendStateExt &blendStateExt,
                           gl::DrawBufferMask attachmentMask);

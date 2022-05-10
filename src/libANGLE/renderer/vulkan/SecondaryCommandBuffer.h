@@ -78,6 +78,7 @@ enum class CommandID : uint16_t
     ResetEvent,
     ResetQueryPool,
     ResolveImage,
+    SetBlendConstants,
     SetDepthBias,
     SetEvent,
     SetFragmentShadingRate,
@@ -413,6 +414,12 @@ struct ResolveImageParams
 };
 VERIFY_4_BYTE_ALIGNMENT(ResolveImageParams)
 
+struct SetBlendConstantsParams
+{
+    float blendConstants[4];
+};
+VERIFY_4_BYTE_ALIGNMENT(SetBlendConstantsParams)
+
 struct SetDepthBiasParams
 {
     float depthBiasConstantFactor;
@@ -694,6 +701,7 @@ class SecondaryCommandBuffer final : angle::NonCopyable
                       uint32_t regionCount,
                       const VkImageResolve *regions);
 
+    void setBlendConstants(const float blendConstants[4]);
     void setDepthBias(float depthBiasConstantFactor,
                       float depthBiasClamp,
                       float depthBiasSlopeFactor);
@@ -1472,6 +1480,16 @@ ANGLE_INLINE void SecondaryCommandBuffer::resolveImage(const Image &srcImage,
     paramStruct->srcImage           = srcImage.getHandle();
     paramStruct->dstImage           = dstImage.getHandle();
     paramStruct->region             = regions[0];
+}
+
+ANGLE_INLINE void SecondaryCommandBuffer::setBlendConstants(const float blendConstants[4])
+{
+    SetBlendConstantsParams *paramStruct =
+        initCommand<SetBlendConstantsParams>(CommandID::SetBlendConstants);
+    for (uint32_t channel = 0; channel < 4; ++channel)
+    {
+        paramStruct->blendConstants[channel] = blendConstants[channel];
+    }
 }
 
 ANGLE_INLINE void SecondaryCommandBuffer::setDepthBias(float depthBiasConstantFactor,

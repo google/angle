@@ -112,6 +112,8 @@ const char *GetCommandString(CommandID id)
             return "ResetQueryPool";
         case CommandID::ResolveImage:
             return "ResolveImage";
+        case CommandID::SetBlendConstants:
+            return "SetBlendConstants";
         case CommandID::SetDepthBias:
             return "SetDepthBias";
         case CommandID::SetEvent:
@@ -533,6 +535,13 @@ void SecondaryCommandBuffer::executeCommands(PrimaryCommandBuffer *primary)
                     vkCmdResolveImage(cmdBuffer, params->srcImage,
                                       VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, params->dstImage,
                                       VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &params->region);
+                    break;
+                }
+                case CommandID::SetBlendConstants:
+                {
+                    const SetBlendConstantsParams *params =
+                        getParamPtr<SetBlendConstantsParams>(currentCommand);
+                    vkCmdSetBlendConstants(cmdBuffer, params->blendConstants);
                     break;
                 }
                 case CommandID::SetDepthBias:
