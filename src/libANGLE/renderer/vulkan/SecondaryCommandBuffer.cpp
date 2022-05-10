@@ -124,6 +124,8 @@ const char *GetCommandString(CommandID id)
             return "SetLineWidth";
         case CommandID::SetScissor:
             return "SetScissor";
+        case CommandID::SetStencilCompareMask:
+            return "SetStencilCompareMask";
         case CommandID::SetViewport:
             return "SetViewport";
         case CommandID::WaitEvents:
@@ -580,6 +582,16 @@ void SecondaryCommandBuffer::executeCommands(PrimaryCommandBuffer *primary)
                 {
                     const SetScissorParams *params = getParamPtr<SetScissorParams>(currentCommand);
                     vkCmdSetScissor(cmdBuffer, 0, 1, &params->scissor);
+                    break;
+                }
+                case CommandID::SetStencilCompareMask:
+                {
+                    const SetStencilCompareMaskParams *params =
+                        getParamPtr<SetStencilCompareMaskParams>(currentCommand);
+                    vkCmdSetStencilCompareMask(cmdBuffer, VK_STENCIL_FACE_FRONT_BIT,
+                                               params->compareFrontMask);
+                    vkCmdSetStencilCompareMask(cmdBuffer, VK_STENCIL_FACE_BACK_BIT,
+                                               params->compareBackMask);
                     break;
                 }
                 case CommandID::SetViewport:

@@ -389,12 +389,12 @@ void SetStencilForShaderExport(ContextVk *contextVk, vk::GraphicsPipelineDesc *d
 {
     ASSERT(contextVk->getRenderer()->getFeatures().supportsShaderStencilExport.enabled);
 
-    const uint8_t completeMask    = 0xFF;
-    const uint8_t unusedReference = 0x00;
+    constexpr uint8_t completeMask    = 0xFF;
+    constexpr uint8_t unusedReference = 0x00;
 
     desc->setStencilTestEnabled(true);
-    desc->setStencilFrontFuncs(unusedReference, VK_COMPARE_OP_ALWAYS, completeMask);
-    desc->setStencilBackFuncs(unusedReference, VK_COMPARE_OP_ALWAYS, completeMask);
+    desc->setStencilFrontFuncs(unusedReference, VK_COMPARE_OP_ALWAYS);
+    desc->setStencilBackFuncs(unusedReference, VK_COMPARE_OP_ALWAYS);
     desc->setStencilFrontOps(VK_STENCIL_OP_REPLACE, VK_STENCIL_OP_REPLACE, VK_STENCIL_OP_REPLACE);
     desc->setStencilBackOps(VK_STENCIL_OP_REPLACE, VK_STENCIL_OP_REPLACE, VK_STENCIL_OP_REPLACE);
     desc->setStencilFrontWriteMask(completeMask);
@@ -1053,6 +1053,10 @@ void ResetDynamicState(ContextVk *contextVk, vk::RenderPassCommandBuffer *comman
     // - line width: UtilsVk doesn't use line primitives
     // - depth bias: UtilsVk doesn't enable depth bias
     // - blend constants: UtilsVk doesn't enable blending
+    //
+    // The following dynamic state is always set by UtilsVk when effective:
+    //
+    // - stencil compare mask: UtilsVk sets this when enabling stencil test
 
     // Reset all other dynamic state, since it can affect UtilsVk functions:
     if (contextVk->getFeatures().supportsFragmentShadingRate.enabled)
@@ -2111,13 +2115,12 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
     // Clear stencil by enabling stencil write with the right mask.
     if (params.clearStencil)
     {
-        const uint8_t compareMask = 0xFF;
         const uint8_t clearStencilValue =
             static_cast<uint8_t>(params.depthStencilClearValue.stencil);
 
         pipelineDesc.setStencilTestEnabled(true);
-        pipelineDesc.setStencilFrontFuncs(clearStencilValue, VK_COMPARE_OP_ALWAYS, compareMask);
-        pipelineDesc.setStencilBackFuncs(clearStencilValue, VK_COMPARE_OP_ALWAYS, compareMask);
+        pipelineDesc.setStencilFrontFuncs(clearStencilValue, VK_COMPARE_OP_ALWAYS);
+        pipelineDesc.setStencilBackFuncs(clearStencilValue, VK_COMPARE_OP_ALWAYS);
         pipelineDesc.setStencilFrontOps(VK_STENCIL_OP_REPLACE, VK_STENCIL_OP_REPLACE,
                                         VK_STENCIL_OP_REPLACE);
         pipelineDesc.setStencilBackOps(VK_STENCIL_OP_REPLACE, VK_STENCIL_OP_REPLACE,
@@ -2166,6 +2169,12 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
 
     const VkRect2D scissor = gl_vk::GetRect(params.clearArea);
     commandBuffer->setScissor(0, 1, &scissor);
+
+    if (params.clearStencil)
+    {
+        constexpr uint8_t compareMask = 0xFF;
+        commandBuffer->setStencilCompareMask(compareMask, compareMask);
+    }
 
     // Make sure this draw call doesn't count towards occlusion query results.
     contextVk->pauseRenderPassQueriesIfActive();
@@ -2435,14 +2444,14 @@ angle::Result UtilsVk::blitResolveImpl(ContextVk *contextVk,
     flags |= src->getLayerCount() > 1 ? BlitResolve_frag::kSrcIsArray : 0;
     flags |= isResolve ? BlitResolve_frag::kIsResolve : 0;
 
-    constexpr VkColorComponentFlags kAllColorComponents =
-        VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT |
-        VK_COLOR_COMPONENT_A_BIT;
-
     vk::GraphicsPipelineDesc pipelineDesc;
     pipelineDesc.initDefaults(contextVk);
     if (blitColor)
     {
+        constexpr VkColorComponentFlags kAllColorComponents =
+            VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT |
+            VK_COLOR_COMPONENT_A_BIT;
+
         pipelineDesc.setColorWriteMasks(
             gl::BlendStateExt::ColorMaskStorage::GetReplicatedValue(
                 kAllColorComponents, gl::BlendStateExt::ColorMaskStorage::GetMask(
@@ -2551,6 +2560,12 @@ angle::Result UtilsVk::blitResolveImpl(ContextVk *contextVk,
 
     VkRect2D scissor = gl_vk::GetRect(params.blitArea);
     commandBuffer->setScissor(0, 1, &scissor);
+
+    if (blitStencil)
+    {
+        constexpr uint8_t completeMask = 0xFF;
+        commandBuffer->setStencilCompareMask(completeMask, completeMask);
+    }
 
     // Note: this utility starts the render pass directly, thus bypassing
     // ContextVk::startRenderPass. As such, occlusion queries are not enabled.
@@ -3428,6 +3443,12 @@ angle::Result UtilsVk::unresolve(ContextVk *contextVk,
 
     VkRect2D scissor = gl_vk::GetRect(completeRenderArea);
     commandBuffer->setScissor(0, 1, &scissor);
+
+    if (params.unresolveStencil)
+    {
+        constexpr uint8_t completeMask = 0xFF;
+        commandBuffer->setStencilCompareMask(completeMask, completeMask);
+    }
 
     // This draw call is made before ContextVk gets a chance to start the occlusion query.  As such,
     // occlusion queries are not enabled.

@@ -313,7 +313,7 @@ void UnpackStencilState(const PackedStencilOpState &packedState,
     stateOut->passOp      = static_cast<VkStencilOp>(packedState.ops.pass);
     stateOut->depthFailOp = static_cast<VkStencilOp>(packedState.ops.depthFail);
     stateOut->compareOp   = static_cast<VkCompareOp>(packedState.ops.compare);
-    stateOut->compareMask = packedState.compareMask;
+    stateOut->compareMask = 0;
     stateOut->writeMask   = packedState.writeMask;
     stateOut->reference   = stencilReference;
 }
@@ -1849,14 +1849,14 @@ void GraphicsPipelineDesc::initDefaults(const ContextVk *contextVk)
     SetBitField(mDepthStencilStateInfo.front.ops.pass, VK_STENCIL_OP_KEEP);
     SetBitField(mDepthStencilStateInfo.front.ops.depthFail, VK_STENCIL_OP_KEEP);
     SetBitField(mDepthStencilStateInfo.front.ops.compare, VK_COMPARE_OP_ALWAYS);
-    SetBitField(mDepthStencilStateInfo.front.compareMask, 0xFF);
+    SetBitField(mDepthStencilStateInfo.front.padding, 0);
     SetBitField(mDepthStencilStateInfo.front.writeMask, 0xFF);
     mDepthStencilStateInfo.frontStencilReference = 0;
     SetBitField(mDepthStencilStateInfo.back.ops.fail, VK_STENCIL_OP_KEEP);
     SetBitField(mDepthStencilStateInfo.back.ops.pass, VK_STENCIL_OP_KEEP);
     SetBitField(mDepthStencilStateInfo.back.ops.depthFail, VK_STENCIL_OP_KEEP);
     SetBitField(mDepthStencilStateInfo.back.ops.compare, VK_COMPARE_OP_ALWAYS);
-    SetBitField(mDepthStencilStateInfo.back.compareMask, 0xFF);
+    SetBitField(mDepthStencilStateInfo.back.padding, 0);
     SetBitField(mDepthStencilStateInfo.back.writeMask, 0xFF);
     mDepthStencilStateInfo.backStencilReference = 0;
 
@@ -2300,12 +2300,13 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     }
 
     // Dynamic state
-    angle::FixedVector<VkDynamicState, 6> dynamicStateList;
+    angle::FixedVector<VkDynamicState, 7> dynamicStateList;
     dynamicStateList.push_back(VK_DYNAMIC_STATE_VIEWPORT);
     dynamicStateList.push_back(VK_DYNAMIC_STATE_SCISSOR);
     dynamicStateList.push_back(VK_DYNAMIC_STATE_LINE_WIDTH);
     dynamicStateList.push_back(VK_DYNAMIC_STATE_DEPTH_BIAS);
     dynamicStateList.push_back(VK_DYNAMIC_STATE_BLEND_CONSTANTS);
+    dynamicStateList.push_back(VK_DYNAMIC_STATE_STENCIL_COMPARE_MASK);
     if (contextVk->getFeatures().supportsFragmentShadingRate.enabled)
     {
         dynamicStateList.push_back(VK_DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR);
@@ -2676,21 +2677,15 @@ void GraphicsPipelineDesc::setStencilTestEnabled(bool enabled)
     mDepthStencilStateInfo.enable.stencilTest = enabled;
 }
 
-void GraphicsPipelineDesc::setStencilFrontFuncs(uint8_t reference,
-                                                VkCompareOp compareOp,
-                                                uint8_t compareMask)
+void GraphicsPipelineDesc::setStencilFrontFuncs(uint8_t reference, VkCompareOp compareOp)
 {
     mDepthStencilStateInfo.frontStencilReference = reference;
-    mDepthStencilStateInfo.front.compareMask     = compareMask;
     SetBitField(mDepthStencilStateInfo.front.ops.compare, compareOp);
 }
 
-void GraphicsPipelineDesc::setStencilBackFuncs(uint8_t reference,
-                                               VkCompareOp compareOp,
-                                               uint8_t compareMask)
+void GraphicsPipelineDesc::setStencilBackFuncs(uint8_t reference, VkCompareOp compareOp)
 {
     mDepthStencilStateInfo.backStencilReference = reference;
-    mDepthStencilStateInfo.back.compareMask     = compareMask;
     SetBitField(mDepthStencilStateInfo.back.ops.compare, compareOp);
 }
 
@@ -2778,8 +2773,7 @@ void GraphicsPipelineDesc::updateStencilFrontFuncs(GraphicsPipelineTransitionBit
                                                    const gl::DepthStencilState &depthStencilState)
 {
     setStencilFrontFuncs(static_cast<uint8_t>(ref),
-                         PackGLCompareFunc(depthStencilState.stencilFunc),
-                         static_cast<uint8_t>(depthStencilState.stencilMask));
+                         PackGLCompareFunc(depthStencilState.stencilFunc));
     transition->set(ANGLE_GET_TRANSITION_BIT(mDepthStencilStateInfo, front));
     transition->set(ANGLE_GET_TRANSITION_BIT(mDepthStencilStateInfo, frontStencilReference));
 }
@@ -2789,8 +2783,7 @@ void GraphicsPipelineDesc::updateStencilBackFuncs(GraphicsPipelineTransitionBits
                                                   const gl::DepthStencilState &depthStencilState)
 {
     setStencilBackFuncs(static_cast<uint8_t>(ref),
-                        PackGLCompareFunc(depthStencilState.stencilBackFunc),
-                        static_cast<uint8_t>(depthStencilState.stencilBackMask));
+                        PackGLCompareFunc(depthStencilState.stencilBackFunc));
     transition->set(ANGLE_GET_TRANSITION_BIT(mDepthStencilStateInfo, back));
     transition->set(ANGLE_GET_TRANSITION_BIT(mDepthStencilStateInfo, backStencilReference));
 }

@@ -420,7 +420,7 @@ static_assert(kStencilOpsSize == 2, "Size check failed");
 struct PackedStencilOpState final
 {
     StencilOps ops;
-    uint8_t compareMask;
+    uint8_t padding;
     uint8_t writeMask;
 };
 
@@ -663,8 +663,8 @@ class GraphicsPipelineDesc final
     void setDepthFunc(VkCompareOp op);
     void setDepthClampEnabled(bool enabled);
     void setStencilTestEnabled(bool enabled);
-    void setStencilFrontFuncs(uint8_t reference, VkCompareOp compareOp, uint8_t compareMask);
-    void setStencilBackFuncs(uint8_t reference, VkCompareOp compareOp, uint8_t compareMask);
+    void setStencilFrontFuncs(uint8_t reference, VkCompareOp compareOp);
+    void setStencilBackFuncs(uint8_t reference, VkCompareOp compareOp);
     void setStencilFrontOps(VkStencilOp failOp, VkStencilOp passOp, VkStencilOp depthFailOp);
     void setStencilBackOps(VkStencilOp failOp, VkStencilOp passOp, VkStencilOp depthFailOp);
     void setStencilFrontWriteMask(uint8_t mask);

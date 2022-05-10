@@ -792,6 +792,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         DIRTY_BIT_LINE_WIDTH,
         DIRTY_BIT_DEPTH_BIAS,
         DIRTY_BIT_BLEND_CONSTANTS,
+        DIRTY_BIT_STENCIL_COMPARE_MASK,
         // - In VK_KHR_fragment_shading_rate
         DIRTY_BIT_FRAGMENT_SHADING_RATE,
 
@@ -856,6 +857,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     static_assert(DIRTY_BIT_DEPTH_BIAS > DIRTY_BIT_RENDER_PASS,
                   "Render pass using dirty bit must be handled after the render pass dirty bit");
     static_assert(DIRTY_BIT_BLEND_CONSTANTS > DIRTY_BIT_RENDER_PASS,
+                  "Render pass using dirty bit must be handled after the render pass dirty bit");
+    static_assert(DIRTY_BIT_STENCIL_COMPARE_MASK > DIRTY_BIT_RENDER_PASS,
                   "Render pass using dirty bit must be handled after the render pass dirty bit");
     static_assert(DIRTY_BIT_FRAGMENT_SHADING_RATE > DIRTY_BIT_RENDER_PASS,
                   "Render pass using dirty bit must be handled after the render pass dirty bit");
@@ -1059,6 +1062,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
                                                DirtyBits dirtyBitMask);
     angle::Result handleDirtyGraphicsBlendConstants(DirtyBits::Iterator *dirtyBitsIterator,
                                                     DirtyBits dirtyBitMask);
+    angle::Result handleDirtyGraphicsStencilCompareMask(DirtyBits::Iterator *dirtyBitsIterator,
+                                                        DirtyBits dirtyBitMask);
     angle::Result handleDirtyGraphicsFragmentShadingRate(DirtyBits::Iterator *dirtyBitsIterator,
                                                          DirtyBits dirtyBitMask);
 

@@ -814,8 +814,10 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
         DirtyBits{DIRTY_BIT_PIPELINE_BINDING, DIRTY_BIT_TEXTURES, DIRTY_BIT_SHADER_RESOURCES,
                   DIRTY_BIT_DESCRIPTOR_SETS, DIRTY_BIT_DRIVER_UNIFORMS_BINDING};
 
-    mDynamicStateDirtyBits = DirtyBits{DIRTY_BIT_VIEWPORT, DIRTY_BIT_SCISSOR, DIRTY_BIT_LINE_WIDTH,
-                                       DIRTY_BIT_DEPTH_BIAS, DIRTY_BIT_BLEND_CONSTANTS};
+    mDynamicStateDirtyBits = DirtyBits{
+        DIRTY_BIT_VIEWPORT,   DIRTY_BIT_SCISSOR,         DIRTY_BIT_LINE_WIDTH,
+        DIRTY_BIT_DEPTH_BIAS, DIRTY_BIT_BLEND_CONSTANTS, DIRTY_BIT_STENCIL_COMPARE_MASK,
+    };
     if (getFeatures().supportsFragmentShadingRate.enabled)
     {
         mDynamicStateDirtyBits.set(DIRTY_BIT_FRAGMENT_SHADING_RATE);
@@ -875,6 +877,8 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
     mGraphicsDirtyBitHandlers[DIRTY_BIT_DEPTH_BIAS] = &ContextVk::handleDirtyGraphicsDepthBias;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_BLEND_CONSTANTS] =
         &ContextVk::handleDirtyGraphicsBlendConstants;
+    mGraphicsDirtyBitHandlers[DIRTY_BIT_STENCIL_COMPARE_MASK] =
+        &ContextVk::handleDirtyGraphicsStencilCompareMask;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_FRAGMENT_SHADING_RATE] =
         &ContextVk::handleDirtyGraphicsFragmentShadingRate;
 
@@ -2473,6 +2477,16 @@ angle::Result ContextVk::handleDirtyGraphicsBlendConstants(DirtyBits::Iterator *
 {
     const gl::ColorF &color = mState.getBlendColor();
     mRenderPassCommandBuffer->setBlendConstants(color.data());
+    return angle::Result::Continue;
+}
+
+angle::Result ContextVk::handleDirtyGraphicsStencilCompareMask(
+    DirtyBits::Iterator *dirtyBitsIterator,
+    DirtyBits dirtyBitMask)
+{
+    const gl::DepthStencilState &depthStencilState = mState.getDepthStencilState();
+    mRenderPassCommandBuffer->setStencilCompareMask(depthStencilState.stencilMask,
+                                                    depthStencilState.stencilBackMask);
     return angle::Result::Continue;
 }
 
@@ -4493,12 +4507,14 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 mGraphicsPipelineDesc->updateStencilFrontFuncs(&mGraphicsPipelineTransition,
                                                                glState.getStencilRef(),
                                                                glState.getDepthStencilState());
+                mGraphicsDirtyBits.set(DIRTY_BIT_STENCIL_COMPARE_MASK);
                 onDepthStencilAccessChange();
                 break;
             case gl::State::DIRTY_BIT_STENCIL_FUNCS_BACK:
                 mGraphicsPipelineDesc->updateStencilBackFuncs(&mGraphicsPipelineTransition,
                                                               glState.getStencilBackRef(),
                                                               glState.getDepthStencilState());
+                mGraphicsDirtyBits.set(DIRTY_BIT_STENCIL_COMPARE_MASK);
                 onDepthStencilAccessChange();
                 break;
             case gl::State::DIRTY_BIT_STENCIL_OPS_FRONT:

@@ -8489,6 +8489,100 @@ TEST_P(StateChangeTestES3, BlendColor)
 
     ASSERT_GL_NO_ERROR();
 }
+
+// Tests state change for mask in glStencilFuncSeparate.
+TEST_P(StateChangeTestES3, StencilCompareMask)
+{
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+    glUseProgram(program);
+
+    GLint colorLoc = glGetUniformLocation(program, angle::essl1_shaders::ColorUniform());
+    ASSERT_NE(colorLoc, -1);
+
+    glClearColor(0, 0, 0, 1);
+    glClearStencil(0x3A);
+    glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+    glEnable(GL_STENCIL_TEST);
+
+    glStencilMaskSeparate(GL_FRONT, 0xF0);
+    glStencilMaskSeparate(GL_BACK, 0x0F);
+
+    glStencilFuncSeparate(GL_FRONT, GL_EQUAL, 0xB9, 0x7C);
+    glStencilOpSeparate(GL_FRONT, GL_KEEP, GL_KEEP, GL_REPLACE);
+
+    glStencilFuncSeparate(GL_BACK, GL_EQUAL, 0x99, 0xAC);
+    glStencilOpSeparate(GL_BACK, GL_REPLACE, GL_KEEP, GL_KEEP);
+
+    const int w = getWindowWidth();
+    const int h = getWindowHeight();
+
+    // Draw front-facing.  Front stencil test should pass, replacing the top bits with 0xB:
+    //
+    // Current value of stencil buffer: 0x3A, mask: 0x7C, writing 0xB9
+    //
+    //     B9 & 7C == 38 == 3A & 7C
+    glUniform4f(colorLoc, 1, 0, 0, 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f);
+
+    // Draw back-facing.  Back stencil test should fail, replacing the bottom bits with 0x9:
+    //
+    // Current value of stencil buffer: 0xBA, mask: 0xAC, writing 0x99
+    //
+    //     99 & AC == 88 != A8 == BA & AC
+    glFrontFace(GL_CW);
+    glDisable(GL_CULL_FACE);
+    glEnable(GL_SCISSOR_TEST);
+    glScissor(0, 0, w / 2, h);
+    glUniform4f(colorLoc, 0, 1, 0, 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f);
+
+    // The left half of image should now have a value of B9, the right half should have BA
+    //
+    // Change the masks such that if the old masks are used, stencil test would fail, but if the new
+    // mask is used it would pass.
+    //
+    //    Left:  B9 & 7C == 38 != 3C == 3D & 7C
+    //           B9 & 33 == 31 == 3D & 33
+    //
+    //    Right: BA & AC == A8 != 28 == 3A & AC
+    //           BA & 59 == 18 == 3A & 59
+    //
+    glStencilFuncSeparate(GL_FRONT, GL_EQUAL, 0x3D, 0x33);
+    glStencilFuncSeparate(GL_BACK, GL_EQUAL, 0x3A, 0x59);
+    glStencilOpSeparate(GL_FRONT, GL_KEEP, GL_KEEP, GL_KEEP);
+    glStencilOpSeparate(GL_BACK, GL_KEEP, GL_KEEP, GL_KEEP);
+
+    glScissor(0, 0, w, h / 2);
+
+    // Draw front-facing, coloring the top-left
+    glUniform4f(colorLoc, 1, 1, 0, 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f);
+    glFrontFace(GL_CCW);
+    glUniform4f(colorLoc, 0, 0, 1, 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f);
+
+    // Verify results
+    EXPECT_PIXEL_RECT_EQ(0, 0, w / 2, h / 2, GLColor::blue);
+    EXPECT_PIXEL_RECT_EQ(w / 2, 0, w / 2, h / 2, GLColor::yellow);
+    EXPECT_PIXEL_RECT_EQ(0, h / 2, w / 2, h / 2, GLColor::red);
+    EXPECT_PIXEL_RECT_EQ(w / 2, h / 2, w / 2, h / 2, GLColor::red);
+
+    // Verify stencil exactly
+    glDisable(GL_SCISSOR_TEST);
+    glStencilFunc(GL_EQUAL, 0xB9, 0xFF);
+    glUniform4f(colorLoc, 0, 1, 1, 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f);
+
+    glStencilFunc(GL_EQUAL, 0xBA, 0xFF);
+    glUniform4f(colorLoc, 1, 0, 1, 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f);
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, w / 2, h, GLColor::cyan);
+    EXPECT_PIXEL_RECT_EQ(w / 2, 0, w / 2, h, GLColor::magenta);
+
+    ASSERT_GL_NO_ERROR();
+}
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST_ES2(StateChangeTest);

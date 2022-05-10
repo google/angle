@@ -300,6 +300,7 @@
 7148 WIN D3D9 : RobustResourceInitTest.OutOfBoundsArrayBuffers/* = SKIP
 7213 WIN D3D11 : BufferDataTestES3.BufferDataWithNullFollowedByMap/* = SKIP
 7293 WIN INTEL D3D11 : StateChangeTestES3.PolygonOffset/* = SKIP
+7294 WIN D3D11 : StateChangeTestES3.StencilCompareMask/* = SKIP
 
 // Android
 6095 ANDROID GLES : GLSLTest_ES3.InitGlobalComplexConstant/* = SKIP
@@ -458,6 +459,8 @@
 // Failure to compile the shader
 6179 NEXUS5X GLES : GLSLTest_ES31.BoolInInterfaceBlocks/* = SKIP
 6179 PIXEL4ORXL GLES : GLSLTest_ES31.BoolInInterfaceBlocks/* = SKIP
+
+7295 PIXEL4ORXL VULKAN : StateChangeTestES3.StencilCompareMask/* = SKIP
 
 // Pixel 6 expectations.
 6931 PIXEL6 VULKAN : BlitFramebufferTest.OOBWrite/* = SKIP

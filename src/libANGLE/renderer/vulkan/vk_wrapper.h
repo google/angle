@@ -327,6 +327,7 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
                                 VkFragmentShadingRateCombinerOpKHR ops[2]);
     void setLineWidth(float lineWidth);
     void setScissor(uint32_t firstScissor, uint32_t scissorCount, const VkRect2D *scissors);
+    void setStencilCompareMask(uint32_t compareFrontMask, uint32_t compareBackMask);
     void setViewport(uint32_t firstViewport, uint32_t viewportCount, const VkViewport *viewports);
     VkResult reset();
     void resetEvent(VkEvent event, VkPipelineStageFlags stageMask);
@@ -994,6 +995,14 @@ ANGLE_INLINE void CommandBuffer::setScissor(uint32_t firstScissor,
 {
     ASSERT(valid() && scissors != nullptr);
     vkCmdSetScissor(mHandle, firstScissor, scissorCount, scissors);
+}
+
+ANGLE_INLINE void CommandBuffer::setStencilCompareMask(uint32_t compareFrontMask,
+                                                       uint32_t compareBackMask)
+{
+    ASSERT(valid());
+    vkCmdSetStencilCompareMask(mHandle, VK_STENCIL_FACE_FRONT_BIT, compareFrontMask);
+    vkCmdSetStencilCompareMask(mHandle, VK_STENCIL_FACE_BACK_BIT, compareBackMask);
 }
 
 ANGLE_INLINE void CommandBuffer::setViewport(uint32_t firstViewport,

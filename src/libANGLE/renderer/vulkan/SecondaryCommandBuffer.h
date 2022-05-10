@@ -84,6 +84,7 @@ enum class CommandID : uint16_t
     SetFragmentShadingRate,
     SetLineWidth,
     SetScissor,
+    SetStencilCompareMask,
     SetViewport,
     WaitEvents,
     WriteTimestamp,
@@ -454,6 +455,13 @@ struct SetScissorParams
 };
 VERIFY_4_BYTE_ALIGNMENT(SetScissorParams)
 
+struct SetStencilCompareMaskParams
+{
+    uint16_t compareFrontMask;
+    uint16_t compareBackMask;
+};
+VERIFY_4_BYTE_ALIGNMENT(SetStencilCompareMaskParams)
+
 struct SetViewportParams
 {
     VkViewport viewport;
@@ -713,6 +721,8 @@ class SecondaryCommandBuffer final : angle::NonCopyable
     void setLineWidth(float lineWidth);
 
     void setScissor(uint32_t firstScissor, uint32_t scissorCount, const VkRect2D *scissors);
+
+    void setStencilCompareMask(uint32_t compareFrontMask, uint32_t compareBackMask);
 
     void setViewport(uint32_t firstViewport, uint32_t viewportCount, const VkViewport *viewports);
 
@@ -1544,6 +1554,15 @@ ANGLE_INLINE void SecondaryCommandBuffer::setScissor(uint32_t firstScissor,
     ASSERT(scissors != nullptr);
     SetScissorParams *paramStruct = initCommand<SetScissorParams>(CommandID::SetScissor);
     paramStruct->scissor          = scissors[0];
+}
+
+ANGLE_INLINE void SecondaryCommandBuffer::setStencilCompareMask(uint32_t compareFrontMask,
+                                                                uint32_t compareBackMask)
+{
+    SetStencilCompareMaskParams *paramStruct =
+        initCommand<SetStencilCompareMaskParams>(CommandID::SetStencilCompareMask);
+    paramStruct->compareFrontMask = static_cast<uint16_t>(compareFrontMask);
+    paramStruct->compareBackMask  = static_cast<uint16_t>(compareBackMask);
 }
 
 ANGLE_INLINE void SecondaryCommandBuffer::setViewport(uint32_t firstViewport,
