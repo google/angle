@@ -754,7 +754,7 @@ void GenerateCaps(IDirect3D9 *d3d9,
     extensions->fragDepthEXT                = true;
     extensions->textureUsageANGLE           = true;
     extensions->translatedShaderSourceANGLE = true;
-    extensions->fboRenderMipmapOES          = false;
+    extensions->fboRenderMipmapOES          = true;
     extensions->discardFramebufferEXT = false;  // It would be valid to set this to true, since
                                                 // glDiscardFramebufferEXT is just a hint
     extensions->colorBufferFloatEXT   = false;
