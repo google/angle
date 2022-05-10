@@ -574,6 +574,11 @@ const char *ShaderTypeToString(ShaderType shaderType)
         {ShaderType::Compute, "Compute"}};
     return kShaderTypeNameMap[shaderType];
 }
+
+bool operator<(const UniformLocation &lhs, const UniformLocation &rhs)
+{
+    return lhs.value < rhs.value;
+}
 }  // namespace gl
 
 namespace egl

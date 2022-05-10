@@ -841,6 +841,8 @@ struct UniformLocation
     int value;
 };
 
+bool operator<(const UniformLocation &lhs, const UniformLocation &rhs);
+
 struct UniformBlockIndex
 {
     uint32_t value;

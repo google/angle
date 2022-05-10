@@ -281,6 +281,20 @@ using BufferMapStatusMap = std::map<GLuint, bool>;
 using FenceSyncSet   = std::set<GLsync>;
 using FenceSyncCalls = std::map<GLsync, std::vector<CallCapture>>;
 
+// For default uniforms, we need to track which ones are dirty, and the series of calls to reset.
+// Each program has unique default uniforms, and each uniform has one or more locations in the
+// default buffer. For reset efficiency, we track only the uniforms dirty by location, per program.
+
+// A set of all default uniforms (per program) that were modified during the run
+using DefaultUniformLocationsSet = std::set<gl::UniformLocation>;
+using DefaultUniformLocationsPerProgramMap =
+    std::map<gl::ShaderProgramID, DefaultUniformLocationsSet>;
+
+// A map of programs which maps to locations and their reset calls
+using DefaultUniformCallsPerLocationMap = std::map<gl::UniformLocation, std::vector<CallCapture>>;
+using DefaultUniformCallsPerProgramMap =
+    std::map<gl::ShaderProgramID, DefaultUniformCallsPerLocationMap>;
+
 using ResourceSet   = std::set<GLuint>;
 using ResourceCalls = std::map<GLuint, std::vector<CallCapture>>;
 
@@ -362,6 +376,16 @@ class ResourceTracker final : angle::NonCopyable
     FenceSyncSet &getFenceSyncsToRegen() { return mFenceSyncsToRegen; }
     void setDeletedFenceSync(GLsync sync);
 
+    DefaultUniformLocationsPerProgramMap &getDefaultUniformsToReset()
+    {
+        return mDefaultUniformsToReset;
+    }
+    DefaultUniformCallsPerLocationMap &getDefaultUniformResetCalls(gl::ShaderProgramID id)
+    {
+        return mDefaultUniformResetCalls[id];
+    }
+    void setModifiedDefaultUniform(gl::ShaderProgramID programID, gl::UniformLocation location);
+
     TrackedResource &getTrackedResource(ResourceIDType type)
     {
         return mTrackedResources[static_cast<uint32_t>(type)];
@@ -391,6 +415,11 @@ class ResourceTracker final : angle::NonCopyable
     // Fence syncs to regen are a list of starting fence sync objects that were deleted and need to
     // be regen'ed.
     FenceSyncSet mFenceSyncsToRegen;
+
+    // Default uniforms that were modified during the run
+    DefaultUniformLocationsPerProgramMap mDefaultUniformsToReset;
+    // Calls per default uniform to return to original state
+    DefaultUniformCallsPerProgramMap mDefaultUniformResetCalls;
 
     TrackedResourceArray mTrackedResources;
 };
@@ -614,6 +643,7 @@ class FrameCaptureShared final : angle::NonCopyable
                             bool coherent);
 
     void trackTextureUpdate(const gl::Context *context, const CallCapture &call);
+    void trackDefaultUniformUpdate(const gl::Context *context, const CallCapture &call);
 
     const std::string &getShaderSource(gl::ShaderProgramID id) const;
     void setShaderSource(gl::ShaderProgramID id, std::string sources);
