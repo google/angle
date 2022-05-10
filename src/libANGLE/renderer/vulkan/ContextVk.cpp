@@ -824,9 +824,9 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
                   DIRTY_BIT_DESCRIPTOR_SETS, DIRTY_BIT_DRIVER_UNIFORMS_BINDING};
 
     mDynamicStateDirtyBits = DirtyBits{
-        DIRTY_BIT_VIEWPORT,           DIRTY_BIT_SCISSOR,         DIRTY_BIT_LINE_WIDTH,
-        DIRTY_BIT_DEPTH_BIAS,         DIRTY_BIT_BLEND_CONSTANTS, DIRTY_BIT_STENCIL_COMPARE_MASK,
-        DIRTY_BIT_STENCIL_WRITE_MASK,
+        DIRTY_BIT_VIEWPORT,           DIRTY_BIT_SCISSOR,           DIRTY_BIT_LINE_WIDTH,
+        DIRTY_BIT_DEPTH_BIAS,         DIRTY_BIT_BLEND_CONSTANTS,   DIRTY_BIT_STENCIL_COMPARE_MASK,
+        DIRTY_BIT_STENCIL_WRITE_MASK, DIRTY_BIT_STENCIL_REFERENCE,
     };
     if (getFeatures().supportsFragmentShadingRate.enabled)
     {
@@ -891,6 +891,8 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
         &ContextVk::handleDirtyGraphicsStencilCompareMask;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_STENCIL_WRITE_MASK] =
         &ContextVk::handleDirtyGraphicsStencilWriteMask;
+    mGraphicsDirtyBitHandlers[DIRTY_BIT_STENCIL_REFERENCE] =
+        &ContextVk::handleDirtyGraphicsStencilReference;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_FRAGMENT_SHADING_RATE] =
         &ContextVk::handleDirtyGraphicsFragmentShadingRate;
 
@@ -2509,6 +2511,7 @@ angle::Result ContextVk::handleDirtyGraphicsStencilWriteMask(DirtyBits::Iterator
     const gl::Framebuffer *drawFramebuffer         = mState.getDrawFramebuffer();
     uint32_t frontWritemask                        = 0;
     uint32_t backWritemask                         = 0;
+    // Don't write to stencil buffers that should not exist
     if (drawFramebuffer->hasStencil())
     {
         frontWritemask = depthStencilState.stencilWritemask;
@@ -2516,6 +2519,14 @@ angle::Result ContextVk::handleDirtyGraphicsStencilWriteMask(DirtyBits::Iterator
     }
 
     mRenderPassCommandBuffer->setStencilWriteMask(frontWritemask, backWritemask);
+    return angle::Result::Continue;
+}
+
+angle::Result ContextVk::handleDirtyGraphicsStencilReference(DirtyBits::Iterator *dirtyBitsIterator,
+                                                             DirtyBits dirtyBitMask)
+{
+    mRenderPassCommandBuffer->setStencilReference(mState.getStencilRef(),
+                                                  mState.getStencilBackRef());
     return angle::Result::Continue;
 }
 
@@ -4531,16 +4542,16 @@ angle::Result ContextVk::syncState(const gl::Context *context,
             }
             case gl::State::DIRTY_BIT_STENCIL_FUNCS_FRONT:
                 mGraphicsPipelineDesc->updateStencilFrontFuncs(&mGraphicsPipelineTransition,
-                                                               glState.getStencilRef(),
                                                                glState.getDepthStencilState());
                 mGraphicsDirtyBits.set(DIRTY_BIT_STENCIL_COMPARE_MASK);
+                mGraphicsDirtyBits.set(DIRTY_BIT_STENCIL_REFERENCE);
                 onDepthStencilAccessChange();
                 break;
             case gl::State::DIRTY_BIT_STENCIL_FUNCS_BACK:
                 mGraphicsPipelineDesc->updateStencilBackFuncs(&mGraphicsPipelineTransition,
-                                                              glState.getStencilBackRef(),
                                                               glState.getDepthStencilState());
                 mGraphicsDirtyBits.set(DIRTY_BIT_STENCIL_COMPARE_MASK);
+                mGraphicsDirtyBits.set(DIRTY_BIT_STENCIL_REFERENCE);
                 onDepthStencilAccessChange();
                 break;
             case gl::State::DIRTY_BIT_STENCIL_OPS_FRONT:

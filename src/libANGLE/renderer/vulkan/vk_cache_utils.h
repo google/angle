@@ -452,9 +452,8 @@ static_assert(kDepthCompareOpAndSurfaceRotationSize == 1, "Size check failed");
 struct PackedDepthStencilStateInfo final
 {
     DepthStencilEnableFlags enable;
-    uint8_t frontStencilReference;
-    uint8_t backStencilReference;
     DepthCompareOpAndSurfaceRotation depthCompareOpAndSurfaceRotation;
+    uint16_t padding;
 
     float minDepthBounds;
     float maxDepthBounds;
@@ -661,8 +660,8 @@ class GraphicsPipelineDesc final
     void setDepthFunc(VkCompareOp op);
     void setDepthClampEnabled(bool enabled);
     void setStencilTestEnabled(bool enabled);
-    void setStencilFrontFuncs(uint8_t reference, VkCompareOp compareOp);
-    void setStencilBackFuncs(uint8_t reference, VkCompareOp compareOp);
+    void setStencilFrontFuncs(VkCompareOp compareOp);
+    void setStencilBackFuncs(VkCompareOp compareOp);
     void setStencilFrontOps(VkStencilOp failOp, VkStencilOp passOp, VkStencilOp depthFailOp);
     void setStencilBackOps(VkStencilOp failOp, VkStencilOp passOp, VkStencilOp depthFailOp);
     void setStencilFrontWriteMask(uint8_t mask);
@@ -679,10 +678,8 @@ class GraphicsPipelineDesc final
                                   const gl::DepthStencilState &depthStencilState,
                                   const gl::Framebuffer *drawFramebuffer);
     void updateStencilFrontFuncs(GraphicsPipelineTransitionBits *transition,
-                                 GLint ref,
                                  const gl::DepthStencilState &depthStencilState);
     void updateStencilBackFuncs(GraphicsPipelineTransitionBits *transition,
-                                GLint ref,
                                 const gl::DepthStencilState &depthStencilState);
     void updateStencilFrontOps(GraphicsPipelineTransitionBits *transition,
                                const gl::DepthStencilState &depthStencilState);

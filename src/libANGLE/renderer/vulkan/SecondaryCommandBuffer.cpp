@@ -126,6 +126,8 @@ const char *GetCommandString(CommandID id)
             return "SetScissor";
         case CommandID::SetStencilCompareMask:
             return "SetStencilCompareMask";
+        case CommandID::SetStencilReference:
+            return "SetStencilReference";
         case CommandID::SetStencilWriteMask:
             return "SetStencilWriteMask";
         case CommandID::SetViewport:
@@ -594,6 +596,16 @@ void SecondaryCommandBuffer::executeCommands(PrimaryCommandBuffer *primary)
                                                params->compareFrontMask);
                     vkCmdSetStencilCompareMask(cmdBuffer, VK_STENCIL_FACE_BACK_BIT,
                                                params->compareBackMask);
+                    break;
+                }
+                case CommandID::SetStencilReference:
+                {
+                    const SetStencilReferenceParams *params =
+                        getParamPtr<SetStencilReferenceParams>(currentCommand);
+                    vkCmdSetStencilReference(cmdBuffer, VK_STENCIL_FACE_FRONT_BIT,
+                                             params->frontReference);
+                    vkCmdSetStencilReference(cmdBuffer, VK_STENCIL_FACE_BACK_BIT,
+                                             params->backReference);
                     break;
                 }
                 case CommandID::SetStencilWriteMask:

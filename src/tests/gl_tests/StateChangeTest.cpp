@@ -8490,8 +8490,8 @@ TEST_P(StateChangeTestES3, BlendColor)
     ASSERT_GL_NO_ERROR();
 }
 
-// Tests state change for mask in glStencilFuncSeparate.
-TEST_P(StateChangeTestES3, StencilCompareMask)
+// Tests state change for ref and mask in glStencilFuncSeparate.
+TEST_P(StateChangeTestES3, StencilReferenceAndCompareMask)
 {
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
     glUseProgram(program);

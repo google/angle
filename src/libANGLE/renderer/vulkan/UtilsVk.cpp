@@ -389,11 +389,9 @@ void SetStencilForShaderExport(ContextVk *contextVk, vk::GraphicsPipelineDesc *d
 {
     ASSERT(contextVk->getRenderer()->getFeatures().supportsShaderStencilExport.enabled);
 
-    constexpr uint8_t unusedReference = 0x00;
-
     desc->setStencilTestEnabled(true);
-    desc->setStencilFrontFuncs(unusedReference, VK_COMPARE_OP_ALWAYS);
-    desc->setStencilBackFuncs(unusedReference, VK_COMPARE_OP_ALWAYS);
+    desc->setStencilFrontFuncs(VK_COMPARE_OP_ALWAYS);
+    desc->setStencilBackFuncs(VK_COMPARE_OP_ALWAYS);
     desc->setStencilFrontOps(VK_STENCIL_OP_REPLACE, VK_STENCIL_OP_REPLACE, VK_STENCIL_OP_REPLACE);
     desc->setStencilBackOps(VK_STENCIL_OP_REPLACE, VK_STENCIL_OP_REPLACE, VK_STENCIL_OP_REPLACE);
 }
@@ -1055,6 +1053,7 @@ void ResetDynamicState(ContextVk *contextVk, vk::RenderPassCommandBuffer *comman
     //
     // - stencil compare mask: UtilsVk sets this when enabling stencil test
     // - stencil write mask: UtilsVk sets this when enabling stencil test
+    // - stencil reference: UtilsVk sets this when enabling stencil test
 
     // Reset all other dynamic state, since it can affect UtilsVk functions:
     if (contextVk->getFeatures().supportsFragmentShadingRate.enabled)
@@ -2113,12 +2112,9 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
     // Clear stencil by enabling stencil write with the right mask.
     if (params.clearStencil)
     {
-        const uint8_t clearStencilValue =
-            static_cast<uint8_t>(params.depthStencilClearValue.stencil);
-
         pipelineDesc.setStencilTestEnabled(true);
-        pipelineDesc.setStencilFrontFuncs(clearStencilValue, VK_COMPARE_OP_ALWAYS);
-        pipelineDesc.setStencilBackFuncs(clearStencilValue, VK_COMPARE_OP_ALWAYS);
+        pipelineDesc.setStencilFrontFuncs(VK_COMPARE_OP_ALWAYS);
+        pipelineDesc.setStencilBackFuncs(VK_COMPARE_OP_ALWAYS);
         pipelineDesc.setStencilFrontOps(VK_STENCIL_OP_REPLACE, VK_STENCIL_OP_REPLACE,
                                         VK_STENCIL_OP_REPLACE);
         pipelineDesc.setStencilBackOps(VK_STENCIL_OP_REPLACE, VK_STENCIL_OP_REPLACE,
@@ -2169,8 +2165,12 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
     if (params.clearStencil)
     {
         constexpr uint8_t compareMask = 0xFF;
+        const uint8_t clearStencilValue =
+            static_cast<uint8_t>(params.depthStencilClearValue.stencil);
+
         commandBuffer->setStencilCompareMask(compareMask, compareMask);
         commandBuffer->setStencilWriteMask(params.stencilMask, params.stencilMask);
+        commandBuffer->setStencilReference(clearStencilValue, clearStencilValue);
     }
 
     // Make sure this draw call doesn't count towards occlusion query results.
@@ -2560,9 +2560,12 @@ angle::Result UtilsVk::blitResolveImpl(ContextVk *contextVk,
 
     if (blitStencil)
     {
-        constexpr uint8_t completeMask = 0xFF;
+        constexpr uint8_t completeMask    = 0xFF;
+        constexpr uint8_t unusedReference = 0x00;
+
         commandBuffer->setStencilCompareMask(completeMask, completeMask);
         commandBuffer->setStencilWriteMask(completeMask, completeMask);
+        commandBuffer->setStencilReference(unusedReference, unusedReference);
     }
 
     // Note: this utility starts the render pass directly, thus bypassing
@@ -3444,9 +3447,12 @@ angle::Result UtilsVk::unresolve(ContextVk *contextVk,
 
     if (params.unresolveStencil)
     {
-        constexpr uint8_t completeMask = 0xFF;
+        constexpr uint8_t completeMask    = 0xFF;
+        constexpr uint8_t unusedReference = 0x00;
+
         commandBuffer->setStencilCompareMask(completeMask, completeMask);
         commandBuffer->setStencilWriteMask(completeMask, completeMask);
+        commandBuffer->setStencilReference(unusedReference, unusedReference);
     }
 
     // This draw call is made before ContextVk gets a chance to start the occlusion query.  As such,

@@ -328,6 +328,7 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
     void setLineWidth(float lineWidth);
     void setScissor(uint32_t firstScissor, uint32_t scissorCount, const VkRect2D *scissors);
     void setStencilCompareMask(uint32_t compareFrontMask, uint32_t compareBackMask);
+    void setStencilReference(uint32_t frontReference, uint32_t backReference);
     void setStencilWriteMask(uint32_t writeFrontMask, uint32_t writeBackMask);
     void setViewport(uint32_t firstViewport, uint32_t viewportCount, const VkViewport *viewports);
     VkResult reset();
@@ -1004,6 +1005,14 @@ ANGLE_INLINE void CommandBuffer::setStencilCompareMask(uint32_t compareFrontMask
     ASSERT(valid());
     vkCmdSetStencilCompareMask(mHandle, VK_STENCIL_FACE_FRONT_BIT, compareFrontMask);
     vkCmdSetStencilCompareMask(mHandle, VK_STENCIL_FACE_BACK_BIT, compareBackMask);
+}
+
+ANGLE_INLINE void CommandBuffer::setStencilReference(uint32_t frontReference,
+                                                     uint32_t backReference)
+{
+    ASSERT(valid());
+    vkCmdSetStencilReference(mHandle, VK_STENCIL_FACE_FRONT_BIT, frontReference);
+    vkCmdSetStencilReference(mHandle, VK_STENCIL_FACE_BACK_BIT, backReference);
 }
 
 ANGLE_INLINE void CommandBuffer::setStencilWriteMask(uint32_t writeFrontMask,
