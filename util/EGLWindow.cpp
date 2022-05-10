@@ -717,6 +717,32 @@ bool EGLWindow::makeCurrent()
     return makeCurrent(mContext);
 }
 
+EGLWindow::Image EGLWindow::createImage(GLWindowContext context,
+                                        Enum target,
+                                        ClientBuffer buffer,
+                                        const Attrib *attrib_list)
+{
+    return eglCreateImage(getDisplay(), context, target, buffer, attrib_list);
+}
+
+EGLWindow::Image EGLWindow::createImageKHR(GLWindowContext context,
+                                           Enum target,
+                                           ClientBuffer buffer,
+                                           const AttribKHR *attrib_list)
+{
+    return eglCreateImageKHR(getDisplay(), context, target, buffer, attrib_list);
+}
+
+EGLBoolean EGLWindow::destroyImage(Image image)
+{
+    return eglDestroyImage(getDisplay(), image);
+}
+
+EGLBoolean EGLWindow::destroyImageKHR(Image image)
+{
+    return eglDestroyImageKHR(getDisplay(), image);
+}
+
 bool EGLWindow::makeCurrent(EGLContext context)
 {
     if (isGLInitialized())
