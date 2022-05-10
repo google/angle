@@ -160,7 +160,6 @@ class DynamicHLSL : angle::NonCopyable
         const std::vector<rx::ShaderStorageBlock> &shaderStorageBlocks,
         size_t baseUAVRegister) const;
     std::string generateShaderForImage2DBindSignature(
-        const d3d::Context *context,
         ProgramD3D &programD3D,
         const gl::ProgramState &programData,
         gl::ShaderType shaderType,

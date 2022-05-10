@@ -403,7 +403,6 @@ std::string DynamicHLSL::generatePixelShaderForOutputSignature(
 }
 
 std::string DynamicHLSL::generateShaderForImage2DBindSignature(
-    const d3d::Context *context,
     ProgramD3D &programD3D,
     const gl::ProgramState &programData,
     gl::ShaderType shaderType,
@@ -417,7 +416,7 @@ std::string DynamicHLSL::generateShaderForImage2DBindSignature(
         return shaderHLSL;
     }
 
-    return GenerateShaderForImage2DBindSignature(context, programD3D, programData, shaderType,
+    return GenerateShaderForImage2DBindSignature(programD3D, programData, shaderType,
                                                  image2DUniforms, image2DBindLayout);
 }
 

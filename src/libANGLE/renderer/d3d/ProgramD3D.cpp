@@ -1656,9 +1656,9 @@ angle::Result ProgramD3D::getGeometryExecutableForPrimitiveType(d3d::Context *co
 
     ShaderExecutableD3D *geometryExecutable = nullptr;
     angle::Result result                    = mRenderer->compileToExecutable(
-        context, *currentInfoLog, geometryHLSL, gl::ShaderType::Geometry, mStreamOutVaryings,
-        (mState.getTransformFeedbackBufferMode() == GL_SEPARATE_ATTRIBS), CompilerWorkaroundsD3D(),
-        &geometryExecutable);
+                           context, *currentInfoLog, geometryHLSL, gl::ShaderType::Geometry, mStreamOutVaryings,
+                           (mState.getTransformFeedbackBufferMode() == GL_SEPARATE_ATTRIBS), CompilerWorkaroundsD3D(),
+                           &geometryExecutable);
 
     if (!infoLog && result == angle::Result::Stop)
     {
@@ -2011,7 +2011,7 @@ angle::Result ProgramD3D::getComputeExecutableForImage2DBindLayout(
     }
 
     std::string finalComputeHLSL = mDynamicHLSL->generateShaderForImage2DBindSignature(
-        context, *this, mState, gl::ShaderType::Compute, mImage2DUniforms[gl::ShaderType::Compute],
+        *this, mState, gl::ShaderType::Compute, mImage2DUniforms[gl::ShaderType::Compute],
         mImage2DBindLayoutCache[gl::ShaderType::Compute]);
 
     // Generate new compute executable
@@ -3176,8 +3176,8 @@ void ProgramD3D::updateCachedOutputLayout(const gl::Context *context,
 
         if (colorbuffer)
         {
-            auto binding = colorbuffer->getBinding() == GL_BACK ? GL_COLOR_ATTACHMENT0
-                                                                : colorbuffer->getBinding();
+            auto binding    = colorbuffer->getBinding() == GL_BACK ? GL_COLOR_ATTACHMENT0
+                                                                   : colorbuffer->getBinding();
             size_t maxIndex = binding != GL_NONE ? GetMaxOutputIndex(mPixelShaderKey,
                                                                      binding - GL_COLOR_ATTACHMENT0)
                                                  : 0;

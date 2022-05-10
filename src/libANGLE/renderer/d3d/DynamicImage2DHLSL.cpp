@@ -839,7 +839,6 @@ constexpr const char kImage2DFunctionString[] = "// @@ IMAGE2D DECLARATION FUNCT
 }  // anonymous namespace
 
 std::string GenerateShaderForImage2DBindSignature(
-    const d3d::Context *context,
     ProgramD3D &programD3D,
     const gl::ProgramState &programData,
     gl::ShaderType shaderType,
