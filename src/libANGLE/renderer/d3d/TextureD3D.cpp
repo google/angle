@@ -116,6 +116,7 @@ angle::Result TextureD3D::getImageAndSyncFromStorage(const gl::Context *context,
         ANGLE_TRY(image->copyFromTexStorage(context, index, mTexStorage));
         mDirtyImages = true;
     }
+    image->markClean();
     *outImage = image;
     return angle::Result::Continue;
 }

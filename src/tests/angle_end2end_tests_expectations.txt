@@ -294,9 +294,6 @@
 7148 WIN D3D9 : RobustResourceInitTest.OutOfBoundsArrayBuffers/* = SKIP
 7213 WIN D3D11 : BufferDataTestES3.BufferDataWithNullFollowedByMap/* = SKIP
 
-2192 WIN D3D9 : CopyTextureTest.ClearAfterCopySubTextureLuminance/* = SKIP
-2192 WIN D3D9 : CopyTextureTest.ClearAfterCopySubTextureLuminanceAlpha/* = SKIP
-
 // Android
 6095 ANDROID GLES : GLSLTest_ES3.InitGlobalComplexConstant/* = SKIP
 6116 ANDROID GLES : GLSLTestLoops.ForNoCondition/* = SKIP
