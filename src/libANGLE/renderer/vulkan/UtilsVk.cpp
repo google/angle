@@ -1044,10 +1044,9 @@ void UpdateDepthStencilAccess(ContextVk *contextVk,
 
 void ResetDynamicState(ContextVk *contextVk, vk::RenderPassCommandBuffer *commandBuffer)
 {
-    // Reset all dynamic state for simplicity.  Scissor and viewport is always set by the UtilsVk
-    // functions, so those are skipped.  Ideally, dynamic state that will be set by any UtilsVk
-    // functions wouldn't be reset here.  However, until such time as extensive transition tests are
-    // written, this approach is less bug-prone.
+    // Reset dynamic state that might affect UtilsVk.  Mark all dynamic state dirty for simplicity.
+    // Ideally, only dynamic state that is changed by UtilsVk will be marked dirty but, until such
+    // time as extensive transition tests are written, this approach is less bug-prone.
     if (contextVk->getFeatures().supportsFragmentShadingRate.enabled)
     {
         VkExtent2D fragmentSize                                     = {1, 1};
@@ -2119,21 +2118,6 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
         pipelineDesc.setStencilBackWriteMask(params.stencilMask);
     }
 
-    VkViewport viewport;
-    gl::Rectangle completeRenderArea = framebuffer->getRotatedCompleteRenderArea(contextVk);
-    bool invertViewport              = contextVk->isViewportFlipEnabledForDrawFBO();
-    bool clipSpaceOriginUpperLeft =
-        contextVk->getState().getClipSpaceOrigin() == gl::ClipSpaceOrigin::UpperLeft;
-    // Set depth range to clear value.  If clearing depth, the vertex shader depth output is clamped
-    // to this value, thus clearing the depth buffer to the desired clear value.
-    const float clearDepthValue = params.depthStencilClearValue.depth;
-    gl_vk::GetViewport(completeRenderArea, clearDepthValue, clearDepthValue, invertViewport,
-                       clipSpaceOriginUpperLeft, completeRenderArea.height, &viewport);
-    commandBuffer->setViewport(0, 1, &viewport);
-
-    const VkRect2D scissor = gl_vk::GetRect(params.clearArea);
-    commandBuffer->setScissor(0, 1, &scissor);
-
     vk::ShaderLibrary &shaderLibrary                    = contextVk->getShaderLibrary();
     vk::RefCounted<vk::ShaderAndSerial> *vertexShader   = nullptr;
     vk::RefCounted<vk::ShaderAndSerial> *fragmentShader = nullptr;
@@ -2158,6 +2142,22 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
     ANGLE_TRY(setupGraphicsProgram(contextVk, Function::ImageClear, vertexShader, fragmentShader,
                                    imageClearProgram, &pipelineDesc, VK_NULL_HANDLE, &shaderParams,
                                    sizeof(shaderParams), commandBuffer));
+
+    // Set dynamic state
+    VkViewport viewport;
+    gl::Rectangle completeRenderArea = framebuffer->getRotatedCompleteRenderArea(contextVk);
+    bool invertViewport              = contextVk->isViewportFlipEnabledForDrawFBO();
+    bool clipSpaceOriginUpperLeft =
+        contextVk->getState().getClipSpaceOrigin() == gl::ClipSpaceOrigin::UpperLeft;
+    // Set depth range to clear value.  If clearing depth, the vertex shader depth output is clamped
+    // to this value, thus clearing the depth buffer to the desired clear value.
+    const float clearDepthValue = params.depthStencilClearValue.depth;
+    gl_vk::GetViewport(completeRenderArea, clearDepthValue, clearDepthValue, invertViewport,
+                       clipSpaceOriginUpperLeft, completeRenderArea.height, &viewport);
+    commandBuffer->setViewport(0, 1, &viewport);
+
+    const VkRect2D scissor = gl_vk::GetRect(params.clearArea);
+    commandBuffer->setScissor(0, 1, &scissor);
 
     // Make sure this draw call doesn't count towards occlusion query results.
     contextVk->pauseRenderPassQueriesIfActive();
@@ -2238,13 +2238,6 @@ angle::Result UtilsVk::clearImage(ContextVk *contextVk,
 
     UpdateColorAccess(contextVk, MakeColorBufferMask(0), MakeColorBufferMask(0));
 
-    VkViewport viewport;
-    gl_vk::GetViewport(renderArea, 0.0f, 1.0f, false, false, dst->getExtents().height, &viewport);
-    commandBuffer->setViewport(0, 1, &viewport);
-
-    VkRect2D scissor = gl_vk::GetRect(renderArea);
-    commandBuffer->setScissor(0, 1, &scissor);
-
     contextVk->onImageRenderPassWrite(dst->toGLLevel(params.dstMip), params.dstLayer, 1,
                                       VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::ColorAttachment,
                                       dst);
@@ -2260,6 +2253,14 @@ angle::Result UtilsVk::clearImage(ContextVk *contextVk,
     ANGLE_TRY(setupGraphicsProgram(contextVk, Function::ImageClear, vertexShader, fragmentShader,
                                    &mImageClearPrograms[flags], &pipelineDesc, VK_NULL_HANDLE,
                                    &shaderParams, sizeof(shaderParams), commandBuffer));
+
+    // Set dynamic state
+    VkViewport viewport;
+    gl_vk::GetViewport(renderArea, 0.0f, 1.0f, false, false, dst->getExtents().height, &viewport);
+    commandBuffer->setViewport(0, 1, &viewport);
+
+    VkRect2D scissor = gl_vk::GetRect(renderArea);
+    commandBuffer->setScissor(0, 1, &scissor);
 
     // Note: this utility creates its own framebuffer, thus bypassing ContextVk::startRenderPass.
     // As such, occlusion queries are not enabled.
@@ -2464,15 +2465,6 @@ angle::Result UtilsVk::blitResolveImpl(ContextVk *contextVk,
                                     &contextVk->getStartedRenderPassCommands().getResourceUseList(),
                                     Function::BlitResolve, &descriptorPoolBinding, &descriptorSet));
 
-    VkViewport viewport;
-    gl::Rectangle completeRenderArea = framebuffer->getRotatedCompleteRenderArea(contextVk);
-    gl_vk::GetViewport(completeRenderArea, 0.0f, 1.0f, false, false, completeRenderArea.height,
-                       &viewport);
-    commandBuffer->setViewport(0, 1, &viewport);
-
-    VkRect2D scissor = gl_vk::GetRect(params.blitArea);
-    commandBuffer->setScissor(0, 1, &scissor);
-
     contextVk->onImageRenderPassRead(src->getAspectFlags(), vk::ImageLayout::FragmentShaderReadOnly,
                                      src);
 
@@ -2541,6 +2533,16 @@ angle::Result UtilsVk::blitResolveImpl(ContextVk *contextVk,
     ANGLE_TRY(setupGraphicsProgram(contextVk, Function::BlitResolve, vertexShader, fragmentShader,
                                    &mBlitResolvePrograms[flags], &pipelineDesc, descriptorSet,
                                    &shaderParams, sizeof(shaderParams), commandBuffer));
+
+    // Set dynamic state
+    VkViewport viewport;
+    gl::Rectangle completeRenderArea = framebuffer->getRotatedCompleteRenderArea(contextVk);
+    gl_vk::GetViewport(completeRenderArea, 0.0f, 1.0f, false, false, completeRenderArea.height,
+                       &viewport);
+    commandBuffer->setViewport(0, 1, &viewport);
+
+    VkRect2D scissor = gl_vk::GetRect(params.blitArea);
+    commandBuffer->setScissor(0, 1, &scissor);
 
     // Note: this utility starts the render pass directly, thus bypassing
     // ContextVk::startRenderPass. As such, occlusion queries are not enabled.
@@ -2898,13 +2900,6 @@ angle::Result UtilsVk::copyImage(ContextVk *contextVk,
 
     UpdateColorAccess(contextVk, MakeColorBufferMask(0), MakeColorBufferMask(0));
 
-    VkViewport viewport;
-    gl_vk::GetViewport(renderArea, 0.0f, 1.0f, false, false, dst->getExtents().height, &viewport);
-    commandBuffer->setViewport(0, 1, &viewport);
-
-    VkRect2D scissor = gl_vk::GetRect(renderArea);
-    commandBuffer->setScissor(0, 1, &scissor);
-
     // Change source layout inside render pass.
     contextVk->onImageRenderPassRead(VK_IMAGE_ASPECT_COLOR_BIT,
                                      vk::ImageLayout::FragmentShaderReadOnly, src);
@@ -2934,6 +2929,14 @@ angle::Result UtilsVk::copyImage(ContextVk *contextVk,
     ANGLE_TRY(setupGraphicsProgram(contextVk, Function::ImageCopy, vertexShader, fragmentShader,
                                    &mImageCopyPrograms[flags], &pipelineDesc, descriptorSet,
                                    &shaderParams, sizeof(shaderParams), commandBuffer));
+
+    // Set dynamic state
+    VkViewport viewport;
+    gl_vk::GetViewport(renderArea, 0.0f, 1.0f, false, false, dst->getExtents().height, &viewport);
+    commandBuffer->setViewport(0, 1, &viewport);
+
+    VkRect2D scissor = gl_vk::GetRect(renderArea);
+    commandBuffer->setScissor(0, 1, &scissor);
 
     // Note: this utility creates its own framebuffer, thus bypassing ContextVk::startRenderPass.
     // As such, occlusion queries are not enabled.
@@ -3352,18 +3355,6 @@ angle::Result UtilsVk::unresolve(ContextVk *contextVk,
     vk::RenderPassCommandBuffer *commandBuffer =
         &contextVk->getStartedRenderPassCommands().getCommandBuffer();
 
-    VkViewport viewport;
-    gl::Rectangle completeRenderArea = framebuffer->getRotatedCompleteRenderArea(contextVk);
-    bool invertViewport              = contextVk->isViewportFlipEnabledForDrawFBO();
-    bool clipSpaceOriginUpperLeft =
-        contextVk->getState().getClipSpaceOrigin() == gl::ClipSpaceOrigin::UpperLeft;
-    gl_vk::GetViewport(completeRenderArea, 0.0f, 1.0f, invertViewport, clipSpaceOriginUpperLeft,
-                       completeRenderArea.height, &viewport);
-    commandBuffer->setViewport(0, 1, &viewport);
-
-    VkRect2D scissor = gl_vk::GetRect(completeRenderArea);
-    commandBuffer->setScissor(0, 1, &scissor);
-
     VkDescriptorSet descriptorSet;
     vk::RefCountedDescriptorPoolBinding descriptorPoolBinding;
     ANGLE_TRY(allocateDescriptorSet(contextVk,
@@ -3416,6 +3407,20 @@ angle::Result UtilsVk::unresolve(ContextVk *contextVk,
     ANGLE_TRY(setupGraphicsProgram(contextVk, function, vertexShader, fragmentShader,
                                    &mUnresolvePrograms[flags], &pipelineDesc, descriptorSet,
                                    nullptr, 0, commandBuffer));
+
+    // Set dynamic state
+    VkViewport viewport;
+    gl::Rectangle completeRenderArea = framebuffer->getRotatedCompleteRenderArea(contextVk);
+    bool invertViewport              = contextVk->isViewportFlipEnabledForDrawFBO();
+    bool clipSpaceOriginUpperLeft =
+        contextVk->getState().getClipSpaceOrigin() == gl::ClipSpaceOrigin::UpperLeft;
+    gl_vk::GetViewport(completeRenderArea, 0.0f, 1.0f, invertViewport, clipSpaceOriginUpperLeft,
+                       completeRenderArea.height, &viewport);
+    commandBuffer->setViewport(0, 1, &viewport);
+
+    VkRect2D scissor = gl_vk::GetRect(completeRenderArea);
+    commandBuffer->setScissor(0, 1, &scissor);
+
     // This draw call is made before ContextVk gets a chance to start the occlusion query.  As such,
     // occlusion queries are not enabled.
     commandBuffer->draw(3, 0);
@@ -3486,13 +3491,6 @@ angle::Result UtilsVk::drawOverlay(ContextVk *contextVk,
 
     UpdateColorAccess(contextVk, MakeColorBufferMask(0), MakeColorBufferMask(0));
 
-    VkViewport viewport;
-    gl_vk::GetViewport(renderArea, 0.0f, 1.0f, false, false, dst->getExtents().height, &viewport);
-    commandBuffer->setViewport(0, 1, &viewport);
-
-    VkRect2D scissor = gl_vk::GetRect(renderArea);
-    commandBuffer->setScissor(0, 1, &scissor);
-
     textWidgetsBuffer->retainReadOnly(
         &contextVk->getStartedRenderPassCommands().getResourceUseList());
     graphWidgetsBuffer->retainReadOnly(
@@ -3545,6 +3543,14 @@ angle::Result UtilsVk::drawOverlay(ContextVk *contextVk,
     ANGLE_TRY(setupGraphicsProgram(contextVk, Function::OverlayDraw, vertexShader, fragmentShader,
                                    &mOverlayDrawProgram, &pipelineDesc, descriptorSet, nullptr, 0,
                                    commandBuffer));
+
+    // Set dynamic state
+    VkViewport viewport;
+    gl_vk::GetViewport(renderArea, 0.0f, 1.0f, false, false, dst->getExtents().height, &viewport);
+    commandBuffer->setViewport(0, 1, &viewport);
+
+    VkRect2D scissor = gl_vk::GetRect(renderArea);
+    commandBuffer->setScissor(0, 1, &scissor);
 
     // Draw all the graph widgets.
     if (params.graphWidgetCount > 0)
