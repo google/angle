@@ -193,3 +193,7 @@
 7088 : VulkanPerformanceCounterTest* = SKIP_FOR_CAPTURE
 
 7111 : ImageTestES3.Source2DTarget2DStorageOrphan/* = FAIL
+
+7291 : BlitFramebufferTest.Blit3D/* = SKIP_FOR_CAPTURE
+7291 : BlitFramebufferTest.Blit3DTo2DArray/* = SKIP_FOR_CAPTURE
+7291 : BlitFramebufferTest.Blit2DArrayTo3D/* = SKIP_FOR_CAPTURE

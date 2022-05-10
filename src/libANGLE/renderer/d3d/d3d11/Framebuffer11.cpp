@@ -54,6 +54,17 @@ angle::Result MarkAttachmentsDirty(const gl::Context *context,
 
     return angle::Result::Continue;
 }
+
+UINT GetAttachmentLayer(const gl::FramebufferAttachment *attachment)
+{
+    if (attachment->type() == GL_TEXTURE &&
+        attachment->getTexture()->getType() == gl::TextureType::_3D)
+    {
+        return attachment->layer();
+    }
+    return 0;
+}
+
 }  // anonymous namespace
 
 Framebuffer11::Framebuffer11(const gl::FramebufferState &data, Renderer11 *renderer)
@@ -294,10 +305,7 @@ angle::Result Framebuffer11::blitImpl(const gl::Context *context,
 
         const auto &colorAttachments = mState.getColorAttachments();
         const auto &drawBufferStates = mState.getDrawBufferStates();
-        UINT readLayer               = readBuffer->type() == GL_TEXTURE &&
-                                 readBuffer->getTexture()->getType() == gl::TextureType::_3D
-                                           ? readBuffer->layer()
-                                           : 0;
+        UINT readLayer               = GetAttachmentLayer(readBuffer);
 
         for (size_t colorAttachment = 0; colorAttachment < colorAttachments.size();
              colorAttachment++)
@@ -322,10 +330,7 @@ angle::Result Framebuffer11::blitImpl(const gl::Context *context,
 
                 const bool invertColorDest   = UsePresentPathFast(mRenderer, &drawBuffer);
                 gl::Rectangle actualDestArea = destArea;
-                UINT drawLayer               = drawBuffer.type() == GL_TEXTURE &&
-                                         drawBuffer.getTexture()->getType() == gl::TextureType::_3D
-                                                   ? drawBuffer.layer()
-                                                   : 0;
+                UINT drawLayer               = GetAttachmentLayer(&drawBuffer);
 
                 const auto &surfaceTextureOffset = mState.getSurfaceTextureOffset();
                 actualDestArea.x                 = actualDestArea.x + surfaceTextureOffset.x;

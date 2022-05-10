@@ -54,6 +54,9 @@
 7197 VULKAN : BlitFramebufferTest.BlitMultisampleStencilToDefault/ES3_Vulkan_EmulatedPrerotation180 = SKIP
 7198 VULKAN : BlitFramebufferTest.BlitMultisampleStencilToDefault/ES3_Vulkan_EmulatedPrerotation90 = SKIP
 7198 VULKAN : BlitFramebufferTest.BlitMultisampleStencilToDefault/ES3_Vulkan_EmulatedPrerotation270 = SKIP
+7291 VULKAN : BlitFramebufferTest.Blit3D/* = SKIP
+7291 VULKAN : BlitFramebufferTest.Blit3DTo2DArray/* = SKIP
+7291 VULKAN : BlitFramebufferTest.Blit2DArrayTo3D/* = SKIP
 
 // Windows
 3786 WIN NVIDIA D3D11 : BufferDataOverflowTest.VertexBufferIntegerOverflow/* = SKIP
@@ -69,6 +72,7 @@
 6826 WIN NVIDIA OPENGL : GLSLTest.VectorAndMatrixScalarizationDoesNotAffectRendering/* = SKIP
 6826 WIN NVIDIA GLES : GLSLTest.VectorAndMatrixScalarizationDoesNotAffectRendering/* = SKIP
 4716 WIN NVIDIA GLES : CopyTextureTest.CopyOutsideMipmap/* = SKIP
+7298 WIN INTEL D3D11 : BlitFramebufferTest.Blit3DTo2DArray/* = SKIP
 
 // Linux
 6065 LINUX INTEL VULKAN : SimpleStateChangeTestES31.DrawThenUpdateUBOThenDrawThenDrawIndexed/* = SKIP
@@ -328,6 +332,10 @@
 6344 PIXEL4ORXL : GLSLTest_ES31_InitShaderVariables.InitIOBlockWithComplexTypes/ES3_1_Vulkan_ForceInitShaderVariables = SKIP
 
 5981 PIXEL4ORXL GLES : BlitFramebufferTest.BlitSRGBToRGBOversizedDestArea/* = SKIP
+7297 PIXEL4ORXL GLES : BlitFramebufferTest.Blit3D/* = SKIP
+7297 PIXEL4ORXL GLES : BlitFramebufferTest.Blit2DArray/* = SKIP
+7297 PIXEL4ORXL GLES : BlitFramebufferTest.Blit3DTo2DArray/* = SKIP
+7297 PIXEL4ORXL GLES : BlitFramebufferTest.Blit2DArrayTo3D/* = SKIP
 5981 PIXEL4ORXL GLES : CopyTexImageTest.CopyTexSubImageFrom3DTexureOES/* = SKIP
 5981 PIXEL4ORXL GLES : CubeMapTextureTest.SampleCoordinateTransform/* = SKIP
 6805 PIXEL4ORXL GLES : GLSLTest_ES31.StructAndArrayEqualOperator/* = SKIP
