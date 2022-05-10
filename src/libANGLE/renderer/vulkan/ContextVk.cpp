@@ -814,7 +814,8 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
         DirtyBits{DIRTY_BIT_PIPELINE_BINDING, DIRTY_BIT_TEXTURES, DIRTY_BIT_SHADER_RESOURCES,
                   DIRTY_BIT_DESCRIPTOR_SETS, DIRTY_BIT_DRIVER_UNIFORMS_BINDING};
 
-    mDynamicStateDirtyBits = DirtyBits{DIRTY_BIT_VIEWPORT, DIRTY_BIT_SCISSOR, DIRTY_BIT_LINE_WIDTH};
+    mDynamicStateDirtyBits = DirtyBits{DIRTY_BIT_VIEWPORT, DIRTY_BIT_SCISSOR, DIRTY_BIT_LINE_WIDTH,
+                                       DIRTY_BIT_DEPTH_BIAS};
     if (getFeatures().supportsFragmentShadingRate.enabled)
     {
         mDynamicStateDirtyBits.set(DIRTY_BIT_FRAGMENT_SHADING_RATE);
@@ -871,6 +872,7 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
     mGraphicsDirtyBitHandlers[DIRTY_BIT_VIEWPORT]   = &ContextVk::handleDirtyGraphicsViewport;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_SCISSOR]    = &ContextVk::handleDirtyGraphicsScissor;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_LINE_WIDTH] = &ContextVk::handleDirtyGraphicsLineWidth;
+    mGraphicsDirtyBitHandlers[DIRTY_BIT_DEPTH_BIAS] = &ContextVk::handleDirtyGraphicsDepthBias;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_FRAGMENT_SHADING_RATE] =
         &ContextVk::handleDirtyGraphicsFragmentShadingRate;
 
@@ -2451,6 +2453,16 @@ angle::Result ContextVk::handleDirtyGraphicsLineWidth(DirtyBits::Iterator *dirty
                                                       DirtyBits dirtyBitMask)
 {
     mRenderPassCommandBuffer->setLineWidth(mState.getLineWidth());
+    return angle::Result::Continue;
+}
+
+angle::Result ContextVk::handleDirtyGraphicsDepthBias(DirtyBits::Iterator *dirtyBitsIterator,
+                                                      DirtyBits dirtyBitMask)
+{
+    const gl::RasterizerState &rasterState = mState.getRasterizerState();
+    // Note: depth bias clamp is only exposed in EXT_polygon_offset_clamp.
+    mRenderPassCommandBuffer->setDepthBias(rasterState.polygonOffsetUnits, 0,
+                                           rasterState.polygonOffsetFactor);
     return angle::Result::Continue;
 }
 
@@ -4517,8 +4529,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                     &mGraphicsPipelineTransition, glState.isPolygonOffsetFillEnabled());
                 break;
             case gl::State::DIRTY_BIT_POLYGON_OFFSET:
-                mGraphicsPipelineDesc->updatePolygonOffset(&mGraphicsPipelineTransition,
-                                                           glState.getRasterizerState());
+                mGraphicsDirtyBits.set(DIRTY_BIT_DEPTH_BIAS);
                 break;
             case gl::State::DIRTY_BIT_RASTERIZER_DISCARD_ENABLED:
                 updateRasterizerDiscardEnabled(

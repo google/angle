@@ -790,6 +790,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         DIRTY_BIT_VIEWPORT,
         DIRTY_BIT_SCISSOR,
         DIRTY_BIT_LINE_WIDTH,
+        DIRTY_BIT_DEPTH_BIAS,
         // - In VK_KHR_fragment_shading_rate
         DIRTY_BIT_FRAGMENT_SHADING_RATE,
 
@@ -850,6 +851,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     static_assert(DIRTY_BIT_SCISSOR > DIRTY_BIT_RENDER_PASS,
                   "Render pass using dirty bit must be handled after the render pass dirty bit");
     static_assert(DIRTY_BIT_LINE_WIDTH > DIRTY_BIT_RENDER_PASS,
+                  "Render pass using dirty bit must be handled after the render pass dirty bit");
+    static_assert(DIRTY_BIT_DEPTH_BIAS > DIRTY_BIT_RENDER_PASS,
                   "Render pass using dirty bit must be handled after the render pass dirty bit");
     static_assert(DIRTY_BIT_FRAGMENT_SHADING_RATE > DIRTY_BIT_RENDER_PASS,
                   "Render pass using dirty bit must be handled after the render pass dirty bit");
@@ -1048,6 +1051,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     angle::Result handleDirtyGraphicsScissor(DirtyBits::Iterator *dirtyBitsIterator,
                                              DirtyBits dirtyBitMask);
     angle::Result handleDirtyGraphicsLineWidth(DirtyBits::Iterator *dirtyBitsIterator,
+                                               DirtyBits dirtyBitMask);
+    angle::Result handleDirtyGraphicsDepthBias(DirtyBits::Iterator *dirtyBitsIterator,
                                                DirtyBits dirtyBitMask);
     angle::Result handleDirtyGraphicsFragmentShadingRate(DirtyBits::Iterator *dirtyBitsIterator,
                                                          DirtyBits dirtyBitMask);

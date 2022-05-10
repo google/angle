@@ -1051,6 +1051,7 @@ void ResetDynamicState(ContextVk *contextVk, vk::RenderPassCommandBuffer *comman
     // Notes: the following dynamic state doesn't apply to UtilsVk functions:
     //
     // - line width: UtilsVk doesn't use line primitives
+    // - depth bias: UtilsVk doesn't enable depth bias
 
     // Reset all other dynamic state, since it can affect UtilsVk functions:
     if (contextVk->getFeatures().supportsFragmentShadingRate.enabled)

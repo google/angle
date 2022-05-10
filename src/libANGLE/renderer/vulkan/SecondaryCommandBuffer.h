@@ -78,6 +78,7 @@ enum class CommandID : uint16_t
     ResetEvent,
     ResetQueryPool,
     ResolveImage,
+    SetDepthBias,
     SetEvent,
     SetFragmentShadingRate,
     SetLineWidth,
@@ -412,6 +413,14 @@ struct ResolveImageParams
 };
 VERIFY_4_BYTE_ALIGNMENT(ResolveImageParams)
 
+struct SetDepthBiasParams
+{
+    float depthBiasConstantFactor;
+    float depthBiasClamp;
+    float depthBiasSlopeFactor;
+};
+VERIFY_4_BYTE_ALIGNMENT(SetDepthBiasParams)
+
 struct SetEventParams
 {
     VkEvent event;
@@ -685,6 +694,9 @@ class SecondaryCommandBuffer final : angle::NonCopyable
                       uint32_t regionCount,
                       const VkImageResolve *regions);
 
+    void setDepthBias(float depthBiasConstantFactor,
+                      float depthBiasClamp,
+                      float depthBiasSlopeFactor);
     void setEvent(VkEvent event, VkPipelineStageFlags stageMask);
 
     void setFragmentShadingRate(const VkExtent2D *fragmentSize,
@@ -1460,6 +1472,16 @@ ANGLE_INLINE void SecondaryCommandBuffer::resolveImage(const Image &srcImage,
     paramStruct->srcImage           = srcImage.getHandle();
     paramStruct->dstImage           = dstImage.getHandle();
     paramStruct->region             = regions[0];
+}
+
+ANGLE_INLINE void SecondaryCommandBuffer::setDepthBias(float depthBiasConstantFactor,
+                                                       float depthBiasClamp,
+                                                       float depthBiasSlopeFactor)
+{
+    SetDepthBiasParams *paramStruct      = initCommand<SetDepthBiasParams>(CommandID::SetDepthBias);
+    paramStruct->depthBiasConstantFactor = depthBiasConstantFactor;
+    paramStruct->depthBiasClamp          = depthBiasClamp;
+    paramStruct->depthBiasSlopeFactor    = depthBiasSlopeFactor;
 }
 
 ANGLE_INLINE void SecondaryCommandBuffer::setEvent(VkEvent event, VkPipelineStageFlags stageMask)

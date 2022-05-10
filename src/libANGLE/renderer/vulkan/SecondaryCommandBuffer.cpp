@@ -112,6 +112,8 @@ const char *GetCommandString(CommandID id)
             return "ResetQueryPool";
         case CommandID::ResolveImage:
             return "ResolveImage";
+        case CommandID::SetDepthBias:
+            return "SetDepthBias";
         case CommandID::SetEvent:
             return "SetEvent";
         case CommandID::SetFragmentShadingRate:
@@ -531,6 +533,14 @@ void SecondaryCommandBuffer::executeCommands(PrimaryCommandBuffer *primary)
                     vkCmdResolveImage(cmdBuffer, params->srcImage,
                                       VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, params->dstImage,
                                       VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &params->region);
+                    break;
+                }
+                case CommandID::SetDepthBias:
+                {
+                    const SetDepthBiasParams *params =
+                        getParamPtr<SetDepthBiasParams>(currentCommand);
+                    vkCmdSetDepthBias(cmdBuffer, params->depthBiasConstantFactor,
+                                      params->depthBiasClamp, params->depthBiasSlopeFactor);
                     break;
                 }
                 case CommandID::SetEvent:

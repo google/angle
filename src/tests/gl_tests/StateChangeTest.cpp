@@ -30,6 +30,8 @@ class StateChangeTest : public ANGLETest
         setConfigGreenBits(8);
         setConfigBlueBits(8);
         setConfigAlphaBits(8);
+        setConfigDepthBits(24);
+        setConfigStencilBits(8);
 
         // Enable the no error extension to avoid syncing the FBO state on validation.
         setNoErrorEnabled(true);
@@ -8368,6 +8370,90 @@ void main()
     EXPECT_PIXEL_RECT_EQ(0, 3 * h / 4 - 1, w, 1, GLColor::black);
     EXPECT_PIXEL_RECT_EQ(0, 3 * h / 4, w, 1, GLColor::blue);
     EXPECT_PIXEL_RECT_EQ(0, 3 * h / 4 + 1, w, 1, GLColor::black);
+}
+
+// Tests state change for glPolygonOffset.
+TEST_P(StateChangeTestES3, PolygonOffset)
+{
+    constexpr char kVS[] = R"(#version 300 es
+precision highp float;
+uniform float height;
+void main()
+{
+    // gl_VertexID    x    y
+    //      0        -1   -1
+    //      1         1   -1
+    //      2        -1    1
+    //      3         1    1
+    int bit0 = gl_VertexID & 1;
+    int bit1 = gl_VertexID >> 1;
+    gl_Position = vec4(bit0 * 2 - 1, bit1 * 2 - 1, gl_VertexID % 2 == 0 ? -1 : 1, 1);
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 colorOut;
+uniform vec4 color;
+void main()
+{
+    colorOut = color;
+})";
+
+    glEnable(GL_POLYGON_OFFSET_FILL);
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+
+    GLint colorLoc = glGetUniformLocation(program, "color");
+    ASSERT_NE(-1, colorLoc);
+
+    glClearColor(0, 0, 0, 1);
+    glClearDepthf(0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_ALWAYS);
+
+    // The shader creates a depth slope from left (0) to right (1).
+    //
+    // This test issues three draw calls:
+    //
+    //           Draw 2 (green): factor width/2, offset 0, depth test: Greater
+    //          ^      |       __________________
+    //          |      |    __/__/   __/
+    //          |      V __/__/   __/  <--- Draw 1 (red): factor width/4, offset 0
+    //          |     __/__/ ^ __/
+    //          |  __/__/   _|/
+    //          | /__/   __/ |
+    //          | /   __/    |
+    //          |  __/    Draw 3 (blue): factor width/2, offset -1, depth test: Less
+    //          | /
+    //          |
+    //          |
+    //          +------------------------------->
+    //
+    // Result:  <--- blue ----><-green-><--red-->
+
+    const int w = getWindowWidth();
+    const int h = getWindowHeight();
+
+    glUniform4f(colorLoc, 1, 0, 0, 1);
+    glPolygonOffset(getWindowWidth() / 4, 0);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+    glUniform4f(colorLoc, 0, 1, 0, 1);
+    glPolygonOffset(getWindowWidth() / 2, 0);
+    glDepthFunc(GL_GREATER);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+    glUniform4f(colorLoc, 0, 0, 1, 1);
+    glPolygonOffset(getWindowWidth() / 2, -2);
+    glDepthFunc(GL_LESS);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, w / 2 - 1, h, GLColor::blue);
+    EXPECT_PIXEL_RECT_EQ(w / 2 + 1, 0, w / 4 - 1, h, GLColor::green);
+    EXPECT_PIXEL_RECT_EQ(3 * w / 4 + 1, 0, w / 4 - 1, h, GLColor::red);
 }
 }  // anonymous namespace
 

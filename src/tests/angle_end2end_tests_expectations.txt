@@ -124,6 +124,7 @@
 6563 LINUX INTEL VULKAN : TransformFeedbackTest.EndWithDifferentProgram/* = SKIP
 6962 WIN INTEL VULKAN : BlitFramebufferTestES31.PartialResolve/* = SKIP
 7177 INTEL VULKAN : EXTBlendFuncExtendedDrawTest.FragData/* = SKIP
+7293 INTEL VULKAN : StateChangeTestES3.PolygonOffset/* = SKIP
 
 // Linux AMD
 6855 LINUX AMD OPENGL : ClearTestES3.ClearMaxAttachmentsAfterDraw/* = SKIP
@@ -171,6 +172,7 @@
 7206 MAC NVIDIA OPENGL : BlendIntegerTest.MRTUnsigned/ES3_OpenGL = SKIP
 7206 MAC NVIDIA OPENGL : BlendIntegerTest.MRTSigned/ES3_OpenGL = SKIP
 7206 MAC NVIDIA OPENGL : DrawBuffersTest.BlendWithGaps/ES3_OpenGL = SKIP
+7293 MAC INTEL OPENGL : StateChangeTestES3.PolygonOffset/* = SKIP
 
 // BlitFramebufferTest.ScissoredMultisampleStencil failures
 3496 MAC INTEL OPENGL : BlitFramebufferTest.ScissoredMultisampleStencil/* = SKIP
@@ -293,6 +295,7 @@
 7113 WIN D3D9 : GLSLTest.LoopBodyEndingInBranch*/* = SKIP
 7148 WIN D3D9 : RobustResourceInitTest.OutOfBoundsArrayBuffers/* = SKIP
 7213 WIN D3D11 : BufferDataTestES3.BufferDataWithNullFollowedByMap/* = SKIP
+7293 WIN INTEL D3D11 : StateChangeTestES3.PolygonOffset/* = SKIP
 
 // Android
 6095 ANDROID GLES : GLSLTest_ES3.InitGlobalComplexConstant/* = SKIP

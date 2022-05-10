@@ -1823,10 +1823,7 @@ void GraphicsPipelineDesc::initDefaults(const ContextVk *contextVk)
     SetBitField(mRasterizationAndMultisampleStateInfo.bits.cullMode, VK_CULL_MODE_BACK_BIT);
     SetBitField(mRasterizationAndMultisampleStateInfo.bits.frontFace,
                 VK_FRONT_FACE_COUNTER_CLOCKWISE);
-    mRasterizationAndMultisampleStateInfo.bits.depthBiasEnable    = 0;
-    mRasterizationAndMultisampleStateInfo.depthBiasConstantFactor = 0.0f;
-    mRasterizationAndMultisampleStateInfo.depthBiasClamp          = 0.0f;
-    mRasterizationAndMultisampleStateInfo.depthBiasSlopeFactor    = 0.0f;
+    mRasterizationAndMultisampleStateInfo.bits.depthBiasEnable = 0;
 
     mRasterizationAndMultisampleStateInfo.bits.rasterizationSamples = 1;
     mRasterizationAndMultisampleStateInfo.bits.sampleShadingEnable  = 0;
@@ -2144,15 +2141,12 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     rasterState.depthClampEnable = static_cast<VkBool32>(rasterAndMS.bits.depthClampEnable);
     rasterState.rasterizerDiscardEnable =
         static_cast<VkBool32>(rasterAndMS.bits.rasterizationDiscardEnable);
-    rasterState.polygonMode             = static_cast<VkPolygonMode>(rasterAndMS.bits.polygonMode);
-    rasterState.cullMode                = static_cast<VkCullModeFlags>(rasterAndMS.bits.cullMode);
-    rasterState.frontFace               = static_cast<VkFrontFace>(rasterAndMS.bits.frontFace);
-    rasterState.depthBiasEnable         = static_cast<VkBool32>(rasterAndMS.bits.depthBiasEnable);
-    rasterState.depthBiasConstantFactor = rasterAndMS.depthBiasConstantFactor;
-    rasterState.depthBiasClamp          = rasterAndMS.depthBiasClamp;
-    rasterState.depthBiasSlopeFactor    = rasterAndMS.depthBiasSlopeFactor;
-    rasterState.lineWidth               = 0;
-    const void **pNextPtr               = &rasterState.pNext;
+    rasterState.polygonMode     = static_cast<VkPolygonMode>(rasterAndMS.bits.polygonMode);
+    rasterState.cullMode        = static_cast<VkCullModeFlags>(rasterAndMS.bits.cullMode);
+    rasterState.frontFace       = static_cast<VkFrontFace>(rasterAndMS.bits.frontFace);
+    rasterState.depthBiasEnable = static_cast<VkBool32>(rasterAndMS.bits.depthBiasEnable);
+    rasterState.lineWidth       = 0;
+    const void **pNextPtr       = &rasterState.pNext;
 
     VkPipelineRasterizationLineStateCreateInfoEXT rasterLineState = {};
     rasterLineState.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_LINE_STATE_CREATE_INFO_EXT;
@@ -2315,10 +2309,11 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     }
 
     // Dynamic state
-    angle::FixedVector<VkDynamicState, 4> dynamicStateList;
+    angle::FixedVector<VkDynamicState, 5> dynamicStateList;
     dynamicStateList.push_back(VK_DYNAMIC_STATE_VIEWPORT);
     dynamicStateList.push_back(VK_DYNAMIC_STATE_SCISSOR);
     dynamicStateList.push_back(VK_DYNAMIC_STATE_LINE_WIDTH);
+    dynamicStateList.push_back(VK_DYNAMIC_STATE_DEPTH_BIAS);
     if (contextVk->getFeatures().supportsFragmentShadingRate.enabled)
     {
         dynamicStateList.push_back(VK_DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR);
@@ -2871,17 +2866,6 @@ void GraphicsPipelineDesc::updatePolygonOffsetFillEnabled(
 {
     mRasterizationAndMultisampleStateInfo.bits.depthBiasEnable = enabled;
     transition->set(ANGLE_GET_TRANSITION_BIT(mRasterizationAndMultisampleStateInfo, bits));
-}
-
-void GraphicsPipelineDesc::updatePolygonOffset(GraphicsPipelineTransitionBits *transition,
-                                               const gl::RasterizerState &rasterState)
-{
-    mRasterizationAndMultisampleStateInfo.depthBiasSlopeFactor    = rasterState.polygonOffsetFactor;
-    mRasterizationAndMultisampleStateInfo.depthBiasConstantFactor = rasterState.polygonOffsetUnits;
-    transition->set(
-        ANGLE_GET_TRANSITION_BIT(mRasterizationAndMultisampleStateInfo, depthBiasSlopeFactor));
-    transition->set(
-        ANGLE_GET_TRANSITION_BIT(mRasterizationAndMultisampleStateInfo, depthBiasConstantFactor));
 }
 
 void GraphicsPipelineDesc::setRenderPassDesc(const RenderPassDesc &renderPassDesc)

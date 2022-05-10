@@ -400,15 +400,11 @@ struct PackedRasterizationAndMultisampleStateInfo final
     // Padded to ensure there's no gaps in this structure or those that use it.
     float minSampleShading;
     uint32_t sampleMask[gl::MAX_SAMPLE_MASK_WORDS];
-    // Note: depth bias clamp is only exposed in a 3.1 extension, but left here for completeness.
-    float depthBiasClamp;
-    float depthBiasConstantFactor;
-    float depthBiasSlopeFactor;
 };
 
 constexpr size_t kPackedRasterizationAndMultisampleStateSize =
     sizeof(PackedRasterizationAndMultisampleStateInfo);
-static_assert(kPackedRasterizationAndMultisampleStateSize == 28, "Size check failed");
+static_assert(kPackedRasterizationAndMultisampleStateSize == 16, "Size check failed");
 
 struct StencilOps final
 {
@@ -705,8 +701,6 @@ class GraphicsPipelineDesc final
 
     // Depth offset.
     void updatePolygonOffsetFillEnabled(GraphicsPipelineTransitionBits *transition, bool enabled);
-    void updatePolygonOffset(GraphicsPipelineTransitionBits *transition,
-                             const gl::RasterizerState &rasterState);
 
     // Tessellation
     void updatePatchVertices(GraphicsPipelineTransitionBits *transition, GLuint value);

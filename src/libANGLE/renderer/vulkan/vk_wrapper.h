@@ -318,6 +318,9 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
                        uint32_t size,
                        const void *data);
 
+    void setDepthBias(float depthBiasConstantFactor,
+                      float depthBiasClamp,
+                      float depthBiasSlopeFactor);
     void setEvent(VkEvent event, VkPipelineStageFlags stageMask);
     void setFragmentShadingRate(const VkExtent2D *fragmentSize,
                                 VkFragmentShadingRateCombinerOpKHR ops[2]);
@@ -949,6 +952,14 @@ ANGLE_INLINE void CommandBuffer::pushConstants(const PipelineLayout &layout,
     ASSERT(valid() && layout.valid());
     ASSERT(offset == 0);
     vkCmdPushConstants(mHandle, layout.getHandle(), flag, 0, size, data);
+}
+
+ANGLE_INLINE void CommandBuffer::setDepthBias(float depthBiasConstantFactor,
+                                              float depthBiasClamp,
+                                              float depthBiasSlopeFactor)
+{
+    ASSERT(valid());
+    vkCmdSetDepthBias(mHandle, depthBiasConstantFactor, depthBiasClamp, depthBiasSlopeFactor);
 }
 
 ANGLE_INLINE void CommandBuffer::setEvent(VkEvent event, VkPipelineStageFlags stageMask)
