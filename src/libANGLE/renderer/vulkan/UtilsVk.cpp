@@ -1047,6 +1047,12 @@ void ResetDynamicState(ContextVk *contextVk, vk::RenderPassCommandBuffer *comman
     // Reset dynamic state that might affect UtilsVk.  Mark all dynamic state dirty for simplicity.
     // Ideally, only dynamic state that is changed by UtilsVk will be marked dirty but, until such
     // time as extensive transition tests are written, this approach is less bug-prone.
+
+    // Notes: the following dynamic state doesn't apply to UtilsVk functions:
+    //
+    // - line width: UtilsVk doesn't use line primitives
+
+    // Reset all other dynamic state, since it can affect UtilsVk functions:
     if (contextVk->getFeatures().supportsFragmentShadingRate.enabled)
     {
         VkExtent2D fragmentSize                                     = {1, 1};

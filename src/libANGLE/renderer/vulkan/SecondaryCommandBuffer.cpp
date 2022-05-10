@@ -116,6 +116,8 @@ const char *GetCommandString(CommandID id)
             return "SetEvent";
         case CommandID::SetFragmentShadingRate:
             return "SetFragmentShadingRate";
+        case CommandID::SetLineWidth:
+            return "SetLineWidth";
         case CommandID::SetScissor:
             return "SetScissor";
         case CommandID::SetViewport:
@@ -546,6 +548,13 @@ void SecondaryCommandBuffer::executeCommands(PrimaryCommandBuffer *primary)
                         VK_FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR,
                         VK_FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR};
                     vkCmdSetFragmentShadingRateKHR(cmdBuffer, &fragmentSize, ops);
+                    break;
+                }
+                case CommandID::SetLineWidth:
+                {
+                    const SetLineWidthParams *params =
+                        getParamPtr<SetLineWidthParams>(currentCommand);
+                    vkCmdSetLineWidth(cmdBuffer, params->lineWidth);
                     break;
                 }
                 case CommandID::SetScissor:

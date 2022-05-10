@@ -80,6 +80,7 @@ enum class CommandID : uint16_t
     ResolveImage,
     SetEvent,
     SetFragmentShadingRate,
+    SetLineWidth,
     SetScissor,
     SetViewport,
     WaitEvents,
@@ -425,6 +426,12 @@ struct SetFragmentShadingRateParams
 };
 VERIFY_4_BYTE_ALIGNMENT(SetFragmentShadingRateParams)
 
+struct SetLineWidthParams
+{
+    float lineWidth;
+};
+VERIFY_4_BYTE_ALIGNMENT(SetLineWidthParams)
+
 struct SetScissorParams
 {
     VkRect2D scissor;
@@ -682,6 +689,8 @@ class SecondaryCommandBuffer final : angle::NonCopyable
 
     void setFragmentShadingRate(const VkExtent2D *fragmentSize,
                                 VkFragmentShadingRateCombinerOpKHR ops[2]);
+
+    void setLineWidth(float lineWidth);
 
     void setScissor(uint32_t firstScissor, uint32_t scissorCount, const VkRect2D *scissors);
 
@@ -1478,6 +1487,12 @@ ANGLE_INLINE void SecondaryCommandBuffer::setFragmentShadingRate(
         initCommand<SetFragmentShadingRateParams>(CommandID::SetFragmentShadingRate);
     paramStruct->fragmentWidth  = static_cast<uint16_t>(fragmentSize->width);
     paramStruct->fragmentHeight = static_cast<uint16_t>(fragmentSize->height);
+}
+
+ANGLE_INLINE void SecondaryCommandBuffer::setLineWidth(float lineWidth)
+{
+    SetLineWidthParams *paramStruct = initCommand<SetLineWidthParams>(CommandID::SetLineWidth);
+    paramStruct->lineWidth          = lineWidth;
 }
 
 ANGLE_INLINE void SecondaryCommandBuffer::setScissor(uint32_t firstScissor,

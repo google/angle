@@ -7134,9 +7134,9 @@ TEST_P(ImageRespecificationTest, ImageTarget2DOESSwitch)
 
     EGLWindow *window = getEGLWindow();
     EGLint attribs[]  = {
-        EGL_IMAGE_PRESERVED,
-        EGL_TRUE,
-        EGL_NONE,
+         EGL_IMAGE_PRESERVED,
+         EGL_TRUE,
+         EGL_NONE,
     };
     EGLImageKHR firstEGLImage = eglCreateImageKHR(
         window->getDisplay(), window->getContext(), EGL_GL_TEXTURE_2D_KHR,
@@ -8299,6 +8299,75 @@ TEST_P(SimpleStateChangeTestES3, DeleteDoubleBoundBufferAndVertexArray)
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, bufData.size(), bufData.data(), GL_STATIC_DRAW);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, bufData.size(), bufData.data(), GL_STATIC_DRAW);
     ASSERT_GL_NO_ERROR();
+}
+
+// Tests state change for glLineWidth.
+TEST_P(StateChangeTestES3, LineWidth)
+{
+    GLfloat range[2] = {1};
+    glGetFloatv(GL_ALIASED_LINE_WIDTH_RANGE, range);
+    EXPECT_GL_NO_ERROR();
+
+    ANGLE_SKIP_TEST_IF(range[1] < 5.0);
+
+    constexpr char kVS[] = R"(#version 300 es
+precision highp float;
+uniform float height;
+void main()
+{
+    gl_Position = vec4(gl_VertexID == 0 ? -1 : 1, height * 2. - 1., 0, 1);
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 colorOut;
+uniform vec4 color;
+void main()
+{
+    colorOut = color;
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+
+    GLint heightLoc = glGetUniformLocation(program, "height");
+    GLint colorLoc  = glGetUniformLocation(program, "color");
+    ASSERT_NE(-1, heightLoc);
+    ASSERT_NE(-1, colorLoc);
+
+    glClearColor(0, 0, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    const int w                 = getWindowWidth();
+    const int h                 = getWindowHeight();
+    const float halfPixelHeight = 0.5 / h;
+
+    glUniform1f(heightLoc, 0.25f + halfPixelHeight);
+    glUniform4f(colorLoc, 1, 0, 0, 1);
+    glLineWidth(3);
+    glDrawArrays(GL_LINES, 0, 2);
+
+    glUniform1f(heightLoc, 0.5f + halfPixelHeight);
+    glUniform4f(colorLoc, 0, 1, 0, 1);
+    glLineWidth(5);
+    glDrawArrays(GL_LINES, 0, 2);
+
+    glUniform1f(heightLoc, 0.75f + halfPixelHeight);
+    glUniform4f(colorLoc, 0, 0, 1, 1);
+    glLineWidth(1);
+    glDrawArrays(GL_LINES, 0, 2);
+
+    EXPECT_PIXEL_RECT_EQ(0, h / 4 - 2, w, 1, GLColor::black);
+    EXPECT_PIXEL_RECT_EQ(0, h / 4 - 1, w, 3, GLColor::red);
+    EXPECT_PIXEL_RECT_EQ(0, h / 4 + 2, w, 1, GLColor::black);
+
+    EXPECT_PIXEL_RECT_EQ(0, h / 2 - 3, w, 1, GLColor::black);
+    EXPECT_PIXEL_RECT_EQ(0, h / 2 - 2, w, 5, GLColor::green);
+    EXPECT_PIXEL_RECT_EQ(0, h / 2 + 3, w, 1, GLColor::black);
+
+    EXPECT_PIXEL_RECT_EQ(0, 3 * h / 4 - 1, w, 1, GLColor::black);
+    EXPECT_PIXEL_RECT_EQ(0, 3 * h / 4, w, 1, GLColor::blue);
+    EXPECT_PIXEL_RECT_EQ(0, 3 * h / 4 + 1, w, 1, GLColor::black);
 }
 }  // anonymous namespace
 

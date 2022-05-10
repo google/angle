@@ -814,7 +814,7 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
         DirtyBits{DIRTY_BIT_PIPELINE_BINDING, DIRTY_BIT_TEXTURES, DIRTY_BIT_SHADER_RESOURCES,
                   DIRTY_BIT_DESCRIPTOR_SETS, DIRTY_BIT_DRIVER_UNIFORMS_BINDING};
 
-    mDynamicStateDirtyBits = DirtyBits{DIRTY_BIT_VIEWPORT, DIRTY_BIT_SCISSOR};
+    mDynamicStateDirtyBits = DirtyBits{DIRTY_BIT_VIEWPORT, DIRTY_BIT_SCISSOR, DIRTY_BIT_LINE_WIDTH};
     if (getFeatures().supportsFragmentShadingRate.enabled)
     {
         mDynamicStateDirtyBits.set(DIRTY_BIT_FRAGMENT_SHADING_RATE);
@@ -868,8 +868,9 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
     mGraphicsDirtyBitHandlers[DIRTY_BIT_DESCRIPTOR_SETS] =
         &ContextVk::handleDirtyGraphicsDescriptorSets;
 
-    mGraphicsDirtyBitHandlers[DIRTY_BIT_VIEWPORT] = &ContextVk::handleDirtyGraphicsViewport;
-    mGraphicsDirtyBitHandlers[DIRTY_BIT_SCISSOR]  = &ContextVk::handleDirtyGraphicsScissor;
+    mGraphicsDirtyBitHandlers[DIRTY_BIT_VIEWPORT]   = &ContextVk::handleDirtyGraphicsViewport;
+    mGraphicsDirtyBitHandlers[DIRTY_BIT_SCISSOR]    = &ContextVk::handleDirtyGraphicsScissor;
+    mGraphicsDirtyBitHandlers[DIRTY_BIT_LINE_WIDTH] = &ContextVk::handleDirtyGraphicsLineWidth;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_FRAGMENT_SHADING_RATE] =
         &ContextVk::handleDirtyGraphicsFragmentShadingRate;
 
@@ -2443,6 +2444,13 @@ angle::Result ContextVk::handleDirtyGraphicsScissor(DirtyBits::Iterator *dirtyBi
                                                     DirtyBits dirtyBitMask)
 {
     handleDirtyGraphicsScissorImpl(mState.isQueryActive(gl::QueryType::PrimitivesGenerated));
+    return angle::Result::Continue;
+}
+
+angle::Result ContextVk::handleDirtyGraphicsLineWidth(DirtyBits::Iterator *dirtyBitsIterator,
+                                                      DirtyBits dirtyBitMask)
+{
+    mRenderPassCommandBuffer->setLineWidth(mState.getLineWidth());
     return angle::Result::Continue;
 }
 
@@ -4518,8 +4526,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 onColorAccessChange();
                 break;
             case gl::State::DIRTY_BIT_LINE_WIDTH:
-                mGraphicsPipelineDesc->updateLineWidth(&mGraphicsPipelineTransition,
-                                                       glState.getLineWidth());
+                mGraphicsDirtyBits.set(DIRTY_BIT_LINE_WIDTH);
                 break;
             case gl::State::DIRTY_BIT_PRIMITIVE_RESTART_ENABLED:
                 mGraphicsPipelineDesc->updatePrimitiveRestartEnabled(

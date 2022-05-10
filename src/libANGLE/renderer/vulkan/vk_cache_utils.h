@@ -404,12 +404,11 @@ struct PackedRasterizationAndMultisampleStateInfo final
     float depthBiasClamp;
     float depthBiasConstantFactor;
     float depthBiasSlopeFactor;
-    float lineWidth;
 };
 
 constexpr size_t kPackedRasterizationAndMultisampleStateSize =
     sizeof(PackedRasterizationAndMultisampleStateInfo);
-static_assert(kPackedRasterizationAndMultisampleStateSize == 32, "Size check failed");
+static_assert(kPackedRasterizationAndMultisampleStateSize == 28, "Size check failed");
 
 struct StencilOps final
 {
@@ -611,7 +610,6 @@ class GraphicsPipelineDesc final
     void updateFrontFace(GraphicsPipelineTransitionBits *transition,
                          const gl::RasterizerState &rasterState,
                          bool invertFrontFace);
-    void updateLineWidth(GraphicsPipelineTransitionBits *transition, float lineWidth);
     void updateRasterizerDiscardEnabled(GraphicsPipelineTransitionBits *transition,
                                         bool rasterizerDiscardEnabled);
 

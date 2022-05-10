@@ -1827,7 +1827,6 @@ void GraphicsPipelineDesc::initDefaults(const ContextVk *contextVk)
     mRasterizationAndMultisampleStateInfo.depthBiasConstantFactor = 0.0f;
     mRasterizationAndMultisampleStateInfo.depthBiasClamp          = 0.0f;
     mRasterizationAndMultisampleStateInfo.depthBiasSlopeFactor    = 0.0f;
-    mRasterizationAndMultisampleStateInfo.lineWidth               = 1.0f;
 
     mRasterizationAndMultisampleStateInfo.bits.rasterizationSamples = 1;
     mRasterizationAndMultisampleStateInfo.bits.sampleShadingEnable  = 0;
@@ -2152,7 +2151,7 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     rasterState.depthBiasConstantFactor = rasterAndMS.depthBiasConstantFactor;
     rasterState.depthBiasClamp          = rasterAndMS.depthBiasClamp;
     rasterState.depthBiasSlopeFactor    = rasterAndMS.depthBiasSlopeFactor;
-    rasterState.lineWidth               = rasterAndMS.lineWidth;
+    rasterState.lineWidth               = 0;
     const void **pNextPtr               = &rasterState.pNext;
 
     VkPipelineRasterizationLineStateCreateInfoEXT rasterLineState = {};
@@ -2316,9 +2315,10 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     }
 
     // Dynamic state
-    angle::FixedVector<VkDynamicState, 3> dynamicStateList;
+    angle::FixedVector<VkDynamicState, 4> dynamicStateList;
     dynamicStateList.push_back(VK_DYNAMIC_STATE_VIEWPORT);
     dynamicStateList.push_back(VK_DYNAMIC_STATE_SCISSOR);
+    dynamicStateList.push_back(VK_DYNAMIC_STATE_LINE_WIDTH);
     if (contextVk->getFeatures().supportsFragmentShadingRate.enabled)
     {
         dynamicStateList.push_back(VK_DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR);
@@ -2446,13 +2446,6 @@ void GraphicsPipelineDesc::updateFrontFace(GraphicsPipelineTransitionBits *trans
     mRasterizationAndMultisampleStateInfo.bits.frontFace =
         static_cast<uint16_t>(gl_vk::GetFrontFace(rasterState.frontFace, invertFrontFace));
     transition->set(ANGLE_GET_TRANSITION_BIT(mRasterizationAndMultisampleStateInfo, bits));
-}
-
-void GraphicsPipelineDesc::updateLineWidth(GraphicsPipelineTransitionBits *transition,
-                                           float lineWidth)
-{
-    mRasterizationAndMultisampleStateInfo.lineWidth = lineWidth;
-    transition->set(ANGLE_GET_TRANSITION_BIT(mRasterizationAndMultisampleStateInfo, lineWidth));
 }
 
 void GraphicsPipelineDesc::updateRasterizerDiscardEnabled(
