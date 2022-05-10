@@ -91,6 +91,19 @@ class TracePerfTest : public ANGLERenderTest
                                   EGLint const *attrib_list);
     void onEglMakeCurrent(EGLDisplay display, EGLSurface draw, EGLSurface read, EGLContext context);
     EGLContext onEglGetCurrentContext();
+    EGLImage onEglCreateImage(EGLDisplay display,
+                              EGLContext context,
+                              EGLenum target,
+                              EGLClientBuffer buffer,
+                              const EGLAttrib *attrib_list);
+    EGLImageKHR onEglCreateImageKHR(EGLDisplay display,
+                                    EGLContext context,
+                                    EGLenum target,
+                                    EGLClientBuffer buffer,
+                                    const EGLint *attrib_list);
+    EGLBoolean onEglDestroyImage(EGLDisplay display, EGLImage image);
+    EGLBoolean onEglDestroyImageKHR(EGLDisplay display, EGLImage image);
+
     void onReplayFramebufferChange(GLenum target, GLuint framebuffer);
     void onReplayInvalidateFramebuffer(GLenum target,
                                        GLsizei numAttachments,
@@ -200,6 +213,35 @@ void KHRONOS_APIENTRY EglMakeCurrent(EGLDisplay display,
 EGLContext KHRONOS_APIENTRY EglGetCurrentContext()
 {
     return gCurrentTracePerfTest->onEglGetCurrentContext();
+}
+
+EGLImage KHRONOS_APIENTRY EglCreateImage(EGLDisplay display,
+                                         EGLContext context,
+                                         EGLenum target,
+                                         EGLClientBuffer buffer,
+                                         const EGLAttrib *attrib_list)
+{
+    return gCurrentTracePerfTest->onEglCreateImage(display, context, target, buffer, attrib_list);
+}
+
+EGLImageKHR KHRONOS_APIENTRY EglCreateImageKHR(EGLDisplay display,
+                                               EGLContext context,
+                                               EGLenum target,
+                                               EGLClientBuffer buffer,
+                                               const EGLint *attrib_list)
+{
+    return gCurrentTracePerfTest->onEglCreateImageKHR(display, context, target, buffer,
+                                                      attrib_list);
+}
+
+EGLBoolean KHRONOS_APIENTRY EglDestroyImage(EGLDisplay display, EGLImage image)
+{
+    return gCurrentTracePerfTest->onEglDestroyImage(display, image);
+}
+
+EGLBoolean KHRONOS_APIENTRY EglDestroyImageKHR(EGLDisplay display, EGLImage image)
+{
+    return gCurrentTracePerfTest->onEglDestroyImageKHR(display, image);
 }
 
 void KHRONOS_APIENTRY BindFramebufferProc(GLenum target, GLuint framebuffer)
@@ -497,6 +539,22 @@ angle::GenericProc KHRONOS_APIENTRY TraceLoadProc(const char *procName)
     if (strcmp(procName, "eglGetCurrentContext") == 0)
     {
         return reinterpret_cast<angle::GenericProc>(EglGetCurrentContext);
+    }
+    if (strcmp(procName, "eglCreateImage") == 0)
+    {
+        return reinterpret_cast<angle::GenericProc>(EglCreateImage);
+    }
+    if (strcmp(procName, "eglCreateImageKHR") == 0)
+    {
+        return reinterpret_cast<angle::GenericProc>(EglCreateImageKHR);
+    }
+    if (strcmp(procName, "eglDestroyImage") == 0)
+    {
+        return reinterpret_cast<angle::GenericProc>(EglDestroyImage);
+    }
+    if (strcmp(procName, "eglDestroyImageKHR") == 0)
+    {
+        return reinterpret_cast<angle::GenericProc>(EglDestroyImageKHR);
     }
 
     // GLES
@@ -1634,6 +1692,38 @@ void TracePerfTest::onEglMakeCurrent(EGLDisplay display,
 EGLContext TracePerfTest::onEglGetCurrentContext()
 {
     return getGLWindow()->getCurrentContextGeneric();
+}
+
+EGLImage TracePerfTest::onEglCreateImage(EGLDisplay display,
+                                         EGLContext context,
+                                         EGLenum target,
+                                         EGLClientBuffer buffer,
+                                         const EGLAttrib *attrib_list)
+{
+    GLWindowBase::Image image = getGLWindow()->createImage(
+        reinterpret_cast<GLWindowContext>(context), target, buffer, attrib_list);
+    return reinterpret_cast<EGLImage>(image);
+}
+
+EGLImageKHR TracePerfTest::onEglCreateImageKHR(EGLDisplay display,
+                                               EGLContext context,
+                                               EGLenum target,
+                                               EGLClientBuffer buffer,
+                                               const EGLint *attrib_list)
+{
+    GLWindowBase::Image image = getGLWindow()->createImageKHR(
+        reinterpret_cast<GLWindowContext>(context), target, buffer, attrib_list);
+    return reinterpret_cast<EGLImage>(image);
+}
+
+EGLBoolean TracePerfTest::onEglDestroyImage(EGLDisplay display, EGLImage image)
+{
+    return getGLWindow()->destroyImage(image);
+}
+
+EGLBoolean TracePerfTest::onEglDestroyImageKHR(EGLDisplay display, EGLImage image)
+{
+    return getGLWindow()->destroyImageKHR(image);
 }
 
 // Triggered when the replay calls glBindFramebuffer.
