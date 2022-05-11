@@ -313,6 +313,30 @@ def get_gpu_memory(trace_duration):
     return gpu_mem_average, gpu_mem_max
 
 
+def get_proc_memory():
+    # Pull the results from the device and parse
+    result = run_adb_command('shell cat /sdcard/Download/out.txt')
+    memory_median = ''
+    memory_max = ''
+
+    while True:
+        # Look for "memory_max" in the line and grab the second to last entry:
+        line = result.process.stdout.readline()
+        logging.debug('Checking line: %s' % line)
+        if not line:
+            break
+
+        if "memory_median" in line:
+            memory_median = line.split()[-2]
+            continue
+
+        if "memory_max" in line:
+            memory_max = line.split()[-2]
+            continue
+
+    return safe_cast_int(memory_max), safe_cast_int(memory_median)
+
+
 def get_gpu_time():
     # Pull the results from the device and parse
     result = run_adb_command('shell cat /sdcard/Download/out.txt')
@@ -380,10 +404,14 @@ class GPUPowerStats():
         self.mid_cpu_power = 0
         self.little_cpu_power = 0
 
-    def get_power_data(self):
+    def get_gpu_power(self, device_number):
         gpu_power_command = 'shell "'
-        gpu_power_command += 'cat /sys/bus/iio/devices/iio:device1/energy_value'
+        gpu_power_command += 'cat /sys/bus/iio/devices/iio:device'
+        gpu_power_command += device_number
+        gpu_power_command += '/energy_value'
         gpu_power_command += '"'
+
+        logging.debug("gpu_power_command %s" % gpu_power_command)
 
         gpu_result = run_adb_command(gpu_power_command)
 
@@ -413,9 +441,12 @@ class GPUPowerStats():
 
         logging.debug("self.gpu_power %s" % self.gpu_power)
 
+    def get_cpu_power(self, device_number):
         # Also grab the sum of CPU powers
         cpu_power_command = 'shell "'
-        cpu_power_command += 'cat /sys/bus/iio/devices/iio:device0/energy_value'
+        cpu_power_command += 'cat /sys/bus/iio/devices/iio:device'
+        cpu_power_command += device_number
+        cpu_power_command += '/energy_value'
         cpu_power_command += '"'
 
         cpu_result = run_adb_command(cpu_power_command)
@@ -461,6 +492,41 @@ class GPUPowerStats():
                 self.little_cpu_power = line.split()[1]
                 break
         logging.debug("self.little_cpu_power %s" % self.little_cpu_power)
+
+    def get_power_data(self):
+
+        logging.debug('Checking where CPU and GPU data are mapped on enabled_rails')
+        enabled_rails_command = 'shell "'
+        enabled_rails_command += 'cat /sys/bus/iio/devices/iio:device0/enabled_rails'
+        enabled_rails_command += '"'
+
+        enabled_rails_result = run_adb_command(enabled_rails_command)
+
+        # See which rails are on device 0
+        rails0 = ''
+        while True:
+            line = enabled_rails_result.process.stdout.readline()
+            logging.debug('Checking line: %s' % line)
+            if not line:
+                break
+            if "S2S_VDD_G3D" in line:
+                rails0 = 'GPU'
+                break
+            if "S2M_VDD_CPUCL2" in line:
+                rails0 = 'CPU'
+                break
+
+        if "CPU" in rails0:
+            logging.debug('CPU is rail 0, GPU is rail 1')
+            self.get_cpu_power('0')
+            self.get_gpu_power('1')
+        elif "GPU" in rails0:
+            logging.debug('GPU is rail 0, CPU is rail 1')
+            self.get_cpu_power('1')
+            self.get_gpu_power('0')
+        else:
+            logging.error('Failed to select device in get_power_data')
+            exit()
 
 
 def drop_high_low_and_average(values):
@@ -568,19 +634,42 @@ def main():
     output_file = open(raw_data_filename, 'w', newline='')
     output_writer = csv.writer(output_file)
 
+    # Set some widths that allow easily reading the values, but fit on smaller monitors.
+    column_width = {
+        'trace': trace_width,
+        'wall_time': 15,
+        'gpu_time': 15,
+        'cpu_time': 15,
+        'gpu_power': 10,
+        'cpu_power': 10,
+        'gpu_mem_sustained': 20,
+        'gpu_mem_peak': 15,
+        'proc_mem_median': 20,
+        'proc_mem_peak': 15
+    }
+
     if args.walltimeonly:
         print('%-*s' % (trace_width, 'wall_time_per_frame'))
     elif args.power:
-        print('%-*s %-*s %-*s %-*s %-*s %-*s %-*s %-*s' %
-              (trace_width, 'trace', 30, 'wall_time', 30, 'gpu_time', 20, 'cpu_time', 20,
-               'gpu_power', 20, 'cpu_power', 20, 'gpu_mem_sustained', 20, 'gpu_mem_peak'))
+        print('%-*s %-*s %-*s %-*s %-*s %-*s %-*s %-*s %-*s %-*s' %
+              (column_width['trace'], 'trace', column_width['wall_time'], 'wall_time',
+               column_width['gpu_time'], 'gpu_time', column_width['cpu_time'], 'cpu_time',
+               column_width['gpu_power'], 'gpu_power', column_width['cpu_power'], 'cpu_power',
+               column_width['gpu_mem_sustained'], 'gpu_mem_sustained',
+               column_width['gpu_mem_peak'], 'gpu_mem_peak', column_width['proc_mem_median'],
+               'proc_mem_median', column_width['proc_mem_peak'], 'proc_mem_peak'))
         output_writer.writerow([
             'trace', 'wall_time(ms)', 'gpu_time(ms)', 'cpu_time(ms)', 'gpu_power(uWs)',
-            'cpu_power(uWs)', 'gpu_mem_sustained', 'gpu_mem_peak'
+            'cpu_power(uWs)', 'gpu_mem_sustained', 'gpu_mem_peak', 'proc_mem_median',
+            'proc_mem_peak'
         ])
     else:
-        print('%-*s %-*s %-*s' %
-              (trace_width, 'trace', 30, 'wall_time_per_frame(ms)', 30, 'gpu_time_per_frame'))
+        print('%-*s %-*s %-*s %-*s %-*s %-*s %-*s %-*s' %
+              (column_width['trace'], 'trace', column_width['wall_time'], 'wall_time',
+               column_width['gpu_time'], 'gpu_time', column_width['cpu_time'], 'cpu_time',
+               column_width['gpu_mem_sustained'], 'gpu_mem_sustained',
+               column_width['gpu_mem_peak'], 'gpu_mem_peak', column_width['proc_mem_median'],
+               'proc_mem_median', column_width['proc_mem_peak'], 'proc_mem_peak'))
 
     run_adb_command('root')
 
@@ -601,6 +690,8 @@ def main():
     cpu_power_per_frames = defaultdict(dict)
     gpu_mem_sustaineds = defaultdict(dict)
     gpu_mem_peaks = defaultdict(dict)
+    proc_mem_medians = defaultdict(dict)
+    proc_mem_peaks = defaultdict(dict)
 
     for renderer in renderers:
         for i in range(int(args.loop_count)):
@@ -661,6 +752,8 @@ def main():
                     '%s = %i, %s = %i' %
                     ('gpu_mem_sustained', gpu_mem_sustained, 'gpu_mem_peak', gpu_mem_peak))
 
+                proc_mem_peak, proc_mem_median = get_proc_memory()
+
                 trace_name = mode + renderer + '_' + test
 
                 if len(wall_times[test]) == 0:
@@ -670,6 +763,10 @@ def main():
                 if len(gpu_times[test]) == 0:
                     gpu_times[test] = defaultdict(list)
                 gpu_times[test][renderer].append(safe_cast_float(gpu_time))
+
+                if len(cpu_times[test]) == 0:
+                    cpu_times[test] = defaultdict(list)
+                cpu_times[test][renderer].append(safe_cast_float(cpu_time))
 
                 if len(gpu_power_per_frames[test]) == 0:
                     gpu_power_per_frames[test] = defaultdict(list)
@@ -687,24 +784,40 @@ def main():
                     gpu_mem_peaks[test] = defaultdict(list)
                 gpu_mem_peaks[test][renderer].append(safe_cast_int(gpu_mem_peak))
 
-                if len(cpu_times[test]) == 0:
-                    cpu_times[test] = defaultdict(list)
-                cpu_times[test][renderer].append(safe_cast_float(cpu_time))
+                if len(proc_mem_medians[test]) == 0:
+                    proc_mem_medians[test] = defaultdict(list)
+                proc_mem_medians[test][renderer].append(safe_cast_int(proc_mem_median))
+
+                if len(proc_mem_peaks[test]) == 0:
+                    proc_mem_peaks[test] = defaultdict(list)
+                proc_mem_peaks[test][renderer].append(safe_cast_int(proc_mem_peak))
 
                 if args.walltimeonly:
                     print('%-*s' % (trace_width, wall_time))
                 elif args.power:
-                    print('%-*s %-*s %-*s %-*s %-*i %-*i %-*i %-*i' %
-                          (trace_width, trace_name, 30, wall_time, 30, gpu_time, 20, cpu_time, 20,
-                           gpu_power_per_frame, 20, cpu_power_per_frame, 20, gpu_mem_sustained, 20,
-                           gpu_mem_peak))
+                    print(
+                        '%-*s %-*s %-*s %-*s %-*i %-*i %-*i %-*i %-*i %-*i' %
+                        (column_width['trace'], trace_name, column_width['wall_time'], wall_time,
+                         column_width['gpu_time'], gpu_time, column_width['cpu_time'], cpu_time,
+                         column_width['gpu_power'], gpu_power_per_frame, column_width['cpu_power'],
+                         cpu_power_per_frame, column_width['gpu_mem_sustained'], gpu_mem_sustained,
+                         column_width['gpu_mem_peak'], gpu_mem_peak,
+                         column_width['proc_mem_median'], proc_mem_median,
+                         column_width['proc_mem_peak'], proc_mem_peak))
                     output_writer.writerow([
                         mode + renderer + '_' + test, wall_time, gpu_time, cpu_time,
-                        gpu_power_per_frame, cpu_power_per_frame, gpu_mem_sustained, gpu_mem_peak
+                        gpu_power_per_frame, cpu_power_per_frame, gpu_mem_sustained, gpu_mem_peak,
+                        proc_mem_median, proc_mem_peak
                     ])
                 else:
-                    print('%-*s %-*s %-*s' %
-                          (trace_width, trace_name, 30, wall_time, 30, gpu_time))
+                    print('%-*s %-*s %-*s %-*s %-*i %-*i %-*i %-*i' %
+                          (column_width['trace'], trace_name, column_width['wall_time'], wall_time,
+                           column_width['gpu_time'], gpu_time, column_width['cpu_time'], cpu_time,
+                           column_width['gpu_mem_sustained'], gpu_mem_sustained,
+                           column_width['gpu_mem_peak'], gpu_mem_peak,
+                           column_width['proc_mem_median'], proc_mem_median,
+                           column_width['proc_mem_peak'], proc_mem_peak))
+
 
                 # Early exit for testing
                 #exit()
@@ -744,7 +857,12 @@ def main():
         "\"ANGLE\nGPU\nmem\nvariance\"", "\"GPU\nmem\ncompare\"",
         "\"Native\npeak\nGPU\nmem\n(B)\"", "\"Native\npeak\nGPU\nmem\nvariance\"",
         "\"ANGLE\npeak\nGPU\nmem\n(B)\"", "\"ANGLE\npeak\nGPU\nmem\nvariance\"",
-        "\"GPU\npeak\nmem\ncompare\""
+        "\"GPU\npeak\nmem\ncompare\"", "\"Native\nprocess\nmem\n(B)\"",
+        "\"Native\nprocess\nmem\nvariance\"", "\"ANGLE\nprocess\nmem\n(B)\"",
+        "\"ANGLE\nprocess\nmem\nvariance\"", "\"process\nmem\ncompare\"",
+        "\"Native\npeak\nprocess\nmem\n(B)\"", "\"Native\npeak\nprocess\nmem\nvariance\"",
+        "\"ANGLE\npeak\nprocess\nmem\n(B)\"", "\"ANGLE\npeak\nprocess\nmem\nvariance\"",
+        "\"process\npeak\nmem\ncompare\""
     ])
 
     rows = defaultdict(dict)
@@ -776,6 +894,12 @@ def main():
         populate_row(rows, name, results)
 
     for name, results in gpu_mem_peaks.items():
+        populate_row(rows, name, results)
+
+    for name, results in proc_mem_medians.items():
+        populate_row(rows, name, results)
+
+    for name, results in proc_mem_peaks.items():
         populate_row(rows, name, results)
 
     for name, data in rows.items():
@@ -826,7 +950,17 @@ def main():
             percent(data["native"][13]),
             int(data["vulkan"][12]),
             percent(data["vulkan"][13]),
-            percent(safe_divide(data["native"][12], data["vulkan"][12]))
+            percent(safe_divide(data["native"][12], data["vulkan"][12])),
+            int(data["native"][14]),
+            percent(data["native"][15]),
+            int(data["vulkan"][14]),
+            percent(data["vulkan"][15]),
+            percent(safe_divide(data["native"][14], data["vulkan"][14])),
+            int(data["native"][16]),
+            percent(data["native"][17]),
+            int(data["vulkan"][16]),
+            percent(data["vulkan"][17]),
+            percent(safe_divide(data["native"][16], data["vulkan"][16]))
         ])
 
     return 0
