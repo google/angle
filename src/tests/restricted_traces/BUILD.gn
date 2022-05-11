@@ -20,10 +20,7 @@ angle_shared_library("angle_restricted_trace_loader") {
 
 angle_trace_fixture("angle_restricted_trace_fixture") {
   gl_header = "angle_trace_gl.h"
-  public_deps = [
-    ":angle_restricted_trace_loader",
-    "$angle_root/util:angle_util",
-  ]
+  public_deps = [ ":angle_restricted_trace_loader" ]
   public_configs = [ "$angle_root:no_gl_prototypes" ]
 }
 
@@ -42,11 +39,7 @@ angle_shared_library("angle_restricted_traces") {
   data_deps = [ ":angle_restricted_trace" ]
   defines = [ "ANGLE_TRACE_IMPLEMENTATION" ]
 
-  deps = [
-    "$angle_root:angle_common",
-    "$angle_root/util:angle_util",
-  ]
-
+  deps = [ "$angle_root:angle_common" ]
   public_deps = [ ":angle_restricted_trace_loader" ]
 }
 
