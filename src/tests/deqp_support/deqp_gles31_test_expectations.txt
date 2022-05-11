@@ -9,10 +9,13 @@
 ////
 
 // Crashing Tests
-1442 D3D11 : dEQP-GLES31.functional.program_interface_query.transform_feedback_varying.resource_list.vertex_fragment.builtin_gl_position = SKIP
 1442 OPENGL : dEQP-GLES31.functional.program_interface_query.transform_feedback_varying.resource_list.vertex_fragment.builtin_gl_position = SKIP
 
-1442 D3D11 : dEQP-GLES31.functional.image_load_store.* = SKIP
+1442 D3D11 : dEQP-GLES31.functional.image_load_store.3d.qualifiers.volatile_r32f = SKIP
+1442 D3D11 : dEQP-GLES31.functional.image_load_store.2d.format_reinterpret.* = SKIP
+1442 D3D11 : dEQP-GLES31.functional.image_load_store.cube.format_reinterpret.* = SKIP
+1442 D3D11 : dEQP-GLES31.functional.image_load_store.3d.format_reinterpret.* = SKIP
+1442 D3D11 : dEQP-GLES31.functional.image_load_store.2d_array.format_reinterpret.* = SKIP
 
 // Times out shader compilation because it uses so many resources.
 3445 : dEQP-GLES31.functional.ssbo.layout.random.all_shared_buffer.48 = SKIP
@@ -119,7 +122,6 @@
 // TODO(xinghua.cao@intel.com): FAIL expectation instead of SKIP should be sufficient for OpenGL, but the
 // test expectations parser doesn't support having FAIL for GL and SKIP for D3D with the same test filter.
 
-1729 D3D11 : dEQP-GLES31.functional.atomic_counter.* = SKIP
 1951 D3D11 : dEQP-GLES31.functional.layout_binding.ssbo.* = SKIP
 4330 D3D11 : dEQP-GLES31.functional.program_interface_query.buffer_variable.referenced_by.separable_vertex.* = SKIP
 4329 D3D11 : dEQP-GLES31.functional.program_interface_query.buffer_variable.referenced_by.separable_fragment.* = SKIP
