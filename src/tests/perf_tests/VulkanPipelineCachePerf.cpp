@@ -8,6 +8,7 @@
 
 #include "ANGLEPerfTest.h"
 
+#include "libANGLE/renderer/vulkan/RendererVk.h"
 #include "libANGLE/renderer/vulkan/vk_cache_utils.h"
 #include "libANGLE/renderer/vulkan/vk_helpers.h"
 #include "util/random_utils.h"
@@ -44,7 +45,7 @@ VulkanPipelineCachePerfTest::VulkanPipelineCachePerfTest()
 
 VulkanPipelineCachePerfTest::~VulkanPipelineCachePerfTest()
 {
-    mCache.destroy(VK_NULL_HANDLE);
+    mCache.reset();
 }
 
 void VulkanPipelineCachePerfTest::SetUp()
@@ -83,6 +84,8 @@ void VulkanPipelineCachePerfTest::step()
     vk::RenderPass rp;
     vk::PipelineLayout pl;
     vk::PipelineCache pc;
+    vk::RefCounted<vk::ShaderAndSerial> vsAndSerial;
+    vk::RefCounted<vk::ShaderAndSerial> fsAndSerial;
     vk::ShaderAndSerialMap ssm;
     const vk::GraphicsPipelineDesc *desc = nullptr;
     vk::PipelineHelper *result           = nullptr;
@@ -93,8 +96,12 @@ void VulkanPipelineCachePerfTest::step()
     // The Vulkan handle types are difficult to cast to without #ifdefs.
     VkShaderModule vs = (VkShaderModule)1;
     VkShaderModule fs = (VkShaderModule)2;
-    ssm[gl::ShaderType::Vertex].get().get().setHandle(vs);
-    ssm[gl::ShaderType::Fragment].get().get().setHandle(fs);
+
+    vsAndSerial.get().get().setHandle(vs);
+    fsAndSerial.get().get().setHandle(fs);
+
+    ssm[gl::ShaderType::Vertex].set(&vsAndSerial);
+    ssm[gl::ShaderType::Fragment].set(&fsAndSerial);
 
     vk::SpecializationConstants defaultSpecConsts{};
 
@@ -114,6 +121,9 @@ void VulkanPipelineCachePerfTest::step()
         (void)mCache.getPipeline(VK_NULL_HANDLE, pc, rp, pl, am, ctm, dbm, ssm, defaultSpecConsts,
                                  miss, &desc, &result);
     }
+
+    vsAndSerial.get().get().setHandle(VK_NULL_HANDLE);
+    fsAndSerial.get().get().setHandle(VK_NULL_HANDLE);
 }
 
 }  // anonymous namespace

@@ -1707,6 +1707,9 @@ class GraphicsPipelineCache final : public HasCacheStats<VulkanCacheType::Graphi
                               shaders, specConsts, desc, descPtrOut, pipelineOut);
     }
 
+    // Helper for VulkanPipelineCachePerf that resets the object without destroying any object.
+    void reset();
+
   private:
     angle::Result insertPipeline(ContextVk *contextVk,
                                  const vk::PipelineCache &pipelineCacheVk,

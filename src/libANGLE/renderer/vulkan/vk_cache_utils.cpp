@@ -3878,6 +3878,11 @@ void GraphicsPipelineCache::release(ContextVk *context)
     mPayload.clear();
 }
 
+void GraphicsPipelineCache::reset()
+{
+    mPayload.clear();
+}
+
 angle::Result GraphicsPipelineCache::insertPipeline(
     ContextVk *contextVk,
     const vk::PipelineCache &pipelineCacheVk,
