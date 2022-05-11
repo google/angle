@@ -232,8 +232,6 @@ constexpr const char *kSkippedMessages[] = {
     // https://anglebug.com/42266639
     "VUID-VkVertexInputBindingDivisorDescriptionKHR-divisor-01870",
     "VUID-VkVertexInputBindingDivisorDescription-divisor-01870",
-    // https://anglebug.com/42266675
-    "VUID-VkGraphicsPipelineCreateInfo-topology-08773",
     // https://anglebug.com/42265766
     "VUID-vkCmdBlitImage-srcImage-00240",
     // https://anglebug.com/42266678
@@ -300,6 +298,12 @@ constexpr const char *kNoListRestartSkippedMessages[] = {
 constexpr const char *kNoMaintenance5SkippedMessages[] = {
     // https://anglebug.com/42266575#comment4
     "VUID-VkBufferViewCreateInfo-format-08779",
+    // https://anglebug.com/42266675
+    "VUID-VkGraphicsPipelineCreateInfo-topology-08773",
+    "VUID-vkCmdDraw-primitiveTopology-10748",
+    "VUID-vkCmdDrawIndexed-primitiveTopology-10748",
+    "VUID-vkCmdDrawIndirect-primitiveTopology-10748",
+    "VUID-vkCmdDrawIndexedIndirect-primitiveTopology-10748",
 };
 
 // Validation messages that should be ignored only when VK_KHR_maintenance9 is not present.
@@ -6019,6 +6023,8 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
         &mFeatures, useDepthWriteEnableDynamicState,
         mFeatures.supportsExtendedDynamicState.enabled && !isExtendedDynamicStateBuggy);
     ANGLE_FEATURE_CONDITION(&mFeatures, useFrontFaceDynamicState,
+                            mFeatures.supportsExtendedDynamicState.enabled);
+    ANGLE_FEATURE_CONDITION(&mFeatures, usePrimitiveTopologyDynamicState,
                             mFeatures.supportsExtendedDynamicState.enabled);
     ANGLE_FEATURE_CONDITION(&mFeatures, useStencilOpDynamicState,
                             mFeatures.supportsExtendedDynamicState.enabled);

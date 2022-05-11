@@ -752,6 +752,12 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo usePrimitiveTopologyDynamicState = {
+        "usePrimitiveTopologyDynamicState",
+        FeatureCategory::VulkanWorkarounds,
+        &members,
+    };
+
     FeatureInfo useDepthTestEnableDynamicState = {
         "useDepthTestEnableDynamicState",
         FeatureCategory::VulkanWorkarounds,

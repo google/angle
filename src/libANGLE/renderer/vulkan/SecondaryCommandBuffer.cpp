@@ -154,6 +154,8 @@ const char *GetCommandString(CommandID id)
             return "SetLogicOp";
         case CommandID::SetPrimitiveRestartEnable:
             return "SetPrimitiveRestartEnable";
+        case CommandID::SetPrimitiveTopology:
+            return "SetPrimitiveTopology";
         case CommandID::SetRasterizerDiscardEnable:
             return "SetRasterizerDiscardEnable";
         case CommandID::SetScissor:
@@ -830,6 +832,13 @@ void SecondaryCommandBuffer::executeCommands(PrimaryCommandBuffer *primary)
                     const SetPrimitiveRestartEnableParams *params =
                         getParamPtr<SetPrimitiveRestartEnableParams>(currentCommand);
                     vkCmdSetPrimitiveRestartEnableEXT(cmdBuffer, params->primitiveRestartEnable);
+                    break;
+                }
+                case CommandID::SetPrimitiveTopology:
+                {
+                    const SetPrimitiveTopologyParams *params =
+                        getParamPtr<SetPrimitiveTopologyParams>(currentCommand);
+                    vkCmdSetPrimitiveTopologyEXT(cmdBuffer, params->primitiveTopology);
                     break;
                 }
                 case CommandID::SetRasterizerDiscardEnable:
