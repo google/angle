@@ -1512,6 +1512,8 @@
 410630704 SAMSUNG GALAXYS24EXYNOS GLES : VulkanImageTest.DeviceVulkan/* = SKIP
 410630704 SAMSUNG GALAXYS24EXYNOS GLES : VulkanImageTest.HasVulkanImageExtensions/* = SKIP
 410630704 SAMSUNG GALAXYS24EXYNOS GLES : VulkanExternalImageTestES31.UninitializedOnGLImportAndStorageWrite/* = SKIP
+465357680 SAMSUNG GALAXYS24EXYNOS VULKAN : StateChangeTestES3.PrimitiveRestart/ES3_Vulkan_NoSupportsExtendedDynamicState2* = SKIP
+465357680 SAMSUNG GALAXYS24EXYNOS VULKAN : StateChangeTestES3.PrimitiveRestart/ES3_Vulkan_NoUsePrimitiveRestartEnableDynamicState = SKIP
 
 // Additional Xclipse failures on latest public
 410630704 SAMSUNG GALAXYS24EXYNOS GLES : AdvancedBlendTest.AdvancedBlendDisabledAndThenEnabledKHR/* = SKIP

@@ -232,8 +232,6 @@ constexpr const char *kSkippedMessages[] = {
     // https://anglebug.com/42266639
     "VUID-VkVertexInputBindingDivisorDescriptionKHR-divisor-01870",
     "VUID-VkVertexInputBindingDivisorDescription-divisor-01870",
-    // https://anglebug.com/42266675
-    "VUID-VkGraphicsPipelineCreateInfo-topology-08773",
     // https://anglebug.com/42265766
     "VUID-vkCmdBlitImage-srcImage-00240",
     // https://anglebug.com/42266678
@@ -300,6 +298,12 @@ constexpr const char *kNoListRestartSkippedMessages[] = {
 constexpr const char *kNoMaintenance5SkippedMessages[] = {
     // https://anglebug.com/42266575#comment4
     "VUID-VkBufferViewCreateInfo-format-08779",
+    // https://anglebug.com/42266675
+    "VUID-VkGraphicsPipelineCreateInfo-topology-08773",
+    "VUID-vkCmdDraw-primitiveTopology-10748",
+    "VUID-vkCmdDrawIndexed-primitiveTopology-10748",
+    "VUID-vkCmdDrawIndirect-primitiveTopology-10748",
+    "VUID-vkCmdDrawIndexedIndirect-primitiveTopology-10748",
 };
 
 // Validation messages that should be ignored only when VK_KHR_maintenance9 is not present.
@@ -5997,7 +6001,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     //
     // Regressions have been detected using r46 on older architectures though
     // http://issuetracker.google.com/336411904
-    const bool isExtendedDynamicStateBuggy =
+    const bool isARMExtendedDynamicStateBuggy =
         isARMProprietary &&
         (driverVersion < angle::VersionTriple(44, 1, 0) ||
          (isMaliJobManagerBasedGPU && driverVersion >= angle::VersionTriple(46, 0, 0)));
@@ -6024,7 +6028,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsExtendedDynamicState,
                             mExtendedDynamicStateFeatures.extendedDynamicState == VK_TRUE &&
-                                !isExtendedDynamicStateBuggy);
+                                !isARMExtendedDynamicStateBuggy);
 
     // VK_EXT_vertex_input_dynamic_state enables dynamic state for the full vertex input state. As
     // such, when available use supportsVertexInputDynamicState instead of
@@ -6037,7 +6041,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // https://developer.arm.com/documentation/SDEN-3735689/0100/?lang=en
     ANGLE_FEATURE_CONDITION(
         &mFeatures, useCullModeDynamicState,
-        mFeatures.supportsExtendedDynamicState.enabled && !isExtendedDynamicStateBuggy &&
+        mFeatures.supportsExtendedDynamicState.enabled && !isARMExtendedDynamicStateBuggy &&
             !(isARMProprietary && driverVersion < angle::VersionTriple(52, 0, 0)));
     ANGLE_FEATURE_CONDITION(&mFeatures, useDepthCompareOpDynamicState,
                             mFeatures.supportsExtendedDynamicState.enabled);
@@ -6045,9 +6049,17 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
                             mFeatures.supportsExtendedDynamicState.enabled);
     ANGLE_FEATURE_CONDITION(
         &mFeatures, useDepthWriteEnableDynamicState,
-        mFeatures.supportsExtendedDynamicState.enabled && !isExtendedDynamicStateBuggy);
+        mFeatures.supportsExtendedDynamicState.enabled && !isARMExtendedDynamicStateBuggy);
     ANGLE_FEATURE_CONDITION(&mFeatures, useFrontFaceDynamicState,
                             mFeatures.supportsExtendedDynamicState.enabled);
+    // On ARM proprietary drivers, there seems to be a bug with primitive topology dynamic state in
+    // combination with geometry shaders.
+    //
+    // On Samsung, it was observed that the combination of primitive topology dynamic state
+    // _enabled_ and primitive restart dynamic state _disabled_ is buggy.  However, the feature is
+    // not disabled because primitive restart is not disabled outside tests.
+    ANGLE_FEATURE_CONDITION(&mFeatures, usePrimitiveTopologyDynamicState,
+                            mFeatures.supportsExtendedDynamicState.enabled && !isARMProprietary);
     ANGLE_FEATURE_CONDITION(&mFeatures, useStencilOpDynamicState,
                             mFeatures.supportsExtendedDynamicState.enabled);
     ANGLE_FEATURE_CONDITION(&mFeatures, useStencilTestEnableDynamicState,
@@ -6061,11 +6073,11 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsExtendedDynamicState2,
                             mExtendedDynamicState2Features.extendedDynamicState2 == VK_TRUE &&
-                                !isExtendedDynamicStateBuggy);
+                                !isARMExtendedDynamicStateBuggy);
 
     ANGLE_FEATURE_CONDITION(
         &mFeatures, usePrimitiveRestartEnableDynamicState,
-        mFeatures.supportsExtendedDynamicState2.enabled && !isExtendedDynamicStateBuggy);
+        mFeatures.supportsExtendedDynamicState2.enabled && !isARMExtendedDynamicStateBuggy);
     ANGLE_FEATURE_CONDITION(&mFeatures, useRasterizerDiscardEnableDynamicState,
                             mFeatures.supportsExtendedDynamicState2.enabled);
     ANGLE_FEATURE_CONDITION(&mFeatures, useDepthBiasEnableDynamicState,

@@ -1008,7 +1008,7 @@ angle::Result ProgramExecutableVk::preparePipelineCacheForWarmUp(
                                  ? gl::PrimitiveMode::Patches
                              : mExecutable->hasLinkedShaderStage(gl::ShaderType::Geometry)
                                  ? mExecutable->getGeometryShaderInputPrimitiveType()
-                                 : gl::PrimitiveMode::TriangleStrip;
+                                 : gl::PrimitiveMode::Triangles;
     SetupDefaultPipelineState(context, *mExecutable, mode, pipelineRobustness,
                               pipelineProtectedAccess, subset, &mWarmUpGraphicsPipelineDesc);
 

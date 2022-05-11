@@ -474,6 +474,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::UseMultipleDescriptorsForExternalFormats, "useMultipleDescriptorsForExternalFormats"},
     {Feature::UseNonZeroStencilWriteMaskStaticState, "useNonZeroStencilWriteMaskStaticState"},
     {Feature::UsePrimitiveRestartEnableDynamicState, "usePrimitiveRestartEnableDynamicState"},
+    {Feature::UsePrimitiveTopologyDynamicState, "usePrimitiveTopologyDynamicState"},
     {Feature::UseRasterizerDiscardEnableDynamicState, "useRasterizerDiscardEnableDynamicState"},
     {Feature::UseResetCommandBufferBitForSecondaryPools, "useResetCommandBufferBitForSecondaryPools"},
     {Feature::UseShadowBuffersWhenAppropriate, "useShadowBuffersWhenAppropriate"},

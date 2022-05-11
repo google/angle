@@ -474,6 +474,7 @@ enum class Feature
     UseMultipleDescriptorsForExternalFormats,
     UseNonZeroStencilWriteMaskStaticState,
     UsePrimitiveRestartEnableDynamicState,
+    UsePrimitiveTopologyDynamicState,
     UseRasterizerDiscardEnableDynamicState,
     UseResetCommandBufferBitForSecondaryPools,
     UseShadowBuffersWhenAppropriate,

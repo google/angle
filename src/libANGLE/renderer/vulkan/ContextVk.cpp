@@ -180,6 +180,24 @@ constexpr gl::ShaderMap<vk::ImageAccess> kShaderWriteImageAccess = {
     {gl::ShaderType::Fragment, vk::ImageAccess::FragmentShaderWrite},
     {gl::ShaderType::Compute, vk::ImageAccess::ComputeShaderWrite}};
 
+constexpr angle::PackedEnumMap<gl::PrimitiveMode, gl::PrimitiveMode> kPrimitiveTopologyClass = {{
+    {gl::PrimitiveMode::Points, gl::PrimitiveMode::Points},
+    {gl::PrimitiveMode::Lines, gl::PrimitiveMode::Lines},
+    {gl::PrimitiveMode::LineLoop, gl::PrimitiveMode::Lines},
+    {gl::PrimitiveMode::LineStrip, gl::PrimitiveMode::Lines},
+    {gl::PrimitiveMode::Triangles, gl::PrimitiveMode::Triangles},
+    {gl::PrimitiveMode::TriangleStrip, gl::PrimitiveMode::Triangles},
+    {gl::PrimitiveMode::TriangleFan, gl::PrimitiveMode::Triangles},
+    {gl::PrimitiveMode::LinesAdjacency, gl::PrimitiveMode::Lines},
+    {gl::PrimitiveMode::LineStripAdjacency, gl::PrimitiveMode::Lines},
+    {gl::PrimitiveMode::TrianglesAdjacency, gl::PrimitiveMode::Triangles},
+    {gl::PrimitiveMode::TriangleStripAdjacency, gl::PrimitiveMode::Triangles},
+    {gl::PrimitiveMode::Patches, gl::PrimitiveMode::Patches},
+    // Use Unused1 as a placeholder for "uninitialized".  Using that instead of InvalidEnum allows a
+    // look up in this table and avoid special-casing it.
+    {gl::PrimitiveMode::Unused1, gl::PrimitiveMode::InvalidEnum},
+}};
+
 constexpr VkBufferUsageFlags kVertexBufferUsage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
 constexpr size_t kDynamicVertexDataSize         = 16 * 1024;
 
@@ -827,7 +845,7 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
       mCurrentGraphicsPipeline(nullptr),
       mCurrentGraphicsPipelineShaders(nullptr),
       mCurrentComputePipeline(nullptr),
-      mCurrentDrawMode(gl::PrimitiveMode::InvalidEnum),
+      mCurrentDrawMode(gl::PrimitiveMode::Unused1),
       mCurrentWindowSurface(nullptr),
       mCurrentRotationDrawFramebuffer(SurfaceRotation::Identity),
       mCurrentRotationReadFramebuffer(SurfaceRotation::Identity),
@@ -925,6 +943,10 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
     if (mRenderer->getFeatures().useFrontFaceDynamicState.enabled)
     {
         mDynamicStateDirtyBits.set(DIRTY_BIT_DYNAMIC_FRONT_FACE);
+    }
+    if (mRenderer->getFeatures().usePrimitiveTopologyDynamicState.enabled)
+    {
+        mDynamicStateDirtyBits.set(DIRTY_BIT_DYNAMIC_PRIMITIVE_TOPOLOGY);
     }
     if (mRenderer->getFeatures().useDepthTestEnableDynamicState.enabled)
     {
@@ -1039,6 +1061,8 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
         &ContextVk::handleDirtyGraphicsDynamicCullMode;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_FRONT_FACE] =
         &ContextVk::handleDirtyGraphicsDynamicFrontFace;
+    mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_PRIMITIVE_TOPOLOGY] =
+        &ContextVk::handleDirtyGraphicsDynamicPrimitiveTopology;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_DEPTH_TEST_ENABLE] =
         &ContextVk::handleDirtyGraphicsDynamicDepthTestEnable;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_DEPTH_WRITE_ENABLE] =
@@ -1578,9 +1602,7 @@ angle::Result ContextVk::setupDraw(const gl::Context *context,
     // Set any dirty bits that depend on draw call parameters or other objects.
     if (mode != mCurrentDrawMode)
     {
-        invalidateCurrentGraphicsPipeline();
-        mCurrentDrawMode = mode;
-        mGraphicsPipelineDesc->updateTopology(&mGraphicsPipelineTransition, mCurrentDrawMode);
+        updateTopology(mode);
     }
 
     // Submit pending commands if the number of write-commands in the current render pass reaches a
@@ -3220,6 +3242,14 @@ angle::Result ContextVk::handleDirtyGraphicsDynamicFrontFace(DirtyBits::Iterator
     const gl::RasterizerState &rasterState = mState.getRasterizerState();
     mRenderPassCommandBuffer->setFrontFace(
         gl_vk::GetFrontFace(rasterState.frontFace, isYFlipEnabledForDrawFBO()));
+    return angle::Result::Continue;
+}
+
+angle::Result ContextVk::handleDirtyGraphicsDynamicPrimitiveTopology(
+    DirtyBits::Iterator *dirtyBitsIterator,
+    DirtyBits dirtyBitMask)
+{
+    mRenderPassCommandBuffer->setPrimitiveTopology(gl_vk::GetPrimitiveTopology(mCurrentDrawMode));
     return angle::Result::Continue;
 }
 
@@ -5151,6 +5181,39 @@ void ContextVk::updateFrontFace()
         mGraphicsPipelineDesc->updateFrontFace(
             &mGraphicsPipelineTransition, mState.getRasterizerState(), isYFlipEnabledForDrawFBO());
     }
+}
+
+ANGLE_INLINE void ContextVk::updateTopology(gl::PrimitiveMode mode)
+{
+    ASSERT(mode != mCurrentDrawMode);
+
+    gl::PrimitiveMode pipelineTopology  = mode;
+    const gl::PrimitiveMode currentMode = mCurrentDrawMode;
+    mCurrentDrawMode                    = mode;
+
+    // When VK_EXT_extended_dynamic_state is enabled, all that's needed in the graphics pipeline
+    // desc is the topology "class", and the exact topology is specified dynamically.
+    //
+    // Note: VK_EXT_extended_dynamic_state3's dynamicPrimitiveTopologyUnrestricted property
+    // indicates that the dynamically set primitive topology doesn't need to match even the topology
+    // class used to create the pipeline.  That property seems to only be set on Nvidia.
+    if (getFeatures().usePrimitiveTopologyDynamicState.enabled)
+    {
+        // Update the exact mode dynamically
+        mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_PRIMITIVE_TOPOLOGY);
+
+        // Only update the pipeline desc if the primitive class has changed
+        pipelineTopology = kPrimitiveTopologyClass[mode];
+        const bool isTopologyClassChanged =
+            pipelineTopology != kPrimitiveTopologyClass[currentMode];
+        if (!isTopologyClassChanged)
+        {
+            return;
+        }
+    }
+
+    invalidateCurrentGraphicsPipeline();
+    mGraphicsPipelineDesc->updateTopology(&mGraphicsPipelineTransition, pipelineTopology);
 }
 
 void ContextVk::updateDepthRange(float nearPlane, float farPlane)
