@@ -641,3 +641,6 @@
 // Windows GLES also has an issue with this test.
 3032 D3D11 : GLSLTest_ES31.AliasedLoadStore/* = SKIP
 7398 WIN OpenGL : GLSLTest_ES31.AliasedLoadStore/* = SKIP
+
+// imageLoad after imageStore with barrier is not coherent on Pixel 4 GLES.
+7388 ANDROID GLES : PixelLocalStorageTest.*/ES3_1_OpenGLES = SKIP
