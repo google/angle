@@ -79,6 +79,7 @@ enum class CommandID : uint16_t
     ResetQueryPool,
     ResolveImage,
     SetBlendConstants,
+    SetCullMode,
     SetDepthBias,
     SetEvent,
     SetFragmentShadingRate,
@@ -423,6 +424,12 @@ struct SetBlendConstantsParams
 };
 VERIFY_4_BYTE_ALIGNMENT(SetBlendConstantsParams)
 
+struct SetCullModeParams
+{
+    VkCullModeFlags cullMode;
+};
+VERIFY_4_BYTE_ALIGNMENT(SetCullModeParams)
+
 struct SetDepthBiasParams
 {
     float depthBiasConstantFactor;
@@ -726,6 +733,7 @@ class SecondaryCommandBuffer final : angle::NonCopyable
                       const VkImageResolve *regions);
 
     void setBlendConstants(const float blendConstants[4]);
+    void setCullMode(VkCullModeFlags cullMode);
     void setDepthBias(float depthBiasConstantFactor,
                       float depthBiasClamp,
                       float depthBiasSlopeFactor);
@@ -1520,6 +1528,12 @@ ANGLE_INLINE void SecondaryCommandBuffer::setBlendConstants(const float blendCon
     {
         paramStruct->blendConstants[channel] = blendConstants[channel];
     }
+}
+
+ANGLE_INLINE void SecondaryCommandBuffer::setCullMode(VkCullModeFlags cullMode)
+{
+    SetCullModeParams *paramStruct = initCommand<SetCullModeParams>(CommandID::SetCullMode);
+    paramStruct->cullMode          = cullMode;
 }
 
 ANGLE_INLINE void SecondaryCommandBuffer::setDepthBias(float depthBiasConstantFactor,

@@ -973,6 +973,20 @@ PFN_vkCreateStreamDescriptorSurfaceGGP vkCreateStreamDescriptorSurfaceGGP = null
 // VK_KHR_shared_presentable_image
 PFN_vkGetSwapchainStatusKHR vkGetSwapchainStatusKHR = nullptr;
 
+// VK_EXT_extended_dynamic_state
+PFN_vkCmdBindVertexBuffers2EXT vkCmdBindVertexBuffers2EXT             = nullptr;
+PFN_vkCmdSetCullModeEXT vkCmdSetCullModeEXT                           = nullptr;
+PFN_vkCmdSetDepthBoundsTestEnableEXT vkCmdSetDepthBoundsTestEnableEXT = nullptr;
+PFN_vkCmdSetDepthCompareOpEXT vkCmdSetDepthCompareOpEXT               = nullptr;
+PFN_vkCmdSetDepthTestEnableEXT vkCmdSetDepthTestEnableEXT             = nullptr;
+PFN_vkCmdSetDepthWriteEnableEXT vkCmdSetDepthWriteEnableEXT           = nullptr;
+PFN_vkCmdSetFrontFaceEXT vkCmdSetFrontFaceEXT                         = nullptr;
+PFN_vkCmdSetPrimitiveTopologyEXT vkCmdSetPrimitiveTopologyEXT         = nullptr;
+PFN_vkCmdSetScissorWithCountEXT vkCmdSetScissorWithCountEXT           = nullptr;
+PFN_vkCmdSetStencilOpEXT vkCmdSetStencilOpEXT                         = nullptr;
+PFN_vkCmdSetStencilTestEnableEXT vkCmdSetStencilTestEnableEXT         = nullptr;
+PFN_vkCmdSetViewportWithCountEXT vkCmdSetViewportWithCountEXT         = nullptr;
+
 // VK_KHR_fragment_shading_rate
 PFN_vkGetPhysicalDeviceFragmentShadingRatesKHR vkGetPhysicalDeviceFragmentShadingRatesKHR = nullptr;
 PFN_vkCmdSetFragmentShadingRateKHR vkCmdSetFragmentShadingRateKHR                         = nullptr;
@@ -1096,6 +1110,23 @@ void InitExternalSemaphoreCapabilitiesFunctions(VkInstance instance)
 void InitGetSwapchainStatusKHRFunctions(VkDevice device)
 {
     GET_DEVICE_FUNC(vkGetSwapchainStatusKHR);
+}
+
+// VK_EXT_extended_dynamic_state
+void InitExtendedDynamicStateEXTFunctions(VkDevice device)
+{
+    GET_DEVICE_FUNC(vkCmdBindVertexBuffers2EXT);
+    GET_DEVICE_FUNC(vkCmdSetCullModeEXT);
+    GET_DEVICE_FUNC(vkCmdSetDepthBoundsTestEnableEXT);
+    GET_DEVICE_FUNC(vkCmdSetDepthCompareOpEXT);
+    GET_DEVICE_FUNC(vkCmdSetDepthTestEnableEXT);
+    GET_DEVICE_FUNC(vkCmdSetDepthWriteEnableEXT);
+    GET_DEVICE_FUNC(vkCmdSetFrontFaceEXT);
+    GET_DEVICE_FUNC(vkCmdSetPrimitiveTopologyEXT);
+    GET_DEVICE_FUNC(vkCmdSetScissorWithCountEXT);
+    GET_DEVICE_FUNC(vkCmdSetStencilOpEXT);
+    GET_DEVICE_FUNC(vkCmdSetStencilTestEnableEXT);
+    GET_DEVICE_FUNC(vkCmdSetViewportWithCountEXT);
 }
 
 // VK_KHR_fragment_shading_rate

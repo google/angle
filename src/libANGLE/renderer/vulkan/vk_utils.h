@@ -1340,6 +1340,9 @@ void InitExternalSemaphoreCapabilitiesFunctions(VkInstance instance);
 // VK_KHR_shared_presentable_image
 void InitGetSwapchainStatusKHRFunctions(VkDevice device);
 
+// VK_EXT_extended_dynamic_state
+void InitExtendedDynamicStateEXTFunctions(VkDevice device);
+
 // VK_KHR_fragment_shading_rate
 void InitFragmentShadingRateKHRFunctions(VkDevice device);
 

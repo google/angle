@@ -8681,6 +8681,67 @@ TEST_P(StateChangeTestES3, StencilWriteMask)
 
     ASSERT_GL_NO_ERROR();
 }
+
+// Tests state change for glCullFace and glEnable(GL_CULL_FACE)
+TEST_P(StateChangeTestES3, CullFace)
+{
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+    glUseProgram(program);
+
+    GLint colorLoc = glGetUniformLocation(program, angle::essl1_shaders::ColorUniform());
+    ASSERT_NE(colorLoc, -1);
+
+    glClearColor(0, 0, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    const int w = getWindowWidth();
+    const int h = getWindowHeight();
+
+    // Draw red back-facing.  Face culling is initially disabled
+    glFrontFace(GL_CW);
+    glUniform4f(colorLoc, 1, 0, 0, 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f);
+
+    // Draw green back-facing, but enable face culling.  Default cull face is back.
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_SCISSOR_TEST);
+    glScissor(0, 0, w / 2, h / 2);
+    glUniform4f(colorLoc, 0, 1, 0, 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f);
+
+    // Draw blue front-facing.
+    glFrontFace(GL_CCW);
+    glScissor(w / 2, 0, w / 2, h / 2);
+    glUniform4f(colorLoc, 0, 0, 1, 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f);
+
+    // Draw magenta front-facing, but change cull face to front
+    glCullFace(GL_FRONT);
+    glScissor(0, h / 2, w / 2, h / 2);
+    glUniform4f(colorLoc, 1, 0, 1, 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f);
+
+    // Draw cyan front-facing, with face culling disabled
+    glDisable(GL_CULL_FACE);
+    glScissor(w / 2, h / 2, w / 2, h / 2);
+    glUniform4f(colorLoc, 0, 1, 1, 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f);
+
+    // Draw yellow front-facing, with cull face set to front and back
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_FRONT_AND_BACK);
+    glDisable(GL_SCISSOR_TEST);
+    glUniform4f(colorLoc, 1, 1, 0, 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f);
+
+    // Verify results
+    EXPECT_PIXEL_RECT_EQ(0, 0, w / 2, h / 2, GLColor::red);
+    EXPECT_PIXEL_RECT_EQ(w / 2, 0, w / 2, h / 2, GLColor::blue);
+    EXPECT_PIXEL_RECT_EQ(0, h / 2, w / 2, h / 2, GLColor::red);
+    EXPECT_PIXEL_RECT_EQ(w / 2, h / 2, w / 2, h / 2, GLColor::cyan);
+
+    ASSERT_GL_NO_ERROR();
+}
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST_ES2(StateChangeTest);
@@ -8688,7 +8749,8 @@ ANGLE_INSTANTIATE_TEST_ES2(LineLoopStateChangeTest);
 ANGLE_INSTANTIATE_TEST_ES2(StateChangeRenderTest);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(StateChangeTestES3);
-ANGLE_INSTANTIATE_TEST_ES3(StateChangeTestES3);
+ANGLE_INSTANTIATE_TEST_ES3_AND(StateChangeTestES3,
+                               ES3_VULKAN().disable(Feature::SupportsExtendedDynamicState));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(StateChangeTestWebGL2);
 ANGLE_INSTANTIATE_TEST_COMBINE_1(StateChangeTestWebGL2,

@@ -607,7 +607,6 @@ class GraphicsPipelineDesc final
     void updateDepthClipControl(GraphicsPipelineTransitionBits *transition, bool negativeOneToOne);
 
     // Raster states
-    void setCullMode(VkCullModeFlagBits cullMode);
     void updateCullMode(GraphicsPipelineTransitionBits *transition,
                         const gl::RasterizerState &rasterState);
     void updateFrontFace(GraphicsPipelineTransitionBits *transition,

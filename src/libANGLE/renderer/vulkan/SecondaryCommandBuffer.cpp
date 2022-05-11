@@ -114,6 +114,8 @@ const char *GetCommandString(CommandID id)
             return "ResolveImage";
         case CommandID::SetBlendConstants:
             return "SetBlendConstants";
+        case CommandID::SetCullMode:
+            return "SetCullMode";
         case CommandID::SetDepthBias:
             return "SetDepthBias";
         case CommandID::SetEvent:
@@ -548,6 +550,13 @@ void SecondaryCommandBuffer::executeCommands(PrimaryCommandBuffer *primary)
                     const SetBlendConstantsParams *params =
                         getParamPtr<SetBlendConstantsParams>(currentCommand);
                     vkCmdSetBlendConstants(cmdBuffer, params->blendConstants);
+                    break;
+                }
+                case CommandID::SetCullMode:
+                {
+                    const SetCullModeParams *params =
+                        getParamPtr<SetCullModeParams>(currentCommand);
+                    vkCmdSetCullModeEXT(cmdBuffer, params->cullMode);
                     break;
                 }
                 case CommandID::SetDepthBias:

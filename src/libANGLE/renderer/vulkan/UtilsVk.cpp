@@ -1056,6 +1056,10 @@ void ResetDynamicState(ContextVk *contextVk, vk::RenderPassCommandBuffer *comman
     // - stencil reference: UtilsVk sets this when enabling stencil test
 
     // Reset all other dynamic state, since it can affect UtilsVk functions:
+    if (contextVk->getFeatures().supportsExtendedDynamicState.enabled)
+    {
+        commandBuffer->setCullMode(VK_CULL_MODE_NONE);
+    }
     if (contextVk->getFeatures().supportsFragmentShadingRate.enabled)
     {
         VkExtent2D fragmentSize                                     = {1, 1};
@@ -2081,7 +2085,6 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
 
     vk::GraphicsPipelineDesc pipelineDesc;
     pipelineDesc.initDefaults(contextVk);
-    pipelineDesc.setCullMode(VK_CULL_MODE_NONE);
     pipelineDesc.setColorWriteMasks(0, gl::DrawBufferMask(), gl::DrawBufferMask());
     pipelineDesc.setSingleColorWriteMask(params.colorAttachmentIndexGL, params.colorMaskFlags);
     pipelineDesc.setRasterizationSamples(framebuffer->getSamples());
@@ -2241,7 +2244,6 @@ angle::Result UtilsVk::clearImage(ContextVk *contextVk,
 
     vk::GraphicsPipelineDesc pipelineDesc;
     pipelineDesc.initDefaults(contextVk);
-    pipelineDesc.setCullMode(VK_CULL_MODE_NONE);
     pipelineDesc.setSingleColorWriteMask(0, params.colorMaskFlags);
     pipelineDesc.setRasterizationSamples(dst->getSamples());
     pipelineDesc.setRenderPassDesc(renderPassDesc);
@@ -2459,7 +2461,6 @@ angle::Result UtilsVk::blitResolveImpl(ContextVk *contextVk,
     {
         pipelineDesc.setColorWriteMasks(0, gl::DrawBufferMask(), gl::DrawBufferMask());
     }
-    pipelineDesc.setCullMode(VK_CULL_MODE_NONE);
     pipelineDesc.setRenderPassDesc(framebuffer->getRenderPassDesc());
     pipelineDesc.setDepthTestEnabled(blitDepth);
     pipelineDesc.setDepthWriteEnabled(blitDepth);
@@ -2895,7 +2896,6 @@ angle::Result UtilsVk::copyImage(ContextVk *contextVk,
 
     vk::GraphicsPipelineDesc pipelineDesc;
     pipelineDesc.initDefaults(contextVk);
-    pipelineDesc.setCullMode(VK_CULL_MODE_NONE);
     pipelineDesc.setRenderPassDesc(renderPassDesc);
     pipelineDesc.setRasterizationSamples(dst->getSamples());
 
@@ -3364,7 +3364,6 @@ angle::Result UtilsVk::unresolve(ContextVk *contextVk,
 
     vk::GraphicsPipelineDesc pipelineDesc;
     pipelineDesc.initDefaults(contextVk);
-    pipelineDesc.setCullMode(VK_CULL_MODE_NONE);
     pipelineDesc.setRasterizationSamples(framebuffer->getSamples());
     pipelineDesc.setRenderPassDesc(framebuffer->getRenderPassDesc());
     pipelineDesc.setDepthTestEnabled(params.unresolveDepth);
@@ -3501,7 +3500,6 @@ angle::Result UtilsVk::drawOverlay(ContextVk *contextVk,
     pipelineDesc.initDefaults(contextVk);
     pipelineDesc.setRenderPassDesc(renderPassDesc);
     pipelineDesc.setTopology(gl::PrimitiveMode::TriangleStrip);
-    pipelineDesc.setCullMode(VK_CULL_MODE_NONE);
     pipelineDesc.setSingleBlend(0, true, VK_BLEND_OP_ADD, VK_BLEND_FACTOR_SRC_ALPHA,
                                 VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA);
 

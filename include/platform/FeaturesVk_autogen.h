@@ -599,6 +599,11 @@ struct FeaturesVk : FeatureSetBase
         "Prefer adding HOST_VISIBLE flag for DEVICE_LOCAL memory when picking memory types",
         &members, "http://anglebug.com/7047"};
 
+    FeatureInfo supportsExtendedDynamicState = {
+        "supportsExtendedDynamicState", FeatureCategory::VulkanFeatures,
+        "VkDevice supports VK_EXT_extended_dynamic_state extension", &members,
+        "http://anglebug.com/5906"};
+
     FeatureInfo supportsFragmentShadingRate = {
         "supportsFragmentShadingRate", FeatureCategory::VulkanFeatures,
         "VkDevice supports VK_KHR_fragment_shading_rate extension", &members,

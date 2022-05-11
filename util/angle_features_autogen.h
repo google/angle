@@ -199,6 +199,7 @@ enum class Feature
     SupportsCustomBorderColor,
     SupportsDepthClipControl,
     SupportsDepthStencilResolve,
+    SupportsExtendedDynamicState,
     SupportsExternalFenceCapabilities,
     SupportsExternalFenceFd,
     SupportsExternalMemoryDmaBufAndModifiers,

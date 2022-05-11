@@ -319,6 +319,7 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
                        const void *data);
 
     void setBlendConstants(const float blendConstants[4]);
+    void setCullMode(VkCullModeFlags cullMode);
     void setDepthBias(float depthBiasConstantFactor,
                       float depthBiasClamp,
                       float depthBiasSlopeFactor);
@@ -962,6 +963,12 @@ ANGLE_INLINE void CommandBuffer::setBlendConstants(const float blendConstants[4]
 {
     ASSERT(valid());
     vkCmdSetBlendConstants(mHandle, blendConstants);
+}
+
+ANGLE_INLINE void CommandBuffer::setCullMode(VkCullModeFlags cullMode)
+{
+    ASSERT(valid());
+    vkCmdSetCullModeEXT(mHandle, cullMode);
 }
 
 ANGLE_INLINE void CommandBuffer::setDepthBias(float depthBiasConstantFactor,
