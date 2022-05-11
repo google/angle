@@ -83,6 +83,7 @@ enum class CommandID : uint16_t
     SetDepthBias,
     SetEvent,
     SetFragmentShadingRate,
+    SetFrontFace,
     SetLineWidth,
     SetScissor,
     SetStencilCompareMask,
@@ -458,6 +459,12 @@ struct SetLineWidthParams
 };
 VERIFY_4_BYTE_ALIGNMENT(SetLineWidthParams)
 
+struct SetFrontFaceParams
+{
+    VkFrontFace frontFace;
+};
+VERIFY_4_BYTE_ALIGNMENT(SetFrontFaceParams)
+
 struct SetScissorParams
 {
     VkRect2D scissor;
@@ -738,20 +745,14 @@ class SecondaryCommandBuffer final : angle::NonCopyable
                       float depthBiasClamp,
                       float depthBiasSlopeFactor);
     void setEvent(VkEvent event, VkPipelineStageFlags stageMask);
-
     void setFragmentShadingRate(const VkExtent2D *fragmentSize,
                                 VkFragmentShadingRateCombinerOpKHR ops[2]);
-
+    void setFrontFace(VkFrontFace frontFace);
     void setLineWidth(float lineWidth);
-
     void setScissor(uint32_t firstScissor, uint32_t scissorCount, const VkRect2D *scissors);
-
     void setStencilCompareMask(uint32_t compareFrontMask, uint32_t compareBackMask);
-
     void setStencilReference(uint32_t frontReference, uint32_t backReference);
-
     void setStencilWriteMask(uint32_t writeFrontMask, uint32_t writeBackMask);
-
     void setViewport(uint32_t firstViewport, uint32_t viewportCount, const VkViewport *viewports);
 
     void waitEvents(uint32_t eventCount,
@@ -1571,6 +1572,12 @@ ANGLE_INLINE void SecondaryCommandBuffer::setFragmentShadingRate(
         initCommand<SetFragmentShadingRateParams>(CommandID::SetFragmentShadingRate);
     paramStruct->fragmentWidth  = static_cast<uint16_t>(fragmentSize->width);
     paramStruct->fragmentHeight = static_cast<uint16_t>(fragmentSize->height);
+}
+
+ANGLE_INLINE void SecondaryCommandBuffer::setFrontFace(VkFrontFace frontFace)
+{
+    SetFrontFaceParams *paramStruct = initCommand<SetFrontFaceParams>(CommandID::SetFrontFace);
+    paramStruct->frontFace          = frontFace;
 }
 
 ANGLE_INLINE void SecondaryCommandBuffer::setLineWidth(float lineWidth)

@@ -775,6 +775,7 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
     {
         mDynamicStateDirtyBits |= DirtyBits{
             DIRTY_BIT_DYNAMIC_CULL_MODE,
+            DIRTY_BIT_DYNAMIC_FRONT_FACE,
         };
     }
     if (getFeatures().supportsFragmentShadingRate.enabled)
@@ -848,6 +849,8 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
         &ContextVk::handleDirtyGraphicsDynamicStencilReference;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_CULL_MODE] =
         &ContextVk::handleDirtyGraphicsDynamicCullMode;
+    mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_FRONT_FACE] =
+        &ContextVk::handleDirtyGraphicsDynamicFrontFace;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_FRAGMENT_SHADING_RATE] =
         &ContextVk::handleDirtyGraphicsDynamicFragmentShadingRate;
 
@@ -917,6 +920,7 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
     {
         mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_CULL_FACE_ENABLED);
         mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_CULL_FACE);
+        mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_FRONT_FACE);
     }
 
     angle::PerfMonitorCounterGroup vulkanGroup;
@@ -2512,6 +2516,15 @@ angle::Result ContextVk::handleDirtyGraphicsDynamicCullMode(DirtyBits::Iterator 
 {
     const gl::RasterizerState &rasterState = mState.getRasterizerState();
     mRenderPassCommandBuffer->setCullMode(gl_vk::GetCullMode(rasterState));
+    return angle::Result::Continue;
+}
+
+angle::Result ContextVk::handleDirtyGraphicsDynamicFrontFace(DirtyBits::Iterator *dirtyBitsIterator,
+                                                             DirtyBits dirtyBitMask)
+{
+    const gl::RasterizerState &rasterState = mState.getRasterizerState();
+    mRenderPassCommandBuffer->setFrontFace(
+        gl_vk::GetFrontFace(rasterState.frontFace, isYFlipEnabledForDrawFBO()));
     return angle::Result::Continue;
 }
 
@@ -4134,6 +4147,19 @@ void ContextVk::updateViewport(FramebufferVk *framebufferVk,
     mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_VIEWPORT);
 }
 
+void ContextVk::updateFrontFace()
+{
+    if (getFeatures().supportsExtendedDynamicState.enabled)
+    {
+        mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_FRONT_FACE);
+    }
+    else
+    {
+        mGraphicsPipelineDesc->updateFrontFace(
+            &mGraphicsPipelineTransition, mState.getRasterizerState(), isYFlipEnabledForDrawFBO());
+    }
+}
+
 void ContextVk::updateDepthRange(float nearPlane, float farPlane)
 {
     // GLES2.0 Section 2.12.1: Each of n and f are clamped to lie within [0, 1], as are all
@@ -4562,9 +4588,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 }
                 break;
             case gl::State::DIRTY_BIT_FRONT_FACE:
-                mGraphicsPipelineDesc->updateFrontFace(&mGraphicsPipelineTransition,
-                                                       glState.getRasterizerState(),
-                                                       isYFlipEnabledForDrawFBO());
+                updateFrontFace();
                 break;
             case gl::State::DIRTY_BIT_POLYGON_OFFSET_FILL_ENABLED:
                 mGraphicsPipelineDesc->updatePolygonOffsetFillEnabled(
@@ -4647,9 +4671,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 updateRasterizerDiscardEnabled(
                     mState.isQueryActive(gl::QueryType::PrimitivesGenerated));
 
-                mGraphicsPipelineDesc->updateFrontFace(&mGraphicsPipelineTransition,
-                                                       glState.getRasterizerState(),
-                                                       isYFlipEnabledForDrawFBO());
+                updateFrontFace();
                 updateScissor(glState);
                 updateDepthStencil(glState);
                 updateDither();
@@ -4791,9 +4813,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                                            glState.getViewport(), glState.getNearPlane(),
                                            glState.getFarPlane());
                             // Since we are flipping the y coordinate, update front face state
-                            mGraphicsPipelineDesc->updateFrontFace(&mGraphicsPipelineTransition,
-                                                                   glState.getRasterizerState(),
-                                                                   isYFlipEnabledForDrawFBO());
+                            updateFrontFace();
                             updateScissor(glState);
 
                             // If VK_EXT_depth_clip_control is not enabled, there's nothing needed

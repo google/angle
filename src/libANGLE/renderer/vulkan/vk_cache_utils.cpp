@@ -2304,7 +2304,7 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     }
 
     // Dynamic state
-    angle::FixedVector<VkDynamicState, 10> dynamicStateList;
+    angle::FixedVector<VkDynamicState, 11> dynamicStateList;
     dynamicStateList.push_back(VK_DYNAMIC_STATE_VIEWPORT);
     dynamicStateList.push_back(VK_DYNAMIC_STATE_SCISSOR);
     dynamicStateList.push_back(VK_DYNAMIC_STATE_LINE_WIDTH);
@@ -2316,6 +2316,7 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     if (contextVk->getFeatures().supportsExtendedDynamicState.enabled)
     {
         dynamicStateList.push_back(VK_DYNAMIC_STATE_CULL_MODE_EXT);
+        dynamicStateList.push_back(VK_DYNAMIC_STATE_FRONT_FACE_EXT);
     }
     if (contextVk->getFeatures().supportsFragmentShadingRate.enabled)
     {

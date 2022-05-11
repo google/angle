@@ -1059,6 +1059,7 @@ void ResetDynamicState(ContextVk *contextVk, vk::RenderPassCommandBuffer *comman
     if (contextVk->getFeatures().supportsExtendedDynamicState.enabled)
     {
         commandBuffer->setCullMode(VK_CULL_MODE_NONE);
+        commandBuffer->setFrontFace(VK_FRONT_FACE_COUNTER_CLOCKWISE);
     }
     if (contextVk->getFeatures().supportsFragmentShadingRate.enabled)
     {

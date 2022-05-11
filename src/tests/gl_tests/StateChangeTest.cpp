@@ -8682,8 +8682,8 @@ TEST_P(StateChangeTestES3, StencilWriteMask)
     ASSERT_GL_NO_ERROR();
 }
 
-// Tests state change for glCullFace and glEnable(GL_CULL_FACE)
-TEST_P(StateChangeTestES3, CullFace)
+// Tests state change for glCullFace and glEnable(GL_CULL_FACE) as well as glFrontFace
+TEST_P(StateChangeTestES3, CullFaceAndFrontFace)
 {
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
     glUseProgram(program);
