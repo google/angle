@@ -872,6 +872,8 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
     // - PACK/UNPACK_STATE only affect texture data upload/download,
     // - *_BINDING only affect descriptor sets.
     //
+    // Additionally, state that is set dynamically doesn't invalidate the program pipeline.
+    //
     mPipelineDirtyBitsMask.set();
     mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_READ_FRAMEBUFFER_BINDING);
     mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_CLEAR_COLOR);
@@ -891,6 +893,16 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
     mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_UNIFORM_BUFFER_BINDINGS);
     mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_SHADER_STORAGE_BUFFER_BINDING);
     mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_ATOMIC_COUNTER_BUFFER_BINDING);
+
+    // Dynamic state in core Vulkan 1.0:
+    mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_VIEWPORT);
+    mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_SCISSOR_TEST_ENABLED);
+    mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_SCISSOR);
+    mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_LINE_WIDTH);
+    mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_POLYGON_OFFSET);
+    mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_BLEND_COLOR);
+    mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_STENCIL_WRITEMASK_FRONT);
+    mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_STENCIL_WRITEMASK_BACK);
 
     angle::PerfMonitorCounterGroup vulkanGroup;
     vulkanGroup.name = "vulkan";
