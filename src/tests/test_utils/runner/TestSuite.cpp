@@ -1388,6 +1388,7 @@ bool TestSuite::parseSingleArg(const char *argument)
             ParseStringArg("--isolated_script_test_perf_output=", argument, &mHistogramJsonFile) ||
             ParseStringArg(kRenderTestOutputDir, argument, &mTestArtifactDirectory) ||
             ParseStringArg(kIsolatedOutDir, argument, &mTestArtifactDirectory) ||
+            ParseFlag("--test-launcher-bot-mode", argument, &mBotMode) ||
             ParseFlag("--bot-mode", argument, &mBotMode) ||
             ParseFlag("--debug-test-groups", argument, &mDebugTestGroups) ||
             ParseFlag(kGTestListTests, argument, &mGTestListTests) ||
