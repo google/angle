@@ -1289,6 +1289,11 @@ constexpr bool IsDynamicDescriptor(VkDescriptorType descriptorType)
 }
 
 void ApplyPipelineCreationFeedback(Context *context, const VkPipelineCreationFeedback &feedback);
+
+angle::Result SetDebugUtilsObjectName(ContextVk *contextVk,
+                                      uint64_t handle,
+                                      const std::string &label);
+
 }  // namespace vk
 
 #if !defined(ANGLE_SHARED_LIBVULKAN)
