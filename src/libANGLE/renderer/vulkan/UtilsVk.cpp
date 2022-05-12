@@ -1051,6 +1051,8 @@ void ResetDynamicState(ContextVk *contextVk, vk::RenderPassCommandBuffer *comman
     //
     // The following dynamic state is always set by UtilsVk when effective:
     //
+    // - depth write mask: UtilsVk sets this when enabling depth test
+    // - depth compare op: UtilsVk sets this when enabling depth test
     // - stencil compare mask: UtilsVk sets this when enabling stencil test
     // - stencil write mask: UtilsVk sets this when enabling stencil test
     // - stencil reference: UtilsVk sets this when enabling stencil test
@@ -1060,6 +1062,7 @@ void ResetDynamicState(ContextVk *contextVk, vk::RenderPassCommandBuffer *comman
     {
         commandBuffer->setCullMode(VK_CULL_MODE_NONE);
         commandBuffer->setFrontFace(VK_FRONT_FACE_COUNTER_CLOCKWISE);
+        commandBuffer->setDepthTestEnable(VK_FALSE);
     }
     if (contextVk->getFeatures().supportsFragmentShadingRate.enabled)
     {
@@ -2090,9 +2093,6 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
     pipelineDesc.setSingleColorWriteMask(params.colorAttachmentIndexGL, params.colorMaskFlags);
     pipelineDesc.setRasterizationSamples(framebuffer->getSamples());
     pipelineDesc.setRenderPassDesc(framebuffer->getRenderPassDesc());
-    // Note: depth test is disabled by default so this should be unnecessary, but works around an
-    // Intel bug on windows.  http://anglebug.com/3348
-    pipelineDesc.setDepthWriteEnabled(false);
     // Clears can be done on a currently open render pass, so make sure the correct subpass index is
     // used.
     pipelineDesc.setSubpass(contextVk->getCurrentSubpassIndex());
@@ -2103,9 +2103,12 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
         contextVk->getRenderer()->getPhysicalDeviceFeatures().depthClamp == VK_TRUE;
     if (params.clearDepth)
     {
-        pipelineDesc.setDepthTestEnabled(true);
-        pipelineDesc.setDepthWriteEnabled(true);
-        pipelineDesc.setDepthFunc(VK_COMPARE_OP_ALWAYS);
+        if (!contextVk->getFeatures().supportsExtendedDynamicState.enabled)
+        {
+            pipelineDesc.setDepthTestEnabled(true);
+            pipelineDesc.setDepthWriteEnabled(true);
+            pipelineDesc.setDepthFunc(VK_COMPARE_OP_ALWAYS);
+        }
         if (supportsDepthClamp)
         {
             // Note: this path requires the depthClamp Vulkan feature.
@@ -2165,6 +2168,13 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
 
     const VkRect2D scissor = gl_vk::GetRect(params.clearArea);
     commandBuffer->setScissor(0, 1, &scissor);
+
+    if (params.clearDepth && contextVk->getFeatures().supportsExtendedDynamicState.enabled)
+    {
+        commandBuffer->setDepthTestEnable(VK_TRUE);
+        commandBuffer->setDepthWriteEnable(VK_TRUE);
+        commandBuffer->setDepthCompareOp(VK_COMPARE_OP_ALWAYS);
+    }
 
     if (params.clearStencil)
     {
@@ -2463,9 +2473,12 @@ angle::Result UtilsVk::blitResolveImpl(ContextVk *contextVk,
         pipelineDesc.setColorWriteMasks(0, gl::DrawBufferMask(), gl::DrawBufferMask());
     }
     pipelineDesc.setRenderPassDesc(framebuffer->getRenderPassDesc());
-    pipelineDesc.setDepthTestEnabled(blitDepth);
-    pipelineDesc.setDepthWriteEnabled(blitDepth);
-    pipelineDesc.setDepthFunc(VK_COMPARE_OP_ALWAYS);
+    if (blitDepth && !contextVk->getFeatures().supportsExtendedDynamicState.enabled)
+    {
+        pipelineDesc.setDepthTestEnabled(VK_TRUE);
+        pipelineDesc.setDepthWriteEnabled(VK_TRUE);
+        pipelineDesc.setDepthFunc(VK_COMPARE_OP_ALWAYS);
+    }
 
     if (blitStencil)
     {
@@ -2559,6 +2572,13 @@ angle::Result UtilsVk::blitResolveImpl(ContextVk *contextVk,
 
     VkRect2D scissor = gl_vk::GetRect(params.blitArea);
     commandBuffer->setScissor(0, 1, &scissor);
+
+    if (blitDepth && contextVk->getFeatures().supportsExtendedDynamicState.enabled)
+    {
+        commandBuffer->setDepthTestEnable(VK_TRUE);
+        commandBuffer->setDepthWriteEnable(VK_TRUE);
+        commandBuffer->setDepthCompareOp(VK_COMPARE_OP_ALWAYS);
+    }
 
     if (blitStencil)
     {
@@ -3367,9 +3387,12 @@ angle::Result UtilsVk::unresolve(ContextVk *contextVk,
     pipelineDesc.initDefaults(contextVk);
     pipelineDesc.setRasterizationSamples(framebuffer->getSamples());
     pipelineDesc.setRenderPassDesc(framebuffer->getRenderPassDesc());
-    pipelineDesc.setDepthTestEnabled(params.unresolveDepth);
-    pipelineDesc.setDepthWriteEnabled(params.unresolveDepth);
-    pipelineDesc.setDepthFunc(VK_COMPARE_OP_ALWAYS);
+    if (params.unresolveDepth && !contextVk->getFeatures().supportsExtendedDynamicState.enabled)
+    {
+        pipelineDesc.setDepthTestEnabled(VK_TRUE);
+        pipelineDesc.setDepthWriteEnabled(VK_TRUE);
+        pipelineDesc.setDepthFunc(VK_COMPARE_OP_ALWAYS);
+    }
 
     if (params.unresolveStencil)
     {
@@ -3444,6 +3467,13 @@ angle::Result UtilsVk::unresolve(ContextVk *contextVk,
 
     VkRect2D scissor = gl_vk::GetRect(completeRenderArea);
     commandBuffer->setScissor(0, 1, &scissor);
+
+    if (params.unresolveDepth && contextVk->getFeatures().supportsExtendedDynamicState.enabled)
+    {
+        commandBuffer->setDepthTestEnable(VK_TRUE);
+        commandBuffer->setDepthWriteEnable(VK_TRUE);
+        commandBuffer->setDepthCompareOp(VK_COMPARE_OP_ALWAYS);
+    }
 
     if (params.unresolveStencil)
     {

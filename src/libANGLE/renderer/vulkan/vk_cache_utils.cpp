@@ -194,32 +194,6 @@ VkStencilOp PackGLStencilOp(GLenum compareOp)
     }
 }
 
-VkCompareOp PackGLCompareFunc(GLenum compareFunc)
-{
-    switch (compareFunc)
-    {
-        case GL_NEVER:
-            return VK_COMPARE_OP_NEVER;
-        case GL_ALWAYS:
-            return VK_COMPARE_OP_ALWAYS;
-        case GL_LESS:
-            return VK_COMPARE_OP_LESS;
-        case GL_LEQUAL:
-            return VK_COMPARE_OP_LESS_OR_EQUAL;
-        case GL_EQUAL:
-            return VK_COMPARE_OP_EQUAL;
-        case GL_GREATER:
-            return VK_COMPARE_OP_GREATER;
-        case GL_GEQUAL:
-            return VK_COMPARE_OP_GREATER_OR_EQUAL;
-        case GL_NOTEQUAL:
-            return VK_COMPARE_OP_NOT_EQUAL;
-        default:
-            UNREACHABLE();
-            return VK_COMPARE_OP_NEVER;
-    }
-}
-
 void UnpackAttachmentDesc(VkAttachmentDescription *desc,
                           angle::FormatID formatID,
                           uint8_t samples,
@@ -2302,7 +2276,7 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     }
 
     // Dynamic state
-    angle::FixedVector<VkDynamicState, 13> dynamicStateList;
+    angle::FixedVector<VkDynamicState, 16> dynamicStateList;
     dynamicStateList.push_back(VK_DYNAMIC_STATE_VIEWPORT);
     dynamicStateList.push_back(VK_DYNAMIC_STATE_SCISSOR);
     dynamicStateList.push_back(VK_DYNAMIC_STATE_LINE_WIDTH);
@@ -2316,6 +2290,9 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     {
         dynamicStateList.push_back(VK_DYNAMIC_STATE_CULL_MODE_EXT);
         dynamicStateList.push_back(VK_DYNAMIC_STATE_FRONT_FACE_EXT);
+        dynamicStateList.push_back(VK_DYNAMIC_STATE_DEPTH_TEST_ENABLE);
+        dynamicStateList.push_back(VK_DYNAMIC_STATE_DEPTH_WRITE_ENABLE);
+        dynamicStateList.push_back(VK_DYNAMIC_STATE_DEPTH_COMPARE_OP);
     }
     if (contextVk->getFeatures().supportsFragmentShadingRate.enabled)
     {
@@ -2724,7 +2701,7 @@ void GraphicsPipelineDesc::updateDepthTestEnabled(GraphicsPipelineTransitionBits
 void GraphicsPipelineDesc::updateDepthFunc(GraphicsPipelineTransitionBits *transition,
                                            const gl::DepthStencilState &depthStencilState)
 {
-    setDepthFunc(PackGLCompareFunc(depthStencilState.depthFunc));
+    setDepthFunc(gl_vk::GetCompareOp(depthStencilState.depthFunc));
     transition->set(
         ANGLE_GET_TRANSITION_BIT(mDepthStencilStateInfo, depthCompareOpAndSurfaceRotation));
 }
@@ -2765,14 +2742,14 @@ void GraphicsPipelineDesc::updateStencilTestEnabled(GraphicsPipelineTransitionBi
 void GraphicsPipelineDesc::updateStencilFrontFuncs(GraphicsPipelineTransitionBits *transition,
                                                    const gl::DepthStencilState &depthStencilState)
 {
-    setStencilFrontFuncs(PackGLCompareFunc(depthStencilState.stencilFunc));
+    setStencilFrontFuncs(gl_vk::GetCompareOp(depthStencilState.stencilFunc));
     transition->set(ANGLE_GET_TRANSITION_BIT(mDepthStencilStateInfo, front));
 }
 
 void GraphicsPipelineDesc::updateStencilBackFuncs(GraphicsPipelineTransitionBits *transition,
                                                   const gl::DepthStencilState &depthStencilState)
 {
-    setStencilBackFuncs(PackGLCompareFunc(depthStencilState.stencilBackFunc));
+    setStencilBackFuncs(gl_vk::GetCompareOp(depthStencilState.stencilBackFunc));
     transition->set(ANGLE_GET_TRANSITION_BIT(mDepthStencilStateInfo, back));
 }
 

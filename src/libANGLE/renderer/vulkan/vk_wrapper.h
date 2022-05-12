@@ -323,6 +323,9 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
     void setDepthBias(float depthBiasConstantFactor,
                       float depthBiasClamp,
                       float depthBiasSlopeFactor);
+    void setDepthCompareOp(VkCompareOp depthCompareOp);
+    void setDepthTestEnable(VkBool32 depthTestEnable);
+    void setDepthWriteEnable(VkBool32 depthWriteEnable);
     void setEvent(VkEvent event, VkPipelineStageFlags stageMask);
     void setFragmentShadingRate(const VkExtent2D *fragmentSize,
                                 VkFragmentShadingRateCombinerOpKHR ops[2]);
@@ -978,6 +981,24 @@ ANGLE_INLINE void CommandBuffer::setDepthBias(float depthBiasConstantFactor,
 {
     ASSERT(valid());
     vkCmdSetDepthBias(mHandle, depthBiasConstantFactor, depthBiasClamp, depthBiasSlopeFactor);
+}
+
+ANGLE_INLINE void CommandBuffer::setDepthCompareOp(VkCompareOp depthCompareOp)
+{
+    ASSERT(valid());
+    vkCmdSetDepthCompareOpEXT(mHandle, depthCompareOp);
+}
+
+ANGLE_INLINE void CommandBuffer::setDepthTestEnable(VkBool32 depthTestEnable)
+{
+    ASSERT(valid());
+    vkCmdSetDepthTestEnableEXT(mHandle, depthTestEnable);
+}
+
+ANGLE_INLINE void CommandBuffer::setDepthWriteEnable(VkBool32 depthWriteEnable)
+{
+    ASSERT(valid());
+    vkCmdSetDepthWriteEnableEXT(mHandle, depthWriteEnable);
 }
 
 ANGLE_INLINE void CommandBuffer::setEvent(VkEvent event, VkPipelineStageFlags stageMask)

@@ -81,6 +81,9 @@ enum class CommandID : uint16_t
     SetBlendConstants,
     SetCullMode,
     SetDepthBias,
+    SetDepthCompareOp,
+    SetDepthTestEnable,
+    SetDepthWriteEnable,
     SetEvent,
     SetFragmentShadingRate,
     SetFrontFace,
@@ -439,6 +442,24 @@ struct SetDepthBiasParams
 };
 VERIFY_4_BYTE_ALIGNMENT(SetDepthBiasParams)
 
+struct SetDepthCompareOpParams
+{
+    VkCompareOp depthCompareOp;
+};
+VERIFY_4_BYTE_ALIGNMENT(SetDepthCompareOpParams)
+
+struct SetDepthTestEnableParams
+{
+    VkBool32 depthTestEnable;
+};
+VERIFY_4_BYTE_ALIGNMENT(SetDepthTestEnableParams)
+
+struct SetDepthWriteEnableParams
+{
+    VkBool32 depthWriteEnable;
+};
+VERIFY_4_BYTE_ALIGNMENT(SetDepthWriteEnableParams)
+
 struct SetEventParams
 {
     VkEvent event;
@@ -744,6 +765,9 @@ class SecondaryCommandBuffer final : angle::NonCopyable
     void setDepthBias(float depthBiasConstantFactor,
                       float depthBiasClamp,
                       float depthBiasSlopeFactor);
+    void setDepthCompareOp(VkCompareOp depthCompareOp);
+    void setDepthTestEnable(VkBool32 depthTestEnable);
+    void setDepthWriteEnable(VkBool32 depthWriteEnable);
     void setEvent(VkEvent event, VkPipelineStageFlags stageMask);
     void setFragmentShadingRate(const VkExtent2D *fragmentSize,
                                 VkFragmentShadingRateCombinerOpKHR ops[2]);
@@ -1545,6 +1569,27 @@ ANGLE_INLINE void SecondaryCommandBuffer::setDepthBias(float depthBiasConstantFa
     paramStruct->depthBiasConstantFactor = depthBiasConstantFactor;
     paramStruct->depthBiasClamp          = depthBiasClamp;
     paramStruct->depthBiasSlopeFactor    = depthBiasSlopeFactor;
+}
+
+ANGLE_INLINE void SecondaryCommandBuffer::setDepthCompareOp(VkCompareOp depthCompareOp)
+{
+    SetDepthCompareOpParams *paramStruct =
+        initCommand<SetDepthCompareOpParams>(CommandID::SetDepthCompareOp);
+    paramStruct->depthCompareOp = depthCompareOp;
+}
+
+ANGLE_INLINE void SecondaryCommandBuffer::setDepthTestEnable(VkBool32 depthTestEnable)
+{
+    SetDepthTestEnableParams *paramStruct =
+        initCommand<SetDepthTestEnableParams>(CommandID::SetDepthTestEnable);
+    paramStruct->depthTestEnable = depthTestEnable;
+}
+
+ANGLE_INLINE void SecondaryCommandBuffer::setDepthWriteEnable(VkBool32 depthWriteEnable)
+{
+    SetDepthWriteEnableParams *paramStruct =
+        initCommand<SetDepthWriteEnableParams>(CommandID::SetDepthWriteEnable);
+    paramStruct->depthWriteEnable = depthWriteEnable;
 }
 
 ANGLE_INLINE void SecondaryCommandBuffer::setEvent(VkEvent event, VkPipelineStageFlags stageMask)

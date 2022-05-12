@@ -118,6 +118,12 @@ const char *GetCommandString(CommandID id)
             return "SetCullMode";
         case CommandID::SetDepthBias:
             return "SetDepthBias";
+        case CommandID::SetDepthCompareOp:
+            return "SetDepthCompareOp";
+        case CommandID::SetDepthTestEnable:
+            return "SetDepthTestEnable";
+        case CommandID::SetDepthWriteEnable:
+            return "SetDepthWriteEnable";
         case CommandID::SetEvent:
             return "SetEvent";
         case CommandID::SetFragmentShadingRate:
@@ -567,6 +573,27 @@ void SecondaryCommandBuffer::executeCommands(PrimaryCommandBuffer *primary)
                         getParamPtr<SetDepthBiasParams>(currentCommand);
                     vkCmdSetDepthBias(cmdBuffer, params->depthBiasConstantFactor,
                                       params->depthBiasClamp, params->depthBiasSlopeFactor);
+                    break;
+                }
+                case CommandID::SetDepthCompareOp:
+                {
+                    const SetDepthCompareOpParams *params =
+                        getParamPtr<SetDepthCompareOpParams>(currentCommand);
+                    vkCmdSetDepthCompareOpEXT(cmdBuffer, params->depthCompareOp);
+                    break;
+                }
+                case CommandID::SetDepthTestEnable:
+                {
+                    const SetDepthTestEnableParams *params =
+                        getParamPtr<SetDepthTestEnableParams>(currentCommand);
+                    vkCmdSetDepthTestEnableEXT(cmdBuffer, params->depthTestEnable);
+                    break;
+                }
+                case CommandID::SetDepthWriteEnable:
+                {
+                    const SetDepthWriteEnableParams *params =
+                        getParamPtr<SetDepthWriteEnableParams>(currentCommand);
+                    vkCmdSetDepthWriteEnableEXT(cmdBuffer, params->depthWriteEnable);
                     break;
                 }
                 case CommandID::SetEvent:

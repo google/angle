@@ -8742,6 +8742,129 @@ TEST_P(StateChangeTestES3, CullFaceAndFrontFace)
 
     ASSERT_GL_NO_ERROR();
 }
+
+// Tests state change for depth test, write and function
+TEST_P(StateChangeTestES3, DepthTestWriteAndFunc)
+{
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+    glUseProgram(program);
+
+    GLint colorLoc = glGetUniformLocation(program, angle::essl1_shaders::ColorUniform());
+    ASSERT_NE(colorLoc, -1);
+
+    const int w = getWindowWidth();
+    const int h = getWindowHeight();
+
+    glClearColor(0, 0, 0, 1);
+    glClearDepthf(0.5);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // Initialize the depth buffer:
+    glEnable(GL_DEPTH_TEST);
+    glDepthMask(GL_TRUE);
+    glDepthFunc(GL_ALWAYS);
+
+    glEnable(GL_SCISSOR_TEST);
+    glScissor(0, 0, w / 2, h / 2);
+    glUniform4f(colorLoc, 0, 0, 0, 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), -0.8f);
+    glScissor(w / 2, 0, w / 2, h / 2);
+    drawQuad(program, essl1_shaders::PositionAttrib(), -0.2f);
+    glScissor(0, h / 2, w / 2, h / 2);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.4f);
+    glScissor(w / 2, h / 2, w / 2, h / 2);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.6f);
+
+    glDisable(GL_SCISSOR_TEST);
+    glDisable(GL_DEPTH_TEST);
+    glDepthMask(GL_FALSE);
+    glUniform4f(colorLoc, 1, 0, 0, 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0);
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, w, h, GLColor::red);
+
+    // Make draw calls that test depth or not, write depth or not, and use different functions
+
+    // Write green to one half
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+    glUniform4f(colorLoc, 0, 1, 0, 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.35f);
+
+    // Write blue to another half
+    glDepthFunc(GL_GREATER);
+    glUniform4f(colorLoc, 0, 0, 1, 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), -0.15f);
+
+    // Write yellow to a corner, overriding depth
+    glDepthMask(GL_TRUE);
+    glUniform4f(colorLoc, 1, 1, 0, 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), -0.6f);
+
+    // Write magenta to another corner, overriding depth
+    glDepthFunc(GL_LESS);
+    glUniform4f(colorLoc, 1, 0, 1, 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+
+    // No-op write
+    glDepthFunc(GL_NEVER);
+    glUniform4f(colorLoc, 0, 1, 1, 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0);
+
+    // Verify results
+    EXPECT_PIXEL_RECT_EQ(0, 0, w / 2, h / 2, GLColor::yellow);
+    EXPECT_PIXEL_RECT_EQ(w / 2, 0, w / 2, h / 2, GLColor::blue);
+    EXPECT_PIXEL_RECT_EQ(0, h / 2, w / 2, h / 2, GLColor::green);
+    EXPECT_PIXEL_RECT_EQ(w / 2, h / 2, w / 2, h / 2, GLColor::magenta);
+
+    // Verify the depth buffer
+    glDepthMask(GL_FALSE);
+    glDepthFunc(GL_LESS);
+    glUniform4f(colorLoc, 1, 0, 0, 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), -0.61f);
+    glUniform4f(colorLoc, 0, 0, 0, 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), -0.59f);
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, w / 2, h / 2, GLColor::red);
+    EXPECT_PIXEL_RECT_EQ(w / 2, 0, w / 2, h / 2, GLColor::black);
+    EXPECT_PIXEL_RECT_EQ(0, h / 2, w / 2, h / 2, GLColor::black);
+    EXPECT_PIXEL_RECT_EQ(w / 2, h / 2, w / 2, h / 2, GLColor::black);
+
+    glDepthFunc(GL_GREATER);
+    glUniform4f(colorLoc, 0, 1, 1, 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.51f);
+    glUniform4f(colorLoc, 0, 0, 0, 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.49f);
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, w / 2, h / 2, GLColor::black);
+    EXPECT_PIXEL_RECT_EQ(w / 2, 0, w / 2, h / 2, GLColor::black);
+    EXPECT_PIXEL_RECT_EQ(0, h / 2, w / 2, h / 2, GLColor::black);
+    EXPECT_PIXEL_RECT_EQ(w / 2, h / 2, w / 2, h / 2, GLColor::cyan);
+
+    glDepthFunc(GL_LESS);
+    glUniform4f(colorLoc, 0, 1, 0, 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), -0.21f);
+    glUniform4f(colorLoc, 1, 1, 1, 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), -0.19f);
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, w / 2, h / 2, GLColor::black);
+    EXPECT_PIXEL_RECT_EQ(w / 2, 0, w / 2, h / 2, GLColor::green);
+    EXPECT_PIXEL_RECT_EQ(0, h / 2, w / 2, h / 2, GLColor::white);
+    EXPECT_PIXEL_RECT_EQ(w / 2, h / 2, w / 2, h / 2, GLColor::white);
+
+    glDepthFunc(GL_GREATER);
+    glUniform4f(colorLoc, 0, 0, 1, 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.41f);
+    glUniform4f(colorLoc, 1, 0, 1, 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.39f);
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, w / 2, h / 2, GLColor::magenta);
+    EXPECT_PIXEL_RECT_EQ(w / 2, 0, w / 2, h / 2, GLColor::magenta);
+    EXPECT_PIXEL_RECT_EQ(0, h / 2, w / 2, h / 2, GLColor::blue);
+    EXPECT_PIXEL_RECT_EQ(w / 2, h / 2, w / 2, h / 2, GLColor::white);
+
+    ASSERT_GL_NO_ERROR();
+}
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST_ES2(StateChangeTest);

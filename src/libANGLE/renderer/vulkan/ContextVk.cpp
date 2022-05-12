@@ -774,8 +774,9 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
     if (getFeatures().supportsExtendedDynamicState.enabled)
     {
         mDynamicStateDirtyBits |= DirtyBits{
-            DIRTY_BIT_DYNAMIC_CULL_MODE,
-            DIRTY_BIT_DYNAMIC_FRONT_FACE,
+            DIRTY_BIT_DYNAMIC_CULL_MODE,         DIRTY_BIT_DYNAMIC_FRONT_FACE,
+            DIRTY_BIT_DYNAMIC_DEPTH_TEST_ENABLE, DIRTY_BIT_DYNAMIC_DEPTH_WRITE_ENABLE,
+            DIRTY_BIT_DYNAMIC_DEPTH_COMPARE_OP,
         };
     }
     if (getFeatures().supportsFragmentShadingRate.enabled)
@@ -851,6 +852,12 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
         &ContextVk::handleDirtyGraphicsDynamicCullMode;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_FRONT_FACE] =
         &ContextVk::handleDirtyGraphicsDynamicFrontFace;
+    mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_DEPTH_TEST_ENABLE] =
+        &ContextVk::handleDirtyGraphicsDynamicDepthTestEnable;
+    mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_DEPTH_WRITE_ENABLE] =
+        &ContextVk::handleDirtyGraphicsDynamicDepthWriteEnable;
+    mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_DEPTH_COMPARE_OP] =
+        &ContextVk::handleDirtyGraphicsDynamicDepthCompareOp;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_FRAGMENT_SHADING_RATE] =
         &ContextVk::handleDirtyGraphicsDynamicFragmentShadingRate;
 
@@ -921,6 +928,9 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
         mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_CULL_FACE_ENABLED);
         mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_CULL_FACE);
         mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_FRONT_FACE);
+        mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_DEPTH_TEST_ENABLED);
+        mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_DEPTH_MASK);
+        mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_DEPTH_FUNC);
     }
 
     angle::PerfMonitorCounterGroup vulkanGroup;
@@ -2525,6 +2535,42 @@ angle::Result ContextVk::handleDirtyGraphicsDynamicFrontFace(DirtyBits::Iterator
     const gl::RasterizerState &rasterState = mState.getRasterizerState();
     mRenderPassCommandBuffer->setFrontFace(
         gl_vk::GetFrontFace(rasterState.frontFace, isYFlipEnabledForDrawFBO()));
+    return angle::Result::Continue;
+}
+
+angle::Result ContextVk::handleDirtyGraphicsDynamicDepthTestEnable(
+    DirtyBits::Iterator *dirtyBitsIterator,
+    DirtyBits dirtyBitMask)
+{
+    const gl::DepthStencilState depthStencilState = mState.getDepthStencilState();
+    gl::Framebuffer *drawFramebuffer              = mState.getDrawFramebuffer();
+
+    // Only enable the depth test if the draw framebuffer has a depth buffer.
+    mRenderPassCommandBuffer->setDepthTestEnable(depthStencilState.depthTest &&
+                                                 drawFramebuffer->hasDepth());
+    return angle::Result::Continue;
+}
+
+angle::Result ContextVk::handleDirtyGraphicsDynamicDepthWriteEnable(
+    DirtyBits::Iterator *dirtyBitsIterator,
+    DirtyBits dirtyBitMask)
+{
+    const gl::DepthStencilState depthStencilState = mState.getDepthStencilState();
+    gl::Framebuffer *drawFramebuffer              = mState.getDrawFramebuffer();
+
+    // Only enable the depth write if the draw framebuffer has a depth buffer.
+    const bool depthWriteEnabled =
+        drawFramebuffer->hasDepth() && depthStencilState.depthTest && depthStencilState.depthMask;
+    mRenderPassCommandBuffer->setDepthWriteEnable(depthWriteEnabled);
+    return angle::Result::Continue;
+}
+
+angle::Result ContextVk::handleDirtyGraphicsDynamicDepthCompareOp(
+    DirtyBits::Iterator *dirtyBitsIterator,
+    DirtyBits dirtyBitMask)
+{
+    const gl::DepthStencilState depthStencilState = mState.getDepthStencilState();
+    mRenderPassCommandBuffer->setDepthCompareOp(gl_vk::GetCompareOp(depthStencilState.depthFunc));
     return angle::Result::Continue;
 }
 
@@ -4206,15 +4252,58 @@ void ContextVk::updateScissor(const gl::State &glState)
 void ContextVk::updateDepthStencil(const gl::State &glState)
 {
     const gl::DepthStencilState depthStencilState = glState.getDepthStencilState();
+    gl::Framebuffer *drawFramebuffer              = glState.getDrawFramebuffer();
 
-    gl::Framebuffer *drawFramebuffer = mState.getDrawFramebuffer();
-    mGraphicsPipelineDesc->updateDepthTestEnabled(&mGraphicsPipelineTransition, depthStencilState,
-                                                  drawFramebuffer);
-    mGraphicsPipelineDesc->updateDepthWriteEnabled(&mGraphicsPipelineTransition, depthStencilState,
-                                                   drawFramebuffer);
+    updateDepthTestEnabled(glState);
+    updateDepthWriteEnabled(glState);
     mGraphicsPipelineDesc->updateStencilTestEnabled(&mGraphicsPipelineTransition, depthStencilState,
                                                     drawFramebuffer);
     mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_STENCIL_WRITE_MASK);
+}
+
+void ContextVk::updateDepthTestEnabled(const gl::State &glState)
+{
+    const gl::DepthStencilState depthStencilState = glState.getDepthStencilState();
+    gl::Framebuffer *drawFramebuffer              = glState.getDrawFramebuffer();
+
+    if (getFeatures().supportsExtendedDynamicState.enabled)
+    {
+        mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_DEPTH_TEST_ENABLE);
+    }
+    else
+    {
+        mGraphicsPipelineDesc->updateDepthTestEnabled(&mGraphicsPipelineTransition,
+                                                      depthStencilState, drawFramebuffer);
+    }
+}
+
+void ContextVk::updateDepthWriteEnabled(const gl::State &glState)
+{
+    const gl::DepthStencilState depthStencilState = glState.getDepthStencilState();
+    gl::Framebuffer *drawFramebuffer              = glState.getDrawFramebuffer();
+
+    if (getFeatures().supportsExtendedDynamicState.enabled)
+    {
+        mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_DEPTH_WRITE_ENABLE);
+    }
+    else
+    {
+        mGraphicsPipelineDesc->updateDepthWriteEnabled(&mGraphicsPipelineTransition,
+                                                       depthStencilState, drawFramebuffer);
+    }
+}
+
+void ContextVk::updateDepthFunc(const gl::State &glState)
+{
+    if (getFeatures().supportsExtendedDynamicState.enabled)
+    {
+        mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_DEPTH_COMPARE_OP);
+    }
+    else
+    {
+        mGraphicsPipelineDesc->updateDepthFunc(&mGraphicsPipelineTransition,
+                                               glState.getDepthStencilState());
+    }
 }
 
 // If the target is a single-sampled target, sampleShading should be disabled, to use Bresenham line
@@ -4519,21 +4608,16 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 break;
             case gl::State::DIRTY_BIT_DEPTH_TEST_ENABLED:
             {
-                mGraphicsPipelineDesc->updateDepthTestEnabled(&mGraphicsPipelineTransition,
-                                                              glState.getDepthStencilState(),
-                                                              glState.getDrawFramebuffer());
+                updateDepthTestEnabled(glState);
                 iter.setLaterBit(gl::State::DIRTY_BIT_DEPTH_MASK);
                 break;
             }
             case gl::State::DIRTY_BIT_DEPTH_FUNC:
-                mGraphicsPipelineDesc->updateDepthFunc(&mGraphicsPipelineTransition,
-                                                       glState.getDepthStencilState());
+                updateDepthFunc(glState);
                 break;
             case gl::State::DIRTY_BIT_DEPTH_MASK:
             {
-                mGraphicsPipelineDesc->updateDepthWriteEnabled(&mGraphicsPipelineTransition,
-                                                               glState.getDepthStencilState(),
-                                                               glState.getDrawFramebuffer());
+                updateDepthWriteEnabled(glState);
                 onDepthStencilAccessChange();
                 break;
             }
