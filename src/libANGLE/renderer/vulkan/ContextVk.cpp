@@ -774,9 +774,13 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
     if (getFeatures().supportsExtendedDynamicState.enabled)
     {
         mDynamicStateDirtyBits |= DirtyBits{
-            DIRTY_BIT_DYNAMIC_CULL_MODE,         DIRTY_BIT_DYNAMIC_FRONT_FACE,
-            DIRTY_BIT_DYNAMIC_DEPTH_TEST_ENABLE, DIRTY_BIT_DYNAMIC_DEPTH_WRITE_ENABLE,
-            DIRTY_BIT_DYNAMIC_DEPTH_COMPARE_OP,  DIRTY_BIT_DYNAMIC_STENCIL_TEST_ENABLE,
+            DIRTY_BIT_DYNAMIC_CULL_MODE,
+            DIRTY_BIT_DYNAMIC_FRONT_FACE,
+            DIRTY_BIT_VERTEX_BUFFERS,
+            DIRTY_BIT_DYNAMIC_DEPTH_TEST_ENABLE,
+            DIRTY_BIT_DYNAMIC_DEPTH_WRITE_ENABLE,
+            DIRTY_BIT_DYNAMIC_DEPTH_COMPARE_OP,
+            DIRTY_BIT_DYNAMIC_STENCIL_TEST_ENABLE,
             DIRTY_BIT_DYNAMIC_STENCIL_OP,
         };
     }
@@ -2074,21 +2078,60 @@ angle::Result ContextVk::handleDirtyComputeTextures()
 angle::Result ContextVk::handleDirtyGraphicsVertexBuffers(DirtyBits::Iterator *dirtyBitsIterator,
                                                           DirtyBits dirtyBitMask)
 {
-    VertexArrayVk *vertexArrayVk = getVertexArray();
-    uint32_t maxAttrib           = mState.getProgramExecutable()->getMaxActiveAttribLocation();
+    const gl::ProgramExecutable *executable = mState.getProgramExecutable();
+    VertexArrayVk *vertexArrayVk            = getVertexArray();
+    uint32_t maxAttrib = mState.getProgramExecutable()->getMaxActiveAttribLocation();
     const gl::AttribArray<VkBuffer> &bufferHandles = vertexArrayVk->getCurrentArrayBufferHandles();
     const gl::AttribArray<VkDeviceSize> &bufferOffsets =
         vertexArrayVk->getCurrentArrayBufferOffsets();
 
-    mRenderPassCommandBuffer->bindVertexBuffers(0, maxAttrib, bufferHandles.data(),
-                                                bufferOffsets.data());
+    if (getFeatures().supportsExtendedDynamicState.enabled)
+    {
+        const gl::AttribArray<GLuint> &bufferStrides =
+            vertexArrayVk->getCurrentArrayBufferStrides();
+        const gl::AttribArray<angle::FormatID> &bufferFormats =
+            vertexArrayVk->getCurrentArrayBufferFormats();
+        gl::AttribArray<VkDeviceSize> strides = {};
+
+        // Set stride to 0 for mismatching formats between the program's declared attribute and that
+        // which is specified in glVertexAttribPointer.  See comment in vk_cache_utils.cpp
+        // (initializePipeline) for more details.
+        const gl::AttributesMask &activeAttribLocations =
+            executable->getNonBuiltinAttribLocationsMask();
+        const gl::ComponentTypeMask &programAttribsTypeMask = executable->getAttributesTypeMask();
+
+        for (size_t attribIndex : activeAttribLocations)
+        {
+            const angle::Format &intendedFormat =
+                mRenderer->getFormat(bufferFormats[attribIndex]).getIntendedFormat();
+
+            const gl::ComponentType attribType = GetVertexAttributeComponentType(
+                intendedFormat.isPureInt(), intendedFormat.vertexAttribType);
+            const gl::ComponentType programAttribType =
+                gl::GetComponentTypeMask(programAttribsTypeMask, attribIndex);
+
+            const bool mismatchingType =
+                attribType != programAttribType && (programAttribType == gl::ComponentType::Float ||
+                                                    attribType == gl::ComponentType::Float);
+            strides[attribIndex] = mismatchingType ? 0 : bufferStrides[attribIndex];
+        }
+
+        // TODO: Use the sizes parameters here to fix the robustness issue worked around in
+        // crbug.com/1310038
+        mRenderPassCommandBuffer->bindVertexBuffers2(0, maxAttrib, bufferHandles.data(),
+                                                     bufferOffsets.data(), nullptr, strides.data());
+    }
+    else
+    {
+        mRenderPassCommandBuffer->bindVertexBuffers(0, maxAttrib, bufferHandles.data(),
+                                                    bufferOffsets.data());
+    }
 
     const gl::AttribArray<vk::BufferHelper *> &arrayBufferResources =
         vertexArrayVk->getCurrentArrayBuffers();
 
     // Mark all active vertex buffers as accessed.
-    const gl::ProgramExecutable *executable = mState.getProgramExecutable();
-    gl::AttributesMask attribsMask          = executable->getActiveAttribLocationsMask();
+    const gl::AttributesMask attribsMask = executable->getActiveAttribLocationsMask();
     for (size_t attribIndex : attribsMask)
     {
         vk::BufferHelper *arrayBuffer = arrayBufferResources[attribIndex];
