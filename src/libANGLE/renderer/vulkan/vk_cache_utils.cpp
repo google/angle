@@ -1855,8 +1855,6 @@ void GraphicsPipelineDesc::initDefaults(const ContextVk *contextVk)
     mDepthStencilStateInfo.enable.depthBoundsTest = 0;
     mDepthStencilStateInfo.enable.stencilTest     = 0;
     mDepthStencilStateInfo.padding                = 0;
-    mDepthStencilStateInfo.minDepthBounds         = 0.0f;
-    mDepthStencilStateInfo.maxDepthBounds         = 0.0f;
     SetBitField(mDepthStencilStateInfo.front.ops.fail, VK_STENCIL_OP_KEEP);
     SetBitField(mDepthStencilStateInfo.front.ops.pass, VK_STENCIL_OP_KEEP);
     SetBitField(mDepthStencilStateInfo.front.ops.depthFail, VK_STENCIL_OP_KEEP);
@@ -2233,8 +2231,8 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
         static_cast<VkBool32>(mDepthStencilStateInfo.enable.stencilTest);
     UnpackStencilState(mDepthStencilStateInfo.front, &depthStencilState.front);
     UnpackStencilState(mDepthStencilStateInfo.back, &depthStencilState.back);
-    depthStencilState.minDepthBounds = mDepthStencilStateInfo.minDepthBounds;
-    depthStencilState.maxDepthBounds = mDepthStencilStateInfo.maxDepthBounds;
+    depthStencilState.minDepthBounds = 0;
+    depthStencilState.maxDepthBounds = 0;
 
     const PackedInputAssemblyAndColorBlendStateInfo &inputAndBlend =
         mInputAssemblyAndColorBlendStateInfo;
@@ -2304,12 +2302,13 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     }
 
     // Dynamic state
-    angle::FixedVector<VkDynamicState, 11> dynamicStateList;
+    angle::FixedVector<VkDynamicState, 13> dynamicStateList;
     dynamicStateList.push_back(VK_DYNAMIC_STATE_VIEWPORT);
     dynamicStateList.push_back(VK_DYNAMIC_STATE_SCISSOR);
     dynamicStateList.push_back(VK_DYNAMIC_STATE_LINE_WIDTH);
     dynamicStateList.push_back(VK_DYNAMIC_STATE_DEPTH_BIAS);
     dynamicStateList.push_back(VK_DYNAMIC_STATE_BLEND_CONSTANTS);
+    dynamicStateList.push_back(VK_DYNAMIC_STATE_DEPTH_BOUNDS);
     dynamicStateList.push_back(VK_DYNAMIC_STATE_STENCIL_COMPARE_MASK);
     dynamicStateList.push_back(VK_DYNAMIC_STATE_STENCIL_WRITE_MASK);
     dynamicStateList.push_back(VK_DYNAMIC_STATE_STENCIL_REFERENCE);

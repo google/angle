@@ -466,14 +466,12 @@ struct PackedDepthStencilStateInfo final
     DepthCompareOpAndSurfaceRotation depthCompareOpAndSurfaceRotation;
     uint16_t padding;
 
-    float minDepthBounds;
-    float maxDepthBounds;
     PackedStencilOpState front;
     PackedStencilOpState back;
 };
 
 constexpr size_t kPackedDepthStencilStateSize = sizeof(PackedDepthStencilStateInfo);
-static_assert(kPackedDepthStencilStateSize == 16, "Size check failed");
+static_assert(kPackedDepthStencilStateSize == 8, "Size check failed");
 static_assert(static_cast<int>(SurfaceRotation::EnumCount) <= 8, "Size check failed");
 
 struct LogicOpState final
