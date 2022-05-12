@@ -1287,6 +1287,11 @@ constexpr bool IsDynamicDescriptor(VkDescriptorType descriptorType)
             return false;
     }
 }
+
+angle::Result SetDebugUtilsObjectName(ContextVk *contextVk,
+                                      uint64_t handle,
+                                      const std::string &label);
+
 }  // namespace vk
 
 #if !defined(ANGLE_SHARED_LIBVULKAN)
