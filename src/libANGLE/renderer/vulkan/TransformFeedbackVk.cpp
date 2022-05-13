@@ -260,7 +260,7 @@ void TransformFeedbackVk::getBufferOffsets(ContextVk *contextVk,
 void TransformFeedbackVk::onSubjectStateChange(angle::SubjectIndex index,
                                                angle::SubjectMessage message)
 {
-    if (message == angle::SubjectMessage::BufferVkStorageChanged)
+    if (message == angle::SubjectMessage::InternalMemoryAllocationChanged)
     {
         ASSERT(index < mBufferObserverBindings.size());
         const gl::OffsetBindingPointer<gl::Buffer> &binding = mState.getIndexedBuffer(index);
