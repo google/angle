@@ -4753,6 +4753,100 @@ void main()
     EXPECT_EQ(expectedRenderPassCount, actualRenderPassCount);
 }
 
+// Test that one texture sampled by fragment shader, compute shader and fragment
+// shader sequentlly.
+TEST_P(VulkanPerformanceCounterTest_ES31, TextureSampleByDrawDispatchDraw)
+{
+    constexpr char kVSSource[] = R"(#version 310 es
+in vec4 a_position;
+out vec2 v_texCoord;
+
+void main()
+{
+gl_Position = vec4(a_position.xy, 0.0, 1.0);
+v_texCoord = a_position.xy * 0.5 + vec2(0.5);
+})";
+
+    constexpr char kFSSource[] = R"(#version 310 es
+uniform sampler2D u_tex2D;
+precision highp float;
+in vec2 v_texCoord;
+out vec4 out_FragColor;
+void main()
+{
+out_FragColor = texture(u_tex2D, v_texCoord);
+})";
+
+    constexpr char kCSSource[] = R"(#version 310 es
+layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+precision highp sampler2D;
+uniform sampler2D tex;
+layout(std140, binding=0) buffer buf {
+vec4 outData;
+};
+void main()
+{
+uint x = gl_LocalInvocationID.x;
+uint y = gl_LocalInvocationID.y;
+outData = texture(tex, vec2(x, y));
+})";
+
+    GLfloat initValue[4] = {1.0, 1.0, 1.0, 1.0};
+
+    // Step 1: Set up a simple 2D Texture rendering loop.
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA32F, 1, 1);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_FLOAT, initValue);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    GLfloat vertices[] = {-1, -1, 1, -1, -1, 1, 1, 1};
+
+    GLBuffer vertexBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, 8 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
+
+    ANGLE_GL_PROGRAM(program, kVSSource, kFSSource);
+    glUseProgram(program);
+
+    GLint posLoc = glGetAttribLocation(program, "a_position");
+    ASSERT_NE(-1, posLoc);
+
+    glVertexAttribPointer(posLoc, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(posLoc);
+    ASSERT_GL_NO_ERROR();
+
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    ASSERT_GL_NO_ERROR();
+    uint32_t expectedRenderPassCount = getPerfCounters().renderPasses + 1;
+
+    // Step 2: sample this texture through compute
+    GLBuffer ssbo;
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, 16, nullptr, GL_STREAM_DRAW);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+
+    ANGLE_GL_COMPUTE_PROGRAM(csProgram, kCSSource);
+    glUseProgram(csProgram);
+
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glUniform1i(glGetUniformLocation(csProgram, "tex"), 0);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, ssbo);
+
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    // Step3: use the first program sample texture again
+    glUseProgram(program);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    ASSERT_GL_NO_ERROR();
+
+    uint32_t actualRenderPassCount = getPerfCounters().renderPasses;
+    EXPECT_EQ(expectedRenderPassCount, actualRenderPassCount);
+}
+
 // Verify a mid-render pass clear of a newly enabled attachment uses LOAD_OP_CLEAR.
 TEST_P(VulkanPerformanceCounterTest, DisableThenMidRenderPassClear)
 {
