@@ -3189,8 +3189,6 @@ void ContextVk::handleDeviceLost()
     (void)mOutsideRenderPassCommands->reset(this);
     (void)mRenderPassCommands->reset(this);
     mRenderer->handleDeviceLost();
-    clearAllGarbage();
-
     mRenderer->notifyDeviceLost();
 }
 
