@@ -90,7 +90,9 @@ enum class CommandID : uint16_t
     SetLineWidth,
     SetScissor,
     SetStencilCompareMask,
+    SetStencilOp,
     SetStencilReference,
+    SetStencilTestEnable,
     SetStencilWriteMask,
     SetViewport,
     WaitEvents,
@@ -499,12 +501,28 @@ struct SetStencilCompareMaskParams
 };
 VERIFY_4_BYTE_ALIGNMENT(SetStencilCompareMaskParams)
 
+struct SetStencilOpParams
+{
+    uint32_t faceMask : 4;
+    uint32_t failOp : 3;
+    uint32_t passOp : 3;
+    uint32_t depthFailOp : 3;
+    uint32_t compareOp : 3;
+};
+VERIFY_4_BYTE_ALIGNMENT(SetStencilOpParams)
+
 struct SetStencilReferenceParams
 {
     uint16_t frontReference;
     uint16_t backReference;
 };
 VERIFY_4_BYTE_ALIGNMENT(SetStencilReferenceParams)
+
+struct SetStencilTestEnableParams
+{
+    VkBool32 stencilTestEnable;
+};
+VERIFY_4_BYTE_ALIGNMENT(SetStencilTestEnableParams)
 
 struct SetStencilWriteMaskParams
 {
@@ -775,7 +793,13 @@ class SecondaryCommandBuffer final : angle::NonCopyable
     void setLineWidth(float lineWidth);
     void setScissor(uint32_t firstScissor, uint32_t scissorCount, const VkRect2D *scissors);
     void setStencilCompareMask(uint32_t compareFrontMask, uint32_t compareBackMask);
+    void setStencilOp(VkStencilFaceFlags faceMask,
+                      VkStencilOp failOp,
+                      VkStencilOp passOp,
+                      VkStencilOp depthFailOp,
+                      VkCompareOp compareOp);
     void setStencilReference(uint32_t frontReference, uint32_t backReference);
+    void setStencilTestEnable(VkBool32 stencilTestEnable);
     void setStencilWriteMask(uint32_t writeFrontMask, uint32_t writeBackMask);
     void setViewport(uint32_t firstViewport, uint32_t viewportCount, const VkViewport *viewports);
 
@@ -1651,6 +1675,20 @@ ANGLE_INLINE void SecondaryCommandBuffer::setStencilCompareMask(uint32_t compare
     paramStruct->compareBackMask  = static_cast<uint16_t>(compareBackMask);
 }
 
+ANGLE_INLINE void SecondaryCommandBuffer::setStencilOp(VkStencilFaceFlags faceMask,
+                                                       VkStencilOp failOp,
+                                                       VkStencilOp passOp,
+                                                       VkStencilOp depthFailOp,
+                                                       VkCompareOp compareOp)
+{
+    SetStencilOpParams *paramStruct = initCommand<SetStencilOpParams>(CommandID::SetStencilOp);
+    SetBitField(paramStruct->faceMask, faceMask);
+    SetBitField(paramStruct->failOp, failOp);
+    SetBitField(paramStruct->passOp, passOp);
+    SetBitField(paramStruct->depthFailOp, depthFailOp);
+    SetBitField(paramStruct->compareOp, compareOp);
+}
+
 ANGLE_INLINE void SecondaryCommandBuffer::setStencilReference(uint32_t frontReference,
                                                               uint32_t backReference)
 {
@@ -1658,6 +1696,13 @@ ANGLE_INLINE void SecondaryCommandBuffer::setStencilReference(uint32_t frontRefe
         initCommand<SetStencilReferenceParams>(CommandID::SetStencilReference);
     paramStruct->frontReference = static_cast<uint16_t>(frontReference);
     paramStruct->backReference  = static_cast<uint16_t>(backReference);
+}
+
+ANGLE_INLINE void SecondaryCommandBuffer::setStencilTestEnable(VkBool32 stencilTestEnable)
+{
+    SetStencilTestEnableParams *paramStruct =
+        initCommand<SetStencilTestEnableParams>(CommandID::SetStencilTestEnable);
+    paramStruct->stencilTestEnable = stencilTestEnable;
 }
 
 ANGLE_INLINE void SecondaryCommandBuffer::setStencilWriteMask(uint32_t writeFrontMask,

@@ -1371,6 +1371,32 @@ VkCompareOp GetCompareOp(const GLenum compareFunc)
     }
 }
 
+VkStencilOp GetStencilOp(GLenum compareOp)
+{
+    switch (compareOp)
+    {
+        case GL_KEEP:
+            return VK_STENCIL_OP_KEEP;
+        case GL_ZERO:
+            return VK_STENCIL_OP_ZERO;
+        case GL_REPLACE:
+            return VK_STENCIL_OP_REPLACE;
+        case GL_INCR:
+            return VK_STENCIL_OP_INCREMENT_AND_CLAMP;
+        case GL_DECR:
+            return VK_STENCIL_OP_DECREMENT_AND_CLAMP;
+        case GL_INCR_WRAP:
+            return VK_STENCIL_OP_INCREMENT_AND_WRAP;
+        case GL_DECR_WRAP:
+            return VK_STENCIL_OP_DECREMENT_AND_WRAP;
+        case GL_INVERT:
+            return VK_STENCIL_OP_INVERT;
+        default:
+            UNREACHABLE();
+            return VK_STENCIL_OP_KEEP;
+    }
+}
+
 void GetOffset(const gl::Offset &glOffset, VkOffset3D *vkOffset)
 {
     vkOffset->x = glOffset.x;

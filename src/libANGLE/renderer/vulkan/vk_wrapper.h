@@ -333,7 +333,13 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
     void setLineWidth(float lineWidth);
     void setScissor(uint32_t firstScissor, uint32_t scissorCount, const VkRect2D *scissors);
     void setStencilCompareMask(uint32_t compareFrontMask, uint32_t compareBackMask);
+    void setStencilOp(VkStencilFaceFlags faceMask,
+                      VkStencilOp failOp,
+                      VkStencilOp passOp,
+                      VkStencilOp depthFailOp,
+                      VkCompareOp compareOp);
     void setStencilReference(uint32_t frontReference, uint32_t backReference);
+    void setStencilTestEnable(VkBool32 stencilTestEnable);
     void setStencilWriteMask(uint32_t writeFrontMask, uint32_t writeBackMask);
     void setViewport(uint32_t firstViewport, uint32_t viewportCount, const VkViewport *viewports);
     VkResult reset();
@@ -1042,12 +1048,28 @@ ANGLE_INLINE void CommandBuffer::setStencilCompareMask(uint32_t compareFrontMask
     vkCmdSetStencilCompareMask(mHandle, VK_STENCIL_FACE_BACK_BIT, compareBackMask);
 }
 
+ANGLE_INLINE void CommandBuffer::setStencilOp(VkStencilFaceFlags faceMask,
+                                              VkStencilOp failOp,
+                                              VkStencilOp passOp,
+                                              VkStencilOp depthFailOp,
+                                              VkCompareOp compareOp)
+{
+    ASSERT(valid());
+    vkCmdSetStencilOpEXT(mHandle, faceMask, failOp, passOp, depthFailOp, compareOp);
+}
+
 ANGLE_INLINE void CommandBuffer::setStencilReference(uint32_t frontReference,
                                                      uint32_t backReference)
 {
     ASSERT(valid());
     vkCmdSetStencilReference(mHandle, VK_STENCIL_FACE_FRONT_BIT, frontReference);
     vkCmdSetStencilReference(mHandle, VK_STENCIL_FACE_BACK_BIT, backReference);
+}
+
+ANGLE_INLINE void CommandBuffer::setStencilTestEnable(VkBool32 stencilTestEnable)
+{
+    ASSERT(valid());
+    vkCmdSetStencilTestEnableEXT(mHandle, stencilTestEnable);
 }
 
 ANGLE_INLINE void CommandBuffer::setStencilWriteMask(uint32_t writeFrontMask,

@@ -8865,6 +8865,165 @@ TEST_P(StateChangeTestES3, DepthTestWriteAndFunc)
 
     ASSERT_GL_NO_ERROR();
 }
+
+// Tests state change for stencil test and function
+TEST_P(StateChangeTestES3, StencilTestAndFunc)
+{
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+    glUseProgram(program);
+
+    GLint colorLoc = glGetUniformLocation(program, angle::essl1_shaders::ColorUniform());
+    ASSERT_NE(colorLoc, -1);
+
+    const int w = getWindowWidth();
+    const int h = getWindowHeight();
+
+    glClearColor(0, 0, 0, 1);
+    glClearDepthf(0.5);
+    glClearStencil(0x55);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+    // Initialize the depth and stencil buffers
+    glEnable(GL_DEPTH_TEST);
+    glDepthMask(GL_TRUE);
+    glDepthFunc(GL_ALWAYS);
+
+    glEnable(GL_STENCIL_TEST);
+    glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
+
+    glEnable(GL_SCISSOR_TEST);
+    glScissor(0, 0, w / 2, h / 2);
+    glUniform4f(colorLoc, 0, 0, 0, 1);
+    glStencilFunc(GL_ALWAYS, 0x3E, 0xFF);
+    drawQuad(program, essl1_shaders::PositionAttrib(), -0.8f);
+    glScissor(w / 2, 0, w / 2, h / 2);
+    glStencilFunc(GL_ALWAYS, 0xA7, 0xFF);
+    drawQuad(program, essl1_shaders::PositionAttrib(), -0.2f);
+    glScissor(0, h / 2, w / 2, h / 2);
+    glStencilFunc(GL_ALWAYS, 0x6C, 0xFF);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.4f);
+    glScissor(w / 2, h / 2, w / 2, h / 2);
+    glStencilFunc(GL_ALWAYS, 0x5B, 0xFF);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.6f);
+
+    glDisable(GL_SCISSOR_TEST);
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_STENCIL_TEST);
+    glDepthMask(GL_FALSE);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+    glUniform4f(colorLoc, 1, 0, 0, 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0);
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, w, h, GLColor::red);
+
+    // Make draw calls that manipulate stencil and use different functions and ops.
+
+    // Current color/depth/stencil in the four sections of the image:
+    //
+    //     red/-0.8/3E    red/-0.2/A7
+    //     red/ 0.4/6C    red/0.6/5B
+    //
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+    glEnable(GL_STENCIL_TEST);
+    glStencilFuncSeparate(GL_FRONT, GL_EQUAL, 0x2C, 0x2C);
+    glStencilOpSeparate(GL_FRONT, GL_INCR, GL_DECR, GL_INVERT);
+    glStencilFuncSeparate(GL_BACK, GL_GREATER, 0x7B, 0xFF);
+    glStencilOpSeparate(GL_BACK, GL_INCR, GL_ZERO, GL_REPLACE);
+
+    // Draw green front-facing to get:
+    //
+    //       red/-0.8/3D    red/-0.2/A8
+    //     green/ 0.4/93    red/ 0.6/5C
+    //
+    glUniform4f(colorLoc, 0, 1, 0, 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0);
+
+    // Draw blue back-facing to get:
+    //
+    //       red/-0.8/00    red/-0.2/A9
+    //     green/ 0.4/94   blue/ 0.6/7B
+    //
+    glFrontFace(GL_CW);
+    glUniform4f(colorLoc, 0, 0, 1, 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0);
+
+    glStencilFuncSeparate(GL_FRONT, GL_LEQUAL, 0x42, 0x42);
+    glStencilOpSeparate(GL_FRONT, GL_KEEP, GL_DECR, GL_INCR_WRAP);
+    glStencilFuncSeparate(GL_BACK, GL_ALWAYS, 0x00, 0x00);
+    glStencilOpSeparate(GL_BACK, GL_KEEP, GL_INCR, GL_INVERT);
+
+    // Draw yellow back-facing to get:
+    //
+    //    yellow/-0.8/FF yellow/-0.2/56
+    //     green/ 0.4/95   blue/ 0.6/7C
+    //
+    glDepthFunc(GL_GREATER);
+    glUniform4f(colorLoc, 1, 1, 0, 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0);
+
+    // Draw cyan front-facing to get:
+    //
+    //      cyan/-0.8/00 yellow/-0.2/55
+    //     green/ 0.4/95   blue/ 0.6/7C
+    //
+    glFrontFace(GL_CCW);
+    glUniform4f(colorLoc, 0, 1, 1, 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), -0.5);
+
+    // No-op draw
+    glStencilFuncSeparate(GL_FRONT, GL_NEVER, 0x00, 0x00);
+    glStencilOpSeparate(GL_FRONT, GL_KEEP, GL_INVERT, GL_INVERT);
+    glUniform4f(colorLoc, 1, 0, 1, 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0);
+
+    // Verify results
+    EXPECT_PIXEL_RECT_EQ(0, 0, w / 2, h / 2, GLColor::cyan);
+    EXPECT_PIXEL_RECT_EQ(w / 2, 0, w / 2, h / 2, GLColor::yellow);
+    EXPECT_PIXEL_RECT_EQ(0, h / 2, w / 2, h / 2, GLColor::green);
+    EXPECT_PIXEL_RECT_EQ(w / 2, h / 2, w / 2, h / 2, GLColor::blue);
+
+    // Verify the stencil buffer
+    glDisable(GL_DEPTH_TEST);
+    glStencilOpSeparate(GL_FRONT, GL_KEEP, GL_KEEP, GL_KEEP);
+    glStencilFuncSeparate(GL_FRONT, GL_EQUAL, 0x00, 0xFF);
+    glUniform4f(colorLoc, 1, 0, 0, 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0);
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, w / 2, h / 2, GLColor::red);
+    EXPECT_PIXEL_RECT_EQ(w / 2, 0, w / 2, h / 2, GLColor::yellow);
+    EXPECT_PIXEL_RECT_EQ(0, h / 2, w / 2, h / 2, GLColor::green);
+    EXPECT_PIXEL_RECT_EQ(w / 2, h / 2, w / 2, h / 2, GLColor::blue);
+
+    glStencilFuncSeparate(GL_FRONT, GL_EQUAL, 0x55, 0xFF);
+    glUniform4f(colorLoc, 1, 0, 1, 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0);
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, w / 2, h / 2, GLColor::red);
+    EXPECT_PIXEL_RECT_EQ(w / 2, 0, w / 2, h / 2, GLColor::magenta);
+    EXPECT_PIXEL_RECT_EQ(0, h / 2, w / 2, h / 2, GLColor::green);
+    EXPECT_PIXEL_RECT_EQ(w / 2, h / 2, w / 2, h / 2, GLColor::blue);
+
+    glStencilFuncSeparate(GL_FRONT, GL_EQUAL, 0x95, 0xFF);
+    glUniform4f(colorLoc, 1, 1, 1, 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0);
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, w / 2, h / 2, GLColor::red);
+    EXPECT_PIXEL_RECT_EQ(w / 2, 0, w / 2, h / 2, GLColor::magenta);
+    EXPECT_PIXEL_RECT_EQ(0, h / 2, w / 2, h / 2, GLColor::white);
+    EXPECT_PIXEL_RECT_EQ(w / 2, h / 2, w / 2, h / 2, GLColor::blue);
+
+    glStencilFuncSeparate(GL_FRONT, GL_EQUAL, 0x7C, 0xFF);
+    glUniform4f(colorLoc, 0, 0, 0, 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0);
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, w / 2, h / 2, GLColor::red);
+    EXPECT_PIXEL_RECT_EQ(w / 2, 0, w / 2, h / 2, GLColor::magenta);
+    EXPECT_PIXEL_RECT_EQ(0, h / 2, w / 2, h / 2, GLColor::white);
+    EXPECT_PIXEL_RECT_EQ(w / 2, h / 2, w / 2, h / 2, GLColor::black);
+
+    ASSERT_GL_NO_ERROR();
+}
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST_ES2(StateChangeTest);

@@ -68,15 +68,6 @@ using RefCountedDescriptorSetLayout    = RefCounted<DescriptorSetLayout>;
 using RefCountedPipelineLayout         = RefCounted<PipelineLayout>;
 using RefCountedSamplerYcbcrConversion = RefCounted<SamplerYcbcrConversion>;
 
-// Helper macro that casts to a bitfield type then verifies no bits were dropped.
-#define SetBitField(lhs, rhs)                                                         \
-    do                                                                                \
-    {                                                                                 \
-        auto ANGLE_LOCAL_VAR = rhs;                                                   \
-        lhs = static_cast<typename std::decay<decltype(lhs)>::type>(ANGLE_LOCAL_VAR); \
-        ASSERT(static_cast<decltype(ANGLE_LOCAL_VAR)>(lhs) == ANGLE_LOCAL_VAR);       \
-    } while (0)
-
 // Packed Vk resource descriptions.
 // Most Vk types use many more bits than required to represent the underlying data.
 // Since ANGLE wants to cache things like RenderPasses and Pipeline State Objects using
