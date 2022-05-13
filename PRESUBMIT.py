@@ -383,10 +383,11 @@ def _CheckNonAsciiInSourceFiles(input_api, output_api):
 
 
 def _CheckCommentBeforeTestInTestFiles(input_api, output_api):
-    """Require a comment before TEST_P() tests. """
+    """Require a comment before TEST_P() and other tests. """
 
     def test_files(f):
-        return input_api.FilterSourceFile(f, files_to_check=(r'^src\/tests\/.+\.cpp$',))
+        return input_api.FilterSourceFile(
+            f, files_to_check=(r'^src\/tests\/.+\.cpp$', r'^src\/.+_unittest\.cpp$'))
 
     tests_with_no_comment = []
     for f in input_api.AffectedSourceFiles(test_files):
@@ -398,7 +399,9 @@ def _CheckCommentBeforeTestInTestFiles(input_api, output_api):
                 continue
 
             new_line_is_comment = line.startswith(' //') or line.startswith('+//')
-            new_line_is_test_declaration = line.startswith('+TEST_P(')
+            new_line_is_test_declaration = (
+                line.startswith('+TEST_P(') or line.startswith('+TEST(') or
+                line.startswith('+TYPED_TEST('))
 
             if new_line_is_test_declaration and not last_line_was_comment:
                 tests_with_no_comment.append(line[1:])
