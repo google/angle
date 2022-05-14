@@ -90,26 +90,87 @@ class PixelLocalStoragePrototype
     void endPixelLocalStorage();
 
   private:
-    struct LocalStoragePlane
+    class PLSPlane
     {
-        GLuint tex;
-        GLsizei width;
-        GLsizei height;
-        GLenum internalformat;
-        GLfloat clearValuef[4]{};
-        GLint clearValuei[4]{};
-        GLuint clearValueui[4]{};
+      public:
+        PLSPlane() = default;
+
+        void reset(GLuint tex, GLsizei width, GLsizei height, GLuint internalformat)
+        {
+            if (mMemoryless && mTex)
+            {
+                glDeleteTextures(1, &mTex);
+            }
+            mMemoryless = !tex;
+            if (mMemoryless)
+            {
+                GLint textureBinding2D;
+                glGetIntegerv(GL_TEXTURE_BINDING_2D, &textureBinding2D);
+                glGenTextures(1, &mTex);
+                glBindTexture(GL_TEXTURE_2D, mTex);
+                glTexStorage2D(GL_TEXTURE_2D, 1, internalformat, width, height);
+                glBindTexture(GL_TEXTURE_2D, textureBinding2D);
+            }
+            else
+            {
+                mTex = tex;
+            }
+            mWidth          = width;
+            mHeight         = height;
+            mInternalformat = internalformat;
+        }
+
+        ~PLSPlane()
+        {
+            if (mMemoryless && mTex)
+            {
+                glDeleteTextures(1, &mTex);
+            }
+        }
+
+        GLuint tex() const { return mTex; }
+        GLsizei width() const { return mWidth; }
+        GLsizei height() const { return mHeight; }
+        GLenum internalformat() const { return mInternalformat; }
+
+        const float *clearValuef() const { return mClearValuef; }
+        const int32_t *clearValuei() const { return mClearValuei; }
+        const uint32_t *clearValueui() const { return mClearValueui; }
+
+        void setClearValuef(const float val[4]) { memcpy(mClearValuef, val, sizeof(mClearValuef)); }
+        void setClearValuei(const int32_t val[4])
+        {
+            memcpy(mClearValuei, val, sizeof(mClearValuei));
+        }
+        void setClearValueui(const uint32_t val[4])
+        {
+            memcpy(mClearValueui, val, sizeof(mClearValueui));
+        }
+
+      private:
+        PLSPlane &operator=(const PLSPlane &) = delete;
+        PLSPlane(const PLSPlane &)            = delete;
+
+        bool mMemoryless;
+        GLuint mTex = 0;
+        GLsizei mWidth;
+        GLsizei mHeight;
+        GLenum mInternalformat;
+
+        float mClearValuef[4]{};
+        int32_t mClearValuei[4]{};
+        uint32_t mClearValueui[4]{};
     };
 
-    std::array<LocalStoragePlane, MAX_LOCAL_STORAGE_PLANES> &boundLocalStoragePlanes()
+    std::array<PLSPlane, MAX_LOCAL_STORAGE_PLANES> &boundLocalStoragePlanes()
     {
         GLint drawFBO;
         glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, &drawFBO);
         ASSERT(drawFBO != 0);  // GL_INVALID_OPERATION!
-        return mLocalStoragePlanes[drawFBO];
+        return mPLSPlanes[drawFBO];
     }
 
-    std::map<GLuint, std::array<LocalStoragePlane, MAX_LOCAL_STORAGE_PLANES>> mLocalStoragePlanes;
+    std::map<GLuint, std::array<PLSPlane, MAX_LOCAL_STORAGE_PLANES>> mPLSPlanes;
     bool mLocalStorageEnabled = false;
     std::vector<int> mEnabledLocalStoragePlanes;
     GLint mFramebufferPreviousDefaultWidth  = 0;
@@ -134,35 +195,30 @@ void PixelLocalStoragePrototype::framebufferPixelLocalStorage(GLuint unit,
                                                               GLenum internalformat)
 {
     ASSERT(0 <= unit && unit < MAX_LOCAL_STORAGE_PLANES);  // GL_INVALID_VALUE!
-    ASSERT(backingtexture != 0);                           // NOT IMPLEMENTED!
     ASSERT(level == 0);                                    // NOT IMPLEMENTED!
     ASSERT(layer == 0);                                    // NOT IMPLEMENTED!
     ASSERT(width > 0 && height > 0);                       // NOT IMPLEMENTED!
-    auto &plane          = boundLocalStoragePlanes()[unit];
-    plane.tex            = backingtexture;
-    plane.width          = width;
-    plane.height         = height;
-    plane.internalformat = internalformat;
+    boundLocalStoragePlanes()[unit].reset(backingtexture, width, height, internalformat);
 }
 
 void PixelLocalStoragePrototype::framebufferPixelLocalClearValuefv(GLuint unit,
                                                                    const GLfloat *value)
 {
     ASSERT(0 <= unit && unit < MAX_LOCAL_STORAGE_PLANES);  // GL_INVALID_VALUE!
-    memcpy(boundLocalStoragePlanes()[unit].clearValuef, value, sizeof(GLfloat) * 4);
+    boundLocalStoragePlanes()[unit].setClearValuef(value);
 }
 
 void PixelLocalStoragePrototype::framebufferPixelLocalClearValueiv(GLuint unit, const GLint *value)
 {
     ASSERT(0 <= unit && unit < MAX_LOCAL_STORAGE_PLANES);  // GL_INVALID_VALUE!
-    memcpy(boundLocalStoragePlanes()[unit].clearValuei, value, sizeof(GLint) * 4);
+    boundLocalStoragePlanes()[unit].setClearValuei(value);
 }
 
 void PixelLocalStoragePrototype::framebufferPixelLocalClearValueuiv(GLuint unit,
                                                                     const GLuint *value)
 {
     ASSERT(0 <= unit && unit < MAX_LOCAL_STORAGE_PLANES);  // GL_INVALID_VALUE!
-    memcpy(boundLocalStoragePlanes()[unit].clearValueui, value, sizeof(GLuint) * 4);
+    boundLocalStoragePlanes()[unit].setClearValueui(value);
 }
 
 class AutoRestoreDrawBuffers
@@ -279,15 +335,15 @@ void PixelLocalStoragePrototype::beginPixelLocalStorage(GLsizei n, const GLenum 
         GLenum internalformat = GL_RGBA8;
         if (loadOps[i] != GL_DISABLED_ANGLE)
         {
-            ASSERT(planes[i].tex);  // GL_INVALID_FRAMEBUFFER_OPERATION!
-            tex            = planes[i].tex;
-            internalformat = planes[i].internalformat;
+            ASSERT(planes[i].tex());  // GL_INVALID_FRAMEBUFFER_OPERATION!
+            tex            = planes[i].tex();
+            internalformat = planes[i].internalformat();
 
             // GL_INVALID_FRAMEBUFFER_OPERATION!
-            ASSERT(!framebufferWidth || framebufferWidth == planes[i].width);
-            ASSERT(!framebufferHeight || framebufferHeight == planes[i].height);
-            framebufferWidth  = planes[i].width;
-            framebufferHeight = planes[i].height;
+            ASSERT(!framebufferWidth || framebufferWidth == planes[i].width());
+            ASSERT(!framebufferHeight || framebufferHeight == planes[i].height());
+            framebufferWidth  = planes[i].width();
+            framebufferHeight = planes[i].height();
 
             mEnabledLocalStoragePlanes.push_back(i);
         }
@@ -319,7 +375,7 @@ void PixelLocalStoragePrototype::beginPixelLocalStorage(GLsizei n, const GLenum 
                 continue;
             }
             constexpr static char zero[4][4]{};
-            switch (planes[i].internalformat)
+            switch (planes[i].internalformat())
             {
                 case GL_RGBA8:
                 case GL_R32F:
@@ -327,14 +383,14 @@ void PixelLocalStoragePrototype::beginPixelLocalStorage(GLsizei n, const GLenum 
                 case GL_RGBA32F:
                     glClearBufferfv(GL_COLOR, MAX_FRAGMENT_OUTPUTS_WITH_LOCAL_STORAGE + i,
                                     loadOps[i] == GL_REPLACE
-                                        ? planes[i].clearValuef
+                                        ? planes[i].clearValuef()
                                         : reinterpret_cast<const float *>(zero));
                     break;
                 case GL_RGBA8I:
                 case GL_RGBA16I:
                     glClearBufferiv(GL_COLOR, MAX_FRAGMENT_OUTPUTS_WITH_LOCAL_STORAGE + i,
                                     loadOps[i] == GL_REPLACE
-                                        ? planes[i].clearValuei
+                                        ? planes[i].clearValuei()
                                         : reinterpret_cast<const int32_t *>(zero));
                     break;
                 case GL_RGBA8UI:
@@ -343,7 +399,7 @@ void PixelLocalStoragePrototype::beginPixelLocalStorage(GLsizei n, const GLenum 
                 case GL_RGBA32UI:
                     glClearBufferuiv(GL_COLOR, MAX_FRAGMENT_OUTPUTS_WITH_LOCAL_STORAGE + i,
                                      loadOps[i] == GL_REPLACE
-                                         ? planes[i].clearValueui
+                                         ? planes[i].clearValueui()
                                          : reinterpret_cast<const uint32_t *>(zero));
                     break;
                 default:
@@ -1504,6 +1560,69 @@ TEST_P(PixelLocalStorageTest, ForgetBarrier)
         }
         ASSERT_TRUE(isAcceptableValue);
     }
+
+    ASSERT_GL_NO_ERROR();
+}
+
+// Check loading and storing from memoryless local storage planes.
+TEST_P(PixelLocalStorageTest, MemorylessStorage)
+{
+    ANGLE_SKIP_TEST_IF(!supportsPixelLocalStorage());
+
+    PixelLocalStoragePrototype pls;
+
+    // Bind the texture, but don't call glTexStorage until after creating the memoryless plane.
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    // Create a memoryless plane.
+    glFramebufferPixelLocalStorageANGLE(1, 0 /*memoryless*/, 0, 0, W, H, GL_RGBA8);
+    // Define the persistent texture now, after attaching the memoryless pixel local storage. This
+    // verifies that the GL_TEXTURE_2D binding doesn't get perturbed by local storage.
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, W, H);
+    glFramebufferPixelLocalStorageANGLE(0, tex, 0, 0, W, H, GL_RGBA8);
+    glViewport(0, 0, W, H);
+    glDrawBuffers(0, nullptr);
+
+    glBeginPixelLocalStorageANGLE(2, GLenumArray({GL_ZERO, GL_ZERO}));
+
+    // Draw into memoryless storage.
+    useProgram(R"(
+    PIXEL_LOCAL_DECL(memoryless, binding=1, rgba8);
+    void main()
+    {
+        pixelLocalStore(memoryless, color + pixelLocalLoad(memoryless));
+    })");
+
+    drawBoxes(pls, {{{0, 20, W, H}, {1, 0, 0, 0}},
+                    {{0, 40, W, H}, {0, 1, 0, 0}},
+                    {{0, 60, W, H}, {0, 0, 1, 0}}});
+
+    // Transfer to a texture.
+    useProgram(R"(
+    PIXEL_LOCAL_DECL(framebuffer, binding=0, rgba8);
+    PIXEL_LOCAL_DECL(memoryless, binding=1, rgba8);
+    void main()
+    {
+        pixelLocalStore(framebuffer, vec4(1) - pixelLocalLoad(memoryless));
+    })");
+
+    drawBoxes(pls, {{FULLSCREEN}});
+
+    glEndPixelLocalStorageANGLE();
+
+    attachTextureToScratchFBO(tex);
+    EXPECT_PIXEL_RECT_EQ(0, 60, W, H - 60, GLColor(0, 0, 0, 255));
+    EXPECT_PIXEL_RECT_EQ(0, 40, W, 20, GLColor(0, 0, 255, 255));
+    EXPECT_PIXEL_RECT_EQ(0, 20, W, 20, GLColor(0, 255, 255, 255));
+    EXPECT_PIXEL_RECT_EQ(0, 0, W, 20, GLColor(255, 255, 255, 255));
+
+    // Ensure the GL_TEXTURE_2D binding still hasn't been perturbed by local storage.
+    GLint textureBinding2D;
+    glGetIntegerv(GL_TEXTURE_BINDING_2D, &textureBinding2D);
+    ASSERT_EQ((GLuint)textureBinding2D, tex);
 
     ASSERT_GL_NO_ERROR();
 }
