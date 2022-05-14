@@ -82,6 +82,9 @@ class PixelLocalStoragePrototype
                                       GLint width,
                                       GLint height,
                                       GLenum internalformat);
+    void framebufferPixelLocalClearValuefv(GLuint unit, const float *value);
+    void framebufferPixelLocalClearValueiv(GLuint unit, const GLint *value);
+    void framebufferPixelLocalClearValueuiv(GLuint unit, const GLuint *value);
     void beginPixelLocalStorage(GLsizei n, const GLenum *loadOps);
     void pixelLocalStorageBarrier();
     void endPixelLocalStorage();
@@ -93,7 +96,11 @@ class PixelLocalStoragePrototype
         GLsizei width;
         GLsizei height;
         GLenum internalformat;
+        GLfloat clearValuef[4]{};
+        GLint clearValuei[4]{};
+        GLuint clearValueui[4]{};
     };
+
     std::array<LocalStoragePlane, MAX_LOCAL_STORAGE_PLANES> &boundLocalStoragePlanes()
     {
         GLint drawFBO;
@@ -101,6 +108,7 @@ class PixelLocalStoragePrototype
         ASSERT(drawFBO != 0);  // GL_INVALID_OPERATION!
         return mLocalStoragePlanes[drawFBO];
     }
+
     std::map<GLuint, std::array<LocalStoragePlane, MAX_LOCAL_STORAGE_PLANES>> mLocalStoragePlanes;
     bool mLocalStorageEnabled = false;
     std::vector<int> mEnabledLocalStoragePlanes;
@@ -110,6 +118,9 @@ class PixelLocalStoragePrototype
 
 // Bootstrap the draft extension assuming an in-scope PixelLocalStoragePrototype object named "pls".
 #define glFramebufferPixelLocalStorageANGLE pls.framebufferPixelLocalStorage
+#define glFramebufferPixelLocalClearValuefvANGLE pls.framebufferPixelLocalClearValuefv
+#define glFramebufferPixelLocalClearValueivANGLE pls.framebufferPixelLocalClearValueiv
+#define glFramebufferPixelLocalClearValueuivANGLE pls.framebufferPixelLocalClearValueuiv
 #define glBeginPixelLocalStorageANGLE pls.beginPixelLocalStorage
 #define glPixelLocalStorageBarrierANGLE pls.pixelLocalStorageBarrier
 #define glEndPixelLocalStorageANGLE pls.endPixelLocalStorage
@@ -127,7 +138,31 @@ void PixelLocalStoragePrototype::framebufferPixelLocalStorage(GLuint unit,
     ASSERT(level == 0);                                    // NOT IMPLEMENTED!
     ASSERT(layer == 0);                                    // NOT IMPLEMENTED!
     ASSERT(width > 0 && height > 0);                       // NOT IMPLEMENTED!
-    boundLocalStoragePlanes()[unit] = {backingtexture, width, height, internalformat};
+    auto &plane          = boundLocalStoragePlanes()[unit];
+    plane.tex            = backingtexture;
+    plane.width          = width;
+    plane.height         = height;
+    plane.internalformat = internalformat;
+}
+
+void PixelLocalStoragePrototype::framebufferPixelLocalClearValuefv(GLuint unit,
+                                                                   const GLfloat *value)
+{
+    ASSERT(0 <= unit && unit < MAX_LOCAL_STORAGE_PLANES);  // GL_INVALID_VALUE!
+    memcpy(boundLocalStoragePlanes()[unit].clearValuef, value, sizeof(GLfloat) * 4);
+}
+
+void PixelLocalStoragePrototype::framebufferPixelLocalClearValueiv(GLuint unit, const GLint *value)
+{
+    ASSERT(0 <= unit && unit < MAX_LOCAL_STORAGE_PLANES);  // GL_INVALID_VALUE!
+    memcpy(boundLocalStoragePlanes()[unit].clearValuei, value, sizeof(GLint) * 4);
+}
+
+void PixelLocalStoragePrototype::framebufferPixelLocalClearValueuiv(GLuint unit,
+                                                                    const GLuint *value)
+{
+    ASSERT(0 <= unit && unit < MAX_LOCAL_STORAGE_PLANES);  // GL_INVALID_VALUE!
+    memcpy(boundLocalStoragePlanes()[unit].clearValueui, value, sizeof(GLuint) * 4);
 }
 
 class AutoRestoreDrawBuffers
@@ -256,7 +291,7 @@ void PixelLocalStoragePrototype::beginPixelLocalStorage(GLsizei n, const GLenum 
 
             mEnabledLocalStoragePlanes.push_back(i);
         }
-        if (loadOps[i] == GL_ZERO)
+        if (loadOps[i] == GL_ZERO || loadOps[i] == GL_REPLACE)
         {
             // Attach all textures that need clearing to the framebuffer.
             GLenum attachmentPoint =
@@ -276,15 +311,50 @@ void PixelLocalStoragePrototype::beginPixelLocalStorage(GLsizei n, const GLenum 
         AutoRestoreDrawBuffers autoRestoreDrawBuffers;
         AutoRestoreClearColor autoRestoreClearColor;
         AutoDisableScissor autoDisableScissor;
-
         glDrawBuffers(MAX_FRAGMENT_OUTPUTS_WITH_LOCAL_STORAGE + n, attachmentsToClear);
-        glClearColor(0, 0, 0, 0);  // TODO: We should use glClearBuffer here.
-        glClear(GL_COLOR_BUFFER_BIT);
-
+        for (int i = 0; i < n; ++i)
+        {
+            if (loadOps[i] != GL_ZERO && loadOps[i] != GL_REPLACE)
+            {
+                continue;
+            }
+            constexpr static char zero[4][4]{};
+            switch (planes[i].internalformat)
+            {
+                case GL_RGBA8:
+                case GL_R32F:
+                case GL_RGBA16F:
+                case GL_RGBA32F:
+                    glClearBufferfv(GL_COLOR, MAX_FRAGMENT_OUTPUTS_WITH_LOCAL_STORAGE + i,
+                                    loadOps[i] == GL_REPLACE
+                                        ? planes[i].clearValuef
+                                        : reinterpret_cast<const float *>(zero));
+                    break;
+                case GL_RGBA8I:
+                case GL_RGBA16I:
+                    glClearBufferiv(GL_COLOR, MAX_FRAGMENT_OUTPUTS_WITH_LOCAL_STORAGE + i,
+                                    loadOps[i] == GL_REPLACE
+                                        ? planes[i].clearValuei
+                                        : reinterpret_cast<const int32_t *>(zero));
+                    break;
+                case GL_RGBA8UI:
+                case GL_R32UI:
+                case GL_RGBA16UI:
+                case GL_RGBA32UI:
+                    glClearBufferuiv(GL_COLOR, MAX_FRAGMENT_OUTPUTS_WITH_LOCAL_STORAGE + i,
+                                     loadOps[i] == GL_REPLACE
+                                         ? planes[i].clearValueui
+                                         : reinterpret_cast<const uint32_t *>(zero));
+                    break;
+                default:
+                    // Internal error. Invalid internalformats should not have made it this far.
+                    ASSERT(false);
+            }
+        }
         // Detach the textures that needed clearing.
         for (int i = 0; i < n; ++i)
         {
-            if (loadOps[i] == GL_ZERO)
+            if (loadOps[i] == GL_ZERO || loadOps[i] == GL_REPLACE)
             {
                 glFramebufferTexture2D(
                     GL_FRAMEBUFFER,
@@ -747,6 +817,229 @@ TEST_P(PixelLocalStorageTest, AllFormats)
 
         ASSERT_GL_NO_ERROR();
     }
+}
+
+// Check proper functioning of glFramebufferPixelLocalClearValue{fi ui}vANGLE.
+TEST_P(PixelLocalStorageTest, ClearValue)
+{
+    ANGLE_SKIP_TEST_IF(!supportsPixelLocalStorage());
+
+    PixelLocalStoragePrototype pls;
+
+    // Scissor and clear color should not affect clear loads.
+    glEnable(GL_SCISSOR_TEST);
+    glScissor(0, 0, 1, 1);
+    glClearColor(.1f, .2f, .3f, .4f);
+
+    PLSTestTexture texf(GL_RGBA8);
+    PLSTestTexture texi(GL_RGBA16I);
+    PLSTestTexture texui(GL_RGBA16UI);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferPixelLocalStorageANGLE(0, texf, 0, 0, W, H, GL_RGBA8);
+    glFramebufferPixelLocalStorageANGLE(1, texi, 0, 0, W, H, GL_RGBA16I);
+    glFramebufferPixelLocalStorageANGLE(2, texui, 0, 0, W, H, GL_RGBA16UI);
+    auto clearLoads = GLenumArray({GL_REPLACE, GL_REPLACE, GL_REPLACE});
+
+    // Clear values are initially zero.
+    glBeginPixelLocalStorageANGLE(3, clearLoads);
+    glEndPixelLocalStorageANGLE();
+    attachTextureToScratchFBO(texf);
+    EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor(0, 0, 0, 0));
+    attachTextureToScratchFBO(texi);
+    EXPECT_PIXEL_RECT32I_EQ(0, 0, W, H, GLColor32I(0, 0, 0, 0));
+    attachTextureToScratchFBO(texui);
+    EXPECT_PIXEL_RECT32UI_EQ(0, 0, W, H, GLColor32UI(0, 0, 0, 0));
+
+    // Test custom clear values.
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferPixelLocalClearValuefvANGLE(0, MakeArray<float>({1, 0, 0, 0}));
+    glFramebufferPixelLocalClearValueivANGLE(1, MakeArray<int32_t>({1, 2, 3, 4}));
+    glFramebufferPixelLocalClearValueuivANGLE(2, MakeArray<uint32_t>({5, 6, 7, 8}));
+    glBeginPixelLocalStorageANGLE(3, clearLoads);
+    glEndPixelLocalStorageANGLE();
+    attachTextureToScratchFBO(texf);
+    EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor(255, 0, 0, 0));
+    attachTextureToScratchFBO(texi);
+    EXPECT_PIXEL_RECT32I_EQ(0, 0, W, H, GLColor32I(1, 2, 3, 4));
+    attachTextureToScratchFBO(texui);
+    EXPECT_PIXEL_RECT32UI_EQ(0, 0, W, H, GLColor32UI(5, 6, 7, 8));
+
+    // Different clear value types are separate state values.
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferPixelLocalStorageANGLE(1, texf, 0, 0, W, H, GL_RGBA8);
+    glFramebufferPixelLocalStorageANGLE(2, texi, 0, 0, W, H, GL_RGBA16I);
+    glFramebufferPixelLocalStorageANGLE(0, texui, 0, 0, W, H, GL_RGBA16UI);
+    glBeginPixelLocalStorageANGLE(3, clearLoads);
+    glEndPixelLocalStorageANGLE();
+    attachTextureToScratchFBO(texf);
+    EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor(0, 0, 0, 0));
+    attachTextureToScratchFBO(texi);
+    EXPECT_PIXEL_RECT32I_EQ(0, 0, W, H, GLColor32I(0, 0, 0, 0));
+    attachTextureToScratchFBO(texui);
+    EXPECT_PIXEL_RECT32UI_EQ(0, 0, W, H, GLColor32UI(0, 0, 0, 0));
+
+    // Set new custom clear values.
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferPixelLocalClearValuefvANGLE(1, MakeArray<float>({0, 1, 0, 0}));
+    glFramebufferPixelLocalClearValueivANGLE(2, MakeArray<int32_t>({100, 200, 300, 400}));
+    glFramebufferPixelLocalClearValueuivANGLE(0, MakeArray<uint32_t>({500, 600, 700, 800}));
+    glBeginPixelLocalStorageANGLE(3, clearLoads);
+    glEndPixelLocalStorageANGLE();
+    attachTextureToScratchFBO(texf);
+    EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor(0, 255, 0, 0));
+    attachTextureToScratchFBO(texi);
+    EXPECT_PIXEL_RECT32I_EQ(0, 0, W, H, GLColor32I(100, 200, 300, 400));
+    attachTextureToScratchFBO(texui);
+    EXPECT_PIXEL_RECT32UI_EQ(0, 0, W, H, GLColor32UI(500, 600, 700, 800));
+
+    // Different clear value types are separate state values (final rotation).
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferPixelLocalStorageANGLE(2, texf, 0, 0, W, H, GL_RGBA8);
+    glFramebufferPixelLocalStorageANGLE(0, texi, 0, 0, W, H, GL_RGBA16I);
+    glFramebufferPixelLocalStorageANGLE(1, texui, 0, 0, W, H, GL_RGBA16UI);
+    glBeginPixelLocalStorageANGLE(3, clearLoads);
+    glEndPixelLocalStorageANGLE();
+    attachTextureToScratchFBO(texf);
+    EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor(0, 0, 0, 0));
+    attachTextureToScratchFBO(texi);
+    EXPECT_PIXEL_RECT32I_EQ(0, 0, W, H, GLColor32I(0, 0, 0, 0));
+    attachTextureToScratchFBO(texui);
+    EXPECT_PIXEL_RECT32UI_EQ(0, 0, W, H, GLColor32UI(0, 0, 0, 0));
+
+    // Set new custom clear values (final rotation).
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferPixelLocalClearValuefvANGLE(2, MakeArray<float>({0, 0, 1, 0}));
+    glFramebufferPixelLocalClearValueivANGLE(0, MakeArray<int32_t>({1000, 2000, 3000, 4000}));
+    glFramebufferPixelLocalClearValueuivANGLE(1, MakeArray<uint32_t>({5000, 6000, 7000, 8000}));
+    glBeginPixelLocalStorageANGLE(3, clearLoads);
+    glEndPixelLocalStorageANGLE();
+    attachTextureToScratchFBO(texf);
+    EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor(0, 0, 255, 0));
+    attachTextureToScratchFBO(texi);
+    EXPECT_PIXEL_RECT32I_EQ(0, 0, W, H, GLColor32I(1000, 2000, 3000, 4000));
+    attachTextureToScratchFBO(texui);
+    EXPECT_PIXEL_RECT32UI_EQ(0, 0, W, H, GLColor32UI(5000, 6000, 7000, 8000));
+
+    // GL_ZERO shouldn't be affected by the clear color state.
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glBeginPixelLocalStorageANGLE(3, GLenumArray({GL_ZERO, GL_ZERO, GL_ZERO}));
+    glEndPixelLocalStorageANGLE();
+    attachTextureToScratchFBO(texf);
+    EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor(0, 0, 0, 0));
+    attachTextureToScratchFBO(texi);
+    EXPECT_PIXEL_RECT32I_EQ(0, 0, W, H, GLColor32I(0, 0, 0, 0));
+    attachTextureToScratchFBO(texui);
+    EXPECT_PIXEL_RECT32UI_EQ(0, 0, W, H, GLColor32UI(0, 0, 0, 0));
+}
+
+// Check proper support of GL_ZERO, GL_KEEP, GL_REPLACE, and GL_DISABLED_ANGLE loadOps. Also verify
+// that it works do draw with GL_MAX_LOCAL_STORAGE_PLANES_ANGLE planes.
+TEST_P(PixelLocalStorageTest, LoadOps)
+{
+    ANGLE_SKIP_TEST_IF(!supportsPixelLocalStorage());
+
+    PixelLocalStoragePrototype pls;
+
+    std::stringstream fs;
+    for (int i = 0; i < MAX_LOCAL_STORAGE_PLANES; ++i)
+    {
+        fs << "PIXEL_LOCAL_DECL(pls" << i << ", binding=" << i << ", rgba8);\n";
+    }
+    fs << "void main() {\n";
+    for (int i = 0; i < MAX_LOCAL_STORAGE_PLANES; ++i)
+    {
+        fs << "pixelLocalStore(pls" << i << ", color + pixelLocalLoad(pls" << i << "));\n";
+    }
+    fs << "}";
+    useProgram(fs.str().c_str());
+
+    // Create pls textures and clear them to red.
+    glClearColor(1, 0, 0, 1);
+    std::vector<PLSTestTexture> texs;
+    for (int i = 0; i < MAX_LOCAL_STORAGE_PLANES; ++i)
+    {
+        texs.emplace_back(GL_RGBA8);
+        attachTextureToScratchFBO(texs[i]);
+        glClear(GL_COLOR_BUFFER_BIT);
+    }
+
+    // Turn on scissor to try and confuse the local storage clear step.
+    glEnable(GL_SCISSOR_TEST);
+    glScissor(0, 0, 20, H);
+
+    // Set up pls color planes with a clear color of black. Odd units load with GL_REPLACE (cleared
+    // to black) and even load with GL_KEEP (preserved red).
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    std::vector<GLenum> loadOps(MAX_LOCAL_STORAGE_PLANES);
+    for (int i = 0; i < MAX_LOCAL_STORAGE_PLANES; ++i)
+    {
+        glFramebufferPixelLocalClearValuefvANGLE(i, MakeArray<float>({0, 0, 0, 1}));
+        glFramebufferPixelLocalStorageANGLE(i, texs[i], 0, 0, W, H, GL_RGBA8);
+        loadOps[i] = (i & 1) ? GL_REPLACE : GL_KEEP;
+    }
+    glViewport(0, 0, W, H);
+    glDrawBuffers(0, nullptr);
+
+    // Draw transparent green into all pls attachments.
+    glBeginPixelLocalStorageANGLE(MAX_LOCAL_STORAGE_PLANES, loadOps.data());
+    drawBoxes(pls, {{{FULLSCREEN}, {0, 1, 0, 0}}});
+    glEndPixelLocalStorageANGLE();
+
+    for (int i = 0; i < MAX_LOCAL_STORAGE_PLANES; ++i)
+    {
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texs[i], 0);
+        // Check that the draw buffers didn't get perturbed by local storage -- GL_COLOR_ATTACHMENT0
+        // is currently off, so glClear has no effect. This also verifies that local storage planes
+        // didn't get left attached to the framebuffer somewhere with draw buffers on.
+        glClear(GL_COLOR_BUFFER_BIT);
+        EXPECT_PIXEL_RECT_EQ(0, 0, 20, H,
+                             loadOps[i] == GL_REPLACE ? GLColor(0, 255, 0, 255)
+                                                      : /*GL_KEEP*/ GLColor(255, 255, 0, 255));
+        // Check that the scissor didn't get perturbed by local storage.
+        EXPECT_PIXEL_RECT_EQ(
+            20, 0, W - 20, H,
+            loadOps[i] == GL_REPLACE ? GLColor(0, 0, 0, 255) : /*GL_KEEP*/ GLColor(255, 0, 0, 255));
+    }
+
+    // Detach the last read pls texture from the framebuffer.
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
+
+    // Now test GL_DISABLED_ANGLE and GL_ZERO.
+    for (int i = 0; i < MAX_LOCAL_STORAGE_PLANES; ++i)
+    {
+        loadOps[i] = loadOps[i] == GL_REPLACE ? GL_ZERO : GL_DISABLED_ANGLE;
+    }
+
+    // Execute a pls pass without a draw.
+    glBeginPixelLocalStorageANGLE(MAX_LOCAL_STORAGE_PLANES, loadOps.data());
+    glEndPixelLocalStorageANGLE();
+
+    for (int i = 0; i < MAX_LOCAL_STORAGE_PLANES; ++i)
+    {
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texs[i], 0);
+        if (loadOps[i] == GL_ZERO)
+        {
+            EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor(0, 0, 0, 0));
+        }
+        else
+        {
+            EXPECT_PIXEL_RECT_EQ(0, 0, 20, H, GLColor(255, 255, 0, 255));
+            EXPECT_PIXEL_RECT_EQ(20, 0, W - 20, H, GLColor(255, 0, 0, 255));
+        }
+    }
+
+    // Now turn GL_COLOR_ATTACHMENT0 back on and check that the clear color and scissor didn't get
+    // perturbed by local storage.
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texs[1], 0);
+    glDrawBuffers(1, std::array<GLenum, 1>{GL_COLOR_ATTACHMENT0}.data());
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_RECT_EQ(0, 0, 20, H, GLColor(255, 0, 0, 255));
+    EXPECT_PIXEL_RECT_EQ(20, 0, W - 20, H, GLColor(0, 0, 0, 0));
+
+    ASSERT_GL_NO_ERROR();
 }
 
 ANGLE_INSTANTIATE_TEST_ES31(PixelLocalStorageTest);
