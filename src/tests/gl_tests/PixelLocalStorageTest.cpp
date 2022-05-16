@@ -22,6 +22,7 @@ using namespace angle;
 #define GL_DISABLED_ANGLE 0xbaadbeef
 
 constexpr static int MAX_LOCAL_STORAGE_PLANES                = 3;
+constexpr static int MAX_LOCAL_STORAGE_BYTES                 = 16;
 constexpr static int MAX_FRAGMENT_OUTPUTS_WITH_LOCAL_STORAGE = 1;
 
 // ES 3.1 unfortunately requires most image formats to be either readonly or writeonly. To work
@@ -1623,6 +1624,98 @@ TEST_P(PixelLocalStorageTest, MemorylessStorage)
     GLint textureBinding2D;
     glGetIntegerv(GL_TEXTURE_BINDING_2D, &textureBinding2D);
     ASSERT_EQ((GLuint)textureBinding2D, tex);
+
+    ASSERT_GL_NO_ERROR();
+}
+
+// Check that it works to render with the maximum supported data payload:
+//
+//   GL_MAX_LOCAL_STORAGE_PLANES_ANGLE
+//   GL_MAX_LOCAL_STORAGE_BYTES_ANGLE
+//   GL_MAX_FRAGMENT_OUTPUTS_WITH_LOCAL_STORAGE_ANGLE
+//
+TEST_P(PixelLocalStorageTest, MaxCapacity)
+{
+    ANGLE_SKIP_TEST_IF(!supportsPixelLocalStorage());
+
+    PixelLocalStoragePrototype pls;
+
+    // Try to use up MAX_LOCAL_STORAGE_BYTES of data.
+    int numRegisters = MAX_LOCAL_STORAGE_BYTES / 4;
+    ASSERT(numRegisters >=
+           MAX_LOCAL_STORAGE_PLANES);  // Otherwise MAX_LOCAL_STORAGE_PLANES is impossible.
+    int numExtraRegisters = numRegisters - MAX_LOCAL_STORAGE_PLANES;
+    int num32s            = std::min(numExtraRegisters / 3, MAX_LOCAL_STORAGE_PLANES);
+    int num16s = std::min(numExtraRegisters - num32s * 3, MAX_LOCAL_STORAGE_PLANES - num32s);
+    int num8s  = MAX_LOCAL_STORAGE_PLANES - num32s - num16s;
+    ASSERT(num8s >= 0);
+    ASSERT(num32s * 4 + num16s * 2 + num8s <= numRegisters);
+
+    std::stringstream fs;
+    for (int i = 0; i < MAX_LOCAL_STORAGE_PLANES; ++i)
+    {
+        const char *format = i < num32s              ? "rgba32ui"
+                             : i < (num32s + num16s) ? "rgba16ui"
+                                                     : "rgba8ui";
+        fs << "PIXEL_LOCAL_DECL_UI(pls" << i << ", binding=" << i << ", " << format << ");\n";
+    }
+    for (int i = 0; i < MAX_FRAGMENT_OUTPUTS_WITH_LOCAL_STORAGE; ++i)
+    {
+        fs << "out uvec4 out" << i << ";\n";
+    }
+    fs << "void main() {\n";
+    for (int i = 0; i < MAX_LOCAL_STORAGE_PLANES; ++i)
+    {
+        fs << "pixelLocalStore(pls" << i << ", uvec4(color) - uvec4(" << i << "));\n";
+    }
+    for (int i = 0; i < MAX_FRAGMENT_OUTPUTS_WITH_LOCAL_STORAGE; ++i)
+    {
+        fs << "out" << i << " = uvec4(aux1) + uvec4(" << i << ");\n";
+    }
+    fs << "}";
+    useProgram(fs.str().c_str());
+
+    glViewport(0, 0, W, H);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    std::vector<PLSTestTexture> localTexs;
+    localTexs.reserve(MAX_LOCAL_STORAGE_PLANES);
+    for (int i = 0; i < MAX_LOCAL_STORAGE_PLANES; ++i)
+    {
+        GLenum internalformat = i < num32s              ? GL_RGBA32UI
+                                : i < (num32s + num16s) ? GL_RGBA16UI
+                                                        : GL_RGBA8UI;
+        localTexs.emplace_back(internalformat);
+        glFramebufferPixelLocalStorageANGLE(i, localTexs[i], 0, 0, W, H, internalformat);
+    }
+    std::vector<PLSTestTexture> renderTexs;
+    renderTexs.reserve(MAX_FRAGMENT_OUTPUTS_WITH_LOCAL_STORAGE);
+    std::vector<GLenum> drawBuffers(MAX_FRAGMENT_OUTPUTS_WITH_LOCAL_STORAGE);
+    for (int i = 0; i < MAX_FRAGMENT_OUTPUTS_WITH_LOCAL_STORAGE; ++i)
+    {
+        renderTexs.emplace_back(GL_RGBA32UI);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D,
+                               renderTexs[i], 0);
+        drawBuffers[i] = GL_COLOR_ATTACHMENT0 + i;
+    }
+    glDrawBuffers(drawBuffers.size(), drawBuffers.data());
+
+    glBeginPixelLocalStorageANGLE(MAX_LOCAL_STORAGE_PLANES,
+                                  std::vector<GLenum>(MAX_LOCAL_STORAGE_PLANES, GL_ZERO).data());
+    drawBoxes(pls, {{FULLSCREEN, {255, 254, 253, 252}, {0, 1, 2, 3}}});
+    glEndPixelLocalStorageANGLE();
+
+    for (int i = 0; i < MAX_LOCAL_STORAGE_PLANES; ++i)
+    {
+        attachTextureToScratchFBO(localTexs[i]);
+        EXPECT_PIXEL_RECT32UI_EQ(0, 0, W, H, GLColor32UI(255u - i, 254u - i, 253u - i, 252u - i));
+    }
+    for (int i = 0; i < MAX_FRAGMENT_OUTPUTS_WITH_LOCAL_STORAGE; ++i)
+    {
+        attachTextureToScratchFBO(renderTexs[i]);
+        EXPECT_PIXEL_RECT32UI_EQ(0, 0, W, H, GLColor32UI(0u + i, 1u + i, 2u + i, 3u + i));
+    }
 
     ASSERT_GL_NO_ERROR();
 }
