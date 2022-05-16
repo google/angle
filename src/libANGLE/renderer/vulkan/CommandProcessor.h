@@ -641,25 +641,6 @@ class CommandProcessor final : public Context, public CommandQueueInterface
     std::thread mTaskThread;
 };
 
-// An RAII wrapper for locking and unlocking the command-queue mutex.  On destructor, this class
-// handles device loss, if it has happened.  This is because handling device loss affects the
-// command queue state, so it's deferred until the current scope that's using the command queue
-// state is finished.
-class ANGLE_NO_DISCARD ScopedCommandQueueLock final
-{
-  public:
-    ScopedCommandQueueLock(RendererVk *renderer, std::mutex &lock)
-        : mRenderer(renderer), mLock(lock)
-    {
-        lock.lock();
-    }
-    ~ScopedCommandQueueLock();
-
-  private:
-    RendererVk *mRenderer;
-    std::mutex &mLock;
-};
-
 }  // namespace vk
 
 }  // namespace rx

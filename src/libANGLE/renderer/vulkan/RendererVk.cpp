@@ -1194,7 +1194,7 @@ RendererVk::~RendererVk()
 
 bool RendererVk::hasSharedGarbage()
 {
-    std::lock_guard<std::mutex> lock(mGarbageMutex);
+    std::unique_lock<std::mutex> lock(mGarbageMutex);
     return !mSharedGarbage.empty() || !mPendingSubmissionGarbage.empty() ||
            !mSuballocationGarbage.empty() || !mPendingSubmissionSuballocationGarbage.empty();
 }
@@ -1203,22 +1203,12 @@ void RendererVk::releaseSharedResources(vk::ResourceUseList *resourceList)
 {
     // resource list may access same resources referenced by garbage collection so need to protect
     // that access with a lock.
-    std::lock_guard<std::mutex> lock(mGarbageMutex);
+    std::unique_lock<std::mutex> lock(mGarbageMutex);
     resourceList->releaseResourceUses();
 }
 
 void RendererVk::onDestroy(vk::Context *context)
 {
-    // Make sure device loss is handled, despite potential race conditions.  Device loss is only
-    // procesed under the mCommandQueueMutex lock, but it may be generated from any Vulkan command.
-    // For example:
-    //
-    // - Thread A may proceed without a device loss, but be at ~ScopedCommandQueueLock before
-    //   unlocking the mutex.
-    // - Thread B may generate a device loss, but cannot take the lock in handleDeviceLost.
-    //
-    // In the above scenario, neither thread handles device loss.  If the application destroys the
-    // display at this moment, device loss needs to be handled.
     if (isDeviceLost())
     {
         handleDeviceLost();
@@ -1232,7 +1222,7 @@ void RendererVk::onDestroy(vk::Context *context)
     mOrphanedBufferBlocks.clear();
 
     {
-        vk::ScopedCommandQueueLock lock(this, mCommandQueueMutex);
+        std::unique_lock<std::mutex> lock(mCommandQueueMutex);
         if (isAsyncCommandQueueEnabled())
         {
             mCommandProcessor.destroy(context);
@@ -2645,7 +2635,7 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     // Initialize the vulkan pipeline cache.
     bool success = false;
     {
-        std::lock_guard<std::mutex> lock(mPipelineCacheMutex);
+        std::unique_lock<std::mutex> lock(mPipelineCacheMutex);
         ANGLE_TRY(initPipelineCache(displayVk, &mPipelineCache, &success));
     }
 
@@ -3541,7 +3531,7 @@ angle::Result RendererVk::getPipelineCache(vk::PipelineCache **pipelineCache)
     // Note that unless external synchronization is specifically requested the pipeline cache
     // is internally synchronized. See VK_EXT_pipeline_creation_cache_control. We might want
     // to investigate controlling synchronization manually in ANGLE at some point for perf.
-    std::lock_guard<std::mutex> lock(mPipelineCacheMutex);
+    std::unique_lock<std::mutex> lock(mPipelineCacheMutex);
 
     if (mPipelineCacheInitialized)
     {
@@ -3768,7 +3758,7 @@ angle::Result RendererVk::queueSubmitOneOff(vk::Context *context,
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "RendererVk::queueSubmitOneOff");
 
-    vk::ScopedCommandQueueLock lock(this, mCommandQueueMutex);
+    std::unique_lock<std::mutex> lock(mCommandQueueMutex);
 
     Serial submitQueueSerial;
     if (isAsyncCommandQueueEnabled())
@@ -3859,7 +3849,7 @@ bool RendererVk::haveSameFormatFeatureBits(angle::FormatID formatID1,
 
 void RendererVk::addBufferBlockToOrphanList(vk::BufferBlock *block)
 {
-    std::lock_guard<std::mutex> lock(mGarbageMutex);
+    std::unique_lock<std::mutex> lock(mGarbageMutex);
     mOrphanedBufferBlocks.emplace_back(block);
 }
 
@@ -3879,7 +3869,7 @@ void RendererVk::pruneOrphanedBufferBlocks()
 
 void RendererVk::cleanupGarbage(Serial lastCompletedQueueSerial)
 {
-    std::lock_guard<std::mutex> lock(mGarbageMutex);
+    std::unique_lock<std::mutex> lock(mGarbageMutex);
 
     // Clean up general garbages
     while (!mSharedGarbage.empty())
@@ -3928,7 +3918,7 @@ void RendererVk::cleanupCompletedCommandsGarbage()
 
 void RendererVk::cleanupPendingSubmissionGarbage()
 {
-    std::lock_guard<std::mutex> lock(mGarbageMutex);
+    std::unique_lock<std::mutex> lock(mGarbageMutex);
 
     // Check if pending garbage is still pending. If not, move them to the garbage list.
     vk::SharedGarbageList pendingGarbage;
@@ -4034,7 +4024,7 @@ void RendererVk::setGlobalDebugAnnotator()
 #endif
 
     {
-        std::lock_guard<std::mutex> lock(gl::GetDebugMutex());
+        std::unique_lock<std::mutex> lock(gl::GetDebugMutex());
         if (installDebugAnnotatorVk)
         {
             gl::InitializeDebugAnnotations(&mAnnotator);
@@ -4111,7 +4101,7 @@ angle::Result RendererVk::submitFrame(vk::Context *context,
                                       vk::SecondaryCommandPools *commandPools,
                                       Serial *submitSerialOut)
 {
-    vk::ScopedCommandQueueLock lock(this, mCommandQueueMutex);
+    std::unique_lock<std::mutex> lock(mCommandQueueMutex);
 
     vk::SecondaryCommandBufferList commandBuffersToReset = {
         std::move(mOutsideRenderPassCommandBufferRecycler.releaseCommandBuffersToReset()),
@@ -4145,21 +4135,7 @@ angle::Result RendererVk::submitFrame(vk::Context *context,
 
 void RendererVk::handleDeviceLost()
 {
-    // If the lock is already taken, it must be taken by ScopedCommandQueueLock, which would call
-    // handleDeviceLostNoLock when appropriate.
-    if (!mCommandQueueMutex.try_lock())
-    {
-        return;
-    }
-    handleDeviceLostNoLock();
-    mCommandQueueMutex.unlock();
-}
-
-void RendererVk::handleDeviceLostNoLock()
-{
-    // The lock must already be taken, either by handleDeviceLost() or ScopedCommandQueueLock
-    ASSERT(mCommandQueueMutex.try_lock() == false);
-
+    std::unique_lock<std::mutex> lock(mCommandQueueMutex);
     if (isAsyncCommandQueueEnabled())
     {
         mCommandProcessor.handleDeviceLost(this);
@@ -4172,7 +4148,7 @@ void RendererVk::handleDeviceLostNoLock()
 
 angle::Result RendererVk::finishToSerial(vk::Context *context, Serial serial)
 {
-    vk::ScopedCommandQueueLock lock(this, mCommandQueueMutex);
+    std::unique_lock<std::mutex> lock(mCommandQueueMutex);
 
     if (isAsyncCommandQueueEnabled())
     {
@@ -4193,7 +4169,7 @@ angle::Result RendererVk::waitForSerialWithUserTimeout(vk::Context *context,
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "RendererVk::waitForSerialWithUserTimeout");
 
-    vk::ScopedCommandQueueLock lock(this, mCommandQueueMutex);
+    std::unique_lock<std::mutex> lock(mCommandQueueMutex);
 
     if (isAsyncCommandQueueEnabled())
     {
@@ -4209,7 +4185,7 @@ angle::Result RendererVk::waitForSerialWithUserTimeout(vk::Context *context,
 
 angle::Result RendererVk::finish(vk::Context *context, bool hasProtectedContent)
 {
-    vk::ScopedCommandQueueLock lock(this, mCommandQueueMutex);
+    std::unique_lock<std::mutex> lock(mCommandQueueMutex);
 
     if (isAsyncCommandQueueEnabled())
     {
@@ -4225,7 +4201,7 @@ angle::Result RendererVk::finish(vk::Context *context, bool hasProtectedContent)
 
 angle::Result RendererVk::checkCompletedCommands(vk::Context *context)
 {
-    vk::ScopedCommandQueueLock lock(this, mCommandQueueMutex);
+    std::unique_lock<std::mutex> lock(mCommandQueueMutex);
     // TODO: https://issuetracker.google.com/169788986 - would be better if we could just wait
     // for the work we need but that requires QueryHelper to use the actual serial for the
     // query.
@@ -4249,7 +4225,7 @@ angle::Result RendererVk::flushRenderPassCommands(
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "RendererVk::flushRenderPassCommands");
 
-    vk::ScopedCommandQueueLock lock(this, mCommandQueueMutex);
+    std::unique_lock<std::mutex> lock(mCommandQueueMutex);
     if (isAsyncCommandQueueEnabled())
     {
         ANGLE_TRY(mCommandProcessor.flushRenderPassCommands(context, hasProtectedContent,
@@ -4271,7 +4247,7 @@ angle::Result RendererVk::flushOutsideRPCommands(
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "RendererVk::flushOutsideRPCommands");
 
-    vk::ScopedCommandQueueLock lock(this, mCommandQueueMutex);
+    std::unique_lock<std::mutex> lock(mCommandQueueMutex);
     if (isAsyncCommandQueueEnabled())
     {
         ANGLE_TRY(mCommandProcessor.flushOutsideRPCommands(context, hasProtectedContent,
@@ -4290,7 +4266,7 @@ VkResult RendererVk::queuePresent(vk::Context *context,
                                   egl::ContextPriority priority,
                                   const VkPresentInfoKHR &presentInfo)
 {
-    vk::ScopedCommandQueueLock lock(this, mCommandQueueMutex);
+    std::unique_lock<std::mutex> lock(mCommandQueueMutex);
 
     VkResult result = VK_SUCCESS;
     if (isAsyncCommandQueueEnabled())
@@ -4337,7 +4313,7 @@ void RendererVk::recycleOutsideRenderPassCommandBufferHelper(
     vk::OutsideRenderPassCommandBufferHelper **commandBuffer)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "RendererVk::recycleOutsideRenderPassCommandBufferHelper");
-    std::lock_guard<std::mutex> lock(mCommandBufferRecyclerMutex);
+    std::unique_lock<std::mutex> lock(mCommandBufferRecyclerMutex);
     mOutsideRenderPassCommandBufferRecycler.recycleCommandBufferHelper(device, commandBuffer);
 }
 
@@ -4346,7 +4322,7 @@ void RendererVk::recycleRenderPassCommandBufferHelper(
     vk::RenderPassCommandBufferHelper **commandBuffer)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "RendererVk::recycleRenderPassCommandBufferHelper");
-    std::lock_guard<std::mutex> lock(mCommandBufferRecyclerMutex);
+    std::unique_lock<std::mutex> lock(mCommandBufferRecyclerMutex);
     mRenderPassCommandBufferRecycler.recycleCommandBufferHelper(device, commandBuffer);
 }
 
@@ -4357,7 +4333,7 @@ void RendererVk::logCacheStats() const
         return;
     }
 
-    std::lock_guard<std::mutex> localLock(mCacheStatsMutex);
+    std::unique_lock<std::mutex> localLock(mCacheStatsMutex);
 
     int cacheType = 0;
     INFO() << "Vulkan object cache hit ratios: ";
@@ -4424,13 +4400,13 @@ angle::Result RendererVk::getFormatDescriptorCountForExternalFormat(ContextVk *c
 
 void RendererVk::onAllocateHandle(vk::HandleType handleType)
 {
-    std::lock_guard<std::mutex> localLock(mActiveHandleCountsMutex);
+    std::unique_lock<std::mutex> localLock(mActiveHandleCountsMutex);
     mActiveHandleCounts.onAllocate(handleType);
 }
 
 void RendererVk::onDeallocateHandle(vk::HandleType handleType)
 {
-    std::lock_guard<std::mutex> localLock(mActiveHandleCountsMutex);
+    std::unique_lock<std::mutex> localLock(mActiveHandleCountsMutex);
     mActiveHandleCounts.onDeallocate(handleType);
 }
 
@@ -4453,7 +4429,7 @@ MemoryReport::MemoryReport()
 void MemoryReport::processCallback(const VkDeviceMemoryReportCallbackDataEXT &callbackData,
                                    bool logCallback)
 {
-    std::lock_guard<std::mutex> lock(mMemoryReportMutex);
+    std::unique_lock<std::mutex> lock(mMemoryReportMutex);
     VkDeviceSize size = 0;
     std::string reportType;
     switch (callbackData.type)
@@ -4531,7 +4507,7 @@ void MemoryReport::processCallback(const VkDeviceMemoryReportCallbackDataEXT &ca
 
 void MemoryReport::logMemoryReportStats() const
 {
-    std::lock_guard<std::mutex> lock(mMemoryReportMutex);
+    std::unique_lock<std::mutex> lock(mMemoryReportMutex);
 
     INFO() << std::right << "GPU Memory Totals:       Allocated=" << std::setw(10)
            << mCurrentTotalAllocatedMemory << " (max=" << std::setw(10) << mMaxTotalAllocatedMemory

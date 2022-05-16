@@ -1494,17 +1494,5 @@ uint32_t QueueFamily::FindIndex(const std::vector<VkQueueFamilyProperties> &queu
     return index;
 }
 
-// ScopedCommandQueueLock implementation
-ScopedCommandQueueLock::~ScopedCommandQueueLock()
-{
-    // Before unlocking the mutex, see if device loss has occured, and if so handle it.
-    if (mRenderer->isDeviceLost())
-    {
-        mRenderer->handleDeviceLostNoLock();
-    }
-
-    mLock.unlock();
-}
-
 }  // namespace vk
 }  // namespace rx
