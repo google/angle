@@ -539,37 +539,6 @@ if (angle_standalone || build_with_chromium) {
   }
 }
 
-# Used by a few targets that compile traces.
-template("angle_trace_fixture") {
-  _config_name = target_name + "_config"
-  config(_config_name) {
-    include_dirs = [ "$angle_root/src/libANGLE/capture" ]
-  }
-  angle_source_set(target_name) {
-    testonly = true
-    defines = [ "ANGLE_REPLAY_IMPLEMENTATION" ]
-    suppressed_configs += [ "$angle_root:constructor_and_destructor_warnings" ]
-    sources = [
-      "$angle_root/src/libANGLE/capture/trace_fixture.cpp",
-      "$angle_root/src/libANGLE/capture/trace_fixture.h",
-      invoker.gl_header,
-    ]
-    public_deps = [ "$angle_root:includes" ]
-    if (defined(invoker.public_deps)) {
-      public_deps += invoker.public_deps
-    }
-    include_dirs = [ "." ]
-    public_configs = [ ":${_config_name}" ]
-    if (defined(invoker.public_configs)) {
-      public_configs += invoker.public_configs
-    }
-    if (is_ios) {
-      # shared libraries are hidden inside ios_framework_bundle, but we include headers from them
-      check_includes = false
-    }
-  }
-}
-
 template("angle_trace") {
   angle_shared_library(target_name) {
     testonly = true
@@ -581,10 +550,7 @@ template("angle_trace") {
     defines = [ "ANGLE_REPLAY_IMPLEMENTATION" ]
     suppressed_configs += [ "$angle_root:constructor_and_destructor_warnings" ]
 
-    deps = [
-      "$angle_root:includes",
-      invoker.fixture,
-    ]
+    deps = [ "$angle_root:angle_trace_fixture" ]
 
     if (is_android) {
       libs = [ "log" ]
@@ -648,7 +614,6 @@ template("angle_trace_library") {
         "$_trace_dir/$_trace.json",
         "$_trace_dir/$_trace.angledata.gz",
       ]
-      fixture = invoker.trace_fixture
 
       if (invoker.short_names) {
         output_name = _trace
@@ -658,9 +623,11 @@ template("angle_trace_library") {
     _trace_targets += [ ":$_target" ]
   }
 
-  group(target_name) {
+  angle_shared_library(target_name) {
     testonly = true
     data = [ invoker.json_path ]
     data_deps = _trace_targets
+    deps = [ "$angle_root:angle_common" ]
+    public_deps = [ "$angle_root/util:angle_trace_loader" ]
   }
 }

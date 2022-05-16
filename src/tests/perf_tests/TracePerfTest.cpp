@@ -11,11 +11,11 @@
 #include "common/PackedEnums.h"
 #include "common/string_utils.h"
 #include "common/system_utils.h"
-#include "restricted_traces/restricted_traces_export.h"
 #include "tests/perf_tests/ANGLEPerfTest.h"
 #include "tests/perf_tests/ANGLEPerfTestArgs.h"
 #include "tests/perf_tests/DrawCallPerfParams.h"
 #include "util/capture/frame_capture_test_utils.h"
+#include "util/capture/traces_export.h"
 #include "util/egl_loader_autogen.h"
 #include "util/png_utils.h"
 #include "util/test_utils.h"
@@ -1325,7 +1325,7 @@ void TracePerfTest::initializeBenchmark()
     mStartingDirectory = angle::GetCWD().value();
 
     std::stringstream traceNameStr;
-    traceNameStr << "angle_restricted_trace_" << traceInfo.name;
+    traceNameStr << "angle_restricted_traces_" << traceInfo.name;
     std::string traceName = traceNameStr.str();
     mTraceLibrary.reset(new TraceLibrary(traceName.c_str()));
 
