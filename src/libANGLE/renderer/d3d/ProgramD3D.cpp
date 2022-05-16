@@ -2860,8 +2860,6 @@ void ProgramD3D::AssignSamplers(unsigned int startSamplerIndex,
                                 gl::RangeUI *outUsedRange)
 {
     unsigned int samplerIndex = startSamplerIndex;
-    unsigned int low          = outUsedRange->low();
-    unsigned int high         = outUsedRange->high();
 
     do
     {
@@ -2870,13 +2868,9 @@ void ProgramD3D::AssignSamplers(unsigned int startSamplerIndex,
         sampler->active             = true;
         sampler->textureType        = gl::FromGLenum<gl::TextureType>(typeInfo.textureType);
         sampler->logicalTextureUnit = 0;
-        low                         = std::min(samplerIndex, low);
-        high                        = std::max(samplerIndex + 1, high);
+        outUsedRange->extend(samplerIndex);
         samplerIndex++;
     } while (samplerIndex < startSamplerIndex + samplerCount);
-
-    ASSERT(low < high);
-    *outUsedRange = gl::RangeUI(low, high);
 }
 
 void ProgramD3D::assignAllImageRegisters()
@@ -2902,8 +2896,6 @@ void ProgramD3D::assignAllAtomicCounterRegisters()
     {
         const ShaderD3D *computeShaderD3D = GetImplAs<ShaderD3D>(computeShader);
         auto &registerIndices             = mComputeAtomicCounterBufferRegisterIndices;
-        unsigned int firstRegister        = GL_INVALID_VALUE;
-        unsigned int lastRegister         = 0;
         for (auto &atomicBinding : mAtomicBindingMap)
         {
             ASSERT(computeShaderD3D->hasUniform(atomicBinding.first));
@@ -2914,13 +2906,8 @@ void ProgramD3D::assignAllAtomicCounterRegisters()
 
             registerIndices[kBinding] = currentRegister;
 
-            firstRegister = std::min(firstRegister, currentRegister);
-            lastRegister  = std::max(lastRegister, currentRegister);
+            mUsedAtomicCounterRange[gl::ShaderType::Compute].extend(currentRegister);
         }
-        ASSERT(firstRegister != GL_INVALID_VALUE);
-        ASSERT(lastRegister != GL_INVALID_VALUE);
-        mUsedAtomicCounterRange[gl::ShaderType::Compute] =
-            gl::RangeUI(firstRegister, lastRegister + 1);
     }
     else
     {
@@ -2987,8 +2974,6 @@ void ProgramD3D::AssignImages(unsigned int startImageIndex,
                               gl::RangeUI *outUsedRange)
 {
     unsigned int imageIndex = startImageIndex;
-    unsigned int low        = outUsedRange->low();
-    unsigned int high       = outUsedRange->high();
 
     // If declare without a binding qualifier, any uniform image variable (include all elements of
     // unbound image array) shoud be bound to unit zero.
@@ -2998,10 +2983,7 @@ void ProgramD3D::AssignImages(unsigned int startImageIndex,
         Image *image            = &outImages[imageIndex];
         image->active           = true;
         image->logicalImageUnit = 0;
-        low                     = std::min(imageIndex, low);
-        high                    = std::max(imageIndex + 1, high);
-        ASSERT(low < high);
-        *outUsedRange = gl::RangeUI(low, high);
+        outUsedRange->extend(imageIndex);
         return;
     }
 
@@ -3012,14 +2994,10 @@ void ProgramD3D::AssignImages(unsigned int startImageIndex,
         Image *image            = &outImages[imageIndex];
         image->active           = true;
         image->logicalImageUnit = logcalImageUnit;
-        low                     = std::min(imageIndex, low);
-        high                    = std::max(imageIndex + 1, high);
+        outUsedRange->extend(imageIndex);
         imageIndex++;
         logcalImageUnit++;
     } while (imageIndex < startImageIndex + imageCount);
-
-    ASSERT(low < high);
-    *outUsedRange = gl::RangeUI(low, high);
 }
 
 void ProgramD3D::assignImage2DRegisters(gl::ShaderType shaderType,
