@@ -8374,6 +8374,44 @@ void main()
     ASSERT_GL_NO_ERROR();
 }
 
+// Tests state change for out-of-range value for glLineWidth. The expectation
+// here is primarily that rendering backends do not crash with invalid line
+// width values.
+TEST_P(StateChangeTestES3, LineWidthOutOfRangeDoesntCrash)
+{
+    GLfloat range[2] = {1};
+    glGetFloatv(GL_ALIASED_LINE_WIDTH_RANGE, range);
+    EXPECT_GL_NO_ERROR();
+
+    constexpr char kVS[] = R"(#version 300 es
+precision highp float;
+void main()
+{
+    gl_Position = vec4(gl_VertexID == 0 ? -1.0 : 1.0, -1.0, 0.0, 1.0);
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 colorOut;
+void main()
+{
+    colorOut = vec4(1.0);
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+
+    glClearColor(0, 0, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    glLineWidth(range[1] + 1.0f);
+    glDrawArrays(GL_LINES, 0, 2);
+
+    glFinish();
+
+    ASSERT_GL_NO_ERROR();
+}
+
 // Tests state change for glPolygonOffset.
 TEST_P(StateChangeTestES3, PolygonOffset)
 {

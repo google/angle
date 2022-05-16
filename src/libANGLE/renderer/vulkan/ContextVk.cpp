@@ -2470,7 +2470,11 @@ angle::Result ContextVk::handleDirtyGraphicsDynamicScissor(DirtyBits::Iterator *
 angle::Result ContextVk::handleDirtyGraphicsDynamicLineWidth(DirtyBits::Iterator *dirtyBitsIterator,
                                                              DirtyBits dirtyBitMask)
 {
-    mRenderPassCommandBuffer->setLineWidth(mState.getLineWidth());
+    // Clamp line width to min/max allowed values. It's not invalid GL to
+    // provide out-of-range line widths, but it _is_ invalid Vulkan.
+    const float lineWidth = gl::clamp(mState.getLineWidth(), mState.getCaps().minAliasedLineWidth,
+                                      mState.getCaps().maxAliasedLineWidth);
+    mRenderPassCommandBuffer->setLineWidth(lineWidth);
     return angle::Result::Continue;
 }
 
