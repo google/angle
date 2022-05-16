@@ -358,15 +358,10 @@ struct PackedAttribDesc final
     uint16_t offset : kAttributeOffsetMaxBits;
 
     uint16_t compressed : 1;
-
-    // Although technically stride can be any value in ES 2.0, in practice supporting stride
-    // greater than MAX_USHORT should not be that helpful. Note that stride limits are
-    // introduced in ES 3.1.
-    uint16_t stride;
 };
 
 constexpr size_t kPackedAttribDescSize = sizeof(PackedAttribDesc);
-static_assert(kPackedAttribDescSize == 6, "Size mismatch");
+static_assert(kPackedAttribDescSize == 4, "Size mismatch");
 
 struct VertexInputAttributes final
 {
@@ -374,39 +369,48 @@ struct VertexInputAttributes final
 };
 
 constexpr size_t kVertexInputAttributesSize = sizeof(VertexInputAttributes);
-static_assert(kVertexInputAttributesSize == 96, "Size mismatch");
+static_assert(kVertexInputAttributesSize == 64, "Size mismatch");
 
 struct RasterizationStateBits final
 {
-    // Note: Currently only 2 subpasses possible, so there are 5 bits in subpass that can be
+    // Note: Currently only 2 subpasses possible, so there are some bits in subpass that can be
     // repurposed.
-    uint32_t subpass : 6;
-    uint32_t depthClampEnable : 1;
-    uint32_t rasterizationDiscardEnable : 1;
-    uint32_t polygonMode : 4;
-    uint32_t cullMode : 4;
-    uint32_t frontFace : 4;
-    uint32_t depthBiasEnable : 1;
-    uint32_t sampleShadingEnable : 1;
-    uint32_t alphaToCoverageEnable : 1;
-    uint32_t alphaToOneEnable : 1;
-    uint32_t rasterizationSamples : 8;
+    uint16_t subpass : 3;
+    uint16_t depthClampEnable : 1;
+    uint16_t rasterizationDiscardEnable : 1;
+    uint16_t depthBiasEnable : 1;
+    uint16_t sampleShadingEnable : 1;
+    uint16_t alphaToCoverageEnable : 1;
+    uint16_t alphaToOneEnable : 1;
+    uint16_t rasterizationSamples : 7;
 };
 
 constexpr size_t kRasterizationStateBitsSize = sizeof(RasterizationStateBits);
-static_assert(kRasterizationStateBitsSize == 4, "Size check failed");
+static_assert(kRasterizationStateBitsSize == 2, "Size check failed");
+
+struct SampleShadingAndRotationState final
+{
+    // 11-bit normalized instead of float to avoid padding.
+    uint16_t minSampleShading : 11;
+    // Other state fit here to fill in the padding
+    uint16_t surfaceRotation : 3;
+    uint16_t viewportNegativeOneToOne : 1;
+    uint16_t depthBoundsTest : 1;
+};
+
+constexpr size_t kSampleShadingAndRotationStateSize = sizeof(SampleShadingAndRotationState);
+static_assert(kSampleShadingAndRotationStateSize == 2, "Size check failed");
 
 struct PackedRasterizationAndMultisampleStateInfo final
 {
     RasterizationStateBits bits;
-    // Padded to ensure there's no gaps in this structure or those that use it.
-    float minSampleShading;
+    SampleShadingAndRotationState misc;
     uint32_t sampleMask[gl::MAX_SAMPLE_MASK_WORDS];
 };
 
 constexpr size_t kPackedRasterizationAndMultisampleStateSize =
     sizeof(PackedRasterizationAndMultisampleStateInfo);
-static_assert(kPackedRasterizationAndMultisampleStateSize == 16, "Size check failed");
+static_assert(kPackedRasterizationAndMultisampleStateSize == 12, "Size check failed");
 
 struct StencilOps final
 {
@@ -426,44 +430,6 @@ struct PackedStencilOpState final
 
 constexpr size_t kPackedStencilOpSize = sizeof(PackedStencilOpState);
 static_assert(kPackedStencilOpSize == 2, "Size check failed");
-
-struct DepthStencilEnableFlags final
-{
-    uint8_t viewportNegativeOneToOne : 1;
-
-    uint8_t depthTest : 1;
-    uint8_t depthWrite : 2;  // these only need one bit each. the extra is used as padding.
-    uint8_t depthBoundsTest : 2;
-    uint8_t stencilTest : 2;
-};
-
-constexpr size_t kDepthStencilEnableFlagsSize = sizeof(DepthStencilEnableFlags);
-static_assert(kDepthStencilEnableFlagsSize == 1, "Size check failed");
-
-// We are borrowing three bits here for surface rotation, even though it has nothing to do with
-// depth stencil.
-struct DepthCompareOpAndSurfaceRotation final
-{
-    uint8_t depthCompareOp : 4;
-    uint8_t surfaceRotation : 3;
-    uint8_t padding : 1;
-};
-constexpr size_t kDepthCompareOpAndSurfaceRotationSize = sizeof(DepthCompareOpAndSurfaceRotation);
-static_assert(kDepthCompareOpAndSurfaceRotationSize == 1, "Size check failed");
-
-struct PackedDepthStencilStateInfo final
-{
-    DepthStencilEnableFlags enable;
-    DepthCompareOpAndSurfaceRotation depthCompareOpAndSurfaceRotation;
-    uint16_t padding;
-
-    PackedStencilOpState front;
-    PackedStencilOpState back;
-};
-
-constexpr size_t kPackedDepthStencilStateSize = sizeof(PackedDepthStencilStateInfo);
-static_assert(kPackedDepthStencilStateSize == 8, "Size check failed");
-static_assert(static_cast<int>(SurfaceRotation::EnumCount) <= 8, "Size check failed");
 
 struct LogicOpState final
 {
@@ -506,6 +472,10 @@ struct PackedInputAssemblyAndColorBlendStateInfo final
     PrimitiveState primitive;
 };
 
+constexpr size_t kPackedInputAssemblyAndColorBlendStateSize =
+    sizeof(PackedInputAssemblyAndColorBlendStateInfo);
+static_assert(kPackedInputAssemblyAndColorBlendStateSize == 40, "Size check failed");
+
 struct PackedExtent final
 {
     uint16_t width;
@@ -520,14 +490,49 @@ struct PackedDither final
     uint16_t unused;
 };
 
-constexpr size_t kPackedInputAssemblyAndColorBlendStateSize =
-    sizeof(PackedInputAssemblyAndColorBlendStateInfo);
-static_assert(kPackedInputAssemblyAndColorBlendStateSize == 40, "Size check failed");
+struct PackedDynamicState1Bits final
+{
+    uint32_t cullMode : 4;
+    uint32_t frontFace : 4;
+
+    uint32_t depthCompareOp : 4;
+
+    uint32_t depthTest : 1;
+    uint32_t depthWrite : 1;
+    uint32_t stencilTest : 1;
+
+    // Store support for VK_EXT_extended_dynamic_state in the bits wasted here for padding.  This is
+    // to support GraphicsPipelineDesc::hash(), allowing it to exclude this state from the hash.
+    uint32_t supportsDynamicState1 : 1;
+
+    uint32_t padding : 16;
+};
+
+constexpr size_t kPackedDynamicState1BitsSize = sizeof(PackedDynamicState1Bits);
+static_assert(kPackedDynamicState1BitsSize == 4, "Size check failed");
+
+// State that is dynamic in VK_EXT_extended_dynamic_state.  These are placed at the end of the
+// pipeline description so they can be excluded from hash when the extension is present.
+struct PackedDynamicState1 final
+{
+    PackedDynamicState1Bits bits;
+
+    PackedStencilOpState front;
+    PackedStencilOpState back;
+
+    // Although technically stride can be any value in ES 2.0, in practice supporting stride
+    // greater than MAX_USHORT should not be that helpful. Note that stride limits are
+    // introduced in ES 3.1.
+    uint16_t vertexStrides[gl::MAX_VERTEX_ATTRIBS];
+};
+
+constexpr size_t kPackedDynamicState1StateSize = sizeof(PackedDynamicState1);
+static_assert(kPackedDynamicState1StateSize == 40, "Size check failed");
 
 constexpr size_t kGraphicsPipelineDescSumOfSizes =
     kVertexInputAttributesSize + kRenderPassDescSize + kPackedRasterizationAndMultisampleStateSize +
-    kPackedDepthStencilStateSize + kPackedInputAssemblyAndColorBlendStateSize +
-    sizeof(PackedExtent) + sizeof(PackedDither);
+    kPackedInputAssemblyAndColorBlendStateSize + sizeof(PackedExtent) + sizeof(PackedDither) +
+    kPackedDynamicState1StateSize;
 
 // Number of dirty bits in the dirty bit set.
 constexpr size_t kGraphicsPipelineDirtyBitBytes = 4;
@@ -578,7 +583,8 @@ class GraphicsPipelineDesc final
                                      Pipeline *pipelineOut) const;
 
     // Vertex input state. For ES 3.1 this should be separated into binding and attribute.
-    void updateVertexInput(GraphicsPipelineTransitionBits *transition,
+    void updateVertexInput(ContextVk *contextVk,
+                           GraphicsPipelineTransitionBits *transition,
                            uint32_t attribIndex,
                            GLuint stride,
                            GLuint divisor,
@@ -702,7 +708,7 @@ class GraphicsPipelineDesc final
     SurfaceRotation getSurfaceRotation() const
     {
         return static_cast<SurfaceRotation>(
-            mDepthStencilStateInfo.depthCompareOpAndSurfaceRotation.surfaceRotation);
+            mRasterizationAndMultisampleStateInfo.misc.surfaceRotation);
     }
 
     void updateDrawableSize(GraphicsPipelineTransitionBits *transition,
@@ -713,16 +719,21 @@ class GraphicsPipelineDesc final
     void updateEmulatedDitherControl(GraphicsPipelineTransitionBits *transition, uint16_t value);
     uint32_t getEmulatedDitherControl() const { return mDither.emulatedDitherControl; }
 
+    void setSupportsDynamicState1ForTest(bool supports)
+    {
+        mDynamicState1.bits.supportsDynamicState1 = supports;
+    }
+
   private:
     void updateSubpass(GraphicsPipelineTransitionBits *transition, uint32_t subpass);
 
     VertexInputAttributes mVertexInputAttribs;
     RenderPassDesc mRenderPassDesc;
     PackedRasterizationAndMultisampleStateInfo mRasterizationAndMultisampleStateInfo;
-    PackedDepthStencilStateInfo mDepthStencilStateInfo;
     PackedInputAssemblyAndColorBlendStateInfo mInputAssemblyAndColorBlendStateInfo;
     PackedExtent mDrawableSize;
     PackedDither mDither;
+    PackedDynamicState1 mDynamicState1;
 };
 
 // Verify the packed pipeline description has no gaps in the packing.
