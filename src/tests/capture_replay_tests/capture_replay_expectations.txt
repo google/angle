@@ -40,20 +40,8 @@
 
 6267 : FramebufferTest.MultiContextNoRenderingFeedbackLoops/* = SKIP_FOR_CAPTURE
 
-6286 : ImageTest.Deletion/* = FAIL
-6286 : ImageTest.MipLevels/* = FAIL
-
-6286 : ImageTest.Source2DTarget2D/* = FAIL
-6286 : ImageTest.Source2DTargetExternal/* = FAIL
-6286 : ImageTest.SourceCubeTarget2D/* = FAIL
-5822 : ImageTest.SourceCubeTargetExternal/* = FAIL
-
 6180 : GLSLTest_ES3.GLVertexIDIntegerTextureDrawElementsU8Line/* = NOT_RUN
 6180 : GLSLTest_ES3.GLVertexIDIntegerTextureDrawElementsU8LineIds/* = NOT_RUN
-
-6286 : ImageTest.SourceRenderbufferTargetTexture/* = FAIL
-6286 : ImageTest.SourceRenderbufferTargetTextureExternal/* = FAIL
-6286 : ImageTest.UpdatedData/* = FAIL
 
 6180 : PbufferTest.BindTexImage/* = FAIL
 6180 : PbufferTest.BindTexImageAfterTexImage/* = FAIL
@@ -91,11 +79,6 @@
 # This test only exists on Win64
 6180 WIN : BufferDataOverflowTest.VertexBufferIntegerOverflow/* = NOT_RUN
 
-6286 : ImageRespecificationTest.ImageTarget2DOESSwitch/* = FAIL
-6286 : ImageTest.Source2DTarget2DArray/ES3* = FAIL
-6286 : ImageTestES3.Source2DTarget2DTargetTextureRespecifyLevel/* = FAIL
-6286 : ImageTestES3.Source2DTargetExternalESSL3/* = FAIL
-6286 : ImageTestES3.SourceRenderbufferTargetTextureExternalESSL3/* = FAIL
 6512 : RobustResourceInitTestES3.BindTexImage/* = FAIL
 6180 WIN : TransformFeedbackTest.DrawWithoutTransformFeedbackThenWith/* = FLAKY
 6180 : TransformFeedbackTest.TransformFeedbackQueryPausedDrawThenResume/* = FLAKY
@@ -109,7 +92,6 @@
 6314 : FramebufferTest_ES3.AttachmentsWithUnequalDimensions/* = CRASH
 6314 : FramebufferTest_ES3.ChangeAttachmentThenInvalidateAndDraw/* = CRASH
 6314 : FramebufferTest_ES3.RenderAndInvalidateImmutableTextureWithBeyondMaxLevel/* = CRASH
-6180 : ImageTestES3.SourceCubeTargetExternalESSL3/* = FAIL
 6334 : MipmapTestES3.GenerateMipmapBaseLevelOutOfRangeImmutableTexture/* = CRASH
 6334 : Texture2DTestES3.ImmutableTextureBaseLevelOutOfRange/* = CRASH
 6399 : Texture2DTestES3.TexStorage2DCycleThroughYuvSourcesNoData/* = CRASH
@@ -129,24 +111,6 @@
 6510 : FenceSyncTest.Errors/* = FLAKY
 6510 : FenceSyncTest.MultipleFenceDraw/* = FLAKY
 6510 : FenceSyncTest.NullLength/* = FLAKY
-
-# Fails after recent colorspace CL.
-6578 : ImageTest.Source2DTarget2D_Colorspace/* = FAIL
-6578 : ImageTest.Source2DTargetExternal_Colorspace/* = FAIL
-6578 : ImageTest.SourceCubeTargetExternal_Colorspace/* = FAIL
-6578 : ImageTest.SourceCubeTarget2D_Colorspace/* = FAIL
-6578 : ImageTest.SourceRenderbufferTargetTextureExternal_Colorspace/* = FAIL
-6578 : ImageTest.SourceRenderbufferTargetTexture_Colorspace/* = FAIL
-6578 : ImageTest.Source2DTarget2DArray_Colorspace/ES3* = FAIL
-6578 : ImageTest.Source2DTarget2D_Colorspace/* = FAIL
-6578 : ImageTest.Source2DTargetExternal_Colorspace/* = FAIL
-6578 : ImageTest.SourceCubeTarget2D_Colorspace/* = FAIL
-6578 : ImageTest.SourceCubeTargetExternal_Colorspace/* = FAIL
-6578 : ImageTest.SourceRenderbufferTargetTextureExternal_Colorspace/* = FAIL
-6578 : ImageTest.SourceRenderbufferTargetTexture_Colorspace/* = FAIL
-6578 : ImageTestES3.Source2DTargetExternalESSL3_Colorspace/* = FAIL
-6578 : ImageTestES3.SourceCubeTargetExternalESSL3_Colorspace/* = FAIL
-6578 : ImageTestES3.SourceRenderbufferTargetTextureExternalESSL3_Colorspace/* = FAIL
 
 6631 : MultithreadingTest.MultiContextCreateAndDeleteResources/* = CRASH
 6631 WIN : MultithreadingTestES3.MultithreadFenceDraw/* = CRASH
@@ -191,8 +155,6 @@
 5366 : ProgramPipelineTest32.MaxGeometryImageUniforms/* = CRASH
 
 7088 : VulkanPerformanceCounterTest* = SKIP_FOR_CAPTURE
-
-7111 : ImageTestES3.Source2DTarget2DStorageOrphan/* = FAIL
 
 7291 : BlitFramebufferTest.Blit3D/* = SKIP_FOR_CAPTURE
 7291 : BlitFramebufferTest.Blit3DTo2DArray/* = SKIP_FOR_CAPTURE

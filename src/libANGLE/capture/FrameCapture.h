@@ -1061,6 +1061,10 @@ template <>
 void WriteParamValueReplay<ParamType::TEGLSetBlobFuncANDROID>(std::ostream &os,
                                                               const CallCapture &call,
                                                               EGLSetBlobFuncANDROID value);
+template <>
+void WriteParamValueReplay<ParamType::TEGLClientBuffer>(std::ostream &os,
+                                                        const CallCapture &call,
+                                                        EGLClientBuffer value);
 
 // General fallback for any unspecific type.
 template <ParamType ParamT, typename T>
