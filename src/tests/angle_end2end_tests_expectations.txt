@@ -57,6 +57,7 @@
 7291 VULKAN : BlitFramebufferTest.Blit3D/* = SKIP
 7291 VULKAN : BlitFramebufferTest.Blit3DTo2DArray/* = SKIP
 7291 VULKAN : BlitFramebufferTest.Blit2DArrayTo3D/* = SKIP
+7283 VULKAN : TextureBufferTestES31.TextureBufferThenBufferData/* = SKIP
 
 // Windows
 3786 WIN NVIDIA D3D11 : BufferDataOverflowTest.VertexBufferIntegerOverflow/* = SKIP
@@ -459,6 +460,8 @@
 6167 PIXEL4ORXL GLES : DepthStencilTestES3.FramebufferClearThenStencilTestStateThenStencilAttached/* = SKIP
 6167 PIXEL4ORXL GLES : DepthStencilTestES3.StencilTestStateThenFramebufferClearThenStencilAttached/* = SKIP
 1296467 PIXEL4ORXL GLES : VertexAttributeTestES3.emptyBuffer/* = SKIP
+
+7283 PIXEL4ORXL GLES : TextureBufferTestES31.TextureBufferThenBufferData/* = SKIP
 
 // Internal driver failures on both GLES and Vulkan
 3839 NEXUS5X : GLSLTest_ES31.TypesUsedInDifferentBlockStorages/* = SKIP
