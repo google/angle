@@ -329,6 +329,7 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
     void setDepthBias(float depthBiasConstantFactor,
                       float depthBiasClamp,
                       float depthBiasSlopeFactor);
+    void setDepthBiasEnable(VkBool32 depthBiasEnable);
     void setDepthCompareOp(VkCompareOp depthCompareOp);
     void setDepthTestEnable(VkBool32 depthTestEnable);
     void setDepthWriteEnable(VkBool32 depthWriteEnable);
@@ -994,6 +995,12 @@ ANGLE_INLINE void CommandBuffer::setDepthBias(float depthBiasConstantFactor,
 {
     ASSERT(valid());
     vkCmdSetDepthBias(mHandle, depthBiasConstantFactor, depthBiasClamp, depthBiasSlopeFactor);
+}
+
+ANGLE_INLINE void CommandBuffer::setDepthBiasEnable(VkBool32 depthBiasEnable)
+{
+    ASSERT(valid());
+    vkCmdSetDepthBiasEnableEXT(mHandle, depthBiasEnable);
 }
 
 ANGLE_INLINE void CommandBuffer::setDepthCompareOp(VkCompareOp depthCompareOp)

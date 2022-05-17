@@ -8459,20 +8459,20 @@ void main()
     // This test issues three draw calls:
     //
     //           Draw 2 (green): factor width/2, offset 0, depth test: Greater
-    //          ^      |       __________________
-    //          |      |    __/__/   __/
-    //          |      V __/__/   __/  <--- Draw 1 (red): factor width/4, offset 0
-    //          |     __/__/ ^ __/
-    //          |  __/__/   _|/
-    //          | /__/   __/ |
-    //          | /   __/    |
-    //          |  __/    Draw 3 (blue): factor width/2, offset -1, depth test: Less
-    //          | /
+    //          ^     |       __________________
+    //          |     |    __/__/   __/
+    //          |     V __/__/   __/  <--- Draw 1 (red): factor width/4, offset 0
+    //          |    __/__/ ^ __/
+    //          | __/__/   _|/
+    //          |/__/   __/ |
+    //          |/   __/    |
+    //          | __/    Draw 3 (blue): factor width/2, offset -1, depth test: Less
+    //          |/
     //          |
     //          |
     //          +------------------------------->
     //
-    // Result:  <--- blue ----><-green-><--red-->
+    // Result:  <----blue-----><-green-><--red-->
 
     const int w = getWindowWidth();
     const int h = getWindowHeight();
@@ -9322,6 +9322,95 @@ TEST_P(StateChangeTestES3, RasterizerDiscard)
     drawQuad(program, essl1_shaders::PositionAttrib(), 0);
 
     EXPECT_PIXEL_RECT_EQ(0, 0, w, h, GLColor::magenta);
+
+    ASSERT_GL_NO_ERROR();
+}
+
+// Tests state change for GL_POLYGON_OFFSET_FILL.
+TEST_P(StateChangeTestES3, PolygonOffsetFill)
+{
+    constexpr char kVS[] = R"(#version 300 es
+precision highp float;
+uniform float height;
+void main()
+{
+    // gl_VertexID    x    y
+    //      0        -1   -1
+    //      1         1   -1
+    //      2        -1    1
+    //      3         1    1
+    int bit0 = gl_VertexID & 1;
+    int bit1 = gl_VertexID >> 1;
+    gl_Position = vec4(bit0 * 2 - 1, bit1 * 2 - 1, gl_VertexID % 2 == 0 ? -1 : 1, 1);
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 colorOut;
+uniform vec4 color;
+void main()
+{
+    colorOut = color;
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+
+    GLint colorLoc = glGetUniformLocation(program, "color");
+    ASSERT_NE(-1, colorLoc);
+
+    glClearColor(0, 0, 0, 1);
+    glClearDepthf(0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // The shader creates a depth slope from left (0) to right (1).
+    //
+    // This test issues three draw calls:
+    //
+    //
+    //           Draw 3 (blue): factor width/2, enabled, depth test: Greater
+    //          ^     |       __________________
+    //          |     |    __/      __/      __/
+    //          |     V __/      __/      __/
+    //          |    __/      __/      __/
+    //          | __/      __/      __/
+    //          |/      __/^     __/
+    //          |    __/   |  __/   <--- Draw 2: factor width/2, disabled, depth test: Greater
+    //          | __/      _\/
+    //          |/      __/  \
+    //          |    __/      Draw 1 (red): factor width/4, enabled
+    //          | __/
+    //          +/------------------------------>
+    //
+    // Result:  <-------magenta-------><--red-->
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_ALWAYS);
+
+    glEnable(GL_POLYGON_OFFSET_FILL);
+
+    const int w = getWindowWidth();
+    const int h = getWindowHeight();
+
+    glUniform4f(colorLoc, 1, 0, 0, 1);
+    glPolygonOffset(getWindowWidth() / 4, 0);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+    glUniform4f(colorLoc, 0, 1, 0, 1);
+    glPolygonOffset(getWindowWidth() / 2, 0);
+    glDepthFunc(GL_GREATER);
+    glDisable(GL_POLYGON_OFFSET_FILL);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+    glUniform4f(colorLoc, 0, 0, 1, 1);
+    glEnable(GL_POLYGON_OFFSET_FILL);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, 3 * w / 4 - 1, h, GLColor::magenta);
+    EXPECT_PIXEL_RECT_EQ(3 * w / 4 + 1, 0, w / 4 - 1, h, GLColor::red);
 
     ASSERT_GL_NO_ERROR();
 }
