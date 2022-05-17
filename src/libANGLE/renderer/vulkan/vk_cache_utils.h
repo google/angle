@@ -405,12 +405,12 @@ struct PackedRasterizationAndMultisampleStateInfo final
 {
     RasterizationStateBits bits;
     SampleShadingAndRotationState misc;
-    uint32_t sampleMask[gl::MAX_SAMPLE_MASK_WORDS];
+    uint32_t sampleMask[gl::IMPLEMENTATION_MAX_SAMPLE_MASK_WORDS];
 };
 
 constexpr size_t kPackedRasterizationAndMultisampleStateSize =
     sizeof(PackedRasterizationAndMultisampleStateInfo);
-static_assert(kPackedRasterizationAndMultisampleStateSize == 12, "Size check failed");
+static_assert(kPackedRasterizationAndMultisampleStateSize == 8, "Size check failed");
 
 struct StencilOps final
 {

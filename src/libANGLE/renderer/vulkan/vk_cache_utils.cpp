@@ -2467,7 +2467,7 @@ void GraphicsPipelineDesc::updateSampleMask(GraphicsPipelineTransitionBits *tran
                                             uint32_t maskNumber,
                                             uint32_t mask)
 {
-    ASSERT(maskNumber < gl::MAX_SAMPLE_MASK_WORDS);
+    ASSERT(maskNumber < gl::IMPLEMENTATION_MAX_SAMPLE_MASK_WORDS);
     mRasterizationAndMultisampleStateInfo.sampleMask[maskNumber] = mask;
 
     constexpr size_t kMaskBits =
