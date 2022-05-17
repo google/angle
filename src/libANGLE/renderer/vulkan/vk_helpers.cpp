@@ -898,7 +898,7 @@ angle::Result InitDynamicDescriptorPool(Context *context,
         {
             VkDescriptorPoolSize poolSize = {};
             poolSize.type                 = binding.descriptorType;
-            poolSize.descriptorCount      = binding.descriptorCount;
+            poolSize.descriptorCount      = binding.descriptorCount * descriptorCountMultiplier;
             descriptorPoolSizes.emplace_back(poolSize);
         }
     }
