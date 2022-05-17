@@ -619,6 +619,10 @@ struct FeaturesVk : FeatureSetBase
         "forceContinuousRefreshOnSharedPresent", FeatureCategory::VulkanFeatures,
         "Force to create vulkan swapchain with continuous refresh on shared present", &members,
         "https://issuetracker.google.com/229267970"};
+
+    FeatureInfo supportsImage2dViewOf3d = {
+        "supportsImage2dViewOf3d", FeatureCategory::VulkanFeatures,
+        "VkDevice supports VK_EXT_image_2d_view_of_3d", &members, "https://anglebug.com/7320"};
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

@@ -920,6 +920,71 @@ void main()
     }
 }
 
+// Test that binding a 2D slice of a 3D texture works with compute shader
+TEST_P(ComputeShaderTest, BindImageTexture3D)
+{
+    GLTexture mTexture[2];
+    GLFramebuffer mFramebuffer;
+    constexpr char kCS[] = R"(#version 310 es
+layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+layout(r32ui, binding = 0) writeonly uniform highp uimage2D uImage[2];
+void main()
+{
+    imageStore(uImage[0], ivec2(gl_LocalInvocationIndex, gl_WorkGroupID.x), uvec4(100, 0,
+0, 0));
+    imageStore(uImage[1], ivec2(gl_LocalInvocationIndex, gl_WorkGroupID.x), uvec4(100, 0,
+0, 0));
+})";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kCS);
+    glUseProgram(program.get());
+    int width = 1, height = 1, depth = 1;
+    GLuint inputValues[] = {200};
+
+    glBindTexture(GL_TEXTURE_3D, mTexture[0]);
+    glTexStorage3D(GL_TEXTURE_3D, 1, GL_R32UI, width, height, depth);
+    glTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, 0, width, height, depth, GL_RED_INTEGER,
+                    GL_UNSIGNED_INT, inputValues);
+    EXPECT_GL_NO_ERROR();
+
+    glBindImageTexture(0, mTexture[0], 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_R32UI);
+    EXPECT_GL_NO_ERROR();
+
+    glBindTexture(GL_TEXTURE_3D, mTexture[1]);
+    glTexStorage3D(GL_TEXTURE_3D, 1, GL_R32UI, width, height, depth);
+    glTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, 0, width, height, depth, GL_RED_INTEGER,
+                    GL_UNSIGNED_INT, inputValues);
+    EXPECT_GL_NO_ERROR();
+
+    glBindImageTexture(1, mTexture[1], 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_R32UI);
+    EXPECT_GL_NO_ERROR();
+
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    glMemoryBarrier(GL_FRAMEBUFFER_BARRIER_BIT);
+    glUseProgram(0);
+    GLuint outputValues[2][1];
+    GLuint expectedValue = 100;
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, mFramebuffer);
+
+    glFramebufferTextureLayer(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, mTexture[0], 0, 0);
+    EXPECT_GL_NO_ERROR();
+    glReadPixels(0, 0, width, height, GL_RED_INTEGER, GL_UNSIGNED_INT, outputValues[0]);
+    EXPECT_GL_NO_ERROR();
+
+    glFramebufferTextureLayer(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, mTexture[1], 0, 0);
+    EXPECT_GL_NO_ERROR();
+    glReadPixels(0, 0, width, height, GL_RED_INTEGER, GL_UNSIGNED_INT, outputValues[1]);
+    EXPECT_GL_NO_ERROR();
+
+    for (int i = 0; i < width * height; i++)
+    {
+        EXPECT_EQ(expectedValue, outputValues[0][i]);
+        EXPECT_EQ(expectedValue, outputValues[1][i]);
+    }
+}
+
 // When declare a image array without a binding qualifier, all elements are bound to unit zero.
 TEST_P(ComputeShaderTest, ImageArrayWithoutBindingQualifier)
 {

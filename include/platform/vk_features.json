@@ -829,6 +829,14 @@
                 "Force to create vulkan swapchain with continuous refresh on shared present"
             ],
             "issue": "https://issuetracker.google.com/229267970"
+        },
+        {
+            "name": "supports_image_2d_view_of_3d",
+            "category": "Features",
+            "description": [
+                "VkDevice supports VK_EXT_image_2d_view_of_3d"
+            ],
+            "issue": "https://anglebug.com/7320"
         }
     ]
 }

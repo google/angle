@@ -214,6 +214,7 @@ enum class Feature
     SupportsGeometryStreamsCapability,
     SupportsGGPFrameToken,
     SupportsHostQueryReset,
+    SupportsImage2dViewOf3d,
     SupportsImageCubeArray,
     SupportsImageFormatList,
     SupportsIncrementalPresent,

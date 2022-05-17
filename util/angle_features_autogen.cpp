@@ -226,6 +226,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::SupportsGeometryStreamsCapability, "supportsGeometryStreamsCapability"},
     {Feature::SupportsGGPFrameToken, "supportsGGPFrameToken"},
     {Feature::SupportsHostQueryReset, "supportsHostQueryReset"},
+    {Feature::SupportsImage2dViewOf3d, "supportsImage2dViewOf3d"},
     {Feature::SupportsImageCubeArray, "supportsImageCubeArray"},
     {Feature::SupportsImageFormatList, "supportsImageFormatList"},
     {Feature::SupportsIncrementalPresent, "supportsIncrementalPresent"},

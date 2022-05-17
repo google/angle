@@ -610,3 +610,7 @@
 // Causes incompatible error in GL back-end.
 7218 OPENGL : TransformFeedbackTest.DrawAfterDeletingPausedBuffer/* = SKIP
 7218 GLES : TransformFeedbackTest.DrawAfterDeletingPausedBuffer/* = SKIP
+
+// // Cannot create 2D (array) view of 3D texture.  These fail with validation errors, and cause a crash in syncval.
+3886 VULKAN : ComputeShaderTest.BindImageTexture3D/* = SKIP
+3886 D3D11 : ComputeShaderTest.BindImageTexture3D/* = SKIP
