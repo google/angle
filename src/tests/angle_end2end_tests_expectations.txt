@@ -306,6 +306,7 @@
 7294 WIN D3D11 : StateChangeTestES3.StencilReferenceAndCompareMask/* = SKIP
 7294 WIN D3D11 : StateChangeTestES3.StencilWriteMask/* = SKIP
 7316 WIN D3D11 : StateChangeTestES3.StencilTestAndFunc/* = SKIP
+7329 WIN D3D11 : StateChangeTestES3.PrimitiveRestart/* = SKIP
 
 // Android
 6095 ANDROID GLES : GLSLTest_ES3.InitGlobalComplexConstant/* = SKIP

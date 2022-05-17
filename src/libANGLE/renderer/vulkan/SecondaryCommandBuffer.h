@@ -90,6 +90,7 @@ enum class CommandID : uint16_t
     SetFragmentShadingRate,
     SetFrontFace,
     SetLineWidth,
+    SetPrimitiveRestartEnable,
     SetRasterizerDiscardEnable,
     SetScissor,
     SetStencilCompareMask,
@@ -498,6 +499,12 @@ struct SetLineWidthParams
 };
 VERIFY_4_BYTE_ALIGNMENT(SetLineWidthParams)
 
+struct SetPrimitiveRestartEnableParams
+{
+    VkBool32 primitiveRestartEnable;
+};
+VERIFY_4_BYTE_ALIGNMENT(SetPrimitiveRestartEnableParams)
+
 struct SetRasterizerDiscardEnableParams
 {
     VkBool32 rasterizerDiscardEnable;
@@ -815,6 +822,7 @@ class SecondaryCommandBuffer final : angle::NonCopyable
                                 VkFragmentShadingRateCombinerOpKHR ops[2]);
     void setFrontFace(VkFrontFace frontFace);
     void setLineWidth(float lineWidth);
+    void setPrimitiveRestartEnable(VkBool32 primitiveRestartEnable);
     void setRasterizerDiscardEnable(VkBool32 rasterizerDiscardEnable);
     void setScissor(uint32_t firstScissor, uint32_t scissorCount, const VkRect2D *scissors);
     void setStencilCompareMask(uint32_t compareFrontMask, uint32_t compareBackMask);
@@ -1707,6 +1715,13 @@ ANGLE_INLINE void SecondaryCommandBuffer::setLineWidth(float lineWidth)
 {
     SetLineWidthParams *paramStruct = initCommand<SetLineWidthParams>(CommandID::SetLineWidth);
     paramStruct->lineWidth          = lineWidth;
+}
+
+ANGLE_INLINE void SecondaryCommandBuffer::setPrimitiveRestartEnable(VkBool32 primitiveRestartEnable)
+{
+    SetPrimitiveRestartEnableParams *paramStruct =
+        initCommand<SetPrimitiveRestartEnableParams>(CommandID::SetPrimitiveRestartEnable);
+    paramStruct->primitiveRestartEnable = primitiveRestartEnable;
 }
 
 ANGLE_INLINE void SecondaryCommandBuffer::setRasterizerDiscardEnable(

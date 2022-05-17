@@ -789,6 +789,7 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
         mDynamicStateDirtyBits |= DirtyBits{
             DIRTY_BIT_DYNAMIC_RASTERIZER_DISCARD_ENABLE,
             DIRTY_BIT_DYNAMIC_DEPTH_BIAS_ENABLE,
+            DIRTY_BIT_DYNAMIC_PRIMITIVE_RESTART_ENABLE,
         };
     }
     if (getFeatures().supportsFragmentShadingRate.enabled)
@@ -878,6 +879,8 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
         &ContextVk::handleDirtyGraphicsDynamicRasterizerDiscardEnable;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_DEPTH_BIAS_ENABLE] =
         &ContextVk::handleDirtyGraphicsDynamicDepthBiasEnable;
+    mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_PRIMITIVE_RESTART_ENABLE] =
+        &ContextVk::handleDirtyGraphicsDynamicPrimitiveRestartEnable;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_FRAGMENT_SHADING_RATE] =
         &ContextVk::handleDirtyGraphicsDynamicFragmentShadingRate;
 
@@ -962,6 +965,7 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
     {
         mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_RASTERIZER_DISCARD_ENABLED);
         mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_POLYGON_OFFSET_FILL_ENABLED);
+        mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_PRIMITIVE_RESTART_ENABLED);
     }
 
     angle::PerfMonitorCounterGroup vulkanGroup;
@@ -2697,6 +2701,14 @@ angle::Result ContextVk::handleDirtyGraphicsDynamicDepthBiasEnable(
     DirtyBits dirtyBitMask)
 {
     mRenderPassCommandBuffer->setDepthBiasEnable(mState.isPolygonOffsetFillEnabled());
+    return angle::Result::Continue;
+}
+
+angle::Result ContextVk::handleDirtyGraphicsDynamicPrimitiveRestartEnable(
+    DirtyBits::Iterator *dirtyBitsIterator,
+    DirtyBits dirtyBitMask)
+{
+    mRenderPassCommandBuffer->setPrimitiveRestartEnable(mState.isPrimitiveRestartEnabled());
     return angle::Result::Continue;
 }
 
@@ -4859,8 +4871,23 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_LINE_WIDTH);
                 break;
             case gl::State::DIRTY_BIT_PRIMITIVE_RESTART_ENABLED:
-                mGraphicsPipelineDesc->updatePrimitiveRestartEnabled(
-                    &mGraphicsPipelineTransition, glState.isPrimitiveRestartEnabled());
+                if (getFeatures().supportsExtendedDynamicState2.enabled)
+                {
+                    mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_PRIMITIVE_RESTART_ENABLE);
+                }
+                else
+                {
+                    mGraphicsPipelineDesc->updatePrimitiveRestartEnabled(
+                        &mGraphicsPipelineTransition, glState.isPrimitiveRestartEnabled());
+                }
+                // Additionally set the index buffer dirty if conversion from uint8 might have been
+                // necessary.  Otherwise if primitive restart is enabled and the index buffer is
+                // translated to uint16_t with a value of 0xFFFF, it cannot be reused when primitive
+                // restart is disabled.
+                if (!mRenderer->getFeatures().supportsIndexTypeUint8.enabled)
+                {
+                    mGraphicsDirtyBits.set(DIRTY_BIT_INDEX_BUFFER);
+                }
                 break;
             case gl::State::DIRTY_BIT_CLEAR_COLOR:
                 mClearColorValue.color.float32[0] = glState.getColorClearValue().red;

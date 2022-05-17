@@ -9414,6 +9414,86 @@ void main()
 
     ASSERT_GL_NO_ERROR();
 }
+
+// Tests state change for GL_PRIMITIVE_RESTART.
+TEST_P(StateChangeTestES3, PrimitiveRestart)
+{
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+    glUseProgram(program);
+
+    GLint colorLoc = glGetUniformLocation(program, angle::essl1_shaders::ColorUniform());
+    ASSERT_NE(colorLoc, -1);
+
+    GLint posAttrib = glGetAttribLocation(program, essl1_shaders::PositionAttrib());
+    ASSERT_EQ(0, posAttrib);
+
+    // Arrange the vertices as such:
+    //
+    //     1      3      4
+    //      +-----+-----+
+    //      |     |     |
+    //      |     |     |
+    //      |     |     |
+    //      |     |     |
+    //      |     |     |
+    //      |     |     |
+    //      +-----+-----+
+    //     0      2     FF
+    //
+    // Drawing a triangle strip, without primitive restart, the whole framebuffer is rendered, while
+    // with primitive restart only the left half is.
+    std::vector<Vector3> positionData(256, {0, 0, 0});
+
+    positionData[0]    = Vector3(-1, -1, 0);
+    positionData[1]    = Vector3(-1, 1, 0);
+    positionData[2]    = Vector3(0, -1, 0);
+    positionData[3]    = Vector3(0, 1, 0);
+    positionData[0xFF] = Vector3(1, -1, 0);
+    positionData[4]    = Vector3(1, 1, 0);
+
+    constexpr std::array<GLubyte, 6> indices = {0, 1, 2, 3, 0xFF, 4};
+
+    GLBuffer posBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, posBuffer);
+    glBufferData(GL_ARRAY_BUFFER, positionData.size() * sizeof(positionData[0]),
+                 positionData.data(), GL_STATIC_DRAW);
+    glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(posAttrib);
+
+    GLBuffer indexBuffer;
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices.data(), GL_STATIC_DRAW);
+
+    const int w = getWindowWidth();
+    const int h = getWindowHeight();
+
+    glClearColor(0, 0, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+
+    // Draw red with primitive restart enabled
+    glEnable(GL_PRIMITIVE_RESTART_FIXED_INDEX);
+    glUniform4f(colorLoc, 1, 0, 0, 0);
+    glDrawElements(GL_TRIANGLE_STRIP, 6, GL_UNSIGNED_BYTE, nullptr);
+
+    // Draw green with primitive restart disabled
+    glDisable(GL_PRIMITIVE_RESTART_FIXED_INDEX);
+    glUniform4f(colorLoc, 0, 1, 0, 1);
+    glDrawElements(GL_TRIANGLE_STRIP, 6, GL_UNSIGNED_BYTE, nullptr);
+
+    // Draw blue with primitive restart enabled again
+    glEnable(GL_PRIMITIVE_RESTART_FIXED_INDEX);
+    glUniform4f(colorLoc, 0, 0, 1, 0);
+    glDrawElements(GL_TRIANGLE_STRIP, 6, GL_UNSIGNED_BYTE, nullptr);
+
+    // Verify results
+    EXPECT_PIXEL_RECT_EQ(0, 0, w / 2 - 1, h, GLColor::white);
+    EXPECT_PIXEL_RECT_EQ(w / 2 + 1, 0, w / 2 - 1, h, GLColor::green);
+
+    ASSERT_GL_NO_ERROR();
+}
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST_ES2(StateChangeTest);
@@ -9422,6 +9502,7 @@ ANGLE_INSTANTIATE_TEST_ES2(StateChangeRenderTest);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(StateChangeTestES3);
 ANGLE_INSTANTIATE_TEST_ES3_AND(StateChangeTestES3,
+                               ES3_VULKAN().disable(Feature::SupportsIndexTypeUint8),
                                ES3_VULKAN()
                                    .disable(Feature::SupportsExtendedDynamicState)
                                    .disable(Feature::SupportsExtendedDynamicState2),
