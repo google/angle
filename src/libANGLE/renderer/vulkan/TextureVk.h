@@ -190,6 +190,10 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
                                      GLenum binding,
                                      const gl::ImageIndex &imageIndex) override;
 
+    angle::Result initializeContentsWithBlack(const gl::Context *context,
+                                              GLenum binding,
+                                              const gl::ImageIndex &imageIndex);
+
     const vk::ImageHelper &getImage() const
     {
         ASSERT(mImage && mImage->valid());

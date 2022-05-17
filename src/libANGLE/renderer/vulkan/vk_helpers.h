@@ -1966,8 +1966,15 @@ class ImageHelper final : public Resource, public angle::Subject
                                                      const gl::ImageIndex &index,
                                                      const gl::Extents &glExtents,
                                                      const angle::Format &intendedFormat,
-                                                     const angle::Format &actualFormat);
+                                                     const angle::Format &imageFormat);
     void stageRobustResourceClear(const gl::ImageIndex &index);
+
+    angle::Result stageResourceClearWithFormat(ContextVk *contextVk,
+                                               const gl::ImageIndex &index,
+                                               const gl::Extents &glExtents,
+                                               const angle::Format &intendedFormat,
+                                               const angle::Format &imageFormat,
+                                               const VkClearValue &clearValue);
 
     // Stage the currently allocated image as updates to base level and on, making this !valid().
     // This is used for:

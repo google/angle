@@ -7217,7 +7217,8 @@ angle::Result ContextVk::initializeMultisampleTextureToBlack(const gl::Context *
     ASSERT(glTexture->getType() == gl::TextureType::_2DMultisample);
     TextureVk *textureVk = vk::GetImpl(glTexture);
 
-    return textureVk->initializeContents(context, GL_NONE, gl::ImageIndex::Make2DMultisample());
+    return textureVk->initializeContentsWithBlack(context, GL_NONE,
+                                                  gl::ImageIndex::Make2DMultisample());
 }
 
 void ContextVk::onProgramExecutableReset(ProgramExecutableVk *executableVk)
