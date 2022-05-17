@@ -1073,6 +1073,10 @@ void ResetDynamicState(ContextVk *contextVk, vk::RenderPassCommandBuffer *comman
         commandBuffer->setDepthTestEnable(VK_FALSE);
         commandBuffer->setStencilTestEnable(VK_FALSE);
     }
+    if (contextVk->getFeatures().supportsExtendedDynamicState2.enabled)
+    {
+        commandBuffer->setRasterizerDiscardEnable(VK_FALSE);
+    }
     if (contextVk->getFeatures().supportsFragmentShadingRate.enabled)
     {
         VkExtent2D fragmentSize                                     = {1, 1};

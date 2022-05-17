@@ -987,6 +987,13 @@ PFN_vkCmdSetStencilOpEXT vkCmdSetStencilOpEXT                         = nullptr;
 PFN_vkCmdSetStencilTestEnableEXT vkCmdSetStencilTestEnableEXT         = nullptr;
 PFN_vkCmdSetViewportWithCountEXT vkCmdSetViewportWithCountEXT         = nullptr;
 
+// VK_EXT_extended_dynamic_state2
+PFN_vkCmdSetDepthBiasEnableEXT vkCmdSetDepthBiasEnableEXT                 = nullptr;
+PFN_vkCmdSetLogicOpEXT vkCmdSetLogicOpEXT                                 = nullptr;
+PFN_vkCmdSetPatchControlPointsEXT vkCmdSetPatchControlPointsEXT           = nullptr;
+PFN_vkCmdSetPrimitiveRestartEnableEXT vkCmdSetPrimitiveRestartEnableEXT   = nullptr;
+PFN_vkCmdSetRasterizerDiscardEnableEXT vkCmdSetRasterizerDiscardEnableEXT = nullptr;
+
 // VK_KHR_fragment_shading_rate
 PFN_vkGetPhysicalDeviceFragmentShadingRatesKHR vkGetPhysicalDeviceFragmentShadingRatesKHR = nullptr;
 PFN_vkCmdSetFragmentShadingRateKHR vkCmdSetFragmentShadingRateKHR                         = nullptr;
@@ -1127,6 +1134,16 @@ void InitExtendedDynamicStateEXTFunctions(VkDevice device)
     GET_DEVICE_FUNC(vkCmdSetStencilOpEXT);
     GET_DEVICE_FUNC(vkCmdSetStencilTestEnableEXT);
     GET_DEVICE_FUNC(vkCmdSetViewportWithCountEXT);
+}
+
+// VK_EXT_extended_dynamic_state2
+void InitExtendedDynamicState2EXTFunctions(VkDevice device)
+{
+    GET_DEVICE_FUNC(vkCmdSetDepthBiasEnableEXT);
+    GET_DEVICE_FUNC(vkCmdSetLogicOpEXT);
+    GET_DEVICE_FUNC(vkCmdSetPatchControlPointsEXT);
+    GET_DEVICE_FUNC(vkCmdSetPrimitiveRestartEnableEXT);
+    GET_DEVICE_FUNC(vkCmdSetRasterizerDiscardEnableEXT);
 }
 
 // VK_KHR_fragment_shading_rate

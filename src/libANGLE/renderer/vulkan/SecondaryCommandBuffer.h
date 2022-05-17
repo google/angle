@@ -89,6 +89,7 @@ enum class CommandID : uint16_t
     SetFragmentShadingRate,
     SetFrontFace,
     SetLineWidth,
+    SetRasterizerDiscardEnable,
     SetScissor,
     SetStencilCompareMask,
     SetStencilOp,
@@ -478,17 +479,23 @@ struct SetFragmentShadingRateParams
 };
 VERIFY_4_BYTE_ALIGNMENT(SetFragmentShadingRateParams)
 
+struct SetFrontFaceParams
+{
+    VkFrontFace frontFace;
+};
+VERIFY_4_BYTE_ALIGNMENT(SetFrontFaceParams)
+
 struct SetLineWidthParams
 {
     float lineWidth;
 };
 VERIFY_4_BYTE_ALIGNMENT(SetLineWidthParams)
 
-struct SetFrontFaceParams
+struct SetRasterizerDiscardEnableParams
 {
-    VkFrontFace frontFace;
+    VkBool32 rasterizerDiscardEnable;
 };
-VERIFY_4_BYTE_ALIGNMENT(SetFrontFaceParams)
+VERIFY_4_BYTE_ALIGNMENT(SetRasterizerDiscardEnableParams)
 
 struct SetScissorParams
 {
@@ -800,6 +807,7 @@ class SecondaryCommandBuffer final : angle::NonCopyable
                                 VkFragmentShadingRateCombinerOpKHR ops[2]);
     void setFrontFace(VkFrontFace frontFace);
     void setLineWidth(float lineWidth);
+    void setRasterizerDiscardEnable(VkBool32 rasterizerDiscardEnable);
     void setScissor(uint32_t firstScissor, uint32_t scissorCount, const VkRect2D *scissors);
     void setStencilCompareMask(uint32_t compareFrontMask, uint32_t compareBackMask);
     void setStencilOp(VkStencilFaceFlags faceMask,
@@ -1684,6 +1692,14 @@ ANGLE_INLINE void SecondaryCommandBuffer::setLineWidth(float lineWidth)
 {
     SetLineWidthParams *paramStruct = initCommand<SetLineWidthParams>(CommandID::SetLineWidth);
     paramStruct->lineWidth          = lineWidth;
+}
+
+ANGLE_INLINE void SecondaryCommandBuffer::setRasterizerDiscardEnable(
+    VkBool32 rasterizerDiscardEnable)
+{
+    SetRasterizerDiscardEnableParams *paramStruct =
+        initCommand<SetRasterizerDiscardEnableParams>(CommandID::SetRasterizerDiscardEnable);
+    paramStruct->rasterizerDiscardEnable = rasterizerDiscardEnable;
 }
 
 ANGLE_INLINE void SecondaryCommandBuffer::setScissor(uint32_t firstScissor,

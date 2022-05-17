@@ -134,6 +134,8 @@ const char *GetCommandString(CommandID id)
             return "SetFrontFace";
         case CommandID::SetLineWidth:
             return "SetLineWidth";
+        case CommandID::SetRasterizerDiscardEnable:
+            return "SetRasterizerDiscardEnable";
         case CommandID::SetScissor:
             return "SetScissor";
         case CommandID::SetStencilCompareMask:
@@ -645,6 +647,13 @@ void SecondaryCommandBuffer::executeCommands(PrimaryCommandBuffer *primary)
                     const SetLineWidthParams *params =
                         getParamPtr<SetLineWidthParams>(currentCommand);
                     vkCmdSetLineWidth(cmdBuffer, params->lineWidth);
+                    break;
+                }
+                case CommandID::SetRasterizerDiscardEnable:
+                {
+                    const SetRasterizerDiscardEnableParams *params =
+                        getParamPtr<SetRasterizerDiscardEnableParams>(currentCommand);
+                    vkCmdSetRasterizerDiscardEnableEXT(cmdBuffer, params->rasterizerDiscardEnable);
                     break;
                 }
                 case CommandID::SetScissor:

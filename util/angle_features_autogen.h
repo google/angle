@@ -200,6 +200,7 @@ enum class Feature
     SupportsDepthClipControl,
     SupportsDepthStencilResolve,
     SupportsExtendedDynamicState,
+    SupportsExtendedDynamicState2,
     SupportsExternalFenceCapabilities,
     SupportsExternalFenceFd,
     SupportsExternalMemoryDmaBufAndModifiers,

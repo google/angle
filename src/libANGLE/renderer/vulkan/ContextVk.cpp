@@ -784,6 +784,12 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
             DIRTY_BIT_DYNAMIC_STENCIL_OP,
         };
     }
+    if (getFeatures().supportsExtendedDynamicState2.enabled)
+    {
+        mDynamicStateDirtyBits |= DirtyBits{
+            DIRTY_BIT_DYNAMIC_RASTERIZER_DISCARD_ENABLE,
+        };
+    }
     if (getFeatures().supportsFragmentShadingRate.enabled)
     {
         mDynamicStateDirtyBits.set(DIRTY_BIT_DYNAMIC_FRAGMENT_SHADING_RATE);
@@ -867,6 +873,8 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
         &ContextVk::handleDirtyGraphicsDynamicStencilTestEnable;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_STENCIL_OP] =
         &ContextVk::handleDirtyGraphicsDynamicStencilOp;
+    mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_RASTERIZER_DISCARD_ENABLE] =
+        &ContextVk::handleDirtyGraphicsDynamicRasterizerDiscardEnable;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_FRAGMENT_SHADING_RATE] =
         &ContextVk::handleDirtyGraphicsDynamicFragmentShadingRate;
 
@@ -945,6 +953,11 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
         mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_STENCIL_FUNCS_BACK);
         mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_STENCIL_OPS_FRONT);
         mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_STENCIL_OPS_BACK);
+    }
+
+    if (getFeatures().supportsExtendedDynamicState2.enabled)
+    {
+        mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_RASTERIZER_DISCARD_ENABLED);
     }
 
     angle::PerfMonitorCounterGroup vulkanGroup;
@@ -2658,6 +2671,20 @@ angle::Result ContextVk::handleDirtyGraphicsDynamicStencilOp(DirtyBits::Iterator
         gl_vk::GetStencilOp(depthStencilState.stencilBackPassDepthPass),
         gl_vk::GetStencilOp(depthStencilState.stencilBackPassDepthFail),
         gl_vk::GetCompareOp(depthStencilState.stencilBackFunc));
+    return angle::Result::Continue;
+}
+
+angle::Result ContextVk::handleDirtyGraphicsDynamicRasterizerDiscardEnable(
+    DirtyBits::Iterator *dirtyBitsIterator,
+    DirtyBits dirtyBitMask)
+{
+    const bool isEmulatingRasterizerDiscard =
+        isEmulatingRasterizerDiscardDuringPrimitivesGeneratedQuery(
+            mState.isQueryActive(gl::QueryType::PrimitivesGenerated));
+    const bool isRasterizerDiscardEnabled = mState.isRasterizerDiscardEnabled();
+
+    mRenderPassCommandBuffer->setRasterizerDiscardEnable(isRasterizerDiscardEnabled &&
+                                                         !isEmulatingRasterizerDiscard);
     return angle::Result::Continue;
 }
 
@@ -4451,25 +4478,30 @@ void ContextVk::updateRasterizerDiscardEnabled(bool isPrimitivesGeneratedQueryAc
 
     // If the primitives generated query implementation supports rasterizer discard, just set
     // rasterizer discard as requested.  Otherwise disable it.
-    bool isRasterizerDiscardEnabled   = mState.isRasterizerDiscardEnabled();
-    bool isEmulatingRasterizerDiscard = isEmulatingRasterizerDiscardDuringPrimitivesGeneratedQuery(
-        isPrimitivesGeneratedQueryActive);
+    const bool isEmulatingRasterizerDiscard =
+        isEmulatingRasterizerDiscardDuringPrimitivesGeneratedQuery(
+            isPrimitivesGeneratedQueryActive);
 
-    mGraphicsPipelineDesc->updateRasterizerDiscardEnabled(
-        &mGraphicsPipelineTransition, isRasterizerDiscardEnabled && !isEmulatingRasterizerDiscard);
-
-    invalidateCurrentGraphicsPipeline();
-
-    if (!isEmulatingRasterizerDiscard)
+    if (getFeatures().supportsExtendedDynamicState2.enabled)
     {
-        return;
+        mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_RASTERIZER_DISCARD_ENABLE);
+    }
+    else
+    {
+        const bool isRasterizerDiscardEnabled = mState.isRasterizerDiscardEnabled();
+
+        mGraphicsPipelineDesc->updateRasterizerDiscardEnabled(
+            &mGraphicsPipelineTransition,
+            isRasterizerDiscardEnabled && !isEmulatingRasterizerDiscard);
+
+        invalidateCurrentGraphicsPipeline();
     }
 
-    // If we are emulating rasterizer discard, update the scissor if in render pass.  If not in
-    // render pass, DIRTY_BIT_DYNAMIC_SCISSOR will be set when the render pass next starts.
-    if (hasStartedRenderPass())
+    if (isEmulatingRasterizerDiscard)
     {
-        handleDirtyGraphicsDynamicScissorImpl(isPrimitivesGeneratedQueryActive);
+        // If we are emulating rasterizer discard, update the scissor to use an empty one if
+        // rasterizer discard is enabled.
+        mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_SCISSOR);
     }
 }
 

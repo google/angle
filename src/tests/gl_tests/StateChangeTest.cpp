@@ -9262,6 +9262,69 @@ TEST_P(StateChangeTestES3, StencilTestAndFunc)
 
     ASSERT_GL_NO_ERROR();
 }
+
+// Tests state change for rasterizer discard
+TEST_P(StateChangeTestES3, RasterizerDiscard)
+{
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+    glUseProgram(program);
+
+    GLint colorLoc = glGetUniformLocation(program, angle::essl1_shaders::ColorUniform());
+    ASSERT_NE(colorLoc, -1);
+
+    const int w = getWindowWidth();
+    const int h = getWindowHeight();
+
+    glClearColor(0, 0, 0, 0);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+
+    // Start a render pass and issue three draw calls with the middle one having rasterizer discard
+    // enabled.
+    glUniform4f(colorLoc, 1, 0, 0, 0);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0);
+
+    glEnable(GL_RASTERIZER_DISCARD);
+
+    glUniform4f(colorLoc, 0, 1, 1, 0);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0);
+
+    glDisable(GL_RASTERIZER_DISCARD);
+
+    glUniform4f(colorLoc, 0, 0, 0, 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0);
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, w, h, GLColor::red);
+
+    // Enable rasterizer discard and make sure the state is effective.
+    glEnable(GL_RASTERIZER_DISCARD);
+
+    glUniform4f(colorLoc, 0, 1, 0, 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0);
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, w, h, GLColor::red);
+
+    // Start a render pass and issue three draw calls with the first and last ones having rasterizer
+    // discard enabled.
+    glUniform4f(colorLoc, 0, 1, 0, 0);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0);
+
+    glDisable(GL_RASTERIZER_DISCARD);
+
+    glUniform4f(colorLoc, 0, 0, 1, 0);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0);
+
+    glEnable(GL_RASTERIZER_DISCARD);
+
+    glUniform4f(colorLoc, 0, 1, 0, 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0);
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, w, h, GLColor::magenta);
+
+    ASSERT_GL_NO_ERROR();
+}
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST_ES2(StateChangeTest);
@@ -9270,7 +9333,10 @@ ANGLE_INSTANTIATE_TEST_ES2(StateChangeRenderTest);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(StateChangeTestES3);
 ANGLE_INSTANTIATE_TEST_ES3_AND(StateChangeTestES3,
-                               ES3_VULKAN().disable(Feature::SupportsExtendedDynamicState));
+                               ES3_VULKAN()
+                                   .disable(Feature::SupportsExtendedDynamicState)
+                                   .disable(Feature::SupportsExtendedDynamicState2),
+                               ES3_VULKAN().disable(Feature::SupportsExtendedDynamicState2));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(StateChangeTestWebGL2);
 ANGLE_INSTANTIATE_TEST_COMBINE_1(StateChangeTestWebGL2,

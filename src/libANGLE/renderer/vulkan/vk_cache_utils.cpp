@@ -1783,7 +1783,7 @@ void GraphicsPipelineDesc::initDefaults(const ContextVk *contextVk)
     mRasterizationAndMultisampleStateInfo.bits.subpass = 0;
     mRasterizationAndMultisampleStateInfo.bits.depthClampEnable =
         contextVk->getFeatures().depthClamping.enabled ? VK_TRUE : VK_FALSE;
-    mRasterizationAndMultisampleStateInfo.bits.rasterizationDiscardEnable = 0;
+    mRasterizationAndMultisampleStateInfo.bits.rasterizerDiscardEnable = 0;
     SetBitField(mDynamicState1.bits.cullMode, VK_CULL_MODE_NONE);
     SetBitField(mDynamicState1.bits.frontFace, VK_FRONT_FACE_COUNTER_CLOCKWISE);
     mRasterizationAndMultisampleStateInfo.bits.depthBiasEnable = 0;
@@ -1932,10 +1932,10 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     }
 
     // Fragment shader is optional.
-    // anglebug.com/3509 - Don't compile the fragment shader if rasterizationDiscardEnable = true
+    // anglebug.com/3509 - Don't compile the fragment shader if rasterizerDiscardEnable = true
     const ShaderAndSerialPointer &fragmentPointer = shaders[gl::ShaderType::Fragment];
     if (fragmentPointer.valid() &&
-        !mRasterizationAndMultisampleStateInfo.bits.rasterizationDiscardEnable)
+        !mRasterizationAndMultisampleStateInfo.bits.rasterizerDiscardEnable)
     {
         const ShaderModule &fragmentModule            = fragmentPointer.get().get();
         VkPipelineShaderStageCreateInfo fragmentStage = {};
@@ -2100,7 +2100,7 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     rasterState.flags            = 0;
     rasterState.depthClampEnable = static_cast<VkBool32>(rasterAndMS.bits.depthClampEnable);
     rasterState.rasterizerDiscardEnable =
-        static_cast<VkBool32>(rasterAndMS.bits.rasterizationDiscardEnable);
+        static_cast<VkBool32>(rasterAndMS.bits.rasterizerDiscardEnable);
     rasterState.polygonMode     = VK_POLYGON_MODE_FILL;
     rasterState.cullMode        = static_cast<VkCullModeFlags>(dynamicState1.bits.cullMode);
     rasterState.frontFace       = static_cast<VkFrontFace>(dynamicState1.bits.frontFace);
@@ -2119,9 +2119,9 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     // VK_LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH_EXT and if rasterization is enabled, then the
     // alphaToCoverageEnable, alphaToOneEnable, and sampleShadingEnable members of pMultisampleState
     // must all be VK_FALSE.
-    if (rasterAndMS.bits.rasterizationSamples <= 1 &&
-        !rasterAndMS.bits.rasterizationDiscardEnable && !rasterAndMS.bits.alphaToCoverageEnable &&
-        !rasterAndMS.bits.alphaToOneEnable && !rasterAndMS.bits.sampleShadingEnable &&
+    if (rasterAndMS.bits.rasterizationSamples <= 1 && !rasterAndMS.bits.rasterizerDiscardEnable &&
+        !rasterAndMS.bits.alphaToCoverageEnable && !rasterAndMS.bits.alphaToOneEnable &&
+        !rasterAndMS.bits.sampleShadingEnable &&
         contextVk->getFeatures().bresenhamLineRasterization.enabled)
     {
         rasterLineState.lineRasterizationMode = VK_LINE_RASTERIZATION_MODE_BRESENHAM_EXT;
@@ -2283,6 +2283,10 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
         dynamicStateList.push_back(VK_DYNAMIC_STATE_STENCIL_TEST_ENABLE);
         dynamicStateList.push_back(VK_DYNAMIC_STATE_STENCIL_OP);
     }
+    if (contextVk->getFeatures().supportsExtendedDynamicState2.enabled)
+    {
+        dynamicStateList.push_back(VK_DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE);
+    }
     if (contextVk->getFeatures().supportsFragmentShadingRate.enabled)
     {
         dynamicStateList.push_back(VK_DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR);
@@ -2421,7 +2425,7 @@ void GraphicsPipelineDesc::updateRasterizerDiscardEnabled(
     GraphicsPipelineTransitionBits *transition,
     bool rasterizerDiscardEnabled)
 {
-    mRasterizationAndMultisampleStateInfo.bits.rasterizationDiscardEnable =
+    mRasterizationAndMultisampleStateInfo.bits.rasterizerDiscardEnable =
         static_cast<uint32_t>(rasterizerDiscardEnabled);
     transition->set(ANGLE_GET_TRANSITION_BIT(mRasterizationAndMultisampleStateInfo, bits));
 }

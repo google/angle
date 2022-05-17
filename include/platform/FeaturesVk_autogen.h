@@ -604,6 +604,11 @@ struct FeaturesVk : FeatureSetBase
         "VkDevice supports VK_EXT_extended_dynamic_state extension", &members,
         "http://anglebug.com/5906"};
 
+    FeatureInfo supportsExtendedDynamicState2 = {
+        "supportsExtendedDynamicState2", FeatureCategory::VulkanFeatures,
+        "VkDevice supports VK_EXT_extended_dynamic_state2 extension", &members,
+        "http://anglebug.com/5906"};
+
     FeatureInfo supportsFragmentShadingRate = {
         "supportsFragmentShadingRate", FeatureCategory::VulkanFeatures,
         "VkDevice supports VK_KHR_fragment_shading_rate extension", &members,

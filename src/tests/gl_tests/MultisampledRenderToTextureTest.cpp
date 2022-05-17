@@ -3957,13 +3957,22 @@ TEST_P(MultisampledRenderToTextureES3Test, ClearThenMaskedClearFramebufferTest)
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND_ES31_AND(
     MultisampledRenderToTextureTest,
-    ES3_VULKAN().disable(Feature::SupportsExtendedDynamicState));
+    ES3_VULKAN()
+        .disable(Feature::SupportsExtendedDynamicState)
+        .disable(Feature::SupportsExtendedDynamicState2),
+    ES3_VULKAN().disable(Feature::SupportsExtendedDynamicState2));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(MultisampledRenderToTextureES3Test);
 ANGLE_INSTANTIATE_TEST_ES3_AND(MultisampledRenderToTextureES3Test,
-                               ES3_VULKAN().disable(Feature::SupportsExtendedDynamicState));
+                               ES3_VULKAN()
+                                   .disable(Feature::SupportsExtendedDynamicState)
+                                   .disable(Feature::SupportsExtendedDynamicState2),
+                               ES3_VULKAN().disable(Feature::SupportsExtendedDynamicState2));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(MultisampledRenderToTextureES31Test);
 ANGLE_INSTANTIATE_TEST_ES31_AND(MultisampledRenderToTextureES31Test,
-                                ES31_VULKAN().disable(Feature::SupportsExtendedDynamicState));
+                                ES31_VULKAN()
+                                    .disable(Feature::SupportsExtendedDynamicState)
+                                    .disable(Feature::SupportsExtendedDynamicState2),
+                                ES31_VULKAN().disable(Feature::SupportsExtendedDynamicState2));
 }  // namespace

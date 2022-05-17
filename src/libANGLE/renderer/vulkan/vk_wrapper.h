@@ -337,6 +337,7 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
                                 VkFragmentShadingRateCombinerOpKHR ops[2]);
     void setFrontFace(VkFrontFace frontFace);
     void setLineWidth(float lineWidth);
+    void setRasterizerDiscardEnable(VkBool32 rasterizerDiscardEnable);
     void setScissor(uint32_t firstScissor, uint32_t scissorCount, const VkRect2D *scissors);
     void setStencilCompareMask(uint32_t compareFrontMask, uint32_t compareBackMask);
     void setStencilOp(VkStencilFaceFlags faceMask,
@@ -1036,6 +1037,12 @@ ANGLE_INLINE void CommandBuffer::setLineWidth(float lineWidth)
 {
     ASSERT(valid());
     vkCmdSetLineWidth(mHandle, lineWidth);
+}
+
+ANGLE_INLINE void CommandBuffer::setRasterizerDiscardEnable(VkBool32 rasterizerDiscardEnable)
+{
+    ASSERT(valid());
+    vkCmdSetRasterizerDiscardEnableEXT(mHandle, rasterizerDiscardEnable);
 }
 
 ANGLE_INLINE void CommandBuffer::setScissor(uint32_t firstScissor,

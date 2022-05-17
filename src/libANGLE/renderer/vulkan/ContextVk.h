@@ -527,14 +527,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     vk::DescriptorSetLayoutDesc getDriverUniformsDescriptorSetDesc() const;
 
-    void updateScissor(const gl::State &glState);
-
-    void updateDepthStencil(const gl::State &glState);
-    void updateDepthTestEnabled(const gl::State &glState);
-    void updateDepthWriteEnabled(const gl::State &glState);
-    void updateDepthFunc(const gl::State &glState);
-    void updateStencilTestEnabled(const gl::State &glState);
-
     bool emulateSeamfulCubeMapSampling() const { return mEmulateSeamfulCubeMapSampling; }
 
     const gl::Debug &getDebug() const { return mState.getDebug(); }
@@ -819,6 +811,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         DIRTY_BIT_DYNAMIC_DEPTH_COMPARE_OP,
         DIRTY_BIT_DYNAMIC_STENCIL_TEST_ENABLE,
         DIRTY_BIT_DYNAMIC_STENCIL_OP,
+        // - In VK_EXT_extended_dynamic_state2
+        DIRTY_BIT_DYNAMIC_RASTERIZER_DISCARD_ENABLE,
         // - In VK_KHR_fragment_shading_rate
         DIRTY_BIT_DYNAMIC_FRAGMENT_SHADING_RATE,
 
@@ -903,6 +897,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     static_assert(DIRTY_BIT_DYNAMIC_STENCIL_TEST_ENABLE > DIRTY_BIT_RENDER_PASS,
                   "Render pass using dirty bit must be handled after the render pass dirty bit");
     static_assert(DIRTY_BIT_DYNAMIC_STENCIL_OP > DIRTY_BIT_RENDER_PASS,
+                  "Render pass using dirty bit must be handled after the render pass dirty bit");
+    static_assert(DIRTY_BIT_DYNAMIC_RASTERIZER_DISCARD_ENABLE > DIRTY_BIT_RENDER_PASS,
                   "Render pass using dirty bit must be handled after the render pass dirty bit");
     static_assert(DIRTY_BIT_DYNAMIC_FRAGMENT_SHADING_RATE > DIRTY_BIT_RENDER_PASS,
                   "Render pass using dirty bit must be handled after the render pass dirty bit");
@@ -1128,6 +1124,9 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         DirtyBits dirtyBitMask);
     angle::Result handleDirtyGraphicsDynamicStencilOp(DirtyBits::Iterator *dirtyBitsIterator,
                                                       DirtyBits dirtyBitMask);
+    angle::Result handleDirtyGraphicsDynamicRasterizerDiscardEnable(
+        DirtyBits::Iterator *dirtyBitsIterator,
+        DirtyBits dirtyBitMask);
     angle::Result handleDirtyGraphicsDynamicFragmentShadingRate(
         DirtyBits::Iterator *dirtyBitsIterator,
         DirtyBits dirtyBitMask);
@@ -1249,6 +1248,14 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     angle::Result pushDebugGroupImpl(GLenum source, GLuint id, const char *message);
     angle::Result popDebugGroupImpl();
+
+    void updateScissor(const gl::State &glState);
+
+    void updateDepthStencil(const gl::State &glState);
+    void updateDepthTestEnabled(const gl::State &glState);
+    void updateDepthWriteEnabled(const gl::State &glState);
+    void updateDepthFunc(const gl::State &glState);
+    void updateStencilTestEnabled(const gl::State &glState);
 
     void updateSampleShadingWithRasterizationSamples(const uint32_t rasterizationSamples);
     void updateRasterizationSamples(const uint32_t rasterizationSamples);
