@@ -449,12 +449,14 @@ spv::StorageClass GetStorageClass(const TType &type, GLenum shaderType)
         case EvqGlobalInvocationID:
         case EvqLocalInvocationIndex:
         case EvqViewIDOVR:
+        case EvqLayerIn:
             return spv::StorageClassInput;
 
         case EvqPosition:
         case EvqPointSize:
         case EvqFragDepth:
         case EvqSampleMask:
+        case EvqLayerOut:
             return spv::StorageClassOutput;
 
         case EvqClipDistance:
@@ -470,9 +472,7 @@ spv::StorageClass GetStorageClass(const TType &type, GLenum shaderType)
             return shaderType == GL_TESS_CONTROL_SHADER_EXT ? spv::StorageClassOutput
                                                             : spv::StorageClassInput;
 
-        case EvqLayer:
         case EvqPrimitiveID:
-            // gl_Layer is output in GS and input in FS.
             // gl_PrimitiveID is output in GS and input in TCS, TES and FS.
             return shaderType == GL_GEOMETRY_SHADER ? spv::StorageClassOutput
                                                     : spv::StorageClassInput;
@@ -617,7 +617,8 @@ spirv::IdRef OutputSPIRVTraverser::getSymbolIdAndStorageClass(const TSymbol *sym
             name              = "gl_PrimitiveIDIn";
             builtInDecoration = spv::BuiltInPrimitiveId;
             break;
-        case EvqLayer:
+        case EvqLayerOut:
+        case EvqLayerIn:
             name              = "gl_Layer";
             builtInDecoration = spv::BuiltInLayer;
 
@@ -668,8 +669,15 @@ spirv::IdRef OutputSPIRVTraverser::getSymbolIdAndStorageClass(const TSymbol *sym
     spirv::WriteDecorate(mBuilder.getSpirvDecorations(), varId, spv::DecorationBuiltIn,
                          {spirv::LiteralInteger(builtInDecoration)});
 
-    // Additionally, decorate gl_TessLevel* with Patch.
-    if (type.getQualifier() == EvqTessLevelInner || type.getQualifier() == EvqTessLevelOuter)
+    // Additionally:
+    //
+    // - decorate gl_Layer in FS with Flat.
+    // - decorate gl_TessLevel* with Patch.
+    if (type.getQualifier() == EvqLayerIn)
+    {
+        spirv::WriteDecorate(mBuilder.getSpirvDecorations(), varId, spv::DecorationFlat, {});
+    }
+    else if (type.getQualifier() == EvqTessLevelInner || type.getQualifier() == EvqTessLevelOuter)
     {
         spirv::WriteDecorate(mBuilder.getSpirvDecorations(), varId, spv::DecorationPatch, {});
     }
