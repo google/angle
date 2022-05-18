@@ -890,7 +890,8 @@ void RendererVk::ensureCapsInitialized() const
         reservedVaryingComponentCount += kReservedVaryingComponentsForGLLineRasterization;
     }
     if (getFeatures().supportsTransformFeedbackExtension.enabled &&
-        !getFeatures().supportsDepthClipControl.enabled)
+        !getFeatures().supportsDepthClipControl.enabled &&
+        !getFeatures().enablePreRotateSurfaces.enabled)
     {
         reservedVaryingComponentCount += kReservedVaryingComponentsForTransformFeedbackExtension;
     }
