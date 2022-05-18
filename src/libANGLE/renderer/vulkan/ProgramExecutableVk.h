@@ -155,23 +155,23 @@ class ProgramExecutableVk
                                               bool emulateSeamfulCubeMapSampling,
                                               PipelineType pipelineType,
                                               UpdateDescriptorSetsBuilder *updateBuilder,
-                                              vk::ResourceUseList *resourceUseList,
+                                              vk::CommandBufferHelperCommon *commandBufferHelper,
                                               const vk::DescriptorSetDesc &texturesDesc);
     angle::Result updateShaderResourcesDescriptorSet(
         ContextVk *contextVk,
         UpdateDescriptorSetsBuilder *updateBuilder,
-        vk::ResourceUseList *resourceUseList,
+        vk::CommandBufferHelperCommon *commandBufferHelper,
         const vk::DescriptorSetDescBuilder &shaderResourcesDesc);
     angle::Result updateUniformsAndXfbDescriptorSet(
         vk::Context *context,
         UpdateDescriptorSetsBuilder *updateBuilder,
-        vk::ResourceUseList *resourceUseList,
+        vk::CommandBufferHelperCommon *commandBufferHelper,
         vk::BufferHelper *defaultUniformBuffer,
         const vk::DescriptorSetDescBuilder &uniformsAndXfbDesc);
 
     template <typename CommandBufferT>
     angle::Result bindDescriptorSets(vk::Context *context,
-                                     vk::ResourceUseList *resourceUseList,
+                                     vk::CommandBufferHelperCommon *commandBufferHelper,
                                      CommandBufferT *commandBuffer,
                                      PipelineType pipelineType);
 
@@ -211,7 +211,7 @@ class ProgramExecutableVk
     void setAllDefaultUniformsDirty(const gl::ProgramExecutable &executable);
     angle::Result updateUniforms(vk::Context *context,
                                  UpdateDescriptorSetsBuilder *updateBuilder,
-                                 vk::ResourceUseList *resourceUseList,
+                                 vk::CommandBufferHelperCommon *commandBufferHelper,
                                  vk::BufferHelper *emptyBuffer,
                                  const gl::ProgramExecutable &glExecutable,
                                  vk::DynamicBuffer *defaultUniformStorage,
@@ -303,7 +303,7 @@ class ProgramExecutableVk
 
     angle::Result getOrAllocateDescriptorSet(vk::Context *context,
                                              UpdateDescriptorSetsBuilder *updateBuilder,
-                                             vk::ResourceUseList *resourceUseList,
+                                             vk::CommandBufferHelperCommon *commandBufferHelper,
                                              const vk::DescriptorSetDescBuilder &descriptorSetDesc,
                                              DescriptorSetIndex setIndex);
 
