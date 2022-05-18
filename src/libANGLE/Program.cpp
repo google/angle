@@ -1341,8 +1341,6 @@ angle::Result Program::linkImpl(const Context *context)
                 return angle::Result::Continue;
             }
 
-            mState.mExecutable->mUsesEarlyFragmentTestsOptimization =
-                fragmentShader->hasEarlyFragmentTestsOptimization();
             mState.mExecutable->mEnablesPerSampleShading =
                 fragmentShader->enablesPerSampleShading();
             mState.mExecutable->mAdvancedBlendEquations =

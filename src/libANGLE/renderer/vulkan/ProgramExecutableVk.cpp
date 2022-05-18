@@ -182,9 +182,7 @@ angle::Result ProgramInfo::initProgram(ContextVk *contextVk,
     angle::spirv::Blob &transformedSpirvBlob = transformedSpirvBlobs[shaderType];
 
     GlslangSpirvOptions options;
-    options.shaderType = shaderType;
-    options.removeEarlyFragmentTestsOptimization =
-        shaderType == gl::ShaderType::Fragment && optionBits.removeEarlyFragmentTestsOptimization;
+    options.shaderType               = shaderType;
     options.removeDebugInfo          = !contextVk->getFeatures().retainSPIRVDebugInfo.enabled;
     options.isTransformFeedbackStage = isLastPreFragmentStage && isTransformFeedbackProgram &&
                                        !optionBits.removeTransformFeedbackEmulation;
@@ -735,22 +733,6 @@ angle::Result ProgramExecutableVk::addTextureDescriptorSetDesc(
     }
 
     return angle::Result::Continue;
-}
-
-void ProgramExecutableVk::updateEarlyFragmentTestsOptimization(
-    ContextVk *contextVk,
-    const gl::ProgramExecutable &glExecutable)
-{
-    const gl::State &glState = contextVk->getState();
-
-    mTransformOptions.removeEarlyFragmentTestsOptimization = false;
-    if (!glState.canEnableEarlyFragmentTestsOptimization())
-    {
-        if (glExecutable.usesEarlyFragmentTestsOptimization())
-        {
-            mTransformOptions.removeEarlyFragmentTestsOptimization = true;
-        }
-    }
 }
 
 angle::Result ProgramExecutableVk::getGraphicsPipeline(ContextVk *contextVk,

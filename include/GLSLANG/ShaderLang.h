@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 273
+#define ANGLE_SH_VERSION 274
 
 enum ShShaderSpec
 {
@@ -321,8 +321,7 @@ const ShCompileOptions SH_REWRITE_ROW_MAJOR_MATRICES = UINT64_C(1) << 49;
 // Drop any explicit precision qualifiers from shader.
 const ShCompileOptions SH_IGNORE_PRECISION_QUALIFIERS = UINT64_C(1) << 50;
 
-// Allow compiler to do early fragment tests as an optimization.
-const ShCompileOptions SH_EARLY_FRAGMENT_TESTS_OPTIMIZATION = UINT64_C(1) << 51;
+// Bit 51 is unused.
 
 // Allow compiler to insert Android pre-rotation code.
 const ShCompileOptions SH_ADD_PRE_ROTATION = UINT64_C(1) << 52;
@@ -724,8 +723,6 @@ sh::WorkGroupSize GetComputeShaderLocalGroupSize(const ShHandle handle);
 // Returns the number of views specified through the num_views layout qualifier. If num_views is
 // not set, the function returns -1.
 int GetVertexShaderNumViews(const ShHandle handle);
-// Returns true if compiler has injected instructions for early fragment tests as an optimization
-bool HasEarlyFragmentTestsOptimization(const ShHandle handle);
 // Returns true if the shader has specified the |sample| qualifier, implying that per-sample shading
 // should be enabled
 bool EnablesPerSampleShading(const ShHandle handle);

@@ -4682,10 +4682,6 @@ angle::Result ContextVk::invalidateProgramExecutableHelper(const gl::Context *co
         mCurrentGraphicsPipeline = nullptr;
         mGraphicsPipelineTransition.reset();
 
-        ProgramExecutableVk *executableVk = getExecutable();
-        ASSERT(executableVk);
-        executableVk->updateEarlyFragmentTestsOptimization(this, *executable);
-
         if (getDrawFramebuffer()->getRenderPassDesc().getFramebufferFetchMode() !=
             executable->usesFramebufferFetch())
         {

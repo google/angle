@@ -2161,8 +2161,7 @@ void SPIRVBuilder::writeExecutionModes(spirv::Blob *blob)
         case gl::ShaderType::Fragment:
             spirv::WriteExecutionMode(blob, mEntryPointId, spv::ExecutionModeOriginUpperLeft, {});
 
-            if (mCompiler->isEarlyFragmentTestsSpecified() ||
-                mCompiler->isEarlyFragmentTestsOptimized())
+            if (mCompiler->isEarlyFragmentTestsSpecified())
             {
                 spirv::WriteExecutionMode(blob, mEntryPointId, spv::ExecutionModeEarlyFragmentTests,
                                           {});

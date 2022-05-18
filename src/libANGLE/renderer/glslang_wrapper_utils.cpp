@@ -2959,7 +2959,6 @@ class SpirvTransformer final : public SpirvTransformerBase
     TransformationState transformTypeStruct(const uint32_t *instruction);
     TransformationState transformReturn(const uint32_t *instruction);
     TransformationState transformVariable(const uint32_t *instruction);
-    TransformationState transformExecutionMode(const uint32_t *instruction);
 
     // Helpers:
     void visitTypeHelper(spirv::IdResult id, spirv::IdRef typeId);
@@ -3170,9 +3169,6 @@ void SpirvTransformer::transformInstruction()
                 break;
             case spv::OpVariable:
                 transformationState = transformVariable(instruction);
-                break;
-            case spv::OpExecutionMode:
-                transformationState = transformExecutionMode(instruction);
                 break;
             default:
                 break;
@@ -3718,21 +3714,6 @@ TransformationState SpirvTransformer::transformAccessChain(const uint32_t *instr
 
     return mInactiveVaryingRemover.transformAccessChain(typeId, id, baseId, indexList,
                                                         mSpirvBlobOut);
-}
-
-TransformationState SpirvTransformer::transformExecutionMode(const uint32_t *instruction)
-{
-    spirv::IdRef entryPoint;
-    spv::ExecutionMode mode;
-    spirv::ParseExecutionMode(instruction, &entryPoint, &mode, nullptr);
-
-    if (mode == spv::ExecutionModeEarlyFragmentTests &&
-        mOptions.removeEarlyFragmentTestsOptimization)
-    {
-        // Drop the instruction.
-        return TransformationState::Transformed;
-    }
-    return TransformationState::Unchanged;
 }
 
 struct AliasingAttributeMap

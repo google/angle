@@ -593,16 +593,6 @@ int GetVertexShaderNumViews(const ShHandle handle)
     return compiler->getNumViews();
 }
 
-bool HasEarlyFragmentTestsOptimization(const ShHandle handle)
-{
-    TCompiler *compiler = GetCompilerFromHandle(handle);
-    if (compiler == nullptr)
-    {
-        return false;
-    }
-    return compiler->isEarlyFragmentTestsOptimized();
-}
-
 bool EnablesPerSampleShading(const ShHandle handle)
 {
     TCompiler *compiler = GetCompilerFromHandle(handle);
