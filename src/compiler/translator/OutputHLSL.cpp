@@ -2950,6 +2950,11 @@ bool OutputHLSL::visitBranch(Visit visit, TIntermBranch *node)
                 {
                     ASSERT(!mInsideMain);
                     out << "return ";
+                    if (IsInShaderStorageBlock(node->getExpression()))
+                    {
+                        mSSBOOutputHLSL->outputLoadFunctionCall(node->getExpression());
+                        return false;
+                    }
                 }
                 else
                 {
