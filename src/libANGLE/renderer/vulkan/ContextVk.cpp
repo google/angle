@@ -190,20 +190,14 @@ uint32_t GetCoverageSampleCount(const gl::State &glState, FramebufferVk *drawFra
     return static_cast<uint32_t>(glState.getSampleCoverageValue() * drawFramebuffer->getSamples());
 }
 
-void ApplySampleCoverage(const gl::State &glState,
-                         uint32_t coverageSampleCount,
-                         uint32_t maskNumber,
-                         uint32_t *maskOut)
+void ApplySampleCoverage(const gl::State &glState, uint32_t coverageSampleCount, uint32_t *maskOut)
 {
     if (!glState.isSampleCoverageEnabled())
     {
         return;
     }
 
-    uint32_t maskBitOffset = maskNumber * 32;
-    uint32_t coverageMask  = coverageSampleCount >= (maskBitOffset + 32)
-                                 ? std::numeric_limits<uint32_t>::max()
-                                 : (1u << (coverageSampleCount - maskBitOffset)) - 1;
+    uint32_t coverageMask = angle::BitMask<uint32_t>(coverageSampleCount);
 
     if (glState.getSampleCoverageInvert())
     {
@@ -4250,16 +4244,17 @@ void ContextVk::updateSampleMaskWithRasterizationSamples(const uint32_t rasteriz
     uint32_t coverageSampleCount = GetCoverageSampleCount(mState, drawFramebuffer);
 
     static_assert(sizeof(uint32_t) == sizeof(GLbitfield), "Vulkan assumes 32-bit sample masks");
-    for (uint32_t maskNumber = 0; maskNumber < mState.getMaxSampleMaskWords(); ++maskNumber)
+    ASSERT(mState.getMaxSampleMaskWords() == 1);
+
+    uint32_t mask = std::numeric_limits<uint16_t>::max();
+    if (mState.isSampleMaskEnabled() && rasterizationSamples > 1)
     {
-        uint32_t mask = mState.isSampleMaskEnabled() && rasterizationSamples > 1
-                            ? mState.getSampleMaskWord(maskNumber)
-                            : std::numeric_limits<uint32_t>::max();
-
-        ApplySampleCoverage(mState, coverageSampleCount, maskNumber, &mask);
-
-        mGraphicsPipelineDesc->updateSampleMask(&mGraphicsPipelineTransition, maskNumber, mask);
+        mask = mState.getSampleMaskWord(0) & angle::BitMask<uint32_t>(rasterizationSamples);
     }
+
+    ApplySampleCoverage(mState, coverageSampleCount, &mask);
+
+    mGraphicsPipelineDesc->updateSampleMask(&mGraphicsPipelineTransition, 0, mask);
 }
 
 gl::Rectangle ContextVk::getCorrectedViewport(const gl::Rectangle &viewport) const
