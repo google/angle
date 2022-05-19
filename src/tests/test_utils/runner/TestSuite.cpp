@@ -614,7 +614,7 @@ bool GetTestArtifactsFromJSON(const js::Value::ConstObject &obj,
         return false;
     }
 
-    const js::Value::ConstObject &artifacts = jsArtifacts.GetObject();
+    const js::Value::ConstObject &artifacts = jsArtifacts.GetObj();
     for (const auto &artifactMember : artifacts)
     {
         const js::Value &artifact = artifactMember.value;
@@ -743,7 +743,7 @@ bool GetTestResultsFromJSON(const js::Document &document, TestResults *resultsOu
         return false;
     }
 
-    const js::Value::ConstObject &tests = document["tests"].GetObject();
+    const js::Value::ConstObject &tests = document["tests"].GetObj();
     for (const auto &testMember : tests)
     {
         // Get test identifier.
@@ -762,7 +762,7 @@ bool GetTestResultsFromJSON(const js::Document &document, TestResults *resultsOu
             return false;
         }
 
-        const js::Value::ConstObject &obj = value.GetObject();
+        const js::Value::ConstObject &obj = value.GetObj();
 
         if (BeginsWith(name.GetString(), kArtifactsFakeTestName))
         {
