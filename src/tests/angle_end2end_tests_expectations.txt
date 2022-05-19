@@ -634,3 +634,8 @@
 // imageLoad isn't fully implemented for fragment shaders on D3D11.
 7355 INTEL OPENGL : GLSLTest_ES31.ImageLoadAfterClear/* = SKIP
 7355 D3D11 : GLSLTest_ES31.ImageLoadAfterClear/* = SKIP
+
+// UAVs don't allow aliasing.
+// Windows GLES also has an issue with this test.
+3032 D3D11 : GLSLTest_ES31.AliasedLoadStore/* = SKIP
+7398 WIN OpenGL : GLSLTest_ES31.AliasedLoadStore/* = SKIP
