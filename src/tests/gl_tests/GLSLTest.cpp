@@ -5046,6 +5046,53 @@ void main(void)
     glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 }
 
+// Check that imageLoad gives the correct color after clearing the texture -- anglebug.com/7355
+TEST_P(GLSLTest_ES31, ImageLoadAfterClear)
+{
+    ANGLE_GL_PROGRAM(program,
+                     R"(#version 310 es
+                     precision highp float;
+                     void main() {
+                         gl_Position.x = ((gl_VertexID & 1) == 0 ? -1.0 : 1.0);
+                         gl_Position.y = ((gl_VertexID & 2) == 0 ? -1.0 : 1.0);
+                         gl_Position.zw = vec2(0, 1);
+                     })",
+
+                     R"(#version 310 es
+                     precision highp float;
+                     layout(binding=0, rgba8) readonly highp uniform image2D img;
+                     out vec4 fragColor;
+                     void main() {
+                         ivec2 imgcoord = ivec2(floor(gl_FragCoord.xy));
+                         fragColor = vec4(1, 0, 0, 0) + imageLoad(img, imgcoord);
+                     })");
+    ASSERT_TRUE(program.valid());
+    glUseProgram(program.get());
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, getWindowWidth(), getWindowHeight());
+    glBindImageTexture(0, tex, 0, GL_FALSE, 0, GL_READ_ONLY, GL_RGBA8);
+
+    // Clear the texture to green.
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    glClearColor(0, 1, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT | GL_FRAMEBUFFER_BARRIER_BIT);
+
+    // Draw the texture via imageLoad, plus red, into the main framebuffer. Make sure the texture
+    // was still green. (green + red == yellow.)
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::yellow);
+    ASSERT_GL_NO_ERROR();
+}
+
 // Test that structs containing arrays of samplers work as expected.
 TEST_P(GLSLTest_ES31, StructArraySampler)
 {
