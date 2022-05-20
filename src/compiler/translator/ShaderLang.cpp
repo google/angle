@@ -984,6 +984,8 @@ const char kXfbEmulationBufferBlockName[]        = "ANGLEXfbBuffer";
 const char kXfbEmulationBufferName[]             = "ANGLEXfb";
 const char kXfbEmulationBufferFieldName[]        = "xfbOut";
 
+const char kPreRotationRotatePositionFunctionName[] = "ANGLEPreRotatePositionXY";
+
 const char kXfbExtensionPositionOutName[] = "ANGLEXfbPosition";
 
 // EXT_shader_framebuffer_fetch / EXT_shader_framebuffer_fetch_non_coherent

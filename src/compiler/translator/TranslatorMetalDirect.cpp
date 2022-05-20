@@ -215,15 +215,14 @@ TIntermSequence *GetMainSequence(TIntermBlock *root)
 }
 
 // Replaces a builtin variable with a version that is rotated and corrects the X and Y coordinates.
-ANGLE_NO_DISCARD bool RotateAndFlipBuiltinVariable(TCompiler *compiler,
-                                                   TIntermBlock *root,
-                                                   TIntermSequence *insertSequence,
-                                                   TIntermTyped *flipXY,
-                                                   TSymbolTable *symbolTable,
-                                                   const TVariable *builtin,
-                                                   const Name &flippedVariableName,
-                                                   TIntermTyped *pivot,
-                                                   TIntermTyped *fragRotation)
+ANGLE_NO_DISCARD bool FlipBuiltinVariable(TCompiler *compiler,
+                                          TIntermBlock *root,
+                                          TIntermSequence *insertSequence,
+                                          TIntermTyped *flipXY,
+                                          TSymbolTable *symbolTable,
+                                          const TVariable *builtin,
+                                          const Name &flippedVariableName,
+                                          TIntermTyped *pivot)
 {
     // Create a symbol reference to 'builtin'.
     TIntermSymbol *builtinRef = new TIntermSymbol(builtin);
@@ -246,20 +245,8 @@ ANGLE_NO_DISCARD bool RotateAndFlipBuiltinVariable(TCompiler *compiler,
         return false;
     }
 
-    // Create the expression "(builtin.xy * fragRotation)"
-    TIntermTyped *rotatedXY;
-    if (fragRotation)
-    {
-        rotatedXY = new TIntermBinary(EOpMatrixTimesVector, fragRotation, builtinXY);
-    }
-    else
-    {
-        // No rotation applied, use original variable.
-        rotatedXY = builtinXY;
-    }
-
     // Create the expression "(builtin.xy - pivot) * flipXY + pivot
-    TIntermBinary *removePivot = new TIntermBinary(EOpSub, rotatedXY, pivot);
+    TIntermBinary *removePivot = new TIntermBinary(EOpSub, builtinXY, pivot);
     TIntermBinary *inverseXY   = new TIntermBinary(EOpMul, removePivot, flipXY);
     TIntermBinary *plusPivot   = new TIntermBinary(EOpAdd, inverseXY, pivot->deepCopy());
 
@@ -290,11 +277,7 @@ ANGLE_NO_DISCARD bool InsertFragCoordCorrection(TCompiler *compiler,
                                                 SpecConst *specConst,
                                                 const DriverUniformMetal *driverUniforms)
 {
-    TIntermTyped *flipXY = specConst->getFlipXY();
-    if (!flipXY)
-    {
-        flipXY = driverUniforms->getFlipXYRef();
-    }
+    TIntermTyped *flipXY = driverUniforms->getFlipXYRef(symbolTable, DriverUniformFlip::Fragment);
 
     TIntermTyped *pivot = specConst->getHalfRenderArea();
     if (!pivot)
@@ -302,20 +285,10 @@ ANGLE_NO_DISCARD bool InsertFragCoordCorrection(TCompiler *compiler,
         pivot = driverUniforms->getHalfRenderAreaRef();
     }
 
-    TIntermTyped *fragRotation = nullptr;
-    if ((compileOptions & SH_ADD_PRE_ROTATION) != 0)
-    {
-        fragRotation = specConst->getFragRotationMatrix();
-        if (!fragRotation)
-        {
-            fragRotation = driverUniforms->getFragRotationMatrixRef();
-        }
-    }
-
     const TVariable *fragCoord = static_cast<const TVariable *>(
         symbolTable->findBuiltIn(ImmutableString("gl_FragCoord"), compiler->getShaderVersion()));
-    return RotateAndFlipBuiltinVariable(compiler, root, insertSequence, flipXY, symbolTable,
-                                        fragCoord, kFlippedFragCoordName, pivot, fragRotation);
+    return FlipBuiltinVariable(compiler, root, insertSequence, flipXY, symbolTable, fragCoord,
+                               kFlippedFragCoordName, pivot);
 }
 
 void DeclareRightBeforeMain(TIntermBlock &root, const TVariable &var)
@@ -892,16 +865,13 @@ bool TranslatorMetalDirect::translateImpl(TInfoSinkBase &sink,
 
         if (usesPointCoord)
         {
-            TIntermTyped *flipNegXY = specConst->getNegFlipXY();
-            if (!flipNegXY)
-            {
-                flipNegXY = driverUniforms->getNegFlipXYRef();
-            }
+            TIntermTyped *flipNegXY =
+                driverUniforms->getFlipXYRef(&getSymbolTable(), DriverUniformFlip::Fragment);
+            flipNegXY                   = MakeNegFlipXY(flipNegXY);
             TIntermConstantUnion *pivot = CreateFloatNode(0.5f, EbpMedium);
-            TIntermTyped *fragRotation  = nullptr;
-            if (!RotateAndFlipBuiltinVariable(this, root, GetMainSequence(root), flipNegXY,
-                                              &getSymbolTable(), BuiltInVariable::gl_PointCoord(),
-                                              kFlippedPointCoordName, pivot, fragRotation))
+            if (!FlipBuiltinVariable(this, root, GetMainSequence(root), flipNegXY,
+                                     &getSymbolTable(), BuiltInVariable::gl_PointCoord(),
+                                     kFlippedPointCoordName, pivot))
             {
                 return false;
             }
@@ -920,8 +890,8 @@ bool TranslatorMetalDirect::translateImpl(TInfoSinkBase &sink,
             DeclareRightBeforeMain(*root, *fragCoord);
         }
 
-        if (!RewriteDfdy(this, compileOptions, root, getSymbolTable(), getShaderVersion(),
-                         specConst, driverUniforms))
+        if (!RewriteDfdy(this, root, &getSymbolTable(), getShaderVersion(), specConst,
+                         driverUniforms))
         {
             return false;
         }
@@ -1001,9 +971,11 @@ bool TranslatorMetalDirect::translateImpl(TInfoSinkBase &sink,
 
     if (getShaderType() == GL_VERTEX_SHADER)
     {
-        TIntermTyped *negFlipY = driverUniforms->getNegFlipYRef();
+        TIntermTyped *flipNegY =
+            driverUniforms->getFlipXYRef(&getSymbolTable(), DriverUniformFlip::PreFragment);
+        flipNegY = (new TIntermSwizzle(flipNegY, {1}))->fold(nullptr);
 
-        if (!AppendVertexShaderPositionYCorrectionToMain(this, root, &getSymbolTable(), negFlipY))
+        if (!AppendVertexShaderPositionYCorrectionToMain(this, root, &getSymbolTable(), flipNegY))
         {
             return false;
         }

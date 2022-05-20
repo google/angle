@@ -211,6 +211,7 @@ ContextMtl::ContextMtl(const gl::State &state,
       mRenderEncoder(&mCmdBuffer, mOcclusionQueryPool),
       mBlitEncoder(&mCmdBuffer),
       mComputeEncoder(&mCmdBuffer),
+      mDriverUniforms{},
       mProvokingVertexHelper(this, &display->cmdQueue(), display),
       mContextDevice(GetOwnershipIdentity(attribs))
 {}
@@ -2491,10 +2492,10 @@ angle::Result ContextMtl::handleDirtyDriverUniforms(const gl::Context *context,
         static_cast<float>(mDrawFramebuffer->getState().getDimensions().width) * 0.5f;
     mDriverUniforms.halfRenderArea[1] =
         static_cast<float>(mDrawFramebuffer->getState().getDimensions().height) * 0.5f;
-    mDriverUniforms.flipXY[0]    = 1.0f;
-    mDriverUniforms.flipXY[1]    = mDrawFramebuffer->flipY() ? -1.0f : 1.0f;
-    mDriverUniforms.negFlipXY[0] = mDriverUniforms.flipXY[0];
-    mDriverUniforms.negFlipXY[1] = -mDriverUniforms.flipXY[1];
+
+    const float flipX      = 1.0;
+    const float flipY      = mDrawFramebuffer->flipY() ? -1.0f : 1.0f;
+    mDriverUniforms.flipXY = gl::PackSnorm4x8(flipX, flipY, flipX, -flipY);
 
     // gl_ClipDistance
     mDriverUniforms.enabledClipDistances = mState.getEnabledClipDistances().bits();

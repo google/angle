@@ -81,15 +81,6 @@ std::shared_ptr<WaitableCompileEvent> ShaderVk::compile(const gl::Context *conte
         compileOptions |= SH_USE_SPECIALIZATION_CONSTANT;
     }
 
-    if (contextVk->getFeatures().enablePreRotateSurfaces.enabled ||
-        contextVk->getFeatures().emulatedPrerotation90.enabled ||
-        contextVk->getFeatures().emulatedPrerotation180.enabled ||
-        contextVk->getFeatures().emulatedPrerotation270.enabled)
-    {
-        // Let compiler insert pre-rotation code.
-        compileOptions |= SH_ADD_PRE_ROTATION;
-    }
-
     if (contextVk->getFeatures().supportsTransformFeedbackExtension.enabled)
     {
         compileOptions |= SH_ADD_VULKAN_XFB_EXTENSION_SUPPORT_CODE;

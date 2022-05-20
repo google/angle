@@ -392,11 +392,11 @@ struct PackedInputAssemblyAndMiscState final
 {
     uint32_t topology : 4;
     uint32_t patchVertices : 6;
-    uint32_t surfaceRotation : 3;
+    uint32_t surfaceRotation : 1;
     uint32_t viewportNegativeOneToOne : 1;
     uint32_t depthBoundsTest : 1;
-    // 9-bit normalized instead of float to align the struct.
-    uint32_t minSampleShading : 9;
+    // 11-bit normalized instead of float to align the struct.
+    uint32_t minSampleShading : 11;
     uint32_t blendEnableMask : 8;
 };
 
@@ -704,10 +704,9 @@ class GraphicsPipelineDesc final
 
     void updateSurfaceRotation(GraphicsPipelineTransitionBits *transition,
                                const SurfaceRotation surfaceRotation);
-    SurfaceRotation getSurfaceRotation() const
+    bool getSurfaceRotation() const
     {
-        return static_cast<SurfaceRotation>(
-            mInputAssemblyAndRasterizationStateInfo.misc.surfaceRotation);
+        return mInputAssemblyAndRasterizationStateInfo.misc.surfaceRotation;
     }
 
     void updateDrawableSize(GraphicsPipelineTransitionBits *transition,

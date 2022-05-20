@@ -51,7 +51,7 @@ static_assert(static_cast<uint32_t>(RenderPassStoreOp::DontCare) ==
 static_assert(static_cast<uint32_t>(RenderPassStoreOp::None) == 2,
               "ConvertRenderPassStoreOpToVkStoreOp must be updated");
 
-constexpr uint16_t kMinSampleShadingScale = angle::BitMask<uint16_t>(9);
+constexpr uint16_t kMinSampleShadingScale = angle::BitMask<uint16_t>(11);
 
 VkAttachmentLoadOp ConvertRenderPassLoadOpToVkLoadOp(RenderPassLoadOp loadOp)
 {
@@ -1843,8 +1843,7 @@ void GraphicsPipelineDesc::initDefaults(const ContextVk *contextVk)
     SetBitField(mInputAssemblyAndRasterizationStateInfo.misc.topology,
                 VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST);
     SetBitField(mInputAssemblyAndRasterizationStateInfo.misc.patchVertices, 3);
-    mInputAssemblyAndRasterizationStateInfo.misc.surfaceRotation =
-        static_cast<uint8_t>(SurfaceRotation::Identity);
+    mInputAssemblyAndRasterizationStateInfo.misc.surfaceRotation = 0;
     mInputAssemblyAndRasterizationStateInfo.misc.viewportNegativeOneToOne =
         contextVk->getFeatures().supportsDepthClipControl.enabled;
     mInputAssemblyAndRasterizationStateInfo.misc.depthBoundsTest  = 0;
@@ -2763,7 +2762,8 @@ void GraphicsPipelineDesc::updateDepthFunc(GraphicsPipelineTransitionBits *trans
 void GraphicsPipelineDesc::updateSurfaceRotation(GraphicsPipelineTransitionBits *transition,
                                                  const SurfaceRotation surfaceRotation)
 {
-    SetBitField(mInputAssemblyAndRasterizationStateInfo.misc.surfaceRotation, surfaceRotation);
+    SetBitField(mInputAssemblyAndRasterizationStateInfo.misc.surfaceRotation,
+                IsRotatedAspectRatio(surfaceRotation));
     transition->set(ANGLE_GET_TRANSITION_BIT(mInputAssemblyAndRasterizationStateInfo, misc));
 }
 

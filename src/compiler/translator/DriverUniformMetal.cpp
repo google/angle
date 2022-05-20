@@ -20,8 +20,6 @@ namespace
 
 // Metal specific driver uniforms
 constexpr const char kHalfRenderArea[] = "halfRenderArea";
-constexpr const char kFlipXY[]         = "flipXY";
-constexpr const char kNegFlipXY[]      = "negFlipXY";
 constexpr const char kCoverageMask[]   = "coverageMask";
 constexpr const char kUnusedMetal[]    = "unusedMetal";
 
@@ -33,15 +31,12 @@ TFieldList *DriverUniformMetal::createUniformFields(TSymbolTable *symbolTable)
 {
     TFieldList *driverFieldList = DriverUniform::createUniformFields(symbolTable);
 
-    constexpr size_t kNumGraphicsDriverUniformsMetal = 5;
+    constexpr size_t kNumGraphicsDriverUniformsMetal = 3;
     constexpr std::array<const char *, kNumGraphicsDriverUniformsMetal>
-        kGraphicsDriverUniformNamesMetal = {
-            {kHalfRenderArea, kFlipXY, kNegFlipXY, kCoverageMask, kUnusedMetal}};
+        kGraphicsDriverUniformNamesMetal = {{kHalfRenderArea, kCoverageMask, kUnusedMetal}};
 
     const std::array<TType *, kNumGraphicsDriverUniformsMetal> kDriverUniformTypesMetal = {{
         new TType(EbtFloat, EbpHigh, EvqGlobal, 2),  // halfRenderArea
-        new TType(EbtFloat, EbpLow, EvqGlobal, 2),   // flipXY
-        new TType(EbtFloat, EbpLow, EvqGlobal, 2),   // negFlipXY
         new TType(EbtUInt, EbpHigh, EvqGlobal),      // kCoverageMask
         new TType(EbtUInt, EbpHigh, EvqGlobal),      // kUnusedMetal
     }};
@@ -61,25 +56,6 @@ TFieldList *DriverUniformMetal::createUniformFields(TSymbolTable *symbolTable)
 TIntermTyped *DriverUniformMetal::getHalfRenderAreaRef() const
 {
     return createDriverUniformRef(kHalfRenderArea);
-}
-
-TIntermTyped *DriverUniformMetal::getFlipXYRef() const
-{
-    return createDriverUniformRef(kFlipXY);
-}
-
-TIntermTyped *DriverUniformMetal::getNegFlipXYRef() const
-{
-    return createDriverUniformRef(kNegFlipXY);
-}
-
-TIntermTyped *DriverUniformMetal::getNegFlipYRef() const
-{
-    // Create a swizzle to "negFlipXY.y"
-    TIntermTyped *negFlipXY     = createDriverUniformRef(kNegFlipXY);
-    TVector<int> swizzleOffsetY = {1};
-    TIntermSwizzle *negFlipY    = new TIntermSwizzle(negFlipXY, swizzleOffsetY);
-    return negFlipY;
 }
 
 TIntermTyped *DriverUniformMetal::getCoverageMaskFieldRef() const

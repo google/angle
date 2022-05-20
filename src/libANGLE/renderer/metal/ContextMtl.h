@@ -548,17 +548,18 @@ class ContextMtl : public ContextImpl, public mtl::Context
         int32_t numSamples;
 
         int32_t xfbBufferOffsets[4];
-        uint32_t acbBufferOffsets[4];
+        uint32_t acbBufferOffsets[2];
+
+        uint32_t unused2;
+        uint32_t flipXY;
 
         // We'll use x, y, z, w for near / far / diff / zscale respectively.
         float depthRange[4];
 
         // Metal specific
         float halfRenderArea[2];
-        float flipXY[2];
-        float negFlipXY[2];
         uint32_t coverageMask;
-        uint32_t unusedMetal;
+        uint32_t unused3;
     };
     static_assert(sizeof(DriverUniforms) % (sizeof(uint32_t) * 4) == 0,
                   "DriverUniforms should be 16 bytes aligned");

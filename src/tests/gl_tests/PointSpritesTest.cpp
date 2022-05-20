@@ -529,4 +529,7 @@ TEST_P(PointSpritesTest, PointSizeAboveMaxIsClamped)
 // We test on D3D11 9_3 because the existing D3D11 PointSprite implementation
 // uses Geometry Shaders which are not supported for 9_3.
 // D3D9 and D3D11 are also tested to ensure no regressions.
-ANGLE_INSTANTIATE_TEST_ES2(PointSpritesTest);
+ANGLE_INSTANTIATE_TEST_ES2_AND(PointSpritesTest,
+                               ES2_VULKAN().enable(Feature::EmulatedPrerotation90),
+                               ES2_VULKAN().enable(Feature::EmulatedPrerotation180),
+                               ES2_VULKAN().enable(Feature::EmulatedPrerotation270));

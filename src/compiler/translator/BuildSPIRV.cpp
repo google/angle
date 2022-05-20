@@ -505,6 +505,8 @@ SPIRVBuilder::SPIRVBuilder(TCompiler *compiler,
     {
         addCapability(spv::CapabilityTessellation);
     }
+
+    mExtInstImportIdStd = getNewId({});
 }
 
 spirv::IdRef SPIRVBuilder::getNewId(const SpirvDecorations &decorations)
@@ -721,10 +723,7 @@ SpirvDecorations SPIRVBuilder::getArithmeticDecorations(const TType &type,
 
 spirv::IdRef SPIRVBuilder::getExtInstImportIdStd()
 {
-    if (!mExtInstImportIdStd.valid())
-    {
-        mExtInstImportIdStd = getNewId({});
-    }
+    ASSERT(mExtInstImportIdStd.valid());
     return mExtInstImportIdStd;
 }
 
@@ -2110,10 +2109,7 @@ spirv::Blob SPIRVBuilder::getSpirv()
     writeExtensions(&result);
 
     // - OpExtInstImport
-    if (mExtInstImportIdStd.valid())
-    {
-        spirv::WriteExtInstImport(&result, mExtInstImportIdStd, "GLSL.std.450");
-    }
+    spirv::WriteExtInstImport(&result, getExtInstImportIdStd(), "GLSL.std.450");
 
     // - OpMemoryModel
     spirv::WriteMemoryModel(&result, spv::AddressingModelLogical, spv::MemoryModelGLSL450);

@@ -31,16 +31,8 @@ class SpecConst
     TIntermSymbol *getLineRasterEmulation();
 
     // Flip/rotation
-    TIntermTyped *getMultiplierXForDFdx();
-    TIntermTyped *getMultiplierYForDFdx();
-    TIntermTyped *getMultiplierXForDFdy();
-    TIntermTyped *getMultiplierYForDFdy();
-    TIntermTyped *getPreRotationMatrix();
-    TIntermTyped *getFragRotationMatrix();
-    TIntermTyped *getFlipXY();
-    TIntermTyped *getNegFlipXY();
-    TIntermTyped *getFlipY();
-    TIntermTyped *getFragRotationMultiplyFlipXY();
+    // Returns a boolean: should X and Y be swapped?
+    TIntermTyped *getSwapXY();
 
     // Half render area
     TIntermTyped *getHalfRenderArea();
@@ -52,11 +44,9 @@ class SpecConst
     SpecConstUsageBits getSpecConstUsageBits() const { return mUsageBits; }
 
   private:
-    TIntermSymbol *getFlipRotation();
-    TIntermTyped *getNegFlipY();
+    TIntermSymbol *getRotation();
     TIntermSymbol *getDrawableWidth();
     TIntermSymbol *getDrawableHeight();
-    TIntermTyped *getHalfRenderAreaRotationMatrix();
 
     // If unsupported, this should be set to null.
     TSymbolTable *mSymbolTable;

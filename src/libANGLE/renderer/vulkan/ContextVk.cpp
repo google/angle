@@ -78,9 +78,11 @@ struct GraphicsDriverUniforms
     // .xy contain packed 8-bit values for atomic counter buffer offsets.  These offsets are
     // within Vulkan's minStorageBufferOffsetAlignment limit and are used to support unaligned
     // offsets allowed in GL.
-    //
-    // .zw are unused.
-    std::array<uint32_t, 4> acbBufferOffsets;
+    std::array<uint32_t, 2> acbBufferOffsets;
+
+    uint32_t surfaceRotation;
+    // Packed vec2 of float16
+    uint32_t flipXY;
 
     // We'll use x, y, z for near / far / diff respectively.
     std::array<float, 4> depthRange;
@@ -95,14 +97,8 @@ struct GraphicsDriverUniformsExtended
 
     // Used to flip gl_FragCoord (both .xy for Android pre-rotation; only .y for desktop)
     std::array<float, 2> halfRenderArea;
-    std::array<float, 2> flipXY;
-    std::array<float, 2> negFlipXY;
     uint32_t dither;
-    uint32_t padding;
-
-    // Used to pre-rotate gl_FragCoord for swapchain images on Android (a mat2, which is padded to
-    // the size of two vec4's).
-    std::array<float, 8> fragRotation;
+    uint32_t padding[3];
 };
 
 struct ComputeDriverUniforms
@@ -110,6 +106,24 @@ struct ComputeDriverUniforms
     // Atomic counter buffer offsets with the same layout as in GraphicsDriverUniforms.
     std::array<uint32_t, 4> acbBufferOffsets;
 };
+
+uint32_t MakeFlipUniform(bool flipX, bool flipY, bool invertViewport)
+{
+    // Create snorm values of either -1 or 1, based on whether flipping is enabled or not
+    // respectively.
+    constexpr uint8_t kSnormOne      = 0x7F;
+    constexpr uint8_t kSnormMinusOne = 0x81;
+
+    // .xy are flips for the fragment stage.
+    uint32_t x = flipX ? kSnormMinusOne : kSnormOne;
+    uint32_t y = flipY ? kSnormMinusOne : kSnormOne;
+
+    // .zw are flips for the vertex stage.
+    uint32_t z = x;
+    uint32_t w = flipY != invertViewport ? kSnormMinusOne : kSnormOne;
+
+    return x | y << 8 | z << 16 | w << 24;
+}
 
 GLenum DefaultGLErrorCode(VkResult result)
 {
@@ -218,34 +232,6 @@ bool IsRenderPassStartedAndTransitionsImageLayout(
     vk::ImageHelper &image)
 {
     return renderPassCommands.started() && renderPassCommands.isImageWithLayoutTransition(image);
-}
-
-// When an Android surface is rotated differently than the device's native orientation, ANGLE must
-// rotate gl_Position in the last pre-rasterization shader and gl_FragCoord in the fragment shader.
-// Rotation of gl_Position is done in SPIR-V.  The following are the rotation matrices for the
-// fragment shader.
-//
-// Note: these are mat2's that are appropriately padded (4 floats per row).
-using PreRotationMatrixValues = std::array<float, 8>;
-constexpr angle::PackedEnumMap<rx::SurfaceRotation, PreRotationMatrixValues> kFragRotationMatrices =
-    {{{SurfaceRotation::Identity, {{1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f}}},
-      {SurfaceRotation::Rotated90Degrees, {{0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f}}},
-      {SurfaceRotation::Rotated180Degrees, {{1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f}}},
-      {SurfaceRotation::Rotated270Degrees, {{0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f}}},
-      {SurfaceRotation::FlippedIdentity, {{1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f}}},
-      {SurfaceRotation::FlippedRotated90Degrees,
-       {{0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f}}},
-      {SurfaceRotation::FlippedRotated180Degrees,
-       {{1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f}}},
-      {SurfaceRotation::FlippedRotated270Degrees,
-       {{0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f}}}}};
-
-bool IsRotatedAspectRatio(SurfaceRotation rotation)
-{
-    return ((rotation == SurfaceRotation::Rotated90Degrees) ||
-            (rotation == SurfaceRotation::Rotated270Degrees) ||
-            (rotation == SurfaceRotation::FlippedRotated90Degrees) ||
-            (rotation == SurfaceRotation::FlippedRotated270Degrees));
 }
 
 SurfaceRotation DetermineSurfaceRotation(gl::Framebuffer *framebuffer,
@@ -4329,7 +4315,7 @@ void ContextVk::updateViewport(FramebufferVk *framebufferVk,
     RotateRectangle(getRotationDrawFramebuffer(), false, fbDimensions.width, fbDimensions.height,
                     correctedRect, &rotatedRect);
 
-    bool invertViewport =
+    const bool invertViewport =
         isViewportFlipEnabledForDrawFBO() && getFeatures().supportsNegativeViewport.enabled;
 
     gl_vk::GetViewport(
@@ -5195,11 +5181,8 @@ angle::Result ContextVk::onMakeCurrent(const gl::Context *context)
     updateSurfaceRotationDrawFramebuffer(glState);
     updateSurfaceRotationReadFramebuffer(glState);
 
-    if (getFeatures().forceDriverUniformOverSpecConst.enabled)
-    {
-        invalidateDriverUniforms();
-    }
-    else
+    invalidateDriverUniforms();
+    if (!getFeatures().forceDriverUniformOverSpecConst.enabled)
     {
         // Force update mGraphicsPipelineDesc
         mCurrentGraphicsPipeline = nullptr;
@@ -5270,44 +5253,14 @@ SpecConstUsageBits ContextVk::getCurrentProgramSpecConstUsageBits() const
 
 void ContextVk::updateGraphicsPipelineDescWithSpecConstUsageBits(SpecConstUsageBits usageBits)
 {
-    SurfaceRotation rotationAndFlip = mCurrentRotationDrawFramebuffer;
-    ASSERT(ToUnderlying(rotationAndFlip) < ToUnderlying(SurfaceRotation::FlippedIdentity));
-    bool yFlipped =
-        isViewportFlipEnabledForDrawFBO() && (usageBits.test(sh::vk::SpecConstUsage::YFlip) ||
-                                              !getFeatures().supportsNegativeViewport.enabled);
+    SurfaceRotation rotation = mCurrentRotationDrawFramebuffer;
 
-    // usageBits are only set when specialization constants are used.  With gl_Position pre-rotation
-    // handled by the SPIR-V transformer, we need to have this information even when the driver
-    // uniform path is taken to pre-rotate everything else.
-    const bool programUsesRotation = usageBits.test(sh::vk::SpecConstUsage::Rotation) ||
-                                     getFeatures().forceDriverUniformOverSpecConst.enabled;
-
-    // If program is not using rotation at all, we force it to use the Identity or FlippedIdentity
-    // slot to improve the program cache hit rate
-    if (!programUsesRotation)
-    {
-        rotationAndFlip = yFlipped ? SurfaceRotation::FlippedIdentity : SurfaceRotation::Identity;
-    }
-    else if (yFlipped)
-    {
-        // DetermineSurfaceRotation() does not encode yflip information. Shader code uses
-        // SurfaceRotation specialization constant to determine yflip as well. We add yflip
-        // information to the SurfaceRotation here so the shader does yflip properly.
-        rotationAndFlip = static_cast<SurfaceRotation>(
-            ToUnderlying(SurfaceRotation::FlippedIdentity) + ToUnderlying(rotationAndFlip));
-    }
-    else
-    {
-        // If program is not using yflip, then we just use the non-flipped slot to increase the
-        // chance of pipeline program cache hit even if drawable is yflipped.
-    }
-
-    if (rotationAndFlip != mGraphicsPipelineDesc->getSurfaceRotation())
+    if (IsRotatedAspectRatio(rotation) != mGraphicsPipelineDesc->getSurfaceRotation())
     {
         // surface rotation are specialization constants, which affects program compilation. When
         // rotation changes, we need to update GraphicsPipelineDesc so that the correct pipeline
         // program object will be retrieved.
-        mGraphicsPipelineDesc->updateSurfaceRotation(&mGraphicsPipelineTransition, rotationAndFlip);
+        mGraphicsPipelineDesc->updateSurfaceRotation(&mGraphicsPipelineTransition, rotation);
     }
 
     if (usageBits.test(sh::vk::SpecConstUsage::DrawableSize))
@@ -6117,56 +6070,50 @@ angle::Result ContextVk::handleDirtyGraphicsDriverUniforms(DirtyBits::Iterator *
                                      &ptr, &newBuffer));
 
     FramebufferVk *drawFramebufferVk = getDrawFramebuffer();
+    float halfRenderAreaWidth =
+        static_cast<float>(drawFramebufferVk->getState().getDimensions().width) * 0.5f;
+    float halfRenderAreaHeight =
+        static_cast<float>(drawFramebufferVk->getState().getDimensions().height) * 0.5f;
+
+    bool flipX = false;
+    bool flipY = false;
+    // Y-axis flipping only comes into play with the default framebuffer (i.e. a swapchain
+    // image). For 0-degree rotation, an FBO or pbuffer could be the draw framebuffer, and so we
+    // must check whether flipY should be positive or negative.  All other rotations, will be to
+    // the default framebuffer, and so the value of isViewportFlipEnabledForDrawFBO() is assumed
+    // true; the appropriate flipY value is chosen such that gl_FragCoord is positioned at the
+    // lower-left corner of the window.
+    switch (mCurrentRotationDrawFramebuffer)
+    {
+        case SurfaceRotation::Identity:
+            flipY = isViewportFlipEnabledForDrawFBO();
+            break;
+        case SurfaceRotation::Rotated90Degrees:
+            ASSERT(isViewportFlipEnabledForDrawFBO());
+            break;
+        case SurfaceRotation::Rotated180Degrees:
+            ASSERT(isViewportFlipEnabledForDrawFBO());
+            flipX = true;
+            break;
+        case SurfaceRotation::Rotated270Degrees:
+            ASSERT(isViewportFlipEnabledForDrawFBO());
+            flipX = true;
+            flipY = true;
+            break;
+        default:
+            UNREACHABLE();
+            break;
+    }
+
+    const bool invertViewport =
+        isViewportFlipEnabledForDrawFBO() && getFeatures().supportsNegativeViewport.enabled;
+
     if (useGraphicsDriverUniformsExtended)
     {
-        float halfRenderAreaWidth =
-            static_cast<float>(drawFramebufferVk->getState().getDimensions().width) * 0.5f;
-        float halfRenderAreaHeight =
-            static_cast<float>(drawFramebufferVk->getState().getDimensions().height) * 0.5f;
-
-        float flipX = 1.0f;
-        float flipY = -1.0f;
-        // Y-axis flipping only comes into play with the default framebuffer (i.e. a swapchain
-        // image). For 0-degree rotation, an FBO or pbuffer could be the draw framebuffer, and so we
-        // must check whether flipY should be positive or negative.  All other rotations, will be to
-        // the default framebuffer, and so the value of isViewportFlipEnabledForDrawFBO() is assumed
-        // true; the appropriate flipY value is chosen such that gl_FragCoord is positioned at the
-        // lower-left corner of the window.
-        switch (mCurrentRotationDrawFramebuffer)
-        {
-            case SurfaceRotation::Identity:
-                flipX = 1.0f;
-                flipY = isViewportFlipEnabledForDrawFBO() ? -1.0f : 1.0f;
-                break;
-            case SurfaceRotation::Rotated90Degrees:
-                ASSERT(isViewportFlipEnabledForDrawFBO());
-                flipX = 1.0f;
-                flipY = 1.0f;
-                break;
-            case SurfaceRotation::Rotated180Degrees:
-                ASSERT(isViewportFlipEnabledForDrawFBO());
-                flipX = -1.0f;
-                flipY = 1.0f;
-                break;
-            case SurfaceRotation::Rotated270Degrees:
-                ASSERT(isViewportFlipEnabledForDrawFBO());
-                flipX = -1.0f;
-                flipY = -1.0f;
-                break;
-            default:
-                UNREACHABLE();
-                break;
-        }
-
         GraphicsDriverUniformsExtended *driverUniformsExt =
             reinterpret_cast<GraphicsDriverUniformsExtended *>(ptr);
         driverUniformsExt->halfRenderArea = {halfRenderAreaWidth, halfRenderAreaHeight};
-        driverUniformsExt->flipXY         = {flipX, flipY};
-        driverUniformsExt->negFlipXY      = {flipX, -flipY};
-        memcpy(&driverUniformsExt->fragRotation,
-               &kFragRotationMatrices[mCurrentRotationDrawFramebuffer],
-               sizeof(PreRotationMatrixValues));
-        driverUniforms = &driverUniformsExt->common;
+        driverUniforms                    = &driverUniformsExt->common;
     }
     else
     {
@@ -6209,6 +6156,8 @@ angle::Result ContextVk::handleDirtyGraphicsDriverUniforms(DirtyBits::Iterator *
         numSamples,
         {},
         {},
+        IsRotatedAspectRatio(mCurrentRotationDrawFramebuffer),
+        MakeFlipUniform(flipX, flipY, invertViewport),
         {depthRangeNear, depthRangeFar, depthRangeDiff, 0.0f}};
 
     if (mState.isTransformFeedbackActiveUnpaused())
