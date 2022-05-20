@@ -17,6 +17,8 @@
 1442 D3D11 : dEQP-GLES31.functional.image_load_store.cube.format_reinterpret.* = SKIP
 1442 D3D11 : dEQP-GLES31.functional.image_load_store.3d.format_reinterpret.* = SKIP
 1442 D3D11 : dEQP-GLES31.functional.image_load_store.2d_array.format_reinterpret.* = SKIP
+7345 NVIDIA D3D11 : dEQP-GLES31.functional.image_load_store.2d_array.qualifiers.volatile_r32f = SKIP
+7345 NVIDIA D3D11 : dEQP-GLES31.functional.image_load_store.2d_array.qualifiers.coherent_r32f = SKIP
 
 // Times out shader compilation because it uses so many resources.
 3445 : dEQP-GLES31.functional.ssbo.layout.random.all_shared_buffer.48 = SKIP
