@@ -633,6 +633,13 @@ struct FeaturesVk : FeatureSetBase
     FeatureInfo supportsImage2dViewOf3d = {
         "supportsImage2dViewOf3d", FeatureCategory::VulkanFeatures,
         "VkDevice supports VK_EXT_image_2d_view_of_3d", &members, "https://anglebug.com/7320"};
+
+    FeatureInfo preferLinearFilterForYUV = {
+        "preferLinearFilterForYUV",
+        FeatureCategory::VulkanFeatures,
+        "Prefer to use VK_FILTER_LINEAR for VkSamplerYcbcrConversion",
+        &members,
+    };
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

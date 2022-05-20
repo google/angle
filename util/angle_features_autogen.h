@@ -167,6 +167,7 @@ enum class Feature
     PreferCPUForBufferSubData,
     PreferDeviceLocalMemoryHostVisible,
     PreferDrawClearOverVkCmdClearAttachments,
+    PreferLinearFilterForYUV,
     PreferSkippingInvalidateForEmulatedFormats,
     PreferSubmitAtFBOBoundary,
     PromotePackedFormatsTo8BitPerChannel,

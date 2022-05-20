@@ -853,6 +853,13 @@
                 "VkDevice supports VK_EXT_image_2d_view_of_3d"
             ],
             "issue": "https://anglebug.com/7320"
+        },
+        {
+            "name": "prefer_linear_filter_for_YUV",
+            "category": "Features",
+            "description": [
+                "Prefer to use VK_FILTER_LINEAR for VkSamplerYcbcrConversion"
+            ]
         }
     ]
 }
