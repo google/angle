@@ -420,7 +420,7 @@ State::State(const State *shareContextState,
       mBoundingBoxMaxZ(1.0f),
       mBoundingBoxMaxW(1.0f),
       mShadingRatePreserveAspectRatio(false),
-      mShadingRate(ShadingRate::_1x1)
+      mShadingRate(ShadingRate::Undefined)
 {}
 
 State::~State() {}

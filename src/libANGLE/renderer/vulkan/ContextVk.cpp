@@ -2727,7 +2727,13 @@ angle::Result ContextVk::handleDirtyGraphicsDynamicFragmentShadingRate(
     DirtyBits::Iterator *dirtyBitsIterator,
     DirtyBits dirtyBitMask)
 {
-    gl::ShadingRate shadingRate     = getState().getShadingRate();
+    gl::ShadingRate shadingRate = getState().getShadingRate();
+    if (shadingRate == gl::ShadingRate::Undefined)
+    {
+        // Shading rate has not been set. Nothing to do, early return.
+        return angle::Result::Continue;
+    }
+
     const bool shadingRateSupported = mRenderer->isShadingRateSupported(shadingRate);
     VkExtent2D fragmentSize         = {};
     VkFragmentShadingRateCombinerOpKHR shadingRateCombinerOp[2] = {
