@@ -14,7 +14,7 @@
   "infra/specs/waterfalls.pyl":
     "bb2784ae8f458ce250038ff67c1027a3",
   "testing/buildbot/generate_buildbot_json.py":
-    "616bb95b1c1508b1254ca95e78c38e67",
+    "f8360ea81d7034028ce130d89a545b14",
   "testing/buildbot/mixins.pyl":
     "0d6617082b7537f401af81a0fb631a04"
 }
