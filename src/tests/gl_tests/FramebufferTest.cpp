@@ -4133,6 +4133,66 @@ void main()
     }
 }
 
+// Regression test for a bug in the Vulkan backend where the application produces a conditional
+// framebuffer feedback loop which results in VUID-VkDescriptorImageInfo-imageLayout-00344 and
+// VUID-vkCmdDraw-None-02699 (or VUID-vkCmdDrawIndexed-None-02699 when a different draw call is
+// used). The application samples from the frame buffer it renders to depending on a uniform
+// condition.
+TEST_P(FramebufferTest_ES3, FramebufferConditionalFeedbackLoop)
+{
+    GLTexture colorAttachment;
+    glBindTexture(GL_TEXTURE_2D, colorAttachment);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kWidth, kHeight);
+
+    glActiveTexture(GL_TEXTURE13);
+    glBindTexture(GL_TEXTURE_2D, colorAttachment);
+
+    ASSERT_GL_NO_ERROR();
+
+    GLFramebuffer framebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorAttachment, 0);
+
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    constexpr char kFS[] = {
+        R"(#version 300 es
+precision mediump float;
+
+uniform mediump sampler2D samp;
+uniform vec4 sampleCondition;
+out vec4 color;
+
+void main()
+{
+    if (sampleCondition.x > 0.0)
+    {
+        color = texture(samp, vec2(0.0));
+    }
+})",
+    };
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    glUseProgram(program);
+
+    GLint textureLoc = glGetUniformLocation(program, "samp");
+    glUniform1i(textureLoc, 13);
+
+    // This draw is required for the issue to occur. The application does multiple draws to
+    // different framebuffers at this point, but drawing without a framebuffer bound also does
+    // reproduce it.
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    ASSERT_GL_NO_ERROR();
+
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+
+    // This draw triggers the issue.
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    ASSERT_GL_NO_ERROR();
+}
+
 ANGLE_INSTANTIATE_TEST_ES2_AND(AddMockTextureNoRenderTargetTest,
                                ES2_D3D9().enable(Feature::AddMockTextureNoRenderTarget),
                                ES2_D3D11().enable(Feature::AddMockTextureNoRenderTarget));

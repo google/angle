@@ -615,3 +615,6 @@
 // // Cannot create 2D (array) view of 3D texture.  These fail with validation errors, and cause a crash in syncval.
 3886 VULKAN : ComputeShaderTest.BindImageTexture3D/* = SKIP
 3886 D3D11 : ComputeShaderTest.BindImageTexture3D/* = SKIP
+
+// Produces VVL errors
+7357 VULKAN : FramebufferTest_ES3.FramebufferConditionalFeedbackLoop/* = SKIP
