@@ -1220,9 +1220,21 @@ if (build_angle_deqp_tests && !is_fuchsia) {
     ]
   }
 
+  # TODO(angleproject:7349): Remove this again once
+  # https://github.com/KhronosGroup/VK-GL-CTS/pull/323 is rolled in.
+  # We can't use C++20 before then.
+  # (And keeping this warning disabled for long carries the risk of unknowingly
+  # adding new references to other deprecated things.)
+  config("angle_deqp_framework_common_warnings") {
+    if (is_clang) {
+      cflags = [ "-Wno-deprecated-declarations" ]
+    }
+  }
+
   angle_deqp_source_set("angle_deqp_framework_common") {
     sources = deqp_framework_common_sources
     public_configs = [ ":angle_deqp_framework_common_config" ]
+    configs += [ ":angle_deqp_framework_common_warnings" ]
     public_deps = [
       ":angle_deqp_framework_decpp",
       ":angle_deqp_framework_qphelper",
