@@ -1220,7 +1220,7 @@ if (build_angle_deqp_tests && !is_fuchsia) {
     ]
   }
 
-  # TODO(angleproject:7349): Remove this again once
+  # TODO(anglebug.com/7349): Remove this again once
   # https://github.com/KhronosGroup/VK-GL-CTS/pull/323 is rolled in.
   # We can't use C++20 before then.
   # (And keeping this warning disabled for long carries the risk of unknowingly
@@ -1253,6 +1253,7 @@ if (build_angle_deqp_tests && !is_fuchsia) {
   angle_deqp_source_set("angle_deqp_framework_opengl") {
     sources = deqp_framework_opengl_sources
     public_configs = [ ":angle_deqp_framework_opengl_config" ]
+    configs += [ ":angle_deqp_framework_common_warnings" ]
     public_deps = [ ":angle_deqp_framework_common" ]
   }
 
@@ -1290,6 +1291,7 @@ if (build_angle_deqp_tests && !is_fuchsia) {
     sources = deqp_glshared_sources
     public_deps = [ ":angle_deqp_framework_opengl" ]
     public_configs = [ ":angle_deqp_glshared_config" ]
+    configs += [ ":angle_deqp_framework_common_warnings" ]
   }
 
   angle_deqp_source_set("angle_deqp_libtester") {
@@ -1404,6 +1406,7 @@ if (build_angle_deqp_tests && !is_fuchsia) {
 
   angle_deqp_source_set("angle_deqp_gles2_common") {
     sources = deqp_gles2_sources
+    configs += [ ":angle_deqp_framework_common_warnings" ]
     public_deps = [
       ":angle_deqp_framework_egl",
       ":angle_deqp_glshared",
@@ -1412,6 +1415,7 @@ if (build_angle_deqp_tests && !is_fuchsia) {
 
   angle_deqp_source_set("angle_deqp_gles3_common") {
     sources = deqp_gles3_sources
+    configs += [ ":angle_deqp_framework_common_warnings" ]
     public_deps = [
       ":angle_deqp_framework_egl",
       ":angle_deqp_glshared",
@@ -1420,6 +1424,7 @@ if (build_angle_deqp_tests && !is_fuchsia) {
 
   angle_deqp_source_set("angle_deqp_gles31_common") {
     sources = deqp_gles31_sources
+    configs += [ ":angle_deqp_framework_common_warnings" ]
     public_deps = [
       ":angle_deqp_framework_egl",
       ":angle_deqp_glshared",
