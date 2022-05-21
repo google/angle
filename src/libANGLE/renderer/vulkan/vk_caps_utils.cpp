@@ -588,11 +588,11 @@ void RendererVk::ensureCapsInitialized() const
     mNativeCaps.maxViewportHeight    = LimitToInt(limitsVk.maxViewportDimensions[1]);
     mNativeCaps.maxSampleMaskWords   = LimitToInt(limitsVk.maxSampleMaskWords);
     mNativeCaps.maxColorTextureSamples =
-        limitsVk.sampledImageColorSampleCounts & vk_gl::kSupportedSampleCounts;
+        vk_gl::GetMaxSampleCount(limitsVk.sampledImageColorSampleCounts);
     mNativeCaps.maxDepthTextureSamples =
-        limitsVk.sampledImageDepthSampleCounts & vk_gl::kSupportedSampleCounts;
+        vk_gl::GetMaxSampleCount(limitsVk.sampledImageDepthSampleCounts);
     mNativeCaps.maxIntegerSamples =
-        limitsVk.sampledImageIntegerSampleCounts & vk_gl::kSupportedSampleCounts;
+        vk_gl::GetMaxSampleCount(limitsVk.sampledImageIntegerSampleCounts);
 
     mNativeCaps.maxVertexAttributes     = LimitToInt(limitsVk.maxVertexInputAttributes);
     mNativeCaps.maxVertexAttribBindings = LimitToInt(limitsVk.maxVertexInputBindings);
