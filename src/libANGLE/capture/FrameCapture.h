@@ -427,6 +427,32 @@ using SurfaceParamsMap = std::map<gl::ContextID, SurfaceParams>;
 
 using CallVector = std::vector<std::vector<CallCapture> *>;
 
+// A map from API entry point to calls
+using CallResetMap = std::map<angle::EntryPoint, std::vector<CallCapture>>;
+
+// StateResetHelper provides a simple way to track whether an entry point has been called during the
+// trace, along with the reset calls to get it back to starting state.  This is useful for things
+// that are one dimensional, like context bindings or context state.
+class StateResetHelper final : angle::NonCopyable
+{
+  public:
+    StateResetHelper();
+    ~StateResetHelper();
+
+    const std::set<angle::EntryPoint> &getDirtyEntryPoints() const { return mDirtyEntryPoints; }
+    void setEntryPointDirty(EntryPoint entryPoint) { mDirtyEntryPoints.insert(entryPoint); }
+
+    CallResetMap &getResetCalls() { return mResetCalls; }
+    const CallResetMap &getResetCalls() const { return mResetCalls; }
+
+  private:
+    // Dirty state per entry point
+    std::set<angle::EntryPoint> mDirtyEntryPoints;
+
+    // Reset calls per API entry point
+    CallResetMap mResetCalls;
+};
+
 class FrameCapture final : angle::NonCopyable
 {
   public:
@@ -436,10 +462,15 @@ class FrameCapture final : angle::NonCopyable
     std::vector<CallCapture> &getSetupCalls() { return mSetupCalls; }
     void clearSetupCalls() { mSetupCalls.clear(); }
 
+    StateResetHelper &getStateResetHelper() { return mStateResetHelper; }
+    const StateResetHelper &getStateResetHelper() const { return mStateResetHelper; }
+
     void reset();
 
   private:
     std::vector<CallCapture> mSetupCalls;
+
+    StateResetHelper mStateResetHelper;
 };
 
 // Page range inside a coherent buffer
@@ -692,7 +723,8 @@ class FrameCaptureShared final : angle::NonCopyable
     void writeJSON(const gl::Context *context);
     void writeCppReplayIndexFiles(const gl::Context *context, bool writeResetContextCall);
     void writeMainContextCppReplay(const gl::Context *context,
-                                   const std::vector<CallCapture> &setupCalls);
+                                   const std::vector<CallCapture> &setupCalls,
+                                   const StateResetHelper &StateResetHelper);
 
     void captureClientArraySnapshot(const gl::Context *context,
                                     size_t vertexCount,
