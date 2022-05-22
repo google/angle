@@ -87,7 +87,6 @@
 6180 : BlitFramebufferTest.BlitDepthStencilPixelByPixel/* = NOT_RUN
 6180 : GLSLTest_ES3.UnsuccessfulRelinkWithBindAttribLocation/* = NOT_RUN
 3886 : ComputeShaderTest.BindImageTexture3D/* = NOT_RUN
-7350 WIN : StateChangeTestES3.PrimitiveRestart/* = FAIL
 
 # This test only exists on Win64
 6180 WIN : BufferDataOverflowTest.VertexBufferIntegerOverflow/* = NOT_RUN

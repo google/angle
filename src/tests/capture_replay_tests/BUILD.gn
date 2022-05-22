@@ -37,6 +37,11 @@ angle_executable("capture_replay_tests") {
     "$angle_root/util:angle_util",
   ]
 
+  data_deps = [
+    "$angle_root:libEGL",
+    "$angle_root:libGLESv2",
+  ]
+
   configs += [ "$angle_root:library_name_config" ]
   defines = []
 
