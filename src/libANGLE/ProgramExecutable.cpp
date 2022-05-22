@@ -804,6 +804,39 @@ GLuint ProgramExecutable::getUniformIndexFromSamplerIndex(GLuint samplerIndex) c
     return samplerIndex + mSamplerUniformRange.low();
 }
 
+void ProgramExecutable::setActive(size_t textureUnit,
+                                  const SamplerBinding &samplerBinding,
+                                  const gl::LinkedUniform &samplerUniform)
+{
+    mActiveSamplersMask.set(textureUnit);
+    mActiveSamplerTypes[textureUnit]      = samplerBinding.textureType;
+    mActiveSamplerYUV[textureUnit]        = IsSamplerYUVType(samplerBinding.samplerType);
+    mActiveSamplerFormats[textureUnit]    = samplerBinding.format;
+    mActiveSamplerShaderBits[textureUnit] = samplerUniform.activeShaders();
+}
+
+void ProgramExecutable::setInactive(size_t textureUnit)
+{
+    mActiveSamplersMask.reset(textureUnit);
+    mActiveSamplerTypes[textureUnit] = TextureType::InvalidEnum;
+    mActiveSamplerYUV.reset(textureUnit);
+    mActiveSamplerFormats[textureUnit] = SamplerFormat::InvalidEnum;
+    mActiveSamplerShaderBits[textureUnit].reset();
+}
+
+void ProgramExecutable::hasSamplerTypeConflict(size_t textureUnit)
+{
+    // Conflicts are marked with InvalidEnum
+    mActiveSamplerYUV.reset(textureUnit);
+    mActiveSamplerTypes[textureUnit] = TextureType::InvalidEnum;
+}
+
+void ProgramExecutable::hasSamplerFormatConflict(size_t textureUnit)
+{
+    // Conflicts are marked with InvalidEnum
+    mActiveSamplerFormats[textureUnit] = SamplerFormat::InvalidEnum;
+}
+
 void ProgramExecutable::updateActiveSamplers(const ProgramState &programState)
 {
     const std::vector<SamplerBinding> &samplerBindings = programState.getSamplerBindings();
@@ -811,33 +844,26 @@ void ProgramExecutable::updateActiveSamplers(const ProgramState &programState)
     for (uint32_t samplerIndex = 0; samplerIndex < samplerBindings.size(); ++samplerIndex)
     {
         const SamplerBinding &samplerBinding = samplerBindings[samplerIndex];
-        uint32_t uniformIndex = programState.getUniformIndexFromSamplerIndex(samplerIndex);
-        const gl::LinkedUniform &samplerUniform = programState.getUniforms()[uniformIndex];
 
         for (GLint textureUnit : samplerBinding.boundTextureUnits)
         {
             if (++mActiveSamplerRefCounts[textureUnit] == 1)
             {
-                mActiveSamplerTypes[textureUnit]   = samplerBinding.textureType;
-                mActiveSamplerYUV[textureUnit]     = IsSamplerYUVType(samplerBinding.samplerType);
-                mActiveSamplerFormats[textureUnit] = samplerBinding.format;
-                mActiveSamplerShaderBits[textureUnit] = samplerUniform.activeShaders();
+                uint32_t uniformIndex = programState.getUniformIndexFromSamplerIndex(samplerIndex);
+                setActive(textureUnit, samplerBinding, programState.getUniforms()[uniformIndex]);
             }
             else
             {
-                if (mActiveSamplerTypes[textureUnit] != samplerBinding.textureType)
+                if (mActiveSamplerTypes[textureUnit] != samplerBinding.textureType ||
+                    mActiveSamplerYUV.test(textureUnit) !=
+                        IsSamplerYUVType(samplerBinding.samplerType))
                 {
-                    // Conflicts are marked with InvalidEnum
-                    mActiveSamplerTypes[textureUnit] = TextureType::InvalidEnum;
+                    hasSamplerTypeConflict(textureUnit);
                 }
-                if (mActiveSamplerYUV.test(textureUnit) !=
-                    IsSamplerYUVType(samplerBinding.samplerType))
-                {
-                    mActiveSamplerYUV[textureUnit] = false;
-                }
+
                 if (mActiveSamplerFormats[textureUnit] != samplerBinding.format)
                 {
-                    mActiveSamplerFormats[textureUnit] = SamplerFormat::InvalidEnum;
+                    hasSamplerFormatConflict(textureUnit);
                 }
             }
             mActiveSamplersMask.set(textureUnit);
@@ -875,43 +901,43 @@ void ProgramExecutable::setSamplerUniformTextureTypeAndFormat(
     bool foundYUV             = false;
     SamplerFormat foundFormat = SamplerFormat::InvalidEnum;
 
-    for (const SamplerBinding &binding : samplerBindings)
+    for (uint32_t samplerIndex = 0; samplerIndex < samplerBindings.size(); ++samplerIndex)
     {
+        const SamplerBinding &binding = samplerBindings[samplerIndex];
+
         // A conflict exists if samplers of different types are sourced by the same texture unit.
         // We need to check all bound textures to detect this error case.
         for (GLuint textureUnit : binding.boundTextureUnits)
         {
-            if (textureUnit == textureUnitIndex)
+            if (textureUnit != textureUnitIndex)
             {
-                if (!foundBinding)
+                continue;
+            }
+
+            if (!foundBinding)
+            {
+                foundBinding          = true;
+                foundType             = binding.textureType;
+                foundYUV              = IsSamplerYUVType(binding.samplerType);
+                foundFormat           = binding.format;
+                uint32_t uniformIndex = getUniformIndexFromSamplerIndex(samplerIndex);
+                setActive(textureUnit, binding, mUniforms[uniformIndex]);
+            }
+            else
+            {
+                if (foundType != binding.textureType ||
+                    foundYUV != IsSamplerYUVType(binding.samplerType))
                 {
-                    foundBinding = true;
-                    foundType    = binding.textureType;
-                    foundYUV     = IsSamplerYUVType(binding.samplerType);
-                    foundFormat  = binding.format;
+                    hasSamplerTypeConflict(textureUnit);
                 }
-                else
+
+                if (foundFormat != binding.format)
                 {
-                    if (foundType != binding.textureType)
-                    {
-                        foundType = TextureType::InvalidEnum;
-                    }
-                    if (foundYUV != IsSamplerYUVType(binding.samplerType))
-                    {
-                        foundYUV = false;
-                    }
-                    if (foundFormat != binding.format)
-                    {
-                        foundFormat = SamplerFormat::InvalidEnum;
-                    }
+                    hasSamplerFormatConflict(textureUnit);
                 }
             }
         }
     }
-
-    mActiveSamplerTypes[textureUnitIndex]   = foundType;
-    mActiveSamplerYUV[textureUnitIndex]     = foundYUV;
-    mActiveSamplerFormats[textureUnitIndex] = foundFormat;
 }
 
 void ProgramExecutable::updateCanDrawWith()
