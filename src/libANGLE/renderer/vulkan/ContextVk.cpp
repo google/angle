@@ -621,6 +621,17 @@ VkDependencyFlags GetLocalDependencyFlags(ContextVk *contextVk)
     }
     return dependencyFlags;
 }
+
+void DumpPipelineCacheGraph(const std::ostringstream &graph)
+{
+    std::ostream &out = std::cout;
+
+    out << "digraph {\n"
+        << " node [shape=point]\n";
+    out << graph.str();
+    out << "}\n";
+}
+
 }  // anonymous namespace
 
 // Not necessary once upgraded to C++17.
@@ -980,7 +991,13 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
     mPerfMonitorCounters.push_back(vulkanGroup);
 }
 
-ContextVk::~ContextVk() = default;
+ContextVk::~ContextVk()
+{
+    if (!mPipelineCacheGraph.str().empty())
+    {
+        DumpPipelineCacheGraph(mPipelineCacheGraph);
+    }
+}
 
 void ContextVk::onDestroy(const gl::Context *context)
 {

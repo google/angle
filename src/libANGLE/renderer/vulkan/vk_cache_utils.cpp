@@ -27,12 +27,13 @@
 
 namespace rx
 {
+constexpr bool kDumpPipelineCacheGraph = false;
+
 namespace vk
 {
 
 namespace
 {
-
 static_assert(static_cast<uint32_t>(RenderPassLoadOp::Load) == VK_ATTACHMENT_LOAD_OP_LOAD,
               "ConvertRenderPassLoadOpToVkLoadOp must be updated");
 static_assert(static_cast<uint32_t>(RenderPassLoadOp::Clear) == VK_ATTACHMENT_LOAD_OP_CLEAR,
@@ -1568,6 +1569,48 @@ constexpr char kDescriptorTypeNameMap[][30] = {"sampler",
                                                "uniform buffer dynamic",
                                                "storage buffer dynamic",
                                                "input attachment"};
+
+void DumpPipelineCacheGraph(
+    std::ostream &out,
+    const std::unordered_map<vk::GraphicsPipelineDesc, vk::PipelineHelper> &cache)
+{
+    static std::atomic<uint32_t> sCacheSerial(0);
+    angle::HashMap<vk::GraphicsPipelineDesc, uint32_t> descToId;
+
+    uint32_t cacheSerial = sCacheSerial.fetch_add(1);
+    uint32_t descId      = 0;
+
+    out << " subgraph cluster_" << cacheSerial << "{\n";
+    for (const auto &descAndPipeline : cache)
+    {
+        const vk::GraphicsPipelineDesc &desc = descAndPipeline.first;
+
+        out << "  p" << cacheSerial << "_" << descId << ";\n";
+
+        descToId[desc] = descId++;
+    }
+    for (const auto &descAndPipeline : cache)
+    {
+        const vk::GraphicsPipelineDesc &desc     = descAndPipeline.first;
+        const vk::PipelineHelper &pipelineHelper = descAndPipeline.second;
+        const std::vector<GraphicsPipelineTransition> &transitions =
+            pipelineHelper.getTransitions();
+
+        for (const GraphicsPipelineTransition &transition : transitions)
+        {
+#if defined(ANGLE_IS_64_BIT_CPU)
+            const uint64_t transitionBits = transition.bits.bits();
+#else
+            const uint64_t transitionBits =
+                static_cast<uint64_t>(transition.bits.bits(1)) << 32 | transition.bits.bits(0);
+#endif
+            out << "  p" << cacheSerial << "_" << descToId[desc] << " -> p" << cacheSerial << "_"
+                << descToId[*transition.desc] << " [label=\"'0x" << std::hex << transitionBits
+                << "'\"];\n";
+        }
+    }
+    out << " }\n";
+}
 }  // anonymous namespace
 
 // RenderPassDesc implementation.
@@ -4580,6 +4623,11 @@ void GraphicsPipelineCache::destroy(RendererVk *rendererVk)
 
 void GraphicsPipelineCache::release(ContextVk *context)
 {
+    if (kDumpPipelineCacheGraph && !mPayload.empty())
+    {
+        vk::DumpPipelineCacheGraph(context->getPipelineCacheGraphStream(), mPayload);
+    }
+
     for (auto &item : mPayload)
     {
         vk::PipelineHelper &pipeline = item.second;

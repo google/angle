@@ -1065,6 +1065,8 @@ class PipelineHelper final : public Resource
                        const GraphicsPipelineDesc *desc,
                        PipelineHelper *pipeline);
 
+    const std::vector<GraphicsPipelineTransition> getTransitions() const { return mTransitions; }
+
   private:
     std::vector<GraphicsPipelineTransition> mTransitions;
     Pipeline mPipeline;

@@ -749,6 +749,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         mVulkanCacheStats[cache].accumulate(stats);
     }
 
+    std::ostringstream &getPipelineCacheGraphStream() { return mPipelineCacheGraph; }
+
   private:
     // Dirty bits.
     enum DirtyBitType : size_t
@@ -1500,6 +1502,9 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     VkRect2D mScissor;
 
     VulkanCacheStats mVulkanCacheStats;
+
+    // A graph built from pipeline descs and their transitions.
+    std::ostringstream mPipelineCacheGraph;
 };
 
 ANGLE_INLINE angle::Result ContextVk::endRenderPassIfTransformFeedbackBuffer(
