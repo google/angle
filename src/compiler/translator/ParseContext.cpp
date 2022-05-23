@@ -2671,7 +2671,7 @@ TIntermNode *TParseContext::addLoop(TLoopType type,
     }
     if (cond == nullptr || typedCond)
     {
-        if (type == ELoopDoWhile)
+        if (type == ELoopDoWhile && typedCond)
         {
             checkIsScalarBool(line, typedCond);
         }
