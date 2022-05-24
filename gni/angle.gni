@@ -250,6 +250,9 @@ declare_args() {
       (angle_enable_glsl || angle_enable_metal || use_fuzzing_engine)
 
   angle_has_histograms = angle_has_build
+
+  # True if we want to build the ANGLE test suites. On by default in most configs.
+  angle_build_tests = angle_has_build
 }
 
 declare_args() {

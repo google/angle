@@ -36,7 +36,8 @@ declare_args() {
 
   # Don't build extra (test, samples etc) for Windows UWP. We don't have
   # infrastructure (e.g. windowing helper functions) in place to run them.
-  angle_build_all = !build_with_chromium && !angle_is_winuwp && angle_has_build
+  angle_build_all = !build_with_chromium && !angle_is_winuwp &&
+                    angle_has_build && angle_build_tests
 
   # Enable generating current commit information using git
   angle_enable_commit_id = true
@@ -1146,28 +1147,30 @@ if (angle_has_frame_capture) {
   }
 }
 
-# Used by a few targets that compile traces.
-config("angle_trace_fixture_config") {
-  include_dirs = [ "src/libANGLE/capture" ]
-}
+if (angle_build_tests) {
+  # Used by a few targets that compile traces.
+  config("angle_trace_fixture_config") {
+    include_dirs = [ "src/libANGLE/capture" ]
+  }
 
-angle_source_set("angle_trace_fixture") {
-  testonly = true
-  defines = [ "ANGLE_REPLAY_IMPLEMENTATION" ]
-  suppressed_configs += [ "$angle_root:constructor_and_destructor_warnings" ]
-  sources = [
-    "src/libANGLE/capture/trace_fixture.cpp",
-    "src/libANGLE/capture/trace_fixture.h",
-  ]
-  public_deps = [
-    ":includes",
-    "util:angle_trace_loader",
-  ]
-  include_dirs = [ "." ]
-  public_configs = [ ":angle_trace_fixture_config" ]
-  if (is_ios) {
-    # shared libraries are hidden inside ios_framework_bundle, but we include headers from them
-    check_includes = false
+  angle_source_set("angle_trace_fixture") {
+    testonly = true
+    defines = [ "ANGLE_REPLAY_IMPLEMENTATION" ]
+    suppressed_configs += [ "$angle_root:constructor_and_destructor_warnings" ]
+    sources = [
+      "src/libANGLE/capture/trace_fixture.cpp",
+      "src/libANGLE/capture/trace_fixture.h",
+    ]
+    public_deps = [
+      ":includes",
+      "util:angle_trace_loader",
+    ]
+    include_dirs = [ "." ]
+    public_configs = [ ":angle_trace_fixture_config" ]
+    if (is_ios) {
+      # shared libraries are hidden inside ios_framework_bundle, but we include headers from them
+      check_includes = false
+    }
   }
 }
 
