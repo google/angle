@@ -15703,6 +15703,7 @@ void main()
 
     ANGLE_GL_PROGRAM(testProgram, kVS, kFS);
 }
+
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(GLSLTest,

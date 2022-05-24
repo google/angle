@@ -169,6 +169,11 @@ Version GetClientVersion(egl::Display *display, const egl::AttributeMap &attribs
     }
 }
 
+EGLint GetProfileMask(const egl::AttributeMap &attribs)
+{
+    return attribs.getAsInt(EGL_CONTEXT_OPENGL_PROFILE_MASK, EGL_CONTEXT_OPENGL_CORE_PROFILE_BIT);
+}
+
 GLenum GetResetStrategy(const egl::AttributeMap &attribs)
 {
     EGLAttrib resetStrategyExt =
@@ -444,6 +449,7 @@ Context::Context(egl::Display *display,
              &mOverlay,
              clientType,
              GetClientVersion(display, attribs),
+             GetProfileMask(attribs),
              GetDebug(attribs),
              GetBindGeneratesResource(attribs),
              GetClientArraysEnabled(attribs),

@@ -84,6 +84,10 @@ angle_static_library("angle_test_expectations") {
 
 config("angle_common_test_utils_config") {
   include_dirs = [ "." ]
+  defines = []
+  if (angle_enable_gl_desktop) {
+    defines += [ "ANGLE_ENABLE_OPENGL_DESKTOP" ]
+  }
 }
 
 template("angle_common_test_utils") {

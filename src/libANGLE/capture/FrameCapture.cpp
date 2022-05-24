@@ -6714,10 +6714,10 @@ void FrameCaptureShared::runMidExecutionCapture(const gl::Context *mainContext)
     shareGroup->finishAllContexts();
 
     const gl::State &contextState = mainContext->getState();
-    gl::State mainContextReplayState(nullptr, nullptr, nullptr, nullptr, nullptr, EGL_OPENGL_ES_API,
-                                     contextState.getClientVersion(), false, true, true, true,
-                                     false, EGL_CONTEXT_PRIORITY_MEDIUM_IMG,
-                                     contextState.hasProtectedContent());
+    gl::State mainContextReplayState(
+        nullptr, nullptr, nullptr, nullptr, nullptr, contextState.getClientType(),
+        contextState.getClientVersion(), contextState.getProfileMask(), false, true, true, true,
+        false, EGL_CONTEXT_PRIORITY_MEDIUM_IMG, contextState.hasProtectedContent());
     mainContextReplayState.initializeForCapture(mainContext);
 
     CaptureShareGroupMidExecutionSetup(mainContext, &mShareGroupSetupCalls, &mResourceTracker,
@@ -6741,10 +6741,12 @@ void FrameCaptureShared::runMidExecutionCapture(const gl::Context *mainContext)
         }
         else
         {
+            const gl::State &shareContextState = shareContext->getState();
             gl::State auxContextReplayState(
-                nullptr, nullptr, nullptr, nullptr, nullptr, EGL_OPENGL_ES_API,
-                shareContext->getState().getClientVersion(), false, true, true, true, false,
-                EGL_CONTEXT_PRIORITY_MEDIUM_IMG, shareContext->getState().hasProtectedContent());
+                nullptr, nullptr, nullptr, nullptr, nullptr, shareContextState.getClientType(),
+                shareContextState.getClientVersion(), shareContextState.getProfileMask(), false,
+                true, true, true, false, EGL_CONTEXT_PRIORITY_MEDIUM_IMG,
+                shareContextState.hasProtectedContent());
             auxContextReplayState.initializeForCapture(shareContext);
 
             CaptureMidExecutionSetup(shareContext, &frameCapture->getSetupCalls(),

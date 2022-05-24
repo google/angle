@@ -731,12 +731,14 @@ ANGLERenderTest::ANGLERenderTest(const std::string &name,
     switch (testParams.driver)
     {
         case GLESDriverType::AngleEGL:
-            mGLWindow = EGLWindow::New(testParams.majorVersion, testParams.minorVersion);
+            mGLWindow = EGLWindow::New(testParams.clientType, testParams.majorVersion,
+                                       testParams.minorVersion, testParams.profileMask);
             mEntryPointsLib.reset(OpenSharedLibrary(ANGLE_EGL_LIBRARY_NAME, SearchType::ModuleDir));
             break;
         case GLESDriverType::SystemEGL:
 #if defined(ANGLE_USE_UTIL_LOADER) && !defined(ANGLE_PLATFORM_WINDOWS)
-            mGLWindow = EGLWindow::New(testParams.majorVersion, testParams.minorVersion);
+            mGLWindow = EGLWindow::New(testParams.clientType, testParams.majorVersion,
+                                       testParams.minorVersion, testParams.profileMask);
             mEntryPointsLib.reset(OpenSharedLibraryWithExtension(
                 GetNativeEGLLibraryNameWithExtension(), SearchType::SystemDir));
 #else
@@ -745,7 +747,8 @@ ANGLERenderTest::ANGLERenderTest(const std::string &name,
             break;
         case GLESDriverType::SystemWGL:
 #if defined(ANGLE_USE_UTIL_LOADER) && defined(ANGLE_PLATFORM_WINDOWS)
-            mGLWindow = WGLWindow::New(testParams.majorVersion, testParams.minorVersion);
+            mGLWindow = WGLWindow::New(testParams.clientType, testParams.majorVersion,
+                                       testParams.minorVersion, testParams.profileMask);
             mEntryPointsLib.reset(OpenSharedLibrary("opengl32", SearchType::SystemDir));
 #else
             skipTest("WGL driver not available.");

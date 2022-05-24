@@ -27,12 +27,20 @@ size_t gActiveCompilers = 0;
 ShShaderSpec SelectShaderSpec(GLint majorVersion,
                               GLint minorVersion,
                               bool isWebGL,
-                              EGLenum clientType)
+                              EGLenum clientType,
+                              EGLint profileMask)
 {
     // For Desktop GL
     if (clientType == EGL_OPENGL_API)
     {
-        return SH_GL_COMPATIBILITY_SPEC;
+        if ((profileMask & EGL_CONTEXT_OPENGL_CORE_PROFILE_BIT) != 0)
+        {
+            return SH_GL_CORE_SPEC;
+        }
+        else
+        {
+            return SH_GL_COMPATIBILITY_SPEC;
+        }
     }
 
     if (majorVersion >= 3)
@@ -67,7 +75,8 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const State &state, egl::Disp
       mSpec(SelectShaderSpec(state.getClientMajorVersion(),
                              state.getClientMinorVersion(),
                              state.isWebGL(),
-                             state.getClientType())),
+                             state.getClientType(),
+                             state.getProfileMask())),
       mOutputType(mImplementation->getTranslatorOutputType()),
       mResources()
 {
