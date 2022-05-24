@@ -536,6 +536,8 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
 
     void updateCachedImageViewSerials();
 
+    angle::Result updateTextureLabel(ContextVk *contextVk);
+
     bool mOwnsImage;
     bool mRequiresMutableStorage;
     vk::ImageAccess mRequiredImageAccess;

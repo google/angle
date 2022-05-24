@@ -1307,6 +1307,7 @@ constexpr bool IsDynamicDescriptor(VkDescriptorType descriptorType)
 void ApplyPipelineCreationFeedback(Context *context, const VkPipelineCreationFeedback &feedback);
 
 angle::Result SetDebugUtilsObjectName(ContextVk *contextVk,
+                                      VkObjectType objectType,
                                       uint64_t handle,
                                       const std::string &label);
 

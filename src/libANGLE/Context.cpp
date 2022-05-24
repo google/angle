@@ -1226,7 +1226,7 @@ void Context::objectLabel(GLenum identifier, GLuint name, GLsizei length, const 
     ASSERT(object != nullptr);
 
     std::string labelName = GetObjectLabelFromPointer(length, label);
-    object->setLabel(this, labelName);
+    ANGLE_CONTEXT_TRY(object->setLabel(this, labelName));
 
     // TODO(jmadill): Determine if the object is dirty based on 'name'. Conservatively assume the
     // specified object is active until we do this.
@@ -1244,7 +1244,7 @@ void Context::labelObject(GLenum type, GLuint object, GLsizei length, const GLch
         size_t labelLength = length == 0 ? strlen(label) : length;
         labelName          = std::string(label, labelLength);
     }
-    obj->setLabel(this, labelName);
+    ANGLE_CONTEXT_TRY(obj->setLabel(this, labelName));
     mState.setObjectDirty(type);
 }
 
@@ -1254,7 +1254,7 @@ void Context::objectPtrLabel(const void *ptr, GLsizei length, const GLchar *labe
     ASSERT(object != nullptr);
 
     std::string labelName = GetObjectLabelFromPointer(length, label);
-    object->setLabel(this, labelName);
+    ANGLE_CONTEXT_TRY(object->setLabel(this, labelName));
 }
 
 void Context::getObjectLabel(GLenum identifier,

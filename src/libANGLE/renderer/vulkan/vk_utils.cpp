@@ -800,6 +800,7 @@ void MakeDebugUtilsLabel(GLenum source, const char *marker, VkDebugUtilsLabelEXT
 }
 
 angle::Result SetDebugUtilsObjectName(ContextVk *contextVk,
+                                      VkObjectType objectType,
                                       uint64_t handle,
                                       const std::string &label)
 {
@@ -807,7 +808,7 @@ angle::Result SetDebugUtilsObjectName(ContextVk *contextVk,
 
     VkDebugUtilsObjectNameInfoEXT objectNameInfo = {};
     objectNameInfo.sType        = VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT;
-    objectNameInfo.objectType   = VK_OBJECT_TYPE_IMAGE;
+    objectNameInfo.objectType   = objectType;
     objectNameInfo.objectHandle = handle;
     objectNameInfo.pObjectName  = label.c_str();
 
