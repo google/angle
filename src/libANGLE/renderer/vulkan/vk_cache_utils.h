@@ -1195,7 +1195,6 @@ class DescriptorSetDesc
 
     bool operator==(const DescriptorSetDesc &other) const
     {
-        ASSERT(mWriteDescriptors == other.mWriteDescriptors);
         return (mDescriptorInfos == other.mDescriptorInfos);
     }
 
