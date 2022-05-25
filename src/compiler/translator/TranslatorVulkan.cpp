@@ -260,7 +260,7 @@ ANGLE_NO_DISCARD bool ReplaceGLDepthRangeWithDriverUniform(TCompiler *compiler,
         symbolTable->findBuiltIn(ImmutableString("gl_DepthRange"), 0));
 
     // ANGLEUniforms.depthRange
-    TIntermTyped *angleEmulatedDepthRangeRef = driverUniforms->getDepthRangeRef();
+    TIntermTyped *angleEmulatedDepthRangeRef = driverUniforms->getDepthRange();
 
     // Use this variable instead of gl_DepthRange everywhere.
     return ReplaceVariableWithTyped(compiler, root, depthRangeVar, angleEmulatedDepthRangeRef);
@@ -355,8 +355,10 @@ ANGLE_NO_DISCARD bool AddBresenhamEmulationVS(TCompiler *compiler,
     // Clamp position to subpixel grid.
     // Do perspective divide (get normalized device coords)
     // "vec2 ndc = gl_Position.xy / gl_Position.w"
-    const TType *vec2Type        = StaticType::GetTemporary<EbtFloat, EbpHigh, 2>();
-    TIntermTyped *viewportRef    = driverUniforms->getViewportRef();
+    const TType *vec2Type     = StaticType::GetTemporary<EbtFloat, EbpHigh, 2>();
+    TIntermTyped *viewportRef = driverUniforms->getViewport();
+    ASSERT(viewportRef != nullptr);
+
     TIntermSymbol *glPos         = new TIntermSymbol(BuiltInVariable::gl_Position());
     TIntermSwizzle *glPosXY      = CreateSwizzle(glPos, 0, 1);
     TIntermSwizzle *glPosW       = CreateSwizzle(glPos->deepCopy(), 3);
@@ -645,15 +647,14 @@ ANGLE_NO_DISCARD bool AddVertexPreRotationSupport(TCompiler *compiler,
     TIntermTyped *swapXY = specConst->getSwapXY();
     if (swapXY == nullptr)
     {
-        swapXY = driverUniforms->getSwapXYRef();
+        swapXY = driverUniforms->getSwapXY();
     }
 
     TIntermTyped *swapped   = new TIntermSwizzle(positionSymbol, {1, 0});
     TIntermTyped *rotatedXY = new TIntermTernary(swapXY, swapped, positionSymbol->deepCopy());
 
     // (swapXY ? position.yx : position) * flipXY
-    TIntermTyped *flipXY =
-        driverUniforms->getFlipXYRef(symbolTable, DriverUniformFlip::PreFragment);
+    TIntermTyped *flipXY = driverUniforms->getFlipXY(symbolTable, DriverUniformFlip::PreFragment);
     TIntermTyped *rotatedFlippedXY = new TIntermBinary(EOpMul, rotatedXY, flipXY);
 
     // Create the function body, which has a single return statement.
@@ -698,18 +699,18 @@ ANGLE_NO_DISCARD bool InsertFragCoordCorrection(TCompiler *compiler,
                                                 SpecConst *specConst,
                                                 const DriverUniform *driverUniforms)
 {
-    TIntermTyped *flipXY = driverUniforms->getFlipXYRef(symbolTable, DriverUniformFlip::Fragment);
+    TIntermTyped *flipXY = driverUniforms->getFlipXY(symbolTable, DriverUniformFlip::Fragment);
 
     TIntermTyped *pivot = specConst->getHalfRenderArea();
     if (!pivot)
     {
-        pivot = driverUniforms->getHalfRenderAreaRef();
+        pivot = driverUniforms->getHalfRenderArea();
     }
 
     TIntermTyped *swapXY = specConst->getSwapXY();
     if (swapXY == nullptr)
     {
-        swapXY = driverUniforms->getSwapXYRef();
+        swapXY = driverUniforms->getSwapXY();
     }
 
     const TVariable *fragCoord = static_cast<const TVariable *>(
@@ -762,7 +763,8 @@ ANGLE_NO_DISCARD bool AddBresenhamEmulationFS(TCompiler *compiler,
     TVariable *anglePosition = AddANGLEPositionVaryingDeclaration(root, symbolTable, EvqVaryingIn);
     const TType *vec2Type    = StaticType::GetTemporary<EbtFloat, EbpHigh, 2>();
 
-    TIntermTyped *viewportRef = driverUniforms->getViewportRef();
+    TIntermTyped *viewportRef = driverUniforms->getViewport();
+    ASSERT(viewportRef != nullptr);
 
     // vec2 p = ((ANGLEPosition * 0.5) + 0.5) * viewport.zw + viewport.xy
     TIntermSwizzle *viewportXY    = CreateSwizzle(viewportRef->deepCopy(), 0, 1);
@@ -1024,7 +1026,7 @@ bool TranslatorVulkan::translateImpl(TInfoSinkBase &sink,
     if (atomicCounterCount > 0)
     {
         // ANGLEUniforms.acbBufferOffsets
-        const TIntermTyped *acbBufferOffsets = driverUniforms->getAbcBufferOffsets();
+        const TIntermTyped *acbBufferOffsets = driverUniforms->getAcbBufferOffsets();
         if (!RewriteAtomicCounters(this, root, &getSymbolTable(), acbBufferOffsets))
         {
             return false;
@@ -1173,13 +1175,12 @@ bool TranslatorVulkan::translateImpl(TInfoSinkBase &sink,
             if (usesPointCoord)
             {
                 TIntermTyped *flipNegXY =
-                    driverUniforms->getFlipXYRef(&getSymbolTable(), DriverUniformFlip::Fragment);
-                flipNegXY                   = MakeNegFlipXY(flipNegXY);
+                    driverUniforms->getNegFlipXY(&getSymbolTable(), DriverUniformFlip::Fragment);
                 TIntermConstantUnion *pivot = CreateFloatNode(0.5f, EbpMedium);
                 TIntermTyped *swapXY        = specConst->getSwapXY();
                 if (swapXY == nullptr)
                 {
-                    swapXY = driverUniforms->getSwapXYRef();
+                    swapXY = driverUniforms->getSwapXY();
                 }
                 if (!RotateAndFlipBuiltinVariable(
                         this, root, GetMainSequence(root), swapXY, flipNegXY, &getSymbolTable(),
@@ -1192,12 +1193,12 @@ bool TranslatorVulkan::translateImpl(TInfoSinkBase &sink,
             if (useSamplePosition)
             {
                 TIntermTyped *flipXY =
-                    driverUniforms->getFlipXYRef(&getSymbolTable(), DriverUniformFlip::Fragment);
+                    driverUniforms->getFlipXY(&getSymbolTable(), DriverUniformFlip::Fragment);
                 TIntermConstantUnion *pivot = CreateFloatNode(0.5f, EbpMedium);
                 TIntermTyped *swapXY        = specConst->getSwapXY();
                 if (swapXY == nullptr)
                 {
-                    swapXY = driverUniforms->getSwapXYRef();
+                    swapXY = driverUniforms->getSwapXY();
                 }
 
                 const TVariable *samplePositionBuiltin =
@@ -1275,7 +1276,7 @@ bool TranslatorVulkan::translateImpl(TInfoSinkBase &sink,
 
             if (hasGLSampleMask)
             {
-                TIntermTyped *numSamples = driverUniforms->getNumSamplesRef();
+                TIntermTyped *numSamples = driverUniforms->getNumSamples();
                 if (!RewriteSampleMask(this, root, &getSymbolTable(), numSamples))
                 {
                     return false;
@@ -1286,7 +1287,7 @@ bool TranslatorVulkan::translateImpl(TInfoSinkBase &sink,
                 const TVariable *numSamplesVar =
                     static_cast<const TVariable *>(getSymbolTable().findBuiltIn(
                         ImmutableString("gl_NumSamples"), getShaderVersion()));
-                TIntermTyped *numSamples = driverUniforms->getNumSamplesRef();
+                TIntermTyped *numSamples = driverUniforms->getNumSamples();
                 if (!ReplaceVariableWithTyped(this, root, numSamplesVar, numSamples))
                 {
                     return false;
@@ -1451,23 +1452,18 @@ bool TranslatorVulkan::translate(TIntermBlock *root,
 
     SpecConst specConst(&getSymbolTable(), compileOptions, getShaderType());
 
-    if ((compileOptions & SH_USE_SPECIALIZATION_CONSTANT) != 0)
+    DriverUniform driverUniforms(DriverUniformMode::InterfaceBlock);
+    DriverUniformExtended driverUniformsExt(DriverUniformMode::InterfaceBlock);
+
+    const bool useExtendedDriverUniforms =
+        (compileOptions & SH_ADD_VULKAN_XFB_EMULATION_SUPPORT_CODE) != 0 ||
+        (compileOptions & SH_ADD_BRESENHAM_LINE_RASTER_EMULATION) != 0;
+
+    DriverUniform *uniforms = useExtendedDriverUniforms ? &driverUniformsExt : &driverUniforms;
+
+    if (!translateImpl(sink, root, compileOptions, perfDiagnostics, &specConst, uniforms))
     {
-        DriverUniform driverUniforms(DriverUniformMode::InterfaceBlock);
-        if (!translateImpl(sink, root, compileOptions, perfDiagnostics, &specConst,
-                           &driverUniforms))
-        {
-            return false;
-        }
-    }
-    else
-    {
-        DriverUniformExtended driverUniformsExt(DriverUniformMode::InterfaceBlock);
-        if (!translateImpl(sink, root, compileOptions, perfDiagnostics, &specConst,
-                           &driverUniformsExt))
-        {
-            return false;
-        }
+        return false;
     }
 
 #if defined(ANGLE_ENABLE_SPIRV_GENERATION_THROUGH_GLSLANG)

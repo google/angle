@@ -86,8 +86,8 @@ enum
     // Implementation upper limits, real maximums depend on the hardware.
     IMPLEMENTATION_MAX_SHADER_STORAGE_BUFFER_BINDINGS = 64,
 
-    // Implementation upper limits of max number of clip distances
-    IMPLEMENTATION_MAX_CLIP_DISTANCES = 32,
+    // Implementation upper limits of max number of clip distances (minimum required per spec)
+    IMPLEMENTATION_MAX_CLIP_DISTANCES = 8,
 
     // Implementation upper limit for layered framebuffer layer count
     IMPLEMENTATION_MAX_FRAMEBUFFER_LAYERS = 256,

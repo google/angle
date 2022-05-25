@@ -125,10 +125,10 @@ const TFunction *Traverser::getRotateFunc()
     TIntermTyped *swapXY = mSpecConst->getSwapXY();
     if (swapXY == nullptr)
     {
-        swapXY = mDriverUniforms->getSwapXYRef();
+        swapXY = mDriverUniforms->getSwapXY();
     }
 
-    TIntermTyped *flipXY = mDriverUniforms->getFlipXYRef(mSymbolTable, DriverUniformFlip::Fragment);
+    TIntermTyped *flipXY = mDriverUniforms->getFlipXY(mSymbolTable, DriverUniformFlip::Fragment);
 
     TIntermSwizzle *offsetYX = new TIntermSwizzle(new TIntermSymbol(offsetParam), {1, 0});
 

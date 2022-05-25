@@ -126,7 +126,7 @@ bool Builder::build(TIntermBlock *root)
     generateEquationSwitch(blendBlock);
 
     // Place the entire blend block under an if (equation != 0)
-    TIntermTyped *equationUniform = mDriverUniforms->getAdvancedBlendEquationRef();
+    TIntermTyped *equationUniform = mDriverUniforms->getAdvancedBlendEquation();
     TIntermTyped *notZero = new TIntermBinary(EOpNotEqual, equationUniform, CreateUIntNode(0));
 
     TIntermIfElse *blend = new TIntermIfElse(notZero, blendBlock, nullptr);
@@ -1181,7 +1181,7 @@ void Builder::generateEquationSwitch(TIntermBlock *blendBlock)
     }
 
     // A driver uniform is used to communicate the blend equation to use.
-    TIntermTyped *equationUniform = mDriverUniforms->getAdvancedBlendEquationRef();
+    TIntermTyped *equationUniform = mDriverUniforms->getAdvancedBlendEquation();
 
     blendBlock->appendStatement(new TIntermSwitch(equationUniform, switchBody));
 

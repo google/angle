@@ -82,14 +82,14 @@ bool Traverser::visitAggregate(Visit visit, TIntermAggregate *node)
     TIntermTyped *swapXY = mSpecConst->getSwapXY();
     if (swapXY == nullptr)
     {
-        swapXY = mDriverUniforms->getSwapXYRef();
+        swapXY = mDriverUniforms->getSwapXY();
     }
 
     TIntermTyped *swapXMultiplier = MakeSwapXMultiplier(swapXY);
     TIntermTyped *swapYMultiplier = MakeSwapYMultiplier(swapXY->deepCopy());
 
     // Get flip multiplier
-    TIntermTyped *flipXY = mDriverUniforms->getFlipXYRef(mSymbolTable, DriverUniformFlip::Fragment);
+    TIntermTyped *flipXY = mDriverUniforms->getFlipXY(mSymbolTable, DriverUniformFlip::Fragment);
 
     // Multiply the flip and rotation multipliers
     TIntermTyped *xMultiplier =

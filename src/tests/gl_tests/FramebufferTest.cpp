@@ -11,6 +11,7 @@
 #include "platform/FeaturesD3D_autogen.h"
 #include "test_utils/ANGLETest.h"
 #include "test_utils/gl_raii.h"
+#include "util/OSWindow.h"
 
 using namespace angle;
 
@@ -4190,6 +4191,163 @@ void main()
 
     // This draw triggers the issue.
     glDrawArrays(GL_TRIANGLES, 0, 6);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Tests change of framebuffer dimensions vs gl_FragCoord.
+TEST_P(FramebufferTest_ES3, FramebufferDimensionsChangeAndFragCoord)
+{
+    constexpr char kVS[] = R"(#version 300 es
+precision highp float;
+uniform float height;
+void main()
+{
+    // gl_VertexID    x    y
+    //      0        -1   -1
+    //      1         1   -1
+    //      2        -1    1
+    //      3         1    1
+    int bit0 = gl_VertexID & 1;
+    int bit1 = gl_VertexID >> 1;
+    gl_Position = vec4(bit0 * 2 - 1, bit1 * 2 - 1, gl_VertexID % 2 == 0 ? -1 : 1, 1);
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+out vec4 colorOut;
+void main()
+{
+    float red = gl_FragCoord.x < 10. ? 1.0 : 0.0;
+    float green = gl_FragCoord.y < 25. ? 1.0 : 0.0;
+    colorOut = vec4(red, green, 0, 1);
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+
+    constexpr GLuint kWidth1       = 99;
+    constexpr GLuint kHeight1      = 142;
+    constexpr GLuint kWidth2       = 75;
+    constexpr GLuint kHeight2      = 167;
+    constexpr GLuint kRenderSplitX = 10;
+    constexpr GLuint kRenderSplitY = 25;
+
+    glViewport(0, 0, std::max(kWidth1, kWidth2), std::max(kHeight1, kHeight2));
+
+    GLTexture tex1, tex2;
+    glBindTexture(GL_TEXTURE_2D, tex1);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kWidth1, kHeight1);
+    glBindTexture(GL_TEXTURE_2D, tex2);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kWidth2, kHeight2);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex1, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    glUseProgram(program);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+    // Verify results
+    EXPECT_PIXEL_RECT_EQ(0, 0, kRenderSplitX, kRenderSplitY, GLColor::yellow);
+    EXPECT_PIXEL_RECT_EQ(0, kRenderSplitY, kRenderSplitX, kHeight1 - kRenderSplitY, GLColor::red);
+    EXPECT_PIXEL_RECT_EQ(kRenderSplitX, 0, kWidth1 - kRenderSplitX, kRenderSplitY, GLColor::green);
+    EXPECT_PIXEL_RECT_EQ(kRenderSplitX, kRenderSplitY, kWidth1 - kRenderSplitX,
+                         kHeight1 - kRenderSplitY, GLColor::black);
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex2, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+    // Verify results
+    EXPECT_PIXEL_RECT_EQ(0, 0, kRenderSplitX, kRenderSplitY, GLColor::yellow);
+    EXPECT_PIXEL_RECT_EQ(0, kRenderSplitY, kRenderSplitX, kHeight2 - kRenderSplitY, GLColor::red);
+    EXPECT_PIXEL_RECT_EQ(kRenderSplitX, 0, kWidth2 - kRenderSplitX, kRenderSplitY, GLColor::green);
+    EXPECT_PIXEL_RECT_EQ(kRenderSplitX, kRenderSplitY, kWidth2 - kRenderSplitX,
+                         kHeight2 - kRenderSplitY, GLColor::black);
+
+    ASSERT_GL_NO_ERROR();
+}
+
+// Tests change of surface dimensions vs gl_FragCoord.
+TEST_P(FramebufferTest_ES3, SurfaceDimensionsChangeAndFragCoord)
+{
+    constexpr char kVS[] = R"(#version 300 es
+precision highp float;
+uniform float height;
+void main()
+{
+    // gl_VertexID    x    y
+    //      0        -1   -1
+    //      1         1   -1
+    //      2        -1    1
+    //      3         1    1
+    int bit0 = gl_VertexID & 1;
+    int bit1 = gl_VertexID >> 1;
+    gl_Position = vec4(bit0 * 2 - 1, bit1 * 2 - 1, gl_VertexID % 2 == 0 ? -1 : 1, 1);
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+out vec4 colorOut;
+void main()
+{
+    float red = gl_FragCoord.x < 10. ? 1.0 : 0.0;
+    float green = gl_FragCoord.y < 25. ? 1.0 : 0.0;
+    colorOut = vec4(red, green, 0, 1);
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+
+    constexpr GLuint kWidth1       = 99;
+    constexpr GLuint kHeight1      = 142;
+    constexpr GLuint kWidth2       = 75;
+    constexpr GLuint kHeight2      = 167;
+    constexpr GLuint kRenderSplitX = 10;
+    constexpr GLuint kRenderSplitY = 25;
+
+    glViewport(0, 0, std::max(kWidth1, kWidth2), std::max(kHeight1, kHeight2));
+
+    const bool isSwappedDimensions = GetParam().isEnabled(Feature::EmulatedPrerotation90) ||
+                                     GetParam().isEnabled(Feature::EmulatedPrerotation270);
+
+    auto resizeWindow = [this, isSwappedDimensions](GLuint width, GLuint height) {
+        if (isSwappedDimensions)
+        {
+            getOSWindow()->resize(height, width);
+        }
+        else
+        {
+            getOSWindow()->resize(width, height);
+        }
+        swapBuffers();
+    };
+
+    resizeWindow(kWidth1, kHeight1);
+    glUseProgram(program);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+    // Verify results
+    EXPECT_PIXEL_RECT_EQ(0, 0, kRenderSplitX, kRenderSplitY, GLColor::yellow);
+    EXPECT_PIXEL_RECT_EQ(0, kRenderSplitY, kRenderSplitX, kHeight1 - kRenderSplitY, GLColor::red);
+    EXPECT_PIXEL_RECT_EQ(kRenderSplitX, 0, kWidth1 - kRenderSplitX, kRenderSplitY, GLColor::green);
+    EXPECT_PIXEL_RECT_EQ(kRenderSplitX, kRenderSplitY, kWidth1 - kRenderSplitX,
+                         kHeight1 - kRenderSplitY, GLColor::black);
+
+    resizeWindow(kWidth2, kHeight2);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+    // Verify results
+    EXPECT_PIXEL_RECT_EQ(0, 0, kRenderSplitX, kRenderSplitY, GLColor::yellow);
+    EXPECT_PIXEL_RECT_EQ(0, kRenderSplitY, kRenderSplitX, kHeight2 - kRenderSplitY, GLColor::red);
+    EXPECT_PIXEL_RECT_EQ(kRenderSplitX, 0, kWidth2 - kRenderSplitX, kRenderSplitY, GLColor::green);
+    EXPECT_PIXEL_RECT_EQ(kRenderSplitX, kRenderSplitY, kWidth2 - kRenderSplitX,
+                         kHeight2 - kRenderSplitY, GLColor::black);
+
+    // Reset window to original dimensions
+    resizeWindow(kWidth, kHeight);
+
     ASSERT_GL_NO_ERROR();
 }
 

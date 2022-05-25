@@ -62,44 +62,53 @@ constexpr size_t kDescriptorBufferViewsInitialSize      = 0;
 // For shader uniforms such as gl_DepthRange and the viewport size.
 struct GraphicsDriverUniforms
 {
-    std::array<float, 4> viewport;
-
-    // 32 bits for 32 clip planes
-    uint32_t enabledClipPlanes;
-
-    uint32_t advancedBlendEquation;
-    int32_t xfbVerticesPerInstance;
-
-    // Used to replace gl_NumSamples. Because gl_NumSamples cannot be recognized in SPIR-V.
-    int32_t numSamples;
-
-    std::array<int32_t, 4> xfbBufferOffsets;
-
-    // .xy contain packed 8-bit values for atomic counter buffer offsets.  These offsets are
-    // within Vulkan's minStorageBufferOffsetAlignment limit and are used to support unaligned
-    // offsets allowed in GL.
+    // Contain packed 8-bit values for atomic counter buffer offsets.  These offsets are within
+    // Vulkan's minStorageBufferOffsetAlignment limit and are used to support unaligned offsets
+    // allowed in GL.
     std::array<uint32_t, 2> acbBufferOffsets;
 
-    uint32_t surfaceRotation;
-    // Packed vec2 of float16
+    // .x is near, .y is far
+    std::array<float, 2> depthRange;
+
+    // Used to flip gl_FragCoord.  Packed uvec2
+    uint32_t renderArea;
+
+    // Packed vec4 of snorm8
     uint32_t flipXY;
 
-    // We'll use x, y, z for near / far / diff respectively.
-    std::array<float, 4> depthRange;
+    // Only the lower 16 bits used
+    uint32_t dither;
+
+    // Various bits of state:
+    // - Surface rotation
+    // - Advanced blend equation
+    // - Sample count
+    // - Enabled clip planes
+    uint32_t misc;
 };
 static_assert(sizeof(GraphicsDriverUniforms) % (sizeof(uint32_t) * 4) == 0,
               "GraphicsDriverUniforms should 16bytes aligned");
 
-// TODO: http://issuetracker.google.com/173636783 Once the bug is fixed, we should remove this.
+// Only used under the following conditions:
+//
+// - Bresenham line rasterization is not supported, or
+// - Transform feedback is emulated
+//
 struct GraphicsDriverUniformsExtended
 {
     GraphicsDriverUniforms common;
 
-    // Used to flip gl_FragCoord (both .xy for Android pre-rotation; only .y for desktop)
-    std::array<float, 2> halfRenderArea;
-    uint32_t dither;
-    uint32_t padding[3];
+    // Only used with bresenham line rasterization emulation
+    std::array<float, 4> viewport;
+
+    // Only used with transform feedback emulation
+    std::array<int32_t, 4> xfbBufferOffsets;
+    int32_t xfbVerticesPerInstance;
+
+    int32_t padding[3];
 };
+static_assert(sizeof(GraphicsDriverUniformsExtended) % (sizeof(uint32_t) * 4) == 0,
+              "GraphicsDriverUniformsExtended should 16bytes aligned");
 
 struct ComputeDriverUniforms
 {
@@ -4330,7 +4339,10 @@ void ContextVk::updateViewport(FramebufferVk *framebufferVk,
     // Ensure viewport is within Vulkan requirements
     vk::ClampViewport(&mViewport);
 
-    invalidateGraphicsDriverUniforms();
+    if (getFeatures().basicGLLineRasterization.enabled)
+    {
+        invalidateGraphicsDriverUniforms();
+    }
     mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_VIEWPORT);
 }
 
@@ -5589,6 +5601,9 @@ void ContextVk::onDrawFramebufferRenderPassDescChange(FramebufferVk *framebuffer
         // Otherwise mark the pipeline as dirty.
         invalidateCurrentGraphicsPipeline();
     }
+
+    // Update render area in the driver uniforms.
+    invalidateGraphicsDriverUniforms();
 }
 
 void ContextVk::invalidateCurrentTransformFeedbackBuffers()
@@ -6051,7 +6066,8 @@ angle::Result ContextVk::handleDirtyGraphicsDriverUniforms(DirtyBits::Iterator *
                                                            DirtyBits dirtyBitMask)
 {
     // Allocate a new region in the dynamic buffer.
-    bool useGraphicsDriverUniformsExtended = getFeatures().forceDriverUniformOverSpecConst.enabled;
+    const bool useGraphicsDriverUniformsExtended = getFeatures().basicGLLineRasterization.enabled ||
+                                                   getFeatures().emulateTransformFeedback.enabled;
     uint8_t *ptr;
     bool newBuffer;
     GraphicsDriverUniforms *driverUniforms;
@@ -6070,10 +6086,13 @@ angle::Result ContextVk::handleDirtyGraphicsDriverUniforms(DirtyBits::Iterator *
                                      &ptr, &newBuffer));
 
     FramebufferVk *drawFramebufferVk = getDrawFramebuffer();
-    float halfRenderAreaWidth =
-        static_cast<float>(drawFramebufferVk->getState().getDimensions().width) * 0.5f;
-    float halfRenderAreaHeight =
-        static_cast<float>(drawFramebufferVk->getState().getDimensions().height) * 0.5f;
+
+    static_assert(gl::IMPLEMENTATION_MAX_2D_TEXTURE_SIZE <= 0xFFFF,
+                  "Not enough bits for render area");
+    uint16_t renderAreaWidth, renderAreaHeight;
+    SetBitField(renderAreaWidth, drawFramebufferVk->getState().getDimensions().width);
+    SetBitField(renderAreaHeight, drawFramebufferVk->getState().getDimensions().height);
+    const uint32_t renderArea = renderAreaHeight << 16 | renderAreaWidth;
 
     bool flipX = false;
     bool flipY = false;
@@ -6112,26 +6131,40 @@ angle::Result ContextVk::handleDirtyGraphicsDriverUniforms(DirtyBits::Iterator *
     {
         GraphicsDriverUniformsExtended *driverUniformsExt =
             reinterpret_cast<GraphicsDriverUniformsExtended *>(ptr);
-        driverUniformsExt->halfRenderArea = {halfRenderAreaWidth, halfRenderAreaHeight};
-        driverUniforms                    = &driverUniformsExt->common;
+        memset(driverUniformsExt, 0, sizeof(*driverUniformsExt));
+
+        gl::Rectangle glViewport = mState.getViewport();
+        if (isRotatedAspectRatioForDrawFBO())
+        {
+            // The surface is rotated 90/270 degrees.  This changes the aspect ratio of the surface.
+            std::swap(glViewport.x, glViewport.y);
+            std::swap(glViewport.width, glViewport.height);
+        }
+        driverUniformsExt->viewport = {
+            static_cast<float>(glViewport.x), static_cast<float>(glViewport.y),
+            static_cast<float>(glViewport.width), static_cast<float>(glViewport.height)};
+
+        if (mState.isTransformFeedbackActiveUnpaused())
+        {
+            TransformFeedbackVk *transformFeedbackVk =
+                vk::GetImpl(mState.getCurrentTransformFeedback());
+            transformFeedbackVk->getBufferOffsets(this, mXfbBaseVertex,
+                                                  driverUniformsExt->xfbBufferOffsets.data(),
+                                                  driverUniformsExt->xfbBufferOffsets.size());
+        }
+        driverUniformsExt->xfbVerticesPerInstance =
+            static_cast<int32_t>(mXfbVertexCountPerInstance);
+
+        driverUniforms = &driverUniformsExt->common;
     }
     else
     {
         driverUniforms = reinterpret_cast<GraphicsDriverUniforms *>(ptr);
     }
 
-    gl::Rectangle glViewport = mState.getViewport();
-    if (isRotatedAspectRatioForDrawFBO())
-    {
-        // The surface is rotated 90/270 degrees.  This changes the aspect ratio of the surface.
-        std::swap(glViewport.x, glViewport.y);
-        std::swap(glViewport.width, glViewport.height);
-    }
-
-    float depthRangeNear = mState.getNearPlane();
-    float depthRangeFar  = mState.getFarPlane();
-    float depthRangeDiff = depthRangeFar - depthRangeNear;
-    int32_t numSamples   = drawFramebufferVk->getSamples();
+    const float depthRangeNear = mState.getNearPlane();
+    const float depthRangeFar  = mState.getFarPlane();
+    const uint32_t numSamples  = drawFramebufferVk->getSamples();
 
     uint32_t advancedBlendEquation = 0;
     if (getFeatures().emulateAdvancedBlendEquations.enabled)
@@ -6146,28 +6179,32 @@ angle::Result ContextVk::handleDirtyGraphicsDriverUniforms(DirtyBits::Iterator *
         }
     }
 
+    const uint32_t swapXY               = IsRotatedAspectRatio(mCurrentRotationDrawFramebuffer);
+    const uint32_t enabledClipDistances = mState.getEnabledClipDistances().bits();
+
+    static_assert(angle::BitMask<uint32_t>(gl::IMPLEMENTATION_MAX_CLIP_DISTANCES) <=
+                      sh::vk::kDriverUniformsMiscEnabledClipPlanesMask,
+                  "Not enough bits for enabled clip planes");
+
+    ASSERT((swapXY & ~sh::vk::kDriverUniformsMiscSwapXYMask) == 0);
+    ASSERT((advancedBlendEquation & ~sh::vk::kDriverUniformsMiscAdvancedBlendEquationMask) == 0);
+    ASSERT((numSamples & ~sh::vk::kDriverUniformsMiscSampleCountMask) == 0);
+    ASSERT((enabledClipDistances & ~sh::vk::kDriverUniformsMiscEnabledClipPlanesMask) == 0);
+
+    const uint32_t misc =
+        swapXY | advancedBlendEquation << sh::vk::kDriverUniformsMiscAdvancedBlendEquationOffset |
+        numSamples << sh::vk::kDriverUniformsMiscSampleCountOffset |
+        enabledClipDistances << sh::vk::kDriverUniformsMiscEnabledClipPlanesOffset;
+
     // Copy and flush to the device.
     *driverUniforms = {
-        {static_cast<float>(glViewport.x), static_cast<float>(glViewport.y),
-         static_cast<float>(glViewport.width), static_cast<float>(glViewport.height)},
-        mState.getEnabledClipDistances().bits(),
-        advancedBlendEquation,
-        static_cast<int32_t>(mXfbVertexCountPerInstance),
-        numSamples,
         {},
-        {},
-        IsRotatedAspectRatio(mCurrentRotationDrawFramebuffer),
+        {depthRangeNear, depthRangeFar},
+        renderArea,
         MakeFlipUniform(flipX, flipY, invertViewport),
-        {depthRangeNear, depthRangeFar, depthRangeDiff, 0.0f}};
-
-    if (mState.isTransformFeedbackActiveUnpaused())
-    {
-        TransformFeedbackVk *transformFeedbackVk =
-            vk::GetImpl(mState.getCurrentTransformFeedback());
-        transformFeedbackVk->getBufferOffsets(this, mXfbBaseVertex,
-                                              driverUniforms->xfbBufferOffsets.data(),
-                                              driverUniforms->xfbBufferOffsets.size());
-    }
+        mGraphicsPipelineDesc->getEmulatedDitherControl(),
+        misc,
+    };
 
     if (mState.hasValidAtomicCounterBuffer())
     {
