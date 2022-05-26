@@ -206,15 +206,6 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
         return *mImage;
     }
 
-    bool imageValid()
-    {
-        if (mImage && mImage->valid())
-        {
-            return true;
-        }
-        return false;
-    }
-
     void retainBufferViews(vk::ResourceUseList *resourceUseList)
     {
         mBufferViews.retain(resourceUseList);
@@ -312,8 +303,6 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
         mImmutableSamplerDirty = false;
         return isDirty;
     }
-
-    angle::Result onLabelUpdate(const gl::Context *context) override;
 
   private:
     // Transform an image index from the frontend into one that can be used on the backing
