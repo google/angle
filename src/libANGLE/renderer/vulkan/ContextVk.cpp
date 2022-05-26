@@ -502,9 +502,9 @@ void OnImageBufferWrite(ContextVk *contextVk,
     // TODO: accept multiple stages in bufferWrite.  http://anglebug.com/3573
     for (gl::ShaderType stage : stages)
     {
-        commandBufferHelper->bufferWrite(
-            contextVk, VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT,
-            vk::GetPipelineStage(stage), vk::AliasingMode::Disallowed, &buffer);
+        commandBufferHelper->bufferWrite(contextVk,
+                                         VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT,
+                                         vk::GetPipelineStage(stage), &buffer);
     }
 }
 
@@ -2320,7 +2320,7 @@ void ContextVk::handleDirtyShaderBufferResourcesImpl(
             // We set the SHADER_READ_BIT to be conservative.
             VkAccessFlags accessFlags = VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT;
             commandBufferHelper->bufferWrite(this, accessFlags, vk::GetPipelineStage(shaderType),
-                                             vk::AliasingMode::Allowed, &bufferHelper);
+                                             &bufferHelper);
         }
 
         const std::vector<gl::AtomicCounterBuffer> &acbs = executable->getAtomicCounterBuffers();
@@ -2339,9 +2339,9 @@ void ContextVk::handleDirtyShaderBufferResourcesImpl(
             vk::BufferHelper &bufferHelper = bufferVk->getBuffer();
 
             // We set SHADER_READ_BIT to be conservative.
-            commandBufferHelper->bufferWrite(
-                this, VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT,
-                vk::GetPipelineStage(shaderType), vk::AliasingMode::Allowed, &bufferHelper);
+            commandBufferHelper->bufferWrite(this,
+                                             VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT,
+                                             vk::GetPipelineStage(shaderType), &bufferHelper);
         }
     }
 }
@@ -2382,8 +2382,7 @@ angle::Result ContextVk::handleDirtyGraphicsTransformFeedbackBuffersEmulation(
             vk::BufferHelper *bufferHelper = bufferHelpers[bufferIndex];
             ASSERT(bufferHelper);
             mRenderPassCommands->bufferWrite(this, VK_ACCESS_SHADER_WRITE_BIT,
-                                             vk::PipelineStage::VertexShader,
-                                             vk::AliasingMode::Disallowed, bufferHelper);
+                                             vk::PipelineStage::VertexShader, bufferHelper);
         }
     }
 
@@ -2426,8 +2425,7 @@ angle::Result ContextVk::handleDirtyGraphicsTransformFeedbackBuffersExtension(
         vk::BufferHelper *bufferHelper = buffers[bufferIndex];
         ASSERT(bufferHelper);
         mRenderPassCommands->bufferWrite(this, VK_ACCESS_TRANSFORM_FEEDBACK_WRITE_BIT_EXT,
-                                         vk::PipelineStage::TransformFeedback,
-                                         vk::AliasingMode::Disallowed, bufferHelper);
+                                         vk::PipelineStage::TransformFeedback, bufferHelper);
     }
 
     // Issue necessary barriers for the transform feedback counter buffer.  Note that the barrier is
@@ -2438,8 +2436,7 @@ angle::Result ContextVk::handleDirtyGraphicsTransformFeedbackBuffersExtension(
     mRenderPassCommands->bufferWrite(this,
                                      VK_ACCESS_TRANSFORM_FEEDBACK_COUNTER_WRITE_BIT_EXT |
                                          VK_ACCESS_TRANSFORM_FEEDBACK_COUNTER_READ_BIT_EXT,
-                                     vk::PipelineStage::TransformFeedback,
-                                     vk::AliasingMode::Disallowed, &counterBuffers[0]);
+                                     vk::PipelineStage::TransformFeedback, &counterBuffers[0]);
     for (size_t bufferIndex = 1; bufferIndex < bufferCount; ++bufferIndex)
     {
         mRenderPassCommands->retainReadWriteResource(&counterBuffers[bufferIndex]);
@@ -6541,8 +6538,7 @@ angle::Result ContextVk::updateActiveImages(CommandBufferHelperT *commandBufferH
             imageUnit, *image, shaderStages, &level, &layerStart, &layerCount);
 
         commandBufferHelper->imageWrite(this, level, layerStart, layerCount,
-                                        image->getAspectFlags(), imageLayout,
-                                        vk::AliasingMode::Allowed, image);
+                                        image->getAspectFlags(), imageLayout, image);
     }
 
     return angle::Result::Continue;
@@ -7424,7 +7420,7 @@ angle::Result ContextVk::onResourceAccess(const vk::CommandBufferAccess &access)
         ASSERT(!mOutsideRenderPassCommands->usesBuffer(*bufferAccess.buffer));
 
         mOutsideRenderPassCommands->bufferWrite(this, bufferAccess.accessType, bufferAccess.stage,
-                                                vk::AliasingMode::Disallowed, bufferAccess.buffer);
+                                                bufferAccess.buffer);
     }
 
     for (const vk::CommandBufferBufferExternalAcquireRelease &bufferAcquireRelease :
