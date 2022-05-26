@@ -179,11 +179,12 @@ class VertexArray final : public angle::ObserverInterface,
         DIRTY_BINDING_MAX = DIRTY_BINDING_UNKNOWN,
     };
 
-    using DirtyBits             = angle::BitSet<DIRTY_BIT_MAX>;
-    using DirtyAttribBits       = angle::BitSet<DIRTY_ATTRIB_MAX>;
-    using DirtyBindingBits      = angle::BitSet<DIRTY_BINDING_MAX>;
-    using DirtyAttribBitsArray  = std::array<DirtyAttribBits, gl::MAX_VERTEX_ATTRIBS>;
-    using DirtyBindingBitsArray = std::array<DirtyBindingBits, gl::MAX_VERTEX_ATTRIB_BINDINGS>;
+    using DirtyBits                = angle::BitSet<DIRTY_BIT_MAX>;
+    using DirtyAttribBits          = angle::BitSet<DIRTY_ATTRIB_MAX>;
+    using DirtyBindingBits         = angle::BitSet<DIRTY_BINDING_MAX>;
+    using DirtyAttribBitsArray     = std::array<DirtyAttribBits, gl::MAX_VERTEX_ATTRIBS>;
+    using DirtyBindingBitsArray    = std::array<DirtyBindingBits, gl::MAX_VERTEX_ATTRIB_BINDINGS>;
+    using DirtyObserverBindingBits = angle::BitSet<gl::MAX_VERTEX_ATTRIB_BINDINGS>;
 
     VertexArray(rx::GLImplFactory *factory,
                 VertexArrayID id,
@@ -364,6 +365,9 @@ class VertexArray final : public angle::ObserverInterface,
                               GLintptr offset,
                               GLsizei stride);
 
+    void onBind(const Context *context);
+    void onUnbind(const Context *context);
+
     VertexArrayID mId;
 
     VertexArrayState mState;
@@ -375,6 +379,9 @@ class VertexArray final : public angle::ObserverInterface,
     rx::VertexArrayImpl *mVertexArray;
 
     std::vector<angle::ObserverBinding> mArrayBufferObserverBindings;
+    // Track which observer in mArrayBufferObserverBindings is not currently been removed from
+    // subject's observer list.
+    DirtyObserverBindingBits mDirtyObserverBindingBits;
 
     AttributesMask mCachedTransformFeedbackConflictedBindingsMask;
 

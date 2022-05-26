@@ -1881,16 +1881,13 @@ void State::setVertexArrayBinding(const Context *context, VertexArray *vertexArr
         return;
     }
 
-    if (context->isWebGL())
+    if (mVertexArray)
     {
-        if (mVertexArray)
-        {
-            mVertexArray->onBindingChanged(context, -1);
-        }
-        if (vertexArray)
-        {
-            vertexArray->onBindingChanged(context, 1);
-        }
+        mVertexArray->onBindingChanged(context, -1);
+    }
+    if (vertexArray)
+    {
+        vertexArray->onBindingChanged(context, 1);
     }
 
     mVertexArray = vertexArray;
