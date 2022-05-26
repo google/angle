@@ -441,6 +441,14 @@
             "issue": "http://anglebug.com/5371"
         },
         {
+            "name": "disallow_mixed_depth_stencil_load_op_none_and_load",
+            "category": "Workarounds",
+            "description": [
+                "Disallow use of LOAD_OP_NONE for only one of the depth or stencil aspects of a depth/stencil attachment"
+            ],
+            "issue": "http://anglebug.com/7370"
+        },
+        {
             "name": "supports_depth_clip_control",
             "category": "Features",
             "description": [
