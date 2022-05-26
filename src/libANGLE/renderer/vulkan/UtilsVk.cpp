@@ -2087,7 +2087,11 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
                                           SwapchainResolveMode::Disabled));
     if (contextVk->hasStartedRenderPassWithFramebuffer(currentFramebuffer))
     {
-        commandBuffer = &contextVk->getStartedRenderPassCommands().getCommandBuffer();
+        vk::RenderPassCommandBufferHelper *renderPassCommands =
+            &contextVk->getStartedRenderPassCommands();
+        renderPassCommands->growRenderArea(contextVk, scissoredRenderArea);
+
+        commandBuffer = &renderPassCommands->getCommandBuffer();
     }
     else
     {
