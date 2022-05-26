@@ -871,8 +871,12 @@ void RendererVk::ensureCapsInitialized() const
         reservedVaryingComponentCount += kReservedVaryingComponentsForGLLineRasterization;
     }
     if (getFeatures().supportsTransformFeedbackExtension.enabled &&
-        !getFeatures().supportsDepthClipControl.enabled &&
-        !getFeatures().enablePreRotateSurfaces.enabled)
+        (!getFeatures().supportsDepthClipControl.enabled ||
+         getFeatures().enablePreRotateSurfaces.enabled ||
+         getFeatures().emulatedPrerotation90.enabled ||
+         getFeatures().emulatedPrerotation180.enabled ||
+         getFeatures().emulatedPrerotation270.enabled ||
+         !getFeatures().supportsNegativeViewport.enabled))
     {
         reservedVaryingComponentCount += kReservedVaryingComponentsForTransformFeedbackExtension;
     }
