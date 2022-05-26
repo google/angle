@@ -4661,7 +4661,6 @@ angle::Result GraphicsPipelineCache::insertPipeline(
     // This "if" is left here for the benefit of VulkanPipelineCachePerfTest.
     if (contextVk != nullptr)
     {
-        contextVk->getRenderer()->onNewGraphicsPipeline();
         ANGLE_TRY(desc.initializePipeline(contextVk, pipelineCacheVk, compatibleRenderPass,
                                           pipelineLayout, activeAttribLocationsMask,
                                           programAttribsTypeMask, missingOutputsMask, shaders,
