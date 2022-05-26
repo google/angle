@@ -211,6 +211,14 @@
                 "some GPUs are faster to read a texture by first copying the texture to a buffer"
             ],
             "issue": "http://anglebug.com/7117"
+        },
+        {
+            "name": "limit_max_draw_buffers_for_testing",
+            "category": "Features",
+            "description": [
+                "Used to check the backend works when the device's advertized limit is less than the code's limit"
+            ],
+            "issue": "http://anglebug.com/7280"
         }
     ]
 }

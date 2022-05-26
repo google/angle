@@ -57,9 +57,13 @@ const gl::InternalFormat &GetReadAttachmentInfo(const gl::Context *context,
 
 // FramebufferMtl implementation
 FramebufferMtl::FramebufferMtl(const gl::FramebufferState &state,
+                               ContextMtl *context,
                                bool flipY,
                                WindowSurfaceMtl *backbuffer)
-    : FramebufferImpl(state), mBackbuffer(backbuffer), mFlipY(flipY)
+    : FramebufferImpl(state),
+      mColorRenderTargets(context->getNativeCaps().maxColorAttachments, nullptr),
+      mBackbuffer(backbuffer),
+      mFlipY(flipY)
 {
     reset();
 }
@@ -885,7 +889,7 @@ void FramebufferMtl::onFrameEnd(const gl::Context *context)
 angle::Result FramebufferMtl::updateColorRenderTarget(const gl::Context *context,
                                                       size_t colorIndexGL)
 {
-    ASSERT(colorIndexGL < mtl::kMaxRenderTargets);
+    ASSERT(colorIndexGL < mColorRenderTargets.size());
     // Reset load store action
     mRenderPassDesc.colorAttachments[colorIndexGL].reset();
     return updateCachedRenderTarget(context, mState.getColorAttachment(colorIndexGL),
@@ -1019,7 +1023,7 @@ angle::Result FramebufferMtl::prepareRenderPass(const gl::Context *context,
     desc.sampleCount             = 1;
     for (uint32_t colorIndexGL = 0; colorIndexGL < maxColorAttachments; ++colorIndexGL)
     {
-        ASSERT(colorIndexGL < mtl::kMaxRenderTargets);
+        ASSERT(colorIndexGL < mColorRenderTargets.size());
 
         mtl::RenderPassColorAttachmentDesc &colorAttachment = desc.colorAttachments[colorIndexGL];
         const RenderTargetMtl *colorRenderTarget            = mColorRenderTargets[colorIndexGL];
@@ -1114,7 +1118,7 @@ angle::Result FramebufferMtl::clearWithLoadOpRenderPassNotStarted(
 
     for (uint32_t colorIndexGL = 0; colorIndexGL < tempDesc.numColorAttachments; ++colorIndexGL)
     {
-        ASSERT(colorIndexGL < mtl::kMaxRenderTargets);
+        ASSERT(colorIndexGL < tempDesc.colorAttachments.size());
 
         mtl::RenderPassColorAttachmentDesc &colorAttachment =
             tempDesc.colorAttachments[colorIndexGL];
@@ -1196,7 +1200,7 @@ angle::Result FramebufferMtl::clearWithLoadOpRenderPassStarted(
     for (uint32_t colorIndexGL = 0; colorIndexGL < mRenderPassDesc.numColorAttachments;
          ++colorIndexGL)
     {
-        ASSERT(colorIndexGL < mtl::kMaxRenderTargets);
+        ASSERT(colorIndexGL < mRenderPassDesc.colorAttachments.size());
 
         mtl::RenderPassColorAttachmentDesc &colorAttachment =
             mRenderPassDesc.colorAttachments[colorIndexGL];

@@ -211,6 +211,12 @@ struct FeaturesMtl : FeatureSetBase
         "copyTextureToBufferForReadOptimization", FeatureCategory::MetalWorkarounds,
         "some GPUs are faster to read a texture by first copying the texture to a buffer", &members,
         "http://anglebug.com/7117"};
+
+    FeatureInfo limitMaxDrawBuffersForTesting = {
+        "limitMaxDrawBuffersForTesting", FeatureCategory::MetalFeatures,
+        "Used to check the backend works when the device's advertized limit is less than the "
+        "code's limit",
+        &members, "http://anglebug.com/7280"};
 };
 
 inline FeaturesMtl::FeaturesMtl()  = default;

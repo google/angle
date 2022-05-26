@@ -775,7 +775,7 @@ void RenderPassDesc::populateRenderPipelineOutputDesc(const BlendDescArray &blen
     }
 
     // Reset the unused output slots to ensure consistent hash value
-    for (uint32_t i = this->numColorAttachments; i < kMaxRenderTargets; ++i)
+    for (uint32_t i = this->numColorAttachments; i < outputDescriptor.colorAttachments.size(); ++i)
     {
         outputDescriptor.colorAttachments[i].reset();
     }
@@ -831,15 +831,18 @@ bool RenderPassDesc::operator==(const RenderPassDesc &other) const
 }
 
 // Convert to Metal object
-void RenderPassDesc::convertToMetalDesc(MTLRenderPassDescriptor *objCDesc) const
+void RenderPassDesc::convertToMetalDesc(MTLRenderPassDescriptor *objCDesc,
+                                        uint32_t deviceMaxRenderTargets) const
 {
+    ASSERT(deviceMaxRenderTargets <= kMaxRenderTargets);
+
     ANGLE_MTL_OBJC_SCOPE
     {
         for (uint32_t i = 0; i < numColorAttachments; ++i)
         {
             ToObjC(colorAttachments[i], objCDesc.colorAttachments[i]);
         }
-        for (uint32_t i = numColorAttachments; i < kMaxRenderTargets; ++i)
+        for (uint32_t i = numColorAttachments; i < deviceMaxRenderTargets; ++i)
         {
             // Inactive render target
             objCDesc.colorAttachments[i].texture     = nil;

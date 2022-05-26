@@ -147,6 +147,7 @@ enum class Feature
     IntelExplicitBoolCastWorkaround,
     KeepBufferShadowCopy,
     LimitMax3dArrayTextureSizeTo1024,
+    LimitMaxDrawBuffersForTesting,
     LimitMaxMSAASamplesTo4,
     LimitMaxTextureSizeTo4096,
     LogMemoryReportCallbacks,
