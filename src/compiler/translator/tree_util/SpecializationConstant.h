@@ -34,9 +34,6 @@ class SpecConst
     // Returns a boolean: should X and Y be swapped?
     TIntermTyped *getSwapXY();
 
-    // Half render area
-    TIntermTyped *getHalfRenderArea();
-
     // Dither emulation
     TIntermTyped *getDither();
 
@@ -45,8 +42,6 @@ class SpecConst
 
   private:
     TIntermSymbol *getRotation();
-    TIntermSymbol *getDrawableWidth();
-    TIntermSymbol *getDrawableHeight();
 
     // If unsupported, this should be set to null.
     TSymbolTable *mSymbolTable;
@@ -54,8 +49,6 @@ class SpecConst
 
     TVariable *mLineRasterEmulationVar;
     TVariable *mSurfaceRotationVar;
-    TVariable *mDrawableWidthVar;
-    TVariable *mDrawableHeightVar;
     TVariable *mDitherVar;
 
     // Bit is set if YFlip or Rotation has been used

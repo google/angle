@@ -456,12 +456,6 @@ struct PackedColorBlendStateInfo final
 constexpr size_t kPackedColorBlendStateSize = sizeof(PackedColorBlendStateInfo);
 static_assert(kPackedColorBlendStateSize == 36, "Size check failed");
 
-struct PackedExtent final
-{
-    uint16_t width;
-    uint16_t height;
-};
-
 struct PackedDither final
 {
     static_assert(gl::IMPLEMENTATION_MAX_DRAW_BUFFERS <= 8,
@@ -531,7 +525,7 @@ static_assert(kPackedDynamicStateSize == 40, "Size check failed");
 constexpr size_t kGraphicsPipelineDescSumOfSizes =
     kVertexInputAttributesSize + kRenderPassDescSize +
     kPackedInputAssemblyAndRasterizationStateSize + kPackedColorBlendStateSize +
-    sizeof(PackedExtent) + sizeof(PackedDither) + kPackedDynamicStateSize;
+    sizeof(PackedDither) + kPackedDynamicStateSize;
 
 // Number of dirty bits in the dirty bit set.
 constexpr size_t kGraphicsPipelineDirtyBitBytes = 4;
@@ -709,11 +703,6 @@ class GraphicsPipelineDesc final
         return mInputAssemblyAndRasterizationStateInfo.misc.surfaceRotation;
     }
 
-    void updateDrawableSize(GraphicsPipelineTransitionBits *transition,
-                            uint32_t width,
-                            uint32_t height);
-    const PackedExtent &getDrawableSize() const { return mDrawableSize; }
-
     void updateEmulatedDitherControl(GraphicsPipelineTransitionBits *transition, uint16_t value);
     uint32_t getEmulatedDitherControl() const { return mDither.emulatedDitherControl; }
 
@@ -730,7 +719,6 @@ class GraphicsPipelineDesc final
     RenderPassDesc mRenderPassDesc;
     PackedInputAssemblyAndRasterizationStateInfo mInputAssemblyAndRasterizationStateInfo;
     PackedColorBlendStateInfo mColorBlendStateInfo;
-    PackedExtent mDrawableSize;
     PackedDither mDither;
     PackedDynamicState mDynamicState;
 };

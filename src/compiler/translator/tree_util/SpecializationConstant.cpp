@@ -23,9 +23,7 @@ constexpr ImmutableString kLineRasterEmulationSpecConstVarName =
     ImmutableString("ANGLELineRasterEmulation");
 constexpr ImmutableString kSurfaceRotationSpecConstVarName =
     ImmutableString("ANGLESurfaceRotation");
-constexpr ImmutableString kDrawableWidthSpecConstVarName  = ImmutableString("ANGLEDrawableWidth");
-constexpr ImmutableString kDrawableHeightSpecConstVarName = ImmutableString("ANGLEDrawableHeight");
-constexpr ImmutableString kDitherSpecConstVarName         = ImmutableString("ANGLEDither");
+constexpr ImmutableString kDitherSpecConstVarName = ImmutableString("ANGLEDither");
 
 const TType *MakeSpecConst(const TType &type, vk::SpecializationConstantId id)
 {
@@ -47,8 +45,6 @@ SpecConst::SpecConst(TSymbolTable *symbolTable, ShCompileOptions compileOptions,
       mCompileOptions(compileOptions),
       mLineRasterEmulationVar(nullptr),
       mSurfaceRotationVar(nullptr),
-      mDrawableWidthVar(nullptr),
-      mDrawableHeightVar(nullptr),
       mDitherVar(nullptr)
 {
     if (shaderType == GL_FRAGMENT_SHADER || shaderType == GL_COMPUTE_SHADER)
@@ -86,22 +82,6 @@ void SpecConst::declareSpecConsts(TIntermBlock *root)
             new TIntermBinary(EOpInitialize, getRotation(), CreateBoolNode(false)));
 
         root->insertStatement(0, decl);
-    }
-
-    if (mDrawableWidthVar != nullptr)
-    {
-        TIntermDeclaration *decl = new TIntermDeclaration();
-        decl->appendDeclarator(
-            new TIntermBinary(EOpInitialize, getDrawableWidth(), CreateFloatNode(0, EbpMedium)));
-        root->insertStatement(0, decl);
-    }
-
-    if (mDrawableHeightVar != nullptr)
-    {
-        TIntermDeclaration *decl = new TIntermDeclaration();
-        decl->appendDeclarator(
-            new TIntermBinary(EOpInitialize, getDrawableHeight(), CreateFloatNode(0, EbpMedium)));
-        root->insertStatement(1, decl);
     }
 
     if (mDitherVar != nullptr)
@@ -152,56 +132,6 @@ TIntermTyped *SpecConst::getSwapXY()
     }
     mUsageBits.set(vk::SpecConstUsage::Rotation);
     return getRotation();
-}
-
-TIntermSymbol *SpecConst::getDrawableWidth()
-{
-    if (mDrawableWidthVar == nullptr)
-    {
-        const TType *type = MakeSpecConst(*StaticType::GetBasic<EbtFloat, EbpHigh>(),
-                                          vk::SpecializationConstantId::DrawableWidth);
-
-        mDrawableWidthVar = new TVariable(mSymbolTable, kDrawableWidthSpecConstVarName, type,
-                                          SymbolType::AngleInternal);
-    }
-    return new TIntermSymbol(mDrawableWidthVar);
-}
-
-TIntermSymbol *SpecConst::getDrawableHeight()
-{
-    if (mDrawableHeightVar == nullptr)
-    {
-        const TType *type = MakeSpecConst(*StaticType::GetBasic<EbtFloat, EbpHigh>(),
-                                          vk::SpecializationConstantId::DrawableHeight);
-
-        mDrawableHeightVar = new TVariable(mSymbolTable, kDrawableHeightSpecConstVarName, type,
-                                           SymbolType::AngleInternal);
-    }
-    return new TIntermSymbol(mDrawableHeightVar);
-}
-
-TIntermTyped *SpecConst::getHalfRenderArea()
-{
-    if ((mCompileOptions & SH_USE_SPECIALIZATION_CONSTANT) == 0)
-    {
-        return nullptr;
-    }
-
-    // vec2 drawableSize(drawableWidth, drawableHeight)
-    auto vec2Type = new TType(EbtFloat, 2);
-    TIntermSequence widthHeightArgs;
-    widthHeightArgs.push_back(getDrawableWidth());
-    widthHeightArgs.push_back(getDrawableHeight());
-    TIntermAggregate *drawableSize =
-        TIntermAggregate::CreateConstructor(*vec2Type, &widthHeightArgs);
-
-    // drawableSize * 0.5f
-    TIntermBinary *halfRenderArea =
-        new TIntermBinary(EOpVectorTimesScalar, drawableSize, CreateFloatNode(0.5, EbpMedium));
-    mUsageBits.set(vk::SpecConstUsage::DrawableSize);
-
-    // No rotation needed because drawableSize is already rotated.
-    return halfRenderArea;
 }
 
 TIntermTyped *SpecConst::getDither()

@@ -1384,16 +1384,6 @@ void InitializeSpecializationInfo(
                     offsetof(SpecializationConstants, surfaceRotation);
                 (*specializationEntriesOut)[id].size = sizeof(specConsts.surfaceRotation);
                 break;
-            case sh::vk::SpecializationConstantId::DrawableWidth:
-                (*specializationEntriesOut)[id].offset =
-                    offsetof(vk::SpecializationConstants, drawableWidth);
-                (*specializationEntriesOut)[id].size = sizeof(specConsts.drawableWidth);
-                break;
-            case sh::vk::SpecializationConstantId::DrawableHeight:
-                (*specializationEntriesOut)[id].offset =
-                    offsetof(vk::SpecializationConstants, drawableHeight);
-                (*specializationEntriesOut)[id].size = sizeof(specConsts.drawableHeight);
-                break;
             case sh::vk::SpecializationConstantId::Dither:
                 (*specializationEntriesOut)[id].offset =
                     offsetof(vk::SpecializationConstants, dither);
@@ -1870,9 +1860,6 @@ void GraphicsPipelineDesc::initDefaults(const ContextVk *contextVk)
     std::fill(&mColorBlendStateInfo.attachments[0],
               &mColorBlendStateInfo.attachments[gl::IMPLEMENTATION_MAX_DRAW_BUFFERS],
               blendAttachmentState);
-
-    mDrawableSize.width  = 1;
-    mDrawableSize.height = 1;
 
     mDither.emulatedDitherControl = 0;
     mDither.unused                = 0;
@@ -2834,16 +2821,6 @@ void GraphicsPipelineDesc::updatePolygonOffsetFillEnabled(
 void GraphicsPipelineDesc::setRenderPassDesc(const RenderPassDesc &renderPassDesc)
 {
     mRenderPassDesc = renderPassDesc;
-}
-
-void GraphicsPipelineDesc::updateDrawableSize(GraphicsPipelineTransitionBits *transition,
-                                              uint32_t width,
-                                              uint32_t height)
-{
-    SetBitField(mDrawableSize.width, width);
-    SetBitField(mDrawableSize.height, height);
-    transition->set(ANGLE_GET_TRANSITION_BIT(mDrawableSize, width));
-    transition->set(ANGLE_GET_TRANSITION_BIT(mDrawableSize, height));
 }
 
 void GraphicsPipelineDesc::updateSubpass(GraphicsPipelineTransitionBits *transition,
