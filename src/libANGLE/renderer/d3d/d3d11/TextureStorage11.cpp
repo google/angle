@@ -225,7 +225,7 @@ angle::Result TextureStorage11::getSRVForSampler(const gl::Context *context,
     ANGLE_TRY(resolveTexture(context));
     // Make sure to add the level offset for our tiny compressed texture workaround
     const GLuint effectiveBaseLevel = textureState.getEffectiveBaseLevel();
-    const bool swizzleRequired      = textureState.swizzleRequired();
+    const bool swizzleRequired      = SwizzleRequired(textureState);
     const bool mipmapping           = gl::IsMipmapFiltered(sampler.getMinFilter());
     unsigned int mipLevels =
         mipmapping ? (textureState.getEffectiveMaxLevel() - effectiveBaseLevel + 1) : 1;
@@ -248,7 +248,7 @@ angle::Result TextureStorage11::getSRVForSampler(const gl::Context *context,
 
     if (swizzleRequired)
     {
-        verifySwizzleExists(textureState.getSwizzleState());
+        verifySwizzleExists(GetEffectiveSwizzle(textureState));
     }
 
     // We drop the stencil when sampling from the SRV if three conditions hold:
@@ -336,6 +336,20 @@ angle::Result TextureStorage11::getSRVLevel(const gl::Context *context,
     ASSERT(mipLevel >= 0 && mipLevel < getLevelCount());
 
     ANGLE_TRY(resolveTexture(context));
+    if (srvType == SRVType::Stencil)
+    {
+        if (!mLevelStencilSRVs[mipLevel].valid())
+        {
+            const TextureHelper11 *resource = nullptr;
+            ANGLE_TRY(getResource(context, &resource));
+
+            ANGLE_TRY(createSRVForSampler(context, mipLevel, 1, mFormatInfo.stencilSRVFormat,
+                                          *resource, &mLevelStencilSRVs[mipLevel]));
+        }
+        *outSRV = &mLevelStencilSRVs[mipLevel];
+        return angle::Result::Continue;
+    }
+
     auto &levelSRVs      = srvType == SRVType::Blit ? mLevelBlitSRVs : mLevelSRVs;
     auto &otherLevelSRVs = srvType == SRVType::Blit ? mLevelSRVs : mLevelBlitSRVs;
 
@@ -466,9 +480,10 @@ const d3d11::Format &TextureStorage11::getFormatSet() const
 }
 
 angle::Result TextureStorage11::generateSwizzles(const gl::Context *context,
-                                                 const gl::SwizzleState &swizzleTarget)
+                                                 const gl::TextureState &textureState)
 {
     ANGLE_TRY(resolveTexture(context));
+    gl::SwizzleState swizzleTarget = GetEffectiveSwizzle(textureState);
     for (int level = 0; level < getLevelCount(); level++)
     {
         // Check if the swizzle for this level is out of date
@@ -476,7 +491,9 @@ angle::Result TextureStorage11::generateSwizzles(const gl::Context *context,
         {
             // Need to re-render the swizzle for this level
             const d3d11::SharedSRV *sourceSRV = nullptr;
-            ANGLE_TRY(getSRVLevel(context, level, SRVType::Blit, &sourceSRV));
+            ANGLE_TRY(getSRVLevel(context, level,
+                                  textureState.isStencilMode() ? SRVType::Stencil : SRVType::Blit,
+                                  &sourceSRV));
 
             const d3d11::RenderTargetView *destRTV;
             ANGLE_TRY(getSwizzleRenderTarget(context, level, &destRTV));

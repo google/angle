@@ -3337,7 +3337,7 @@ angle::Result StateManager11::generateSwizzle(const gl::Context *context, gl::Te
     {
         TextureStorage11 *storage11          = GetAs<TextureStorage11>(texStorage);
         const gl::TextureState &textureState = texture->getTextureState();
-        ANGLE_TRY(storage11->generateSwizzles(context, textureState.getSwizzleState()));
+        ANGLE_TRY(storage11->generateSwizzles(context, textureState));
     }
 
     return angle::Result::Continue;
@@ -3357,7 +3357,7 @@ angle::Result StateManager11::generateSwizzlesForShader(const gl::Context *conte
         {
             gl::Texture *texture = glState.getSamplerTexture(textureUnit, textureType);
             ASSERT(texture);
-            if (texture->getTextureState().swizzleRequired())
+            if (SwizzleRequired(texture->getTextureState()))
             {
                 ANGLE_TRY(generateSwizzle(context, texture));
             }

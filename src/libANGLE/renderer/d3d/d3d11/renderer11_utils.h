@@ -470,6 +470,9 @@ IndexStorageType ClassifyIndexStorage(const gl::State &glState,
                                       gl::DrawElementsType destElementType,
                                       unsigned int offset);
 
+bool SwizzleRequired(const gl::TextureState &textureState);
+gl::SwizzleState GetEffectiveSwizzle(const gl::TextureState &textureState);
+
 }  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_D3D_D3D11_RENDERER11_UTILS_H_
