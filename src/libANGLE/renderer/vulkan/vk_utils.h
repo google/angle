@@ -1287,6 +1287,8 @@ constexpr bool IsDynamicDescriptor(VkDescriptorType descriptorType)
             return false;
     }
 }
+
+void ApplyPipelineCreationFeedback(Context *context, const VkPipelineCreationFeedback &feedback);
 }  // namespace vk
 
 #if !defined(ANGLE_SHARED_LIBVULKAN)

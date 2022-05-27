@@ -2523,6 +2523,11 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
         vk::AddToPNextChain(&mEnabledFeatures, &mHostQueryResetFeatures);
     }
 
+    if (getFeatures().supportsPipelineCreationFeedback.enabled)
+    {
+        mEnabledDeviceExtensions.push_back(VK_EXT_PIPELINE_CREATION_FEEDBACK_EXTENSION_NAME);
+    }
+
     if (getFeatures().supportsDepthClipControl.enabled)
     {
         mEnabledDeviceExtensions.push_back(VK_EXT_DEPTH_CLIP_CONTROL_EXTENSION_NAME);
@@ -3090,6 +3095,12 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     // http://anglebug.com/6692
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsHostQueryReset,
                             (mHostQueryResetFeatures.hostQueryReset == VK_TRUE));
+
+    // VK_EXT_pipeline_creation_feedback is promoted to core in Vulkan 1.3.
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, supportsPipelineCreationFeedback,
+        ExtensionFound(VK_EXT_PIPELINE_CREATION_FEEDBACK_EXTENSION_NAME, deviceExtensionNames) ||
+            mPhysicalDeviceProperties.apiVersion >= VK_API_VERSION_1_3);
 
     // Note: Protected Swapchains is not determined until we have a VkSurface to query.
     // So here vendors should indicate support so that protected_content extension

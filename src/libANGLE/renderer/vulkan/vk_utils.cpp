@@ -878,6 +878,24 @@ void ClampViewport(VkViewport *viewport)
     }
 }
 
+void ApplyPipelineCreationFeedback(Context *context, const VkPipelineCreationFeedback &feedback)
+{
+    const bool cacheHit =
+        (feedback.flags & VK_PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT) != 0;
+
+    angle::VulkanPerfCounters &perfCounters = context->getPerfCounters();
+
+    if (cacheHit)
+    {
+        ++perfCounters.pipelineCreationCacheHits;
+        perfCounters.pipelineCreationTotalCacheHitsDurationNs += feedback.duration;
+    }
+    else
+    {
+        ++perfCounters.pipelineCreationCacheMisses;
+        perfCounters.pipelineCreationTotalCacheMissesDurationNs += feedback.duration;
+    }
+}
 }  // namespace vk
 
 #if !defined(ANGLE_SHARED_LIBVULKAN)

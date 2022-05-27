@@ -2369,8 +2369,33 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     createInfo.basePipelineHandle  = VK_NULL_HANDLE;
     createInfo.basePipelineIndex   = 0;
 
+    VkPipelineCreationFeedback feedback = {};
+    gl::ShaderMap<VkPipelineCreationFeedback> perStageFeedback;
+
+    VkPipelineCreationFeedbackCreateInfo feedbackInfo = {};
+    feedbackInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO;
+    feedbackInfo.pPipelineCreationFeedback = &feedback;
+    // Provide some storage for per-stage data, even though it's not used.  This first works around
+    // a VVL bug that doesn't allow `pipelineStageCreationFeedbackCount=0` despite the spec (See
+    // https://github.com/KhronosGroup/Vulkan-ValidationLayers/issues/4161).  Even with fixed VVL,
+    // several drivers crash when this storage is missing too.
+    feedbackInfo.pipelineStageCreationFeedbackCount = createInfo.stageCount;
+    feedbackInfo.pPipelineStageCreationFeedbacks    = perStageFeedback.data();
+
+    const bool supportsFeedback = contextVk->getFeatures().supportsPipelineCreationFeedback.enabled;
+    if (supportsFeedback)
+    {
+        createInfo.pNext = &feedbackInfo;
+    }
+
     ANGLE_VK_TRY(contextVk,
                  pipelineOut->initGraphics(contextVk->getDevice(), createInfo, pipelineCacheVk));
+
+    if (supportsFeedback)
+    {
+        ApplyPipelineCreationFeedback(contextVk, feedback);
+    }
+
     return angle::Result::Continue;
 }
 

@@ -661,6 +661,14 @@
             "issue": "http://anglebug.com/6692"
         },
         {
+            "name": "supports_pipeline_creation_feedback",
+            "category": "Features",
+            "description": [
+                "VkDevice supports VK_EXT_pipeline_creation_feedback extension"
+            ],
+            "issue": "http://anglebug.com/5881"
+        },
+        {
             "name": "supports_surface_capabilities2_extension",
             "category": "Features",
             "description": [

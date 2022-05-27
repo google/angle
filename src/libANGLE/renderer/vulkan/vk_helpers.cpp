@@ -9958,10 +9958,31 @@ angle::Result ShaderProgramHelper::getComputePipeline(Context *context,
     createInfo.basePipelineHandle = VK_NULL_HANDLE;
     createInfo.basePipelineIndex  = 0;
 
+    VkPipelineCreationFeedback feedback               = {};
+    VkPipelineCreationFeedback perStageFeedback       = {};
+    VkPipelineCreationFeedbackCreateInfo feedbackInfo = {};
+    feedbackInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO;
+    feedbackInfo.pPipelineCreationFeedback = &feedback;
+    // Note: see comment in GraphicsPipelineDesc::initializePipeline about why per-stage feedback is
+    // specified even though unused.
+    feedbackInfo.pipelineStageCreationFeedbackCount = 1;
+    feedbackInfo.pPipelineStageCreationFeedbacks    = &perStageFeedback;
+
+    const bool supportsFeedback = renderer->getFeatures().supportsPipelineCreationFeedback.enabled;
+    if (supportsFeedback)
+    {
+        createInfo.pNext = &feedbackInfo;
+    }
+
     PipelineCache *pipelineCache = nullptr;
     ANGLE_TRY(renderer->getPipelineCache(&pipelineCache));
     ANGLE_VK_TRY(context, mComputePipeline.getPipeline().initCompute(context->getDevice(),
                                                                      createInfo, *pipelineCache));
+
+    if (supportsFeedback)
+    {
+        ApplyPipelineCreationFeedback(context, feedback);
+    }
 
     *pipelineOut = &mComputePipeline;
     return angle::Result::Continue;
