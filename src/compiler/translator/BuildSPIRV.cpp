@@ -698,10 +698,13 @@ SpirvDecorations SPIRVBuilder::getArithmeticDecorations(const TType &type,
     // > relaxed precision.
     // > ...
     //
-    // Here, we remove RelaxedPrecision from such problematic instructions.
+    // findLSB() and bitCount() are in a similar situation.  Here, we remove RelaxedPrecision from
+    // such problematic instructions.
     switch (op)
     {
         case EOpFindMSB:
+        case EOpFindLSB:
+        case EOpBitCount:
             // Currently getDecorations() only adds RelaxedPrecision, so removing the
             // RelaxedPrecision decoration is simply done by clearing the vector.
             ASSERT(decorations.empty() ||
