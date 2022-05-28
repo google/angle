@@ -128,6 +128,10 @@ constexpr uint32_t kMaxRenderTargets = 8;
 // Metal Apple1 iOS devices only support 4 render targets
 constexpr uint32_t kMaxRenderTargetsOlderGPUFamilies = 4;
 
+constexpr uint32_t kMaxColorTargetBitsApple1To3      = 256;
+constexpr uint32_t kMaxColorTargetBitsApple4Plus     = 512;
+constexpr uint32_t kMaxColorTargetBitsMacAndCatalyst = std::numeric_limits<uint32_t>::max();
+
 constexpr uint32_t kMaxShaderUBOs = 12;
 constexpr uint32_t kMaxUBOSize    = 16384;
 

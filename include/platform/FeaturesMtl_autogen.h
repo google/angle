@@ -217,6 +217,11 @@ struct FeaturesMtl : FeatureSetBase
         "Used to check the backend works when the device's advertized limit is less than the "
         "code's limit",
         &members, "http://anglebug.com/7280"};
+
+    FeatureInfo limitMaxColorTargetBitsForTesting = {
+        "limitMaxColorTargetBitsForTesting", FeatureCategory::MetalFeatures,
+        "Metal iOS has a limit on the number of color target bits per pixel.", &members,
+        "http://anglebug.com/7280"};
 };
 
 inline FeaturesMtl::FeaturesMtl()  = default;

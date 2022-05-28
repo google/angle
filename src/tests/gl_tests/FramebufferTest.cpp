@@ -1177,6 +1177,129 @@ void main()
     ASSERT_GL_NO_ERROR();
 }
 
+class FramebufferTest_ES3Metal : public FramebufferTest_ES3
+{};
+
+// Metal, iOS has a limit of the number of bits that can be output
+// to color attachments. Test we're enforcing that limit.
+TEST_P(FramebufferTest_ES3Metal, TooManyBitsGeneratesFramebufferUnsupported)
+{
+    ANGLE_SKIP_TEST_IF(!GetParam().isEnabled(Feature::LimitMaxColorTargetBitsForTesting));
+
+    GLint maxDrawBuffers;
+    glGetIntegerv(GL_MAX_DRAW_BUFFERS, &maxDrawBuffers);
+
+    GLFramebuffer framebuffer;
+
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+
+    // Test maxDrawBuffers * RGBA8UI works.
+    {
+        std::vector<GLTexture> textures(maxDrawBuffers);
+        for (GLint i = 0; i < maxDrawBuffers; ++i)
+        {
+            glBindTexture(GL_TEXTURE_2D, textures[i]);
+            glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8UI, 1, 1);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D,
+                                   textures[i], 0);
+        }
+        EXPECT_GL_NO_ERROR();
+        EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+    }
+
+    // Test maxDrawBuffers * RGBA32UI does not work.
+    {
+        std::vector<GLTexture> textures(maxDrawBuffers);
+        for (GLint i = 0; i < maxDrawBuffers; ++i)
+        {
+            glBindTexture(GL_TEXTURE_2D, textures[i]);
+            glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA32UI, 1, 1);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D,
+                                   textures[i], 0);
+        }
+        EXPECT_GL_NO_ERROR();
+        EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_UNSUPPORTED, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+    }
+}
+
+// Metal, iOS has a limit of the number of bits that can be output
+// to color attachments. Test we're enforcing that limit.
+// This test is separate from the one above as it's possible
+// glCheckFramebufferStatus might cache some calculation so we
+// don't call here to ensure we get INVALID_FRAMEBUFFER_OPERATION
+// when drawing.
+TEST_P(FramebufferTest_ES3Metal, TooManyBitsGeneratesInvalidFramebufferOperation)
+{
+    ANGLE_SKIP_TEST_IF(!GetParam().isEnabled(Feature::LimitMaxColorTargetBitsForTesting));
+
+    GLint maxDrawBuffers;
+    glGetIntegerv(GL_MAX_DRAW_BUFFERS, &maxDrawBuffers);
+
+    GLFramebuffer framebuffer;
+    std::vector<GLTexture> textures(maxDrawBuffers);
+    std::vector<GLenum> drawBuffers(maxDrawBuffers, GL_NONE);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+
+    std::stringstream fs;
+
+    fs << R"(#version 300 es
+      precision highp float;
+      out uvec4 fragColor[)"
+       << maxDrawBuffers << R"(];
+      void main() {
+      )";
+
+    for (GLint i = 0; i < maxDrawBuffers; ++i)
+    {
+        fs << "  fragColor[" << i << "] = uvec4(" << i << ", " << i * 2 << ", " << i * 4 << ", "
+           << i * 8 << ");\n";
+        drawBuffers[i] = GL_COLOR_ATTACHMENT0 + i;
+        glBindTexture(GL_TEXTURE_2D, textures[i]);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8UI, 1, 1, 0, GL_RGBA_INTEGER, GL_UNSIGNED_BYTE,
+                     nullptr);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, textures[i],
+                               0);
+    }
+    EXPECT_GL_NO_ERROR();
+
+    fs << "}";
+
+    constexpr const char vs[] = R"(#version 300 es
+      void main() {
+        gl_Position = vec4(0, 0, 0, 1);
+        gl_PointSize = 1.0;
+      }
+    )";
+
+    GLProgram program;
+    program.makeRaster(vs, fs.str().c_str());
+    glUseProgram(program);
+    EXPECT_GL_NO_ERROR();
+
+    // Validate we can draw to maxDrawBuffers attachments
+    glDrawBuffers(maxDrawBuffers, drawBuffers.data());
+    glDrawArrays(GL_POINTS, 0, 1);
+    EXPECT_GL_NO_ERROR();
+
+    for (GLint i = 0; i < maxDrawBuffers; ++i)
+    {
+        glBindTexture(GL_TEXTURE_2D, textures[i]);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32UI, 1, 1, 0, GL_RGBA_INTEGER, GL_UNSIGNED_INT,
+                     nullptr);
+    }
+    EXPECT_GL_NO_ERROR();
+
+    glDrawArrays(GL_POINTS, 0, 1);
+    EXPECT_GLENUM_EQ(GL_INVALID_FRAMEBUFFER_OPERATION, glGetError());
+}
+
 class FramebufferTestWithFormatFallback : public ANGLETest
 {
   protected:
@@ -4363,6 +4486,10 @@ ANGLE_INSTANTIATE_TEST_ES3_AND(FramebufferTest_ES3,
                                ES3_VULKAN().enable(Feature::EmulatedPrerotation90),
                                ES3_VULKAN().enable(Feature::EmulatedPrerotation180),
                                ES3_VULKAN().enable(Feature::EmulatedPrerotation270));
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(FramebufferTest_ES3Metal);
+ANGLE_INSTANTIATE_TEST(FramebufferTest_ES3Metal,
+                       ES3_METAL().enable(Feature::LimitMaxColorTargetBitsForTesting));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(FramebufferTest_ES31);
 ANGLE_INSTANTIATE_TEST_ES31(FramebufferTest_ES31);

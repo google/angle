@@ -545,6 +545,24 @@ angle::Result FramebufferMtl::blitWithDraw(const gl::Context *context,
     return angle::Result::Continue;
 }
 
+bool FramebufferMtl::totalBitsUsedIsLessThanOrEqualToMaxBitsSupported(
+    const gl::Context *context) const
+{
+    ContextMtl *contextMtl = mtl::GetImpl(context);
+
+    uint32_t bitsUsed = 0;
+    for (const gl::FramebufferAttachment &attachment : mState.getColorAttachments())
+    {
+        if (attachment.isAttached())
+        {
+            bitsUsed += attachment.getRedSize() + attachment.getGreenSize() +
+                        attachment.getBlueSize() + attachment.getAlphaSize();
+        }
+    }
+
+    return bitsUsed <= contextMtl->getDisplay()->getMaxColorTargetBits();
+}
+
 gl::FramebufferStatus FramebufferMtl::checkStatus(const gl::Context *context) const
 {
     if (!mState.attachmentsHaveSameDimensions())
@@ -574,6 +592,13 @@ gl::FramebufferStatus FramebufferMtl::checkStatus(const gl::Context *context) co
         mState.getStencilAttachment()->getFormat().info->stencilBits)
     {
         return checkPackedDepthStencilAttachment();
+    }
+
+    if (!totalBitsUsedIsLessThanOrEqualToMaxBitsSupported(context))
+    {
+        return gl::FramebufferStatus::Incomplete(
+            GL_FRAMEBUFFER_UNSUPPORTED,
+            gl::err::kFramebufferIncompleteColorBitsUsedExceedsMaxColorBitsSupported);
     }
 
     return gl::FramebufferStatus::Complete();
