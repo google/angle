@@ -1364,6 +1364,7 @@ void Context::bindTransformFeedback(GLenum target, TransformFeedbackID transform
     TransformFeedback *transformFeedback =
         checkTransformFeedbackAllocation(transformFeedbackHandle);
     mState.setTransformFeedbackBinding(this, transformFeedback);
+    mStateCache.onActiveTransformFeedbackChange(this);
 }
 
 void Context::bindProgramPipeline(ProgramPipelineID pipelineHandle)
