@@ -806,12 +806,12 @@
             "issue": "http://anglebug.com/5901"
         },
         {
-            "name": "create_pipeline_during_link",
+            "name": "warm_up_pipeline_cache_at_link",
             "category": "Features",
             "description": [
-                "Create pipeline with default state during glLinkProgram"
+                "Warm up the Vulkan pipeline cache at link time"
             ],
-            "issue": "http://anglebug.com/7046"
+            "issue": "http://anglebug.com/5881"
         },
         {
             "name": "prefer_device_local_memory_host_visible",

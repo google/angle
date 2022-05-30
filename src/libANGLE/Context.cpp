@@ -9223,7 +9223,7 @@ void Context::getFramebufferParameterivMESA(GLenum target, GLenum pname, GLint *
 
 bool Context::isGLES1() const
 {
-    return mState.getClientVersion() < Version(2, 0);
+    return mState.isGLES1();
 }
 
 void Context::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message)

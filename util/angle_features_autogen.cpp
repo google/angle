@@ -57,7 +57,6 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::CopyIOSurfaceToNonIOSurfaceForReadOptimization,
      "copyIOSurfaceToNonIOSurfaceForReadOptimization"},
     {Feature::CopyTextureToBufferForReadOptimization, "copyTextureToBufferForReadOptimization"},
-    {Feature::CreatePipelineDuringLink, "createPipelineDuringLink"},
     {Feature::DecodeEncodeSRGBForGenerateMipmap, "decodeEncodeSRGBForGenerateMipmap"},
     {Feature::DeferFlushUntilEndRenderPass, "deferFlushUntilEndRenderPass"},
     {Feature::DepthClamping, "depthClamping"},
@@ -283,6 +282,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
      "useUnusedBlocksWithStandardOrSharedLayout"},
     {Feature::VertexIDDoesNotIncludeBaseVertex, "vertexIDDoesNotIncludeBaseVertex"},
     {Feature::WaitIdleBeforeSwapchainRecreation, "waitIdleBeforeSwapchainRecreation"},
+    {Feature::WarmUpPipelineCacheAtLink, "warmUpPipelineCacheAtLink"},
     {Feature::ZeroMaxLodWorkaround, "zeroMaxLodWorkaround"},
 }};
 }  // anonymous namespace

@@ -605,10 +605,9 @@ struct FeaturesVk : FeatureSetBase
                                         "Retain debug info in SPIR-V blob.", &members,
                                         "http://anglebug.com/5901"};
 
-    FeatureInfo createPipelineDuringLink = {
-        "createPipelineDuringLink", FeatureCategory::VulkanFeatures,
-        "Create pipeline with default state during glLinkProgram", &members,
-        "http://anglebug.com/7046"};
+    FeatureInfo warmUpPipelineCacheAtLink = {
+        "warmUpPipelineCacheAtLink", FeatureCategory::VulkanFeatures,
+        "Warm up the Vulkan pipeline cache at link time", &members, "http://anglebug.com/5881"};
 
     FeatureInfo preferDeviceLocalMemoryHostVisible = {
         "preferDeviceLocalMemoryHostVisible", FeatureCategory::VulkanFeatures,

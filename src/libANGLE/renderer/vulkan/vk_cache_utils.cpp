@@ -3703,6 +3703,11 @@ void GraphicsPipelineDesc::setRenderPassSampleCount(GLint samples)
     mRenderPassDesc.setSamples(samples);
 }
 
+void GraphicsPipelineDesc::setRenderPassFramebufferFetchMode(bool hasFramebufferFetch)
+{
+    mRenderPassDesc.setFramebufferFetchMode(hasFramebufferFetch);
+}
+
 void GraphicsPipelineDesc::setRenderPassColorAttachmentFormat(size_t colorIndexGL,
                                                               angle::FormatID formatID)
 {
@@ -5450,6 +5455,15 @@ angle::Result PipelineCacheAccess::createComputePipeline(
                  pipelineOut->initCompute(context->getDevice(), createInfo, *mPipelineCache));
 
     return angle::Result::Continue;
+}
+
+void PipelineCacheAccess::merge(RendererVk *renderer, const vk::PipelineCache &pipelineCache)
+{
+    ASSERT(mMutex != nullptr);
+
+    std::unique_lock<std::mutex> lock = getLock();
+
+    mPipelineCache->merge(renderer->getDevice(), 1, pipelineCache.ptr());
 }
 
 // GraphicsPipelineCache implementation.

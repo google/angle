@@ -661,6 +661,7 @@
 
 // Slow tests, should appear last in this file
 5076 : GLSLTest.VerifyMaxVertexUniformVectors* = TIMEOUT
+5076 : GLSLTest.VerifyMaxFragmentUniformVectors* = TIMEOUT
 6251 : MultithreadingTest* = TIMEOUT
 // Please do not add expectations below this line,
 // so that TIMEOUT expectations above don't override more precise SKIP expectations

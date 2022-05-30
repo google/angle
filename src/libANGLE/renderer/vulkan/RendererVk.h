@@ -365,6 +365,7 @@ class RendererVk : angle::NonCopyable
     }
 
     angle::Result getPipelineCache(PipelineCacheAccess *pipelineCacheOut);
+    angle::Result mergeIntoPipelineCache(const vk::PipelineCache &pipelineCache);
 
     void onNewValidationMessage(const std::string &message);
     std::string getAndClearLastValidationMessage(uint32_t *countSinceLastClear);

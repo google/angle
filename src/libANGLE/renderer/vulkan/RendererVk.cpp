@@ -3586,6 +3586,28 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsFragmentShadingRate,
                             canSupportFragmentShadingRate(deviceExtensionNames));
 
+    // The following drivers are known to key the pipeline cache blobs with vertex input and
+    // fragment output state, causing draw-time pipeline creation to miss the cache regardless of
+    // warmup:
+    //
+    // - ARM drivers
+    // - Imagination drivers
+    //
+    // The following drivers are instead known to _not_ include said state, and hit the cache at
+    // draw time.
+    //
+    // - SwiftShader
+    // - Open source Qualcomm drivers
+    //
+    // The situation is unknown for other drivers.
+    //
+    // Additionally, numerous tests that previously never created a Vulkan pipeline fail or crash on
+    // proprietary Qualcomm drivers when they do during cache warm up.  On Intel/Linux, one trace
+    // shows flakiness with this.
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, warmUpPipelineCacheAtLink,
+        !isARM && !isPowerVR && !isQualcommProprietary && !(IsLinux() && isIntel));
+
     // On ARM, per-sample shading is not enabled despite the presence of a Sample decoration.  As a
     // workaround, per-sample shading is inferred by ANGLE and explicitly enabled by the API.
     ANGLE_FEATURE_CONDITION(&mFeatures, explicitlyEnablePerSampleShading, isARM);
@@ -3665,6 +3687,16 @@ angle::Result RendererVk::getPipelineCache(PipelineCacheAccess *pipelineCacheOut
     }
 
     pipelineCacheOut->init(&mPipelineCache, &mPipelineCacheMutex);
+    return angle::Result::Continue;
+}
+
+angle::Result RendererVk::mergeIntoPipelineCache(const vk::PipelineCache &pipelineCache)
+{
+    PipelineCacheAccess globalCache;
+    ANGLE_TRY(getPipelineCache(&globalCache));
+
+    globalCache.merge(this, pipelineCache);
+
     return angle::Result::Continue;
 }
 
