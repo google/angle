@@ -87,7 +87,7 @@ struct GraphicsDriverUniforms
     uint32_t misc;
 };
 static_assert(sizeof(GraphicsDriverUniforms) % (sizeof(uint32_t) * 4) == 0,
-              "GraphicsDriverUniforms should 16bytes aligned");
+              "GraphicsDriverUniforms should be 16bytes aligned");
 
 // Only used under the following conditions:
 //
@@ -108,7 +108,7 @@ struct GraphicsDriverUniformsExtended
     int32_t padding[3];
 };
 static_assert(sizeof(GraphicsDriverUniformsExtended) % (sizeof(uint32_t) * 4) == 0,
-              "GraphicsDriverUniformsExtended should 16bytes aligned");
+              "GraphicsDriverUniformsExtended should be 16bytes aligned");
 
 struct ComputeDriverUniforms
 {
@@ -623,7 +623,7 @@ void DumpPipelineCacheGraph(const std::ostringstream &graph)
     std::ostream &out = std::cout;
 
     out << "digraph {\n"
-        << " node [shape=point]\n";
+        << " node [shape=box]\n";
     out << graph.str();
     out << "}\n";
 }

@@ -172,6 +172,7 @@ class alignas(4) RenderPassDesc final
 
     bool isColorAttachmentEnabled(size_t colorIndexGL) const;
     bool hasDepthStencilAttachment() const;
+    gl::DrawBufferMask getColorResolveAttachmentMask() const { return mColorResolveAttachmentMask; }
     bool hasColorResolveAttachment(size_t colorIndexGL) const
     {
         return mColorResolveAttachmentMask.test(colorIndexGL);
@@ -486,7 +487,7 @@ struct PackedDynamicState1And2 final
     // From VK_EXT_extended_dynamic_state2
     uint32_t rasterizerDiscardEnable : 1;
     uint32_t depthBiasEnable : 1;
-    uint32_t restartEnable : 1;
+    uint32_t primitiveRestartEnable : 1;
 
     // Store support for VK_EXT_extended_dynamic_state/2 in the bits wasted here for padding.  This
     // is to support GraphicsPipelineDesc::hash(), allowing it to exclude this state from the hash.
@@ -711,6 +712,21 @@ class GraphicsPipelineDesc final
         mDynamicState.ds1And2.supportsDynamicState1 = supports;
         mDynamicState.ds1And2.supportsDynamicState2 = supports;
     }
+
+    // Helpers to dump the state
+    const VertexInputAttributes &getVertexInputAttribsForLog() const { return mVertexInputAttribs; }
+    const RenderPassDesc &getRenderPassDescForLog() const { return mRenderPassDesc; }
+    const PackedInputAssemblyAndRasterizationStateInfo
+    getInputAssemblyAndRasterizationStateInfoForLog() const
+    {
+        return mInputAssemblyAndRasterizationStateInfo;
+    }
+    const PackedColorBlendStateInfo &getColorBlendStateInfoForLog() const
+    {
+        return mColorBlendStateInfo;
+    }
+    const PackedDither &getDitherForLog() const { return mDither; }
+    const PackedDynamicState &getDynamicStateForLog() const { return mDynamicState; }
 
   private:
     void updateSubpass(GraphicsPipelineTransitionBits *transition, uint32_t subpass);
@@ -1752,7 +1768,7 @@ class GraphicsPipelineCache final : public HasCacheStats<VulkanCacheType::Graphi
     ~GraphicsPipelineCache() override;
 
     void destroy(RendererVk *rendererVk);
-    void release(ContextVk *context);
+    void release(ContextVk *contextVk);
 
     void populate(const vk::GraphicsPipelineDesc &desc, vk::Pipeline &&pipeline);
 
