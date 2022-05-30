@@ -2873,7 +2873,7 @@ class ShaderProgramHelper : angle::NonCopyable
     ANGLE_INLINE angle::Result getGraphicsPipeline(
         ContextVk *contextVk,
         RenderPassCache *renderPassCache,
-        const PipelineCache &pipelineCache,
+        PipelineCacheAccess *pipelineCache,
         const PipelineLayout &pipelineLayout,
         const GraphicsPipelineDesc &pipelineDesc,
         const gl::AttributesMask &activeAttribLocationsMask,
@@ -2894,6 +2894,7 @@ class ShaderProgramHelper : angle::NonCopyable
     }
 
     angle::Result getComputePipeline(Context *context,
+                                     PipelineCacheAccess *pipelineCache,
                                      const PipelineLayout &pipelineLayout,
                                      PipelineHelper **pipelineOut);
 

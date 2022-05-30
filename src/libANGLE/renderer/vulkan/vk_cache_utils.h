@@ -56,6 +56,8 @@ enum class DescriptorSetIndex : uint32_t
     EnumCount = InvalidEnum,
 };
 
+class PipelineCacheAccess;
+
 namespace vk
 {
 class BufferHelper;
@@ -566,7 +568,7 @@ class GraphicsPipelineDesc final
     }
 
     angle::Result initializePipeline(ContextVk *contextVk,
-                                     const PipelineCache &pipelineCacheVk,
+                                     PipelineCacheAccess *pipelineCache,
                                      const RenderPass &compatibleRenderPass,
                                      const PipelineLayout &pipelineLayout,
                                      const gl::AttributesMask &activeAttribLocationsMask,
@@ -1760,6 +1762,34 @@ class RenderPassCache final : angle::NonCopyable
     CacheStats mRenderPassWithOpsCacheStats;
 };
 
+// A class that encapsulates the vk::PipelineCache and associated mutex.  The mutex may be nullptr
+// if synchronization is not necessary.
+class PipelineCacheAccess
+{
+  public:
+    PipelineCacheAccess()  = default;
+    ~PipelineCacheAccess() = default;
+
+    void init(const vk::PipelineCache *pipelineCache, std::mutex *mutex)
+    {
+        mPipelineCache = pipelineCache;
+        mMutex         = mutex;
+    }
+
+    angle::Result createGraphicsPipeline(vk::Context *context,
+                                         const VkGraphicsPipelineCreateInfo &createInfo,
+                                         vk::Pipeline *pipelineOut);
+    angle::Result createComputePipeline(vk::Context *context,
+                                        const VkComputePipelineCreateInfo &createInfo,
+                                        vk::Pipeline *pipelineOut);
+
+  private:
+    std::unique_lock<std::mutex> getLock();
+
+    const vk::PipelineCache *mPipelineCache = nullptr;
+    std::mutex *mMutex;
+};
+
 // TODO(jmadill): Add cache trimming/eviction.
 class GraphicsPipelineCache final : public HasCacheStats<VulkanCacheType::GraphicsPipeline>
 {
@@ -1773,7 +1803,7 @@ class GraphicsPipelineCache final : public HasCacheStats<VulkanCacheType::Graphi
     void populate(const vk::GraphicsPipelineDesc &desc, vk::Pipeline &&pipeline);
 
     ANGLE_INLINE angle::Result getPipeline(ContextVk *contextVk,
-                                           const vk::PipelineCache &pipelineCacheVk,
+                                           PipelineCacheAccess *pipelineCache,
                                            const vk::RenderPass &compatibleRenderPass,
                                            const vk::PipelineLayout &pipelineLayout,
                                            const gl::AttributesMask &activeAttribLocationsMask,
@@ -1795,7 +1825,7 @@ class GraphicsPipelineCache final : public HasCacheStats<VulkanCacheType::Graphi
         }
 
         mCacheStats.missAndIncrementSize();
-        return insertPipeline(contextVk, pipelineCacheVk, compatibleRenderPass, pipelineLayout,
+        return insertPipeline(contextVk, pipelineCache, compatibleRenderPass, pipelineLayout,
                               activeAttribLocationsMask, programAttribsTypeMask, missingOutputsMask,
                               shaders, specConsts, desc, descPtrOut, pipelineOut);
     }
@@ -1805,7 +1835,7 @@ class GraphicsPipelineCache final : public HasCacheStats<VulkanCacheType::Graphi
 
   private:
     angle::Result insertPipeline(ContextVk *contextVk,
-                                 const vk::PipelineCache &pipelineCacheVk,
+                                 PipelineCacheAccess *pipelineCache,
                                  const vk::RenderPass &compatibleRenderPass,
                                  const vk::PipelineLayout &pipelineLayout,
                                  const gl::AttributesMask &activeAttribLocationsMask,

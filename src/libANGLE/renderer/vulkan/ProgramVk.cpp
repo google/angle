@@ -231,7 +231,7 @@ std::unique_ptr<LinkEvent> ProgramVk::link(const gl::Context *context,
     // Compile the shaders.
     const gl::ProgramExecutable &programExecutable = mState.getExecutable();
     angle::Result status                           = mExecutable.mOriginalShaderInfo.initShaders(
-        programExecutable.getLinkedShaderStages(), spirvBlobs, mExecutable.mVariableInfoMap);
+                                  programExecutable.getLinkedShaderStages(), spirvBlobs, mExecutable.mVariableInfoMap);
     if (status != angle::Result::Continue)
     {
         return std::make_unique<LinkEventDone>(status);
@@ -251,13 +251,21 @@ std::unique_ptr<LinkEvent> ProgramVk::link(const gl::Context *context,
     if ((status == angle::Result::Continue) &&
         contextVk->getFeatures().createPipelineDuringLink.enabled)
     {
-        status = createGraphicsPipelineWithDefaultState(context);
+        PipelineCacheAccess pipelineCache;
+        status = contextVk->getRenderer()->getPipelineCache(&pipelineCache);
+        if (status != angle::Result::Continue)
+        {
+            return std::make_unique<LinkEventDone>(status);
+        }
+
+        status = createGraphicsPipelineWithDefaultState(context, &pipelineCache);
     }
 
     return std::make_unique<LinkEventDone>(status);
 }
 
-angle::Result ProgramVk::createGraphicsPipelineWithDefaultState(const gl::Context *context)
+angle::Result ProgramVk::createGraphicsPipelineWithDefaultState(const gl::Context *context,
+                                                                PipelineCacheAccess *pipelineCache)
 {
     const gl::ProgramExecutable &glExecutable = mState.getExecutable();
 
@@ -287,8 +295,8 @@ angle::Result ProgramVk::createGraphicsPipelineWithDefaultState(const gl::Contex
                                  : gl::PrimitiveMode::TriangleStrip;
     SetupDefaultPipelineState(contextVk, glExecutable.getOutputVariables().size(), mode,
                               &graphicsPipelineDesc);
-    return mExecutable.getGraphicsPipeline(contextVk, mode, graphicsPipelineDesc, glExecutable,
-                                           &descPtr, &pipeline);
+    return mExecutable.getGraphicsPipeline(contextVk, mode, pipelineCache, graphicsPipelineDesc,
+                                           glExecutable, &descPtr, &pipeline);
 }
 
 void ProgramVk::linkResources(const gl::ProgramLinkedResources &resources)

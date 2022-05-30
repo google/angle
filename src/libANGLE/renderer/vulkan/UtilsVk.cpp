@@ -1507,13 +1507,19 @@ angle::Result UtilsVk::setupComputeProgram(
     size_t pushConstantsSize,
     vk::OutsideRenderPassCommandBufferHelper *commandBufferHelper)
 {
+    RendererVk *renderer = contextVk->getRenderer();
+
     ASSERT(function >= Function::ComputeStartIndex);
 
     const vk::BindingPointer<vk::PipelineLayout> &pipelineLayout = mPipelineLayouts[function];
 
-    vk::PipelineHelper *pipeline;
     program->setShader(gl::ShaderType::Compute, csShader);
-    ANGLE_TRY(program->getComputePipeline(contextVk, pipelineLayout.get(), &pipeline));
+
+    vk::PipelineHelper *pipeline;
+    PipelineCacheAccess pipelineCache;
+    ANGLE_TRY(renderer->getPipelineCache(&pipelineCache));
+    ANGLE_TRY(
+        program->getComputePipeline(contextVk, &pipelineCache, pipelineLayout.get(), &pipeline));
     commandBufferHelper->retainResource(pipeline);
 
     vk::OutsideRenderPassCommandBuffer *commandBuffer = &commandBufferHelper->getCommandBuffer();
@@ -1564,10 +1570,10 @@ angle::Result UtilsVk::setupGraphicsProgram(ContextVk *contextVk,
     // This value is not used but is passed to getGraphicsPipeline to avoid a nullptr check.
     const vk::GraphicsPipelineDesc *descPtr;
     vk::PipelineHelper *helper;
-    vk::PipelineCache *pipelineCache = nullptr;
+    PipelineCacheAccess pipelineCache;
     ANGLE_TRY(renderer->getPipelineCache(&pipelineCache));
     ANGLE_TRY(program->getGraphicsPipeline(contextVk, &contextVk->getRenderPassCache(),
-                                           *pipelineCache, pipelineLayout.get(), *pipelineDesc,
+                                           &pipelineCache, pipelineLayout.get(), *pipelineDesc,
                                            gl::AttributesMask(), gl::ComponentTypeMask(),
                                            gl::DrawBufferMask(), &descPtr, &helper));
     contextVk->getStartedRenderPassCommands().retainResource(helper);

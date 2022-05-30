@@ -494,6 +494,11 @@ struct FeaturesVk : FeatureSetBase
                                           "VkDevice supports VK_EXT_host_query_reset extension",
                                           &members, "http://anglebug.com/6692"};
 
+    FeatureInfo supportsPipelineCreationCacheControl = {
+        "supportsPipelineCreationCacheControl", FeatureCategory::VulkanFeatures,
+        "VkDevice supports VK_EXT_pipeline_creation_cache_control extension", &members,
+        "http://anglebug.com/5881"};
+
     FeatureInfo supportsPipelineCreationFeedback = {
         "supportsPipelineCreationFeedback", FeatureCategory::VulkanFeatures,
         "VkDevice supports VK_EXT_pipeline_creation_feedback extension", &members,

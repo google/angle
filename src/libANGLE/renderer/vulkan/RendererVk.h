@@ -362,7 +362,7 @@ class RendererVk : angle::NonCopyable
         }
     }
 
-    angle::Result getPipelineCache(vk::PipelineCache **pipelineCache);
+    angle::Result getPipelineCache(PipelineCacheAccess *pipelineCacheOut);
 
     void onNewValidationMessage(const std::string &message);
     std::string getAndClearLastValidationMessage(uint32_t *countSinceLastClear);
@@ -695,6 +695,7 @@ class RendererVk : angle::NonCopyable
     VkPhysicalDeviceDepthClipControlFeaturesEXT mDepthClipControlFeatures;
     VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT mBlendOperationAdvancedFeatures;
     VkPhysicalDeviceSamplerYcbcrConversionFeatures mSamplerYcbcrConversionFeatures;
+    VkPhysicalDevicePipelineCreationCacheControlFeaturesEXT mPipelineCreationCacheControlFeatures;
     VkPhysicalDeviceExtendedDynamicStateFeaturesEXT mExtendedDynamicStateFeatures;
     VkPhysicalDeviceExtendedDynamicState2FeaturesEXT mExtendedDynamicState2Features;
     VkPhysicalDeviceFragmentShadingRateFeaturesKHR mFragmentShadingRateFeatures;

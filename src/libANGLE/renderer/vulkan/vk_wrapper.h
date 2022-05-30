@@ -586,11 +586,8 @@ class PipelineCache final : public WrappedObject<PipelineCache, VkPipelineCache>
     void destroy(VkDevice device);
 
     VkResult init(VkDevice device, const VkPipelineCacheCreateInfo &createInfo);
-    VkResult getCacheData(VkDevice device, size_t *cacheSize, void *cacheData);
-    VkResult merge(VkDevice device,
-                   VkPipelineCache dstCache,
-                   uint32_t srcCacheCount,
-                   const VkPipelineCache *srcCaches);
+    VkResult getCacheData(VkDevice device, size_t *cacheSize, void *cacheData) const;
+    VkResult merge(VkDevice device, uint32_t srcCacheCount, const VkPipelineCache *srcCaches);
 };
 
 class DescriptorSetLayout final : public WrappedObject<DescriptorSetLayout, VkDescriptorSetLayout>
@@ -1731,17 +1728,16 @@ ANGLE_INLINE VkResult PipelineCache::init(VkDevice device,
 }
 
 ANGLE_INLINE VkResult PipelineCache::merge(VkDevice device,
-                                           VkPipelineCache dstCache,
                                            uint32_t srcCacheCount,
                                            const VkPipelineCache *srcCaches)
 {
     ASSERT(valid());
-    return vkMergePipelineCaches(device, dstCache, srcCacheCount, srcCaches);
+    return vkMergePipelineCaches(device, mHandle, srcCacheCount, srcCaches);
 }
 
 ANGLE_INLINE VkResult PipelineCache::getCacheData(VkDevice device,
                                                   size_t *cacheSize,
-                                                  void *cacheData)
+                                                  void *cacheData) const
 {
     ASSERT(valid());
 
