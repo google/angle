@@ -99,11 +99,6 @@ class BufferVk : public BufferImpl
                                 bool primitiveRestartEnabled,
                                 gl::IndexRange *outRange) override;
 
-    angle::Result initializeContents(const gl::Context *context,
-                                     gl::BufferBinding target,
-                                     GLintptr offset,
-                                     GLsizeiptr length) override;
-
     GLint64 getSize() const { return mState.getSize(); }
 
     void onDataChanged() override;

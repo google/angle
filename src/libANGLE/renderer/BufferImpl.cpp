@@ -20,15 +20,6 @@ angle::Result BufferImpl::getSubData(const gl::Context *context,
     return angle::Result::Stop;
 }
 
-angle::Result BufferImpl::initializeContents(const gl::Context *context,
-                                             gl::BufferBinding target,
-                                             GLintptr offset,
-                                             GLsizeiptr length)
-{
-    UNIMPLEMENTED();
-    return angle::Result::Stop;
-}
-
 angle::Result BufferImpl::setDataWithUsageFlags(const gl::Context *context,
                                                 gl::BufferBinding target,
                                                 GLeglClientBufferEXT clientBuffer,

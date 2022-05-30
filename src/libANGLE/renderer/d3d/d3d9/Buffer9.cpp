@@ -138,16 +138,4 @@ angle::Result Buffer9::markTransformFeedbackUsage(const gl::Context *context)
     return angle::Result::Stop;
 }
 
-angle::Result Buffer9::initializeContents(const gl::Context *context,
-                                          gl::BufferBinding target,
-                                          GLintptr offset,
-                                          GLsizeiptr length)
-{
-    memset(mMemory.data() + offset, 0, length);
-
-    invalidateStaticData(context);
-
-    return angle::Result::Continue;
-}
-
 }  // namespace rx

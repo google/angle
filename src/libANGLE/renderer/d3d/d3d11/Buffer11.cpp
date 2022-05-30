@@ -603,18 +603,6 @@ angle::Result Buffer11::markTransformFeedbackUsage(const gl::Context *context)
     return angle::Result::Continue;
 }
 
-angle::Result Buffer11::initializeContents(const gl::Context *context,
-                                           gl::BufferBinding target,
-                                           GLintptr offset,
-                                           GLsizeiptr length)
-{
-    angle::MemoryBuffer *scratchBuffer = nullptr;
-    ANGLE_CHECK_GL_ALLOC(GetImplAs<Context11>(context),
-                         context->getZeroFilledBuffer(length, &scratchBuffer));
-
-    return setSubData(context, target, scratchBuffer->data(), length, offset);
-}
-
 void Buffer11::updateDeallocThreshold(BufferUsage usage)
 {
     // The following strategy was tuned on the Oort online benchmark (http://oortonline.gl/)

@@ -77,11 +77,6 @@ class BufferImpl : public angle::Subject
                                      GLsizeiptr size,
                                      void *outData);
 
-    virtual angle::Result initializeContents(const gl::Context *context,
-                                             gl::BufferBinding target,
-                                             GLintptr offset,
-                                             GLsizeiptr length);
-
     // Override if accurate native memory size information is available
     virtual GLint64 getMemorySize() const;
 

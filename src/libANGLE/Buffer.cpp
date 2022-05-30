@@ -122,6 +122,17 @@ angle::Result Buffer::bufferDataImpl(Context *context,
         ANGLE_TRY(unmap(context, &dontCare));
     }
 
+    // If we are using robust resource init, make sure the buffer starts cleared.
+    // Note: the Context is checked for nullptr because of some testing code.
+    // TODO(jmadill): Investigate lazier clearing.
+    if (context && context->isRobustResourceInitEnabled() && !data && size > 0)
+    {
+        angle::MemoryBuffer *scratchBuffer = nullptr;
+        ANGLE_CHECK_GL_ALLOC(
+            context, context->getZeroFilledBuffer(static_cast<size_t>(size), &scratchBuffer));
+        dataForImpl = scratchBuffer->data();
+    }
+
     if (mImpl->setDataWithUsageFlags(context, target, nullptr, dataForImpl, size, usage, flags) ==
         angle::Result::Stop)
     {
@@ -142,13 +153,6 @@ angle::Result Buffer::bufferDataImpl(Context *context,
     mState.mSize                 = size;
     mState.mImmutable            = (usage == BufferUsage::InvalidEnum);
     mState.mStorageExtUsageFlags = flags;
-
-    // If we are using robust resource init, make sure the buffer starts cleared.
-    // Note: the Context is checked for nullptr because of some testing code.
-    if (context && context->getState().isRobustResourceInitEnabled() && !data && size > 0)
-    {
-        ANGLE_TRY(mImpl->initializeContents(context, target, 0, size));
-    }
 
     // Notify when storage changes.
     if (wholeBuffer)
