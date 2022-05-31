@@ -5545,6 +5545,169 @@ void main() {
     EXPECT_EQ(expectedCacheMisses, actualCacheMisses);
 }
 
+// Test modifying texture size and render to it does not cause VkFramebuffer cache explode
+TEST_P(VulkanPerformanceCounterTest, ResizeFBOAttachedTexture)
+{
+    ANGLE_GL_PROGRAM(blueProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
+
+    int32_t framebufferCacheSizeBefore = getPerfCounters().framebufferCacheSize;
+    GLTexture texture;
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    for (GLint texWidth = 1; texWidth <= 10; texWidth++)
+    {
+        for (GLint texHeight = 1; texHeight <= 10; texHeight++)
+        {
+            // Allocate texture
+            glBindTexture(GL_TEXTURE_2D, texture);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texWidth, texHeight, 0, GL_RGBA,
+                         GL_UNSIGNED_BYTE, nullptr);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+            ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+            // Draw to FBO backed by the texture
+            glUseProgram(blueProgram);
+            drawQuad(blueProgram.get(), std::string(essl1_shaders::PositionAttrib()), 0.0f);
+            ASSERT_GL_NO_ERROR();
+            EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+        }
+    }
+    int32_t framebufferCacheSizeAfter    = getPerfCounters().framebufferCacheSize;
+    int32_t framebufferCacheSizeIncrease = framebufferCacheSizeAfter - framebufferCacheSizeBefore;
+    printf("\tframebufferCacheCountIncrease:%u\n", framebufferCacheSizeIncrease);
+    // We should not cache obsolete VkImages. Only current VkImage should be cached.
+    EXPECT_EQ(framebufferCacheSizeIncrease, 1);
+}
+
+// Test calling glTexParameteri(GL_TEXTURE_SWIZZLE_*) on a texture that attached to FBO with the
+// same value did not cause VkFramebuffer cache explode
+TEST_P(VulkanPerformanceCounterTest, SetTextureSwizzleWithSameValueOnFBOAttachedTexture)
+{
+    ANGLE_GL_PROGRAM(blueProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
+    ANGLE_GL_PROGRAM(textureProgram, essl1_shaders::vs::Texture2D(),
+                     essl1_shaders::fs::Texture2D());
+
+    // Allocate texture
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 16, 16, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_R, GL_RED);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_G, GL_GREEN);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_B, GL_BLUE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_A, GL_ALPHA);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    int32_t framebufferCacheSizeBefore = getPerfCounters().framebufferCacheSize;
+    for (GLint loop = 0; loop < 10; loop++)
+    {
+        // Draw to FBO
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        glUseProgram(blueProgram);
+        drawQuad(blueProgram.get(), std::string(essl1_shaders::PositionAttrib()), 0.0f);
+
+        // Sample from texture
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glClearColor(1, 0, 0, 1);
+        glClear(GL_COLOR_BUFFER_BIT);
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_R, GL_RED);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_G, GL_GREEN);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_B, GL_BLUE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_A, GL_ALPHA);
+        drawQuad(textureProgram.get(), std::string(essl1_shaders::PositionAttrib()), 0.0f);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+    }
+    // Now make fbo current and read out cache size and verify it does not grow just because of
+    // swizzle update even though there is no actual change.
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glUseProgram(blueProgram);
+    drawQuad(blueProgram.get(), std::string(essl1_shaders::PositionAttrib()), 0.0f);
+    ASSERT_GL_NO_ERROR();
+    int32_t framebufferCacheSizeAfter    = getPerfCounters().framebufferCacheSize;
+    int32_t framebufferCacheSizeIncrease = framebufferCacheSizeAfter - framebufferCacheSizeBefore;
+    // This should not cause frame buffer cache increase.
+    EXPECT_EQ(framebufferCacheSizeIncrease, 1);
+}
+
+// Test calling glTexParameteri(GL_TEXTURE_SWIZZLE_*) on a texture that attached to FBO with
+// different value did not cause VkFramebuffer cache explode
+TEST_P(VulkanPerformanceCounterTest, SetTextureSwizzleWithDifferentValueOnFBOAttachedTexture)
+{
+    ANGLE_GL_PROGRAM(blueProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
+    ANGLE_GL_PROGRAM(textureProgram, essl1_shaders::vs::Texture2D(),
+                     essl1_shaders::fs::Texture2D());
+
+    // Allocate texture
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 16, 16, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_R, GL_RED);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_G, GL_GREEN);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_B, GL_BLUE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_A, GL_ALPHA);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    GLColor expectedColors[] = {GLColor::black,   GLColor::black,  GLColor::blue,  GLColor::black,
+                                GLColor::black,   GLColor::blue,   GLColor::green, GLColor::green,
+                                GLColor::cyan,    GLColor::black,  GLColor::black, GLColor::blue,
+                                GLColor::black,   GLColor::black,  GLColor::blue,  GLColor::green,
+                                GLColor::green,   GLColor::cyan,   GLColor::red,   GLColor::red,
+                                GLColor::magenta, GLColor::red,    GLColor::red,   GLColor::magenta,
+                                GLColor::yellow,  GLColor::yellow, GLColor::white};
+    int32_t framebufferCacheSizeBefore = getPerfCounters().framebufferCacheSize;
+    int loop                           = 0;
+    for (GLenum swizzle_R = GL_RED; swizzle_R <= GL_BLUE; swizzle_R++)
+    {
+        for (GLenum swizzle_G = GL_RED; swizzle_G <= GL_BLUE; swizzle_G++)
+        {
+            for (GLenum swizzle_B = GL_RED; swizzle_B <= GL_BLUE; swizzle_B++)
+            {
+                // Draw to FBO
+                glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+                glUseProgram(blueProgram);
+                drawQuad(blueProgram.get(), std::string(essl1_shaders::PositionAttrib()), 0.0f);
+
+                // Sample from texture
+                glBindFramebuffer(GL_FRAMEBUFFER, 0);
+                glClearColor(1, 0, 0, 1);
+                glClear(GL_COLOR_BUFFER_BIT);
+                glBindTexture(GL_TEXTURE_2D, texture);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_R, swizzle_R);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_G, swizzle_G);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_B, swizzle_B);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_A, GL_ALPHA);
+                drawQuad(textureProgram.get(), std::string(essl1_shaders::PositionAttrib()), 0.0f);
+                EXPECT_PIXEL_COLOR_EQ(0, 0, expectedColors[loop]);
+                loop++;
+            }
+        }
+    }
+    // Now make fbo current and read out cache size and verify it does not grow just because of
+    // swizzle update even though there is no actual change.
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glUseProgram(blueProgram);
+    drawQuad(blueProgram.get(), std::string(essl1_shaders::PositionAttrib()), 0.0f);
+    ASSERT_GL_NO_ERROR();
+    int32_t framebufferCacheSizeAfter    = getPerfCounters().framebufferCacheSize;
+    int32_t framebufferCacheSizeIncrease = framebufferCacheSizeAfter - framebufferCacheSizeBefore;
+    // This should not cause frame buffer cache increase.
+    EXPECT_EQ(framebufferCacheSizeIncrease, 1);
+}
+
 ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest, ES3_VULKAN(), ES3_VULKAN_SWIFTSHADER());
 ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest_ES31, ES31_VULKAN(), ES31_VULKAN_SWIFTSHADER());
 ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest_MSAA, ES3_VULKAN(), ES3_VULKAN_SWIFTSHADER());

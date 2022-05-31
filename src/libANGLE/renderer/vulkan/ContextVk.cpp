@@ -2911,6 +2911,9 @@ void ContextVk::syncObjectPerfCounters(const angle::VulkanPerfCounters &commandQ
         commandQueuePerfCounters.commandQueueSubmitCallsPerFrame;
     mPerfCounters.vkQueueSubmitCallsTotal    = commandQueuePerfCounters.vkQueueSubmitCallsTotal;
     mPerfCounters.vkQueueSubmitCallsPerFrame = commandQueuePerfCounters.vkQueueSubmitCallsPerFrame;
+
+    // Return current drawFramebuffer's cache stats
+    mPerfCounters.framebufferCacheSize = getDrawFramebuffer()->getCacheSize();
 }
 
 void ContextVk::updateOverlayOnPresent()

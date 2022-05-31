@@ -41,6 +41,8 @@ class FramebufferCache final : angle::NonCopyable
     void insert(const vk::FramebufferDesc &desc, vk::FramebufferHelper &&framebufferHelper);
     void clear(ContextVk *contextVk);
 
+    size_t getSize() const { return mPayload.size(); }
+
   private:
     angle::HashMap<vk::FramebufferDesc, vk::FramebufferHelper> mPayload;
     CacheStats mCacheStats;
@@ -169,6 +171,8 @@ class FramebufferVk : public FramebufferImpl
     bool hasFramebufferFetch() const { return mCurrentFramebufferDesc.hasFramebufferFetch(); }
 
     void removeColorResolveAttachment(uint32_t colorIndexGL);
+
+    size_t getCacheSize() const { return mFramebufferCache.getSize(); }
 
   private:
     FramebufferVk(RendererVk *renderer,

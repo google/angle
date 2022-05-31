@@ -185,7 +185,8 @@ struct PerfMonitorTriplet
     FN(buffersGhosted)                             \
     FN(vertexArraySyncStateCalls)                  \
     FN(allocateNewBufferBlockCalls)                \
-    FN(dynamicBufferAllocations)
+    FN(dynamicBufferAllocations)                   \
+    FN(framebufferCacheSize)
 
 #define ANGLE_DECLARE_PERF_COUNTER(COUNTER) uint64_t COUNTER;
 
