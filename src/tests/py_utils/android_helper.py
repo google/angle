@@ -5,6 +5,7 @@
 import contextlib
 import functools
 import glob
+import hashlib
 import json
 import logging
 import os
@@ -124,20 +125,41 @@ def PrepareTestSuite(suite_name):
     _AdbShell('p=com.android.angle.test;'
               'for q in %s;do pm grant "$p" "$q";done;' % ' '.join(permissions))
 
+    _AdbShell('appops set com.android.angle.test MANAGE_EXTERNAL_STORAGE allow || true')
+
     if suite_name == 'angle_perftests':
         _AddRestrictedTracesJson()
 
 
-def PrepareRestrictedTraces(traces):
+def _CompareHashes(local_path, device_path):
+    device_hash = _AdbShell('sha256sum -b ' + device_path +
+                            ' 2> /dev/null || true').decode().strip()
+    if not device_hash:
+        return False  # file not on device
+
+    h = hashlib.sha256()
+    with open(local_path, 'rb') as f:
+        for data in iter(lambda: f.read(65536), b''):
+            h.update(data)
+    return h.hexdigest() == device_hash
+
+
+def PrepareRestrictedTraces(traces, check_hash=False):
     start = time.time()
     total_size = 0
+    skipped = 0
     for trace in traces:
         path_from_root = 'src/tests/restricted_traces/' + trace + '/' + trace + '.angledata.gz'
         local_path = '../../' + path_from_root
-        total_size += os.path.getsize(local_path)
-        _AdbRun(['push', local_path, '/sdcard/chromium_tests_root/' + path_from_root])
+        device_path = '/sdcard/chromium_tests_root/' + path_from_root
+        if check_hash and _CompareHashes(local_path, device_path):
+            skipped += 1
+        else:
+            total_size += os.path.getsize(local_path)
+            _AdbRun(['push', local_path, device_path])
 
-    logging.info('Pushed %d trace files (%.1fMB) in %.1fs', len(traces), total_size / 1e6,
+    logging.info('Synced %d trace files (%.1fMB, %d files already ok) in %.1fs', len(traces),
+                 total_size / 1e6, skipped,
                  time.time() - start)
 
 
@@ -290,7 +312,7 @@ def RunSmokeTest():
     logging.info('Smoke test passed')
 
 
-def RunTests(test_suite, args, stdoutfile=None, output_dir=None, log_output=True):
+def RunTests(args, stdoutfile=None, output_dir=None, log_output=True):
     args = args[:]
     test_output_path = _RemoveFlag(args, '--isolated-script-test-output')
     perf_output_path = _RemoveFlag(args, '--isolated-script-test-perf-output')

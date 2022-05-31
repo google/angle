@@ -101,8 +101,7 @@ def _use_adb(test_suite):
 
 def _run_and_get_output(args, cmd, env, runner_args):
     if _use_adb(args.test_suite):
-        result, output = android_helper.RunTests(
-            args.test_suite, cmd[1:], log_output=args.show_test_stdout)
+        result, output = android_helper.RunTests(cmd[1:], log_output=args.show_test_stdout)
         return result, output.decode().split('\n')
 
     runner_cmd = cmd + runner_args

@@ -128,7 +128,7 @@ def _use_adb(test_suite):
 
 def run_wrapper(test_suite, cmd_args, args, env, stdoutfile):
     if _use_adb(args.test_suite):
-        return android_helper.RunTests(test_suite, cmd_args, stdoutfile)[0]
+        return android_helper.RunTests(cmd_args, stdoutfile)[0]
 
     cmd = [get_binary_name(test_suite)] + cmd_args
 
