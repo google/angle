@@ -435,7 +435,7 @@ void ANGLEPerfTest::processResults()
     for (const auto &iter : mPerfCounterInfo)
     {
         const std::string &counterName = iter.second.name;
-        std::vector<GLuint> samples    = iter.second.samples;
+        std::vector<GLuint64> samples  = iter.second.samples;
 
         // Median
         {
@@ -449,8 +449,8 @@ void ANGLEPerfTest::processResults()
             mReporter->AddResult(medianName, static_cast<size_t>(samples[midpoint]));
 
             std::string measurement = mName + mBackend + "." + counterName + "_median";
-            TestSuite::GetInstance()->addHistogramSample(measurement, mStory, samples[midpoint],
-                                                         "count");
+            TestSuite::GetInstance()->addHistogramSample(
+                measurement, mStory, static_cast<double>(samples[midpoint]), "count");
         }
 
         // Maximum
@@ -463,12 +463,14 @@ void ANGLEPerfTest::processResults()
             mReporter->AddResult(maxName, static_cast<size_t>(*maxIt));
 
             std::string measurement = mName + mBackend + "." + counterName + "_max";
-            TestSuite::GetInstance()->addHistogramSample(measurement, mStory, *maxIt, "count");
+            TestSuite::GetInstance()->addHistogramSample(measurement, mStory,
+                                                         static_cast<double>(*maxIt), "count");
         }
 
         // Sum
         {
-            GLuint sum = std::accumulate(samples.begin(), samples.end(), 0);
+            GLuint64 sum =
+                std::accumulate(samples.begin(), samples.end(), static_cast<GLuint64>(0));
 
             std::stringstream sumStr;
             sumStr << "." << counterName << "_sum";
@@ -476,7 +478,8 @@ void ANGLEPerfTest::processResults()
             mReporter->AddResult(sumName, static_cast<size_t>(sum));
 
             std::string measurement = mName + mBackend + "." + counterName + "_sum";
-            TestSuite::GetInstance()->addHistogramSample(measurement, mStory, sum, "count");
+            TestSuite::GetInstance()->addHistogramSample(measurement, mStory,
+                                                         static_cast<double>(sum), "count");
         }
     }
 }
@@ -1009,8 +1012,8 @@ void ANGLERenderTest::updatePerfCounters()
 
     for (auto &iter : mPerfCounterInfo)
     {
-        uint32_t counter             = iter.first;
-        std::vector<GLuint> &samples = iter.second.samples;
+        uint32_t counter               = iter.first;
+        std::vector<GLuint64> &samples = iter.second.samples;
         samples.push_back(perfData[counter].value);
     }
 }

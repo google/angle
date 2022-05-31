@@ -143,7 +143,7 @@ class ANGLEPerfTest : public testing::Test, angle::NonCopyable
     struct CounterInfo
     {
         std::string name;
-        std::vector<GLuint> samples;
+        std::vector<GLuint64> samples;
     };
     std::map<GLuint, CounterInfo> mPerfCounterInfo;
     std::vector<uint64_t> mProcessMemoryUsageKBSamples;
