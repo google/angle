@@ -161,9 +161,14 @@ class TextureStorage11 : public TextureStorage
     virtual angle::Result getSwizzleRenderTarget(const gl::Context *context,
                                                  int mipLevel,
                                                  const d3d11::RenderTargetView **outRTV) = 0;
+    enum class SRVType
+    {
+        Sample,
+        Blit
+    };
     angle::Result getSRVLevel(const gl::Context *context,
                               int mipLevel,
-                              bool blitSRV,
+                              SRVType srvType,
                               const d3d11::SharedSRV **outSRV);
 
     // Get a version of a depth texture with only depth information, not stencil.

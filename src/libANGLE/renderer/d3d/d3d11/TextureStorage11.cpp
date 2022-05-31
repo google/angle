@@ -330,14 +330,14 @@ angle::Result TextureStorage11::getCachedOrCreateSRVForSampler(const gl::Context
 
 angle::Result TextureStorage11::getSRVLevel(const gl::Context *context,
                                             int mipLevel,
-                                            bool blitSRV,
+                                            SRVType srvType,
                                             const d3d11::SharedSRV **outSRV)
 {
     ASSERT(mipLevel >= 0 && mipLevel < getLevelCount());
 
     ANGLE_TRY(resolveTexture(context));
-    auto &levelSRVs      = (blitSRV) ? mLevelBlitSRVs : mLevelSRVs;
-    auto &otherLevelSRVs = (blitSRV) ? mLevelSRVs : mLevelBlitSRVs;
+    auto &levelSRVs      = srvType == SRVType::Blit ? mLevelBlitSRVs : mLevelSRVs;
+    auto &otherLevelSRVs = srvType == SRVType::Blit ? mLevelSRVs : mLevelBlitSRVs;
 
     if (!levelSRVs[mipLevel].valid())
     {
@@ -352,7 +352,7 @@ angle::Result TextureStorage11::getSRVLevel(const gl::Context *context,
             ANGLE_TRY(getResource(context, &resource));
 
             DXGI_FORMAT resourceFormat =
-                blitSRV ? mFormatInfo.blitSRVFormat : mFormatInfo.srvFormat;
+                srvType == SRVType::Blit ? mFormatInfo.blitSRVFormat : mFormatInfo.srvFormat;
             ANGLE_TRY(createSRVForSampler(context, mipLevel, 1, resourceFormat, *resource,
                                           &levelSRVs[mipLevel]));
         }
@@ -476,7 +476,7 @@ angle::Result TextureStorage11::generateSwizzles(const gl::Context *context,
         {
             // Need to re-render the swizzle for this level
             const d3d11::SharedSRV *sourceSRV = nullptr;
-            ANGLE_TRY(getSRVLevel(context, level, true, &sourceSRV));
+            ANGLE_TRY(getSRVLevel(context, level, SRVType::Blit, &sourceSRV));
 
             const d3d11::RenderTargetView *destRTV;
             ANGLE_TRY(getSwizzleRenderTarget(context, level, &destRTV));
@@ -1379,10 +1379,10 @@ angle::Result TextureStorage11_2D::getRenderTarget(const gl::Context *context,
     ANGLE_TRY(getResource(context, &texture));
 
     const d3d11::SharedSRV *srv = nullptr;
-    ANGLE_TRY(getSRVLevel(context, level, false, &srv));
+    ANGLE_TRY(getSRVLevel(context, level, SRVType::Sample, &srv));
 
     const d3d11::SharedSRV *blitSRV = nullptr;
-    ANGLE_TRY(getSRVLevel(context, level, true, &blitSRV));
+    ANGLE_TRY(getSRVLevel(context, level, SRVType::Blit, &blitSRV));
 
     Context11 *context11 = GetImplAs<Context11>(context);
 
@@ -3080,10 +3080,10 @@ angle::Result TextureStorage11_3D::getRenderTarget(const gl::Context *context,
             ANGLE_TRY(getResource(context, &texture));
 
             const d3d11::SharedSRV *srv = nullptr;
-            ANGLE_TRY(getSRVLevel(context, mipLevel, false, &srv));
+            ANGLE_TRY(getSRVLevel(context, mipLevel, SRVType::Sample, &srv));
 
             const d3d11::SharedSRV *blitSRV = nullptr;
-            ANGLE_TRY(getSRVLevel(context, mipLevel, true, &blitSRV));
+            ANGLE_TRY(getSRVLevel(context, mipLevel, SRVType::Blit, &blitSRV));
 
             D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
             rtvDesc.Format                = mFormatInfo.rtvFormat;
@@ -3123,10 +3123,10 @@ angle::Result TextureStorage11_3D::getRenderTarget(const gl::Context *context,
         rtvDesc.Texture3D.WSize       = 1;
 
         const d3d11::SharedSRV *srv = nullptr;
-        ANGLE_TRY(getSRVLevel(context, mipLevel, false, &srv));
+        ANGLE_TRY(getSRVLevel(context, mipLevel, SRVType::Sample, &srv));
 
         const d3d11::SharedSRV *blitSRV = nullptr;
-        ANGLE_TRY(getSRVLevel(context, mipLevel, true, &blitSRV));
+        ANGLE_TRY(getSRVLevel(context, mipLevel, SRVType::Blit, &blitSRV));
 
         d3d11::RenderTargetView rtv;
         ANGLE_TRY(mRenderer->allocateResource(context11, rtvDesc, texture->get(), &rtv));
@@ -3786,10 +3786,10 @@ angle::Result TextureStorage11_2DMultisample::getRenderTarget(const gl::Context 
     ANGLE_TRY(getResource(context, &texture));
 
     const d3d11::SharedSRV *srv = nullptr;
-    ANGLE_TRY(getSRVLevel(context, level, false, &srv));
+    ANGLE_TRY(getSRVLevel(context, level, SRVType::Sample, &srv));
 
     const d3d11::SharedSRV *blitSRV = nullptr;
-    ANGLE_TRY(getSRVLevel(context, level, true, &blitSRV));
+    ANGLE_TRY(getSRVLevel(context, level, SRVType::Blit, &blitSRV));
 
     Context11 *context11 = GetImplAs<Context11>(context);
 
