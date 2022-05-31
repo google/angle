@@ -248,7 +248,9 @@ void AssignTransformFeedbackEmulationBindings(gl::ShaderType shaderType,
     }
 }
 
-bool IsFirstRegisterOfVarying(const gl::PackedVaryingRegister &varyingReg, bool allowFields)
+bool IsFirstRegisterOfVarying(const gl::PackedVaryingRegister &varyingReg,
+                              bool allowFields,
+                              uint32_t expectArrayIndex)
 {
     const gl::PackedVarying &varying = *varyingReg.packedVarying;
 
@@ -263,8 +265,10 @@ bool IsFirstRegisterOfVarying(const gl::PackedVaryingRegister &varyingReg, bool 
     }
 
     // Similarly, assign array varying locations to the assigned location of the first element.
-    if (varyingReg.varyingArrayIndex != 0 ||
-        (varying.arrayIndex != GL_INVALID_INDEX && varying.arrayIndex != 0))
+    // Transform feedback may capture array elements, so if a specific non-zero element is
+    // requested, accept that only.
+    if (varyingReg.varyingArrayIndex != expectArrayIndex ||
+        (varying.arrayIndex != GL_INVALID_INDEX && varying.arrayIndex != expectArrayIndex))
     {
         return false;
     }
@@ -430,7 +434,7 @@ void AssignVaryingLocations(const GlslangSourceOptions &options,
     // Assign varying locations.
     for (const gl::PackedVaryingRegister &varyingReg : varyingPacking.getRegisterList())
     {
-        if (!IsFirstRegisterOfVarying(varyingReg, false))
+        if (!IsFirstRegisterOfVarying(varyingReg, false, 0))
         {
             continue;
         }
@@ -628,7 +632,9 @@ void AssignTransformFeedbackQualifiers(const gl::ProgramExecutable &programExecu
         const gl::PackedVarying *originalVarying = nullptr;
         for (const gl::PackedVaryingRegister &varyingReg : varyingPacking.getRegisterList())
         {
-            if (!IsFirstRegisterOfVarying(varyingReg, tfVarying.isShaderIOBlock))
+            const uint32_t arrayIndex =
+                tfVarying.arrayIndex == GL_INVALID_INDEX ? 0 : tfVarying.arrayIndex;
+            if (!IsFirstRegisterOfVarying(varyingReg, tfVarying.isShaderIOBlock, arrayIndex))
             {
                 continue;
             }
@@ -1591,12 +1597,17 @@ class SpirvInactiveVaryingRemover final : angle::NonCopyable
         gl::ShaderType shaderType,
         spirv::IdRefList *interfaceList);
 
+    bool isInactive(spirv::IdRef id) const { return mIsInactiveById[id]; }
+
   private:
     // Each OpTypePointer instruction that defines a type with the Output storage class is
     // duplicated with a similar instruction but which defines a type with the Private storage
     // class.  If inactive varyings are encountered, its type is changed to the Private one.  The
     // following vector maps the Output type id to the corresponding Private one.
     std::vector<spirv::IdRef> mTypePointerTransformedId;
+
+    // Whether a variable has been marked inactive.
+    std::vector<bool> mIsInactiveById;
 };
 
 void SpirvInactiveVaryingRemover::init(size_t indexBound)
@@ -1604,6 +1615,7 @@ void SpirvInactiveVaryingRemover::init(size_t indexBound)
     // Allocate storage for Output type pointer map.  At index i, this vector holds the identical
     // type as %i except for its storage class turned to Private.
     mTypePointerTransformedId.resize(indexBound);
+    mIsInactiveById.resize(indexBound, false);
 }
 
 TransformationState SpirvInactiveVaryingRemover::transformAccessChain(
@@ -1714,6 +1726,8 @@ TransformationState SpirvInactiveVaryingRemover::transformVariable(spirv::IdResu
     ASSERT(mTypePointerTransformedId[typeId].valid());
     spirv::WriteVariable(blobOut, mTypePointerTransformedId[typeId], id, spv::StorageClassPrivate,
                          nullptr);
+
+    mIsInactiveById[id] = true;
 
     return TransformationState::Transformed;
 }
@@ -1933,6 +1947,7 @@ class SpirvTransformFeedbackCodeGenerator final : angle::NonCopyable
                                                spirv::Blob *blobOut);
     void writeTransformFeedbackEmulationOutput(
         const SpirvIDDiscoverer &ids,
+        const SpirvInactiveVaryingRemover &inactiveVaryingRemover,
         const SpirvVaryingPrecisionFixer &varyingPrecisionFixer,
         spirv::IdRef currentFunctionId,
         spirv::Blob *blobOut);
@@ -2383,6 +2398,7 @@ class AccessChainIndexListAppend final : angle::NonCopyable
 
 void SpirvTransformFeedbackCodeGenerator::writeTransformFeedbackEmulationOutput(
     const SpirvIDDiscoverer &ids,
+    const SpirvInactiveVaryingRemover &inactiveVaryingRemover,
     const SpirvVaryingPrecisionFixer &varyingPrecisionFixer,
     spirv::IdRef currentFunctionId,
     spirv::Blob *blobOut)
@@ -2524,7 +2540,8 @@ void SpirvTransformFeedbackCodeGenerator::writeTransformFeedbackEmulationOutput(
             // implementation of intBitsToFloat() and uintBitsToFloat() for non-float types).
             spirv::IdRef varyingTypeId;
             spirv::IdRef varyingTypePtr;
-            const bool isPrivate = varyingPrecisionFixer.isReplaced(varying.baseId);
+            const bool isPrivate = inactiveVaryingRemover.isInactive(varying.baseId) ||
+                                   varyingPrecisionFixer.isReplaced(varying.baseId);
             getVaryingTypeIds(ids, info->componentType, isPrivate, &varyingTypeId, &varyingTypePtr);
 
             for (uint32_t arrayIndex = arrayIndexStart; arrayIndex < arrayIndexEnd; ++arrayIndex)
@@ -3592,7 +3609,8 @@ TransformationState SpirvTransformer::transformReturn(const uint32_t *instructio
             // Transform feedback emulation is written to a designated function.  Allow its code to
             // be generated if this is the right function.
             mXfbCodeGenerator.writeTransformFeedbackEmulationOutput(
-                mIds, mVaryingPrecisionFixer, mCurrentFunctionId, mSpirvBlobOut);
+                mIds, mInactiveVaryingRemover, mVaryingPrecisionFixer, mCurrentFunctionId,
+                mSpirvBlobOut);
         }
 
         // We only need to process the precision info when returning from the entry point function

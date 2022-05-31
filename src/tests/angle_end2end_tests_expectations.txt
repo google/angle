@@ -565,8 +565,8 @@
 6875 SWIFTSHADER : TransformFeedbackTest.SpanMultipleRenderPasses/* = SKIP
 
 7112 SWIFTSHADER : TransformFeedbackTest.BaseInstance/* = SKIP
-7112 AMD VULKAN : TransformFeedbackTest.BaseInstance/* = SKIP
 7112 PIXEL4ORXL VULKAN : TransformFeedbackTest.BaseInstance/* = SKIP
+7112 VULKAN : TransformFeedbackTest.BaseInstance/ES3_Vulkan_EmulateTransformFeedback_NoSupportsTransformFeedbackExtension_NoSupportsGeometryStreamsCapability = SKIP
 
 // ASAN flaky timeouts and crashes with Win / Vulkan / Swiftshader
 6965 ASAN WIN VULKAN SWIFTSHADER : MipmapTest* = SKIP
