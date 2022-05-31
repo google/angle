@@ -8306,21 +8306,12 @@ angle::Result ImageHelper::copyImageDataToBuffer(ContextVk *contextVk,
 
     const angle::Format &imageFormat = getActualFormat();
 
-    // Two VK formats (one depth-only, one combined depth/stencil) use an extra byte for depth.
-    // From https://www.khronos.org/registry/vulkan/specs/1.1/html/vkspec.html#VkBufferImageCopy:
-    //  data copied to or from the depth aspect of a VK_FORMAT_X8_D24_UNORM_PACK32 or
-    //  VK_FORMAT_D24_UNORM_S8_UINT format is packed with one 32-bit word per texel...
-    // So make sure if we hit the depth/stencil format that we have 5 bytes per pixel (4 for depth
-    //  data, 1 for stencil). NOTE that depth-only VK_FORMAT_X8_D24_UNORM_PACK32 already has 4 bytes
-    //  per pixel which is sufficient to contain its depth aspect (no stencil aspect).
-    uint32_t pixelBytes         = imageFormat.pixelBytes;
-    uint32_t depthBytesPerPixel = imageFormat.depthBits >> 3;
-    if (getActualVkFormat() == VK_FORMAT_D24_UNORM_S8_UINT)
-    {
-        pixelBytes         = 5;
-        depthBytesPerPixel = 4;
-    }
+    // As noted in the OpenGL ES 3.2 specs, table 8.13, CopyTexImage cannot
+    // be used for depth textures. There is no way for the image or buffer
+    // used in this function to be of some combined depth and stencil format.
+    ASSERT(getAspectFlags() == VK_IMAGE_ASPECT_COLOR_BIT);
 
+    uint32_t pixelBytes = imageFormat.pixelBytes;
     size_t bufferSize =
         sourceArea.width * sourceArea.height * sourceArea.depth * pixelBytes * layerCount;
 
@@ -8335,44 +8326,22 @@ angle::Result ImageHelper::copyImageDataToBuffer(ContextVk *contextVk,
 
     LevelIndex sourceLevelVk = toVkLevel(sourceLevelGL);
 
-    VkBufferImageCopy regions[2] = {};
-    uint32_t regionCount         = 1;
+    VkBufferImageCopy regions = {};
+    uint32_t regionCount      = 1;
     // Default to non-combined DS case
-    regions[0].bufferOffset                    = dstOffset;
-    regions[0].bufferRowLength                 = 0;
-    regions[0].bufferImageHeight               = 0;
-    regions[0].imageExtent.width               = sourceArea.width;
-    regions[0].imageExtent.height              = sourceArea.height;
-    regions[0].imageExtent.depth               = sourceArea.depth;
-    regions[0].imageOffset.x                   = sourceArea.x;
-    regions[0].imageOffset.y                   = sourceArea.y;
-    regions[0].imageOffset.z                   = sourceArea.z;
-    regions[0].imageSubresource.aspectMask     = aspectFlags;
-    regions[0].imageSubresource.baseArrayLayer = baseLayer;
-    regions[0].imageSubresource.layerCount     = layerCount;
-    regions[0].imageSubresource.mipLevel       = sourceLevelVk.get();
-
-    if (isCombinedDepthStencilFormat())
-    {
-        // For combined DS image we'll copy depth and stencil aspects separately
-        // Depth aspect comes first in buffer and can use most settings from above
-        regions[0].imageSubresource.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
-
-        // Get depth data size since stencil data immediately follows depth data in buffer
-        const VkDeviceSize depthSize = depthBytesPerPixel * sourceArea.width * sourceArea.height *
-                                       sourceArea.depth * layerCount;
-
-        // Double-check that we allocated enough buffer space (always 1 byte per stencil)
-        ASSERT(bufferSize >= (depthSize + (sourceArea.width * sourceArea.height * sourceArea.depth *
-                                           layerCount)));
-
-        // Copy stencil data into buffer immediately following the depth data
-        const VkDeviceSize stencilOffset       = dstOffset + depthSize;
-        regions[1]                             = regions[0];
-        regions[1].bufferOffset                = stencilOffset;
-        regions[1].imageSubresource.aspectMask = VK_IMAGE_ASPECT_STENCIL_BIT;
-        regionCount++;
-    }
+    regions.bufferOffset                    = dstOffset;
+    regions.bufferRowLength                 = 0;
+    regions.bufferImageHeight               = 0;
+    regions.imageExtent.width               = sourceArea.width;
+    regions.imageExtent.height              = sourceArea.height;
+    regions.imageExtent.depth               = sourceArea.depth;
+    regions.imageOffset.x                   = sourceArea.x;
+    regions.imageOffset.y                   = sourceArea.y;
+    regions.imageOffset.z                   = sourceArea.z;
+    regions.imageSubresource.aspectMask     = aspectFlags;
+    regions.imageSubresource.baseArrayLayer = baseLayer;
+    regions.imageSubresource.layerCount     = layerCount;
+    regions.imageSubresource.mipLevel       = sourceLevelVk.get();
 
     CommandBufferAccess access;
     access.onBufferTransferWrite(dstBuffer);
@@ -8382,7 +8351,7 @@ angle::Result ImageHelper::copyImageDataToBuffer(ContextVk *contextVk,
     ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(access, &commandBuffer));
 
     commandBuffer->copyImageToBuffer(mImage, getCurrentLayout(), bufferHandle, regionCount,
-                                     regions);
+                                     &regions);
 
     return angle::Result::Continue;
 }
