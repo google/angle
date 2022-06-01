@@ -61,7 +61,7 @@ EGLBoolean BindTexImage(Thread *thread, Display *display, Surface *eglSurface, E
                          GetDisplayIfValid(display), EGL_FALSE);
 
     gl::Context *context = thread->getContext();
-    if (context)
+    if (context && !context->isContextLost())
     {
         gl::TextureType type =
             egl_gl::EGLTextureTargetToTextureType(eglSurface->getTextureTarget());
@@ -573,15 +573,18 @@ EGLBoolean ReleaseTexImage(Thread *thread, Display *display, Surface *eglSurface
 {
     ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglReleaseTexImage",
                          GetDisplayIfValid(display), EGL_FALSE);
-    gl::Texture *texture = eglSurface->getBoundTexture();
-
-    if (texture)
+    gl::Context *context = thread->getContext();
+    if (context && !context->isContextLost())
     {
-        ANGLE_EGL_TRY_RETURN(thread, eglSurface->releaseTexImage(thread->getContext(), buffer),
-                             "eglReleaseTexImage", GetSurfaceIfValid(display, eglSurface),
-                             EGL_FALSE);
-    }
+        gl::Texture *texture = eglSurface->getBoundTexture();
 
+        if (texture)
+        {
+            ANGLE_EGL_TRY_RETURN(thread, eglSurface->releaseTexImage(thread->getContext(), buffer),
+                                 "eglReleaseTexImage", GetSurfaceIfValid(display, eglSurface),
+                                 EGL_FALSE);
+        }
+    }
     thread->setSuccess();
     return EGL_TRUE;
 }
