@@ -51,7 +51,6 @@ class ShaderInfo final : angle::NonCopyable
 
 struct ProgramTransformOptions final
 {
-    uint8_t enableLineRasterEmulation : 1;
     uint8_t surfaceRotation : 1;
     uint8_t removeTransformFeedbackEmulation : 1;
     uint8_t reserved : 5;  // must initialize to zero

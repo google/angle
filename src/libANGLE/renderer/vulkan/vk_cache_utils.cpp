@@ -1374,11 +1374,6 @@ void InitializeSpecializationInfo(
         (*specializationEntriesOut)[id].constantID = static_cast<uint32_t>(id);
         switch (id)
         {
-            case sh::vk::SpecializationConstantId::LineRasterEmulation:
-                (*specializationEntriesOut)[id].offset =
-                    offsetof(SpecializationConstants, lineRasterEmulation);
-                (*specializationEntriesOut)[id].size = sizeof(specConsts.lineRasterEmulation);
-                break;
             case sh::vk::SpecializationConstantId::SurfaceRotation:
                 (*specializationEntriesOut)[id].offset =
                     offsetof(SpecializationConstants, surfaceRotation);

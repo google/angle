@@ -9883,9 +9883,6 @@ void ShaderProgramHelper::setSpecializationConstant(sh::vk::SpecializationConsta
     ASSERT(id < sh::vk::SpecializationConstantId::EnumCount);
     switch (id)
     {
-        case sh::vk::SpecializationConstantId::LineRasterEmulation:
-            mSpecializationConstants.lineRasterEmulation = value;
-            break;
         case sh::vk::SpecializationConstantId::SurfaceRotation:
             mSpecializationConstants.surfaceRotation = value;
             break;

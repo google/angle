@@ -420,17 +420,6 @@ void AssignVaryingLocations(const GlslangSourceOptions &options,
 {
     uint32_t locationsUsedForEmulation = programInterfaceInfo->locationsUsedForXfbExtension;
 
-    // Substitute layout and qualifier strings for the position varying added for line raster
-    // emulation.
-    if (options.emulateBresenhamLines)
-    {
-        uint32_t lineRasterEmulationPositionLocation = locationsUsedForEmulation++;
-
-        AddLocationInfo(variableInfoMapOut, shaderType, ShaderVariableType::Varying,
-                        sh::vk::kLineRasterEmulationPosition, lineRasterEmulationPositionLocation,
-                        ShaderInterfaceVariableInfo::kInvalid, 0, 0);
-    }
-
     // Assign varying locations.
     for (const gl::PackedVaryingRegister &varyingReg : varyingPacking.getRegisterList())
     {

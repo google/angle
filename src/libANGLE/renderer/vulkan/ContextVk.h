@@ -665,11 +665,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     size_t getVkIndexTypeSize(gl::DrawElementsType glIndexType) const;
     bool shouldConvertUint8VkIndexType(gl::DrawElementsType glIndexType) const;
 
-    ANGLE_INLINE bool isBresenhamEmulationEnabled(const gl::PrimitiveMode mode)
-    {
-        return getFeatures().basicGLLineRasterization.enabled && gl::IsLineMode(mode);
-    }
-
     ProgramExecutableVk *getExecutable() const;
 
     bool isRobustResourceInitEnabled() const;

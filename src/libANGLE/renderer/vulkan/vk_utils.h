@@ -790,7 +790,6 @@ class Recycler final : angle::NonCopyable
 ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
 struct SpecializationConstants final
 {
-    VkBool32 lineRasterEmulation;
     VkBool32 surfaceRotation;
     float drawableWidth;
     float drawableHeight;

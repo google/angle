@@ -976,8 +976,6 @@ const char kDriverUniformsVarName[]   = "ANGLEUniforms";
 // Interface block array name used for atomic counter emulation
 const char kAtomicCountersBlockName[] = "ANGLEAtomicCounters";
 
-const char kLineRasterEmulationPosition[] = "ANGLEPosition";
-
 const char kXfbEmulationGetOffsetsFunctionName[] = "ANGLEGetXfbOffsets";
 const char kXfbEmulationCaptureFunctionName[]    = "ANGLECaptureXfb";
 const char kXfbEmulationBufferBlockName[]        = "ANGLEXfbBuffer";

@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 279
+#define ANGLE_SH_VERSION 280
 
 enum ShShaderSpec
 {
@@ -304,10 +304,7 @@ const ShCompileOptions SH_REMOVE_DYNAMIC_INDEXING_OF_SWIZZLED_VECTOR = UINT64_C(
 // This flag works around a slow fxc compile performance issue with dynamic uniform indexing.
 const ShCompileOptions SH_ALLOW_TRANSLATE_UNIFORM_BLOCK_TO_STRUCTUREDBUFFER = UINT64_C(1) << 46;
 
-// This flag indicates whether Bresenham line raster emulation code should be generated.  This
-// emulation is necessary if the backend uses a differnet algorithm to draw lines.  Currently only
-// implemented for the Vulkan backend.
-const ShCompileOptions SH_ADD_BRESENHAM_LINE_RASTER_EMULATION = UINT64_C(1) << 47;
+// Note: bit 47 is unused
 
 // This flag allows disabling ARB_texture_rectangle on a per-compile basis. This is necessary
 // for WebGL contexts becuase ARB_texture_rectangle may be necessary for the WebGL implementation
@@ -833,21 +830,19 @@ namespace vk
 // Specialization constant ids
 enum class SpecializationConstantId : uint32_t
 {
-    LineRasterEmulation = 0,
-    SurfaceRotation     = 1,
-    Dither              = 2,
+    SurfaceRotation = 0,
+    Dither          = 1,
 
-    InvalidEnum = 3,
+    InvalidEnum = 2,
     EnumCount   = InvalidEnum,
 };
 
 enum class SpecConstUsage : uint32_t
 {
-    LineRasterEmulation = 0,
-    Rotation            = 1,
-    Dither              = 2,
+    Rotation = 0,
+    Dither   = 1,
 
-    InvalidEnum = 3,
+    InvalidEnum = 2,
     EnumCount   = InvalidEnum,
 };
 
@@ -891,9 +886,6 @@ constexpr uint32_t kDriverUniformsMiscTransformDepthMask          = 0x1;
 
 // Interface block array name used for atomic counter emulation
 extern const char kAtomicCountersBlockName[];
-
-// Line raster emulation varying
-extern const char kLineRasterEmulationPosition[];
 
 // Transform feedback emulation support
 extern const char kXfbEmulationGetOffsetsFunctionName[];
