@@ -295,8 +295,8 @@ angle::Result ProgramVk::createGraphicsPipelineWithDefaultState(const gl::Contex
                                  : gl::PrimitiveMode::TriangleStrip;
     SetupDefaultPipelineState(contextVk, glExecutable.getOutputVariables().size(), mode,
                               &graphicsPipelineDesc);
-    return mExecutable.getGraphicsPipeline(contextVk, mode, pipelineCache, graphicsPipelineDesc,
-                                           glExecutable, &descPtr, &pipeline);
+    return mExecutable.getGraphicsPipeline(contextVk, mode, pipelineCache, PipelineSource::WarmUp,
+                                           graphicsPipelineDesc, glExecutable, &descPtr, &pipeline);
 }
 
 void ProgramVk::linkResources(const gl::ProgramLinkedResources &resources)

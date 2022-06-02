@@ -738,6 +738,7 @@ angle::Result ProgramExecutableVk::addTextureDescriptorSetDesc(
 angle::Result ProgramExecutableVk::getGraphicsPipeline(ContextVk *contextVk,
                                                        gl::PrimitiveMode mode,
                                                        PipelineCacheAccess *pipelineCache,
+                                                       PipelineSource source,
                                                        const vk::GraphicsPipelineDesc &desc,
                                                        const gl::ProgramExecutable &glExecutable,
                                                        const vk::GraphicsPipelineDesc **descPtrOut,
@@ -789,13 +790,14 @@ angle::Result ProgramExecutableVk::getGraphicsPipeline(ContextVk *contextVk,
     gl::DrawBufferMask missingOutputsMask   = ~shaderOutMask & framebufferMask;
 
     return shaderProgram->getGraphicsPipeline(
-        contextVk, &contextVk->getRenderPassCache(), pipelineCache, getPipelineLayout(), desc,
-        activeAttribLocations, glExecutable.getAttributesTypeMask(), missingOutputsMask, descPtrOut,
-        pipelineOut);
+        contextVk, &contextVk->getRenderPassCache(), pipelineCache, getPipelineLayout(), source,
+        desc, activeAttribLocations, glExecutable.getAttributesTypeMask(), missingOutputsMask,
+        descPtrOut, pipelineOut);
 }
 
 angle::Result ProgramExecutableVk::getComputePipeline(ContextVk *contextVk,
                                                       PipelineCacheAccess *pipelineCache,
+                                                      PipelineSource source,
                                                       const gl::ProgramExecutable &glExecutable,
                                                       vk::PipelineHelper **pipelineOut)
 {
@@ -805,7 +807,7 @@ angle::Result ProgramExecutableVk::getComputePipeline(ContextVk *contextVk,
 
     vk::ShaderProgramHelper *shaderProgram = mComputeProgramInfo.getShaderProgram();
     ASSERT(shaderProgram);
-    return shaderProgram->getComputePipeline(contextVk, pipelineCache, getPipelineLayout(),
+    return shaderProgram->getComputePipeline(contextVk, pipelineCache, getPipelineLayout(), source,
                                              pipelineOut);
 }
 

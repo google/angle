@@ -2338,9 +2338,31 @@ void DumpPipelineCacheGraph(
     {
         const vk::GraphicsPipelineDesc &desc = descAndPipeline.first;
 
-        out << "  p" << cacheSerial << "_" << descId << "[label=\"";
+        out << "  p" << cacheSerial << "_" << descId << "[label=\"Pipeline " << descId << "\\n\\n";
         OutputAllPipelineState(contextVk, out, pipelines[descId], nodeState, false);
-        out << "\"];\n";
+        out << "\"]";
+
+        switch (descAndPipeline.second.getCacheLookUpFeedback())
+        {
+            case vk::CacheLookUpFeedback::Hit:
+                // Default is green already
+                break;
+            case vk::CacheLookUpFeedback::Miss:
+                out << "[color=red]";
+                break;
+            case vk::CacheLookUpFeedback::WarmUpHit:
+                // Default is green already
+                out << "[style=dashed]";
+                break;
+            case vk::CacheLookUpFeedback::WarmUpMiss:
+                out << "[style=dashed,color=red]";
+                break;
+            default:
+                // No feedback available
+                break;
+        }
+
+        out << ";\n";
 
         descToId[desc] = descId++;
     }
@@ -2667,7 +2689,8 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     const gl::DrawBufferMask &missingOutputsMask,
     const ShaderAndSerialMap &shaders,
     const SpecializationConstants &specConsts,
-    Pipeline *pipelineOut) const
+    Pipeline *pipelineOut,
+    CacheLookUpFeedback *feedbackOut) const
 {
     angle::FixedVector<VkPipelineShaderStageCreateInfo, 5> shaderStages;
     VkPipelineVertexInputStateCreateInfo vertexInputState     = {};
@@ -3157,6 +3180,11 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
 
     if (supportsFeedback)
     {
+        const bool cacheHit =
+            (feedback.flags & VK_PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT) !=
+            0;
+
+        *feedbackOut = cacheHit ? CacheLookUpFeedback::Hit : CacheLookUpFeedback::Miss;
         ApplyPipelineCreationFeedback(contextVk, feedback);
     }
 
@@ -3907,6 +3935,13 @@ PipelineHelper::~PipelineHelper() = default;
 void PipelineHelper::destroy(VkDevice device)
 {
     mPipeline.destroy(device);
+    mCacheLookUpFeedback = CacheLookUpFeedback::None;
+}
+
+void PipelineHelper::release(ContextVk *contextVk)
+{
+    contextVk->addGarbage(&mPipeline);
+    mCacheLookUpFeedback = CacheLookUpFeedback::None;
 }
 
 void PipelineHelper::addTransition(GraphicsPipelineTransitionBits bits,
@@ -5459,11 +5494,13 @@ angle::Result GraphicsPipelineCache::insertPipeline(
     const gl::DrawBufferMask &missingOutputsMask,
     const vk::ShaderAndSerialMap &shaders,
     const vk::SpecializationConstants &specConsts,
+    PipelineSource source,
     const vk::GraphicsPipelineDesc &desc,
     const vk::GraphicsPipelineDesc **descPtrOut,
     vk::PipelineHelper **pipelineOut)
 {
     vk::Pipeline newPipeline;
+    vk::CacheLookUpFeedback feedback = vk::CacheLookUpFeedback::None;
 
     // This "if" is left here for the benefit of VulkanPipelineCachePerfTest.
     if (contextVk != nullptr)
@@ -5471,11 +5508,18 @@ angle::Result GraphicsPipelineCache::insertPipeline(
         ANGLE_TRY(desc.initializePipeline(contextVk, pipelineCache, compatibleRenderPass,
                                           pipelineLayout, activeAttribLocationsMask,
                                           programAttribsTypeMask, missingOutputsMask, shaders,
-                                          specConsts, &newPipeline));
+                                          specConsts, &newPipeline, &feedback));
+    }
+
+    if (source == PipelineSource::WarmUp)
+    {
+        feedback = feedback == vk::CacheLookUpFeedback::Hit ? vk::CacheLookUpFeedback::WarmUpHit
+                                                            : vk::CacheLookUpFeedback::WarmUpMiss;
     }
 
     // The Serial will be updated outside of this query.
-    auto insertedItem = mPayload.emplace(desc, std::move(newPipeline));
+    auto insertedItem = mPayload.emplace(std::piecewise_construct, std::forward_as_tuple(desc),
+                                         std::forward_as_tuple(std::move(newPipeline), feedback));
     *descPtrOut       = &insertedItem.first->first;
     *pipelineOut      = &insertedItem.first->second;
 
@@ -5490,7 +5534,9 @@ void GraphicsPipelineCache::populate(const vk::GraphicsPipelineDesc &desc, vk::P
         return;
     }
 
-    mPayload.emplace(desc, std::move(pipeline));
+    // Note: this function is only used for testing.
+    mPayload.emplace(std::piecewise_construct, std::forward_as_tuple(desc),
+                     std::forward_as_tuple(std::move(pipeline), vk::CacheLookUpFeedback::None));
 }
 
 // DescriptorSetLayoutCache implementation.

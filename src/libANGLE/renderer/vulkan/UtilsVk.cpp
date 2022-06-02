@@ -1518,8 +1518,8 @@ angle::Result UtilsVk::setupComputeProgram(
     vk::PipelineHelper *pipeline;
     PipelineCacheAccess pipelineCache;
     ANGLE_TRY(renderer->getPipelineCache(&pipelineCache));
-    ANGLE_TRY(
-        program->getComputePipeline(contextVk, &pipelineCache, pipelineLayout.get(), &pipeline));
+    ANGLE_TRY(program->getComputePipeline(contextVk, &pipelineCache, pipelineLayout.get(),
+                                          PipelineSource::Utils, &pipeline));
     commandBufferHelper->retainResource(pipeline);
 
     vk::OutsideRenderPassCommandBuffer *commandBuffer = &commandBufferHelper->getCommandBuffer();
@@ -1572,10 +1572,10 @@ angle::Result UtilsVk::setupGraphicsProgram(ContextVk *contextVk,
     vk::PipelineHelper *helper;
     PipelineCacheAccess pipelineCache;
     ANGLE_TRY(renderer->getPipelineCache(&pipelineCache));
-    ANGLE_TRY(program->getGraphicsPipeline(contextVk, &contextVk->getRenderPassCache(),
-                                           &pipelineCache, pipelineLayout.get(), *pipelineDesc,
-                                           gl::AttributesMask(), gl::ComponentTypeMask(),
-                                           gl::DrawBufferMask(), &descPtr, &helper));
+    ANGLE_TRY(program->getGraphicsPipeline(
+        contextVk, &contextVk->getRenderPassCache(), &pipelineCache, pipelineLayout.get(),
+        PipelineSource::Utils, *pipelineDesc, gl::AttributesMask(), gl::ComponentTypeMask(),
+        gl::DrawBufferMask(), &descPtr, &helper));
     contextVk->getStartedRenderPassCommands().retainResource(helper);
     commandBuffer->bindGraphicsPipeline(helper->getPipeline());
 
