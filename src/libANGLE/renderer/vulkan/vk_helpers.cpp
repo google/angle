@@ -7633,6 +7633,13 @@ void ImageHelper::stageClearIfEmulatedFormat(bool isRobustResourceInitEnabled, b
     // For external images, we cannot clear the image entirely, as it may contain data in the
     // non-emulated channels.  For depth/stencil images, clear is already per aspect, but for color
     // images we would need to take a special path where we only clear the emulated channels.
+
+    // Block images are not cleared, since no emulated channels are present if decoded.
+    if (isExternalImage && getIntendedFormat().isBlock)
+    {
+        return;
+    }
+
     const bool clearOnlyEmulatedChannels =
         isExternalImage && !getIntendedFormat().hasDepthOrStencilBits();
     const VkColorComponentFlags colorMaskFlags =
@@ -9328,6 +9335,12 @@ bool ImageHelper::hasEmulatedImageChannels() const
 {
     const angle::Format &angleFmt   = getIntendedFormat();
     const angle::Format &textureFmt = getActualFormat();
+
+    // Block formats may be decoded and emulated with a non-block format.
+    if (angleFmt.isBlock && !textureFmt.isBlock)
+    {
+        return true;
+    }
 
     // The red channel is never emulated.
     ASSERT((angleFmt.redBits != 0 || angleFmt.luminanceBits != 0 || angleFmt.alphaBits != 0) ==

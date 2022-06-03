@@ -310,6 +310,13 @@ void RendererVk::ensureCapsInitialized() const
         mNativeLimitations.emulatedEtc1 = true;
     }
 
+    // When ASTC formats are not natively supported
+    // mark potentially-available ASTC extension as emulated.
+    if (mPhysicalDeviceFeatures.textureCompressionASTC_LDR == VK_FALSE)
+    {
+        mNativeLimitations.emulatedAstc = true;
+    }
+
     // Vulkan doesn't support ASTC 3D block textures, which are required by
     // GL_OES_texture_compression_astc.
     mNativeExtensions.textureCompressionAstcOES = false;

@@ -204,6 +204,12 @@
 5276 NVIDIA VULKAN : dEQP-GLES31.functional.copy_image.compressed.viewclass_etc* = FAIL
 5276 NVIDIA VULKAN : dEQP-GLES31.functional.copy_image.mixed.*eac* = FAIL
 
+// Copy image tests fail on desktop cards where ASTC is emulated
+7415 AMD VULKAN : dEQP-GLES31.functional.copy_image.mixed.*astc* = FAIL
+7415 AMD VULKAN : dEQP-GLES31.functional.copy_image.compressed.viewclass_astc* = FAIL
+7415 NVIDIA VULKAN : dEQP-GLES31.functional.copy_image.mixed.*astc* = FAIL
+7415 NVIDIA VULKAN : dEQP-GLES31.functional.copy_image.compressed.viewclass_astc* = FAIL
+
 // Vulkan Android failures with these formats
 5277 VULKAN ANDROID : dEQP-GLES31.functional.copy_image.non_compressed.viewclass_32_bits.rgba8_snorm_rgb10_a2* = FAIL
 5277 VULKAN ANDROID : dEQP-GLES31.functional.copy_image.non_compressed.viewclass_32_bits.rgba8_snorm_rgb9_e5* = FAIL
@@ -377,7 +383,7 @@
 6910 PIXEL6 VULKAN : dEQP-GLES31.functional.shaders.linkage.es31.tessellation_geometry.varying.rules.different_precision = FAIL
 // This test fails on pre-release Android T drivers as of 3/25/22:
 6910 PIXEL6 VULKAN : dEQP-GLES31.functional.geometry_shading.layered.layer_provoking_vertex_* = FAIL
- 
+
 // Geometry shader support:
 // This fails on pre-release Android T drivers as of 3/25/22:
 5430 PIXEL6 VULKAN : dEQP-GLES31.functional.geometry_shading.query.primitives_generated_* = FAIL

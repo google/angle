@@ -172,6 +172,11 @@ declare_args() {
   angle_use_spirv_gen_through_glslang = false
 }
 
+declare_args() {
+  # ASTC emulation is only built on standalone non-android builds
+  angle_has_astc_encoder = angle_has_build && angle_standalone && !is_android
+}
+
 # OpenCL is not supported on Windows UWP, because the CL headers include DX9, which is not
 # supported by UWP. A workaround might be possible if CL support on UWP is required.
 assert(!angle_is_winuwp || !angle_enable_cl,

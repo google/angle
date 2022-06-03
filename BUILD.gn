@@ -186,6 +186,10 @@ config("internal_config") {
   if (is_lsan) {
     defines += [ "ANGLE_WITH_LSAN" ]
   }
+
+  if (angle_has_astc_encoder) {
+    defines += [ "ANGLE_HAS_ASTCENC" ]
+  }
 }
 
 config("constructor_and_destructor_warnings") {
@@ -453,6 +457,11 @@ angle_static_library("angle_image_util") {
   sources = libangle_image_util_sources
   public_configs += [ ":angle_image_util_config" ]
   public_deps = [ ":angle_image_util_headers" ]
+
+  if (angle_has_astc_encoder) {
+    public_deps += [ "third_party/astc-encoder:astcenc" ]
+    include_dirs = [ "third_party/astc-encoder/src/Source/" ]
+  }
 }
 
 config("angle_gl_visibility_config") {

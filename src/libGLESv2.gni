@@ -134,6 +134,7 @@ libangle_image_util_sources = [
   "src/image_util/copyimage.cpp",
   "src/image_util/imageformats.cpp",
   "src/image_util/loadimage.cpp",
+  "src/image_util/loadimage_astc.cpp",
   "src/image_util/loadimage_etc.cpp",
 ]
 

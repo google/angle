@@ -1043,6 +1043,11 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
     {
         addExtensionPrerequisite("GL_KHR_texture_compression_astc_ldr");
 
+        if (IsNVIDIA() && mParams->isVulkan())
+        {
+            skipTest("http://anglebug.com/7496 Nondeterministic noise between runs");
+        }
+
         if ((IsLinux() && IsIntel()) && mParams->isVulkan())
         {
             skipTest("TODO: http://anglebug.com/6029 Crashes on Linux Intel Vulkan");
@@ -1206,6 +1211,11 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
         if (IsWindows() && IsIntel())
         {
             skipTest("http://anglebug.com/7173 Fails on Intel HD 630 Mobile");
+        }
+
+        if (IsNVIDIA() && mParams->isVulkan())
+        {
+            skipTest("http://anglebug.com/7125 Renders incorrectly on NVIDIA");
         }
 
         addExtensionPrerequisite("GL_EXT_geometry_shader");
