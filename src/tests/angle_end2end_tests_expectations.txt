@@ -56,8 +56,6 @@
 7291 VULKAN : BlitFramebufferTest.Blit3D/* = SKIP
 7291 VULKAN : BlitFramebufferTest.Blit3DTo2DArray/* = SKIP
 7291 VULKAN : BlitFramebufferTest.Blit2DArrayTo3D/* = SKIP
-234769934 VULKAN : VulkanPerformanceCounterTest.ResizeFBOAttachedTexture/* = SKIP
-234769934 VULKAN : VulkanPerformanceCounterTest.SetTextureSwizzleWithDifferentValueOnFBOAttachedTexture/* = SKIP
 235523746 VULKAN : VulkanPerformanceCounterTest.CreateDestroyTextureDoesNotIncreaseDescriptporSetCache/* = SKIP
 
 // Windows

@@ -2844,6 +2844,7 @@ class FramebufferHelper : public Resource
     FramebufferHelper &operator=(FramebufferHelper &&other);
 
     angle::Result init(ContextVk *contextVk, const VkFramebufferCreateInfo &createInfo);
+    void destroy(RendererVk *rendererVk);
     void release(ContextVk *contextVk);
 
     bool valid() { return mFramebuffer.valid(); }

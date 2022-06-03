@@ -30,6 +30,8 @@ class ShareGroupVk : public ShareGroupImpl
     ShareGroupVk();
     void onDestroy(const egl::Display *display) override;
 
+    FramebufferCache &getFramebufferCache() { return mFramebufferCache; }
+
     // PipelineLayoutCache and DescriptorSetLayoutCache can be shared between multiple threads
     // accessing them via shared contexts. The ShareGroup locks around gl entrypoints ensuring
     // synchronous update to the caches.
@@ -60,6 +62,9 @@ class ShareGroupVk : public ShareGroupImpl
     void removeContext(ContextVk *contextVk);
 
   private:
+    // VkFramebuffer caches
+    FramebufferCache mFramebufferCache;
+
     // ANGLE uses a PipelineLayout cache to store compatible pipeline layouts.
     PipelineLayoutCache mPipelineLayoutCache;
 

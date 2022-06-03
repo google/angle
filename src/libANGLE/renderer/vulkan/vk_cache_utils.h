@@ -1398,11 +1398,15 @@ constexpr size_t kFramebufferDescColorResolveIndexOffset =
 // Enable struct padding warnings for the code below since it is used in caches.
 ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
 
+class FramebufferHelper;
+
 class FramebufferDesc
 {
   public:
     FramebufferDesc();
     ~FramebufferDesc();
+
+    void destroyCachedObject(ContextVk *contextVk);
 
     FramebufferDesc(const FramebufferDesc &other);
     FramebufferDesc &operator=(const FramebufferDesc &other);
@@ -1480,6 +1484,16 @@ static_assert(kFramebufferDescSize == 148, "Size check failed");
 // Disable warnings about struct padding.
 ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
 
+// SharedFramebufferCacheKey
+using FramebufferDescPointer    = std::unique_ptr<FramebufferDesc>;
+using SharedFramebufferCacheKey = std::shared_ptr<FramebufferDescPointer>;
+ANGLE_INLINE const SharedFramebufferCacheKey
+CreateSharedFramebufferCacheKey(const FramebufferDesc &desc)
+{
+    FramebufferDescPointer framebufferDescPointer = std::make_unique<FramebufferDesc>(desc);
+    return std::make_shared<FramebufferDescPointer>(std::move(framebufferDescPointer));
+}
+
 // The SamplerHelper allows a Sampler to be coupled with a serial.
 // Must be included before we declare SamplerCache.
 class SamplerHelper final : angle::NonCopyable
@@ -1526,6 +1540,30 @@ class RenderPassHelper final : angle::NonCopyable
     RenderPass mRenderPass;
     RenderPassPerfCounters mPerfCounters;
 };
+
+// Helper class manages the lifetime of various cache objects so that the cache entry can be
+// destroyed when one of the components becomes invalid.
+template <class SharedCacheKeyT>
+class SharedCacheKeyManager
+{
+  public:
+    SharedCacheKeyManager() = default;
+    ~SharedCacheKeyManager() { ASSERT(empty()); }
+    // Store the pointer to the cache key and retains it
+    void addKey(const SharedCacheKeyT &key);
+    // Iterate over the descriptor array and destroy the descriptor and cache.
+    void releaseKeys(ContextVk *contextVk);
+    void destroy();
+    bool empty() { return mSharedCacheKeys.empty(); }
+
+  private:
+    bool containsKey(const SharedCacheKeyT &key) const;
+    // Tracks an array of cache keys with refcounting. Note this owns one refcount of
+    // SharedCacheKeyT object.
+    std::vector<SharedCacheKeyT> mSharedCacheKeys;
+};
+
+using FramebufferCacheManager = SharedCacheKeyManager<SharedFramebufferCacheKey>;
 }  // namespace vk
 }  // namespace rx
 
@@ -1728,6 +1766,27 @@ class HasCacheStats : angle::NonCopyable
 };
 
 using VulkanCacheStats = angle::PackedEnumMap<VulkanCacheType, CacheStats>;
+
+// FramebufferVk Cache
+class FramebufferCache final : angle::NonCopyable
+{
+  public:
+    FramebufferCache() = default;
+    ~FramebufferCache() { ASSERT(mPayload.empty()); }
+
+    void destroy(RendererVk *rendererVk);
+
+    bool get(ContextVk *contextVk, const vk::FramebufferDesc &desc, vk::Framebuffer &framebuffer);
+    void insert(const vk::FramebufferDesc &desc, vk::FramebufferHelper &&framebufferHelper);
+    void erase(ContextVk *contextVk, const vk::FramebufferDesc &desc);
+
+    size_t getSize() const { return mPayload.size(); }
+    bool empty() const { return mPayload.empty(); }
+
+  private:
+    angle::HashMap<vk::FramebufferDesc, vk::FramebufferHelper> mPayload;
+    CacheStats mCacheStats;
+};
 
 // TODO(jmadill): Add cache trimming/eviction.
 class RenderPassCache final : angle::NonCopyable
