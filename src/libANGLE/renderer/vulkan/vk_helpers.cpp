@@ -2990,6 +2990,7 @@ angle::Result BufferPool::allocateBuffer(Context *context,
                                          BufferSuballocation *suballocation)
 {
     ASSERT(alignment);
+    VmaVirtualAllocation allocation;
     VkDeviceSize offset;
     VkDeviceSize alignedSize = roundUp(sizeInBytes, alignment);
 
@@ -3048,9 +3049,9 @@ angle::Result BufferPool::allocateBuffer(Context *context,
             continue;
         }
 
-        if (block->allocate(alignedSize, alignment, &offset) == VK_SUCCESS)
+        if (block->allocate(alignedSize, alignment, &allocation, &offset) == VK_SUCCESS)
         {
-            suballocation->init(context->getDevice(), block.get(), offset, alignedSize);
+            suballocation->init(context->getDevice(), block.get(), allocation, offset, alignedSize);
             return angle::Result::Continue;
         }
         ++iter;
@@ -3068,8 +3069,8 @@ angle::Result BufferPool::allocateBuffer(Context *context,
         }
         else
         {
-            ANGLE_VK_TRY(context, block->allocate(alignedSize, alignment, &offset));
-            suballocation->init(context->getDevice(), block.get(), offset, alignedSize);
+            ANGLE_VK_TRY(context, block->allocate(alignedSize, alignment, &allocation, &offset));
+            suballocation->init(context->getDevice(), block.get(), allocation, offset, alignedSize);
             mBufferBlocks.push_back(std::move(block));
             mEmptyBufferBlocks.pop_back();
             mNumberOfNewBuffersNeededSinceLastPrune++;
@@ -3082,9 +3083,10 @@ angle::Result BufferPool::allocateBuffer(Context *context,
 
     // Sub-allocate from the bufferBlock.
     std::unique_ptr<BufferBlock> &block = mBufferBlocks.back();
-    ANGLE_VK_CHECK(context, block->allocate(alignedSize, alignment, &offset) == VK_SUCCESS,
+    ANGLE_VK_CHECK(context,
+                   block->allocate(alignedSize, alignment, &allocation, &offset) == VK_SUCCESS,
                    VK_ERROR_OUT_OF_DEVICE_MEMORY);
-    suballocation->init(context->getDevice(), block.get(), offset, alignedSize);
+    suballocation->init(context->getDevice(), block.get(), allocation, offset, alignedSize);
     mNumberOfNewBuffersNeededSinceLastPrune++;
 
     return angle::Result::Continue;

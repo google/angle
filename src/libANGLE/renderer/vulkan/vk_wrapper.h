@@ -684,8 +684,11 @@ class VirtualBlock final : public WrappedObject<VirtualBlock, VmaVirtualBlock>
     void destroy(VkDevice device);
     VkResult init(VkDevice device, vma::VirtualBlockCreateFlags flags, VkDeviceSize size);
 
-    VkResult allocate(VkDeviceSize size, VkDeviceSize alignment, VkDeviceSize *offsetOut);
-    void free(VkDeviceSize offset);
+    VkResult allocate(VkDeviceSize size,
+                      VkDeviceSize alignment,
+                      VmaVirtualAllocation *allocationOut,
+                      VkDeviceSize *offsetOut);
+    void free(VmaVirtualAllocation allocation, VkDeviceSize offset);
     void calculateStats(vma::StatInfo *pStatInfo) const;
 };
 
@@ -1994,14 +1997,15 @@ ANGLE_INLINE VkResult VirtualBlock::init(VkDevice device,
 
 ANGLE_INLINE VkResult VirtualBlock::allocate(VkDeviceSize size,
                                              VkDeviceSize alignment,
+                                             VmaVirtualAllocation *allocationOut,
                                              VkDeviceSize *offsetOut)
 {
-    return vma::VirtualAllocate(mHandle, size, alignment, offsetOut);
+    return vma::VirtualAllocate(mHandle, size, alignment, allocationOut, offsetOut);
 }
 
-ANGLE_INLINE void VirtualBlock::free(VkDeviceSize offset)
+ANGLE_INLINE void VirtualBlock::free(VmaVirtualAllocation allocation, VkDeviceSize offset)
 {
-    vma::VirtualFree(mHandle, offset);
+    vma::VirtualFree(mHandle, allocation, offset);
 }
 
 ANGLE_INLINE void VirtualBlock::calculateStats(vma::StatInfo *pStatInfo) const
