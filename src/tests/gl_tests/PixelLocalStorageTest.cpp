@@ -506,6 +506,11 @@ class PixelLocalStorageTest : public ANGLETest
         return true;
     }
 
+    bool supportsPixelLocalStorageCoherent()
+    {
+        return false;  // ES 3.1 shader images can't be coherent.
+    }
+
     // anglebug.com/7398: imageLoad() eventually starts failing. A workaround is to delete and
     // recreate the texture every once in a while. Hopefully this goes away once we start using
     // proper readwrite desktop GL shader images and INTEL_fragment_shader_ordering.
@@ -615,20 +620,43 @@ class PixelLocalStorageTest : public ANGLETest
         float4 aux2;
     };
 
-    void drawBoxes(PixelLocalStoragePrototype &pls, std::vector<Box> boxes)
+    enum class UseBarriers : bool
     {
-        for (const auto &box : boxes)
+        No = false,
+        IfNotCoherent
+    };
+
+    void drawBoxes(PixelLocalStoragePrototype &pls,
+                   std::vector<Box> boxes,
+                   UseBarriers useBarriers = UseBarriers::IfNotCoherent)
+    {
+        if (!supportsPixelLocalStorageCoherent() && useBarriers == UseBarriers::IfNotCoherent)
+        {
+            for (const auto &box : boxes)
+            {
+                glVertexAttribPointer(mLTRBLocation, 4, GL_FLOAT, GL_FALSE, sizeof(Box),
+                                      box.rect.data());
+                glVertexAttribPointer(mRGBALocation, 4, GL_FLOAT, GL_FALSE, sizeof(Box),
+                                      box.color.data());
+                glVertexAttribPointer(mAux1Location, 4, GL_FLOAT, GL_FALSE, sizeof(Box),
+                                      box.aux1.data());
+                glVertexAttribPointer(mAux2Location, 4, GL_FLOAT, GL_FALSE, sizeof(Box),
+                                      box.aux2.data());
+                glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, 1);
+                glPixelLocalStorageBarrierANGLE();
+            }
+        }
+        else
         {
             glVertexAttribPointer(mLTRBLocation, 4, GL_FLOAT, GL_FALSE, sizeof(Box),
-                                  box.rect.data());
+                                  boxes[0].rect.data());
             glVertexAttribPointer(mRGBALocation, 4, GL_FLOAT, GL_FALSE, sizeof(Box),
-                                  box.color.data());
+                                  boxes[0].color.data());
             glVertexAttribPointer(mAux1Location, 4, GL_FLOAT, GL_FALSE, sizeof(Box),
-                                  box.aux1.data());
+                                  boxes[0].aux1.data());
             glVertexAttribPointer(mAux2Location, 4, GL_FLOAT, GL_FALSE, sizeof(Box),
-                                  box.aux2.data());
-            glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, 1);
-            glPixelLocalStorageBarrierANGLE();
+                                  boxes[0].aux2.data());
+            glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, boxes.size());
         }
     }
 
@@ -1268,7 +1296,7 @@ TEST_P(PixelLocalStorageTest, FragmentReject_stencil)
     // Stencil should be preserved after PLS, and only pixels that pass the stencil test should
     // update PLS next.
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-    if (hasImageLoadBug())
+    if (hasImageLoadBug())  // anglebug.com/7398
     {
         tex.reset(GL_RGBA8);
         glFramebufferPixelLocalStorageANGLE(0, tex, 0, 0, W, H, GL_RGBA8);
@@ -1361,6 +1389,122 @@ TEST_P(PixelLocalStorageTest, FragmentReject_viewport)
                          FRAG_REJECT_TEST_HEIGHT, GLColor::black);
     EXPECT_PIXEL_RECT_EQ(0, FRAG_REJECT_TEST_HEIGHT, W, H - FRAG_REJECT_TEST_HEIGHT,
                          GLColor::black);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Check that results are only nondeterministic within predictable constraints, and that no data is
+// random or leaked from other contexts when we forget to insert a barrier.
+TEST_P(PixelLocalStorageTest, ForgetBarrier)
+{
+    ANGLE_SKIP_TEST_IF(!supportsPixelLocalStorage());
+
+    PixelLocalStoragePrototype pls;
+
+    useProgram(R"(
+    PIXEL_LOCAL_DECL_UI(framebuffer, binding=0, r32ui);
+    void main()
+    {
+        uvec4 dst = pixelLocalLoad(framebuffer);
+        pixelLocalStore(framebuffer, uvec4(color) + dst * 2u);
+    })");
+
+    // Draw r=100, one pixel at a time, in random order.
+    constexpr static int NUM_PIXELS = H * W;
+    std::vector<Box> boxesA_100;
+    int pixelIdx = 0;
+    for (int i = 0; i < NUM_PIXELS; ++i)
+    {
+        int iy  = pixelIdx / W;
+        float y = iy;
+        int ix  = pixelIdx % W;
+        float x = ix;
+        pixelIdx =
+            (pixelIdx + 69484171) % NUM_PIXELS;  // Prime numbers guarantee we hit every pixel once.
+        boxesA_100.push_back(Box{{x, y, x + 1, y + 1}, {100, 0, 0, 0}});
+    }
+
+    // Draw r=7, one pixel at a time, in random order.
+    std::vector<Box> boxesB_7;
+    for (int i = 0; i < NUM_PIXELS; ++i)
+    {
+        int iy  = pixelIdx / W;
+        float y = iy;
+        int ix  = pixelIdx % W;
+        float x = ix;
+        pixelIdx =
+            (pixelIdx + 97422697) % NUM_PIXELS;  // Prime numbers guarantee we hit every pixel once.
+        boxesB_7.push_back(Box{{x, y, x + 1, y + 1}, {7, 0, 0, 0}});
+    }
+
+    PLSTestTexture tex(GL_R32UI);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferPixelLocalStorageANGLE(0, tex, 0, 0, W, H, GL_R32UI);
+    glFramebufferPixelLocalClearValueuivANGLE(0, MakeArray<uint32_t>({1, 0, 0, 0}));
+    glViewport(0, 0, W, H);
+    glDrawBuffers(0, nullptr);
+
+    // First make sure it works properly with a barrier.
+    glBeginPixelLocalStorageANGLE(1, GLenumArray({GL_REPLACE}));
+    drawBoxes(pls, boxesA_100, UseBarriers::No);
+    glPixelLocalStorageBarrierANGLE();
+    drawBoxes(pls, boxesB_7, UseBarriers::No);
+    glEndPixelLocalStorageANGLE();
+
+    attachTextureToScratchFBO(tex);
+    EXPECT_PIXEL_RECT32UI_EQ(0, 0, W, H, GLColor32UI(211, 0, 0, 1));
+
+    ASSERT_GL_NO_ERROR();
+
+    // Vulkan generates rightful "SYNC-HAZARD-READ_AFTER_WRITE" validation errors when we omit the
+    // barrier.
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
+    // Now forget to insert the barrier and ensure our nondeterminism still falls within predictable
+    // constraints.
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    if (hasImageLoadBug())  // anglebug.com/7398
+    {
+        tex.reset(GL_R32UI);
+        glFramebufferPixelLocalStorageANGLE(0, tex, 0, 0, W, H, GL_R32UI);
+    }
+    glBeginPixelLocalStorageANGLE(1, GLenumArray({GL_REPLACE}));
+    drawBoxes(pls, boxesA_100, UseBarriers::No);
+    // OOPS! We forgot to insert a barrier!
+    drawBoxes(pls, boxesB_7, UseBarriers::No);
+    glEndPixelLocalStorageANGLE();
+
+    uint32_t pixels[H * W * 4];
+    attachTextureToScratchFBO(tex);
+    glReadPixels(0, 0, W, H, GL_RGBA_INTEGER, GL_UNSIGNED_INT, pixels);
+    for (int r = 0; r < NUM_PIXELS * 4; r += 4)
+    {
+        // When two fragments, A and B, touch a pixel, there are 6 possible orderings of operations:
+        //
+        //   * Read A, Write A, Read B, Write B
+        //   * Read B, Write B, Read A, Write A
+        //   * Read A, Read B, Write A, Write B
+        //   * Read A, Read B, Write B, Write A
+        //   * Read B, Read A, Write B, Write A
+        //   * Read B, Read A, Write A, Write B
+        //
+        // Which (assumimg the read and/or write operations themselves are atomic), is equivalent to
+        // 1 of 4 potential effects:
+        bool isAcceptableValue = pixels[r] == 211 ||  // A, then B  (  7 + (100 + 1 * 2) * 2 == 211)
+                                 pixels[r] == 118 ||  // B, then A  (100 + (  7 + 1 * 2) * 2 == 118)
+                                 pixels[r] == 102 ||  // A only     (100 +             1 * 2 == 102)
+                                 pixels[r] == 9;
+        if (!isAcceptableValue)
+        {
+            printf(__FILE__ "(%i): UNACCEPTABLE value at pixel location [%i, %i]\n", __LINE__,
+                   (r / 4) % W, (r / 4) / W);
+            printf("              Got: %u\n", pixels[r]);
+            printf("  Expected one of: { 211, 118, 102, 9 }\n");
+        }
+        ASSERT_TRUE(isAcceptableValue);
+    }
+
     ASSERT_GL_NO_ERROR();
 }
 
