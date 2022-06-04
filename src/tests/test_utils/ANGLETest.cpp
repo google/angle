@@ -331,11 +331,6 @@ std::ostream &operator<<(std::ostream &ostream, const GLColorRGB &color)
     return ostream;
 }
 
-bool operator==(const GLColor32F &a, const GLColor32F &b)
-{
-    return a.R == b.R && a.G == b.G && a.B == b.B && a.A == b.A;
-}
-
 std::ostream &operator<<(std::ostream &ostream, const GLColor32F &color)
 {
     ostream << "(" << color.R << ", " << color.G << ", " << color.B << ", " << color.A << ")";

@@ -35,18 +35,38 @@ constexpr static int MAX_FRAGMENT_OUTPUTS_WITH_LOCAL_STORAGE = 1;
 // NOTE: PixelLocalStorageTest::useProgram appends "_R"/"_W" for you automatically if you use
 // PIXEL_LOCAL_DECL / pixelLocalLoad / pixelLocalStore.
 constexpr static const char kLocalStorageGLSLDefines[] = R"(
-#define PIXEL_LOCAL_DECL_IMPL(NAME_R, NAME_W, BINDING, FORMAT) \
+#define PIXEL_LOCAL_DECL_IMPL(NAME_R, NAME_W, BINDING, FORMAT)                       \
     layout(BINDING, FORMAT) coherent volatile readonly highp uniform image2D NAME_R; \
     layout(BINDING, FORMAT) coherent volatile writeonly highp uniform image2D NAME_W
+#define PIXEL_LOCAL_DECL_I_IMPL(NAME_R, NAME_W, BINDING, FORMAT)                      \
+    layout(BINDING, FORMAT) coherent volatile readonly highp uniform iimage2D NAME_R; \
+    layout(BINDING, FORMAT) coherent volatile writeonly highp uniform iimage2D NAME_W
+#define PIXEL_LOCAL_DECL_UI_IMPL(NAME_R, NAME_W, BINDING, FORMAT)                     \
+    layout(BINDING, FORMAT) coherent volatile readonly highp uniform uimage2D NAME_R; \
+    layout(BINDING, FORMAT) coherent volatile writeonly highp uniform uimage2D NAME_W
 #define PIXEL_I_COORD \
     ivec2(floor(gl_FragCoord.xy))
 #define pixelLocalLoadImpl(NAME_R) \
     imageLoad(NAME_R, PIXEL_I_COORD)
-#define pixelLocalStoreImpl(NAME_W, VALUE) \
-    { \
-        memoryBarrierImage(); \
-        imageStore(NAME_W, PIXEL_I_COORD, VALUE); \
-        memoryBarrierImage(); \
+vec4 barrierAfter(vec4 expressionResult)
+{
+    memoryBarrier();
+    return expressionResult;
+}
+ivec4 barrierAfter(ivec4 expressionResult)
+{
+    memoryBarrier();
+    return expressionResult;
+}
+uvec4 barrierAfter(uvec4 expressionResult)
+{
+    memoryBarrier();
+    return expressionResult;
+}
+#define pixelLocalStoreImpl(NAME_W, VALUE_EXPRESSION)                      \
+    {                                                                      \
+        imageStore(NAME_W, PIXEL_I_COORD, barrierAfter(VALUE_EXPRESSION)); \
+        memoryBarrier();                                                   \
     }
 // Don't execute pixelLocalStore when depth/stencil fails.
 layout(early_fragment_tests) in;
@@ -318,6 +338,7 @@ void PixelLocalStoragePrototype::endPixelLocalStorage()
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 constexpr static int W = 128, H = 128;
+constexpr static std::array<float, 4> FULLSCREEN = {0, 0, W, H};
 
 template <typename T>
 struct Array
@@ -335,6 +356,17 @@ static Array<GLenum> GLenumArray(const std::initializer_list<GLenum> &list)
 {
     return Array<GLenum>(list);
 }
+
+class PLSTestTexture : public GLTexture
+{
+  public:
+    PLSTestTexture(GLenum internalformat) : PLSTestTexture(internalformat, W, H) {}
+    PLSTestTexture(GLenum internalformat, int w, int h)
+    {
+        glBindTexture(GL_TEXTURE_2D, *this);
+        glTexStorage2D(GL_TEXTURE_2D, 1, internalformat, w, h);
+    }
+};
 
 class PixelLocalStorageTest : public ANGLETest
 {
@@ -378,34 +410,62 @@ class PixelLocalStorageTest : public ANGLETest
     void useProgram(std::string fsMain)
     {
         // Replace: PIXEL_LOCAL_DECL(name, ...) -> PIXEL_LOCAL_DECL_IMPL(name_R, name_W, ...)
-        static std::regex kDeclPattern("PIXEL_LOCAL_DECL\\s*\\(\\s*([a-zA-Z_][a-zA-Z0-9_]*)");
-        fsMain = std::regex_replace(fsMain, kDeclPattern, "PIXEL_LOCAL_DECL_IMPL($1_R, $1_W");
+        static std::regex kDeclRegex("(PIXEL_LOCAL_DECL[_UI]*)\\s*\\(\\s*([a-zA-Z_][a-zA-Z0-9_]*)");
+        fsMain = std::regex_replace(fsMain, kDeclRegex, "$1_IMPL($2_R, $2_W");
 
         // Replace: pixelLocalLoad(name) -> pixelLocalLoadImpl(name_R)
-        static std::regex kLoadPattern("pixelLocalLoad\\s*\\(\\s*([a-zA-Z_][a-zA-Z0-9_]*)");
-        fsMain = std::regex_replace(fsMain, kLoadPattern, "pixelLocalLoadImpl($1_R");
+        static std::regex kLoadRegex("pixelLocalLoad\\s*\\(\\s*([a-zA-Z_][a-zA-Z0-9_]*)");
+        fsMain = std::regex_replace(fsMain, kLoadRegex, "pixelLocalLoadImpl($1_R");
 
         // Replace: pixelLocalStore(name, ...) -> pixelLocalStoreImpl(name_W, ...)
-        static std::regex kStorePattern("pixelLocalStore\\s*\\(\\s*([a-zA-Z_][a-zA-Z0-9_]*)");
-        fsMain = std::regex_replace(fsMain, kStorePattern, "pixelLocalStoreImpl($1_W");
+        static std::regex kStoreRegex("pixelLocalStore\\s*\\(\\s*([a-zA-Z_][a-zA-Z0-9_]*)");
+        fsMain = std::regex_replace(fsMain, kStoreRegex, "pixelLocalStoreImpl($1_W");
+
+        if (mLTRBLocation >= 0)
+        {
+            glDisableVertexAttribArray(mLTRBLocation);
+        }
+        if (mRGBALocation >= 0)
+        {
+            glDisableVertexAttribArray(mRGBALocation);
+        }
+        if (mAux1Location >= 0)
+        {
+            glDisableVertexAttribArray(mAux1Location);
+        }
+        if (mAux2Location >= 0)
+        {
+            glDisableVertexAttribArray(mAux2Location);
+        }
 
         mProgram.makeRaster(
             R"(#version 310 es
             precision highp float;
 
             uniform float W, H;
-            uniform vec4 rect;
+            in vec4 rect;
+            in vec4 incolor;
+            in vec4 inaux1;
+            in vec4 inaux2;
+            out vec4 color;
+            out vec4 aux1;
+            out vec4 aux2;
 
             void main()
             {
-                gl_Position.x = ((gl_VertexID & 1) == 0 ? rect.x : rect.z) * 2.0 / W - 1.0;
-                gl_Position.y = ((gl_VertexID & 2) == 0 ? rect.y : rect.w) * 2.0 / H - 1.0;
+                color = incolor;
+                aux1 = inaux1;
+                aux2 = inaux2;
+                gl_Position.x = ((gl_VertexID & 1) == 0 ? rect.x : rect.z) * 2.0/W - 1.0;
+                gl_Position.y = ((gl_VertexID & 2) == 0 ? rect.y : rect.w) * 2.0/H - 1.0;
                 gl_Position.zw = vec2(0, 1);
             })",
 
             std::string(R"(#version 310 es
             precision highp float;
-            uniform vec4 color;)")
+            in vec4 color;
+            in vec4 aux1;
+            in vec4 aux2;)")
                 .append(kLocalStorageGLSLDefines)
                 .append(fsMain)
                 .c_str());
@@ -417,11 +477,54 @@ class PixelLocalStorageTest : public ANGLETest
         glUniform1f(glGetUniformLocation(mProgram, "W"), W);
         glUniform1f(glGetUniformLocation(mProgram, "H"), H);
 
-        mRectUniform = glGetUniformLocation(mProgram, "rect");
-        ASSERT_TRUE(mRectUniform >= 0);
+        mLTRBLocation = glGetAttribLocation(mProgram, "rect");
+        glEnableVertexAttribArray(mLTRBLocation);
+        glVertexAttribDivisor(mLTRBLocation, 1);
 
-        mColorUniform = glGetUniformLocation(mProgram, "color");
-        ASSERT_TRUE(mColorUniform >= 0);
+        mRGBALocation = glGetAttribLocation(mProgram, "incolor");
+        glEnableVertexAttribArray(mRGBALocation);
+        glVertexAttribDivisor(mRGBALocation, 1);
+
+        mAux1Location = glGetAttribLocation(mProgram, "inaux1");
+        glEnableVertexAttribArray(mAux1Location);
+        glVertexAttribDivisor(mAux1Location, 1);
+
+        mAux2Location = glGetAttribLocation(mProgram, "inaux2");
+        glEnableVertexAttribArray(mAux2Location);
+        glVertexAttribDivisor(mAux2Location, 1);
+    }
+
+    struct Box
+    {
+        using float4 = std::array<float, 4>;
+        Box(float4 rect, float4 incolor) : rect(rect), color(incolor), aux1{}, aux2{} {}
+        Box(float4 rect, float4 incolor, float4 inaux1)
+            : rect(rect), color(incolor), aux1(inaux1), aux2{}
+        {}
+        Box(float4 rect, float4 incolor, float4 inaux1, float4 inaux2)
+            : rect(rect), color(incolor), aux1(inaux1), aux2(inaux2)
+        {}
+        float4 rect;
+        float4 color;
+        float4 aux1;
+        float4 aux2;
+    };
+
+    void drawBoxes(PixelLocalStoragePrototype &pls, std::vector<Box> boxes)
+    {
+        for (const auto &box : boxes)
+        {
+            glVertexAttribPointer(mLTRBLocation, 4, GL_FLOAT, GL_FALSE, sizeof(Box),
+                                  box.rect.data());
+            glVertexAttribPointer(mRGBALocation, 4, GL_FLOAT, GL_FALSE, sizeof(Box),
+                                  box.color.data());
+            glVertexAttribPointer(mAux1Location, 4, GL_FLOAT, GL_FALSE, sizeof(Box),
+                                  box.aux1.data());
+            glVertexAttribPointer(mAux2Location, 4, GL_FLOAT, GL_FALSE, sizeof(Box),
+                                  box.aux2.data());
+            glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, 1);
+            glPixelLocalStorageBarrierANGLE();
+        }
     }
 
     void attachTextureToScratchFBO(GLuint tex)
@@ -432,64 +535,218 @@ class PixelLocalStorageTest : public ANGLETest
         }
         glBindFramebuffer(GL_FRAMEBUFFER, mScratchFBO);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
-        EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
     }
 
     GLProgram mProgram;
-    GLint mRectUniform  = -1;
-    GLint mColorUniform = -1;
+    GLint mLTRBLocation = -1;
+    GLint mRGBALocation = -1;
+    GLint mAux1Location = -1;
+    GLint mAux2Location = -1;
 
     GLuint mScratchFBO = 0;
 };
 
-// Verify that R,G,B values from separate draw calls persist in pixel local storage.
-TEST_P(PixelLocalStorageTest, RGB)
+// Verify that values from separate draw calls persist in pixel local storage, for all supported
+// formats. Also verify that clear-to-zero works on every supported format.
+TEST_P(PixelLocalStorageTest, AllFormats)
 {
     ANGLE_SKIP_TEST_IF(!supportsPixelLocalStorage());
 
-    PixelLocalStoragePrototype pls;
-
-    GLTexture tex;
-    glBindTexture(GL_TEXTURE_2D, tex);
-    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, W, H);
-
-    GLFramebuffer fbo;
-    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-    glFramebufferPixelLocalStorageANGLE(0, tex, 0, 0, W, H, GL_RGBA8);
-    glViewport(0, 0, W, H);
-    glDrawBuffers(0, nullptr);
-
-    glBeginPixelLocalStorageANGLE(1, GLenumArray({GL_ZERO}));
-
-    // Accumulate R,G,B in 3 separate passes.
-    useProgram(R"(
-    PIXEL_LOCAL_DECL(framebuffer, binding=0, rgba8);
-    void main()
     {
-        vec4 dst = pixelLocalLoad(framebuffer);
-        pixelLocalStore(framebuffer, color + dst);
-    })");
+        PixelLocalStoragePrototype pls;
 
-    // Draw fullscreen rects.
-    glUniform4f(mRectUniform, 0, 0, W, H);
+        useProgram(R"(
+        PIXEL_LOCAL_DECL(plane1, binding=0, rgba8);
+        PIXEL_LOCAL_DECL_I(plane2, binding=1, rgba8i);
+        PIXEL_LOCAL_DECL_UI(plane3, binding=2, rgba8ui);
+        void main()
+        {
+            pixelLocalStore(plane1, color + pixelLocalLoad(plane1));
+            pixelLocalStore(plane2, ivec4(aux1) + pixelLocalLoad(plane2));
+            pixelLocalStore(plane3, uvec4(aux2) + pixelLocalLoad(plane3));
+        })");
 
-    glUniform4f(mColorUniform, 1, 0, 0, 0);
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-    glPixelLocalStorageBarrierANGLE();
+        PLSTestTexture tex1(GL_RGBA8);
+        PLSTestTexture tex2(GL_RGBA8I);
+        PLSTestTexture tex3(GL_RGBA8UI);
 
-    glUniform4f(mColorUniform, 0, 1, 0, 0);
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-    glPixelLocalStorageBarrierANGLE();
+        GLFramebuffer fbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        glFramebufferPixelLocalStorageANGLE(0, tex1, 0, 0, W, H, GL_RGBA8);
+        glFramebufferPixelLocalStorageANGLE(1, tex2, 0, 0, W, H, GL_RGBA8I);
+        glFramebufferPixelLocalStorageANGLE(2, tex3, 0, 0, W, H, GL_RGBA8UI);
+        glViewport(0, 0, W, H);
+        glDrawBuffers(0, nullptr);
 
-    glUniform4f(mColorUniform, 0, 0, 1, 0);
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+        glBeginPixelLocalStorageANGLE(3, GLenumArray({GL_ZERO, GL_ZERO, GL_ZERO}));
 
-    glEndPixelLocalStorageANGLE();
+        // Accumulate R, G, B, A in 4 separate passes.
+        drawBoxes(pls, {{FULLSCREEN, {1, 0, 0, 0}, {-5, 0, 0, 0}, {1, 0, 0, 0}},
+                        {FULLSCREEN, {0, 1, 0, 0}, {0, -100, 0, 0}, {0, 50, 0, 0}},
+                        {FULLSCREEN, {0, 0, 1, 0}, {0, 0, -70, 0}, {0, 0, 100, 0}},
+                        {FULLSCREEN, {0, 0, 0, 0}, {0, 0, 0, 22}, {0, 0, 0, 255}}});
 
-    attachTextureToScratchFBO(tex);
-    EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor(255, 255, 255, 0));
+        glEndPixelLocalStorageANGLE();
 
-    ASSERT_GL_NO_ERROR();
+        attachTextureToScratchFBO(tex1);
+        EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor(255, 255, 255, 0));
+
+        attachTextureToScratchFBO(tex2);
+        EXPECT_PIXEL_RECT32I_EQ(0, 0, W, H, GLColor32I(-5, -100, -70, 22));
+
+        attachTextureToScratchFBO(tex3);
+        EXPECT_PIXEL_RECT32UI_EQ(0, 0, W, H, GLColor32UI(1, 50, 100, 255));
+
+        ASSERT_GL_NO_ERROR();
+    }
+
+    {
+        PixelLocalStoragePrototype pls;
+
+        useProgram(R"(
+        PIXEL_LOCAL_DECL(plane1, binding=0, r32f);
+        PIXEL_LOCAL_DECL_UI(plane2, binding=1, r32ui);
+        void main()
+        {
+            pixelLocalStore(plane1, color + pixelLocalLoad(plane1));
+            pixelLocalStore(plane2, uvec4(aux1) + pixelLocalLoad(plane2));
+        })");
+
+        PLSTestTexture tex1(GL_R32F);
+        PLSTestTexture tex2(GL_R32UI);
+
+        GLFramebuffer fbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        glFramebufferPixelLocalStorageANGLE(0, tex1, 0, 0, W, H, GL_R32F);
+        glFramebufferPixelLocalStorageANGLE(1, tex2, 0, 0, W, H, GL_R32UI);
+        glViewport(0, 0, W, H);
+        glDrawBuffers(0, nullptr);
+
+        glBeginPixelLocalStorageANGLE(2, GLenumArray({GL_ZERO, GL_ZERO}));
+
+        // Accumulate R in 4 separate passes.
+        drawBoxes(pls, {{FULLSCREEN, {-1.5, 0, 0, 0}, {5, 0, 0, 0}},
+                        {FULLSCREEN, {-10.25, 0, 0, 0}, {60, 0, 0, 0}},
+                        {FULLSCREEN, {-100, 0, 0, 0}, {700, 0, 0, 0}},
+                        {FULLSCREEN, {.25, 0, 0, 0}, {8000, 0, 0, 22}}});
+
+        glEndPixelLocalStorageANGLE();
+
+        // These values should be exact matches.
+        //
+        // GL_R32F is spec'd as a 32-bit IEEE float, and GL_R32UI is a 32-bit unsigned integer.
+        // There is some affordance for fp32 fused operations, but "a + b" is required to be
+        // correctly rounded.
+        //
+        // From the GLSL ES 3.0 spec:
+        //
+        //   "Highp unsigned integers have exactly 32 bits of precision. Highp signed integers use
+        //    32 bits, including a sign bit, in two's complement form."
+        //
+        //   "Highp floating-point variables within a shader are encoded according to the IEEE 754
+        //    specification for single-precision floating-point values (logically, not necessarily
+        //    physically)."
+        //
+        //   "Operation: a + b, a - b, a * b
+        //    Precision: Correctly rounded."
+        attachTextureToScratchFBO(tex1);
+        EXPECT_PIXEL_RECT32F_EQ(0, 0, W, H, GLColor32F(-111.5, 0, 0, 1));
+
+        attachTextureToScratchFBO(tex2);
+        EXPECT_PIXEL_RECT32UI_EQ(0, 0, W, H, GLColor32UI(8765, 0, 0, 1));
+
+        ASSERT_GL_NO_ERROR();
+    }
+
+    {
+        PixelLocalStoragePrototype pls;
+
+        useProgram(R"(
+        PIXEL_LOCAL_DECL(plane1, binding=0, rgba16f);
+        PIXEL_LOCAL_DECL_I(plane2, binding=1, rgba16i);
+        PIXEL_LOCAL_DECL_UI(plane3, binding=2, rgba16ui);
+        void main()
+        {
+            pixelLocalStore(plane1, color + pixelLocalLoad(plane1));
+            pixelLocalStore(plane2, ivec4(aux1) + pixelLocalLoad(plane2));
+            pixelLocalStore(plane3, uvec4(aux2) + pixelLocalLoad(plane3));
+        })");
+
+        PLSTestTexture tex1(GL_RGBA16F);
+        PLSTestTexture tex2(GL_RGBA16I);
+        PLSTestTexture tex3(GL_RGBA16UI);
+
+        GLFramebuffer fbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        glFramebufferPixelLocalStorageANGLE(0, tex1, 0, 0, W, H, GL_RGBA16F);
+        glFramebufferPixelLocalStorageANGLE(1, tex2, 0, 0, W, H, GL_RGBA16I);
+        glFramebufferPixelLocalStorageANGLE(2, tex3, 0, 0, W, H, GL_RGBA16UI);
+        glViewport(0, 0, W, H);
+        glDrawBuffers(0, nullptr);
+
+        glBeginPixelLocalStorageANGLE(3, GLenumArray({GL_ZERO, GL_ZERO, GL_ZERO}));
+
+        // Accumulate R, G, B, A in 4 separate passes.
+        drawBoxes(pls, {{FULLSCREEN, {-100.5, 0, 0, 0}, {-500, 0, 0, 0}, {1, 0, 0, 0}},
+                        {FULLSCREEN, {0, 1024, 0, 0}, {0, -10000, 0, 0}, {0, 500, 0, 0}},
+                        {FULLSCREEN, {0, 0, -4096, 0}, {0, 0, -7000, 0}, {0, 0, 10000, 0}},
+                        {FULLSCREEN, {0, 0, 0, 16384}, {0, 0, 0, 2200}, {0, 0, 0, 65535}}});
+
+        glEndPixelLocalStorageANGLE();
+
+        attachTextureToScratchFBO(tex1);
+        EXPECT_PIXEL_RECT32F_EQ(0, 0, W, H, GLColor32F(-100.5, 1024, -4096, 16384));
+
+        attachTextureToScratchFBO(tex2);
+        EXPECT_PIXEL_RECT32I_EQ(0, 0, W, H, GLColor32I(-500, -10000, -7000, 2200));
+
+        attachTextureToScratchFBO(tex3);
+        EXPECT_PIXEL_RECT32UI_EQ(0, 0, W, H, GLColor32UI(1, 500, 10000, 65535));
+
+        ASSERT_GL_NO_ERROR();
+    }
+
+    {
+        PixelLocalStoragePrototype pls;
+
+        useProgram(R"(
+        PIXEL_LOCAL_DECL(plane1, binding=0, rgba32f);
+        PIXEL_LOCAL_DECL_UI(plane2, binding=1, rgba32ui);
+        void main()
+        {
+            pixelLocalStore(plane1, color + pixelLocalLoad(plane1));
+            pixelLocalStore(plane2, uvec4(aux1) + pixelLocalLoad(plane2));
+        })");
+
+        PLSTestTexture tex1(GL_RGBA32F);
+        PLSTestTexture tex2(GL_RGBA32UI);
+
+        GLFramebuffer fbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        glFramebufferPixelLocalStorageANGLE(0, tex1, 0, 0, W, H, GL_RGBA32F);
+        glFramebufferPixelLocalStorageANGLE(1, tex2, 0, 0, W, H, GL_RGBA32UI);
+        glViewport(0, 0, W, H);
+        glDrawBuffers(0, nullptr);
+
+        glBeginPixelLocalStorageANGLE(2, GLenumArray({GL_ZERO, GL_ZERO}));
+
+        // Accumulate R, G, B, A in 4 separate passes.
+        drawBoxes(pls, {{FULLSCREEN, {-100.5, 0, 0, 0}, {1, 0, 0, 0}},
+                        {FULLSCREEN, {0, 1024, 0, 0}, {0, 500, 0, 0}},
+                        {FULLSCREEN, {0, 0, -4096, 0}, {0, 0, 10000, 0}},
+                        {FULLSCREEN, {0, 0, 0, 16384}, {0, 0, 0, 65535}}});
+
+        glEndPixelLocalStorageANGLE();
+
+        attachTextureToScratchFBO(tex1);
+        EXPECT_PIXEL_RECT32F_EQ(0, 0, W, H, GLColor32F(-100.5, 1024, -4096, 16384));
+
+        attachTextureToScratchFBO(tex2);
+        EXPECT_PIXEL_RECT32UI_EQ(0, 0, W, H, GLColor32UI(1, 500, 10000, 65535));
+
+        ASSERT_GL_NO_ERROR();
+    }
 }
 
 ANGLE_INSTANTIATE_TEST_ES31(PixelLocalStorageTest);
