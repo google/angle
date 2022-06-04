@@ -77,6 +77,23 @@ constexpr uint32_t kPipelineCacheVkUpdatePeriod = 60;
 // version of Vulkan.
 constexpr uint32_t kPreferredVulkanAPIVersion = VK_API_VERSION_1_1;
 
+bool IsQualcommOpenSource(uint32_t vendorId, uint32_t driverId, const char *deviceName)
+{
+    if (!IsQualcomm(vendorId))
+    {
+        return false;
+    }
+
+    // Where driver id is available, distinguish by driver id:
+    if (driverId != 0)
+    {
+        return driverId != VK_DRIVER_ID_QUALCOMM_PROPRIETARY;
+    }
+
+    // Otherwise, look for Venus or Turnip in the device name.
+    return strstr(deviceName, "Venus") != nullptr || strstr(deviceName, "Turnip") != nullptr;
+}
+
 angle::vk::ICD ChooseICDFromAttribs(const egl::AttributeMap &attribs)
 {
 #if !defined(ANGLE_PLATFORM_ANDROID)
@@ -3055,6 +3072,12 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     const bool isSwiftShader =
         IsSwiftshader(mPhysicalDeviceProperties.vendorID, mPhysicalDeviceProperties.deviceID);
 
+    // Distinguish between the open source and proprietary Qualcomm drivers
+    const bool isQualcommOpenSource =
+        IsQualcommOpenSource(mPhysicalDeviceProperties.vendorID, mDriverProperties.driverID,
+                             mPhysicalDeviceProperties.deviceName);
+    const bool isQualcommProprietary = isQualcomm && !isQualcommOpenSource;
+
     // Classify devices based on general architecture:
     //
     // - IMR (Immediate-Mode Rendering) devices generally progress through draw calls once and use
@@ -3301,7 +3324,7 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     ANGLE_FEATURE_CONDITION(&mFeatures, disableFifoPresentMode, IsLinux() && isIntel);
 
     ANGLE_FEATURE_CONDITION(&mFeatures, bindEmptyForUnusedDescriptorSets,
-                            IsAndroid() && isQualcomm);
+                            IsAndroid() && isQualcommProprietary);
 
     ANGLE_FEATURE_CONDITION(&mFeatures, perFrameWindowSizeQuery,
                             isIntel || (IsWindows() && isAMD) || IsFuchsia() || isSamsung);
@@ -3310,9 +3333,10 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     mMaxVertexAttribStride = std::min(static_cast<uint32_t>(gl::limits::kMaxVertexAttribStride),
                                       mPhysicalDeviceProperties.limits.maxVertexInputBindingStride);
 
-    ANGLE_FEATURE_CONDITION(&mFeatures, forceD16TexFilter, IsAndroid() && isQualcomm);
+    ANGLE_FEATURE_CONDITION(&mFeatures, forceD16TexFilter, IsAndroid() && isQualcommProprietary);
 
-    ANGLE_FEATURE_CONDITION(&mFeatures, disableFlippingBlitWithCommand, IsAndroid() && isQualcomm);
+    ANGLE_FEATURE_CONDITION(&mFeatures, disableFlippingBlitWithCommand,
+                            IsAndroid() && isQualcommProprietary);
 
     // Allocation sanitization disabled by default because of a heaveyweight implementation
     // that can cause OOM and timeouts.
@@ -3384,10 +3408,11 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     // - Imagination hardware
     // - SwiftShader
     //
-    ANGLE_FEATURE_CONDITION(&mFeatures, preferDriverUniformOverSpecConst,
-                            (isQualcomm && mPhysicalDeviceProperties.driverVersion <
-                                               kPixel4DriverWithWorkingSpecConstSupport) ||
-                                isARM || isPowerVR || isSwiftShader);
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, preferDriverUniformOverSpecConst,
+        (isQualcommProprietary &&
+         mPhysicalDeviceProperties.driverVersion < kPixel4DriverWithWorkingSpecConstSupport) ||
+            isARM || isPowerVR || isSwiftShader);
 
     // The compute shader used to generate mipmaps needs -
     // 1. subgroup quad operations in compute shader stage.
@@ -3419,7 +3444,8 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
                                 ((isAMD && !IsWindows()) || isNvidia || isSamsung));
 
     bool isAdreno540 = mPhysicalDeviceProperties.deviceID == angle::kDeviceID_Adreno540;
-    ANGLE_FEATURE_CONDITION(&mFeatures, forceMaxUniformBufferSize16KB, isQualcomm && isAdreno540);
+    ANGLE_FEATURE_CONDITION(&mFeatures, forceMaxUniformBufferSize16KB,
+                            isQualcommProprietary && isAdreno540);
 
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsImageFormatList,
@@ -3455,14 +3481,15 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
 
     // Defer glFLush call causes manhattan 3.0 perf regression. Let Qualcomm driver opt out from
     // this optimization.
-    ANGLE_FEATURE_CONDITION(&mFeatures, deferFlushUntilEndRenderPass, !isQualcomm);
+    ANGLE_FEATURE_CONDITION(&mFeatures, deferFlushUntilEndRenderPass, !isQualcommProprietary);
 
     // Android mistakenly destroys the old swapchain when creating a new one.
     ANGLE_FEATURE_CONDITION(&mFeatures, waitIdleBeforeSwapchainRecreation, IsAndroid() && isARM);
 
     // vkCmdClearAttachments races with draw calls on Qualcomm hardware as observed on Pixel2 and
     // Pixel4.  https://issuetracker.google.com/issues/166809097
-    ANGLE_FEATURE_CONDITION(&mFeatures, preferDrawClearOverVkCmdClearAttachments, isQualcomm);
+    ANGLE_FEATURE_CONDITION(&mFeatures, preferDrawClearOverVkCmdClearAttachments,
+                            isQualcommProprietary);
 
     // r32f image emulation is done unconditionally so VK_FORMAT_FEATURE_STORAGE_*_ATOMIC_BIT is not
     // required.
