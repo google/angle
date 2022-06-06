@@ -977,6 +977,7 @@
       }
     ]
   },
+  "linux-amd": {},
   "linux-intel": {
     "gtest_tests": [
       {

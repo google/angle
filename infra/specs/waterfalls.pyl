@@ -54,6 +54,14 @@
           'gtest_tests': 'android_vulkan_gtests',
         },
       },
+      'linux-amd': {
+        'os_type': 'linux',
+        'mixins': [
+          'linux_amd_rx_5500_xt',
+        ],
+        'test_suites': {
+        },
+      },
       'linux-intel': {
         'os_type': 'linux',
         'mixins': [
