@@ -984,7 +984,7 @@ const char kXfbEmulationBufferBlockName[]        = "ANGLEXfbBuffer";
 const char kXfbEmulationBufferName[]             = "ANGLEXfb";
 const char kXfbEmulationBufferFieldName[]        = "xfbOut";
 
-const char kPreRotationRotatePositionFunctionName[] = "ANGLEPreRotatePositionXY";
+const char kTransformPositionFunctionName[] = "ANGLETransformPosition";
 
 const char kXfbExtensionPositionOutName[] = "ANGLEXfbPosition";
 

@@ -193,13 +193,13 @@ bool TranslatorMetal::transformDepthBeforeCorrection(TIntermBlock *root,
     TVector<int> swizzleOffsetZ = {2};
     TIntermSwizzle *positionZ   = new TIntermSwizzle(positionRef, swizzleOffsetZ);
 
-    // Create a ref to "depthRange.reserved"
+    // Create a ref to "zscale"
     TIntermTyped *viewportZScale = driverUniforms->getViewportZScale();
 
-    // Create the expression "gl_Position.z * depthRange.reserved".
+    // Create the expression "gl_Position.z * zscale".
     TIntermBinary *zScale = new TIntermBinary(EOpMul, positionZ->deepCopy(), viewportZScale);
 
-    // Create the assignment "gl_Position.z = gl_Position.z * depthRange.reserved"
+    // Create the assignment "gl_Position.z = gl_Position.z * zscale"
     TIntermTyped *positionZLHS = positionZ->deepCopy();
     TIntermBinary *assignment  = new TIntermBinary(TOperator::EOpAssign, positionZLHS, zScale);
 

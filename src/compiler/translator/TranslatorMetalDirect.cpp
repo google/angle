@@ -506,14 +506,15 @@ ANGLE_NO_DISCARD bool TranslatorMetalDirect::insertRasterizationDiscardLogic(TIn
     TIntermSymbol *positionRef = new TIntermSymbol(position);
 
     // Create vec4(-3, -3, -3, 1):
-    auto vec4Type             = new TType(EbtFloat, 4);
-    TIntermSequence *vec4Args = new TIntermSequence();
-    vec4Args->push_back(CreateFloatNode(-3.0f, EbpMedium));
-    vec4Args->push_back(CreateFloatNode(-3.0f, EbpMedium));
-    vec4Args->push_back(CreateFloatNode(-3.0f, EbpMedium));
-    vec4Args->push_back(CreateFloatNode(1.0f, EbpMedium));
+    auto vec4Type            = new TType(EbtFloat, 4);
+    TIntermSequence vec4Args = {
+        CreateFloatNode(-3.0f, EbpMedium),
+        CreateFloatNode(-3.0f, EbpMedium),
+        CreateFloatNode(-3.0f, EbpMedium),
+        CreateFloatNode(1.0f, EbpMedium),
+    };
     TIntermAggregate *constVarConstructor =
-        TIntermAggregate::CreateConstructor(*vec4Type, vec4Args);
+        TIntermAggregate::CreateConstructor(*vec4Type, &vec4Args);
 
     // Create the assignment "gl_Position = vec4(-3, -3, -3, 1)"
     TIntermBinary *assignment =
@@ -542,13 +543,13 @@ bool TranslatorMetalDirect::transformDepthBeforeCorrection(TIntermBlock *root,
     TVector<int> swizzleOffsetZ = {2};
     TIntermSwizzle *positionZ   = new TIntermSwizzle(positionRef, swizzleOffsetZ);
 
-    // Create a ref to "depthRange.reserved"
+    // Create a ref to "zscale"
     TIntermTyped *viewportZScale = driverUniforms->getViewportZScale();
 
-    // Create the expression "gl_Position.z * depthRange.reserved".
+    // Create the expression "gl_Position.z * zscale".
     TIntermBinary *zScale = new TIntermBinary(EOpMul, positionZ->deepCopy(), viewportZScale);
 
-    // Create the assignment "gl_Position.z = gl_Position.z * depthRange.reserved"
+    // Create the assignment "gl_Position.z = gl_Position.z * zscale"
     TIntermTyped *positionZLHS = positionZ->deepCopy();
     TIntermBinary *assignment  = new TIntermBinary(TOperator::EOpAssign, positionZLHS, zScale);
 

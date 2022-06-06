@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 277
+#define ANGLE_SH_VERSION 279
 
 enum ShShaderSpec
 {
@@ -321,7 +321,9 @@ const ShCompileOptions SH_REWRITE_ROW_MAJOR_MATRICES = UINT64_C(1) << 49;
 // Drop any explicit precision qualifiers from shader.
 const ShCompileOptions SH_IGNORE_PRECISION_QUALIFIERS = UINT64_C(1) << 50;
 
-// Bit 51 is unused.
+// Ask compiler to generate code for depth correction to conform to the Vulkan clip space.  If
+// VK_EXT_depth_clip_control is supported, this code is not generated, saving a uniform look up.
+const ShCompileOptions SH_ADD_VULKAN_DEPTH_CORRECTION = UINT64_C(1) << 51;
 
 // Note: bit 52 is unused
 
@@ -875,7 +877,8 @@ extern const char kDriverUniformsVarName[];
 // - 5 bits for advanced blend equation
 // - 6 bits for sample count
 // - 8 bits for enabled clip planes
-// - 12 bits unused
+// - 1 bit for whether depth should be transformed to Vulkan clip space
+// - 11 bits unused
 constexpr uint32_t kDriverUniformsMiscSwapXYMask                  = 0x1;
 constexpr uint32_t kDriverUniformsMiscAdvancedBlendEquationOffset = 1;
 constexpr uint32_t kDriverUniformsMiscAdvancedBlendEquationMask   = 0x1F;
@@ -883,6 +886,8 @@ constexpr uint32_t kDriverUniformsMiscSampleCountOffset           = 6;
 constexpr uint32_t kDriverUniformsMiscSampleCountMask             = 0x3F;
 constexpr uint32_t kDriverUniformsMiscEnabledClipPlanesOffset     = 12;
 constexpr uint32_t kDriverUniformsMiscEnabledClipPlanesMask       = 0xFF;
+constexpr uint32_t kDriverUniformsMiscTransformDepthOffset        = 20;
+constexpr uint32_t kDriverUniformsMiscTransformDepthMask          = 0x1;
 
 // Interface block array name used for atomic counter emulation
 extern const char kAtomicCountersBlockName[];
@@ -901,7 +906,7 @@ extern const char kXfbEmulationBufferFieldName[];
 extern const char kXfbExtensionPositionOutName[];
 
 // Pre-rotation support
-extern const char kPreRotationRotatePositionFunctionName[];
+extern const char kTransformPositionFunctionName[];
 
 // EXT_shader_framebuffer_fetch and EXT_shader_framebuffer_fetch_non_coherent
 extern const char kInputAttachmentName[];

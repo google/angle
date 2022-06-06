@@ -619,23 +619,33 @@ ANGLE_NO_DISCARD bool AddXfbExtensionSupport(TCompiler *compiler,
     return compiler->validateAST(root);
 }
 
-ANGLE_NO_DISCARD bool AddVertexPreRotationSupport(TCompiler *compiler,
-                                                  ShCompileOptions compileOptions,
-                                                  TIntermBlock *root,
-                                                  TSymbolTable *symbolTable,
-                                                  SpecConst *specConst,
-                                                  const DriverUniform *driverUniforms)
+ANGLE_NO_DISCARD bool AddVertexTransformationSupport(TCompiler *compiler,
+                                                     ShCompileOptions compileOptions,
+                                                     TIntermBlock *root,
+                                                     TSymbolTable *symbolTable,
+                                                     SpecConst *specConst,
+                                                     const DriverUniform *driverUniforms)
 {
-    // Generate the following function and place it before main().  This function takes
-    // gl_Position.xy and rotates it.
+    // In GL the viewport transformation is slightly different - see the GL 2.0 spec section "2.12.1
+    // Controlling the Viewport".  In Vulkan the corresponding spec section is currently "23.4.
+    // Coordinate Transformations".  The following transformation needs to be done:
     //
-    //     vec2 ANGLEPreRotatePositionXY(vec2 position)
+    //     z_vk = 0.5 * (w_gl + z_gl)
+    //
+    // where z_vk is the depth output of a Vulkan geometry-stage shader and z_gl is the same for GL.
+    //
+    // Generate the following function and place it before main().  This function takes
+    // gl_Position and rotates xy, and adjusts z (if necessary).
+    //
+    //     vec4 ANGLETransformPosition(vec4 position)
     //     {
-    //         return (swapXY ? position.yx : position) * flipXY;
+    //         return vec4((swapXY ? position.yx : position.xy) * flipXY,
+    //                     transformDepth ? (gl_Position.z + gl_Position.w) / 2 : gl_Position.z,
+    //                     gl_Postion.w);
     //     }
 
-    const TType *vec2Type = StaticType::GetBasic<EbtFloat, EbpHigh, 2>();
-    TType *positionType   = new TType(*vec2Type);
+    const TType *vec4Type = StaticType::GetBasic<EbtFloat, EbpHigh, 4>();
+    TType *positionType   = new TType(*vec4Type);
     positionType->setQualifier(EvqParamConst);
 
     // Create the parameter variable.
@@ -643,46 +653,71 @@ ANGLE_NO_DISCARD bool AddVertexPreRotationSupport(TCompiler *compiler,
                                            SymbolType::AngleInternal);
     TIntermSymbol *positionSymbol = new TIntermSymbol(positionVar);
 
-    // swapXY ? position.yx : position
+    // swapXY ? position.yx : position.xy
     TIntermTyped *swapXY = specConst->getSwapXY();
     if (swapXY == nullptr)
     {
         swapXY = driverUniforms->getSwapXY();
     }
 
-    TIntermTyped *swapped   = new TIntermSwizzle(positionSymbol, {1, 0});
-    TIntermTyped *rotatedXY = new TIntermTernary(swapXY, swapped, positionSymbol->deepCopy());
+    TIntermTyped *xy        = new TIntermSwizzle(positionSymbol, {0, 1});
+    TIntermTyped *swappedXY = new TIntermSwizzle(positionSymbol->deepCopy(), {1, 0});
+    TIntermTyped *rotatedXY = new TIntermTernary(swapXY, swappedXY, xy);
 
-    // (swapXY ? position.yx : position) * flipXY
+    // (swapXY ? position.yx : position.xy) * flipXY
     TIntermTyped *flipXY = driverUniforms->getFlipXY(symbolTable, DriverUniformFlip::PreFragment);
     TIntermTyped *rotatedFlippedXY = new TIntermBinary(EOpMul, rotatedXY, flipXY);
 
+    // (gl_Position.z + gl_Position.w) / 2
+    TIntermTyped *z = new TIntermSwizzle(positionSymbol->deepCopy(), {2});
+    TIntermTyped *w = new TIntermSwizzle(positionSymbol->deepCopy(), {3});
+
+    TIntermTyped *transformedDepth = z;
+    if ((compileOptions & SH_ADD_VULKAN_DEPTH_CORRECTION) != 0)
+    {
+        TIntermBinary *zPlusW = new TIntermBinary(EOpAdd, z, w->deepCopy());
+        TIntermBinary *halfZPlusW =
+            new TIntermBinary(EOpMul, zPlusW, CreateFloatNode(0.5, EbpMedium));
+
+        // transformDepth ? (gl_Position.z + gl_Position.w) / 2 : gl_Position.z,
+        TIntermTyped *transformDepth = driverUniforms->getTransformDepth();
+        transformedDepth = new TIntermTernary(transformDepth, halfZPlusW, z->deepCopy());
+    }
+
+    // vec4(...);
+    TIntermSequence args = {
+        rotatedFlippedXY,
+        transformedDepth,
+        w,
+    };
+    TIntermTyped *transformedPosition = TIntermAggregate::CreateConstructor(*vec4Type, &args);
+
     // Create the function body, which has a single return statement.
     TIntermBlock *body = new TIntermBlock;
-    body->appendStatement(new TIntermBranch(EOpReturn, rotatedFlippedXY));
+    body->appendStatement(new TIntermBranch(EOpReturn, transformedPosition));
 
     // Declare the function
-    TFunction *rotatePositionFunction =
-        new TFunction(symbolTable, ImmutableString(vk::kPreRotationRotatePositionFunctionName),
-                      SymbolType::AngleInternal, vec2Type, true);
-    rotatePositionFunction->addParameter(positionVar);
+    TFunction *transformPositionFunction =
+        new TFunction(symbolTable, ImmutableString(vk::kTransformPositionFunctionName),
+                      SymbolType::AngleInternal, vec4Type, true);
+    transformPositionFunction->addParameter(positionVar);
 
     TIntermFunctionDefinition *functionDef =
-        CreateInternalFunctionDefinitionNode(*rotatePositionFunction, body);
+        CreateInternalFunctionDefinitionNode(*transformPositionFunction, body);
 
     // Insert the function declaration before main().
     const size_t mainIndex = FindMainIndex(root);
     root->insertChildNodes(mainIndex, {functionDef});
 
-    // Create a call to ANGLEPreRotatePositionXY, for the sole purpose of preventing it from being
+    // Create a call to ANGLETransformPosition, for the sole purpose of preventing it from being
     // culled as unused by glslang.
     if ((compileOptions & SH_GENERATE_SPIRV_THROUGH_GLSLANG) != 0)
     {
-        TIntermSequence vec2Zero;
-        vec2Zero.push_back(CreateZeroNode(*vec2Type));
-        TIntermAggregate *rotateCall =
-            TIntermAggregate::CreateFunctionCall(*rotatePositionFunction, &vec2Zero);
-        if (!RunAtTheBeginningOfShader(compiler, root, rotateCall))
+        TIntermSequence vec4Zero;
+        vec4Zero.push_back(CreateZeroNode(*vec4Type));
+        TIntermAggregate *transformCall =
+            TIntermAggregate::CreateFunctionCall(*transformPositionFunction, &vec4Zero);
+        if (!RunAtTheBeginningOfShader(compiler, root, transformCall))
         {
             return false;
         }
@@ -1096,9 +1131,9 @@ bool TranslatorVulkan::translateImpl(TInfoSinkBase &sink,
             }
         }
 
-        // Add support code for pre-rotation in the vertex processing stages.
-        if (!AddVertexPreRotationSupport(this, compileOptions, root, &getSymbolTable(), specConst,
-                                         driverUniforms))
+        // Add support code for pre-rotation and depth correction in the vertex processing stages.
+        if (!AddVertexTransformationSupport(this, compileOptions, root, &getSymbolTable(),
+                                            specConst, driverUniforms))
         {
             return false;
         }

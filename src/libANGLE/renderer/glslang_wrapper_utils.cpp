@@ -1123,7 +1123,6 @@ class SpirvIDDiscoverer final : angle::NonCopyable
     }
 
     spirv::IdRef floatId() const { return mFloatId; }
-    spirv::IdRef vec2Id() const { return mVec2Id; }
     spirv::IdRef vec4Id() const { return mVec4Id; }
     spirv::IdRef vec4OutTypePointerId() const { return mVec4OutTypePointerId; }
     spirv::IdRef intId() const { return mIntId; }
@@ -1167,7 +1166,6 @@ class SpirvIDDiscoverer final : angle::NonCopyable
     // and swizzles.
     //
     // - mFloatId: id of OpTypeFloat 32
-    // - mVec2Id: id of OpTypeVector %mFloatId 2
     // - mVec4Id: id of OpTypeVector %mFloatId 4
     // - mVec4OutTypePointerId: id of OpTypePointer Output %mVec4Id
     // - mIntId: id of OpTypeInt 32 1
@@ -1179,7 +1177,6 @@ class SpirvIDDiscoverer final : angle::NonCopyable
     // - mOutputPerVertexId: id of OpVariable %mOutputPerVertexTypePointerId Output
     //
     spirv::IdRef mFloatId;
-    spirv::IdRef mVec2Id;
     spirv::IdRef mVec4Id;
     spirv::IdRef mVec4OutTypePointerId;
     spirv::IdRef mIntId;
@@ -1371,12 +1368,7 @@ void SpirvIDDiscoverer::visitTypeVector(spirv::IdResult id,
                                         spirv::IdRef componentId,
                                         spirv::LiteralInteger componentCount)
 {
-    // Only interested in OpTypeVector %mFloatId 2/4 and OpTypeVector %mIntId 4
-    if (componentId == mFloatId && componentCount == 2)
-    {
-        ASSERT(!mVec2Id.valid());
-        mVec2Id = id;
-    }
+    // Only interested in OpTypeVector %mFloatId 4 and OpTypeVector %mIntId 4
     if (componentId == mFloatId && componentCount == 4)
     {
         ASSERT(!mVec4Id.valid());
@@ -1445,12 +1437,6 @@ void SpirvIDDiscoverer::writePendingDeclarations(spirv::Blob *blobOut)
     {
         mFloatId = SpirvTransformerBase::GetNewId(blobOut);
         spirv::WriteTypeFloat(blobOut, mFloatId, spirv::LiteralInteger(32));
-    }
-
-    if (!mVec2Id.valid())
-    {
-        mVec2Id = SpirvTransformerBase::GetNewId(blobOut);
-        spirv::WriteTypeVector(blobOut, mVec2Id, mFloatId, spirv::LiteralInteger(2));
     }
 
     if (!mVec4Id.valid())
@@ -2777,28 +2763,17 @@ class SpirvPositionTransformer final : angle::NonCopyable
                                      spirv::Blob *blobOut);
 
   private:
-    void preRotateXY(const SpirvIDDiscoverer &ids,
-                     spirv::IdRef vec2Id,
-                     spirv::IdRef xyId,
-                     spirv::IdRef rotatedXYId,
-                     spirv::Blob *blobOut);
-    void transformZToVulkanClipSpace(const SpirvIDDiscoverer &ids,
-                                     spirv::IdRef zId,
-                                     spirv::IdRef wId,
-                                     spirv::IdRef *correctedZIdOut,
-                                     spirv::Blob *blobOut);
-
     GlslangSpirvOptions mOptions;
 
-    spirv::IdRef mPreRotatePositionFuncId;
+    spirv::IdRef mTransformPositionFuncId;
 };
 
 void SpirvPositionTransformer::visitName(spirv::IdRef id, const spirv::LiteralString &name)
 {
-    if (angle::BeginsWith(name, sh::vk::kPreRotationRotatePositionFunctionName))
+    if (angle::BeginsWith(name, sh::vk::kTransformPositionFunctionName))
     {
-        ASSERT(!mPreRotatePositionFuncId.valid());
-        mPreRotatePositionFuncId = id;
+        ASSERT(!mTransformPositionFuncId.valid());
+        mTransformPositionFuncId = id;
     }
 }
 
@@ -2807,86 +2782,20 @@ void SpirvPositionTransformer::writePositionTransformation(const SpirvIDDiscover
                                                            spirv::IdRef positionId,
                                                            spirv::Blob *blobOut)
 {
-    // In GL the viewport transformation is slightly different - see the GL 2.0 spec section "2.12.1
-    // Controlling the Viewport".  In Vulkan the corresponding spec section is currently "23.4.
-    // Coordinate Transformations".  The following transformation needs to be done:
-    //
-    //     z_vk = 0.5 * (w_gl + z_gl)
-    //
-    // where z_vk is the depth output of a Vulkan geometry-stage shader and z_gl is the same for GL.
-
     // Generate the following SPIR-V for prerotation and depth transformation:
     //
-    //     // Create gl_Position.x and gl_Position.y for transformation, as well as gl_Position.z
-    //     // and gl_Position.w for later.
-    //     %xy = OpVectorShuffle %mVec2Id %Position %position 0 1
-    //     %z = OpCompositeExtract %mFloatId %Position 2
-    //     %w = OpCompositeExtract %mFloatId %Position 3
-    //
-    //     // Transform %xy based on pre-rotation by making a call to the ANGLEPreRotatePositionXY
+    //     // Transform position based on uniforms by making a call to the ANGLETransformPosition
     //     // function that the translator has already provided.
+    //     %transformed = OpFunctionCall %mVec4Id %mTransformPositionFuncId %position
     //
-    //     // Transform %z if necessary, based on the above formula.
-    //     %zPlusW = OpFAdd %mFloatId %z %w
-    //     %correctedZ = OpFMul %mFloatId %zPlusW %mFloatHalfId
-    //
-    //     // Create the rotated gl_Position from the rotated xy and corrected z components.
-    //     %RotatedPosition = OpCompositeConstruct %mVec4Id %rotatedXY %correctedZ %w
     //     // Store the results back in gl_Position
-    //     OpStore %PositionPointer %RotatedPosition
+    //     OpStore %PositionPointer %transformedPosition
     //
-    const spirv::IdRef xyId(SpirvTransformerBase::GetNewId(blobOut));
-    const spirv::IdRef zId(SpirvTransformerBase::GetNewId(blobOut));
-    const spirv::IdRef wId(SpirvTransformerBase::GetNewId(blobOut));
-    const spirv::IdRef rotatedXYId(SpirvTransformerBase::GetNewId(blobOut));
-    const spirv::IdRef rotatedPositionId(SpirvTransformerBase::GetNewId(blobOut));
+    const spirv::IdRef transformedPositionId(SpirvTransformerBase::GetNewId(blobOut));
 
-    spirv::WriteVectorShuffle(blobOut, ids.vec2Id(), xyId, positionId, positionId,
-                              {spirv::LiteralInteger{0}, spirv::LiteralInteger{1}});
-    spirv::WriteCompositeExtract(blobOut, ids.floatId(), zId, positionId,
-                                 {spirv::LiteralInteger{2}});
-    spirv::WriteCompositeExtract(blobOut, ids.floatId(), wId, positionId,
-                                 {spirv::LiteralInteger{3}});
-
-    preRotateXY(ids, ids.vec2Id(), xyId, rotatedXYId, blobOut);
-
-    spirv::IdRef correctedZId;
-    transformZToVulkanClipSpace(ids, zId, wId, &correctedZId, blobOut);
-
-    spirv::WriteCompositeConstruct(blobOut, ids.vec4Id(), rotatedPositionId,
-                                   {rotatedXYId, correctedZId, wId});
-    spirv::WriteStore(blobOut, positionPointerId, rotatedPositionId, nullptr);
-}
-
-void SpirvPositionTransformer::preRotateXY(const SpirvIDDiscoverer &ids,
-                                           spirv::IdRef vec2Id,
-                                           spirv::IdRef xyId,
-                                           spirv::IdRef rotatedXYId,
-                                           spirv::Blob *blobOut)
-{
-    spirv::WriteFunctionCall(blobOut, vec2Id, rotatedXYId, mPreRotatePositionFuncId, {xyId});
-}
-
-void SpirvPositionTransformer::transformZToVulkanClipSpace(const SpirvIDDiscoverer &ids,
-                                                           spirv::IdRef zId,
-                                                           spirv::IdRef wId,
-                                                           spirv::IdRef *correctedZIdOut,
-                                                           spirv::Blob *blobOut)
-{
-    if (!mOptions.transformPositionToVulkanClipSpace)
-    {
-        *correctedZIdOut = zId;
-        return;
-    }
-
-    const spirv::IdRef zPlusWId(SpirvTransformerBase::GetNewId(blobOut));
-    *correctedZIdOut = SpirvTransformerBase::GetNewId(blobOut);
-
-    // %zPlusW = OpFAdd %mFloatId %z %w
-    spirv::WriteFAdd(blobOut, ids.floatId(), zPlusWId, zId, wId);
-
-    // %correctedZ = OpFMul %mFloatId %zPlusW %mFloatHalfId
-    spirv::WriteFMul(blobOut, ids.floatId(), *correctedZIdOut, zPlusWId, ids.floatHalfId());
+    spirv::WriteFunctionCall(blobOut, ids.vec4Id(), transformedPositionId, mTransformPositionFuncId,
+                             {positionId});
+    spirv::WriteStore(blobOut, positionPointerId, transformedPositionId, nullptr);
 }
 
 // A SPIR-V transformer.  It walks the instructions and modifies them as necessary, for example to

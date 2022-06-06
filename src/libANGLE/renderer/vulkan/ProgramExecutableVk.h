@@ -53,10 +53,9 @@ struct ProgramTransformOptions final
 {
     uint8_t enableLineRasterEmulation : 1;
     uint8_t surfaceRotation : 1;
-    uint8_t enableDepthCorrection : 1;
     uint8_t removeTransformFeedbackEmulation : 1;
-    uint8_t reserved : 4;  // must initialize to zero
-    static constexpr uint32_t kPermutationCount = 0x1 << 4;
+    uint8_t reserved : 5;  // must initialize to zero
+    static constexpr uint32_t kPermutationCount = 0x1 << 3;
 };
 static_assert(sizeof(ProgramTransformOptions) == 1, "Size check failed");
 static_assert(static_cast<int>(SurfaceRotation::EnumCount) <= 8, "Size check failed");

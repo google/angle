@@ -81,6 +81,11 @@ std::shared_ptr<WaitableCompileEvent> ShaderVk::compile(const gl::Context *conte
         compileOptions |= SH_USE_SPECIALIZATION_CONSTANT;
     }
 
+    if (!contextVk->getFeatures().supportsDepthClipControl.enabled)
+    {
+        compileOptions |= SH_ADD_VULKAN_DEPTH_CORRECTION;
+    }
+
     if (contextVk->getFeatures().supportsTransformFeedbackExtension.enabled)
     {
         compileOptions |= SH_ADD_VULKAN_XFB_EXTENSION_SUPPORT_CODE;
