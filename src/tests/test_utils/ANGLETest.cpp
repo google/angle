@@ -172,8 +172,15 @@ bool ShouldAlwaysForceNewDisplay()
     return (!systemInfo || !IsWindows() || systemInfo->hasAMDGPU());
 }
 
-GPUTestConfig::API GetTestConfigAPIFromRenderer(EGLenum renderer, EGLenum deviceType)
+GPUTestConfig::API GetTestConfigAPIFromRenderer(angle::GLESDriverType driverType,
+                                                EGLenum renderer,
+                                                EGLenum deviceType)
 {
+    if (driverType != angle::GLESDriverType::AngleEGL)
+    {
+        return GPUTestConfig::kAPIUnknown;
+    }
+
     switch (renderer)
     {
         case EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE:
@@ -196,7 +203,7 @@ GPUTestConfig::API GetTestConfigAPIFromRenderer(EGLenum renderer, EGLenum device
         case EGL_PLATFORM_ANGLE_TYPE_METAL_ANGLE:
             return GPUTestConfig::kAPIMetal;
         default:
-            std::cerr << "Unknown Renderer enum: 0x%X\n" << renderer;
+            std::cerr << "Unknown Renderer enum: 0x" << std::hex << renderer << "\n";
             return GPUTestConfig::kAPIUnknown;
     }
 }
@@ -606,9 +613,9 @@ void ANGLETestBase::ANGLETestSetUp()
 
     // Check the skip list.
 
-    angle::GPUTestConfig::API api = GetTestConfigAPIFromRenderer(mCurrentParams->getRenderer(),
-                                                                 mCurrentParams->getDeviceType());
-    GPUTestConfig testConfig      = GPUTestConfig(api, 0);
+    angle::GPUTestConfig::API api = GetTestConfigAPIFromRenderer(
+        mCurrentParams->driver, mCurrentParams->getRenderer(), mCurrentParams->getDeviceType());
+    GPUTestConfig testConfig = GPUTestConfig(api, 0);
 
     std::stringstream fullTestNameStr;
     fullTestNameStr << testInfo->test_case_name() << "." << testInfo->name();
