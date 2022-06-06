@@ -178,6 +178,34 @@ void CaptureDrawElementsInstancedANGLE_indices(const State &glState,
                                 paramCapture);
 }
 
+void CaptureDrawElementsInstancedBaseInstanceEXT_indices(const State &glState,
+                                                         bool isCallValid,
+                                                         GLenum mode,
+                                                         GLsizei count,
+                                                         GLenum type,
+                                                         const void *indices,
+                                                         GLsizei instancecount,
+                                                         GLuint baseinstance,
+                                                         angle::ParamCapture *indicesParam)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureDrawElementsInstancedBaseVertexBaseInstanceEXT_indices(
+    const State &glState,
+    bool isCallValid,
+    PrimitiveMode modePacked,
+    GLsizei count,
+    DrawElementsType typePacked,
+    const void *indices,
+    GLsizei instancecount,
+    GLint basevertex,
+    GLuint baseInstance,
+    angle::ParamCapture *indicesParam)
+{
+    UNIMPLEMENTED();
+}
+
 void CaptureDrawElementsBaseVertexEXT_indices(const State &glState,
                                               bool isCallValid,
                                               PrimitiveMode modePacked,

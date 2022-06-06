@@ -23,6 +23,7 @@ using data from registry_xml.py and gl.xml.
 
 | Extension Name | NVIDIA 1660 Win10 | Intel 630 Win10 | NVIDIA 1660 Linux | Intel 630 Linux | SwiftShader Win10 | Pixel 4 Android 11 | Pixel 6 Android 13 |
 | -------------- | :---------------: | :-------------: | :---------------: | :-------------: | :---------------: | :----------------: | :----------------: |
+| [GL_EXT_base_instance](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_base_instance.txt) |  |  |  |  |  |  |  |
 | [GL_KHR_blend_equation_advanced](https://khronos.org/registry/OpenGL/extensions/KHR/KHR_blend_equation_advanced.txt) | &#x2714; |  | &#x2714; |  | &#x2714; | &#x2714; | &#x2714; |
 | [GL_EXT_blend_func_extended](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_blend_func_extended.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; |  | &#x2714; |  |
 | [GL_EXT_blend_minmax](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_blend_minmax.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |

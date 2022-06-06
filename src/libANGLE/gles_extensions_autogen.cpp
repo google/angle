@@ -39,6 +39,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
 
         // GLES 2.0 extension strings
         // --------------------------
+        map["GL_EXT_base_instance"] = enableableExtension(&Extensions::baseInstanceEXT);
         map["GL_KHR_blend_equation_advanced"] = esOnlyExtension(&Extensions::blendEquationAdvancedKHR);
         map["GL_EXT_blend_func_extended"] = enableableExtension(&Extensions::blendFuncExtendedEXT);
         map["GL_EXT_blend_minmax"] = enableableExtension(&Extensions::blendMinmaxEXT);

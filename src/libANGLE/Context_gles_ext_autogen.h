@@ -82,6 +82,15 @@
     void eGLImageTargetTextureStorage(GLuint texture, GLeglImageOES image,                         \
                                       const GLint *attrib_list);                                   \
     /* GL_EXT_YUV_target */                                                                        \
+    /* GL_EXT_base_instance */                                                                     \
+    void drawArraysInstancedBaseInstance(PrimitiveMode modePacked, GLint first, GLsizei count,     \
+                                         GLsizei instancecount, GLuint baseinstance);              \
+    void drawElementsInstancedBaseInstance(GLenum mode, GLsizei count, GLenum type,                \
+                                           const void *indices, GLsizei instancecount,             \
+                                           GLuint baseinstance);                                   \
+    void drawElementsInstancedBaseVertexBaseInstance(                                              \
+        PrimitiveMode modePacked, GLsizei count, DrawElementsType typePacked, const void *indices, \
+        GLsizei instancecount, GLint basevertex, GLuint baseinstance);                             \
     /* GL_EXT_blend_func_extended */                                                               \
     void bindFragDataLocation(ShaderProgramID programPacked, GLuint color, const GLchar *name);    \
     void bindFragDataLocationIndexed(ShaderProgramID programPacked, GLuint colorNumber,            \
@@ -325,9 +334,10 @@
     /* ANGLE Extensions */                                                                         \
                                                                                                    \
     /* GL_ANGLE_base_vertex_base_instance */                                                       \
-    void drawArraysInstancedBaseInstance(PrimitiveMode modePacked, GLint first, GLsizei count,     \
-                                         GLsizei instanceCount, GLuint baseInstance);              \
-    void drawElementsInstancedBaseVertexBaseInstance(                                              \
+    void drawArraysInstancedBaseInstanceANGLE(PrimitiveMode modePacked, GLint first,               \
+                                              GLsizei count, GLsizei instanceCount,                \
+                                              GLuint baseInstance);                                \
+    void drawElementsInstancedBaseVertexBaseInstanceANGLE(                                         \
         PrimitiveMode modePacked, GLsizei count, DrawElementsType typePacked,                      \
         const GLvoid *indices, GLsizei instanceCount, GLint baseVertex, GLuint baseInstance);      \
     void multiDrawArraysInstancedBaseInstance(                                                     \
