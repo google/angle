@@ -7,7 +7,7 @@
 # run_angle_android_test.py:
 #   Runs ANGLE tests using android_helper wrapper. Example:
 #     (cd out/Android; ../../src/tests/run_angle_android_test.py \
-#       --suite=angle_perftests \
+#       angle_perftests \
 #       --filter='TracePerfTest.Run/*_words_with_friends_2' \
 #       --no-warmup --steps-per-trial 1000 --trials 1)
 
@@ -26,7 +26,8 @@ import android_helper
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--suite', help='Test suite to run (e.g. angle_perftests).', required=True)
+    parser.add_argument(
+        'suite', help='Test suite to run.', choices=['angle_perftests', 'angle_end2end_tests'])
     parser.add_argument(
         '-f',
         '--filter',
@@ -52,10 +53,12 @@ def main():
             print(test)
         return 0
 
-    traces = set(android_helper.GetTraceFromTestName(test) for test in tests)
-    android_helper.PrepareRestrictedTraces(traces, check_hash=True)
+    if args.suite == 'angle_perftests':
+        traces = set(android_helper.GetTraceFromTestName(test) for test in tests)
+        android_helper.PrepareRestrictedTraces(traces, check_hash=True)
 
-    return android_helper.RunTests(['--gtest_filter=' + args.filter] + extra_flags)[0]
+    flags = ['--gtest_filter=' + args.filter] if args.filter else []
+    return android_helper.RunTests(flags + extra_flags)[0]
 
 
 if __name__ == '__main__':

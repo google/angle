@@ -93,8 +93,6 @@ def _RemoveDeviceFile(device_path):
 
 
 def _AddRestrictedTracesJson():
-    _AdbShell('mkdir -p /sdcard/chromium_tests_root/')
-
     def add(tar, fn):
         assert (fn.startswith('../../'))
         tar.add(fn, arcname=fn.replace('../../', ''))
@@ -127,8 +125,16 @@ def PrepareTestSuite(suite_name):
 
     _AdbShell('appops set com.android.angle.test MANAGE_EXTERNAL_STORAGE allow || true')
 
+    _AdbShell('mkdir -p /sdcard/chromium_tests_root/')
+
     if suite_name == 'angle_perftests':
         _AddRestrictedTracesJson()
+
+    if suite_name == 'angle_end2end_tests':
+        _AdbRun([
+            'push', '../../src/tests/angle_end2end_tests_expectations.txt',
+            '/sdcard/chromium_tests_root/src/tests/angle_end2end_tests_expectations.txt'
+        ])
 
 
 def _CompareHashes(local_path, device_path):
