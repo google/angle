@@ -723,6 +723,12 @@ bool FindRootTraceTestDataPath(char *testDataDirOut, size_t maxDataDirLen)
 TracePerfTest::TracePerfTest(const TracePerfParams &params)
     : ANGLERenderTest("TracePerf", params, "ms"), mParams(params), mStartFrame(0), mEndFrame(0)
 {
+    if (!params.traceInfo.initialized)
+    {
+        failTest("Failed to load trace json.");
+        return;
+    }
+
     if (IsWindows() && IsIntel() && mParams.isVulkan() && traceNameIs("manhattan_10"))
     {
         skipTest(
@@ -2070,11 +2076,8 @@ void RegisterTraceTests()
         std::string traceJsonPath = traceJsonStream.str();
 
         TraceInfo traceInfo = {};
-        if (!LoadTraceInfoFromJSON(trace, traceJsonPath, &traceInfo))
-        {
-            ERR() << "Unable to load traced data from JSON file: " << traceJsonPath;
-            return;
-        }
+        strncpy(traceInfo.name, trace.c_str(), kTraceInfoMaxNameLen);
+        traceInfo.initialized = LoadTraceInfoFromJSON(trace, traceJsonPath, &traceInfo);
 
         traceInfos.push_back(traceInfo);
     }
