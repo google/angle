@@ -167,6 +167,7 @@ class TestSuite
     void startWatchdog();
     void dumpTestExpectationsErrorMessages();
     int getSlowTestTimeout() const;
+    void writeOutputFiles(bool interrupted);
 
     static TestSuite *mInstance;
 
@@ -206,6 +207,8 @@ class TestSuite
     HistogramWriter mHistogramWriter;
     std::string mTestArtifactDirectory;
     GPUTestExpectationsParser mTestExpectationsParser;
+
+    class TestEventListener;
 };
 
 bool GetTestResultsFromFile(const char *fileName, TestResults *resultsOut);

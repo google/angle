@@ -397,24 +397,6 @@ void WriteHistogramJson(const HistogramWriter &histogramWriter,
     }
 }
 
-void WriteOutputFiles(bool interrupted,
-                      const TestResults &testResults,
-                      const std::string &resultsFile,
-                      const HistogramWriter &histogramWriter,
-                      const std::string &histogramJsonOutputFile,
-                      const char *testSuiteName)
-{
-    if (!resultsFile.empty())
-    {
-        WriteResultsFile(interrupted, testResults, resultsFile, testSuiteName);
-    }
-
-    if (!histogramJsonOutputFile.empty())
-    {
-        WriteHistogramJson(histogramWriter, histogramJsonOutputFile, testSuiteName);
-    }
-}
-
 void UpdateCurrentTestResult(const testing::TestResult &resultIn, TestResults *resultsOut)
 {
     TestResult &resultOut = resultsOut->results[resultsOut->currentTest];
@@ -440,54 +422,6 @@ TestIdentifier GetTestIdentifier(const testing::TestInfo &testInfo)
 {
     return {testInfo.test_suite_name(), testInfo.name()};
 }
-
-class TestEventListener : public testing::EmptyTestEventListener
-{
-  public:
-    // Note: TestResults is owned by the TestSuite. It should outlive TestEventListener.
-    TestEventListener(const std::string &resultsFile,
-                      const std::string &histogramJsonFile,
-                      const char *testSuiteName,
-                      TestResults *testResults,
-                      HistogramWriter *histogramWriter)
-        : mResultsFile(resultsFile),
-          mHistogramJsonFile(histogramJsonFile),
-          mTestSuiteName(testSuiteName),
-          mTestResults(testResults),
-          mHistogramWriter(histogramWriter)
-    {}
-
-    void OnTestStart(const testing::TestInfo &testInfo) override
-    {
-        std::lock_guard<std::mutex> guard(mTestResults->currentTestMutex);
-        mTestResults->currentTest = GetTestIdentifier(testInfo);
-        mTestResults->currentTestTimer.start();
-    }
-
-    void OnTestEnd(const testing::TestInfo &testInfo) override
-    {
-        std::lock_guard<std::mutex> guard(mTestResults->currentTestMutex);
-        mTestResults->currentTestTimer.stop();
-        const testing::TestResult &resultIn = *testInfo.result();
-        UpdateCurrentTestResult(resultIn, mTestResults);
-        mTestResults->currentTest = TestIdentifier();
-    }
-
-    void OnTestProgramEnd(const testing::UnitTest &testProgramInfo) override
-    {
-        std::lock_guard<std::mutex> guard(mTestResults->currentTestMutex);
-        mTestResults->allDone = true;
-        WriteOutputFiles(false, *mTestResults, mResultsFile, *mHistogramWriter, mHistogramJsonFile,
-                         mTestSuiteName);
-    }
-
-  private:
-    std::string mResultsFile;
-    std::string mHistogramJsonFile;
-    const char *mTestSuiteName;
-    TestResults *mTestResults;
-    HistogramWriter *mHistogramWriter;
-};
 
 bool IsTestDisabled(const testing::TestInfo &testInfo)
 {
@@ -1051,6 +985,39 @@ ProcessInfo::ProcessInfo(ProcessInfo &&other)
     *this = std::move(other);
 }
 
+class TestSuite::TestEventListener : public testing::EmptyTestEventListener
+{
+  public:
+    // Note: TestResults is owned by the TestSuite. It should outlive TestEventListener.
+    TestEventListener(TestSuite *testSuite) : mTestSuite(testSuite) {}
+
+    void OnTestStart(const testing::TestInfo &testInfo) override
+    {
+        std::lock_guard<std::mutex> guard(mTestSuite->mTestResults.currentTestMutex);
+        mTestSuite->mTestResults.currentTest = GetTestIdentifier(testInfo);
+        mTestSuite->mTestResults.currentTestTimer.start();
+    }
+
+    void OnTestEnd(const testing::TestInfo &testInfo) override
+    {
+        std::lock_guard<std::mutex> guard(mTestSuite->mTestResults.currentTestMutex);
+        mTestSuite->mTestResults.currentTestTimer.stop();
+        const testing::TestResult &resultIn = *testInfo.result();
+        UpdateCurrentTestResult(resultIn, &mTestSuite->mTestResults);
+        mTestSuite->mTestResults.currentTest = TestIdentifier();
+    }
+
+    void OnTestProgramEnd(const testing::UnitTest &testProgramInfo) override
+    {
+        std::lock_guard<std::mutex> guard(mTestSuite->mTestResults.currentTestMutex);
+        mTestSuite->mTestResults.allDone = true;
+        mTestSuite->writeOutputFiles(false);
+    }
+
+  private:
+    TestSuite *mTestSuite;
+};
+
 TestSuite::TestSuite(int *argc, char **argv)
     : mShardCount(-1),
       mShardIndex(-1),
@@ -1339,9 +1306,7 @@ TestSuite::TestSuite(int *argc, char **argv)
     if (!mBotMode)
     {
         testing::TestEventListeners &listeners = testing::UnitTest::GetInstance()->listeners();
-        listeners.Append(new TestEventListener(mResultsFile, mHistogramJsonFile,
-                                               mTestSuiteName.c_str(), &mTestResults,
-                                               &mHistogramWriter));
+        listeners.Append(new TestEventListener(this));
 
         for (const TestIdentifier &id : testSet)
         {
@@ -1413,8 +1378,7 @@ void TestSuite::onCrashOrTimeout(TestResultType crashOrTimeout)
         return;
     }
 
-    WriteOutputFiles(true, mTestResults, mResultsFile, mHistogramWriter, mHistogramJsonFile,
-                     mTestSuiteName.c_str());
+    writeOutputFiles(true);
 }
 
 bool TestSuite::launchChildTestProcess(uint32_t batchId,
@@ -1868,8 +1832,7 @@ int TestSuite::run()
     }
     else
     {
-        WriteOutputFiles(false, mTestResults, mResultsFile, mHistogramWriter, mHistogramJsonFile,
-                         mTestSuiteName.c_str());
+        writeOutputFiles(false);
     }
 
     totalRunTime.stop();
@@ -2073,6 +2036,19 @@ int32_t TestSuite::getTestExpectationWithConfigAndUpdateTimeout(const GPUTestCon
 int TestSuite::getSlowTestTimeout() const
 {
     return mTestTimeout * kSlowTestTimeoutScale;
+}
+
+void TestSuite::writeOutputFiles(bool interrupted)
+{
+    if (!mResultsFile.empty())
+    {
+        WriteResultsFile(interrupted, mTestResults, mResultsFile, mTestSuiteName.c_str());
+    }
+
+    if (!mHistogramJsonFile.empty())
+    {
+        WriteHistogramJson(mHistogramWriter, mHistogramJsonFile, mTestSuiteName.c_str());
+    }
 }
 
 const char *TestResultTypeToString(TestResultType type)
