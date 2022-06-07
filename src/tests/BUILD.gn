@@ -1285,14 +1285,46 @@ if (build_angle_deqp_tests && !is_fuchsia) {
     public_configs = [ ":angle_deqp_glshared_config" ]
   }
 
+  angle_deqp_source_set("angle_deqp_framework_platform") {
+    if (is_ios) {
+      # shared libraries are hidden inside ios_framework_bundle, but we include headers from them
+      check_includes = false
+    }
+    sources = deqp_framework_platform_sources
+    libs = []
+    if (is_win) {
+      sources += [
+        "$deqp_path/framework/platform/win32/tcuWGL.cpp",
+        "$deqp_path/framework/platform/win32/tcuWGLContextFactory.cpp",
+        "$deqp_path/framework/platform/win32/tcuWin32EGLNativeDisplayFactory.cpp",
+        "$deqp_path/framework/platform/win32/tcuWin32Window.cpp",
+      ]
+    }
+    if (is_linux) {
+      sources += [
+        "$deqp_path/framework/platform/lnx/X11/tcuLnxX11.cpp",
+        "$deqp_path/framework/platform/lnx/X11/tcuLnxX11.hpp",
+        "$deqp_path/framework/platform/lnx/X11/tcuLnxX11EglDisplayFactory.cpp",
+        "$deqp_path/framework/platform/lnx/X11/tcuLnxX11EglDisplayFactory.hpp",
+        "$deqp_path/framework/platform/lnx/tcuLnx.cpp",
+        "$deqp_path/framework/platform/lnx/tcuLnx.hpp",
+        "$deqp_path/framework/platform/lnx/tcuLnxEglPlatform.cpp",
+        "$deqp_path/framework/platform/lnx/tcuLnxEglPlatform.hpp",
+      ]
+    }
+    public_deps = [
+      ":angle_deqp_framework_common",
+      ":angle_deqp_framework_egl",
+    ]
+  }
+
   angle_deqp_source_set("angle_deqp_libtester") {
     if (is_ios) {
       # shared libraries are hidden inside ios_framework_bundle, but we include headers from them
       check_includes = false
     }
     public_deps = [
-      ":angle_deqp_framework_common",
-      ":angle_deqp_framework_egl",
+      ":angle_deqp_framework_platform",
       ":angle_deqp_glshared",
       "$angle_root:angle_common",
       "$angle_root/util:angle_util",
@@ -1491,7 +1523,7 @@ if (build_angle_deqp_tests && !is_fuchsia) {
               deqp_khr_gles32_sources + deqp_khr_glesext_sources +
               [ "deqp_support/glcTestPackageEntry_override.cpp" ]
     public_deps = [
-      ":angle_deqp_framework_egl",
+      ":angle_deqp_framework_platform",
       ":angle_deqp_glshared",
       "${angle_glslang_dir}:glslang_lib_sources",
       "${angle_spirv_tools_dir}:spvtools_val",
