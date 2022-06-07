@@ -2993,6 +2993,24 @@ void ContextVk::updateOverlayOnPresent()
         actualSubmissionsWidget->add(commandQueuePerfCounters.vkQueueSubmitCallsPerFrame);
         actualSubmissionsWidget->next();
     }
+
+    {
+        gl::RunningGraphWidget *cacheLookupsWidget =
+            overlay->getRunningGraphWidget(gl::WidgetId::VulkanPipelineCacheLookups);
+        cacheLookupsWidget->add(mPerfCounters.pipelineCreationCacheHits +
+                                mPerfCounters.pipelineCreationCacheMisses);
+        cacheLookupsWidget->next();
+
+        gl::RunningGraphWidget *cacheMissesWidget =
+            overlay->getRunningGraphWidget(gl::WidgetId::VulkanPipelineCacheMisses);
+        cacheMissesWidget->add(mPerfCounters.pipelineCreationCacheMisses);
+        cacheMissesWidget->next();
+
+        overlay->getCountWidget(gl::WidgetId::VulkanTotalPipelineCacheHitTimeMs)
+            ->set(mPerfCounters.pipelineCreationTotalCacheHitsDurationNs / 1000'000);
+        overlay->getCountWidget(gl::WidgetId::VulkanTotalPipelineCacheMissTimeMs)
+            ->set(mPerfCounters.pipelineCreationTotalCacheMissesDurationNs / 1000'000);
+    }
 }
 
 void ContextVk::addOverlayUsedBuffersCount(vk::CommandBufferHelperCommon *commandBuffer)
@@ -7797,6 +7815,8 @@ void ContextVk::resetPerFramePerfCounters()
     mPerfCounters.flushedOutsideRenderPassCommandBuffers = 0;
     mPerfCounters.resolveImageCommands                   = 0;
     mPerfCounters.descriptorSetAllocations               = 0;
+    mPerfCounters.pipelineCreationCacheHits              = 0;
+    mPerfCounters.pipelineCreationCacheMisses            = 0;
 
     mRenderer->resetCommandQueuePerFrameCounters();
 

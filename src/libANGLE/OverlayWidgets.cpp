@@ -577,6 +577,68 @@ void AppendWidgetDataHelper::AppendVulkanActualSubmissions(const overlay::Widget
     AppendRunningGraphCommon(widget, imageExtent, textWidget, graphWidget, widgetCounts, format);
 }
 
+void AppendWidgetDataHelper::AppendVulkanPipelineCacheLookups(const overlay::Widget *widget,
+                                                              const gl::Extents &imageExtent,
+                                                              TextWidgetData *textWidget,
+                                                              GraphWidgetData *graphWidget,
+                                                              OverlayWidgetCounts *widgetCounts)
+{
+    auto format = [](uint64_t curValue, uint64_t maxValue) {
+        std::ostringstream text;
+        text << "Pipeline Cache Lookups (peak): " << maxValue;
+        return text.str();
+    };
+
+    AppendRunningGraphCommon(widget, imageExtent, textWidget, graphWidget, widgetCounts, format);
+}
+
+void AppendWidgetDataHelper::AppendVulkanPipelineCacheMisses(const overlay::Widget *widget,
+                                                             const gl::Extents &imageExtent,
+                                                             TextWidgetData *textWidget,
+                                                             GraphWidgetData *graphWidget,
+                                                             OverlayWidgetCounts *widgetCounts)
+{
+    auto format = [](uint64_t curValue, uint64_t maxValue) {
+        std::ostringstream text;
+        text << "Pipeline Cache Misses (peak): " << maxValue;
+        return text.str();
+    };
+
+    AppendRunningGraphCommon(widget, imageExtent, textWidget, graphWidget, widgetCounts, format);
+}
+
+void AppendWidgetDataHelper::AppendVulkanTotalPipelineCacheHitTimeMs(
+    const overlay::Widget *widget,
+    const gl::Extents &imageExtent,
+    TextWidgetData *textWidget,
+    GraphWidgetData *graphWidget,
+    OverlayWidgetCounts *widgetCounts)
+{
+    const overlay::Count *totalTime = static_cast<const overlay::Count *>(widget);
+    std::ostringstream text;
+    text << "Total Pipeline Cache Hit Time: ";
+    OutputCount(text, totalTime);
+    text << "ms";
+
+    AppendTextCommon(widget, imageExtent, text.str(), textWidget, widgetCounts);
+}
+
+void AppendWidgetDataHelper::AppendVulkanTotalPipelineCacheMissTimeMs(
+    const overlay::Widget *widget,
+    const gl::Extents &imageExtent,
+    TextWidgetData *textWidget,
+    GraphWidgetData *graphWidget,
+    OverlayWidgetCounts *widgetCounts)
+{
+    const overlay::Count *totalTime = static_cast<const overlay::Count *>(widget);
+    std::ostringstream text;
+    text << "Total Pipeline Cache Miss Time: ";
+    OutputCount(text, totalTime);
+    text << "ms";
+
+    AppendTextCommon(widget, imageExtent, text.str(), textWidget, widgetCounts);
+}
+
 std::ostream &AppendWidgetDataHelper::OutputPerSecond(std::ostream &out,
                                                       const overlay::PerSecond *perSecond)
 {
@@ -605,8 +667,16 @@ constexpr angle::PackedEnumMap<WidgetId, AppendWidgetDataFunc> kWidgetIdToAppend
 
 namespace overlay
 {
+const Text *Widget::getDescriptionWidget() const
+{
+    return nullptr;
+}
 RunningGraph::RunningGraph(size_t n) : runningValues(n, 0) {}
 RunningGraph::~RunningGraph() = default;
+const Text *RunningGraph::getDescriptionWidget() const
+{
+    return &description;
+}
 }  // namespace overlay
 
 size_t OverlayState::getWidgetCoordinatesBufferSize() const

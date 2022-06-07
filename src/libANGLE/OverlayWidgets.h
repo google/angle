@@ -47,10 +47,13 @@ enum class WidgetType
 
 namespace overlay
 {
+class Text;
 class Widget
 {
   public:
     virtual ~Widget() {}
+
+    virtual const Text *getDescriptionWidget() const;
 
   protected:
     WidgetType type;
@@ -81,6 +84,7 @@ class Count : public Widget
   public:
     ~Count() override {}
     void add(uint64_t n) { count += n; }
+    void set(uint64_t n) { count = n; }
     void reset() { count = 0; }
 
   protected:
@@ -141,6 +145,8 @@ class RunningGraph : public Widget
             runningValues[lastValueIndex] = 0;
         }
     }
+
+    const Text *getDescriptionWidget() const override;
 
   protected:
     std::vector<uint64_t> runningValues;

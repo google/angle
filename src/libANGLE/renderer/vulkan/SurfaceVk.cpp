@@ -2437,7 +2437,7 @@ void WindowSurfaceVk::updateOverlay(ContextVk *contextVk) const
         overlay->getTextWidget(gl::WidgetId::VulkanLastValidationMessage)
             ->set(std::move(lastValidationMessage));
         overlay->getCountWidget(gl::WidgetId::VulkanValidationMessageCount)
-            ->add(validationMessageCount);
+            ->set(validationMessageCount);
     }
 
     contextVk->updateOverlayOnPresent();
