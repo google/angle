@@ -33,11 +33,11 @@ class GLSLTest : public ANGLETest
 
         if (vectorSize == 1)
         {
-            sprintf(varyingType, "float");
+            snprintf(varyingType, sizeof(varyingType), "float");
         }
         else
         {
-            sprintf(varyingType, "vec%d", vectorSize);
+            snprintf(varyingType, sizeof(varyingType), "vec%d", vectorSize);
         }
 
         return std::string(varyingType);
@@ -49,12 +49,13 @@ class GLSLTest : public ANGLETest
 
         if (arraySize == 1)
         {
-            sprintf(buff, "varying %s v%d;\n", GenerateVaryingType(vectorSize).c_str(), id);
+            snprintf(buff, sizeof(buff), "varying %s v%d;\n",
+                     GenerateVaryingType(vectorSize).c_str(), id);
         }
         else
         {
-            sprintf(buff, "varying %s v%d[%d];\n", GenerateVaryingType(vectorSize).c_str(), id,
-                    arraySize);
+            snprintf(buff, sizeof(buff), "varying %s v%d[%d];\n",
+                     GenerateVaryingType(vectorSize).c_str(), id, arraySize);
         }
 
         return std::string(buff);
@@ -67,15 +68,16 @@ class GLSLTest : public ANGLETest
 
         if (arraySize == 1)
         {
-            sprintf(buff, "\t v%d = %s(1.0);\n", id, GenerateVaryingType(vectorSize).c_str());
+            snprintf(buff, sizeof(buff), "\t v%d = %s(1.0);\n", id,
+                     GenerateVaryingType(vectorSize).c_str());
             returnString += buff;
         }
         else
         {
             for (int i = 0; i < arraySize; i++)
             {
-                sprintf(buff, "\t v%d[%d] = %s(1.0);\n", id, i,
-                        GenerateVaryingType(vectorSize).c_str());
+                snprintf(buff, sizeof(buff), "\t v%d[%d] = %s(1.0);\n", id, i,
+                         GenerateVaryingType(vectorSize).c_str());
                 returnString += buff;
             }
         }
@@ -88,7 +90,7 @@ class GLSLTest : public ANGLETest
         if (arraySize == 1)
         {
             char buff[100];
-            sprintf(buff, "v%d + ", id);
+            snprintf(buff, sizeof(buff), "v%d + ", id);
             return std::string(buff);
         }
         else
@@ -97,7 +99,7 @@ class GLSLTest : public ANGLETest
             for (int i = 0; i < arraySize; i++)
             {
                 char buff[100];
-                sprintf(buff, "v%d[%d] + ", id, i);
+                snprintf(buff, sizeof(buff), "v%d[%d] + ", id, i);
                 returnString += buff;
             }
             return returnString;
