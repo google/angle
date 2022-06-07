@@ -3664,6 +3664,17 @@ const gl::Limitations &RendererVk::getNativeLimitations() const
     return mNativeLimitations;
 }
 
+void RendererVk::initializeFrontendFeatures(angle::FrontendFeatures *features) const
+{
+    bool isSwiftShader =
+        IsSwiftshader(mPhysicalDeviceProperties.vendorID, mPhysicalDeviceProperties.deviceID);
+
+    // Hopefully-temporary work-around for a crash on SwiftShader.  An Android process is turning
+    // off GL error checking, and then asking ANGLE to write past the end of a buffer.
+    // https://issuetracker.google.com/issues/220069903
+    ANGLE_FEATURE_CONDITION(features, forceGlErrorChecking, (IsAndroid() && isSwiftShader));
+}
+
 angle::Result RendererVk::getPipelineCacheSize(DisplayVk *displayVk, size_t *pipelineCacheSizeOut)
 {
     VkResult result = mPipelineCache.getCacheData(mDevice, pipelineCacheSizeOut, nullptr);
