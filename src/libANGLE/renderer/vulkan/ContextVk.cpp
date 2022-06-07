@@ -5211,7 +5211,7 @@ angle::Result ContextVk::onMakeCurrent(const gl::Context *context)
     updateSurfaceRotationReadFramebuffer(glState);
 
     invalidateDriverUniforms();
-    if (!getFeatures().forceDriverUniformOverSpecConst.enabled)
+    if (!getFeatures().preferDriverUniformOverSpecConst.enabled)
     {
         // Force update mGraphicsPipelineDesc
         mCurrentGraphicsPipeline = nullptr;

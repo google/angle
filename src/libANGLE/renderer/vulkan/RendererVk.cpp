@@ -3375,11 +3375,18 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsShaderFloat16,
                             mShaderFloat16Int8Features.shaderFloat16 == VK_TRUE);
 
-    // http://issuetracker.google.com/173636783 Qualcomm driver appears having issues with
-    // specialization constant
-    ANGLE_FEATURE_CONDITION(&mFeatures, forceDriverUniformOverSpecConst,
-                            isQualcomm && mPhysicalDeviceProperties.driverVersion <
-                                              kPixel4DriverWithWorkingSpecConstSupport);
+    // Prefer driver uniforms over specialization constants in the following:
+    //
+    // - Older Qualcomm drivers where specialization constants severly degrade the performance of
+    //   pipeline creation.  http://issuetracker.google.com/173636783
+    // - ARM hardware
+    // - Imagination hardware
+    // - SwiftShader
+    //
+    ANGLE_FEATURE_CONDITION(&mFeatures, preferDriverUniformOverSpecConst,
+                            (isQualcomm && mPhysicalDeviceProperties.driverVersion <
+                                               kPixel4DriverWithWorkingSpecConstSupport) ||
+                                isARM || isPowerVR || isSwiftShader);
 
     // The compute shader used to generate mipmaps needs -
     // 1. subgroup quad operations in compute shader stage.

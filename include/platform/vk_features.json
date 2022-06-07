@@ -590,12 +590,12 @@
             "issue": "http://anglebug.com/4889"
         },
         {
-            "name": "force_driver_uniform_over_spec_const",
-            "category": "Workarounds",
+            "name": "prefer_driver_uniform_over_spec_const",
+            "category": "Features",
             "description": [
-                "Forces using driver uniforms instead of specialization constants."
+                "Prefer using driver uniforms instead of specialization constants."
             ],
-            "issue": "http://issuetracker.google.com/173636783"
+            "issue": "http://anglebug.com/7406"
         },
         {
             "name": "expose_non_conformant_extensions_and_versions",
