@@ -77,6 +77,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
      "disableProgramCachingForTransformFeedback"},
     {Feature::DisableSemaphoreFd, "disableSemaphoreFd"},
     {Feature::DisableSyncControlSupport, "disableSyncControlSupport"},
+    {Feature::DisableTextureClampToBorder, "disableTextureClampToBorder"},
     {Feature::DisableTimestampQueries, "disableTimestampQueries"},
     {Feature::DisableWorkerContexts, "disableWorkerContexts"},
     {Feature::DoesSRGBClearsOnLinearFramebufferAttachments,

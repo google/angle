@@ -73,6 +73,7 @@ enum class Feature
     DisableProgramCachingForTransformFeedback,
     DisableSemaphoreFd,
     DisableSyncControlSupport,
+    DisableTextureClampToBorder,
     DisableTimestampQueries,
     DisableWorkerContexts,
     DoesSRGBClearsOnLinearFramebufferAttachments,
