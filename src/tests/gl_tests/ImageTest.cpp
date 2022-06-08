@@ -5220,6 +5220,56 @@ TEST_P(ImageTest, DeletedImageWithSameSizeAndFormat)
     ASSERT_GL_NO_ERROR();
 }
 
+// Check that create a source cube texture and then redefine the same target texture with each face
+// of source cube texture renders correctly
+TEST_P(ImageTest, SourceCubeAndSameTargetTextureWithEachCubeFace)
+{
+    EGLWindow *window = getEGLWindow();
+
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
+
+    // Create a source cube map texture
+    GLTexture sourceTexture;
+    glBindTexture(GL_TEXTURE_CUBE_MAP, sourceTexture);
+    uint8_t *data     = reinterpret_cast<uint8_t *>(kLinearColorCube);
+    size_t dataStride = sizeof(GLubyte) * 4;
+    for (GLenum faceIdx = 0; faceIdx < 6; faceIdx++)
+    {
+        glTexImage2D(faceIdx + GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, GL_RGBA, 1, 1, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, data + (faceIdx * dataStride));
+    }
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+
+    EGLImageKHR images[6];
+    GLTexture targetTexture;
+    glBindTexture(GL_TEXTURE_2D, targetTexture);
+
+    for (GLenum faceIdx = 0; faceIdx < 6; faceIdx++)
+    {
+        // Create the Image with EGL_GL_TEXTURE_CUBE_MAP_POSITIVE_X_KHR
+        images[faceIdx] = eglCreateImageKHR(window->getDisplay(), window->getContext(),
+                                            EGL_GL_TEXTURE_CUBE_MAP_POSITIVE_X_KHR + faceIdx,
+                                            reinterpretHelper<EGLClientBuffer>(sourceTexture.get()),
+                                            kDefaultAttribs);
+
+        // Create a target texture from the image
+        glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, images[faceIdx]);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        ASSERT_GL_NO_ERROR();
+        // Expect that the target texture has the same color as the source texture
+        verifyResults2D(targetTexture, &kLinearColorCube[faceIdx * 4]);
+    }
+
+    // Clean up
+    for (GLenum faceIdx = 0; faceIdx < 6; faceIdx++)
+    {
+        eglDestroyImageKHR(window->getDisplay(), images[faceIdx]);
+    }
+}
+
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(ImageTest);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ImageTestES3);
