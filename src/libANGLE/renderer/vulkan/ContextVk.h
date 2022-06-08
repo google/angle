@@ -29,6 +29,11 @@ struct FeaturesVk;
 
 namespace rx
 {
+namespace vk
+{
+class SyncHelper;
+}  // namespace vk
+
 class ProgramExecutableVk;
 class RendererVk;
 class WindowSurfaceVk;
@@ -659,6 +664,14 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     angle::Result syncExternalMemory();
 
+    // Either issue a submission or defer it when a sync object is initialized.  If deferred, a
+    // submission will have to be incurred during client wait.
+    angle::Result onSyncObjectInit(vk::SyncHelper *syncHelper, bool isEGLSyncObject);
+    // Called when a sync object is waited on while its submission was deffered in onSyncObjectInit.
+    // It's a no-op if this context doesn't have a pending submission.  Note that due to
+    // mHasDeferredFlush being set, flushing the render pass leads to a submission automatically.
+    angle::Result flushCommandsAndEndRenderPassIfDeferredSyncInit(RenderPassClosureReason reason);
+
     void addCommandBufferDiagnostics(const std::string &commandBufferDiagnostics);
 
     VkIndexType getVkIndexType(gl::DrawElementsType glIndexType) const;
@@ -1210,6 +1223,9 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
                                                DirtyBits dirtyBitMask,
                                                RenderPassClosureReason reason);
 
+    // Mark the render pass to be closed on the next draw call.  The render pass is not actually
+    // closed and can be restored with restoreFinishedRenderPass if necessary, for example to append
+    // a resolve attachment.
     void onRenderPassFinished(RenderPassClosureReason reason);
 
     void initIndexTypeMap();

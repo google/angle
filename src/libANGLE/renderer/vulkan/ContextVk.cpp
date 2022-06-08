@@ -585,6 +585,8 @@ constexpr angle::PackedEnumMap<RenderPassClosureReason, const char *> kRenderPas
      "Render pass closed due to sync object client wait"},
     {RenderPassClosureReason::SyncObjectServerWait,
      "Render pass closed due to sync object server wait"},
+    {RenderPassClosureReason::SyncObjectGetStatus,
+     "Render pass closed due to sync object get status"},
     {RenderPassClosureReason::XfbPause, "Render pass closed due to transform feedback pause"},
     {RenderPassClosureReason::FramebufferFetchEmulation,
      "Render pass closed due to framebuffer fetch emulation"},
@@ -3946,6 +3948,10 @@ angle::Result ContextVk::optimizeRenderPassForPresent(VkFramebuffer framebufferH
                                                       vk::PresentMode presentMode,
                                                       bool *imageResolved)
 {
+    // Note: mRenderPassCommandBuffer may be nullptr because the render pass is marked for closure.
+    // That doesn't matter and the render pass can continue to be modified.  This function shouldn't
+    // rely on mRenderPassCommandBuffer.
+
     if (!mRenderPassCommands->started())
     {
         return angle::Result::Continue;
@@ -7098,6 +7104,61 @@ angle::Result ContextVk::syncExternalMemory()
     mOutsideRenderPassCommands->getCommandBuffer().memoryBarrier(
         VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, &memoryBarrier);
     return angle::Result::Continue;
+}
+
+angle::Result ContextVk::onSyncObjectInit(vk::SyncHelper *syncHelper, bool isEGLSyncObject)
+{
+    const bool isRenderPassStarted = mRenderPassCommands->started();
+
+    if (isRenderPassStarted)
+    {
+        mRenderPassCommands->retainResource(syncHelper);
+    }
+    else
+    {
+        mOutsideRenderPassCommands->retainResource(syncHelper);
+    }
+
+    // Submit the commands:
+    //
+    // - This breaks the current render pass to ensure the proper ordering of the sync object in the
+    //   commands,
+    // - The sync object has a valid serial when it's waited on later,
+    // - After waiting on the sync object, every resource that's used so far (and is being synced)
+    //   will also be aware that it's finished (based on the serial) and won't incur a further wait
+    //   (for example when a buffer is mapped).
+    //
+    // The submission is done immediately for EGL sync objects, and when no render pass is open.  If
+    // a render pass is open, the submission is deferred.  This is done to be able to optimize
+    // scenarios such as sync object init followed by eglSwapBuffers() (that would otherwise incur
+    // another submission, as well as not being able to optimize the render-to-swapchain render
+    // pass).
+    if (isEGLSyncObject || !isRenderPassStarted)
+    {
+        return flushImpl(nullptr, RenderPassClosureReason::SyncObjectInit);
+    }
+
+    onRenderPassFinished(RenderPassClosureReason::SyncObjectInit);
+
+    // Mark the context as having a deffered flush.  This is later used to close the render pass and
+    // cause a submission in this context if another context wants to wait on the fence while the
+    // original context never issued a submission naturally.  Note that this also takes care of
+    // contexts that think they issued a submission (through glFlush) but that the submission got
+    // deferred (due to the deferFlushUntilEndRenderPass feature).
+    mHasDeferredFlush = true;
+
+    return angle::Result::Continue;
+}
+
+angle::Result ContextVk::flushCommandsAndEndRenderPassIfDeferredSyncInit(
+    RenderPassClosureReason reason)
+{
+    if (!mHasDeferredFlush)
+    {
+        return angle::Result::Continue;
+    }
+
+    return flushCommandsAndEndRenderPassImpl(QueueSubmitType::PerformQueueSubmit, reason);
 }
 
 void ContextVk::addCommandBufferDiagnostics(const std::string &commandBufferDiagnostics)

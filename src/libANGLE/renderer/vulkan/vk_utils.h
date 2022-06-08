@@ -1505,6 +1505,7 @@ enum class RenderPassClosureReason
     SyncObjectWithFdInit,
     SyncObjectClientWait,
     SyncObjectServerWait,
+    SyncObjectGetStatus,
 
     // Closures that ANGLE could have avoided, but doesn't for simplicity or optimization of more
     // common cases.

@@ -5773,6 +5773,41 @@ TEST_P(VulkanPerformanceCounterTest, Source2DAndRepeatedlyRespecifyTarget2DWithS
     eglDestroyImageKHR(window->getDisplay(), image);
 }
 
+// Test that post-render-pass-to-swapchain glFenceSync followed by eglSwapBuffers incurs only a
+// single submission.
+TEST_P(VulkanPerformanceCounterTest, FenceThenSwapBuffers)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled(kPerfMonitorExtensionName));
+    initANGLEFeatures();
+
+    angle::VulkanPerfCounters expected;
+
+    // Expect rpCount+1, depth(Clears+0, Loads+0, LoadNones+0, Stores+0, StoreNones+0),
+    setExpectedCountersForDepthOps(getPerfCounters(), 1, 0, 0, 0, 0, 0, &expected);
+    expected.vkQueueSubmitCallsTotal = getPerfCounters().vkQueueSubmitCallsTotal + 1;
+
+    // Start a render pass and render to the surface.  Enable depth write so the depth/stencil image
+    // is written to.
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_ALWAYS);
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+
+    // Issue a fence
+    glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
+
+    EXPECT_EQ(getPerfCounters().renderPasses, expected.renderPasses);
+
+    // Swap buffers.  The depth/stencil attachment's storeOp should be optimized to DONT_CARE.  This
+    // would not have been possible if the previous glFenceSync caused a submission.
+    swapBuffers();
+
+    EXPECT_EQ(getPerfCounters().vkQueueSubmitCallsTotal, expected.vkQueueSubmitCallsTotal);
+    compareDepthOpCounters(getPerfCounters(), expected);
+}
+
 ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest, ES3_VULKAN(), ES3_VULKAN_SWIFTSHADER());
 ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest_ES31, ES31_VULKAN(), ES31_VULKAN_SWIFTSHADER());
 ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest_MSAA, ES3_VULKAN(), ES3_VULKAN_SWIFTSHADER());

@@ -410,6 +410,10 @@
 7213 PIXEL4ORXL GLES : BufferDataTestES3.BufferDataWithNullFollowedByMap/* = SKIP
 7265 PIXEL4ORXL GLES : PbufferTest.BindTexImageAfterTexImage/* = SKIP
 5981 PIXEL4ORXL GLES : ComputeShaderTest.DrawDispatchImageReadDraw/* = SKIP
+7414 PIXEL4ORXL GLES : MultithreadingTest.CreateFenceThreadAClientWaitSyncThreadBDelayedFlush/* = SKIP
+7414 PIXEL4ORXL GLES : MultithreadingTestES3.ThreadB*BeforeThreadASync* = SKIP
+7414 PIXEL4ORXL GLES : MultithreadingTestES3.ThreadCWaitBeforeThreadBSyncFinish/* = SKIP
+7414 PIXEL4ORXL GLES : EGLMultiContextTest.ThreadB*BeforeThreadASync* = SKIP
 
 5946 PIXEL4ORXL VULKAN : TransformFeedbackTestES32.PrimitivesWrittenAndGenerated/* = SKIP
 5947 PIXEL4ORXL VULKAN : FramebufferFetchES31.DrawFetchBlitDrawFetch_NonCoherent/* = SKIP
