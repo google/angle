@@ -655,6 +655,10 @@
 7431 LINUX SWIFTSHADER : MultithreadingTestES3.ThreadB*BeforeThreadASyncFinish/ES3_Vulkan_SwiftShader = SKIP
 7431 LINUX SWIFTSHADER : MultithreadingTestES3.ThreadB*BeforeThreadASyncFlush/ES3_Vulkan_SwiftShader = SKIP
 
+// Timeout with SwiftShader and MAC OpenGL due to large workloads
+7389 SWIFTSHADER : Texture2DTest.ManySupersedingTextureUpdates/* = SKIP
+7389 MAC OPENGL : Texture2DTest.ManySupersedingTextureUpdates/* = SKIP
+
 // Slow tests, should appear last in this file
 5076 : GLSLTest.VerifyMaxVertexUniformVectors* = TIMEOUT
 6251 : MultithreadingTest* = TIMEOUT

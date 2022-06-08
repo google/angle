@@ -172,3 +172,5 @@
 7423 : MultithreadingTestES3.ThreadBServerWaitBeforeThreadASyncFinish/* = SKIP_FOR_CAPTURE
 7423 : MultithreadingTestES3.ThreadBServerWaitBeforeThreadASyncFlush/* = SKIP_FOR_CAPTURE
 7423 : MultithreadingTestES3.ThreadCWaitBeforeThreadBSyncFinish/* = SKIP_FOR_CAPTURE
+
+7389 : Texture2DTest.ManySupersedingTextureUpdates/* = SKIP_FOR_CAPTURE

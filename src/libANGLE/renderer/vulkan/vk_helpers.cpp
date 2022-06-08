@@ -4882,6 +4882,7 @@ ImageHelper::ImageHelper(ImageHelper &&other)
       mLayerCount(other.mLayerCount),
       mLevelCount(other.mLevelCount),
       mSubresourceUpdates(std::move(other.mSubresourceUpdates)),
+      mTotalStagedBufferUpdateSize(other.mTotalStagedBufferUpdateSize),
       mCurrentSingleClearValue(std::move(other.mCurrentSingleClearValue)),
       mContentDefined(std::move(other.mContentDefined)),
       mStencilContentDefined(std::move(other.mStencilContentDefined)),
@@ -4915,6 +4916,7 @@ void ImageHelper::resetCachedProperties()
     mFirstAllocatedLevel         = gl::LevelIndex(0);
     mLayerCount                  = 0;
     mLevelCount                  = 0;
+    mTotalStagedBufferUpdateSize = 0;
     mYcbcrConversionDesc.reset();
     mCurrentSingleClearValue.reset();
     mRenderPassUsageFlags.reset();
@@ -5301,6 +5303,7 @@ void ImageHelper::releaseStagedUpdates(RendererVk *renderer)
     ASSERT(validateSubresourceUpdateRefCountsConsistent());
 
     mSubresourceUpdates.clear();
+    mTotalStagedBufferUpdateSize = 0;
     mCurrentSingleClearValue.reset();
 }
 
@@ -6534,6 +6537,10 @@ void ImageHelper::removeSingleSubresourceStagedUpdates(ContextVk *contextVk,
         auto update = levelUpdates->begin() + index;
         if (update->isUpdateToLayers(layerIndex, layerCount))
         {
+            // Update total staging buffer size
+            mTotalStagedBufferUpdateSize -= update->updateSource == UpdateSource::Buffer
+                                                ? update->data.buffer.bufferHelper->getSize()
+                                                : 0;
             update->release(contextVk->getRenderer());
             levelUpdates->erase(update);
         }
@@ -6590,6 +6597,10 @@ void ImageHelper::removeStagedUpdates(Context *context,
 
         for (SubresourceUpdate &update : *levelUpdates)
         {
+            // Update total staging buffer size
+            mTotalStagedBufferUpdateSize -= update.updateSource == UpdateSource::Buffer
+                                                ? update.data.buffer.bufferHelper->getSize()
+                                                : 0;
             update.release(context->getRenderer());
         }
 
@@ -6836,6 +6847,7 @@ angle::Result ImageHelper::stageSubresourceUpdateImpl(ContextVk *contextVk,
         copy.imageSubresource.aspectMask = aspectFlags;
         appendSubresourceUpdate(updateLevelGL, SubresourceUpdate(stagingBuffer.get(), currentBuffer,
                                                                  copy, storageFormat.id));
+        pruneSupersededUpdatesForLevel(contextVk, updateLevelGL, PruneReason::MemoryOptimization);
     }
 
     stagingBuffer.release();
@@ -6905,6 +6917,10 @@ angle::Result ImageHelper::reformatStagedBufferUpdates(ContextVk *contextVk,
                 update.data.buffer.bufferHelper            = dstBuffer;
                 update.data.buffer.formatID                = dstFormatID;
                 update.data.buffer.copyRegion.bufferOffset = dstBufferOffset;
+
+                // Update total staging buffer size
+                mTotalStagedBufferUpdateSize -= srcBuffer->getSize();
+                mTotalStagedBufferUpdateSize += dstBuffer->getSize();
 
                 // Let update structure owns the staging buffer
                 if (update.refCounted.buffer)
@@ -7949,6 +7965,9 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
                 ANGLE_TRY(contextVk->onCopyUpdate(currentBuffer->getSize()));
                 onWrite(updateMipLevelGL, 1, updateBaseLayer, updateLayerCount,
                         copyRegion->imageSubresource.aspectMask);
+
+                // Update total staging buffer size
+                mTotalStagedBufferUpdateSize -= bufferUpdate.bufferHelper->getSize();
             }
             else
             {
@@ -7989,6 +8008,7 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
     // If no updates left, release the staging buffers to save memory.
     if (mSubresourceUpdates.empty())
     {
+        ASSERT(mTotalStagedBufferUpdateSize == 0);
         onStateChange(angle::SubjectMessage::InitializationComplete);
     }
 
@@ -8186,111 +8206,115 @@ bool ImageHelper::validateSubresourceUpdateRefCountsConsistent() const
     return true;
 }
 
-void ImageHelper::removeSupersededUpdates(ContextVk *contextVk, gl::TexLevelMask skipLevelsMask)
+void ImageHelper::pruneSupersededUpdatesForLevel(ContextVk *contextVk,
+                                                 const gl::LevelIndex level,
+                                                 const PruneReason reason)
 {
-    if (mLayerCount > 64)
+    constexpr VkDeviceSize kSubresourceUpdateSizeBeforePruning = 16 * 1024 * 1024;  // 16 MB
+    constexpr int kUpdateCountThreshold                        = 1024;
+    std::vector<ImageHelper::SubresourceUpdate> *levelUpdates  = getLevelUpdates(level);
+
+    // If we are below pruning threshold, nothing to do.
+    const int updateCount      = static_cast<int>(levelUpdates->size());
+    const bool withinThreshold = updateCount < kUpdateCountThreshold &&
+                                 mTotalStagedBufferUpdateSize < kSubresourceUpdateSizeBeforePruning;
+    if (updateCount == 1 || (reason == PruneReason::MemoryOptimization && withinThreshold))
     {
-        // Not implemented for images with more than 64 layers.  A 64-bit mask is used for
-        // efficiency, hence the limit.
         return;
     }
 
-    ASSERT(validateSubresourceUpdateRefCountsConsistent());
+    // Start from the most recent update and define a boundingBox that covers the region to be
+    // updated. Walk through all earlier updates and if its update region is contained within the
+    // boundingBox, mark it as superseded, otherwise reset the boundingBox and continue.
+    //
+    // Color, depth and stencil are the only types supported for now. The boundingBox for color and
+    // depth types is at index 0 and index 1 has the boundingBox for stencil type.
+    VkDeviceSize supersededUpdateSize  = 0;
+    std::array<gl::Box, 2> boundingBox = {gl::Box(gl::kOffsetZero, gl::Extents())};
 
-    RendererVk *renderer = contextVk->getRenderer();
+    auto canDropUpdate = [this, contextVk, level, &supersededUpdateSize,
+                          &boundingBox](SubresourceUpdate &update) {
+        VkDeviceSize updateSize       = 0;
+        VkImageAspectFlags aspectMask = update.getDestAspectFlags();
+        gl::Box currentUpdateBox(gl::kOffsetZero, gl::Extents());
 
-    // Go over updates in reverse order, and mark the layers they completely overwrite.  If an
-    // update is encountered whose layers are all already marked, that update is superseded by
-    // future updates, so it can be dropped.  This tracking is done per level.  If the aspect being
-    // written to is color/depth or stencil, index 0 or 1 is used respectively.  This is so
-    // that if a depth write for example covers the whole subresource, a stencil write to that same
-    // subresource is not dropped.
-    constexpr size_t kIndexColorOrDepth = 0;
-    constexpr size_t kIndexStencil      = 1;
-    uint64_t supersededLayers[2]        = {};
-
-    gl::Extents levelExtents = {};
-
-    // Note: this lambda only needs |this|, but = is specified because clang warns about kIndex* not
-    // needing capture, while MSVC fails to compile without capturing them.
-    auto markLayersAndDropSuperseded = [=, &supersededLayers,
-                                        &levelExtents](SubresourceUpdate &update) {
-        uint32_t updateBaseLayer, updateLayerCount;
-        update.getDestSubresource(mLayerCount, &updateBaseLayer, &updateLayerCount);
-
-        const VkImageAspectFlags aspectMask = update.getDestAspectFlags();
-        const bool hasColorOrDepth =
+        const bool isColor =
             (aspectMask & (VK_IMAGE_ASPECT_COLOR_BIT | VK_IMAGE_ASPECT_PLANE_0_BIT |
-                           VK_IMAGE_ASPECT_PLANE_1_BIT | VK_IMAGE_ASPECT_PLANE_2_BIT |
-                           VK_IMAGE_ASPECT_DEPTH_BIT)) != 0;
-        const bool hasStencil = (aspectMask & VK_IMAGE_ASPECT_STENCIL_BIT) != 0;
-
-        // Test if the update is to layers that are all superseded.  In that case, drop the update.
-        ASSERT(updateLayerCount <= 64);
-        uint64_t updateLayersMask = updateLayerCount >= 64
-                                        ? ~static_cast<uint64_t>(0)
-                                        : angle::BitMask<uint64_t>(updateLayerCount);
-        updateLayersMask <<= updateBaseLayer;
-
-        const bool isColorOrDepthSuperseded =
-            !hasColorOrDepth ||
-            (supersededLayers[kIndexColorOrDepth] & updateLayersMask) == updateLayersMask;
-        const bool isStencilSuperseded =
-            !hasStencil || (supersededLayers[kIndexStencil] & updateLayersMask) == updateLayersMask;
-
-        if (isColorOrDepthSuperseded && isStencilSuperseded)
-        {
-            ANGLE_VK_PERF_WARNING(contextVk, GL_DEBUG_SEVERITY_LOW,
-                                  "Dropped image update that is superseded by an overlapping one");
-
-            update.release(renderer);
-            return true;
-        }
-
-        // Get the area this update affects.  Note that clear updates always clear the whole
-        // subresource.
-        gl::Box updateBox(gl::kOffsetZero, levelExtents);
+                           VK_IMAGE_ASPECT_PLANE_1_BIT | VK_IMAGE_ASPECT_PLANE_2_BIT)) != 0;
+        const bool isDepth   = (aspectMask & VK_IMAGE_ASPECT_DEPTH_BIT) != 0;
+        const bool isStencil = (aspectMask & VK_IMAGE_ASPECT_STENCIL_BIT) != 0;
+        ASSERT(isColor || isDepth || isStencil);
+        int aspectIndex = (isColor || isDepth) ? 0 : 1;
 
         if (update.updateSource == UpdateSource::Buffer)
         {
-            updateBox = gl::Box(update.data.buffer.copyRegion.imageOffset,
-                                update.data.buffer.copyRegion.imageExtent);
+            currentUpdateBox = gl::Box(update.data.buffer.copyRegion.imageOffset,
+                                       update.data.buffer.copyRegion.imageExtent);
+            updateSize       = update.data.buffer.bufferHelper->getSize();
         }
         else if (update.updateSource == UpdateSource::Image)
         {
-            updateBox = gl::Box(update.data.image.copyRegion.dstOffset,
-                                update.data.image.copyRegion.extent);
+            currentUpdateBox = gl::Box(update.data.image.copyRegion.dstOffset,
+                                       update.data.image.copyRegion.extent);
         }
-
-        // Only if the update is to the whole subresource, mark its layers.
-        if (updateBox.coversSameExtent(levelExtents))
+        else
         {
-            if (hasColorOrDepth)
-            {
-                supersededLayers[kIndexColorOrDepth] |= updateLayersMask;
-            }
-            if (hasStencil)
-            {
-                supersededLayers[kIndexStencil] |= updateLayersMask;
-            }
+            ASSERT(IsClear(update.updateSource));
+            currentUpdateBox = gl::Box(gl::kOffsetZero, getLevelExtents(toVkLevel(level)));
         }
 
-        return false;
+        // Account for updates to layered images
+        uint32_t layerIndex = 0;
+        uint32_t layerCount = 0;
+        update.getDestSubresource(mLayerCount, &layerIndex, &layerCount);
+        if (layerIndex > 0 || layerCount > 1)
+        {
+            currentUpdateBox.z     = layerIndex;
+            currentUpdateBox.depth = layerCount;
+        }
+
+        // Check if current update region is superseded by the accumulated update region
+        if (boundingBox[aspectIndex].contains(currentUpdateBox))
+        {
+            ANGLE_VK_PERF_WARNING(contextVk, GL_DEBUG_SEVERITY_LOW,
+                                  "Dropped update that is superseded by a more recent one");
+
+            // Release the superseded update
+            update.release(contextVk->getRenderer());
+
+            // Update pruning size
+            supersededUpdateSize += updateSize;
+
+            return true;
+        }
+        else
+        {
+            // Reset boundingBox to current update's value
+            boundingBox[aspectIndex] = currentUpdateBox;
+            return false;
+        }
     };
+
+    levelUpdates->erase(
+        levelUpdates->begin(),
+        std::remove_if(levelUpdates->rbegin(), levelUpdates->rend(), canDropUpdate).base());
+
+    // Update total staging buffer size
+    mTotalStagedBufferUpdateSize -= supersededUpdateSize;
+}
+
+void ImageHelper::removeSupersededUpdates(ContextVk *contextVk, gl::TexLevelMask skipLevelsMask)
+{
+    ASSERT(validateSubresourceUpdateRefCountsConsistent());
 
     for (LevelIndex levelVk(0); levelVk < LevelIndex(mLevelCount); ++levelVk)
     {
         gl::LevelIndex levelGL                       = toGLLevel(levelVk);
         std::vector<SubresourceUpdate> *levelUpdates = getLevelUpdates(levelGL);
-        if (levelUpdates == nullptr)
+        if (levelUpdates == nullptr || levelUpdates->size() == 0 ||
+            skipLevelsMask.test(levelGL.get()))
         {
-            ASSERT(static_cast<size_t>(levelGL.get()) >= mSubresourceUpdates.size());
-            break;
-        }
-
-        // If level is skipped (because incompatibly redefined), don't remove any of its updates.
-        if (skipLevelsMask.test(levelGL.get()))
-        {
+            // There are no valid updates to process, continue.
             continue;
         }
 
@@ -8298,14 +8322,7 @@ void ImageHelper::removeSupersededUpdates(ContextVk *contextVk, gl::TexLevelMask
         // They don't entirely clear the image, so they cannot supersede any update.
         ASSERT(verifyEmulatedClearsAreBeforeOtherUpdates(*levelUpdates));
 
-        levelExtents                         = getLevelExtents(levelVk);
-        supersededLayers[kIndexColorOrDepth] = 0;
-        supersededLayers[kIndexStencil]      = 0;
-
-        levelUpdates->erase(levelUpdates->rend().base(),
-                            std::remove_if(levelUpdates->rbegin(), levelUpdates->rend(),
-                                           markLayersAndDropSuperseded)
-                                .base());
+        pruneSupersededUpdatesForLevel(contextVk, levelGL, PruneReason::MinimizeWorkBeforeFlush);
     }
 
     ASSERT(validateSubresourceUpdateRefCountsConsistent());
@@ -9098,6 +9115,10 @@ void ImageHelper::appendSubresourceUpdate(gl::LevelIndex level, SubresourceUpdat
         mSubresourceUpdates.resize(level.get() + 1);
     }
 
+    // Update total staging buffer size
+    mTotalStagedBufferUpdateSize += update.updateSource == UpdateSource::Buffer
+                                        ? update.data.buffer.bufferHelper->getSize()
+                                        : 0;
     mSubresourceUpdates[level.get()].emplace_back(std::move(update));
     onStateChange(angle::SubjectMessage::SubjectChanged);
 }
@@ -9109,6 +9130,10 @@ void ImageHelper::prependSubresourceUpdate(gl::LevelIndex level, SubresourceUpda
         mSubresourceUpdates.resize(level.get() + 1);
     }
 
+    // Update total staging buffer size
+    mTotalStagedBufferUpdateSize += update.updateSource == UpdateSource::Buffer
+                                        ? update.data.buffer.bufferHelper->getSize()
+                                        : 0;
     mSubresourceUpdates[level.get()].insert(mSubresourceUpdates[level.get()].begin(),
                                             std::move(update));
     onStateChange(angle::SubjectMessage::SubjectChanged);
