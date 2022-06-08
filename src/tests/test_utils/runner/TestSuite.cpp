@@ -499,7 +499,8 @@ std::string GetTestFilter(const std::vector<TestIdentifier> &tests)
             filterStream << ":";
         }
 
-        filterStream << tests[testIndex];
+        filterStream << ReplaceDashesWithQuestionMark(tests[testIndex].testSuiteName) << "."
+                     << ReplaceDashesWithQuestionMark(tests[testIndex].testName);
     }
 
     return filterStream.str();
@@ -1018,7 +1019,9 @@ class TestSuite::TestEventListener : public testing::EmptyTestEventListener
     TestSuite *mTestSuite;
 };
 
-TestSuite::TestSuite(int *argc, char **argv)
+TestSuite::TestSuite(int *argc, char **argv) : TestSuite(argc, argv, []() {}) {}
+
+TestSuite::TestSuite(int *argc, char **argv, std::function<void()> registerTestsCallback)
     : mShardCount(-1),
       mShardIndex(-1),
       mBotMode(false),
@@ -1111,6 +1114,8 @@ TestSuite::TestSuite(int *argc, char **argv)
         mCrashCallback = [this]() { onCrashOrTimeout(TestResultType::Crash); };
         InitCrashHandler(&mCrashCallback);
     }
+
+    registerTestsCallback();
 
     std::string envShardIndex = angle::GetEnvironmentVar("GTEST_SHARD_INDEX");
     if (!envShardIndex.empty())
@@ -2071,5 +2076,15 @@ const char *TestResultTypeToString(TestResultType type)
         default:
             return "Unknown";
     }
+}
+
+// This code supports using "-" in test names, which happens often in dEQP. GTest uses as a marker
+// for the beginning of the exclusion filter. Work around this by replacing "-" with "?" which
+// matches any single character.
+std::string ReplaceDashesWithQuestionMark(std::string dashesString)
+{
+    std::string noDashesString = dashesString;
+    ReplaceAllSubstrings(&noDashesString, "-", "?");
+    return noDashesString;
 }
 }  // namespace angle
