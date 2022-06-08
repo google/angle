@@ -5708,6 +5708,71 @@ TEST_P(VulkanPerformanceCounterTest, SetTextureSwizzleWithDifferentValueOnFBOAtt
     EXPECT_EQ(framebufferCacheSizeIncrease, 1);
 }
 
+// Test calling glEGLImageTargetTexture2DOES repeatedly with same arguments will not leak
+// DescriptorSets. This is the same usage pattern surafceflinger is doing with notification shades
+// except with AHB.
+TEST_P(VulkanPerformanceCounterTest, Source2DAndRepeatedlyRespecifyTarget2DWithSameParameter)
+{
+    EGLWindow *window = getEGLWindow();
+    EGLDisplay dpy    = window->getDisplay();
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_EGL_image") ||
+                       !IsEGLDisplayExtensionEnabled(dpy, "EGL_KHR_image_base") ||
+                       !IsEGLDisplayExtensionEnabled(dpy, "EGL_KHR_gl_texture_2D_image"));
+
+    ANGLE_GL_PROGRAM(textureProgram, essl1_shaders::vs::Texture2D(),
+                     essl1_shaders::fs::Texture2D());
+
+    // Create a source 2D texture
+    GLTexture sourceTexture;
+    glBindTexture(GL_TEXTURE_2D, sourceTexture);
+    GLubyte kLinearColor[] = {132, 55, 219, 255};
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 static_cast<void *>(&kLinearColor));
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+    // Create an eglImage from the source texture
+    constexpr EGLint kDefaultAttribs[] = {EGL_IMAGE_PRESERVED, EGL_TRUE, EGL_NONE};
+    EGLClientBuffer clientBuffer =
+        reinterpret_cast<EGLClientBuffer>(static_cast<size_t>(sourceTexture.get()));
+    EGLImageKHR image = eglCreateImageKHR(window->getDisplay(), window->getContext(),
+                                          EGL_GL_TEXTURE_2D_KHR, clientBuffer, kDefaultAttribs);
+    ASSERT_EGL_SUCCESS();
+
+    // Create the target in a loop
+    GLTexture targetTexture;
+    constexpr size_t kMaxLoop = 2;
+    GLint textureDescriptorSetCacheTotalSizeBefore =
+        getPerfCounters().textureDescriptorSetCacheTotalSize;
+    for (size_t loop = 0; loop < kMaxLoop; loop++)
+    {
+        //  Create a target texture from the image
+        glBindTexture(GL_TEXTURE_2D, targetTexture);
+        glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, image);
+
+        // Disable mipmapping
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+        // Draw a quad with the target texture
+        glBindTexture(GL_TEXTURE_2D, targetTexture);
+        drawQuad(textureProgram.get(), std::string(essl1_shaders::PositionAttrib()), 0.0f);
+        // Expect that the rendered quad's color is the same as the reference color with a tolerance
+        // of 1
+        EXPECT_PIXEL_NEAR(0, 0, kLinearColor[0], kLinearColor[1], kLinearColor[2], kLinearColor[3],
+                          1);
+    }
+    GLint textureDescriptorSetCacheTotalSizeIncrease =
+        getPerfCounters().textureDescriptorSetCacheTotalSize -
+        textureDescriptorSetCacheTotalSizeBefore;
+
+    // We don't expect descriptorSet cache to keep growing
+    EXPECT_EQ(1, textureDescriptorSetCacheTotalSizeIncrease);
+
+    // Clean up
+    eglDestroyImageKHR(window->getDisplay(), image);
+}
+
 ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest, ES3_VULKAN(), ES3_VULKAN_SWIFTSHADER());
 ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest_ES31, ES31_VULKAN(), ES31_VULKAN_SWIFTSHADER());
 ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest_MSAA, ES3_VULKAN(), ES3_VULKAN_SWIFTSHADER());
