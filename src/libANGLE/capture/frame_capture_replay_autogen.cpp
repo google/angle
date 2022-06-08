@@ -749,9 +749,10 @@ void FrameCaptureShared::ReplayCall(gl::Context *context,
             break;
         case angle::EntryPoint::GLDrawElementsInstancedBaseInstance:
             context->drawElementsInstancedBaseInstance(
-                params.getParam("mode", ParamType::TGLenum, 0).value.GLenumVal,
+                params.getParam("modePacked", ParamType::TPrimitiveMode, 0).value.PrimitiveModeVal,
                 params.getParam("count", ParamType::TGLsizei, 1).value.GLsizeiVal,
-                params.getParam("type", ParamType::TGLenum, 2).value.GLenumVal,
+                params.getParam("typePacked", ParamType::TDrawElementsType, 2)
+                    .value.DrawElementsTypeVal,
                 replayContext->getAsConstPointer<const void *>(
                     params.getParam("indices", ParamType::TvoidConstPointer, 3)),
                 params.getParam("instancecount", ParamType::TGLsizei, 4).value.GLsizeiVal,

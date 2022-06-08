@@ -1681,6 +1681,7 @@ void GenerateCaps(ID3D11Device *device,
     extensions->blendFuncExtendedEXT    = true;
     // http://anglebug.com/4926
     extensions->texture3DOES                             = false;
+    extensions->baseInstanceEXT                          = true;
     extensions->baseVertexBaseInstanceANGLE              = true;
     extensions->baseVertexBaseInstanceShaderBuiltinANGLE = true;
     extensions->drawElementsBaseVertexOES                = true;

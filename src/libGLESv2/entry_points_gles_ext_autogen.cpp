@@ -4308,18 +4308,21 @@ void GL_APIENTRY GL_DrawElementsInstancedBaseInstanceEXT(GLenum mode,
 
     if (context)
     {
+        PrimitiveMode modePacked                              = PackParam<PrimitiveMode>(mode);
+        DrawElementsType typePacked                           = PackParam<DrawElementsType>(type);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateDrawElementsInstancedBaseInstanceEXT(
-                                                                     context, angle::EntryPoint::GLDrawElementsInstancedBaseInstanceEXT,
-                                                                     mode, count, type, indices, instancecount, baseinstance));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateDrawElementsInstancedBaseInstanceEXT(
+                 context, angle::EntryPoint::GLDrawElementsInstancedBaseInstanceEXT, modePacked,
+                 count, typePacked, indices, instancecount, baseinstance));
         if (isCallValid)
         {
-            context->drawElementsInstancedBaseInstance(mode, count, type, indices, instancecount,
-                                                       baseinstance);
+            context->drawElementsInstancedBaseInstance(modePacked, count, typePacked, indices,
+                                                       instancecount, baseinstance);
         }
-        ANGLE_CAPTURE_GL(DrawElementsInstancedBaseInstanceEXT, isCallValid, context, mode, count,
-                         type, indices, instancecount, baseinstance);
+        ANGLE_CAPTURE_GL(DrawElementsInstancedBaseInstanceEXT, isCallValid, context, modePacked,
+                         count, typePacked, indices, instancecount, baseinstance);
     }
     else
     {

@@ -3641,12 +3641,13 @@ angle::Result ContextVk::drawElementsInstancedBaseVertexBaseInstance(const gl::C
     {
         uint32_t indexCount;
         ANGLE_TRY(setupLineLoopDraw(context, mode, 0, count, type, indices, &indexCount));
-        mRenderPassCommandBuffer->drawIndexedInstancedBaseVertexBaseInstance(
-            indexCount, instances, 0, baseVertex, baseInstance);
-        return angle::Result::Continue;
+        count = indexCount;
+    }
+    else
+    {
+        ANGLE_TRY(setupIndexedDraw(context, mode, count, instances, type, indices));
     }
 
-    ANGLE_TRY(setupIndexedDraw(context, mode, count, instances, type, indices));
     mRenderPassCommandBuffer->drawIndexedInstancedBaseVertexBaseInstance(count, instances, 0,
                                                                          baseVertex, baseInstance);
     return angle::Result::Continue;

@@ -989,9 +989,9 @@ bool ValidateDrawArraysInstancedBaseInstanceEXT(const Context *context,
                                                 GLuint baseinstance);
 bool ValidateDrawElementsInstancedBaseInstanceEXT(const Context *context,
                                                   angle::EntryPoint entryPoint,
-                                                  GLenum mode,
+                                                  PrimitiveMode modePacked,
                                                   GLsizei count,
-                                                  GLenum type,
+                                                  DrawElementsType typePacked,
                                                   const void *indices,
                                                   GLsizei instancecount,
                                                   GLuint baseinstance);

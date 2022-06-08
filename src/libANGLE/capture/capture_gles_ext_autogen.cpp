@@ -5100,26 +5100,26 @@ CallCapture CaptureDrawArraysInstancedBaseInstanceEXT(const State &glState,
 
 CallCapture CaptureDrawElementsInstancedBaseInstanceEXT(const State &glState,
                                                         bool isCallValid,
-                                                        GLenum mode,
+                                                        PrimitiveMode modePacked,
                                                         GLsizei count,
-                                                        GLenum type,
+                                                        DrawElementsType typePacked,
                                                         const void *indices,
                                                         GLsizei instancecount,
                                                         GLuint baseinstance)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addEnumParam("mode", GLenumGroup::PrimitiveType, ParamType::TGLenum, mode);
+    paramBuffer.addValueParam("modePacked", ParamType::TPrimitiveMode, modePacked);
     paramBuffer.addValueParam("count", ParamType::TGLsizei, count);
-    paramBuffer.addEnumParam("type", GLenumGroup::PrimitiveType, ParamType::TGLenum, type);
+    paramBuffer.addValueParam("typePacked", ParamType::TDrawElementsType, typePacked);
 
     if (isCallValid)
     {
         ParamCapture indicesParam("indices", ParamType::TvoidConstPointer);
         InitParamValue(ParamType::TvoidConstPointer, indices, &indicesParam.value);
-        CaptureDrawElementsInstancedBaseInstanceEXT_indices(glState, isCallValid, mode, count, type,
-                                                            indices, instancecount, baseinstance,
-                                                            &indicesParam);
+        CaptureDrawElementsInstancedBaseInstanceEXT_indices(glState, isCallValid, modePacked, count,
+                                                            typePacked, indices, instancecount,
+                                                            baseinstance, &indicesParam);
         paramBuffer.addParam(std::move(indicesParam));
     }
     else

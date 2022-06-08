@@ -85,9 +85,9 @@
     /* GL_EXT_base_instance */                                                                     \
     void drawArraysInstancedBaseInstance(PrimitiveMode modePacked, GLint first, GLsizei count,     \
                                          GLsizei instancecount, GLuint baseinstance);              \
-    void drawElementsInstancedBaseInstance(GLenum mode, GLsizei count, GLenum type,                \
-                                           const void *indices, GLsizei instancecount,             \
-                                           GLuint baseinstance);                                   \
+    void drawElementsInstancedBaseInstance(PrimitiveMode modePacked, GLsizei count,                \
+                                           DrawElementsType typePacked, const void *indices,       \
+                                           GLsizei instancecount, GLuint baseinstance);            \
     void drawElementsInstancedBaseVertexBaseInstance(                                              \
         PrimitiveMode modePacked, GLsizei count, DrawElementsType typePacked, const void *indices, \
         GLsizei instancecount, GLint basevertex, GLuint baseinstance);                             \

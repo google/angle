@@ -3858,11 +3858,8 @@ bool ValidateDrawArraysInstancedBaseInstanceANGLE(const Context *context,
         context->validationError(entryPoint, GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
     }
-    if (!ValidateDrawArraysInstancedBase(context, entryPoint, mode, first, count, instanceCount))
-    {
-        return false;
-    }
-    return true;
+
+    return ValidateDrawArraysInstancedBase(context, entryPoint, mode, first, count, instanceCount);
 }
 
 bool ValidateDrawElementsInstancedBaseVertexBaseInstanceANGLE(const Context *context,
@@ -3880,12 +3877,9 @@ bool ValidateDrawElementsInstancedBaseVertexBaseInstanceANGLE(const Context *con
         context->validationError(entryPoint, GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
     }
-    if (!ValidateDrawElementsInstancedBase(context, entryPoint, mode, count, type, indices,
-                                           instanceCount))
-    {
-        return false;
-    }
-    return true;
+
+    return ValidateDrawElementsInstancedBase(context, entryPoint, mode, count, type, indices,
+                                             instanceCount);
 }
 
 bool ValidateMultiDrawArraysInstancedBaseInstanceANGLE(const Context *context,

@@ -6769,14 +6769,15 @@ void Context::drawArraysInstancedBaseInstanceANGLE(PrimitiveMode mode,
     drawArraysInstancedBaseInstance(mode, first, count, instanceCount, baseInstance);
 }
 
-void Context::drawElementsInstancedBaseInstance(GLenum mode,
+void Context::drawElementsInstancedBaseInstance(PrimitiveMode mode,
                                                 GLsizei count,
-                                                GLenum type,
+                                                DrawElementsType type,
                                                 const void *indices,
-                                                GLsizei instancecount,
-                                                GLuint baseinstance)
+                                                GLsizei instanceCount,
+                                                GLuint baseInstance)
 {
-    UNIMPLEMENTED();
+    drawElementsInstancedBaseVertexBaseInstance(mode, count, type, indices, instanceCount, 0,
+                                                baseInstance);
 }
 
 void Context::drawElementsInstancedBaseVertexBaseInstance(PrimitiveMode mode,
