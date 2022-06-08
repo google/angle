@@ -174,7 +174,6 @@ class TracePerfTest : public ANGLERenderTest
     std::vector<QueryInfo> mRunningQueries;
     std::vector<TimeSample> mTimeline;
 
-    std::string mStartingDirectory;
     bool mUseTimestampQueries                                           = false;
     static constexpr int mMaxOffscreenBufferCount                       = 2;
     std::array<GLuint, mMaxOffscreenBufferCount> mOffscreenFramebuffers = {0, 0};
@@ -1271,19 +1270,10 @@ void TracePerfTest::initializeBenchmark()
 {
     const TraceInfo &traceInfo = mParams.traceInfo;
 
-    mStartingDirectory = angle::GetCWD().value();
-
     std::stringstream traceNameStr;
     traceNameStr << "angle_restricted_traces_" << traceInfo.name;
     std::string traceName = traceNameStr.str();
     mTraceLibrary.reset(new TraceLibrary(traceName.c_str()));
-
-    // To load the trace data path correctly we set the CWD to the executable dir.
-    if (!IsAndroid())
-    {
-        std::string exeDir = angle::GetExecutableDirectory();
-        angle::SetCWD(exeDir.c_str());
-    }
 
     trace_angle::LoadEGL(TraceLoadProc);
     trace_angle::LoadGLES(TraceLoadProc);
@@ -1400,9 +1390,6 @@ void TracePerfTest::destroyBenchmark()
 
     mTraceLibrary->finishReplay();
     mTraceLibrary.reset(nullptr);
-
-    // In order for the next test to load, restore the working directory
-    angle::SetCWD(mStartingDirectory.c_str());
 }
 
 void TracePerfTest::sampleTime()
@@ -2053,15 +2040,6 @@ using PV = std::vector<P>;
 
 void RegisterTraceTests()
 {
-    // To load the trace data path correctly we set the CWD to the executable dir.
-    std::string previousCWD;
-    if (!IsAndroid())
-    {
-        previousCWD        = GetCWD().value();
-        std::string exeDir = GetExecutableDirectory();
-        SetCWD(exeDir.c_str());
-    }
-
     char rootTracePath[kMaxPath] = {};
     if (!FindRootTraceTestDataPath(rootTracePath, kMaxPath))
     {
@@ -2147,10 +2125,5 @@ void RegisterTraceTests()
         std::string testName = testNameStr.str();
         testing::RegisterTest("TracePerfTest", testName.c_str(), nullptr, paramName.c_str(),
                               __FILE__, __LINE__, factory);
-    }
-
-    if (!previousCWD.empty())
-    {
-        SetCWD(previousCWD.c_str());
     }
 }
