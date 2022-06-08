@@ -1720,4 +1720,107 @@ TEST_P(PixelLocalStorageTest, MaxCapacity)
     ASSERT_GL_NO_ERROR();
 }
 
+// Check that the pls is preserved when a shader does not call pixelLocalStore(). (Whether that's
+// because a conditional branch failed or because the shader didn't write to it at all.) It's
+// conceivable that an implementation may need to be careful to preserve the pls contents in this
+// scenario.
+//
+// Also check that a pixelLocalLoad() of an r32f texture returns (r, 0, 0, 1).
+TEST_P(PixelLocalStorageTest, LoadOnly)
+{
+    ANGLE_SKIP_TEST_IF(!supportsPixelLocalStorage());
+
+    PixelLocalStoragePrototype pls;
+
+    PLSTestTexture tex(GL_RGBA8);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferPixelLocalStorageANGLE(0, 0 /*Memoryless*/, 0, 0, W, H, GL_R32F);
+    glFramebufferPixelLocalStorageANGLE(1, tex, 0, 0, W, H, GL_RGBA8);
+    glViewport(0, 0, W, H);
+    glDrawBuffers(0, nullptr);
+
+    // Leave unit 0 with the default clear value of zero.
+    glFramebufferPixelLocalClearValuefvANGLE(1, MakeArray<float>({0, 1, 0, 0}));
+    glBeginPixelLocalStorageANGLE(2, GLenumArray({GL_REPLACE, GL_REPLACE}));
+
+    // Pass 1: draw to memoryless conditionally.
+    useProgram(R"(
+    PIXEL_LOCAL_DECL(memoryless, binding=0, r32f);
+    void main()
+    {
+        // Omit braces on the 'if' to ensure proper insertion of memoryBarriers in the translator.
+        if (gl_FragCoord.x < 64.0)
+            pixelLocalStore(memoryless, vec4(1, -.1, .2, -.3));  // Only stores r.
+    })");
+    drawBoxes(pls, {{FULLSCREEN}});
+
+    // Pass 2: draw to tex conditionally.
+    useProgram(R"(
+    PIXEL_LOCAL_DECL(tex, binding=1, rgba8);
+    void main()
+    {
+        // Omit braces on the 'if' to ensure proper insertion of memoryBarriers in the translator.
+        if (gl_FragCoord.y < 64.0)
+            pixelLocalStore(tex, vec4(0, 1, 1, 0));
+    })");
+    drawBoxes(pls, {{FULLSCREEN}});
+
+    // Pass 3: combine memoryless and tex.
+    useProgram(R"(
+    PIXEL_LOCAL_DECL(memoryless, binding=0, r32f);
+    PIXEL_LOCAL_DECL(tex, binding=1, rgba8);
+    void main()
+    {
+        pixelLocalStore(tex, pixelLocalLoad(tex) + pixelLocalLoad(memoryless));
+    })");
+    drawBoxes(pls, {{FULLSCREEN}});
+
+    glEndPixelLocalStorageANGLE();
+
+    attachTextureToScratchFBO(tex);
+    EXPECT_PIXEL_RECT_EQ(0, 0, 64, 64, GLColor(255, 255, 255, 255));
+    EXPECT_PIXEL_RECT_EQ(64, 0, W - 64, 64, GLColor(0, 255, 255, 255));
+    EXPECT_PIXEL_RECT_EQ(0, 64, 64, H - 64, GLColor(255, 255, 0, 255));
+    EXPECT_PIXEL_RECT_EQ(64, 64, W - 64, H - 64, GLColor(0, 255, 0, 255));
+
+    ASSERT_GL_NO_ERROR();
+
+    // Now treat "tex" as entirely readonly for an entire local storage render pass.
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    PLSTestTexture rttex(GL_RGBA8);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, rttex, 0);
+    glDrawBuffers(1, GLenumArray({GL_COLOR_ATTACHMENT0}));
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    glBeginPixelLocalStorageANGLE(2, GLenumArray({GL_DISABLED_ANGLE, GL_KEEP}));
+
+    useProgram(R"(
+    PIXEL_LOCAL_DECL(tex, binding=1, rgba8);
+    out vec4 fragcolor;
+    void main()
+    {
+        fragcolor = 1.0 - pixelLocalLoad(tex);
+    })");
+    drawBoxes(pls, {{FULLSCREEN}});
+
+    glEndPixelLocalStorageANGLE();
+
+    // Ensure "tex" was properly read in the shader.
+    EXPECT_PIXEL_RECT_EQ(0, 0, 64, 64, GLColor(0, 0, 0, 0));
+    EXPECT_PIXEL_RECT_EQ(64, 0, W - 64, 64, GLColor(255, 0, 0, 0));
+    EXPECT_PIXEL_RECT_EQ(0, 64, 64, H - 64, GLColor(0, 0, 255, 0));
+    EXPECT_PIXEL_RECT_EQ(64, 64, W - 64, H - 64, GLColor(255, 0, 255, 0));
+
+    // Ensure "tex" was preserved after the shader.
+    attachTextureToScratchFBO(tex);
+    EXPECT_PIXEL_RECT_EQ(0, 0, 64, 64, GLColor(255, 255, 255, 255));
+    EXPECT_PIXEL_RECT_EQ(64, 0, W - 64, 64, GLColor(0, 255, 255, 255));
+    EXPECT_PIXEL_RECT_EQ(0, 64, 64, H - 64, GLColor(255, 255, 0, 255));
+    EXPECT_PIXEL_RECT_EQ(64, 64, W - 64, H - 64, GLColor(0, 255, 0, 255));
+
+    ASSERT_GL_NO_ERROR();
+}
+
 ANGLE_INSTANTIATE_TEST_ES31(PixelLocalStorageTest);
