@@ -416,14 +416,13 @@ void AppendWidgetDataHelper::AppendVulkanRenderPassBufferCount(const overlay::Wi
                                                                GraphWidgetData *graphWidget,
                                                                OverlayWidgetCounts *widgetCounts)
 {
-    auto format = [](size_t peakRange, size_t maxValueRange, size_t numRanges) {
+    auto format = [](uint64_t curValue, uint64_t maxValue) {
         std::ostringstream text;
-        text << "RP VkBuffers (Peak: " << peakRange << ", Max: " << maxValueRange << ")";
+        text << "RP VkBuffers (Max: " << maxValue << ")";
         return text.str();
     };
 
-    AppendRunningHistogramCommon(widget, imageExtent, textWidget, graphWidget, widgetCounts,
-                                 format);
+    AppendRunningGraphCommon(widget, imageExtent, textWidget, graphWidget, widgetCounts, format);
 }
 
 void AppendWidgetDataHelper::AppendVulkanWriteDescriptorSetCount(const overlay::Widget *widget,

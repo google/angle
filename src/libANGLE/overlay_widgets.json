@@ -76,7 +76,7 @@
         {
             "name": "VulkanRenderPassBufferCount",
             "comment": "Number of buffers used in RenderPasses (Count).",
-            "type": "RunningHistogram(100)",
+            "type": "RunningGraph(100)",
             "color": [255, 200, 75, 200],
             "coords": [-50, 100],
             "bar_width": 6,

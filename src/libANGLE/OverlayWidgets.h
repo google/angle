@@ -164,6 +164,7 @@ class RunningHistogram : public RunningGraph
   public:
     RunningHistogram(size_t n) : RunningGraph(n) {}
     ~RunningHistogram() override {}
+
     void set(float n)
     {
         ASSERT(n >= 0.0f && n <= 1.0f);
@@ -172,6 +173,10 @@ class RunningHistogram : public RunningGraph
 
         runningValues[lastValueIndex] = rank;
     }
+
+  private:
+    // Do not use the add() function from RunningGraph
+    using RunningGraph::add;
 };
 
 // If overlay is disabled, all the above classes would be replaced with Mock, turning them into

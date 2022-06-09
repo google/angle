@@ -152,7 +152,7 @@ void Overlay::initOverlayWidgets()
     }
 
     {
-        RunningHistogram *widget = new RunningHistogram(100);
+        RunningGraph *widget = new RunningGraph(100);
         {
             const int32_t fontSize = GetFontSize(0, kLargeFont);
             const int32_t offsetX  = -50;
@@ -160,7 +160,7 @@ void Overlay::initOverlayWidgets()
             const int32_t width    = 6 * static_cast<uint32_t>(widget->runningValues.size());
             const int32_t height   = 100;
 
-            widget->type          = WidgetType::RunningHistogram;
+            widget->type          = WidgetType::RunningGraph;
             widget->fontSize      = fontSize;
             widget->coords[0]     = offsetX - width;
             widget->coords[1]     = offsetY;

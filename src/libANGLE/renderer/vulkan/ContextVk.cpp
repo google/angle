@@ -3021,8 +3021,8 @@ void ContextVk::addOverlayUsedBuffersCount(vk::CommandBufferHelperCommon *comman
         return;
     }
 
-    gl::RunningHistogramWidget *widget =
-        overlay->getRunningHistogramWidget(gl::WidgetId::VulkanRenderPassBufferCount);
+    gl::RunningGraphWidget *widget =
+        overlay->getRunningGraphWidget(gl::WidgetId::VulkanRenderPassBufferCount);
     size_t buffersCount = commandBuffer->getUsedBuffersCount();
     if (buffersCount > 0)
     {
