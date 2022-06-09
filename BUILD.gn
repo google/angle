@@ -2,6 +2,8 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
+import("//build_overrides/wayland.gni")
+
 # import the ozone_platform_x11 variable
 import("gni/angle.gni")
 if (angle_enable_vulkan) {
@@ -1044,7 +1046,7 @@ angle_source_set("angle_gl_enum_utils") {
 
 if (angle_use_wayland) {
   config("angle_wayland_config") {
-    if (!defined(use_system_libwayland) || use_system_libwayland) {
+    if (use_system_libwayland) {
       libs = [
         "wayland-client",
         "wayland-egl",
@@ -1052,23 +1054,19 @@ if (angle_use_wayland) {
     }
 
     include_dirs = [
-      "$angle_wayland_dir/egl",
-      "$angle_wayland_dir/src",
-
-      # In case we are building with chromium, we need to take into account the case
-      # where wayland-egl-backend.h is not installed in the system include directories
-      "//third_party/wayland/src/egl",
+      "$wayland_dir/egl",
+      "$wayland_dir/src",
     ]
   }
 
   group("angle_wayland") {
     public_configs = [ ":angle_wayland_config" ]
 
-    if (defined(use_system_libwayland) && !use_system_libwayland) {
-      # Use chromium third-party targets
+    if (!use_system_libwayland) {
+      # Use third-party targets
       public_deps = [
-        "//third_party/wayland:wayland_client",
-        "//third_party/wayland:wayland_egl",
+        "$wayland_gn_dir:wayland_client",
+        "$wayland_gn_dir:wayland_egl",
       ]
     }
   }

@@ -3,6 +3,7 @@
 # found in the LICENSE file.
 
 import("//build_overrides/swiftshader.gni")
+import("//build_overrides/wayland.gni")
 import("../../../gni/angle.gni")
 
 declare_args() {
@@ -30,7 +31,7 @@ if (angle_enable_vulkan || angle_build_vulkan_system_info) {
       defines = [ "ANGLE_SHARED_LIBVULKAN=1" ]
     }
     if (angle_use_wayland) {
-      include_dirs = [ "$angle_wayland_dir/src" ]
+      include_dirs = [ "$wayland_dir/src" ]
     }
     configs = [ "$angle_root:angle_vulkan_wayland_config" ]
   }
