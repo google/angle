@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <algorithm>
+#include <cctype>
 #include <fstream>
 #include <sstream>
 
