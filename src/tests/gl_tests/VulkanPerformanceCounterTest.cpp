@@ -5773,6 +5773,44 @@ TEST_P(VulkanPerformanceCounterTest, Source2DAndRepeatedlyRespecifyTarget2DWithS
     eglDestroyImageKHR(window->getDisplay(), image);
 }
 
+// Test create, use and then destroy a texture does not increase number of DescriptoprSets.
+// DesriptorSet should be destroyed promptly. We are seeing this type of usage pattern in
+// surfaceflinger, except that the texture is created from AHB (and AHB keeps changing as well).
+TEST_P(VulkanPerformanceCounterTest, CreateDestroyTextureDoesNotIncreaseDescriptporSetCache)
+{
+    ANGLE_GL_PROGRAM(textureProgram, essl1_shaders::vs::Texture2D(),
+                     essl1_shaders::fs::Texture2D());
+
+    // Respecify texture in a loop
+    GLubyte kLinearColor[]    = {132, 55, 219, 255};
+    constexpr size_t kMaxLoop = 2;
+    GLint textureDescriptorSetCacheTotalSizeBefore =
+        getPerfCounters().textureDescriptorSetCacheTotalSize;
+    for (size_t loop = 0; loop < kMaxLoop; loop++)
+    {
+        // Create a 2D texture
+        GLTexture sourceTexture;
+        glBindTexture(GL_TEXTURE_2D, sourceTexture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     static_cast<void *>(&kLinearColor));
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        ASSERT_GL_NO_ERROR();
+
+        drawQuad(textureProgram.get(), std::string(essl1_shaders::PositionAttrib()), 0.0f);
+        // Expect that the rendered quad's color is the same as the reference color with a tolerance
+        // of 1
+        EXPECT_PIXEL_NEAR(0, 0, kLinearColor[0], kLinearColor[1], kLinearColor[2], kLinearColor[3],
+                          1);
+    }
+    GLint textureDescriptorSetCacheTotalSizeIncrease =
+        getPerfCounters().textureDescriptorSetCacheTotalSize -
+        textureDescriptorSetCacheTotalSizeBefore;
+
+    // We don't expect descriptorSet cache to keep growing
+    EXPECT_EQ(0, textureDescriptorSetCacheTotalSizeIncrease);
+}
+
 // Test that post-render-pass-to-swapchain glFenceSync followed by eglSwapBuffers incurs only a
 // single submission.
 TEST_P(VulkanPerformanceCounterTest, FenceThenSwapBuffers)
