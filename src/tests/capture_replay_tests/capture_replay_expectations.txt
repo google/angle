@@ -163,3 +163,12 @@
 7357 : FramebufferTest_ES3.FramebufferConditionalFeedbackLoop/* = SKIP_FOR_CAPTURE
 
 7373 : FramebufferTest_ES3.SurfaceDimensionsChangeAndFragCoord/* = SKIP_FOR_CAPTURE
+
+7423 : MultithreadingTest.NoFlushNoContextReturnsTimeout/* = SKIP_FOR_CAPTURE
+7423 : MultithreadingTestES3.ThreadBClientWaitBeforeThreadASyncFinish/* = SKIP_FOR_CAPTURE
+7423 : MultithreadingTestES3.ThreadBClientWaitBeforeThreadASyncFlush/* = SKIP_FOR_CAPTURE
+7423 : MultithreadingTestES3.ThreadBGetStatusBeforeThreadASyncFinish/* = SKIP_FOR_CAPTURE
+7423 : MultithreadingTestES3.ThreadBGetStatusBeforeThreadASyncFlush/* = SKIP_FOR_CAPTURE
+7423 : MultithreadingTestES3.ThreadBServerWaitBeforeThreadASyncFinish/* = SKIP_FOR_CAPTURE
+7423 : MultithreadingTestES3.ThreadBServerWaitBeforeThreadASyncFlush/* = SKIP_FOR_CAPTURE
+7423 : MultithreadingTestES3.ThreadCWaitBeforeThreadBSyncFinish/* = SKIP_FOR_CAPTURE
