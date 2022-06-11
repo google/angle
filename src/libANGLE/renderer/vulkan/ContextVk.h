@@ -253,7 +253,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
                                                 GLsizei stride);
 
     // ShareGroup
-    ShareGroupVk *getShareGroupVk() { return mShareGroupVk; }
+    ShareGroupVk *getShareGroup() { return mShareGroupVk; }
     PipelineLayoutCache &getPipelineLayoutCache()
     {
         return mShareGroupVk->getPipelineLayoutCache();

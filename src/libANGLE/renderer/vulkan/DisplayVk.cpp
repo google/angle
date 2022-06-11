@@ -417,10 +417,9 @@ void DisplayVk::populateFeatureList(angle::FeatureList *features)
     mRenderer->getFeatures().populateFeatureList(features);
 }
 
-ShareGroupVk::ShareGroupVk()
+ShareGroupVk::ShareGroupVk() : mOrphanNonEmptyBufferBlock(false)
 {
-    mLastPruneTime             = angle::GetCurrentSystemTime();
-    mOrphanNonEmptyBufferBlock = false;
+    mLastPruneTime = angle::GetCurrentSystemTime();
 }
 
 void ShareGroupVk::addContext(ContextVk *contextVk)

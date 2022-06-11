@@ -1479,7 +1479,7 @@ enum class RenderPassClosureReason
 
     // Use of resource after render pass
     BufferWriteThenMap,
-    BufferUseThenOutOfRPRead,
+    BufferWriteThenOutOfRPRead,
     BufferUseThenOutOfRPWrite,
     ImageUseThenOutOfRPRead,
     ImageUseThenOutOfRPWrite,

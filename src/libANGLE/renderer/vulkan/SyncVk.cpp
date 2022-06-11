@@ -183,7 +183,7 @@ angle::Result SyncHelper::submitSyncIfDeferred(ContextVk *contextVk, RenderPassC
     // Cannot reach here from EGL syncs, because serial should already be valid.
     ASSERT(contextVk != nullptr);
 
-    const ContextVkSet &shareContextSet = contextVk->getShareGroupVk()->getContexts();
+    const ContextVkSet &shareContextSet = contextVk->getShareGroup()->getContexts();
     for (ContextVk *ctx : shareContextSet)
     {
         ANGLE_TRY(ctx->flushCommandsAndEndRenderPassIfDeferredSyncInit(reason));
@@ -269,7 +269,7 @@ angle::Result SyncHelperNativeFence::initializeWithFd(ContextVk *contextVk, int 
 
     ResourceUseList resourceUseList;
     retain(&resourceUseList);
-    contextVk->getShareGroupVk()->acquireResourceUseList(std::move(resourceUseList));
+    contextVk->getShareGroup()->acquireResourceUseList(std::move(resourceUseList));
 
     Serial serialOut;
     // exportFd is exporting VK_EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT_KHR type handle which

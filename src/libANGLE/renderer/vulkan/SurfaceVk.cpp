@@ -1398,7 +1398,11 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context,
 
     if (samples > 1)
     {
-        const VkImageUsageFlags usage = kSurfaceVkColorImageUsageFlags;
+        VkImageUsageFlags usage = kSurfaceVkColorImageUsageFlags;
+        if (NeedsInputAttachmentUsage(renderer->getFeatures()))
+        {
+            usage |= VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT;
+        }
 
         // Create a multisampled image that will be rendered to, and then resolved to a swapchain
         // image.  The actual VkImage is created with rotated coordinates to make it easier to do

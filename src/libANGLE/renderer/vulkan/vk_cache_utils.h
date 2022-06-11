@@ -1513,6 +1513,7 @@ class RenderPassHelper final : angle::NonCopyable
     RenderPassHelper &operator=(RenderPassHelper &&other);
 
     void destroy(VkDevice device);
+    void release(ContextVk *contextVk);
 
     const RenderPass &getRenderPass() const;
     RenderPass &getRenderPass();
@@ -1735,6 +1736,7 @@ class RenderPassCache final : angle::NonCopyable
     ~RenderPassCache();
 
     void destroy(RendererVk *rendererVk);
+    void clear(ContextVk *contextVk);
 
     ANGLE_INLINE angle::Result getCompatibleRenderPass(ContextVk *contextVk,
                                                        const vk::RenderPassDesc &desc,

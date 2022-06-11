@@ -2752,7 +2752,7 @@ void DynamicBuffer::releaseInFlightBuffersToResourceUseList(ContextVk *contextVk
     }
     mInFlightBuffers.clear();
 
-    contextVk->getShareGroupVk()->acquireResourceUseList(std::move(resourceUseList));
+    contextVk->getShareGroup()->acquireResourceUseList(std::move(resourceUseList));
 }
 
 void DynamicBuffer::destroy(RendererVk *renderer)
@@ -3534,7 +3534,7 @@ void DynamicallyGrowingPool<Pool>::onEntryFreed(ContextVk *contextVk, size_t poo
     ASSERT(poolIndex < mPools.size() && mPools[poolIndex].freedCount < mPoolSize);
     ResourceUseList resourceUseList;
     mPools[poolIndex].retain(&resourceUseList);
-    contextVk->getShareGroupVk()->acquireResourceUseList(std::move(resourceUseList));
+    contextVk->getShareGroup()->acquireResourceUseList(std::move(resourceUseList));
     ++mPools[poolIndex].freedCount;
 }
 
@@ -5261,7 +5261,7 @@ void ImageHelper::releaseImageFromShareContexts(RendererVk *renderer, ContextVk 
 {
     if (contextVk && mImageSerial.valid())
     {
-        const ContextVkSet &shareContextSet = contextVk->getShareGroupVk()->getContexts();
+        const ContextVkSet &shareContextSet = contextVk->getShareGroup()->getContexts();
         for (ContextVk *ctx : shareContextSet)
         {
             ctx->finalizeImageLayout(this);

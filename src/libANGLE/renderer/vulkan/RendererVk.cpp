@@ -403,7 +403,7 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
         "SYNC-HAZARD-READ_AFTER_WRITE",
         "type: VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC",
     },
-    // Coherent framebuffer fetch is enabled on some platforms that are known apriori to have the
+    // Coherent framebuffer fetch is enabled on some platforms that are known a priori to have the
     // needed behavior, even though this is not specified in the Vulkan spec.  These generate
     // syncval errors that are benign on those platforms.
     // http://anglebug.com/6870

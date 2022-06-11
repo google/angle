@@ -2054,6 +2054,20 @@ void main (void)
     ASSERT_GL_NO_ERROR();
 }
 
+// Verify that calling glFramebufferFetchBarrierEXT without an open render pass is ok.
+TEST_P(FramebufferFetchES31, BarrierBeforeDraw)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch") ||
+                       !IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch_non_coherent"));
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+
+    glFramebufferFetchBarrierEXT();
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f);
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(FramebufferFetchES31);
 ANGLE_INSTANTIATE_TEST_ES31(FramebufferFetchES31);
 }  // namespace angle

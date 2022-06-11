@@ -4455,6 +4455,11 @@ void RenderPassHelper::destroy(VkDevice device)
     mRenderPass.destroy(device);
 }
 
+void RenderPassHelper::release(ContextVk *contextVk)
+{
+    contextVk->addGarbage(&mRenderPass);
+}
+
 const RenderPass &RenderPassHelper::getRenderPass() const
 {
     return mRenderPass;
@@ -5306,6 +5311,18 @@ void RenderPassCache::destroy(RendererVk *rendererVk)
         for (auto &innerIt : outerIt.second)
         {
             innerIt.second.destroy(device);
+        }
+    }
+    mPayload.clear();
+}
+
+void RenderPassCache::clear(ContextVk *contextVk)
+{
+    for (auto &outerIt : mPayload)
+    {
+        for (auto &innerIt : outerIt.second)
+        {
+            innerIt.second.release(contextVk);
         }
     }
     mPayload.clear();

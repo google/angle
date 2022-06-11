@@ -541,7 +541,7 @@ constexpr angle::PackedEnumMap<RenderPassClosureReason, const char *> kRenderPas
      "Render pass closed due to graphics pipeline change while transform feedback is active"},
     {RenderPassClosureReason::BufferWriteThenMap,
      "Render pass closed due to mapping buffer being written to by said render pass"},
-    {RenderPassClosureReason::BufferUseThenOutOfRPRead,
+    {RenderPassClosureReason::BufferWriteThenOutOfRPRead,
      "Render pass closed due to non-render-pass read of buffer that was written to in render pass"},
     {RenderPassClosureReason::BufferUseThenOutOfRPWrite,
      "Render pass closed due to non-render-pass write of buffer that was used in render pass"},
@@ -3056,9 +3056,9 @@ void ContextVk::addOverlayUsedBuffersCount(vk::CommandBufferHelperCommon *comman
 
 angle::Result ContextVk::submitFrame(const vk::Semaphore *signalSemaphore, Serial *submitSerialOut)
 {
-    getShareGroupVk()->acquireResourceUseList(
+    getShareGroup()->acquireResourceUseList(
         std::move(mOutsideRenderPassCommands->releaseResourceUseList()));
-    getShareGroupVk()->acquireResourceUseList(
+    getShareGroup()->acquireResourceUseList(
         std::move(mRenderPassCommands->releaseResourceUseList()));
 
     ANGLE_TRY(submitCommands(signalSemaphore, submitSerialOut));
@@ -3072,7 +3072,7 @@ angle::Result ContextVk::submitFrame(const vk::Semaphore *signalSemaphore, Seria
 angle::Result ContextVk::submitFrameOutsideCommandBufferOnly(Serial *submitSerialOut)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "ContextVk::submitFrameOutsideCommandBufferOnly");
-    getShareGroupVk()->acquireResourceUseList(
+    getShareGroup()->acquireResourceUseList(
         std::move(mOutsideRenderPassCommands->releaseResourceUseList()));
 
     return submitCommands(nullptr, submitSerialOut);
@@ -3102,7 +3102,7 @@ angle::Result ContextVk::submitCommands(const vk::Semaphore *signalSemaphore,
                                      std::move(mWaitSemaphoreStageMasks), signalSemaphore,
                                      std::move(mCurrentGarbage), &mCommandPools, submitSerialOut));
 
-    getShareGroupVk()->releaseResourceUseLists(*submitSerialOut);
+    getShareGroup()->releaseResourceUseLists(*submitSerialOut);
     // Now that we have processed resourceUseList, some of pending garbage may no longer pending
     // and should be moved to garbage list.
     mRenderer->cleanupPendingSubmissionGarbage();
@@ -7035,7 +7035,7 @@ angle::Result ContextVk::flushCommandsAndEndRenderPassImpl(QueueSubmitType queue
 
     flushDescriptorSetUpdates();
 
-    getShareGroupVk()->acquireResourceUseList(
+    getShareGroup()->acquireResourceUseList(
         std::move(mRenderPassCommands->releaseResourceUseList()));
 
     ANGLE_TRY(mRenderer->flushRenderPassCommands(this, hasProtectedContent(), *renderPass,
@@ -7249,7 +7249,7 @@ angle::Result ContextVk::flushOutsideRenderPassCommands()
 
     flushDescriptorSetUpdates();
 
-    getShareGroupVk()->acquireResourceUseList(
+    getShareGroup()->acquireResourceUseList(
         std::move(mOutsideRenderPassCommands->releaseResourceUseList()));
 
     ANGLE_TRY(mRenderer->flushOutsideRPCommands(this, hasProtectedContent(),
@@ -7580,7 +7580,8 @@ angle::Result ContextVk::flushCommandBuffersIfNecessary(const vk::CommandBufferA
     {
         if (mRenderPassCommands->usesBufferForWrite(*bufferAccess.buffer))
         {
-            return flushCommandsAndEndRenderPass(RenderPassClosureReason::BufferUseThenOutOfRPRead);
+            return flushCommandsAndEndRenderPass(
+                RenderPassClosureReason::BufferWriteThenOutOfRPRead);
         }
         else if (mOutsideRenderPassCommands->usesBufferForWrite(*bufferAccess.buffer))
         {
