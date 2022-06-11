@@ -741,15 +741,21 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         return angle::Result::Continue;
     }
 
-    const angle::PerfMonitorCounterGroups &getPerfMonitorCounters() override;
-
-    void resetPerFramePerfCounters();
-
     angle::Result bindCachedDescriptorPool(
         DescriptorSetIndex descriptorSetIndex,
         const vk::DescriptorSetLayoutDesc &descriptorSetLayoutDesc,
         uint32_t descriptorCountMultiplier,
         vk::DescriptorPoolPointer *poolPointerOut);
+
+    // Put the context in framebuffer fetch mode.  If the permanentlySwitchToFramebufferFetchMode
+    // feature is enabled, this is done on first encounter of framebuffer fetch, and makes the
+    // context use framebuffer-fetch-enabled render passes from here on.
+    angle::Result switchToFramebufferFetchMode(bool hasFramebufferFetch);
+    bool isInFramebufferFetchMode() const { return mIsInFramebufferFetchMode; }
+
+    const angle::PerfMonitorCounterGroups &getPerfMonitorCounters() override;
+
+    void resetPerFramePerfCounters();
 
     // Accumulate cache stats for a specific cache
     void accumulateCacheStats(VulkanCacheType cache, const CacheStats &stats)
@@ -1054,7 +1060,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     }
 
     angle::Result invalidateProgramExecutableHelper(const gl::Context *context);
-    angle::Result checkAndUpdateFramebufferFetchStatus(const gl::ProgramExecutable *executable);
 
     void invalidateCurrentDefaultUniforms();
     angle::Result invalidateCurrentTextures(const gl::Context *context, gl::Command command);
@@ -1470,6 +1475,13 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     // shared-present mode, and the app is unnecessarily calling eglSwapBuffers (which equates
     // glFlush in that mode).
     bool mHasAnyCommandsPendingSubmission;
+
+    // Whether framebuffer fetch is active.  When the permanentlySwitchToFramebufferFetchMode
+    // feature is enabled, if any program uses framebuffer fetch, rendering switches to assuming
+    // framebuffer fetch could happen in any render pass.  This incurs a potential cost due to usage
+    // of the GENERAL layout instead of COLOR_ATTACHMENT_OPTIMAL, but has definite benefits of
+    // avoiding render pass breaks when a framebuffer fetch program is used mid render pass.
+    bool mIsInFramebufferFetchMode;
 
     // The size of copy commands issued between buffers and images. Used to submit the command
     // buffer for the outside render pass.

@@ -171,6 +171,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::PackOverlappingRowsSeparatelyPackBuffer, "packOverlappingRowsSeparatelyPackBuffer"},
     {Feature::PadBuffersToMaxVertexAttribStride, "padBuffersToMaxVertexAttribStride"},
     {Feature::PerFrameWindowSizeQuery, "perFrameWindowSizeQuery"},
+    {Feature::PermanentlySwitchToFramebufferFetchMode, "permanentlySwitchToFramebufferFetchMode"},
     {Feature::PersistentlyMappedBuffers, "persistentlyMappedBuffers"},
     {Feature::PreAddTexelFetchOffsets, "preAddTexelFetchOffsets"},
     {Feature::PreferAggregateBarrierCalls, "preferAggregateBarrierCalls"},

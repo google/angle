@@ -444,7 +444,8 @@
             "name": "disallow_mixed_depth_stencil_load_op_none_and_load",
             "category": "Workarounds",
             "description": [
-                "Disallow use of LOAD_OP_NONE for only one of the depth or stencil aspects of a depth/stencil attachment"
+                "Disallow use of LOAD_OP_NONE for only one of the depth or stencil aspects of a ",
+                "depth/stencil attachment"
             ],
             "issue": "http://anglebug.com/7370"
         },
@@ -742,6 +743,14 @@
             ]
         },
         {
+            "name": "permanently_switch_to_framebuffer_fetch_mode",
+            "category": "Features",
+            "description": [
+                "Whether the context should permanently switch to framebuffer fetch mode on first",
+                "encounter"
+            ]
+        },
+        {
             "name": "supports_lock_surface_extension",
             "category": "Features",
             "description": [
@@ -752,8 +761,8 @@
             "name": "swapbuffers_on_flush_or_finish_with_single_buffer",
             "category": "Features",
             "description": [
-                "Bypass deferredFlush with calling swapbuffers on flush or finish when in Shared Present ",
-                "mode"
+                "Bypass deferredFlush with calling swapbuffers on flush or finish when in Shared ",
+                "Present mode"
             ],
             "issue": "http://anglebug.com/6878"
         },

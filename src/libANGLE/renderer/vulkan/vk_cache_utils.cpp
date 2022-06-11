@@ -1007,7 +1007,7 @@ angle::Result InitializeRenderPassFromDesc(ContextVk *contextVk,
         VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2_KHR, nullptr, VK_ATTACHMENT_UNUSED,
         VK_IMAGE_LAYOUT_UNDEFINED, 0};
 
-    const bool needInputAttachments = desc.getFramebufferFetchMode();
+    const bool needInputAttachments = desc.hasFramebufferFetch();
     const bool isRenderToTextureThroughExtension =
         desc.isRenderToTexture() &&
         contextVk->getFeatures().supportsMultisampledRenderToSingleSampled.enabled;
@@ -1661,7 +1661,7 @@ void UnpackPipelineState(const vk::GraphicsPipelineDesc &state, UnpackedPipeline
     (*valuesOut)[PipelineState::RenderPassSrgbWriteControl] =
         static_cast<uint32_t>(renderPassDesc.getSRGBWriteControlMode());
     (*valuesOut)[PipelineState::RenderPassHasFramebufferFetch] =
-        renderPassDesc.getFramebufferFetchMode();
+        renderPassDesc.hasFramebufferFetch();
     (*valuesOut)[PipelineState::RenderPassIsRenderToTexture] = renderPassDesc.isRenderToTexture();
     (*valuesOut)[PipelineState::RenderPassResolveDepthStencil] =
         renderPassDesc.hasDepthStencilResolveAttachment();
@@ -4067,7 +4067,7 @@ void FramebufferDesc::updateLayerCount(uint32_t layerCount)
     SetBitField(mLayerCount, layerCount);
 }
 
-void FramebufferDesc::updateFramebufferFetchMode(bool hasFramebufferFetch)
+void FramebufferDesc::setFramebufferFetchMode(bool hasFramebufferFetch)
 {
     SetBitField(mHasFramebufferFetch, hasFramebufferFetch);
 }

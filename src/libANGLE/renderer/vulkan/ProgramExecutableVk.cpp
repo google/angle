@@ -1233,6 +1233,18 @@ angle::Result ProgramExecutableVk::createPipelineLayout(
     mDynamicUniformDescriptorOffsets.clear();
     mDynamicUniformDescriptorOffsets.resize(glExecutable.getLinkedShaderStageCount(), 0);
 
+    // If the program uses framebuffer fetch and this is the first time this happens, switch the
+    // context to "framebuffer fetch mode".  In this mode, all render passes assume framebuffer
+    // fetch may be used, so they are prepared to accept a program that uses input attachments.
+    // This is done only when a program with framebuffer fetch is created to avoid potential
+    // performance impact on applications that don't use this extension.  If other contexts in the
+    // share group use this program, they will lazily switch to this mode.
+    if (contextVk->getFeatures().permanentlySwitchToFramebufferFetchMode.enabled &&
+        glExecutable.usesFramebufferFetch())
+    {
+        ANGLE_TRY(contextVk->switchToFramebufferFetchMode(true));
+    }
+
     return angle::Result::Continue;
 }
 

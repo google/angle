@@ -3536,6 +3536,13 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsShaderFramebufferFetchNonCoherent,
                             (IsAndroid() && !(isARM || isQualcomm)) || isSwiftShader);
 
+    // On tile-based renderers, breaking the render pass is costly.  Changing into and out of
+    // framebuffer fetch causes the render pass to break so that the layout of the color attachments
+    // can be adjusted.  On such hardware, the switch to framebuffer fetch mode is made permanent so
+    // such render pass breaks don't happen.
+    ANGLE_FEATURE_CONDITION(&mFeatures, permanentlySwitchToFramebufferFetchMode,
+                            isTileBasedRenderer);
+
     // Support EGL_KHR_lock_surface3 extension.
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsLockSurfaceExtension, IsAndroid());
 

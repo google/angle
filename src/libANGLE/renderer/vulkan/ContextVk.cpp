@@ -726,6 +726,7 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
       mPrimaryBufferEventCounter(0),
       mHasDeferredFlush(false),
       mHasAnyCommandsPendingSubmission(false),
+      mIsInFramebufferFetchMode(false),
       mTotalBufferToImageCopySize(0),
       mGpuClockSync{std::numeric_limits<double>::max(), std::numeric_limits<double>::max()},
       mGpuEventTimestampOrigin(0),
@@ -1973,6 +1974,9 @@ angle::Result ContextVk::handleDirtyGraphicsColorAccess(DirtyBits::Iterator *dir
     FramebufferVk *drawFramebufferVk             = getDrawFramebuffer();
     const gl::FramebufferState &framebufferState = drawFramebufferVk->getState();
 
+    const gl::ProgramExecutable *executable = mState.getProgramExecutable();
+    ASSERT(executable);
+
     // Update color attachment accesses
     vk::PackedAttachmentIndex colorIndexVk(0);
     for (size_t colorIndexGL : framebufferState.getColorAttachmentsMask())
@@ -1981,7 +1985,7 @@ angle::Result ContextVk::handleDirtyGraphicsColorAccess(DirtyBits::Iterator *dir
         {
             vk::ResourceAccess colorAccess = GetColorAccess(
                 mState, framebufferState, drawFramebufferVk->getEmulatedAlphaAttachmentMask(),
-                drawFramebufferVk->hasFramebufferFetch(), colorIndexGL);
+                executable->usesFramebufferFetch(), colorIndexGL);
             mRenderPassCommands->onColorAccess(colorIndexVk, colorAccess);
         }
         ++colorIndexVk;
@@ -4666,35 +4670,6 @@ void ContextVk::updateDither()
     }
 }
 
-angle::Result ContextVk::checkAndUpdateFramebufferFetchStatus(
-    const gl::ProgramExecutable *executable)
-{
-    if (!executable)
-    {
-        return angle::Result::Continue;
-    }
-
-    FramebufferVk *drawFramebufferVk = getDrawFramebuffer();
-    ASSERT(drawFramebufferVk);
-
-    if (drawFramebufferVk->getRenderPassDesc().getFramebufferFetchMode() !=
-        executable->usesFramebufferFetch())
-    {
-        drawFramebufferVk->onSwitchProgramFramebufferFetch(this,
-                                                           executable->usesFramebufferFetch());
-        if (executable->usesFramebufferFetch())
-        {
-            mRenderer->onFramebufferFetchUsed();
-
-            // When framebuffer fetch is enabled, attachments can be read from even if output is
-            // masked, so update their access.
-            onColorAccessChange();
-        }
-    }
-
-    return angle::Result::Continue;
-}
-
 angle::Result ContextVk::invalidateProgramExecutableHelper(const gl::Context *context)
 {
     const gl::State &glState                = context->getState();
@@ -4718,13 +4693,17 @@ angle::Result ContextVk::invalidateProgramExecutableHelper(const gl::Context *co
         mCurrentGraphicsPipeline = nullptr;
         mGraphicsPipelineTransition.reset();
 
-        if (getDrawFramebuffer()->getRenderPassDesc().getFramebufferFetchMode() !=
-            executable->usesFramebufferFetch())
+        const bool hasFramebufferFetch = executable->usesFramebufferFetch();
+        if (mIsInFramebufferFetchMode != hasFramebufferFetch)
         {
-            ANGLE_TRY(
-                flushCommandsAndEndRenderPass(RenderPassClosureReason::FramebufferFetchEmulation));
+            ASSERT(getDrawFramebuffer()->getRenderPassDesc().hasFramebufferFetch() ==
+                   mIsInFramebufferFetchMode);
 
-            ANGLE_TRY(checkAndUpdateFramebufferFetchStatus(executable));
+            ANGLE_TRY(switchToFramebufferFetchMode(hasFramebufferFetch));
+
+            // When framebuffer fetch is enabled, attachments can be read from even if output is
+            // masked, so update their access.
+            onColorAccessChange();
         }
     }
 
@@ -5016,10 +4995,11 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 mCachedDrawFramebufferColorAttachmentMask = newColorAttachmentMask;
 
                 mGraphicsPipelineDesc->resetSubpass(&mGraphicsPipelineTransition);
-                onDrawFramebufferRenderPassDescChange(drawFramebufferVk, nullptr);
 
-                // We may need to update the framebuffer's use of fetch to match the in-use program
-                ANGLE_TRY(checkAndUpdateFramebufferFetchStatus(glState.getProgramExecutable()));
+                // The framebuffer may not be in sync with usage of framebuffer fetch programs.
+                drawFramebufferVk->switchToFramebufferFetchMode(this, mIsInFramebufferFetchMode);
+
+                onDrawFramebufferRenderPassDescChange(drawFramebufferVk, nullptr);
 
                 break;
             }
@@ -7772,6 +7752,43 @@ angle::Result ContextVk::bindCachedDescriptorPool(
     return descriptorPool.bindCachedDescriptorPool(
         this, descriptorSetLayoutDesc, descriptorCountMultiplier,
         &mShareGroupVk->getDescriptorSetLayoutCache(), poolPointerOut);
+}
+
+angle::Result ContextVk::switchToFramebufferFetchMode(bool hasFramebufferFetch)
+{
+    // If framebuffer fetch is permanent, make sure we never switch out of it.
+    if (getFeatures().permanentlySwitchToFramebufferFetchMode.enabled && mIsInFramebufferFetchMode)
+    {
+        return angle::Result::Continue;
+    }
+
+    ASSERT(mIsInFramebufferFetchMode != hasFramebufferFetch);
+    mIsInFramebufferFetchMode = hasFramebufferFetch;
+
+    // If a render pass is already open, close it.
+    if (mRenderPassCommands->started())
+    {
+        ANGLE_TRY(
+            flushCommandsAndEndRenderPass(RenderPassClosureReason::FramebufferFetchEmulation));
+    }
+
+    // If there's a draw buffer bound, switch it to framebuffer fetch mode.  Every other framebuffer
+    // will switch when bound.
+    if (mState.getDrawFramebuffer() != nullptr)
+    {
+        getDrawFramebuffer()->switchToFramebufferFetchMode(this, mIsInFramebufferFetchMode);
+    }
+
+    // Clear the render pass cache; all render passes will be incompatible from now on with the old
+    // ones.
+    if (getFeatures().permanentlySwitchToFramebufferFetchMode.enabled)
+    {
+        mRenderPassCache.clear(this);
+    }
+
+    mRenderer->onFramebufferFetchUsed();
+
+    return angle::Result::Continue;
 }
 
 // UpdateDescriptorSetsBuilder implementation.

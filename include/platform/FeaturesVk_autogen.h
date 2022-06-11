@@ -563,6 +563,14 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo permanentlySwitchToFramebufferFetchMode = {
+        "permanentlySwitchToFramebufferFetchMode",
+        FeatureCategory::VulkanFeatures,
+        "Whether the context should permanently switch to framebuffer fetch mode on first"
+        "encounter",
+        &members,
+    };
+
     FeatureInfo supportsLockSurfaceExtension = {
         "supportsLockSurfaceExtension",
         FeatureCategory::VulkanFeatures,
@@ -572,8 +580,8 @@ struct FeaturesVk : FeatureSetBase
 
     FeatureInfo swapbuffersOnFlushOrFinishWithSingleBuffer = {
         "swapbuffersOnFlushOrFinishWithSingleBuffer", FeatureCategory::VulkanFeatures,
-        "Bypass deferredFlush with calling swapbuffers on flush or finish when in Shared Present "
-        "mode",
+        "Bypass deferredFlush with calling swapbuffers on flush or finish when in Shared "
+        "Present mode",
         &members, "http://anglebug.com/6878"};
 
     FeatureInfo emulateDithering = {"emulateDithering", FeatureCategory::VulkanFeatures,

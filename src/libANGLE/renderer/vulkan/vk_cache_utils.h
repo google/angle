@@ -210,7 +210,7 @@ class alignas(4) RenderPassDesc final
     {
         mHasFramebufferFetch = hasFramebufferFetch;
     }
-    bool getFramebufferFetchMode() const { return mHasFramebufferFetch; }
+    bool hasFramebufferFetch() const { return mHasFramebufferFetch; }
 
     void updateRenderToTexture(bool isRenderToTexture) { mIsRenderToTexture = isRenderToTexture; }
     bool isRenderToTexture() const { return mIsRenderToTexture; }
@@ -1460,7 +1460,7 @@ class FramebufferDesc
 
     void updateLayerCount(uint32_t layerCount);
     uint32_t getLayerCount() const { return mLayerCount; }
-    void updateFramebufferFetchMode(bool hasFramebufferFetch);
+    void setFramebufferFetchMode(bool hasFramebufferFetch);
     bool hasFramebufferFetch() const { return mHasFramebufferFetch; }
 
     bool isMultiview() const { return mIsMultiview; }

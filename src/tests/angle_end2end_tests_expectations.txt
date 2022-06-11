@@ -654,6 +654,7 @@
 // Flaky hangs on Linux SwANGLE
 7431 LINUX SWIFTSHADER : MultithreadingTestES3.ThreadB*BeforeThreadASyncFinish/ES3_Vulkan_SwiftShader = SKIP
 7431 LINUX SWIFTSHADER : MultithreadingTestES3.ThreadB*BeforeThreadASyncFlush/ES3_Vulkan_SwiftShader = SKIP
+7419 SWIFTSHADER : MultithreadingTestES3.CreateFramebufferFetchBeforeRenderPass/* = SKIP
 
 // Timeout with SwiftShader and MAC OpenGL due to large workloads
 7389 SWIFTSHADER : Texture2DTest.ManySupersedingTextureUpdates/* = SKIP
