@@ -380,7 +380,7 @@ class RendererVk : angle::NonCopyable
 
     uint64_t getMaxFenceWaitTimeNs() const;
 
-    ANGLE_INLINE Serial getLastCompletedQueueSerial()
+    ANGLE_INLINE Serial getLastCompletedQueueSerial() const
     {
         if (isAsyncCommandQueueEnabled())
         {

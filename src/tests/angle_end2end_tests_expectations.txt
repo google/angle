@@ -53,7 +53,8 @@
 7291 VULKAN : BlitFramebufferTest.Blit3D/* = SKIP
 7291 VULKAN : BlitFramebufferTest.Blit3DTo2DArray/* = SKIP
 7291 VULKAN : BlitFramebufferTest.Blit2DArrayTo3D/* = SKIP
-235523746 VULKAN : VulkanPerformanceCounterTest.CreateDestroyTextureDoesNotIncreaseDescriptporSetCache/* = SKIP
+235877059 VULKAN : MultisampleTestES3.ResolveToFBO/ES3_Vulkan_EmulatedPrerotation180 = SKIP
+235877059 VULKAN : MultisampleTestES3.ResolveToFBO/ES3_Vulkan_EmulatedPrerotation270 = SKIP
 
 // Windows
 3786 WIN NVIDIA D3D11 : BufferDataOverflowTest.VertexBufferIntegerOverflow/* = SKIP

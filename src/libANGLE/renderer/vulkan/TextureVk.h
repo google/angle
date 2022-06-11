@@ -308,6 +308,11 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
 
     angle::Result onLabelUpdate(const gl::Context *context) override;
 
+    void onNewTextureDescriptorSet(const vk::SharedDescriptorSetCacheKey &sharedCacheKey)
+    {
+        mTextureDescriptorSetCacheManager.addKey(sharedCacheKey);
+    }
+
   private:
     // Transform an image index from the frontend into one that can be used on the backing
     // ImageHelper, taking into account mipmap or cube face offsets
@@ -617,6 +622,9 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
     // Cached subresource indexes.
     vk::ImageOrBufferViewSubresourceSerial mCachedImageViewSubresourceSerialSRGBDecode;
     vk::ImageOrBufferViewSubresourceSerial mCachedImageViewSubresourceSerialSkipDecode;
+
+    // Manages the texture descriptor set cache that created with this texture
+    vk::DescriptorSetCacheManager mTextureDescriptorSetCacheManager;
 };
 
 }  // namespace rx
