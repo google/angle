@@ -1207,6 +1207,11 @@ Result SerializeTextureData(JsonSerializer *json,
     {
         gl::ImageIndex index = imageIter.next();
 
+        // Skip serializing level data if the level index is out of range
+        GLuint levelIndex = index.getLevelIndex();
+        if (levelIndex > texture->getMipmapMaxLevel() || levelIndex < texture->getBaseLevel())
+            continue;
+
         const gl::ImageDesc &desc = texture->getTextureState().getImageDesc(index);
 
         if (desc.size.empty())

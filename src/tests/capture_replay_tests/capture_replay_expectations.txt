@@ -92,10 +92,7 @@
 6314 : FramebufferTest_ES3.AttachmentsWithUnequalDimensions/* = CRASH
 6314 : FramebufferTest_ES3.ChangeAttachmentThenInvalidateAndDraw/* = CRASH
 6314 : FramebufferTest_ES3.RenderAndInvalidateImmutableTextureWithBeyondMaxLevel/* = CRASH
-6334 : MipmapTestES3.GenerateMipmapBaseLevelOutOfRangeImmutableTexture/* = CRASH
-6334 : Texture2DTestES3.ImmutableTextureBaseLevelOutOfRange/* = CRASH
 6399 : Texture2DTestES3.TexStorage2DCycleThroughYuvSourcesNoData/* = CRASH
-6334 : Texture2DTestES3.TextureBaseLevelGreaterThanMaxLevel/* = CRASH
 6399 : Texture2DTestES3.TexStorage2DSimultaneousUseOfMultipleYuvSourcesNoData/* = CRASH
 6400 : Texture2DTestES3.TextureCompletenessChangesWithBaseLevel/* = CRASH
 6399 : Texture2DTestES3.TexStorage2DLargeYuvTextureCount/* = CRASH
