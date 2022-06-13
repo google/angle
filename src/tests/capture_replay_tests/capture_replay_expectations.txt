@@ -33,11 +33,6 @@
 
 # ES2
 
-5822 : ExternalWrapTest.ClampToEdge/* = CRASH
-5822 : ExternalWrapTest.MirroredRepeat/* = CRASH
-5822 : ExternalWrapTest.NoWrap/* = CRASH
-5822 : ExternalWrapTest.Repeat/* = CRASH
-
 6267 : FramebufferTest.MultiContextNoRenderingFeedbackLoops/* = SKIP_FOR_CAPTURE
 
 6180 : GLSLTest_ES3.GLVertexIDIntegerTextureDrawElementsU8Line/* = NOT_RUN
