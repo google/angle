@@ -1637,6 +1637,9 @@ enum class UpdateSource
     Image,
 };
 
+constexpr VkImageAspectFlagBits IMAGE_ASPECT_DEPTH_STENCIL =
+    static_cast<VkImageAspectFlagBits>(VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT);
+
 bool FormatHasNecessaryFeature(RendererVk *renderer,
                                angle::FormatID formatID,
                                VkImageTiling tilingMode,
@@ -2471,6 +2474,23 @@ class ImageHelper final : public Resource, public angle::Subject
                                          uint32_t layerCount,
                                          VkFormat imageFormat,
                                          VkImageUsageFlags usageFlags) const;
+
+    angle::Result readPixelsImpl(ContextVk *contextVk,
+                                 const gl::Rectangle &area,
+                                 const PackPixelsParams &packPixelsParams,
+                                 VkImageAspectFlagBits copyAspectFlags,
+                                 gl::LevelIndex levelGL,
+                                 uint32_t layer,
+                                 void *pixels);
+
+    angle::Result packReadPixelBuffer(ContextVk *contextVk,
+                                      const gl::Rectangle &area,
+                                      const PackPixelsParams &packPixelsParams,
+                                      const angle::Format &readFormat,
+                                      const angle::Format &aspectFormat,
+                                      const uint8_t *readPixelBuffer,
+                                      gl::LevelIndex levelGL,
+                                      void *pixels);
 
     bool canCopyWithTransformForReadPixels(const PackPixelsParams &packPixelsParams,
                                            const angle::Format *readFormat);

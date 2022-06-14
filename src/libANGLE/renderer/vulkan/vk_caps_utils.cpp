@@ -1127,6 +1127,11 @@ void RendererVk::ensureCapsInitialized() const
     // GL_KHR_parallel_shader_compile
     mNativeExtensions.parallelShaderCompileKHR = false;
 
+    // GL_NV_read_depth, GL_NV_read_depth_stencil, GL_NV_read_stencil
+    mNativeExtensions.readDepthNV        = true;
+    mNativeExtensions.readDepthStencilNV = true;
+    mNativeExtensions.readStencilNV      = true;
+
     // GL_QCOM_shading_rate
     mNativeExtensions.shadingRateQCOM = mFeatures.supportsFragmentShadingRate.enabled;
 }

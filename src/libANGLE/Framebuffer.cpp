@@ -486,6 +486,8 @@ const FramebufferAttachment *FramebufferState::getReadPixelsAttachment(GLenum re
             return getDepthAttachment();
         case GL_STENCIL_INDEX_OES:
             return getStencilOrDepthStencilAttachment();
+        case GL_DEPTH_STENCIL_OES:
+            return getDepthStencilAttachment();
         default:
             return getReadAttachment();
     }

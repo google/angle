@@ -8623,22 +8623,19 @@ angle::Result ImageHelper::readPixelsForGetImage(ContextVk *contextVk,
     if (angleFormat.redBits > 0 || angleFormat.blueBits > 0 || angleFormat.greenBits > 0 ||
         angleFormat.alphaBits > 0 || angleFormat.luminanceBits > 0)
     {
-        aspectFlags = VK_IMAGE_ASPECT_COLOR_BIT;
+        aspectFlags = static_cast<VkImageAspectFlagBits>(aspectFlags | VK_IMAGE_ASPECT_COLOR_BIT);
     }
     else
     {
         if (angleFormat.depthBits > 0)
         {
-            if (angleFormat.stencilBits != 0)
-            {
-                // TODO (anglebug.com/4688) Support combined depth stencil for GetTexImage
-                WARN() << "Unable to pull stencil from combined depth/stencil for GetTexImage";
-            }
-            aspectFlags = VK_IMAGE_ASPECT_DEPTH_BIT;
+            aspectFlags =
+                static_cast<VkImageAspectFlagBits>(aspectFlags | VK_IMAGE_ASPECT_DEPTH_BIT);
         }
-        else if (angleFormat.stencilBits > 0)
+        if (angleFormat.stencilBits > 0)
         {
-            aspectFlags = VK_IMAGE_ASPECT_STENCIL_BIT;
+            aspectFlags =
+                static_cast<VkImageAspectFlagBits>(aspectFlags | VK_IMAGE_ASPECT_STENCIL_BIT);
         }
     }
 
@@ -8766,6 +8763,105 @@ angle::Result ImageHelper::readPixels(ContextVk *contextVk,
                                       void *pixels)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "ImageHelper::readPixels");
+
+    const angle::Format &readFormat = getActualFormat();
+
+    if (readFormat.depthBits == 0)
+    {
+        copyAspectFlags =
+            static_cast<VkImageAspectFlagBits>(copyAspectFlags & ~VK_IMAGE_ASPECT_DEPTH_BIT);
+    }
+    if (readFormat.stencilBits == 0)
+    {
+        copyAspectFlags =
+            static_cast<VkImageAspectFlagBits>(copyAspectFlags & ~VK_IMAGE_ASPECT_STENCIL_BIT);
+    }
+
+    if (copyAspectFlags == IMAGE_ASPECT_DEPTH_STENCIL)
+    {
+        const angle::Format &depthFormat =
+            GetDepthStencilImageToBufferFormat(readFormat, VK_IMAGE_ASPECT_DEPTH_BIT);
+        const angle::Format &stencilFormat =
+            GetDepthStencilImageToBufferFormat(readFormat, VK_IMAGE_ASPECT_STENCIL_BIT);
+
+        int depthOffset   = 0;
+        int stencilOffset = 0;
+        switch (readFormat.id)
+        {
+            case angle::FormatID::D24_UNORM_S8_UINT:
+                depthOffset   = 1;
+                stencilOffset = 0;
+                break;
+
+            case angle::FormatID::D32_FLOAT_S8X24_UINT:
+                depthOffset   = 0;
+                stencilOffset = 4;
+                break;
+
+            default:
+                UNREACHABLE();
+        }
+
+        ASSERT(depthOffset > 0 || stencilOffset > 0);
+        ASSERT(depthOffset + depthFormat.depthBits / 8 <= readFormat.pixelBytes);
+        ASSERT(stencilOffset + stencilFormat.stencilBits / 8 <= readFormat.pixelBytes);
+
+        // Read the depth values, tightly-packed
+        angle::MemoryBuffer depthBuffer;
+        ANGLE_VK_CHECK_ALLOC(contextVk,
+                             depthBuffer.resize(depthFormat.pixelBytes * area.width * area.height));
+        ANGLE_TRY(
+            readPixelsImpl(contextVk, area,
+                           PackPixelsParams(area, depthFormat, depthFormat.pixelBytes * area.width,
+                                            false, nullptr, 0),
+                           VK_IMAGE_ASPECT_DEPTH_BIT, levelGL, layer, depthBuffer.data()));
+
+        // Read the stencil values, tightly-packed
+        angle::MemoryBuffer stencilBuffer;
+        ANGLE_VK_CHECK_ALLOC(
+            contextVk, stencilBuffer.resize(stencilFormat.pixelBytes * area.width * area.height));
+        ANGLE_TRY(readPixelsImpl(
+            contextVk, area,
+            PackPixelsParams(area, stencilFormat, stencilFormat.pixelBytes * area.width, false,
+                             nullptr, 0),
+            VK_IMAGE_ASPECT_STENCIL_BIT, levelGL, layer, stencilBuffer.data()));
+
+        // Interleave them together
+        angle::MemoryBuffer readPixelBuffer;
+        ANGLE_VK_CHECK_ALLOC(
+            contextVk, readPixelBuffer.resize(readFormat.pixelBytes * area.width * area.height));
+        readPixelBuffer.fill(0);
+        for (int i = 0; i < area.width * area.height; i++)
+        {
+            uint8_t *readPixel = readPixelBuffer.data() + i * readFormat.pixelBytes;
+            memcpy(readPixel + depthOffset, depthBuffer.data() + i * depthFormat.pixelBytes,
+                   depthFormat.depthBits / 8);
+            memcpy(readPixel + stencilOffset, stencilBuffer.data() + i * stencilFormat.pixelBytes,
+                   stencilFormat.stencilBits / 8);
+        }
+
+        // Pack the interleaved depth and stencil into user-provided
+        // destination, per user's pack pixels params
+
+        // The compressed format path in packReadPixelBuffer isn't applicable
+        // to our case, let's make extra sure we won't hit it
+        ASSERT(!readFormat.isBlock);
+        return packReadPixelBuffer(contextVk, area, packPixelsParams, readFormat, readFormat,
+                                   readPixelBuffer.data(), levelGL, pixels);
+    }
+
+    return readPixelsImpl(contextVk, area, packPixelsParams, copyAspectFlags, levelGL, layer,
+                          pixels);
+}
+
+angle::Result ImageHelper::readPixelsImpl(ContextVk *contextVk,
+                                          const gl::Rectangle &area,
+                                          const PackPixelsParams &packPixelsParams,
+                                          VkImageAspectFlagBits copyAspectFlags,
+                                          gl::LevelIndex levelGL,
+                                          uint32_t layer,
+                                          void *pixels)
+{
     RendererVk *renderer = contextVk->getRenderer();
 
     // If the source image is multisampled, we need to resolve it into a temporary image before
@@ -8931,8 +9027,27 @@ angle::Result ImageHelper::readPixels(ContextVk *contextVk,
     // TODO(jmadill): Don't block on asynchronous readback.
     ANGLE_TRY(contextVk->finishImpl(RenderPassClosureReason::GLReadPixels));
 
-    if (readFormat->isBlock)
+    return packReadPixelBuffer(contextVk, area, packPixelsParams, getActualFormat(), *readFormat,
+                               readPixelBuffer, levelGL, pixels);
+}
+
+angle::Result ImageHelper::packReadPixelBuffer(ContextVk *contextVk,
+                                               const gl::Rectangle &area,
+                                               const PackPixelsParams &packPixelsParams,
+                                               const angle::Format &readFormat,
+                                               const angle::Format &aspectFormat,
+                                               const uint8_t *readPixelBuffer,
+                                               gl::LevelIndex levelGL,
+                                               void *pixels)
+{
+    const vk::Format &vkFormat = contextVk->getRenderer()->getFormat(readFormat.id);
+    const gl::InternalFormat &storageFormatInfo =
+        vkFormat.getInternalFormatInfo(readFormat.componentType);
+
+    if (readFormat.isBlock)
     {
+        ASSERT(readFormat == aspectFormat);
+
         const LevelIndex levelVk = toVkLevel(levelGL);
         gl::Extents levelExtents = getLevelExtents(levelVk);
 
@@ -8950,13 +9065,13 @@ angle::Result ImageHelper::readPixels(ContextVk *contextVk,
         void *mapPtr           = nullptr;
         ANGLE_TRY(packBufferVk->mapImpl(contextVk, GL_MAP_WRITE_BIT, &mapPtr));
         uint8_t *dst = static_cast<uint8_t *>(mapPtr) + reinterpret_cast<ptrdiff_t>(pixels);
-        PackPixels(packPixelsParams, *readFormat, area.width * readFormat->pixelBytes,
+        PackPixels(packPixelsParams, aspectFormat, area.width * aspectFormat.pixelBytes,
                    readPixelBuffer, static_cast<uint8_t *>(dst));
         ANGLE_TRY(packBufferVk->unmapImpl(contextVk));
     }
     else
     {
-        PackPixels(packPixelsParams, *readFormat, area.width * readFormat->pixelBytes,
+        PackPixels(packPixelsParams, aspectFormat, area.width * aspectFormat.pixelBytes,
                    readPixelBuffer, static_cast<uint8_t *>(pixels));
     }
 
