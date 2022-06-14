@@ -539,10 +539,6 @@
 // Test is disabled as it only pertains to desktop GLSL
 6197 : GLSLTest_ES31.InterpolateAtWithSwizzle/* = SKIP
 
-// Slow tests
-5076 : GLSLTest.VerifyMaxVertexUniformVectors* = TIMEOUT
-6251 : MultithreadingTest* = TIMEOUT
-
 6336 VULKAN : GetImageTest.InconsistentTexture2D/* = SKIP
 
 6358 D3D11 : GLSLTest_ES3.UnsuccessfulRelinkWithBindAttribLocation/* = SKIP
@@ -654,3 +650,12 @@
 
 // imageLoad after imageStore with barrier is not coherent on Pixel 4 GLES.
 7388 ANDROID GLES : PixelLocalStorageTest.*/ES3_1_OpenGLES = SKIP
+
+// Flaky hangs on Linux SwANGLE
+7431 LINUX SWIFTSHADER : MultithreadingTestES3.ThreadB*BeforeThreadASyncFinish/ES3_Vulkan_SwiftShader = SKIP
+
+// Slow tests, should appear last in this file
+5076 : GLSLTest.VerifyMaxVertexUniformVectors* = TIMEOUT
+6251 : MultithreadingTest* = TIMEOUT
+// Please do not add expectations below this line,
+// so that TIMEOUT expectations above don't override more precise SKIP expectations
