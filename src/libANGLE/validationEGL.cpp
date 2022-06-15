@@ -2837,11 +2837,6 @@ bool ValidateCreatePbufferFromClientBuffer(const ValidationContext *val,
                                   "<buftype> doesn't support setting texture offset");
                     return false;
                 }
-                if (value < 0)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE, "Texture offset cannot be negative");
-                    return false;
-                }
                 break;
 
             case EGL_PROTECTED_CONTENT_EXT:
