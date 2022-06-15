@@ -37,7 +37,7 @@ vars = {
   'checkout_android_native_support': 'checkout_android or checkout_chromeos',
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '6644947937782477fb0a91a6319ac1b8770f25e1',
+  'chromium_revision': 'c8885f7596b74cf269b48574fce8e85f0d0aff64',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -126,7 +126,7 @@ vars = {
 deps = {
 
   'build': {
-    'url': '{chromium_git}/chromium/src/build.git@6326939d517160bfec46310170aa3fa1d6918d33',
+    'url': '{chromium_git}/chromium/src/build.git@0bfcd945062b5834a876b3e0a609a1577e6f0a9c',
     'condition': 'not build_with_chromium',
   },
 
@@ -168,7 +168,7 @@ deps = {
   },
 
   'buildtools/third_party/libc++abi/trunk': {
-    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libcxxabi.git@bb4dcb7164a67f828225714c7ed099cfe418d3d7',
+    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libcxxabi.git@2dba7d2cc46a25cd67fb990826179e0c159c5b5c',
     'condition': 'not build_with_chromium',
   },
 
@@ -189,12 +189,12 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@59d5fb688779a91a96fb8814040063e28dc783c8',
+    'url': '{chromium_git}/chromium/src/testing@af4060e181eefdaf754ad6579cfce6e33f8b7408',
     'condition': 'not build_with_chromium',
   },
 
   'third_party/abseil-cpp': {
-    'url': '{chromium_git}/chromium/src/third_party/abseil-cpp@67fb565748a580dffbb7fd243bb551dca1d0baab',
+    'url': '{chromium_git}/chromium/src/third_party/abseil-cpp@df429e4f942dbbd94abaae347bc21ce7fba63b36',
     'condition': 'not build_with_chromium',
   },
 
@@ -581,7 +581,7 @@ deps = {
   },
 
   'tools/mb': {
-    'url': '{chromium_git}/chromium/src/tools/mb@b66f056edb1da27dd61b205b4b0300b4c48caba3',
+    'url': '{chromium_git}/chromium/src/tools/mb@9b4f350017deb9e60a027e276e5018d09bebce12',
     'condition': 'not build_with_chromium',
   },
 
@@ -596,7 +596,7 @@ deps = {
   },
 
   'tools/perf': {
-    'url': '{chromium_git}/chromium/src/tools/perf@e9d8dad31db077c838ee503894054e2491f1fa1c',
+    'url': '{chromium_git}/chromium/src/tools/perf@4ca94d228cf0202b75bbd0b68bce0f5dc5fa5a82',
     'condition': 'not build_with_chromium',
   },
 
