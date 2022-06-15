@@ -3,8 +3,11 @@
 # found in the LICENSE file.
 
 import("//build_overrides/swiftshader.gni")
-import("//build_overrides/wayland.gni")
 import("../../../gni/angle.gni")
+
+if (angle_use_wayland) {
+  import("//build_overrides/wayland.gni")
+}
 
 declare_args() {
   angle_use_custom_libvulkan = !is_android && !is_fuchsia && !is_ggp

@@ -2,12 +2,13 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
-import("//build_overrides/wayland.gni")
-
 # import the ozone_platform_x11 variable
 import("gni/angle.gni")
 if (angle_enable_vulkan) {
   import("//build_overrides//vulkan_headers.gni")
+}
+if (angle_use_wayland) {
+  import("//build_overrides/wayland.gni")
 }
 if (angle_has_build) {
   import("//build/config/linux/pkg_config.gni")
