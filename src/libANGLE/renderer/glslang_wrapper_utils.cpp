@@ -9,6 +9,7 @@
 #include "libANGLE/renderer/glslang_wrapper_utils.h"
 
 #include <array>
+#include <cctype>
 #include <numeric>
 
 #include "common/FixedVector.h"
