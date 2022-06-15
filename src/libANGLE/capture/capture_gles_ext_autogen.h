@@ -2065,6 +2065,8 @@ angle::CallCapture CaptureBlitFramebufferNV(const State &glState,
 
 // GL_NV_read_depth
 
+// GL_NV_read_depth_stencil
+
 // GL_NV_read_stencil
 
 // GL_NV_robustness_video_memory_purge

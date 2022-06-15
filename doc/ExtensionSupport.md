@@ -110,6 +110,7 @@ using data from registry_xml.py and gl.xml.
 | [GL_EXT_protected_textures](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_protected_textures.txt) |  |  |  |  |  | &#x2714; |  |
 | [GL_EXT_pvrtc_sRGB](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_pvrtc_sRGB.txt) |  |  |  |  |  |  |  |
 | [GL_NV_read_depth](https://khronos.org/registry/OpenGL/extensions/NV/NV_read_depth.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
+| [GL_NV_read_depth_stencil](https://khronos.org/registry/OpenGL/extensions/NV/NV_read_depth_stencil.txt) |  |  |  |  |  |  |  |
 | [GL_EXT_read_format_bgra](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_read_format_bgra.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
 | [GL_NV_read_stencil](https://khronos.org/registry/OpenGL/extensions/NV/NV_read_stencil.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
 | [GL_OES_rgb8_rgba8](https://khronos.org/registry/OpenGL/extensions/OES/OES_rgb8_rgba8.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |

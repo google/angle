@@ -263,6 +263,7 @@
     /* GL_NV_pack_subimage */                                                                      \
     /* GL_NV_pixel_buffer_object */                                                                \
     /* GL_NV_read_depth */                                                                         \
+    /* GL_NV_read_depth_stencil */                                                                 \
     /* GL_NV_read_stencil */                                                                       \
     /* GL_NV_robustness_video_memory_purge */                                                      \
     /* GL_NV_shader_noperspective_interpolation */                                                 \

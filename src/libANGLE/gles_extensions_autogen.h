@@ -335,6 +335,9 @@ struct Extensions
     // GL_NV_read_depth
     bool readDepthNV = false;
 
+    // GL_NV_read_depth_stencil
+    bool readDepthStencilNV = false;
+
     // GL_EXT_read_format_bgra
     bool readFormatBgraEXT = false;
 
