@@ -1347,7 +1347,7 @@ angle::Result TextureVk::setStorageExternalMemory(const gl::Context *context,
 
     constexpr VkImageUsageFlags kRenderableUsageFlags =
         kColorAttachmentImageFlags | VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
-    if ((usageFlags | kRenderableUsageFlags) != 0)
+    if ((usageFlags & kRenderableUsageFlags) != 0)
     {
         mRequiredImageAccess = vk::ImageAccess::Renderable;
     }
