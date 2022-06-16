@@ -661,6 +661,9 @@ struct DisplayExtensions
 
     // EGL_KHR_partial_update
     bool partialUpdateKHR = false;
+
+    // EGL_ANGLE_sync_mtl_shared_event
+    bool mtlSyncSharedEventANGLE = false;
 };
 
 struct DeviceExtensions

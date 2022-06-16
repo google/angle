@@ -18,6 +18,8 @@
 #include "libANGLE/renderer/SyncImpl.h"
 #include "libANGLE/renderer/metal/mtl_common.h"
 
+#include "common/Optional.h"
+
 namespace egl
 {
 class AttributeMap;
@@ -42,9 +44,15 @@ class Sync
 
     void onDestroy();
 
-    angle::Result initialize(ContextMtl *contextMtl);
+    angle::Result initialize(ContextMtl *contextMtl,
+                             id<MTLSharedEvent> sharedEvent,
+                             Optional<uint64_t> signalValue);
 
-    angle::Result set(ContextMtl *contextMtl, GLenum condition, GLbitfield flags);
+    angle::Result set(ContextMtl *contextMtl,
+                      GLenum condition,
+                      GLbitfield flags,
+                      id<MTLSharedEvent> sharedEvent,
+                      Optional<uint64_t> signalValue);
     angle::Result clientWait(ContextMtl *contextMtl,
                              bool flushCommands,
                              uint64_t timeout,
@@ -54,7 +62,7 @@ class Sync
 
   private:
     SharedEventRef mMetalSharedEvent;
-    uint64_t mSetCounter = 0;
+    uint64_t mSignalValue = 0;
 
     std::shared_ptr<std::condition_variable> mCv;
     std::shared_ptr<std::mutex> mLock;
@@ -154,6 +162,9 @@ class EGLSyncMtl final : public EGLSyncImpl
 
   private:
     mtl::Sync mSync;
+    id<MTLSharedEvent> mSharedEvent;
+    Optional<uint64_t> mSignalValue;
+    EGLenum mType;
 };
 
 }  // namespace rx
