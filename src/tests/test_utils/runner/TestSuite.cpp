@@ -1196,15 +1196,8 @@ TestSuite::TestSuite(int *argc, char **argv, std::function<void()> registerTests
             exit(EXIT_FAILURE);
         }
 
-        uint32_t fileSize = 0;
-        if (!GetFileSize(mFilterFile.c_str(), &fileSize))
-        {
-            printf("Error getting filter file size: %s\n", mFilterFile.c_str());
-            exit(EXIT_FAILURE);
-        }
-
-        std::vector<char> fileContents(fileSize + 1, 0);
-        if (!ReadEntireFileToString(mFilterFile.c_str(), fileContents.data(), fileSize))
+        std::string fileContents;
+        if (!ReadEntireFileToString(mFilterFile.c_str(), &fileContents))
         {
             printf("Error loading filter file: %s\n", mFilterFile.c_str());
             exit(EXIT_FAILURE);
