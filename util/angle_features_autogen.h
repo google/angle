@@ -30,6 +30,7 @@ enum class Feature
     AllowGenMultipleMipsPerPass,
     AllowInlineConstVertexData,
     AllowMultisampleStoreAndResolve,
+    AllowRenderpassWithoutAttachment,
     AllowRuntimeSamplerCompareMode,
     AllowSamplerCompareGradient,
     AllowSamplerCompareLod,

@@ -192,6 +192,13 @@ struct FeaturesMtl : FeatureSetBase
         &members,
     };
 
+    FeatureInfo allowRenderpassWithoutAttachment = {
+        "allowRenderpassWithoutAttachment",
+        FeatureCategory::MetalFeatures,
+        "Allow creation of render passes without any attachments",
+        &members,
+    };
+
     FeatureInfo multisampleColorFormatShaderReadWorkaround = {
         "multisampleColorFormatShaderReadWorkaround", FeatureCategory::MetalWorkarounds,
         "Add shaderRead usage to some multisampled texture formats", &members,

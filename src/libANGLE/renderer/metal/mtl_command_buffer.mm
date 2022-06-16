@@ -1265,6 +1265,15 @@ void RenderCommandEncoder::endEncodingImpl(bool considerDiscardSimulation)
         ASSERT(hasAttachment || objCRenderPassDesc.defaultRasterSampleCount != 0);
         encodeMetalEncoder();
     }
+    else if (!hasSideEffects && hasDrawCalls())
+    {
+        // Command encoder should not have been created if no side effects occur, but draw calls do.
+        UNREACHABLE();
+        // Fallback to clearing commands if on release.
+        mCommands.clear();
+    }
+    // If no side effects, and no drawing is encoded, there's no point in encoding. Skip the
+    // commands.
     else
     {
         mCommands.clear();

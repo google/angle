@@ -1242,6 +1242,10 @@ void DisplayMtl::initializeFeatures()
 
     ANGLE_FEATURE_CONDITION((&mFeatures), uploadDataToIosurfacesWithStagingBuffers, isAMD());
 
+    // Render passes can be rendered without attachments on Apple4 , mac2 hardware.
+    ANGLE_FEATURE_CONDITION(&(mFeatures), allowRenderpassWithoutAttachment,
+                            supportsEitherGPUFamily(4, 2));
+
     ApplyFeatureOverrides(&mFeatures, getState());
 }
 

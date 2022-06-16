@@ -180,6 +180,14 @@
             ]
         },
         {
+            "name": "allow_renderpass_without_attachment",
+            "category": "Features",
+            "description": [
+                "Allow creation of render passes without any attachments"
+            ]
+        },
+
+        {
             "name": "multisample_color_format_shader_read_workaround",
             "category": "Workarounds",
             "description": [

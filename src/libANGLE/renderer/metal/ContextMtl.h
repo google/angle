@@ -409,7 +409,8 @@ class ContextMtl : public ContextImpl, public mtl::Context
                             GLsizei instanceCount,
                             gl::DrawElementsType indexTypeOrNone,
                             const void *indices,
-                            bool xfbPass);
+                            bool xfbPass,
+                            bool *isNoOp);
 
     angle::Result setupDrawImpl(const gl::Context *context,
                                 gl::PrimitiveMode mode,
@@ -418,7 +419,8 @@ class ContextMtl : public ContextImpl, public mtl::Context
                                 GLsizei instanceCount,
                                 gl::DrawElementsType indexTypeOrNone,
                                 const void *indices,
-                                bool xfbPass);
+                                bool xfbPass,
+                                bool *isNoOp);
 
     angle::Result drawTriFanArrays(const gl::Context *context,
                                    GLint first,
