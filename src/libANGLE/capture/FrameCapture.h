@@ -1128,6 +1128,16 @@ void WriteParamValueReplay<ParamType::TEGLClientBuffer>(std::ostream &os,
                                                         const CallCapture &call,
                                                         EGLClientBuffer value);
 
+template <>
+void WriteParamValueReplay<ParamType::TEGLConfig>(std::ostream &os,
+                                                  const CallCapture &call,
+                                                  EGLConfig value);
+
+template <>
+void WriteParamValueReplay<ParamType::TEGLSurface>(std::ostream &os,
+                                                   const CallCapture &call,
+                                                   EGLSurface value);
+
 // General fallback for any unspecific type.
 template <ParamType ParamT, typename T>
 void WriteParamValueReplay(std::ostream &os, const CallCapture &call, T value)

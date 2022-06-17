@@ -743,19 +743,61 @@ EGLBoolean EGLWindow::destroyImageKHR(Image image)
     return eglDestroyImageKHR(getDisplay(), image);
 }
 
-bool EGLWindow::makeCurrent(EGLContext context)
+GLWindowBase::Surface EGLWindow::createPbufferSurface(const EGLint *attrib_list)
 {
+    return eglCreatePbufferSurface(getDisplay(), getConfig(), attrib_list);
+}
+
+EGLBoolean EGLWindow::destroySurface(Surface surface)
+{
+    return eglDestroySurface(getDisplay(), surface);
+}
+
+EGLBoolean EGLWindow::bindTexImage(EGLSurface surface, EGLint buffer)
+{
+    return eglBindTexImage(getDisplay(), surface, buffer);
+}
+
+EGLBoolean EGLWindow::releaseTexImage(EGLSurface surface, EGLint buffer)
+{
+    return eglReleaseTexImage(getDisplay(), surface, buffer);
+}
+
+bool EGLWindow::makeCurrent(EGLSurface draw, EGLSurface read, EGLContext context)
+{
+    if ((draw && !read) || (!draw && read))
+    {
+        fprintf(stderr, "eglMakeCurrent: setting only one of draw and read buffer is illegal\n");
+        return false;
+    }
+
+    // if the draw buffer is a nullptr and a context is given, then we use mSurface,
+    // because we didn't add this the gSurfaceMap, and it is the most likely
+    // case that we actually wanted the default surface here.
+    // TODO: This will need additional work when we want to support capture/replay
+    // with a sourfaceless context.
+    //
+    // If no context is given then we also don't assign a surface
+    if (!draw)
+    {
+        draw = read = context != EGL_NO_CONTEXT ? mSurface : EGL_NO_SURFACE;
+    }
+
     if (isGLInitialized())
     {
-        if (eglMakeCurrent(mDisplay, mSurface, mSurface, context) == EGL_FALSE ||
+        if (eglMakeCurrent(mDisplay, draw, read, context) == EGL_FALSE ||
             eglGetError() != EGL_SUCCESS)
         {
             fprintf(stderr, "Error during eglMakeCurrent.\n");
             return false;
         }
     }
-
     return true;
+}
+
+bool EGLWindow::makeCurrent(EGLContext context)
+{
+    return makeCurrent(mSurface, mSurface, context);
 }
 
 bool EGLWindow::setSwapInterval(EGLint swapInterval)

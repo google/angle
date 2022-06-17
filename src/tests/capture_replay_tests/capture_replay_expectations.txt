@@ -38,14 +38,6 @@
 6180 : GLSLTest_ES3.GLVertexIDIntegerTextureDrawElementsU8Line/* = NOT_RUN
 6180 : GLSLTest_ES3.GLVertexIDIntegerTextureDrawElementsU8LineIds/* = NOT_RUN
 
-6180 : PbufferTest.BindTexImage/* = FAIL
-6180 : PbufferTest.BindTexImageAfterTexImage/* = FAIL
-6180 : PbufferTest.ClearAndBindTexImageSrgb/* = FAIL
-6180 : PbufferTest.ClearAndBindTexImageSrgbSkipDecode/* = FAIL
-6180 : PbufferTest.Clearing/* = FAIL
-6180 : PbufferTest.TextureSizeReset/* = FAIL
-
-
 6221 : VulkanExternalImageTest.ShouldClearOpaqueFdWithSemaphores/* = TIMEOUT
 6221 : VulkanExternalImageTest.ShouldClearOpaqueFdWithSemaphoresMutableNoStorage/* = TIMEOUT
 6221 : VulkanExternalImageTest.ShouldClearOpaqueFdWithSemaphoresNoStorage/* = TIMEOUT
@@ -75,7 +67,6 @@
 # This test only exists on Win64
 6180 WIN : BufferDataOverflowTest.VertexBufferIntegerOverflow/* = NOT_RUN
 
-6512 : RobustResourceInitTestES3.BindTexImage/* = FAIL
 6180 WIN : TransformFeedbackTest.DrawWithoutTransformFeedbackThenWith/* = FLAKY
 6180 : TransformFeedbackTest.TransformFeedbackQueryPausedDrawThenResume/* = FLAKY
 6513 : TransformFeedbackTest.MultiContext/* = FLAKY

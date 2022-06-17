@@ -631,6 +631,12 @@ void WriteCppReplayForCall(const CallCapture &call,
         callOut << "gEGLImageMap[" << reinterpret_cast<uintptr_t>(image) << "ul] = ";
     }
 
+    if (call.entryPoint == EntryPoint::EGLCreatePbufferSurface)
+    {
+        EGLSurface surface = call.params.getReturnValue().value.EGLSurfaceVal;
+        callOut << "gSurfaceMap[" << reinterpret_cast<uintptr_t>(surface) << "ul] = ";
+    }
+
     if (call.entryPoint == EntryPoint::EGLCreateNativeClientBufferANDROID)
     {
         EGLClientBuffer buffer = call.params.getReturnValue().value.EGLClientBufferVal;

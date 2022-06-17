@@ -26,6 +26,11 @@ template <typename CaptureFuncT, typename... ArgsT>
 void CaptureCallToCaptureEGL(CaptureFuncT captureFunc, egl::Thread *thread, ArgsT... captureParams)
 {
     gl::Context *context = thread->getContext();
+    if (!context)
+    {
+        return;
+    }
+
     angle::FrameCaptureShared *frameCaptureShared =
         context->getShareGroup()->getFrameCaptureShared();
     if (!frameCaptureShared->isCapturing())
@@ -50,6 +55,26 @@ angle::CallCapture CaptureEGLDestroyImage(gl::Context *context,
                                           egl::Display *display,
                                           egl::Image *image);
 
+angle::CallCapture CaptureEGLCreatePbufferSurface(gl::Context *context,
+                                                  const AttributeMap &attrib_list,
+                                                  egl::Surface *surface);
+
+angle::CallCapture CaptureEGLDestroySurface(gl::Context *context,
+                                            Display *display,
+                                            Surface *surface);
+
+angle::CallCapture CaptureEGLBindTexImage(gl::Context *context,
+                                          egl::Surface *surface,
+                                          EGLint buffer);
+
+angle::CallCapture CaptureEGLReleaseTexImage(gl::Context *context,
+                                             egl::Surface *surface,
+                                             EGLint buffer);
+
+angle::CallCapture CaptureEGLMakeCurrent(gl::Context *dummy,
+                                         Surface *drawSurface,
+                                         Surface *readSurface,
+                                         gl::Context *context);
 }  // namespace egl
 
 #endif  // LIBANGLE_FRAME_CAPTURE_H_
