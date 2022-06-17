@@ -7531,9 +7531,21 @@ angle::Result ImageHelper::stageRobustResourceClearWithFormat(ContextVk *context
                                                               const angle::Format &intendedFormat,
                                                               const angle::Format &imageFormat)
 {
-    VkClearValue clearValue = GetRobustResourceClearValue(intendedFormat, imageFormat);
-    return stageResourceClearWithFormat(contextVk, index, glExtents, intendedFormat, imageFormat,
-                                        clearValue);
+    VkClearValue clearValue          = GetRobustResourceClearValue(intendedFormat, imageFormat);
+    gl::ImageIndex fullResourceIndex = index;
+    gl::Extents fullResourceExtents  = glExtents;
+
+    if (gl::IsArrayTextureType(index.getType()))
+    {
+        // For 2Darray textures gl::Extents::depth is the layer count.
+        fullResourceIndex = gl::ImageIndex::MakeFromType(
+            index.getType(), index.getLevelIndex(), gl::ImageIndex::kEntireLevel, glExtents.depth);
+        // Vulkan requires depth of 1 for 2Darray textures.
+        fullResourceExtents.depth = 1;
+    }
+
+    return stageResourceClearWithFormat(contextVk, fullResourceIndex, fullResourceExtents,
+                                        intendedFormat, imageFormat, clearValue);
 }
 
 void ImageHelper::stageClearIfEmulatedFormat(bool isRobustResourceInitEnabled, bool isExternalImage)
