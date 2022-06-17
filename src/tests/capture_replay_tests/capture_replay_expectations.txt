@@ -166,3 +166,5 @@
 7423 : MultithreadingTestES3.ThreadCWaitBeforeThreadBSyncFinish/* = SKIP_FOR_CAPTURE
 
 7389 : Texture2DTest.ManySupersedingTextureUpdates/* = SKIP_FOR_CAPTURE
+
+7438 WIN : DXT1CompressedTextureTestES3.CompressedTexSubImage3DValidationPerSlice/ES3_Vulkan_SwiftShader = CRASH
