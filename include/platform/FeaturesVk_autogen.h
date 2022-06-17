@@ -770,6 +770,12 @@ struct FeaturesVk : FeatureSetBase
         "supportsPipelineProtectedAccess", FeatureCategory::VulkanFeatures,
         "VkDevice supports the VK_EXT_pipeline_protected_access extension", &members,
         "https://anglebug.com/7714"};
+
+    FeatureInfo preferSubmitOnAnySamplesPassedQueryEnd = {
+        "preferSubmitOnAnySamplesPassedQueryEnd", FeatureCategory::VulkanWorkarounds,
+        "Submit commands to driver when last GL_ANY_SAMPLES_PASSED query is made for performance "
+        "improvements.",
+        &members, "https://issuetracker.google.com/250706693"};
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

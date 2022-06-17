@@ -182,6 +182,7 @@ enum class Feature
     PreferLinearFilterForYUV,
     PreferSkippingInvalidateForEmulatedFormats,
     PreferSubmitAtFBOBoundary,
+    PreferSubmitOnAnySamplesPassedQueryEnd,
     PromotePackedFormatsTo8BitPerChannel,
     ProvokingVertex,
     QueryCounterBitsGeneratesErrors,

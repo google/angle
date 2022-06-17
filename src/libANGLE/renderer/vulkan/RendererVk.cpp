@@ -4034,6 +4034,15 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     // GBM does not have a VkSurface hence it does not support presentation through a Vulkan queue.
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsPresentation, !displayVk->isGBM());
 
+    // For tiled renderer, the renderpass query result may not available until the entire renderpass
+    // is completed. This may cause a bubble in the application thread waiting result to be
+    // available. When this feature flag is enabled, we will issue an immediate flush when we detect
+    // there is switch from query enabled draw to query disabled draw. Since most apps uses bunch of
+    // query back to back, this should only introduce one extra flush per frame.
+    // https://issuetracker.google.com/250706693
+    ANGLE_FEATURE_CONDITION(&mFeatures, preferSubmitOnAnySamplesPassedQueryEnd,
+                            isTileBasedRenderer);
+
     ApplyFeatureOverrides(&mFeatures, displayVk->getState());
 
     // Disable async command queue when using Vulkan secondary command buffers temporarily to avoid
