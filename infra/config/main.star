@@ -320,8 +320,7 @@ def angle_builder(name, cpu):
         )
 
         # Don't add experimental bots to CQ.
-        # TODO: anglebug.com/7433 reenable win-trace when it's fixed
-        if not is_exp and not name == "win-trace":
+        if not is_exp:
             luci.cq_tryjob_verifier(
                 cq_group = "main",
                 builder = "angle:try/" + name,
