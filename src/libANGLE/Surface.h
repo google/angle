@@ -222,6 +222,7 @@ class Surface : public LabeledObject, public gl::FramebufferAttachmentObject
 
   protected:
     Surface(EGLint surfaceType,
+            GLuint serialId,
             const egl::Config *config,
             const AttributeMap &attributes,
             bool forceRobustResourceInit,
@@ -297,6 +298,8 @@ class Surface : public LabeledObject, public gl::FramebufferAttachmentObject
     gl::InitState mColorInitState;
     gl::InitState mDepthStencilInitState;
     angle::ObserverBinding mImplObserverBinding;
+
+    GLuint mSerialId;
 };
 
 class WindowSurface final : public Surface

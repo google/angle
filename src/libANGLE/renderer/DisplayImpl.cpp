@@ -148,4 +148,11 @@ egl::Error DisplayImpl::queryDmaBufModifiers(EGLint format,
     return egl::NoError();
 }
 
+GLuint DisplayImpl::getNextSurfaceID()
+{
+    uint64_t id = mNextSurfaceID.generate().getValue();
+    ASSERT(id <= 0xfffffffful);
+    return static_cast<GLuint>(id);
+}
+
 }  // namespace rx
