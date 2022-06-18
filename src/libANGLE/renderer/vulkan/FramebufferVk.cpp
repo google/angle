@@ -1146,7 +1146,7 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
     commonParams.srcExtents[0]          = srcFramebufferDimensions.width;
     commonParams.srcExtents[1]          = srcFramebufferDimensions.height;
     commonParams.blitArea               = blitArea;
-    commonParams.linear                 = filter == GL_LINEAR;
+    commonParams.linear                 = filter == GL_LINEAR && !isResolve;
     commonParams.flipX                  = flipX;
     commonParams.flipY                  = flipY;
     commonParams.rotation               = rotation;

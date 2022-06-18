@@ -2427,39 +2427,29 @@ angle::Result UtilsVk::blitResolveImpl(ContextVk *contextVk,
     switch (params.rotation)
     {
         case SurfaceRotation::Identity:
-            break;
         case SurfaceRotation::Rotated90Degrees:
-            shaderParams.rotateXY = 1;
             break;
         case SurfaceRotation::Rotated180Degrees:
-            if (isResolve)
-            {
-                shaderParams.offset.resolve[0] += params.rotatedOffsetFactor[0];
-                shaderParams.offset.resolve[1] += params.rotatedOffsetFactor[1];
-            }
-            else
-            {
-                shaderParams.offset.blit[0] += params.rotatedOffsetFactor[0];
-                shaderParams.offset.blit[1] += params.rotatedOffsetFactor[1];
-            }
-            break;
         case SurfaceRotation::Rotated270Degrees:
             if (isResolve)
             {
-                shaderParams.offset.resolve[0] += params.rotatedOffsetFactor[0];
-                shaderParams.offset.resolve[1] += params.rotatedOffsetFactor[1];
+                // Align the offset with minus 1, or the sample position near the edge will be
+                // wrong.
+                shaderParams.offset.resolve[0] += params.rotatedOffsetFactor[0] - 1;
+                shaderParams.offset.resolve[1] += params.rotatedOffsetFactor[1] - 1;
             }
             else
             {
                 shaderParams.offset.blit[0] += params.rotatedOffsetFactor[0];
                 shaderParams.offset.blit[1] += params.rotatedOffsetFactor[1];
             }
-            shaderParams.rotateXY = 1;
             break;
         default:
             UNREACHABLE();
             break;
     }
+
+    shaderParams.rotateXY = IsRotatedAspectRatio(params.rotation);
 
     bool blitColor   = srcColorView != nullptr;
     bool blitDepth   = srcDepthView != nullptr;
@@ -2687,41 +2677,29 @@ angle::Result UtilsVk::stencilBlitResolveNoShaderExport(ContextVk *contextVk,
     switch (params.rotation)
     {
         case SurfaceRotation::Identity:
-            break;
         case SurfaceRotation::Rotated90Degrees:
-            shaderParams.rotateXY = 1;
             break;
         case SurfaceRotation::Rotated180Degrees:
+        case SurfaceRotation::Rotated270Degrees:
             if (isResolve)
             {
                 // Align the offset with minus 1, or the sample position near the edge will be
                 // wrong.
                 shaderParams.offset.resolve[0] += params.rotatedOffsetFactor[0] - 1;
-                shaderParams.offset.resolve[1] += params.rotatedOffsetFactor[1];
-            }
-            else
-            {
-                shaderParams.offset.blit[0] += params.rotatedOffsetFactor[0] - 1;
-                shaderParams.offset.blit[1] += params.rotatedOffsetFactor[1];
-            }
-            break;
-        case SurfaceRotation::Rotated270Degrees:
-            if (isResolve)
-            {
-                shaderParams.offset.resolve[0] += params.rotatedOffsetFactor[0] - 1;
                 shaderParams.offset.resolve[1] += params.rotatedOffsetFactor[1] - 1;
             }
             else
             {
-                shaderParams.offset.blit[0] += params.rotatedOffsetFactor[0] - 1;
-                shaderParams.offset.blit[1] += params.rotatedOffsetFactor[1] - 1;
+                shaderParams.offset.blit[0] += params.rotatedOffsetFactor[0];
+                shaderParams.offset.blit[1] += params.rotatedOffsetFactor[1];
             }
-            shaderParams.rotateXY = 1;
             break;
         default:
             UNREACHABLE();
             break;
     }
+
+    shaderParams.rotateXY = IsRotatedAspectRatio(params.rotation);
 
     // Linear sampling is only valid with color blitting.
     ASSERT(!params.linear);
