@@ -190,6 +190,15 @@ inline bool IsLinux()
 #endif
 }
 
+inline bool IsChromeOS()
+{
+#if defined(ANGLE_PLATFORM_CHROMEOS)
+    return true;
+#else
+    return false;
+#endif
+}
+
 inline bool IsApple()
 {
 #if defined(ANGLE_PLATFORM_APPLE)

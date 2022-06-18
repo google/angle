@@ -3604,9 +3604,9 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     // Additionally, numerous tests that previously never created a Vulkan pipeline fail or crash on
     // proprietary Qualcomm drivers when they do during cache warm up.  On Intel/Linux, one trace
     // shows flakiness with this.
-    ANGLE_FEATURE_CONDITION(
-        &mFeatures, warmUpPipelineCacheAtLink,
-        !isARM && !isPowerVR && !isQualcommProprietary && !(IsLinux() && isIntel));
+    ANGLE_FEATURE_CONDITION(&mFeatures, warmUpPipelineCacheAtLink,
+                            !isARM && !isPowerVR && !isQualcommProprietary &&
+                                !(IsLinux() && isIntel) && !(IsChromeOS() && isSwiftShader));
 
     // On ARM, per-sample shading is not enabled despite the presence of a Sample decoration.  As a
     // workaround, per-sample shading is inferred by ANGLE and explicitly enabled by the API.
