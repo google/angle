@@ -167,3 +167,8 @@
 7423 : MultithreadingTestES3.ThreadCWaitBeforeThreadBSyncFinish/* = SKIP_FOR_CAPTURE
 
 7389 : Texture2DTest.ManySupersedingTextureUpdates/* = SKIP_FOR_CAPTURE
+
+7449 : MultisampleTest.ContentPresevedAfterInterruption/* = SKIP_FOR_CAPTURE
+7449 : MultisampleTest.Line/* = SKIP_FOR_CAPTURE
+7449 : MultisampleTest.Point/* = SKIP_FOR_CAPTURE
+7449 : MultisampleTest.Triangle/* = SKIP_FOR_CAPTURE

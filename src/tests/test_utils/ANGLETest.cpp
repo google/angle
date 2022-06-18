@@ -718,6 +718,12 @@ void ANGLETestBase::ANGLETestSetUp()
                 // test.
                 GTEST_SKIP() << "Test skipped due to missing extension";
             }
+            else if (mFixture->configParams.multisample)
+            {
+                // If the test requests a multisampled window that isn't supported, automatically
+                // skip the test.
+                GTEST_SKIP() << "Test skipped due to no multisampled configs available";
+            }
             else
             {
                 // Otherwise fail the test.
