@@ -8373,8 +8373,14 @@ void ImageHelper::pruneSupersededUpdatesForLevel(ContextVk *contextVk,
         }
         else
         {
-            // Reset boundingBox to current update's value
-            boundingBox[aspectIndex] = currentUpdateBox;
+            // Extend boundingBox to best accommodate current update's box.
+            boundingBox[aspectIndex].extend(currentUpdateBox);
+            // If the volume of the current update box is larger than the extended boundingBox
+            // use that as the new boundingBox instead.
+            if (currentUpdateBox.volume() > boundingBox[aspectIndex].volume())
+            {
+                boundingBox[aspectIndex] = currentUpdateBox;
+            }
             return false;
         }
     };

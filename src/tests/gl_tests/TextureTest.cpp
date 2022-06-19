@@ -5570,6 +5570,63 @@ TEST_P(Texture2DArrayTestES3, TextureArrayRedefineThenUse)
     EXPECT_PIXEL_COLOR_EQ(px, py, GLColor::green);
 }
 
+// Create a 2D array texture and update layers with data and test that pruning
+// of superseded updates works as expected.
+TEST_P(Texture2DArrayTestES3, TextureArrayPruneSupersededUpdates)
+{
+    constexpr uint32_t kTexWidth  = 256;
+    constexpr uint32_t kTexHeight = 256;
+    constexpr uint32_t kTexLayers = 3;
+
+    glBindTexture(GL_TEXTURE_2D_ARRAY, m2DArrayTexture);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    EXPECT_GL_NO_ERROR();
+
+    // Initialize entire texture.
+    constexpr GLColor kInitialExpectedColor = GLColor(201u, 201u, 201u, 201u);
+    std::vector<GLColor> initialData(kTexWidth * kTexHeight * kTexLayers, kInitialExpectedColor);
+    glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, kTexWidth, kTexHeight, kTexLayers, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, initialData.data());
+
+    // Upate different layers with different colors, these together should supersed
+    // the entire init update
+    constexpr GLColor kExpectedColor[] = {GLColor(32u, 32u, 32u, 32u), GLColor(64u, 64u, 64u, 64u),
+                                          GLColor(128u, 128u, 128u, 128u)};
+    std::vector<GLColor> supersedingData[] = {
+        std::vector<GLColor>(kTexWidth * kTexHeight, kExpectedColor[0]),
+        std::vector<GLColor>(kTexWidth * kTexHeight, kExpectedColor[1]),
+        std::vector<GLColor>(kTexWidth * kTexHeight, kExpectedColor[2])};
+
+    glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0, kTexWidth, kTexHeight, 1, GL_RGBA,
+                    GL_UNSIGNED_BYTE, supersedingData[0].data());
+    glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 1, kTexWidth, kTexHeight, 1, GL_RGBA,
+                    GL_UNSIGNED_BYTE, supersedingData[1].data());
+    glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 2, kTexWidth, kTexHeight, 1, GL_RGBA,
+                    GL_UNSIGNED_BYTE, supersedingData[2].data());
+
+    glUseProgram(mProgram);
+    EXPECT_GL_NO_ERROR();
+
+    // Draw layer 0
+    glUniform1i(mTextureArraySliceUniformLocation, 0);
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, kExpectedColor[0]);
+
+    // Draw layer 1
+    glUniform1i(mTextureArraySliceUniformLocation, 1);
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, kExpectedColor[1]);
+
+    // Draw layer 2
+    glUniform1i(mTextureArraySliceUniformLocation, 2);
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, kExpectedColor[2]);
+}
+
 // Create a 2D array, use it, then redefine it to have fewer layers.  Regression test for a bug in
 // the Vulkan backend where the old higher-layer-count data upload was not removed.
 TEST_P(Texture2DArrayTestES3, TextureArrayUseThenRedefineThenUse)

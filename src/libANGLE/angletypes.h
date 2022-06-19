@@ -205,6 +205,8 @@ struct Box
     bool coversSameExtent(const Extents &size) const;
 
     bool contains(const Box &other) const;
+    size_t volume() const;
+    void extend(const Box &other);
 
     int x;
     int y;
