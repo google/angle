@@ -860,7 +860,7 @@ void ANGLERenderTest::SetUp()
     }
 
 #if defined(ANGLE_ENABLE_ASSERTS)
-    if (IsGLExtensionEnabled("GL_KHR_debug"))
+    if (IsGLExtensionEnabled("GL_KHR_debug") && mEnableDebugCallback)
     {
         EnableDebugCallback(&PerfTestDebugCallback, this);
     }

@@ -220,6 +220,7 @@ class ANGLERenderTest : public ANGLEPerfTest
     void updatePerfCounters();
 
     bool mIsTimestampQueryAvailable;
+    bool mEnableDebugCallback = true;
 
   private:
     void SetUp() override;

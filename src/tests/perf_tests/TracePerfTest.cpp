@@ -1260,6 +1260,12 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
         addExtensionPrerequisite("GL_EXT_texture_buffer");
     }
 
+    // glDebugMessageControlKHR and glDebugMessageCallbackKHR crash on ARM GLES1.
+    if (IsARM() && mParams->traceInfo.contextClientMajorVersion == 1)
+    {
+        mEnableDebugCallback = false;
+    }
+
     ASSERT(mParams->surfaceType == SurfaceType::Window || gEnableAllTraceTests);
     ASSERT(mParams->eglParameters.deviceType == EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE ||
            gEnableAllTraceTests);
