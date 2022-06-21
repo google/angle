@@ -3,8 +3,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// Copyright 2022 Rive
-//
 
 #include <regex>
 #include <sstream>
@@ -25,51 +23,7 @@ constexpr static int MAX_LOCAL_STORAGE_PLANES                = 3;
 constexpr static int MAX_LOCAL_STORAGE_BYTES                 = 16;
 constexpr static int MAX_FRAGMENT_OUTPUTS_WITH_LOCAL_STORAGE = 1;
 
-// ES 3.1 unfortunately requires most image formats to be either readonly or writeonly. To work
-// around this limitation, we bind the same image unit to both a readonly and a writeonly image2D.
-// We mark the images as volatile since they are aliases of the same memory.
-//
-// The ANGLE GLSL compiler doesn't appear to support macro concatenation (e.g., NAME ## _R). For
-// now, the client code is responsible to know there are two image2D variables, append "_R" for
-// pixelLocalLoadImpl, and append "_W" for pixelLocalStoreImpl.
-//
-// NOTE: PixelLocalStorageTest::useProgram appends "_R"/"_W" for you automatically if you use
-// PIXEL_LOCAL_DECL / pixelLocalLoad / pixelLocalStore.
 constexpr static const char kLocalStorageGLSLDefines[] = R"(
-#define PIXEL_LOCAL_DECL_IMPL(NAME_R, NAME_W, BINDING, FORMAT)                       \
-    layout(BINDING, FORMAT) coherent volatile readonly highp uniform image2D NAME_R; \
-    layout(BINDING, FORMAT) coherent volatile writeonly highp uniform image2D NAME_W
-#define PIXEL_LOCAL_DECL_I_IMPL(NAME_R, NAME_W, BINDING, FORMAT)                      \
-    layout(BINDING, FORMAT) coherent volatile readonly highp uniform iimage2D NAME_R; \
-    layout(BINDING, FORMAT) coherent volatile writeonly highp uniform iimage2D NAME_W
-#define PIXEL_LOCAL_DECL_UI_IMPL(NAME_R, NAME_W, BINDING, FORMAT)                     \
-    layout(BINDING, FORMAT) coherent volatile readonly highp uniform uimage2D NAME_R; \
-    layout(BINDING, FORMAT) coherent volatile writeonly highp uniform uimage2D NAME_W
-#define PIXEL_I_COORD \
-    ivec2(floor(gl_FragCoord.xy))
-#define pixelLocalLoadImpl(NAME_R) \
-    imageLoad(NAME_R, PIXEL_I_COORD)
-vec4 barrierAfter(vec4 expressionResult)
-{
-    memoryBarrier();
-    return expressionResult;
-}
-ivec4 barrierAfter(ivec4 expressionResult)
-{
-    memoryBarrier();
-    return expressionResult;
-}
-uvec4 barrierAfter(uvec4 expressionResult)
-{
-    memoryBarrier();
-    return expressionResult;
-}
-#define pixelLocalStoreImpl(NAME_W, VALUE_EXPRESSION)                      \
-    {                                                                      \
-        imageStore(NAME_W, PIXEL_I_COORD, barrierAfter(VALUE_EXPRESSION)); \
-        memoryBarrier();                                                   \
-    }
-// Don't execute pixelLocalStore when depth/stencil fails.
 layout(early_fragment_tests) in;
 )";
 
@@ -525,9 +479,14 @@ class ShaderInfoLog
   public:
     bool compileFragmentShader(const char *source)
     {
+        return compileShader(source, GL_FRAGMENT_SHADER);
+    }
+
+    bool compileShader(const char *source, GLenum shaderType)
+    {
         mInfoLog.clear();
 
-        GLuint shader = glCreateShader(GL_FRAGMENT_SHADER);
+        GLuint shader = glCreateShader(shaderType);
         glShaderSource(shader, 1, &source, nullptr);
         glCompileShader(shader);
 
@@ -581,18 +540,6 @@ class PixelLocalStorageTest : public ANGLETest<>
 
     void useProgram(std::string fsMain)
     {
-        // Replace: PIXEL_LOCAL_DECL(name, ...) -> PIXEL_LOCAL_DECL_IMPL(name_R, name_W, ...)
-        static std::regex kDeclRegex("(PIXEL_LOCAL_DECL[_UI]*)\\s*\\(\\s*([a-zA-Z_][a-zA-Z0-9_]*)");
-        fsMain = std::regex_replace(fsMain, kDeclRegex, "$1_IMPL($2_R, $2_W");
-
-        // Replace: pixelLocalLoad(name) -> pixelLocalLoadImpl(name_R)
-        static std::regex kLoadRegex("pixelLocalLoad\\s*\\(\\s*([a-zA-Z_][a-zA-Z0-9_]*)");
-        fsMain = std::regex_replace(fsMain, kLoadRegex, "pixelLocalLoadImpl($1_R");
-
-        // Replace: pixelLocalStore(name, ...) -> pixelLocalStoreImpl(name_W, ...)
-        static std::regex kStoreRegex("pixelLocalStore\\s*\\(\\s*([a-zA-Z_][a-zA-Z0-9_]*)");
-        fsMain = std::regex_replace(fsMain, kStoreRegex, "pixelLocalStoreImpl($1_W");
-
         if (mLTRBLocation >= 0)
         {
             glDisableVertexAttribArray(mLTRBLocation);
@@ -802,14 +749,14 @@ TEST_P(PixelLocalStorageTest, AllFormats)
         PixelLocalStoragePrototype pls;
 
         useProgram(R"(
-        PIXEL_LOCAL_DECL(plane1, binding=0, rgba8);
-        PIXEL_LOCAL_DECL_I(plane2, binding=1, rgba8i);
-        PIXEL_LOCAL_DECL_UI(plane3, binding=2, rgba8ui);
+        layout(binding=0, rgba8) lowp uniform pixelLocalANGLE plane1;
+        layout(rgba8i, binding=1) lowp uniform ipixelLocalANGLE plane2;
+        layout(binding=2, rgba8ui) lowp uniform upixelLocalANGLE plane3;
         void main()
         {
-            pixelLocalStore(plane1, color + pixelLocalLoad(plane1));
-            pixelLocalStore(plane2, ivec4(aux1) + pixelLocalLoad(plane2));
-            pixelLocalStore(plane3, uvec4(aux2) + pixelLocalLoad(plane3));
+            pixelLocalStoreANGLE(plane1, color + pixelLocalLoadANGLE(plane1));
+            pixelLocalStoreANGLE(plane2, ivec4(aux1) + pixelLocalLoadANGLE(plane2));
+            pixelLocalStoreANGLE(plane3, uvec4(aux2) + pixelLocalLoadANGLE(plane3));
         })");
 
         PLSTestTexture tex1(GL_RGBA8);
@@ -850,12 +797,12 @@ TEST_P(PixelLocalStorageTest, AllFormats)
         PixelLocalStoragePrototype pls;
 
         useProgram(R"(
-        PIXEL_LOCAL_DECL(plane1, binding=0, r32f);
-        PIXEL_LOCAL_DECL_UI(plane2, binding=1, r32ui);
+        layout(r32f, binding=0) highp uniform pixelLocalANGLE plane1;
+        layout(binding=1, r32ui) highp uniform upixelLocalANGLE plane2;
         void main()
         {
-            pixelLocalStore(plane1, color + pixelLocalLoad(plane1));
-            pixelLocalStore(plane2, uvec4(aux1) + pixelLocalLoad(plane2));
+            pixelLocalStoreANGLE(plane1, color + pixelLocalLoadANGLE(plane1));
+            pixelLocalStoreANGLE(plane2, uvec4(aux1) + pixelLocalLoadANGLE(plane2));
         })");
 
         PLSTestTexture tex1(GL_R32F);
@@ -908,14 +855,14 @@ TEST_P(PixelLocalStorageTest, AllFormats)
         PixelLocalStoragePrototype pls;
 
         useProgram(R"(
-        PIXEL_LOCAL_DECL(plane1, binding=0, rgba16f);
-        PIXEL_LOCAL_DECL_I(plane2, binding=1, rgba16i);
-        PIXEL_LOCAL_DECL_UI(plane3, binding=2, rgba16ui);
+        layout(rgba16f, binding=0) mediump uniform pixelLocalANGLE plane1;
+        layout(binding=1, rgba16i) mediump uniform ipixelLocalANGLE plane2;
+        layout(rgba16ui, binding=2) mediump uniform upixelLocalANGLE plane3;
         void main()
         {
-            pixelLocalStore(plane1, color + pixelLocalLoad(plane1));
-            pixelLocalStore(plane2, ivec4(aux1) + pixelLocalLoad(plane2));
-            pixelLocalStore(plane3, uvec4(aux2) + pixelLocalLoad(plane3));
+            pixelLocalStoreANGLE(plane1, color + pixelLocalLoadANGLE(plane1));
+            pixelLocalStoreANGLE(plane2, ivec4(aux1) + pixelLocalLoadANGLE(plane2));
+            pixelLocalStoreANGLE(plane3, uvec4(aux2) + pixelLocalLoadANGLE(plane3));
         })");
 
         PLSTestTexture tex1(GL_RGBA16F);
@@ -956,12 +903,12 @@ TEST_P(PixelLocalStorageTest, AllFormats)
         PixelLocalStoragePrototype pls;
 
         useProgram(R"(
-        PIXEL_LOCAL_DECL(plane1, binding=0, rgba32f);
-        PIXEL_LOCAL_DECL_UI(plane2, binding=1, rgba32ui);
+        layout(binding=0, rgba32f) highp uniform pixelLocalANGLE plane1;
+        layout(rgba32ui, binding=1) highp uniform upixelLocalANGLE plane2;
         void main()
         {
-            pixelLocalStore(plane1, color + pixelLocalLoad(plane1));
-            pixelLocalStore(plane2, uvec4(aux1) + pixelLocalLoad(plane2));
+            pixelLocalStoreANGLE(plane1, color + pixelLocalLoadANGLE(plane1));
+            pixelLocalStoreANGLE(plane2, uvec4(aux1) + pixelLocalLoadANGLE(plane2));
         })");
 
         PLSTestTexture tex1(GL_RGBA32F);
@@ -1120,12 +1067,13 @@ TEST_P(PixelLocalStorageTest, LoadOps)
     std::stringstream fs;
     for (int i = 0; i < MAX_LOCAL_STORAGE_PLANES; ++i)
     {
-        fs << "PIXEL_LOCAL_DECL(pls" << i << ", binding=" << i << ", rgba8);\n";
+        fs << "layout(binding=" << i << ", rgba8) highp uniform pixelLocalANGLE pls" << i << ";\n";
     }
     fs << "void main() {\n";
     for (int i = 0; i < MAX_LOCAL_STORAGE_PLANES; ++i)
     {
-        fs << "pixelLocalStore(pls" << i << ", color + pixelLocalLoad(pls" << i << "));\n";
+        fs << "pixelLocalStoreANGLE(pls" << i << ", color + pixelLocalLoadANGLE(pls" << i
+           << "));\n";
     }
     fs << "}";
     useProgram(fs.str().c_str());
@@ -1144,8 +1092,8 @@ TEST_P(PixelLocalStorageTest, LoadOps)
     glEnable(GL_SCISSOR_TEST);
     glScissor(0, 0, 20, H);
 
-    // Set up pls color planes with a clear color of black. Odd units load with GL_REPLACE (cleared
-    // to black) and even load with GL_KEEP (preserved red).
+    // Set up pls color planes with a clear color of black. Odd units load with GL_REPLACE
+    // (cleared to black) and even load with GL_KEEP (preserved red).
     GLFramebuffer fbo;
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
     std::vector<GLenum> loadOps(MAX_LOCAL_STORAGE_PLANES);
@@ -1219,8 +1167,6 @@ TEST_P(PixelLocalStorageTest, LoadOps)
 
 // This next series of tests checks that GL utilities for rejecting fragments prevent stores to PLS:
 //
-//   * discard
-//   * return (from main)
 //   * stencil test
 //   * depth test
 //   * viewport
@@ -1228,8 +1174,8 @@ TEST_P(PixelLocalStorageTest, LoadOps)
 // Some utilities are not legal in ANGLE_shader_pixel_local_storage:
 //
 //   * gl_SampleMask is disallowed by the spec
-//   * discard, after potential calls to pixelLocalLoad/Store, is disallowed by the spec
-//   * pixelLocalLoad/Store after a return from main is disallowed by the spec
+//   * discard, after potential calls to pixelLocalLoadANGLE/Store, is disallowed by the spec
+//   * pixelLocalLoadANGLE/Store after a return from main is disallowed by the spec
 //
 // To run the tests, bind a FragmentRejectTestFBO and draw {FRAG_REJECT_TEST_BOX}:
 //
@@ -1254,75 +1200,6 @@ constexpr static PixelLocalStorageTest::Box FRAG_REJECT_TEST_BOX(
     {0, 1, 0, 0},                                              // draw color
     {0, 0, FRAG_REJECT_TEST_WIDTH, FRAG_REJECT_TEST_HEIGHT});  // reject pixels outside aux1
 
-// Check that discard prevents stores to pls.
-// (discard after pixelLocalLoad/Store is illegal because it would have different behavior with
-// shader images vs framebuffer fetch.)
-TEST_P(PixelLocalStorageTest, FragmentReject_discard)
-{
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
-
-    PixelLocalStoragePrototype pls;
-    PLSTestTexture tex(GL_RGBA8);
-    FragmentRejectTestFBO fbo(pls, tex);
-
-    useProgram(R"(
-    PIXEL_LOCAL_DECL(pls, binding=0, rgba8);
-    void main()
-    {
-        vec4 dst = pixelLocalLoad(pls);
-        if (any(lessThan(gl_FragCoord.xy, aux1.xy)) || any(greaterThan(gl_FragCoord.xy, aux1.zw)))
-        {
-            discard;
-        }
-        pixelLocalStore(pls, color + dst);
-    })");
-    glBeginPixelLocalStorageANGLE(1, GLenumArray({GL_REPLACE}));
-    drawBoxes(pls, {FRAG_REJECT_TEST_BOX});
-    glEndPixelLocalStorageANGLE();
-
-    renderTextureToDefaultFramebuffer(tex);
-    EXPECT_PIXEL_RECT_EQ(0, 0, FRAG_REJECT_TEST_WIDTH, FRAG_REJECT_TEST_HEIGHT, GLColor::green);
-    EXPECT_PIXEL_RECT_EQ(FRAG_REJECT_TEST_WIDTH, 0, W - FRAG_REJECT_TEST_WIDTH,
-                         FRAG_REJECT_TEST_HEIGHT, GLColor::black);
-    EXPECT_PIXEL_RECT_EQ(0, FRAG_REJECT_TEST_HEIGHT, W, H - FRAG_REJECT_TEST_HEIGHT,
-                         GLColor::black);
-    ASSERT_GL_NO_ERROR();
-}
-
-// Check that return from main prevents stores to PLS.
-// (pixelLocalLoad/Store after a return from main is illegal because
-// GL_ARB_fragment_shader_interlock isn't allowed after a return from main.)
-TEST_P(PixelLocalStorageTest, FragmentReject_return)
-{
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
-
-    PixelLocalStoragePrototype pls;
-    PLSTestTexture tex(GL_RGBA8);
-    FragmentRejectTestFBO fbo(pls, tex);
-
-    useProgram(R"(
-    PIXEL_LOCAL_DECL(pls, binding=0, rgba8);
-    void main()
-    {
-        if (any(lessThan(gl_FragCoord.xy, aux1.xy)) || any(greaterThan(gl_FragCoord.xy, aux1.zw)))
-        {
-            return;
-        }
-        pixelLocalStore(pls, color + pixelLocalLoad(pls));
-    })");
-    glBeginPixelLocalStorageANGLE(1, GLenumArray({GL_REPLACE}));
-    drawBoxes(pls, {FRAG_REJECT_TEST_BOX});
-    glEndPixelLocalStorageANGLE();
-
-    renderTextureToDefaultFramebuffer(tex);
-    EXPECT_PIXEL_RECT_EQ(0, 0, FRAG_REJECT_TEST_WIDTH, FRAG_REJECT_TEST_HEIGHT, GLColor::green);
-    EXPECT_PIXEL_RECT_EQ(FRAG_REJECT_TEST_WIDTH, 0, W - FRAG_REJECT_TEST_WIDTH,
-                         FRAG_REJECT_TEST_HEIGHT, GLColor::black);
-    EXPECT_PIXEL_RECT_EQ(0, FRAG_REJECT_TEST_HEIGHT, W, H - FRAG_REJECT_TEST_HEIGHT,
-                         GLColor::black);
-    ASSERT_GL_NO_ERROR();
-}
-
 // Check that the stencil test prevents stores to PLS.
 TEST_P(PixelLocalStorageTest, FragmentReject_stencil)
 {
@@ -1333,10 +1210,10 @@ TEST_P(PixelLocalStorageTest, FragmentReject_stencil)
     FragmentRejectTestFBO fbo(pls, tex);
 
     useProgram(R"(
-    PIXEL_LOCAL_DECL(pls, binding=0, rgba8);
+    layout(binding=0, rgba8) highp uniform pixelLocalANGLE pls;
     void main()
     {
-        pixelLocalStore(pls, color + pixelLocalLoad(pls));
+        pixelLocalStoreANGLE(pls, color + pixelLocalLoadANGLE(pls));
     })");
     GLuint depthStencil;
     glGenRenderbuffers(1, &depthStencil);
@@ -1393,10 +1270,10 @@ TEST_P(PixelLocalStorageTest, FragmentReject_depth)
     FragmentRejectTestFBO fbo(pls, tex);
 
     useProgram(R"(
-    PIXEL_LOCAL_DECL(pls, binding=0, rgba8);
+    layout(binding=0, rgba8) highp uniform pixelLocalANGLE pls;
     void main()
     {
-        pixelLocalStore(pls, pixelLocalLoad(pls) + color);
+        pixelLocalStoreANGLE(pls, pixelLocalLoadANGLE(pls) + color);
     })");
     GLuint depth;
     glGenRenderbuffers(1, &depth);
@@ -1436,11 +1313,11 @@ TEST_P(PixelLocalStorageTest, FragmentReject_viewport)
     FragmentRejectTestFBO fbo(pls, tex);
 
     useProgram(R"(
-    PIXEL_LOCAL_DECL(pls, binding=0, rgba8);
+    layout(binding=0, rgba8) highp uniform pixelLocalANGLE pls;
     void main()
     {
-        vec4 dst = pixelLocalLoad(pls);
-        pixelLocalStore(pls, color + dst);
+        vec4 dst = pixelLocalLoadANGLE(pls);
+        pixelLocalStoreANGLE(pls, color + dst);
     })");
     glBeginPixelLocalStorageANGLE(1, GLenumArray({GL_REPLACE}));
     glViewport(0, 0, FRAG_REJECT_TEST_WIDTH, FRAG_REJECT_TEST_HEIGHT);
@@ -1466,11 +1343,11 @@ TEST_P(PixelLocalStorageTest, ForgetBarrier)
     PixelLocalStoragePrototype pls;
 
     useProgram(R"(
-    PIXEL_LOCAL_DECL_UI(framebuffer, binding=0, r32ui);
+    layout(binding=0, r32ui) highp uniform upixelLocalANGLE framebuffer;
     void main()
     {
-        uvec4 dst = pixelLocalLoad(framebuffer);
-        pixelLocalStore(framebuffer, uvec4(color) + dst * 2u);
+        uvec4 dst = pixelLocalLoadANGLE(framebuffer);
+        pixelLocalStoreANGLE(framebuffer, uvec4(color) + dst * 2u);
     })");
 
     // Draw r=100, one pixel at a time, in random order.
@@ -1599,10 +1476,10 @@ TEST_P(PixelLocalStorageTest, MemorylessStorage)
 
     // Draw into memoryless storage.
     useProgram(R"(
-    PIXEL_LOCAL_DECL(memoryless, binding=1, rgba8);
+    layout(binding=1, rgba8) highp uniform pixelLocalANGLE memoryless;
     void main()
     {
-        pixelLocalStore(memoryless, color + pixelLocalLoad(memoryless));
+        pixelLocalStoreANGLE(memoryless, color + pixelLocalLoadANGLE(memoryless));
     })");
 
     drawBoxes(pls, {{{0, 20, W, H}, {1, 0, 0, 0}},
@@ -1611,11 +1488,11 @@ TEST_P(PixelLocalStorageTest, MemorylessStorage)
 
     // Transfer to a texture.
     useProgram(R"(
-    PIXEL_LOCAL_DECL(framebuffer, binding=0, rgba8);
-    PIXEL_LOCAL_DECL(memoryless, binding=1, rgba8);
+    layout(binding=0, rgba8) highp uniform pixelLocalANGLE framebuffer;
+    layout(binding=1, rgba8) highp uniform pixelLocalANGLE memoryless;
     void main()
     {
-        pixelLocalStore(framebuffer, vec4(1) - pixelLocalLoad(memoryless));
+        pixelLocalStoreANGLE(framebuffer, vec4(1) - pixelLocalLoadANGLE(memoryless));
     })");
 
     drawBoxes(pls, {{FULLSCREEN}});
@@ -1665,7 +1542,8 @@ TEST_P(PixelLocalStorageTest, MaxCapacity)
         const char *format = i < num32s              ? "rgba32ui"
                              : i < (num32s + num16s) ? "rgba16ui"
                                                      : "rgba8ui";
-        fs << "PIXEL_LOCAL_DECL_UI(pls" << i << ", binding=" << i << ", " << format << ");\n";
+        fs << "layout(binding=" << i << ", " << format << ") highp uniform upixelLocalANGLE pls"
+           << i << ";\n";
     }
     for (int i = 0; i < MAX_FRAGMENT_OUTPUTS_WITH_LOCAL_STORAGE; ++i)
     {
@@ -1674,7 +1552,7 @@ TEST_P(PixelLocalStorageTest, MaxCapacity)
     fs << "void main() {\n";
     for (int i = 0; i < MAX_LOCAL_STORAGE_PLANES; ++i)
     {
-        fs << "pixelLocalStore(pls" << i << ", uvec4(color) - uvec4(" << i << "));\n";
+        fs << "pixelLocalStoreANGLE(pls" << i << ", uvec4(color) - uvec4(" << i << "));\n";
     }
     for (int i = 0; i < MAX_FRAGMENT_OUTPUTS_WITH_LOCAL_STORAGE; ++i)
     {
@@ -1728,12 +1606,12 @@ TEST_P(PixelLocalStorageTest, MaxCapacity)
     ASSERT_GL_NO_ERROR();
 }
 
-// Check that the pls is preserved when a shader does not call pixelLocalStore(). (Whether that's
-// because a conditional branch failed or because the shader didn't write to it at all.) It's
+// Check that the pls is preserved when a shader does not call pixelLocalStoreANGLE(). (Whether
+// that's because a conditional branch failed or because the shader didn't write to it at all.) It's
 // conceivable that an implementation may need to be careful to preserve the pls contents in this
 // scenario.
 //
-// Also check that a pixelLocalLoad() of an r32f texture returns (r, 0, 0, 1).
+// Also check that a pixelLocalLoadANGLE() of an r32f texture returns (r, 0, 0, 1).
 TEST_P(PixelLocalStorageTest, LoadOnly)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
@@ -1755,33 +1633,33 @@ TEST_P(PixelLocalStorageTest, LoadOnly)
 
     // Pass 1: draw to memoryless conditionally.
     useProgram(R"(
-    PIXEL_LOCAL_DECL(memoryless, binding=0, r32f);
+    layout(binding=0, r32f) highp uniform pixelLocalANGLE memoryless;
     void main()
     {
         // Omit braces on the 'if' to ensure proper insertion of memoryBarriers in the translator.
         if (gl_FragCoord.x < 64.0)
-            pixelLocalStore(memoryless, vec4(1, -.1, .2, -.3));  // Only stores r.
+            pixelLocalStoreANGLE(memoryless, vec4(1, -.1, .2, -.3));  // Only stores r.
     })");
     drawBoxes(pls, {{FULLSCREEN}});
 
     // Pass 2: draw to tex conditionally.
     useProgram(R"(
-    PIXEL_LOCAL_DECL(tex, binding=1, rgba8);
+    layout(binding=1, rgba8) highp uniform pixelLocalANGLE tex;
     void main()
     {
         // Omit braces on the 'if' to ensure proper insertion of memoryBarriers in the translator.
         if (gl_FragCoord.y < 64.0)
-            pixelLocalStore(tex, vec4(0, 1, 1, 0));
+            pixelLocalStoreANGLE(tex, vec4(0, 1, 1, 0));
     })");
     drawBoxes(pls, {{FULLSCREEN}});
 
     // Pass 3: combine memoryless and tex.
     useProgram(R"(
-    PIXEL_LOCAL_DECL(memoryless, binding=0, r32f);
-    PIXEL_LOCAL_DECL(tex, binding=1, rgba8);
+    layout(binding=0, r32f) highp uniform pixelLocalANGLE memoryless;
+    layout(binding=1, rgba8) highp uniform pixelLocalANGLE tex;
     void main()
     {
-        pixelLocalStore(tex, pixelLocalLoad(tex) + pixelLocalLoad(memoryless));
+        pixelLocalStoreANGLE(tex, pixelLocalLoadANGLE(tex) + pixelLocalLoadANGLE(memoryless));
     })");
     drawBoxes(pls, {{FULLSCREEN}});
 
@@ -1805,11 +1683,11 @@ TEST_P(PixelLocalStorageTest, LoadOnly)
     glBeginPixelLocalStorageANGLE(2, GLenumArray({GL_DISABLE_ANGLE, GL_KEEP}));
 
     useProgram(R"(
-    PIXEL_LOCAL_DECL(tex, binding=1, rgba8);
+    layout(binding=1, rgba8) highp uniform pixelLocalANGLE tex;
     out vec4 fragcolor;
     void main()
     {
-        fragcolor = 1.0 - pixelLocalLoad(tex);
+        fragcolor = 1.0 - pixelLocalLoadANGLE(tex);
     })");
     drawBoxes(pls, {{FULLSCREEN}});
 
@@ -1840,19 +1718,19 @@ TEST_P(PixelLocalStorageTest, CoherentStoreLoad)
 
     // Run a fibonacci loop that stores and loads the same PLS multiple times.
     useProgram(R"(
-    PIXEL_LOCAL_DECL(fibonacci, binding=0, rgba16f);
+    layout(binding=0, rgba16f) highp uniform pixelLocalANGLE fibonacci;
     void main()
     {
-        pixelLocalStore(fibonacci, vec4(1, 0, 0, 0));  // fib(1, 0, 0, 0)
+        pixelLocalStoreANGLE(fibonacci, vec4(1, 0, 0, 0));  // fib(1, 0, 0, 0)
         for (int i = 0; i < 3; ++i)
         {
-            vec4 fib0 = pixelLocalLoad(fibonacci);
+            vec4 fib0 = pixelLocalLoadANGLE(fibonacci);
             vec4 fib1;
             fib1.w = fib0.x + fib0.y;
             fib1.z = fib1.w + fib0.x;
             fib1.y = fib1.z + fib1.w;
             fib1.x = fib1.y + fib1.z;  // fib(i*4 + (5, 4, 3, 2))
-            pixelLocalStore(fibonacci, fib1);
+            pixelLocalStoreANGLE(fibonacci, fib1);
         }
         // fib is at indices (13, 12, 11, 10)
     })");
@@ -1876,17 +1754,17 @@ TEST_P(PixelLocalStorageTest, CoherentStoreLoad)
 
     // Now verify that r32f and r32ui still reload as (r, 0, 0, 1), even after an in-shader store.
     useProgram(R"(
-    PIXEL_LOCAL_DECL(pls32f, binding=0, r32f);
-    PIXEL_LOCAL_DECL_UI(pls32ui, binding=1, r32ui);
+    layout(binding=0, r32f) highp uniform pixelLocalANGLE pls32f;
+    layout(binding=1, r32ui) highp uniform upixelLocalANGLE pls32ui;
     out vec4 fragcolor;
     void main()
     {
-        pixelLocalStore(pls32f, vec4(1, .5, .5, .5));
-        pixelLocalStore(pls32ui, uvec4(1, 1, 1, 0));
+        pixelLocalStoreANGLE(pls32f, vec4(1, .5, .5, .5));
+        pixelLocalStoreANGLE(pls32ui, uvec4(1, 1, 1, 0));
         if ((int(floor(gl_FragCoord.x)) & 1) == 0)
-            fragcolor = pixelLocalLoad(pls32f);
+            fragcolor = pixelLocalLoadANGLE(pls32f);
         else
-            fragcolor = vec4(pixelLocalLoad(pls32ui));
+            fragcolor = vec4(pixelLocalLoadANGLE(pls32ui));
     })");
 
     tex.reset(GL_RGBA8);
@@ -1929,7 +1807,8 @@ class PixelLocalStorageCompilerTest : public ANGLETest<>
 // Check that PLS #extension support is properly implemented.
 TEST_P(PixelLocalStorageCompilerTest, Extension)
 {
-    // GL_ANGLE_shader_pixel_local_storage_coherent isn't a shader extension.
+    // GL_ANGLE_shader_pixel_local_storage_coherent isn't a shader extension. Shaders must always
+    // use GL_ANGLE_shader_pixel_local_storage, regardless of coherency.
     const char *kNonexistentPLSCoherentExtension = R"(#version 310 es
     #extension GL_ANGLE_shader_pixel_local_storage_coherent : require
     void main()
@@ -1938,6 +1817,661 @@ TEST_P(PixelLocalStorageCompilerTest, Extension)
     EXPECT_FALSE(log.compileFragmentShader(kNonexistentPLSCoherentExtension));
     EXPECT_TRUE(log.has(
         "ERROR: 0:2: 'GL_ANGLE_shader_pixel_local_storage_coherent' : extension is not supported"));
+
+    // PLS type names cannot be used as variable names when the extension is enabled.
+    const char *kPLSEnabledTypesAsNames = R"(#version 310 es
+    #extension all : warn
+    void main()
+    {
+        int pixelLocalANGLE = 0;
+        int ipixelLocalANGLE = 0;
+        int upixelLocalANGLE = 0;
+    })";
+    EXPECT_FALSE(log.compileFragmentShader(kPLSEnabledTypesAsNames));
+    EXPECT_TRUE(log.has("ERROR: 0:5: 'pixelLocalANGLE' : syntax error"));
+
+    // PLS type names are fair game when the extension is disabled.
+    const char *kPLSDisabledTypesAsNames = R"(#version 310 es
+    #extension GL_ANGLE_shader_pixel_local_storage : disable
+    void main()
+    {
+        int pixelLocalANGLE = 0;
+        int ipixelLocalANGLE = 0;
+        int upixelLocalANGLE = 0;
+    })";
+    EXPECT_TRUE(log.compileFragmentShader(kPLSDisabledTypesAsNames));
+
+    // PLS is not allowed in a vertex shader.
+    const char *kPLSInVertexShader = R"(#version 310 es
+    #extension GL_ANGLE_shader_pixel_local_storage : enable
+    layout(binding=0, rgba8) lowp uniform pixelLocalANGLE pls;
+    void main()
+    {
+        pixelLocalStoreANGLE(pls, vec4(0));
+    })";
+    EXPECT_FALSE(log.compileShader(kPLSInVertexShader, GL_VERTEX_SHADER));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:3: 'pixelLocalANGLE' : undefined use of pixel local storage outside a "
+                "fragment shader"));
+
+    ASSERT_GL_NO_ERROR();
+}
+
+// Check proper validation of PLS handle declarations.
+TEST_P(PixelLocalStorageCompilerTest, Declarations)
+{
+    // PLS handles must be uniform.
+    const char *kPLSTypesMustBeUniform = R"(#version 310 es
+    #extension GL_ANGLE_shader_pixel_local_storage : enable
+    layout(binding=0, rgba8) highp pixelLocalANGLE pls1;
+    void main()
+    {
+        highp ipixelLocalANGLE pls2;
+        highp upixelLocalANGLE pls3;
+    })";
+    EXPECT_FALSE(log.compileFragmentShader(kPLSTypesMustBeUniform));
+    EXPECT_TRUE(log.has("ERROR: 0:3: 'pixelLocalANGLE' : pixelLocalANGLEs must be uniform"));
+    EXPECT_TRUE(log.has("ERROR: 0:6: 'ipixelLocalANGLE' : ipixelLocalANGLEs must be uniform"));
+    EXPECT_TRUE(log.has("ERROR: 0:7: 'upixelLocalANGLE' : upixelLocalANGLEs must be uniform"));
+
+    // Memory qualifiers are not allowed on PLS handles.
+    const char *kPLSMemoryQualifiers = R"(#version 310 es
+    #extension GL_ANGLE_shader_pixel_local_storage : require
+    layout(binding=0, rgba8) uniform lowp volatile coherent restrict pixelLocalANGLE pls1;
+    layout(binding=1, rgba16i) uniform mediump readonly ipixelLocalANGLE pls2;
+    void f(uniform highp writeonly upixelLocalANGLE pls);
+    void main()
+    {
+    })";
+    EXPECT_FALSE(log.compileFragmentShader(kPLSMemoryQualifiers));
+    EXPECT_TRUE(log.has("ERROR: 0:3: 'coherent' : "));
+    EXPECT_TRUE(log.has("ERROR: 0:3: 'restrict' : "));
+    EXPECT_TRUE(log.has("ERROR: 0:3: 'volatile' : "));
+    EXPECT_TRUE(log.has("ERROR: 0:4: 'readonly' : "));
+    EXPECT_TRUE(log.has("ERROR: 0:5: 'writeonly' : "));
+
+    // PLS handles must specify precision.
+    const char *kPLSNoPrecision = R"(#version 310 es
+    #extension GL_ANGLE_shader_pixel_local_storage : enable
+    layout(binding=0, rgba8) uniform pixelLocalANGLE pls1;
+    layout(binding=1, rgba8i) uniform ipixelLocalANGLE pls2;
+    void f(upixelLocalANGLE pls3)
+    {
+    }
+    void main()
+    {
+    })";
+    EXPECT_FALSE(log.compileFragmentShader(kPLSNoPrecision));
+    EXPECT_TRUE(log.has("ERROR: 0:3: 'pixelLocalANGLE' : No precision specified"));
+    EXPECT_TRUE(log.has("ERROR: 0:4: 'ipixelLocalANGLE' : No precision specified"));
+    EXPECT_TRUE(log.has("ERROR: 0:5: 'upixelLocalANGLE' : No precision specified"));
+
+    // PLS handles cannot cannot be aggregated in arrays.
+    const char *kPLSArrays = R"(#version 310 es
+    #extension GL_ANGLE_shader_pixel_local_storage : require
+    layout(binding=0, rgba8) uniform lowp pixelLocalANGLE pls1[1];
+    layout(binding=1, rgba16i) uniform mediump ipixelLocalANGLE pls2[2];
+    layout(binding=2, rgba32ui) uniform highp upixelLocalANGLE pls3[3];
+    void main()
+    {
+    })";
+    EXPECT_FALSE(log.compileFragmentShader(kPLSArrays));
+    EXPECT_TRUE(log.has(
+        "ERROR: 0:3: 'array' : pixel local storage handles cannot be aggregated in arrays"));
+    EXPECT_TRUE(log.has(
+        "ERROR: 0:4: 'array' : pixel local storage handles cannot be aggregated in arrays"));
+    EXPECT_TRUE(log.has(
+        "ERROR: 0:5: 'array' : pixel local storage handles cannot be aggregated in arrays"));
+
+    // If PLS handles could be used before their declaration, then we would need to update the PLS
+    // rewriters to make two passes.
+    const char *kPLSUseBeforeDeclaration = R"(#version 310 es
+    #extension GL_ANGLE_shader_pixel_local_storage : require
+    void f()
+    {
+        pixelLocalStoreANGLE(pls, vec4(0));
+        pixelLocalStoreANGLE(pls2, ivec4(0));
+    }
+    layout(binding=0, rgba8) uniform lowp pixelLocalANGLE pls;
+    void main()
+    {
+        pixelLocalStoreANGLE(pls, vec4(0));
+        pixelLocalStoreANGLE(pls2, ivec4(0));
+    }
+    layout(binding=1, rgba8i) uniform lowp ipixelLocalANGLE pls2;)";
+    EXPECT_FALSE(log.compileFragmentShader(kPLSUseBeforeDeclaration));
+    EXPECT_TRUE(log.has("ERROR: 0:5: 'pls' : undeclared identifier"));
+    EXPECT_TRUE(log.has("ERROR: 0:6: 'pls2' : undeclared identifier"));
+    EXPECT_TRUE(log.has("ERROR: 0:12: 'pls2' : undeclared identifier"));
+
+    // PLS unimorms must be declared at global scope; they cannot be declared in structs or
+    // interface blocks.
+    const char *kPLSInStruct = R"(#version 310 es
+    #extension GL_ANGLE_shader_pixel_local_storage : require
+    struct Foo
+    {
+        lowp pixelLocalANGLE pls;
+    };
+    uniform Foo foo;
+    uniform PLSBlock
+    {
+        lowp pixelLocalANGLE blockpls;
+    };
+    void main()
+    {
+        pixelLocalStoreANGLE(foo.pls, pixelLocalLoadANGLE(blockpls));
+    })";
+    EXPECT_FALSE(log.compileFragmentShader(kPLSInStruct));
+    EXPECT_TRUE(log.has("ERROR: 0:5: 'pixelLocalANGLE' : disallowed type in struct"));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:10: 'pixelLocalANGLE' : unsupported type - pixelLocalANGLE types are not "
+                "allowed in interface blocks"));
+
+    ASSERT_GL_NO_ERROR();
+}
+
+// Check proper validation of PLS layout qualifiers.
+TEST_P(PixelLocalStorageCompilerTest, LayoutQualifiers)
+{
+    // PLS handles must specify a layout qualifier with a valid binding and format.
+    const char *kPLSInvalidBindingsAndFormats = R"(#version 310 es
+    #extension GL_ANGLE_shader_pixel_local_storage : require
+    layout(rgba8) highp uniform ipixelLocalANGLE pls0;
+    layout(rgba8i) highp uniform upixelLocalANGLE pls1;
+    layout(rgba8ui) highp uniform pixelLocalANGLE pls2;
+    layout(r32f) highp uniform ipixelLocalANGLE pls3;
+    layout(r32ui) highp uniform pixelLocalANGLE pls4;
+    layout(rgba16f) highp uniform ipixelLocalANGLE pls5;
+    layout(rgba16i) highp uniform upixelLocalANGLE pls6;
+    layout(rgba16ui) highp uniform pixelLocalANGLE pls7;
+    layout(rgba32f) highp uniform ipixelLocalANGLE pls8;
+    layout(rgba32ui) highp uniform pixelLocalANGLE pls9;
+    layout(rgba8) highp uniform upixelLocalANGLE pls10;
+    layout(rgba8i) highp uniform pixelLocalANGLE pls11;
+    layout(rgba8ui) highp uniform ipixelLocalANGLE pls12;
+    layout(r32f) highp uniform upixelLocalANGLE pls13;
+    layout(r32ui) highp uniform ipixelLocalANGLE pls14;
+    layout(rgba16f) highp uniform upixelLocalANGLE pls15;
+    layout(rgba16i) highp uniform pixelLocalANGLE pls16;
+    layout(rgba16ui) highp uniform ipixelLocalANGLE pls17;
+    layout(rgba32f) highp uniform upixelLocalANGLE pls18;
+    layout(rgba32ui) highp uniform ipixelLocalANGLE pls19;
+    layout(r32i) highp uniform pixelLocalANGLE pls20;
+    layout(rgba32i) highp uniform pixelLocalANGLE pls21;
+    layout(rgba8_snorm) highp uniform pixelLocalANGLE pls22;
+    highp uniform pixelLocalANGLE pls23;
+    layout(binding=999999999, rgba8i) highp uniform ipixelLocalANGLE pls24;
+    void main()
+    {
+    })";
+    EXPECT_FALSE(log.compileFragmentShader(kPLSInvalidBindingsAndFormats));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:3: 'rgba8' : pixel local storage format requires pixelLocalANGLE"));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:3: 'layout qualifier' : pixel local storage requires a binding index"));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:4: 'rgba8i' : pixel local storage format requires ipixelLocalANGLE"));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:4: 'layout qualifier' : pixel local storage requires a binding index"));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:5: 'rgba8ui' : pixel local storage format requires upixelLocalANGLE"));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:5: 'layout qualifier' : pixel local storage requires a binding index"));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:6: 'r32f' : pixel local storage format requires pixelLocalANGLE"));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:6: 'layout qualifier' : pixel local storage requires a binding index"));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:7: 'r32ui' : pixel local storage format requires upixelLocalANGLE"));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:7: 'layout qualifier' : pixel local storage requires a binding index"));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:8: 'rgba16f' : pixel local storage format requires pixelLocalANGLE"));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:8: 'layout qualifier' : pixel local storage requires a binding index"));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:9: 'rgba16i' : pixel local storage format requires ipixelLocalANGLE"));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:9: 'layout qualifier' : pixel local storage requires a binding index"));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:10: 'rgba16ui' : pixel local storage format requires upixelLocalANGLE"));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:10: 'layout qualifier' : pixel local storage requires a binding index"));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:11: 'rgba32f' : pixel local storage format requires pixelLocalANGLE"));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:11: 'layout qualifier' : pixel local storage requires a binding index"));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:12: 'rgba32ui' : pixel local storage format requires upixelLocalANGLE"));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:12: 'layout qualifier' : pixel local storage requires a binding index"));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:13: 'rgba8' : pixel local storage format requires pixelLocalANGLE"));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:13: 'layout qualifier' : pixel local storage requires a binding index"));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:14: 'rgba8i' : pixel local storage format requires ipixelLocalANGLE"));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:14: 'layout qualifier' : pixel local storage requires a binding index"));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:15: 'rgba8ui' : pixel local storage format requires upixelLocalANGLE"));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:15: 'layout qualifier' : pixel local storage requires a binding index"));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:16: 'r32f' : pixel local storage format requires pixelLocalANGLE"));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:16: 'layout qualifier' : pixel local storage requires a binding index"));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:17: 'r32ui' : pixel local storage format requires upixelLocalANGLE"));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:17: 'layout qualifier' : pixel local storage requires a binding index"));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:18: 'rgba16f' : pixel local storage format requires pixelLocalANGLE"));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:18: 'layout qualifier' : pixel local storage requires a binding index"));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:19: 'rgba16i' : pixel local storage format requires ipixelLocalANGLE"));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:19: 'layout qualifier' : pixel local storage requires a binding index"));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:20: 'rgba16ui' : pixel local storage format requires upixelLocalANGLE"));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:20: 'layout qualifier' : pixel local storage requires a binding index"));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:21: 'rgba32f' : pixel local storage format requires pixelLocalANGLE"));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:21: 'layout qualifier' : pixel local storage requires a binding index"));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:22: 'rgba32ui' : pixel local storage format requires upixelLocalANGLE"));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:22: 'layout qualifier' : pixel local storage requires a binding index"));
+    EXPECT_TRUE(log.has("ERROR: 0:23: 'r32i' : illegal pixel local storage format"));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:23: 'layout qualifier' : pixel local storage requires a binding index"));
+    EXPECT_TRUE(log.has("ERROR: 0:24: 'rgba32i' : illegal pixel local storage format"));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:24: 'layout qualifier' : pixel local storage requires a binding index"));
+    EXPECT_TRUE(log.has("ERROR: 0:25: 'rgba8_snorm' : illegal pixel local storage format"));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:25: 'layout qualifier' : pixel local storage requires a binding index"));
+    EXPECT_TRUE(log.has(
+        "ERROR: 0:26: 'layout qualifier' : pixel local storage requires a format specifier"));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:26: 'layout qualifier' : pixel local storage requires a binding index"));
+    // TODO(anglebug.com/7279): "PLS binding greater than gl_MaxPixelLocalStoragePlanesANGLE".
+
+    // PLS handles cannot have duplicate binding indices.
+    const char *kPLSDuplicateBindings = R"(#version 310 es
+    #extension GL_ANGLE_shader_pixel_local_storage : require
+    layout(binding=0, rgba32f) uniform highp pixelLocalANGLE pls1;
+    layout(rgba16i, binding=1) uniform highp ipixelLocalANGLE pls2;
+    layout(binding=2, rgba32ui) uniform highp upixelLocalANGLE pls3;
+    layout(binding=1, rgba16i) uniform highp ipixelLocalANGLE pls4;
+    layout(rgba16i, binding=0) uniform mediump ipixelLocalANGLE pls5;
+    void main()
+    {
+    })";
+    EXPECT_FALSE(log.compileFragmentShader(kPLSDuplicateBindings));
+    EXPECT_TRUE(log.has("ERROR: 0:6: '1' : duplicate pixel local storage binding index"));
+    EXPECT_TRUE(log.has("ERROR: 0:7: '0' : duplicate pixel local storage binding index"));
+
+    // PLS handles cannot have duplicate binding indices.
+    const char *kPLSIllegalLayoutQualifiers = R"(#version 310 es
+    #extension GL_ANGLE_shader_pixel_local_storage : require
+    layout(foo) highp uniform pixelLocalANGLE pls1;
+    layout(binding=0, location=0, rgba8ui) highp uniform upixelLocalANGLE pls2;
+    void main()
+    {
+    })";
+    EXPECT_FALSE(log.compileFragmentShader(kPLSIllegalLayoutQualifiers));
+    EXPECT_TRUE(log.has("ERROR: 0:3: 'foo' : invalid layout qualifier"));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:4: 'location' : location must only be specified for a single input or "
+                "output variable"));
+
+    ASSERT_GL_NO_ERROR();
+}
+
+// Check proper validation of the discard statement when pixel local storage is(n't) declared.
+TEST_P(PixelLocalStorageCompilerTest, Discard)
+{
+    // Discard is not allowed when pixel local storage has been declared. When polyfilled with
+    // shader images, pixel local storage requires early_fragment_tests, which causes discard to
+    // interact differently with the depth and stencil tests.
+    //
+    // To ensure identical behavior across all backends (some of which may not have access to
+    // early_fragment_tests), we disallow discard if pixel local storage has been declared.
+    const char *kDiscardWithPLS = R"(#version 310 es
+    #extension GL_ANGLE_shader_pixel_local_storage : require
+    layout(binding=0, rgba16f) highp uniform pixelLocalANGLE pls;
+    void a()
+    {
+        discard;
+    }
+    void b();
+    void main()
+    {
+        if (gl_FragDepth == 3.14)
+            discard;
+        discard;
+    }
+    void b()
+    {
+        discard;
+    })";
+    EXPECT_FALSE(log.compileFragmentShader(kDiscardWithPLS));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:6: 'discard' : illegal discard when pixel local storage is declared"));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:12: 'discard' : illegal discard when pixel local storage is declared"));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:13: 'discard' : illegal discard when pixel local storage is declared"));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:17: 'discard' : illegal discard when pixel local storage is declared"));
+
+    // Discard is OK when pixel local storage has _not_ been declared.
+    const char *kDiscardNoPLS = R"(#version 310 es
+    #extension GL_ANGLE_shader_pixel_local_storage : require
+    void f(lowp pixelLocalANGLE pls);  // Function arguments don't trigger PLS restrictions.
+    void a()
+    {
+        discard;
+    }
+    void b();
+    void main()
+    {
+        if (gl_FragDepth == 3.14)
+            discard;
+        discard;
+    }
+    void b()
+    {
+        discard;
+    })";
+    EXPECT_TRUE(log.compileFragmentShader(kDiscardNoPLS));
+
+    // Ensure discard is caught even if it happens before PLS is declared.
+    const char *kDiscardBeforePLS = R"(#version 310 es
+    #extension GL_ANGLE_shader_pixel_local_storage : require
+    void a()
+    {
+        discard;
+    }
+    void main()
+    {
+    }
+    layout(binding=0, rgba16f) highp uniform pixelLocalANGLE pls;)";
+    EXPECT_FALSE(log.compileFragmentShader(kDiscardBeforePLS));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:5: 'discard' : illegal discard when pixel local storage is declared"));
+
+    ASSERT_GL_NO_ERROR();
+}
+
+// Check proper validation of the return statement when pixel local storage is(n't) declared.
+TEST_P(PixelLocalStorageCompilerTest, Return)
+{
+    // Returning from main isn't allowed when pixel local storage has been declared.
+    // (ARB_fragment_shader_interlock isn't allowed after return from main.)
+    const char *kReturnFromMainWithPLS = R"(#version 310 es
+    #extension GL_ANGLE_shader_pixel_local_storage : require
+    layout(binding=0, rgba16f) highp uniform pixelLocalANGLE pls;
+    void main()
+    {
+        if (gl_FragDepth == 3.14)
+            return;
+        return;
+    })";
+    EXPECT_FALSE(log.compileFragmentShader(kReturnFromMainWithPLS));
+    EXPECT_TRUE(log.has(
+        "ERROR: 0:7: 'return' : illegal return from main when pixel local storage is declared"));
+    EXPECT_TRUE(log.has(
+        "ERROR: 0:8: 'return' : illegal return from main when pixel local storage is declared"));
+
+    // Returning from main is OK when pixel local storage has _not_ been declared.
+    const char *kReturnFromMainNoPLS = R"(#version 310 es
+    #extension GL_ANGLE_shader_pixel_local_storage : require
+    void main()
+    {
+        if (gl_FragDepth == 3.14)
+            return;
+        return;
+    })";
+    EXPECT_TRUE(log.compileFragmentShader(kReturnFromMainNoPLS));
+
+    // Returning from subroutines is OK when pixel local storage has been declared.
+    const char *kReturnFromSubroutinesWithPLS = R"(#version 310 es
+    #extension GL_ANGLE_shader_pixel_local_storage : require
+    layout(rgba16ui, binding=0) highp uniform upixelLocalANGLE pls;
+    void a()
+    {
+        return;
+    }
+    void b();
+    void main()
+    {
+        a();
+        b();
+    }
+    void b()
+    {
+        return;
+    })";
+    EXPECT_TRUE(log.compileFragmentShader(kReturnFromSubroutinesWithPLS));
+
+    // Ensure return from main is caught even if it happens before PLS is declared.
+    const char *kDiscardBeforePLS = R"(#version 310 es
+    #extension GL_ANGLE_shader_pixel_local_storage : require
+    void main()
+    {
+        return;
+    }
+    layout(binding=0, rgba8) highp uniform pixelLocalANGLE pls;)";
+    EXPECT_FALSE(log.compileFragmentShader(kDiscardBeforePLS));
+    EXPECT_TRUE(log.has(
+        "ERROR: 0:5: 'return' : illegal return from main when pixel local storage is declared"));
+
+    ASSERT_GL_NO_ERROR();
+}
+
+// Check that gl_FragDepth(EXT) and gl_SampleMask are not assignable when PLS is declared.
+TEST_P(PixelLocalStorageCompilerTest, FragmentTestVariables)
+{
+    // gl_FragDepth is not assignable when pixel local storage has been declared. When polyfilled
+    // with shader images, pixel local storage requires early_fragment_tests, which causes
+    // assignments to gl_FragDepth(EXT) and gl_SampleMask to be ignored.
+    //
+    // To ensure identical behavior across all backends, we disallow assignment to these values if
+    // pixel local storage has been declared.
+    const char *kAssignFragDepthWithPLS = R"(#version 310 es
+    #extension GL_ANGLE_shader_pixel_local_storage : require
+    void set(out mediump float x, mediump float val)
+    {
+        x = val;
+    }
+    void set2(inout mediump float x, mediump float val)
+    {
+        x = val;
+    }
+    void main()
+    {
+        gl_FragDepth = 0.0;
+        gl_FragDepth -= 1.0;
+        set(gl_FragDepth, 0.0);
+        set2(gl_FragDepth, 0.1);
+    }
+    layout(binding=0, rgba8i) lowp uniform ipixelLocalANGLE pls;)";
+    EXPECT_FALSE(log.compileFragmentShader(kAssignFragDepthWithPLS));
+    EXPECT_TRUE(log.has(
+        "ERROR: 0:13: 'gl_FragDepth' : value not assignable when pixel local storage is declared"));
+    EXPECT_TRUE(log.has(
+        "ERROR: 0:14: 'gl_FragDepth' : value not assignable when pixel local storage is declared"));
+    EXPECT_TRUE(log.has(
+        "ERROR: 0:15: 'gl_FragDepth' : value not assignable when pixel local storage is declared"));
+    EXPECT_TRUE(log.has(
+        "ERROR: 0:16: 'gl_FragDepth' : value not assignable when pixel local storage is declared"));
+
+    // Assigning gl_FragDepth is OK if we don't declare any PLS.
+    const char *kAssignFragDepthNoPLS = R"(#version 310 es
+    #extension GL_ANGLE_shader_pixel_local_storage : require
+    void f(highp ipixelLocalANGLE pls)
+    {
+        // Function arguments don't trigger PLS restrictions.
+        pixelLocalStoreANGLE(pls, ivec4(8));
+    }
+    void set(out mediump float x, mediump float val)
+    {
+        x = val;
+    }
+    void main()
+    {
+        gl_FragDepth = 0.0;
+        gl_FragDepth /= 2.0;
+        set(gl_FragDepth, 0.0);
+    })";
+    EXPECT_TRUE(log.compileFragmentShader(kAssignFragDepthNoPLS));
+
+    // Reading gl_FragDepth is OK.
+    const char *kReadFragDepth = R"(#version 310 es
+    #extension GL_ANGLE_shader_pixel_local_storage : require
+    layout(r32f, binding=0) highp uniform pixelLocalANGLE pls;
+    highp vec4 get(in mediump float x)
+    {
+        return vec4(x);
+    }
+    void set(inout mediump float x, mediump float val)
+    {
+        x = val;
+    }
+    void main()
+    {
+        pixelLocalStoreANGLE(pls, get(gl_FragDepth));
+        // Check when gl_FragDepth is involved in an l-value expression, but not assigned to.
+        highp float x[2];
+        x[int(gl_FragDepth)] = 1.0;
+        set(x[1 - int(gl_FragDepth)], 2.0);
+    })";
+    EXPECT_TRUE(log.compileFragmentShader(kReadFragDepth));
+
+    if (IsGLExtensionEnabled("GL_OES_sample_variables"))
+    {
+        // gl_SampleMask is not assignable when pixel local storage has been declared. The shader
+        // image polyfill requires early_fragment_tests, which causes gl_SampleMask to be ignored.
+        //
+        // To ensure identical behavior across all implementations (some of which may not have
+        // access to early_fragment_tests), we disallow assignment to these values if pixel local
+        // storage has been declared.
+        const char *kAssignSampleMaskWithPLS = R"(#version 310 es
+        #extension GL_ANGLE_shader_pixel_local_storage : require
+        #extension GL_OES_sample_variables : require
+        void set(out highp int x, highp int val)
+        {
+            x = val;
+        }
+        void set2(inout highp int x, highp int val)
+        {
+            x = val;
+        }
+        void main()
+        {
+            gl_SampleMask[0] = 0;
+            gl_SampleMask[0] ^= 1;
+            set(gl_SampleMask[0], 9);
+            set2(gl_SampleMask[0], 10);
+        }
+        layout(binding=0, rgba16i) highp uniform ipixelLocalANGLE pls;)";
+        EXPECT_FALSE(log.compileFragmentShader(kAssignSampleMaskWithPLS));
+        EXPECT_TRUE(
+            log.has("ERROR: 0:14: 'gl_SampleMask' : value not assignable when pixel local storage "
+                    "is declared"));
+        EXPECT_TRUE(
+            log.has("ERROR: 0:15: 'gl_SampleMask' : value not assignable when pixel local storage "
+                    "is declared"));
+        EXPECT_TRUE(
+            log.has("ERROR: 0:16: 'gl_SampleMask' : value not assignable when pixel local storage "
+                    "is declared"));
+        EXPECT_TRUE(
+            log.has("ERROR: 0:17: 'gl_SampleMask' : value not assignable when pixel local storage "
+                    "is declared"));
+
+        // Assigning gl_SampleMask is OK if we don't declare any PLS.
+        const char *kAssignSampleMaskNoPLS = R"(#version 310 es
+        #extension GL_ANGLE_shader_pixel_local_storage : require
+        #extension GL_OES_sample_variables : require
+        void set(out highp int x, highp int val)
+        {
+            x = val;
+        }
+        void main()
+        {
+            gl_SampleMask[0] = 0;
+            gl_SampleMask[0] ^= 1;
+            set(gl_SampleMask[0], 9);
+        })";
+        EXPECT_TRUE(log.compileFragmentShader(kAssignSampleMaskNoPLS));
+
+        // Reading gl_SampleMask is OK enough (even though it's technically output only).
+        const char *kReadSampleMask = R"(#version 310 es
+        #extension GL_ANGLE_shader_pixel_local_storage : require
+        #extension GL_OES_sample_variables : require
+        layout(binding=0, rgba16i) highp uniform ipixelLocalANGLE pls;
+        highp int get(in highp int x)
+        {
+            return x;
+        }
+        void set(out highp int x, highp int val)
+        {
+            x = val;
+        }
+        void main()
+        {
+            pixelLocalStoreANGLE(pls, ivec4(get(gl_SampleMask[0]), gl_SampleMaskIn[0], 0, 1));
+            // Check when gl_SampleMask is involved in an l-value expression, but not assigned to.
+            highp int x[2];
+            x[gl_SampleMask[0]] = 1;
+            set(x[gl_SampleMask[0]], 2);
+        })";
+        EXPECT_TRUE(log.compileFragmentShader(kReadSampleMask));
+    }
+
+    ASSERT_GL_NO_ERROR();
+}
+
+// Check proper validation of PLS function arguments.
+TEST_P(PixelLocalStorageCompilerTest, FunctionArguments)
+{
+    // Ensure PLS handles can't be the result of complex expressions.
+    const char *kPLSHandleComplexExpression = R"(#version 310 es
+    #extension GL_ANGLE_shader_pixel_local_storage : require
+    layout(rgba8, binding=0) mediump uniform pixelLocalANGLE pls0;
+    layout(rgba8, binding=1) mediump uniform pixelLocalANGLE pls1;
+    void clear(mediump pixelLocalANGLE pls)
+    {
+        pixelLocalStoreANGLE(pls, vec4(0));
+    }
+    void main()
+    {
+        highp float x = gl_FragDepth;
+        clear(((x += 50.0) < 100.0) ? pls0 : pls1);
+    })";
+    EXPECT_FALSE(log.compileFragmentShader(kPLSHandleComplexExpression));
+    EXPECT_TRUE(log.has("ERROR: 0:12: '?:' : ternary operator is not allowed for opaque types"));
+
+    // As function arguments, PLS handles cannot have layout qualifiers.
+    const char *kPLSFnArgWithLayoutQualifiers = R"(#version 310 es
+    #extension GL_ANGLE_shader_pixel_local_storage : require
+    void f(layout(rgba8, binding=1) mediump pixelLocalANGLE pls)
+    {
+    }
+    void g(layout(rgba8) lowp pixelLocalANGLE pls);
+    void main()
+    {
+    })";
+    EXPECT_FALSE(log.compileFragmentShader(kPLSFnArgWithLayoutQualifiers));
+    EXPECT_TRUE(log.has("ERROR: 0:3: 'layout' : only allowed at global scope"));
+    EXPECT_TRUE(log.has("ERROR: 0:6: 'layout' : only allowed at global scope"));
+
+    ASSERT_GL_NO_ERROR();
 }
 
 ANGLE_INSTANTIATE_TEST(PixelLocalStorageCompilerTest,
