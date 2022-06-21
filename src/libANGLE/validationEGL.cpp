@@ -5332,6 +5332,10 @@ bool ValidateSurfaceAttrib(const ValidationContext *val,
             }
             break;
 
+        case EGL_FRONT_BUFFER_AUTO_REFRESH_ANDROID:
+            ASSERT(value == EGL_TRUE || value == EGL_FALSE);
+            break;
+
         case EGL_RENDER_BUFFER:
             if (value != EGL_BACK_BUFFER && value != EGL_SINGLE_BUFFER)
             {

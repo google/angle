@@ -59,6 +59,7 @@ struct SurfaceState final : private angle::NonCopyable
     AttributeMap attributes;
 
     bool timestampsEnabled;
+    bool autoRefreshEnabled;
     SupportedCompositorTiming supportedCompositorTimings;
     SupportedTimestamps supportedTimestamps;
     bool directComposition;
@@ -187,6 +188,9 @@ class Surface : public LabeledObject, public gl::FramebufferAttachmentObject
     // EGL_ANDROID_get_frame_timestamps entry points
     void setTimestampsEnabled(bool enabled);
     bool isTimestampsEnabled() const;
+
+    // EGL_ANDROID_front_buffer_auto_refresh entry points
+    Error setAutoRefreshEnabled(bool enabled);
 
     const SupportedCompositorTiming &getSupportedCompositorTimings() const;
     Error getCompositorTiming(EGLint numTimestamps,

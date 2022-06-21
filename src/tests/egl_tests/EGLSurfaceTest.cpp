@@ -461,6 +461,9 @@ class EGLSingleBufferTest : public ANGLETest<>
     const EGLint kHeight = 32;
 };
 
+class EGLAndroidAutoRefreshTest : public EGLSingleBufferTest
+{};
+
 // Test clearing and checking the color is correct
 TEST_P(EGLFloatSurfaceTest, Clearing)
 {
@@ -1648,7 +1651,7 @@ TEST_P(EGLSingleBufferTest, OnCreateWindowSurface)
         glClear(GL_COLOR_BUFFER_BIT);
         glFlush();
         ASSERT_GL_NO_ERROR();
-        // Flush should result in update of screen. Must be visually confirmend.
+        // Flush should result in update of screen. Must be visually confirmed.
         // Pixel test for automation.
         EXPECT_PIXEL_COLOR_EQ(1, 1, GLColor::green);
     }
@@ -1704,12 +1707,88 @@ TEST_P(EGLSingleBufferTest, OnSetSurfaceAttrib)
         glClearColor(0.0, 1.0, 0.0, 1.0);
         glClear(GL_COLOR_BUFFER_BIT);
         glFlush();
-        // Flush should result in update of screen. Must be visually confirmend Green window.
+        // Flush should result in update of screen. Must be visually confirmed Green window.
 
         // Check color for automation.
         EXPECT_PIXEL_COLOR_EQ(1, 1, GLColor::green);
 
         // Switch back to EGL_BACK_BUFFEr and check.
+        EXPECT_EGL_TRUE(eglSurfaceAttrib(mDisplay, surface, EGL_RENDER_BUFFER, EGL_BACK_BUFFER));
+        glClearColor(1.0, 1.0, 1.0, 1.0);
+        glClear(GL_COLOR_BUFFER_BIT);
+        EXPECT_EGL_TRUE(eglSwapBuffers(mDisplay, surface));
+
+        EXPECT_EGL_TRUE(eglQueryContext(mDisplay, context, EGL_RENDER_BUFFER, &actualRenderbuffer));
+        EXPECT_EGL_TRUE(actualRenderbuffer == EGL_BACK_BUFFER);
+
+        glClearColor(1.0, 0.0, 0.0, 1.0);
+        glClear(GL_COLOR_BUFFER_BIT);
+        EXPECT_PIXEL_COLOR_EQ(1, 1, GLColor::red);
+    }
+    else
+    {
+        std::cout << "EGL_SINGLE_BUFFER mode is not supported." << std::endl;
+    }
+
+    EXPECT_EGL_TRUE(eglMakeCurrent(mDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, context));
+    ASSERT_EGL_SUCCESS() << "eglMakeCurrent - uncurrent failed.";
+
+    eglDestroySurface(mDisplay, surface);
+    surface = EGL_NO_SURFACE;
+    osWindow->destroy();
+    OSWindow::Delete(&osWindow);
+
+    eglDestroyContext(mDisplay, context);
+    context = EGL_NO_CONTEXT;
+}
+
+// Test that setting a surface to EGL_SINGLE_BUFFER after enabling
+// EGL_FRONT_BUFFER_AUTO_REFRESH_ANDROID does not disable auto refresh
+TEST_P(EGLAndroidAutoRefreshTest, Basic)
+{
+    ANGLE_SKIP_TEST_IF(!IsEGLDisplayExtensionEnabled(mDisplay, "EGL_KHR_mutable_render_buffer"));
+    ANGLE_SKIP_TEST_IF(!IsAndroid());
+
+    EGLConfig config = EGL_NO_CONFIG_KHR;
+    ANGLE_SKIP_TEST_IF(!chooseConfig(&config, true));
+
+    EGLContext context = EGL_NO_CONTEXT;
+    EXPECT_EGL_TRUE(createContext(config, &context));
+    ASSERT_EGL_SUCCESS() << "eglCreateContext failed.";
+
+    EGLSurface surface = EGL_NO_SURFACE;
+    OSWindow *osWindow = OSWindow::New();
+    osWindow->initialize("EGLSingleBufferTest", kWidth, kHeight);
+    EXPECT_EGL_TRUE(
+        createWindowSurface(config, osWindow->getNativeWindow(), &surface, EGL_BACK_BUFFER));
+    ASSERT_EGL_SUCCESS() << "eglCreateWindowSurface failed.";
+
+    EXPECT_EGL_TRUE(eglMakeCurrent(mDisplay, surface, surface, context));
+    ASSERT_EGL_SUCCESS() << "eglMakeCurrent failed.";
+
+    EXPECT_EGL_TRUE(
+        eglSurfaceAttrib(mDisplay, surface, EGL_FRONT_BUFFER_AUTO_REFRESH_ANDROID, EGL_TRUE));
+
+    if (eglSurfaceAttrib(mDisplay, surface, EGL_RENDER_BUFFER, EGL_SINGLE_BUFFER))
+    {
+        // Transition into EGL_SINGLE_BUFFER mode.
+        glClearColor(1.0, 1.0, 1.0, 1.0);
+        glClear(GL_COLOR_BUFFER_BIT);
+        EXPECT_EGL_TRUE(eglSwapBuffers(mDisplay, surface));
+
+        EGLint actualRenderbuffer;
+        EXPECT_EGL_TRUE(eglQueryContext(mDisplay, context, EGL_RENDER_BUFFER, &actualRenderbuffer));
+        EXPECT_EGL_TRUE(actualRenderbuffer == EGL_SINGLE_BUFFER);
+
+        glClearColor(0.0, 1.0, 0.0, 1.0);
+        glClear(GL_COLOR_BUFFER_BIT);
+        glFlush();
+        // Flush should result in update of screen. Must be visually confirmed Green window.
+
+        // Check color for automation.
+        EXPECT_PIXEL_COLOR_EQ(1, 1, GLColor::green);
+
+        // Switch back to EGL_BACK_BUFFER and check.
         EXPECT_EGL_TRUE(eglSurfaceAttrib(mDisplay, surface, EGL_RENDER_BUFFER, EGL_BACK_BUFFER));
         glClearColor(1.0, 1.0, 1.0, 1.0);
         glClear(GL_COLOR_BUFFER_BIT);
@@ -1745,6 +1824,9 @@ GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(EGLSingleBufferTest);
 ANGLE_INSTANTIATE_TEST(EGLSingleBufferTest,
                        WithNoFixture(ES2_VULKAN()),
                        WithNoFixture(ES3_VULKAN()));
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(EGLAndroidAutoRefreshTest);
+ANGLE_INSTANTIATE_TEST(EGLAndroidAutoRefreshTest, WithNoFixture(ES3_VULKAN()));
 
 ANGLE_INSTANTIATE_TEST(EGLSurfaceTest,
                        WithNoFixture(ES2_D3D9()),
