@@ -21,6 +21,8 @@ libangle_common_sources = [
   "src/common/PackedGLEnums_autogen.h",
   "src/common/PoolAlloc.cpp",
   "src/common/PoolAlloc.h",
+  "src/common/RingBufferAllocator.cpp",
+  "src/common/RingBufferAllocator.h",
   "src/common/Spinlock.h",
   "src/common/SynchronizedValue.h",
   "src/common/WorkerThread.cpp",

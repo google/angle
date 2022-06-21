@@ -54,7 +54,7 @@ angle::Result VulkanSecondaryCommandBuffer::InitializeRenderPassInheritanceInfo(
 angle::Result VulkanSecondaryCommandBuffer::initialize(Context *context,
                                                        vk::CommandPool *pool,
                                                        bool isRenderPassCommandBuffer,
-                                                       angle::PoolAllocator *allocator)
+                                                       SecondaryCommandMemoryAllocator *allocator)
 {
     VkDevice device = context->getDevice();
 
@@ -70,7 +70,7 @@ angle::Result VulkanSecondaryCommandBuffer::initialize(Context *context,
     ANGLE_VK_TRY(context, init(device, allocInfo));
 
     // Outside-RP command buffers are begun automatically here.  RP command buffers are begun when
-    // the render pass itself starts, as they require inheritence info.
+    // the render pass itself starts, as they require inheritance info.
     if (!isRenderPassCommandBuffer)
     {
         VkCommandBufferInheritanceInfo inheritanceInfo = {};
