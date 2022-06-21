@@ -224,6 +224,7 @@ def angle_builder(name, cpu):
 
         # Trace tests are only run on CQ if files in the capture folders change.
         location_regexp = [
+            ".+/[+]/DEPS",
             ".+/[+]/src/libANGLE/capture/.+",
             ".+/[+]/src/tests/angle_end2end_tests_expectations.txt",
             ".+/[+]/src/tests/capture.+",
