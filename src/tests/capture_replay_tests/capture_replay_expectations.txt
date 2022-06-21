@@ -171,3 +171,5 @@
 
 7483 : MultisampleTest.AlphaToSampleCoverage/* = SKIP_FOR_CAPTURE
 7483 : MultisampleTestES3.ResolveToFBO/* = SKIP_FOR_CAPTURE
+
+6723 : EGLMultiContextTest.ReuseUnterminatedDisplay/* = SKIP_FOR_CAPTURE
