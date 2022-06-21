@@ -172,8 +172,8 @@ class DisplayVk : public DisplayImpl, public vk::Context
     // surfaceType, which would still allow the config to be used for pbuffers.
     virtual void checkConfigSupport(egl::Config *config) = 0;
 
-    ANGLE_NO_DISCARD bool getScratchBuffer(size_t requestedSizeBytes,
-                                           angle::MemoryBuffer **scratchBufferOut) const;
+    [[nodiscard]] bool getScratchBuffer(size_t requestedSizeBytes,
+                                        angle::MemoryBuffer **scratchBufferOut) const;
     angle::ScratchBuffer *getScratchBuffer() const { return &mScratchBuffer; }
 
     void handleError(VkResult result,

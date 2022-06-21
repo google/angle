@@ -41,10 +41,10 @@ constexpr ImmutableString kSampleMaskWriteFuncName = ImmutableString("ANGLEWrite
 // manually.
 // This operation performs flipping the gl_Position.y using this expression:
 // gl_Position.y = gl_Position.y * negViewportScaleY
-ANGLE_NO_DISCARD bool AppendVertexShaderPositionYCorrectionToMain(TCompiler *compiler,
-                                                                  TIntermBlock *root,
-                                                                  TSymbolTable *symbolTable,
-                                                                  TIntermTyped *negFlipY)
+[[nodiscard]] bool AppendVertexShaderPositionYCorrectionToMain(TCompiler *compiler,
+                                                               TIntermBlock *root,
+                                                               TSymbolTable *symbolTable,
+                                                               TIntermTyped *negFlipY)
 {
     // Create a symbol reference to "gl_Position"
     const TVariable *position  = BuiltInVariable::gl_Position();
@@ -67,9 +67,9 @@ ANGLE_NO_DISCARD bool AppendVertexShaderPositionYCorrectionToMain(TCompiler *com
 }
 
 // Initialize unused varying outputs.
-ANGLE_NO_DISCARD bool InitializeUnusedOutputs(TIntermBlock *root,
-                                              TSymbolTable *symbolTable,
-                                              const InitVariableList &unusedVars)
+[[nodiscard]] bool InitializeUnusedOutputs(TIntermBlock *root,
+                                           TSymbolTable *symbolTable,
+                                           const InitVariableList &unusedVars)
 {
     if (unusedVars.empty())
     {
@@ -209,7 +209,7 @@ bool TranslatorMetal::transformDepthBeforeCorrection(TIntermBlock *root,
 
 // Add sample_mask writing to main, guarded by the specialization constant
 // kCoverageMaskEnabledConstName
-ANGLE_NO_DISCARD bool TranslatorMetal::insertSampleMaskWritingLogic(
+[[nodiscard]] bool TranslatorMetal::insertSampleMaskWritingLogic(
     TInfoSinkBase &sink,
     TIntermBlock *root,
     const DriverUniformMetal *driverUniforms)
@@ -270,8 +270,8 @@ ANGLE_NO_DISCARD bool TranslatorMetal::insertSampleMaskWritingLogic(
     return RunAtTheEndOfShader(this, root, ifCall, symbolTable);
 }
 
-ANGLE_NO_DISCARD bool TranslatorMetal::insertRasterizerDiscardLogic(TInfoSinkBase &sink,
-                                                                    TIntermBlock *root)
+[[nodiscard]] bool TranslatorMetal::insertRasterizerDiscardLogic(TInfoSinkBase &sink,
+                                                                 TIntermBlock *root)
 {
     // This transformation leaves the tree in an inconsistent state by using a variable that's
     // defined in text, outside of the knowledge of the AST.

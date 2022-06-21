@@ -511,7 +511,7 @@ class ANGLETestBase
     // Has a float uniform "u_layer" to choose the 3D texture layer.
     GLuint get3DTexturedQuadProgram();
 
-    class ANGLE_NO_DISCARD ScopedIgnorePlatformMessages : angle::NonCopyable
+    class [[nodiscard]] ScopedIgnorePlatformMessages : angle::NonCopyable
     {
       public:
         ScopedIgnorePlatformMessages();

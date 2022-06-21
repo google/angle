@@ -340,7 +340,7 @@ class PixmapSurface final : public Surface
     ~PixmapSurface() override;
 };
 
-class ANGLE_NO_DISCARD ScopedSurfaceRef
+class [[nodiscard]] ScopedSurfaceRef
 {
   public:
     ScopedSurfaceRef(Surface *surface) : mSurface(surface)

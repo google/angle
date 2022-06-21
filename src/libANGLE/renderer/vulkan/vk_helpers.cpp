@@ -853,14 +853,14 @@ void RecycleCommandBufferHelper(VkDevice device,
     SafeDelete(*commandBufferHelper);
 }
 
-ANGLE_MAYBE_UNUSED void ResetSecondaryCommandBuffer(
+[[maybe_unused]] void ResetSecondaryCommandBuffer(
     std::vector<priv::SecondaryCommandBuffer> *resetList,
     priv::SecondaryCommandBuffer &&commandBuffer)
 {
     commandBuffer.reset();
 }
 
-ANGLE_MAYBE_UNUSED void ResetSecondaryCommandBuffer(
+[[maybe_unused]] void ResetSecondaryCommandBuffer(
     std::vector<VulkanSecondaryCommandBuffer> *resetList,
     VulkanSecondaryCommandBuffer &&commandBuffer)
 {

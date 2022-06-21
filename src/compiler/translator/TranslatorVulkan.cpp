@@ -189,15 +189,15 @@ bool DeclareDefaultUniforms(TCompiler *compiler,
 }
 
 // Replaces a builtin variable with a version that is rotated and corrects the X and Y coordinates.
-ANGLE_NO_DISCARD bool RotateAndFlipBuiltinVariable(TCompiler *compiler,
-                                                   TIntermBlock *root,
-                                                   TIntermSequence *insertSequence,
-                                                   TIntermTyped *swapXY,
-                                                   TIntermTyped *flipXY,
-                                                   TSymbolTable *symbolTable,
-                                                   const TVariable *builtin,
-                                                   const ImmutableString &flippedVariableName,
-                                                   TIntermTyped *pivot)
+[[nodiscard]] bool RotateAndFlipBuiltinVariable(TCompiler *compiler,
+                                                TIntermBlock *root,
+                                                TIntermSequence *insertSequence,
+                                                TIntermTyped *swapXY,
+                                                TIntermTyped *flipXY,
+                                                TSymbolTable *symbolTable,
+                                                const TVariable *builtin,
+                                                const ImmutableString &flippedVariableName,
+                                                TIntermTyped *pivot)
 {
     // Create a symbol reference to 'builtin'.
     TIntermSymbol *builtinRef = new TIntermSymbol(builtin);
@@ -250,10 +250,10 @@ TIntermSequence *GetMainSequence(TIntermBlock *root)
 }
 
 // Declares a new variable to replace gl_DepthRange, its values are fed from a driver uniform.
-ANGLE_NO_DISCARD bool ReplaceGLDepthRangeWithDriverUniform(TCompiler *compiler,
-                                                           TIntermBlock *root,
-                                                           const DriverUniform *driverUniforms,
-                                                           TSymbolTable *symbolTable)
+[[nodiscard]] bool ReplaceGLDepthRangeWithDriverUniform(TCompiler *compiler,
+                                                        TIntermBlock *root,
+                                                        const DriverUniform *driverUniforms,
+                                                        TSymbolTable *symbolTable)
 {
     // Create a symbol reference to "gl_DepthRange"
     const TVariable *depthRangeVar = static_cast<const TVariable *>(
@@ -268,10 +268,10 @@ ANGLE_NO_DISCARD bool ReplaceGLDepthRangeWithDriverUniform(TCompiler *compiler,
 
 // Declares a new variable to replace gl_BoundingBoxEXT, its values are fed from a global temporary
 // variable.
-ANGLE_NO_DISCARD bool ReplaceGLBoundingBoxWithGlobal(TCompiler *compiler,
-                                                     TIntermBlock *root,
-                                                     TSymbolTable *symbolTable,
-                                                     int shaderVersion)
+[[nodiscard]] bool ReplaceGLBoundingBoxWithGlobal(TCompiler *compiler,
+                                                  TIntermBlock *root,
+                                                  TSymbolTable *symbolTable,
+                                                  int shaderVersion)
 {
     // Declare the replacement bounding box variable type
     TType *emulatedBoundingBoxDeclType = new TType(EbtFloat, EbpHigh, EvqGlobal, 4);
@@ -321,10 +321,10 @@ ANGLE_NO_DISCARD bool ReplaceGLBoundingBoxWithGlobal(TCompiler *compiler,
     return replacementResult;
 }
 
-ANGLE_NO_DISCARD bool AddXfbEmulationSupport(TCompiler *compiler,
-                                             TIntermBlock *root,
-                                             TSymbolTable *symbolTable,
-                                             const DriverUniform *driverUniforms)
+[[nodiscard]] bool AddXfbEmulationSupport(TCompiler *compiler,
+                                          TIntermBlock *root,
+                                          TSymbolTable *symbolTable,
+                                          const DriverUniform *driverUniforms)
 {
     // Generate the following function and place it before main().  This function takes a "strides"
     // parameter that is determined at link time, and calculates for each transform feedback buffer
@@ -480,10 +480,10 @@ ANGLE_NO_DISCARD bool AddXfbEmulationSupport(TCompiler *compiler,
     return compiler->validateAST(root);
 }
 
-ANGLE_NO_DISCARD bool AddXfbExtensionSupport(TCompiler *compiler,
-                                             TIntermBlock *root,
-                                             TSymbolTable *symbolTable,
-                                             const DriverUniform *driverUniforms)
+[[nodiscard]] bool AddXfbExtensionSupport(TCompiler *compiler,
+                                          TIntermBlock *root,
+                                          TSymbolTable *symbolTable,
+                                          const DriverUniform *driverUniforms)
 {
     // Generate the following output varying declaration used to capture transform feedback output
     // from gl_Position, as it can't be captured directly due to changes that are applied to it for
@@ -522,12 +522,12 @@ ANGLE_NO_DISCARD bool AddXfbExtensionSupport(TCompiler *compiler,
     return compiler->validateAST(root);
 }
 
-ANGLE_NO_DISCARD bool AddVertexTransformationSupport(TCompiler *compiler,
-                                                     ShCompileOptions compileOptions,
-                                                     TIntermBlock *root,
-                                                     TSymbolTable *symbolTable,
-                                                     SpecConst *specConst,
-                                                     const DriverUniform *driverUniforms)
+[[nodiscard]] bool AddVertexTransformationSupport(TCompiler *compiler,
+                                                  ShCompileOptions compileOptions,
+                                                  TIntermBlock *root,
+                                                  TSymbolTable *symbolTable,
+                                                  SpecConst *specConst,
+                                                  const DriverUniform *driverUniforms)
 {
     // In GL the viewport transformation is slightly different - see the GL 2.0 spec section "2.12.1
     // Controlling the Viewport".  In Vulkan the corresponding spec section is currently "23.4.
@@ -629,13 +629,13 @@ ANGLE_NO_DISCARD bool AddVertexTransformationSupport(TCompiler *compiler,
     return compiler->validateAST(root);
 }
 
-ANGLE_NO_DISCARD bool InsertFragCoordCorrection(TCompiler *compiler,
-                                                ShCompileOptions compileOptions,
-                                                TIntermBlock *root,
-                                                TIntermSequence *insertSequence,
-                                                TSymbolTable *symbolTable,
-                                                SpecConst *specConst,
-                                                const DriverUniform *driverUniforms)
+[[nodiscard]] bool InsertFragCoordCorrection(TCompiler *compiler,
+                                             ShCompileOptions compileOptions,
+                                             TIntermBlock *root,
+                                             TIntermSequence *insertSequence,
+                                             TSymbolTable *symbolTable,
+                                             SpecConst *specConst,
+                                             const DriverUniform *driverUniforms)
 {
     TIntermTyped *flipXY = driverUniforms->getFlipXY(symbolTable, DriverUniformFlip::Fragment);
     TIntermTyped *pivot  = driverUniforms->getHalfRenderArea();

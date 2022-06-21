@@ -105,7 +105,7 @@ const char *CompileStatusToString(gl::CompileStatus status)
 
 #undef ENUM_TO_STRING
 
-class ANGLE_NO_DISCARD GroupScope
+class [[nodiscard]] GroupScope
 {
   public:
     GroupScope(JsonSerializer *json, const std::string &name) : mJson(json)

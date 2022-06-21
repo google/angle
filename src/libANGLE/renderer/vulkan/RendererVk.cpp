@@ -867,7 +867,7 @@ gl::Version LimitVersionTo(const gl::Version &current, const gl::Version &lower)
     return std::min(current, lower);
 }
 
-ANGLE_MAYBE_UNUSED bool FencePropertiesCompatibleWithAndroid(
+[[maybe_unused]] bool FencePropertiesCompatibleWithAndroid(
     const VkExternalFenceProperties &externalFenceProperties)
 {
     // handleType here is the external fence type -
@@ -898,7 +898,7 @@ ANGLE_MAYBE_UNUSED bool FencePropertiesCompatibleWithAndroid(
     return true;
 }
 
-ANGLE_MAYBE_UNUSED bool SemaphorePropertiesCompatibleWithAndroid(
+[[maybe_unused]] bool SemaphorePropertiesCompatibleWithAndroid(
     const VkExternalSemaphoreProperties &externalSemaphoreProperties)
 {
     // handleType here is the external semaphore type -

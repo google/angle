@@ -195,13 +195,13 @@ void DumpTraceEventsToJSONFile(const std::vector<TraceEvent> &traceEvents,
     }
 }
 
-ANGLE_MAYBE_UNUSED void KHRONOS_APIENTRY PerfTestDebugCallback(GLenum source,
-                                                               GLenum type,
-                                                               GLuint id,
-                                                               GLenum severity,
-                                                               GLsizei length,
-                                                               const GLchar *message,
-                                                               const void *userParam)
+[[maybe_unused]] void KHRONOS_APIENTRY PerfTestDebugCallback(GLenum source,
+                                                             GLenum type,
+                                                             GLuint id,
+                                                             GLenum severity,
+                                                             GLsizei length,
+                                                             const GLchar *message,
+                                                             const void *userParam)
 {
     // Early exit on non-errors.
     if (type != GL_DEBUG_TYPE_ERROR || !userParam)
