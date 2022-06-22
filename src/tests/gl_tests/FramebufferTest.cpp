@@ -1889,9 +1889,6 @@ void main()
 })";
 };
 
-// Until C++17, need to redundantly declare the constexpr array members outside the class.
-constexpr char FramebufferTest_ES31::kFSWriteRedGreen[];
-
 // Test that without attachment, if either the value of FRAMEBUFFER_DEFAULT_WIDTH or
 // FRAMEBUFFER_DEFAULT_HEIGHT parameters is zero, the framebuffer is incomplete.
 TEST_P(FramebufferTest_ES31, IncompleteMissingAttachmentDefaultParam)

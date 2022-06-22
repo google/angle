@@ -377,9 +377,6 @@ class MemoryBarrierTestBase
     static constexpr char kUniformName[] = "uniformData";
 };
 
-// Can be removed with C++17
-constexpr char MemoryBarrierTestBase::kUniformName[];
-
 bool MemoryBarrierTestBase::hasExtensions(WriteResource writeResource)
 {
     return writeResource != WriteResource::ImageBuffer ||

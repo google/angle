@@ -638,14 +638,6 @@ void DumpPipelineCacheGraph(ContextVk *contextVk, const std::ostringstream &grap
 
 }  // anonymous namespace
 
-// Not necessary once upgraded to C++17.
-constexpr ContextVk::DirtyBits ContextVk::kIndexAndVertexDirtyBits;
-constexpr ContextVk::DirtyBits ContextVk::kPipelineDescAndBindingDirtyBits;
-constexpr ContextVk::DirtyBits ContextVk::kTexturesAndDescSetDirtyBits;
-constexpr ContextVk::DirtyBits ContextVk::kResourcesAndDescSetDirtyBits;
-constexpr ContextVk::DirtyBits ContextVk::kXfbBuffersAndDescSetDirtyBits;
-constexpr ContextVk::DirtyBits ContextVk::kDriverUniformsAndBindingDirtyBits;
-
 void ContextVk::flushDescriptorSetUpdates()
 {
     mPerfCounters.writeDescriptorSets +=
