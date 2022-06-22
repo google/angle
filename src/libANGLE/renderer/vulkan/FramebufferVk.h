@@ -257,6 +257,8 @@ class FramebufferVk : public FramebufferImpl
     // depth stencil read only mode. When we are in feedback loop, we must flush renderpass to exit
     // the loop instead of update the layout.
     bool mReadOnlyDepthFeedbackLoopMode;
+
+    gl::DrawBufferMask mIsAHBColorAttachments;
 };
 }  // namespace rx
 
