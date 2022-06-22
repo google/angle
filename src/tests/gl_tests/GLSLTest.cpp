@@ -1016,6 +1016,30 @@ void main()
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
 }
 
+// Test that struct with same name can be declared in inner scope.
+TEST_P(GLSLTest, SameNameStructInInnerScope)
+{
+    constexpr char kVS[] = R"(
+void main() {
+    gl_Position = vec4(0);
+})";
+
+    constexpr char kFS[] = R"(
+struct S
+{
+    mediump float f;
+};
+void main()
+{
+    struct S
+    {
+        S n;
+    };
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+}
+
 // Regression test based on WebGL's conformance/glsl/misc/empty-declaration.html
 TEST_P(GLSLTest, StructEmptyDeclaratorBug)
 {
@@ -1029,7 +1053,6 @@ void main() {
 })";
 
     constexpr char kFS[] = R"(precision mediump float;
-precision mediump float;
 void main()
 {
     gl_FragColor = vec4(1.0,0.0,0.0,1.0);
