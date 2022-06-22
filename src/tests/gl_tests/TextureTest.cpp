@@ -10163,6 +10163,87 @@ TEST_P(PBOCompressedTextureTest, PBOCompressedSubImageWithUnpackRowLength)
     runCompressedSubImage();
 }
 
+class PBOCompressedTexture3DTest : public ANGLETest<>
+{
+  protected:
+    PBOCompressedTexture3DTest() {}
+};
+
+// Test that uses glCompressedTexSubImage3D combined with a PBO
+TEST_P(PBOCompressedTexture3DTest, 2DArray)
+{
+    // We use GetTexImage to determine if the internal texture format is emulated
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_get_image"));
+
+    const GLuint width  = 4u;
+    const GLuint height = 4u;
+    const GLuint depth  = 1u;
+
+    setWindowWidth(width);
+    setWindowHeight(height);
+
+    // Setup primary texture as a 2DArray holding ETC2 data
+    GLTexture texture2DArray;
+    glBindTexture(GL_TEXTURE_2D_ARRAY, texture2DArray);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_COMPRESSED_RGB8_ETC2, width, height, depth);
+
+    // If the format emulated, we can't transfer it from a PBO
+    ANGLE_SKIP_TEST_IF(IsFormatEmulated(GL_TEXTURE_2D_ARRAY));
+
+    // Set up a VS that simply passes through position and texcord
+    const char kVS[] = R"(#version 300 es
+in vec4 position;
+out vec3 texCoord;
+
+void main()
+{
+    gl_Position = vec4(position.xy, 0.0, 1.0);
+    texCoord = vec3(position.xy * 0.5 + vec2(0.5), 0.0);
+})";
+
+    // and FS that pulls from the 2DArray, writing out color
+    const char kFS[] = R"(#version 300 es
+precision mediump float;
+uniform highp sampler2DArray tex2DArray;
+in vec3 texCoord;
+out vec4 fragColor;
+
+void main()
+{
+    fragColor = texture(tex2DArray, texCoord);
+})";
+
+    // Compile the shaders and create the program
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    ASSERT_GL_NO_ERROR();
+
+    // Setup PBO and fill it with a red
+    GLBuffer pbo;
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, width * height * depth / 2u, kCompressedImageETC2,
+                 GL_STATIC_DRAW);
+    ASSERT_GL_NO_ERROR();
+
+    // Write PBO to texture2DArray
+    glCompressedTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0, width, height, depth,
+                              GL_COMPRESSED_RGB8_ETC2, width * height * depth / 2u, nullptr);
+
+    ASSERT_GL_NO_ERROR();
+
+    // Draw using PBO updated texture
+    glUseProgram(program);
+    glUniform1i(glGetUniformLocation(program, "tex2DArray"), 0);
+    glBindTexture(GL_TEXTURE_2D_ARRAY, texture2DArray);
+    drawQuad(program, "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify the texture now contains data from the PBO
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 2, getWindowHeight() / 2, GLColor::red);
+    ASSERT_GL_NO_ERROR();
+}
+
 // Test using ETC1_RGB8 with subimage updates
 TEST_P(ETC1CompressedTextureTest, ETC1CompressedSubImage)
 {
@@ -10920,6 +11001,7 @@ ANGLE_INSTANTIATE_TEST_ES3(Texture3DIntegerTestES3);
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(Texture2DDepthTest);
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(PBOCompressedTextureTest);
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(ETC1CompressedTextureTest);
+ANGLE_INSTANTIATE_TEST_ES3(PBOCompressedTexture3DTest);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TextureBufferTestES31);
 ANGLE_INSTANTIATE_TEST_ES31(TextureBufferTestES31);
