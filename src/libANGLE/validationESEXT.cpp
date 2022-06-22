@@ -323,12 +323,9 @@ bool ValidateGetCompressedTexImageANGLE(const Context *context,
         return false;
     }
 
-    // Check if format is emulated
-    // TODO(anglebug.com/6177): Check here for all the formats that ANGLE will use to emulate a
-    // compressed texture
-    GLenum implFormat = texture->getImplementationColorReadFormat(context);
-    if (implFormat == GL_RGBA || implFormat == GL_RG || implFormat == GL_RED)
+    if (texture->isCompressedFormatEmulated(context, target, level))
     {
+        // TODO (anglebug.com/7464): We can't currently read back from an emulated format
         context->validationError(entryPoint, GL_INVALID_OPERATION, kInvalidEmulatedFormat);
         return false;
     }

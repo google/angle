@@ -840,6 +840,8 @@ struct UniformBlockIndex
 {
     uint32_t value;
 };
+
+bool IsEmulatedCompressedFormat(GLenum format);
 }  // namespace gl
 
 namespace egl

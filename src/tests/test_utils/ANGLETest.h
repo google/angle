@@ -230,6 +230,7 @@ constexpr std::array<GLenum, 6> kCubeFaces = {
 
 void LoadEntryPointsWithUtilLoader(angle::GLESDriverType driver);
 
+bool IsFormatEmulated(GLenum target);
 }  // namespace angle
 
 #define EXPECT_PIXEL_EQ(x, y, r, g, b, a) \

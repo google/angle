@@ -713,13 +713,6 @@ const CompressionExtension kCompressionExtensions[] = {
 };
 // clang-format on
 
-bool IsFormatEmulated(GLenum target)
-{
-    GLint readFormat;
-    glGetTexParameteriv(target, GL_IMPLEMENTATION_COLOR_READ_FORMAT, &readFormat);
-    return readFormat == GL_RGBA || readFormat == GL_RG || readFormat == GL_RED;
-}
-
 // Basic GetCompressedTexImage.
 TEST_P(GetImageTest, CompressedTexImage)
 {
