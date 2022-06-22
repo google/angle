@@ -97,7 +97,7 @@ GLColor32F SliceFormatColor32F(GLenum format, GLColor32F full)
     }
 }
 
-class TexCoordDrawTest : public ANGLETest
+class TexCoordDrawTest : public ANGLETest<>
 {
   protected:
     TexCoordDrawTest() : ANGLETest(), mProgram(0), mFramebuffer(0), mFramebufferColorTexture(0)
@@ -471,7 +471,7 @@ class Texture2DTestES3RobustInit : public Texture2DTestES3
     Texture2DTestES3RobustInit() : Texture2DTestES3() { setRobustResourceInit(true); }
 };
 
-class Texture2DBaseMaxTestES3 : public ANGLETest
+class Texture2DBaseMaxTestES3 : public ANGLETest<>
 {
   protected:
     static constexpr size_t kMip0Size   = 13;
@@ -928,7 +928,7 @@ class TextureCubeTest : public TexCoordDrawTest
     GLint mTextureCubeUniformLocation;
 };
 
-class TextureCubeTestES3 : public ANGLETest
+class TextureCubeTestES3 : public ANGLETest<>
 {
   protected:
     TextureCubeTestES3() {}
@@ -7165,7 +7165,7 @@ TEST_P(TextureBorderClampIntegerTestES3, TextureBorderClampIntegerUnsigned2)
 
 // ~GL_OES_texture_border_clamp
 
-class TextureLimitsTest : public ANGLETest
+class TextureLimitsTest : public ANGLETest<>
 {
   protected:
     struct RGBA8
@@ -10406,7 +10406,7 @@ TEST_P(ETC1CompressedTextureTest, ETC1ShrinkThenGrowMaxLevels)
     ASSERT_GL_NO_ERROR();
 }
 
-class TextureBufferTestES31 : public ANGLETest
+class TextureBufferTestES31 : public ANGLETest<>
 {
   protected:
     TextureBufferTestES31() {}
@@ -10630,7 +10630,7 @@ TEST_P(TextureBufferTestES31, TestErrorWhenNotEnabled)
     ASSERT_GL_ERROR(GL_INVALID_ENUM);
 }
 
-class CopyImageTestES31 : public ANGLETest
+class CopyImageTestES31 : public ANGLETest<>
 {
   protected:
     CopyImageTestES31() {}
@@ -10703,7 +10703,7 @@ void main()
     glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 }
 
-class TextureChangeStorageUploadTest : public ANGLETest
+class TextureChangeStorageUploadTest : public ANGLETest<>
 {
   protected:
     TextureChangeStorageUploadTest()
@@ -10768,7 +10768,7 @@ TEST_P(TextureChangeStorageUploadTest, Basic)
     EXPECT_GL_NO_ERROR();
 }
 
-class ExtraSamplerCubeShadowUseTest : public ANGLETest
+class ExtraSamplerCubeShadowUseTest : public ANGLETest<>
 {
   protected:
     ExtraSamplerCubeShadowUseTest() : ANGLETest() {}

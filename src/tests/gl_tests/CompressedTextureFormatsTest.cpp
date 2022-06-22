@@ -90,7 +90,7 @@ const FormatInfo *getCompressedFormatInfo(GLenum format)
 using FormatDesc                  = std::pair<GLenum, GLsizei>;
 using CompressedTextureTestParams = std::tuple<angle::PlatformParameters, FormatDesc>;
 
-class CompressedTextureFormatsTest : public ANGLETestWithParam<CompressedTextureTestParams>
+class CompressedTextureFormatsTest : public ANGLETest<CompressedTextureTestParams>
 {
   public:
     CompressedTextureFormatsTest(const std::string ext1,

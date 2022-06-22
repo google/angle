@@ -54,7 +54,7 @@ struct VectorCase
     const unsigned int kBytesPerComponent = sizeof(GLuint);
 };
 
-class ShaderStorageBufferTest31 : public ANGLETest
+class ShaderStorageBufferTest31 : public ANGLETest<>
 {
   protected:
     ShaderStorageBufferTest31()

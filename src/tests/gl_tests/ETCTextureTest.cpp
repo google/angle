@@ -14,7 +14,7 @@ using namespace angle;
 namespace
 {
 
-class ETCTextureTest : public ANGLETest
+class ETCTextureTest : public ANGLETest<>
 {
   protected:
     ETCTextureTest() : mTexture(0u)

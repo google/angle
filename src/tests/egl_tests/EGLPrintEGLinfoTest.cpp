@@ -19,7 +19,7 @@
 
 using namespace angle;
 
-class EGLPrintEGLinfoTest : public ANGLETest
+class EGLPrintEGLinfoTest : public ANGLETest<>
 {
   protected:
     EGLPrintEGLinfoTest() {}

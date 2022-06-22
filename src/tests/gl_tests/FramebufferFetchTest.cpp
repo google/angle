@@ -266,7 +266,7 @@ void main (void)
     o_color3 += u_color;
 })";
 
-class FramebufferFetchES31 : public ANGLETest
+class FramebufferFetchES31 : public ANGLETest<>
 {
   protected:
     static constexpr GLuint kMaxColorBuffer = 4u;

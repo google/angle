@@ -16,7 +16,7 @@ using namespace angle;
 namespace
 {
 
-class TransformFeedbackTestBase : public ANGLETest
+class TransformFeedbackTestBase : public ANGLETest<>
 {
   protected:
     TransformFeedbackTestBase() : mProgram(0), mTransformFeedbackBuffer(0), mTransformFeedback(0)

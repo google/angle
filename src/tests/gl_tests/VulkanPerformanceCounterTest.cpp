@@ -30,7 +30,7 @@ enum class ANGLEFeature
     Unknown,
 };
 
-class VulkanPerformanceCounterTest : public ANGLETest
+class VulkanPerformanceCounterTest : public ANGLETest<>
 {
   protected:
     VulkanPerformanceCounterTest()

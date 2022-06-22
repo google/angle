@@ -14,7 +14,7 @@ using namespace angle;
 namespace
 {
 
-class GLSLTest : public ANGLETest
+class GLSLTest : public ANGLETest<>
 {
   protected:
     GLSLTest()

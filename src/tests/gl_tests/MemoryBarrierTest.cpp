@@ -3145,7 +3145,7 @@ void MemoryBarrierTestBase::framebufferBitBlitThenImageWrite(ShaderWritePipeline
 }
 
 class MemoryBarrierBufferTest : public MemoryBarrierTestBase,
-                                public ANGLETestWithParam<MemoryBarrierVariationsTestParams>
+                                public ANGLETest<MemoryBarrierVariationsTestParams>
 {
   protected:
     MemoryBarrierBufferTest()
@@ -3160,7 +3160,7 @@ class MemoryBarrierBufferTest : public MemoryBarrierTestBase,
 };
 
 class MemoryBarrierImageTest : public MemoryBarrierTestBase,
-                               public ANGLETestWithParam<MemoryBarrierVariationsTestParams>
+                               public ANGLETest<MemoryBarrierVariationsTestParams>
 {
   protected:
     MemoryBarrierImageTest()
@@ -3174,9 +3174,8 @@ class MemoryBarrierImageTest : public MemoryBarrierTestBase,
     }
 };
 
-class MemoryBarrierImageBufferOnlyTest
-    : public MemoryBarrierTestBase,
-      public ANGLETestWithParam<MemoryBarrierVariationsTestParams>
+class MemoryBarrierImageBufferOnlyTest : public MemoryBarrierTestBase,
+                                         public ANGLETest<MemoryBarrierVariationsTestParams>
 {
   protected:
     MemoryBarrierImageBufferOnlyTest()
@@ -3191,7 +3190,7 @@ class MemoryBarrierImageBufferOnlyTest
 };
 
 class MemoryBarrierImageOnlyTest : public MemoryBarrierTestBase,
-                                   public ANGLETestWithParam<MemoryBarrierVariationsTestParams>
+                                   public ANGLETest<MemoryBarrierVariationsTestParams>
 {
   protected:
     MemoryBarrierImageOnlyTest()
@@ -3206,7 +3205,7 @@ class MemoryBarrierImageOnlyTest : public MemoryBarrierTestBase,
 };
 
 class MemoryBarrierBufferOnlyTest : public MemoryBarrierTestBase,
-                                    public ANGLETestWithParam<MemoryBarrierVariationsTestParams>
+                                    public ANGLETest<MemoryBarrierVariationsTestParams>
 {
   protected:
     MemoryBarrierBufferOnlyTest()

@@ -108,7 +108,7 @@ constexpr int AHARDWAREBUFFER_FORMAT_YV12            = 0x32315659;
 
 }  // anonymous namespace
 
-class ImageTest : public ANGLETest
+class ImageTest : public ANGLETest<>
 {
   protected:
     ImageTest()

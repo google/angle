@@ -9,7 +9,7 @@
 
 using namespace angle;
 
-class DrawBuffersTest : public ANGLETest
+class DrawBuffersTest : public ANGLETest<>
 {
   protected:
     DrawBuffersTest()

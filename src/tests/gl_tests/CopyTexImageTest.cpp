@@ -10,7 +10,7 @@
 namespace angle
 {
 
-class CopyTexImageTest : public ANGLETest
+class CopyTexImageTest : public ANGLETest<>
 {
   protected:
     CopyTexImageTest()

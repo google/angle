@@ -463,7 +463,7 @@ class PLSTestTexture
     GLuint mID                                        = 0;
 };
 
-class PixelLocalStorageTest : public ANGLETest
+class PixelLocalStorageTest : public ANGLETest<>
 {
   public:
     PixelLocalStorageTest()

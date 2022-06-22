@@ -31,7 +31,7 @@ EGLBoolean SafeDestroyContext(EGLDisplay display, EGLContext &context)
     return result;
 }
 
-class EGLMultiContextTest : public ANGLETest
+class EGLMultiContextTest : public ANGLETest<>
 {
   public:
     EGLMultiContextTest() : mContexts{EGL_NO_CONTEXT, EGL_NO_CONTEXT}, mTexture(0) {}

@@ -26,7 +26,7 @@ void ExpectFramebufferCompleteOrUnsupported(GLenum binding)
 
 }  // anonymous namespace
 
-class FramebufferFormatsTest : public ANGLETest
+class FramebufferFormatsTest : public ANGLETest<>
 {
   protected:
     FramebufferFormatsTest() : mFramebuffer(0), mTexture(0), mRenderbuffer(0), mProgram(0)
@@ -386,7 +386,7 @@ TEST_P(FramebufferFormatsTest, RGB565Renderbuffer)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 }
 
-class FramebufferTest_ES3 : public ANGLETest
+class FramebufferTest_ES3 : public ANGLETest<>
 {
   protected:
     FramebufferTest_ES3()
@@ -1300,7 +1300,7 @@ TEST_P(FramebufferTest_ES3Metal, TooManyBitsGeneratesInvalidFramebufferOperation
     EXPECT_GLENUM_EQ(GL_INVALID_FRAMEBUFFER_OPERATION, glGetError());
 }
 
-class FramebufferTestWithFormatFallback : public ANGLETest
+class FramebufferTestWithFormatFallback : public ANGLETest<>
 {
   protected:
     FramebufferTestWithFormatFallback()
@@ -1853,7 +1853,7 @@ TEST_P(FramebufferTestWithFormatFallback, R4G4B4A4_InCompatibleFormat)
     }
 }
 
-class FramebufferTest_ES31 : public ANGLETest
+class FramebufferTest_ES31 : public ANGLETest<>
 {
   protected:
     void validateSamplePass(GLuint &query, GLuint &passedCount, GLint width, GLint height)
@@ -2994,7 +2994,7 @@ TEST_P(FramebufferTest_ES31, ValidateFramebufferFlipYMesaExtension)
     EXPECT_EQ(flip_y, 0);
 }
 
-class AddMockTextureNoRenderTargetTest : public ANGLETest
+class AddMockTextureNoRenderTargetTest : public ANGLETest<>
 {
   public:
     AddMockTextureNoRenderTargetTest()
@@ -3744,7 +3744,7 @@ TEST_P(FramebufferTest_ES3, FramebufferFlipYMesaExtensionIncorrectPname)
     ASSERT_GL_ERROR(GL_INVALID_ENUM);
 }
 
-class FramebufferTest : public ANGLETest
+class FramebufferTest : public ANGLETest<>
 {};
 
 template <typename T>

@@ -18,7 +18,7 @@ using namespace angle;
 namespace
 {
 
-class MultisampleTest : public ANGLETest
+class MultisampleTest : public ANGLETest<>
 {
   protected:
     MultisampleTest()
@@ -365,7 +365,7 @@ TEST_P(MultisampleTestES3, ResolveToFBO)
     EXPECT_PIXEL_COLOR_NEAR(kWindowWidth / 2, kWindowHeight / 2, kResult, 1);
 }
 
-class MultisampleResolveTest : public ANGLETest
+class MultisampleResolveTest : public ANGLETest<>
 {
   protected:
     static const GLColor kEXPECTED_R8;

@@ -19,7 +19,7 @@
 namespace angle
 {
 
-class MultithreadingTest : public ANGLETest
+class MultithreadingTest : public ANGLETest<>
 {
   public:
     static constexpr uint32_t kSize = 512;

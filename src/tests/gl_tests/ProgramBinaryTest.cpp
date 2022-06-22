@@ -17,7 +17,7 @@
 
 using namespace angle;
 
-class ProgramBinaryTest : public ANGLETest
+class ProgramBinaryTest : public ANGLETest<>
 {
   protected:
     ProgramBinaryTest()
@@ -1007,7 +1007,7 @@ TEST_P(ProgramBinaryES3Test, ArrayOfStructContainingArrayOfSamplers)
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ProgramBinaryES3Test);
 ANGLE_INSTANTIATE_TEST_ES3(ProgramBinaryES3Test);
 
-class ProgramBinaryES31Test : public ANGLETest
+class ProgramBinaryES31Test : public ANGLETest<>
 {
   protected:
     ProgramBinaryES31Test()
@@ -1238,7 +1238,7 @@ TEST_P(ProgramBinaryES31Test, ImageTextureBinding)
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ProgramBinaryES31Test);
 ANGLE_INSTANTIATE_TEST_ES31(ProgramBinaryES31Test);
 
-class ProgramBinaryTransformFeedbackTest : public ANGLETest
+class ProgramBinaryTransformFeedbackTest : public ANGLETest<>
 {
   protected:
     ProgramBinaryTransformFeedbackTest()

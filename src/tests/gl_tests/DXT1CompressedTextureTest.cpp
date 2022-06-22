@@ -11,7 +11,7 @@
 
 using namespace angle;
 
-class DXT1CompressedTextureTest : public ANGLETest
+class DXT1CompressedTextureTest : public ANGLETest<>
 {
   protected:
     DXT1CompressedTextureTest()

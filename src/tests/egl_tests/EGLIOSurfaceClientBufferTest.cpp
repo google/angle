@@ -131,7 +131,7 @@ ScopedIOSurfaceRef CreateSinglePlaneIOSurface(int width,
 
 }  // anonymous namespace
 
-class IOSurfaceClientBufferTest : public ANGLETest
+class IOSurfaceClientBufferTest : public ANGLETest<>
 {
   protected:
     EGLint getTextureTarget() const

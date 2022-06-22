@@ -18,7 +18,7 @@ using namespace angle;
 namespace
 {
 
-class DepthStencilTest : public ANGLETest
+class DepthStencilTest : public ANGLETest<>
 {
   protected:
     DepthStencilTest()
