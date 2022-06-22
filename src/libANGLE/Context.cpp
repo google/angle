@@ -4119,6 +4119,11 @@ void Context::initCaps()
             ANGLE_LIMIT_CAP(mState.mCaps.maxShaderStorageBlocks[shaderType],
                             maxShaderStorageBufferBindings);
         }
+
+        // Pixel 4 only supports GL_MAX_SAMPLES of 4
+        constexpr GLint maxSamples = 4;
+        INFO() << "Limiting GL_MAX_SAMPLES to " << maxSamples;
+        ANGLE_LIMIT_CAP(mState.mCaps.maxSamples, maxSamples);
     }
 
     // Disable support for OES_get_program_binary
