@@ -7,12 +7,22 @@ See http://dev.chromium.org/developers/how-tos/depottools/presubmit-scripts
 for more details on the presubmit API built into depot_tools.
 """
 
+import itertools
 import os
 import re
 import shutil
 import subprocess
 import sys
 import tempfile
+import textwrap
+
+# TODO(https://anglebug.com/7475): Remove these checks throughout the file
+# pathlib is a python3-only library. This script sometimes gets run with python2 so we need
+# to check if we are the right python version before we import/use pathlib.
+# See the comments on https://anglebug.com/4905 for more information.
+PYTHON_MAJOR_VERSION = sys.version_info.major
+if PYTHON_MAJOR_VERSION == 3:
+    import pathlib
 
 # This line is 'magic' in that git-cl looks for it to decide whether to
 # use Python3 instead of Python2 when running the code in this file.
@@ -30,7 +40,6 @@ _PRIMARY_EXPORT_TARGETS = [
     '//:libGLESv2',
     '//:translator',
 ]
-
 
 def _CheckCommitMessageFormatting(input_api, output_api):
 
@@ -422,6 +431,30 @@ def _CheckCommentBeforeTestInTestFiles(input_api, output_api):
     return []
 
 
+def _CheckGClientExists(input_api, output_api, search_limit=None):
+    presubmit_path = pathlib.Path(input_api.PresubmitLocalPath())
+
+    for current_path in itertools.chain([presubmit_path], presubmit_path.parents):
+        gclient_path = current_path.joinpath('.gclient')
+        if gclient_path.exists() and gclient_path.is_file():
+            return []
+        # search_limit parameter is used in unit tests to prevent searching all the way to root
+        # directory for reproducibility.
+        elif search_limit != None and current_path == search_limit:
+            break
+
+    return [
+        output_api.PresubmitError(
+            'Missing .gclient file.',
+            long_text=textwrap.fill(
+                width=100,
+                text='The top level directory of the repository must contain a .gclient file.'
+                ' You can follow the steps outlined in the link below to get set up for ANGLE'
+                ' development:') +
+            '\n\nhttps://chromium.googlesource.com/angle/angle/+/refs/heads/main/doc/DevSetup.md')
+    ]
+
+
 def CheckChangeOnUpload(input_api, output_api):
     results = []
     results.extend(_CheckTabsInSourceFiles(input_api, output_api))
@@ -436,6 +469,9 @@ def CheckChangeOnUpload(input_api, output_api):
         input_api.canned_checks.CheckPatchFormatted(
             input_api, output_api, result_factory=output_api.PresubmitError))
     results.extend(_CheckCommitMessageFormatting(input_api, output_api))
+    if PYTHON_MAJOR_VERSION == 3:
+        results.extend(_CheckGClientExists(input_api, output_api))
+
     return results
 
 
