@@ -720,11 +720,25 @@ HRESULT Renderer11::callD3D11CreateDevice(PFN_D3D11_CREATE_DEVICE createDevice, 
             for (UINT i = 0; SUCCEEDED(factory->EnumAdapters(i, &temp)); i++)
             {
                 DXGI_ADAPTER_DESC desc;
-                if (SUCCEEDED(temp->GetDesc(&desc)) && desc.AdapterLuid.HighPart == high &&
-                    desc.AdapterLuid.LowPart == low)
+                if (SUCCEEDED(temp->GetDesc(&desc)))
                 {
-                    adapter = temp;
-                    break;
+                    // EGL_ANGLE_platform_angle_d3d_luid
+                    if (desc.AdapterLuid.HighPart == high && desc.AdapterLuid.LowPart == low)
+                    {
+                        adapter = temp;
+                        break;
+                    }
+
+                    // EGL_ANGLE_platform_angle_device_id
+                    // NOTE: If there are multiple GPUs with the same PCI
+                    // vendor and device IDs, this will arbitrarily choose one
+                    // of them. To select a specific GPU, use the LUID instead.
+                    if ((high == 0 || desc.VendorId == static_cast<UINT>(high)) &&
+                        (low == 0 || desc.DeviceId == static_cast<UINT>(low)))
+                    {
+                        adapter = temp;
+                        break;
+                    }
                 }
             }
         }
