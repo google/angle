@@ -3010,21 +3010,21 @@ bool RendererVk::canSupportFragmentShadingRate(const vk::ExtensionNameList &devi
     ASSERT(vkGetPhysicalDeviceFragmentShadingRatesKHR);
     ASSERT(vkCmdSetFragmentShadingRateKHR);
 
-    // Query supported shading rates
-    constexpr uint32_t kShadingRatesCount                                               = 6;
-    uint32_t shadingRatesCount                                                          = 6;
-    std::array<VkPhysicalDeviceFragmentShadingRateKHR, kShadingRatesCount> shadingRates = {
-        {{VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_KHR, nullptr, 0, {1, 1}},
-         {VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_KHR, nullptr, 0, {1, 2}},
-         {VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_KHR, nullptr, 0, {2, 1}},
-         {VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_KHR, nullptr, 0, {2, 2}},
-         {VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_KHR, nullptr, 0, {4, 2}},
-         {VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_KHR, nullptr, 0, {4, 4}}}};
+    // Query number of supported shading rates first
+    uint32_t shadingRatesCount = 0;
+    VkResult result =
+        vkGetPhysicalDeviceFragmentShadingRatesKHR(mPhysicalDevice, &shadingRatesCount, nullptr);
+    ASSERT(result == VK_SUCCESS);
+    ASSERT(shadingRatesCount > 0);
 
-    VkResult result = vkGetPhysicalDeviceFragmentShadingRatesKHR(
-        mPhysicalDevice, &shadingRatesCount, shadingRates.data());
-    ASSERT(result == VK_SUCCESS || result == VK_INCOMPLETE);
-    ASSERT(shadingRatesCount > 0 && shadingRatesCount <= kShadingRatesCount);
+    std::vector<VkPhysicalDeviceFragmentShadingRateKHR> shadingRates(
+        shadingRatesCount,
+        {VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_KHR, nullptr, 0, {0, 0}});
+
+    // Query supported shading rates
+    result = vkGetPhysicalDeviceFragmentShadingRatesKHR(mPhysicalDevice, &shadingRatesCount,
+                                                        shadingRates.data());
+    ASSERT(result == VK_SUCCESS);
 
     // Cache supported fragment shading rates
     mSupportedFragmentShadingRates.reset();
