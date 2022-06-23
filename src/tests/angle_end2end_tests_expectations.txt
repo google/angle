@@ -642,6 +642,7 @@
 
 // Produces VVL errors
 7357 VULKAN : FramebufferTest_ES3.FramebufferConditionalFeedbackLoop/* = SKIP
+7499 VULKAN : Texture2DTest.TextureMaxSize/* = SKIP
 
 // Intel Mesa 19.0.2 appears to have a driver bug.
 // imageLoad isn't fully implemented for fragment shaders on D3D11.

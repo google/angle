@@ -371,6 +371,7 @@ void main()
     }
 
     void testTextureSize(int testCaseIndex);
+    void testTextureSizeError();
 
     struct UploadThenUseStageParam
     {
@@ -3824,6 +3825,19 @@ void main()
     }
 }
 
+void Texture2DTest::testTextureSizeError()
+{
+    GLint max2DSize = 0;
+    glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max2DSize);
+    glActiveTexture(GL_TEXTURE0);
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    FillLevel(0, max2DSize, max2DSize, GLColor::red, false, false);
+    GLenum err  = glGetError();
+    bool passed = (err == GL_NO_ERROR || err == GL_OUT_OF_MEMORY);
+    ASSERT_TRUE(passed);
+}
+
 // Permutation 0 of testTextureSize.
 TEST_P(Texture2DTest, TextureSizeCase0)
 {
@@ -3846,6 +3860,12 @@ TEST_P(Texture2DTest, TextureSizeCase2)
 TEST_P(Texture2DTest, TextureSizeCase3)
 {
     testTextureSize(3);
+}
+
+// Test allocating a very large texture
+TEST_P(Texture2DTest, TextureMaxSize)
+{
+    testTextureSizeError();
 }
 
 // Test that drawing works correctly RGBA 3D texture
