@@ -468,6 +468,28 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
      "FRAGMENT_SHADER_UNIFORM_READ, "
      "command: vkCmdPipelineBarrier, seq_no: 3,",
      "", false},
+    // http://anglebug.com/7456
+    {
+        "SYNC-HAZARD-READ_AFTER_WRITE",
+        "type: VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, "
+        "imageLayout: VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL",
+        "Access info (usage: SYNC_FRAGMENT_SHADER_SHADER_STORAGE_READ, "
+        "prior_usage: SYNC_IMAGE_LAYOUT_TRANSITION, "
+        "write_barriers: SYNC_VERTEX_SHADER_SHADER_SAMPLED_READ|"
+        "SYNC_VERTEX_SHADER_SHADER_STORAGE_READ|SYNC_VERTEX_SHADER_UNIFORM_READ, "
+        "command: vkCmdPipelineBarrier",
+    },
+    {
+        "SYNC-HAZARD-READ_AFTER_WRITE",
+        "type: VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, "
+        "imageLayout: VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL",
+        "Access info (usage: SYNC_COMPUTE_SHADER_SHADER_STORAGE_READ, "
+        "prior_usage: SYNC_IMAGE_LAYOUT_TRANSITION, "
+        "write_barriers: SYNC_VERTEX_ATTRIBUTE_INPUT_VERTEX_ATTRIBUTE_READ|"
+        "SYNC_FRAGMENT_SHADER_SHADER_SAMPLED_READ|SYNC_FRAGMENT_SHADER_SHADER_STORAGE_READ|"
+        "SYNC_FRAGMENT_SHADER_UNIFORM_READ, "
+        "command: vkCmdPipelineBarrier",
+    },
 
 };
 
