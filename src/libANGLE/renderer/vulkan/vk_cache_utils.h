@@ -637,6 +637,8 @@ class GraphicsPipelineDesc final
                               const RenderPassDesc &renderPassDesc);
     void setRenderPassSampleCount(GLint samples);
     void setRenderPassFramebufferFetchMode(bool hasFramebufferFetch);
+    bool getRenderPassFramebufferFetchMode() const { return mRenderPassDesc.hasFramebufferFetch(); }
+
     void setRenderPassColorAttachmentFormat(size_t colorIndexGL, angle::FormatID formatID);
 
     // Blend states

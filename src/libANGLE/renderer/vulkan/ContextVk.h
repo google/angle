@@ -468,6 +468,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     void updateColorMasks();
     void updateBlendFuncsAndEquations();
     void updateSampleMaskWithRasterizationSamples(const uint32_t rasterizationSamples);
+    void updateFrameBufferFetchSamples(const uint32_t prevSamples, const uint32_t curSamples);
 
     void handleError(VkResult errorCode,
                      const char *file,

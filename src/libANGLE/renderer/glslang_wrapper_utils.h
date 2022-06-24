@@ -53,12 +53,13 @@ struct GlslangSourceOptions
 
 struct GlslangSpirvOptions
 {
-    gl::ShaderType shaderType        = gl::ShaderType::InvalidEnum;
-    bool negativeViewportSupported   = false;
-    bool removeDebugInfo             = false;
-    bool isLastPreFragmentStage      = false;
-    bool isTransformFeedbackStage    = false;
-    bool isTransformFeedbackEmulated = false;
+    gl::ShaderType shaderType           = gl::ShaderType::InvalidEnum;
+    bool negativeViewportSupported      = false;
+    bool removeDebugInfo                = false;
+    bool isLastPreFragmentStage         = false;
+    bool isTransformFeedbackStage       = false;
+    bool isTransformFeedbackEmulated    = false;
+    bool isMultisampledFramebufferFetch = false;
 };
 
 struct UniformBindingInfo final
