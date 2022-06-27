@@ -33,7 +33,6 @@ SurfaceState::SurfaceState(const egl::Config *configIn, const AttributeMap &attr
       config((configIn != nullptr) ? new egl::Config(*configIn) : nullptr),
       attributes(attributesIn),
       timestampsEnabled(false),
-      autoRefreshEnabled(false),
       directComposition(false),
       swapBehavior(EGL_NONE)
 {
@@ -697,13 +696,6 @@ void Surface::setTimestampsEnabled(bool enabled)
 bool Surface::isTimestampsEnabled() const
 {
     return mState.timestampsEnabled;
-}
-
-Error Surface::setAutoRefreshEnabled(bool enabled)
-{
-    ANGLE_TRY(mImplementation->setAutoRefreshEnabled(enabled));
-    mState.autoRefreshEnabled = enabled;
-    return NoError();
 }
 
 bool Surface::hasProtectedContent() const
