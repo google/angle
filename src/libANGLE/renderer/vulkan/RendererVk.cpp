@@ -3774,8 +3774,17 @@ angle::Result RendererVk::getPipelineCacheSize(DisplayVk *displayVk, size_t *pip
 
 angle::Result RendererVk::syncPipelineCacheVk(DisplayVk *displayVk, const gl::Context *context)
 {
-    // TODO: Synchronize access to the pipeline/blob caches?
     ASSERT(mPipelineCache.valid());
+
+    // If the pipeline cache is being warmed up at link time, the blobs corresponding to each
+    // program is individually retrieved and stored in the blob cache.  This should be enabled only
+    // on platforms where draw time pipeline creation hits the cache due to said warm up.  As a
+    // result, there's no need to store the aggregate cache (the one owned by RendererVk) in the
+    // blob cache too.
+    if (mFeatures.warmUpPipelineCacheAtLink.enabled)
+    {
+        return angle::Result::Continue;
+    }
 
     if (--mPipelineCacheVkUpdateTimeout > 0)
     {
