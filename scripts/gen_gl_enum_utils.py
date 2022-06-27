@@ -96,7 +96,7 @@ exclude_gl_enum_groups = {'SpecialNumbers'}
 
 
 def dump_value_to_string_mapping(gl_enum_in_groups, exporting_enums):
-    exporting_groups = list()
+    exporting_groups = []
     for group_name, inner_mapping in gl_enum_in_groups.items():
         string_value_pairs = list(filter(lambda x: x[0] in exporting_enums, inner_mapping.items()))
         if not string_value_pairs:
@@ -111,10 +111,11 @@ def dump_value_to_string_mapping(gl_enum_in_groups, exporting_enums):
         #     GL_BLEND_EQUATION_RGB and GL_BLEND_EQUATION
         # it is safe to output either one of them, for simplity here just
         # choose the shorter one which comes first in the sorted list
-        exporting_string_value_pairs = list()
-        for index, pair in enumerate(string_value_pairs):
-            if index == 0 or pair[1] != string_value_pairs[index - 1][1]:
-                exporting_string_value_pairs.append(pair)
+        exporting_string_value_pairs = [
+            pair
+            for index, pair in enumerate(string_value_pairs)
+            if index == 0 or pair[1] != string_value_pairs[index - 1][1]
+        ]
 
         inner_code_block = "\n".join([
             template_enum_value_to_string_case.format(
@@ -137,7 +138,7 @@ def main(header_output_path, source_output_path):
     xml = registry_xml.RegistryXML('gl.xml', 'gl_angle_ext.xml')
 
     # build a map from GLenum name to its value
-    all_gl_enums = dict()
+    all_gl_enums = {}
     for enums_node in xml.root.findall('enums'):
         for enum in enums_node.findall('enum'):
             name = enum.attrib['name']
@@ -145,7 +146,7 @@ def main(header_output_path, source_output_path):
             all_gl_enums[name] = value
 
     # Parse groups of GLenums to build a {group, name} -> value mapping.
-    gl_enum_in_groups = dict()
+    gl_enum_in_groups = {}
     enums_has_group = set()
     for enums_group_node in xml.root.findall('groups/group'):
         group_name = enums_group_node.attrib['name']
@@ -153,7 +154,7 @@ def main(header_output_path, source_output_path):
             continue
 
         if group_name not in gl_enum_in_groups:
-            gl_enum_in_groups[group_name] = dict()
+            gl_enum_in_groups[group_name] = {}
 
         for enum_node in enums_group_node.findall('enum'):
             enum_name = enum_node.attrib['name']
@@ -178,7 +179,7 @@ def main(header_output_path, source_output_path):
 
     # For enums that do not have a group, add them to a default group
     default_group_name = registry_xml.default_enum_group_name
-    gl_enum_in_groups[default_group_name] = dict()
+    gl_enum_in_groups[default_group_name] = {}
     default_group = gl_enum_in_groups[default_group_name]
     for enum_name in exporting_enums:
         if enum_name not in enums_has_group:
@@ -219,9 +220,10 @@ if __name__ == '__main__':
 
     gl_enum_utils_autogen_base_path = '../src/libANGLE/capture/gl_enum_utils_autogen'
     outputs = [
-        gl_enum_utils_autogen_base_path + '.h',
-        gl_enum_utils_autogen_base_path + '.cpp',
+        f'{gl_enum_utils_autogen_base_path}.h',
+        f'{gl_enum_utils_autogen_base_path}.cpp',
     ]
+
 
     if len(sys.argv) > 1:
         if sys.argv[1] == 'inputs':

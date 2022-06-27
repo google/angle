@@ -119,9 +119,9 @@ def write_header(enums, path_prefix, file_name, data_source_name, includes, name
     content = ['']
 
     for enum in enums:
-        value_declarations = []
-        for value in enum.values:
-            value_declarations.append('    ' + value.name + ' = ' + str(value.value) + ',')
+        value_declarations = [
+            f'    {value.name} = {str(value.value)},' for value in enum.values
+        ]
 
         content.append(
             enum_declaration_template.format(
@@ -209,13 +209,40 @@ def write_cpp(enums, path_prefix, file_name, data_source_name, namespace, api_en
         to_glenum_cases = []
         ostream_cases = []
         for value in enum.values:
-            qualified_name = enum.name + '::' + value.name
-            from_glenum_cases.append('        case ' + value.gl_name + ':\n            return ' +
-                                     qualified_name + ';')
-            to_glenum_cases.append('        case ' + qualified_name + ':\n            return ' +
-                                   value.gl_name + ';')
-            ostream_cases.append('        case ' + qualified_name + ':\n            os << "' +
-                                 value.gl_name + '";\n            break;')
+            qualified_name = f'{enum.name}::{value.name}'
+            from_glenum_cases.append(
+                (
+                    (
+                        f'        case {value.gl_name}'
+                        + ':\n            return '
+                        + qualified_name
+                    )
+                    + ';'
+                )
+            )
+
+            to_glenum_cases.append(
+                (
+                    (
+                        f'        case {qualified_name}'
+                        + ':\n            return '
+                        + value.gl_name
+                    )
+                    + ';'
+                )
+            )
+
+            ostream_cases.append(
+                (
+                    (
+                        f'        case {qualified_name}'
+                        + ':\n            os << "'
+                        + value.gl_name
+                    )
+                    + '";\n            break;'
+                )
+            )
+
 
         content.append(
             enum_implementation_template.format(
@@ -270,10 +297,25 @@ def main():
         namespace = generator['namespace']
         enum_type = generator['enum_type']
         enums = load_enums(path_prefix + json_file)
-        write_header(enums, path_prefix, output_file + '_autogen.h', json_file, includes,
-                     namespace, enum_type)
-        write_cpp(enums, path_prefix, output_file + '_autogen.cpp', json_file, namespace,
-                  enum_type)
+        write_header(
+            enums,
+            path_prefix,
+            f'{output_file}_autogen.h',
+            json_file,
+            includes,
+            namespace,
+            enum_type,
+        )
+
+        write_cpp(
+            enums,
+            path_prefix,
+            f'{output_file}_autogen.cpp',
+            json_file,
+            namespace,
+            enum_type,
+        )
+
     return 0
 
 

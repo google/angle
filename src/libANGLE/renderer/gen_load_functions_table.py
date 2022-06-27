@@ -100,7 +100,7 @@ angle_format_unknown = 'NONE'
 
 
 def load_functions_name(internal_format, angle_format):
-    return internal_format[3:] + "_to_" + angle_format
+    return f"{internal_format[3:]}_to_{angle_format}"
 
 
 def unknown_func_name(internal_format):
@@ -108,14 +108,18 @@ def unknown_func_name(internal_format):
 
 
 def get_load_func(func_name, type_functions):
-    snippet = "LoadImageFunctionInfo " + func_name + "(GLenum type)\n"
+    snippet = f"LoadImageFunctionInfo {func_name}" + "(GLenum type)\n"
     snippet += "{\n"
     snippet += "    switch (type)\n"
     snippet += "    {\n"
     for gl_type, load_function in sorted(type_functions.items()):
-        snippet += "        case " + gl_type + ":\n"
+        snippet += f"        case {gl_type}" + ":\n"
         requiresConversion = str('LoadToNative<' not in load_function).lower()
-        snippet += "            return LoadImageFunctionInfo(" + load_function + ", " + requiresConversion + ");\n"
+        snippet += (
+            f"            return LoadImageFunctionInfo({load_function}, {requiresConversion}"
+            + ");\n"
+        )
+
     snippet += "        default:\n"
     snippet += "            UNREACHABLE();\n"
     snippet += "            return LoadImageFunctionInfo(UnreachableLoadFunction, true);\n"
@@ -139,7 +143,7 @@ def parse_json(json_data):
 
         s = '        '
 
-        table_data += s + 'case ' + internal_format + ':\n'
+        table_data += f'{s}case {internal_format}' + ':\n'
 
         do_switch = len(angle_to_type_map) > 1 or list(
             angle_to_type_map)[0] != angle_format_unknown
@@ -147,7 +151,7 @@ def parse_json(json_data):
         if do_switch:
             table_data += s + '{\n'
             s += '    '
-            table_data += s + 'switch (' + angle_format_param + ')\n'
+            table_data += f'{s}switch ({angle_format_param}' + ')\n'
             table_data += s + '{\n'
             s += '    '
 
@@ -159,8 +163,8 @@ def parse_json(json_data):
             func_name = load_functions_name(internal_format, angle_format)
 
             # Main case statements
-            table_data += s + 'case FormatID::' + angle_format + ':\n'
-            table_data += s + '    return ' + func_name + ';\n'
+            table_data += f'{s}case FormatID::{angle_format}' + ':\n'
+            table_data += f'{s}    return {func_name}' + ';\n'
 
             if angle_format_unknown in angle_to_type_map:
                 for gl_type, load_function in sorted(
@@ -175,7 +179,7 @@ def parse_json(json_data):
 
         has_break_in_switch = False
         if angle_format_unknown in angle_to_type_map:
-            table_data += s + '    return ' + unknown_func_name(internal_format) + ';\n'
+            table_data += f'{s}    return {unknown_func_name(internal_format)}' + ';\n'
             load_functions_data += get_unknown_load_func(angle_to_type_map, internal_format)
         else:
             has_break_in_switch = True
@@ -198,10 +202,10 @@ def main():
 
     # auto_script parameters.
     if len(sys.argv) > 1:
-        inputs = ['angle_format.py', 'load_functions_data.json']
         outputs = ['load_functions_table_autogen.cpp']
 
         if sys.argv[1] == 'inputs':
+            inputs = ['angle_format.py', 'load_functions_data.json']
             print(','.join(inputs))
         elif sys.argv[1] == 'outputs':
             print(','.join(outputs))

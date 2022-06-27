@@ -5,9 +5,8 @@ import sys
 
 def ReadFileAsLines(filename):
     """Reads a file, removing blank lines and lines that start with #"""
-    file = open(filename, "r")
-    raw_lines = file.readlines()
-    file.close()
+    with open(filename, "r") as file:
+        raw_lines = file.readlines()
     lines = []
     for line in raw_lines:
         line = line.strip()
@@ -23,7 +22,7 @@ def GetSuiteName(testName):
 def GetTestName(testName):
     replacements = {".test": "", ".": "_"}
     splitTestName = testName.split("/")
-    cleanName = splitTestName[-2] + "_" + splitTestName[-1]
+    cleanName = f"{splitTestName[-2]}_{splitTestName[-1]}"
     for replaceKey in replacements:
         cleanName = cleanName.replace(replaceKey, replacements[replaceKey])
     return cleanName
@@ -38,11 +37,11 @@ def GenerateTests(outFile, testNames):
 
     for test in testNames:
         testSuite = GetSuiteName(test)
-        if not testSuite in testSuites:
-            outFile.write("DEFINE_CONFORMANCE_TEST_CLASS(" + testSuite + ");\n\n")
+        if testSuite not in testSuites:
+            outFile.write(f"DEFINE_CONFORMANCE_TEST_CLASS({testSuite}" + ");\n\n")
             testSuites.append(testSuite)
 
-        outFile.write("TYPED_TEST(" + testSuite + ", " + GetTestName(test) + ")\n")
+        outFile.write(f"TYPED_TEST({testSuite}, {GetTestName(test)}" + ")\n")
         outFile.write("{\n")
         outFile.write("    run(\"" + test + "\");\n")
         outFile.write("}\n\n")
@@ -64,10 +63,8 @@ def main(argv):
     tests = GenerateTestList(argv[0], argv[1])
     tests.sort()
 
-    output = open(argv[2], 'wb')
-    GenerateTests(output, tests)
-    output.close()
-
+    with open(argv[2], 'wb') as output:
+        GenerateTests(output, tests)
     return 0
 
 

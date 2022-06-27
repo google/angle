@@ -103,15 +103,15 @@ def main():
 
     # auto_script parameters.
     if len(sys.argv) > 1:
-        inputs = [
-            '../angle_format.py',
-            input_file_name,
-            vk_format_map_path,
-            vk_xml_file,
-        ]
         outputs = [out_file_name]
 
         if sys.argv[1] == 'inputs':
+            inputs = [
+                '../angle_format.py',
+                input_file_name,
+                vk_format_map_path,
+                vk_xml_file,
+            ]
             print(','.join(inputs))
         elif sys.argv[1] == 'outputs':
             print(','.join(outputs))

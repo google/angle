@@ -43,24 +43,20 @@ def rebase_script_path(script_path, relative_path):
 def get_executable_name(first_line):
     binary = os.path.basename(first_line.strip().replace(' ', '/'))
     if platform.system() == 'Windows':
-        if binary == 'python2':
-            return 'python.bat'
-        else:
-            return binary + '.bat'
+        return 'python.bat' if binary == 'python2' else f'{binary}.bat'
     else:
         return binary
 
 
 def grab_from_script(script, param):
     res = ''
-    f = open(os.path.basename(script), 'r')
-    exe = get_executable_name(f.readline())
-    try:
-        res = subprocess.check_output([exe, script, param]).decode().strip()
-    except Exception:
-        print('Error grabbing script output: %s, executable %s' % (script, exe))
-        raise
-    f.close()
+    with open(os.path.basename(script), 'r') as f:
+        exe = get_executable_name(f.readline())
+        try:
+            res = subprocess.check_output([exe, script, param]).decode().strip()
+        except Exception:
+            print(f'Error grabbing script output: {script}, executable {exe}')
+            raise
     if res == '':
         return []
     return [clean_path_slashes(rebase_script_path(script, name)) for name in res.split(',')]
@@ -168,7 +164,10 @@ def any_hash_dirty(name, filenames, new_hashes, old_hashes):
             found_dirty_hash = True
         else:
             new_hashes[fname] = md5(fname)
-            if (not fname in old_hashes) or (old_hashes[fname] != new_hashes[fname]):
+            if (
+                fname not in old_hashes
+                or old_hashes[fname] != new_hashes[fname]
+            ):
                 print('Hash for "%s" dirty for %s generator.' % (fname, name))
                 found_dirty_hash = True
     return found_dirty_hash
@@ -191,7 +190,7 @@ def any_old_hash_missing(all_new_hashes, all_old_hashes):
 def update_output_hashes(script, outputs, new_hashes):
     for output in outputs:
         if not os.path.isfile(output):
-            print('Output is missing from %s: %s' % (script, output))
+            print(f'Output is missing from {script}: {output}')
             sys.exit(1)
         new_hashes[output] = md5(output)
 
@@ -204,7 +203,7 @@ def load_hashes():
             try:
                 hashes[file] = json.load(hash_file)
             except ValueError:
-                raise Exception("Could not decode JSON from %s" % file)
+                raise Exception(f"Could not decode JSON from {file}")
     return hashes
 
 
@@ -248,17 +247,15 @@ def main():
             any_dirty = True
 
             if not args.verify_only:
-                print('Running ' + name + ' code generator')
+                print(f'Running {name} code generator')
 
                 # Set the CWD to the script directory.
                 os.chdir(get_child_script_dirname(script))
 
-                f = open(os.path.basename(script), "r")
-                if subprocess.call([get_executable_name(f.readline()),
-                                    os.path.basename(script)]) != 0:
-                    sys.exit(1)
-                f.close()
-
+                with open(os.path.basename(script), "r") as f:
+                    if subprocess.call([get_executable_name(f.readline()),
+                                        os.path.basename(script)]) != 0:
+                        sys.exit(1)
         # Update the hash dictionary.
         all_new_hashes[fname] = new_hashes
 

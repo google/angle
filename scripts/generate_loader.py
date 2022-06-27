@@ -30,9 +30,7 @@ def write_header(data_source_name,
     header_path = registry_xml.path_to(path, file_name)
 
     def pre(cmd):
-        if prefix == None:
-            return cmd
-        return prefix + cmd[len(api):]
+        return cmd if prefix is None else prefix + cmd[len(api):]
 
     with open(header_path, "w") as out:
         defines = [
@@ -73,9 +71,7 @@ def write_source(data_source_name,
     source_path = registry_xml.path_to(path, file_name)
 
     def pre(cmd):
-        if prefix == None:
-            return cmd
-        return prefix + cmd[len(api):]
+        return cmd if prefix is None else prefix + cmd[len(api):]
 
     with open(source_path, "w") as out:
         var_defs = [
@@ -107,11 +103,11 @@ def gen_libegl_loader():
     data_source_name = "egl.xml and egl_angle_ext.xml"
     xml = registry_xml.RegistryXML("egl.xml", "egl_angle_ext.xml")
 
-    for major_version, minor_version in [[1, 0], [1, 1], [1, 2], [1, 3], [1, 4], [1, 5]]:
-        annotation = "{}_{}".format(major_version, minor_version)
-        name_prefix = "EGL_VERSION_"
+    name_prefix = "EGL_VERSION_"
 
-        feature_name = "{}{}".format(name_prefix, annotation)
+    for major_version, minor_version in [[1, 0], [1, 1], [1, 2], [1, 3], [1, 4], [1, 5]]:
+        annotation = f"{major_version}_{minor_version}"
+        feature_name = f"{name_prefix}{annotation}"
 
         xml.AddCommands(feature_name, annotation)
 
@@ -140,14 +136,14 @@ def gen_gles_loader(gles_preamble, path, header_lib, export, internal_prefix, fi
     # First run through the main GLES entry points.  Since ES2+ is the primary use
     # case, we go through those first and then add ES1-only APIs at the end.
     for major_version, minor_version in [[2, 0], [3, 0], [3, 1], [3, 2], [1, 0]]:
-        annotation = "{}_{}".format(major_version, minor_version)
+        annotation = f"{major_version}_{minor_version}"
         name_prefix = "GL_ES_VERSION_"
 
         is_gles1 = major_version == 1
         if is_gles1:
             name_prefix = "GL_VERSION_ES_CM_"
 
-        feature_name = "{}{}".format(name_prefix, annotation)
+        feature_name = f"{name_prefix}{annotation}"
 
         xml.AddCommands(feature_name, annotation)
 
@@ -183,11 +179,11 @@ def gen_egl_loader(egl_preamble, path, header_lib, export, internal_prefix, file
     data_source_name = "egl.xml and egl_angle_ext.xml"
     xml = registry_xml.RegistryXML("egl.xml", "egl_angle_ext.xml")
 
-    for major_version, minor_version in [[1, 0], [1, 1], [1, 2], [1, 3], [1, 4], [1, 5]]:
-        annotation = "{}_{}".format(major_version, minor_version)
-        name_prefix = "EGL_VERSION_"
+    name_prefix = "EGL_VERSION_"
 
-        feature_name = "{}{}".format(name_prefix, annotation)
+    for major_version, minor_version in [[1, 0], [1, 1], [1, 2], [1, 3], [1, 4], [1, 5]]:
+        annotation = f"{major_version}_{minor_version}"
+        feature_name = f"{name_prefix}{annotation}"
 
         xml.AddCommands(feature_name, annotation)
 
@@ -241,11 +237,11 @@ def gen_util_wgl_loader():
     source = "wgl.xml"
     xml = registry_xml.RegistryXML(source)
 
-    for major_version, minor_version in [[1, 0]]:
-        annotation = "{}_{}".format(major_version, minor_version)
-        name_prefix = "WGL_VERSION_"
+    name_prefix = "WGL_VERSION_"
 
-        feature_name = "{}{}".format(name_prefix, annotation)
+    for major_version, minor_version in [[1, 0]]:
+        annotation = f"{major_version}_{minor_version}"
+        feature_name = f"{name_prefix}{annotation}"
 
         xml.AddCommands(feature_name, annotation)
 

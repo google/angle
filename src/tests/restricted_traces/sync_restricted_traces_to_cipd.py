@@ -51,7 +51,7 @@ def sync_trace(param):
     trace, trace_version = trace_info.split(' ')
 
     if args.filter and not fnmatch.fnmatch(trace, args.filter):
-        logger.debug('Skipping %s because it does not match the test filter.' % trace)
+        logger.debug(f'Skipping {trace} because it does not match the test filter.')
         return EXIT_SUCCESS
 
     if 'x' in trace_version:
@@ -60,17 +60,41 @@ def sync_trace(param):
     else:
         trace_prefix = CIPD_PREFIX
 
-    trace_name = '%s/%s' % (trace_prefix, trace)
+    trace_name = f'{trace_prefix}/{trace}'
     # Determine if this version exists
-    if cipd(logger, 'describe', trace_name, '-version', 'version:%s' % trace_version) == 0:
-        logger.info('%s version %s already present' % (trace, trace_version))
+    if (
+        cipd(
+            logger,
+            'describe',
+            trace_name,
+            '-version',
+            f'version:{trace_version}',
+        )
+        == 0
+    ):
+        logger.info(f'{trace} version {trace_version} already present')
         return EXIT_SUCCESS
 
-    logger.info('%s version %s missing. calling create.' % (trace, trace_version))
+    logger.info(f'{trace} version {trace_version} missing. calling create.')
     trace_folder = os.path.join(SCRIPT_DIR, trace)
-    if cipd(logger, 'create', '-name', trace_name, '-in', trace_folder, '-tag', 'version:%s' %
-            trace_version, '-log-level', args.log.lower(), '-install-mode', 'copy') != 0:
-        logger.error('%s version %s create failed' % (trace, trace_version))
+    if (
+        cipd(
+            logger,
+            'create',
+            '-name',
+            trace_name,
+            '-in',
+            trace_folder,
+            '-tag',
+            f'version:{trace_version}',
+            '-log-level',
+            args.log.lower(),
+            '-install-mode',
+            'copy',
+        )
+        != 0
+    ):
+        logger.error(f'{trace} version {trace_version} create failed')
         return EXIT_FAILURE
     return EXIT_SUCCESS
 
@@ -105,16 +129,28 @@ if __name__ == '__main__':
     max_threads = min(multiprocessing.cpu_count(), MAX_THREADS)
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        '-p', '--prefix', help='CIPD Prefix. Default: %s' % CIPD_PREFIX, default=CIPD_PREFIX)
+        '-p',
+        '--prefix',
+        help=f'CIPD Prefix. Default: {CIPD_PREFIX}',
+        default=CIPD_PREFIX,
+    )
+
     parser.add_argument(
-        '-l', '--log', help='Logging level. Default: %s' % LOG_LEVEL, default=LOG_LEVEL)
+        '-l',
+        '--log',
+        help=f'Logging level. Default: {LOG_LEVEL}',
+        default=LOG_LEVEL,
+    )
+
     parser.add_argument(
         '-f', '--filter', help='Only sync specified tests. Supports fnmatch expressions.')
     parser.add_argument(
         '-t',
         '--threads',
-        help='Maxiumum parallel threads. Default: %s' % max_threads,
-        default=max_threads)
+        help=f'Maxiumum parallel threads. Default: {max_threads}',
+        default=max_threads,
+    )
+
     args, extra_flags = parser.parse_known_args()
 
     logging.basicConfig(level=args.log.upper())

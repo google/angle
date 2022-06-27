@@ -120,8 +120,8 @@ def verify_vk_map_keys(angle_to_gl, vk_json_data):
     no_error = True
     for table in ["map", "fallbacks"]:
         for angle_format in vk_json_data[table].keys():
-            if not angle_format in angle_to_gl.keys():
-                print("Invalid format " + angle_format + " in vk_format_map.json in " + table)
+            if angle_format not in angle_to_gl.keys():
+                print(f"Invalid format {angle_format} in vk_format_map.json in {table}")
                 no_error = False
 
     return no_error
@@ -129,17 +129,17 @@ def verify_vk_map_keys(angle_to_gl, vk_json_data):
 
 def get_vertex_copy_function(src_format, dst_format, vk_format):
     if "_PACK" in vk_format:
-        pack_bits = int(re.search(r'_PACK(\d+)', vk_format).group(1))
+        pack_bits = int(re.search(r'_PACK(\d+)', vk_format)[1])
         base_type = None
-        if pack_bits == 8:
-            base_type = 'byte'
-        elif pack_bits == 16:
+        if pack_bits == 16:
             base_type = 'short'
         elif pack_bits == 32:
             base_type = 'int'
+        elif pack_bits == 8:
+            base_type = 'byte'
         else:
             return 'nullptr'
-        return 'CopyNativeVertexData<GLu%s, 1, 1, 0>' % base_type
+        return f'CopyNativeVertexData<GLu{base_type}, 1, 1, 0>'
     if 'R10G10B10A2' in src_format:
         # When the R10G10B10A2 type can't be used by the vertex buffer,
         # it needs to be converted to the type which can be used by it.
@@ -147,8 +147,8 @@ def get_vertex_copy_function(src_format, dst_format, vk_format):
         normalized = 'true' if 'NORM' in src_format else 'false'
         to_float = 'false' if 'INT' in src_format else 'true'
         to_half = to_float
-        return 'CopyXYZ10W2ToXYZWFloatVertexData<%s, %s, %s, %s>' % (is_signed, normalized,
-                                                                     to_float, to_half)
+        return f'CopyXYZ10W2ToXYZWFloatVertexData<{is_signed}, {normalized}, {to_half}, {to_half}>'
+
     return angle_format.get_vertex_copy_function(src_format, dst_format)
 
 
@@ -170,7 +170,7 @@ def gen_format_case(angle, internal_format, vk_json_data):
         if not isinstance(fallbacks, list):
             fallbacks = [fallbacks]
 
-        compressed = vk_fallbacks.get(format, {}).get(type + "_compressed", [])
+        compressed = vk_fallbacks.get(format, {}).get(f"{type}_compressed", [])
         if not isinstance(compressed, list):
             compressed = [compressed]
 
@@ -183,16 +183,20 @@ def gen_format_case(angle, internal_format, vk_json_data):
 
     def image_args(format):
         return dict(
-            image="angle::FormatID::" + format,
+            image=f"angle::FormatID::{format}",
             image_initializer=angle_format.get_internal_format_initializer(
-                internal_format, format))
+                internal_format, format
+            ),
+        )
 
     def buffer_args(format):
         vk_buffer_format = vk_map[format]
         return dict(
-            buffer="angle::FormatID::" + format,
+            buffer=f"angle::FormatID::{format}",
             vk_buffer_format_is_packed=is_packed(vk_buffer_format),
-            vertex_load_function=get_vertex_copy_function(angle, format, vk_buffer_format),
+            vertex_load_function=get_vertex_copy_function(
+                angle, format, vk_buffer_format
+            ),
             vertex_load_converts='false' if angle == format else 'true',
         )
 
@@ -237,10 +241,10 @@ def main():
 
     # auto_script parameters.
     if len(sys.argv) > 1:
-        inputs = ['../angle_format.py', '../angle_format_map.json', input_file_name]
         outputs = [out_file_name]
 
         if sys.argv[1] == 'inputs':
+            inputs = ['../angle_format.py', '../angle_format_map.json', input_file_name]
             print(','.join(inputs))
         elif sys.argv[1] == 'outputs':
             print(','.join(outputs))

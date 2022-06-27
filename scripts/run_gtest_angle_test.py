@@ -88,8 +88,10 @@ def main():
     try:
         # Consider adding stdio control flags.
         if args.isolated_script_test_output:
-            extra_flags.append('--isolated-script-test-output=%s' %
-                               args.isolated_script_test_output)
+            extra_flags.append(
+                f'--isolated-script-test-output={args.isolated_script_test_output}'
+            )
+
 
         if args.isolated_script_test_filter:
             filter_list = common.extract_filter_list(args.isolated_script_test_filter)
@@ -98,7 +100,7 @@ def main():
         if IsWindows():
             args.executable = '.\\%s.exe' % args.executable
         else:
-            args.executable = './%s' % args.executable
+            args.executable = f'./{args.executable}'
         with common.temporary_file() as tempfile_path:
             env['CHROME_HEADLESS'] = '1'
             cmd = [args.executable] + extra_flags

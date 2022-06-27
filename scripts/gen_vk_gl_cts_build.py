@@ -116,7 +116,7 @@ def main():
     if len(sys.argv) > 1:
         # All CMakeLists.txt in the dEQP source tree (at the time)
         cmakeDirs = getCMakeLists(deqpSourceDirectory)
-        inputs = [os.path.join(deqpSourceDirectory, "%s" % dir) for dir in cmakeDirs]
+        inputs = [os.path.join(deqpSourceDirectory, f"{dir}") for dir in cmakeDirs]
         outputs = [dataGniFilename, buildGnPath]
 
         if sys.argv[1] == 'inputs':
@@ -177,12 +177,13 @@ copy("vk_gl_cts_data_{relDir}") {{
             path, filename = os.path.split(dataFile)
             if relativeDirectory == path:
                 filesToCopy += templateFilesToCopy.format(dataFile=dataFile.replace(os.sep, '/'))
-        copyCommand = ""
         destDir = fixDestinationDirectory(pathReplacements, relativeDirectory)
-        copyCommand += templateCopyCommand.format(
+        copyCommand = "" + templateCopyCommand.format(
             relDir=convertPathToVarName(relativeDirectory),
             filesToCopy=filesToCopy,
-            destDir=destDir.replace(os.sep, '/'))
+            destDir=destDir.replace(os.sep, '/'),
+        )
+
         buildGnFile.write(copyCommand)
 
     #
@@ -202,13 +203,17 @@ copy("vk_gl_cts_data_{relDir}") {{
 {files}]
 """
     for dataDirectory in dataDirectories:
-        files = ""
-        for dataFile in dataFiles:
-            if dataDirectory + os.sep in dataFile:
-                files += templateDataFiles.format(
-                    dataFile=fixDestinationDirectory(pathReplacements, dataFile).replace(
-                        os.sep, '/'))
-        dataDepName = "angle_deqp_" + convertPathToVarName(dataDirectory)
+        files = "".join(
+            templateDataFiles.format(
+                dataFile=fixDestinationDirectory(
+                    pathReplacements, dataFile
+                ).replace(os.sep, '/')
+            )
+            for dataFile in dataFiles
+            if dataDirectory + os.sep in dataFile
+        )
+
+        dataDepName = f"angle_deqp_{convertPathToVarName(dataDirectory)}"
         fileDeps = templateDataFileDeps.format(dataDepName=dataDepName, files=files)
         gniFile.write(fileDeps)
 
@@ -218,11 +223,14 @@ copy("vk_gl_cts_data_{relDir}") {{
 angle_deqp_data_copy_targets = [
 {targets}]
 """
-    targets = ""
-    for relativeDirectory in relativeDirectories:
-        targets += templateCopyTarget.format(
+    targets = "".join(
+        templateCopyTarget.format(
             deqpSupportDirectory=deqpSupportDirectory,
-            relDir=convertPathToVarName(relativeDirectory))
+            relDir=convertPathToVarName(relativeDirectory),
+        )
+        for relativeDirectory in relativeDirectories
+    )
+
     gniFile.write(templateCopyTargets.format(targets=targets))
 
 

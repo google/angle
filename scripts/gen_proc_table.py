@@ -125,7 +125,7 @@ def main():
 
     # auto_script parameters.
     if len(sys.argv) > 1:
-        inputs = [source for source in registry_xml.xml_inputs]
+        inputs = list(registry_xml.xml_inputs)
         outputs = [out_file_name_gles, out_file_name_gl, out_file_name_cl, out_file_name_cl_map]
         if sys.argv[1] == 'inputs':
             print(','.join(inputs))
@@ -142,7 +142,7 @@ def main():
         name_prefix = "GL_ES_VERSION_"
         if annotation[0] == '1':
             name_prefix = "GL_VERSION_ES_CM_"
-        feature_name = "{}{}".format(name_prefix, annotation)
+        feature_name = f"{name_prefix}{annotation}"
         glesxml.AddCommands(feature_name, annotation)
 
     glesxml.AddExtensionCommands(registry_xml.supported_extensions, ['gles2', 'gles1'])
@@ -155,7 +155,7 @@ def main():
         name_no_suffix = name
         for suffix in strip_suffixes:
             if name_no_suffix.endswith(suffix):
-                name_no_suffix = name_no_suffix[0:-len(suffix)]
+                name_no_suffix = name_no_suffix[:-len(suffix)]
 
     gles_data = glesxml.all_cmd_names.get_all_commands()
 
@@ -163,7 +163,7 @@ def main():
 
     for annotation in _get_annotations(registry_xml.EGL_VERSIONS):
         name_prefix = "EGL_VERSION_"
-        feature_name = "{}{}".format(name_prefix, annotation)
+        feature_name = f"{name_prefix}{annotation}"
         eglxml.AddCommands(feature_name, annotation)
 
     eglxml.AddExtensionCommands(registry_xml.supported_egl_extensions, ['gles2', 'gles1'])
@@ -177,9 +177,9 @@ def main():
 
     for function in gles_data:
         if function.startswith("gl"):
-            all_functions[function] = "GL_" + function[2:]
+            all_functions[function] = f"GL_{function[2:]}"
         elif function.startswith("egl"):
-            all_functions[function] = "EGL_" + function[3:]
+            all_functions[function] = f"EGL_{function[3:]}"
         else:
             all_functions[function] = function
 
@@ -203,26 +203,29 @@ def main():
 
     for annotation in _get_annotations(registry_xml.DESKTOP_GL_VERSIONS):
         name_prefix = "GL_VERSION_"
-        feature_name = "{}{}".format(name_prefix, annotation)
+        feature_name = f"{name_prefix}{annotation}"
         glxml.AddCommands(feature_name, annotation)
 
-    gl_data = [cmd for cmd in glxml.all_cmd_names.get_all_commands()]
+    gl_data = list(glxml.all_cmd_names.get_all_commands())
 
     wglxml = registry_xml.RegistryXML('wgl.xml')
 
     for annotation in _get_annotations(registry_xml.WGL_VERSIONS):
         name_prefix = "WGL_VERSION_"
-        feature_name = "{}{}".format(name_prefix, annotation)
+        feature_name = f"{name_prefix}{annotation}"
         wglxml.AddCommands(feature_name, annotation)
 
     gl_commands = wglxml.all_cmd_names.get_all_commands()
-    gl_data.extend([cmd if cmd[:3] == 'wgl' else 'wgl' + cmd for cmd in gl_commands])
+    gl_data.extend(
+        [cmd if cmd[:3] == 'wgl' else f'wgl{cmd}' for cmd in gl_commands]
+    )
+
 
     all_functions = {}
 
     for function in gl_data:
         if function.startswith("gl"):
-            all_functions[function] = "GL_" + function[2:]
+            all_functions[function] = f"GL_{function[2:]}"
         else:
             all_functions[function] = function
 
@@ -246,18 +249,20 @@ def main():
     symbol_maps = []
     symbol_map_dependency = ""
 
+    name_prefix = "CL_VERSION_"
     for major_version, minor_version in registry_xml.CL_VERSIONS:
-        name_prefix = "CL_VERSION_"
         annotation = "%d_%d" % (major_version, minor_version)
-        feature_name = "%s%s" % (name_prefix, annotation)
+        feature_name = f"{name_prefix}{annotation}"
         clxml.AddCommands(feature_name, annotation)
         symbol_version = "OPENCL_%d.%d" % (major_version, minor_version)
         symbol_maps += ["\n%s {\n    global:" % symbol_version]
-        symbol_maps += ['        %s;' % cmd for cmd in clxml.commands[annotation]]
-        if not symbol_map_dependency:
-            symbol_maps += ["    local:\n        *;\n};"]
-        else:
-            symbol_maps += ["} %s;" % symbol_map_dependency]
+        symbol_maps += [f'        {cmd};' for cmd in clxml.commands[annotation]]
+        symbol_maps += (
+            ["} %s;" % symbol_map_dependency]
+            if symbol_map_dependency
+            else ["    local:\n        *;\n};"]
+        )
+
         symbol_map_dependency = symbol_version
 
     clxml.AddExtensionCommands(registry_xml.supported_cl_extensions, ['cl'])

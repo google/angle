@@ -671,7 +671,7 @@ glsl_levels = [
 
 
 def generate_suffix_from_level(level):
-    assert (level[:4] == 'GLSL' or level[:4] == 'ESSL')
+    assert level[:4] in ['GLSL', 'ESSL']
     assert (level[-9:] == '_BUILTINS')
 
     # Turn XYSLN_M_BUILTINS to XYN_M
@@ -679,7 +679,7 @@ def generate_suffix_from_level(level):
 
 
 def get_essl_shader_version_for_level(level):
-    if level == None:
+    if level is None:
         return '-1'
     elif level == 'ESSL_VULKAN_BUILTINS':
         return 'kESSLVulkanOnly'
@@ -698,7 +698,7 @@ def get_essl_shader_version_for_level(level):
 
 
 def get_glsl_shader_version_for_level(level):
-    if level == None:
+    if level is None:
         return '-1'
     elif level == 'GLSL1_2_BUILTINS':
         return '120'
@@ -739,8 +739,13 @@ def get_shader_version_for_level(spec, level):
 
 def get_extension_list(extensions):
     extension_list = [ext.strip() for ext in extensions.split(',')]
-    extension_string = ', '.join(['TExtension::' + ext for ext in extension_list])
-    return 'std::array<TExtension, ' + str(len(extension_list)) + 'u>{{' + extension_string + '}}'
+    extension_string = ', '.join([f'TExtension::{ext}' for ext in extension_list])
+    return (
+        f'std::array<TExtension, {len(extension_list)}'
+        + 'u>{{'
+        + extension_string
+        + '}}'
+    )
 
 
 class GroupedList:
@@ -756,9 +761,9 @@ class GroupedList:
     def add_entry(self, essl_level, glsl_level, shader_type, name, symbol, essl_extension,
                   glsl_extension, script_generated_hash_tests):
         if essl_level and essl_level not in essl_levels:
-            raise Exception('Unexpected essl level: ' + str(essl_level))
+            raise Exception(f'Unexpected essl level: {str(essl_level)}')
         if glsl_level and glsl_level not in glsl_levels:
-            raise Exception('Unexpected glsl level: ' + str(glsl_level))
+            raise Exception(f'Unexpected glsl level: {str(glsl_level)}')
         if len(name) > self.max_name_length:
             self.max_name_length = len(name)
 
@@ -856,23 +861,26 @@ class GroupedList:
     def update_arrays(self, essl_only):
 
         def add_rule(rules, spec, level, shaders, extension, symbol):
-            var = ("&TableBase::%s" % symbol) if symbol.startswith("m_gl") else None
+            var = f"&TableBase::{symbol}" if symbol.startswith("m_gl") else None
 
             extension_list = []
-            specField = "Spec::%s" % ("ESSL" if spec == "ESSL" else "GLSL")
+            specField = f'Spec::{"ESSL" if spec == "ESSL" else "GLSL"}'
             versionField = get_shader_version_for_level(spec, level)
-            shadersField = "Shader::%s" % ("ALL" if shaders == "NONE" else shaders)
+            shadersField = f'Shader::{"ALL" if shaders == "NONE" else shaders}'
             symbolOrVarField = symbol.replace("Func::", "") if var is None else var
             if extension != None:
                 extension_list = [ext.strip() for ext in extension.split(',')]
                 for ext in extension_list:
-                    rules.append({
-                        "spec": specField,
-                        "version": versionField,
-                        "shaders": shadersField,
-                        "extension": "0" if ext == None else "EXT_INDEX(%s)" % ext,
-                        "symbol_or_var": symbolOrVarField
-                    })
+                    rules.append(
+                        {
+                            "spec": specField,
+                            "version": versionField,
+                            "shaders": shadersField,
+                            "extension": "0" if ext is None else f"EXT_INDEX({ext})",
+                            "symbol_or_var": symbolOrVarField,
+                        }
+                    )
+
             else:
                 rules.append({
                     "spec": specField,
@@ -969,9 +977,9 @@ class UnmangledGroupedList:
     def add_entry(self, essl_level, glsl_level, shader_type, name, essl_ext, glsl_ext,
                   essl_extension, glsl_extension, unmangled_script_generated_hash_tests):
         if essl_level and essl_level not in essl_levels:
-            raise Exception('Unexpected essl level: ' + str(essl_level))
+            raise Exception(f'Unexpected essl level: {str(essl_level)}')
         if glsl_level and glsl_level not in glsl_levels:
-            raise Exception('Unexpected glsl level: ' + str(glsl_level))
+            raise Exception(f'Unexpected glsl level: {str(glsl_level)}')
         if len(name) > self.max_name_length:
             self.max_name_length = len(name)
 
@@ -1010,25 +1018,27 @@ class UnmangledGroupedList:
 
     def get_array(self):
         code = []
-        for hash_val in range(0, self.num_names):
+        template_extensions = 'std::array<TExtension, {count}>{{{{{extensions}}}}}'
+        for hash_val in range(self.num_names):
             obj = self.objs[hash_val]
             essl_level = obj['essl_level']
             glsl_level = obj['glsl_level']
             shader_type = 'Shader::' + obj['shader_type'] if obj[
                 'shader_type'] != 'NONE' else 'Shader::ALL'
-            data = []
-            data.append('"{name}"'.format(name=obj['name']))
+            data = ['"{name}"'.format(name=obj['name'])]
             essl_extensions = [ext.strip() for ext in obj['essl_extension'].split(',')]
-            template_extensions = 'std::array<TExtension, {count}>{{{{{extensions}}}}}'
             data.append(
                 template_extensions.format(
                     count=len(essl_extensions),
-                    extensions=','.join(['Ext::' + ext for ext in essl_extensions])))
+                    extensions=','.join(
+                        [f'Ext::{ext}' for ext in essl_extensions]
+                    ),
+                )
+            )
+
             data.append("Ext::" + obj['glsl_extension'])
             data.append(get_essl_shader_version_for_level(essl_level))
-            data.append(get_glsl_shader_version_for_level(glsl_level))
-            data.append(shader_type)
-
+            data.extend((get_glsl_shader_version_for_level(glsl_level), shader_type))
             code.append('{%s}' % ', '.join(data))
         return code
 
@@ -1105,17 +1115,20 @@ class TType:
         return self.data['primarySize'] * self.data['secondarySize']
 
     def specific_sampler_or_image_or_subpass_type(self, basic_type_prefix):
-        if 'genType' in self.data and self.data['genType'] == 'sampler_or_image_or_subpass':
-            type = {}
-            if 'basic' not in self.data:
-                type['basic'] = {'': 'Float', 'I': 'Int', 'U': 'UInt'}[basic_type_prefix]
-                type['primarySize'] = self.data['primarySize']
-            else:
-                type['basic'] = basic_type_prefix + self.data['basic']
-                type['primarySize'] = 1
-            type['precision'] = 'Undefined'
-            return TType(type)
-        return self
+        if (
+            'genType' not in self.data
+            or self.data['genType'] != 'sampler_or_image_or_subpass'
+        ):
+            return self
+        type = {}
+        if 'basic' not in self.data:
+            type['basic'] = {'': 'Float', 'I': 'Int', 'U': 'UInt'}[basic_type_prefix]
+            type['primarySize'] = self.data['primarySize']
+        else:
+            type['basic'] = basic_type_prefix + self.data['basic']
+            type['primarySize'] = 1
+        type['precision'] = 'Undefined'
+        return TType(type)
 
     def specific_type(self, vec_size):
         type = {}
@@ -1177,39 +1190,34 @@ class TType:
         }
 
         vec_re = re.compile(r'^([iudb]?)vec([234]?)((\[[234]\])?)$')
-        vec_match = vec_re.match(glsl_header_type)
-        if vec_match:
-            type_obj['basic'] = basic_type_prefix_map[vec_match.group(1)]
-            if vec_match.group(2) == '':
+        if vec_match := vec_re.match(glsl_header_type):
+            type_obj['basic'] = basic_type_prefix_map[vec_match[1]]
+            if vec_match[2] == '':
                 # Type like "ivec" that represents either ivec2, ivec3 or ivec4
                 type_obj['genType'] = 'vec'
             else:
-                # vec with specific size
-                if vec_match.group(3) != '':
                     # vec array
-                    type_obj['primarySize'] = int(vec_match.group(2))
-                    type_obj['arraySize'] = int(vec_match.group(3)[1])
-                else:
-                    type_obj['primarySize'] = int(vec_match.group(2))
+                type_obj['primarySize'] = int(vec_match[2])
+                # vec with specific size
+                if vec_match[3] != '':
+                    type_obj['arraySize'] = int(vec_match[3][1])
             return type_obj
 
         mat_re = re.compile(r'^mat([234])(x([234]))?$')
-        mat_match = mat_re.match(glsl_header_type)
-        if mat_match:
+        if mat_match := mat_re.match(glsl_header_type):
             type_obj['basic'] = 'Float'
             if len(glsl_header_type) == 4:
-                mat_size = int(mat_match.group(1))
+                mat_size = int(mat_match[1])
                 type_obj['primarySize'] = mat_size
                 type_obj['secondarySize'] = mat_size
             else:
-                type_obj['primarySize'] = int(mat_match.group(1))
-                type_obj['secondarySize'] = int(mat_match.group(3))
+                type_obj['primarySize'] = int(mat_match[1])
+                type_obj['secondarySize'] = int(mat_match[3])
             return type_obj
 
         gen_re = re.compile(r'^gen([IUDB]?)Type$')
-        gen_match = gen_re.match(glsl_header_type)
-        if gen_match:
-            type_obj['basic'] = basic_type_prefix_map[gen_match.group(1).lower()]
+        if gen_match := gen_re.match(glsl_header_type):
+            type_obj['basic'] = basic_type_prefix_map[gen_match[1].lower()]
             type_obj['genType'] = 'yes'
             return type_obj
 
@@ -1231,7 +1239,7 @@ class TType:
         if glsl_header_type == 'IMAGE_PARAMS':
             return {'genType': 'image_params'}
 
-        raise Exception('Unrecognized type: ' + str(glsl_header_type))
+        raise Exception(f'Unrecognized type: {str(glsl_header_type)}')
 
 
 class SymbolsData:
@@ -1276,7 +1284,7 @@ class FunctionsData:
         self.function_declarations = []
 
         # TOperator enum values (and grouping comments) for built-in functions.
-        self.operator_list = dict()
+        self.operator_list = {}
         self.operator_enum_declarations = []
 
         # Functions for testing whether a builtin belongs in group.
@@ -1318,11 +1326,8 @@ def get_parsed_functions(functions_txt_filename, essl_only):
     def parse_function_parameters(parameters):
         if parameters == '':
             return []
-        parametersOut = []
         parameters = parameters.split(', ')
-        for parameter in parameters:
-            parametersOut.append(TType(parameter.strip()))
-        return parametersOut
+        return [TType(parameter.strip()) for parameter in parameters]
 
     lines = []
     with open(functions_txt_filename) as f:
@@ -1427,47 +1432,45 @@ def get_variable_names(group, mangled_names):
 
 
 def get_suffix(props):
-    if 'suffix' in props:
-        return props['suffix']
-    return ''
+    return props['suffix'] if 'suffix' in props else ''
 
 
 def get_essl_extension(props):
-    if 'essl_extension' in props:
-        return props['essl_extension']
-    return 'UNDEFINED'
+    return props['essl_extension'] if 'essl_extension' in props else 'UNDEFINED'
 
 
 def get_glsl_extension(props):
-    if 'glsl_extension' in props:
-        return props['glsl_extension']
-    return 'UNDEFINED'
+    return props['glsl_extension'] if 'glsl_extension' in props else 'UNDEFINED'
 
 
 def get_op(name, function_props, group_op_suffix):
-    return 'EOp' + name[0].upper() + name[1:] + group_op_suffix + function_props.get(
-        'opSuffix', '')
+    return (
+        f'EOp{name[0].upper()}{name[1:]}{group_op_suffix}'
+        + function_props.get('opSuffix', '')
+    )
 
 
 def get_known_to_not_have_side_effects(function_props):
     if 'hasSideEffects' in function_props:
         return 'false'
     else:
-        for param in get_parameters(function_props):
-            if 'qualifier' in param.data and (param.data['qualifier'] == 'ParamOut' or
-                                              param.data['qualifier'] == 'ParamInOut'):
-                return 'false'
-        return 'true'
+        return next(
+            (
+                'false'
+                for param in get_parameters(function_props)
+                if 'qualifier' in param.data
+                and param.data['qualifier'] in ['ParamOut', 'ParamInOut']
+            ),
+            'true',
+        )
 
 
 def get_parameters(function_props):
-    if 'parameters' in function_props:
-        return function_props['parameters']
-    return []
+    return function_props['parameters'] if 'parameters' in function_props else []
 
 
 def get_function_mangled_name(function_name, parameters):
-    mangled_name = function_name + '('
+    mangled_name = f'{function_name}('
     for param in parameters:
         mangled_name += param.get_mangled_name()
     return mangled_name
@@ -1476,12 +1479,12 @@ def get_function_mangled_name(function_name, parameters):
 def get_function_human_readable_name(function_name, parameters):
     name = function_name
     for param in parameters:
-        name += '_' + param.get_human_readable_name()
+        name += f'_{param.get_human_readable_name()}'
     return name
 
 
 def get_unique_identifier_name(function_name, parameters):
-    unique_name = function_name + '_'
+    unique_name = f'{function_name}_'
     for param in parameters:
         unique_name += param.get_mangled_name()
     return unique_name
@@ -1542,7 +1545,7 @@ def gen_function_variants(function_props):
             if param.data['genType'] == 'image_params':
                 image_params_index = parameters.index(param)
 
-    if len(gen_type) == 0:
+    if not gen_type:
         function_variants.append(function_props)
         return function_variants
 
@@ -1558,17 +1561,20 @@ def gen_function_variants(function_props):
             image_variant_parameters = []
             for param in parameters:
                 if parameters.index(param) == image_params_index:
-                    for variant_param in variant:
-                        image_variant_parameters.append(TType(variant_param))
+                    image_variant_parameters.extend(
+                        TType(variant_param) for variant_param in variant
+                    )
+
                 else:
                     image_variant_parameters.append(param)
             types = ['', 'I', 'U']
             for type in types:
                 variant_props = function_props.copy()
-                variant_parameters = []
-                for param in image_variant_parameters:
-                    variant_parameters.append(
-                        param.specific_sampler_or_image_or_subpass_type(type))
+                variant_parameters = [
+                    param.specific_sampler_or_image_or_subpass_type(type)
+                    for param in image_variant_parameters
+                ]
+
                 variant_props['parameters'] = variant_parameters
                 variant_props['returnType'] = function_props[
                     'returnType'].specific_sampler_or_image_or_subpass_type(type)
@@ -1581,24 +1587,21 @@ def gen_function_variants(function_props):
         types = ['', 'I', 'U']
         for type in types:
             variant_props = function_props.copy()
-            variant_parameters = []
-            for param in parameters:
-                variant_parameters.append(param.specific_sampler_or_image_or_subpass_type(type))
+            variant_parameters = [
+                param.specific_sampler_or_image_or_subpass_type(type)
+                for param in parameters
+            ]
+
             variant_props['parameters'] = variant_parameters
             variant_props['returnType'] = function_props[
                 'returnType'].specific_sampler_or_image_or_subpass_type(type)
             function_variants.append(variant_props)
         return function_variants
 
-    # If we have a normal gentype then we're generating variants for different sizes of vectors.
-    sizes = range(1, 5)
-    if 'vec' in gen_type:
-        sizes = range(2, 5)
+    sizes = range(2, 5) if 'vec' in gen_type else range(1, 5)
     for size in sizes:
         variant_props = function_props.copy()
-        variant_parameters = []
-        for param in parameters:
-            variant_parameters.append(param.specific_type(size))
+        variant_parameters = [param.specific_type(size) for param in parameters]
         variant_props['parameters'] = variant_parameters
         variant_props['returnType'] = function_props['returnType'].specific_type(size)
         function_variants.append(variant_props)

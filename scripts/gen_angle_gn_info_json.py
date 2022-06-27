@@ -33,9 +33,9 @@ def get_json_description(gn_out, target_name):
     try:
         text_desc = subprocess.check_output(['gn', 'desc', '--format=json', gn_out, target_name])
     except subprocess.CalledProcessError as e:
-        logging.error("e.retcode = %s" % e.returncode)
-        logging.error("e.cmd = %s" % e.cmd)
-        logging.error("e.output = %s" % e.output)
+        logging.error(f"e.retcode = {e.returncode}")
+        logging.error(f"e.cmd = {e.cmd}")
+        logging.error(f"e.output = {e.output}")
     try:
         json_out = json.loads(text_desc)
     except ValueError:
@@ -59,27 +59,27 @@ def load_json_deps(desc, gn_out, target_name, all_desc, indent="  "):
     text_descriptions = []
     for dep in target.get('deps', []):
         if dep not in all_desc:
-            logging.debug("dep: %s%s" % (indent, dep))
+            logging.debug(f"dep: {indent}{dep}")
             new_desc = get_json_description(gn_out, dep)
             all_desc[dep] = new_desc[dep]
-            load_json_deps(new_desc, gn_out, dep, all_desc, indent + "  ")
+            load_json_deps(new_desc, gn_out, dep, all_desc, f"{indent}  ")
         else:
-            logging.debug("dup: %s%s" % (indent, dep))
+            logging.debug(f"dup: {indent}{dep}")
 
 
 def create_build_description(gn_out, targets):
     """Creates the JSON build description by running GN."""
 
-    logging.debug("targets = %s" % targets)
+    logging.debug(f"targets = {targets}")
     json_descriptions = {}
     for target in targets:
-        logging.debug("target: %s" % (target))
+        logging.debug(f"target: {target}")
         target_desc = get_json_description(gn_out, target)
         if (target in target_desc and target not in json_descriptions):
             json_descriptions[target] = target_desc[target]
             load_json_deps(target_desc, gn_out, target, json_descriptions)
         else:
-            logging.debug("Invalid target: %s" % target)
+            logging.debug(f"Invalid target: {target}")
     return json_descriptions
 
 
@@ -104,11 +104,9 @@ def main():
     args = parser.parse_args()
 
     desc = create_build_description(args.gn_out, args.targets)
-    fh = open(args.output, "w")
-    fh.write(json.dumps(desc, indent=4, sort_keys=True))
-    fh.close()
-
-    print("Output written to: %s" % args.output)
+    with open(args.output, "w") as fh:
+        fh.write(json.dumps(desc, indent=4, sort_keys=True))
+    print(f"Output written to: {args.output}")
 
 
 if __name__ == '__main__':

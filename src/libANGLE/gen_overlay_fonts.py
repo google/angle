@@ -102,13 +102,14 @@ const uint8_t *OverlayState::getFontData() const
 
 
 def main():
-    if len(sys.argv) == 2 and sys.argv[1] == 'inputs':
-        # disabled because of issues on Windows. http://anglebug.com/3892
-        # print(font_file)
-        return
-    if len(sys.argv) == 2 and sys.argv[1] == 'outputs':
-        print(','.join([out_file_cpp, out_file_h]))
-        return
+    if len(sys.argv) == 2:
+        if sys.argv[1] == 'inputs':
+            # disabled because of issues on Windows. http://anglebug.com/3892
+            # print(font_file)
+            return
+        if sys.argv[1] == 'outputs':
+            print(','.join([out_file_cpp, out_file_h]))
+            return
 
     # Font sizes are chosen such that the sizes form a mip chain.
     font_defs = [('large', 29), ('small', 14)]
@@ -121,7 +122,6 @@ def main():
     font_glyph_heights = []
     font_data = ""
     font_mips = []
-    current_font_mip = 0
     font_data_sizes = []
     font_data_offsets = []
     total_font_data_size = 0
@@ -130,7 +130,7 @@ def main():
     face = Face(font_file)
     assert (face.is_fixed_width)
 
-    for font_name, font_size in font_defs:
+    for current_font_mip, (font_name, font_size) in enumerate(font_defs):
 
         # Since the font is fixed width, we can retrieve its size right away.
         face.set_char_size(font_size << 6)
@@ -148,9 +148,9 @@ def main():
 
         font_tag = font_name.capitalize()
         font_mip = str(current_font_mip)
-        font_mip_symbol = 'kFontMip' + font_tag
+        font_mip_symbol = f'kFontMip{font_tag}'
 
-        font_data += '// ' + font_tag + '\n'
+        font_data += f'// {font_tag}' + '\n'
 
         # Font pixels are packed in 32-bit values.
         font_data_size = char_count * glyph_width * glyph_height
@@ -191,15 +191,10 @@ def main():
                         font_data += '   0,'
                     else:
                         pixel_value = bitmap.buffer[(y - offset_y) * pitch + (x - offset_x)]
-                        if pixel_value == 0:
-                            font_data += '   0,'
-                        else:
-                            font_data += '0x{:02X},'.format(pixel_value)
+                        font_data += '   0,' if pixel_value == 0 else '0x{:02X},'.format(pixel_value)
                 font_data += '\n'
 
-        font_mips.append('constexpr uint32_t ' + font_mip_symbol + ' = ' + font_mip + ';')
-        current_font_mip += 1
-
+        font_mips.append(f'constexpr uint32_t {font_mip_symbol} = {font_mip};')
     with open(out_file_h, 'w') as outfile:
         outfile.write(
             template_out_file_h.format(

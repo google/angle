@@ -58,11 +58,11 @@ class StreamParams(_StreamParamsBase):
         streamname.validate_stream_name(self.name)
 
         if self.type not in (self.TEXT, self.BINARY, self.DATAGRAM):
-            raise ValueError('Invalid type (%s)' % (self.type,))
+            raise ValueError(f'Invalid type ({self.type})')
 
         if self.tags is not None:
             if not isinstance(self.tags, _MAPPING):
-                raise ValueError('Invalid tags type (%s)' % (self.tags,))
+                raise ValueError(f'Invalid tags type ({self.tags})')
             for k, v in self.tags.items():
                 streamname.validate_tag(k, v)
 
@@ -122,12 +122,12 @@ class StreamProtocolRegistry(object):
     """
         uri = uri.split(':', 1)
         if len(uri) != 2:
-            raise ValueError('Invalid stream server URI [%s]' % (uri,))
+            raise ValueError(f'Invalid stream server URI [{uri}]')
         protocol, value = uri
 
         client_cls = self._registry.get(protocol)
         if not client_cls:
-            raise ValueError('Unknown stream client protocol (%s)' % (protocol,))
+            raise ValueError(f'Unknown stream client protocol ({protocol})')
         return client_cls._create(value, **kwargs)
 
 
@@ -206,9 +206,12 @@ class StreamClient(object):
                 # discontinued in py3. User should switch to binary stream instead
                 # if there's a need to write bytes.
                 return self._fd.write(data)
-            elif _PY2 and isinstance(data, unicode):
-                return self._fd.write(data.encode('utf-8'))
-            elif not _PY2 and isinstance(data, str):
+            elif (
+                _PY2
+                and isinstance(data, unicode)
+                or not _PY2
+                and isinstance(data, str)
+            ):
                 return self._fd.write(data.encode('utf-8'))
             else:
                 raise ValueError('expect str, got %r that is type %s' % (
@@ -326,7 +329,7 @@ class StreamClient(object):
     """
         with self._name_lock:
             if name in self._names:
-                raise ValueError("Duplicate stream name [%s]" % (name,))
+                raise ValueError(f"Duplicate stream name [{name}]")
             self._names.add(name)
 
     @classmethod
@@ -578,7 +581,7 @@ class _UnixDomainSocketStreamClient(StreamClient):
     @classmethod
     def _create(cls, value, **kwargs):
         if not os.path.exists(value):
-            raise ValueError('UNIX domain socket [%s] does not exist.' % (value,))
+            raise ValueError(f'UNIX domain socket [{value}] does not exist.')
         return cls(value, **kwargs)
 
     def _connect_raw(self):

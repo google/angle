@@ -70,7 +70,7 @@ def temporary_dir(prefix=''):
     try:
         yield path
     finally:
-        logging.info("Removing temporary directory: %s" % path)
+        logging.info(f"Removing temporary directory: {path}")
         shutil.rmtree(path)
 
 
@@ -141,7 +141,7 @@ def run_wrapper(test_suite, cmd_args, args, env, stdoutfile):
 def run_angle_system_info_test(sysinfo_args, args, env):
     with temporary_dir() as temp_dir:
         tempfile_path = os.path.join(temp_dir, 'stdout')
-        sysinfo_args += ['--render-test-output-dir=' + temp_dir]
+        sysinfo_args += [f'--render-test-output-dir={temp_dir}']
 
         if run_wrapper('angle_system_info_test', sysinfo_args, args, env, tempfile_path):
             raise Exception('Error getting system info.')
@@ -155,7 +155,7 @@ def to_hex(num):
 
 
 def to_hex_or_none(num):
-    return 'None' if num == None else to_hex(num)
+    return 'None' if num is None else to_hex(num)
 
 
 def to_non_empty_string_or_none(val):
@@ -163,14 +163,11 @@ def to_non_empty_string_or_none(val):
 
 
 def to_non_empty_string_or_none_dict(d, key):
-    return 'None' if not key in d else to_non_empty_string_or_none(d[key])
+    return 'None' if key not in d else to_non_empty_string_or_none(d[key])
 
 
 def get_binary_name(binary):
-    if IsWindows():
-        return '.\\%s.exe' % binary
-    else:
-        return './%s' % binary
+    return '.\\%s.exe' % binary if IsWindows() else f'./{binary}'
 
 
 def get_skia_gold_keys(args, env):
@@ -192,23 +189,32 @@ def get_skia_gold_keys(args, env):
     else:
         json_data = run_angle_system_info_test(sysinfo_args, args, env)
 
-    if len(json_data.get('gpus', [])) == 0 or not 'activeGPUIndex' in json_data:
+    if (
+        len(json_data.get('gpus', [])) == 0
+        or 'activeGPUIndex' not in json_data
+    ):
         raise Exception('Error getting system info.')
 
     active_gpu = json_data['gpus'][json_data['activeGPUIndex']]
 
-    angle_keys = {
+    return {
         'vendor_id': to_hex_or_none(active_gpu['vendorId']),
         'device_id': to_hex_or_none(active_gpu['deviceId']),
-        'model_name': to_non_empty_string_or_none_dict(active_gpu, 'machineModelVersion'),
-        'manufacturer_name': to_non_empty_string_or_none_dict(active_gpu, 'machineManufacturer'),
+        'model_name': to_non_empty_string_or_none_dict(
+            active_gpu, 'machineModelVersion'
+        ),
+        'manufacturer_name': to_non_empty_string_or_none_dict(
+            active_gpu, 'machineManufacturer'
+        ),
         'os': to_non_empty_string_or_none(platform.system()),
         'os_version': to_non_empty_string_or_none(platform.version()),
-        'driver_version': to_non_empty_string_or_none_dict(active_gpu, 'driverVersion'),
-        'driver_vendor': to_non_empty_string_or_none_dict(active_gpu, 'driverVendor'),
+        'driver_version': to_non_empty_string_or_none_dict(
+            active_gpu, 'driverVersion'
+        ),
+        'driver_vendor': to_non_empty_string_or_none_dict(
+            active_gpu, 'driverVendor'
+        ),
     }
-
-    return angle_keys
 
 
 def output_diff_local_files(gold_session, image_name):
@@ -254,7 +260,7 @@ def upload_test_result_to_skia_gold(args, gold_session_manager, gold_session, go
     png_file_name = os.path.join(screenshot_dir, prefix + image_name + '.png')
 
     if not os.path.isfile(png_file_name):
-        raise Exception('Screenshot not found: ' + png_file_name)
+        raise Exception(f'Screenshot not found: {png_file_name}')
 
     status, error = gold_session.RunComparison(
         name=image_name, png_file=png_file_name, use_luci=use_luci)
@@ -305,8 +311,8 @@ def _get_batches(traces, batch_size):
 
 def _get_gtest_filter_for_batch(args, batch):
     prefix = SWIFTSHADER_TEST_PREFIX if args.swiftshader else DEFAULT_TEST_PREFIX
-    expanded = ['%s%s' % (prefix, trace) for trace in batch]
-    return '--gtest_filter=%s' % ':'.join(expanded)
+    expanded = [f'{prefix}{trace}' for trace in batch]
+    return f"--gtest_filter={':'.join(expanded)}"
 
 
 def _run_tests(args, tests, extra_flags, env, screenshot_dir, results, test_results):
@@ -329,10 +335,12 @@ def _run_tests(args, tests, extra_flags, env, screenshot_dir, results, test_resu
             filtered = []
             for trace in traces:
                 # Apply test filter if present.
-                full_name = 'angle_restricted_trace_gold_tests.%s' % trace
+                full_name = f'angle_restricted_trace_gold_tests.{trace}'
                 if not fnmatch.fnmatch(full_name, args.isolated_script_test_filter):
-                    logging.info('Skipping test %s because it does not match filter %s' %
-                                 (full_name, args.isolated_script_test_filter))
+                    logging.info(
+                        f'Skipping test {full_name} because it does not match filter {args.isolated_script_test_filter}'
+                    )
+
                 else:
                     filtered += [trace]
             traces = filtered
@@ -343,7 +351,7 @@ def _run_tests(args, tests, extra_flags, env, screenshot_dir, results, test_resu
             if _use_adb(args.test_suite):
                 android_helper.PrepareRestrictedTraces(batch)
 
-            for iteration in range(0, args.flaky_retries + 1):
+            for iteration in range(args.flaky_retries + 1):
                 with common.temporary_file() as tempfile_path:
                     # This is how we signal early exit
                     if not batch:
@@ -358,8 +366,9 @@ def _run_tests(args, tests, extra_flags, env, screenshot_dir, results, test_resu
                         '--one-frame-only',
                         '--verbose-logging',
                         '--enable-all-trace-tests',
-                        '--render-test-output-dir=%s' % screenshot_dir,
+                        f'--render-test-output-dir={screenshot_dir}',
                     ] + extra_flags
+
                     batch_result = PASS if run_wrapper(args.test_suite, cmd_args, args, env,
                                                        tempfile_path) == 0 else FAIL
 
@@ -372,11 +381,11 @@ def _run_tests(args, tests, extra_flags, env, screenshot_dir, results, test_resu
 
                         if batch_result == PASS:
                             test_prefix = SWIFTSHADER_TEST_PREFIX if args.swiftshader else DEFAULT_TEST_PREFIX
-                            trace_skipped_notice = '[  SKIPPED ] ' + test_prefix + trace + '\n'
+                            trace_skipped_notice = f'[  SKIPPED ] {test_prefix}{trace}' + '\n'
                             if trace_skipped_notice in test_output:
                                 result = SKIP
                             else:
-                                logging.debug('upload test result: %s' % trace)
+                                logging.debug(f'upload test result: {trace}')
                                 result = upload_test_result_to_skia_gold(
                                     args, gold_session_manager, gold_session, gold_properties,
                                     screenshot_dir, trace, artifacts)
@@ -385,7 +394,7 @@ def _run_tests(args, tests, extra_flags, env, screenshot_dir, results, test_resu
 
                         expected_result = SKIP if result == SKIP else PASS
                         test_results[trace] = {'expected': expected_result, 'actual': result}
-                        if len(artifacts) > 0:
+                        if artifacts:
                             test_results[trace]['artifacts'] = artifacts
                         if result == FAIL:
                             next_batch.append(trace)
@@ -431,7 +440,12 @@ def main():
         type=int,
         default=DEFAULT_BATCH_SIZE)
     parser.add_argument(
-        '-l', '--log', help='Log output level. Default is %s.' % DEFAULT_LOG, default=DEFAULT_LOG)
+        '-l',
+        '--log',
+        help=f'Log output level. Default is {DEFAULT_LOG}.',
+        default=DEFAULT_LOG,
+    )
+
     parser.add_argument('--swiftshader', help='Test with SwiftShader.', action='store_true')
     parser.add_argument(
         '-i',

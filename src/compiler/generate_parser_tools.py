@@ -48,15 +48,22 @@ def get_tool_file_sha1s():
         for dll in ['msys-2.0.dll', 'msys-iconv-2.dll', 'msys-intl-8.dll']
     ]
 
-    return [f + '.sha1' for f in files]
+    return [f'{f}.sha1' for f in files]
 
 
 def run_flex(basename):
     flex = get_tool_path('flex')
-    input_file = basename + '.l'
-    output_source = basename + '_lex_autogen.cpp'
+    input_file = f'{basename}.l'
+    output_source = f'{basename}_lex_autogen.cpp'
 
-    flex_args = [flex, '--noline', '--nounistd', '--outfile=' + output_source, input_file]
+    flex_args = [
+        flex,
+        '--noline',
+        '--nounistd',
+        f'--outfile={output_source}',
+        input_file,
+    ]
+
 
     flex_env = os.environ.copy()
     if is_windows:
@@ -100,14 +107,14 @@ def run_flex(basename):
 
 def run_bison(basename, generate_header):
     bison = get_tool_path('bison')
-    input_file = basename + '.y'
-    output_header = basename + '_tab_autogen.h'
-    output_source = basename + '_tab_autogen.cpp'
+    input_file = f'{basename}.y'
+    output_header = f'{basename}_tab_autogen.h'
+    output_source = f'{basename}_tab_autogen.cpp'
 
     bison_args = [bison, '--no-lines', '--skeleton=yacc.c']
     if generate_header:
-        bison_args += ['--defines=' + output_header]
-    bison_args += ['--output=' + output_source, input_file]
+        bison_args += [f'--defines={output_header}']
+    bison_args += [f'--output={output_source}', input_file]
 
     bison_env = os.environ.copy()
     bison_env['BISON_PKGDATADIR'] = get_tool_path_platform('', 'third_party')
@@ -120,13 +127,17 @@ def run_bison(basename, generate_header):
 
 
 def get_input_files(basename):
-    files = [basename + '.l', basename + '.y']
+    files = [f'{basename}.l', f'{basename}.y']
     return [os.path.join(sys.path[0], f) for f in files]
 
 
 def get_output_files(basename, generate_header):
-    optional_header = [basename + '_tab_autogen.h'] if generate_header else []
-    files = [basename + '_lex_autogen.cpp', basename + '_tab_autogen.cpp'] + optional_header
+    optional_header = [f'{basename}_tab_autogen.h'] if generate_header else []
+    files = [
+        f'{basename}_lex_autogen.cpp',
+        f'{basename}_tab_autogen.cpp',
+    ] + optional_header
+
     return [os.path.join(sys.path[0], f) for f in files]
 
 
@@ -148,12 +159,12 @@ def generate_parser(basename, generate_header):
     # Call flex and bison to generate the lexer and parser.
     flex_result = run_flex(basename)
     if flex_result != 0:
-        print('Failed to run flex. Error %s' % str(flex_result))
+        print(f'Failed to run flex. Error {str(flex_result)}')
         return 1
 
     bison_result = run_bison(basename, generate_header)
     if bison_result != 0:
-        print('Failed to run bison. Error %s' % str(bison_result))
+        print(f'Failed to run bison. Error {str(bison_result)}')
         return 2
 
     return 0

@@ -22,7 +22,7 @@ def find_file_in_path(filename):
         full_path = os.path.join(env_path, filename)
         if os.path.isfile(full_path):
             return full_path
-    raise Exception('Cannot find %s in environment' % filename)
+    raise Exception(f'Cannot find {filename} in environment')
 
 
 def get_exe_name(file_name, windows_extension):
@@ -42,5 +42,5 @@ def stage_google_storage_sha1(files):
     git_exe = get_exe_name('git', '.bat')
     git_exe = find_file_in_path(git_exe)
 
-    sha1_files = [f + '.sha1' for f in files]
+    sha1_files = [f'{f}.sha1' for f in files]
     return subprocess.call([git_exe, 'add'] + sha1_files) == 0

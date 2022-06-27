@@ -49,8 +49,7 @@ def mean(data):
 
 def sum_of_square_deviations(data, c):
     """Return sum of square deviations of sequence data."""
-    ss = sum((float(x) - c)**2 for x in data)
-    return ss
+    return sum((float(x) - c)**2 for x in data)
 
 
 def coefficient_of_variation(data):
@@ -130,21 +129,21 @@ def main(raw_args):
     print('Test name: %s' % args.test_name)
 
     def get_results(metric, extra_args=[]):
-        run = [perftests_path, '--gtest_filter=%s' % args.test_name] + extra_args
-        logging.info('running %s' % str(run))
+        run = [perftests_path, f'--gtest_filter={args.test_name}'] + extra_args
+        logging.info(f'running {str(run)}')
         process = subprocess.Popen(
             run, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding='utf8')
         output, err = process.communicate()
 
         m = re.search(r'Running (\d+) tests', output)
-        if m and int(m.group(1)) > 1:
+        if m and int(m[1]) > 1:
             print(output)
             raise Exception('Found more than one test result in output')
 
         # Results are reported in the format:
         # name_backend.metric: story= value units.
         pattern = r'\.' + metric + r':.*= ([0-9.]+)'
-        logging.debug('searching for %s in output' % pattern)
+        logging.debug(f'searching for {pattern} in output')
         m = re.findall(pattern, output)
         if not m:
             print(output)

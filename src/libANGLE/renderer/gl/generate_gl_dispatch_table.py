@@ -85,7 +85,7 @@ def first_lower(str):
 
 
 def format_ep_decl(entry_point):
-    return "    PFNGL" + entry_point.upper() + "PROC " + first_lower(entry_point) + " = nullptr;"
+    return f"    PFNGL{entry_point.upper()}PROC {first_lower(entry_point)} = nullptr;"
 
 
 # Template for the initialization file of the dispatch table.
@@ -168,7 +168,7 @@ def format_assign_ep(entry_point, ep):
 
 def format_requirements_lines(required, entry_points):
     major, minor = required
-    lines = ['    if (version >= gl::Version(' + major + ', ' + minor + '))', '    {']
+    lines = [f'    if (version >= gl::Version({major}, {minor}))', '    {']
     lines += [format_assign_ep(entry_point, entry_point) for entry_point in sorted(entry_points)]
     lines += ['    }']
     return '\n'.join(lines)
@@ -182,12 +182,10 @@ def format_extension_requirements_lines(extension, entry_points, api):
 
 
 def assign_null_line(line):
-    m = re.match(r'        ASSIGN\("gl.*", (.+)\);', line)
-    if m:
-        name = m.group(1)
-        return '        ' + name + ' = &gl' + name[0].upper() + name[1:] + 'NULL;'
-    else:
+    if not (m := re.match(r'        ASSIGN\("gl.*", (.+)\);', line)):
         return line
+    name = m[1]
+    return f'        {name} = &gl{name[0].upper()}{name[1:]}NULL;'
 
 
 def assign_null(entry):
