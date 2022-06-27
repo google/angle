@@ -1097,6 +1097,38 @@ class PipelineHelper final : public Resource
     CacheLookUpFeedback mCacheLookUpFeedback = CacheLookUpFeedback::None;
 };
 
+class FramebufferHelper : public Resource
+{
+  public:
+    FramebufferHelper();
+    ~FramebufferHelper() override;
+
+    FramebufferHelper(FramebufferHelper &&other);
+    FramebufferHelper &operator=(FramebufferHelper &&other);
+
+    angle::Result init(ContextVk *contextVk, const VkFramebufferCreateInfo &createInfo);
+    void destroy(RendererVk *rendererVk);
+    void release(ContextVk *contextVk);
+
+    bool valid() { return mFramebuffer.valid(); }
+
+    const Framebuffer &getFramebuffer() const
+    {
+        ASSERT(mFramebuffer.valid());
+        return mFramebuffer;
+    }
+
+    Framebuffer &getFramebuffer()
+    {
+        ASSERT(mFramebuffer.valid());
+        return mFramebuffer;
+    }
+
+  private:
+    // Vulkan object.
+    Framebuffer mFramebuffer;
+};
+
 ANGLE_INLINE PipelineHelper::PipelineHelper(Pipeline &&pipeline, CacheLookUpFeedback feedback)
     : mPipeline(std::move(pipeline)), mCacheLookUpFeedback(feedback)
 {}
@@ -1397,8 +1429,6 @@ constexpr size_t kFramebufferDescColorResolveIndexOffset =
 
 // Enable struct padding warnings for the code below since it is used in caches.
 ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
-
-class FramebufferHelper;
 
 class FramebufferDesc
 {

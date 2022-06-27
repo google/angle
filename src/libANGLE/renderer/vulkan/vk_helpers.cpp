@@ -9206,40 +9206,6 @@ VkColorComponentFlags ImageHelper::getEmulatedChannelsMask() const
     return emulatedChannelsMask;
 }
 
-// FramebufferHelper implementation.
-FramebufferHelper::FramebufferHelper() = default;
-
-FramebufferHelper::~FramebufferHelper() = default;
-
-FramebufferHelper::FramebufferHelper(FramebufferHelper &&other) : Resource(std::move(other))
-{
-    mFramebuffer = std::move(other.mFramebuffer);
-}
-
-FramebufferHelper &FramebufferHelper::operator=(FramebufferHelper &&other)
-{
-    std::swap(mUse, other.mUse);
-    std::swap(mFramebuffer, other.mFramebuffer);
-    return *this;
-}
-
-angle::Result FramebufferHelper::init(ContextVk *contextVk,
-                                      const VkFramebufferCreateInfo &createInfo)
-{
-    ANGLE_VK_TRY(contextVk, mFramebuffer.init(contextVk->getDevice(), createInfo));
-    return angle::Result::Continue;
-}
-
-void FramebufferHelper::destroy(RendererVk *rendererVk)
-{
-    mFramebuffer.destroy(rendererVk->getDevice());
-}
-
-void FramebufferHelper::release(ContextVk *contextVk)
-{
-    contextVk->addGarbage(&mFramebuffer);
-}
-
 LayerMode GetLayerMode(const vk::ImageHelper &image, uint32_t layerCount)
 {
     const uint32_t imageLayerCount = GetImageLayerCountForView(image);

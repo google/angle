@@ -733,8 +733,6 @@ class PipelineBarrier : angle::NonCopyable
 };
 using PipelineBarrierArray = angle::PackedEnumMap<PipelineStage, PipelineBarrier>;
 
-class FramebufferHelper;
-
 enum class MemoryCoherency
 {
     NonCoherent,
@@ -2832,38 +2830,6 @@ class BufferViewHelper final : public Resource
     // Serial for the buffer view.  An ImageOrBufferViewSerial is used for texture buffers so that
     // they fit together with the other texture types.
     ImageOrBufferViewSerial mViewSerial;
-};
-
-class FramebufferHelper : public Resource
-{
-  public:
-    FramebufferHelper();
-    ~FramebufferHelper() override;
-
-    FramebufferHelper(FramebufferHelper &&other);
-    FramebufferHelper &operator=(FramebufferHelper &&other);
-
-    angle::Result init(ContextVk *contextVk, const VkFramebufferCreateInfo &createInfo);
-    void destroy(RendererVk *rendererVk);
-    void release(ContextVk *contextVk);
-
-    bool valid() { return mFramebuffer.valid(); }
-
-    const Framebuffer &getFramebuffer() const
-    {
-        ASSERT(mFramebuffer.valid());
-        return mFramebuffer;
-    }
-
-    Framebuffer &getFramebuffer()
-    {
-        ASSERT(mFramebuffer.valid());
-        return mFramebuffer;
-    }
-
-  private:
-    // Vulkan object.
-    Framebuffer mFramebuffer;
 };
 
 class ShaderProgramHelper : angle::NonCopyable
