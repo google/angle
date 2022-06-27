@@ -73,10 +73,8 @@ def update_deps(trace_pairs):
                     in_deps = False
             else:
                 if DEPS_START in line:
-                    new_deps += line
                     in_deps = True
-                else:
-                    new_deps += line
+                new_deps += line
         f.close()
 
     with open(DEPS_PATH, 'w') as f:

@@ -1266,9 +1266,7 @@ def is_aliasing_excepted(api, cmd_name):
 
 
 def entry_point_export(api):
-    if api == apis.CL:
-        return ""
-    return "ANGLE_EXPORT "
+    return "" if api == apis.CL else "ANGLE_EXPORT "
 
 
 def entry_point_prefix(api):
@@ -1276,7 +1274,7 @@ def entry_point_prefix(api):
         return "cl"
     if api == apis.GLES:
         return "GL_"
-    return api + "_"
+    return f"{api}_"
 
 
 def get_api_entry_def(api):
@@ -1303,10 +1301,11 @@ def format_entry_point_decl(api, cmd_name, proto, params):
     return TEMPLATE_ENTRY_POINT_DECL.format(
         angle_export=entry_point_export(api),
         export_def=get_api_entry_def(api),
-        name="%s%s" % (entry_point_prefix(api), stripped),
-        return_type=proto[:-len(cmd_name)].strip(),
+        name=f"{entry_point_prefix(api)}{stripped}",
+        return_type=proto[: -len(cmd_name)].strip(),
         params=", ".join(params),
-        comma_if_needed=comma_if_needed)
+        comma_if_needed=comma_if_needed,
+    )
 
 
 # Returns index range of identifier in function parameter
@@ -1348,7 +1347,7 @@ def just_the_name(param):
 def make_param(param_type, param_name):
 
     def insert_name(param_type, param_name, pos):
-        return param_type[:pos] + " " + param_name + param_type[pos:]
+        return f"{param_type[:pos]} {param_name}{param_type[pos:]}"
 
     # If type is a function declaration, insert identifier before first closing parentheses
     left_paren = param_type.find("(")
@@ -1367,22 +1366,16 @@ def make_param(param_type, param_name):
 
 def just_the_type_packed(param, entry):
     name = just_the_name(param)
-    if name in entry:
-        return entry[name]
-    else:
-        return just_the_type(param)
+    return entry[name] if name in entry else just_the_type(param)
 
 
 def just_the_name_packed(param, reserved_set):
     name = just_the_name(param)
-    if name in reserved_set:
-        return name + 'Packed'
-    else:
-        return name
+    return f'{name}Packed' if name in reserved_set else name
 
 
 def is_unsigned_long_format(fmt):
-    return fmt == UNSIGNED_LONG_LONG_FORMAT or fmt == HEX_LONG_LONG_FORMAT
+    return fmt in [UNSIGNED_LONG_LONG_FORMAT, HEX_LONG_LONG_FORMAT]
 
 
 def param_print_argument(command_node, param):
@@ -1395,21 +1388,21 @@ def param_print_argument(command_node, param):
                         (type_only, name_only, registry_xml.get_cmd_name(command_node)))
 
     if "*" in param or FORMAT_DICT[type_only] == POINTER_FORMAT:
-        return "(uintptr_t)%s" % name_only
+        return f"(uintptr_t){name_only}"
 
     if is_unsigned_long_format(FORMAT_DICT[type_only]):
-        return "static_cast<unsigned long long>(%s)" % name_only
+        return f"static_cast<unsigned long long>({name_only})"
 
     if type_only == "GLboolean":
-        return "GLbooleanToString(%s)" % name_only
+        return f"GLbooleanToString({name_only})"
 
     if type_only == "GLbitfield":
         group_name = find_gl_enum_group_in_command(command_node, name_only)
-        return "GLbitfieldToString(GLenumGroup::%s, %s).c_str()" % (group_name, name_only)
+        return f"GLbitfieldToString(GLenumGroup::{group_name}, {name_only}).c_str()"
 
     if type_only == "GLenum":
         group_name = find_gl_enum_group_in_command(command_node, name_only)
-        return "GLenumToString(GLenumGroup::%s, %s)" % (group_name, name_only)
+        return f"GLenumToString(GLenumGroup::{group_name}, {name_only})"
 
     return name_only
 
@@ -1417,12 +1410,11 @@ def param_print_argument(command_node, param):
 def param_format_string(param):
     if "*" in param:
         return just_the_name(param) + " = 0x%016\" PRIxPTR \""
-    else:
-        type_only = just_the_type(param)
-        if type_only not in FORMAT_DICT:
-            raise Exception(type_only + " is not a known type in 'FORMAT_DICT'")
+    type_only = just_the_type(param)
+    if type_only not in FORMAT_DICT:
+        raise Exception(type_only + " is not a known type in 'FORMAT_DICT'")
 
-        return just_the_name(param) + " = " + FORMAT_DICT[type_only]
+    return f"{just_the_name(param)} = {FORMAT_DICT[type_only]}"
 
 
 def is_context_lost_acceptable_cmd(cmd_name):
@@ -1435,10 +1427,10 @@ def is_context_lost_acceptable_cmd(cmd_name):
         "glGetShaderiv",
     ]
 
-    for context_lost_entry_pont in lost_context_acceptable_cmds:
-        if cmd_name.startswith(context_lost_entry_pont):
-            return True
-    return False
+    return any(
+        cmd_name.startswith(context_lost_entry_pont)
+        for context_lost_entry_pont in lost_context_acceptable_cmds
+    )
 
 
 def get_context_getter_function(cmd_name):
@@ -1467,16 +1459,19 @@ def strip_suffix(api, name):
 
     for suffix in registry_xml.strip_suffixes:
         if name.endswith(suffix):
-            name = name[0:-len(suffix)]
+            name = name[:-len(suffix)]
     return name
 
 
 def find_gl_enum_group_in_command(command_node, param_name):
-    group_name = None
-    for param_node in command_node.findall('./param'):
-        if param_node.find('./name').text == param_name:
-            group_name = param_node.attrib.get('group', None)
-            break
+    group_name = next(
+        (
+            param_node.attrib.get('group', None)
+            for param_node in command_node.findall('./param')
+            if param_node.find('./name').text == param_name
+        ),
+        None,
+    )
 
     if group_name is None or group_name in registry_xml.unsupported_enum_group_names:
         group_name = registry_xml.default_enum_group_name
@@ -1498,29 +1493,36 @@ CUSTOM_EGL_ENTRY_POINTS = ["eglPrepareSwapBuffersANGLE"]
 
 
 def get_def_template(api, cmd_name, return_type, has_errcode_ret):
-    if return_type == "void":
+    if return_type == "cl_int":
+        return TEMPLATE_CL_ENTRY_POINT_WITH_RETURN_ERROR
+    elif return_type == "void":
         if api == apis.EGL:
-            if cmd_name in CUSTOM_EGL_ENTRY_POINTS:
-                return TEMPLATE_EGL_ENTRY_POINT_NO_RETURN_CUSTOM
-            return TEMPLATE_EGL_ENTRY_POINT_NO_RETURN
+            return (
+                TEMPLATE_EGL_ENTRY_POINT_NO_RETURN_CUSTOM
+                if cmd_name in CUSTOM_EGL_ENTRY_POINTS
+                else TEMPLATE_EGL_ENTRY_POINT_NO_RETURN
+            )
+
         elif api == apis.CL:
             return TEMPLATE_CL_ENTRY_POINT_NO_RETURN
         else:
             return TEMPLATE_GLES_ENTRY_POINT_NO_RETURN
-    elif return_type == "cl_int":
-        return TEMPLATE_CL_ENTRY_POINT_WITH_RETURN_ERROR
+    elif api == apis.EGL:
+        return (
+            TEMPLATE_EGL_ENTRY_POINT_WITH_RETURN_CUSTOM
+            if cmd_name in CUSTOM_EGL_ENTRY_POINTS
+            else TEMPLATE_EGL_ENTRY_POINT_WITH_RETURN
+        )
+
+    elif api == apis.CL:
+        return (
+            TEMPLATE_CL_ENTRY_POINT_WITH_ERRCODE_RET
+            if has_errcode_ret
+            else TEMPLATE_CL_ENTRY_POINT_WITH_RETURN_POINTER
+        )
+
     else:
-        if api == apis.EGL:
-            if cmd_name in CUSTOM_EGL_ENTRY_POINTS:
-                return TEMPLATE_EGL_ENTRY_POINT_WITH_RETURN_CUSTOM
-            return TEMPLATE_EGL_ENTRY_POINT_WITH_RETURN
-        elif api == apis.CL:
-            if has_errcode_ret:
-                return TEMPLATE_CL_ENTRY_POINT_WITH_ERRCODE_RET
-            else:
-                return TEMPLATE_CL_ENTRY_POINT_WITH_RETURN_POINTER
-        else:
-            return TEMPLATE_GLES_ENTRY_POINT_WITH_RETURN
+        return TEMPLATE_GLES_ENTRY_POINT_WITH_RETURN
 
 
 def format_entry_point_def(api, command_node, cmd_name, proto, params, cmd_packed_enums,
@@ -1542,7 +1544,7 @@ def format_entry_point_def(api, command_node, cmd_name, proto, params, cmd_packe
         name = just_the_name(param)
 
         if name in packed_enums:
-            internal_name = name + "Packed"
+            internal_name = f"{name}Packed"
             internal_type = packed_enums[name]
             packed_gl_enum_conversions += [
                 "\n        " + internal_type + " " + internal_name + " = PackParam<" +
@@ -1555,7 +1557,7 @@ def format_entry_point_def(api, command_node, cmd_name, proto, params, cmd_packe
     initialization = "InitBackEnds(%s);\n" % INIT_DICT[cmd_name] if cmd_name in INIT_DICT else ""
     event_comment = TEMPLATE_EVENT_COMMENT if cmd_name in NO_EVENT_MARKER_EXCEPTIONS_LIST else ""
     name_lower_no_suffix = strip_suffix(api, cmd_name[2:3].lower() + cmd_name[3:])
-    entry_point_name = "angle::EntryPoint::GL" + strip_api_prefix(cmd_name)
+    entry_point_name = f"angle::EntryPoint::GL{strip_api_prefix(cmd_name)}"
 
     format_params = {
         "name":
@@ -1620,7 +1622,7 @@ def get_capture_param_type_name(param_type):
     if "EGL" not in param_type:
         if is_const and param_type != 'AttributeMap':
             param_type += "Const"
-        for x in range(pointer_count):
+        for _ in range(pointer_count):
             param_type += "Pointer"
 
     return param_type
@@ -1655,7 +1657,7 @@ def format_capture_method(api, command, cmd_name, proto, params, all_param_types
 
         if pointer_count > 0:
             params = params_just_name
-            capture_name = "Capture%s_%s" % (strip_api_prefix(cmd_name), param_name)
+            capture_name = f"Capture{strip_api_prefix(cmd_name)}_{param_name}"
             capture = TEMPLATE_PARAMETER_CAPTURE_POINTER.format(
                 name=param_name,
                 type=capture_param_type,
@@ -1664,7 +1666,10 @@ def format_capture_method(api, command, cmd_name, proto, params, all_param_types
                 cast_type=param_type)
 
             capture_pointer_func = TEMPLATE_PARAMETER_CAPTURE_POINTER_FUNC.format(
-                name=capture_name, params=params_with_type + ", angle::ParamCapture *paramCapture")
+                name=capture_name,
+                params=f"{params_with_type}, angle::ParamCapture *paramCapture",
+            )
+
             capture_pointer_funcs += [capture_pointer_func]
         elif capture_param_type in ('GLenum', 'GLbitfield'):
             gl_enum_group = find_gl_enum_group_in_command(command, param_name)
@@ -1703,7 +1708,7 @@ def const_pointer_type(param, packed_gl_enums):
     elif "**" in type and "const" not in type:
         return type.replace("**", "* const *")
     elif "*" in type and "const" not in type:
-        return type.replace("*", "*const ") if "[]" in type else "const " + type
+        return type.replace("*", "*const ") if "[]" in type else f"const {type}"
     else:
         return type
 
@@ -1759,10 +1764,7 @@ def format_entry_point_export(cmd_name, proto, params, template):
 
 
 def format_validation_proto(api, cmd_name, proto, params, cmd_packed_gl_enums, packed_param_types):
-    if api == apis.CL:
-        return_type = "cl_int"
-    else:
-        return_type = "bool"
+    return_type = "cl_int" if api == apis.CL else "bool"
     if api in [apis.GL, apis.GLES]:
         with_extra_params = ["Context *context"] + ["angle::EntryPoint entryPoint"] + params
     elif api == apis.EGL:
@@ -1780,7 +1782,7 @@ def format_capture_proto(api, cmd_name, proto, params, cmd_packed_gl_enums, pack
                                           cmd_packed_gl_enums, packed_param_types)
     return_type = proto[:-len(cmd_name)].strip()
     if return_type != "void":
-        internal_params += ", %s returnValue" % return_type
+        internal_params += f", {return_type} returnValue"
     return TEMPLATE_CAPTURE_PROTO % (strip_api_prefix(cmd_name), internal_params)
 
 
@@ -1875,7 +1877,10 @@ class EGLEntryPoints(ANGLEEntryPoints):
             try:
                 spec_json = json.loads(f.read())
             except ValueError:
-                raise Exception("Could not decode JSON from %s" % EGL_GET_LABELED_OBJECT_DATA_PATH)
+                raise Exception(
+                    f"Could not decode JSON from {EGL_GET_LABELED_OBJECT_DATA_PATH}"
+                )
+
 
         # Construct a mapping from EP to type. Fill in the gaps with Display/None.
         cls._ep_to_object = {}
@@ -1948,11 +1953,7 @@ def get_decls(api,
 def get_glext_decls(all_commands, gles_commands, version):
     glext_ptrs = []
     glext_protos = []
-    is_gles1 = False
-
-    if (version == ""):
-        is_gles1 = True
-
+    is_gles1 = version == ""
     for command in all_commands:
         proto = command.find('proto')
         cmd_name = proto.find('name').text
@@ -1992,7 +1993,7 @@ def write_file(annotation, comment, template, entry_points, suffix, includes, li
         includes=includes,
         entry_points=entry_points)
 
-    path = path_to(lib, "entry_points_{}_autogen.{}".format(annotation.lower(), suffix))
+    path = path_to(lib, f"entry_points_{annotation.lower()}_autogen.{suffix}")
 
     with open(path, "w") as out:
         out.write(content)
@@ -2008,7 +2009,7 @@ def write_export_files(entry_points, includes, source, lib_name, lib_description
         includes=includes,
         entry_points=entry_points)
 
-    path = path_to(lib_name, "{}_autogen.cpp".format(lib_name))
+    path = path_to(lib_name, f"{lib_name}_autogen.cpp")
 
     with open(path, "w") as out:
         out.write(content)
@@ -2018,11 +2019,11 @@ def write_export_files(entry_points, includes, source, lib_name, lib_description
 def write_context_api_decls(decls, api):
     for (major, minor), version_decls in sorted(decls['core'].items()):
         if minor == "X":
-            annotation = '{}_{}'.format(api, major)
+            annotation = f'{api}_{major}'
             version = str(major)
         else:
-            annotation = '{}_{}_{}'.format(api, major, minor)
-            version = '{}_{}'.format(major, minor)
+            annotation = f'{api}_{major}_{minor}'
+            version = f'{major}_{minor}'
         content = CONTEXT_HEADER.format(
             annotation_lower=annotation.lower(),
             annotation_upper=annotation.upper(),
@@ -2031,7 +2032,7 @@ def write_context_api_decls(decls, api):
             version=version,
             interface="\n".join(version_decls))
 
-        path = path_to("libANGLE", "Context_%s_autogen.h" % annotation.lower())
+        path = path_to("libANGLE", f"Context_{annotation.lower()}_autogen.h")
 
         with open(path, "w") as out:
             out.write(content)
@@ -2043,7 +2044,7 @@ def write_context_api_decls(decls, api):
             interface_lines.append("\\\n    /* " + annotation + " */ \\\n\\")
 
             for extname in sorted(decls['exts'][annotation].keys()):
-                interface_lines.append("    /* " + extname + " */ \\")
+                interface_lines.append(f"    /* {extname}" + " */ \\")
                 interface_lines.extend(decls['exts'][annotation][extname])
 
         content = CONTEXT_HEADER.format(
@@ -2069,7 +2070,7 @@ def write_validation_header(annotation, comment, protos, source, template):
         comment=comment,
         prototypes="\n".join(protos))
 
-    path = path_to("libANGLE", "validation%s_autogen.h" % annotation)
+    path = path_to("libANGLE", f"validation{annotation}_autogen.h")
 
     with open(path, "w") as out:
         out.write(content)
@@ -2091,7 +2092,11 @@ def write_capture_header(annotation, comment, protos, capture_pointer_funcs):
         prototypes="\n".join(["\n// Method Captures\n"] + protos + ["\n// Parameter Captures\n"] +
                              capture_pointer_funcs))
 
-    path = path_to(os.path.join("libANGLE", "capture"), "capture_gles_%s_autogen.h" % annotation)
+    path = path_to(
+        os.path.join("libANGLE", "capture"),
+        f"capture_gles_{annotation}_autogen.h",
+    )
+
 
     with open(path, "w") as out:
         out.write(content)
@@ -2108,7 +2113,10 @@ def write_capture_source(annotation_with_dash, annotation_no_dash, comment, capt
         capture_methods="\n".join(capture_methods))
 
     path = path_to(
-        os.path.join("libANGLE", "capture"), "capture_gles_%s_autogen.cpp" % annotation_with_dash)
+        os.path.join("libANGLE", "capture"),
+        f"capture_gles_{annotation_with_dash}_autogen.cpp",
+    )
+
 
     with open(path, "w") as out:
         out.write(content)
@@ -2116,16 +2124,20 @@ def write_capture_source(annotation_with_dash, annotation_no_dash, comment, capt
 
 
 def is_packed_enum_param_type(param_type):
-    return param_type[0:2] != "GL" and "void" not in param_type
+    return param_type[:2] != "GL" and "void" not in param_type
 
 
 def add_namespace(param_type):
     param_type = param_type.strip()
 
-    if param_type == 'AHardwareBufferConstPointer' or param_type == 'charConstPointer':
+    if param_type in ['AHardwareBufferConstPointer', 'charConstPointer']:
         return param_type
 
-    if param_type[0:2] == "GL" or param_type[0:3] == "EGL" or "void" in param_type:
+    if (
+        param_type[:2] == "GL"
+        or param_type[:3] == "EGL"
+        or "void" in param_type
+    ):
         return param_type
 
     # ANGLE namespaced EGL types
@@ -2138,9 +2150,9 @@ def add_namespace(param_type):
     ]
 
     if param_type in egl_namespace:
-        return "egl::" + param_type
+        return f"egl::{param_type}"
     else:
-        return "gl::" + param_type
+        return f"gl::{param_type}"
 
 
 def get_gl_pointer_type(param_type):
@@ -2166,24 +2178,19 @@ def get_param_type_type(param_type):
 
 
 def get_gl_param_type_type(param_type):
-    if not is_packed_enum_param_type(param_type):
-        return get_gl_pointer_type(param_type)
-    else:
+    if is_packed_enum_param_type(param_type):
         base_type = param_type.replace("Pointer", "").replace("Const", "")
-        if base_type[-2:] == "ID":
-            replace_type = "GLuint"
-        else:
-            replace_type = "GLenum"
+        replace_type = "GLuint" if base_type[-2:] == "ID" else "GLenum"
         param_type = param_type.replace(base_type, replace_type)
-        return get_gl_pointer_type(param_type)
+    return get_gl_pointer_type(param_type)
 
 
 def get_param_type_union_name(param_type):
-    return param_type + "Val"
+    return f"{param_type}Val"
 
 
 def format_param_type_union_type(param_type):
-    return "%s %s;" % (get_param_type_type(param_type), get_param_type_union_name(param_type))
+    return f"{get_param_type_type(param_type)} {get_param_type_union_name(param_type)};"
 
 
 def format_get_param_val_specialization(param_type):
@@ -2242,7 +2249,7 @@ struct GetResourceIDTypeFromType<gl::%sID>
 
 def write_capture_helper_header(all_param_types):
 
-    param_types = "\n    ".join(["T%s," % t for t in all_param_types])
+    param_types = "\n    ".join([f"T{t}," for t in all_param_types])
     param_union_values = "\n    ".join([format_param_type_union_type(t) for t in all_param_types])
     get_param_val_specializations = "\n\n".join(
         [format_get_param_val_specialization(t) for t in all_param_types])
@@ -2332,10 +2339,10 @@ def write_capture_helper_source(all_param_types):
 
 
 def get_command_params_text(command_node, cmd_name):
-    param_text_list = list()
-    for param_node in command_node.findall('param'):
-        param_text_list.append("".join(param_node.itertext()))
-    return param_text_list
+    return [
+        "".join(param_node.itertext())
+        for param_node in command_node.findall('param')
+    ]
 
 
 def is_get_pointer_command(command_name):
@@ -2344,7 +2351,7 @@ def is_get_pointer_command(command_name):
 
 def format_capture_replay_param_access(api, command_name, param_text_list, cmd_packed_gl_enums,
                                        packed_param_types):
-    param_access_strs = list()
+    param_access_strs = []
     cmd_packed_enums = get_packed_enums(api, cmd_packed_gl_enums, command_name, packed_param_types,
                                         param_text_list)
     for i, param_text in enumerate(param_text_list):
@@ -2362,7 +2369,7 @@ def format_capture_replay_param_access(api, command_name, param_text_list, cmd_p
         elif pointer_count == 1 or (pointer_count == 2 and is_get_pointer_command(command_name)):
             param_template = 'replayContext->getReadBufferPointer<{type}>(params.getParam("{name}", ParamType::T{enum_type}, {index}))'
         else:
-            assert False, "Not supported param type %s" % param_type
+            assert False, f"Not supported param type {param_type}"
 
         param_access_strs.append(
             param_template.format(
@@ -2375,7 +2382,7 @@ def format_capture_replay_param_access(api, command_name, param_text_list, cmd_p
 
 def format_capture_replay_call_case(api, command_to_param_types_mapping, cmd_packed_gl_enums,
                                     packed_param_types):
-    call_str_list = list()
+    call_str_list = []
     for command_name, cmd_param_texts in sorted(command_to_param_types_mapping.items()):
         entry_point_name = strip_api_prefix(command_name)
 
@@ -2394,7 +2401,7 @@ def write_capture_replay_source(api, all_commands_nodes, gles_command_names, cmd
                                 packed_param_types):
     all_commands_names = set(gles_command_names)
 
-    command_to_param_types_mapping = dict()
+    command_to_param_types_mapping = {}
     for command_node in all_commands_nodes:
         command_name = command_node.find('proto').find('name').text
         if command_name not in all_commands_names:
@@ -2425,7 +2432,7 @@ def write_windows_def_file(data_source_name, lib, libexport, folder, exports):
         exports="\n".join(exports),
         lib=libexport)
 
-    path = path_to(folder, "%s_autogen.def" % lib)
+    path = path_to(folder, f"{lib}_autogen.def")
 
     with open(path, "w") as out:
         out.write(content)
@@ -2434,9 +2441,9 @@ def write_windows_def_file(data_source_name, lib, libexport, folder, exports):
 
 def get_exports(commands, fmt=None):
     if fmt:
-        return ["    %s" % fmt(cmd) for cmd in sorted(commands)]
+        return [f"    {fmt(cmd)}" for cmd in sorted(commands)]
     else:
-        return ["    %s" % cmd for cmd in sorted(commands)]
+        return [f"    {cmd}" for cmd in sorted(commands)]
 
 
 # Get EGL exports
@@ -2445,13 +2452,13 @@ def get_egl_exports():
     egl = registry_xml.RegistryXML('egl.xml', 'egl_angle_ext.xml')
     exports = []
 
-    capser = lambda fn: "EGL_" + fn[3:]
+    capser = lambda fn: f"EGL_{fn[3:]}"
+
+    name_prefix = "EGL_VERSION_"
 
     for major, minor in registry_xml.EGL_VERSIONS:
-        annotation = "{}_{}".format(major, minor)
-        name_prefix = "EGL_VERSION_"
-
-        feature_name = "{}{}".format(name_prefix, annotation)
+        annotation = f"{major}_{minor}"
+        feature_name = f"{name_prefix}{annotation}"
 
         egl.AddCommands(feature_name, annotation)
 
@@ -2484,10 +2491,15 @@ def get_egl_entry_point_labeled_object(ep_to_object, cmd_stripped, params, packe
 
     # Finds a packed parameter name in a list of params
     def find_param(params, type_name, packed_enums):
-        for param in params:
-            if just_the_type_packed(param, packed_enums).split(' ')[0] == type_name:
-                return just_the_name_packed(param, packed_enums)
-        return None
+        return next(
+            (
+                just_the_name_packed(param, packed_enums)
+                for param in params
+                if just_the_type_packed(param, packed_enums).split(' ')[0]
+                == type_name
+            ),
+            None,
+        )
 
     display_param = find_param(params, "egl::Display", packed_enums)
 
@@ -2598,12 +2610,14 @@ def write_stubs_header(api, annotation, title, data_source, out_file, all_comman
         return_type = proto_text[:-len(cmd_name)].strip()
 
         if cmd_name in CUSTOM_EGL_ENTRY_POINTS:
-            stubs.append("%s %s(%s);" %
-                         (return_type, strip_api_prefix(cmd_name), ", ".join(params)))
+            stubs.append(
+                f'{return_type} {strip_api_prefix(cmd_name)}({", ".join(params)});'
+            )
+
         else:
             internal_params = get_internal_params(api, cmd_name, params, cmd_packed_egl_enums,
                                                   packed_param_types)
-            stubs.append("%s %s(%s);" % (return_type, strip_api_prefix(cmd_name), internal_params))
+            stubs.append(f"{return_type} {strip_api_prefix(cmd_name)}({internal_params});")
 
     args = {
         "annotation_lower": annotation.lower(),

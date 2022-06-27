@@ -127,7 +127,7 @@ def get_font_size_constant(properties):
 
 
 def is_graph_type(type):
-    return type == 'RunningGraph' or type == 'RunningHistogram'
+    return type in ['RunningGraph', 'RunningHistogram']
 
 
 def is_text_type(type):
@@ -189,7 +189,7 @@ def parse_relative_coord(coord):
         return None, None, None
 
     coord_split = coord.split('.')
-    coords_expr = 'mState.mOverlayWidgets[WidgetId::' + coord_split[0] + ']'
+    coords_expr = f'mState.mOverlayWidgets[WidgetId::{coord_split[0]}]'
     if len(coord_split) > 3:
         assert len(coord_split) == 4 and coord_split[1] == 'desc'
         coords_expr += '->getDescriptionWidget()'
@@ -250,7 +250,7 @@ def get_offset_helper(widget, axis, smaller_coord_side):
     is_align = relative_mode == 'align'
 
     other_widget_coord_index = axis + (0 if is_left else 2)
-    offset = other_coords_expr + '[' + str(other_widget_coord_index) + ']'
+    offset = f'{other_coords_expr}[{str(other_widget_coord_index)}]'
 
     return offset, is_left == is_align
 
@@ -271,13 +271,13 @@ def get_bounding_box_coords(offset, width, offset_is_left, is_left_aligned):
     # - !offset_is_left &&  is_left_aligned: [std::max(1, offset - width), offset]
     # - !offset_is_left && !is_left_aligned: [offset - width, offset]
 
-    coord_left = offset if offset_is_left else (offset + ' - ' + width)
-    coord_right = (offset + ' + ' + width) if offset_is_left else offset
+    coord_left = offset if offset_is_left else f'{offset} - {width}'
+    coord_right = f'{offset} + {width}' if offset_is_left else offset
 
     if offset_is_left and not is_left_aligned:
-        coord_right = 'std::min(' + coord_right + ', -1)'
+        coord_right = f'std::min({coord_right}, -1)'
     if not offset_is_left and is_left_aligned:
-        coord_left = 'std::max(' + coord_left + ', 1)'
+        coord_left = f'std::max({coord_left}, 1)'
 
     return coord_left, coord_right
 
@@ -293,11 +293,12 @@ def generate_widget_init_helper(widget, is_graph_description=False):
     if is_text_type(widget.type):
         # Attributes deriven from text properties
         font_size = widget.font
-        width = str(widget.length) + ' * (kFontGlyphWidth >> fontSize)'
+        width = f'{str(widget.length)} * (kFontGlyphWidth >> fontSize)'
         height = '(kFontGlyphHeight >> fontSize)'
     else:
         # Attributes deriven from graph properties
-        width = str(widget.bar_width) + ' * static_cast<uint32_t>(widget->runningValues.size())'
+        width = f'{str(widget.bar_width)} * static_cast<uint32_t>(widget->runningValues.size())'
+
         height = widget.height
 
     is_left_aligned = not widget.negative_alignment[0]
@@ -322,8 +323,12 @@ def generate_widget_init_helper(widget, is_graph_description=False):
     coord0, coord2 = get_bounding_box_coords('offsetX', 'width', offset_x_is_left, is_left_aligned)
     coord1, coord3 = get_bounding_box_coords('offsetY', 'height', offset_y_is_top, is_top_aligned)
 
-    match_to = 'nullptr' if widget.match_to is None else \
-               'mState.mOverlayWidgets[WidgetId::' + widget.match_to + '].get()'
+    match_to = (
+        'nullptr'
+        if widget.match_to is None
+        else f'mState.mOverlayWidgets[WidgetId::{widget.match_to}].get()'
+    )
+
 
     return WIDGET_INIT_TEMPLATE.format(
         subwidget='description.' if is_graph_description else '',
@@ -348,7 +353,11 @@ def generate_widget_init(widget):
     widget_init = '{\n' + widget.type + ' *widget = new ' + widget.constructor + ';\n'
 
     widget_init += generate_widget_init_helper(widget)
-    widget_init += 'mState.mOverlayWidgets[WidgetId::' + widget.name + '].reset(widget);\n'
+    widget_init += (
+        f'mState.mOverlayWidgets[WidgetId::{widget.name}'
+        + '].reset(widget);\n'
+    )
+
 
     if is_graph_type(widget.type):
         widget_init += generate_widget_init_helper(widget.description, True)
@@ -359,16 +368,17 @@ def generate_widget_init(widget):
 
 
 def main():
-    if len(sys.argv) == 2 and sys.argv[1] == 'inputs':
-        print(IN_JSON_FILE_NAME)
-        return
-    if len(sys.argv) == 2 and sys.argv[1] == 'outputs':
-        outputs = [
-            OUT_SOURCE_FILE_NAME,
-            OUT_HEADER_FILE_NAME,
-        ]
-        print(','.join(outputs))
-        return
+    if len(sys.argv) == 2:
+        if sys.argv[1] == 'inputs':
+            print(IN_JSON_FILE_NAME)
+            return
+        if sys.argv[1] == 'outputs':
+            outputs = [
+                OUT_SOURCE_FILE_NAME,
+                OUT_HEADER_FILE_NAME,
+            ]
+            print(','.join(outputs))
+            return
 
     with open(IN_JSON_FILE_NAME) as fin:
         layout = json.loads(fin.read())
@@ -385,9 +395,10 @@ def main():
 
     # Go over the widgets again and generate initialization code.  Note that we need to iterate over
     # the widgets in order, so we can't use the overlay_widgets dictionary for iteration.
-    init_widgets = []
-    for widget_properties in widgets:
-        init_widgets.append(generate_widget_init(overlay_widgets[widget_properties['name']]))
+    init_widgets = [
+        generate_widget_init(overlay_widgets[widget_properties['name']])
+        for widget_properties in widgets
+    ]
 
     with open(OUT_SOURCE_FILE_NAME, 'w') as outfile:
         outfile.write(

@@ -12,7 +12,7 @@ import os, shutil, sys
 
 def main():
     if len(sys.argv) != 2:
-        print("Usage: %s <path>" % sys.argv[0])
+        print(f"Usage: {sys.argv[0]} <path>")
         sys.exit(1)
 
     if os.path.exists(sys.argv[1]):

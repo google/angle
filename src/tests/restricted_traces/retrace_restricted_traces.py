@@ -51,7 +51,7 @@ def get_script_dir():
 
 def context_header(trace, trace_path):
     context_id = get_context(trace)
-    header = '%s_context%s.h' % (trace, context_id)
+    header = f'{trace}_context{context_id}.h'
     return os.path.join(trace_path, header)
 
 
@@ -65,10 +65,7 @@ def get_num_frames(json_data):
 
 
 def path_contains_header(path):
-    for file in os.listdir(path):
-        if fnmatch.fnmatch(file, '*.h'):
-            return True
-    return False
+    return any(fnmatch.fnmatch(file, '*.h') for file in os.listdir(path))
 
 
 def chmod_directory(directory, perm):
@@ -85,7 +82,7 @@ def ensure_rmdir(directory):
 
 
 def copy_trace_folder(old_path, new_path):
-    logging.info('%s -> %s' % (old_path, new_path))
+    logging.info(f'{old_path} -> {new_path}')
     ensure_rmdir(new_path)
     shutil.copytree(old_path, new_path)
 
@@ -102,7 +99,7 @@ def restore_traces(args, traces):
         trace_path = src_trace_path(trace)
         trace_backup_path = os.path.join(args.out_path, trace)
         if not os.path.isdir(trace_backup_path):
-            logging.error('Trace folder not found at %s' % trace_backup_path)
+            logging.error(f'Trace folder not found at {trace_backup_path}')
         else:
             copy_trace_folder(trace_backup_path, trace_path)
 
@@ -113,7 +110,7 @@ def run_autoninja(args):
         autoninja_binary += '.bat'
 
     autoninja_args = [autoninja_binary, '-C', args.gn_path, args.test_suite]
-    logging.debug('Calling %s' % ' '.join(autoninja_args))
+    logging.debug(f"Calling {' '.join(autoninja_args)}")
     subprocess.check_call(autoninja_args)
 
 
@@ -123,7 +120,7 @@ def run_test_suite(args, trace, max_steps, additional_args, additional_env):
         trace_binary += '.exe'
 
     renderer = 'vulkan' if args.no_swiftshader else 'vulkan_swiftshader'
-    trace_filter = '--gtest_filter=TracePerfTest.Run/%s_%s' % (renderer, trace)
+    trace_filter = f'--gtest_filter=TracePerfTest.Run/{renderer}_{trace}'
     run_args = [
         trace_binary,
         trace_filter,
@@ -138,7 +135,7 @@ def run_test_suite(args, trace, max_steps, additional_args, additional_env):
     if env_string:
         env_string += ' '
 
-    logging.info('%s%s' % (env_string, ' '.join(run_args)))
+    logging.info(f"{env_string}{' '.join(run_args)}")
     subprocess.check_call(run_args, env=env)
 
 
@@ -148,7 +145,7 @@ def upgrade_traces(args, traces):
     failures = []
 
     for trace in fnmatch.filter(traces, args.traces):
-        logging.debug('Tracing %s' % trace)
+        logging.debug(f'Tracing {trace}')
 
         trace_path = os.path.abspath(os.path.join(args.out_path, trace))
         if not os.path.isdir(trace_path):
@@ -161,7 +158,7 @@ def upgrade_traces(args, traces):
         num_frames = get_num_frames(json_data)
 
         metadata = json_data['TraceMetadata']
-        logging.debug('Read metadata: %s' % str(metadata))
+        logging.debug(f'Read metadata: {str(metadata)}')
 
         max_steps = min(args.limit, num_frames) if args.limit else num_frames
 
@@ -203,7 +200,7 @@ def upgrade_traces(args, traces):
 
     if failures:
         print('The following traces failed to upgrade:\n')
-        print('\n'.join(['  ' + trace for trace in failures]))
+        print('\n'.join([f'  {trace}' for trace in failures]))
         return EXIT_FAILURE
 
     return EXIT_SUCCESS
@@ -232,7 +229,7 @@ def validate_traces(args, traces):
 
     if failures:
         print('The following traces failed to validate:\n')
-        print('\n'.join(['  ' + trace for trace in failures]))
+        print('\n'.join([f'  {trace}' for trace in failures]))
         return EXIT_FAILURE
 
     return EXIT_SUCCESS
@@ -243,8 +240,10 @@ def main():
     parser.add_argument('-l', '--log', help='Logging level.', default=DEFAULT_LOG_LEVEL)
     parser.add_argument(
         '--test-suite',
-        help='Test Suite. Default is %s' % DEFAULT_TEST_SUITE,
-        default=DEFAULT_TEST_SUITE)
+        help=f'Test Suite. Default is {DEFAULT_TEST_SUITE}',
+        default=DEFAULT_TEST_SUITE,
+    )
+
     parser.add_argument(
         '--no-swiftshader',
         help='Trace against native Vulkan.',
@@ -330,7 +329,7 @@ def main():
     elif args.command == 'validate':
         return validate_traces(args, traces)
     else:
-        logging.fatal('Unknown command: %s' % args.command)
+        logging.fatal(f'Unknown command: {args.command}')
         return EXIT_FAILURE
 
 

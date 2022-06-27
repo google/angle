@@ -217,25 +217,11 @@ def get_step_names(build_name):
     out, err = bb.communicate()
     if err:
         raise ValueError("Unexpected error from bb get: '" + err + "'")
-    step_names = []
-    # Example output (relevant lines to a single step):
-    # ...
-    # Step "angle_deqp_egl_vulkan_tests on (nvidia-quadro-p400-win10-stable) GPU on Windows on Windows-10"                                      SUCCESS   4m12s     Logs: "stdout", "chromium_swarming.summary", "Merge script log", "Flaky failure: dEQP.EGL&#x2f;info_version (status CRASH,SUCCESS)", "step_metadata"
-    # Run on OS: 'Windows-10'<br>Max shard duration: 0:04:07.309848 (shard \#1)<br>Min shard duration: 0:02:26.402128 (shard \#0)<br/>flaky failures [ignored]:<br/>dEQP.EGL/info\_version<br/>
-    #  * [shard #0 isolated out](https://isolateserver.appspot.com/browse?namespace=default-gzip&hash=9a5999a59d332e55f54f495948d0c9f959e60ed2)
-    #  * [shard #0 (128.3 sec)](https://chromium-swarm.appspot.com/user/task/446903ae365b8110)
-    #  * [shard #1 isolated out](https://isolateserver.appspot.com/browse?namespace=default-gzip&hash=d71e1bdd91dee61b536b4057a9222e642bd3809f)
-    #  * [shard #1 (229.3 sec)](https://chromium-swarm.appspot.com/user/task/446903b7b0d90210)
-    #  * [shard #2 isolated out](https://isolateserver.appspot.com/browse?namespace=default-gzip&hash=ac9ba85b1cca77774061b87335c077980e1eef85)
-    #  * [shard #2 (144.5 sec)](https://chromium-swarm.appspot.com/user/task/446903c18e15a010)
-    #  * [shard #3 isolated out](https://isolateserver.appspot.com/browse?namespace=default-gzip&hash=976d586386864abecf53915fbac3e085f672e30f)
-    #  * [shard #3 (138.4 sec)](https://chromium-swarm.appspot.com/user/task/446903cc8da0ad10)
-    # ...
-    for line in out.splitlines():
-        if 'Step "angle_' not in line:
-            continue
-        step_names.append(line.split('"')[1])
-    return step_names
+    return [
+        line.split('"')[1]
+        for line in out.splitlines()
+        if 'Step "angle_' in line
+    ]
 
 
 # Performs some heuristic validation of the step_info struct returned from a single step log.
@@ -243,7 +229,7 @@ def get_step_names(build_name):
 def validate_step_info(step_info, build_name, step_name):
     print_name = "'" + build_name + "': '" + step_name + "'"
     if not step_info:
-        LOGGER.warning('Step info empty for ' + print_name + '\n')
+        LOGGER.warning(f'Step info empty for {print_name}' + '\n')
         return False
 
     if 'Total' in step_info:
@@ -251,9 +237,20 @@ def validate_step_info(step_info, build_name, step_name):
         partial_sum_values = [int(step_info[key]) for key in partial_sum_keys if key in step_info]
         computed_total = sum(partial_sum_values)
         if step_info['Total'] != computed_total:
-            LOGGER.warning('Step info does not sum to total for ' + print_name + ' | Total: ' +
-                           str(step_info['Total']) + ' - Computed total: ' + str(computed_total) +
-                           '\n')
+            LOGGER.warning(
+                (
+                    (
+                        (
+                            f'Step info does not sum to total for {print_name} | Total: '
+                            + str(step_info['Total'])
+                        )
+                        + ' - Computed total: '
+                    )
+                    + str(computed_total)
+                    + '\n'
+                )
+            )
+
     return True
 
 
@@ -339,20 +336,18 @@ def get_step_info(build_name, step_name):
             if key not in step_info:
                 step_info[key] = 0
             step_info[key] += intVal
-        else:
-            if key not in step_info:
-                step_info[key] = line_columns[2].strip()
-            else:
-                append_string = '\n' + line_columns[2].strip()
+        elif key in step_info:
+            append_string = '\n' + line_columns[2].strip()
                 # Sheets has a limit of 50000 characters per cell, so make sure to stop appending
                 # below this limit
-                if len(step_info[key]) + len(append_string) < 50000:
-                    step_info[key] += append_string
-                else:
-                    if key not in append_errors:
-                        append_errors.append(key)
-                        LOGGER.warning("Too many characters in column '" + key +
-                                       "'. Output capped.")
+            if len(step_info[key]) + len(append_string) < 50000:
+                step_info[key] += append_string
+            elif key not in append_errors:
+                append_errors.append(key)
+                LOGGER.warning("Too many characters in column '" + key +
+                               "'. Output capped.")
+        else:
+            step_info[key] = line_columns[2].strip()
     return step_info
 
 
@@ -433,9 +428,9 @@ def format_sheet_name(bot_name, step_name):
     step_name = step_name.replace('_deqp_', '_')
     step_name = step_name.replace('_tests', '_')
     step_name = step_name.replace('_', ' ').strip()
-    new_step_name += ' ' + step_name
+    new_step_name += f' {step_name}'
     new_step_name = ' '.join(new_step_name.strip().split())  # Remove extra spaces
-    return new_step_name + ' ' + bot_name
+    return f'{new_step_name} {bot_name}'
 
 
 # Returns the full list of sheet names that should be populated based on the info struct
@@ -450,20 +445,20 @@ def get_sheet_names(info):
 
 # Returns True if the sheet is found in the spreadsheets object
 def sheet_exists(spreadsheet, step_name):
-    for sheet in spreadsheet['sheets']:
-        if sheet['properties']['title'] == step_name:
-            return True
-    return False
+    return any(
+        sheet['properties']['title'] == step_name
+        for sheet in spreadsheet['sheets']
+    )
 
 
 # Validates the spreadsheets object against the list of sheet names which should appear. Returns a
 # list of sheets that need creation.
 def validate_sheets(spreadsheet, sheet_names):
-    create_sheets = []
-    for sheet_name in sheet_names:
-        if not sheet_exists(spreadsheet, sheet_name):
-            create_sheets.append(sheet_name)
-    return create_sheets
+    return [
+        sheet_name
+        for sheet_name in sheet_names
+        if not sheet_exists(spreadsheet, sheet_name)
+    ]
 
 
 # Performs a batch update with a given service, spreadsheet id, and list <object(Request)> of
@@ -487,19 +482,17 @@ def create_sheets(service, spreadsheet_id, sheet_names):
 # Calls a values().batchGet() on the service to find the list of column names from each sheet in
 # sheet_names. Returns a dictionary with one list per sheet_name.
 def get_headers(service, spreadsheet_id, sheet_names):
-    header_ranges = [sheet_name + '!A1:Z' for sheet_name in sheet_names]
+    header_ranges = [f'{sheet_name}!A1:Z' for sheet_name in sheet_names]
     LOGGER.debug("Called [spreadsheets.values().batchGet(spreadsheetId='" + spreadsheet_id +
                  ', ranges=' + str(header_ranges) + "')]")
     request = service.values().batchGet(spreadsheetId=spreadsheet_id, ranges=header_ranges)
     response = request.execute()
-    headers = {}
-    for k, sheet_name in enumerate(sheet_names):
-        if 'values' in response['valueRanges'][k]:
-            # Headers are in the first row of values
-            headers[sheet_name] = response['valueRanges'][k]['values'][0]
-        else:
-            headers[sheet_name] = []
-    return headers
+    return {
+        sheet_name: response['valueRanges'][k]['values'][0]
+        if 'values' in response['valueRanges'][k]
+        else []
+        for k, sheet_name in enumerate(sheet_names)
+    }
 
 
 # Calls values().batchUpdate() with supplied list of data <object(ValueRange)> to update on the
@@ -518,10 +511,14 @@ def batch_update_values(service, spreadsheet_id, data):
 
 # Get the sheetId of a sheet based on its name
 def get_sheet_id(spreadsheet, sheet_name):
-    for sheet in spreadsheet['sheets']:
-        if sheet['properties']['title'] == sheet_name:
-            return sheet['properties']['sheetId']
-    return -1
+    return next(
+        (
+            sheet['properties']['sheetId']
+            for sheet in spreadsheet['sheets']
+            if sheet['properties']['title'] == sheet_name
+        ),
+        -1,
+    )
 
 
 # Update the filters on sheets with a 'duplicate' column. Filter out any duplicate rows
@@ -566,7 +563,7 @@ def update_headers(service, spreadsheet_id, headers, info):
     sheet_names = []
     for bot_name in info:
         for step_name in info[bot_name]['step_names']:
-            if not step_name in info[bot_name]:
+            if step_name not in info[bot_name]:
                 LOGGER.error("Missing info for step name: '" + step_name + "'")
             sheet_name = format_sheet_name(bot_name, step_name)
             headers_stale = False
@@ -583,7 +580,7 @@ def update_headers(service, spreadsheet_id, headers, info):
             # Update the Gdoc headers if necessary
             if headers_stale:
                 sheet_names.append(sheet_name)
-                header_range = sheet_name + '!A1:Z'
+                header_range = f'{sheet_name}!A1:Z'
                 data.append({
                     'range': header_range,
                     'majorDimension': 'ROWS',
@@ -595,7 +592,7 @@ def update_headers(service, spreadsheet_id, headers, info):
 
 # Calls values().append() to append a list of values to a given sheet.
 def append_values(service, spreadsheet_id, sheet_name, values):
-    header_range = sheet_name + '!A1:Z'
+    header_range = f'{sheet_name}!A1:Z'
     insert_data_option = 'INSERT_ROWS'
     value_input_option = 'USER_ENTERED'  # Helps with formatting of dates
     append_values_request_body = {
@@ -639,9 +636,18 @@ def generate_duplicate_formula(headers, filter_columns):
     for i in range(len(headers)):
         if headers[i] == filter_columns[0]:
             col = str(i + 1)
-            formula = "IF(INDIRECT(ADDRESS(ROW(), " + col + "))=INDIRECT(ADDRESS(ROW() - 1, " + \
-                col + "))," + generate_duplicate_formula(headers, filter_columns[1:]) + ",0)"
-            return formula
+            return (
+                (
+                    (
+                        f"IF(INDIRECT(ADDRESS(ROW(), {col}))=INDIRECT(ADDRESS(ROW() - 1, "
+                        + col
+                    )
+                    + ")),"
+                )
+                + generate_duplicate_formula(headers, filter_columns[1:])
+                + ",0)"
+            )
+
     # Next column not found, remove from recursion but just return whatever the next one is
     return generate_duplicate_formula(headers, filter_columns[1:])
 
@@ -650,11 +656,7 @@ def generate_duplicate_formula(headers, filter_columns):
 def generate_duplicate_formula_helper(headers):
     filter_columns = MAIN_RESULT_COLUMNS
     formula = generate_duplicate_formula(headers, filter_columns)
-    if (formula == "1"):
-        return ""
-    else:
-        # Final result needs to be prepended with =
-        return "=" + formula
+    return "" if (formula == "1") else f"={formula}"
 
 # Uses the list of headers and the info struct to come up with a list of values for each step
 # from the latest builds.
@@ -688,8 +690,7 @@ def update_spreadsheet(service, spreadsheet_id, info):
     spreadsheet = get_spreadsheet(service, spreadsheet_id)
     LOGGER.info('Parsing sheet names...')
     sheet_names = get_sheet_names(info)
-    new_sheets = validate_sheets(spreadsheet, sheet_names)
-    if new_sheets:
+    if new_sheets := validate_sheets(spreadsheet, sheet_names):
         LOGGER.info('Creating new sheets...')
         create_sheets(service, spreadsheet_id, new_sheets)
     LOGGER.info('Parsing sheet headers...')
@@ -707,8 +708,8 @@ def update_spreadsheet(service, spreadsheet_id, info):
 # Loads or creates credentials and connects to the Sheets API. Returns a Spreadsheets object with
 # an open connection.
 def get_sheets_service(auth_path):
-    credentials_path = auth_path + '/credentials.json'
-    token_path = auth_path + '/token.pickle'
+    credentials_path = f'{auth_path}/credentials.json'
+    token_path = f'{auth_path}/token.pickle'
     creds = None
     if not os.path.exists(auth_path):
         LOGGER.info("Creating auth dir '" + auth_path + "'")
@@ -722,7 +723,7 @@ def get_sheets_service(auth_path):
     if os.path.exists(token_path):
         with open(token_path, 'rb') as token:
             creds = pickle.load(token)
-            LOGGER.info('Loaded credentials from ' + token_path)
+            LOGGER.info(f'Loaded credentials from {token_path}')
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             LOGGER.info('Refreshing credentials...')
@@ -734,8 +735,7 @@ def get_sheets_service(auth_path):
         with open(token_path, 'wb') as token:
             pickle.dump(creds, token)
     service = build('sheets', 'v4', credentials=creds)
-    sheets = service.spreadsheets()
-    return sheets
+    return service.spreadsheets()
 
 
 # Parse the input to the script
@@ -743,11 +743,13 @@ def parse_args():
     parser = argparse.ArgumentParser(os.path.basename(sys.argv[0]))
     parser.add_argument(
         '--auth_path',
-        default=HOME_DIR + '/.auth',
+        default=f'{HOME_DIR}/.auth',
         nargs='?',
         help='path to directory containing authorization data '
         '(credentials.json and token.pickle). '
-        '[default=<home>/.auth]')
+        '[default=<home>/.auth]',
+    )
+
     parser.add_argument(
         '--spreadsheet',
         default='1uttk1z8lJ4ZsUY7wMdFauMzUxb048nh5l52zdrAznek',
@@ -772,14 +774,16 @@ def initialize_logging(verbosity):
     LOGGER.addHandler(handler)
     if 'DEBUG' in verbosity:
         LOGGER.setLevel(level=logging.DEBUG)
-    elif 'INFO' in verbosity:
+    elif (
+        'INFO' in verbosity
+        or 'WARNING' not in verbosity
+        and 'ERROR' not in verbosity
+    ):
         LOGGER.setLevel(level=logging.INFO)
     elif 'WARNING' in verbosity:
         LOGGER.setLevel(level=logging.WARNING)
-    elif 'ERROR' in verbosity:
-        LOGGER.setLevel(level=logging.ERROR)
     else:
-        LOGGER.setLevel(level=logging.INFO)
+        LOGGER.setLevel(level=logging.ERROR)
 
 
 def main():

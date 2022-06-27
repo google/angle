@@ -35,60 +35,85 @@ def main():
 
     awk_cmd = subprocess.Popen(['awk', '{ print $1}'], stdin=nm_cmd.stdout, stdout=subprocess.PIPE)
 
-    dynsym_out = open(args.output + '.dynsyms', 'w')
-    sort_cmd = subprocess.Popen(['sort'], stdin=awk_cmd.stdout, stdout=dynsym_out)
-    sort_cmd.wait()
-    dynsym_out.close()
+    with open(f'{args.output}.dynsyms', 'w') as dynsym_out:
+        sort_cmd = subprocess.Popen(['sort'], stdin=awk_cmd.stdout, stdout=dynsym_out)
+        sort_cmd.wait()
+    with open(f'{args.output}.funcsyms', 'w') as funcsyms_out:
+        nm_cmd = subprocess.Popen([args.nm, args.output, '--format=posix', '--defined-only'],
+                                  stdout=subprocess.PIPE)
 
-    funcsyms_out = open(args.output + '.funcsyms', 'w')
-    nm_cmd = subprocess.Popen([args.nm, args.output, '--format=posix', '--defined-only'],
-                              stdout=subprocess.PIPE)
+        awk_cmd = subprocess.Popen(['awk', '{ if ($2 == "T" || $2 == "t" || $2 == "D") print $1 }'],
+                                   stdin=nm_cmd.stdout,
+                                   stdout=subprocess.PIPE)
 
-    awk_cmd = subprocess.Popen(['awk', '{ if ($2 == "T" || $2 == "t" || $2 == "D") print $1 }'],
-                               stdin=nm_cmd.stdout,
-                               stdout=subprocess.PIPE)
+        sort_cmd = subprocess.Popen(['sort'], stdin=awk_cmd.stdout, stdout=funcsyms_out)
+        sort_cmd.wait()
+    with open(f'{args.output}.keep_symbols', 'w') as keep_symbols:
+        comm_cmd = subprocess.Popen(
+            [
+                'comm',
+                '-13',
+                f'{args.output}.dynsyms',
+                f'{args.output}.funcsyms',
+            ],
+            stdout=keep_symbols,
+        )
 
-    sort_cmd = subprocess.Popen(['sort'], stdin=awk_cmd.stdout, stdout=funcsyms_out)
-    sort_cmd.wait()
-    funcsyms_out.close()
+        comm_cmd.wait()
 
-    keep_symbols = open(args.output + '.keep_symbols', 'w')
-    comm_cmd = subprocess.Popen(
-        ['comm', '-13', args.output + '.dynsyms', args.output + '.funcsyms'], stdout=keep_symbols)
-    comm_cmd.wait()
+        # Ensure that the keep_symbols file is not empty.
+        keep_symbols.write("\n")
+    objcopy_cmd = [
+        args.objcopy,
+        '--only-keep-debug',
+        args.output,
+        f'{args.output}.debug',
+    ]
 
-    # Ensure that the keep_symbols file is not empty.
-    keep_symbols.write("\n")
-    keep_symbols.close()
-
-    objcopy_cmd = [args.objcopy, '--only-keep-debug', args.output, args.output + '.debug']
     subprocess.check_call(objcopy_cmd)
 
     objcopy_cmd = [
-        args.objcopy, '-S', '--remove-section', '.gdb_index', '--remove-section', '.comment',
-        '--keep-symbols', args.output + '.keep_symbols', args.output + '.debug',
-        args.output + '.mini_debuginfo'
+        args.objcopy,
+        '-S',
+        '--remove-section',
+        '.gdb_index',
+        '--remove-section',
+        '.comment',
+        '--keep-symbols',
+        f'{args.output}.keep_symbols',
+        f'{args.output}.debug',
+        f'{args.output}.mini_debuginfo',
     ]
+
     subprocess.check_call(objcopy_cmd)
 
     strip_cmd = [args.strip, '--strip-all', '-R', '.comment', args.output]
     subprocess.check_call(strip_cmd)
 
-    xz_cmd = ['xz', '-f', args.output + '.mini_debuginfo']
+    xz_cmd = ['xz', '-f', f'{args.output}.mini_debuginfo']
     subprocess.check_call(xz_cmd)
 
     objcopy_cmd = [
-        args.objcopy, '--add-section', '.gnu_debugdata=' + args.output + '.mini_debuginfo.xz',
-        args.output
+        args.objcopy,
+        '--add-section',
+        f'.gnu_debugdata={args.output}.mini_debuginfo.xz',
+        args.output,
     ]
+
     subprocess.check_call(objcopy_cmd)
 
     # Clean out scratch files
     rm_cmd = [
-        'rm', '-f', args.output + '.dynsyms', args.output + '.funcsyms',
-        args.output + '.keep_symbols', args.output + '.debug', args.output + '.mini_debuginfo',
-        args.output + '.mini_debuginfo.xz'
+        'rm',
+        '-f',
+        f'{args.output}.dynsyms',
+        f'{args.output}.funcsyms',
+        f'{args.output}.keep_symbols',
+        f'{args.output}.debug',
+        f'{args.output}.mini_debuginfo',
+        f'{args.output}.mini_debuginfo.xz',
     ]
+
     result = subprocess.call(rm_cmd)
 
     return result

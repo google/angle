@@ -40,11 +40,7 @@ def has_child_values(value):
     if isinstance(value, list):
         return len(value) > 0
     if isinstance(value, dict):
-        for (item, item_value) in value.items():
-            if has_child_values(item_value):
-                return True
-        return False
-
+        return any(has_child_values(item_value) for item, item_value in value.items())
     # This is a value leaf node
     return True
 
@@ -53,14 +49,14 @@ def write_blueprint_key_value(output, name, value, indent=1):
     if not has_child_values(value):
         return
 
-    if isinstance(value, set) or isinstance(value, list):
+    if isinstance(value, (set, list)):
         value = list(sorted(set(value)))
 
     if isinstance(value, list):
-        output.append(tabs(indent) + '%s: [' % name)
+        output.append(tabs(indent) + f'{name}: [')
         for item in value:
             output.append(tabs(indent + 1) + '"%s",' % item)
-        output.append(tabs(indent) + '],')
+        output.append(f'{tabs(indent)}],')
         return
     if isinstance(value, dict):
         if not value:
@@ -71,7 +67,7 @@ def write_blueprint_key_value(output, name, value, indent=1):
         output.append(tabs(indent) + '},')
         return
     if isinstance(value, bool):
-        output.append(tabs(indent) + '%s: %s,' % (name, 'true' if value else 'false'))
+        output.append(tabs(indent) + f"{name}: {'true' if value else 'false'},")
         return
     output.append(tabs(indent) + '%s: "%s",' % (name, value))
 
@@ -111,8 +107,8 @@ def gn_target_to_blueprint_target(target, target_info):
     match = re.match(target_regex, target)
     assert match is not None
 
-    gn_file_path = match.group(1)
-    target_name = match.group(2)
+    gn_file_path = match[1]
+    target_name = match[2]
     assert len(target_name) > 0
 
     # Clean up the gn file path to be a valid blueprint target name.
@@ -152,10 +148,7 @@ def gn_path_to_blueprint_path(source):
 
 
 def gn_paths_to_blueprint_paths(paths):
-    rebased_paths = []
-    for path in paths:
-        rebased_paths.append(gn_path_to_blueprint_path(path))
-    return rebased_paths
+    return [gn_path_to_blueprint_path(path) for path in paths]
 
 
 def gn_sources_to_blueprint_sources(sources):
@@ -167,11 +160,11 @@ def gn_sources_to_blueprint_sources(sources):
         '.cpp',
     ]
 
-    rebased_sources = []
-    for source in sources:
-        if os.path.splitext(source)[1] in file_extension_allowlist:
-            rebased_sources.append(gn_path_to_blueprint_path(source))
-    return rebased_sources
+    return [
+        gn_path_to_blueprint_path(source)
+        for source in sources
+        if os.path.splitext(source)[1] in file_extension_allowlist
+    ]
 
 
 target_blockist = [
@@ -214,7 +207,7 @@ def gn_deps_to_blueprint_deps(target_info, build_info):
                 static_libs.append(blueprint_dep_name)
             elif gn_dep_type == 'shared_library':
                 shared_libs.append(blueprint_dep_name)
-            elif gn_dep_type == 'source_set' or gn_dep_type == 'group':
+            elif gn_dep_type in ['source_set', 'group']:
                 defaults.append(blueprint_dep_name)
             elif gn_dep_type == 'action':
                 generated_headers.append(blueprint_dep_name)
@@ -242,16 +235,16 @@ def gn_deps_to_blueprint_deps(target_info, build_info):
 
 
 def gn_libs_to_blueprint_shared_libraries(target_info):
-    lib_blockist = [
-        'android_support',
-        'unwind',
-    ]
-
     result = []
     if 'libs' in target_info:
+        lib_blockist = [
+            'android_support',
+            'unwind',
+        ]
+
         for lib in target_info['libs']:
             if lib not in lib_blockist:
-                android_lib = lib if '@' in lib else 'lib' + lib
+                android_lib = lib if '@' in lib else f'lib{lib}'
                 result.append(android_lib)
     return result
 
@@ -259,9 +252,12 @@ def gn_libs_to_blueprint_shared_libraries(target_info):
 def gn_include_dirs_to_blueprint_include_dirs(target_info):
     result = []
     if 'include_dirs' in target_info:
-        for include_dir in target_info['include_dirs']:
-            if len(include_dir) > 0 and include_dir not in include_blocklist:
-                result.append(gn_path_to_blueprint_path(include_dir))
+        result.extend(
+            gn_path_to_blueprint_path(include_dir)
+            for include_dir in target_info['include_dirs']
+            if len(include_dir) > 0 and include_dir not in include_blocklist
+        )
+
     return result
 
 
@@ -281,23 +277,17 @@ def gn_cflags_to_blueprint_cflags(target_info):
     for cflag_type in ['cflags', 'cflags_c', 'cflags_cc']:
         if cflag_type in target_info:
             for cflag in target_info[cflag_type]:
-                for allowlisted_cflag in cflag_allowlist:
-                    if re.search(allowlisted_cflag, cflag):
-                        result.append(cflag)
+                result.extend(
+                    cflag
+                    for allowlisted_cflag in cflag_allowlist
+                    if re.search(allowlisted_cflag, cflag)
+                )
 
-    # Chrome and Android use different versions of Clang which support differnt warning options.
-    # Ignore errors about unrecognized warning flags.
-    result.append('-Wno-unknown-warning-option')
-
-    # Override AOSP build flags to match ANGLE's CQ testing and reduce binary size
-    result.append('-Os')
-    result.append('-fno-unwind-tables')
-
+    result.extend(('-Wno-unknown-warning-option', '-Os', '-fno-unwind-tables'))
     if 'defines' in target_info:
-        for define in target_info['defines']:
-            # Don't emit ANGLE's CPU-bits define here, it will be part of the arch-specific
-            # information later
-            result.append('-D%s' % escape_quotes(define))
+        result.extend(
+            f'-D{escape_quotes(define)}' for define in target_info['defines']
+        )
 
     return result
 
@@ -325,16 +315,14 @@ def merge_bps(bps_for_abis):
                         value_in_all_abis = value_in_all_abis and (key in bps_for_abis[abi2].keys(
                         )) and (value in bps_for_abis[abi2][key])
                     if value_in_all_abis:
-                        if key in common_bp.keys():
+                        if key in common_bp:
                             common_bp[key].append(value)
                         else:
                             common_bp[key] = [value]
                     else:
                         if 'arch' not in common_bp.keys():
                             # Make sure there is an 'arch' entry to hold ABI-specific values
-                            common_bp['arch'] = {}
-                            for abi3 in abi_targets:
-                                common_bp['arch'][abi3] = {}
+                            common_bp['arch'] = {abi3: {} for abi3 in abi_targets}
                         if key in common_bp['arch'][abi].keys():
                             common_bp['arch'][abi][key].append(value)
                         else:
@@ -406,9 +394,9 @@ def gn_action_args_to_blueprint_args(blueprint_inputs, blueprint_outputs, args):
             remapped_path_arg = remapped_path_arg.replace(remap_source, remap_dest)
 
         if remapped_path_arg in blueprint_inputs or remapped_path_arg in blueprint_outputs:
-            result_args.append('$(location %s)' % remapped_path_arg)
+            result_args.append(f'$(location {remapped_path_arg})')
         elif os.path.basename(remapped_path_arg) in blueprint_outputs:
-            result_args.append('$(location %s)' % os.path.basename(remapped_path_arg))
+            result_args.append(f'$(location {os.path.basename(remapped_path_arg)})')
         else:
             result_args.append(remapped_path_arg)
 
@@ -442,9 +430,12 @@ def action_target_to_blueprint(target, build_info):
     # Blueprints use only one 'srcs', merge all gn inputs into one list.
     gn_inputs = []
     if 'inputs' in target_info:
-        for input in target_info['inputs']:
-            if input not in inputs_blocklist:
-                gn_inputs.append(input)
+        gn_inputs.extend(
+            input
+            for input in target_info['inputs']
+            if input not in inputs_blocklist
+        )
+
     if 'sources' in target_info:
         gn_inputs += target_info['sources']
     # Filter out the 'script' entry since Android.bp doesn't like the duplicate entries
@@ -514,12 +505,14 @@ def main():
 
     for abi in abi_targets:
         fixed_abi = abi
-        if abi == abi_x64:
+        if fixed_abi == abi_x64:
             fixed_abi = 'x64'  # gn uses x64, rather than x86_64
         parser.add_argument(
-            'gn_json_' + fixed_abi,
-            help=fixed_abi +
-            'gn desc in json format. Generated with \'gn desc <out_dir> --format=json "*"\'.')
+            f'gn_json_{fixed_abi}',
+            help=fixed_abi
+            + 'gn desc in json format. Generated with \'gn desc <out_dir> --format=json "*"\'.',
+        )
+
     args = vars(parser.parse_args())
 
     build_info = {}
@@ -527,7 +520,7 @@ def main():
         fixed_abi = abi
         if abi == abi_x64:
             fixed_abi = 'x64'  # gn uses x64, rather than x86_64
-        with open(args['gn_json_' + fixed_abi], 'r') as f:
+        with open(args[f'gn_json_{fixed_abi}'], 'r') as f:
             build_info[abi] = json.load(f)
 
     targets_to_write = []
@@ -535,101 +528,120 @@ def main():
         for root_target in root_targets:
             get_gn_target_dependencies(targets_to_write, build_info[abi], root_target)
 
-    blueprint_targets = []
-    for target in targets_to_write:
-        blueprint_targets.append(gn_target_to_blueprint(target, build_info))
+    blueprint_targets = [
+        gn_target_to_blueprint(target, build_info)
+        for target in targets_to_write
+    ]
 
-    # Add license build rules
-    blueprint_targets.append(('package', {
-        'default_applicable_licenses': ['external_angle_license'],
-    }))
-    blueprint_targets.append(('license', {
-        'name':
-            'external_angle_license',
-        'visibility': [':__subpackages__'],
-        'license_kinds': [
-            'SPDX-license-identifier-Apache-2.0',
-            'SPDX-license-identifier-BSD',
-            'SPDX-license-identifier-GPL',
-            'SPDX-license-identifier-GPL-2.0',
-            'SPDX-license-identifier-GPL-3.0',
-            'SPDX-license-identifier-LGPL',
-            'SPDX-license-identifier-MIT',
-            'SPDX-license-identifier-Zlib',
-            'legacy_unencumbered',
-        ],
-        'license_text': [
-            'LICENSE',
-            'src/common/third_party/smhasher/LICENSE',
-            'src/common/third_party/xxhash/LICENSE',
-            'src/libANGLE/renderer/vulkan/shaders/src/third_party/ffx_spd/LICENSE',
-            'src/tests/test_utils/third_party/LICENSE',
-            'src/third_party/libXNVCtrl/LICENSE',
-            'src/third_party/volk/LICENSE.md',
-            'third_party/abseil-cpp/LICENSE',
-            'third_party/android_system_sdk/LICENSE',
-            'third_party/bazel/LICENSE',
-            'third_party/colorama/LICENSE',
-            'third_party/proguard/LICENSE',
-            'third_party/r8/LICENSE',
-            'third_party/turbine/LICENSE',
-            'third_party/vulkan-deps/glslang/LICENSE',
-            'third_party/vulkan-deps/glslang/src/LICENSE.txt',
-            'third_party/vulkan-deps/LICENSE',
-            'third_party/vulkan-deps/spirv-headers/LICENSE',
-            'third_party/vulkan-deps/spirv-headers/src/LICENSE',
-            'third_party/vulkan-deps/spirv-tools/LICENSE',
-            'third_party/vulkan-deps/spirv-tools/src/LICENSE',
-            'third_party/vulkan-deps/spirv-tools/src/utils/vscode/src/lsp/LICENSE',
-            'third_party/vulkan-deps/vulkan-headers/LICENSE.txt',
-            'third_party/vulkan-deps/vulkan-headers/src/LICENSE.txt',
-            'third_party/vulkan_memory_allocator/LICENSE.txt',
-            'third_party/zlib/LICENSE',
-            'tools/flex-bison/third_party/m4sugar/LICENSE',
-            'tools/flex-bison/third_party/skeletons/LICENSE',
-            'util/windows/third_party/StackWalker/LICENSE',
-        ],
-    }))
-
-    # Add APKs with all of the root libraries
-    blueprint_targets.append((
-        'filegroup',
-        {
-            'name': 'ANGLE_srcs',
-            # Only add EmptyMainActivity.java since we just need to be able to reply to the intent
-            # android.app.action.ANGLE_FOR_ANDROID to indicate ANGLE is present on the device.
-            'srcs': ['src/android_system_settings/src/com/android/angle/EmptyMainActivity.java'],
-        }))
-    blueprint_targets.append((
-        'java_defaults',
-        {
-            'name': 'ANGLE_java_defaults',
-            'sdk_version': 'system_current',
-            'min_sdk_version': sdk_version,
-            'compile_multilib': 'both',
-            'use_embedded_native_libs': True,
-            'jni_libs': [
-                # hack: assume abi_arm
-                gn_target_to_blueprint_target(target, build_info[abi_arm][target])
-                for target in root_targets
-            ],
-            'aaptflags': [
-                # Don't compress *.json files
-                '-0 .json',
-            ],
-            'srcs': [':ANGLE_srcs'],
-            'plugins': ['java_api_finder',],
-            'privileged': True,
-            'product_specific': True,
-            'owner': 'google',
-        }))
-
-    blueprint_targets.append(('android_app', {
-        'name': 'ANGLE',
-        'defaults': ['ANGLE_java_defaults'],
-        'manifest': 'android/AndroidManifest.xml',
-        'asset_dirs': ['src/android_system_settings/assets',],
-    }))
+    blueprint_targets.extend(
+        (
+            (
+                'package',
+                {
+                    'default_applicable_licenses': ['external_angle_license'],
+                },
+            ),
+            (
+                'license',
+                {
+                    'name': 'external_angle_license',
+                    'visibility': [':__subpackages__'],
+                    'license_kinds': [
+                        'SPDX-license-identifier-Apache-2.0',
+                        'SPDX-license-identifier-BSD',
+                        'SPDX-license-identifier-GPL',
+                        'SPDX-license-identifier-GPL-2.0',
+                        'SPDX-license-identifier-GPL-3.0',
+                        'SPDX-license-identifier-LGPL',
+                        'SPDX-license-identifier-MIT',
+                        'SPDX-license-identifier-Zlib',
+                        'legacy_unencumbered',
+                    ],
+                    'license_text': [
+                        'LICENSE',
+                        'src/common/third_party/smhasher/LICENSE',
+                        'src/common/third_party/xxhash/LICENSE',
+                        'src/libANGLE/renderer/vulkan/shaders/src/third_party/ffx_spd/LICENSE',
+                        'src/tests/test_utils/third_party/LICENSE',
+                        'src/third_party/libXNVCtrl/LICENSE',
+                        'src/third_party/volk/LICENSE.md',
+                        'third_party/abseil-cpp/LICENSE',
+                        'third_party/android_system_sdk/LICENSE',
+                        'third_party/bazel/LICENSE',
+                        'third_party/colorama/LICENSE',
+                        'third_party/proguard/LICENSE',
+                        'third_party/r8/LICENSE',
+                        'third_party/turbine/LICENSE',
+                        'third_party/vulkan-deps/glslang/LICENSE',
+                        'third_party/vulkan-deps/glslang/src/LICENSE.txt',
+                        'third_party/vulkan-deps/LICENSE',
+                        'third_party/vulkan-deps/spirv-headers/LICENSE',
+                        'third_party/vulkan-deps/spirv-headers/src/LICENSE',
+                        'third_party/vulkan-deps/spirv-tools/LICENSE',
+                        'third_party/vulkan-deps/spirv-tools/src/LICENSE',
+                        'third_party/vulkan-deps/spirv-tools/src/utils/vscode/src/lsp/LICENSE',
+                        'third_party/vulkan-deps/vulkan-headers/LICENSE.txt',
+                        'third_party/vulkan-deps/vulkan-headers/src/LICENSE.txt',
+                        'third_party/vulkan_memory_allocator/LICENSE.txt',
+                        'third_party/zlib/LICENSE',
+                        'tools/flex-bison/third_party/m4sugar/LICENSE',
+                        'tools/flex-bison/third_party/skeletons/LICENSE',
+                        'util/windows/third_party/StackWalker/LICENSE',
+                    ],
+                },
+            ),
+            (
+                'filegroup',
+                {
+                    'name': 'ANGLE_srcs',
+                    # Only add EmptyMainActivity.java since we just need to be able to reply to the intent
+                    # android.app.action.ANGLE_FOR_ANDROID to indicate ANGLE is present on the device.
+                    'srcs': [
+                        'src/android_system_settings/src/com/android/angle/EmptyMainActivity.java'
+                    ],
+                },
+            ),
+            (
+                'java_defaults',
+                {
+                    'name': 'ANGLE_java_defaults',
+                    'sdk_version': 'system_current',
+                    'min_sdk_version': sdk_version,
+                    'compile_multilib': 'both',
+                    'use_embedded_native_libs': True,
+                    'jni_libs': [
+                        # hack: assume abi_arm
+                        gn_target_to_blueprint_target(
+                            target, build_info[abi_arm][target]
+                        )
+                        for target in root_targets
+                    ],
+                    'aaptflags': [
+                        # Don't compress *.json files
+                        '-0 .json',
+                    ],
+                    'srcs': [':ANGLE_srcs'],
+                    'plugins': [
+                        'java_api_finder',
+                    ],
+                    'privileged': True,
+                    'product_specific': True,
+                    'owner': 'google',
+                },
+            ),
+            (
+                'android_app',
+                {
+                    'name': 'ANGLE',
+                    'defaults': ['ANGLE_java_defaults'],
+                    'manifest': 'android/AndroidManifest.xml',
+                    'asset_dirs': [
+                        'src/android_system_settings/assets',
+                    ],
+                },
+            ),
+        )
+    )
 
     output = [
         """// GENERATED FILE - DO NOT EDIT.

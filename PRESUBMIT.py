@@ -62,7 +62,7 @@ def _CheckCommitMessageFormatting(input_api, output_api):
         return multiple_commits
 
     def _CheckTabInCommit(lines):
-        return all([line.find("\t") == -1 for line in lines])
+        return all(line.find("\t") == -1 for line in lines)
 
     allowlist_strings = ['Revert "', 'Roll ', 'Reland ', 'Re-land ']
     summary_linelength_warning_lower_limit = 65
@@ -210,7 +210,7 @@ def _CheckChangeHasBugField(input_api, output_api):
             continue
 
         match = re.match(bug_regex, bug)
-        if match == None or bug != match.group(0) or match.group(1) not in projects:
+        if match is None or bug != match[0] or match[1] not in projects:
             errors.append(output_api.PresubmitError('Incorrect bug tag "' + bug + '".'))
             if not extra_help:
                 extra_help = output_api.PresubmitError('Acceptable format is:\n\n'
@@ -258,7 +258,9 @@ def _CheckNewHeaderWithoutGnChange(input_api, output_api):
   """
 
     def headers(f):
-        return input_api.FilterSourceFile(f, files_to_check=(r'.+%s' % _HEADER_EXTENSIONS,))
+        return input_api.FilterSourceFile(
+            f, files_to_check=(f'.+{_HEADER_EXTENSIONS}',)
+        )
 
     new_headers = []
     for f in input_api.AffectedSourceFiles(headers):
@@ -304,8 +306,10 @@ def _CheckExportValidity(input_api, output_api):
         except subprocess.CalledProcessError as e:
             return [
                 output_api.PresubmitError(
-                    'Unable to run gn gen for export_targets.py: %s' % e.output)
+                    f'Unable to run gn gen for export_targets.py: {e.output}'
+                )
             ]
+
         export_target_script = os.path.join(input_api.PresubmitLocalPath(), 'scripts',
                                             'export_targets.py')
         try:
@@ -315,12 +319,13 @@ def _CheckExportValidity(input_api, output_api):
                 shell=use_shell)
         except subprocess.CalledProcessError as e:
             if input_api.is_committing:
-                return [output_api.PresubmitError('export_targets.py failed: %s' % e.output)]
+                return [output_api.PresubmitError(f'export_targets.py failed: {e.output}')]
             return [
                 output_api.PresubmitPromptWarning(
-                    'export_targets.py failed, this may just be due to your local checkout: %s' %
-                    e.output)
+                    f'export_targets.py failed, this may just be due to your local checkout: {e.output}'
+                )
             ]
+
         return []
     finally:
         shutil.rmtree(outdir)
@@ -333,8 +338,13 @@ def _CheckTabsInSourceFiles(input_api, output_api):
         # Check third_party files too, because WebKit's checks don't make exceptions.
         return input_api.FilterSourceFile(
             f,
-            files_to_check=(r'.+%s' % _IMPLEMENTATION_AND_HEADER_EXTENSIONS,),
-            files_to_skip=[f for f in input_api.DEFAULT_FILES_TO_SKIP if not "third_party" in f])
+            files_to_check=(f'.+{_IMPLEMENTATION_AND_HEADER_EXTENSIONS}',),
+            files_to_skip=[
+                f
+                for f in input_api.DEFAULT_FILES_TO_SKIP
+                if "third_party" not in f
+            ],
+        )
 
     files_with_tabs = []
     for f in input_api.AffectedSourceFiles(implementation_and_headers_including_third_party):
@@ -366,7 +376,8 @@ def _CheckNonAsciiInSourceFiles(input_api, output_api):
 
     def implementation_and_headers(f):
         return input_api.FilterSourceFile(
-            f, files_to_check=(r'.+%s' % _IMPLEMENTATION_AND_HEADER_EXTENSIONS,))
+            f, files_to_check=(f'.+{_IMPLEMENTATION_AND_HEADER_EXTENSIONS}',)
+        )
 
     files_with_non_ascii = []
     for f in input_api.AffectedSourceFiles(implementation_and_headers):

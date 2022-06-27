@@ -155,13 +155,15 @@ def format_shader_include(dimension, blitshader):
 
 
 def format_get_blitshader_case(operation):
-    dimension_cases = []
-    for dimension in supported_dimensions:
-        dimension_cases.append(format_get_blitshader_case_dimension(operation, dimension))
+    dimension_cases = [
+        format_get_blitshader_case_dimension(operation, dimension)
+        for dimension in supported_dimensions
+    ]
 
     return template_get_blitshader_case.format(
-        get_blitshader_dimension_cases="\n".join([c for c in dimension_cases]),
-        operation=operation)
+        get_blitshader_dimension_cases="\n".join(list(dimension_cases)),
+        operation=operation,
+    )
 
 
 def format_get_blitshader_case_dimension(operation, dimension):
@@ -169,32 +171,30 @@ def format_get_blitshader_case_dimension(operation, dimension):
     if dimension == "2D" and operation.find("TOI") != -1:
         blitshader = "INVALID"
     else:
-        blitshader = dimension.upper() + "_" + operation
+        blitshader = f"{dimension.upper()}_{operation}"
 
     return template_get_blitshader_case_dimension.format(
         dimension=dimension.upper(), blitshader=blitshader)
 
 
 def format_map_blitshader_case(dimension, blitshader):
-    blitshader_name = "BLITSHADER_" + dimension.upper() + "_" + blitshader[0]
+    blitshader_name = f"BLITSHADER_{dimension.upper()}_{blitshader[0]}"
 
     # 3D and 2DArray use the RGBA shader for passthrough alpha
     if dimension != "2D" and blitshader[0] == "ALPHA":
-        compiled_shader_name = "PassthroughRGBA" + dimension
+        compiled_shader_name = f"PassthroughRGBA{dimension}"
     else:
         compiled_shader_name = blitshader[1].replace("*", dimension)
 
     shader_comment = compiled_shader_name.replace("_", " ")
 
-    case = template_map_blitshader_case.format(
+    return template_map_blitshader_case.format(
         blitshader_name=blitshader_name,
         dimension=dimension,
         dimension_upper=dimension.upper(),
         compiled_shader_name=compiled_shader_name,
         shader_comment=shader_comment,
     )
-
-    return case
 
 
 def format_shader_filename(dimension, blitshader):
@@ -219,31 +219,27 @@ def get_shader_includes():
 
 
 def get_blitshader_cases():
-    blitshader_cases = []
-    for blitshader in blitshader_data:
-        blitshader_cases.append(format_get_blitshader_case(blitshader[0]))
-
-    return blitshader_cases
+    return [
+        format_get_blitshader_case(blitshader[0])
+        for blitshader in blitshader_data
+    ]
 
 
 def get_map_blitshader_cases():
     blitshader_cases = []
 
     for dimension in supported_dimensions:
-        for blitshader in blitshader_data:
-            # 2D float to int shaders have not been implemented
-            if dimension == "2D" and blitshader[0].find("TOI") != -1:
-                continue
-            blitshader_cases.append(format_map_blitshader_case(dimension, blitshader))
+        blitshader_cases.extend(
+            format_map_blitshader_case(dimension, blitshader)
+            for blitshader in blitshader_data
+            if dimension != "2D" or blitshader[0].find("TOI") == -1
+        )
 
     return blitshader_cases
 
 
 def get_blitshaderop_enums():
-    blitshaderops = []
-
-    for blitshader in blitshader_data:
-        blitshaderops.append("    " + blitshader[0] + ",")
+    blitshaderops = [f"    {blitshader[0]}," for blitshader in blitshader_data]
 
     blitshaderops.append("    OPERATION_INVALID")
     return blitshaderops
@@ -253,11 +249,11 @@ def get_blitshadertype_enums():
     blitshaders = []
 
     for dimension in supported_dimensions:
-        for blitshader in blitshader_data:
-            # 2D float to int shaders have not been implemented
-            if dimension == "2D" and blitshader[0].find("TOI") != -1:
-                continue
-            blitshaders.append("    BLITSHADER_" + dimension.upper() + "_" + blitshader[0] + ",")
+        blitshaders.extend(
+            f"    BLITSHADER_{dimension.upper()}_{blitshader[0]},"
+            for blitshader in blitshader_data
+            if dimension != "2D" or blitshader[0].find("TOI") == -1
+        )
 
     blitshaders.append("    BLITSHADER_INVALID")
     return blitshaders
@@ -315,10 +311,10 @@ def main():
 
     # auto_script parameters.
     if len(sys.argv) > 1:
-        inputs = []
         outputs = ['Blit11Helper_autogen.inc', 'd3d11_blit_shaders_autogen.gni']
 
         if sys.argv[1] == 'inputs':
+            inputs = []
             print(','.join(inputs))
         elif sys.argv[1] == 'outputs':
             print(','.join(outputs))
@@ -341,10 +337,15 @@ def main():
     blitshadertype_enums = get_blitshadertype_enums()
     shader_filenames = get_shader_filenames()
 
-    write_inc_file("\n".join([d for d in blitshadertype_cases]), "\n".join(
-        [c for c in map_blitshader_cases]), "\n".join([i for i in shader_includes]), "\n".join(
-            [e for e in blitshaderop_enums]), "\n".join([e for e in blitshadertype_enums]))
-    write_gni_file("\n".join([s for s in shader_filenames]))
+    write_inc_file(
+        "\n".join(list(blitshadertype_cases)),
+        "\n".join(list(map_blitshader_cases)),
+        "\n".join(list(shader_includes)),
+        "\n".join(list(blitshaderop_enums)),
+        "\n".join(list(blitshadertype_enums)),
+    )
+
+    write_gni_file("\n".join(list(shader_filenames)))
     return 0
 
 

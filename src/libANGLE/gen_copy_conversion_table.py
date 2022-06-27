@@ -59,9 +59,11 @@ template_simple_case = """                case {key}:
 
 
 def parse_texture_format_case(texture_format, framebuffer_formats):
-    framebuffer_format_cases = ""
-    for framebuffer_format in sorted(framebuffer_formats):
-        framebuffer_format_cases += template_simple_case.format(key=framebuffer_format)
+    framebuffer_format_cases = "".join(
+        template_simple_case.format(key=framebuffer_format)
+        for framebuffer_format in sorted(framebuffer_formats)
+    )
+
     return template_format_case.format(
         texture_format=texture_format, framebuffer_format_cases=framebuffer_format_cases)
 
@@ -73,10 +75,10 @@ def main():
 
     # auto_script parameters.
     if len(sys.argv) > 1:
-        inputs = ['renderer/angle_format.py', data_source_name]
         outputs = [out_file_name]
 
         if sys.argv[1] == 'inputs':
+            inputs = ['renderer/angle_format.py', data_source_name]
             print(','.join(inputs))
         elif sys.argv[1] == 'outputs':
             print(','.join(outputs))
@@ -95,10 +97,11 @@ def main():
                 format_map[texture_format] = []
             format_map[texture_format] += [framebuffer_format]
 
-    texture_format_cases = ""
+    texture_format_cases = "".join(
+        parse_texture_format_case(texture_format, framebuffer_formats)
+        for texture_format, framebuffer_formats in sorted(format_map.items())
+    )
 
-    for texture_format, framebuffer_formats in sorted(format_map.items()):
-        texture_format_cases += parse_texture_format_case(texture_format, framebuffer_formats)
 
     with open(out_file_name, 'wt') as out_file:
         output_cpp = template_cpp.format(

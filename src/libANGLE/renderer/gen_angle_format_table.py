@@ -97,7 +97,7 @@ def ceil_int(value, mod):
 
 
 def is_depth_stencil(angle_format):
-    if not 'channels' in angle_format or not angle_format['channels']:
+    if 'channels' not in angle_format or not angle_format['channels']:
         return False
     return 'd' in angle_format['channels'] or 's' in angle_format['channels']
 
@@ -105,7 +105,7 @@ def is_depth_stencil(angle_format):
 def get_component_suffix(angle_format):
     if angle_format['componentType'] == 'float':
         return 'F'
-    if angle_format['componentType'] == 'int' or angle_format['componentType'] == 'snorm':
+    if angle_format['componentType'] in ['int', 'snorm']:
         return 'S'
     return ""
 
@@ -127,22 +127,22 @@ def get_channel_struct(angle_format):
     component_suffix = get_component_suffix(angle_format)
 
     for channel in angle_format['channels']:
-        if channel == 'r':
-            struct_name += 'R{}'.format(bits['R'])
-        if channel == 'g':
-            struct_name += 'G{}'.format(bits['G'])
-        if channel == 'b':
-            struct_name += 'B{}'.format(bits['B'])
         if channel == 'a':
-            struct_name += 'A{}'.format(bits['A'])
-        if channel == 'l':
-            struct_name += 'L{}'.format(bits['L'])
-        if channel == 'd':
-            struct_name += 'D{}'.format(bits['D']) + component_suffix
+            struct_name += f"A{bits['A']}"
+        elif channel == 'b':
+            struct_name += f"B{bits['B']}"
+        elif channel == 'd':
+            struct_name += f"D{bits['D']}" + component_suffix
+        elif channel == 'g':
+            struct_name += f"G{bits['G']}"
+        elif channel == 'l':
+            struct_name += f"L{bits['L']}"
+        elif channel == 'r':
+            struct_name += f"R{bits['R']}"
         if channel == 's':
-            struct_name += 'S{}'.format(bits['S'])
+            struct_name += f"S{bits['S']}"
         if channel == 'x':
-            struct_name += 'X{}'.format(bits['X'])
+            struct_name += f"X{bits['X']}"
 
     if not is_depth_stencil(angle_format):
         struct_name += component_suffix
@@ -152,10 +152,14 @@ def get_channel_struct(angle_format):
 
 def get_mip_generation_function(angle_format):
     channel_struct = get_channel_struct(angle_format)
-    if is_depth_stencil(angle_format) or channel_struct == None \
-            or "BLOCK" in angle_format["id"] or "VERTEX" in angle_format["id"]:
+    if (
+        is_depth_stencil(angle_format)
+        or channel_struct is None
+        or "BLOCK" in angle_format["id"]
+        or "VERTEX" in angle_format["id"]
+    ):
         return 'nullptr'
-    return 'GenerateMip<' + channel_struct + '>'
+    return f'GenerateMip<{channel_struct}>'
 
 
 def get_color_read_write_component_type(angle_format):
@@ -171,26 +175,26 @@ def get_color_read_write_component_type(angle_format):
 
 def get_color_read_function(angle_format):
     channel_struct = get_channel_struct(angle_format)
-    if channel_struct == None:
+    if channel_struct is None:
         return 'nullptr'
 
     if is_depth_stencil(angle_format):
-        return 'ReadDepthStencil<' + channel_struct + '>'
+        return f'ReadDepthStencil<{channel_struct}>'
 
     read_component_type = get_color_read_write_component_type(angle_format)
-    return 'ReadColor<' + channel_struct + ', ' + read_component_type + '>'
+    return f'ReadColor<{channel_struct}, {read_component_type}>'
 
 
 def get_color_write_function(angle_format):
     channel_struct = get_channel_struct(angle_format)
-    if channel_struct == None:
+    if channel_struct is None:
         return 'nullptr'
 
     if is_depth_stencil(angle_format):
-        return 'WriteDepthStencil<' + channel_struct + '>'
+        return f'WriteDepthStencil<{channel_struct}>'
 
     write_component_type = get_color_read_write_component_type(angle_format)
-    return 'WriteColor<' + channel_struct + ', ' + write_component_type + '>'
+    return f'WriteColor<{channel_struct}, {write_component_type}>'
 
 
 format_entry_template = """    {{ FormatID::{id}, {glInternalFormat}, {fboImplementationInternalFormat}, {mipGenerationFunction}, {fastCopyFunctions}, {colorReadFunction}, {colorWriteFunction}, {namedComponentType}, {R}, {G}, {B}, {A}, {L}, {D}, {S}, {pixelBytes}, {componentAlignmentMask}, {isBlock}, {isFixed}, {isScaled}, {isSRGB}, {isYUV}, {vertexAttribType} }},
@@ -211,11 +215,11 @@ def get_named_component_type(component_type):
     elif component_type == "none":
         return "GL_NONE"
     else:
-        raise ValueError("Unknown component type for " + component_type)
+        raise ValueError(f"Unknown component type for {component_type}")
 
 
 def get_component_alignment_mask(channels, bits):
-    if channels == None or bits == None:
+    if channels is None or bits is None:
         return "std::numeric_limits<GLuint>::max()"
     bitness = bits[channels[0].upper()]
     for channel in channels:
@@ -247,8 +251,6 @@ def get_vertex_attrib_type(format_id):
     has_r16 = "R16" in format_id
     has_r32 = "R32" in format_id
     has_r10 = "R10" in format_id
-    has_vertex = "VERTEX" in format_id
-
     if has_fixed:
         return "Fixed"
 
@@ -259,6 +261,8 @@ def get_vertex_attrib_type(format_id):
         return "Byte" if has_s else "UnsignedByte"
 
     if has_r10:
+        has_vertex = "VERTEX" in format_id
+
         if has_vertex:
             return "Int1010102" if has_s else "UnsignedInt1010102"
         else:
@@ -325,14 +329,13 @@ def json_to_table_data(format_id, json, angle_to_gl):
 
     pixel_bytes = 0
     if is_block:
-        assert 'blockPixelBytes' in parsed, \
-            'Compressed format %s requires its block size to be specified in angle_format_data.json' % \
-                format_id
+        assert (
+            'blockPixelBytes' in parsed
+        ), f'Compressed format {format_id} requires its block size to be specified in angle_format_data.json'
+
         pixel_bytes = parsed['blockPixelBytes']
     else:
-        sum_of_bits = 0
-        for channel in angle_format.kChannels:
-            sum_of_bits += int(parsed[channel])
+        sum_of_bits = sum(int(parsed[channel]) for channel in angle_format.kChannels)
         pixel_bytes = ceil_int(sum_of_bits, 8)
     parsed["pixelBytes"] = pixel_bytes
     parsed["componentAlignmentMask"] = get_component_alignment_mask(parsed["channels"],
@@ -345,7 +348,10 @@ def json_to_table_data(format_id, json, angle_to_gl):
     # when adding support for YUV formats that have different identifying markers.
     parsed["isYUV"] = bool_str("PLANE" in format_id)
 
-    parsed["vertexAttribType"] = "gl::VertexAttribType::" + get_vertex_attrib_type(format_id)
+    parsed[
+        "vertexAttribType"
+    ] = f"gl::VertexAttribType::{get_vertex_attrib_type(format_id)}"
+
 
     return format_entry_template.format(**parsed)
 
@@ -358,7 +364,7 @@ def sorted_ds_first(all_angle):
     for format_id in sorted(all_angle):
         if format_id == 'NONE':
             continue
-        if format_id[0] == 'D' or format_id[0] == 'S':
+        if format_id[0] in ['D', 'S']:
             ds_sorted.append(format_id)
         else:
             color_sorted.append(format_id)
@@ -403,10 +409,10 @@ def main():
 
     # auto_script parameters.
     if len(sys.argv) > 1:
-        inputs = ['angle_format.py', 'angle_format_data.json', 'angle_format_map.json']
         outputs = ['Format_table_autogen.cpp', 'FormatID_autogen.h']
 
         if sys.argv[1] == 'inputs':
+            inputs = ['angle_format.py', 'angle_format_data.json', 'angle_format_map.json']
             print(','.join(inputs))
         elif sys.argv[1] == 'outputs':
             print(','.join(outputs))

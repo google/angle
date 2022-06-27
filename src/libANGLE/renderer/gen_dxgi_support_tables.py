@@ -173,15 +173,16 @@ def do_format(format_data):
     table_data = {'9_3': '', '10_0': '', '10_1': '', '11_0': '', '11_1': ''}
 
     json_flag_to_d3d = {
-        'texture2D': macro_prefix + '2D',
-        'texture3D': macro_prefix + '3D',
-        'textureCube': macro_prefix + 'CUBE',
-        'shaderSample': macro_prefix + 'SAMPLE',
-        'renderTarget': macro_prefix + 'RT',
-        'multisampleRT': macro_prefix + 'MS',
-        'depthStencil': macro_prefix + 'DS',
-        'mipAutoGen': macro_prefix + 'MIPGEN'
+        'texture2D': f'{macro_prefix}2D',
+        'texture3D': f'{macro_prefix}3D',
+        'textureCube': f'{macro_prefix}CUBE',
+        'shaderSample': f'{macro_prefix}SAMPLE',
+        'renderTarget': f'{macro_prefix}RT',
+        'multisampleRT': f'{macro_prefix}MS',
+        'depthStencil': f'{macro_prefix}DS',
+        'mipAutoGen': f'{macro_prefix}MIPGEN',
     }
+
 
     for format_name, format_support in sorted(format_data.items()):
 
@@ -202,49 +203,43 @@ def do_format(format_data):
 
             d3d_flag = [json_flag_to_d3d[json_flag]]
 
-            if support == 'check':
-                optionally_supported.update(d3d_flag)
-            elif support == 'always':
-                always_supported.update(d3d_flag)
-            elif support == 'never':
-                never_supported.update(d3d_flag)
-            elif support == '10_0':
+            if support == '10_0':
                 fl_10_0_supported.update(d3d_flag)
-            elif support == '10_1':
-                fl_10_1_supported.update(d3d_flag)
-            elif support == '11_0':
-                fl_11_0_supported.update(d3d_flag)
-            elif support == '11_1':
-                fl_11_1_supported.update(d3d_flag)
-            elif support == 'dxgi1_2':
-                # TODO(jmadill): DXGI 1.2 handling.
-                always_supported.update(d3d_flag)
             elif support == '10_0check10_1always':
                 fl_10_0_check_10_1_supported.update(d3d_flag)
             elif support == '10_0check11_0always':
                 fl_10_0_check_11_0_supported.update(d3d_flag)
+            elif support == '10_1':
+                fl_10_1_supported.update(d3d_flag)
+            elif support == '11_0':
+                fl_11_0_supported.update(d3d_flag)
             elif support == '11_0check':
                 fl_11_0_check.update(d3d_flag)
+            elif support == '11_1':
+                fl_11_1_supported.update(d3d_flag)
             elif support == '9_3always_10_0check11_0always':
                 fl_9_3_supported.update(d3d_flag)
+                fl_10_0_check_11_0_supported.update(d3d_flag)
+            elif support == '9_3check11_0always':
+                fl_9_3_check.update(d3d_flag)
                 fl_10_0_check_11_0_supported.update(d3d_flag)
             elif support == '9_3check_10_0always':
                 fl_9_3_check.update(d3d_flag)
                 fl_10_0_supported.update(d3d_flag)
-            elif support == '9_3check11_0always':
-                fl_9_3_check.update(d3d_flag)
-                fl_10_0_check_11_0_supported.update(d3d_flag)
+            elif support in ['always', 'dxgi1_2']:
+                always_supported.update(d3d_flag)
+            elif support == 'check':
+                optionally_supported.update(d3d_flag)
+            elif support == 'never':
+                never_supported.update(d3d_flag)
             else:
-                print("Data specification error: " + support)
+                print(f"Data specification error: {support}")
                 sys.exit(1)
 
         for feature_level in ['9_3', '10_0', '10_1', '11_0', '11_1']:
             always_for_fl = always_supported
             optional_for_fl = optionally_supported
-            if feature_level == '9_3':
-                always_for_fl = fl_9_3_supported.union(always_for_fl)
-                optional_for_fl = fl_9_3_check.union(optional_for_fl)
-            elif feature_level == '10_0':
+            if feature_level == '10_0':
                 always_for_fl = fl_10_0_supported.union(always_for_fl)
                 optional_for_fl = fl_10_0_check_10_1_supported.union(optional_for_fl)
                 optional_for_fl = fl_10_0_check_11_0_supported.union(optional_for_fl)
@@ -267,6 +262,9 @@ def do_format(format_data):
                 always_for_fl = fl_11_0_supported.union(always_for_fl)
                 always_for_fl = fl_11_1_supported.union(always_for_fl)
 
+            elif feature_level == '9_3':
+                always_for_fl = fl_9_3_supported.union(always_for_fl)
+                optional_for_fl = fl_9_3_check.union(optional_for_fl)
             always = ' | '.join(sorted(always_for_fl))
             never = ' | '.join(sorted(never_supported))
             optional = ' | '.join(sorted(optional_for_fl))
@@ -278,10 +276,13 @@ def do_format(format_data):
             if not optional:
                 optional = '0'
 
-            table_data[feature_level] += '        case ' + format_name + ':\n'
+            table_data[feature_level] += f'        case {format_name}' + ':\n'
             table_data[feature_level] += '        {\n'
-            table_data[
-                feature_level] += '            static const DXGISupport info(' + always + ', ' + never + ', ' + optional + ');\n'
+            table_data[feature_level] += (
+                f'            static const DXGISupport info({always}, {never}, {optional}'
+                + ');\n'
+            )
+
             table_data[feature_level] += '            return info;\n'
             table_data[feature_level] += '        }\n'
 
@@ -302,10 +303,10 @@ def main():
 
     # auto_script parameters.
     if len(sys.argv) > 1:
-        inputs = ['dxgi_support_data.json']
         outputs = ['dxgi_support_table_autogen.cpp']
 
         if sys.argv[1] == 'inputs':
+            inputs = ['dxgi_support_data.json']
             print(','.join(inputs))
         elif sys.argv[1] == 'outputs':
             print(','.join(outputs))

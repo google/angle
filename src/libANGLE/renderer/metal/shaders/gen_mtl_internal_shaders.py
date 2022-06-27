@@ -27,12 +27,14 @@ template_header_boilerplate = """// GENERATED FILE - DO NOT EDIT.
 
 def gen_shader_enums_code(angle_formats):
 
-    code = """// This file is similar to src/libANGLE/renderer/FormatID_autogen.h but is used by Metal default
+    code = (
+        """// This file is similar to src/libANGLE/renderer/FormatID_autogen.h but is used by Metal default
 // shaders instead of C++ code.
 //
 """
+        + "namespace rx\n"
+    )
 
-    code += "namespace rx\n"
     code += "{\n"
     code += "namespace mtl_shader\n"
     code += "{\n"
@@ -52,11 +54,7 @@ def gen_shader_enums_code(angle_formats):
 
 
 def find_clang():
-    if os.name == 'nt':
-        binary = 'clang-cl.exe'
-    else:
-        binary = 'clang++'
-
+    binary = 'clang-cl.exe' if os.name == 'nt' else 'clang++'
     clang = os.path.join('..', '..', '..', '..', '..', 'third_party', 'llvm-build',
                          'Release+Asserts', 'bin', binary)
 
@@ -119,7 +117,7 @@ def main():
             temp_file.write(include_str.encode('utf-8'))
 
     args = [clang]
-    if not os.name == 'nt':
+    if os.name != 'nt':
         args += ['-xc++']
     args += ['-E', temp_fname]
 

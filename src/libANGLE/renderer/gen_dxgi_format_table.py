@@ -87,14 +87,14 @@ def main():
 
     # auto_script parameters.
     if len(sys.argv) > 1:
-        inputs = [
-            'angle_format.py',
-            'angle_format_map.json',
-            'dxgi_format_data.json',
-        ]
         outputs = ['dxgi_format_map_autogen.cpp']
 
         if sys.argv[1] == 'inputs':
+            inputs = [
+                'angle_format.py',
+                'angle_format_map.json',
+                'dxgi_format_data.json',
+            ]
             print(','.join(inputs))
         elif sys.argv[1] == 'outputs':
             print(','.join(outputs))
@@ -121,12 +121,12 @@ def main():
 
     all_angle = angle_format.get_all_angle_formats()
 
+    component_type = 'GL_NONE'
+
     for dxgi_format, a_format in sorted(dxgi_map.items()):
 
-        found = [ctype in dxgi_format for ctype in types.keys()]
+        found = [ctype in dxgi_format for ctype in types]
         count = reduce((lambda a, b: int(a) + int(b)), found)
-
-        component_type = 'GL_NONE'
 
         if count == 1:
             gltype = next(
@@ -139,7 +139,7 @@ def main():
             a_format = dxgi_format
 
         if a_format in all_angle:
-            a_format = "Format::Get(FormatID::" + a_format + ")"
+            a_format = f"Format::Get(FormatID::{a_format})"
             format_cases += format_case(dxgi_format, a_format)
         else:
             format_cases += undefined_case(dxgi_format)

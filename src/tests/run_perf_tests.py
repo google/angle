@@ -63,10 +63,7 @@ def is_windows():
 
 
 def get_binary_name(binary):
-    if is_windows():
-        return '.\\%s.exe' % binary
-    else:
-        return './%s' % binary
+    return '.\\%s.exe' % binary if is_windows() else f'./{binary}'
 
 
 def _popen(*args, **kwargs):
@@ -115,8 +112,7 @@ def _run_and_get_output(args, cmd, env, runner_args):
             exit_code = run_command_with_output(
                 runner_cmd, env=env, stdoutfile=tempfile_path, log=args.show_test_stdout)
         with open(tempfile_path) as f:
-            for line in f:
-                lines.append(line.strip())
+            lines.extend(line.strip() for line in f)
     return exit_code, lines
 
 
@@ -131,13 +127,13 @@ def _shard_tests(tests, shard_count, shard_index):
 def _get_results_from_output(output, result):
     output = '\n'.join(output)
     m = re.search(r'Running (\d+) tests', output)
-    if m and int(m.group(1)) > 1:
+    if m and int(m[1]) > 1:
         raise Exception('Found more than one test result in output')
 
     # Results are reported in the format:
     # name_backend.result: story= value units.
     pattern = r'\.' + result + r':.*= ([0-9.]+)'
-    logging.debug('Searching for %s in output' % pattern)
+    logging.debug(f'Searching for {pattern} in output')
     m = re.findall(pattern, output)
     if not m:
         logging.warning('Did not find the result "%s" in the test output:\n%s' % (result, output))
@@ -182,8 +178,7 @@ def _mean(data):
 
 def _sum_of_square_deviations(data, c):
     """Return sum of square deviations of sequence data."""
-    ss = sum((float(x) - c)**2 for x in data)
-    return ss
+    return sum((float(x) - c)**2 for x in data)
 
 
 def _coefficient_of_variation(data):
@@ -208,7 +203,7 @@ def _save_extra_output_files(args, results, histograms):
     test_output_path = os.path.join(benchmark_path, 'test_results.json')
     results.save_to_json_file(test_output_path)
     perf_output_path = os.path.join(benchmark_path, 'perf_results.json')
-    logging.info('Saving perf histograms to %s.' % perf_output_path)
+    logging.info(f'Saving perf histograms to {perf_output_path}.')
     with open(perf_output_path, 'w') as out_file:
         out_file.write(json.dumps(histograms.AsDicts(), indent=2))
 
@@ -251,7 +246,7 @@ class Results:
             out_file.write(json.dumps(self._results, indent=2))
 
     def save_to_json_file(self, fname):
-        logging.info('Saving test results to %s.' % fname)
+        logging.info(f'Saving test results to {fname}.')
         with open(fname, 'w') as out_file:
             out_file.write(json.dumps(self._results, indent=2))
 

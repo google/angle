@@ -132,7 +132,7 @@ def make_camel_case(json_name):
 
 
 def make_header_name(class_name):
-    return class_name + '_autogen.h'
+    return f'{class_name}_autogen.h'
 
 
 def main():
@@ -174,7 +174,7 @@ def main():
             # multiple backends.  That's ok for the purposes of feature overriding.
             name_map[var_name] = display_name
 
-        description = '\n'.join(['// ' + line for line in src['description']])
+        description = '\n'.join([f'// {line}' for line in src['description']])
         header_file = make_header_name(class_name)
 
         header = template_header.format(

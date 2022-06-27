@@ -109,7 +109,7 @@ def main():
     for mixin in seen_mixins:
         if mixin in found_mixins:
             continue
-        assert (mixin in chromium_generator.mixins), 'Error with %s mixin' % mixin
+        assert (mixin in chromium_generator.mixins), f'Error with {mixin} mixin'
         found_mixins[mixin] = chromium_generator.mixins[mixin]
 
     pp = pprint.PrettyPrinter(indent=2)

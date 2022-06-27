@@ -42,10 +42,7 @@ def convertExponent(i):
 
 
 def convertOffset(i):
-    if i == 0 or i == 32:
-        return 0
-    else:
-        return 1024
+    return 0 if i in [0, 32] else 1024
 
 
 print """//

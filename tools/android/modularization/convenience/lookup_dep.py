@@ -194,10 +194,10 @@ class ClassLookupIndex:
         # Handle android_aar_prebuilt() sub targets.
         index = target.find('_java__subjar')
         if index >= 0:
-            return target[0:index + 5]
+            return target[:index + 5]
         index = target.find('_java__classes')
         if index >= 0:
-            return target[0:index + 5]
+            return target[:index + 5]
 
         return target
 
@@ -206,23 +206,15 @@ class ClassLookupIndex:
 
         full_class_names = set()
 
-        # Read the location of the java_sources_file from the build_config
-        sources_path = deps_info.get('java_sources_file')
-        if sources_path:
+        if sources_path := deps_info.get('java_sources_file'):
             # Read the java_sources_file, indexing the classes found
             with open(self._abs_build_output_dir / sources_path) as sources_contents:
                 for source_line in sources_contents:
                     source_path = pathlib.Path(source_line.strip())
-                    java_class = self._parse_full_java_class(source_path)
-                    if java_class:
+                    if java_class := self._parse_full_java_class(source_path):
                         full_class_names.add(java_class)
 
-        # |unprocessed_jar_path| is set for prebuilt targets. (ex:
-        # android_aar_prebuilt())
-        # |unprocessed_jar_path| might be set but not exist if not all targets have
-        # been built.
-        unprocessed_jar_path = deps_info.get('unprocessed_jar_path')
-        if unprocessed_jar_path:
+        if unprocessed_jar_path := deps_info.get('unprocessed_jar_path'):
             abs_unprocessed_jar_path = (self._abs_build_output_dir / unprocessed_jar_path)
             if abs_unprocessed_jar_path.exists():
                 # Normalize path but do not follow symlink if .jar is symlink.
@@ -250,7 +242,7 @@ class ClassLookupIndex:
             full_java_class = full_java_class.replace('/', '.')
             dollar_index = full_java_class.find('$')
             if dollar_index >= 0:
-                full_java_class[0:dollar_index]
+                full_java_class[:dollar_index]
 
             out.add(full_java_class)
         return out
@@ -261,7 +253,7 @@ class ClassLookupIndex:
         """Returns list of jar members by name."""
 
         # Caching namelist speeds up lookup_dep.py runtime by 1.5s.
-        cache_path = abs_jar_path.with_suffix(abs_jar_path.suffix + '.namelist_cache')
+        cache_path = abs_jar_path.with_suffix(f'{abs_jar_path.suffix}.namelist_cache')
         if (not ClassLookupIndex._is_path_relative_to(abs_jar_path, abs_build_output_dir)):
             cache_path = (abs_build_output_dir / 'gen' / cache_path.relative_to(_SRC_DIR))
         if (cache_path.exists() and os.path.getmtime(cache_path) > os.path.getmtime(abs_jar_path)):

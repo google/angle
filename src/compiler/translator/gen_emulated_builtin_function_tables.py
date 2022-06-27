@@ -84,11 +84,9 @@ def enum_type(arg):
     if len(chunks) == 3:
         arg_type = chunks[1]
 
-    suffix = ""
-    if not arg_type[-1].isdigit():
-        suffix = '1'
-    if arg_type[0:4] == 'uint':
-        return 'UI' + arg_type[2:] + suffix
+    suffix = "" if arg_type[-1].isdigit() else '1'
+    if arg_type[:4] == 'uint':
+        return f'UI{arg_type[2:]}{suffix}'
     return arg_type.capitalize() + suffix
 
 
@@ -96,10 +94,10 @@ def gen_emulated_function(data):
 
     func = ""
     if 'comment' in data:
-        func += "".join(["// " + line + "\n" for line in data['comment']])
+        func += "".join([f"// {line}" + "\n" for line in data['comment']])
 
     sig = data['return_type'] + ' ' + data['op'] + '_emu(' + ', '.join(data['args']) + ')'
-    body = [sig, '{'] + ['    ' + line for line in data['body']] + ['}']
+    body = [sig, '{'] + [f'    {line}' for line in data['body']] + ['}']
 
     func += "{\n"
     func += "BuiltInId::" + data['op'] + "_" + "_".join([enum_type(arg) for arg in data['args']
@@ -118,10 +116,10 @@ def main():
 
     # auto_script parameters.
     if len(sys.argv) > 1:
-        inputs = [input_script]
         outputs = [hlsl_fname]
 
         if sys.argv[1] == 'inputs':
+            inputs = [input_script]
             print(','.join(inputs))
         elif sys.argv[1] == 'outputs':
             print(','.join(outputs))

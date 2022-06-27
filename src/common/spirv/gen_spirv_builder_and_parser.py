@@ -177,9 +177,9 @@ class Writer:
         self.grammar = load_grammar(self.path_prefix + SPIRV_GRAMMAR_FILE)
 
         # If an instruction has a parameter of these types, the instruction is ignored
-        self.unsupported_kinds = set(['LiteralSpecConstantOpInteger'])
+        self.unsupported_kinds = {'LiteralSpecConstantOpInteger'}
         # If an instruction requires a capability of these kinds, the instruction is ignored
-        self.unsupported_capabilities = set(['Kernel', 'Addresses'])
+        self.unsupported_capabilities = {'Kernel', 'Addresses'}
         # If an instruction requires an extension other than these, the instruction is ignored
         self.supported_extensions = set([])
         # List of bit masks.  These have 'Mask' added to their typename in SPIR-V headers.
@@ -247,11 +247,11 @@ class Writer:
         depends = item.get('capabilities', [])
         if len(depends) == 0:
             return False
-        return all([dep in self.unsupported_capabilities for dep in depends])
+        return all(dep in self.unsupported_capabilities for dep in depends)
 
     def requires_unsupported_extension(self, item):
         extensions = item.get('extensions', [])
-        return any([ext not in self.supported_extensions for ext in extensions])
+        return any(ext not in self.supported_extensions for ext in extensions)
 
     def accumulate_unsupported_capabilities(self):
         operand_kinds = self.grammar['operand_kinds']
@@ -296,9 +296,8 @@ class Writer:
             # For IdRefs, change 'Xyz 1', +\n'Xyz 2', +\n...' to xyzList
             if kind == 'IdRef':
                 if name.find(' ') != -1:
-                    name = name[0:name.find(' ')]
+                    name = name[:name.find(' ')]
 
-            # Otherwise, if it's a pair in the form of 'Xyz, Abc, ...', change it to xyzAbcPairList
             elif kind.startswith('Pair'):
                 suffix = 'PairList'
 
@@ -333,14 +332,14 @@ class Writer:
         cpp_type = self.get_kind_cpp_type(kind)
 
         if is_array:
-            type_in = 'const ' + cpp_type + 'List &'
-            type_out = cpp_type + 'List *'
+            type_in = f'const {cpp_type}List &'
+            type_out = f'{cpp_type}List *'
         elif is_optional:
-            type_in = 'const ' + cpp_type + ' *'
-            type_out = cpp_type + ' *'
+            type_in = f'const {cpp_type} *'
+            type_out = f'{cpp_type} *'
         else:
             type_in = cpp_type
-            type_out = cpp_type + ' *'
+            type_out = f'{cpp_type} *'
 
         return (type_in, type_out, is_array, is_optional)
 
@@ -353,38 +352,42 @@ class Writer:
         item_dereferenced = item
         if is_optional:
             # If optional, surround with an if.
-            pre = 'if (' + operand_name + ') {\n'
+            pre = f'if ({operand_name}' + ') {\n'
             post = '\n}'
             accessor = '->'
-            item_dereferenced = '*' + item
+            item_dereferenced = f'*{item}'
         elif is_array:
             # If array, surround with a loop.
-            pre = 'for (const auto &operand : ' + operand_name + ') {\n'
+            pre = f'for (const auto &operand : {operand_name}' + ') {\n'
             post = '\n}'
             item = 'operand'
             item_dereferenced = item
 
         # Usually the operand is one uint32_t, but it may be pair.  Handle the pairs especially.
-        if kind == 'PairLiteralIntegerIdRef':
-            line = 'blob->push_back(' + item + accessor + 'literal);'
-            line += 'blob->push_back(' + item + accessor + 'id);'
-        elif kind == 'PairIdRefLiteralInteger':
-            line = 'blob->push_back(' + item + accessor + 'id);'
-            line += 'blob->push_back(' + item + accessor + 'literal);'
-        elif kind == 'PairIdRefIdRef':
-            line = 'blob->push_back(' + item + accessor + 'id1);'
-            line += 'blob->push_back(' + item + accessor + 'id2);'
-        elif kind == 'LiteralString':
+        if kind == 'LiteralString':
             line = '{size_t d = blob->size();'
-            line += 'blob->resize(d + strlen(' + item_dereferenced + ') / 4 + 1, 0);'
+            line += f'blob->resize(d + strlen({item_dereferenced}) / 4 + 1, 0);'
             # We currently don't have any big-endian devices in the list of supported platforms.
             # Literal strings in SPIR-V are stored little-endian (SPIR-V 1.0 Section 2.2.1, Literal
             # String), so if a big-endian device is to be supported, the string copy here should
             # be adjusted.
             line += 'ASSERT(IsLittleEndian());'
-            line += 'strcpy(reinterpret_cast<char *>(blob->data() + d), ' + item_dereferenced + ');}'
+            line += (
+                f'strcpy(reinterpret_cast<char *>(blob->data() + d), {item_dereferenced}'
+                + ');}'
+            )
+
+        elif kind == 'PairIdRefIdRef':
+            line = f'blob->push_back({item}{accessor}id1);'
+            line += f'blob->push_back({item}{accessor}id2);'
+        elif kind == 'PairIdRefLiteralInteger':
+            line = f'blob->push_back({item}{accessor}id);'
+            line += f'blob->push_back({item}{accessor}literal);'
+        elif kind == 'PairLiteralIntegerIdRef':
+            line = f'blob->push_back({item}{accessor}literal);'
+            line += f'blob->push_back({item}{accessor}id);'
         else:
-            line = 'blob->push_back(' + item_dereferenced + ');'
+            line = f'blob->push_back({item_dereferenced});'
 
         return pre + line + post
 
@@ -397,11 +400,11 @@ class Writer:
         if is_optional:
             # If optional, surround with an if, both checking if argument is provided, and whether
             # it exists.
-            pre = 'if (' + operand_name + ' && _o < _length) {\n'
+            pre = f'if ({operand_name}' + ' && _o < _length) {\n'
             post = '\n}'
         elif is_array:
             # If array, surround with an if and a loop.
-            pre = 'if (' + operand_name + ') {\n'
+            pre = f'if ({operand_name}' + ') {\n'
             pre += 'while (_o < _length) {\n'
             post = '\n}}'
             accessor = '.'
@@ -409,39 +412,53 @@ class Writer:
         # Usually the operand is one uint32_t, but it may be pair.  Handle the pairs especially.
         if kind == 'PairLiteralIntegerIdRef':
             if is_array:
-                line = operand_name + '->emplace_back(' + kind + '{LiteralInteger(_instruction[_o]), IdRef(_instruction[_o + 1])});'
+                line = (
+                    f'{operand_name}->emplace_back({kind}'
+                    + '{LiteralInteger(_instruction[_o]), IdRef(_instruction[_o + 1])});'
+                )
+
                 line += '_o += 2;'
             else:
-                line = operand_name + '->literal = LiteralInteger(_instruction[_o++]);'
-                line += operand_name + '->id = IdRef(_instruction[_o++]);'
+                line = f'{operand_name}->literal = LiteralInteger(_instruction[_o++]);'
+                line += f'{operand_name}->id = IdRef(_instruction[_o++]);'
         elif kind == 'PairIdRefLiteralInteger':
             if is_array:
-                line = operand_name + '->emplace_back(' + kind + '{IdRef(_instruction[_o]), LiteralInteger(_instruction[_o + 1])});'
+                line = (
+                    f'{operand_name}->emplace_back({kind}'
+                    + '{IdRef(_instruction[_o]), LiteralInteger(_instruction[_o + 1])});'
+                )
+
                 line += '_o += 2;'
             else:
-                line = operand_name + '->id = IdRef(_instruction[_o++]);'
-                line += operand_name + '->literal = LiteralInteger(_instruction[_o++]);'
+                line = f'{operand_name}->id = IdRef(_instruction[_o++]);'
+                line += f'{operand_name}->literal = LiteralInteger(_instruction[_o++]);'
         elif kind == 'PairIdRefIdRef':
             if is_array:
-                line = operand_name + '->emplace_back(' + kind + '{IdRef(_instruction[_o]), IdRef(_instruction[_o + 1])});'
+                line = (
+                    f'{operand_name}->emplace_back({kind}'
+                    + '{IdRef(_instruction[_o]), IdRef(_instruction[_o + 1])});'
+                )
+
                 line += '_o += 2;'
             else:
-                line = operand_name + '->id1 = IdRef(_instruction[_o++]);'
-                line += operand_name + '->id2 = IdRef(_instruction[_o++]);'
+                line = f'{operand_name}->id1 = IdRef(_instruction[_o++]);'
+                line += f'{operand_name}->id2 = IdRef(_instruction[_o++]);'
         elif kind == 'LiteralString':
             # The length of string in words is ceil((strlen(str) + 1) / 4).  This is equal to
             # (strlen(str)+1+3) / 4, which is equal to strlen(str)/4+1.
             assert (not is_array)
             # See handling of LiteralString in get_operand_push_back_line.
             line = 'ASSERT(IsLittleEndian());'
-            line += '*' + operand_name + ' = reinterpret_cast<const char *>(&_instruction[_o]);'
-            line += '_o += strlen(*' + operand_name + ') / 4 + 1;'
+            line += f'*{operand_name} = reinterpret_cast<const char *>(&_instruction[_o]);'
+            line += f'_o += strlen(*{operand_name}) / 4 + 1;'
+        elif is_array:
+            line = f'{operand_name}->emplace_back(_instruction[_o++]);'
         else:
-            if is_array:
-                line = operand_name + '->emplace_back(_instruction[_o++]);'
-            else:
-                line = '*' + operand_name + ' = ' + self.get_kind_cpp_type(
-                    kind) + '(_instruction[_o++]);'
+            line = (
+                f'*{operand_name} = {self.get_kind_cpp_type(kind)}'
+                + '(_instruction[_o++]);'
+            )
+
 
         return pre + line + post
 
@@ -451,8 +468,8 @@ class Writer:
         type_in, type_out, is_array, is_optional = self.get_operand_type_in_and_out(operand)
 
         # Make the parameter list
-        cpp_operands_in.append(', ' + type_in + ' ' + operand_name)
-        cpp_operands_out.append(', ' + type_out + ' ' + operand_name)
+        cpp_operands_in.append(f', {type_in} {operand_name}')
+        cpp_operands_out.append(f', {type_out} {operand_name}')
 
         # Make the builder body lines
         cpp_out_push_back_lines.append(
@@ -476,7 +493,7 @@ class Writer:
         operands = instruction.get('operands', [])
 
         # Skip if any of the operands are not supported
-        if any([operand['kind'] in self.unsupported_kinds for operand in operands]):
+        if any(operand['kind'] in self.unsupported_kinds for operand in operands):
             return
 
         cpp_operands_in = []

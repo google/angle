@@ -115,8 +115,17 @@ def dag_traverse(root_keys: Sequence[str], pre_recurse_func: Callable[[str], lis
 print('Importing graph', file=sys.stderr)
 
 try:
-    p = run_checked('gn', 'desc', '--format=json', str(OUT_DIR), '*', stdout=subprocess.PIPE,
-                env=GN_ENV, shell=(True if sys.platform == 'win32' else False))
+    p = run_checked(
+        'gn',
+        'desc',
+        '--format=json',
+        str(OUT_DIR),
+        '*',
+        stdout=subprocess.PIPE,
+        env=GN_ENV,
+        shell=sys.platform == 'win32',
+    )
+
 except subprocess.CalledProcessError:
     sys.stderr.buffer.write(b'"gn desc" failed. Is depot_tools in your PATH?\n')
     exit(1)
@@ -145,7 +154,7 @@ def flattened_target(target_name: str, descs: dict, stop_at_lib: bool =True) -> 
             return ((),)
 
         if dep_type == 'copy':
-            assert not deps, (target_name, dep['deps'])
+            assert not deps, (target_name, deps)
         else:
             assert dep_type in EXPECTED_TYPES, (k, dep_type)
             for (k,v) in dep.items():
@@ -157,9 +166,6 @@ def flattened_target(target_name: str, descs: dict, stop_at_lib: bool =True) -> 
                     if isinstance(existing, str):
                       existing = [existing]
                     flattened[k] = sortedi(set(existing + v))
-                else:
-                    #flattened.setdefault(k, v)
-                    pass
         return (deps,)
 
     dag_traverse(descs[target_name]['deps'], pre)
@@ -300,7 +306,11 @@ def has_all_includes(target_name: str, descs: dict) -> bool:
                 #print('  acceptable_sources:')
                 #for x in sorted(acceptable_sources):
                 #    print('   ', x)
-                print('Warning in {}: {}: Included file must be listed in the GN target or its public dependency: {}'.format(target_name, cur_file, include), file=sys.stderr)
+                print(
+                    f'Warning in {target_name}: {cur_file}: Included file must be listed in the GN target or its public dependency: {include}',
+                    file=sys.stderr,
+                )
+
                 ret = False
             #print('Looks valid:', m.group())
             continue
