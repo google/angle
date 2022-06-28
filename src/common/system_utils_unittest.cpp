@@ -12,6 +12,8 @@
 #include "common/system_utils.h"
 #include "util/test_utils.h"
 
+#include <fstream>
+#include <sstream>
 #include <vector>
 
 #if defined(ANGLE_PLATFORM_POSIX)
@@ -207,6 +209,78 @@ TEST(SystemUtils, IsFullPath)
     EXPECT_FALSE(IsFullPath(path2));
 }
 #endif
+
+// Temporary file creation is not supported on Android right now.
+#if defined(ANGLE_PLATFORM_ANDROID)
+#    define MAYBE_CreateAndDeleteTemporaryFile DISABLED_CreateAndDeleteTemporaryFile
+#    define MAYBE_CreateAndDeleteFileInTempDir DISABLED_CreateAndDeleteFileInTempDir
+#else
+#    define MAYBE_CreateAndDeleteTemporaryFile CreateAndDeleteTemporaryFile
+#    define MAYBE_CreateAndDeleteFileInTempDir CreateAndDeleteFileInTempDir
+#endif  // defined(ANGLE_PLATFORM_ANDROID)
+
+// Test creating/using temporary file
+TEST(SystemUtils, MAYBE_CreateAndDeleteTemporaryFile)
+{
+    Optional<std::string> path = CreateTemporaryFile();
+    ASSERT_TRUE(path.valid());
+    ASSERT_TRUE(!path.value().empty());
+
+    const std::string testContents = "test output";
+
+    // Test writing
+    std::ofstream out;
+    out.open(path.value());
+    ASSERT_TRUE(out.is_open());
+    out << testContents;
+    EXPECT_TRUE(out.good());
+    out.close();
+
+    // Test reading
+    std::ifstream in;
+    in.open(path.value());
+    EXPECT_TRUE(in.is_open());
+    std::ostringstream sstr;
+    sstr << in.rdbuf();
+    EXPECT_EQ(sstr.str(), testContents);
+    in.close();
+
+    // Test deleting
+    EXPECT_TRUE(DeleteSystemFile(path.value().c_str()));
+}
+
+// Test creating/using file created in system's temporary directory
+TEST(SystemUtils, MAYBE_CreateAndDeleteFileInTempDir)
+{
+    Optional<std::string> tempDir = GetTempDirectory();
+    ASSERT_TRUE(tempDir.valid());
+
+    Optional<std::string> path = CreateTemporaryFileInDirectory(tempDir.value());
+    ASSERT_TRUE(path.valid());
+    ASSERT_TRUE(!path.value().empty());
+
+    const std::string testContents = "test output";
+
+    // Test writing
+    std::ofstream out;
+    out.open(path.value());
+    ASSERT_TRUE(out.is_open());
+    out << "test output";
+    EXPECT_TRUE(out.good());
+    out.close();
+
+    // Test reading
+    std::ifstream in;
+    in.open(path.value());
+    EXPECT_TRUE(in.is_open());
+    std::ostringstream sstr;
+    sstr << in.rdbuf();
+    EXPECT_EQ(sstr.str(), testContents);
+    in.close();
+
+    // Test deleting
+    EXPECT_TRUE(DeleteSystemFile(path.value().c_str()));
+}
 
 // Test retrieving page size
 TEST(SystemUtils, PageSize)

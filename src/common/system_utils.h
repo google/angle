@@ -43,6 +43,10 @@ bool IsFullPath(std::string dirName);
 std::string GetRootDirectory();
 std::string ConcatenatePath(std::string first, std::string second);
 
+Optional<std::string> GetTempDirectory();
+Optional<std::string> CreateTemporaryFileInDirectory(const std::string &directory);
+Optional<std::string> CreateTemporaryFile();
+
 // Get absolute time in seconds.  Use this function to get an absolute time with an unknown origin.
 double GetCurrentSystemTime();
 // Get CPU time for current process in seconds.

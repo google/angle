@@ -155,6 +155,15 @@ std::string ConcatenatePath(std::string first, std::string second)
     return first + GetPathSeparator() + second;
 }
 
+Optional<std::string> CreateTemporaryFile()
+{
+    const Optional<std::string> tempDir = GetTempDirectory();
+    if (!tempDir.valid())
+        return Optional<std::string>::Invalid();
+
+    return CreateTemporaryFileInDirectory(tempDir.value());
+}
+
 PageFaultHandler::PageFaultHandler(PageFaultCallback callback) : mCallback(callback) {}
 PageFaultHandler::~PageFaultHandler() {}
 

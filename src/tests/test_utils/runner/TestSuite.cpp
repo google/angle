@@ -1382,18 +1382,16 @@ void TestSuite::onCrashOrTimeout(TestResultType crashOrTimeout)
 bool TestSuite::launchChildTestProcess(uint32_t batchId,
                                        const std::vector<TestIdentifier> &testsInBatch)
 {
-    constexpr uint32_t kMaxPath = 1000;
-
     // Create a temporary file to store the test list
     ProcessInfo processInfo;
 
-    char filterBuffer[kMaxPath] = {};
-    if (!CreateTemporaryFile(filterBuffer, kMaxPath))
+    Optional<std::string> filterBuffer = CreateTemporaryFile();
+    if (!filterBuffer.valid())
     {
         std::cerr << "Error creating temporary file for test list.\n";
         return false;
     }
-    processInfo.filterFileName.assign(filterBuffer);
+    processInfo.filterFileName.assign(filterBuffer.value());
 
     std::string filterString = GetTestFilter(testsInBatch);
 
@@ -1411,13 +1409,13 @@ bool TestSuite::launchChildTestProcess(uint32_t batchId,
     std::string filterFileArg = kFilterFileArg + processInfo.filterFileName;
 
     // Create a temporary file to store the test output.
-    char resultsBuffer[kMaxPath] = {};
-    if (!CreateTemporaryFile(resultsBuffer, kMaxPath))
+    Optional<std::string> resultsBuffer = CreateTemporaryFile();
+    if (!resultsBuffer.valid())
     {
         std::cerr << "Error creating temporary file for test list.\n";
         return false;
     }
-    processInfo.resultsFileName.assign(resultsBuffer);
+    processInfo.resultsFileName.assign(resultsBuffer.value());
 
     std::string resultsFileArg = kResultFileArg + processInfo.resultsFileName;
 
