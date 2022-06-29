@@ -37,19 +37,9 @@ class DisplayVkWayland : public DisplayVkLinux
 
     bool isWayland() const override;
 
-    bool supportsDmaBufFormat(EGLint format) const override;
-    egl::Error queryDmaBufFormats(EGLint maxFormats, EGLint *formats, EGLint *numFormats) override;
-    egl::Error queryDmaBufModifiers(EGLint format,
-                                    EGLint maxModifiers,
-                                    EGLuint64KHR *modifiers,
-                                    EGLBoolean *externalOnly,
-                                    EGLint *numModifiers) override;
-
   private:
     bool mOwnDisplay;
     wl_display *mWaylandDisplay;
-    // Supported DRM formats
-    std::vector<EGLint> mDrmFormats;
 };
 
 }  // namespace rx
