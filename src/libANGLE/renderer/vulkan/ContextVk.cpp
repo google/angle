@@ -6338,7 +6338,8 @@ angle::Result ContextVk::updateDriverUniformsDescriptorSet(
     vk::DescriptorCacheResult cacheResult;
     ANGLE_TRY(mDriverUniformsDescriptorPools[pipelineType].getOrAllocateDescriptorSet(
         this, commandBufferHelper, desc.getDesc(), driverUniforms.descriptorSetLayout.get(),
-        &driverUniforms.descriptorPoolBinding, &driverUniforms.descriptorSet, &cacheResult));
+        &driverUniforms.descriptorPoolBinding, &driverUniforms.descriptorSet, nullptr,
+        &cacheResult));
     if (cacheResult == vk::DescriptorCacheResult::CacheHit)
     {
         // The descriptor pool that this descriptor set was allocated from needs to be retained each

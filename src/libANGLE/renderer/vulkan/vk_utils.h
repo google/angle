@@ -638,6 +638,8 @@ class BindingPointer final : angle::NonCopyable
 
     bool valid() const { return mRefCounted != nullptr; }
 
+    RefCounted<T> *getRefCounted() { return mRefCounted; }
+
   private:
     RefCounted<T> *mRefCounted = nullptr;
 };
