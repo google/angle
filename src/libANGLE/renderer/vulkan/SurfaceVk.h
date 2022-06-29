@@ -298,6 +298,8 @@ class WindowSurfaceVk : public SurfaceVk
 
     angle::Result onSharedPresentContextFlush(const gl::Context *context);
 
+    bool hasStagedUpdates() const;
+
   protected:
     angle::Result prepareSwapImpl(const gl::Context *context);
     angle::Result swapImpl(const gl::Context *context,

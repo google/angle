@@ -1933,6 +1933,11 @@ angle::Result WindowSurfaceVk::onSharedPresentContextFlush(const gl::Context *co
     return swapImpl(context, nullptr, 0, nullptr);
 }
 
+bool WindowSurfaceVk::hasStagedUpdates() const
+{
+    return mSwapchainImages[mCurrentSwapchainImageIndex].image.hasStagedUpdatesInAllocatedLevels();
+}
+
 void WindowSurfaceVk::deferAcquireNextImage()
 {
     mNeedToAcquireNextSwapchainImage = true;

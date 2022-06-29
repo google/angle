@@ -1222,15 +1222,18 @@ angle::Result ContextVk::initialize()
 
 angle::Result ContextVk::flush(const gl::Context *context)
 {
-    // Skip the flush if there's nothing recorded.
+    // Skip the flush if there's nothing recorded.  For single-buffer swapchains, flush should
+    // ensure updates reach the screen, so even staged updates are considered something pending
+    // submission.
+    const bool isSingleBuffer =
+        mCurrentWindowSurface != nullptr && mCurrentWindowSurface->isSharedPresentMode();
+
     if (!mHasAnyCommandsPendingSubmission && !hasStartedRenderPass() &&
-        mOutsideRenderPassCommands->empty())
+        mOutsideRenderPassCommands->empty() &&
+        !(isSingleBuffer && mCurrentWindowSurface->hasStagedUpdates()))
     {
         return angle::Result::Continue;
     }
-
-    const bool isSingleBuffer =
-        (mCurrentWindowSurface != nullptr) && mCurrentWindowSurface->isSharedPresentMode();
 
     // Don't defer flushes in single-buffer mode.  In this mode, the application is not required to
     // call eglSwapBuffers(), and glFlush() is expected to ensure that work is submitted.
