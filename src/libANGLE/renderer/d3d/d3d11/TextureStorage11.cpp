@@ -682,8 +682,9 @@ angle::Result TextureStorage11::generateMipmap(const gl::Context *context,
 
     RenderTarget11 *srcRT11                = GetAs<RenderTarget11>(source);
     RenderTarget11 *dstRT11                = GetAs<RenderTarget11>(dest);
-    const d3d11::SharedSRV &sourceSRV      = srcRT11->getBlitShaderResourceView(context);
     const d3d11::RenderTargetView &destRTV = dstRT11->getRenderTargetView();
+    const d3d11::SharedSRV *sourceSRV;
+    ANGLE_TRY(srcRT11->getBlitShaderResourceView(context, &sourceSRV));
 
     gl::Box sourceArea(0, 0, 0, source->getWidth(), source->getHeight(), source->getDepth());
     gl::Extents sourceSize(source->getWidth(), source->getHeight(), source->getDepth());
@@ -696,7 +697,7 @@ angle::Result TextureStorage11::generateMipmap(const gl::Context *context,
         gl::GetSizedInternalFormatInfo(source->getInternalFormat());
     GLenum format = sourceInternalFormat.format;
     GLenum type   = sourceInternalFormat.type;
-    return blitter->copyTexture(context, sourceSRV, sourceArea, sourceSize, format, destRTV,
+    return blitter->copyTexture(context, *sourceSRV, sourceArea, sourceSize, format, destRTV,
                                 destArea, destSize, nullptr, format, type, GL_LINEAR, false, false,
                                 false);
 }
@@ -2095,7 +2096,10 @@ angle::Result TextureStorage11_EGLImage::createSRVForSampler(const gl::Context *
 
         ASSERT(texture == renderTarget->getTexture());
 
-        *outSRV = renderTarget->getShaderResourceView(context).makeCopy();
+        const d3d11::SharedSRV *srv;
+        ANGLE_TRY(renderTarget->getShaderResourceView(context, &srv));
+
+        *outSRV = srv->makeCopy();
     }
 
     return angle::Result::Continue;

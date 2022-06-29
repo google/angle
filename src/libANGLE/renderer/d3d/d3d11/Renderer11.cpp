@@ -2559,10 +2559,11 @@ angle::Result Renderer11::copyImageInternal(const gl::Context *context,
 
     ASSERT(!sourceRenderTarget->isMultisampled());
 
-    const d3d11::SharedSRV &source = sourceRenderTarget->getBlitShaderResourceView(context);
-    ASSERT(source.valid());
+    const d3d11::SharedSRV *source;
+    ANGLE_TRY(sourceRenderTarget->getBlitShaderResourceView(context, &source));
+    ASSERT(source->valid());
 
-    ANGLE_TRY(mBlit->copyTexture(context, source, sourceArea, sourceSize, sourceFormat, dest,
+    ANGLE_TRY(mBlit->copyTexture(context, *source, sourceArea, sourceSize, sourceFormat, dest,
                                  destArea, destSize, nullptr, gl::GetUnsizedFormat(destFormat),
                                  GL_NONE, GL_NEAREST, false, false, false));
 
@@ -3632,11 +3633,15 @@ angle::Result Renderer11::blitRenderbufferRect(const gl::Context *context,
         ASSERT(readRenderTarget11);
         readTexture     = readRenderTarget11->getTexture();
         readSubresource = readRenderTarget11->getSubresourceIndex();
-        readSRV         = readRenderTarget11->getBlitShaderResourceView(context).makeCopy();
+        const d3d11::SharedSRV *blitSRV;
+        ANGLE_TRY(readRenderTarget11->getBlitShaderResourceView(context, &blitSRV));
+        readSRV = blitSRV->makeCopy();
         if (!readSRV.valid())
         {
             ASSERT(depthBlit || stencilBlit);
-            readSRV = readRenderTarget11->getShaderResourceView(context).makeCopy();
+            const d3d11::SharedSRV *srv;
+            ANGLE_TRY(readRenderTarget11->getShaderResourceView(context, &srv));
+            readSRV = srv->makeCopy();
         }
         ASSERT(readSRV.valid());
     }
@@ -3921,9 +3926,10 @@ angle::Result Renderer11::resolveMultisampledTexture(const gl::Context *context,
     const auto &formatSet = renderTarget->getFormatSet();
 
     ASSERT(renderTarget->isMultisampled());
-    const d3d11::SharedSRV &sourceSRV = renderTarget->getShaderResourceView(context);
+    const d3d11::SharedSRV *sourceSRV;
+    ANGLE_TRY(renderTarget->getShaderResourceView(context, &sourceSRV));
     D3D11_SHADER_RESOURCE_VIEW_DESC sourceSRVDesc;
-    sourceSRV.get()->GetDesc(&sourceSRVDesc);
+    sourceSRV->get()->GetDesc(&sourceSRVDesc);
     ASSERT(sourceSRVDesc.ViewDimension == D3D_SRV_DIMENSION_TEXTURE2DMS ||
            sourceSRVDesc.ViewDimension == D3D_SRV_DIMENSION_TEXTURE2DMSARRAY);
 
