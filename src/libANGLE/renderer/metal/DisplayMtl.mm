@@ -1045,6 +1045,10 @@ void DisplayMtl::initializeTextureCaps() const
         mNativeLimitations.emulatedEtc1 = true;
     }
 
+    // Enable EXT_compressed_ETC1_RGB8_sub_texture if ETC1 is supported.
+    mNativeExtensions.compressedETC1RGB8SubTextureEXT =
+        mNativeExtensions.compressedETC1RGB8TextureOES;
+
     // Enable ASTC sliced 3D, requires MTLGPUFamilyApple3
     if (supportsAppleGPUFamily(3) && mNativeExtensions.textureCompressionAstcLdrKHR)
     {

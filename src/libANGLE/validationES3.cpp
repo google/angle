@@ -705,7 +705,7 @@ bool ValidateES3TexImageParametersBase(const Context *context,
             }
 
             // GL_EXT_compressed_ETC1_RGB8_sub_texture allows this format
-            if (actualInternalFormat == GL_ETC1_RGB8_OES &&
+            if (IsETC1Format(actualInternalFormat) &&
                 !context->getExtensions().compressedETC1RGB8SubTextureEXT)
             {
                 context->validationError(entryPoint, GL_INVALID_OPERATION, kInvalidInternalFormat);

@@ -1535,7 +1535,7 @@ void GenerateCaps(const FunctionsGL *functions,
     // ANGLE treats ETC1 as ETC2 for ES 3.0 and higher because it becomes a core format, and they
     // are backwards compatible.
     extensions->compressedETC1RGB8SubTextureEXT =
-        functions->isAtLeastGLES(gl::Version(3, 0)) ||
+        extensions->compressedETC2RGB8TextureOES || functions->isAtLeastGLES(gl::Version(3, 0)) ||
         functions->hasGLESExtension("GL_EXT_compressed_ETC1_RGB8_sub_texture");
 
 #if defined(ANGLE_PLATFORM_MACOS) || defined(ANGLE_PLATFORM_MACCATALYST)

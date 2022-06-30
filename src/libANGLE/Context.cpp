@@ -4020,7 +4020,8 @@ void Context::initCaps()
     // Hide emulated ETC1 extension from WebGL contexts.
     if (mWebGLContext && getLimitations().emulatedEtc1)
     {
-        mSupportedExtensions.compressedETC1RGB8TextureOES = false;
+        mSupportedExtensions.compressedETC1RGB8SubTextureEXT = false;
+        mSupportedExtensions.compressedETC1RGB8TextureOES    = false;
     }
 
     // If we're capturing application calls for replay, apply some feature limits to increase
