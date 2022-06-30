@@ -774,6 +774,11 @@ void ANGLERenderTest::addExtensionPrerequisite(const char *extensionName)
     mExtensionPrerequisites.push_back(extensionName);
 }
 
+void ANGLERenderTest::addIntegerPrerequisite(GLenum target, int min)
+{
+    mIntegerPrerequisites.push_back({target, min});
+}
+
 void ANGLERenderTest::SetUp()
 {
     if (mSkipTest)
@@ -858,6 +863,7 @@ void ANGLERenderTest::SetUp()
     }
 
     skipTestIfMissingExtensionPrerequisites();
+    skipTestIfFailsIntegerPrerequisite();
 
     if (mSkipTest)
     {
@@ -1204,6 +1210,23 @@ void ANGLERenderTest::skipTestIfMissingExtensionPrerequisites()
         {
             skipTest(std::string("Test skipped due to missing extension: ") + extension);
             return;
+        }
+    }
+}
+
+void ANGLERenderTest::skipTestIfFailsIntegerPrerequisite()
+{
+    for (const auto [target, minRequired] : mIntegerPrerequisites)
+    {
+        GLint driverValue;
+        glGetIntegerv(target, &driverValue);
+        if (static_cast<int>(driverValue) < minRequired)
+        {
+            std::stringstream ss;
+            ss << "Test skipped due to value (" << std::to_string(static_cast<int>(driverValue))
+               << ") being less than the prerequisite minimum (" << std::to_string(minRequired)
+               << ") for GL constant 0x" << std::hex << target;
+            skipTest(ss.str());
         }
     }
 }
