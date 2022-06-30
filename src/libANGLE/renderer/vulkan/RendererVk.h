@@ -606,10 +606,9 @@ class RendererVk : angle::NonCopyable
         return mSuballocationGarbageSizeInBytesCachedAtomic.load(std::memory_order_consume);
     }
 
-    ANGLE_INLINE VkFilter getPreferredFilterForYUV()
+    ANGLE_INLINE VkFilter getPreferredFilterForYUV(VkFilter defaultFilter)
     {
-        return getFeatures().preferLinearFilterForYUV.enabled ? VK_FILTER_LINEAR
-                                                              : VK_FILTER_NEAREST;
+        return getFeatures().preferLinearFilterForYUV.enabled ? VK_FILTER_LINEAR : defaultFilter;
     }
 
   private:

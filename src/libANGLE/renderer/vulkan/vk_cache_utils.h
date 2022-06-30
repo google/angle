@@ -884,7 +884,8 @@ class YcbcrConversionDesc final
                 VkFilter chromaFilter,
                 VkComponentMapping components,
                 angle::FormatID intendedFormatID);
-    void updateChromaFilter(VkFilter filter);
+    VkFilter getChromaFilter() const { return static_cast<VkFilter>(mChromaFilter); }
+    bool updateChromaFilter(RendererVk *rendererVk, VkFilter filter);
     uint64_t getExternalFormat() const { return mIsExternalFormat ? mExternalOrVkFormat : 0; }
 
     angle::Result init(Context *context, SamplerYcbcrConversion *conversionOut) const;

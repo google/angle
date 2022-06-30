@@ -465,6 +465,9 @@ class Texture2DTestES3 : public Texture2DTest
     }
 };
 
+class Texture2DTestES3YUV : public Texture2DTestES3
+{};
+
 class Texture2DTestES3RobustInit : public Texture2DTestES3
 {
   protected:
@@ -3250,6 +3253,36 @@ TEST_P(Texture2DTestES3, TexImageWithDepthStencilPBO)
     ASSERT_GL_NO_ERROR();
 
     EXPECT_PIXEL_RECT_EQ(0, 0, kSize, kSize, GLColor::red);
+}
+
+// Test functionality of GL_ANGLE_yuv_internal_format with min/mag filters
+// set to nearest and linear modes.
+TEST_P(Texture2DTestES3YUV, TexStorage2DYuvFilterModes)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_yuv_internal_format"));
+
+    // Create YUV texture
+    GLTexture yuvTexture;
+    GLubyte yuvColor[]         = {40, 40, 40, 40, 40, 40, 40, 40, 240, 109, 240, 109};
+    GLubyte expectedRgbColor[] = {0, 0, 255, 255};
+    createImmutableTexture2D(yuvTexture, 2, 4, GL_G8_B8R8_2PLANE_420_UNORM_ANGLE,
+                             GL_G8_B8R8_2PLANE_420_UNORM_ANGLE, GL_UNSIGNED_BYTE, 1, yuvColor);
+
+    // Default is nearest filter mode
+    verifyResults2D(yuvTexture, expectedRgbColor);
+    ASSERT_GL_NO_ERROR();
+
+    // Enable linear filter mode
+    glBindTexture(GL_TEXTURE_2D, yuvTexture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    verifyResults2D(yuvTexture, expectedRgbColor);
+    ASSERT_GL_NO_ERROR();
+
+    const int windowHeight = getWindowHeight();
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor::blue, 1);
+    EXPECT_PIXEL_COLOR_NEAR(0, windowHeight - 1, GLColor::blue, 1);
+    EXPECT_PIXEL_COLOR_NEAR(0, windowHeight / 2, GLColor::blue, 1);
 }
 
 // Test functionality of GL_ANGLE_yuv_internal_format while cycling through RGB and YUV sources
@@ -10914,6 +10947,10 @@ ANGLE_INSTANTIATE_TEST_ES2(SamplerArrayAsFunctionParameterTest);
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(Texture2DTestES3);
 ANGLE_INSTANTIATE_TEST_ES3_AND(Texture2DTestES3,
                                ES3_VULKAN().enable(Feature::AllocateNonZeroMemory));
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(Texture2DTestES3YUV);
+ANGLE_INSTANTIATE_TEST_ES3_AND(Texture2DTestES3YUV,
+                               ES3_VULKAN().enable(Feature::PreferLinearFilterForYUV));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(Texture2DTestES3RobustInit);
 ANGLE_INSTANTIATE_TEST_ES3(Texture2DTestES3RobustInit);

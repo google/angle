@@ -3022,8 +3022,8 @@ TEST_P(ImageTestES3, SourceYUVAHBTargetExternalYUVSampleLinearFiltering)
     const int windowHeight = getWindowHeight();
     ASSERT_GE(windowHeight, 8);
 
-    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
-    EXPECT_PIXEL_COLOR_EQ(0, windowHeight - 1, GLColor::red);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor::black, 1);
+    EXPECT_PIXEL_COLOR_NEAR(0, windowHeight - 1, GLColor::red, 1);
 
     // Approximately half-red:
     EXPECT_PIXEL_COLOR_NEAR(0, windowHeight / 2, GLColor(127, 0, 0, 255), 15.0);

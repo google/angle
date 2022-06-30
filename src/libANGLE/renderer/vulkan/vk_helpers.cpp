@@ -5212,7 +5212,7 @@ angle::Result ImageHelper::initExternal(Context *context,
                                                             : VK_CHROMA_LOCATION_MIDPOINT;
         VkSamplerYcbcrModelConversion conversionModel = VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_601;
         VkSamplerYcbcrRange colorRange                = VK_SAMPLER_YCBCR_RANGE_ITU_NARROW;
-        VkFilter chromaFilter                         = rendererVk->getPreferredFilterForYUV();
+        VkFilter chromaFilter                         = kDefaultYCbCrChromaFilter;
         VkComponentMapping components                 = {
                             VK_COMPONENT_SWIZZLE_IDENTITY,
                             VK_COMPONENT_SWIZZLE_IDENTITY,
@@ -7064,21 +7064,6 @@ void ImageHelper::onWrite(gl::LevelIndex levelStart,
 
     // Mark contents of the given subresource as defined.
     setContentDefined(toVkLevel(levelStart), levelCount, layerStart, layerCount, aspectFlags);
-}
-
-void ImageHelper::updateImmutableSamplerState(const gl::SamplerState &samplerState)
-{
-    // VUID-VkSamplerCreateInfo-minFilter VkCreateSampler:
-    // VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT
-    // specifies that the format can have different chroma, min, and mag filters. However,
-    // VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT is
-    // not supported for VkSamplerYcbcrConversionCreateInfo.format = VK_FORMAT_UNDEFINED so
-    // chromaFilter needs to be equal to minFilter/magFilter.
-    if (mYcbcrConversionDesc.getExternalFormat() != 0)
-    {
-        ASSERT(samplerState.getMinFilter() == samplerState.getMagFilter());
-        mYcbcrConversionDesc.updateChromaFilter(gl_vk::GetFilter(samplerState.getMinFilter()));
-    }
 }
 
 bool ImageHelper::hasSubresourceDefinedContent(gl::LevelIndex level,
