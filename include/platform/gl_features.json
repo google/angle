@@ -258,10 +258,10 @@
             "issue": "http://crbug.com/849576"
         },
         {
-            "name": "limit_max_texture_size_to_4096",
+            "name": "limit_webgl_max_texture_size_to_4096",
             "category": "Workarounds",
             "description": [
-                "Limit max texture size to 4096 to avoid frequent ",
+                "Limit webgl max texture size to 4096 to avoid frequent ",
                 "out-of-memory errors"
             ],
             "issue": "http://crbug.com/927470"
