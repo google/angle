@@ -165,6 +165,7 @@ enum class Feature
     PermanentlySwitchToFramebufferFetchMode,
     PersistentlyMappedBuffers,
     PreAddTexelFetchOffsets,
+    PrecisionSafeDivision,
     PreferAggregateBarrierCalls,
     PreferCPUForBufferSubData,
     PreferDeviceLocalMemoryHostVisible,

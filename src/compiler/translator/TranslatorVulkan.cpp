@@ -1024,8 +1024,9 @@ bool TranslatorVulkan::translateImpl(TInfoSinkBase &sink,
             // attachment variable then create a new one.
             if (getAdvancedBlendEquations().any() &&
                 (compileOptions & SH_ADD_ADVANCED_BLEND_EQUATIONS_EMULATION) != 0 &&
-                !EmulateAdvancedBlendEquations(this, root, &getSymbolTable(), driverUniforms,
-                                               &mUniforms, getAdvancedBlendEquations()))
+                !EmulateAdvancedBlendEquations(this, compileOptions, root, &getSymbolTable(),
+                                               driverUniforms, &mUniforms,
+                                               getAdvancedBlendEquations()))
             {
                 return false;
             }

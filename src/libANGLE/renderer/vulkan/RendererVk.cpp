@@ -3593,6 +3593,10 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     ANGLE_FEATURE_CONDITION(&mFeatures, emulateAdvancedBlendEquations,
                             !mFeatures.supportsBlendOperationAdvanced.enabled && !isIntel);
 
+    // Workaround for platforms that do not return 1.0f even when dividend and divisor have the same
+    // value.
+    ANGLE_FEATURE_CONDITION(&mFeatures, precisionSafeDivision, isSamsung || isAMD);
+
     // http://anglebug.com/6933
     // Android expects VkPresentRegionsKHR rectangles with a bottom-left origin, while spec
     // states they should have a top-left origin.

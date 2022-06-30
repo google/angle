@@ -791,6 +791,14 @@
             "issue": "http://anglebug.com/3586"
         },
         {
+            "name": "precision_safe_division",
+            "category": "Workarounds",
+            "description": [
+                "Special case handling for platforms that do not generate 1.0f even when the dividend and",
+                "divisor have the same value"
+            ]
+        },
+        {
             "name": "bottom_left_origin_present_region_rectangles",
             "category": "Workarounds",
             "description": [

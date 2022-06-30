@@ -174,6 +174,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::PermanentlySwitchToFramebufferFetchMode, "permanentlySwitchToFramebufferFetchMode"},
     {Feature::PersistentlyMappedBuffers, "persistentlyMappedBuffers"},
     {Feature::PreAddTexelFetchOffsets, "preAddTexelFetchOffsets"},
+    {Feature::PrecisionSafeDivision, "precisionSafeDivision"},
     {Feature::PreferAggregateBarrierCalls, "preferAggregateBarrierCalls"},
     {Feature::PreferCPUForBufferSubData, "preferCPUForBufferSubData"},
     {Feature::PreferDeviceLocalMemoryHostVisible, "preferDeviceLocalMemoryHostVisible"},

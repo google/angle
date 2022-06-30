@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 280
+#define ANGLE_SH_VERSION 281
 
 enum ShShaderSpec
 {
@@ -351,6 +351,10 @@ const ShCompileOptions SH_ADD_EXPLICIT_BOOL_CASTS = UINT64_C(1) << 59;
 // Add round() after applying dither.  This works around a Qualcomm quirk where values can get
 // ceil()ed instead.
 const ShCompileOptions SH_ROUND_OUTPUT_AFTER_DITHERING = UINT64_C(1) << 60;
+
+// Even when the dividend and divisor have the same value some platforms do not return 1.0f.
+// Need to emit different division code for such platforms.
+const ShCompileOptions SH_PRECISION_SAFE_DIVISION = UINT64_C(1) << 61;
 
 // The 64 bits hash function. The first parameter is the input string; the
 // second parameter is the string length.
