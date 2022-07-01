@@ -163,7 +163,7 @@ class ProgramExecutableVk
                                               vk::CommandBufferHelperCommon *commandBufferHelper,
                                               const vk::DescriptorSetDesc &texturesDesc);
     angle::Result updateShaderResourcesDescriptorSet(
-        vk::Context *context,
+        ContextVk *contextVk,
         UpdateDescriptorSetsBuilder *updateBuilder,
         vk::CommandBufferHelperCommon *commandBufferHelper,
         const vk::DescriptorSetDescBuilder &shaderResourcesDesc);
