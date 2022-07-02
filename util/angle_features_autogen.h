@@ -157,6 +157,7 @@ enum class Feature
     LogMemoryReportCallbacks,
     LogMemoryReportStats,
     LoseContextOnOutOfMemory,
+    MapUnspecifiedColorSpaceToPassThrough,
     MrtPerfWorkaround,
     MultisampleColorFormatShaderReadWorkaround,
     MutableMipmapTextureUpload,

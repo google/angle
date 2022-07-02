@@ -699,6 +699,14 @@ struct FeaturesVk : FeatureSetBase
         "Work around a driver bug where 0 in stencil write mask static state would make the"
         "corresponding dynamic state malfunction in the presence of discard or alpha to coverage",
         &members, "http://anglebug.com/7556"};
+
+    FeatureInfo mapUnspecifiedColorSpaceToPassThrough = {
+        "mapUnspecifiedColorSpaceToPassThrough",
+        FeatureCategory::VulkanFeatures,
+        "Use VK_COLOR_SPACE_PASS_THROUGH_EXT for EGL_NONE or unspecifed color "
+        "spaces",
+        &members,
+    };
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

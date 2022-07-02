@@ -941,6 +941,14 @@
                 "corresponding dynamic state malfunction in the presence of discard or alpha to coverage"
             ],
             "issue": "http://anglebug.com/7556"
+        },
+        {
+            "name": "map_unspecified_color_space_to_pass_through",
+            "category": "Features",
+            "description": [
+                "Use VK_COLOR_SPACE_PASS_THROUGH_EXT for EGL_NONE or unspecifed color ",
+                "spaces"
+            ]
         }
     ]
 }
