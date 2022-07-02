@@ -19,7 +19,7 @@ using namespace angle;
 //
 // NOTE: the hope is for this to eventually move into ANGLE.
 
-#define GL_DISABLED_ANGLE 0xbaadbeef
+#define GL_DISABLE_ANGLE 0xbaadbeef
 
 constexpr static int MAX_LOCAL_STORAGE_PLANES                = 3;
 constexpr static int MAX_LOCAL_STORAGE_BYTES                 = 16;
@@ -334,7 +334,7 @@ void PixelLocalStoragePrototype::beginPixelLocalStorage(GLsizei n, const GLenum 
     {
         GLuint tex            = 0;
         GLenum internalformat = GL_RGBA8;
-        if (loadOps[i] != GL_DISABLED_ANGLE)
+        if (loadOps[i] != GL_DISABLE_ANGLE)
         {
             ASSERT(planes[i].tex());  // GL_INVALID_FRAMEBUFFER_OPERATION!
             tex            = planes[i].tex();
@@ -1101,7 +1101,7 @@ TEST_P(PixelLocalStorageTest, ClearValue)
     EXPECT_PIXEL_RECT32UI_EQ(0, 0, W, H, GLColor32UI(0, 0, 0, 0));
 }
 
-// Check proper support of GL_ZERO, GL_KEEP, GL_REPLACE, and GL_DISABLED_ANGLE loadOps. Also verify
+// Check proper support of GL_ZERO, GL_KEEP, GL_REPLACE, and GL_DISABLE_ANGLE loadOps. Also verify
 // that it works do draw with GL_MAX_LOCAL_STORAGE_PLANES_ANGLE planes.
 TEST_P(PixelLocalStorageTest, LoadOps)
 {
@@ -1174,10 +1174,10 @@ TEST_P(PixelLocalStorageTest, LoadOps)
     // Detach the last read pls texture from the framebuffer.
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
 
-    // Now test GL_DISABLED_ANGLE and GL_ZERO.
+    // Now test GL_DISABLE_ANGLE and GL_ZERO.
     for (int i = 0; i < MAX_LOCAL_STORAGE_PLANES; ++i)
     {
-        loadOps[i] = loadOps[i] == GL_REPLACE ? GL_ZERO : GL_DISABLED_ANGLE;
+        loadOps[i] = loadOps[i] == GL_REPLACE ? GL_ZERO : GL_DISABLE_ANGLE;
     }
 
     // Execute a pls pass without a draw.
@@ -1794,7 +1794,7 @@ TEST_P(PixelLocalStorageTest, LoadOnly)
     glDrawBuffers(1, GLenumArray({GL_COLOR_ATTACHMENT0}));
     glClear(GL_COLOR_BUFFER_BIT);
 
-    glBeginPixelLocalStorageANGLE(2, GLenumArray({GL_DISABLED_ANGLE, GL_KEEP}));
+    glBeginPixelLocalStorageANGLE(2, GLenumArray({GL_DISABLE_ANGLE, GL_KEEP}));
 
     useProgram(R"(
     PIXEL_LOCAL_DECL(tex, binding=1, rgba8);
