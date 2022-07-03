@@ -6838,7 +6838,8 @@ bool ValidateGetRenderbufferParameterivBase(const Context *context,
             break;
 
         case GL_RENDERBUFFER_SAMPLES_ANGLE:
-            if (!context->getExtensions().framebufferMultisampleANGLE)
+            if (context->getClientMajorVersion() < 3 &&
+                !context->getExtensions().framebufferMultisampleANGLE)
             {
                 context->validationError(entryPoint, GL_INVALID_ENUM, kExtensionNotEnabled);
                 return false;

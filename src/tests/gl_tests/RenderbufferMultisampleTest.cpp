@@ -25,6 +25,7 @@ class RenderbufferMultisampleTest : public ANGLETest<>
         setConfigGreenBits(8);
         setConfigBlueBits(8);
         setConfigAlphaBits(8);
+        setExtensionsEnabled(false);
     }
 
     void testSetUp() override
@@ -58,6 +59,13 @@ TEST_P(RenderbufferMultisampleTest, IntegerInternalformat)
     if (getClientMajorVersion() < 3 || getClientMinorVersion() < 1)
     {
         ASSERT_GL_ERROR(GL_INVALID_OPERATION);
+
+        // Check that NUM_SAMPLE_COUNTS is zero
+        GLint numSampleCounts = 0;
+        glGetInternalformativ(GL_RENDERBUFFER, GL_RGBA8I, GL_NUM_SAMPLE_COUNTS, 1,
+                              &numSampleCounts);
+        ASSERT_GL_NO_ERROR();
+        EXPECT_EQ(numSampleCounts, 0);
     }
     else
     {
