@@ -2137,11 +2137,7 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
                             isTSANBuild && IsLinux() && isNvidia);
 
     // anglebug.com/4849
-    // This workaround is definitely needed on Intel and AMD GPUs. To
-    // determine whether it's needed on iOS and Apple Silicon, the
-    // workaround's being restricted to existing desktop GPUs.
-    ANGLE_FEATURE_CONDITION(features, emulatePackSkipRowsAndPackSkipPixels,
-                            IsApple() && (isAMD || isIntel || isNvidia));
+    ANGLE_FEATURE_CONDITION(features, emulatePackSkipRowsAndPackSkipPixels, IsApple());
 
     // http://crbug.com/1042393
     // XWayland defaults to a 1hz refresh rate when the "surface is not visible", which sometimes
