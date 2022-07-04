@@ -96,7 +96,7 @@
 2546 MAC : dEQP-EGL.functional.native_coord_mapping.native_window.* = FAIL
 2546 MAC : dEQP-EGL.functional.negative_api.copy_buffers = FAIL
 2546 MAC : dEQP-EGL.functional.negative_api.swap_interval = FAIL
-2546 MAC : dEQP-EGL.functional.query_surface.simple.pbuffer.rgba8888_depth_stencil = FAIL
+2546 MAC OPENGL : dEQP-EGL.functional.query_surface.simple.pbuffer.rgba8888_depth_stencil = FAIL
 2546 MAC : dEQP-EGL.functional.thread_cleanup.* = SKIP
 
 // Android GLES-only failues
@@ -232,8 +232,6 @@
 6485 MAC METAL : dEQP-EGL.functional.image.render_multiple_contexts.gles2_renderbuffer* = FAIL
 6485 MAC METAL : dEQP-EGL.functional.image.render_multiple_contexts.gles2_texture* = FAIL
 
-6485 MAC METAL : dEQP-EGL.functional.query_surface.simple.pbuffer.rgba8888_depth_no_stencil = FAIL
-6485 MAC METAL : dEQP-EGL.functional.query_surface.simple.pbuffer.rgba8888_no_depth_stencil = FAIL
 6485 MAC METAL : dEQP-EGL.functional.render.multi_context.gles2.rgba8888_pbuffer = FAIL
 6485 MAC METAL : dEQP-EGL.functional.render.multi_context.gles2_gles3.rgba8888_pbuffer = FAIL
 6485 MAC METAL : dEQP-EGL.functional.render.multi_context.gles3.rgba8888_pbuffer = FAIL
