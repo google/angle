@@ -2873,7 +2873,20 @@ bool ValidateCompressedTexSubImage3D(const Context *context,
         return false;
     }
 
+    if (!ValidateES3TexImage3DParameters(context, entryPoint, target, level, GL_NONE, true, true,
+                                         xoffset, yoffset, zoffset, width, height, depth, 0, format,
+                                         GL_NONE, -1, data))
+    {
+        return false;
+    }
+
     const InternalFormat &formatInfo = GetSizedInternalFormatInfo(format);
+
+    if (!formatInfo.compressed)
+    {
+        context->validationError(entryPoint, GL_INVALID_ENUM, kInvalidCompressedFormat);
+        return false;
+    }
 
     GLuint blockSize = 0;
     if (!formatInfo.computeCompressedImageSize(Extents(width, height, depth), &blockSize))
@@ -2885,19 +2898,6 @@ bool ValidateCompressedTexSubImage3D(const Context *context,
     if (imageSize < 0 || static_cast<GLuint>(imageSize) != blockSize)
     {
         context->validationError(entryPoint, GL_INVALID_VALUE, kInvalidCompressedImageSize);
-        return false;
-    }
-
-    if (!ValidateES3TexImage3DParameters(context, entryPoint, target, level, GL_NONE, true, true,
-                                         xoffset, yoffset, zoffset, width, height, depth, 0, format,
-                                         GL_NONE, -1, data))
-    {
-        return false;
-    }
-
-    if (!formatInfo.compressed)
-    {
-        context->validationError(entryPoint, GL_INVALID_ENUM, kInvalidCompressedFormat);
         return false;
     }
 
