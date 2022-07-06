@@ -28,16 +28,24 @@ class Library;
 
 bool IsGLExtensionEnabled(const std::string &extName);
 
+enum class ClientType
+{
+    // Client types used by the samples.  Add as needed.
+    ES1,
+    ES2,
+    ES3_0,
+    ES3_1,
+    GL3_3_CORE,
+    GL3_3_COMPATIBILITY,
+};
+
 class SampleApplication
 {
   public:
     SampleApplication(std::string name,
                       int argc,
                       char **argv,
-                      EGLenum clientType    = EGL_OPENGL_ES_API,
-                      EGLint glMajorVersion = 2,
-                      EGLint glMinorVersion = 0,
-                      EGLint profileMask    = 0,
+                      ClientType clientType = ClientType::ES2,
                       uint32_t width        = 1280,
                       uint32_t height       = 720);
     virtual ~SampleApplication();
