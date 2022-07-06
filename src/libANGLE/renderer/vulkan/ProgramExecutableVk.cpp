@@ -1447,9 +1447,9 @@ angle::Result ProgramExecutableVk::bindDescriptorSets(
             // later sets to misbehave.
             if (mEmptyDescriptorSets[descriptorSetIndex] == VK_NULL_HANDLE)
             {
-                ANGLE_TRY(mDescriptorPools[descriptorSetIndex].get().allocateDescriptorSets(
+                ANGLE_TRY(mDescriptorPools[descriptorSetIndex].get().allocateDescriptorSet(
                     context, commandBufferHelper, mDescriptorSetLayouts[descriptorSetIndex].get(),
-                    1, &mDescriptorPoolBindings[descriptorSetIndex],
+                    &mDescriptorPoolBindings[descriptorSetIndex],
                     &mEmptyDescriptorSets[descriptorSetIndex]));
             }
             descSet = mEmptyDescriptorSets[descriptorSetIndex];
