@@ -15,14 +15,7 @@ import subprocess
 import sys
 import tempfile
 import textwrap
-
-# TODO(https://anglebug.com/7475): Remove these checks throughout the file
-# pathlib is a python3-only library. This script sometimes gets run with python2 so we need
-# to check if we are the right python version before we import/use pathlib.
-# See the comments on https://anglebug.com/4905 for more information.
-PYTHON_MAJOR_VERSION = sys.version_info.major
-if PYTHON_MAJOR_VERSION == 3:
-    import pathlib
+import pathlib
 
 # This line is 'magic' in that git-cl looks for it to decide whether to
 # use Python3 instead of Python2 when running the code in this file.
@@ -469,8 +462,7 @@ def CheckChangeOnUpload(input_api, output_api):
         input_api.canned_checks.CheckPatchFormatted(
             input_api, output_api, result_factory=output_api.PresubmitError))
     results.extend(_CheckCommitMessageFormatting(input_api, output_api))
-    if PYTHON_MAJOR_VERSION == 3:
-        results.extend(_CheckGClientExists(input_api, output_api))
+    results.extend(_CheckGClientExists(input_api, output_api))
 
     return results
 
