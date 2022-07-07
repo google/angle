@@ -1320,7 +1320,7 @@ angle::Result TextureVk::copySubImageImplWithDraw(ContextVk *contextVk,
             ANGLE_TRY(stagingImage->get().initLayerImageView(
                 contextVk, stagingTextureType, VK_IMAGE_ASPECT_COLOR_BIT, gl::SwizzleState(),
                 &stagingView, vk::LevelIndex(0), 1, layerIndex, 1,
-                gl::SrgbWriteControlMode::Default));
+                gl::SrgbWriteControlMode::Default, gl::YuvSamplingMode::Default));
 
             ANGLE_TRY(utilsVk.copyImage(contextVk, &stagingImage->get(), &stagingView, srcImage,
                                         srcView, params));
@@ -2969,7 +2969,8 @@ bool TextureVk::shouldDecodeSRGB(vk::Context *context,
 
 const vk::ImageView &TextureVk::getReadImageView(vk::Context *context,
                                                  GLenum srgbDecode,
-                                                 bool texelFetchStaticUse) const
+                                                 bool texelFetchStaticUse,
+                                                 bool samplerExternal2DY2YEXT) const
 {
     ASSERT(mImage->valid());
 
@@ -2980,7 +2981,12 @@ const vk::ImageView &TextureVk::getReadImageView(vk::Context *context,
         return imageViews.getStencilReadImageView();
     }
 
-    if (shouldDecodeSRGB(context, srgbDecode, texelFetchStaticUse))
+    if (samplerExternal2DY2YEXT)
+    {
+        ASSERT(imageViews.getSamplerExternal2DY2YEXTImageView().valid());
+        return imageViews.getSamplerExternal2DY2YEXTImageView();
+    }
+    else if (shouldDecodeSRGB(context, srgbDecode, texelFetchStaticUse))
     {
         ASSERT(imageViews.getSRGBReadImageView().valid());
         return imageViews.getSRGBReadImageView();

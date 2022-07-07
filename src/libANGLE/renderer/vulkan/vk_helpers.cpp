@@ -5242,8 +5242,8 @@ angle::Result ImageHelper::initExternal(Context *context,
 
         // Create the VkSamplerYcbcrConversion to associate with image views and samplers
         // Update the SamplerYcbcrConversionCache key
-        mYcbcrConversionDesc.update(rendererVk, 0, conversionModel, colorRange, supportedLocation,
-                                    supportedLocation, chromaFilter, components, intendedFormatID);
+        updateYcbcrConversionDesc(rendererVk, 0, conversionModel, colorRange, supportedLocation,
+                                  supportedLocation, chromaFilter, components, intendedFormatID);
     }
 
     if (hasProtectedContent)
@@ -5609,7 +5609,7 @@ angle::Result ImageHelper::initImageView(Context *context,
 {
     return initLayerImageView(context, textureType, aspectMask, swizzleMap, imageViewOut,
                               baseMipLevelVk, levelCount, 0, mLayerCount,
-                              gl::SrgbWriteControlMode::Default);
+                              gl::SrgbWriteControlMode::Default, gl::YuvSamplingMode::Default);
 }
 
 angle::Result ImageHelper::initLayerImageView(Context *context,
@@ -5621,14 +5621,15 @@ angle::Result ImageHelper::initLayerImageView(Context *context,
                                               uint32_t levelCount,
                                               uint32_t baseArrayLayer,
                                               uint32_t layerCount,
-                                              gl::SrgbWriteControlMode mode) const
+                                              gl::SrgbWriteControlMode srgbWriteControlMode,
+                                              gl::YuvSamplingMode yuvSamplingMode) const
 {
     angle::FormatID actualFormat = mActualFormatID;
 
     // If we are initializing an imageview for use with EXT_srgb_write_control, we need to override
     // the format to its linear counterpart. Formats that cannot be reinterpreted are exempt from
     // this requirement.
-    if (mode == gl::SrgbWriteControlMode::Linear)
+    if (srgbWriteControlMode == gl::SrgbWriteControlMode::Linear)
     {
         angle::FormatID linearFormat = ConvertToLinear(actualFormat);
         if (linearFormat != angle::FormatID::NONE)
@@ -5639,7 +5640,7 @@ angle::Result ImageHelper::initLayerImageView(Context *context,
 
     return initLayerImageViewImpl(context, textureType, aspectMask, swizzleMap, imageViewOut,
                                   baseMipLevelVk, levelCount, baseArrayLayer, layerCount,
-                                  GetVkFormatFromFormatID(actualFormat), 0);
+                                  GetVkFormatFromFormatID(actualFormat), 0, yuvSamplingMode);
 }
 
 angle::Result ImageHelper::initLayerImageViewImpl(Context *context,
@@ -5652,7 +5653,8 @@ angle::Result ImageHelper::initLayerImageViewImpl(Context *context,
                                                   uint32_t baseArrayLayer,
                                                   uint32_t layerCount,
                                                   VkFormat imageFormat,
-                                                  VkImageUsageFlags usageFlags) const
+                                                  VkImageUsageFlags usageFlags,
+                                                  gl::YuvSamplingMode yuvSamplingMode) const
 {
     VkImageViewCreateInfo viewInfo = {};
     viewInfo.sType                 = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
@@ -5691,18 +5693,22 @@ angle::Result ImageHelper::initLayerImageViewImpl(Context *context,
     }
 
     VkSamplerYcbcrConversionInfo yuvConversionInfo = {};
-    if (mYcbcrConversionDesc.valid())
+
+    auto conversionDesc =
+        yuvSamplingMode == gl::YuvSamplingMode::Y2Y ? getY2YConversionDesc() : mYcbcrConversionDesc;
+
+    if (conversionDesc.valid())
     {
         ASSERT((context->getRenderer()->getFeatures().supportsYUVSamplerConversion.enabled));
         yuvConversionInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO;
         yuvConversionInfo.pNext = nullptr;
         ANGLE_TRY(context->getRenderer()->getYuvConversionCache().getSamplerYcbcrConversion(
-            context, mYcbcrConversionDesc, &yuvConversionInfo.conversion));
+            context, conversionDesc, &yuvConversionInfo.conversion));
         AddToPNextChain(&viewInfo, &yuvConversionInfo);
 
         // VUID-VkImageViewCreateInfo-image-02399
         // If image has an external format, format must be VK_FORMAT_UNDEFINED
-        if (mYcbcrConversionDesc.getExternalFormat() != 0)
+        if (conversionDesc.getExternalFormat() != 0)
         {
             viewInfo.format = VK_FORMAT_UNDEFINED;
         }
@@ -5728,7 +5734,8 @@ angle::Result ImageHelper::initReinterpretedLayerImageView(Context *context,
 
     return initLayerImageViewImpl(context, textureType, aspectMask, swizzleMap, imageViewOut,
                                   baseMipLevelVk, levelCount, baseArrayLayer, layerCount,
-                                  vk::GetVkFormatFromFormatID(imageViewFormat), usageFlags);
+                                  vk::GetVkFormatFromFormatID(imageViewFormat), usageFlags,
+                                  gl::YuvSamplingMode::Default);
 }
 
 void ImageHelper::destroy(RendererVk *renderer)
@@ -9437,6 +9444,8 @@ ImageViewHelper::ImageViewHelper(ImageViewHelper &&other)
     std::swap(mPerLevelRangeLinearCopyImageViews, other.mPerLevelRangeLinearCopyImageViews);
     std::swap(mPerLevelRangeSRGBCopyImageViews, other.mPerLevelRangeSRGBCopyImageViews);
     std::swap(mPerLevelRangeStencilReadImageViews, other.mPerLevelRangeStencilReadImageViews);
+    std::swap(mPerLevelRangeSamplerExternal2DY2YEXTImageViews,
+              other.mPerLevelRangeSamplerExternal2DY2YEXTImageViews);
 
     std::swap(mLayerLevelDrawImageViews, other.mLayerLevelDrawImageViews);
     std::swap(mLayerLevelDrawImageViewsLinear, other.mLayerLevelDrawImageViewsLinear);
@@ -9468,6 +9477,7 @@ void ImageViewHelper::release(RendererVk *renderer, std::vector<vk::GarbageObjec
     ReleaseImageViews(&mPerLevelRangeLinearCopyImageViews, &garbage);
     ReleaseImageViews(&mPerLevelRangeSRGBCopyImageViews, &garbage);
     ReleaseImageViews(&mPerLevelRangeStencilReadImageViews, &garbage);
+    ReleaseImageViews(&mPerLevelRangeSamplerExternal2DY2YEXTImageViews, &garbage);
 
     // Release the draw views
     for (ImageViewVector &layerViews : mLayerLevelDrawImageViews)
@@ -9527,9 +9537,10 @@ bool ImageViewHelper::isImageViewGarbageEmpty() const
            mPerLevelRangeLinearFetchImageViews.empty() &&
            mPerLevelRangeSRGBReadImageViews.empty() && mPerLevelRangeSRGBCopyImageViews.empty() &&
            mPerLevelRangeSRGBFetchImageViews.empty() &&
-           mPerLevelRangeStencilReadImageViews.empty() && mLayerLevelDrawImageViews.empty() &&
-           mLayerLevelDrawImageViewsLinear.empty() && mSubresourceDrawImageViews.empty() &&
-           mLayerLevelStorageImageViews.empty();
+           mPerLevelRangeStencilReadImageViews.empty() &&
+           mPerLevelRangeSamplerExternal2DY2YEXTImageViews.empty() &&
+           mLayerLevelDrawImageViews.empty() && mLayerLevelDrawImageViewsLinear.empty() &&
+           mSubresourceDrawImageViews.empty() && mLayerLevelStorageImageViews.empty();
 }
 
 void ImageViewHelper::destroy(VkDevice device)
@@ -9544,6 +9555,7 @@ void ImageViewHelper::destroy(VkDevice device)
     DestroyImageViews(&mPerLevelRangeLinearCopyImageViews, device);
     DestroyImageViews(&mPerLevelRangeSRGBCopyImageViews, device);
     DestroyImageViews(&mPerLevelRangeStencilReadImageViews, device);
+    DestroyImageViews(&mPerLevelRangeSamplerExternal2DY2YEXTImageViews, device);
 
     // Release the draw views
     for (ImageViewVector &layerViews : mLayerLevelDrawImageViews)
@@ -9613,6 +9625,7 @@ angle::Result ImageViewHelper::initReadViews(ContextVk *contextVk,
         mPerLevelRangeLinearCopyImageViews.resize(maxViewCount);
         mPerLevelRangeSRGBCopyImageViews.resize(maxViewCount);
         mPerLevelRangeStencilReadImageViews.resize(maxViewCount);
+        mPerLevelRangeSamplerExternal2DY2YEXTImageViews.resize(maxViewCount);
     }
 
     // Determine if we already have ImageViews for the new max level
@@ -9652,19 +9665,26 @@ angle::Result ImageViewHelper::initReadViewsImpl(ContextVk *contextVk,
 
     if (HasBothDepthAndStencilAspects(aspectFlags))
     {
-        ANGLE_TRY(image.initLayerImageView(
-            contextVk, viewType, VK_IMAGE_ASPECT_DEPTH_BIT, readSwizzle, &getReadImageView(),
-            baseLevel, levelCount, baseLayer, layerCount, gl::SrgbWriteControlMode::Default));
+        ANGLE_TRY(image.initLayerImageView(contextVk, viewType, VK_IMAGE_ASPECT_DEPTH_BIT,
+                                           readSwizzle, &getReadImageView(), baseLevel, levelCount,
+                                           baseLayer, layerCount, gl::SrgbWriteControlMode::Default,
+                                           gl::YuvSamplingMode::Default));
         ANGLE_TRY(image.initLayerImageView(
             contextVk, viewType, VK_IMAGE_ASPECT_STENCIL_BIT, readSwizzle,
             &mPerLevelRangeStencilReadImageViews[mCurrentBaseMaxLevelHash], baseLevel, levelCount,
-            baseLayer, layerCount, gl::SrgbWriteControlMode::Default));
+            baseLayer, layerCount, gl::SrgbWriteControlMode::Default,
+            gl::YuvSamplingMode::Default));
     }
     else
     {
         ANGLE_TRY(image.initLayerImageView(contextVk, viewType, aspectFlags, readSwizzle,
                                            &getReadImageView(), baseLevel, levelCount, baseLayer,
-                                           layerCount, gl::SrgbWriteControlMode::Default));
+                                           layerCount, gl::SrgbWriteControlMode::Default,
+                                           gl::YuvSamplingMode::Default));
+        ANGLE_TRY(image.initLayerImageView(
+            contextVk, viewType, aspectFlags, readSwizzle, &getSamplerExternal2DY2YEXTImageView(),
+            baseLevel, levelCount, baseLayer, layerCount, gl::SrgbWriteControlMode::Default,
+            gl::YuvSamplingMode::Y2Y));
     }
 
     gl::TextureType fetchType = viewType;
@@ -9676,12 +9696,14 @@ angle::Result ImageViewHelper::initReadViewsImpl(ContextVk *contextVk,
 
         ANGLE_TRY(image.initLayerImageView(contextVk, fetchType, aspectFlags, readSwizzle,
                                            &getFetchImageView(), baseLevel, levelCount, baseLayer,
-                                           layerCount, gl::SrgbWriteControlMode::Default));
+                                           layerCount, gl::SrgbWriteControlMode::Default,
+                                           gl::YuvSamplingMode::Default));
     }
 
     ANGLE_TRY(image.initLayerImageView(contextVk, fetchType, aspectFlags, formatSwizzle,
                                        &getCopyImageView(), baseLevel, levelCount, baseLayer,
-                                       layerCount, gl::SrgbWriteControlMode::Default));
+                                       layerCount, gl::SrgbWriteControlMode::Default,
+                                       gl::YuvSamplingMode::Default));
 
     return angle::Result::Continue;
 }
@@ -9860,7 +9882,8 @@ angle::Result ImageViewHelper::getLevelDrawImageView(Context *context,
     // therefore don't have swizzle.
     gl::TextureType viewType = Get2DTextureType(layerCount, image.getSamples());
     return image.initLayerImageView(context, viewType, image.getAspectFlags(), gl::SwizzleState(),
-                                    view.get(), levelVk, 1, layer, layerCount, mode);
+                                    view.get(), levelVk, 1, layer, layerCount, mode,
+                                    gl::YuvSamplingMode::Default);
 }
 
 angle::Result ImageViewHelper::getLevelLayerDrawImageView(Context *context,
@@ -9893,7 +9916,8 @@ angle::Result ImageViewHelper::getLevelLayerDrawImageView(Context *context,
     // therefore don't have swizzle.
     gl::TextureType viewType = Get2DTextureType(1, image.getSamples());
     return image.initLayerImageView(context, viewType, image.getAspectFlags(), gl::SwizzleState(),
-                                    imageView, levelVk, 1, layer, 1, mode);
+                                    imageView, levelVk, 1, layer, 1, mode,
+                                    gl::YuvSamplingMode::Default);
 }
 
 ImageOrBufferViewSubresourceSerial ImageViewHelper::getSubresourceSerial(

@@ -1685,7 +1685,8 @@ class ImageHelper final : public Resource, public angle::Subject
                                      uint32_t levelCount,
                                      uint32_t baseArrayLayer,
                                      uint32_t layerCount,
-                                     gl::SrgbWriteControlMode mode) const;
+                                     gl::SrgbWriteControlMode srgbWriteControlMode,
+                                     gl::YuvSamplingMode yuvSamplingMode) const;
     angle::Result initReinterpretedLayerImageView(Context *context,
                                                   gl::TextureType textureType,
                                                   VkImageAspectFlags aspectMask,
@@ -2185,6 +2186,12 @@ class ImageHelper final : public Resource, public angle::Subject
         return mYcbcrConversionDesc.updateChromaFilter(rendererVk, filter);
     }
     const YcbcrConversionDesc &getYcbcrConversionDesc() const { return mYcbcrConversionDesc; }
+    const YcbcrConversionDesc getY2YConversionDesc() const
+    {
+        YcbcrConversionDesc y2yDesc = mYcbcrConversionDesc;
+        y2yDesc.updateConversionModel(VK_SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY);
+        return y2yDesc;
+    }
     void updateYcbcrConversionDesc(RendererVk *rendererVk,
                                    uint64_t externalFormat,
                                    VkSamplerYcbcrModelConversion conversionModel,
@@ -2442,7 +2449,8 @@ class ImageHelper final : public Resource, public angle::Subject
                                          uint32_t baseArrayLayer,
                                          uint32_t layerCount,
                                          VkFormat imageFormat,
-                                         VkImageUsageFlags usageFlags) const;
+                                         VkImageUsageFlags usageFlags,
+                                         gl::YuvSamplingMode yuvSamplingMode) const;
 
     angle::Result readPixelsImpl(ContextVk *contextVk,
                                  const gl::Rectangle &area,
@@ -2616,6 +2624,16 @@ class ImageViewHelper final : angle::NonCopyable
     {
         return mLinearColorspace ? getReadViewImpl(mPerLevelRangeLinearCopyImageViews)
                                  : getReadViewImpl(mPerLevelRangeSRGBCopyImageViews);
+    }
+
+    ImageView &getSamplerExternal2DY2YEXTImageView()
+    {
+        return getReadViewImpl(mPerLevelRangeSamplerExternal2DY2YEXTImageViews);
+    }
+
+    const ImageView &getSamplerExternal2DY2YEXTImageView() const
+    {
+        return getValidReadViewImpl(mPerLevelRangeSamplerExternal2DY2YEXTImageViews);
     }
 
     // Used when initialized RenderTargets.
@@ -2800,6 +2818,7 @@ class ImageViewHelper final : angle::NonCopyable
     ImageViewVector mPerLevelRangeLinearCopyImageViews;
     ImageViewVector mPerLevelRangeSRGBCopyImageViews;
     ImageViewVector mPerLevelRangeStencilReadImageViews;
+    ImageViewVector mPerLevelRangeSamplerExternal2DY2YEXTImageViews;
 
     // Draw views
     LayerLevelImageViewVector mLayerLevelDrawImageViews;
