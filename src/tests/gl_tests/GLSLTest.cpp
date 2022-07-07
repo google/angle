@@ -4358,6 +4358,36 @@ TEST_P(GLSLTest_ES3, WriteIntoDynamicIndexingOfSwizzledVector)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Test including Ternary using a uniform block is correctly
+// expanded.
+TEST_P(GLSLTest_ES3, NamelessUniformBlockTernary)
+{
+    const char kVS[] = R"(#version 300 es
+    precision highp float;
+    out vec4 color_interp;
+    void  main()
+    {
+        color_interp = vec4(0.0);
+    }
+)";
+    const char kFS[] = R"(#version 300 es
+    precision highp float;
+    out vec4 fragColor;
+    in vec4 color_interp;
+layout(std140) uniform TestData {
+    int a;
+    int b;
+};
+void main()
+{
+    int c, a1;
+    a1 += c > 0 ? a : b;
+    fragColor = vec4(a1,a1,a1,1.0);
+}
+)";
+    ANGLE_GL_PROGRAM(testProgram, kVS, kFS);
+}
+
 // Test that the length() method is correctly translated in Vulkan atomic counter buffer emulation.
 TEST_P(GLSLTest_ES31, AtomicCounterArrayLength)
 {
