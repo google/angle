@@ -10931,13 +10931,22 @@ TEST_P(ExtraSamplerCubeShadowUseTest, Basic)
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
+#define ES2_EMULATE_COPY_TEX_IMAGE_VIA_SUB()             \
+    ES2_OPENGL().enable(Feature::EmulateCopyTexImage2D), \
+        ES2_OPENGLES().enable(Feature::EmulateCopyTexImage2D)
+#define ES3_EMULATE_COPY_TEX_IMAGE_VIA_SUB()             \
+    ES3_OPENGL().enable(Feature::EmulateCopyTexImage2D), \
+        ES3_OPENGLES().enable(Feature::EmulateCopyTexImage2D)
 #define ES2_EMULATE_COPY_TEX_IMAGE()                                      \
     ES2_OPENGL().enable(Feature::EmulateCopyTexImage2DFromRenderbuffers), \
         ES2_OPENGLES().enable(Feature::EmulateCopyTexImage2DFromRenderbuffers)
 #define ES3_EMULATE_COPY_TEX_IMAGE()                                      \
     ES3_OPENGL().enable(Feature::EmulateCopyTexImage2DFromRenderbuffers), \
         ES3_OPENGLES().enable(Feature::EmulateCopyTexImage2DFromRenderbuffers)
-ANGLE_INSTANTIATE_TEST(Texture2DTest, ANGLE_ALL_TEST_PLATFORMS_ES2, ES2_EMULATE_COPY_TEX_IMAGE());
+ANGLE_INSTANTIATE_TEST(Texture2DTest,
+                       ANGLE_ALL_TEST_PLATFORMS_ES2,
+                       ES2_EMULATE_COPY_TEX_IMAGE_VIA_SUB(),
+                       ES2_EMULATE_COPY_TEX_IMAGE());
 ANGLE_INSTANTIATE_TEST_ES2(TextureCubeTest);
 ANGLE_INSTANTIATE_TEST_ES2(Texture2DTestWithDrawScale);
 ANGLE_INSTANTIATE_TEST_ES2(Sampler2DAsFunctionParameterTest);
@@ -11006,6 +11015,8 @@ ANGLE_INSTANTIATE_TEST_ES3(Texture2DNorm16TestES3);
 ANGLE_INSTANTIATE_TEST(Texture2DRGTest,
                        ANGLE_ALL_TEST_PLATFORMS_ES2,
                        ANGLE_ALL_TEST_PLATFORMS_ES3,
+                       ES2_EMULATE_COPY_TEX_IMAGE_VIA_SUB(),
+                       ES3_EMULATE_COPY_TEX_IMAGE_VIA_SUB(),
                        ES2_EMULATE_COPY_TEX_IMAGE(),
                        ES3_EMULATE_COPY_TEX_IMAGE());
 

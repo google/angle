@@ -1890,6 +1890,7 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
         GetSystemInfoVendorIDAndDeviceID(functions, &systemInfo, &vendor, &device);
 
     bool isAMD         = IsAMD(vendor);
+    bool isApple       = IsApple(vendor);
     bool isIntel       = IsIntel(vendor);
     bool isNvidia      = IsNvidia(vendor);
     bool isQualcomm    = IsQualcomm(vendor);
@@ -2107,6 +2108,10 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     ANGLE_FEATURE_CONDITION(
         features, emulateCopyTexImage2DFromRenderbuffers,
         IsApple() && functions->standard == STANDARD_GL_ES && !(isAMD && IsWindows()));
+
+    // anglebug.com/5360
+    // Replace copyTexImage2D with texImage2D + copyTexSubImage2D to bypass driver bug.
+    ANGLE_FEATURE_CONDITION(features, emulateCopyTexImage2D, isApple);
 
     // Don't attempt to use the discrete GPU on NVIDIA-based MacBook Pros, since the
     // driver is unstable in this situation.

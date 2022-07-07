@@ -90,6 +90,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::EmulateAbsIntFunction, "emulateAbsIntFunction"},
     {Feature::EmulateAdvancedBlendEquations, "emulateAdvancedBlendEquations"},
     {Feature::EmulateAtan2Float, "emulateAtan2Float"},
+    {Feature::EmulateCopyTexImage2D, "emulateCopyTexImage2D"},
     {Feature::EmulateCopyTexImage2DFromRenderbuffers, "emulateCopyTexImage2DFromRenderbuffers"},
     {Feature::EmulateDithering, "emulateDithering"},
     {Feature::EmulatedPrerotation180, "emulatedPrerotation180"},

@@ -84,6 +84,7 @@ enum class Feature
     EmulateAbsIntFunction,
     EmulateAdvancedBlendEquations,
     EmulateAtan2Float,
+    EmulateCopyTexImage2D,
     EmulateCopyTexImage2DFromRenderbuffers,
     EmulateDithering,
     EmulatedPrerotation180,

@@ -249,6 +249,10 @@
 5284 MAC METAL AMD : ColorMaskForDrawBuffersTest.Blit/* = SKIP
 5360 MAC METAL APPLE : ColorMaskForDrawBuffersTest.Blit/* = SKIP
 
+// The workaround is not intended to be enabled in this configuration so
+// skip it as the failure is likely a driver bug.
+5360 PIXEL4ORXL GLES : CopyTexImageTestES3.CopyTexSubImageFromTexture3D/ES3_OpenGLES_EmulateCopyTexImage2D = SKIP
+
 // Skipped because intel macs use a GPU family that doesn't support swizzle
 5049 MAC METAL INTEL : DXT1CompressedTextureTest.DXT1Alpha/* = SKIP
 
