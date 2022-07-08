@@ -89,6 +89,11 @@ bool PlatformParameters::isSwiftshader() const
     return eglParameters.deviceType == EGL_PLATFORM_ANGLE_DEVICE_TYPE_SWIFTSHADER_ANGLE;
 }
 
+bool PlatformParameters::isMetal() const
+{
+    return eglParameters.renderer == EGL_PLATFORM_ANGLE_TYPE_METAL_ANGLE;
+}
+
 bool PlatformParameters::isVulkan() const
 {
     return eglParameters.renderer == EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE;

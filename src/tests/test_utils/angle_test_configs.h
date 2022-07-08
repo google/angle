@@ -42,6 +42,7 @@ struct PlatformParameters
     bool isSwiftshader() const;
     bool isVulkan() const;
     bool isANGLE() const;
+    bool isMetal() const;
     bool isDesktopOpenGLFrontend() const;
 
     void initDefaultParameters();
@@ -113,6 +114,8 @@ EGLPlatformParameters D3D11_FL11_1_REFERENCE();
 EGLPlatformParameters D3D11_FL11_0_REFERENCE();
 EGLPlatformParameters D3D11_FL10_1_REFERENCE();
 EGLPlatformParameters D3D11_FL10_0_REFERENCE();
+
+EGLPlatformParameters METAL();
 
 EGLPlatformParameters OPENGL();
 EGLPlatformParameters OPENGL(EGLint major, EGLint minor);
