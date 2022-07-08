@@ -1448,7 +1448,8 @@ class DescriptorSetDescBuilder final
 };
 
 // Specialized update for textures.
-void UpdatePreCacheActiveTextures(const gl::ActiveTextureMask &activeTextures,
+void UpdatePreCacheActiveTextures(const std::vector<gl::SamplerBinding> &samplerBindings,
+                                  const gl::ActiveTextureMask &activeTextures,
                                   const gl::ActiveTextureArray<TextureVk *> &textures,
                                   const gl::SamplerBindingVector &samplers,
                                   DescriptorSetDesc *desc);

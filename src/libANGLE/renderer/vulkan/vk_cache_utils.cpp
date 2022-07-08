@@ -4897,45 +4897,58 @@ void DescriptorSetDescBuilder::updateUniformsAndXfb(Context *context,
     }
 }
 
-void UpdatePreCacheActiveTextures(const gl::ActiveTextureMask &activeTextures,
+void UpdatePreCacheActiveTextures(const std::vector<gl::SamplerBinding> &samplerBindings,
+                                  const gl::ActiveTextureMask &activeTextures,
                                   const gl::ActiveTextureArray<TextureVk *> &textures,
                                   const gl::SamplerBindingVector &samplers,
                                   DescriptorSetDesc *desc)
 {
     desc->reset();
 
-    for (size_t textureIndex : activeTextures)
+    for (uint32_t samplerIndex = 0; samplerIndex < samplerBindings.size(); ++samplerIndex)
     {
-        TextureVk *textureVk = textures[textureIndex];
-
-        DescriptorInfoDesc infoDesc = {};
-
-        if (textureVk->getState().getType() == gl::TextureType::Buffer)
+        const gl::SamplerBinding &samplerBinding = samplerBindings[samplerIndex];
+        uint32_t arraySize        = static_cast<uint32_t>(samplerBinding.boundTextureUnits.size());
+        bool isSamplerExternalY2Y = samplerBinding.samplerType == GL_SAMPLER_EXTERNAL_2D_Y2Y_EXT;
+        for (uint32_t arrayElement = 0; arrayElement < arraySize; ++arrayElement)
         {
-            ImageOrBufferViewSubresourceSerial imageViewSerial = textureVk->getBufferViewSerial();
-            infoDesc.imageViewSerialOrOffset = imageViewSerial.viewSerial.getValue();
+            size_t textureIndex = samplerBinding.boundTextureUnits[arrayElement];
+            if (!activeTextures.test(textureIndex))
+                continue;
+            TextureVk *textureVk = textures[textureIndex];
+
+            DescriptorInfoDesc infoDesc = {};
+
+            if (textureVk->getState().getType() == gl::TextureType::Buffer)
+            {
+                ImageOrBufferViewSubresourceSerial imageViewSerial =
+                    textureVk->getBufferViewSerial();
+                infoDesc.imageViewSerialOrOffset = imageViewSerial.viewSerial.getValue();
+            }
+            else
+            {
+                gl::Sampler *sampler       = samplers[textureIndex].get();
+                const SamplerVk *samplerVk = sampler ? vk::GetImpl(sampler) : nullptr;
+
+                const SamplerHelper &samplerHelper =
+                    samplerVk ? samplerVk->getSampler()
+                              : textureVk->getSampler(isSamplerExternalY2Y);
+                const gl::SamplerState &samplerState =
+                    sampler ? sampler->getSamplerState() : textureVk->getState().getSamplerState();
+
+                ImageOrBufferViewSubresourceSerial imageViewSerial =
+                    textureVk->getImageViewSubresourceSerial(samplerState);
+
+                // Layout is implicit.
+
+                infoDesc.imageViewSerialOrOffset = imageViewSerial.viewSerial.getValue();
+                infoDesc.samplerOrBufferSerial   = samplerHelper.getSamplerSerial().getValue();
+                memcpy(&infoDesc.imageSubresourceRange, &imageViewSerial.subresource,
+                       sizeof(uint32_t));
+            }
+
+            desc->updateInfoDesc(static_cast<uint32_t>(textureIndex), infoDesc);
         }
-        else
-        {
-            gl::Sampler *sampler       = samplers[textureIndex].get();
-            const SamplerVk *samplerVk = sampler ? vk::GetImpl(sampler) : nullptr;
-
-            const SamplerHelper &samplerHelper =
-                samplerVk ? samplerVk->getSampler() : textureVk->getSampler();
-            const gl::SamplerState &samplerState =
-                sampler ? sampler->getSamplerState() : textureVk->getState().getSamplerState();
-
-            ImageOrBufferViewSubresourceSerial imageViewSerial =
-                textureVk->getImageViewSubresourceSerial(samplerState);
-
-            // Layout is implicit.
-
-            infoDesc.imageViewSerialOrOffset = imageViewSerial.viewSerial.getValue();
-            infoDesc.samplerOrBufferSerial   = samplerHelper.getSamplerSerial().getValue();
-            memcpy(&infoDesc.imageSubresourceRange, &imageViewSerial.subresource, sizeof(uint32_t));
-        }
-
-        desc->updateInfoDesc(static_cast<uint32_t>(textureIndex), infoDesc);
     }
 }
 
@@ -5031,7 +5044,8 @@ angle::Result DescriptorSetDescBuilder::updateExecutableActiveTexturesForShader(
                 const SamplerVk *samplerVk = sampler ? vk::GetImpl(sampler) : nullptr;
 
                 const SamplerHelper &samplerHelper =
-                    samplerVk ? samplerVk->getSampler() : textureVk->getSampler();
+                    samplerVk ? samplerVk->getSampler()
+                              : textureVk->getSampler(isSamplerExternalY2Y);
                 const gl::SamplerState &samplerState =
                     sampler ? sampler->getSamplerState() : textureVk->getState().getSamplerState();
 

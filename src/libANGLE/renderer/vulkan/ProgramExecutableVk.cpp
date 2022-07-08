@@ -950,14 +950,24 @@ angle::Result ProgramExecutableVk::addTextureDescriptorSetDesc(
                 ((*activeTextures)[textureUnit]->getImage().hasImmutableSampler()))
             {
                 ASSERT(samplerBinding.boundTextureUnits.size() == 1);
+
+                // In the case of samplerExternal2DY2YEXT, we need
+                // samplerYcbcrConversion object with IDENTITY conversion model
+                bool isSamplerExternalY2Y =
+                    samplerBinding.samplerType == GL_SAMPLER_EXTERNAL_2D_Y2Y_EXT;
+
                 // Always take the texture's sampler, that's only way to get to yuv conversion for
                 // externalFormat
-                const TextureVk *textureVk          = (*activeTextures)[textureUnit];
-                const vk::Sampler &immutableSampler = textureVk->getSampler().get();
+                const TextureVk *textureVk = (*activeTextures)[textureUnit];
+                const vk::Sampler &immutableSampler =
+                    textureVk->getSampler(isSamplerExternalY2Y).get();
                 descOut->update(info.binding, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, arraySize,
                                 activeStages, &immutableSampler);
-                const vk::ImageHelper &image                              = textureVk->getImage();
-                mImmutableSamplerIndexMap[image.getYcbcrConversionDesc()] = textureIndex;
+                const vk::ImageHelper &image = textureVk->getImage();
+                const vk::YcbcrConversionDesc ycbcrConversionDesc =
+                    isSamplerExternalY2Y ? image.getY2YConversionDesc()
+                                         : image.getYcbcrConversionDesc();
+                mImmutableSamplerIndexMap[ycbcrConversionDesc] = textureIndex;
                 // The Vulkan spec has the following note -
                 // All descriptors in a binding use the same maximum
                 // combinedImageSamplerDescriptorCount descriptors to allow implementations to use a
