@@ -144,9 +144,16 @@ angle::CallCapture CaptureEGLCreateImage(gl::Context *context,
     // In CaptureMidExecutionSetup and FrameCaptureShared::captureCall
     // we capture the actual context ID (via CaptureMakeCurrent),
     // so we have to do the same here.
-    uint64_t contextID    = context->id().value;
-    EGLContext eglContext = reinterpret_cast<EGLContext>(contextID);
-    paramBuffer.addValueParam("context", angle::ParamType::TEGLContext, eglContext);
+    if (context != EGL_NO_CONTEXT)
+    {
+        uint64_t contextID    = context->id().value;
+        EGLContext eglContext = reinterpret_cast<EGLContext>(contextID);
+        paramBuffer.addValueParam("context", angle::ParamType::TEGLContext, eglContext);
+    }
+    else
+    {
+        paramBuffer.addValueParam("context", angle::ParamType::TEGLContext, 0);
+    }
 
     paramBuffer.addEnumParam("target", gl::GLenumGroup::DefaultGroup, angle::ParamType::TEGLenum,
                              target);

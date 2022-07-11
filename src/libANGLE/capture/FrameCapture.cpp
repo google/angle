@@ -7348,6 +7348,7 @@ void FrameCaptureShared::writeMainContextCppReplay(const gl::Context *context,
 
             out << proto << "\n";
             out << "{\n";
+            out << "    gContextMap[0] = EGL_NO_CONTEXT;\n";
             out << "    EGLContext context = eglGetCurrentContext();\n";
             out << "    gContextMap[" << context->id().value << "] = context;\n";
             out << "\n";
