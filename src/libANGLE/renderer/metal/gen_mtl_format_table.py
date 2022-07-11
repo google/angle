@@ -217,7 +217,7 @@ def get_vertex_copy_function_and_default_alpha(src_format, dst_format):
         if src_format.startswith('R10G10B10A2'):
             return 'CopyNativeVertexData<GLuint, 1, 1, 0>', 0, "true"
 
-        if src_gl_type == None:
+        if src_gl_type is None:
             return 'nullptr', 0, "true"
         dst_num_channel = len(angle_format_utils.get_channel_tokens(dst_format))
         default_alpha = '1'
@@ -229,7 +229,7 @@ def get_vertex_copy_function_and_default_alpha(src_format, dst_format):
         elif 'A32_FLOAT' in dst_format:
             default_alpha = 'gl::Float32One'
         elif 'NORM' in dst_format:
-            default_alpha = 'std::numeric_limits<%s>::max()' % (src_gl_type)
+            default_alpha = f'std::numeric_limits<{src_gl_type}>::max()'
 
         return 'CopyNativeVertexData<%s, %d, %d, %s>' % (src_gl_type, num_channel, dst_num_channel,
                                                          default_alpha), default_alpha, "true"
@@ -239,8 +239,12 @@ def get_vertex_copy_function_and_default_alpha(src_format, dst_format):
                                        ' not to ' + dst_format)
         is_signed = 'true' if 'SINT' in src_format or 'SNORM' in src_format or 'SSCALED' in src_format else 'false'
         is_normal = 'true' if 'NORM' in src_format else 'false'
-        return 'CopyXYZ10W2ToXYZWFloatVertexData<%s, %s, true, false>' % (is_signed,
-                                                                          is_normal), 0, "false"
+        return (
+            f'CopyXYZ10W2ToXYZWFloatVertexData<{is_signed}, {is_normal}, true, false>',
+            0,
+            "false",
+        )
+
 
     return angle_format_utils.get_vertex_copy_function(src_format, dst_format), 0, "false"
 
@@ -250,43 +254,42 @@ def get_vertex_copy_function_and_default_alpha(src_format, dst_format):
 
 def gen_image_map_switch_case(angle_format, actual_angle_format_info, angle_to_mtl_map,
                               assign_gen_func):
-    if isinstance(actual_angle_format_info, dict):
-        default_actual_angle_format = actual_angle_format_info['default']
-        # Check if the format can be override with swizzle feature
-        if 'swizzle' in actual_angle_format_info:
-            swizzle_info = actual_angle_format_info['swizzle']
-            swizzle_channels = swizzle_info[0]
-            swizzled_actual_angle_format = swizzle_info[1]
-            swizzle_map = {
-                'R': 'GL_RED',
-                'G': 'GL_GREEN',
-                'B': 'GL_BLUE',
-                'A': 'GL_ALPHA',
-                '1': 'GL_ONE',
-                '0': 'GL_ZERO',
-            }
-
-            mtl_swizzle_make = '{{{r}, {g}, {b}, {a}}}'.format(
-                r=swizzle_map[swizzle_channels[0:1]],
-                g=swizzle_map[swizzle_channels[1:2]],
-                b=swizzle_map[swizzle_channels[2:3]],
-                a=swizzle_map[swizzle_channels[3:]])
-            return case_image_format_template2.format(
-                angle_format=angle_format,
-                image_format_assign_default=assign_gen_func(default_actual_angle_format,
-                                                            angle_to_mtl_map),
-                image_format_assign_swizzled=assign_gen_func(swizzled_actual_angle_format,
-                                                             angle_to_mtl_map),
-                mtl_swizzle=mtl_swizzle_make)
-        else:
-            # Only default case
-            return gen_image_map_switch_case(angle_format, default_actual_angle_format,
-                                             angle_to_mtl_map, assign_gen_func)
-    else:
+    if not isinstance(actual_angle_format_info, dict):
         # Default case
         return case_image_format_template1.format(
             angle_format=angle_format,
             image_format_assign=assign_gen_func(actual_angle_format_info, angle_to_mtl_map))
+    default_actual_angle_format = actual_angle_format_info['default']
+    if 'swizzle' not in actual_angle_format_info:
+        # Only default case
+        return gen_image_map_switch_case(angle_format, default_actual_angle_format,
+                                         angle_to_mtl_map, assign_gen_func)
+    swizzle_info = actual_angle_format_info['swizzle']
+    swizzle_channels = swizzle_info[0]
+    swizzled_actual_angle_format = swizzle_info[1]
+    swizzle_map = {
+        'R': 'GL_RED',
+        'G': 'GL_GREEN',
+        'B': 'GL_BLUE',
+        'A': 'GL_ALPHA',
+        '1': 'GL_ONE',
+        '0': 'GL_ZERO',
+    }
+
+    mtl_swizzle_make = '{{{r}, {g}, {b}, {a}}}'.format(
+        r=swizzle_map[swizzle_channels[:1]],
+        g=swizzle_map[swizzle_channels[1:2]],
+        b=swizzle_map[swizzle_channels[2:3]],
+        a=swizzle_map[swizzle_channels[3:]],
+    )
+
+    return case_image_format_template2.format(
+        angle_format=angle_format,
+        image_format_assign_default=assign_gen_func(default_actual_angle_format,
+                                                    angle_to_mtl_map),
+        image_format_assign_swizzled=assign_gen_func(swizzled_actual_angle_format,
+                                                     angle_to_mtl_map),
+        mtl_swizzle=mtl_swizzle_make)
 
 
 # Generate format conversion switch case (simple case)
@@ -315,26 +318,7 @@ def gen_image_map_switch_mac_case(angle_format, actual_angle_format_info, angle_
     gl_format = angle_to_gl[angle_format]
 
     def gen_format_assign_code(actual_angle_format, angle_to_mtl_map):
-        if actual_angle_format in mac_fallbacks:
-            # This format requires fallback when depth24Stencil8PixelFormatSupported flag is false.
-            # Fallback format:
-            actual_angle_format_fallback = mac_fallbacks[actual_angle_format]
-            fallback_condition = "metalDevice.depth24Stencil8PixelFormatSupported && \
-                                 !display->getFeatures().forceD24S8AsUnsupported.enabled"
-            # return if else block:
-            return image_format_assign_template2.format(
-                actual_angle_format=actual_angle_format,
-                mtl_format=angle_to_mtl_map[actual_angle_format],
-                init_function=wrap_init_function(
-                    angle_format_utils.get_internal_format_initializer(
-                        gl_format, actual_angle_format)),
-                actual_angle_format_fallback=actual_angle_format_fallback,
-                mtl_format_fallback=angle_to_mtl_map[actual_angle_format_fallback],
-                init_function_fallback=wrap_init_function(
-                    angle_format_utils.get_internal_format_initializer(
-                        gl_format, actual_angle_format_fallback)),
-                fallback_condition=fallback_condition)
-        else:
+        if actual_angle_format not in mac_fallbacks:
             # return ordinary block:
             return image_format_assign_template1.format(
                 actual_angle_format=actual_angle_format,
@@ -342,6 +326,24 @@ def gen_image_map_switch_mac_case(angle_format, actual_angle_format_info, angle_
                 init_function=wrap_init_function(
                     angle_format_utils.get_internal_format_initializer(
                         gl_format, actual_angle_format)))
+        # This format requires fallback when depth24Stencil8PixelFormatSupported flag is false.
+        # Fallback format:
+        actual_angle_format_fallback = mac_fallbacks[actual_angle_format]
+        fallback_condition = "metalDevice.depth24Stencil8PixelFormatSupported && \
+                                 !display->getFeatures().forceD24S8AsUnsupported.enabled"
+        # return if else block:
+        return image_format_assign_template2.format(
+            actual_angle_format=actual_angle_format,
+            mtl_format=angle_to_mtl_map[actual_angle_format],
+            init_function=wrap_init_function(
+                angle_format_utils.get_internal_format_initializer(
+                    gl_format, actual_angle_format)),
+            actual_angle_format_fallback=actual_angle_format_fallback,
+            mtl_format_fallback=angle_to_mtl_map[actual_angle_format_fallback],
+            init_function_fallback=wrap_init_function(
+                angle_format_utils.get_internal_format_initializer(
+                    gl_format, actual_angle_format_fallback)),
+            fallback_condition=fallback_condition)
 
     return gen_image_map_switch_case(angle_format, actual_angle_format_info, angle_to_mtl_map,
                                      gen_format_assign_code)
@@ -378,16 +380,21 @@ def gen_image_map_switch_astc_case_iosmac(angle_format, angle_to_gl, angle_to_mt
     def gen_format_assign_code(actual_angle_format, angle_to_mtl_map):
         return image_format_assign_template2.format(
             actual_angle_format=actual_angle_format,
-            mtl_format=angle_to_mtl_map[actual_angle_format] + "HDR",
+            mtl_format=f"{angle_to_mtl_map[actual_angle_format]}HDR",
             init_function=wrap_init_function(
-                angle_format_utils.get_internal_format_initializer(gl_format,
-                                                                   actual_angle_format)),
+                angle_format_utils.get_internal_format_initializer(
+                    gl_format, actual_angle_format
+                )
+            ),
             actual_angle_format_fallback=actual_angle_format,
-            mtl_format_fallback=angle_to_mtl_map[actual_angle_format] + "LDR",
+            mtl_format_fallback=f"{angle_to_mtl_map[actual_angle_format]}LDR",
             init_function_fallback=wrap_init_function(
-                angle_format_utils.get_internal_format_initializer(gl_format,
-                                                                   actual_angle_format)),
-            fallback_condition="display->supportsAppleGPUFamily(6)")
+                angle_format_utils.get_internal_format_initializer(
+                    gl_format, actual_angle_format
+                )
+            ),
+            fallback_condition="display->supportsAppleGPUFamily(6)",
+        )
 
     return gen_image_map_switch_case(angle_format, angle_format, angle_to_mtl_map,
                                      gen_format_assign_code)
@@ -399,10 +406,13 @@ def gen_image_map_switch_astc_case_tv_watchos(angle_format, angle_to_gl, angle_t
     def gen_format_assign_code(actual_angle_format, angle_to_mtl_map):
         return image_format_assign_template1.format(
             actual_angle_format=actual_angle_format,
-            mtl_format=angle_to_mtl_map[actual_angle_format] + "LDR",
+            mtl_format=f"{angle_to_mtl_map[actual_angle_format]}LDR",
             init_function=wrap_init_function(
-                angle_format_utils.get_internal_format_initializer(gl_format,
-                                                                   actual_angle_format)))
+                angle_format_utils.get_internal_format_initializer(
+                    gl_format, actual_angle_format
+                )
+            ),
+        )
 
     return gen_image_map_switch_case(angle_format, angle_format, angle_to_mtl_map,
                                      gen_format_assign_code)
@@ -533,15 +543,17 @@ def gen_image_mtl_to_angle_switch_string(image_table):
     ios_specific_map = image_table["map_ios"]
     astc_tpl_map = image_table["map_astc_tpl"]
 
-    switch_data = ''
+    switch_data = (
+        ''.join(
+            case_image_mtl_to_angle_template.format(
+                mtl_format=angle_to_mtl[angle_format],
+                angle_format=angle_format,
+            )
+            for angle_format in sorted(angle_to_mtl.keys())
+        )
+        + "#if TARGET_OS_OSX || TARGET_OS_MACCATALYST\n"
+    )
 
-    # Common case
-    for angle_format in sorted(angle_to_mtl.keys()):
-        switch_data += case_image_mtl_to_angle_template.format(
-            mtl_format=angle_to_mtl[angle_format], angle_format=angle_format)
-
-    # Mac specific
-    switch_data += "#if TARGET_OS_OSX || TARGET_OS_MACCATALYST\n"
     for angle_format in sorted(mac_specific_map.keys()):
         switch_data += case_image_mtl_to_angle_template.format(
             mtl_format=mac_specific_map[angle_format], angle_format=angle_format)
@@ -557,11 +569,17 @@ def gen_image_mtl_to_angle_switch_string(image_table):
             mtl_format=ios_specific_map[angle_format], angle_format=angle_format)
     for angle_format in sorted(astc_tpl_map.keys()):
         switch_data += case_image_mtl_to_angle_template.format(
-            mtl_format=astc_tpl_map[angle_format] + "LDR", angle_format=angle_format)
+            mtl_format=f"{astc_tpl_map[angle_format]}LDR",
+            angle_format=angle_format,
+        )
+
     switch_data += "#if TARGET_OS_IOS || TARGET_OS_OSX \n"
     for angle_format in sorted(astc_tpl_map.keys()):
         switch_data += case_image_mtl_to_angle_template.format(
-            mtl_format=astc_tpl_map[angle_format] + "HDR", angle_format=angle_format)
+            mtl_format=f"{astc_tpl_map[angle_format]}HDR",
+            angle_format=angle_format,
+        )
+
     switch_data += "#endif // TARGET_OS_IOS || TARGET_OS_OSX\n"
     switch_data += "#endif  // TARGET_OS_IPHONE || mac 11.0+\n"
 
@@ -611,10 +629,12 @@ def gen_vertex_map_switch_string(vertex_table):
     angle_override = vertex_table["override"]
     override_packed = vertex_table["override_tightly_packed"]
 
-    switch_data = ''
-    for angle_fmt in sorted(angle_to_mtl.keys()):
-        switch_data += gen_vertex_map_switch_case(angle_fmt, angle_fmt, angle_to_mtl,
-                                                  override_packed)
+    switch_data = ''.join(
+        gen_vertex_map_switch_case(
+            angle_fmt, angle_fmt, angle_to_mtl, override_packed
+        )
+        for angle_fmt in sorted(angle_to_mtl.keys())
+    )
 
     for angle_fmt in sorted(angle_override.keys()):
         switch_data += gen_vertex_map_switch_case(angle_fmt, angle_override[angle_fmt],
@@ -637,7 +657,7 @@ def gen_mtl_format_caps_init_string(map_image):
     caps_init_str = ''
 
     def cap_to_param(caps, key):
-        return '/** ' + key + '*/ ' + caps.get(key, 'false')
+        return f'/** {key}*/ ' + caps.get(key, 'false')
 
     def caps_to_cpp(caps_table):
         init_str = ''
@@ -680,10 +700,10 @@ def main():
     data_source_name = 'mtl_format_map.json'
     # auto_script parameters.
     if len(sys.argv) > 1:
-        inputs = ['../angle_format.py', '../angle_format_map.json', data_source_name]
         outputs = ['mtl_format_table_autogen.mm']
 
         if sys.argv[1] == 'inputs':
+            inputs = ['../angle_format.py', '../angle_format_map.json', data_source_name]
             print(','.join(inputs))
         elif sys.argv[1] == 'outputs':
             print(','.join(outputs))

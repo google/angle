@@ -86,8 +86,10 @@ def get_swizzle_format_id(internal_format, angle_format):
     bits = angle_format['bits']
     max_component_bits = max(bits.values())
     bits_iter = iter(list(sorted(bits.values())))
-    channels_different = not all(
-        [component_bits == next(bits_iter) for component_bits in bits.values()])
+    channels_different = any(
+        component_bits != next(bits_iter) for component_bits in bits.values()
+    )
+
 
     # The format itself can be used for swizzles if it can be accessed as a render target and
     # sampled and the bit count for all 4 channels is the same.
@@ -101,7 +103,7 @@ def get_swizzle_format_id(internal_format, angle_format):
     # Depth formats need special handling, since combined depth/stencil formats don't have a clearly
     # defined component type.
     if angle_format['channels'].find('d') >= 0:
-        if b == 24 or b == 32:
+        if b in {24, 32}:
             return 'GL_RGBA32F'
         if b == 16:
             return 'GL_RGBA16_EXT'
@@ -116,7 +118,7 @@ def get_swizzle_format_id(internal_format, angle_format):
 
     component_type = angle_format['componentType']
 
-    swizzle = "GL_RGBA" + str(b)
+    swizzle = f"GL_RGBA{b}"
 
     if component_type == 'uint':
         swizzle += "I"
@@ -275,18 +277,23 @@ def parse_json_into_switch_angle_format_string(json_map, json_data):
         supported_case, unsupported_case, support_test = parse_json_angle_format_case(
             format_name, angle_format, json_data)
 
-        table_data += '        case ' + internal_format + ':\n'
+        table_data += f'        case {internal_format}' + ':\n'
 
-        if support_test != None:
+        if support_test is None:
+            table_data += json_to_table_data(internal_format, format_name, "", supported_case)
+
+        else:
             table_data += "        {\n"
-            table_data += json_to_table_data(internal_format, format_name,
-                                             "if (" + support_test + ")", supported_case)
+            table_data += json_to_table_data(
+                internal_format,
+                format_name,
+                f"if ({support_test})",
+                supported_case,
+            )
+
             table_data += json_to_table_data(internal_format, format_name, "else",
                                              unsupported_case)
             table_data += "        }\n"
-        else:
-            table_data += json_to_table_data(internal_format, format_name, "", supported_case)
-
     return table_data
 
 
@@ -297,10 +304,10 @@ def main():
 
     # auto_script parameters.
     if len(sys.argv) > 1:
-        inputs = ['../../angle_format.py', data_source_name, map_file_name]
         outputs = ['texture_format_table_autogen.cpp']
 
         if sys.argv[1] == 'inputs':
+            inputs = ['../../angle_format.py', data_source_name, map_file_name]
             print(','.join(inputs))
         elif sys.argv[1] == 'outputs':
             print(','.join(outputs))

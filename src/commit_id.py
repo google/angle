@@ -32,7 +32,7 @@ def does_git_dir_exist(cwd, aosp):
     ret = os.path.exists(os.path.join(cwd, '.git', 'HEAD'))
     # If we're on Android, .git may be a file with a gitdir directive pointing elsewhere.
     if aosp and not ret and os.path.exists(os.path.join(cwd, '.git')):
-        ret = 'true' == grab_output('git rev-parse --is-inside-work-tree', cwd)
+        ret = grab_output('git rev-parse --is-inside-work-tree', cwd) == 'true'
     return ret
 
 
@@ -110,14 +110,11 @@ if git_dir_exists:
     except:
         pass
 
-hfile = open(output_file, 'w')
-
-logging.info('ANGLE hash: {}'.format(commit_id))
-hfile.write('#define ANGLE_COMMIT_HASH "%s"\n' % commit_id)
-hfile.write('#define ANGLE_COMMIT_HASH_SIZE %d\n' % commit_id_size)
-hfile.write('#define ANGLE_COMMIT_DATE "%s"\n' % commit_date)
-hfile.write('#define ANGLE_COMMIT_POSITION %s\n' % commit_position)
-if binary_loading:
-    hfile.write('#define ANGLE_HAS_BINARY_LOADING\n')
-
-hfile.close()
+with open(output_file, 'w') as hfile:
+    logging.info(f'ANGLE hash: {commit_id}')
+    hfile.write('#define ANGLE_COMMIT_HASH "%s"\n' % commit_id)
+    hfile.write('#define ANGLE_COMMIT_HASH_SIZE %d\n' % commit_id_size)
+    hfile.write('#define ANGLE_COMMIT_DATE "%s"\n' % commit_date)
+    hfile.write('#define ANGLE_COMMIT_POSITION %s\n' % commit_position)
+    if binary_loading:
+        hfile.write('#define ANGLE_HAS_BINARY_LOADING\n')

@@ -31,7 +31,12 @@ def parse_args():
     parser.add_argument('os_dim', help='OS dimension. (e.g. Windows-10)')
     parser.add_argument('-s', '--shards', default=1, help='number of shards', type=int)
     parser.add_argument(
-        '-p', '--pool', default=DEFAULT_POOL, help='swarming pool, default is %s.' % DEFAULT_POOL)
+        '-p',
+        '--pool',
+        default=DEFAULT_POOL,
+        help=f'swarming pool, default is {DEFAULT_POOL}.',
+    )
+
     parser.add_argument('-g', '--gpu', help='GPU dimension. (e.g. intel-hd-630-win10-stable)')
     parser.add_argument('-t', '--device-type', help='Android device type (e.g. bullhead)')
     parser.add_argument('-o', '--device-os', help='Android OS.')
@@ -39,13 +44,17 @@ def parse_args():
         '-l',
         '--log',
         default=DEFAULT_LOG_LEVEL,
-        help='Log level. Default is %s.' % DEFAULT_LOG_LEVEL)
+        help=f'Log level. Default is {DEFAULT_LOG_LEVEL}.',
+    )
+
     parser.add_argument(
         '--gold', action='store_true', help='Use swarming arguments for Gold tests.')
     parser.add_argument(
         '--priority',
-        help='Task priority. Default is %s. Use judiciously.' % DEFAULT_TASK_PRIORITY,
-        default=DEFAULT_TASK_PRIORITY)
+        help=f'Task priority. Default is {DEFAULT_TASK_PRIORITY}. Use judiciously.',
+        default=DEFAULT_TASK_PRIORITY,
+    )
+
     parser.add_argument(
         '-e',
         '--env',
@@ -67,7 +76,7 @@ def invoke_mb(args):
         logging.info('Standalone mode detected.')
         mb_args += ['-i', os.path.join('infra', 'specs', 'gn_isolate_map.pyl')]
 
-    logging.info('Invoking mb: %s' % ' '.join(mb_args))
+    logging.info(f"Invoking mb: {' '.join(mb_args)}")
     return subprocess.check_output(mb_args)
 
 
@@ -77,35 +86,44 @@ def main():
     logging.basicConfig(level=args.log.upper())
 
     path = args.gn_path.replace('\\', '/')
-    out_gn_path = '//' + path
+    out_gn_path = f'//{path}'
     out_file_path = os.path.join(*path.split('/'))
 
     get_command_output = invoke_mb(['get-swarming-command', out_gn_path, args.test, '--as-list'])
     swarming_cmd = json.loads(get_command_output)
-    logging.info('Swarming command: %s' % ' '.join(swarming_cmd))
+    logging.info(f"Swarming command: {' '.join(swarming_cmd)}")
 
     invoke_mb(['isolate', out_gn_path, args.test])
 
     isolate_cmd_path = os.path.join('tools', 'luci-go', 'isolate')
-    isolate_file = os.path.join(out_file_path, '%s.isolate' % args.test)
-    archive_file = os.path.join(out_file_path, '%s.archive.json' % args.test)
+    isolate_file = os.path.join(out_file_path, f'{args.test}.isolate')
+    archive_file = os.path.join(out_file_path, f'{args.test}.archive.json')
 
     isolate_args = [
         isolate_cmd_path, 'archive', '-i', isolate_file, '-cas-instance', 'chromium-swarm',
         '-dump-json', archive_file
     ]
-    logging.info('Invoking isolate: %s' % ' '.join(isolate_args))
+    logging.info(f"Invoking isolate: {' '.join(isolate_args)}")
     subprocess.check_call(isolate_args)
     with open(archive_file) as f:
         digest = json.load(f).get(args.test)
 
-    logging.info('Got an CAS digest %s' % digest)
+    logging.info(f'Got an CAS digest {digest}')
     swarming_script_path = os.path.join('tools', 'luci-go', 'swarming')
 
     swarming_args = [
-        swarming_script_path, 'trigger', '-S', 'chromium-swarm.appspot.com', '-d',
-        'os=' + args.os_dim, '-d', 'pool=' + args.pool, '-digest', digest
+        swarming_script_path,
+        'trigger',
+        '-S',
+        'chromium-swarm.appspot.com',
+        '-d',
+        f'os={args.os_dim}',
+        '-d',
+        f'pool={args.pool}',
+        '-digest',
+        digest,
     ]
+
 
     # Set priority. Don't abuse this!
     swarming_args += ['-priority', str(args.priority), '-realm', DEFAULT_REALM]
@@ -120,13 +138,13 @@ def main():
         pass
 
     if args.gpu:
-        swarming_args += ['-d', 'gpu=' + args.gpu]
+        swarming_args += ['-d', f'gpu={args.gpu}']
 
     if args.device_type:
-        swarming_args += ['-d', 'device_type=' + args.device_type]
+        swarming_args += ['-d', f'device_type={args.device_type}']
 
     if args.device_os:
-        swarming_args += ['-d', 'device_os=' + args.device_os]
+        swarming_args += ['-d', f'device_os={args.device_os}']
 
     cmd_args = ['-relative-cwd', args.gn_path, '--']
 
@@ -154,11 +172,11 @@ def main():
 
             shard_args += cmd_args
 
-            logging.info('Invoking swarming: %s' % ' '.join(shard_args))
+            logging.info(f"Invoking swarming: {' '.join(shard_args)}")
             subprocess.call(shard_args)
     else:
         swarming_args += cmd_args
-        logging.info('Invoking swarming: %s' % ' '.join(swarming_args))
+        logging.info(f"Invoking swarming: {' '.join(swarming_args)}")
         subprocess.call(swarming_args)
     return 0
 

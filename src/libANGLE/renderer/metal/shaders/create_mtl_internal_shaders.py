@@ -29,8 +29,10 @@ template_header_boilerplate = """// GENERATED FILE - DO NOT EDIT.
 # filename: the file whose content will be converted to C++ byte array.
 # dest_src_file: destination header file that will contain the byte array.
 def append_file_as_byte_array_string(variable_name, filename, dest_src_file):
-    string = '// Generated from {0}:\n'.format(filename)
-    string += 'constexpr uint8_t {0}[]={{\n'.format(variable_name)
+    string = '// Generated from {0}:\n'.format(
+        filename
+    ) + 'constexpr uint8_t {0}[]={{\n'.format(variable_name)
+
     bytes_ = open(filename, "rb").read()
     for byte in bytes_:
         string += '0x{:02x}'.format(byte) + ", "
@@ -56,7 +58,9 @@ def main():
     os.chdir(sys.path[0])
 
     boilerplate_code = template_header_boilerplate.format(
-        script_name=sys.argv[0], copyright_year=datetime.today().year)
+        script_name=sys.argv[0], copyright_year=datetime.now().year
+    )
+
 
     # -------- Compile shaders -----------
     # boiler plate code

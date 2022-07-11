@@ -15,7 +15,7 @@ import six
 import sys
 # Swarming runs merge scripts with its python and some really old modules.
 if __name__ == '__main__' and 'ensure_binary' not in dir(six):
-    print('spawning via vpython due to an old six version (%s)' % six.__version__)
+    print(f'spawning via vpython due to an old six version ({six.__version__})')
     import subprocess
     sys.exit(subprocess.call(['vpython', os.path.realpath(__file__)] + sys.argv[1:]))
 
@@ -96,7 +96,7 @@ def _upload_perf_results(json_to_upload, name, configuration_name, build_propert
         args.append(build_properties['git_revision'])
 
     #TODO(crbug.com/1072729): log this in top level
-    logging.info('upload_results_to_perf_dashboard: %s.' % args)
+    logging.info(f'upload_results_to_perf_dashboard: {args}.')
 
     return upload_results_to_perf_dashboard.main(args)
 
@@ -146,14 +146,12 @@ def _handle_perf_json_test_results(benchmark_directory_map, test_results_list):
                         # Output is null meaning the test didn't produce any results.
                         # Want to output an error and continue loading the rest of the
                         # test results.
-                        logging.warning('No results produced for %s, skipping upload' % directory)
+                        logging.warning(f'No results produced for {directory}, skipping upload')
                         continue
-                    if json_results.get('version') == 3:
-                        # Non-telemetry tests don't have written json results but
-                        # if they are executing then they are enabled and will generate
-                        # chartjson results.
-                        if not bool(json_results.get('tests')):
-                            enabled = False
+                    if json_results.get('version') == 3 and not bool(
+                        json_results.get('tests')
+                    ):
+                        enabled = False
                     if not is_ref:
                         # We don't need to upload reference build data to the
                         # flakiness dashboard since we don't monitor the ref build
@@ -166,7 +164,7 @@ def _handle_perf_json_test_results(benchmark_directory_map, test_results_list):
             if not enabled:
                 # We don't upload disabled benchmarks or tests that are run
                 # as a smoke test
-                logging.info('Benchmark %s ran no tests on at least one shard' % benchmark_name)
+                logging.info(f'Benchmark {benchmark_name} ran no tests on at least one shard')
                 continue
             benchmark_enabled_map[benchmark_name] = True
 
@@ -176,7 +174,7 @@ def _handle_perf_json_test_results(benchmark_directory_map, test_results_list):
 
 
 def _generate_unique_logdog_filename(name_prefix):
-    return name_prefix + '_' + str(uuid.uuid4())
+    return f'{name_prefix}_{str(uuid.uuid4())}'
 
 
 def _handle_perf_logs(benchmark_directory_map, extra_links):
@@ -239,7 +237,7 @@ def _scan_output_dir(task_output_dir):
     # the lists were written to.
     for directory in benchmark_directory_list:
         benchmark_name = _get_benchmark_name(directory)
-        if benchmark_name in benchmark_directory_map.keys():
+        if benchmark_name in benchmark_directory_map:
             benchmark_directory_map[benchmark_name].append(directory)
         else:
             benchmark_directory_map[benchmark_name] = [directory]
@@ -399,7 +397,7 @@ def _merge_perf_results(benchmark_name, results_filename, directories, build_pro
         json.dump(merged_results, rf)
 
     end_time = time.time()
-    print_duration(('%s results merging' % (benchmark_name)), begin_time, end_time)
+    print_duration(f'{benchmark_name} results merging', begin_time, end_time)
 
 
 def _upload_individual(benchmark_name, directories, configuration_name, build_properties,
@@ -421,14 +419,20 @@ def _upload_individual(benchmark_name, directories, configuration_name, build_pr
             results_filename = os.path.join(directories[0], 'perf_results.json')
 
         results_size_in_mib = os.path.getsize(results_filename) / (2**20)
-        logging.info('Uploading perf results from %s benchmark (size %s Mib)' %
-                     (benchmark_name, results_size_in_mib))
+        logging.info(
+            f'Uploading perf results from {benchmark_name} benchmark (size {results_size_in_mib} Mib)'
+        )
+
         with open(output_json_file, 'w') as oj:
             upload_return_code = _upload_perf_results(results_filename, benchmark_name,
                                                       configuration_name, build_properties, oj)
             upload_end_time = time.time()
-            print_duration(('%s upload time' % (benchmark_name)), upload_begin_time,
-                           upload_end_time)
+            print_duration(
+                f'{benchmark_name} upload time',
+                upload_begin_time,
+                upload_end_time,
+            )
+
             return (benchmark_name, upload_return_code == 0)
     finally:
         shutil.rmtree(tmpfile_dir)
@@ -440,7 +444,7 @@ def _upload_individual_benchmark(params):
     except Exception:
         benchmark_name = params[0]
         upload_succeed = False
-        logging.exception('Error uploading perf result of %s' % benchmark_name)
+        logging.exception(f'Error uploading perf result of {benchmark_name}')
         return benchmark_name, upload_succeed
 
 
@@ -484,7 +488,7 @@ def _find_device_id_by_shard_id(benchmarks_shard_map_file, shard_id):
     try:
         with open(benchmarks_shard_map_file) as f:
             shard_map_json = json.load(f)
-            device_id = shard_map_json['extra_infos']['bot #%s' % shard_id]
+            device_id = shard_map_json['extra_infos'][f'bot #{shard_id}']
     except KeyError as e:
         logging.error('Failed to locate device name in shard map: %s', e)
     return device_id
@@ -526,8 +530,12 @@ def _should_add_device_id_in_perf_result(builder_name):
     # We should always add device id in calibration builders.
     # For testing purpose, adding fyi as well for faster turnaround, because
     # calibration builders run every 24 hours.
-    return any([builder_name == p.name for p in bot_platforms.CALIBRATION_PLATFORMS
-               ]) or (builder_name == 'android-pixel2-perf-fyi')
+    return (
+        any(
+            builder_name == p.name for p in bot_platforms.CALIBRATION_PLATFORMS
+        )
+        or builder_name == 'android-pixel2-perf-fyi'
+    )
 
 
 def _update_perf_results_for_calibration(benchmarks_shard_map_file, benchmark_enabled_map,
@@ -590,17 +598,16 @@ def _handle_perf_results(benchmark_enabled_map, benchmark_directory_map, configu
     except multiprocessing.TimeoutError:
         upload_result_timeout = True
         logging.error('Timeout uploading benchmarks to perf dashboard in parallel')
-        results = []
-        for benchmark_name in benchmark_directory_map:
-            results.append((benchmark_name, False))
+        results = [
+            (benchmark_name, False)
+            for benchmark_name in benchmark_directory_map
+        ]
+
     finally:
         pool.terminate()
 
     # Keep a mapping of benchmarks to their upload results
-    benchmark_upload_result_map = {}
-    for r in results:
-        benchmark_upload_result_map[r[0]] = r[1]
-
+    benchmark_upload_result_map = {r[0]: r[1] for r in results}
     logdog_dict = {}
     upload_failures_counter = 0
     logdog_stream = None
@@ -625,7 +632,8 @@ def _handle_perf_results(benchmark_enabled_map, benchmark_directory_map, configu
         json.dumps(dict(logdog_dict), sort_keys=True, indent=4, separators=(',', ': ')),
         content_type=JSON_CONTENT_TYPE)
     if upload_failures_counter > 0:
-        logdog_label += (' %s merge script perf data upload failures' % upload_failures_counter)
+        logdog_label += f' {upload_failures_counter} merge script perf data upload failures'
+
     extra_links[logdog_label] = logdog_stream
     end_time = time.time()
     print_duration('Uploading results to perf dashboard', begin_time, end_time)
@@ -644,7 +652,10 @@ def _write_perf_data_to_logfile(benchmark_name, output_file, configuration_name,
             try:
                 results = json.load(f)
             except ValueError:
-                logging.error('Error parsing perf results JSON for benchmark  %s' % benchmark_name)
+                logging.error(
+                    f'Error parsing perf results JSON for benchmark  {benchmark_name}'
+                )
+
         if results:
             try:
                 json_fname = _generate_unique_logdog_filename(benchmark_name)

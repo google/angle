@@ -125,34 +125,40 @@ def get_component_type(uniform_type):
 
 
 def get_texture_type(uniform_type):
-    for sampler_type, tex_type in texture_types.items():
-        if uniform_type.endswith(sampler_type):
-            return "GL_TEXTURE_" + tex_type
-    return "GL_NONE"
+    return next(
+        (
+            f"GL_TEXTURE_{tex_type}"
+            for sampler_type, tex_type in texture_types.items()
+            if uniform_type.endswith(sampler_type)
+        ),
+        "GL_NONE",
+    )
 
 
 def get_transposed_type(uniform_type):
-    if "_MAT" in uniform_type:
-        if "x" in uniform_type:
-            return "GL_FLOAT_MAT" + uniform_type[-1] + "x" + uniform_type[uniform_type.find("_MAT")
-                                                                          + 4]
-        else:
-            return uniform_type
-    else:
+    if "_MAT" not in uniform_type:
         return "GL_NONE"
+    if "x" in uniform_type:
+        return (
+            f"GL_FLOAT_MAT{uniform_type[-1]}x"
+            + uniform_type[uniform_type.find("_MAT") + 4]
+        )
+
+    else:
+        return uniform_type
 
 
 def get_bool_type(uniform_type):
-    if uniform_type == "GL_INT" or uniform_type == "GL_UNSIGNED_INT" or uniform_type == "GL_FLOAT":
+    if uniform_type in ["GL_INT", "GL_UNSIGNED_INT", "GL_FLOAT"]:
         return "GL_BOOL"
     elif "_VEC" in uniform_type:
-        return "GL_BOOL_VEC" + uniform_type[-1]
+        return f"GL_BOOL_VEC{uniform_type[-1]}"
     else:
         return "GL_NONE"
 
 
 def get_sampler_format(uniform_type):
-    if not "_SAMPLER_" in uniform_type:
+    if "_SAMPLER_" not in uniform_type:
         return "SamplerFormat::InvalidEnum"
     elif "_SHADOW" in uniform_type:
         return "SamplerFormat::Shadow"
@@ -190,26 +196,24 @@ def get_components(uniform_type):
 
 def get_component_size(uniform_type):
     component_type = get_component_type(uniform_type)
-    if component_type == "GL_BOOL":
+    if component_type in ["GL_BOOL", "GL_INT"]:
         return "sizeof(GLint)"
     elif component_type == "GL_FLOAT":
         return "sizeof(GLfloat)"
-    elif component_type == "GL_INT":
-        return "sizeof(GLint)"
-    elif component_type == "GL_UNSIGNED_INT":
-        return "sizeof(GLuint)"
     elif component_type == "GL_NONE":
         return "0"
+    elif component_type == "GL_UNSIGNED_INT":
+        return "sizeof(GLuint)"
     else:
-        raise "Invalid component type: " + component_type
+        raise f"Invalid component type: {component_type}"
 
 
 def get_internal_size(uniform_type):
-    return get_component_size(uniform_type) + " * " + str(int(get_rows(uniform_type)) * 4)
+    return f"{get_component_size(uniform_type)} * {str(int(get_rows(uniform_type)) * 4)}"
 
 
 def get_external_size(uniform_type):
-    return get_component_size(uniform_type) + " * " + get_components(uniform_type)
+    return f"{get_component_size(uniform_type)} * {get_components(uniform_type)}"
 
 
 def get_is_sampler(uniform_type):
@@ -244,17 +248,17 @@ def gen_type_info(uniform_type):
 
 
 def gen_type_index_case(index, uniform_type):
-    return "case " + uniform_type + ": return " + str(index) + ";"
+    return f"case {uniform_type}: return {str(index)};"
 
 
 def main():
 
     # auto_script parameters.
     if len(sys.argv) > 1:
-        inputs = []
         outputs = ['uniform_type_info_autogen.cpp']
 
         if sys.argv[1] == 'inputs':
+            inputs = []
             print(','.join(inputs))
         elif sys.argv[1] == 'outputs':
             print(','.join(outputs))

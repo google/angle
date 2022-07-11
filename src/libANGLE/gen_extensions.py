@@ -325,7 +325,7 @@ def format_exts(ext_infos):
 def format_helper_function(ext_name, vendors):
     return _HELPER_TEMPLATE.format(
         ext_name=ext_name,
-        expression=' || '.join(['%s%s' % (ext_name, vendor) for vendor in vendors]),
+        expression=' || '.join([f'{ext_name}{vendor}' for vendor in vendors]),
     )
 
 
@@ -356,7 +356,10 @@ def get_ext_support(ext_name, gpu_data):
 
 def get_md_table_header(md_gpu_configs):
     configs = ' | '.join(md_gpu_configs)
-    dashes = ' | '.join([(':%s:' % ('-' * (len(config) - 2))) for config in md_gpu_configs])
+    dashes = ' | '.join(
+        [f":{'-' * (len(config) - 2)}:" for config in md_gpu_configs]
+    )
+
     return _MD_TABLE_HEADER_TEMPLATE.format(configs=configs, dashes=dashes)
 
 
@@ -385,16 +388,24 @@ def main():
     gles_cpp_output_name = 'gles_extensions_autogen.cpp'
     md_output_name = '../../doc/ExtensionSupport.md'
     ext_jsons = [
-        '../../scripts/extension_data/%s.json' % s.lower().replace(' ', '_')
+        f"../../scripts/extension_data/{s.lower().replace(' ', '_')}.json"
         for s in _MD_GLES_GPU_CONFIGS
     ]
+
     gles1_ext_jsons = [
-        '../../scripts/extension_data/%s_gles1.json' % s.lower().replace(' ', '_')
+        f"../../scripts/extension_data/{s.lower().replace(' ', '_')}_gles1.json"
         for s in _MD_GLES1_GPU_CONFIGS
     ]
+
     if len(sys.argv) > 1:
-        inputs = ['../../scripts/%s' % xml_input for xml_input in registry_xml.xml_inputs
-                 ] + ext_jsons + gles1_ext_jsons
+        inputs = (
+            [
+                f'../../scripts/{xml_input}'
+                for xml_input in registry_xml.xml_inputs
+            ]
+            + ext_jsons
+        ) + gles1_ext_jsons
+
         outputs = [gles_h_output_name, gles_cpp_output_name, md_output_name]
         if sys.argv[1] == 'inputs':
             print(','.join(inputs))
@@ -434,10 +445,11 @@ def main():
         else:
             ext_name_to_vendors[ext_name] = [info['vendor']]
 
-    helper_function_data = []
-    for (ext_name, vendors) in sorted(ext_name_to_vendors.items()):
-        if len(vendors) > 1:
-            helper_function_data += [format_helper_function(ext_name, vendors)]
+    helper_function_data = [
+        format_helper_function(ext_name, vendors)
+        for ext_name, vendors in sorted(ext_name_to_vendors.items())
+        if len(vendors) > 1
+    ]
 
     helper_functions = '\n'.join(helper_function_data)
 

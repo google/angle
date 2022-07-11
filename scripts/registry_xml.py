@@ -381,7 +381,6 @@ default_enum_group_name = "DefaultGroup"
 unsupported_enum_group_names = {
     'GetMultisamplePNameNV',
     'BufferPNameARB',
-    'BufferPointerNameARB',
     'VertexAttribPointerPropertyARB',
     'VertexAttribPropertyARB',
     'FenceParameterNameNV',
@@ -393,6 +392,7 @@ unsupported_enum_group_names = {
     'ClampColorModeARB',
 }
 
+
 # Versions (major, minor). Note that GLES intentionally places 1.0 last.
 DESKTOP_GL_VERSIONS = [(1, 0), (1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (2, 0), (2, 1), (3, 0),
                        (3, 1), (3, 2), (3, 3), (4, 0), (4, 1), (4, 2), (4, 3), (4, 4), (4, 5),
@@ -403,7 +403,6 @@ WGL_VERSIONS = [(1, 0)]
 CL_VERSIONS = [(1, 0), (1, 1), (1, 2), (2, 0), (2, 1), (2, 2), (3, 0)]
 
 
-# API types
 class apis:
     GL = 'GL'
     GLES = 'GLES'
@@ -426,8 +425,7 @@ def strip_api_prefix(cmd_name):
 
 def get_cmd_name(command_node):
     proto = command_node.find('proto')
-    cmd_name = proto.find('name').text
-    return cmd_name
+    return proto.find('name').text
 
 
 class CommandNames:
@@ -505,8 +503,10 @@ class RegistryXML:
         elif 'cl' in supported:
             return 'clext'
         else:
-            assert False, 'Cannot classify support for %s: %s' % (extension.attrib['name'],
-                                                                  supported)
+            assert (
+                False
+            ), f"Cannot classify support for {extension.attrib['name']}: {supported}"
+
             return 'unknown'
 
     def AddExtensionCommands(self, supported_extensions, apis):
@@ -518,7 +518,7 @@ class RegistryXML:
 
         for extension in self.root.findall("extensions/extension"):
             extension_name = extension.attrib['name']
-            if not extension_name in supported_extensions:
+            if extension_name not in supported_extensions:
                 continue
 
             ext_annotations[extension_name] = self._ClassifySupport(extension)
@@ -546,10 +546,11 @@ class RegistryXML:
         for extension_name, ext_cmd_names in sorted(self.ext_data.items()):
 
             # Detect and filter duplicate extensions.
-            dupes = []
-            for ext_cmd in ext_cmd_names:
-                if ext_cmd in self.all_cmd_names.get_all_commands():
-                    dupes.append(ext_cmd)
+            dupes = [
+                ext_cmd
+                for ext_cmd in ext_cmd_names
+                if ext_cmd in self.all_cmd_names.get_all_commands()
+            ]
 
             for dupe in dupes:
                 ext_cmd_names.remove(dupe)
@@ -569,7 +570,7 @@ class EntryPoints:
             cmd_name = get_cmd_name(command_node)
 
             if api == apis.WGL:
-                cmd_name = cmd_name if cmd_name[:3] == 'wgl' else 'wgl' + cmd_name
+                cmd_name = cmd_name if cmd_name[:3] == 'wgl' else f'wgl{cmd_name}'
 
             if cmd_name not in commands:
                 continue

@@ -108,22 +108,20 @@ def run_swarming_and_get_json(*args):
 def name_device(gpu, device_type):
     if gpu:
         return GPU_NAME_MAP[gpu]
-    else:
-        assert device_type
-        return DEVICE_NAME_MAP[device_type]
+    assert device_type
+    return DEVICE_NAME_MAP[device_type]
 
 
 def name_os(bot_os, device_os):
     if bot_os:
         return BOT_OS_NAME_MAP[bot_os]
-    else:
-        assert device_os
-        return DEVICE_OS_NAME_MAP[device_os]
+    assert device_os
+    return DEVICE_OS_NAME_MAP[device_os]
 
 
 def get_props_string(gpu, bot_os, device_os, device_type):
     d = {'gpu': gpu, 'os': bot_os, 'device os': device_os, 'device': device_type}
-    return ', '.join('%s %s' % (k, v) for (k, v) in d.items() if v)
+    return ', '.join(f'{k} {v}' for (k, v) in d.items() if v)
 
 
 def collect_task_and_update_json(task_id, found_dims):
@@ -131,21 +129,33 @@ def collect_task_and_update_json(task_id, found_dims):
     bot_os = found_dims.get('os', None)
     device_os = found_dims.get('device_os', None)
     device_type = found_dims.get('device_type', None)
-    logging.info('Found task with ID: %s, %s' %
-                 (task_id, get_props_string(gpu, bot_os, device_os, device_type)))
-    target_file_name = '%s_%s.json' % (name_device(gpu, device_type), name_os(bot_os, device_os))
+    logging.info(
+        f'Found task with ID: {task_id}, {get_props_string(gpu, bot_os, device_os, device_type)}'
+    )
+
+    target_file_name = (
+        f'{name_device(gpu, device_type)}_{name_os(bot_os, device_os)}.json'
+    )
+
     target_file = os.path.join(THIS_DIR, 'extension_data', target_file_name)
     with tempfile.TemporaryDirectory() as tempdirname:
-        run_swarming('collect', '-S', SWARMING_SERVER, '-output-dir=%s' % tempdirname, task_id)
+        run_swarming(
+            'collect',
+            '-S',
+            SWARMING_SERVER,
+            f'-output-dir={tempdirname}',
+            task_id,
+        )
+
         task_dir = os.path.join(tempdirname, task_id)
         found = False
         for fname in os.listdir(task_dir):
             if fname in INFO_FILES:
                 if found:
-                    logging.warning('Multiple candidates found for %s' % target_file_name)
+                    logging.warning(f'Multiple candidates found for {target_file_name}')
                     return
                 else:
-                    logging.info('%s -> %s' % (fname, target_file))
+                    logging.info(f'{fname} -> {target_file}')
                     found = True
                     source_file = os.path.join(task_dir, fname)
                     shutil.copy(source_file, target_file)
@@ -167,7 +177,7 @@ def main():
         args.verbose = len(LOG_LEVELS) - 1
     logging.basicConfig(level=LOG_LEVELS[args.verbose])
 
-    name_expr = re.compile(r'^' + TEST_SUITE + r' on (.*) on (.*)$')
+    name_expr = re.compile(f'^{TEST_SUITE} on (.*) on (.*)$')
 
     for builder in BUILDERS:
 
@@ -175,18 +185,20 @@ def main():
         # We list two builds using 'bb ls' and take the second, to ensure the build is finished.
         ls_output = run_bb_and_get_output('ls', builder, '-n', '2', '-id')
         build_id = ls_output.splitlines()[1]
-        logging.info('%s: build id %s' % (builder, build_id))
+        logging.info(f'{builder}: build id {build_id}')
 
         # Step 2: Get the test suite swarm hashes.
         # 'bb get' returns build properties, including cloud storage identifiers for this test suite.
         get_json = run_bb_and_get_json('get', build_id, '-p')
         test_suite_hash = get_json['output']['properties']['swarm_hashes'][TEST_SUITE]
-        logging.info('Found swarm hash: %s' % test_suite_hash)
+        logging.info(f'Found swarm hash: {test_suite_hash}')
 
         # Step 3: Find all tasks using the swarm hashes.
         # 'swarming tasks' can find instances of the test suite that ran on specific systems.
-        task_json = run_swarming_and_get_json('tasks', '-tag', 'data:%s' % test_suite_hash, '-S',
-                                              SWARMING_SERVER)
+        task_json = run_swarming_and_get_json(
+            'tasks', '-tag', f'data:{test_suite_hash}', '-S', SWARMING_SERVER
+        )
+
 
         # Step 4: Download the extension data for each configuration we're monitoring.
         # 'swarming collect' downloads test artifacts to a temporary directory.
@@ -202,10 +214,11 @@ def main():
             for bot_dim in task['bot_dimensions']:
                 key, value = bot_dim['key'], bot_dim['value']
                 if key in dim_map:
-                    logging.debug('%s=%s' % (key, value))
+                    logging.debug(f'{key}={value}')
                     mapped_values = dim_map[key]
-                    found_dim = get_intersect_or_none(mapped_values, value)
-                    if found_dim:
+                    if found_dim := get_intersect_or_none(
+                        mapped_values, value
+                    ):
                         found_dims[key] = found_dim
             found_gpu_or_device = ('gpu' in found_dims or 'device_type' in found_dims)
             found_os = ('os' in found_dims or 'device_os' in found_dims)

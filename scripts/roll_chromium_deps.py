@@ -96,9 +96,9 @@ ANGLE_CHROMIUM_DEPS = [
 
 ANGLE_URL = 'https://chromium.googlesource.com/angle/angle'
 CHROMIUM_SRC_URL = 'https://chromium.googlesource.com/chromium/src'
-CHROMIUM_COMMIT_TEMPLATE = CHROMIUM_SRC_URL + '/+/%s'
-CHROMIUM_LOG_TEMPLATE = CHROMIUM_SRC_URL + '/+log/%s'
-CHROMIUM_FILE_TEMPLATE = CHROMIUM_SRC_URL + '/+/%s/%s'
+CHROMIUM_COMMIT_TEMPLATE = f'{CHROMIUM_SRC_URL}/+/%s'
+CHROMIUM_LOG_TEMPLATE = f'{CHROMIUM_SRC_URL}/+log/%s'
+CHROMIUM_FILE_TEMPLATE = f'{CHROMIUM_SRC_URL}/+/%s/%s'
 
 COMMIT_POSITION_RE = re.compile('^Cr-Commit-Position: .*#([0-9]+).*$')
 CLANG_REVISION_RE = re.compile(r'^CLANG_REVISION = \'([-0-9a-z]+)\'')
@@ -117,7 +117,7 @@ ANDROID_DEPS_PATH = 'src/third_party/android_deps/'
 NOTIFY_EMAIL = 'angle-wrangler@grotations.appspotmail.com'
 
 CLANG_TOOLS_URL = 'https://chromium.googlesource.com/chromium/src/tools/clang'
-CLANG_FILE_TEMPLATE = CLANG_TOOLS_URL + '/+/%s/%s'
+CLANG_FILE_TEMPLATE = f'{CLANG_TOOLS_URL}/+/%s/%s'
 
 CLANG_TOOLS_PATH = 'tools/clang'
 CLANG_UPDATE_SCRIPT_URL_PATH = 'scripts/update.py'
@@ -172,8 +172,7 @@ def ParseLocalDepsFile(filename):
 
 def ParseCommitPosition(commit_message):
     for line in reversed(commit_message.splitlines()):
-        m = COMMIT_POSITION_RE.match(line.strip())
-        if m:
+        if m := COMMIT_POSITION_RE.match(line.strip()):
             return int(m.group(1))
     logging.error('Failed to parse commit position id from:\n%s\n', commit_message)
     sys.exit(-1)
@@ -228,18 +227,16 @@ def _GetBranches():
             # The assumption is that the first char will always be the '*'.
             active = line[1:].strip()
             branches.append(active)
-        else:
-            branch = line.strip()
-            if branch:
-                branches.append(branch)
+        elif branch := line.strip():
+            branches.append(branch)
     return active, branches
 
 
 def _ReadGitilesContent(url):
     # Download and decode BASE64 content until
     # https://code.google.com/p/gitiles/issues/detail?id=7 is fixed.
-    logging.debug('Reading gitiles URL %s' % url)
-    base64_content = ReadUrlContent(url + '?format=TEXT')
+    logging.debug(f'Reading gitiles URL {url}')
+    base64_content = ReadUrlContent(f'{url}?format=TEXT')
     return base64.b64decode(base64_content[0]).decode('utf-8')
 
 
@@ -413,8 +410,7 @@ def CalculateChangedClang(changed_deps, autoroll):
 
     def GetClangRev(lines):
         for line in lines:
-            match = CLANG_REVISION_RE.match(line)
-            if match:
+            if match := CLANG_REVISION_RE.match(line):
                 return match.group(1)
         raise RollError('Could not parse Clang revision!')
 
@@ -455,7 +451,7 @@ def GenerateCommitMessage(
 
     def Section(adjective, deps):
         noun = 'dependency' if len(deps) == 1 else 'dependencies'
-        commit_msg.append('%s %s' % (adjective, noun))
+        commit_msg.append(f'{adjective} {noun}')
 
     tbr_authors = ''
     if changed_deps_list:
@@ -516,16 +512,18 @@ def UpdateDepsFile(deps_filename, rev_update, changed_deps, new_cr_content, auto
         # Add and remove dependencies. For now: only generated android deps.
         # Since gclient cannot add or remove deps, we rely on the fact that
         # these android deps are located in one place to copy/paste.
-        deps_re = re.compile(ANDROID_DEPS_START + '.*' + ANDROID_DEPS_END, re.DOTALL)
+        deps_re = re.compile(f'{ANDROID_DEPS_START}.*{ANDROID_DEPS_END}', re.DOTALL)
         new_deps = deps_re.search(new_cr_content)
         old_deps = deps_re.search(deps_content)
         if not new_deps or not old_deps:
-            faulty = 'Chromium' if not new_deps else 'ANGLE'
+            faulty = 'ANGLE' if new_deps else 'Chromium'
             raise RollError('Was expecting to find "%s" and "%s"\n'
                             'in %s DEPS' % (ANDROID_DEPS_START, ANDROID_DEPS_END, faulty))
 
-        replacement = new_deps.group(0).replace('src/third_party/android_deps',
-                                                'third_party/android_deps')
+        replacement = new_deps[0].replace(
+            'src/third_party/android_deps', 'third_party/android_deps'
+        )
+
         replacement = replacement.replace('checkout_android',
                                           'checkout_android and not build_with_chromium')
 
@@ -548,9 +546,9 @@ def UpdateDepsFile(deps_filename, rev_update, changed_deps, new_cr_content, auto
                                 'Then run "gclient sync" again.' % local_dep_dir)
         if isinstance(dep, ChangedCipdPackage):
             package = dep.package.format()  # Eliminate double curly brackets
-            update = '%s:%s@%s' % (dep.path, package, dep.new_version)
+            update = f'{dep.path}:{package}@{dep.new_version}'
         else:
-            update = '%s@%s' % (dep.path, dep.new_rev)
+            update = f'{dep.path}@{dep.new_rev}'
         gclient_cmd = 'gclient'
         if platform.system() == 'Windows':
             gclient_cmd += '.bat'
@@ -633,8 +631,17 @@ def _UploadCL(commit_queue_mode):
     - 1: Run trybots but do not submit to CQ.
     - 0: Skip CQ, upload only.
   """
-    cmd = ['git', 'cl', 'upload', '--force', '--bypass-hooks', '--send-mail']
-    cmd.extend(['--cc', NOTIFY_EMAIL])
+    cmd = [
+        'git',
+        'cl',
+        'upload',
+        '--force',
+        '--bypass-hooks',
+        '--send-mail',
+        '--cc',
+        NOTIFY_EMAIL,
+    ]
+
     if commit_queue_mode >= 2:
         logging.info('Sending the CL to the CQ...')
         cmd.extend(['--use-commit-queue'])
@@ -758,16 +765,15 @@ def main():
 
     if opts.autoroll:
         _LocalCommitAmend(commit_msg, opts.dry_run)
+    elif _IsTreeClean():
+        logging.info("No DEPS changes detected, skipping CL creation.")
     else:
-        if _IsTreeClean():
-            logging.info("No DEPS changes detected, skipping CL creation.")
-        else:
-            _LocalCommit(commit_msg, opts.dry_run)
-            commit_queue_mode = ChooseCQMode(opts.skip_cq, opts.cq_over, current_commit_pos,
-                                             new_commit_pos)
-            logging.info('Uploading CL...')
-            if not opts.dry_run:
-                _UploadCL(commit_queue_mode)
+        _LocalCommit(commit_msg, opts.dry_run)
+        commit_queue_mode = ChooseCQMode(opts.skip_cq, opts.cq_over, current_commit_pos,
+                                         new_commit_pos)
+        logging.info('Uploading CL...')
+        if not opts.dry_run:
+            _UploadCL(commit_queue_mode)
     return 0
 
 
