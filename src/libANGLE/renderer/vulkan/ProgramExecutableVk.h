@@ -167,7 +167,8 @@ class ProgramExecutableVk
         vk::Context *context,
         UpdateDescriptorSetsBuilder *updateBuilder,
         vk::CommandBufferHelperCommon *commandBufferHelper,
-        const vk::DescriptorSetDescBuilder &shaderResourcesDesc);
+        const vk::DescriptorSetDescBuilder &shaderResourcesDesc,
+        vk::SharedDescriptorSetCacheKey *newSharedCacheKeyOut);
     angle::Result updateUniformsAndXfbDescriptorSet(
         vk::Context *context,
         UpdateDescriptorSetsBuilder *updateBuilder,
@@ -325,7 +326,8 @@ class ProgramExecutableVk
                                              UpdateDescriptorSetsBuilder *updateBuilder,
                                              vk::CommandBufferHelperCommon *commandBufferHelper,
                                              const vk::DescriptorSetDescBuilder &descriptorSetDesc,
-                                             DescriptorSetIndex setIndex);
+                                             DescriptorSetIndex setIndex,
+                                             vk::SharedDescriptorSetCacheKey *newSharedCacheKeyOut);
 
     angle::Result initializePipelineCache(ContextVk *contextVk,
                                           const std::vector<uint8_t> &compressedPipelineData);

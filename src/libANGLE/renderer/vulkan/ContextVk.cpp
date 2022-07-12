@@ -2268,8 +2268,16 @@ angle::Result ContextVk::handleDirtyShaderResourcesImpl(CommandBufferHelperT *co
 
     ProgramExecutableVk *executableVk = getExecutable();
 
+    vk::SharedDescriptorSetCacheKey newSharedCacheKey = nullptr;
     ANGLE_TRY(executableVk->updateShaderResourcesDescriptorSet(
-        this, &mUpdateDescriptorSetsBuilder, commandBufferHelper, mShaderBuffersDescriptorDesc));
+        this, &mUpdateDescriptorSetsBuilder, commandBufferHelper, mShaderBuffersDescriptorDesc,
+        &newSharedCacheKey));
+
+    // If this is a new cache entry, record the sharedCacheKey in each object
+    if (newSharedCacheKey != nullptr)
+    {
+        mShaderBuffersDescriptorDesc.updateShaderResourcesSharedCacheKey(newSharedCacheKey);
+    }
 
     // Record usage of storage buffers and images in the command buffer to aid handling of
     // glMemoryBarrier.

@@ -6370,6 +6370,58 @@ TEST_P(VulkanPerformanceCounterTest, CreateDestroyTextureDoesNotIncreaseDescript
     EXPECT_EQ(0, textureDescriptorSetCacheTotalSizeIncrease);
 }
 
+// Similar to CreateDestroyTextureDoesNotIncreaseDescriptporSetCache, but for shader image.
+TEST_P(VulkanPerformanceCounterTest_ES31,
+       CreateDestroyTextureDoesNotIncreaseComputeShaderDescriptporSetCache)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled(kPerfMonitorExtensionName));
+    initANGLEFeatures();
+
+    constexpr char kCS[] = R"(#version 310 es
+layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+layout(r32ui, binding = 0) readonly uniform highp uimage2D uImage_1;
+layout(r32ui, binding = 1) writeonly uniform highp uimage2D uImage_2;
+void main()
+{
+    uvec4 value = imageLoad(uImage_1, ivec2(gl_LocalInvocationID.xy));
+    imageStore(uImage_2, ivec2(gl_LocalInvocationID.xy), value);
+})";
+    ANGLE_GL_COMPUTE_PROGRAM(program, kCS);
+    glUseProgram(program.get());
+
+    constexpr int kWidth = 1, kHeight = 1;
+    constexpr GLuint kInputValues[2][1] = {{200}, {100}};
+    constexpr size_t kMaxLoop           = 20;
+    GLint shaderResourceDescriptorSetCacheTotalSizeBefore =
+        getPerfCounters().shaderResourcesDescriptorSetCacheTotalSize;
+    for (size_t loop = 0; loop < kMaxLoop; loop++)
+    {
+        // Respecify texture in a loop
+        GLTexture texture0;
+        glBindTexture(GL_TEXTURE_2D, texture0);
+        glTexStorage2D(GL_TEXTURE_2D, 1, GL_R32UI, kWidth, kHeight);
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kWidth, kHeight, GL_RED_INTEGER, GL_UNSIGNED_INT,
+                        kInputValues[0]);
+
+        GLTexture texture1;
+        glBindTexture(GL_TEXTURE_2D, texture1);
+        glTexStorage2D(GL_TEXTURE_2D, 1, GL_R32UI, kWidth, kHeight);
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kWidth, kHeight, GL_RED_INTEGER, GL_UNSIGNED_INT,
+                        kInputValues[1]);
+
+        glBindImageTexture(0, texture0, 0, GL_FALSE, 0, GL_READ_ONLY, GL_R32UI);
+        glBindImageTexture(1, texture1, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_R32UI);
+        glDispatchCompute(1, 1, 1);
+    }
+    glFinish();
+    GLint shaderResourceDescriptorSetCacheTotalSizeIncrease =
+        getPerfCounters().shaderResourcesDescriptorSetCacheTotalSize -
+        shaderResourceDescriptorSetCacheTotalSizeBefore;
+
+    // We don't expect descriptorSet cache to keep growing
+    EXPECT_EQ(0, shaderResourceDescriptorSetCacheTotalSizeIncrease);
+}
+
 // Test that post-render-pass-to-swapchain glFenceSync followed by eglSwapBuffers incurs only a
 // single submission.
 TEST_P(VulkanPerformanceCounterTest, FenceThenSwapBuffers)
