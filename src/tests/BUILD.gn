@@ -1503,11 +1503,24 @@ if (build_angle_deqp_tests && !is_fuchsia) {
   }
 
   template("angle_deqp_khr_gtest") {
+    split_target = string_split(target_name, "_")
+    _api = split_target[1]
     angle_deqp_gtest(target_name) {
       forward_variables_from(invoker, "*")
       deps = [ ":angle_deqp_khr_common" ]
       deps += angle_deqp_data_copy_targets
-      data = angle_deqp_external_openglcts_data_gles3
+      if (_api == "gles2") {
+        # Make sure we include something so that angle_deqp_libtester_main.cpp can find something.
+        data = [ "$root_gen_dir/vk_gl_cts_data/data/gles2/shaders/misc.test" ]
+      } else if (_api == "gles3") {
+        data = angle_deqp_external_openglcts_data_gles3
+      } else if (_api == "gles31") {
+        data = angle_deqp_external_openglcts_data_gles31
+      } else if (_api == "gles32") {
+        data = angle_deqp_external_openglcts_data_gles32
+      } else {
+        assert(false)
+      }
       mustpass_dir = _khronos_mustpass
     }
   }
