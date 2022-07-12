@@ -940,14 +940,6 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
         addExtensionPrerequisite("GL_KHR_texture_compression_astc_ldr");
     }
 
-    if (traceNameIs("real_cricket_20"))
-    {
-        if (IsAndroid() && IsARM())
-        {
-            skipTest("TODO: http://anglebug.com/5777 ARM doesn't have enough VS storage blocks");
-        }
-    }
-
     if (traceNameIs("league_of_legends_wild_rift"))
     {
         addExtensionPrerequisite("GL_OES_EGL_image_external");
@@ -1045,11 +1037,6 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
     {
         addExtensionPrerequisite("GL_EXT_texture_cube_map_array");
         addExtensionPrerequisite("GL_OES_EGL_image_external");
-
-        if (IsAndroid() && IsARM())
-        {
-            skipTest("TODO: http://anglebug.com/6017 ARM doesn't have enough VS storage blocks");
-        }
     }
 
     if (traceNameIs("genshin_impact"))
