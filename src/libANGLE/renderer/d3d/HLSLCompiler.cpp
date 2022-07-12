@@ -221,7 +221,7 @@ angle::Result HLSLCompiler::compileToBinary(d3d::Context *context,
     ASSERT(mD3DCompileFunc);
 
 #if !defined(ANGLE_ENABLE_WINDOWS_UWP) && defined(ANGLE_ENABLE_DEBUG_TRACE)
-    std::string sourcePath = CreateTemporaryFile().value();
+    std::string sourcePath = angle::CreateTemporaryFile().value();
     std::ostringstream stream;
     stream << "#line 2 \"" << sourcePath << "\"\n\n" << hlsl;
     std::string sourceText = stream.str();
