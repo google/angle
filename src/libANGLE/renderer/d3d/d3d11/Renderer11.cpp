@@ -3362,49 +3362,49 @@ TextureStorage *Renderer11::createTextureStorageExternal(
 }
 
 TextureStorage *Renderer11::createTextureStorage2D(GLenum internalformat,
-                                                   bool renderTarget,
+                                                   BindFlags bindFlags,
                                                    GLsizei width,
                                                    GLsizei height,
                                                    int levels,
                                                    const std::string &label,
                                                    bool hintLevelZeroOnly)
 {
-    return new TextureStorage11_2D(this, internalformat, renderTarget, width, height, levels, label,
+    return new TextureStorage11_2D(this, internalformat, bindFlags, width, height, levels, label,
                                    hintLevelZeroOnly);
 }
 
 TextureStorage *Renderer11::createTextureStorageCube(GLenum internalformat,
-                                                     bool renderTarget,
+                                                     BindFlags bindFlags,
                                                      int size,
                                                      int levels,
                                                      bool hintLevelZeroOnly,
                                                      const std::string &label)
 {
-    return new TextureStorage11_Cube(this, internalformat, renderTarget, size, levels,
+    return new TextureStorage11_Cube(this, internalformat, bindFlags, size, levels,
                                      hintLevelZeroOnly, label);
 }
 
 TextureStorage *Renderer11::createTextureStorage3D(GLenum internalformat,
-                                                   bool renderTarget,
+                                                   BindFlags bindFlags,
                                                    GLsizei width,
                                                    GLsizei height,
                                                    GLsizei depth,
                                                    int levels,
                                                    const std::string &label)
 {
-    return new TextureStorage11_3D(this, internalformat, renderTarget, width, height, depth, levels,
+    return new TextureStorage11_3D(this, internalformat, bindFlags, width, height, depth, levels,
                                    label);
 }
 
 TextureStorage *Renderer11::createTextureStorage2DArray(GLenum internalformat,
-                                                        bool renderTarget,
+                                                        BindFlags bindFlags,
                                                         GLsizei width,
                                                         GLsizei height,
                                                         GLsizei depth,
                                                         int levels,
                                                         const std::string &label)
 {
-    return new TextureStorage11_2DArray(this, internalformat, renderTarget, width, height, depth,
+    return new TextureStorage11_2DArray(this, internalformat, bindFlags, width, height, depth,
                                         levels, label);
 }
 
