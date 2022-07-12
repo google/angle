@@ -671,14 +671,15 @@ spirv::IdRef OutputSPIRVTraverser::getSymbolIdAndStorageClass(const TSymbol *sym
 
     // Additionally:
     //
-    // - decorate int inputs in FS with Flat (gl_Layer, gl_SampleID, gl_PrimitiveID).
+    // - decorate int inputs in FS with Flat (gl_Layer, gl_SampleID, gl_PrimitiveID, gl_ViewID_OVR).
     // - decorate gl_TessLevel* with Patch.
     switch (type.getQualifier())
     {
         case EvqLayerIn:
         case EvqSampleID:
         case EvqPrimitiveID:
-            if (*storageClass == spv::StorageClassInput)
+        case EvqViewIDOVR:
+            if (mCompiler->getShaderType() == GL_FRAGMENT_SHADER)
             {
                 spirv::WriteDecorate(mBuilder.getSpirvDecorations(), varId, spv::DecorationFlat,
                                      {});
