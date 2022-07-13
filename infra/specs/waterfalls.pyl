@@ -62,6 +62,16 @@
         'test_suites': {
         },
       },
+      'linux-exp-intel': {
+        'os_type': 'linux',
+        'mixins': [
+          'linux_intel_uhd_630_stable',
+        ],
+        'test_suites': {
+          'gtest_tests': 'linux_intel_gtests',
+          'isolated_scripts': 'common_isolated_scripts',
+        },
+      },
       'linux-intel': {
         'os_type': 'linux',
         'mixins': [
