@@ -732,9 +732,15 @@ class TParseContext : angle::NonCopyable
                                   // without precision, explicit or implicit.
     bool mFragmentPrecisionHighOnESSL1;  // true if highp precision is supported when compiling
                                          // ESSL1.
-    bool mEarlyFragmentTestsSpecified;   // true if |layout(early_fragment_tests) in| is specified.
+    bool mEarlyFragmentTestsSpecified;   // true if layout(early_fragment_tests) in; is specified.
     bool mHasDiscard;                    // true if |discard| is encountered in the shader.
-    bool mSampleQualifierSpecified;      // true if the |sample| qualifier is used.
+    bool mSampleQualifierSpecified;      // true if the |sample| qualifier is used
+    bool mPositionRedeclaredForSeparateShaderObject;       // true if EXT_separate_shader_objects is
+                                                           // enabled and gl_Position is redefined.
+    bool mPointSizeRedeclaredForSeparateShaderObject;      // true if EXT_separate_shader_objects is
+                                                           // enabled and gl_PointSize is redefined.
+    bool mPositionOrPointSizeUsedForSeparateShaderObject;  // true if gl_Position or gl_PointSize
+                                                           // has been referenced.
     TLayoutMatrixPacking mDefaultUniformMatrixPacking;
     TLayoutBlockStorage mDefaultUniformBlockStorage;
     TLayoutMatrixPacking mDefaultBufferMatrixPacking;
