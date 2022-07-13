@@ -23,9 +23,8 @@ enum class ImageMipLevels
 {
     EnabledLevels                 = 0,
     FullMipChainForGenerateMipmap = 1,
-    FullMipChain                  = 2,
 
-    InvalidEnum = 3,
+    InvalidEnum = 2,
 };
 
 enum class TextureUpdateResult

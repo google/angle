@@ -285,7 +285,7 @@ angle::Result TextureUpload::onMutableTextureUpload(ContextVk *contextVk, Textur
     if (mPrevUploadedMutableTexture->isMutableTextureConsistentlySpecifiedForFlush())
     {
         ANGLE_TRY(mPrevUploadedMutableTexture->ensureImageInitialized(
-            contextVk, ImageMipLevels::FullMipChain));
+            contextVk, ImageMipLevels::EnabledLevels));
         contextVk->getPerfCounters().mutableTexturesUploaded++;
     }
 

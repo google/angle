@@ -646,17 +646,17 @@ bool TextureVk::isMutableTextureConsistentlySpecifiedForFlush()
         return false;
     }
 
-    // Before we initialize the full mip chain, we make sure that the base mip level and at least
-    // one other level after (1 for simplicity) are defined and have appropriate values.
-    if (mState.getImageDescs().size() < 2)
+    // Before we initialize the mips, we make sure that the base mip level is properly defined.
+    gl::TextureTarget textureTarget = (mState.getType() == gl::TextureType::CubeMap)
+                                          ? gl::kCubeMapTextureTargetMin
+                                          : gl::TextureTypeToTarget(mState.getType(), 0);
+    if (!isMipImageDescDefined(textureTarget, 0))
     {
         return false;
     }
 
-    gl::TextureTarget textureTarget = (mState.getType() == gl::TextureType::CubeMap)
-                                          ? gl::kCubeMapTextureTargetMin
-                                          : gl::TextureTypeToTarget(mState.getType(), 0);
-    if (!isMipImageDescDefined(textureTarget, 0) || !isMipImageDescDefined(textureTarget, 1))
+    // We do not flush if the texture has been bound as an attachment.
+    if (mState.hasBeenBoundAsAttachment())
     {
         return false;
     }
@@ -3678,7 +3678,6 @@ uint32_t TextureVk::getMipLevelCount(ImageMipLevels mipLevels) const
             return mState.getEnabledLevelCount();
         // Returns all mipmap levels from base to max regardless if an image has been specified or
         // not.
-        case ImageMipLevels::FullMipChain:
         case ImageMipLevels::FullMipChainForGenerateMipmap:
             return getMaxLevelCount() - mState.getEffectiveBaseLevel();
 
