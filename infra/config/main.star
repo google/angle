@@ -6,6 +6,8 @@
 #
 # main.star: lucicfg configuration for ANGLE's standalone builders.
 
+lucicfg.check_version(min = "1.31.3", message = "Update depot_tools")
+
 # Use LUCI Scheduler BBv2 names and add Scheduler realms configs.
 lucicfg.enable_experiment("crbug.com/1182002")
 
