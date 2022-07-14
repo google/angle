@@ -135,6 +135,7 @@
 7177 INTEL VULKAN : EXTBlendFuncExtendedDrawTest.FragData/* = SKIP
 7293 INTEL VULKAN : StateChangeTestES3.PolygonOffset/* = SKIP
 7465 WIN INTEL VULKAN : TextureSampleShadingTest.Basic/ES3_1_Vulkan_AsyncCommandQueue = SKIP
+7497 LINUX INTEL VULKAN : EGLBufferAgeTest.QueryBufferAge/* = SKIP
 
 // Linux AMD
 6855 LINUX AMD OPENGL : ClearTestES3.ClearMaxAttachmentsAfterDraw/* = SKIP
