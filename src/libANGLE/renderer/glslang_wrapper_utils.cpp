@@ -2792,8 +2792,15 @@ class SpirvMultiSampleTransformer final : angle::NonCopyable
 {
   public:
     SpirvMultiSampleTransformer(const GlslangSpirvOptions &options)
-        : mOptions(options), mIsSampleRateShadingCapabilityEnabled(false), mSampleIDExists(false)
+        : mOptions(options),
+          mIsSampleRateShadingCapabilityEnabled(false),
+          mSampleIDExists(false),
+          mAnyImageTypesModified(false)
     {}
+    ~SpirvMultiSampleTransformer()
+    {
+        ASSERT(!mOptions.isMultisampledFramebufferFetch || mAnyImageTypesModified);
+    }
 
     void visitCapability(const uint32_t *instruction);
 
@@ -2827,6 +2834,8 @@ class SpirvMultiSampleTransformer final : angle::NonCopyable
     spirv::IdRef mIntInputPointerId;
     bool mIsSampleRateShadingCapabilityEnabled;
     bool mSampleIDExists;
+    // Used to assert that the transformation is not unnecessarily run.
+    bool mAnyImageTypesModified;
 };
 
 TransformationState SpirvMultiSampleTransformer::transformImageRead(const uint32_t *instruction,
@@ -2933,9 +2942,13 @@ TransformationState SpirvMultiSampleTransformer::transformTypeImage(const uint32
     spv::AccessQualifier accessQualifier;
     spirv::ParseTypeImage(instruction, &idResult, &sampledType, &dim, &depth, &arrayed, &ms,
                           &sampled, &imageFormat, &accessQualifier);
+
     ms = spirv::LiteralInteger(1);
     spirv::WriteTypeImage(blobOut, idResult, sampledType, dim, depth, arrayed, ms, sampled,
                           imageFormat, nullptr);
+
+    mAnyImageTypesModified = true;
+
     return TransformationState::Transformed;
 }
 

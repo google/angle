@@ -1068,9 +1068,8 @@ angle::Result ProgramExecutableVk::getGraphicsPipeline(ContextVk *contextVk,
         contextVk->getFeatures().emulateTransformFeedback.enabled &&
         !glState.isTransformFeedbackActiveUnpaused();
     FramebufferVk *drawFrameBuffer = vk::GetImpl(contextVk->getState().getDrawFramebuffer());
-    GLint samples                  = drawFrameBuffer->getSamples();
-    const bool hasFramebufferFetch = desc.getRenderPassFramebufferFetchMode();
-    const bool isMultisampled      = samples > 1;
+    const bool hasFramebufferFetch = glExecutable.usesFramebufferFetch();
+    const bool isMultisampled      = drawFrameBuffer->getSamples() > 1;
     transformOptions.multiSampleFramebufferFetch = hasFramebufferFetch && isMultisampled;
 
     const gl::DrawBufferMask framebufferMask = glState.getDrawFramebuffer()->getDrawBufferMask();
