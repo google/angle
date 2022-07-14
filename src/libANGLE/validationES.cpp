@@ -4368,6 +4368,25 @@ const char *ValidateDrawStates(const Context *context)
     return nullptr;
 }
 
+const char *ValidateProgramPipeline(const Context *context)
+{
+    const State &state = context->getState();
+    // If we are running GLES1, there is no current program.
+    if (context->getClientVersion() >= Version(2, 0))
+    {
+        ProgramPipeline *programPipeline = state.getProgramPipeline();
+        if (programPipeline)
+        {
+            const char *errorMsg = ValidateProgramPipelineAttachedPrograms(programPipeline);
+            if (errorMsg)
+            {
+                return errorMsg;
+            }
+        }
+    }
+    return nullptr;
+}
+
 void RecordDrawModeError(const Context *context, angle::EntryPoint entryPoint, PrimitiveMode mode)
 {
     const State &state                      = context->getState();

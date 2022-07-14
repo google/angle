@@ -633,11 +633,11 @@ void ProgramPipeline::validate(const gl::Context *context)
         }
     }
 
-    intptr_t drawStatesError = context->getStateCache().getBasicDrawStatesError(context);
-    if (drawStatesError)
+    intptr_t programPipelineError = context->getStateCache().getProgramPipelineError(context);
+    if (programPipelineError)
     {
         mState.mValid            = false;
-        const char *errorMessage = reinterpret_cast<const char *>(drawStatesError);
+        const char *errorMessage = reinterpret_cast<const char *>(programPipelineError);
         infoLog << errorMessage << "\n";
         return;
     }
