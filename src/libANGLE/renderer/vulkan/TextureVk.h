@@ -195,6 +195,13 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
                                               GLenum binding,
                                               const gl::ImageIndex &imageIndex);
 
+    GLint getRequiredExternalTextureImageUnits([[maybe_unused]] const gl::Context *context) override
+    {
+        // For now, we assume that only one image unit is needed to support
+        // external GL textures in the Vulkan backend.
+        return 1;
+    }
+
     const vk::ImageHelper &getImage() const
     {
         ASSERT(mImage && mImage->valid());

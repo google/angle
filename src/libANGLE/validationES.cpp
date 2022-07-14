@@ -7126,6 +7126,9 @@ bool ValidateGetTexParameterBase(const Context *context,
             }
             break;
 
+        case GL_REQUIRED_TEXTURE_IMAGE_UNITS_OES:
+            break;
+
         default:
             context->validationError(entryPoint, GL_INVALID_ENUM, kEnumNotSupported);
             return false;

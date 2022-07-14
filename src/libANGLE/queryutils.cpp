@@ -3057,6 +3057,7 @@ unsigned int GetTexParameterCount(GLenum pname)
         case GL_TEXTURE_SRGB_DECODE_EXT:
         case GL_DEPTH_STENCIL_TEXTURE_MODE:
         case GL_TEXTURE_NATIVE_ID_ANGLE:
+        case GL_REQUIRED_TEXTURE_IMAGE_UNITS_OES:
             return 1;
         default:
             return 0;
