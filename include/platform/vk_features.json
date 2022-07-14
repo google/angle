@@ -53,6 +53,14 @@
             "issue": "http://anglebug.com/3970"
         },
         {
+            "name": "mutable_mipmap_texture_upload",
+            "category": "Features",
+            "description": [
+                "Enable uploading the previously defined mutable mipmap texture."
+            ],
+            "issue": "https://anglebug.com/7308"
+        },
+        {
             "name": "supports_renderpass2",
             "category": "Features",
             "description": [

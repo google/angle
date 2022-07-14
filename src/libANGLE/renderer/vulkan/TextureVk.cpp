@@ -663,7 +663,8 @@ angle::Result TextureVk::setSubImageImpl(const gl::Context *context,
             ANGLE_TRY(contextVk->submitStagedTextureUpdates());
         }
     }
-    else if (kEnableMutableMipmapTextureUpload && !mState.getImmutableFormat())
+    else if (contextVk->getFeatures().mutableMipmapTextureUpload.enabled &&
+             !mState.getImmutableFormat())
     {
         // Check if we should flush any mutable textures from before.
         ANGLE_TRY(contextVk->getShareGroup()->onMutableTextureUpload(contextVk, this));

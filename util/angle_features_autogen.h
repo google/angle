@@ -159,6 +159,7 @@ enum class Feature
     LoseContextOnOutOfMemory,
     MrtPerfWorkaround,
     MultisampleColorFormatShaderReadWorkaround,
+    MutableMipmapTextureUpload,
     OverrideSurfaceFormatRGB8ToRGBA8,
     PackLastRowSeparatelyForPaddingInclusion,
     PackOverlappingRowsSeparatelyPackBuffer,

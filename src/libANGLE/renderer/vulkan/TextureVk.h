@@ -319,9 +319,6 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
     bool isMutableTextureConsistentlySpecifiedForFlush();
     bool isMipImageDescDefined(gl::TextureTarget textureTarget, size_t level);
 
-    // Uploading previous mutable mipmap texture is enabled by default.
-    static constexpr bool kEnableMutableMipmapTextureUpload = true;
-
   private:
     // Transform an image index from the frontend into one that can be used on the backing
     // ImageHelper, taking into account mipmap or cube face offsets

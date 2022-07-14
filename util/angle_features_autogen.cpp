@@ -168,6 +168,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::MrtPerfWorkaround, "mrtPerfWorkaround"},
     {Feature::MultisampleColorFormatShaderReadWorkaround,
      "multisampleColorFormatShaderReadWorkaround"},
+    {Feature::MutableMipmapTextureUpload, "mutableMipmapTextureUpload"},
     {Feature::OverrideSurfaceFormatRGB8ToRGBA8, "overrideSurfaceFormatRGB8ToRGBA8"},
     {Feature::PackLastRowSeparatelyForPaddingInclusion, "packLastRowSeparatelyForPaddingInclusion"},
     {Feature::PackOverlappingRowsSeparatelyPackBuffer, "packOverlappingRowsSeparatelyPackBuffer"},
