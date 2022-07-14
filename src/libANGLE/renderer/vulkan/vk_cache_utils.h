@@ -47,13 +47,13 @@ class UpdateDescriptorSetsBuilder;
 
 enum class DescriptorSetIndex : uint32_t
 {
-    Internal,        // ANGLE driver uniforms or internal shaders
-    UniformsAndXfb,  // Uniforms set index
-    Texture,         // Textures set index
-    ShaderResource,  // Other shader resources set index
+    Internal       = 0,         // Internal shaders
+    UniformsAndXfb = Internal,  // Uniforms set index
+    Texture        = 1,         // Textures set index
+    ShaderResource = 2,         // Other shader resources set index
 
-    InvalidEnum,
-    EnumCount = InvalidEnum,
+    InvalidEnum = 3,
+    EnumCount   = InvalidEnum,
 };
 
 class PipelineCacheAccess;
@@ -814,9 +814,9 @@ class DescriptorSetLayoutDesc final
         mPackedDescriptorSetLayout;
 };
 
-// The following are for caching descriptor set layouts. Limited to max four descriptor set layouts.
-// This can be extended in the future.
-constexpr size_t kMaxDescriptorSetLayouts = 4;
+// The following are for caching descriptor set layouts. Limited to max three descriptor set
+// layouts. This can be extended in the future.
+constexpr size_t kMaxDescriptorSetLayouts = 3;
 
 struct PackedPushConstantRange
 {

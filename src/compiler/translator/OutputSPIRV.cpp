@@ -479,10 +479,17 @@ spv::StorageClass GetStorageClass(const TType &type, GLenum shaderType)
 
         default:
             // Uniform and storage buffers have the Uniform storage class.  Default uniforms are
-            // gathered in a uniform block as well.
+            // gathered in a uniform block as well. Push constants use the PushConstant storage
+            // class instead.
             ASSERT(type.getInterfaceBlock() != nullptr || qualifier == EvqUniform);
             // I/O blocks must have already been classified as input or output above.
             ASSERT(!IsShaderIoBlock(qualifier));
+
+            if (type.getLayoutQualifier().pushConstant)
+            {
+                ASSERT(type.getInterfaceBlock() != nullptr);
+                return spv::StorageClassPushConstant;
+            }
             return spv::StorageClassUniform;
     }
 }
