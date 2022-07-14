@@ -581,6 +581,10 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
         const bool clearAnyWithDraw =
             clearColorWithDraw || clearDepthWithDraw || clearStencilWithDraw;
 
+        bool isAnyAttachment3DWithoutAllLayers =
+            IsAnyAttachment3DWithoutAllLayers(mRenderTargetCache, mState.getColorAttachmentsMask(),
+                                              mCurrentFramebufferDesc.getLayerCount());
+
         // If we are in an active renderpass that has recorded commands and the framebuffer hasn't
         // changed, inline the clear.
         if (isMidRenderPassClear)
@@ -606,7 +610,16 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
         }
         else
         {
-            ASSERT(!contextVk->hasStartedRenderPass());
+            if (contextVk->hasStartedRenderPass())
+            {
+                // Typically, clears are deferred such that it's impossible to have a render pass
+                // opened without any additional commands recorded on it.  This is not true for some
+                // corner cases, such as with 3D or AHB attachments.  In those cases, a clear can
+                // open a render pass that's otherwise empty, and additional clears can continue to
+                // be accumulated in the render pass loadOps.
+                ASSERT(isAnyAttachment3DWithoutAllLayers || mIsAHBColorAttachments.any());
+                clearWithLoadOp(contextVk);
+            }
 
             // This path will defer the current clears along with deferred clears.  This won't work
             // if any attachment needs to be subsequently cleared with a draw call.  In that case,
@@ -617,10 +630,9 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
             // depth than the framebuffer layers, clears cannot be deferred.  This is because the
             // clear may later need to be flushed with vkCmdClearColorImage, which cannot partially
             // clear the 3D texture.  In that case, the clears are flushed immediately too.
-            bool isAnyAttachment3DWithoutAllLayers = IsAnyAttachment3DWithoutAllLayers(
-                mRenderTargetCache, mState.getColorAttachmentsMask(),
-                mCurrentFramebufferDesc.getLayerCount());
-
+            //
+            // For imported images such as from AHBs, the clears are not deferred so that they are
+            // definitely applied before the application uses them outside of the control of ANGLE.
             if (clearAnyWithDraw || isAnyAttachment3DWithoutAllLayers ||
                 mIsAHBColorAttachments.any())
             {

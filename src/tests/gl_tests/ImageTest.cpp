@@ -3187,6 +3187,47 @@ TEST_P(ImageTestES3, AHBClearAppliedBeforeReadBack)
     destroyAndroidHardwareBuffer(ahb);
 }
 
+// Similar to AHBClearAppliedBeforeReadBack, but clear is applied twice.
+TEST_P(ImageTestES3, AHBTwiceClearAppliedBeforeReadBack)
+{
+    EGLWindow *window = getEGLWindow();
+
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
+    ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+
+    const GLubyte kRed[]   = {255, 0, 0, 255};
+    const GLubyte kBlack[] = {0, 0, 0, 0};
+
+    // Create one image backed by the AHB.
+    AHardwareBuffer *ahb;
+    EGLImageKHR ahbImage;
+    createEGLImageAndroidHardwareBufferSource(1, 1, 1, AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM,
+                                              kDefaultAHBUsage, kDefaultAttribs, {{kBlack, 4}},
+                                              &ahb, &ahbImage);
+    GLTexture ahbTexture;
+    createEGLImageTargetTexture2D(ahbImage, ahbTexture);
+
+    // Create one framebuffer backed by the AHB.
+    {
+        GLFramebuffer ahbFbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, ahbFbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, ahbTexture, 0);
+        EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+        // Clear to green, then to red
+        glClearColor(0, 1, 0, 1);
+        glClear(GL_COLOR_BUFFER_BIT);
+        glClearColor(1, 0, 0, 1);
+        glClear(GL_COLOR_BUFFER_BIT);
+        glFinish();
+    }
+
+    verifyResultAHB(ahb, {{kRed, 4}});
+
+    eglDestroyImageKHR(window->getDisplay(), ahbImage);
+    destroyAndroidHardwareBuffer(ahb);
+}
+
 // Test that glClear on FBO with AHB attachment is applied to the AHB image before detaching the AHB
 // image from FBO
 TEST_P(ImageTestES3, AHBClearAndDetachBeforeReadback)
