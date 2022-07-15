@@ -113,8 +113,7 @@ static angle::ParamCapture CaptureAttributeMapInt(const egl::AttributeMap &attri
     return paramCapture;
 }
 
-angle::CallCapture CaptureCreateNativeClientBufferANDROID(gl::Context *context,
-                                                          const egl::AttributeMap &attribMap,
+angle::CallCapture CaptureCreateNativeClientBufferANDROID(const egl::AttributeMap &attribMap,
                                                           EGLClientBuffer eglClientBuffer)
 {
     angle::ParamBuffer paramBuffer;
@@ -152,7 +151,7 @@ angle::CallCapture CaptureEGLCreateImage(gl::Context *context,
     }
     else
     {
-        paramBuffer.addValueParam("context", angle::ParamType::TEGLContext, 0);
+        paramBuffer.addValueParam("context", angle::ParamType::TEGLContext, EGL_NO_CONTEXT);
     }
 
     paramBuffer.addEnumParam("target", gl::GLenumGroup::DefaultGroup, angle::ParamType::TEGLenum,
@@ -173,12 +172,10 @@ angle::CallCapture CaptureEGLCreateImage(gl::Context *context,
     return angle::CallCapture(angle::EntryPoint::EGLCreateImage, std::move(paramBuffer));
 }
 
-angle::CallCapture CaptureEGLDestroyImage(gl::Context *context,
-                                          egl::Display *display,
-                                          egl::Image *image)
+angle::CallCapture CaptureEGLDestroyImage(egl::Display *display, egl::Image *image)
 {
     angle::ParamBuffer paramBuffer;
-    paramBuffer.addValueParam("display", angle::ParamType::TEGLContext, EGL_NO_DISPLAY);
+    paramBuffer.addValueParam("display", angle::ParamType::TEGLDisplay, EGL_NO_DISPLAY);
 
     angle::ParamCapture paramImage("image", angle::ParamType::TGLeglImageOES);
     angle::SetParamVal<angle::ParamType::TGLeglImageOES, GLeglImageOES>(image, &paramImage.value);
@@ -187,8 +184,7 @@ angle::CallCapture CaptureEGLDestroyImage(gl::Context *context,
     return angle::CallCapture(angle::EntryPoint::EGLDestroyImage, std::move(paramBuffer));
 }
 
-angle::CallCapture CaptureEGLCreatePbufferSurface(gl::Context *context,
-                                                  const AttributeMap &attrib_list,
+angle::CallCapture CaptureEGLCreatePbufferSurface(const AttributeMap &attrib_list,
                                                   egl::Surface *surface)
 {
     angle::ParamBuffer paramBuffer;
@@ -206,9 +202,7 @@ angle::CallCapture CaptureEGLCreatePbufferSurface(gl::Context *context,
 
     return angle::CallCapture(angle::EntryPoint::EGLCreatePbufferSurface, std::move(paramBuffer));
 }
-angle::CallCapture CaptureEGLDestroySurface(gl::Context *context,
-                                            egl::Display *display,
-                                            egl::Surface *surface)
+angle::CallCapture CaptureEGLDestroySurface(egl::Display *display, egl::Surface *surface)
 {
     angle::ParamBuffer paramBuffer;
     paramBuffer.addValueParam("display", angle::ParamType::TEGLDisplay, EGL_NO_DISPLAY);
@@ -222,8 +216,7 @@ angle::CallCapture CaptureEGLDestroySurface(gl::Context *context,
     return angle::CallCapture(angle::EntryPoint::EGLDestroySurface, std::move(paramBuffer));
 }
 
-static angle::CallCapture CaptureEGLBindOrReleaseImage(gl::Context *context,
-                                                       egl::Surface *surface,
+static angle::CallCapture CaptureEGLBindOrReleaseImage(egl::Surface *surface,
                                                        EGLint buffer,
                                                        angle::EntryPoint entryPoint)
 {
@@ -239,24 +232,17 @@ static angle::CallCapture CaptureEGLBindOrReleaseImage(gl::Context *context,
     return angle::CallCapture(entryPoint, std::move(paramBuffer));
 }
 
-angle::CallCapture CaptureEGLBindTexImage(gl::Context *context,
-                                          egl::Surface *surface,
-                                          EGLint buffer)
+angle::CallCapture CaptureEGLBindTexImage(egl::Surface *surface, EGLint buffer)
 {
-    return CaptureEGLBindOrReleaseImage(context, surface, buffer,
-                                        angle::EntryPoint::EGLBindTexImage);
+    return CaptureEGLBindOrReleaseImage(surface, buffer, angle::EntryPoint::EGLBindTexImage);
 }
 
-angle::CallCapture CaptureEGLReleaseTexImage(gl::Context *context,
-                                             egl::Surface *surface,
-                                             EGLint buffer)
+angle::CallCapture CaptureEGLReleaseTexImage(egl::Surface *surface, EGLint buffer)
 {
-    return CaptureEGLBindOrReleaseImage(context, surface, buffer,
-                                        angle::EntryPoint::EGLReleaseTexImage);
+    return CaptureEGLBindOrReleaseImage(surface, buffer, angle::EntryPoint::EGLReleaseTexImage);
 }
 
-angle::CallCapture CaptureEGLMakeCurrent(gl::Context *dummy,
-                                         Surface *drawSurface,
+angle::CallCapture CaptureEGLMakeCurrent(Surface *drawSurface,
                                          Surface *readSurface,
                                          gl::Context *context)
 {

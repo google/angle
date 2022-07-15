@@ -38,41 +38,30 @@ void CaptureCallToCaptureEGL(CaptureFuncT captureFunc, egl::Thread *thread, Args
         return;
     }
 
-    angle::CallCapture call = captureFunc(context, captureParams...);
+    angle::CallCapture call = captureFunc(captureParams...);
 
     frameCaptureShared->captureCall(context, std::move(call), true);
 }
 
-angle::CallCapture CaptureCreateNativeClientBufferANDROID(gl::Context *context,
-                                                          const egl::AttributeMap &attribMap,
+angle::CallCapture CaptureCreateNativeClientBufferANDROID(const egl::AttributeMap &attribMap,
                                                           EGLClientBuffer eglClientBuffer);
 angle::CallCapture CaptureEGLCreateImage(gl::Context *context,
                                          EGLenum target,
                                          EGLClientBuffer buffer,
                                          const egl::AttributeMap &attributes,
                                          egl::Image *image);
-angle::CallCapture CaptureEGLDestroyImage(gl::Context *context,
-                                          egl::Display *display,
-                                          egl::Image *image);
+angle::CallCapture CaptureEGLDestroyImage(egl::Display *display, egl::Image *image);
 
-angle::CallCapture CaptureEGLCreatePbufferSurface(gl::Context *context,
-                                                  const AttributeMap &attrib_list,
+angle::CallCapture CaptureEGLCreatePbufferSurface(const AttributeMap &attrib_list,
                                                   egl::Surface *surface);
 
-angle::CallCapture CaptureEGLDestroySurface(gl::Context *context,
-                                            Display *display,
-                                            Surface *surface);
+angle::CallCapture CaptureEGLDestroySurface(Display *display, Surface *surface);
 
-angle::CallCapture CaptureEGLBindTexImage(gl::Context *context,
-                                          egl::Surface *surface,
-                                          EGLint buffer);
+angle::CallCapture CaptureEGLBindTexImage(egl::Surface *surface, EGLint buffer);
 
-angle::CallCapture CaptureEGLReleaseTexImage(gl::Context *context,
-                                             egl::Surface *surface,
-                                             EGLint buffer);
+angle::CallCapture CaptureEGLReleaseTexImage(egl::Surface *surface, EGLint buffer);
 
-angle::CallCapture CaptureEGLMakeCurrent(gl::Context *dummy,
-                                         Surface *drawSurface,
+angle::CallCapture CaptureEGLMakeCurrent(Surface *drawSurface,
                                          Surface *readSurface,
                                          gl::Context *context);
 }  // namespace egl

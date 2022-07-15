@@ -159,7 +159,7 @@ EGLImage CreateImage(Thread *thread,
         return EGL_NO_IMAGE;
     }
 
-    ANGLE_CAPTURE_EGL(EGLCreateImage, thread, target, buffer, attributes, image);
+    ANGLE_CAPTURE_EGL(EGLCreateImage, thread, context, target, buffer, attributes, image);
 
     thread->setSuccess();
     return static_cast<EGLImage>(image);
