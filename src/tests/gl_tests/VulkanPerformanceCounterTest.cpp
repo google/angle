@@ -6444,6 +6444,74 @@ void main()
     EXPECT_EQ(0, shaderResourceDescriptorSetCacheTotalSizeIncrease);
 }
 
+// Similar to CreateDestroyTextureDoesNotIncreaseDescriptporSetCache, but for uniform buffers.
+TEST_P(VulkanPerformanceCounterTest, DestroyUniformBufferAlsoDestroyDescriptporSetCache)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled(kPerfMonitorExtensionName));
+    initANGLEFeatures();
+
+    const char *mkFS = R"(#version 300 es
+precision highp float;
+uniform uni { vec4 color; };
+out vec4 fragColor;
+void main()
+{
+    fragColor = color;
+})";
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), mkFS);
+    GLint uniformBufferIndex = glGetUniformBlockIndex(program, "uni");
+    ASSERT_NE(uniformBufferIndex, -1);
+
+    // Warm up. Make a draw to ensure other descriptorSets are created if needed.
+    GLBuffer intialBuffer;
+    glBindBuffer(GL_UNIFORM_BUFFER, intialBuffer);
+    std::vector<float> initialData = {0.1, 0.2, 0.3, 0.4};
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(float) * initialData.size(), initialData.data(),
+                 GL_DYNAMIC_DRAW);
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, intialBuffer);
+    glUniformBlockBinding(program, uniformBufferIndex, 0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_NEAR(0, 0, initialData[0] * 255, initialData[1] * 255, initialData[2] * 255,
+                      initialData[3] * 255, 1);
+
+    // Use big buffer size to force it into individual bufferBlocks
+    constexpr GLsizei kBufferSize           = 4 * 1024 * 1024;
+    GLint DescriptorSetCacheTotalSizeBefore = getPerfCounters().descriptorSetCacheTotalSize;
+
+    // Create buffer and use it and then destroy it. Because buffers are big enough they should be
+    // in a different bufferBlock. DescriptorSet created due to these temporary buffer should be
+    // destroyed promptly.
+    constexpr int kBufferCount = 16;
+    for (int i = 0; i < kBufferCount; i++)
+    {
+        GLBuffer uniformBuffer;
+        glBindBuffer(GL_UNIFORM_BUFFER, uniformBuffer);
+        glBufferData(GL_UNIFORM_BUFFER, kBufferSize, nullptr, GL_DYNAMIC_DRAW);
+        float *ptr = reinterpret_cast<float *>(
+            glMapBufferRange(GL_UNIFORM_BUFFER, 0, kBufferSize, GL_MAP_WRITE_BIT));
+        for (int j = 0; j < 4; j++)
+        {
+            ptr[j] = (float)(i * 4 + j) / 255.0f;
+        }
+        glUnmapBuffer(GL_UNIFORM_BUFFER);
+        glBindBufferBase(GL_UNIFORM_BUFFER, 0, uniformBuffer);
+        glUniformBlockBinding(program, uniformBufferIndex, 0);
+        glClear(GL_COLOR_BUFFER_BIT);
+        drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+        EXPECT_PIXEL_NEAR(0, 0, (i * 4), (i * 4 + 1), (i * 4 + 2), (i * 4 + 3), 1);
+    }
+    // Should trigger prune buffer call
+    swapBuffers();
+
+    GLint DescriptorSetCacheTotalSizeIncrease =
+        getPerfCounters().descriptorSetCacheTotalSize - DescriptorSetCacheTotalSizeBefore;
+    // We expect most of descriptorSet caches for temporary uniformBuffers gets destroyed. Give
+    // extra room in case a new descriptorSet is allocated due to a new driver uniform buffer gets
+    // allocated.
+    EXPECT_LT(DescriptorSetCacheTotalSizeIncrease, 2);
+}
+
 // Test that post-render-pass-to-swapchain glFenceSync followed by eglSwapBuffers incurs only a
 // single submission.
 TEST_P(VulkanPerformanceCounterTest, FenceThenSwapBuffers)

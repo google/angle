@@ -2268,16 +2268,12 @@ angle::Result ContextVk::handleDirtyShaderResourcesImpl(CommandBufferHelperT *co
 
     ProgramExecutableVk *executableVk = getExecutable();
 
-    vk::SharedDescriptorSetCacheKey newSharedCacheKey = nullptr;
+    vk::SharedDescriptorSetCacheKey newSharedCacheKey;
     ANGLE_TRY(executableVk->updateShaderResourcesDescriptorSet(
         this, &mUpdateDescriptorSetsBuilder, commandBufferHelper, mShaderBuffersDescriptorDesc,
         &newSharedCacheKey));
 
-    // If this is a new cache entry, record the sharedCacheKey in each object
-    if (newSharedCacheKey != nullptr)
-    {
-        mShaderBuffersDescriptorDesc.updateShaderResourcesSharedCacheKey(newSharedCacheKey);
-    }
+    mShaderBuffersDescriptorDesc.updateImagesAndBuffersWithSharedCacheKey(newSharedCacheKey);
 
     // Record usage of storage buffers and images in the command buffer to aid handling of
     // glMemoryBarrier.
@@ -2420,7 +2416,7 @@ angle::Result ContextVk::handleDirtyGraphicsTransformFeedbackBuffersEmulation(
 
     return executableVk->updateUniformsAndXfbDescriptorSet(
         this, &mUpdateDescriptorSetsBuilder, mRenderPassCommands, currentUniformBuffer,
-        uniformsAndXfbDesc);
+        &uniformsAndXfbDesc);
 }
 
 angle::Result ContextVk::handleDirtyGraphicsTransformFeedbackBuffersExtension(
@@ -6343,15 +6339,17 @@ angle::Result ContextVk::updateDriverUniformsDescriptorSet(
     desc.updateUniformWrite(1);
     desc.updateUniformBuffer(0, *driverUniforms.currentBuffer, driverUniformsSize);
 
-    vk::DescriptorCacheResult cacheResult;
+    vk::SharedDescriptorSetCacheKey newSharedCacheKey;
     ANGLE_TRY(mDriverUniformsDescriptorPools[pipelineType].getOrAllocateDescriptorSet(
         this, commandBufferHelper, desc.getDesc(), driverUniforms.descriptorSetLayout.get(),
-        &driverUniforms.descriptorPoolBinding, &driverUniforms.descriptorSet, nullptr,
-        &cacheResult));
-    if (cacheResult == vk::DescriptorCacheResult::CacheHit)
+        &driverUniforms.descriptorPoolBinding, &driverUniforms.descriptorSet, &newSharedCacheKey));
+
+    desc.updateImagesAndBuffersWithSharedCacheKey(newSharedCacheKey);
+
+    if (newSharedCacheKey == nullptr)
     {
-        // The descriptor pool that this descriptor set was allocated from needs to be retained each
-        // time the descriptor set is used in a new command.
+        // Cache hit. The descriptor pool that this descriptor set was allocated from needs to be
+        // retained each time the descriptor set is used in a new command.
         commandBufferHelper->retainResource(&driverUniforms.descriptorPoolBinding.get());
         return angle::Result::Continue;
     }

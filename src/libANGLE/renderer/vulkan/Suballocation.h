@@ -14,6 +14,7 @@
 #include "libANGLE/angletypes.h"
 #include "libANGLE/renderer/serial_utils.h"
 #include "libANGLE/renderer/vulkan/ResourceVk.h"
+#include "libANGLE/renderer/vulkan/vk_cache_utils.h"
 #include "libANGLE/renderer/vulkan/vk_utils.h"
 #include "libANGLE/renderer/vulkan/vk_wrapper.h"
 
@@ -76,6 +77,11 @@ class BufferBlock final : angle::NonCopyable
     int32_t getAndIncrementEmptyCounter();
     void calculateStats(vma::StatInfo *pStatInfo) const;
 
+    void onNewDescriptorSet(const SharedDescriptorSetCacheKey &sharedCacheKey)
+    {
+        mDescriptorSetCacheManager.addKey(sharedCacheKey);
+    }
+
   private:
     // Protect multi-thread access to mVirtualBlock, which could be possible when asyncCommandQueue
     // is enabled.
@@ -92,6 +98,8 @@ class BufferBlock final : angle::NonCopyable
     // buffer block is found to be empty when pruneEmptyBuffer is called. This gets reset whenever
     // it becomes non-empty.
     int32_t mCountRemainsEmpty;
+    // Manages the descriptorSet cache that created with this BufferBlock.
+    DescriptorSetCacheManager mDescriptorSetCacheManager;
 };
 using BufferBlockPointerVector = std::vector<std::unique_ptr<BufferBlock>>;
 

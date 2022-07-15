@@ -1303,15 +1303,15 @@ angle::Result ProgramExecutableVk::getOrAllocateDescriptorSet(
     DescriptorSetIndex setIndex,
     vk::SharedDescriptorSetCacheKey *newSharedCacheKeyOut)
 {
-    vk::DescriptorCacheResult cacheResult;
     ANGLE_TRY(mDescriptorPools[setIndex].get().getOrAllocateDescriptorSet(
         context, commandBufferHelper, descriptorSetDesc.getDesc(),
         mDescriptorSetLayouts[setIndex].get(), &mDescriptorPoolBindings[setIndex],
-        &mDescriptorSets[setIndex], newSharedCacheKeyOut, &cacheResult));
+        &mDescriptorSets[setIndex], newSharedCacheKeyOut));
     ASSERT(mDescriptorSets[setIndex] != VK_NULL_HANDLE);
 
-    if (cacheResult == vk::DescriptorCacheResult::NewAllocation)
+    if (*newSharedCacheKeyOut != nullptr)
     {
+        // Cache miss. A new cache entry has been created.
         descriptorSetDesc.updateDescriptorSet(updateBuilder, mDescriptorSets[setIndex]);
     }
     else
@@ -1331,6 +1331,7 @@ angle::Result ProgramExecutableVk::updateShaderResourcesDescriptorSet(
 {
     if (!mDescriptorPools[DescriptorSetIndex::ShaderResource].get().valid())
     {
+        *newSharedCacheKeyOut = nullptr;
         return angle::Result::Continue;
     }
 
@@ -1354,14 +1355,17 @@ angle::Result ProgramExecutableVk::updateUniformsAndXfbDescriptorSet(
     UpdateDescriptorSetsBuilder *updateBuilder,
     vk::CommandBufferHelperCommon *commandBufferHelper,
     vk::BufferHelper *defaultUniformBuffer,
-    const vk::DescriptorSetDescBuilder &uniformsAndXfbDesc)
+    vk::DescriptorSetDescBuilder *uniformsAndXfbDesc)
 {
     mCurrentDefaultUniformBufferSerial =
         defaultUniformBuffer ? defaultUniformBuffer->getBufferSerial() : vk::kInvalidBufferSerial;
 
-    return getOrAllocateDescriptorSet(context, updateBuilder, commandBufferHelper,
-                                      uniformsAndXfbDesc, DescriptorSetIndex::UniformsAndXfb,
-                                      nullptr);
+    vk::SharedDescriptorSetCacheKey newSharedCacheKey;
+    ANGLE_TRY(getOrAllocateDescriptorSet(context, updateBuilder, commandBufferHelper,
+                                         *uniformsAndXfbDesc, DescriptorSetIndex::UniformsAndXfb,
+                                         &newSharedCacheKey));
+    uniformsAndXfbDesc->updateImagesAndBuffersWithSharedCacheKey(newSharedCacheKey);
+    return angle::Result::Continue;
 }
 
 angle::Result ProgramExecutableVk::updateTexturesDescriptorSet(
@@ -1375,21 +1379,21 @@ angle::Result ProgramExecutableVk::updateTexturesDescriptorSet(
     vk::CommandBufferHelperCommon *commandBufferHelper,
     const vk::DescriptorSetDesc &texturesDesc)
 {
-    vk::SharedDescriptorSetCacheKey sharedCacheKey;
-    vk::DescriptorCacheResult cacheResult;
+    vk::SharedDescriptorSetCacheKey newSharedCacheKey;
     ANGLE_TRY(mDescriptorPools[DescriptorSetIndex::Texture].get().getOrAllocateDescriptorSet(
         context, commandBufferHelper, texturesDesc,
         mDescriptorSetLayouts[DescriptorSetIndex::Texture].get(),
         &mDescriptorPoolBindings[DescriptorSetIndex::Texture],
-        &mDescriptorSets[DescriptorSetIndex::Texture], &sharedCacheKey, &cacheResult));
+        &mDescriptorSets[DescriptorSetIndex::Texture], &newSharedCacheKey));
     ASSERT(mDescriptorSets[DescriptorSetIndex::Texture] != VK_NULL_HANDLE);
 
-    if (cacheResult == vk::DescriptorCacheResult::NewAllocation)
+    if (newSharedCacheKey != nullptr)
     {
         vk::DescriptorSetDescBuilder fullDesc;
+        // Cache miss. A new cache entry has been created.
         ANGLE_TRY(fullDesc.updateFullActiveTextures(context, mVariableInfoMap, executable, textures,
                                                     samplers, emulateSeamfulCubeMapSampling,
-                                                    pipelineType, sharedCacheKey));
+                                                    pipelineType, newSharedCacheKey));
         fullDesc.updateDescriptorSet(updateBuilder, mDescriptorSets[DescriptorSetIndex::Texture]);
     }
     else
@@ -1580,7 +1584,7 @@ angle::Result ProgramExecutableVk::updateUniforms(
             glExecutable.hasTransformFeedbackOutput() ? transformFeedbackVk : nullptr);
 
         ANGLE_TRY(updateUniformsAndXfbDescriptorSet(context, updateBuilder, commandBufferHelper,
-                                                    defaultUniformBuffer, uniformsAndXfbDesc));
+                                                    defaultUniformBuffer, &uniformsAndXfbDesc));
     }
 
     return angle::Result::Continue;

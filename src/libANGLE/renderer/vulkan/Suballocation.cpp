@@ -50,12 +50,14 @@ BufferBlock::~BufferBlock()
     ASSERT(!mVirtualBlock.valid());
     ASSERT(!mBuffer.valid());
     ASSERT(!mDeviceMemory.valid());
+    ASSERT(mDescriptorSetCacheManager.empty());
 }
 
 void BufferBlock::destroy(RendererVk *renderer)
 {
     VkDevice device = renderer->getDevice();
 
+    mDescriptorSetCacheManager.destroyKeys();
     if (mMappedMemory)
     {
         unmap(device);

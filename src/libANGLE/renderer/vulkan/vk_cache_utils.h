@@ -1409,7 +1409,12 @@ class DescriptorSetDescBuilder final
     void updateDescriptorSet(UpdateDescriptorSetsBuilder *updateBuilder,
                              VkDescriptorSet descriptorSet) const;
 
-    void updateShaderResourcesSharedCacheKey(SharedDescriptorSetCacheKey sharedCacheKey);
+    // If sharedCacheKey is not null, it means a new cache entry for descriptoret has been created.
+    // This function will store the new shared cache key in the buffer or textures that the
+    // descriptorSet is created so that the descriptorSet cache can be destroyed when any of these
+    // is release or destroyed.
+    void updateImagesAndBuffersWithSharedCacheKey(
+        const SharedDescriptorSetCacheKey &sharedCacheKey);
 
     const uint32_t *getDynamicOffsets() const { return mDynamicOffsets.data(); }
     size_t getDynamicOffsetsSize() const { return mDynamicOffsets.size(); }
@@ -1434,7 +1439,10 @@ class DescriptorSetDescBuilder final
     angle::FastMap<DescriptorDescHandles, kFastDescriptorSetDescLimit> mHandles;
     angle::FastMap<uint32_t, kFastDescriptorSetDescLimit> mDynamicOffsets;
     uint32_t mCurrentInfoIndex = 0;
+
+    // Track textures and buffers that used for this descriptorSet.
     std::vector<TextureVk *> mUsedImages;
+    std::vector<BufferBlock *> mUsedBufferBlocks;
 };
 
 // Specialized update for textures.

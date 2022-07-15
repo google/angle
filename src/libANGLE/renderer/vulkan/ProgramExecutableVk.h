@@ -174,7 +174,7 @@ class ProgramExecutableVk
         UpdateDescriptorSetsBuilder *updateBuilder,
         vk::CommandBufferHelperCommon *commandBufferHelper,
         vk::BufferHelper *defaultUniformBuffer,
-        const vk::DescriptorSetDescBuilder &uniformsAndXfbDesc);
+        vk::DescriptorSetDescBuilder *uniformsAndXfbDesc);
 
     template <typename CommandBufferT>
     angle::Result bindDescriptorSets(vk::Context *context,

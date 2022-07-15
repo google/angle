@@ -3192,6 +3192,7 @@ DescriptorPoolHelper::~DescriptorPoolHelper()
 {
     // Caller must have already freed all caches
     ASSERT(mDescriptorSetCacheManager.empty());
+    ASSERT(mDescriptorSetGarbageList.empty());
 }
 
 bool DescriptorPoolHelper::hasCapacity(uint32_t descriptorSetCount) const
@@ -3408,14 +3409,13 @@ angle::Result DynamicDescriptorPool::getOrAllocateDescriptorSet(
     const DescriptorSetLayout &descriptorSetLayout,
     RefCountedDescriptorPoolBinding *bindingOut,
     VkDescriptorSet *descriptorSetOut,
-    SharedDescriptorSetCacheKey *sharedCacheKeyOut,
-    DescriptorCacheResult *cacheResultOut)
+    SharedDescriptorSetCacheKey *newSharedCacheKeyOut)
 {
     // First scan the descriptorSet cache.
     vk::RefCountedDescriptorPoolHelper *poolOut;
     if (mDescriptorSetCache.getDescriptorSet(desc, descriptorSetOut, &poolOut))
     {
-        *cacheResultOut = DescriptorCacheResult::CacheHit;
+        *newSharedCacheKeyOut = nullptr;
         bindingOut->set(poolOut);
         mCacheStats.hit();
         return angle::Result::Continue;
@@ -3443,17 +3443,13 @@ angle::Result DynamicDescriptorPool::getOrAllocateDescriptorSet(
     }
 
     mDescriptorSetCache.insertDescriptorSet(desc, *descriptorSetOut, bindingOut->getRefCounted());
-    *cacheResultOut = DescriptorCacheResult::NewAllocation;
     ++context->getPerfCounters().descriptorSetAllocations;
 
     // Let pool know there is a shared cache key created and destroys the shared cache key
     // when it destroys the pool.
-    SharedDescriptorSetCacheKey sharedCacheKey = CreateSharedDescriptorSetCacheKey(desc, this);
-    bindingOut->get().onNewDescriptorSetAllocated(sharedCacheKey);
-    if (sharedCacheKeyOut != nullptr)
-    {
-        *sharedCacheKeyOut = sharedCacheKey;
-    }
+    *newSharedCacheKeyOut = CreateSharedDescriptorSetCacheKey(desc, this);
+    bindingOut->get().onNewDescriptorSetAllocated(*newSharedCacheKeyOut);
+
     return angle::Result::Continue;
 }
 
@@ -3512,9 +3508,16 @@ void DynamicDescriptorPool::releaseCachedDescriptorSet(ContextVk *contextVk,
 
 void DynamicDescriptorPool::destroyCachedDescriptorSet(const DescriptorSetDesc &desc)
 {
-    // Remove from the cache hash map
-    mDescriptorSetCache.eraseDescriptorSet(desc);
-    mCacheStats.decrementSize();
+    VkDescriptorSet descriptorSet;
+    RefCountedDescriptorPoolHelper *poolOut;
+    if (mDescriptorSetCache.getDescriptorSet(desc, &descriptorSet, &poolOut))
+    {
+        // Remove from the cache hash map
+        mDescriptorSetCache.eraseDescriptorSet(desc);
+        mCacheStats.decrementSize();
+        // Put descriptorSet to the garbage list for reuse.
+        poolOut->get().getGarbageList().emplace_back(descriptorSet);
+    }
 }
 
 // For testing only!
