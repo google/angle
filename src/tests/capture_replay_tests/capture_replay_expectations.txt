@@ -134,8 +134,6 @@
 
 7112 : TransformFeedbackTest.BaseInstance/* = NOT_RUN
 
-7484 : GLSLTest_ES31.Image2DAsFunctionArg/* = NOT_RUN
-
 # GLES 3.2 tests that fail because of missing features
 5366 : GeometryShaderTestES32.MaxGeometryImageUniforms/* = CRASH
 5366 : ProgramPipelineTest32.MaxGeometryImageUniforms/* = CRASH

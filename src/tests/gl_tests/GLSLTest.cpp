@@ -5150,8 +5150,8 @@ void main()
     ASSERT_GL_NO_ERROR();
 }
 
-// Check that image2D handles can be passed as function args: anglebug.com/7484
-TEST_P(GLSLTest_ES31, Image2DAsFunctionArg)
+// Check that writeonly image2D handles can be passed as function args.
+TEST_P(GLSLTest_ES31, WriteOnlyImage2DAsFunctionArg)
 {
     // Create an image.
     GLTexture tex;
@@ -5162,22 +5162,22 @@ TEST_P(GLSLTest_ES31, Image2DAsFunctionArg)
     GLFramebuffer fbo;
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
     glClearColor(1, 0, 0, 1);
     glClear(GL_COLOR_BUFFER_BIT);
-    glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT | GL_FRAMEBUFFER_BARRIER_BIT);
+    glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 
-    // Store yellow to the image.
-    ANGLE_GL_PROGRAM(program,
-                     R"(#version 310 es
+    const char kVS[] = R"(#version 310 es
 precision highp float;
 void main()
 {
     gl_Position.x = ((gl_VertexID & 1) == 0 ? -1.0 : 1.0);
     gl_Position.y = ((gl_VertexID & 2) == 0 ? -1.0 : 1.0);
     gl_Position.zw = vec2(0, 1);
-})",
+})";
 
-                     R"(#version 310 es
+    const char kFS[] = R"(#version 310 es
 precision highp float;
 layout(binding=0, rgba8) writeonly highp uniform image2D uniformImage;
 void store(writeonly highp image2D img, vec4 color)
@@ -5188,19 +5188,82 @@ void store(writeonly highp image2D img, vec4 color)
 void main()
 {
     store(uniformImage, vec4(1, 1, 0, 1));
-})");
-    ASSERT_TRUE(program.valid());
-    glUseProgram(program.get());
+})";
+
+    // Store yellow to the image.
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glBindImageTexture(0, tex, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA8);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-    glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
+    glMemoryBarrier(GL_FRAMEBUFFER_BARRIER_BIT);
 
     // Check that the image is yellow.
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
     EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::yellow);
+    ASSERT_GL_NO_ERROR();
+}
 
+// Check that readonly image2D handles can be passed as function args.
+TEST_P(GLSLTest_ES31, ReadOnlyImage2DAsFunctionArg)
+{
+    const int w = getWindowWidth();
+    const int h = getWindowHeight();
+
+    // Create an image.
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, w, h);
+
+    const std::vector<GLColor> kInitData(w * h, GLColor::red);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, kInitData.data());
+
+    // Create a framebuffer.
+    GLTexture color;
+    glBindTexture(GL_TEXTURE_2D, color);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, w, h);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color, 0);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Initialize the framebuffer with the contents of the texture.
+    glClearColor(0, 0, 0, 0);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    const char kVS[] = R"(#version 310 es
+precision highp float;
+void main()
+{
+    gl_Position.x = ((gl_VertexID & 1) == 0 ? -1.0 : 1.0);
+    gl_Position.y = ((gl_VertexID & 2) == 0 ? -1.0 : 1.0);
+    gl_Position.zw = vec2(0, 1);
+})";
+
+    const char kFS[] = R"(#version 310 es
+precision highp float;
+layout(binding=0, rgba8) readonly highp uniform image2D uniformImage;
+out vec4 color;
+vec4 load(readonly highp image2D img)
+{
+    ivec2 imgcoord = ivec2(floor(gl_FragCoord.xy));
+    return imageLoad(img, imgcoord);
+}
+void main()
+{
+    color = load(uniformImage);
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+
+    glBindImageTexture(0, tex, 0, GL_FALSE, 0, GL_READ_ONLY, GL_RGBA8);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+    // Check that the framebuffer is red.
+    EXPECT_PIXEL_RECT_EQ(0, 0, w, h, GLColor::red);
     ASSERT_GL_NO_ERROR();
 }
 

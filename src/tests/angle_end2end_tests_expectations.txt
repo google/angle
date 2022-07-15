@@ -655,10 +655,9 @@
 7398 OpenGL : GLSLTest_ES31.AliasedLoadStore/* = SKIP
 
 // image2D handles do not work as function arguments.
-7484 D3D11 : GLSLTest_ES31.Image2DAsFunctionArg/* = SKIP
-7484 OpenGL : GLSLTest_ES31.Image2DAsFunctionArg/* = SKIP
-7484 GLES : GLSLTest_ES31.Image2DAsFunctionArg/* = SKIP
-7484 VULKAN : GLSLTest_ES31.Image2DAsFunctionArg/* = SKIP
+7484 D3D11 : GLSLTest_ES31.*Image2DAsFunctionArg/* = SKIP
+7484 OpenGL : GLSLTest_ES31.*Image2DAsFunctionArg/* = SKIP
+7484 GLES : GLSLTest_ES31.*Image2DAsFunctionArg/* = SKIP
 
 // imageLoad after imageStore with barrier is not coherent on Pixel 4 GLES.
 7388 ANDROID GLES : PixelLocalStorageTest.*/ES3_1_OpenGLES_EmulatePixelLocalStorage = SKIP
