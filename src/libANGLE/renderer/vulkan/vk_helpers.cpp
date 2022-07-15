@@ -4705,6 +4705,7 @@ const Buffer &BufferHelper::getBufferForVertexArray(ContextVk *contextVk,
 
 void BufferHelper::destroy(RendererVk *renderer)
 {
+    mDescriptorSetCacheManager.destroyKeys();
     unmap(renderer);
     mBufferForVertexArray.destroy(renderer->getDevice());
     mSuballocation.destroy(renderer);
@@ -4712,6 +4713,7 @@ void BufferHelper::destroy(RendererVk *renderer)
 
 void BufferHelper::release(RendererVk *renderer)
 {
+    ASSERT(mDescriptorSetCacheManager.empty());
     unmap(renderer);
 
     if (mSuballocation.valid())
@@ -4726,6 +4728,22 @@ void BufferHelper::release(RendererVk *renderer)
         }
     }
     ASSERT(!mBufferForVertexArray.valid());
+}
+
+void BufferHelper::releaseBufferAndDescriptorSetCache(ContextVk *contextVk)
+{
+    RendererVk *renderer = contextVk->getRenderer();
+
+    if (mReadOnlyUse.isCurrentlyInUse(renderer->getLastCompletedQueueSerial()))
+    {
+        mDescriptorSetCacheManager.releaseKeys(contextVk);
+    }
+    else
+    {
+        mDescriptorSetCacheManager.destroyKeys();
+    }
+
+    release(renderer);
 }
 
 angle::Result BufferHelper::copyFromBuffer(ContextVk *contextVk,

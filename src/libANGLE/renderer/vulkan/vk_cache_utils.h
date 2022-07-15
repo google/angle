@@ -1443,6 +1443,7 @@ class DescriptorSetDescBuilder final
     // Track textures and buffers that used for this descriptorSet.
     std::vector<TextureVk *> mUsedImages;
     std::vector<BufferBlock *> mUsedBufferBlocks;
+    std::vector<BufferHelper *> mUsedBufferHelpers;
 };
 
 // Specialized update for textures.

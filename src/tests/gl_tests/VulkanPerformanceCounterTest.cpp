@@ -6512,6 +6512,66 @@ void main()
     EXPECT_LT(DescriptorSetCacheTotalSizeIncrease, 2);
 }
 
+// Similar to CreateDestroyTextureDoesNotIncreaseDescriptporSetCache, but for atomic acounter
+// buffer.
+TEST_P(VulkanPerformanceCounterTest_ES31, DestroyAtomicCounterBufferAlsoDestroyDescriptporSetCache)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled(kPerfMonitorExtensionName));
+    initANGLEFeatures();
+
+    constexpr char kFS[] =
+        "#version 310 es\n"
+        "precision highp float;\n"
+        "layout(binding = 0, offset = 4) uniform atomic_uint ac;\n"
+        "out highp vec4 my_color;\n"
+        "void main()\n"
+        "{\n"
+        "    uint a1 = atomicCounter(ac);\n"
+        "    my_color = vec4(float(a1)/255.0, 0.0, 0.0, 1.0);\n"
+        "}\n";
+    ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), kFS);
+
+    // Warm up. Make a draw to ensure other descriptorSets are created if needed.
+    GLBuffer intialBuffer;
+    glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, intialBuffer);
+    uint32_t bufferData[3] = {0, 0u, 0u};
+    glBufferData(GL_ATOMIC_COUNTER_BUFFER, sizeof(bufferData), bufferData, GL_STATIC_DRAW);
+    glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 0, intialBuffer);
+    drawQuad(program, essl31_shaders::PositionAttrib(), 0.0f);
+    GLColor expectedColor = GLColor::black;
+    EXPECT_PIXEL_COLOR_EQ(0, 0, expectedColor);
+
+    GLint DescriptorSetCacheTotalSizeBefore = getPerfCounters().descriptorSetCacheTotalSize;
+
+    // Create atomic counter buffer and use it and then destroy it.
+    constexpr int kBufferCount = 16;
+    GLBuffer paddingBuffers[kBufferCount];
+    for (uint32_t i = 0; i < kBufferCount; i++)
+    {
+        // Allocate a padding buffer so that atomicCounterBuffer will be allocated in different
+        // offset
+        glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, paddingBuffers[i]);
+        glBufferData(GL_ATOMIC_COUNTER_BUFFER, 256, nullptr, GL_STATIC_DRAW);
+        // Allocate, use, destroy atomic counter buffer
+        GLBuffer atomicCounterBuffer;
+        glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, atomicCounterBuffer);
+        bufferData[1] = i;
+        glBufferData(GL_ATOMIC_COUNTER_BUFFER, sizeof(bufferData), bufferData, GL_STATIC_DRAW);
+        glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 0, atomicCounterBuffer);
+        drawQuad(program, essl31_shaders::PositionAttrib(), 0.0f);
+        expectedColor.R = bufferData[1];
+        EXPECT_PIXEL_COLOR_EQ(0, 0, expectedColor);
+    }
+    ASSERT_GL_NO_ERROR();
+
+    GLint DescriptorSetCacheTotalSizeIncrease =
+        getPerfCounters().descriptorSetCacheTotalSize - DescriptorSetCacheTotalSizeBefore;
+    // We expect most of descriptorSet caches for temporary atomic counter buffers gets destroyed.
+    // Give extra room in case a new descriptorSet is allocated due to a new driver uniform buffer
+    // gets allocated.
+    EXPECT_LT(DescriptorSetCacheTotalSizeIncrease, 2);
+}
+
 // Test that post-render-pass-to-swapchain glFenceSync followed by eglSwapBuffers incurs only a
 // single submission.
 TEST_P(VulkanPerformanceCounterTest, FenceThenSwapBuffers)

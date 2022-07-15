@@ -4729,6 +4729,7 @@ DescriptorSetDescBuilder::~DescriptorSetDescBuilder()
 {
     ASSERT(mUsedImages.empty());
     ASSERT(mUsedBufferBlocks.empty());
+    ASSERT(mUsedBufferHelpers.empty());
 }
 
 DescriptorSetDescBuilder::DescriptorSetDescBuilder(const DescriptorSetDescBuilder &other)
@@ -4737,17 +4738,19 @@ DescriptorSetDescBuilder::DescriptorSetDescBuilder(const DescriptorSetDescBuilde
       mDynamicOffsets(other.mDynamicOffsets),
       mCurrentInfoIndex(other.mCurrentInfoIndex),
       mUsedImages(other.mUsedImages),
-      mUsedBufferBlocks(other.mUsedBufferBlocks)
+      mUsedBufferBlocks(other.mUsedBufferBlocks),
+      mUsedBufferHelpers(other.mUsedBufferHelpers)
 {}
 
 DescriptorSetDescBuilder &DescriptorSetDescBuilder::operator=(const DescriptorSetDescBuilder &other)
 {
-    mDesc             = other.mDesc;
-    mHandles          = other.mHandles;
-    mDynamicOffsets   = other.mDynamicOffsets;
-    mCurrentInfoIndex = other.mCurrentInfoIndex;
-    mUsedImages       = other.mUsedImages;
-    mUsedBufferBlocks = other.mUsedBufferBlocks;
+    mDesc              = other.mDesc;
+    mHandles           = other.mHandles;
+    mDynamicOffsets    = other.mDynamicOffsets;
+    mCurrentInfoIndex  = other.mCurrentInfoIndex;
+    mUsedImages        = other.mUsedImages;
+    mUsedBufferBlocks  = other.mUsedBufferBlocks;
+    mUsedBufferHelpers = other.mUsedBufferHelpers;
     return *this;
 }
 
@@ -4759,6 +4762,7 @@ void DescriptorSetDescBuilder::reset()
     mCurrentInfoIndex = 0;
     mUsedImages.clear();
     mUsedBufferBlocks.clear();
+    mUsedBufferHelpers.clear();
 }
 
 void DescriptorSetDescBuilder::updateWriteDesc(uint32_t bindingIndex,
@@ -5168,6 +5172,7 @@ void DescriptorSetDescBuilder::updateShaderBuffers(
             else
             {
                 SetBitField(infoDesc.imageViewSerialOrOffset, offset);
+                mUsedBufferHelpers.emplace_back(&bufferHelper);
             }
 
             mDesc.updateInfoDesc(infoDescIndex, infoDesc);
@@ -5244,6 +5249,7 @@ void DescriptorSetDescBuilder::updateAtomicCounters(
         SetBitField(infoDesc.imageLayoutOrRange, range);
         SetBitField(infoDesc.imageViewSerialOrOffset, offset);
         infoDesc.samplerOrBufferSerial = bufferHelper.getBlockSerial().getValue();
+        mUsedBufferHelpers.emplace_back(&bufferHelper);
 
         mDesc.updateInfoDesc(infoIndex, infoDesc);
         mHandles[infoIndex].buffer = bufferHelper.getBuffer().getHandle();
@@ -5440,10 +5446,15 @@ void DescriptorSetDescBuilder::updateImagesAndBuffersWithSharedCacheKey(
         {
             bufferBlock->onNewDescriptorSet(sharedCacheKey);
         }
+        for (BufferHelper *bufferHelper : mUsedBufferHelpers)
+        {
+            bufferHelper->onNewDescriptorSet(sharedCacheKey);
+        }
     }
 
     mUsedImages.clear();
     mUsedBufferBlocks.clear();
+    mUsedBufferHelpers.clear();
 }
 
 // SharedCacheKeyManager implementation.
