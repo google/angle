@@ -1,0 +1,137 @@
+Name
+
+    ANGLE_shader_pixel_local_storage
+
+Name Strings
+
+    GL_ANGLE_shader_pixel_local_storage
+    GL_ANGLE_shader_pixel_local_storage_coherent
+
+Contact
+
+    Chris Dalton (chris 'at' rive.app)
+
+Contributors
+
+    Chris Dalton, Rive
+    Kenneth Russell, Google Inc.
+    Shahbaz Youssefi, Google Inc.
+    WebGL Working Group in Khronos
+    Contributors to the EXT_shader_pixel_local_storage specification
+    Contributors to the ARB_fragment_shader_interlock specification
+    Contributors to the INTEL_fragment_shader_ordering specification
+    Contributors to the EXT_shader_framebuffer_fetch specification
+    Contributors to the QCOM_tiled_rendering specification
+    Contributors to the KHR_blend_equation_advanced specification
+    Contributors to the NV_texture_barrier specification
+    Contributors to the (Vulkan) EXT_fragment_shader_interlock specification
+    Contributors to the (Vulkan) ARM_rasterization_order_attachment_access specification
+
+Status
+
+    Incomplete
+
+Version
+
+    Last Modified Date: Jun 29, 2022
+    Author Revision: 1
+
+Number
+
+    OpenGL ES Extension XX
+
+Dependencies
+
+    OpenGL ES 3.0 is required.
+
+    This extension is written against the OpenGL ES 3.0 specification and the
+    OpenGL ES Shading Language 3.0 specification.
+
+    This extension interacts with OpenGL ES 3.1.
+
+    This extension interacts with GL_OES_sample_variables.
+
+Overview
+
+    A major feature missing from WebGL is the ability to access rendering
+    results from fragment shaders and perform tasks like programmable blending.
+    This is especially desirable on Tile-Based Deferred Rendering (TBDR)
+    architectures, as it can be implemented entirely on-chip to achieve maximum
+    performance.
+
+    Capabilities in this area vary widely, but it is the case that all major GPU
+    vendors, on all major APIs, have some mechanism, direct or indirect, whereby
+    a fragment shader can access prior rendering results. The intent of this
+    extension is to condense this myriad of hardware and API features into a
+    simple interface with straightforward implementation(s) on every graphics
+    API.
+
+    Similar to EXT_shader_pixel_local_storage, this extension provides a means
+    for fragment shaders to load and store user-defined data associated with the
+    pixel being covered. The data is accessed via GLSL built-in functions
+    pixelLocalLoadANGLE() and pixelLocalStoreANGLE(). Only the current pixel's
+    data can be accessed; data associated with other pixels is not accessible to
+    the fragment shader. Pixel local storage persists across all fragment
+    invocations and across all rendering passes issued between OpenGL ES API
+    calls BeginPixelLocalStorageANGLE() and EndPixelLocalStorageANGLE(), even if
+    the application binds different shader programs. In order to make this
+    guarantee, various OpenGL ES commands are explicitly disallowed while pixel
+    local storage is active, instead generating errors.
+
+    Applications define custom, formatted planes of pixel local storage data, up
+    to an implementation-dependent maximum, using the OpenGL ES API function
+    FramebufferPixelLocalStorageANGLE(). This method behaves similarly to
+    FramebufferTexture2D(). Fragment shaders access a specific local storage
+    plane using one of the opaque GLSL types {pixelLocalANGLE, ipixelLocalANGLE,
+    upixelLocalANGLE}, which are analogous to samplers or images.
+
+    This extension provides two different extension string entries:
+
+        - GL_ANGLE_shader_pixel_local_storage: Provides the new pixel local
+          storage functionality, but each pixel may only be touched once in any
+          single rendering pass. The command PixelLocalStorageBarrierANGLE() is
+          provided to indicate a boundary between passes. Rendering the same
+          pixel twice without a barrier can yield incorrect results. However,
+          "incorrect" does _not_ mean they can be random, uninitialized, or
+          leaked from another context; any artifacts are strictly a result of
+          race conditions between overlapping fragment invocations involved in
+          the current rendering pass.
+
+        - GL_ANGLE_shader_pixel_local_storage_coherent: Guarantees that pixel
+          local storage operations touching the same pixel are invoked
+          synchronously and in API primitive order. No barriers are required and
+          render passes can emit overlapping fragments.
+
+    Some implementations may support GL_ANGLE_shader_pixel_local_storage without
+    supporting GL_ANGLE_shader_pixel_local_storage_coherent.
+
+    A note on performance: On some platforms, this feature will be polyfilled
+    with shader images. While every implementation can be expected to run
+    reasonably fast, certain platforms may see some performance degradation at
+    times from using pixel local storage instead of the normal raster pipeline.
+    As always, benchmark and consider other options before using pixel local
+    storage.
+
+IP Status
+
+    No known IP claims.
+
+New Procedures and Functions
+
+    TBD
+
+New Tokens
+
+    TBD
+
+Additions to the OpenGL ES Specification, Version 3.0.6
+
+    TBD
+
+Errors
+
+    TBD
+
+Issues
+
+    TBD

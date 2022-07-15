@@ -2163,6 +2163,9 @@ void Display::initializeFrontendFeatures()
     // compressing pipeline cache in multi-thread pool.
     ANGLE_FEATURE_CONDITION(&mFrontendFeatures, enableCompressingPipelineCacheInThreadPool, false);
 
+    // Disabled by default until work on the extension is complete - anglebug.com/7279.
+    ANGLE_FEATURE_CONDITION(&mFrontendFeatures, emulatePixelLocalStorage, false);
+
     mImplementation->initializeFrontendFeatures(&mFrontendFeatures);
 
     rx::ApplyFeatureOverrides(&mFrontendFeatures, mState);

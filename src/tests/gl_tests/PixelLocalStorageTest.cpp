@@ -520,6 +520,39 @@ class PLSTestTexture
     GLuint mID                                        = 0;
 };
 
+class ShaderInfoLog
+{
+  public:
+    bool compileFragmentShader(const char *source)
+    {
+        mInfoLog.clear();
+
+        GLuint shader = glCreateShader(GL_FRAGMENT_SHADER);
+        glShaderSource(shader, 1, &source, nullptr);
+        glCompileShader(shader);
+
+        GLint compileResult;
+        glGetShaderiv(shader, GL_COMPILE_STATUS, &compileResult);
+
+        if (compileResult == 0)
+        {
+            GLint infoLogLength;
+            glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLogLength);
+            // Info log length includes the null terminator; std::string::reserve does not.
+            mInfoLog.resize(std::max(infoLogLength - 1, 0));
+            glGetShaderInfoLog(shader, infoLogLength, nullptr, mInfoLog.data());
+        }
+
+        glDeleteShader(shader);
+        return compileResult != 0;
+    }
+
+    bool has(const char *subStr) const { return strstr(mInfoLog.c_str(), subStr); }
+
+  private:
+    std::string mInfoLog;
+};
+
 class PixelLocalStorageTest : public ANGLETest<>
 {
   public:
@@ -539,33 +572,6 @@ class PixelLocalStorageTest : public ANGLETest<>
         {
             glDeleteFramebuffers(1, &mScratchFBO);
         }
-    }
-
-    bool supportsPixelLocalStorage()
-    {
-        ASSERT(getClientMajorVersion() == 3);
-        ASSERT(getClientMinorVersion() == 1);
-
-        if (isD3D11Renderer())
-        {
-            // We can't implement pixel local storage via shader images on top of D3D11:
-            //
-            //   * D3D UAVs don't support aliasing: https://anglebug.com/3032
-            //   * But ES 3.1 doesn't allow most image2D formats to be readwrite
-            //   * And we can't use texelFetch because ps_5_0 does not support thread
-            //     synchronization operations in shaders (aka memoryBarrier()).
-            //
-            // We will need to do a custom local storage implementation in D3D11 that uses
-            // RWTexture2D<> or, more ideally, the coherent RasterizerOrderedTexture2D<>.
-            return false;
-        }
-
-        return true;
-    }
-
-    bool supportsPixelLocalStorageCoherent()
-    {
-        return false;  // ES 3.1 shader images can't be coherent.
     }
 
     // anglebug.com/7398: imageLoad() eventually starts failing. A workaround is to delete and
@@ -628,6 +634,7 @@ class PixelLocalStorageTest : public ANGLETest<>
             })",
 
             std::string(R"(#version 310 es
+            #extension GL_ANGLE_shader_pixel_local_storage : require
             precision highp float;
             in vec4 color;
             in vec4 aux1;
@@ -687,7 +694,8 @@ class PixelLocalStorageTest : public ANGLETest<>
                    std::vector<Box> boxes,
                    UseBarriers useBarriers = UseBarriers::IfNotCoherent)
     {
-        if (!supportsPixelLocalStorageCoherent() && useBarriers == UseBarriers::IfNotCoherent)
+        if (useBarriers == UseBarriers::IfNotCoherent &&
+            !IsGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage_coherent"))
         {
             for (const auto &box : boxes)
             {
@@ -788,7 +796,7 @@ class PixelLocalStorageTest : public ANGLETest<>
 // formats. Also verify that clear-to-zero works on every supported format.
 TEST_P(PixelLocalStorageTest, AllFormats)
 {
-    ANGLE_SKIP_TEST_IF(!supportsPixelLocalStorage());
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
 
     {
         PixelLocalStoragePrototype pls;
@@ -989,7 +997,7 @@ TEST_P(PixelLocalStorageTest, AllFormats)
 // Check proper functioning of glFramebufferPixelLocalClearValue{fi ui}vANGLE.
 TEST_P(PixelLocalStorageTest, ClearValue)
 {
-    ANGLE_SKIP_TEST_IF(!supportsPixelLocalStorage());
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
 
     PixelLocalStoragePrototype pls;
 
@@ -1105,7 +1113,7 @@ TEST_P(PixelLocalStorageTest, ClearValue)
 // that it works do draw with GL_MAX_LOCAL_STORAGE_PLANES_ANGLE planes.
 TEST_P(PixelLocalStorageTest, LoadOps)
 {
-    ANGLE_SKIP_TEST_IF(!supportsPixelLocalStorage());
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
 
     PixelLocalStoragePrototype pls;
 
@@ -1251,7 +1259,7 @@ constexpr static PixelLocalStorageTest::Box FRAG_REJECT_TEST_BOX(
 // shader images vs framebuffer fetch.)
 TEST_P(PixelLocalStorageTest, FragmentReject_discard)
 {
-    ANGLE_SKIP_TEST_IF(!supportsPixelLocalStorage());
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
 
     PixelLocalStoragePrototype pls;
     PLSTestTexture tex(GL_RGBA8);
@@ -1286,7 +1294,7 @@ TEST_P(PixelLocalStorageTest, FragmentReject_discard)
 // GL_ARB_fragment_shader_interlock isn't allowed after a return from main.)
 TEST_P(PixelLocalStorageTest, FragmentReject_return)
 {
-    ANGLE_SKIP_TEST_IF(!supportsPixelLocalStorage());
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
 
     PixelLocalStoragePrototype pls;
     PLSTestTexture tex(GL_RGBA8);
@@ -1318,7 +1326,7 @@ TEST_P(PixelLocalStorageTest, FragmentReject_return)
 // Check that the stencil test prevents stores to PLS.
 TEST_P(PixelLocalStorageTest, FragmentReject_stencil)
 {
-    ANGLE_SKIP_TEST_IF(!supportsPixelLocalStorage());
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
 
     PixelLocalStoragePrototype pls;
     PLSTestTexture tex(GL_RGBA8);
@@ -1378,7 +1386,7 @@ TEST_P(PixelLocalStorageTest, FragmentReject_stencil)
 // Check that the depth test prevents stores to PLS.
 TEST_P(PixelLocalStorageTest, FragmentReject_depth)
 {
-    ANGLE_SKIP_TEST_IF(!supportsPixelLocalStorage());
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
 
     PixelLocalStoragePrototype pls;
     PLSTestTexture tex(GL_RGBA8);
@@ -1421,7 +1429,7 @@ TEST_P(PixelLocalStorageTest, FragmentReject_depth)
 // Check that restricting the viewport also restricts stores to PLS.
 TEST_P(PixelLocalStorageTest, FragmentReject_viewport)
 {
-    ANGLE_SKIP_TEST_IF(!supportsPixelLocalStorage());
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
 
     PixelLocalStoragePrototype pls;
     PLSTestTexture tex(GL_RGBA8);
@@ -1453,7 +1461,7 @@ TEST_P(PixelLocalStorageTest, FragmentReject_viewport)
 // random or leaked from other contexts when we forget to insert a barrier.
 TEST_P(PixelLocalStorageTest, ForgetBarrier)
 {
-    ANGLE_SKIP_TEST_IF(!supportsPixelLocalStorage());
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
 
     PixelLocalStoragePrototype pls;
 
@@ -1568,7 +1576,7 @@ TEST_P(PixelLocalStorageTest, ForgetBarrier)
 // Check loading and storing from memoryless local storage planes.
 TEST_P(PixelLocalStorageTest, MemorylessStorage)
 {
-    ANGLE_SKIP_TEST_IF(!supportsPixelLocalStorage());
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
 
     PixelLocalStoragePrototype pls;
 
@@ -1636,7 +1644,7 @@ TEST_P(PixelLocalStorageTest, MemorylessStorage)
 //
 TEST_P(PixelLocalStorageTest, MaxCapacity)
 {
-    ANGLE_SKIP_TEST_IF(!supportsPixelLocalStorage());
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
 
     PixelLocalStoragePrototype pls;
 
@@ -1728,7 +1736,7 @@ TEST_P(PixelLocalStorageTest, MaxCapacity)
 // Also check that a pixelLocalLoad() of an r32f texture returns (r, 0, 0, 1).
 TEST_P(PixelLocalStorageTest, LoadOnly)
 {
-    ANGLE_SKIP_TEST_IF(!supportsPixelLocalStorage());
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
 
     PixelLocalStoragePrototype pls;
 
@@ -1826,7 +1834,7 @@ TEST_P(PixelLocalStorageTest, LoadOnly)
 // Check that stores and loads in a single shader invocation are coherent.
 TEST_P(PixelLocalStorageTest, CoherentStoreLoad)
 {
-    ANGLE_SKIP_TEST_IF(!supportsPixelLocalStorage());
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
 
     PixelLocalStoragePrototype pls;
 
@@ -1896,4 +1904,72 @@ TEST_P(PixelLocalStorageTest, CoherentStoreLoad)
     ASSERT_GL_NO_ERROR();
 }
 
-ANGLE_INSTANTIATE_TEST_ES31(PixelLocalStorageTest);
+ANGLE_INSTANTIATE_TEST(
+    PixelLocalStorageTest,
+    ES31_OPENGL().enable(Feature::EmulatePixelLocalStorage),
+    ES31_OPENGLES().enable(Feature::EmulatePixelLocalStorage),
+    ES31_VULKAN().enable(Feature::EmulatePixelLocalStorage),
+    ES31_VULKAN_SWIFTSHADER().enable(Feature::EmulatePixelLocalStorage),
+    ES31_VULKAN().enable(Feature::EmulatePixelLocalStorage).enable(Feature::AsyncCommandQueue),
+    ES31_VULKAN_SWIFTSHADER()
+        .enable(Feature::EmulatePixelLocalStorage)
+        .enable(Feature::AsyncCommandQueue));
+
+class PixelLocalStorageCompilerTest : public ANGLETest<>
+{
+  protected:
+    void testSetUp() override
+    {
+        ASSERT(IsGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
+        ANGLETest::testSetUp();
+    }
+    ShaderInfoLog log;
+};
+
+// Check that PLS #extension support is properly implemented.
+TEST_P(PixelLocalStorageCompilerTest, Extension)
+{
+    // GL_ANGLE_shader_pixel_local_storage_coherent isn't a shader extension.
+    const char *kNonexistentPLSCoherentExtension = R"(#version 310 es
+    #extension GL_ANGLE_shader_pixel_local_storage_coherent : require
+    void main()
+    {
+    })";
+    EXPECT_FALSE(log.compileFragmentShader(kNonexistentPLSCoherentExtension));
+    EXPECT_TRUE(log.has(
+        "ERROR: 0:2: 'GL_ANGLE_shader_pixel_local_storage_coherent' : extension is not supported"));
+}
+
+ANGLE_INSTANTIATE_TEST(PixelLocalStorageCompilerTest,
+                       ES31_NULL().enable(Feature::EmulatePixelLocalStorage));
+
+class PixelLocalStorageTestPreES31 : public ANGLETest<>
+{};
+
+// Check that GL_ANGLE_shader_pixel_local_storage is not advertised before ES 3.1.
+//
+// TODO(anglebug.com/7279): we can relax the min supported version once the implementation details
+// are inside ANGLE.
+TEST_P(PixelLocalStorageTestPreES31, UnsupportedClientVersion)
+{
+    EXPECT_FALSE(IsGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
+    EXPECT_FALSE(IsGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage_coherent"));
+
+    ShaderInfoLog log;
+
+    const char *kRequireUnsupportedPLS = R"(#version 300 es
+    #extension GL_ANGLE_shader_pixel_local_storage : require
+    void main()
+    {
+    })";
+    EXPECT_FALSE(log.compileFragmentShader(kRequireUnsupportedPLS));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:2: 'GL_ANGLE_shader_pixel_local_storage' : extension is not supported"));
+
+    ASSERT_GL_NO_ERROR();
+}
+
+ANGLE_INSTANTIATE_TEST(PixelLocalStorageTestPreES31,
+                       ES1_NULL().enable(Feature::EmulatePixelLocalStorage),
+                       ES2_NULL().enable(Feature::EmulatePixelLocalStorage),
+                       ES3_NULL().enable(Feature::EmulatePixelLocalStorage));

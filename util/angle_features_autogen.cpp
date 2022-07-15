@@ -100,6 +100,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::EmulateIsnanFloat, "emulateIsnanFloat"},
     {Feature::EmulateMaxVertexAttribStride, "emulateMaxVertexAttribStride"},
     {Feature::EmulatePackSkipRowsAndPackSkipPixels, "emulatePackSkipRowsAndPackSkipPixels"},
+    {Feature::EmulatePixelLocalStorage, "emulatePixelLocalStorage"},
     {Feature::EmulatePrimitiveRestartFixedIndex, "emulatePrimitiveRestartFixedIndex"},
     {Feature::EmulateR32fImageAtomicExchange, "emulateR32fImageAtomicExchange"},
     {Feature::EmulateRGB10, "emulateRGB10"},

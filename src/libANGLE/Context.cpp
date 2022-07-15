@@ -3671,12 +3671,12 @@ Extensions Context::generateSupportedExtensions() const
         // Disable ES3.1+ extensions
         supportedExtensions.geometryShaderEXT       = false;
         supportedExtensions.geometryShaderOES       = false;
-        supportedExtensions.tessellationShaderEXT   = false;
         supportedExtensions.gpuShader5EXT           = false;
         supportedExtensions.primitiveBoundingBoxEXT = false;
         supportedExtensions.shaderImageAtomicOES    = false;
         supportedExtensions.shaderIoBlocksEXT       = false;
         supportedExtensions.shaderIoBlocksOES       = false;
+        supportedExtensions.tessellationShaderEXT   = false;
         supportedExtensions.textureBufferEXT        = false;
         supportedExtensions.textureBufferOES        = false;
 
@@ -3804,6 +3804,12 @@ Extensions Context::generateSupportedExtensions() const
     // GL_ANDROID_extension_pack_es31a
     supportedExtensions.extensionPackEs31aANDROID =
         CanSupportAEP(getClientVersion(), supportedExtensions);
+
+    // GL_ANGLE_shader_pixel_local_storage is implemented in the front-end.
+    if (getFrontendFeatures().emulatePixelLocalStorage.enabled && getClientVersion() >= ES_3_1)
+    {
+        supportedExtensions.shaderPixelLocalStorageANGLE = true;
+    }
 
     return supportedExtensions;
 }

@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 281
+#define ANGLE_SH_VERSION 282
 
 enum ShShaderSpec
 {
@@ -405,6 +405,7 @@ struct ShBuiltInResources
     int EXT_shader_non_constant_global_initializers;
     int OES_texture_storage_multisample_2d_array;
     int OES_texture_3D;
+    int ANGLE_shader_pixel_local_storage;
     int ANGLE_texture_multisample;
     int ANGLE_multi_draw;
     // TODO(angleproject:3402) remove after chromium side removal to pass compilation
