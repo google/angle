@@ -36,6 +36,7 @@ class VulkanPerformanceCounterTest : public ANGLETest<>
     VulkanPerformanceCounterTest()
         : mLoadOpNoneSupport(ANGLEFeature::Unknown),
           mStoreOpNoneSupport(ANGLEFeature::Unknown),
+          mMutableMipmapTextureUpload(ANGLEFeature::Unknown),
           mPreferDrawOverClearAttachments(ANGLEFeature::Unknown),
           mSupportsPipelineCreationFeedback(ANGLEFeature::Unknown),
           mWarmUpPipelineCacheAtLink(ANGLEFeature::Unknown)
@@ -100,8 +101,12 @@ class VulkanPerformanceCounterTest : public ANGLETest<>
                 }
             }
 
-            if (strcmp(featureName,
-                       GetFeatureName(Feature::PreferDrawClearOverVkCmdClearAttachments)) == 0)
+            if (strcmp(featureName, GetFeatureName(Feature::MutableMipmapTextureUpload)) == 0)
+            {
+                mMutableMipmapTextureUpload = isSupported;
+            }
+            else if (strcmp(featureName,
+                            GetFeatureName(Feature::PreferDrawClearOverVkCmdClearAttachments)) == 0)
             {
                 mPreferDrawOverClearAttachments = isSupported;
             }
@@ -119,6 +124,7 @@ class VulkanPerformanceCounterTest : public ANGLETest<>
         // Make sure feature renames are caught
         ASSERT_NE(mLoadOpNoneSupport, ANGLEFeature::Unknown);
         ASSERT_NE(mStoreOpNoneSupport, ANGLEFeature::Unknown);
+        ASSERT_NE(mMutableMipmapTextureUpload, ANGLEFeature::Unknown);
         ASSERT_NE(mPreferDrawOverClearAttachments, ANGLEFeature::Unknown);
         ASSERT_NE(mSupportsPipelineCreationFeedback, ANGLEFeature::Unknown);
         ASSERT_NE(mWarmUpPipelineCacheAtLink, ANGLEFeature::Unknown);
@@ -436,6 +442,7 @@ class VulkanPerformanceCounterTest : public ANGLETest<>
     // Support status for ANGLE features.
     ANGLEFeature mLoadOpNoneSupport;
     ANGLEFeature mStoreOpNoneSupport;
+    ANGLEFeature mMutableMipmapTextureUpload;
     ANGLEFeature mPreferDrawOverClearAttachments;
     ANGLEFeature mSupportsPipelineCreationFeedback;
     ANGLEFeature mWarmUpPipelineCacheAtLink;
@@ -666,6 +673,7 @@ TEST_P(VulkanPerformanceCounterTest, SubmittingOutsideCommandBufferDoesNotBreakR
 TEST_P(VulkanPerformanceCounterTest, MutableTextureCompatibleMipLevelsInit)
 {
     initANGLEFeatures();
+    ANGLE_SKIP_TEST_IF(mMutableMipmapTextureUpload != ANGLEFeature::Supported);
 
     uint32_t expectedMutableTexturesUploaded = getPerfCounters().mutableTexturesUploaded + 1;
 
@@ -691,6 +699,7 @@ TEST_P(VulkanPerformanceCounterTest, MutableTextureCompatibleMipLevelsInit)
 TEST_P(VulkanPerformanceCounterTest, MutableTextureCompatibleMipLevelsNonSquareInit)
 {
     initANGLEFeatures();
+    ANGLE_SKIP_TEST_IF(mMutableMipmapTextureUpload != ANGLEFeature::Supported);
 
     uint32_t expectedMutableTexturesUploaded = getPerfCounters().mutableTexturesUploaded + 1;
 
@@ -718,6 +727,7 @@ TEST_P(VulkanPerformanceCounterTest, MutableTextureCompatibleMipLevelsNonSquareI
 TEST_P(VulkanPerformanceCounterTest, MutableTextureChangeToImmutableNoInit)
 {
     initANGLEFeatures();
+    ANGLE_SKIP_TEST_IF(mMutableMipmapTextureUpload != ANGLEFeature::Supported);
 
     uint32_t expectedMutableTexturesUploaded = getPerfCounters().mutableTexturesUploaded;
 
@@ -743,6 +753,7 @@ TEST_P(VulkanPerformanceCounterTest, MutableTextureChangeToImmutableNoInit)
 TEST_P(VulkanPerformanceCounterTest, MutableTextureNoBaseLevelNoInit)
 {
     initANGLEFeatures();
+    ANGLE_SKIP_TEST_IF(mMutableMipmapTextureUpload != ANGLEFeature::Supported);
 
     uint32_t expectedMutableTexturesUploaded = getPerfCounters().mutableTexturesUploaded;
 
@@ -768,6 +779,7 @@ TEST_P(VulkanPerformanceCounterTest, MutableTextureNoBaseLevelNoInit)
 TEST_P(VulkanPerformanceCounterTest, MutableTextureMissingMipLevelGreaterThanOneInit)
 {
     initANGLEFeatures();
+    ANGLE_SKIP_TEST_IF(mMutableMipmapTextureUpload != ANGLEFeature::Supported);
 
     uint32_t expectedMutableTexturesUploaded = getPerfCounters().mutableTexturesUploaded + 1;
 
@@ -794,6 +806,7 @@ TEST_P(VulkanPerformanceCounterTest, MutableTextureMissingMipLevelGreaterThanOne
 TEST_P(VulkanPerformanceCounterTest, MutableTextureMipLevelsWithIncompatibleSizesNoInit)
 {
     initANGLEFeatures();
+    ANGLE_SKIP_TEST_IF(mMutableMipmapTextureUpload != ANGLEFeature::Supported);
 
     uint32_t expectedMutableTexturesUploaded = getPerfCounters().mutableTexturesUploaded;
 
@@ -820,6 +833,7 @@ TEST_P(VulkanPerformanceCounterTest, MutableTextureMipLevelsWithIncompatibleSize
 TEST_P(VulkanPerformanceCounterTest, MutableTextureMipLevelsWithIncompatibleFormatsNoInit)
 {
     initANGLEFeatures();
+    ANGLE_SKIP_TEST_IF(mMutableMipmapTextureUpload != ANGLEFeature::Supported);
 
     uint32_t expectedMutableTexturesUploaded = getPerfCounters().mutableTexturesUploaded;
 
@@ -844,6 +858,7 @@ TEST_P(VulkanPerformanceCounterTest, MutableTextureMipLevelsWithIncompatibleForm
 TEST_P(VulkanPerformanceCounterTest, MutableTexture3DCompatibleMipLevelsInit)
 {
     initANGLEFeatures();
+    ANGLE_SKIP_TEST_IF(mMutableMipmapTextureUpload != ANGLEFeature::Supported);
 
     uint32_t expectedMutableTexturesUploaded = getPerfCounters().mutableTexturesUploaded + 1;
 
@@ -871,6 +886,7 @@ TEST_P(VulkanPerformanceCounterTest, MutableTexture3DCompatibleMipLevelsInit)
 TEST_P(VulkanPerformanceCounterTest, MutableTexture3DCompatibleMipLevelsNonCubeInit)
 {
     initANGLEFeatures();
+    ANGLE_SKIP_TEST_IF(mMutableMipmapTextureUpload != ANGLEFeature::Supported);
 
     uint32_t expectedMutableTexturesUploaded = getPerfCounters().mutableTexturesUploaded + 1;
 
@@ -900,6 +916,7 @@ TEST_P(VulkanPerformanceCounterTest, MutableTexture3DCompatibleMipLevelsNonCubeI
 TEST_P(VulkanPerformanceCounterTest, MutableTexture3DMipLevelsWithIncompatibleSizesNoInit)
 {
     initANGLEFeatures();
+    ANGLE_SKIP_TEST_IF(mMutableMipmapTextureUpload != ANGLEFeature::Supported);
 
     uint32_t expectedMutableTexturesUploaded = getPerfCounters().mutableTexturesUploaded;
 
@@ -926,6 +943,7 @@ TEST_P(VulkanPerformanceCounterTest, MutableTexture3DMipLevelsWithIncompatibleSi
 TEST_P(VulkanPerformanceCounterTest, MutableTexture2DArrayMipLevelsWithIncompatibleSizesNoInit)
 {
     initANGLEFeatures();
+    ANGLE_SKIP_TEST_IF(mMutableMipmapTextureUpload != ANGLEFeature::Supported);
 
     uint32_t expectedMutableTexturesUploaded = getPerfCounters().mutableTexturesUploaded;
 
@@ -952,6 +970,7 @@ TEST_P(VulkanPerformanceCounterTest, MutableTexture2DArrayMipLevelsWithIncompati
 TEST_P(VulkanPerformanceCounterTest, MutableTextureCubemapCompatibleMipLevelsInit)
 {
     initANGLEFeatures();
+    ANGLE_SKIP_TEST_IF(mMutableMipmapTextureUpload != ANGLEFeature::Supported);
 
     uint32_t expectedMutableTexturesUploaded = getPerfCounters().mutableTexturesUploaded + 1;
 
@@ -981,6 +1000,7 @@ TEST_P(VulkanPerformanceCounterTest, MutableTextureCubemapCompatibleMipLevelsIni
 TEST_P(VulkanPerformanceCounterTest, MutableTextureCubemapIncompleteInit)
 {
     initANGLEFeatures();
+    ANGLE_SKIP_TEST_IF(mMutableMipmapTextureUpload != ANGLEFeature::Supported);
 
     uint32_t expectedMutableTexturesUploaded = getPerfCounters().mutableTexturesUploaded;
 
@@ -1007,6 +1027,7 @@ TEST_P(VulkanPerformanceCounterTest, MutableTextureCubemapIncompleteInit)
 TEST_P(VulkanPerformanceCounterTest, MutableTextureCubemapArrayCompatibleMipLevelsInit)
 {
     initANGLEFeatures();
+    ANGLE_SKIP_TEST_IF(mMutableMipmapTextureUpload != ANGLEFeature::Supported);
 
     uint32_t expectedMutableTexturesUploaded = getPerfCounters().mutableTexturesUploaded + 1;
 
@@ -1034,6 +1055,7 @@ TEST_P(VulkanPerformanceCounterTest, MutableTextureCubemapArrayCompatibleMipLeve
 TEST_P(VulkanPerformanceCounterTest, MutableTextureCubemapArrayDifferentLayerFacesNoInit)
 {
     initANGLEFeatures();
+    ANGLE_SKIP_TEST_IF(mMutableMipmapTextureUpload != ANGLEFeature::Supported);
 
     uint32_t expectedMutableTexturesUploaded = getPerfCounters().mutableTexturesUploaded;
 
