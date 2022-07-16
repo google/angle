@@ -529,11 +529,6 @@ class PixelLocalStorageTest : public ANGLETest<>
         }
     }
 
-    // anglebug.com/7398: imageLoad() eventually starts failing. A workaround is to delete and
-    // recreate the texture every once in a while. Hopefully this goes away once we start using
-    // proper readwrite desktop GL shader images and INTEL_fragment_shader_ordering.
-    bool hasImageLoadBug() { return IsWindows() && IsIntel() && IsOpenGL(); }
-
     void useProgram(std::string fsMain)
     {
         if (mLTRBLocation >= 0)
@@ -1233,11 +1228,6 @@ TEST_P(PixelLocalStorageTest, FragmentReject_stencil)
     // Stencil should be preserved after PLS, and only pixels that pass the stencil test should
     // update PLS next.
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-    if (hasImageLoadBug())  // anglebug.com/7398
-    {
-        tex.reset(GL_RGBA8);
-        glFramebufferPixelLocalStorageANGLE(0, tex, 0, 0, W, H, GL_RGBA8);
-    }
     glEnable(GL_STENCIL_TEST);
     glBeginPixelLocalStorageANGLE(1, GLenumArray({GL_REPLACE}));
     glStencilFunc(GL_NOTEQUAL, 0, ~0u);
@@ -1401,11 +1391,6 @@ TEST_P(PixelLocalStorageTest, ForgetBarrier)
     // Now forget to insert the barrier and ensure our nondeterminism still falls within predictable
     // constraints.
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-    if (hasImageLoadBug())  // anglebug.com/7398
-    {
-        tex.reset(GL_R32UI);
-        glFramebufferPixelLocalStorageANGLE(0, tex, 0, 0, W, H, GL_R32UI);
-    }
     glBeginPixelLocalStorageANGLE(1, GLenumArray({GL_REPLACE}));
     drawBoxes(pls, boxesA_100, UseBarriers::No);
     // OOPS! We forgot to insert a barrier!
