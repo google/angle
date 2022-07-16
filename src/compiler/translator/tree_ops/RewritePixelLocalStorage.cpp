@@ -8,6 +8,7 @@
 
 #include "common/angleutils.h"
 #include "compiler/translator/SymbolTable.h"
+#include "compiler/translator/tree_ops/MonomorphizeUnsupportedFunctions.h"
 #include "compiler/translator/tree_util/IntermNode_util.h"
 #include "compiler/translator/tree_util/IntermTraverse.h"
 #include "compiler/translator/tree_util/RunAtTheBeginningOfShader.h"
@@ -145,7 +146,7 @@ class RewriteToImagesTraverser : public TIntermTraverser
                                             plsSymbol->getPrecision(), EvqTemporary, 4);
             TVariable *valueVar = CreateTempVariable(mSymbolTable, valueType);
             TIntermDeclaration *valueDecl =
-                CreateTempInitDeclarationNode(valueVar, args[1]->deepCopy()->getAsTyped());
+                CreateTempInitDeclarationNode(valueVar, args[1]->getAsTyped());
             valueDecl->traverse(this);  // Rewrite any potential pixelLocalLoadANGLEs in valueDecl.
 
             insertStatementsInParentBlock({valueDecl, createMemoryBarrierNode()},  // Before.
@@ -254,8 +255,19 @@ class RewriteToImagesTraverser : public TIntermTraverser
 bool RewritePixelLocalStorageToImages(TCompiler *compiler,
                                       TIntermBlock *root,
                                       TSymbolTable &symbolTable,
+                                      ShCompileOptions compileOptions,
                                       int shaderVersion)
 {
+    // If any functions take PLS arguments, monomorphize the functions by removing said parameters
+    // and making the PLS calls from main() instead, using the global uniform from the call site
+    // instead of the function argument. This is necessary because function arguments don't carry
+    // the necessary "binding" or "format" layout qualifiers.
+    if (!MonomorphizeUnsupportedFunctions(
+            compiler, root, &symbolTable, compileOptions,
+            UnsupportedFunctionArgsBitSet{UnsupportedFunctionArgs::PixelLocalStorage}))
+    {
+        return false;
+    }
     RewriteToImagesTraverser traverser(symbolTable, shaderVersion);
     root->traverse(&traverser);
     if (!traverser.updateTree(compiler, root))

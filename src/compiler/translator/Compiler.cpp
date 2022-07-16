@@ -678,7 +678,8 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     {
         ASSERT(
             IsExtensionEnabled(mExtensionBehavior, TExtension::ANGLE_shader_pixel_local_storage));
-        if (!RewritePixelLocalStorageToImages(this, root, getSymbolTable(), getShaderVersion()))
+        if (!RewritePixelLocalStorageToImages(this, root, getSymbolTable(), compileOptions,
+                                              getShaderVersion()))
         {
             mDiagnostics.globalError("internal compiler error translating pixel local storage");
             return false;

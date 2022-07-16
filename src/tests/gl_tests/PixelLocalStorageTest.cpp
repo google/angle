@@ -1782,6 +1782,58 @@ TEST_P(PixelLocalStorageTest, CoherentStoreLoad)
     ASSERT_GL_NO_ERROR();
 }
 
+// Check that PLS handles can be passed as function arguments.
+TEST_P(PixelLocalStorageTest, FunctionArguments)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
+
+    PixelLocalStoragePrototype pls;
+
+    useProgram(R"(
+    layout(binding=0, rgba8) lowp uniform pixelLocalANGLE dst;
+    layout(binding=1, rgba16f) mediump uniform pixelLocalANGLE src1;
+    void store2(lowp pixelLocalANGLE d);
+    void store(highp pixelLocalANGLE d, lowp pixelLocalANGLE s)
+    {
+        pixelLocalStoreANGLE(d, pixelLocalLoadANGLE(s));
+    }
+    void main()
+    {
+        if (gl_FragCoord.x < 25.0)
+            store(dst, src1);
+        else
+            store2(dst);
+    }
+    // Ensure inlining still works on a uniform declared after main().
+    layout(binding=2, rgba32f) highp uniform pixelLocalANGLE src2;
+    void store2(lowp pixelLocalANGLE d)
+    {
+        pixelLocalStoreANGLE(d, pixelLocalLoadANGLE(src2));
+    })");
+
+    PLSTestTexture dst(GL_RGBA8);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferPixelLocalStorageANGLE(0, dst, 0, 0, W, H, GL_RGBA8);
+    glFramebufferPixelLocalStorageANGLE(1, 0 /*memoryless*/, 0, 0, W, H, GL_RGBA16F);
+    glFramebufferPixelLocalStorageANGLE(2, 0 /*memoryless*/, 0, 0, W, H, GL_RGBA32F);
+    glViewport(0, 0, W, H);
+    glDrawBuffers(0, nullptr);
+
+    glFramebufferPixelLocalClearValuefvANGLE(1, MakeArray<float>({1, 0, 1, 0}));
+    glFramebufferPixelLocalClearValuefvANGLE(2, MakeArray<float>({0, 1, 1, 0}));
+    glBeginPixelLocalStorageANGLE(3, GLenumArray({GL_ZERO, GL_REPLACE, GL_REPLACE}));
+    drawBoxes(pls, {{FULLSCREEN}});
+    glEndPixelLocalStorageANGLE();
+
+    attachTextureToScratchFBO(dst);
+    EXPECT_PIXEL_RECT_EQ(0, 0, 25, H, GLColor(255, 0, 255, 0));
+    EXPECT_PIXEL_RECT_EQ(25, 0, W - 25, H, GLColor(0, 255, 255, 0));
+
+    ASSERT_GL_NO_ERROR();
+}
+
 ANGLE_INSTANTIATE_TEST(
     PixelLocalStorageTest,
     ES31_OPENGL().enable(Feature::EmulatePixelLocalStorage),
