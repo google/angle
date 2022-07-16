@@ -846,6 +846,7 @@ Display::Display(EGLenum platform, EGLNativeDisplayType displayId, Device *eglDe
       mAttributeMap(),
       mConfigSet(),
       mStreamSet(),
+      mInvalidContextSet(),
       mInvalidImageSet(),
       mInvalidStreamSet(),
       mInvalidSurfaceSet(),
@@ -1070,44 +1071,31 @@ Error Display::initialize()
 Error Display::destroyInvalidEglObjects()
 {
     // Destroy invalid EGL objects
-
-    ImageSet images     = {};
-    StreamSet streams   = {};
-    SurfaceSet surfaces = {};
-    SyncSet syncs       = {};
+    while (!mInvalidContextSet.empty())
     {
-        // Retrieve objects to be destroyed
-        std::lock_guard<std::mutex> lock(mInvalidEglObjectsMutex);
-        images   = std::move(mInvalidImageSet);
-        streams  = std::move(mInvalidStreamSet);
-        surfaces = std::move(mInvalidSurfaceSet);
-        syncs    = std::move(mInvalidSyncSet);
-
-        // Update invalid object sets
-        mInvalidImageSet.clear();
-        mInvalidStreamSet.clear();
-        mInvalidSurfaceSet.clear();
-        mInvalidSyncSet.clear();
+        gl::Context *context = *mInvalidContextSet.begin();
+        context->setIsDestroyed();
+        ANGLE_TRY(releaseContextImpl(context, &mInvalidContextSet));
     }
 
-    while (!images.empty())
+    while (!mInvalidImageSet.empty())
     {
-        destroyImageImpl(*images.begin(), &images);
+        destroyImageImpl(*mInvalidImageSet.begin(), &mInvalidImageSet);
     }
 
-    while (!streams.empty())
+    while (!mInvalidStreamSet.empty())
     {
-        destroyStreamImpl(*streams.begin(), &streams);
+        destroyStreamImpl(*mInvalidStreamSet.begin(), &mInvalidStreamSet);
     }
 
-    while (!surfaces.empty())
+    while (!mInvalidSurfaceSet.empty())
     {
-        ANGLE_TRY(destroySurfaceImpl(*surfaces.begin(), &surfaces));
+        ANGLE_TRY(destroySurfaceImpl(*mInvalidSurfaceSet.begin(), &mInvalidSurfaceSet));
     }
 
-    while (!syncs.empty())
+    while (!mInvalidSyncSet.empty())
     {
-        destroySyncImpl(*syncs.begin(), &syncs);
+        destroySyncImpl(*mInvalidSyncSet.begin(), &mInvalidSyncSet);
     }
 
     return NoError();
@@ -1120,7 +1108,9 @@ Error Display::terminate(Thread *thread, TerminateReason terminateReason)
         mTerminatedByApi = true;
     }
 
-    if (!mInitialized)
+    // All subsequent calls assume the display to be valid and terminated by app.
+    // If it is not terminated or if it isn't even initialized, early return.
+    if (!mTerminatedByApi || !mInitialized)
     {
         return NoError();
     }
@@ -1129,29 +1119,32 @@ Error Display::terminate(Thread *thread, TerminateReason terminateReason)
     // 3.2 Initialization
     // Termination marks all EGL-specific resources, such as contexts and surfaces, associated
     // with the specified display for deletion. Handles to all such resources are invalid as soon
-    // as eglTerminate returns
-    // Cache EGL objects that are no longer valid
-    // TODO (http://www.anglebug.com/6798): Invalidate context handles as well.
-    if (mTerminatedByApi)
-    {
-        std::lock_guard<std::mutex> lock(mInvalidEglObjectsMutex);
+    // as eglTerminate returns. Cache EGL objects that are no longer valid.
+    //
+    // It is fairly common for apps to call eglTerminate while some contexts and/or surfaces are
+    // still current on some thread. Since objects are refCounted, trying to destroy them right away
+    // would only result in a decRef. We instead cache such invalid objects and use other EGL
+    // entrypoints like eglReleaseThread or thread exit events (on the Android platform) to
+    // perform the necessary cleanup.
+    mInvalidImageSet.insert(mImageSet.begin(), mImageSet.end());
+    mImageSet.clear();
 
-        mInvalidImageSet.insert(mImageSet.begin(), mImageSet.end());
-        mImageSet.clear();
+    mInvalidStreamSet.insert(mStreamSet.begin(), mStreamSet.end());
+    mStreamSet.clear();
 
-        mInvalidStreamSet.insert(mStreamSet.begin(), mStreamSet.end());
-        mStreamSet.clear();
+    mInvalidSurfaceSet.insert(mState.surfaceSet.begin(), mState.surfaceSet.end());
+    mState.surfaceSet.clear();
 
-        mInvalidSurfaceSet.insert(mState.surfaceSet.begin(), mState.surfaceSet.end());
-        mState.surfaceSet.clear();
+    mInvalidSyncSet.insert(mSyncSet.begin(), mSyncSet.end());
+    mSyncSet.clear();
 
-        mInvalidSyncSet.insert(mSyncSet.begin(), mSyncSet.end());
-        mSyncSet.clear();
-    }
+    // Cache total number of contexts before invalidation. This is used as a check to verify that
+    // no context is "lost" while being moved between the various sets.
+    size_t contextSetSizeBeforeInvalidation = mState.contextSet.size() + mInvalidContextSet.size();
 
-    // All EGL objects, except contexts, have been marked invalid by the block above and will be
-    // cleaned up by "destroyInvalidEglObjects". If app called eglTerminate and no active threads
-    // remain, perform the cleanup right away.
+    // If app called eglTerminate and no active threads remain,
+    // force realease any context that is still current.
+    ContextSet contextsStillCurrent = {};
     for (gl::Context *context : mState.contextSet)
     {
         if (context->getRefCount() > 0)
@@ -1164,17 +1157,32 @@ Error Display::terminate(Thread *thread, TerminateReason terminateReason)
             }
             else
             {
-                return NoError();
+                contextsStillCurrent.emplace(context);
+                continue;
             }
         }
+
+        // Add context that is not current to mInvalidContextSet for cleanup.
+        mInvalidContextSet.emplace(context);
     }
 
-    // Destroy all of the Contexts for this Display, since none of them are current anymore.
-    while (!mState.contextSet.empty())
+    // There are many methods that require contexts that are still current to be present in
+    // display's contextSet like during context release or to notify of state changes in a subject.
+    // So as to not interrupt this flow, do not remove contexts that are still current on some
+    // thread from display's contextSet even though eglTerminate marks such contexts as invalid.
+    //
+    // "mState.contextSet" will now contain only those contexts that are still current on some
+    // thread.
+    mState.contextSet = std::move(contextsStillCurrent);
+
+    // Assert that the total number of contexts is the same before and after context invalidation.
+    ASSERT(contextSetSizeBeforeInvalidation ==
+           mState.contextSet.size() + mInvalidContextSet.size());
+
+    if (!mState.contextSet.empty())
     {
-        gl::Context *context = *mState.contextSet.begin();
-        context->setIsDestroyed();
-        ANGLE_TRY(releaseContext(context, thread));
+        // There was atleast 1 context that was current on some thread, early return.
+        return NoError();
     }
 
     mMemoryProgramCache.clear();
@@ -1185,7 +1193,7 @@ Error Display::terminate(Thread *thread, TerminateReason terminateReason)
     ASSERT(mGlobalTextureShareGroupUsers == 0 && mTextureManager == nullptr);
     ASSERT(mGlobalSemaphoreShareGroupUsers == 0 && mSemaphoreManager == nullptr);
 
-    // Now that contexts have been destroyed, clean up any remaining invalid objects
+    // Clean up all invalid objects
     ANGLE_TRY(destroyInvalidEglObjects());
 
     mConfigSet.clear();
@@ -1224,18 +1232,16 @@ Error Display::releaseThread()
 
 void Display::addActiveThread(Thread *thread)
 {
-    std::lock_guard<std::mutex> lock(mActiveThreadsMutex);
     mActiveThreads.insert(thread);
 }
 
-void Display::removeActiveThreadAndPerformCleanup(Thread *thread)
+void Display::threadCleanup(Thread *thread)
 {
-    std::lock_guard<std::mutex> lock(mActiveThreadsMutex);
     mActiveThreads.erase(thread);
-    if (mTerminatedByApi && mActiveThreads.size() == 0)
-    {
-        (void)terminate(thread, TerminateReason::NoActiveThreads);
-    }
+    const bool noActiveThreads = mActiveThreads.size() == 0;
+
+    (void)terminate(thread, noActiveThreads ? TerminateReason::NoActiveThreads
+                                            : TerminateReason::InternalCleanup);
 }
 
 std::vector<const Config *> Display::getConfigs(const egl::AttributeMap &attribs) const
@@ -1671,12 +1677,17 @@ void Display::destroyStreamImpl(Stream *stream, StreamSet *streams)
 // as part of destruction.
 Error Display::releaseContext(gl::Context *context, Thread *thread)
 {
+    return releaseContextImpl(context, &mState.contextSet);
+}
+
+Error Display::releaseContextImpl(gl::Context *context, ContextSet *contexts)
+{
     ASSERT(context->getRefCount() == 0);
 
     // Use scoped_ptr to make sure the context is always freed.
     std::unique_ptr<gl::Context> unique_context(context);
-    ASSERT(mState.contextSet.find(context) != mState.contextSet.end());
-    mState.contextSet.erase(context);
+    ASSERT(contexts->find(context) != contexts->end());
+    contexts->erase(context);
 
     if (context->usingDisplayTextureShareGroup())
     {
