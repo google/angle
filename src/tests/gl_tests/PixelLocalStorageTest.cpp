@@ -23,10 +23,6 @@ constexpr static int MAX_LOCAL_STORAGE_PLANES                = 3;
 constexpr static int MAX_LOCAL_STORAGE_BYTES                 = 16;
 constexpr static int MAX_FRAGMENT_OUTPUTS_WITH_LOCAL_STORAGE = 1;
 
-constexpr static const char kLocalStorageGLSLDefines[] = R"(
-layout(early_fragment_tests) in;
-)";
-
 class PixelLocalStoragePrototype
 {
   public:
@@ -586,7 +582,6 @@ class PixelLocalStorageTest : public ANGLETest<>
             in vec4 color;
             in vec4 aux1;
             in vec4 aux2;)")
-                .append(kLocalStorageGLSLDefines)
                 .append(fsMain)
                 .c_str());
 
@@ -696,7 +691,7 @@ class PixelLocalStorageTest : public ANGLETest<>
         glGetProgramiv(mRenderTextureProgram, GL_LINK_STATUS, &linked);
         if (!linked)
         {
-            constexpr static const char *kVS =
+            constexpr char kVS[] =
                 R"(#version 310 es
                 precision highp float;
                 out vec2 texcoord;
@@ -707,7 +702,7 @@ class PixelLocalStorageTest : public ANGLETest<>
                     gl_Position = vec4(texcoord * 2.0 - 1.0, 0, 1);
                 })";
 
-            constexpr static const char *kFS =
+            constexpr char kFS[] =
                 R"(#version 310 es
                 precision highp float;
                 uniform highp sampler2D tex;  // FIXME! layout(binding=0) causes an ANGLE crash!
@@ -1834,6 +1829,101 @@ TEST_P(PixelLocalStorageTest, FunctionArguments)
     ASSERT_GL_NO_ERROR();
 }
 
+// Check that early_fragment_tests are not triggered when PLS uniforms are not declared.
+TEST_P(PixelLocalStorageTest, EarlyFragmentTests)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
+
+    PixelLocalStoragePrototype pls;
+
+    PLSTestTexture tex(GL_RGBA8);
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
+
+    GLuint stencil;
+    glGenRenderbuffers(1, &stencil);
+    glBindRenderbuffer(GL_RENDERBUFFER, stencil);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_STENCIL_INDEX8, W, H);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, stencil);
+    glClearStencil(0);
+    glClear(GL_STENCIL_BUFFER_BIT);
+
+    glEnable(GL_STENCIL_TEST);
+    glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
+
+    // Emits a fullscreen quad.
+    constexpr char kFullscreenVS[] = R"(#version 310 es
+    precision highp float;
+    void main()
+    {
+        gl_Position.x = (gl_VertexID & 1) == 0 ? -1.0 : 1.0;
+        gl_Position.y = (gl_VertexID & 2) == 0 ? -1.0 : 1.0;
+        gl_Position.zw = vec2(0, 1);
+    })";
+
+    // Renders green to the framebuffer.
+    constexpr char kDrawRed[] = R"(#version 310 es
+    out mediump vec4 fragColor;
+    void main()
+    {
+        fragColor = vec4(1, 0, 0, 1);
+    })";
+
+    ANGLE_GL_PROGRAM(drawGreen, kFullscreenVS, kDrawRed);
+
+    // Render to stencil without PLS uniforms and with a discard. Since we discard, and since the
+    // shader shouldn't enable early_fragment_tests, stencil should not be affected.
+    constexpr char kNonPLSDiscard[] = R"(#version 310 es
+    #extension GL_ANGLE_shader_pixel_local_storage : enable
+    void f(highp ipixelLocalANGLE pls)
+    {
+        // Function arguments don't trigger PLS restrictions.
+        pixelLocalStoreANGLE(pls, ivec4(8));
+    }
+    void main()
+    {
+        discard;
+    })";
+    ANGLE_GL_PROGRAM(lateDiscard, kFullscreenVS, kNonPLSDiscard);
+    glUseProgram(lateDiscard);
+    glStencilFunc(GL_ALWAYS, 1, ~0u);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+    // Clear the framebuffer to green.
+    glClearColor(0, 1, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Render red to the framebuffer with a stencil test. This should have no effect because the
+    // stencil buffer should be all zeros.
+    glUseProgram(drawGreen);
+    glStencilFunc(GL_NOTEQUAL, 0, ~0u);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor::green);
+
+    // Now double check that this test would have failed if the shader had enabled
+    // early_fragment_tests. Render to stencil *with* early_fragment_tests and a discard. Stencil
+    // should be affected this time even though we discard.
+    ANGLE_GL_PROGRAM(earlyDiscard, kFullscreenVS,
+                     (std::string(kNonPLSDiscard) + "layout(early_fragment_tests) in;").c_str());
+    glUseProgram(earlyDiscard);
+    glStencilFunc(GL_ALWAYS, 1, ~0u);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+    // Clear the framebuffer to green.
+    glClearColor(0, 1, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Render red to the framebuffer again. This time the stencil test should pass because the
+    // stencil buffer should be all ones.
+    glUseProgram(drawGreen);
+    glStencilFunc(GL_NOTEQUAL, 0, ~0u);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor::red);
+
+    ASSERT_GL_NO_ERROR();
+}
+
 ANGLE_INSTANTIATE_TEST(
     PixelLocalStorageTest,
     ES31_OPENGL().enable(Feature::EmulatePixelLocalStorage),
@@ -1861,7 +1951,7 @@ TEST_P(PixelLocalStorageCompilerTest, Extension)
 {
     // GL_ANGLE_shader_pixel_local_storage_coherent isn't a shader extension. Shaders must always
     // use GL_ANGLE_shader_pixel_local_storage, regardless of coherency.
-    const char *kNonexistentPLSCoherentExtension = R"(#version 310 es
+    constexpr char kNonexistentPLSCoherentExtension[] = R"(#version 310 es
     #extension GL_ANGLE_shader_pixel_local_storage_coherent : require
     void main()
     {
@@ -1871,7 +1961,7 @@ TEST_P(PixelLocalStorageCompilerTest, Extension)
         "ERROR: 0:2: 'GL_ANGLE_shader_pixel_local_storage_coherent' : extension is not supported"));
 
     // PLS type names cannot be used as variable names when the extension is enabled.
-    const char *kPLSEnabledTypesAsNames = R"(#version 310 es
+    constexpr char kPLSEnabledTypesAsNames[] = R"(#version 310 es
     #extension all : warn
     void main()
     {
@@ -1883,7 +1973,7 @@ TEST_P(PixelLocalStorageCompilerTest, Extension)
     EXPECT_TRUE(log.has("ERROR: 0:5: 'pixelLocalANGLE' : syntax error"));
 
     // PLS type names are fair game when the extension is disabled.
-    const char *kPLSDisabledTypesAsNames = R"(#version 310 es
+    constexpr char kPLSDisabledTypesAsNames[] = R"(#version 310 es
     #extension GL_ANGLE_shader_pixel_local_storage : disable
     void main()
     {
@@ -1894,7 +1984,7 @@ TEST_P(PixelLocalStorageCompilerTest, Extension)
     EXPECT_TRUE(log.compileFragmentShader(kPLSDisabledTypesAsNames));
 
     // PLS is not allowed in a vertex shader.
-    const char *kPLSInVertexShader = R"(#version 310 es
+    constexpr char kPLSInVertexShader[] = R"(#version 310 es
     #extension GL_ANGLE_shader_pixel_local_storage : enable
     layout(binding=0, rgba8) lowp uniform pixelLocalANGLE pls;
     void main()
@@ -1913,7 +2003,7 @@ TEST_P(PixelLocalStorageCompilerTest, Extension)
 TEST_P(PixelLocalStorageCompilerTest, Declarations)
 {
     // PLS handles must be uniform.
-    const char *kPLSTypesMustBeUniform = R"(#version 310 es
+    constexpr char kPLSTypesMustBeUniform[] = R"(#version 310 es
     #extension GL_ANGLE_shader_pixel_local_storage : enable
     layout(binding=0, rgba8) highp pixelLocalANGLE pls1;
     void main()
@@ -1927,7 +2017,7 @@ TEST_P(PixelLocalStorageCompilerTest, Declarations)
     EXPECT_TRUE(log.has("ERROR: 0:7: 'upixelLocalANGLE' : upixelLocalANGLEs must be uniform"));
 
     // Memory qualifiers are not allowed on PLS handles.
-    const char *kPLSMemoryQualifiers = R"(#version 310 es
+    constexpr char kPLSMemoryQualifiers[] = R"(#version 310 es
     #extension GL_ANGLE_shader_pixel_local_storage : require
     layout(binding=0, rgba8) uniform lowp volatile coherent restrict pixelLocalANGLE pls1;
     layout(binding=1, rgba16i) uniform mediump readonly ipixelLocalANGLE pls2;
@@ -1943,7 +2033,7 @@ TEST_P(PixelLocalStorageCompilerTest, Declarations)
     EXPECT_TRUE(log.has("ERROR: 0:5: 'writeonly' : "));
 
     // PLS handles must specify precision.
-    const char *kPLSNoPrecision = R"(#version 310 es
+    constexpr char kPLSNoPrecision[] = R"(#version 310 es
     #extension GL_ANGLE_shader_pixel_local_storage : enable
     layout(binding=0, rgba8) uniform pixelLocalANGLE pls1;
     layout(binding=1, rgba8i) uniform ipixelLocalANGLE pls2;
@@ -1959,7 +2049,7 @@ TEST_P(PixelLocalStorageCompilerTest, Declarations)
     EXPECT_TRUE(log.has("ERROR: 0:5: 'upixelLocalANGLE' : No precision specified"));
 
     // PLS handles cannot cannot be aggregated in arrays.
-    const char *kPLSArrays = R"(#version 310 es
+    constexpr char kPLSArrays[] = R"(#version 310 es
     #extension GL_ANGLE_shader_pixel_local_storage : require
     layout(binding=0, rgba8) uniform lowp pixelLocalANGLE pls1[1];
     layout(binding=1, rgba16i) uniform mediump ipixelLocalANGLE pls2[2];
@@ -1977,7 +2067,7 @@ TEST_P(PixelLocalStorageCompilerTest, Declarations)
 
     // If PLS handles could be used before their declaration, then we would need to update the PLS
     // rewriters to make two passes.
-    const char *kPLSUseBeforeDeclaration = R"(#version 310 es
+    constexpr char kPLSUseBeforeDeclaration[] = R"(#version 310 es
     #extension GL_ANGLE_shader_pixel_local_storage : require
     void f()
     {
@@ -1998,7 +2088,7 @@ TEST_P(PixelLocalStorageCompilerTest, Declarations)
 
     // PLS unimorms must be declared at global scope; they cannot be declared in structs or
     // interface blocks.
-    const char *kPLSInStruct = R"(#version 310 es
+    constexpr char kPLSInStruct[] = R"(#version 310 es
     #extension GL_ANGLE_shader_pixel_local_storage : require
     struct Foo
     {
@@ -2026,7 +2116,7 @@ TEST_P(PixelLocalStorageCompilerTest, Declarations)
 TEST_P(PixelLocalStorageCompilerTest, LayoutQualifiers)
 {
     // PLS handles must specify a layout qualifier with a valid binding and format.
-    const char *kPLSInvalidBindingsAndFormats = R"(#version 310 es
+    constexpr char kPLSInvalidBindingsAndFormats[] = R"(#version 310 es
     #extension GL_ANGLE_shader_pixel_local_storage : require
     layout(rgba8) highp uniform ipixelLocalANGLE pls0;
     layout(rgba8i) highp uniform upixelLocalANGLE pls1;
@@ -2153,7 +2243,7 @@ TEST_P(PixelLocalStorageCompilerTest, LayoutQualifiers)
     // TODO(anglebug.com/7279): "PLS binding greater than gl_MaxPixelLocalStoragePlanesANGLE".
 
     // PLS handles cannot have duplicate binding indices.
-    const char *kPLSDuplicateBindings = R"(#version 310 es
+    constexpr char kPLSDuplicateBindings[] = R"(#version 310 es
     #extension GL_ANGLE_shader_pixel_local_storage : require
     layout(binding=0, rgba32f) uniform highp pixelLocalANGLE pls1;
     layout(rgba16i, binding=1) uniform highp ipixelLocalANGLE pls2;
@@ -2168,7 +2258,7 @@ TEST_P(PixelLocalStorageCompilerTest, LayoutQualifiers)
     EXPECT_TRUE(log.has("ERROR: 0:7: '0' : duplicate pixel local storage binding index"));
 
     // PLS handles cannot have duplicate binding indices.
-    const char *kPLSIllegalLayoutQualifiers = R"(#version 310 es
+    constexpr char kPLSIllegalLayoutQualifiers[] = R"(#version 310 es
     #extension GL_ANGLE_shader_pixel_local_storage : require
     layout(foo) highp uniform pixelLocalANGLE pls1;
     layout(binding=0, location=0, rgba8ui) highp uniform upixelLocalANGLE pls2;
@@ -2193,7 +2283,7 @@ TEST_P(PixelLocalStorageCompilerTest, Discard)
     //
     // To ensure identical behavior across all backends (some of which may not have access to
     // early_fragment_tests), we disallow discard if pixel local storage has been declared.
-    const char *kDiscardWithPLS = R"(#version 310 es
+    constexpr char kDiscardWithPLS[] = R"(#version 310 es
     #extension GL_ANGLE_shader_pixel_local_storage : require
     layout(binding=0, rgba16f) highp uniform pixelLocalANGLE pls;
     void a()
@@ -2222,7 +2312,7 @@ TEST_P(PixelLocalStorageCompilerTest, Discard)
         log.has("ERROR: 0:17: 'discard' : illegal discard when pixel local storage is declared"));
 
     // Discard is OK when pixel local storage has _not_ been declared.
-    const char *kDiscardNoPLS = R"(#version 310 es
+    constexpr char kDiscardNoPLS[] = R"(#version 310 es
     #extension GL_ANGLE_shader_pixel_local_storage : require
     void f(lowp pixelLocalANGLE pls);  // Function arguments don't trigger PLS restrictions.
     void a()
@@ -2243,7 +2333,7 @@ TEST_P(PixelLocalStorageCompilerTest, Discard)
     EXPECT_TRUE(log.compileFragmentShader(kDiscardNoPLS));
 
     // Ensure discard is caught even if it happens before PLS is declared.
-    const char *kDiscardBeforePLS = R"(#version 310 es
+    constexpr char kDiscardBeforePLS[] = R"(#version 310 es
     #extension GL_ANGLE_shader_pixel_local_storage : require
     void a()
     {
@@ -2265,7 +2355,7 @@ TEST_P(PixelLocalStorageCompilerTest, Return)
 {
     // Returning from main isn't allowed when pixel local storage has been declared.
     // (ARB_fragment_shader_interlock isn't allowed after return from main.)
-    const char *kReturnFromMainWithPLS = R"(#version 310 es
+    constexpr char kReturnFromMainWithPLS[] = R"(#version 310 es
     #extension GL_ANGLE_shader_pixel_local_storage : require
     layout(binding=0, rgba16f) highp uniform pixelLocalANGLE pls;
     void main()
@@ -2281,7 +2371,7 @@ TEST_P(PixelLocalStorageCompilerTest, Return)
         "ERROR: 0:8: 'return' : illegal return from main when pixel local storage is declared"));
 
     // Returning from main is OK when pixel local storage has _not_ been declared.
-    const char *kReturnFromMainNoPLS = R"(#version 310 es
+    constexpr char kReturnFromMainNoPLS[] = R"(#version 310 es
     #extension GL_ANGLE_shader_pixel_local_storage : require
     void main()
     {
@@ -2292,7 +2382,7 @@ TEST_P(PixelLocalStorageCompilerTest, Return)
     EXPECT_TRUE(log.compileFragmentShader(kReturnFromMainNoPLS));
 
     // Returning from subroutines is OK when pixel local storage has been declared.
-    const char *kReturnFromSubroutinesWithPLS = R"(#version 310 es
+    constexpr char kReturnFromSubroutinesWithPLS[] = R"(#version 310 es
     #extension GL_ANGLE_shader_pixel_local_storage : require
     layout(rgba16ui, binding=0) highp uniform upixelLocalANGLE pls;
     void a()
@@ -2312,7 +2402,7 @@ TEST_P(PixelLocalStorageCompilerTest, Return)
     EXPECT_TRUE(log.compileFragmentShader(kReturnFromSubroutinesWithPLS));
 
     // Ensure return from main is caught even if it happens before PLS is declared.
-    const char *kDiscardBeforePLS = R"(#version 310 es
+    constexpr char kDiscardBeforePLS[] = R"(#version 310 es
     #extension GL_ANGLE_shader_pixel_local_storage : require
     void main()
     {
@@ -2335,7 +2425,7 @@ TEST_P(PixelLocalStorageCompilerTest, FragmentTestVariables)
     //
     // To ensure identical behavior across all backends, we disallow assignment to these values if
     // pixel local storage has been declared.
-    const char *kAssignFragDepthWithPLS = R"(#version 310 es
+    constexpr char kAssignFragDepthWithPLS[] = R"(#version 310 es
     #extension GL_ANGLE_shader_pixel_local_storage : require
     void set(out mediump float x, mediump float val)
     {
@@ -2364,7 +2454,7 @@ TEST_P(PixelLocalStorageCompilerTest, FragmentTestVariables)
         "ERROR: 0:16: 'gl_FragDepth' : value not assignable when pixel local storage is declared"));
 
     // Assigning gl_FragDepth is OK if we don't declare any PLS.
-    const char *kAssignFragDepthNoPLS = R"(#version 310 es
+    constexpr char kAssignFragDepthNoPLS[] = R"(#version 310 es
     #extension GL_ANGLE_shader_pixel_local_storage : require
     void f(highp ipixelLocalANGLE pls)
     {
@@ -2384,7 +2474,7 @@ TEST_P(PixelLocalStorageCompilerTest, FragmentTestVariables)
     EXPECT_TRUE(log.compileFragmentShader(kAssignFragDepthNoPLS));
 
     // Reading gl_FragDepth is OK.
-    const char *kReadFragDepth = R"(#version 310 es
+    constexpr char kReadFragDepth[] = R"(#version 310 es
     #extension GL_ANGLE_shader_pixel_local_storage : require
     layout(r32f, binding=0) highp uniform pixelLocalANGLE pls;
     highp vec4 get(in mediump float x)
@@ -2413,7 +2503,7 @@ TEST_P(PixelLocalStorageCompilerTest, FragmentTestVariables)
         // To ensure identical behavior across all implementations (some of which may not have
         // access to early_fragment_tests), we disallow assignment to these values if pixel local
         // storage has been declared.
-        const char *kAssignSampleMaskWithPLS = R"(#version 310 es
+        constexpr char kAssignSampleMaskWithPLS[] = R"(#version 310 es
         #extension GL_ANGLE_shader_pixel_local_storage : require
         #extension GL_OES_sample_variables : require
         void set(out highp int x, highp int val)
@@ -2447,7 +2537,7 @@ TEST_P(PixelLocalStorageCompilerTest, FragmentTestVariables)
                     "is declared"));
 
         // Assigning gl_SampleMask is OK if we don't declare any PLS.
-        const char *kAssignSampleMaskNoPLS = R"(#version 310 es
+        constexpr char kAssignSampleMaskNoPLS[] = R"(#version 310 es
         #extension GL_ANGLE_shader_pixel_local_storage : require
         #extension GL_OES_sample_variables : require
         void set(out highp int x, highp int val)
@@ -2463,7 +2553,7 @@ TEST_P(PixelLocalStorageCompilerTest, FragmentTestVariables)
         EXPECT_TRUE(log.compileFragmentShader(kAssignSampleMaskNoPLS));
 
         // Reading gl_SampleMask is OK enough (even though it's technically output only).
-        const char *kReadSampleMask = R"(#version 310 es
+        constexpr char kReadSampleMask[] = R"(#version 310 es
         #extension GL_ANGLE_shader_pixel_local_storage : require
         #extension GL_OES_sample_variables : require
         layout(binding=0, rgba16i) highp uniform ipixelLocalANGLE pls;
@@ -2493,7 +2583,7 @@ TEST_P(PixelLocalStorageCompilerTest, FragmentTestVariables)
 TEST_P(PixelLocalStorageCompilerTest, FunctionArguments)
 {
     // Ensure PLS handles can't be the result of complex expressions.
-    const char *kPLSHandleComplexExpression = R"(#version 310 es
+    constexpr char kPLSHandleComplexExpression[] = R"(#version 310 es
     #extension GL_ANGLE_shader_pixel_local_storage : require
     layout(rgba8, binding=0) mediump uniform pixelLocalANGLE pls0;
     layout(rgba8, binding=1) mediump uniform pixelLocalANGLE pls1;
@@ -2510,7 +2600,7 @@ TEST_P(PixelLocalStorageCompilerTest, FunctionArguments)
     EXPECT_TRUE(log.has("ERROR: 0:12: '?:' : ternary operator is not allowed for opaque types"));
 
     // As function arguments, PLS handles cannot have layout qualifiers.
-    const char *kPLSFnArgWithLayoutQualifiers = R"(#version 310 es
+    constexpr char kPLSFnArgWithLayoutQualifiers[] = R"(#version 310 es
     #extension GL_ANGLE_shader_pixel_local_storage : require
     void f(layout(rgba8, binding=1) mediump pixelLocalANGLE pls)
     {
@@ -2543,7 +2633,7 @@ TEST_P(PixelLocalStorageTestPreES31, UnsupportedClientVersion)
 
     ShaderInfoLog log;
 
-    const char *kRequireUnsupportedPLS = R"(#version 300 es
+    constexpr char kRequireUnsupportedPLS[] = R"(#version 300 es
     #extension GL_ANGLE_shader_pixel_local_storage : require
     void main()
     {

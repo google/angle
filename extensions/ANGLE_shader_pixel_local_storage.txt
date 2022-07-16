@@ -17,6 +17,7 @@ Contributors
     Kenneth Russell, Google Inc.
     Shahbaz Youssefi, Google Inc.
     Kelsey Gilbert, Mozilla Corp.
+    Geoff Lang, Google Inc.
     WebGL Working Group in Khronos
     Contributors to the EXT_shader_pixel_local_storage specification
     Contributors to the ARB_fragment_shader_interlock specification
