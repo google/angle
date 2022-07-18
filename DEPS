@@ -37,7 +37,7 @@ vars = {
   'checkout_android_native_support': 'checkout_android or checkout_chromeos',
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': 'd19b3e76906eee92dff565506231c28992b5894f',
+  'chromium_revision': '14dcb8bf5432d6e029ddf50cb37b4e34c114704c',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -82,7 +82,7 @@ vars = {
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling catapult
   # and whatever else without interference from each other.
-  'catapult_revision': '880567709d857be348bd9d88d3a1de43abc16ed3',
+  'catapult_revision': '1240e973d53fe4ad1679620896992d5115fa08ad',
 
   # the commit queue can handle CLs rolling Fuchsia sdk
   # and whatever else without interference from each other.
@@ -126,7 +126,7 @@ vars = {
 deps = {
 
   'build': {
-    'url': '{chromium_git}/chromium/src/build.git@62186a2b918bfd4f999d3ce06ee4eb0ae6068f65',
+    'url': '{chromium_git}/chromium/src/build.git@679de1ec39660023aa6abef1ec0d62893747d39f',
     'condition': 'not build_with_chromium',
   },
 
@@ -189,7 +189,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@866e5a3d6a8c1eae40cf8615ca026cc4ec1f4ccc',
+    'url': '{chromium_git}/chromium/src/testing@e94a13ab1ce2f7d2a735ca749058462a91cd3fbf',
     'condition': 'not build_with_chromium',
   },
 
@@ -357,7 +357,7 @@ deps = {
   },
 
   'third_party/depot_tools': {
-    'url': '{chromium_git}/chromium/tools/depot_tools.git@26bc518eaef421d8ef3cadb1be19c1255d5b51ea',
+    'url': '{chromium_git}/chromium/tools/depot_tools.git@8168f76753ed3d622fc4b7b94bb1dbf7b8abdb95',
     'condition': 'not build_with_chromium',
   },
 
@@ -618,7 +618,7 @@ deps = {
   },
 
   'tools/perf': {
-    'url': '{chromium_git}/chromium/src/tools/perf@75964e1dea276ed4e87632fa4b7134acf9ea9ea2',
+    'url': '{chromium_git}/chromium/src/tools/perf@352f40454598f0cde4ae2a86a0e808d2f2f16422',
     'condition': 'not build_with_chromium',
   },
 
