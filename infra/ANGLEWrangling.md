@@ -35,15 +35,15 @@ There are two consoles for ANGLE continuous integration builders:
  1. Chromium + ANGLE integration: https://ci.chromium.org/p/chromium/g/chromium.angle/console
 
 We expect these waterfalls to be perfectly green at all times. As of writing
-several builders are red or flaky. Oart of your job as wrangler is to
+several builders are red or flaky. Part of your job as wrangler is to
 eliminate all sources of breaks and flakiness. We can fix flakiness by
 suppressing tests that are not worth fixing, reverting problematic CLs, or
 finding other solutions.
 
-When you encouter red builds or flakiness, please [file an ANGLE bug]
-(http://anglebug.com/new) and set the label: `Hotlist-Wrangler`.
+When you encounter red builds or flakiness, please [file an ANGLE bug](http://anglebug.com/new)
+and set the label: `Hotlist-Wrangler` ([search for existing bugs][WranglerBugs]).
 
-[Click here to see a ANGLE wrangler bug hot list.][WranglerBugs]
+[WranglerBugs]:https://bugs.chromium.org/p/angleproject/issues/list?q=Hotlist%3DWrangler&can=2
 
 In addition to the CI builders, we have a console for try jobs on the ANGLE CV (change verifier):
 
@@ -52,8 +52,6 @@ In addition to the CI builders, we have a console for try jobs on the ANGLE CV (
 Some failures are expected on this waterfall as developers test WIP changes.
 Please watch for persistent sources of flakiness and failure and take action
 as appropriate by filing bugs, reverting CLs, or taking other action.
-
-[WranglerBugs]:https://bugs.chromium.org/p/angleproject/issues/list?q=Hotlist%3DWrangler&can=2
 
 If you find a point of failure that is unrelated to ANGLE, please [file a
 Chromium bug](http://crbug.com/new). Set the bug label
