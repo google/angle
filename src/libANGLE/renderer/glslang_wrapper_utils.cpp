@@ -2943,6 +2943,12 @@ TransformationState SpirvMultiSampleTransformer::transformTypeImage(const uint32
     spirv::ParseTypeImage(instruction, &idResult, &sampledType, &dim, &depth, &arrayed, &ms,
                           &sampled, &imageFormat, &accessQualifier);
 
+    // Only transform input attachment image types.
+    if (dim != spv::DimSubpassData)
+    {
+        return TransformationState::Unchanged;
+    }
+
     ms = spirv::LiteralInteger(1);
     spirv::WriteTypeImage(blobOut, idResult, sampledType, dim, depth, arrayed, ms, sampled,
                           imageFormat, nullptr);
