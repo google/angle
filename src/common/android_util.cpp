@@ -265,7 +265,6 @@ GLenum getPixelFormatInfo(int pixelFormat, bool *isYUV)
         default:
             // Treat unknown formats as RGB. They are vendor-specific YUV formats that would sample
             // as RGB.
-            WARN() << "Unknown pixelFormat: " << pixelFormat << ". Treating as RGB8";
             *isYUV = true;
             return GL_RGB8;
     }
