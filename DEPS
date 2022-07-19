@@ -37,7 +37,7 @@ vars = {
   'checkout_android_native_support': 'checkout_android or checkout_chromeos',
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': 'a1cfdbdf4c3bf741cb9055c2da4194276661841a',
+  'chromium_revision': '806fa2d991d9e829f3f294b14c6f50f8ab9b545a',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -86,7 +86,7 @@ vars = {
 
   # the commit queue can handle CLs rolling Fuchsia sdk
   # and whatever else without interference from each other.
-  'fuchsia_version': 'version:8.20220713.3.1',
+  'fuchsia_version': 'version:9.20220719.1.1',
 
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling luci-go
@@ -126,7 +126,7 @@ vars = {
 deps = {
 
   'build': {
-    'url': '{chromium_git}/chromium/src/build.git@f7ac2ecbd420c112dbc629fff985b6099b0b30e3',
+    'url': '{chromium_git}/chromium/src/build.git@f304e1f5080d49cbfc6bebbd2346120873f4f179',
     'condition': 'not build_with_chromium',
   },
 
@@ -189,7 +189,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@0a224ca59040157cacd839ef78f753cfe74d5d14',
+    'url': '{chromium_git}/chromium/src/testing@1307a6e5bead728195d7f47ce611044e7553e096',
     'condition': 'not build_with_chromium',
   },
 
@@ -622,7 +622,7 @@ deps = {
   },
 
   'tools/perf': {
-    'url': '{chromium_git}/chromium/src/tools/perf@4e30c7daa41fda4de4eaeb1a95da42ae0a303a11',
+    'url': '{chromium_git}/chromium/src/tools/perf@394db6d2a87f87dc46ffe4593ebc15bb2185df97',
     'condition': 'not build_with_chromium',
   },
 
