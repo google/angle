@@ -217,6 +217,8 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-VkGraphicsPipelineCreateInfo-renderPass-06039",
     // http://anglebug.com/7470
     "UNASSIGNED-BestPractices-vkCmdBeginRenderPass-ClearValueWithoutLoadOpClear",
+    // http://anglebug.com/7513
+    "VUID-VkGraphicsPipelineCreateInfo-pStages-06896",
 };
 
 // Some syncval errors are resolved in the presence of the NONE load or store render pass ops.  For
