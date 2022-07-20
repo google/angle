@@ -57,6 +57,8 @@
 
 # Skipped in end2end tests
 6336 : GetImageTest.InconsistentTexture2D/* = NOT_RUN
+6195 : FramebufferFetchES31.SingleSampledMultiSampledMixedTest/* = NOT_RUN
+6195 : RenderbufferMultisampleTestES31.ColorBurnBlend/* = NOT_RUN
 
 # ES3
 6180 : BlitFramebufferTest.BlitDepthStencilPixelByPixel/* = NOT_RUN
