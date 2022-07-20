@@ -1213,6 +1213,11 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
             skipTest("http://anglebug.com/7173 Fails on Intel HD 630 Mobile");
         }
 
+        if (IsLinux() && IsIntel())
+        {
+            skipTest("http://anglebug.com/7125#c8 Flaky hang on UHD630 Mesa 20.0.8");
+        }
+
         if (IsNVIDIA() && mParams->isVulkan())
         {
             skipTest("http://anglebug.com/7125 Renders incorrectly on NVIDIA");
