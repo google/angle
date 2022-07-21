@@ -1130,7 +1130,7 @@ void UtilsVk::destroy(RendererVk *renderer)
             descriptorSetLayout.reset();
         }
         mPipelineLayouts[f].reset();
-        mDescriptorPools[f].destroy(renderer, VulkanCacheType::DriverUniformsDescriptors);
+        mDescriptorPools[f].destroy(renderer);
     }
 
     for (vk::ShaderProgramHelper &program : mConvertIndexPrograms)

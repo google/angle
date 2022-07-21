@@ -1016,7 +1016,7 @@ void ContextVk::onDestroy(const gl::Context *context)
 
     for (vk::DynamicDescriptorPool &dynamicDescriptorPool : mDriverUniformsDescriptorPools)
     {
-        dynamicDescriptorPool.destroy(mRenderer, VulkanCacheType::DriverUniformsDescriptors);
+        dynamicDescriptorPool.destroy(mRenderer);
     }
 
     mDefaultUniformStorage.release(mRenderer);

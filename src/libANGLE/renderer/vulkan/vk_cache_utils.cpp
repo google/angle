@@ -2397,16 +2397,16 @@ void ReleaseCachedObject(ContextVk *contextVk, const DescriptorSetDescAndPool &d
     descAndPool.mPool->releaseCachedDescriptorSet(contextVk, descAndPool.mDesc);
 }
 
-void DestroyCachedObject(const FramebufferDesc &desc)
+void DestroyCachedObject(RendererVk *renderer, const FramebufferDesc &desc)
 {
     // Framebuffer cache are implemented in a way that each cache entry tracks GPU progress and we
     // always guarantee cache entries are released before calling destroy.
 }
 
-void DestroyCachedObject(const DescriptorSetDescAndPool &descAndPool)
+void DestroyCachedObject(RendererVk *renderer, const DescriptorSetDescAndPool &descAndPool)
 {
     ASSERT(descAndPool.mPool != nullptr);
-    descAndPool.mPool->destroyCachedDescriptorSet(descAndPool.mDesc);
+    descAndPool.mPool->destroyCachedDescriptorSet(renderer, descAndPool.mDesc);
 }
 }  // anonymous namespace
 
@@ -5515,7 +5515,7 @@ void SharedCacheKeyManager<SharedCacheKeyT>::releaseKeys(ContextVk *contextVk)
 }
 
 template <class SharedCacheKeyT>
-void SharedCacheKeyManager<SharedCacheKeyT>::destroyKeys()
+void SharedCacheKeyManager<SharedCacheKeyT>::destroyKeys(RendererVk *renderer)
 {
     for (SharedCacheKeyT &sharedCacheKey : mSharedCacheKeys)
     {
@@ -5523,7 +5523,7 @@ void SharedCacheKeyManager<SharedCacheKeyT>::destroyKeys()
         if (*sharedCacheKey.get() != nullptr)
         {
             // Immediate destroy the cached object and the key
-            DestroyCachedObject(*(*sharedCacheKey.get()));
+            DestroyCachedObject(renderer, *(*sharedCacheKey.get()));
             *sharedCacheKey.get() = nullptr;
         }
     }
