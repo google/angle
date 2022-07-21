@@ -449,6 +449,10 @@ angle_static_library("angle_common") {
   if (using_sanitizer && !build_with_chromium) {
     data_deps = [ "//build/config/clang:llvm-symbolizer_data($host_toolchain)" ]
   }
+
+  if (is_apple) {
+    frameworks = [ "Metal.framework" ]
+  }
 }
 
 config("angle_image_util_config") {
