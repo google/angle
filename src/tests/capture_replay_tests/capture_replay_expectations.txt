@@ -10,7 +10,9 @@
 #
 # Valid values for "handling/result" are
 #
-#   NOT_RUN : the is expceted to be skipped by the end2end_tests program
+#   SKIP_FOR_CAPTURE : SKIP from capture_replay tests
+#
+#   NOT_RUN (DEPRECATED https://anglebug.com/7516): already skipped by end2end test suite
 #
 #   FAIL : the test is expected to fail
 #
@@ -98,8 +100,8 @@
 6631 WIN : MultithreadingTestES3.MultithreadFenceTexImage/* = CRASH
 6631 : MultithreadingTest.MultiContextDrawWithSwapBuffers/* = CRASH
 
-# Marking this as NOT_RUN because we don't want it to run as it uses multiple contexts
-6752 : OcclusionQueriesNoSurfaceTestES3.SwitchingContextsWithQuery/* = NOT_RUN
+# Uses multiple contexts, don't want to run
+6752 : OcclusionQueriesNoSurfaceTestES3.SwitchingContextsWithQuery/* = SKIP_FOR_CAPTURE
 
 # ES3_1
 6180 : ProgramPipelineTest31.VerifyPpoLinkErrorSignalledCorrectly/* = FAIL
