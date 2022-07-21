@@ -55,11 +55,6 @@
 # Fails because of unsupported combined depth/stencil GetImage.
 4688 ASAN : DepthStencilTest.DepthOnlyEmulatedWithPacked/* = FAIL
 
-# Skipped in end2end tests
-6336 : GetImageTest.InconsistentTexture2D/* = NOT_RUN
-6195 : FramebufferFetchES31.SingleSampledMultiSampledMixedTest/* = NOT_RUN
-6195 : RenderbufferMultisampleTestES31.ColorBurnBlend/* = NOT_RUN
-
 # ES3
 6180 : BlitFramebufferTest.BlitDepthStencilPixelByPixel/* = NOT_RUN
 6180 : GLSLTest_ES3.UnsuccessfulRelinkWithBindAttribLocation/* = NOT_RUN
@@ -119,20 +114,12 @@
 6180 : GeometryShaderTest.LayeredFramebufferPreRenderClear2DArrayColor/* = NOT_RUN
 6180 : GeometryShaderTest.LayeredFramebufferPreRenderClear3DColor/* = NOT_RUN
 
-6663 : Texture2DTest.UploadThenFSThenNewRPThenFSThenVS/* = NOT_RUN
-6663 : Texture2DTest.UploadThenFSThenNewRPThenVS/* = NOT_RUN
-6663 : Texture2DTest.UploadThenFSThenNewRPThenVSThenFS/* = NOT_RUN
-6663 : Texture2DTest.UploadThenFSThenVS/* = NOT_RUN
-6663 : Texture2DTest.UploadThenFSThenVSThenNewRPThenFS/*  = NOT_RUN
-
 6741 : VulkanImageTest.* = SKIP_FOR_CAPTURE
 
 6941 : Texture2DTestES3RobustInit.TextureCOMPRESSEDRGB8A1ETC2/* = NOT_RUN
 6941 : Texture2DTestES3RobustInit.TextureCOMPRESSEDSRGB8A1ETC2/* = NOT_RUN
 
 6926 : Texture2DTestES3.TextureRGBUpdateWithPBO/ES3_Vulkan* = NOT_RUN
-
-6875 : TransformFeedbackTest.SpanMultipleRenderPasses/* = NOT_RUN
 
 7112 : TransformFeedbackTest.BaseInstance/* = NOT_RUN
 
