@@ -370,6 +370,11 @@ std::shared_ptr<WaitableCompileEvent> ShaderGL::compile(const gl::Context *conte
         options->rewriteRowMajorMatrices = true;
     }
 
+    if (features.passHighpToPackUnormSnormBuiltins.enabled)
+    {
+        options->passHighpToPackUnormSnormBuiltins = true;
+    }
+
     if (mRenderer->getNativeExtensions().shaderPixelLocalStorageCoherentANGLE)
     {
         const ShShaderOutput translatorOutputType = GetShaderOutputType(GetFunctionsGL(context));

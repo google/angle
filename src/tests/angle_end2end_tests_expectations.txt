@@ -667,9 +667,6 @@
 7484 OpenGL : GLSLTest_ES31.*Image2DAsFunctionArg/* = SKIP
 7484 GLES : GLSLTest_ES31.*Image2DAsFunctionArg/* = SKIP
 
-// imageLoad after imageStore with barrier is not coherent on Pixel 4 GLES.
-7388 ANDROID GLES : PixelLocalStorageTest.*/ES3_1_OpenGLES_EmulatePixelLocalStorage = SKIP
-
 // Flaky hangs on Linux SwANGLE
 7431 LINUX SWIFTSHADER : MultithreadingTestES3.ThreadB*BeforeThreadASyncFinish/ES3_Vulkan_SwiftShader = SKIP
 7431 LINUX SWIFTSHADER : MultithreadingTestES3.ThreadB*BeforeThreadASyncFlush/ES3_Vulkan_SwiftShader = SKIP

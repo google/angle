@@ -136,6 +136,20 @@ TIntermConstantUnion *CreateVecNode(const float values[],
     return new TIntermConstantUnion(u, type);
 }
 
+TIntermConstantUnion *CreateUVecNode(const unsigned int values[],
+                                     unsigned int vecSize,
+                                     TPrecision precision)
+{
+    TConstantUnion *u = new TConstantUnion[vecSize];
+    for (unsigned int channel = 0; channel < vecSize; ++channel)
+    {
+        u[channel].setUConst(values[channel]);
+    }
+
+    TType type(EbtUInt, precision, EvqConst, static_cast<uint8_t>(vecSize));
+    return new TIntermConstantUnion(u, type);
+}
+
 TIntermConstantUnion *CreateIndexNode(int index)
 {
     TConstantUnion *u = new TConstantUnion[1];

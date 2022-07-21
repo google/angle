@@ -637,6 +637,14 @@
             "issue": "https://anglebug.com/7405"
         },
         {
+            "name": "pass_highp_to_pack_unorm_snorm_builtins",
+            "category": "Workarounds",
+            "description": [
+                "packUnorm4x8 fails on Pixel 4 if it is not passed a highp vec4."
+            ],
+            "issue": "http://anglebug.com/7527"
+        },
+        {
             "name": "supports_fragment_shader_interlock_NV",
             "category": "Features",
             "description": [

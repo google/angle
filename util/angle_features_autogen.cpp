@@ -172,6 +172,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::PackLastRowSeparatelyForPaddingInclusion, "packLastRowSeparatelyForPaddingInclusion"},
     {Feature::PackOverlappingRowsSeparatelyPackBuffer, "packOverlappingRowsSeparatelyPackBuffer"},
     {Feature::PadBuffersToMaxVertexAttribStride, "padBuffersToMaxVertexAttribStride"},
+    {Feature::PassHighpToPackUnormSnormBuiltins, "passHighpToPackUnormSnormBuiltins"},
     {Feature::PerFrameWindowSizeQuery, "perFrameWindowSizeQuery"},
     {Feature::PermanentlySwitchToFramebufferFetchMode, "permanentlySwitchToFramebufferFetchMode"},
     {Feature::PersistentlyMappedBuffers, "persistentlyMappedBuffers"},

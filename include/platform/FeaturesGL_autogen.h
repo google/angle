@@ -462,6 +462,11 @@ struct FeaturesGL : FeatureSetBase
         "Imagination devices generate INVALID_ENUM when setting the texture border color.",
         &members, "https://anglebug.com/7405"};
 
+    FeatureInfo passHighpToPackUnormSnormBuiltins = {
+        "passHighpToPackUnormSnormBuiltins", FeatureCategory::OpenGLWorkarounds,
+        "packUnorm4x8 fails on Pixel 4 if it is not passed a highp vec4.", &members,
+        "http://anglebug.com/7527"};
+
     FeatureInfo supportsFragmentShaderInterlockNV = {
         "supportsFragmentShaderInterlockNV", FeatureCategory::OpenGLFeatures,
         "GL context supports NV_fragment_shader_interlock extension", &members,
