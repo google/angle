@@ -61,6 +61,9 @@ declare_args() {
   # Allow shared library custom name extensions for setting soname such as libEGL.so.1
   angle_egl_extension = ""
   angle_glesv2_extension = ""
+
+  # Enable share context lock. If it is false, the client need to use gl calls in a threadsafe way.
+  angle_enable_share_context_lock = true
 }
 
 if (angle_build_all) {
@@ -132,6 +135,10 @@ config("internal_config") {
     }
   } else if (is_linux || is_chromeos) {
     defines += [ "ANGLE_IS_LINUX" ]
+  }
+
+  if (angle_enable_share_context_lock) {
+    defines += [ "ANGLE_ENABLE_SHARE_CONTEXT_LOCK=1" ]
   }
 
   # Enables debug/trace-related functionality, including logging every GLES/EGL API command to the
