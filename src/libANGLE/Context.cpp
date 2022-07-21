@@ -141,13 +141,20 @@ bool GetWebGLContext(const egl::AttributeMap &attribs)
     return (attribs.get(EGL_CONTEXT_WEBGL_COMPATIBILITY_ANGLE, EGL_FALSE) == EGL_TRUE);
 }
 
-Version GetClientVersion(egl::Display *display, const egl::AttributeMap &attribs)
+Version GetClientVersion(egl::Display *display,
+                         const egl::AttributeMap &attribs,
+                         const EGLenum clientType)
 {
     Version requestedVersion =
         Version(GetClientMajorVersion(attribs), GetClientMinorVersion(attribs));
     if (GetBackwardCompatibleContext(attribs))
     {
-        if (requestedVersion.major == 1)
+        if (clientType == EGL_OPENGL_API)
+        {
+            return std::max(display->getImplementation()->getMaxSupportedDesktopVersion(),
+                            requestedVersion);
+        }
+        else if (requestedVersion.major == 1)
         {
             // If the user requests an ES1 context, we cannot return an ES 2+ context.
             return Version(1, 1);
@@ -448,7 +455,7 @@ Context::Context(egl::Display *display,
              shareSemaphores,
              &mOverlay,
              clientType,
-             GetClientVersion(display, attribs),
+             GetClientVersion(display, attribs, clientType),
              GetProfileMask(attribs),
              GetDebug(attribs),
              GetBindGeneratesResource(attribs),
@@ -591,14 +598,16 @@ void Context::initializeDefaultResources()
         }
     }
 
-    if (getClientVersion() >= Version(3, 2) || mSupportedExtensions.textureCubeMapArrayAny())
+    if ((getClientType() != EGL_OPENGL_API && getClientVersion() >= Version(3, 2)) ||
+        mSupportedExtensions.textureCubeMapArrayAny())
     {
         Texture *zeroTextureCubeMapArray =
             new Texture(mImplementation.get(), {0}, TextureType::CubeMapArray);
         mZeroTextures[TextureType::CubeMapArray].set(this, zeroTextureCubeMapArray);
     }
 
-    if (getClientVersion() >= Version(3, 2) || mSupportedExtensions.textureBufferAny())
+    if ((getClientType() != EGL_OPENGL_API && getClientVersion() >= Version(3, 2)) ||
+        mSupportedExtensions.textureBufferAny())
     {
         Texture *zeroTextureBuffer = new Texture(mImplementation.get(), {0}, TextureType::Buffer);
         mZeroTextures[TextureType::Buffer].set(this, zeroTextureBuffer);
@@ -1860,7 +1869,7 @@ void Context::getIntegervImpl(GLenum pname, GLint *params) const
         break;
         case GL_CONTEXT_PROFILE_MASK:
             ASSERT(getClientType() == EGL_OPENGL_API);
-            *params = GL_CONTEXT_COMPATIBILITY_PROFILE_BIT;
+            *params = mState.getProfileMask();
             break;
 
         // GL_ANGLE_request_extension
