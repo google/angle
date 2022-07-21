@@ -365,11 +365,6 @@ bool IsIntelUHD630Mobile()
     return HasSystemDeviceID(kVendorID_Intel, kDeviceID_UHD630Mobile);
 }
 
-bool IsIntelHD630Mobile()
-{
-    return HasSystemDeviceID(kVendorID_Intel, kDeviceID_HD630Mobile);
-}
-
 bool IsAMD()
 {
     return HasSystemVendorID(kVendorID_AMD);

@@ -53,7 +53,6 @@ bool IsQualcomm();
 // GPU devices.
 bool IsSwiftshaderDevice();
 bool IsIntelUHD630Mobile();
-bool IsIntelHD630Mobile();
 
 bool Is64Bit();
 
