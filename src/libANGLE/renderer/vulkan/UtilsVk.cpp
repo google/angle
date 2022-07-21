@@ -1237,7 +1237,7 @@ angle::Result UtilsVk::ensureResourcesInitialized(ContextVk *contextVk,
     {
         ANGLE_TRY(mDescriptorPools[function].init(
             contextVk, descriptorPoolSizes.data(), descriptorPoolSizes.size(),
-            mDescriptorSetLayouts[function][DescriptorSetIndex::Internal].get().getHandle()));
+            mDescriptorSetLayouts[function][DescriptorSetIndex::Internal].get()));
     }
 
     // Corresponding pipeline layouts:
@@ -3662,9 +3662,12 @@ angle::Result UtilsVk::allocateDescriptorSet(ContextVk *contextVk,
                                              VkDescriptorSet *descriptorSetOut)
 {
     ANGLE_TRY(mDescriptorPools[function].allocateDescriptorSet(
-        contextVk, commandBufferHelper,
-        mDescriptorSetLayouts[function][DescriptorSetIndex::Internal].get(), bindingOut,
+        contextVk, mDescriptorSetLayouts[function][DescriptorSetIndex::Internal].get(), bindingOut,
         descriptorSetOut));
+
+    // The pool is still in use every time a new descriptor set is allocated from it.
+    commandBufferHelper->retainResource(&bindingOut->get());
+    ++contextVk->getPerfCounters().descriptorSetAllocations;
 
     return angle::Result::Continue;
 }

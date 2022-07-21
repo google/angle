@@ -166,7 +166,6 @@ class DescriptorPoolHelper final : public Resource
 
     bool valid() { return mDescriptorPool.valid(); }
 
-    bool hasCapacity(uint32_t descriptorSetCount) const;
     angle::Result init(Context *context,
                        const std::vector<VkDescriptorPoolSize> &poolSizesIn,
                        uint32_t maxSets);
@@ -174,7 +173,6 @@ class DescriptorPoolHelper final : public Resource
     void release(RendererVk *renderer);
 
     bool allocateDescriptorSet(Context *context,
-                               CommandBufferHelperCommon *commandBufferHelper,
                                const DescriptorSetLayout &descriptorSetLayout,
                                VkDescriptorSet *descriptorSetsOut);
 
@@ -223,7 +221,7 @@ class DynamicDescriptorPool final : angle::NonCopyable
     angle::Result init(Context *context,
                        const VkDescriptorPoolSize *setSizes,
                        size_t setSizeCount,
-                       VkDescriptorSetLayout descriptorSetLayout);
+                       const DescriptorSetLayout &descriptorSetLayout);
     void destroy(RendererVk *renderer);
 
     bool valid() const { return !mDescriptorPools.empty(); }
@@ -231,10 +229,9 @@ class DynamicDescriptorPool final : angle::NonCopyable
     // We use the descriptor type to help count the number of free sets.
     // By convention, sets are indexed according to the constants in vk_cache_utils.h.
     angle::Result allocateDescriptorSet(Context *context,
-                                        CommandBufferHelperCommon *commandBufferHelper,
                                         const DescriptorSetLayout &descriptorSetLayout,
                                         RefCountedDescriptorPoolBinding *bindingOut,
-                                        VkDescriptorSet *descriptorSetsOut);
+                                        VkDescriptorSet *descriptorSetOut);
 
     angle::Result getOrAllocateDescriptorSet(Context *context,
                                              CommandBufferHelperCommon *commandBufferHelper,
@@ -280,8 +277,10 @@ class DynamicDescriptorPool final : angle::NonCopyable
     // from the pool matches the layout that the pool was created for, to ensure that the free
     // descriptor count is accurate and new pools are created appropriately.
     VkDescriptorSetLayout mCachedDescriptorSetLayout;
-
+    // Tracks cache for descriptorSet. Note that cached DescriptorSet can be reuse even if it is GPU
+    // busy.
     DescriptorSetCache mDescriptorSetCache;
+    // Statistics for the cache.
     CacheStats mCacheStats;
 };
 

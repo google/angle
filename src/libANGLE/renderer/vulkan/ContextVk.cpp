@@ -1151,7 +1151,7 @@ angle::Result ContextVk::initialize()
         {
             ANGLE_TRY(mDriverUniformsDescriptorPools[pipeline].init(
                 this, descriptorPoolSizes.data(), descriptorPoolSizes.size(),
-                mDriverUniforms[pipeline].descriptorSetLayout.get().getHandle()));
+                mDriverUniforms[pipeline].descriptorSetLayout.get()));
         }
     }
 

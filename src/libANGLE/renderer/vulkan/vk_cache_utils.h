@@ -1312,7 +1312,6 @@ using RefCountedDescriptorPoolHelper = RefCounted<DescriptorPoolHelper>;
 
 // SharedDescriptorSetCacheKey.
 // Because DescriptorSet must associate with a pool, we need to define a structure that wraps both.
-class DynamicDescriptorPool;
 struct DescriptorSetDescAndPool
 {
     DescriptorSetDesc mDesc;
