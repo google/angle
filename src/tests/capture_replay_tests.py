@@ -1024,8 +1024,9 @@ def main(args):
         retval = EXIT_SUCCESS
 
         unexpected_test_results_count = 0
-        for count in unexpected_count.values():
-            unexpected_test_results_count += count
+        for result, count in unexpected_count.items():
+            if result != GroupedResult.Skipped:  # Suite skipping tests is ok
+                unexpected_test_results_count += count
 
         if unexpected_test_results_count > 0:
             retval = EXIT_FAILURE
@@ -1034,7 +1035,7 @@ def main(args):
                 unexpected_test_results_count))
             logger.info('')
             for result, count in unexpected_count.items():
-                if count > 0:
+                if count > 0 and result != GroupedResult.Skipped:
                     logger.info("Unexpected '{}' ({}):".format(result, count))
                     for test_result in unexpected_test_results[result]:
                         logger.info('     {}'.format(test_result))
