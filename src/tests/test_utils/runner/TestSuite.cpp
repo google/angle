@@ -236,8 +236,7 @@ bool WriteJsonFile(const std::string &outputFile, js::Document *doc)
 // https://chromium.googlesource.com/chromium/src.git/+/main/docs/testing/json_test_results_format.md
 void WriteResultsFile(bool interrupted,
                       const TestResults &testResults,
-                      const std::string &outputFile,
-                      const char *testSuiteName)
+                      const std::string &outputFile)
 {
     time_t ltime;
     time(&ltime);
@@ -380,9 +379,7 @@ void WriteResultsFile(bool interrupted,
     }
 }
 
-void WriteHistogramJson(const HistogramWriter &histogramWriter,
-                        const std::string &outputFile,
-                        const char *testSuiteName)
+void WriteHistogramJson(const HistogramWriter &histogramWriter, const std::string &outputFile)
 {
     js::Document doc;
     doc.SetArray();
@@ -504,33 +501,6 @@ std::string GetTestFilter(const std::vector<TestIdentifier> &tests)
     }
 
     return filterStream.str();
-}
-
-std::string ParseTestSuiteName(const char *executable)
-{
-    const char *baseNameStart = strrchr(executable, GetPathSeparator());
-    if (!baseNameStart)
-    {
-        baseNameStart = executable;
-    }
-    else
-    {
-        baseNameStart++;
-    }
-
-    const char *suffix = GetExecutableExtension();
-    size_t suffixLen   = strlen(suffix);
-    if (suffixLen == 0)
-    {
-        return baseNameStart;
-    }
-
-    if (!EndsWith(baseNameStart, suffix))
-    {
-        return baseNameStart;
-    }
-
-    return std::string(baseNameStart, baseNameStart + strlen(baseNameStart) - suffixLen);
 }
 
 bool GetTestArtifactsFromJSON(const js::Value::ConstObject &obj,
@@ -1065,7 +1035,6 @@ TestSuite::TestSuite(int *argc, char **argv, std::function<void()> registerTests
     }
 
     mTestExecutableName = argv[0];
-    mTestSuiteName      = ParseTestSuiteName(mTestExecutableName.c_str());
 
     for (int argIndex = 1; argIndex < *argc;)
     {
@@ -2038,12 +2007,12 @@ void TestSuite::writeOutputFiles(bool interrupted)
 {
     if (!mResultsFile.empty())
     {
-        WriteResultsFile(interrupted, mTestResults, mResultsFile, mTestSuiteName.c_str());
+        WriteResultsFile(interrupted, mTestResults, mResultsFile);
     }
 
     if (!mHistogramJsonFile.empty())
     {
-        WriteHistogramJson(mHistogramWriter, mHistogramJsonFile, mTestSuiteName.c_str());
+        WriteHistogramJson(mHistogramWriter, mHistogramJsonFile);
     }
 }
 

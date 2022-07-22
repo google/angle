@@ -173,7 +173,6 @@ class TestSuite
     static TestSuite *mInstance;
 
     std::string mTestExecutableName;
-    std::string mTestSuiteName;
     TestQueue mTestQueue;
     std::string mFilterString;
     std::string mFilterFile;
