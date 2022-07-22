@@ -255,8 +255,6 @@ class ProgramExecutableVk
         const gl::ActiveTextureArray<TextureVk *> *activeTextures,
         vk::DescriptorSetLayoutDesc *descOut);
 
-    void resolvePrecisionMismatch(const gl::ProgramMergedVaryings &mergedVaryings);
-
     size_t calcUniformUpdateRequiredSpace(vk::Context *context,
                                           const gl::ProgramExecutable &glExecutable,
                                           gl::ShaderMap<VkDeviceSize> *uniformOffsets) const;
