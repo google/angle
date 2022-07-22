@@ -1490,13 +1490,8 @@ bool ValidateES2TexImageParametersBase(const Context *context,
                     break;
                 default:
                     // Compressed formats are not valid internal formats for glTexImage*D
-                    // except formats listed in CompressedFormatAcceptedByTexImage
-                    if (!CompressedTextureFormatAcceptedByTexImage(internalformat))
-                    {
-                        context->validationError(entryPoint, GL_INVALID_VALUE,
-                                                 kInvalidInternalFormat);
-                        return false;
-                    }
+                    context->validationError(entryPoint, GL_INVALID_VALUE, kInvalidInternalFormat);
+                    return false;
             }
         }
 

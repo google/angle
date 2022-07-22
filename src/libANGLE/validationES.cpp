@@ -661,36 +661,6 @@ ANGLE_INLINE const char *ValidateProgramDrawStates(const Context *context,
 }
 }  // anonymous namespace
 
-bool CompressedTextureFormatAcceptedByTexImage(GLenum internalFormat)
-{
-    // List of compressed formats from the EXT_texture_compression_bptc,
-    // EXT_texture_compression_rgtc,
-    // EXT_texture_compression_s3tc and EXT_texture_compression_s3tc_srgb
-    switch (internalFormat)
-    {
-        case GL_COMPRESSED_SRGB_S3TC_DXT1_EXT:
-        case GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT:
-        case GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT:
-        case GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT:
-        case GL_COMPRESSED_RGB_S3TC_DXT1_EXT:
-        case GL_COMPRESSED_RGBA_S3TC_DXT1_EXT:
-        case GL_COMPRESSED_RGBA_S3TC_DXT3_EXT:
-        case GL_COMPRESSED_RGBA_S3TC_DXT5_EXT:
-        case GL_COMPRESSED_RED_RGTC1_EXT:
-        case GL_COMPRESSED_SIGNED_RED_RGTC1_EXT:
-        case GL_COMPRESSED_RED_GREEN_RGTC2_EXT:
-        case GL_COMPRESSED_SIGNED_RED_GREEN_RGTC2_EXT:
-        case GL_COMPRESSED_RGBA_BPTC_UNORM_EXT:
-        case GL_COMPRESSED_SRGB_ALPHA_BPTC_UNORM_EXT:
-        case GL_COMPRESSED_RGB_BPTC_SIGNED_FLOAT_EXT:
-        case GL_COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT_EXT:
-            return true;
-
-        default:
-            return false;
-    }
-}
-
 void SetRobustLengthParam(const GLsizei *length, GLsizei value)
 {
     if (length)

@@ -36,7 +36,6 @@ struct LinkedUniform;
 class Program;
 class Shader;
 
-bool CompressedTextureFormatAcceptedByTexImage(GLenum internalFormat);
 void SetRobustLengthParam(const GLsizei *length, GLsizei value);
 bool ValidTextureTarget(const Context *context, TextureType type);
 bool ValidTexture2DTarget(const Context *context, TextureType type);
