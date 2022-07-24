@@ -8,8 +8,6 @@ import("../../gni/angle.gni")
 import("angle_unittests.gni")
 
 declare_args() {
-  # Don't build dEQP by default.
-  build_angle_deqp_tests = false
   build_angle_gles1_conform_tests = false
   build_angle_trace_perf_tests = false
   build_angle_perftests =

@@ -21,6 +21,9 @@ declare_args() {
   angle_enable_cl = false
 
   angle_restricted_traces = []
+
+  # Don't build dEQP by default.
+  build_angle_deqp_tests = false
 }
 
 if (angle_has_build) {
