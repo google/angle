@@ -262,10 +262,6 @@ TEST_P(DrawBuffersTest, Gaps)
 {
     ANGLE_SKIP_TEST_IF(!setupTest());
 
-    // TODO(syoussefi): Qualcomm driver crashes in the presence of VK_ATTACHMENT_UNUSED.
-    // http://anglebug.com/3423
-    ANGLE_SKIP_TEST_IF(IsVulkan() && IsAndroid());
-
     glBindTexture(GL_TEXTURE_2D, mTextures[0]);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, mTextures[0], 0);
 
@@ -287,10 +283,6 @@ TEST_P(DrawBuffersTest, Gaps)
 TEST_P(DrawBuffersTest, BlendWithGaps)
 {
     ANGLE_SKIP_TEST_IF(!setupTest());
-
-    // Qualcomm driver crashes in the presence of VK_ATTACHMENT_UNUSED.
-    // http://anglebug.com/3423
-    ANGLE_SKIP_TEST_IF(IsVulkan() && IsAndroid());
 
     // http://anglebug.com/5154
     ANGLE_SKIP_TEST_IF(IsOSX() && IsIntel() && IsDesktopOpenGL());
@@ -331,10 +323,6 @@ TEST_P(DrawBuffersTest, BlendWithGaps)
 // Test that clear works with gaps
 TEST_P(DrawBuffersTest, ClearWithGaps)
 {
-    // TODO(syoussefi): Qualcomm driver crashes in the presence of VK_ATTACHMENT_UNUSED.
-    // http://anglebug.com/3423
-    ANGLE_SKIP_TEST_IF(IsVulkan() && IsAndroid());
-
     ANGLE_SKIP_TEST_IF(!setupTest());
 
     glGetIntegerv(GL_MAX_DRAW_BUFFERS, &mMaxDrawBuffers);
@@ -553,10 +541,6 @@ TEST_P(DrawBuffersTest, FirstAndLast)
 {
     ANGLE_SKIP_TEST_IF(!setupTest());
 
-    // TODO(syoussefi): Qualcomm driver crashes in the presence of VK_ATTACHMENT_UNUSED.
-    // http://anglebug.com/3423
-    ANGLE_SKIP_TEST_IF(IsVulkan() && IsAndroid());
-
     glBindTexture(GL_TEXTURE_2D, mTextures[0]);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTextures[0], 0);
 
@@ -584,10 +568,6 @@ TEST_P(DrawBuffersTest, FirstAndLast)
 TEST_P(DrawBuffersTest, FirstHalfNULL)
 {
     ANGLE_SKIP_TEST_IF(!setupTest());
-
-    // TODO(syoussefi): Qualcomm driver crashes in the presence of VK_ATTACHMENT_UNUSED.
-    // http://anglebug.com/3423
-    ANGLE_SKIP_TEST_IF(IsVulkan() && IsAndroid());
 
     bool flags[8]  = {false};
     GLenum bufs[8] = {GL_NONE};
@@ -638,10 +618,6 @@ TEST_P(DrawBuffersTest, AllRGBA8)
 {
     ANGLE_SKIP_TEST_IF(!setupTest());
 
-    // TODO(syoussefi): Qualcomm driver crashes in the presence of VK_ATTACHMENT_UNUSED.
-    // http://anglebug.com/3423
-    ANGLE_SKIP_TEST_IF(IsVulkan() && IsAndroid());
-
     bool flags[8]  = {false};
     GLenum bufs[8] = {GL_NONE};
     GLTexture textures[8];
@@ -679,10 +655,6 @@ TEST_P(DrawBuffersWebGL2Test, TwoProgramsWithDifferentOutputsAndClear)
 {
     // TODO(http://anglebug.com/2872): Broken on the GL back-end.
     ANGLE_SKIP_TEST_IF(IsOpenGL());
-
-    // TODO(syoussefi): Qualcomm driver crashes in the presence of VK_ATTACHMENT_UNUSED.
-    // http://anglebug.com/3423
-    ANGLE_SKIP_TEST_IF(IsVulkan() && IsAndroid());
 
     ANGLE_SKIP_TEST_IF(!setupTest());
 
@@ -1116,10 +1088,6 @@ TEST_P(DrawBuffersTestES3, CubeMapArrayTextures)
 TEST_P(DrawBuffersTestES3, BlendWithDrawBufferAndFramebufferChanges)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_draw_buffers_indexed"));
-
-    // Qualcomm driver crashes in the presence of VK_ATTACHMENT_UNUSED.
-    // http://anglebug.com/3423
-    ANGLE_SKIP_TEST_IF(IsVulkan() && IsAndroid());
 
     // http://anglebug.com/5154
     ANGLE_SKIP_TEST_IF(IsOSX() && IsIntel() && IsDesktopOpenGL());

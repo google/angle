@@ -1307,10 +1307,6 @@ TEST_P(ClearTestES3, ScissoredClearHeterogeneousAttachments)
 // mistakenly clear every channel (including the masked-out ones)
 TEST_P(ClearTestES3, MaskedClearBufferBug)
 {
-    // TODO(syoussefi): Qualcomm driver crashes in the presence of VK_ATTACHMENT_UNUSED.
-    // http://anglebug.com/3423
-    ANGLE_SKIP_TEST_IF(IsVulkan() && IsAndroid());
-
     unsigned char pixelData[] = {255, 255, 255, 255};
 
     glBindFramebuffer(GL_FRAMEBUFFER, mFBOs[0]);

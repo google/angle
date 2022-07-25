@@ -4861,10 +4861,6 @@ void main()
         }
     }
 
-    // TODO(syoussefi): Qualcomm driver crashes in the presence of VK_ATTACHMENT_UNUSED.
-    // http://anglebug.com/3423
-    ANGLE_SKIP_TEST_IF(IsVulkan() && IsAndroid());
-
     // Test that attachments written to get the correct color from shader output but that even when
     // the extension is used, disabled attachments are not written at all and stay red.
     {

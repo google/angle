@@ -425,6 +425,8 @@
 7414 PIXEL4ORXL GLES : MultithreadingTestES3.ThreadCWaitBeforeThreadBSyncFinish/* = SKIP
 7414 PIXEL4ORXL GLES : EGLMultiContextTest.ThreadB*BeforeThreadASync* = SKIP
 
+3423 PIXEL4ORXL VULKAN : ClearTestES3.MaskedClearBufferBug/* = SKIP
+3423 PIXEL4ORXL VULKAN : DrawBuffersWebGL2Test.TwoProgramsWithDifferentOutputsAndClear/* = SKIP
 5946 PIXEL4ORXL VULKAN : TransformFeedbackTestES32.PrimitivesWrittenAndGenerated/* = SKIP
 5947 PIXEL4ORXL VULKAN : FramebufferFetchES31.DrawFetchBlitDrawFetch_NonCoherent/* = SKIP
 5947 PIXEL4ORXL VULKAN : FramebufferFetchES31.DrawNonFetchDrawFetchWithDifferentAttachments_NonCoherent/* = SKIP
