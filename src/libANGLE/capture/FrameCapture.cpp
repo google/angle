@@ -925,7 +925,8 @@ void MaybeResetResources(gl::ContextID contextID,
                          std::stringstream &out,
                          std::stringstream &header,
                          ResourceTracker *resourceTracker,
-                         std::vector<uint8_t> *binaryData)
+                         std::vector<uint8_t> *binaryData,
+                         bool &anyResourceReset)
 {
     // Local helper to get well structured blocks in Delete calls, i.e.
     // const GLuint deleteTextures[] = {
@@ -941,6 +942,9 @@ void MaybeResetResources(gl::ContextID contextID,
             out << "\n        ";
         }
     };
+
+    // Track the initial output position so we can detect if it has moved
+    std::streampos initialOutPos = out.tellp();
 
     switch (resourceIDType)
     {
@@ -1306,6 +1310,9 @@ void MaybeResetResources(gl::ContextID contextID,
             // TODO (http://anglebug.com/4599): Reset more resource types
             break;
     }
+
+    // If the output position has moved, we Reset something
+    anyResourceReset = (initialOutPos != out.tellp());
 }
 
 void MaybeResetFenceSyncObjects(std::stringstream &out,
@@ -7693,16 +7700,16 @@ void FrameCaptureShared::writeMainContextCppReplay(const gl::Context *context,
         std::set<gl::ContextID> contextIDs;
         mResourceTracker.getContextIDs(contextIDs);
 
-        // If we're going to be switching contexts, grab the current one now
-        if (contextIDs.size() > 1)
-        {
-            resetBodyStream << "    EGLContext context = eglGetCurrentContext();\n";
-        }
-
         // TODO(http://anglebug.com/5878): Look at moving this into the shared context file since
         // it's resetting shared objects.
 
         // TODO(http://anglebug.com/4599): Support function parts when writing Reset functions
+
+        // Track whether anything was written during Reset
+        bool anyResourceReset = false;
+
+        // Track whether we changed contexts during Reset
+        bool contextChanged = false;
 
         // First emit shared object reset, including opaque and context state
         {
@@ -7722,16 +7729,13 @@ void FrameCaptureShared::writeMainContextCppReplay(const gl::Context *context,
                 }
                 // Use current context for shared reset
                 MaybeResetResources(context->id(), resourceType, mReplayWriter, bodyStream,
-                                    headerStream, &mResourceTracker, &mBinaryData);
+                                    headerStream, &mResourceTracker, &mBinaryData,
+                                    anyResourceReset);
             }
 
             // Reset opaque type objects that don't have IDs, so are not ResourceIDTypes.
             MaybeResetOpaqueTypeObjects(mReplayWriter, bodyStream, headerStream,
                                         context->getState(), &mResourceTracker, &mBinaryData);
-
-            // Reset any context state
-            MaybeResetContextState(mReplayWriter, bodyStream, headerStream, &mResourceTracker,
-                                   context->getState(), &mBinaryData, stateResetHelper);
 
             bodyStream << "}\n";
 
@@ -7740,6 +7744,9 @@ void FrameCaptureShared::writeMainContextCppReplay(const gl::Context *context,
 
         // Emit the call to shared object reset
         resetBodyStream << "    " << FmtResetFunction(kNoPartId, kSharedContextId) << ";\n";
+
+        // Reset our output tracker (Note: This was unused during shared reset)
+        anyResourceReset = false;
 
         // Walk through all contexts that need Reset
         for (const gl::ContextID &contextID : contextIDs)
@@ -7754,15 +7761,35 @@ void FrameCaptureShared::writeMainContextCppReplay(const gl::Context *context,
                 bodyStream << protoStream.str() << "\n";
                 bodyStream << "{\n";
 
+                // Build the Reset calls in a separate stream so we can insert before them
+                std::stringstream resetStream;
+
                 for (ResourceIDType resourceType : AllEnums<ResourceIDType>())
                 {
                     if (IsSharedObjectResource(resourceType))
                     {
                         continue;
                     }
-                    MaybeResetResources(contextID, resourceType, mReplayWriter, bodyStream,
-                                        headerStream, &mResourceTracker, &mBinaryData);
+                    MaybeResetResources(contextID, resourceType, mReplayWriter, resetStream,
+                                        headerStream, &mResourceTracker, &mBinaryData,
+                                        anyResourceReset);
                 }
+
+                // Only call eglMakeCurrent if anything was actually reset in the function and the
+                // context differs from current
+                if (anyResourceReset && contextID != context->id())
+                {
+                    contextChanged = true;
+
+                    bodyStream << "    // Switching contexts for non-shared Reset\n"
+                               << "    eglMakeCurrent("
+                               << "EGL_NO_DISPLAY, EGL_NO_SURFACE, EGL_NO_SURFACE, "
+                               << "gContextMap[" << contextID.value << "]);\n\n";
+                }
+
+                // Then append the Reset calls
+                bodyStream << resetStream.str();
+
                 bodyStream << "}\n";
                 mReplayWriter.addPrivateFunction(protoStream.str(), headerStream, bodyStream);
             }
@@ -7772,11 +7799,19 @@ void FrameCaptureShared::writeMainContextCppReplay(const gl::Context *context,
         }
 
         // Bind the main context again if we bound any additional contexts
-        if (contextIDs.size() > 1)
+        if (contextChanged)
         {
-            resetBodyStream
-                << "    eglMakeCurrent(EGL_NO_DISPLAY, EGL_NO_SURFACE, EGL_NO_SURFACE, context);\n";
+            resetBodyStream << "    // Restoring main context\n"
+                            << "    eglMakeCurrent("
+                            << "EGL_NO_DISPLAY, EGL_NO_SURFACE, EGL_NO_SURFACE, "
+                            << "gContexMap[" << context->id() << "]);\n";
         }
+
+        // Now that we're back on the main context, reset any additional state
+        resetBodyStream << "\n    // Reset main context state\n";
+        MaybeResetContextState(mReplayWriter, resetBodyStream, resetHeaderStream, &mResourceTracker,
+                               context->getState(), &mBinaryData, stateResetHelper);
+
         resetBodyStream << "}\n";
 
         mReplayWriter.addPublicFunction(resetProtoStream.str(), resetHeaderStream, resetBodyStream);
