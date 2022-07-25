@@ -336,7 +336,6 @@ class ProgramExecutableVk
 
     // Descriptor sets and pools for shader resources for this program.
     vk::DescriptorSetArray<VkDescriptorSet> mDescriptorSets;
-    vk::DescriptorSetArray<VkDescriptorSet> mEmptyDescriptorSets;
     vk::DescriptorSetArray<vk::DescriptorPoolPointer> mDescriptorPools;
     vk::DescriptorSetArray<vk::RefCountedDescriptorPoolBinding> mDescriptorPoolBindings;
     uint32_t mNumDefaultUniformDescriptors;

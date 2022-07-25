@@ -903,24 +903,6 @@ angle::Result InitDynamicDescriptorPool(Context *context,
         }
     }
 
-    if (descriptorPoolSizes.empty())
-    {
-        if (context->getRenderer()->getFeatures().bindEmptyForUnusedDescriptorSets.enabled)
-        {
-            // For this workaround, we have to create an empty descriptor set for each descriptor
-            // set index, so make sure their pools are initialized.
-            VkDescriptorPoolSize poolSize = {};
-            // The type doesn't matter, since it's not actually used for anything.
-            poolSize.type            = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-            poolSize.descriptorCount = 1;
-            descriptorPoolSizes.emplace_back(poolSize);
-        }
-        else
-        {
-            return angle::Result::Continue;
-        }
-    }
-
     if (!descriptorPoolSizes.empty())
     {
         ANGLE_TRY(poolToInit->init(context, descriptorPoolSizes.data(), descriptorPoolSizes.size(),

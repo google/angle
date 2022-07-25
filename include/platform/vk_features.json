@@ -265,14 +265,6 @@
             "issue": "http://anglebug.com/3153"
         },
         {
-            "name": "bind_empty_for_unused_descriptor_sets",
-            "category": "Workarounds",
-            "description": [
-                "Gaps in bound descriptor set indices causes the post-gap sets to misbehave"
-            ],
-            "issue": "http://anglebug.com/2727"
-        },
-        {
             "name": "force_D16_tex_filter",
             "category": "Workarounds",
             "description": [

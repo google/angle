@@ -344,8 +344,7 @@ void ProgramInfo::release(ContextVk *contextVk)
 }
 
 ProgramExecutableVk::ProgramExecutableVk()
-    : mEmptyDescriptorSets{},
-      mNumDefaultUniformDescriptors(0),
+    : mNumDefaultUniformDescriptors(0),
       mImmutableSamplersMaxDescriptorCount(1),
       mUniformBufferDescriptorType(VK_DESCRIPTOR_TYPE_MAX_ENUM),
       mDynamicUniformDescriptorOffsets{}
@@ -372,7 +371,6 @@ void ProgramExecutableVk::resetLayout(ContextVk *contextVk)
     mPipelineLayout.reset();
 
     mDescriptorSets.fill(VK_NULL_HANDLE);
-    mEmptyDescriptorSets.fill(VK_NULL_HANDLE);
     mNumDefaultUniformDescriptors = 0;
 
     for (vk::RefCountedDescriptorPoolBinding &binding : mDescriptorPoolBindings)
@@ -1455,21 +1453,7 @@ angle::Result ProgramExecutableVk::bindDescriptorSets(
         VkDescriptorSet descSet = mDescriptorSets[descriptorSetIndex];
         if (descSet == VK_NULL_HANDLE)
         {
-            if (!context->getRenderer()->getFeatures().bindEmptyForUnusedDescriptorSets.enabled)
-            {
-                continue;
-            }
-
-            // Workaround a driver bug where missing (though unused) descriptor sets indices cause
-            // later sets to misbehave.
-            if (mEmptyDescriptorSets[descriptorSetIndex] == VK_NULL_HANDLE)
-            {
-                ANGLE_TRY(mDescriptorPools[descriptorSetIndex].get().allocateDescriptorSet(
-                    context, commandBufferHelper, mDescriptorSetLayouts[descriptorSetIndex].get(),
-                    &mDescriptorPoolBindings[descriptorSetIndex],
-                    &mEmptyDescriptorSets[descriptorSetIndex]));
-            }
-            descSet = mEmptyDescriptorSets[descriptorSetIndex];
+            continue;
         }
 
         // Default uniforms are encompassed in a block per shader stage, and they are assigned

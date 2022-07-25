@@ -41,7 +41,6 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::AsyncCommandQueue, "asyncCommandQueue"},
     {Feature::Avoid1BitAlphaTextureFormats, "avoid1BitAlphaTextureFormats"},
     {Feature::BasicGLLineRasterization, "basicGLLineRasterization"},
-    {Feature::BindEmptyForUnusedDescriptorSets, "bindEmptyForUnusedDescriptorSets"},
     {Feature::BindTransformFeedbackBufferBeforeBindBufferRange,
      "bindTransformFeedbackBufferBeforeBindBufferRange"},
     {Feature::BottomLeftOriginPresentRegionRectangles, "bottomLeftOriginPresentRegionRectangles"},
