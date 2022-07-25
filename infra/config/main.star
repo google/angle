@@ -273,13 +273,23 @@ def angle_builder(name, cpu):
         "test_mode": test_mode,
     }
 
+    ci_properties = {
+        "builder_group": "angle",
+        "$build/goma": goma_props,
+        "platform": config_os.console_name,
+        "toolchain": toolchain,
+        "test_mode": test_mode,
+    }
+
+    ci_properties["sheriff_rotations"] = ["angle"]
+
     luci.builder(
         name = name,
         bucket = "ci",
         triggered_by = ["main-poller"],
         executable = "recipe:angle",
         service_account = "angle-ci-builder@chops-service-accounts.iam.gserviceaccount.com",
-        properties = properties,
+        properties = ci_properties,
         dimensions = dimensions,
         build_numbers = True,
         resultdb_settings = resultdb.settings(enable = True),
