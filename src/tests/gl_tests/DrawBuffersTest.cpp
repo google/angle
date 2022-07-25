@@ -266,9 +266,6 @@ TEST_P(DrawBuffersTest, Gaps)
     // http://anglebug.com/3423
     ANGLE_SKIP_TEST_IF(IsVulkan() && IsAndroid());
 
-    // Fails on Intel Ubuntu 19.04 Mesa 19.0.2 Vulkan. http://anglebug.com/3616
-    ANGLE_SKIP_TEST_IF(IsLinux() && IsIntel() && IsVulkan());
-
     glBindTexture(GL_TEXTURE_2D, mTextures[0]);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, mTextures[0], 0);
 
@@ -294,9 +291,6 @@ TEST_P(DrawBuffersTest, BlendWithGaps)
     // Qualcomm driver crashes in the presence of VK_ATTACHMENT_UNUSED.
     // http://anglebug.com/3423
     ANGLE_SKIP_TEST_IF(IsVulkan() && IsAndroid());
-
-    // Fails on Intel Ubuntu 19.04 Mesa 19.0.2 Vulkan. http://anglebug.com/3616
-    ANGLE_SKIP_TEST_IF(IsLinux() && IsIntel() && IsVulkan());
 
     // http://anglebug.com/5154
     ANGLE_SKIP_TEST_IF(IsOSX() && IsIntel() && IsDesktopOpenGL());
@@ -594,9 +588,6 @@ TEST_P(DrawBuffersTest, FirstHalfNULL)
     // TODO(syoussefi): Qualcomm driver crashes in the presence of VK_ATTACHMENT_UNUSED.
     // http://anglebug.com/3423
     ANGLE_SKIP_TEST_IF(IsVulkan() && IsAndroid());
-
-    // Fails on Intel Ubuntu 19.04 Mesa 19.0.2 Vulkan. http://anglebug.com/3616
-    ANGLE_SKIP_TEST_IF(IsLinux() && IsIntel() && IsVulkan());
 
     bool flags[8]  = {false};
     GLenum bufs[8] = {GL_NONE};
@@ -1129,9 +1120,6 @@ TEST_P(DrawBuffersTestES3, BlendWithDrawBufferAndFramebufferChanges)
     // Qualcomm driver crashes in the presence of VK_ATTACHMENT_UNUSED.
     // http://anglebug.com/3423
     ANGLE_SKIP_TEST_IF(IsVulkan() && IsAndroid());
-
-    // Fails on Intel Ubuntu 19.04 Mesa 19.0.2 Vulkan. http://anglebug.com/3616
-    ANGLE_SKIP_TEST_IF(IsLinux() && IsIntel() && IsVulkan());
 
     // http://anglebug.com/5154
     ANGLE_SKIP_TEST_IF(IsOSX() && IsIntel() && IsDesktopOpenGL());

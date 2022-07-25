@@ -2844,9 +2844,6 @@ void MultisampledRenderToTextureES3Test::colorAttachment1Common(bool useRenderbu
     // http://anglebug.com/3423
     ANGLE_SKIP_TEST_IF(IsVulkan() && IsAndroid());
 
-    // Fails on Intel Ubuntu 19.04 Mesa 19.0.2 Vulkan. http://anglebug.com/3616
-    ANGLE_SKIP_TEST_IF(IsLinux() && IsIntel() && IsVulkan());
-
     constexpr GLsizei kSize = 64;
 
     setupCopyTexProgram();
