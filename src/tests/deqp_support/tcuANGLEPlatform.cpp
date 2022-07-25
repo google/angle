@@ -20,19 +20,55 @@
 
 #include "tcuANGLEPlatform.h"
 
-#include <EGL/egl.h>
-#include <EGL/eglext.h>
-
 #include "egluGLContextFactory.hpp"
+#include "gluPlatform.hpp"
 #include "tcuANGLENativeDisplayFactory.h"
+#include "tcuDefs.hpp"
 #include "tcuNullContextFactory.hpp"
+#include "tcuPlatform.hpp"
 #include "util/angle_features_autogen.h"
 #include "util/test_utils.h"
+
+#ifndef _EGLUPLATFORM_HPP
+#    include "egluPlatform.hpp"
+#endif
+
+#include <EGL/egl.h>
+#include <EGL/eglext.h>
 
 static_assert(EGL_DONT_CARE == -1, "Unexpected value for EGL_DONT_CARE");
 
 namespace tcu
 {
+class ANGLEPlatform : public tcu::Platform, private glu::Platform, private eglu::Platform
+{
+  public:
+    ANGLEPlatform(angle::LogErrorFunc logErrorFunc, uint32_t preRotation);
+    ~ANGLEPlatform();
+
+    bool processEvents() override;
+
+    const glu::Platform &getGLPlatform() const override
+    {
+        return static_cast<const glu::Platform &>(*this);
+    }
+    const eglu::Platform &getEGLPlatform() const override
+    {
+        return static_cast<const eglu::Platform &>(*this);
+    }
+
+  private:
+    // Note: -1 represents EGL_DONT_CARE, but we don't have the EGL headers here.
+    std::vector<eglw::EGLAttrib> initAttribs(eglw::EGLAttrib type,
+                                             eglw::EGLAttrib deviceType   = -1,
+                                             eglw::EGLAttrib majorVersion = -1,
+                                             eglw::EGLAttrib minorVersion = -1);
+
+    EventState mEvents;
+    angle::PlatformMethods mPlatformMethods;
+    std::vector<const char *> mEnableFeatureOverrides;
+};
+
 ANGLEPlatform::ANGLEPlatform(angle::LogErrorFunc logErrorFunc, uint32_t preRotation)
 {
     angle::SetLowPriorityProcess();
