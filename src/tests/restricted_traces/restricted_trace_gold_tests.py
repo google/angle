@@ -359,6 +359,7 @@ def _run_tests(args, tests, extra_flags, env, screenshot_dir, results, test_resu
                         '--verbose-logging',
                         '--enable-all-trace-tests',
                         '--render-test-output-dir=%s' % screenshot_dir,
+                        '--save-screenshots',
                     ] + extra_flags
                     batch_result = PASS if run_wrapper(args.test_suite, cmd_args, args, env,
                                                        tempfile_path) == 0 else FAIL
