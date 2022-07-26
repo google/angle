@@ -8,6 +8,7 @@
 #include "gtest/gtest.h"
 
 #include "common/system_utils.h"
+#include "tests/test_utils/runner/TestSuite.h"
 #include "util/Timer.h"
 #include "util/test_utils.h"
 #include "util/test_utils_unittest_helper.h"
@@ -84,7 +85,9 @@ TEST(TestUtils, Sleep)
 // Test running an external application and receiving its output
 TEST(TestUtils, MAYBE_RunApp)
 {
-    std::string executablePath = GetExecutableDirectory();
+    std::string testExecutableName = angle::TestSuite::GetInstance()->getTestExecutableName();
+    std::string executablePath     = angle::StripFilenameFromPath(testExecutableName);
+
     EXPECT_NE(executablePath, "");
     executablePath += "/";
     executablePath += kRunAppHelperExecutable;

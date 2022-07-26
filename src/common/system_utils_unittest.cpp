@@ -376,6 +376,14 @@ TEST(SystemUtils, MAYBE_PageFaultHandlerProtect)
     EXPECT_TRUE(handler->disable());
 }
 
+// Tests basic usage of StripFilenameFromPath.
+TEST(SystemUtils, StripFilenameFromPathUsage)
+{
+    EXPECT_EQ(StripFilenameFromPath("/path/to/tests/angle_tests"), "/path/to/tests");
+    EXPECT_EQ(StripFilenameFromPath("C:\\tests\\angle_tests.exe"), "C:\\tests");
+    EXPECT_EQ(StripFilenameFromPath("angle_tests"), "");
+}
+
 #if defined(ANGLE_PLATFORM_POSIX)
 std::mutex gCustomHandlerMutex;
 bool gCustomHandlerCalled = false;

@@ -160,6 +160,8 @@ class TestSuite
         mTestExpectationsParser.setTestExpectationsAllowMask(mask);
     }
 
+    const std::string &getTestExecutableName() const { return mTestExecutableName; }
+
   private:
     bool parseSingleArg(const char *argument);
     bool launchChildTestProcess(uint32_t batchId, const std::vector<TestIdentifier> &testsInBatch);

@@ -214,6 +214,8 @@ std::string Narrow(const std::wstring_view &utf16);
 // Convert an UTF-8 string to an UTF-16 wstring.
 std::wstring Widen(const std::string_view &utf8);
 #endif
+
+std::string StripFilenameFromPath(const std::string &path);
 }  // namespace angle
 
 #endif  // COMMON_SYSTEM_UTILS_H_

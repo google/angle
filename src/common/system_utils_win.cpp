@@ -30,8 +30,7 @@ std::string GetPath(HMODULE module)
 std::string GetDirectory(HMODULE module)
 {
     std::string executablePath = GetPath(module);
-    size_t lastPathSepLoc      = executablePath.find_last_of("\\/");
-    return (lastPathSepLoc != std::string::npos) ? executablePath.substr(0, lastPathSepLoc) : "";
+    return StripFilenameFromPath(executablePath);
 }
 
 }  // anonymous namespace

@@ -215,4 +215,10 @@ void *OpenSystemLibraryAndGetError(const char *libraryName,
     return OpenSystemLibraryWithExtensionAndGetError(libraryWithExtension.c_str(), searchType,
                                                      errorOut);
 }
+
+std::string StripFilenameFromPath(const std::string &path)
+{
+    size_t lastPathSepLoc = path.find_last_of("\\/");
+    return (lastPathSepLoc != std::string::npos) ? path.substr(0, lastPathSepLoc) : "";
+}
 }  // namespace angle
