@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 282
+#define ANGLE_SH_VERSION 283
 
 enum ShShaderSpec
 {
@@ -304,7 +304,8 @@ const ShCompileOptions SH_REMOVE_DYNAMIC_INDEXING_OF_SWIZZLED_VECTOR = UINT64_C(
 // This flag works around a slow fxc compile performance issue with dynamic uniform indexing.
 const ShCompileOptions SH_ALLOW_TRANSLATE_UNIFORM_BLOCK_TO_STRUCTUREDBUFFER = UINT64_C(1) << 46;
 
-// Note: bit 47 is unused
+// This flag allows us to add a decoration for layout(yuv) in shaders.
+const ShCompileOptions SH_ADD_VULKAN_YUV_LAYOUT_QUALIFIER = UINT64_C(1) << 47;
 
 // This flag allows disabling ARB_texture_rectangle on a per-compile basis. This is necessary
 // for WebGL contexts becuase ARB_texture_rectangle may be necessary for the WebGL implementation
