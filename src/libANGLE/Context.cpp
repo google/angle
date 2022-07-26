@@ -4036,10 +4036,12 @@ void Context::initCaps()
         if (mWebGLContext)
         {
             mSupportedExtensions.textureCompressionAstcLdrKHR = false;
+            mState.mExtensions.textureCompressionAstcLdrKHR   = false;
         }
-#ifndef ANGLE_HAS_ASTCENC
+#if !defined(ANGLE_HAS_ASTCENC)
         // Don't expose emulated ASTC when it's not built.
         mSupportedExtensions.textureCompressionAstcLdrKHR = false;
+        mState.mExtensions.textureCompressionAstcLdrKHR   = false;
 #endif
     }
 
