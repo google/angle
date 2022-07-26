@@ -671,6 +671,13 @@ struct FeaturesVk : FeatureSetBase
         "Prefer to use VK_FILTER_LINEAR for VkSamplerYcbcrConversion",
         &members,
     };
+
+    FeatureInfo supportsYuvTarget = {
+        "supportsYuvTarget",
+        FeatureCategory::VulkanFeatures,
+        "VkDevice supports VK_ANDROID_render_to_external_format and VK_EXT_ycbcr_attachment",
+        &members,
+    };
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

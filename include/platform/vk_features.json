@@ -901,6 +901,13 @@
             "description": [
                 "Prefer to use VK_FILTER_LINEAR for VkSamplerYcbcrConversion"
             ]
+        },
+        {
+            "name": "supports_yuv_target",
+            "category": "Features",
+            "description": [
+                "VkDevice supports VK_ANDROID_render_to_external_format and VK_EXT_ycbcr_attachment"
+            ]
         }
     ]
 }

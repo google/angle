@@ -253,6 +253,7 @@ enum class Feature
     SupportsSurfaceProtectedSwapchains,
     SupportsTransformFeedbackExtension,
     SupportsYUVSamplerConversion,
+    SupportsYuvTarget,
     SwapbuffersOnFlushOrFinishWithSingleBuffer,
     SyncVertexArraysToDefault,
     UnbindFBOBeforeSwitchingContext,

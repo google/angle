@@ -269,6 +269,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::SupportsSurfaceProtectedSwapchains, "supportsSurfaceProtectedSwapchains"},
     {Feature::SupportsTransformFeedbackExtension, "supportsTransformFeedbackExtension"},
     {Feature::SupportsYUVSamplerConversion, "supportsYUVSamplerConversion"},
+    {Feature::SupportsYuvTarget, "supportsYuvTarget"},
     {Feature::SwapbuffersOnFlushOrFinishWithSingleBuffer,
      "swapbuffersOnFlushOrFinishWithSingleBuffer"},
     {Feature::SyncVertexArraysToDefault, "syncVertexArraysToDefault"},
