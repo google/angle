@@ -2415,6 +2415,8 @@ angle::Result ContextVk::handleDirtyGraphicsTransformFeedbackBuffersEmulation(
             mRenderPassCommands->bufferWrite(this, VK_ACCESS_SHADER_WRITE_BIT,
                                              vk::PipelineStage::VertexShader, bufferHelper);
         }
+
+        populateTransformFeedbackBufferSet(bufferCount, bufferHelpers);
     }
 
     ProgramExecutableVk *executableVk      = getExecutable();
@@ -2499,6 +2501,8 @@ angle::Result ContextVk::handleDirtyGraphicsTransformFeedbackBuffersExtension(
 
     mRenderPassCommands->beginTransformFeedback(bufferCount, counterBufferHandles.data(),
                                                 counterBufferOffsets.data(), rebindBuffers);
+
+    populateTransformFeedbackBufferSet(bufferCount, buffers);
 
     return angle::Result::Continue;
 }
@@ -5715,8 +5719,6 @@ angle::Result ContextVk::onBeginTransformFeedback(
         ANGLE_TRY(flushCommandsAndEndRenderPass(RenderPassClosureReason::BufferUseThenXfbWrite));
     }
 
-    populateTransformFeedbackBufferSet(bufferCount, buffers);
-
     return angle::Result::Continue;
 }
 
@@ -7009,19 +7011,6 @@ angle::Result ContextVk::flushCommandsAndEndRenderPassImpl(QueueSubmitType queue
     mGraphicsPipelineDesc->resetSubpass(&mGraphicsPipelineTransition);
 
     mCurrentTransformFeedbackBuffers.clear();
-
-    // Reset serials for XFB if active.
-    if (mState.isTransformFeedbackActiveUnpaused())
-    {
-        const gl::ProgramExecutable *executable = mState.getProgramExecutable();
-        ASSERT(executable);
-        size_t xfbBufferCount = executable->getTransformFeedbackBufferCount();
-
-        TransformFeedbackVk *transformFeedbackVk =
-            vk::GetImpl(mState.getCurrentTransformFeedback());
-
-        populateTransformFeedbackBufferSet(xfbBufferCount, transformFeedbackVk->getBufferHelpers());
-    }
 
     onRenderPassFinished(reason);
 

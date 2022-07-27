@@ -6607,6 +6607,81 @@ TEST_P(VulkanPerformanceCounterTest, FenceThenSwapBuffers)
     compareDepthOpCounters(getPerfCounters(), expected);
 }
 
+// Verify that ending transform feedback after a render pass is closed, doesn't cause the following
+// render pass to close when the transform feedback buffer is used.
+TEST_P(VulkanPerformanceCounterTest, EndXfbAfterRenderPassClosed)
+{
+    // There should be two render passes; one for the transform feedback draw, one for the other two
+    // draw calls.
+    uint64_t expectedRenderPassCount = getPerfCounters().renderPasses + 2;
+
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Set the program's transform feedback varyings (just gl_Position)
+    std::vector<std::string> tfVaryings;
+    tfVaryings.push_back("gl_Position");
+    ANGLE_GL_PROGRAM_TRANSFORM_FEEDBACK(drawRed, essl3_shaders::vs::Simple(),
+                                        essl3_shaders::fs::Red(), tfVaryings,
+                                        GL_INTERLEAVED_ATTRIBS);
+
+    glUseProgram(drawRed);
+    GLint positionLocation = glGetAttribLocation(drawRed, essl1_shaders::PositionAttrib());
+
+    const GLfloat vertices[] = {
+        -0.5f, 0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, -0.5f, 0.5f,
+        -0.5f, 0.5f, 0.5f, 0.5f,  -0.5f, 0.5f, 0.5f, 0.5f,  0.5f,
+    };
+
+    glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, vertices);
+    glEnableVertexAttribArray(positionLocation);
+
+    // Bind the buffer for transform feedback output and start transform feedback
+    GLBuffer xfbBuffer;
+    glBindBuffer(GL_TRANSFORM_FEEDBACK_BUFFER, xfbBuffer);
+    glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, 100, nullptr, GL_STATIC_DRAW);
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, xfbBuffer);
+    glBeginTransformFeedback(GL_POINTS);
+
+    glDrawArrays(GL_POINTS, 0, 6);
+
+    // Break the render pass
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+
+    // End transform feedback after the render pass is closed
+    glEndTransformFeedback();
+
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, 0);
+    EXPECT_GL_NO_ERROR();
+
+    // Issue an unrelated draw call.
+    ANGLE_GL_PROGRAM(drawGreen, essl3_shaders::vs::Simple(), essl3_shaders::fs::Green());
+    drawQuad(drawGreen, essl3_shaders::PositionAttrib(), 0.0f);
+
+    // Issue a draw call using the transform feedback buffer.
+    glBindBuffer(GL_ARRAY_BUFFER, xfbBuffer);
+    glVertexAttribPointer(positionLocation, 4, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(positionLocation);
+
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glUseProgram(drawRed);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    const int w = getWindowWidth();
+    const int h = getWindowHeight();
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, w, h / 4, GLColor::black);
+    EXPECT_PIXEL_RECT_EQ(0, 3 * h / 4, w, h / 4, GLColor::black);
+    EXPECT_PIXEL_RECT_EQ(0, h / 4, w / 4, h / 2, GLColor::black);
+    EXPECT_PIXEL_RECT_EQ(3 * w / 4, h / 4, w / 4, h / 2, GLColor::black);
+
+    EXPECT_PIXEL_RECT_EQ(w / 4, h / 4, w / 2, h / 2, GLColor::red);
+    EXPECT_GL_NO_ERROR();
+
+    EXPECT_EQ(getPerfCounters().renderPasses, expectedRenderPassCount);
+}
+
 ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest, ES3_VULKAN(), ES3_VULKAN_SWIFTSHADER());
 ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest_ES31, ES31_VULKAN(), ES31_VULKAN_SWIFTSHADER());
 ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest_MSAA, ES3_VULKAN(), ES3_VULKAN_SWIFTSHADER());
