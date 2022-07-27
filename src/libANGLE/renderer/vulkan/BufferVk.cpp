@@ -809,6 +809,7 @@ angle::Result BufferVk::updateBuffer(ContextVk *contextVk,
     }
     return angle::Result::Continue;
 }
+
 angle::Result BufferVk::directUpdate(ContextVk *contextVk,
                                      const uint8_t *data,
                                      size_t size,

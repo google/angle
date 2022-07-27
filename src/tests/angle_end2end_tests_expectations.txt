@@ -189,6 +189,7 @@
 5001 MAC NVIDIA OPENGL : BlitFramebufferTest.NonZeroBaseSourceStencil/ES3_OpenGL = SKIP
 5155 MAC NVIDIA OPENGL : CopyTextureTestES3.InvalidateCopyThenBlend/ES3_OpenGL = SKIP
 5155 MAC NVIDIA OPENGL : CopyTextureTestES3.InvalidateBlitThenBlend3Layers/ES3_OpenGL = SKIP
+7530 MAC NVIDIA OPENGL : TransformFeedbackTest.RenderOnceChangeXfbBufferRenderAgain/* = SKIP
 
 // BlitFramebufferTest.ScissoredMultisampleStencil failures
 3496 MAC INTEL OPENGL : BlitFramebufferTest.ScissoredMultisampleStencil/* = SKIP

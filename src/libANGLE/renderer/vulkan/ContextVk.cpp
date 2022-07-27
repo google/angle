@@ -767,7 +767,8 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
         DIRTY_BIT_DESCRIPTOR_SETS,
         DIRTY_BIT_DRIVER_UNIFORMS_BINDING,
     };
-    if (getFeatures().supportsTransformFeedbackExtension.enabled)
+    if (getFeatures().supportsTransformFeedbackExtension.enabled ||
+        getFeatures().emulateTransformFeedback.enabled)
     {
         mNewGraphicsCommandBufferDirtyBits.set(DIRTY_BIT_TRANSFORM_FEEDBACK_BUFFERS);
     }
