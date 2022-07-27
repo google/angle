@@ -57,6 +57,9 @@ enum class SubjectMessage
 
     // Indicates an external change to the default framebuffer.
     SurfaceChanged,
+    // Indicates the system framebuffer's swapchain changed, i.e. color buffer changed but no
+    // depth/stencil buffer change.
+    SwapchainImageChanged,
 
     // Indicates a separable program's textures or images changed in the ProgramExecutable.
     ProgramTextureOrImageBindingChanged,

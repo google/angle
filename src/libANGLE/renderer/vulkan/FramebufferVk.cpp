@@ -333,7 +333,14 @@ FramebufferVk::FramebufferVk(RendererVk *renderer,
       mBackbuffer(backbuffer),
       mActiveColorComponentMasksForClear(0),
       mReadOnlyDepthFeedbackLoopMode(false)
-{}
+{
+    if (mState.isDefault())
+    {
+        // These are immutable for system default framebuffer.
+        mCurrentFramebufferDesc.updateLayerCount(1);
+        mCurrentFramebufferDesc.updateIsMultiview(false);
+    }
+}
 
 FramebufferVk::~FramebufferVk() = default;
 
@@ -1961,8 +1968,13 @@ angle::Result FramebufferVk::syncState(const gl::Context *context,
 
                 ANGLE_TRY(updateColorAttachment(context, colorIndexGL));
 
-                shouldUpdateColorMaskAndBlend = true;
-                shouldUpdateLayerCount        = true;
+                // Window system framebuffer only have one color attachment and its property should
+                // never change unless via DIRTY_BIT_DRAW_BUFFERS bit.
+                if (!mState.isDefault())
+                {
+                    shouldUpdateColorMaskAndBlend = true;
+                    shouldUpdateLayerCount        = true;
+                }
                 dirtyColorAttachments.set(colorIndexGL);
 
                 break;

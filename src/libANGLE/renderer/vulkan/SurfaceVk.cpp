@@ -1949,7 +1949,7 @@ void WindowSurfaceVk::deferAcquireNextImage()
     // WindowSurfaceVk::getAttachmentRenderTarget() to be called (which will acquire the next image)
     // before any RenderTargetVk accesses.  The processing of other dirty bits as well as other
     // setup for draws and reads will then access a properly-updated RenderTargetVk.
-    onStateChange(angle::SubjectMessage::SubjectChanged);
+    onStateChange(angle::SubjectMessage::SwapchainImageChanged);
 }
 
 angle::Result WindowSurfaceVk::doDeferredAcquireNextImage(const gl::Context *context,
@@ -2099,7 +2099,7 @@ VkResult WindowSurfaceVk::acquireNextSwapchainImage(vk::Context *context)
     // Notify the owning framebuffer there may be staged updates.
     if (image.image.hasStagedUpdatesInAllocatedLevels())
     {
-        onStateChange(angle::SubjectMessage::SubjectChanged);
+        onStateChange(angle::SubjectMessage::SwapchainImageChanged);
     }
 
     // Note that an acquire is no longer needed.

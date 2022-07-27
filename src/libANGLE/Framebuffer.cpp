@@ -2090,6 +2090,17 @@ void Framebuffer::onSubjectStateChange(angle::SubjectIndex index, angle::Subject
             return;
         }
 
+        // Swapchain changes should only result in color buffer changes.
+        if (message == angle::SubjectMessage::SwapchainImageChanged)
+        {
+            if (index < DIRTY_BIT_COLOR_ATTACHMENT_MAX)
+            {
+                mDirtyBits.set(DIRTY_BIT_COLOR_BUFFER_CONTENTS_0 + index);
+                onStateChange(angle::SubjectMessage::DirtyBitsFlagged);
+            }
+            return;
+        }
+
         ASSERT(message != angle::SubjectMessage::BindingChanged);
 
         // This can be triggered by external changes to the default framebuffer.
