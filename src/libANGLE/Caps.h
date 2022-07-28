@@ -133,6 +133,9 @@ struct Limitations
     // and GL_CONSTANT_COLOR/GL_ONE_MINUS_CONSTANT_COLOR blend functions.
     bool noSimultaneousConstantColorAndAlphaBlendFunc = false;
 
+    // Renderer always clamps constant blend color.
+    bool noUnclampedBlendColor = false;
+
     // D3D9 does not support flexible varying register packing.
     bool noFlexibleVaryingPacking = false;
 
