@@ -1923,6 +1923,7 @@ TEST_P(PixelLocalStorageTest, Coherency)
 
 ANGLE_INSTANTIATE_TEST(
     PixelLocalStorageTest,
+    ES31_D3D11().enable(Feature::EmulatePixelLocalStorage),
     ES31_OPENGL().enable(Feature::EmulatePixelLocalStorage),
     ES31_OPENGLES().enable(Feature::EmulatePixelLocalStorage),
     ES31_VULKAN().enable(Feature::EmulatePixelLocalStorage),
