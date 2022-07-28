@@ -1061,6 +1061,14 @@ TestSuite::TestSuite(int *argc, char **argv, std::function<void()> registerTests
         ++argIndex;
     }
 
+#if defined(ANGLE_PLATFORM_FUCHSIA)
+    if (mBotMode)
+    {
+        printf("Note: Bot mode is not available on Fuchsia. See http://anglebug.com/7312\n");
+        mBotMode = false;
+    }
+#endif
+
     if (UsesExternalBatching() && mBotMode)
     {
         printf("Bot mode is mutually exclusive with external batching.\n");
