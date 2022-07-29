@@ -2238,7 +2238,7 @@ void RenderPassCommandBufferHelper::invalidateRenderPassColorAttachment(
     // - Rasterizer-discard is not enabled
     const gl::BlendStateExt &blendStateExt = state.getBlendStateExt();
     const bool isColorWriteEnabled =
-        blendStateExt.getColorMaskIndexed(colorIndexGL) != 0 && state.isRasterizerDiscardEnabled();
+        blendStateExt.getColorMaskIndexed(colorIndexGL) != 0 && !state.isRasterizerDiscardEnabled();
     mColorAttachments[attachmentIndex].invalidate(invalidateArea, isColorWriteEnabled,
                                                   getRenderPassWriteCommandCount());
 }

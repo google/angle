@@ -1036,7 +1036,8 @@ angle::Result InitializeRenderPassFromDesc(ContextVk *contextVk,
     bool isStencilInvalidated = false;
     const bool hasUnresolveAttachments =
         desc.getColorUnresolveAttachmentMask().any() || desc.hasDepthStencilUnresolveAttachment();
-    const bool canRemoveResolveAttachments = !hasUnresolveAttachments;
+    const bool canRemoveResolveAttachments =
+        isRenderToTextureThroughEmulation && !hasUnresolveAttachments;
 
     // Pack color attachments
     PackedAttachmentIndex attachmentCount(0);
