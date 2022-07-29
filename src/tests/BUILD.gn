@@ -371,6 +371,7 @@ template("angle_perftests_common") {
       "test_utils/runner/TestSuite.h",
     ]
     public_deps = [
+      "$angle_root:angle_gl_enum_utils",
       "$angle_root/src/tests:angle_test_expectations",
       "$angle_root/third_party/rapidjson:rapidjson",
       "${invoker.test_utils}",
