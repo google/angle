@@ -1646,6 +1646,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_traces',
   },
+  'src/tests/restricted_traces/ni_no_kuni': {
+      'packages': [
+        {
+            'package': 'angle/traces/ni_no_kuni',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_traces',
+  },
   'src/tests/restricted_traces/nier_reincarnation': {
       'packages': [
         {
