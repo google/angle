@@ -137,7 +137,6 @@ struct ImageState : private angle::NonCopyable
     EGLenum target;
     gl::ImageIndex imageIndex;
     ImageSibling *source;
-    std::set<ImageSibling *> targets;
 
     gl::Format format;
     bool yuv;
@@ -148,6 +147,9 @@ struct ImageState : private angle::NonCopyable
     EGLenum sourceType;
     EGLenum colorspace;
     bool hasProtectedContent;
+
+    mutable std::mutex targetsLock;
+    std::set<ImageSibling *> targets;
 };
 
 class Image final : public RefCountObject, public LabeledObject
