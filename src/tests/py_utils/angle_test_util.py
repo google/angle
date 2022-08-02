@@ -5,6 +5,7 @@
 import datetime
 import importlib
 import logging
+import sys
 
 
 class LogFormatter(logging.Formatter):
@@ -17,7 +18,7 @@ class LogFormatter(logging.Formatter):
         return datetime.datetime.fromtimestamp(record.created).strftime('%H:%M:%S.%fZ')
 
 
-def setupLogging(level):
+def SetupLogging(level):
     # Reload to reset if it was already setup by a library
     importlib.reload(logging)
 
@@ -27,3 +28,28 @@ def setupLogging(level):
     handler = logging.StreamHandler()
     handler.setFormatter(LogFormatter())
     logger.addHandler(handler)
+
+
+def IsWindows():
+    return sys.platform == 'cygwin' or sys.platform.startswith('win')
+
+
+def ExecutablePathInCurrentDir(binary):
+    if IsWindows():
+        return '.\\%s.exe' % binary
+    else:
+        return './%s' % binary
+
+
+def HasGtestShardsAndIndex(env):
+    if 'GTEST_TOTAL_SHARDS' in env and int(env['GTEST_TOTAL_SHARDS']) != 1:
+        if 'GTEST_SHARD_INDEX' not in env:
+            logging.error('Sharding params must be specified together.')
+            sys.exit(1)
+        return True
+
+    return False
+
+
+def PopGtestShardsAndIndex(env):
+    return int(env.pop('GTEST_TOTAL_SHARDS')), int(env.pop('GTEST_SHARD_INDEX'))
