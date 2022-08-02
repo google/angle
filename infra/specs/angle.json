@@ -2786,6 +2786,7 @@
           "--use-angle=swiftshader",
           "--bot-mode",
           "--batch-timeout=600",
+          "--flaky-retries=2",
           "--xvfb"
         ],
         "merge": {
