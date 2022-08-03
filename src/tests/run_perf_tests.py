@@ -9,7 +9,6 @@
 
 import argparse
 import fnmatch
-import functools
 import importlib
 import io
 import json
@@ -38,7 +37,7 @@ from tracing.value import histogram
 from tracing.value import histogram_set
 from tracing.value import merge_histograms
 
-DEFAULT_TEST_SUITE = 'angle_perftests'
+ANGLE_PERFTESTS = 'angle_perftests'
 DEFAULT_LOG = 'info'
 DEFAULT_SAMPLES = 4
 DEFAULT_TRIALS = 3
@@ -83,14 +82,10 @@ def run_command_with_output(argv, stdoutfile, env=None, cwd=None, log=True):
         return process.returncode
 
 
-@functools.lru_cache()
-def _use_adb(test_suite):
-    return android_helper.ApkFileExists(test_suite)
-
-
 def _run_and_get_output(args, cmd, env, runner_args):
-    if _use_adb(args.test_suite):
-        result, output = android_helper.RunTests(cmd[1:], log_output=args.show_test_stdout)
+    if android_helper.IsAndroid():
+        result, output = android_helper.RunTests(
+            args.test_suite, cmd[1:], log_output=args.show_test_stdout)
         return result, output.decode().split('\n')
 
     runner_cmd = cmd + runner_args
@@ -259,7 +254,7 @@ def main():
     parser.add_argument('--isolated-script-test-perf-output', type=str)
     parser.add_argument(
         '-f', '--filter', '--isolated-script-test-filter', type=str, help='Test filter.')
-    parser.add_argument('--test-suite', help='Test suite to run.', default=DEFAULT_TEST_SUITE)
+    parser.add_argument('--test-suite', help='Test suite to run.', default=ANGLE_PERFTESTS)
     parser.add_argument('--xvfb', help='Use xvfb.', action='store_true')
     parser.add_argument(
         '--shard-count',
@@ -328,12 +323,11 @@ def main():
     if angle_test_util.HasGtestShardsAndIndex(env):
         args.shard_count, args.shard_index = angle_test_util.PopGtestShardsAndIndex(env)
 
+    android_helper.Initialize(args.test_suite)
+
     # Get test list
-    if _use_adb(args.test_suite):
-        android_helper.PrepareTestSuite(args.test_suite)
-        tests = android_helper.ListTests()
-        if args.test_suite == DEFAULT_TEST_SUITE:
-            android_helper.RunSmokeTest()
+    if android_helper.IsAndroid():
+        tests = android_helper.ListTests(args.test_suite)
     else:
         cmd = [
             angle_test_util.ExecutablePathInCurrentDir(args.test_suite),
@@ -356,6 +350,9 @@ def main():
         logging.error('No tests to run.')
         return EXIT_FAILURE
 
+    if android_helper.IsAndroid() and args.test_suite == ANGLE_PERFTESTS:
+        android_helper.RunSmokeTest()
+
     logging.info('Running %d test%s' % (num_tests, 's' if num_tests > 1 else ' '))
 
     # Run tests
@@ -368,7 +365,7 @@ def main():
     for test_index in range(num_tests):
         test = tests[test_index]
 
-        if _use_adb(args.test_suite):
+        if android_helper.IsAndroid():
             trace = android_helper.GetTraceFromTestName(test)
             if trace and trace not in prepared_traces:
                 android_helper.PrepareRestrictedTraces([trace])

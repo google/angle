@@ -12,7 +12,6 @@
 import argparse
 import contextlib
 import fnmatch
-import functools
 import json
 import logging
 import os
@@ -41,7 +40,7 @@ import test_env
 import xvfb
 
 
-DEFAULT_TEST_SUITE = 'angle_perftests'
+ANGLE_PERFTESTS = 'angle_perftests'
 DEFAULT_TEST_PREFIX = 'TracePerfTest.Run/vulkan_'
 SWIFTSHADER_TEST_PREFIX = 'TracePerfTest.Run/vulkan_swiftshader_'
 DEFAULT_SCREENSHOT_PREFIX = 'angle_vulkan_'
@@ -117,14 +116,9 @@ def add_skia_gold_args(parser):
         'pre-authenticated. Meant for testing locally instead of on the bots.')
 
 
-@functools.lru_cache()
-def _use_adb(test_suite):
-    return android_helper.ApkFileExists(test_suite)
-
-
 def run_wrapper(test_suite, cmd_args, args, env, stdoutfile):
-    if _use_adb(args.test_suite):
-        return android_helper.RunTests(cmd_args, stdoutfile)[0]
+    if android_helper.IsAndroid():
+        return android_helper.RunTests(test_suite, cmd_args, stdoutfile)[0]
 
     cmd = [angle_test_util.ExecutablePathInCurrentDir(test_suite)] + cmd_args
 
@@ -175,7 +169,7 @@ def get_skia_gold_keys(args, env):
     if args.swiftshader:
         sysinfo_args.append('--swiftshader')
 
-    if _use_adb(args.test_suite):
+    if android_helper.IsAndroid():
         json_data = android_helper.AngleSystemInfo(sysinfo_args)
         logging.info(json_data)
     else:
@@ -308,10 +302,8 @@ def _get_gtest_filter_for_batch(args, batch):
 def _run_tests(args, tests, extra_flags, env, screenshot_dir, results, test_results):
     keys = get_skia_gold_keys(args, env)
 
-    if _use_adb(args.test_suite):
-        android_helper.PrepareTestSuite(args.test_suite)
-        if args.test_suite == DEFAULT_TEST_SUITE:
-            android_helper.RunSmokeTest()
+    if android_helper.IsAndroid() and args.test_suite == ANGLE_PERFTESTS:
+        android_helper.RunSmokeTest()
 
     with temporary_dir('angle_skia_gold_') as skia_gold_temp_dir:
         gold_properties = angle_skia_gold_properties.ANGLESkiaGoldProperties(args)
@@ -336,7 +328,7 @@ def _run_tests(args, tests, extra_flags, env, screenshot_dir, results, test_resu
         batches = _get_batches(traces, args.batch_size)
 
         for batch in batches:
-            if _use_adb(args.test_suite):
+            if android_helper.IsAndroid():
                 android_helper.PrepareRestrictedTraces(batch)
 
             for iteration in range(0, args.flaky_retries + 1):
@@ -407,7 +399,7 @@ def main():
     parser.add_argument('--isolated-script-test-output', type=str)
     parser.add_argument('--isolated-script-test-perf-output', type=str)
     parser.add_argument('-f', '--isolated-script-test-filter', '--filter', type=str)
-    parser.add_argument('--test-suite', help='Test suite to run.', default=DEFAULT_TEST_SUITE)
+    parser.add_argument('--test-suite', help='Test suite to run.', default=ANGLE_PERFTESTS)
     parser.add_argument('--render-test-output-dir', help='Directory to store screenshots')
     parser.add_argument('--xvfb', help='Start xvfb.', action='store_true')
     parser.add_argument(
@@ -447,6 +439,8 @@ def main():
 
     if angle_test_util.HasGtestShardsAndIndex(env):
         args.shard_count, args.shard_index = angle_test_util.PopGtestShardsAndIndex(env)
+
+    android_helper.Initialize(args.test_suite)
 
     results = {
         'tests': {},
