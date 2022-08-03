@@ -461,6 +461,21 @@ struct FeaturesGL : FeatureSetBase
         "disableTextureClampToBorder", FeatureCategory::OpenGLWorkarounds,
         "Imagination devices generate INVALID_ENUM when setting the texture border color.",
         &members, "https://anglebug.com/7405"};
+
+    FeatureInfo supportsFragmentShaderInterlockNV = {
+        "supportsFragmentShaderInterlockNV", FeatureCategory::OpenGLFeatures,
+        "GL context supports NV_fragment_shader_interlock extension", &members,
+        "http://anglebug.com/7279"};
+
+    FeatureInfo supportsFragmentShaderOrderingINTEL = {
+        "supportsFragmentShaderOrderingINTEL", FeatureCategory::OpenGLFeatures,
+        "GL context supports GL_INTEL_fragment_shader_ordering extension", &members,
+        "http://anglebug.com/7279"};
+
+    FeatureInfo supportsFragmentShaderInterlockARB = {
+        "supportsFragmentShaderInterlockARB", FeatureCategory::OpenGLFeatures,
+        "GL context supports ARB_fragment_shader_interlock extension", &members,
+        "http://anglebug.com/7279"};
 };
 
 inline FeaturesGL::FeaturesGL()  = default;

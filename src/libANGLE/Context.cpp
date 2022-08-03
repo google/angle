@@ -3678,16 +3678,18 @@ Extensions Context::generateSupportedExtensions() const
     if (getClientVersion() < ES_3_1)
     {
         // Disable ES3.1+ extensions
-        supportedExtensions.geometryShaderEXT       = false;
-        supportedExtensions.geometryShaderOES       = false;
-        supportedExtensions.gpuShader5EXT           = false;
-        supportedExtensions.primitiveBoundingBoxEXT = false;
-        supportedExtensions.shaderImageAtomicOES    = false;
-        supportedExtensions.shaderIoBlocksEXT       = false;
-        supportedExtensions.shaderIoBlocksOES       = false;
-        supportedExtensions.tessellationShaderEXT   = false;
-        supportedExtensions.textureBufferEXT        = false;
-        supportedExtensions.textureBufferOES        = false;
+        supportedExtensions.geometryShaderEXT                    = false;
+        supportedExtensions.geometryShaderOES                    = false;
+        supportedExtensions.gpuShader5EXT                        = false;
+        supportedExtensions.primitiveBoundingBoxEXT              = false;
+        supportedExtensions.shaderImageAtomicOES                 = false;
+        supportedExtensions.shaderIoBlocksEXT                    = false;
+        supportedExtensions.shaderIoBlocksOES                    = false;
+        supportedExtensions.shaderPixelLocalStorageANGLE         = false;
+        supportedExtensions.shaderPixelLocalStorageCoherentANGLE = false;
+        supportedExtensions.tessellationShaderEXT                = false;
+        supportedExtensions.textureBufferEXT                     = false;
+        supportedExtensions.textureBufferOES                     = false;
 
         // TODO(http://anglebug.com/2775): Multisample arrays could be supported on ES 3.0 as well
         // once 2D multisample texture extension is exposed there.
@@ -3723,6 +3725,12 @@ Extensions Context::generateSupportedExtensions() const
     if (getFrontendFeatures().disableAnisotropicFiltering.enabled)
     {
         supportedExtensions.textureFilterAnisotropicEXT = false;
+    }
+
+    if (!getFrontendFeatures().emulatePixelLocalStorage.enabled)
+    {
+        supportedExtensions.shaderPixelLocalStorageANGLE         = false;
+        supportedExtensions.shaderPixelLocalStorageCoherentANGLE = false;
     }
 
     // Some extensions are always available because they are implemented in the GL layer.
@@ -3813,12 +3821,6 @@ Extensions Context::generateSupportedExtensions() const
     // GL_ANDROID_extension_pack_es31a
     supportedExtensions.extensionPackEs31aANDROID =
         CanSupportAEP(getClientVersion(), supportedExtensions);
-
-    // GL_ANGLE_shader_pixel_local_storage is implemented in the front-end.
-    if (getFrontendFeatures().emulatePixelLocalStorage.enabled && getClientVersion() >= ES_3_1)
-    {
-        supportedExtensions.shaderPixelLocalStorageANGLE = true;
-    }
 
     return supportedExtensions;
 }

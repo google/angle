@@ -1101,7 +1101,7 @@ void Builder::generatePreamble(TIntermBlock *blendBlock)
 
     TIntermSequence subpassArguments  = {new TIntermSymbol(mSubpassInputVar)};
     TIntermTyped *subpassLoadFuncCall = CreateBuiltInFunctionCallNode(
-        "subpassLoad", &subpassArguments, *mSymbolTable, kESSLVulkanOnly);
+        "subpassLoad", &subpassArguments, *mSymbolTable, kESSLInternalBackendBuiltIns);
 
     blendBlock->appendStatement(
         CreateTempInitDeclarationNode(&subpassInputData->variable(), subpassLoadFuncCall));

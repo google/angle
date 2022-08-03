@@ -17,6 +17,12 @@
 namespace rx
 {
 
+struct CompilerBackendFeatures
+{
+    // For ANGLE_shader_pixel_local_storage_coherent.
+    ShFragmentSynchronizationType fragmentSynchronizationType = ShFragmentSynchronizationType::None;
+};
+
 class CompilerImpl : angle::NonCopyable
 {
   public:
@@ -25,7 +31,14 @@ class CompilerImpl : angle::NonCopyable
 
     // TODO(jmadill): Expose translator built-in resources init method.
     virtual ShShaderOutput getTranslatorOutputType() const = 0;
+
+    virtual CompilerBackendFeatures getBackendFeatures() const;
 };
+
+inline CompilerBackendFeatures CompilerImpl::getBackendFeatures() const
+{
+    return CompilerBackendFeatures();
+}
 
 }  // namespace rx
 

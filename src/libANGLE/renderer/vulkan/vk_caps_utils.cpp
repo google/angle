@@ -395,6 +395,7 @@ void RendererVk::ensureCapsInitialized() const
     mNativeExtensions.semaphoreFdEXT = getFeatures().supportsExternalSemaphoreFd.enabled;
     mNativeExtensions.semaphoreFuchsiaANGLE =
         getFeatures().supportsExternalSemaphoreFuchsia.enabled;
+    mNativeExtensions.shaderPixelLocalStorageANGLE = true;
 
     mNativeExtensions.vertexHalfFloatOES = true;
 

@@ -367,13 +367,21 @@ TIntermTyped *CreateBuiltInFunctionCallNode(const char *name,
     return TIntermAggregate::CreateBuiltInFunctionCall(*fn, arguments);
 }
 
+TIntermTyped *CreateBuiltInFunctionCallNode(const char *name,
+                                            const std::initializer_list<TIntermNode *> &arguments,
+                                            const TSymbolTable &symbolTable,
+                                            int shaderVersion)
+{
+    TIntermSequence argSequence(arguments);
+    return CreateBuiltInFunctionCallNode(name, &argSequence, symbolTable, shaderVersion);
+}
+
 TIntermTyped *CreateBuiltInUnaryFunctionCallNode(const char *name,
                                                  TIntermTyped *argument,
                                                  const TSymbolTable &symbolTable,
                                                  int shaderVersion)
 {
-    TIntermSequence seq = {argument};
-    return CreateBuiltInFunctionCallNode(name, &seq, symbolTable, shaderVersion);
+    return CreateBuiltInFunctionCallNode(name, {argument}, symbolTable, shaderVersion);
 }
 
 int GetESSLOrGLSLVersion(ShShaderSpec spec, int esslVersion, int glslVersion)

@@ -1328,11 +1328,11 @@ TEST_P(PixelLocalStorageTest, ForgetBarrier)
     PixelLocalStoragePrototype pls;
 
     useProgram(R"(
-    layout(binding=0, r32ui) highp uniform upixelLocalANGLE framebuffer;
+    layout(binding=0, r32f) highp uniform pixelLocalANGLE framebuffer;
     void main()
     {
-        uvec4 dst = pixelLocalLoadANGLE(framebuffer);
-        pixelLocalStoreANGLE(framebuffer, uvec4(color) + dst * 2u);
+        vec4 dst = pixelLocalLoadANGLE(framebuffer);
+        pixelLocalStoreANGLE(framebuffer, color + dst * 2.0);
     })");
 
     // Draw r=100, one pixel at a time, in random order.
@@ -1363,12 +1363,12 @@ TEST_P(PixelLocalStorageTest, ForgetBarrier)
         boxesB_7.push_back(Box{{x, y, x + 1, y + 1}, {7, 0, 0, 0}});
     }
 
-    PLSTestTexture tex(GL_R32UI);
+    PLSTestTexture tex(GL_R32F);
 
     GLFramebuffer fbo;
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-    glFramebufferPixelLocalStorageANGLE(0, tex, 0, 0, W, H, GL_R32UI);
-    glFramebufferPixelLocalClearValueuivANGLE(0, MakeArray<uint32_t>({1, 0, 0, 0}));
+    glFramebufferPixelLocalStorageANGLE(0, tex, 0, 0, W, H, GL_R32F);
+    glFramebufferPixelLocalClearValuefvANGLE(0, MakeArray<float>({1, 0, 0, 0}));
     glViewport(0, 0, W, H);
     glDrawBuffers(0, nullptr);
 
@@ -1380,7 +1380,7 @@ TEST_P(PixelLocalStorageTest, ForgetBarrier)
     glEndPixelLocalStorageANGLE();
 
     attachTextureToScratchFBO(tex);
-    EXPECT_PIXEL_RECT32UI_EQ(0, 0, W, H, GLColor32UI(211, 0, 0, 1));
+    EXPECT_PIXEL_RECT32F_EQ(0, 0, W, H, GLColor32F(211, 0, 0, 1));
 
     ASSERT_GL_NO_ERROR();
 
@@ -1397,9 +1397,9 @@ TEST_P(PixelLocalStorageTest, ForgetBarrier)
     drawBoxes(pls, boxesB_7, UseBarriers::No);
     glEndPixelLocalStorageANGLE();
 
-    uint32_t pixels[H * W * 4];
+    float pixels[H * W * 4];
     attachTextureToScratchFBO(tex);
-    glReadPixels(0, 0, W, H, GL_RGBA_INTEGER, GL_UNSIGNED_INT, pixels);
+    glReadPixels(0, 0, W, H, GL_RGBA, GL_FLOAT, pixels);
     for (int r = 0; r < NUM_PIXELS * 4; r += 4)
     {
         // When two fragments, A and B, touch a pixel, there are 6 possible orderings of operations:
@@ -1421,7 +1421,7 @@ TEST_P(PixelLocalStorageTest, ForgetBarrier)
         {
             printf(__FILE__ "(%i): UNACCEPTABLE value at pixel location [%i, %i]\n", __LINE__,
                    (r / 4) % W, (r / 4) / W);
-            printf("              Got: %u\n", pixels[r]);
+            printf("              Got: %f\n", pixels[r]);
             printf("  Expected one of: { 211, 118, 102, 9 }\n");
         }
         ASSERT_TRUE(isAcceptableValue);
@@ -1690,7 +1690,7 @@ TEST_P(PixelLocalStorageTest, LoadOnly)
 }
 
 // Check that stores and loads in a single shader invocation are coherent.
-TEST_P(PixelLocalStorageTest, CoherentStoreLoad)
+TEST_P(PixelLocalStorageTest, LoadAfterStore)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
 
@@ -1909,6 +1909,110 @@ TEST_P(PixelLocalStorageTest, EarlyFragmentTests)
     ASSERT_GL_NO_ERROR();
 }
 
+// Check that if the "_coherent" extension is advertised, PLS operations are ordered and coherent.
+TEST_P(PixelLocalStorageTest, Coherency)
+{
+    // We could run this test with barriers and non-coherent, but it takes an extremely long time.
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage_coherent"));
+
+    PixelLocalStoragePrototype pls;
+
+    useProgram(R"(
+    layout(binding=0, rgba8ui) lowp uniform upixelLocalANGLE framebuffer;
+    layout(binding=1, rgba8) lowp uniform pixelLocalANGLE tmp;
+    // The application shouldn't be able to override internal synchronization functions used by
+    // the compiler.
+    //
+    // If the compiler accidentally calls any of these functions, stomp out the framebuffer to make
+    // the test fail.
+    void endInvocationInterlockNV() { pixelLocalStoreANGLE(framebuffer, uvec4(0)); }
+    void beginFragmentShaderOrderingINTEL() { pixelLocalStoreANGLE(framebuffer, uvec4(0)); }
+    void beginInvocationInterlockARB() { pixelLocalStoreANGLE(framebuffer, uvec4(0)); }
+
+    // Give these functions a side effect so they don't get pruned, then call them from main().
+    void beginInvocationInterlockNV() { pixelLocalStoreANGLE(tmp, vec4(0)); }
+    void endInvocationInterlockARB() { pixelLocalStoreANGLE(tmp, vec4(0)); }
+
+    void main()
+    {
+        highp uvec4 d = pixelLocalLoadANGLE(framebuffer) >> 1;
+        pixelLocalStoreANGLE(framebuffer, uvec4(color) + d);
+        beginInvocationInterlockNV();
+        endInvocationInterlockARB();
+    })");
+
+    PLSTestTexture tex(GL_RGBA8UI);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferPixelLocalStorageANGLE(0, tex, 0, 0, W, H, GL_RGBA8UI);
+    glFramebufferPixelLocalStorageANGLE(1, 0 /* Memoryless */, 0, 0, W, H, GL_RGBA8);
+    glViewport(0, 0, W, H);
+    glDrawBuffers(0, nullptr);
+
+    std::vector<uint8_t> expected(H * W * 4);
+    memset(expected.data(), 0, H * W * 4);
+
+    // Prepare a ton of random sized boxes in various draws.
+    std::vector<Box> boxesList[5];
+    srand(17);
+    uint32_t boxID = 1;
+    for (auto &boxes : boxesList)
+    {
+        for (int i = 0; i < H * W * 11; ++i)
+        {
+            // Define a box.
+            int w     = rand() % 10 + 1;
+            int h     = rand() % 10 + 1;
+            float x   = rand() % (W - w);
+            float y   = rand() % (H - h);
+            uint8_t r = boxID & 0x7f;
+            uint8_t g = (boxID >> 7) & 0x7f;
+            uint8_t b = (boxID >> 14) & 0x7f;
+            uint8_t a = (boxID >> 21) & 0x7f;
+            ++boxID;
+            // Update expectations.
+            for (int yy = y; yy < y + h; ++yy)
+            {
+                for (int xx = x; xx < x + w; ++xx)
+                {
+                    int p           = (yy * W + xx) * 4;
+                    expected[p]     = r + (expected[p] >> 1);
+                    expected[p + 1] = g + (expected[p + 1] >> 1);
+                    expected[p + 2] = b + (expected[p + 2] >> 1);
+                    expected[p + 3] = a + (expected[p + 3] >> 1);
+                }
+            }
+            // Set up the gpu draw.
+            float x0 = x;
+            float x1 = x + w;
+            float y0 = y;
+            float y1 = y + h;
+            // Allow boxes to have negative widths and heights. This adds randomness by making the
+            // diagonals go in different directions.
+            if (rand() & 1)
+                std::swap(x0, x1);
+            if (rand() & 1)
+                std::swap(y0, y1);
+            boxes.push_back({{x0, y0, x1, y1}, {(float)r, (float)g, (float)b, (float)a}});
+        }
+    }
+
+    glBeginPixelLocalStorageANGLE(2, GLenumArray({GL_ZERO, GL_ZERO}));
+    for (const std::vector<Box> &boxes : boxesList)
+    {
+        drawBoxes(pls, boxes);
+    }
+    glEndPixelLocalStorageANGLE();
+
+    attachTextureToScratchFBO(tex);
+    std::vector<uint8_t> actual(H * W * 4);
+    glReadPixels(0, 0, W, H, GL_RGBA_INTEGER, GL_UNSIGNED_BYTE, actual.data());
+    EXPECT_EQ(expected, actual);
+
+    ASSERT_GL_NO_ERROR();
+}
+
 ANGLE_INSTANTIATE_TEST(
     PixelLocalStorageTest,
     ES31_OPENGL().enable(Feature::EmulatePixelLocalStorage),
@@ -1980,6 +2084,40 @@ TEST_P(PixelLocalStorageCompilerTest, Extension)
     EXPECT_TRUE(
         log.has("ERROR: 0:3: 'pixelLocalANGLE' : undefined use of pixel local storage outside a "
                 "fragment shader"));
+
+    // Internal synchronization functions used by the compiler shouldn't be visible in ESSL.
+    EXPECT_FALSE(log.compileFragmentShader(R"(#version 310 es
+    #extension GL_ANGLE_shader_pixel_local_storage : require
+    void main()
+    {
+        beginInvocationInterlockNV();
+        endInvocationInterlockNV();
+    })"));
+    EXPECT_TRUE(log.has(
+        "ERROR: 0:5: 'beginInvocationInterlockNV' : no matching overloaded function found"));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:6: 'endInvocationInterlockNV' : no matching overloaded function found"));
+
+    EXPECT_FALSE(log.compileFragmentShader(R"(#version 310 es
+    #extension GL_ANGLE_shader_pixel_local_storage : require
+    void main()
+    {
+        beginFragmentShaderOrderingINTEL();
+    })"));
+    EXPECT_TRUE(log.has(
+        "ERROR: 0:5: 'beginFragmentShaderOrderingINTEL' : no matching overloaded function found"));
+
+    EXPECT_FALSE(log.compileFragmentShader(R"(#version 310 es
+    #extension GL_ANGLE_shader_pixel_local_storage : require
+    void main()
+    {
+        beginInvocationInterlockARB();
+        endInvocationInterlockARB();
+    })"));
+    EXPECT_TRUE(log.has(
+        "ERROR: 0:5: 'beginInvocationInterlockARB' : no matching overloaded function found"));
+    EXPECT_TRUE(
+        log.has("ERROR: 0:6: 'endInvocationInterlockARB' : no matching overloaded function found"));
 
     ASSERT_GL_NO_ERROR();
 }

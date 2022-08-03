@@ -9,7 +9,10 @@
 
 #include "libANGLE/renderer/gl/CompilerGL.h"
 
+#include "libANGLE/gles_extensions_autogen.h"
+#include "libANGLE/renderer/gl/ContextGL.h"
 #include "libANGLE/renderer/gl/FunctionsGL.h"
+#include "platform/FeaturesGL_autogen.h"
 
 namespace rx
 {
@@ -83,9 +86,44 @@ ShShaderOutput GetShaderOutputType(const FunctionsGL *functions)
 
 }  // anonymous namespace
 
-CompilerGL::CompilerGL(const FunctionsGL *functions)
-    : mTranslatorOutputType(GetShaderOutputType(functions))
-{}
+CompilerGL::CompilerGL(const ContextGL *context)
+    : mTranslatorOutputType(GetShaderOutputType(context->getFunctions()))
+{
+    if (context->getExtensions().shaderPixelLocalStorageCoherentANGLE)
+    {
+        const angle::FeaturesGL &features = context->getFeaturesGL();
+        // Prefer vendor-specific extensions first. The PixelLocalStorageTest.Coherency test doesn't
+        // always pass on Intel when we use the ARB extension.
+        if (features.supportsFragmentShaderInterlockNV.enabled)
+        {
+            // This extension requires 430+. GetShaderOutputType() should always select 430+ on a GL
+            // 4.3 context, where this extension is defined.
+            ASSERT(context->getFunctions()->isAtLeastGL(gl::Version(4, 3)));
+            ASSERT(mTranslatorOutputType >= SH_GLSL_430_CORE_OUTPUT);
+            mBackendFeatures.fragmentSynchronizationType =
+                ShFragmentSynchronizationType::FragmentShaderInterlock_NV_GL;
+        }
+        else if (features.supportsFragmentShaderOrderingINTEL.enabled)
+        {
+            // This extension requires 440+. GetShaderOutputType() should always select 440+ on a GL
+            // 4.4 context, where this extension is defined.
+            ASSERT(context->getFunctions()->isAtLeastGL(gl::Version(4, 4)));
+            ASSERT(mTranslatorOutputType >= SH_GLSL_440_CORE_OUTPUT);
+            mBackendFeatures.fragmentSynchronizationType =
+                ShFragmentSynchronizationType::FragmentShaderOrdering_INTEL_GL;
+        }
+        else
+        {
+            ASSERT(features.supportsFragmentShaderInterlockARB.enabled);
+            // This extension requires 450+. GetShaderOutputType() should always select 450+ on a GL
+            // 4.5 context, where this extension is defined.
+            ASSERT(context->getFunctions()->isAtLeastGL(gl::Version(4, 5)));
+            ASSERT(mTranslatorOutputType >= SH_GLSL_450_CORE_OUTPUT);
+            mBackendFeatures.fragmentSynchronizationType =
+                ShFragmentSynchronizationType::FragmentShaderInterlock_ARB_GL;
+        }
+    }
+}
 
 ShShaderOutput CompilerGL::getTranslatorOutputType() const
 {
