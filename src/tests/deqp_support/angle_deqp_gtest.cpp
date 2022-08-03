@@ -106,7 +106,7 @@ constexpr APIInfo kEGLDisplayAPIs[] = {
     {"angle-swiftshader", GPUTestConfig::kAPISwiftShader},
     {"angle-vulkan", GPUTestConfig::kAPIVulkan},
     {"win32", GPUTestConfig::kAPIUnknown},
-    {"window", GPUTestConfig::kAPIUnknown},
+    {"x11", GPUTestConfig::kAPIUnknown},
 };
 
 constexpr char kdEQPEGLString[]     = "--deqp-egl-display-type=";
