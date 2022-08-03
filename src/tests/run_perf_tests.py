@@ -29,8 +29,6 @@ import angle_test_util
 
 angle_path_util.AddDepsDirToPath('testing/scripts')
 import common
-import test_env
-import xvfb
 
 angle_path_util.AddDepsDirToPath('third_party/catapult/tracing')
 from tracing.value import histogram
@@ -45,9 +43,6 @@ DEFAULT_MAX_ERRORS = 3
 DEFAULT_WARMUP_LOOPS = 2
 DEFAULT_CALIBRATION_TIME = 2
 
-# Filters out stuff like: " I   72.572s run_tests_on_device(96071FFAZ00096) "
-ANDROID_LOGGING_PREFIX = r'I +\d+.\d+s \w+\(\w+\)  '
-
 # Test expectations
 FAIL = 'FAIL'
 PASS = 'PASS'
@@ -55,53 +50,6 @@ SKIP = 'SKIP'
 
 EXIT_FAILURE = 1
 EXIT_SUCCESS = 0
-
-
-def _popen(*args, **kwargs):
-    assert 'creationflags' not in kwargs
-    if sys.platform == 'win32':
-        # Necessary for signal handling. See crbug.com/733612#c6.
-        kwargs['creationflags'] = subprocess.CREATE_NEW_PROCESS_GROUP
-    return subprocess.Popen(*args, **kwargs)
-
-
-def run_command_with_output(argv, stdoutfile, env=None, cwd=None, log=True):
-    assert stdoutfile
-    with io.open(stdoutfile, 'wb') as writer, \
-          io.open(stdoutfile, 'rb') as reader:
-        process = _popen(argv, env=env, cwd=cwd, stdout=writer, stderr=subprocess.STDOUT)
-        test_env.forward_signals([process])
-        while process.poll() is None:
-            if log:
-                sys.stdout.write(reader.read().decode('utf-8'))
-            # This sleep is needed for signal propagation. See the
-            # wait_with_signals() docstring.
-            time.sleep(0.1)
-        if log:
-            sys.stdout.write(reader.read().decode('utf-8'))
-        return process.returncode
-
-
-def _run_and_get_output(args, cmd, env, runner_args):
-    if android_helper.IsAndroid():
-        result, output = android_helper.RunTests(
-            args.test_suite, cmd[1:], log_output=args.show_test_stdout)
-        return result, output.decode().split('\n')
-
-    runner_cmd = cmd + runner_args
-
-    lines = []
-    logging.debug(' '.join(runner_cmd))
-    with common.temporary_file() as tempfile_path:
-        if args.xvfb:
-            exit_code = xvfb.run_executable(runner_cmd, env, stdoutfile=tempfile_path)
-        else:
-            exit_code = run_command_with_output(
-                runner_cmd, env=env, stdoutfile=tempfile_path, log=args.show_test_stdout)
-        with open(tempfile_path) as f:
-            for line in f:
-                lines.append(line.strip())
-    return exit_code, lines
 
 
 def _filter_tests(tests, pattern):
@@ -113,7 +61,6 @@ def _shard_tests(tests, shard_count, shard_index):
 
 
 def _get_results_from_output(output, result):
-    output = '\n'.join(output)
     m = re.search(r'Running (\d+) tests', output)
     if m and int(m.group(1)) > 1:
         raise Exception('Found more than one test result in output')
@@ -130,23 +77,11 @@ def _get_results_from_output(output, result):
     return [float(value) for value in m]
 
 
-def _get_tests_from_output(lines):
-    seen_start_of_tests = False
-    tests = []
-    android_prefix = re.compile(ANDROID_LOGGING_PREFIX)
-    logging.debug('Read %d lines from test output.' % len(lines))
-    for line in lines:
-        line = android_prefix.sub('', line.strip())
-        if line == 'Tests list:':
-            seen_start_of_tests = True
-        elif line == 'End tests list.':
-            break
-        elif seen_start_of_tests:
-            tests.append(line)
-    if not seen_start_of_tests:
-        raise Exception('Did not find test list in test output!')
-    logging.debug('Found %d tests from test output.' % len(tests))
-    return tests
+def _get_tests_from_output(output):
+    out_lines = output.split('\n')
+    start = out_lines.index('Tests list:')
+    end = out_lines.index('End tests list.')
+    return out_lines[start + 1:end]
 
 
 def _truncated_list(data, n):
@@ -323,21 +258,26 @@ def main():
     if angle_test_util.HasGtestShardsAndIndex(env):
         args.shard_count, args.shard_index = angle_test_util.PopGtestShardsAndIndex(env)
 
-    android_helper.Initialize(args.test_suite)
+    angle_test_util.Initialize(args.test_suite)
 
     # Get test list
-    if android_helper.IsAndroid():
+    if angle_test_util.IsAndroid():
         tests = android_helper.ListTests(args.test_suite)
     else:
-        cmd = [
-            angle_test_util.ExecutablePathInCurrentDir(args.test_suite),
+        cmd_args = [
             '--list-tests',
             '--verbose',
         ]
-        exit_code, lines = _run_and_get_output(args, cmd, env, [])
+        exit_code, output = angle_test_util.RunTestSuite(
+            args.test_suite,
+            cmd_args,
+            env,
+            runner_args=[],
+            use_xvfb=args.xvfb,
+            show_test_stdout=args.show_test_stdout)
         if exit_code != EXIT_SUCCESS:
-            logging.fatal('Could not find test list from test output:\n%s' % '\n'.join(lines))
-        tests = _get_tests_from_output(lines)
+            logging.fatal('Could not find test list from test output:\n%s' % output)
+        tests = _get_tests_from_output(output)
 
     if args.filter:
         tests = _filter_tests(tests, args.filter)
@@ -350,7 +290,7 @@ def main():
         logging.error('No tests to run.')
         return EXIT_FAILURE
 
-    if android_helper.IsAndroid() and args.test_suite == ANGLE_PERFTESTS:
+    if angle_test_util.IsAndroid() and args.test_suite == ANGLE_PERFTESTS:
         android_helper.RunSmokeTest()
 
     logging.info('Running %d test%s' % (num_tests, 's' if num_tests > 1 else ' '))
@@ -365,14 +305,13 @@ def main():
     for test_index in range(num_tests):
         test = tests[test_index]
 
-        if android_helper.IsAndroid():
+        if angle_test_util.IsAndroid():
             trace = android_helper.GetTraceFromTestName(test)
             if trace and trace not in prepared_traces:
                 android_helper.PrepareRestrictedTraces([trace])
                 prepared_traces.add(trace)
 
-        cmd = [
-            angle_test_util.ExecutablePathInCurrentDir(args.test_suite),
+        cmd_args = [
             '--gtest_filter=%s' % test,
             '--verbose',
             '--calibration-time',
@@ -387,16 +326,20 @@ def main():
         if args.steps_per_trial:
             steps_per_trial = args.steps_per_trial
         else:
-            cmd_calibrate = cmd + [
+            calibrate_args = cmd_args + [
                 '--calibration',
                 '--warmup-loops',
                 str(args.warmup_loops),
             ]
-            exit_code, calibrate_output = _run_and_get_output(args, cmd_calibrate, env,
-                                                              runner_args)
+            exit_code, calibrate_output = angle_test_util.RunTestSuite(
+                args.test_suite,
+                calibrate_args,
+                env,
+                runner_args=runner_args,
+                use_xvfb=args.xvfb,
+                show_test_stdout=args.show_test_stdout)
             if exit_code != EXIT_SUCCESS:
-                logging.fatal('%s failed. Output:\n%s' %
-                              (cmd_calibrate[0], '\n'.join(calibrate_output)))
+                logging.fatal('%s failed. Output:\n%s' % (args.test_suite, calibrate_output))
                 total_errors += 1
                 results.result_fail(test)
                 continue
@@ -417,7 +360,7 @@ def main():
                 logging.error('Error count exceeded max errors (%d). Aborting.' % args.max_errors)
                 return EXIT_FAILURE
 
-            cmd_run = cmd + [
+            run_args = cmd_args + [
                 '--steps-per-trial',
                 str(steps_per_trial),
                 '--trials',
@@ -425,18 +368,24 @@ def main():
             ]
 
             if args.smoke_test_mode:
-                cmd_run += ['--no-warmup']
+                run_args += ['--no-warmup']
             else:
-                cmd_run += ['--warmup-loops', str(args.warmup_loops)]
+                run_args += ['--warmup-loops', str(args.warmup_loops)]
 
             if args.perf_counters:
-                cmd_run += ['--perf-counters', args.perf_counters]
+                run_args += ['--perf-counters', args.perf_counters]
 
             with common.temporary_file() as histogram_file_path:
-                cmd_run += ['--isolated-script-test-perf-output=%s' % histogram_file_path]
-                exit_code, output = _run_and_get_output(args, cmd_run, env, runner_args)
+                run_args += ['--isolated-script-test-perf-output=%s' % histogram_file_path]
+                exit_code, output = angle_test_util.RunTestSuite(
+                    args.test_suite,
+                    run_args,
+                    env,
+                    runner_args=runner_args,
+                    use_xvfb=args.xvfb,
+                    show_test_stdout=args.show_test_stdout)
                 if exit_code != EXIT_SUCCESS:
-                    logging.error('%s failed. Output:\n%s' % (cmd_run[0], '\n'.join(output)))
+                    logging.error('%s failed. Output:\n%s' % (args.test_suite, output))
                     results.result_fail(test)
                     total_errors += 1
                     break

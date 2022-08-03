@@ -346,7 +346,7 @@ def RunSmokeTest():
     logging.info('Smoke test passed')
 
 
-def RunTests(test_suite, args, stdoutfile=None, output_dir=None, log_output=True):
+def RunTests(test_suite, args, stdoutfile=None, log_output=True):
     _EnsureTestSuite(test_suite)
 
     args = args[:]
