@@ -978,7 +978,6 @@ Error Display::initialize()
 
     gl::InitializeDebugMutexIfNeeded();
 
-    SCOPED_ANGLE_HISTOGRAM_TIMER("GPU.ANGLE.DisplayInitializeMS");
     ANGLE_TRACE_EVENT0("gpu.angle", "egl::Display::initialize");
 
     if (isInitialized())
