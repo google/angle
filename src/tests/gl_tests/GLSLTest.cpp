@@ -15937,6 +15937,34 @@ void main()
 
     ANGLE_GL_PROGRAM(testProgram, kVS, kFS);
 }
+
+// Tests adding a struct definition inline in a shader.
+// Metal backend contains a pass that separates struct definition and declaration.
+TEST_P(GLSLTest_ES3, StructInShader)
+{
+    const char kVS[] = R"(#version 300 es
+precision highp float;
+void main(void)
+{
+    struct structMain {
+        float i;
+    } testStruct;
+
+    testStruct.i = 5.0 ;
+    gl_Position = vec4(testStruct.i - 4.0, 0, 0, 1);
+})";
+
+    const char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 color;
+void main()
+{
+    color = vec4(0,1,0,0);
+})";
+
+    ANGLE_GL_PROGRAM(testProgram, kVS, kFS);
+}
+
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(GLSLTest,

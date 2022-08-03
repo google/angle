@@ -1016,6 +1016,11 @@ bool TranslatorMetalDirect::translateImpl(TInfoSinkBase &sink,
         return false;
     }
 
+    if (!SeparateCompoundStructDeclarations(*this, idGen, *root, &getSymbolTable()))
+    {
+        return false;
+    }
+
     if (!SeparateCompoundExpressions(*this, symbolEnv, idGen, *root))
     {
         return false;
@@ -1043,11 +1048,6 @@ bool TranslatorMetalDirect::translateImpl(TInfoSinkBase &sink,
     // Note: ReduceInterfaceBlocks removes row_major matrix layout specifiers
     // so it must come after RewriteRowMajorMatrices.
     if (!ReduceInterfaceBlocks(*this, *root, idGen, &getSymbolTable()))
-    {
-        return false;
-    }
-
-    if (!SeparateCompoundStructDeclarations(*this, idGen, *root, &getSymbolTable()))
     {
         return false;
     }
