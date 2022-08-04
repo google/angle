@@ -18,6 +18,7 @@
 #include "test_utils/gl_raii.h"
 #include "util/random_utils.h"
 #include "util/shader_utils.h"
+#include "util/test_utils.h"
 
 using namespace angle;
 
@@ -582,22 +583,21 @@ TEST_P(VulkanPerformanceCounterTest, NewTextureDoesNotBreakRenderPass)
 TEST_P(VulkanPerformanceCounterTest, SubmittingOutsideCommandBufferDoesNotBreakRenderPass)
 {
     initANGLEFeatures();
-    // http://anglebug.com/6354
 
-    size_t kMaxBufferToImageCopySize     = 64 * 1024 * 1024;
-    uint64_t kNumSubmits                 = 2;
-    uint64_t expectedRenderPassCount     = getPerfCounters().renderPasses + 1;
+    constexpr size_t kMaxBufferToImageCopySize = 64 * 1024 * 1024;
+    constexpr uint64_t kNumSubmits             = 2;
+    uint64_t expectedRenderPassCount           = getPerfCounters().renderPasses + 1;
     uint64_t expectedSubmitCommandsCount = getPerfCounters().vkQueueSubmitCallsTotal + kNumSubmits;
 
     // Step 1: Set up a simple 2D texture.
     GLTexture texture;
-    GLsizei texDim         = 256;
-    uint32_t pixelSizeRGBA = 4;
-    uint32_t textureSize   = texDim * texDim * pixelSizeRGBA;
-    std::vector<GLColor> kInitialData(texDim * texDim, GLColor::green);
+    constexpr GLsizei kTexDim         = 256;
+    constexpr uint32_t kPixelSizeRGBA = 4;
+    constexpr uint32_t kTextureSize   = kTexDim * kTexDim * kPixelSizeRGBA;
+    std::vector<GLColor> kInitialData(kTexDim * kTexDim, GLColor::green);
 
     glBindTexture(GL_TEXTURE_2D, texture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texDim, texDim, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kTexDim, kTexDim, 0, GL_RGBA, GL_UNSIGNED_BYTE,
                  kInitialData.data());
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -624,13 +624,12 @@ TEST_P(VulkanPerformanceCounterTest, SubmittingOutsideCommandBufferDoesNotBreakR
 
     // Step 2: Load a new 2D Texture multiple times with the same Program and Framebuffer. The total
     // size of the loaded textures must exceed the threshold to submit the outside command buffer.
-    auto maxLoadCount =
-        static_cast<size_t>((kMaxBufferToImageCopySize / textureSize) * kNumSubmits + 1);
-    for (size_t loadCount = 0; loadCount < maxLoadCount; loadCount++)
+    constexpr size_t kMaxLoadCount = kMaxBufferToImageCopySize / kTextureSize * kNumSubmits + 1;
+    for (size_t loadCount = 0; loadCount < kMaxLoadCount; loadCount++)
     {
         GLTexture newTexture;
         glBindTexture(GL_TEXTURE_2D, newTexture);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texDim, texDim, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kTexDim, kTexDim, 0, GL_RGBA, GL_UNSIGNED_BYTE,
                      kInitialData.data());
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -642,6 +641,96 @@ TEST_P(VulkanPerformanceCounterTest, SubmittingOutsideCommandBufferDoesNotBreakR
     // Verify render pass and submitted frame counts.
     EXPECT_EQ(getPerfCounters().renderPasses, expectedRenderPassCount);
     EXPECT_EQ(getPerfCounters().vkQueueSubmitCallsTotal, expectedSubmitCommandsCount);
+}
+
+// Tests that submitting the outside command buffer due to texture upload size does not result in
+// garbage collection of render pass resources..
+TEST_P(VulkanPerformanceCounterTest, SubmittingOutsideCommandBufferDoesNotCollectRenderPassGarbage)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_disjoint_timer_query"));
+
+    initANGLEFeatures();
+
+    uint64_t expectedRenderPassCount = getPerfCounters().renderPasses + 1;
+    uint64_t submitCommandsCount     = getPerfCounters().vkQueueSubmitCallsTotal;
+
+    // Set up a simple 2D texture.
+    GLTexture texture;
+    constexpr GLsizei kTexDim = 256;
+    std::vector<GLColor> kInitialData(kTexDim * kTexDim, GLColor::green);
+
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kTexDim, kTexDim, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 kInitialData.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    auto quadVerts = GetQuadVertices();
+
+    GLBuffer vertexBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, quadVerts.size() * sizeof(quadVerts[0]), quadVerts.data(),
+                 GL_STATIC_DRAW);
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Texture2D(), essl1_shaders::fs::Texture2D());
+    glUseProgram(program);
+
+    GLint posLoc = glGetAttribLocation(program, essl1_shaders::PositionAttrib());
+    ASSERT_NE(-1, posLoc);
+
+    glVertexAttribPointer(posLoc, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(posLoc);
+    ASSERT_GL_NO_ERROR();
+
+    // Issue a timestamp query, just for the sake of using it as a means of knowing when a
+    // submission is finished.  In the Vulkan backend, querying the status of the query results in a
+    // check of completed submissions, at which point associated garbage is also destroyed.
+    GLQuery query;
+    glQueryCounterEXT(query, GL_TIMESTAMP_EXT);
+
+    // Issue a draw call, and delete the program
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    ASSERT_GL_NO_ERROR();
+    program.reset();
+
+    ANGLE_GL_PROGRAM(program2, essl1_shaders::vs::Texture2D(), essl1_shaders::fs::Texture2D());
+    glUseProgram(program2);
+    ASSERT_EQ(posLoc, glGetAttribLocation(program2, essl1_shaders::PositionAttrib()));
+
+    // Issue uploads until there's an implicit submission
+    while (getPerfCounters().vkQueueSubmitCallsTotal == submitCommandsCount)
+    {
+        GLTexture newTexture;
+        glBindTexture(GL_TEXTURE_2D, newTexture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kTexDim, kTexDim, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     kInitialData.data());
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+        ASSERT_GL_NO_ERROR();
+    }
+
+    ++submitCommandsCount;
+    EXPECT_EQ(getPerfCounters().vkQueueSubmitCallsTotal, submitCommandsCount);
+
+    // Busy wait until the query results are available.
+    GLuint ready = GL_FALSE;
+    while (ready == GL_FALSE)
+    {
+        angle::Sleep(0);
+        glGetQueryObjectuivEXT(query, GL_QUERY_RESULT_AVAILABLE_EXT, &ready);
+    }
+
+    // At this point, the render pass should still not be submitted, and the pipeline that is
+    // deleted should still not be garbage collected.  Submit the commands and ensure there is no
+    // crash.
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    ++submitCommandsCount;
+
+    // Verify counters.
+    EXPECT_EQ(getPerfCounters().renderPasses, expectedRenderPassCount);
+    EXPECT_EQ(getPerfCounters().vkQueueSubmitCallsTotal, submitCommandsCount);
 }
 
 // Tests that RGB texture should not break renderpass.
