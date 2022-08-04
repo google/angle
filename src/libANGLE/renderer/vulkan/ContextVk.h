@@ -1208,9 +1208,19 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     void writeAtomicCounterBufferDriverUniformOffsets(uint32_t *offsetsOut, size_t offsetsSize);
 
-    angle::Result submitFrame(const vk::Semaphore *signalSemaphore, Serial *submitSerialOut);
+    enum class Submit
+    {
+        OutsideRenderPassCommandsOnly,
+        AllCommands,
+    };
+
+    angle::Result submitFrame(const vk::Semaphore *signalSemaphore,
+                              Submit submission,
+                              Serial *submitSerialOut);
     angle::Result submitFrameOutsideCommandBufferOnly(Serial *submitSerialOut);
-    angle::Result submitCommands(const vk::Semaphore *signalSemaphore, Serial *submitSerialOut);
+    angle::Result submitCommands(const vk::Semaphore *signalSemaphore,
+                                 Submit submission,
+                                 Serial *submitSerialOut);
 
     angle::Result synchronizeCpuGpuTime();
     angle::Result traceGpuEventImpl(vk::OutsideRenderPassCommandBuffer *commandBuffer,

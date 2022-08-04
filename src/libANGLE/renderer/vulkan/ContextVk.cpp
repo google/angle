@@ -3072,14 +3072,16 @@ void ContextVk::addOverlayUsedBuffersCount(vk::CommandBufferHelperCommon *comman
     }
 }
 
-angle::Result ContextVk::submitFrame(const vk::Semaphore *signalSemaphore, Serial *submitSerialOut)
+angle::Result ContextVk::submitFrame(const vk::Semaphore *signalSemaphore,
+                                     Submit submission,
+                                     Serial *submitSerialOut)
 {
     getShareGroup()->acquireResourceUseList(
         std::move(mOutsideRenderPassCommands->releaseResourceUseList()));
     getShareGroup()->acquireResourceUseList(
         std::move(mRenderPassCommands->releaseResourceUseList()));
 
-    ANGLE_TRY(submitCommands(signalSemaphore, submitSerialOut));
+    ANGLE_TRY(submitCommands(signalSemaphore, submission, submitSerialOut));
 
     mHasAnyCommandsPendingSubmission = false;
 
@@ -3093,10 +3095,11 @@ angle::Result ContextVk::submitFrameOutsideCommandBufferOnly(Serial *submitSeria
     getShareGroup()->acquireResourceUseList(
         std::move(mOutsideRenderPassCommands->releaseResourceUseList()));
 
-    return submitCommands(nullptr, submitSerialOut);
+    return submitCommands(nullptr, Submit::OutsideRenderPassCommandsOnly, submitSerialOut);
 }
 
 angle::Result ContextVk::submitCommands(const vk::Semaphore *signalSemaphore,
+                                        Submit submission,
                                         Serial *submitSerialOut)
 {
     if (mCurrentWindowSurface)
@@ -3115,10 +3118,18 @@ angle::Result ContextVk::submitCommands(const vk::Semaphore *signalSemaphore,
         dumpCommandStreamDiagnostics();
     }
 
+    // Clean up garbage only when submitting all commands.  Otherwise there may be garbage
+    // associated with commands that are not yet flushed.
+    vk::GarbageList garbage;
+    if (submission == Submit::AllCommands)
+    {
+        garbage = std::move(mCurrentGarbage);
+    }
+
     ANGLE_TRY(mRenderer->submitFrame(this, hasProtectedContent(), mContextPriority,
                                      std::move(mWaitSemaphores),
                                      std::move(mWaitSemaphoreStageMasks), signalSemaphore,
-                                     std::move(mCurrentGarbage), &mCommandPools, submitSerialOut));
+                                     std::move(garbage), &mCommandPools, submitSerialOut));
 
     getShareGroup()->releaseResourceUseLists(*submitSerialOut);
     // Now that we have processed resourceUseList, some of pending garbage may no longer pending
@@ -6686,7 +6697,7 @@ angle::Result ContextVk::flushAndGetSerial(const vk::Semaphore *signalSemaphore,
         mHasInFlightStreamedVertexBuffers.reset();
     }
 
-    ANGLE_TRY(submitFrame(signalSemaphore, submitSerialOut));
+    ANGLE_TRY(submitFrame(signalSemaphore, Submit::AllCommands, submitSerialOut));
 
     ASSERT(mWaitSemaphores.empty());
     ASSERT(mWaitSemaphoreStageMasks.empty());
