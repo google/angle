@@ -377,7 +377,7 @@ def main():
             '--verbose',
             '--calibration-time',
             str(args.calibration_time),
-        ]
+        ] + extra_flags
         runner_args = [
             '--extract-test-list-from-filter',
             '--enable-device-cache',
