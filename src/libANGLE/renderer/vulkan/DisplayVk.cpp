@@ -486,6 +486,9 @@ void ShareGroupVk::releaseResourceUseLists(const Serial &submitSerial)
 
 angle::Result ShareGroupVk::onMutableTextureUpload(ContextVk *contextVk, TextureVk *newTexture)
 {
+    // This feature is currently disabled in the case of display-level texture sharing.
+    ASSERT(!contextVk->hasDisplayTextureShareGroup());
+
     // If the previous texture is null, it should be set to the current texture. We also have to
     // make sure that the previous texture pointer is still a mutable texture. Otherwise, we skip
     // the optimization.
