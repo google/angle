@@ -33,6 +33,7 @@
 #include "compiler/translator/tree_ops/FoldExpressions.h"
 #include "compiler/translator/tree_ops/ForcePrecisionQualifier.h"
 #include "compiler/translator/tree_ops/InitializeVariables.h"
+#include "compiler/translator/tree_ops/MonomorphizeUnsupportedFunctions.h"
 #include "compiler/translator/tree_ops/PruneEmptyCases.h"
 #include "compiler/translator/tree_ops/PruneNoOps.h"
 #include "compiler/translator/tree_ops/RemoveArrayLengthMethod.h"
@@ -803,6 +804,15 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     }
 
     if (mShaderVersion >= 310 && !ValidateVaryingLocations(root, &mDiagnostics, mShaderType))
+    {
+        return false;
+    }
+
+    // anglebug.com/7484: The ESSL spec has a bug with images as function arguments. The recommended
+    // workaround is to inline functions that accept image arguments.
+    if (mShaderVersion >= 310 && !MonomorphizeUnsupportedFunctions(
+                                     this, root, &mSymbolTable, compileOptions,
+                                     UnsupportedFunctionArgsBitSet{UnsupportedFunctionArgs::Image}))
     {
         return false;
     }
