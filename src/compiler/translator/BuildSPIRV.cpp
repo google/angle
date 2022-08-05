@@ -1677,8 +1677,7 @@ void SPIRVBuilder::addCapability(spv::Capability capability)
 
 void SPIRVBuilder::addExecutionMode(spv::ExecutionMode executionMode)
 {
-    ASSERT(static_cast<size_t>(executionMode) < mExecutionModes.size());
-    mExecutionModes.set(executionMode);
+    mExecutionModes.insert(executionMode);
 }
 
 void SPIRVBuilder::addExtension(SPIRVExtensions extension)
@@ -2239,10 +2238,9 @@ void SPIRVBuilder::writeExecutionModes(spirv::Blob *blob)
     }
 
     // Add any execution modes that were added due to built-ins used in the shader.
-    for (size_t executionMode : mExecutionModes)
+    for (spv::ExecutionMode executionMode : mExecutionModes)
     {
-        spirv::WriteExecutionMode(blob, mEntryPointId,
-                                  static_cast<spv::ExecutionMode>(executionMode), {});
+        spirv::WriteExecutionMode(blob, mEntryPointId, executionMode, {});
     }
 }
 
@@ -2254,6 +2252,9 @@ void SPIRVBuilder::writeExtensions(spirv::Blob *blob)
         {
             case SPIRVExtensions::MultiviewOVR:
                 spirv::WriteExtension(blob, "SPV_KHR_multiview");
+                break;
+            case SPIRVExtensions::FragmentShaderInterlockARB:
+                spirv::WriteExtension(blob, "SPV_EXT_fragment_shader_interlock");
                 break;
             default:
                 UNREACHABLE();
@@ -2269,6 +2270,9 @@ void SPIRVBuilder::writeSourceExtensions(spirv::Blob *blob)
         {
             case SPIRVExtensions::MultiviewOVR:
                 spirv::WriteSourceExtension(blob, "GL_OVR_multiview");
+                break;
+            case SPIRVExtensions::FragmentShaderInterlockARB:
+                spirv::WriteSourceExtension(blob, "GL_ARB_fragment_shader_interlock");
                 break;
             default:
                 UNREACHABLE();

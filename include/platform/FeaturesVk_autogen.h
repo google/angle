@@ -647,6 +647,14 @@ struct FeaturesVk : FeatureSetBase
         "VkDevice supports VK_KHR_fragment_shading_rate extension", &members,
         "http://anglebug.com/7172"};
 
+    FeatureInfo supportsFragmentShaderPixelInterlock = {
+        "supportsFragmentShaderPixelInterlock",
+        FeatureCategory::VulkanFeatures,
+        "VkDevice supports the VK_EXT_fragment_shader_interlock extension "
+        "and has the fragmentShaderPixelInterlock feature",
+        &members,
+    };
+
     FeatureInfo explicitlyEnablePerSampleShading = {
         "explicitlyEnablePerSampleShading", FeatureCategory::VulkanWorkarounds,
         "Explicitly enable per-sample shading if the fragment shader contains the "

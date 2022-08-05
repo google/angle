@@ -395,7 +395,6 @@ void RendererVk::ensureCapsInitialized() const
     mNativeExtensions.semaphoreFdEXT = getFeatures().supportsExternalSemaphoreFd.enabled;
     mNativeExtensions.semaphoreFuchsiaANGLE =
         getFeatures().supportsExternalSemaphoreFuchsia.enabled;
-    mNativeExtensions.shaderPixelLocalStorageANGLE = true;
 
     mNativeExtensions.vertexHalfFloatOES = true;
 
@@ -1135,6 +1134,11 @@ void RendererVk::ensureCapsInitialized() const
 
     // GL_QCOM_shading_rate
     mNativeExtensions.shadingRateQCOM = mFeatures.supportsFragmentShadingRate.enabled;
+
+    // GL_ANGLE_shader_pixel_local_storage
+    mNativeExtensions.shaderPixelLocalStorageANGLE = true;
+    mNativeExtensions.shaderPixelLocalStorageCoherentANGLE =
+        getFeatures().supportsFragmentShaderPixelInterlock.enabled;
 }
 
 namespace vk

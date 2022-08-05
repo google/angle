@@ -294,8 +294,11 @@ enum class SPIRVExtensions
     // GL_OVR_multiview / SPV_KHR_multiview
     MultiviewOVR = 0,
 
-    InvalidEnum = 1,
-    EnumCount   = 1,
+    // GL_ARB_fragment_shader_interlock / SPV_EXT_fragment_shader_interlock
+    FragmentShaderInterlockARB = 1,
+
+    InvalidEnum = 2,
+    EnumCount   = 2,
 };
 
 // Helper class to construct SPIR-V
@@ -472,7 +475,7 @@ class SPIRVBuilder : angle::NonCopyable
     // Execution modes the shader is using.  Most execution modes are automatically derived from
     // shader metadata, but some are only discovered while traversing the tree.  Only the latter
     // execution modes are stored here.
-    angle::BitSet<32> mExecutionModes;
+    std::set<spv::ExecutionMode> mExecutionModes;
     // Extensions used by the shader.
     angle::PackedEnumBitSet<SPIRVExtensions> mExtensions;
 

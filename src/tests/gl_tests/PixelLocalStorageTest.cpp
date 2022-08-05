@@ -1386,7 +1386,8 @@ TEST_P(PixelLocalStorageTest, ForgetBarrier)
 
     // Vulkan generates rightful "SYNC-HAZARD-READ_AFTER_WRITE" validation errors when we omit the
     // barrier.
-    ANGLE_SKIP_TEST_IF(IsVulkan());
+    ANGLE_SKIP_TEST_IF(IsVulkan() &&
+                       !IsGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage_coherent"));
 
     // Now forget to insert the barrier and ensure our nondeterminism still falls within predictable
     // constraints.
@@ -2022,7 +2023,12 @@ ANGLE_INSTANTIATE_TEST(
     ES31_VULKAN().enable(Feature::EmulatePixelLocalStorage).enable(Feature::AsyncCommandQueue),
     ES31_VULKAN_SWIFTSHADER()
         .enable(Feature::EmulatePixelLocalStorage)
-        .enable(Feature::AsyncCommandQueue));
+        .enable(Feature::AsyncCommandQueue),
+    // The coherent version of the extension relies on ARB_fragment_shader_interlock. Ensure it
+    // works on Vulkan GLSL.
+    ES31_VULKAN()
+        .enable(Feature::EmulatePixelLocalStorage)
+        .enable(Feature::GenerateSPIRVThroughGlslang));
 
 class PixelLocalStorageCompilerTest : public ANGLETest<>
 {

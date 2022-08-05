@@ -223,6 +223,7 @@ enum class Feature
     SupportsFragmentShaderInterlockARB,
     SupportsFragmentShaderInterlockNV,
     SupportsFragmentShaderOrderingINTEL,
+    SupportsFragmentShaderPixelInterlock,
     SupportsFragmentShadingRate,
     SupportsGeometryStreamsCapability,
     SupportsGGPFrameToken,

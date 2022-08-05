@@ -14,7 +14,6 @@
 namespace rx
 {
 class ContextGL;
-class FunctionsGL;
 
 class CompilerGL : public CompilerImpl
 {

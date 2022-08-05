@@ -5814,6 +5814,22 @@ bool OutputSPIRVTraverser::visitAggregate(Visit visit, TIntermAggregate *node)
             UNIMPLEMENTED();
             break;
 
+        case EOpBeginInvocationInterlockARB:
+            // Set up a "pixel_interlock_ordered" execution mode, as that is the default
+            // interlocked execution mode in GLSL, and we don't currently expose an option to change
+            // that.
+            mBuilder.addExtension(SPIRVExtensions::FragmentShaderInterlockARB);
+            mBuilder.addCapability(spv::CapabilityFragmentShaderPixelInterlockEXT);
+            mBuilder.addExecutionMode(spv::ExecutionMode::ExecutionModePixelInterlockOrderedEXT);
+            // Compile GL_ARB_fragment_shader_interlock to SPV_EXT_fragment_shader_interlock.
+            spirv::WriteBeginInvocationInterlockEXT(mBuilder.getSpirvCurrentFunctionBlock());
+            break;
+
+        case EOpEndInvocationInterlockARB:
+            // Compile GL_ARB_fragment_shader_interlock to SPV_EXT_fragment_shader_interlock.
+            spirv::WriteEndInvocationInterlockEXT(mBuilder.getSpirvCurrentFunctionBlock());
+            break;
+
         default:
             result = visitOperator(node, resultTypeId);
             break;
