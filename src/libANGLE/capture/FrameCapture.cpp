@@ -1162,16 +1162,28 @@ void MaybeResetResources(gl::ContextID contextID,
         }
         case ResourceIDType::Renderbuffer:
         {
-            ResourceSet &newRenderbuffers =
-                resourceTracker->getTrackedResource(contextID, ResourceIDType::Renderbuffer)
-                    .getNewResources();
+            TrackedResource &trackedRenderbuffers =
+                resourceTracker->getTrackedResource(contextID, ResourceIDType::Renderbuffer);
+            ResourceSet &newRenderbuffers         = trackedRenderbuffers.getNewResources();
+            ResourceSet &renderbuffersToRegen     = trackedRenderbuffers.getResourcesToRegen();
+            ResourceCalls &renderbufferRegenCalls = trackedRenderbuffers.getResourceRegenCalls();
+            ResourceCalls &renderbufferRestoreCalls =
+                trackedRenderbuffers.getResourceRestoreCalls();
 
-            // Delete any new renderbuffers generated and not deleted during the run
-            if (!newRenderbuffers.empty())
+            // If we have any new renderbuffers generated and not deleted during the run, or any
+            // renderbuffers that we need to regen, delete them now
+            if (!newRenderbuffers.empty() || !renderbuffersToRegen.empty())
             {
                 size_t count = 0;
 
                 out << "    const GLuint deleteRenderbuffers[] = {";
+
+                for (auto &oldRb : renderbuffersToRegen)
+                {
+                    formatResourceIndex(out, count);
+                    out << "gRenderbufferMap[" << oldRb << "]";
+                    ++count;
+                }
 
                 for (auto &newRb : newRenderbuffers)
                 {
@@ -1184,11 +1196,30 @@ void MaybeResetResources(gl::ContextID contextID,
                 out << "    glDeleteRenderbuffers(" << count << ", deleteRenderbuffers);\n";
             }
 
-            // TODO (http://anglebug.com/4599): Handle renderbuffers that need regen
-            // This would only happen if a starting renderbuffer was deleted during the run.
-            ASSERT(resourceTracker->getTrackedResource(contextID, ResourceIDType::Renderbuffer)
-                       .getResourcesToRegen()
-                       .empty());
+            for (GLuint id : renderbuffersToRegen)
+            {
+                // Emit their regen calls
+                for (CallCapture &call : renderbufferRegenCalls[id])
+                {
+                    out << "    ";
+                    WriteCppReplayForCall(call, replayWriter, out, header, binaryData);
+                    out << ";\n";
+                }
+            }
+
+            // If any of our starting renderbuffers were modified during the run, restore their
+            // contents
+            ResourceSet &renderbuffersToRestore = trackedRenderbuffers.getResourcesToRestore();
+            for (GLuint id : renderbuffersToRestore)
+            {
+                // Emit their restore calls
+                for (CallCapture &call : renderbufferRestoreCalls[id])
+                {
+                    out << "    ";
+                    WriteCppReplayForCall(call, replayWriter, out, header, binaryData);
+                    out << ";\n";
+                }
+            }
             break;
         }
         case ResourceIDType::ShaderProgram:
@@ -3745,30 +3776,46 @@ void CaptureShareGroupMidExecutionSetup(
         gl::RenderbufferID id                = {renderbufIter.first};
         const gl::Renderbuffer *renderbuffer = renderbufIter.second;
 
+        // Track this as a starting resource that may need to be restored.
+        TrackedResource &trackedRenderbuffers =
+            resourceTracker->getTrackedResource(context->id(), ResourceIDType::Renderbuffer);
+        ResourceSet &startingRenderbuffers = trackedRenderbuffers.getStartingResources();
+        startingRenderbuffers.insert(id.value);
+
+        // For the initial renderbuffer creation calls, track in the generate list
+        ResourceCalls &renderbufferRegenCalls = trackedRenderbuffers.getResourceRegenCalls();
+        CallVector rbGenCalls({setupCalls, &renderbufferRegenCalls[id.value]});
+
         // Generate renderbuffer id.
-        cap(framebufferFuncs.genRenderbuffers(replayState, true, 1, &id));
-
-        resourceTracker->getTrackedResource(context->id(), ResourceIDType::Renderbuffer)
-            .getStartingResources()
-            .insert(id.value);
-
-        MaybeCaptureUpdateResourceIDs(context, resourceTracker, setupCalls);
-        cap(framebufferFuncs.bindRenderbuffer(replayState, true, GL_RENDERBUFFER, id));
+        for (std::vector<CallCapture> *calls : rbGenCalls)
+        {
+            Capture(calls, framebufferFuncs.genRenderbuffers(replayState, true, 1, &id));
+            MaybeCaptureUpdateResourceIDs(context, resourceTracker, calls);
+            Capture(calls,
+                    framebufferFuncs.bindRenderbuffer(replayState, true, GL_RENDERBUFFER, id));
+        }
 
         GLenum internalformat = renderbuffer->getFormat().info->internalFormat;
 
         if (renderbuffer->getSamples() > 0)
         {
             // Note: We could also use extensions if available.
-            cap(CaptureRenderbufferStorageMultisample(
-                replayState, true, GL_RENDERBUFFER, renderbuffer->getSamples(), internalformat,
-                renderbuffer->getWidth(), renderbuffer->getHeight()));
+            for (std::vector<CallCapture> *calls : rbGenCalls)
+            {
+                Capture(calls,
+                        CaptureRenderbufferStorageMultisample(
+                            replayState, true, GL_RENDERBUFFER, renderbuffer->getSamples(),
+                            internalformat, renderbuffer->getWidth(), renderbuffer->getHeight()));
+            }
         }
         else
         {
-            cap(framebufferFuncs.renderbufferStorage(replayState, true, GL_RENDERBUFFER,
-                                                     internalformat, renderbuffer->getWidth(),
-                                                     renderbuffer->getHeight()));
+            for (std::vector<CallCapture> *calls : rbGenCalls)
+            {
+                Capture(calls, framebufferFuncs.renderbufferStorage(
+                                   replayState, true, GL_RENDERBUFFER, internalformat,
+                                   renderbuffer->getWidth(), renderbuffer->getHeight()));
+            }
         }
 
         // TODO(jmadill): Capture renderbuffer contents. http://anglebug.com/3662
@@ -6170,6 +6217,27 @@ void FrameCaptureShared::maybeCapturePreCallUpdates(
         case EntryPoint::GLBindRenderbufferOES:
             maybeGenResourceOnBind<gl::RenderbufferID>(context, call);
             break;
+
+        case EntryPoint::GLDeleteRenderbuffers:
+        case EntryPoint::GLDeleteRenderbuffersOES:
+        {
+            // Look up how many renderbuffers are being deleted
+            GLsizei n = call.params.getParam("n", ParamType::TGLsizei, 0).value.GLsizeiVal;
+
+            // Look up the pointer to list of renderbuffers
+            const gl::RenderbufferID *renderbufferIDs =
+                call.params
+                    .getParam("renderbuffersPacked", ParamType::TRenderbufferIDConstPointer, 1)
+                    .value.RenderbufferIDConstPointerVal;
+
+            // For each renderbuffer listed for deletion
+            for (int32_t i = 0; i < n; ++i)
+            {
+                // If we're capturing, track what renderbuffers have been deleted
+                handleDeletedResource(context, renderbufferIDs[i]);
+            }
+            break;
+        }
 
         case EntryPoint::GLGenTextures:
         {
