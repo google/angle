@@ -89,6 +89,8 @@ class FastVector final
     void resize(size_type count);
     void resize(size_type count, const value_type &value);
 
+    void reserve(size_type count);
+
     // Specialty function that removes a known element and might shuffle the list.
     void remove_and_permute(const value_type &element);
 
@@ -389,6 +391,12 @@ void FastVector<T, N, Storage>::resize(size_type count, const value_type &value)
         std::fill(mData + mSize, mData + count, value);
     }
     mSize = count;
+}
+
+template <class T, size_t N, class Storage>
+void FastVector<T, N, Storage>::reserve(size_type count)
+{
+    ensure_capacity(count);
 }
 
 template <class T, size_t N, class Storage>
