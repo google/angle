@@ -348,7 +348,7 @@ Result SerializeFramebufferState(const gl::Context *context,
 
     {
         GroupScope attachmentsGroup(json, "Attachments");
-        const std::vector<gl::FramebufferAttachment> &colorAttachments =
+        const gl::DrawBuffersVector<gl::FramebufferAttachment> &colorAttachments =
             framebufferState.getColorAttachments();
         for (size_t attachmentIndex = 0; attachmentIndex < colorAttachments.size();
              ++attachmentIndex)

@@ -3916,6 +3916,8 @@ void Context::initCaps()
     } while (0)
 
     // Apply/Verify implementation limits
+    ANGLE_LIMIT_CAP(mState.mCaps.maxDrawBuffers, IMPLEMENTATION_MAX_DRAW_BUFFERS);
+    ANGLE_LIMIT_CAP(mState.mCaps.maxColorAttachments, IMPLEMENTATION_MAX_DRAW_BUFFERS);
     ANGLE_LIMIT_CAP(mState.mCaps.maxVertexAttributes, MAX_VERTEX_ATTRIBS);
     ANGLE_LIMIT_CAP(mState.mCaps.maxVertexAttribStride,
                     static_cast<GLint>(limits::kMaxVertexAttribStride));

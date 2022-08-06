@@ -4153,9 +4153,9 @@ void CaptureMidExecutionSetup(const gl::Context *context,
         gl::FramebufferState defaultFramebufferState(
             context->getCaps(), framebuffer->getState().id(),
             framebuffer->getState().getFramebufferSerial());
-        const std::vector<GLenum> &defaultDrawBufferStates =
+        const gl::DrawBuffersVector<GLenum> &defaultDrawBufferStates =
             defaultFramebufferState.getDrawBufferStates();
-        const std::vector<GLenum> &drawBufferStates = framebuffer->getDrawBufferStates();
+        const gl::DrawBuffersVector<GLenum> &drawBufferStates = framebuffer->getDrawBufferStates();
 
         if (drawBufferStates != defaultDrawBufferStates)
         {

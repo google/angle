@@ -1056,7 +1056,7 @@ GLenum Framebuffer::getDrawBufferState(size_t drawBuffer) const
     return mState.mDrawBufferStates[drawBuffer];
 }
 
-const std::vector<GLenum> &Framebuffer::getDrawBufferStates() const
+const DrawBuffersVector<GLenum> &Framebuffer::getDrawBufferStates() const
 {
     return mState.getDrawBufferStates();
 }
