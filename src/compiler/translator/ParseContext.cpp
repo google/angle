@@ -190,7 +190,7 @@ TParseContext::TParseContext(TSymbolTable &symt,
                              TExtensionBehavior &ext,
                              sh::GLenum type,
                              ShShaderSpec spec,
-                             ShCompileOptions options,
+                             const ShCompileOptions &options,
                              bool checksPrecErrors,
                              TDiagnostics *diagnostics,
                              const ShBuiltInResources &resources,
@@ -3069,7 +3069,7 @@ TIntermDeclaration *TParseContext::parseSingleDeclaration(
     const ImmutableString &identifier)
 {
     TType *type = new TType(publicType);
-    if ((mCompileOptions & SH_FLATTEN_PRAGMA_STDGL_INVARIANT_ALL) != 0 &&
+    if (mCompileOptions.flattenPragmaSTDGLInvariantAll &&
         mDirectiveHandler.pragma().stdgl.invariantAll)
     {
         TQualifier qualifier = type->getQualifier();

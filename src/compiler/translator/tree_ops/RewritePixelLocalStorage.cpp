@@ -58,9 +58,10 @@ constexpr static TBasicType Image2DTypeOfPLSType(TBasicType plsType)
 // Either: GL_NV_fragment_shader_interlock,
 //         GL_INTEL_fragment_shader_ordering
 //         GL_ARB_fragment_shader_interlock,
-static TIntermNode *CreateBuiltInInterlockBeginCall(TCompiler *compiler, TSymbolTable &symbolTable)
+static TIntermNode *CreateBuiltInInterlockBeginCall(const ShCompileOptions &compileOptions,
+                                                    TSymbolTable &symbolTable)
 {
-    switch (compiler->getResources().FragmentSynchronizationType)
+    switch (compileOptions.pls.fragmentSynchronizationType)
     {
         case ShFragmentSynchronizationType::FragmentShaderInterlock_NV_GL:
             return CreateBuiltInFunctionCallNode("beginInvocationInterlockNV", {}, symbolTable,
@@ -80,9 +81,10 @@ static TIntermNode *CreateBuiltInInterlockBeginCall(TCompiler *compiler, TSymbol
 //
 // Either: GL_ARB_fragment_shader_interlock or GL_NV_fragment_shader_interlock.
 // GL_INTEL_fragment_shader_ordering doesn't have an "end()" call.
-static TIntermNode *CreateBuiltInInterlockEndCall(TCompiler *compiler, TSymbolTable &symbolTable)
+static TIntermNode *CreateBuiltInInterlockEndCall(const ShCompileOptions &compileOptions,
+                                                  TSymbolTable &symbolTable)
 {
-    switch (compiler->getResources().FragmentSynchronizationType)
+    switch (compileOptions.pls.fragmentSynchronizationType)
     {
         case ShFragmentSynchronizationType::FragmentShaderInterlock_NV_GL:
             return CreateBuiltInFunctionCallNode("endInvocationInterlockNV", {}, symbolTable,
@@ -338,7 +340,7 @@ class RewriteToImagesTraverser : public TIntermTraverser
 bool RewritePixelLocalStorageToImages(TCompiler *compiler,
                                       TIntermBlock *root,
                                       TSymbolTable &symbolTable,
-                                      ShCompileOptions compileOptions,
+                                      const ShCompileOptions &compileOptions,
                                       int shaderVersion)
 {
     // If any functions take PLS arguments, monomorphize the functions by removing said parameters
@@ -356,7 +358,7 @@ bool RewritePixelLocalStorageToImages(TCompiler *compiler,
 
     // Surround the critical section of PLS operations in fragment synchronization calls, if
     // supported. This makes pixel local storage coherent.
-    TIntermNode *interlockBeginCall = CreateBuiltInInterlockBeginCall(compiler, symbolTable);
+    TIntermNode *interlockBeginCall = CreateBuiltInInterlockBeginCall(compileOptions, symbolTable);
     if (interlockBeginCall)
     {
         // TODO(anglebug.com/7279): Inject these functions in a tight critical section, instead of
@@ -364,7 +366,7 @@ bool RewritePixelLocalStorageToImages(TCompiler *compiler,
         //   - Monomorphize all PLS calls into main().
         //   - Insert begin/end calls around the first/last PLS calls (and outside of flow control).
         mainBody->insertStatement(0, interlockBeginCall);
-        TIntermNode *interlockEndCall = CreateBuiltInInterlockEndCall(compiler, symbolTable);
+        TIntermNode *interlockEndCall = CreateBuiltInInterlockEndCall(compileOptions, symbolTable);
         if (interlockEndCall)
         {
             // Not all fragment synchronization extensions have an end() call.

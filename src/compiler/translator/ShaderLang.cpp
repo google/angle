@@ -402,7 +402,7 @@ const std::string &GetBuiltInResourcesString(const ShHandle handle)
 bool Compile(const ShHandle handle,
              const char *const shaderStrings[],
              size_t numStrings,
-             ShCompileOptions compileOptions)
+             const ShCompileOptions &compileOptions)
 {
     TCompiler *compiler = GetCompilerFromHandle(handle);
     ASSERT(compiler);

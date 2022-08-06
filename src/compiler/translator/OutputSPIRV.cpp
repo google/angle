@@ -179,7 +179,7 @@ bool IsAccessChainRValue(const AccessChain &accessChain)
 class OutputSPIRVTraverser : public TIntermTraverser
 {
   public:
-    OutputSPIRVTraverser(TCompiler *compiler, ShCompileOptions compileOptions);
+    OutputSPIRVTraverser(TCompiler *compiler, const ShCompileOptions &compileOptions);
     ~OutputSPIRVTraverser() override;
 
     spirv::Blob getSpirv();
@@ -362,7 +362,7 @@ class OutputSPIRVTraverser : public TIntermTraverser
                                                uint32_t fieldIndex);
 
     TCompiler *mCompiler;
-    [[maybe_unused]] ShCompileOptions mCompileOptions;
+    [[maybe_unused]] const ShCompileOptions &mCompileOptions;
 
     SPIRVBuilder mBuilder;
 
@@ -494,7 +494,8 @@ spv::StorageClass GetStorageClass(const TType &type, GLenum shaderType)
     }
 }
 
-OutputSPIRVTraverser::OutputSPIRVTraverser(TCompiler *compiler, ShCompileOptions compileOptions)
+OutputSPIRVTraverser::OutputSPIRVTraverser(TCompiler *compiler,
+                                           const ShCompileOptions &compileOptions)
     : TIntermTraverser(true, true, true, &compiler->getSymbolTable()),
       mCompiler(compiler),
       mCompileOptions(compileOptions),
@@ -6352,7 +6353,7 @@ spirv::Blob OutputSPIRVTraverser::getSpirv()
 }
 }  // anonymous namespace
 
-bool OutputSPIRV(TCompiler *compiler, TIntermBlock *root, ShCompileOptions compileOptions)
+bool OutputSPIRV(TCompiler *compiler, TIntermBlock *root, const ShCompileOptions &compileOptions)
 {
     // Find the list of nodes that require NoContraction (as a result of |precise|).
     if (compiler->hasAnyPreciseType())

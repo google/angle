@@ -884,11 +884,6 @@ void DisplayMtl::ensureCapsInitialized() const
     {
         mNativeLimitations.noCompressedTexture3D = true;
     }
-
-    // Direct-to-metal constants:
-    mNativeCaps.driverUniformsBindingIndex    = mtl::kDriverUniformsBindingIndex;
-    mNativeCaps.defaultUniformsBindingIndex   = mtl::kDefaultUniformsBindingIndex;
-    mNativeCaps.UBOArgumentBufferBindingIndex = mtl::kUBOArgumentBufferBindingIndex;
 }
 
 void DisplayMtl::initializeExtensions() const

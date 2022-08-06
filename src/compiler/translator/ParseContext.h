@@ -37,7 +37,7 @@ class TParseContext : angle::NonCopyable
                   TExtensionBehavior &ext,
                   sh::GLenum type,
                   ShShaderSpec spec,
-                  ShCompileOptions options,
+                  const ShCompileOptions &options,
                   bool checksPrecErrors,
                   TDiagnostics *diagnostics,
                   const ShBuiltInResources &resources,

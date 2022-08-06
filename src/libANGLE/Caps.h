@@ -390,11 +390,6 @@ struct Caps
     // ES 3.2 Table 20.41: Implementation Dependent Values (cont.)
     GLint maxTextureBufferSize         = 0;
     GLint textureBufferOffsetAlignment = 0;
-
-    // Direct-to-metal constants:
-    GLuint driverUniformsBindingIndex    = 0;
-    GLuint defaultUniformsBindingIndex   = 0;
-    GLuint UBOArgumentBufferBindingIndex = 0;
 };
 
 Caps GenerateMinimumCaps(const Version &clientVersion, const Extensions &extensions);

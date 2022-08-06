@@ -144,7 +144,7 @@ CompilerImpl *Context11::createCompiler()
 
 ShaderImpl *Context11::createShader(const gl::ShaderState &data)
 {
-    return new ShaderD3D(data, mRenderer->getFeatures(), mRenderer->getNativeExtensions());
+    return new ShaderD3D(data, mRenderer);
 }
 
 ProgramImpl *Context11::createProgram(const gl::ProgramState &data)

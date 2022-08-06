@@ -479,7 +479,7 @@ void SpirvTypeSpec::onVectorComponentSelection()
 }
 
 SPIRVBuilder::SPIRVBuilder(TCompiler *compiler,
-                           ShCompileOptions compileOptions,
+                           const ShCompileOptions &compileOptions,
                            ShHashFunction64 hashFunction,
                            NameMap &nameMap)
     : mCompiler(compiler),
@@ -667,7 +667,7 @@ spirv::IdRef SPIRVBuilder::getFunctionTypeId(spirv::IdRef returnTypeId,
 
 SpirvDecorations SPIRVBuilder::getDecorations(const TType &type)
 {
-    const bool enablePrecision = (mCompileOptions & SH_IGNORE_PRECISION_QUALIFIERS) == 0;
+    const bool enablePrecision = !mCompileOptions.ignorePrecisionQualifiers;
     const TPrecision precision = type.getPrecision();
 
     SpirvDecorations decorations;
@@ -1746,7 +1746,7 @@ void SPIRVBuilder::writeInterfaceVariableDecorations(const TType &type, spirv::I
     const bool needsInputAttachmentIndex = IsSubpassInputType(type.getBasicType());
     const bool needsBlendIndex =
         type.getQualifier() == EvqFragmentOut && layoutQualifier.index >= 0;
-    const bool needsYuvDecorate = (mCompileOptions & SH_ADD_VULKAN_YUV_LAYOUT_QUALIFIER) != 0 &&
+    const bool needsYuvDecorate = mCompileOptions.addVulkanYUVLayoutQualifier &&
                                   type.getQualifier() == EvqFragmentOut && layoutQualifier.yuv;
 
     // If the resource declaration requires set & binding, add the DescriptorSet and Binding

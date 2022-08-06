@@ -9785,7 +9785,7 @@ foo
     ANGLE_GL_PROGRAM(program, kVS, kFS);
 }
 
-// Test that inactive output variables compile ok in combination with SH_INIT_OUTPUT_VARIABLES
+// Test that inactive output variables compile ok in combination with initOutputVariables
 // (which is enabled on WebGL).
 TEST_P(WebGL2GLSLTest, InactiveOutput)
 {

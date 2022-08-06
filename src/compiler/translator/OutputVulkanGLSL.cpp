@@ -22,7 +22,7 @@ namespace sh
 TOutputVulkanGLSL::TOutputVulkanGLSL(TCompiler *compiler,
                                      TInfoSinkBase &objSink,
                                      bool enablePrecision,
-                                     ShCompileOptions compileOptions)
+                                     const ShCompileOptions &compileOptions)
     : TOutputGLSL(compiler, objSink, compileOptions),
       mNextUnusedBinding(0),
       mNextUnusedInputLocation(0),
