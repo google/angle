@@ -17,9 +17,73 @@
 #include <algorithm>
 #include <array>
 #include <initializer_list>
+#include <iterator>
 
 namespace angle
 {
+
+template <class Iter>
+class WrapIter
+{
+  public:
+    typedef Iter iterator_type;
+    typedef typename std::iterator_traits<iterator_type>::value_type value_type;
+    typedef typename std::iterator_traits<iterator_type>::difference_type difference_type;
+    typedef typename std::iterator_traits<iterator_type>::pointer pointer;
+    typedef typename std::iterator_traits<iterator_type>::reference reference;
+    typedef typename std::iterator_traits<iterator_type>::iterator_category iterator_category;
+
+    WrapIter() : mIter() {}
+    WrapIter(const Iter &iter) : mIter(iter) {}
+    ~WrapIter() = default;
+
+    WrapIter &operator=(const WrapIter &x)
+    {
+        mIter = x.mIter;
+        return *this;
+    }
+
+    bool operator==(const WrapIter &x) const { return mIter == x.mIter; }
+
+    bool operator!=(const WrapIter &x) const { return mIter != x.mIter; }
+
+    WrapIter &operator++()
+    {
+        mIter++;
+        return *this;
+    }
+
+    WrapIter operator++(int)
+    {
+        WrapIter tmp(mIter);
+        mIter++;
+        return tmp;
+    }
+
+    WrapIter operator+(difference_type n)
+    {
+        WrapIter tmp(mIter);
+        tmp.mIter += n;
+        return tmp;
+    }
+
+    WrapIter operator-(difference_type n)
+    {
+        WrapIter tmp(mIter);
+        tmp.mIter -= n;
+        return tmp;
+    }
+
+    difference_type operator-(const WrapIter &x) const { return mIter - x.mIter; }
+
+    iterator_type operator->() const { return mIter; }
+
+    reference operator*() const { return *mIter; }
+
+  private:
+    iterator_type mIter;
+};
+
 template <class T, size_t N, class Storage = std::array<T, N>>
 class FastVector final
 {
@@ -30,8 +94,8 @@ class FastVector final
     using const_reference = typename Storage::const_reference;
     using pointer         = typename Storage::pointer;
     using const_pointer   = typename Storage::const_pointer;
-    using iterator        = T *;
-    using const_iterator  = const T *;
+    using iterator        = WrapIter<T *>;
+    using const_iterator  = WrapIter<const T *>;
 
     FastVector();
     FastVector(size_type count, const value_type &value);
@@ -499,39 +563,72 @@ template <class Key, class Value, size_t N>
 class FlatUnorderedMap final
 {
   public:
-    using Pair = std::pair<Key, Value>;
+    using Pair           = std::pair<Key, Value>;
+    using Storage        = FastVector<Pair, N>;
+    using iterator       = typename Storage::iterator;
+    using const_iterator = typename Storage::const_iterator;
 
     FlatUnorderedMap() {}
     ~FlatUnorderedMap() {}
 
-    void insert(Key key, Value value)
+    iterator begin() { return mData.begin(); }
+    const_iterator begin() const { return mData.begin(); }
+    iterator end() { return mData.end(); }
+    const_iterator end() const { return mData.end(); }
+
+    iterator find(const Key &key)
+    {
+        for (auto it = mData.begin(); it != mData.end(); ++it)
+        {
+            if (it->first == key)
+            {
+                return it;
+            }
+        }
+        return mData.end();
+    }
+
+    const_iterator find(const Key &key) const
+    {
+        for (auto it = mData.begin(); it != mData.end(); ++it)
+        {
+            if (it->first == key)
+            {
+                return it;
+            }
+        }
+        return mData.end();
+    }
+
+    Value &operator[](const Key &key)
+    {
+        iterator it = find(key);
+        if (it != end())
+        {
+            return it->second;
+        }
+
+        mData.push_back(Pair(key, {}));
+        return mData.back().second;
+    }
+
+    void insert(const Key &key, Value value)
     {
         ASSERT(!contains(key));
         mData.push_back(Pair(key, value));
     }
 
-    bool contains(Key key) const
-    {
-        for (size_t index = 0; index < mData.size(); ++index)
-        {
-            if (mData[index].first == key)
-                return true;
-        }
-        return false;
-    }
+    bool contains(const Key &key) const { return find(key) != end(); }
 
     void clear() { mData.clear(); }
 
-    bool get(Key key, Value *value) const
+    bool get(const Key &key, Value *value) const
     {
-        for (size_t index = 0; index < mData.size(); ++index)
+        auto it = find(key);
+        if (it != end())
         {
-            const Pair &item = mData[index];
-            if (item.first == key)
-            {
-                *value = item.second;
-                return true;
-            }
+            *value = it->second;
+            return true;
         }
         return false;
     }
