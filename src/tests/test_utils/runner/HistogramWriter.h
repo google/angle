@@ -9,6 +9,10 @@
 #ifndef ANGLE_TESTS_TEST_UTILS_HISTOGRAM_WRITER_H_
 #define ANGLE_TESTS_TEST_UTILS_HISTOGRAM_WRITER_H_
 
+#if !defined(ANGLE_HAS_HISTOGRAMS)
+#    error "Requires ANGLE_HAS_HISTOGRAMS, see angle_maybe_has_histograms"
+#endif  // !defined(ANGLE_HAS_HISTOGRAMS)
+
 #include <map>
 #include <memory>
 #include <string>

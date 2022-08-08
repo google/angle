@@ -342,8 +342,10 @@ if (is_win || is_linux || is_chromeos || is_android || is_fuchsia || is_apple) {
 
 config("angle_maybe_has_histograms") {
   if (angle_has_histograms) {
-    defines = [ "ANGLE_HAS_HISTOGRAMS" ]
+    defines = [ "ANGLE_HAS_HISTOGRAMS=1" ]
     include_dirs = [ "$root_gen_dir" ]
+  } else {
+    defines = [ "ANGLE_HAS_HISTOGRAMS=0" ]
   }
 }
 
@@ -377,7 +379,10 @@ template("angle_perftests_common") {
       "$angle_root/third_party/rapidjson:rapidjson",
       "${invoker.test_utils}",
     ]
-    public_configs += [ "${angle_root}:libANGLE_config" ]
+    public_configs += [
+      ":angle_maybe_has_histograms",
+      "$angle_root:libANGLE_config",
+    ]
   }
 }
 
