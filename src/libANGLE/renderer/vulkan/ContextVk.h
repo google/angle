@@ -1567,7 +1567,7 @@ ANGLE_INLINE void ContextVk::retainResource(vk::Resource *resource)
 
 ANGLE_INLINE bool UseLineRaster(const ContextVk *contextVk, gl::PrimitiveMode mode)
 {
-    return contextVk->getFeatures().basicGLLineRasterization.enabled && gl::IsLineMode(mode);
+    return gl::IsLineMode(mode);
 }
 }  // namespace rx
 

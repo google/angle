@@ -870,17 +870,11 @@ void RendererVk::ensureCapsInitialized() const
     mNativeCaps.maxCombinedShaderOutputResources =
         LimitToInt(maxPerStageResources - kReservedPerStageBindingCount);
 
-    // Reserve 1 extra varying for ANGLEPosition when GLLineRasterization is enabled
-    constexpr GLint kReservedVaryingComponentsForGLLineRasterization = 4;
     // Reserve 1 extra varying for transform feedback capture of gl_Position.
     constexpr GLint kReservedVaryingComponentsForTransformFeedbackExtension = 4;
 
     GLint reservedVaryingComponentCount = 0;
 
-    if (getFeatures().basicGLLineRasterization.enabled)
-    {
-        reservedVaryingComponentCount += kReservedVaryingComponentsForGLLineRasterization;
-    }
     if (getFeatures().supportsTransformFeedbackExtension.enabled &&
         (!getFeatures().supportsDepthClipControl.enabled ||
          getFeatures().enablePreRotateSurfaces.enabled ||
@@ -981,7 +975,7 @@ void RendererVk::ensureCapsInitialized() const
     // Atomic image operations in the vertex and fragment shaders require the
     // vertexPipelineStoresAndAtomics and fragmentStoresAndAtomics Vulkan features respectively.
     // If either of these features is not present, the number of image uniforms for that stage is
-    // advertized as zero, so image atomic operations support can be agnostic of shader stages.
+    // advertised as zero, so image atomic operations support can be agnostic of shader stages.
     //
     // GL_OES_shader_image_atomic requires that image atomic functions have support for r32i and
     // r32ui formats.  These formats have mandatory support for STORAGE_IMAGE_ATOMIC and
@@ -991,8 +985,7 @@ void RendererVk::ensureCapsInitialized() const
     mNativeExtensions.shaderImageAtomicOES = true;
 
     // Geometry shaders are required for ES 3.2.
-    // We don't support GS when we are emulating line raster due to the tricky position varying.
-    if (mPhysicalDeviceFeatures.geometryShader && !mFeatures.basicGLLineRasterization.enabled)
+    if (mPhysicalDeviceFeatures.geometryShader)
     {
         // TODO: geometry shader support is incomplete.  http://anglebug.com/3571
         bool geometryShader = mFeatures.supportsTransformFeedbackExtension.enabled &&
@@ -1022,8 +1015,8 @@ void RendererVk::ensureCapsInitialized() const
             LimitToInt(limitsVk.maxGeometryShaderInvocations);
     }
 
-    // We don't support TS when we are emulating line raster due to the tricky position varying.
-    if (mPhysicalDeviceFeatures.tessellationShader && !mFeatures.basicGLLineRasterization.enabled)
+    // Tessellation shaders are required for ES 3.2.
+    if (mPhysicalDeviceFeatures.tessellationShader)
     {
         constexpr uint32_t kReservedTessellationDefaultUniformBindingCount = 2;
 

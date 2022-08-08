@@ -8,14 +8,6 @@
     ],
     "features": [
         {
-            "name": "basic_GL_line_rasterization",
-            "category": "Features",
-            "description": [
-                "Enable the use of pixel shader patching to implement OpenGL basic line ",
-                "rasterization rules"
-            ]
-        },
-        {
             "name": "bresenham_line_rasterization",
             "category": "Features",
             "description": [

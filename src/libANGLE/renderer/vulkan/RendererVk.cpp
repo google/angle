@@ -3160,12 +3160,6 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
                VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_FEATURES_EXT);
         ANGLE_FEATURE_CONDITION(&mFeatures, bresenhamLineRasterization, true);
     }
-    else
-    {
-        // Use OpenGL line rasterization rules if extension not available by default.
-        // TODO(jmadill): Fix Android support. http://anglebug.com/2830
-        ANGLE_FEATURE_CONDITION(&mFeatures, basicGLLineRasterization, !IsAndroid() && !isPowerVR);
-    }
 
     if (mProvokingVertexFeatures.provokingVertexLast == VK_TRUE)
     {

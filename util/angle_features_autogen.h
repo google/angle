@@ -39,7 +39,6 @@ enum class Feature
     AlwaysUnbindFramebufferTexture2D,
     AsyncCommandQueue,
     Avoid1BitAlphaTextureFormats,
-    BasicGLLineRasterization,
     BindTransformFeedbackBufferBeforeBindBufferRange,
     BottomLeftOriginPresentRegionRectangles,
     BresenhamLineRasterization,

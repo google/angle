@@ -20,14 +20,6 @@ struct FeaturesVk : FeatureSetBase
     FeaturesVk();
     ~FeaturesVk();
 
-    FeatureInfo basicGLLineRasterization = {
-        "basicGLLineRasterization",
-        FeatureCategory::VulkanFeatures,
-        "Enable the use of pixel shader patching to implement OpenGL basic line "
-        "rasterization rules",
-        &members,
-    };
-
     FeatureInfo bresenhamLineRasterization = {
         "bresenhamLineRasterization",
         FeatureCategory::VulkanFeatures,
