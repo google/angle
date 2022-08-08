@@ -40,7 +40,8 @@ class VulkanPerformanceCounterTest : public ANGLETest<>
           mMutableMipmapTextureUpload(ANGLEFeature::Unknown),
           mPreferDrawOverClearAttachments(ANGLEFeature::Unknown),
           mSupportsPipelineCreationFeedback(ANGLEFeature::Unknown),
-          mWarmUpPipelineCacheAtLink(ANGLEFeature::Unknown)
+          mWarmUpPipelineCacheAtLink(ANGLEFeature::Unknown),
+          mPreferCPUForBufferSubData(ANGLEFeature::Unknown)
     {
         // Depth/Stencil required for SwapShouldInvalidate*.
         // Also RGBA8 is required to avoid the clear for emulated alpha.
@@ -120,6 +121,10 @@ class VulkanPerformanceCounterTest : public ANGLETest<>
             {
                 mWarmUpPipelineCacheAtLink = isSupported;
             }
+            else if (strcmp(featureName, GetFeatureName(Feature::PreferCPUForBufferSubData)) == 0)
+            {
+                mPreferCPUForBufferSubData = isSupported;
+            }
         }
 
         // Make sure feature renames are caught
@@ -129,6 +134,7 @@ class VulkanPerformanceCounterTest : public ANGLETest<>
         ASSERT_NE(mPreferDrawOverClearAttachments, ANGLEFeature::Unknown);
         ASSERT_NE(mSupportsPipelineCreationFeedback, ANGLEFeature::Unknown);
         ASSERT_NE(mWarmUpPipelineCacheAtLink, ANGLEFeature::Unknown);
+        ASSERT_NE(mPreferCPUForBufferSubData, ANGLEFeature::Unknown);
 
         // Impossible to have LOAD_OP_NONE but not STORE_OP_NONE
         ASSERT_FALSE(mLoadOpNoneSupport == ANGLEFeature::Supported &&
@@ -447,6 +453,7 @@ class VulkanPerformanceCounterTest : public ANGLETest<>
     ANGLEFeature mPreferDrawOverClearAttachments;
     ANGLEFeature mSupportsPipelineCreationFeedback;
     ANGLEFeature mWarmUpPipelineCacheAtLink;
+    ANGLEFeature mPreferCPUForBufferSubData;
 };
 
 class VulkanPerformanceCounterTest_ES31 : public VulkanPerformanceCounterTest
@@ -4828,6 +4835,106 @@ void main()
     ASSERT_EQ(getPerfCounters().renderPasses, 1u);
 
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::cyan);
+}
+
+// Verifies that BufferSubData calls don't cause a render pass break when it only uses the buffer
+// read-only.
+TEST_P(VulkanPerformanceCounterTest, BufferSubDataShouldNotBreakRenderPass)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled(kPerfMonitorExtensionName));
+    initANGLEFeatures();
+
+    uint64_t expectedRenderPassCount = getPerfCounters().renderPasses + 1;
+    if (mPreferCPUForBufferSubData != ANGLEFeature::Supported)
+    {
+        ++expectedRenderPassCount;
+    }
+
+    const std::array<GLColor, 4> kInitialData = {GLColor::red, GLColor::green, GLColor::blue,
+                                                 GLColor::yellow};
+    const std::array<GLColor, 1> kUpdateData1 = {GLColor::cyan};
+    const std::array<GLColor, 3> kUpdateData2 = {GLColor::magenta, GLColor::black, GLColor::white};
+
+    GLBuffer buffer;
+    glBindBuffer(GL_UNIFORM_BUFFER, buffer);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(kInitialData), kInitialData.data(), GL_DYNAMIC_DRAW);
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, buffer);
+    ASSERT_GL_NO_ERROR();
+
+    constexpr char kVS[] = R"(#version 300 es
+precision highp float;
+uniform float height;
+void main()
+{
+    // gl_VertexID    x    y
+    //      0        -1   -1
+    //      1         1   -1
+    //      2        -1    1
+    //      3         1    1
+    int bit0 = gl_VertexID & 1;
+    int bit1 = gl_VertexID >> 1;
+    gl_Position = vec4(bit0 * 2 - 1, bit1 * 2 - 1, 0, 1);
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 colorOut;
+uniform block {
+    uvec4 data;
+} ubo;
+uniform uvec4 expect;
+uniform vec4 successColor;
+void main()
+{
+    if (all(equal(ubo.data, expect)))
+        colorOut = successColor;
+    else
+        colorOut = vec4(0);
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+
+    GLint expectLoc = glGetUniformLocation(program, "expect");
+    ASSERT_NE(-1, expectLoc);
+    GLint successLoc = glGetUniformLocation(program, "successColor");
+    ASSERT_NE(-1, successLoc);
+
+    glClearColor(0, 0, 0, 0);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+
+    // Draw once, using the buffer in the render pass.
+    glUniform4ui(expectLoc, kInitialData[0].asUint(), kInitialData[1].asUint(),
+                 kInitialData[2].asUint(), kInitialData[3].asUint());
+    glUniform4f(successLoc, 1, 0, 0, 1);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+    // Upload a small part of the buffer, and draw again.
+    glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(kUpdateData1), kUpdateData1.data());
+
+    glUniform4ui(expectLoc, kUpdateData1[0].asUint(), kInitialData[1].asUint(),
+                 kInitialData[2].asUint(), kInitialData[3].asUint());
+    glUniform4f(successLoc, 0, 1, 0, 1);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+    // Upload a large part of the buffer, and draw again.
+    glBufferSubData(GL_UNIFORM_BUFFER, sizeof(kUpdateData1), sizeof(kUpdateData2),
+                    kUpdateData2.data());
+
+    glUniform4ui(expectLoc, kUpdateData1[0].asUint(), kUpdateData2[0].asUint(),
+                 kUpdateData2[1].asUint(), kUpdateData2[2].asUint());
+    glUniform4f(successLoc, 0, 0, 1, 1);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+    // Verify results
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
+    ASSERT_GL_NO_ERROR();
+
+    // Only one render pass should have been used.
+    EXPECT_EQ(getPerfCounters().renderPasses, expectedRenderPassCount);
 }
 
 // Verifies that BufferSubData calls don't trigger state updates for non-translated formats.
