@@ -5939,6 +5939,28 @@ bool OutputSPIRVTraverser::visitDeclaration(Visit visit, TIntermDeclaration *nod
         // Apply the Invariant decoration to output variables if specified or if globally enabled.
         decorations.push_back(spv::DecorationInvariant);
     }
+    // Apply the declared memory qualifiers.
+    TMemoryQualifier memoryQualifier = type.getMemoryQualifier();
+    if (memoryQualifier.coherent)
+    {
+        decorations.push_back(spv::DecorationCoherent);
+    }
+    if (memoryQualifier.volatileQualifier)
+    {
+        decorations.push_back(spv::DecorationVolatile);
+    }
+    if (memoryQualifier.restrictQualifier)
+    {
+        decorations.push_back(spv::DecorationRestrict);
+    }
+    if (memoryQualifier.readonly)
+    {
+        decorations.push_back(spv::DecorationNonWritable);
+    }
+    if (memoryQualifier.writeonly)
+    {
+        decorations.push_back(spv::DecorationNonReadable);
+    }
 
     const spirv::IdRef variableId = mBuilder.declareVariable(
         typeId, storageClass, decorations, initializeWithDeclaration ? &initializerId : nullptr,

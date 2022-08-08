@@ -227,11 +227,15 @@ struct SpirvTypeData
 //                    property to be promoted through the nodes in the AST, which currently isn't.
 //                    http://anglebug.com/4889
 //     Invariant: used to implement |invariant|, which is applied to output variables.
+//     Memory qualifiers: used to implement |coherent, volatile, restrict, readonly, writeonly|,
+//                        which apply to shader storage blocks, variables declared within shader
+//                        storage blocks, and images.
 //
-// Note that Invariant applies to variables and NoContraction to arithmetic instructions, so they
-// are mutually exclusive and a maximum of 2 decorations are possible.  FixedVector::push_back will
-// ASSERT if the given size is ever not enough.
-using SpirvDecorations = angle::FixedVector<spv::Decoration, 2>;
+// Note that Invariant applies to output variables, NoContraction to arithmetic instructions, and
+// memory qualifiers to shader storage and images, so they are mutually exclusive. A maximum of 6
+// decorations are possible.  FixedVector::push_back will ASSERT if the given size is ever not
+// enough.
+using SpirvDecorations = angle::FixedVector<spv::Decoration, 6>;
 
 // A block of code.  SPIR-V produces forward references to blocks, such as OpBranchConditional
 // specifying the id of the if and else blocks, each of those referencing the id of the block after
