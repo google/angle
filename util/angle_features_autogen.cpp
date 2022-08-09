@@ -285,6 +285,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::UploadTextureDataInChunks, "uploadTextureDataInChunks"},
     {Feature::UseInstancedPointSpriteEmulation, "useInstancedPointSpriteEmulation"},
     {Feature::UseMultipleDescriptorsForExternalFormats, "useMultipleDescriptorsForExternalFormats"},
+    {Feature::UseNonZeroStencilWriteMaskStaticState, "useNonZeroStencilWriteMaskStaticState"},
     {Feature::UseSystemMemoryForConstantBuffers, "useSystemMemoryForConstantBuffers"},
     {Feature::UseUnusedBlocksWithStandardOrSharedLayout,
      "useUnusedBlocksWithStandardOrSharedLayout"},

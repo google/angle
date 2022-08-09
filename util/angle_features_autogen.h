@@ -266,6 +266,7 @@ enum class Feature
     UploadTextureDataInChunks,
     UseInstancedPointSpriteEmulation,
     UseMultipleDescriptorsForExternalFormats,
+    UseNonZeroStencilWriteMaskStaticState,
     UseSystemMemoryForConstantBuffers,
     UseUnusedBlocksWithStandardOrSharedLayout,
     VertexIDDoesNotIncludeBaseVertex,

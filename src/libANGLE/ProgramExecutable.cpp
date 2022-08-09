@@ -196,6 +196,7 @@ ProgramExecutable::ProgramExecutable()
       mImageUniformRange(0, 0),
       mAtomicCounterUniformRange(0, 0),
       mFragmentInoutRange(0, 0),
+      mHasDiscard(false),
       mEnablesPerSampleShading(false),
       // [GL_EXT_geometry_shader] Table 20.22
       mGeometryShaderInputPrimitiveType(PrimitiveMode::Triangles),
@@ -244,6 +245,7 @@ ProgramExecutable::ProgramExecutable(const ProgramExecutable &other)
       mAtomicCounterBuffers(other.mAtomicCounterBuffers),
       mShaderStorageBlocks(other.mShaderStorageBlocks),
       mFragmentInoutRange(other.mFragmentInoutRange),
+      mHasDiscard(other.mHasDiscard),
       mEnablesPerSampleShading(other.mEnablesPerSampleShading),
       mAdvancedBlendEquations(other.mAdvancedBlendEquations)
 {
@@ -293,6 +295,7 @@ void ProgramExecutable::reset(bool clearInfoLog)
     mAtomicCounterUniformRange = RangeUI(0, 0);
 
     mFragmentInoutRange      = RangeUI(0, 0);
+    mHasDiscard              = false;
     mEnablesPerSampleShading = false;
     mAdvancedBlendEquations.reset();
 
@@ -325,6 +328,7 @@ void ProgramExecutable::load(bool isSeparable, gl::BinaryInputStream *stream)
     unsigned int fragmentInoutRangeHigh = stream->readInt<uint32_t>();
     mFragmentInoutRange                 = RangeUI(fragmentInoutRangeLow, fragmentInoutRangeHigh);
 
+    mHasDiscard              = stream->readBool();
     mEnablesPerSampleShading = stream->readBool();
 
     static_assert(sizeof(mAdvancedBlendEquations.bits()) == sizeof(uint32_t));
@@ -557,6 +561,7 @@ void ProgramExecutable::save(bool isSeparable, gl::BinaryOutputStream *stream) c
     stream->writeInt(mFragmentInoutRange.low());
     stream->writeInt(mFragmentInoutRange.high());
 
+    stream->writeBool(mHasDiscard);
     stream->writeBool(mEnablesPerSampleShading);
     stream->writeInt(mAdvancedBlendEquations.bits());
 

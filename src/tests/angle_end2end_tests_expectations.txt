@@ -538,7 +538,6 @@
 7158 PIXEL6 VULKAN : ImageTestES3.SourceAHBMipTarget2DMip/* = SKIP
 7158 PIXEL6 VULKAN : ImageTestES3.SourceAHBMipTarget2DMipGenerateMipmap/* = SKIP
 7279 PIXEL6 VULKAN : PixelLocalStorageTest.EarlyFragmentTests/ES3_1_Vulkan_EmulatePixelLocalStorage* = SKIP
-7556 PIXEL6 VULKAN : StateChangeTestES3.StencilWriteMaskVsDiscard/* = SKIP
 
 // ARM drivers cannot support xfb emulation because they lack support for the
 // vertexPipelineStoresAndAtomics Vulkan feature.  The tests that force-enable this feature are

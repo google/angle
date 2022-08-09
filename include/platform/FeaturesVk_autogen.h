@@ -670,6 +670,12 @@ struct FeaturesVk : FeatureSetBase
         "VkDevice supports VK_ANDROID_render_to_external_format and VK_EXT_ycbcr_attachment",
         &members,
     };
+
+    FeatureInfo useNonZeroStencilWriteMaskStaticState = {
+        "useNonZeroStencilWriteMaskStaticState", FeatureCategory::VulkanWorkarounds,
+        "Work around a driver bug where 0 in stencil write mask static state would make the"
+        "corresponding dynamic state malfunction in the presence of discard or alpha to coverage",
+        &members, "http://anglebug.com/7556"};
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 300
+#define ANGLE_SH_VERSION 301
 
 enum ShShaderSpec
 {
@@ -805,6 +805,7 @@ unsigned int GetImage2DRegisterIndex(const ShHandle handle);
 // handle: Specifies the compiler
 const std::set<std::string> *GetUsedImage2DFunctionNames(const ShHandle handle);
 
+bool HasDiscardInFragmentShader(const ShHandle handle);
 bool HasValidGeometryShaderInputPrimitiveType(const ShHandle handle);
 bool HasValidGeometryShaderOutputPrimitiveType(const ShHandle handle);
 bool HasValidGeometryShaderMaxVertices(const ShHandle handle);

@@ -1347,6 +1347,7 @@ angle::Result Program::linkImpl(const Context *context)
                 return angle::Result::Continue;
             }
 
+            mState.mExecutable->mHasDiscard = fragmentShader->hasDiscard();
             mState.mExecutable->mEnablesPerSampleShading =
                 fragmentShader->enablesPerSampleShading();
             mState.mExecutable->mAdvancedBlendEquations =

@@ -468,12 +468,13 @@ struct PackedColorBlendStateInfo final
 constexpr size_t kPackedColorBlendStateSize = sizeof(PackedColorBlendStateInfo);
 static_assert(kPackedColorBlendStateSize == 36, "Size check failed");
 
-struct PackedDither final
+struct PackedDitherAndWorkarounds final
 {
     static_assert(gl::IMPLEMENTATION_MAX_DRAW_BUFFERS <= 8,
                   "2 bits per draw buffer is needed for dither emulation");
     uint16_t emulatedDitherControl;
-    uint16_t unused;
+    uint16_t nonZeroStencilWriteMaskWorkaround : 1;
+    uint16_t unused : 15;
 };
 
 // State that is dynamic in VK_EXT_extended_dynamic_state and 2.  These are placed at the end of the
@@ -537,7 +538,7 @@ static_assert(kPackedDynamicStateSize == 40, "Size check failed");
 constexpr size_t kGraphicsPipelineDescSumOfSizes =
     kVertexInputAttributesSize + kRenderPassDescSize +
     kPackedInputAssemblyAndRasterizationStateSize + kPackedColorBlendStateSize +
-    sizeof(PackedDither) + kPackedDynamicStateSize;
+    sizeof(PackedDitherAndWorkarounds) + kPackedDynamicStateSize;
 
 // Number of dirty bits in the dirty bit set.
 constexpr size_t kGraphicsPipelineDirtyBitBytes = 4;
@@ -720,7 +721,13 @@ class GraphicsPipelineDesc final
     }
 
     void updateEmulatedDitherControl(GraphicsPipelineTransitionBits *transition, uint16_t value);
-    uint32_t getEmulatedDitherControl() const { return mDither.emulatedDitherControl; }
+    uint32_t getEmulatedDitherControl() const
+    {
+        return mDitherAndWorkarounds.emulatedDitherControl;
+    }
+
+    void updateNonZeroStencilWriteMaskWorkaround(GraphicsPipelineTransitionBits *transition,
+                                                 bool enabled);
 
     void setSupportsDynamicStateForTest(bool supports)
     {
@@ -740,7 +747,7 @@ class GraphicsPipelineDesc final
     {
         return mColorBlendStateInfo;
     }
-    const PackedDither &getDitherForLog() const { return mDither; }
+    const PackedDitherAndWorkarounds &getDitherForLog() const { return mDitherAndWorkarounds; }
     const PackedDynamicState &getDynamicStateForLog() const { return mDynamicState; }
 
   private:
@@ -750,7 +757,7 @@ class GraphicsPipelineDesc final
     RenderPassDesc mRenderPassDesc;
     PackedInputAssemblyAndRasterizationStateInfo mInputAssemblyAndRasterizationStateInfo;
     PackedColorBlendStateInfo mColorBlendStateInfo;
-    PackedDither mDither;
+    PackedDitherAndWorkarounds mDitherAndWorkarounds;
     PackedDynamicState mDynamicState;
 };
 

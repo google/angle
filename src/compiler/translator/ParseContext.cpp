@@ -210,6 +210,7 @@ TParseContext::TParseContext(TSymbolTable &symt,
       mChecksPrecisionErrors(checksPrecErrors),
       mFragmentPrecisionHighOnESSL1(false),
       mEarlyFragmentTestsSpecified(false),
+      mHasDiscard(false),
       mSampleQualifierSpecified(false),
       mDefaultUniformMatrixPacking(EmpColumnMajor),
       mDefaultUniformBlockStorage(sh::IsWebGLBasedSpec(spec) ? EbsStd140 : EbsShared),
@@ -6810,6 +6811,7 @@ TIntermBranch *TParseContext::addBranch(TOperator op, const TSourceLoc &loc)
             {
                 errorIfPLSDeclared(loc, PLSIllegalOperations::Discard);
             }
+            mHasDiscard = true;
             break;
         default:
             UNREACHABLE();

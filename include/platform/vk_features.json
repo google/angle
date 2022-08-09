@@ -900,6 +900,15 @@
             "description": [
                 "VkDevice supports VK_ANDROID_render_to_external_format and VK_EXT_ycbcr_attachment"
             ]
+        },
+        {
+            "name": "use_non_zero_stencil_write_mask_static_state",
+            "category": "Workarounds",
+            "description": [
+                "Work around a driver bug where 0 in stencil write mask static state would make the",
+                "corresponding dynamic state malfunction in the presence of discard or alpha to coverage"
+            ],
+            "issue": "http://anglebug.com/7556"
         }
     ]
 }

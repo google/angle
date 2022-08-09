@@ -920,8 +920,11 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
     mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_LINE_WIDTH);
     mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_POLYGON_OFFSET);
     mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_BLEND_COLOR);
-    mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_STENCIL_WRITEMASK_FRONT);
-    mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_STENCIL_WRITEMASK_BACK);
+    if (!getFeatures().useNonZeroStencilWriteMaskStaticState.enabled)
+    {
+        mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_STENCIL_WRITEMASK_FRONT);
+        mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_STENCIL_WRITEMASK_BACK);
+    }
 
     // Dynamic state in VK_EXT_extended_dynamic_state:
     if (getFeatures().supportsExtendedDynamicState.enabled)
@@ -4626,6 +4629,24 @@ void ContextVk::updateDither()
     }
 }
 
+void ContextVk::updateStencilWriteWorkaround()
+{
+    if (!getFeatures().useNonZeroStencilWriteMaskStaticState.enabled)
+    {
+        return;
+    }
+
+    // On certain drivers, having a stencil write mask of 0 in static state enables optimizations
+    // that make the interaction of the stencil write mask dynamic state with discard and alpha to
+    // coverage broken.  When the program has discard, or when alpha to coverage is enabled, these
+    // optimizations are disabled by specifying a non-zero static state for stencil write mask.
+    const bool programHasDiscard        = mState.getProgramExecutable()->hasDiscard();
+    const bool isAlphaToCoverageEnabled = mState.isSampleAlphaToCoverageEnabled();
+
+    mGraphicsPipelineDesc->updateNonZeroStencilWriteMaskWorkaround(
+        &mGraphicsPipelineTransition, programHasDiscard || isAlphaToCoverageEnabled);
+}
+
 angle::Result ContextVk::invalidateProgramExecutableHelper(const gl::Context *context)
 {
     const gl::State &glState                = context->getState();
@@ -4661,6 +4682,8 @@ angle::Result ContextVk::invalidateProgramExecutableHelper(const gl::Context *co
             // masked, so update their access.
             onColorAccessChange();
         }
+
+        updateStencilWriteWorkaround();
     }
 
     return angle::Result::Continue;
@@ -4729,6 +4752,8 @@ angle::Result ContextVk::syncState(const gl::Context *context,
             case gl::State::DIRTY_BIT_SAMPLE_ALPHA_TO_COVERAGE_ENABLED:
                 mGraphicsPipelineDesc->updateAlphaToCoverageEnable(
                     &mGraphicsPipelineTransition, glState.isSampleAlphaToCoverageEnabled());
+                updateStencilWriteWorkaround();
+
                 static_assert(gl::State::DIRTY_BIT_PROGRAM_EXECUTABLE >
                                   gl::State::DIRTY_BIT_SAMPLE_ALPHA_TO_COVERAGE_ENABLED,
                               "Dirty bit order");
