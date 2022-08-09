@@ -2451,7 +2451,15 @@ bool ValidateCreateContext(const ValidationContext *val,
             break;
 
         case EGL_OPENGL_API:
-            // TODO: validate desktop OpenGL versions and profile mask
+            // The requested configuration must use EGL_OPENGL_BIT if EGL_OPENGL_BIT is the
+            // currently bound API.
+            if ((configuration != EGL_NO_CONFIG_KHR) &&
+                !(configuration->renderableType & EGL_OPENGL_BIT))
+            {
+                val->setError(EGL_BAD_CONFIG);
+                return false;
+            }
+            // TODO(http://anglebug.com/7533): validate desktop OpenGL versions and profile mask
             break;
 
         default:

@@ -2250,3 +2250,29 @@ EXPORTS
     glMultiDrawElementsIndirectCount
     glPolygonOffsetClamp
     glSpecializeShader
+
+    ; WGL 1.0
+    wglChoosePixelFormat
+    wglCopyContext
+    wglCreateContext
+    wglCreateLayerContext
+    wglDeleteContext
+    wglDescribeLayerPlane
+    wglDescribePixelFormat
+    wglGetCurrentContext
+    wglGetCurrentDC
+    wglGetEnhMetaFilePixelFormat
+    wglGetLayerPaletteEntries
+    wglGetPixelFormat
+    wglGetProcAddress
+    wglMakeCurrent
+    wglRealizeLayerPalette
+    wglSetLayerPaletteEntries
+    wglSetPixelFormat
+    wglShareLists
+    wglSwapBuffers
+    wglSwapLayerBuffers
+    wglUseFontBitmapsA
+    wglUseFontBitmapsW
+    wglUseFontOutlinesA
+    wglUseFontOutlinesW

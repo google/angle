@@ -1445,7 +1445,9 @@ if (build_angle_deqp_tests && !is_fuchsia) {
   _android_mustpass = "$deqp_path/android/cts/main"
   _aosp_mustpass =
       "$deqp_path/external/openglcts/data/mustpass/gles/aosp_mustpass/main"
-  _khronos_mustpass =
+  _khronos_gl_mustpass =
+      "$deqp_path/external/openglcts/data/mustpass/gl/khronos_mustpass/main"
+  _khronos_gles_mustpass =
       "$deqp_path/external/openglcts/data/mustpass/gles/khronos_mustpass/main"
 
   angle_deqp_source_set("angle_deqp_gles2_common") {
@@ -1563,18 +1565,23 @@ if (build_angle_deqp_tests && !is_fuchsia) {
       if (api == "gles2") {
         # Make sure we include something so that angle_deqp_libtester_main.cpp can find something.
         data = [ "$root_gen_dir/vk_gl_cts_data/data/gles2/shaders/misc.test" ]
+        mustpass_dir = _khronos_gles_mustpass
       } else if (api == "gles3") {
         data = angle_deqp_external_openglcts_data_gles3
+        mustpass_dir = _khronos_gles_mustpass
       } else if (api == "gles31") {
         data = angle_deqp_external_openglcts_data_gles31
+        mustpass_dir = _khronos_gles_mustpass
       } else if (api == "gles32") {
         data = angle_deqp_external_openglcts_data_gles32
+        mustpass_dir = _khronos_gles_mustpass
       } else if (api == "gl46") {
-        data = angle_deqp_external_openglcts_data_gl46
+        # Use this as a placeholder, the gl46 test suite does not need data
+        data = [ "$root_gen_dir/vk_gl_cts_data/data/gles2/shaders/misc.test" ]
+        mustpass_dir = _khronos_gl_mustpass
       } else {
         assert(false)
       }
-      mustpass_dir = _khronos_mustpass
     }
   }
 
@@ -1605,7 +1612,7 @@ if (build_angle_deqp_tests && !is_fuchsia) {
   # The core Desktop GL CTS is in the same category as these KHR tests.
   angle_deqp_khr_gtest("gl46") {
     defines = [ "ANGLE_DEQP_GL_TESTS" ]
-    mustpass_name = "gl46-khr-master.txt"
+    mustpass_name = "gl46-master.txt"
     api = "gl46"
   }
 

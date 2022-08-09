@@ -427,6 +427,11 @@ gl::Version DisplayMtl::getMaxConformantESVersion() const
     return std::min(getMaxSupportedESVersion(), gl::Version(3, 0));
 }
 
+Optional<gl::Version> DisplayMtl::getMaxSupportedDesktopVersion() const
+{
+    return Optional<gl::Version>::Invalid();
+}
+
 EGLSyncImpl *DisplayMtl::createSync(const egl::AttributeMap &attribs)
 {
     return new EGLSyncMtl(attribs);

@@ -3255,8 +3255,9 @@ def main():
     for lib in ["libGLESv2" + suffix for suffix in ["", "_no_capture", "_with_capture"]]:
         write_windows_def_file(everything, lib, lib, "libGLESv2", libgles_ep_exports)
 
-    write_windows_def_file(everything, "opengl32", "opengl32", "libGLESv2",
+    write_windows_def_file(everything, "opengl32_with_wgl", "opengl32", "libGLESv2",
                            libgl_ep_exports + sorted(wgl_commands))
+    write_windows_def_file(everything, "opengl32", "opengl32", "libGLESv2", libgl_ep_exports)
     write_windows_def_file("egl.xml and egl_angle_ext.xml", "libEGL", "libEGL", "libEGL",
                            libegl_windows_def_exports)
 

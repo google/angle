@@ -9,6 +9,7 @@
 #ifndef LIBANGLE_RENDERER_DISPLAYIMPL_H_
 #define LIBANGLE_RENDERER_DISPLAYIMPL_H_
 
+#include "common/Optional.h"
 #include "common/angleutils.h"
 #include "libANGLE/Caps.h"
 #include "libANGLE/Config.h"
@@ -104,11 +105,8 @@ class DisplayImpl : public EGLImplFactory, public angle::Subject
     virtual egl::Error waitNative(const gl::Context *context, EGLint engine) = 0;
     virtual gl::Version getMaxSupportedESVersion() const                     = 0;
     virtual gl::Version getMaxConformantESVersion() const                    = 0;
-    gl::Version getMaxSupportedDesktopVersion() const
-    {
-        // TODO(eddiehatfield): We should make this virtual and implement for all backends.
-        return {4, 6};
-    }
+    // If desktop GL is not supported in any capacity for a given backend, this returns None.
+    virtual Optional<gl::Version> getMaxSupportedDesktopVersion() const = 0;
     const egl::Caps &getCaps() const;
 
     virtual void setBlobCacheFuncs(EGLSetBlobFuncANDROID set, EGLGetBlobFuncANDROID get) {}

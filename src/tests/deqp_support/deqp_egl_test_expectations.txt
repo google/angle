@@ -148,6 +148,11 @@
 5170 VULKAN LINUX : dEQP-EGL.functional.swap_buffers_with_damage.resize_after_swap.* = SKIP
 5170 VULKAN LINUX : dEQP-EGL.functional.swap_buffers_with_damage.resize_before_swap.* = SKIP
 
+// Tests that fail when the GL desktop frontend is enabled
+// TODO(http://anglebug.com/7566): Get these tests to pass.
+7533 : dEQP-EGL.functional.create_context_ext.gl_30.* = SKIP
+7533 : dEQP-EGL.functional.create_context_ext.robust_gl_30.* = SKIP
+
 //// Metal
 
 6485 MAC METAL : dEQP-EGL.functional.multithread.pbuffer_single_window = SKIP

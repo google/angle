@@ -264,6 +264,7 @@ class Display final : public LabeledObject,
     const std::string &getExtensionString() const;
     const std::string &getVendorString() const;
     const std::string &getVersionString() const;
+    const std::string &getClientAPIString() const;
 
     std::string getBackendRendererDescription() const;
     std::string getBackendVendorString() const;
@@ -344,6 +345,7 @@ class Display final : public LabeledObject,
     void initDisplayExtensions();
     void initVendorString();
     void initVersionString();
+    void initClientAPIString();
     void initializeFrontendFeatures();
 
     angle::ScratchBuffer requestScratchBufferImpl(std::vector<angle::ScratchBuffer> *bufferVector);
@@ -390,6 +392,7 @@ class Display final : public LabeledObject,
 
     std::string mVendorString;
     std::string mVersionString;
+    std::string mClientAPIString;
 
     Device *mDevice;
     Surface *mSurface;
