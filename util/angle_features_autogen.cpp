@@ -243,6 +243,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::SupportsImage2dViewOf3d, "supportsImage2dViewOf3d"},
     {Feature::SupportsImageCubeArray, "supportsImageCubeArray"},
     {Feature::SupportsImageFormatList, "supportsImageFormatList"},
+    {Feature::SupportsImagelessFramebuffer, "supportsImagelessFramebuffer"},
     {Feature::SupportsIncrementalPresent, "supportsIncrementalPresent"},
     {Feature::SupportsIndexTypeUint8, "supportsIndexTypeUint8"},
     {Feature::SupportsLockSurfaceExtension, "supportsLockSurfaceExtension"},

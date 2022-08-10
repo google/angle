@@ -230,6 +230,7 @@ enum class Feature
     SupportsImage2dViewOf3d,
     SupportsImageCubeArray,
     SupportsImageFormatList,
+    SupportsImagelessFramebuffer,
     SupportsIncrementalPresent,
     SupportsIndexTypeUint8,
     SupportsLockSurfaceExtension,

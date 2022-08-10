@@ -896,6 +896,14 @@
             "issue": "https://anglebug.com/7320"
         },
         {
+            "name": "supports_imageless_framebuffer",
+            "category": "Features",
+            "description": [
+                "VkDevice supports VK_KHR_imageless_framebuffer extension"
+            ],
+            "issue": "http://anglebug.com/7553"
+        },
+        {
             "name": "prefer_linear_filter_for_YUV",
             "category": "Features",
             "description": [
