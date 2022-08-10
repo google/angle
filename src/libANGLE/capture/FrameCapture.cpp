@@ -4846,12 +4846,14 @@ bool SkipCall(EntryPoint entryPoint)
         case EntryPoint::GLDebugMessageInsertKHR:
         case EntryPoint::GLGetDebugMessageLog:
         case EntryPoint::GLGetDebugMessageLogKHR:
+        case EntryPoint::GLGetObjectLabel:
         case EntryPoint::GLGetObjectLabelEXT:
         case EntryPoint::GLGetObjectLabelKHR:
         case EntryPoint::GLGetObjectPtrLabelKHR:
         case EntryPoint::GLGetPointervKHR:
         case EntryPoint::GLInsertEventMarkerEXT:
         case EntryPoint::GLLabelObjectEXT:
+        case EntryPoint::GLObjectLabel:
         case EntryPoint::GLObjectLabelKHR:
         case EntryPoint::GLObjectPtrLabelKHR:
         case EntryPoint::GLPopDebugGroupKHR:
