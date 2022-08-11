@@ -43,6 +43,15 @@ std::shared_ptr<WaitableCompileEvent> ShaderVk::compile(const gl::Context *conte
         }
     }
 
+    // robustBufferAccess on Vulkan doesn't support bound check on shader local variables
+    // but the GL_EXT_robustness does support.
+    // Enable the flag clampIndirectArrayBounds to ensure out of bounds local variable writes in
+    // shaders are protected when the context has GL_EXT_robustness enabled
+    if (context->isRobustnessEnabled())
+    {
+        options->clampIndirectArrayBounds = true;
+    }
+
     if (contextVk->getFeatures().clampPointSize.enabled)
     {
         options->clampPointSize = true;

@@ -3015,6 +3015,11 @@ bool Context::isResetNotificationEnabled() const
     return (mResetStrategy == GL_LOSE_CONTEXT_ON_RESET_EXT);
 }
 
+bool Context::isRobustnessEnabled() const
+{
+    return mRobustAccess;
+}
+
 const egl::Config *Context::getConfig() const
 {
     return mConfig;
