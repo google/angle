@@ -3767,7 +3767,7 @@ void CaptureShareGroupMidExecutionSetup(const gl::Context *context,
         // This does not handle some more tricky situations like attaching shaders to a non-linked
         // program. Or attaching uncompiled shaders. Or attaching and then deleting a shader.
         // TODO(jmadill): Handle trickier program uses. http://anglebug.com/3662
-        if (shader->isCompiled())
+        if (shader->isCompiled(context))
         {
             const std::string &capturedSource =
                 context->getShareGroup()->getFrameCaptureShared()->getShaderSource(id);
@@ -3781,7 +3781,8 @@ void CaptureShareGroupMidExecutionSetup(const gl::Context *context,
             cap(CaptureCompileShader(replayState, true, id));
         }
 
-        if (sourcePointer && (!shader->isCompiled() || sourcePointer != shaderSource.c_str()))
+        if (sourcePointer &&
+            (!shader->isCompiled(context) || sourcePointer != shaderSource.c_str()))
         {
             cap(CaptureShaderSource(replayState, true, id, 1, &sourcePointer, nullptr));
         }

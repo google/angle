@@ -49,7 +49,8 @@ void GlslangWrapperVk::ResetGlslangProgramInterfaceInfo(
 }
 
 // static
-void GlslangWrapperVk::GetShaderCode(const angle::FeaturesVk &features,
+void GlslangWrapperVk::GetShaderCode(const gl::Context *context,
+                                     const angle::FeaturesVk &features,
                                      const gl::ProgramState &programState,
                                      const gl::ProgramLinkedResources &resources,
                                      GlslangProgramInterfaceInfo *programInterfaceInfo,
@@ -57,8 +58,8 @@ void GlslangWrapperVk::GetShaderCode(const angle::FeaturesVk &features,
                                      ShaderInterfaceVariableInfoMap *variableInfoMapOut)
 {
     GlslangSourceOptions options = CreateSourceOptions(features);
-    GlslangGetShaderSpirvCode(options, programState, resources, programInterfaceInfo, spirvBlobsOut,
-                              variableInfoMapOut);
+    GlslangGetShaderSpirvCode(context, options, programState, resources, programInterfaceInfo,
+                              spirvBlobsOut, variableInfoMapOut);
 }
 
 // static

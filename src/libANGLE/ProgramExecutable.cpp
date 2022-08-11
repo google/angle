@@ -950,17 +950,17 @@ void ProgramExecutable::updateCanDrawWith()
     mCanDrawWith = hasLinkedShaderStage(ShaderType::Vertex);
 }
 
-void ProgramExecutable::saveLinkedStateInfo(const ProgramState &state)
+void ProgramExecutable::saveLinkedStateInfo(const Context *context, const ProgramState &state)
 {
     for (ShaderType shaderType : getLinkedShaderStages())
     {
         Shader *shader = state.getAttachedShader(shaderType);
         ASSERT(shader);
-        mLinkedOutputVaryings[shaderType] = shader->getOutputVaryings();
-        mLinkedInputVaryings[shaderType]  = shader->getInputVaryings();
-        mLinkedShaderVersions[shaderType] = shader->getShaderVersion();
-        mLinkedUniforms[shaderType]       = shader->getUniforms();
-        mLinkedUniformBlocks[shaderType]  = shader->getUniformBlocks();
+        mLinkedOutputVaryings[shaderType] = shader->getOutputVaryings(context);
+        mLinkedInputVaryings[shaderType]  = shader->getInputVaryings(context);
+        mLinkedShaderVersions[shaderType] = shader->getShaderVersion(context);
+        mLinkedUniforms[shaderType]       = shader->getUniforms(context);
+        mLinkedUniformBlocks[shaderType]  = shader->getUniformBlocks(context);
     }
 }
 

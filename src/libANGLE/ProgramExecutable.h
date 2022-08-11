@@ -287,7 +287,7 @@ class ProgramExecutable final : public angle::Subject
 
     GLuint getUniformIndexFromSamplerIndex(GLuint samplerIndex) const;
 
-    void saveLinkedStateInfo(const ProgramState &state);
+    void saveLinkedStateInfo(const Context *context, const ProgramState &state);
     const std::vector<sh::ShaderVariable> &getLinkedOutputVaryings(ShaderType shaderType) const
     {
         return mLinkedOutputVaryings[shaderType];

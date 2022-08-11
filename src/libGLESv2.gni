@@ -570,6 +570,7 @@ libangle_capture_sources = [
   "src/libANGLE/capture/frame_capture_utils_autogen.cpp",
   "src/libANGLE/capture/gl_enum_utils.cpp",
   "src/libANGLE/capture/gl_enum_utils_autogen.cpp",
+  "src/libGLESv2/global_state.h",
   "src/third_party/ceval/ceval.h",
 ]
 

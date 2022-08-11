@@ -180,21 +180,27 @@ class Shader final : angle::NonCopyable, public LabeledObject
     rx::ShaderImpl *getImplementation() const { return mImplementation.get(); }
 
     void setSource(GLsizei count, const char *const *string, const GLint *length);
-    int getInfoLogLength();
-    void getInfoLog(GLsizei bufSize, GLsizei *length, char *infoLog);
+    int getInfoLogLength(const Context *context);
+    void getInfoLog(const Context *context, GLsizei bufSize, GLsizei *length, char *infoLog);
     std::string getInfoLogString() const { return mInfoLog; }
     int getSourceLength() const;
     const std::string &getSourceString() const { return mState.getSource(); }
     void getSource(GLsizei bufSize, GLsizei *length, char *buffer) const;
-    int getTranslatedSourceLength();
-    int getTranslatedSourceWithDebugInfoLength();
-    const std::string &getTranslatedSource();
-    void getTranslatedSource(GLsizei bufSize, GLsizei *length, char *buffer);
-    void getTranslatedSourceWithDebugInfo(GLsizei bufSize, GLsizei *length, char *buffer);
-    const sh::BinaryBlob &getCompiledBinary();
+    int getTranslatedSourceLength(const Context *context);
+    int getTranslatedSourceWithDebugInfoLength(const Context *context);
+    const std::string &getTranslatedSource(const Context *context);
+    void getTranslatedSource(const Context *context,
+                             GLsizei bufSize,
+                             GLsizei *length,
+                             char *buffer);
+    void getTranslatedSourceWithDebugInfo(const Context *context,
+                                          GLsizei bufSize,
+                                          GLsizei *length,
+                                          char *buffer);
+    const sh::BinaryBlob &getCompiledBinary(const Context *context);
 
     void compile(const Context *context);
-    bool isCompiled();
+    bool isCompiled(const Context *context);
     bool isCompleted();
 
     void addRef();
@@ -207,35 +213,36 @@ class Shader final : angle::NonCopyable, public LabeledObject
     BlendEquationBitSet getAdvancedBlendEquations() const { return mState.mAdvancedBlendEquations; }
     rx::SpecConstUsageBits getSpecConstUsageBits() const { return mState.mSpecConstUsageBits; }
 
-    int getShaderVersion();
+    int getShaderVersion(const Context *context);
 
-    const std::vector<sh::ShaderVariable> &getInputVaryings();
-    const std::vector<sh::ShaderVariable> &getOutputVaryings();
-    const std::vector<sh::ShaderVariable> &getUniforms();
-    const std::vector<sh::InterfaceBlock> &getUniformBlocks();
-    const std::vector<sh::InterfaceBlock> &getShaderStorageBlocks();
-    const std::vector<sh::ShaderVariable> &getActiveAttributes();
-    const std::vector<sh::ShaderVariable> &getAllAttributes();
-    const std::vector<sh::ShaderVariable> &getActiveOutputVariables();
+    const std::vector<sh::ShaderVariable> &getInputVaryings(const Context *context);
+    const std::vector<sh::ShaderVariable> &getOutputVaryings(const Context *context);
+    const std::vector<sh::ShaderVariable> &getUniforms(const Context *context);
+    const std::vector<sh::InterfaceBlock> &getUniformBlocks(const Context *context);
+    const std::vector<sh::InterfaceBlock> &getShaderStorageBlocks(const Context *context);
+    const std::vector<sh::ShaderVariable> &getActiveAttributes(const Context *context);
+    const std::vector<sh::ShaderVariable> &getAllAttributes(const Context *context);
+    const std::vector<sh::ShaderVariable> &getActiveOutputVariables(const Context *context);
 
     // Returns mapped name of a transform feedback varying. The original name may contain array
     // brackets with an index inside, which will get copied to the mapped name. The varying must be
     // known to be declared in the shader.
-    std::string getTransformFeedbackVaryingMappedName(const std::string &tfVaryingName);
+    std::string getTransformFeedbackVaryingMappedName(const Context *context,
+                                                      const std::string &tfVaryingName);
 
-    const sh::WorkGroupSize &getWorkGroupSize();
+    const sh::WorkGroupSize &getWorkGroupSize(const Context *context);
 
-    int getNumViews();
+    int getNumViews(const Context *context);
 
-    Optional<PrimitiveMode> getGeometryShaderInputPrimitiveType();
-    Optional<PrimitiveMode> getGeometryShaderOutputPrimitiveType();
-    int getGeometryShaderInvocations();
-    Optional<GLint> getGeometryShaderMaxVertices();
-    int getTessControlShaderVertices();
-    GLenum getTessGenMode();
-    GLenum getTessGenSpacing();
-    GLenum getTessGenVertexOrder();
-    GLenum getTessGenPointMode();
+    Optional<PrimitiveMode> getGeometryShaderInputPrimitiveType(const Context *context);
+    Optional<PrimitiveMode> getGeometryShaderOutputPrimitiveType(const Context *context);
+    int getGeometryShaderInvocations(const Context *context);
+    Optional<GLint> getGeometryShaderMaxVertices(const Context *context);
+    int getTessControlShaderVertices(const Context *context);
+    GLenum getTessGenMode(const Context *context);
+    GLenum getTessGenSpacing(const Context *context);
+    GLenum getTessGenVertexOrder(const Context *context);
+    GLenum getTessGenPointMode(const Context *context);
 
     const std::string &getCompilerResourcesString() const;
 
@@ -249,7 +256,8 @@ class Shader final : angle::NonCopyable, public LabeledObject
     unsigned int getMaxComputeSharedMemory() const { return mMaxComputeSharedMemory; }
     bool hasBeenDeleted() const { return mDeleteStatus; }
 
-    void resolveCompile();
+    // Block until compiling is finished and resolve it.
+    void resolveCompile(const Context *context);
 
   private:
     struct CompilingState;
