@@ -23,6 +23,8 @@ GLuint CompileProgramInternal(const char *vsSource,
                               const char *fsSource,
                               const std::function<void(GLuint)> &preLinkCallback)
 {
+    GLuint program = glCreateProgram();
+
     GLuint vs = CompileShader(GL_VERTEX_SHADER, vsSource);
     GLuint fs = CompileShader(GL_FRAGMENT_SHADER, fsSource);
 
@@ -30,10 +32,9 @@ GLuint CompileProgramInternal(const char *vsSource,
     {
         glDeleteShader(fs);
         glDeleteShader(vs);
+        glDeleteProgram(program);
         return 0;
     }
-
-    GLuint program = glCreateProgram();
 
     glAttachShader(program, vs);
     glDeleteShader(vs);
