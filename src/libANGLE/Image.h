@@ -149,7 +149,7 @@ struct ImageState : private angle::NonCopyable
     bool hasProtectedContent;
 
     mutable std::mutex targetsLock;
-    std::set<ImageSibling *> targets;
+    angle::FlatUnorderedSet<ImageSibling *, 2> targets;
 };
 
 class Image final : public RefCountObject, public LabeledObject
