@@ -395,7 +395,7 @@ def _CheckCommentBeforeTestInTestFiles(input_api, output_api):
 
     def test_files(f):
         return input_api.FilterSourceFile(
-            f, files_to_check=(r'^src\/tests\/.+\.cpp$', r'^src\/.+_unittest\.cpp$'))
+            f, files_to_check=(r'^src/tests/.+\.cpp$', r'^src/.+_unittest\.cpp$'))
 
     tests_with_no_comment = []
     for f in input_api.AffectedSourceFiles(test_files):
@@ -432,8 +432,7 @@ def _CheckShaderVersionInShaderLangHeader(input_api, output_api):
     def headers(f):
         return input_api.FilterSourceFile(
             f,
-            files_to_check=(r'^include\/GLSLANG\/ShaderLang.h$',
-                            r'^include\/GLSLANG\/ShaderVars.h$'))
+            files_to_check=(r'^include/GLSLANG/ShaderLang.h$', r'^include/GLSLANG/ShaderVars.h$'))
 
     headers_changed = input_api.AffectedSourceFiles(headers)
     if len(headers_changed) == 0:
