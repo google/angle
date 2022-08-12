@@ -27,7 +27,8 @@ using AttributeValidationFunc =
 class AttributeMap final
 {
   public:
-    using Map = angle::FlatUnorderedMap<EGLAttrib, EGLAttrib, 2>;
+    static constexpr size_t kMapSize = 2;
+    using Map                        = angle::FlatUnorderedMap<EGLAttrib, EGLAttrib, kMapSize>;
 
     AttributeMap();
     AttributeMap(const AttributeMap &other);

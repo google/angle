@@ -9,6 +9,7 @@
 #ifndef LIBANGLE_IMAGE_H_
 #define LIBANGLE_IMAGE_H_
 
+#include "common/FastVector.h"
 #include "common/angleutils.h"
 #include "libANGLE/AttributeMap.h"
 #include "libANGLE/Debug.h"
@@ -16,8 +17,6 @@
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/RefCountObject.h"
 #include "libANGLE/formatutils.h"
-
-#include <set>
 
 namespace rx
 {
@@ -74,7 +73,8 @@ class ImageSibling : public gl::FramebufferAttachmentObject
     // Called from Image only to remove a source image when the Image is being deleted
     void removeImageSource(egl::Image *imageSource);
 
-    std::set<Image *> mSourcesOf;
+    static constexpr size_t kSourcesOfSetSize = 2;
+    angle::FlatUnorderedSet<Image *, kSourcesOfSetSize> mSourcesOf;
     BindingPointer<Image> mTargetOf;
 };
 
@@ -149,7 +149,9 @@ struct ImageState : private angle::NonCopyable
     bool hasProtectedContent;
 
     mutable std::mutex targetsLock;
-    angle::FlatUnorderedSet<ImageSibling *, 2> targets;
+
+    static constexpr size_t kTargetsSetSize = 2;
+    angle::FlatUnorderedSet<ImageSibling *, kTargetsSetSize> targets;
 };
 
 class Image final : public RefCountObject, public LabeledObject
