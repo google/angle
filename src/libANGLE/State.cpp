@@ -1986,6 +1986,7 @@ angle::Result State::setProgram(const Context *context, Program *newProgram)
         else if (mProgramPipeline.get())
         {
             mExecutable = &mProgramPipeline->getExecutable();
+            ANGLE_TRY(onProgramPipelineExecutableChange(context));
         }
 
         // Note that rendering is undefined if glUseProgram(0) is called. But ANGLE will generate
@@ -2046,6 +2047,7 @@ angle::Result State::setProgramPipelineBinding(const Context *context, ProgramPi
         if (mProgramPipeline.get())
         {
             mExecutable = &mProgramPipeline->getExecutable();
+            ANGLE_TRY(onProgramPipelineExecutableChange(context));
         }
         else
         {
@@ -3477,6 +3479,16 @@ angle::Result State::syncProgram(const Context *context, Command command)
     return angle::Result::Continue;
 }
 
+angle::Result State::syncProgramPipelineObject(const Context *context, Command command)
+{
+    // If a ProgramPipeline is bound, ensure it is linked.
+    if (mProgramPipeline.get())
+    {
+        mProgramPipeline->resolveLink(context);
+    }
+    return angle::Result::Continue;
+}
+
 angle::Result State::syncDirtyObject(const Context *context, GLenum target)
 {
     DirtyObjects localSet;
@@ -3595,6 +3607,11 @@ angle::Result State::onProgramExecutableChange(const Context *context, Program *
 angle::Result State::onProgramPipelineExecutableChange(const Context *context)
 {
     mDirtyBits.set(DIRTY_BIT_PROGRAM_EXECUTABLE);
+
+    if (!mProgramPipeline->isLinked())
+    {
+        mDirtyObjects.set(DIRTY_OBJECT_PROGRAM_PIPELINE_OBJECT);
+    }
 
     // Set any bound textures.
     const ProgramExecutable &executable        = mProgramPipeline->getExecutable();

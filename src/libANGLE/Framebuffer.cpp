@@ -2233,7 +2233,7 @@ FramebufferAttachment *Framebuffer::getAttachmentFromSubjectIndex(angle::Subject
 bool Framebuffer::formsRenderingFeedbackLoopWith(const Context *context) const
 {
     const State &glState                = context->getState();
-    const ProgramExecutable *executable = glState.getProgramExecutable();
+    const ProgramExecutable *executable = glState.getLinkedProgramExecutable(context);
 
     // In some error cases there may be no bound program or executable.
     if (!executable)
