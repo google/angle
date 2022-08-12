@@ -3922,6 +3922,8 @@ void RendererVk::initializeFrontendFeatures(angle::FrontendFeatures *features) c
     // off GL error checking, and then asking ANGLE to write past the end of a buffer.
     // https://issuetracker.google.com/issues/220069903
     ANGLE_FEATURE_CONDITION(features, forceGlErrorChecking, (IsAndroid() && isSwiftShader));
+
+    ANGLE_FEATURE_CONDITION(features, cacheCompiledShader, true);
 }
 
 angle::Result RendererVk::getPipelineCacheSize(DisplayVk *displayVk, size_t *pipelineCacheSizeOut)

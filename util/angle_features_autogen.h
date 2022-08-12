@@ -42,6 +42,7 @@ enum class Feature
     BindTransformFeedbackBufferBeforeBindBufferRange,
     BottomLeftOriginPresentRegionRectangles,
     BresenhamLineRasterization,
+    CacheCompiledShader,
     CallClearTwice,
     ClampArrayAccess,
     ClampFragDepth,

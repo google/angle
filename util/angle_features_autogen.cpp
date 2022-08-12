@@ -44,6 +44,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
      "bindTransformFeedbackBufferBeforeBindBufferRange"},
     {Feature::BottomLeftOriginPresentRegionRectangles, "bottomLeftOriginPresentRegionRectangles"},
     {Feature::BresenhamLineRasterization, "bresenhamLineRasterization"},
+    {Feature::CacheCompiledShader, "cacheCompiledShader"},
     {Feature::CallClearTwice, "callClearTwice"},
     {Feature::ClampArrayAccess, "clampArrayAccess"},
     {Feature::ClampFragDepth, "clampFragDepth"},

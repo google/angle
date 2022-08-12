@@ -24,6 +24,7 @@
 #include "libANGLE/Error.h"
 #include "libANGLE/LoggingAnnotator.h"
 #include "libANGLE/MemoryProgramCache.h"
+#include "libANGLE/MemoryShaderCache.h"
 #include "libANGLE/Observer.h"
 #include "libANGLE/Version.h"
 #include "platform/Feature.h"
@@ -313,6 +314,8 @@ class Display final : public LabeledObject,
     std::mutex &getDisplayGlobalMutex() { return mDisplayGlobalMutex; }
     std::mutex &getProgramCacheMutex() { return mProgramCacheMutex; }
 
+    gl::MemoryShaderCache *getMemoryShaderCache() { return &mMemoryShaderCache; }
+
     // Installs LoggingAnnotator as the global DebugAnnotator, for back-ends that do not implement
     // their own DebugAnnotator.
     void setGlobalDebugAnnotator() { gl::InitializeDebugAnnotations(&mAnnotator); }
@@ -397,6 +400,7 @@ class Display final : public LabeledObject,
     gl::SemaphoreManager *mSemaphoreManager;
     BlobCache mBlobCache;
     gl::MemoryProgramCache mMemoryProgramCache;
+    gl::MemoryShaderCache mMemoryShaderCache;
     size_t mGlobalTextureShareGroupUsers;
     size_t mGlobalSemaphoreShareGroupUsers;
 
