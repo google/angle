@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 303
+#define ANGLE_SH_VERSION 304
 
 enum ShShaderSpec
 {
@@ -88,6 +88,8 @@ enum class ShFragmentSynchronizationType
     FragmentShaderInterlock_NV_GL,
     FragmentShaderOrdering_INTEL_GL,
     FragmentShaderInterlock_ARB_GL,
+
+    RasterizerOrderViews_D3D,
 
     InvalidEnum,
     EnumCount = InvalidEnum,

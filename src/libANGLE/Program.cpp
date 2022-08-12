@@ -689,6 +689,7 @@ void WriteShaderVar(BinaryOutputStream *stream, const sh::ShaderVariable &var)
     stream->writeInt(var.binding);
     stream->writeInt(var.imageUnitFormat);
     stream->writeInt(var.offset);
+    stream->writeBool(var.rasterOrdered);
     stream->writeBool(var.readonly);
     stream->writeBool(var.writeonly);
     stream->writeBool(var.isFragmentInOut);
@@ -725,6 +726,7 @@ void LoadShaderVar(gl::BinaryInputStream *stream, sh::ShaderVariable *var)
     var->binding             = stream->readInt<int>();
     var->imageUnitFormat     = stream->readInt<GLenum>();
     var->offset              = stream->readInt<int>();
+    var->rasterOrdered       = stream->readBool();
     var->readonly            = stream->readBool();
     var->writeonly           = stream->readBool();
     var->isFragmentInOut     = stream->readBool();
