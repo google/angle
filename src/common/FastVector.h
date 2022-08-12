@@ -44,8 +44,11 @@ class WrapIter
     }
 
     bool operator==(const WrapIter &x) const { return mIter == x.mIter; }
-
     bool operator!=(const WrapIter &x) const { return mIter != x.mIter; }
+    bool operator<(const WrapIter &x) const { return mIter < x.mIter; }
+    bool operator<=(const WrapIter &x) const { return mIter <= x.mIter; }
+    bool operator>(const WrapIter &x) const { return mIter > x.mIter; }
+    bool operator>=(const WrapIter &x) const { return mIter >= x.mIter; }
 
     WrapIter &operator++()
     {
@@ -157,6 +160,7 @@ class FastVector final
 
     // Specialty function that removes a known element and might shuffle the list.
     void remove_and_permute(const value_type &element);
+    void remove_and_permute(iterator pos);
 
   private:
     void assign_from_initializer_list(std::initializer_list<value_type> init);
@@ -491,6 +495,16 @@ ANGLE_INLINE void FastVector<T, N, Storage>::remove_and_permute(const value_type
 }
 
 template <class T, size_t N, class Storage>
+ANGLE_INLINE void FastVector<T, N, Storage>::remove_and_permute(iterator pos)
+{
+    ASSERT(pos >= begin());
+    ASSERT(pos < end());
+    size_t len = mSize - 1;
+    *pos       = std::move(mData[len]);
+    pop_back();
+}
+
+template <class T, size_t N, class Storage>
 void FastVector<T, N, Storage>::ensure_capacity(size_t capacity)
 {
     // We have a minimum capacity of N.
@@ -612,11 +626,15 @@ class FlatUnorderedMap final
         return mData.back().second;
     }
 
-    void insert(const Key &key, Value value)
+    void insert(Pair pair)
     {
-        ASSERT(!contains(key));
-        mData.push_back(Pair(key, value));
+        ASSERT(!contains(pair.first));
+        mData.push_back(std::move(pair));
     }
+
+    void insert(const Key &key, Value value) { insert(Pair(key, value)); }
+
+    void erase(iterator pos) { mData.remove_and_permute(pos); }
 
     bool contains(const Key &key) const { return find(key) != end(); }
 

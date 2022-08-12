@@ -12,7 +12,6 @@
 
 #include <algorithm>
 #include <iterator>
-#include <map>
 #include <sstream>
 #include <vector>
 
@@ -90,7 +89,7 @@ namespace
 
 constexpr angle::SubjectIndex kGPUSwitchedSubjectIndex = 0;
 
-typedef std::map<EGLNativeWindowType, Surface *> WindowSurfaceMap;
+typedef angle::FlatUnorderedMap<EGLNativeWindowType, Surface *, 32> WindowSurfaceMap;
 // Get a map of all EGL window surfaces to validate that no window has more than one EGL surface
 // associated with it.
 static WindowSurfaceMap *GetWindowSurfaces()
@@ -132,19 +131,19 @@ struct ANGLEPlatformDisplay
     EGLAttrib deviceIdLow{0};
 };
 
-inline bool operator<(const ANGLEPlatformDisplay &a, const ANGLEPlatformDisplay &b)
+inline bool operator==(const ANGLEPlatformDisplay &a, const ANGLEPlatformDisplay &b)
 {
-    return a.tie() < b.tie();
+    return a.tie() == b.tie();
 }
 
-typedef std::map<ANGLEPlatformDisplay, Display *> ANGLEPlatformDisplayMap;
+typedef angle::FlatUnorderedMap<ANGLEPlatformDisplay, Display *, 8> ANGLEPlatformDisplayMap;
 static ANGLEPlatformDisplayMap *GetANGLEPlatformDisplayMap()
 {
     static angle::base::NoDestructor<ANGLEPlatformDisplayMap> displays;
     return displays.get();
 }
 
-typedef std::map<Device *, Display *> DevicePlatformDisplayMap;
+typedef angle::FlatUnorderedMap<Device *, Display *, 8> DevicePlatformDisplayMap;
 static DevicePlatformDisplayMap *GetDevicePlatformDisplayMap()
 {
     static angle::base::NoDestructor<DevicePlatformDisplayMap> displays;
