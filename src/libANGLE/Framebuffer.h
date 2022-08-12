@@ -508,7 +508,7 @@ class Framebuffer final : public angle::ObserverInterface,
     rx::FramebufferImpl *mImpl;
 
     mutable Optional<FramebufferStatus> mCachedStatus;
-    std::vector<angle::ObserverBinding> mDirtyColorAttachmentBindings;
+    DrawBuffersVector<angle::ObserverBinding> mDirtyColorAttachmentBindings;
     angle::ObserverBinding mDirtyDepthAttachmentBinding;
     angle::ObserverBinding mDirtyStencilAttachmentBinding;
 
