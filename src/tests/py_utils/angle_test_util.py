@@ -45,7 +45,7 @@ def SetupLogging(level):
     logger = logging.getLogger()
     logger.setLevel(level)
 
-    handler = logging.StreamHandler()
+    handler = logging.StreamHandler(sys.stdout)
     handler.setFormatter(LogFormatter())
     logger.addHandler(handler)
 
