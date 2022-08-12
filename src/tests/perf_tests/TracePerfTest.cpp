@@ -1163,6 +1163,14 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
         }
     }
 
+    if (traceNameIs("star_wars_kotor"))
+    {
+        if (IsLinux() && mParams->isSwiftshader())
+        {
+            skipTest("TODO: http://anglebug.com/7565 Flaky on Swiftshader");
+        }
+    }
+
     if (traceNameIs("dead_by_daylight"))
     {
         addExtensionPrerequisite("GL_EXT_shader_framebuffer_fetch");
