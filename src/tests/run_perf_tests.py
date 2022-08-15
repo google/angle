@@ -183,6 +183,191 @@ class Results:
             self._test_results = {}
 
 
+def _read_histogram(histogram_file_path):
+    with open(histogram_file_path) as histogram_file:
+        histogram = histogram_set.HistogramSet()
+        histogram.ImportDicts(json.load(histogram_file))
+        return histogram
+
+
+def _merge_into_one_histogram(test_histogram_set):
+    with common.temporary_file() as merge_histogram_path:
+        logging.info('Writing merged histograms to %s.' % merge_histogram_path)
+        with open(merge_histogram_path, 'w') as merge_histogram_file:
+            json.dump(test_histogram_set.AsDicts(), merge_histogram_file)
+            merge_histogram_file.close()
+        merged_dicts = merge_histograms.MergeHistograms(merge_histogram_path, groupby=['name'])
+        merged_histogram = histogram_set.HistogramSet()
+        merged_histogram.ImportDicts(merged_dicts)
+        return merged_histogram
+
+
+def _wall_times_stats(wall_times):
+    if len(wall_times) > 7:
+        truncation_n = len(wall_times) >> 3
+        logging.debug('Truncation: Removing the %d highest and lowest times from wall_times.' %
+                      truncation_n)
+        wall_times = _truncated_list(wall_times, truncation_n)
+
+    if len(wall_times) > 1:
+        return ('truncated mean wall_time = %.2f, cov = %.2f%%' %
+                (_mean(wall_times), _coefficient_of_variation(wall_times) * 100.0))
+
+    return None
+
+
+def _run_test_suite(args, cmd_args, env):
+    android_test_runner_args = [
+        '--extract-test-list-from-filter',
+        '--enable-device-cache',
+        '--skip-clear-data',
+        '--use-existing-test-data',
+    ]
+    return angle_test_util.RunTestSuite(
+        args.test_suite,
+        cmd_args,
+        env,
+        runner_args=android_test_runner_args,
+        use_xvfb=args.xvfb,
+        show_test_stdout=args.show_test_stdout)
+
+
+def _run_calibration(args, common_args, env):
+    exit_code, calibrate_output = _run_test_suite(
+        args, common_args + [
+            '--calibration',
+            '--warmup-loops',
+            str(args.warmup_loops),
+        ], env)
+    if exit_code != EXIT_SUCCESS:
+        raise RuntimeError('%s failed. Output:\n%s' % (args.test_suite, calibrate_output))
+    steps_per_trial = _get_results_from_output(calibrate_output, 'steps_to_run')
+    if not steps_per_trial:
+        return None
+    assert (len(steps_per_trial) == 1)
+    return int(steps_per_trial[0])
+
+
+def _run_perf(args, common_args, env, steps_per_trial):
+    run_args = common_args + [
+        '--steps-per-trial',
+        str(steps_per_trial),
+        '--trials',
+        str(args.trials_per_sample),
+    ]
+
+    if args.smoke_test_mode:
+        run_args += ['--no-warmup']
+    else:
+        run_args += ['--warmup-loops', str(args.warmup_loops)]
+
+    if args.perf_counters:
+        run_args += ['--perf-counters', args.perf_counters]
+
+    with common.temporary_file() as histogram_file_path:
+        run_args += ['--isolated-script-test-perf-output=%s' % histogram_file_path]
+
+        exit_code, output = _run_test_suite(args, run_args, env)
+        if exit_code != EXIT_SUCCESS:
+            raise RuntimeError('%s failed. Output:\n%s' % (args.test_suite, output))
+
+        sample_wall_times = _get_results_from_output(output, 'wall_time')
+        if sample_wall_times:
+            sample_histogram = _read_histogram(histogram_file_path)
+            return sample_wall_times, sample_histogram
+
+    return None, None
+
+
+class _MaxErrorsException(Exception):
+    pass
+
+
+def _run_tests(tests, args, extra_flags, env):
+    results = Results()
+    histograms = histogram_set.HistogramSet()
+    total_errors = 0
+    prepared_traces = set()
+
+    for test_index in range(len(tests)):
+        if total_errors >= args.max_errors:
+            raise _MaxErrorsException()
+
+        test = tests[test_index]
+
+        if angle_test_util.IsAndroid():
+            trace = android_helper.GetTraceFromTestName(test)
+            if trace and trace not in prepared_traces:
+                android_helper.PrepareRestrictedTraces([trace])
+                prepared_traces.add(trace)
+
+        common_args = [
+            '--gtest_filter=%s' % test,
+            '--verbose',
+            '--calibration-time',
+            str(args.calibration_time),
+        ] + extra_flags
+
+        if args.steps_per_trial:
+            steps_per_trial = args.steps_per_trial
+        else:
+            try:
+                steps_per_trial = _run_calibration(args, common_args, env)
+            except RuntimeError as e:
+                logging.fatal(e)
+                total_errors += 1
+                results.result_fail(test)
+                continue
+
+            if not steps_per_trial:
+                logging.warning('Skipping test %s' % test)
+                results.result_skip(test)
+                continue
+
+        logging.info('Test %d/%d: %s (samples=%d trials_per_sample=%d steps_per_trial=%d)' %
+                     (test_index + 1, len(tests), test, args.samples_per_test,
+                      args.trials_per_sample, steps_per_trial))
+
+        wall_times = []
+        test_histogram_set = histogram_set.HistogramSet()
+        for sample in range(args.samples_per_test):
+            try:
+                sample_wall_times, sample_histogram = _run_perf(args, common_args, env,
+                                                                steps_per_trial)
+            except RuntimeError as e:
+                logging.error(e)
+                results.result_fail(test)
+                total_errors += 1
+                break
+
+            if not sample_wall_times:
+                # This can be intentional for skipped tests. They are handled below.
+                logging.warning('Test %s failed to produce a sample output' % test)
+                break
+
+            logging.info('Test %d/%d Sample %d/%d wall_times: %s' %
+                         (test_index + 1, len(tests), sample + 1, args.samples_per_test,
+                          str(sample_wall_times)))
+
+            wall_times += sample_wall_times
+            test_histogram_set.Merge(sample_histogram)
+
+        if not results.has_result(test):
+            if not wall_times:
+                logging.warning('Skipping test %s. Assuming this is intentional.' % test)
+                results.result_skip(test)
+            elif len(wall_times) == (args.samples_per_test * args.trials_per_sample):
+                logging.info('Test %d/%d: %s: %s' %
+                             (test_index + 1, len(tests), test, _wall_times_stats(wall_times)))
+                histograms.Merge(_merge_into_one_histogram(test_histogram_set))
+                results.result_pass(test)
+            else:
+                logging.error('Test %s failed to record some samples' % test)
+                results.result_fail(test)
+
+    return results, histograms
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--isolated-script-test-output', type=str)
@@ -264,17 +449,7 @@ def main():
     if angle_test_util.IsAndroid():
         tests = android_helper.ListTests(args.test_suite)
     else:
-        cmd_args = [
-            '--list-tests',
-            '--verbose',
-        ]
-        exit_code, output = angle_test_util.RunTestSuite(
-            args.test_suite,
-            cmd_args,
-            env,
-            runner_args=[],
-            use_xvfb=args.xvfb,
-            show_test_stdout=args.show_test_stdout)
+        exit_code, output = _run_test_suite(args, ['--list-tests', '--verbose'], env)
         if exit_code != EXIT_SUCCESS:
             logging.fatal('Could not find test list from test output:\n%s' % output)
         tests = _get_tests_from_output(output)
@@ -285,158 +460,20 @@ def main():
     # Get tests for this shard (if using sharding args)
     tests = _shard_tests(tests, args.shard_count, args.shard_index)
 
-    num_tests = len(tests)
-    if num_tests == 0:
+    if not tests:
         logging.error('No tests to run.')
         return EXIT_FAILURE
 
     if angle_test_util.IsAndroid() and args.test_suite == ANGLE_PERFTESTS:
         android_helper.RunSmokeTest()
 
-    logging.info('Running %d test%s' % (num_tests, 's' if num_tests > 1 else ' '))
+    logging.info('Running %d test%s' % (len(tests), 's' if len(tests) > 1 else ' '))
 
-    # Run tests
-    results = Results()
-
-    histograms = histogram_set.HistogramSet()
-    total_errors = 0
-
-    prepared_traces = set()
-    for test_index in range(num_tests):
-        test = tests[test_index]
-
-        if angle_test_util.IsAndroid():
-            trace = android_helper.GetTraceFromTestName(test)
-            if trace and trace not in prepared_traces:
-                android_helper.PrepareRestrictedTraces([trace])
-                prepared_traces.add(trace)
-
-        cmd_args = [
-            '--gtest_filter=%s' % test,
-            '--verbose',
-            '--calibration-time',
-            str(args.calibration_time),
-        ] + extra_flags
-        runner_args = [
-            '--extract-test-list-from-filter',
-            '--enable-device-cache',
-            '--skip-clear-data',
-            '--use-existing-test-data',
-        ]
-        if args.steps_per_trial:
-            steps_per_trial = args.steps_per_trial
-        else:
-            calibrate_args = cmd_args + [
-                '--calibration',
-                '--warmup-loops',
-                str(args.warmup_loops),
-            ]
-            exit_code, calibrate_output = angle_test_util.RunTestSuite(
-                args.test_suite,
-                calibrate_args,
-                env,
-                runner_args=runner_args,
-                use_xvfb=args.xvfb,
-                show_test_stdout=args.show_test_stdout)
-            if exit_code != EXIT_SUCCESS:
-                logging.fatal('%s failed. Output:\n%s' % (args.test_suite, calibrate_output))
-                total_errors += 1
-                results.result_fail(test)
-                continue
-            steps_per_trial = _get_results_from_output(calibrate_output, 'steps_to_run')
-            if not steps_per_trial:
-                logging.warning('Skipping test %s' % test)
-                results.result_skip(test)
-                continue
-            assert (len(steps_per_trial) == 1)
-            steps_per_trial = int(steps_per_trial[0])
-        logging.info('Test %d/%d: %s (samples=%d trials_per_sample=%d steps_per_trial=%d)' %
-                     (test_index + 1, num_tests, test, args.samples_per_test,
-                      args.trials_per_sample, steps_per_trial))
-        wall_times = []
-        test_histogram_set = histogram_set.HistogramSet()
-        for sample in range(args.samples_per_test):
-            if total_errors >= args.max_errors:
-                logging.error('Error count exceeded max errors (%d). Aborting.' % args.max_errors)
-                return EXIT_FAILURE
-
-            run_args = cmd_args + [
-                '--steps-per-trial',
-                str(steps_per_trial),
-                '--trials',
-                str(args.trials_per_sample),
-            ]
-
-            if args.smoke_test_mode:
-                run_args += ['--no-warmup']
-            else:
-                run_args += ['--warmup-loops', str(args.warmup_loops)]
-
-            if args.perf_counters:
-                run_args += ['--perf-counters', args.perf_counters]
-
-            with common.temporary_file() as histogram_file_path:
-                run_args += ['--isolated-script-test-perf-output=%s' % histogram_file_path]
-                exit_code, output = angle_test_util.RunTestSuite(
-                    args.test_suite,
-                    run_args,
-                    env,
-                    runner_args=runner_args,
-                    use_xvfb=args.xvfb,
-                    show_test_stdout=args.show_test_stdout)
-                if exit_code != EXIT_SUCCESS:
-                    logging.error('%s failed. Output:\n%s' % (args.test_suite, output))
-                    results.result_fail(test)
-                    total_errors += 1
-                    break
-
-                sample_wall_times = _get_results_from_output(output, 'wall_time')
-                if not sample_wall_times:
-                    # This can be intentional for skipped tests. They are handled below.
-                    logging.warning('Test %s failed to produce a sample output' % test)
-                    break
-                logging.info('Test %d/%d Sample %d/%d wall_times: %s' %
-                             (test_index + 1, num_tests, sample + 1, args.samples_per_test,
-                              str(sample_wall_times)))
-                wall_times += sample_wall_times
-                with open(histogram_file_path) as histogram_file:
-                    sample_json = json.load(histogram_file)
-                    sample_histogram = histogram_set.HistogramSet()
-                    sample_histogram.ImportDicts(sample_json)
-                    test_histogram_set.Merge(sample_histogram)
-
-        if not results.has_result(test):
-            if not wall_times:
-                logging.warning('Skipping test %s. Assuming this is intentional.' % test)
-                results.result_skip(test)
-            elif len(wall_times) == (args.samples_per_test * args.trials_per_sample):
-                if len(wall_times) > 7:
-                    truncation_n = len(wall_times) >> 3
-                    logging.debug(
-                        'Truncation: Removing the %d highest and lowest times from wall_times.' %
-                        truncation_n)
-                    wall_times = _truncated_list(wall_times, truncation_n)
-
-                if len(wall_times) > 1:
-                    logging.info('Test %d/%d: %s: truncated mean wall_time = %.2f, cov = %.2f%%' %
-                                 (test_index + 1, num_tests, test, _mean(wall_times),
-                                  (_coefficient_of_variation(wall_times) * 100.0)))
-                results.result_pass(test)
-
-                # Merge the histogram set into one histogram
-                with common.temporary_file() as merge_histogram_path:
-                    logging.info('Writing merged histograms to %s.' % merge_histogram_path)
-                    with open(merge_histogram_path, 'w') as merge_histogram_file:
-                        json.dump(test_histogram_set.AsDicts(), merge_histogram_file)
-                        merge_histogram_file.close()
-                    merged_dicts = merge_histograms.MergeHistograms(
-                        merge_histogram_path, groupby=['name'])
-                    merged_histogram = histogram_set.HistogramSet()
-                    merged_histogram.ImportDicts(merged_dicts)
-                    histograms.Merge(merged_histogram)
-            else:
-                logging.error('Test %s failed to record some samples' % test)
-                results.result_fail(test)
+    try:
+        results, histograms = _run_tests(tests, args, extra_flags, env)
+    except _MaxErrorsException:
+        logging.error('Error count exceeded max errors (%d). Aborting.' % args.max_errors)
+        return EXIT_FAILURE
 
     for test in tests:
         assert results.has_result(test)
