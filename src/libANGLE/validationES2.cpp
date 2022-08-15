@@ -3257,6 +3257,15 @@ bool ValidateCopyTextureCHROMIUM(const Context *context,
         return false;
     }
 
+    const InternalFormat &destInternalFormatInfo = GetInternalFormatInfo(internalFormat, destType);
+    if (sourceType == TextureType::External && destInternalFormatInfo.isInt() &&
+        !context->getExtensions().EGLImageExternalEssl3OES)
+    {
+        context->validationError(entryPoint, GL_INVALID_OPERATION,
+                                 kANGLECopyTextureMissingRequiredExtension);
+        return false;
+    }
+
     if (!IsValidCopyTextureDestinationTarget(context, dest->getType(), destTarget))
     {
         context->validationError(entryPoint, GL_INVALID_VALUE, kInvalidDestinationTextureType);
@@ -3406,6 +3415,14 @@ bool ValidateCopySubTextureCHROMIUM(const Context *context,
     if (!IsValidCopySubTextureDestionationInternalFormat(destFormat.internalFormat))
     {
         context->validationError(entryPoint, GL_INVALID_OPERATION, kInvalidFormatCombination);
+        return false;
+    }
+
+    if (sourceType == TextureType::External && destFormat.isInt() &&
+        !context->getExtensions().EGLImageExternalEssl3OES)
+    {
+        context->validationError(entryPoint, GL_INVALID_OPERATION,
+                                 kANGLECopyTextureMissingRequiredExtension);
         return false;
     }
 

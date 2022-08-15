@@ -18,6 +18,7 @@ namespace err
 // clang-format off
 MSG k3DDepthStencil = "Format cannot be GL_DEPTH_COMPONENT or GL_DEPTH_STENCIL if target is GL_TEXTURE_3D";
 MSG kANGLECopyTexture3DUnavailable = "GL_ANGLE_copy_texture_3d extension not available.";
+MSG kANGLECopyTextureMissingRequiredExtension = "Copy*TextureCHROMIUM from EXTERNAL_OES to integer format requires OES_EGL_image_external_essl3";
 MSG kAdvancedBlendEquationWithMRT = "Advanced blend equation can only be used when only one draw buffer is not NONE";
 MSG kAdvancedBlendExtensionNotEnabled = "GL_KHR_blend_equation_advanced extension not enabled.";
 MSG kAtomicCounterResourceName = "Active atomic counter resources are not assigned name strings.";
