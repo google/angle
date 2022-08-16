@@ -3894,6 +3894,9 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     ANGLE_FEATURE_CONDITION(&mFeatures, eglColorspaceAttributePassthrough,
                             IsAndroid() && isSamsung);
 
+    // GBM does not have a VkSurface hence it does not support presentation through a Vulkan queue.
+    ANGLE_FEATURE_CONDITION(&mFeatures, supportsPresentation, !displayVk->isGBM());
+
     ApplyFeatureOverrides(&mFeatures, displayVk->getState());
 
     // Disable async command queue when using Vulkan secondary command buffers temporarily to avoid

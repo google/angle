@@ -741,6 +741,13 @@ struct FeaturesVk : FeatureSetBase
                                             FeatureCategory::VulkanFeatures,
                                             "VkDevice supports VK_EXT_color_write_enable extension",
                                             &members, "https://anglebug.com/7161"};
+
+    FeatureInfo supportsPresentation = {
+        "supportsPresentation",
+        FeatureCategory::VulkanFeatures,
+        "VkDisplay supports presentation through a present family queue",
+        &members,
+    };
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

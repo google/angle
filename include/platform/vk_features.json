@@ -1007,6 +1007,13 @@
                 "VkDevice supports VK_EXT_color_write_enable extension"
             ],
             "issue": "https://anglebug.com/7161"
+        },
+        {
+            "name": "supports_presentation",
+            "category": "Features",
+            "description": [
+                "VkDisplay supports presentation through a present family queue"
+            ]
         }
     ]
 }

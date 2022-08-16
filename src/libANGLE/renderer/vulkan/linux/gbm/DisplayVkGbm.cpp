@@ -85,6 +85,11 @@ bool DisplayVkGbm::isUsingSwapchain() const
     return true;
 }
 
+bool DisplayVkGbm::isGBM() const
+{
+    return true;
+}
+
 bool IsVulkanGbmDisplayAvailable()
 {
     return true;
