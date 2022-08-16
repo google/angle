@@ -357,8 +357,9 @@ def _run_tests(tests, args, extra_flags, env):
                 logging.warning('Skipping test %s. Assuming this is intentional.' % test)
                 results.result_skip(test)
             elif len(wall_times) == (args.samples_per_test * args.trials_per_sample):
-                logging.info('Test %d/%d: %s: %s' %
-                             (test_index + 1, len(tests), test, _wall_times_stats(wall_times)))
+                stats = _wall_times_stats(wall_times)
+                if stats:
+                    logging.info('Test %d/%d: %s: %s' % (test_index + 1, len(tests), test, stats))
                 histograms.Merge(_merge_into_one_histogram(test_histogram_set))
                 results.result_pass(test)
             else:
