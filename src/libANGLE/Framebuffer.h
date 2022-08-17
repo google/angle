@@ -197,10 +197,7 @@ class Framebuffer final : public angle::ObserverInterface,
 {
   public:
     // Constructor to build application-defined framebuffers
-    Framebuffer(const Caps &caps,
-                rx::GLImplFactory *factory,
-                FramebufferID id,
-                egl::ShareGroup *shareGroup);
+    Framebuffer(const Context *context, rx::GLImplFactory *factory, FramebufferID id);
     // Constructor to build default framebuffers for a surface and context pair
     Framebuffer(const Context *context, egl::Surface *surface, egl::Surface *readSurface);
     // Constructor to build a fake default framebuffer when surfaceless

@@ -789,25 +789,23 @@ bool FramebufferState::isBoundAsDrawFramebuffer(const Context *context) const
 
 const FramebufferID Framebuffer::kDefaultDrawFramebufferHandle = {0};
 
-Framebuffer::Framebuffer(const Caps &caps,
-                         rx::GLImplFactory *factory,
-                         FramebufferID id,
-                         egl::ShareGroup *shareGroup)
-    : mState(caps, id, shareGroup->generateFramebufferSerial()),
+Framebuffer::Framebuffer(const Context *context, rx::GLImplFactory *factory, FramebufferID id)
+    : mState(context->getCaps(), id, context->getShareGroup()->generateFramebufferSerial()),
       mImpl(factory->createFramebuffer(mState)),
       mCachedStatus(),
       mDirtyDepthAttachmentBinding(this, DIRTY_BIT_DEPTH_ATTACHMENT),
       mDirtyStencilAttachmentBinding(this, DIRTY_BIT_STENCIL_ATTACHMENT)
 {
     ASSERT(mImpl != nullptr);
-    ASSERT(mState.mColorAttachments.size() == static_cast<size_t>(caps.maxColorAttachments));
+    ASSERT(mState.mColorAttachments.size() ==
+           static_cast<size_t>(context->getCaps().maxColorAttachments));
 
     for (uint32_t colorIndex = 0;
          colorIndex < static_cast<uint32_t>(mState.mColorAttachments.size()); ++colorIndex)
     {
         mDirtyColorAttachmentBindings.emplace_back(this, DIRTY_BIT_COLOR_ATTACHMENT_0 + colorIndex);
     }
-    if (caps.maxDrawBuffers > 1)
+    if (context->getClientVersion() >= ES_3_0)
     {
         mDirtyBits.set(DIRTY_BIT_READ_BUFFER);
     }
@@ -902,7 +900,11 @@ void Framebuffer::setReadSurface(const Context *context, egl::Surface *readSurfa
         context, GL_FRAMEBUFFER_DEFAULT, GL_BACK, ImageIndex(), readSurface,
         FramebufferAttachment::kDefaultNumViews, FramebufferAttachment::kDefaultBaseViewIndex,
         false, FramebufferAttachment::kDefaultRenderToTextureSamples, mState.mFramebufferSerial);
-    mDirtyBits.set(DIRTY_BIT_READ_BUFFER);
+
+    if (context->getClientVersion() >= ES_3_0)
+    {
+        mDirtyBits.set(DIRTY_BIT_READ_BUFFER);
+    }
 }
 
 angle::Result Framebuffer::setLabel(const Context *context, const std::string &label)
@@ -1143,8 +1145,11 @@ void Framebuffer::setReadBuffer(GLenum buffer)
     ASSERT(buffer == GL_BACK || buffer == GL_NONE ||
            (buffer >= GL_COLOR_ATTACHMENT0 &&
             (buffer - GL_COLOR_ATTACHMENT0) < mState.mColorAttachments.size()));
-    mState.mReadBufferState = buffer;
-    mDirtyBits.set(DIRTY_BIT_READ_BUFFER);
+    if (mState.mReadBufferState != buffer)
+    {
+        mState.mReadBufferState = buffer;
+        mDirtyBits.set(DIRTY_BIT_READ_BUFFER);
+    }
 }
 
 size_t Framebuffer::getNumColorAttachments() const
