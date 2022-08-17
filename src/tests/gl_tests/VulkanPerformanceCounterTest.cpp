@@ -41,7 +41,8 @@ class VulkanPerformanceCounterTest : public ANGLETest<>
           mPreferDrawOverClearAttachments(ANGLEFeature::Unknown),
           mSupportsPipelineCreationFeedback(ANGLEFeature::Unknown),
           mWarmUpPipelineCacheAtLink(ANGLEFeature::Unknown),
-          mPreferCPUForBufferSubData(ANGLEFeature::Unknown)
+          mPreferCPUForBufferSubData(ANGLEFeature::Unknown),
+          mPreferSubmitAtFBOBoundary(ANGLEFeature::Unknown)
     {
         // Depth/Stencil required for SwapShouldInvalidate*.
         // Also RGBA8 is required to avoid the clear for emulated alpha.
@@ -125,6 +126,10 @@ class VulkanPerformanceCounterTest : public ANGLETest<>
             {
                 mPreferCPUForBufferSubData = isSupported;
             }
+            else if (strcmp(featureName, GetFeatureName(Feature::PreferSubmitAtFBOBoundary)) == 0)
+            {
+                mPreferSubmitAtFBOBoundary = isSupported;
+            }
         }
 
         // Make sure feature renames are caught
@@ -135,6 +140,7 @@ class VulkanPerformanceCounterTest : public ANGLETest<>
         ASSERT_NE(mSupportsPipelineCreationFeedback, ANGLEFeature::Unknown);
         ASSERT_NE(mWarmUpPipelineCacheAtLink, ANGLEFeature::Unknown);
         ASSERT_NE(mPreferCPUForBufferSubData, ANGLEFeature::Unknown);
+        ASSERT_NE(mPreferSubmitAtFBOBoundary, ANGLEFeature::Unknown);
 
         // Impossible to have LOAD_OP_NONE but not STORE_OP_NONE
         ASSERT_FALSE(mLoadOpNoneSupport == ANGLEFeature::Supported &&
@@ -454,6 +460,7 @@ class VulkanPerformanceCounterTest : public ANGLETest<>
     ANGLEFeature mSupportsPipelineCreationFeedback;
     ANGLEFeature mWarmUpPipelineCacheAtLink;
     ANGLEFeature mPreferCPUForBufferSubData;
+    ANGLEFeature mPreferSubmitAtFBOBoundary;
 };
 
 class VulkanPerformanceCounterTest_ES31 : public VulkanPerformanceCounterTest
@@ -759,6 +766,13 @@ TEST_P(VulkanPerformanceCounterTest, SubmittingOutsideCommandBufferDoesNotCollec
     // crash.
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
     ++submitCommandsCount;
+
+    // When the preferSubmitAtFBOBoundary feature is enabled, the render pass closure causes an
+    // extra submission.
+    if (mPreferSubmitAtFBOBoundary == ANGLEFeature::Supported)
+    {
+        ++submitCommandsCount;
+    }
 
     // Verify counters.
     EXPECT_EQ(getPerfCounters().renderPasses, expectedRenderPassCount);
