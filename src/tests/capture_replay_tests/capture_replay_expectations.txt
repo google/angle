@@ -178,3 +178,5 @@
 7570 : ImageTestES3.SourceCubeTargetExternalESSL3/* = SKIP_FOR_CAPTURE
 7570 : ImageTestES3.SourceCubeTargetExternalESSL3_Colorspace/* = SKIP_FOR_CAPTURE
 7570 : ImageTestES3.SourceRenderbufferTargetTextureExternalESSL3_Colorspace/* = SKIP_FOR_CAPTURE
+
+7581 : FramebufferTest_ES3.BlitWithDifferentPreRotations/* = SKIP_FOR_CAPTURE
