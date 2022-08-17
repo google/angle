@@ -5377,7 +5377,7 @@ ProgramImpl *ContextVk::createProgram(const gl::ProgramState &state)
 
 FramebufferImpl *ContextVk::createFramebuffer(const gl::FramebufferState &state)
 {
-    return FramebufferVk::CreateUserFBO(mRenderer, state);
+    return new FramebufferVk(mRenderer, state);
 }
 
 TextureImpl *ContextVk::createTexture(const gl::TextureState &state)
