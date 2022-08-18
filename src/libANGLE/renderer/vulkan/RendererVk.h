@@ -371,10 +371,6 @@ class RendererVk : angle::NonCopyable
     void onNewValidationMessage(const std::string &message);
     std::string getAndClearLastValidationMessage(uint32_t *countSinceLastClear);
 
-    const std::vector<const char *> &getSkippedValidationMessages() const
-    {
-        return mSkippedValidationMessages;
-    }
     const std::vector<vk::SkippedSyncvalMessage> &getSkippedSyncvalMessages() const
     {
         return mSkippedSyncvalMessages;
@@ -624,7 +620,6 @@ class RendererVk : angle::NonCopyable
   private:
     angle::Result initializeDevice(DisplayVk *displayVk, uint32_t queueFamilyIndex);
     void ensureCapsInitialized() const;
-    void initializeValidationMessageSuppressions();
 
     void queryDeviceExtensionFeatures(const vk::ExtensionNameList &deviceExtensionNames);
 
@@ -707,7 +702,6 @@ class RendererVk : angle::NonCopyable
     VkPhysicalDeviceHostQueryResetFeaturesEXT mHostQueryResetFeatures;
     VkPhysicalDeviceDepthClipControlFeaturesEXT mDepthClipControlFeatures;
     VkPhysicalDevicePrimitivesGeneratedQueryFeaturesEXT mPrimitivesGeneratedQueryFeatures;
-    VkPhysicalDevicePrimitiveTopologyListRestartFeaturesEXT mPrimitiveTopologyListRestartFeatures;
     VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT mBlendOperationAdvancedFeatures;
     VkPhysicalDeviceSamplerYcbcrConversionFeatures mSamplerYcbcrConversionFeatures;
     VkPhysicalDevicePipelineCreationCacheControlFeaturesEXT mPipelineCreationCacheControlFeatures;
@@ -784,9 +778,6 @@ class RendererVk : angle::NonCopyable
     std::string mLastValidationMessage;
     uint32_t mValidationMessageCount;
 
-    // Skipped validation messages.  The exact contents of the list depends on the availability of
-    // certain extensions.
-    std::vector<const char *> mSkippedValidationMessages;
     // Syncval skipped messages.  The exact contents of the list depends on the availability of
     // certain extensions.
     std::vector<vk::SkippedSyncvalMessage> mSkippedSyncvalMessages;

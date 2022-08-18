@@ -259,7 +259,6 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::SupportsPipelineCreationFeedback, "supportsPipelineCreationFeedback"},
     {Feature::SupportsPipelineStatisticsQuery, "supportsPipelineStatisticsQuery"},
     {Feature::SupportsPrimitivesGeneratedQuery, "supportsPrimitivesGeneratedQuery"},
-    {Feature::SupportsPrimitiveTopologyListRestart, "supportsPrimitiveTopologyListRestart"},
     {Feature::SupportsProtectedMemory, "supportsProtectedMemory"},
     {Feature::SupportsRenderpass2, "supportsRenderpass2"},
     {Feature::SupportsRenderPassLoadStoreOpNone, "supportsRenderPassLoadStoreOpNone"},
