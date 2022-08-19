@@ -51,6 +51,8 @@ _metal_backend_sources = [
   "TransformFeedbackMtl.mm",
   "VertexArrayMtl.h",
   "VertexArrayMtl.mm",
+  "mtl_buffer_manager.h",
+  "mtl_buffer_manager.mm",
   "mtl_buffer_pool.h",
   "mtl_buffer_pool.mm",
   "mtl_command_buffer.h",

@@ -1460,7 +1460,7 @@ angle::Result ProgramMtl::legalizeUniformBufferOffsets(
             // Has the content of the buffer has changed since last conversion?
             if (conversion->dirty)
             {
-                const uint8_t *srcBytes = bufferMtl->getClientShadowCopyData(context);
+                const uint8_t *srcBytes = bufferMtl->getBufferDataReadOnly(context);
                 srcBytes += offsetModulo;
                 size_t sizeToCopy      = bufferMtl->size() - offsetModulo;
                 size_t bytesToAllocate = roundUp<size_t>(sizeToCopy, 16u);
