@@ -188,7 +188,8 @@ bool ValidateCopyTexture3DCommon(const Context *context,
         case GL_DEPTH_STENCIL:
             break;
         default:
-            context->validationError(entryPoint, GL_INVALID_OPERATION, kInvalidInternalFormat);
+            context->validationErrorF(entryPoint, GL_INVALID_OPERATION, kInvalidInternalFormat,
+                                      srcInternalFormat);
             return false;
     }
 
@@ -259,7 +260,8 @@ bool ValidateCopyTexture3DCommon(const Context *context,
         case GL_RGBA32UI:
             break;
         default:
-            context->validationError(entryPoint, GL_INVALID_OPERATION, kInvalidInternalFormat);
+            context->validationErrorF(entryPoint, GL_INVALID_OPERATION, kInvalidInternalFormat,
+                                      internalFormat);
             return false;
     }
 
@@ -324,7 +326,8 @@ static bool ValidateTexImageFormatCombination(const Context *context,
     // the validation codepaths for glTexImage2D/3D, we record a GL_INVALID_VALUE error.
     if (!ValidES3InternalFormat(internalFormat))
     {
-        context->validationError(entryPoint, GL_INVALID_VALUE, kInvalidInternalFormat);
+        context->validationErrorF(entryPoint, GL_INVALID_VALUE, kInvalidInternalFormat,
+                                  internalFormat);
         return false;
     }
 
@@ -375,7 +378,8 @@ static bool ValidateTexImageFormatCombination(const Context *context,
     const InternalFormat &formatInfo = GetInternalFormatInfo(internalFormat, type);
     if (!formatInfo.textureSupport(context->getClientVersion(), context->getExtensions()))
     {
-        context->validationError(entryPoint, GL_INVALID_OPERATION, kInvalidInternalFormat);
+        context->validationErrorF(entryPoint, GL_INVALID_OPERATION, kInvalidInternalFormat,
+                                  internalFormat);
         return false;
     }
 
@@ -708,7 +712,8 @@ bool ValidateES3TexImageParametersBase(const Context *context,
             if (IsETC1Format(actualInternalFormat) &&
                 !context->getExtensions().compressedETC1RGB8SubTextureEXT)
             {
-                context->validationError(entryPoint, GL_INVALID_OPERATION, kInvalidInternalFormat);
+                context->validationErrorF(entryPoint, GL_INVALID_OPERATION, kInvalidInternalFormat,
+                                          internalformat);
                 return false;
             }
         }
@@ -738,7 +743,8 @@ bool ValidateES3TexImageParametersBase(const Context *context,
             const InternalFormat &internalFormatInfo = GetSizedInternalFormatInfo(internalformat);
             if (internalFormatInfo.compressed)
             {
-                context->validationError(entryPoint, GL_INVALID_VALUE, kInvalidInternalFormat);
+                context->validationErrorF(entryPoint, GL_INVALID_VALUE, kInvalidInternalFormat,
+                                          internalformat);
                 return false;
             }
         }
