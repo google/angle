@@ -100,6 +100,7 @@ struct FramebufferCaptureFuncs
     {
         if (isGLES1)
         {
+            // From GL_OES_framebuffer_object
             framebufferTexture2D    = &gl::CaptureFramebufferTexture2DOES;
             framebufferRenderbuffer = &gl::CaptureFramebufferRenderbufferOES;
             bindFramebuffer         = &gl::CaptureBindFramebufferOES;
@@ -4154,6 +4155,8 @@ void CaptureMidExecutionSetup(const gl::Context *context,
     }
 
     // Set Renderbuffer binding.
+    FramebufferCaptureFuncs framebufferFuncs(context->isGLES1());
+
     const gl::RenderbufferManager &renderbuffers = apiState.getRenderbufferManagerForCapture();
     gl::RenderbufferID currentRenderbuffer       = {0};
     for (const auto &renderbufIter : renderbuffers)
@@ -4163,13 +4166,12 @@ void CaptureMidExecutionSetup(const gl::Context *context,
 
     if (currentRenderbuffer != apiState.getRenderbufferId())
     {
-        cap(CaptureBindRenderbuffer(replayState, true, GL_RENDERBUFFER,
-                                    apiState.getRenderbufferId()));
+        cap(framebufferFuncs.bindRenderbuffer(replayState, true, GL_RENDERBUFFER,
+                                              apiState.getRenderbufferId()));
     }
 
     // Capture Framebuffers.
     const gl::FramebufferManager &framebuffers = apiState.getFramebufferManagerForCapture();
-    FramebufferCaptureFuncs framebufferFuncs(context->isGLES1());
 
     gl::FramebufferID currentDrawFramebuffer = {0};
     gl::FramebufferID currentReadFramebuffer = {0};
