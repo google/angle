@@ -129,6 +129,33 @@ struct FramebufferCaptureFuncs
     decltype(&gl::CaptureRenderbufferStorage) renderbufferStorage;
 };
 
+struct VertexArrayCaptureFuncs
+{
+    VertexArrayCaptureFuncs(bool isGLES1)
+    {
+        if (isGLES1)
+        {
+            // From GL_OES_vertex_array_object
+            bindVertexArray    = &gl::CaptureBindVertexArrayOES;
+            deleteVertexArrays = &gl::CaptureDeleteVertexArraysOES;
+            genVertexArrays    = &gl::CaptureGenVertexArraysOES;
+            isVertexArray      = &gl::CaptureIsVertexArrayOES;
+        }
+        else
+        {
+            bindVertexArray    = &gl::CaptureBindVertexArray;
+            deleteVertexArrays = &gl::CaptureDeleteVertexArrays;
+            genVertexArrays    = &gl::CaptureGenVertexArrays;
+            isVertexArray      = &gl::CaptureIsVertexArray;
+        }
+    }
+
+    decltype(&gl::CaptureBindVertexArray) bindVertexArray;
+    decltype(&gl::CaptureDeleteVertexArrays) deleteVertexArrays;
+    decltype(&gl::CaptureGenVertexArrays) genVertexArrays;
+    decltype(&gl::CaptureIsVertexArray) isVertexArray;
+};
+
 std::string GetDefaultOutDirectory()
 {
 #if defined(ANGLE_PLATFORM_ANDROID)
@@ -3968,6 +3995,8 @@ void CaptureMidExecutionSetup(const gl::Context *context,
     }
 
     // Capture vertex array objects
+    VertexArrayCaptureFuncs vertexArrayFuncs(context->isGLES1());
+
     const gl::VertexArrayMap &vertexArrayMap = context->getVertexArraysForCapture();
     gl::VertexArrayID boundVertexArrayID     = {0};
     for (const auto &vertexArrayIter : vertexArrayMap)
@@ -3991,7 +4020,8 @@ void CaptureMidExecutionSetup(const gl::Context *context,
             // Gen the vertex array
             for (std::vector<CallCapture> *calls : vertexArrayGenCalls)
             {
-                Capture(calls, CaptureGenVertexArrays(replayState, true, 1, &vertexArrayID));
+                Capture(calls,
+                        vertexArrayFuncs.genVertexArrays(replayState, true, 1, &vertexArrayID));
                 MaybeCaptureUpdateResourceIDs(context, resourceTracker, calls);
             }
         }
@@ -4009,7 +4039,7 @@ void CaptureMidExecutionSetup(const gl::Context *context,
             for (std::vector<CallCapture> *calls : vertexArraySetupCalls)
             {
                 // Bind the vertexArray and populate it
-                Capture(calls, CaptureBindVertexArray(replayState, true, vertexArrayID));
+                Capture(calls, vertexArrayFuncs.bindVertexArray(replayState, true, vertexArrayID));
                 boundVertexArrayID = vertexArrayID;
 
                 CaptureVertexArrayState(calls, context, vertexArray, &replayState);
@@ -4021,12 +4051,12 @@ void CaptureMidExecutionSetup(const gl::Context *context,
     const gl::VertexArray *currentVertexArray = apiState.getVertexArray();
     if (currentVertexArray->id() != boundVertexArrayID)
     {
-        cap(CaptureBindVertexArray(replayState, true, currentVertexArray->id()));
+        cap(vertexArrayFuncs.bindVertexArray(replayState, true, currentVertexArray->id()));
     }
 
     // Track the calls necessary to bind the vertex array back to initial state
     Capture(&resetCalls[angle::EntryPoint::GLBindVertexArray],
-            CaptureBindVertexArray(replayState, true, currentVertexArray->id()));
+            vertexArrayFuncs.bindVertexArray(replayState, true, currentVertexArray->id()));
 
     // Capture indexed buffer bindings.
     const gl::BufferVector &uniformIndexedBuffers =
