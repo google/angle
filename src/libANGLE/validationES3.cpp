@@ -620,8 +620,12 @@ bool ValidateES3TexImageParametersBase(const Context *context,
             }
             break;
 
+        case TextureType::InvalidEnum:
+            context->validationError(entryPoint, GL_INVALID_ENUM, kEnumInvalid);
+            return false;
         default:
-            context->validationError(entryPoint, GL_INVALID_ENUM, kEnumNotSupported);
+            context->validationErrorF(entryPoint, GL_INVALID_ENUM, kEnumNotSupported,
+                                      ToGLenum(texType));
             return false;
     }
 
@@ -2263,8 +2267,12 @@ static bool ValidateBindBufferCommon(const Context *context,
             }
             break;
         }
+        case BufferBinding::InvalidEnum:
+            context->validationError(entryPoint, GL_INVALID_ENUM, kEnumInvalid);
+            return false;
         default:
-            context->validationError(entryPoint, GL_INVALID_ENUM, kEnumNotSupported);
+            context->validationErrorF(entryPoint, GL_INVALID_ENUM, kEnumNotSupported,
+                                      ToGLenum(target));
             return false;
     }
 
@@ -2447,7 +2455,7 @@ bool ValidateClearBufferiv(const Context *context,
             break;
 
         default:
-            context->validationError(entryPoint, GL_INVALID_ENUM, kEnumNotSupported);
+            context->validationErrorF(entryPoint, GL_INVALID_ENUM, kEnumNotSupported, buffer);
             return false;
     }
 
@@ -2481,7 +2489,7 @@ bool ValidateClearBufferuiv(const Context *context,
             break;
 
         default:
-            context->validationError(entryPoint, GL_INVALID_ENUM, kEnumNotSupported);
+            context->validationErrorF(entryPoint, GL_INVALID_ENUM, kEnumNotSupported, buffer);
             return false;
     }
 
@@ -2525,7 +2533,7 @@ bool ValidateClearBufferfv(const Context *context,
             break;
 
         default:
-            context->validationError(entryPoint, GL_INVALID_ENUM, kEnumNotSupported);
+            context->validationErrorF(entryPoint, GL_INVALID_ENUM, kEnumNotSupported, buffer);
             return false;
     }
 
@@ -2551,7 +2559,7 @@ bool ValidateClearBufferfi(const Context *context,
             break;
 
         default:
-            context->validationError(entryPoint, GL_INVALID_ENUM, kEnumNotSupported);
+            context->validationErrorF(entryPoint, GL_INVALID_ENUM, kEnumNotSupported, buffer);
             return false;
     }
 
@@ -3346,7 +3354,7 @@ bool ValidateIndexedStateQuery(const Context *context,
             }
             break;
         default:
-            context->validationError(entryPoint, GL_INVALID_ENUM, kEnumNotSupported);
+            context->validationErrorF(entryPoint, GL_INVALID_ENUM, kEnumNotSupported, pname);
             return false;
     }
 
@@ -4242,7 +4250,7 @@ bool ValidateTransformFeedbackVaryings(const Context *context,
             break;
         }
         default:
-            context->validationError(entryPoint, GL_INVALID_ENUM, kEnumNotSupported);
+            context->validationErrorF(entryPoint, GL_INVALID_ENUM, kEnumNotSupported, bufferMode);
             return false;
     }
 
@@ -4329,7 +4337,7 @@ bool ValidateBindTransformFeedback(const Context *context,
         break;
 
         default:
-            context->validationError(entryPoint, GL_INVALID_ENUM, kEnumNotSupported);
+            context->validationErrorF(entryPoint, GL_INVALID_ENUM, kEnumNotSupported, target);
             return false;
     }
 
@@ -4560,7 +4568,7 @@ bool ValidateGetActiveUniformsiv(const Context *context,
         case GL_UNIFORM_NAME_LENGTH:
             if (context->getExtensions().webglCompatibilityANGLE)
             {
-                context->validationError(entryPoint, GL_INVALID_ENUM, kEnumNotSupported);
+                context->validationErrorF(entryPoint, GL_INVALID_ENUM, kEnumNotSupported, pname);
                 return false;
             }
             break;
@@ -4572,7 +4580,7 @@ bool ValidateGetActiveUniformsiv(const Context *context,
             break;
 
         default:
-            context->validationError(entryPoint, GL_INVALID_ENUM, kEnumNotSupported);
+            context->validationErrorF(entryPoint, GL_INVALID_ENUM, kEnumNotSupported, pname);
             return false;
     }
 
