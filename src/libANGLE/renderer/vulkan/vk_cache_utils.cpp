@@ -2913,15 +2913,6 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     inputAssemblyState.sType    = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
     inputAssemblyState.flags    = 0;
     inputAssemblyState.topology = static_cast<VkPrimitiveTopology>(inputAndRaster.misc.topology);
-    // http://anglebug.com/3832
-    // We currently hit a VK Validation here where VUID
-    // VUID-VkPipelineInputAssemblyStateCreateInfo-topology-00428 is flagged because we allow
-    // primitiveRestartEnable to be true for topologies VK_PRIMITIVE_TOPOLOGY_POINT_LIST,
-    // VK_PRIMITIVE_TOPOLOGY_LINE_LIST, VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST
-    // VK_PRIMITIVE_TOPOLOGY_LINE_LIST_WITH_ADJACENCY,
-    // VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY and VK_PRIMITIVE_TOPOLOGY_PATCH_LIST
-    // However if we force primiteRestartEnable to FALSE we fail tests.
-    // Need to identify alternate fix.
     inputAssemblyState.primitiveRestartEnable =
         static_cast<VkBool32>(mDynamicState.ds1And2.primitiveRestartEnable);
 
