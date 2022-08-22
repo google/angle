@@ -559,7 +559,6 @@
 7583 PIXEL6 VULKAN : VulkanPerformanceCounterTest.DisableDrawInvalidateEnable/* = SKIP
 7583 PIXEL6 VULKAN : VulkanPerformanceCounterTest.DisableInvalidateDraw/* = SKIP
 7583 PIXEL6 VULKAN : VulkanPerformanceCounterTest.ReadOnlyDepthBufferLayout/* = SKIP
-7583 PIXEL6 VULKAN : VulkanPerformanceCounterTest.SubmittingOutsideCommandBufferDoesNotCollectRenderPassGarbage/* = SKIP
 
 // ARM drivers cannot support xfb emulation because they lack support for the
 // vertexPipelineStoresAndAtomics Vulkan feature.  The tests that force-enable this feature are
