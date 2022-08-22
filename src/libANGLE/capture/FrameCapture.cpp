@@ -8420,7 +8420,7 @@ void WriteParamValueReplay<ParamType::TUniformLocation>(std::ostream &os,
     if (FindShaderProgramIDsInCall(call, programIDs))
     {
         ASSERT(programIDs.size() == 1);
-        os << "gShaderProgramMap[" << programIDs[0].value << "]";
+        os << programIDs[0].value;
     }
     else
     {
