@@ -2847,6 +2847,13 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
         const gl::ComponentType programAttribType =
             gl::GetComponentTypeMask(programAttribsTypeMask, attribIndex);
 
+        // If using dynamic state for stride, the value for stride is unconditionally 0 here.
+        // |ContextVk::handleDirtyGraphicsVertexBuffers| implements the same fix when setting stride
+        // dynamically.
+        ASSERT(!contextVk->getFeatures().supportsExtendedDynamicState.enabled ||
+               contextVk->getFeatures().forceStaticVertexStrideState.enabled ||
+               bindingDesc.stride == 0);
+
         // This forces stride to 0 when glVertexAttribPointer specifies a different type from the
         // program's attribute type except when the type mismatch is a mismatched integer sign.
         if (bindingDesc.stride > 0 && attribType != programAttribType)
@@ -2876,12 +2883,6 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
             }
 
             ASSERT(contextVk->getNativeExtensions().relaxedVertexAttributeTypeANGLE);
-            // If using dynamic state for stride, the value for stride is unconditionally 0 here.
-            // |ContextVk::handleDirtyGraphicsVertexBuffers| implements the same fix when setting
-            // stride dynamically.
-            ASSERT(!contextVk->getFeatures().supportsExtendedDynamicState.enabled ||
-                   contextVk->getFeatures().forceStaticVertexStrideState.enabled ||
-                   bindingDesc.stride == 0);
 
             if (programAttribType == gl::ComponentType::Float ||
                 attribType == gl::ComponentType::Float)
