@@ -67,6 +67,10 @@ bool IsMetalRendererAvailable()
                     if ([device supportsFeatureSet:static_cast<MTLFeatureSet>(iosFamily3v1)])
                         gpuFamilySufficient = true;
                 }
+#elif defined(ANGLE_PLATFORM_IOS) && TARGET_OS_SIMULATOR
+                // FIXME: Currently we do not have good simulator query, as it does not support
+                // the whole feature set needed for iOS.
+                gpuFamilySufficient = true;
 #endif
             }
         }
