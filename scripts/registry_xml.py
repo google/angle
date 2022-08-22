@@ -24,6 +24,7 @@ xml_inputs = [
     'egl.xml',
     'egl_angle_ext.xml',
     'wgl.xml',
+    'glx.xml',
     'registry_xml.py',
 ]
 
@@ -402,6 +403,7 @@ DESKTOP_GL_VERSIONS = [(1, 0), (1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (2, 0), (
 GLES_VERSIONS = [(2, 0), (3, 0), (3, 1), (3, 2), (1, 0)]
 EGL_VERSIONS = [(1, 0), (1, 1), (1, 2), (1, 3), (1, 4), (1, 5)]
 WGL_VERSIONS = [(1, 0)]
+GLX_VERSIONS = [(1, 0), (1, 1), (1, 2), (1, 3), (1, 4)]
 CL_VERSIONS = [(1, 0), (1, 1), (1, 2), (2, 0), (2, 1), (2, 2), (3, 0)]
 
 
@@ -410,6 +412,7 @@ class apis:
     GL = 'GL'
     GLES = 'GLES'
     WGL = 'WGL'
+    GLX = 'GLX'
     EGL = 'EGL'
     CL = 'CL'
 
@@ -504,6 +507,8 @@ class RegistryXML:
             return 'eglext'
         elif 'wgl' in supported:
             return 'wglext'
+        elif 'glx' in supported:
+            return 'glxext'
         elif 'cl' in supported:
             return 'clext'
         else:
@@ -571,7 +576,7 @@ class EntryPoints:
             cmd_name = get_cmd_name(command_node)
 
             if api == apis.WGL:
-                cmd_name = cmd_name if cmd_name[:3] == 'wgl' else 'wgl' + cmd_name
+                cmd_name = cmd_name if cmd_name.startswith('wgl') else 'wgl' + cmd_name
 
             if cmd_name not in commands:
                 continue

@@ -6,19 +6,23 @@
   "scripts/egl_angle_ext.xml":
     "e90fb2b574f3b42700ec1d6e18817869",
   "scripts/gen_proc_table.py":
-    "07b8f30e0d78b3032f12bb6217eb7876",
+    "101d1ce8880be0c061c05c20420d92f5",
   "scripts/gl.xml":
     "e8f8d52f5a5b8bd5bdd4557fdc58d5dd",
   "scripts/gl_angle_ext.xml":
     "37eebedc1153cd9d208efa469a10a7b2",
+  "scripts/glx.xml":
+    "94f3eee4b076801d117804eb466714b7",
   "scripts/registry_xml.py":
-    "6d483e9eff91193e16c2975ebe4694dd",
+    "ccec833125d3cb4da79f2a51f6523802",
   "scripts/wgl.xml":
     "c36001431919e1c435f1215a85f7e1db",
   "src/libGLESv2/proc_table_cl_autogen.cpp":
     "ed003b0f041aaaa35b67d3fe07e61f91",
   "src/libGLESv2/proc_table_egl_autogen.cpp":
     "18c126ebbbb2329891d466e0f075d666",
+  "src/libGLESv2/proc_table_glx_autogen.cpp":
+    "e48a283e477d90d5e624a1e3d186c646",
   "src/libGLESv2/proc_table_wgl_autogen.cpp":
     "43cd25dd2cbec8bcfddcd7e29ccce905",
   "src/libOpenCL/libOpenCL_autogen.map":

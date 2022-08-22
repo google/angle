@@ -433,6 +433,13 @@ TEMPLATE_EGL_ENTRY_POINT_EXPORT = """\
 }}
 """
 
+TEMPLATE_GLX_ENTRY_POINT_EXPORT = """\
+{return_type} GLXENTRY {name}({params})
+{{
+    return GLX_{name}({internal_params});
+}}
+"""
+
 TEMPLATE_GLEXT_FUNCTION_POINTER = """typedef {return_type}(GL_APIENTRYP PFN{name_upper}PROC)({params});"""
 TEMPLATE_GLEXT_FUNCTION_PROTOTYPE = """{apicall} {return_type}GL_APIENTRY {name}({params});"""
 
@@ -1894,6 +1901,21 @@ class EGLEntryPoints(ANGLEEntryPoints):
         return cls._packed_enums
 
 
+class GLXEntryPoints(ANGLEEntryPoints):
+
+    all_param_types = set()
+
+    def __init__(self, xml, commands):
+        super().__init__(
+            apis.GLX,
+            xml,
+            commands,
+            GLXEntryPoints.all_param_types,
+            GLXEntryPoints.get_packed_enums(),
+            export_template=TEMPLATE_GLX_ENTRY_POINT_EXPORT,
+            packed_param_types=GLX_PACKED_TYPES)
+
+
 class CLEntryPoints(ANGLEEntryPoints):
 
     all_param_types = set()
@@ -2928,6 +2950,30 @@ def main():
         write_gl_validation_header("GL%s" % major_version, name, validation_protos, "gl.xml")
 
     libgles_ep_defs.append('#endif // defined(ANGLE_ENABLE_GL_DESKTOP_FRONTEND)')
+
+    # GLX
+    glxxml = registry_xml.RegistryXML('glx.xml')
+    glx_validation_protos = []
+    glx_decls = ["namespace glx\n{"]
+    glx_defs = ["namespace glx\n{"]
+    libglx_ep_defs = []
+    glx_commands = []
+    for major_version, minor_version in registry_xml.GLX_VERSIONS:
+        version = "{}_{}".format(major_version, minor_version)
+        annotation = "GLX_{}".format(version)
+        name_prefix = "GLX_VERSION_"
+
+        comment = version.replace("_", ".")
+        feature_name = "{}{}".format(name_prefix, version)
+
+        glxxml.AddCommands(feature_name, version)
+        glx_version_commands = glxxml.commands[version]
+        glx_commands += glx_version_commands
+
+        if not glx_version_commands:
+            continue
+
+
 
     # OpenCL
     clxml = registry_xml.RegistryXML('cl.xml')

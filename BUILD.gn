@@ -1307,16 +1307,22 @@ template("angle_libGLESv2") {
     if (angle_enable_gl_desktop_frontend) {
       sources += libglesv2_gl_sources
       defines += [ "ANGLE_ENABLE_GL_DESKTOP_FRONTEND" ]
-    }
-
-    if (angle_expose_wgl_entry_points) {
-      sources += [
-        "src/libGLESv2/entry_points_wgl.cpp",
-        "src/libGLESv2/entry_points_wgl.h",
-        "src/libGLESv2/proc_table_wgl.h",
-        "src/libGLESv2/proc_table_wgl_autogen.cpp",
-      ]
-      defines += [ "ANGLE_EXPOSE_WGL_ENTRY_POINTS" ]
+      if (is_win) {
+        sources += [
+          "src/libGLESv2/entry_points_wgl.cpp",
+          "src/libGLESv2/entry_points_wgl.h",
+          "src/libGLESv2/proc_table_wgl.h",
+          "src/libGLESv2/proc_table_wgl_autogen.cpp",
+        ]
+        defines += [ "ANGLE_EXPOSE_WGL_ENTRY_POINTS" ]
+      } else {
+        sources += [
+          "src/libGLESv2/entry_points_glx.cpp",
+          "src/libGLESv2/entry_points_glx.h",
+          "src/libGLESv2/proc_table_glx.h",
+          "src/libGLESv2/proc_table_glx_autogen.cpp",
+        ]
+      }
     }
 
     if (angle_enable_cl) {
@@ -1371,15 +1377,22 @@ angle_static_library("libGLESv2_static") {
   if (angle_enable_gl_desktop_frontend) {
     sources += libglesv2_gl_sources
     defines = [ "ANGLE_ENABLE_GL_DESKTOP_FRONTEND" ]
-  }
-  if (angle_expose_wgl_entry_points) {
-    sources += [
-      "src/libGLESv2/entry_points_wgl.cpp",
-      "src/libGLESv2/entry_points_wgl.h",
-      "src/libGLESv2/proc_table_wgl.h",
-      "src/libGLESv2/proc_table_wgl_autogen.cpp",
-    ]
-    defines += [ "ANGLE_EXPOSE_WGL_ENTRY_POINTS" ]
+    if (is_win) {
+      sources += [
+        "src/libGLESv2/entry_points_wgl.cpp",
+        "src/libGLESv2/entry_points_wgl.h",
+        "src/libGLESv2/proc_table_wgl.h",
+        "src/libGLESv2/proc_table_wgl_autogen.cpp",
+      ]
+      defines += [ "ANGLE_EXPOSE_WGL_ENTRY_POINTS" ]
+    } else {
+      sources += [
+        "src/libGLESv2/entry_points_glx.cpp",
+        "src/libGLESv2/entry_points_glx.h",
+        "src/libGLESv2/proc_table_glx.h",
+        "src/libGLESv2/proc_table_glx_autogen.cpp",
+      ]
+    }
   }
   if (angle_enable_cl) {
     sources += libglesv2_cl_sources
