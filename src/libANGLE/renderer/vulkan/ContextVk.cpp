@@ -756,15 +756,16 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
     if (getFeatures().supportsExtendedDynamicState.enabled)
     {
         mDynamicStateDirtyBits |= DirtyBits{
-            DIRTY_BIT_DYNAMIC_CULL_MODE,
-            DIRTY_BIT_DYNAMIC_FRONT_FACE,
-            DIRTY_BIT_VERTEX_BUFFERS,
-            DIRTY_BIT_DYNAMIC_DEPTH_TEST_ENABLE,
-            DIRTY_BIT_DYNAMIC_DEPTH_WRITE_ENABLE,
-            DIRTY_BIT_DYNAMIC_DEPTH_COMPARE_OP,
-            DIRTY_BIT_DYNAMIC_STENCIL_TEST_ENABLE,
+            DIRTY_BIT_DYNAMIC_CULL_MODE,         DIRTY_BIT_DYNAMIC_FRONT_FACE,
+            DIRTY_BIT_DYNAMIC_DEPTH_TEST_ENABLE, DIRTY_BIT_DYNAMIC_DEPTH_WRITE_ENABLE,
+            DIRTY_BIT_DYNAMIC_DEPTH_COMPARE_OP,  DIRTY_BIT_DYNAMIC_STENCIL_TEST_ENABLE,
             DIRTY_BIT_DYNAMIC_STENCIL_OP,
         };
+
+        if (!getFeatures().forceStaticVertexStrideState.enabled)
+        {
+            mDynamicStateDirtyBits.set(DIRTY_BIT_VERTEX_BUFFERS);
+        }
     }
     if (getFeatures().supportsExtendedDynamicState2.enabled)
     {
@@ -2070,7 +2071,8 @@ angle::Result ContextVk::handleDirtyGraphicsVertexBuffers(DirtyBits::Iterator *d
     const gl::AttribArray<VkDeviceSize> &bufferOffsets =
         vertexArrayVk->getCurrentArrayBufferOffsets();
 
-    if (getFeatures().supportsExtendedDynamicState.enabled)
+    if (getFeatures().supportsExtendedDynamicState.enabled &&
+        !getFeatures().forceStaticVertexStrideState.enabled)
     {
         const gl::AttribArray<GLuint> &bufferStrides =
             vertexArrayVk->getCurrentArrayBufferStrides();

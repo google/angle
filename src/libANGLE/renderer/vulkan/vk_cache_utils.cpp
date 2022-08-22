@@ -2600,7 +2600,8 @@ GraphicsPipelineDesc &GraphicsPipelineDesc::operator=(const GraphicsPipelineDesc
 size_t GraphicsPipelineDesc::hash() const
 {
     size_t keySize = sizeof(*this);
-    if (mDynamicState.ds1And2.supportsDynamicState1)
+    if (mDynamicState.ds1And2.supportsDynamicState1 &&
+        !mDynamicState.ds1And2.forceStaticVertexStrideState)
     {
         keySize -= kPackedDynamicState1Size;
 
@@ -2694,6 +2695,8 @@ void GraphicsPipelineDesc::initDefaults(const ContextVk *contextVk)
         contextVk->getFeatures().supportsExtendedDynamicState.enabled;
     mDynamicState.ds1And2.supportsDynamicState2 =
         contextVk->getFeatures().supportsExtendedDynamicState2.enabled;
+    mDynamicState.ds1And2.forceStaticVertexStrideState =
+        contextVk->getFeatures().forceStaticVertexStrideState.enabled;
     mDynamicState.ds1And2.padding = 0;
 
     SetBitField(mDynamicState.ds1.front.ops.fail, VK_STENCIL_OP_KEEP);
@@ -2877,6 +2880,7 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
             // |ContextVk::handleDirtyGraphicsVertexBuffers| implements the same fix when setting
             // stride dynamically.
             ASSERT(!contextVk->getFeatures().supportsExtendedDynamicState.enabled ||
+                   contextVk->getFeatures().forceStaticVertexStrideState.enabled ||
                    bindingDesc.stride == 0);
 
             if (programAttribType == gl::ComponentType::Float ||
@@ -3118,7 +3122,7 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     {
         dynamicStateList.push_back(VK_DYNAMIC_STATE_CULL_MODE_EXT);
         dynamicStateList.push_back(VK_DYNAMIC_STATE_FRONT_FACE_EXT);
-        if (vertexAttribCount > 0)
+        if (vertexAttribCount > 0 && !contextVk->getFeatures().forceStaticVertexStrideState.enabled)
         {
             dynamicStateList.push_back(VK_DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE);
         }
@@ -3243,7 +3247,8 @@ void GraphicsPipelineDesc::updateVertexInput(ContextVk *contextVk,
                   "Adjust transition bits");
     transition->set(kBit);
 
-    if (!contextVk->getFeatures().supportsExtendedDynamicState.enabled)
+    if (!contextVk->getFeatures().supportsExtendedDynamicState.enabled ||
+        contextVk->getFeatures().forceStaticVertexStrideState.enabled)
     {
         SetBitField(mDynamicState.ds1.vertexStrides[attribIndex], stride);
         transition->set(ANGLE_GET_INDEXED_TRANSITION_BIT(

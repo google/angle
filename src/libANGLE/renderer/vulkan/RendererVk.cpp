@@ -3760,6 +3760,10 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsExtendedDynamicState2,
                             mExtendedDynamicState2Features.extendedDynamicState2 == VK_TRUE);
 
+    // Avoid dynamic state for vertex input binding stride on buggy drivers.
+    ANGLE_FEATURE_CONDITION(&mFeatures, forceStaticVertexStrideState,
+                            mFeatures.supportsExtendedDynamicState.enabled && isARM);
+
     // Support GL_QCOM_shading_rate extension
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsFragmentShadingRate,
                             canSupportFragmentShadingRate(deviceExtensionNames));

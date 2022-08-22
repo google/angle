@@ -637,6 +637,12 @@ struct FeaturesVk : FeatureSetBase
         "Prefer adding HOST_VISIBLE flag for DEVICE_LOCAL memory when picking memory types",
         &members, "http://anglebug.com/7047"};
 
+    FeatureInfo forceStaticVertexStrideState = {
+        "forceStaticVertexStrideState", FeatureCategory::VulkanWorkarounds,
+        "Force static state for VK_DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT due to"
+        "driver bugs",
+        &members, "https://bugs.fuchsia.dev/p/fuchsia/issues/detail?id=107106"};
+
     FeatureInfo supportsExtendedDynamicState = {
         "supportsExtendedDynamicState", FeatureCategory::VulkanFeatures,
         "VkDevice supports VK_EXT_extended_dynamic_state extension", &members,
