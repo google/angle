@@ -230,7 +230,7 @@ GLenum getPixelFormatInfo(int pixelFormat, bool *isYUV)
         case AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM:
             return GL_RGBA8;
         case AHARDWAREBUFFER_FORMAT_R8G8B8X8_UNORM:
-            return GL_RGB8;
+            return GL_RGBX8_ANGLE;
         case AHARDWAREBUFFER_FORMAT_R8G8B8_UNORM:
             return GL_RGB8;
         case AHARDWAREBUFFER_FORMAT_R5G6B5_UNORM:
