@@ -287,6 +287,8 @@ void main() {
 // properly.
 TEST_P(EGLBlobCacheTest, ShaderCacheFunctional)
 {
+    // TODO(eddiehatfield): re-enable when BlobCache test flakes are resolved.
+    ANGLE_SKIP_TEST_IF(true);
     ANGLE_SKIP_TEST_IF(!IsVulkan());
 
     EGLDisplay display = getEGLWindow()->getDisplay();
@@ -345,6 +347,8 @@ void main()
 // the cache. We then perform a draw call and test the result to ensure nothing was corrupted.
 TEST_P(EGLBlobCacheTest, ThreadSafety)
 {
+    // TODO(eddiehatfield): re-enable when BlobCache test flakes are resolved.
+    ANGLE_SKIP_TEST_IF(true);
     ANGLE_SKIP_TEST_IF(!IsVulkan());
 
     EGLDisplay display = getEGLWindow()->getDisplay();
