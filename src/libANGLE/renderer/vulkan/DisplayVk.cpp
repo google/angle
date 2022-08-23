@@ -352,6 +352,9 @@ void DisplayVk::generateExtensions(egl::DisplayExtensions *outExtensions) const
         getRenderer()->getFeatures().supportsLockSurfaceExtension.enabled;
 
     outExtensions->partialUpdateKHR = true;
+
+    outExtensions->timestampSurfaceAttributeANGLE =
+        getRenderer()->getFeatures().supportsTimestampSurfaceAttribute.enabled;
 }
 
 void DisplayVk::generateCaps(egl::Caps *outCaps) const

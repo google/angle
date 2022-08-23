@@ -5358,7 +5358,8 @@ bool ValidateSurfaceAttrib(const ValidationContext *val,
             break;
 
         case EGL_TIMESTAMPS_ANDROID:
-            if (!display->getExtensions().getFrameTimestamps)
+            if (!display->getExtensions().getFrameTimestamps &&
+                !display->getExtensions().timestampSurfaceAttributeANGLE)
             {
                 val->setError(EGL_BAD_ATTRIBUTE,
                               "EGL_TIMESTAMPS_ANDROID cannot be used without "
@@ -5507,7 +5508,8 @@ bool ValidateQuerySurface(const ValidationContext *val,
             break;
 
         case EGL_TIMESTAMPS_ANDROID:
-            if (!display->getExtensions().getFrameTimestamps)
+            if (!display->getExtensions().getFrameTimestamps &&
+                !display->getExtensions().timestampSurfaceAttributeANGLE)
             {
                 val->setError(EGL_BAD_ATTRIBUTE,
                               "EGL_TIMESTAMPS_ANDROID cannot be used without "

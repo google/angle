@@ -2454,6 +2454,15 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
         mEnabledDeviceExtensions.push_back(VK_KHR_IMAGE_FORMAT_LIST_EXTENSION_NAME);
     }
 
+    if (getFeatures().supportsTimestampSurfaceAttribute.enabled)
+    {
+        mEnabledDeviceExtensions.push_back(VK_GOOGLE_DISPLAY_TIMING_EXTENSION_NAME);
+#if !defined(ANGLE_SHARED_LIBVULKAN)
+        InitGetPastPresentationTimingGoogleFunction(mDevice);
+#endif  // !defined(ANGLE_SHARED_LIBVULKAN)
+        ASSERT(vkGetPastPresentationTimingGOOGLE);
+    }
+
     std::sort(mEnabledDeviceExtensions.begin(), mEnabledDeviceExtensions.end(), StrLess);
     ANGLE_VK_TRY(displayVk,
                  VerifyExtensionsPresent(deviceExtensionNames, mEnabledDeviceExtensions));
@@ -3810,6 +3819,13 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     // Force to create swapchain with continuous refresh on shared present. Disabled by default.
     // Only enable it on integrations without EGL_FRONT_BUFFER_AUTO_REFRESH_ANDROID passthrough.
     ANGLE_FEATURE_CONDITION(&mFeatures, forceContinuousRefreshOnSharedPresent, false);
+
+    // Enable setting frame timestamp surface attribute on Android platform.
+    // Frame timestamp is enabled by calling into "vkGetPastPresentationTimingGOOGLE"
+    // which, on Android platforms, makes the necessary ANativeWindow API calls.
+    ANGLE_FEATURE_CONDITION(&mFeatures, supportsTimestampSurfaceAttribute,
+                            IsAndroid() && ExtensionFound(VK_GOOGLE_DISPLAY_TIMING_EXTENSION_NAME,
+                                                          deviceExtensionNames));
 
     ApplyFeatureOverrides(&mFeatures, displayVk->getState());
 

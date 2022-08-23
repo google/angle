@@ -1397,6 +1397,17 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context,
     mSwapchain            = newSwapChain;
     mSwapchainPresentMode = mDesiredSwapchainPresentMode;
 
+    // If frame timestamp was enabled for the surface, [re]enable it when [re]creating the swapchain
+    if (renderer->getFeatures().supportsTimestampSurfaceAttribute.enabled &&
+        mState.timestampsEnabled)
+    {
+        // The implementation of "vkGetPastPresentationTimingGOOGLE" on Android calls into the
+        // appropriate ANativeWindow API that enables frame timestamps.
+        uint32_t count = 0;
+        ANGLE_VK_TRY(context,
+                     vkGetPastPresentationTimingGOOGLE(device, mSwapchain, &count, nullptr));
+    }
+
     // Initialize the swapchain image views.
     uint32_t imageCount = 0;
     ANGLE_VK_TRY(context, vkGetSwapchainImagesKHR(device, mSwapchain, &imageCount, nullptr));
@@ -1951,6 +1962,12 @@ angle::Result WindowSurfaceVk::onSharedPresentContextFlush(const gl::Context *co
 bool WindowSurfaceVk::hasStagedUpdates() const
 {
     return mSwapchainImages[mCurrentSwapchainImageIndex].image.hasStagedUpdatesInAllocatedLevels();
+}
+
+void WindowSurfaceVk::setTimestampsEnabled(bool enabled)
+{
+    // The frontend has already cached the state, nothing to do.
+    ASSERT(IsAndroid());
 }
 
 void WindowSurfaceVk::deferAcquireNextImage()
