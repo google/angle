@@ -419,15 +419,10 @@ angle::Result GetPresentModes(DisplayVk *displayVk,
 
 SurfaceVk::SurfaceVk(const egl::SurfaceState &surfaceState) : SurfaceImpl(surfaceState) {}
 
-SurfaceVk::~SurfaceVk() {}
-
-void SurfaceVk::destroy(const egl::Display *display)
+SurfaceVk::~SurfaceVk()
 {
-    DisplayVk *displayVk = vk::GetImpl(display);
-    RendererVk *renderer = displayVk->getRenderer();
-
-    mColorRenderTarget.destroy(renderer);
-    mDepthStencilRenderTarget.destroy(renderer);
+    mColorRenderTarget.destroy();
+    mDepthStencilRenderTarget.destroy();
 }
 
 angle::Result SurfaceVk::getAttachmentRenderTarget(const gl::Context *context,
@@ -566,9 +561,6 @@ void OffscreenSurfaceVk::destroy(const egl::Display *display)
     {
         mLockBufferHelper.destroy(vk::GetImpl(display)->getRenderer());
     }
-
-    // Call parent class to destroy any resources parent owns.
-    SurfaceVk::destroy(display);
 }
 
 FramebufferImpl *OffscreenSurfaceVk::createDefaultFramebuffer(const gl::Context *context,
@@ -853,9 +845,6 @@ void WindowSurfaceVk::destroy(const egl::Display *display)
     }
 
     mPresentSemaphoreRecycler.destroy(device);
-
-    // Call parent class to destroy any resources parent owns.
-    SurfaceVk::destroy(display);
 }
 
 egl::Error WindowSurfaceVk::initialize(const egl::Display *display)

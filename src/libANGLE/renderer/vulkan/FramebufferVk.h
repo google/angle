@@ -226,6 +226,7 @@ class FramebufferVk : public FramebufferImpl
     void insertCache(ContextVk *contextVk,
                      const vk::FramebufferDesc &desc,
                      vk::FramebufferHelper &&newFramebuffer);
+    void resetCache(ContextVk *contextVk);
 
     WindowSurfaceVk *mBackbuffer;
 
@@ -246,6 +247,9 @@ class FramebufferVk : public FramebufferImpl
     // The framebuffer cache actually owns the Framebuffer object and manages its lifetime. We just
     // store the current VkFramebuffer handle here that associated with mCurrentFramebufferDesc.
     vk::Framebuffer mCurrentFramebuffer;
+
+    // Track references to the cached Framebuffer object that created out of this object
+    vk::FramebufferCacheManager mFramebufferCacheManager;
 
     vk::ClearValuesArray mDeferredClears;
 
