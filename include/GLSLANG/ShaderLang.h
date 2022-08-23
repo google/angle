@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 304
+#define ANGLE_SH_VERSION 305
 
 enum ShShaderSpec
 {
@@ -116,6 +116,10 @@ struct ShCompileOptionsPLS
 
 struct ShCompileOptions
 {
+    ShCompileOptions();
+    ShCompileOptions(const ShCompileOptions &other);
+    ShCompileOptions &operator=(const ShCompileOptions &other);
+
     // Translates intermediate tree to glsl, hlsl, msl, or SPIR-V binary.  Can be queried by
     // calling sh::GetObjectCode().
     uint64_t objectCode : 1;
@@ -403,6 +407,10 @@ using ShHashFunction64 = khronos_uint64_t (*)(const char *, size_t);
 //
 struct ShBuiltInResources
 {
+    ShBuiltInResources();
+    ShBuiltInResources(const ShBuiltInResources &other);
+    ShBuiltInResources &operator=(const ShBuiltInResources &other);
+
     // Constants.
     int MaxVertexAttribs;
     int MaxVertexUniformVectors;
@@ -664,6 +672,12 @@ bool Finalize();
 // resources: The object to initialize. Will be comparable with memcmp.
 //
 void InitBuiltInResources(ShBuiltInResources *resources);
+
+//
+// Returns a copy of the current ShBuiltInResources stored in the compiler.
+// Parameters:
+// handle: Specifies the handle of the compiler to be used.
+ShBuiltInResources GetBuiltInResources(const ShHandle handle);
 
 //
 // Returns the a concatenated list of the items in ShBuiltInResources as a null-terminated string.

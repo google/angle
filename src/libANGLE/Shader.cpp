@@ -403,23 +403,6 @@ void Shader::compile(const Context *context)
         static_cast<GLuint>(context->getCaps().maxComputeWorkGroupInvocations);
     mMaxComputeSharedMemory = context->getCaps().maxComputeSharedMemorySize;
 
-    // Find a shader in Blob Cache
-    egl::BlobCache::Key shaderHash = {0};
-    MemoryShaderCache *shaderCache = context->getMemoryShaderCache();
-    if (shaderCache)
-    {
-        angle::Result cacheResult = shaderCache->getShader(context, this, &shaderHash);
-
-        if (cacheResult == angle::Result::Continue)
-        {
-            return;
-        }
-    }
-
-    // Cache load failed, fall through normal compiling.
-    mState.mCompileStatus = CompileStatus::COMPILE_REQUESTED;
-    mBoundCompiler.set(context, context->getCompiler());
-
     ShCompileOptions options = {};
     options.objectCode       = true;
     options.variables        = true;
@@ -461,12 +444,31 @@ void Shader::compile(const Context *context)
         options.initializeUninitializedLocals = true;
     }
 
+    mBoundCompiler.set(context, context->getCompiler());
+
     ASSERT(mBoundCompiler.get());
     ShCompilerInstance compilerInstance = mBoundCompiler->getInstance(mState.mShaderType);
     ShHandle compilerHandle             = compilerInstance.getHandle();
     ASSERT(compilerHandle);
     mCompilerResourcesString = compilerInstance.getBuiltinResourcesString();
 
+    // Find a shader in Blob Cache
+    egl::BlobCache::Key shaderHash = {0};
+    MemoryShaderCache *shaderCache = context->getMemoryShaderCache();
+    if (shaderCache)
+    {
+        angle::Result cacheResult =
+            shaderCache->getShader(context, this, options, compilerInstance, &shaderHash);
+
+        if (cacheResult == angle::Result::Continue)
+        {
+            compilerInstance.destroy();
+            return;
+        }
+    }
+
+    // Cache load failed, fall through normal compiling.
+    mState.mCompileStatus = CompileStatus::COMPILE_REQUESTED;
     mCompilingState.reset(new CompilingState());
     mCompilingState->shCompilerInstance = std::move(compilerInstance);
     mCompilingState->shaderHash         = shaderHash;

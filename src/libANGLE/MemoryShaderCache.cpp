@@ -15,6 +15,7 @@
 #include "common/angle_version_info.h"
 #include "common/utilities.h"
 #include "libANGLE/BinaryStream.h"
+#include "libANGLE/Compiler.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Debug.h"
 #include "libANGLE/Uniform.h"
@@ -27,57 +28,33 @@ namespace gl
 
 namespace
 {
-class HashStream final : angle::NonCopyable
+void ComputeHash(const Context *context,
+                 const Shader *shader,
+                 const ShCompileOptions &compileOptions,
+                 const ShCompilerInstance &compilerInstance,
+                 egl::BlobCache::Key *hashOut)
 {
-  public:
-    std::string str() { return mStringStream.str(); }
-
-    template <typename T>
-    HashStream &operator<<(T value)
-    {
-        mStringStream << value << kSeparator;
-        return *this;
-    }
-
-  private:
-    static constexpr char kSeparator = ':';
-    std::ostringstream mStringStream;
-};
-
-HashStream &operator<<(HashStream &stream, const Shader *shader)
-{
-    if (shader)
-    {
-        stream << shader->getType() << shader->getSourceString().length()
-               << shader->getSourceString().c_str();
-    }
-    return stream;
-}
-
-void ComputeHash(const Context *context, const Shader *shader, egl::BlobCache::Key *hashOut)
-{
+    BinaryOutputStream hashStream;
     // Compute the shader hash. Start with the shader hashes and resource strings.
-    HashStream hashStream;
-    hashStream << shader;
+    hashStream.writeEnum(shader->getType());
+    hashStream.writeString(shader->getSourceString());
 
-    // Add some ANGLE metadata and Context properties, such as version and back-end.
-    hashStream << angle::GetANGLECommitHash() << context->getClientMajorVersion()
-               << context->getClientMinorVersion() << context->getString(GL_RENDERER);
+    // Include the commit hash
+    hashStream.writeString(angle::GetANGLECommitHash());
 
-    // Shaders must be recompiled if these extensions have been toggled, so we include them in the
-    // key.
-    const std::string shaderTextureLodEXTTag =
-        (context->getExtensions().shaderTextureLodEXT) ? "EXT_shader_texture_lod" : "";
-    const std::string fragDepthEXTTag =
-        (context->getExtensions().fragDepthEXT) ? "EXT_frag_depth" : "";
-    const std::string oesStarndardDerivativesTag =
-        (context->getExtensions().standardDerivativesOES) ? "OES_standard_derivatives" : "";
-    hashStream << shaderTextureLodEXTTag << fragDepthEXTTag << oesStarndardDerivativesTag;
+    hashStream.writeEnum(Compiler::SelectShaderSpec(context->getState()));
+    hashStream.writeEnum(compilerInstance.getShaderOutputType());
+    hashStream.writeBytes(reinterpret_cast<const uint8_t *>(&compileOptions),
+                          sizeof(compileOptions));
+
+    // Include the ShBuiltInResources, which represent the extensions and constants used by the
+    // shader.
+    const ShBuiltInResources resources = compilerInstance.getBuiltInResources();
+    hashStream.writeBytes(reinterpret_cast<const uint8_t *>(&resources), sizeof(resources));
 
     // Call the secure SHA hashing function.
-    const std::string &shaderKey = hashStream.str();
-    angle::base::SHA1HashBytes(reinterpret_cast<const unsigned char *>(shaderKey.c_str()),
-                               shaderKey.length(), hashOut->data());
+    const std::vector<uint8_t> &shaderKey = hashStream.getData();
+    angle::base::SHA1HashBytes(shaderKey.data(), shaderKey.size(), hashOut->data());
 }
 }  // namespace
 
@@ -87,6 +64,8 @@ MemoryShaderCache::~MemoryShaderCache() {}
 
 angle::Result MemoryShaderCache::getShader(const Context *context,
                                            Shader *shader,
+                                           const ShCompileOptions &compileOptions,
+                                           const ShCompilerInstance &compilerInstance,
                                            egl::BlobCache::Key *hashOut)
 {
     // If caching is effectively disabled, don't bother calculating the hash.
@@ -95,7 +74,7 @@ angle::Result MemoryShaderCache::getShader(const Context *context,
         return angle::Result::Incomplete;
     }
 
-    ComputeHash(context, shader, hashOut);
+    ComputeHash(context, shader, compileOptions, compilerInstance, hashOut);
 
     angle::MemoryBuffer uncompressedData;
     switch (mBlobCache.getAndDecompress(context->getScratchBuffer(), *hashOut, &uncompressedData))

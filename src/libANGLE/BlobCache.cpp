@@ -239,9 +239,14 @@ BlobCache::GetAndDecompressResult BlobCache::getAndDecompress(
         return GetAndDecompressResult::NotFound;
     }
 
-    if (!DecompressBlobCacheData(compressedValue.data(), compressedSize, uncompressedValueOut))
     {
-        return GetAndDecompressResult::DecompressFailure;
+        // This needs to be locked because `DecompressBlobCacheData` is reading shared memory from
+        // `compressedValue.data()`.
+        std::scoped_lock<std::mutex> lock(mBlobCacheMutex);
+        if (!DecompressBlobCacheData(compressedValue.data(), compressedSize, uncompressedValueOut))
+        {
+            return GetAndDecompressResult::DecompressFailure;
+        }
     }
 
     return GetAndDecompressResult::GetSuccess;

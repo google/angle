@@ -12,6 +12,7 @@
 
 #include <array>
 
+#include "GLSLANG/ShaderLang.h"
 #include "common/MemoryBuffer.h"
 #include "libANGLE/BlobCache.h"
 #include "libANGLE/Error.h"
@@ -21,6 +22,7 @@ namespace gl
 class Context;
 class Shader;
 class ShaderState;
+class ShCompilerInstance;
 
 class MemoryShaderCache final : angle::NonCopyable
 {
@@ -35,7 +37,11 @@ class MemoryShaderCache final : angle::NonCopyable
 
     // Check the cache, and deserialize and load the shader if found. Evict existing hash if load
     // fails.
-    angle::Result getShader(const Context *context, Shader *shader, egl::BlobCache::Key *hashOut);
+    angle::Result getShader(const Context *context,
+                            Shader *shader,
+                            const ShCompileOptions &compileOptions,
+                            const ShCompilerInstance &compilerInstance,
+                            egl::BlobCache::Key *hashOut);
 
     // Empty the cache.
     void clear();
