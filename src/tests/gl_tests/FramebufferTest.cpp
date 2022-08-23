@@ -2840,6 +2840,58 @@ TEST_P(FramebufferTest_ES31, MultisampleResolveWithBlitThenDrawThenResolveAgainT
                       255, 1.0);
 }
 
+// Test resolving a multisampled texture with blit to a non-zero level.
+TEST_P(FramebufferTest_ES31, MultisampleResolveWithBlitNonZeroLevel)
+{
+    constexpr int kWidth  = 16;
+    constexpr int kHeight = 20;
+    glViewport(0, 0, kWidth, kHeight);
+
+    GLFramebuffer msaaFBO;
+    glBindFramebuffer(GL_FRAMEBUFFER, msaaFBO);
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, texture);
+    glTexStorage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGBA8, kWidth, kHeight, false);
+    ASSERT_GL_NO_ERROR();
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, texture,
+                           0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    ANGLE_GL_PROGRAM(gradientProgram, essl31_shaders::vs::Passthrough(),
+                     essl31_shaders::fs::RedGreenGradient());
+    drawQuad(gradientProgram, essl31_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+    ASSERT_GL_NO_ERROR();
+
+    // Create a resolve FBO and texture. The multisample buffer will be resolved into level 1 of the
+    // bound texture, which has the same dimensions as the multisampled texture.
+    GLTexture resolveTexture;
+    glBindTexture(GL_TEXTURE_2D, resolveTexture);
+    glTexStorage2D(GL_TEXTURE_2D, 3, GL_RGBA8, kWidth * 2, kHeight * 2);
+
+    GLFramebuffer resolveFBO;
+    glBindFramebuffer(GL_FRAMEBUFFER, resolveFBO);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, resolveTexture, 1);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, msaaFBO);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, resolveFBO);
+    glBlitFramebuffer(0, 0, kWidth, kHeight, 0, 0, kWidth, kHeight, GL_COLOR_BUFFER_BIT,
+                      GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, resolveFBO);
+    constexpr uint8_t kWidthHalfPixelGradient  = 256 / kWidth / 2;
+    constexpr uint8_t kHeightHalfPixelGradient = 256 / kHeight / 2;
+    EXPECT_PIXEL_NEAR(0, 0, kWidthHalfPixelGradient, kHeightHalfPixelGradient, 0, 255, 1.0);
+    EXPECT_PIXEL_NEAR(kWidth - 1, 0, 255 - kWidthHalfPixelGradient, kHeightHalfPixelGradient, 0,
+                      255, 1.0);
+    EXPECT_PIXEL_NEAR(0, kHeight - 1, kWidthHalfPixelGradient, 255 - kHeightHalfPixelGradient, 0,
+                      255, 1.0);
+    EXPECT_PIXEL_NEAR(kWidth - 1, kHeight - 1, 255 - kWidthHalfPixelGradient,
+                      255 - kHeightHalfPixelGradient, 0, 255, 1.0);
+}
+
 // If there are no attachments, rendering will be limited to a rectangle having a lower left of
 // (0, 0) and an upper right of(width, height), where width and height are the framebuffer
 // object's default width and height.
@@ -3186,6 +3238,268 @@ void main()
     validateSamplePass(query, defaultWidth, defaultHeight);
 
     ASSERT_GL_NO_ERROR();
+}
+
+// Test binding two textures with different widths to an FBO and drawing to it.
+TEST_P(FramebufferTest_ES31, BindTexturesOfDifferentWidthsToFBOAndDraw)
+{
+    constexpr GLuint kSize = 2;
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+
+    GLTexture colorTexture;
+    glBindTexture(GL_TEXTURE_2D, colorTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTexture, 0);
+    ASSERT_GL_NO_ERROR();
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_RECT_EQ(0, 0, kSize, kSize, GLColor::green);
+
+    // The second texture is defined with double the width as the first.
+    GLTexture colorTexture2;
+    glBindTexture(GL_TEXTURE_2D, colorTexture2);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, kSize * 2, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 nullptr);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTexture2, 0);
+    ASSERT_GL_NO_ERROR();
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_RECT_EQ(0, 0, kSize * 2, kSize, GLColor::green);
+}
+
+// Test binding two textures with different heights to an FBO and drawing to it.
+TEST_P(FramebufferTest_ES31, BindTexturesOfDifferentHeightsToFBOAndDraw)
+{
+    constexpr GLuint kSize = 2;
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+
+    GLTexture colorTexture;
+    glBindTexture(GL_TEXTURE_2D, colorTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTexture, 0);
+    ASSERT_GL_NO_ERROR();
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_RECT_EQ(0, 0, kSize, kSize, GLColor::green);
+
+    // The second texture is defined with double the height as the first.
+    GLTexture colorTexture2;
+    glBindTexture(GL_TEXTURE_2D, colorTexture2);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, kSize, kSize * 2, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 nullptr);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTexture2, 0);
+    ASSERT_GL_NO_ERROR();
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_RECT_EQ(0, 0, kSize, kSize * 2, GLColor::green);
+}
+
+// Test binding two textures with different formats to an FBO and drawing to it.
+TEST_P(FramebufferTest_ES31, BindTexturesOfDifferentFormatsToFBOAndDraw)
+{
+    constexpr GLuint kSize = 2;
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+
+    GLTexture colorTexture;
+    glBindTexture(GL_TEXTURE_2D, colorTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTexture, 0);
+    ASSERT_GL_NO_ERROR();
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_RECT_EQ(0, 0, kSize, kSize, GLColor::red);
+
+    // The second texture is defined with R8 as its format.
+    GLTexture colorTexture2;
+    glBindTexture(GL_TEXTURE_2D, colorTexture2);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, kSize, kSize, 0, GL_RED, GL_UNSIGNED_BYTE, nullptr);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTexture2, 0);
+    ASSERT_GL_NO_ERROR();
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_RECT_EQ(0, 0, kSize, kSize, GLColor::red);
+}
+
+// Test binding two textures with different attachments to an FBO and drawing to it.
+TEST_P(FramebufferTest_ES31, BindTexturesOfDifferentAttachmentsToFBOAndDraw)
+{
+    constexpr GLuint kSize = 2;
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+
+    GLTexture colorTexture;
+    glBindTexture(GL_TEXTURE_2D, colorTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTexture, 0);
+    ASSERT_GL_NO_ERROR();
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_RECT_EQ(0, 0, kSize, kSize, GLColor::green);
+
+    // The second texture has an additional depth attachment.
+    GLTexture colorTexture2;
+    glBindTexture(GL_TEXTURE_2D, colorTexture2);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    ASSERT_GL_NO_ERROR();
+
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTexture2, 0);
+
+    GLRenderbuffer depthBuffer;
+    glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, kSize, kSize);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
+
+    ASSERT_GL_NO_ERROR();
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_RECT_EQ(0, 0, kSize, kSize, GLColor::green);
+}
+
+// Test binding two textures with different create flags to an FBO and drawing to it.
+TEST_P(FramebufferTest_ES31, BindTexturesOfDifferentCreateFlagsToFBOAndDraw)
+{
+    constexpr GLuint kSize = 2;
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+
+    GLTexture colorTexture;
+    glBindTexture(GL_TEXTURE_2D, colorTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTexture, 0);
+    ASSERT_GL_NO_ERROR();
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_RECT_EQ(0, 0, kSize, kSize, GLColor::green);
+
+    // The second texture is defined as a cubemap, changing its create flags.
+    GLTexture colorTexture2;
+    glBindTexture(GL_TEXTURE_CUBE_MAP, colorTexture2);
+
+    for (size_t faceIndex = 0; faceIndex < 6; ++faceIndex)
+    {
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + faceIndex, 0, GL_RGBA8, kSize, kSize, 0,
+                     GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    }
+    ASSERT_GL_NO_ERROR();
+
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    for (size_t faceIndex = 0; faceIndex < 6; ++faceIndex)
+    {
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                               GL_TEXTURE_CUBE_MAP_POSITIVE_X + faceIndex, colorTexture2, 0);
+    }
+    ASSERT_GL_NO_ERROR();
+
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_RECT_EQ(0, 0, kSize, kSize, GLColor::green);
+}
+
+// Test binding two textures with different usage flags to an FBO and drawing to it.
+TEST_P(FramebufferTest_ES31, BindTexturesOfDifferentUsageFlagsToFBOAndDraw)
+{
+    constexpr GLuint kSize = 2;
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+
+    GLTexture colorTexture;
+    glBindTexture(GL_TEXTURE_2D, colorTexture);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kSize, kSize);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTexture, 0);
+    ASSERT_GL_NO_ERROR();
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_RECT_EQ(0, 0, kSize, kSize, GLColor::green);
+
+    // The second texture is used in a compute shader before the original shader, adding the storage
+    // bit to its usage bits.
+    GLTexture colorTexture2;
+    glBindTexture(GL_TEXTURE_2D, colorTexture2);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kSize, kSize);
+    ASSERT_GL_NO_ERROR();
+
+    constexpr char kCS[] = R"(#version 310 es
+layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+uniform vec4 data;
+layout(rgba8, binding = 0) writeonly uniform highp image2D image;
+
+void main()
+{
+    imageStore(image, ivec2(gl_LocalInvocationID.xy), data);
+})";
+
+    GLuint computeProgram = CompileComputeProgram(kCS);
+    ASSERT_NE(computeProgram, 0u);
+    glUseProgram(computeProgram);
+
+    glBindImageTexture(0, colorTexture2, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA8);
+
+    GLint uniformLoc = glGetUniformLocation(computeProgram, "data");
+    ASSERT_NE(uniformLoc, -1);
+    glUniform4f(uniformLoc, 0.0f, 0.0f, 1.0f, 1.0f);
+
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    glUseProgram(program);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTexture2, 0);
+    ASSERT_GL_NO_ERROR();
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_RECT_EQ(0, 0, kSize, kSize, GLColor::green);
 }
 
 // Validates both MESA and standard functions can be used on OpenGL ES >=3.1
@@ -4830,5 +5144,6 @@ ANGLE_INSTANTIATE_TEST(FramebufferTest_ES3Metal,
                        ES3_METAL().enable(Feature::LimitMaxColorTargetBitsForTesting));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(FramebufferTest_ES31);
-ANGLE_INSTANTIATE_TEST_ES31(FramebufferTest_ES31);
+ANGLE_INSTANTIATE_TEST_ES31_AND(FramebufferTest_ES31,
+                                ES31_VULKAN().disable(Feature::SupportsImagelessFramebuffer));
 ANGLE_INSTANTIATE_TEST_ES3(FramebufferTestWithFormatFallback);

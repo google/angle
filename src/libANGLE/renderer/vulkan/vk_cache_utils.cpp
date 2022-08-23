@@ -5688,6 +5688,8 @@ bool FramebufferCache::get(ContextVk *contextVk,
                            const vk::FramebufferDesc &desc,
                            vk::Framebuffer &framebuffer)
 {
+    ASSERT(!contextVk->getFeatures().supportsImagelessFramebuffer.enabled);
+
     auto iter = mPayload.find(desc);
     if (iter != mPayload.end())
     {
@@ -5700,14 +5702,19 @@ bool FramebufferCache::get(ContextVk *contextVk,
     return false;
 }
 
-void FramebufferCache::insert(const vk::FramebufferDesc &desc,
+void FramebufferCache::insert(ContextVk *contextVk,
+                              const vk::FramebufferDesc &desc,
                               vk::FramebufferHelper &&framebufferHelper)
 {
+    ASSERT(!contextVk->getFeatures().supportsImagelessFramebuffer.enabled);
+
     mPayload.emplace(desc, std::move(framebufferHelper));
 }
 
 void FramebufferCache::erase(ContextVk *contextVk, const vk::FramebufferDesc &desc)
 {
+    ASSERT(!contextVk->getFeatures().supportsImagelessFramebuffer.enabled);
+
     auto iter = mPayload.find(desc);
     if (iter != mPayload.end())
     {

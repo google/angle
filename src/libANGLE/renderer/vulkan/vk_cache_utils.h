@@ -1864,7 +1864,9 @@ class FramebufferCache final : angle::NonCopyable
     void destroy(RendererVk *rendererVk);
 
     bool get(ContextVk *contextVk, const vk::FramebufferDesc &desc, vk::Framebuffer &framebuffer);
-    void insert(const vk::FramebufferDesc &desc, vk::FramebufferHelper &&framebufferHelper);
+    void insert(ContextVk *contextVk,
+                const vk::FramebufferDesc &desc,
+                vk::FramebufferHelper &&framebufferHelper);
     void erase(ContextVk *contextVk, const vk::FramebufferDesc &desc);
 
     size_t getSize() const { return mPayload.size(); }

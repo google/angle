@@ -3971,15 +3971,17 @@ angle::Result ContextVk::optimizeRenderPassForPresent(VkFramebuffer framebufferH
                                                  gl::SrgbOverride::Default);
         ASSERT(resolveImageViewSerial.viewSerial.valid());
         drawFramebufferVk->updateColorResolveAttachment(0, resolveImageViewSerial);
+        drawFramebufferVk->releaseCurrentFramebuffer(this);
 
         const vk::ImageView *resolveImageView = nullptr;
         ANGLE_TRY(colorImageView->getLevelLayerDrawImageView(this, *colorImage, vk::LevelIndex(0),
                                                              0, gl::SrgbWriteControlMode::Default,
                                                              &resolveImageView));
-        vk::Framebuffer *newFramebuffer                      = nullptr;
+        vk::MaybeImagelessFramebuffer newFramebuffer         = {};
         constexpr SwapchainResolveMode kSwapchainResolveMode = SwapchainResolveMode::Enabled;
-        ANGLE_TRY(drawFramebufferVk->getFramebuffer(this, &newFramebuffer, resolveImageView,
-                                                    kSwapchainResolveMode));
+        RenderTargetVk *resolveRenderTarget = drawFramebufferVk->getColorDrawRenderTarget(0);
+        ANGLE_TRY(drawFramebufferVk->getFramebuffer(this, &newFramebuffer, resolveRenderTarget,
+                                                    resolveImageView, kSwapchainResolveMode));
 
         commandBufferHelper.updateRenderPassForResolve(this, newFramebuffer,
                                                        drawFramebufferVk->getRenderPassDesc());
@@ -6790,7 +6792,7 @@ angle::Result ContextVk::onImageReleaseToExternal(const vk::ImageHelper &image)
 }
 
 angle::Result ContextVk::beginNewRenderPass(
-    const vk::Framebuffer &framebuffer,
+    vk::MaybeImagelessFramebuffer &framebuffer,
     const gl::Rectangle &renderArea,
     const vk::RenderPassDesc &renderPassDesc,
     const vk::AttachmentOpsArray &renderPassAttachmentOps,

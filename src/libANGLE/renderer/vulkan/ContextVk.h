@@ -618,7 +618,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         return flushOutsideRenderPassCommands();
     }
 
-    angle::Result beginNewRenderPass(const vk::Framebuffer &framebuffer,
+    angle::Result beginNewRenderPass(vk::MaybeImagelessFramebuffer &framebuffer,
                                      const gl::Rectangle &renderArea,
                                      const vk::RenderPassDesc &renderPassDesc,
                                      const vk::AttachmentOpsArray &renderPassAttachmentOps,

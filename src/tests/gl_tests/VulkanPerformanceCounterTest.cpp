@@ -373,6 +373,10 @@ class VulkanPerformanceCounterTest : public ANGLETest<>
     {
         return isFeatureEnabled(Feature::DisallowMixedDepthStencilLoadOpNoneAndLoad);
     }
+    bool hasSupportsImagelessFramebuffer() const
+    {
+        return isFeatureEnabled(Feature::SupportsImagelessFramebuffer);
+    }
 
     CounterNameToIndexMap mIndexMap;
 };
@@ -6343,9 +6347,10 @@ TEST_P(VulkanPerformanceCounterTest, ResizeFBOAttachedTexture)
     }
     int32_t framebufferCacheSizeAfter    = getPerfCounters().framebufferCacheSize;
     int32_t framebufferCacheSizeIncrease = framebufferCacheSizeAfter - framebufferCacheSizeBefore;
+    int32_t expectedFramebufferCacheSizeIncrease = (hasSupportsImagelessFramebuffer()) ? 0 : 1;
     printf("\tframebufferCacheCountIncrease:%u\n", framebufferCacheSizeIncrease);
     // We should not cache obsolete VkImages. Only current VkImage should be cached.
-    EXPECT_EQ(framebufferCacheSizeIncrease, 1);
+    EXPECT_EQ(framebufferCacheSizeIncrease, expectedFramebufferCacheSizeIncrease);
 }
 
 // Test calling glTexParameteri(GL_TEXTURE_SWIZZLE_*) on a texture that attached to FBO with the
@@ -6400,8 +6405,9 @@ TEST_P(VulkanPerformanceCounterTest, SetTextureSwizzleWithSameValueOnFBOAttached
     ASSERT_GL_NO_ERROR();
     int32_t framebufferCacheSizeAfter    = getPerfCounters().framebufferCacheSize;
     int32_t framebufferCacheSizeIncrease = framebufferCacheSizeAfter - framebufferCacheSizeBefore;
+    int32_t expectedFramebufferCacheSizeIncrease = (hasSupportsImagelessFramebuffer()) ? 0 : 1;
     // This should not cause frame buffer cache increase.
-    EXPECT_EQ(framebufferCacheSizeIncrease, 1);
+    EXPECT_EQ(framebufferCacheSizeIncrease, expectedFramebufferCacheSizeIncrease);
 }
 
 // Test calling glTexParameteri(GL_TEXTURE_SWIZZLE_*) on a texture that attached to FBO with
@@ -6471,8 +6477,9 @@ TEST_P(VulkanPerformanceCounterTest, SetTextureSwizzleWithDifferentValueOnFBOAtt
     ASSERT_GL_NO_ERROR();
     int32_t framebufferCacheSizeAfter    = getPerfCounters().framebufferCacheSize;
     int32_t framebufferCacheSizeIncrease = framebufferCacheSizeAfter - framebufferCacheSizeBefore;
+    int32_t expectedFramebufferCacheSizeIncrease = (hasSupportsImagelessFramebuffer()) ? 0 : 1;
     // This should not cause frame buffer cache increase.
-    EXPECT_EQ(framebufferCacheSizeIncrease, 1);
+    EXPECT_EQ(framebufferCacheSizeIncrease, expectedFramebufferCacheSizeIncrease);
 }
 
 void VulkanPerformanceCounterTest::saveAndReloadBinary(GLProgram *original, GLProgram *reloaded)
