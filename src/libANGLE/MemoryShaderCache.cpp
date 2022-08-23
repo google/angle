@@ -171,6 +171,6 @@ void MemoryShaderCache::clear()
 size_t MemoryShaderCache::maxSize() const
 {
     return mBlobCache.maxSize();
-};
+}
 
 }  // namespace gl
