@@ -212,6 +212,12 @@ void *OpenSystemLibraryAndGetError(const char *libraryName,
                                    std::string *errorOut)
 {
     std::string libraryWithExtension = std::string(libraryName) + "." + GetSharedLibraryExtension();
+#if ANGLE_PLATFORM_IOS
+    // On iOS, libraryWithExtension is a directory in which the library resides.
+    // The actual library name doesn't have an extension at all.
+    // E.g. "libEGL.framework/libEGL"
+    libraryWithExtension = libraryWithExtension + "/" + libraryName;
+#endif
     return OpenSystemLibraryWithExtensionAndGetError(libraryWithExtension.c_str(), searchType,
                                                      errorOut);
 }
