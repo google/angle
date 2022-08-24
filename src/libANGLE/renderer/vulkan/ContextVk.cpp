@@ -5985,6 +5985,12 @@ angle::Result ContextVk::memoryBarrierByRegion(const gl::Context *context, GLbit
 
 void ContextVk::framebufferFetchBarrier()
 {
+    // No need for a barrier with VK_EXT_rasterization_order_attachment_access.
+    if (getFeatures().supportsRasterizationOrderAttachmentAccess.enabled)
+    {
+        return;
+    }
+
     mGraphicsDirtyBits.set(DIRTY_BIT_FRAMEBUFFER_FETCH_BARRIER);
 }
 

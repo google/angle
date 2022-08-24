@@ -708,9 +708,19 @@ DebugMessageReport ShouldReportDebugMessage(RendererVk *renderer,
             continue;
         }
 
-        // If the error is due to exposing coherent framebuffer fetch, but framebuffer fetch has not
-        // been used by the application, report it.
-        if (msg.isDueToNonConformantCoherentFramebufferFetch && !isFramebufferFetchUsed)
+        // If the error is due to exposing coherent framebuffer fetch (without
+        // VK_EXT_rasterization_order_attachment_access), but framebuffer fetch has not been used by
+        // the application, report it.
+        //
+        // Note that currently syncval doesn't support the
+        // VK_EXT_rasterization_order_attachment_access extension, so the syncval messages would
+        // continue to be produced despite the extension.
+        constexpr bool kSyncValSupportsRasterizationOrderExtension = false;
+        const bool hasRasterizationOrderExtension =
+            renderer->getFeatures().supportsRasterizationOrderAttachmentAccess.enabled &&
+            kSyncValSupportsRasterizationOrderExtension;
+        if (msg.isDueToNonConformantCoherentFramebufferFetch &&
+            (!isFramebufferFetchUsed || hasRasterizationOrderExtension))
         {
             return DebugMessageReport::Print;
         }
@@ -2047,6 +2057,10 @@ void RendererVk::queryDeviceExtensionFeatures(const vk::ExtensionNameList &devic
     mPipelineRobustnessFeatures.sType =
         VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_ROBUSTNESS_FEATURES_EXT;
 
+    mRasterizationOrderAttachmentAccessFeatures = {};
+    mRasterizationOrderAttachmentAccessFeatures.sType =
+        VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_FEATURES_EXT;
+
     if (!vkGetPhysicalDeviceProperties2KHR || !vkGetPhysicalDeviceFeatures2KHR)
     {
         return;
@@ -2234,6 +2248,18 @@ void RendererVk::queryDeviceExtensionFeatures(const vk::ExtensionNameList &devic
         vk::AddToPNextChain(&deviceFeatures, &mPipelineRobustnessFeatures);
     }
 
+    // The EXT and ARM versions are interchangeable. The structs and enums alias each other.
+    if (ExtensionFound(VK_EXT_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_EXTENSION_NAME,
+                       deviceExtensionNames))
+    {
+        vk::AddToPNextChain(&deviceFeatures, &mRasterizationOrderAttachmentAccessFeatures);
+    }
+    else if (ExtensionFound(VK_ARM_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_EXTENSION_NAME,
+                            deviceExtensionNames))
+    {
+        vk::AddToPNextChain(&deviceFeatures, &mRasterizationOrderAttachmentAccessFeatures);
+    }
+
     vkGetPhysicalDeviceFeatures2KHR(mPhysicalDevice, &deviceFeatures);
     vkGetPhysicalDeviceProperties2KHR(mPhysicalDevice, &deviceProperties);
 
@@ -2272,6 +2298,7 @@ void RendererVk::queryDeviceExtensionFeatures(const vk::ExtensionNameList &devic
     mFragmentShaderInterlockFeatures.pNext                  = nullptr;
     mImagelessFramebufferFeatures.pNext                     = nullptr;
     mPipelineRobustnessFeatures.pNext                       = nullptr;
+    mRasterizationOrderAttachmentAccessFeatures.pNext       = nullptr;
 }
 
 angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueFamilyIndex)
@@ -2805,6 +2832,24 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     {
         mEnabledDeviceExtensions.push_back(VK_EXT_PIPELINE_ROBUSTNESS_EXTENSION_NAME);
         vk::AddToPNextChain(&mEnabledFeatures, &mPipelineRobustnessFeatures);
+    }
+
+    if (getFeatures().supportsRasterizationOrderAttachmentAccess.enabled)
+    {
+        if (ExtensionFound(VK_EXT_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_EXTENSION_NAME,
+                           deviceExtensionNames))
+        {
+            mEnabledDeviceExtensions.push_back(
+                VK_EXT_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_EXTENSION_NAME);
+        }
+        else
+        {
+            ASSERT(ExtensionFound(VK_ARM_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_EXTENSION_NAME,
+                                  deviceExtensionNames));
+            mEnabledDeviceExtensions.push_back(
+                VK_ARM_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_EXTENSION_NAME);
+        }
+        vk::AddToPNextChain(&mEnabledFeatures, &mRasterizationOrderAttachmentAccessFeatures);
     }
 
     mCurrentQueueFamilyIndex = queueFamilyIndex;
@@ -3778,11 +3823,17 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     // natively anyway.
     ANGLE_FEATURE_CONDITION(&mFeatures, overrideSurfaceFormatRGB8ToRGBA8, true);
 
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, supportsRasterizationOrderAttachmentAccess,
+        mRasterizationOrderAttachmentAccessFeatures.rasterizationOrderColorAttachmentAccess ==
+            VK_TRUE);
+
     // http://anglebug.com/6872
     // On ARM hardware, framebuffer-fetch-like behavior on Vulkan is already coherent, so we can
     // expose the coherent version of the GL extension despite unofficial Vulkan support.
-    ANGLE_FEATURE_CONDITION(&mFeatures, supportsShaderFramebufferFetch,
-                            (IsAndroid() && isARM) || isSwiftShader);
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, supportsShaderFramebufferFetch,
+        (IsAndroid() && isARM) || mFeatures.supportsRasterizationOrderAttachmentAccess.enabled);
 
     // Important games are not checking supported extensions properly, and are confusing the
     // GL_EXT_shader_framebuffer_fetch_non_coherent as the GL_EXT_shader_framebuffer_fetch
