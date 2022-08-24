@@ -134,6 +134,23 @@
       },
     },
 
+    'angle_deqp_gles2_gl_with_retry_gtests': {
+      'angle_deqp_gles2_gl_tests': {
+        'args': [
+          'angle_deqp_gles2_tests',
+          '--use-angle=gl',
+          '--bot-mode',
+          # Flaky crashes. See http://anglebug.com/6570
+          '--flaky-retries=2',
+        ],
+        'merge': {
+          'script': '//scripts/angle_deqp_test_merge.py',
+        },
+        'test': 'angle_deqp_gles2_tests',
+        'use_isolated_scripts_api': True,
+      },
+    },
+
     'angle_deqp_gles2_gles_gtests': {
       'angle_deqp_gles2_gles_tests': {
         'args': [
@@ -343,6 +360,26 @@
           'angle_deqp_gles3_tests',
           '--use-angle=gl',
           '--bot-mode',
+        ],
+        'merge': {
+          'script': '//scripts/angle_deqp_test_merge.py',
+        },
+        'swarming': {
+          'shards': 2,
+        },
+        'test': 'angle_deqp_gles3_tests',
+        'use_isolated_scripts_api': True,
+      },
+    },
+
+    'angle_deqp_gles3_gl_with_retry_gtests': {
+      'angle_deqp_gles3_gl_tests': {
+        'args': [
+          'angle_deqp_gles3_tests',
+          '--use-angle=gl',
+          '--bot-mode',
+          # Flaky crashes. See http://anglebug.com/6570
+          '--flaky-retries=2',
         ],
         'merge': {
           'script': '//scripts/angle_deqp_test_merge.py',
@@ -1128,9 +1165,9 @@
     'mac_amd_and_intel_gtests': [
       'angle_deqp_egl_gl_gtests',
       'angle_deqp_egl_metal_gtests',
-      'angle_deqp_gles2_gl_gtests',
+      'angle_deqp_gles2_gl_with_retry_gtests',
       'angle_deqp_gles2_metal_gtests',
-      'angle_deqp_gles3_gl_gtests',
+      'angle_deqp_gles3_gl_with_retry_gtests',
       'angle_deqp_gles3_metal_gtests',
       'angle_end2end_with_retry_gtests',
       'angle_unit_gtests',
