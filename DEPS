@@ -372,6 +372,11 @@ deps = {
     'condition': 'dummy_checkout_chromium',
   },
 
+  'third_party/EGL-Registry/src': {
+    'url': '{chromium_git}/external/github.com/KhronosGroup/EGL-Registry@7dea2ed79187cd13f76183c4b9100159b9e3e071',
+    'condition': 'not build_with_chromium',
+  },
+
   'third_party/fuchsia-sdk/sdk': {
       'packages': [
           {
@@ -457,8 +462,18 @@ deps = {
     'condition': 'not build_with_chromium',
   },
 
+  'third_party/OpenCL-Docs/src': {
+    'url': '{chromium_git}/external/github.com/KhronosGroup/OpenCL-Docs@774114e8761920b976d538d47fad8178d05984ec',
+    'condition': 'not build_with_chromium',
+  },
+
   'third_party/OpenCL-ICD-Loader/src': {
     'url': '{chromium_git}/external/github.com/KhronosGroup/OpenCL-ICD-Loader@9b5e3849b49a1448996c8b96ba086cd774d987db',
+    'condition': 'not build_with_chromium',
+  },
+
+  'third_party/OpenGL-Registry/src': {
+    'url': '{chromium_git}/external/github.com/KhronosGroup/OpenGL-Registry@5048bd8682a4483d00ea8de495cd8e59b2c720af',
     'condition': 'not build_with_chromium',
   },
 

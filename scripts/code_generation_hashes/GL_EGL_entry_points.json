@@ -1,10 +1,6 @@
 {
-  "scripts/cl.xml":
-    "f923201d4ea3e1130763b19fa7faa7a2",
-  "scripts/egl.xml":
-    "013c552e6c523abdcf268268ea47e9fe",
   "scripts/egl_angle_ext.xml":
-    "e90fb2b574f3b42700ec1d6e18817869",
+    "59a68cbdd991542e74803befe8edde9e",
   "scripts/entry_point_packed_egl_enums.json":
     "a72ae855c6b403912103b519139951a1",
   "scripts/entry_point_packed_gl_enums.json":
@@ -15,12 +11,8 @@
     "e8f8d52f5a5b8bd5bdd4557fdc58d5dd",
   "scripts/gl_angle_ext.xml":
     "37eebedc1153cd9d208efa469a10a7b2",
-  "scripts/glx.xml":
-    "94f3eee4b076801d117804eb466714b7",
   "scripts/registry_xml.py":
-    "ccec833125d3cb4da79f2a51f6523802",
-  "scripts/wgl.xml":
-    "c36001431919e1c435f1215a85f7e1db",
+    "93fccfa6990a507e62daba66dd78bf8b",
   "src/common/entry_points_enum_autogen.cpp":
     "c78602e4d4280c80bd72299291db1e81",
   "src/common/entry_points_enum_autogen.h":
@@ -106,7 +98,7 @@
   "src/libGLESv2/cl_stubs_autogen.h":
     "6d880c6b65284192b5842f0e42ad2741",
   "src/libGLESv2/egl_ext_stubs_autogen.h":
-    "8614c0f3e9bec09421f557c5bb7826ef",
+    "35eac83d909581f12e28c98539b4f302",
   "src/libGLESv2/egl_get_labeled_object_data.json":
     "2f4148b2ddf34e62670e32c5e6da4937",
   "src/libGLESv2/egl_stubs_autogen.h":
@@ -172,5 +164,13 @@
   "src/libGLESv2/libGLESv2_with_capture_autogen.def":
     "8f4c18f6815ec736f16bed0d5f1f3cad",
   "src/libOpenCL/libOpenCL_autogen.cpp":
-    "10849978c910dc1af5dd4f0c815d1581"
+    "10849978c910dc1af5dd4f0c815d1581",
+  "third_party/EGL-Registry/src/api/egl.xml":
+    "2056d54ea07156f1988ca1366bdee21a",
+  "third_party/OpenCL-Docs/src/xml/cl.xml":
+    "6d0bf09e20a8f8c3ae440d79eda08bf9",
+  "third_party/OpenGL-Registry/src/xml/glx.xml":
+    "94f3eee4b076801d117804eb466714b7",
+  "third_party/OpenGL-Registry/src/xml/wgl.xml":
+    "b674e6e4ae71067341985e93b410b5f1"
 }

@@ -17,16 +17,23 @@ import xml.etree.ElementTree as etree
 
 from enum import Enum
 
-xml_inputs = [
-    'cl.xml',
+khronos_xml_inputs = [
+    '../third_party/EGL-Registry/src/api/egl.xml',
+    '../third_party/OpenCL-Docs/src/xml/cl.xml',
+    # TODO(jmadill): Use canonical XML. http://anglebug.com/6461
+    # '../third_party/OpenGL-Registry/src/xml/gl.xml',
     'gl.xml',
+    '../third_party/OpenGL-Registry/src/xml/glx.xml',
+    '../third_party/OpenGL-Registry/src/xml/wgl.xml',
+]
+
+angle_xml_inputs = [
     'gl_angle_ext.xml',
-    'egl.xml',
     'egl_angle_ext.xml',
-    'wgl.xml',
-    'glx.xml',
     'registry_xml.py',
 ]
+
+xml_inputs = sorted(khronos_xml_inputs + angle_xml_inputs)
 
 # Notes on categories of extensions:
 # 'Requestable' extensions are extensions that can be enabled with ANGLE_request_extension
@@ -429,6 +436,13 @@ def strip_api_prefix(cmd_name):
     return cmd_name.lstrip("cwegl")
 
 
+def find_xml_input(xml_file):
+    for found_xml in xml_inputs:
+        if found_xml == xml_file or found_xml.endswith('/' + xml_file):
+            return found_xml
+    raise Exception('Could not find XML input: ' + xml_file)
+
+
 def get_cmd_name(command_node):
     proto = command_node.find('proto')
     cmd_name = proto.find('name').text
@@ -462,10 +476,10 @@ class CommandNames:
 class RegistryXML:
 
     def __init__(self, xml_file, ext_file=None):
-        tree = etree.parse(script_relative(xml_file))
+        tree = etree.parse(script_relative(find_xml_input(xml_file)))
         self.root = tree.getroot()
         if (ext_file):
-            self._AppendANGLEExts(ext_file)
+            self._AppendANGLEExts(find_xml_input(ext_file))
         self.all_commands = self.root.findall('commands/command')
         self.all_cmd_names = CommandNames()
         self.commands = {}
