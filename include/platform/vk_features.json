@@ -233,6 +233,14 @@
             "issue": "http://anglebug.com/4836"
         },
         {
+            "name": "supports_multisampled_render_to_single_sampled_GOOGLEX",
+            "category": "Features",
+            "description": [
+                "VkDevice supports the VK_GOOGLEX_multisampled_render_to_single_sampled extension"
+            ],
+            "issue": "http://anglebug.com/4836"
+        },
+        {
             "name": "supports_multisampled_render_to_single_sampled",
             "category": "Features",
             "description": [
@@ -967,6 +975,46 @@
                 "Platform supports setting frame timestamp surface attribute"
             ],
             "issue": "https://anglebug.com/7489"
+        },
+        {
+            "name": "supports_rasterization_order_attachment_access",
+            "category": "Features",
+            "description": [
+                "VkDevice supports VK_EXT_rasterization_order_attachment_access extension"
+            ],
+            "issue": "https://anglebug.com/7604"
+        },
+        {
+            "name": "egl_colorspace_attribute_passthrough",
+            "category": "Features",
+            "description": [
+                "Support passthrough of EGL colorspace attribute values"
+            ],
+            "issue": "https://anglebug.com/7319"
+        },
+        {
+            "name": "supports_pipeline_robustness",
+            "category": "Features",
+            "description": [
+                "VkDevice supports VK_EXT_pipeline_robustness extension"
+            ],
+            "issue": "https://anglebug.com/5845"
+        },
+        {
+            "name": "supports_vertex_input_dynamic_state",
+            "category": "Features",
+            "description": [
+                "VkDevice supports VK_EXT_vertex_input_dynamic_state extension"
+            ],
+            "issue": "https://anglebug.com/7162"
+        },
+        {
+            "name": "supports_color_write_enable",
+            "category": "Features",
+            "description": [
+                "VkDevice supports VK_EXT_color_write_enable extension"
+            ],
+            "issue": "https://anglebug.com/7161"
         }
     ]
 }

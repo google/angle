@@ -200,6 +200,11 @@ struct FeaturesVk : FeatureSetBase
                                                "extension with the independentResolveNone feature",
                                                &members, "http://anglebug.com/4836"};
 
+    FeatureInfo supportsMultisampledRenderToSingleSampledGOOGLEX = {
+        "supportsMultisampledRenderToSingleSampledGOOGLEX", FeatureCategory::VulkanFeatures,
+        "VkDevice supports the VK_GOOGLEX_multisampled_render_to_single_sampled extension",
+        &members, "http://anglebug.com/4836"};
+
     FeatureInfo supportsMultisampledRenderToSingleSampled = {
         "supportsMultisampledRenderToSingleSampled", FeatureCategory::VulkanFeatures,
         "VkDevice supports the VK_EXT_multisampled_render_to_single_sampled extension", &members,
@@ -716,6 +721,31 @@ struct FeaturesVk : FeatureSetBase
         "supportsTimestampSurfaceAttribute", FeatureCategory::VulkanFeatures,
         "Platform supports setting frame timestamp surface attribute", &members,
         "https://anglebug.com/7489"};
+
+    FeatureInfo supportsRasterizationOrderAttachmentAccess = {
+        "supportsRasterizationOrderAttachmentAccess", FeatureCategory::VulkanFeatures,
+        "VkDevice supports VK_EXT_rasterization_order_attachment_access extension", &members,
+        "https://anglebug.com/7604"};
+
+    FeatureInfo eglColorspaceAttributePassthrough = {
+        "eglColorspaceAttributePassthrough", FeatureCategory::VulkanFeatures,
+        "Support passthrough of EGL colorspace attribute values", &members,
+        "https://anglebug.com/7319"};
+
+    FeatureInfo supportsPipelineRobustness = {
+        "supportsPipelineRobustness", FeatureCategory::VulkanFeatures,
+        "VkDevice supports VK_EXT_pipeline_robustness extension", &members,
+        "https://anglebug.com/5845"};
+
+    FeatureInfo supportsVertexInputDynamicState = {
+        "supportsVertexInputDynamicState", FeatureCategory::VulkanFeatures,
+        "VkDevice supports VK_EXT_vertex_input_dynamic_state extension", &members,
+        "https://anglebug.com/7162"};
+
+    FeatureInfo supportsColorWriteEnable = {"supportsColorWriteEnable",
+                                            FeatureCategory::VulkanFeatures,
+                                            "VkDevice supports VK_EXT_color_write_enable extension",
+                                            &members, "https://anglebug.com/7161"};
 };
 
 inline FeaturesVk::FeaturesVk()  = default;
