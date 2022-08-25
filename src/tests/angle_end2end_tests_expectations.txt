@@ -689,11 +689,9 @@
 7484 GLES : GLSLTest_ES31.*Image2DAsFunctionArg/* = SKIP
 
 // Flaky hangs on Linux SwANGLE
-7431 LINUX SWIFTSHADER : MultithreadingTestES3.ThreadB*BeforeThreadASyncFinish/ES3_Vulkan_SwiftShader = SKIP
-7431 LINUX SWIFTSHADER : MultithreadingTestES3.ThreadB*BeforeThreadASyncFlush/ES3_Vulkan_SwiftShader = SKIP
 7419 SWIFTSHADER : MultithreadingTestES3.CreateFramebufferFetchBeforeRenderPass/* = SKIP
 7419 WIN SWIFTSHADER : MultithreadingTestES3.CreateFramebufferFetchMidRenderPass/* = SKIP
-7419 SWIFTSHADER : MultithreadingTestES3.ThreadCWaitBeforeThreadBSyncFinish/* = SKIP
+7419 SWIFTSHADER : MultithreadingTestES3.Thread* = SKIP
 
 // Timeout with SwiftShader and MAC OpenGL due to large workloads
 7389 SWIFTSHADER : Texture2DTest.ManySupersedingTextureUpdates/* = SKIP
@@ -713,6 +711,6 @@
 // Slow tests, should appear last in this file
 5076 : GLSLTest.VerifyMaxVertexUniformVectors* = TIMEOUT
 5076 : GLSLTest.VerifyMaxFragmentUniformVectors* = TIMEOUT
-6251 : MultithreadingTest* = TIMEOUT
+6261 : MultithreadingTest* = TIMEOUT
 // Please do not add expectations below this line,
 // so that TIMEOUT expectations above don't override more precise SKIP expectations
