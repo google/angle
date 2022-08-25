@@ -31,7 +31,7 @@ CallCapture CaptureGetVertexAttribdv(const State &glState,
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("index", ParamType::TGLuint, index);
-    paramBuffer.addEnumParam("pname", GLenumGroup::DefaultGroup, ParamType::TGLenum, pname);
+    paramBuffer.addEnumParam("pname", BigGLEnum::AllEnums, ParamType::TGLenum, pname);
 
     if (isCallValid)
     {

@@ -4973,16 +4973,21 @@ struct ParamValueTrait<gl::TextureID>
 
 }  // namespace
 
-ParamCapture::ParamCapture() : type(ParamType::TGLenum), enumGroup(gl::GLenumGroup::DefaultGroup) {}
+ParamCapture::ParamCapture() : type(ParamType::TGLenum), enumGroup(gl::GLESEnum::AllEnums) {}
 
 ParamCapture::ParamCapture(const char *nameIn, ParamType typeIn)
-    : name(nameIn), type(typeIn), enumGroup(gl::GLenumGroup::DefaultGroup)
+    : name(nameIn),
+      type(typeIn),
+      enumGroup(gl::GLESEnum::AllEnums),
+      bigGLEnum(gl::BigGLEnum::AllEnums)
 {}
 
 ParamCapture::~ParamCapture() = default;
 
 ParamCapture::ParamCapture(ParamCapture &&other)
-    : type(ParamType::TGLenum), enumGroup(gl::GLenumGroup::DefaultGroup)
+    : type(ParamType::TGLenum),
+      enumGroup(gl::GLESEnum::AllEnums),
+      bigGLEnum(gl::BigGLEnum::AllEnums)
 {
     *this = std::move(other);
 }
@@ -4993,6 +4998,7 @@ ParamCapture &ParamCapture::operator=(ParamCapture &&other)
     std::swap(type, other.type);
     std::swap(value, other.value);
     std::swap(enumGroup, other.enumGroup);
+    std::swap(bigGLEnum, other.bigGLEnum);
     std::swap(data, other.data);
     std::swap(arrayClientPointerIndex, other.arrayClientPointerIndex);
     std::swap(readBufferSizeBytes, other.readBufferSizeBytes);

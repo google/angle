@@ -30,7 +30,7 @@ CallCapture CaptureBeginConditionalRender(const State &glState,
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("id", ParamType::TGLuint, id);
-    paramBuffer.addEnumParam("mode", GLenumGroup::TypeEnum, ParamType::TGLenum, mode);
+    paramBuffer.addEnumParam("mode", BigGLEnum::ConditionalRenderMode, ParamType::TGLenum, mode);
 
     return CallCapture(angle::EntryPoint::GLBeginConditionalRender, std::move(paramBuffer));
 }
@@ -69,8 +69,8 @@ CallCapture CaptureClampColor(const State &glState, bool isCallValid, GLenum tar
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addEnumParam("target", GLenumGroup::DefaultGroup, ParamType::TGLenum, target);
-    paramBuffer.addEnumParam("clamp", GLenumGroup::DefaultGroup, ParamType::TGLenum, clamp);
+    paramBuffer.addEnumParam("target", BigGLEnum::AllEnums, ParamType::TGLenum, target);
+    paramBuffer.addEnumParam("clamp", BigGLEnum::AllEnums, ParamType::TGLenum, clamp);
 
     return CallCapture(angle::EntryPoint::GLClampColor, std::move(paramBuffer));
 }
@@ -92,8 +92,8 @@ CallCapture CaptureFramebufferTexture1D(const State &glState,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addEnumParam("target", GLenumGroup::FramebufferTarget, ParamType::TGLenum, target);
-    paramBuffer.addEnumParam("attachment", GLenumGroup::FramebufferAttachment, ParamType::TGLenum,
+    paramBuffer.addEnumParam("target", BigGLEnum::FramebufferTarget, ParamType::TGLenum, target);
+    paramBuffer.addEnumParam("attachment", BigGLEnum::FramebufferAttachment, ParamType::TGLenum,
                              attachment);
     paramBuffer.addValueParam("textargetPacked", ParamType::TTextureTarget, textargetPacked);
     paramBuffer.addValueParam("texturePacked", ParamType::TTextureID, texturePacked);
@@ -113,8 +113,8 @@ CallCapture CaptureFramebufferTexture3D(const State &glState,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addEnumParam("target", GLenumGroup::FramebufferTarget, ParamType::TGLenum, target);
-    paramBuffer.addEnumParam("attachment", GLenumGroup::FramebufferAttachment, ParamType::TGLenum,
+    paramBuffer.addEnumParam("target", BigGLEnum::FramebufferTarget, ParamType::TGLenum, target);
+    paramBuffer.addEnumParam("attachment", BigGLEnum::FramebufferAttachment, ParamType::TGLenum,
                              attachment);
     paramBuffer.addValueParam("textargetPacked", ParamType::TTextureTarget, textargetPacked);
     paramBuffer.addValueParam("texturePacked", ParamType::TTextureID, texturePacked);
@@ -633,9 +633,9 @@ CallCapture CaptureTexImage2DMultisample(const State &glState,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addEnumParam("target", GLenumGroup::TextureTarget, ParamType::TGLenum, target);
+    paramBuffer.addEnumParam("target", BigGLEnum::TextureTarget, ParamType::TGLenum, target);
     paramBuffer.addValueParam("samples", ParamType::TGLsizei, samples);
-    paramBuffer.addEnumParam("internalformat", GLenumGroup::InternalFormat, ParamType::TGLenum,
+    paramBuffer.addEnumParam("internalformat", BigGLEnum::InternalFormat, ParamType::TGLenum,
                              internalformat);
     paramBuffer.addValueParam("width", ParamType::TGLsizei, width);
     paramBuffer.addValueParam("height", ParamType::TGLsizei, height);
@@ -656,9 +656,9 @@ CallCapture CaptureTexImage3DMultisample(const State &glState,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addEnumParam("target", GLenumGroup::TextureTarget, ParamType::TGLenum, target);
+    paramBuffer.addEnumParam("target", BigGLEnum::TextureTarget, ParamType::TGLenum, target);
     paramBuffer.addValueParam("samples", ParamType::TGLsizei, samples);
-    paramBuffer.addEnumParam("internalformat", GLenumGroup::InternalFormat, ParamType::TGLenum,
+    paramBuffer.addEnumParam("internalformat", BigGLEnum::InternalFormat, ParamType::TGLenum,
                              internalformat);
     paramBuffer.addValueParam("width", ParamType::TGLsizei, width);
     paramBuffer.addValueParam("height", ParamType::TGLsizei, height);
@@ -706,7 +706,7 @@ CallCapture CaptureColorP3ui(const State &glState, bool isCallValid, GLenum type
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addEnumParam("type", GLenumGroup::ColorPointerType, ParamType::TGLenum, type);
+    paramBuffer.addEnumParam("type", BigGLEnum::ColorPointerType, ParamType::TGLenum, type);
     paramBuffer.addValueParam("color", ParamType::TGLuint, color);
 
     return CallCapture(angle::EntryPoint::GLColorP3ui, std::move(paramBuffer));
@@ -719,7 +719,7 @@ CallCapture CaptureColorP3uiv(const State &glState,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addEnumParam("type", GLenumGroup::ColorPointerType, ParamType::TGLenum, type);
+    paramBuffer.addEnumParam("type", BigGLEnum::ColorPointerType, ParamType::TGLenum, type);
 
     if (isCallValid)
     {
@@ -743,7 +743,7 @@ CallCapture CaptureColorP4ui(const State &glState, bool isCallValid, GLenum type
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addEnumParam("type", GLenumGroup::ColorPointerType, ParamType::TGLenum, type);
+    paramBuffer.addEnumParam("type", BigGLEnum::ColorPointerType, ParamType::TGLenum, type);
     paramBuffer.addValueParam("color", ParamType::TGLuint, color);
 
     return CallCapture(angle::EntryPoint::GLColorP4ui, std::move(paramBuffer));
@@ -756,7 +756,7 @@ CallCapture CaptureColorP4uiv(const State &glState,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addEnumParam("type", GLenumGroup::ColorPointerType, ParamType::TGLenum, type);
+    paramBuffer.addEnumParam("type", BigGLEnum::ColorPointerType, ParamType::TGLenum, type);
 
     if (isCallValid)
     {
@@ -817,7 +817,7 @@ CallCapture CaptureGetQueryObjecti64v(const State &glState,
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("idPacked", ParamType::TQueryID, idPacked);
-    paramBuffer.addEnumParam("pname", GLenumGroup::QueryObjectParameterName, ParamType::TGLenum,
+    paramBuffer.addEnumParam("pname", BigGLEnum::QueryObjectParameterName, ParamType::TGLenum,
                              pname);
 
     if (isCallValid)
@@ -848,7 +848,7 @@ CallCapture CaptureGetQueryObjectui64v(const State &glState,
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("idPacked", ParamType::TQueryID, idPacked);
-    paramBuffer.addEnumParam("pname", GLenumGroup::QueryObjectParameterName, ParamType::TGLenum,
+    paramBuffer.addEnumParam("pname", BigGLEnum::QueryObjectParameterName, ParamType::TGLenum,
                              pname);
 
     if (isCallValid)
@@ -878,8 +878,8 @@ CallCapture CaptureMultiTexCoordP1ui(const State &glState,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addEnumParam("texture", GLenumGroup::TextureUnit, ParamType::TGLenum, texture);
-    paramBuffer.addEnumParam("type", GLenumGroup::TexCoordPointerType, ParamType::TGLenum, type);
+    paramBuffer.addEnumParam("texture", BigGLEnum::TextureUnit, ParamType::TGLenum, texture);
+    paramBuffer.addEnumParam("type", BigGLEnum::TexCoordPointerType, ParamType::TGLenum, type);
     paramBuffer.addValueParam("coords", ParamType::TGLuint, coords);
 
     return CallCapture(angle::EntryPoint::GLMultiTexCoordP1ui, std::move(paramBuffer));
@@ -893,8 +893,8 @@ CallCapture CaptureMultiTexCoordP1uiv(const State &glState,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addEnumParam("texture", GLenumGroup::TextureUnit, ParamType::TGLenum, texture);
-    paramBuffer.addEnumParam("type", GLenumGroup::TexCoordPointerType, ParamType::TGLenum, type);
+    paramBuffer.addEnumParam("texture", BigGLEnum::TextureUnit, ParamType::TGLenum, texture);
+    paramBuffer.addEnumParam("type", BigGLEnum::TexCoordPointerType, ParamType::TGLenum, type);
 
     if (isCallValid)
     {
@@ -922,8 +922,8 @@ CallCapture CaptureMultiTexCoordP2ui(const State &glState,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addEnumParam("texture", GLenumGroup::TextureUnit, ParamType::TGLenum, texture);
-    paramBuffer.addEnumParam("type", GLenumGroup::TexCoordPointerType, ParamType::TGLenum, type);
+    paramBuffer.addEnumParam("texture", BigGLEnum::TextureUnit, ParamType::TGLenum, texture);
+    paramBuffer.addEnumParam("type", BigGLEnum::TexCoordPointerType, ParamType::TGLenum, type);
     paramBuffer.addValueParam("coords", ParamType::TGLuint, coords);
 
     return CallCapture(angle::EntryPoint::GLMultiTexCoordP2ui, std::move(paramBuffer));
@@ -937,8 +937,8 @@ CallCapture CaptureMultiTexCoordP2uiv(const State &glState,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addEnumParam("texture", GLenumGroup::TextureUnit, ParamType::TGLenum, texture);
-    paramBuffer.addEnumParam("type", GLenumGroup::TexCoordPointerType, ParamType::TGLenum, type);
+    paramBuffer.addEnumParam("texture", BigGLEnum::TextureUnit, ParamType::TGLenum, texture);
+    paramBuffer.addEnumParam("type", BigGLEnum::TexCoordPointerType, ParamType::TGLenum, type);
 
     if (isCallValid)
     {
@@ -966,8 +966,8 @@ CallCapture CaptureMultiTexCoordP3ui(const State &glState,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addEnumParam("texture", GLenumGroup::TextureUnit, ParamType::TGLenum, texture);
-    paramBuffer.addEnumParam("type", GLenumGroup::TexCoordPointerType, ParamType::TGLenum, type);
+    paramBuffer.addEnumParam("texture", BigGLEnum::TextureUnit, ParamType::TGLenum, texture);
+    paramBuffer.addEnumParam("type", BigGLEnum::TexCoordPointerType, ParamType::TGLenum, type);
     paramBuffer.addValueParam("coords", ParamType::TGLuint, coords);
 
     return CallCapture(angle::EntryPoint::GLMultiTexCoordP3ui, std::move(paramBuffer));
@@ -981,8 +981,8 @@ CallCapture CaptureMultiTexCoordP3uiv(const State &glState,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addEnumParam("texture", GLenumGroup::TextureUnit, ParamType::TGLenum, texture);
-    paramBuffer.addEnumParam("type", GLenumGroup::TexCoordPointerType, ParamType::TGLenum, type);
+    paramBuffer.addEnumParam("texture", BigGLEnum::TextureUnit, ParamType::TGLenum, texture);
+    paramBuffer.addEnumParam("type", BigGLEnum::TexCoordPointerType, ParamType::TGLenum, type);
 
     if (isCallValid)
     {
@@ -1010,8 +1010,8 @@ CallCapture CaptureMultiTexCoordP4ui(const State &glState,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addEnumParam("texture", GLenumGroup::TextureUnit, ParamType::TGLenum, texture);
-    paramBuffer.addEnumParam("type", GLenumGroup::TexCoordPointerType, ParamType::TGLenum, type);
+    paramBuffer.addEnumParam("texture", BigGLEnum::TextureUnit, ParamType::TGLenum, texture);
+    paramBuffer.addEnumParam("type", BigGLEnum::TexCoordPointerType, ParamType::TGLenum, type);
     paramBuffer.addValueParam("coords", ParamType::TGLuint, coords);
 
     return CallCapture(angle::EntryPoint::GLMultiTexCoordP4ui, std::move(paramBuffer));
@@ -1025,8 +1025,8 @@ CallCapture CaptureMultiTexCoordP4uiv(const State &glState,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addEnumParam("texture", GLenumGroup::TextureUnit, ParamType::TGLenum, texture);
-    paramBuffer.addEnumParam("type", GLenumGroup::TexCoordPointerType, ParamType::TGLenum, type);
+    paramBuffer.addEnumParam("texture", BigGLEnum::TextureUnit, ParamType::TGLenum, texture);
+    paramBuffer.addEnumParam("type", BigGLEnum::TexCoordPointerType, ParamType::TGLenum, type);
 
     if (isCallValid)
     {
@@ -1050,7 +1050,7 @@ CallCapture CaptureNormalP3ui(const State &glState, bool isCallValid, GLenum typ
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addEnumParam("type", GLenumGroup::NormalPointerType, ParamType::TGLenum, type);
+    paramBuffer.addEnumParam("type", BigGLEnum::NormalPointerType, ParamType::TGLenum, type);
     paramBuffer.addValueParam("coords", ParamType::TGLuint, coords);
 
     return CallCapture(angle::EntryPoint::GLNormalP3ui, std::move(paramBuffer));
@@ -1063,7 +1063,7 @@ CallCapture CaptureNormalP3uiv(const State &glState,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addEnumParam("type", GLenumGroup::NormalPointerType, ParamType::TGLenum, type);
+    paramBuffer.addEnumParam("type", BigGLEnum::NormalPointerType, ParamType::TGLenum, type);
 
     if (isCallValid)
     {
@@ -1103,7 +1103,7 @@ CallCapture CaptureSecondaryColorP3ui(const State &glState,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addEnumParam("type", GLenumGroup::ColorPointerType, ParamType::TGLenum, type);
+    paramBuffer.addEnumParam("type", BigGLEnum::ColorPointerType, ParamType::TGLenum, type);
     paramBuffer.addValueParam("color", ParamType::TGLuint, color);
 
     return CallCapture(angle::EntryPoint::GLSecondaryColorP3ui, std::move(paramBuffer));
@@ -1116,7 +1116,7 @@ CallCapture CaptureSecondaryColorP3uiv(const State &glState,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addEnumParam("type", GLenumGroup::ColorPointerType, ParamType::TGLenum, type);
+    paramBuffer.addEnumParam("type", BigGLEnum::ColorPointerType, ParamType::TGLenum, type);
 
     if (isCallValid)
     {
@@ -1140,7 +1140,7 @@ CallCapture CaptureTexCoordP1ui(const State &glState, bool isCallValid, GLenum t
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addEnumParam("type", GLenumGroup::TexCoordPointerType, ParamType::TGLenum, type);
+    paramBuffer.addEnumParam("type", BigGLEnum::TexCoordPointerType, ParamType::TGLenum, type);
     paramBuffer.addValueParam("coords", ParamType::TGLuint, coords);
 
     return CallCapture(angle::EntryPoint::GLTexCoordP1ui, std::move(paramBuffer));
@@ -1153,7 +1153,7 @@ CallCapture CaptureTexCoordP1uiv(const State &glState,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addEnumParam("type", GLenumGroup::TexCoordPointerType, ParamType::TGLenum, type);
+    paramBuffer.addEnumParam("type", BigGLEnum::TexCoordPointerType, ParamType::TGLenum, type);
 
     if (isCallValid)
     {
@@ -1177,7 +1177,7 @@ CallCapture CaptureTexCoordP2ui(const State &glState, bool isCallValid, GLenum t
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addEnumParam("type", GLenumGroup::TexCoordPointerType, ParamType::TGLenum, type);
+    paramBuffer.addEnumParam("type", BigGLEnum::TexCoordPointerType, ParamType::TGLenum, type);
     paramBuffer.addValueParam("coords", ParamType::TGLuint, coords);
 
     return CallCapture(angle::EntryPoint::GLTexCoordP2ui, std::move(paramBuffer));
@@ -1190,7 +1190,7 @@ CallCapture CaptureTexCoordP2uiv(const State &glState,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addEnumParam("type", GLenumGroup::TexCoordPointerType, ParamType::TGLenum, type);
+    paramBuffer.addEnumParam("type", BigGLEnum::TexCoordPointerType, ParamType::TGLenum, type);
 
     if (isCallValid)
     {
@@ -1214,7 +1214,7 @@ CallCapture CaptureTexCoordP3ui(const State &glState, bool isCallValid, GLenum t
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addEnumParam("type", GLenumGroup::TexCoordPointerType, ParamType::TGLenum, type);
+    paramBuffer.addEnumParam("type", BigGLEnum::TexCoordPointerType, ParamType::TGLenum, type);
     paramBuffer.addValueParam("coords", ParamType::TGLuint, coords);
 
     return CallCapture(angle::EntryPoint::GLTexCoordP3ui, std::move(paramBuffer));
@@ -1227,7 +1227,7 @@ CallCapture CaptureTexCoordP3uiv(const State &glState,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addEnumParam("type", GLenumGroup::TexCoordPointerType, ParamType::TGLenum, type);
+    paramBuffer.addEnumParam("type", BigGLEnum::TexCoordPointerType, ParamType::TGLenum, type);
 
     if (isCallValid)
     {
@@ -1251,7 +1251,7 @@ CallCapture CaptureTexCoordP4ui(const State &glState, bool isCallValid, GLenum t
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addEnumParam("type", GLenumGroup::TexCoordPointerType, ParamType::TGLenum, type);
+    paramBuffer.addEnumParam("type", BigGLEnum::TexCoordPointerType, ParamType::TGLenum, type);
     paramBuffer.addValueParam("coords", ParamType::TGLuint, coords);
 
     return CallCapture(angle::EntryPoint::GLTexCoordP4ui, std::move(paramBuffer));
@@ -1264,7 +1264,7 @@ CallCapture CaptureTexCoordP4uiv(const State &glState,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addEnumParam("type", GLenumGroup::TexCoordPointerType, ParamType::TGLenum, type);
+    paramBuffer.addEnumParam("type", BigGLEnum::TexCoordPointerType, ParamType::TGLenum, type);
 
     if (isCallValid)
     {
@@ -1294,8 +1294,7 @@ CallCapture CaptureVertexAttribP1ui(const State &glState,
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("index", ParamType::TGLuint, index);
-    paramBuffer.addEnumParam("type", GLenumGroup::VertexAttribPointerType, ParamType::TGLenum,
-                             type);
+    paramBuffer.addEnumParam("type", BigGLEnum::VertexAttribPointerType, ParamType::TGLenum, type);
     paramBuffer.addValueParam("normalized", ParamType::TGLboolean, normalized);
     paramBuffer.addValueParam("value", ParamType::TGLuint, value);
 
@@ -1312,8 +1311,7 @@ CallCapture CaptureVertexAttribP1uiv(const State &glState,
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("index", ParamType::TGLuint, index);
-    paramBuffer.addEnumParam("type", GLenumGroup::VertexAttribPointerType, ParamType::TGLenum,
-                             type);
+    paramBuffer.addEnumParam("type", BigGLEnum::VertexAttribPointerType, ParamType::TGLenum, type);
     paramBuffer.addValueParam("normalized", ParamType::TGLboolean, normalized);
 
     if (isCallValid)
@@ -1345,8 +1343,7 @@ CallCapture CaptureVertexAttribP2ui(const State &glState,
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("index", ParamType::TGLuint, index);
-    paramBuffer.addEnumParam("type", GLenumGroup::VertexAttribPointerType, ParamType::TGLenum,
-                             type);
+    paramBuffer.addEnumParam("type", BigGLEnum::VertexAttribPointerType, ParamType::TGLenum, type);
     paramBuffer.addValueParam("normalized", ParamType::TGLboolean, normalized);
     paramBuffer.addValueParam("value", ParamType::TGLuint, value);
 
@@ -1363,8 +1360,7 @@ CallCapture CaptureVertexAttribP2uiv(const State &glState,
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("index", ParamType::TGLuint, index);
-    paramBuffer.addEnumParam("type", GLenumGroup::VertexAttribPointerType, ParamType::TGLenum,
-                             type);
+    paramBuffer.addEnumParam("type", BigGLEnum::VertexAttribPointerType, ParamType::TGLenum, type);
     paramBuffer.addValueParam("normalized", ParamType::TGLboolean, normalized);
 
     if (isCallValid)
@@ -1396,8 +1392,7 @@ CallCapture CaptureVertexAttribP3ui(const State &glState,
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("index", ParamType::TGLuint, index);
-    paramBuffer.addEnumParam("type", GLenumGroup::VertexAttribPointerType, ParamType::TGLenum,
-                             type);
+    paramBuffer.addEnumParam("type", BigGLEnum::VertexAttribPointerType, ParamType::TGLenum, type);
     paramBuffer.addValueParam("normalized", ParamType::TGLboolean, normalized);
     paramBuffer.addValueParam("value", ParamType::TGLuint, value);
 
@@ -1414,8 +1409,7 @@ CallCapture CaptureVertexAttribP3uiv(const State &glState,
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("index", ParamType::TGLuint, index);
-    paramBuffer.addEnumParam("type", GLenumGroup::VertexAttribPointerType, ParamType::TGLenum,
-                             type);
+    paramBuffer.addEnumParam("type", BigGLEnum::VertexAttribPointerType, ParamType::TGLenum, type);
     paramBuffer.addValueParam("normalized", ParamType::TGLboolean, normalized);
 
     if (isCallValid)
@@ -1447,8 +1441,7 @@ CallCapture CaptureVertexAttribP4ui(const State &glState,
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("index", ParamType::TGLuint, index);
-    paramBuffer.addEnumParam("type", GLenumGroup::VertexAttribPointerType, ParamType::TGLenum,
-                             type);
+    paramBuffer.addEnumParam("type", BigGLEnum::VertexAttribPointerType, ParamType::TGLenum, type);
     paramBuffer.addValueParam("normalized", ParamType::TGLboolean, normalized);
     paramBuffer.addValueParam("value", ParamType::TGLuint, value);
 
@@ -1465,8 +1458,7 @@ CallCapture CaptureVertexAttribP4uiv(const State &glState,
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("index", ParamType::TGLuint, index);
-    paramBuffer.addEnumParam("type", GLenumGroup::VertexAttribPointerType, ParamType::TGLenum,
-                             type);
+    paramBuffer.addEnumParam("type", BigGLEnum::VertexAttribPointerType, ParamType::TGLenum, type);
     paramBuffer.addValueParam("normalized", ParamType::TGLboolean, normalized);
 
     if (isCallValid)
@@ -1492,7 +1484,7 @@ CallCapture CaptureVertexP2ui(const State &glState, bool isCallValid, GLenum typ
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addEnumParam("type", GLenumGroup::VertexPointerType, ParamType::TGLenum, type);
+    paramBuffer.addEnumParam("type", BigGLEnum::VertexPointerType, ParamType::TGLenum, type);
     paramBuffer.addValueParam("value", ParamType::TGLuint, value);
 
     return CallCapture(angle::EntryPoint::GLVertexP2ui, std::move(paramBuffer));
@@ -1505,7 +1497,7 @@ CallCapture CaptureVertexP2uiv(const State &glState,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addEnumParam("type", GLenumGroup::VertexPointerType, ParamType::TGLenum, type);
+    paramBuffer.addEnumParam("type", BigGLEnum::VertexPointerType, ParamType::TGLenum, type);
 
     if (isCallValid)
     {
@@ -1529,7 +1521,7 @@ CallCapture CaptureVertexP3ui(const State &glState, bool isCallValid, GLenum typ
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addEnumParam("type", GLenumGroup::VertexPointerType, ParamType::TGLenum, type);
+    paramBuffer.addEnumParam("type", BigGLEnum::VertexPointerType, ParamType::TGLenum, type);
     paramBuffer.addValueParam("value", ParamType::TGLuint, value);
 
     return CallCapture(angle::EntryPoint::GLVertexP3ui, std::move(paramBuffer));
@@ -1542,7 +1534,7 @@ CallCapture CaptureVertexP3uiv(const State &glState,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addEnumParam("type", GLenumGroup::VertexPointerType, ParamType::TGLenum, type);
+    paramBuffer.addEnumParam("type", BigGLEnum::VertexPointerType, ParamType::TGLenum, type);
 
     if (isCallValid)
     {
@@ -1566,7 +1558,7 @@ CallCapture CaptureVertexP4ui(const State &glState, bool isCallValid, GLenum typ
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addEnumParam("type", GLenumGroup::VertexPointerType, ParamType::TGLenum, type);
+    paramBuffer.addEnumParam("type", BigGLEnum::VertexPointerType, ParamType::TGLenum, type);
     paramBuffer.addValueParam("value", ParamType::TGLuint, value);
 
     return CallCapture(angle::EntryPoint::GLVertexP4ui, std::move(paramBuffer));
@@ -1579,7 +1571,7 @@ CallCapture CaptureVertexP4uiv(const State &glState,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addEnumParam("type", GLenumGroup::VertexPointerType, ParamType::TGLenum, type);
+    paramBuffer.addEnumParam("type", BigGLEnum::VertexPointerType, ParamType::TGLenum, type);
 
     if (isCallValid)
     {

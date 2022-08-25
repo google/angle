@@ -4,11 +4,11 @@
   "scripts/generate_loader.py":
     "101c7ad1f8f1bcd7c1afee3b854913af",
   "scripts/gl.xml":
-    "4fbb3be5950ac486b9da7c830dff0dfe",
+    "c79f59912f42e96ea958dddb5e029d47",
   "scripts/gl_angle_ext.xml":
-    "37eebedc1153cd9d208efa469a10a7b2",
+    "07ce630bceb8d419943bfc8064e247b3",
   "scripts/registry_xml.py":
-    "4d162936baeb7e803561559e11b7fd89",
+    "b1150b94db620646a38156213cbba402",
   "src/libEGL/egl_loader_autogen.cpp":
     "f8e305c5b9defa9ec419cac1a4c2247c",
   "src/libEGL/egl_loader_autogen.h":
@@ -20,7 +20,7 @@
   "third_party/OpenGL-Registry/src/xml/glx.xml":
     "94f3eee4b076801d117804eb466714b7",
   "third_party/OpenGL-Registry/src/xml/wgl.xml":
-    "b674e6e4ae71067341985e93b410b5f1",
+    "eae784bf4d1b983a42af5671b140b7c4",
   "util/capture/trace_egl_loader_autogen.cpp":
     "757d54a7afc30f8aa3d285ad2318f68c",
   "util/capture/trace_egl_loader_autogen.h":

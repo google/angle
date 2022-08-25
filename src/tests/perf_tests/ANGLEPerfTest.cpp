@@ -1233,7 +1233,7 @@ void ANGLERenderTest::skipTestIfFailsIntegerPrerequisite()
             std::stringstream ss;
             ss << "Test skipped due to value (" << std::to_string(static_cast<int>(driverValue))
                << ") being less than the prerequisite minimum (" << std::to_string(minRequired)
-               << ") for GL constant " << gl::GLenumToString(gl::GLenumGroup::DefaultGroup, target);
+               << ") for GL constant " << gl::GLenumToString(gl::GLESEnum::AllEnums, target);
             skipTest(ss.str());
         }
     }

@@ -36,7 +36,7 @@ void GL_APIENTRY GL_GetVertexAttribdv(GLuint index, GLenum pname, GLdouble *para
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetVertexAttribdv,
           "context = %d, index = %u, pname = %s, params = 0x%016" PRIxPTR "", CID(context), index,
-          GLenumToString(GLenumGroup::DefaultGroup, pname), (uintptr_t)params);
+          GLenumToString(BigGLEnum::AllEnums, pname), (uintptr_t)params);
 
     if (context)
     {

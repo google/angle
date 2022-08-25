@@ -10,7 +10,7 @@
 
 import sys, os, pprint, json
 import registry_xml
-from registry_xml import apis, script_relative, strip_api_prefix
+from registry_xml import apis, script_relative, strip_api_prefix, api_enums
 
 # Paths
 CL_STUBS_HEADER_PATH = "../src/libGLESv2/cl_stubs_autogen.h"
@@ -597,7 +597,7 @@ CallCapture Capture{short_name}({params_with_type})
 
 TEMPLATE_PARAMETER_CAPTURE_VALUE = """paramBuffer.addValueParam("{name}", ParamType::T{type}, {name});"""
 
-TEMPLATE_PARAMETER_CAPTURE_GL_ENUM = """paramBuffer.addEnumParam("{name}", GLenumGroup::{group}, ParamType::T{type}, {name});"""
+TEMPLATE_PARAMETER_CAPTURE_GL_ENUM = """paramBuffer.addEnumParam("{name}", {api_enum}::{group}, ParamType::T{type}, {name});"""
 
 TEMPLATE_PARAMETER_CAPTURE_POINTER = """
     if (isCallValid)
@@ -1389,7 +1389,7 @@ def is_unsigned_long_format(fmt):
     return fmt == UNSIGNED_LONG_LONG_FORMAT or fmt == HEX_LONG_LONG_FORMAT
 
 
-def param_print_argument(command_node, param):
+def param_print_argument(api, command_node, param):
     name_only = just_the_name(param)
     type_only = just_the_type(param)
 
@@ -1409,11 +1409,11 @@ def param_print_argument(command_node, param):
 
     if type_only == "GLbitfield":
         group_name = find_gl_enum_group_in_command(command_node, name_only)
-        return "GLbitfieldToString(GLenumGroup::%s, %s).c_str()" % (group_name, name_only)
+        return "GLbitfieldToString(%s::%s, %s).c_str()" % (api_enums[api], group_name, name_only)
 
     if type_only == "GLenum":
         group_name = find_gl_enum_group_in_command(command_node, name_only)
-        return "GLenumToString(GLenumGroup::%s, %s)" % (group_name, name_only)
+        return "GLenumToString(%s::%s, %s)" % (api_enums[api], group_name, name_only)
 
     return name_only
 
@@ -1553,7 +1553,7 @@ def format_entry_point_def(api, command_node, cmd_name, proto, params, cmd_packe
                 internal_type + ">(" + name + ");"
             ]
 
-    pass_params = [param_print_argument(command_node, param) for param in params]
+    pass_params = [param_print_argument(api, command_node, param) for param in params]
     format_params = [param_format_string(param) for param in params]
     return_type = proto[:-len(cmd_name)].strip()
     initialization = "InitBackEnds(%s);\n" % INIT_DICT[cmd_name] if cmd_name in INIT_DICT else ""
@@ -1673,7 +1673,10 @@ def format_capture_method(api, command, cmd_name, proto, params, all_param_types
         elif capture_param_type in ('GLenum', 'GLbitfield'):
             gl_enum_group = find_gl_enum_group_in_command(command, param_name)
             capture = TEMPLATE_PARAMETER_CAPTURE_GL_ENUM.format(
-                name=param_name, type=capture_param_type, group=gl_enum_group)
+                name=param_name,
+                type=capture_param_type,
+                api_enum=api_enums[api],
+                group=gl_enum_group)
         else:
             capture = TEMPLATE_PARAMETER_CAPTURE_VALUE.format(
                 name=param_name, type=capture_param_type)

@@ -17,7 +17,7 @@ namespace gl
 {
 const char kUnknownGLenumString[] = "EnumUnknown";
 
-void OutputGLenumString(std::ostream &out, GLenumGroup enumGroup, unsigned int value)
+void OutputGLenumString(std::ostream &out, GLESEnum enumGroup, unsigned int value)
 {
     const char *enumStr = GLenumToString(enumGroup, value);
     if (enumStr != kUnknownGLenumString)
@@ -26,7 +26,7 @@ void OutputGLenumString(std::ostream &out, GLenumGroup enumGroup, unsigned int v
         return;
     }
 
-    if (enumGroup == GLenumGroup::Boolean)
+    if (enumGroup == GLESEnum::Boolean)
     {
         // If an unknown enum was submitted as GLboolean, just write out the value.
         if (enumStr == kUnknownGLenumString)
@@ -41,10 +41,10 @@ void OutputGLenumString(std::ostream &out, GLenumGroup enumGroup, unsigned int v
         return;
     }
 
-    if (enumGroup != GLenumGroup::DefaultGroup)
+    if (enumGroup != GLESEnum::AllEnums)
     {
         // Retry with the "Default" group
-        enumStr = GLenumToString(GLenumGroup::DefaultGroup, value);
+        enumStr = GLenumToString(GLESEnum::AllEnums, value);
         if (enumStr != kUnknownGLenumString)
         {
             out << enumStr;
@@ -55,17 +55,17 @@ void OutputGLenumString(std::ostream &out, GLenumGroup enumGroup, unsigned int v
     out << std::hex << "0x" << std::setfill('0') << std::setw(4) << value << std::dec;
 }
 
-void OutputGLbitfieldString(std::ostream &out, GLenumGroup enumGroup, unsigned int value)
+void OutputGLbitfieldString(std::ostream &out, GLESEnum enumGroup, unsigned int value)
 {
     out << GLbitfieldToString(enumGroup, value);
 }
 
 const char *GLbooleanToString(unsigned int value)
 {
-    return GLenumToString(GLenumGroup::Boolean, value);
+    return GLenumToString(GLESEnum::Boolean, value);
 }
 
-std::string GLbitfieldToString(GLenumGroup enumGroup, unsigned int value)
+std::string GLbitfieldToString(GLESEnum enumGroup, unsigned int value)
 {
     std::stringstream st;
 
@@ -93,6 +93,6 @@ std::string GLbitfieldToString(GLenumGroup enumGroup, unsigned int value)
 
 const char *GLinternalFormatToString(unsigned int format)
 {
-    return GLenumToString(gl::GLenumGroup::InternalFormat, format);
+    return GLenumToString(gl::GLESEnum::InternalFormat, format);
 }
 }  // namespace gl

@@ -384,9 +384,6 @@ check_sorted('strip_suffixes', strip_suffixes)
 # Toggle generation here.
 support_EGL_ANGLE_explicit_context = True
 
-# For ungrouped GLenum types
-default_enum_group_name = "DefaultGroup"
-
 # Group names that appear in command/param, but not present in groups/group
 unsupported_enum_group_names = {
     'GetMultisamplePNameNV',
@@ -422,6 +419,10 @@ class apis:
     GLX = 'GLX'
     EGL = 'EGL'
     CL = 'CL'
+
+# For GLenum types
+api_enums = {apis.GL: 'BigGLEnum', apis.GLES: 'GLESEnum'}
+default_enum_group_name = 'AllEnums'
 
 
 def script_relative(path):
