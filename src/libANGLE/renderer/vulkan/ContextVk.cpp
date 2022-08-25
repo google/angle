@@ -325,7 +325,16 @@ vk::ResourceAccess GetDepthAccess(const gl::DepthStencilState &dsState,
     {
         return vk::ResourceAccess::Unused;
     }
-    return dsState.isDepthMaskedOut() ? vk::ResourceAccess::ReadOnly : vk::ResourceAccess::Write;
+
+    if (dsState.isDepthMaskedOut())
+    {
+        // If depthFunc is GL_ALWAYS or GL_NEVER, we do not need to load depth value.
+        return (dsState.depthFunc == GL_ALWAYS || dsState.depthFunc == GL_NEVER)
+                   ? vk::ResourceAccess::Unused
+                   : vk::ResourceAccess::ReadOnly;
+    }
+
+    return vk::ResourceAccess::Write;
 }
 
 vk::ResourceAccess GetStencilAccess(const gl::DepthStencilState &dsState,
