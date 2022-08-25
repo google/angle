@@ -589,6 +589,17 @@ void DispatchTableGL::initProcsDesktopGL(const gl::Version &version,
         ASSIGN("glUniformSubroutinesuiv", uniformSubroutinesuiv);
     }
 
+    if (extensions.count("GL_ARB_sync") != 0)
+    {
+        ASSIGN("glClientWaitSync", clientWaitSync);
+        ASSIGN("glDeleteSync", deleteSync);
+        ASSIGN("glFenceSync", fenceSync);
+        ASSIGN("glGetInteger64v", getInteger64v);
+        ASSIGN("glGetSynciv", getSynciv);
+        ASSIGN("glIsSync", isSync);
+        ASSIGN("glWaitSync", waitSync);
+    }
+
     if (extensions.count("GL_ARB_tessellation_shader") != 0)
     {
         ASSIGN("glPatchParameterfv", patchParameterfv);
@@ -2639,17 +2650,6 @@ void DispatchTableGL::initProcsGLES(const gl::Version &version,
 
 void DispatchTableGL::initProcsSharedExtensions(const std::set<std::string> &extensions)
 {
-    if (extensions.count("GL_ARB_sync") != 0)
-    {
-        ASSIGN("glClientWaitSync", clientWaitSync);
-        ASSIGN("glDeleteSync", deleteSync);
-        ASSIGN("glFenceSync", fenceSync);
-        ASSIGN("glGetInteger64v", getInteger64v);
-        ASSIGN("glGetSynciv", getSynciv);
-        ASSIGN("glIsSync", isSync);
-        ASSIGN("glWaitSync", waitSync);
-    }
-
     if (extensions.count("GL_EXT_blend_minmax") != 0)
     {
         ASSIGN("glBlendEquationEXT", blendEquation);
@@ -3375,6 +3375,17 @@ void DispatchTableGL::initProcsDesktopGLNULL(const gl::Version &version,
         getSubroutineUniformLocation   = &glGetSubroutineUniformLocationNULL;
         getUniformSubroutineuiv        = &glGetUniformSubroutineuivNULL;
         uniformSubroutinesuiv          = &glUniformSubroutinesuivNULL;
+    }
+
+    if (extensions.count("GL_ARB_sync") != 0)
+    {
+        clientWaitSync = &glClientWaitSyncNULL;
+        deleteSync     = &glDeleteSyncNULL;
+        fenceSync      = &glFenceSyncNULL;
+        getInteger64v  = &glGetInteger64vNULL;
+        getSynciv      = &glGetSyncivNULL;
+        isSync         = &glIsSyncNULL;
+        waitSync       = &glWaitSyncNULL;
     }
 
     if (extensions.count("GL_ARB_tessellation_shader") != 0)
@@ -5425,17 +5436,6 @@ void DispatchTableGL::initProcsGLESNULL(const gl::Version &version,
 
 void DispatchTableGL::initProcsSharedExtensionsNULL(const std::set<std::string> &extensions)
 {
-    if (extensions.count("GL_ARB_sync") != 0)
-    {
-        clientWaitSync = &glClientWaitSyncNULL;
-        deleteSync     = &glDeleteSyncNULL;
-        fenceSync      = &glFenceSyncNULL;
-        getInteger64v  = &glGetInteger64vNULL;
-        getSynciv      = &glGetSyncivNULL;
-        isSync         = &glIsSyncNULL;
-        waitSync       = &glWaitSyncNULL;
-    }
-
     if (extensions.count("GL_EXT_blend_minmax") != 0)
     {
         blendEquation = &glBlendEquationNULL;

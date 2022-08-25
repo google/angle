@@ -41414,7 +41414,7 @@ typedef unsigned int GLhandleARB;
                 <enum name="GL_DEPTH_STENCIL_TEXTURE_MODE"/>
             </require>
         </extension>
-        <extension name="GL_ARB_sync" supported="gl|glcore|gles2" comment="ANGLE hacks, should only be desktop GL">
+        <extension name="GL_ARB_sync" supported="gl|glcore">
             <require>
                 <enum name="GL_MAX_SERVER_WAIT_TIMEOUT"/>
                 <enum name="GL_OBJECT_TYPE"/>
@@ -47330,7 +47330,7 @@ typedef unsigned int GLhandleARB;
                 <command name="glGetCombinerStageParameterfvNV"/>
             </require>
         </extension>
-        <extension name="GL_NV_robustness_video_memory_purge" supported="gl|gles2" command="ANGLE hacks, should only be gl">
+        <extension name="GL_NV_robustness_video_memory_purge" supported="gl">
             <require>
                 <enum name="GL_PURGED_CONTEXT_RESET_NV"/>
             </require>

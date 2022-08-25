@@ -8,11 +8,11 @@
   "scripts/generate_entry_points.py":
     "8f70fa30bca01140a39e0f512e4d7105",
   "scripts/gl.xml":
-    "e8f8d52f5a5b8bd5bdd4557fdc58d5dd",
+    "4fbb3be5950ac486b9da7c830dff0dfe",
   "scripts/gl_angle_ext.xml":
     "37eebedc1153cd9d208efa469a10a7b2",
   "scripts/registry_xml.py":
-    "93fccfa6990a507e62daba66dd78bf8b",
+    "4d162936baeb7e803561559e11b7fd89",
   "src/common/entry_points_enum_autogen.cpp":
     "c78602e4d4280c80bd72299291db1e81",
   "src/common/entry_points_enum_autogen.h":

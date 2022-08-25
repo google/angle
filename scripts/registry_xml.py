@@ -513,6 +513,9 @@ class RegistryXML:
 
     def _ClassifySupport(self, extension):
         supported = extension.attrib['supported']
+        # Desktop GL extensions exposed in ANGLE GLES for Chrome.
+        if extension.attrib['name'] in ['GL_ARB_sync', 'GL_NV_robustness_video_memory_purge']:
+            supported += "|gles2"
         if 'gles2' in supported:
             return 'gl2ext'
         elif 'gles1' in supported:
