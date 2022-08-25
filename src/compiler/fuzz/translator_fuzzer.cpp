@@ -89,6 +89,11 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 
     bool hasUnsupportedOptions = false;
 
+    const bool hasMacGLSLOptions = options.rewriteFloatUnaryMinusOperator ||
+                                   options.addAndTrueToLoopCondition ||
+                                   options.rewriteDoWhileLoops || options.unfoldShortCircuit ||
+                                   options.rewriteRowMajorMatrices;
+
     if (!IsOutputGLSL(shaderOutput) && !IsOutputESSL(shaderOutput))
     {
         hasUnsupportedOptions =
@@ -96,10 +101,12 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
             options.regenerateStructNames || options.rewriteRepeatedAssignToSwizzled ||
             options.useUnusedStandardSharedBlocks || options.selectViewInNvGLSLVertexShader;
 
+        hasUnsupportedOptions = hasUnsupportedOptions || hasMacGLSLOptions;
+    }
+    else
+    {
 #if !defined(ANGLE_PLATFORM_APPLE)
-        hasUnsupportedOptions = hasUnsupportedOptions || options.rewriteFloatUnaryMinusOperator ||
-                                options.addAndTrueToLoopCondition || options.rewriteDoWhileLoops ||
-                                options.unfoldShortCircuit || options.rewriteRowMajorMatrices;
+        hasUnsupportedOptions = hasUnsupportedOptions || hasMacGLSLOptions;
 #endif
     }
     if (!IsOutputVulkan(shaderOutput))
