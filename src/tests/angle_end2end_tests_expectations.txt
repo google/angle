@@ -543,7 +543,6 @@
 7583 PIXEL6 VULKAN : GLSLTest_ES31.ShaderCacheGeometryWithSSBO/* = SKIP
 7583 PIXEL6 VULKAN : GLSLTest_ES31.ShaderCacheTessellationControlWithSSBO/* = SKIP
 7583 PIXEL6 VULKAN : GLSLTest_ES31.ShaderCacheTessellationEvalWithSSBO/* = SKIP
-7583 PIXEL6 VULKAN : GLSLTest_ES31.ShaderCacheVertexWithSSBO/* = SKIP
 7583 PIXEL6 VULKAN : VulkanPerformanceCounterTest.DepthStencilInvalidate/* = SKIP
 7583 PIXEL6 VULKAN : VulkanPerformanceCounterTest.DepthStencilInvalidateAndClear/* = SKIP
 7583 PIXEL6 VULKAN : VulkanPerformanceCounterTest.DepthStencilInvalidateDetachModifyTexAttachDrawWithBlend/* = SKIP
