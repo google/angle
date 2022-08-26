@@ -28,14 +28,14 @@
 #    define VK_STRUCTURE_TYPE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_INFO_GOOGLEX \
         ((VkStructureType)(1000376001))
 
-typedef struct VkPhysicalDeviceMultisampledRenderToSingleSampledFeaturesGoogleX
+typedef struct VkPhysicalDeviceMultisampledRenderToSingleSampledFeaturesGOOGLEX
 {
     VkStructureType sType;
     const void *pNext;
     VkBool32 multisampledRenderToSingleSampled;
-} VkPhysicalDeviceMultisampledRenderToSingleSampledFeaturesGoogleX;
+} VkPhysicalDeviceMultisampledRenderToSingleSampledFeaturesGOOGLEX;
 
-typedef struct VkMultisampledRenderToSingleSampledInfoGoogleX
+typedef struct VkMultisampledRenderToSingleSampledInfoGOOGLEX
 {
     VkStructureType sType;
     const void *pNext;
@@ -43,7 +43,7 @@ typedef struct VkMultisampledRenderToSingleSampledInfoGoogleX
     VkSampleCountFlagBits rasterizationSamples;
     VkResolveModeFlagBits depthResolveMode;
     VkResolveModeFlagBits stencilResolveMode;
-} VkMultisampledRenderToSingleSampledInfoGoogleX;
+} VkMultisampledRenderToSingleSampledInfoGOOGLEX;
 #endif /* VK_GOOGLEX_multisampled_render_to_single_sampled */
 
 #if !defined(ANGLE_SHARED_LIBVULKAN)

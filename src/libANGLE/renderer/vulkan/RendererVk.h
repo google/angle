@@ -694,7 +694,9 @@ class RendererVk : angle::NonCopyable
     VkPhysicalDeviceExternalMemoryHostPropertiesEXT mExternalMemoryHostProperties;
     VkPhysicalDeviceShaderFloat16Int8FeaturesKHR mShaderFloat16Int8Features;
     VkPhysicalDeviceDepthStencilResolvePropertiesKHR mDepthStencilResolveProperties;
-    VkPhysicalDeviceMultisampledRenderToSingleSampledFeaturesGoogleX
+    VkPhysicalDeviceMultisampledRenderToSingleSampledFeaturesGOOGLEX
+        mMultisampledRenderToSingleSampledFeaturesGOOGLEX;
+    VkPhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT
         mMultisampledRenderToSingleSampledFeatures;
     VkPhysicalDeviceImage2DViewOf3DFeaturesEXT mImage2dViewOf3dFeatures;
     VkPhysicalDeviceMultiviewFeatures mMultiviewFeatures;

@@ -791,13 +791,23 @@ angle::Result CreateRenderPass2(Context *context,
                               multiviewInfo.pViewMasks[subpass], &subpassDescriptions[subpass]);
     }
 
-    VkMultisampledRenderToSingleSampledInfoGoogleX renderToTextureInfo = {};
-    renderToTextureInfo.sType =
-        VK_STRUCTURE_TYPE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_INFO_GOOGLEX;
-    renderToTextureInfo.multisampledRenderToSingleSampledEnable = true;
-    renderToTextureInfo.rasterizationSamples = gl_vk::GetSamples(renderToTextureSamples);
-    renderToTextureInfo.depthResolveMode     = VK_RESOLVE_MODE_SAMPLE_ZERO_BIT;
-    renderToTextureInfo.stencilResolveMode   = VK_RESOLVE_MODE_SAMPLE_ZERO_BIT;
+    VkSubpassDescriptionDepthStencilResolve msrtssResolve = {};
+    msrtssResolve.sType              = VK_STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE;
+    msrtssResolve.depthResolveMode   = VK_RESOLVE_MODE_SAMPLE_ZERO_BIT;
+    msrtssResolve.stencilResolveMode = VK_RESOLVE_MODE_SAMPLE_ZERO_BIT;
+
+    VkMultisampledRenderToSingleSampledInfoEXT msrtss = {};
+    msrtss.sType = VK_STRUCTURE_TYPE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_INFO_EXT;
+    msrtss.pNext = &msrtssResolve;
+    msrtss.multisampledRenderToSingleSampledEnable = true;
+    msrtss.rasterizationSamples                    = gl_vk::GetSamples(renderToTextureSamples);
+
+    VkMultisampledRenderToSingleSampledInfoGOOGLEX msrtssGOOGLEX = {};
+    msrtssGOOGLEX.sType = VK_STRUCTURE_TYPE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_INFO_GOOGLEX;
+    msrtssGOOGLEX.multisampledRenderToSingleSampledEnable = true;
+    msrtssGOOGLEX.rasterizationSamples                    = msrtss.rasterizationSamples;
+    msrtssGOOGLEX.depthResolveMode                        = VK_RESOLVE_MODE_SAMPLE_ZERO_BIT;
+    msrtssGOOGLEX.stencilResolveMode                      = VK_RESOLVE_MODE_SAMPLE_ZERO_BIT;
 
     // Append the depth/stencil resolve attachment to the pNext chain of last subpass, if any.
     if (depthStencilResolve.pDepthStencilResolveAttachment != nullptr)
@@ -810,10 +820,18 @@ angle::Result CreateRenderPass2(Context *context,
         RendererVk *renderer = context->getRenderer();
 
         ASSERT(isRenderToTextureThroughExtension);
-        ASSERT(renderer->getFeatures().supportsMultisampledRenderToSingleSampled.enabled);
+        ASSERT(renderer->getFeatures().supportsMultisampledRenderToSingleSampled.enabled ||
+               renderer->getFeatures().supportsMultisampledRenderToSingleSampledGOOGLEX.enabled);
         ASSERT(subpassDescriptions.size() == 1);
 
-        subpassDescriptions.back().pNext = &renderToTextureInfo;
+        if (renderer->getFeatures().supportsMultisampledRenderToSingleSampled.enabled)
+        {
+            subpassDescriptions.back().pNext = &msrtss;
+        }
+        else
+        {
+            subpassDescriptions.back().pNext = &msrtssGOOGLEX;
+        }
     }
 
     // Convert subpass dependencies to VkSubpassDependency2.
@@ -1017,7 +1035,8 @@ angle::Result InitializeRenderPassFromDesc(ContextVk *contextVk,
     const bool needInputAttachments = desc.hasFramebufferFetch();
     const bool isRenderToTextureThroughExtension =
         desc.isRenderToTexture() &&
-        contextVk->getFeatures().supportsMultisampledRenderToSingleSampled.enabled;
+        (contextVk->getFeatures().supportsMultisampledRenderToSingleSampled.enabled ||
+         contextVk->getFeatures().supportsMultisampledRenderToSingleSampledGOOGLEX.enabled);
     const bool isRenderToTextureThroughEmulation =
         desc.isRenderToTexture() && !isRenderToTextureThroughExtension;
 
