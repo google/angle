@@ -225,6 +225,7 @@
                 <enum name="EGL_CONTEXT_METAL_OWNERSHIP_IDENTITY_ANGLE"/>
             </require>
         </extension>
+        <extension name="EGL_ANGLE_colorspace_attribute_passthrough" supported="egl" />
         <extension name="EGL_ANGLE_context_virtualization" supported="egl">
             <require>
                 <enum name="EGL_CONTEXT_VIRTUALIZATION_GROUP_ANGLE"/>

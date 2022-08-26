@@ -3827,6 +3827,11 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
                             IsAndroid() && ExtensionFound(VK_GOOGLE_DISPLAY_TIMING_EXTENSION_NAME,
                                                           deviceExtensionNames));
 
+    // Allow passthrough of EGL colorspace attributes on Android platform and for vendors that
+    // are known to support wide color gamut.
+    ANGLE_FEATURE_CONDITION(&mFeatures, eglColorspaceAttributePassthrough,
+                            IsAndroid() && isSamsung);
+
     ApplyFeatureOverrides(&mFeatures, displayVk->getState());
 
     // Disable async command queue when using Vulkan secondary command buffers temporarily to avoid
