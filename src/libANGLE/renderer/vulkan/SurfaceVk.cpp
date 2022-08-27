@@ -1722,26 +1722,12 @@ angle::Result WindowSurfaceVk::computePresentOutOfDate(vk::Context *context,
                                                        bool *presentOutOfDate)
 {
     // If OUT_OF_DATE is returned, it's ok, we just need to recreate the swapchain before
-    // continuing.
-    // If VK_SUBOPTIMAL_KHR is returned it's because the device orientation changed and we should
-    // recreate the swapchain with a new window orientation.
-    if (context->getRenderer()->getFeatures().enablePreRotateSurfaces.enabled)
+    // continuing.  We do the same when VK_SUBOPTIMAL_KHR is returned to avoid visual degradation
+    // and handle device rotation / screen resize.
+    *presentOutOfDate = result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR;
+    if (!*presentOutOfDate)
     {
-        // Also check for VK_SUBOPTIMAL_KHR.
-        *presentOutOfDate = ((result == VK_ERROR_OUT_OF_DATE_KHR) || (result == VK_SUBOPTIMAL_KHR));
-        if (!*presentOutOfDate)
-        {
-            ANGLE_VK_TRY(context, result);
-        }
-    }
-    else
-    {
-        // We aren't quite ready for that so just ignore for now.
-        *presentOutOfDate = result == VK_ERROR_OUT_OF_DATE_KHR;
-        if (!*presentOutOfDate && result != VK_SUBOPTIMAL_KHR)
-        {
-            ANGLE_VK_TRY(context, result);
-        }
+        ANGLE_VK_TRY(context, result);
     }
     return angle::Result::Continue;
 }
