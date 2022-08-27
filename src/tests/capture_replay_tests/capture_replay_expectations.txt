@@ -112,9 +112,6 @@
 
 # ES3_1 gtest skips
 6180 : GLSLTest_ES31.InterpolateAtWithSwizzle/* = NOT_RUN
-6180 : GLSLTest_ES31.VaryingTessellationSampleInAndOut/* = NOT_RUN
-6180 : GeometryShaderTest.LayeredFramebufferPreRenderClear2DArrayColor/* = NOT_RUN
-6180 : GeometryShaderTest.LayeredFramebufferPreRenderClear3DColor/* = NOT_RUN
 
 6741 : VulkanImageTest.* = SKIP_FOR_CAPTURE
 
