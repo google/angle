@@ -305,8 +305,12 @@ void DisplayVk::generateExtensions(egl::DisplayExtensions *outExtensions) const
         getRenderer()->getFeatures().supportsAndroidHardwareBuffer.enabled;
     outExtensions->surfacelessContext = true;
     outExtensions->glColorspace       = true;
+
+    // TODO(b/205995945): drop the !AHB condition after sRGB texture upload for AHB gets fixed.
     outExtensions->imageGlColorspace =
-        outExtensions->glColorspace && getRenderer()->getFeatures().supportsImageFormatList.enabled;
+        outExtensions->glColorspace &&
+        getRenderer()->getFeatures().supportsImageFormatList.enabled &&
+        !getRenderer()->getFeatures().supportsAndroidHardwareBuffer.enabled;
 
 #if defined(ANGLE_PLATFORM_ANDROID)
     outExtensions->getNativeClientBufferANDROID = true;
