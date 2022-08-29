@@ -215,6 +215,15 @@ angle_test("angle_unittests") {
   }
 }
 
+if (is_ios) {
+  bundle_data("angle_end2end_tests_bundle_data") {
+    testonly = true
+    sources = [ "angle_end2end_tests_expectations.txt" ]
+    outputs = [ "{{bundle_resources_dir}}/" +
+                "{{source_root_relative_dir}}/{{source_file_part}}" ]
+  }
+}
+
 if (is_win || is_linux || is_chromeos || is_android || is_fuchsia || is_apple) {
   import("angle_end2end_tests.gni")
 
@@ -223,7 +232,6 @@ if (is_win || is_linux || is_chromeos || is_android || is_fuchsia || is_apple) {
 
     sources = angle_end2end_tests_sources + [ "angle_end2end_tests_main.cpp" ]
     libs = []
-    data = [ "angle_end2end_tests_expectations.txt" ]
 
     if (is_mac) {
       sources += angle_end2end_tests_mac_sources
@@ -257,6 +265,12 @@ if (is_win || is_linux || is_chromeos || is_android || is_fuchsia || is_apple) {
       "$angle_root:angle_gl_enum_utils",
       "$angle_root:angle_image_util",
     ]
+
+    if (is_ios) {
+      deps += [ ":angle_end2end_tests_bundle_data" ]
+    } else {
+      data = [ "angle_end2end_tests_expectations.txt" ]
+    }
 
     if (angle_has_rapidjson) {
       deps += [ "$angle_root:angle_json_serializer" ]
