@@ -291,11 +291,6 @@ struct FeaturesVk : FeatureSetBase
         "Persistently map buffer memory to reduce map/unmap IOCTL overhead.", &members,
         "http://anglebug.com/2162"};
 
-    FeatureInfo extraBufferLoggingAndChecking = {
-        "extraBufferLoggingAndChecking", FeatureCategory::VulkanFeatures,
-        "Enable extra buffer logging and checking to catch rare crashes", &members,
-        "https://issuetracker.google.com/236098131"};
-
     FeatureInfo enablePreRotateSurfaces = {"enablePreRotateSurfaces",
                                            FeatureCategory::VulkanFeatures,
                                            "Enable Android pre-rotation for landscape applications",

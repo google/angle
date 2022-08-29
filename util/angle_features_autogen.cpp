@@ -117,7 +117,6 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::ExpandIntegerPowExpressions, "expandIntegerPowExpressions"},
     {Feature::ExplicitlyEnablePerSampleShading, "explicitlyEnablePerSampleShading"},
     {Feature::ExposeNonConformantExtensionsAndVersions, "exposeNonConformantExtensionsAndVersions"},
-    {Feature::ExtraBufferLoggingAndChecking, "extraBufferLoggingAndChecking"},
     {Feature::FinishDoesNotCauseQueriesToBeAvailable, "finishDoesNotCauseQueriesToBeAvailable"},
     {Feature::FlushAfterEndingTransformFeedback, "flushAfterEndingTransformFeedback"},
     {Feature::FlushBeforeDeleteTextureIfCopiedTo, "flushBeforeDeleteTextureIfCopiedTo"},

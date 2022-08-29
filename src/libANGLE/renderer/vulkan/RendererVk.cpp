@@ -3430,12 +3430,6 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
                                 (mFeatures.supportsExternalFenceFd.enabled &&
                                  mFeatures.supportsExternalSemaphoreFd.enabled));
     }
-
-    // Enable extra logging and checking on Android-Swiftshader to try to find the root
-    // cause of a rare/random crash.
-    // https://issuetracker.google.com/issues/236098131
-    ANGLE_FEATURE_CONDITION(&mFeatures, extraBufferLoggingAndChecking,
-                            (IsAndroid() && isSwiftShader));
 #endif  // defined(ANGLE_PLATFORM_ANDROID)
 
     ANGLE_FEATURE_CONDITION(
