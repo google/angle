@@ -603,6 +603,11 @@ class State : angle::NonCopyable
 
     bool isRobustResourceInitEnabled() const { return mRobustResourceInit; }
 
+    bool isDrawFramebufferBindingDirty() const
+    {
+        return mDirtyBits.test(DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING);
+    }
+
     // Sets the dirty bit for the program executable.
     angle::Result onProgramExecutableChange(const Context *context, Program *program);
     // Sets the dirty bit for the program pipeline executable.
