@@ -303,6 +303,13 @@ angle::Result QueryVk::begin(const gl::Context *context)
 {
     ContextVk *contextVk = vk::GetImpl(context);
 
+    // Ensure that we start with the right RenderPass when we begin a new query.
+    if (contextVk->getState().isDrawFramebufferBindingDirty())
+    {
+        ANGLE_TRY(contextVk->flushCommandsAndEndRenderPass(
+            RenderPassClosureReason::FramebufferBindingChange));
+    }
+
     mCachedResultValid = false;
 
     // Transform feedback query is handled by a CPU-calculated value when emulated.
