@@ -389,7 +389,7 @@ GROUP END Math
 
 GROUP BEGIN Texture {"queryFunction": true}
   GROUP BEGIN FirstVersions
-    DEFAULT METADATA {"essl_level": "ESSL1_BUILTINS", "glsl_level": "COMMON_BUILTINS", "hasSideEffects": "true"}
+    DEFAULT METADATA {"essl_level": "ESSL1_BUILTINS", "glsl_level": "COMMON_BUILTINS", "hasSideEffects": "false"}
       vec4 texture2D(sampler2D, vec2);
       vec4 texture2DProj(sampler2D, vec3);
       vec4 texture2DProj(sampler2D, vec4);
@@ -430,7 +430,7 @@ GROUP BEGIN Texture {"queryFunction": true}
 
     // Variants with bias are limited to fragment shaders
     GROUP BEGIN Bias {"shader_type": "FRAGMENT", "opSuffix": "Bias"}
-      DEFAULT METADATA {"essl_level": "ESSL1_BUILTINS", "glsl_level": "COMMON_BUILTINS", "hasSideEffects": "true"}
+      DEFAULT METADATA {"essl_level": "ESSL1_BUILTINS", "glsl_level": "COMMON_BUILTINS", "hasSideEffects": "false"}
         vec4 texture2D(sampler2D, vec2, float);
         vec4 texture2DProj(sampler2D, vec3, float);
         vec4 texture2DProj(sampler2D, vec4, float);
