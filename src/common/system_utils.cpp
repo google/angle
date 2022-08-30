@@ -10,6 +10,7 @@
 #include "common/debug.h"
 
 #include <stdlib.h>
+#include <atomic>
 
 #if defined(ANGLE_PLATFORM_ANDROID)
 #    include <sys/system_properties.h>
