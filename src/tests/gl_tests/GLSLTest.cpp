@@ -16623,6 +16623,9 @@ TEST_P(GLSLTest_ES31, ShaderCacheGeometryWithSSBO)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_geometry_shader"));
     ANGLE_SKIP_TEST_IF(!IsVulkan());
+    GLint maxGeometryShaderStorageBlocks = 0;
+    glGetIntegerv(GL_MAX_GEOMETRY_SHADER_STORAGE_BLOCKS_EXT, &maxGeometryShaderStorageBlocks);
+    ANGLE_SKIP_TEST_IF(maxGeometryShaderStorageBlocks == 0);
 
     constexpr char kGS[] = R"(#version 310 es
 #extension GL_EXT_geometry_shader : require
@@ -16923,6 +16926,10 @@ TEST_P(GLSLTest_ES31, ShaderCacheTessellationControlWithSSBO)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_tessellation_shader"));
     ANGLE_SKIP_TEST_IF(!IsVulkan());
+    GLint maxTessControlShaderStorageBlocks;
+    glGetIntegerv(GL_MAX_TESS_CONTROL_SHADER_STORAGE_BLOCKS_EXT,
+                  &maxTessControlShaderStorageBlocks);
+    ANGLE_SKIP_TEST_IF(maxTessControlShaderStorageBlocks == 0);
 
     constexpr char kTCS[] = R"(#version 310 es
 #extension GL_EXT_tessellation_shader : require
@@ -17166,6 +17173,10 @@ TEST_P(GLSLTest_ES31, ShaderCacheTessellationEvalWithSSBO)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_tessellation_shader"));
     ANGLE_SKIP_TEST_IF(!IsVulkan());
+    GLint maxTessEvalShaderStorageBlocks;
+    glGetIntegerv(GL_MAX_TESS_EVALUATION_SHADER_STORAGE_BLOCKS_EXT,
+                  &maxTessEvalShaderStorageBlocks);
+    ANGLE_SKIP_TEST_IF(maxTessEvalShaderStorageBlocks == 0);
 
     constexpr char kTCS[] = R"(#version 310 es
 #extension GL_EXT_tessellation_shader : require
