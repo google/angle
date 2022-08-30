@@ -91,19 +91,21 @@ using RefCountedSamplerYcbcrConversion = RefCounted<SamplerYcbcrConversion>;
 // Enable struct padding warnings for the code below since it is used in caches.
 ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
 
-enum ResourceAccess
+enum class ResourceAccess
 {
-    Unused,
-    ReadOnly,
-    Write,
+    Unused    = 0x0,
+    ReadOnly  = 0x1,
+    WriteOnly = 0x2,
+    ReadWrite = ReadOnly | WriteOnly,
 };
 
 inline void UpdateAccess(ResourceAccess *oldAccess, ResourceAccess newAccess)
 {
-    if (newAccess > *oldAccess)
-    {
-        *oldAccess = newAccess;
-    }
+    *oldAccess = static_cast<ResourceAccess>(ToUnderlying(newAccess) | ToUnderlying(*oldAccess));
+}
+inline bool HasResourceWriteAccess(ResourceAccess access)
+{
+    return (ToUnderlying(access) & ToUnderlying(ResourceAccess::WriteOnly)) != 0;
 }
 
 enum class RenderPassLoadOp

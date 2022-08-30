@@ -1000,7 +1000,7 @@ class RenderPassAttachment final
                            bool *isInvalidatedOut);
     void restoreContent();
     bool hasAnyAccess() const { return mAccess != ResourceAccess::Unused; }
-    bool hasWriteAccess() const { return mAccess == ResourceAccess::Write; }
+    bool hasWriteAccess() const { return HasResourceWriteAccess(mAccess); }
 
     ImageHelper *getImage() { return mImage; }
 

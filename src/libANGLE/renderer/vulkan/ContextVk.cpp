@@ -290,7 +290,7 @@ vk::ResourceAccess GetColorAccess(const gl::State &state,
         return hasFramebufferFetch ? vk::ResourceAccess::ReadOnly : vk::ResourceAccess::Unused;
     }
 
-    return vk::ResourceAccess::Write;
+    return vk::ResourceAccess::ReadWrite;
 }
 
 vk::ResourceAccess GetDepthAccess(const gl::DepthStencilState &dsState,
@@ -317,7 +317,7 @@ vk::ResourceAccess GetDepthAccess(const gl::DepthStencilState &dsState,
                    : vk::ResourceAccess::ReadOnly;
     }
 
-    return vk::ResourceAccess::Write;
+    return vk::ResourceAccess::ReadWrite;
 }
 
 vk::ResourceAccess GetStencilAccess(const gl::DepthStencilState &dsState,
@@ -337,7 +337,7 @@ vk::ResourceAccess GetStencilAccess(const gl::DepthStencilState &dsState,
     }
 
     return dsState.isStencilNoOp() && dsState.isStencilBackNoOp() ? vk::ResourceAccess::ReadOnly
-                                                                  : vk::ResourceAccess::Write;
+                                                                  : vk::ResourceAccess::ReadWrite;
 }
 
 egl::ContextPriority GetContextPriority(const gl::State &state)
@@ -2193,9 +2193,9 @@ angle::Result ContextVk::updateRenderPassDepthFeedbackLoopModeImpl(
     vk::ResourceAccess depthAccess       = GetDepthAccess(dsState, depthReason);
     vk::ResourceAccess stencilAccess     = GetStencilAccess(dsState, stencilReason);
 
-    if ((depthAccess == vk::ResourceAccess::Write &&
+    if ((HasResourceWriteAccess(depthAccess) &&
          drawFramebufferVk->isReadOnlyDepthFeedbackLoopMode()) ||
-        (stencilAccess == vk::ResourceAccess::Write &&
+        (HasResourceWriteAccess(stencilAccess) &&
          drawFramebufferVk->isReadOnlyStencilFeedbackLoopMode()))
     {
         // If we are switching out of read only mode and we are in feedback loop, we must end

@@ -1041,7 +1041,7 @@ void UpdateColorAccess(ContextVk *contextVk,
     {
         if (colorEnabledMask.test(colorIndexGL))
         {
-            renderPassCommands->onColorAccess(colorIndexVk, vk::ResourceAccess::Write);
+            renderPassCommands->onColorAccess(colorIndexVk, vk::ResourceAccess::ReadWrite);
         }
         ++colorIndexVk;
     }
@@ -1058,14 +1058,14 @@ void UpdateDepthStencilAccess(ContextVk *contextVk,
     if (depthWrite)
     {
         // Explicitly mark a depth write because we are modifying the depth buffer.
-        renderPassCommands->onDepthAccess(vk::ResourceAccess::Write);
+        renderPassCommands->onDepthAccess(vk::ResourceAccess::ReadWrite);
         // Because we may have changed the depth access mode, update read only depth mode.
         framebuffer->updateRenderPassDepthReadOnlyMode(contextVk, renderPassCommands);
     }
     if (stencilWrite)
     {
         // Explicitly mark a stencil write because we are modifying the stencil buffer.
-        renderPassCommands->onStencilAccess(vk::ResourceAccess::Write);
+        renderPassCommands->onStencilAccess(vk::ResourceAccess::ReadWrite);
         // Because we may have changed the stencil access mode, update read only stencil mode.
         framebuffer->updateRenderPassStencilReadOnlyMode(contextVk, renderPassCommands);
     }
