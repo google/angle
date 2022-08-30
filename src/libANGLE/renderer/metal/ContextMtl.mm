@@ -283,7 +283,7 @@ angle::Result ContextMtl::ensureIncompleteTexturesCreated(const gl::Context *con
 // Flush and finish.
 angle::Result ContextMtl::flush(const gl::Context *context)
 {
-    flushCommandBuffer(mtl::WaitUntilScheduled);
+    flushCommandBuffer(mtl::NoWait);
     return angle::Result::Continue;
 }
 angle::Result ContextMtl::finish(const gl::Context *context)
