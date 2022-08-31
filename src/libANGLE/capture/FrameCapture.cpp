@@ -5156,7 +5156,6 @@ FrameCaptureShared::FrameCaptureShared()
       mMaxAccessedResourceIDs{},
       mCaptureTrigger(0),
       mCaptureActive(false),
-      mMidExecutionCaptureActive(false),
       mWindowSurfaceContextID({0})
 {
     reset();
@@ -5713,7 +5712,7 @@ void FrameCaptureShared::trackBufferMapping(const gl::Context *context,
         // Track coherent buffer
         // Check if capture is active to not initialize the coherent buffer tracker on the
         // first coherent glMapBufferRange call.
-        if (coherent && (isCaptureActive() || mMidExecutionCaptureActive))
+        if (coherent && isCaptureActive())
         {
             mCoherentBufferTracker.enable();
             uintptr_t data = reinterpret_cast<uintptr_t>(buffer->getMapPointer());
@@ -7115,7 +7114,9 @@ void FrameCaptureShared::scanSetupCalls(const gl::Context *context,
 
 void FrameCaptureShared::runMidExecutionCapture(const gl::Context *mainContext)
 {
-    mMidExecutionCaptureActive = true;
+    // Set the capture active to ensure all GLES commands issued by the next frame are
+    // handled correctly by maybeCapturePreCallUpdates() and maybeCapturePostCallUpdates().
+    setCaptureActive();
 
     // Make sure all pending work for every Context in the share group has completed so all data
     // (buffers, textures, etc.) has been updated and no resources are in use.
@@ -7171,8 +7172,6 @@ void FrameCaptureShared::runMidExecutionCapture(const gl::Context *mainContext)
                 frameCapture->getSetupCalls(), &mBinaryData, mSerializeStateEnabled, *this);
         }
     }
-
-    mMidExecutionCaptureActive = false;
 }
 
 void FrameCaptureShared::onEndFrame(const gl::Context *context)
@@ -7212,11 +7211,8 @@ void FrameCaptureShared::onEndFrame(const gl::Context *context)
     {
         if (mFrameIndex == mCaptureStartFrame - 1)
         {
+            // Trigger MEC.
             runMidExecutionCapture(context);
-
-            // Set the capture active to ensure all GLES commands issued by the next frame are
-            // handled correctly by maybeCapturePreCallUpdates() and maybeCapturePostCallUpdates().
-            setCaptureActive();
         }
         mFrameIndex++;
         reset();
