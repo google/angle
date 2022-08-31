@@ -69,6 +69,7 @@ enum class Feature
     DisableNativeParallelCompile,
     DisableProgramBinary,
     DisableProgramCachingForTransformFeedback,
+    DisableRasterizerOrderViews,
     DisableSemaphoreFd,
     DisableSyncControlSupport,
     DisableTextureClampToBorder,

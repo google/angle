@@ -73,6 +73,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::DisableProgramBinary, "disableProgramBinary"},
     {Feature::DisableProgramCachingForTransformFeedback,
      "disableProgramCachingForTransformFeedback"},
+    {Feature::DisableRasterizerOrderViews, "disableRasterizerOrderViews"},
     {Feature::DisableSemaphoreFd, "disableSemaphoreFd"},
     {Feature::DisableSyncControlSupport, "disableSyncControlSupport"},
     {Feature::DisableTextureClampToBorder, "disableTextureClampToBorder"},

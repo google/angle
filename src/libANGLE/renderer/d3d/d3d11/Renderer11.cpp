@@ -1091,7 +1091,10 @@ void Renderer11::populateRenderer11DeviceCaps()
         {
             mRenderer11DeviceCaps.supportsTypedUAVLoadAdditionalFormats =
                 d3d11Options2.TypedUAVLoadAdditionalFormats;
-            mRenderer11DeviceCaps.supportsRasterizerOrderViews = d3d11Options2.ROVsSupported;
+            if (!getFeatures().disableRasterizerOrderViews.enabled)
+            {
+                mRenderer11DeviceCaps.supportsRasterizerOrderViews = d3d11Options2.ROVsSupported;
+            }
         }
     }
 
