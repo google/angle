@@ -7981,7 +7981,7 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
             }
             else if (update.updateSource == UpdateSource::Buffer)
             {
-                if (update.data.buffer.formatID != mActualFormatID)
+                if (!isDataFormatMatchForCopy(update.data.buffer.formatID))
                 {
                     // TODD: http://anglebug.com/6368, we should handle this in higher level code.
                     // If we have incompatible updates, skip but keep it.
@@ -7992,7 +7992,7 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
             }
             else if (update.updateSource == UpdateSource::Image)
             {
-                if (update.data.image.formatID != mActualFormatID)
+                if (!isDataFormatMatchForCopy(update.data.image.formatID))
                 {
                     // If we have incompatible updates, skip but keep it.
                     updatesToKeep.emplace_back(std::move(update));
