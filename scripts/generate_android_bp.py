@@ -66,7 +66,7 @@ def write_blueprint_key_value(output, name, value, indent=1):
         if not value:
             return
         output.append(tabs(indent) + '%s: {' % name)
-        for (item, item_value) in value.items():
+        for (item, item_value) in sorted(value.items()):
             write_blueprint_key_value(output, item, item_value, indent + 1)
         output.append(tabs(indent) + '},')
         return
@@ -96,7 +96,7 @@ def write_blueprint(output, target_type, values):
         output.append(comment)
 
     output.append('%s {' % target_type)
-    for (key, value) in values.items():
+    for (key, value) in sorted(values.items()):
         write_blueprint_key_value(output, key, value)
     output.append('}')
 
