@@ -178,7 +178,7 @@ def get_trace_width(mode):
     return width
 
 
-def run_trace(trace, renderer, args):
+def run_trace(trace, args):
     mode = get_mode(args)
     if mode != '':
         mode = '_' + mode
@@ -191,7 +191,7 @@ def run_trace(trace, renderer, args):
 
     adb_command = 'shell am instrument -w '
     adb_command += '-e org.chromium.native_test.NativeTestInstrumentationTestRunner.StdoutFile /sdcard/Download/out.txt '
-    adb_command += '-e org.chromium.native_test.NativeTest.CommandLineFlags "--gtest_filter=TracePerfTest.Run/' + renderer + mode + '_' + trace + '\ '
+    adb_command += '-e org.chromium.native_test.NativeTest.CommandLineFlags "--gtest_filter=TracePerfTest.Run/native' + mode + '_' + trace + '\ '
     if args.maxsteps != '':
         adb_command += '--max-steps-performed\ ' + args.maxsteps + '\ '
     if args.fixedtime != '':
@@ -214,7 +214,7 @@ def run_trace(trace, renderer, args):
     return result.time
 
 
-def get_test_time(renderer, time):
+def get_test_time():
     # Pull the results from the device and parse
     result = run_adb_command('shell cat /sdcard/Download/out.txt | grep -v Error | grep -v Frame')
 
@@ -694,6 +694,20 @@ def main():
     proc_mem_peaks = defaultdict(dict)
 
     for renderer in renderers:
+
+        if renderer == "native":
+            # Force the settings to native
+            run_adb_command('shell settings put global angle_debug_package org.chromium.angle')
+            run_adb_command(
+                'shell settings put global angle_gl_driver_selection_pkgs com.android.angle.test')
+            run_adb_command('shell settings put global angle_gl_driver_selection_values native')
+        else:
+            # Force the settings to ANGLE
+            run_adb_command('shell settings put global angle_debug_package org.chromium.angle')
+            run_adb_command(
+                'shell settings put global angle_gl_driver_selection_pkgs com.android.angle.test')
+            run_adb_command('shell settings put global angle_gl_driver_selection_values angle')
+
         for i in range(int(args.loop_count)):
             print("\nStarting run %i with %s at %s\n" %
                   (i + 1, renderer, datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
@@ -712,7 +726,7 @@ def main():
                                   int(starting_power.little_cpu_power))
 
                 logging.debug('Running %s' % test)
-                test_time = run_trace(test, renderer, args)
+                test_time = run_trace(test, args)
 
                 if args.power:
                     ending_power.get_power_data()
@@ -722,7 +736,7 @@ def main():
                     logging.debug('Ending little CPU power: %i' %
                                   int(ending_power.little_cpu_power))
 
-                wall_time = get_test_time(renderer, "wall_time")
+                wall_time = get_test_time()
 
                 gpu_time = get_gpu_time() if args.vsync else '0'
 
@@ -962,6 +976,11 @@ def main():
             percent(data["vulkan"][17]),
             percent(safe_divide(data["native"][16], data["vulkan"][16]))
         ])
+
+    # Clean up settings
+    run_adb_command('shell settings delete global angle_debug_package')
+    run_adb_command('shell settings delete global angle_gl_driver_selection_pkgs')
+    run_adb_command('shell settings delete global angle_gl_driver_selection_values')
 
     return 0
 
