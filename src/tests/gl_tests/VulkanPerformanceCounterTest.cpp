@@ -7039,11 +7039,8 @@ TEST_P(VulkanPerformanceCounterTest, EndXfbAfterRenderPassClosed)
 
     glDrawArrays(GL_POINTS, 0, 6);
 
-    const int w = getWindowWidth();
-    const int h = getWindowHeight();
-
     // Break the render pass
-    EXPECT_PIXEL_COLOR_EQ(w / 2, h / 2, GLColor::black);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
 
     // End transform feedback after the render pass is closed
     glEndTransformFeedback();
@@ -7064,6 +7061,9 @@ TEST_P(VulkanPerformanceCounterTest, EndXfbAfterRenderPassClosed)
     glClear(GL_COLOR_BUFFER_BIT);
     glUseProgram(drawRed);
     glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    const int w = getWindowWidth();
+    const int h = getWindowHeight();
 
     EXPECT_PIXEL_RECT_EQ(0, 0, w, h / 4, GLColor::black);
     EXPECT_PIXEL_RECT_EQ(0, 3 * h / 4, w, h / 4, GLColor::black);
