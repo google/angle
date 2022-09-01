@@ -4712,6 +4712,23 @@ angle::Result ContextVk::invalidateProgramExecutableHelper(const gl::Context *co
             onColorAccessChange();
         }
 
+        // If permanentlySwitchToFramebufferFetchMode is enabled,
+        // mIsInFramebufferFetchMode will remain true throughout the entire time.
+        // If we switch from a program that doesn't use framebuffer fetch and doesn't
+        // read/write to the framebuffer color attachment, to a
+        // program that uses framebuffer fetch and needs to read from the framebuffer
+        // color attachment, we will miss the call
+        // onColorAccessChange() above and miss setting the dirty bit
+        // DIRTY_BIT_COLOR_ACCESS. This means we will not call
+        // handleDirtyGraphicsColorAccess that updates the access value of
+        // framebuffer color attachment from unused to readonly. This makes the
+        // color attachment to continue using LoadOpNone, and the second program
+        // will not be able to read the value in the color attachment.
+        if (getFeatures().permanentlySwitchToFramebufferFetchMode.enabled && hasFramebufferFetch)
+        {
+            onColorAccessChange();
+        }
+
         updateStencilWriteWorkaround();
     }
 
