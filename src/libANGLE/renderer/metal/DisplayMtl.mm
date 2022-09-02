@@ -1144,8 +1144,9 @@ void DisplayMtl::initializeFeatures()
     ANGLE_FEATURE_CONDITION((&mFeatures), preemptivelyStartProvokingVertexCommandBuffer, isAMD());
 
     bool defaultDirectToMetal = true;
-
     ANGLE_FEATURE_CONDITION((&mFeatures), directMetalGeneration, defaultDirectToMetal);
+
+    ANGLE_FEATURE_CONDITION((&mFeatures), unpackLastRowSeparatelyForPaddingInclusion, isAMD());
 
     ApplyFeatureOverrides(&mFeatures, getState());
 #ifdef ANGLE_ENABLE_ASSERTS

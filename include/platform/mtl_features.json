@@ -235,5 +235,14 @@
                 "AMD Metal Drivers appear to have a bug this works around"
             ],
             "issue": "http://anglebug.com/7635"
-        }    ]
+        },
+        {
+            "name": "unpack_last_row_separately_for_padding_inclusion",
+            "category": "Workarounds",
+            "description": [
+                "When uploading textures, some drivers count an extra row padding"
+            ],
+            "issue": "http://anglebug.com/7573"
+        }
+    ]
 }

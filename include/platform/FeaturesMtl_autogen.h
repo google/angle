@@ -227,6 +227,11 @@ struct FeaturesMtl : FeatureSetBase
         "preemptivelyStartProvokingVertexCommandBuffer", FeatureCategory::MetalFeatures,
         "AMD Metal Drivers appear to have a bug this works around", &members,
         "http://anglebug.com/7635"};
+
+    FeatureInfo unpackLastRowSeparatelyForPaddingInclusion = {
+        "unpackLastRowSeparatelyForPaddingInclusion", FeatureCategory::MetalWorkarounds,
+        "When uploading textures, some drivers count an extra row padding", &members,
+        "http://anglebug.com/7573"};
 };
 
 inline FeaturesMtl::FeaturesMtl()  = default;
