@@ -259,22 +259,37 @@ angle::Result HardwareBufferImageSiblingVkAndroid::initImpl(DisplayVk *displayVk
     ANGLE_VK_TRY(displayVk, vkGetAndroidHardwareBufferPropertiesANDROID(device, hardwareBuffer,
                                                                         &bufferProperties));
 
+    const bool isExternal = bufferFormatProperties.format == VK_FORMAT_UNDEFINED;
+
     VkExternalFormatANDROID externalFormat = {};
     externalFormat.sType                   = VK_STRUCTURE_TYPE_EXTERNAL_FORMAT_ANDROID;
     externalFormat.externalFormat          = 0;
 
-    // Instead of guessing the corresponding GL format via NativePixelFormatToGLInternalFormat,
-    // use bufferFormatProperties.format directly.
-    // Unless it's the RGBX8 case, where we do something special.
-    const vk::Format &vkFormat =
-        pixelFormat == AHARDWAREBUFFER_FORMAT_R8G8B8X8_UNORM
-            ? renderer->getFormat(GL_RGBX8_ANGLE)
-            : renderer->getFormat(vk::GetFormatIDFromVkFormat(bufferFormatProperties.format));
+    // Use bufferFormatProperties.format directly when possible.  For RGBX, the spec requires the
+    // corresponding format to be RGB, which is not _technically_ correct.  The Vulkan backend uses
+    // the RGBX8_ANGLE format, so that's overriden.
+    //
+    // Where bufferFormatProperties.format returns UNDEFINED, NativePixelFormatToGLInternalFormat is
+    // used to infer the format.
+    const vk::Format *vkFormat = nullptr;
+    if (pixelFormat == AHARDWAREBUFFER_FORMAT_R8G8B8X8_UNORM)
+    {
+        vkFormat = &renderer->getFormat(GL_RGBX8_ANGLE);
+    }
+    else if (!isExternal)
+    {
+        vkFormat = &renderer->getFormat(vk::GetFormatIDFromVkFormat(bufferFormatProperties.format));
+    }
+    else
+    {
+        vkFormat =
+            &renderer->getFormat(angle::android::NativePixelFormatToGLInternalFormat(pixelFormat));
+    }
+
     const vk::Format &externalVkFormat = renderer->getFormat(angle::FormatID::NONE);
-    const angle::Format &imageFormat   = vkFormat.getActualRenderableImageFormat();
+    const angle::Format &imageFormat   = vkFormat->getActualRenderableImageFormat();
     bool isDepthOrStencilFormat        = imageFormat.hasDepthOrStencilBits();
-    mFormat                            = gl::Format(vkFormat.getIntendedGLFormat());
-    bool isExternal                    = bufferFormatProperties.format == VK_FORMAT_UNDEFINED;
+    mFormat                            = gl::Format(vkFormat->getIntendedGLFormat());
 
     // TODO (b/223456677): VK_EXT_ycbcr_attachment Extension query
     bool externalRenderTargetSupported = false;
@@ -336,7 +351,7 @@ angle::Result HardwareBufferImageSiblingVkAndroid::initImpl(DisplayVk *displayVk
     mImage->setTilingMode(imageTilingMode);
     VkImageCreateFlags imageCreateFlags = AhbDescUsageToVkImageCreateFlags(ahbDescription);
 
-    const vk::Format &format          = isExternal ? externalVkFormat : vkFormat;
+    const vk::Format &format          = isExternal ? externalVkFormat : *vkFormat;
     const gl::TextureType textureType = AhbDescUsageToTextureType(ahbDescription, layerCount);
 
     VkImageFormatListCreateInfoKHR imageFormatListInfoStorage;
@@ -410,14 +425,14 @@ angle::Result HardwareBufferImageSiblingVkAndroid::initImpl(DisplayVk *displayVk
         constexpr uint32_t kDepthStencilRenderableRequiredBits =
             VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT;
         mRenderable =
-            renderer->hasImageFormatFeatureBits(vkFormat.getActualRenderableImageFormatID(),
+            renderer->hasImageFormatFeatureBits(vkFormat->getActualRenderableImageFormatID(),
                                                 kColorRenderableRequiredBits) ||
-            renderer->hasImageFormatFeatureBits(vkFormat.getActualRenderableImageFormatID(),
+            renderer->hasImageFormatFeatureBits(vkFormat->getActualRenderableImageFormatID(),
                                                 kDepthStencilRenderableRequiredBits);
         constexpr uint32_t kTextureableRequiredBits =
             VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT | VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT;
         mTextureable = renderer->hasImageFormatFeatureBits(
-            vkFormat.getActualRenderableImageFormatID(), kTextureableRequiredBits);
+            vkFormat->getActualRenderableImageFormatID(), kTextureableRequiredBits);
     }
 
     return angle::Result::Continue;
