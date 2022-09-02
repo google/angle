@@ -617,6 +617,11 @@ void ShareGroup::finishAllContexts()
 void ShareGroup::addSharedContext(gl::Context *context)
 {
     mContexts.insert(context);
+
+    if (context->isRobustnessEnabled())
+    {
+        mImplementation->onRobustContextAdd();
+    }
 }
 
 void ShareGroup::removeSharedContext(gl::Context *context)
