@@ -2012,6 +2012,10 @@ void RendererVk::queryDeviceExtensionFeatures(const vk::ExtensionNameList &devic
     mImagelessFramebufferFeatures.sType =
         VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGELESS_FRAMEBUFFER_FEATURES_KHR;
 
+    mPipelineRobustnessFeatures = {};
+    mPipelineRobustnessFeatures.sType =
+        VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_ROBUSTNESS_FEATURES_EXT;
+
     if (!vkGetPhysicalDeviceProperties2KHR || !vkGetPhysicalDeviceFeatures2KHR)
     {
         return;
@@ -2194,6 +2198,11 @@ void RendererVk::queryDeviceExtensionFeatures(const vk::ExtensionNameList &devic
         vk::AddToPNextChain(&deviceFeatures, &mImagelessFramebufferFeatures);
     }
 
+    if (ExtensionFound(VK_EXT_PIPELINE_ROBUSTNESS_EXTENSION_NAME, deviceExtensionNames))
+    {
+        vk::AddToPNextChain(&deviceFeatures, &mPipelineRobustnessFeatures);
+    }
+
     vkGetPhysicalDeviceFeatures2KHR(mPhysicalDevice, &deviceFeatures);
     vkGetPhysicalDeviceProperties2KHR(mPhysicalDevice, &deviceProperties);
 
@@ -2231,6 +2240,7 @@ void RendererVk::queryDeviceExtensionFeatures(const vk::ExtensionNameList &devic
     mFragmentShadingRateFeatures.pNext                      = nullptr;
     mFragmentShaderInterlockFeatures.pNext                  = nullptr;
     mImagelessFramebufferFeatures.pNext                     = nullptr;
+    mPipelineRobustnessFeatures.pNext                       = nullptr;
 }
 
 angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueFamilyIndex)
@@ -2489,8 +2499,11 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     mEnabledFeatures.features.independentBlend = mPhysicalDeviceFeatures.independentBlend;
     // Used to support multi_draw_indirect
     mEnabledFeatures.features.multiDrawIndirect = mPhysicalDeviceFeatures.multiDrawIndirect;
-    // Used to support robust buffer access:
-    mEnabledFeatures.features.robustBufferAccess = mPhysicalDeviceFeatures.robustBufferAccess;
+    // Used to support robust buffer access, if VK_EXT_pipeline_robustness is not supported.
+    if (!getFeatures().supportsPipelineRobustness.enabled)
+    {
+        mEnabledFeatures.features.robustBufferAccess = mPhysicalDeviceFeatures.robustBufferAccess;
+    }
     // Used to support Anisotropic filtering:
     mEnabledFeatures.features.samplerAnisotropy = mPhysicalDeviceFeatures.samplerAnisotropy;
     // Used to support wide lines:
@@ -2751,6 +2764,12 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     {
         mEnabledDeviceExtensions.push_back(VK_KHR_IMAGELESS_FRAMEBUFFER_EXTENSION_NAME);
         vk::AddToPNextChain(&mEnabledFeatures, &mImagelessFramebufferFeatures);
+    }
+
+    if (getFeatures().supportsPipelineRobustness.enabled)
+    {
+        mEnabledDeviceExtensions.push_back(VK_EXT_PIPELINE_ROBUSTNESS_EXTENSION_NAME);
+        vk::AddToPNextChain(&mEnabledFeatures, &mPipelineRobustnessFeatures);
     }
 
     mCurrentQueueFamilyIndex = queueFamilyIndex;
@@ -3814,6 +3833,12 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsImagelessFramebuffer,
                             mImagelessFramebufferFeatures.imagelessFramebuffer == VK_TRUE);
+
+    // The VK_PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS_EXT behavior is used by
+    // ANGLE, which requires the robustBufferAccess feature to be available.
+    ANGLE_FEATURE_CONDITION(&mFeatures, supportsPipelineRobustness,
+                            mPipelineRobustnessFeatures.pipelineRobustness == VK_TRUE &&
+                                mPhysicalDeviceFeatures.robustBufferAccess);
 
     // The following drivers are known to key the pipeline cache blobs with vertex input and
     // fragment output state, causing draw-time pipeline creation to miss the cache regardless of

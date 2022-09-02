@@ -5755,10 +5755,7 @@ angle::Result ContextVk::onPauseTransformFeedback()
             return flushCommandsAndEndRenderPass(RenderPassClosureReason::XfbPause);
         }
     }
-    else if (getFeatures().emulateTransformFeedback.enabled)
-    {
-        invalidateCurrentTransformFeedbackBuffers();
-    }
+    onTransformFeedbackStateChanged();
     return angle::Result::Continue;
 }
 

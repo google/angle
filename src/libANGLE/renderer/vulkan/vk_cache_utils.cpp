@@ -3202,23 +3202,40 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     createInfo.basePipelineHandle  = VK_NULL_HANDLE;
     createInfo.basePipelineIndex   = 0;
 
+    VkPipelineRobustnessCreateInfoEXT robustness = {};
+    robustness.sType = VK_STRUCTURE_TYPE_PIPELINE_ROBUSTNESS_CREATE_INFO_EXT;
+
+    // Enable robustness on the pipeline if needed.  Note that the global robustBufferAccess feature
+    // must be disabled by default.
+    if (contextVk->getFeatures().supportsPipelineRobustness.enabled &&
+        contextVk->getShareGroup()->hasAnyContextWithRobustness())
+    {
+        robustness.storageBuffers = VK_PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS_EXT;
+        robustness.uniformBuffers = VK_PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS_EXT;
+        robustness.vertexInputs   = VK_PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS_EXT;
+        robustness.images         = VK_PIPELINE_ROBUSTNESS_IMAGE_BEHAVIOR_DEVICE_DEFAULT_EXT;
+
+        AddToPNextChain(&createInfo, &robustness);
+    }
+
     VkPipelineCreationFeedback feedback = {};
     gl::ShaderMap<VkPipelineCreationFeedback> perStageFeedback;
 
     VkPipelineCreationFeedbackCreateInfo feedbackInfo = {};
     feedbackInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO;
-    feedbackInfo.pPipelineCreationFeedback = &feedback;
-    // Provide some storage for per-stage data, even though it's not used.  This first works around
-    // a VVL bug that doesn't allow `pipelineStageCreationFeedbackCount=0` despite the spec (See
-    // https://github.com/KhronosGroup/Vulkan-ValidationLayers/issues/4161).  Even with fixed VVL,
-    // several drivers crash when this storage is missing too.
-    feedbackInfo.pipelineStageCreationFeedbackCount = createInfo.stageCount;
-    feedbackInfo.pPipelineStageCreationFeedbacks    = perStageFeedback.data();
 
     const bool supportsFeedback = contextVk->getFeatures().supportsPipelineCreationFeedback.enabled;
     if (supportsFeedback)
     {
-        createInfo.pNext = &feedbackInfo;
+        feedbackInfo.pPipelineCreationFeedback = &feedback;
+        // Provide some storage for per-stage data, even though it's not used.  This first works
+        // around a VVL bug that doesn't allow `pipelineStageCreationFeedbackCount=0` despite the
+        // spec (See https://github.com/KhronosGroup/Vulkan-ValidationLayers/issues/4161).  Even
+        // with fixed VVL, several drivers crash when this storage is missing too.
+        feedbackInfo.pipelineStageCreationFeedbackCount = createInfo.stageCount;
+        feedbackInfo.pPipelineStageCreationFeedbacks    = perStageFeedback.data();
+
+        AddToPNextChain(&createInfo, &feedbackInfo);
     }
 
     ANGLE_TRY(pipelineCache->createGraphicsPipeline(contextVk, createInfo, pipelineOut));
