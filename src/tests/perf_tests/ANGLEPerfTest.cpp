@@ -275,9 +275,12 @@ ANGLEPerfTest::~ANGLEPerfTest() {}
 
 void ANGLEPerfTest::run()
 {
-    printf("ANGLE: running test: %s\n", mName.c_str());
+    printf("running test name: \"%s\", backend: \"%s\", story: \"%s\"", mName.c_str(),
+           mBackend.c_str(), mStory.c_str());
 #if defined(ANGLE_PLATFORM_ANDROID)
-    __android_log_print(ANDROID_LOG_INFO, "ANGLE", "running test: %s", mName.c_str());
+    __android_log_print(ANDROID_LOG_INFO, "ANGLE",
+                        "running test name: \"%s\", backend: \"%s\", story: \"%s\"", mName.c_str(),
+                        mBackend.c_str(), mStory.c_str());
 #endif
     if (mSkipTest)
     {
