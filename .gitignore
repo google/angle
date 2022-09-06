@@ -65,6 +65,7 @@
 /third_party/Python-Markdown
 /third_party/qemu-linux-x64
 /third_party/qemu-mac-x64
+/third_party/r8/d8
 /third_party/r8/lib
 /third_party/rapidjson/src
 /third_party/requests/src
