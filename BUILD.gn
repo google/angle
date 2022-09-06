@@ -211,6 +211,10 @@ config("internal_config") {
   if (angle_has_astc_encoder) {
     defines += [ "ANGLE_HAS_ASTCENC" ]
   }
+
+  if (angle_test_enable_system_egl) {
+    defines += [ "ANGLE_TEST_ENABLE_SYSTEM_EGL" ]
+  }
 }
 
 config("constructor_and_destructor_warnings") {
