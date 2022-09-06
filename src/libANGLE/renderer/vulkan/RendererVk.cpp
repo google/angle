@@ -13,6 +13,7 @@
 #include "libANGLE/renderer/vulkan/vk_utils.h"
 
 #include <EGL/eglext.h>
+#include <regex>
 
 #include "common/debug.h"
 #include "common/platform.h"
@@ -677,7 +678,10 @@ DebugMessageReport ShouldReportDebugMessage(RendererVk *renderer,
 
     for (const vk::SkippedSyncvalMessage &msg : renderer->getSkippedSyncvalMessages())
     {
-        if (strstr(messageId, msg.messageId) == nullptr ||
+        std::string dashMessageId(msg.messageId);
+        dashMessageId = std::regex_replace(dashMessageId, std::regex("_"), "-");
+        if ((strstr(messageId, msg.messageId) == nullptr &&
+             strstr(messageId, dashMessageId.c_str()) == nullptr) ||
             strstr(message, msg.messageContents1) == nullptr ||
             strstr(message, msg.messageContents2) == nullptr)
         {
