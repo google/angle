@@ -708,3 +708,9 @@
 // so that TIMEOUT expectations above don't override more precise SKIP expectations
 
 7629 VULKAN : EGLRobustnessTestES3.Context*ResetOnInvalidLocalShaderVariableAccess_ShareGroupAfterProgramCreation/* = SKIP
+
+// Renders incorrectly on ANGLE
+7598 VULKAN : FogBlendTest.ShadowEffect/* = SKIP
+7598 OpenGL : FogBlendTest.ShadowEffect/* = SKIP
+7598 GLES : FogBlendTest.ShadowEffect/* = SKIP
+7598 D3D11 : FogBlendTest.ShadowEffect/* = SKIP
