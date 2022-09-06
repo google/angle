@@ -7015,7 +7015,7 @@ TEST_P(VulkanPerformanceCounterTest, EndXfbAfterRenderPassClosed)
     // Set the program's transform feedback varyings (just gl_Position)
     std::vector<std::string> tfVaryings;
     tfVaryings.push_back("gl_Position");
-    ANGLE_GL_PROGRAM_TRANSFORM_FEEDBACK(drawRed, essl3_shaders::vs::Simple(),
+    ANGLE_GL_PROGRAM_TRANSFORM_FEEDBACK(drawRed, essl3_shaders::vs::SimpleForPoints(),
                                         essl3_shaders::fs::Red(), tfVaryings,
                                         GL_INTERLEAVED_ATTRIBS);
 

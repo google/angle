@@ -520,6 +520,19 @@ void main()
 })";
 }
 
+// A shader that sets gl_Position to attribute a_position, and sets gl_PointSize to 1.
+const char *SimpleForPoints()
+{
+    return R"(precision highp float;
+attribute vec4 a_position;
+
+void main()
+{
+    gl_Position = a_position;
+    gl_PointSize = 1.0;
+})";
+}
+
 // A shader that simply passes through attribute a_position, setting it to gl_Position and varying
 // v_position.
 const char *Passthrough()
@@ -687,6 +700,18 @@ in vec4 a_position;
 void main()
 {
     gl_Position = a_position;
+})";
+}
+
+// A shader that sets gl_Position to attribute a_position, and sets gl_PointSize to 1.
+const char *SimpleForPoints()
+{
+    return R"(#version 300 es
+in vec4 a_position;
+void main()
+{
+    gl_Position = a_position;
+    gl_PointSize = 1.0;
 })";
 }
 
