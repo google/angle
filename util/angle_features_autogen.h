@@ -173,6 +173,7 @@ enum class Feature
     PersistentlyMappedBuffers,
     PreAddTexelFetchOffsets,
     PrecisionSafeDivision,
+    PreemptivelyStartProvokingVertexCommandBuffer,
     PreferAggregateBarrierCalls,
     PreferCPUForBufferSubData,
     PreferDeviceLocalMemoryHostVisible,

@@ -1881,6 +1881,12 @@ mtl::ComputeCommandEncoder *ContextMtl::getIndexPreprocessingCommandEncoder()
 void ContextMtl::ensureCommandBufferReady()
 {
     flushCommandBufferIfNeeded();
+
+    if (getDisplay()->getFeatures().preemptivelyStartProvokingVertexCommandBuffer.enabled)
+    {
+        mProvokingVertexHelper.ensureCommandBufferReady();
+    }
+
     if (!mCmdBuffer.ready())
     {
         mCmdBuffer.restart();

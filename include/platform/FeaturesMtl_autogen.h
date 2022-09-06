@@ -222,6 +222,11 @@ struct FeaturesMtl : FeatureSetBase
         "limitMaxColorTargetBitsForTesting", FeatureCategory::MetalFeatures,
         "Metal iOS has a limit on the number of color target bits per pixel.", &members,
         "http://anglebug.com/7280"};
+
+    FeatureInfo preemptivelyStartProvokingVertexCommandBuffer = {
+        "preemptivelyStartProvokingVertexCommandBuffer", FeatureCategory::MetalFeatures,
+        "AMD Metal Drivers appear to have a bug this works around", &members,
+        "http://anglebug.com/7635"};
 };
 
 inline FeaturesMtl::FeaturesMtl()  = default;
