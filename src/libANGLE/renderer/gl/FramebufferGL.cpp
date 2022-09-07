@@ -415,14 +415,16 @@ bool IsValidUnsignedShortReadPixelsFormat(GLenum readFormat, const gl::Context *
 
 }  // namespace
 
-FramebufferGL::FramebufferGL(const gl::FramebufferState &data, GLuint id, bool emulatedAlpha)
+FramebufferGL::FramebufferGL(const gl::FramebufferState &data,
+                             GLuint id,
+                             bool isDefault,
+                             bool emulatedAlpha)
     : FramebufferImpl(data),
       mFramebufferID(id),
+      mIsDefault(isDefault),
       mHasEmulatedAlphaAttachment(emulatedAlpha),
       mAppliedEnabledDrawBuffers(1)
-{
-    ASSERT((isDefault() && id == 0) || !isDefault());
-}
+{}
 
 FramebufferGL::~FramebufferGL()
 {
@@ -431,13 +433,9 @@ FramebufferGL::~FramebufferGL()
 
 void FramebufferGL::destroy(const gl::Context *context)
 {
-    if (mFramebufferID)
-    {
-        ASSERT(!isDefault());
-        StateManagerGL *stateManager = GetStateManagerGL(context);
-        stateManager->deleteFramebuffer(mFramebufferID);
-        mFramebufferID = 0;
-    }
+    StateManagerGL *stateManager = GetStateManagerGL(context);
+    stateManager->deleteFramebuffer(mFramebufferID);
+    mFramebufferID = 0;
 }
 
 angle::Result FramebufferGL::discard(const gl::Context *context,
@@ -1255,7 +1253,7 @@ angle::Result FramebufferGL::syncState(const gl::Context *context,
                                        gl::Command command)
 {
     // Don't need to sync state for the default FBO.
-    if (isDefault())
+    if (mIsDefault)
     {
         return angle::Result::Continue;
     }
@@ -1370,12 +1368,22 @@ angle::Result FramebufferGL::syncState(const gl::Context *context,
     return angle::Result::Continue;
 }
 
+GLuint FramebufferGL::getFramebufferID() const
+{
+    return mFramebufferID;
+}
+
 void FramebufferGL::updateDefaultFramebufferID(GLuint framebufferID)
 {
     // We only update framebufferID for a default frambuffer, and the framebufferID is created
     // externally. ANGLE doesn't owne it.
     ASSERT(isDefault());
     mFramebufferID = framebufferID;
+}
+
+bool FramebufferGL::isDefault() const
+{
+    return mIsDefault;
 }
 
 bool FramebufferGL::hasEmulatedAlphaChannelTextureAttachment() const
@@ -1389,7 +1397,7 @@ void FramebufferGL::syncClearState(const gl::Context *context, GLbitfield mask)
     const angle::FeaturesGL &features = GetFeaturesGL(context);
 
     if (features.doesSRGBClearsOnLinearFramebufferAttachments.enabled &&
-        (mask & GL_COLOR_BUFFER_BIT) != 0 && !isDefault())
+        (mask & GL_COLOR_BUFFER_BIT) != 0 && !mIsDefault)
     {
         bool hasSRGBAttachment = false;
         for (const auto &attachment : mState.getColorAttachments())
@@ -1405,7 +1413,7 @@ void FramebufferGL::syncClearState(const gl::Context *context, GLbitfield mask)
     }
     else
     {
-        stateManager->setFramebufferSRGBEnabled(context, !isDefault());
+        stateManager->setFramebufferSRGBEnabled(context, !mIsDefault);
     }
 }
 
@@ -1417,7 +1425,7 @@ void FramebufferGL::syncClearBufferState(const gl::Context *context,
     const angle::FeaturesGL &features = GetFeaturesGL(context);
 
     if (features.doesSRGBClearsOnLinearFramebufferAttachments.enabled && buffer == GL_COLOR &&
-        !isDefault())
+        !mIsDefault)
     {
         // If doing a clear on a color buffer, set SRGB blend enabled only if the color buffer
         // is an SRGB format.
@@ -1441,7 +1449,7 @@ void FramebufferGL::syncClearBufferState(const gl::Context *context,
     }
     else
     {
-        stateManager->setFramebufferSRGBEnabled(context, !isDefault());
+        stateManager->setFramebufferSRGBEnabled(context, !mIsDefault);
     }
 }
 
@@ -1450,7 +1458,7 @@ bool FramebufferGL::modifyInvalidateAttachmentsForEmulatedDefaultFBO(
     const GLenum *attachments,
     std::vector<GLenum> *modifiedAttachments) const
 {
-    bool needsModification = isDefault() && mFramebufferID != 0;
+    bool needsModification = mIsDefault && mFramebufferID != 0;
     if (!needsModification)
     {
         return false;

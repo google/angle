@@ -44,6 +44,8 @@ class SurfaceMtl : public SurfaceImpl
     void destroy(const egl::Display *display) override;
 
     egl::Error initialize(const egl::Display *display) override;
+    FramebufferImpl *createDefaultFramebuffer(const gl::Context *context,
+                                              const gl::FramebufferState &state) override;
 
     egl::Error makeCurrent(const gl::Context *context) override;
     egl::Error unMakeCurrent(const gl::Context *context) override;
@@ -87,10 +89,6 @@ class SurfaceMtl : public SurfaceImpl
                                             const gl::ImageIndex &imageIndex,
                                             GLsizei samples,
                                             FramebufferAttachmentRenderTarget **rtOut) override;
-    egl::Error attachToFramebuffer(const gl::Context *context,
-                                   gl::Framebuffer *framebuffer) override;
-    egl::Error detachFromFramebuffer(const gl::Context *context,
-                                     gl::Framebuffer *framebuffer) override;
 
   protected:
     // Ensure companion (MS, depth, stencil) textures' size is correct w.r.t color texture.
@@ -137,6 +135,8 @@ class WindowSurfaceMtl : public SurfaceMtl
     void destroy(const egl::Display *display) override;
 
     egl::Error initialize(const egl::Display *display) override;
+    FramebufferImpl *createDefaultFramebuffer(const gl::Context *context,
+                                              const gl::FramebufferState &state) override;
 
     egl::Error swap(const gl::Context *context) override;
 
@@ -150,15 +150,12 @@ class WindowSurfaceMtl : public SurfaceMtl
     // width and height can change with client window resizing
     EGLint getWidth() const override;
     EGLint getHeight() const override;
+
     angle::Result getAttachmentRenderTarget(const gl::Context *context,
                                             GLenum binding,
                                             const gl::ImageIndex &imageIndex,
                                             GLsizei samples,
                                             FramebufferAttachmentRenderTarget **rtOut) override;
-    egl::Error attachToFramebuffer(const gl::Context *context,
-                                   gl::Framebuffer *framebuffer) override;
-    egl::Error detachFromFramebuffer(const gl::Context *context,
-                                     gl::Framebuffer *framebuffer) override;
 
     angle::Result ensureCurrentDrawableObtained(const gl::Context *context);
 

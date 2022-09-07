@@ -23,7 +23,7 @@ class StateManagerGL;
 class FramebufferGL : public FramebufferImpl
 {
   public:
-    FramebufferGL(const gl::FramebufferState &data, GLuint id, bool emulatedAlpha);
+    FramebufferGL(const gl::FramebufferState &data, GLuint id, bool isDefault, bool emulatedAlpha);
     ~FramebufferGL() override;
 
     void destroy(const gl::Context *context) override;
@@ -86,17 +86,11 @@ class FramebufferGL : public FramebufferImpl
                             const gl::Framebuffer::DirtyBits &dirtyBits,
                             gl::Command command) override;
 
+    GLuint getFramebufferID() const;
     void updateDefaultFramebufferID(GLuint framebufferID);
-    bool isDefault() const { return mState.isDefault(); }
+    bool isDefault() const;
 
-    void setHasEmulatedAlphaAttachment(bool hasEmulatedAlphaAttachment)
-    {
-        mHasEmulatedAlphaAttachment = hasEmulatedAlphaAttachment;
-    }
     bool hasEmulatedAlphaChannelTextureAttachment() const;
-
-    void setFramebufferID(GLuint id) { mFramebufferID = id; }
-    GLuint getFramebufferID() const { return mFramebufferID; }
 
   private:
     void syncClearState(const gl::Context *context, GLbitfield mask);
@@ -140,7 +134,10 @@ class FramebufferGL : public FramebufferImpl
                                 gl::Rectangle *newDestArea);
 
     GLuint mFramebufferID;
+    bool mIsDefault;
+
     bool mHasEmulatedAlphaAttachment;
+
     gl::DrawBufferMask mAppliedEnabledDrawBuffers;
 };
 }  // namespace rx

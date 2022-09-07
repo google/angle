@@ -26,6 +26,7 @@
 #include "libANGLE/Compiler.h"
 #include "libANGLE/Display.h"
 #include "libANGLE/Fence.h"
+#include "libANGLE/Framebuffer.h"
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/MemoryObject.h"
 #include "libANGLE/Program.h"
@@ -555,8 +556,6 @@ void Context::initializeDefaultResources()
 
     mState.initialize(this);
 
-    mDefaultFramebuffer = std::make_unique<Framebuffer>(this, mImplementation.get());
-
     mFenceNVHandleAllocator.setBaseHandle(0);
 
     // [OpenGL ES 2.0.24] section 3.7 page 83:
@@ -776,9 +775,6 @@ egl::Error Context::onDestroy(const egl::Display *display)
     }
 
     ANGLE_TRY(unMakeCurrent(display));
-
-    mDefaultFramebuffer->onDestroy(this);
-    mDefaultFramebuffer.reset();
 
     for (auto fence : mFenceNVMap)
     {
@@ -9438,15 +9434,21 @@ egl::Error Context::setDefaultFramebuffer(egl::Surface *drawSurface, egl::Surfac
     ASSERT(mCurrentDrawSurface == nullptr);
     ASSERT(mCurrentReadSurface == nullptr);
 
+    UniqueFramebufferPointer newDefaultFramebuffer;
+
     mCurrentDrawSurface = drawSurface;
     mCurrentReadSurface = readSurface;
 
     if (drawSurface != nullptr)
     {
         ANGLE_TRY(drawSurface->makeCurrent(this));
+        newDefaultFramebuffer = {new Framebuffer(this, drawSurface, readSurface), this};
     }
-
-    ANGLE_TRY(mDefaultFramebuffer->setSurfaces(this, drawSurface, readSurface));
+    else
+    {
+        newDefaultFramebuffer = {new Framebuffer(this, mImplementation.get(), readSurface), this};
+    }
+    ASSERT(newDefaultFramebuffer);
 
     if (readSurface && (drawSurface != readSurface))
     {
@@ -9455,14 +9457,15 @@ egl::Error Context::setDefaultFramebuffer(egl::Surface *drawSurface, egl::Surfac
 
     // Update default framebuffer, the binding of the previous default
     // framebuffer (or lack of) will have a nullptr.
-    mState.mFramebufferManager->setDefaultFramebuffer(mDefaultFramebuffer.get());
+    Framebuffer *framebuffer = newDefaultFramebuffer.get();
+    mState.mFramebufferManager->setDefaultFramebuffer(newDefaultFramebuffer.release());
     if (mState.getDrawFramebuffer() == nullptr)
     {
-        bindDrawFramebuffer(mDefaultFramebuffer->id());
+        bindDrawFramebuffer(framebuffer->id());
     }
     if (mState.getReadFramebuffer() == nullptr)
     {
-        bindReadFramebuffer(mDefaultFramebuffer->id());
+        bindReadFramebuffer(framebuffer->id());
     }
 
     return egl::NoError();
@@ -9470,27 +9473,29 @@ egl::Error Context::setDefaultFramebuffer(egl::Surface *drawSurface, egl::Surfac
 
 egl::Error Context::unsetDefaultFramebuffer()
 {
-    Framebuffer *defaultFramebuffer =
+    gl::Framebuffer *defaultFramebuffer =
         mState.mFramebufferManager->getFramebuffer(Framebuffer::kDefaultDrawFramebufferHandle);
+
+    // Remove the default framebuffer
+    if (mState.getReadFramebuffer() == defaultFramebuffer)
+    {
+        mState.setReadFramebufferBinding(nullptr);
+        mReadFramebufferObserverBinding.bind(nullptr);
+    }
+
+    if (mState.getDrawFramebuffer() == defaultFramebuffer)
+    {
+        mState.setDrawFramebufferBinding(nullptr);
+        mDrawFramebufferObserverBinding.bind(nullptr);
+    }
 
     if (defaultFramebuffer)
     {
-        // Remove the default framebuffer
-        if (defaultFramebuffer == mState.getReadFramebuffer())
-        {
-            mState.setReadFramebufferBinding(nullptr);
-            mReadFramebufferObserverBinding.bind(nullptr);
-        }
-
-        if (defaultFramebuffer == mState.getDrawFramebuffer())
-        {
-            mState.setDrawFramebufferBinding(nullptr);
-            mDrawFramebufferObserverBinding.bind(nullptr);
-        }
-
-        ANGLE_TRY(defaultFramebuffer->unsetSurfaces(this));
-        mState.mFramebufferManager->setDefaultFramebuffer(nullptr);
+        defaultFramebuffer->onDestroy(this);
+        delete defaultFramebuffer;
     }
+
+    mState.mFramebufferManager->setDefaultFramebuffer(nullptr);
 
     // Always unset the current surface, even if setIsCurrent fails.
     egl::Surface *drawSurface = mCurrentDrawSurface;

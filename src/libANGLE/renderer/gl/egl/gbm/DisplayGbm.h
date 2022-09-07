@@ -65,8 +65,7 @@ class DisplayGbm final : public DisplayEGL
         void reset();
         bool resize(int32_t width, int32_t height);
         GLuint createGLFB(const gl::Context *context);
-        egl::Error attachToFramebuffer(const gl::Context *context, FramebufferGL *framebuffer);
-        egl::Error detachFromFramebuffer(const gl::Context *context, FramebufferGL *framebuffer);
+        FramebufferGL *framebufferGL(const gl::Context *context, const gl::FramebufferState &state);
         void present(const gl::Context *context);
         uint32_t getDRMFB();
         void bindTexImage();
@@ -96,7 +95,6 @@ class DisplayGbm final : public DisplayEGL
         GLuint mColorBuffer;
         GLuint mDSBuffer;
         GLuint mTexture;
-        GLuint mFramebufferID;
     };
 
     DisplayGbm(const egl::DisplayState &state);

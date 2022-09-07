@@ -110,8 +110,7 @@ DisplayGbm::Buffer::Buffer(DisplayGbm *display,
       mImage(EGL_NO_IMAGE_KHR),
       mColorBuffer(0),
       mDSBuffer(0),
-      mTexture(0),
-      mFramebufferID(0)
+      mTexture(0)
 {}
 
 DisplayGbm::Buffer::~Buffer()
@@ -119,8 +118,6 @@ DisplayGbm::Buffer::~Buffer()
     reset();
 
     const FunctionsGL *gl = mDisplay->getRenderer()->getFunctions();
-    gl->deleteFramebuffers(1, &mFramebufferID);
-    mFramebufferID = 0;
     gl->deleteRenderbuffers(1, &mColorBuffer);
     mColorBuffer = 0;
     gl->deleteRenderbuffers(1, &mDSBuffer);
@@ -313,24 +310,10 @@ GLuint DisplayGbm::Buffer::createGLFB(const gl::Context *context)
     return framebuffer;
 }
 
-egl::Error DisplayGbm::Buffer::attachToFramebuffer(const gl::Context *context,
-                                                   FramebufferGL *framebuffer)
+FramebufferGL *DisplayGbm::Buffer::framebufferGL(const gl::Context *context,
+                                                 const gl::FramebufferState &state)
 {
-    ASSERT(framebuffer->getFramebufferID() == 0);
-    if (mFramebufferID == 0)
-    {
-        mFramebufferID = createGLFB(context);
-    }
-    framebuffer->setFramebufferID(mFramebufferID);
-    return egl::NoError();
-}
-
-egl::Error DisplayGbm::Buffer::detachFromFramebuffer(const gl::Context *context,
-                                                     FramebufferGL *framebuffer)
-{
-    ASSERT(framebuffer->getFramebufferID() == mFramebufferID);
-    framebuffer->setFramebufferID(0);
-    return eg::NoError();
+    return new FramebufferGL(state, createGLFB(context), true, false);
 }
 
 void DisplayGbm::Buffer::present(const gl::Context *context)
@@ -834,7 +817,7 @@ SurfaceImpl *DisplayGbm::createPbufferSurface(const egl::SurfaceState &state,
     EGLAttrib width  = attribs.get(EGL_WIDTH, 0);
     EGLAttrib height = attribs.get(EGL_HEIGHT, 0);
     Buffer *buffer   = new Buffer(this, GBM_BO_USE_RENDERING, GBM_FORMAT_ARGB8888,
-                                  DRM_FORMAT_ARGB8888, DRM_FORMAT_XRGB8888, true, true);
+                                DRM_FORMAT_ARGB8888, DRM_FORMAT_XRGB8888, true, true);
     if (!buffer || !buffer->initialize(static_cast<int>(width), static_cast<int>(height)))
     {
         return nullptr;

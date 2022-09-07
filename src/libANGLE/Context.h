@@ -31,7 +31,6 @@
 #include "libANGLE/Context_gles_3_2_autogen.h"
 #include "libANGLE/Context_gles_ext_autogen.h"
 #include "libANGLE/Error.h"
-#include "libANGLE/Framebuffer.h"
 #include "libANGLE/HandleAllocator.h"
 #include "libANGLE/RefCountObject.h"
 #include "libANGLE/ResourceManager.h"
@@ -67,6 +66,7 @@ namespace gl
 class Buffer;
 class Compiler;
 class FenceNV;
+class Framebuffer;
 class GLES1Renderer;
 class MemoryProgramCache;
 class MemoryShaderCache;
@@ -860,8 +860,6 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     const bool mSaveAndRestoreState;
 
     bool mIsDestroyed;
-
-    std::unique_ptr<Framebuffer> mDefaultFramebuffer;
 };
 
 class [[nodiscard]] ScopedContextRef
