@@ -233,7 +233,7 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
     // http://anglebug.com/6416
     // http://anglebug.com/6421
     {
-        "SYNC-HAZARD-WRITE-AFTER-WRITE",
+        "SYNC-HAZARD-WRITE_AFTER_WRITE",
         "Access info (usage: SYNC_IMAGE_LAYOUT_TRANSITION, prior_usage: "
         "SYNC_IMAGE_LAYOUT_TRANSITION, "
         "write_barriers: 0, command: vkCmdEndRenderPass",
@@ -245,21 +245,21 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
     //
     // From: Texture2DBaseMaxTestES3.Fuzz545ImmutableTexRenderFeedback/ES3_Vulkan
     {
-        "SYNC-HAZARD-READ-AFTER-WRITE",
+        "SYNC-HAZARD-READ_AFTER_WRITE",
         "type: VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, imageLayout: VK_IMAGE_LAYOUT_GENERAL, "
         "binding #0, index 0. Access info (usage: SYNC_FRAGMENT_SHADER_SHADER_STORAGE_READ, "
         "prior_usage: SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_WRITE, write_barriers: 0, "
         "command: vkCmdBeginRenderPass, seq_no: 6",
     },
     {
-        "SYNC-HAZARD-READ-AFTER-WRITE",
+        "SYNC-HAZARD-READ_AFTER_WRITE",
         "type: VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, imageLayout: VK_IMAGE_LAYOUT_GENERAL, "
         "binding #0, index 0. Access info (usage: SYNC_FRAGMENT_SHADER_SHADER_STORAGE_READ, "
         "prior_usage: SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_WRITE, write_barriers: 0, "
         "command: vkCmdBeginRenderPass, seq_no: 7",
     },
     {
-        "SYNC-HAZARD-READ-AFTER-WRITE",
+        "SYNC-HAZARD-READ_AFTER_WRITE",
         "type: VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, imageLayout: VK_IMAGE_LAYOUT_GENERAL, "
         "binding #0, index 0. Access info (usage: SYNC_FRAGMENT_SHADER_SHADER_STORAGE_READ, "
         "prior_usage: SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_WRITE, write_barriers: 0, "
@@ -267,21 +267,21 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
     },
     // From: FramebufferTest_ES3.FramebufferBindToNewLevelAfterMaxIncreaseShouldntCrash/ES3_Vulkan
     {
-        "SYNC-HAZARD-READ-AFTER-WRITE",
+        "SYNC-HAZARD-READ_AFTER_WRITE",
         "type: VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, imageLayout: VK_IMAGE_LAYOUT_GENERAL, "
         "binding #0, index 0. Access info (usage: SYNC_FRAGMENT_SHADER_SHADER_STORAGE_READ, "
         "prior_usage: SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_WRITE, write_barriers: 0, "
         "command: vkCmdBeginRenderPass, seq_no: 10,",
     },
     {
-        "SYNC-HAZARD-READ-AFTER-WRITE",
+        "SYNC-HAZARD-READ_AFTER_WRITE",
         "type: VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, imageLayout: VK_IMAGE_LAYOUT_GENERAL, "
         "binding #0, index 0. Access info (usage: SYNC_FRAGMENT_SHADER_SHADER_STORAGE_READ, "
         "prior_usage: SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_WRITE, write_barriers: 0, "
         "command: vkCmdBeginRenderPass, seq_no: 2,",
     },
     {
-        "SYNC-HAZARD-READ-AFTER-WRITE",
+        "SYNC-HAZARD-READ_AFTER_WRITE",
         "type: VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, imageLayout: VK_IMAGE_LAYOUT_GENERAL, "
         "binding #0, index 0. Access info (usage: SYNC_FRAGMENT_SHADER_SHADER_STORAGE_READ, "
         "prior_usage: SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_WRITE, write_barriers: 0, "
@@ -289,7 +289,7 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
     },
     // From: FramebufferTest_ES3.SampleFromAttachedTextureWithDifferentLOD/ES3_Vulkan
     {
-        "SYNC-HAZARD-READ-AFTER-WRITE",
+        "SYNC-HAZARD-READ_AFTER_WRITE",
         "type: VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, imageLayout: VK_IMAGE_LAYOUT_GENERAL, "
         "binding #0, index 0. Access info (usage: SYNC_FRAGMENT_SHADER_SHADER_STORAGE_READ, "
         "prior_usage: SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_WRITE, write_barriers: 0, "
@@ -297,7 +297,7 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
     },
     // With Vulkan secondary command buffers:
     {
-        "SYNC-HAZARD-READ-AFTER-WRITE",
+        "SYNC-HAZARD-READ_AFTER_WRITE",
         "Recorded access info (recorded_usage: SYNC_FRAGMENT_SHADER_SHADER_STORAGE_READ, command: "
         "vkCmdDraw, seq_no: 1, reset_no: 1). Access info (prior_usage: "
         "SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_WRITE, write_barriers: 0, command: "
@@ -305,7 +305,7 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
     },
     // From: TracePerfTest.Run/vulkan_aztec_ruins
     {
-        "SYNC-HAZARD-READ-AFTER-WRITE",
+        "SYNC-HAZARD-READ_AFTER_WRITE",
         "type: VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, imageLayout: VK_IMAGE_LAYOUT_GENERAL, "
         "binding #0, index 0. Access info (usage: SYNC_FRAGMENT_SHADER_SHADER_STORAGE_READ, "
         "prior_usage: SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_WRITE, write_barriers: 0, "
@@ -313,7 +313,7 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
     },
     // http://anglebug.com/6551
     {
-        "SYNC-HAZARD-WRITE-AFTER-WRITE",
+        "SYNC-HAZARD-WRITE_AFTER_WRITE",
         "Access info (usage: SYNC_IMAGE_LAYOUT_TRANSITION, prior_usage: "
         "SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_WRITE, write_barriers: "
         "SYNC_EARLY_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_READ|SYNC_EARLY_FRAGMENT_TESTS_DEPTH_"
@@ -323,7 +323,7 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
         "READ|SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_WRITE, command: vkCmdEndRenderPass",
     },
     {
-        "SYNC-HAZARD-WRITE-AFTER-WRITE",
+        "SYNC-HAZARD-WRITE_AFTER_WRITE",
         "Access info (usage: SYNC_IMAGE_LAYOUT_TRANSITION, prior_usage: "
         "SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_WRITE, write_barriers: "
         "SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_READ|SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_"
@@ -331,7 +331,7 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
     },
     // From: TracePerfTest.Run/vulkan_swiftshader_manhattan_31 http://anglebug.com/6701
     {
-        "SYNC-HAZARD-WRITE-AFTER-WRITE",
+        "SYNC-HAZARD-WRITE_AFTER_WRITE",
         "Hazard WRITE_AFTER_WRITE in subpass 0 for attachment 1 aspect stencil during load with "
         "loadOp VK_ATTACHMENT_LOAD_OP_DONT_CARE. Access info (usage: "
         "SYNC_EARLY_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE, prior_usage: "
@@ -340,52 +340,52 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
     // From various tests. The validation layer does not calculate the exact vertexCounts that's
     // being accessed. http://anglebug.com/6725
     {
-        "SYNC-HAZARD-READ-AFTER-WRITE",
+        "SYNC-HAZARD-READ_AFTER_WRITE",
         "vkCmdDrawIndexed: Hazard READ_AFTER_WRITE for vertex",
         "usage: SYNC_VERTEX_ATTRIBUTE_INPUT_VERTEX_ATTRIBUTE_READ",
     },
     {
-        "SYNC-HAZARD-READ-AFTER-WRITE",
+        "SYNC-HAZARD-READ_AFTER_WRITE",
         "vkCmdDrawIndexedIndirect: Hazard READ_AFTER_WRITE for vertex",
         "usage: SYNC_VERTEX_ATTRIBUTE_INPUT_VERTEX_ATTRIBUTE_READ",
     },
     {
-        "SYNC-HAZARD-READ-AFTER-WRITE",
+        "SYNC-HAZARD-READ_AFTER_WRITE",
         "vkCmdDrawIndirect: Hazard READ_AFTER_WRITE for vertex",
         "usage: SYNC_VERTEX_ATTRIBUTE_INPUT_VERTEX_ATTRIBUTE_READ",
     },
     {
-        "SYNC-HAZARD-READ-AFTER-WRITE",
+        "SYNC-HAZARD-READ_AFTER_WRITE",
         "vkCmdDrawIndexedIndirect: Hazard READ_AFTER_WRITE for index",
         "usage: SYNC_INDEX_INPUT_INDEX_READ",
     },
     {
-        "SYNC-HAZARD-WRITE-AFTER-READ",
+        "SYNC-HAZARD-WRITE_AFTER_READ",
         "vkCmdDraw: Hazard WRITE_AFTER_READ for",
         "Access info (usage: SYNC_VERTEX_SHADER_SHADER_STORAGE_WRITE, prior_usage: "
         "SYNC_VERTEX_ATTRIBUTE_INPUT_VERTEX_ATTRIBUTE_READ",
     },
     {
-        "SYNC-HAZARD-WRITE-AFTER-READ",
+        "SYNC-HAZARD-WRITE_AFTER_READ",
         "vkCmdCopyImageToBuffer: Hazard WRITE_AFTER_READ for dstBuffer VkBuffer",
         "Access info (usage: SYNC_COPY_TRANSFER_WRITE, prior_usage: "
         "SYNC_VERTEX_ATTRIBUTE_INPUT_VERTEX_ATTRIBUTE_READ",
     },
     {
-        "SYNC-HAZARD-WRITE-AFTER-READ",
+        "SYNC-HAZARD-WRITE_AFTER_READ",
         "vkCmdCopyBuffer: Hazard WRITE_AFTER_READ for dstBuffer VkBuffer",
         "Access info (usage: SYNC_COPY_TRANSFER_WRITE, prior_usage: "
         "SYNC_VERTEX_ATTRIBUTE_INPUT_VERTEX_ATTRIBUTE_READ",
     },
     {
-        "SYNC-HAZARD-WRITE-AFTER-READ",
+        "SYNC-HAZARD-WRITE_AFTER_READ",
         "vkCmdDispatch: Hazard WRITE_AFTER_READ for VkBuffer",
         "Access info (usage: SYNC_COMPUTE_SHADER_SHADER_STORAGE_WRITE, prior_usage: "
         "SYNC_VERTEX_ATTRIBUTE_INPUT_VERTEX_ATTRIBUTE_READ",
     },
     // From: MultisampledRenderToTextureES3Test.TransformFeedbackTest. http://anglebug.com/6725
     {
-        "SYNC-HAZARD-WRITE-AFTER-WRITE",
+        "SYNC-HAZARD-WRITE_AFTER_WRITE",
         "vkCmdBeginRenderPass: Hazard WRITE_AFTER_WRITE in subpass",
         "write_barriers: "
         "SYNC_TRANSFORM_FEEDBACK_EXT_TRANSFORM_FEEDBACK_COUNTER_READ_EXT|SYNC_TRANSFORM_FEEDBACK_"
@@ -397,19 +397,19 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
     // VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER. My guess is that syncval is not doing a fine grain enough
     // range tracking with dynamic uniform buffers. http://anglebug.com/6725
     {
-        "SYNC-HAZARD-WRITE-AFTER-READ",
+        "SYNC-HAZARD-WRITE_AFTER_READ",
         "usage: SYNC_VERTEX_SHADER_UNIFORM_READ",
     },
     {
-        "SYNC-HAZARD-READ-AFTER-WRITE",
+        "SYNC-HAZARD-READ_AFTER_WRITE",
         "usage: SYNC_VERTEX_SHADER_UNIFORM_READ",
     },
     {
-        "SYNC-HAZARD-WRITE-AFTER-READ",
+        "SYNC-HAZARD-WRITE_AFTER_READ",
         "type: VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC",
     },
     {
-        "SYNC-HAZARD-READ-AFTER-WRITE",
+        "SYNC-HAZARD-READ_AFTER_WRITE",
         "type: VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC",
     },
     // Coherent framebuffer fetch is enabled on some platforms that are known a priori to have the
@@ -418,13 +418,13 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
     // http://anglebug.com/6870
     // From: TracePerfTest.Run/vulkan_dead_by_daylight
     // From: TracePerfTest.Run/vulkan_genshin_impact
-    {"SYNC-HAZARD-READ-AFTER-WRITE",
+    {"SYNC-HAZARD-READ_AFTER_WRITE",
      "vkCmdBeginRenderPass: Hazard READ_AFTER_WRITE in subpass 0 for attachment ",
      "aspect color during load with loadOp VK_ATTACHMENT_LOAD_OP_LOAD. Access info (usage: "
      "SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_READ, prior_usage: "
      "SYNC_IMAGE_LAYOUT_TRANSITION, write_barriers: 0, command: vkCmdEndRenderPass",
      true},
-    {"SYNC-HAZARD-WRITE-AFTER-WRITE",
+    {"SYNC-HAZARD-WRITE_AFTER_WRITE",
      "vkCmdBeginRenderPass: Hazard WRITE_AFTER_WRITE in subpass 0 for attachment ",
      "image layout transition (old_layout: VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, new_layout: "
      "VK_IMAGE_LAYOUT_GENERAL). Access info (usage: SYNC_IMAGE_LAYOUT_TRANSITION, prior_usage: "
@@ -432,7 +432,7 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
      true},
     // http://anglebug.com/7070
     {
-        "SYNC-HAZARD-READ-AFTER-WRITE",
+        "SYNC-HAZARD-READ_AFTER_WRITE",
         "type: VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, imageLayout: VK_IMAGE_LAYOUT_GENERAL, "
         "binding #0, index 0. Access info (usage: SYNC_FRAGMENT_SHADER_SHADER_STORAGE_READ, "
         "prior_usage: SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_WRITE, write_barriers: 0, "
@@ -440,25 +440,25 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
     },
     // From: TracePerfTest.Run/vulkan_car_chase http://anglebug.com/7125
     {
-        "SYNC-HAZARD-WRITE-AFTER-READ",
+        "SYNC-HAZARD-WRITE_AFTER_READ",
         "type: VK_DESCRIPTOR_TYPE_STORAGE_BUFFER",
     },
     // From: TracePerfTest.Run/vulkan_car_chase http://anglebug.com/7125#c6
     {
-        "SYNC-HAZARD-WRITE-AFTER-READ",
+        "SYNC-HAZARD-WRITE_AFTER_READ",
         "Access info (usage: SYNC_COPY_TRANSFER_WRITE, "
         "prior_usage: SYNC_FRAGMENT_SHADER_UNIFORM_READ, "
         "read_barriers: VK_PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT, command: vkCmdDrawIndexed",
     },
     // From: TracePerfTest.Run/vulkan_special_forces_group_2 http://anglebug.com/5592
     {
-        "SYNC-HAZARD-WRITE-AFTER-READ",
+        "SYNC-HAZARD-WRITE_AFTER_READ",
         "Access info (usage: SYNC_IMAGE_LAYOUT_TRANSITION, prior_usage: "
         "SYNC_FRAGMENT_SHADER_SHADER_STORAGE_READ, read_barriers: "
         "VK_PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT, command: vkCmdDrawIndexed",
     },
     // http://anglebug.com/7031
-    {"SYNC-HAZARD-READ-AFTER-WRITE",
+    {"SYNC-HAZARD-READ_AFTER_WRITE",
      "type: VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, imageLayout: "
      "VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, binding #0, index 0. Access info (usage: "
      "SYNC_COMPUTE_SHADER_SHADER_STORAGE_READ, prior_usage: SYNC_IMAGE_LAYOUT_TRANSITION, "
@@ -475,7 +475,7 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
      "command: vkCmdPipelineBarrier, seq_no: 4,",
      "", false},
     // On SwiftShader, http://anglebug.com/7031
-    {"SYNC-HAZARD-READ-AFTER-WRITE",
+    {"SYNC-HAZARD-READ_AFTER_WRITE",
      "type: VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, imageLayout: "
      "VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, binding #0, index 0. Access info (usage: "
      "SYNC_COMPUTE_SHADER_SHADER_STORAGE_READ, prior_usage: SYNC_IMAGE_LAYOUT_TRANSITION, "
@@ -486,7 +486,7 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
      "", false},
     // http://anglebug.com/7456
     {
-        "SYNC-HAZARD-READ-AFTER-WRITE",
+        "SYNC-HAZARD-READ_AFTER_WRITE",
         "type: VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, "
         "imageLayout: VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL",
         "Access info (usage: SYNC_FRAGMENT_SHADER_SHADER_STORAGE_READ, "
@@ -496,7 +496,7 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
         "command: vkCmdPipelineBarrier",
     },
     {
-        "SYNC-HAZARD-READ-AFTER-WRITE",
+        "SYNC-HAZARD-READ_AFTER_WRITE",
         "type: VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, "
         "imageLayout: VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL",
         "Access info (usage: SYNC_COMPUTE_SHADER_SHADER_STORAGE_READ, "
@@ -510,7 +510,7 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
     // gives synchronization guarantees without the need for an image barrier. Suppress these
     // syncval errors globally until it's fixed.
     // https://github.com/KhronosGroup/Vulkan-ValidationLayers/issues/4387
-    {"SYNC-HAZARD-READ-AFTER-WRITE",
+    {"SYNC-HAZARD-READ_AFTER_WRITE",
      "type: VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, "
      "imageLayout: VK_IMAGE_LAYOUT_GENERAL",
      "Access info (usage: SYNC_FRAGMENT_SHADER_SHADER_STORAGE_READ, "
@@ -533,7 +533,7 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessagesWithoutStoreOpNone[] 
     // (similarly to the previous case as DONT_CARE is also a write operation).
     // http://anglebug.com/5962
     {
-        "SYNC-HAZARD-WRITE-AFTER-READ",
+        "SYNC-HAZARD-WRITE_AFTER_READ",
         "depth aspect during store with storeOp VK_ATTACHMENT_STORE_OP_STORE. Access info (usage: "
         "SYNC_LATE_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE, prior_usage: "
         "SYNC_FRAGMENT_SHADER_SHADER_STORAGE_READ, read_barriers: VK_PIPELINE_STAGE_2_NONE, "
@@ -541,7 +541,7 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessagesWithoutStoreOpNone[] 
         "",
     },
     {
-        "SYNC-HAZARD-READ-AFTER-WRITE",
+        "SYNC-HAZARD-READ_AFTER_WRITE",
         "type: VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, imageLayout: "
         "VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL, binding ",
         "Access info (usage: "
@@ -550,7 +550,7 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessagesWithoutStoreOpNone[] 
         "vkCmdEndRenderPass",
     },
     {
-        "SYNC-HAZARD-READ-AFTER-WRITE",
+        "SYNC-HAZARD-READ_AFTER_WRITE",
         "type: VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, imageLayout: "
         "VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL, binding ",
         "Access info (usage: "
@@ -571,7 +571,7 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessagesWithoutLoadStoreOpNon
     // - http://anglebug.com/6411
     // - http://anglebug.com/5371: This is resolved with storeOp=NONE
     {
-        "SYNC-HAZARD-WRITE-AFTER-WRITE",
+        "SYNC-HAZARD-WRITE_AFTER_WRITE",
         "Access info (usage: SYNC_IMAGE_LAYOUT_TRANSITION, prior_usage: "
         "SYNC_LATE_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE, write_barriers: 0, command: "
         "vkCmdEndRenderPass",
@@ -579,7 +579,7 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessagesWithoutLoadStoreOpNon
     },
     // http://anglebug.com/6411
     {
-        "SYNC-HAZARD-WRITE-AFTER-WRITE",
+        "SYNC-HAZARD-WRITE_AFTER_WRITE",
         "aspect depth during load with loadOp VK_ATTACHMENT_LOAD_OP_DONT_CARE. Access info (usage: "
         "SYNC_EARLY_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE, prior_usage: "
         "SYNC_IMAGE_LAYOUT_TRANSITION, write_barriers: "
@@ -588,7 +588,7 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessagesWithoutLoadStoreOpNon
         "",
     },
     {
-        "SYNC-HAZARD-WRITE-AFTER-WRITE",
+        "SYNC-HAZARD-WRITE_AFTER_WRITE",
         "aspect stencil during load with loadOp VK_ATTACHMENT_LOAD_OP_DONT_CARE. Access info "
         "(usage: "
         "SYNC_EARLY_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE, prior_usage: "
@@ -599,7 +599,7 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessagesWithoutLoadStoreOpNon
     },
     // http://anglebug.com/6584
     {
-        "SYNC-HAZARD-WRITE-AFTER-WRITE",
+        "SYNC-HAZARD-WRITE_AFTER_WRITE",
         "aspect depth during load with loadOp VK_ATTACHMENT_LOAD_OP_DONT_CARE. Access info (usage: "
         "SYNC_EARLY_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE, prior_usage: "
         "SYNC_IMAGE_LAYOUT_TRANSITION, write_barriers: "
@@ -610,7 +610,7 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessagesWithoutLoadStoreOpNon
     },
     // http://anglebug.com/5962
     {
-        "SYNC-HAZARD-WRITE-AFTER-WRITE",
+        "SYNC-HAZARD-WRITE_AFTER_WRITE",
         "aspect stencil during load with loadOp VK_ATTACHMENT_LOAD_OP_DONT_CARE. Access info "
         "(usage: "
         "SYNC_EARLY_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE, prior_usage: "
@@ -622,7 +622,7 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessagesWithoutLoadStoreOpNon
         "",
     },
     {
-        "SYNC-HAZARD-WRITE-AFTER-WRITE",
+        "SYNC-HAZARD-WRITE_AFTER_WRITE",
         "aspect stencil during load with loadOp VK_ATTACHMENT_LOAD_OP_DONT_CARE. Access info "
         "(usage: "
         "SYNC_EARLY_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE, prior_usage: "
@@ -677,10 +677,10 @@ DebugMessageReport ShouldReportDebugMessage(RendererVk *renderer,
 
     for (const vk::SkippedSyncvalMessage &msg : renderer->getSkippedSyncvalMessages())
     {
-        std::string underScoreMessage(msg.messageId);
-        std::replace(underScoreMessage.begin(), underScoreMessage.end(), '-', '_');
+        std::string dashMessageId(msg.messageId);
+        std::replace(dashMessageId.begin(), dashMessageId.end(), '_', '-');
         if ((strstr(messageId, msg.messageId) == nullptr &&
-             strstr(messageId, underScoreMessage.c_str()) == nullptr) ||
+             strstr(messageId, dashMessageId.c_str()) == nullptr) ||
             strstr(message, msg.messageContents1) == nullptr ||
             strstr(message, msg.messageContents2) == nullptr)
         {
