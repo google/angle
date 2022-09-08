@@ -1506,7 +1506,12 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     if (displayVk->isUsingSwapchain())
     {
         mEnabledInstanceExtensions.push_back(VK_KHR_SURFACE_EXTENSION_NAME);
+        if (ExtensionFound(VK_EXT_SWAPCHAIN_COLOR_SPACE_EXTENSION_NAME, instanceExtensionNames))
+        {
+            mEnabledInstanceExtensions.push_back(VK_EXT_SWAPCHAIN_COLOR_SPACE_EXTENSION_NAME);
+        }
     }
+
     if (wsiExtension)
     {
         mEnabledInstanceExtensions.push_back(wsiExtension);
