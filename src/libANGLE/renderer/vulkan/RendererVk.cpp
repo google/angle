@@ -1548,8 +1548,10 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
 
     if (ExtensionFound(VK_GOOGLE_SURFACELESS_QUERY_EXTENSION_NAME, instanceExtensionNames))
     {
+        // TODO: Validation layer has a bug when vkGetPhysicalDeviceSurfaceFormats2KHR is called
+        // on Mock ICD with surface handle set as VK_NULL_HANDLE. http://anglebug.com/7631
         mEnabledInstanceExtensions.push_back(VK_GOOGLE_SURFACELESS_QUERY_EXTENSION_NAME);
-        ANGLE_FEATURE_CONDITION(&mFeatures, supportsSurfacelessQueryExtension, true);
+        ANGLE_FEATURE_CONDITION(&mFeatures, supportsSurfacelessQueryExtension, !isMockICDEnabled());
     }
 
     // Verify the required extensions are in the extension names set. Fail if not.
