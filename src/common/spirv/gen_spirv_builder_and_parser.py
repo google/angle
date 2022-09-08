@@ -224,7 +224,7 @@ class Writer:
         # Write out the files.
         data_source_base_name = os.path.basename(SPIRV_GRAMMAR_FILE)
         builder_template_args = {
-            'script_name': sys.argv[0],
+            'script_name': os.path.basename(sys.argv[0]),
             'data_source_name': data_source_base_name,
             'file_name': SPIRV_BUILDER_FILE,
             'file_name_capitalized': remove_chars(SPIRV_BUILDER_FILE.upper(), '_'),
@@ -234,7 +234,7 @@ class Writer:
             'function_list': ''.join(self.instruction_builder_impl)
         }
         parser_template_args = {
-            'script_name': sys.argv[0],
+            'script_name': os.path.basename(sys.argv[0]),
             'data_source_name': data_source_base_name,
             'file_name': SPIRV_PARSER_FILE,
             'file_name_capitalized': remove_chars(SPIRV_PARSER_FILE.upper(), '_'),

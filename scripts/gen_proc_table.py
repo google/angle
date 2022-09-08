@@ -7,6 +7,7 @@
 #  Code generation for entry point loading tables.
 #  NOTE: don't run this script directly. Run scripts/run_code_generation.py.
 
+import os
 import sys
 import registry_xml
 
@@ -254,7 +255,7 @@ def main():
 
     with open(out_file_name_gles, 'w') as out_file:
         output_cpp = template_cpp.format(
-            script_name=sys.argv[0],
+            script_name=os.path.basename(sys.argv[0]),
             data_source_name="gl.xml, gl_angle_ext.xml, egl.xml, egl_angle_ext.xml",
             includes=includes_gles,
             cast="__eglMustCastToProperFunctionPointerType",
@@ -291,7 +292,7 @@ def main():
 
         with open(out_file_name, 'w') as out_file:
             output_cpp = template_cpp.format(
-                script_name=sys.argv[0],
+                script_name=os.path.basename(sys.argv[0]),
                 data_source_name="gl.xml, gl_angle_ext.xml, {}".format(xml_file_name),
                 includes=includes,
                 cast=cast,
@@ -330,7 +331,7 @@ def main():
 
     with open(out_file_name_cl, 'w') as out_file:
         output_cpp = template_map_cpp.format(
-            script_name=sys.argv[0],
+            script_name=os.path.basename(sys.argv[0]),
             data_source_name="cl.xml",
             includes=includes_cl,
             cast="void *",
@@ -341,7 +342,9 @@ def main():
 
     with open(out_file_name_cl_map, 'w') as out_file:
         output_map = template_map.format(
-            script_name=sys.argv[0], data_source_name="cl.xml", symbol_maps="\n".join(symbol_maps))
+            script_name=os.path.basename(sys.argv[0]),
+            data_source_name="cl.xml",
+            symbol_maps="\n".join(symbol_maps))
         out_file.write(output_map)
         out_file.close()
 
