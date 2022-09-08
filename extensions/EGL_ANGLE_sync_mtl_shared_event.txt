@@ -20,7 +20,7 @@ Status
 
 Version
 
-    Version 1, 2022-05-17
+    Version 2, 2022-09-08
 
 Number
 
@@ -50,7 +50,9 @@ New Types
 
 New Procedures and Functions
 
-    None.
+    void* eglCopyMetalSharedEventANGLE(
+                        EGLDisplay dpy,
+                        EGLSync sync);
 
 New Tokens
 
@@ -75,10 +77,15 @@ Additions to the EGL Specification
     object is created. In this case the
     EGL_SYNC_METAL_SHARED_EVENT_OBJECT_ANGLE,
     EGL_SYNC_METAL_SHARED_EVENT_SIGNAL_VALUE_LO_ANGLE, and
-    EGL_SYNC_METAL_SHARED_EVENT_SIGNAL_VALUE_HI_ANGLE may be specified. If
-    EGL_SYNC_METAL_SHARED_EVENT_OBJECT_ANGLE is specified, it must be set to
-    either a valid MTLSharedEvent else EGL_NO_SYNC is returned and an
-    EGL_BAD_ATTRIBUTE error is generated.
+    EGL_SYNC_METAL_SHARED_EVENT_SIGNAL_VALUE_HI_ANGLE may be specified.
+
+    If EGL_SYNC_METAL_SHARED_EVENT_OBJECT_ANGLE attribute is specified, it must
+    be set to a pointer to a valid id<MTLSharedEvent>, or to a NULL pointer. If
+    EGL_SYNC_METAL_SHARED_EVENT_OBJECT_ANGLE is not specified, or is a NULL
+    pointer, the EGL implementation will create a Metal event
+    object. Additionally, the EGL implementation assumes ownership of the Metal
+    event object and will follow Objective-C behavior and increase the Metal
+    event object's retain count.
 
     EGL_SYNC_METAL_SHARED_EVENT_SIGNAL_VALUE_LO_ANGLE and
     EGL_SYNC_METAL_SHARED_EVENT_HI_ANGLE are optional attributes specifying the
@@ -104,13 +111,27 @@ Additions to the EGL Specification
      ------
     ..."
 
+    Add the following after the last paragraph of Section 3.8.1 (Sync Objects):
+
+    "The command
+
+         void* eglCopyMetalSharedEventANGLE(
+                                EGLDisplay dpy,
+                                EGLSync sync);
+
+    increases the retain count of the id<MTLSharedEvent> stored in the
+    EGL_SYNC_METAL_SHARED_EVENT_OBJECT_ANGLE attribute of an EGL metal shared
+    event sync object and returns a pointer to the event as a void* pointer. If
+    this returns a non-null value, the caller is responsible for releasing the
+    MTLSharedEvent once after calling this function."
+
 Issues
 
     1. What should the name be? METAL_EVENT_ANGLE? MTL or METAL?
-    2. Add language describing the behaviour of
-       EGL_SYNC_METAL_SHARED_EVENT_SIGNAL_VALUE_ANGLE.
 
 Revision History
 
     Version 1, 2022-05-17
       - Initial draft
+    Version 2, 2022-09-08
+      - Add eglCopyMetalSharedEventANGLE function

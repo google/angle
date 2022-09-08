@@ -51,6 +51,7 @@ const ProcEntry g_procTable[] = {
     {"eglClientWaitSync", P(EGL_ClientWaitSync)},
     {"eglClientWaitSyncKHR", P(EGL_ClientWaitSyncKHR)},
     {"eglCopyBuffers", P(EGL_CopyBuffers)},
+    {"eglCopyMetalSharedEventANGLE", P(EGL_CopyMetalSharedEventANGLE)},
     {"eglCreateContext", P(EGL_CreateContext)},
     {"eglCreateDeviceANGLE", P(EGL_CreateDeviceANGLE)},
     {"eglCreateImage", P(EGL_CreateImage)},

@@ -138,6 +138,12 @@ angle::Result Sync::getStatus(bool *signaled)
     *signaled = mMetalSharedEvent.get().signaledValue >= mSignalValue;
     return angle::Result::Continue;
 }
+
+void *Sync::copySharedEvent() const
+{
+    mtl::SharedEventRef copySharedEvent = mMetalSharedEvent;
+    return reinterpret_cast<void *>(copySharedEvent.leakObject());
+}
 #endif  // #if defined(__IPHONE_12_0) || defined(__MAC_10_14)
 }  // namespace mtl
 
@@ -272,9 +278,6 @@ egl::Error EGLSyncMtl::initialize(const egl::Display *display,
             ASSERT(!mSignalValue.valid());
             break;
         case EGL_SYNC_METAL_SHARED_EVENT_ANGLE:
-            if (!mSharedEvent)
-                return egl::Error(EGL_BAD_ATTRIBUTE,
-                                  "EGL_SYNC_METAL_SHARED_EVENT_ANGLE can't be NULL");
             break;
         default:
             UNREACHABLE();
@@ -351,6 +354,19 @@ egl::Error EGLSyncMtl::getStatus(const egl::Display *display, EGLint *outStatus)
 
     *outStatus = signaled ? EGL_SIGNALED_KHR : EGL_UNSIGNALED_KHR;
     return egl::NoError();
+}
+
+egl::Error EGLSyncMtl::copyMetalSharedEventANGLE(const egl::Display *display, void **result) const
+{
+    switch (mType)
+    {
+        case EGL_SYNC_METAL_SHARED_EVENT_ANGLE:
+            *result = mSync.copySharedEvent();
+            return egl::NoError();
+
+        default:
+            return egl::EglBadDisplay();
+    }
 }
 
 egl::Error EGLSyncMtl::dupNativeFenceFD(const egl::Display *display, EGLint *result) const

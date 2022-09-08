@@ -64,6 +64,11 @@ class EGLSyncTestMetalSharedEvent : public ANGLETest<>
     {
         return reinterpret_cast<EGLAttrib>(sharedEvent);
     }
+
+    id<MTLSharedEvent> sharedEventFromVoidPtr(void *ptr) const
+    {
+        return (__bridge id<MTLSharedEvent>)ptr;
+    }
 };
 
 // Test existing fence is created unsignaled
@@ -154,23 +159,6 @@ TEST_P(EGLSyncTestMetalSharedEvent, GetSyncAttrib)
     sharedEvent = nil;
 }
 
-// Verify CreateSync fails with out a valid EGL_SYNC_METAL_SHARED_OBJECT_ANGLE
-TEST_P(EGLSyncTestMetalSharedEvent, CreateError)
-{
-    ANGLE_SKIP_TEST_IF(!hasSyncMetalSharedEventExtension());
-
-    EGLDisplay display = getEGLWindow()->getDisplay();
-
-    EXPECT_EQ(EGL_NO_SYNC_KHR, eglCreateSync(display, EGL_SYNC_METAL_SHARED_EVENT_ANGLE, nullptr));
-    EXPECT_EGL_ERROR(EGL_BAD_ATTRIBUTE);
-
-    EGLAttrib syncAttribs[] = {EGL_SYNC_METAL_SHARED_EVENT_OBJECT_ANGLE, NULL, EGL_NONE};
-
-    EXPECT_EQ(EGL_NO_SYNC_KHR,
-              eglCreateSync(display, EGL_SYNC_METAL_SHARED_EVENT_ANGLE, syncAttribs));
-    EXPECT_EGL_ERROR(EGL_BAD_ATTRIBUTE);
-}
-
 // Verify CreateSync and ClientWait for EGL_ANGLE_metal_shared_event_sync
 TEST_P(EGLSyncTestMetalSharedEvent, AngleMetalSharedEventSync_ClientWait)
 {
@@ -250,6 +238,31 @@ TEST_P(EGLSyncTestMetalSharedEvent, AngleMetalSharedEventSync_ClientWait_WithSig
     // Clean up created objects.
     EXPECT_EGL_TRUE(eglDestroySync(display, syncWithSharedEvent));
     sharedEvent = nil;
+}
+
+// Verify eglCopyMetalSharedEventANGLE for EGL_ANGLE_metal_shared_event_sync
+TEST_P(EGLSyncTestMetalSharedEvent, AngleMetalSharedEventSync_CopyMetalSharedEventANGLE)
+{
+    ANGLE_SKIP_TEST_IF(!hasSyncMetalSharedEventExtension());
+
+    EGLDisplay display = getEGLWindow()->getDisplay();
+
+    // We can ClientWait on this
+    EGLSync syncWithGeneratedEvent =
+        eglCreateSyncKHR(display, EGL_SYNC_METAL_SHARED_EVENT_ANGLE, nullptr);
+    EXPECT_NE(syncWithGeneratedEvent, EGL_NO_SYNC_KHR);
+
+    id<MTLSharedEvent> sharedEvent =
+        sharedEventFromVoidPtr(eglCopyMetalSharedEventANGLE(display, syncWithGeneratedEvent));
+    EXPECT_EGL_SUCCESS();
+    EXPECT_EQ([sharedEvent retainCount], 3ul);
+
+    glFinish();
+    EXPECT_EGL_TRUE(eglDestroySync(display, syncWithGeneratedEvent));
+
+    // Clean up created objects.
+    EXPECT_EQ([sharedEvent retainCount], 1ul);
+    [sharedEvent release];
 }
 
 // Verify WaitSync with EGL_ANGLE_metal_shared_event_sync

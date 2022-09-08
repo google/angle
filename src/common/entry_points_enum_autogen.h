@@ -136,6 +136,7 @@ enum class EntryPoint
     EGLClientWaitSync,
     EGLClientWaitSyncKHR,
     EGLCopyBuffers,
+    EGLCopyMetalSharedEventANGLE,
     EGLCreateContext,
     EGLCreateDeviceANGLE,
     EGLCreateImage,

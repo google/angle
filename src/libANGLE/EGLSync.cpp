@@ -101,6 +101,11 @@ Error Sync::getStatus(const Display *display, EGLint *outStatus) const
     return mFence->getStatus(display, outStatus);
 }
 
+Error Sync::copyMetalSharedEventANGLE(const Display *display, void **result) const
+{
+    return mFence->copyMetalSharedEventANGLE(display, result);
+}
+
 Error Sync::dupNativeFenceFD(const Display *display, EGLint *result) const
 {
     return mFence->dupNativeFenceFD(display, result);

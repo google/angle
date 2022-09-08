@@ -6110,6 +6110,23 @@ bool ValidateCreateNativeClientBufferANDROID(const ValidationContext *val,
     return true;
 }
 
+bool ValidateCopyMetalSharedEventANGLE(const ValidationContext *val,
+                                       const Display *display,
+                                       const Sync *sync)
+{
+    ANGLE_VALIDATION_TRY(ValidateDisplay(val, display));
+
+    if (!display->getExtensions().mtlSyncSharedEventANGLE)
+    {
+        val->setError(EGL_BAD_DISPLAY, "EGL_ANGLE_metal_shared_event_sync is not available.");
+        return false;
+    }
+
+    ANGLE_VALIDATION_TRY(ValidateSync(val, display, sync));
+
+    return true;
+}
+
 bool ValidateDupNativeFenceFDANDROID(const ValidationContext *val,
                                      const Display *display,
                                      const Sync *sync)

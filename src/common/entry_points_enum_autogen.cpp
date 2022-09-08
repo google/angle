@@ -260,6 +260,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "eglClientWaitSyncKHR";
         case EntryPoint::EGLCopyBuffers:
             return "eglCopyBuffers";
+        case EntryPoint::EGLCopyMetalSharedEventANGLE:
+            return "eglCopyMetalSharedEventANGLE";
         case EntryPoint::EGLCreateContext:
             return "eglCreateContext";
         case EntryPoint::EGLCreateDeviceANGLE:

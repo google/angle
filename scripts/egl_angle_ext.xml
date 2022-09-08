@@ -131,6 +131,11 @@
             <param><ptype>void *</ptype> <name>vk_image</name></param>
             <param><ptype>void *</ptype> <name>vk_image_create_info</name></param>
         </command>
+        <command>
+            <proto><ptype>void *</ptype> <name>eglCopyMetalSharedEventANGLE</name></proto>
+            <param><ptype>EGLDisplay</ptype> <name>dpy</name></param>
+            <param><ptype>EGLSyncKHR</ptype> <name>sync</name></param>
+        </command>
     </commands>
     <!-- SECTION: ANGLE extension interface definitions -->
     <extensions>
@@ -452,6 +457,7 @@
         </extension>
         <extension name="EGL_ANGLE_metal_shared_event_sync" supported="egl">
             <require>
+                <command name="eglCopyMetalSharedEventANGLE"/>
                 <enum name="EGL_SYNC_METAL_SHARED_EVENT_ANGLE"/>
                 <enum name="EGL_SYNC_METAL_SHARED_EVENT_OBJECT_ANGLE"/>
                 <enum name="EGL_SYNC_METAL_SHARED_EVENT_SIGNAL_VALUE_LO_ANGLE"/>

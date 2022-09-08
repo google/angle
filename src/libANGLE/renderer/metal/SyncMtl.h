@@ -60,6 +60,8 @@ class Sync
     void serverWait(ContextMtl *contextMtl);
     angle::Result getStatus(bool *signaled);
 
+    void *copySharedEvent() const;
+
   private:
     SharedEventRef mMetalSharedEvent;
     uint64_t mSignalValue = 0;
@@ -96,6 +98,12 @@ class Sync
     {
         UNREACHABLE();
         return angle::Result::Stop;
+    }
+
+    void *copySharedEvent() const
+    {
+        UNREACHABLE();
+        return nullptr;
     }
 };
 #endif  // #if defined(__IPHONE_12_0) || defined(__MAC_10_14)
@@ -158,6 +166,7 @@ class EGLSyncMtl final : public EGLSyncImpl
                           EGLint flags) override;
     egl::Error getStatus(const egl::Display *display, EGLint *outStatus) override;
 
+    egl::Error copyMetalSharedEventANGLE(const egl::Display *display, void **result) const override;
     egl::Error dupNativeFenceFD(const egl::Display *display, EGLint *result) const override;
 
   private:
