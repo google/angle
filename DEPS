@@ -2335,6 +2335,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_traces',
   },
+  'src/tests/restricted_traces/zombie_smasher': {
+      'packages': [
+        {
+            'package': 'angle/traces/zombie_smasher',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_traces',
+  },
   # === ANGLE Restricted Trace Generated Code End ===
 
   # === ANDROID_DEPS Generated Code Start ===
