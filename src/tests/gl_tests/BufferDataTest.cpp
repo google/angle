@@ -885,7 +885,14 @@ void main()
 
     EXPECT_PIXEL_COLOR_EQ(1, 1, GLColor::red);
     EXPECT_PIXEL_COLOR_EQ(1, 3, GLColor::red);
-    EXPECT_PIXEL_COLOR_EQ(3, 3, GLColor::green);
+
+    // The result below is undefined. The glBufferData at the top puts
+    // [red, red, red, ..., zero, zero, zero, ...]
+    // in the buffer and the glMap,glUnmap tries to overwrite the zeros with green
+    // but because UNSYNCHRONIZED was passed in there's no guarantee those
+    // zeros have been written yet. If they haven't they'll overwrite the
+    // greens.
+    // EXPECT_PIXEL_COLOR_EQ(3, 3, GLColor::green);
 }
 
 // Verify that we can map and write the buffer between draws and the second draw sees the new buffer
