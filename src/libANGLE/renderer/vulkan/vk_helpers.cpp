@@ -371,9 +371,14 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
         ImageMemoryBarrierData{
             "Present",
             VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
+            // Transition to: do not delay execution of commands in the second synchronization
+            // scope. Allow layout transition to be delayed until present semaphore is signaled.
             VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
-            VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-            // transition to: vkQueuePresentKHR automatically performs the appropriate memory barriers:
+            // Transition from: use same stages as in Acquire Image Semaphore stage mask in order to
+            // build a dependency chain from the Acquire Image Semaphore to the layout transition's
+            // first synchronization scope.
+            kSwapchainAcquireImageWaitStageFlags,
+            // Transition to: vkQueuePresentKHR automatically performs the appropriate memory barriers:
             //
             // > Any writes to memory backing the images referenced by the pImageIndices and
             // > pSwapchains members of pPresentInfo, that are available before vkQueuePresentKHR

@@ -2262,7 +2262,7 @@ void WindowSurfaceVk::flushAcquireImageSemaphore(const gl::Context *context)
     ASSERT(mAcquireImageSemaphore);
     ContextVk *contextVk = vk::GetImpl(context);
     contextVk->addWaitSemaphore(mAcquireImageSemaphore->getHandle(),
-                                VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT);
+                                vk::kSwapchainAcquireImageWaitStageFlags);
     mAcquireImageSemaphore = nullptr;
 }
 

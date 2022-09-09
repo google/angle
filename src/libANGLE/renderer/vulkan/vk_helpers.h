@@ -43,6 +43,11 @@ constexpr VkImageCreateFlags kVkImageCreateFlagsNone = 0;
 
 constexpr VkFilter kDefaultYCbCrChromaFilter = VK_FILTER_NEAREST;
 
+constexpr VkPipelineStageFlags kSwapchainAcquireImageWaitStageFlags =
+    VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT |          // First use is a blit command.
+    VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT |  // First use is a draw command.
+    VK_PIPELINE_STAGE_TRANSFER_BIT;                  // First use is a clear without scissor.
+
 using StagingBufferOffsetArray = std::array<VkDeviceSize, 2>;
 
 // A dynamic buffer is conceptually an infinitely long buffer. Each time you write to the buffer,
