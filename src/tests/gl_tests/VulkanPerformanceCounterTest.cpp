@@ -1984,9 +1984,9 @@ TEST_P(VulkanPerformanceCounterTest, DepthStencilInvalidateDisableDraw)
     angle::VulkanPerfCounters expected;
 
     // Expect rpCount+1, depth(Clears+1, Loads+0, LoadNones+0, Stores+0, StoreNones+0),
-    // stencil(Clears+0, Loads+0, LoadNones+1, Stores+0, StoreNones+1)
+    // stencil(Clears+0, Loads+0, LoadNones+0, Stores+0, StoreNones+0)
     setExpectedCountersForDepthOps(getPerfCounters(), 1, 1, 0, 0, 0, 0, &expected);
-    setExpectedCountersForStencilOps(getPerfCounters(), 0, 0, 1, 0, 1, &expected);
+    setExpectedCountersForStencilOps(getPerfCounters(), 0, 0, 0, 0, 0, &expected);
 
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
     GLFramebuffer framebuffer;
@@ -2035,9 +2035,9 @@ TEST_P(VulkanPerformanceCounterTest, DisableInvalidateDraw)
     angle::VulkanPerfCounters expected;
 
     // Expect rpCount+1, depth(Clears+1, Loads+0, LoadNones+0, Stores+0, StoreNones+0),
-    // stencil(Clears+0, Loads+0, LoadNones+1, Stores+0, StoreNones+1)
+    // stencil(Clears+0, Loads+0, LoadNones+0, Stores+0, StoreNones+0)
     setExpectedCountersForDepthOps(getPerfCounters(), 1, 1, 0, 0, 0, 0, &expected);
-    setExpectedCountersForStencilOps(getPerfCounters(), 0, 0, 1, 0, 1, &expected);
+    setExpectedCountersForStencilOps(getPerfCounters(), 0, 0, 0, 0, 0, &expected);
 
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
     GLFramebuffer framebuffer;
@@ -2086,9 +2086,9 @@ TEST_P(VulkanPerformanceCounterTest, DisableDrawInvalidateEnable)
     angle::VulkanPerfCounters expected;
 
     // Expect rpCount+1, depth(Clears+1, Loads+0, LoadNones+0, Stores+0, StoreNones+0),
-    // stencil(Clears+0, Loads+0, LoadNones+1, Stores+0, StoreNones+1)
+    // stencil(Clears+0, Loads+0, LoadNones+0, Stores+0, StoreNones+0)
     setExpectedCountersForDepthOps(getPerfCounters(), 1, 1, 0, 0, 0, 0, &expected);
-    setExpectedCountersForStencilOps(getPerfCounters(), 0, 0, 1, 0, 1, &expected);
+    setExpectedCountersForStencilOps(getPerfCounters(), 0, 0, 0, 0, 0, &expected);
 
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
     GLFramebuffer framebuffer;
@@ -2148,9 +2148,9 @@ TEST_P(VulkanPerformanceCounterTest, DepthStencilInvalidate)
     angle::VulkanPerfCounters expected;
 
     // Expect rpCount+1, depth(Clears+1, Loads+0, LoadNones+0, Stores+0, StoreNones+0),
-    // stencil(Clears+0, Loads+0, LoadNones+1, Stores+0, StoreNones+1)
+    // stencil(Clears+0, Loads+0, LoadNones+0, Stores+0, StoreNones+0)
     setExpectedCountersForDepthOps(getPerfCounters(), 1, 1, 0, 0, 0, 0, &expected);
-    setExpectedCountersForStencilOps(getPerfCounters(), 0, 0, 1, 0, 1, &expected);
+    setExpectedCountersForStencilOps(getPerfCounters(), 0, 0, 0, 0, 0, &expected);
 
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
     GLFramebuffer framebuffer;
@@ -2190,9 +2190,9 @@ TEST_P(VulkanPerformanceCounterTest, DepthStencilInvalidateSub)
     angle::VulkanPerfCounters expected;
 
     // Expect rpCount+1, depth(Clears+1, Loads+0, LoadNones+0, Stores+0, StoreNones+0),
-    // stencil(Clears+0, Loads+0, LoadNones+1, Stores+0, StoreNones+1)
+    // stencil(Clears+0, Loads+0, LoadNones+0, Stores+0, StoreNones+0)
     setExpectedCountersForDepthOps(getPerfCounters(), 1, 1, 0, 0, 0, 0, &expected);
-    setExpectedCountersForStencilOps(getPerfCounters(), 0, 0, 1, 0, 1, &expected);
+    setExpectedCountersForStencilOps(getPerfCounters(), 0, 0, 0, 0, 0, &expected);
 
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
     GLFramebuffer framebuffer;
@@ -2308,9 +2308,9 @@ TEST_P(VulkanPerformanceCounterTest, DepthStencilInvalidateDraw)
     angle::VulkanPerfCounters expected;
 
     // Expect rpCount+1, depth(Clears+1, Loads+0, LoadNones+0, Stores+1, StoreNones+0),
-    // stencil(Clears+0, Loads+0, LoadNones+1, Stores+0, StoreNones+1)
+    // stencil(Clears+0, Loads+0, LoadNones+0, Stores+0, StoreNones+0)
     setExpectedCountersForDepthOps(getPerfCounters(), 1, 1, 0, 0, 1, 0, &expected);
-    setExpectedCountersForStencilOps(getPerfCounters(), 0, 0, 1, 0, 1, &expected);
+    setExpectedCountersForStencilOps(getPerfCounters(), 0, 0, 0, 0, 0, &expected);
 
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
     GLFramebuffer framebuffer;
@@ -2412,9 +2412,9 @@ TEST_P(VulkanPerformanceCounterTest, DepthStencilInvalidateDisableDrawEnable)
     angle::VulkanPerfCounters expected;
 
     // Expect rpCount+1, depth(Clears+1, Loads+0, LoadNones+0, Stores+0, StoreNones+0),
-    // stencil(Clears+0, Loads+0, LoadNones+1, Stores+0, StoreNones+1)
+    // stencil(Clears+0, Loads+0, LoadNones+0, Stores+0, StoreNones+0)
     setExpectedCountersForDepthOps(getPerfCounters(), 1, 1, 0, 0, 0, 0, &expected);
-    setExpectedCountersForStencilOps(getPerfCounters(), 0, 0, 1, 0, 1, &expected);
+    setExpectedCountersForStencilOps(getPerfCounters(), 0, 0, 0, 0, 0, &expected);
 
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
     GLFramebuffer framebuffer;
@@ -2589,9 +2589,9 @@ TEST_P(VulkanPerformanceCounterTest, DepthStencilInvalidateDrawDisableEnableInva
     angle::VulkanPerfCounters expected;
 
     // Expect rpCount+1, depth(Clears+1, Loads+0, LoadNones+0, Stores+0, StoreNones+0),
-    // stencil(Clears+0, Loads+0, LoadNones+1, Stores+0, StoreNones+1)
+    // stencil(Clears+0, Loads+0, LoadNones+0, Stores+0, StoreNones+0)
     setExpectedCountersForDepthOps(getPerfCounters(), 1, 1, 0, 0, 0, 0, &expected);
-    setExpectedCountersForStencilOps(getPerfCounters(), 0, 0, 1, 0, 1, &expected);
+    setExpectedCountersForStencilOps(getPerfCounters(), 0, 0, 0, 0, 0, &expected);
 
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
     GLFramebuffer framebuffer;
@@ -2651,9 +2651,9 @@ TEST_P(VulkanPerformanceCounterTest, DepthStencilInvalidateDrawDisableEnableInva
     angle::VulkanPerfCounters expected;
 
     // Expect rpCount+1, depth(Clears+1, Loads+0, LoadNones+0, Stores+1, StoreNones+0),
-    // stencil(Clears+0, Loads+0, LoadNones+1, Stores+0, StoreNones+1)
+    // stencil(Clears+0, Loads+0, LoadNones+0, Stores+0, StoreNones+0)
     setExpectedCountersForDepthOps(getPerfCounters(), 1, 1, 0, 0, 1, 0, &expected);
-    setExpectedCountersForStencilOps(getPerfCounters(), 0, 0, 1, 0, 1, &expected);
+    setExpectedCountersForStencilOps(getPerfCounters(), 0, 0, 0, 0, 0, &expected);
 
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
     GLFramebuffer framebuffer;
@@ -2773,9 +2773,9 @@ TEST_P(VulkanPerformanceCounterTest, DepthStencilInvalidateAndClear)
     angle::VulkanPerfCounters expected;
 
     // Expect rpCount+1, depth(Clears+1, Loads+0, LoadNones+0, Stores+1, StoreNones+0),
-    // stencil(Clears+0, Loads+0, LoadNones+1, Stores+0, StoreNones+1)
+    // stencil(Clears+0, Loads+0, LoadNones+0, Stores+0, StoreNones+0)
     setExpectedCountersForDepthOps(getPerfCounters(), 1, 1, 0, 0, 1, 0, &expected);
-    setExpectedCountersForStencilOps(getPerfCounters(), 0, 0, 1, 0, 1, &expected);
+    setExpectedCountersForStencilOps(getPerfCounters(), 0, 0, 0, 0, 0, &expected);
 
     // Clear should vkCmdClearAttachments
     expected.depthClearAttachments = getPerfCounters().depthClearAttachments + 1;
@@ -3043,9 +3043,9 @@ TEST_P(VulkanPerformanceCounterTest, DepthStencilInvalidateDetachModifyTexAttach
     angle::VulkanPerfCounters expected;
 
     // Expect rpCount+1, depth(Clears+1, Loads+0, LoadNones+0, Stores+0, StoreNones+0),
-    // stencil(Clears+0, Loads+0, LoadNones+1, Stores+0, StoreNones+1)
+    // stencil(Clears+0, Loads+0, LoadNones+0, Stores+0, StoreNones+0)
     setExpectedCountersForDepthOps(getPerfCounters(), 1, 1, 0, 0, 0, 0, &expected);
-    setExpectedCountersForStencilOps(getPerfCounters(), 0, 0, 1, 0, 1, &expected);
+    setExpectedCountersForStencilOps(getPerfCounters(), 0, 0, 0, 0, 0, &expected);
 
     ANGLE_GL_PROGRAM(redProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
     ANGLE_GL_PROGRAM(greenProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
@@ -3142,9 +3142,9 @@ TEST_P(VulkanPerformanceCounterTest, DepthStencilInvalidateDrawAndDeleteRenderbu
     angle::VulkanPerfCounters expected;
 
     // Expect rpCount+1, depth(Clears+1, Loads+0, LoadNones+0, Stores+1, StoreNones+0),
-    // stencil(Clears+0, Loads+0, LoadNones+1, Stores+0, StoreNones+1)
+    // stencil(Clears+0, Loads+0, LoadNones+0, Stores+0, StoreNones+0)
     setExpectedCountersForDepthOps(getPerfCounters(), 1, 1, 0, 0, 1, 0, &expected);
-    setExpectedCountersForStencilOps(getPerfCounters(), 0, 0, 1, 0, 1, &expected);
+    setExpectedCountersForStencilOps(getPerfCounters(), 0, 0, 0, 0, 0, &expected);
 
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
     GLFramebuffer framebuffer;
