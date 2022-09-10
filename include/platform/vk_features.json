@@ -1022,6 +1022,13 @@
             "description": [
                 "VkDisplay supports presentation through a present family queue"
             ]
+        },
+        {
+            "name": "supports_compute_transcode_etc_to_bc",
+            "category": "Features",
+            "description": [
+                 "supports compute shader transcode etc format to bc format"
+            ]
         }
     ]
 }

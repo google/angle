@@ -260,6 +260,11 @@ class UtilsVk : angle::NonCopyable
                                 vk::ImageHelper *src,
                                 const CopyImageBitsParameters &params);
 
+    angle::Result transCodeEtcToBc(ContextVk *contextVk,
+                                   vk::BufferHelper *srcBuffer,
+                                   vk::ImageHelper *dstImage,
+                                   const VkBufferImageCopy *copyRegion);
+
     using GenerateMipmapDestLevelViews =
         std::array<const vk::ImageView *, kGenerateMipmapMaxLevels>;
     angle::Result generateMipmap(ContextVk *contextVk,
@@ -422,6 +427,18 @@ class UtilsVk : angle::NonCopyable
         uint32_t levelCount   = 0;
     };
 
+    struct EtcToBcShaderParams
+    {
+        uint32_t offsetX;
+        uint32_t offsetY;
+        int32_t texelOffset;
+        uint32_t width;
+        uint32_t height;
+        uint32_t alphaBits;
+        uint32_t isSigned;
+        uint32_t isEacRg;
+    };
+
     ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
 
     // Functions implemented by the class:
@@ -454,9 +471,10 @@ class UtilsVk : angle::NonCopyable
         ConvertIndexIndirectLineLoopBuffer = 18,
         ConvertIndirectLineLoopBuffer      = 19,
         GenerateMipmap                     = 20,
+        TransCodeEtcToBc                   = 21,
 
-        InvalidEnum = 21,
-        EnumCount   = 21,
+        InvalidEnum = 22,
+        EnumCount   = 22,
     };
 
     // Common functions that create the pipeline for the specified function, binds it and prepares
@@ -505,6 +523,7 @@ class UtilsVk : angle::NonCopyable
     angle::Result ensureBlitResolveStencilNoExportResourcesInitialized(ContextVk *contextVk);
     angle::Result ensureOverlayDrawResourcesInitialized(ContextVk *contextVk);
     angle::Result ensureGenerateMipmapResourcesInitialized(ContextVk *contextVk);
+    angle::Result ensureTransCodeEtcToBcResourcesInitialized(ContextVk *contextVk);
     angle::Result ensureUnresolveResourcesInitialized(ContextVk *contextVk,
                                                       Function function,
                                                       uint32_t attachmentIndex);
@@ -562,6 +581,7 @@ class UtilsVk : angle::NonCopyable
     vk::ShaderProgramHelper mOverlayDrawProgram;
     vk::ShaderProgramHelper
         mGenerateMipmapPrograms[vk::InternalShader::GenerateMipmap_comp::kArrayLen];
+    vk::ShaderProgramHelper mEtcToBcPrograms[vk::InternalShader::EtcToBc_comp::kArrayLen];
 
     // Unresolve shaders are special as they are generated on the fly due to the large number of
     // combinations.

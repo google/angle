@@ -4702,7 +4702,6 @@ void BufferHelper::release(RendererVk *renderer)
     {
         renderer->collectSuballocationGarbage(mReadOnlyUse, std::move(mSuballocation),
                                               std::move(mBufferForVertexArray));
-
         if (mReadWriteUse.isCurrentlyInUse(renderer->getLastCompletedQueueSerial()))
         {
             mReadWriteUse.release();
@@ -5587,11 +5586,13 @@ angle::Result ImageHelper::initImageView(Context *context,
                                          const gl::SwizzleState &swizzleMap,
                                          ImageView *imageViewOut,
                                          LevelIndex baseMipLevelVk,
-                                         uint32_t levelCount)
+                                         uint32_t levelCount,
+                                         VkImageUsageFlags imageUsageFlags)
 {
     return initLayerImageView(context, textureType, aspectMask, swizzleMap, imageViewOut,
                               baseMipLevelVk, levelCount, 0, mLayerCount,
-                              gl::SrgbWriteControlMode::Default, gl::YuvSamplingMode::Default);
+                              gl::SrgbWriteControlMode::Default, gl::YuvSamplingMode::Default,
+                              imageUsageFlags);
 }
 
 angle::Result ImageHelper::initLayerImageView(Context *context,
@@ -5604,7 +5605,8 @@ angle::Result ImageHelper::initLayerImageView(Context *context,
                                               uint32_t baseArrayLayer,
                                               uint32_t layerCount,
                                               gl::SrgbWriteControlMode srgbWriteControlMode,
-                                              gl::YuvSamplingMode yuvSamplingMode) const
+                                              gl::YuvSamplingMode yuvSamplingMode,
+                                              VkImageUsageFlags imageUsageFlags) const
 {
     angle::FormatID actualFormat = mActualFormatID;
 
@@ -5622,7 +5624,8 @@ angle::Result ImageHelper::initLayerImageView(Context *context,
 
     return initLayerImageViewImpl(context, textureType, aspectMask, swizzleMap, imageViewOut,
                                   baseMipLevelVk, levelCount, baseArrayLayer, layerCount,
-                                  GetVkFormatFromFormatID(actualFormat), 0, yuvSamplingMode);
+                                  GetVkFormatFromFormatID(actualFormat), imageUsageFlags,
+                                  yuvSamplingMode);
 }
 
 angle::Result ImageHelper::initLayerImageViewImpl(Context *context,
@@ -7885,6 +7888,11 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
     }
 
     ASSERT(validateSubresourceUpdateRefCountsConsistent());
+    const angle::FormatID &actualformat   = getActualFormatID();
+    const angle::FormatID &intendedFormat = getIntendedFormatID();
+    bool transCoding =
+        contextVk->getRenderer()->getFeatures().supportsComputeTranscodeEtcToBc.enabled &&
+        IsETCFormat(intendedFormat) && IsBCFormat(actualformat);
 
     const VkImageAspectFlags aspectFlags = GetFormatAspectFlags(getActualFormat());
 
@@ -7902,8 +7910,16 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
     // done with fine granularity as updates are applied.  This is achieved by specifying a layer
     // that is outside the tracking range.
     CommandBufferAccess access;
-    access.onImageTransferWrite(levelGLStart, 1, kMaxContentDefinedLayerCount, 0, aspectFlags,
-                                this);
+    if (!transCoding)
+    {
+        access.onImageTransferWrite(levelGLStart, 1, kMaxContentDefinedLayerCount, 0, aspectFlags,
+                                    this);
+    }
+    else
+    {
+        access.onImageComputeShaderWrite(levelGLStart, 1, kMaxContentDefinedLayerCount, 0,
+                                         aspectFlags, this);
+    }
 
     OutsideRenderPassCommandBuffer *commandBuffer;
     ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(access, &commandBuffer));
@@ -7951,6 +7967,10 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
                 continue;
             }
 
+            // It seems we haven't fully support glCopyImageSubData
+            // when compressed format emulated by uncompressed format.
+            // make assumption that there is no data source come from image.
+            ASSERT(!transCoding || (transCoding && update.updateSource == UpdateSource::Buffer));
             // The updates were holding gl::LevelIndex values so that they would not need
             // modification when the base level of the texture changes.  Now that the update is
             // about to take effect, we need to change miplevel to LevelIndex.
@@ -7983,7 +8003,10 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
             if (updateLayerCount >= kMaxParallelSubresourceUpload)
             {
                 // If there are more subresources than bits we can track, always insert a barrier.
-                recordWriteBarrier(contextVk, aspectFlags, ImageLayout::TransferDst, commandBuffer);
+                recordWriteBarrier(
+                    contextVk, aspectFlags,
+                    transCoding ? ImageLayout::ComputeShaderWrite : ImageLayout::TransferDst,
+                    commandBuffer);
                 subresourceUploadsInProgress = std::numeric_limits<uint64_t>::max();
             }
             else
@@ -7997,8 +8020,10 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
                 if ((subresourceUploadsInProgress & subresourceHash) != 0)
                 {
                     // If there's overlap in subresource upload, issue a barrier.
-                    recordWriteBarrier(contextVk, aspectFlags, ImageLayout::TransferDst,
-                                       commandBuffer);
+                    recordWriteBarrier(
+                        contextVk, aspectFlags,
+                        transCoding ? ImageLayout::ComputeShaderWrite : ImageLayout::TransferDst,
+                        commandBuffer);
                     subresourceUploadsInProgress = 0;
                 }
                 subresourceUploadsInProgress |= subresourceHash;
@@ -8042,13 +8067,24 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
                 ANGLE_TRY(currentBuffer->flush(renderer));
 
                 CommandBufferAccess bufferAccess;
-                bufferAccess.onBufferTransferRead(currentBuffer);
-                ANGLE_TRY(
-                    contextVk->getOutsideRenderPassCommandBuffer(bufferAccess, &commandBuffer));
-
                 VkBufferImageCopy *copyRegion = &update.data.buffer.copyRegion;
-                commandBuffer->copyBufferToImage(currentBuffer->getBuffer().getHandle(), mImage,
-                                                 getCurrentLayout(), 1, copyRegion);
+
+                if (transCoding)
+                {
+                    bufferAccess.onBufferComputeShaderRead(currentBuffer);
+                    ANGLE_TRY(
+                        contextVk->getOutsideRenderPassCommandBuffer(bufferAccess, &commandBuffer));
+                    ANGLE_TRY(contextVk->getUtils().transCodeEtcToBc(contextVk, currentBuffer, this,
+                                                                     copyRegion));
+                }
+                else
+                {
+                    bufferAccess.onBufferTransferRead(currentBuffer);
+                    ANGLE_TRY(
+                        contextVk->getOutsideRenderPassCommandBuffer(bufferAccess, &commandBuffer));
+                    commandBuffer->copyBufferToImage(currentBuffer->getBuffer().getHandle(), mImage,
+                                                     getCurrentLayout(), 1, copyRegion);
+                }
                 ANGLE_TRY(contextVk->onCopyUpdate(currentBuffer->getSize()));
                 onWrite(updateMipLevelGL, 1, updateBaseLayer, updateLayerCount,
                         copyRegion->imageSubresource.aspectMask);
@@ -9322,7 +9358,6 @@ void ImageHelper::appendSubresourceUpdate(gl::LevelIndex level, SubresourceUpdat
     {
         mSubresourceUpdates.resize(level.get() + 1);
     }
-
     // Update total staging buffer size
     mTotalStagedBufferUpdateSize += update.updateSource == UpdateSource::Buffer
                                         ? update.data.buffer.bufferHelper->getSize()
@@ -9353,9 +9388,9 @@ bool ImageHelper::hasEmulatedImageChannels() const
     const angle::Format &textureFmt = getActualFormat();
 
     // Block formats may be decoded and emulated with a non-block format.
-    if (angleFmt.isBlock && !textureFmt.isBlock)
+    if (angleFmt.isBlock)
     {
-        return true;
+        return !textureFmt.isBlock;
     }
 
     // The red channel is never emulated.
@@ -9624,7 +9659,7 @@ angle::Result ImageViewHelper::initReadViews(ContextVk *contextVk,
 
     // Since we don't have a readImageView, we must create ImageViews for the new max level
     ANGLE_TRY(initReadViewsImpl(contextVk, viewType, image, formatSwizzle, readSwizzle, baseLevel,
-                                levelCount, baseLayer, layerCount));
+                                levelCount, baseLayer, layerCount, imageUsageFlags));
 
     if (requiresSRGBViews)
     {
@@ -9644,7 +9679,8 @@ angle::Result ImageViewHelper::initReadViewsImpl(ContextVk *contextVk,
                                                  LevelIndex baseLevel,
                                                  uint32_t levelCount,
                                                  uint32_t baseLayer,
-                                                 uint32_t layerCount)
+                                                 uint32_t layerCount,
+                                                 VkImageUsageFlags imageUsageFlags)
 {
     ASSERT(mImageViewSerial.valid());
 
@@ -9656,23 +9692,23 @@ angle::Result ImageViewHelper::initReadViewsImpl(ContextVk *contextVk,
         ANGLE_TRY(image.initLayerImageView(contextVk, viewType, VK_IMAGE_ASPECT_DEPTH_BIT,
                                            readSwizzle, &getReadImageView(), baseLevel, levelCount,
                                            baseLayer, layerCount, gl::SrgbWriteControlMode::Default,
-                                           gl::YuvSamplingMode::Default));
+                                           gl::YuvSamplingMode::Default, imageUsageFlags));
         ANGLE_TRY(image.initLayerImageView(
             contextVk, viewType, VK_IMAGE_ASPECT_STENCIL_BIT, readSwizzle,
             &mPerLevelRangeStencilReadImageViews[mCurrentBaseMaxLevelHash], baseLevel, levelCount,
-            baseLayer, layerCount, gl::SrgbWriteControlMode::Default,
-            gl::YuvSamplingMode::Default));
+            baseLayer, layerCount, gl::SrgbWriteControlMode::Default, gl::YuvSamplingMode::Default,
+            imageUsageFlags));
     }
     else
     {
         ANGLE_TRY(image.initLayerImageView(contextVk, viewType, aspectFlags, readSwizzle,
                                            &getReadImageView(), baseLevel, levelCount, baseLayer,
                                            layerCount, gl::SrgbWriteControlMode::Default,
-                                           gl::YuvSamplingMode::Default));
+                                           gl::YuvSamplingMode::Default, imageUsageFlags));
         ANGLE_TRY(image.initLayerImageView(
             contextVk, viewType, aspectFlags, readSwizzle, &getSamplerExternal2DY2YEXTImageView(),
             baseLevel, levelCount, baseLayer, layerCount, gl::SrgbWriteControlMode::Default,
-            gl::YuvSamplingMode::Y2Y));
+            gl::YuvSamplingMode::Y2Y, imageUsageFlags));
     }
 
     gl::TextureType fetchType = viewType;
@@ -9685,13 +9721,13 @@ angle::Result ImageViewHelper::initReadViewsImpl(ContextVk *contextVk,
         ANGLE_TRY(image.initLayerImageView(contextVk, fetchType, aspectFlags, readSwizzle,
                                            &getFetchImageView(), baseLevel, levelCount, baseLayer,
                                            layerCount, gl::SrgbWriteControlMode::Default,
-                                           gl::YuvSamplingMode::Default));
+                                           gl::YuvSamplingMode::Default, imageUsageFlags));
     }
 
     ANGLE_TRY(image.initLayerImageView(contextVk, fetchType, aspectFlags, formatSwizzle,
                                        &getCopyImageView(), baseLevel, levelCount, baseLayer,
                                        layerCount, gl::SrgbWriteControlMode::Default,
-                                       gl::YuvSamplingMode::Default));
+                                       gl::YuvSamplingMode::Default, imageUsageFlags));
 
     return angle::Result::Continue;
 }
@@ -9871,7 +9907,8 @@ angle::Result ImageViewHelper::getLevelDrawImageView(Context *context,
     gl::TextureType viewType = Get2DTextureType(layerCount, image.getSamples());
     return image.initLayerImageView(context, viewType, image.getAspectFlags(), gl::SwizzleState(),
                                     view.get(), levelVk, 1, layer, layerCount, mode,
-                                    gl::YuvSamplingMode::Default);
+                                    gl::YuvSamplingMode::Default,
+                                    vk::ImageHelper::kDefaultImageViewUsageFlags);
 }
 
 angle::Result ImageViewHelper::getLevelLayerDrawImageView(Context *context,
@@ -9903,9 +9940,9 @@ angle::Result ImageViewHelper::getLevelLayerDrawImageView(Context *context,
     // Note that these views are specifically made to be used as framebuffer attachments, and
     // therefore don't have swizzle.
     gl::TextureType viewType = Get2DTextureType(1, image.getSamples());
-    return image.initLayerImageView(context, viewType, image.getAspectFlags(), gl::SwizzleState(),
-                                    imageView, levelVk, 1, layer, 1, mode,
-                                    gl::YuvSamplingMode::Default);
+    return image.initLayerImageView(
+        context, viewType, image.getAspectFlags(), gl::SwizzleState(), imageView, levelVk, 1, layer,
+        1, mode, gl::YuvSamplingMode::Default, vk::ImageHelper::kDefaultImageViewUsageFlags);
 }
 
 ImageOrBufferViewSubresourceSerial ImageViewHelper::getSubresourceSerial(

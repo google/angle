@@ -212,6 +212,7 @@ enum class Feature
     SupportsAndroidNativeFenceSync,
     SupportsBlendOperationAdvanced,
     SupportsColorWriteEnable,
+    SupportsComputeTranscodeEtcToBc,
     SupportsCustomBorderColor,
     SupportsDepthClipControl,
     SupportsDepthStencilResolve,

@@ -226,6 +226,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::SupportsAndroidNativeFenceSync, "supportsAndroidNativeFenceSync"},
     {Feature::SupportsBlendOperationAdvanced, "supportsBlendOperationAdvanced"},
     {Feature::SupportsColorWriteEnable, "supportsColorWriteEnable"},
+    {Feature::SupportsComputeTranscodeEtcToBc, "supportsComputeTranscodeEtcToBc"},
     {Feature::SupportsCustomBorderColor, "supportsCustomBorderColor"},
     {Feature::SupportsDepthClipControl, "supportsDepthClipControl"},
     {Feature::SupportsDepthStencilResolve, "supportsDepthStencilResolve"},

@@ -29,6 +29,7 @@ namespace BlitResolve_frag                  = vk::InternalShader::BlitResolve_fr
 namespace BlitResolveStencilNoExport_comp   = vk::InternalShader::BlitResolveStencilNoExport_comp;
 namespace ConvertIndexIndirectLineLoop_comp = vk::InternalShader::ConvertIndexIndirectLineLoop_comp;
 namespace GenerateMipmap_comp               = vk::InternalShader::GenerateMipmap_comp;
+namespace EtcToBc_comp                      = vk::InternalShader::EtcToBc_comp;
 
 namespace spirv = angle::spirv;
 
@@ -1176,7 +1177,10 @@ void UtilsVk::destroy(RendererVk *renderer)
     {
         program.destroy(renderer);
     }
-
+    for (vk::ShaderProgramHelper &program : mEtcToBcPrograms)
+    {
+        program.destroy(renderer);
+    }
     for (auto &programIter : mUnresolvePrograms)
     {
         vk::ShaderProgramHelper &program = programIter.second;
@@ -1443,6 +1447,21 @@ angle::Result UtilsVk::ensureGenerateMipmapResourcesInitialized(ContextVk *conte
 
     return ensureResourcesInitialized(contextVk, Function::GenerateMipmap, setSizes,
                                       ArraySize(setSizes), sizeof(GenerateMipmapShaderParams));
+}
+
+angle::Result UtilsVk::ensureTransCodeEtcToBcResourcesInitialized(ContextVk *contextVk)
+{
+    if (mPipelineLayouts[Function::TransCodeEtcToBc].valid())
+    {
+        return angle::Result::Continue;
+    }
+    VkDescriptorPoolSize setSizes[2] = {
+        {VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER, 1},
+        {VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, 1},
+    };
+
+    return ensureResourcesInitialized(contextVk, Function::TransCodeEtcToBc, setSizes,
+                                      ArraySize(setSizes), sizeof(EtcToBcShaderParams));
 }
 
 angle::Result UtilsVk::ensureUnresolveResourcesInitialized(ContextVk *contextVk,
@@ -2250,10 +2269,10 @@ angle::Result UtilsVk::clearImage(ContextVk *contextVk,
     vk::DeviceScoped<vk::ImageView> destView(contextVk->getDevice());
     const gl::TextureType destViewType = vk::Get2DTextureType(1, dst->getSamples());
 
-    ANGLE_TRY(dst->initLayerImageView(contextVk, destViewType, VK_IMAGE_ASPECT_COLOR_BIT,
-                                      gl::SwizzleState(), &destView.get(), params.dstMip, 1,
-                                      params.dstLayer, 1, gl::SrgbWriteControlMode::Default,
-                                      gl::YuvSamplingMode::Default));
+    ANGLE_TRY(dst->initLayerImageView(
+        contextVk, destViewType, VK_IMAGE_ASPECT_COLOR_BIT, gl::SwizzleState(), &destView.get(),
+        params.dstMip, 1, params.dstLayer, 1, gl::SrgbWriteControlMode::Default,
+        gl::YuvSamplingMode::Default, vk::ImageHelper::kDefaultImageViewUsageFlags));
 
     const gl::Rectangle &renderArea = params.clearArea;
 
@@ -3207,6 +3226,150 @@ angle::Result UtilsVk::copyImageBits(ContextVk *contextVk,
     return angle::Result::Continue;
 }
 
+uint32_t GetEtcToBcFlags(const angle::Format &format)
+{
+    switch (format.id)
+    {
+        case angle::FormatID::ETC1_R8G8B8_UNORM_BLOCK:
+        case angle::FormatID::ETC2_R8G8B8_UNORM_BLOCK:
+        case angle::FormatID::ETC2_R8G8B8_SRGB_BLOCK:
+        case angle::FormatID::ETC2_R8G8B8A1_SRGB_BLOCK:
+        case angle::FormatID::ETC2_R8G8B8A1_UNORM_BLOCK:
+        case angle::FormatID::ETC2_R8G8B8A8_UNORM_BLOCK:
+        case angle::FormatID::ETC2_R8G8B8A8_SRGB_BLOCK:
+        case angle::FormatID::ETC1_LOSSY_DECODE_R8G8B8_UNORM_BLOCK:
+            return EtcToBc_comp::kEtcRgba8ToBC3;
+        case angle::FormatID::EAC_R11_SNORM_BLOCK:
+        case angle::FormatID::EAC_R11_UNORM_BLOCK:
+        case angle::FormatID::EAC_R11G11_SNORM_BLOCK:
+        case angle::FormatID::EAC_R11G11_UNORM_BLOCK:
+            return EtcToBc_comp::kEtcRg11ToBC5;
+        default:
+            UNREACHABLE();
+            return EtcToBc_comp::kEtcRgba8ToBC3;
+    }
+}
+
+angle::FormatID GetCompactibleUINTFormat(const angle::Format &format)
+{
+    ASSERT(format.pixelBytes == 8 || format.pixelBytes == 16);
+    return format.pixelBytes != 8 ? angle::FormatID::R32G32B32A32_UINT
+                                  : angle::FormatID::R32G32_UINT;
+}
+
+angle::Result UtilsVk::transCodeEtcToBc(ContextVk *contextVk,
+                                        vk::BufferHelper *srcBuffer,
+                                        vk::ImageHelper *dstImage,
+                                        const VkBufferImageCopy *copyRegion)
+{
+    ANGLE_TRY(ensureTransCodeEtcToBcResourcesInitialized(contextVk));
+    RendererVk *renderer                = contextVk->getRenderer();
+    const angle::Format &intendedFormat = dstImage->getIntendedFormat();
+    vk::ContextScoped<vk::BufferViewHelper> bufferViewHelper(contextVk);
+    const gl::InternalFormat &info =
+        gl::GetSizedInternalFormatInfo(intendedFormat.glInternalFormat);
+
+    // According to GLES spec. Etc texture don't support 3D texture type.
+    ASSERT(copyRegion->bufferRowLength % info.compressedBlockWidth == 0 &&
+           copyRegion->bufferImageHeight % info.compressedBlockHeight == 0 &&
+           copyRegion->imageExtent.depth == 1);
+
+    ASSERT(dstImage->getType() != VK_IMAGE_TYPE_1D && dstImage->getType() != VK_IMAGE_TYPE_3D);
+
+    GLuint sliceTexels = (copyRegion->bufferRowLength / info.compressedBlockWidth) *
+                         (copyRegion->bufferImageHeight / info.compressedBlockHeight);
+    GLuint sliceSize     = sliceTexels * intendedFormat.pixelBytes;
+    GLuint texBufferSize = sliceSize * copyRegion->imageSubresource.layerCount;
+
+    // Make sure the texture buffer size not out of limit.
+    // Usually the limit is more than 128M.
+    ASSERT(
+        texBufferSize <
+        static_cast<GLuint>(renderer->getPhysicalDeviceProperties().limits.maxTexelBufferElements));
+    const vk::BufferView *srcBufferView = nullptr;
+    bufferViewHelper.get().init(renderer, 0, texBufferSize);
+    ANGLE_TRY(bufferViewHelper.get().getView(
+        contextVk, *srcBuffer, copyRegion->bufferOffset,
+        renderer->getFormat(GetCompactibleUINTFormat(intendedFormat)), &srcBufferView));
+
+    vk::LevelIndex dstLevel =
+        gl::LevelIndexWrapper<uint32_t>(copyRegion->imageSubresource.mipLevel);
+
+    vk::OutsideRenderPassCommandBufferHelper *commandBufferHelper;
+    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBufferHelper({}, &commandBufferHelper));
+    const angle::Format &format                 = dstImage->getIntendedFormat();
+    uint32_t flags                              = GetEtcToBcFlags(format);
+    vk::RefCounted<vk::ShaderAndSerial> *shader = nullptr;
+    ANGLE_TRY(contextVk->getShaderLibrary().getEtcToBc_comp(contextVk, flags, &shader));
+
+    vk::OutsideRenderPassCommandBuffer *commandBuffer;
+    commandBuffer = &commandBufferHelper->getCommandBuffer();
+
+    // For BC format, shader need width and height to be multiple of four.
+    uint32_t width  = rx::roundUpPow2(copyRegion->imageExtent.width, 4u);
+    uint32_t height = rx::roundUpPow2(copyRegion->imageExtent.height, 4u);
+
+    // push constants data
+    EtcToBcShaderParams shaderParams = {};
+    shaderParams.offsetX             = static_cast<uint32_t>(copyRegion->imageOffset.x);
+    shaderParams.offsetY             = static_cast<uint32_t>(copyRegion->imageOffset.y);
+    shaderParams.texelOffset         = 0;
+    shaderParams.width               = width;
+    shaderParams.height              = height;
+    shaderParams.alphaBits           = format.alphaBits;
+    shaderParams.isSigned            = format.isSnorm();
+    shaderParams.isEacRg             = format.channelCount == 2;  // EAC_RG11
+
+    VkBufferView bufferView                    = srcBufferView->getHandle();
+    VkWriteDescriptorSet writeDescriptorSet[2] = {};
+    writeDescriptorSet[0].sType                = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+    writeDescriptorSet[0].descriptorType       = VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER;
+    writeDescriptorSet[0].dstBinding           = 0;
+    writeDescriptorSet[0].pBufferInfo          = nullptr;
+    writeDescriptorSet[0].descriptorCount      = 1;
+    writeDescriptorSet[0].pTexelBufferView     = &bufferView;
+
+    VkDescriptorImageInfo imageInfo       = {};
+    imageInfo.imageLayout                 = VK_IMAGE_LAYOUT_GENERAL;
+    writeDescriptorSet[1].sType           = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+    writeDescriptorSet[1].descriptorType  = VK_DESCRIPTOR_TYPE_STORAGE_IMAGE;
+    writeDescriptorSet[1].dstBinding      = 1;
+    writeDescriptorSet[1].pImageInfo      = &imageInfo;
+    writeDescriptorSet[1].descriptorCount = 1;
+    // Due to limitation VUID-VkImageViewCreateInfo-image-07072, we have to copy layer by layer.
+    for (uint32_t i = 0; i < copyRegion->imageSubresource.layerCount; ++i)
+    {
+        vk::DeviceScoped<vk::ImageView> scopedImageView(contextVk->getDevice());
+        ANGLE_TRY(dstImage->initReinterpretedLayerImageView(
+            contextVk, gl::TextureType::_2D, VK_IMAGE_ASPECT_COLOR_BIT, gl::SwizzleState(),
+            &scopedImageView.get(), dstLevel, 1, copyRegion->imageSubresource.baseArrayLayer + i, 1,
+            VK_IMAGE_USAGE_STORAGE_BIT, GetCompactibleUINTFormat(intendedFormat)));
+        imageInfo.imageView = scopedImageView.get().getHandle();
+
+        VkDescriptorSet descriptorSet;
+        ANGLE_TRY(allocateDescriptorSet(contextVk, commandBufferHelper, Function::TransCodeEtcToBc,
+                                        &descriptorSet));
+        writeDescriptorSet[0].dstSet = descriptorSet;
+        writeDescriptorSet[1].dstSet = descriptorSet;
+        vkUpdateDescriptorSets(contextVk->getDevice(), 2, writeDescriptorSet, 0, nullptr);
+
+        ANGLE_TRY(setupComputeProgram(contextVk, Function::TransCodeEtcToBc, shader,
+                                      &mEtcToBcPrograms[flags], descriptorSet, &shaderParams,
+                                      sizeof(shaderParams), commandBufferHelper));
+
+        // Work group size is 8 x 8 x 1
+        commandBuffer->dispatch(UnsignedCeilDivide(width, 8), UnsignedCeilDivide(height, 8), 1);
+        // Release temporary views
+        vk::ImageView imageView = scopedImageView.release();
+        contextVk->addGarbage(&imageView);
+
+        shaderParams.texelOffset += sliceTexels;
+    }
+    // Retain buffer view
+    commandBufferHelper->retainResource(&bufferViewHelper.get());
+    return angle::Result::Continue;
+}
+
 angle::Result UtilsVk::generateMipmap(ContextVk *contextVk,
                                       vk::ImageHelper *src,
                                       const vk::ImageView *srcLevelZeroView,
@@ -3340,7 +3503,7 @@ angle::Result UtilsVk::unresolve(ContextVk *contextVk,
             ANGLE_TRY(depthStencilSrc->initLayerImageView(
                 contextVk, textureType, VK_IMAGE_ASPECT_DEPTH_BIT, gl::SwizzleState(),
                 &depthView.get(), levelIndex, 1, layerIndex, 1, gl::SrgbWriteControlMode::Default,
-                gl::YuvSamplingMode::Default));
+                gl::YuvSamplingMode::Default, vk::ImageHelper::kDefaultImageViewUsageFlags));
             depthSrcView = &depthView.get();
         }
 
@@ -3349,7 +3512,7 @@ angle::Result UtilsVk::unresolve(ContextVk *contextVk,
             ANGLE_TRY(depthStencilSrc->initLayerImageView(
                 contextVk, textureType, VK_IMAGE_ASPECT_STENCIL_BIT, gl::SwizzleState(),
                 &stencilView.get(), levelIndex, 1, layerIndex, 1, gl::SrgbWriteControlMode::Default,
-                gl::YuvSamplingMode::Default));
+                gl::YuvSamplingMode::Default, vk::ImageHelper::kDefaultImageViewUsageFlags));
             stencilSrcView = &stencilView.get();
         }
     }

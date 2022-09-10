@@ -753,6 +753,13 @@ struct FeaturesVk : FeatureSetBase
         "VkDisplay supports presentation through a present family queue",
         &members,
     };
+
+    FeatureInfo supportsComputeTranscodeEtcToBc = {
+        "supportsComputeTranscodeEtcToBc",
+        FeatureCategory::VulkanFeatures,
+        "supports compute shader transcode etc format to bc format",
+        &members,
+    };
 };
 
 inline FeaturesVk::FeaturesVk()  = default;
