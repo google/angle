@@ -131,10 +131,9 @@ New Procedures and Functions
                                                   int level,
                                                   int layer)
 
-    void FramebufferPixelLocalClearValue{f,i,ui}vANGLE(GLint plane,
-                                                       const T value[4])
-
-    void BeginPixelLocalStorageANGLE(sizei planes, const enum loadops[])
+    void BeginPixelLocalStorageANGLE(sizei planes,
+                                     const enum loadops[],
+                                     const void *cleardata)
 
     void EndPixelLocalStorageANGLE()
 
@@ -207,7 +206,10 @@ Additions to the OpenGL ES Specification, Version 3.0.6
     Pixel local storage is activated and deactivated for the current draw
     framebuffer using the commands:
 
-      void BeginPixelLocalStorageANGLE(sizei planes, const enum loadops[])
+      void BeginPixelLocalStorageANGLE(sizei planes,
+                                       const enum loadops[],
+                                       const void *cleardata)
+
       void EndPixelLocalStorageANGLE()
 
     Parameters:
@@ -221,7 +223,16 @@ Additions to the OpenGL ES Specification, Version 3.0.6
                   whose length is equal to <planes>, and whose ith element
                   describes the Load Operation to perform on the ith pixel local
                   storage plane. Possible Load Operations are listed in Table
-                  X.1.
+                  X.1. Load Operations are performed on the entire area of each
+                  plane, irrespective of scissor or viewport state.
+
+      * <cleardata> specifies a buffer containing clear values. This buffer is
+                    interpreted as specified in Table X.1, description for
+                    CLEAR_ANGLE. If a Load Operation other than CLEAR_ANGLE is
+                    specified for a particular plane, <cleardata> is not
+                    accessed for that plane. Note that this also means
+                    <cleardata> can be NULL if CLEAR_ANGLE is not used for any
+                    plane.
 
         Load Operation    Description
         -----------------------------------------------------------------------
@@ -230,12 +241,14 @@ Additions to the OpenGL ES Specification, Version 3.0.6
                           it is more likely to be performant on all
                           implementations.
 
-        CLEAR_ANGLE       Clear the pixel local storage plane to its
-                          framebuffer's ith clear value of corresponding type.
-                          Pixel local clear values are specified with
-                          FramebufferPixelLocalClearValue{f,i,ui}vANGLE(), as
-                          described in section 4.4.2.Y "Pixel Local Clear
-                          State".
+        CLEAR_ANGLE       Clear pixel local storage plane <i> to the clear value
+                          provided in <cleardata>. The clear value is located at
+                          an offset of <i> * 16 bytes from the beginning of
+                          <cleardata>, and is interpreted as an array of 4
+                          32-bit values, the type of which is specified in Table
+                          X.2. If the magnitude of any component of the clear
+                          value is too large to be represented in the plane's
+                          internalformat, it is clamped.
 
         KEEP              Load the contents of the bound texture layer image
                           into pixel local storage. This Load Operation is
@@ -270,6 +283,9 @@ Additions to the OpenGL ES Specification, Version 3.0.6
 
       * INVALID_OPERATION is generated if <loadops>[0..<planes>-1] is KEEP and
         the pixel local storage plane at that same index is memoryless
+
+      * INVALID_VALUE is generated if <loadops>[0..<planes>-1] is CLEAR_ANGLE
+        and <cleardata> is NULL.
 
       * INVALID_OPERATION is generated if <loadops>[0..<planes>-1] is not
         DISABLE_ANGLE, and the pixel local storage plane at that same index is
@@ -428,7 +444,7 @@ Additions to the OpenGL ES Specification, Version 3.0.6
 
   Modify Section 4.4.2 "Attaching Images to Framebuffer Objects"
 
-  (Insert two new numbered section after 4.4.2.3 "Attaching Texture Images to a
+  (Insert a new numbered section after 4.4.2.3 "Attaching Texture Images to a
    Framebuffer".)
 
   Section 4.4.2.X "Configuring Pixel Local Storage on a Framebuffer"
@@ -453,17 +469,17 @@ Additions to the OpenGL ES Specification, Version 3.0.6
 
       * <internalformat> selects the data format, as enumerated in Table X.2
 
-        internalformat    format qualifier    Pixel Local Type
-        ------------------------------------------------------
-        RGBA8             rgba8               pixelLocalANGLE
-        RGBA8I            rgba8i              ipixelLocalANGLE
-        RGBA8UI           rgba8ui             upixelLocalANGLE
-        R32F              r32f                pixelLocalANGLE
-        R32UI             r32ui               upixelLocalANGLE
+        internalformat    cleardata type    Pixel Local Type    format qualifier
+        ------------------------------------------------------------------------
+        RGBA8             float             pixelLocalANGLE     rgba8
+        RGBA8I            int               ipixelLocalANGLE    rgba8i
+        RGBA8UI           uint              upixelLocalANGLE    rgba8ui
+        R32F              float             pixelLocalANGLE     r32f
+        R32UI             uint              upixelLocalANGLE    r32ui
 
-        Table X.2: Supported pixel local storage internalformats, with their
-        required corresponding GLSL format layout qualifier and Pixel Local
-        Type.
+        Table X.2: Supported pixel local storage internalformats, with the clear
+        value type expected by BeginPixelLocalStorageANGLE(), and their required
+        corresponding GLSL Pixel Local Type and format layout qualifier.
 
         Note that all pixel local storage formats consume exactly 4 bytes of
         storage.
@@ -587,40 +603,6 @@ Additions to the OpenGL ES Specification, Version 3.0.6
     framebuffer objects. Unbinding the texture layers from other framebuffer
     objects is the responsibility of the application, and their underlying
     memory will not be released until the application does so.
-
-  Section 4.4.2.Y "Pixel Local Clear State"
-
-    Each pixel local storage plane on a framebuffer has state for three separate
-    clear values: a 4-component vector of type FLOAT, INT, and UNSIGNED_INT. A
-    pixel local storage plane is cleared to the value whose type corresponds to
-    its internalformat when the Load Operation CLEAR_ANGLE is executed. The
-    commands:
-
-      void FramebufferPixelLocalClearValuefvANGLE(GLint plane,
-                                                  const float value[4])
-
-      void FramebufferPixelLocalClearValueivANGLE(GLint plane,
-                                                  const int value[4])
-
-      void FramebufferPixelLocalClearValueuivANGLE(GLint plane,
-                                                   const uint value[4])
-
-    Parameters:
-
-      * <plane> identifies the pixel local storage plane index
-
-      * <value> specifies the new 4-component clear value
-
-    Errors:
-
-      * INVALID_FRAMEBUFFER_OPERATION is generated if the default framebuffer
-        object name 0 is bound to DRAW_FRAMEBUFFER
-
-      * INVALID_VALUE is generated if
-        <plane> < 0 or <plane> >= MAX_PIXEL_LOCAL_STORAGE_PLANES_ANGLE
-
-    set the clear value state for a specific plane of pixel local storage on the
-    current draw framebuffer.
 
   Modify Section 6.1 "Querying GL State"
 
