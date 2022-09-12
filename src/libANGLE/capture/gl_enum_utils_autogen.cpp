@@ -2692,6 +2692,26 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                     return "GL_SHADING_RATE_4X2_PIXELS_QCOM";
                 case 0x96AE:
                     return "GL_SHADING_RATE_4X4_PIXELS_QCOM";
+                case 0x96E0:
+                    return "GL_MAX_PIXEL_LOCAL_STORAGE_PLANES_ANGLE";
+                case 0x96E1:
+                    return "GL_MAX_COLOR_ATTACHMENTS_WITH_ACTIVE_PIXEL_LOCAL_STORAGE_ANGLE";
+                case 0x96E2:
+                    return "GL_MAX_COMBINED_DRAW_BUFFERS_AND_PIXEL_LOCAL_STORAGE_PLANES_ANGLE";
+                case 0x96E3:
+                    return "GL_PIXEL_LOCAL_STORAGE_ACTIVE_ANGLE";
+                case 0x96E4:
+                    return "GL_PIXEL_LOCAL_FORMAT_ANGLE";
+                case 0x96E5:
+                    return "GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE";
+                case 0x96E6:
+                    return "GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE";
+                case 0x96E7:
+                    return "GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE";
+                case 0x96E8:
+                    return "GL_CLEAR_ANGLE";
+                case 0x96E9:
+                    return "GL_DISABLE_ANGLE";
                 case 0xFFFFFFFF:
                     return "GL_ALL_BARRIER_BITS";
                 default:

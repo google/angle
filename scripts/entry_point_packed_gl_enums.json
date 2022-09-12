@@ -443,6 +443,9 @@
     "glFramebufferTextureMultiview": {
         "texture": "TextureID"
     },
+    "glFramebufferTexturePixelLocalStorage": {
+        "backingtexture": "TextureID"
+    },
     "glGenBuffers": {
         "buffers": "BufferID *"
     },
