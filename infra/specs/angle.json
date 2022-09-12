@@ -16,13 +16,6 @@
         "name": "angle_deqp_egl_gles_tests",
         "swarming": {
           "can_use_on_swarming_builders": true,
-          "cipd_packages": [
-            {
-              "cipd_package": "infra/tools/luci/logdog/butler/${platform}",
-              "location": "bin",
-              "revision": "git_revision:ff387eadf445b24c935f1cf7d6ddd279f8a6b04c"
-            }
-          ],
           "containment_type": "AUTO",
           "dimension_sets": [
             {
@@ -52,13 +45,6 @@
         "name": "angle_deqp_egl_vulkan_tests",
         "swarming": {
           "can_use_on_swarming_builders": true,
-          "cipd_packages": [
-            {
-              "cipd_package": "infra/tools/luci/logdog/butler/${platform}",
-              "location": "bin",
-              "revision": "git_revision:ff387eadf445b24c935f1cf7d6ddd279f8a6b04c"
-            }
-          ],
           "containment_type": "AUTO",
           "dimension_sets": [
             {
@@ -89,13 +75,6 @@
         "name": "angle_deqp_gles2_gles_tests",
         "swarming": {
           "can_use_on_swarming_builders": true,
-          "cipd_packages": [
-            {
-              "cipd_package": "infra/tools/luci/logdog/butler/${platform}",
-              "location": "bin",
-              "revision": "git_revision:ff387eadf445b24c935f1cf7d6ddd279f8a6b04c"
-            }
-          ],
           "containment_type": "AUTO",
           "dimension_sets": [
             {
@@ -126,13 +105,6 @@
         "name": "angle_deqp_gles2_vulkan_tests",
         "swarming": {
           "can_use_on_swarming_builders": true,
-          "cipd_packages": [
-            {
-              "cipd_package": "infra/tools/luci/logdog/butler/${platform}",
-              "location": "bin",
-              "revision": "git_revision:ff387eadf445b24c935f1cf7d6ddd279f8a6b04c"
-            }
-          ],
           "containment_type": "AUTO",
           "dimension_sets": [
             {
@@ -163,13 +135,6 @@
         "name": "angle_deqp_gles31_vulkan_tests",
         "swarming": {
           "can_use_on_swarming_builders": true,
-          "cipd_packages": [
-            {
-              "cipd_package": "infra/tools/luci/logdog/butler/${platform}",
-              "location": "bin",
-              "revision": "git_revision:ff387eadf445b24c935f1cf7d6ddd279f8a6b04c"
-            }
-          ],
           "containment_type": "AUTO",
           "dimension_sets": [
             {
@@ -200,13 +165,6 @@
         "name": "angle_deqp_gles3_gles_tests",
         "swarming": {
           "can_use_on_swarming_builders": true,
-          "cipd_packages": [
-            {
-              "cipd_package": "infra/tools/luci/logdog/butler/${platform}",
-              "location": "bin",
-              "revision": "git_revision:ff387eadf445b24c935f1cf7d6ddd279f8a6b04c"
-            }
-          ],
           "containment_type": "AUTO",
           "dimension_sets": [
             {
@@ -237,13 +195,6 @@
         "name": "angle_deqp_gles3_vulkan_tests",
         "swarming": {
           "can_use_on_swarming_builders": true,
-          "cipd_packages": [
-            {
-              "cipd_package": "infra/tools/luci/logdog/butler/${platform}",
-              "location": "bin",
-              "revision": "git_revision:ff387eadf445b24c935f1cf7d6ddd279f8a6b04c"
-            }
-          ],
           "containment_type": "AUTO",
           "dimension_sets": [
             {
@@ -274,13 +225,6 @@
         "name": "angle_deqp_khr_gles2_vulkan_tests",
         "swarming": {
           "can_use_on_swarming_builders": true,
-          "cipd_packages": [
-            {
-              "cipd_package": "infra/tools/luci/logdog/butler/${platform}",
-              "location": "bin",
-              "revision": "git_revision:ff387eadf445b24c935f1cf7d6ddd279f8a6b04c"
-            }
-          ],
           "containment_type": "AUTO",
           "dimension_sets": [
             {
@@ -310,13 +254,6 @@
         "name": "angle_deqp_khr_gles31_vulkan_tests",
         "swarming": {
           "can_use_on_swarming_builders": true,
-          "cipd_packages": [
-            {
-              "cipd_package": "infra/tools/luci/logdog/butler/${platform}",
-              "location": "bin",
-              "revision": "git_revision:ff387eadf445b24c935f1cf7d6ddd279f8a6b04c"
-            }
-          ],
           "containment_type": "AUTO",
           "dimension_sets": [
             {
@@ -346,13 +283,6 @@
         "name": "angle_deqp_khr_gles32_vulkan_tests",
         "swarming": {
           "can_use_on_swarming_builders": true,
-          "cipd_packages": [
-            {
-              "cipd_package": "infra/tools/luci/logdog/butler/${platform}",
-              "location": "bin",
-              "revision": "git_revision:ff387eadf445b24c935f1cf7d6ddd279f8a6b04c"
-            }
-          ],
           "containment_type": "AUTO",
           "dimension_sets": [
             {
@@ -382,13 +312,6 @@
         "name": "angle_deqp_khr_gles3_vulkan_tests",
         "swarming": {
           "can_use_on_swarming_builders": true,
-          "cipd_packages": [
-            {
-              "cipd_package": "infra/tools/luci/logdog/butler/${platform}",
-              "location": "bin",
-              "revision": "git_revision:ff387eadf445b24c935f1cf7d6ddd279f8a6b04c"
-            }
-          ],
           "containment_type": "AUTO",
           "dimension_sets": [
             {
@@ -419,13 +342,6 @@
         },
         "swarming": {
           "can_use_on_swarming_builders": true,
-          "cipd_packages": [
-            {
-              "cipd_package": "infra/tools/luci/logdog/butler/${platform}",
-              "location": "bin",
-              "revision": "git_revision:ff387eadf445b24c935f1cf7d6ddd279f8a6b04c"
-            }
-          ],
           "containment_type": "AUTO",
           "dimension_sets": [
             {
@@ -454,13 +370,6 @@
         },
         "swarming": {
           "can_use_on_swarming_builders": true,
-          "cipd_packages": [
-            {
-              "cipd_package": "infra/tools/luci/logdog/butler/${platform}",
-              "location": "bin",
-              "revision": "git_revision:ff387eadf445b24c935f1cf7d6ddd279f8a6b04c"
-            }
-          ],
           "containment_type": "AUTO",
           "dimension_sets": [
             {
@@ -495,13 +404,6 @@
         "name": "angle_perftests",
         "swarming": {
           "can_use_on_swarming_builders": true,
-          "cipd_packages": [
-            {
-              "cipd_package": "infra/tools/luci/logdog/butler/${platform}",
-              "location": "bin",
-              "revision": "git_revision:ff387eadf445b24c935f1cf7d6ddd279f8a6b04c"
-            }
-          ],
           "containment_type": "AUTO",
           "dimension_sets": [
             {
@@ -537,13 +439,6 @@
         ],
         "swarming": {
           "can_use_on_swarming_builders": true,
-          "cipd_packages": [
-            {
-              "cipd_package": "infra/tools/luci/logdog/butler/${platform}",
-              "location": "bin",
-              "revision": "git_revision:ff387eadf445b24c935f1cf7d6ddd279f8a6b04c"
-            }
-          ],
           "containment_type": "AUTO",
           "dimension_sets": [
             {
@@ -575,13 +470,6 @@
         "name": "angle_perftests",
         "swarming": {
           "can_use_on_swarming_builders": true,
-          "cipd_packages": [
-            {
-              "cipd_package": "infra/tools/luci/logdog/butler/${platform}",
-              "location": "bin",
-              "revision": "git_revision:ff387eadf445b24c935f1cf7d6ddd279f8a6b04c"
-            }
-          ],
           "containment_type": "AUTO",
           "dimension_sets": [
             {
@@ -614,13 +502,6 @@
         "name": "angle_deqp_egl_vulkan_tests",
         "swarming": {
           "can_use_on_swarming_builders": true,
-          "cipd_packages": [
-            {
-              "cipd_package": "infra/tools/luci/logdog/butler/${platform}",
-              "location": "bin",
-              "revision": "git_revision:ff387eadf445b24c935f1cf7d6ddd279f8a6b04c"
-            }
-          ],
           "containment_type": "AUTO",
           "dimension_sets": [
             {
@@ -652,13 +533,6 @@
         "name": "angle_deqp_gles2_vulkan_tests",
         "swarming": {
           "can_use_on_swarming_builders": true,
-          "cipd_packages": [
-            {
-              "cipd_package": "infra/tools/luci/logdog/butler/${platform}",
-              "location": "bin",
-              "revision": "git_revision:ff387eadf445b24c935f1cf7d6ddd279f8a6b04c"
-            }
-          ],
           "containment_type": "AUTO",
           "dimension_sets": [
             {
@@ -690,13 +564,6 @@
         "name": "angle_deqp_gles31_vulkan_tests",
         "swarming": {
           "can_use_on_swarming_builders": true,
-          "cipd_packages": [
-            {
-              "cipd_package": "infra/tools/luci/logdog/butler/${platform}",
-              "location": "bin",
-              "revision": "git_revision:ff387eadf445b24c935f1cf7d6ddd279f8a6b04c"
-            }
-          ],
           "containment_type": "AUTO",
           "dimension_sets": [
             {
@@ -728,13 +595,6 @@
         "name": "angle_deqp_gles3_vulkan_tests",
         "swarming": {
           "can_use_on_swarming_builders": true,
-          "cipd_packages": [
-            {
-              "cipd_package": "infra/tools/luci/logdog/butler/${platform}",
-              "location": "bin",
-              "revision": "git_revision:ff387eadf445b24c935f1cf7d6ddd279f8a6b04c"
-            }
-          ],
           "containment_type": "AUTO",
           "dimension_sets": [
             {
@@ -766,13 +626,6 @@
         "name": "angle_deqp_khr_gles2_vulkan_tests",
         "swarming": {
           "can_use_on_swarming_builders": true,
-          "cipd_packages": [
-            {
-              "cipd_package": "infra/tools/luci/logdog/butler/${platform}",
-              "location": "bin",
-              "revision": "git_revision:ff387eadf445b24c935f1cf7d6ddd279f8a6b04c"
-            }
-          ],
           "containment_type": "AUTO",
           "dimension_sets": [
             {
@@ -803,13 +656,6 @@
         "name": "angle_deqp_khr_gles31_vulkan_tests",
         "swarming": {
           "can_use_on_swarming_builders": true,
-          "cipd_packages": [
-            {
-              "cipd_package": "infra/tools/luci/logdog/butler/${platform}",
-              "location": "bin",
-              "revision": "git_revision:ff387eadf445b24c935f1cf7d6ddd279f8a6b04c"
-            }
-          ],
           "containment_type": "AUTO",
           "dimension_sets": [
             {
@@ -840,13 +686,6 @@
         "name": "angle_deqp_khr_gles32_vulkan_tests",
         "swarming": {
           "can_use_on_swarming_builders": true,
-          "cipd_packages": [
-            {
-              "cipd_package": "infra/tools/luci/logdog/butler/${platform}",
-              "location": "bin",
-              "revision": "git_revision:ff387eadf445b24c935f1cf7d6ddd279f8a6b04c"
-            }
-          ],
           "containment_type": "AUTO",
           "dimension_sets": [
             {
@@ -877,13 +716,6 @@
         "name": "angle_deqp_khr_gles3_vulkan_tests",
         "swarming": {
           "can_use_on_swarming_builders": true,
-          "cipd_packages": [
-            {
-              "cipd_package": "infra/tools/luci/logdog/butler/${platform}",
-              "location": "bin",
-              "revision": "git_revision:ff387eadf445b24c935f1cf7d6ddd279f8a6b04c"
-            }
-          ],
           "containment_type": "AUTO",
           "dimension_sets": [
             {
@@ -915,13 +747,6 @@
         },
         "swarming": {
           "can_use_on_swarming_builders": true,
-          "cipd_packages": [
-            {
-              "cipd_package": "infra/tools/luci/logdog/butler/${platform}",
-              "location": "bin",
-              "revision": "git_revision:ff387eadf445b24c935f1cf7d6ddd279f8a6b04c"
-            }
-          ],
           "containment_type": "AUTO",
           "dimension_sets": [
             {
@@ -951,13 +776,6 @@
         },
         "swarming": {
           "can_use_on_swarming_builders": true,
-          "cipd_packages": [
-            {
-              "cipd_package": "infra/tools/luci/logdog/butler/${platform}",
-              "location": "bin",
-              "revision": "git_revision:ff387eadf445b24c935f1cf7d6ddd279f8a6b04c"
-            }
-          ],
           "containment_type": "AUTO",
           "dimension_sets": [
             {
@@ -997,13 +815,6 @@
         ],
         "swarming": {
           "can_use_on_swarming_builders": true,
-          "cipd_packages": [
-            {
-              "cipd_package": "infra/tools/luci/logdog/butler/${platform}",
-              "location": "bin",
-              "revision": "git_revision:ff387eadf445b24c935f1cf7d6ddd279f8a6b04c"
-            }
-          ],
           "containment_type": "AUTO",
           "dimension_sets": [
             {

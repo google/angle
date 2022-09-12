@@ -1097,7 +1097,10 @@ ANGLE_INLINE void SecondaryCommandBuffer::bindDescriptorSets(const PipelineLayou
     paramStruct->dynamicOffsetCount = dynamicOffsetCount;
     // Copy variable sized data
     writePtr = storePointerParameter(writePtr, descriptorSets, descSize);
-    storePointerParameter(writePtr, dynamicOffsets, offsetSize);
+    if (offsetSize)
+    {
+        storePointerParameter(writePtr, dynamicOffsets, offsetSize);
+    }
 }
 
 ANGLE_INLINE void SecondaryCommandBuffer::bindGraphicsPipeline(const Pipeline &pipeline)
@@ -1566,9 +1569,18 @@ ANGLE_INLINE void SecondaryCommandBuffer::pipelineBarrier(
     paramStruct->bufferMemoryBarrierCount = bufferMemoryBarrierCount;
     paramStruct->imageMemoryBarrierCount  = imageMemoryBarrierCount;
     // Copy variable sized data
-    writePtr = storePointerParameter(writePtr, memoryBarriers, memBarrierSize);
-    writePtr = storePointerParameter(writePtr, bufferMemoryBarriers, buffBarrierSize);
-    storePointerParameter(writePtr, imageMemoryBarriers, imgBarrierSize);
+    if (memBarrierSize)
+    {
+        writePtr = storePointerParameter(writePtr, memoryBarriers, memBarrierSize);
+    }
+    if (buffBarrierSize)
+    {
+        writePtr = storePointerParameter(writePtr, bufferMemoryBarriers, buffBarrierSize);
+    }
+    if (imgBarrierSize)
+    {
+        storePointerParameter(writePtr, imageMemoryBarriers, imgBarrierSize);
+    }
 }
 
 ANGLE_INLINE void SecondaryCommandBuffer::pushConstants(const PipelineLayout &layout,
