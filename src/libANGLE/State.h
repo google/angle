@@ -613,12 +613,16 @@ class State : angle::NonCopyable
     void setPatchVertices(GLuint value);
     GLuint getPatchVertices() const { return mPatchVertices; }
 
+    // GL_ANGLE_shader_pixel_local_storage
+    void setPixelLocalStorageActive(bool active);
+    bool getPixelLocalStorageActive() const { return mPixelLocalStorageActive; }
+
     // State query functions
     void getBooleanv(GLenum pname, GLboolean *params) const;
     void getFloatv(GLenum pname, GLfloat *params) const;
     angle::Result getIntegerv(const Context *context, GLenum pname, GLint *params) const;
     void getPointerv(const Context *context, GLenum pname, void **params) const;
-    void getIntegeri_v(GLenum target, GLuint index, GLint *data) const;
+    void getIntegeri_v(const Context *context, GLenum target, GLuint index, GLint *data) const;
     void getInteger64i_v(GLenum target, GLuint index, GLint64 *data) const;
     void getBooleani_v(GLenum target, GLuint index, GLboolean *data) const;
 
@@ -1181,6 +1185,9 @@ class State : angle::NonCopyable
 
     // GL_EXT_tessellation_shader
     GLuint mPatchVertices;
+
+    // GL_ANGLE_shader_pixel_local_storage
+    bool mPixelLocalStorageActive;
 
     // GLES1 emulation: state specific to GLES1
     GLES1State mGLES1State;

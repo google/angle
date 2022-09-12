@@ -1573,9 +1573,24 @@ void GenerateCaps(const FunctionsGL *functions,
          functions->hasGLESExtension("GL_KHR_robust_buffer_access_behavior"));
 
     // ANGLE_shader_pixel_local_storage.
-    extensions->shaderPixelLocalStorageANGLE =
-        functions->isAtLeastGL(gl::Version(4, 2)) || functions->isAtLeastGLES(gl::Version(3, 1)) ||
-        functions->hasGLExtension("GL_ARB_shader_image_load_store");
+    if (functions->isAtLeastGL(gl::Version(4, 2)) ||
+        functions->hasGLExtension("GL_ARB_shader_image_load_store"))
+    {
+        // [ANGLE_shader_pixel_local_storage] "New Implementation Dependent State":
+        // MAX_PIXEL_LOCAL_STORAGE_PLANES_ANGLE must be at least 4.
+        //
+        // MAX_FRAGMENT_IMAGE_UNIFORMS is at least 8 on Desktop Core and ARB.
+        extensions->shaderPixelLocalStorageANGLE = true;
+    }
+    else if (functions->isAtLeastGLES(gl::Version(3, 1)))
+    {
+        // [ANGLE_shader_pixel_local_storage] "New Implementation Dependent State":
+        // MAX_PIXEL_LOCAL_STORAGE_PLANES_ANGLE must be at least 4.
+        //
+        // ES 3.1, Table 20.44: MAX_FRAGMENT_IMAGE_UNIFORMS can be 0.
+        extensions->shaderPixelLocalStorageANGLE =
+            caps->maxShaderImageUniforms[gl::ShaderType::Fragment] >= 4;
+    }
     if (extensions->shaderPixelLocalStorageANGLE)
     {
         extensions->shaderPixelLocalStorageCoherentANGLE =

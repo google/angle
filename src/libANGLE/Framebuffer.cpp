@@ -17,6 +17,7 @@
 #include "libANGLE/Display.h"
 #include "libANGLE/ErrorStrings.h"
 #include "libANGLE/FramebufferAttachment.h"
+#include "libANGLE/PixelLocalStorage.h"
 #include "libANGLE/Renderbuffer.h"
 #include "libANGLE/Surface.h"
 #include "libANGLE/Texture.h"
@@ -844,6 +845,11 @@ void Framebuffer::onDestroy(const Context *context)
     mState.mWebGLDepthAttachment.detach(context, mState.mFramebufferSerial);
     mState.mWebGLStencilAttachment.detach(context, mState.mFramebufferSerial);
     mState.mWebGLDepthStencilAttachment.detach(context, mState.mFramebufferSerial);
+
+    if (mPixelLocalStorage)
+    {
+        mPixelLocalStorage->onFramebufferDestroyed(context);
+    }
 
     mImpl->destroy(context);
 }
@@ -2703,5 +2709,19 @@ bool Framebuffer::partialBufferClearNeedsInit(const Context *context, GLenum buf
             UNREACHABLE();
             return false;
     }
+}
+
+PixelLocalStorage &Framebuffer::getPixelLocalStorage(const Context *context)
+{
+    if (!mPixelLocalStorage)
+    {
+        mPixelLocalStorage = PixelLocalStorage::Make(context);
+    }
+    return *mPixelLocalStorage.get();
+}
+
+std::unique_ptr<PixelLocalStorage> Framebuffer::detachPixelLocalStorage()
+{
+    return std::move(mPixelLocalStorage);
 }
 }  // namespace gl

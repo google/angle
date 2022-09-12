@@ -20,6 +20,7 @@
 #include "libANGLE/Debug.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/FramebufferAttachment.h"
+#include "libANGLE/PixelLocalStorage.h"
 #include "libANGLE/Query.h"
 #include "libANGLE/VertexArray.h"
 #include "libANGLE/formatutils.h"
@@ -409,6 +410,7 @@ State::State(const State *shareContextState,
       mLogicOp(LogicalOperation::Copy),
       mMaxShaderCompilerThreads(std::numeric_limits<GLuint>::max()),
       mPatchVertices(3),
+      mPixelLocalStorageActive(false),
       mOverlay(overlay),
       mNoSimultaneousConstantColorAndAlphaBlendFunc(false),
       mSetBlendIndexedInvoked(false),
@@ -2400,6 +2402,11 @@ void State::setPatchVertices(GLuint value)
     }
 }
 
+void State::setPixelLocalStorageActive(bool active)
+{
+    mPixelLocalStorageActive = active;
+}
+
 void State::setShadingRate(GLenum rate)
 {
     mShadingRate = FromGLenum<ShadingRate>(rate);
@@ -2526,6 +2533,10 @@ void State::getBooleanv(GLenum pname, GLboolean *params) const
             break;
         case GL_ROBUST_FRAGMENT_SHADER_OUTPUT_ANGLE:
             *params = mExtensions.robustFragmentShaderOutputANGLE ? GL_TRUE : GL_FALSE;
+            break;
+        // GL_ANGLE_shader_pixel_local_storage
+        case GL_PIXEL_LOCAL_STORAGE_ACTIVE_ANGLE:
+            *params = mPixelLocalStorageActive ? GL_TRUE : GL_FALSE;
             break;
         default:
             UNREACHABLE();
@@ -3164,7 +3175,7 @@ void State::getPointerv(const Context *context, GLenum pname, void **params) con
     }
 }
 
-void State::getIntegeri_v(GLenum target, GLuint index, GLint *data) const
+void State::getIntegeri_v(const Context *context, GLenum target, GLuint index, GLint *data) const
 {
     switch (target)
     {
@@ -3248,6 +3259,17 @@ void State::getIntegeri_v(GLenum target, GLuint index, GLint *data) const
             ASSERT(static_cast<size_t>(index) < mImageUnits.size());
             *data = mImageUnits[index].format;
             break;
+        // GL_ANGLE_shader_pixel_local_storage.
+        case GL_PIXEL_LOCAL_FORMAT_ANGLE:
+        case GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE:
+        case GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE:
+        case GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE:
+        {
+            ASSERT(mDrawFramebuffer);
+            *data = mDrawFramebuffer->getPixelLocalStorage(context).getPlane(index).getIntegeri(
+                context, target, index);
+            break;
+        }
         default:
             UNREACHABLE();
             break;

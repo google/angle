@@ -4251,7 +4251,11 @@ void CaptureBeginPixelLocalStorageANGLE_loadops(const State &glState,
                                                 const void *cleardata,
                                                 angle::ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    if (!isCallValid)
+    {
+        return;
+    }
+    CaptureArray(loadops, planes, paramCapture);
 }
 
 void CaptureBeginPixelLocalStorageANGLE_cleardata(const State &glState,
@@ -4261,6 +4265,18 @@ void CaptureBeginPixelLocalStorageANGLE_cleardata(const State &glState,
                                                   const void *cleardata,
                                                   angle::ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    if (!isCallValid)
+    {
+        return;
+    }
+    GLsizei minLengthWithAllClears = planes;
+    while (minLengthWithAllClears > 0 && loadops[minLengthWithAllClears - 1] != GL_CLEAR_ANGLE)
+    {
+        --minLengthWithAllClears;
+    }
+    if (minLengthWithAllClears > 0)
+    {
+        CaptureMemory(cleardata, minLengthWithAllClears * 4 * 4, paramCapture);
+    }
 }
 }  // namespace gl
