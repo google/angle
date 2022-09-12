@@ -573,6 +573,13 @@ ANGLE_UTIL_EXPORT PFNGLTEXPARAMETERIVROBUSTANGLEPROC l_glTexParameterivRobustANG
 ANGLE_UTIL_EXPORT PFNGLTEXSUBIMAGE2DROBUSTANGLEPROC l_glTexSubImage2DRobustANGLE;
 ANGLE_UTIL_EXPORT PFNGLTEXSUBIMAGE3DROBUSTANGLEPROC l_glTexSubImage3DRobustANGLE;
 ANGLE_UTIL_EXPORT PFNGLIMPORTSEMAPHOREZIRCONHANDLEANGLEPROC l_glImportSemaphoreZirconHandleANGLE;
+ANGLE_UTIL_EXPORT PFNGLBEGINPIXELLOCALSTORAGEANGLEPROC l_glBeginPixelLocalStorageANGLE;
+ANGLE_UTIL_EXPORT PFNGLENDPIXELLOCALSTORAGEANGLEPROC l_glEndPixelLocalStorageANGLE;
+ANGLE_UTIL_EXPORT PFNGLFRAMEBUFFERMEMORYLESSPIXELLOCALSTORAGEANGLEPROC
+    l_glFramebufferMemorylessPixelLocalStorageANGLE;
+ANGLE_UTIL_EXPORT PFNGLFRAMEBUFFERTEXTUREPIXELLOCALSTORAGEANGLEPROC
+    l_glFramebufferTexturePixelLocalStorageANGLE;
+ANGLE_UTIL_EXPORT PFNGLPIXELLOCALSTORAGEBARRIERANGLEPROC l_glPixelLocalStorageBarrierANGLE;
 ANGLE_UTIL_EXPORT PFNGLINVALIDATETEXTUREANGLEPROC l_glInvalidateTextureANGLE;
 ANGLE_UTIL_EXPORT PFNGLTEXIMAGE2DEXTERNALANGLEPROC l_glTexImage2DExternalANGLE;
 ANGLE_UTIL_EXPORT PFNGLGETMULTISAMPLEFVANGLEPROC l_glGetMultisamplefvANGLE;
@@ -1716,6 +1723,18 @@ void LoadGLES(LoadProc loadProc)
     l_glImportSemaphoreZirconHandleANGLE =
         reinterpret_cast<PFNGLIMPORTSEMAPHOREZIRCONHANDLEANGLEPROC>(
             loadProc("glImportSemaphoreZirconHandleANGLE"));
+    l_glBeginPixelLocalStorageANGLE = reinterpret_cast<PFNGLBEGINPIXELLOCALSTORAGEANGLEPROC>(
+        loadProc("glBeginPixelLocalStorageANGLE"));
+    l_glEndPixelLocalStorageANGLE = reinterpret_cast<PFNGLENDPIXELLOCALSTORAGEANGLEPROC>(
+        loadProc("glEndPixelLocalStorageANGLE"));
+    l_glFramebufferMemorylessPixelLocalStorageANGLE =
+        reinterpret_cast<PFNGLFRAMEBUFFERMEMORYLESSPIXELLOCALSTORAGEANGLEPROC>(
+            loadProc("glFramebufferMemorylessPixelLocalStorageANGLE"));
+    l_glFramebufferTexturePixelLocalStorageANGLE =
+        reinterpret_cast<PFNGLFRAMEBUFFERTEXTUREPIXELLOCALSTORAGEANGLEPROC>(
+            loadProc("glFramebufferTexturePixelLocalStorageANGLE"));
+    l_glPixelLocalStorageBarrierANGLE = reinterpret_cast<PFNGLPIXELLOCALSTORAGEBARRIERANGLEPROC>(
+        loadProc("glPixelLocalStorageBarrierANGLE"));
     l_glInvalidateTextureANGLE =
         reinterpret_cast<PFNGLINVALIDATETEXTUREANGLEPROC>(loadProc("glInvalidateTextureANGLE"));
     l_glTexImage2DExternalANGLE =

@@ -847,6 +847,25 @@ angle::CallCapture CaptureImportSemaphoreZirconHandleANGLE(const State &glState,
                                                            HandleType handleTypePacked,
                                                            GLuint handle);
 
+// GL_ANGLE_shader_pixel_local_storage
+angle::CallCapture CaptureFramebufferMemorylessPixelLocalStorageANGLE(const State &glState,
+                                                                      bool isCallValid,
+                                                                      GLint plane,
+                                                                      GLenum internalformat);
+angle::CallCapture CaptureFramebufferTexturePixelLocalStorageANGLE(const State &glState,
+                                                                   bool isCallValid,
+                                                                   GLint plane,
+                                                                   TextureID backingtexturePacked,
+                                                                   GLint level,
+                                                                   GLint layer);
+angle::CallCapture CaptureBeginPixelLocalStorageANGLE(const State &glState,
+                                                      bool isCallValid,
+                                                      GLsizei planes,
+                                                      const GLenum *loadops,
+                                                      const void *cleardata);
+angle::CallCapture CaptureEndPixelLocalStorageANGLE(const State &glState, bool isCallValid);
+angle::CallCapture CapturePixelLocalStorageBarrierANGLE(const State &glState, bool isCallValid);
+
 // GL_ANGLE_texture_compression_dxt3
 
 // GL_ANGLE_texture_compression_dxt5
@@ -4065,6 +4084,18 @@ void CaptureGetQueryObjectui64vRobustANGLE_params(const State &glState,
                                                   GLsizei bufSize,
                                                   GLsizei *length,
                                                   GLuint64 *params,
+                                                  angle::ParamCapture *paramCapture);
+void CaptureBeginPixelLocalStorageANGLE_loadops(const State &glState,
+                                                bool isCallValid,
+                                                GLsizei planes,
+                                                const GLenum *loadops,
+                                                const void *cleardata,
+                                                angle::ParamCapture *paramCapture);
+void CaptureBeginPixelLocalStorageANGLE_cleardata(const State &glState,
+                                                  bool isCallValid,
+                                                  GLsizei planes,
+                                                  const GLenum *loadops,
+                                                  const void *cleardata,
                                                   angle::ParamCapture *paramCapture);
 void CaptureGetMultisamplefvANGLE_val(const State &glState,
                                       bool isCallValid,

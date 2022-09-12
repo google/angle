@@ -604,6 +604,13 @@ EXPORTS
     ; GL_ANGLE_semaphore_fuchsia
     glImportSemaphoreZirconHandleANGLE
 
+    ; GL_ANGLE_shader_pixel_local_storage
+    glBeginPixelLocalStorageANGLE
+    glEndPixelLocalStorageANGLE
+    glFramebufferMemorylessPixelLocalStorageANGLE
+    glFramebufferTexturePixelLocalStorageANGLE
+    glPixelLocalStorageBarrierANGLE
+
     ; GL_ANGLE_texture_compression_dxt3
 
     ; GL_ANGLE_texture_compression_dxt5

@@ -2692,6 +2692,26 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                     return "GL_SHADING_RATE_4X2_PIXELS_QCOM";
                 case 0x96AE:
                     return "GL_SHADING_RATE_4X4_PIXELS_QCOM";
+                case 0x96E0:
+                    return "GL_MAX_PIXEL_LOCAL_STORAGE_PLANES_ANGLE";
+                case 0x96E1:
+                    return "GL_MAX_COLOR_ATTACHMENTS_WITH_ACTIVE_PIXEL_LOCAL_STORAGE_ANGLE";
+                case 0x96E2:
+                    return "GL_MAX_COMBINED_DRAW_BUFFERS_AND_PIXEL_LOCAL_STORAGE_PLANES_ANGLE";
+                case 0x96E3:
+                    return "GL_PIXEL_LOCAL_STORAGE_ACTIVE_ANGLE";
+                case 0x96E4:
+                    return "GL_PIXEL_LOCAL_FORMAT_ANGLE";
+                case 0x96E5:
+                    return "GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE";
+                case 0x96E6:
+                    return "GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE";
+                case 0x96E7:
+                    return "GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE";
+                case 0x96E8:
+                    return "GL_CLEAR_ANGLE";
+                case 0x96E9:
+                    return "GL_DISABLE_ANGLE";
                 case 0xFFFFFFFF:
                     return "GL_ALL_BARRIER_BITS";
                 default:
@@ -6200,6 +6220,46 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                     return "GL_RGB_INTEGER";
                 case 0x8D99:
                     return "GL_RGBA_INTEGER";
+                default:
+                    return UnknownEnumToString(value);
+            }
+        }
+
+        case GLESEnum::PixelLocalInternalFormatANGLE:
+        {
+            switch (value)
+            {
+                case 0x0:
+                    return "GL_NONE";
+                case 0x8058:
+                    return "GL_RGBA8";
+                case 0x822E:
+                    return "GL_R32F";
+                case 0x8236:
+                    return "GL_R32UI";
+                case 0x8D7C:
+                    return "GL_RGBA8UI";
+                case 0x8D8E:
+                    return "GL_RGBA8I";
+                default:
+                    return UnknownEnumToString(value);
+            }
+        }
+
+        case GLESEnum::PixelLocalLoadOpANGLE:
+        {
+            switch (value)
+            {
+                case 0x0:
+                    return "GL_ZERO";
+                case 0x1100:
+                    return "GL_DONT_CARE";
+                case 0x1E00:
+                    return "GL_KEEP";
+                case 0x96E8:
+                    return "GL_CLEAR_ANGLE";
+                case 0x96E9:
+                    return "GL_DISABLE_ANGLE";
                 default:
                     return UnknownEnumToString(value);
             }
@@ -16760,6 +16820,42 @@ const char *GLenumToString(BigGLEnum enumGroup, unsigned int value)
                     return "GL_BGR_INTEGER";
                 case 0x8D9B:
                     return "GL_BGRA_INTEGER";
+                default:
+                    return UnknownEnumToString(value);
+            }
+        }
+
+        case BigGLEnum::PixelLocalInternalFormatANGLE:
+        {
+            switch (value)
+            {
+                case 0x0:
+                    return "GL_NONE";
+                case 0x8058:
+                    return "GL_RGBA8";
+                case 0x822E:
+                    return "GL_R32F";
+                case 0x8236:
+                    return "GL_R32UI";
+                case 0x8D7C:
+                    return "GL_RGBA8UI";
+                case 0x8D8E:
+                    return "GL_RGBA8I";
+                default:
+                    return UnknownEnumToString(value);
+            }
+        }
+
+        case BigGLEnum::PixelLocalLoadOpANGLE:
+        {
+            switch (value)
+            {
+                case 0x0:
+                    return "GL_ZERO";
+                case 0x1100:
+                    return "GL_DONT_CARE";
+                case 0x1E00:
+                    return "GL_KEEP";
                 default:
                     return UnknownEnumToString(value);
             }

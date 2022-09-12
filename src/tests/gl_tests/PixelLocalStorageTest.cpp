@@ -17,8 +17,6 @@ using namespace angle;
 //
 // NOTE: the hope is for this to eventually move into ANGLE.
 
-#define GL_DISABLE_ANGLE 0xbaadbeef
-
 constexpr static int MAX_LOCAL_STORAGE_PLANES                = 3;
 constexpr static int MAX_FRAGMENT_OUTPUTS_WITH_LOCAL_STORAGE = 1;
 
@@ -105,6 +103,11 @@ class PixelLocalStoragePrototype
     GLint mFramebufferPreviousDefaultWidth  = 0;
     GLint mFramebufferPreviousDefaultHeight = 0;
 };
+
+// Temporarily undef the PLS API so we can split out the autogen of the PLS API into its own change.
+#undef glBeginPixelLocalStorageANGLE
+#undef glPixelLocalStorageBarrierANGLE
+#undef glEndPixelLocalStorageANGLE
 
 // Bootstrap the draft extension assuming an in-scope PixelLocalStoragePrototype object named "pls".
 #define glFramebufferPixelLocalStorageANGLE pls.framebufferPixelLocalStorage

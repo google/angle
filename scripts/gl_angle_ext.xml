@@ -935,6 +935,30 @@
             <param len="COMPSIZE(numTextures)">const <ptype>GLuint</ptype> *<name>textures</name></param>
             <param group="TextureLayout" len="COMPSIZE(numTextures)"><ptype>GLenum</ptype> *<name>layouts</name></param>
         </command>
+        <command>
+            <proto>void <name>glFramebufferMemorylessPixelLocalStorageANGLE</name></proto>
+            <param><ptype>GLint</ptype> <name>plane</name></param>
+            <param group="PixelLocalInternalFormatANGLE"><ptype>GLenum</ptype> <name>internalformat</name></param>
+        </command>
+        <command>
+            <proto>void <name>glFramebufferTexturePixelLocalStorageANGLE</name></proto>
+            <param><ptype>GLint</ptype> <name>plane</name></param>
+            <param class="texture"><ptype>GLuint</ptype> <name>backingtexture</name></param>
+            <param><ptype>GLint</ptype> <name>level</name></param>
+            <param><ptype>GLint</ptype> <name>layer</name></param>
+        </command>
+        <command>
+            <proto>void <name>glBeginPixelLocalStorageANGLE</name></proto>
+            <param><ptype>GLsizei</ptype> <name>planes</name></param>
+            <param group="PixelLocalLoadOpANGLE" len="planes">const <ptype>GLenum</ptype> *<name>loadops</name></param>
+            <param len="(planes * 4)">const void *<name>cleardata</name></param>
+        </command>
+        <command>
+            <proto>void <name>glEndPixelLocalStorageANGLE</name></proto>
+        </command>
+        <command>
+            <proto>void <name>glPixelLocalStorageBarrierANGLE</name></proto>
+        </command>
     </commands>
 
     <!-- SECTION: ANGLE extension interface definitions -->
@@ -1157,6 +1181,25 @@
                 <command name="glImportSemaphoreZirconHandleANGLE"/>
             </require>
         </extension>
+        <extension name="GL_ANGLE_shader_pixel_local_storage" supported="gles2">
+            <require>
+                <enum name="GL_MAX_PIXEL_LOCAL_STORAGE_PLANES_ANGLE"/>
+                <enum name="GL_MAX_COLOR_ATTACHMENTS_WITH_ACTIVE_PIXEL_LOCAL_STORAGE_ANGLE"/>
+                <enum name="GL_MAX_COMBINED_DRAW_BUFFERS_AND_PIXEL_LOCAL_STORAGE_PLANES_ANGLE"/>
+                <enum name="GL_PIXEL_LOCAL_STORAGE_ACTIVE_ANGLE"/>
+                <enum name="GL_PIXEL_LOCAL_FORMAT_ANGLE"/>
+                <enum name="GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE"/>
+                <enum name="GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE"/>
+                <enum name="GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE"/>
+                <enum name="GL_CLEAR_ANGLE"/>
+                <enum name="GL_DISABLE_ANGLE"/>
+                <command name="glFramebufferMemorylessPixelLocalStorageANGLE"/>
+                <command name="glFramebufferTexturePixelLocalStorageANGLE"/>
+                <command name="glBeginPixelLocalStorageANGLE"/>
+                <command name="glEndPixelLocalStorageANGLE"/>
+                <command name="glPixelLocalStorageBarrierANGLE"/>
+            </require>
+        </extension>
     </extensions>
 
     <!-- SECTION: GL enumerant (token) definitions. -->
@@ -1170,6 +1213,19 @@
     <enums namespace="GL" start="0x93AE" end="0x93AF" vendor="ANGLE">
         <enum value="0x93AE" name="GL_HANDLE_TYPE_ZIRCON_VMO_ANGLE"/>
         <enum value="0x93AF" name="GL_HANDLE_TYPE_ZIRCON_EVENT_ANGLE"/>
+    </enums>
+
+    <enums namespace="GL" start="0x96E0" end="0x96EA" vendor="ANGLE">
+        <enum value="0x96E0" name="GL_MAX_PIXEL_LOCAL_STORAGE_PLANES_ANGLE"/>
+        <enum value="0x96E1" name="GL_MAX_COLOR_ATTACHMENTS_WITH_ACTIVE_PIXEL_LOCAL_STORAGE_ANGLE"/>
+        <enum value="0x96E2" name="GL_MAX_COMBINED_DRAW_BUFFERS_AND_PIXEL_LOCAL_STORAGE_PLANES_ANGLE"/>
+        <enum value="0x96E3" name="GL_PIXEL_LOCAL_STORAGE_ACTIVE_ANGLE"/>
+        <enum value="0x96E4" name="GL_PIXEL_LOCAL_FORMAT_ANGLE"/>
+        <enum value="0x96E5" name="GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE"/>
+        <enum value="0x96E6" name="GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE"/>
+        <enum value="0x96E7" name="GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE"/>
+        <enum value="0x96E8" name="GL_CLEAR_ANGLE" group="PixelLocalLoadOpANGLE"/>
+        <enum value="0x96E9" name="GL_DISABLE_ANGLE" group="PixelLocalLoadOpANGLE"/>
     </enums>
 
     <enums namespace="GL" group="CreateFlagMask" type="bitmask" vendor="ANGLE">
