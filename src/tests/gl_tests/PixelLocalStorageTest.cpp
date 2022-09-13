@@ -1921,6 +1921,7 @@ TEST_P(PixelLocalStorageTest, Coherency)
     ASSERT_GL_NO_ERROR();
 }
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(PixelLocalStorageTest);
 ANGLE_INSTANTIATE_TEST(
     PixelLocalStorageTest,
     ES31_D3D11().enable(Feature::EmulatePixelLocalStorage),
