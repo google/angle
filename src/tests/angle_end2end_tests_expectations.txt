@@ -555,6 +555,56 @@
 // skipped.
 7376 PIXEL6 VULKAN : *_EmulateTransformFeedback_NoSupportsTransformFeedbackExtension_NoSupportsGeometryStreamsCapability = SKIP
 
+// iOS
+7653 IOS : BufferDataTestES3.DrawWithNotCallingBufferData/ES3_OpenGL = SKIP
+7653 IOS : DepthStencilFormatsTest.DepthStencilReadback_DepthStencil/ES2_OpenGL = SKIP
+7653 IOS : DepthStencilFormatsTest.DepthStencilReadback_Float/ES2_OpenGL = SKIP
+7653 IOS : DepthStencilFormatsTest.DepthStencilReadback_UInt/ES2_OpenGL = SKIP
+7653 IOS : DepthStencilFormatsTest.DepthStencilReadback_UShort/ES2_OpenGL = SKIP
+7653 IOS : DepthStencilTestES3.FramebufferClearThenStencilAttachedThenStencilTestState/ES3_OpenGL = SKIP
+7653 IOS : DepthStencilTestES3.FramebufferClearThenStencilTestStateThenStencilAttached/ES3_OpenGL = SKIP
+7653 IOS : DepthStencilTestES3.ReadPixelsDepth24/ES3_OpenGL = SKIP
+7653 IOS : DepthStencilTestES3.StencilTestStateThenFramebufferClearThenStencilAttached/ES3_OpenGL = SKIP
+7653 IOS : EGLContextCompatibilityTest.PbufferDifferentConfig/OpenGL_R8G8B8A8D24S8_R8G8B8A8D24S8 = SKIP
+7653 IOS : EGLContextCompatibilityTest.PbufferSameConfig/OpenGL_R8G8B8A8D24S8 = SKIP
+7653 IOS : EGLSurfacelessContextTest.Switcheroo/ES2_OpenGL_NoFixture = SKIP
+7653 IOS : GLSLTest_ES3.GLVertexIDIntegerTextureDrawElementsU8Line/ES3_OpenGL = SKIP
+7653 IOS : GLSLTest_ES3.InactiveVaryingStructUnusedInFragmentShader/ES3_OpenGL = SKIP
+7653 IOS : GLSLTestLoops.DoWhileContinueInSwitch/ES3_OpenGL = SKIP
+7653 IOS : GLSLTestLoops.ForContinueInSwitch/ES3_OpenGL = SKIP
+7653 IOS : GLSLTestLoops.WhileContinueInSwitch/ES3_OpenGL = SKIP
+7653 IOS : IncompleteTextureTestES3.IntegerType/ES3_OpenGL = SKIP
+7653 IOS : IncompleteTextureTestES3.UnsignedIntegerType/ES3_OpenGL = SKIP
+7653 IOS : MipmapTest.DefineValidExtraLevelAndUseItLater/ES2_OpenGL = SKIP
+7653 IOS : MipmapTest.DefineValidExtraLevelAndUseItLater/ES3_OpenGL = SKIP
+7653 IOS : MipmapTest.GenerateMipmapAfterModifyingBaseLevel/ES2_OpenGL = SKIP
+7653 IOS : MipmapTest.GenerateMipmapAfterModifyingBaseLevel/ES3_OpenGL = SKIP
+7653 IOS : MipmapTest.GenerateMipmapAfterSingleLevelDraw/ES2_OpenGL = SKIP
+7653 IOS : MipmapTest.GenerateMipmapAfterSingleLevelDraw/ES3_OpenGL = SKIP
+7653 IOS : MipmapTest.GenerateMipmapFromInitDataThenRender/ES2_OpenGL = SKIP
+7653 IOS : MipmapTest.GenerateMipmapFromInitDataThenRender/ES3_OpenGL = SKIP
+7653 IOS : MipmapTest.GenerateMipmapFromRenderedImage/ES2_OpenGL = SKIP
+7653 IOS : MipmapTest.GenerateMipmapFromRenderedImage/ES3_OpenGL = SKIP
+7653 IOS : MipmapTest.MipMapGenerationD3D9Bug/ES2_OpenGL = SKIP
+7653 IOS : MipmapTest.MipMapGenerationD3D9Bug/ES3_OpenGL = SKIP
+7653 IOS : MipmapTest.MipmapsForTexture3DOES/ES2_OpenGL = SKIP
+7653 IOS : MipmapTest.MipmapsForTexture3DOES/ES3_OpenGL = SKIP
+7653 IOS : MipmapTest.RenderOntoLevelZeroAfterGenerateMipmap/ES2_OpenGL = SKIP
+7653 IOS : MipmapTest.RenderOntoLevelZeroAfterGenerateMipmap/ES3_OpenGL = SKIP
+7653 IOS : MipmapTest.TextureCubeGeneralLevelZero/ES2_OpenGL = SKIP
+7653 IOS : MipmapTest.TextureCubeGeneralLevelZero/ES3_OpenGL = SKIP
+7653 IOS : MipmapTest.TextureCubeRenderToLevelZero/ES2_OpenGL = SKIP
+7653 IOS : MipmapTest.TextureCubeRenderToLevelZero/ES3_OpenGL = SKIP
+7653 IOS : PbufferTest.Clearing/ES2_OpenGL = SKIP
+7653 IOS : StateChangeTestES3.LineWidth/ES3_OpenGL = SKIP
+7653 IOS : Texture3DTestES2.CopySubImageAlpha/ES2_OpenGL = SKIP
+7653 IOS : Texture3DTestES2.CopySubImageLuminance/ES2_OpenGL = SKIP
+7653 IOS : Texture3DTestES2.CopySubImageRGBA/ES2_OpenGL = SKIP
+7653 IOS : Texture3DTestES2.Luminance/ES2_OpenGL = SKIP
+7653 IOS : Texture3DTestES2.RGBA/ES2_OpenGL = SKIP
+7653 IOS : TransformFeedbackTest.RenderOnceChangeXfbBufferRenderAgain/ES3_OpenGL = SKIP
+7653 IOS : VertexAttributeTestES3.emptyBuffer/ES3_OpenGL = SKIP
+
 // Test is disabled as it only pertains to desktop GLSL
 6197 : GLSLTest_ES31.InterpolateAtWithSwizzle/* = SKIP
 
