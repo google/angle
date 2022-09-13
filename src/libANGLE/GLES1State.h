@@ -116,7 +116,17 @@ struct TextureEnvironmentParameters
     GLfloat alphaScale = 1.0f;
 
     bool pointSpriteCoordReplace = false;
+
+    auto tie() const
+    {
+        return std::tie(mode, combineRgb, combineAlpha, src0Rgb, src0Alpha, src1Rgb, src1Alpha,
+                        src2Rgb, src2Alpha, op0Rgb, op0Alpha, op1Rgb, op1Alpha, op2Rgb, op2Alpha,
+                        color, rgbScale, alphaScale, pointSpriteCoordReplace);
+    }
 };
+
+bool operator==(const TextureEnvironmentParameters &a, const TextureEnvironmentParameters &b);
+bool operator!=(const TextureEnvironmentParameters &a, const TextureEnvironmentParameters &b);
 
 struct PointParameters
 {

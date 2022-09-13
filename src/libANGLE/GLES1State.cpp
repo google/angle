@@ -500,6 +500,16 @@ const TextureEnvironmentParameters &GLES1State::textureEnvironment(unsigned int 
     return mTextureEnvironments[unit];
 }
 
+bool operator==(const TextureEnvironmentParameters &a, const TextureEnvironmentParameters &b)
+{
+    return a.tie() == b.tie();
+}
+
+bool operator!=(const TextureEnvironmentParameters &a, const TextureEnvironmentParameters &b)
+{
+    return !(a == b);
+}
+
 PointParameters &GLES1State::pointParameters()
 {
     setDirty(DIRTY_GLES1_POINT_PARAMETERS);

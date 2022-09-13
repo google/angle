@@ -2708,6 +2708,85 @@ void CaptureVertexPointerES1(std::vector<CallCapture> *setupCalls,
     }
 }
 
+void CaptureTextureEnvironmentState(std::vector<CallCapture> *setupCalls,
+                                    gl::State *replayState,
+                                    const gl::State *apiState,
+                                    unsigned int unit)
+{
+    const gl::TextureEnvironmentParameters &currentEnv = apiState->gles1().textureEnvironment(unit);
+    const gl::TextureEnvironmentParameters &defaultEnv =
+        replayState->gles1().textureEnvironment(unit);
+
+    if (currentEnv == defaultEnv)
+    {
+        return;
+    }
+
+    auto capIfNe = [setupCalls](auto currentState, auto defaultState, CallCapture &&call) {
+        if (currentState != defaultState)
+        {
+            setupCalls->emplace_back(std::move(call));
+        }
+    };
+
+    // When the texture env state differs on a non-default sampler unit, emit an ActiveTexture call.
+    // The default sampler unit is GL_TEXTURE0.
+    GLenum currentUnit = GL_TEXTURE0 + static_cast<GLenum>(unit);
+    GLenum defaultUnit = GL_TEXTURE0 + static_cast<GLenum>(replayState->getActiveSampler());
+    capIfNe(currentUnit, defaultUnit, CaptureActiveTexture(*replayState, true, currentUnit));
+
+    auto capEnum = [capIfNe, replayState](gl::TextureEnvParameter pname, auto currentState,
+                                          auto defaultState) {
+        capIfNe(currentState, defaultState,
+                CaptureTexEnvi(*replayState, true, gl::TextureEnvTarget::Env, pname,
+                               ToGLenum(currentState)));
+    };
+
+    capEnum(gl::TextureEnvParameter::Mode, currentEnv.mode, defaultEnv.mode);
+
+    capEnum(gl::TextureEnvParameter::CombineRgb, currentEnv.combineRgb, defaultEnv.combineRgb);
+    capEnum(gl::TextureEnvParameter::CombineAlpha, currentEnv.combineAlpha,
+            defaultEnv.combineAlpha);
+
+    capEnum(gl::TextureEnvParameter::Src0Rgb, currentEnv.src0Rgb, defaultEnv.src0Rgb);
+    capEnum(gl::TextureEnvParameter::Src1Rgb, currentEnv.src1Rgb, defaultEnv.src1Rgb);
+    capEnum(gl::TextureEnvParameter::Src2Rgb, currentEnv.src2Rgb, defaultEnv.src2Rgb);
+
+    capEnum(gl::TextureEnvParameter::Src0Alpha, currentEnv.src0Alpha, defaultEnv.src0Alpha);
+    capEnum(gl::TextureEnvParameter::Src1Alpha, currentEnv.src1Alpha, defaultEnv.src1Alpha);
+    capEnum(gl::TextureEnvParameter::Src2Alpha, currentEnv.src2Alpha, defaultEnv.src2Alpha);
+
+    capEnum(gl::TextureEnvParameter::Op0Rgb, currentEnv.op0Rgb, defaultEnv.op0Rgb);
+    capEnum(gl::TextureEnvParameter::Op1Rgb, currentEnv.op1Rgb, defaultEnv.op1Rgb);
+    capEnum(gl::TextureEnvParameter::Op2Rgb, currentEnv.op2Rgb, defaultEnv.op2Rgb);
+
+    capEnum(gl::TextureEnvParameter::Op0Alpha, currentEnv.op0Alpha, defaultEnv.op0Alpha);
+    capEnum(gl::TextureEnvParameter::Op1Alpha, currentEnv.op1Alpha, defaultEnv.op1Alpha);
+    capEnum(gl::TextureEnvParameter::Op2Alpha, currentEnv.op2Alpha, defaultEnv.op2Alpha);
+
+    auto capFloat = [capIfNe, replayState](gl::TextureEnvParameter pname, auto currentState,
+                                           auto defaultState) {
+        capIfNe(currentState, defaultState,
+                CaptureTexEnvf(*replayState, true, gl::TextureEnvTarget::Env, pname, currentState));
+    };
+
+    capFloat(gl::TextureEnvParameter::RgbScale, currentEnv.rgbScale, defaultEnv.rgbScale);
+    capFloat(gl::TextureEnvParameter::AlphaScale, currentEnv.alphaScale, defaultEnv.alphaScale);
+
+    capIfNe(currentEnv.color, defaultEnv.color,
+            CaptureTexEnvfv(*replayState, true, gl::TextureEnvTarget::Env,
+                            gl::TextureEnvParameter::Color, currentEnv.color.data()));
+
+    // PointCoordReplace is the only parameter that uses the PointSprite TextureEnvTarget.
+    capIfNe(currentEnv.pointSpriteCoordReplace, defaultEnv.pointSpriteCoordReplace,
+            CaptureTexEnvi(*replayState, true, gl::TextureEnvTarget::PointSprite,
+                           gl::TextureEnvParameter::PointCoordReplace,
+                           currentEnv.pointSpriteCoordReplace));
+
+    // In case of non-default sampler units, the default unit must be set back here.
+    capIfNe(currentUnit, defaultUnit, CaptureActiveTexture(*replayState, true, defaultUnit));
+}
+
 bool VertexBindingMatchesAttribStride(const gl::VertexAttribute &attrib,
                                       const gl::VertexBinding &binding)
 {
@@ -4184,6 +4263,16 @@ void CaptureMidExecutionSetup(const gl::Context *context,
                 replayState.setSamplerTexture(context, textureType,
                                               apiBindings[bindingIndex].get());
             }
+        }
+    }
+
+    // Capture Texture Environment
+    if (context->isGLES1())
+    {
+        const gl::Caps &caps = context->getCaps();
+        for (GLuint unit = 0; unit < caps.maxMultitextureUnits; ++unit)
+        {
+            CaptureTextureEnvironmentState(setupCalls, &replayState, &apiState, unit);
         }
     }
 
