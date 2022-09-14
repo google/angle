@@ -113,13 +113,29 @@ angle::Result GLES1Renderer::prepareForDraw(PrimitiveMode mode, Context *context
 
         texCubeEnables[i] = gles1State.isTextureTargetEnabled(i, TextureType::CubeMap);
         tex2DEnables[i] =
-            !texCubeEnables[i] && (gles1State.isTextureTargetEnabled(i, TextureType::_2D));
+            !texCubeEnables[i] && gles1State.isTextureTargetEnabled(i, TextureType::_2D);
 
         Texture *curr2DTexture = glState->getSamplerTexture(i, TextureType::_2D);
         if (curr2DTexture)
         {
             tex2DFormats[i] = gl::GetUnsizedFormat(
                 curr2DTexture->getFormat(TextureTarget::_2D, 0).info->internalFormat);
+        }
+
+        Texture *currCubeTexture = glState->getSamplerTexture(i, TextureType::CubeMap);
+
+        // > If texturing is enabled for a texture unit at the time a primitive is rasterized, if
+        // > TEXTURE MIN FILTER is one that requires a mipmap, and if the texture image bound to the
+        // > enabled texture target is not complete, then it is as if texture mapping were disabled
+        // > for that texture unit.
+        if (tex2DEnables[i] && curr2DTexture && IsMipmapFiltered(curr2DTexture->getMinFilter()))
+        {
+            tex2DEnables[i] = curr2DTexture->isMipmapComplete();
+        }
+        if (texCubeEnables[i] && currCubeTexture &&
+            IsMipmapFiltered(currCubeTexture->getMinFilter()))
+        {
+            texCubeEnables[i] = curr2DTexture->isMipmapComplete();
         }
     }
 

@@ -290,7 +290,6 @@ TEST_P(GLES1ConformanceTest, Mip)
 
 TEST_P(GLES1ConformanceTest, MipLevels)
 {
-    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, MipLevelsExec());
 }
 
