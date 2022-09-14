@@ -4963,6 +4963,12 @@ bool SkipCall(EntryPoint entryPoint)
             //   and asking about uniforms above GL_ACTIVE_UNIFORMS triggers errors.
             return true;
 
+        case EntryPoint::GLGetActiveAttrib:
+            // Skip these calls because:
+            // - We don't use the return values.
+            // - Same as uniforms, the value can vary, asking above GL_ACTIVE_ATTRIBUTES is an error
+            return true;
+
         default:
             break;
     }
