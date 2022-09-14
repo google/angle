@@ -68,6 +68,13 @@
 4716 WIN NVIDIA GLES : CopyTextureTest.CopyOutsideMipmap/* = SKIP
 7298 WIN INTEL D3D11 : BlitFramebufferTest.Blit3DTo2DArray/* = SKIP
 7413 WIN NVIDIA VULKAN : DebugTestES3.MessageControl1/* = SKIP
+7666 WIN INTEL : FramebufferTest_ES31.ChangeFBOSizeWithNoAttachments/* = SKIP
+7666 WIN INTEL : FramebufferTest_ES31.ChangeFBOSizeAndAttachmentsCount/* = SKIP
+7666 WIN INTEL : FramebufferTest_ES31.RenderingLimitToDefaultFBOSizeWithNoAttachments/* = SKIP
+7666 WIN AMD : FramebufferTest_ES31.ChangeFBOSizeWithNoAttachments/* = SKIP
+7666 WIN AMD : FramebufferTest_ES31.ChangeFBOSizeAndAttachmentsCount/* = SKIP
+7666 WIN AMD : FramebufferTest_ES31.RenderingLimitToDefaultFBOSizeWithNoAttachments/* = SKIP
+7666 WIN NVIDIA D3D11 : FramebufferTest_ES31.ChangeFBOSizeAndAttachmentsCount/* = SKIP
 234602034 WIN INTEL D3D9 : ImageTest.SourceCubeAndSameTargetTextureWithEachCubeFace/* = SKIP
 234602034 WIN NVIDIA D3D9 : ImageTest.SourceCubeAndSameTargetTextureWithEachCubeFace/* = SKIP
 
@@ -481,6 +488,10 @@
 1296467 PIXEL4ORXL GLES : VertexAttributeTestES3.emptyBuffer/* = SKIP
 
 7283 PIXEL4ORXL GLES : TextureBufferTestES31.TextureBufferThenBufferData/* = SKIP
+
+7666 PIXEL4ORXL VULKAN : FramebufferTest_ES31.ChangeFBOSizeWithNoAttachments/* = SKIP
+7666 PIXEL4ORXL VULKAN : FramebufferTest_ES31.ChangeFBOSizeAndAttachmentsCount/* = SKIP
+7666 PIXEL4ORXL VULKAN : FramebufferTest_ES31.RenderingLimitToDefaultFBOSizeWithNoAttachments/* = SKIP
 
 // Internal driver failures on both GLES and Vulkan
 3839 NEXUS5X : GLSLTest_ES31.TypesUsedInDifferentBlockStorages/* = SKIP
