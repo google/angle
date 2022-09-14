@@ -331,7 +331,6 @@ TEST_P(GLES1ConformanceTest, PackedPixels)
 
 TEST_P(GLES1ConformanceTest, PointAntiAlias)
 {
-    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, PointAntiAliasExec());
 }
 
@@ -352,7 +351,6 @@ TEST_P(GLES1ConformanceTest, ReadFormat)
 
 TEST_P(GLES1ConformanceTest, RescaleNormal)
 {
-    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, RescaleNormalExec());
 }
 
