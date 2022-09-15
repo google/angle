@@ -65,6 +65,12 @@ RasterizerState::RasterizerState(const RasterizerState &other)
     memcpy(this, &other, sizeof(RasterizerState));
 }
 
+RasterizerState &RasterizerState::operator=(const RasterizerState &other)
+{
+    memcpy(this, &other, sizeof(RasterizerState));
+    return *this;
+}
+
 bool operator==(const RasterizerState &a, const RasterizerState &b)
 {
     return memcmp(&a, &b, sizeof(RasterizerState)) == 0;
@@ -132,6 +138,12 @@ DepthStencilState::DepthStencilState()
 DepthStencilState::DepthStencilState(const DepthStencilState &other)
 {
     memcpy(this, &other, sizeof(DepthStencilState));
+}
+
+DepthStencilState &DepthStencilState::operator=(const DepthStencilState &other)
+{
+    memcpy(this, &other, sizeof(DepthStencilState));
+    return *this;
 }
 
 bool DepthStencilState::isDepthMaskedOut() const

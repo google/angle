@@ -221,6 +221,7 @@ struct RasterizerState final
     // This will zero-initialize the struct, including padding.
     RasterizerState();
     RasterizerState(const RasterizerState &other);
+    RasterizerState &operator=(const RasterizerState &other);
 
     bool cullFace;
     CullFaceMode cullMode;
@@ -270,6 +271,7 @@ struct DepthStencilState final
     // This will zero-initialize the struct, including padding.
     DepthStencilState();
     DepthStencilState(const DepthStencilState &other);
+    DepthStencilState &operator=(const DepthStencilState &other);
 
     bool isDepthMaskedOut() const;
     bool isStencilMaskedOut() const;
