@@ -653,6 +653,11 @@ struct FeaturesVk : FeatureSetBase
         "VkDevice supports VK_EXT_extended_dynamic_state2 extension", &members,
         "http://anglebug.com/5906"};
 
+    FeatureInfo supportsLogicOpDynamicState = {
+        "supportsLogicOpDynamicState", FeatureCategory::VulkanFeatures,
+        "VkDevice supports the logicOp feature of VK_EXT_extended_dynamic_state2 extension",
+        &members, "http://anglebug.com/3862"};
+
     FeatureInfo supportsFragmentShadingRate = {
         "supportsFragmentShadingRate", FeatureCategory::VulkanFeatures,
         "VkDevice supports VK_KHR_fragment_shading_rate extension", &members,

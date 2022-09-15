@@ -784,6 +784,10 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
             DIRTY_BIT_DYNAMIC_PRIMITIVE_RESTART_ENABLE,
         };
     }
+    if (getFeatures().supportsLogicOpDynamicState.enabled)
+    {
+        mDynamicStateDirtyBits.set(DIRTY_BIT_DYNAMIC_LOGIC_OP);
+    }
     if (getFeatures().supportsFragmentShadingRate.enabled)
     {
         mDynamicStateDirtyBits.set(DIRTY_BIT_DYNAMIC_FRAGMENT_SHADING_RATE);
@@ -869,6 +873,8 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
         &ContextVk::handleDirtyGraphicsDynamicRasterizerDiscardEnable;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_DEPTH_BIAS_ENABLE] =
         &ContextVk::handleDirtyGraphicsDynamicDepthBiasEnable;
+    mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_LOGIC_OP] =
+        &ContextVk::handleDirtyGraphicsDynamicLogicOp;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_PRIMITIVE_RESTART_ENABLE] =
         &ContextVk::handleDirtyGraphicsDynamicPrimitiveRestartEnable;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_FRAGMENT_SHADING_RATE] =
@@ -2679,6 +2685,13 @@ angle::Result ContextVk::handleDirtyGraphicsDynamicDepthBiasEnable(
     DirtyBits dirtyBitMask)
 {
     mRenderPassCommandBuffer->setDepthBiasEnable(mState.isPolygonOffsetFillEnabled());
+    return angle::Result::Continue;
+}
+
+angle::Result ContextVk::handleDirtyGraphicsDynamicLogicOp(DirtyBits::Iterator *dirtyBitsIterator,
+                                                           DirtyBits dirtyBitMask)
+{
+    mRenderPassCommandBuffer->setLogicOp(gl_vk::GetLogicOp(gl::ToGLenum(mState.getLogicOp())));
     return angle::Result::Continue;
 }
 
@@ -5174,6 +5187,22 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                         case gl::State::EXTENDED_DIRTY_BIT_MIPMAP_GENERATION_HINT:
                             break;
                         case gl::State::EXTENDED_DIRTY_BIT_SHADER_DERIVATIVE_HINT:
+                            break;
+                        case gl::State::EXTENDED_DIRTY_BIT_LOGIC_OP_ENABLED:
+                            mGraphicsPipelineDesc->updateLogicOpEnabled(
+                                &mGraphicsPipelineTransition, glState.isLogicOpEnabled());
+                            break;
+                        case gl::State::EXTENDED_DIRTY_BIT_LOGIC_OP:
+                            if (getFeatures().supportsLogicOpDynamicState.enabled)
+                            {
+                                mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_LOGIC_OP);
+                            }
+                            else
+                            {
+                                mGraphicsPipelineDesc->updateLogicOp(
+                                    &mGraphicsPipelineTransition,
+                                    gl_vk::GetLogicOp(gl::ToGLenum(glState.getLogicOp())));
+                            }
                             break;
                         case gl::State::EXTENDED_DIRTY_BIT_SHADING_RATE:
                             mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_FRAGMENT_SHADING_RATE);

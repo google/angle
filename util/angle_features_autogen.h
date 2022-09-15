@@ -242,6 +242,7 @@ enum class Feature
     SupportsIncrementalPresent,
     SupportsIndexTypeUint8,
     SupportsLockSurfaceExtension,
+    SupportsLogicOpDynamicState,
     SupportsMultiDrawIndirect,
     SupportsMultisampledRenderToSingleSampled,
     SupportsMultisampledRenderToSingleSampledGOOGLEX,

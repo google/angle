@@ -1092,7 +1092,7 @@ void RendererVk::ensureCapsInitialized() const
     }
 
     // GL_EXT_blend_func_extended
-    mNativeExtensions.blendFuncExtendedEXT = (mPhysicalDeviceFeatures.dualSrcBlend == VK_TRUE);
+    mNativeExtensions.blendFuncExtendedEXT = mPhysicalDeviceFeatures.dualSrcBlend == VK_TRUE;
     mNativeCaps.maxDualSourceDrawBuffers   = LimitToInt(limitsVk.maxFragmentDualSrcAttachments);
 
     // GL_ANGLE_relaxed_vertex_attribute_type
@@ -1139,6 +1139,8 @@ void RendererVk::ensureCapsInitialized() const
     mNativeExtensions.shaderPixelLocalStorageANGLE = true;
     mNativeExtensions.shaderPixelLocalStorageCoherentANGLE =
         getFeatures().supportsFragmentShaderPixelInterlock.enabled;
+
+    mNativeExtensions.logicOpANGLE = mPhysicalDeviceFeatures.logicOp == VK_TRUE;
 }
 
 namespace vk
