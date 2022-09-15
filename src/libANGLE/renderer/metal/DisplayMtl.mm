@@ -666,11 +666,15 @@ const gl::Extensions &DisplayMtl::getNativeExtensions() const
     ensureCapsInitialized();
     return mNativeExtensions;
 }
-
 const gl::Limitations &DisplayMtl::getNativeLimitations() const
 {
     ensureCapsInitialized();
     return mNativeLimitations;
+}
+ShPixelLocalStorageType DisplayMtl::getNativePixelLocalStorageType() const
+{
+    // PLS isn't supported on Metal yet.
+    return ShPixelLocalStorageType::NotSupported;
 }
 
 void DisplayMtl::ensureCapsInitialized() const

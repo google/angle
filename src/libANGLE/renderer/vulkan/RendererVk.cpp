@@ -4005,6 +4005,15 @@ const gl::Limitations &RendererVk::getNativeLimitations() const
     return mNativeLimitations;
 }
 
+ShPixelLocalStorageType RendererVk::getNativePixelLocalStorageType() const
+{
+    if (!getNativeExtensions().shaderPixelLocalStorageANGLE)
+    {
+        return ShPixelLocalStorageType::NotSupported;
+    }
+    return ShPixelLocalStorageType::ImageStoreNativeFormats;
+}
+
 void RendererVk::initializeFrontendFeatures(angle::FrontendFeatures *features) const
 {
     bool isSwiftShader =

@@ -407,6 +407,13 @@ const gl::Limitations &ContextNULL::getNativeLimitations() const
     return mLimitations;
 }
 
+ShPixelLocalStorageType ContextNULL::getNativePixelLocalStorageType() const
+{
+    return getNativeExtensions().shaderPixelLocalStorageANGLE
+               ? ShPixelLocalStorageType::ImageStoreNativeFormats
+               : ShPixelLocalStorageType::NotSupported;
+}
+
 CompilerImpl *ContextNULL::createCompiler()
 {
     return new CompilerNULL();

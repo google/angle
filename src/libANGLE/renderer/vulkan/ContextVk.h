@@ -329,6 +329,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     const gl::TextureCapsMap &getNativeTextureCaps() const override;
     const gl::Extensions &getNativeExtensions() const override;
     const gl::Limitations &getNativeLimitations() const override;
+    ShPixelLocalStorageType getNativePixelLocalStorageType() const override;
 
     // Shader creation
     CompilerImpl *createCompiler() override;

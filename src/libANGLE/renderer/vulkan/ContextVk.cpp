@@ -5360,6 +5360,11 @@ const gl::Limitations &ContextVk::getNativeLimitations() const
     return mRenderer->getNativeLimitations();
 }
 
+ShPixelLocalStorageType ContextVk::getNativePixelLocalStorageType() const
+{
+    return mRenderer->getNativePixelLocalStorageType();
+}
+
 CompilerImpl *ContextVk::createCompiler()
 {
     return new CompilerVk();
