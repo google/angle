@@ -893,6 +893,32 @@
       },
       {
         "args": [
+          "angle_gles1_conformance_tests",
+          "--test-timeout=300",
+          "--bot-mode"
+        ],
+        "merge": {
+          "args": [],
+          "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
+        },
+        "swarming": {
+          "can_use_on_swarming_builders": true,
+          "containment_type": "AUTO",
+          "dimension_sets": [
+            {
+              "gpu": "8086:9bc5-20.0.8",
+              "os": "Ubuntu-18.04.6",
+              "pool": "chromium.tests.gpu"
+            }
+          ],
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
+        },
+        "test": "angle_gles1_conformance_tests",
+        "test_id_prefix": "ninja://src/tests:angle_gles1_conformance_tests/",
+        "use_isolated_scripts_api": true
+      },
+      {
+        "args": [
           "angle_unittests"
         ],
         "merge": {
@@ -1538,6 +1564,32 @@
         },
         "test": "angle_end2end_tests",
         "test_id_prefix": "ninja://src/tests:angle_end2end_tests/",
+        "use_isolated_scripts_api": true
+      },
+      {
+        "args": [
+          "angle_gles1_conformance_tests",
+          "--test-timeout=300",
+          "--bot-mode"
+        ],
+        "merge": {
+          "args": [],
+          "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
+        },
+        "swarming": {
+          "can_use_on_swarming_builders": true,
+          "containment_type": "AUTO",
+          "dimension_sets": [
+            {
+              "gpu": "10de:2184-440.100",
+              "os": "Ubuntu-18.04.5|Ubuntu-18.04.6",
+              "pool": "chromium.tests.gpu"
+            }
+          ],
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
+        },
+        "test": "angle_gles1_conformance_tests",
+        "test_id_prefix": "ninja://src/tests:angle_gles1_conformance_tests/",
         "use_isolated_scripts_api": true
       },
       {
