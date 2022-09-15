@@ -29,6 +29,7 @@ enum class GLESDriverType
     AngleEGL,
     SystemEGL,
     SystemWGL,
+    ZinkEGL,
 };
 
 GLESDriverType GetDriverTypeFromString(const char *driverName, GLESDriverType defaultDriverType);

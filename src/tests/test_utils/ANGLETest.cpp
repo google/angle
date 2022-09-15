@@ -551,6 +551,7 @@ void ANGLETestBase::initOSWindow()
     {
         case GLESDriverType::AngleEGL:
         case GLESDriverType::SystemEGL:
+        case GLESDriverType::ZinkEGL:
         {
             mFixture->eglWindow =
                 EGLWindow::New(mCurrentParams->clientType, mCurrentParams->majorVersion,
@@ -1519,6 +1520,7 @@ Optional<EGLint> ANGLETestBase::mLastRendererType;
 Optional<angle::GLESDriverType> ANGLETestBase::mLastLoadedDriver;
 
 std::unique_ptr<Library> ANGLETestEnvironment::gAngleEGLLibrary;
+std::unique_ptr<Library> ANGLETestEnvironment::gMesaEGLLibrary;
 std::unique_ptr<Library> ANGLETestEnvironment::gSystemEGLLibrary;
 std::unique_ptr<Library> ANGLETestEnvironment::gSystemWGLLibrary;
 
@@ -1540,6 +1542,8 @@ Library *ANGLETestEnvironment::GetDriverLibrary(angle::GLESDriverType driver)
             return GetSystemEGLLibrary();
         case angle::GLESDriverType::SystemWGL:
             return GetSystemWGLLibrary();
+        case angle::GLESDriverType::ZinkEGL:
+            return GetMesaEGLLibrary();
         default:
             return nullptr;
     }
@@ -1555,6 +1559,19 @@ Library *ANGLETestEnvironment::GetAngleEGLLibrary()
     }
 #endif  // defined(ANGLE_USE_UTIL_LOADER)
     return gAngleEGLLibrary.get();
+}
+
+// static
+Library *ANGLETestEnvironment::GetMesaEGLLibrary()
+{
+#if defined(ANGLE_USE_UTIL_LOADER)
+    if (!gMesaEGLLibrary)
+    {
+        gMesaEGLLibrary.reset(
+            OpenSharedLibrary(ANGLE_MESA_EGL_LIBRARY_NAME, SearchType::ModuleDir));
+    }
+#endif  // defined(ANGLE_USE_UTIL_LOADER)
+    return gMesaEGLLibrary.get();
 }
 
 // static

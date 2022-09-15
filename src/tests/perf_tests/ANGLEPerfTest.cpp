@@ -673,6 +673,9 @@ std::string RenderTestParams::backend() const
         case GLESDriverType::SystemEGL:
             strstr << "_native";
             break;
+        case GLESDriverType::ZinkEGL:
+            strstr << "_zink";
+            break;
         default:
             assert(0);
             return "_unk";
@@ -800,6 +803,12 @@ ANGLERenderTest::ANGLERenderTest(const std::string &name,
 #else
             skipTest("WGL driver not available.");
 #endif  // defined(ANGLE_USE_UTIL_LOADER) && defined(ANGLE_PLATFORM_WINDOWS)
+            break;
+        case GLESDriverType::ZinkEGL:
+            mGLWindow = EGLWindow::New(testParams.clientType, testParams.majorVersion,
+                                       testParams.minorVersion, testParams.profileMask);
+            mEntryPointsLib.reset(
+                OpenSharedLibrary(ANGLE_MESA_EGL_LIBRARY_NAME, SearchType::ModuleDir));
             break;
         default:
             skipTest("Error in switch.");

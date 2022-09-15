@@ -152,6 +152,19 @@ bool EGLWindow::initializeDisplay(OSWindow *osWindow,
                                   angle::GLESDriverType driverType,
                                   const EGLPlatformParameters &params)
 {
+    if (driverType == angle::GLESDriverType::ZinkEGL)
+    {
+        std::stringstream driDirStream;
+        char s = angle::GetPathSeparator();
+        driDirStream << angle::GetModuleDirectory() << "mesa" << s << "src" << s << "gallium" << s
+                     << "targets" << s << "dri";
+
+        std::string driDir = driDirStream.str();
+
+        angle::SetEnvironmentVar("MESA_LOADER_DRIVER_OVERRIDE", "zink");
+        angle::SetEnvironmentVar("LIBGL_DRIVERS_PATH", driDir.c_str());
+    }
+
 #if defined(ANGLE_USE_UTIL_LOADER)
     PFNEGLGETPROCADDRESSPROC getProcAddress;
     glWindowingLibrary->getAs("eglGetProcAddress", &getProcAddress);
