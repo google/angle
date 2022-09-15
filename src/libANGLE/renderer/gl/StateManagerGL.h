@@ -516,6 +516,9 @@ class StateManagerGL final : angle::NonCopyable
     gl::State::ClipDistanceEnableBits mEnabledClipDistances;
     const size_t mMaxClipDistances;
 
+    bool mLogicOpEnabled;
+    gl::LogicalOperation mLogicOp;
+
     gl::State::DirtyBits mLocalDirtyBits;
     gl::State::ExtendedDirtyBits mLocalExtendedDirtyBits;
     gl::AttributesMask mLocalDirtyCurrentValues;

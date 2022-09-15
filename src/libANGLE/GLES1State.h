@@ -184,6 +184,7 @@ class GLES1State final : angle::NonCopyable
     void loadMatrix(const angle::Mat4 &m);
     void multMatrix(const angle::Mat4 &m);
 
+    void setLogicOpEnabled(bool enabled);
     void setLogicOp(LogicalOperation opcodePacked);
 
     void setClientStateEnabled(ClientVertexArrayType clientState, bool enable);

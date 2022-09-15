@@ -157,7 +157,9 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions,
       mCoverageModulation(GL_NONE),
       mIsMultiviewEnabled(extensions.multiviewOVR || extensions.multiview2OVR),
       mProvokingVertex(GL_LAST_VERTEX_CONVENTION),
-      mMaxClipDistances(rendererCaps.maxClipDistances)
+      mMaxClipDistances(rendererCaps.maxClipDistances),
+      mLogicOpEnabled(false),
+      mLogicOp(gl::LogicalOperation::Copy)
 {
     ASSERT(mFunctions);
     ASSERT(rendererCaps.maxViews >= 1u);
@@ -2198,8 +2200,9 @@ angle::Result StateManagerGL::syncState(const gl::Context *context,
                             break;
                         case gl::State::EXTENDED_DIRTY_BIT_CLIP_CONTROL:
                         case gl::State::EXTENDED_DIRTY_BIT_SHADING_RATE:
+                            // Unimplemented extensions.
+                            break;
                         default:
-                            // Unimplemented functionality.
                             UNREACHABLE();
                             break;
                     }
@@ -2436,6 +2439,12 @@ void StateManagerGL::setClipDistancesEnable(const gl::State::ClipDistanceEnableB
 
 void StateManagerGL::setLogicOpEnabled(bool enabled)
 {
+    if (enabled == mLogicOpEnabled)
+    {
+        return;
+    }
+    mLogicOpEnabled = enabled;
+
     if (enabled)
     {
         mFunctions->enable(GL_COLOR_LOGIC_OP);
@@ -2451,6 +2460,12 @@ void StateManagerGL::setLogicOpEnabled(bool enabled)
 
 void StateManagerGL::setLogicOp(gl::LogicalOperation opcode)
 {
+    if (opcode == mLogicOp)
+    {
+        return;
+    }
+    mLogicOp = opcode;
+
     mFunctions->logicOp(ToGLenum(opcode));
 
     mLocalDirtyBits.set(gl::State::DIRTY_BIT_EXTENDED);

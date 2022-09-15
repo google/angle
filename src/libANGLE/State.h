@@ -749,6 +749,7 @@ class State : angle::NonCopyable
     void setAllDirtyBits()
     {
         mDirtyBits.set();
+        mExtendedDirtyBits.set();
         mDirtyCurrentValues.set();
     }
 

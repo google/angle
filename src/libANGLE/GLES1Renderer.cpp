@@ -242,6 +242,13 @@ angle::Result GLES1Renderer::prepareForDraw(PrimitiveMode mode, Context *context
     setUniform4fv(programObject, programState.drawTextureNormalizedCropRectLoc, kTexUnitCount,
                   reinterpret_cast<GLfloat *>(cropRectBuffer));
 
+    if (gles1State.isDirty(GLES1State::DIRTY_GLES1_LOGIC_OP) &&
+        context->getExtensions().logicOpANGLE)
+    {
+        context->setLogicOpEnabled(gles1State.mLogicOpEnabled);
+        context->setLogicOp(gles1State.mLogicOp);
+    }
+
     // Client state / current vector enables
     if (gles1State.isDirty(GLES1State::DIRTY_GLES1_CLIENT_STATE_ENABLE) ||
         gles1State.isDirty(GLES1State::DIRTY_GLES1_CURRENT_VECTOR))
