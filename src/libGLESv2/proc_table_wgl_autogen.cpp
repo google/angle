@@ -775,6 +775,7 @@ const ProcEntry g_procTable[] = {
     {"glLoadTransposeMatrixd", P(GL_LoadTransposeMatrixd)},
     {"glLoadTransposeMatrixf", P(GL_LoadTransposeMatrixf)},
     {"glLogicOp", P(GL_LogicOp)},
+    {"glLogicOpANGLE", P(GL_LogicOpANGLE)},
     {"glLoseContextCHROMIUM", P(GL_LoseContextCHROMIUM)},
     {"glMap1d", P(GL_Map1d)},
     {"glMap1f", P(GL_Map1f)},

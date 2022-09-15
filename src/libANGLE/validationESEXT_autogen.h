@@ -228,6 +228,11 @@ bool ValidateVertexAttribDivisorANGLE(const Context *context,
                                       GLuint index,
                                       GLuint divisor);
 
+// GL_ANGLE_logic_op
+bool ValidateLogicOpANGLE(const Context *context,
+                          angle::EntryPoint entryPoint,
+                          LogicalOperation opcodePacked);
+
 // GL_ANGLE_memory_object_flags
 bool ValidateTexStorageMemFlags2DANGLE(const Context *context,
                                        angle::EntryPoint entryPoint,

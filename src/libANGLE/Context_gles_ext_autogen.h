@@ -369,6 +369,8 @@
     void getRenderbufferImage(GLenum target, GLenum format, GLenum type, void *pixels);            \
     /* GL_ANGLE_get_serialized_context_string */                                                   \
     /* GL_ANGLE_get_tex_level_parameter */                                                         \
+    /* GL_ANGLE_logic_op */                                                                        \
+    void logicOpANGLE(LogicalOperation opcodePacked);                                              \
     /* GL_ANGLE_lossy_etc_decode */                                                                \
     /* GL_ANGLE_memory_object_flags */                                                             \
     void texStorageMemFlags2D(TextureType targetPacked, GLsizei levels, GLenum internalFormat,     \

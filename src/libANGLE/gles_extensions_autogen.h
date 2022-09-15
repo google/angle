@@ -602,6 +602,9 @@ struct Extensions
     // GL_ANGLE_get_tex_level_parameter
     bool getTexLevelParameterANGLE = false;
 
+    // GL_ANGLE_logic_op
+    bool logicOpANGLE = false;
+
     // GL_CHROMIUM_lose_context
     bool loseContextCHROMIUM = false;
 

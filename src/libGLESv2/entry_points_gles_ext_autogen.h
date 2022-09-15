@@ -173,6 +173,9 @@ ANGLE_EXPORT void GL_APIENTRY GL_DrawElementsInstancedANGLE(GLenum mode,
                                                             GLsizei primcount);
 ANGLE_EXPORT void GL_APIENTRY GL_VertexAttribDivisorANGLE(GLuint index, GLuint divisor);
 
+// GL_ANGLE_logic_op
+ANGLE_EXPORT void GL_APIENTRY GL_LogicOpANGLE(GLenum opcode);
+
 // GL_ANGLE_memory_object_flags
 ANGLE_EXPORT void GL_APIENTRY GL_TexStorageMemFlags2DANGLE(GLenum target,
                                                            GLsizei levels,

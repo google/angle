@@ -44,6 +44,24 @@
             <enum name="GL_HANDLE_TYPE_ZIRCON_VMO_ANGLE"/>
             <enum name="GL_HANDLE_TYPE_ZIRCON_EVENT_ANGLE"/>
         </group>
+        <group name="LogicOp">
+            <enum name="GL_CLEAR_ANGLE"/>
+            <enum name="GL_AND_ANGLE"/>
+            <enum name="GL_AND_REVERSE_ANGLE"/>
+            <enum name="GL_COPY_ANGLE"/>
+            <enum name="GL_AND_INVERTED_ANGLE"/>
+            <enum name="GL_NOOP_ANGLE"/>
+            <enum name="GL_XOR_ANGLE"/>
+            <enum name="GL_OR_ANGLE"/>
+            <enum name="GL_NOR_ANGLE"/>
+            <enum name="GL_EQUIV_ANGLE"/>
+            <enum name="GL_INVERT_ANGLE"/>
+            <enum name="GL_OR_REVERSE_ANGLE"/>
+            <enum name="GL_COPY_INVERTED_ANGLE"/>
+            <enum name="GL_OR_INVERTED_ANGLE"/>
+            <enum name="GL_NAND_ANGLE"/>
+            <enum name="GL_SET_ANGLE"/>
+        </group>
     </groups>
 
     <!-- SECTION: GL command definitions. -->
@@ -959,6 +977,10 @@
         <command>
             <proto>void <name>glPixelLocalStorageBarrierANGLE</name></proto>
         </command>
+        <command>
+            <proto>void <name>glLogicOpANGLE</name></proto>
+            <param group="LogicOp"><ptype>GLenum</ptype> <name>opcode</name></param>
+        </command>
     </commands>
 
     <!-- SECTION: ANGLE extension interface definitions -->
@@ -1200,6 +1222,28 @@
                 <command name="glPixelLocalStorageBarrierANGLE"/>
             </require>
         </extension>
+        <extension name="GL_ANGLE_logic_op" supported="gles2">
+            <require>
+                <enum name="GL_COLOR_LOGIC_OP_ANGLE"/>
+                <enum name="GL_LOGIC_OP_CLEAR_ANGLE"/>
+                <enum name="GL_LOGIC_OP_AND_ANGLE"/>
+                <enum name="GL_LOGIC_OP_AND_REVERSE_ANGLE"/>
+                <enum name="GL_LOGIC_OP_COPY_ANGLE"/>
+                <enum name="GL_LOGIC_OP_AND_INVERTED_ANGLE"/>
+                <enum name="GL_LOGIC_OP_NOOP_ANGLE"/>
+                <enum name="GL_LOGIC_OP_XOR_ANGLE"/>
+                <enum name="GL_LOGIC_OP_OR_ANGLE"/>
+                <enum name="GL_LOGIC_OP_NOR_ANGLE"/>
+                <enum name="GL_LOGIC_OP_EQUIV_ANGLE"/>
+                <enum name="GL_LOGIC_OP_INVERT_ANGLE"/>
+                <enum name="GL_LOGIC_OP_OR_REVERSE_ANGLE"/>
+                <enum name="GL_LOGIC_OP_COPY_INVERTED_ANGLE"/>
+                <enum name="GL_LOGIC_OP_OR_INVERTED_ANGLE"/>
+                <enum name="GL_LOGIC_OP_NAND_ANGLE"/>
+                <enum name="GL_LOGIC_OP_SET_ANGLE"/>
+                <command name="glLogicOpANGLE"/>
+            </require>
+        </extension>
     </extensions>
 
     <!-- SECTION: GL enumerant (token) definitions. -->
@@ -1257,5 +1301,27 @@
         <enum value="0x00000080" name="GL_USAGE_INPUT_ATTACHMENT_BIT_ANGLE"/>
         <enum value="0x00000100" name="GL_USAGE_SHADING_RATE_IMAGE_BIT_ANGLE"/>
         <enum value="0x00000200" name="GL_USAGE_FRAGMENT_DENSITY_MAP_BIT_ANGLE"/>
+    </enums>
+
+    <enums namespace="GL" group="LogicOp" start="0x1500" end="0x150F" vendor="ANGLE">
+        <enum value="0x1500" name="GL_LOGIC_OP_CLEAR_ANGLE"/>
+        <enum value="0x1501" name="GL_LOGIC_OP_AND_ANGLE"/>
+        <enum value="0x1502" name="GL_LOGIC_OP_AND_REVERSE_ANGLE"/>
+        <enum value="0x1503" name="GL_LOGIC_OP_COPY_ANGLE"/>
+        <enum value="0x1504" name="GL_LOGIC_OP_AND_INVERTED_ANGLE"/>
+        <enum value="0x1505" name="GL_LOGIC_OP_NOOP_ANGLE"/>
+        <enum value="0x1506" name="GL_LOGIC_OP_XOR_ANGLE"/>
+        <enum value="0x1507" name="GL_LOGIC_OP_OR_ANGLE"/>
+        <enum value="0x1508" name="GL_LOGIC_OP_NOR_ANGLE"/>
+        <enum value="0x1509" name="GL_LOGIC_OP_EQUIV_ANGLE"/>
+        <enum value="0x150A" name="GL_LOGIC_OP_INVERT_ANGLE"/>
+        <enum value="0x150B" name="GL_LOGIC_OP_OR_REVERSE_ANGLE"/>
+        <enum value="0x150C" name="GL_LOGIC_OP_COPY_INVERTED_ANGLE"/>
+        <enum value="0x150D" name="GL_LOGIC_OP_OR_INVERTED_ANGLE"/>
+        <enum value="0x150E" name="GL_LOGIC_OP_NAND_ANGLE"/>
+        <enum value="0x150F" name="GL_LOGIC_OP_SET_ANGLE"/>
+    </enums>
+    <enums namespace="GL" start="0x0BF2" end="0x0BF2" vendor="ANGLE">
+        <enum value="0x0BF2" name="GL_COLOR_LOGIC_OP_ANGLE"/>
     </enums>
 </registry>

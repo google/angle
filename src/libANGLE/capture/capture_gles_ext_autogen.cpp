@@ -1020,6 +1020,17 @@ CallCapture CaptureVertexAttribDivisorANGLE(const State &glState,
     return CallCapture(angle::EntryPoint::GLVertexAttribDivisorANGLE, std::move(paramBuffer));
 }
 
+CallCapture CaptureLogicOpANGLE(const State &glState,
+                                bool isCallValid,
+                                LogicalOperation opcodePacked)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addValueParam("opcodePacked", ParamType::TLogicalOperation, opcodePacked);
+
+    return CallCapture(angle::EntryPoint::GLLogicOpANGLE, std::move(paramBuffer));
+}
+
 CallCapture CaptureTexStorageMemFlags2DANGLE(const State &glState,
                                              bool isCallValid,
                                              TextureType targetPacked,

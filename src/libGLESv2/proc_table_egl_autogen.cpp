@@ -893,6 +893,7 @@ const ProcEntry g_procTable[] = {
     DESKTOP_ONLY("glLoadTransposeMatrixd", GL_LoadTransposeMatrixd)
     DESKTOP_ONLY("glLoadTransposeMatrixf", GL_LoadTransposeMatrixf)
     {"glLogicOp", P(GL_LogicOp)},
+    {"glLogicOpANGLE", P(GL_LogicOpANGLE)},
     {"glLoseContextCHROMIUM", P(GL_LoseContextCHROMIUM)},
     DESKTOP_ONLY("glMap1d", GL_Map1d)
     DESKTOP_ONLY("glMap1f", GL_Map1f)

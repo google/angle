@@ -9569,6 +9569,11 @@ void Context::getRenderbufferImage(GLenum target, GLenum format, GLenum type, vo
                                                          format, type, pixels));
 }
 
+void Context::logicOpANGLE(LogicalOperation opcodePacked)
+{
+    UNREACHABLE();
+}
+
 egl::Error Context::releaseHighPowerGPU()
 {
     return mImplementation->releaseHighPowerGPU(this);

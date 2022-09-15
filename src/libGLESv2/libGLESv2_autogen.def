@@ -507,6 +507,9 @@ EXPORTS
     glDrawElementsInstancedANGLE
     glVertexAttribDivisorANGLE
 
+    ; GL_ANGLE_logic_op
+    glLogicOpANGLE
+
     ; GL_ANGLE_memory_object_flags
     glTexStorageMemFlags2DANGLE
     glTexStorageMemFlags2DMultisampleANGLE

@@ -54,6 +54,7 @@ angle_requestable_extensions = [
     "GL_ANGLE_framebuffer_multisample",
     "GL_ANGLE_get_image",
     "GL_ANGLE_get_tex_level_parameter",
+    "GL_ANGLE_logic_op",
     "GL_ANGLE_lossy_etc_decode",
     "GL_ANGLE_memory_object_flags",
     "GL_ANGLE_memory_object_fuchsia",

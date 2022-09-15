@@ -45,15 +45,15 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
             switch (value)
             {
                 case 0x0:
-                    return "GL_FALSE";
+                    return "GL_NONE";
                 case 0x1:
-                    return "GL_CREATE_SPARSE_BINDING_BIT_ANGLE";
+                    return "GL_ONE";
                 case 0x2:
-                    return "GL_CONTEXT_FLAG_DEBUG_BIT";
+                    return "GL_LINE_LOOP";
                 case 0x3:
                     return "GL_LINE_STRIP";
                 case 0x4:
-                    return "GL_CONTEXT_FLAG_ROBUST_ACCESS_BIT";
+                    return "GL_TRIANGLES";
                 case 0x5:
                     return "GL_TRIANGLE_STRIP";
                 case 0x6:
@@ -61,7 +61,7 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                 case 0x7:
                     return "GL_QUADS";
                 case 0x8:
-                    return "GL_CONTEXT_FLAG_NO_ERROR_BIT_KHR";
+                    return "GL_TESS_CONTROL_SHADER_BIT";
                 case 0xA:
                     return "GL_LINES_ADJACENCY";
                 case 0xB:
@@ -73,7 +73,7 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                 case 0xE:
                     return "GL_PATCHES";
                 case 0x10:
-                    return "GL_CONTEXT_FLAG_PROTECTED_CONTENT_BIT_EXT";
+                    return "GL_MAP_FLUSH_EXPLICIT_BIT";
                 case 0x16:
                     return "GL_UUID_SIZE_EXT";
                 case 0x20:
@@ -81,13 +81,13 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                 case 0x40:
                     return "GL_COMMAND_BARRIER_BIT";
                 case 0x80:
-                    return "GL_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT_ANGLE";
+                    return "GL_MAP_COHERENT_BIT_EXT";
                 case 0x100:
-                    return "GL_CREATE_EXTENDED_USAGE_BIT_ANGLE";
+                    return "GL_DEPTH_BUFFER_BIT";
                 case 0x104:
                     return "GL_ADD";
                 case 0x200:
-                    return "GL_BUFFER_UPDATE_BARRIER_BIT";
+                    return "GL_NEVER";
                 case 0x201:
                     return "GL_LESS";
                 case 0x202:
@@ -121,7 +121,7 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                 case 0x308:
                     return "GL_SRC_ALPHA_SATURATE";
                 case 0x400:
-                    return "GL_CREATE_ALIAS_BIT_ANGLE";
+                    return "GL_STENCIL_BUFFER_BIT";
                 case 0x404:
                     return "GL_FRONT";
                 case 0x405:
@@ -145,7 +145,7 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                 case 0x507:
                     return "GL_CONTEXT_LOST";
                 case 0x800:
-                    return "GL_CREATE_PROTECTED_BIT_ANGLE";
+                    return "GL_EXP";
                 case 0x801:
                     return "GL_EXP2";
                 case 0x900:
@@ -301,7 +301,7 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                 case 0xD31:
                     return "GL_MAX_LIGHTS";
                 case 0xD32:
-                    return "GL_MAX_CLIP_DISTANCES_APPLE";
+                    return "GL_MAX_CLIP_PLANES";
                 case 0xD33:
                     return "GL_MAX_TEXTURE_SIZE";
                 case 0xD36:
@@ -329,7 +329,7 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                 case 0xDE1:
                     return "GL_TEXTURE_2D";
                 case 0x1000:
-                    return "GL_ATOMIC_COUNTER_BARRIER_BIT";
+                    return "GL_TEXTURE_WIDTH";
                 case 0x1001:
                     return "GL_TEXTURE_HEIGHT";
                 case 0x1003:
@@ -471,7 +471,7 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                 case 0x1F03:
                     return "GL_EXTENSIONS";
                 case 0x2000:
-                    return "GL_CREATE_CORNER_SAMPLED_BIT_ANGLE";
+                    return "GL_SHADER_STORAGE_BARRIER_BIT";
                 case 0x2100:
                     return "GL_MODULATE";
                 case 0x2101:
@@ -509,23 +509,23 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                 case 0x2A00:
                     return "GL_POLYGON_OFFSET_UNITS";
                 case 0x3000:
-                    return "GL_CLIP_DISTANCE0_APPLE";
+                    return "GL_CLIP_PLANE0";
                 case 0x3001:
-                    return "GL_CLIP_DISTANCE1_APPLE";
+                    return "GL_CLIP_PLANE1";
                 case 0x3002:
-                    return "GL_CLIP_DISTANCE2_APPLE";
+                    return "GL_CLIP_PLANE2";
                 case 0x3003:
-                    return "GL_CLIP_DISTANCE3_APPLE";
+                    return "GL_CLIP_PLANE3";
                 case 0x3004:
-                    return "GL_CLIP_DISTANCE4_APPLE";
+                    return "GL_CLIP_PLANE4";
                 case 0x3005:
-                    return "GL_CLIP_DISTANCE5_APPLE";
+                    return "GL_CLIP_PLANE5";
                 case 0x3006:
-                    return "GL_CLIP_DISTANCE6_APPLE";
+                    return "GL_CLIP_DISTANCE6_EXT";
                 case 0x3007:
-                    return "GL_CLIP_DISTANCE7_APPLE";
+                    return "GL_CLIP_DISTANCE7_EXT";
                 case 0x4000:
-                    return "GL_CLIENT_MAPPED_BUFFER_BARRIER_BIT_EXT";
+                    return "GL_LIGHT0";
                 case 0x4001:
                     return "GL_LIGHT1";
                 case 0x4002:
@@ -929,9 +929,9 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                 case 0x83F1:
                     return "GL_COMPRESSED_RGBA_S3TC_DXT1_EXT";
                 case 0x83F2:
-                    return "GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE";
+                    return "GL_COMPRESSED_RGBA_S3TC_DXT3_EXT";
                 case 0x83F3:
-                    return "GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE";
+                    return "GL_COMPRESSED_RGBA_S3TC_DXT5_EXT";
                 case 0x846D:
                     return "GL_ALIASED_POINT_SIZE_RANGE";
                 case 0x846E:
@@ -1335,11 +1335,11 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                 case 0x8905:
                     return "GL_MAX_PROGRAM_TEXEL_OFFSET";
                 case 0x8916:
-                    return "GL_GEOMETRY_LINKED_VERTICES_OUT_EXT";
+                    return "GL_GEOMETRY_VERTICES_OUT";
                 case 0x8917:
                     return "GL_GEOMETRY_INPUT_TYPE";
                 case 0x8918:
-                    return "GL_GEOMETRY_LINKED_OUTPUT_TYPE_EXT";
+                    return "GL_GEOMETRY_OUTPUT_TYPE";
                 case 0x8919:
                     return "GL_SAMPLER_BINDING";
                 case 0x898A:
@@ -1521,7 +1521,7 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                 case 0x8B8C:
                     return "GL_SHADING_LANGUAGE_VERSION";
                 case 0x8B8D:
-                    return "GL_ACTIVE_PROGRAM_EXT";
+                    return "GL_CURRENT_PROGRAM";
                 case 0x8B9A:
                     return "GL_IMPLEMENTATION_COLOR_READ_TYPE";
                 case 0x8B9B:
@@ -1661,7 +1661,7 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                 case 0x8CA5:
                     return "GL_STENCIL_BACK_WRITEMASK";
                 case 0x8CA6:
-                    return "GL_DRAW_FRAMEBUFFER_BINDING";
+                    return "GL_FRAMEBUFFER_BINDING";
                 case 0x8CA7:
                     return "GL_RENDERBUFFER_BINDING";
                 case 0x8CA8:
@@ -1685,7 +1685,7 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                 case 0x8CD3:
                     return "GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_CUBE_MAP_FACE";
                 case 0x8CD4:
-                    return "GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_3D_ZOFFSET_OES";
+                    return "GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LAYER";
                 case 0x8CD5:
                     return "GL_FRAMEBUFFER_COMPLETE";
                 case 0x8CD6:
@@ -2713,7 +2713,7 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                 case 0x96E9:
                     return "GL_DISABLE_ANGLE";
                 case 0xFFFFFFFF:
-                    return "GL_ALL_BARRIER_BITS";
+                    return "GL_INVALID_INDEX";
                 default:
                     return UnknownEnumToString(value);
             }
@@ -4295,7 +4295,7 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                 case 0x8CD3:
                     return "GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_CUBE_MAP_FACE";
                 case 0x8CD4:
-                    return "GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_3D_ZOFFSET_OES";
+                    return "GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LAYER";
                 case 0x8D6C:
                     return "GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_SAMPLES_EXT";
                 case 0x8DA7:
@@ -5377,9 +5377,9 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                 case 0x83F1:
                     return "GL_COMPRESSED_RGBA_S3TC_DXT1_EXT";
                 case 0x83F2:
-                    return "GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE";
+                    return "GL_COMPRESSED_RGBA_S3TC_DXT3_EXT";
                 case 0x83F3:
-                    return "GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE";
+                    return "GL_COMPRESSED_RGBA_S3TC_DXT5_EXT";
                 case 0x84F9:
                     return "GL_DEPTH_STENCIL";
                 case 0x8814:
@@ -6995,9 +6995,9 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                 case 0x83F1:
                     return "GL_COMPRESSED_RGBA_S3TC_DXT1_EXT";
                 case 0x83F2:
-                    return "GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE";
+                    return "GL_COMPRESSED_RGBA_S3TC_DXT3_EXT";
                 case 0x83F3:
-                    return "GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE";
+                    return "GL_COMPRESSED_RGBA_S3TC_DXT5_EXT";
                 case 0x8814:
                     return "GL_RGBA32F";
                 case 0x8815:
@@ -8327,15 +8327,15 @@ const char *GLenumToString(BigGLEnum enumGroup, unsigned int value)
             switch (value)
             {
                 case 0x0:
-                    return "GL_FALSE";
+                    return "GL_NONE";
                 case 0x1:
-                    return "GL_CLIENT_PIXEL_STORE_BIT";
+                    return "GL_ONE";
                 case 0x2:
-                    return "GL_CLIENT_VERTEX_ARRAY_BIT";
+                    return "GL_LINE_LOOP";
                 case 0x3:
                     return "GL_LINE_STRIP";
                 case 0x4:
-                    return "GL_CONTEXT_FLAG_ROBUST_ACCESS_BIT";
+                    return "GL_LINE_BIT";
                 case 0x5:
                     return "GL_TRIANGLE_STRIP";
                 case 0x6:
@@ -8343,7 +8343,7 @@ const char *GLenumToString(BigGLEnum enumGroup, unsigned int value)
                 case 0x7:
                     return "GL_QUADS";
                 case 0x8:
-                    return "GL_CONTEXT_FLAG_NO_ERROR_BIT";
+                    return "GL_QUAD_STRIP";
                 case 0x9:
                     return "GL_POLYGON";
                 case 0xA:
@@ -8357,15 +8357,15 @@ const char *GLenumToString(BigGLEnum enumGroup, unsigned int value)
                 case 0xE:
                     return "GL_PATCHES";
                 case 0x10:
-                    return "GL_CREATE_CUBE_COMPATIBLE_BIT_ANGLE";
+                    return "GL_POLYGON_STIPPLE_BIT";
                 case 0x16:
                     return "GL_UUID_SIZE_EXT";
                 case 0x20:
-                    return "GL_COMPUTE_SHADER_BIT";
+                    return "GL_PIXEL_MODE_BIT";
                 case 0x40:
-                    return "GL_COMMAND_BARRIER_BIT";
+                    return "GL_LIGHTING_BIT";
                 case 0x80:
-                    return "GL_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT_ANGLE";
+                    return "GL_FOG_BIT";
                 case 0x100:
                     return "GL_ACCUM";
                 case 0x101:
@@ -8377,7 +8377,7 @@ const char *GLenumToString(BigGLEnum enumGroup, unsigned int value)
                 case 0x104:
                     return "GL_ADD";
                 case 0x200:
-                    return "GL_ACCUM_BUFFER_BIT";
+                    return "GL_NEVER";
                 case 0x201:
                     return "GL_LESS";
                 case 0x202:
@@ -8411,7 +8411,7 @@ const char *GLenumToString(BigGLEnum enumGroup, unsigned int value)
                 case 0x308:
                     return "GL_SRC_ALPHA_SATURATE";
                 case 0x400:
-                    return "GL_CREATE_ALIAS_BIT_ANGLE";
+                    return "GL_FRONT_LEFT";
                 case 0x401:
                     return "GL_FRONT_RIGHT";
                 case 0x402:
@@ -8479,7 +8479,7 @@ const char *GLenumToString(BigGLEnum enumGroup, unsigned int value)
                 case 0x707:
                     return "GL_LINE_RESET_TOKEN";
                 case 0x800:
-                    return "GL_CREATE_PROTECTED_BIT_ANGLE";
+                    return "GL_EXP";
                 case 0x801:
                     return "GL_EXP2";
                 case 0x900:
@@ -8655,7 +8655,7 @@ const char *GLenumToString(BigGLEnum enumGroup, unsigned int value)
                 case 0xBF0:
                     return "GL_LOGIC_OP_MODE";
                 case 0xBF1:
-                    return "GL_INDEX_LOGIC_OP";
+                    return "GL_LOGIC_OP";
                 case 0xBF2:
                     return "GL_COLOR_LOGIC_OP";
                 case 0xC00:
@@ -8805,7 +8805,7 @@ const char *GLenumToString(BigGLEnum enumGroup, unsigned int value)
                 case 0xD31:
                     return "GL_MAX_LIGHTS";
                 case 0xD32:
-                    return "GL_MAX_CLIP_DISTANCES";
+                    return "GL_MAX_CLIP_PLANES";
                 case 0xD33:
                     return "GL_MAX_TEXTURE_SIZE";
                 case 0xD34:
@@ -8911,7 +8911,7 @@ const char *GLenumToString(BigGLEnum enumGroup, unsigned int value)
                 case 0xDF4:
                     return "GL_SELECTION_BUFFER_SIZE";
                 case 0x1000:
-                    return "GL_ATOMIC_COUNTER_BARRIER_BIT";
+                    return "GL_TEXTURE_WIDTH";
                 case 0x1001:
                     return "GL_TEXTURE_HEIGHT";
                 case 0x1003:
@@ -9087,7 +9087,7 @@ const char *GLenumToString(BigGLEnum enumGroup, unsigned int value)
                 case 0x1F03:
                     return "GL_EXTENSIONS";
                 case 0x2000:
-                    return "GL_CREATE_CORNER_SAMPLED_BIT_ANGLE";
+                    return "GL_S";
                 case 0x2001:
                     return "GL_T";
                 case 0x2002:
@@ -9177,23 +9177,23 @@ const char *GLenumToString(BigGLEnum enumGroup, unsigned int value)
                 case 0x2A2D:
                     return "GL_T4F_C4F_N3F_V4F";
                 case 0x3000:
-                    return "GL_CLIP_DISTANCE0";
+                    return "GL_CLIP_PLANE0";
                 case 0x3001:
-                    return "GL_CLIP_DISTANCE1";
+                    return "GL_CLIP_PLANE1";
                 case 0x3002:
-                    return "GL_CLIP_DISTANCE2";
+                    return "GL_CLIP_PLANE2";
                 case 0x3003:
-                    return "GL_CLIP_DISTANCE3";
+                    return "GL_CLIP_PLANE3";
                 case 0x3004:
-                    return "GL_CLIP_DISTANCE4";
+                    return "GL_CLIP_PLANE4";
                 case 0x3005:
-                    return "GL_CLIP_DISTANCE5";
+                    return "GL_CLIP_PLANE5";
                 case 0x3006:
                     return "GL_CLIP_DISTANCE6";
                 case 0x3007:
                     return "GL_CLIP_DISTANCE7";
                 case 0x4000:
-                    return "GL_CLIENT_MAPPED_BUFFER_BARRIER_BIT";
+                    return "GL_LIGHT0";
                 case 0x4001:
                     return "GL_LIGHT1";
                 case 0x4002:
@@ -9979,7 +9979,7 @@ const char *GLenumToString(BigGLEnum enumGroup, unsigned int value)
                 case 0x83F3:
                     return "GL_COMPRESSED_RGBA_S3TC_DXT5_EXT";
                 case 0x8450:
-                    return "GL_FOG_COORDINATE_SOURCE";
+                    return "GL_FOG_COORD_SRC";
                 case 0x8451:
                     return "GL_FOG_COORD";
                 case 0x8452:
@@ -9987,13 +9987,13 @@ const char *GLenumToString(BigGLEnum enumGroup, unsigned int value)
                 case 0x8453:
                     return "GL_CURRENT_FOG_COORD";
                 case 0x8454:
-                    return "GL_FOG_COORDINATE_ARRAY_TYPE";
+                    return "GL_FOG_COORD_ARRAY_TYPE";
                 case 0x8455:
-                    return "GL_FOG_COORDINATE_ARRAY_STRIDE";
+                    return "GL_FOG_COORD_ARRAY_STRIDE";
                 case 0x8456:
-                    return "GL_FOG_COORDINATE_ARRAY_POINTER";
+                    return "GL_FOG_COORD_ARRAY_POINTER";
                 case 0x8457:
-                    return "GL_FOG_COORDINATE_ARRAY";
+                    return "GL_FOG_COORD_ARRAY";
                 case 0x8458:
                     return "GL_COLOR_SUM";
                 case 0x8459:
@@ -10189,17 +10189,17 @@ const char *GLenumToString(BigGLEnum enumGroup, unsigned int value)
                 case 0x8578:
                     return "GL_PREVIOUS";
                 case 0x8580:
-                    return "GL_SOURCE0_RGB";
+                    return "GL_SRC0_RGB";
                 case 0x8581:
-                    return "GL_SOURCE1_RGB";
+                    return "GL_SRC1_RGB";
                 case 0x8582:
-                    return "GL_SOURCE2_RGB";
+                    return "GL_SRC2_RGB";
                 case 0x8588:
-                    return "GL_SOURCE0_ALPHA";
+                    return "GL_SRC0_ALPHA";
                 case 0x8589:
-                    return "GL_SOURCE1_ALPHA";
+                    return "GL_SRC1_ALPHA";
                 case 0x858A:
-                    return "GL_SOURCE2_ALPHA";
+                    return "GL_SRC2_ALPHA";
                 case 0x8590:
                     return "GL_OPERAND0_RGB";
                 case 0x8591:
@@ -10331,7 +10331,7 @@ const char *GLenumToString(BigGLEnum enumGroup, unsigned int value)
                 case 0x884D:
                     return "GL_TEXTURE_COMPARE_FUNC";
                 case 0x884E:
-                    return "GL_COMPARE_REF_TO_TEXTURE";
+                    return "GL_COMPARE_R_TO_TEXTURE";
                 case 0x884F:
                     return "GL_TEXTURE_CUBE_MAP_SEAMLESS";
                 case 0x8861:
@@ -10383,7 +10383,7 @@ const char *GLenumToString(BigGLEnum enumGroup, unsigned int value)
                 case 0x889C:
                     return "GL_SECONDARY_COLOR_ARRAY_BUFFER_BINDING";
                 case 0x889D:
-                    return "GL_FOG_COORDINATE_ARRAY_BUFFER_BINDING";
+                    return "GL_FOG_COORD_ARRAY_BUFFER_BINDING";
                 case 0x889E:
                     return "GL_WEIGHT_ARRAY_BUFFER_BINDING";
                 case 0x889F:
@@ -10555,7 +10555,7 @@ const char *GLenumToString(BigGLEnum enumGroup, unsigned int value)
                 case 0x8B4A:
                     return "GL_MAX_VERTEX_UNIFORM_COMPONENTS";
                 case 0x8B4B:
-                    return "GL_MAX_VARYING_COMPONENTS";
+                    return "GL_MAX_VARYING_FLOATS";
                 case 0x8B4C:
                     return "GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS";
                 case 0x8B4D:
@@ -10785,7 +10785,7 @@ const char *GLenumToString(BigGLEnum enumGroup, unsigned int value)
                 case 0x8CA5:
                     return "GL_STENCIL_BACK_WRITEMASK";
                 case 0x8CA6:
-                    return "GL_DRAW_FRAMEBUFFER_BINDING";
+                    return "GL_FRAMEBUFFER_BINDING";
                 case 0x8CA7:
                     return "GL_RENDERBUFFER_BINDING";
                 case 0x8CA8:
@@ -10989,9 +10989,9 @@ const char *GLenumToString(BigGLEnum enumGroup, unsigned int value)
                 case 0x8DBC:
                     return "GL_COMPRESSED_SIGNED_RED_RGTC1";
                 case 0x8DBD:
-                    return "GL_COMPRESSED_RED_GREEN_RGTC2_EXT";
+                    return "GL_COMPRESSED_RG_RGTC2";
                 case 0x8DBE:
-                    return "GL_COMPRESSED_SIGNED_RED_GREEN_RGTC2_EXT";
+                    return "GL_COMPRESSED_SIGNED_RG_RGTC2";
                 case 0x8DC0:
                     return "GL_SAMPLER_1D_ARRAY";
                 case 0x8DC1:
@@ -11107,7 +11107,7 @@ const char *GLenumToString(BigGLEnum enumGroup, unsigned int value)
                 case 0x8E22:
                     return "GL_TRANSFORM_FEEDBACK";
                 case 0x8E23:
-                    return "GL_TRANSFORM_FEEDBACK_BUFFER_PAUSED";
+                    return "GL_TRANSFORM_FEEDBACK_PAUSED";
                 case 0x8E24:
                     return "GL_TRANSFORM_FEEDBACK_ACTIVE";
                 case 0x8E25:
@@ -11231,7 +11231,7 @@ const char *GLenumToString(BigGLEnum enumGroup, unsigned int value)
                 case 0x8F38:
                     return "GL_MAX_IMAGE_UNITS";
                 case 0x8F39:
-                    return "GL_MAX_COMBINED_IMAGE_UNITS_AND_FRAGMENT_OUTPUTS";
+                    return "GL_MAX_COMBINED_SHADER_OUTPUT_RESOURCES";
                 case 0x8F3A:
                     return "GL_IMAGE_BINDING_NAME";
                 case 0x8F3B:
@@ -11955,7 +11955,7 @@ const char *GLenumToString(BigGLEnum enumGroup, unsigned int value)
                 case 0x20000000:
                     return "GL_MULTISAMPLE_BIT";
                 case 0xFFFFFFFF:
-                    return "GL_ALL_ATTRIB_BITS";
+                    return "GL_INVALID_INDEX";
                 default:
                     return UnknownEnumToString(value);
             }
@@ -12713,17 +12713,17 @@ const char *GLenumToString(BigGLEnum enumGroup, unsigned int value)
             switch (value)
             {
                 case 0x3000:
-                    return "GL_CLIP_DISTANCE0";
+                    return "GL_CLIP_PLANE0";
                 case 0x3001:
-                    return "GL_CLIP_DISTANCE1";
+                    return "GL_CLIP_PLANE1";
                 case 0x3002:
-                    return "GL_CLIP_DISTANCE2";
+                    return "GL_CLIP_PLANE2";
                 case 0x3003:
-                    return "GL_CLIP_DISTANCE3";
+                    return "GL_CLIP_PLANE3";
                 case 0x3004:
-                    return "GL_CLIP_DISTANCE4";
+                    return "GL_CLIP_PLANE4";
                 case 0x3005:
-                    return "GL_CLIP_DISTANCE5";
+                    return "GL_CLIP_PLANE5";
                 case 0x3006:
                     return "GL_CLIP_DISTANCE6";
                 case 0x3007:
@@ -13479,17 +13479,17 @@ const char *GLenumToString(BigGLEnum enumGroup, unsigned int value)
                 case 0x2A02:
                     return "GL_POLYGON_OFFSET_LINE";
                 case 0x3000:
-                    return "GL_CLIP_DISTANCE0";
+                    return "GL_CLIP_PLANE0";
                 case 0x3001:
-                    return "GL_CLIP_DISTANCE1";
+                    return "GL_CLIP_PLANE1";
                 case 0x3002:
-                    return "GL_CLIP_DISTANCE2";
+                    return "GL_CLIP_PLANE2";
                 case 0x3003:
-                    return "GL_CLIP_DISTANCE3";
+                    return "GL_CLIP_PLANE3";
                 case 0x3004:
-                    return "GL_CLIP_DISTANCE4";
+                    return "GL_CLIP_PLANE4";
                 case 0x3005:
-                    return "GL_CLIP_DISTANCE5";
+                    return "GL_CLIP_PLANE5";
                 case 0x3006:
                     return "GL_CLIP_DISTANCE6";
                 case 0x3007:
@@ -14358,7 +14358,7 @@ const char *GLenumToString(BigGLEnum enumGroup, unsigned int value)
                 case 0xBF0:
                     return "GL_LOGIC_OP_MODE";
                 case 0xBF1:
-                    return "GL_INDEX_LOGIC_OP";
+                    return "GL_LOGIC_OP";
                 case 0xBF2:
                     return "GL_COLOR_LOGIC_OP";
                 case 0xC00:
@@ -14488,7 +14488,7 @@ const char *GLenumToString(BigGLEnum enumGroup, unsigned int value)
                 case 0xD31:
                     return "GL_MAX_LIGHTS";
                 case 0xD32:
-                    return "GL_MAX_CLIP_DISTANCES";
+                    return "GL_MAX_CLIP_PLANES";
                 case 0xD33:
                     return "GL_MAX_TEXTURE_SIZE";
                 case 0xD34:
@@ -14854,7 +14854,7 @@ const char *GLenumToString(BigGLEnum enumGroup, unsigned int value)
                 case 0x8B4A:
                     return "GL_MAX_VERTEX_UNIFORM_COMPONENTS";
                 case 0x8B4B:
-                    return "GL_MAX_VARYING_COMPONENTS";
+                    return "GL_MAX_VARYING_FLOATS";
                 case 0x8B4C:
                     return "GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS";
                 case 0x8B4D:
@@ -15734,9 +15734,9 @@ const char *GLenumToString(BigGLEnum enumGroup, unsigned int value)
                 case 0x8DBC:
                     return "GL_COMPRESSED_SIGNED_RED_RGTC1";
                 case 0x8DBD:
-                    return "GL_COMPRESSED_RED_GREEN_RGTC2_EXT";
+                    return "GL_COMPRESSED_RG_RGTC2";
                 case 0x8DBE:
-                    return "GL_COMPRESSED_SIGNED_RED_GREEN_RGTC2_EXT";
+                    return "GL_COMPRESSED_SIGNED_RG_RGTC2";
                 case 0x8E8C:
                     return "GL_COMPRESSED_RGBA_BPTC_UNORM";
                 case 0x8E8D:
@@ -17448,17 +17448,17 @@ const char *GLenumToString(BigGLEnum enumGroup, unsigned int value)
                 case 0x8578:
                     return "GL_PREVIOUS";
                 case 0x8580:
-                    return "GL_SOURCE0_RGB";
+                    return "GL_SRC0_RGB";
                 case 0x8581:
-                    return "GL_SOURCE1_RGB";
+                    return "GL_SRC1_RGB";
                 case 0x8582:
-                    return "GL_SOURCE2_RGB";
+                    return "GL_SRC2_RGB";
                 case 0x8588:
-                    return "GL_SOURCE0_ALPHA";
+                    return "GL_SRC0_ALPHA";
                 case 0x8589:
-                    return "GL_SOURCE1_ALPHA";
+                    return "GL_SRC1_ALPHA";
                 case 0x858A:
-                    return "GL_SOURCE2_ALPHA";
+                    return "GL_SRC2_ALPHA";
                 case 0x8590:
                     return "GL_OPERAND0_RGB";
                 case 0x8591:
@@ -17889,9 +17889,9 @@ const char *GLenumToString(BigGLEnum enumGroup, unsigned int value)
                 case 0x8DBC:
                     return "GL_COMPRESSED_SIGNED_RED_RGTC1";
                 case 0x8DBD:
-                    return "GL_COMPRESSED_RED_GREEN_RGTC2_EXT";
+                    return "GL_COMPRESSED_RG_RGTC2";
                 case 0x8DBE:
-                    return "GL_COMPRESSED_SIGNED_RED_GREEN_RGTC2_EXT";
+                    return "GL_COMPRESSED_SIGNED_RG_RGTC2";
                 case 0x8E8C:
                     return "GL_COMPRESSED_RGBA_BPTC_UNORM";
                 case 0x8E8D:
@@ -18210,7 +18210,7 @@ const char *GLenumToString(BigGLEnum enumGroup, unsigned int value)
                 case 0x0:
                     return "GL_NONE";
                 case 0x884E:
-                    return "GL_COMPARE_REF_TO_TEXTURE";
+                    return "GL_COMPARE_R_TO_TEXTURE";
                 default:
                     return UnknownEnumToString(value);
             }

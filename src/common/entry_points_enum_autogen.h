@@ -979,6 +979,7 @@ enum class EntryPoint
     GLLoadTransposeMatrixd,
     GLLoadTransposeMatrixf,
     GLLogicOp,
+    GLLogicOpANGLE,
     GLLoseContextCHROMIUM,
     GLMap1d,
     GLMap1f,

@@ -2976,6 +2976,12 @@ void GL_APIENTRY glVertexAttribDivisorANGLE(GLuint index, GLuint divisor)
     return GL_VertexAttribDivisorANGLE(index, divisor);
 }
 
+// GL_ANGLE_logic_op
+void GL_APIENTRY glLogicOpANGLE(GLenum opcode)
+{
+    return GL_LogicOpANGLE(opcode);
+}
+
 // GL_ANGLE_memory_object_flags
 void GL_APIENTRY glTexStorageMemFlags2DANGLE(GLenum target,
                                              GLsizei levels,

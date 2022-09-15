@@ -217,6 +217,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_ANGLE_get_image"] = enableableExtension(&Extensions::getImageANGLE);
         map["GL_ANGLE_get_serialized_context_string"] = esOnlyExtension(&Extensions::getSerializedContextStringANGLE);
         map["GL_ANGLE_get_tex_level_parameter"] = enableableExtension(&Extensions::getTexLevelParameterANGLE);
+        map["GL_ANGLE_logic_op"] = enableableExtension(&Extensions::logicOpANGLE);
         map["GL_CHROMIUM_lose_context"] = enableableExtension(&Extensions::loseContextCHROMIUM);
         map["GL_ANGLE_lossy_etc_decode"] = enableableExtension(&Extensions::lossyEtcDecodeANGLE);
         map["GL_ANGLE_memory_object_flags"] = enableableExtension(&Extensions::memoryObjectFlagsANGLE);

@@ -948,6 +948,32 @@ void GL_APIENTRY GL_VertexAttribDivisorANGLE(GLuint index, GLuint divisor)
     }
 }
 
+// GL_ANGLE_logic_op
+void GL_APIENTRY GL_LogicOpANGLE(GLenum opcode)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT(context, GLLogicOpANGLE, "context = %d, opcode = %s", CID(context),
+          GLenumToString(GLESEnum::LogicOp, opcode));
+
+    if (context)
+    {
+        LogicalOperation opcodePacked = PackParam<LogicalOperation>(opcode);
+        SCOPED_SHARE_CONTEXT_LOCK(context);
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateLogicOpANGLE(context, angle::EntryPoint::GLLogicOpANGLE, opcodePacked));
+        if (isCallValid)
+        {
+            context->logicOpANGLE(opcodePacked);
+        }
+        ANGLE_CAPTURE_GL(LogicOpANGLE, isCallValid, context, opcodePacked);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
+}
+
 // GL_ANGLE_memory_object_flags
 void GL_APIENTRY GL_TexStorageMemFlags2DANGLE(GLenum target,
                                               GLsizei levels,
