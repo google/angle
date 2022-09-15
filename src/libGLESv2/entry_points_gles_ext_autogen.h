@@ -638,19 +638,6 @@ ANGLE_EXPORT void GL_APIENTRY GL_ImportSemaphoreZirconHandleANGLE(GLuint semapho
                                                                   GLenum handleType,
                                                                   GLuint handle);
 
-// GL_ANGLE_shader_pixel_local_storage
-ANGLE_EXPORT void GL_APIENTRY GL_FramebufferMemorylessPixelLocalStorageANGLE(GLint plane,
-                                                                             GLenum internalformat);
-ANGLE_EXPORT void GL_APIENTRY GL_FramebufferTexturePixelLocalStorageANGLE(GLint plane,
-                                                                          GLuint backingtexture,
-                                                                          GLint level,
-                                                                          GLint layer);
-ANGLE_EXPORT void GL_APIENTRY GL_BeginPixelLocalStorageANGLE(GLsizei planes,
-                                                             const GLenum *loadops,
-                                                             const void *cleardata);
-ANGLE_EXPORT void GL_APIENTRY GL_EndPixelLocalStorageANGLE();
-ANGLE_EXPORT void GL_APIENTRY GL_PixelLocalStorageBarrierANGLE();
-
 // GL_ANGLE_texture_compression_dxt3
 
 // GL_ANGLE_texture_compression_dxt5

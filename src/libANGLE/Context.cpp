@@ -9073,34 +9073,6 @@ void Context::importSemaphoreZirconHandle(SemaphoreID semaphore,
     ANGLE_CONTEXT_TRY(semaphoreObject->importZirconHandle(this, handleType, handle));
 }
 
-void Context::framebufferMemorylessPixelLocalStorage(GLint plane, GLenum internalformat)
-{
-    UNIMPLEMENTED();
-}
-
-void Context::framebufferTexturePixelLocalStorage(GLint plane,
-                                                  TextureID backingtexture,
-                                                  GLint level,
-                                                  GLint layer)
-{
-    UNIMPLEMENTED();
-}
-
-void Context::beginPixelLocalStorage(GLsizei planes, const GLenum loadops[], const void *cleardata)
-{
-    UNIMPLEMENTED();
-}
-
-void Context::endPixelLocalStorage()
-{
-    UNIMPLEMENTED();
-}
-
-void Context::pixelLocalStorageBarrier()
-{
-    UNIMPLEMENTED();
-}
-
 void Context::eGLImageTargetTexStorage(GLenum target, GLeglImageOES image, const GLint *attrib_list)
 {
     Texture *texture        = getTextureByType(FromGLenum<TextureType>(target));

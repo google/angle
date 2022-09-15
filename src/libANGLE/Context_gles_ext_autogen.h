@@ -563,12 +563,6 @@
     void importSemaphoreZirconHandle(SemaphoreID semaphorePacked, HandleType handleTypePacked,     \
                                      GLuint handle);                                               \
     /* GL_ANGLE_shader_pixel_local_storage */                                                      \
-    void framebufferMemorylessPixelLocalStorage(GLint plane, GLenum internalformat);               \
-    void framebufferTexturePixelLocalStorage(GLint plane, TextureID backingtexturePacked,          \
-                                             GLint level, GLint layer);                            \
-    void beginPixelLocalStorage(GLsizei planes, const GLenum *loadops, const void *cleardata);     \
-    void endPixelLocalStorage();                                                                   \
-    void pixelLocalStorageBarrier();                                                               \
     /* GL_ANGLE_shader_pixel_local_storage_coherent */                                             \
     /* GL_ANGLE_texture_compression_dxt3 */                                                        \
     /* GL_ANGLE_texture_compression_dxt5 */                                                        \

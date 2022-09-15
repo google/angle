@@ -166,7 +166,6 @@ const ProcEntry g_procTable[] = {
     DESKTOP_ONLY("glBegin", GL_Begin)
     DESKTOP_ONLY("glBeginConditionalRender", GL_BeginConditionalRender)
     {"glBeginPerfMonitorAMD", P(GL_BeginPerfMonitorAMD)},
-    {"glBeginPixelLocalStorageANGLE", P(GL_BeginPixelLocalStorageANGLE)},
     {"glBeginQuery", P(GL_BeginQuery)},
     {"glBeginQueryEXT", P(GL_BeginQueryEXT)},
     DESKTOP_ONLY("glBeginQueryIndexed", GL_BeginQueryIndexed)
@@ -471,7 +470,6 @@ const ProcEntry g_procTable[] = {
     DESKTOP_ONLY("glEndConditionalRender", GL_EndConditionalRender)
     DESKTOP_ONLY("glEndList", GL_EndList)
     {"glEndPerfMonitorAMD", P(GL_EndPerfMonitorAMD)},
-    {"glEndPixelLocalStorageANGLE", P(GL_EndPixelLocalStorageANGLE)},
     {"glEndQuery", P(GL_EndQuery)},
     {"glEndQueryEXT", P(GL_EndQueryEXT)},
     DESKTOP_ONLY("glEndQueryIndexed", GL_EndQueryIndexed)
@@ -508,7 +506,6 @@ const ProcEntry g_procTable[] = {
     {"glFogx", P(GL_Fogx)},
     {"glFogxv", P(GL_Fogxv)},
     {"glFramebufferFetchBarrierEXT", P(GL_FramebufferFetchBarrierEXT)},
-    {"glFramebufferMemorylessPixelLocalStorageANGLE", P(GL_FramebufferMemorylessPixelLocalStorageANGLE)},
     {"glFramebufferParameteri", P(GL_FramebufferParameteri)},
     {"glFramebufferParameteriMESA", P(GL_FramebufferParameteriMESA)},
     {"glFramebufferRenderbuffer", P(GL_FramebufferRenderbuffer)},
@@ -524,7 +521,6 @@ const ProcEntry g_procTable[] = {
     {"glFramebufferTextureLayer", P(GL_FramebufferTextureLayer)},
     {"glFramebufferTextureMultiviewOVR", P(GL_FramebufferTextureMultiviewOVR)},
     {"glFramebufferTextureOES", P(GL_FramebufferTextureOES)},
-    {"glFramebufferTexturePixelLocalStorageANGLE", P(GL_FramebufferTexturePixelLocalStorageANGLE)},
     {"glFrontFace", P(GL_FrontFace)},
     DESKTOP_ONLY("glFrustum", GL_Frustum)
     {"glFrustumf", P(GL_Frustumf)},
@@ -1024,7 +1020,6 @@ const ProcEntry g_procTable[] = {
     {"glPatchParameteri", P(GL_PatchParameteri)},
     {"glPatchParameteriEXT", P(GL_PatchParameteriEXT)},
     {"glPauseTransformFeedback", P(GL_PauseTransformFeedback)},
-    {"glPixelLocalStorageBarrierANGLE", P(GL_PixelLocalStorageBarrierANGLE)},
     DESKTOP_ONLY("glPixelMapfv", GL_PixelMapfv)
     DESKTOP_ONLY("glPixelMapuiv", GL_PixelMapuiv)
     DESKTOP_ONLY("glPixelMapusv", GL_PixelMapusv)
