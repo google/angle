@@ -1885,6 +1885,9 @@ void GenerateCaps(const FunctionsGL *functions,
     // GL_KHR_parallel_shader_compile
     extensions->parallelShaderCompileKHR = true;
 
+    // GL_ANGLE_logic_op
+    extensions->logicOpANGLE = functions->isAtLeastGL(gl::Version(2, 0));
+
     // PVRTC1 textures must be squares on Apple platforms.
     if (IsApple())
     {

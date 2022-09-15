@@ -3227,6 +3227,16 @@ bool GetQueryParameterInfo(const State &glState,
             *numParams = 1;
             return true;
         }
+        case GL_COLOR_LOGIC_OP:
+        {
+            if (!extensions.logicOpANGLE)
+            {
+                return false;
+            }
+            *type      = GL_BOOL;
+            *numParams = 1;
+            return true;
+        }
         case GL_COLOR_WRITEMASK:
         {
             *type      = GL_BOOL;

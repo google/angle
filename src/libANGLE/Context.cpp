@@ -9571,7 +9571,7 @@ void Context::getRenderbufferImage(GLenum target, GLenum format, GLenum type, vo
 
 void Context::logicOpANGLE(LogicalOperation opcodePacked)
 {
-    UNREACHABLE();
+    mState.setLogicOp(opcodePacked);
 }
 
 egl::Error Context::releaseHighPowerGPU()

@@ -8612,4 +8612,33 @@ bool ValidateProgramExecutableXFBBuffersPresent(const Context *context,
 
     return true;
 }
+
+bool ValidateLogicOpCommon(const Context *context,
+                           angle::EntryPoint entryPoint,
+                           LogicalOperation opcodePacked)
+{
+    switch (opcodePacked)
+    {
+        case LogicalOperation::And:
+        case LogicalOperation::AndInverted:
+        case LogicalOperation::AndReverse:
+        case LogicalOperation::Clear:
+        case LogicalOperation::Copy:
+        case LogicalOperation::CopyInverted:
+        case LogicalOperation::Equiv:
+        case LogicalOperation::Invert:
+        case LogicalOperation::Nand:
+        case LogicalOperation::Noop:
+        case LogicalOperation::Nor:
+        case LogicalOperation::Or:
+        case LogicalOperation::OrInverted:
+        case LogicalOperation::OrReverse:
+        case LogicalOperation::Set:
+        case LogicalOperation::Xor:
+            return true;
+        default:
+            context->validationError(entryPoint, GL_INVALID_ENUM, kInvalidLogicOp);
+            return false;
+    }
+}
 }  // namespace gl

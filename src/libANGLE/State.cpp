@@ -405,6 +405,8 @@ State::State(const State *shareContextState,
       mRobustResourceInit(robustResourceInit),
       mProgramBinaryCacheEnabled(programBinaryCacheEnabled),
       mTextureRectangleEnabled(true),
+      mLogicOpEnabled(false),
+      mLogicOp(LogicalOperation::Copy),
       mMaxShaderCompilerThreads(std::numeric_limits<GLuint>::max()),
       mPatchVertices(3),
       mOverlay(overlay),
@@ -1302,6 +1304,9 @@ void State::setEnableFeature(GLenum feature, bool enabled)
         case GL_DITHER:
             setDither(enabled);
             return;
+        case GL_COLOR_LOGIC_OP:
+            setLogicOpEnabled(enabled);
+            return;
         case GL_PRIMITIVE_RESTART_FIXED_INDEX:
             setPrimitiveRestart(enabled);
             return;
@@ -1451,6 +1456,8 @@ bool State::getEnableFeature(GLenum feature) const
             return isBlendEnabled();
         case GL_DITHER:
             return isDitherEnabled();
+        case GL_COLOR_LOGIC_OP:
+            return isLogicOpEnabled();
         case GL_PRIMITIVE_RESTART_FIXED_INDEX:
             return isPrimitiveRestartEnabled();
         case GL_RASTERIZER_DISCARD:
@@ -2440,6 +2447,9 @@ void State::getBooleanv(GLenum pname, GLboolean *params) const
             break;
         case GL_DITHER:
             *params = mRasterizer.dither;
+            break;
+        case GL_COLOR_LOGIC_OP:
+            *params = mLogicOpEnabled;
             break;
         case GL_TRANSFORM_FEEDBACK_ACTIVE:
             *params = getCurrentTransformFeedback()->isActive() ? GL_TRUE : GL_FALSE;
@@ -3787,6 +3797,26 @@ void State::initializeForCapture(const Context *context)
     // nothing in the context is modified in a non-compatible way during capture.
     Context *mutableContext = const_cast<Context *>(context);
     initialize(mutableContext);
+}
+
+void State::setLogicOpEnabled(bool enabled)
+{
+    if (mLogicOpEnabled != enabled)
+    {
+        mLogicOpEnabled = enabled;
+        mDirtyBits.set(DIRTY_BIT_EXTENDED);
+        mExtendedDirtyBits.set(EXTENDED_DIRTY_BIT_LOGIC_OP_ENABLED);
+    }
+}
+
+void State::setLogicOp(LogicalOperation opcode)
+{
+    if (mLogicOp != opcode)
+    {
+        mLogicOp = opcode;
+        mDirtyBits.set(DIRTY_BIT_EXTENDED);
+        mExtendedDirtyBits.set(EXTENDED_DIRTY_BIT_LOGIC_OP);
+    }
 }
 
 constexpr State::DirtyObjectHandler State::kDirtyObjectHandlers[DIRTY_OBJECT_MAX];

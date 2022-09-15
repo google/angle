@@ -5145,7 +5145,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 {
                     switch (extendedDirtyBit)
                     {
-                        case gl::State::ExtendedDirtyBitType::EXTENDED_DIRTY_BIT_CLIP_CONTROL:
+                        case gl::State::EXTENDED_DIRTY_BIT_CLIP_CONTROL:
                             updateViewport(vk::GetImpl(glState.getDrawFramebuffer()),
                                            glState.getViewport(), glState.getNearPlane(),
                                            glState.getFarPlane());
@@ -5168,16 +5168,14 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                                 invalidateGraphicsDriverUniforms();
                             }
                             break;
-                        case gl::State::ExtendedDirtyBitType::EXTENDED_DIRTY_BIT_CLIP_DISTANCES:
+                        case gl::State::EXTENDED_DIRTY_BIT_CLIP_DISTANCES:
                             invalidateGraphicsDriverUniforms();
                             break;
-                        case gl::State::ExtendedDirtyBitType::
-                            EXTENDED_DIRTY_BIT_MIPMAP_GENERATION_HINT:
+                        case gl::State::EXTENDED_DIRTY_BIT_MIPMAP_GENERATION_HINT:
                             break;
-                        case gl::State::ExtendedDirtyBitType::
-                            EXTENDED_DIRTY_BIT_SHADER_DERIVATIVE_HINT:
+                        case gl::State::EXTENDED_DIRTY_BIT_SHADER_DERIVATIVE_HINT:
                             break;
-                        case gl::State::ExtendedDirtyBitType::EXTENDED_DIRTY_BIT_SHADING_RATE:
+                        case gl::State::EXTENDED_DIRTY_BIT_SHADING_RATE:
                             mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_FRAGMENT_SHADING_RATE);
                             break;
                         default:

@@ -714,6 +714,8 @@ class State : angle::NonCopyable
         EXTENDED_DIRTY_BIT_MIPMAP_GENERATION_HINT,  // mipmap generation hint
         EXTENDED_DIRTY_BIT_SHADER_DERIVATIVE_HINT,  // shader derivative hint
         EXTENDED_DIRTY_BIT_SHADING_RATE,            // QCOM_shading_rate
+        EXTENDED_DIRTY_BIT_LOGIC_OP_ENABLED,        // ANGLE_logic_op
+        EXTENDED_DIRTY_BIT_LOGIC_OP,                // ANGLE_logic_op
         EXTENDED_DIRTY_BIT_INVALID,
         EXTENDED_DIRTY_BIT_MAX = EXTENDED_DIRTY_BIT_INVALID,
     };
@@ -933,6 +935,12 @@ class State : angle::NonCopyable
     const std::vector<ImageUnit> &getImageUnits() const { return mImageUnits; }
 
     bool hasDisplayTextureShareGroup() const { return mDisplayTextureShareGroup; }
+
+    void setLogicOpEnabled(bool enabled);
+    bool isLogicOpEnabled() const { return mLogicOpEnabled; }
+
+    void setLogicOp(LogicalOperation opcode);
+    LogicalOperation getLogicOp() const { return mLogicOp; }
 
   private:
     friend class Context;
@@ -1159,6 +1167,10 @@ class State : angle::NonCopyable
 
     // GL_ANGLE_webgl_compatibility
     bool mTextureRectangleEnabled;
+
+    // GL_ANGLE_logic_op
+    bool mLogicOpEnabled;
+    LogicalOperation mLogicOp;
 
     // GL_KHR_parallel_shader_compile
     GLuint mMaxShaderCompilerThreads;

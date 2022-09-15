@@ -3150,7 +3150,12 @@ bool ValidateLogicOpANGLE(const Context *context,
                           angle::EntryPoint entryPoint,
                           LogicalOperation opcodePacked)
 {
-    UNREACHABLE();
-    return false;
+    if (!context->getExtensions().logicOpANGLE)
+    {
+        context->validationError(entryPoint, GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateLogicOpCommon(context, entryPoint, opcodePacked);
 }
 }  // namespace gl
