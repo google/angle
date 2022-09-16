@@ -145,6 +145,8 @@ class FramebufferVk : public FramebufferImpl
 
     void releaseCurrentFramebuffer(ContextVk *contextVk);
 
+    vk::RenderPassSerial getLastRenderPassSerial() const { return mLastRenderPassSerial; }
+
   private:
     // The 'in' rectangles must be clipped to the scissor and FBO. The clipping is done in 'blit'.
     angle::Result blitWithCommand(ContextVk *contextVk,
@@ -249,6 +251,9 @@ class FramebufferVk : public FramebufferImpl
     gl::DrawBufferMask mIsAHBColorAttachments;
 
     bool mIsCurrentFramebufferCached;
+
+    // Serial of the render pass this framebuffer has opened, if any.
+    vk::RenderPassSerial mLastRenderPassSerial;
 };
 }  // namespace rx
 
