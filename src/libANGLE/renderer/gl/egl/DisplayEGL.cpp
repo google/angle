@@ -880,9 +880,6 @@ void DisplayEGL::generateExtensions(egl::DisplayExtensions *outExtensions) const
 
     outExtensions->imageDmaBufImportEXT = mEGL->hasExtension("EGL_EXT_image_dma_buf_import");
 
-    outExtensions->imageDmaBufImportModifiersEXT =
-        mEGL->hasExtension("EGL_EXT_image_dma_buf_import_modifiers");
-
     outExtensions->robustnessVideoMemoryPurgeNV = mHasNVRobustnessVideoMemoryPurge;
 
     outExtensions->bufferAgeEXT = mEGL->hasExtension("EGL_EXT_buffer_age");
