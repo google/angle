@@ -8,6 +8,7 @@ import json
 import importlib
 import io
 import logging
+import os
 import signal
 import subprocess
 import sys
@@ -155,7 +156,9 @@ def RunTestSuite(test_suite,
             test_suite, cmd_args, log_output=show_test_stdout)
         return result, output.decode(), json_results
 
-    runner_cmd = [ExecutablePathInCurrentDir(test_suite)] + cmd_args + (runner_args or [])
+    cmd = ExecutablePathInCurrentDir(test_suite) if os.path.exists(
+        os.path.basename(test_suite)) else test_suite
+    runner_cmd = [cmd] + cmd_args + (runner_args or [])
 
     logging.debug(' '.join(runner_cmd))
     with contextlib.ExitStack() as stack:
