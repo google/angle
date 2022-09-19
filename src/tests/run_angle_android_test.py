@@ -56,7 +56,7 @@ def main():
 
     if args.suite == 'angle_perftests':
         traces = set(android_helper.GetTraceFromTestName(test) for test in tests)
-        android_helper.PrepareRestrictedTraces(traces, check_hash=True)
+        android_helper.PrepareRestrictedTraces(traces)
 
     flags = ['--gtest_filter=' + args.filter] if args.filter else []
     return android_helper.RunTests(args.suite, flags + extra_flags)[0]
