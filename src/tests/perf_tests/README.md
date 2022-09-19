@@ -33,11 +33,11 @@ Several command-line arguments control how the tests run:
 * `--screenshot-frame <frame>`: Which frame to capture a screenshot of. Defaults to first frame (1). Only implemented in `TracePerfTest`.
 * `--render-test-output-dir=dir`: Directory to store test artifacts (including screenshots but unlike `--screenshot-dir`, `dir` here is always a local directory regardless of platform and `--save-screenshots` isn't implied).
 * `--verbose`: Print extra timing information.
-* `--warmup-loops x`: Number of times to warm up the test before starting timing. Defaults to 3.
+* `--warmup-trials x`: Number of times to warm up the test before starting timing. Defaults to 3.
 * `--warmup-steps x`: Maximum number of steps for the warmup loops. Defaults to unlimited.
 * `--no-warmup`: Skip warming up the tests. Equivalent to `--warmup-steps 0`.
 * `--calibration-time`: Run each test calibration step in a fixed time. Defaults to 1 second.
-* `--max-trial-time x`: Run each test trial under this max time. Defaults to 10 seconds.
+* `--trial-time x` or `--max-trial-time x`: Run each test trial under this max time. Defaults to 10 seconds.
 * `--fixed-test-time x`: Run the tests until this much time has elapsed.
 * `--trials`: Number of times to repeat testing. Defaults to 3.
 * `--no-finish`: Don't call glFinish after each test trial.

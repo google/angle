@@ -82,7 +82,7 @@ class ANGLEPerfTest : public testing::Test, angle::NonCopyable
     virtual int getStepAlignment() const;
 
   protected:
-    enum class RunLoopPolicy
+    enum class RunTrialPolicy
     {
         FinishEveryStep,
         RunContinuously,
@@ -92,7 +92,7 @@ class ANGLEPerfTest : public testing::Test, angle::NonCopyable
     void SetUp() override;
     void TearDown() override;
 
-    // Normalize a time value according to the number of test loop iterations (mFrameCount)
+    // Normalize a time value according to the number of test trial iterations (mFrameCount)
     double normalizedTime(size_t value) const;
 
     // Call if the test step was aborted and the test should stop running.
@@ -100,13 +100,13 @@ class ANGLEPerfTest : public testing::Test, angle::NonCopyable
 
     int getNumStepsPerformed() const { return mTrialNumStepsPerformed; }
 
-    void doRunLoop(double maxRunTime, int maxStepsToRun, RunLoopPolicy runPolicy);
+    void runTrial(double maxRunTime, int maxStepsToRun, RunTrialPolicy runPolicy);
 
     // Overriden in trace perf tests.
     virtual void saveScreenshot(const std::string &screenshotName) {}
     virtual void computeGPUTime() {}
 
-    void calibrateStepsToRun(RunLoopPolicy policy);
+    void calibrateStepsToRun(RunTrialPolicy policy);
 
     void processResults();
     void processClockResult(const char *metric, double resultSeconds);

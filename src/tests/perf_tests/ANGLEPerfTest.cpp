@@ -275,7 +275,7 @@ ANGLEPerfTest::~ANGLEPerfTest() {}
 
 void ANGLEPerfTest::run()
 {
-    printf("running test name: \"%s\", backend: \"%s\", story: \"%s\"", mName.c_str(),
+    printf("running test name: \"%s\", backend: \"%s\", story: \"%s\"\n", mName.c_str(),
            mBackend.c_str(), mStory.c_str());
 #if defined(ANGLE_PLATFORM_ANDROID)
     __android_log_print(ANDROID_LOG_INFO, "ANGLE",
@@ -292,7 +292,7 @@ void ANGLEPerfTest::run()
     {
         // We don't call finish between calibration steps when calibrating non-Render tests. The
         // Render tests will have already calibrated when this code is run.
-        calibrateStepsToRun(RunLoopPolicy::RunContinuously);
+        calibrateStepsToRun(RunTrialPolicy::RunContinuously);
         ASSERT(mStepsToRun > 0);
     }
 
@@ -304,7 +304,7 @@ void ANGLEPerfTest::run()
 
     for (uint32_t trial = 0; trial < numTrials; ++trial)
     {
-        doRunLoop(gMaxTrialTimeSeconds, mStepsToRun, RunLoopPolicy::RunContinuously);
+        runTrial(gMaxTrialTimeSeconds, mStepsToRun, RunTrialPolicy::RunContinuously);
         processResults();
         if (gVerboseLogging)
         {
@@ -345,7 +345,7 @@ void ANGLEPerfTest::run()
     }
 }
 
-void ANGLEPerfTest::doRunLoop(double maxRunTime, int maxStepsToRun, RunLoopPolicy runPolicy)
+void ANGLEPerfTest::runTrial(double maxRunTime, int maxStepsToRun, RunTrialPolicy runPolicy)
 {
     mTrialNumStepsPerformed = 0;
     mRunning                = true;
@@ -375,7 +375,7 @@ void ANGLEPerfTest::doRunLoop(double maxRunTime, int maxStepsToRun, RunLoopPolic
         {
             step();
 
-            if (runPolicy == RunLoopPolicy::FinishEveryStep)
+            if (runPolicy == RunTrialPolicy::FinishEveryStep)
             {
                 glFinish();
             }
@@ -552,10 +552,10 @@ double ANGLEPerfTest::normalizedTime(size_t value) const
     return static_cast<double>(value) / static_cast<double>(mTrialNumStepsPerformed);
 }
 
-void ANGLEPerfTest::calibrateStepsToRun(RunLoopPolicy policy)
+void ANGLEPerfTest::calibrateStepsToRun(RunTrialPolicy policy)
 {
-    // Run initially for "gCalibrationTimeSeconds" using the run loop policy.
-    doRunLoop(gCalibrationTimeSeconds, std::numeric_limits<int>::max(), policy);
+    // Run initially for "gMaxTrialTime" using the run trial policy.
+    runTrial(gCalibrationTimeSeconds, std::numeric_limits<int>::max(), policy);
 
     double elapsedTime = mTimer.getElapsedWallClockTime();
     int stepsPerformed = mTrialNumStepsPerformed;
@@ -568,7 +568,7 @@ void ANGLEPerfTest::calibrateStepsToRun(RunLoopPolicy policy)
         stepsToRun = rx::roundUp(stepsToRun, getStepAlignment());
     }
 
-    // The run loop policy "FinishEveryStep" indicates we're running GPU tests. GPU work
+    // The run trial policy "FinishEveryStep" indicates we're running GPU tests. GPU work
     // completes asynchronously from the issued CPU steps. Therefore we need to call
     // glFinish before we can compute an accurate time elapsed by the test.
     //
@@ -579,11 +579,11 @@ void ANGLEPerfTest::calibrateStepsToRun(RunLoopPolicy policy)
     // and call glFinish a single time after "mStepsToRun" steps. We can then use the
     // "actual" time elapsed to compute an accurate estimate for "mStepsToRun".
 
-    if (policy == RunLoopPolicy::FinishEveryStep)
+    if (policy == RunTrialPolicy::FinishEveryStep)
     {
-        for (int loopIndex = 0; loopIndex < gWarmupLoops; ++loopIndex)
+        for (int warmupTrial = 0; warmupTrial < gWarmupTrials; ++warmupTrial)
         {
-            doRunLoop(gMaxTrialTimeSeconds, stepsToRun, RunLoopPolicy::RunContinuously);
+            runTrial(gMaxTrialTimeSeconds, stepsToRun, RunTrialPolicy::RunContinuously);
 
             // Compute mean of the calibration results.
             double sampleElapsedTime = mTimer.getElapsedWallClockTime();
@@ -591,7 +591,7 @@ void ANGLEPerfTest::calibrateStepsToRun(RunLoopPolicy policy)
 
             if (gVerboseLogging)
             {
-                printf("Calibration loop took %.2lf seconds, with %d steps.\n", sampleElapsedTime,
+                printf("Warmup trial took %.2lf seconds, with %d steps.\n", sampleElapsedTime,
                        sampleStepsPerformed);
             }
 
@@ -611,7 +611,7 @@ void ANGLEPerfTest::calibrateStepsToRun(RunLoopPolicy policy)
 
     if (gVerboseLogging)
     {
-        printf("Running %d steps after calibration.", mStepsToRun);
+        printf("Running %d steps after calibration.\n", mStepsToRun);
     }
 
     // Calibration allows the perf test runner script to save some time.
@@ -911,12 +911,12 @@ void ANGLERenderTest::SetUp()
 
     mTestTrialResults.reserve(gTestTrials);
 
-    for (int loopIndex = 0; loopIndex < gWarmupLoops; ++loopIndex)
+    for (int warmupTrial = 0; warmupTrial < gWarmupTrials; ++warmupTrial)
     {
-        doRunLoop(gCalibrationTimeSeconds, gWarmupSteps, RunLoopPolicy::FinishEveryStep);
+        runTrial(gCalibrationTimeSeconds, gWarmupSteps, RunTrialPolicy::FinishEveryStep);
         if (gVerboseLogging)
         {
-            printf("Warm-up loop took %.2lf seconds.\n", mTimer.getElapsedWallClockTime());
+            printf("Warm-up trials took %.2lf seconds.\n", mTimer.getElapsedWallClockTime());
         }
     }
 
@@ -924,7 +924,7 @@ void ANGLERenderTest::SetUp()
     {
         // Ensure we always call Finish when calibrating Render tests. This completes our work
         // between calibration measurements.
-        calibrateStepsToRun(RunLoopPolicy::FinishEveryStep);
+        calibrateStepsToRun(RunTrialPolicy::FinishEveryStep);
     }
 
     initPerfCounters();

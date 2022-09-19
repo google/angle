@@ -42,8 +42,10 @@ DEFAULT_LOG = 'info'
 DEFAULT_SAMPLES = 4
 DEFAULT_TRIALS = 3
 DEFAULT_MAX_ERRORS = 3
-DEFAULT_WARMUP_LOOPS = 2
-DEFAULT_CALIBRATION_TIME = 2
+
+# These parameters condition the test warmup to stabilize the scores across runs.
+DEFAULT_WARMUP_TRIALS = 3
+DEFAULT_TRIAL_TIME = 10
 
 # Test expectations
 FAIL = 'FAIL'
@@ -238,8 +240,10 @@ def _run_calibration(args, common_args, env):
     exit_code, calibrate_output, json_results = _run_test_suite(
         args, common_args + [
             '--calibration',
-            '--warmup-loops',
-            str(args.warmup_loops),
+            '--warmup-trials',
+            str(args.warmup_trials),
+            '--calibration-time',
+            str(args.trial_time),
         ], env)
     if exit_code != EXIT_SUCCESS:
         raise RuntimeError('%s failed. Output:\n%s' % (args.test_suite, calibrate_output))
@@ -254,18 +258,21 @@ def _run_calibration(args, common_args, env):
     return PASS, int(steps_per_trial[0])
 
 
-def _run_perf(args, common_args, env, steps_per_trial):
+def _run_perf(args, common_args, env, steps_per_trial=None):
     run_args = common_args + [
-        '--steps-per-trial',
-        str(steps_per_trial),
         '--trials',
         str(args.trials_per_sample),
     ]
 
+    if steps_per_trial:
+        run_args += ['--steps-per-trial', str(steps_per_trial)]
+    else:
+        run_args += ['--trial-time', str(args.trial_time)]
+
     if args.smoke_test_mode:
         run_args += ['--no-warmup']
     else:
-        run_args += ['--warmup-loops', str(args.warmup_loops)]
+        run_args += ['--warmup-trials', str(args.warmup_trials)]
 
     if args.perf_counters:
         run_args += ['--perf-counters', args.perf_counters]
@@ -325,13 +332,12 @@ def _run_tests(tests, args, extra_flags, env):
         common_args = [
             '--gtest_filter=%s' % test,
             '--verbose',
-            '--calibration-time',
-            str(args.calibration_time),
         ] + extra_flags
 
         if args.steps_per_trial:
             steps_per_trial = args.steps_per_trial
-        else:
+            trial_limit = 'steps_per_trial=%d' % steps_per_trial
+        elif args.calibrate_steps_per_trial:
             try:
                 test_status, steps_per_trial = _run_calibration(args, common_args, env)
             except RuntimeError as e:
@@ -348,10 +354,14 @@ def _run_tests(tests, args, extra_flags, env):
                 logging.error('Test %s missing steps_per_trial' % test)
                 results.result_fail(test)
                 continue
+            trial_limit = 'steps_per_trial=%d' % steps_per_trial
+        else:
+            steps_per_trial = None
+            trial_limit = 'trial_time=%d' % args.trial_time
 
-        logging.info('Test %d/%d: %s (samples=%d trials_per_sample=%d steps_per_trial=%d)' %
+        logging.info('Test %d/%d: %s (samples=%d trials_per_sample=%d %s)' %
                      (test_index + 1, len(tests), test, args.samples_per_test,
-                      args.trials_per_sample, steps_per_trial))
+                      args.trials_per_sample, trial_limit))
 
         wall_times = []
         test_histogram_set = histogram_set.HistogramSet()
@@ -453,8 +463,18 @@ def main():
         help='Number of trials to run per sample. Default is %d.' % DEFAULT_TRIALS,
         type=int,
         default=DEFAULT_TRIALS)
-    parser.add_argument(
+    trial_group = parser.add_mutually_exclusive_group()
+    trial_group.add_argument(
         '--steps-per-trial', help='Fixed number of steps to run per trial.', type=int)
+    trial_group.add_argument(
+        '--trial-time',
+        help='Number of seconds to run per trial. Default is %d.' % DEFAULT_TRIAL_TIME,
+        type=int,
+        default=DEFAULT_TRIAL_TIME)
+    trial_group.add_argument(
+        '--calibrate-steps-per-trial',
+        help='Automatically determine a number of steps per trial.',
+        action='store_true')
     parser.add_argument(
         '--max-errors',
         help='After this many errors, abort the run. Default is %d.' % DEFAULT_MAX_ERRORS,
@@ -463,17 +483,11 @@ def main():
     parser.add_argument(
         '--smoke-test-mode', help='Do a quick run to validate correctness.', action='store_true')
     parser.add_argument(
-        '--warmup-loops',
-        help='Number of warmup loops to run in the perf test. Default is %d.' %
-        DEFAULT_WARMUP_LOOPS,
+        '--warmup-trials',
+        help='Number of warmup trials to run in the perf test. Default is %d.' %
+        DEFAULT_WARMUP_TRIALS,
         type=int,
-        default=DEFAULT_WARMUP_LOOPS)
-    parser.add_argument(
-        '--calibration-time',
-        help='Amount of time to spend each loop in calibration and warmup. Default is %d seconds.'
-        % DEFAULT_CALIBRATION_TIME,
-        type=int,
-        default=DEFAULT_CALIBRATION_TIME)
+        default=DEFAULT_WARMUP_TRIALS)
     parser.add_argument(
         '--show-test-stdout', help='Prints all test stdout during execution.', action='store_true')
     parser.add_argument(
