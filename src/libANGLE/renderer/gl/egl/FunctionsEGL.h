@@ -105,6 +105,14 @@ class FunctionsEGL
 
     EGLint dupNativeFenceFDANDROID(EGLSync sync) const;
 
+    EGLint queryDmaBufFormatsEXT(EGLint maxFormats, EGLint *formats, EGLint *numFormats) const;
+
+    EGLint queryDmaBufModifiersEXT(EGLint format,
+                                   EGLint maxModifiers,
+                                   EGLuint64KHR *modifiers,
+                                   EGLBoolean *externalOnly,
+                                   EGLint *numModifiers) const;
+
   private:
     // So as to isolate from angle we do not include angleutils.h and cannot
     // use angle::NonCopyable so we replicated it here instead.
