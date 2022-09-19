@@ -313,7 +313,7 @@ static bool ValidateTexImageFormatCombination(const Context *context,
             }
         }
 
-        if (!ValidES3Type(type))
+        if (!ValidES3Type(type) || (type == GL_HALF_FLOAT_OES && context->isWebGL()))
         {
             context->validationError(entryPoint, GL_INVALID_ENUM, kInvalidType);
             return false;
