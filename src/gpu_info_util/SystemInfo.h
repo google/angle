@@ -21,6 +21,7 @@ using VendorID       = uint32_t;
 using DeviceID       = uint32_t;
 using RevisionID     = uint32_t;
 using SystemDeviceID = uint64_t;
+using DriverID       = uint32_t;
 
 struct VersionInfo
 {
@@ -48,6 +49,7 @@ struct GPUDeviceInfo
 
     // Only available via GetSystemInfoVulkan currently.
     VersionInfo detailedDriverVersion;
+    DriverID driverId = 0;
 };
 
 struct SystemInfo
