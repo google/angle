@@ -192,7 +192,7 @@ TEST_P(FogBlendTest, ShadowEffect)
 
     glClearColor(GLColor::red.R, GLColor::red.G, GLColor::red.B, GLColor::red.A);
     glClearDepthf(1);
-    glClear(GL_COLOR_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glViewport(0, 0, w, h);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();

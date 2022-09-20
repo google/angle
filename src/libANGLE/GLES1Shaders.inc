@@ -560,7 +560,8 @@ vec4 doFog(vec4 currentFragment)
             break;
     }
 
-    vec4 result = f * currentFragment + (1.0 - f) * fog_color;
+    f = clamp(f, 0.0, 1.0);
+    vec4 result = vec4(f * currentFragment.rgb + (1.0 - f) * fog_color.rgb, currentFragment.a);
     return result;
 }
 
