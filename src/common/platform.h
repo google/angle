@@ -83,7 +83,7 @@
 
 // Include <windows.h> to ensure tests related files can be built when building
 // vulkan only backend ANGLE on windows.
-#    if defined(ANGLE_PLATFORM_WINDOWS) && defined(ANGLE_ENABLE_VULKAN)
+#    if defined(ANGLE_ENABLE_VULKAN)
 #        include <windows.h>
 #    endif
 
