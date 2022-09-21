@@ -418,6 +418,10 @@ const char *QueryDeviceStringEXT(Thread *thread, Device *dev, EGLint name)
         case EGL_EXTENSIONS:
             result = dev->getExtensionString().c_str();
             break;
+        case EGL_DRM_DEVICE_FILE_EXT:
+        case EGL_DRM_RENDER_NODE_FILE_EXT:
+            result = dev->getDeviceString(name).c_str();
+            break;
         default:
             thread->setError(EglBadDevice(), "eglQueryDeviceStringEXT", GetDeviceIfValid(dev));
             return nullptr;

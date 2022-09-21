@@ -130,4 +130,14 @@ const std::string &Device::getExtensionString() const
 {
     return mDeviceExtensionString;
 }
+
+const std::string &Device::getDeviceString(EGLint name)
+{
+    if (mDeviceStrings.find(name) == mDeviceStrings.end())
+    {
+        mDeviceStrings.emplace(name, mImplementation.get()->getDeviceString(name));
+    }
+
+    return mDeviceStrings.find(name)->second;
+}
 }  // namespace egl

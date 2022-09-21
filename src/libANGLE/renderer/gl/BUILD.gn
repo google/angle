@@ -129,6 +129,8 @@ if (is_android || is_linux || is_chromeos) {
   _gl_backend_sources += [
     "egl/ContextEGL.cpp",
     "egl/ContextEGL.h",
+    "egl/DeviceEGL.cpp",
+    "egl/DeviceEGL.h",
     "egl/DisplayEGL.cpp",
     "egl/DisplayEGL.h",
     "egl/DmaBufImageSiblingEGL.cpp",
