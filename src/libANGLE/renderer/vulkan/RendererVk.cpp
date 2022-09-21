@@ -217,6 +217,8 @@ constexpr const char *kSkippedMessages[] = {
     "UNASSIGNED-BestPractices-vkCmdBeginRenderPass-ClearValueWithoutLoadOpClear",
     // http://anglebug.com/7513
     "VUID-VkGraphicsPipelineCreateInfo-pStages-06896",
+    // http://anglebug.com/7685
+    "UNASSIGNED-input-attachment-descriptor-not-in-subpass",
 };
 
 // Validation messages that should be ignored only when VK_EXT_primitive_topology_list_restart is
