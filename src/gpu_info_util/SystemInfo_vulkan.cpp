@@ -141,10 +141,12 @@ bool GetSystemInfoVulkanWithICD(SystemInfo *info, vk::ICD preferredICD)
     // Enumerate the Vulkan physical devices, which are ANGLE gpus:
     auto pfnEnumeratePhysicalDevices =
         vkLibrary.getProc<PFN_vkEnumeratePhysicalDevices>("vkEnumeratePhysicalDevices");
+    auto pfnGetPhysicalDeviceProperties =
+        vkLibrary.getProc<PFN_vkGetPhysicalDeviceProperties>("vkGetPhysicalDeviceProperties");
     auto pfnGetPhysicalDeviceProperties2 =
         vkLibrary.getProc<PFN_vkGetPhysicalDeviceProperties2>("vkGetPhysicalDeviceProperties2");
     uint32_t physicalDeviceCount = 0;
-    if (!pfnEnumeratePhysicalDevices || !pfnGetPhysicalDeviceProperties2 ||
+    if (!pfnEnumeratePhysicalDevices || !pfnGetPhysicalDeviceProperties ||
         pfnEnumeratePhysicalDevices(instance, &physicalDeviceCount, nullptr) != VK_SUCCESS)
     {
         return false;
@@ -168,9 +170,16 @@ bool GetSystemInfoVulkanWithICD(SystemInfo *info, vk::ICD preferredICD)
         properties2.sType                       = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2;
         properties2.pNext                       = &driverProperties;
 
-        pfnGetPhysicalDeviceProperties2(physicalDevices[i], &properties2);
+        VkPhysicalDeviceProperties &properties = properties2.properties;
+        pfnGetPhysicalDeviceProperties(physicalDevices[i], &properties);
 
-        const VkPhysicalDeviceProperties &properties = properties2.properties;
+        // vkGetPhysicalDeviceProperties2() is supported since 1.1
+        // Use vkGetPhysicalDeviceProperties2() to get driver information.
+        if (properties.apiVersion >= VK_API_VERSION_1_1)
+        {
+            pfnGetPhysicalDeviceProperties2(physicalDevices[i], &properties2);
+        }
+
         // Fill in data for a given physical device (a.k.a. gpu):
         GPUDeviceInfo &gpu = info->gpus[i];
         gpu.vendorId       = properties.vendorID;
