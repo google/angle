@@ -1184,7 +1184,8 @@ class FramebufferTest_ES3Metal : public FramebufferTest_ES3
 // to color attachments. Test we're enforcing that limit.
 TEST_P(FramebufferTest_ES3Metal, TooManyBitsGeneratesFramebufferUnsupported)
 {
-    ANGLE_SKIP_TEST_IF(!GetParam().isEnabled(Feature::LimitMaxColorTargetBitsForTesting));
+    ANGLE_SKIP_TEST_IF(
+        !getEGLWindow()->isFeatureEnabled(Feature::LimitMaxColorTargetBitsForTesting));
 
     GLint maxDrawBuffers;
     glGetIntegerv(GL_MAX_DRAW_BUFFERS, &maxDrawBuffers);
@@ -1234,7 +1235,8 @@ TEST_P(FramebufferTest_ES3Metal, TooManyBitsGeneratesFramebufferUnsupported)
 // when drawing.
 TEST_P(FramebufferTest_ES3Metal, TooManyBitsGeneratesInvalidFramebufferOperation)
 {
-    ANGLE_SKIP_TEST_IF(!GetParam().isEnabled(Feature::LimitMaxColorTargetBitsForTesting));
+    ANGLE_SKIP_TEST_IF(
+        !getEGLWindow()->isFeatureEnabled(Feature::LimitMaxColorTargetBitsForTesting));
 
     GLint maxDrawBuffers;
     glGetIntegerv(GL_MAX_DRAW_BUFFERS, &maxDrawBuffers);
@@ -4574,8 +4576,9 @@ void main()
 
     glViewport(0, 0, std::max(kWidth1, kWidth2), std::max(kHeight1, kHeight2));
 
-    const bool isSwappedDimensions = GetParam().isEnabled(Feature::EmulatedPrerotation90) ||
-                                     GetParam().isEnabled(Feature::EmulatedPrerotation270);
+    const bool isSwappedDimensions =
+        getEGLWindow()->isFeatureEnabled(Feature::EmulatedPrerotation90) ||
+        getEGLWindow()->isFeatureEnabled(Feature::EmulatedPrerotation270);
 
     auto resizeWindow = [this, isSwappedDimensions](GLuint width, GLuint height) {
         if (isSwappedDimensions)
