@@ -1088,6 +1088,10 @@ void ResetDynamicState(ContextVk *contextVk, vk::RenderPassCommandBuffer *comman
             VK_FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR};
         commandBuffer->setFragmentShadingRate(&fragmentSize, shadingRateCombinerOp);
     }
+    if (contextVk->getFeatures().supportsLogicOpDynamicState.enabled)
+    {
+        commandBuffer->setLogicOp(VK_LOGIC_OP_COPY);
+    }
 
     // Let ContextVk know that it should refresh all dynamic state.
     contextVk->invalidateAllDynamicState();
