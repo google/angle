@@ -2442,18 +2442,34 @@ void SetMaterialParameters(GLES1State *state,
                            MaterialParameter pname,
                            const GLfloat *params)
 {
+    // Note: Ambient and diffuse colors are inherited from glColor when COLOR_MATERIAL is enabled,
+    // and can only be modified by this function if that is disabled:
+    //
+    // > the replaced values remain until changed by either sending a new color or by setting a
+    // > new material value when COLOR_MATERIAL is not currently enabled, to override that
+    // particular value.
+
     MaterialParameters &material = state->materialParameters();
     switch (pname)
     {
         case MaterialParameter::Ambient:
-            material.ambient = ColorF::fromData(params);
+            if (!state->isColorMaterialEnabled())
+            {
+                material.ambient = ColorF::fromData(params);
+            }
             break;
         case MaterialParameter::Diffuse:
-            material.diffuse = ColorF::fromData(params);
+            if (!state->isColorMaterialEnabled())
+            {
+                material.diffuse = ColorF::fromData(params);
+            }
             break;
         case MaterialParameter::AmbientAndDiffuse:
-            material.ambient = ColorF::fromData(params);
-            material.diffuse = ColorF::fromData(params);
+            if (!state->isColorMaterialEnabled())
+            {
+                material.ambient = ColorF::fromData(params);
+                material.diffuse = ColorF::fromData(params);
+            }
             break;
         case MaterialParameter::Specular:
             material.specular = ColorF::fromData(params);
