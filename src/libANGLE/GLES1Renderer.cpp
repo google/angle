@@ -784,15 +784,20 @@ void GLES1Renderer::addShaderBoolClipPlaneArray(std::stringstream &outStream,
 
 void GLES1Renderer::addVertexShaderDefs(std::stringstream &outStream)
 {
+    addShaderDefine(outStream, GLES1StateEnables::Lighting, "enable_lighting");
+    addShaderDefine(outStream, GLES1StateEnables::ColorMaterial, "enable_color_material");
     addShaderDefine(outStream, GLES1StateEnables::DrawTexture, "enable_draw_texture");
     addShaderDefine(outStream, GLES1StateEnables::PointRasterization, "point_rasterization");
     addShaderDefine(outStream, GLES1StateEnables::RescaleNormal, "enable_rescale_normal");
     addShaderDefine(outStream, GLES1StateEnables::Normalize, "enable_normalize");
+    addShaderDefine(outStream, GLES1StateEnables::LightModelTwoSided, "light_model_two_sided");
+
+    // bool light_enables[kMaxLights] = bool[kMaxLights](...);
+    addShaderBoolLightArray(outStream, "light_enables", mShaderState.lightEnables);
 }
 
 void GLES1Renderer::addFragmentShaderDefs(std::stringstream &outStream)
 {
-    addShaderDefine(outStream, GLES1StateEnables::Lighting, "enable_lighting");
     addShaderDefine(outStream, GLES1StateEnables::Fog, "enable_fog");
     addShaderDefine(outStream, GLES1StateEnables::ClipPlanes, "enable_clip_planes");
     addShaderDefine(outStream, GLES1StateEnables::DrawTexture, "enable_draw_texture");
@@ -800,8 +805,6 @@ void GLES1Renderer::addFragmentShaderDefs(std::stringstream &outStream)
     addShaderDefine(outStream, GLES1StateEnables::PointSprite, "point_sprite_enabled");
     addShaderDefine(outStream, GLES1StateEnables::AlphaTest, "enable_alpha_test");
     addShaderDefine(outStream, GLES1StateEnables::ShadeModelFlat, "shade_model_flat");
-    addShaderDefine(outStream, GLES1StateEnables::ColorMaterial, "enable_color_material");
-    addShaderDefine(outStream, GLES1StateEnables::LightModelTwoSided, "light_model_two_sided");
 
     // bool enable_texture_2d[kMaxTexUnits] = bool[kMaxTexUnits](...);
     addShaderBoolTexArray(outStream, "enable_texture_2d", mShaderState.tex2DEnables);
@@ -815,9 +818,6 @@ void GLES1Renderer::addFragmentShaderDefs(std::stringstream &outStream)
     // bool point_sprite_coord_replace[kMaxTexUnits] = bool[kMaxTexUnits](...);
     addShaderBoolTexArray(outStream, "point_sprite_coord_replace",
                           mShaderState.pointSpriteCoordReplaces);
-
-    // bool light_enables[kMaxLights] = bool[kMaxLights](...);
-    addShaderBoolLightArray(outStream, "light_enables", mShaderState.lightEnables);
 
     // bool clip_plane_enables[kMaxClipPlanes] = bool[kMaxClipPlanes](...);
     addShaderBoolClipPlaneArray(outStream, "clip_plane_enables", mShaderState.clipPlaneEnables);

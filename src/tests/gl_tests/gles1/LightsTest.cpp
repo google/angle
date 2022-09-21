@@ -317,7 +317,7 @@ TEST_P(LightsTest, Set)
 }
 
 // Check a case that approximates the one caught in the wild
-TEST_P(LightsTest, Bug6201)
+TEST_P(LightsTest, DiffuseGradient)
 {
     GLTexture texture;
     glBindTexture(GL_TEXTURE_2D, texture);
