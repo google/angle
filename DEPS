@@ -331,6 +331,7 @@ deps = {
 
   'third_party/astc-encoder/src': {
     'url': '{chromium_git}/external/github.com/ARM-software/astc-encoder@573c475389bf51d16a5c3fc8348092e094e50e8f',
+    'condition': 'not build_with_chromium',
   },
 
   'third_party/bazel': {
