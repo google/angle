@@ -367,6 +367,7 @@ TCompiler::TCompiler(sh::GLenum type, ShShaderSpec spec, ShShaderOutput output)
       mTessEvaluationShaderInputPointType(EtetUndefined),
       mHasAnyPreciseType(false),
       mAdvancedBlendEquations(0),
+      mHasPixelLocalStorageUniforms(false),
       mCompileOptions{}
 {}
 
@@ -586,7 +587,8 @@ void TCompiler::setASTMetadata(const TParseContext &parseContext)
 
     if (mShaderType == GL_FRAGMENT_SHADER)
     {
-        mAdvancedBlendEquations = parseContext.getAdvancedBlendEquations();
+        mAdvancedBlendEquations       = parseContext.getAdvancedBlendEquations();
+        mHasPixelLocalStorageUniforms = !parseContext.pixelLocalStorageBindings().empty();
     }
     if (mShaderType == GL_GEOMETRY_SHADER_EXT)
     {
@@ -695,7 +697,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     //   Should this actually run after collecting variables?
     //   Do we need more introspection?
     //   Do we want to hide rewritten shader image uniforms from glGetActiveUniform?
-    if (!parseContext.pixelLocalStorageBindings().empty())
+    if (hasPixelLocalStorageUniforms())
     {
         ASSERT(
             IsExtensionEnabled(mExtensionBehavior, TExtension::ANGLE_shader_pixel_local_storage));

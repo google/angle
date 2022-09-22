@@ -78,7 +78,7 @@ ContextNULL::ContextNULL(const gl::State &state,
     mExtensions.mapBufferRangeEXT             = true;
     mExtensions.mapbufferOES                  = true;
     mExtensions.pixelBufferObjectNV           = true;
-    mExtensions.shaderPixelLocalStorageANGLE  = state.getClientVersion() >= gl::Version(3, 1);
+    mExtensions.shaderPixelLocalStorageANGLE  = state.getClientVersion() >= gl::Version(3, 0);
     mExtensions.shaderPixelLocalStorageCoherentANGLE = mExtensions.shaderPixelLocalStorageANGLE;
     mExtensions.textureRectangleANGLE                = true;
     mExtensions.textureUsageANGLE                    = true;

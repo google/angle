@@ -189,6 +189,8 @@ class TCompiler : public TShHandleBase
 
     AdvancedBlendEquations getAdvancedBlendEquations() const { return mAdvancedBlendEquations; }
 
+    bool hasPixelLocalStorageUniforms() const { return mHasPixelLocalStorageUniforms; }
+
     unsigned int getSharedMemorySize() const;
 
     sh::GLenum getShaderType() const { return mShaderType; }
@@ -354,6 +356,9 @@ class TCompiler : public TShHandleBase
 
     // advanced blend equation parameters
     AdvancedBlendEquations mAdvancedBlendEquations;
+
+    // ANGLE_shader_pixel_local_storage.
+    bool mHasPixelLocalStorageUniforms;
 
     // name hashing.
     NameMap mNameMap;

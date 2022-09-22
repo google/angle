@@ -3709,23 +3709,25 @@ Extensions Context::generateSupportedExtensions() const
 
         // GL_EXT_clip_cull_distance requires ESSL3
         supportedExtensions.clipCullDistanceEXT = false;
+
+        // ANGLE_shader_pixel_local_storage requires ES3
+        supportedExtensions.shaderPixelLocalStorageANGLE         = false;
+        supportedExtensions.shaderPixelLocalStorageCoherentANGLE = false;
     }
 
     if (getClientVersion() < ES_3_1)
     {
         // Disable ES3.1+ extensions
-        supportedExtensions.geometryShaderEXT                    = false;
-        supportedExtensions.geometryShaderOES                    = false;
-        supportedExtensions.gpuShader5EXT                        = false;
-        supportedExtensions.primitiveBoundingBoxEXT              = false;
-        supportedExtensions.shaderImageAtomicOES                 = false;
-        supportedExtensions.shaderIoBlocksEXT                    = false;
-        supportedExtensions.shaderIoBlocksOES                    = false;
-        supportedExtensions.shaderPixelLocalStorageANGLE         = false;
-        supportedExtensions.shaderPixelLocalStorageCoherentANGLE = false;
-        supportedExtensions.tessellationShaderEXT                = false;
-        supportedExtensions.textureBufferEXT                     = false;
-        supportedExtensions.textureBufferOES                     = false;
+        supportedExtensions.geometryShaderEXT       = false;
+        supportedExtensions.geometryShaderOES       = false;
+        supportedExtensions.gpuShader5EXT           = false;
+        supportedExtensions.primitiveBoundingBoxEXT = false;
+        supportedExtensions.shaderImageAtomicOES    = false;
+        supportedExtensions.shaderIoBlocksEXT       = false;
+        supportedExtensions.shaderIoBlocksOES       = false;
+        supportedExtensions.tessellationShaderEXT   = false;
+        supportedExtensions.textureBufferEXT        = false;
+        supportedExtensions.textureBufferOES        = false;
 
         // TODO(http://anglebug.com/2775): Multisample arrays could be supported on ES 3.0 as well
         // once 2D multisample texture extension is exposed there.

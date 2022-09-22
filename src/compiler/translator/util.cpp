@@ -747,6 +747,18 @@ bool IsShaderOutput(TQualifier qualifier)
     return IsVaryingOut(qualifier) || IsBuiltinOutputVariable(qualifier);
 }
 
+bool IsFragmentOutput(TQualifier qualifier)
+{
+    switch (qualifier)
+    {
+        case EvqFragmentOut:
+        case EvqFragmentInOut:
+            return true;
+        default:
+            return false;
+    }
+}
+
 bool IsOutputESSL(ShShaderOutput output)
 {
     return output == SH_ESSL_OUTPUT;

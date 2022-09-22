@@ -43,11 +43,11 @@ void TOutputVulkanGLSL::writeLayoutQualifier(TIntermSymbol *symbol)
         IsImage(type.getBasicType()) || IsSubpassInputType(type.getBasicType());
     bool needsLocation = type.getQualifier() == EvqAttribute ||
                          type.getQualifier() == EvqVertexIn ||
-                         type.getQualifier() == EvqFragmentOut || IsVarying(type.getQualifier());
+                         IsFragmentOutput(type.getQualifier()) || IsVarying(type.getQualifier());
     bool needsInputAttachmentIndex = IsSubpassInputType(type.getBasicType());
     bool needsSpecConstId          = type.getQualifier() == EvqSpecConst;
 
-    if (!NeedsToWriteLayoutQualifier(type) && !needsSetBinding && !needsLocation &&
+    if (!needsToWriteLayoutQualifier(type) && !needsSetBinding && !needsLocation &&
         !needsInputAttachmentIndex && !needsSpecConstId)
     {
         return;

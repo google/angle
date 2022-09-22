@@ -93,6 +93,12 @@ TOutputGLSLBase::TOutputGLSLBase(TCompiler *compiler,
       mShaderVersion(compiler->getShaderVersion()),
       mOutput(compiler->getOutputType()),
       mHighPrecisionSupported(compiler->isHighPrecisionSupported()),
+      // If pixel local storage introduces new fragment outputs, we are now required to specify a
+      // location for _all_ fragment outputs, including previously valid outputs that had an
+      // implicit location of zero.
+      mAlwaysSpecifyFragOutLocation(compiler->hasPixelLocalStorageUniforms() &&
+                                    compileOptions.pls.type ==
+                                        ShPixelLocalStorageType::FramebufferFetch),
       mCompileOptions(compileOptions)
 {}
 
@@ -244,7 +250,7 @@ void TOutputGLSLBase::writeLayoutQualifier(TIntermSymbol *variable)
 {
     const TType &type = variable->getType();
 
-    if (!NeedsToWriteLayoutQualifier(type))
+    if (!needsToWriteLayoutQualifier(type))
     {
         return;
     }
@@ -261,12 +267,13 @@ void TOutputGLSLBase::writeLayoutQualifier(TIntermSymbol *variable)
 
     CommaSeparatedListItemPrefixGenerator listItemPrefix;
 
-    if (type.getQualifier() == EvqFragmentOut || type.getQualifier() == EvqFragmentInOut ||
-        type.getQualifier() == EvqVertexIn || IsVarying(type.getQualifier()))
+    if (IsFragmentOutput(type.getQualifier()) || type.getQualifier() == EvqVertexIn ||
+        IsVarying(type.getQualifier()))
     {
-        if (layoutQualifier.location >= 0)
+        if (layoutQualifier.location >= 0 ||
+            (mAlwaysSpecifyFragOutLocation && IsFragmentOutput(type.getQualifier())))
         {
-            out << listItemPrefix << "location = " << layoutQualifier.location;
+            out << listItemPrefix << "location = " << std::max(layoutQualifier.location, 0);
         }
     }
 
@@ -1395,7 +1402,7 @@ void WriteTessEvaluationShaderLayoutQualifiers(TInfoSinkBase &out,
 // type and storage qualifier of the variable to verify that layout qualifiers have to be outputted.
 // TODO (mradev): Fix layout qualifier spilling in ScalarizeVecAndMatConstructorArgs and remove
 // NeedsToWriteLayoutQualifier.
-bool NeedsToWriteLayoutQualifier(const TType &type)
+bool TOutputGLSLBase::needsToWriteLayoutQualifier(const TType &type)
 {
     if (type.getBasicType() == EbtInterfaceBlock)
     {
@@ -1404,11 +1411,14 @@ bool NeedsToWriteLayoutQualifier(const TType &type)
 
     const TLayoutQualifier &layoutQualifier = type.getLayoutQualifier();
 
-    if ((type.getQualifier() == EvqFragmentOut || type.getQualifier() == EvqFragmentInOut ||
-         type.getQualifier() == EvqVertexIn || IsVarying(type.getQualifier())) &&
-        layoutQualifier.location >= 0)
+    if (IsFragmentOutput(type.getQualifier()) || type.getQualifier() == EvqVertexIn ||
+        IsVarying(type.getQualifier()))
     {
-        return true;
+        if (layoutQualifier.location >= 0 ||
+            (mAlwaysSpecifyFragOutLocation && IsFragmentOutput(type.getQualifier())))
+        {
+            return true;
+        }
     }
 
     if (type.getQualifier() == EvqFragmentOut || type.getQualifier() == EvqFragmentInOut)

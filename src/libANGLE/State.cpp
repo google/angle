@@ -514,6 +514,12 @@ void State::initialize(Context *context)
 
         mAtomicCounterBuffers.resize(mCaps.maxAtomicCounterBufferBindings);
         mShaderStorageBuffers.resize(mCaps.maxShaderStorageBufferBindings);
+    }
+    if (clientVersion >= Version(3, 1) ||
+        (mExtensions.shaderPixelLocalStorageANGLE &&
+         ShPixelLocalStorageTypeUsesImages(
+             context->getImplementation()->getNativePixelLocalStorageType())))
+    {
         mImageUnits.resize(mCaps.maxImageUnits);
     }
     if (clientVersion >= Version(3, 2) || mExtensions.textureCubeMapArrayAny())

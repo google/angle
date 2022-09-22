@@ -31884,17 +31884,17 @@ constexpr SymbolRule kRules[] = {
     Rule::Get<Spec::GLSL, 420, Shader::ALL, 0>(&imageAtomicCompSwap_01c20D00D00D00D),
     Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(OES_shader_image_atomic)>(
         &imageAtomicCompSwapExt_01c20D00D00D00D),
-    Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(ANGLE_shader_pixel_local_storage)>(
+    Rule::Get<Spec::ESSL, 300, Shader::ALL, EXT_INDEX(ANGLE_shader_pixel_local_storage)>(
         &pixelLocalLoadANGLE_01g),
-    Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(ANGLE_shader_pixel_local_storage)>(
+    Rule::Get<Spec::ESSL, 300, Shader::ALL, EXT_INDEX(ANGLE_shader_pixel_local_storage)>(
         &pixelLocalLoadANGLE_01h),
-    Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(ANGLE_shader_pixel_local_storage)>(
+    Rule::Get<Spec::ESSL, 300, Shader::ALL, EXT_INDEX(ANGLE_shader_pixel_local_storage)>(
         &pixelLocalLoadANGLE_01i),
-    Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(ANGLE_shader_pixel_local_storage)>(
+    Rule::Get<Spec::ESSL, 300, Shader::ALL, EXT_INDEX(ANGLE_shader_pixel_local_storage)>(
         &pixelLocalStoreANGLE_01g30B),
-    Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(ANGLE_shader_pixel_local_storage)>(
+    Rule::Get<Spec::ESSL, 300, Shader::ALL, EXT_INDEX(ANGLE_shader_pixel_local_storage)>(
         &pixelLocalStoreANGLE_01h30D),
-    Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(ANGLE_shader_pixel_local_storage)>(
+    Rule::Get<Spec::ESSL, 300, Shader::ALL, EXT_INDEX(ANGLE_shader_pixel_local_storage)>(
         &pixelLocalStoreANGLE_01i30E),
     Rule::Get<Spec::ESSL, kESSLInternalBackendBuiltIns, Shader::ALL, 0>(
         &beginInvocationInterlockNV_),
@@ -37179,9 +37179,9 @@ constexpr UnmangledEntry unmangled[] = {
     {"imageAtomicCompSwap", std::array<TExtension, 1>{{Ext::OES_shader_image_atomic}},
      Ext::UNDEFINED, 310, -1, Shader::ALL},
     {"pixelLocalLoadANGLE", std::array<TExtension, 1>{{Ext::ANGLE_shader_pixel_local_storage}},
-     Ext::UNDEFINED, 310, -1, Shader::ALL},
+     Ext::UNDEFINED, 300, -1, Shader::ALL},
     {"pixelLocalStoreANGLE", std::array<TExtension, 1>{{Ext::ANGLE_shader_pixel_local_storage}},
-     Ext::UNDEFINED, 310, -1, Shader::ALL},
+     Ext::UNDEFINED, 300, -1, Shader::ALL},
     {"beginInvocationInterlockNV", std::array<TExtension, 1>{{Ext::UNDEFINED}}, Ext::UNDEFINED,
      kESSLInternalBackendBuiltIns, -1, Shader::ALL},
     {"endInvocationInterlockNV", std::array<TExtension, 1>{{Ext::UNDEFINED}}, Ext::UNDEFINED,
