@@ -273,8 +273,9 @@ bool GetSystemInfoVulkanWithICD(SystemInfo *info, vk::ICD preferredICD)
             default:
                 return false;
         }
-        gpu.driverId   = static_cast<DriverID>(driverProperties.driverID);
-        gpu.driverDate = "";
+        gpu.driverId         = static_cast<DriverID>(driverProperties.driverID);
+        gpu.driverApiVersion = properties.apiVersion;
+        gpu.driverDate       = "";
     }
 
     return true;
