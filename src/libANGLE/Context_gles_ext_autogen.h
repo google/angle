@@ -284,6 +284,7 @@
     /* GL_OES_compressed_ETC2_punchthroughA_sRGB8_alpha_texture */                                 \
     /* GL_OES_compressed_ETC2_sRGB8_alpha8_texture */                                              \
     /* GL_OES_compressed_ETC2_sRGB8_texture */                                                     \
+    /* GL_OES_compressed_paletted_texture */                                                       \
     /* GL_OES_copy_image */                                                                        \
     /* GL_OES_depth24 */                                                                           \
     /* GL_OES_depth32 */                                                                           \

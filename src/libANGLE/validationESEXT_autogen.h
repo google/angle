@@ -2094,6 +2094,8 @@ bool ValidateEGLImageTargetTexture2DOES(const Context *context,
 
 // GL_OES_compressed_ETC1_RGB8_texture
 
+// GL_OES_compressed_paletted_texture
+
 // GL_OES_copy_image
 bool ValidateCopyImageSubDataOES(const Context *context,
                                  angle::EntryPoint entryPoint,

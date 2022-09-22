@@ -174,6 +174,7 @@ gles_requestable_extensions = [
     "GL_OES_compressed_ETC2_RGBA8_texture",
     "GL_OES_compressed_ETC2_sRGB8_alpha8_texture",
     "GL_OES_compressed_ETC2_sRGB8_texture",
+    "GL_OES_compressed_paletted_texture",
     "GL_OES_copy_image",
     "GL_OES_depth_texture_cube_map",
     "GL_OES_draw_buffers_indexed",

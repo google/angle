@@ -140,6 +140,9 @@ struct Extensions
     // GL_OES_compressed_ETC2_sRGB8_texture
     bool compressedETC2SRGB8TextureOES = false;
 
+    // GL_OES_compressed_paletted_texture
+    bool compressedPalettedTextureOES = false;
+
     // GL_EXT_copy_image
     bool copyImageEXT = false;
 

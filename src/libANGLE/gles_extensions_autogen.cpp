@@ -61,6 +61,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_OES_compressed_ETC2_RGBA8_texture"] = enableableExtension(&Extensions::compressedETC2RGBA8TextureOES);
         map["GL_OES_compressed_ETC2_sRGB8_alpha8_texture"] = enableableExtension(&Extensions::compressedETC2SRGB8Alpha8TextureOES);
         map["GL_OES_compressed_ETC2_sRGB8_texture"] = enableableExtension(&Extensions::compressedETC2SRGB8TextureOES);
+        map["GL_OES_compressed_paletted_texture"] = enableableExtension(&Extensions::compressedPalettedTextureOES);
         map["GL_EXT_copy_image"] = enableableExtension(&Extensions::copyImageEXT);
         map["GL_OES_copy_image"] = enableableExtension(&Extensions::copyImageOES);
         map["GL_KHR_debug"] = esOnlyExtension(&Extensions::debugKHR);

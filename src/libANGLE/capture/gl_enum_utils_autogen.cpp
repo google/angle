@@ -1522,6 +1522,26 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                     return "GL_SHADING_LANGUAGE_VERSION";
                 case 0x8B8D:
                     return "GL_CURRENT_PROGRAM";
+                case 0x8B90:
+                    return "GL_PALETTE4_RGB8_OES";
+                case 0x8B91:
+                    return "GL_PALETTE4_RGBA8_OES";
+                case 0x8B92:
+                    return "GL_PALETTE4_R5_G6_B5_OES";
+                case 0x8B93:
+                    return "GL_PALETTE4_RGBA4_OES";
+                case 0x8B94:
+                    return "GL_PALETTE4_RGB5_A1_OES";
+                case 0x8B95:
+                    return "GL_PALETTE8_RGB8_OES";
+                case 0x8B96:
+                    return "GL_PALETTE8_RGBA8_OES";
+                case 0x8B97:
+                    return "GL_PALETTE8_R5_G6_B5_OES";
+                case 0x8B98:
+                    return "GL_PALETTE8_RGBA4_OES";
+                case 0x8B99:
+                    return "GL_PALETTE8_RGB5_A1_OES";
                 case 0x8B9A:
                     return "GL_IMPLEMENTATION_COLOR_READ_TYPE";
                 case 0x8B9B:
@@ -10644,6 +10664,26 @@ const char *GLenumToString(BigGLEnum enumGroup, unsigned int value)
                     return "GL_SHADING_LANGUAGE_VERSION";
                 case 0x8B8D:
                     return "GL_CURRENT_PROGRAM";
+                case 0x8B90:
+                    return "GL_PALETTE4_RGB8_OES";
+                case 0x8B91:
+                    return "GL_PALETTE4_RGBA8_OES";
+                case 0x8B92:
+                    return "GL_PALETTE4_R5_G6_B5_OES";
+                case 0x8B93:
+                    return "GL_PALETTE4_RGBA4_OES";
+                case 0x8B94:
+                    return "GL_PALETTE4_RGB5_A1_OES";
+                case 0x8B95:
+                    return "GL_PALETTE8_RGB8_OES";
+                case 0x8B96:
+                    return "GL_PALETTE8_RGBA8_OES";
+                case 0x8B97:
+                    return "GL_PALETTE8_R5_G6_B5_OES";
+                case 0x8B98:
+                    return "GL_PALETTE8_RGBA4_OES";
+                case 0x8B99:
+                    return "GL_PALETTE8_RGB5_A1_OES";
                 case 0x8B9A:
                     return "GL_IMPLEMENTATION_COLOR_READ_TYPE";
                 case 0x8B9B:

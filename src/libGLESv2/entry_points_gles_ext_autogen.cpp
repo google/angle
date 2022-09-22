@@ -9520,6 +9520,8 @@ void GL_APIENTRY GL_EGLImageTargetTexture2DOES(GLenum target, GLeglImageOES imag
 
 // GL_OES_compressed_ETC1_RGB8_texture
 
+// GL_OES_compressed_paletted_texture
+
 // GL_OES_copy_image
 void GL_APIENTRY GL_CopyImageSubDataOES(GLuint srcName,
                                         GLenum srcTarget,
