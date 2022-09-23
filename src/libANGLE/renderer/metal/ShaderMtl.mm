@@ -103,7 +103,9 @@ std::shared_ptr<WaitableCompileEvent> ShaderMtl::compile(const gl::Context *cont
                                                          gl::ShCompilerInstance *compilerInstance,
                                                          ShCompileOptions *options)
 {
-    ContextMtl *contextMtl                 = mtl::GetImpl(context);
+    ContextMtl *contextMtl = mtl::GetImpl(context);
+    DisplayMtl *displayMtl = contextMtl->getDisplay();
+
     options->initializeUninitializedLocals = true;
 
     if (context->isWebGL() && mState.getShaderType() != gl::ShaderType::Compute)
@@ -111,7 +113,7 @@ std::shared_ptr<WaitableCompileEvent> ShaderMtl::compile(const gl::Context *cont
         options->initOutputVariables = true;
     }
 
-    if (contextMtl->getDisplay()->getFeatures().intelExplicitBoolCastWorkaround.enabled)
+    if (displayMtl->getFeatures().intelExplicitBoolCastWorkaround.enabled)
     {
         options->addExplicitBoolCasts = true;
     }
@@ -121,7 +123,7 @@ std::shared_ptr<WaitableCompileEvent> ShaderMtl::compile(const gl::Context *cont
     options->clampFragDepth = true;
 #endif
 
-    if (contextMtl->getDisplay()->getFeatures().rewriteRowMajorMatrices.enabled)
+    if (displayMtl->getFeatures().rewriteRowMajorMatrices.enabled)
     {
         options->rewriteRowMajorMatrices = true;
     }
@@ -136,6 +138,13 @@ std::shared_ptr<WaitableCompileEvent> ShaderMtl::compile(const gl::Context *cont
     options->metal.driverUniformsBindingIndex    = mtl::kDriverUniformsBindingIndex;
     options->metal.defaultUniformsBindingIndex   = mtl::kDefaultUniformsBindingIndex;
     options->metal.UBOArgumentBufferBindingIndex = mtl::kUBOArgumentBufferBindingIndex;
+
+    // GL_ANGLE_shader_pixel_local_storage.
+    if (displayMtl->getNativeExtensions().shaderPixelLocalStorageANGLE)
+    {
+        options->pls.type                        = displayMtl->getNativePixelLocalStorageType();
+        options->pls.fragmentSynchronizationType = displayMtl->getPLSSynchronizationType();
+    }
 
     return compileImplMtl(context, compilerInstance, getState().getSource(), options);
 }

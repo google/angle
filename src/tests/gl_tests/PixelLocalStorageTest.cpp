@@ -1971,7 +1971,7 @@ TEST_P(PixelLocalStorageTest, LeakFramebufferAndTexture)
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(PixelLocalStorageTest);
 #define PLATFORM(API, BACKEND) API##_##BACKEND()
-#define PLS_INSTANTIATE_RENDERING_TEST(TEST, API)                                                  \
+#define PLS_INSTANTIATE_RENDERING_TEST_AND(TEST, API, ...)                                         \
     ANGLE_INSTANTIATE_TEST(                                                                        \
         TEST,                                                                                      \
         PLATFORM(API, D3D11) /* D3D coherent. */                                                   \
@@ -2022,8 +2022,14 @@ GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(PixelLocalStorageTest);
         PLATFORM(API, VULKAN_SWIFTSHADER) /* Test PLS not having access to                         \
                                              glEnablei/glDisablei/glColorMaski. */                 \
             .enable(Feature::EmulatePixelLocalStorage)                                             \
-            .enable(Feature::DisableDrawBuffersIndexed))
-PLS_INSTANTIATE_RENDERING_TEST(PixelLocalStorageTest, ES3);
+            .enable(Feature::DisableDrawBuffersIndexed),                                           \
+        __VA_ARGS__)
+
+#define PLS_INSTANTIATE_RENDERING_TEST(TEST, API) PLS_INSTANTIATE_RENDERING_TEST_AND(TEST, API)
+
+PLS_INSTANTIATE_RENDERING_TEST_AND(PixelLocalStorageTest,
+                                   ES3,
+                                   ES3_METAL().enable(Feature::EmulatePixelLocalStorage));
 
 class PixelLocalStorageTestES31 : public PixelLocalStorageTest
 {};

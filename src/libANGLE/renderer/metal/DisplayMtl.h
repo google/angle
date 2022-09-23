@@ -121,6 +121,7 @@ class DisplayMtl : public DisplayImpl
     const gl::Extensions &getNativeExtensions() const;
     const gl::Limitations &getNativeLimitations() const;
     ShPixelLocalStorageType getNativePixelLocalStorageType() const;
+    ShFragmentSynchronizationType getPLSSynchronizationType() const;
     const angle::FeaturesMtl &getFeatures() const { return mFeatures; }
 
     // Check whether either of the specified iOS or Mac GPU family is supported
@@ -203,6 +204,11 @@ class DisplayMtl : public DisplayImpl
     mutable gl::Caps mNativeCaps;
     mutable gl::Limitations mNativeLimitations;
     mutable uint32_t mMaxColorTargetBits = 0;
+
+    // GL_ANGLE_shader_pixel_local_storage.
+    mutable ShPixelLocalStorageType mPixelLocalStorageType = ShPixelLocalStorageType::NotSupported;
+    mutable ShFragmentSynchronizationType mPLSSynchronizationType =
+        ShFragmentSynchronizationType::NotSupported;
 
     angle::FeaturesMtl mFeatures;
 };

@@ -74,6 +74,7 @@ bool Pipeline::uses(const TVariable &var) const
             switch (qualifier)
             {
                 case TQualifier::EvqFragmentOut:
+                case TQualifier::EvqFragmentInOut:
                 case TQualifier::EvqFragColor:
                 case TQualifier::EvqFragData:
                 case TQualifier::EvqFragDepth:
