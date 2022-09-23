@@ -281,6 +281,7 @@ enum class Feature
     UnpackLastRowSeparatelyForPaddingInclusion,
     UnpackOverlappingRowsSeparatelyUnpackBuffer,
     UnsizedSRGBReadPixelsDoesntTransform,
+    UploadDataToIosurfacesWithStagingBuffers,
     UploadTextureDataInChunks,
     UseInstancedPointSpriteEmulation,
     UseMultipleDescriptorsForExternalFormats,
