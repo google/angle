@@ -205,7 +205,7 @@ struct FeaturesMtl : FeatureSetBase
         "copyIOSurfaceToNonIOSurfaceForReadOptimization", FeatureCategory::MetalWorkarounds,
         "some GPUs are faster to read an IOSurface texture by first copying the texture to a "
         "non-IOSurface texture",
-        &members, "http://anglebug.com/7117"};
+        &members, "http://anglebug.com/7117 http://anglebug.com/7573"};
 
     FeatureInfo copyTextureToBufferForReadOptimization = {
         "copyTextureToBufferForReadOptimization", FeatureCategory::MetalWorkarounds,
