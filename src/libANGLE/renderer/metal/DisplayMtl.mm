@@ -1153,8 +1153,6 @@ void DisplayMtl::initializeFeatures()
     bool defaultDirectToMetal = true;
     ANGLE_FEATURE_CONDITION((&mFeatures), directMetalGeneration, defaultDirectToMetal);
 
-    ANGLE_FEATURE_CONDITION((&mFeatures), unpackLastRowSeparatelyForPaddingInclusion, isAMD());
-
     ANGLE_FEATURE_CONDITION((&mFeatures), uploadDataToIosurfacesWithStagingBuffers, isAMD());
 
     ApplyFeatureOverrides(&mFeatures, getState());
