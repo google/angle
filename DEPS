@@ -62,7 +62,7 @@ vars = {
 
   # Current revision of jsoncpp.
   # Note: this dep cannot be auto-rolled b/c of nesting.
-  'jsoncpp_revision': '645250b6690785be60ab6780ce4b58698d884d11',
+  'jsoncpp_revision': '42e892d96e47b1f6e29844cc705e148ec4856448',
 
   # Current revision of Chrome's third_party jsoncpp directory. This repository
   # is mirrored as a separate repository, with separate git hashes that
@@ -73,7 +73,7 @@ vars = {
   # https://chromium.googlesource.com/chromium/src/third_party/jsoncpp/
   # Then get the new hash for jsoncpp_revision from the root Chrome DEPS file:
   # https://source.chromium.org/chromium/chromium/src/+/main:DEPS
-  'chromium_jsoncpp_revision': '30a6ac108e24dabac7c2e0df4d33d55032af4ee7',
+  'chromium_jsoncpp_revision': 'f62d44704b4da6014aa231cfc116e7fd29617d2a',
 
   # Current revision of patched-yasm.
   # Note: this dep cannot be auto-rolled b/c of nesting.
