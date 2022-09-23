@@ -361,8 +361,8 @@ TEST_P(GLES1ConformanceTest, Scissor)
 
 TEST_P(GLES1ConformanceTest, SPClear)
 {
-    // http://g.co/anglebug/3863
-    ANGLE_SKIP_TEST_IF(IsVulkan());
+    // http://anglebug.com/7676
+    ANGLE_SKIP_TEST_IF(IsQualcomm() && IsVulkan());
     ASSERT_NE(CONFORMANCE_TEST_ERROR, SPClearExec());
 }
 
@@ -490,8 +490,6 @@ TEST_P(GLES1ConformanceTest, XFormHomogenous)
 
 TEST_P(GLES1ConformanceTest, ZBClear)
 {
-    // http://g.co/anglebug/3864
-    ANGLE_SKIP_TEST_IF(IsVulkan());
     ASSERT_NE(CONFORMANCE_TEST_ERROR, ZBClearExec());
 }
 

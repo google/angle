@@ -5125,16 +5125,23 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 invalidateDriverUniforms();
                 break;
             case gl::State::DIRTY_BIT_MULTISAMPLING:
-                // TODO(syoussefi): this should configure the pipeline to render as if
-                // single-sampled, and write the results to all samples of a pixel regardless of
-                // coverage. See EXT_multisample_compatibility.  http://anglebug.com/3204
+                // When disabled, this should configure the pipeline to render as if single-sampled,
+                // and write the results to all samples of a pixel regardless of coverage. See
+                // EXT_multisample_compatibility.  This is not possible in Vulkan without some
+                // gymnastics, so continue multisampled rendering anyway.  http://anglebug.com/7657
+                //
+                // Potentially, the GLES1 renderer can switch rendering between two images and blit
+                // from one to the other when the mode changes.  Then this extension wouldn't need
+                // to be exposed.
+                iter.setLaterBit(gl::State::DIRTY_BIT_SAMPLE_ALPHA_TO_ONE);
                 break;
             case gl::State::DIRTY_BIT_SAMPLE_ALPHA_TO_ONE:
-                // TODO(syoussefi): this is part of EXT_multisample_compatibility.  The
-                // alphaToOne Vulkan feature should be enabled to support this extension.
-                // http://anglebug.com/3204
-                mGraphicsPipelineDesc->updateAlphaToOneEnable(&mGraphicsPipelineTransition,
-                                                              glState.isSampleAlphaToOneEnabled());
+                // This is part of EXT_multisample_compatibility, and requires the alphaToOne Vulkan
+                // feature.
+                // http://anglebug.com/7657
+                mGraphicsPipelineDesc->updateAlphaToOneEnable(
+                    &mGraphicsPipelineTransition,
+                    glState.isMultisamplingEnabled() && glState.isSampleAlphaToOneEnabled());
                 break;
             case gl::State::DIRTY_BIT_SAMPLE_SHADING:
                 updateSampleShadingWithRasterizationSamples(drawFramebufferVk->getSamples());

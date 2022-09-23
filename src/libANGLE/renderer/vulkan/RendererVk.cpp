@@ -2556,6 +2556,8 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     mEnabledFeatures.features.dualSrcBlend = mPhysicalDeviceFeatures.dualSrcBlend;
     // Used to support ANGLE_logic_op and GLES1
     mEnabledFeatures.features.logicOp = mPhysicalDeviceFeatures.logicOp;
+    // Used to support EXT_multisample_compatibility
+    mEnabledFeatures.features.alphaToOne = mPhysicalDeviceFeatures.alphaToOne;
 
     if (!vk::OutsideRenderPassCommandBuffer::ExecutesInline() ||
         !vk::RenderPassCommandBuffer::ExecutesInline())

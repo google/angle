@@ -516,6 +516,14 @@ void RendererVk::ensureCapsInitialized() const
     mNativeExtensions.sampleVariablesOES =
         supportSampleRateShading && vk_gl::GetMaxSampleCount(kNotSupportedSampleCounts) == 0;
 
+    // EXT_multisample_compatibility is necessary for GLES1 conformance so calls like
+    // glDisable(GL_MULTISAMPLE) don't fail.  This is not actually implemented in Vulkan.  However,
+    // no CTS tests actually test this extension.  GL_SAMPLE_ALPHA_TO_ONE requires the Vulkan
+    // alphaToOne feature.
+    mNativeExtensions.multisampleCompatibilityEXT =
+        mPhysicalDeviceFeatures.alphaToOne ||
+        mFeatures.exposeNonConformantExtensionsAndVersions.enabled;
+
     // GL_KHR_blend_equation_advanced.  According to the spec, only color attachment zero can be
     // used with advanced blend:
     //
