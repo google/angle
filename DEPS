@@ -37,7 +37,7 @@ vars = {
   'checkout_android_native_support': 'checkout_android or checkout_chromeos',
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': 'c4be4c7e0a43171d0470b17481f6da6b76de6725',
+  'chromium_revision': '73f358f3727fcfcd7745631fef9688b28aea35dc',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -126,12 +126,12 @@ vars = {
 deps = {
 
   'build': {
-    'url': '{chromium_git}/chromium/src/build.git@2f2727f2d4a4123df8e110354b885fbf657551cf',
+    'url': '{chromium_git}/chromium/src/build.git@f87b9ff92eb2b16cd9b0e8998aebf8ec06433181',
     'condition': 'not build_with_chromium',
   },
 
   'buildtools': {
-    'url': '{chromium_git}/chromium/src/buildtools.git@b79692f320d80b158ce069f166f32861c36c6074',
+    'url': '{chromium_git}/chromium/src/buildtools.git@15fa3e772dfb58c8e912861b0af62977dd851072',
     'condition': 'not build_with_chromium',
   },
 
@@ -163,7 +163,7 @@ deps = {
   },
 
   'buildtools/third_party/libc++/trunk': {
-    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libcxx.git@a4dc7f17ca393e764685d475bbf65ff8f71a0800',
+    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libcxx.git@4d2c483d6df5b7d9ce4ac06d635be9412d79d22f',
     'condition': 'not build_with_chromium',
   },
 
@@ -606,7 +606,7 @@ deps = {
   },
 
   'tools/clang': {
-    'url': '{chromium_git}/chromium/src/tools/clang.git@40b472e3053a3e13d350d842ccafe7f23d75c256',
+    'url': '{chromium_git}/chromium/src/tools/clang.git@209fff0a4f6b87435669c94b4aa6ed4da73bdbf5',
     'condition': 'not build_with_chromium',
   },
 
@@ -652,7 +652,7 @@ deps = {
   },
 
   'tools/perf': {
-    'url': '{chromium_git}/chromium/src/tools/perf@4d5e36a4f4ae52a243d2053a69ff3653fc2a740c',
+    'url': '{chromium_git}/chromium/src/tools/perf@ca01098c09de5fb7496eadcae78491a6e3cb22da',
     'condition': 'not build_with_chromium',
   },
 
