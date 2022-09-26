@@ -381,7 +381,7 @@ gl::GraphicsResetStatus Context9::getResetStatus()
 
 angle::Result Context9::insertEventMarker(GLsizei length, const char *marker)
 {
-    mRenderer->getAnnotator()->setMarker(marker);
+    mRenderer->getAnnotator()->setMarker(/*context=*/nullptr, marker);
     return angle::Result::Continue;
 }
 

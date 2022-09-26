@@ -239,7 +239,7 @@ std::shared_ptr<WaitableCompileEvent> ShaderD3D::compile(const gl::Context *cont
     const std::string &source = mState.getSource();
 
 #if !defined(ANGLE_ENABLE_WINDOWS_UWP)
-    if (gl::DebugAnnotationsActive())
+    if (gl::DebugAnnotationsActive(context))
     {
         sourcePath = angle::CreateTemporaryFile().value();
         writeFile(sourcePath.c_str(), source.c_str(), source.length());
