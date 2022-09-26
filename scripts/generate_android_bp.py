@@ -338,35 +338,25 @@ blueprint_library_target_types = {
 def merge_bps(bps_for_abis):
     common_bp = {}
     for abi in ABI_TARGETS:
-        for key in bps_for_abis[abi].keys():
-            if isinstance(bps_for_abis[abi][key], list):
-                # Find list values that are common to all ABIs
-                for value in bps_for_abis[abi][key]:
-                    value_in_all_abis = True
-                    for abi2 in ABI_TARGETS:
-                        if key == 'defaults':
-                            # arch-specific defaults are not supported
-                            break
-                        value_in_all_abis = value_in_all_abis and (key in bps_for_abis[abi2].keys(
-                        )) and (value in bps_for_abis[abi2][key])
-                    if value_in_all_abis:
-                        if key in common_bp.keys():
-                            common_bp[key].append(value)
-                        else:
-                            common_bp[key] = [value]
-                    else:
-                        if 'arch' not in common_bp.keys():
-                            # Make sure there is an 'arch' entry to hold ABI-specific values
-                            common_bp['arch'] = {}
-                            for abi3 in ABI_TARGETS:
-                                common_bp['arch'][abi3] = {}
-                        if key in common_bp['arch'][abi].keys():
-                            common_bp['arch'][abi][key].append(value)
-                        else:
-                            common_bp['arch'][abi][key] = [value]
-            else:
+        for key, values in bps_for_abis[abi].items():
+            if not isinstance(values, list):
                 # Assume everything that's not a list is common to all ABIs
-                common_bp[key] = bps_for_abis[abi][key]
+                common_bp[key] = values
+                continue
+
+            # Find list values that are common to all ABIs
+            values_in_all_abis = set.intersection(
+                *[set(bps_for_abis[abi2].get(key, [])) for abi2 in ABI_TARGETS])
+
+            for value in values:
+                if value in values_in_all_abis or key == 'defaults':  # arch-specific defaults are not supported
+                    common_bp.setdefault(key, [])
+                    common_bp[key].append(value)
+                else:
+                    common_bp.setdefault('arch', {abi3: {} for abi3 in ABI_TARGETS})
+                    abi_specific = common_bp['arch'][abi]
+                    abi_specific.setdefault(key, [])
+                    abi_specific[key].append(value)
 
     return common_bp
 
