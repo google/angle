@@ -761,6 +761,7 @@ if (build_angle_gles1_conform_tests) {
     ]
 
     configs += [
+      ":angle_gles1_conform_support",
       "${angle_root}:libANGLE_config",
       "${angle_root}:angle_backend_config",
     ]

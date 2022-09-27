@@ -109,6 +109,8 @@ void StateSetup(void);
 
 #define CONFORMANCE_TEST_ERROR (-1)
 
+#include "conform.h"
+
 #ifdef __cplusplus
 }
 
@@ -120,8 +122,8 @@ class GLES1ConformanceTest : public ANGLETest<>
   protected:
     GLES1ConformanceTest()
     {
-        setWindowWidth(48);
-        setWindowHeight(48);
+        setWindowWidth(WINDSIZEX);
+        setWindowHeight(WINDSIZEY);
         setConfigRedBits(8);
         setConfigGreenBits(8);
         setConfigBlueBits(8);
@@ -135,6 +137,13 @@ class GLES1ConformanceTest : public ANGLETest<>
         BufferSetup();
         EpsilonSetup();
         StateSetup();
+
+        machine = {};
+        // Default parameters taken from shell.c.  Verbosity is increased so test failures come with
+        // information.
+        machine.randSeed       = 1;
+        machine.verboseLevel   = 2;
+        machine.stateCheckFlag = GL_TRUE;
     }
 };
 
