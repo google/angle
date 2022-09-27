@@ -27,7 +27,7 @@
 #include "libANGLE/renderer/metal/mtl_common.h"
 #include "libANGLE/renderer/metal/shaders/mtl_default_shaders_src_autogen.inc"
 #include "libANGLE/trace.h"
-#include "platform/Platform.h"
+#include "platform/PlatformMethods.h"
 
 #ifdef ANGLE_METAL_XCODE_BUILDS_SHADERS
 #    include "libANGLE/renderer/metal/mtl_default_shaders_compiled.inc"
