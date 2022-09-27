@@ -385,6 +385,12 @@ angle::Result RendererGL::memoryBarrierByRegion(GLbitfield barriers)
     return angle::Result::Continue;
 }
 
+void RendererGL::framebufferFetchBarrier()
+{
+    mFunctions->framebufferFetchBarrierEXT();
+    mWorkDoneSinceLastFlush = true;
+}
+
 bool RendererGL::bindWorkerContext(std::string *infoLog)
 {
     if (mFeatures.disableWorkerContexts.enabled)

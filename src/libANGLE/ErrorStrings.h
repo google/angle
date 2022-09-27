@@ -148,6 +148,7 @@ MSG kFixedNotInWebGL = "GL_FIXED is not supported in WebGL.";
 MSG kFormatNotRenderable = "Internal format is not renderable.";
 MSG kFragDataBindingIndexOutOfRange = "Fragment output color index must be zero or one.";
 MSG kFragmentInputTypeNotFloatingPoint = "Fragment input type is not a floating point scalar or vector.";
+MSG kFramebufferFetchNonCoherentExtensionNotEnabled = "GL_EXT_shader_framebuffer_fetch_non_coherent not enabled.";
 MSG kFramebufferIncomplete = "Framebuffer is incomplete.";
 MSG kFramebufferIncompleteAttachment = "Attachment type must be compatible with attachment object.";
 MSG kFramebufferIncompleteAttachmentDepthGreaterThanMaxLayers = "Framebuffer is incomplete: Attachment depth is greater than MAX_FRAMEBUFFER_LAYERS.";

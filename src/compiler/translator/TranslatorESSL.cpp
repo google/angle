@@ -178,6 +178,18 @@ void TranslatorESSL::writeExtensionBehavior(const ShCompileOptions &compileOptio
                 // TODO(anglebug.com/7279): future impl that uses EXT_shader_framebuffer_fetch.
                 continue;
             }
+            else if (iter->first == TExtension::EXT_shader_framebuffer_fetch)
+            {
+                sink << "#extension GL_EXT_shader_framebuffer_fetch : "
+                     << GetBehaviorString(iter->second) << "\n";
+                continue;
+            }
+            else if (iter->first == TExtension::EXT_shader_framebuffer_fetch_non_coherent)
+            {
+                sink << "#extension GL_EXT_shader_framebuffer_fetch_non_coherent : "
+                     << GetBehaviorString(iter->second) << "\n";
+                continue;
+            }
             else if (iter->first == TExtension::WEBGL_video_texture)
             {
                 // Don't emit anything. This extension is emulated

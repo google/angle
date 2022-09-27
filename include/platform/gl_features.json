@@ -648,7 +648,7 @@
             "name": "supports_fragment_shader_interlock_NV",
             "category": "Features",
             "description": [
-                "GL context supports NV_fragment_shader_interlock extension"
+                "Backend GL context supports NV_fragment_shader_interlock extension"
             ],
             "issue": "http://anglebug.com/7279"
         },
@@ -656,7 +656,7 @@
             "name": "supports_fragment_shader_ordering_INTEL",
             "category": "Features",
             "description": [
-                "GL context supports GL_INTEL_fragment_shader_ordering extension"
+                "Backend GL context supports GL_INTEL_fragment_shader_ordering extension"
             ],
             "issue": "http://anglebug.com/7279"
         },
@@ -664,7 +664,23 @@
             "name": "supports_fragment_shader_interlock_ARB",
             "category": "Features",
             "description": [
-                "GL context supports ARB_fragment_shader_interlock extension"
+                "Backend GL context supports ARB_fragment_shader_interlock extension"
+            ],
+            "issue": "http://anglebug.com/7279"
+        },
+        {
+            "name": "supports_shader_framebuffer_fetch_EXT",
+            "category": "Features",
+            "description": [
+                "Backend GL context supports EXT_shader_framebuffer_fetch extension"
+            ],
+            "issue": "http://anglebug.com/7279"
+        },
+        {
+            "name": "supports_shader_framebuffer_fetch_non_coherent_EXT",
+            "category": "Features",
+            "description": [
+                "Backend GL context supports EXT_shader_framebuffer_fetch_non_coherent extension"
             ],
             "issue": "http://anglebug.com/7279"
         }

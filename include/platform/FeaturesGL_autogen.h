@@ -469,17 +469,27 @@ struct FeaturesGL : FeatureSetBase
 
     FeatureInfo supportsFragmentShaderInterlockNV = {
         "supportsFragmentShaderInterlockNV", FeatureCategory::OpenGLFeatures,
-        "GL context supports NV_fragment_shader_interlock extension", &members,
+        "Backend GL context supports NV_fragment_shader_interlock extension", &members,
         "http://anglebug.com/7279"};
 
     FeatureInfo supportsFragmentShaderOrderingINTEL = {
         "supportsFragmentShaderOrderingINTEL", FeatureCategory::OpenGLFeatures,
-        "GL context supports GL_INTEL_fragment_shader_ordering extension", &members,
+        "Backend GL context supports GL_INTEL_fragment_shader_ordering extension", &members,
         "http://anglebug.com/7279"};
 
     FeatureInfo supportsFragmentShaderInterlockARB = {
         "supportsFragmentShaderInterlockARB", FeatureCategory::OpenGLFeatures,
-        "GL context supports ARB_fragment_shader_interlock extension", &members,
+        "Backend GL context supports ARB_fragment_shader_interlock extension", &members,
+        "http://anglebug.com/7279"};
+
+    FeatureInfo supportsShaderFramebufferFetchEXT = {
+        "supportsShaderFramebufferFetchEXT", FeatureCategory::OpenGLFeatures,
+        "Backend GL context supports EXT_shader_framebuffer_fetch extension", &members,
+        "http://anglebug.com/7279"};
+
+    FeatureInfo supportsShaderFramebufferFetchNonCoherentEXT = {
+        "supportsShaderFramebufferFetchNonCoherentEXT", FeatureCategory::OpenGLFeatures,
+        "Backend GL context supports EXT_shader_framebuffer_fetch_non_coherent extension", &members,
         "http://anglebug.com/7279"};
 };
 

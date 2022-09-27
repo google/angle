@@ -273,6 +273,8 @@ class ContextGL : public ContextImpl
     angle::Result memoryBarrier(const gl::Context *context, GLbitfield barriers) override;
     angle::Result memoryBarrierByRegion(const gl::Context *context, GLbitfield barriers) override;
 
+    void framebufferFetchBarrier() override;
+
     void setMaxShaderCompilerThreads(GLuint count) override;
 
     void invalidateTexture(gl::TextureType target) override;

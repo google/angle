@@ -2043,6 +2043,12 @@ bool ValidatePixelLocalStorageBarrierANGLE(const Context *context, angle::EntryP
 
 bool ValidateFramebufferFetchBarrierEXT(const Context *context, angle::EntryPoint entryPoint)
 {
+    if (!context->getExtensions().shaderFramebufferFetchNonCoherentEXT)
+    {
+        context->validationError(entryPoint, GL_INVALID_OPERATION,
+                                 kFramebufferFetchNonCoherentExtensionNotEnabled);
+        return false;
+    }
     return true;
 }
 

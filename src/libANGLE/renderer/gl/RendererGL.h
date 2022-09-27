@@ -123,6 +123,8 @@ class RendererGL : angle::NonCopyable
     angle::Result memoryBarrier(GLbitfield barriers);
     angle::Result memoryBarrierByRegion(GLbitfield barriers);
 
+    void framebufferFetchBarrier();
+
     bool bindWorkerContext(std::string *infoLog);
     void unbindWorkerContext();
     // Checks if the driver has the KHR_parallel_shader_compile or ARB_parallel_shader_compile
