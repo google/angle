@@ -531,7 +531,6 @@ angle_static_library("angle_gpu_info_util") {
   deps = []
   libs = []
   defines = []
-  configs = []
 
   if (angle_build_vulkan_system_info) {
     sources += libangle_gpu_info_util_vulkan_sources
