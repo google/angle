@@ -545,18 +545,6 @@ TEST_P(GLES1ConformanceTest, UserClip)
     // detect previously drawn fragments from one clip plane that lie exactly
     // on the half space boundary, and avoid drawing them if the same primitive
     // is issued next draw with a negated version of the clip plane.
-    //
-    // TODO(lfy@google.com)
-    // We can skip the test for now, or seed the test with a sufficiently nice
-    // random number so that it still test clip planes, but doesn't have any
-    // pixels exactly on half space boundaries.
-    //
-    // Proper fix would either involve a more complex scheme to track fragments
-    // on the half space boundary and discard or not next draw based on whether
-    // they are hit again, or to pass through to a hardware clip plane
-    // implementation (available in desktop GL or Vulkan)
-
-    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, UserClipExec());
 }
 
