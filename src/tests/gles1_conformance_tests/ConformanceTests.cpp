@@ -431,8 +431,6 @@ TEST_P(GLES1ConformanceTest, SpotExpPos)
 
 TEST_P(GLES1ConformanceTest, SpotExpDir)
 {
-    // http://crbug.com/1136238
-    ANGLE_SKIP_TEST_IF(IsWindows() && IsVulkan());
     ASSERT_NE(CONFORMANCE_TEST_ERROR, SpotExpDirExec());
 }
 
