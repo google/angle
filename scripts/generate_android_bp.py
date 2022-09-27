@@ -212,7 +212,7 @@ include_blocklist = [
 ]
 
 
-@functools.cache
+@functools.lru_cache(maxsize=None)  # .cache() is py3.9 http://b/246559064#comment8
 def gn_deps_to_blueprint_deps(abi, target, build_info):
     target_info = build_info[abi][target]
     static_libs = []
@@ -507,7 +507,7 @@ def gn_target_to_blueprint(target, build_info):
             continue
 
 
-@functools.cache
+@functools.lru_cache(maxsize=None)
 def get_gn_target_dependencies(abi, target, build_info):
     result = collections.OrderedDict()
     result[target] = 1
