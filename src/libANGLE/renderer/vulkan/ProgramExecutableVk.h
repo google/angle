@@ -30,7 +30,8 @@ class ShaderInfo final : angle::NonCopyable
     ShaderInfo();
     ~ShaderInfo();
 
-    angle::Result initShaders(const gl::ShaderBitSet &linkedShaderStages,
+    angle::Result initShaders(ContextVk *contextVk,
+                              const gl::ShaderBitSet &linkedShaderStages,
                               const gl::ShaderMap<const angle::spirv::Blob *> &spirvBlobs,
                               const ShaderInterfaceVariableInfoMap &variableInfoMap);
     void initShaderFromProgram(gl::ShaderType shaderType, const ShaderInfo &programShaderInfo);

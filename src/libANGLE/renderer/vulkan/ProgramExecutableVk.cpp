@@ -223,7 +223,8 @@ ShaderInfo::ShaderInfo() {}
 
 ShaderInfo::~ShaderInfo() = default;
 
-angle::Result ShaderInfo::initShaders(const gl::ShaderBitSet &linkedShaderStages,
+angle::Result ShaderInfo::initShaders(ContextVk *contextVk,
+                                      const gl::ShaderBitSet &linkedShaderStages,
                                       const gl::ShaderMap<const angle::spirv::Blob *> &spirvBlobs,
                                       const ShaderInterfaceVariableInfoMap &variableInfoMap)
 {
@@ -238,7 +239,12 @@ angle::Result ShaderInfo::initShaders(const gl::ShaderBitSet &linkedShaderStages
     }
 
     // Assert that SPIR-V transformation is correct, even if the test never issues a draw call.
-    ASSERT(ValidateTransformedSpirV(linkedShaderStages, variableInfoMap, mSpirvBlobs));
+    // Don't validate GLES1 programs because they are always created right before a draw, so they
+    // will naturally be validated.  This improves GLES1 test run times.
+    if (!contextVk->getState().isGLES1())
+    {
+        ASSERT(ValidateTransformedSpirV(linkedShaderStages, variableInfoMap, mSpirvBlobs));
+    }
 
     mIsInitialized = true;
     return angle::Result::Continue;
