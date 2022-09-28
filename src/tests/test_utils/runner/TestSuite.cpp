@@ -1737,13 +1737,14 @@ int TestSuite::run()
                     SplitString(batchStdout, "\r\n", WhitespaceHandling::TRIM_WHITESPACE,
                                 SplitResult::SPLIT_WANT_NONEMPTY);
                 constexpr size_t kKeepLines = 10;
-                printf("Batch timeout! Last %d lines of batch stdout:\n",
-                       static_cast<int>(kKeepLines));
+                printf("\nBatch timeout! Last %zu lines of batch stdout:\n", kKeepLines);
+                printf("---------------------------------------------\n");
                 for (size_t lineNo = lines.size() - std::min(lines.size(), kKeepLines);
                      lineNo < lines.size(); ++lineNo)
                 {
                     printf("%s\n", lines[lineNo].c_str());
                 }
+                printf("---------------------------------------------\n\n");
 
                 for (const TestIdentifier &testIdentifier : processInfo.testsInBatch)
                 {
