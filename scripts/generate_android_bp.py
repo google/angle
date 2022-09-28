@@ -310,14 +310,6 @@ def gn_cflags_to_blueprint_cflags(target_info):
                     if re.search(allowlisted_cflag, cflag):
                         result.append(cflag)
 
-    # Chrome and Android use different versions of Clang which support differnt warning options.
-    # Ignore errors about unrecognized warning flags.
-    result.append('-Wno-unknown-warning-option')
-
-    # Override AOSP build flags to match ANGLE's CQ testing and reduce binary size
-    result.append('-Os')
-    result.append('-fno-unwind-tables')
-
     if 'defines' in target_info:
         for define in target_info['defines']:
             # Don't emit ANGLE's CPU-bits define here, it will be part of the arch-specific
@@ -385,6 +377,8 @@ def library_target_to_blueprint(target, build_info):
         bp['local_include_dirs'] = gn_include_dirs_to_blueprint_include_dirs(target_info)
 
         bp['cflags'] = gn_cflags_to_blueprint_cflags(target_info)
+
+        bp['defaults'].append('angle_common_library_cflags')
 
         bp['sdk_version'] = SDK_VERSION
         bp['stl'] = STL
@@ -561,6 +555,21 @@ def main():
         'srcs': ['scripts/angle_android_codegen.go'],
         'pluginFor': ['soong_build'],
     }))
+
+    blueprint_targets.append((
+        'cc_defaults',
+        {
+            'name':
+                'angle_common_library_cflags',
+            'cflags': [
+                # Chrome and Android use different versions of Clang which support differnt warning options.
+                # Ignore errors about unrecognized warning flags.
+                '-Wno-unknown-warning-option',
+                '-Os',
+                # Override AOSP build flags to match ANGLE's CQ testing and reduce binary size
+                '-fno-unwind-tables',
+            ],
+        }))
 
     for target in reversed(targets_to_write.keys()):
         blueprint_type, bp = gn_target_to_blueprint(target, build_info)
