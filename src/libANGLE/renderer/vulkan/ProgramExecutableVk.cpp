@@ -325,6 +325,13 @@ angle::Result ProgramInfo::initProgram(ContextVk *contextVk,
     options.isMultisampledFramebufferFetch =
         optionBits.multiSampleFramebufferFetch && shaderType == gl::ShaderType::Fragment;
 
+    // Don't validate SPIR-V generated for GLES1 shaders when validation layers are enabled.  The
+    // layers already validate SPIR-V, and since GLES1 shaders are controlled by ANGLE, they don't
+    // typically require debugging at the SPIR-V level.  This improves GLES1 conformance test run
+    // time.
+    options.validate =
+        !(contextVk->getState().isGLES1() && contextVk->getRenderer()->getEnableValidationLayers());
+
     ANGLE_TRY(GlslangWrapperVk::TransformSpirV(options, variableInfoMap, originalSpirvBlob,
                                                &transformedSpirvBlob));
     ANGLE_TRY(vk::InitShaderAndSerial(contextVk, &mShaders[shaderType].get(),
