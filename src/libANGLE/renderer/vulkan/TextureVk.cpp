@@ -1620,6 +1620,8 @@ void TextureVk::releaseAndDeleteImageAndViews(ContextVk *contextVk)
 
 void TextureVk::initImageUsageFlags(ContextVk *contextVk, angle::FormatID actualFormatID)
 {
+    ASSERT(actualFormatID != angle::FormatID::NONE);
+
     mImageUsageFlags = kTransferImageFlags | VK_IMAGE_USAGE_SAMPLED_BIT;
 
     // If the image has depth/stencil support, add those as possible usage.

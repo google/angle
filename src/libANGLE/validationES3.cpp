@@ -660,7 +660,7 @@ bool ValidateES3TexImageParametersBase(const Context *context,
         // compressedTexSubImage does not generate GL_INVALID_ENUM when format is unknown or invalid
         if (!isSubImage)
         {
-            if (!actualFormatInfo.compressed)
+            if (!actualFormatInfo.compressed && !actualFormatInfo.paletted)
             {
                 context->validationError(entryPoint, GL_INVALID_ENUM, kCompressedMismatch);
                 return false;

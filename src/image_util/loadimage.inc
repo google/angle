@@ -185,7 +185,17 @@ inline void LoadPalettedToRGBA8(size_t width,
                                 size_t outputRowPitch,
                                 size_t outputDepthPitch)
 {
-    UNREACHABLE();
+    static_assert(indexBits == 4 || indexBits == 8);
+    static_assert(redBlueBits == 4 || redBlueBits == 5 || redBlueBits == 8);
+    static_assert(greenBits == 4 || greenBits == 5 || greenBits == 6 || greenBits == 8);
+    static_assert(alphaBits == 0 || alphaBits == 1 || alphaBits == 4 || alphaBits == 8);
+    constexpr uint32_t colorBits = 2 * redBlueBits + greenBits + alphaBits;
+    static_assert(colorBits == 16 || colorBits == 24 || colorBits == 32);
+
+    LoadPalettedToRGBA8Impl(width, height, depth,
+                            indexBits, redBlueBits, greenBits, alphaBits,
+                            input, inputRowPitch, inputDepthPitch,
+                            output, outputRowPitch, outputDepthPitch);
 }
 
 } // namespace angle

@@ -441,7 +441,7 @@ TEST_P(GLES1ConformanceTest, TexDecal)
 
 TEST_P(GLES1ConformanceTest, TexPalet)
 {
-    ANGLE_SKIP_TEST_IF(true);
+    ANGLE_SKIP_TEST_IF(!IsVulkan());
     ASSERT_NE(CONFORMANCE_TEST_ERROR, TexPaletExec());
 }
 

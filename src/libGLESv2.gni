@@ -137,6 +137,7 @@ libangle_image_util_sources = [
   "src/image_util/loadimage.cpp",
   "src/image_util/loadimage_astc.cpp",
   "src/image_util/loadimage_etc.cpp",
+  "src/image_util/loadimage_paletted.cpp",
 ]
 
 libangle_gpu_info_util_sources = [
