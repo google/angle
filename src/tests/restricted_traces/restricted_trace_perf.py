@@ -592,6 +592,8 @@ def main():
         '--loop-count', help='How many times to loop through the traces', default=5)
     parser.add_argument(
         '--device', help='Which device to run the tests on (use serial)', default='')
+    parser.add_argument(
+        '--sleep', help='Add a sleep of this many seconds between each test)', type=int, default=0)
 
     group = parser.add_mutually_exclusive_group()
     group.add_argument(
@@ -835,6 +837,10 @@ def main():
 
                 # Early exit for testing
                 #exit()
+
+                # For unlocked clocks, try sleeping the same amount of time that the trace ran, to dissipate heat
+                if args.sleep != 0:
+                    time.sleep(args.sleep)
 
     # Generate the SUMMARY output
 
