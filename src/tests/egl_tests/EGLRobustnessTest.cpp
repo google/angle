@@ -237,6 +237,9 @@ class EGLRobustnessTest : public ANGLETest<>
 class EGLRobustnessTestES3 : public EGLRobustnessTest
 {};
 
+class EGLRobustnessTestES31 : public EGLRobustnessTest
+{};
+
 // Check glGetGraphicsResetStatusEXT returns GL_NO_ERROR if we did nothing
 TEST_P(EGLRobustnessTest, NoErrorByDefault)
 {
@@ -414,8 +417,110 @@ TEST_P(EGLRobustnessTestES3,
     eglDestroyContext(mDisplay, shareContext);
 }
 
+// Test that indirect indices on unsized storage buffer arrays work.  Regression test for the
+// ClampIndirectIndices AST transformation.
+TEST_P(EGLRobustnessTestES31, IndirectIndexOnUnsizedStorageBufferArray)
+{
+    ANGLE_SKIP_TEST_IF(!mInitialized);
+    ANGLE_SKIP_TEST_IF(
+        !IsEGLDisplayExtensionEnabled(mDisplay, "EGL_KHR_create_context") ||
+        !IsEGLDisplayExtensionEnabled(mDisplay, "EGL_EXT_create_context_robustness"));
+
+    createRobustContext(EGL_NO_RESET_NOTIFICATION_EXT, EGL_NO_CONTEXT);
+
+    const char kCS[] = R"(#version 310 es
+
+layout(binding = 0, std430) buffer B {
+  uint data[];
+} b;
+
+layout(local_size_x = 64, local_size_y = 1, local_size_z = 1) in;
+void main() {
+  b.data[gl_GlobalInvocationID.x] = gl_GlobalInvocationID.x;
+})";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kCS);
+    EXPECT_GL_NO_ERROR();
+
+    constexpr uint32_t kBufferSize              = 2;
+    constexpr uint32_t kBufferData[kBufferSize] = {10, 20};
+
+    GLBuffer buffer;
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, buffer);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(kBufferData), kBufferData, GL_STATIC_DRAW);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, buffer);
+
+    // Run the compute shader with a large workload.  Only the first two invocations should write to
+    // the buffer, the rest should be dropped out due to robust access.
+    glUseProgram(program);
+    glDispatchCompute(8192, 1, 1);
+
+    glMemoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT);
+    uint32_t bufferDataOut[kBufferSize] = {};
+    const uint32_t *ptr                 = reinterpret_cast<uint32_t *>(
+        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, sizeof(kBufferData), GL_MAP_READ_BIT));
+    memcpy(bufferDataOut, ptr, sizeof(kBufferData));
+    glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+
+    for (uint32_t index = 0; index < kBufferSize; ++index)
+    {
+        EXPECT_EQ(bufferDataOut[index], index) << " index " << index;
+    }
+}
+
+// Similar to IndirectIndexOnUnsizedStorageBufferArray, but without a block instance name.
+TEST_P(EGLRobustnessTestES31, IndirectIndexOnUnsizedStorageBufferArray_NoBlockInstanceName)
+{
+    ANGLE_SKIP_TEST_IF(!mInitialized);
+    ANGLE_SKIP_TEST_IF(
+        !IsEGLDisplayExtensionEnabled(mDisplay, "EGL_KHR_create_context") ||
+        !IsEGLDisplayExtensionEnabled(mDisplay, "EGL_EXT_create_context_robustness"));
+
+    createRobustContext(EGL_NO_RESET_NOTIFICATION_EXT, EGL_NO_CONTEXT);
+
+    const char kCS[] = R"(#version 310 es
+
+layout(binding = 0, std430) buffer B {
+  uint data[];
+};
+
+layout(local_size_x = 64, local_size_y = 1, local_size_z = 1) in;
+void main() {
+  data[gl_GlobalInvocationID.x] = gl_GlobalInvocationID.x;
+})";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kCS);
+    EXPECT_GL_NO_ERROR();
+
+    constexpr uint32_t kBufferSize              = 2;
+    constexpr uint32_t kBufferData[kBufferSize] = {10, 20};
+
+    GLBuffer buffer;
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, buffer);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(kBufferData), kBufferData, GL_STATIC_DRAW);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, buffer);
+
+    // Run the compute shader with a large workload.  Only the first two invocations should write to
+    // the buffer, the rest should be dropped out due to robust access.
+    glUseProgram(program);
+    glDispatchCompute(8192, 1, 1);
+
+    glMemoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT);
+    uint32_t bufferDataOut[kBufferSize] = {};
+    const uint32_t *ptr                 = reinterpret_cast<uint32_t *>(
+        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, sizeof(kBufferData), GL_MAP_READ_BIT));
+    memcpy(bufferDataOut, ptr, sizeof(kBufferData));
+    glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+
+    for (uint32_t index = 0; index < kBufferSize; ++index)
+    {
+        EXPECT_EQ(bufferDataOut[index], index) << " index " << index;
+    }
+}
+
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(EGLRobustnessTest);
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(EGLRobustnessTestES3);
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(EGLRobustnessTestES31);
 ANGLE_INSTANTIATE_TEST(EGLRobustnessTest,
                        WithNoFixture(ES2_VULKAN()),
                        WithNoFixture(ES2_D3D9()),
@@ -427,3 +532,4 @@ ANGLE_INSTANTIATE_TEST(EGLRobustnessTestES3,
                        WithNoFixture(ES3_D3D11()),
                        WithNoFixture(ES3_OPENGL()),
                        WithNoFixture(ES3_OPENGLES()));
+ANGLE_INSTANTIATE_TEST(EGLRobustnessTestES31, WithNoFixture(ES31_VULKAN()));
