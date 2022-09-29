@@ -276,6 +276,9 @@ declare_args() {
   # Enable overlay by default when debug layers are enabled.  This is currently only implemented on
   # Vulkan.
   angle_enable_overlay = angle_enable_vulkan && angle_debug_layers_enabled
+
+  # Build Mesa as a third party dependency
+  angle_build_mesa = false
 }
 
 declare_args() {

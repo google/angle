@@ -88,6 +88,9 @@ if (angle_build_all) {
     if (angle_enable_cl) {
       deps += [ "$angle_root/src/libOpenCL:angle_cl" ]
     }
+    if (angle_build_mesa) {
+      deps += [ "$angle_root/third_party/mesa" ]
+    }
   }
 }
 
