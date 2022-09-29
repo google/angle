@@ -1301,6 +1301,17 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
         }
     }
 
+    if (traceNameIs("life_is_strange"))
+    {
+        if (IsWindows() && IsNVIDIA() && mParams->isVulkan() && !mParams->isSwiftshader())
+        {
+            skipTest("http://anglebug.com/7723 Renders incorrectly on Nvidia Windows");
+        }
+
+        addExtensionPrerequisite("GL_EXT_texture_buffer");
+        addExtensionPrerequisite("GL_EXT_texture_cube_map_array");
+    }
+
     // glDebugMessageControlKHR and glDebugMessageCallbackKHR crash on ARM GLES1.
     if (IsARM() && mParams->traceInfo.contextClientMajorVersion == 1)
     {
