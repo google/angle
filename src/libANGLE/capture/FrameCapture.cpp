@@ -1446,11 +1446,24 @@ void MaybeResetDefaultUniforms(std::stringstream &out,
         DefaultUniformCallsPerLocationMap &defaultUniformResetCalls =
             resourceTracker->getDefaultUniformResetCalls(programID);
 
+        // Uniform arrays might have been modified in the middle (i.e. location 5 out of 10)
+        // We only have Reset calls for the entire array, so emit them once for the entire array
+        std::set<gl::UniformLocation> alreadyReset;
+
         // Emit the reset calls per modified location
         for (const gl::UniformLocation &location : locations)
         {
-            ASSERT(defaultUniformResetCalls.find(location) != defaultUniformResetCalls.end());
-            std::vector<CallCapture> &callsPerLocation = defaultUniformResetCalls[location];
+            gl::UniformLocation baseLocation =
+                resourceTracker->getDefaultUniformBaseLocation(programID, location);
+            if (alreadyReset.find(baseLocation) != alreadyReset.end())
+            {
+                // We've already Reset this array
+                continue;
+            }
+            alreadyReset.insert(baseLocation);
+
+            ASSERT(defaultUniformResetCalls.find(baseLocation) != defaultUniformResetCalls.end());
+            std::vector<CallCapture> &callsPerLocation = defaultUniformResetCalls[baseLocation];
 
             for (CallCapture &call : callsPerLocation)
             {
@@ -2461,6 +2474,8 @@ void CaptureUpdateUniformValues(const gl::State &replayState,
                 {
                     program->getUniformfv(context, readLoc,
                                           uniformBuffer.data() + index * componentCount);
+                    resourceTracker->setDefaultUniformBaseLocation(program->id(), readLoc,
+                                                                   uniformLoc);
                 }
                 switch (typeInfo->type)
                 {
@@ -2578,6 +2593,8 @@ void CaptureUpdateUniformValues(const gl::State &replayState,
                 {
                     program->getUniformiv(context, readLoc,
                                           uniformBuffer.data() + index * componentCount);
+                    resourceTracker->setDefaultUniformBaseLocation(program->id(), readLoc,
+                                                                   uniformLoc);
                 }
                 switch (componentCount)
                 {
@@ -2623,6 +2640,8 @@ void CaptureUpdateUniformValues(const gl::State &replayState,
                 {
                     program->getUniformuiv(context, readLoc,
                                            uniformBuffer.data() + index * componentCount);
+                    resourceTracker->setDefaultUniformBaseLocation(program->id(), readLoc,
+                                                                   uniformLoc);
                 }
                 switch (componentCount)
                 {
@@ -2646,7 +2665,6 @@ void CaptureUpdateUniformValues(const gl::State &replayState,
                             Capture(calls, CaptureUniform2uiv(replayState, true, uniformLoc,
                                                               uniformCount, uniformBuffer.data()));
                         }
-
                         break;
                     case 1:
                         for (std::vector<CallCapture> *calls : defaultUniformCalls)
@@ -7514,6 +7532,14 @@ void ResourceTracker::setModifiedDefaultUniform(gl::ShaderProgramID programID,
 {
     // Pull up or create the list of uniform locations for this program and mark one dirty
     mDefaultUniformsToReset[programID].insert(location);
+}
+
+void ResourceTracker::setDefaultUniformBaseLocation(gl::ShaderProgramID programID,
+                                                    gl::UniformLocation location,
+                                                    gl::UniformLocation baseLocation)
+{
+    // Track the base location used to populate arrayed uniforms in Setup
+    mDefaultUniformBaseLocations[{programID, location}] = baseLocation;
 }
 
 TrackedResource &ResourceTracker::getTrackedResource(gl::ContextID contextID, ResourceIDType type)

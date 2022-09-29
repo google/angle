@@ -302,6 +302,9 @@ using DefaultUniformCallsPerLocationMap = std::map<gl::UniformLocation, std::vec
 using DefaultUniformCallsPerProgramMap =
     std::map<gl::ShaderProgramID, DefaultUniformCallsPerLocationMap>;
 
+using DefaultUniformBaseLocationMap =
+    std::map<std::pair<gl::ShaderProgramID, gl::UniformLocation>, gl::UniformLocation>;
+
 using ResourceSet   = std::set<GLuint>;
 using ResourceCalls = std::map<GLuint, std::vector<CallCapture>>;
 
@@ -392,6 +395,16 @@ class ResourceTracker final : angle::NonCopyable
         return mDefaultUniformResetCalls[id];
     }
     void setModifiedDefaultUniform(gl::ShaderProgramID programID, gl::UniformLocation location);
+    void setDefaultUniformBaseLocation(gl::ShaderProgramID programID,
+                                       gl::UniformLocation location,
+                                       gl::UniformLocation baseLocation);
+    gl::UniformLocation getDefaultUniformBaseLocation(gl::ShaderProgramID programID,
+                                                      gl::UniformLocation location)
+    {
+        ASSERT(mDefaultUniformBaseLocations.find({programID, location}) !=
+               mDefaultUniformBaseLocations.end());
+        return mDefaultUniformBaseLocations[{programID, location}];
+    }
 
     TrackedResource &getTrackedResource(gl::ContextID contextID, ResourceIDType type);
 
@@ -426,6 +439,9 @@ class ResourceTracker final : angle::NonCopyable
     DefaultUniformLocationsPerProgramMap mDefaultUniformsToReset;
     // Calls per default uniform to return to original state
     DefaultUniformCallsPerProgramMap mDefaultUniformResetCalls;
+
+    // Base location of arrayed uniforms
+    DefaultUniformBaseLocationMap mDefaultUniformBaseLocations;
 
     // Tracked resources per context
     TrackedResourceArray mTrackedResourcesShared;
