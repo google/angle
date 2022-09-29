@@ -4163,6 +4163,10 @@ void Context::initCaps()
                   "supported on some native drivers";
         mState.mExtensions.shaderNoperspectiveInterpolationNV = false;
 
+        INFO() << "Disabling GL_NV_framebuffer_blit during capture, which is not "
+                  "supported on some native drivers";
+        mState.mExtensions.framebufferBlitNV = false;
+
         // NVIDIA's Vulkan driver only supports 4 draw buffers
         constexpr GLint maxDrawBuffers = 4;
         INFO() << "Limiting draw buffer count to " << maxDrawBuffers;
