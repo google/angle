@@ -6,6 +6,7 @@
 
 #include <algorithm>
 #include <cstring>
+#include <functional>
 #include <numeric>
 #include <unordered_map>
 #include <unordered_set>
