@@ -10177,7 +10177,7 @@ void ShaderProgramHelper::setSpecializationConstant(sh::vk::SpecializationConsta
     }
 }
 
-angle::Result ShaderProgramHelper::getComputePipeline(Context *context,
+angle::Result ShaderProgramHelper::getComputePipeline(ContextVk *contextVk,
                                                       PipelineCacheAccess *pipelineCache,
                                                       const PipelineLayout &pipelineLayout,
                                                       PipelineSource source,
@@ -10206,6 +10206,22 @@ angle::Result ShaderProgramHelper::getComputePipeline(Context *context,
     createInfo.basePipelineHandle = VK_NULL_HANDLE;
     createInfo.basePipelineIndex  = 0;
 
+    VkPipelineRobustnessCreateInfoEXT robustness = {};
+    robustness.sType = VK_STRUCTURE_TYPE_PIPELINE_ROBUSTNESS_CREATE_INFO_EXT;
+
+    // Enable robustness on the pipeline if needed.  Note that the global robustBufferAccess feature
+    // must be disabled by default.
+    if (contextVk->getFeatures().supportsPipelineRobustness.enabled &&
+        contextVk->getShareGroup()->hasAnyContextWithRobustness())
+    {
+        robustness.storageBuffers = VK_PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS_EXT;
+        robustness.uniformBuffers = VK_PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS_EXT;
+        robustness.vertexInputs   = VK_PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_DEVICE_DEFAULT_EXT;
+        robustness.images         = VK_PIPELINE_ROBUSTNESS_IMAGE_BEHAVIOR_DEVICE_DEFAULT_EXT;
+
+        AddToPNextChain(&createInfo, &robustness);
+    }
+
     VkPipelineCreationFeedback feedback               = {};
     VkPipelineCreationFeedback perStageFeedback       = {};
     VkPipelineCreationFeedbackCreateInfo feedbackInfo = {};
@@ -10217,14 +10233,14 @@ angle::Result ShaderProgramHelper::getComputePipeline(Context *context,
     feedbackInfo.pPipelineStageCreationFeedbacks    = &perStageFeedback;
 
     const bool supportsFeedback =
-        context->getRenderer()->getFeatures().supportsPipelineCreationFeedback.enabled;
+        contextVk->getRenderer()->getFeatures().supportsPipelineCreationFeedback.enabled;
     if (supportsFeedback)
     {
-        createInfo.pNext = &feedbackInfo;
+        AddToPNextChain(&createInfo, &feedbackInfo);
     }
 
-    ANGLE_TRY(
-        pipelineCache->createComputePipeline(context, createInfo, &mComputePipeline.getPipeline()));
+    ANGLE_TRY(pipelineCache->createComputePipeline(contextVk, createInfo,
+                                                   &mComputePipeline.getPipeline()));
 
     if (supportsFeedback)
     {
@@ -10234,7 +10250,7 @@ angle::Result ShaderProgramHelper::getComputePipeline(Context *context,
 
         mComputePipeline.setCacheLookUpFeedback(cacheHit ? CacheLookUpFeedback::Hit
                                                          : CacheLookUpFeedback::Miss);
-        ApplyPipelineCreationFeedback(context, feedback);
+        ApplyPipelineCreationFeedback(contextVk, feedback);
     }
 
     *pipelineOut = &mComputePipeline;
