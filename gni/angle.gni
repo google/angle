@@ -501,7 +501,6 @@ if (angle_standalone || build_with_chromium) {
                     ]
 
       data = invoker.data + [
-               "$angle_root/scripts/run_gtest_angle_test.py",
                "$angle_root/src/tests/py_utils/android_helper.py",
                "$angle_root/src/tests/py_utils/angle_path_util.py",
                "$angle_root/src/tests/py_utils/angle_test_util.py",
