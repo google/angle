@@ -3832,14 +3832,14 @@ void CaptureShareGroupMidExecutionSetup(
 
                 if (index.getType() == gl::TextureType::External)
                 {
-                    constexpr EGLint attribs[] = {
-                        EGL_IMAGE_PRESERVED,
-                        EGL_TRUE,
-                        EGL_NONE,
-                    };
-                    const egl::AttributeMap &attrib_listPacked =
-                        egl::PackParam<const egl::AttributeMap &>(attribs);
-                    attrib_listPacked.initializeWithoutValidation();
+                    auto eglImageIter = resourceTracker->getTextureIDToImageTable().find(id.value);
+                    ASSERT(eglImageIter != resourceTracker->getTextureIDToImageTable().end());
+                    void *eglImage = eglImageIter->second;
+                    ASSERT(eglImage != nullptr);
+                    auto eglImageAttribIter =
+                        resourceTracker->getImageToAttribTable().find(eglImage);
+                    ASSERT(eglImageAttribIter != resourceTracker->getImageToAttribTable().end());
+                    const egl::AttributeMap &retrievedAttribs = eglImageAttribIter->second;
 
                     // Create the image on demand
                     egl::Image *image = nullptr;
@@ -3847,7 +3847,7 @@ void CaptureShareGroupMidExecutionSetup(
                             CaptureEGLCreateImage(context, EGL_GL_TEXTURE_2D_KHR,
                                                   reinterpret_cast<EGLClientBuffer>(
                                                       static_cast<GLuint64>(stagingTexId.value)),
-                                                  attrib_listPacked, image));
+                                                  retrievedAttribs, image));
 
                     // Pass the eglImage to the texture that is bound to GL_TEXTURE_EXTERNAL_OES
                     // target
@@ -6773,34 +6773,29 @@ void FrameCaptureShared::maybeCapturePreCallUpdates(
             break;
         }
 
+        case EntryPoint::GLEGLImageTargetTexture2DOES:
+        {
+            gl::TextureType target =
+                call.params.getParam("targetPacked", ParamType::TTextureType, 0)
+                    .value.TextureTypeVal;
+            GLeglImageOES image =
+                call.params.getParam("image", ParamType::TGLeglImageOES, 1).value.GLeglImageOESVal;
+
+            mResourceTracker.getTextureIDToImageTable().insert(std::pair<GLuint, void *>(
+                context->getState().getTargetTexture(target)->getId(), image));
+            break;
+        }
+
         case EntryPoint::EGLCreateImage:
         case EntryPoint::EGLCreateImageKHR:
         {
-            ParamData attribs =
-                call.params.getParam("attrib_list", ParamType::TGLint64Pointer, 4).data;
-
-            int bytesPerAttrib = 8;
-            int numAttribs     = static_cast<int>(attribs[0].size() / bytesPerAttrib);
-            std::vector<GLint64> reconstructedAttribs(numAttribs);
-            for (int i = 0; i < numAttribs; i++)
-            {
-                GLint64 compiledAttrib = 0;
-                for (int b = 0; b < bytesPerAttrib; b++)
-                {
-                    compiledAttrib |= attribs[0][i * bytesPerAttrib + b] << (b * sizeof(uint64_t));
-                }
-                reconstructedAttribs[i] = compiledAttrib;
-            }
-
-            // Check if the passed-in attribs are as expected, otherwise throw an UNREACHABLE
-            if (!isCaptureActive() &&
-                (reconstructedAttribs[0] != EGL_IMAGE_PRESERVED ||
-                 reconstructedAttribs[1] != EGL_TRUE || reconstructedAttribs[2] != EGL_NONE))
-            {
-                ERR() << "EGLImage created with " << numAttribs << " unsupported attribs types.";
-                UNREACHABLE();
-            }
-
+            GLeglImageOES image      = call.params.getReturnValue().value.voidPointerVal;
+            const EGLAttrib *attribs = reinterpret_cast<const EGLAttrib *>(
+                call.params.getParam("attrib_list", ParamType::TGLint64Pointer, 4).data[0].data());
+            egl::AttributeMap attributeMap = egl::AttributeMap::CreateFromAttribArray(attribs);
+            attributeMap.initializeWithoutValidation();
+            mResourceTracker.getImageToAttribTable().insert(
+                std::pair<void *, egl::AttributeMap>(image, attributeMap));
             break;
         }
 
