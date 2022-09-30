@@ -180,19 +180,21 @@ LogMessage::LogMessage(const char *file, const char *function, int line, LogSeve
 
 LogMessage::~LogMessage()
 {
-    std::unique_lock<std::mutex> lock;
-    if (g_debugMutex != nullptr)
     {
-        lock = std::unique_lock<std::mutex>(*g_debugMutex);
-    }
+        std::unique_lock<std::mutex> lock;
+        if (g_debugMutex != nullptr)
+        {
+            lock = std::unique_lock<std::mutex>(*g_debugMutex);
+        }
 
-    if (DebugAnnotationsInitialized() && (mSeverity > LOG_INFO))
-    {
-        g_debugAnnotator->logMessage(*this);
-    }
-    else
-    {
-        Trace(getSeverity(), getMessage().c_str());
+        if (DebugAnnotationsInitialized() && (mSeverity > LOG_INFO))
+        {
+            g_debugAnnotator->logMessage(*this);
+        }
+        else
+        {
+            Trace(getSeverity(), getMessage().c_str());
+        }
     }
 
     if (mSeverity == LOG_FATAL)
