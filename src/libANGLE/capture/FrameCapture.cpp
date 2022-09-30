@@ -2454,6 +2454,7 @@ void CaptureUpdateUniformValues(const gl::State &replayState,
             {
                 program->getUniformiv(context, readLoc,
                                       uniformBuffer.data() + index * componentCount);
+                resourceTracker->setDefaultUniformBaseLocation(program->id(), readLoc, uniformLoc);
             }
 
             for (std::vector<CallCapture> *calls : defaultUniformCalls)
