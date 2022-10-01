@@ -110,18 +110,6 @@ ContextNULL::ContextNULL(const gl::State &state,
     const gl::Version maxClientVersion(3, 1);
     mCaps = GenerateMinimumCaps(maxClientVersion, mExtensions);
 
-    if (mExtensions.shaderPixelLocalStorageANGLE)
-    {
-        // [ANGLE_shader_pixel_local_storage], Table 6.X: MAX_PIXEL_LOCAL_STORAGE_PLANES_ANGLE must
-        // be at least 4.
-        //
-        // ES 3.1, Table 20.44: MAX_FRAGMENT_IMAGE_UNIFORMS can be 0.
-        //
-        // Support at least 4 fragment shader image units if we want pixel local storage.
-        mCaps.maxShaderImageUniforms[gl::ShaderType::Fragment] =
-            std::max(mCaps.maxShaderImageUniforms[gl::ShaderType::Fragment], 4);
-    }
-
     InitMinimumTextureCapsMap(maxClientVersion, mExtensions, &mTextureCaps);
 }
 
@@ -422,7 +410,7 @@ const gl::Limitations &ContextNULL::getNativeLimitations() const
 ShPixelLocalStorageType ContextNULL::getNativePixelLocalStorageType() const
 {
     return getNativeExtensions().shaderPixelLocalStorageANGLE
-               ? ShPixelLocalStorageType::ImageStoreNativeFormats
+               ? ShPixelLocalStorageType::FramebufferFetch
                : ShPixelLocalStorageType::NotSupported;
 }
 

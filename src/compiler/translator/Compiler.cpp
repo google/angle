@@ -699,15 +699,12 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     {
         ASSERT(
             IsExtensionEnabled(mExtensionBehavior, TExtension::ANGLE_shader_pixel_local_storage));
-        if (!RewritePixelLocalStorageToImages(this, root, getSymbolTable(), compileOptions,
-                                              getShaderVersion()))
+        if (!RewritePixelLocalStorage(this, root, getSymbolTable(), compileOptions,
+                                      getShaderVersion()))
         {
             mDiagnostics.globalError("internal compiler error translating pixel local storage");
             return false;
         }
-        // When PLS is implemented with images, early_fragment_tests ensure that depth/stencil can
-        // also block stores to PLS.
-        mEarlyFragmentTestsSpecified = true;
     }
 
     // Disallow expressions deemed too complex.

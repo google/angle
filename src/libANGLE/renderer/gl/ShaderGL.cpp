@@ -384,7 +384,11 @@ std::shared_ptr<WaitableCompileEvent> ShaderGL::compile(const gl::Context *conte
             // Prefer vendor-specific extensions first. The PixelLocalStorageTest.Coherency test
             // doesn't always pass on Intel when we use the ARB extension.
             ShShaderOutput translatorOutputType = GetShaderOutputType(GetFunctionsGL(context));
-            if (features.supportsFragmentShaderInterlockNV.enabled)
+            if (options->pls.type == ShPixelLocalStorageType::FramebufferFetch)
+            {
+                options->pls.fragmentSynchronizationType = ShFragmentSynchronizationType::Automatic;
+            }
+            else if (features.supportsFragmentShaderInterlockNV.enabled)
             {
                 // This extension requires 430+. GetShaderOutputType() should always select 430+ on
                 // a GL 4.3 context, where this extension is defined.

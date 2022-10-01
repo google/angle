@@ -260,7 +260,6 @@ void PixelLocalStoragePlane::performLoadOperationClear(Context *context,
                                                        GLenum loadop,
                                                        const void *data)
 {
-    ASSERT(loadop == GL_ZERO || loadop == GL_CLEAR_ANGLE);
     // The GL scissor test must be disabled, since the intention is to clear the entire surface.
     ASSERT(!context->getState().isScissorTestEnabled());
     switch (mInternalformat)
@@ -594,12 +593,234 @@ class PixelLocalStorageImageLoadStore : public PixelLocalStorage
     GLint mSavedFramebufferDefaultHeight;
     std::vector<ImageUnit> mSavedImageBindings;
 };
+
+// Implements pixel local storage via framebuffer fetch.
+class PixelLocalStorageFramebufferFetch : public PixelLocalStorage
+{
+  public:
+    void onContextObjectsLost() override {}
+
+    void onDeleteContextObjects(Context *) override {}
+
+    void onBegin(Context *context,
+                 GLsizei n,
+                 const GLenum loadops[],
+                 const char *cleardata,
+                 Extents plsExtents) override
+    {
+        const State &state                              = context->getState();
+        const Caps &caps                                = context->getCaps();
+        Framebuffer *framebuffer                        = context->getState().getDrawFramebuffer();
+        const DrawBuffersVector<GLenum> &appDrawBuffers = framebuffer->getDrawBufferStates();
+
+        // Remember the current draw buffer state so we can restore it during onEnd().
+        mSavedDrawBuffers.resize(appDrawBuffers.size());
+        std::copy(appDrawBuffers.begin(), appDrawBuffers.end(), mSavedDrawBuffers.begin());
+
+        // Set up new draw buffers for PLS.
+        int firstPLSDrawBuffer = caps.maxCombinedDrawBuffersAndPixelLocalStoragePlanes - n;
+        int numAppDrawBuffers =
+            std::min(static_cast<int>(appDrawBuffers.size()), firstPLSDrawBuffer);
+        DrawBuffersArray<GLenum> plsDrawBuffers;
+        std::copy(appDrawBuffers.begin(), appDrawBuffers.begin() + numAppDrawBuffers,
+                  plsDrawBuffers.begin());
+        std::fill(plsDrawBuffers.begin() + numAppDrawBuffers,
+                  plsDrawBuffers.begin() + firstPLSDrawBuffer, GL_NONE);
+
+        mBlendsToReEnable.reset();
+        mColorMasksToRestore.reset();
+        mInvalidateList.clear();
+        bool needsClear = false;
+
+        bool hasIndexedBlendAndColorMask = context->getExtensions().drawBuffersIndexedAny();
+        if (!hasIndexedBlendAndColorMask)
+        {
+            // We don't have indexed blend and color mask control. Disable them globally. (This also
+            // means the app can't have its own draw buffers while PLS is active.)
+            ASSERT(caps.maxColorAttachmentsWithActivePixelLocalStorage == 0);
+            if (state.isBlendEnabled())
+            {
+                context->disable(GL_BLEND);
+                mBlendsToReEnable.set(0);
+            }
+            std::array<bool, 4> &mask = mSavedColorMasks[0];
+            state.getBlendStateExt().getColorMaskIndexed(0, &mask[0], &mask[1], &mask[2], &mask[3]);
+            if (!(mask[0] && mask[1] && mask[2] && mask[3]))
+            {
+                context->colorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+                mColorMasksToRestore.set(0);
+            }
+        }
+
+        for (GLsizei i = 0; i < n; ++i)
+        {
+            GLuint drawBufferIdx = getDrawBufferIdx(caps, i);
+            GLenum loadop        = loadops[i];
+            if (loadop == GL_DISABLE_ANGLE)
+            {
+                plsDrawBuffers[drawBufferIdx] = GL_NONE;
+                continue;
+            }
+
+            PixelLocalStoragePlane &plane = getPlane(i);
+            ASSERT(!plane.isDeinitialized());
+
+            // Attach our PLS texture to the framebuffer. Validation should have already ensured
+            // nothing else was attached at this point.
+            GLenum colorAttachment = GL_COLOR_ATTACHMENT0 + drawBufferIdx;
+            ASSERT(!framebuffer->getAttachment(context, colorAttachment));
+            plane.attachToDrawFramebuffer(context, plsExtents, colorAttachment);
+            plsDrawBuffers[drawBufferIdx] = colorAttachment;
+
+            if (hasIndexedBlendAndColorMask)
+            {
+                // Ensure blend and color mask are disabled for this draw buffer.
+                if (state.isBlendEnabledIndexed(drawBufferIdx))
+                {
+                    context->disablei(GL_BLEND, drawBufferIdx);
+                    mBlendsToReEnable.set(drawBufferIdx);
+                }
+                std::array<bool, 4> &mask = mSavedColorMasks[drawBufferIdx];
+                state.getBlendStateExt().getColorMaskIndexed(drawBufferIdx, &mask[0], &mask[1],
+                                                             &mask[2], &mask[3]);
+                if (!(mask[0] && mask[1] && mask[2] && mask[3]))
+                {
+                    context->colorMaski(drawBufferIdx, GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+                    mColorMasksToRestore.set(drawBufferIdx);
+                }
+            }
+
+            if (plane.isMemoryless())
+            {
+                // Memoryless planes don't need to be preserved after glEndPixelLocalStorageANGLE().
+                mInvalidateList.push_back(colorAttachment);
+            }
+
+            needsClear = needsClear || (loadop != GL_KEEP);
+        }
+
+        // Turn on the PLS draw buffers.
+        context->drawBuffers(caps.maxCombinedDrawBuffersAndPixelLocalStoragePlanes,
+                             plsDrawBuffers.data());
+
+        // Clear the non-KEEP PLS planes now that their draw buffers are turned on.
+        if (needsClear)
+        {
+            ScopedDisableScissor scopedDisableScissor(context);
+            for (GLsizei i = 0; i < n; ++i)
+            {
+                GLenum loadop = loadops[i];
+                if (loadop != GL_DISABLE_ANGLE && loadop != GL_KEEP)
+                {
+                    GLuint drawBufferIdx = getDrawBufferIdx(caps, i);
+                    getPlane(i).performLoadOperationClear(context, drawBufferIdx, loadop,
+                                                          cleardata + i * 4 * 4);
+                }
+            }
+        }
+
+        if (!context->getExtensions().shaderPixelLocalStorageCoherentANGLE)
+        {
+            // Insert a barrier if we aren't coherent, since the textures may have been rendered to
+            // previously.
+            barrier(context);
+        }
+    }
+
+    void onEnd(Context *context, GLint numActivePLSPlanes) override
+    {
+
+        const Caps &caps = context->getCaps();
+
+        // Invalidate the memoryless PLS attachments.
+        if (!mInvalidateList.empty())
+        {
+            context->invalidateFramebuffer(GL_DRAW_FRAMEBUFFER,
+                                           static_cast<GLsizei>(mInvalidateList.size()),
+                                           mInvalidateList.data());
+            mInvalidateList.clear();
+        }
+
+        bool hasIndexedBlendAndColorMask = context->getExtensions().drawBuffersIndexedAny();
+        if (!hasIndexedBlendAndColorMask)
+        {
+            // Restore global blend and color mask. Validation should have ensured these didn't
+            // change while pixel local storage was active.
+            if (mBlendsToReEnable[0])
+            {
+                context->enable(GL_BLEND);
+            }
+            if (mColorMasksToRestore[0])
+            {
+                const std::array<bool, 4> &mask = mSavedColorMasks[0];
+                context->colorMask(mask[0], mask[1], mask[2], mask[3]);
+            }
+        }
+
+        for (GLsizei i = 0; i < numActivePLSPlanes; ++i)
+        {
+            // Reset color attachments where PLS was attached. Validation should have already
+            // ensured nothing was attached at these points when we activated pixel local storage,
+            // and that nothing got attached during.
+            GLuint drawBufferIdx   = getDrawBufferIdx(caps, i);
+            GLenum colorAttachment = GL_COLOR_ATTACHMENT0 + drawBufferIdx;
+            context->framebufferTexture2D(GL_DRAW_FRAMEBUFFER, colorAttachment, TextureTarget::_2D,
+                                          TextureID(), 0);
+
+            if (hasIndexedBlendAndColorMask)
+            {
+                // Restore this draw buffer's blend and color mask. Validation should have ensured
+                // these did not change while pixel local storage was active.
+                if (mBlendsToReEnable[drawBufferIdx])
+                {
+                    context->enablei(GL_BLEND, drawBufferIdx);
+                }
+                if (mColorMasksToRestore[drawBufferIdx])
+                {
+                    const std::array<bool, 4> &mask = mSavedColorMasks[drawBufferIdx];
+                    context->colorMaski(drawBufferIdx, mask[0], mask[1], mask[2], mask[3]);
+                }
+            }
+        }
+
+        // Restore the draw buffer state from before PLS was enabled.
+        context->drawBuffers(static_cast<GLsizei>(mSavedDrawBuffers.size()),
+                             mSavedDrawBuffers.data());
+        mSavedDrawBuffers.clear();
+    }
+
+    void onBarrier(Context *context) override { context->framebufferFetchBarrier(); }
+
+  private:
+    GLuint getDrawBufferIdx(const Caps &caps, GLuint plsPlaneIdx)
+    {
+        // Bind the PLS attachments in reverse order from the rear. This way, the shader translator
+        // doesn't need to know how many planes are going to be active in order to figure out plane
+        // indices.
+        return caps.maxCombinedDrawBuffersAndPixelLocalStoragePlanes - plsPlaneIdx - 1;
+    }
+
+    DrawBuffersVector<GLenum> mSavedDrawBuffers;
+    DrawBufferMask mBlendsToReEnable;
+    DrawBufferMask mColorMasksToRestore;
+    DrawBuffersArray<std::array<bool, 4>> mSavedColorMasks;
+    DrawBuffersVector<GLenum> mInvalidateList;
+};
 }  // namespace
 
 std::unique_ptr<PixelLocalStorage> PixelLocalStorage::Make(const Context *context)
 {
-    bool needsR32Packing = context->getImplementation()->getNativePixelLocalStorageType() ==
-                           ShPixelLocalStorageType::ImageStoreR32PackedFormats;
-    return std::make_unique<PixelLocalStorageImageLoadStore>(needsR32Packing);
+    switch (context->getImplementation()->getNativePixelLocalStorageType())
+    {
+        case ShPixelLocalStorageType::ImageStoreR32PackedFormats:
+            return std::make_unique<PixelLocalStorageImageLoadStore>(true);
+        case ShPixelLocalStorageType::ImageStoreNativeFormats:
+            return std::make_unique<PixelLocalStorageImageLoadStore>(false);
+        case ShPixelLocalStorageType::FramebufferFetch:
+            return std::make_unique<PixelLocalStorageFramebufferFetch>();
+        default:
+            UNREACHABLE();
+            return nullptr;
+    }
 }
 }  // namespace gl

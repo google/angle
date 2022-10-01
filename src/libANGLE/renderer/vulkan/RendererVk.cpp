@@ -4061,7 +4061,15 @@ ShPixelLocalStorageType RendererVk::getNativePixelLocalStorageType() const
     {
         return ShPixelLocalStorageType::NotSupported;
     }
-    return ShPixelLocalStorageType::ImageStoreNativeFormats;
+    if (getNativeExtensions().shaderPixelLocalStorageCoherentANGLE &&
+        !getFeatures().supportsShaderFramebufferFetch.enabled)
+    {
+        // Use shader images with VK_EXT_fragment_shader_interlock, instead of attachments, if
+        // they're our only option to be coherent.
+        return ShPixelLocalStorageType::ImageStoreNativeFormats;
+    }
+    // Vulkan can always support noncoherent framebuffer fetch via subpass loads.
+    return ShPixelLocalStorageType::FramebufferFetch;
 }
 
 void RendererVk::initializeFrontendFeatures(angle::FrontendFeatures *features) const

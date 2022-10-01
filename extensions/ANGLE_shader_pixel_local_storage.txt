@@ -394,8 +394,9 @@ Additions to the OpenGL ES Specification, Version 3.0.6
         pixel local storage plane (i.e., the fragment shader must declare
         uniforms bound to every single active pixel local storage plane).
 
-        This facilitates implementations where the pixel local storage structure
-        must be declared in the shader, e.g., EXT_shader_pixel_local_storage.
+        This is because many backend implementations need to account for every
+        active pixel local storage plane, even if the application code does not
+        access it during a particular shader invocation.
 
       * INVALID_OPERATION is generated if a draw is issued with a fragment
         shader that has a pixel local storage uniform whose format layout
@@ -656,15 +657,14 @@ Additions to the OpenGL ES Specification, Version 3.0.6
     Get Value                                                      Type  Get Command   Value    Sec.
     ------------------------------------------------------------------------------------------------
     MAX_PIXEL_LOCAL_STORAGE_PLANES_ANGLE                            Z+   GetIntegerv     4   4.4.2.X
-    MAX_COLOR_ATTACHMENTS_WITH_ACTIVE_PIXEL_LOCAL_STORAGE_ANGLE     Z+   GetIntegerv   *!0*      2.X
+    MAX_COLOR_ATTACHMENTS_WITH_ACTIVE_PIXEL_LOCAL_STORAGE_ANGLE     Z+   GetIntegerv    *0!      2.X
     MAX_COMBINED_DRAW_BUFFERS_AND_PIXEL_LOCAL_STORAGE_PLANES_ANGLE  Z+   GetIntegerv     4       2.X
 
     Table 6.X: Impementation Dependent Pixel Local Storage Limits
 
     Note that MAX_COLOR_ATTACHMENTS_WITH_ACTIVE_PIXEL_LOCAL_STORAGE_ANGLE may be
-    zero, in which case the application cannot render to fragment shader outputs
-    while PIXEL_LOCAL_STORAGE_ACTIVE_ANGLE is TRUE. (This capability is not
-    supported when using the EXT_shader_pixel_local_storage extension.)
+    zero, in which case the application cannot render to any other color
+    attachments while PIXEL_LOCAL_STORAGE_ACTIVE_ANGLE is TRUE.
 
                                                            Initial
     Get Value                         Type  Get Command     Value    Sec.

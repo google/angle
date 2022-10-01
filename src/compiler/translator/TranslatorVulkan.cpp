@@ -652,12 +652,15 @@ TIntermSequence *GetMainSequence(TIntermBlock *root)
                                         fragCoord, kFlippedFragCoordName, pivot);
 }
 
-bool HasFramebufferFetch(const TExtensionBehavior &extBehavior)
+bool HasFramebufferFetch(const TExtensionBehavior &extBehavior,
+                         const ShCompileOptions &compileOptions)
 {
     return IsExtensionEnabled(extBehavior, TExtension::EXT_shader_framebuffer_fetch) ||
            IsExtensionEnabled(extBehavior, TExtension::EXT_shader_framebuffer_fetch_non_coherent) ||
            IsExtensionEnabled(extBehavior, TExtension::ARM_shader_framebuffer_fetch) ||
-           IsExtensionEnabled(extBehavior, TExtension::NV_shader_framebuffer_fetch);
+           IsExtensionEnabled(extBehavior, TExtension::NV_shader_framebuffer_fetch) ||
+           (compileOptions.pls.type == ShPixelLocalStorageType::FramebufferFetch &&
+            IsExtensionEnabled(extBehavior, TExtension::ANGLE_shader_pixel_local_storage));
 }
 }  // anonymous namespace
 
@@ -999,7 +1002,7 @@ bool TranslatorVulkan::translateImpl(TInfoSinkBase &sink,
                 }
             }
 
-            if (HasFramebufferFetch(getExtensionBehavior()))
+            if (HasFramebufferFetch(getExtensionBehavior(), compileOptions))
             {
                 if (getShaderVersion() == 100)
                 {

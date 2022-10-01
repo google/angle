@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 306
+#define ANGLE_SH_VERSION 307
 
 enum ShShaderSpec
 {
@@ -86,13 +86,16 @@ enum class ShPixelLocalStorageType
     NotSupported,
     ImageStoreR32PackedFormats,
     ImageStoreNativeFormats,
+    FramebufferFetch
 };
 
 // For ANGLE_shader_pixel_local_storage_coherent.
 // Instructs the compiler which fragment synchronization method to use, if any.
 enum class ShFragmentSynchronizationType
 {
-    NotSupported,
+    NotSupported,  // Fragments cannot be ordered or synchronized.
+
+    Automatic,  // Fragments are automatically raster-ordered and synchronized.
 
     FragmentShaderInterlock_NV_GL,
     FragmentShaderOrdering_INTEL_GL,
@@ -651,6 +654,11 @@ struct ShBuiltInResources
     int MaxClipDistances;
     int MaxCullDistances;
     int MaxCombinedClipAndCullDistances;
+
+    // ANGLE_shader_pixel_local_storage.
+    int MaxPixelLocalStoragePlanes;
+    int MaxColorAttachmentsWithActivePixelLocalStorage;
+    int MaxCombinedDrawBuffersAndPixelLocalStoragePlanes;
 };
 
 //
