@@ -698,7 +698,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     angle::Result syncDirtyObjects(const State::DirtyObjects &objectMask, Command command);
     angle::Result syncStateForReadPixels();
     angle::Result syncStateForTexImage();
-    angle::Result syncStateForBlit();
+    angle::Result syncStateForBlit(GLbitfield mask);
     angle::Result syncStateForClear();
     angle::Result syncTextureForCopy(Texture *texture);
 

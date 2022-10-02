@@ -5903,6 +5903,69 @@ TEST_P(VulkanPerformanceCounterTest, ColorClearAfterInvalidate)
     ASSERT_GL_NO_ERROR();
 }
 
+// Test that depth clears are picked up as loadOp even if a color blit is done in between.
+TEST_P(VulkanPerformanceCounterTest, DepthClearThenColorBlitThenDraw)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled(kPerfMonitorExtensionName));
+
+    angle::VulkanPerfCounters expected;
+
+    GLFramebuffer framebuffer;
+    GLTexture texture;
+    GLRenderbuffer renderbuffer;
+    setupForColorDepthOpsTest(&framebuffer, &texture, &renderbuffer);
+
+    // Execute the scenario that this test is for:
+
+    // color+depth clear, blit color as source, draw
+    //
+    // Expected:
+    //   rpCount+1,
+    //   depth(Clears+1, Loads+0, LoadNones+0, Stores+1, StoreNones+0)
+    //   color(Clears+0, Loads+1, LoadNones+0, Stores+1, StoreNones+0)
+    setExpectedCountersForDepthOps(getPerfCounters(), 0, 1, 0, 0, 1, 0, &expected);
+    setExpectedCountersForColorOps(getPerfCounters(), 1, 0, 1, 0, 1, 0, &expected);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glClearColor(0, 1, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // Blit color into another FBO
+    GLTexture destColor;
+    glBindTexture(GL_TEXTURE_2D, destColor);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kOpsTestSize, kOpsTestSize);
+
+    GLFramebuffer destFbo;
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, destFbo);
+    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, destColor, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_DRAW_FRAMEBUFFER);
+
+    glBlitFramebuffer(0, 0, kOpsTestSize, kOpsTestSize, 0, 0, kOpsTestSize, kOpsTestSize,
+                      GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
+    // Draw back to the original framebuffer
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, framebuffer);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 1.f);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_EQ(expected.renderPasses, getPerfCounters().renderPasses);
+
+    // Use swapBuffers and then check how many loads and stores were actually done.  The clear
+    // applied to depth should be done as loadOp, not flushed during the blit.
+    swapBuffers();
+    EXPECT_COLOR_OP_COUNTERS(getPerfCounters(), expected);
+    EXPECT_DEPTH_OP_COUNTERS(getPerfCounters(), expected);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify results
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // Result of blit should be green
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, destFbo);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Ensure that image gets marked as defined after clear + invalidate + clear, and that we use
 // LoadOp=Load for a renderpass which draws to it after the clear has been flushed with a blit.
 TEST_P(VulkanPerformanceCounterTest, InvalidateThenRepeatedClearThenBlitThenDraw)

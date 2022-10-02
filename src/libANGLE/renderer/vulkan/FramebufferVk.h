@@ -192,6 +192,8 @@ class FramebufferVk : public FramebufferImpl
                                 const VkClearColorValue &clearColorValue,
                                 const VkClearDepthStencilValue &clearDepthStencilValue);
     void redeferClears(ContextVk *contextVk);
+    void redeferClearsForReadFramebuffer(ContextVk *contextVk);
+    void redeferClearsImpl(ContextVk *contextVk);
     void clearWithCommand(ContextVk *contextVk, const gl::Rectangle &scissoredRenderArea);
     void clearWithLoadOp(ContextVk *contextVk);
     void updateActiveColorMasks(size_t colorIndex, bool r, bool g, bool b, bool a);
