@@ -7275,14 +7275,15 @@ void ImageHelper::restoreSubresourceContentImpl(gl::LevelIndex level,
             {
                 removeSingleStagedClearAfterInvalidate(level, layerIndex, layerCount);
             }
-            // Additionally, as the resource has been rewritten to in the render pass, its no longer
-            // cleared to the cached value.
-            mCurrentSingleClearValue.reset();
             break;
         default:
             UNREACHABLE();
             break;
     }
+
+    // Additionally, as the resource has been rewritten to in the render pass, its no longer cleared
+    // to the cached value.
+    mCurrentSingleClearValue.reset();
 
     *contentDefinedMask |= layerRangeBits;
 }
