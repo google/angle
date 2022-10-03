@@ -882,9 +882,7 @@ ANGLE_TRACE_LOADER_EXPORT PFNGLTEXGENIVOESPROC t_glTexGenivOES;
 ANGLE_TRACE_LOADER_EXPORT PFNGLTEXGENXOESPROC t_glTexGenxOES;
 ANGLE_TRACE_LOADER_EXPORT PFNGLTEXGENXVOESPROC t_glTexGenxvOES;
 
-namespace trace_angle
-{
-void LoadGLES(LoadProc loadProc)
+void LoadTraceGLES(LoadProc loadProc)
 {
     t_glAlphaFunc       = reinterpret_cast<PFNGLALPHAFUNCPROC>(loadProc("glAlphaFunc"));
     t_glClipPlanef      = reinterpret_cast<PFNGLCLIPPLANEFPROC>(loadProc("glClipPlanef"));
@@ -2243,4 +2241,3 @@ void LoadGLES(LoadProc loadProc)
     t_glTexGenxOES      = reinterpret_cast<PFNGLTEXGENXOESPROC>(loadProc("glTexGenxOES"));
     t_glTexGenxvOES     = reinterpret_cast<PFNGLTEXGENXVOESPROC>(loadProc("glTexGenxvOES"));
 }
-}  // namespace trace_angle

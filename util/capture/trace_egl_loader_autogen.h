@@ -251,11 +251,8 @@ ANGLE_TRACE_LOADER_EXPORT extern PFNEGLPOSTSUBBUFFERNVPROC t_eglPostSubBufferNV;
 ANGLE_TRACE_LOADER_EXPORT extern PFNEGLSTREAMCONSUMERGLTEXTUREEXTERNALATTRIBSNVPROC
     t_eglStreamConsumerGLTextureExternalAttribsNV;
 
-namespace trace_angle
-{
 using GenericProc = void (*)();
 using LoadProc    = GenericProc(KHRONOS_APIENTRY *)(const char *);
-ANGLE_TRACE_LOADER_EXPORT void LoadEGL(LoadProc loadProc);
-}  // namespace trace_angle
+ANGLE_TRACE_LOADER_EXPORT void LoadTraceEGL(LoadProc loadProc);
 
 #endif  // ANGLE_TRACES_UTIL_EGL_LOADER_AUTOGEN_H_

@@ -85,11 +85,8 @@ extern PFNWGLGETPIXELFORMATATTRIBIVARBPROC l__wglGetPixelFormatAttribivARB;
 extern PFNWGLGETSWAPINTERVALEXTPROC l__wglGetSwapIntervalEXT;
 extern PFNWGLSWAPINTERVALEXTPROC l__wglSwapIntervalEXT;
 
-namespace angle
-{
 using GenericProc = void (*)();
 using LoadProc    = GenericProc(KHRONOS_APIENTRY *)(const char *);
 void LoadWGL(LoadProc loadProc);
-}  // namespace angle
 
 #endif  // UTIL_WINDOWS_WGL_LOADER_AUTOGEN_H_

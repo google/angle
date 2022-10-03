@@ -1695,11 +1695,8 @@ ANGLE_UTIL_EXPORT extern PFNGLTEXGENIVOESPROC l_glTexGenivOES;
 ANGLE_UTIL_EXPORT extern PFNGLTEXGENXOESPROC l_glTexGenxOES;
 ANGLE_UTIL_EXPORT extern PFNGLTEXGENXVOESPROC l_glTexGenxvOES;
 
-namespace angle
-{
 using GenericProc = void (*)();
 using LoadProc    = GenericProc(KHRONOS_APIENTRY *)(const char *);
-ANGLE_UTIL_EXPORT void LoadGLES(LoadProc loadProc);
-}  // namespace angle
+ANGLE_UTIL_EXPORT void LoadUtilGLES(LoadProc loadProc);
 
 #endif  // UTIL_GLES_LOADER_AUTOGEN_H_

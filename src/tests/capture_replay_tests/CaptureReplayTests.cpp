@@ -98,7 +98,7 @@ EGLBoolean KHRONOS_APIENTRY EGLMakeCurrent(EGLDisplay display,
 }
 }  // namespace
 
-angle::GenericProc KHRONOS_APIENTRY TraceLoadProc(const char *procName)
+GenericProc KHRONOS_APIENTRY TraceLoadProc(const char *procName)
 {
     if (!gEGLWindow)
     {
@@ -109,39 +109,39 @@ angle::GenericProc KHRONOS_APIENTRY TraceLoadProc(const char *procName)
     {
         if (strcmp(procName, "eglCreateImage") == 0)
         {
-            return reinterpret_cast<angle::GenericProc>(EGLCreateImage);
+            return reinterpret_cast<GenericProc>(EGLCreateImage);
         }
         if (strcmp(procName, "eglCreateImageKHR") == 0)
         {
-            return reinterpret_cast<angle::GenericProc>(EGLCreateImageKHR);
+            return reinterpret_cast<GenericProc>(EGLCreateImageKHR);
         }
         if (strcmp(procName, "eglDestroyImage") == 0)
         {
-            return reinterpret_cast<angle::GenericProc>(EGLDestroyImage);
+            return reinterpret_cast<GenericProc>(EGLDestroyImage);
         }
         if (strcmp(procName, "eglDestroyImageKHR") == 0)
         {
-            return reinterpret_cast<angle::GenericProc>(EGLDestroyImageKHR);
+            return reinterpret_cast<GenericProc>(EGLDestroyImageKHR);
         }
         if (strcmp(procName, "eglCreatePbufferSurface") == 0)
         {
-            return reinterpret_cast<angle::GenericProc>(EGLCreatePbufferSurface);
+            return reinterpret_cast<GenericProc>(EGLCreatePbufferSurface);
         }
         if (strcmp(procName, "eglDestroySurface") == 0)
         {
-            return reinterpret_cast<angle::GenericProc>(EGLDestroySurface);
+            return reinterpret_cast<GenericProc>(EGLDestroySurface);
         }
         if (strcmp(procName, "eglBindTexImage") == 0)
         {
-            return reinterpret_cast<angle::GenericProc>(EGLBindTexImage);
+            return reinterpret_cast<GenericProc>(EGLBindTexImage);
         }
         if (strcmp(procName, "eglReleaseTexImage") == 0)
         {
-            return reinterpret_cast<angle::GenericProc>(EGLReleaseTexImage);
+            return reinterpret_cast<GenericProc>(EGLReleaseTexImage);
         }
         if (strcmp(procName, "eglMakeCurrent") == 0)
         {
-            return reinterpret_cast<angle::GenericProc>(EGLMakeCurrent);
+            return reinterpret_cast<GenericProc>(EGLMakeCurrent);
         }
         return gEGLWindow->getProcAddress(procName);
     }
@@ -221,8 +221,8 @@ class CaptureReplayTests
         }
 
         gEGLWindow = mEGLWindow;
-        trace_angle::LoadEGL(TraceLoadProc);
-        trace_angle::LoadGLES(TraceLoadProc);
+        LoadTraceEGL(TraceLoadProc);
+        LoadTraceGLES(TraceLoadProc);
 
         // Disable vsync
         if (!mEGLWindow->setSwapInterval(0))

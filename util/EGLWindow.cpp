@@ -162,7 +162,7 @@ bool EGLWindow::initializeDisplay(OSWindow *osWindow,
     }
 
     // Likely we will need to use a fallback to Library::getAs on non-ANGLE platforms.
-    angle::LoadEGL(getProcAddress);
+    LoadUtilEGL(getProcAddress);
 #endif  // defined(ANGLE_USE_UTIL_LOADER)
 
     const char *extensionString =
@@ -413,7 +413,7 @@ GLWindowResult EGLWindow::initializeSurface(OSWindow *osWindow,
     }
 
 #if defined(ANGLE_USE_UTIL_LOADER)
-    angle::LoadGLES(eglGetProcAddress);
+    LoadUtilGLES(eglGetProcAddress);
 #endif  // defined(ANGLE_USE_UTIL_LOADER)
 
     return GLWindowResult::NoError;

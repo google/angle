@@ -353,8 +353,8 @@ void LoadEntryPointsWithUtilLoader(angle::GLESDriverType driverType)
     ANGLETestEnvironment::GetDriverLibrary(driverType)->getAs("eglGetProcAddress", &getProcAddress);
     ASSERT_NE(nullptr, getProcAddress);
 
-    LoadEGL(getProcAddress);
-    LoadGLES(getProcAddress);
+    LoadUtilEGL(getProcAddress);
+    LoadUtilGLES(getProcAddress);
 #endif  // defined(ANGLE_USE_UTIL_LOADER)
 }
 

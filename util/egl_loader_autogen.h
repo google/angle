@@ -244,11 +244,8 @@ ANGLE_UTIL_EXPORT extern PFNEGLPOSTSUBBUFFERNVPROC l_eglPostSubBufferNV;
 ANGLE_UTIL_EXPORT extern PFNEGLSTREAMCONSUMERGLTEXTUREEXTERNALATTRIBSNVPROC
     l_eglStreamConsumerGLTextureExternalAttribsNV;
 
-namespace angle
-{
 using GenericProc = void (*)();
 using LoadProc    = GenericProc(KHRONOS_APIENTRY *)(const char *);
-ANGLE_UTIL_EXPORT void LoadEGL(LoadProc loadProc);
-}  // namespace angle
+ANGLE_UTIL_EXPORT void LoadUtilEGL(LoadProc loadProc);
 
 #endif  // UTIL_EGL_LOADER_AUTOGEN_H_

@@ -1342,8 +1342,8 @@ void TracePerfTest::initializeBenchmark()
     std::string traceName = traceNameStr.str();
     mTraceLibrary.reset(new TraceLibrary(traceName.c_str()));
 
-    trace_angle::LoadEGL(TraceLoadProc);
-    trace_angle::LoadGLES(TraceLoadProc);
+    LoadTraceEGL(TraceLoadProc);
+    LoadTraceGLES(TraceLoadProc);
 
     if (!mTraceLibrary->valid())
     {

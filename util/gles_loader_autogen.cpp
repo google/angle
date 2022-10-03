@@ -851,9 +851,7 @@ ANGLE_UTIL_EXPORT PFNGLTEXGENIVOESPROC l_glTexGenivOES;
 ANGLE_UTIL_EXPORT PFNGLTEXGENXOESPROC l_glTexGenxOES;
 ANGLE_UTIL_EXPORT PFNGLTEXGENXVOESPROC l_glTexGenxvOES;
 
-namespace angle
-{
-void LoadGLES(LoadProc loadProc)
+void LoadUtilGLES(LoadProc loadProc)
 {
     l_glAlphaFunc       = reinterpret_cast<PFNGLALPHAFUNCPROC>(loadProc("glAlphaFunc"));
     l_glClipPlanef      = reinterpret_cast<PFNGLCLIPPLANEFPROC>(loadProc("glClipPlanef"));
@@ -2212,4 +2210,3 @@ void LoadGLES(LoadProc loadProc)
     l_glTexGenxOES      = reinterpret_cast<PFNGLTEXGENXOESPROC>(loadProc("glTexGenxOES"));
     l_glTexGenxvOES     = reinterpret_cast<PFNGLTEXGENXVOESPROC>(loadProc("glTexGenxvOES"));
 }
-}  // namespace angle

@@ -120,9 +120,7 @@ PFNEGLWAITSYNCKHRPROC l_EGL_WaitSyncKHR;
 PFNEGLPOSTSUBBUFFERNVPROC l_EGL_PostSubBufferNV;
 PFNEGLSTREAMCONSUMERGLTEXTUREEXTERNALATTRIBSNVPROC l_EGL_StreamConsumerGLTextureExternalAttribsNV;
 
-namespace angle
-{
-void LoadEGL_EGL(LoadProc loadProc)
+void LoadLibEGL_EGL(LoadProc loadProc)
 {
     l_EGL_ChooseConfig  = reinterpret_cast<PFNEGLCHOOSECONFIGPROC>(loadProc("EGL_ChooseConfig"));
     l_EGL_CopyBuffers   = reinterpret_cast<PFNEGLCOPYBUFFERSPROC>(loadProc("EGL_CopyBuffers"));
@@ -320,4 +318,3 @@ void LoadEGL_EGL(LoadProc loadProc)
         reinterpret_cast<PFNEGLSTREAMCONSUMERGLTEXTUREEXTERNALATTRIBSNVPROC>(
             loadProc("EGL_StreamConsumerGLTextureExternalAttribsNV"));
 }
-}  // namespace angle

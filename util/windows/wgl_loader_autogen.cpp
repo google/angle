@@ -44,8 +44,6 @@ PFNWGLGETPIXELFORMATATTRIBIVARBPROC l__wglGetPixelFormatAttribivARB;
 PFNWGLGETSWAPINTERVALEXTPROC l__wglGetSwapIntervalEXT;
 PFNWGLSWAPINTERVALEXTPROC l__wglSwapIntervalEXT;
 
-namespace angle
-{
 void LoadWGL(LoadProc loadProc)
 {
     l__ChoosePixelFormat =
@@ -106,4 +104,3 @@ void LoadWGL(LoadProc loadProc)
     l__wglSwapIntervalEXT =
         reinterpret_cast<PFNWGLSWAPINTERVALEXTPROC>(loadProc("wglSwapIntervalEXT"));
 }
-}  // namespace angle

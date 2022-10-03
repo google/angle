@@ -1754,11 +1754,8 @@ ANGLE_TRACE_LOADER_EXPORT extern PFNGLTEXGENIVOESPROC t_glTexGenivOES;
 ANGLE_TRACE_LOADER_EXPORT extern PFNGLTEXGENXOESPROC t_glTexGenxOES;
 ANGLE_TRACE_LOADER_EXPORT extern PFNGLTEXGENXVOESPROC t_glTexGenxvOES;
 
-namespace trace_angle
-{
 using GenericProc = void (*)();
 using LoadProc    = GenericProc(KHRONOS_APIENTRY *)(const char *);
-ANGLE_TRACE_LOADER_EXPORT void LoadGLES(LoadProc loadProc);
-}  // namespace trace_angle
+ANGLE_TRACE_LOADER_EXPORT void LoadTraceGLES(LoadProc loadProc);
 
 #endif  // ANGLE_TRACES_UTIL_GLES_LOADER_AUTOGEN_H_
