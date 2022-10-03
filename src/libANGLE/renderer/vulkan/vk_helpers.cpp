@@ -3855,7 +3855,7 @@ void QueryHelper::resetQueryPoolImpl(ContextVk *contextVk,
                                      CommandBufferT *commandBuffer)
 {
     RendererVk *renderer = contextVk->getRenderer();
-    if (vkResetQueryPoolEXT != nullptr && renderer->getFeatures().supportsHostQueryReset.enabled)
+    if (renderer->getFeatures().supportsHostQueryReset.enabled)
     {
         vkResetQueryPoolEXT(contextVk->getDevice(), queryPool.getHandle(), mQuery, mQueryCount);
     }
