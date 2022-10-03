@@ -660,6 +660,7 @@
         ],
         'args': [
           '--test-timeout=300',
+          '--batch-size=10',
         ],
         'linux_args': [
           '--no-xvfb',
@@ -676,6 +677,7 @@
         ],
         'args': [
           '--test-timeout=300',
+          '--batch-size=10',
           '--gtest_filter=*Vulkan*',
         ],
         'linux_args': [

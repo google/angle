@@ -350,6 +350,7 @@
       {
         "args": [
           "--test-timeout=300",
+          "--batch-size=10",
           "--gtest_filter=*Vulkan*",
           "--shard-timeout=600",
           "-v"
@@ -898,6 +899,7 @@
       {
         "args": [
           "--test-timeout=300",
+          "--batch-size=10",
           "--no-xvfb"
         ],
         "merge": {
@@ -1549,6 +1551,7 @@
       {
         "args": [
           "--test-timeout=300",
+          "--batch-size=10",
           "--no-xvfb"
         ],
         "merge": {
@@ -3833,7 +3836,8 @@
       },
       {
         "args": [
-          "--test-timeout=300"
+          "--test-timeout=300",
+          "--batch-size=10"
         ],
         "merge": {
           "args": [],
@@ -4534,7 +4538,8 @@
       },
       {
         "args": [
-          "--test-timeout=300"
+          "--test-timeout=300",
+          "--batch-size=10"
         ],
         "merge": {
           "args": [],
