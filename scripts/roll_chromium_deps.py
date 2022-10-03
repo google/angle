@@ -67,6 +67,7 @@ ANGLE_CHROMIUM_DEPS = [
     'third_party/libjpeg_turbo',
     'third_party/markupsafe',
     'third_party/nasm',
+    'third_party/ninja',
     'third_party/proguard',
     'third_party/protobuf',
     'third_party/Python-Markdown',

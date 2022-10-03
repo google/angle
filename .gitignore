@@ -57,6 +57,7 @@
 /third_party/llvm-build
 /third_party/markupsafe
 /third_party/nasm
+/third_party/ninja
 /third_party/OpenCL-Docs/src
 /third_party/OpenCL-ICD-Loader/src
 /third_party/OpenGL-Registry/src
