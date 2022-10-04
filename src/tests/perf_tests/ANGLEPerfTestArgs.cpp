@@ -152,7 +152,8 @@ void ANGLEProcessPerfTestArgs(int *argc, char **argv)
         else if ((strcmp("--max-trial-time", argv[argIndex]) == 0) ||
                  (strcmp("--trial-time", argv[argIndex]) == 0))
         {
-            gMaxTrialTimeSeconds = ReadIntArgument(argv[argIndex + 1]);
+            gMaxTrialTimeSeconds    = ReadIntArgument(argv[argIndex + 1]);
+            gCalibrationTimeSeconds = gMaxTrialTimeSeconds;
             // Skip an additional argument.
             argIndex++;
         }

@@ -916,7 +916,7 @@ void ANGLERenderTest::SetUp()
         runTrial(gCalibrationTimeSeconds, gWarmupSteps, RunTrialPolicy::FinishEveryStep);
         if (gVerboseLogging)
         {
-            printf("Warm-up trials took %.2lf seconds.\n", mTimer.getElapsedWallClockTime());
+            printf("Warm-up trial took %.2lf seconds.\n", mTimer.getElapsedWallClockTime());
         }
     }
 
