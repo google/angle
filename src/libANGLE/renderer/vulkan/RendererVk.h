@@ -648,6 +648,8 @@ class RendererVk : angle::NonCopyable
 
     // Query and cache supported fragment shading rates
     bool canSupportFragmentShadingRate(const vk::ExtensionNameList &deviceExtensionNames);
+    // Perfer host visiable device local via device local based on device type and heap size.
+    bool canPreferDeviceLocalMemoryHostVisible(VkPhysicalDeviceType deviceType);
 
     template <typename CommandBufferHelperT, typename RecyclerT>
     angle::Result getCommandBufferImpl(vk::Context *context,
