@@ -3407,6 +3407,13 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     const ARMDriverVersion armDriverVersion =
         ParseARMDriverVersion(mPhysicalDeviceProperties.driverVersion);
 
+    angle::VersionInfo nvidiaVersion;
+    if (isNvidia)
+    {
+        nvidiaVersion =
+            angle::ParseNvidiaDriverVersion(this->mPhysicalDeviceProperties.driverVersion);
+    }
+
     // Classify devices based on general architecture:
     //
     // - IMR (Immediate-Mode Rendering) devices generally progress through draw calls once and use
@@ -3451,9 +3458,12 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsProtectedMemory,
                             (mProtectedMemoryFeatures.protectedMemory == VK_TRUE) && !isARM);
 
-    // http://anglebug.com/6692
+    // Workaround for nvidia earlier version driver which appears having a bug that
+    // vkGetQueryPoolResult() with VK_QUERY_RESULT_WAIT_BIT may result in incorrect result. In that
+    // case we force into CPU wait for submission to complete. http://anglebug.com/6692
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsHostQueryReset,
-                            (mHostQueryResetFeatures.hostQueryReset == VK_TRUE));
+                            (mHostQueryResetFeatures.hostQueryReset == VK_TRUE &&
+                             !(isNvidia && nvidiaVersion.major < 470u)));
 
     // VK_EXT_pipeline_creation_feedback is promoted to core in Vulkan 1.3.
     ANGLE_FEATURE_CONDITION(
@@ -3476,12 +3486,6 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     // Clamp if driver version is:
     //   < 430 on Windows
     //   < 421 otherwise
-    angle::VersionInfo nvidiaVersion;
-    if (isNvidia)
-    {
-        nvidiaVersion =
-            angle::ParseNvidiaDriverVersion(this->mPhysicalDeviceProperties.driverVersion);
-    }
     ANGLE_FEATURE_CONDITION(&mFeatures, clampPointSize,
                             isNvidia && nvidiaVersion.major < uint32_t(IsWindows() ? 430 : 421));
     // http://anglebug.com/3970#c25.
