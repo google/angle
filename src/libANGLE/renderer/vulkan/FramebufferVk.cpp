@@ -1411,8 +1411,6 @@ void FramebufferVk::releaseCurrentFramebuffer(ContextVk *contextVk)
     {
         contextVk->addGarbage(&mCurrentFramebuffer);
     }
-
-    mLastRenderPassSerial = Serial();
 }
 
 void FramebufferVk::updateLayerCount()
