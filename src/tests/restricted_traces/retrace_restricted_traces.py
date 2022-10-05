@@ -19,6 +19,8 @@ import stat
 import subprocess
 import sys
 
+from pathlib import Path
+
 from gen_restricted_traces import read_json as read_json
 
 DEFAULT_TEST_SUITE = 'angle_perftests'
@@ -90,6 +92,11 @@ def copy_trace_folder(old_path, new_path):
     shutil.copytree(old_path, new_path)
 
 
+def touch_trace_folder(trace_path):
+    for file in os.listdir(trace_path):
+        (Path(trace_path) / file).touch()
+
+
 def backup_traces(args, traces):
     for trace in fnmatch.filter(traces, args.traces):
         trace_path = src_trace_path(trace)
@@ -105,6 +112,7 @@ def restore_traces(args, traces):
             logging.error('Trace folder not found at %s' % trace_backup_path)
         else:
             copy_trace_folder(trace_backup_path, trace_path)
+            touch_trace_folder(trace_path)
 
 
 def run_autoninja(args):
