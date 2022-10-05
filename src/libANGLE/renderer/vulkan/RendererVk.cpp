@@ -3781,7 +3781,10 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
         &mFeatures, supportsImageFormatList,
         ExtensionFound(VK_KHR_IMAGE_FORMAT_LIST_EXTENSION_NAME, deviceExtensionNames));
 
-    // Feature disabled due to driver bugs:
+    // Emulation of GL_EXT_multisampled_render_to_texture is only really useful on tiling hardware,
+    // but is exposed on any configuration deployed on Android, such as Samsung's AMD-based GPU.
+    //
+    // During testing, it was also discovered that emulation triggers bugs on some platforms:
     //
     // - Swiftshader:
     //   * Failure on mac: http://anglebug.com/4937
@@ -3789,8 +3792,6 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     // - Intel on windows: http://anglebug.com/5032
     // - AMD on windows: http://crbug.com/1132366
     //
-    // Note that emulation of GL_EXT_multisampled_render_to_texture is only really useful on tiling
-    // hardware, but is exposed on desktop platforms purely to increase testing coverage.
     const bool supportsIndependentDepthStencilResolve =
         mFeatures.supportsDepthStencilResolve.enabled &&
         mDepthStencilResolveProperties.independentResolveNone == VK_TRUE;
@@ -3798,8 +3799,7 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
         &mFeatures, enableMultisampledRenderToTexture,
         mFeatures.supportsMultisampledRenderToSingleSampled.enabled ||
             mFeatures.supportsMultisampledRenderToSingleSampledGOOGLEX.enabled ||
-            (supportsIndependentDepthStencilResolve && !isSwiftShader &&
-             !(IsWindows() && (isIntel || isAMD))));
+            (supportsIndependentDepthStencilResolve && (isTileBasedRenderer || isSamsung)));
 
     // Currently we enable cube map arrays based on the imageCubeArray Vk feature.
     // TODO: Check device caps for full cube map array support. http://anglebug.com/5143
