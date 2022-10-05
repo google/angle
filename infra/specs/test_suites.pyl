@@ -690,6 +690,9 @@
     # Actually uploads results to the perf dashboard
     'angle_perf_isolated_scripts': {
       'angle_perftests': {
+        'android_args': {
+          '--trial-time=10',
+        },
         'args': [
           '--log=debug',
           '--show-test-stdout',
@@ -701,7 +704,7 @@
           'shards': 30,
         },
         'swarming': {
-          'shards': 20,
+          'shards': 10,
         },
       },
     },

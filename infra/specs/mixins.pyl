@@ -59,6 +59,7 @@
                                             'os': 'Android'}}},
   'swarming_containment_auto': {'swarming': {'containment_type': 'AUTO'}},
   'timeout_15m': {'swarming': {'hard_timeout': 900, 'io_timeout': 900}},
+  'timeout_200m': {'swarming': {'hard_timeout': 12000, 'io_timeout': 300}},
   'win10_gce_gpu_pool': { 'swarming': { 'dimensions': { 'cpu': 'x86-64',
                                                         'gpu': 'none',
                                                         'os': 'Windows-10',

@@ -45,7 +45,7 @@ DEFAULT_MAX_ERRORS = 3
 
 # These parameters condition the test warmup to stabilize the scores across runs.
 DEFAULT_WARMUP_TRIALS = 3
-DEFAULT_TRIAL_TIME = 10
+DEFAULT_TRIAL_TIME = 5
 
 # Test expectations
 FAIL = 'FAIL'
