@@ -200,7 +200,7 @@ def run_trace(trace, args):
         adb_command += '--minimize-gpu-work\ '
     adb_command += '--verbose\ '
     adb_command += '--verbose-logging\ '
-    adb_command += '--warmup-loops\ 1\ '
+    adb_command += '--warmup-trials\ 1\ '
     adb_command += '--enable-all-trace-tests"\ '
     adb_command += '-e org.chromium.native_test.NativeTestInstrumentationTestRunner.ShardNanoTimeout "1000000000000000000" '
     adb_command += '-e org.chromium.native_test.NativeTestInstrumentationTestRunner.NativeTestActivity com.android.angle.test.AngleUnitTestActivity '
