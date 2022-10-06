@@ -106,19 +106,14 @@ namespace
         EXPECT_EQ(expected.stencilLoadOpLoads, counters.stencilLoadOpLoads); \
     }
 
-#define EXPECT_COUNTERS_FOR_UNRESOLVE_RESOLVE_TEST(counters, expected)                             \
-    {                                                                                              \
-        EXPECT_EQ(expected.colorAttachmentUnresolves, counters.colorAttachmentUnresolves);         \
-        EXPECT_EQ(expected.depthAttachmentUnresolves, counters.depthAttachmentUnresolves);         \
-        if (counters.stencilAttachmentUnresolves != 0)                                             \
-        {                                                                                          \
-            /*Allow stencil unresolves to be 0.  If VK_EXT_shader_stencil_export is not supported, \
-             * stencil unresolve is impossible.*/                                                  \
-            EXPECT_EQ(expected.stencilAttachmentUnresolves, counters.stencilAttachmentUnresolves); \
-        }                                                                                          \
-        EXPECT_EQ(expected.colorAttachmentResolves, counters.colorAttachmentResolves);             \
-        EXPECT_EQ(expected.depthAttachmentResolves, counters.depthAttachmentResolves);             \
-        EXPECT_EQ(expected.stencilAttachmentResolves, counters.stencilAttachmentResolves);         \
+#define EXPECT_COUNTERS_FOR_UNRESOLVE_RESOLVE_TEST(counters, expected)                         \
+    {                                                                                          \
+        EXPECT_EQ(expected.colorAttachmentUnresolves, counters.colorAttachmentUnresolves);     \
+        EXPECT_EQ(expected.depthAttachmentUnresolves, counters.depthAttachmentUnresolves);     \
+        EXPECT_EQ(expected.stencilAttachmentUnresolves, counters.stencilAttachmentUnresolves); \
+        EXPECT_EQ(expected.colorAttachmentResolves, counters.colorAttachmentResolves);         \
+        EXPECT_EQ(expected.depthAttachmentResolves, counters.depthAttachmentResolves);         \
+        EXPECT_EQ(expected.stencilAttachmentResolves, counters.stencilAttachmentResolves);     \
     }
 
 #define EXPECT_CLEAR_ATTACHMENTS_COUNTER(expected, actual) \
@@ -3771,8 +3766,8 @@ TEST_P(VulkanPerformanceCounterTest, RenderToTextureDepthStencilTextureShouldNot
     EXPECT_PIXEL_COLOR_EQ(kSize / 2 - 1, kSize / 2 - 1, GLColor::red);
 }
 
-// Tests that multisampled-render-to-texture depth/stencil renderbuffers don't ever load depth data.
-// Stencil data may still be loaded if VK_EXT_shader_stencil_export is not supported.
+// Tests that multisampled-render-to-texture depth/stencil renderbuffers don't ever load
+// depth/stencil data.
 TEST_P(VulkanPerformanceCounterTest, RenderToTextureDepthStencilRenderbufferShouldNotLoad)
 {
     // http://anglebug.com/5083

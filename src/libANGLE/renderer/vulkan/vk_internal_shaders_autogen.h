@@ -100,6 +100,11 @@ enum OutputFormat
 constexpr size_t kArrayLen = 0x00000002;
 }  // namespace EtcToBc_comp
 
+namespace ExportStencil_frag
+{
+constexpr size_t kArrayLen = 0x00000001;
+}  // namespace ExportStencil_frag
+
 namespace FullScreenTri_vert
 {
 constexpr size_t kArrayLen = 0x00000001;
@@ -213,6 +218,9 @@ class ShaderLibrary final : angle::NonCopyable
     angle::Result getEtcToBc_comp(Context *context,
                                   uint32_t shaderFlags,
                                   RefCounted<ShaderAndSerial> **shaderOut);
+    angle::Result getExportStencil_frag(Context *context,
+                                        uint32_t shaderFlags,
+                                        RefCounted<ShaderAndSerial> **shaderOut);
     angle::Result getFullScreenTri_vert(Context *context,
                                         uint32_t shaderFlags,
                                         RefCounted<ShaderAndSerial> **shaderOut);
@@ -246,6 +254,8 @@ class ShaderLibrary final : angle::NonCopyable
     RefCounted<ShaderAndSerial>
         mConvertVertex_comp_shaders[InternalShader::ConvertVertex_comp::kArrayLen];
     RefCounted<ShaderAndSerial> mEtcToBc_comp_shaders[InternalShader::EtcToBc_comp::kArrayLen];
+    RefCounted<ShaderAndSerial>
+        mExportStencil_frag_shaders[InternalShader::ExportStencil_frag::kArrayLen];
     RefCounted<ShaderAndSerial>
         mFullScreenTri_vert_shaders[InternalShader::FullScreenTri_vert::kArrayLen];
     RefCounted<ShaderAndSerial>

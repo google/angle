@@ -1352,7 +1352,7 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
                     vk::ImageHelper::kDefaultImageViewUsageFlags));
             }
 
-            // If shader stencil export is not possible, defer stencil blit/stencil to another pass.
+            // If shader stencil export is not possible, defer stencil blit/resolve to another pass.
             bool hasShaderStencilExport =
                 contextVk->getRenderer()->getFeatures().supportsShaderStencilExport.enabled;
 
@@ -2829,9 +2829,6 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
     RenderTargetVk *depthStencilRenderTarget              = getDepthStencilRenderTarget();
     if (depthStencilRenderTarget)
     {
-        const bool canExportStencil =
-            contextVk->getRenderer()->getFeatures().supportsShaderStencilExport.enabled;
-
         // depth stencil attachment always immediately follows color attachment
         depthStencilAttachmentIndex = colorIndexVk;
 
@@ -2856,17 +2853,11 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
         }
 
         // If depth/stencil image is transient, no need to store its data at the end of the render
-        // pass.  If shader stencil export is not supported, stencil data cannot be unresolved on
-        // the next render pass, so it must be stored/loaded.  If the image is entirely transient,
-        // there is no resolve/unresolve and the image data is never stored/loaded.
+        // pass.
         if (depthStencilRenderTarget->isImageTransient())
         {
-            depthStoreOp = vk::RenderPassStoreOp::DontCare;
-
-            if (canExportStencil || depthStencilRenderTarget->isEntirelyTransient())
-            {
-                stencilStoreOp = vk::RenderPassStoreOp::DontCare;
-            }
+            depthStoreOp   = vk::RenderPassStoreOp::DontCare;
+            stencilStoreOp = vk::RenderPassStoreOp::DontCare;
         }
 
         if (mDeferredClears.testDepth() || mDeferredClears.testStencil())
@@ -2914,15 +2905,11 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
 
         // Similar to color attachments, if there's a resolve attachment and the multisampled image
         // is transient, depth/stencil data need to be unresolved in an initial subpass.
-        //
-        // Note that stencil unresolve is currently only possible if shader stencil export is
-        // supported.
         if (depthStencilRenderTarget->hasResolveAttachment() &&
             depthStencilRenderTarget->isImageTransient())
         {
-            const bool unresolveDepth = depthLoadOp == vk::RenderPassLoadOp::Load;
-            const bool unresolveStencil =
-                stencilLoadOp == vk::RenderPassLoadOp::Load && canExportStencil;
+            const bool unresolveDepth   = depthLoadOp == vk::RenderPassLoadOp::Load;
+            const bool unresolveStencil = stencilLoadOp == vk::RenderPassLoadOp::Load;
 
             if (unresolveDepth)
             {
@@ -2932,6 +2919,19 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
             if (unresolveStencil)
             {
                 stencilLoadOp = vk::RenderPassLoadOp::DontCare;
+
+                // If VK_EXT_shader_stencil_export is not supported, stencil unresolve is done
+                // through a method that requires stencil to have been cleared.
+                if (!contextVk->getRenderer()->getFeatures().supportsShaderStencilExport.enabled)
+                {
+                    stencilLoadOp = vk::RenderPassLoadOp::Clear;
+
+                    // Note the aspect is only depth here. That's intentional.
+                    VkClearValue clearValue = packedClearValues[depthStencilAttachmentIndex];
+                    clearValue.depthStencil.stencil = 0;
+                    packedClearValues.store(depthStencilAttachmentIndex, VK_IMAGE_ASPECT_DEPTH_BIT,
+                                            clearValue);
+                }
             }
 
             if (unresolveDepth || unresolveStencil)

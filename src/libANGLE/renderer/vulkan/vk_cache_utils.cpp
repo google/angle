@@ -315,100 +315,121 @@ void InitializeUnresolveSubpass(
     FramebufferAttachmentsVector<uint32_t> *unresolvePreserveAttachmentRefs,
     VkSubpassDescription *subpassDesc)
 {
+    // Assume the GL Framebuffer has the following attachments enabled:
+    //
+    //     GL Color 0
+    //     GL Color 3
+    //     GL Color 4
+    //     GL Color 6
+    //     GL Color 7
+    //     GL Depth/Stencil
+    //
+    // Additionally, assume Color 0, 4 and 6 are multisampled-render-to-texture (or for any other
+    // reason) have corresponding resolve attachments.  Furthermore, say Color 4 and 6 require an
+    // initial unresolve operation.
+    //
+    // In the above example, the render pass is created with the following attachments:
+    //
+    //     RP Attachment[0] <- corresponding to GL Color 0
+    //     RP Attachment[1] <- corresponding to GL Color 3
+    //     RP Attachment[2] <- corresponding to GL Color 4
+    //     RP Attachment[3] <- corresponding to GL Color 6
+    //     RP Attachment[4] <- corresponding to GL Color 7
+    //     RP Attachment[5] <- corresponding to GL Depth/Stencil
+    //     RP Attachment[6] <- corresponding to resolve attachment of GL Color 0
+    //     RP Attachment[7] <- corresponding to resolve attachment of GL Color 4
+    //     RP Attachment[8] <- corresponding to resolve attachment of GL Color 6
+    //
+    // If the depth/stencil attachment is to be resolved, the following attachment would also be
+    // present:
+    //
+    //     RP Attachment[9] <- corresponding to resolve attachment of GL Depth/Stencil
+    //
+    // The subpass that takes the application draw calls has the following attachments, creating the
+    // mapping from the Vulkan attachment indices (i.e. RP attachment indices) to GL indices as
+    // indicated by the GL shaders:
+    //
+    //     Subpass[1] Color[0] -> RP Attachment[0]
+    //     Subpass[1] Color[1] -> VK_ATTACHMENT_UNUSED
+    //     Subpass[1] Color[2] -> VK_ATTACHMENT_UNUSED
+    //     Subpass[1] Color[3] -> RP Attachment[1]
+    //     Subpass[1] Color[4] -> RP Attachment[2]
+    //     Subpass[1] Color[5] -> VK_ATTACHMENT_UNUSED
+    //     Subpass[1] Color[6] -> RP Attachment[3]
+    //     Subpass[1] Color[7] -> RP Attachment[4]
+    //     Subpass[1] Depth/Stencil -> RP Attachment[5]
+    //     Subpass[1] Resolve[0] -> RP Attachment[6]
+    //     Subpass[1] Resolve[1] -> VK_ATTACHMENT_UNUSED
+    //     Subpass[1] Resolve[2] -> VK_ATTACHMENT_UNUSED
+    //     Subpass[1] Resolve[3] -> VK_ATTACHMENT_UNUSED
+    //     Subpass[1] Resolve[4] -> RP Attachment[7]
+    //     Subpass[1] Resolve[5] -> VK_ATTACHMENT_UNUSED
+    //     Subpass[1] Resolve[6] -> RP Attachment[8]
+    //     Subpass[1] Resolve[7] -> VK_ATTACHMENT_UNUSED
+    //
+    // With depth/stencil resolve attachment:
+    //
+    //     Subpass[1] Depth/Stencil Resolve -> RP Attachment[9]
+    //
+    // The initial subpass that's created here is (remember that in the above example Color 4 and 6
+    // need to be unresolved):
+    //
+    //     Subpass[0] Input[0] -> RP Attachment[7] = Subpass[1] Resolve[4]
+    //     Subpass[0] Input[1] -> RP Attachment[8] = Subpass[1] Resolve[6]
+    //     Subpass[0] Color[0] -> RP Attachment[2] = Subpass[1] Color[4]
+    //     Subpass[0] Color[1] -> RP Attachment[3] = Subpass[1] Color[6]
+    //
+    // The trick here therefore is to use the color attachment refs already created for the
+    // application draw subpass indexed with colorIndexGL.
+    //
+    // If depth/stencil needs to be unresolved (note that as input attachment, it's inserted before
+    // the color attachments.  See UtilsVk::unresolve()):
+    //
+    //     Subpass[0] Input[0]      -> RP Attachment[9] = Subpass[1] Depth/Stencil Resolve
+    //     Subpass[0] Depth/Stencil -> RP Attachment[5] = Subpass[1] Depth/Stencil
+    //
+    // As an additional note, the attachments that are not used in the unresolve subpass must be
+    // preserved.  That is color attachments and the depth/stencil attachment if any.  Resolve
+    // attachments are rewritten by the next subpass, so they don't need to be preserved.  Note that
+    // there's no need to preserve attachments whose loadOp is DONT_CARE.  For simplicity, we
+    // preserve those as well.  The driver would ideally avoid preserving attachments with
+    // loadOp=DONT_CARE.
+    //
+    // With the above example:
+    //
+    //     Subpass[0] Preserve[0] -> RP Attachment[0] = Subpass[1] Color[0]
+    //     Subpass[0] Preserve[1] -> RP Attachment[1] = Subpass[1] Color[3]
+    //     Subpass[0] Preserve[2] -> RP Attachment[4] = Subpass[1] Color[7]
+    //
+    // If depth/stencil is not unresolved:
+    //
+    //     Subpass[0] Preserve[3] -> RP Attachment[5] = Subpass[1] Depth/Stencil
+    //
+    // Again, the color attachment refs already created for the application draw subpass can be used
+    // indexed with colorIndexGL.
+    if (desc.hasDepthStencilUnresolveAttachment())
+    {
+        ASSERT(desc.hasDepthStencilAttachment());
+        ASSERT(desc.hasDepthStencilResolveAttachment());
+
+        *unresolveDepthStencilAttachmentRef = depthStencilAttachmentRef;
+
+        VkAttachmentReference unresolveDepthStencilInputAttachmentRef = {};
+        unresolveDepthStencilInputAttachmentRef.attachment =
+            depthStencilResolveAttachmentRef.attachment;
+        unresolveDepthStencilInputAttachmentRef.layout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+
+        unresolveInputAttachmentRefs->push_back(unresolveDepthStencilInputAttachmentRef);
+    }
+    else if (desc.hasDepthStencilAttachment())
+    {
+        // Preserve the depth/stencil attachment if not unresolved.  Again, there's no need to
+        // preserve this attachment if loadOp=DONT_CARE, but we do for simplicity.
+        unresolvePreserveAttachmentRefs->push_back(depthStencilAttachmentRef.attachment);
+    }
+
     for (uint32_t colorIndexGL = 0; colorIndexGL < desc.colorAttachmentRange(); ++colorIndexGL)
     {
-        // Assume the GL Framebuffer has the following attachments enabled:
-        //
-        //     GL Color 0
-        //     GL Color 3
-        //     GL Color 4
-        //     GL Color 6
-        //     GL Color 7
-        //     GL Depth/Stencil
-        //
-        // Additionally, assume Color 0, 4 and 6 are multisampled-render-to-texture (or for any
-        // other reason) have corresponding resolve attachments.  Furthermore, say Color 4 and 6
-        // require an initial unresolve operation.
-        //
-        // In the above example, the render pass is created with the following attachments:
-        //
-        //     RP Attachment[0] <- corresponding to GL Color 0
-        //     RP Attachment[1] <- corresponding to GL Color 3
-        //     RP Attachment[2] <- corresponding to GL Color 4
-        //     RP Attachment[3] <- corresponding to GL Color 6
-        //     RP Attachment[4] <- corresponding to GL Color 7
-        //     RP Attachment[5] <- corresponding to GL Depth/Stencil
-        //     RP Attachment[6] <- corresponding to resolve attachment of GL Color 0
-        //     RP Attachment[7] <- corresponding to resolve attachment of GL Color 4
-        //     RP Attachment[8] <- corresponding to resolve attachment of GL Color 6
-        //
-        // If the depth/stencil attachment is to be resolved, the following attachment would also be
-        // present:
-        //
-        //     RP Attachment[9] <- corresponding to resolve attachment of GL Depth/Stencil
-        //
-        // The subpass that takes the application draw calls has the following attachments, creating
-        // the mapping from the Vulkan attachment indices (i.e. RP attachment indices) to GL indices
-        // as indicated by the GL shaders:
-        //
-        //     Subpass[1] Color[0] -> RP Attachment[0]
-        //     Subpass[1] Color[1] -> VK_ATTACHMENT_UNUSED
-        //     Subpass[1] Color[2] -> VK_ATTACHMENT_UNUSED
-        //     Subpass[1] Color[3] -> RP Attachment[1]
-        //     Subpass[1] Color[4] -> RP Attachment[2]
-        //     Subpass[1] Color[5] -> VK_ATTACHMENT_UNUSED
-        //     Subpass[1] Color[6] -> RP Attachment[3]
-        //     Subpass[1] Color[7] -> RP Attachment[4]
-        //     Subpass[1] Depth/Stencil -> RP Attachment[5]
-        //     Subpass[1] Resolve[0] -> RP Attachment[6]
-        //     Subpass[1] Resolve[1] -> VK_ATTACHMENT_UNUSED
-        //     Subpass[1] Resolve[2] -> VK_ATTACHMENT_UNUSED
-        //     Subpass[1] Resolve[3] -> VK_ATTACHMENT_UNUSED
-        //     Subpass[1] Resolve[4] -> RP Attachment[7]
-        //     Subpass[1] Resolve[5] -> VK_ATTACHMENT_UNUSED
-        //     Subpass[1] Resolve[6] -> RP Attachment[8]
-        //     Subpass[1] Resolve[7] -> VK_ATTACHMENT_UNUSED
-        //
-        // With depth/stencil resolve attachment:
-        //
-        //     Subpass[1] Depth/Stencil Resolve -> RP Attachment[9]
-        //
-        // The initial subpass that's created here is (remember that in the above example Color 4
-        // and 6 need to be unresolved):
-        //
-        //     Subpass[0] Input[0] -> RP Attachment[7] = Subpass[1] Resolve[4]
-        //     Subpass[0] Input[1] -> RP Attachment[8] = Subpass[1] Resolve[6]
-        //     Subpass[0] Color[0] -> RP Attachment[2] = Subpass[1] Color[4]
-        //     Subpass[0] Color[1] -> RP Attachment[3] = Subpass[1] Color[6]
-        //
-        // The trick here therefore is to use the color attachment refs already created for the
-        // application draw subpass indexed with colorIndexGL.
-        //
-        // If depth/stencil needs to be unresolved:
-        //
-        //     Subpass[0] Input[2] -> RP Attachment[9] = Subpass[1] Depth/Stencil Resolve
-        //     Subpass[0] Color[2] -> RP Attachment[5] = Subpass[1] Depth/Stencil
-        //
-        // As an additional note, the attachments that are not used in the unresolve subpass must be
-        // preserved.  That is color attachments and the depth/stencil attachment if any.  Resolve
-        // attachments are rewritten by the next subpass, so they don't need to be preserved.  Note
-        // that there's no need to preserve attachments whose loadOp is DONT_CARE.  For simplicity,
-        // we preserve those as well.  The driver would ideally avoid preserving attachments with
-        // loadOp=DONT_CARE.
-        //
-        // With the above example:
-        //
-        //     Subpass[0] Preserve[0] -> RP Attachment[0] = Subpass[1] Color[0]
-        //     Subpass[0] Preserve[1] -> RP Attachment[1] = Subpass[1] Color[3]
-        //     Subpass[0] Preserve[2] -> RP Attachment[4] = Subpass[1] Color[7]
-        //
-        // If depth/stencil is not unresolved:
-        //
-        //     Subpass[0] Preserve[3] -> RP Attachment[5] = Subpass[1] Depth/Stencil
-        //
-        // Again, the color attachment refs already created for the application draw subpass can be
-        // used indexed with colorIndexGL.
-
         if (!desc.hasColorUnresolveAttachment(colorIndexGL))
         {
             if (desc.isColorAttachmentEnabled(colorIndexGL))
@@ -430,27 +451,6 @@ void InitializeUnresolveSubpass(
         // will take care of transitioning the layout of the resolve attachment to color attachment
         // automatically.
         unresolveInputAttachmentRefs->back().layout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-    }
-
-    if (desc.hasDepthStencilUnresolveAttachment())
-    {
-        ASSERT(desc.hasDepthStencilAttachment());
-        ASSERT(desc.hasDepthStencilResolveAttachment());
-
-        *unresolveDepthStencilAttachmentRef = depthStencilAttachmentRef;
-
-        VkAttachmentReference unresolveDepthStencilInputAttachmentRef = {};
-        unresolveDepthStencilInputAttachmentRef.attachment =
-            depthStencilResolveAttachmentRef.attachment;
-        unresolveDepthStencilInputAttachmentRef.layout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-
-        unresolveInputAttachmentRefs->push_back(unresolveDepthStencilInputAttachmentRef);
-    }
-    else if (desc.hasDepthStencilAttachment())
-    {
-        // Preserve the depth/stencil attachment if not unresolved.  Again, there's no need to
-        // preserve this attachment if loadOp=DONT_CARE, but we do for simplicity.
-        unresolvePreserveAttachmentRefs->push_back(depthStencilAttachmentRef.attachment);
     }
 
     ASSERT(!unresolveColorAttachmentRefs->empty() ||
@@ -762,11 +762,11 @@ angle::Result CreateRenderPass2(Context *context,
         for (uint32_t index = 0; index < desc.inputAttachmentCount; ++index)
         {
             VkImageAspectFlags aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-            if (index >= desc.colorAttachmentCount)
+            if ((unresolveDepth || unresolveStencil) && index == 0)
             {
                 // Set the aspect of the depth/stencil input attachment (of which there can be only
                 // one).
-                ASSERT(index + 1 == desc.inputAttachmentCount);
+                ASSERT(desc.colorAttachmentCount + 1 == desc.inputAttachmentCount);
                 aspectMask = 0;
                 if (unresolveDepth)
                 {
@@ -776,7 +776,6 @@ angle::Result CreateRenderPass2(Context *context,
                 {
                     aspectMask |= VK_IMAGE_ASPECT_STENCIL_BIT;
                 }
-                ASSERT(aspectMask != 0);
             }
 
             ToAttachmentReference2(desc.pInputAttachments[index], aspectMask, &inputRefs[index]);

@@ -412,6 +412,11 @@ class UtilsVk : angle::NonCopyable
         uint32_t rotateXY        = 0;
     };
 
+    struct ExportStencilShaderParams
+    {
+        uint32_t bit = 0;
+    };
+
     struct OverlayDrawShaderParams
     {
         // Structure matching PushConstants in OverlayDraw.vert and OverlayDraw.frag
@@ -445,36 +450,37 @@ class UtilsVk : angle::NonCopyable
     enum class Function
     {
         // Functions implemented in graphics
-        ImageClear  = 0,
-        ImageCopy   = 1,
-        BlitResolve = 2,
-        OverlayDraw = 3,
+        ImageClear,
+        ImageCopy,
+        BlitResolve,
+        ExportStencil,
+        OverlayDraw,
         // Note: unresolve is special as it has a different layout per attachment count.  Depth and
         // stencil each require a binding, so are counted separately.
-        Unresolve1Attachment   = 4,
-        Unresolve2Attachments  = 5,
-        Unresolve3Attachments  = 6,
-        Unresolve4Attachments  = 7,
-        Unresolve5Attachments  = 8,
-        Unresolve6Attachments  = 9,
-        Unresolve7Attachments  = 10,
-        Unresolve8Attachments  = 11,
-        Unresolve9Attachments  = 12,
-        Unresolve10Attachments = 13,
+        Unresolve1Attachment,
+        Unresolve2Attachments,
+        Unresolve3Attachments,
+        Unresolve4Attachments,
+        Unresolve5Attachments,
+        Unresolve6Attachments,
+        Unresolve7Attachments,
+        Unresolve8Attachments,
+        Unresolve9Attachments,
+        Unresolve10Attachments,
 
         // Functions implemented in compute
-        ComputeStartIndex          = 14,  // Special value to separate draw and dispatch functions.
-        ConvertIndexBuffer         = 14,
-        ConvertVertexBuffer        = 15,
-        BlitResolveStencilNoExport = 16,
-        ConvertIndexIndirectBuffer = 17,
-        ConvertIndexIndirectLineLoopBuffer = 18,
-        ConvertIndirectLineLoopBuffer      = 19,
-        GenerateMipmap                     = 20,
-        TransCodeEtcToBc                   = 21,
+        ComputeStartIndex,  // Special value to separate draw and dispatch functions.
+        ConvertIndexBuffer = ComputeStartIndex,
+        ConvertVertexBuffer,
+        BlitResolveStencilNoExport,
+        ConvertIndexIndirectBuffer,
+        ConvertIndexIndirectLineLoopBuffer,
+        ConvertIndirectLineLoopBuffer,
+        GenerateMipmap,
+        TransCodeEtcToBc,
 
-        InvalidEnum = 22,
-        EnumCount   = 22,
+        InvalidEnum,
+        EnumCount = InvalidEnum,
     };
 
     // Common functions that create the pipeline for the specified function, binds it and prepares
@@ -521,6 +527,7 @@ class UtilsVk : angle::NonCopyable
     angle::Result ensureImageCopyResourcesInitialized(ContextVk *contextVk);
     angle::Result ensureBlitResolveResourcesInitialized(ContextVk *contextVk);
     angle::Result ensureBlitResolveStencilNoExportResourcesInitialized(ContextVk *contextVk);
+    angle::Result ensureExportStencilResourcesInitialized(ContextVk *contextVk);
     angle::Result ensureOverlayDrawResourcesInitialized(ContextVk *contextVk);
     angle::Result ensureGenerateMipmapResourcesInitialized(ContextVk *contextVk);
     angle::Result ensureTransCodeEtcToBcResourcesInitialized(ContextVk *contextVk);
@@ -578,6 +585,7 @@ class UtilsVk : angle::NonCopyable
     vk::ShaderProgramHelper mBlitResolvePrograms[vk::InternalShader::BlitResolve_frag::kArrayLen];
     vk::ShaderProgramHelper mBlitResolveStencilNoExportPrograms
         [vk::InternalShader::BlitResolveStencilNoExport_comp::kArrayLen];
+    vk::ShaderProgramHelper mExportStencilProgram;
     vk::ShaderProgramHelper mOverlayDrawProgram;
     vk::ShaderProgramHelper
         mGenerateMipmapPrograms[vk::InternalShader::GenerateMipmap_comp::kArrayLen];

@@ -93,6 +93,8 @@
     "d879c84633d45d6b4e29a4b798425058",
   "src/libANGLE/renderer/vulkan/shaders/gen/EtcToBc.comp.00000001.inc":
     "370d7b432e0addddc1d33adf339f1615",
+  "src/libANGLE/renderer/vulkan/shaders/gen/ExportStencil.frag.00000000.inc":
+    "4a68fcf26f60d54745325f79d3eaf219",
   "src/libANGLE/renderer/vulkan/shaders/gen/FullScreenTri.vert.00000000.inc":
     "378a69c33285857dc494568e2fee54c7",
   "src/libANGLE/renderer/vulkan/shaders/gen/GenerateMipmap.comp.00000000.inc":
@@ -297,6 +299,8 @@
     "edbdd99f342c5bbd879559f00abe0c4f",
   "src/libANGLE/renderer/vulkan/shaders/src/EtcToBc.comp.json":
     "59e43d52460e98e6f9992ec8c93e2eb5",
+  "src/libANGLE/renderer/vulkan/shaders/src/ExportStencil.frag":
+    "7f714d22a44ddfd15cebbe90af2a6122",
   "src/libANGLE/renderer/vulkan/shaders/src/FullScreenTri.vert":
     "dacf19aaec8cfc9d2d0c05230a11613b",
   "src/libANGLE/renderer/vulkan/shaders/src/GenerateMipmap.comp":
@@ -316,9 +320,9 @@
   "src/libANGLE/renderer/vulkan/shaders/src/OverlayDraw.vert":
     "5aa33152fce5b9261c4d427ad2babdd7",
   "src/libANGLE/renderer/vulkan/vk_internal_shaders_autogen.cpp":
-    "64268780389e701d07cf1a93b2f0e6dd",
+    "d0edf73d27a2ddb521f7671d4fc0f067",
   "src/libANGLE/renderer/vulkan/vk_internal_shaders_autogen.h":
-    "ed5af68b944bd0e0594639087658008f",
+    "c555af75ced6d21aea84460647f85706",
   "tools/glslang/glslang_validator.exe.sha1":
     "17e862cc6f462fecbf50b24ed6544a27",
   "tools/glslang/glslang_validator.sha1":
