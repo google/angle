@@ -174,6 +174,12 @@ class FramebufferVk : public FramebufferImpl
         vk::FramebufferAttachmentsVector<RenderTargetInfo> *renderTargetsInfoOut);
 
   private:
+    enum class ClearWithCommand
+    {
+        Always,
+        OptimizeWithLoadOp,
+    };
+
     // The 'in' rectangles must be clipped to the scissor and FBO. The clipping is done in 'blit'.
     angle::Result blitWithCommand(ContextVk *contextVk,
                                   const gl::Rectangle &sourceArea,
@@ -220,7 +226,10 @@ class FramebufferVk : public FramebufferImpl
     void redeferClears(ContextVk *contextVk);
     void redeferClearsForReadFramebuffer(ContextVk *contextVk);
     void redeferClearsImpl(ContextVk *contextVk);
-    void clearWithCommand(ContextVk *contextVk, const gl::Rectangle &scissoredRenderArea);
+    void clearWithCommand(ContextVk *contextVk,
+                          const gl::Rectangle &scissoredRenderArea,
+                          ClearWithCommand behavior,
+                          vk::ClearValuesArray *clears);
     void clearWithLoadOp(ContextVk *contextVk);
     void updateActiveColorMasks(size_t colorIndex, bool r, bool g, bool b, bool a);
     void updateRenderPassDesc(ContextVk *contextVk);
