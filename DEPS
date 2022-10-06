@@ -731,6 +731,16 @@ deps = {
   },
 
   # === ANGLE Restricted Trace Generated Code Start ===
+  'src/tests/restricted_traces/3d_pool_ball': {
+      'packages': [
+        {
+            'package': 'angle/traces/3d_pool_ball',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_traces',
+  },
   'src/tests/restricted_traces/aliexpress': {
       'packages': [
         {
