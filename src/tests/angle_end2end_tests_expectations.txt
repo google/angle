@@ -636,6 +636,32 @@
 7756 IOS : PixelLocalStorageTest.R32/ES3_OpenGL_EmulatePixelLocalStorage* = SKIP
 7756 IOS : PixelLocalStorageTest.RGBA8/ES3_OpenGL_EmulatePixelLocalStorage* = SKIP
 
+5491 IOS : IOSurfaceClientBufferTest.RenderToBGRX8888IOSurface/ES2_OpenGL = SKIP
+5491 IOS : IOSurfaceClientBufferTest.RenderToBGRX8888IOSurface/ES3_OpenGL = SKIP
+5491 IOS : IOSurfaceClientBufferTest.RenderToRG88IOSurface/ES2_OpenGL = SKIP
+5491 IOS : IOSurfaceClientBufferTest.RenderToRG88IOSurface/ES3_OpenGL = SKIP
+5491 IOS : IOSurfaceClientBufferTest.RenderToR8IOSurface/ES2_OpenGL = SKIP
+5491 IOS : IOSurfaceClientBufferTest.RenderToR8IOSurface/ES3_OpenGL = SKIP
+5491 IOS : IOSurfaceClientBufferTest.RenderToR16IOSurface/ES3_OpenGL = SKIP
+5491 IOS : IOSurfaceClientBufferTest.RenderToBGRA1010102IOSurface/ES2_OpenGL = SKIP
+5491 IOS : IOSurfaceClientBufferTest.RenderToBGRA1010102IOSurface/ES3_OpenGL = SKIP
+5491 IOS : IOSurfaceClientBufferTest.ReadFromBGRA1010102IOSurface/ES2_OpenGL = SKIP
+5491 IOS : IOSurfaceClientBufferTest.ReadFromBGRA1010102IOSurface/ES3_OpenGL = SKIP
+5491 IOS : IOSurfaceClientBufferTest.RenderToRGBA16FIOSurface/ES2_OpenGL = SKIP
+5491 IOS : IOSurfaceClientBufferTest.RenderToRGBA16FIOSurface/ES3_OpenGL = SKIP
+5491 IOS : IOSurfaceClientBufferTest.ReadFromToRGBA16FIOSurface/ES2_OpenGL = SKIP
+5491 IOS : IOSurfaceClientBufferTest.ReadFromToRGBA16FIOSurface/ES3_OpenGL = SKIP
+5491 IOS : IOSurfaceClientBufferTest.RenderToYUV420IOSurface/ES2_OpenGL = SKIP
+5491 IOS : IOSurfaceClientBufferTest.RenderToYUV420IOSurface/ES3_OpenGL = SKIP
+5491 IOS : IOSurfaceClientBufferTest.ReadFromToYUV420IOSurface/ES2_OpenGL = SKIP
+5491 IOS : IOSurfaceClientBufferTest.ReadFromToYUV420IOSurface/ES3_OpenGL = SKIP
+5491 IOS : IOSurfaceClientBufferTest.RenderToP010IOSurface/ES2_OpenGL = SKIP
+5491 IOS : IOSurfaceClientBufferTest.RenderToP010IOSurface/ES3_OpenGL = SKIP
+5491 IOS : IOSurfaceClientBufferTest.ReadFromToP010IOSurface/ES2_OpenGL = SKIP
+5491 IOS : IOSurfaceClientBufferTest.ReadFromToP010IOSurface/ES3_OpenGL = SKIP
+5491 IOS : IOSurfaceClientBufferTest.MakeCurrent/ES2_OpenGL = SKIP
+5491 IOS : IOSurfaceClientBufferTest.MakeCurrent/ES3_OpenGL = SKIP
+
 // Test is disabled as it only pertains to desktop GLSL
 6197 : GLSLTest_ES31.InterpolateAtWithSwizzle/* = SKIP
 
