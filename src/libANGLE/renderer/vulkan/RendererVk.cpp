@@ -2957,6 +2957,11 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     {
                        InitExtendedDynamicState2EXTFunctions(mDevice);
     }
+    if (getFeatures().supportsFragmentShadingRate.enabled)
+    {
+                       InitFragmentShadingRateKHRDeviceFunction(mDevice);
+                       ASSERT(vkCmdSetFragmentShadingRateKHR);
+    }
 #endif  // !defined(ANGLE_SHARED_LIBVULKAN)
 
     if (getFeatures().forceMaxUniformBufferSize16KB.enabled)
@@ -3294,10 +3299,9 @@ bool RendererVk::canSupportFragmentShadingRate(const vk::ExtensionNameList &devi
 
     // Init required functions
 #if !defined(ANGLE_SHARED_LIBVULKAN)
-    InitFragmentShadingRateKHRFunctions(mDevice);
+    InitFragmentShadingRateKHRInstanceFunction(mInstance);
 #endif  // !defined(ANGLE_SHARED_LIBVULKAN)
     ASSERT(vkGetPhysicalDeviceFragmentShadingRatesKHR);
-    ASSERT(vkCmdSetFragmentShadingRateKHR);
 
     // Query number of supported shading rates first
     uint32_t shadingRatesCount = 0;
