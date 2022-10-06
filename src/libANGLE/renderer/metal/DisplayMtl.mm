@@ -1199,15 +1199,6 @@ void DisplayMtl::initializeFeatures()
     ANGLE_FEATURE_CONDITION((&mFeatures), uploadDataToIosurfacesWithStagingBuffers, isAMD());
 
     ApplyFeatureOverrides(&mFeatures, getState());
-#ifdef ANGLE_ENABLE_ASSERTS
-    static bool once = true;
-    if (once)
-    {
-        fprintf(stderr, "Shader compiler output: %s\n",
-                mFeatures.directMetalGeneration.enabled ? "Metal" : "SPIR-V");
-        once = false;
-    }
-#endif
 }
 
 angle::Result DisplayMtl::initializeShaderLibrary()
