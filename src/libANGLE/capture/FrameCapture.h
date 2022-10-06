@@ -498,6 +498,8 @@ class StateResetHelper final : angle::NonCopyable
     CallResetMap &getResetCalls() { return mResetCalls; }
     const CallResetMap &getResetCalls() const { return mResetCalls; }
 
+    void setDefaultResetCalls(const gl::Context *context, angle::EntryPoint);
+
   private:
     // Dirty state per entry point
     std::set<angle::EntryPoint> mDirtyEntryPoints;
@@ -516,7 +518,6 @@ class FrameCapture final : angle::NonCopyable
     void clearSetupCalls() { mSetupCalls.clear(); }
 
     StateResetHelper &getStateResetHelper() { return mStateResetHelper; }
-    const StateResetHelper &getStateResetHelper() const { return mStateResetHelper; }
 
     void reset();
 
@@ -780,7 +781,7 @@ class FrameCaptureShared final : angle::NonCopyable
     void writeCppReplayIndexFiles(const gl::Context *context, bool writeResetContextCall);
     void writeMainContextCppReplay(const gl::Context *context,
                                    const std::vector<CallCapture> &setupCalls,
-                                   const StateResetHelper &StateResetHelper);
+                                   StateResetHelper &StateResetHelper);
 
     void captureClientArraySnapshot(const gl::Context *context,
                                     size_t vertexCount,

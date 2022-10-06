@@ -1491,19 +1491,25 @@ void MaybeResetContextState(ReplayWriter &replayWriter,
                             std::stringstream &out,
                             std::stringstream &header,
                             ResourceTracker *resourceTracker,
-                            const gl::State &replayState,
+                            const gl::Context *context,
                             std::vector<uint8_t> *binaryData,
-                            const StateResetHelper &stateResetHelper)
+                            StateResetHelper &stateResetHelper)
 {
     // Check dirty states per entrypoint
     for (const EntryPoint &entryPoint : stateResetHelper.getDirtyEntryPoints())
     {
-        // Ensure we have calls to reset this entrypoint
-        ASSERT(stateResetHelper.getResetCalls().find(entryPoint) !=
-               stateResetHelper.getResetCalls().end());
+        const CallResetMap *resetCalls = &stateResetHelper.getResetCalls();
+
+        // Create the default reset call for this entrypoint
+        if (resetCalls->find(entryPoint) == resetCalls->end())
+        {
+            // If we don't have any reset calls for these entrypoints, that means we started capture
+            // from the beginning, amd mid-execution capture was not invoked.
+            stateResetHelper.setDefaultResetCalls(context, entryPoint);
+        }
 
         // Emit the calls
-        for (const auto &call : stateResetHelper.getResetCalls().at(entryPoint))
+        for (const auto &call : resetCalls->at(entryPoint))
         {
             out << "    ";
             WriteCppReplayForCall(call, replayWriter, out, header, binaryData);
@@ -7515,6 +7521,40 @@ ResourceTracker::~ResourceTracker() = default;
 StateResetHelper::StateResetHelper()  = default;
 StateResetHelper::~StateResetHelper() = default;
 
+void StateResetHelper::setDefaultResetCalls(const gl::Context *context,
+                                            angle::EntryPoint entryPoint)
+{
+    // Populate default reset calls for entrypoints to support looping to beginning
+    switch (entryPoint)
+    {
+        case angle::EntryPoint::GLUseProgram:
+        {
+            if (context->getActiveLinkedProgram() &&
+                context->getActiveLinkedProgram()->id().value != 0)
+            {
+                Capture(&mResetCalls[angle::EntryPoint::GLUseProgram],
+                        gl::CaptureUseProgram(context->getState(), true, {0}));
+            }
+            break;
+        }
+        case angle::EntryPoint::GLBindVertexArray:
+        {
+            if (context->getState().getVertexArray()->id().value != 0)
+            {
+                VertexArrayCaptureFuncs vertexArrayFuncs(context->isGLES1());
+                Capture(&mResetCalls[angle::EntryPoint::GLBindVertexArray],
+                        vertexArrayFuncs.bindVertexArray(context->getState(), true, {0}));
+            }
+            break;
+        }
+        default:
+            ERR() << "Unhandled entry point in setDefaultResetCalls: "
+                  << GetEntryPointName(entryPoint);
+            UNREACHABLE();
+            break;
+    }
+}
+
 void ResourceTracker::setDeletedFenceSync(GLsync sync)
 {
     ASSERT(sync != nullptr);
@@ -7919,7 +7959,7 @@ void FrameCaptureShared::writeCppReplayIndexFiles(const gl::Context *context,
 
 void FrameCaptureShared::writeMainContextCppReplay(const gl::Context *context,
                                                    const std::vector<CallCapture> &setupCalls,
-                                                   const StateResetHelper &stateResetHelper)
+                                                   StateResetHelper &stateResetHelper)
 {
     ASSERT(mWindowSurfaceContextID == context->id());
 
@@ -8145,7 +8185,7 @@ void FrameCaptureShared::writeMainContextCppReplay(const gl::Context *context,
         // Now that we're back on the main context, reset any additional state
         resetBodyStream << "\n    // Reset main context state\n";
         MaybeResetContextState(mReplayWriter, resetBodyStream, resetHeaderStream, &mResourceTracker,
-                               context->getState(), &mBinaryData, stateResetHelper);
+                               context, &mBinaryData, stateResetHelper);
 
         resetBodyStream << "}\n";
 
