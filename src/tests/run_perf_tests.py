@@ -138,7 +138,7 @@ def _save_extra_output_files(args, results, histograms):
 
 class Results:
 
-    def __init__(self):
+    def __init__(self, suffix):
         self._results = {
             'tests': {},
             'interrupted': False,
@@ -152,23 +152,31 @@ class Results:
             },
         }
         self._test_results = {}
+        self._suffix = suffix
+
+    def _testname(self, name):
+        return name + self._suffix
 
     def has_failures(self):
         return self._results['num_failures_by_type'][FAIL] > 0
 
     def has_result(self, test):
-        return test in self._test_results
+        return self._testname(test) in self._test_results
 
     def result_skip(self, test):
-        self._test_results[test] = {'expected': SKIP, 'actual': SKIP}
+        self._test_results[self._testname(test)] = {'expected': SKIP, 'actual': SKIP}
         self._results['num_failures_by_type'][SKIP] += 1
 
     def result_pass(self, test):
-        self._test_results[test] = {'expected': PASS, 'actual': PASS}
+        self._test_results[self._testname(test)] = {'expected': PASS, 'actual': PASS}
         self._results['num_failures_by_type'][PASS] += 1
 
     def result_fail(self, test):
-        self._test_results[test] = {'expected': PASS, 'actual': FAIL, 'is_unexpected': True}
+        self._test_results[self._testname(test)] = {
+            'expected': PASS,
+            'actual': FAIL,
+            'is_unexpected': True
+        }
         self._results['num_failures_by_type'][FAIL] += 1
 
     def save_to_output_file(self, test_suite, fname):
@@ -312,7 +320,8 @@ def _skipped_or_glmark2(test, test_status):
 
 
 def _run_tests(tests, args, extra_flags, env):
-    results = Results()
+    result_suffix = '_shard%d' % (args.shard_index if args.shard_index != None else None)
+    results = Results(result_suffix)
     histograms = histogram_set.HistogramSet()
     total_errors = 0
     prepared_traces = set()
@@ -430,6 +439,12 @@ def _find_test_suite_directory(test_suite):
     return None
 
 
+def _split_shard_samples(tests, samples_per_test, shard_count, shard_index):
+    test_samples = [(test, sample) for test in tests for sample in range(samples_per_test)]
+    shard_test_samples = _shard_tests(test_samples, shard_count, shard_index)
+    return [test for (test, sample) in shard_test_samples]
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--isolated-script-test-output', type=str)
@@ -497,6 +512,10 @@ def main():
         '--auto-dir',
         help='Run with the most recent test suite found in the build directories.',
         action='store_true')
+    parser.add_argument(
+        '--split-shard-samples',
+        help='Attempt to mitigate variance between machines by splitting samples between shards.',
+        action='store_true')
 
     args, extra_flags = parser.parse_known_args()
 
@@ -538,7 +557,13 @@ def main():
         tests = _filter_tests(tests, args.filter)
 
     # Get tests for this shard (if using sharding args)
-    tests = _shard_tests(tests, args.shard_count, args.shard_index)
+    if args.split_shard_samples and args.shard_count >= args.samples_per_test:
+        tests = _split_shard_samples(tests, args.samples_per_test, args.shard_count,
+                                     args.shard_index)
+        assert (len(set(tests)) == len(tests))
+        args.samples_per_test = 1
+    else:
+        tests = _shard_tests(tests, args.shard_count, args.shard_index)
 
     if not tests:
         logging.error('No tests to run.')
