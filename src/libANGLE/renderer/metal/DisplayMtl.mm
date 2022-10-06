@@ -1023,7 +1023,7 @@ void DisplayMtl::initializeExtensions() const
     mNativeExtensions.provokingVertexANGLE = true;
 
     // GL_ANGLE_shader_pixel_local_storage.
-    if (supportsAppleGPUFamily(1))
+    if (!mFeatures.disableProgrammableBlending.enabled && supportsAppleGPUFamily(1))
     {
         // Programmable blending is supported on all Apple GPU families, and is always coherent.
         mPixelLocalStorageType = ShPixelLocalStorageType::FramebufferFetch;
@@ -1031,34 +1031,61 @@ void DisplayMtl::initializeExtensions() const
         // Raster order groups are NOT required to make framebuffer fetch coherent, however, they
         // may improve performance by allowing finer grained synchronization (e.g., by assigning
         // attachments to different raster order groups when they don't depend on each other).
-        bool rasterOrderGroupsSupported = supportsAppleGPUFamily(4);
-        mPLSSynchronizationType         = rasterOrderGroupsSupported
-                                              ? ShFragmentSynchronizationType::RasterOrderGroups_Metal
-                                              : ShFragmentSynchronizationType::Automatic;
+        bool rasterOrderGroupsSupported =
+            !mFeatures.disableRasterOrderGroups.enabled && supportsAppleGPUFamily(4);
+        mPLSSynchronizationType = rasterOrderGroupsSupported
+                                      ? ShFragmentSynchronizationType::RasterOrderGroups_Metal
+                                      : ShFragmentSynchronizationType::Automatic;
 
         mNativeExtensions.shaderPixelLocalStorageANGLE         = true;
         mNativeExtensions.shaderPixelLocalStorageCoherentANGLE = true;
     }
     else
     {
-        // TODO(anglebug.com/7279): Implement PLS shader images.
-        // MTLReadWriteTextureTier readWriteTextureTier = [mMetalDevice readWriteTextureSupport];
-        // if (readWriteTextureTier != MTLReadWriteTextureTierNone)
-        // {
-        //     mPixelLocalStorageType = (readWriteTextureTier == MTLReadWriteTextureTier1)
-        //                                  ? ShPixelLocalStorageType::ImageStoreR32PackedFormats
-        //                                  : ShPixelLocalStorageType::ImageStoreNativeFormats;
-        //
-        //     // Raster order groups are required to make PLS coherent via readWrite textures.
-        //     bool rasterOrderGroupsSupported = [mMetalDevice areRasterOrderGroupsSupported];
-        //     mPLSSynchronizationType = rasterOrderGroupsSupported
-        //                                  ? ShFragmentSynchronizationType::RasterOrderGroups_Metal
-        //                                  : ShFragmentSynchronizationType::NotSupported;
-        //
-        //     mNativeExtensions.shaderPixelLocalStorageANGLE         = true;
-        //     mNativeExtensions.shaderPixelLocalStorageCoherentANGLE = rasterOrderGroupsSupported;
-        // }
+        MTLReadWriteTextureTier readWriteTextureTier = [mMetalDevice readWriteTextureSupport];
+        if (readWriteTextureTier != MTLReadWriteTextureTierNone)
+        {
+            if (mFeatures.disableRWTextureTier2Support.enabled)
+            {
+                readWriteTextureTier = MTLReadWriteTextureTier1;
+            }
+            mPixelLocalStorageType = (readWriteTextureTier == MTLReadWriteTextureTier1)
+                                         ? ShPixelLocalStorageType::ImageStoreR32PackedFormats
+                                         : ShPixelLocalStorageType::ImageStoreNativeFormats;
+
+            // Raster order groups are required to make PLS coherent when using read_write textures.
+            bool rasterOrderGroupsSupported = !mFeatures.disableRasterOrderGroups.enabled &&
+                                              !isAMD() && !isIntel() &&  // anglebug.com/7792
+                                              [mMetalDevice areRasterOrderGroupsSupported];
+            mPLSSynchronizationType = rasterOrderGroupsSupported
+                                          ? ShFragmentSynchronizationType::RasterOrderGroups_Metal
+                                          : ShFragmentSynchronizationType::NotSupported;
+
+            mNativeExtensions.shaderPixelLocalStorageANGLE         = true;
+            mNativeExtensions.shaderPixelLocalStorageCoherentANGLE = rasterOrderGroupsSupported;
+
+            // Set up PLS caps here because the higher level context won't have enough info to set
+            // them up itself. Shader images and other ES3.1 caps aren't fully exposed yet.
+            static_assert(mtl::kMaxShaderImages >=
+                          gl::IMPLEMENTATION_MAX_PIXEL_LOCAL_STORAGE_PLANES);
+            mNativeCaps.maxPixelLocalStoragePlanes =
+                gl::IMPLEMENTATION_MAX_PIXEL_LOCAL_STORAGE_PLANES;
+            if (!isAMD())  // anglebug.com/7803
+            {
+                mNativeCaps.maxColorAttachmentsWithActivePixelLocalStorage =
+                    gl::IMPLEMENTATION_MAX_DRAW_BUFFERS;
+            }
+            mNativeCaps.maxCombinedDrawBuffersAndPixelLocalStoragePlanes =
+                gl::IMPLEMENTATION_MAX_PIXEL_LOCAL_STORAGE_PLANES +
+                gl::IMPLEMENTATION_MAX_DRAW_BUFFERS;
+            mNativeCaps.maxShaderImageUniforms[gl::ShaderType::Fragment] =
+                gl::IMPLEMENTATION_MAX_PIXEL_LOCAL_STORAGE_PLANES;
+            mNativeCaps.maxImageUnits = gl::IMPLEMENTATION_MAX_PIXEL_LOCAL_STORAGE_PLANES;
+        }
     }
+    // "The GPUs in Apple3 through Apple8 families only support memory barriers for compute command
+    // encoders, and for vertex-to-vertex and vertex-to-fragment stages of render command encoders."
+    mHasFragmentMemoryBarriers = !supportsAppleGPUFamily(3);
 }
 
 void DisplayMtl::initializeTextureCaps() const

@@ -639,7 +639,7 @@
 7653 IOS : TransformFeedbackTest.RenderOnceChangeXfbBufferRenderAgain/ES3_OpenGL = SKIP
 7653 IOS : VertexAttributeTestES3.emptyBuffer/ES3_OpenGL = SKIP
 
-7756 IOS : PixelLocalStorageTest.ClearState/ES3_OpenGL_EmulatePixelLocalStorage* = SKIP
+7756 IOS : PixelLocalStorageTest.ClearValues_r32/ES3_OpenGL_EmulatePixelLocalStorage* = SKIP
 7756 IOS : PixelLocalStorageTest.Coherency/ES3_OpenGL_EmulatePixelLocalStorage* = SKIP
 7756 IOS : PixelLocalStorageTest.ForgetBarrier/ES3_OpenGL_EmulatePixelLocalStorage* = SKIP
 7756 IOS : PixelLocalStorageTest.FunctionArguments/ES3_OpenGL_EmulatePixelLocalStorage* = SKIP
@@ -891,3 +891,9 @@
 5466 OPENGL : ClipCullDistanceTest.CullDistanceInteractWithGeometryShader/* = SKIP
 5466 GLES : ClipCullDistanceTest.ClipDistanceInteractWithGeometryShader/* = SKIP
 5466 GLES : ClipCullDistanceTest.CullDistanceInteractWithGeometryShader/* = SKIP
+
+// bits 24..31 from glClearValueuiv value don't work on Intel Metal.
+7794 MAC INTEL METAL : PixelLocalStorageTest.ClearValues_r32/* = SKIP
+
+// GL program cache failure with shader images.
+7797 WIN OPENGL : PixelLocalStorageTest.ProgramCache/* = SKIP

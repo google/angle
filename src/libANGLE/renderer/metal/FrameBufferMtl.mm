@@ -1115,6 +1115,13 @@ angle::Result FramebufferMtl::prepareRenderPass(const gl::Context *context,
         desc.stencilAttachment.reset();
     }
 
+    if (desc.numColorAttachments == 0 && mDepthRenderTarget == nullptr &&
+        mStencilRenderTarget == nullptr)
+    {
+        desc.defaultWidth  = mState.getDefaultWidth();
+        desc.defaultHeight = mState.getDefaultHeight();
+    }
+
     return angle::Result::Continue;
 }
 

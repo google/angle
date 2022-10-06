@@ -4238,7 +4238,12 @@ void Context::initCaps()
         mMemoryProgramCache = nullptr;
     }
 
-    if (mSupportedExtensions.shaderPixelLocalStorageANGLE)
+    // Initialize ANGLE_shader_pixel_local_storage caps based on frontend GL queries.
+    //
+    // The backend may have already initialized these caps with its own custom values, in which case
+    // maxPixelLocalStoragePlanes will already be nonzero and we can skip this step.
+    if (mSupportedExtensions.shaderPixelLocalStorageANGLE &&
+        mState.mCaps.maxPixelLocalStoragePlanes == 0)
     {
         int maxDrawableAttachments =
             std::min(mState.mCaps.maxDrawBuffers, mState.mCaps.maxColorAttachments);
@@ -4297,6 +4302,10 @@ void Context::initCaps()
                 break;
         }
     }
+    // Validate that pixel local storage caps were initialized within implementation limits. We
+    // can't just clamp this value here since it would potentially impact other caps.
+    ASSERT(mState.mCaps.maxPixelLocalStoragePlanes <=
+           IMPLEMENTATION_MAX_PIXEL_LOCAL_STORAGE_PLANES);
 
 #undef ANGLE_LIMIT_CAP
 #undef ANGLE_LOG_CAP_LIMIT

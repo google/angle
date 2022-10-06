@@ -50,6 +50,10 @@ void TranslatedShaderInfo::reset()
         binding.textureBinding = mtl::kMaxShaderSamplers;
         binding.samplerBinding = 0;
     }
+    for (int &rwTextureBinding : actualImageBindings)
+    {
+        rwTextureBinding = -1;
+    }
     for (uint32_t &binding : actualUBOBindings)
     {
         binding = mtl::kMaxShaderBuffers;
@@ -454,6 +458,10 @@ angle::Result GlslangGetMSL(const gl::Context *glContext,
         {
             GetAssignedSamplerBindings(reflection, originalSamplerBindings, structSamplers,
                                        &mslShaderInfoOut->at(type).actualSamplerBindings);
+        }
+        for (uint32_t i = 0; i < kMaxShaderImages; ++i)
+        {
+            mslShaderInfoOut->at(type).actualImageBindings[i] = reflection->getRWTextureBinding(i);
         }
         (*mslShaderInfoOut)[type].hasInvariantOrAtan =
             reflection->hasAtan || reflection->hasInvariance;

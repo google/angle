@@ -392,8 +392,11 @@ class RewritePLSToImagesTraverser : public RewritePLSTraverser
             default:
                 UNREACHABLE();
         }
-        layoutQualifier.rasterOrdered = mCompileOptions->pls.fragmentSynchronizationType ==
-                                        ShFragmentSynchronizationType::RasterizerOrderViews_D3D;
+        layoutQualifier.rasterOrdered =
+            mCompileOptions->pls.fragmentSynchronizationType ==
+                ShFragmentSynchronizationType::RasterizerOrderViews_D3D ||
+            mCompileOptions->pls.fragmentSynchronizationType ==
+                ShFragmentSynchronizationType::RasterOrderGroups_Metal;
         imageType->setLayoutQualifier(layoutQualifier);
 
         TMemoryQualifier memoryQualifier{};
@@ -593,8 +596,9 @@ class RewritePLSToImagesTraverser : public RewritePLSTraverser
         //                                           SPV_EXT_fragment_shader_interlock)
         switch (compileOptions.pls.fragmentSynchronizationType)
         {
-            // ROVs don't need explicit synchronization calls.
+            // Raster ordered resources don't need explicit synchronization calls.
             case ShFragmentSynchronizationType::RasterizerOrderViews_D3D:
+            case ShFragmentSynchronizationType::RasterOrderGroups_Metal:
             case ShFragmentSynchronizationType::NotSupported:
                 break;
             case ShFragmentSynchronizationType::FragmentShaderInterlock_NV_GL:
@@ -633,8 +637,9 @@ class RewritePLSToImagesTraverser : public RewritePLSTraverser
         //                                           SPV_EXT_fragment_shader_interlock)
         switch (compileOptions.pls.fragmentSynchronizationType)
         {
-            // ROVs don't need explicit synchronization calls.
+            // Raster ordered resources don't need explicit synchronization calls.
             case ShFragmentSynchronizationType::RasterizerOrderViews_D3D:
+            case ShFragmentSynchronizationType::RasterOrderGroups_Metal:
             // GL_INTEL_fragment_shader_ordering doesn't have an "end()" call.
             case ShFragmentSynchronizationType::FragmentShaderOrdering_INTEL_GL:
             case ShFragmentSynchronizationType::NotSupported:

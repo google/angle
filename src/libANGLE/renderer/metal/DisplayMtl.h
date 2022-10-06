@@ -144,6 +144,7 @@ class DisplayMtl : public DisplayImpl
     mtl::RenderUtils &getUtils() { return mUtils; }
     mtl::StateCache &getStateCache() { return mStateCache; }
     uint32_t getMaxColorTargetBits() { return mMaxColorTargetBits; }
+    bool hasFragmentMemoryBarriers() const { return mHasFragmentMemoryBarriers; }
 
     id<MTLLibrary> getDefaultShadersLib();
 
@@ -211,6 +212,7 @@ class DisplayMtl : public DisplayImpl
     mutable ShPixelLocalStorageType mPixelLocalStorageType = ShPixelLocalStorageType::NotSupported;
     mutable ShFragmentSynchronizationType mPLSSynchronizationType =
         ShFragmentSynchronizationType::NotSupported;
+    mutable bool mHasFragmentMemoryBarriers;
 
     angle::FeaturesMtl mFeatures;
 };

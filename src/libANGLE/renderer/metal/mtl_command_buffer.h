@@ -429,6 +429,7 @@ class RenderCommandEncoder final : public CommandEncoder
     RenderCommandEncoder &setTexture(gl::ShaderType shaderType,
                                      const TextureRef &texture,
                                      uint32_t index);
+    RenderCommandEncoder &setRWTexture(gl::ShaderType, const TextureRef &, uint32_t index);
 
     RenderCommandEncoder &draw(MTLPrimitiveType primitiveType,
                                uint32_t vertexStart,
@@ -467,6 +468,10 @@ class RenderCommandEncoder final : public CommandEncoder
     RenderCommandEncoder &useResource(const BufferRef &resource,
                                       MTLResourceUsage usage,
                                       mtl::RenderStages states);
+
+    RenderCommandEncoder &memoryBarrier(mtl::BarrierScope,
+                                        mtl::RenderStages after,
+                                        mtl::RenderStages before);
 
     RenderCommandEncoder &memoryBarrierWithResource(const BufferRef &resource,
                                                     mtl::RenderStages after,
