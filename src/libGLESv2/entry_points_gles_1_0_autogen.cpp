@@ -631,7 +631,7 @@ void GL_APIENTRY GL_GetMaterialfv(GLenum face, GLenum pname, GLfloat *params)
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetMaterialfv,
           "context = %d, face = %s, pname = %s, params = 0x%016" PRIxPTR "", CID(context),
-          GLenumToString(GLESEnum::MaterialFace, face),
+          GLenumToString(GLESEnum::TriangleFace, face),
           GLenumToString(GLESEnum::MaterialParameter, pname), (uintptr_t)params);
 
     if (context)
@@ -658,7 +658,7 @@ void GL_APIENTRY GL_GetMaterialxv(GLenum face, GLenum pname, GLfixed *params)
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetMaterialxv,
           "context = %d, face = %s, pname = %s, params = 0x%016" PRIxPTR "", CID(context),
-          GLenumToString(GLESEnum::MaterialFace, face),
+          GLenumToString(GLESEnum::TriangleFace, face),
           GLenumToString(GLESEnum::MaterialParameter, pname), (uintptr_t)params);
 
     if (context)
@@ -1110,7 +1110,7 @@ void GL_APIENTRY GL_Materialf(GLenum face, GLenum pname, GLfloat param)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMaterialf, "context = %d, face = %s, pname = %s, param = %f", CID(context),
-          GLenumToString(GLESEnum::MaterialFace, face),
+          GLenumToString(GLESEnum::TriangleFace, face),
           GLenumToString(GLESEnum::MaterialParameter, pname), param);
 
     if (context)
@@ -1136,7 +1136,7 @@ void GL_APIENTRY GL_Materialfv(GLenum face, GLenum pname, const GLfloat *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMaterialfv, "context = %d, face = %s, pname = %s, params = 0x%016" PRIxPTR "",
-          CID(context), GLenumToString(GLESEnum::MaterialFace, face),
+          CID(context), GLenumToString(GLESEnum::TriangleFace, face),
           GLenumToString(GLESEnum::MaterialParameter, pname), (uintptr_t)params);
 
     if (context)
@@ -1162,7 +1162,7 @@ void GL_APIENTRY GL_Materialx(GLenum face, GLenum pname, GLfixed param)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMaterialx, "context = %d, face = %s, pname = %s, param = 0x%X", CID(context),
-          GLenumToString(GLESEnum::MaterialFace, face),
+          GLenumToString(GLESEnum::TriangleFace, face),
           GLenumToString(GLESEnum::MaterialParameter, pname), param);
 
     if (context)
@@ -1188,7 +1188,7 @@ void GL_APIENTRY GL_Materialxv(GLenum face, GLenum pname, const GLfixed *param)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMaterialxv, "context = %d, face = %s, pname = %s, param = 0x%016" PRIxPTR "",
-          CID(context), GLenumToString(GLESEnum::MaterialFace, face),
+          CID(context), GLenumToString(GLESEnum::TriangleFace, face),
           GLenumToString(GLESEnum::MaterialParameter, pname), (uintptr_t)param);
 
     if (context)

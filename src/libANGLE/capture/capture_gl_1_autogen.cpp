@@ -757,7 +757,7 @@ CallCapture CaptureColorMaterial(const State &glState, bool isCallValid, GLenum 
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addEnumParam("face", BigGLEnum::MaterialFace, ParamType::TGLenum, face);
+    paramBuffer.addEnumParam("face", BigGLEnum::TriangleFace, ParamType::TGLenum, face);
     paramBuffer.addEnumParam("mode", BigGLEnum::ColorMaterialParameter, ParamType::TGLenum, mode);
 
     return CallCapture(angle::EntryPoint::GLColorMaterial, std::move(paramBuffer));
@@ -1341,7 +1341,7 @@ CallCapture CaptureGetMaterialiv(const State &glState,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addEnumParam("face", BigGLEnum::MaterialFace, ParamType::TGLenum, face);
+    paramBuffer.addEnumParam("face", BigGLEnum::TriangleFace, ParamType::TGLenum, face);
     paramBuffer.addEnumParam("pname", BigGLEnum::MaterialParameter, ParamType::TGLenum, pname);
 
     if (isCallValid)
@@ -2113,7 +2113,7 @@ CallCapture CaptureMateriali(const State &glState,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addEnumParam("face", BigGLEnum::MaterialFace, ParamType::TGLenum, face);
+    paramBuffer.addEnumParam("face", BigGLEnum::TriangleFace, ParamType::TGLenum, face);
     paramBuffer.addEnumParam("pname", BigGLEnum::MaterialParameter, ParamType::TGLenum, pname);
     paramBuffer.addValueParam("param", ParamType::TGLint, param);
 
@@ -2128,7 +2128,7 @@ CallCapture CaptureMaterialiv(const State &glState,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addEnumParam("face", BigGLEnum::MaterialFace, ParamType::TGLenum, face);
+    paramBuffer.addEnumParam("face", BigGLEnum::TriangleFace, ParamType::TGLenum, face);
     paramBuffer.addEnumParam("pname", BigGLEnum::MaterialParameter, ParamType::TGLenum, pname);
 
     if (isCallValid)
@@ -2510,7 +2510,7 @@ CallCapture CapturePolygonMode(const State &glState, bool isCallValid, GLenum fa
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addEnumParam("face", BigGLEnum::MaterialFace, ParamType::TGLenum, face);
+    paramBuffer.addEnumParam("face", BigGLEnum::TriangleFace, ParamType::TGLenum, face);
     paramBuffer.addEnumParam("mode", BigGLEnum::PolygonMode, ParamType::TGLenum, mode);
 
     return CallCapture(angle::EntryPoint::GLPolygonMode, std::move(paramBuffer));

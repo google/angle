@@ -940,7 +940,7 @@ void GL_APIENTRY GL_ColorMaterial(GLenum face, GLenum mode)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLColorMaterial, "context = %d, face = %s, mode = %s", CID(context),
-          GLenumToString(BigGLEnum::MaterialFace, face),
+          GLenumToString(BigGLEnum::TriangleFace, face),
           GLenumToString(BigGLEnum::ColorMaterialParameter, mode));
 
     if (context)
@@ -1725,7 +1725,7 @@ void GL_APIENTRY GL_GetMaterialiv(GLenum face, GLenum pname, GLint *params)
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetMaterialiv,
           "context = %d, face = %s, pname = %s, params = 0x%016" PRIxPTR "", CID(context),
-          GLenumToString(BigGLEnum::MaterialFace, face),
+          GLenumToString(BigGLEnum::TriangleFace, face),
           GLenumToString(BigGLEnum::MaterialParameter, pname), (uintptr_t)params);
 
     if (context)
@@ -2620,7 +2620,7 @@ void GL_APIENTRY GL_Materiali(GLenum face, GLenum pname, GLint param)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMateriali, "context = %d, face = %s, pname = %s, param = %d", CID(context),
-          GLenumToString(BigGLEnum::MaterialFace, face),
+          GLenumToString(BigGLEnum::TriangleFace, face),
           GLenumToString(BigGLEnum::MaterialParameter, pname), param);
 
     if (context)
@@ -2645,7 +2645,7 @@ void GL_APIENTRY GL_Materialiv(GLenum face, GLenum pname, const GLint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMaterialiv, "context = %d, face = %s, pname = %s, params = 0x%016" PRIxPTR "",
-          CID(context), GLenumToString(BigGLEnum::MaterialFace, face),
+          CID(context), GLenumToString(BigGLEnum::TriangleFace, face),
           GLenumToString(BigGLEnum::MaterialParameter, pname), (uintptr_t)params);
 
     if (context)
@@ -3136,7 +3136,7 @@ void GL_APIENTRY GL_PolygonMode(GLenum face, GLenum mode)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLPolygonMode, "context = %d, face = %s, mode = %s", CID(context),
-          GLenumToString(BigGLEnum::MaterialFace, face),
+          GLenumToString(BigGLEnum::TriangleFace, face),
           GLenumToString(BigGLEnum::PolygonMode, mode));
 
     if (context)

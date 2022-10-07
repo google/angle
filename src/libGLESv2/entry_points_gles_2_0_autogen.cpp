@@ -781,7 +781,7 @@ void GL_APIENTRY GL_CullFace(GLenum mode)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLCullFace, "context = %d, mode = %s", CID(context),
-          GLenumToString(GLESEnum::CullFaceMode, mode));
+          GLenumToString(GLESEnum::TriangleFace, mode));
 
     if (context)
     {
@@ -2761,7 +2761,7 @@ void GL_APIENTRY GL_StencilFuncSeparate(GLenum face, GLenum func, GLint ref, GLu
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLStencilFuncSeparate, "context = %d, face = %s, func = %s, ref = %d, mask = %u",
-          CID(context), GLenumToString(GLESEnum::StencilFaceDirection, face),
+          CID(context), GLenumToString(GLESEnum::TriangleFace, face),
           GLenumToString(GLESEnum::StencilFunction, func), ref, mask);
 
     if (context)
@@ -2809,7 +2809,7 @@ void GL_APIENTRY GL_StencilMaskSeparate(GLenum face, GLuint mask)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLStencilMaskSeparate, "context = %d, face = %s, mask = %u", CID(context),
-          GLenumToString(GLESEnum::StencilFaceDirection, face), mask);
+          GLenumToString(GLESEnum::TriangleFace, face), mask);
 
     if (context)
     {
@@ -2859,9 +2859,8 @@ void GL_APIENTRY GL_StencilOpSeparate(GLenum face, GLenum sfail, GLenum dpfail, 
     Context *context = GetValidGlobalContext();
     EVENT(context, GLStencilOpSeparate,
           "context = %d, face = %s, sfail = %s, dpfail = %s, dppass = %s", CID(context),
-          GLenumToString(GLESEnum::StencilFaceDirection, face),
-          GLenumToString(GLESEnum::StencilOp, sfail), GLenumToString(GLESEnum::StencilOp, dpfail),
-          GLenumToString(GLESEnum::StencilOp, dppass));
+          GLenumToString(GLESEnum::TriangleFace, face), GLenumToString(GLESEnum::StencilOp, sfail),
+          GLenumToString(GLESEnum::StencilOp, dpfail), GLenumToString(GLESEnum::StencilOp, dppass));
 
     if (context)
     {

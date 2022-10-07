@@ -20,9 +20,7 @@ from enum import Enum
 khronos_xml_inputs = [
     '../third_party/EGL-Registry/src/api/egl.xml',
     '../third_party/OpenCL-Docs/src/xml/cl.xml',
-    # TODO(jmadill): Use canonical XML. http://anglebug.com/6461
-    # '../third_party/OpenGL-Registry/src/xml/gl.xml',
-    'gl.xml',
+    '../third_party/OpenGL-Registry/src/xml/gl.xml',
     '../third_party/OpenGL-Registry/src/xml/glx.xml',
     '../third_party/OpenGL-Registry/src/xml/wgl.xml',
 ]
