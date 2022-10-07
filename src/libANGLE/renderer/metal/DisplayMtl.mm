@@ -1028,14 +1028,14 @@ void DisplayMtl::initializeExtensions() const
     mNativeExtensions.provokingVertexANGLE = true;
 
     // GL_ANGLE_shader_pixel_local_storage.
-    if (supportsAppleGPUFamily(2))
+    if (supportsAppleGPUFamily(1))
     {
-        // Programmable blending starts in Apple GPU family 2, and is always coherent.
+        // Programmable blending is supported on all Apple GPU families, and is always coherent.
         mPixelLocalStorageType = ShPixelLocalStorageType::FramebufferFetch;
 
         // Raster order groups are NOT required to make framebuffer fetch coherent, however, they
         // may improve performance by allowing finer grained synchronization (e.g., by assigning
-        // attachments to different raster order groups if they don't depend on each other).
+        // attachments to different raster order groups when they don't depend on each other).
         bool rasterOrderGroupsSupported = supportsAppleGPUFamily(4);
         mPLSSynchronizationType         = rasterOrderGroupsSupported
                                               ? ShFragmentSynchronizationType::RasterOrderGroups_Metal
