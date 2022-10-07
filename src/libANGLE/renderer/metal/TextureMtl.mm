@@ -523,10 +523,10 @@ angle::Result UploadTextureContents(const gl::Context *context,
 
 {
     ASSERT(texture && texture->valid());
-    ContextMtl *contextMtl             = mtl::GetImpl(context);
+    ContextMtl *contextMtl = mtl::GetImpl(context);
+#if !TARGET_OS_SIMULATOR
     const angle::FeaturesMtl &features = contextMtl->getDisplay()->getFeatures();
 
-#if !TARGET_OS_SIMULATOR
     bool forceStagedUpload =
         texture->hasIOSurface() && features.uploadDataToIosurfacesWithStagingBuffers.enabled;
     if (texture->isCPUAccessible() && !forceStagedUpload)
