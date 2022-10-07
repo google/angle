@@ -40,9 +40,9 @@ ADDITIONAL_MIXINS = {
             ],
         }
     },
-    'timeout_200m': {
+    'timeout_120m': {
         'swarming': {
-            'hard_timeout': 12000,
+            'hard_timeout': 7200,
             'io_timeout': 300
         }
     },

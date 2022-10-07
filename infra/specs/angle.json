@@ -498,6 +498,8 @@
               "pool": "chromium.tests.gpu"
             }
           ],
+          "hard_timeout": 7200,
+          "io_timeout": 300,
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
           "shards": 30
         },
@@ -1054,7 +1056,7 @@
               "pool": "chromium.tests.gpu"
             }
           ],
-          "hard_timeout": 12000,
+          "hard_timeout": 7200,
           "io_timeout": 300,
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
           "shards": 10
@@ -1708,7 +1710,7 @@
               "pool": "chromium.tests.gpu"
             }
           ],
-          "hard_timeout": 12000,
+          "hard_timeout": 7200,
           "io_timeout": 300,
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
           "shards": 10
@@ -4694,7 +4696,7 @@
               "pool": "chromium.tests.gpu"
             }
           ],
-          "hard_timeout": 12000,
+          "hard_timeout": 7200,
           "io_timeout": 300,
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
           "shards": 10
