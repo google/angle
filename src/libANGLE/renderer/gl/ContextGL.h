@@ -288,6 +288,15 @@ class ContextGL : public ContextImpl
 
     const gl::Debug &getDebug() const { return mState.getDebug(); }
 
+    angle::Result drawPixelLocalStorageEXTEnable(gl::Context *,
+                                                 GLsizei n,
+                                                 const gl::PixelLocalStoragePlane[],
+                                                 const GLenum loadops[],
+                                                 const void *cleardata) override;
+    angle::Result drawPixelLocalStorageEXTDisable(gl::Context *,
+                                                  const gl::PixelLocalStoragePlane[],
+                                                  const GLenum loadops[]) override;
+
   private:
     angle::Result setDrawArraysState(const gl::Context *context,
                                      GLint first,
@@ -304,6 +313,10 @@ class ContextGL : public ContextImpl
     gl::AttributesMask updateAttributesForBaseInstance(const gl::Program *program,
                                                        GLuint baseInstance);
     void resetUpdatedAttributes(gl::AttributesMask attribMask);
+
+    // Resets draw state prior to drawing load/store operations for EXT_shader_pixel_local_storage,
+    // in order to guarantee every pixel gets updated.
+    void resetDrawStateForPixelLocalStorageEXT(const gl::Context *context);
 
   protected:
     std::shared_ptr<RendererGL> mRenderer;

@@ -21,7 +21,7 @@ namespace gl
 // RAII utilities for working with GL state.
 namespace
 {
-class ScopedBindTexture2D
+class ScopedBindTexture2D : angle::NonCopyable
 {
   public:
     ScopedBindTexture2D(Context *context, TextureID texture)
@@ -40,7 +40,7 @@ class ScopedBindTexture2D
     TextureID mSavedTexBinding2D;
 };
 
-class ScopedRestoreDrawFramebuffer
+class ScopedRestoreDrawFramebuffer : angle::NonCopyable
 {
   public:
     ScopedRestoreDrawFramebuffer(Context *context)
@@ -56,7 +56,7 @@ class ScopedRestoreDrawFramebuffer
     Framebuffer *const mSavedFramebuffer;
 };
 
-class ScopedDisableScissor
+class ScopedDisableScissor : angle::NonCopyable
 {
   public:
     ScopedDisableScissor(Context *context)
@@ -79,6 +79,54 @@ class ScopedDisableScissor
   private:
     Context *const mContext;
     const GLint mScissorTestEnabled;
+};
+
+class ScopedEnableColorMask : angle::NonCopyable
+{
+  public:
+    ScopedEnableColorMask(Context *context, int numDrawBuffers)
+        : mContext(context), mNumDrawBuffers(numDrawBuffers)
+    {
+        const State &state = mContext->getState();
+        if (!mContext->getExtensions().drawBuffersIndexedAny())
+        {
+            std::array<bool, 4> &mask = mSavedColorMasks[0];
+            state.getBlendStateExt().getColorMaskIndexed(0, &mask[0], &mask[1], &mask[2], &mask[3]);
+            mContext->colorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+        }
+        else
+        {
+            for (int i = 0; i < mNumDrawBuffers; ++i)
+            {
+                std::array<bool, 4> &mask = mSavedColorMasks[i];
+                state.getBlendStateExt().getColorMaskIndexed(i, &mask[0], &mask[1], &mask[2],
+                                                             &mask[3]);
+                mContext->colorMaski(i, GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+            }
+        }
+    }
+
+    ~ScopedEnableColorMask()
+    {
+        if (!mContext->getExtensions().drawBuffersIndexedAny())
+        {
+            const std::array<bool, 4> &mask = mSavedColorMasks[0];
+            mContext->colorMask(mask[0], mask[1], mask[2], mask[3]);
+        }
+        else
+        {
+            for (int i = 0; i < mNumDrawBuffers; ++i)
+            {
+                const std::array<bool, 4> &mask = mSavedColorMasks[i];
+                mContext->colorMaski(i, mask[0], mask[1], mask[2], mask[3]);
+            }
+        }
+    }
+
+  private:
+    Context *const mContext;
+    const int mNumDrawBuffers;
+    DrawBuffersArray<std::array<bool, 4>> mSavedColorMasks;
 };
 }  // namespace
 
@@ -255,45 +303,86 @@ void PixelLocalStoragePlane::attachToDrawFramebuffer(Context *context,
     }
 }
 
-void PixelLocalStoragePlane::performLoadOperationClear(Context *context,
-                                                       GLint drawBuffer,
-                                                       GLenum loadop,
-                                                       const void *data)
+// Clears the draw buffer at 0-based index 'drawBufferIdx' on the current framebuffer.
+class ClearBufferCommands : public PixelLocalStoragePlane::ClearCommands
 {
-    // The GL scissor test must be disabled, since the intention is to clear the entire surface.
-    ASSERT(!context->getState().isScissorTestEnabled());
+  public:
+    ClearBufferCommands(Context *context) : mContext(context) {}
+
+    void clearfv(int drawBufferIdx, const GLfloat value[]) const override
+    {
+        mContext->clearBufferfv(GL_COLOR, drawBufferIdx, value);
+    }
+
+    void cleariv(int drawBufferIdx, const GLint value[]) const override
+    {
+        mContext->clearBufferiv(GL_COLOR, drawBufferIdx, value);
+    }
+
+    void clearuiv(int drawBufferIdx, const GLuint value[]) const override
+    {
+        mContext->clearBufferuiv(GL_COLOR, drawBufferIdx, value);
+    }
+
+  private:
+    Context *const mContext;
+};
+
+template <typename T, size_t N>
+void ClampArray(std::array<T, N> &arr, T lo, T hi)
+{
+    for (T &x : arr)
+    {
+        x = std::clamp(x, lo, hi);
+    }
+}
+
+void PixelLocalStoragePlane::issueClearCommand(ClearCommands *clearCommands,
+                                               int target,
+                                               GLenum loadop,
+                                               const void *cleardata) const
+{
     switch (mInternalformat)
     {
         case GL_RGBA8:
         case GL_R32F:
         {
-            GLfloat clearValue[4]{};
+            std::array<GLfloat, 4> clearValue = {0, 0, 0, 0};
             if (loadop == GL_CLEAR_ANGLE)
             {
-                memcpy(clearValue, data, sizeof(clearValue));
+                memcpy(clearValue.data(), cleardata, sizeof(clearValue));
+                if (mInternalformat == GL_RGBA8)
+                {
+                    ClampArray(clearValue, 0.f, 1.f);
+                }
             }
-            context->clearBufferfv(GL_COLOR, drawBuffer, clearValue);
+            clearCommands->clearfv(target, clearValue.data());
             break;
         }
         case GL_RGBA8I:
         {
-            GLint clearValue[4]{};
+            std::array<GLint, 4> clearValue = {0, 0, 0, 0};
             if (loadop == GL_CLEAR_ANGLE)
             {
-                memcpy(clearValue, data, sizeof(clearValue));
+                memcpy(clearValue.data(), cleardata, sizeof(clearValue));
+                ClampArray(clearValue, -128, 127);
             }
-            context->clearBufferiv(GL_COLOR, drawBuffer, clearValue);
+            clearCommands->cleariv(target, clearValue.data());
             break;
         }
         case GL_RGBA8UI:
         case GL_R32UI:
         {
-            GLuint clearValue[4]{};
+            std::array<GLuint, 4> clearValue = {0, 0, 0, 0};
             if (loadop == GL_CLEAR_ANGLE)
             {
-                memcpy(clearValue, data, sizeof(clearValue));
+                memcpy(clearValue.data(), cleardata, sizeof(clearValue));
+                if (mInternalformat == GL_RGBA8UI)
+                {
+                    ClampArray(clearValue, 0u, 255u);
+                }
             }
-            context->clearBufferuiv(GL_COLOR, drawBuffer, clearValue);
+            clearCommands->clearuiv(target, clearValue.data());
             break;
         }
         default:
@@ -335,6 +424,14 @@ void PixelLocalStoragePlane::bindToImage(Context *context,
     context->bindImageTexture(unit, mTextureRef->id(), mTextureImageIndex.getLevelIndex(), GL_FALSE,
                               mTextureImageIndex.getLayerIndex(), GL_READ_WRITE,
                               imageBindingFormat);
+}
+
+const Texture *PixelLocalStoragePlane::getBackingTexture(const Context *context) const
+{
+    ASSERT(!isDeinitialized());
+    ASSERT(!isMemoryless());
+    ASSERT(!isTextureIDDeleted(context));  // In this case we are also memoryless.
+    return mTextureRef;
 }
 
 PixelLocalStorage::PixelLocalStorage() {}
@@ -498,7 +595,7 @@ class PixelLocalStorageImageLoadStore : public PixelLocalStorage
         size_t maxClearedAttachments = 0;
         for (int i = 0; i < n;)
         {
-            angle::FixedVector<int, IMPLEMENTATION_MAX_DRAW_BUFFERS> pendingClears;
+            DrawBuffersVector<int> pendingClears;
             for (; pendingClears.size() < maxDrawBuffers && i < n; ++i)
             {
                 GLenum loadop = loadops[i];
@@ -517,13 +614,16 @@ class PixelLocalStorageImageLoadStore : public PixelLocalStorage
                     pendingClears.push_back(i);  // Defer the clear for later.
                 }
             }
-            // Clear in batches to be more efficient with GL state.
+            // Clear in batches in order to be more efficient with GL state.
+            ScopedEnableColorMask scopedEnableColorMask(context,
+                                                        static_cast<int>(pendingClears.size()));
+            ClearBufferCommands clearBufferCommands(context);
             for (size_t drawBufferIdx = 0; drawBufferIdx < pendingClears.size(); ++drawBufferIdx)
             {
                 int plsIdx = pendingClears[drawBufferIdx];
-                getPlane(plsIdx).performLoadOperationClear(
-                    context, static_cast<GLint>(drawBufferIdx), loadops[plsIdx],
-                    cleardata + plsIdx * 4 * 4);
+                getPlane(plsIdx).issueClearCommand(&clearBufferCommands,
+                                                   static_cast<int>(drawBufferIdx), loadops[plsIdx],
+                                                   cleardata + plsIdx * 4 * 4);
             }
             maxClearedAttachments = std::max(maxClearedAttachments, pendingClears.size());
         }
@@ -654,7 +754,7 @@ class PixelLocalStorageFramebufferFetch : public PixelLocalStorage
 
         for (GLsizei i = 0; i < n; ++i)
         {
-            GLuint drawBufferIdx = getDrawBufferIdx(caps, i);
+            GLuint drawBufferIdx = GetDrawBufferIdx(caps, i);
             GLenum loadop        = loadops[i];
             if (loadop == GL_DISABLE_ANGLE)
             {
@@ -707,14 +807,15 @@ class PixelLocalStorageFramebufferFetch : public PixelLocalStorage
         if (needsClear)
         {
             ScopedDisableScissor scopedDisableScissor(context);
+            ClearBufferCommands clearBufferCommands(context);
             for (GLsizei i = 0; i < n; ++i)
             {
                 GLenum loadop = loadops[i];
                 if (loadop != GL_DISABLE_ANGLE && loadop != GL_KEEP)
                 {
-                    GLuint drawBufferIdx = getDrawBufferIdx(caps, i);
-                    getPlane(i).performLoadOperationClear(context, drawBufferIdx, loadop,
-                                                          cleardata + i * 4 * 4);
+                    GLuint drawBufferIdx = GetDrawBufferIdx(caps, i);
+                    getPlane(i).issueClearCommand(&clearBufferCommands, drawBufferIdx, loadop,
+                                                  cleardata + i * 4 * 4);
                 }
             }
         }
@@ -762,7 +863,7 @@ class PixelLocalStorageFramebufferFetch : public PixelLocalStorage
             // Reset color attachments where PLS was attached. Validation should have already
             // ensured nothing was attached at these points when we activated pixel local storage,
             // and that nothing got attached during.
-            GLuint drawBufferIdx   = getDrawBufferIdx(caps, i);
+            GLuint drawBufferIdx   = GetDrawBufferIdx(caps, i);
             GLenum colorAttachment = GL_COLOR_ATTACHMENT0 + drawBufferIdx;
             context->framebufferTexture2D(GL_DRAW_FRAMEBUFFER, colorAttachment, TextureTarget::_2D,
                                           TextureID(), 0);
@@ -792,7 +893,7 @@ class PixelLocalStorageFramebufferFetch : public PixelLocalStorage
     void onBarrier(Context *context) override { context->framebufferFetchBarrier(); }
 
   private:
-    GLuint getDrawBufferIdx(const Caps &caps, GLuint plsPlaneIdx)
+    static GLuint GetDrawBufferIdx(const Caps &caps, GLuint plsPlaneIdx)
     {
         // Bind the PLS attachments in reverse order from the rear. This way, the shader translator
         // doesn't need to know how many planes are going to be active in order to figure out plane
@@ -806,6 +907,73 @@ class PixelLocalStorageFramebufferFetch : public PixelLocalStorage
     DrawBuffersArray<std::array<bool, 4>> mSavedColorMasks;
     DrawBuffersVector<GLenum> mInvalidateList;
 };
+
+// Implements ANGLE_shader_pixel_local_storage directly via EXT_shader_pixel_local_storage.
+class PixelLocalStorageEXT : public PixelLocalStorage
+{
+  private:
+    void onContextObjectsLost() override {}
+
+    void onDeleteContextObjects(Context *) override {}
+
+    void onBegin(Context *context,
+                 GLsizei n,
+                 const GLenum loadops[],
+                 const char *cleardata,
+                 Extents plsExtents) override
+    {
+        const State &state       = context->getState();
+        Framebuffer *framebuffer = state.getDrawFramebuffer();
+
+        // Remember the current draw buffer state so we can restore it during onEnd().
+        const DrawBuffersVector<GLenum> &appDrawBuffers = framebuffer->getDrawBufferStates();
+        mSavedDrawBuffers.resize(appDrawBuffers.size());
+        std::copy(appDrawBuffers.begin(), appDrawBuffers.end(), mSavedDrawBuffers.begin());
+
+        // Turn off draw buffers.
+        context->drawBuffers(0, nullptr);
+
+        // Save the default framebuffer width/height so we can restore it during onEnd().
+        mSavedFramebufferDefaultWidth  = framebuffer->getDefaultWidth();
+        mSavedFramebufferDefaultHeight = framebuffer->getDefaultHeight();
+
+        // Specify the framebuffer width/height explicitly since we don't use color attachments in
+        // this mode.
+        context->framebufferParameteri(GL_DRAW_FRAMEBUFFER, GL_FRAMEBUFFER_DEFAULT_WIDTH,
+                                       plsExtents.width);
+        context->framebufferParameteri(GL_DRAW_FRAMEBUFFER, GL_FRAMEBUFFER_DEFAULT_HEIGHT,
+                                       plsExtents.height);
+
+        context->drawPixelLocalStorageEXTEnable(n, getPlanes(), loadops, cleardata);
+
+        memcpy(mActiveLoadOps.data(), loadops, sizeof(GLenum) * n);
+    }
+
+    void onEnd(Context *context) override
+    {
+        context->drawPixelLocalStorageEXTDisable(getPlanes(), mActiveLoadOps.data());
+
+        // Restore the default framebuffer width/height.
+        context->framebufferParameteri(GL_DRAW_FRAMEBUFFER, GL_FRAMEBUFFER_DEFAULT_WIDTH,
+                                       mSavedFramebufferDefaultWidth);
+        context->framebufferParameteri(GL_DRAW_FRAMEBUFFER, GL_FRAMEBUFFER_DEFAULT_HEIGHT,
+                                       mSavedFramebufferDefaultHeight);
+
+        // Restore the draw buffer state from before PLS was enabled.
+        context->drawBuffers(static_cast<GLsizei>(mSavedDrawBuffers.size()),
+                             mSavedDrawBuffers.data());
+        mSavedDrawBuffers.clear();
+    }
+
+    void onBarrier(Context *context) override { UNREACHABLE(); }
+
+    // Saved values to restore during onEnd().
+    GLint mSavedFramebufferDefaultWidth;
+    GLint mSavedFramebufferDefaultHeight;
+    DrawBuffersVector<GLenum> mSavedDrawBuffers;
+
+    std::array<GLenum, IMPLEMENTATION_MAX_PIXEL_LOCAL_STORAGE_PLANES> mActiveLoadOps;
+};
 }  // namespace
 
 std::unique_ptr<PixelLocalStorage> PixelLocalStorage::Make(const Context *context)
@@ -818,6 +986,8 @@ std::unique_ptr<PixelLocalStorage> PixelLocalStorage::Make(const Context *contex
             return std::make_unique<PixelLocalStorageImageLoadStore>(false);
         case ShPixelLocalStorageType::FramebufferFetch:
             return std::make_unique<PixelLocalStorageFramebufferFetch>();
+        case ShPixelLocalStorageType::PixelLocalStorageEXT:
+            return std::make_unique<PixelLocalStorageEXT>();
         default:
             UNREACHABLE();
             return nullptr;

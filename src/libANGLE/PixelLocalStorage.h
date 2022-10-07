@@ -76,18 +76,29 @@ class PixelLocalStoragePlane : angle::NonCopyable
     // Attaches this plane to the specified color attachment point on the current draw framebuffer.
     void attachToDrawFramebuffer(Context *, Extents plsExtents, GLenum colorAttachment);
 
-    // Clears the draw buffer at 0-based index 'drawbuffer' on the current framebuffer. Reads the
+    // Interface for clearing typed pixel local storage planes.
+    class ClearCommands
+    {
+      public:
+        virtual ~ClearCommands() {}
+        virtual void clearfv(int target, const GLfloat[]) const = 0;
+        virtual void cleariv(int target, const GLint[]) const   = 0;
+        virtual void clearuiv(int target, const GLuint[]) const = 0;
+    };
+
+    // Issues the approprite command from ClearCommands for this plane's internalformat. Reads the
     // clear value from 'data' if 'loadop' is GL_CLEAR_ANGLE, otherwise clears to zero.
     //
     // 'data' is interpereted as either 4 GLfloats, 4 GLints, or 4 GLuints, depending on
     // mInternalFormat.
-    //
-    // The context must internally disable the scissor test before calling this method, since the
-    // intention is to clear the entire surface.
-    void performLoadOperationClear(Context *, GLint drawbuffer, GLenum loadop, const void *data);
+    void issueClearCommand(ClearCommands *, int target, GLenum loadop, const void *data) const;
 
     // Binds this PLS plane to a texture image unit for image load/store shader operations.
     void bindToImage(Context *, Extents plsExtents, GLuint unit, bool needsR32Packing);
+
+    // Low-level access to the backing texture. The plane must not be memoryless or deinitialized.
+    const ImageIndex &getTextureImageIndex() const { return mTextureImageIndex; }
+    const Texture *getBackingTexture(const Context *context) const;
 
   private:
     // Ensures we have an internal backing texture for memoryless planes. In GL, we need a backing
@@ -132,6 +143,8 @@ class PixelLocalStorage
         ASSERT(0 <= plane && plane < IMPLEMENTATION_MAX_PIXEL_LOCAL_STORAGE_PLANES);
         return mPlanes[plane];
     }
+
+    const PixelLocalStoragePlane *getPlanes() { return mPlanes.data(); }
 
     // ANGLE_shader_pixel_local_storage API.
     void deinitialize(Context *context, GLint plane) { mPlanes[plane].deinitialize(context); }

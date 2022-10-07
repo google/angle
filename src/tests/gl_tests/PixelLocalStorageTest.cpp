@@ -451,8 +451,9 @@ class PixelLocalStorageTest : public ANGLETest<>
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     }
 
-    // Implemented as a class member so we can run the test on ES3 and ES31 both.
+    // Implemented as a class members so we can run the test on ES3 and ES31 both.
     void doStateRestorationTest();
+    void doDrawStateTest();
 
     GLint MAX_PIXEL_LOCAL_STORAGE_PLANES                           = 0;
     GLint MAX_COLOR_ATTACHMENTS_WITH_ACTIVE_PIXEL_LOCAL_STORAGE    = 0;
@@ -1869,6 +1870,87 @@ TEST_P(PixelLocalStorageTest, StateRestoration)
     doStateRestorationTest();
 }
 
+void PixelLocalStorageTest::doDrawStateTest()
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ZERO, GL_ONE);
+
+    glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_FRONT_AND_BACK);
+
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_NEVER);
+
+    glEnable(GL_POLYGON_OFFSET_FILL);
+    glPolygonOffset(1e9f, 1e9f);
+
+    glEnable(GL_SCISSOR_TEST);
+    glScissor(0, 0, 1, 1);
+
+    glEnable(GL_STENCIL_TEST);
+    glStencilFunc(GL_NEVER, 0, 0);
+
+    if (isContextVersionAtLeast(3, 1))
+    {
+        glEnable(GL_SAMPLE_MASK);
+        glSampleMaski(0, 0);
+    }
+
+    glViewport(0, 0, 1, 1);
+
+    // Issue a draw to ensure GL state gets synced.
+    PLSTestTexture tex(GL_RGBA8);
+    renderTextureToDefaultFramebuffer(tex);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    GLuint depthStencil;
+    glGenRenderbuffers(1, &depthStencil);
+    glBindRenderbuffer(GL_RENDERBUFFER, depthStencil);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, W, H);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
+                              depthStencil);
+
+    glFramebufferTexturePixelLocalStorageANGLE(0, tex, 0, 0);
+
+    mProgram.compile(R"(
+        layout(binding=0, rgba8) uniform lowp pixelLocalANGLE pls;
+        void main()
+        {
+            pixelLocalStoreANGLE(pls, vec4(1, 0, 0, 1));
+        })");
+
+    // Clear to green. This should work regardless of draw state.
+    glBeginPixelLocalStorageANGLE(1, GLenumArray({GL_CLEAR_ANGLE}), ClearF(0, 1, 0, 1));
+
+    // Draw a red box. This should not go through because the blocking draw state should have been
+    // restored after the clear.
+    mProgram.drawBoxes({{FULLSCREEN}});
+
+    // Store PLS to the texture. This should work again even though the blocking draw state was
+    // synced for the previous draw.
+    glEndPixelLocalStorageANGLE();
+
+    attachTextureToScratchFBO(tex);
+    EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor(0, 255, 0, 255));
+
+    ASSERT_GL_NO_ERROR();
+}
+
+// Check that draw state does not affect PLS loads and stores, particularly for
+// EXT_shader_pixel_local_storage, where they are implemented as fullscreen draws.
+TEST_P(PixelLocalStorageTest, DrawStateReset)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
+
+    doDrawStateTest();
+}
+
 // Check that blend and color mask state do not affect pixel local storage, and that PLS does not
 // affect blend or color mask on the application's draw buffers.
 TEST_P(PixelLocalStorageTest, BlendAndColorMask)
@@ -2072,11 +2154,13 @@ GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(PixelLocalStorageTest);
         PLATFORM(API, OPENGLES) /* OpenGL ES noncoherent                                           \
                                    (EXT_shader_framebuffer_fetch_non_coherent). */                 \
             .enable(Feature::EmulatePixelLocalStorage)                                             \
-            .disable(Feature::SupportsShaderFramebufferFetchEXT),                                  \
+            .disable(Feature::SupportsShaderFramebufferFetchEXT)                                   \
+            .disable(Feature::SupportsShaderPixelLocalStorageEXT),                                 \
         PLATFORM(API, OPENGLES) /* OpenGL ES noncoherent (shader images). */                       \
             .enable(Feature::EmulatePixelLocalStorage)                                             \
             .disable(Feature::SupportsShaderFramebufferFetchEXT)                                   \
-            .disable(Feature::SupportsShaderFramebufferFetchNonCoherentEXT),                       \
+            .disable(Feature::SupportsShaderFramebufferFetchNonCoherentEXT)                        \
+            .disable(Feature::SupportsShaderPixelLocalStorageEXT),                                 \
         PLATFORM(API, VULKAN) /* Vulkan coherent. */                                               \
             .enable(Feature::AsyncCommandQueue)                                                    \
             .enable(Feature::EmulatePixelLocalStorage),                                            \
@@ -2214,6 +2298,15 @@ TEST_P(PixelLocalStorageTestES31, StateRestoration)
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
 
     doStateRestorationTest();
+}
+
+// Check that draw state does not affect PLS loads and stores, particularly for
+// EXT_shader_pixel_local_storage, where they are implemented as fullscreen draws.
+TEST_P(PixelLocalStorageTestES31, DrawStateReset)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
+
+    doDrawStateTest();
 }
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(PixelLocalStorageTestES31);

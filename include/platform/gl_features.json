@@ -691,6 +691,14 @@
                 "Backend GL context supports EXT_shader_framebuffer_fetch_non_coherent extension"
             ],
             "issue": "http://anglebug.com/7279"
+        },
+        {
+            "name": "supports_shader_pixel_local_storage_EXT",
+            "category": "Features",
+            "description": [
+                "Backend GL context supports EXT_shader_pixel_local_storage extension"
+            ],
+            "issue": "http://anglebug.com/7279"
         }
     ]
 }

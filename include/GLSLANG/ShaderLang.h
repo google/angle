@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 309
+#define ANGLE_SH_VERSION 310
 
 enum ShShaderSpec
 {
@@ -86,7 +86,8 @@ enum class ShPixelLocalStorageType
     NotSupported,
     ImageStoreR32PackedFormats,
     ImageStoreNativeFormats,
-    FramebufferFetch
+    FramebufferFetch,
+    PixelLocalStorageEXT,  // GL_EXT_shader_pixel_local_storage.
 };
 
 // For ANGLE_shader_pixel_local_storage_coherent.

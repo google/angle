@@ -27,6 +27,7 @@
 #include "libANGLE/renderer/gl/FenceNVGL.h"
 #include "libANGLE/renderer/gl/FramebufferGL.h"
 #include "libANGLE/renderer/gl/FunctionsGL.h"
+#include "libANGLE/renderer/gl/PLSProgramCache.h"
 #include "libANGLE/renderer/gl/ProgramGL.h"
 #include "libANGLE/renderer/gl/QueryGL.h"
 #include "libANGLE/renderer/gl/RenderbufferGL.h"
@@ -213,6 +214,7 @@ RendererGL::~RendererGL()
     SafeDelete(mBlitter);
     SafeDelete(mMultiviewClearer);
     SafeDelete(mStateManager);
+    SafeDelete(mPLSProgramCache);
 
     std::lock_guard<std::mutex> lock(mWorkerMutex);
 
@@ -282,7 +284,7 @@ void RendererGL::generateCaps(gl::Caps *outCaps,
 {
     nativegl_gl::GenerateCaps(mFunctions.get(), mFeatures, outCaps, outTextureCaps, outExtensions,
                               outLimitations, &mMaxSupportedESVersion,
-                              &mMultiviewImplementationType);
+                              &mMultiviewImplementationType, &mPixelLocalStorageType);
 }
 
 GLint RendererGL::getGPUDisjoint()
@@ -333,28 +335,16 @@ const gl::Limitations &RendererGL::getNativeLimitations() const
 
 ShPixelLocalStorageType RendererGL::getNativePixelLocalStorageType() const
 {
-    if (!getNativeExtensions().shaderPixelLocalStorageANGLE)
+    return mPixelLocalStorageType;
+}
+
+PLSProgramCache *RendererGL::getPLSProgramCache()
+{
+    if (!mPLSProgramCache)
     {
-        return ShPixelLocalStorageType::NotSupported;
+        mPLSProgramCache = new PLSProgramCache(mFunctions.get(), mNativeCaps);
     }
-    if (mFeatures.supportsShaderFramebufferFetchEXT.enabled)
-    {
-        // We have coherent EXT_shader_framebuffer_fetch.
-        ASSERT(getNativeExtensions().shaderPixelLocalStorageCoherentANGLE);
-        return ShPixelLocalStorageType::FramebufferFetch;
-    }
-    if (getNativeExtensions().shaderPixelLocalStorageCoherentANGLE ||
-        !mFeatures.supportsShaderFramebufferFetchNonCoherentEXT.enabled)
-    {
-        // Use shader images with fragment synchronization extensions, instead of
-        // EXT_shader_framebuffer_fetch_non_coherent, if they're our only option to be coherent.
-        return getFunctions()->standard == StandardGL::STANDARD_GL_ES
-                   // OpenGL ES only allows read/write access to "r32*" images.
-                   ? ShPixelLocalStorageType::ImageStoreR32PackedFormats
-                   : ShPixelLocalStorageType::ImageStoreNativeFormats;
-    }
-    ASSERT(mFeatures.supportsShaderFramebufferFetchNonCoherentEXT.enabled);
-    return ShPixelLocalStorageType::FramebufferFetch;
+    return mPLSProgramCache;
 }
 
 MultiviewImplementationTypeGL RendererGL::getMultiviewImplementationType() const

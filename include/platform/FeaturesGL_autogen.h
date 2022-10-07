@@ -496,6 +496,11 @@ struct FeaturesGL : FeatureSetBase
         "supportsShaderFramebufferFetchNonCoherentEXT", FeatureCategory::OpenGLFeatures,
         "Backend GL context supports EXT_shader_framebuffer_fetch_non_coherent extension", &members,
         "http://anglebug.com/7279"};
+
+    FeatureInfo supportsShaderPixelLocalStorageEXT = {
+        "supportsShaderPixelLocalStorageEXT", FeatureCategory::OpenGLFeatures,
+        "Backend GL context supports EXT_shader_pixel_local_storage extension", &members,
+        "http://anglebug.com/7279"};
 };
 
 inline FeaturesGL::FeaturesGL()  = default;

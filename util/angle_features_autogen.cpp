@@ -295,6 +295,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
      "supportsShaderFramebufferFetchNonCoherent"},
     {Feature::SupportsShaderFramebufferFetchNonCoherentEXT,
      "supportsShaderFramebufferFetchNonCoherentEXT"},
+    {Feature::SupportsShaderPixelLocalStorageEXT, "supportsShaderPixelLocalStorageEXT"},
     {Feature::SupportsShaderStencilExport, "supportsShaderStencilExport"},
     {Feature::SupportsSharedPresentableImageExtension, "supportsSharedPresentableImageExtension"},
     {Feature::SupportsSurfaceCapabilities2Extension, "supportsSurfaceCapabilities2Extension"},

@@ -384,7 +384,8 @@ std::shared_ptr<WaitableCompileEvent> ShaderGL::compile(const gl::Context *conte
             // Prefer vendor-specific extensions first. The PixelLocalStorageTest.Coherency test
             // doesn't always pass on Intel when we use the ARB extension.
             ShShaderOutput translatorOutputType = GetShaderOutputType(GetFunctionsGL(context));
-            if (options->pls.type == ShPixelLocalStorageType::FramebufferFetch)
+            if (options->pls.type == ShPixelLocalStorageType::PixelLocalStorageEXT ||
+                options->pls.type == ShPixelLocalStorageType::FramebufferFetch)
             {
                 options->pls.fragmentSynchronizationType = ShFragmentSynchronizationType::Automatic;
             }

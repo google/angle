@@ -382,6 +382,9 @@ struct Caps
     GLuint maxColorAttachmentsWithActivePixelLocalStorage   = 0;
     GLuint maxCombinedDrawBuffersAndPixelLocalStoragePlanes = 0;
 
+    // GL_EXT_shader_pixel_local_storage.
+    GLuint maxShaderPixelLocalStorageFastSizeEXT = 0;
+
     // GLES1 emulation: Caps for ES 1.1. Taken from Table 6.20 / 6.22 in the OpenGL ES 1.1 spec.
     GLuint maxMultitextureUnits                 = 0;
     GLuint maxClipPlanes                        = 0;

@@ -85,4 +85,24 @@ const angle::PerfMonitorCounterGroups &ContextImpl::getPerfMonitorCounters()
     static angle::base::NoDestructor<angle::PerfMonitorCounterGroups> sCounters;
     return *sCounters;
 }
+
+angle::Result ContextImpl::drawPixelLocalStorageEXTEnable(gl::Context *,
+                                                          GLsizei n,
+                                                          const gl::PixelLocalStoragePlane[],
+                                                          const GLenum loadops[],
+                                                          const void *cleardata)
+{
+    ASSERT(getNativePixelLocalStorageType() == ShPixelLocalStorageType::PixelLocalStorageEXT);
+    UNREACHABLE();
+    return angle::Result::Stop;
+}
+
+angle::Result ContextImpl::drawPixelLocalStorageEXTDisable(gl::Context *,
+                                                           const gl::PixelLocalStoragePlane[],
+                                                           const GLenum loadops[])
+{
+    ASSERT(getNativePixelLocalStorageType() == ShPixelLocalStorageType::PixelLocalStorageEXT);
+    UNREACHABLE();
+    return angle::Result::Stop;
+}
 }  // namespace rx

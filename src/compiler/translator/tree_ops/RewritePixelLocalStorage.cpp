@@ -172,38 +172,140 @@ class RewritePLSTraverser : public TIntermTraverser
     }
 
     // Called after rewrite. Injects one-time setup code that needs to run before any PLS accesses.
-    virtual void injectSetupCode(TCompiler *,
-                                 TSymbolTable &,
-                                 const ShCompileOptions &,
-                                 TIntermBlock *mainBody,
-                                 size_t plsBeginPosition)
+    virtual void injectPrePLSCode(TCompiler *,
+                                  TSymbolTable &,
+                                  const ShCompileOptions &,
+                                  TIntermBlock *mainBody,
+                                  size_t plsBeginPosition)
     {}
 
     // Called after rewrite. Injects one-time finalization code that needs to run after all PLS.
-    virtual void injectFinalizeCode(TCompiler *,
-                                    TSymbolTable &,
-                                    const ShCompileOptions &,
-                                    TIntermBlock *mainBody,
-                                    size_t plsEndPosition)
+    virtual void injectPostPLSCode(TCompiler *,
+                                   TSymbolTable &,
+                                   const ShCompileOptions &,
+                                   TIntermBlock *mainBody,
+                                   size_t plsEndPosition)
     {}
 
-    TVariable *globalPixelCoord() const { return mGlobalPixelCoord; }
+    // Called after all other operations have completed.
+    void injectPixelCoordInitializationCodeIfNeeded(TCompiler *compiler,
+                                                    TIntermBlock *root,
+                                                    TIntermBlock *mainBody)
+    {
+        if (mGlobalPixelCoord)
+        {
+            // Initialize the global pixel coord at the beginning of main():
+            //
+            //     pixelCoord = ivec2(floor(gl_FragCoord.xy));
+            //
+            TIntermTyped *exp;
+            exp = ReferenceBuiltInVariable(ImmutableString("gl_FragCoord"), *mSymbolTable,
+                                           mShaderVersion);
+            exp = CreateSwizzle(exp, 0, 1);
+            exp = CreateBuiltInFunctionCallNode("floor", {exp}, *mSymbolTable, mShaderVersion);
+            exp = TIntermAggregate::CreateConstructor(TType(EbtInt, 2), {exp});
+            exp = CreateTempAssignmentNode(mGlobalPixelCoord, exp);
+            mainBody->insertStatement(0, exp);
+        }
+    }
 
   protected:
     virtual void visitPLSDeclaration(TIntermSymbol *plsSymbol)             = 0;
     virtual void visitPLSLoad(TIntermSymbol *plsSymbol)                    = 0;
     virtual void visitPLSStore(TIntermSymbol *plsSymbol, TVariable *value) = 0;
 
+    // Inserts a global to hold the pixel coordinate as soon as we see PLS declared. This will be
+    // initialized at the beginning of main().
     void ensureGlobalPixelCoordDeclared()
     {
-        // Insert a global to hold the pixel coordinate as soon as we see PLS declared. This will be
-        // initialized at the beginning of main().
         if (!mGlobalPixelCoord)
         {
             TType *coordType  = new TType(EbtInt, EbpHigh, EvqGlobal, 2);
             mGlobalPixelCoord = CreateTempVariable(mSymbolTable, coordType);
             insertStatementInParentBlock(CreateTempDeclarationNode(mGlobalPixelCoord));
         }
+    }
+
+    // anglebug.com/7524: Storing to integer formats with larger-than-representable values has
+    // different behavior on the various APIs.
+    //
+    // This method clamps sub-32-bit integers to the min/max representable values of their format.
+    void clampPLSVarIfNeeded(TVariable *plsVar, TLayoutImageInternalFormat plsFormat)
+    {
+        switch (plsFormat)
+        {
+            case EiifRGBA8I:
+            {
+                // Clamp r,g,b,a to their min/max 8-bit values:
+                //
+                //     plsVar = clamp(plsVar, -128, 127) & 0xff
+                //
+                TIntermTyped *newPLSValue = CreateBuiltInFunctionCallNode(
+                    "clamp",
+                    {new TIntermSymbol(plsVar), CreateIndexNode(-128), CreateIndexNode(127)},
+                    *mSymbolTable, mShaderVersion);
+                insertStatementInParentBlock(CreateTempAssignmentNode(plsVar, newPLSValue));
+                break;
+            }
+            case EiifRGBA8UI:
+            {
+                // Clamp r,g,b,a to their max 8-bit values:
+                //
+                //     plsVar = min(plsVar, 255)
+                //
+                TIntermTyped *newPLSValue = CreateBuiltInFunctionCallNode(
+                    "min", {new TIntermSymbol(plsVar), CreateUIntNode(255)}, *mSymbolTable,
+                    mShaderVersion);
+                insertStatementInParentBlock(CreateTempAssignmentNode(plsVar, newPLSValue));
+                break;
+            }
+            default:
+                break;
+        }
+    }
+
+    // Expands an expression to 4 components, filling in the missing components with [0, 0, 0, 1].
+    static TIntermTyped *Expand(TIntermTyped *expr)
+    {
+        const TType &type = expr->getType();
+        ASSERT(type.getNominalSize() == 1 || type.getNominalSize() == 4);
+        if (type.getNominalSize() == 1)
+        {
+            switch (type.getBasicType())
+            {
+                case EbtFloat:
+                    expr = TIntermAggregate::CreateConstructor(  // "vec4(r, 0, 0, 1)"
+                        TType(EbtFloat, 4),
+                        {expr, CreateFloatNode(0, EbpLow), CreateFloatNode(0, EbpLow),
+                         CreateFloatNode(1, EbpLow)});
+                    break;
+                case EbtUInt:
+                    expr = TIntermAggregate::CreateConstructor(  // "uvec4(r, 0, 0, 1)"
+                        TType(EbtUInt, 4),
+                        {expr, CreateUIntNode(0), CreateUIntNode(0), CreateUIntNode(1)});
+                    break;
+                default:
+                    UNREACHABLE();
+                    break;
+            }
+        }
+        return expr;
+    }
+
+    static TIntermTyped *Expand(TVariable *var) { return Expand(new TIntermSymbol(var)); }
+
+    // Returns an expression that swizzles a variable down to 'n' components.
+    static TIntermTyped *Swizzle(TVariable *var, int n)
+    {
+        TIntermTyped *swizzled = new TIntermSymbol(var);
+        if (var->getType().getNominalSize() != n)
+        {
+            ASSERT(var->getType().getNominalSize() > n);
+            TVector swizzleOffsets{0, 1, 2, 3};
+            swizzleOffsets.resize(n);
+            swizzled = new TIntermSwizzle(swizzled, swizzleOffsets);
+        }
+        return swizzled;
     }
 
     const TCompiler *const mCompiler;
@@ -356,7 +458,7 @@ class RewritePLSToImagesTraverser : public RewritePLSTraverser
                 //     data.rrrr << uvec4(24, 16, 8, 0) >> 24u
                 //
                 data = CreateSwizzle(data, 0, 0, 0, 0);
-                data = new TIntermBinary(EOpBitShiftLeft, data, CreateUVecNode(shifts, 4, EbpHigh));
+                data = new TIntermBinary(EOpBitShiftLeft, data, CreateUVecNode(shifts, 4, EbpLow));
                 data = new TIntermBinary(EOpBitShiftRight, data, CreateUIntNode(24));
                 break;
             }
@@ -402,39 +504,7 @@ class RewritePLSToImagesTraverser : public RewritePLSTraverser
     {
         TLayoutImageInternalFormat plsFormat =
             plsSymbol->getType().getLayoutQualifier().imageInternalFormat;
-        // anglebug.com/7524: Storing to integer formats with values larger than can be represented
-        // is specified differently on different APIs. Clamp integer formats here to make it uniform
-        // and more GL-like.
-        switch (plsFormat)
-        {
-            case EiifRGBA8I:
-            {
-                // Clamp r,g,b,a to their min/max 8-bit values:
-                //
-                //     plsVar = clamp(plsVar, -128, 127) & 0xff
-                //
-                TIntermTyped *newPLSValue = CreateBuiltInFunctionCallNode(
-                    "clamp",
-                    {new TIntermSymbol(plsVar), CreateIndexNode(-128), CreateIndexNode(127)},
-                    *mSymbolTable, mShaderVersion);
-                insertStatementInParentBlock(CreateTempAssignmentNode(plsVar, newPLSValue));
-                break;
-            }
-            case EiifRGBA8UI:
-            {
-                // Clamp r,g,b,a to their max 8-bit values:
-                //
-                //     plsVar = min(plsVar, 255)
-                //
-                TIntermTyped *newPLSValue = CreateBuiltInFunctionCallNode(
-                    "min", {new TIntermSymbol(plsVar), CreateUIntNode(255)}, *mSymbolTable,
-                    mShaderVersion);
-                insertStatementInParentBlock(CreateTempAssignmentNode(plsVar, newPLSValue));
-                break;
-            }
-            default:
-                break;
-        }
+        clampPLSVarIfNeeded(plsVar, plsFormat);
         TIntermTyped *result = new TIntermSymbol(plsVar);
         TLayoutImageInternalFormat imageFormat =
             image2D->getType().getLayoutQualifier().imageInternalFormat;
@@ -504,11 +574,11 @@ class RewritePLSToImagesTraverser : public RewritePLSTraverser
         return TIntermAggregate::CreateConstructor(imageStoreType, {result});
     }
 
-    void injectSetupCode(TCompiler *compiler,
-                         TSymbolTable &symbolTable,
-                         const ShCompileOptions &compileOptions,
-                         TIntermBlock *mainBody,
-                         size_t plsBeginPosition) override
+    void injectPrePLSCode(TCompiler *compiler,
+                          TSymbolTable &symbolTable,
+                          const ShCompileOptions &compileOptions,
+                          TIntermBlock *mainBody,
+                          size_t plsBeginPosition) override
     {
         // When PLS is implemented with images, early_fragment_tests ensure that depth/stencil
         // can also block stores to PLS.
@@ -550,11 +620,11 @@ class RewritePLSToImagesTraverser : public RewritePLSTraverser
         }
     }
 
-    void injectFinalizeCode(TCompiler *,
-                            TSymbolTable &symbolTable,
-                            const ShCompileOptions &compileOptions,
-                            TIntermBlock *mainBody,
-                            size_t plsEndPosition) override
+    void injectPostPLSCode(TCompiler *,
+                           TSymbolTable &symbolTable,
+                           const ShCompileOptions &compileOptions,
+                           TIntermBlock *mainBody,
+                           size_t plsEndPosition) override
     {
         // Delimit the end of the PLS critical section, if required.
         //
@@ -615,7 +685,7 @@ class RewritePLSToFramebufferFetchTraverser : public RewritePLSTraverser
     {
         // Read our temporary accessVar.
         const PLSAttachment &attachment = mPLSAttachments.find(plsSymbol);
-        queueReplacement(attachment.expandAccessVar(), OriginalNode::IS_DROPPED);
+        queueReplacement(Expand(attachment.accessVar), OriginalNode::IS_DROPPED);
     }
 
     void visitPLSStore(TIntermSymbol *plsSymbol, TVariable *value) override
@@ -626,11 +696,11 @@ class RewritePLSToFramebufferFetchTraverser : public RewritePLSTraverser
                          OriginalNode::IS_DROPPED);
     }
 
-    void injectSetupCode(TCompiler *compiler,
-                         TSymbolTable &symbolTable,
-                         const ShCompileOptions &compileOptions,
-                         TIntermBlock *mainBody,
-                         size_t plsBeginPosition) override
+    void injectPrePLSCode(TCompiler *compiler,
+                          TSymbolTable &symbolTable,
+                          const ShCompileOptions &compileOptions,
+                          TIntermBlock *mainBody,
+                          size_t plsBeginPosition) override
     {
         // [OpenGL ES Version 3.0.6, 3.9.2.3 "Shader Output"]: Any colors, or color components,
         // associated with a fragment that are not written by the fragment shader are undefined.
@@ -645,7 +715,7 @@ class RewritePLSToFramebufferFetchTraverser : public RewritePLSTraverser
         //
         // To make sure every PLS variable gets written, we read them all before PLS operations,
         // then write them all back out after all PLS is complete.
-        std::vector<TIntermNode *> plsPreloads;
+        TIntermSequence plsPreloads;
         plsPreloads.reserve(mPLSAttachments.bindingOrderedMap().size());
         for (const auto &entry : mPLSAttachments.bindingOrderedMap())
         {
@@ -657,13 +727,13 @@ class RewritePLSToFramebufferFetchTraverser : public RewritePLSTraverser
                                         plsPreloads.begin(), plsPreloads.end());
     }
 
-    void injectFinalizeCode(TCompiler *,
-                            TSymbolTable &symbolTable,
-                            const ShCompileOptions &compileOptions,
-                            TIntermBlock *mainBody,
-                            size_t plsEndPosition) override
+    void injectPostPLSCode(TCompiler *,
+                           TSymbolTable &symbolTable,
+                           const ShCompileOptions &compileOptions,
+                           TIntermBlock *mainBody,
+                           size_t plsEndPosition) override
     {
-        std::vector<TIntermNode *> plsWrites;
+        TIntermSequence plsWrites;
         plsWrites.reserve(mPLSAttachments.bindingOrderedMap().size());
         for (const auto &entry : mPLSAttachments.bindingOrderedMap())
         {
@@ -737,46 +807,10 @@ class RewritePLSToFramebufferFetchTraverser : public RewritePLSTraverser
                                         plsVar.extensions(), fragmentVarType);
         }
 
-        // Expands our accessVar to 4 components, regardless of the size of the pixel local storage
-        // internalformat.
-        TIntermTyped *expandAccessVar() const
-        {
-            TIntermTyped *expanded = new TIntermSymbol(accessVar);
-            if (accessVar->getType().getNominalSize() == 1)
-            {
-                switch (accessVar->getType().getBasicType())
-                {
-                    case EbtFloat:
-                        expanded = TIntermAggregate::CreateConstructor(  // "vec4(r, 0, 0, 1)"
-                            TType(EbtFloat, 4),
-                            {expanded, CreateFloatNode(0, EbpHigh), CreateFloatNode(0, EbpHigh),
-                             CreateFloatNode(1, EbpHigh)});
-                        break;
-                    case EbtUInt:
-                        expanded = TIntermAggregate::CreateConstructor(  // "uvec4(r, 0, 0, 1)"
-                            TType(EbtUInt, 4),
-                            {expanded, CreateUIntNode(0), CreateUIntNode(0), CreateUIntNode(1)});
-                        break;
-                    default:
-                        UNREACHABLE();
-                        break;
-                }
-            }
-            return expanded;
-        }
-
         // Swizzles a variable down to the same number of components as the PLS internalformat.
         TIntermTyped *swizzle(TVariable *var) const
         {
-            TIntermTyped *swizzled = new TIntermSymbol(var);
-            if (var->getType().getNominalSize() != accessVar->getType().getNominalSize())
-            {
-                ASSERT(var->getType().getNominalSize() > accessVar->getType().getNominalSize());
-                TVector swizzleOffsets{0, 1, 2, 3};
-                swizzleOffsets.resize(accessVar->getType().getNominalSize());
-                swizzled = new TIntermSwizzle(swizzled, swizzleOffsets);
-            }
-            return swizzled;
+            return Swizzle(var, accessVar->getType().getNominalSize());
         }
 
         TIntermTyped *swizzleFragmentVar() const { return swizzle(fragmentVar); }
@@ -786,6 +820,142 @@ class RewritePLSToFramebufferFetchTraverser : public RewritePLSTraverser
     };
 
     PLSBackingStoreMap<PLSAttachment> mPLSAttachments;
+};
+
+// Rewrites ANGLE_shader_pixel_local_storage to EXT_shader_pixel_local_storage.
+class RewriteANGLEToEXTTraverser : public RewritePLSTraverser
+{
+  public:
+    RewriteANGLEToEXTTraverser(TCompiler *compiler,
+                               TSymbolTable &symbolTable,
+                               const ShCompileOptions &compileOptions,
+                               int shaderVersion)
+        : RewritePLSTraverser(compiler, symbolTable, compileOptions, shaderVersion)
+    {}
+
+    // Runs before traversal. Collects PLS declarations into a global __pixel_localEXT interface
+    // block and establishes their indices.
+    void rewriteDeclarations(TCompiler *compiler, TIntermBlock *root, TIntermBlock *mainBody)
+    {
+        // Create EXT fields for ANGLE uniforms, then delete the ANGLE uniforms.
+        TIntermSequence &rootSequence = *root->getSequence();
+        for (size_t i = 0; i < rootSequence.size(); ++i)
+        {
+            TIntermNode *node        = rootSequence[i];
+            TIntermDeclaration *decl = node->getAsDeclarationNode();
+            if (decl == nullptr)
+            {
+                continue;
+            }
+            TIntermTyped *declVariable = (decl->getSequence())->front()->getAsTyped();
+            ASSERT(declVariable);
+            if (!IsPixelLocal(declVariable->getBasicType()))
+            {
+                continue;
+            }
+            // Create a native pixel local storage field that describes this plane.
+            TIntermSymbol *symbolANGLE = declVariable->getAsSymbolNode();
+            ASSERT(symbolANGLE);
+            const TVariable &varANGLE = symbolANGLE->variable();
+            const TType &typeANGLE    = varANGLE.getType();
+            TType *typeEXT;
+            switch (typeANGLE.getLayoutQualifier().imageInternalFormat)
+            {
+                default:
+                    UNREACHABLE();
+                    [[fallthrough]];
+                case EiifRGBA8:
+                    typeEXT = new TType(EbtFloat, 4);
+                    break;
+                case EiifRGBA8I:
+                    typeEXT = new TType(EbtInt, 4);
+                    break;
+                case EiifRGBA8UI:
+                    typeEXT = new TType(EbtUInt, 4);
+                    break;
+                case EiifR32F:
+                    typeEXT = new TType(EbtFloat, 1);
+                    break;
+                case EiifR32UI:
+                    typeEXT = new TType(EbtUInt, 1);
+                    break;
+            }
+            typeEXT->setPrecision(typeANGLE.getPrecision());
+            TLayoutQualifier layoutEXT    = TLayoutQualifier::Create();
+            layoutEXT.imageInternalFormat = typeANGLE.getLayoutQualifier().imageInternalFormat;
+            typeEXT->setLayoutQualifier(layoutEXT);
+            mFieldsEXT.insertNew(
+                symbolANGLE,
+                FieldEXT(typeEXT, varANGLE.name(), symbolANGLE->getLine(), varANGLE.symbolType()));
+            rootSequence.erase(rootSequence.begin() + i);
+            --i;
+        }
+
+        // Create the global __pixel_localEXT interface block and save each field's index.
+        TFieldList *fieldsEXT = new TFieldList;
+        fieldsEXT->reserve(mFieldsEXT.bindingOrderedMap().size());
+        for (const auto &entry : mFieldsEXT.bindingOrderedMap())
+        {
+            const FieldEXT &fieldEXT = entry.second;
+            fieldEXT.indexInPLSBlock->setIConst(static_cast<int>(fieldsEXT->size()));
+            fieldsEXT->push_back(fieldEXT.field);
+        }
+        TLayoutQualifier emptyLayoutQualifier = TLayoutQualifier::Create();
+        TInterfaceBlock *blockEXT =
+            new TInterfaceBlock(mSymbolTable, ImmutableString("PLS"), fieldsEXT,
+                                emptyLayoutQualifier, SymbolType::AngleInternal);
+        TType *blockTypeEXT = new TType(blockEXT, EvqPixelLocalEXT, emptyLayoutQualifier);
+        mBlockEXT           = new TVariable(mSymbolTable, ImmutableString("pls"), blockTypeEXT,
+                                            SymbolType::AngleInternal);
+        root->insertChildNodes(0, {new TIntermDeclaration(mBlockEXT, nullptr)});
+    }
+
+    void visitPLSDeclaration(TIntermSymbol *symbolANGLE) override
+    {
+        // ANGLE_shader_pixel_local_storage only allows PLS uniform declarations at global scope,
+        // which should have been rewritten during rewriteDeclarations().
+        UNREACHABLE();
+    }
+
+    void visitPLSLoad(TIntermSymbol *symbolANGLE) override
+    {
+        const FieldEXT &fieldEXT    = mFieldsEXT.find(symbolANGLE);
+        const TType &typeEXT        = *fieldEXT.field->type();
+        TIntermConstantUnion *index = new TIntermConstantUnion(fieldEXT.indexInPLSBlock, typeEXT);
+        TIntermTyped *fieldAccess =
+            new TIntermBinary(EOpIndexDirectInterfaceBlock, new TIntermSymbol(mBlockEXT), index);
+        queueReplacement(Expand(fieldAccess), OriginalNode::IS_DROPPED);
+    }
+
+    void visitPLSStore(TIntermSymbol *symbolANGLE, TVariable *value) override
+    {
+        const FieldEXT &fieldEXT    = mFieldsEXT.find(symbolANGLE);
+        const TType &typeEXT        = *fieldEXT.field->type();
+        TIntermConstantUnion *index = new TIntermConstantUnion(fieldEXT.indexInPLSBlock, typeEXT);
+        TIntermTyped *fieldAccess =
+            new TIntermBinary(EOpIndexDirectInterfaceBlock, new TIntermSymbol(mBlockEXT), index);
+        clampPLSVarIfNeeded(value, typeEXT.getLayoutQualifier().imageInternalFormat);
+        queueReplacement(
+            new TIntermBinary(EOpAssign, fieldAccess, Swizzle(value, typeEXT.getNominalSize())),
+            OriginalNode::IS_DROPPED);
+    }
+
+  private:
+    // Represents a pixel local storage plane within the global __pixel_localEXT interface block.
+    struct FieldEXT
+    {
+        FieldEXT(TType *type,
+                 const ImmutableString &name,
+                 const TSourceLoc &line,
+                 SymbolType symbolType)
+            : field(new TField(type, name, line, symbolType))
+        {}
+        TField *const field;
+        TConstantUnion *const indexInPLSBlock = new TConstantUnion;
+    };
+
+    TVariable *mBlockEXT;                     // Global __pixel_localEXT interface block.
+    PLSBackingStoreMap<FieldEXT> mFieldsEXT;  // Planes within the __pixel_localEXT interface block.
 };
 }  // anonymous namespace
 
@@ -820,12 +990,23 @@ bool RewritePixelLocalStorage(TCompiler *compiler,
             traverser = std::make_unique<RewritePLSToFramebufferFetchTraverser>(
                 compiler, symbolTable, compileOptions, shaderVersion);
             break;
-        default:
+        case ShPixelLocalStorageType::PixelLocalStorageEXT:
+        {
+            auto angle2extTraverser = std::make_unique<RewriteANGLEToEXTTraverser>(
+                compiler, symbolTable, compileOptions, shaderVersion);
+            // The ANGLE -> EXT transformation has to rewrite declarations in a separate pre-pass
+            // that sorts them into a global __pixel_localEXT interface block at the top of the
+            // shader.
+            angle2extTraverser->rewriteDeclarations(compiler, root, mainBody);
+            traverser = std::move(angle2extTraverser);
+            break;
+        }
+        case ShPixelLocalStorageType::NotSupported:
             UNREACHABLE();
             return false;
     }
 
-    // Rewrite PLS operations to image operations.
+    // Rewrite PLS operations.
     root->traverse(traverser.get());
     if (!traverser->updateTree(compiler, root))
     {
@@ -837,24 +1018,12 @@ bool RewritePixelLocalStorage(TCompiler *compiler,
     // just locking the entire main() function:
     //   - Monomorphize all PLS calls into main().
     //   - Insert begin/end calls around the first/last PLS calls (and outside of flow control).
-    traverser->injectSetupCode(compiler, symbolTable, compileOptions, mainBody, 0);
-    traverser->injectFinalizeCode(compiler, symbolTable, compileOptions, mainBody,
-                                  mainBody->getChildCount());
+    traverser->injectPrePLSCode(compiler, symbolTable, compileOptions, mainBody, 0);
+    traverser->injectPostPLSCode(compiler, symbolTable, compileOptions, mainBody,
+                                 mainBody->getChildCount());
 
-    if (traverser->globalPixelCoord())
-    {
-        // Initialize the global pixel coord at the beginning of main():
-        //
-        //     pixelCoord = ivec2(floor(gl_FragCoord.xy));
-        //
-        TIntermTyped *exp;
-        exp = ReferenceBuiltInVariable(ImmutableString("gl_FragCoord"), symbolTable, shaderVersion);
-        exp = CreateSwizzle(exp, 0, 1);
-        exp = CreateBuiltInFunctionCallNode("floor", {exp}, symbolTable, shaderVersion);
-        exp = TIntermAggregate::CreateConstructor(TType(EbtInt, 2), {exp});
-        exp = CreateTempAssignmentNode(traverser->globalPixelCoord(), exp);
-        mainBody->insertStatement(0, exp);
-    }
+    // Assign the global pixel coord at the beginning of main(), if used.
+    traverser->injectPixelCoordInitializationCodeIfNeeded(compiler, root, mainBody);
 
     return compiler->validateAST(root);
 }
