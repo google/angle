@@ -63,6 +63,13 @@ struct FrontendFeatures : FeatureSetBase
         &members,
     };
 
+    FeatureInfo singleThreadedTextureDecompression = {
+        "singleThreadedTextureDecompression",
+        FeatureCategory::FrontendWorkarounds,
+        "Disables multi-threaded decompression of compressed texture formats",
+        &members,
+    };
+
     FeatureInfo forceDepthAttachmentInitOnClear = {
         "forceDepthAttachmentInitOnClear", FeatureCategory::FrontendWorkarounds,
         "Force depth attachment initialization on clear ops", &members,

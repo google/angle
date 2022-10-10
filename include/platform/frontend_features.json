@@ -61,6 +61,13 @@
             ]
         },
         {
+            "name": "single_threaded_texture_decompression",
+            "category": "Workarounds",
+            "description": [
+                "Disables multi-threaded decompression of compressed texture formats"
+            ]
+        },
+        {
             "name": "force_depth_attachment_init_on_clear",
             "category": "Workarounds",
             "description": [

@@ -2539,7 +2539,8 @@ angle::ImageLoadContext Display::getImageLoadContext() const
     angle::ImageLoadContext imageLoadContext;
 
     imageLoadContext.singleThreadPool = mSingleThreadPool;
-    imageLoadContext.multiThreadPool  = mMultiThreadPool;
+    imageLoadContext.multiThreadPool =
+        mFrontendFeatures.singleThreadedTextureDecompression.enabled ? nullptr : mMultiThreadPool;
 
     return imageLoadContext;
 }

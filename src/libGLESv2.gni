@@ -1,6 +1,7 @@
 # Copyright 2013 The ANGLE Project Authors. All rights reserved.
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
+import("../gni/angle.gni")
 
 libangle_common_sources = [
   "src/common/CircularBuffer.h",
@@ -124,6 +125,7 @@ if (is_win) {
 }
 
 libangle_image_util_headers = [
+  "src/image_util/AstcDecompressor.h",
   "src/image_util/copyimage.h",
   "src/image_util/copyimage.inc",
   "src/image_util/generatemip.h",
@@ -141,6 +143,11 @@ libangle_image_util_sources = [
   "src/image_util/loadimage_etc.cpp",
   "src/image_util/loadimage_paletted.cpp",
 ]
+if (angle_has_astc_encoder) {
+  libangle_image_util_sources += [ "src/image_util/AstcDecompressor.cpp" ]
+} else {
+  libangle_image_util_sources += [ "src/image_util/AstcDecompressorNoOp.cpp" ]
+}
 
 libangle_gpu_info_util_sources = [
   "src/gpu_info_util/SystemInfo.cpp",

@@ -214,6 +214,7 @@ enum class Feature
     SetZeroLevelBeforeGenerateMipmap,
     ShadowBuffers,
     ShiftInstancedArrayDataWithOffset,
+    SingleThreadedTextureDecompression,
     SkipVSConstantRegisterZero,
     SupportsAndroidHardwareBuffer,
     SupportsAndroidNativeFenceSync,

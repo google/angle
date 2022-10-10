@@ -44,13 +44,13 @@ class WaitableEvent : angle::NonCopyable
     // Peeks whether the event is ready. If ready, wait() will not block.
     virtual bool isReady() = 0;
 
-    template <size_t Count>
-    static void WaitMany(std::array<std::shared_ptr<WaitableEvent>, Count> *waitables)
+    template <class T>
+    // Waits on multiple events. T should be some container of std::shared_ptr<WaitableEvent>.
+    static void WaitMany(T *waitables)
     {
-        ASSERT(Count > 0);
-        for (size_t index = 0; index < Count; ++index)
+        for (auto &waitable : *waitables)
         {
-            (*waitables)[index]->wait();
+            waitable->wait();
         }
     }
 };
