@@ -5024,15 +5024,15 @@ void CaptureMidExecutionSetup(const gl::Context *context,
     // Clean up the replay state.
     replayState.reset(context);
 
-    if (validationEnabled)
-    {
-        CaptureValidateSerializedState(context, setupCalls);
-    }
-
     if (savedUnpackAlignment != currentUnpackState.alignment)
     {
         cap(CapturePixelStorei(replayState, true, GL_UNPACK_ALIGNMENT, savedUnpackAlignment));
         currentUnpackState.alignment = savedUnpackAlignment;
+    }
+
+    if (validationEnabled)
+    {
+        CaptureValidateSerializedState(context, setupCalls);
     }
 }
 
