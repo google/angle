@@ -760,6 +760,16 @@ struct FeaturesVk : FeatureSetBase
         "supports compute shader transcode etc format to bc format",
         &members,
     };
+
+    FeatureInfo supportsGraphicsPipelineLibrary = {
+        "supportsGraphicsPipelineLibrary", FeatureCategory::VulkanFeatures,
+        "VkDevice supports the VK_EXT_graphics_pipeline_library extension", &members,
+        "https://anglebug.com/7369"};
+
+    FeatureInfo supportsPipelineProtectedAccess = {
+        "supportsPipelineProtectedAccess", FeatureCategory::VulkanFeatures,
+        "VkDevice supports the VK_EXT_pipeline_protected_access extension", &members,
+        "https://anglebug.com/7714"};
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

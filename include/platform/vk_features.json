@@ -1029,6 +1029,22 @@
             "description": [
                  "supports compute shader transcode etc format to bc format"
             ]
+        },
+        {
+            "name": "supports_graphics_pipeline_library",
+            "category": "Features",
+            "description": [
+                "VkDevice supports the VK_EXT_graphics_pipeline_library extension"
+            ],
+            "issue": "https://anglebug.com/7369"
+        },
+        {
+            "name": "supports_pipeline_protected_access",
+            "category": "Features",
+            "description": [
+                "VkDevice supports the VK_EXT_pipeline_protected_access extension"
+            ],
+            "issue": "https://anglebug.com/7714"
         }
     ]
 }
