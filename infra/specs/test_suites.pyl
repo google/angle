@@ -696,6 +696,7 @@
         'args': [
           '--log=debug',
           '--show-test-stdout',
+          '--split-shard-samples',
         ],
         'merge': {
           'script': '//scripts/process_angle_perf_results.py',

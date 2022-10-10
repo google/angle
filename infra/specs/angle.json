@@ -479,6 +479,7 @@
         "args": [
           "--log=debug",
           "--show-test-stdout",
+          "--split-shard-samples",
           "--trial-time=10"
         ],
         "isolate_name": "angle_perftests",
@@ -1039,7 +1040,8 @@
       {
         "args": [
           "--log=debug",
-          "--show-test-stdout"
+          "--show-test-stdout",
+          "--split-shard-samples"
         ],
         "isolate_name": "angle_perftests",
         "merge": {
@@ -1693,7 +1695,8 @@
       {
         "args": [
           "--log=debug",
-          "--show-test-stdout"
+          "--show-test-stdout",
+          "--split-shard-samples"
         ],
         "isolate_name": "angle_perftests",
         "merge": {
@@ -4679,7 +4682,8 @@
       {
         "args": [
           "--log=debug",
-          "--show-test-stdout"
+          "--show-test-stdout",
+          "--split-shard-samples"
         ],
         "isolate_name": "angle_perftests",
         "merge": {
