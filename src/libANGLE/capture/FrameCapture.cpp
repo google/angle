@@ -625,31 +625,24 @@ void WriteBinaryParamReplay(ReplayWriter &replayWriter,
     ASSERT(param.data.size() == 1);
     const std::vector<uint8_t> &data = param.data[0];
 
+    // Only inline strings (shaders) to simplify the C code.
     ParamType overrideType = param.type;
     if (param.type == ParamType::TGLvoidConstPointer || param.type == ParamType::TvoidConstPointer)
     {
         overrideType = ParamType::TGLubyteConstPointer;
     }
-    if (overrideType == ParamType::TGLenumConstPointer || overrideType == ParamType::TGLcharPointer)
+    if (overrideType == ParamType::TGLcharPointer)
     {
-        // Inline if data are of type string or enum
+        // Inline if data is of type string
         std::string paramTypeString = ParamTypeToString(param.type);
         header << paramTypeString.substr(0, paramTypeString.length() - 1) << varName << "[] = { ";
-        if (overrideType == ParamType::TGLenumConstPointer)
-        {
-            WriteInlineData<GLuint>(data, header);
-        }
-        else
-        {
-            ASSERT(overrideType == ParamType::TGLcharPointer);
-            WriteInlineData<GLchar>(data, header);
-        }
+        WriteInlineData<GLchar>(data, header);
         header << " };\n";
         out << varName;
     }
     else
     {
-        // Store in binary file if data are not of type string or enum
+        // Store in binary file if data are not of type string
         // Round up to 16-byte boundary for cross ABI safety
         size_t offset = rx::roundUpPow2(binaryData->size(), kBinaryAlignment);
         binaryData->resize(offset + data.size());
