@@ -590,7 +590,7 @@ template("angle_trace") {
     defines = [ "ANGLE_REPLAY_IMPLEMENTATION" ]
     suppressed_configs += [ "$angle_root:constructor_and_destructor_warnings" ]
 
-    deps = [ "$angle_root:angle_trace_fixture" ]
+    deps = [ "$angle_root/util:angle_trace_fixture" ]
 
     if (is_android) {
       libs = [ "log" ]

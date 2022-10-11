@@ -1220,33 +1220,6 @@ if (angle_has_frame_capture) {
   }
 }
 
-if (angle_build_tests) {
-  # Used by a few targets that compile traces.
-  config("angle_trace_fixture_config") {
-    include_dirs = [ "src/libANGLE/capture" ]
-  }
-
-  angle_source_set("angle_trace_fixture") {
-    testonly = true
-    defines = [ "ANGLE_REPLAY_IMPLEMENTATION" ]
-    suppressed_configs += [ "$angle_root:constructor_and_destructor_warnings" ]
-    sources = [
-      "src/libANGLE/capture/trace_fixture.cpp",
-      "src/libANGLE/capture/trace_fixture.h",
-    ]
-    public_deps = [
-      ":includes",
-      "util:angle_trace_loader",
-    ]
-    include_dirs = [ "." ]
-    public_configs = [ ":angle_trace_fixture_config" ]
-    if (is_ios) {
-      # shared libraries are hidden inside ios_framework_bundle, but we include headers from them
-      check_includes = false
-    }
-  }
-}
-
 config("shared_library_public_config") {
   if (is_mac && !is_component_build) {
     # Executable targets that depend on the shared libraries below need to have

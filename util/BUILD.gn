@@ -195,7 +195,6 @@ angle_shared_library("angle_trace_loader") {
   defines = [ "ANGLE_TRACE_LOADER_IMPLEMENTATION" ]
 
   sources = [
-    "capture/angle_trace_gl.h",
     "capture/trace_egl_loader_autogen.cpp",
     "capture/trace_egl_loader_autogen.h",
     "capture/trace_gles_loader_autogen.cpp",
@@ -211,6 +210,25 @@ angle_shared_library("angle_trace_loader") {
     "$angle_root:no_gl_prototypes",
     ":angle_trace_loader_config",
   ]
+}
+
+angle_source_set("angle_trace_fixture") {
+  testonly = true
+  defines = [ "ANGLE_REPLAY_IMPLEMENTATION" ]
+  suppressed_configs += [ "$angle_root:constructor_and_destructor_warnings" ]
+  sources = [
+    "capture/angle_trace_gl.h",
+    "capture/trace_fixture.cpp",
+    "capture/trace_fixture.h",
+  ]
+  public_deps = [
+    ":angle_trace_loader",
+    "$angle_root:includes",
+  ]
+  if (is_ios) {
+    # shared libraries are hidden inside ios_framework_bundle, but we include headers from them
+    check_includes = false
+  }
 }
 
 config("angle_util_config") {
