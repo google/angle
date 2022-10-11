@@ -25,6 +25,7 @@ typedef void (GL_APIENTRYP PFNGLREQUESTEXTENSIONANGLEPROC) (const GLchar *name);
 typedef void (GL_APIENTRYP PFNGLDISABLEEXTENSIONANGLEPROC) (const GLchar *name);
 #ifdef GL_GLEXT_PROTOTYPES
 GL_APICALL void GL_APIENTRY glRequestExtensionANGLE (const GLchar *name);
+GL_APICALL void GL_APIENTRY glDisableExtensionANGLE (const GLchar *name);
 #endif
 #endif /* GL_ANGLE_webgl_compatibility */
 
@@ -597,14 +598,14 @@ GL_APICALL void GL_APIENTRY glReleaseTexturesANGLE(GLuint numTexture, const GLui
 typedef void (GL_APIENTRYP PFNGLFRAMEBUFFERMEMORYLESSPIXELLOCALSTORAGEANGLEPROC) (GLint plane, GLenum internalformat);
 typedef void (GL_APIENTRYP PFNGLFRAMEBUFFERTEXTUREPIXELLOCALSTORAGEANGLEPROC) (GLint plane, GLuint backingtexture, GLint level, GLint layer);
 typedef void (GL_APIENTRYP PFNGLBEGINPIXELLOCALSTORAGEANGLEPROC) (GLsizei planes, const GLenum loadops[], const void *cleardata);
-typedef void (GL_APIENTRYP PFNGLENDPIXELLOCALSTORAGEANGLEPROC) ();
-typedef void (GL_APIENTRYP PFNGLPIXELLOCALSTORAGEBARRIERANGLEPROC) ();
+typedef void (GL_APIENTRYP PFNGLENDPIXELLOCALSTORAGEANGLEPROC) (void);
+typedef void (GL_APIENTRYP PFNGLPIXELLOCALSTORAGEBARRIERANGLEPROC) (void);
 #ifdef GL_GLEXT_PROTOTYPES
 GL_APICALL void GL_APIENTRY glFramebufferMemorylessPixelLocalStorageANGLE (GLint plane, GLenum internalformat);
 GL_APICALL void GL_APIENTRY glFramebufferTexturePixelLocalStorageANGLE (GLint plane, GLuint backingtexture, GLint level, GLint layer);
 GL_APICALL void GL_APIENTRY glBeginPixelLocalStorageANGLE (GLsizei planes, const GLenum loadops[], const void *cleardata);
-GL_APICALL void GL_APIENTRY glEndPixelLocalStorageANGLE ();
-GL_APICALL void GL_APIENTRY glPixelLocalStorageBarrierANGLE ();
+GL_APICALL void GL_APIENTRY glEndPixelLocalStorageANGLE (void);
+GL_APICALL void GL_APIENTRY glPixelLocalStorageBarrierANGLE (void);
 #endif
 #endif /* GL_ANGLE_shader_pixel_local_storage */
 
@@ -661,7 +662,9 @@ GL_APICALL void GL_APIENTRY glPixelLocalStorageBarrierANGLE ();
 #define GL_LOGIC_OP_NAND_ANGLE           0x150E
 #define GL_LOGIC_OP_SET_ANGLE            0x150F
 typedef void (GL_APIENTRYP PFNGLLOGICOPANGLEPROC) (GLenum);
-
+#ifdef GL_GLEXT_PROTOTYPES
+GL_APICALL void GL_APIENTRY glLogicOpANGLE (GLenum);
+#endif
 #endif /* GL_ANGLE_logic_op */
 
 #endif  // INCLUDE_GLES2_GL2EXT_ANGLE_H_
