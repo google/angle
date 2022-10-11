@@ -78,6 +78,7 @@ class ParamBuffer final : angle::NonCopyable
     ParamCapture &getClientArrayPointerParameter();
     size_t getReadBufferSize() const { return mReadBufferSize; }
 
+    bool empty() const { return mParamCaptures.empty(); }
     const std::vector<ParamCapture> &getParamCaptures() const { return mParamCaptures; }
 
   private:

@@ -5142,18 +5142,6 @@ struct ParamValueTrait<gl::TextureID>
 };
 }  // namespace
 
-ReplayContext::ReplayContext(size_t readBufferSizebytes,
-                             const gl::AttribArray<size_t> &clientArraysSizebytes)
-{
-    mReadBuffer.resize(readBufferSizebytes);
-
-    for (uint32_t i = 0; i < clientArraysSizebytes.size(); i++)
-    {
-        mClientArraysBuffer[i].resize(clientArraysSizebytes[i]);
-    }
-}
-ReplayContext::~ReplayContext() {}
-
 FrameCapture::FrameCapture()  = default;
 FrameCapture::~FrameCapture() = default;
 
@@ -7661,41 +7649,6 @@ uint32_t FrameCaptureShared::getFrameCount() const
 uint32_t FrameCaptureShared::getReplayFrameIndex() const
 {
     return mFrameIndex - mCaptureStartFrame + 1;
-}
-
-void FrameCaptureShared::replay(gl::Context *context)
-{
-    ReplayContext replayContext(mReadBufferSize, mClientArraySizes);
-    for (const CallCapture &call : mFrameCalls)
-    {
-        INFO() << "frame index: " << mFrameIndex << " " << call.name();
-
-        if (call.entryPoint == EntryPoint::Invalid)
-        {
-            if (call.customFunctionName == "UpdateClientArrayPointer")
-            {
-                GLint arrayIndex =
-                    call.params.getParam("arrayIndex", ParamType::TGLint, 0).value.GLintVal;
-                ASSERT(arrayIndex < gl::MAX_VERTEX_ATTRIBS);
-
-                const ParamCapture &pointerParam =
-                    call.params.getParam("pointer", ParamType::TvoidConstPointer, 1);
-                ASSERT(pointerParam.data.size() == 1);
-                const void *pointer = pointerParam.data[0].data();
-
-                size_t size = static_cast<size_t>(
-                    call.params.getParam("size", ParamType::TGLuint64, 2).value.GLuint64Val);
-
-                std::vector<uint8_t> &curClientArrayBuffer =
-                    replayContext.getClientArraysBuffer()[arrayIndex];
-                ASSERT(curClientArrayBuffer.size() >= size);
-                memcpy(curClientArrayBuffer.data(), pointer, size);
-            }
-            continue;
-        }
-
-        ReplayCall(context, &replayContext, call);
-    }
 }
 
 // Serialize trace metadata into a JSON file. The JSON file will be named "trace_prefix.json".

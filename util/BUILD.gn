@@ -166,27 +166,6 @@ angle_source_set("angle_util_loader") {
   ]
 }
 
-if (angle_has_frame_capture) {
-  config("angle_frame_capture_test_utils_config") {
-    include_dirs = [ "$angle_root/util/capture" ]
-  }
-
-  angle_source_set("angle_frame_capture_test_utils") {
-    testonly = true
-    sources = [
-      "capture/frame_capture_test_utils.cpp",
-      "capture/frame_capture_test_utils.h",
-    ]
-    deps = [
-      "$angle_root:angle_common",
-      "$angle_root:angle_compression",
-      "$angle_root/third_party/rapidjson",
-    ]
-
-    public_configs += [ ":angle_frame_capture_test_utils_config" ]
-  }
-}
-
 config("angle_trace_loader_config") {
   include_dirs = [ "$angle_root/util/capture" ]
 }
@@ -228,6 +207,31 @@ angle_source_set("angle_trace_fixture") {
   if (is_ios) {
     # shared libraries are hidden inside ios_framework_bundle, but we include headers from them
     check_includes = false
+  }
+}
+
+if (angle_has_frame_capture) {
+  config("angle_frame_capture_test_utils_config") {
+    include_dirs = [ "$angle_root/util/capture" ]
+  }
+
+  angle_source_set("angle_frame_capture_test_utils") {
+    testonly = true
+    sources = [
+      "capture/frame_capture_replay_autogen.cpp",
+      "capture/frame_capture_test_utils.cpp",
+      "capture/frame_capture_test_utils.h",
+    ]
+    deps = [
+      ":angle_trace_fixture",
+      ":angle_trace_loader",
+      "$angle_root:angle_capture_common",
+      "$angle_root:angle_common",
+      "$angle_root:angle_compression",
+      "$angle_root/third_party/rapidjson",
+    ]
+
+    public_configs += [ ":angle_frame_capture_test_utils_config" ]
   }
 }
 

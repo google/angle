@@ -42,7 +42,6 @@ void FrameCaptureShared::onEndFrame(gl::Context *context) {}
 void FrameCaptureShared::onMakeCurrent(const gl::Context *context, const egl::Surface *drawSurface)
 {}
 void FrameCaptureShared::onDestroyContext(const gl::Context *context) {}
-void FrameCaptureShared::replay(gl::Context *context) {}
 const ProgramSources &FrameCaptureShared::getProgramSources(gl::ShaderProgramID id) const
 {
     const auto &foundSources = mCachedProgramSources.find(id);

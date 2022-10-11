@@ -629,31 +629,27 @@ TEMPLATE_CAPTURE_REPLAY_SOURCE = """\
 // found in the LICENSE file.
 //
 // frame_capture_replay_autogen.cpp:
-//   Util function to dispatch captured GL calls through Context and replay them.
+//   Replay captured GL calls.
 
-#include "angle_gl.h"
-
+#include "angle_trace_gl.h"
 #include "common/debug.h"
-#include "common/debug.h"
-#include "libANGLE/Context.h"
-#include "libANGLE/Context.inl.h"
-#include "libANGLE/capture/FrameCapture.h"
-
-using namespace gl;
+#include "common/frame_capture_utils.h"
+#include "frame_capture_test_utils.h"
 
 namespace angle
 {{
-
-void FrameCaptureShared::ReplayCall(gl::Context *context,
-                              ReplayContext *replayContext,
-                              const CallCapture &call)
+void ReplayTraceFunctionCall(const CallCapture &call, const TraceFunctionMap &customFunctions)
 {{
     const ParamBuffer &params = call.params;
+    const std::vector<ParamCapture> &captures = params.getParamCaptures();
+
     switch (call.entryPoint)
     {{
-        {call_replay_cases}
+{call_replay_cases}
         default:
-            UNREACHABLE();
+            ASSERT(!call.customFunctionName.empty());
+            ReplayCustomFunctionCall(call, customFunctions);
+            break;
     }}
 }}
 
@@ -661,8 +657,11 @@ void FrameCaptureShared::ReplayCall(gl::Context *context,
 
 """
 
-TEMPLATE_CAPTURE_REPLAY_CALL_CASE = """case angle::EntryPoint::GL{entry_point}:
-    context->{context_call}({param_value_access});break;"""
+TEMPLATE_REPLAY_CALL_CASE = """\
+        case angle::EntryPoint::{enum}:
+            {call}({params});
+            break;
+"""
 
 POINTER_FORMAT = "0x%016\" PRIxPTR \""
 UNSIGNED_LONG_LONG_FORMAT = "%llu"
@@ -2394,69 +2393,75 @@ def is_get_pointer_command(command_name):
     return command_name.endswith('Pointerv') and command_name.startswith('glGet')
 
 
-def format_capture_replay_param_access(api, command_name, param_text_list, cmd_packed_gl_enums,
-                                       packed_param_types):
+def remove_id_suffix(t):
+    return t[:-2] if is_id_type(t) else t
+
+
+def format_replay_params(api, command_name, param_text_list, packed_enums, resource_id_types):
     param_access_strs = list()
-    cmd_packed_enums = get_packed_enums(api, cmd_packed_gl_enums, command_name, packed_param_types,
-                                        param_text_list)
     for i, param_text in enumerate(param_text_list):
-        param_type = just_the_type_packed(param_text, cmd_packed_enums)
-        param_name = just_the_name_packed(param_text, cmd_packed_enums)
-
-        pointer_count = param_type.count('*')
-        is_const = 'const' in param_type
-        if pointer_count == 0:
-            param_template = 'params.getParam("{name}", ParamType::T{enum_type}, {index}).value.{enum_type}Val'
-        elif pointer_count == 1 and is_const:
-            param_template = 'replayContext->getAsConstPointer<{type}>(params.getParam("{name}", ParamType::T{enum_type}, {index}))'
-        elif pointer_count == 2 and is_const:
-            param_template = 'replayContext->getAsPointerConstPointer<{type}>(params.getParam("{name}", ParamType::T{enum_type}, {index}))'
-        elif pointer_count == 1 or (pointer_count == 2 and is_get_pointer_command(command_name)):
-            param_template = 'replayContext->getReadBufferPointer<{type}>(params.getParam("{name}", ParamType::T{enum_type}, {index}))'
+        param_type = just_the_type(param_text)
+        if param_type in EGL_PACKED_TYPES:
+            param_type = 'void *'
+        param_name = just_the_name(param_text)
+        capture_type = get_capture_param_type_name(param_type)
+        union_name = get_param_type_union_name(capture_type)
+        param_access = 'captures[%d].value.%s' % (i, union_name)
+        # Workaround for https://github.com/KhronosGroup/OpenGL-Registry/issues/545
+        if command_name == 'glCreateShaderProgramvEXT' and i == 2:
+            param_access = 'const_cast<const char **>(%s)' % param_access
         else:
-            assert False, "Not supported param type %s" % param_type
+            cmd_no_suffix = strip_suffix(api, command_name)
+            if cmd_no_suffix in packed_enums and param_name in packed_enums[cmd_no_suffix]:
+                packed_type = remove_id_suffix(packed_enums[cmd_no_suffix][param_name])
+                if packed_type in resource_id_types:
+                    param_access = 'g%sMap[%s]' % (packed_type, param_access)
+                elif packed_type == 'UniformLocation':
+                    param_access = 'gUniformLocations[gCurrentProgram][%s]' % param_access
+                elif packed_type == 'egl::Image':
+                    param_access = 'gEGLImageMap2[captures[%d].value.GLuintVal]' % i
+        param_access_strs.append(param_access)
+    return ', '.join(param_access_strs)
 
-        param_access_strs.append(
-            param_template.format(
-                index=i,
-                name=param_name,
-                type=param_type,
-                enum_type=get_capture_param_type_name(param_type)))
-    return ",".join(param_access_strs)
 
-
-def format_capture_replay_call_case(api, command_to_param_types_mapping, cmd_packed_gl_enums,
-                                    packed_param_types):
-    call_str_list = list()
+def format_capture_replay_call_case(api, command_to_param_types_mapping, gl_packed_enums,
+                                    resource_id_types):
+    call_list = list()
     for command_name, cmd_param_texts in sorted(command_to_param_types_mapping.items()):
         entry_point_name = strip_api_prefix(command_name)
 
-        call_str_list.append(
-            TEMPLATE_CAPTURE_REPLAY_CALL_CASE.format(
-                entry_point=entry_point_name,
-                param_value_access=format_capture_replay_param_access(
-                    api, command_name, cmd_param_texts, cmd_packed_gl_enums, packed_param_types),
-                context_call=entry_point_name[0].lower() + entry_point_name[1:],
+        call_list.append(
+            TEMPLATE_REPLAY_CALL_CASE.format(
+                enum=('EGL' if api == 'EGL' else 'GL') + entry_point_name,
+                params=format_replay_params(api, command_name, cmd_param_texts, gl_packed_enums,
+                                            resource_id_types),
+                call=command_name,
             ))
 
-    return '\n'.join(call_str_list)
+    return ''.join(call_list)
 
 
-def write_capture_replay_source(api, all_commands_nodes, gles_command_names, cmd_packed_gl_enums,
-                                packed_param_types):
-    all_commands_names = set(gles_command_names)
+def write_capture_replay_source(gl_command_nodes, gl_command_names, gl_packed_enums,
+                                egl_command_nodes, egl_command_names, egl_packed_enums,
+                                resource_id_types):
 
-    command_to_param_types_mapping = dict()
-    for command_node in all_commands_nodes:
-        command_name = command_node.find('proto').find('name').text
-        if command_name not in all_commands_names:
-            continue
+    call_replay_cases = ''
 
-        command_to_param_types_mapping[command_name] = get_command_params_text(
-            command_node, command_name)
+    for api, nodes, names, packed_enums in [
+        (apis.GLES, gl_command_nodes, gl_command_names, gl_packed_enums),
+        (apis.EGL, egl_command_nodes, egl_command_names, egl_packed_enums)
+    ]:
+        command_to_param_types_mapping = dict()
+        all_commands_names = set(names)
+        for command_node in nodes:
+            command_name = command_node.find('proto').find('name').text
+            if command_name not in all_commands_names:
+                continue
+            command_to_param_types_mapping[command_name] = get_command_params_text(
+                command_node, command_name)
 
-    call_replay_cases = format_capture_replay_call_case(api, command_to_param_types_mapping,
-                                                        cmd_packed_gl_enums, packed_param_types)
+        call_replay_cases += format_capture_replay_call_case(api, command_to_param_types_mapping,
+                                                             packed_enums, resource_id_types)
 
     source_content = TEMPLATE_CAPTURE_REPLAY_SOURCE.format(
         script_name=os.path.basename(sys.argv[0]),
@@ -2464,7 +2469,7 @@ def write_capture_replay_source(api, all_commands_nodes, gles_command_names, cmd
         call_replay_cases=call_replay_cases,
     )
     source_file_path = registry_xml.script_relative(
-        "../src/libANGLE/capture/frame_capture_replay_autogen.cpp")
+        "../util/capture/frame_capture_replay_autogen.cpp")
     with open(source_file_path, 'w') as f:
         f.write(source_content)
 
@@ -2721,7 +2726,6 @@ def main():
             '../src/libANGLE/capture/capture_gles_3_2_autogen.h',
             '../src/libANGLE/capture/capture_gles_ext_autogen.cpp',
             '../src/libANGLE/capture/capture_gles_ext_autogen.h',
-            '../src/libANGLE/capture/frame_capture_replay_autogen.cpp',
             '../src/libANGLE/validationCL_autogen.h',
             '../src/libANGLE/validationEGL_autogen.h',
             '../src/libANGLE/validationES1_autogen.h',
@@ -2766,6 +2770,7 @@ def main():
             '../src/libGLESv2/entry_points_gl_3_autogen.h',
             '../src/libGLESv2/entry_points_gl_4_autogen.cpp',
             '../src/libGLESv2/entry_points_gl_4_autogen.h',
+            '../util/capture/frame_capture_replay_autogen.cpp',
         ]
 
         if sys.argv[1] == 'inputs':
@@ -3297,12 +3302,14 @@ def main():
 
     all_gles_param_types = sorted(GLEntryPoints.all_param_types)
     all_egl_param_types = sorted(EGLEntryPoints.all_param_types)
+    resource_id_types = get_resource_id_types(GLEntryPoints.all_param_types)
     # Get a sorted list of param types without duplicates
     all_param_types = sorted(list(set(all_gles_param_types + all_egl_param_types)))
     write_capture_helper_header(all_param_types)
     write_capture_helper_source(all_param_types)
-    write_capture_replay_source(apis.GLES, xml.all_commands, all_commands_no_suffix,
-                                GLEntryPoints.get_packed_enums(), [])
+    write_capture_replay_source(xml.all_commands, all_commands_with_suffix,
+                                GLEntryPoints.get_packed_enums(), eglxml.all_commands,
+                                egl_commands, EGLEntryPoints.get_packed_enums(), resource_id_types)
 
 
 if __name__ == '__main__':

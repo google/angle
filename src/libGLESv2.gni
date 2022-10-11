@@ -584,7 +584,6 @@ libangle_capture_sources = [
   "src/libANGLE/capture/capture_gles_3_2_params.cpp",
   "src/libANGLE/capture/capture_gles_ext_autogen.cpp",
   "src/libANGLE/capture/capture_gles_ext_params.cpp",
-  "src/libANGLE/capture/frame_capture_replay_autogen.cpp",
   "src/libGLESv2/global_state.h",
   "src/third_party/ceval/ceval.h",
 ]

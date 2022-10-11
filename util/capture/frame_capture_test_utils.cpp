@@ -9,7 +9,9 @@
 
 #include "frame_capture_test_utils.h"
 
+#include "common/frame_capture_utils.h"
 #include "common/string_utils.h"
+#include "trace_fixture.h"
 
 #include <rapidjson/document.h>
 #include <rapidjson/istreamwrapper.h>
@@ -83,7 +85,7 @@ bool LoadTraceInfoFromJSON(const std::string &traceName,
         return false;
     }
 
-    const rapidjson::Document::Object &meta = doc["TraceMetadata"].GetObject();
+    const rapidjson::Document::Object &meta = doc["TraceMetadata"].GetObj();
 
     strncpy(traceInfoOut->name, traceName.c_str(), kTraceInfoMaxNameLen);
     traceInfoOut->contextClientMajorVersion = meta["ContextClientMajorVersion"].GetInt();
@@ -115,5 +117,31 @@ bool LoadTraceInfoFromJSON(const std::string &traceName,
     traceInfoOut->initialized                 = true;
 
     return true;
+}
+
+void ReplayTraceFunction(const TraceFunction &func, const TraceFunctionMap &customFunctions)
+{
+    for (const CallCapture &call : func)
+    {
+        ReplayTraceFunctionCall(call, customFunctions);
+    }
+}
+
+void ReplayCustomFunctionCall(const CallCapture &call, const TraceFunctionMap &customFunctions)
+{
+    ASSERT(call.entryPoint == EntryPoint::Invalid);
+    // TODO(jmadill): Handle fixture functions. http://anglebug.com/7752
+    ASSERT(call.params.empty());
+    auto iter = customFunctions.find(call.customFunctionName);
+    if (iter == customFunctions.end())
+    {
+        printf("Unknown custom function: %s\n", call.customFunctionName.c_str());
+        UNREACHABLE();
+    }
+    else
+    {
+        const TraceFunction &func = iter->second;
+        ReplayTraceFunction(func, customFunctions);
+    }
 }
 }  // namespace angle

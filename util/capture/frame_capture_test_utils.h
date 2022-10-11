@@ -11,6 +11,7 @@
 #define UTIL_CAPTURE_FRAME_CAPTURE_TEST_UTILS_H_
 
 #include <iostream>
+#include <map>
 #include <memory>
 #include <sstream>
 #include <type_traits>
@@ -18,6 +19,7 @@
 
 #include "common/angleutils.h"
 #include "common/debug.h"
+#include "common/frame_capture_utils.h"
 #include "common/system_utils.h"
 
 #define USE_SYSTEM_ZLIB
@@ -173,6 +175,13 @@ bool LoadTraceNamesFromJSON(const std::string jsonFilePath, std::vector<std::str
 bool LoadTraceInfoFromJSON(const std::string &traceName,
                            const std::string &traceJsonPath,
                            TraceInfo *traceInfoOut);
+
+using TraceFunction    = std::vector<CallCapture>;
+using TraceFunctionMap = std::map<std::string, TraceFunction>;
+
+void ReplayTraceFunction(const TraceFunction &func, const TraceFunctionMap &customFunctions);
+void ReplayTraceFunctionCall(const CallCapture &call, const TraceFunctionMap &customFunctions);
+void ReplayCustomFunctionCall(const CallCapture &call, const TraceFunctionMap &customFunctions);
 }  // namespace angle
 
 #endif  // UTIL_CAPTURE_FRAME_CAPTURE_TEST_UTILS_H_
