@@ -2168,7 +2168,7 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
     shaderParams.clearDepth = params.depthStencilClearValue.depth;
 
     vk::GraphicsPipelineDesc pipelineDesc;
-    pipelineDesc.initDefaults(contextVk);
+    pipelineDesc.initDefaults(contextVk, vk::GraphicsPipelineSubset::Complete);
     pipelineDesc.setColorWriteMasks(0, gl::DrawBufferMask(), gl::DrawBufferMask());
     pipelineDesc.setSingleColorWriteMask(params.colorAttachmentIndexGL, params.colorMaskFlags);
     pipelineDesc.setRasterizationSamples(framebuffer->getSamples());
@@ -2334,7 +2334,7 @@ angle::Result UtilsVk::clearImage(ContextVk *contextVk,
     renderPassDesc.packColorAttachment(0, dstActualFormat.id);
 
     vk::GraphicsPipelineDesc pipelineDesc;
-    pipelineDesc.initDefaults(contextVk);
+    pipelineDesc.initDefaults(contextVk, vk::GraphicsPipelineSubset::Complete);
     pipelineDesc.setSingleColorWriteMask(0, params.colorMaskFlags);
     pipelineDesc.setRasterizationSamples(dst->getSamples());
     pipelineDesc.setRenderPassDesc(renderPassDesc);
@@ -2525,7 +2525,7 @@ angle::Result UtilsVk::blitResolveImpl(ContextVk *contextVk,
     flags |= isResolve ? BlitResolve_frag::kIsResolve : 0;
 
     vk::GraphicsPipelineDesc pipelineDesc;
-    pipelineDesc.initDefaults(contextVk);
+    pipelineDesc.initDefaults(contextVk, vk::GraphicsPipelineSubset::Complete);
     if (blitColor)
     {
         constexpr VkColorComponentFlags kAllColorComponents =
@@ -2972,7 +2972,7 @@ angle::Result UtilsVk::copyImage(ContextVk *contextVk,
     ASSERT(src->getSamples() == 1);
 
     vk::GraphicsPipelineDesc pipelineDesc;
-    pipelineDesc.initDefaults(contextVk);
+    pipelineDesc.initDefaults(contextVk, vk::GraphicsPipelineSubset::Complete);
     pipelineDesc.setRenderPassDesc(renderPassDesc);
     pipelineDesc.setRasterizationSamples(dst->getSamples());
 
@@ -3567,7 +3567,7 @@ angle::Result UtilsVk::unresolve(ContextVk *contextVk,
     }
 
     vk::GraphicsPipelineDesc pipelineDesc;
-    pipelineDesc.initDefaults(contextVk);
+    pipelineDesc.initDefaults(contextVk, vk::GraphicsPipelineSubset::Complete);
     pipelineDesc.setRasterizationSamples(framebuffer->getSamples());
     pipelineDesc.setRenderPassDesc(framebuffer->getRenderPassDesc());
 
@@ -3820,7 +3820,7 @@ angle::Result UtilsVk::drawOverlay(ContextVk *contextVk,
     renderPassDesc.packColorAttachment(0, dst->getActualFormatID());
 
     vk::GraphicsPipelineDesc pipelineDesc;
-    pipelineDesc.initDefaults(contextVk);
+    pipelineDesc.initDefaults(contextVk, vk::GraphicsPipelineSubset::Complete);
     pipelineDesc.setRenderPassDesc(renderPassDesc);
     pipelineDesc.setTopology(gl::PrimitiveMode::TriangleStrip);
     pipelineDesc.setSingleBlend(0, true, VK_BLEND_OP_ADD, VK_BLEND_FACTOR_SRC_ALPHA,

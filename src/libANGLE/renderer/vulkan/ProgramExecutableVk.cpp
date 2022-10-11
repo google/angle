@@ -123,7 +123,7 @@ void SetupDefaultPipelineState(const ContextVk *contextVk,
                                gl::PrimitiveMode mode,
                                vk::GraphicsPipelineDesc *graphicsPipelineDescOut)
 {
-    graphicsPipelineDescOut->initDefaults(contextVk);
+    graphicsPipelineDescOut->initDefaults(contextVk, vk::GraphicsPipelineSubset::Complete);
     graphicsPipelineDescOut->setTopology(mode);
     graphicsPipelineDescOut->setRenderPassSampleCount(1);
     graphicsPipelineDescOut->setRenderPassFramebufferFetchMode(glExecutable.usesFramebufferFetch());

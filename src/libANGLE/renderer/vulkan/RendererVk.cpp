@@ -2041,6 +2041,10 @@ void RendererVk::queryDeviceExtensionFeatures(const vk::ExtensionNameList &devic
     mExtendedDynamicState2Features.sType =
         VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_DYNAMIC_STATE_2_FEATURES_EXT;
 
+    mGraphicsPipelineLibraryFeatures = {};
+    mGraphicsPipelineLibraryFeatures.sType =
+        VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GRAPHICS_PIPELINE_LIBRARY_FEATURES_EXT;
+
     mFragmentShadingRateFeatures = {};
     mFragmentShadingRateFeatures.sType =
         VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_FEATURES_KHR;
@@ -2228,6 +2232,11 @@ void RendererVk::queryDeviceExtensionFeatures(const vk::ExtensionNameList &devic
         vk::AddToPNextChain(&deviceFeatures, &mExtendedDynamicState2Features);
     }
 
+    if (ExtensionFound(VK_EXT_GRAPHICS_PIPELINE_LIBRARY_EXTENSION_NAME, deviceExtensionNames))
+    {
+        vk::AddToPNextChain(&deviceFeatures, &mGraphicsPipelineLibraryFeatures);
+    }
+
     if (ExtensionFound(VK_KHR_FRAGMENT_SHADING_RATE_EXTENSION_NAME, deviceExtensionNames))
     {
         vk::AddToPNextChain(&deviceFeatures, &mFragmentShadingRateFeatures);
@@ -2294,6 +2303,7 @@ void RendererVk::queryDeviceExtensionFeatures(const vk::ExtensionNameList &devic
     mPipelineCreationCacheControlFeatures.pNext             = nullptr;
     mExtendedDynamicStateFeatures.pNext                     = nullptr;
     mExtendedDynamicState2Features.pNext                    = nullptr;
+    mGraphicsPipelineLibraryFeatures.pNext                  = nullptr;
     mFragmentShadingRateFeatures.pNext                      = nullptr;
     mFragmentShaderInterlockFeatures.pNext                  = nullptr;
     mImagelessFramebufferFeatures.pNext                     = nullptr;
@@ -2808,6 +2818,16 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     {
         mEnabledDeviceExtensions.push_back(VK_EXT_EXTENDED_DYNAMIC_STATE_2_EXTENSION_NAME);
         vk::AddToPNextChain(&mEnabledFeatures, &mExtendedDynamicState2Features);
+    }
+
+    if (getFeatures().supportsGraphicsPipelineLibrary.enabled)
+    {
+        // VK_EXT_graphics_pipeline_library requires VK_KHR_pipeline_library
+        ASSERT(ExtensionFound(VK_KHR_PIPELINE_LIBRARY_EXTENSION_NAME, deviceExtensionNames));
+        mEnabledDeviceExtensions.push_back(VK_KHR_PIPELINE_LIBRARY_EXTENSION_NAME);
+
+        mEnabledDeviceExtensions.push_back(VK_EXT_GRAPHICS_PIPELINE_LIBRARY_EXTENSION_NAME);
+        vk::AddToPNextChain(&mEnabledFeatures, &mGraphicsPipelineLibraryFeatures);
     }
 
     if (getFeatures().supportsFragmentShadingRate.enabled)
@@ -3952,6 +3972,9 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsLogicOpDynamicState,
                             mExtendedDynamicState2Features.extendedDynamicState2LogicOp == VK_TRUE);
+
+    ANGLE_FEATURE_CONDITION(&mFeatures, supportsGraphicsPipelineLibrary,
+                            mGraphicsPipelineLibraryFeatures.graphicsPipelineLibrary == VK_TRUE);
 
     // Avoid dynamic state for vertex input binding stride on buggy drivers.
     ANGLE_FEATURE_CONDITION(&mFeatures, forceStaticVertexStrideState,

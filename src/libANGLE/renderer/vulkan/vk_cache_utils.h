@@ -287,6 +287,14 @@ bool operator==(const RenderPassDesc &lhs, const RenderPassDesc &rhs);
 constexpr size_t kRenderPassDescSize = sizeof(RenderPassDesc);
 static_assert(kRenderPassDescSize == 16, "Size check failed");
 
+enum class GraphicsPipelineSubset
+{
+    Complete,  // Including all subsets
+    VertexInput,
+    Shaders,
+    FragmentOutput,
+};
+
 enum class CacheLookUpFeedback
 {
     None,
@@ -404,7 +412,7 @@ struct PackedInputAssemblyState final
         // Workaround driver bug with dynamic vertex stride.
         uint32_t forceStaticVertexStrideState : 1;
 
-        // Whether the pipeline is robust
+        // Whether the pipeline is robust (vertex input copy)
         uint32_t isRobustContext : 1;
 
         uint32_t padding : 24;
@@ -457,7 +465,10 @@ struct PackedPreRasterizationAndFragmentStates final
         // Affecting specialization constants
         uint32_t surfaceRotation : 1;
 
-        uint32_t padding : 4;
+        // Whether the pipeline is robust (shader stages copy)
+        uint32_t isRobustContext : 1;
+
+        uint32_t padding : 3;
     } bits;
 
     // Affecting specialization constants
@@ -531,7 +542,13 @@ struct PackedBlendMaskAndLogicOpState final
         // Dynamic in VK_EXT_extended_dynamic_state2
         uint32_t logicOp : 4;
 
-        uint32_t padding : 19;
+        uint32_t padding : 17;
+
+        // The following bits are hijacked from this state to store the subset of the pipeline being
+        // compiled.  The separate subsets and the full pipeline are stored in separate caches, so
+        // these bits don't actually need to participate in the hash key of the respective subset.
+        // Takes one of GraphicsPipelineSubset values.
+        uint32_t pipelineSubset : 2;
     } bits;
 };
 
@@ -588,6 +605,61 @@ static_assert(kNumGraphicsPipelineDirtyBits <= 64, "Too many pipeline dirty bits
 // Set of dirty bits. Each bit represents kGraphicsPipelineDirtyBitBytes in the desc.
 using GraphicsPipelineTransitionBits = angle::BitSet<kNumGraphicsPipelineDirtyBits>;
 
+// Disable padding warnings for a few helper structs that aggregate Vulkan state objects.  These are
+// not used as hash keys, they just simplify passing them around to functions.
+ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
+
+struct GraphicsPipelineVertexInputVulkanStructs
+{
+    VkPipelineVertexInputStateCreateInfo vertexInputState       = {};
+    VkPipelineInputAssemblyStateCreateInfo inputAssemblyState   = {};
+    VkPipelineVertexInputDivisorStateCreateInfoEXT divisorState = {};
+
+    // Support storage
+    gl::AttribArray<VkVertexInputBindingDescription> bindingDescs;
+    gl::AttribArray<VkVertexInputAttributeDescription> attributeDescs;
+    gl::AttribArray<VkVertexInputBindingDivisorDescriptionEXT> divisorDesc;
+};
+
+struct GraphicsPipelineShadersVulkanStructs
+{
+    VkPipelineViewportStateCreateInfo viewportState                               = {};
+    VkPipelineRasterizationStateCreateInfo rasterState                            = {};
+    VkPipelineDepthStencilStateCreateInfo depthStencilState                       = {};
+    VkPipelineTessellationStateCreateInfo tessellationState                       = {};
+    VkPipelineTessellationDomainOriginStateCreateInfo domainOriginState           = {};
+    VkPipelineViewportDepthClipControlCreateInfoEXT depthClipControl              = {};
+    VkPipelineRasterizationLineStateCreateInfoEXT rasterLineState                 = {};
+    VkPipelineRasterizationProvokingVertexStateCreateInfoEXT provokingVertexState = {};
+    VkPipelineRasterizationDepthClipStateCreateInfoEXT depthClipState             = {};
+    VkPipelineRasterizationStateStreamCreateInfoEXT rasterStreamState             = {};
+    VkSpecializationInfo specializationInfo                                       = {};
+
+    // Support storage
+    angle::FixedVector<VkPipelineShaderStageCreateInfo, 5> shaderStages;
+    SpecializationConstantMap<VkSpecializationMapEntry> specializationEntries;
+};
+
+struct GraphicsPipelineSharedNonVertexInputVulkanStructs
+{
+    VkPipelineMultisampleStateCreateInfo multisampleState = {};
+
+    // Support storage
+    uint32_t sampleMask;
+};
+
+struct GraphicsPipelineFragmentOutputVulkanStructs
+{
+    VkPipelineColorBlendStateCreateInfo blendState = {};
+
+    // Support storage
+    gl::DrawBuffersArray<VkPipelineColorBlendAttachmentState> blendAttachmentState;
+};
+
+ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
+
+using GraphicsPipelineDynamicStateList = angle::FixedVector<VkDynamicState, 22>;
+
 // State changes are applied through the update methods. Each update method can also have a
 // sibling method that applies the update without marking a state transition. The non-transition
 // update methods are used for internal shader pipelines. Not every non-transition update method
@@ -607,7 +679,7 @@ class GraphicsPipelineDesc final
     size_t hash() const;
     bool operator==(const GraphicsPipelineDesc &other) const;
 
-    void initDefaults(const ContextVk *contextVk);
+    void initDefaults(const ContextVk *contextVk, GraphicsPipelineSubset subset);
 
     // For custom comparisons.
     template <typename T>
@@ -790,6 +862,42 @@ class GraphicsPipelineDesc final
 
   private:
     void updateSubpass(GraphicsPipelineTransitionBits *transition, uint32_t subpass);
+
+    // Get the subset of the desc that corresponds to the pipeline subset being specified.
+    // GraphicsPipelineDesc includes all pipeline state, but is also used in caches that create
+    // partial pipelines.  For those pipelines, only the relevant subset of the state is hashed,
+    // compared, copied, etc, even though the entire class is used as key.
+    GraphicsPipelineSubset getPipelineSubset() const
+    {
+        return static_cast<GraphicsPipelineSubset>(
+            mFragmentOutput.blendMaskAndLogic.bits.pipelineSubset);
+    }
+    const void *getPipelineSubsetMemory(size_t *sizeOut) const;
+
+    void initializePipelineVertexInputState(
+        ContextVk *contextVk,
+        const gl::AttributesMask &activeAttribLocationsMask,
+        const gl::ComponentTypeMask &programAttribsTypeMask,
+        GraphicsPipelineVertexInputVulkanStructs *stateOut,
+        GraphicsPipelineDynamicStateList *dynamicStateListOut) const;
+
+    void initializePipelineShadersState(
+        ContextVk *contextVk,
+        const ShaderAndSerialMap &shaders,
+        const SpecializationConstants &specConsts,
+        GraphicsPipelineShadersVulkanStructs *stateOut,
+        GraphicsPipelineDynamicStateList *dynamicStateListOut) const;
+
+    void initializePipelineSharedNonVertexInputState(
+        ContextVk *contextVk,
+        GraphicsPipelineSharedNonVertexInputVulkanStructs *stateOut,
+        GraphicsPipelineDynamicStateList *dynamicStateListOut) const;
+
+    void initializePipelineFragmentOutputState(
+        ContextVk *contextVk,
+        const gl::DrawBufferMask &missingOutputsMask,
+        GraphicsPipelineFragmentOutputVulkanStructs *stateOut,
+        GraphicsPipelineDynamicStateList *dynamicStateListOut) const;
 
     PipelineShadersState mShaders;
     PipelineSharedNonVertexInputState mSharedNonVertexInput;

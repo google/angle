@@ -1112,7 +1112,7 @@ angle::Result ContextVk::initialize()
     initIndexTypeMap();
 
     mGraphicsPipelineDesc.reset(new vk::GraphicsPipelineDesc());
-    mGraphicsPipelineDesc->initDefaults(this);
+    mGraphicsPipelineDesc->initDefaults(this, vk::GraphicsPipelineSubset::Complete);
 
     // Initialize current value/default attribute buffers.
     for (vk::DynamicBuffer &buffer : mStreamedVertexBuffers)
