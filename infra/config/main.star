@@ -283,6 +283,11 @@ def angle_builder(name, cpu):
 
     ci_properties["sheriff_rotations"] = ["angle"]
 
+    if is_perf:
+        timeout_hours = 5
+    else:
+        timeout_hours = 3
+
     luci.builder(
         name = name,
         bucket = "ci",
@@ -301,6 +306,7 @@ def angle_builder(name, cpu):
             kind = scheduler.LOGARITHMIC_BATCHING_KIND,
             log_base = 2,
         ),
+        execution_timeout = timeout_hours * time.hour,
     )
 
     luci.console_view_entry(
