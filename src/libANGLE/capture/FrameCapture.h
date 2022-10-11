@@ -424,14 +424,21 @@ enum class PageSharingType
 class CoherentBuffer
 {
   public:
-    CoherentBuffer(uintptr_t start, size_t size, size_t pageSize);
+    CoherentBuffer(uintptr_t start, size_t size, size_t pageSize, bool useShadowMemory);
     ~CoherentBuffer();
 
     // Sets the a range in the buffer clean and protects a selected range
     void protectPageRange(const PageRange &pageRange);
 
+    // Sets all pages to clean and enables protection
+    void protectAll();
+
     // Sets a page dirty state and sets it's protection
     void setDirty(size_t relativePage, bool dirty);
+
+    // Shadow memory synchronization
+    void updateBufferMemory();
+    void updateShadowMemory();
 
     // Removes protection
     void removeProtection(PageSharingType sharingType);
@@ -445,6 +452,9 @@ class CoherentBuffer
     // Calculates address range from page range
     AddressRange getDirtyAddressRange(const PageRange &dirtyPageRange);
     AddressRange getRange();
+
+    void markShadowDirty() { mShadowDirty = true; }
+    bool isShadowDirty() { return mShadowDirty; }
 
   private:
     // Actual buffer start and size
@@ -462,6 +472,12 @@ class CoherentBuffer
 
     // Clean pages are protected
     std::vector<bool> mDirtyPages;
+
+    // shadow memory releated fields
+    bool mShadowMemoryEnabled;
+    uintptr_t mBufferStart;
+    void *mShadowMemory;
+    bool mShadowDirty;
 };
 
 class CoherentBufferTracker final : angle::NonCopyable
@@ -471,11 +487,18 @@ class CoherentBufferTracker final : angle::NonCopyable
     ~CoherentBufferTracker();
 
     bool isDirty(gl::BufferID id);
-    void addBuffer(gl::BufferID id, uintptr_t start, size_t size);
+    uintptr_t addBuffer(gl::BufferID id, uintptr_t start, size_t size);
     void removeBuffer(gl::BufferID id);
     void disable();
     void enable();
     void onEndFrame();
+    bool haveBuffer(gl::BufferID id);
+    bool isShadowMemoryEnabled() { return mShadowMemoryEnabled; }
+    void enableShadowMemory() { mShadowMemoryEnabled = true; }
+    void maybeUpdateShadowMemory();
+    void markAllShadowDirty();
+    // Determine whether memory protection can be used directly on graphics memory
+    bool canProtectDirectly(gl::Context *context);
 
   private:
     // Detect overlapping pages when removing protection
@@ -485,16 +508,17 @@ class CoherentBufferTracker final : angle::NonCopyable
     // For addresses that are in a page shared by 2 buffers, 2 results are returned.
     HashMap<std::shared_ptr<CoherentBuffer>, size_t> getBufferPagesForAddress(uintptr_t address);
     PageFaultHandlerRangeType handleWrite(uintptr_t address);
-    bool haveBuffer(gl::BufferID id);
 
   public:
     std::mutex mMutex;
     HashMap<GLuint, std::shared_ptr<CoherentBuffer>> mBuffers;
 
   private:
-    bool mEnabled = false;
+    bool mEnabled;
     std::unique_ptr<PageFaultHandler> mPageFaultHandler;
     size_t mPageSize;
+
+    bool mShadowMemoryEnabled;
 };
 
 // Shared class for any items that need to be tracked by FrameCapture across shared contexts
@@ -633,6 +657,9 @@ class FrameCaptureShared final : angle::NonCopyable
             tracker.setDeletedResource(resourceID.value);
         }
     }
+
+    void *maybeGetShadowMemoryPointer(gl::Buffer *buffer, GLsizeiptr length, GLbitfield access);
+    void determineMemoryProtectionSupport(gl::Context *context);
 
   private:
     void writeJSON(const gl::Context *context);

@@ -16,6 +16,7 @@
 
 #include "sys/stat.h"
 
+#include "common/aligned_memory.h"
 #include "common/angle_version_info.h"
 #include "common/frame_capture_utils.h"
 #include "common/gl_enum_utils.h"
@@ -23,8 +24,10 @@
 #include "common/serializer/JsonSerializer.h"
 #include "common/string_utils.h"
 #include "common/system_utils.h"
+#include "gpu_info_util/SystemInfo.h"
 #include "libANGLE/Config.h"
 #include "libANGLE/Context.h"
+#include "libANGLE/Context.inl.h"
 #include "libANGLE/Display.h"
 #include "libANGLE/Fence.h"
 #include "libANGLE/Framebuffer.h"
@@ -75,6 +78,7 @@ constexpr char kValidationExprVarName[] = "ANGLE_CAPTURE_VALIDATION_EXPR";
 constexpr char kTrimEnabledVarName[]    = "ANGLE_CAPTURE_TRIM_ENABLED";
 constexpr char kSourceExtVarName[]      = "ANGLE_CAPTURE_SOURCE_EXT";
 constexpr char kSourceSizeVarName[]     = "ANGLE_CAPTURE_SOURCE_SIZE";
+constexpr char kForceShadowVarName[]    = "ANGLE_CAPTURE_FORCE_SHADOW";
 
 constexpr size_t kBinaryAlignment   = 16;
 constexpr size_t kFunctionSizeLimit = 5000;
@@ -99,6 +103,7 @@ constexpr char kAndroidValidationExpr[] = "debug.angle.capture.validation_expr";
 constexpr char kAndroidTrimEnabled[]    = "debug.angle.capture.trim_enabled";
 constexpr char kAndroidSourceExt[]      = "debug.angle.capture.source_ext";
 constexpr char kAndroidSourceSize[]     = "debug.angle.capture.source_size";
+constexpr char kAndroidForceShadow[]    = "debug.angle.capture.force_shadow";
 
 struct FramebufferCaptureFuncs
 {
@@ -5428,6 +5433,14 @@ FrameCaptureShared::FrameCaptureShared()
         }
     }
 
+    std::string forceShadowFromEnv =
+        GetEnvironmentVarOrUnCachedAndroidProperty(kForceShadowVarName, kAndroidForceShadow);
+    if (forceShadowFromEnv == "1")
+    {
+        INFO() << "Force enabling shadow memory for coherent buffer tracking.";
+        mCoherentBufferTracker.enableShadowMemory();
+    }
+
     if (mFrameIndex == mCaptureStartFrame)
     {
         // Capture is starting from the first frame, so set the capture active to ensure all GLES
@@ -5458,11 +5471,29 @@ uintptr_t AddressRange::end()
     return start + size;
 }
 
-CoherentBuffer::CoherentBuffer(uintptr_t start, size_t size, size_t pageSize) : mPageSize(pageSize)
+CoherentBuffer::CoherentBuffer(uintptr_t start,
+                               size_t size,
+                               size_t pageSize,
+                               bool isShadowMemoryEnabled)
+    : mPageSize(pageSize),
+      mShadowMemoryEnabled(isShadowMemoryEnabled),
+      mBufferStart(start),
+      mShadowMemory(nullptr),
+      mShadowDirty(false)
 {
-    mRange.start            = start;
-    mRange.size             = size;
-    mProtectionRange.start  = rx::roundDownPow2(start, pageSize);
+    if (mShadowMemoryEnabled)
+    {
+        // Shadow memory needs to have at least the size of one page, to not protect outside.
+        size_t numShadowPages = (size / pageSize) + 1;
+        mShadowMemory         = AlignedAlloc(numShadowPages * pageSize, pageSize);
+        ASSERT(mShadowMemory != nullptr);
+        start = reinterpret_cast<uintptr_t>(mShadowMemory);
+    }
+
+    mRange.start           = start;
+    mRange.size            = size;
+    mProtectionRange.start = rx::roundDownPow2(start, pageSize);
+
     uintptr_t protectionEnd = rx::roundUpPow2(start + size, pageSize);
 
     mProtectionRange.size = protectionEnd - mProtectionRange.start;
@@ -5540,7 +5571,13 @@ AddressRange CoherentBuffer::getDirtyAddressRange(const PageRange &dirtyPageRang
     return range;
 }
 
-CoherentBuffer::~CoherentBuffer() {}
+CoherentBuffer::~CoherentBuffer()
+{
+    if (mShadowMemory != nullptr)
+    {
+        AlignedFree(mShadowMemory);
+    }
+}
 
 bool CoherentBuffer::isDirty()
 {
@@ -5568,6 +5605,27 @@ void CoherentBuffer::protectPageRange(const PageRange &pageRange)
     {
         setDirty(i, false);
     }
+}
+
+void CoherentBuffer::protectAll()
+{
+    for (size_t i = 0; i < mPageCount; i++)
+    {
+        setDirty(i, false);
+    }
+}
+
+void CoherentBuffer::updateBufferMemory()
+{
+    memcpy(reinterpret_cast<void *>(mBufferStart), reinterpret_cast<void *>(mRange.start),
+           mRange.size);
+}
+
+void CoherentBuffer::updateShadowMemory()
+{
+    memcpy(reinterpret_cast<void *>(mRange.start), reinterpret_cast<void *>(mBufferStart),
+           mRange.size);
+    mShadowDirty = false;
 }
 
 void CoherentBuffer::setDirty(size_t relativePage, bool dirty)
@@ -5644,13 +5702,89 @@ void CoherentBuffer::removeProtection(PageSharingType sharingType)
     }
 }
 
-CoherentBufferTracker::CoherentBufferTracker()
+bool CoherentBufferTracker::canProtectDirectly(gl::Context *context)
+{
+    gl::BufferID bufferId = context->createBuffer();
+
+    gl::BufferBinding targetPacked = gl::BufferBinding::Array;
+    context->bindBuffer(targetPacked, bufferId);
+
+    // Allocate 2 pages so we will always have a full aligned page to protect
+    GLsizei size = static_cast<GLsizei>(mPageSize * 2);
+
+    context->bufferStorage(targetPacked, size, nullptr,
+                           GL_DYNAMIC_STORAGE_BIT_EXT | GL_MAP_WRITE_BIT |
+                               GL_MAP_PERSISTENT_BIT_EXT | GL_MAP_COHERENT_BIT_EXT);
+
+    gl::Buffer *buffer = context->getBuffer(bufferId);
+
+    angle::Result result = buffer->mapRange(
+        context, 0, size, GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT_EXT | GL_MAP_COHERENT_BIT_EXT);
+    if (result != angle::Result::Continue)
+    {
+        ERR() << "Failed to mapRange of buffer.";
+    }
+
+    void *map = buffer->getMapPointer();
+    if (map == nullptr)
+    {
+        ERR() << "Failed to getMapPointer of buffer.";
+    }
+
+    // Test mprotect
+    auto start = reinterpret_cast<uintptr_t>(map);
+
+    // Only protect a whole page inside the allocated memory
+    uintptr_t protectionStart = rx::roundUpPow2(start, mPageSize);
+    uintptr_t protectionEnd   = protectionStart + mPageSize;
+
+    ASSERT(protectionStart < protectionEnd);
+
+    angle::PageFaultCallback callback = [](uintptr_t address) {
+        return angle::PageFaultHandlerRangeType::InRange;
+    };
+
+    std::unique_ptr<angle::PageFaultHandler> handler(CreatePageFaultHandler(callback));
+
+    if (!handler->enable())
+    {
+        GLboolean unmapResult;
+        if (buffer->unmap(context, &unmapResult) != angle::Result::Continue)
+        {
+            ERR() << "Could not unmap buffer.";
+        }
+        context->bindBuffer(targetPacked, {0});
+
+        // Page fault handler could not be enabled, memory can't be protected directly.
+        return false;
+    }
+
+    size_t protectionSize = protectionEnd - protectionStart;
+
+    ASSERT(protectionSize == mPageSize);
+
+    bool canProtect = angle::ProtectMemory(protectionStart, protectionSize);
+    if (canProtect)
+    {
+        angle::UnprotectMemory(protectionStart, protectionSize);
+    }
+
+    // Clean up
+    handler->disable();
+
+    GLboolean unmapResult;
+    if (buffer->unmap(context, &unmapResult) != angle::Result::Continue)
+    {
+        ERR() << "Could not unmap buffer.";
+    }
+    context->bindBuffer(targetPacked, {0});
+
+    return canProtect;
+}
+
+CoherentBufferTracker::CoherentBufferTracker() : mEnabled(false), mShadowMemoryEnabled(false)
 {
     mPageSize = GetPageSize();
-
-    PageFaultCallback callback = [this](uintptr_t address) { return handleWrite(address); };
-
-    mPageFaultHandler = std::unique_ptr<PageFaultHandler>(CreatePageFaultHandler(callback));
 }
 
 CoherentBufferTracker::~CoherentBufferTracker()
@@ -5683,7 +5817,29 @@ HashMap<std::shared_ptr<CoherentBuffer>, size_t> CoherentBufferTracker::getBuffe
     uintptr_t address)
 {
     HashMap<std::shared_ptr<CoherentBuffer>, size_t> foundPages;
+
+#if defined(ANGLE_PLATFORM_ANDROID)
+    size_t page;
+    if (mShadowMemoryEnabled)
+    {
+        // Starting with Android 11 heap pointers get a tag which is stripped by the POSIX mprotect
+        // callback. We need to add this tag manually to the untagged pointer in order to determine
+        // the corresponding page.
+        // See: https://source.android.com/docs/security/test/tagged-pointers
+        // TODO(http://anglebug.com/7402): Determine when heap pointer tagging is not enabled.
+        constexpr unsigned long long POINTER_TAG = 0xb400000000000000;
+        unsigned long long taggedAddress         = address | POINTER_TAG;
+        page                                     = static_cast<size_t>(taggedAddress / mPageSize);
+    }
+    else
+    {
+        // VMA allocated memory pointers are not tagged.
+        page = address / mPageSize;
+    }
+#else
     size_t page = address / mPageSize;
+#endif
+
     for (const auto &pair : mBuffers)
     {
         std::shared_ptr<CoherentBuffer> buffer = pair.second;
@@ -5707,6 +5863,14 @@ void CoherentBufferTracker::enable()
     if (mEnabled)
     {
         return;
+    }
+
+    PageFaultCallback callback = [this](uintptr_t address) { return handleWrite(address); };
+
+    // This needs to be initialized after canProtectDirectly ran and can only be initialized once.
+    if (!mPageFaultHandler)
+    {
+        mPageFaultHandler = std::unique_ptr<PageFaultHandler>(CreatePageFaultHandler(callback));
     }
 
     bool ret = mPageFaultHandler->enable();
@@ -5759,20 +5923,53 @@ void CoherentBufferTracker::disable()
     {
         ERR() << "Could not disable page fault handler.";
     }
+
+    if (mShadowMemoryEnabled && mBuffers.size() > 0)
+    {
+        WARN() << "Disabling coherent buffer tracking while leaving shadow memory without "
+                  "synchronization. Expect rendering artifacts after capture ends.";
+    }
 }
 
-void CoherentBufferTracker::addBuffer(gl::BufferID id, uintptr_t start, size_t size)
+uintptr_t CoherentBufferTracker::addBuffer(gl::BufferID id, uintptr_t start, size_t size)
 {
     std::lock_guard<std::mutex> lock(mMutex);
 
     if (haveBuffer(id))
     {
-        return;
+        auto buffer = mBuffers[id.value];
+        return buffer->getRange().start;
     }
 
-    auto buffer = std::make_shared<CoherentBuffer>(start, size, mPageSize);
+    auto buffer = std::make_shared<CoherentBuffer>(start, size, mPageSize, mShadowMemoryEnabled);
+    uintptr_t realOrShadowStart = buffer->getRange().start;
 
     mBuffers.insert(std::make_pair(id.value, std::move(buffer)));
+
+    return realOrShadowStart;
+}
+
+void CoherentBufferTracker::maybeUpdateShadowMemory()
+{
+    for (const auto &pair : mBuffers)
+    {
+        std::shared_ptr<CoherentBuffer> cb = pair.second;
+        if (cb->isShadowDirty())
+        {
+            cb->removeProtection(PageSharingType::NoneShared);
+            cb->updateShadowMemory();
+            cb->protectAll();
+        }
+    }
+}
+
+void CoherentBufferTracker::markAllShadowDirty()
+{
+    for (const auto &pair : mBuffers)
+    {
+        std::shared_ptr<CoherentBuffer> cb = pair.second;
+        cb->markShadowDirty();
+    }
 }
 
 PageSharingType CoherentBufferTracker::doesBufferSharePage(gl::BufferID id)
@@ -5832,11 +6029,71 @@ void CoherentBufferTracker::removeBuffer(gl::BufferID id)
         return;
     }
 
+    // Synchronize graphics buffer memory before the buffer is removed from the tracker.
+    if (mShadowMemoryEnabled)
+    {
+        mBuffers[id.value]->updateBufferMemory();
+    }
+
     // If the buffer shares pages with other tracked buffers,
     // don't unprotect the overlapping pages.
     PageSharingType sharingType = doesBufferSharePage(id);
     mBuffers[id.value]->removeProtection(sharingType);
     mBuffers.erase(id.value);
+}
+
+void *FrameCaptureShared::maybeGetShadowMemoryPointer(gl::Buffer *buffer,
+                                                      GLsizeiptr length,
+                                                      GLbitfield access)
+{
+    if (!(access & GL_MAP_COHERENT_BIT_EXT) || !mCoherentBufferTracker.isShadowMemoryEnabled())
+    {
+        return buffer->getMapPointer();
+    }
+
+    mCoherentBufferTracker.enable();
+    uintptr_t realMapPointer = reinterpret_cast<uintptr_t>(buffer->getMapPointer());
+    return (void *)mCoherentBufferTracker.addBuffer(buffer->id(), realMapPointer, length);
+}
+
+void FrameCaptureShared::determineMemoryProtectionSupport(gl::Context *context)
+{
+    // Skip this test if shadow memory was force enabled or shadow memory requirement was detected
+    // previously
+    if (mCoherentBufferTracker.isShadowMemoryEnabled())
+    {
+        return;
+    }
+
+    // These known devices must use shadow memory
+    HashMap<std::string, std::vector<std::string>> denyList = {
+        {"Google", {"Pixel 6", "Pixel 6 Pro", "Pixel 6a", "Pixel 7", "Pixel 7 Pro"}},
+    };
+
+    angle::SystemInfo info;
+    angle::GetSystemInfo(&info);
+    bool isDeviceDenyListed = false;
+
+    if (denyList.find(info.machineManufacturer) != denyList.end())
+    {
+        const std::vector<std::string> &models = denyList[info.machineManufacturer];
+        isDeviceDenyListed =
+            std::find(models.begin(), models.end(), info.machineModelName) != models.end();
+    }
+
+    if (isDeviceDenyListed)
+    {
+        WARN() << "Direct memory protection not possible on deny listed device '"
+               << info.machineModelName
+               << "', enabling shadow memory for coherent buffer tracking.";
+        mCoherentBufferTracker.enableShadowMemory();
+    }
+    else
+    {
+        // Device is not on deny listed. Run a test if we actually can protect directly. Do this
+        // only on assertion enabled builds.
+        ASSERT(mCoherentBufferTracker.canProtectDirectly(context));
+    }
 }
 
 void FrameCaptureShared::trackBufferMapping(const gl::Context *context,
@@ -5868,8 +6125,13 @@ void FrameCaptureShared::trackBufferMapping(const gl::Context *context,
         if (coherent && isCaptureActive())
         {
             mCoherentBufferTracker.enable();
-            uintptr_t data = reinterpret_cast<uintptr_t>(buffer->getMapPointer());
-            mCoherentBufferTracker.addBuffer(id, data, length);
+            // When not using shadow memory, adding buffers to the tracking happens here instead of
+            // during mapping
+            if (!mCoherentBufferTracker.isShadowMemoryEnabled())
+            {
+                uintptr_t data = reinterpret_cast<uintptr_t>(buffer->getMapPointer());
+                mCoherentBufferTracker.addBuffer(id, data, length);
+            }
         }
     }
 }
@@ -6788,7 +7050,15 @@ void FrameCaptureShared::maybeCapturePreCallUpdates(
             maybeCaptureCoherentBuffers(context);
             break;
         }
-
+        case EntryPoint::GLFinish:
+        {
+            // When using shadow memory we might need to synchronize it here.
+            if (mCoherentBufferTracker.isShadowMemoryEnabled())
+            {
+                mCoherentBufferTracker.maybeUpdateShadowMemory();
+            }
+            break;
+        }
         case EntryPoint::GLDeleteFramebuffers:
         case EntryPoint::GLDeleteFramebuffersOES:
         {
@@ -6884,7 +7154,15 @@ void FrameCaptureShared::maybeCapturePreCallUpdates(
                                                 egl::AttributeMap::CreateFromIntArray);
             break;
         }
-
+        case EntryPoint::GLDispatchCompute:
+        {
+            // When using shadow memory we need to update the real memory here
+            if (mCoherentBufferTracker.isShadowMemoryEnabled())
+            {
+                maybeCaptureCoherentBuffers(context);
+            }
+            break;
+        }
         default:
             break;
     }
@@ -7130,6 +7408,60 @@ void FrameCaptureShared::maybeCapturePostCallUpdates(const gl::Context *context)
             paramLength.data[0] = {0xff, 0xff, 0xff, 0xff};
             break;
         }
+        case EntryPoint::GLBufferData:
+        case EntryPoint::GLBufferSubData:
+        {
+            // When using shadow memory we need to update it from real memory here
+            if (mCoherentBufferTracker.isShadowMemoryEnabled())
+            {
+                gl::BufferBinding target =
+                    lastCall.params.getParam("targetPacked", ParamType::TBufferBinding, 0)
+                        .value.BufferBindingVal;
+
+                gl::Buffer *buffer = context->getState().getTargetBuffer(target);
+                if (mCoherentBufferTracker.haveBuffer(buffer->id()))
+                {
+                    std::shared_ptr<CoherentBuffer> cb =
+                        mCoherentBufferTracker.mBuffers[buffer->id().value];
+                    cb->removeProtection(PageSharingType::NoneShared);
+                    cb->updateShadowMemory();
+                    cb->protectAll();
+                }
+            }
+            break;
+        }
+
+        case EntryPoint::GLCopyBufferSubData:
+        {
+            // When using shadow memory, we need to mark the buffer shadowDirty bit to true
+            // so it will be synchronized with real memory on the next glFinish call.
+            if (mCoherentBufferTracker.isShadowMemoryEnabled())
+            {
+                gl::BufferBinding target =
+                    lastCall.params.getParam("writeTargetPacked", ParamType::TBufferBinding, 1)
+                        .value.BufferBindingVal;
+
+                gl::Buffer *buffer = context->getState().getTargetBuffer(target);
+                if (mCoherentBufferTracker.haveBuffer(buffer->id()))
+                {
+                    std::shared_ptr<CoherentBuffer> cb =
+                        mCoherentBufferTracker.mBuffers[buffer->id().value];
+                    // This needs to be synced on glFinish
+                    cb->markShadowDirty();
+                }
+            }
+            break;
+        }
+        case EntryPoint::GLDispatchCompute:
+        {
+            // When using shadow memory, we need to mark all buffer's shadowDirty bit to true
+            // so they will be synchronized with real memory on the next glFinish call.
+            if (mCoherentBufferTracker.isShadowMemoryEnabled())
+            {
+                mCoherentBufferTracker.markAllShadowDirty();
+            }
+            break;
+        }
         default:
             break;
     }
@@ -7207,6 +7539,11 @@ void FrameCaptureShared::captureCoherentBufferSnapshot(const gl::Context *contex
         mCoherentBufferTracker.mBuffers[id.value];
 
     std::vector<PageRange> dirtyPageRanges = coherentBuffer->getDirtyPageRanges();
+
+    if (mCoherentBufferTracker.isShadowMemoryEnabled() && !dirtyPageRanges.empty())
+    {
+        coherentBuffer->updateBufferMemory();
+    }
 
     AddressRange wholeRange = coherentBuffer->getRange();
 
