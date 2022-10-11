@@ -807,6 +807,61 @@ bool UsesExternalBatching()
 }
 }  // namespace
 
+void MetricWriter::enable(const std::string &testArtifactDirectory)
+{
+    mPath = testArtifactDirectory + GetPathSeparator() + "angle_metrics";
+}
+
+void MetricWriter::writeInfo(const std::string &name,
+                             const std::string &backend,
+                             const std::string &story,
+                             const std::string &metric,
+                             const std::string &units)
+{
+    if (mPath.empty())
+    {
+        return;
+    }
+
+    if (mFile == nullptr)
+    {
+        mFile = fopen(mPath.c_str(), "w");
+    }
+    ASSERT(mFile != nullptr);
+
+    fprintf(mFile, "{\"name\":\"%s\",", name.c_str());
+    fprintf(mFile, "\"backend\":\"%s\",", backend.c_str());
+    fprintf(mFile, "\"story\":\"%s\",", story.c_str());
+    fprintf(mFile, "\"metric\":\"%s\",", metric.c_str());
+    fprintf(mFile, "\"units\":\"%s\",", units.c_str());
+    // followed by writing value, so no closing bracket yet
+}
+
+void MetricWriter::writeDoubleValue(double value)
+{
+    if (mFile != nullptr)
+    {
+        fprintf(mFile, "\"value\":\"%lf\"}\n", value);
+    }
+}
+
+void MetricWriter::writeIntegerValue(size_t value)
+{
+    if (mFile != nullptr)
+    {
+        fprintf(mFile, "\"value\":\"%zu\"}\n", value);
+    }
+}
+
+void MetricWriter::close()
+{
+    if (mFile != nullptr)
+    {
+        fclose(mFile);
+        mFile = nullptr;
+    }
+}
+
 // static
 TestSuite *TestSuite::mInstance = nullptr;
 
@@ -1176,6 +1231,11 @@ TestSuite::TestSuite(int *argc, char **argv, std::function<void()> registerTests
         std::stringstream resultFileName;
         resultFileName << mResultsDirectory << GetPathSeparator() << mResultsFile;
         mResultsFile = resultFileName.str();
+    }
+
+    if (!mTestArtifactDirectory.empty())
+    {
+        mMetricWriter.enable(mTestArtifactDirectory);
     }
 
     if (!mBotMode)
@@ -1927,6 +1987,8 @@ void TestSuite::writeOutputFiles(bool interrupted)
     {
         WriteHistogramJson(mHistogramWriter, mHistogramJsonFile);
     }
+
+    mMetricWriter.close();
 }
 
 const char *TestResultTypeToString(TestResultType type)

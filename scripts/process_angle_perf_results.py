@@ -293,6 +293,17 @@ def process_perf_results(output_json,
     benchmark_enabled_map = _handle_perf_json_test_results(benchmark_directory_map,
                                                            test_results_list)
 
+    for benchmark_name, directories in benchmark_directory_map.items():
+        if not benchmark_enabled_map.get(benchmark_name, False):
+            continue
+
+        for directory in directories:
+            with open(os.path.join(directory, 'angle_metrics.json')) as f:
+                metrics = json.load(f)
+                metric_names = list(set(d['metric'] for d in group for group in metrics))
+                logging.info('angle_metrics: len=%d metrics=%s (directory=%s)' %
+                             (len(metrics), '|'.join(metric_names), directory))
+
     if not smoke_test_mode and handle_perf:
         build_properties_map = json.loads(build_properties)
         if not configuration_name:

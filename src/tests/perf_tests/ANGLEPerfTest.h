@@ -111,6 +111,10 @@ class ANGLEPerfTest : public testing::Test, angle::NonCopyable
     void calibrateStepsToRun();
     int estimateStepsToRun() const;
 
+    void recordIntegerMetric(const char *metric, size_t value, const std::string &units);
+    void recordDoubleMetric(const char *metric, double value, const std::string &units);
+    void addHistogramSample(const char *metric, double value, const std::string &units);
+
     void processResults();
     void processClockResult(const char *metric, double resultSeconds);
     void processMemoryResult(const char *metric, uint64_t resultKB);

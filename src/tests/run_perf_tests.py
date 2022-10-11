@@ -14,11 +14,13 @@ import importlib
 import io
 import json
 import logging
+import tempfile
 import time
 import os
 import pathlib
 import re
 import subprocess
+import shutil
 import sys
 
 SCRIPT_DIR = str(pathlib.Path(__file__).resolve().parent)
@@ -54,6 +56,15 @@ SKIP = 'SKIP'
 
 EXIT_FAILURE = 1
 EXIT_SUCCESS = 0
+
+
+@contextlib.contextmanager
+def temporary_dir(prefix=''):
+    path = tempfile.mkdtemp(prefix=prefix)
+    try:
+        yield path
+    finally:
+        shutil.rmtree(path)
 
 
 def _shard_tests(tests, shard_count, shard_index):
@@ -110,7 +121,7 @@ def _coefficient_of_variation(data):
     return stddev / c
 
 
-def _save_extra_output_files(args, results, histograms):
+def _save_extra_output_files(args, results, histograms, metrics):
     isolated_out_dir = os.path.dirname(args.isolated_script_test_output)
     if not os.path.isdir(isolated_out_dir):
         return
@@ -123,6 +134,9 @@ def _save_extra_output_files(args, results, histograms):
     logging.info('Saving perf histograms to %s.' % perf_output_path)
     with open(perf_output_path, 'w') as out_file:
         out_file.write(json.dumps(histograms.AsDicts(), indent=2))
+
+    with open(os.path.join(benchmark_path, 'angle_metrics.json'), 'w') as f:
+        f.write(json.dumps(metrics, indent=2))
 
 
 class Results:
@@ -189,6 +203,14 @@ def _read_histogram(histogram_file_path):
         histogram = histogram_set.HistogramSet()
         histogram.ImportDicts(json.load(histogram_file))
         return histogram
+
+
+def _read_metrics(metrics_file_path):
+    try:
+        with open(metrics_file_path) as f:
+            return [json.loads(l) for l in f]
+    except FileNotFoundError:
+        return []
 
 
 def _merge_into_one_histogram(test_histogram_set):
@@ -267,8 +289,10 @@ def _run_perf(args, common_args, env, steps_per_trial=None):
     if args.perf_counters:
         run_args += ['--perf-counters', args.perf_counters]
 
-    with common.temporary_file() as histogram_file_path:
+    with temporary_dir() as render_output_dir:
+        histogram_file_path = os.path.join(render_output_dir, 'histogram')
         run_args += ['--isolated-script-test-perf-output=%s' % histogram_file_path]
+        run_args += ['--render-test-output-dir=%s' % render_output_dir]
 
         exit_code, output, json_results = _run_test_suite(args, run_args, env)
         if exit_code != EXIT_SUCCESS:
@@ -276,10 +300,11 @@ def _run_perf(args, common_args, env, steps_per_trial=None):
         if SKIP in json_results['num_failures_by_type']:
             return SKIP, None, None
 
-        sample_wall_times = _get_results_from_output(output, 'wall_time')
-        if sample_wall_times:
+        sample_metrics = _read_metrics(os.path.join(render_output_dir, 'angle_metrics'))
+
+        if sample_metrics:
             sample_histogram = _read_histogram(histogram_file_path)
-            return PASS, sample_wall_times, sample_histogram
+            return PASS, sample_metrics, sample_histogram
 
     return FAIL, None, None
 
@@ -305,6 +330,7 @@ def _run_tests(tests, args, extra_flags, env):
     result_suffix = '_shard%d' % (args.shard_index if args.shard_index != None else None)
     results = Results(result_suffix)
     histograms = histogram_set.HistogramSet()
+    metrics = []
     total_errors = 0
     prepared_traces = set()
 
@@ -358,7 +384,7 @@ def _run_tests(tests, args, extra_flags, env):
         test_histogram_set = histogram_set.HistogramSet()
         for sample in range(args.samples_per_test):
             try:
-                test_status, sample_wall_times, sample_histogram = _run_perf(
+                test_status, sample_metrics, sample_histogram = _run_perf(
                     args, common_args, env, steps_per_trial)
             except RuntimeError as e:
                 logging.error(e)
@@ -370,10 +396,14 @@ def _run_tests(tests, args, extra_flags, env):
                 results.result_skip(test)
                 break
 
-            if not sample_wall_times:
+            if not sample_metrics:
                 logging.error('Test %s failed to produce a sample output' % test)
                 results.result_fail(test)
                 break
+
+            sample_wall_times = [
+                float(m['value']) for m in sample_metrics if m['metric'] == '.wall_time'
+            ]
 
             logging.info('Test %d/%d Sample %d/%d wall_times: %s' %
                          (test_index + 1, len(tests), sample + 1, args.samples_per_test,
@@ -387,6 +417,7 @@ def _run_tests(tests, args, extra_flags, env):
 
             wall_times += sample_wall_times
             test_histogram_set.Merge(sample_histogram)
+            metrics.append(sample_metrics)
 
         if not results.has_result(test):
             assert len(wall_times) == (args.samples_per_test * args.trials_per_sample)
@@ -396,7 +427,7 @@ def _run_tests(tests, args, extra_flags, env):
             histograms.Merge(_merge_into_one_histogram(test_histogram_set))
             results.result_pass(test)
 
-    return results, histograms
+    return results, histograms, metrics
 
 
 def _find_test_suite_directory(test_suite):
@@ -608,7 +639,7 @@ def main():
 
     try:
         with _maybe_lock_gpu_clocks():
-            results, histograms = _run_tests(tests, args, extra_flags, env)
+            results, histograms, metrics = _run_tests(tests, args, extra_flags, env)
     except _MaxErrorsException:
         logging.error('Error count exceeded max errors (%d). Aborting.' % args.max_errors)
         return EXIT_FAILURE
@@ -620,7 +651,7 @@ def main():
         results.save_to_output_file(args.test_suite, args.isolated_script_test_output)
 
         # Uses special output files to match the merge script.
-        _save_extra_output_files(args, results, histograms)
+        _save_extra_output_files(args, results, histograms, metrics)
 
     if args.isolated_script_test_perf_output:
         with open(args.isolated_script_test_perf_output, 'w') as out_file:
