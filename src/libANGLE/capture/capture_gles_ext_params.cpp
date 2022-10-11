@@ -3945,7 +3945,7 @@ void CaptureProgramUniformMatrix4x3fvEXT_value(const State &glState,
 void CaptureEGLImageTargetTexStorageEXT_attrib_list(const State &glState,
                                                     bool isCallValid,
                                                     GLenum target,
-                                                    GLeglImageOES image,
+                                                    egl::ImageID image,
                                                     const GLint *attrib_list,
                                                     angle::ParamCapture *paramCapture)
 {
@@ -3955,7 +3955,7 @@ void CaptureEGLImageTargetTexStorageEXT_attrib_list(const State &glState,
 void CaptureEGLImageTargetTextureStorageEXT_attrib_list(const State &glState,
                                                         bool isCallValid,
                                                         GLuint texture,
-                                                        GLeglImageOES image,
+                                                        egl::ImageID image,
                                                         const GLint *attrib_list,
                                                         angle::ParamCapture *paramCapture)
 {

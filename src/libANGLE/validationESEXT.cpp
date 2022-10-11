@@ -8,6 +8,7 @@
 #include "libANGLE/validationESEXT_autogen.h"
 
 #include "libANGLE/Context.h"
+#include "libANGLE/Display.h"
 #include "libANGLE/ErrorStrings.h"
 #include "libANGLE/MemoryObject.h"
 #include "libANGLE/PixelLocalStorage.h"
@@ -3128,7 +3129,7 @@ bool ValidateLabelObjectEXT(const Context *context,
 bool ValidateEGLImageTargetTextureStorageEXT(const Context *context,
                                              angle::EntryPoint entryPoint,
                                              GLuint texture,
-                                             GLeglImageOES image,
+                                             egl::ImageID image,
                                              const GLint *attrib_list)
 {
     UNREACHABLE();
@@ -3138,7 +3139,7 @@ bool ValidateEGLImageTargetTextureStorageEXT(const Context *context,
 bool ValidateEGLImageTargetTexStorageEXT(const Context *context,
                                          angle::EntryPoint entryPoint,
                                          GLenum target,
-                                         GLeglImageOES image,
+                                         egl::ImageID image,
                                          const GLint *attrib_list)
 {
     if (!context->getExtensions().EGLImageStorageEXT)
@@ -3175,7 +3176,7 @@ bool ValidateEGLImageTargetTexStorageEXT(const Context *context,
     }
 
     // Validate egl source image is valid
-    egl::Image *imageObject = static_cast<egl::Image *>(image);
+    egl::Image *imageObject = context->getDisplay()->getImage(image);
     if (!ValidateEGLImageObject(context, entryPoint, targetType, image))
     {
         return false;

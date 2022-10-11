@@ -1149,19 +1149,14 @@ void WriteParamValueReplay<ParamType::TGLsync>(std::ostream &os,
                                                GLsync value);
 
 template <>
-void WriteParamValueReplay<ParamType::TGLeglImageOES>(std::ostream &os,
-                                                      const CallCapture &call,
-                                                      GLeglImageOES value);
-
-template <>
 void WriteParamValueReplay<ParamType::TGLubyte>(std::ostream &os,
                                                 const CallCapture &call,
                                                 GLubyte value);
 
 template <>
-void WriteParamValueReplay<ParamType::Tgl_ContextPointer>(std::ostream &os,
-                                                          const CallCapture &call,
-                                                          gl::Context *value);
+void WriteParamValueReplay<ParamType::TContextID>(std::ostream &os,
+                                                  const CallCapture &call,
+                                                  gl::ContextID value);
 
 template <>
 void WriteParamValueReplay<ParamType::Tegl_DisplayPointer>(std::ostream &os,
@@ -1169,14 +1164,14 @@ void WriteParamValueReplay<ParamType::Tegl_DisplayPointer>(std::ostream &os,
                                                            egl::Display *value);
 
 template <>
-void WriteParamValueReplay<ParamType::Tegl_ImagePointer>(std::ostream &os,
-                                                         const CallCapture &call,
-                                                         egl::Image *value);
+void WriteParamValueReplay<ParamType::TImageID>(std::ostream &os,
+                                                const CallCapture &call,
+                                                egl::ImageID value);
 
 template <>
-void WriteParamValueReplay<ParamType::Tegl_SurfacePointer>(std::ostream &os,
-                                                           const CallCapture &call,
-                                                           egl::Surface *value);
+void WriteParamValueReplay<ParamType::TSurfaceID>(std::ostream &os,
+                                                  const CallCapture &call,
+                                                  egl::SurfaceID value);
 
 template <>
 void WriteParamValueReplay<ParamType::TEGLDEBUGPROCKHR>(std::ostream &os,
@@ -1201,16 +1196,6 @@ template <>
 void WriteParamValueReplay<ParamType::Tegl_ConfigPointer>(std::ostream &os,
                                                           const CallCapture &call,
                                                           egl::Config *value);
-
-template <>
-void WriteParamValueReplay<ParamType::Tegl_SurfacePointer>(std::ostream &os,
-                                                           const CallCapture &call,
-                                                           egl::Surface *value);
-
-template <>
-void WriteParamValueReplay<ParamType::TEGLClientBuffer>(std::ostream &os,
-                                                        const CallCapture &call,
-                                                        EGLClientBuffer value);
 
 template <>
 void WriteParamValueReplay<ParamType::Tegl_SyncPointer>(std::ostream &os,

@@ -368,6 +368,7 @@ TEMPLATE_EGL_STUBS_HEADER = """\
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 
+#include "common/PackedEnums.h"
 #include "common/PackedEGLEnums_autogen.h"
 
 namespace gl
@@ -1255,14 +1256,14 @@ CL_PACKED_TYPES = {
 }
 
 EGL_PACKED_TYPES = {
-    "EGLContext": "gl::Context *",
+    "EGLContext": "gl::ContextID",
     "EGLConfig": "egl::Config *",
     "EGLDeviceEXT": "egl::Device *",
     "EGLDisplay": "egl::Display *",
-    "EGLImage": "egl::Image *",
-    "EGLImageKHR": "egl::Image *",
+    "EGLImage": "ImageID",
+    "EGLImageKHR": "ImageID",
     "EGLStreamKHR": "egl::Stream *",
-    "EGLSurface": "egl::Surface *",
+    "EGLSurface": "SurfaceID",
     "EGLSync": "egl::Sync *",
     "EGLSyncKHR": "egl::Sync *",
 }
@@ -1617,17 +1618,12 @@ def get_capture_param_type_name(param_type):
     pointer_count = param_type.count("*")
     is_const = "const" in param_type.split()
 
-    # EGL types are special
-    for egl_type, angle_type in EGL_PACKED_TYPES.items():
-        if angle_type == param_type:
-            param_type = angle_type
-
     param_type = param_type.replace("*", "")
     param_type = param_type.replace("&", "")
     param_type = param_type.replace("const", "")
     param_type = param_type.replace("struct", "")
-    param_type = param_type.replace("egl::", "egl_")
-    param_type = param_type.replace("gl::", "gl_")
+    param_type = param_type.replace("egl::", "egl_" if pointer_count else "")
+    param_type = param_type.replace("gl::", "")
     param_type = param_type.strip()
 
     if is_const and param_type != 'AttributeMap':
@@ -2183,7 +2179,7 @@ def add_namespace(param_type):
         'CompositorTiming',
         'ObjectType',
         'Timestamp',
-    ]
+    ] + list(EGL_PACKED_TYPES.values())
 
     if param_type[0:2] == "GL" or param_type[0:3] == "EGL" or "void" in param_type:
         return param_type
@@ -2288,13 +2284,13 @@ def format_resource_id_types(all_param_types):
 def format_resource_id_convert_structs(all_param_types):
     templ = """\
 template <>
-struct GetResourceIDTypeFromType<gl::%sID>
+struct GetResourceIDTypeFromType<%s>
 {
     static constexpr ResourceIDType IDType = ResourceIDType::%s;
 };
 """
     resource_id_types = get_resource_id_types(all_param_types)
-    convert_struct_strings = [templ % (id, id) for id in resource_id_types]
+    convert_struct_strings = [templ % (add_namespace('%sID' % id), id) for id in resource_id_types]
     return "\n".join(convert_struct_strings)
 
 

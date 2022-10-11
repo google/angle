@@ -917,26 +917,6 @@ enum class RenderToTextureImageIndex
 template <typename T>
 using RenderToTextureImageMap = angle::PackedEnumMap<RenderToTextureImageIndex, T>;
 
-struct ContextID
-{
-    uint32_t value;
-};
-
-inline bool operator==(ContextID lhs, ContextID rhs)
-{
-    return lhs.value == rhs.value;
-}
-
-inline bool operator!=(ContextID lhs, ContextID rhs)
-{
-    return lhs.value != rhs.value;
-}
-
-inline bool operator<(ContextID lhs, ContextID rhs)
-{
-    return lhs.value < rhs.value;
-}
-
 constexpr size_t kCubeFaceCount = 6;
 
 template <typename T>

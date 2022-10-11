@@ -4350,16 +4350,17 @@ void GL_APIENTRY GL_EGLImageTargetTexStorageEXT(GLenum target,
 
     if (context)
     {
+        egl::ImageID imagePacked = PackParam<egl::ImageID>(image);
         SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid = (context->skipValidation() ||
                             ValidateEGLImageTargetTexStorageEXT(
                                 context, angle::EntryPoint::GLEGLImageTargetTexStorageEXT, target,
-                                image, attrib_list));
+                                imagePacked, attrib_list));
         if (isCallValid)
         {
-            context->eGLImageTargetTexStorage(target, image, attrib_list);
+            context->eGLImageTargetTexStorage(target, imagePacked, attrib_list);
         }
-        ANGLE_CAPTURE_GL(EGLImageTargetTexStorageEXT, isCallValid, context, target, image,
+        ANGLE_CAPTURE_GL(EGLImageTargetTexStorageEXT, isCallValid, context, target, imagePacked,
                          attrib_list);
     }
     else
@@ -4379,17 +4380,18 @@ void GL_APIENTRY GL_EGLImageTargetTextureStorageEXT(GLuint texture,
 
     if (context)
     {
+        egl::ImageID imagePacked = PackParam<egl::ImageID>(image);
         SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid = (context->skipValidation() ||
                             ValidateEGLImageTargetTextureStorageEXT(
                                 context, angle::EntryPoint::GLEGLImageTargetTextureStorageEXT,
-                                texture, image, attrib_list));
+                                texture, imagePacked, attrib_list));
         if (isCallValid)
         {
-            context->eGLImageTargetTextureStorage(texture, image, attrib_list);
+            context->eGLImageTargetTextureStorage(texture, imagePacked, attrib_list);
         }
-        ANGLE_CAPTURE_GL(EGLImageTargetTextureStorageEXT, isCallValid, context, texture, image,
-                         attrib_list);
+        ANGLE_CAPTURE_GL(EGLImageTargetTextureStorageEXT, isCallValid, context, texture,
+                         imagePacked, attrib_list);
     }
     else
     {
@@ -9470,16 +9472,18 @@ void GL_APIENTRY GL_EGLImageTargetRenderbufferStorageOES(GLenum target, GLeglIma
 
     if (context)
     {
+        egl::ImageID imagePacked = PackParam<egl::ImageID>(image);
         SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid = (context->skipValidation() ||
                             ValidateEGLImageTargetRenderbufferStorageOES(
                                 context, angle::EntryPoint::GLEGLImageTargetRenderbufferStorageOES,
-                                target, image));
+                                target, imagePacked));
         if (isCallValid)
         {
-            context->eGLImageTargetRenderbufferStorage(target, image);
+            context->eGLImageTargetRenderbufferStorage(target, imagePacked);
         }
-        ANGLE_CAPTURE_GL(EGLImageTargetRenderbufferStorageOES, isCallValid, context, target, image);
+        ANGLE_CAPTURE_GL(EGLImageTargetRenderbufferStorageOES, isCallValid, context, target,
+                         imagePacked);
     }
     else
     {
@@ -9497,16 +9501,18 @@ void GL_APIENTRY GL_EGLImageTargetTexture2DOES(GLenum target, GLeglImageOES imag
     if (context)
     {
         TextureType targetPacked = PackParam<TextureType>(target);
+        egl::ImageID imagePacked = PackParam<egl::ImageID>(image);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateEGLImageTargetTexture2DOES(
-                 context, angle::EntryPoint::GLEGLImageTargetTexture2DOES, targetPacked, image));
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateEGLImageTargetTexture2DOES(
+                                context, angle::EntryPoint::GLEGLImageTargetTexture2DOES,
+                                targetPacked, imagePacked));
         if (isCallValid)
         {
-            context->eGLImageTargetTexture2D(targetPacked, image);
+            context->eGLImageTargetTexture2D(targetPacked, imagePacked);
         }
-        ANGLE_CAPTURE_GL(EGLImageTargetTexture2DOES, isCallValid, context, targetPacked, image);
+        ANGLE_CAPTURE_GL(EGLImageTargetTexture2DOES, isCallValid, context, targetPacked,
+                         imagePacked);
     }
     else
     {

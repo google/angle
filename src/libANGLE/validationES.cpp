@@ -4943,17 +4943,16 @@ bool ValidatePushGroupMarkerEXT(const Context *context,
 bool ValidateEGLImageObject(const Context *context,
                             angle::EntryPoint entryPoint,
                             TextureType type,
-                            GLeglImageOES image)
+                            egl::ImageID imageID)
 {
-    egl::Image *imageObject = static_cast<egl::Image *>(image);
-
     ASSERT(context->getDisplay());
-    if (!context->getDisplay()->isValidImage(imageObject))
+    if (!context->getDisplay()->isValidImage(imageID))
     {
         context->validationError(entryPoint, GL_INVALID_VALUE, kInvalidEGLImage);
         return false;
     }
 
+    egl::Image *imageObject = context->getDisplay()->getImage(imageID);
     if (imageObject->getSamples() > 0)
     {
         context->validationError(entryPoint, GL_INVALID_OPERATION,
@@ -5017,7 +5016,7 @@ bool ValidateEGLImageObject(const Context *context,
 bool ValidateEGLImageTargetTexture2DOES(const Context *context,
                                         angle::EntryPoint entryPoint,
                                         TextureType type,
-                                        GLeglImageOES image)
+                                        egl::ImageID image)
 {
     if (!context->getExtensions().EGLImageOES && !context->getExtensions().EGLImageExternalOES)
     {
@@ -5062,7 +5061,7 @@ bool ValidateEGLImageTargetTexture2DOES(const Context *context,
 bool ValidateEGLImageTargetRenderbufferStorageOES(const Context *context,
                                                   angle::EntryPoint entryPoint,
                                                   GLenum target,
-                                                  GLeglImageOES image)
+                                                  egl::ImageID image)
 {
     if (!context->getExtensions().EGLImageOES)
     {
@@ -5080,15 +5079,14 @@ bool ValidateEGLImageTargetRenderbufferStorageOES(const Context *context,
             return false;
     }
 
-    egl::Image *imageObject = static_cast<egl::Image *>(image);
-
     ASSERT(context->getDisplay());
-    if (!context->getDisplay()->isValidImage(imageObject))
+    if (!context->getDisplay()->isValidImage(image))
     {
         context->validationError(entryPoint, GL_INVALID_VALUE, kInvalidEGLImage);
         return false;
     }
 
+    egl::Image *imageObject = context->getDisplay()->getImage(image);
     if (!imageObject->isRenderable(context))
     {
         context->validationError(entryPoint, GL_INVALID_OPERATION,

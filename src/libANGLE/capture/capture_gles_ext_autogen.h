@@ -995,12 +995,12 @@ angle::CallCapture CaptureLoseContextCHROMIUM(const State &glState,
 angle::CallCapture CaptureEGLImageTargetTexStorageEXT(const State &glState,
                                                       bool isCallValid,
                                                       GLenum target,
-                                                      GLeglImageOES image,
+                                                      egl::ImageID imagePacked,
                                                       const GLint *attrib_list);
 angle::CallCapture CaptureEGLImageTargetTextureStorageEXT(const State &glState,
                                                           bool isCallValid,
                                                           GLuint texture,
-                                                          GLeglImageOES image,
+                                                          egl::ImageID imagePacked,
                                                           const GLint *attrib_list);
 
 // GL_EXT_YUV_target
@@ -2103,11 +2103,11 @@ angle::CallCapture CaptureBlitFramebufferNV(const State &glState,
 angle::CallCapture CaptureEGLImageTargetRenderbufferStorageOES(const State &glState,
                                                                bool isCallValid,
                                                                GLenum target,
-                                                               GLeglImageOES image);
+                                                               egl::ImageID imagePacked);
 angle::CallCapture CaptureEGLImageTargetTexture2DOES(const State &glState,
                                                      bool isCallValid,
                                                      TextureType targetPacked,
-                                                     GLeglImageOES image);
+                                                     egl::ImageID imagePacked);
 
 // GL_OES_EGL_image_external
 
@@ -4157,13 +4157,13 @@ void CaptureBindUniformLocationCHROMIUM_name(const State &glState,
 void CaptureEGLImageTargetTexStorageEXT_attrib_list(const State &glState,
                                                     bool isCallValid,
                                                     GLenum target,
-                                                    GLeglImageOES image,
+                                                    egl::ImageID imagePacked,
                                                     const GLint *attrib_list,
                                                     angle::ParamCapture *paramCapture);
 void CaptureEGLImageTargetTextureStorageEXT_attrib_list(const State &glState,
                                                         bool isCallValid,
                                                         GLuint texture,
-                                                        GLeglImageOES image,
+                                                        egl::ImageID imagePacked,
                                                         const GLint *attrib_list,
                                                         angle::ParamCapture *paramCapture);
 void CaptureDrawElementsInstancedBaseInstanceEXT_indices(const State &glState,

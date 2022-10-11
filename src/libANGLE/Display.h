@@ -221,9 +221,9 @@ class Display final : public LabeledObject,
 
     bool isInitialized() const;
     bool isValidConfig(const Config *config) const;
-    bool isValidContext(const gl::Context *context) const;
-    bool isValidSurface(const Surface *surface) const;
-    bool isValidImage(const Image *image) const;
+    bool isValidContext(gl::ContextID contextID) const;
+    bool isValidSurface(SurfaceID surfaceID) const;
+    bool isValidImage(ImageID imageID) const;
     bool isValidStream(const Stream *stream) const;
     bool isValidSync(const Sync *sync) const;
     bool isValidNativeWindow(EGLNativeWindowType window) const;
@@ -338,14 +338,18 @@ class Display final : public LabeledObject,
 
     angle::ImageLoadContext getImageLoadContext() const;
 
+    const gl::Context *getContext(gl::ContextID contextID) const;
+    const egl::Surface *getSurface(egl::SurfaceID surfaceID) const;
+    const egl::Image *getImage(egl::ImageID imageID) const;
+    gl::Context *getContext(gl::ContextID contextID);
+    egl::Surface *getSurface(egl::SurfaceID surfaceID);
+    egl::Image *getImage(egl::ImageID imageID);
+
   private:
     Display(EGLenum platform, EGLNativeDisplayType displayId, Device *eglDevice);
 
     void setAttributes(const AttributeMap &attribMap) { mAttributeMap = attribMap; }
-
     void setupDisplayPlatform(rx::DisplayImpl *impl);
-
-    void updateAttribsFromEnvironment(const AttributeMap &attribMap);
 
     Error restoreLostDevice();
     Error releaseContext(gl::Context *context, Thread *thread);

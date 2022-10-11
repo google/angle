@@ -9222,32 +9222,30 @@ void Context::pixelLocalStorageBarrier()
     pls.barrier(this);
 }
 
-void Context::eGLImageTargetTexStorage(GLenum target, GLeglImageOES image, const GLint *attrib_list)
+void Context::eGLImageTargetTexStorage(GLenum target, egl::ImageID image, const GLint *attrib_list)
 {
     Texture *texture        = getTextureByType(FromGLenum<TextureType>(target));
-    egl::Image *imageObject = static_cast<egl::Image *>(image);
+    egl::Image *imageObject = mDisplay->getImage(image);
     ANGLE_CONTEXT_TRY(texture->setStorageEGLImageTarget(this, FromGLenum<TextureType>(target),
                                                         imageObject, attrib_list));
 }
 
 void Context::eGLImageTargetTextureStorage(GLuint texture,
-                                           GLeglImageOES image,
+                                           egl::ImageID image,
                                            const GLint *attrib_list)
-{
-    return;
-}
+{}
 
-void Context::eGLImageTargetTexture2D(TextureType target, GLeglImageOES image)
+void Context::eGLImageTargetTexture2D(TextureType target, egl::ImageID image)
 {
     Texture *texture        = getTextureByType(target);
-    egl::Image *imageObject = static_cast<egl::Image *>(image);
+    egl::Image *imageObject = mDisplay->getImage(image);
     ANGLE_CONTEXT_TRY(texture->setEGLImageTarget(this, target, imageObject));
 }
 
-void Context::eGLImageTargetRenderbufferStorage(GLenum target, GLeglImageOES image)
+void Context::eGLImageTargetRenderbufferStorage(GLenum target, egl::ImageID image)
 {
     Renderbuffer *renderbuffer = mState.getCurrentRenderbuffer();
-    egl::Image *imageObject    = static_cast<egl::Image *>(image);
+    egl::Image *imageObject    = mDisplay->getImage(image);
     ANGLE_CONTEXT_TRY(renderbuffer->setStorageEGLImageTarget(this, imageObject));
 }
 

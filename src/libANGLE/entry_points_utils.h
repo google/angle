@@ -108,17 +108,17 @@ namespace egl
 {
 inline int CID(EGLDisplay display, EGLContext context)
 {
-    auto *displayPtr = reinterpret_cast<const egl::Display *>(display);
+    const egl::Display *displayPtr = reinterpret_cast<const egl::Display *>(display);
     if (!Display::isValidDisplay(displayPtr))
     {
         return -1;
     }
-    auto *contextPtr = reinterpret_cast<const gl::Context *>(context);
-    if (!displayPtr->isValidContext(contextPtr))
+    gl::ContextID contextID = {static_cast<GLuint>(reinterpret_cast<uintptr_t>(context))};
+    if (!displayPtr->isValidContext(contextID))
     {
         return -1;
     }
-    return gl::CID(contextPtr);
+    return contextID.value;
 }
 
 #if ANGLE_CAPTURE_ENABLED

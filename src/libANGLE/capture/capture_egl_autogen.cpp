@@ -46,14 +46,14 @@ CallCapture CaptureChooseConfig(egl::Thread *thread,
 CallCapture CaptureCopyBuffers(egl::Thread *thread,
                                bool isCallValid,
                                egl::Display *dpyPacked,
-                               egl::Surface *surfacePacked,
+                               SurfaceID surfacePacked,
                                EGLNativePixmapType target,
                                EGLBoolean returnValue)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("dpyPacked", ParamType::Tegl_DisplayPointer, dpyPacked);
-    paramBuffer.addValueParam("surfacePacked", ParamType::Tegl_SurfacePointer, surfacePacked);
+    paramBuffer.addValueParam("surfacePacked", ParamType::TSurfaceID, surfacePacked);
     paramBuffer.addValueParam("target", ParamType::TEGLNativePixmapType, target);
 
     ParamCapture returnValueCapture("returnValue", ParamType::TEGLBoolean);
@@ -67,7 +67,7 @@ CallCapture CaptureCreateContext(egl::Thread *thread,
                                  bool isCallValid,
                                  egl::Display *dpyPacked,
                                  egl::Config *configPacked,
-                                 gl::Context *share_contextPacked,
+                                 gl::ContextID share_contextPacked,
                                  const AttributeMap &attrib_listPacked,
                                  EGLContext returnValue)
 {
@@ -75,8 +75,7 @@ CallCapture CaptureCreateContext(egl::Thread *thread,
 
     paramBuffer.addValueParam("dpyPacked", ParamType::Tegl_DisplayPointer, dpyPacked);
     paramBuffer.addValueParam("configPacked", ParamType::Tegl_ConfigPointer, configPacked);
-    paramBuffer.addValueParam("share_contextPacked", ParamType::Tgl_ContextPointer,
-                              share_contextPacked);
+    paramBuffer.addValueParam("share_contextPacked", ParamType::TContextID, share_contextPacked);
     paramBuffer.addParam(CaptureAttributeMap(attrib_listPacked));
 
     ParamCapture returnValueCapture("returnValue", ParamType::TEGLContext);
@@ -153,13 +152,13 @@ CallCapture CaptureCreateWindowSurface(egl::Thread *thread,
 CallCapture CaptureDestroyContext(egl::Thread *thread,
                                   bool isCallValid,
                                   egl::Display *dpyPacked,
-                                  gl::Context *ctxPacked,
+                                  gl::ContextID ctxPacked,
                                   EGLBoolean returnValue)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("dpyPacked", ParamType::Tegl_DisplayPointer, dpyPacked);
-    paramBuffer.addValueParam("ctxPacked", ParamType::Tgl_ContextPointer, ctxPacked);
+    paramBuffer.addValueParam("ctxPacked", ParamType::TContextID, ctxPacked);
 
     ParamCapture returnValueCapture("returnValue", ParamType::TEGLBoolean);
     InitParamValue(ParamType::TEGLBoolean, returnValue, &returnValueCapture.value);
@@ -171,13 +170,13 @@ CallCapture CaptureDestroyContext(egl::Thread *thread,
 CallCapture CaptureDestroySurface(egl::Thread *thread,
                                   bool isCallValid,
                                   egl::Display *dpyPacked,
-                                  egl::Surface *surfacePacked,
+                                  SurfaceID surfacePacked,
                                   EGLBoolean returnValue)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("dpyPacked", ParamType::Tegl_DisplayPointer, dpyPacked);
-    paramBuffer.addValueParam("surfacePacked", ParamType::Tegl_SurfacePointer, surfacePacked);
+    paramBuffer.addValueParam("surfacePacked", ParamType::TSurfaceID, surfacePacked);
 
     ParamCapture returnValueCapture("returnValue", ParamType::TEGLBoolean);
     InitParamValue(ParamType::TEGLBoolean, returnValue, &returnValueCapture.value);
@@ -317,17 +316,17 @@ CallCapture CaptureInitialize(egl::Thread *thread,
 CallCapture CaptureMakeCurrent(egl::Thread *thread,
                                bool isCallValid,
                                egl::Display *dpyPacked,
-                               egl::Surface *drawPacked,
-                               egl::Surface *readPacked,
-                               gl::Context *ctxPacked,
+                               SurfaceID drawPacked,
+                               SurfaceID readPacked,
+                               gl::ContextID ctxPacked,
                                EGLBoolean returnValue)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("dpyPacked", ParamType::Tegl_DisplayPointer, dpyPacked);
-    paramBuffer.addValueParam("drawPacked", ParamType::Tegl_SurfacePointer, drawPacked);
-    paramBuffer.addValueParam("readPacked", ParamType::Tegl_SurfacePointer, readPacked);
-    paramBuffer.addValueParam("ctxPacked", ParamType::Tgl_ContextPointer, ctxPacked);
+    paramBuffer.addValueParam("drawPacked", ParamType::TSurfaceID, drawPacked);
+    paramBuffer.addValueParam("readPacked", ParamType::TSurfaceID, readPacked);
+    paramBuffer.addValueParam("ctxPacked", ParamType::TContextID, ctxPacked);
 
     ParamCapture returnValueCapture("returnValue", ParamType::TEGLBoolean);
     InitParamValue(ParamType::TEGLBoolean, returnValue, &returnValueCapture.value);
@@ -339,7 +338,7 @@ CallCapture CaptureMakeCurrent(egl::Thread *thread,
 CallCapture CaptureQueryContext(egl::Thread *thread,
                                 bool isCallValid,
                                 egl::Display *dpyPacked,
-                                gl::Context *ctxPacked,
+                                gl::ContextID ctxPacked,
                                 EGLint attribute,
                                 EGLint *value,
                                 EGLBoolean returnValue)
@@ -347,7 +346,7 @@ CallCapture CaptureQueryContext(egl::Thread *thread,
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("dpyPacked", ParamType::Tegl_DisplayPointer, dpyPacked);
-    paramBuffer.addValueParam("ctxPacked", ParamType::Tgl_ContextPointer, ctxPacked);
+    paramBuffer.addValueParam("ctxPacked", ParamType::TContextID, ctxPacked);
     paramBuffer.addValueParam("attribute", ParamType::TEGLint, attribute);
     paramBuffer.addValueParam("value", ParamType::TEGLintPointer, value);
 
@@ -379,7 +378,7 @@ CallCapture CaptureQueryString(egl::Thread *thread,
 CallCapture CaptureQuerySurface(egl::Thread *thread,
                                 bool isCallValid,
                                 egl::Display *dpyPacked,
-                                egl::Surface *surfacePacked,
+                                SurfaceID surfacePacked,
                                 EGLint attribute,
                                 EGLint *value,
                                 EGLBoolean returnValue)
@@ -387,7 +386,7 @@ CallCapture CaptureQuerySurface(egl::Thread *thread,
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("dpyPacked", ParamType::Tegl_DisplayPointer, dpyPacked);
-    paramBuffer.addValueParam("surfacePacked", ParamType::Tegl_SurfacePointer, surfacePacked);
+    paramBuffer.addValueParam("surfacePacked", ParamType::TSurfaceID, surfacePacked);
     paramBuffer.addValueParam("attribute", ParamType::TEGLint, attribute);
     paramBuffer.addValueParam("value", ParamType::TEGLintPointer, value);
 
@@ -401,13 +400,13 @@ CallCapture CaptureQuerySurface(egl::Thread *thread,
 CallCapture CaptureSwapBuffers(egl::Thread *thread,
                                bool isCallValid,
                                egl::Display *dpyPacked,
-                               egl::Surface *surfacePacked,
+                               SurfaceID surfacePacked,
                                EGLBoolean returnValue)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("dpyPacked", ParamType::Tegl_DisplayPointer, dpyPacked);
-    paramBuffer.addValueParam("surfacePacked", ParamType::Tegl_SurfacePointer, surfacePacked);
+    paramBuffer.addValueParam("surfacePacked", ParamType::TSurfaceID, surfacePacked);
 
     ParamCapture returnValueCapture("returnValue", ParamType::TEGLBoolean);
     InitParamValue(ParamType::TEGLBoolean, returnValue, &returnValueCapture.value);
@@ -462,14 +461,14 @@ CallCapture CaptureWaitNative(egl::Thread *thread,
 CallCapture CaptureBindTexImage(egl::Thread *thread,
                                 bool isCallValid,
                                 egl::Display *dpyPacked,
-                                egl::Surface *surfacePacked,
+                                SurfaceID surfacePacked,
                                 EGLint buffer,
                                 EGLBoolean returnValue)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("dpyPacked", ParamType::Tegl_DisplayPointer, dpyPacked);
-    paramBuffer.addValueParam("surfacePacked", ParamType::Tegl_SurfacePointer, surfacePacked);
+    paramBuffer.addValueParam("surfacePacked", ParamType::TSurfaceID, surfacePacked);
     paramBuffer.addValueParam("buffer", ParamType::TEGLint, buffer);
 
     ParamCapture returnValueCapture("returnValue", ParamType::TEGLBoolean);
@@ -482,14 +481,14 @@ CallCapture CaptureBindTexImage(egl::Thread *thread,
 CallCapture CaptureReleaseTexImage(egl::Thread *thread,
                                    bool isCallValid,
                                    egl::Display *dpyPacked,
-                                   egl::Surface *surfacePacked,
+                                   SurfaceID surfacePacked,
                                    EGLint buffer,
                                    EGLBoolean returnValue)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("dpyPacked", ParamType::Tegl_DisplayPointer, dpyPacked);
-    paramBuffer.addValueParam("surfacePacked", ParamType::Tegl_SurfacePointer, surfacePacked);
+    paramBuffer.addValueParam("surfacePacked", ParamType::TSurfaceID, surfacePacked);
     paramBuffer.addValueParam("buffer", ParamType::TEGLint, buffer);
 
     ParamCapture returnValueCapture("returnValue", ParamType::TEGLBoolean);
@@ -502,7 +501,7 @@ CallCapture CaptureReleaseTexImage(egl::Thread *thread,
 CallCapture CaptureSurfaceAttrib(egl::Thread *thread,
                                  bool isCallValid,
                                  egl::Display *dpyPacked,
-                                 egl::Surface *surfacePacked,
+                                 SurfaceID surfacePacked,
                                  EGLint attribute,
                                  EGLint value,
                                  EGLBoolean returnValue)
@@ -510,7 +509,7 @@ CallCapture CaptureSurfaceAttrib(egl::Thread *thread,
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("dpyPacked", ParamType::Tegl_DisplayPointer, dpyPacked);
-    paramBuffer.addValueParam("surfacePacked", ParamType::Tegl_SurfacePointer, surfacePacked);
+    paramBuffer.addValueParam("surfacePacked", ParamType::TSurfaceID, surfacePacked);
     paramBuffer.addValueParam("attribute", ParamType::TEGLint, attribute);
     paramBuffer.addValueParam("value", ParamType::TEGLint, value);
 
@@ -648,7 +647,7 @@ CallCapture CaptureClientWaitSync(egl::Thread *thread,
 CallCapture CaptureCreateImage(egl::Thread *thread,
                                bool isCallValid,
                                egl::Display *dpyPacked,
-                               gl::Context *ctxPacked,
+                               gl::ContextID ctxPacked,
                                EGLenum target,
                                EGLClientBuffer buffer,
                                const AttributeMap &attrib_listPacked,
@@ -657,7 +656,7 @@ CallCapture CaptureCreateImage(egl::Thread *thread,
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("dpyPacked", ParamType::Tegl_DisplayPointer, dpyPacked);
-    paramBuffer.addValueParam("ctxPacked", ParamType::Tgl_ContextPointer, ctxPacked);
+    paramBuffer.addValueParam("ctxPacked", ParamType::TContextID, ctxPacked);
     paramBuffer.addValueParam("target", ParamType::TEGLenum, target);
     paramBuffer.addValueParam("buffer", ParamType::TEGLClientBuffer, buffer);
     paramBuffer.addParam(CaptureAttributeMap(attrib_listPacked));
@@ -736,13 +735,13 @@ CallCapture CaptureCreateSync(egl::Thread *thread,
 CallCapture CaptureDestroyImage(egl::Thread *thread,
                                 bool isCallValid,
                                 egl::Display *dpyPacked,
-                                egl::Image *imagePacked,
+                                ImageID imagePacked,
                                 EGLBoolean returnValue)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("dpyPacked", ParamType::Tegl_DisplayPointer, dpyPacked);
-    paramBuffer.addValueParam("imagePacked", ParamType::Tegl_ImagePointer, imagePacked);
+    paramBuffer.addValueParam("imagePacked", ParamType::TImageID, imagePacked);
 
     ParamCapture returnValueCapture("returnValue", ParamType::TEGLBoolean);
     InitParamValue(ParamType::TEGLBoolean, returnValue, &returnValueCapture.value);
@@ -866,14 +865,14 @@ CallCapture CaptureCreateNativeClientBufferANDROID(egl::Thread *thread,
 CallCapture CaptureGetCompositorTimingSupportedANDROID(egl::Thread *thread,
                                                        bool isCallValid,
                                                        egl::Display *dpyPacked,
-                                                       egl::Surface *surfacePacked,
+                                                       SurfaceID surfacePacked,
                                                        CompositorTiming namePacked,
                                                        EGLBoolean returnValue)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("dpyPacked", ParamType::Tegl_DisplayPointer, dpyPacked);
-    paramBuffer.addValueParam("surfacePacked", ParamType::Tegl_SurfacePointer, surfacePacked);
+    paramBuffer.addValueParam("surfacePacked", ParamType::TSurfaceID, surfacePacked);
     paramBuffer.addValueParam("namePacked", ParamType::TCompositorTiming, namePacked);
 
     ParamCapture returnValueCapture("returnValue", ParamType::TEGLBoolean);
@@ -887,7 +886,7 @@ CallCapture CaptureGetCompositorTimingSupportedANDROID(egl::Thread *thread,
 CallCapture CaptureGetCompositorTimingANDROID(egl::Thread *thread,
                                               bool isCallValid,
                                               egl::Display *dpyPacked,
-                                              egl::Surface *surfacePacked,
+                                              SurfaceID surfacePacked,
                                               EGLint numTimestamps,
                                               const EGLint *names,
                                               EGLnsecsANDROID *values,
@@ -896,7 +895,7 @@ CallCapture CaptureGetCompositorTimingANDROID(egl::Thread *thread,
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("dpyPacked", ParamType::Tegl_DisplayPointer, dpyPacked);
-    paramBuffer.addValueParam("surfacePacked", ParamType::Tegl_SurfacePointer, surfacePacked);
+    paramBuffer.addValueParam("surfacePacked", ParamType::TSurfaceID, surfacePacked);
     paramBuffer.addValueParam("numTimestamps", ParamType::TEGLint, numTimestamps);
     paramBuffer.addValueParam("names", ParamType::TEGLintConstPointer, names);
     paramBuffer.addValueParam("values", ParamType::TEGLnsecsANDROIDPointer, values);
@@ -911,14 +910,14 @@ CallCapture CaptureGetCompositorTimingANDROID(egl::Thread *thread,
 CallCapture CaptureGetNextFrameIdANDROID(egl::Thread *thread,
                                          bool isCallValid,
                                          egl::Display *dpyPacked,
-                                         egl::Surface *surfacePacked,
+                                         SurfaceID surfacePacked,
                                          EGLuint64KHR *frameId,
                                          EGLBoolean returnValue)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("dpyPacked", ParamType::Tegl_DisplayPointer, dpyPacked);
-    paramBuffer.addValueParam("surfacePacked", ParamType::Tegl_SurfacePointer, surfacePacked);
+    paramBuffer.addValueParam("surfacePacked", ParamType::TSurfaceID, surfacePacked);
     paramBuffer.addValueParam("frameId", ParamType::TEGLuint64KHRPointer, frameId);
 
     ParamCapture returnValueCapture("returnValue", ParamType::TEGLBoolean);
@@ -931,14 +930,14 @@ CallCapture CaptureGetNextFrameIdANDROID(egl::Thread *thread,
 CallCapture CaptureGetFrameTimestampSupportedANDROID(egl::Thread *thread,
                                                      bool isCallValid,
                                                      egl::Display *dpyPacked,
-                                                     egl::Surface *surfacePacked,
+                                                     SurfaceID surfacePacked,
                                                      Timestamp timestampPacked,
                                                      EGLBoolean returnValue)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("dpyPacked", ParamType::Tegl_DisplayPointer, dpyPacked);
-    paramBuffer.addValueParam("surfacePacked", ParamType::Tegl_SurfacePointer, surfacePacked);
+    paramBuffer.addValueParam("surfacePacked", ParamType::TSurfaceID, surfacePacked);
     paramBuffer.addValueParam("timestampPacked", ParamType::TTimestamp, timestampPacked);
 
     ParamCapture returnValueCapture("returnValue", ParamType::TEGLBoolean);
@@ -952,7 +951,7 @@ CallCapture CaptureGetFrameTimestampSupportedANDROID(egl::Thread *thread,
 CallCapture CaptureGetFrameTimestampsANDROID(egl::Thread *thread,
                                              bool isCallValid,
                                              egl::Display *dpyPacked,
-                                             egl::Surface *surfacePacked,
+                                             SurfaceID surfacePacked,
                                              EGLuint64KHR frameId,
                                              EGLint numTimestamps,
                                              const EGLint *timestamps,
@@ -962,7 +961,7 @@ CallCapture CaptureGetFrameTimestampsANDROID(egl::Thread *thread,
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("dpyPacked", ParamType::Tegl_DisplayPointer, dpyPacked);
-    paramBuffer.addValueParam("surfacePacked", ParamType::Tegl_SurfacePointer, surfacePacked);
+    paramBuffer.addValueParam("surfacePacked", ParamType::TSurfaceID, surfacePacked);
     paramBuffer.addValueParam("frameId", ParamType::TEGLuint64KHR, frameId);
     paramBuffer.addValueParam("numTimestamps", ParamType::TEGLint, numTimestamps);
     paramBuffer.addValueParam("timestamps", ParamType::TEGLintConstPointer, timestamps);
@@ -1012,14 +1011,14 @@ CallCapture CaptureDupNativeFenceFDANDROID(egl::Thread *thread,
 CallCapture CapturePresentationTimeANDROID(egl::Thread *thread,
                                            bool isCallValid,
                                            egl::Display *dpyPacked,
-                                           egl::Surface *surfacePacked,
+                                           SurfaceID surfacePacked,
                                            EGLnsecsANDROID time,
                                            EGLBoolean returnValue)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("dpyPacked", ParamType::Tegl_DisplayPointer, dpyPacked);
-    paramBuffer.addValueParam("surfacePacked", ParamType::Tegl_SurfacePointer, surfacePacked);
+    paramBuffer.addValueParam("surfacePacked", ParamType::TSurfaceID, surfacePacked);
     paramBuffer.addValueParam("time", ParamType::TEGLnsecsANDROID, time);
 
     ParamCapture returnValueCapture("returnValue", ParamType::TEGLBoolean);
@@ -1126,12 +1125,12 @@ CallCapture CaptureCopyMetalSharedEventANGLE(egl::Thread *thread,
 CallCapture CaptureReleaseHighPowerGPUANGLE(egl::Thread *thread,
                                             bool isCallValid,
                                             egl::Display *dpyPacked,
-                                            gl::Context *ctxPacked)
+                                            gl::ContextID ctxPacked)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("dpyPacked", ParamType::Tegl_DisplayPointer, dpyPacked);
-    paramBuffer.addValueParam("ctxPacked", ParamType::Tgl_ContextPointer, ctxPacked);
+    paramBuffer.addValueParam("ctxPacked", ParamType::TContextID, ctxPacked);
 
     return CallCapture(angle::EntryPoint::EGLReleaseHighPowerGPUANGLE, std::move(paramBuffer));
 }
@@ -1139,12 +1138,12 @@ CallCapture CaptureReleaseHighPowerGPUANGLE(egl::Thread *thread,
 CallCapture CaptureReacquireHighPowerGPUANGLE(egl::Thread *thread,
                                               bool isCallValid,
                                               egl::Display *dpyPacked,
-                                              gl::Context *ctxPacked)
+                                              gl::ContextID ctxPacked)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("dpyPacked", ParamType::Tegl_DisplayPointer, dpyPacked);
-    paramBuffer.addValueParam("ctxPacked", ParamType::Tgl_ContextPointer, ctxPacked);
+    paramBuffer.addValueParam("ctxPacked", ParamType::TContextID, ctxPacked);
 
     return CallCapture(angle::EntryPoint::EGLReacquireHighPowerGPUANGLE, std::move(paramBuffer));
 }
@@ -1178,13 +1177,13 @@ CallCapture CaptureForceGPUSwitchANGLE(egl::Thread *thread,
 CallCapture CapturePrepareSwapBuffersANGLE(egl::Thread *thread,
                                            bool isCallValid,
                                            egl::Display *dpyPacked,
-                                           egl::Surface *surfacePacked,
+                                           SurfaceID surfacePacked,
                                            EGLBoolean returnValue)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("dpyPacked", ParamType::Tegl_DisplayPointer, dpyPacked);
-    paramBuffer.addValueParam("surfacePacked", ParamType::Tegl_SurfacePointer, surfacePacked);
+    paramBuffer.addValueParam("surfacePacked", ParamType::TSurfaceID, surfacePacked);
 
     ParamCapture returnValueCapture("returnValue", ParamType::TEGLBoolean);
     InitParamValue(ParamType::TEGLBoolean, returnValue, &returnValueCapture.value);
@@ -1274,7 +1273,7 @@ CallCapture CaptureProgramCacheResizeANGLE(egl::Thread *thread,
 CallCapture CaptureQuerySurfacePointerANGLE(egl::Thread *thread,
                                             bool isCallValid,
                                             egl::Display *dpyPacked,
-                                            egl::Surface *surfacePacked,
+                                            SurfaceID surfacePacked,
                                             EGLint attribute,
                                             void **value,
                                             EGLBoolean returnValue)
@@ -1282,7 +1281,7 @@ CallCapture CaptureQuerySurfacePointerANGLE(egl::Thread *thread,
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("dpyPacked", ParamType::Tegl_DisplayPointer, dpyPacked);
-    paramBuffer.addValueParam("surfacePacked", ParamType::Tegl_SurfacePointer, surfacePacked);
+    paramBuffer.addValueParam("surfacePacked", ParamType::TSurfaceID, surfacePacked);
     paramBuffer.addValueParam("attribute", ParamType::TEGLint, attribute);
     paramBuffer.addValueParam("value", ParamType::TvoidPointerPointer, value);
 
@@ -1339,14 +1338,14 @@ CallCapture CaptureStreamPostD3DTextureANGLE(egl::Thread *thread,
 CallCapture CaptureSwapBuffersWithFrameTokenANGLE(egl::Thread *thread,
                                                   bool isCallValid,
                                                   egl::Display *dpyPacked,
-                                                  egl::Surface *surfacePacked,
+                                                  SurfaceID surfacePacked,
                                                   EGLFrameTokenANGLE frametoken,
                                                   EGLBoolean returnValue)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("dpyPacked", ParamType::Tegl_DisplayPointer, dpyPacked);
-    paramBuffer.addValueParam("surfacePacked", ParamType::Tegl_SurfacePointer, surfacePacked);
+    paramBuffer.addValueParam("surfacePacked", ParamType::TSurfaceID, surfacePacked);
     paramBuffer.addValueParam("frametoken", ParamType::TEGLFrameTokenANGLE, frametoken);
 
     ParamCapture returnValueCapture("returnValue", ParamType::TEGLBoolean);
@@ -1360,7 +1359,7 @@ CallCapture CaptureSwapBuffersWithFrameTokenANGLE(egl::Thread *thread,
 CallCapture CaptureGetMscRateANGLE(egl::Thread *thread,
                                    bool isCallValid,
                                    egl::Display *dpyPacked,
-                                   egl::Surface *surfacePacked,
+                                   SurfaceID surfacePacked,
                                    EGLint *numerator,
                                    EGLint *denominator,
                                    EGLBoolean returnValue)
@@ -1368,7 +1367,7 @@ CallCapture CaptureGetMscRateANGLE(egl::Thread *thread,
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("dpyPacked", ParamType::Tegl_DisplayPointer, dpyPacked);
-    paramBuffer.addValueParam("surfacePacked", ParamType::Tegl_SurfacePointer, surfacePacked);
+    paramBuffer.addValueParam("surfacePacked", ParamType::TSurfaceID, surfacePacked);
     paramBuffer.addValueParam("numerator", ParamType::TEGLintPointer, numerator);
     paramBuffer.addValueParam("denominator", ParamType::TEGLintPointer, denominator);
 
@@ -1382,7 +1381,7 @@ CallCapture CaptureGetMscRateANGLE(egl::Thread *thread,
 CallCapture CaptureExportVkImageANGLE(egl::Thread *thread,
                                       bool isCallValid,
                                       egl::Display *dpyPacked,
-                                      egl::Image *imagePacked,
+                                      ImageID imagePacked,
                                       void *vk_image,
                                       void *vk_image_create_info,
                                       EGLBoolean returnValue)
@@ -1390,7 +1389,7 @@ CallCapture CaptureExportVkImageANGLE(egl::Thread *thread,
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("dpyPacked", ParamType::Tegl_DisplayPointer, dpyPacked);
-    paramBuffer.addValueParam("imagePacked", ParamType::Tegl_ImagePointer, imagePacked);
+    paramBuffer.addValueParam("imagePacked", ParamType::TImageID, imagePacked);
     paramBuffer.addValueParam("vk_image", ParamType::TvoidPointer, vk_image);
     paramBuffer.addValueParam("vk_image_create_info", ParamType::TvoidPointer,
                               vk_image_create_info);
@@ -1405,7 +1404,7 @@ CallCapture CaptureExportVkImageANGLE(egl::Thread *thread,
 CallCapture CaptureGetSyncValuesCHROMIUM(egl::Thread *thread,
                                          bool isCallValid,
                                          egl::Display *dpyPacked,
-                                         egl::Surface *surfacePacked,
+                                         SurfaceID surfacePacked,
                                          EGLuint64KHR *ust,
                                          EGLuint64KHR *msc,
                                          EGLuint64KHR *sbc,
@@ -1414,7 +1413,7 @@ CallCapture CaptureGetSyncValuesCHROMIUM(egl::Thread *thread,
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("dpyPacked", ParamType::Tegl_DisplayPointer, dpyPacked);
-    paramBuffer.addValueParam("surfacePacked", ParamType::Tegl_SurfacePointer, surfacePacked);
+    paramBuffer.addValueParam("surfacePacked", ParamType::TSurfaceID, surfacePacked);
     paramBuffer.addValueParam("ust", ParamType::TEGLuint64KHRPointer, ust);
     paramBuffer.addValueParam("msc", ParamType::TEGLuint64KHRPointer, msc);
     paramBuffer.addValueParam("sbc", ParamType::TEGLuint64KHRPointer, sbc);
@@ -1741,7 +1740,7 @@ CallCapture CaptureGetSyncAttribKHR(egl::Thread *thread,
 CallCapture CaptureCreateImageKHR(egl::Thread *thread,
                                   bool isCallValid,
                                   egl::Display *dpyPacked,
-                                  gl::Context *ctxPacked,
+                                  gl::ContextID ctxPacked,
                                   EGLenum target,
                                   EGLClientBuffer buffer,
                                   const AttributeMap &attrib_listPacked,
@@ -1750,7 +1749,7 @@ CallCapture CaptureCreateImageKHR(egl::Thread *thread,
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("dpyPacked", ParamType::Tegl_DisplayPointer, dpyPacked);
-    paramBuffer.addValueParam("ctxPacked", ParamType::Tgl_ContextPointer, ctxPacked);
+    paramBuffer.addValueParam("ctxPacked", ParamType::TContextID, ctxPacked);
     paramBuffer.addValueParam("target", ParamType::TEGLenum, target);
     paramBuffer.addValueParam("buffer", ParamType::TEGLClientBuffer, buffer);
     paramBuffer.addParam(CaptureAttributeMap(attrib_listPacked));
@@ -1765,13 +1764,13 @@ CallCapture CaptureCreateImageKHR(egl::Thread *thread,
 CallCapture CaptureDestroyImageKHR(egl::Thread *thread,
                                    bool isCallValid,
                                    egl::Display *dpyPacked,
-                                   egl::Image *imagePacked,
+                                   ImageID imagePacked,
                                    EGLBoolean returnValue)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("dpyPacked", ParamType::Tegl_DisplayPointer, dpyPacked);
-    paramBuffer.addValueParam("imagePacked", ParamType::Tegl_ImagePointer, imagePacked);
+    paramBuffer.addValueParam("imagePacked", ParamType::TImageID, imagePacked);
 
     ParamCapture returnValueCapture("returnValue", ParamType::TEGLBoolean);
     InitParamValue(ParamType::TEGLBoolean, returnValue, &returnValueCapture.value);
@@ -1783,14 +1782,14 @@ CallCapture CaptureDestroyImageKHR(egl::Thread *thread,
 CallCapture CaptureLockSurfaceKHR(egl::Thread *thread,
                                   bool isCallValid,
                                   egl::Display *dpyPacked,
-                                  egl::Surface *surfacePacked,
+                                  SurfaceID surfacePacked,
                                   const AttributeMap &attrib_listPacked,
                                   EGLBoolean returnValue)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("dpyPacked", ParamType::Tegl_DisplayPointer, dpyPacked);
-    paramBuffer.addValueParam("surfacePacked", ParamType::Tegl_SurfacePointer, surfacePacked);
+    paramBuffer.addValueParam("surfacePacked", ParamType::TSurfaceID, surfacePacked);
     paramBuffer.addParam(CaptureAttributeMap(attrib_listPacked));
 
     ParamCapture returnValueCapture("returnValue", ParamType::TEGLBoolean);
@@ -1803,7 +1802,7 @@ CallCapture CaptureLockSurfaceKHR(egl::Thread *thread,
 CallCapture CaptureQuerySurface64KHR(egl::Thread *thread,
                                      bool isCallValid,
                                      egl::Display *dpyPacked,
-                                     egl::Surface *surfacePacked,
+                                     SurfaceID surfacePacked,
                                      EGLint attribute,
                                      EGLAttribKHR *value,
                                      EGLBoolean returnValue)
@@ -1811,7 +1810,7 @@ CallCapture CaptureQuerySurface64KHR(egl::Thread *thread,
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("dpyPacked", ParamType::Tegl_DisplayPointer, dpyPacked);
-    paramBuffer.addValueParam("surfacePacked", ParamType::Tegl_SurfacePointer, surfacePacked);
+    paramBuffer.addValueParam("surfacePacked", ParamType::TSurfaceID, surfacePacked);
     paramBuffer.addValueParam("attribute", ParamType::TEGLint, attribute);
     paramBuffer.addValueParam("value", ParamType::TEGLAttribKHRPointer, value);
 
@@ -1825,13 +1824,13 @@ CallCapture CaptureQuerySurface64KHR(egl::Thread *thread,
 CallCapture CaptureUnlockSurfaceKHR(egl::Thread *thread,
                                     bool isCallValid,
                                     egl::Display *dpyPacked,
-                                    egl::Surface *surfacePacked,
+                                    SurfaceID surfacePacked,
                                     EGLBoolean returnValue)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("dpyPacked", ParamType::Tegl_DisplayPointer, dpyPacked);
-    paramBuffer.addValueParam("surfacePacked", ParamType::Tegl_SurfacePointer, surfacePacked);
+    paramBuffer.addValueParam("surfacePacked", ParamType::TSurfaceID, surfacePacked);
 
     ParamCapture returnValueCapture("returnValue", ParamType::TEGLBoolean);
     InitParamValue(ParamType::TEGLBoolean, returnValue, &returnValueCapture.value);
@@ -1843,7 +1842,7 @@ CallCapture CaptureUnlockSurfaceKHR(egl::Thread *thread,
 CallCapture CaptureSetDamageRegionKHR(egl::Thread *thread,
                                       bool isCallValid,
                                       egl::Display *dpyPacked,
-                                      egl::Surface *surfacePacked,
+                                      SurfaceID surfacePacked,
                                       EGLint *rects,
                                       EGLint n_rects,
                                       EGLBoolean returnValue)
@@ -1851,7 +1850,7 @@ CallCapture CaptureSetDamageRegionKHR(egl::Thread *thread,
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("dpyPacked", ParamType::Tegl_DisplayPointer, dpyPacked);
-    paramBuffer.addValueParam("surfacePacked", ParamType::Tegl_SurfacePointer, surfacePacked);
+    paramBuffer.addValueParam("surfacePacked", ParamType::TSurfaceID, surfacePacked);
     paramBuffer.addValueParam("rects", ParamType::TEGLintPointer, rects);
     paramBuffer.addValueParam("n_rects", ParamType::TEGLint, n_rects);
 
@@ -2042,7 +2041,7 @@ CallCapture CaptureStreamConsumerReleaseKHR(egl::Thread *thread,
 CallCapture CaptureSwapBuffersWithDamageKHR(egl::Thread *thread,
                                             bool isCallValid,
                                             egl::Display *dpyPacked,
-                                            egl::Surface *surfacePacked,
+                                            SurfaceID surfacePacked,
                                             const EGLint *rects,
                                             EGLint n_rects,
                                             EGLBoolean returnValue)
@@ -2050,7 +2049,7 @@ CallCapture CaptureSwapBuffersWithDamageKHR(egl::Thread *thread,
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("dpyPacked", ParamType::Tegl_DisplayPointer, dpyPacked);
-    paramBuffer.addValueParam("surfacePacked", ParamType::Tegl_SurfacePointer, surfacePacked);
+    paramBuffer.addValueParam("surfacePacked", ParamType::TSurfaceID, surfacePacked);
     paramBuffer.addValueParam("rects", ParamType::TEGLintConstPointer, rects);
     paramBuffer.addValueParam("n_rects", ParamType::TEGLint, n_rects);
 
@@ -2084,7 +2083,7 @@ CallCapture CaptureWaitSyncKHR(egl::Thread *thread,
 CallCapture CapturePostSubBufferNV(egl::Thread *thread,
                                    bool isCallValid,
                                    egl::Display *dpyPacked,
-                                   egl::Surface *surfacePacked,
+                                   SurfaceID surfacePacked,
                                    EGLint x,
                                    EGLint y,
                                    EGLint width,
@@ -2094,7 +2093,7 @@ CallCapture CapturePostSubBufferNV(egl::Thread *thread,
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("dpyPacked", ParamType::Tegl_DisplayPointer, dpyPacked);
-    paramBuffer.addValueParam("surfacePacked", ParamType::Tegl_SurfacePointer, surfacePacked);
+    paramBuffer.addValueParam("surfacePacked", ParamType::TSurfaceID, surfacePacked);
     paramBuffer.addValueParam("x", ParamType::TEGLint, x);
     paramBuffer.addValueParam("y", ParamType::TEGLint, y);
     paramBuffer.addValueParam("width", ParamType::TEGLint, width);

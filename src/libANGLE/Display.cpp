@@ -82,6 +82,20 @@
 #    include "libANGLE/renderer/metal/DisplayMtl_api.h"
 #endif  // defined(ANGLE_ENABLE_METAL)
 
+template <typename T, typename IDType, typename SetT>
+T GetResourceFromHashSet(IDType id, SetT &hashSet)
+{
+    for (T resource : hashSet)
+    {
+        if (resource->id() == id)
+        {
+            return resource;
+        }
+    }
+
+    return nullptr;
+}
+
 namespace egl
 {
 
@@ -1933,19 +1947,19 @@ bool Display::isValidConfig(const Config *config) const
     return mConfigSet.contains(config);
 }
 
-bool Display::isValidContext(const gl::Context *context) const
+bool Display::isValidContext(const gl::ContextID contextID) const
 {
-    return mState.contextSet.find(const_cast<gl::Context *>(context)) != mState.contextSet.end();
+    return getContext(contextID) != nullptr;
 }
 
-bool Display::isValidSurface(const Surface *surface) const
+bool Display::isValidSurface(SurfaceID surfaceID) const
 {
-    return mState.surfaceSet.find(const_cast<Surface *>(surface)) != mState.surfaceSet.end();
+    return getSurface(surfaceID) != nullptr;
 }
 
-bool Display::isValidImage(const Image *image) const
+bool Display::isValidImage(ImageID imageID) const
 {
-    return mImageSet.find(const_cast<Image *>(image)) != mImageSet.end();
+    return getImage(imageID) != nullptr;
 }
 
 bool Display::isValidStream(const Stream *stream) const
@@ -2530,4 +2544,32 @@ angle::ImageLoadContext Display::getImageLoadContext() const
     return imageLoadContext;
 }
 
+const gl::Context *Display::getContext(gl::ContextID contextID) const
+{
+    return GetResourceFromHashSet<const gl::Context *>(contextID, mState.contextSet);
+}
+
+const egl::Surface *Display::getSurface(egl::SurfaceID surfaceID) const
+{
+    return GetResourceFromHashSet<const egl::Surface *>(surfaceID, mState.surfaceSet);
+}
+
+const egl::Image *Display::getImage(egl::ImageID imageID) const
+{
+    return GetResourceFromHashSet<const egl::Image *>(imageID, mImageSet);
+}
+
+gl::Context *Display::getContext(gl::ContextID contextID)
+{
+    return GetResourceFromHashSet<gl::Context *>(contextID, mState.contextSet);
+}
+
+egl::Surface *Display::getSurface(egl::SurfaceID surfaceID)
+{
+    return GetResourceFromHashSet<egl::Surface *>(surfaceID, mState.surfaceSet);
+}
+egl::Image *Display::getImage(egl::ImageID imageID)
+{
+    return GetResourceFromHashSet<egl::Image *>(imageID, mImageSet);
+}
 }  // namespace egl

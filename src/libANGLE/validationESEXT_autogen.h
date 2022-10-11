@@ -993,12 +993,12 @@ bool ValidateLoseContextCHROMIUM(const Context *context,
 bool ValidateEGLImageTargetTexStorageEXT(const Context *context,
                                          angle::EntryPoint entryPoint,
                                          GLenum target,
-                                         GLeglImageOES image,
+                                         egl::ImageID imagePacked,
                                          const GLint *attrib_list);
 bool ValidateEGLImageTargetTextureStorageEXT(const Context *context,
                                              angle::EntryPoint entryPoint,
                                              GLuint texture,
-                                             GLeglImageOES image,
+                                             egl::ImageID imagePacked,
                                              const GLint *attrib_list);
 
 // GL_EXT_YUV_target
@@ -2082,11 +2082,11 @@ bool ValidateBlitFramebufferNV(const Context *context,
 bool ValidateEGLImageTargetRenderbufferStorageOES(const Context *context,
                                                   angle::EntryPoint entryPoint,
                                                   GLenum target,
-                                                  GLeglImageOES image);
+                                                  egl::ImageID imagePacked);
 bool ValidateEGLImageTargetTexture2DOES(const Context *context,
                                         angle::EntryPoint entryPoint,
                                         TextureType targetPacked,
-                                        GLeglImageOES image);
+                                        egl::ImageID imagePacked);
 
 // GL_OES_EGL_image_external
 

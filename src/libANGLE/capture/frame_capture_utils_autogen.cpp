@@ -52,6 +52,9 @@ void WriteParamCaptureReplay(std::ostream &os, const CallCapture &call, const Pa
             WriteParamValueReplay<ParamType::TCompositorTiming>(os, call,
                                                                 param.value.CompositorTimingVal);
             break;
+        case ParamType::TContextID:
+            WriteParamValueReplay<ParamType::TContextID>(os, call, param.value.ContextIDVal);
+            break;
         case ParamType::TCullFaceMode:
             WriteParamValueReplay<ParamType::TCullFaceMode>(os, call, param.value.CullFaceModeVal);
             break;
@@ -263,10 +266,6 @@ void WriteParamCaptureReplay(std::ostream &os, const CallCapture &call, const Pa
             WriteParamValueReplay<ParamType::TGLeglClientBufferEXT>(
                 os, call, param.value.GLeglClientBufferEXTVal);
             break;
-        case ParamType::TGLeglImageOES:
-            WriteParamValueReplay<ParamType::TGLeglImageOES>(os, call,
-                                                             param.value.GLeglImageOESVal);
-            break;
         case ParamType::TGLenum:
             WriteParamValueReplay<ParamType::TGLenum>(os, call, param.value.GLenumVal);
             break;
@@ -408,6 +407,9 @@ void WriteParamCaptureReplay(std::ostream &os, const CallCapture &call, const Pa
         case ParamType::THandleType:
             WriteParamValueReplay<ParamType::THandleType>(os, call, param.value.HandleTypeVal);
             break;
+        case ParamType::TImageID:
+            WriteParamValueReplay<ParamType::TImageID>(os, call, param.value.ImageIDVal);
+            break;
         case ParamType::TLightParameter:
             WriteParamValueReplay<ParamType::TLightParameter>(os, call,
                                                               param.value.LightParameterVal);
@@ -528,6 +530,9 @@ void WriteParamCaptureReplay(std::ostream &os, const CallCapture &call, const Pa
         case ParamType::TShadingModel:
             WriteParamValueReplay<ParamType::TShadingModel>(os, call, param.value.ShadingModelVal);
             break;
+        case ParamType::TSurfaceID:
+            WriteParamValueReplay<ParamType::TSurfaceID>(os, call, param.value.SurfaceIDVal);
+            break;
         case ParamType::TTextureEnvParameter:
             WriteParamValueReplay<ParamType::TTextureEnvParameter>(
                 os, call, param.value.TextureEnvParameterVal);
@@ -609,25 +614,13 @@ void WriteParamCaptureReplay(std::ostream &os, const CallCapture &call, const Pa
             WriteParamValueReplay<ParamType::Tegl_DisplayPointer>(
                 os, call, param.value.egl_DisplayPointerVal);
             break;
-        case ParamType::Tegl_ImagePointer:
-            WriteParamValueReplay<ParamType::Tegl_ImagePointer>(os, call,
-                                                                param.value.egl_ImagePointerVal);
-            break;
         case ParamType::Tegl_StreamPointer:
             WriteParamValueReplay<ParamType::Tegl_StreamPointer>(os, call,
                                                                  param.value.egl_StreamPointerVal);
             break;
-        case ParamType::Tegl_SurfacePointer:
-            WriteParamValueReplay<ParamType::Tegl_SurfacePointer>(
-                os, call, param.value.egl_SurfacePointerVal);
-            break;
         case ParamType::Tegl_SyncPointer:
             WriteParamValueReplay<ParamType::Tegl_SyncPointer>(os, call,
                                                                param.value.egl_SyncPointerVal);
-            break;
-        case ParamType::Tgl_ContextPointer:
-            WriteParamValueReplay<ParamType::Tgl_ContextPointer>(os, call,
-                                                                 param.value.gl_ContextPointerVal);
             break;
         case ParamType::TvoidConstPointer:
             WriteParamValueReplay<ParamType::TvoidConstPointer>(os, call,
@@ -672,6 +665,8 @@ const char *ParamTypeToString(ParamType paramType)
             return "GLenum";
         case ParamType::TCompositorTiming:
             return "GLenum";
+        case ParamType::TContextID:
+            return "GLuint";
         case ParamType::TCullFaceMode:
             return "GLenum";
         case ParamType::TDrawElementsType:
@@ -790,8 +785,6 @@ const char *ParamTypeToString(ParamType paramType)
             return "GLdouble *";
         case ParamType::TGLeglClientBufferEXT:
             return "GLeglClientBufferEXT";
-        case ParamType::TGLeglImageOES:
-            return "GLeglImageOES";
         case ParamType::TGLenum:
             return "GLenum";
         case ParamType::TGLenumConstPointer:
@@ -870,6 +863,8 @@ const char *ParamTypeToString(ParamType paramType)
             return "GLenum";
         case ParamType::THandleType:
             return "GLenum";
+        case ParamType::TImageID:
+            return "GLuint";
         case ParamType::TLightParameter:
             return "GLenum";
         case ParamType::TLogicalOperation:
@@ -934,6 +929,8 @@ const char *ParamTypeToString(ParamType paramType)
             return "GLenum";
         case ParamType::TShadingModel:
             return "GLenum";
+        case ParamType::TSurfaceID:
+            return "GLuint";
         case ParamType::TTextureEnvParameter:
             return "GLenum";
         case ParamType::TTextureEnvTarget:
@@ -976,15 +973,9 @@ const char *ParamTypeToString(ParamType paramType)
             return "GLenum *";
         case ParamType::Tegl_DisplayPointer:
             return "GLenum *";
-        case ParamType::Tegl_ImagePointer:
-            return "GLenum *";
         case ParamType::Tegl_StreamPointer:
             return "GLenum *";
-        case ParamType::Tegl_SurfacePointer:
-            return "GLenum *";
         case ParamType::Tegl_SyncPointer:
-            return "GLenum *";
-        case ParamType::Tgl_ContextPointer:
             return "GLenum *";
         case ParamType::TvoidConstPointer:
             return "const void *";
@@ -1010,6 +1001,8 @@ ResourceIDType GetResourceIDTypeFromParamType(ParamType paramType)
             return ResourceIDType::Buffer;
         case ParamType::TBufferIDPointer:
             return ResourceIDType::Buffer;
+        case ParamType::TContextID:
+            return ResourceIDType::Context;
         case ParamType::TFenceNVID:
             return ResourceIDType::FenceNV;
         case ParamType::TFenceNVIDConstPointer:
@@ -1022,6 +1015,8 @@ ResourceIDType GetResourceIDTypeFromParamType(ParamType paramType)
             return ResourceIDType::Framebuffer;
         case ParamType::TFramebufferIDPointer:
             return ResourceIDType::Framebuffer;
+        case ParamType::TImageID:
+            return ResourceIDType::Image;
         case ParamType::TMemoryObjectID:
             return ResourceIDType::MemoryObject;
         case ParamType::TMemoryObjectIDConstPointer:
@@ -1064,6 +1059,8 @@ ResourceIDType GetResourceIDTypeFromParamType(ParamType paramType)
             return ResourceIDType::ShaderProgram;
         case ParamType::TShaderProgramIDPointer:
             return ResourceIDType::ShaderProgram;
+        case ParamType::TSurfaceID:
+            return ResourceIDType::Surface;
         case ParamType::TTextureID:
             return ResourceIDType::Texture;
         case ParamType::TTextureIDConstPointer:
@@ -1093,10 +1090,14 @@ const char *GetResourceIDTypeName(ResourceIDType resourceIDType)
     {
         case ResourceIDType::Buffer:
             return "Buffer";
+        case ResourceIDType::Context:
+            return "Context";
         case ResourceIDType::FenceNV:
             return "FenceNV";
         case ResourceIDType::Framebuffer:
             return "Framebuffer";
+        case ResourceIDType::Image:
+            return "Image";
         case ResourceIDType::MemoryObject:
             return "MemoryObject";
         case ResourceIDType::ProgramPipeline:
@@ -1111,6 +1112,8 @@ const char *GetResourceIDTypeName(ResourceIDType resourceIDType)
             return "Semaphore";
         case ResourceIDType::ShaderProgram:
             return "ShaderProgram";
+        case ResourceIDType::Surface:
+            return "Surface";
         case ResourceIDType::Texture:
             return "Texture";
         case ResourceIDType::TransformFeedback:

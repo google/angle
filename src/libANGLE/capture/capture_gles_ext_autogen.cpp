@@ -5115,19 +5115,19 @@ CallCapture CaptureLoseContextCHROMIUM(const State &glState,
 CallCapture CaptureEGLImageTargetTexStorageEXT(const State &glState,
                                                bool isCallValid,
                                                GLenum target,
-                                               GLeglImageOES image,
+                                               egl::ImageID imagePacked,
                                                const GLint *attrib_list)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addEnumParam("target", GLESEnum::AllEnums, ParamType::TGLenum, target);
-    paramBuffer.addValueParam("image", ParamType::TGLeglImageOES, image);
+    paramBuffer.addValueParam("imagePacked", ParamType::TImageID, imagePacked);
 
     if (isCallValid)
     {
         ParamCapture attrib_listParam("attrib_list", ParamType::TGLintConstPointer);
         InitParamValue(ParamType::TGLintConstPointer, attrib_list, &attrib_listParam.value);
-        CaptureEGLImageTargetTexStorageEXT_attrib_list(glState, isCallValid, target, image,
+        CaptureEGLImageTargetTexStorageEXT_attrib_list(glState, isCallValid, target, imagePacked,
                                                        attrib_list, &attrib_listParam);
         paramBuffer.addParam(std::move(attrib_listParam));
     }
@@ -5145,20 +5145,20 @@ CallCapture CaptureEGLImageTargetTexStorageEXT(const State &glState,
 CallCapture CaptureEGLImageTargetTextureStorageEXT(const State &glState,
                                                    bool isCallValid,
                                                    GLuint texture,
-                                                   GLeglImageOES image,
+                                                   egl::ImageID imagePacked,
                                                    const GLint *attrib_list)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("texture", ParamType::TGLuint, texture);
-    paramBuffer.addValueParam("image", ParamType::TGLeglImageOES, image);
+    paramBuffer.addValueParam("imagePacked", ParamType::TImageID, imagePacked);
 
     if (isCallValid)
     {
         ParamCapture attrib_listParam("attrib_list", ParamType::TGLintConstPointer);
         InitParamValue(ParamType::TGLintConstPointer, attrib_list, &attrib_listParam.value);
-        CaptureEGLImageTargetTextureStorageEXT_attrib_list(glState, isCallValid, texture, image,
-                                                           attrib_list, &attrib_listParam);
+        CaptureEGLImageTargetTextureStorageEXT_attrib_list(
+            glState, isCallValid, texture, imagePacked, attrib_list, &attrib_listParam);
         paramBuffer.addParam(std::move(attrib_listParam));
     }
     else
@@ -9541,12 +9541,12 @@ CallCapture CaptureBlitFramebufferNV(const State &glState,
 CallCapture CaptureEGLImageTargetRenderbufferStorageOES(const State &glState,
                                                         bool isCallValid,
                                                         GLenum target,
-                                                        GLeglImageOES image)
+                                                        egl::ImageID imagePacked)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addEnumParam("target", GLESEnum::AllEnums, ParamType::TGLenum, target);
-    paramBuffer.addValueParam("image", ParamType::TGLeglImageOES, image);
+    paramBuffer.addValueParam("imagePacked", ParamType::TImageID, imagePacked);
 
     return CallCapture(angle::EntryPoint::GLEGLImageTargetRenderbufferStorageOES,
                        std::move(paramBuffer));
@@ -9555,12 +9555,12 @@ CallCapture CaptureEGLImageTargetRenderbufferStorageOES(const State &glState,
 CallCapture CaptureEGLImageTargetTexture2DOES(const State &glState,
                                               bool isCallValid,
                                               TextureType targetPacked,
-                                              GLeglImageOES image)
+                                              egl::ImageID imagePacked)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("targetPacked", ParamType::TTextureType, targetPacked);
-    paramBuffer.addValueParam("image", ParamType::TGLeglImageOES, image);
+    paramBuffer.addValueParam("imagePacked", ParamType::TImageID, imagePacked);
 
     return CallCapture(angle::EntryPoint::GLEGLImageTargetTexture2DOES, std::move(paramBuffer));
 }
