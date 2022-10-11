@@ -9,6 +9,7 @@
 #include "common/gl_enum_utils.h"
 
 #include "common/bitset_utils.h"
+#include "common/string_utils.h"
 
 #include <iomanip>
 #include <sstream>
@@ -120,5 +121,18 @@ std::string GLbitfieldToString(BigGLEnum enumGroup, unsigned int value)
 const char *GLinternalFormatToString(unsigned int format)
 {
     return GLenumToString(gl::GLESEnum::InternalFormat, format);
+}
+
+unsigned int StringToGLbitfield(const char *str)
+{
+    unsigned int value = 0;
+    std::vector<std::string> strings =
+        angle::SplitString(str, " |", angle::WhitespaceHandling::TRIM_WHITESPACE,
+                           angle::SplitResult::SPLIT_WANT_NONEMPTY);
+    for (const std::string &enumString : strings)
+    {
+        value |= StringToGLenum(enumString.c_str());
+    }
+    return value;
 }
 }  // namespace gl
