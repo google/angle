@@ -18,6 +18,8 @@ const char *GetEntryPointName(EntryPoint ep)
 {
     switch (ep)
     {
+        case EntryPoint::Invalid:
+            return "Invalid";
         case EntryPoint::CLBuildProgram:
             return "clBuildProgram";
         case EntryPoint::CLCloneKernel:
@@ -1824,8 +1826,6 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glInsertEventMarkerEXT";
         case EntryPoint::GLInterleavedArrays:
             return "glInterleavedArrays";
-        case EntryPoint::GLInvalid:
-            return "glInvalid";
         case EntryPoint::GLInvalidateBufferData:
             return "glInvalidateBufferData";
         case EntryPoint::GLInvalidateBufferSubData:

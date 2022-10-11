@@ -6,15 +6,15 @@
   "scripts/entry_point_packed_gl_enums.json":
     "85e375c52f80e288c046f0e7c835c844",
   "scripts/generate_entry_points.py":
-    "e2c7e8c21121b4fbe97ef6d851dada5d",
+    "d5dd485ebeecb6a49b821a4243372fe5",
   "scripts/gl_angle_ext.xml":
     "8dd9662655c39ce22fecdc2449594e54",
   "scripts/registry_xml.py":
-    "c8adfe961c58d351049c8c09ff7c2b35",
+    "a532782ba7caa6af314e535b7e467a5b",
   "src/common/entry_points_enum_autogen.cpp":
-    "86a935e3c784ce3155869ba3c922e4e8",
+    "83173a70fac8de4de597818aba434e85",
   "src/common/entry_points_enum_autogen.h":
-    "0e5738ed2a44c5c1e12048a8268f8d13",
+    "b39e694db46a88e1be849683fcb0a9d4",
   "src/common/frame_capture_utils_autogen.cpp":
     "b8b34d5bf264de033bdad511dde41494",
   "src/common/frame_capture_utils_autogen.h":

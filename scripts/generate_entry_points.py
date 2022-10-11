@@ -3245,17 +3245,9 @@ def main():
     write_context_api_decls(desktop_gl_decls, "gl")
 
     # Entry point enum
-    cl_cmd_names = [strip_api_prefix(cmd) for cmd in clxml.all_cmd_names.get_all_commands()]
-    egl_cmd_names = [strip_api_prefix(cmd) for cmd in eglxml.all_cmd_names.get_all_commands()]
-    gles_cmd_names = ["Invalid"
-                     ] + [strip_api_prefix(cmd) for cmd in xml.all_cmd_names.get_all_commands()]
-    gl_cmd_names = [strip_api_prefix(cmd) for cmd in glxml.all_cmd_names.get_all_commands()]
-    wgl_cmd_names = [strip_api_prefix(cmd) for cmd in wglxml.all_cmd_names.get_all_commands()]
-    unsorted_enums = [("CL%s" % cmd, "cl%s" % cmd) for cmd in cl_cmd_names] + [
-        ("EGL%s" % cmd, "egl%s" % cmd) for cmd in egl_cmd_names
-    ] + [("GL%s" % cmd, "gl%s" % cmd) for cmd in set(gles_cmd_names + gl_cmd_names)
-        ] + [("WGL%s" % cmd, "wgl%s" % cmd) for cmd in wgl_cmd_names]
-    all_enums = sorted(unsorted_enums)
+    unsorted_enums = clxml.GetEnums() + eglxml.GetEnums() + xml.GetEnums() + glxml.GetEnums(
+    ) + wglxml.GetEnums('wgl')
+    all_enums = [('Invalid', 'Invalid')] + sorted(list(set(unsorted_enums)))
 
     entry_points_enum_header = TEMPLATE_ENTRY_POINTS_ENUM_HEADER.format(
         script_name=os.path.basename(sys.argv[0]),

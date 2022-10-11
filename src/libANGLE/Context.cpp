@@ -9976,7 +9976,7 @@ void ErrorSet::handleError(GLenum errorCode,
 
     mContext->getState().getDebug().insertMessage(
         GL_DEBUG_SOURCE_API, GL_DEBUG_TYPE_ERROR, errorCode, GL_DEBUG_SEVERITY_HIGH,
-        std::move(formattedMessage), gl::LOG_WARN, angle::EntryPoint::GLInvalid);
+        std::move(formattedMessage), gl::LOG_WARN, angle::EntryPoint::Invalid);
 }
 
 void ErrorSet::validationError(angle::EntryPoint entryPoint, GLenum errorCode, const char *message)

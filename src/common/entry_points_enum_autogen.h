@@ -15,6 +15,7 @@ namespace angle
 {
 enum class EntryPoint
 {
+    Invalid,
     CLBuildProgram,
     CLCloneKernel,
     CLCompileProgram,
@@ -918,7 +919,6 @@ enum class EntryPoint
     GLInitNames,
     GLInsertEventMarkerEXT,
     GLInterleavedArrays,
-    GLInvalid,
     GLInvalidateBufferData,
     GLInvalidateBufferSubData,
     GLInvalidateFramebuffer,

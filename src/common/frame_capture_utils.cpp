@@ -131,7 +131,7 @@ CallCapture::CallCapture(EntryPoint entryPointIn, ParamBuffer &&paramsIn)
 {}
 
 CallCapture::CallCapture(const std::string &customFunctionNameIn, ParamBuffer &&paramsIn)
-    : entryPoint(EntryPoint::GLInvalid),
+    : entryPoint(EntryPoint::Invalid),
       customFunctionName(customFunctionNameIn),
       params(std::move(paramsIn))
 {}
@@ -156,7 +156,7 @@ const char *CallCapture::name() const
 {
     if (customFunctionName.empty())
     {
-        ASSERT(entryPoint != EntryPoint::GLInvalid);
+        ASSERT(entryPoint != EntryPoint::Invalid);
         return angle::GetEntryPointName(entryPoint);
     }
     else

@@ -584,6 +584,15 @@ class RegistryXML:
             self.ext_dupes[extension_name] = dupes
             self.all_cmd_names.add_commands(ext_annotations[extension_name], ext_cmd_names)
 
+    def GetEnums(self, override_prefix=None):
+        cmd_names = []
+        for cmd in self.all_cmd_names.get_all_commands():
+            stripped = strip_api_prefix(cmd)
+            prefix = override_prefix or cmd[:(len(cmd) - len(stripped))]
+            cmd_names.append(
+                ('%s%s' % (prefix.upper(), stripped), '%s%s' % (prefix.lower(), stripped)))
+        return cmd_names
+
 
 class EntryPoints:
 
