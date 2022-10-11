@@ -3,11 +3,12 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// frame_capture_utils.h:
-//   ANGLE frame capture utils interface.
+// serialize.h:
+//   ANGLE GL state serialization.
 //
-#ifndef FRAME_CAPTURE_UTILS_H_
-#define FRAME_CAPTURE_UTILS_H_
+
+#ifndef LIBANGLE_SERIALIZE_H_
+#define LIBANGLE_SERIALIZE_H_
 
 #include "libANGLE/Error.h"
 
@@ -20,4 +21,4 @@ namespace angle
 {
 Result SerializeContextToString(const gl::Context *context, std::string *stringOut);
 }  // namespace angle
-#endif  // FRAME_CAPTURE_UTILS_H_
+#endif  // LIBANGLE_SERIALIZE_H_

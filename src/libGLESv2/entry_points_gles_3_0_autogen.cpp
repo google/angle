@@ -11,10 +11,10 @@
 #include "libGLESv2/entry_points_gles_3_0_autogen.h"
 
 #include "common/entry_points_enum_autogen.h"
+#include "common/gl_enum_utils.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Context.inl.h"
 #include "libANGLE/capture/capture_gles_3_0_autogen.h"
-#include "libANGLE/capture/gl_enum_utils.h"
 #include "libANGLE/entry_points_utils.h"
 #include "libANGLE/validationES3.h"
 #include "libGLESv2/global_state.h"

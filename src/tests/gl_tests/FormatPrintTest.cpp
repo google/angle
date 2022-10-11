@@ -14,9 +14,9 @@
 // But 'None' is also defined as a numeric constant 0L in <X11/X.h>.
 // So we need to include ANGLETest.h first to avoid this conflict.
 
+#include "common/gl_enum_utils.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Display.h"
-#include "libANGLE/capture/gl_enum_utils.h"
 #include "libANGLE/formatutils.h"
 #include "util/EGLWindow.h"
 

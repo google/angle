@@ -14,12 +14,12 @@
 #endif
 #include "ANGLEPerfTestArgs.h"
 #include "common/debug.h"
+#include "common/gl_enum_utils.h"
 #include "common/mathutil.h"
 #include "common/platform.h"
 #include "common/string_utils.h"
 #include "common/system_utils.h"
 #include "common/utilities.h"
-#include "libANGLE/capture/gl_enum_utils.h"
 #include "test_utils/runner/TestSuite.h"
 #include "third_party/perf/perf_test.h"
 #include "third_party/trace_event/trace_event.h"

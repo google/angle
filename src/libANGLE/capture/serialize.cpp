@@ -3,17 +3,16 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// frame_capture_utils.cpp:
-//   ANGLE frame capture util implementation.
+// serialize.cpp:
+//   ANGLE GL state serialization.
 //
 
-#include "libANGLE/capture/frame_capture_utils.h"
-
-#include <vector>
+#include "libANGLE/capture/serialize.h"
 
 #include "common/Color.h"
 #include "common/MemoryBuffer.h"
 #include "common/angleutils.h"
+#include "common/gl_enum_utils.h"
 #include "common/serializer/JsonSerializer.h"
 #include "libANGLE/Buffer.h"
 #include "libANGLE/Caps.h"
@@ -27,9 +26,10 @@
 #include "libANGLE/TransformFeedback.h"
 #include "libANGLE/VertexAttribute.h"
 #include "libANGLE/angletypes.h"
-#include "libANGLE/capture/gl_enum_utils.h"
 #include "libANGLE/renderer/FramebufferImpl.h"
 #include "libANGLE/renderer/RenderbufferImpl.h"
+
+#include <vector>
 
 #if !ANGLE_CAPTURE_ENABLED
 #    error Frame capture must be enabled to build this file.

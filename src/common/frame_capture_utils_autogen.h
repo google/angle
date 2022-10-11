@@ -8,8 +8,8 @@
 // frame_capture_utils_autogen.h:
 //   ANGLE Frame capture types and helper functions.
 
-#ifndef LIBANGLE_FRAME_CAPTURE_UTILS_AUTOGEN_H_
-#define LIBANGLE_FRAME_CAPTURE_UTILS_AUTOGEN_H_
+#ifndef COMMON_FRAME_CAPTURE_UTILS_AUTOGEN_H_
+#define COMMON_FRAME_CAPTURE_UTILS_AUTOGEN_H_
 
 #include "common/PackedEnums.h"
 
@@ -3573,4 +3573,4 @@ struct GetResourceIDTypeFromType<gl::VertexArrayID>
 
 }  // namespace angle
 
-#endif  // LIBANGLE_FRAME_CAPTURE_UTILS_AUTOGEN_H_
+#endif  // COMMON_FRAME_CAPTURE_UTILS_AUTOGEN_H_

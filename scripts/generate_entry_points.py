@@ -559,9 +559,9 @@ TEMPLATE_CAPTURE_SOURCE = """\
 
 #include "libANGLE/capture/capture_{annotation_with_dash}_autogen.h"
 
+#include "common/gl_enum_utils.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/capture/FrameCapture.h"
-#include "libANGLE/capture/gl_enum_utils.h"
 #include "libANGLE/validation{annotation_no_dash}.h"
 
 using namespace angle;
@@ -815,10 +815,10 @@ TEMPLATE_SOURCES_INCLUDES = """\
 #include "libGLESv2/entry_points_{header_version}_autogen.h"
 
 #include "common/entry_points_enum_autogen.h"
+#include "common/gl_enum_utils.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Context.inl.h"
 #include "libANGLE/capture/capture_{header_version}_autogen.h"
-#include "libANGLE/capture/gl_enum_utils.h"
 #include "libANGLE/validation{validation_header_version}.h"
 #include "libANGLE/entry_points_utils.h"
 #include "libGLESv2/global_state.h"
@@ -858,9 +858,9 @@ DESKTOP_GL_HEADER_INCLUDES = """\
 TEMPLATE_DESKTOP_GL_SOURCE_INCLUDES = """\
 #include "libGLESv2/entry_points_{0}_autogen.h"
 
+#include "common/gl_enum_utils.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Context.inl.h"
-#include "libANGLE/capture/gl_enum_utils.h"
 #include "libANGLE/capture/capture_gl_{1}_autogen.h"
 #include "libANGLE/validationEGL.h"
 #include "libANGLE/validationES.h"
@@ -1030,8 +1030,8 @@ TEMPLATE_FRAME_CAPTURE_UTILS_HEADER = """\
 // frame_capture_utils_autogen.h:
 //   ANGLE Frame capture types and helper functions.
 
-#ifndef LIBANGLE_FRAME_CAPTURE_UTILS_AUTOGEN_H_
-#define LIBANGLE_FRAME_CAPTURE_UTILS_AUTOGEN_H_
+#ifndef COMMON_FRAME_CAPTURE_UTILS_AUTOGEN_H_
+#define COMMON_FRAME_CAPTURE_UTILS_AUTOGEN_H_
 
 #include "common/PackedEnums.h"
 
@@ -1112,7 +1112,7 @@ struct GetResourceIDTypeFromType;
 {type_to_resource_id_type_structs}
 }}  // namespace angle
 
-#endif  // LIBANGLE_FRAME_CAPTURE_UTILS_AUTOGEN_H_
+#endif  // COMMON_FRAME_CAPTURE_UTILS_AUTOGEN_H_
 """
 
 TEMPLATE_FRAME_CAPTURE_UTILS_SOURCE = """\
@@ -1126,9 +1126,9 @@ TEMPLATE_FRAME_CAPTURE_UTILS_SOURCE = """\
 // frame_capture_utils_autogen.cpp:
 //   ANGLE Frame capture types and helper functions.
 
-#include "libANGLE/capture/frame_capture_utils_autogen.h"
+#include "common/frame_capture_utils_autogen.h"
 
-#include "libANGLE/capture/FrameCapture.h"
+#include "common/frame_capture_utils.h"
 
 namespace angle
 {{
@@ -2321,7 +2321,7 @@ def write_capture_helper_header(all_param_types):
         resource_id_types=resource_id_types,
         type_to_resource_id_type_structs=convert_structs)
 
-    path = path_to(os.path.join("libANGLE", "capture"), "frame_capture_utils_autogen.h")
+    path = path_to("common", "frame_capture_utils_autogen.h")
 
     with open(path, "w") as out:
         out.write(content)
@@ -2376,7 +2376,7 @@ def write_capture_helper_source(all_param_types):
         param_type_resource_id_cases=param_type_resource_id_cases,
         resource_id_type_name_cases=resource_id_type_name_cases)
 
-    path = path_to(os.path.join("libANGLE", "capture"), "frame_capture_utils_autogen.cpp")
+    path = path_to("common", "frame_capture_utils_autogen.cpp")
 
     with open(path, "w") as out:
         out.write(content)
@@ -2687,6 +2687,8 @@ def main():
             '../src/libOpenCL/libOpenCL_autogen.cpp',
             '../src/common/entry_points_enum_autogen.cpp',
             '../src/common/entry_points_enum_autogen.h',
+            '../src/common/frame_capture_utils_autogen.cpp',
+            '../src/common/frame_capture_utils_autogen.h',
             '../src/libANGLE/Context_gl_1_autogen.h',
             '../src/libANGLE/Context_gl_2_autogen.h',
             '../src/libANGLE/Context_gl_3_autogen.h',
@@ -2720,8 +2722,6 @@ def main():
             '../src/libANGLE/capture/capture_gles_ext_autogen.cpp',
             '../src/libANGLE/capture/capture_gles_ext_autogen.h',
             '../src/libANGLE/capture/frame_capture_replay_autogen.cpp',
-            '../src/libANGLE/capture/frame_capture_utils_autogen.cpp',
-            '../src/libANGLE/capture/frame_capture_utils_autogen.h',
             '../src/libANGLE/validationCL_autogen.h',
             '../src/libANGLE/validationEGL_autogen.h',
             '../src/libANGLE/validationES1_autogen.h',

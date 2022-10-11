@@ -8,8 +8,8 @@
 // gl_enum_utils_autogen.h:
 //   mapping of GLenum value to string.
 
-#ifndef LIBANGLE_GL_ENUM_UTILS_AUTOGEN_H_
-#define LIBANGLE_GL_ENUM_UTILS_AUTOGEN_H_
+#ifndef COMMON_GL_ENUM_UTILS_AUTOGEN_H_
+#define COMMON_GL_ENUM_UTILS_AUTOGEN_H_
 
 namespace gl
 {
@@ -416,4 +416,4 @@ enum class BigGLEnum
 };
 }  // namespace gl
 
-#endif  // LIBANGLE_GL_ENUM_UTILS_AUTOGEN_H_
+#endif  // COMMON_GL_ENUM_UTILS_AUTOGEN_H_

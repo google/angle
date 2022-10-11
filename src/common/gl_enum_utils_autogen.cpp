@@ -8,9 +8,9 @@
 // gl_enum_utils_autogen.cpp:
 //   mapping of GLenum value to string.
 
-#include "libANGLE/capture/gl_enum_utils_autogen.h"
+#include "common/gl_enum_utils_autogen.h"
 
-#include "libANGLE/capture/gl_enum_utils.h"
+#include "common/gl_enum_utils.h"
 
 namespace gl
 {

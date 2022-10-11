@@ -23,8 +23,8 @@ template_gl_enums_header = """// GENERATED FILE - DO NOT EDIT.
 // gl_enum_utils_autogen.h:
 //   mapping of GLenum value to string.
 
-# ifndef LIBANGLE_GL_ENUM_UTILS_AUTOGEN_H_
-# define LIBANGLE_GL_ENUM_UTILS_AUTOGEN_H_
+# ifndef COMMON_GL_ENUM_UTILS_AUTOGEN_H_
+# define COMMON_GL_ENUM_UTILS_AUTOGEN_H_
 
 namespace gl
 {{
@@ -39,7 +39,7 @@ enum class BigGLEnum
 }};
 }}  // namespace gl
 
-# endif  // LIBANGLE_GL_ENUM_UTILS_AUTOGEN_H_
+# endif  // COMMON_GL_ENUM_UTILS_AUTOGEN_H_
 """
 
 template_gl_enums_source = """// GENERATED FILE - DO NOT EDIT.
@@ -52,9 +52,9 @@ template_gl_enums_source = """// GENERATED FILE - DO NOT EDIT.
 // gl_enum_utils_autogen.cpp:
 //   mapping of GLenum value to string.
 
-#include "libANGLE/capture/gl_enum_utils_autogen.h"
+#include "common/gl_enum_utils_autogen.h"
 
-#include "libANGLE/capture/gl_enum_utils.h"
+#include "common/gl_enum_utils.h"
 
 namespace gl
 {{
@@ -255,7 +255,7 @@ if __name__ == '__main__':
         'registry_xml.py',
     ]
 
-    gl_enum_utils_autogen_base_path = '../src/libANGLE/capture/gl_enum_utils_autogen'
+    gl_enum_utils_autogen_base_path = '../src/common/gl_enum_utils_autogen'
     outputs = [
         gl_enum_utils_autogen_base_path + '.h',
         gl_enum_utils_autogen_base_path + '.cpp',

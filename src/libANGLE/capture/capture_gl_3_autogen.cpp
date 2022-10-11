@@ -10,9 +10,9 @@
 
 #include "libANGLE/capture/capture_gl_3_autogen.h"
 
+#include "common/gl_enum_utils.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/capture/FrameCapture.h"
-#include "libANGLE/capture/gl_enum_utils.h"
 #include "libANGLE/validationGL3_autogen.h"
 
 using namespace angle;

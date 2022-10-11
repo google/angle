@@ -14,7 +14,6 @@
 #include "libANGLE/EGLSync.h"
 #include "libANGLE/Surface.h"
 #include "libANGLE/Thread.h"
-#include "libANGLE/capture/gl_enum_utils_autogen.h"
 #include "libANGLE/queryutils.h"
 #include "libANGLE/validationEGL.h"
 #include "libGLESv2/global_state.h"

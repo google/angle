@@ -3,11 +3,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// frame_capture_utils_mock.cpp:
-//   ANGLE frame capture util stub implementation.
+// serialize_mock.cpp:
+//   GL state serialization stub implementation.
 //
 
-#include "libANGLE/capture/frame_capture_utils.h"
+#include "libANGLE/capture/serialize.h"
 
 namespace angle
 {
