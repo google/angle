@@ -221,6 +221,9 @@ if (angle_has_frame_capture) {
       "capture/frame_capture_replay_autogen.cpp",
       "capture/frame_capture_test_utils.cpp",
       "capture/frame_capture_test_utils.h",
+      "capture/trace_interpreter.cpp",
+      "capture/trace_interpreter.h",
+      "capture/trace_interpreter_autogen.cpp",
     ]
     deps = [
       ":angle_trace_fixture",

@@ -1854,6 +1854,9 @@ class ANGLEEntryPoints(registry_xml.EntryPoints):
                                       all_param_types, self.capture_pointer_funcs,
                                       cmd_packed_enums, packed_param_types))
 
+        # Ensure we store GLint64 in the param types for use with the replay interpreter.
+        all_param_types.add('GLint64')
+
 
 class GLEntryPoints(ANGLEEntryPoints):
 

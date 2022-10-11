@@ -60,6 +60,9 @@ class ParamBuffer final : angle::NonCopyable
                       ParamType paramType,
                       T paramValue);
 
+    template <typename T>
+    void addUnnamedParam(ParamType paramType, T paramValue);
+
     ParamCapture &getParam(const char *paramName, ParamType paramType, int index);
     const ParamCapture &getParam(const char *paramName, ParamType paramType, int index) const;
     ParamCapture &getParamFlexName(const char *paramName1,
@@ -80,6 +83,8 @@ class ParamBuffer final : angle::NonCopyable
 
     bool empty() const { return mParamCaptures.empty(); }
     const std::vector<ParamCapture> &getParamCaptures() const { return mParamCaptures; }
+
+    const char *getNextParamName();
 
   private:
     std::vector<ParamCapture> mParamCaptures;
@@ -148,6 +153,12 @@ void ParamBuffer::addEnumParam(const char *paramName,
     InitParamValue(paramType, paramValue, &capture.value);
     capture.bigGLEnum = enumGroup;
     mParamCaptures.emplace_back(std::move(capture));
+}
+
+template <typename T>
+void ParamBuffer::addUnnamedParam(ParamType paramType, T paramValue)
+{
+    addValueParam(getNextParamName(), paramType, paramValue);
 }
 
 template <ParamType ParamT, typename T>

@@ -96,6 +96,7 @@ enum class ParamType
     TGLfloatConstPointer,
     TGLfloatPointer,
     TGLint,
+    TGLint64,
     TGLint64Pointer,
     TGLintConstPointer,
     TGLintPointer,
@@ -188,7 +189,7 @@ enum class ParamType
     TvoidPointerPointer,
 };
 
-constexpr uint32_t kParamTypeCount = 169;
+constexpr uint32_t kParamTypeCount = 170;
 
 union ParamValue
 {
@@ -271,6 +272,7 @@ union ParamValue
     const GLfloat *GLfloatConstPointerVal;
     GLfloat *GLfloatPointerVal;
     GLint GLintVal;
+    GLint64 GLint64Val;
     GLint64 *GLint64PointerVal;
     const GLint *GLintConstPointerVal;
     GLint *GLintPointerVal;
@@ -877,6 +879,12 @@ template <>
 inline GLint GetParamVal<ParamType::TGLint, GLint>(const ParamValue &value)
 {
     return value.GLintVal;
+}
+
+template <>
+inline GLint64 GetParamVal<ParamType::TGLint64, GLint64>(const ParamValue &value)
+{
+    return value.GLint64Val;
 }
 
 template <>
@@ -1649,6 +1657,8 @@ T AccessParamValue(ParamType paramType, const ParamValue &value)
             return GetParamVal<ParamType::TGLfloatPointer, T>(value);
         case ParamType::TGLint:
             return GetParamVal<ParamType::TGLint, T>(value);
+        case ParamType::TGLint64:
+            return GetParamVal<ParamType::TGLint64, T>(value);
         case ParamType::TGLint64Pointer:
             return GetParamVal<ParamType::TGLint64Pointer, T>(value);
         case ParamType::TGLintConstPointer:
@@ -2333,6 +2343,12 @@ template <>
 inline void SetParamVal<ParamType::TGLint>(GLint valueIn, ParamValue *valueOut)
 {
     valueOut->GLintVal = valueIn;
+}
+
+template <>
+inline void SetParamVal<ParamType::TGLint64>(GLint64 valueIn, ParamValue *valueOut)
+{
+    valueOut->GLint64Val = valueIn;
 }
 
 template <>
@@ -3167,6 +3183,9 @@ void InitParamValue(ParamType paramType, T valueIn, ParamValue *valueOut)
             break;
         case ParamType::TGLint:
             SetParamVal<ParamType::TGLint>(valueIn, valueOut);
+            break;
+        case ParamType::TGLint64:
+            SetParamVal<ParamType::TGLint64>(valueIn, valueOut);
             break;
         case ParamType::TGLint64Pointer:
             SetParamVal<ParamType::TGLint64Pointer>(valueIn, valueOut);

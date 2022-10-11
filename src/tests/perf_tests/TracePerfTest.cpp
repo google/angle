@@ -15,6 +15,7 @@
 #include "tests/perf_tests/ANGLEPerfTestArgs.h"
 #include "tests/perf_tests/DrawCallPerfParams.h"
 #include "util/capture/frame_capture_test_utils.h"
+#include "util/capture/trace_interpreter.h"
 #include "util/capture/traces_export.h"
 #include "util/egl_loader_autogen.h"
 #include "util/png_utils.h"
@@ -223,7 +224,7 @@ class TracePerfTest : public ANGLERenderTest
     uint32_t mOffscreenFrameCount                                       = 0;
     uint32_t mTotalFrameCount                                           = 0;
     bool mScreenshotSaved                                               = false;
-    std::unique_ptr<TraceLibrary> mTraceLibrary;
+    std::unique_ptr<TraceReplayInterface> mTraceReplay;
 };
 
 TracePerfTest *gCurrentTracePerfTest = nullptr;
@@ -1383,26 +1384,6 @@ void TracePerfTest::initializeBenchmark()
 {
     const TraceInfo &traceInfo = mParams->traceInfo;
 
-    std::stringstream traceNameStr;
-    traceNameStr << "angle_restricted_traces_" << traceInfo.name;
-    std::string traceName = traceNameStr.str();
-    mTraceLibrary.reset(new TraceLibrary(traceName.c_str()));
-
-    LoadTraceEGL(TraceLoadProc);
-    LoadTraceGLES(TraceLoadProc);
-
-    if (!mTraceLibrary->valid())
-    {
-        failTest("Could not load trace library.");
-        return;
-    }
-
-    mStartFrame = traceInfo.frameStart;
-    mEndFrame   = traceInfo.frameEnd;
-    mTraceLibrary->setBinaryDataDecompressCallback(DecompressBinaryData, DeleteBinaryData);
-
-    mTraceLibrary->setValidateSerializedStateCallback(ValidateSerializedState);
-
     char testDataDir[kMaxPath] = {};
     if (!FindTraceTestDataPath(traceInfo.name, testDataDir, kMaxPath))
     {
@@ -1410,7 +1391,32 @@ void TracePerfTest::initializeBenchmark()
         return;
     }
 
-    mTraceLibrary->setBinaryDataDir(testDataDir);
+    if (gTraceInterpreter)
+    {
+        mTraceReplay.reset(new TraceInterpreter(traceInfo, testDataDir, gVerboseLogging));
+    }
+    else
+    {
+        std::stringstream traceNameStr;
+        traceNameStr << "angle_restricted_traces_" << traceInfo.name;
+        std::string traceName = traceNameStr.str();
+        mTraceReplay.reset(new TraceLibrary(traceName.c_str()));
+    }
+
+    LoadTraceEGL(TraceLoadProc);
+    LoadTraceGLES(TraceLoadProc);
+
+    if (!mTraceReplay->valid())
+    {
+        failTest("Could not load trace.");
+        return;
+    }
+
+    mStartFrame = traceInfo.frameStart;
+    mEndFrame   = traceInfo.frameEnd;
+    mTraceReplay->setBinaryDataDecompressCallback(DecompressBinaryData, DeleteBinaryData);
+    mTraceReplay->setValidateSerializedStateCallback(ValidateSerializedState);
+    mTraceReplay->setBinaryDataDir(testDataDir);
 
     if (gMinimizeGPUWork)
     {
@@ -1468,7 +1474,7 @@ void TracePerfTest::initializeBenchmark()
     }
 
     // Potentially slow. Can load a lot of resources.
-    mTraceLibrary->setupReplay();
+    mTraceReplay->setupReplay();
 
     glFinish();
 
@@ -1501,8 +1507,8 @@ void TracePerfTest::destroyBenchmark()
         mOffscreenFramebuffers.fill(0);
     }
 
-    mTraceLibrary->finishReplay();
-    mTraceLibrary.reset(nullptr);
+    mTraceReplay->finishReplay();
+    mTraceReplay.reset(nullptr);
 }
 
 void TracePerfTest::sampleTime()
@@ -1565,7 +1571,7 @@ void TracePerfTest::drawBenchmark()
     beginInternalTraceEvent(frameName);
 
     startGpuTimer();
-    mTraceLibrary->replayFrame(mCurrentFrame);
+    mTraceReplay->replayFrame(mCurrentFrame);
     stopGpuTimer();
 
     updatePerfCounters();
@@ -1638,7 +1644,7 @@ void TracePerfTest::drawBenchmark()
 
     if (mCurrentFrame == mEndFrame)
     {
-        mTraceLibrary->resetReplay();
+        mTraceReplay->resetReplay();
         mCurrentFrame = mStartFrame;
     }
     else

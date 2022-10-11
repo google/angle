@@ -302,6 +302,9 @@ void WriteParamCaptureReplay(std::ostream &os, const CallCapture &call, const Pa
         case ParamType::TGLint:
             WriteParamValueReplay<ParamType::TGLint>(os, call, param.value.GLintVal);
             break;
+        case ParamType::TGLint64:
+            WriteParamValueReplay<ParamType::TGLint64>(os, call, param.value.GLint64Val);
+            break;
         case ParamType::TGLint64Pointer:
             WriteParamValueReplay<ParamType::TGLint64Pointer>(os, call,
                                                               param.value.GLint64PointerVal);
@@ -805,6 +808,8 @@ const char *ParamTypeToString(ParamType paramType)
             return "GLfloat *";
         case ParamType::TGLint:
             return "GLint";
+        case ParamType::TGLint64:
+            return "GLint64";
         case ParamType::TGLint64Pointer:
             return "GLint64 *";
         case ParamType::TGLintConstPointer:

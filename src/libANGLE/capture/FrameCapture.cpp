@@ -575,7 +575,7 @@ std::ostream &operator<<(std::ostream &ostr, const FmtMultiLineString &fmt)
         ostr << "\"" << EscapeString(string);
     }
 
-    ostr << "\"\n";
+    ostr << "\"";
 
     return ostr;
 }

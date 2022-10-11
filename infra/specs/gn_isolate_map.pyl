@@ -104,6 +104,11 @@
     "script": "//src/tests/restricted_traces/restricted_trace_gold_tests.py",
     "type": "script",
   },
+  "angle_trace_interpreter_tests": {
+    "label": "//src/tests:angle_trace_interpreter_tests",
+    "script": "//src/tests/restricted_traces/retrace_restricted_traces.py",
+    "type": "script",
+  },
   "angle_trace_tests": {
     "label": "//src/tests:angle_trace_tests",
     "type": "windowed_test_launcher",

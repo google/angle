@@ -622,3 +622,27 @@ class EntryPoints:
 
     def get_infos(self):
         return self._cmd_info
+
+
+def GetEGL():
+    egl = RegistryXML('egl.xml', 'egl_angle_ext.xml')
+    for major_version, minor_version in EGL_VERSIONS:
+        version = "%d_%d" % (major_version, minor_version)
+        name_prefix = "EGL_VERSION_"
+        feature_name = "%s%s" % (name_prefix, version)
+        egl.AddCommands(feature_name, version)
+    egl.AddExtensionCommands(supported_egl_extensions, ['egl'])
+    return egl
+
+
+def GetGLES():
+    gles = RegistryXML('gl.xml', 'gl_angle_ext.xml')
+    for major_version, minor_version in GLES_VERSIONS:
+        version = "{}_{}".format(major_version, minor_version)
+        name_prefix = "GL_ES_VERSION_"
+        if major_version == 1:
+            name_prefix = "GL_VERSION_ES_CM_"
+        feature_name = "{}{}".format(name_prefix, version)
+        gles.AddCommands(feature_name, version)
+    gles.AddExtensionCommands(supported_extensions, ['gles2', 'gles1'])
+    return gles

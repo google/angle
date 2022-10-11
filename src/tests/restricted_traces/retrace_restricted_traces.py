@@ -14,22 +14,37 @@ import fnmatch
 import json
 import logging
 import os
+import pathlib
 import shutil
 import stat
 import subprocess
 import sys
+import tempfile
+import time
 
 from pathlib import Path
 
 from gen_restricted_traces import read_json as read_json
 
-DEFAULT_TEST_SUITE = 'angle_trace_tests'
+SCRIPT_DIR = str(pathlib.Path(__file__).resolve().parent)
+PY_UTILS = str(pathlib.Path(SCRIPT_DIR) / '..' / 'py_utils')
+if PY_UTILS not in sys.path:
+    os.stat(PY_UTILS) and sys.path.insert(0, PY_UTILS)
+import android_helper
+import angle_test_util
+
+DEFAULT_TEST_SUITE = angle_test_util.ANGLE_TRACE_TEST_SUITE
 DEFAULT_TEST_JSON = 'restricted_traces.json'
 DEFAULT_LOG_LEVEL = 'info'
 DEFAULT_BACKUP_FOLDER = 'retrace-backups'
 
 EXIT_SUCCESS = 0
 EXIT_FAILURE = 1
+
+# Test expectations
+FAIL = 'FAIL'
+PASS = 'PASS'
+SKIP = 'SKIP'
 
 
 def get_trace_json_path(trace):
@@ -67,6 +82,8 @@ def get_num_frames(json_data):
 
 
 def path_contains_header(path):
+    if not os.path.isdir(path):
+        return False
     for file in os.listdir(path):
         if fnmatch.fnmatch(file, '*.h'):
             return True
@@ -97,22 +114,32 @@ def touch_trace_folder(trace_path):
         (Path(trace_path) / file).touch()
 
 
+def backup_single_trace(trace, backup_path):
+    trace_path = src_trace_path(trace)
+    trace_backup_path = os.path.join(backup_path, trace)
+    copy_trace_folder(trace_path, trace_backup_path)
+
+
 def backup_traces(args, traces):
     for trace in fnmatch.filter(traces, args.traces):
-        trace_path = src_trace_path(trace)
-        trace_backup_path = os.path.join(args.out_path, trace)
-        copy_trace_folder(trace_path, trace_backup_path)
+        backup_single_trace(trace, args.out_path)
+
+
+def restore_single_trace(trace, backup_path):
+    trace_path = src_trace_path(trace)
+    trace_backup_path = os.path.join(backup_path, trace)
+    if not os.path.isdir(trace_backup_path):
+        logging.error('Trace folder not found at %s' % trace_backup_path)
+        return False
+    else:
+        copy_trace_folder(trace_backup_path, trace_path)
+        touch_trace_folder(trace_path)
+        return True
 
 
 def restore_traces(args, traces):
     for trace in fnmatch.filter(traces, args.traces):
-        trace_path = src_trace_path(trace)
-        trace_backup_path = os.path.join(args.out_path, trace)
-        if not os.path.isdir(trace_backup_path):
-            logging.error('Trace folder not found at %s' % trace_backup_path)
-        else:
-            copy_trace_folder(trace_backup_path, trace_path)
-            touch_trace_folder(trace_path)
+        restore_single_trace(trace, args.out_path)
 
 
 def run_autoninja(args):
@@ -125,21 +152,15 @@ def run_autoninja(args):
     subprocess.check_call(autoninja_args)
 
 
-def run_test_suite(args, trace, max_steps, additional_args, additional_env):
-    trace_binary = os.path.join(args.gn_path, args.test_suite)
-    if os.name == 'nt':
-        trace_binary += '.exe'
-
-    renderer = 'vulkan' if args.no_swiftshader else 'vulkan_swiftshader'
-    trace_filter = '--gtest_filter=TracePerfTest.Run/%s_%s' % (renderer, trace)
+def run_test_suite(args, trace_binary, trace, max_steps, additional_args, additional_env):
     run_args = [
-        trace_binary,
-        trace_filter,
+        angle_test_util.ExecutablePathInCurrentDir(trace_binary),
+        '--gtest_filter=TraceTest.%s' % trace,
         '--max-steps-performed',
         str(max_steps),
     ] + additional_args
     if not args.no_swiftshader:
-        run_args += ['--enable-all-trace-tests']
+        run_args += ['--use-angle=swiftshader']
 
     env = {**os.environ.copy(), **additional_env}
     env_string = ' '.join(['%s=%s' % item for item in additional_env.items()])
@@ -147,66 +168,80 @@ def run_test_suite(args, trace, max_steps, additional_args, additional_env):
         env_string += ' '
 
     logging.info('%s%s' % (env_string, ' '.join(run_args)))
-    subprocess.check_call(run_args, env=env)
+    p = subprocess.run(run_args, env=env, capture_output=True, check=True)
+    if args.show_test_stdout:
+        logging.info('Test stdout:\n%s' % p.stdout.decode())
+
+
+def upgrade_single_trace(args, trace_binary, trace, out_path, no_overwrite, c_sources):
+    logging.debug('Tracing %s' % trace)
+
+    trace_path = os.path.abspath(os.path.join(out_path, trace))
+    if no_overwrite and path_contains_header(trace_path):
+        logging.info('Skipping "%s" because the out folder already exists' % trace)
+        return
+
+    json_data = load_trace_json(trace)
+    num_frames = get_num_frames(json_data)
+
+    metadata = json_data['TraceMetadata']
+    logging.debug('Read metadata: %s' % str(metadata))
+
+    max_steps = min(args.limit, num_frames) if args.limit else num_frames
+
+    # We start tracing from frame 2. --retrace-mode issues a Swap() after Setup() so we can
+    # accurately re-trace the MEC.
+    additional_env = {
+        'ANGLE_CAPTURE_LABEL': trace,
+        'ANGLE_CAPTURE_OUT_DIR': trace_path,
+        'ANGLE_CAPTURE_FRAME_START': '2',
+        'ANGLE_CAPTURE_FRAME_END': str(max_steps + 1),
+    }
+    if args.validation:
+        additional_env['ANGLE_CAPTURE_VALIDATION'] = '1'
+        # Also turn on shader output init to ensure we have no undefined values.
+        # This feature is also enabled in replay when using --validation.
+        additional_env[
+            'ANGLE_FEATURE_OVERRIDES_ENABLED'] = 'allocateNonZeroMemory:forceInitShaderVariables'
+    if args.validation_expr:
+        additional_env['ANGLE_CAPTURE_VALIDATION_EXPR'] = args.validation_expr
+    if args.trim:
+        additional_env['ANGLE_CAPTURE_TRIM_ENABLED'] = '1'
+    if args.no_trim:
+        additional_env['ANGLE_CAPTURE_TRIM_ENABLED'] = '0'
+    # TODO: Remove when default. http://anglebug.com/7753
+    if c_sources:
+        additional_env['ANGLE_CAPTURE_SOURCE_EXT'] = 'c'
+
+    additional_args = ['--retrace-mode']
+
+    try:
+        if not os.path.isdir(trace_path):
+            os.makedirs(trace_path)
+
+        run_test_suite(args, trace_binary, trace, max_steps, additional_args, additional_env)
+
+        json_file = get_trace_json_path(trace)
+        if not os.path.exists(json_file):
+            logging.error(
+                f'There was a problem tracing "{trace}", could not find json file: {json_file}')
+            return False
+    except subprocess.CalledProcessError as e:
+        logging.exception('There was an exception running "%s":\n%s' % (trace, e.output.decode()))
+        return False
+
+    return True
 
 
 def upgrade_traces(args, traces):
     run_autoninja(args)
+    trace_binary = os.path.join(args.gn_path, args.test_suite)
 
     failures = []
 
     for trace in fnmatch.filter(traces, args.traces):
-        logging.debug('Tracing %s' % trace)
-
-        trace_path = os.path.abspath(os.path.join(args.out_path, trace))
-        if not os.path.isdir(trace_path):
-            os.makedirs(trace_path)
-        elif args.no_overwrite and path_contains_header(trace_path):
-            logging.info('Skipping "%s" because the out folder already exists' % trace)
-            continue
-
-        json_data = load_trace_json(trace)
-        num_frames = get_num_frames(json_data)
-
-        metadata = json_data['TraceMetadata']
-        logging.debug('Read metadata: %s' % str(metadata))
-
-        max_steps = min(args.limit, num_frames) if args.limit else num_frames
-
-        # We start tracing from frame 2. --retrace-mode issues a Swap() after Setup() so we can
-        # accurately re-trace the MEC.
-        additional_env = {
-            'ANGLE_CAPTURE_LABEL': trace,
-            'ANGLE_CAPTURE_OUT_DIR': trace_path,
-            'ANGLE_CAPTURE_FRAME_START': '2',
-            'ANGLE_CAPTURE_FRAME_END': str(max_steps + 1),
-        }
-        if args.validation:
-            additional_env['ANGLE_CAPTURE_VALIDATION'] = '1'
-            # Also turn on shader output init to ensure we have no undefined values.
-            # This feature is also enabled in replay when using --validation.
-            additional_env[
-                'ANGLE_FEATURE_OVERRIDES_ENABLED'] = 'allocateNonZeroMemory:forceInitShaderVariables'
-        if args.validation_expr:
-            additional_env['ANGLE_CAPTURE_VALIDATION_EXPR'] = args.validation_expr
-        if args.trim:
-            additional_env['ANGLE_CAPTURE_TRIM_ENABLED'] = '1'
-        if args.no_trim:
-            additional_env['ANGLE_CAPTURE_TRIM_ENABLED'] = '0'
-
-        additional_args = ['--retrace-mode']
-
-        try:
-            run_test_suite(args, trace, max_steps, additional_args, additional_env)
-
-            json_file = get_trace_json_path(trace)
-            if not os.path.exists(json_file):
-                logging.error(
-                    f'There was a problem tracing "{trace}", could not find json file: {json_file}'
-                )
-                failures += [trace]
-        except subprocess.CalledProcessError:
-            logging.exception('There was an exception running "%s":' % trace)
+        if not upgrade_single_trace(args, trace_binary, trace, args.out_path, args.no_overwrite,
+                                    args.c_sources):
             failures += [trace]
 
     if failures:
@@ -215,6 +250,18 @@ def upgrade_traces(args, traces):
         return EXIT_FAILURE
 
     return EXIT_SUCCESS
+
+
+def validate_single_trace(args, trace_binary, trace, additional_args, additional_env):
+    json_data = load_trace_json(trace)
+    num_frames = get_num_frames(json_data)
+    max_steps = min(args.limit, num_frames) if args.limit else num_frames
+    try:
+        run_test_suite(args, trace_binary, trace, max_steps, additional_args, additional_env)
+    except subprocess.CalledProcessError as e:
+        logging.error('There was a failure running "%s":\n%s' % (trace, e.output.decode()))
+        return False
+    return True
 
 
 def validate_traces(args, traces):
@@ -227,15 +274,10 @@ def validate_traces(args, traces):
     }
 
     failures = []
+    trace_binary = os.path.join(args.gn_path, args.test_suite)
 
     for trace in fnmatch.filter(traces, args.traces):
-        json_data = load_trace_json(trace)
-        num_frames = get_num_frames(json_data)
-        max_steps = min(args.limit, num_frames) if args.limit else num_frames
-        try:
-            run_test_suite(args, trace, max_steps, additional_args, additional_env)
-        except subprocess.CalledProcessError:
-            logging.error('There was a failure running "%s".' % trace)
+        if not validate_single_trace(args, trace_binary, trace, additional_args, additional_env):
             failures += [trace]
 
     if failures:
@@ -244,6 +286,80 @@ def validate_traces(args, traces):
         return EXIT_FAILURE
 
     return EXIT_SUCCESS
+
+
+def interpret_traces(args, traces):
+    test_name = 'angle_trace_interpreter_tests'
+    results = {
+        'tests': {
+            test_name: {}
+        },
+        'interrupted': False,
+        'seconds_since_epoch': time.time(),
+        'path_delimiter': '.',
+        'version': 3,
+        'num_failures_by_type': {
+            FAIL: 0,
+            PASS: 0,
+            SKIP: 0,
+        },
+    }
+
+    if args.path:
+        trace_binary = os.path.join(args.path, args.test_suite)
+    else:
+        trace_binary = args.test_suite
+
+    for trace in fnmatch.filter(traces, args.traces):
+        with tempfile.TemporaryDirectory() as backup_path:
+            backup_single_trace(trace, backup_path)
+            result = FAIL
+            try:
+                with tempfile.TemporaryDirectory() as out_path:
+                    logging.debug('Using temporary path %s.' % out_path)
+                    if upgrade_single_trace(args, trace_binary, trace, out_path, False, True):
+                        if restore_single_trace(trace, out_path):
+                            if validate_single_trace(args, trace_binary, trace,
+                                                     ['--trace-interpreter'], {}):
+                                logging.info('%s passed!' % trace)
+                                result = PASS
+            finally:
+                restore_single_trace(trace, backup_path)
+            results['num_failures_by_type'][result] += 1
+            results['tests'][test_name][trace] = {'expected': PASS, 'actual': result}
+
+    if results['num_failures_by_type'][FAIL]:
+        logging.error('Some tests failed.')
+        return EXIT_FAILURE
+
+    if results['num_failures_by_type'][PASS] == 0:
+        logging.error('No tests ran. Please check your command line arguments.')
+        return EXIT_FAILURE
+
+    if args.test_output:
+        with open(args.test_output, 'w') as out_file:
+            out_file.write(json.dumps(results, indent=2))
+
+    return EXIT_SUCCESS
+
+
+def add_upgrade_args(parser):
+    parser.add_argument(
+        '--validation', help='Enable state serialization validation calls.', action='store_true')
+    parser.add_argument(
+        '--validation-expr',
+        help='Validation expression, used to add more validation checkpoints.')
+    parser.add_argument(
+        '-L',
+        '--limit',
+        '--frame-limit',
+        type=int,
+        help='Limits the number of captured frames to produce a shorter trace than the original.')
+    parser.add_argument(
+        '--trim', action='store_true', help='Enables trace trimming. Breaks replay validation.')
+    parser.add_argument(
+        '--no-trim', action='store_true', help='Disables trace trimming. Useful for validation.')
+    parser.set_defaults(trim=True)
 
 
 def main():
@@ -258,6 +374,8 @@ def main():
         help='Trace against native Vulkan.',
         action='store_true',
         default=False)
+    parser.add_argument(
+        '--test-output', '--isolated-script-test-output', help='Where to write results JSON.')
 
     subparsers = parser.add_subparsers(dest='command', required=True, help='Command to run.')
 
@@ -295,20 +413,10 @@ def main():
         help='Skip traces which already exist in the out directory.',
         action='store_true')
     upgrade_parser.add_argument(
-        '--validation', help='Enable state serialization validation calls.', action='store_true')
+        '-c', '--c-sources', help='Output to c sources instead of cpp.', action='store_true')
+    add_upgrade_args(upgrade_parser)
     upgrade_parser.add_argument(
-        '--validation-expr',
-        help='Validation expression, used to add more validation checkpoints.')
-    upgrade_parser.add_argument(
-        '--limit',
-        '--frame-limit',
-        type=int,
-        help='Limits the number of captured frames to produce a shorter trace than the original.')
-    upgrade_parser.add_argument(
-        '--trim', action='store_true', help='Enables trace trimming. Breaks replay validation.')
-    upgrade_parser.add_argument(
-        '--no-trim', action='store_true', help='Disables trace trimming. Useful for validation.')
-    upgrade_parser.set_defaults(trim=True)
+        '--show-test-stdout', help='Log test output.', action='store_true', default=False)
 
     validate_parser = subparsers.add_parser(
         'validate', help='Runs the an updated test suite with validation enabled.')
@@ -317,7 +425,17 @@ def main():
     validate_parser.add_argument(
         'traces', help='Traces to validate. Supports fnmatch expressions.', default='*')
     validate_parser.add_argument(
-        '--limit', '--frame-limit', type=int, help='Limits the number of tested frames.')
+        '-L', '--limit', '--frame-limit', type=int, help='Limits the number of tested frames.')
+
+    interpret_parser = subparsers.add_parser(
+        'interpret', help='Complete trace interpreter self-test.')
+    interpret_parser.add_argument(
+        '-p', '--path', help='Path to trace executable. Default: look in CWD.')
+    interpret_parser.add_argument(
+        'traces', help='Traces to test. Supports fnmatch expressions.', default='*')
+    add_upgrade_args(interpret_parser)
+    interpret_parser.add_argument(
+        '--show-test-stdout', help='Log test output.', action='store_true', default=False)
 
     args, extra_flags = parser.parse_known_args()
 
@@ -337,6 +455,8 @@ def main():
         return upgrade_traces(args, traces)
     elif args.command == 'validate':
         return validate_traces(args, traces)
+    elif args.command == 'interpret':
+        return interpret_traces(args, traces)
     else:
         logging.fatal('Unknown command: %s' % args.command)
         return EXIT_FAILURE

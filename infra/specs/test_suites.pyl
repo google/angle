@@ -753,6 +753,18 @@
       }
     },
 
+    'angle_trace_interpreter_isolated_scripts': {
+      'angle_trace_interpreter_tests': {
+        'args': [
+          '--log=debug',
+          'interpret',
+          'trex_200',
+          '-L=2',
+          '--show-test-stdout',
+        ],
+      },
+    },
+
     'angle_trace_perf_native_isolated_scripts': {
       'angle_trace_perf_native_tests': {
         'android_args': {
@@ -1133,6 +1145,7 @@
     'common_isolated_scripts': [
       'angle_perf_smoke_isolated_scripts',
       'angle_restricted_trace_gold_isolated_scripts',
+      'angle_trace_interpreter_isolated_scripts',
       'angle_trace_perf_native_smoke_isolated_scripts',
       'angle_trace_perf_vulkan_smoke_isolated_scripts',
     ],

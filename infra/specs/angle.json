@@ -1172,6 +1172,34 @@
       {
         "args": [
           "--log=debug",
+          "interpret",
+          "trex_200",
+          "-L=2",
+          "--show-test-stdout"
+        ],
+        "isolate_name": "angle_trace_interpreter_tests",
+        "merge": {
+          "args": [],
+          "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
+        },
+        "name": "angle_trace_interpreter_tests",
+        "swarming": {
+          "can_use_on_swarming_builders": true,
+          "containment_type": "AUTO",
+          "dimension_sets": [
+            {
+              "gpu": "8086:9bc5-20.0.8",
+              "os": "Ubuntu-18.04.6",
+              "pool": "chromium.tests.gpu"
+            }
+          ],
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
+        },
+        "test_id_prefix": "ninja://src/tests:angle_trace_interpreter_tests/"
+      },
+      {
+        "args": [
+          "--log=debug",
           "--smoke-test-mode",
           "--show-test-stdout",
           "--use-gl=native",
@@ -1949,6 +1977,34 @@
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
         },
         "test_id_prefix": "ninja://src/tests/restricted_traces:angle_restricted_trace_gold_tests/"
+      },
+      {
+        "args": [
+          "--log=debug",
+          "interpret",
+          "trex_200",
+          "-L=2",
+          "--show-test-stdout"
+        ],
+        "isolate_name": "angle_trace_interpreter_tests",
+        "merge": {
+          "args": [],
+          "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
+        },
+        "name": "angle_trace_interpreter_tests",
+        "swarming": {
+          "can_use_on_swarming_builders": true,
+          "containment_type": "AUTO",
+          "dimension_sets": [
+            {
+              "gpu": "10de:2184-440.100",
+              "os": "Ubuntu-18.04.5|Ubuntu-18.04.6",
+              "pool": "chromium.tests.gpu"
+            }
+          ],
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
+        },
+        "test_id_prefix": "ninja://src/tests:angle_trace_interpreter_tests/"
       },
       {
         "args": [
@@ -4343,6 +4399,34 @@
       {
         "args": [
           "--log=debug",
+          "interpret",
+          "trex_200",
+          "-L=2",
+          "--show-test-stdout"
+        ],
+        "isolate_name": "angle_trace_interpreter_tests",
+        "merge": {
+          "args": [],
+          "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
+        },
+        "name": "angle_trace_interpreter_tests",
+        "swarming": {
+          "can_use_on_swarming_builders": true,
+          "containment_type": "AUTO",
+          "dimension_sets": [
+            {
+              "gpu": "8086:5912-26.20.100.8141|8086:3e92-26.20.100.8141",
+              "os": "Windows-10",
+              "pool": "chromium.tests.gpu"
+            }
+          ],
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
+        },
+        "test_id_prefix": "ninja://src/tests:angle_trace_interpreter_tests/"
+      },
+      {
+        "args": [
+          "--log=debug",
           "--smoke-test-mode",
           "--show-test-stdout",
           "--use-gl=native",
@@ -5101,6 +5185,34 @@
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
         },
         "test_id_prefix": "ninja://src/tests/restricted_traces:angle_restricted_trace_gold_tests/"
+      },
+      {
+        "args": [
+          "--log=debug",
+          "interpret",
+          "trex_200",
+          "-L=2",
+          "--show-test-stdout"
+        ],
+        "isolate_name": "angle_trace_interpreter_tests",
+        "merge": {
+          "args": [],
+          "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
+        },
+        "name": "angle_trace_interpreter_tests",
+        "swarming": {
+          "can_use_on_swarming_builders": true,
+          "containment_type": "AUTO",
+          "dimension_sets": [
+            {
+              "gpu": "10de:2184-27.21.14.5638",
+              "os": "Windows-10-18363",
+              "pool": "chromium.tests.gpu"
+            }
+          ],
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
+        },
+        "test_id_prefix": "ninja://src/tests:angle_trace_interpreter_tests/"
       },
       {
         "args": [

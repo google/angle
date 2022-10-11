@@ -549,6 +549,15 @@ if (build_angle_trace_tests) {
       "//testing:run_perf_test",
     ]
   }
+
+  group("angle_trace_interpreter_tests") {
+    testonly = true
+    data = [
+      "restricted_traces/gen_restricted_traces.py",
+      "restricted_traces/retrace_restricted_traces.py",
+    ]
+    data_deps = [ ":angle_trace_tests" ]
+  }
 }
 
 ###-----------------------------------------------------

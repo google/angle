@@ -40,6 +40,12 @@
       },
     },
   },
+  'angle_trace_interpreter_tests': {
+    'remove_from': [
+      # TODO: Implement on Android. http://anglebug.com/7777
+      'android-arm64-pixel4',
+    ],
+  },
   'angle_white_box_tests': {
     'modifications': {
       # anglebug.com/5328 suspecting blue screen caused by multiprocess
