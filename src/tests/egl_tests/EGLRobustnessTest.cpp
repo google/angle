@@ -417,6 +417,76 @@ TEST_P(EGLRobustnessTestES3,
     eglDestroyContext(mDisplay, shareContext);
 }
 
+// Test that using a program in a non-robust context, then sharing it with a robust context and
+// using it with the same state (but with an OOB access) works.
+TEST_P(EGLRobustnessTestES31, NonRobustContextThenOOBInSharedRobustContext)
+{
+    ANGLE_SKIP_TEST_IF(!mInitialized);
+    ANGLE_SKIP_TEST_IF(
+        !IsEGLDisplayExtensionEnabled(mDisplay, "EGL_KHR_create_context") ||
+        !IsEGLDisplayExtensionEnabled(mDisplay, "EGL_EXT_create_context_robustness"));
+
+    createContext(EGL_NO_RESET_NOTIFICATION_EXT);
+
+    GLint maxFragmentShaderStorageBlocks = 0;
+    glGetIntegerv(GL_MAX_FRAGMENT_SHADER_STORAGE_BLOCKS, &maxFragmentShaderStorageBlocks);
+    ANGLE_SKIP_TEST_IF(maxFragmentShaderStorageBlocks == 0);
+
+    constexpr char kFS[] = R"(#version 310 es
+layout(location = 0) out highp vec4 fragColor;
+layout(std140, binding = 0) buffer Block
+{
+    mediump vec4 data[];
+};
+uniform mediump uint index;
+
+void main (void)
+{
+    fragColor = data[index];
+})";
+
+    ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), kFS);
+    glUseProgram(program);
+
+    GLint indexLocation = glGetUniformLocation(program, "index");
+    ASSERT_NE(-1, indexLocation);
+
+    constexpr std::array<float, 4> kBufferData = {1, 0, 0, 1};
+
+    GLBuffer buffer;
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, buffer);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(kBufferData), kBufferData.data(), GL_STATIC_DRAW);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, buffer);
+
+    // Use the program once before the robust context is created.
+    glUniform1ui(indexLocation, 0);
+    drawQuad(program, essl31_shaders::PositionAttrib(), 0);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    ASSERT_GL_NO_ERROR();
+
+    // Create the share context as robust, and draw identically except accessing OOB.
+    EGLContext shareContext = mContext;
+
+    createRobustContext(EGL_NO_RESET_NOTIFICATION_EXT, shareContext);
+
+    glClearColor(0, 1, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    glUseProgram(program);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, buffer);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, buffer);
+    glUniform1ui(indexLocation, 1'000'000'000u);
+    drawQuad(program, essl31_shaders::PositionAttrib(), 0);
+    // Expect 0, 0, 0, 0/1 returned from buffer
+    GLColor actualColor = angle::ReadColor(0, 0);
+    EXPECT_TRUE(actualColor.A == 0 || actualColor.A == 255);
+    actualColor.A = 0;
+    EXPECT_EQ(actualColor, GLColor::transparentBlack);
+    ASSERT_GL_NO_ERROR();
+
+    eglDestroyContext(mDisplay, shareContext);
+}
+
 // Test that indirect indices on unsized storage buffer arrays work.  Regression test for the
 // ClampIndirectIndices AST transformation.
 TEST_P(EGLRobustnessTestES31, IndirectIndexOnUnsizedStorageBufferArray)
@@ -532,4 +602,6 @@ ANGLE_INSTANTIATE_TEST(EGLRobustnessTestES3,
                        WithNoFixture(ES3_D3D11()),
                        WithNoFixture(ES3_OPENGL()),
                        WithNoFixture(ES3_OPENGLES()));
-ANGLE_INSTANTIATE_TEST(EGLRobustnessTestES31, WithNoFixture(ES31_VULKAN()));
+ANGLE_INSTANTIATE_TEST(EGLRobustnessTestES31,
+                       WithNoFixture(ES31_VULKAN()),
+                       WithNoFixture(ES31_VULKAN_SWIFTSHADER()));

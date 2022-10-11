@@ -2979,6 +2979,21 @@ class BufferViewHelper final : public Resource
     ImageOrBufferViewSerial mViewSerial;
 };
 
+// Context state that can affect a compute pipeline
+enum class ComputePipelineFlag : uint8_t
+{
+    // Whether VK_EXT_pipeline_robustness should be used to make the pipeline robust.  Note that
+    // programs are allowed to be shared between robust and non-robust contexts, so different
+    // pipelines can be created for the same compute program.
+    Robust,
+
+    InvalidEnum,
+    EnumCount = InvalidEnum,
+};
+
+using ComputePipelineFlags = angle::PackedEnumBitSet<ComputePipelineFlag, uint8_t>;
+using ComputePipelineSet   = std::array<PipelineHelper, 1u << ComputePipelineFlags::size()>;
+
 class ShaderProgramHelper : angle::NonCopyable
 {
   public:
@@ -3022,6 +3037,7 @@ class ShaderProgramHelper : angle::NonCopyable
     angle::Result getComputePipeline(ContextVk *contextVk,
                                      PipelineCacheAccess *pipelineCache,
                                      const PipelineLayout &pipelineLayout,
+                                     ComputePipelineFlags pipelineFlags,
                                      PipelineSource source,
                                      PipelineHelper **pipelineOut);
 
@@ -3029,7 +3045,7 @@ class ShaderProgramHelper : angle::NonCopyable
     ShaderAndSerialMap mShaders;
     GraphicsPipelineCache mGraphicsPipelines;
 
-    PipelineHelper mComputePipeline;
+    ComputePipelineSet mComputePipelines;
 
     // Specialization constants, currently only used by the graphics queue.
     SpecializationConstants mSpecializationConstants;

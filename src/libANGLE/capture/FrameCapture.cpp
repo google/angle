@@ -7309,7 +7309,8 @@ void FrameCaptureShared::runMidExecutionCapture(const gl::Context *mainContext)
     gl::State mainContextReplayState(
         nullptr, nullptr, nullptr, nullptr, nullptr, contextState.getClientType(),
         contextState.getClientVersion(), contextState.getProfileMask(), false, true, true, true,
-        false, EGL_CONTEXT_PRIORITY_MEDIUM_IMG, contextState.hasProtectedContent());
+        false, EGL_CONTEXT_PRIORITY_MEDIUM_IMG, contextState.hasRobustAccess(),
+        contextState.hasProtectedContent());
     mainContextReplayState.initializeForCapture(mainContext);
 
     CaptureShareGroupMidExecutionSetup(mainContext, &mShareGroupSetupCalls, &mResourceTracker,
@@ -7338,7 +7339,7 @@ void FrameCaptureShared::runMidExecutionCapture(const gl::Context *mainContext)
                 nullptr, nullptr, nullptr, nullptr, nullptr, shareContextState.getClientType(),
                 shareContextState.getClientVersion(), shareContextState.getProfileMask(), false,
                 true, true, true, false, EGL_CONTEXT_PRIORITY_MEDIUM_IMG,
-                shareContextState.hasProtectedContent());
+                shareContextState.hasRobustAccess(), shareContextState.hasProtectedContent());
             auxContextReplayState.initializeForCapture(shareContext);
 
             CaptureMidExecutionSetup(shareContext, &frameCapture->getSetupCalls(),

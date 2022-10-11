@@ -1590,6 +1590,7 @@ angle::Result UtilsVk::setupComputeProgram(
     PipelineCacheAccess pipelineCache;
     ANGLE_TRY(renderer->getPipelineCache(&pipelineCache));
     ANGLE_TRY(program->getComputePipeline(contextVk, &pipelineCache, pipelineLayout.get(),
+                                          contextVk->getComputePipelineFlags(),
                                           PipelineSource::Utils, &pipeline));
     commandBufferHelper->retainResource(pipeline);
 

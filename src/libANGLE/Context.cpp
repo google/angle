@@ -468,6 +468,7 @@ Context::Context(egl::Display *display,
              GetRobustResourceInit(display, attribs),
              memoryProgramCache != nullptr,
              GetContextPriority(attribs),
+             GetRobustAccess(attribs),
              GetProtectedContent(attribs)),
       mShared(shareContext != nullptr || shareTextures != nullptr || shareSemaphores != nullptr),
       mSkipValidation(GetNoError(attribs)),
@@ -484,7 +485,6 @@ Context::Context(egl::Display *display,
       mResetStatus(GraphicsResetStatus::NoError),
       mContextLostForced(false),
       mResetStrategy(GetResetStrategy(attribs)),
-      mRobustAccess(GetRobustAccess(attribs)),
       mSurfacelessSupported(displayExtensions.surfacelessContext),
       mCurrentDrawSurface(static_cast<egl::Surface *>(EGL_NO_SURFACE)),
       mCurrentReadSurface(static_cast<egl::Surface *>(EGL_NO_SURFACE)),
@@ -1657,7 +1657,7 @@ void Context::getBooleanvImpl(GLenum pname, GLboolean *params) const
             *params = GL_TRUE;
             break;
         case GL_CONTEXT_ROBUST_ACCESS_EXT:
-            *params = ConvertToGLBoolean(mRobustAccess);
+            *params = ConvertToGLBoolean(mState.hasRobustAccess());
             break;
 
         default:
@@ -1880,7 +1880,7 @@ void Context::getIntegervImpl(GLenum pname, GLint *params) const
                 contextFlags |= GL_CONTEXT_FLAG_DEBUG_BIT_KHR;
             }
 
-            if (mRobustAccess)
+            if (mState.hasRobustAccess())
             {
                 contextFlags |= GL_CONTEXT_FLAG_ROBUST_ACCESS_BIT;
             }
@@ -3046,7 +3046,7 @@ bool Context::isResetNotificationEnabled() const
 
 bool Context::isRobustnessEnabled() const
 {
-    return mRobustAccess;
+    return mState.hasRobustAccess();
 }
 
 const egl::Config *Context::getConfig() const
@@ -3806,7 +3806,7 @@ Extensions Context::generateSupportedExtensions() const
     // mState.mExtensions.robustBufferAccessBehaviorKHR is true only if robust access is true and
     // the backend supports it.
     supportedExtensions.robustBufferAccessBehaviorKHR =
-        mRobustAccess && supportedExtensions.robustBufferAccessBehaviorKHR;
+        mState.hasRobustAccess() && supportedExtensions.robustBufferAccessBehaviorKHR;
 
     // Enable the cache control query unconditionally.
     supportedExtensions.programCacheControlANGLE = true;
@@ -4438,7 +4438,7 @@ void Context::updateCaps()
     // We need to validate buffer bounds if we are in a WebGL or robust access context and the
     // back-end does not support robust buffer access behaviour.
     mBufferAccessValidationEnabled = (!mSupportedExtensions.robustBufferAccessBehaviorKHR &&
-                                      (mState.isWebGL() || mRobustAccess));
+                                      (mState.isWebGL() || mState.hasRobustAccess()));
 
     // Cache this in the VertexArrays. They need to check it in state change notifications.
     for (auto vaoIter : mVertexArrayMap)

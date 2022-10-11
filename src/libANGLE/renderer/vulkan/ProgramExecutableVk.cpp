@@ -1110,7 +1110,8 @@ angle::Result ProgramExecutableVk::getComputePipeline(ContextVk *contextVk,
 
     vk::ShaderProgramHelper *shaderProgram = mComputeProgramInfo.getShaderProgram();
     ASSERT(shaderProgram);
-    return shaderProgram->getComputePipeline(contextVk, pipelineCache, getPipelineLayout(), source,
+    return shaderProgram->getComputePipeline(contextVk, pipelineCache, getPipelineLayout(),
+                                             contextVk->getComputePipelineFlags(), source,
                                              pipelineOut);
 }
 

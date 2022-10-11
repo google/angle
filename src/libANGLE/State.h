@@ -101,6 +101,7 @@ class State : angle::NonCopyable
           bool robustResourceInit,
           bool programBinaryCacheEnabled,
           EGLenum contextPriority,
+          bool hasRobustAccess,
           bool hasProtectedContent);
     ~State();
 
@@ -112,6 +113,7 @@ class State : angle::NonCopyable
     EGLenum getClientType() const { return mClientType; }
     EGLint getProfileMask() const { return mProfileMask; }
     EGLenum getContextPriority() const { return mContextPriority; }
+    bool hasRobustAccess() const { return mHasRobustAccess; }
     bool hasProtectedContent() const { return mHasProtectedContent; }
     bool isDebugContext() const { return mIsDebugContext; }
     GLint getClientMajorVersion() const { return mClientVersion.major; }
@@ -1029,6 +1031,7 @@ class State : angle::NonCopyable
     EGLenum mClientType;
     EGLint mProfileMask;
     EGLenum mContextPriority;
+    bool mHasRobustAccess;
     bool mHasProtectedContent;
     bool mIsDebugContext;
     Version mClientVersion;

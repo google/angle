@@ -1689,7 +1689,7 @@ void UnpackPipelineState(const vk::GraphicsPipelineDesc &state, UnpackedPipeline
     const PackedInputAssemblyAndRasterizationStateInfo &inputAndRaster =
         state.getInputAssemblyAndRasterizationStateInfoForLog();
     const PackedColorBlendStateInfo &colorBlend = state.getColorBlendStateInfoForLog();
-    const PackedDitherAndWorkarounds &dither    = state.getDitherForLog();
+    const PackedDitherAndContextState &dither   = state.getDitherForLog();
     const PackedDynamicState &dynamicState      = state.getDynamicStateForLog();
 
     valuesOut->fill(0);
@@ -2722,9 +2722,10 @@ void GraphicsPipelineDesc::initDefaults(const ContextVk *contextVk)
               &mColorBlendStateInfo.attachments[gl::IMPLEMENTATION_MAX_DRAW_BUFFERS],
               blendAttachmentState);
 
-    mDitherAndWorkarounds.emulatedDitherControl             = 0;
-    mDitherAndWorkarounds.nonZeroStencilWriteMaskWorkaround = 0;
-    mDitherAndWorkarounds.unused                            = 0;
+    mDitherAndContextState.emulatedDitherControl = 0;
+    mDitherAndContextState.isRobustContext       = contextVk->shouldUsePipelineRobustness();
+    mDitherAndContextState.nonZeroStencilWriteMaskWorkaround = 0;
+    mDitherAndContextState.unused                            = 0;
 
     SetBitField(mDynamicState.ds1And2.cullMode, VK_CULL_MODE_NONE);
     SetBitField(mDynamicState.ds1And2.frontFace, VK_FRONT_FACE_COUNTER_CLOCKWISE);
@@ -3082,9 +3083,9 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
         static_cast<VkBool32>(inputAndRaster.misc.depthBoundsTest);
     depthStencilState.stencilTestEnable = static_cast<VkBool32>(mDynamicState.ds1And2.stencilTest);
     UnpackStencilState(mDynamicState.ds1.front, &depthStencilState.front,
-                       mDitherAndWorkarounds.nonZeroStencilWriteMaskWorkaround);
+                       mDitherAndContextState.nonZeroStencilWriteMaskWorkaround);
     UnpackStencilState(mDynamicState.ds1.back, &depthStencilState.back,
-                       mDitherAndWorkarounds.nonZeroStencilWriteMaskWorkaround);
+                       mDitherAndContextState.nonZeroStencilWriteMaskWorkaround);
     depthStencilState.minDepthBounds = 0;
     depthStencilState.maxDepthBounds = 0;
 
@@ -3246,9 +3247,10 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
 
     // Enable robustness on the pipeline if needed.  Note that the global robustBufferAccess feature
     // must be disabled by default.
-    if (contextVk->getFeatures().supportsPipelineRobustness.enabled &&
-        contextVk->getShareGroup()->hasAnyContextWithRobustness())
+    if (mDitherAndContextState.isRobustContext)
     {
+        ASSERT(contextVk->getFeatures().supportsPipelineRobustness.enabled);
+
         robustness.storageBuffers = VK_PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS_EXT;
         robustness.uniformBuffers = VK_PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS_EXT;
         robustness.vertexInputs   = VK_PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS_EXT;
@@ -3798,18 +3800,18 @@ void GraphicsPipelineDesc::updateEmulatedDitherControl(GraphicsPipelineTransitio
                                                        uint16_t value)
 {
     // Make sure we don't waste time resetting this to zero in the common no-dither case.
-    ASSERT(value != 0 || mDitherAndWorkarounds.emulatedDitherControl != 0);
+    ASSERT(value != 0 || mDitherAndContextState.emulatedDitherControl != 0);
 
-    mDitherAndWorkarounds.emulatedDitherControl = value;
-    transition->set(ANGLE_GET_TRANSITION_BIT(mDitherAndWorkarounds, emulatedDitherControl));
+    mDitherAndContextState.emulatedDitherControl = value;
+    transition->set(ANGLE_GET_TRANSITION_BIT(mDitherAndContextState, emulatedDitherControl));
 }
 
 void GraphicsPipelineDesc::updateNonZeroStencilWriteMaskWorkaround(
     GraphicsPipelineTransitionBits *transition,
     bool enabled)
 {
-    mDitherAndWorkarounds.nonZeroStencilWriteMaskWorkaround = enabled;
-    transition->set(ANGLE_GET_TRANSITION_BIT(mDitherAndWorkarounds, emulatedDitherControl));
+    mDitherAndContextState.nonZeroStencilWriteMaskWorkaround = enabled;
+    transition->set(ANGLE_GET_TRANSITION_BIT(mDitherAndContextState, emulatedDitherControl));
 }
 
 void GraphicsPipelineDesc::updateRenderPassDesc(GraphicsPipelineTransitionBits *transition,

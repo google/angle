@@ -776,6 +776,15 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     // RenderpassCommands if exists, or outsideRenderPassCommands)
     void retainResource(vk::Resource *resource);
 
+    // Whether VK_EXT_pipeline_robustness should be used to enable robust buffer access in the
+    // pipeline.
+    bool shouldUsePipelineRobustness() const
+    {
+        return getFeatures().supportsPipelineRobustness.enabled && mState.hasRobustAccess();
+    }
+
+    vk::ComputePipelineFlags getComputePipelineFlags() const;
+
   private:
     // Dirty bits.
     enum DirtyBitType : size_t

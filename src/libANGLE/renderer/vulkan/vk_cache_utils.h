@@ -468,13 +468,14 @@ struct PackedColorBlendStateInfo final
 constexpr size_t kPackedColorBlendStateSize = sizeof(PackedColorBlendStateInfo);
 static_assert(kPackedColorBlendStateSize == 36, "Size check failed");
 
-struct PackedDitherAndWorkarounds final
+struct PackedDitherAndContextState final
 {
     static_assert(gl::IMPLEMENTATION_MAX_DRAW_BUFFERS <= 8,
                   "2 bits per draw buffer is needed for dither emulation");
     uint16_t emulatedDitherControl;
+    uint16_t isRobustContext : 1;
     uint16_t nonZeroStencilWriteMaskWorkaround : 1;
-    uint16_t unused : 15;
+    uint16_t unused : 14;
 };
 
 // State that is dynamic in VK_EXT_extended_dynamic_state and 2.  These are placed at the end of the
@@ -539,7 +540,7 @@ static_assert(kPackedDynamicStateSize == 40, "Size check failed");
 constexpr size_t kGraphicsPipelineDescSumOfSizes =
     kVertexInputAttributesSize + kRenderPassDescSize +
     kPackedInputAssemblyAndRasterizationStateSize + kPackedColorBlendStateSize +
-    sizeof(PackedDitherAndWorkarounds) + kPackedDynamicStateSize;
+    sizeof(PackedDitherAndContextState) + kPackedDynamicStateSize;
 
 // Number of dirty bits in the dirty bit set.
 constexpr size_t kGraphicsPipelineDirtyBitBytes = 4;
@@ -728,7 +729,7 @@ class GraphicsPipelineDesc final
     void updateEmulatedDitherControl(GraphicsPipelineTransitionBits *transition, uint16_t value);
     uint32_t getEmulatedDitherControl() const
     {
-        return mDitherAndWorkarounds.emulatedDitherControl;
+        return mDitherAndContextState.emulatedDitherControl;
     }
 
     void updateNonZeroStencilWriteMaskWorkaround(GraphicsPipelineTransitionBits *transition,
@@ -752,7 +753,7 @@ class GraphicsPipelineDesc final
     {
         return mColorBlendStateInfo;
     }
-    const PackedDitherAndWorkarounds &getDitherForLog() const { return mDitherAndWorkarounds; }
+    const PackedDitherAndContextState &getDitherForLog() const { return mDitherAndContextState; }
     const PackedDynamicState &getDynamicStateForLog() const { return mDynamicState; }
 
   private:
@@ -762,7 +763,7 @@ class GraphicsPipelineDesc final
     RenderPassDesc mRenderPassDesc;
     PackedInputAssemblyAndRasterizationStateInfo mInputAssemblyAndRasterizationStateInfo;
     PackedColorBlendStateInfo mColorBlendStateInfo;
-    PackedDitherAndWorkarounds mDitherAndWorkarounds;
+    PackedDitherAndContextState mDitherAndContextState;
     PackedDynamicState mDynamicState;
 };
 

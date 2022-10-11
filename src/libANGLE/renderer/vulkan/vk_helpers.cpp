@@ -10191,7 +10191,10 @@ bool ShaderProgramHelper::valid(const gl::ShaderType shaderType) const
 void ShaderProgramHelper::destroy(RendererVk *rendererVk)
 {
     mGraphicsPipelines.destroy(rendererVk);
-    mComputePipeline.destroy(rendererVk->getDevice());
+    for (PipelineHelper &computePipeline : mComputePipelines)
+    {
+        computePipeline.destroy(rendererVk->getDevice());
+    }
     for (BindingPointer<ShaderAndSerial> &shader : mShaders)
     {
         shader.reset();
@@ -10201,7 +10204,10 @@ void ShaderProgramHelper::destroy(RendererVk *rendererVk)
 void ShaderProgramHelper::release(ContextVk *contextVk)
 {
     mGraphicsPipelines.release(contextVk);
-    mComputePipeline.release(contextVk);
+    for (PipelineHelper &computePipeline : mComputePipelines)
+    {
+        computePipeline.release(contextVk);
+    }
     for (BindingPointer<ShaderAndSerial> &shader : mShaders)
     {
         shader.reset();
@@ -10234,12 +10240,15 @@ void ShaderProgramHelper::setSpecializationConstant(sh::vk::SpecializationConsta
 angle::Result ShaderProgramHelper::getComputePipeline(ContextVk *contextVk,
                                                       PipelineCacheAccess *pipelineCache,
                                                       const PipelineLayout &pipelineLayout,
+                                                      ComputePipelineFlags pipelineFlags,
                                                       PipelineSource source,
                                                       PipelineHelper **pipelineOut)
 {
-    if (mComputePipeline.valid())
+    PipelineHelper *computePipeline = &mComputePipelines[pipelineFlags.bits()];
+
+    if (computePipeline->valid())
     {
-        *pipelineOut = &mComputePipeline;
+        *pipelineOut = computePipeline;
         return angle::Result::Continue;
     }
 
@@ -10265,9 +10274,10 @@ angle::Result ShaderProgramHelper::getComputePipeline(ContextVk *contextVk,
 
     // Enable robustness on the pipeline if needed.  Note that the global robustBufferAccess feature
     // must be disabled by default.
-    if (contextVk->getFeatures().supportsPipelineRobustness.enabled &&
-        contextVk->getShareGroup()->hasAnyContextWithRobustness())
+    if (pipelineFlags[ComputePipelineFlag::Robust])
     {
+        ASSERT(contextVk->getFeatures().supportsPipelineRobustness.enabled);
+
         robustness.storageBuffers = VK_PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS_EXT;
         robustness.uniformBuffers = VK_PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS_EXT;
         robustness.vertexInputs   = VK_PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_DEVICE_DEFAULT_EXT;
@@ -10294,7 +10304,7 @@ angle::Result ShaderProgramHelper::getComputePipeline(ContextVk *contextVk,
     }
 
     ANGLE_TRY(pipelineCache->createComputePipeline(contextVk, createInfo,
-                                                   &mComputePipeline.getPipeline()));
+                                                   &computePipeline->getPipeline()));
 
     if (supportsFeedback)
     {
@@ -10302,12 +10312,12 @@ angle::Result ShaderProgramHelper::getComputePipeline(ContextVk *contextVk,
             (feedback.flags & VK_PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT) !=
             0;
 
-        mComputePipeline.setCacheLookUpFeedback(cacheHit ? CacheLookUpFeedback::Hit
+        computePipeline->setCacheLookUpFeedback(cacheHit ? CacheLookUpFeedback::Hit
                                                          : CacheLookUpFeedback::Miss);
         ApplyPipelineCreationFeedback(contextVk, feedback);
     }
 
-    *pipelineOut = &mComputePipeline;
+    *pipelineOut = computePipeline;
     return angle::Result::Continue;
 }
 
