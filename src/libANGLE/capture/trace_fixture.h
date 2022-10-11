@@ -55,9 +55,14 @@ ANGLE_REPLAY_EXPORT const char *GetSerializedContextState(uint32_t frameIndex);
 
 // Maps from <captured Program ID, captured location> to run-time location.
 extern GLint **gUniformLocations;
+extern GLuint gCurrentProgram;
+
+// TODO(jmadill): Hide from the traces. http://anglebug.com/7753
 using BlockIndexesMap = std::unordered_map<GLuint, std::unordered_map<GLuint, GLuint>>;
 extern BlockIndexesMap gUniformBlockIndexes;
-extern GLuint gCurrentProgram;
+using BufferHandleMap = std::unordered_map<GLuint, void *>;
+extern BufferHandleMap gMappedBufferData;
+
 void UpdateUniformLocation(GLuint program, const char *name, GLint location, GLint count);
 void DeleteUniformLocations(GLuint program);
 void UpdateUniformBlockIndex(GLuint program, const char *name, GLuint index);
@@ -118,8 +123,6 @@ using SurfaceMap = std::unordered_map<uintptr_t, EGLSurface>;
 extern SurfaceMap gSurfaceMap;
 
 void UpdateClientArrayPointer(int arrayIndex, const void *data, uint64_t size);
-using BufferHandleMap = std::unordered_map<GLuint, void *>;
-extern BufferHandleMap gMappedBufferData;
 void UpdateClientBufferData(GLuint bufferID, const void *source, GLsizei size);
 void UpdateClientBufferDataWithOffset(GLuint bufferID,
                                       const void *source,
@@ -146,6 +149,20 @@ void SetFramebufferID(GLuint id);
 void SetBufferID(GLuint id);
 void SetRenderbufferID(GLuint id);
 void SetTextureID(GLuint id);
+
+// These functions allow the traces to change variable assignments into function calls,
+// which makes it so the trace C interpreter doesn't need to implement operators at all.
+void MapBufferRange(GLenum target,
+                    GLintptr offset,
+                    GLsizeiptr length,
+                    GLbitfield access,
+                    GLuint buffer);
+void MapBufferRangeEXT(GLenum target,
+                       GLintptr offset,
+                       GLsizeiptr length,
+                       GLbitfield access,
+                       GLuint buffer);
+void MapBufferOES(GLenum target, GLbitfield access, GLuint buffer);
 
 void ValidateSerializedState(const char *serializedState, const char *fileName, uint32_t line);
 #define VALIDATE_CHECKPOINT(STATE) ValidateSerializedState(STATE, __FILE__, __LINE__)

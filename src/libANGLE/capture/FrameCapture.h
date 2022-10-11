@@ -92,18 +92,11 @@ class ParamBuffer final : angle::NonCopyable
 
     const std::vector<ParamCapture> &getParamCaptures() const { return mParamCaptures; }
 
-    // These helpers allow us to track the ID of the buffer that was active when
-    // MapBufferRange was called.  We'll use it during replay to track the
-    // buffer's contents, as they can be modified by the host.
-    void setMappedBufferID(gl::BufferID bufferID) { mMappedBufferID = bufferID; }
-    gl::BufferID getMappedBufferID() const { return mMappedBufferID; }
-
   private:
     std::vector<ParamCapture> mParamCaptures;
     ParamCapture mReturnValueCapture;
     int mClientArrayDataParam = -1;
     size_t mReadBufferSize    = 0;
-    gl::BufferID mMappedBufferID;
 };
 
 struct CallCapture
@@ -817,6 +810,10 @@ class FrameCaptureShared final : angle::NonCopyable
                                             CallCapture &call,
                                             size_t instanceCount);
     void maybeCaptureCoherentBuffers(const gl::Context *context);
+    void captureCustomMapBufferFromContext(const gl::Context *context,
+                                           const char *entryPointName,
+                                           CallCapture &call,
+                                           std::vector<CallCapture> &callsOut);
     void updateCopyImageSubData(CallCapture &call);
     void overrideProgramBinary(const gl::Context *context,
                                CallCapture &call,
