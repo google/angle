@@ -61,6 +61,7 @@ extern GLuint gCurrentProgram;
 void UpdateUniformLocation(GLuint program, const char *name, GLint location, GLint count);
 void DeleteUniformLocations(GLuint program);
 void UpdateUniformBlockIndex(GLuint program, const char *name, GLuint index);
+void UniformBlockBinding(GLuint program, GLuint uniformblockIndex, GLuint binding);
 void UpdateCurrentProgram(GLuint program);
 
 void InitializeReplay(const char *binaryDataFileName,

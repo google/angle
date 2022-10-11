@@ -114,6 +114,12 @@ void UpdateUniformBlockIndex(GLuint program, const char *name, GLuint index)
 {
     gUniformBlockIndexes[program][index] = glGetUniformBlockIndex(program, name);
 }
+
+void UniformBlockBinding(GLuint program, GLuint uniformblockIndex, GLuint binding)
+{
+    glUniformBlockBinding(program, gUniformBlockIndexes[program][uniformblockIndex], binding);
+}
+
 void UpdateCurrentProgram(GLuint program)
 {
     gCurrentProgram = program;
