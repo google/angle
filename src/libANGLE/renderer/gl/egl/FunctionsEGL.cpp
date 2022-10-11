@@ -85,10 +85,7 @@ struct FunctionsEGL::EGLDispatchTable
           getFrameTimestampSupportedANDROIDPtr(nullptr),
           getFrameTimestampsANDROIDPtr(nullptr),
 
-          dupNativeFenceFDANDROIDPtr(nullptr),
-
-          queryDmaBufFormatsEXTPtr(nullptr),
-          queryDmaBufModifiersEXTPtr(nullptr)
+          dupNativeFenceFDANDROIDPtr(nullptr)
     {}
 
     // 1.0
@@ -151,10 +148,6 @@ struct FunctionsEGL::EGLDispatchTable
 
     // EGL_ANDROID_native_fence_sync
     PFNEGLDUPNATIVEFENCEFDANDROIDPROC dupNativeFenceFDANDROIDPtr;
-
-    // EGL_EXT_image_dma_buf_import_modifiers
-    PFNEGLQUERYDMABUFFORMATSEXTPROC queryDmaBufFormatsEXTPtr;
-    PFNEGLQUERYDMABUFMODIFIERSEXTPROC queryDmaBufModifiersEXTPtr;
 };
 
 FunctionsEGL::FunctionsEGL()
@@ -295,28 +288,6 @@ egl::Error FunctionsEGL::initialize(EGLNativeDisplayType nativeDisplay)
             !hasExtension("EGL_ANDROID_native_fence_sync"))
         {
             mExtensions.push_back("EGL_ANDROID_native_fence_sync");
-        }
-    }
-
-    if (hasExtension("EGL_EXT_image_dma_buf_import_modifiers"))
-    {
-        // Some drivers, notably older versions of ANGLE, announce this extension without
-        // implementing the following functions. Fail softly in such cases.
-        // See anglebug.com/7664 for details.
-        if (!SetPtr(&mFnPtrs->queryDmaBufFormatsEXTPtr,
-                    getProcAddress("eglQueryDmaBufFormatsEXT")) ||
-            !SetPtr(&mFnPtrs->queryDmaBufModifiersEXTPtr,
-                    getProcAddress("eglQueryDmaBufModifiersEXT")))
-        {
-            mFnPtrs->queryDmaBufFormatsEXTPtr   = nullptr;
-            mFnPtrs->queryDmaBufModifiersEXTPtr = nullptr;
-            mExtensions.erase(
-                std::remove_if(mExtensions.begin(), mExtensions.end(),
-                               [](const std::string &extension) {
-                                   return extension.compare(
-                                              "EGL_EXT_image_dma_buf_import_modifiers") == 0;
-                               }),
-                mExtensions.end());
         }
     }
 
@@ -622,23 +593,6 @@ EGLBoolean FunctionsEGL::getFrameTimestampsANDROID(EGLSurface surface,
 EGLint FunctionsEGL::dupNativeFenceFDANDROID(EGLSync sync) const
 {
     return mFnPtrs->dupNativeFenceFDANDROIDPtr(mEGLDisplay, sync);
-}
-
-EGLint FunctionsEGL::queryDmaBufFormatsEXT(EGLint maxFormats,
-                                           EGLint *formats,
-                                           EGLint *numFormats) const
-{
-    return mFnPtrs->queryDmaBufFormatsEXTPtr(mEGLDisplay, maxFormats, formats, numFormats);
-}
-
-EGLint FunctionsEGL::queryDmaBufModifiersEXT(EGLint format,
-                                             EGLint maxModifiers,
-                                             EGLuint64KHR *modifiers,
-                                             EGLBoolean *externalOnly,
-                                             EGLint *numModifiers) const
-{
-    return mFnPtrs->queryDmaBufModifiersEXTPtr(mEGLDisplay, format, maxModifiers, modifiers,
-                                               externalOnly, numModifiers);
 }
 
 }  // namespace rx
