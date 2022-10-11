@@ -75,6 +75,7 @@ class ReplayWriter final : angle::NonCopyable
     ReplayWriter();
     ~ReplayWriter();
 
+    void setSourceFileExtension(const char *ext);
     void setSourceFileSizeThreshold(size_t sourceFileSizeThreshold);
     void setFilenamePattern(const std::string &pattern);
     void setCaptureLabel(const std::string &label);
@@ -109,6 +110,7 @@ class ReplayWriter final : angle::NonCopyable
     void addWrittenFile(const std::string &filename);
     size_t getStoredReplaySourceSize() const;
 
+    std::string mSourceFileExtension;
     size_t mSourceFileSizeThreshold;
     size_t mFrameIndex;
 
