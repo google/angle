@@ -2981,6 +2981,9 @@ enum class ComputePipelineFlag : uint8_t
     // programs are allowed to be shared between robust and non-robust contexts, so different
     // pipelines can be created for the same compute program.
     Robust,
+    // Whether VK_EXT_pipeline_protected_access should be used to make the pipeline protected-only.
+    // Similar to robustness, EGL allows protected and unprotected to be in the same share group.
+    Protected,
 
     InvalidEnum,
     EnumCount = InvalidEnum,

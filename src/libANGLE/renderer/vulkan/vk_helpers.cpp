@@ -10248,6 +10248,17 @@ angle::Result ShaderProgramHelper::getOrCreateComputePipeline(
         AddToPNextChain(&createInfo, &robustness);
     }
 
+    // Restrict pipeline to protected or unprotected command buffers if possible.
+    if (pipelineFlags[ComputePipelineFlag::Protected])
+    {
+        ASSERT(contextVk->getFeatures().supportsPipelineProtectedAccess.enabled);
+        createInfo.flags |= VK_PIPELINE_CREATE_PROTECTED_ACCESS_ONLY_BIT_EXT;
+    }
+    else if (contextVk->getFeatures().supportsPipelineProtectedAccess.enabled)
+    {
+        createInfo.flags |= VK_PIPELINE_CREATE_NO_PROTECTED_ACCESS_BIT_EXT;
+    }
+
     VkPipelineCreationFeedback feedback               = {};
     VkPipelineCreationFeedback perStageFeedback       = {};
     VkPipelineCreationFeedbackCreateInfo feedbackInfo = {};

@@ -8130,6 +8130,10 @@ vk::ComputePipelineFlags ContextVk::getComputePipelineFlags() const
     {
         pipelineFlags.set(vk::ComputePipelineFlag::Robust);
     }
+    if (shouldRestrictPipelineToProtectedAccess())
+    {
+        pipelineFlags.set(vk::ComputePipelineFlag::Protected);
+    }
 
     return pipelineFlags;
 }

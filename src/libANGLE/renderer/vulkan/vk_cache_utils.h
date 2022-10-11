@@ -421,11 +421,13 @@ struct PackedInputAssemblyState final
 
         // Whether the pipeline is robust (vertex input copy)
         uint32_t isRobustContext : 1;
+        // Whether the pipeline needs access to protected content (vertex input copy)
+        uint32_t isProtectedContext : 1;
 
         // Which attributes are actually active in the program and should affect the pipeline.
         uint32_t programActiveAttributeLocations : gl::MAX_VERTEX_ATTRIBS;
 
-        uint32_t padding : 24 - gl::MAX_VERTEX_ATTRIBS;
+        uint32_t padding : 23 - gl::MAX_VERTEX_ATTRIBS;
     } bits;
 };
 
@@ -477,8 +479,10 @@ struct PackedPreRasterizationAndFragmentStates final
 
         // Whether the pipeline is robust (shader stages copy)
         uint32_t isRobustContext : 1;
+        // Whether the pipeline needs access to protected content (shader stages copy)
+        uint32_t isProtectedContext : 1;
 
-        uint32_t padding : 3;
+        uint32_t padding : 2;
     } bits;
 
     // Affecting specialization constants
@@ -552,12 +556,15 @@ struct PackedBlendMaskAndLogicOpState final
         // Dynamic in VK_EXT_extended_dynamic_state2
         uint32_t logicOp : 4;
 
+        // Whether the pipeline needs access to protected content (fragment output copy)
+        uint32_t isProtectedContext : 1;
+
         // Output that is present in the framebuffer but is never written to in the shader.  Used by
         // GL_ANGLE_robust_fragment_shader_output which defines the behavior in this case (which is
         // to mask these outputs)
         uint32_t missingOutputsMask : gl::IMPLEMENTATION_MAX_DRAW_BUFFERS;
 
-        uint32_t padding : 19 - gl::IMPLEMENTATION_MAX_DRAW_BUFFERS;
+        uint32_t padding : 18 - gl::IMPLEMENTATION_MAX_DRAW_BUFFERS;
     } bits;
 };
 
