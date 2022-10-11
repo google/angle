@@ -155,8 +155,12 @@ def get_skia_gold_keys(args, env):
     if angle_test_util.IsAndroid():
         json_data = android_helper.AngleSystemInfo(sysinfo_args)
         logging.info(json_data)
+        os_name = 'Android'
+        os_version = android_helper.GetBuildFingerprint()
     else:
         json_data = run_angle_system_info_test(sysinfo_args, args, env)
+        os_name = to_non_empty_string_or_none(platform.system())
+        os_version = to_non_empty_string_or_none(platform.version())
 
     if len(json_data.get('gpus', [])) == 0 or not 'activeGPUIndex' in json_data:
         raise Exception('Error getting system info.')
@@ -168,8 +172,8 @@ def get_skia_gold_keys(args, env):
         'device_id': to_hex_or_none(active_gpu['deviceId']),
         'model_name': to_non_empty_string_or_none_dict(active_gpu, 'machineModelVersion'),
         'manufacturer_name': to_non_empty_string_or_none_dict(active_gpu, 'machineManufacturer'),
-        'os': to_non_empty_string_or_none(platform.system()),
-        'os_version': to_non_empty_string_or_none(platform.version()),
+        'os': os_name,
+        'os_version': os_version,
         'driver_version': to_non_empty_string_or_none_dict(active_gpu, 'driverVersion'),
         'driver_vendor': to_non_empty_string_or_none_dict(active_gpu, 'driverVendor'),
     }

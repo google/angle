@@ -328,6 +328,10 @@ def AngleSystemInfo(args):
         return json.loads(_ReadDeviceFile(output_file))
 
 
+def GetBuildFingerprint():
+    return _AdbShell('getprop ro.build.fingerprint').decode('ascii').strip()
+
+
 def ListTests(suite_name):
     _EnsureTestSuite(suite_name)
 
