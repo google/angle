@@ -6115,7 +6115,7 @@ vk::DynamicQueryPool *ContextVk::getQueryPool(gl::QueryType queryType)
     }
 
     // Assert that timestamp extension is available if needed.
-    ASSERT(queryType != gl::QueryType::Timestamp && queryType != gl::QueryType::TimeElapsed ||
+    ASSERT((queryType != gl::QueryType::Timestamp && queryType != gl::QueryType::TimeElapsed) ||
            mRenderer->getQueueFamilyProperties().timestampValidBits > 0);
     ASSERT(mQueryPools[queryType].isValid());
     return &mQueryPools[queryType];

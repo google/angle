@@ -801,7 +801,7 @@ class BlendStateExt final
 
     uint8_t mDrawBufferCount;
 
-    [[maybe_unused]] uint32_t kUnused = 0;
+    ANGLE_MAYBE_UNUSED_PRIVATE_FIELD uint32_t kUnused = 0;
 };
 
 static_assert(sizeof(BlendStateExt) == sizeof(uint64_t) +

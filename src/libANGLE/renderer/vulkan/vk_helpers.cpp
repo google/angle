@@ -9502,7 +9502,7 @@ LayerMode GetLayerMode(const vk::ImageHelper &image, uint32_t layerCount)
     const uint32_t imageLayerCount = GetImageLayerCountForView(image);
     const bool allLayers           = layerCount == imageLayerCount;
 
-    ASSERT(allLayers || layerCount > 0 && layerCount <= gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
+    ASSERT(allLayers || (layerCount > 0 && layerCount <= gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS));
     return allLayers ? LayerMode::All : static_cast<LayerMode>(layerCount);
 }
 

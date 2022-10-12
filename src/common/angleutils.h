@@ -564,6 +564,15 @@ size_t FormatStringIntoVector(const char *fmt, va_list vararg, std::vector<char>
 #    define ANGLE_MACRO_STRINGIFY(x) ANGLE_STRINGIFY(x)
 #endif
 
+// The ANGLE_MAYBE_UNUSED_PRIVATE_FIELD can be used to hint 'unused private field'
+// instead of 'maybe_unused' attribute for the compatibility with GCC because
+// GCC doesn't have '-Wno-unused-private-field' whereas Clang has.
+#if defined(__clang__) || defined(_MSC_VER)
+#    define ANGLE_MAYBE_UNUSED_PRIVATE_FIELD [[maybe_unused]]
+#else
+#    define ANGLE_MAYBE_UNUSED_PRIVATE_FIELD
+#endif
+
 #if __has_cpp_attribute(clang::require_constant_initialization)
 #    define ANGLE_REQUIRE_CONSTANT_INIT [[clang::require_constant_initialization]]
 #else
