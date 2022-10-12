@@ -15,32 +15,34 @@
 
 namespace angle
 {
-bool gCalibration                = false;
-int gStepsPerTrial               = 0;
-int gMaxStepsPerformed           = 0;
-bool gEnableTrace                = false;
-const char *gTraceFile           = "ANGLETrace.json";
-const char *gScreenshotDir       = nullptr;
-const char *gRenderTestOutputDir = nullptr;
-bool gSaveScreenshots            = false;
-int gScreenshotFrame             = 1;
-bool gVerboseLogging             = false;
-int gCalibrationTimeSeconds      = 1;
-int gTrialTimeSeconds            = 0;
-int gTestTrials                  = 3;
-bool gNoFinish                   = false;
-bool gRetraceMode                = false;
-bool gMinimizeGPUWork            = false;
-bool gTraceTestValidation        = false;
-const char *gPerfCounters        = nullptr;
-const char *gUseANGLE            = nullptr;
-const char *gUseGL               = nullptr;
-bool gOffscreen                  = false;
-bool gVsync                      = false;
-bool gOneFrameOnly               = false;
-bool gNoWarmup                   = false;
-int gFixedTestTime               = 0;
-bool gTraceInterpreter           = false;
+bool gCalibration                  = false;
+int gStepsPerTrial                 = 0;
+int gMaxStepsPerformed             = 0;
+bool gEnableTrace                  = false;
+const char *gTraceFile             = "ANGLETrace.json";
+const char *gScreenshotDir         = nullptr;
+const char *gRenderTestOutputDir   = nullptr;
+bool gSaveScreenshots              = false;
+int gScreenshotFrame               = 1;
+bool gVerboseLogging               = false;
+int gCalibrationTimeSeconds        = 1;
+int gTrialTimeSeconds              = 0;
+int gTestTrials                    = 3;
+bool gNoFinish                     = false;
+bool gRetraceMode                  = false;
+bool gMinimizeGPUWork              = false;
+bool gTraceTestValidation          = false;
+const char *gPerfCounters          = nullptr;
+const char *gUseANGLE              = nullptr;
+const char *gUseGL                 = nullptr;
+bool gOffscreen                    = false;
+bool gVsync                        = false;
+bool gOneFrameOnly                 = false;
+bool gNoWarmup                     = false;
+int gFixedTestTime                 = 0;
+bool gTraceInterpreter             = false;
+const char *gPrintExtensionsToFile = nullptr;
+const char *gRequestedExtensions   = nullptr;
 
 // Default to three warmup trials. There's no science to this. More than two was experimentally
 // helpful on a Windows NVIDIA setup when testing with Vulkan and native trace tests.
@@ -87,7 +89,10 @@ bool TraceTestArg(int *argc, char **argv, int argIndex)
                            &gRenderTestOutputDir) ||
            ParseCStringArg("--screenshot-dir", argc, argv, argIndex, &gScreenshotDir) ||
            ParseCStringArg("--use-angle", argc, argv, argIndex, &gUseANGLE) ||
-           ParseCStringArg("--use-gl", argc, argv, argIndex, &gUseGL);
+           ParseCStringArg("--use-gl", argc, argv, argIndex, &gUseGL) ||
+           ParseCStringArg("--print-extensions-to-file", argc, argv, argIndex,
+                           &gPrintExtensionsToFile) ||
+           ParseCStringArg("--request-extensions", argc, argv, argIndex, &gRequestedExtensions);
 }
 }  // namespace
 }  // namespace angle

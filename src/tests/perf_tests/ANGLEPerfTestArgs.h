@@ -10,6 +10,8 @@
 #ifndef TESTS_PERF_TESTS_ANGLE_PERF_TEST_ARGS_H_
 #define TESTS_PERF_TESTS_ANGLE_PERF_TEST_ARGS_H_
 
+#include <string>
+#include <vector>
 #include "common/Optional.h"
 
 namespace angle
@@ -38,6 +40,8 @@ extern const char *gUseANGLE;
 extern const char *gUseGL;
 extern bool gOffscreen;
 extern bool gVsync;
+extern const char *gPrintExtensionsToFile;
+extern const char *gRequestedExtensions;
 
 inline bool OneFrame()
 {

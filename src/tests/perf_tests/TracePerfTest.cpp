@@ -768,6 +768,11 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
         return;
     }
 
+    for (std::string extension : mParams->traceInfo.requiredExtensions)
+    {
+        addExtensionPrerequisite(extension);
+    }
+
     if (IsWindows() && IsIntel() && mParams->isVulkan() && traceNameIs("manhattan_10"))
     {
         skipTest(

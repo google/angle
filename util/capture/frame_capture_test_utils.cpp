@@ -116,6 +116,20 @@ bool LoadTraceInfoFromJSON(const std::string &traceName,
     traceInfoOut->isRobustResourceInitEnabled = meta["IsRobustResourceInitEnabled"].GetBool();
     traceInfoOut->windowSurfaceContextId      = doc["WindowSurfaceContextID"].GetInt();
 
+    if (doc.HasMember("RequiredExtensions"))
+    {
+        const rapidjson::Value &requiredExtensions = doc["RequiredExtensions"];
+        if (!requiredExtensions.IsArray())
+        {
+            return false;
+        }
+        for (rapidjson::SizeType i = 0; i < requiredExtensions.Size(); i++)
+        {
+            std::string ext = std::string(requiredExtensions[i].GetString());
+            traceInfoOut->requiredExtensions.push_back(ext);
+        }
+    }
+
     const rapidjson::Document::Array &traceFiles = doc["TraceFiles"].GetArray();
     for (const rapidjson::Value &value : traceFiles)
     {

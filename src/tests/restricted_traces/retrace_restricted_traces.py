@@ -22,6 +22,7 @@ import sys
 import tempfile
 import time
 
+from gen_restricted_traces import read_json as read_json, write_json as write_json
 from pathlib import Path
 
 from gen_restricted_traces import read_json as read_json
@@ -79,6 +80,22 @@ def src_trace_path(trace):
 def get_num_frames(json_data):
     metadata = json_data['TraceMetadata']
     return metadata['FrameEnd'] - metadata['FrameStart'] + 1
+
+
+def get_gles_version(json_data):
+    metadata = json_data['TraceMetadata']
+    return (metadata['ContextClientMajorVersion'], metadata['ContextClientMinorVersion'])
+
+
+def set_gles_version(json_data, version):
+    metadata = json_data['TraceMetadata']
+    metadata['ContextClientMajorVersion'] = version[0]
+    metadata['ContextClientMinorVersion'] = version[1]
+
+
+def save_trace_json(trace, data):
+    json_file_name = get_trace_json_path(trace)
+    return write_json(json_file_name, data)
 
 
 def path_contains_header(path):
@@ -149,7 +166,10 @@ def run_autoninja(args):
 
     autoninja_args = [autoninja_binary, '-C', args.gn_path, args.test_suite]
     logging.debug('Calling %s' % ' '.join(autoninja_args))
-    subprocess.check_call(autoninja_args)
+    if args.show_test_stdout:
+        subprocess.check_call(autoninja_args)
+    else:
+        subprocess.check_call(autoninja_args, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
 def run_test_suite(args, trace_binary, trace, max_steps, additional_args, additional_env):
@@ -362,6 +382,148 @@ def add_upgrade_args(parser):
     parser.set_defaults(trim=True)
 
 
+def get_min_reqs(args, traces):
+    run_autoninja(args)
+
+    env = {}
+    default_args = ["--no-warmup"]
+
+    skipped_traces = []
+    trace_binary = os.path.join(args.gn_path, args.test_suite)
+
+    for trace in fnmatch.filter(traces, args.traces):
+        print(f"Finding requirements for {trace}")
+        extensions = []
+        json_data = load_trace_json(trace)
+        max_steps = get_num_frames(json_data)
+
+        # exts: a list of extensions to use with run_test_suite. If empty,
+        #       then run_test_suite runs with all extensions enabled by default.
+        def run_test_suite_with_exts(exts):
+            additional_args = default_args.copy()
+            additional_args += ['--request-extensions', ' '.join(exts)]
+
+            try:
+                run_test_suite(args, trace_binary, trace, max_steps, additional_args, env)
+            except subprocess.CalledProcessError as error:
+                return False
+            return True
+
+        original_gles_version = get_gles_version(json_data)
+        original_extensions = None if 'RequiredExtensions' not in json_data else json_data[
+            'RequiredExtensions']
+
+        def restore_trace():
+            if original_extensions is not None:
+                json_data['RequiredExtensions'] = original_extensions
+            set_gles_version(json_data, original_gles_version)
+            save_trace_json(trace, json_data)
+
+        try:
+            # Use the highest GLES version we have and empty the required
+            # extensions so that previous data doesn't affect the current
+            # run.
+            json_data['RequiredExtensions'] = []
+            save_trace_json(trace, json_data)
+            if not run_test_suite_with_exts([]):
+                skipped_traces.append(
+                    (trace, "Fails to run in default configuration on this machine"))
+                restore_trace()
+                continue
+
+            # Find minimum GLES version.
+            gles_versions = [(1, 0), (1, 1), (2, 0), (3, 0), (3, 1), (3, 2)]
+            min_version = None
+            for idx in range(len(gles_versions)):
+                min_version = gles_versions[idx]
+                set_gles_version(json_data, min_version)
+                save_trace_json(trace, json_data)
+                try:
+                    run_test_suite(args, trace_binary, trace, max_steps, default_args, env)
+                except subprocess.CalledProcessError as error:
+                    continue
+                break
+
+            # Get the list of requestable extensions for the GLES version.
+            try:
+                # Get the list of requestable extensions
+                with tempfile.NamedTemporaryFile() as tmp:
+                    # Some operating systems will not allow a file to be open for writing
+                    # by multiple processes. So close the temp file we just made before
+                    # running the test suite.
+                    tmp.close()
+                    additional_args = ["--print-extensions-to-file", tmp.name]
+                    run_test_suite(args, trace_binary, trace, max_steps, additional_args, env)
+                    with open(tmp.name) as f:
+                        for line in f:
+                            extensions.append(line.strip())
+            except Exception:
+                skipped_traces.append(
+                    (trace, "Failed to read extension list, likely that test is skipped"))
+                restore_trace()
+                continue
+
+            if len(extensions) > 0 and not run_test_suite_with_exts(extensions):
+                skipped_traces.append((trace, "Requesting all extensions results in test failure"))
+                restore_trace()
+                continue
+
+            # Reset RequiredExtensions so it doesn't interfere with our search
+            json_data['RequiredExtensions'] = []
+            save_trace_json(trace, json_data)
+
+            # Use a divide and conquer strategy to find the required extensions.
+            # Max depth is log(N) where N is the number of extensions. Expected
+            # runtime is p*log(N), where p is the number of required extensions.
+            # p*log(N)
+            # others: A list that contains one or more required extensions,
+            #         but is not actively being searched
+            # exts: The list of extensions actively being searched
+            def recurse_run(others, exts, depth=0):
+                if len(exts) <= 1:
+                    return exts
+                middle = int(len(exts) / 2)
+                left_partition = exts[:middle]
+                right_partition = exts[middle:]
+                left_passed = run_test_suite_with_exts(others + left_partition)
+
+                if depth > 0 and left_passed:
+                    # We know right_passed must be False because one stack up
+                    # run_test_suite(exts) returned False.
+                    return recurse_run(others, left_partition)
+
+                right_passed = run_test_suite_with_exts(others + right_partition)
+                if left_passed and right_passed:
+                    # Neither left nor right contain necessary extensions
+                    return []
+                elif left_passed:
+                    # Only left contains necessary extensions
+                    return recurse_run(others, left_partition, depth + 1)
+                elif right_passed:
+                    # Only right contains necessary extensions
+                    return recurse_run(others, right_partition, depth + 1)
+                else:
+                    # Both left and right contain necessary extensions
+                    left_reqs = recurse_run(others + right_partition, left_partition, depth + 1)
+                    right_reqs = recurse_run(others + left_reqs, right_partition, depth + 1)
+                    return left_reqs + right_reqs
+
+            recurse_reqs = recurse_run([], extensions, 0)
+
+            json_data['RequiredExtensions'] = recurse_reqs
+            save_trace_json(trace, json_data)
+        except BaseException as e:
+            restore_trace()
+            raise e
+
+    if skipped_traces:
+        print("Finished get_min_reqs, skipped traces:")
+        for trace, reason in skipped_traces:
+            print(f"\t{trace}: {reason}")
+    else:
+        print("Finished get_min_reqs for all traces specified")
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-l', '--log', help='Logging level.', default=DEFAULT_LOG_LEVEL)
@@ -439,6 +601,17 @@ def main():
     interpret_parser.add_argument(
         '--show-test-stdout', help='Log test output.', action='store_true', default=False)
 
+    get_min_reqs_parser = subparsers.add_parser(
+        'get_min_reqs',
+        help='Finds the minimum required extensions for a trace to successfully run.')
+    get_min_reqs_parser.add_argument('gn_path', help='GN build path')
+    get_min_reqs_parser.add_argument(
+        '--traces',
+        help='Traces to get minimum requirements for. Supports fnmatch expressions.',
+        default='*')
+    get_min_reqs_parser.add_argument(
+        '--show-test-stdout', help='Log test output.', action='store_true', default=False)
+
     args, extra_flags = parser.parse_known_args()
 
     logging.basicConfig(level=args.log.upper())
@@ -460,11 +633,14 @@ def main():
             return validate_traces(args, traces)
         elif args.command == 'interpret':
             return interpret_traces(args, traces)
+        elif args.command == 'get_min_reqs':
+            return get_min_reqs(args, traces)
         else:
             logging.fatal('Unknown command: %s' % args.command)
             return EXIT_FAILURE
     except subprocess.CalledProcessError as e:
         logging.exception('There was an exception running "%s": %s' % (traces, e.output.decode()))
+
         return EXIT_FAILURE
 
 

@@ -453,6 +453,27 @@ py ./scripts/run_code_generation.py
 Then create and upload a CL as normal. Congratulations, you've finished the
 trace upgrade!
 
+## Finding a trace's minimum requirements
+
+`retrace_restricted_traces.py` can be used to determine a trace's minimum
+extensions and GLES version. Run the command:
+
+```
+py ./src/tests/restricted_traces/retrace_restricted_traces.py get_min_reqs $TRACE_GN_PATH [--traces "*"]
+```
+
+The script will run each listed trace multiple times so it can find the minimum
+required GLES version and each required extension. Finally it records that
+information to the trace's json file.
+
+By default it will run with SwiftShader. To make the script use your machine's
+native vulkan drivers, use the `--no-swiftshader` argument before the script's
+command:
+
+```
+py ./src/tests/restricted_traces/retrace_restricted_traces.py --no-swiftshader get_min_reqs $TRACE_GN_PATH [--traces "*"]
+```
+
 # Diagnosing and fixing tracer errors
 
 ## Debugging a crash or GLES error

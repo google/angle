@@ -186,7 +186,7 @@ class ANGLERenderTest : public ANGLEPerfTest
                     const char *units = "ns");
     ~ANGLERenderTest() override;
 
-    void addExtensionPrerequisite(const char *extensionName);
+    void addExtensionPrerequisite(std::string extensionName);
     void addIntegerPrerequisite(GLenum target, int min);
 
     virtual void initializeBenchmark() {}
@@ -244,7 +244,7 @@ class ANGLERenderTest : public ANGLEPerfTest
 
     GLWindowBase *mGLWindow;
     OSWindow *mOSWindow;
-    std::vector<const char *> mExtensionPrerequisites;
+    std::vector<std::string> mExtensionPrerequisites;
     struct IntegerPrerequisite
     {
         GLenum target;
