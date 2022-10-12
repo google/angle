@@ -375,59 +375,46 @@ struct PackedAttribDesc final
 constexpr size_t kPackedAttribDescSize = sizeof(PackedAttribDesc);
 static_assert(kPackedAttribDescSize == 4, "Size mismatch");
 
-struct VertexInputAttributes final
+struct PackedVertexInputAttributes final
 {
     PackedAttribDesc attribs[gl::MAX_VERTEX_ATTRIBS];
+
+    // Although technically stride can be any value in ES 2.0, in practice supporting stride
+    // greater than MAX_USHORT should not be that helpful. Note that stride limits are
+    // introduced in ES 3.1.
+    // Dynamic in VK_EXT_extended_dynamic_state
+    uint16_t strides[gl::MAX_VERTEX_ATTRIBS];
 };
 
-constexpr size_t kVertexInputAttributesSize = sizeof(VertexInputAttributes);
-static_assert(kVertexInputAttributesSize == 64, "Size mismatch");
+constexpr size_t kPackedVertexInputAttributesSize = sizeof(PackedVertexInputAttributes);
+static_assert(kPackedVertexInputAttributesSize == 96, "Size mismatch");
 
-struct PackedRasterizationAndLogicOpStateBits final
+struct PackedInputAssemblyState final
 {
-    // Note: Currently only 2 subpasses possible.
-    uint16_t subpass : 1;
-    uint16_t depthClampEnable : 1;
-    uint16_t sampleShadingEnable : 1;
-    uint16_t alphaToCoverageEnable : 1;
-    uint16_t alphaToOneEnable : 1;
-    uint16_t rasterizationSamples : 6;
-    uint16_t logicOpEnable : 1;
-    uint16_t logicOp : 4;
+    struct
+    {
+        uint32_t topology : 4;
+
+        // Dynamic in VK_EXT_extended_dynamic_state2
+        uint32_t primitiveRestartEnable : 1;  // ds2
+
+        // Support for VK_EXT_extended_dynamic_state.  Used by GraphicsPipelineDesc::hash() to
+        // exclude |vertexStrides| from the hash
+        uint32_t supportsDynamicState1 : 1;
+        // Workaround driver bug with dynamic vertex stride.
+        uint32_t forceStaticVertexStrideState : 1;
+
+        // Whether the pipeline is robust
+        uint32_t isRobustContext : 1;
+
+        uint32_t padding : 24;
+    } bits;
 };
 
-constexpr size_t kPackedRasterizationAndLogicOpStateBitsSize =
-    sizeof(PackedRasterizationAndLogicOpStateBits);
-static_assert(kPackedRasterizationAndLogicOpStateBitsSize == 2, "Size check failed");
+constexpr size_t kPackedInputAssemblyStateSize = sizeof(PackedInputAssemblyState);
+static_assert(kPackedInputAssemblyStateSize == 4, "Size mismatch");
 
-struct PackedInputAssemblyAndMiscState final
-{
-    uint32_t topology : 4;
-    uint32_t patchVertices : 6;
-    uint32_t surfaceRotation : 1;
-    uint32_t viewportNegativeOneToOne : 1;
-    uint32_t depthBoundsTest : 1;
-    // 11-bit normalized instead of float to align the struct.
-    uint32_t minSampleShading : 11;
-    uint32_t blendEnableMask : 8;
-};
-
-constexpr size_t kPackedInputAssemblyAndMiscStateSize = sizeof(PackedInputAssemblyAndMiscState);
-static_assert(kPackedInputAssemblyAndMiscStateSize == 4, "Size check failed");
-
-struct PackedInputAssemblyAndRasterizationStateInfo final
-{
-    PackedRasterizationAndLogicOpStateBits bits;
-    // Note: Only up to 16xMSAA is supported in the Vulkan backend.
-    uint16_t sampleMask;
-    PackedInputAssemblyAndMiscState misc;
-};
-
-constexpr size_t kPackedInputAssemblyAndRasterizationStateSize =
-    sizeof(PackedInputAssemblyAndRasterizationStateInfo);
-static_assert(kPackedInputAssemblyAndRasterizationStateSize == 8, "Size check failed");
-
-struct StencilOps final
+struct PackedStencilOpState final
 {
     uint8_t fail : 4;
     uint8_t pass : 4;
@@ -435,16 +422,83 @@ struct StencilOps final
     uint8_t compare : 4;
 };
 
-constexpr size_t kStencilOpsSize = sizeof(StencilOps);
-static_assert(kStencilOpsSize == 2, "Size check failed");
-
-struct PackedStencilOpState final
-{
-    StencilOps ops;
-};
-
 constexpr size_t kPackedStencilOpSize = sizeof(PackedStencilOpState);
 static_assert(kPackedStencilOpSize == 2, "Size check failed");
+
+struct PackedPreRasterizationAndFragmentStates final
+{
+    struct
+    {
+        // Affecting VkPipelineViewportStateCreateInfo
+        uint32_t viewportNegativeOneToOne : 1;
+
+        // Affecting VkPipelineRasterizationStateCreateInfo
+        uint32_t depthClampEnable : 1;
+        // Dynamic in VK_EXT_extended_dynamic_state
+        uint32_t cullMode : 4;
+        uint32_t frontFace : 4;
+        // Dynamic in VK_EXT_extended_dynamic_state2
+        uint32_t rasterizerDiscardEnable : 1;
+        uint32_t depthBiasEnable : 1;
+
+        // Affecting VkPipelineTessellationStateCreateInfo
+        uint32_t patchVertices : 6;
+
+        // Affecting VkPipelineDepthStencilStateCreateInfo
+        uint32_t depthBoundsTest : 1;
+        // Dynamic in VK_EXT_extended_dynamic_state
+        uint32_t depthTest : 1;
+        uint32_t depthWrite : 1;
+        uint32_t stencilTest : 1;
+        uint32_t nonZeroStencilWriteMaskWorkaround : 1;
+        // Dynamic in VK_EXT_extended_dynamic_state2
+        uint32_t depthCompareOp : 4;
+
+        // Affecting specialization constants
+        uint32_t surfaceRotation : 1;
+
+        uint32_t padding : 4;
+    } bits;
+
+    // Affecting specialization constants
+    static_assert(gl::IMPLEMENTATION_MAX_DRAW_BUFFERS <= 8,
+                  "2 bits per draw buffer is needed for dither emulation");
+    uint16_t emulatedDitherControl;
+    uint16_t padding;
+
+    // Affecting VkPipelineDepthStencilStateCreateInfo
+    // Dynamic in VK_EXT_extended_dynamic_state
+    PackedStencilOpState front;
+    PackedStencilOpState back;
+};
+
+constexpr size_t kPackedPreRasterizationAndFragmentStatesSize =
+    sizeof(PackedPreRasterizationAndFragmentStates);
+static_assert(kPackedPreRasterizationAndFragmentStatesSize == 12, "Size check failed");
+
+struct PackedMultisampleAndSubpassState final
+{
+    struct
+    {
+        // Affecting VkPipelineMultisampleStateCreateInfo
+        // Note: Only up to 16xMSAA is supported in the Vulkan backend.
+        uint16_t sampleMask;
+        // Stored as minus one so sample count 16 can fit in 4 bits.
+        uint16_t rasterizationSamplesMinusOne : 4;
+        uint16_t sampleShadingEnable : 1;
+        uint16_t alphaToCoverageEnable : 1;
+        uint16_t alphaToOneEnable : 1;
+        // The subpass index affects both the shader stages and the fragment output similarly to
+        // multisampled state, so they are grouped together.
+        // Note: Currently only 2 subpasses possible.
+        uint16_t subpass : 1;
+        // 8-bit normalized instead of float to align the struct.
+        uint16_t minSampleShading : 8;
+    } bits;
+};
+
+constexpr size_t kPackedMultisampleAndSubpassStateSize = sizeof(PackedMultisampleAndSubpassState);
+static_assert(kPackedMultisampleAndSubpassStateSize == 4, "Size check failed");
 
 struct PackedColorBlendAttachmentState final
 {
@@ -459,88 +513,71 @@ struct PackedColorBlendAttachmentState final
 constexpr size_t kPackedColorBlendAttachmentStateSize = sizeof(PackedColorBlendAttachmentState);
 static_assert(kPackedColorBlendAttachmentStateSize == 4, "Size check failed");
 
-struct PackedColorBlendStateInfo final
+struct PackedColorBlendState final
 {
     uint8_t colorWriteMaskBits[gl::IMPLEMENTATION_MAX_DRAW_BUFFERS / 2];
     PackedColorBlendAttachmentState attachments[gl::IMPLEMENTATION_MAX_DRAW_BUFFERS];
 };
 
-constexpr size_t kPackedColorBlendStateSize = sizeof(PackedColorBlendStateInfo);
+constexpr size_t kPackedColorBlendStateSize = sizeof(PackedColorBlendState);
 static_assert(kPackedColorBlendStateSize == 36, "Size check failed");
 
-struct PackedDitherAndContextState final
+struct PackedBlendMaskAndLogicOpState final
 {
-    static_assert(gl::IMPLEMENTATION_MAX_DRAW_BUFFERS <= 8,
-                  "2 bits per draw buffer is needed for dither emulation");
-    uint16_t emulatedDitherControl;
-    uint16_t isRobustContext : 1;
-    uint16_t nonZeroStencilWriteMaskWorkaround : 1;
-    uint16_t unused : 14;
+    struct
+    {
+        uint32_t blendEnableMask : 8;
+        uint32_t logicOpEnable : 1;
+        // Dynamic in VK_EXT_extended_dynamic_state2
+        uint32_t logicOp : 4;
+
+        uint32_t padding : 19;
+    } bits;
 };
 
-// State that is dynamic in VK_EXT_extended_dynamic_state and 2.  These are placed at the end of the
-// pipeline description so they can be excluded from hash when the extension is present.
-//
-// The hash function takes the input as a multiple of 4 bytes.  VK_EXT_extended_dynamic_state2 has
-// too few bits to have a dedicated entry, and can be included with the bits for
-// VK_EXT_extended_dynamic_state.  Additionally, both extensions are promoted to core in Vulkan 1.3,
-// so eventually they are either both present or none.
-struct PackedDynamicState1And2 final
+constexpr size_t kPackedBlendMaskAndLogicOpStateSize = sizeof(PackedBlendMaskAndLogicOpState);
+static_assert(kPackedBlendMaskAndLogicOpStateSize == 4, "Size check failed");
+
+// The vertex input subset of the pipeline.
+struct PipelineVertexInputState final
 {
-    // From VK_EXT_extended_dynamic_state
-    uint32_t cullMode : 4;
-    uint32_t frontFace : 4;
-
-    uint32_t depthCompareOp : 4;
-
-    uint32_t depthTest : 1;
-    uint32_t depthWrite : 1;
-    uint32_t stencilTest : 1;
-
-    // From VK_EXT_extended_dynamic_state2
-    uint32_t rasterizerDiscardEnable : 1;
-    uint32_t depthBiasEnable : 1;
-    uint32_t primitiveRestartEnable : 1;
-
-    // Store support for VK_EXT_extended_dynamic_state/2 in the bits wasted here for padding.  This
-    // is to support GraphicsPipelineDesc::hash(), allowing it to exclude this state from the hash.
-    uint32_t supportsDynamicState1 : 1;
-    uint32_t supportsDynamicState2 : 1;
-    uint32_t forceStaticVertexStrideState : 1;
-
-    uint32_t padding : 11;
+    PackedInputAssemblyState inputAssembly;
+    PackedVertexInputAttributes vertex;
 };
 
-constexpr size_t kPackedDynamicState1And2Size = sizeof(PackedDynamicState1And2);
-static_assert(kPackedDynamicState1And2Size == 4, "Size check failed");
-
-struct PackedDynamicState1 final
+// The pre-rasterization and fragment shader subsets of the pipeline.  This is excluding
+// multisampled and render pass states which are shared with fragment output.
+struct PipelineShadersState final
 {
-    PackedStencilOpState front;
-    PackedStencilOpState back;
-
-    // Although technically stride can be any value in ES 2.0, in practice supporting stride
-    // greater than MAX_USHORT should not be that helpful. Note that stride limits are
-    // introduced in ES 3.1.
-    uint16_t vertexStrides[gl::MAX_VERTEX_ATTRIBS];
+    PackedPreRasterizationAndFragmentStates shaders;
 };
 
-constexpr size_t kPackedDynamicState1Size = sizeof(PackedDynamicState1);
-static_assert(kPackedDynamicState1Size == 36, "Size check failed");
-
-struct PackedDynamicState final
+// Multisampled and render pass states.
+struct PipelineSharedNonVertexInputState final
 {
-    PackedDynamicState1And2 ds1And2;
-    PackedDynamicState1 ds1;
+    PackedMultisampleAndSubpassState multisample;
+    RenderPassDesc renderPass;
 };
 
-constexpr size_t kPackedDynamicStateSize = sizeof(PackedDynamicState);
-static_assert(kPackedDynamicStateSize == 40, "Size check failed");
+// The fragment output subset of the pipeline.  This is excluding multisampled and render pass
+// states which are shared with the shader subsets.
+struct PipelineFragmentOutputState final
+{
+    PackedColorBlendState blend;
+    PackedBlendMaskAndLogicOpState blendMaskAndLogic;
+};
+
+constexpr size_t kGraphicsPipelineVertexInputStateSize =
+    kPackedVertexInputAttributesSize + kPackedInputAssemblyStateSize;
+constexpr size_t kGraphicsPipelineShadersStateSize = kPackedPreRasterizationAndFragmentStatesSize;
+constexpr size_t kGraphicsPipelineSharedNonVertexInputStateSize =
+    kPackedMultisampleAndSubpassStateSize + kRenderPassDescSize;
+constexpr size_t kGraphicsPipelineFragmentOutputStateSize =
+    kPackedColorBlendStateSize + kPackedBlendMaskAndLogicOpStateSize;
 
 constexpr size_t kGraphicsPipelineDescSumOfSizes =
-    kVertexInputAttributesSize + kRenderPassDescSize +
-    kPackedInputAssemblyAndRasterizationStateSize + kPackedColorBlendStateSize +
-    sizeof(PackedDitherAndContextState) + kPackedDynamicStateSize;
+    kGraphicsPipelineVertexInputStateSize + kGraphicsPipelineShadersStateSize +
+    kGraphicsPipelineSharedNonVertexInputStateSize + kGraphicsPipelineFragmentOutputStateSize;
 
 // Number of dirty bits in the dirty bit set.
 constexpr size_t kGraphicsPipelineDirtyBitBytes = 4;
@@ -633,14 +670,17 @@ class GraphicsPipelineDesc final
     void updateSampleShading(GraphicsPipelineTransitionBits *transition, bool enable, float value);
 
     // RenderPass description.
-    const RenderPassDesc &getRenderPassDesc() const { return mRenderPassDesc; }
+    const RenderPassDesc &getRenderPassDesc() const { return mSharedNonVertexInput.renderPass; }
 
     void setRenderPassDesc(const RenderPassDesc &renderPassDesc);
     void updateRenderPassDesc(GraphicsPipelineTransitionBits *transition,
                               const RenderPassDesc &renderPassDesc);
     void setRenderPassSampleCount(GLint samples);
     void setRenderPassFramebufferFetchMode(bool hasFramebufferFetch);
-    bool getRenderPassFramebufferFetchMode() const { return mRenderPassDesc.hasFramebufferFetch(); }
+    bool getRenderPassFramebufferFetchMode() const
+    {
+        return mSharedNonVertexInput.renderPass.hasFramebufferFetch();
+    }
 
     void setRenderPassColorAttachmentFormat(size_t colorIndexGL, angle::FormatID formatID);
 
@@ -721,50 +761,40 @@ class GraphicsPipelineDesc final
 
     void updateSurfaceRotation(GraphicsPipelineTransitionBits *transition,
                                const SurfaceRotation surfaceRotation);
-    bool getSurfaceRotation() const
-    {
-        return mInputAssemblyAndRasterizationStateInfo.misc.surfaceRotation;
-    }
+    bool getSurfaceRotation() const { return mShaders.shaders.bits.surfaceRotation; }
 
     void updateEmulatedDitherControl(GraphicsPipelineTransitionBits *transition, uint16_t value);
-    uint32_t getEmulatedDitherControl() const
-    {
-        return mDitherAndContextState.emulatedDitherControl;
-    }
+    uint32_t getEmulatedDitherControl() const { return mShaders.shaders.emulatedDitherControl; }
 
     void updateNonZeroStencilWriteMaskWorkaround(GraphicsPipelineTransitionBits *transition,
                                                  bool enabled);
 
     void setSupportsDynamicStateForTest(bool supports)
     {
-        mDynamicState.ds1And2.supportsDynamicState1 = supports;
-        mDynamicState.ds1And2.supportsDynamicState2 = supports;
+        mVertexInput.inputAssembly.bits.supportsDynamicState1        = supports;
+        mVertexInput.inputAssembly.bits.forceStaticVertexStrideState = false;
+        mShaders.shaders.bits.nonZeroStencilWriteMaskWorkaround      = false;
     }
 
     // Helpers to dump the state
-    const VertexInputAttributes &getVertexInputAttribsForLog() const { return mVertexInputAttribs; }
-    const RenderPassDesc &getRenderPassDescForLog() const { return mRenderPassDesc; }
-    const PackedInputAssemblyAndRasterizationStateInfo
-    getInputAssemblyAndRasterizationStateInfoForLog() const
+    const PipelineVertexInputState &getVertexInputStateForLog() const { return mVertexInput; }
+    const PipelineShadersState &getShadersStateForLog() const { return mShaders; }
+    const PipelineSharedNonVertexInputState &getSharedNonVertexInputStateForLog() const
     {
-        return mInputAssemblyAndRasterizationStateInfo;
+        return mSharedNonVertexInput;
     }
-    const PackedColorBlendStateInfo &getColorBlendStateInfoForLog() const
+    const PipelineFragmentOutputState &getFragmentOutputStateForLog() const
     {
-        return mColorBlendStateInfo;
+        return mFragmentOutput;
     }
-    const PackedDitherAndContextState &getDitherForLog() const { return mDitherAndContextState; }
-    const PackedDynamicState &getDynamicStateForLog() const { return mDynamicState; }
 
   private:
     void updateSubpass(GraphicsPipelineTransitionBits *transition, uint32_t subpass);
 
-    VertexInputAttributes mVertexInputAttribs;
-    RenderPassDesc mRenderPassDesc;
-    PackedInputAssemblyAndRasterizationStateInfo mInputAssemblyAndRasterizationStateInfo;
-    PackedColorBlendStateInfo mColorBlendStateInfo;
-    PackedDitherAndContextState mDitherAndContextState;
-    PackedDynamicState mDynamicState;
+    PipelineShadersState mShaders;
+    PipelineSharedNonVertexInputState mSharedNonVertexInput;
+    PipelineFragmentOutputState mFragmentOutput;
+    PipelineVertexInputState mVertexInput;
 };
 
 // Verify the packed pipeline description has no gaps in the packing.

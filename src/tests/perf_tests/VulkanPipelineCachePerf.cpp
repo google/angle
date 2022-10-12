@@ -19,7 +19,13 @@ namespace
 {
 constexpr unsigned int kIterationsPerStep = 100;
 
-class VulkanPipelineCachePerfTest : public ANGLEPerfTest
+struct Params
+{
+    bool withDynamicState = false;
+};
+
+class VulkanPipelineCachePerfTest : public ANGLEPerfTest,
+                                    public ::testing::WithParamInterface<Params>
 {
   public:
     VulkanPipelineCachePerfTest();
@@ -35,14 +41,12 @@ class VulkanPipelineCachePerfTest : public ANGLEPerfTest
     std::vector<vk::GraphicsPipelineDesc> mCacheMisses;
     size_t mMissIndex = 0;
 
-    bool mWithDynamicState;
-
   private:
     void randomizeDesc(vk::GraphicsPipelineDesc *desc);
 };
 
 VulkanPipelineCachePerfTest::VulkanPipelineCachePerfTest()
-    : ANGLEPerfTest("VulkanPipelineCachePerf", "", "", kIterationsPerStep), mWithDynamicState(false)
+    : ANGLEPerfTest("VulkanPipelineCachePerf", "", "", kIterationsPerStep), mRNG(0x12345678u)
 {}
 
 VulkanPipelineCachePerfTest::~VulkanPipelineCachePerfTest()
@@ -80,7 +84,7 @@ void VulkanPipelineCachePerfTest::randomizeDesc(vk::GraphicsPipelineDesc *desc)
     FillVectorWithRandomUBytes(&mRNG, &bytes);
     memcpy(desc, bytes.data(), sizeof(vk::GraphicsPipelineDesc));
 
-    desc->setSupportsDynamicStateForTest(mWithDynamicState);
+    desc->setSupportsDynamicStateForTest(GetParam().withDynamicState);
 }
 
 void VulkanPipelineCachePerfTest::step()
@@ -135,13 +139,12 @@ void VulkanPipelineCachePerfTest::step()
 
 }  // anonymous namespace
 
-TEST_F(VulkanPipelineCachePerfTest, Run)
+// Test performance of pipeline hash and look up in Vulkan
+TEST_P(VulkanPipelineCachePerfTest, Run)
 {
     run();
 }
 
-TEST_F(VulkanPipelineCachePerfTest, Run_WithDynamicState)
-{
-    mWithDynamicState = true;
-    run();
-}
+INSTANTIATE_TEST_SUITE_P(,
+                         VulkanPipelineCachePerfTest,
+                         ::testing::ValuesIn(std::vector<Params>{{Params{false}, Params{true}}}));
