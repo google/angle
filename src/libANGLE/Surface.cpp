@@ -325,7 +325,7 @@ Error Surface::prepareSwap(const gl::Context *context)
     return mImplementation->prepareSwap(context);
 }
 
-Error Surface::swap(const gl::Context *context)
+Error Surface::swap(gl::Context *context)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "egl::Surface::swap");
     context->onPreSwap();
@@ -337,7 +337,7 @@ Error Surface::swap(const gl::Context *context)
     return NoError();
 }
 
-Error Surface::swapWithDamage(const gl::Context *context, const EGLint *rects, EGLint n_rects)
+Error Surface::swapWithDamage(gl::Context *context, const EGLint *rects, EGLint n_rects)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "egl::Surface::swapWithDamage");
     context->onPreSwap();
@@ -349,7 +349,7 @@ Error Surface::swapWithDamage(const gl::Context *context, const EGLint *rects, E
     return NoError();
 }
 
-Error Surface::swapWithFrameToken(const gl::Context *context, EGLFrameTokenANGLE frameToken)
+Error Surface::swapWithFrameToken(gl::Context *context, EGLFrameTokenANGLE frameToken)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "egl::Surface::swapWithFrameToken");
     context->onPreSwap();

@@ -45,23 +45,31 @@ void CaptureCallToCaptureEGL(CaptureFuncT captureFunc, egl::Thread *thread, Args
 
 angle::CallCapture CaptureCreateNativeClientBufferANDROID(const egl::AttributeMap &attribMap,
                                                           EGLClientBuffer eglClientBuffer);
-angle::CallCapture CaptureEGLCreateImage(const gl::Context *context,
+angle::CallCapture CaptureEGLCreateImage(egl::Display *display,
+                                         gl::Context *context,
                                          EGLenum target,
                                          EGLClientBuffer buffer,
                                          const egl::AttributeMap &attributes,
                                          egl::Image *image);
 angle::CallCapture CaptureEGLDestroyImage(egl::Display *display, egl::Image *image);
 
-angle::CallCapture CaptureEGLCreatePbufferSurface(const AttributeMap &attrib_list,
+angle::CallCapture CaptureEGLCreatePbufferSurface(egl::Display *display,
+                                                  egl::Config *config,
+                                                  const AttributeMap &attrib_list,
                                                   egl::Surface *surface);
 
-angle::CallCapture CaptureEGLDestroySurface(Display *display, Surface *surface);
+angle::CallCapture CaptureEGLDestroySurface(egl::Display *display, Surface *surface);
 
-angle::CallCapture CaptureEGLBindTexImage(egl::Surface *surface, EGLint buffer);
+angle::CallCapture CaptureEGLBindTexImage(egl::Display *display,
+                                          egl::Surface *surface,
+                                          EGLint buffer);
 
-angle::CallCapture CaptureEGLReleaseTexImage(egl::Surface *surface, EGLint buffer);
+angle::CallCapture CaptureEGLReleaseTexImage(egl::Display *display,
+                                             egl::Surface *surface,
+                                             EGLint buffer);
 
-angle::CallCapture CaptureEGLMakeCurrent(Surface *drawSurface,
+angle::CallCapture CaptureEGLMakeCurrent(egl::Display *display,
+                                         Surface *drawSurface,
                                          Surface *readSurface,
                                          gl::Context *context);
 }  // namespace egl

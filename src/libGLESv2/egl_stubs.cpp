@@ -72,7 +72,7 @@ EGLBoolean BindTexImage(Thread *thread, Display *display, Surface *eglSurface, E
         ANGLE_EGL_TRY_RETURN(thread, eglSurface->bindTexImage(context, textureObject, buffer),
                              "eglBindTexImage", GetSurfaceIfValid(display, eglSurface), EGL_FALSE);
 
-        ANGLE_CAPTURE_EGL(EGLBindTexImage, thread, eglSurface, buffer);
+        ANGLE_CAPTURE_EGL(EGLBindTexImage, thread, display, eglSurface, buffer);
     }
 
     thread->setSuccess();
@@ -159,7 +159,7 @@ EGLImage CreateImage(Thread *thread,
         return EGL_NO_IMAGE;
     }
 
-    ANGLE_CAPTURE_EGL(EGLCreateImage, thread, context, target, buffer, attributes, image);
+    ANGLE_CAPTURE_EGL(EGLCreateImage, thread, display, context, target, buffer, attributes, image);
 
     thread->setSuccess();
     return static_cast<EGLImage>(image);
@@ -195,7 +195,7 @@ EGLSurface CreatePbufferSurface(Thread *thread,
     ANGLE_EGL_TRY_RETURN(thread, display->createPbufferSurface(configuration, attributes, &surface),
                          "eglCreatePbufferSurface", GetDisplayIfValid(display), EGL_NO_SURFACE);
 
-    ANGLE_CAPTURE_EGL(EGLCreatePbufferSurface, thread, attributes, surface);
+    ANGLE_CAPTURE_EGL(EGLCreatePbufferSurface, thread, display, configuration, attributes, surface);
 
     return static_cast<EGLSurface>(surface);
 }
@@ -503,7 +503,7 @@ EGLBoolean MakeCurrent(Thread *thread,
             display->makeCurrent(thread, previousContext, drawSurface, readSurface, context),
             "eglMakeCurrent", GetContextIfValid(display, context), EGL_FALSE);
 
-        ANGLE_CAPTURE_EGL(EGLMakeCurrent, thread, drawSurface, readSurface, context);
+        ANGLE_CAPTURE_EGL(EGLMakeCurrent, thread, display, drawSurface, readSurface, context);
     }
 
     thread->setSuccess();
@@ -605,7 +605,7 @@ EGLBoolean ReleaseTexImage(Thread *thread, Display *display, Surface *eglSurface
             ANGLE_EGL_TRY_RETURN(thread, eglSurface->releaseTexImage(thread->getContext(), buffer),
                                  "eglReleaseTexImage", GetSurfaceIfValid(display, eglSurface),
                                  EGL_FALSE);
-            ANGLE_CAPTURE_EGL(EGLReleaseTexImage, thread, eglSurface, buffer);
+            ANGLE_CAPTURE_EGL(EGLReleaseTexImage, thread, display, eglSurface, buffer);
         }
     }
     thread->setSuccess();

@@ -59,8 +59,8 @@ EGLBoolean EGLAPIENTRY EGL_CopyBuffers(EGLDisplay dpy,
 
     Thread *thread = egl::GetCurrentThread();
 
-    egl::Display *dpyPacked = PackParam<egl::Display *>(dpy);
-    Surface *surfacePacked  = PackParam<Surface *>(surface);
+    egl::Display *dpyPacked     = PackParam<egl::Display *>(dpy);
+    egl::Surface *surfacePacked = PackParam<egl::Surface *>(surface);
 
     ANGLE_EGL_VALIDATE(thread, CopyBuffers, GetDisplayIfValid(dpyPacked), EGLBoolean, dpyPacked,
                        surfacePacked, target);
@@ -83,7 +83,7 @@ EGLContext EGLAPIENTRY EGL_CreateContext(EGLDisplay dpy,
     Thread *thread = egl::GetCurrentThread();
 
     egl::Display *dpyPacked               = PackParam<egl::Display *>(dpy);
-    Config *configPacked                  = PackParam<Config *>(config);
+    egl::Config *configPacked             = PackParam<egl::Config *>(config);
     gl::Context *share_contextPacked      = PackParam<gl::Context *>(share_context);
     const AttributeMap &attrib_listPacked = PackParam<const AttributeMap &>(attrib_list);
 
@@ -107,7 +107,7 @@ EGLSurface EGLAPIENTRY EGL_CreatePbufferSurface(EGLDisplay dpy,
     Thread *thread = egl::GetCurrentThread();
 
     egl::Display *dpyPacked               = PackParam<egl::Display *>(dpy);
-    Config *configPacked                  = PackParam<Config *>(config);
+    egl::Config *configPacked             = PackParam<egl::Config *>(config);
     const AttributeMap &attrib_listPacked = PackParam<const AttributeMap &>(attrib_list);
 
     ANGLE_EGL_VALIDATE(thread, CreatePbufferSurface, GetDisplayIfValid(dpyPacked), EGLSurface,
@@ -131,7 +131,7 @@ EGLSurface EGLAPIENTRY EGL_CreatePixmapSurface(EGLDisplay dpy,
     Thread *thread = egl::GetCurrentThread();
 
     egl::Display *dpyPacked               = PackParam<egl::Display *>(dpy);
-    Config *configPacked                  = PackParam<Config *>(config);
+    egl::Config *configPacked             = PackParam<egl::Config *>(config);
     const AttributeMap &attrib_listPacked = PackParam<const AttributeMap &>(attrib_list);
 
     ANGLE_EGL_VALIDATE(thread, CreatePixmapSurface, GetDisplayIfValid(dpyPacked), EGLSurface,
@@ -155,7 +155,7 @@ EGLSurface EGLAPIENTRY EGL_CreateWindowSurface(EGLDisplay dpy,
     Thread *thread = egl::GetCurrentThread();
 
     egl::Display *dpyPacked               = PackParam<egl::Display *>(dpy);
-    Config *configPacked                  = PackParam<Config *>(config);
+    egl::Config *configPacked             = PackParam<egl::Config *>(config);
     const AttributeMap &attrib_listPacked = PackParam<const AttributeMap &>(attrib_list);
 
     ANGLE_EGL_VALIDATE(thread, CreateWindowSurface, GetDisplayIfValid(dpyPacked), EGLSurface,
@@ -192,8 +192,8 @@ EGLBoolean EGLAPIENTRY EGL_DestroySurface(EGLDisplay dpy, EGLSurface surface)
 
     Thread *thread = egl::GetCurrentThread();
 
-    egl::Display *dpyPacked = PackParam<egl::Display *>(dpy);
-    Surface *surfacePacked  = PackParam<Surface *>(surface);
+    egl::Display *dpyPacked     = PackParam<egl::Display *>(dpy);
+    egl::Surface *surfacePacked = PackParam<egl::Surface *>(surface);
 
     ANGLE_EGL_VALIDATE(thread, DestroySurface, GetDisplayIfValid(dpyPacked), EGLBoolean, dpyPacked,
                        surfacePacked);
@@ -215,8 +215,8 @@ EGLBoolean EGLAPIENTRY EGL_GetConfigAttrib(EGLDisplay dpy,
 
     Thread *thread = egl::GetCurrentThread();
 
-    egl::Display *dpyPacked = PackParam<egl::Display *>(dpy);
-    Config *configPacked    = PackParam<Config *>(config);
+    egl::Display *dpyPacked   = PackParam<egl::Display *>(dpy);
+    egl::Config *configPacked = PackParam<egl::Config *>(config);
 
     ANGLE_EGL_VALIDATE(thread, GetConfigAttrib, GetDisplayIfValid(dpyPacked), EGLBoolean, dpyPacked,
                        configPacked, attribute, value);
@@ -345,10 +345,10 @@ EGLBoolean EGLAPIENTRY EGL_MakeCurrent(EGLDisplay dpy,
 
     Thread *thread = egl::GetCurrentThread();
 
-    egl::Display *dpyPacked = PackParam<egl::Display *>(dpy);
-    Surface *drawPacked     = PackParam<Surface *>(draw);
-    Surface *readPacked     = PackParam<Surface *>(read);
-    gl::Context *ctxPacked  = PackParam<gl::Context *>(ctx);
+    egl::Display *dpyPacked  = PackParam<egl::Display *>(dpy);
+    egl::Surface *drawPacked = PackParam<egl::Surface *>(draw);
+    egl::Surface *readPacked = PackParam<egl::Surface *>(read);
+    gl::Context *ctxPacked   = PackParam<gl::Context *>(ctx);
 
     ANGLE_EGL_VALIDATE(thread, MakeCurrent, GetDisplayIfValid(dpyPacked), EGLBoolean, dpyPacked,
                        drawPacked, readPacked, ctxPacked);
@@ -410,8 +410,8 @@ EGLBoolean EGLAPIENTRY EGL_QuerySurface(EGLDisplay dpy,
 
     Thread *thread = egl::GetCurrentThread();
 
-    egl::Display *dpyPacked = PackParam<egl::Display *>(dpy);
-    Surface *surfacePacked  = PackParam<Surface *>(surface);
+    egl::Display *dpyPacked     = PackParam<egl::Display *>(dpy);
+    egl::Surface *surfacePacked = PackParam<egl::Surface *>(surface);
 
     ANGLE_EGL_VALIDATE(thread, QuerySurface, GetDisplayIfValid(dpyPacked), EGLBoolean, dpyPacked,
                        surfacePacked, attribute, value);
@@ -429,8 +429,8 @@ EGLBoolean EGLAPIENTRY EGL_SwapBuffers(EGLDisplay dpy, EGLSurface surface)
 
     Thread *thread = egl::GetCurrentThread();
 
-    egl::Display *dpyPacked = PackParam<egl::Display *>(dpy);
-    Surface *surfacePacked  = PackParam<Surface *>(surface);
+    egl::Display *dpyPacked     = PackParam<egl::Display *>(dpy);
+    egl::Surface *surfacePacked = PackParam<egl::Surface *>(surface);
 
     ANGLE_EGL_VALIDATE(thread, SwapBuffers, GetDisplayIfValid(dpyPacked), EGLBoolean, dpyPacked,
                        surfacePacked);
@@ -490,8 +490,8 @@ EGLBoolean EGLAPIENTRY EGL_BindTexImage(EGLDisplay dpy, EGLSurface surface, EGLi
 
     Thread *thread = egl::GetCurrentThread();
 
-    egl::Display *dpyPacked = PackParam<egl::Display *>(dpy);
-    Surface *surfacePacked  = PackParam<Surface *>(surface);
+    egl::Display *dpyPacked     = PackParam<egl::Display *>(dpy);
+    egl::Surface *surfacePacked = PackParam<egl::Surface *>(surface);
 
     ANGLE_EGL_VALIDATE(thread, BindTexImage, GetDisplayIfValid(dpyPacked), EGLBoolean, dpyPacked,
                        surfacePacked, buffer);
@@ -509,8 +509,8 @@ EGLBoolean EGLAPIENTRY EGL_ReleaseTexImage(EGLDisplay dpy, EGLSurface surface, E
 
     Thread *thread = egl::GetCurrentThread();
 
-    egl::Display *dpyPacked = PackParam<egl::Display *>(dpy);
-    Surface *surfacePacked  = PackParam<Surface *>(surface);
+    egl::Display *dpyPacked     = PackParam<egl::Display *>(dpy);
+    egl::Surface *surfacePacked = PackParam<egl::Surface *>(surface);
 
     ANGLE_EGL_VALIDATE(thread, ReleaseTexImage, GetDisplayIfValid(dpyPacked), EGLBoolean, dpyPacked,
                        surfacePacked, buffer);
@@ -532,8 +532,8 @@ EGLBoolean EGLAPIENTRY EGL_SurfaceAttrib(EGLDisplay dpy,
 
     Thread *thread = egl::GetCurrentThread();
 
-    egl::Display *dpyPacked = PackParam<egl::Display *>(dpy);
-    Surface *surfacePacked  = PackParam<Surface *>(surface);
+    egl::Display *dpyPacked     = PackParam<egl::Display *>(dpy);
+    egl::Surface *surfacePacked = PackParam<egl::Surface *>(surface);
 
     ANGLE_EGL_VALIDATE(thread, SurfaceAttrib, GetDisplayIfValid(dpyPacked), EGLBoolean, dpyPacked,
                        surfacePacked, attribute, value);
@@ -588,7 +588,7 @@ EGLSurface EGLAPIENTRY EGL_CreatePbufferFromClientBuffer(EGLDisplay dpy,
     Thread *thread = egl::GetCurrentThread();
 
     egl::Display *dpyPacked               = PackParam<egl::Display *>(dpy);
-    Config *configPacked                  = PackParam<Config *>(config);
+    egl::Config *configPacked             = PackParam<egl::Config *>(config);
     const AttributeMap &attrib_listPacked = PackParam<const AttributeMap &>(attrib_list);
 
     ANGLE_EGL_VALIDATE(thread, CreatePbufferFromClientBuffer, GetDisplayIfValid(dpyPacked),
@@ -663,7 +663,7 @@ EGLint EGLAPIENTRY EGL_ClientWaitSync(EGLDisplay dpy, EGLSync sync, EGLint flags
     Thread *thread = egl::GetCurrentThread();
 
     egl::Display *dpyPacked = PackParam<egl::Display *>(dpy);
-    Sync *syncPacked        = PackParam<Sync *>(sync);
+    egl::Sync *syncPacked   = PackParam<egl::Sync *>(sync);
 
     ANGLE_EGL_VALIDATE(thread, ClientWaitSync, GetDisplayIfValid(dpyPacked), EGLint, dpyPacked,
                        syncPacked, flags, timeout);
@@ -711,7 +711,7 @@ EGLSurface EGLAPIENTRY EGL_CreatePlatformPixmapSurface(EGLDisplay dpy,
     Thread *thread = egl::GetCurrentThread();
 
     egl::Display *dpyPacked               = PackParam<egl::Display *>(dpy);
-    Config *configPacked                  = PackParam<Config *>(config);
+    egl::Config *configPacked             = PackParam<egl::Config *>(config);
     const AttributeMap &attrib_listPacked = PackParam<const AttributeMap &>(attrib_list);
 
     ANGLE_EGL_VALIDATE(thread, CreatePlatformPixmapSurface, GetDisplayIfValid(dpyPacked),
@@ -736,7 +736,7 @@ EGLSurface EGLAPIENTRY EGL_CreatePlatformWindowSurface(EGLDisplay dpy,
     Thread *thread = egl::GetCurrentThread();
 
     egl::Display *dpyPacked               = PackParam<egl::Display *>(dpy);
-    Config *configPacked                  = PackParam<Config *>(config);
+    egl::Config *configPacked             = PackParam<egl::Config *>(config);
     const AttributeMap &attrib_listPacked = PackParam<const AttributeMap &>(attrib_list);
 
     ANGLE_EGL_VALIDATE(thread, CreatePlatformWindowSurface, GetDisplayIfValid(dpyPacked),
@@ -774,7 +774,7 @@ EGLBoolean EGLAPIENTRY EGL_DestroyImage(EGLDisplay dpy, EGLImage image)
     Thread *thread = egl::GetCurrentThread();
 
     egl::Display *dpyPacked = PackParam<egl::Display *>(dpy);
-    Image *imagePacked      = PackParam<Image *>(image);
+    egl::Image *imagePacked = PackParam<egl::Image *>(image);
 
     ANGLE_EGL_VALIDATE(thread, DestroyImage, GetDisplayIfValid(dpyPacked), EGLBoolean, dpyPacked,
                        imagePacked);
@@ -792,7 +792,7 @@ EGLBoolean EGLAPIENTRY EGL_DestroySync(EGLDisplay dpy, EGLSync sync)
     Thread *thread = egl::GetCurrentThread();
 
     egl::Display *dpyPacked = PackParam<egl::Display *>(dpy);
-    Sync *syncPacked        = PackParam<Sync *>(sync);
+    egl::Sync *syncPacked   = PackParam<egl::Sync *>(sync);
 
     ANGLE_EGL_VALIDATE(thread, DestroySync, GetDisplayIfValid(dpyPacked), EGLBoolean, dpyPacked,
                        syncPacked);
@@ -836,7 +836,7 @@ EGLBoolean EGLAPIENTRY EGL_GetSyncAttrib(EGLDisplay dpy,
     Thread *thread = egl::GetCurrentThread();
 
     egl::Display *dpyPacked = PackParam<egl::Display *>(dpy);
-    Sync *syncPacked        = PackParam<Sync *>(sync);
+    egl::Sync *syncPacked   = PackParam<egl::Sync *>(sync);
 
     ANGLE_EGL_VALIDATE(thread, GetSyncAttrib, GetDisplayIfValid(dpyPacked), EGLBoolean, dpyPacked,
                        syncPacked, attribute, value);
@@ -854,7 +854,7 @@ EGLBoolean EGLAPIENTRY EGL_WaitSync(EGLDisplay dpy, EGLSync sync, EGLint flags)
     Thread *thread = egl::GetCurrentThread();
 
     egl::Display *dpyPacked = PackParam<egl::Display *>(dpy);
-    Sync *syncPacked        = PackParam<Sync *>(sync);
+    egl::Sync *syncPacked   = PackParam<egl::Sync *>(sync);
 
     ANGLE_EGL_VALIDATE(thread, WaitSync, GetDisplayIfValid(dpyPacked), EGLBoolean, dpyPacked,
                        syncPacked, flags);

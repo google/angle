@@ -649,7 +649,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
         return mTransformFeedbackMap;
     }
 
-    void onPreSwap() const;
+    void onPreSwap();
 
     Program *getActiveLinkedProgram() const;
 

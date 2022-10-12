@@ -1251,16 +1251,15 @@ CL_PACKED_TYPES = {
 
 EGL_PACKED_TYPES = {
     "EGLContext": "gl::Context *",
-    "EGLConfig": "Config *",
-    "EGLDeviceEXT": "Device *",
-    # Needs an explicit namespace to avoid an X11 namespace collision.
+    "EGLConfig": "egl::Config *",
+    "EGLDeviceEXT": "egl::Device *",
     "EGLDisplay": "egl::Display *",
-    "EGLImage": "Image *",
-    "EGLImageKHR": "Image *",
-    "EGLStreamKHR": "Stream *",
-    "EGLSurface": "Surface *",
-    "EGLSync": "Sync *",
-    "EGLSyncKHR": "Sync *",
+    "EGLImage": "egl::Image *",
+    "EGLImageKHR": "egl::Image *",
+    "EGLStreamKHR": "egl::Stream *",
+    "EGLSurface": "egl::Surface *",
+    "EGLSync": "egl::Sync *",
+    "EGLSyncKHR": "egl::Sync *",
 }
 
 
@@ -1612,19 +1611,20 @@ def get_capture_param_type_name(param_type):
     # EGL types are special
     for egl_type, angle_type in EGL_PACKED_TYPES.items():
         if angle_type == param_type:
-            return egl_type
+            param_type = angle_type
 
     param_type = param_type.replace("*", "")
     param_type = param_type.replace("&", "")
     param_type = param_type.replace("const", "")
     param_type = param_type.replace("struct", "")
+    param_type = param_type.replace("egl::", "egl_")
+    param_type = param_type.replace("gl::", "gl_")
     param_type = param_type.strip()
 
-    if "EGL" not in param_type:
-        if is_const and param_type != 'AttributeMap':
-            param_type += "Const"
-        for x in range(pointer_count):
-            param_type += "Pointer"
+    if is_const and param_type != 'AttributeMap':
+        param_type += "Const"
+    for x in range(pointer_count):
+        param_type += "Pointer"
 
     return param_type
 
@@ -2147,19 +2147,21 @@ def add_namespace(param_type):
     if param_type == 'AHardwareBufferConstPointer' or param_type == 'charConstPointer':
         return param_type
 
-    if param_type[0:2] == "GL" or param_type[0:3] == "EGL" or "void" in param_type:
-        return param_type
-
     # ANGLE namespaced EGL types
     egl_namespace = [
         'CompositorTiming',
-        'DevicePointer',
         'ObjectType',
-        'StreamPointer',
         'Timestamp',
     ]
 
-    if param_type in egl_namespace:
+    if param_type[0:2] == "GL" or param_type[0:3] == "EGL" or "void" in param_type:
+        return param_type
+
+    if param_type.startswith('gl_'):
+        return param_type.replace('gl_', 'gl::')
+    elif param_type.startswith('egl_'):
+        return param_type.replace('egl_', 'egl::')
+    elif param_type in egl_namespace:
         return "egl::" + param_type
     else:
         return "gl::" + param_type
@@ -2187,12 +2189,20 @@ def get_param_type_type(param_type):
     return get_gl_pointer_type(param_type)
 
 
+def is_id_type(t):
+    return t.endswith('ID') and not t.endswith('ANDROID')
+
+
+def is_id_pointer_type(t):
+    return t.endswith("IDConstPointer") or t.endswith("IDPointer") and not 'ANDROID' in t
+
+
 def get_gl_param_type_type(param_type):
     if not is_packed_enum_param_type(param_type):
         return get_gl_pointer_type(param_type)
     else:
         base_type = param_type.replace("Pointer", "").replace("Const", "")
-        if base_type[-2:] == "ID":
+        if is_id_type(base_type):
             replace_type = "GLuint"
         else:
             replace_type = "GLenum"
@@ -2236,10 +2246,7 @@ def format_write_param_type_to_stream_case(param_type):
 
 
 def get_resource_id_types(all_param_types):
-    return [
-        t[:-2]
-        for t in filter(lambda t: t.endswith("ID") and not t.endswith("ANDROID"), all_param_types)
-    ]
+    return [t[:-2] for t in filter(lambda t: is_id_type(t), all_param_types)]
 
 
 def format_resource_id_types(all_param_types):
@@ -2315,9 +2322,7 @@ def format_param_type_to_resource_id_type_case(param_type):
 
 
 def format_param_type_resource_id_cases(all_param_types):
-    id_types = filter(
-        lambda t: (t.endswith("ID") and not t.endswith("ANDROID")) or t.endswith("IDConstPointer")
-        or t.endswith("IDPointer"), all_param_types)
+    id_types = filter(lambda t: is_id_type(t) or is_id_pointer_type(t), all_param_types)
     return "\n".join([format_param_type_to_resource_id_type_case(t) for t in id_types])
 
 

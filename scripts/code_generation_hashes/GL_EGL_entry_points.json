@@ -6,7 +6,7 @@
   "scripts/entry_point_packed_gl_enums.json":
     "44a89e71f42598b0596ef4c25b290dff",
   "scripts/generate_entry_points.py":
-    "d4e281eab325bd59232925cf7e99da36",
+    "18dd48631e551dcadf8b687953d3c6cb",
   "scripts/gl_angle_ext.xml":
     "8dd9662655c39ce22fecdc2449594e54",
   "scripts/registry_xml.py":
@@ -78,13 +78,13 @@
   "src/libANGLE/capture/frame_capture_replay_autogen.cpp":
     "f1c2b5949709f05f71aeddee6d00d701",
   "src/libANGLE/capture/frame_capture_utils_autogen.cpp":
-    "90caecf105e7f7a500561d4c5447844b",
+    "c87dd3000aef4270b40b98deeb497144",
   "src/libANGLE/capture/frame_capture_utils_autogen.h":
-    "c7b47636edf70a086788d26505ed4050",
+    "5bcab4ec3a25b1894bd1715581a7b1d3",
   "src/libANGLE/validationCL_autogen.h":
     "0022d0cdb6a9e2ef4a59b71164f62333",
   "src/libANGLE/validationEGL_autogen.h":
-    "f2d2dacaa4d71f47002422663fc7ce67",
+    "faf3b8bbd187a84bc685e58d83a54795",
   "src/libANGLE/validationES1_autogen.h":
     "99af5e328690ae78d7724a80e94cfac5",
   "src/libANGLE/validationES2_autogen.h":
@@ -112,21 +112,21 @@
   "src/libGLESv2/cl_stubs_autogen.h":
     "6d880c6b65284192b5842f0e42ad2741",
   "src/libGLESv2/egl_ext_stubs_autogen.h":
-    "897ab98ae6d032876d73e42708bd95e5",
+    "ad66c66eb865391a94455f6e0d49aa59",
   "src/libGLESv2/egl_get_labeled_object_data.json":
     "2f4148b2ddf34e62670e32c5e6da4937",
   "src/libGLESv2/egl_stubs_autogen.h":
-    "6439daa350c1663e71dd0af37dcc91df",
+    "675f5593b21609c9f77ede2ae6400df5",
   "src/libGLESv2/entry_points_cl_autogen.cpp":
     "9d5320f3b59bb43408aa2646019ceaa0",
   "src/libGLESv2/entry_points_cl_autogen.h":
     "dde2f94c3004874a7da995dae69da811",
   "src/libGLESv2/entry_points_egl_autogen.cpp":
-    "03779202479ef4063616c9dbe253788d",
+    "2ae6b7456e2e8a858bbaf06ab62246fa",
   "src/libGLESv2/entry_points_egl_autogen.h":
     "3bc7a8df9deadd7cfd615d0cfad0c6a8",
   "src/libGLESv2/entry_points_egl_ext_autogen.cpp":
-    "104244d8913340f73808065850ba36e3",
+    "46e86754277c35b101784854532b2e5c",
   "src/libGLESv2/entry_points_egl_ext_autogen.h":
     "132314c90c7f1a104d41f911316c169d",
   "src/libGLESv2/entry_points_gl_1_autogen.cpp":

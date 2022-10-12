@@ -847,6 +847,14 @@ bool IsEmulatedCompressedFormat(GLenum format);
 namespace egl
 {
 MessageType ErrorCodeToMessageType(EGLint errorCode);
+
+struct Config;
+class Device;
+class Display;
+class Image;
+class Surface;
+class Stream;
+class Sync;
 }  // namespace egl
 
 namespace egl_gl

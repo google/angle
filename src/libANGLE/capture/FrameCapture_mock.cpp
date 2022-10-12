@@ -38,7 +38,7 @@ FrameCapture::~FrameCapture() {}
 
 FrameCaptureShared::FrameCaptureShared() : mEnabled(false) {}
 FrameCaptureShared::~FrameCaptureShared() {}
-void FrameCaptureShared::onEndFrame(const gl::Context *context) {}
+void FrameCaptureShared::onEndFrame(gl::Context *context) {}
 void FrameCaptureShared::onMakeCurrent(const gl::Context *context, const egl::Surface *drawSurface)
 {}
 void FrameCaptureShared::onDestroyContext(const gl::Context *context) {}
