@@ -14,8 +14,6 @@
 #include "libANGLE/EGLSync.h"
 #include "libANGLE/Surface.h"
 #include "libANGLE/Thread.h"
-#include "libANGLE/capture/capture_egl.h"
-#include "libANGLE/capture/frame_capture_utils_autogen.h"
 #include "libANGLE/capture/gl_enum_utils_autogen.h"
 #include "libANGLE/queryutils.h"
 #include "libANGLE/validationEGL.h"
@@ -71,8 +69,6 @@ EGLBoolean BindTexImage(Thread *thread, Display *display, Surface *eglSurface, E
         gl::Texture *textureObject = context->getTextureByType(type);
         ANGLE_EGL_TRY_RETURN(thread, eglSurface->bindTexImage(context, textureObject, buffer),
                              "eglBindTexImage", GetSurfaceIfValid(display, eglSurface), EGL_FALSE);
-
-        ANGLE_CAPTURE_EGL(EGLBindTexImage, thread, display, eglSurface, buffer);
     }
 
     thread->setSuccess();
@@ -159,8 +155,6 @@ EGLImage CreateImage(Thread *thread,
         return EGL_NO_IMAGE;
     }
 
-    ANGLE_CAPTURE_EGL(EGLCreateImage, thread, display, context, target, buffer, attributes, image);
-
     thread->setSuccess();
     return static_cast<EGLImage>(image);
 }
@@ -194,8 +188,6 @@ EGLSurface CreatePbufferSurface(Thread *thread,
     Surface *surface = nullptr;
     ANGLE_EGL_TRY_RETURN(thread, display->createPbufferSurface(configuration, attributes, &surface),
                          "eglCreatePbufferSurface", GetDisplayIfValid(display), EGL_NO_SURFACE);
-
-    ANGLE_CAPTURE_EGL(EGLCreatePbufferSurface, thread, display, configuration, attributes, surface);
 
     return static_cast<EGLSurface>(surface);
 }
@@ -302,16 +294,12 @@ EGLBoolean DestroyImage(Thread *thread, Display *display, Image *img)
                          GetDisplayIfValid(display), EGL_FALSE);
     display->destroyImage(img);
 
-    ANGLE_CAPTURE_EGL(EGLDestroyImage, thread, display, img);
-
     thread->setSuccess();
     return EGL_TRUE;
 }
 
 EGLBoolean DestroySurface(Thread *thread, Display *display, Surface *eglSurface)
 {
-    ANGLE_CAPTURE_EGL(EGLDestroySurface, thread, display, eglSurface);
-
     ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglDestroySurface",
                          GetDisplayIfValid(display), EGL_FALSE);
 
@@ -502,8 +490,6 @@ EGLBoolean MakeCurrent(Thread *thread,
             thread,
             display->makeCurrent(thread, previousContext, drawSurface, readSurface, context),
             "eglMakeCurrent", GetContextIfValid(display, context), EGL_FALSE);
-
-        ANGLE_CAPTURE_EGL(EGLMakeCurrent, thread, display, drawSurface, readSurface, context);
     }
 
     thread->setSuccess();
@@ -605,7 +591,6 @@ EGLBoolean ReleaseTexImage(Thread *thread, Display *display, Surface *eglSurface
             ANGLE_EGL_TRY_RETURN(thread, eglSurface->releaseTexImage(thread->getContext(), buffer),
                                  "eglReleaseTexImage", GetSurfaceIfValid(display, eglSurface),
                                  EGL_FALSE);
-            ANGLE_CAPTURE_EGL(EGLReleaseTexImage, thread, display, eglSurface, buffer);
         }
     }
     thread->setSuccess();

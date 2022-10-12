@@ -19,7 +19,6 @@ using namespace angle;
 
 namespace gl
 {
-
 CallCapture CaptureBlendBarrier(const State &glState, bool isCallValid)
 {
     ParamBuffer paramBuffer;

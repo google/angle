@@ -19,7 +19,6 @@ using namespace angle;
 
 namespace gl
 {
-
 CallCapture CaptureActiveTexture(const State &glState, bool isCallValid, GLenum texture)
 {
     ParamBuffer paramBuffer;

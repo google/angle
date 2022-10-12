@@ -19,7 +19,6 @@ using namespace angle;
 
 namespace gl
 {
-
 CallCapture CaptureBeginPerfMonitorAMD(const State &glState, bool isCallValid, GLuint monitor)
 {
     ParamBuffer paramBuffer;

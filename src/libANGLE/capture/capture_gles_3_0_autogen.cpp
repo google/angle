@@ -19,7 +19,6 @@ using namespace angle;
 
 namespace gl
 {
-
 CallCapture CaptureBeginQuery(const State &glState,
                               bool isCallValid,
                               QueryType targetPacked,

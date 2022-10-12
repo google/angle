@@ -21,7 +21,6 @@ namespace gl
 {
 
 // GL 2.0
-
 CallCapture CaptureGetVertexAttribdv(const State &glState,
                                      bool isCallValid,
                                      GLuint index,

@@ -71,6 +71,9 @@ void WriteParamCaptureReplay(std::ostream &os, const CallCapture &call, const Pa
             WriteParamValueReplay<ParamType::TEGLAttribPointer>(os, call,
                                                                 param.value.EGLAttribPointerVal);
             break;
+        case ParamType::TEGLBoolean:
+            WriteParamValueReplay<ParamType::TEGLBoolean>(os, call, param.value.EGLBooleanVal);
+            break;
         case ParamType::TEGLBooleanPointer:
             WriteParamValueReplay<ParamType::TEGLBooleanPointer>(os, call,
                                                                  param.value.EGLBooleanPointerVal);
@@ -83,9 +86,18 @@ void WriteParamCaptureReplay(std::ostream &os, const CallCapture &call, const Pa
             WriteParamValueReplay<ParamType::TEGLConfigPointer>(os, call,
                                                                 param.value.EGLConfigPointerVal);
             break;
+        case ParamType::TEGLContext:
+            WriteParamValueReplay<ParamType::TEGLContext>(os, call, param.value.EGLContextVal);
+            break;
         case ParamType::TEGLDEBUGPROCKHR:
             WriteParamValueReplay<ParamType::TEGLDEBUGPROCKHR>(os, call,
                                                                param.value.EGLDEBUGPROCKHRVal);
+            break;
+        case ParamType::TEGLDeviceEXT:
+            WriteParamValueReplay<ParamType::TEGLDeviceEXT>(os, call, param.value.EGLDeviceEXTVal);
+            break;
+        case ParamType::TEGLDisplay:
+            WriteParamValueReplay<ParamType::TEGLDisplay>(os, call, param.value.EGLDisplayVal);
             break;
         case ParamType::TEGLFrameTokenANGLE:
             WriteParamValueReplay<ParamType::TEGLFrameTokenANGLE>(
@@ -94,6 +106,12 @@ void WriteParamCaptureReplay(std::ostream &os, const CallCapture &call, const Pa
         case ParamType::TEGLGetBlobFuncANDROID:
             WriteParamValueReplay<ParamType::TEGLGetBlobFuncANDROID>(
                 os, call, param.value.EGLGetBlobFuncANDROIDVal);
+            break;
+        case ParamType::TEGLImage:
+            WriteParamValueReplay<ParamType::TEGLImage>(os, call, param.value.EGLImageVal);
+            break;
+        case ParamType::TEGLImageKHR:
+            WriteParamValueReplay<ParamType::TEGLImageKHR>(os, call, param.value.EGLImageKHRVal);
             break;
         case ParamType::TEGLLabelKHR:
             WriteParamValueReplay<ParamType::TEGLLabelKHR>(os, call, param.value.EGLLabelKHRVal);
@@ -116,6 +134,18 @@ void WriteParamCaptureReplay(std::ostream &os, const CallCapture &call, const Pa
         case ParamType::TEGLSetBlobFuncANDROID:
             WriteParamValueReplay<ParamType::TEGLSetBlobFuncANDROID>(
                 os, call, param.value.EGLSetBlobFuncANDROIDVal);
+            break;
+        case ParamType::TEGLStreamKHR:
+            WriteParamValueReplay<ParamType::TEGLStreamKHR>(os, call, param.value.EGLStreamKHRVal);
+            break;
+        case ParamType::TEGLSurface:
+            WriteParamValueReplay<ParamType::TEGLSurface>(os, call, param.value.EGLSurfaceVal);
+            break;
+        case ParamType::TEGLSync:
+            WriteParamValueReplay<ParamType::TEGLSync>(os, call, param.value.EGLSyncVal);
+            break;
+        case ParamType::TEGLSyncKHR:
+            WriteParamValueReplay<ParamType::TEGLSyncKHR>(os, call, param.value.EGLSyncKHRVal);
             break;
         case ParamType::TEGLTime:
             WriteParamValueReplay<ParamType::TEGLTime>(os, call, param.value.EGLTimeVal);
@@ -647,55 +677,75 @@ const char *ParamTypeToString(ParamType paramType)
         case ParamType::TDrawElementsType:
             return "GLenum";
         case ParamType::TEGLAttribConstPointer:
-            return "const GLenum *";
+            return "const EGLAttrib *";
         case ParamType::TEGLAttribKHRPointer:
-            return "GLenum *";
+            return "EGLAttribKHR *";
         case ParamType::TEGLAttribPointer:
-            return "GLenum *";
+            return "EGLAttrib *";
+        case ParamType::TEGLBoolean:
+            return "EGLBoolean";
         case ParamType::TEGLBooleanPointer:
-            return "GLenum *";
+            return "EGLBoolean *";
         case ParamType::TEGLClientBuffer:
-            return "GLenum";
+            return "EGLClientBuffer";
         case ParamType::TEGLConfigPointer:
-            return "GLenum *";
+            return "EGLConfig *";
+        case ParamType::TEGLContext:
+            return "EGLContext";
         case ParamType::TEGLDEBUGPROCKHR:
-            return "GLenum";
+            return "EGLDEBUGPROCKHR";
+        case ParamType::TEGLDeviceEXT:
+            return "EGLDeviceEXT";
+        case ParamType::TEGLDisplay:
+            return "EGLDisplay";
         case ParamType::TEGLFrameTokenANGLE:
-            return "GLenum";
+            return "EGLFrameTokenANGLE";
         case ParamType::TEGLGetBlobFuncANDROID:
-            return "GLenum";
+            return "EGLGetBlobFuncANDROID";
+        case ParamType::TEGLImage:
+            return "EGLImage";
+        case ParamType::TEGLImageKHR:
+            return "EGLImageKHR";
         case ParamType::TEGLLabelKHR:
-            return "GLenum";
+            return "EGLLabelKHR";
         case ParamType::TEGLNativeDisplayType:
-            return "GLenum";
+            return "EGLNativeDisplayType";
         case ParamType::TEGLNativePixmapType:
-            return "GLenum";
+            return "EGLNativePixmapType";
         case ParamType::TEGLNativeWindowType:
-            return "GLenum";
+            return "EGLNativeWindowType";
         case ParamType::TEGLObjectKHR:
-            return "GLenum";
+            return "EGLObjectKHR";
         case ParamType::TEGLSetBlobFuncANDROID:
-            return "GLenum";
+            return "EGLSetBlobFuncANDROID";
+        case ParamType::TEGLStreamKHR:
+            return "EGLStreamKHR";
+        case ParamType::TEGLSurface:
+            return "EGLSurface";
+        case ParamType::TEGLSync:
+            return "EGLSync";
+        case ParamType::TEGLSyncKHR:
+            return "EGLSyncKHR";
         case ParamType::TEGLTime:
-            return "GLenum";
+            return "EGLTime";
         case ParamType::TEGLTimeKHR:
-            return "GLenum";
+            return "EGLTimeKHR";
         case ParamType::TEGLenum:
-            return "GLenum";
+            return "EGLenum";
         case ParamType::TEGLint:
-            return "GLenum";
+            return "EGLint";
         case ParamType::TEGLintConstPointer:
-            return "const GLenum *";
+            return "const EGLint *";
         case ParamType::TEGLintPointer:
-            return "GLenum *";
+            return "EGLint *";
         case ParamType::TEGLnsecsANDROID:
-            return "GLenum";
+            return "EGLnsecsANDROID";
         case ParamType::TEGLnsecsANDROIDPointer:
-            return "GLenum *";
+            return "EGLnsecsANDROID *";
         case ParamType::TEGLuint64KHR:
-            return "GLenum";
+            return "EGLuint64KHR";
         case ParamType::TEGLuint64KHRPointer:
-            return "GLenum *";
+            return "EGLuint64KHR *";
         case ParamType::TFenceNVID:
             return "GLuint";
         case ParamType::TFenceNVIDConstPointer:

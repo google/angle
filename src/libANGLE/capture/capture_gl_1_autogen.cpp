@@ -21,7 +21,6 @@ namespace gl
 {
 
 // GL 1.0
-
 CallCapture CaptureAccum(const State &glState, bool isCallValid, GLenum op, GLfloat value)
 {
     ParamBuffer paramBuffer;
@@ -4458,7 +4457,6 @@ CallCapture CaptureVertex4sv(const State &glState, bool isCallValid, const GLsho
 }
 
 // GL 1.1
-
 CallCapture CaptureAreTexturesResident(const State &glState,
                                        bool isCallValid,
                                        GLsizei n,
@@ -4783,7 +4781,6 @@ CallCapture CaptureTexSubImage1D(const State &glState,
 // GL 1.2
 
 // GL 1.3
-
 CallCapture CaptureCompressedTexImage1D(const State &glState,
                                         bool isCallValid,
                                         GLenum target,
@@ -5638,7 +5635,6 @@ CallCapture CaptureMultiTexCoord4sv(const State &glState,
 }
 
 // GL 1.4
-
 CallCapture CaptureFogCoordPointer(const State &glState,
                                    bool isCallValid,
                                    GLenum type,
@@ -6470,7 +6466,6 @@ CallCapture CaptureWindowPos3sv(const State &glState, bool isCallValid, const GL
 }
 
 // GL 1.5
-
 CallCapture CaptureGetBufferSubData(const State &glState,
                                     bool isCallValid,
                                     GLenum target,

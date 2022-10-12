@@ -21,7 +21,6 @@ namespace gl
 {
 
 // GL 3.0
-
 CallCapture CaptureBeginConditionalRender(const State &glState,
                                           bool isCallValid,
                                           GLuint id,
@@ -479,7 +478,6 @@ CallCapture CaptureVertexAttribI4usv(const State &glState,
 }
 
 // GL 3.1
-
 CallCapture CaptureGetActiveUniformName(const State &glState,
                                         bool isCallValid,
                                         ShaderProgramID programPacked,
@@ -539,7 +537,6 @@ CallCapture CapturePrimitiveRestartIndex(const State &glState, bool isCallValid,
 }
 
 // GL 3.2
-
 CallCapture CaptureMultiDrawElementsBaseVertex(const State &glState,
                                                bool isCallValid,
                                                PrimitiveMode modePacked,
@@ -669,7 +666,6 @@ CallCapture CaptureTexImage3DMultisample(const State &glState,
 }
 
 // GL 3.3
-
 CallCapture CaptureBindFragDataLocationIndexed(const State &glState,
                                                bool isCallValid,
                                                ShaderProgramID programPacked,

@@ -180,7 +180,7 @@ void GL_APIENTRY GL_{name}({params})
         {{
             context->{name_lower_no_suffix}({internal_params});
         }}
-        ANGLE_CAPTURE_GL({name}, isCallValid, {capture_params});
+        ANGLE_CAPTURE_GL({name}, isCallValid, {gl_capture_params});
     }}
     else
     {{
@@ -208,7 +208,7 @@ TEMPLATE_GLES_ENTRY_POINT_WITH_RETURN = """\
         {{
             returnValue = GetDefaultReturnValue<angle::EntryPoint::GL{name}, {return_type}>();
     }}
-        ANGLE_CAPTURE_GL({name}, isCallValid, {capture_params}, returnValue);
+        ANGLE_CAPTURE_GL({name}, isCallValid, {gl_capture_params}, returnValue);
     }}
     else
     {{
@@ -233,6 +233,7 @@ void EGLAPIENTRY EGL_{name}({params})
     ANGLE_EGL_VALIDATE_VOID(thread, {name}, {labeled_object}, {internal_params});
 
     {name}(thread{comma_if_needed}{internal_params});
+    ANGLE_CAPTURE_EGL({name}, true, {egl_capture_params});
 }}
 """
 
@@ -256,7 +257,9 @@ TEMPLATE_EGL_ENTRY_POINT_WITH_RETURN = """\
 
     ANGLE_EGL_VALIDATE(thread, {name}, {labeled_object}, {return_type}{comma_if_needed}{internal_params});
 
-    return {name}(thread{comma_if_needed}{internal_params});
+    {return_type} returnValue = {name}(thread{comma_if_needed}{internal_params});
+    ANGLE_CAPTURE_EGL({name}, true, {egl_capture_params}, returnValue);
+    return returnValue;
 }}
 """
 
@@ -534,10 +537,10 @@ TEMPLATE_CAPTURE_HEADER = """\
 #include "common/PackedEnums.h"
 #include "libANGLE/capture/FrameCapture.h"
 
-namespace gl
+namespace {namespace}
 {{
 {prototypes}
-}}  // namespace gl
+}}  // namespace {namespace}
 
 #endif  // LIBANGLE_CAPTURE_{annotation_upper}_AUTOGEN_H_
 """
@@ -562,13 +565,13 @@ TEMPLATE_CAPTURE_SOURCE = """\
 
 using namespace angle;
 
-namespace gl
+namespace {namespace}
 {{
 {capture_methods}
-}}  // namespace gl
+}}  // namespace {namespace}
 """
 
-TEMPLATE_CAPTURE_METHOD_WITH_RETURN_VALUE = """
+TEMPLATE_CAPTURE_METHOD_WITH_RETURN_VALUE = """\
 CallCapture Capture{short_name}({params_with_type}, {return_value_type_original} returnValue)
 {{
     ParamBuffer paramBuffer;
@@ -579,18 +582,18 @@ CallCapture Capture{short_name}({params_with_type}, {return_value_type_original}
     InitParamValue(ParamType::T{return_value_type_custom}, returnValue, &returnValueCapture.value);
     paramBuffer.addReturnValue(std::move(returnValueCapture));
 
-    return CallCapture(angle::EntryPoint::GL{short_name}, std::move(paramBuffer));
+    return CallCapture(angle::EntryPoint::{api_upper}{short_name}, std::move(paramBuffer));
 }}
 """
 
-TEMPLATE_CAPTURE_METHOD_NO_RETURN_VALUE = """
+TEMPLATE_CAPTURE_METHOD_NO_RETURN_VALUE = """\
 CallCapture Capture{short_name}({params_with_type})
 {{
     ParamBuffer paramBuffer;
 
     {parameter_captures}
 
-    return CallCapture(angle::EntryPoint::GL{short_name}, std::move(paramBuffer));
+    return CallCapture(angle::EntryPoint::{api_upper}{short_name}, std::move(paramBuffer));
 }}
 """
 
@@ -881,6 +884,7 @@ EGL_HEADER_INCLUDES = """\
 EGL_SOURCE_INCLUDES = """\
 #include "libGLESv2/entry_points_egl_autogen.h"
 
+#include "libANGLE/capture/capture_egl_autogen.h"
 #include "libANGLE/entry_points_utils.h"
 #include "libANGLE/validationEGL_autogen.h"
 #include "libGLESv2/egl_stubs_autogen.h"
@@ -899,6 +903,7 @@ EGL_EXT_HEADER_INCLUDES = """\
 EGL_EXT_SOURCE_INCLUDES = """\
 #include "libGLESv2/entry_points_egl_ext_autogen.h"
 
+#include "libANGLE/capture/capture_egl_autogen.h"
 #include "libANGLE/entry_points_utils.h"
 #include "libANGLE/validationEGL_autogen.h"
 #include "libGLESv2/egl_ext_stubs_autogen.h"
@@ -1262,6 +1267,8 @@ EGL_PACKED_TYPES = {
     "EGLSyncKHR": "egl::Sync *",
 }
 
+CAPTURE_BLOCKLIST = ['eglGetProcAddress']
+
 
 def is_aliasing_excepted(api, cmd_name):
     return api == apis.GLES and cmd_name in ALIASING_EXCEPTIONS
@@ -1578,8 +1585,10 @@ def format_entry_point_def(api, command_node, cmd_name, proto, params, cmd_packe
             ", ".join(pass_params),
         "comma_if_needed":
             ", " if len(params) > 0 else "",
-        "capture_params":
+        "gl_capture_params":
             ", ".join(["context"] + internal_params),
+        "egl_capture_params":
+            ", ".join(["thread"] + internal_params),
         "validate_params":
             ", ".join(["context"] + [entry_point_name] + internal_params),
         "format_params":
@@ -1632,14 +1641,17 @@ def get_capture_param_type_name(param_type):
 def format_capture_method(api, command, cmd_name, proto, params, all_param_types,
                           capture_pointer_funcs, cmd_packed_gl_enums, packed_param_types):
 
+    context_param_typed = 'egl::Thread *thread' if api == apis.EGL else 'const State &glState'
+    context_param_name = 'thread' if api == apis.EGL else 'glState'
+
     packed_gl_enums = get_packed_enums(api, cmd_packed_gl_enums, cmd_name, packed_param_types,
                                        params)
 
     params_with_type = get_internal_params(api, cmd_name,
-                                           ["const State &glState", "bool isCallValid"] + params,
+                                           [context_param_typed, "bool isCallValid"] + params,
                                            cmd_packed_gl_enums, packed_param_types)
     params_just_name = ", ".join(
-        ["glState", "isCallValid"] +
+        [context_param_name, "isCallValid"] +
         [just_the_name_packed(param, packed_gl_enums) for param in params])
 
     parameter_captures = []
@@ -1648,15 +1660,16 @@ def format_capture_method(api, command, cmd_name, proto, params, all_param_types
         param_name = just_the_name_packed(param, packed_gl_enums)
         param_type = just_the_type_packed(param, packed_gl_enums).strip()
 
-        # TODO(http://anglebug.com/4035: Add support for egl::AttributeMap.
         if 'AttributeMap' in param_type:
-            # egl::AttributeMap is too complex for ParamCapture to handle it.
+            capture = 'paramBuffer.addParam(CaptureAttributeMap(%s));' % param_name
+            parameter_captures += [capture]
             continue
 
         pointer_count = param_type.count("*")
         capture_param_type = get_capture_param_type_name(param_type)
 
-        if pointer_count > 0:
+        # With EGL capture, we don't currently support capturing specific pointer params.
+        if pointer_count > 0 and api != apis.EGL:
             params = params_just_name
             capture_name = "Capture%s_%s" % (strip_api_prefix(cmd_name), param_name)
             capture = TEMPLATE_PARAMETER_CAPTURE_POINTER.format(
@@ -1680,23 +1693,32 @@ def format_capture_method(api, command, cmd_name, proto, params, all_param_types
             capture = TEMPLATE_PARAMETER_CAPTURE_VALUE.format(
                 name=param_name, type=capture_param_type)
 
-        all_param_types.add(capture_param_type)
-
-        parameter_captures += [capture]
+        # For specific methods we can't easily parse their types. Work around this by omitting
+        # parameter captures, but keeping the capture method as a mostly empty stub.
+        if cmd_name not in CAPTURE_BLOCKLIST:
+            all_param_types.add(capture_param_type)
+            parameter_captures += [capture]
 
     return_type = proto[:-len(cmd_name)].strip()
+    capture_return_type = get_capture_param_type_name(return_type)
+    if capture_return_type != 'void':
+        if cmd_name in CAPTURE_BLOCKLIST:
+            params_with_type += ", %s returnValue" % capture_return_type
+        else:
+            all_param_types.add(capture_return_type)
 
     format_args = {
+        "api_upper": "EGL" if api == apis.EGL else "GL",
         "full_name": cmd_name,
         "short_name": strip_api_prefix(cmd_name),
         "params_with_type": params_with_type,
         "params_just_name": params_just_name,
         "parameter_captures": "\n    ".join(parameter_captures),
         "return_value_type_original": return_type,
-        "return_value_type_custom": get_capture_param_type_name(return_type)
+        "return_value_type_custom": capture_return_type,
     }
 
-    if return_type == "void":
+    if return_type == "void" or cmd_name in CAPTURE_BLOCKLIST:
         return TEMPLATE_CAPTURE_METHOD_NO_RETURN_VALUE.format(**format_args)
     else:
         return TEMPLATE_CAPTURE_METHOD_WITH_RETURN_VALUE.format(**format_args)
@@ -1781,8 +1803,9 @@ def format_validation_proto(api, cmd_name, proto, params, cmd_packed_gl_enums, p
 
 
 def format_capture_proto(api, cmd_name, proto, params, cmd_packed_gl_enums, packed_param_types):
+    context_param_typed = 'egl::Thread *thread' if api == apis.EGL else 'const State &glState'
     internal_params = get_internal_params(api, cmd_name,
-                                          ["const State &glState", "bool isCallValid"] + params,
+                                          [context_param_typed, "bool isCallValid"] + params,
                                           cmd_packed_gl_enums, packed_param_types)
     return_type = proto[:-len(cmd_name)].strip()
     if return_type != "void":
@@ -1827,6 +1850,7 @@ class ANGLEEntryPoints(registry_xml.EntryPoints):
             self.validation_protos.append(
                 format_validation_proto(self.api, cmd_name, proto_text, param_text,
                                         cmd_packed_enums, packed_param_types))
+
             self.capture_protos.append(
                 format_capture_proto(self.api, cmd_name, proto_text, param_text, cmd_packed_enums,
                                      packed_param_types))
@@ -2103,15 +2127,19 @@ def write_gl_validation_header(annotation, comment, protos, source):
                                    TEMPLATE_GL_VALIDATION_HEADER)
 
 
-def write_capture_header(annotation, comment, protos, capture_pointer_funcs):
+def write_capture_header(api, annotation, comment, protos, capture_pointer_funcs):
+    ns = 'egl' if api == apis.EGL else 'gl'
+    combined_protos = ["\n// Method Captures\n"] + protos
+    if capture_pointer_funcs:
+        combined_protos += ["\n// Parameter Captures\n"] + capture_pointer_funcs
     content = TEMPLATE_CAPTURE_HEADER.format(
         script_name=os.path.basename(sys.argv[0]),
-        data_source_name="gl.xml and gl_angle_ext.xml",
+        data_source_name="%s.xml and %s_angle_ext.xml" % (ns, ns),
         annotation_lower=annotation.lower(),
         annotation_upper=annotation.upper(),
         comment=comment,
-        prototypes="\n".join(["\n// Method Captures\n"] + protos + ["\n// Parameter Captures\n"] +
-                             capture_pointer_funcs))
+        namespace=ns,
+        prototypes="\n".join(combined_protos))
 
     path = path_to(os.path.join("libANGLE", "capture"), "capture_%s_autogen.h" % annotation)
 
@@ -2120,13 +2148,15 @@ def write_capture_header(annotation, comment, protos, capture_pointer_funcs):
         out.close()
 
 
-def write_capture_source(annotation_with_dash, annotation_no_dash, comment, capture_methods):
+def write_capture_source(api, annotation_with_dash, annotation_no_dash, comment, capture_methods):
+    ns = 'egl' if api == apis.EGL else 'gl'
     content = TEMPLATE_CAPTURE_SOURCE.format(
         script_name=os.path.basename(sys.argv[0]),
-        data_source_name="gl.xml and gl_angle_ext.xml",
+        data_source_name="%s.xml and %s_angle_ext.xml" % (ns, ns),
         annotation_with_dash=annotation_with_dash,
         annotation_no_dash=annotation_no_dash,
         comment=comment,
+        namespace=ns,
         capture_methods="\n".join(capture_methods))
 
     path = path_to(
@@ -2138,7 +2168,8 @@ def write_capture_source(annotation_with_dash, annotation_no_dash, comment, capt
 
 
 def is_packed_enum_param_type(param_type):
-    return param_type[0:2] != "GL" and "void" not in param_type
+    return not param_type.startswith("GL") and not param_type.startswith(
+        "EGL") and "void" not in param_type
 
 
 def add_namespace(param_type):
@@ -2198,16 +2229,14 @@ def is_id_pointer_type(t):
 
 
 def get_gl_param_type_type(param_type):
-    if not is_packed_enum_param_type(param_type):
-        return get_gl_pointer_type(param_type)
-    else:
+    if is_packed_enum_param_type(param_type):
         base_type = param_type.replace("Pointer", "").replace("Const", "")
         if is_id_type(base_type):
             replace_type = "GLuint"
         else:
             replace_type = "GLenum"
         param_type = param_type.replace(base_type, replace_type)
-        return get_gl_pointer_type(param_type)
+    return get_gl_pointer_type(param_type)
 
 
 def get_param_type_union_name(param_type):
@@ -2672,6 +2701,8 @@ def main():
             '../src/libANGLE/Context_gles_3_1_autogen.h',
             '../src/libANGLE/Context_gles_3_2_autogen.h',
             '../src/libANGLE/Context_gles_ext_autogen.h',
+            '../src/libANGLE/capture/capture_egl_autogen.cpp',
+            '../src/libANGLE/capture/capture_egl_autogen.h',
             '../src/libANGLE/capture/capture_gl_1_autogen.cpp',
             '../src/libANGLE/capture/capture_gl_1_autogen.h',
             '../src/libANGLE/capture/capture_gl_2_autogen.cpp',
@@ -2829,9 +2860,9 @@ def main():
         write_gl_validation_header(validation_annotation, "ES %s" % comment, eps.validation_protos,
                                    "gl.xml and gl_angle_ext.xml")
 
-        write_capture_header('gles_' + version, comment, eps.capture_protos,
+        write_capture_header(apis.GLES, 'gles_' + version, comment, eps.capture_protos,
                              eps.capture_pointer_funcs)
-        write_capture_source('gles_' + version, validation_annotation, comment,
+        write_capture_source(apis.GLES, 'gles_' + version, validation_annotation, comment,
                              eps.capture_methods)
 
     # After we finish with the main entry points, we process the extensions.
@@ -2970,9 +3001,10 @@ def main():
                    source_includes, "libGLESv2", "gl.xml")
 
         # Capture files
-        write_capture_header(annotation.lower(), name, capture_protos, capture_pointer_funcs)
-        write_capture_source(annotation.lower(), 'GL' + str(major_version) + '_autogen', name,
-                             capture_defs)
+        write_capture_header(apis.GL, annotation.lower(), name, capture_protos,
+                             capture_pointer_funcs)
+        write_capture_source(apis.GL, annotation.lower(), 'GL' + str(major_version) + '_autogen',
+                             name, capture_defs)
 
         # Validation files
         write_gl_validation_header("GL%s" % major_version, name, validation_protos, "gl.xml")
@@ -3088,6 +3120,8 @@ def main():
     libegl_ep_defs = []
     libegl_windows_def_exports = []
     egl_commands = []
+    egl_capture_protos = []
+    egl_capture_methods = []
 
     for major_version, minor_version in registry_xml.EGL_VERSIONS:
         version = "%d_%d" % (major_version, minor_version)
@@ -3116,6 +3150,8 @@ def main():
         libegl_ep_defs += [comment] + eps.export_defs
         egl_validation_protos += [comment] + eps.validation_protos
         libegl_windows_def_exports += [win_def_comment] + get_exports(eglxml.commands[version])
+        egl_capture_protos += eps.capture_protos
+        egl_capture_methods += eps.capture_methods
 
     egl_decls.append("} // extern \"C\"")
     egl_defs.append("} // extern \"C\"")
@@ -3151,6 +3187,8 @@ def main():
         libegl_ep_defs += [comment] + eps.export_defs
         egl_validation_protos += [comment] + eps.validation_protos
         libegl_windows_def_exports += [win_def_comment] + get_exports(ext_cmd_names)
+        egl_capture_protos += eps.capture_protos
+        egl_capture_methods += eps.capture_methods
 
         # Avoid writing out entry points defined by a prior extension.
         for dupe in eglxml.ext_dupes[extension_name]:
@@ -3169,6 +3207,9 @@ def main():
     write_stubs_header("EGL", "egl_ext", "EXT extension", "egl.xml and egl_angle_ext.xml",
                        EGL_EXT_STUBS_HEADER_PATH, eglxml.all_commands, egl_ext_commands,
                        EGLEntryPoints.get_packed_enums(), EGL_PACKED_TYPES)
+
+    write_capture_header(apis.EGL, 'egl', 'EGL', egl_capture_protos, [])
+    write_capture_source(apis.EGL, 'egl', 'EGL', 'all', egl_capture_methods)
 
     wglxml = registry_xml.RegistryXML('wgl.xml')
 
@@ -3200,8 +3241,9 @@ def main():
 
     write_gl_validation_header("ESEXT", "ES extension", ext_validation_protos,
                                "gl.xml and gl_angle_ext.xml")
-    write_capture_header("gles_ext", "extension", ext_capture_protos, ext_capture_pointer_funcs)
-    write_capture_source("gles_ext", "ESEXT", "extension", ext_capture_methods)
+    write_capture_header(apis.GLES, "gles_ext", "extension", ext_capture_protos,
+                         ext_capture_pointer_funcs)
+    write_capture_source(apis.GLES, "gles_ext", "ESEXT", "extension", ext_capture_methods)
 
     write_context_api_decls(glesdecls, "gles")
     write_context_api_decls(desktop_gl_decls, "gl")

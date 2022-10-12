@@ -31,18 +31,28 @@ enum class ParamType
     TEGLAttribConstPointer,
     TEGLAttribKHRPointer,
     TEGLAttribPointer,
+    TEGLBoolean,
     TEGLBooleanPointer,
     TEGLClientBuffer,
     TEGLConfigPointer,
+    TEGLContext,
     TEGLDEBUGPROCKHR,
+    TEGLDeviceEXT,
+    TEGLDisplay,
     TEGLFrameTokenANGLE,
     TEGLGetBlobFuncANDROID,
+    TEGLImage,
+    TEGLImageKHR,
     TEGLLabelKHR,
     TEGLNativeDisplayType,
     TEGLNativePixmapType,
     TEGLNativeWindowType,
     TEGLObjectKHR,
     TEGLSetBlobFuncANDROID,
+    TEGLStreamKHR,
+    TEGLSurface,
+    TEGLSync,
+    TEGLSyncKHR,
     TEGLTime,
     TEGLTimeKHR,
     TEGLenum,
@@ -179,7 +189,7 @@ enum class ParamType
     TvoidPointerPointer,
 };
 
-constexpr uint32_t kParamTypeCount = 160;
+constexpr uint32_t kParamTypeCount = 170;
 
 union ParamValue
 {
@@ -197,18 +207,28 @@ union ParamValue
     const EGLAttrib *EGLAttribConstPointerVal;
     EGLAttribKHR *EGLAttribKHRPointerVal;
     EGLAttrib *EGLAttribPointerVal;
+    EGLBoolean EGLBooleanVal;
     EGLBoolean *EGLBooleanPointerVal;
     EGLClientBuffer EGLClientBufferVal;
     EGLConfig *EGLConfigPointerVal;
+    EGLContext EGLContextVal;
     EGLDEBUGPROCKHR EGLDEBUGPROCKHRVal;
+    EGLDeviceEXT EGLDeviceEXTVal;
+    EGLDisplay EGLDisplayVal;
     EGLFrameTokenANGLE EGLFrameTokenANGLEVal;
     EGLGetBlobFuncANDROID EGLGetBlobFuncANDROIDVal;
+    EGLImage EGLImageVal;
+    EGLImageKHR EGLImageKHRVal;
     EGLLabelKHR EGLLabelKHRVal;
     EGLNativeDisplayType EGLNativeDisplayTypeVal;
     EGLNativePixmapType EGLNativePixmapTypeVal;
     EGLNativeWindowType EGLNativeWindowTypeVal;
     EGLObjectKHR EGLObjectKHRVal;
     EGLSetBlobFuncANDROID EGLSetBlobFuncANDROIDVal;
+    EGLStreamKHR EGLStreamKHRVal;
+    EGLSurface EGLSurfaceVal;
+    EGLSync EGLSyncVal;
+    EGLSyncKHR EGLSyncKHRVal;
     EGLTime EGLTimeVal;
     EGLTimeKHR EGLTimeKHRVal;
     EGLenum EGLenumVal;
@@ -445,6 +465,12 @@ inline EGLAttrib *GetParamVal<ParamType::TEGLAttribPointer, EGLAttrib *>(const P
 }
 
 template <>
+inline EGLBoolean GetParamVal<ParamType::TEGLBoolean, EGLBoolean>(const ParamValue &value)
+{
+    return value.EGLBooleanVal;
+}
+
+template <>
 inline EGLBoolean *GetParamVal<ParamType::TEGLBooleanPointer, EGLBoolean *>(const ParamValue &value)
 {
     return value.EGLBooleanPointerVal;
@@ -464,10 +490,28 @@ inline EGLConfig *GetParamVal<ParamType::TEGLConfigPointer, EGLConfig *>(const P
 }
 
 template <>
+inline EGLContext GetParamVal<ParamType::TEGLContext, EGLContext>(const ParamValue &value)
+{
+    return value.EGLContextVal;
+}
+
+template <>
 inline EGLDEBUGPROCKHR GetParamVal<ParamType::TEGLDEBUGPROCKHR, EGLDEBUGPROCKHR>(
     const ParamValue &value)
 {
     return value.EGLDEBUGPROCKHRVal;
+}
+
+template <>
+inline EGLDeviceEXT GetParamVal<ParamType::TEGLDeviceEXT, EGLDeviceEXT>(const ParamValue &value)
+{
+    return value.EGLDeviceEXTVal;
+}
+
+template <>
+inline EGLDisplay GetParamVal<ParamType::TEGLDisplay, EGLDisplay>(const ParamValue &value)
+{
+    return value.EGLDisplayVal;
 }
 
 template <>
@@ -482,6 +526,18 @@ inline EGLGetBlobFuncANDROID GetParamVal<ParamType::TEGLGetBlobFuncANDROID, EGLG
     const ParamValue &value)
 {
     return value.EGLGetBlobFuncANDROIDVal;
+}
+
+template <>
+inline EGLImage GetParamVal<ParamType::TEGLImage, EGLImage>(const ParamValue &value)
+{
+    return value.EGLImageVal;
+}
+
+template <>
+inline EGLImageKHR GetParamVal<ParamType::TEGLImageKHR, EGLImageKHR>(const ParamValue &value)
+{
+    return value.EGLImageKHRVal;
 }
 
 template <>
@@ -522,6 +578,30 @@ inline EGLSetBlobFuncANDROID GetParamVal<ParamType::TEGLSetBlobFuncANDROID, EGLS
     const ParamValue &value)
 {
     return value.EGLSetBlobFuncANDROIDVal;
+}
+
+template <>
+inline EGLStreamKHR GetParamVal<ParamType::TEGLStreamKHR, EGLStreamKHR>(const ParamValue &value)
+{
+    return value.EGLStreamKHRVal;
+}
+
+template <>
+inline EGLSurface GetParamVal<ParamType::TEGLSurface, EGLSurface>(const ParamValue &value)
+{
+    return value.EGLSurfaceVal;
+}
+
+template <>
+inline EGLSync GetParamVal<ParamType::TEGLSync, EGLSync>(const ParamValue &value)
+{
+    return value.EGLSyncVal;
+}
+
+template <>
+inline EGLSyncKHR GetParamVal<ParamType::TEGLSyncKHR, EGLSyncKHR>(const ParamValue &value)
+{
+    return value.EGLSyncKHRVal;
 }
 
 template <>
@@ -1449,18 +1529,30 @@ T AccessParamValue(ParamType paramType, const ParamValue &value)
             return GetParamVal<ParamType::TEGLAttribKHRPointer, T>(value);
         case ParamType::TEGLAttribPointer:
             return GetParamVal<ParamType::TEGLAttribPointer, T>(value);
+        case ParamType::TEGLBoolean:
+            return GetParamVal<ParamType::TEGLBoolean, T>(value);
         case ParamType::TEGLBooleanPointer:
             return GetParamVal<ParamType::TEGLBooleanPointer, T>(value);
         case ParamType::TEGLClientBuffer:
             return GetParamVal<ParamType::TEGLClientBuffer, T>(value);
         case ParamType::TEGLConfigPointer:
             return GetParamVal<ParamType::TEGLConfigPointer, T>(value);
+        case ParamType::TEGLContext:
+            return GetParamVal<ParamType::TEGLContext, T>(value);
         case ParamType::TEGLDEBUGPROCKHR:
             return GetParamVal<ParamType::TEGLDEBUGPROCKHR, T>(value);
+        case ParamType::TEGLDeviceEXT:
+            return GetParamVal<ParamType::TEGLDeviceEXT, T>(value);
+        case ParamType::TEGLDisplay:
+            return GetParamVal<ParamType::TEGLDisplay, T>(value);
         case ParamType::TEGLFrameTokenANGLE:
             return GetParamVal<ParamType::TEGLFrameTokenANGLE, T>(value);
         case ParamType::TEGLGetBlobFuncANDROID:
             return GetParamVal<ParamType::TEGLGetBlobFuncANDROID, T>(value);
+        case ParamType::TEGLImage:
+            return GetParamVal<ParamType::TEGLImage, T>(value);
+        case ParamType::TEGLImageKHR:
+            return GetParamVal<ParamType::TEGLImageKHR, T>(value);
         case ParamType::TEGLLabelKHR:
             return GetParamVal<ParamType::TEGLLabelKHR, T>(value);
         case ParamType::TEGLNativeDisplayType:
@@ -1473,6 +1565,14 @@ T AccessParamValue(ParamType paramType, const ParamValue &value)
             return GetParamVal<ParamType::TEGLObjectKHR, T>(value);
         case ParamType::TEGLSetBlobFuncANDROID:
             return GetParamVal<ParamType::TEGLSetBlobFuncANDROID, T>(value);
+        case ParamType::TEGLStreamKHR:
+            return GetParamVal<ParamType::TEGLStreamKHR, T>(value);
+        case ParamType::TEGLSurface:
+            return GetParamVal<ParamType::TEGLSurface, T>(value);
+        case ParamType::TEGLSync:
+            return GetParamVal<ParamType::TEGLSync, T>(value);
+        case ParamType::TEGLSyncKHR:
+            return GetParamVal<ParamType::TEGLSyncKHR, T>(value);
         case ParamType::TEGLTime:
             return GetParamVal<ParamType::TEGLTime, T>(value);
         case ParamType::TEGLTimeKHR:
@@ -1841,6 +1941,12 @@ inline void SetParamVal<ParamType::TEGLAttribPointer>(EGLAttrib *valueIn, ParamV
 }
 
 template <>
+inline void SetParamVal<ParamType::TEGLBoolean>(EGLBoolean valueIn, ParamValue *valueOut)
+{
+    valueOut->EGLBooleanVal = valueIn;
+}
+
+template <>
 inline void SetParamVal<ParamType::TEGLBooleanPointer>(EGLBoolean *valueIn, ParamValue *valueOut)
 {
     valueOut->EGLBooleanPointerVal = valueIn;
@@ -1859,9 +1965,27 @@ inline void SetParamVal<ParamType::TEGLConfigPointer>(EGLConfig *valueIn, ParamV
 }
 
 template <>
+inline void SetParamVal<ParamType::TEGLContext>(EGLContext valueIn, ParamValue *valueOut)
+{
+    valueOut->EGLContextVal = valueIn;
+}
+
+template <>
 inline void SetParamVal<ParamType::TEGLDEBUGPROCKHR>(EGLDEBUGPROCKHR valueIn, ParamValue *valueOut)
 {
     valueOut->EGLDEBUGPROCKHRVal = valueIn;
+}
+
+template <>
+inline void SetParamVal<ParamType::TEGLDeviceEXT>(EGLDeviceEXT valueIn, ParamValue *valueOut)
+{
+    valueOut->EGLDeviceEXTVal = valueIn;
+}
+
+template <>
+inline void SetParamVal<ParamType::TEGLDisplay>(EGLDisplay valueIn, ParamValue *valueOut)
+{
+    valueOut->EGLDisplayVal = valueIn;
 }
 
 template <>
@@ -1876,6 +2000,18 @@ inline void SetParamVal<ParamType::TEGLGetBlobFuncANDROID>(EGLGetBlobFuncANDROID
                                                            ParamValue *valueOut)
 {
     valueOut->EGLGetBlobFuncANDROIDVal = valueIn;
+}
+
+template <>
+inline void SetParamVal<ParamType::TEGLImage>(EGLImage valueIn, ParamValue *valueOut)
+{
+    valueOut->EGLImageVal = valueIn;
+}
+
+template <>
+inline void SetParamVal<ParamType::TEGLImageKHR>(EGLImageKHR valueIn, ParamValue *valueOut)
+{
+    valueOut->EGLImageKHRVal = valueIn;
 }
 
 template <>
@@ -1916,6 +2052,30 @@ inline void SetParamVal<ParamType::TEGLSetBlobFuncANDROID>(EGLSetBlobFuncANDROID
                                                            ParamValue *valueOut)
 {
     valueOut->EGLSetBlobFuncANDROIDVal = valueIn;
+}
+
+template <>
+inline void SetParamVal<ParamType::TEGLStreamKHR>(EGLStreamKHR valueIn, ParamValue *valueOut)
+{
+    valueOut->EGLStreamKHRVal = valueIn;
+}
+
+template <>
+inline void SetParamVal<ParamType::TEGLSurface>(EGLSurface valueIn, ParamValue *valueOut)
+{
+    valueOut->EGLSurfaceVal = valueIn;
+}
+
+template <>
+inline void SetParamVal<ParamType::TEGLSync>(EGLSync valueIn, ParamValue *valueOut)
+{
+    valueOut->EGLSyncVal = valueIn;
+}
+
+template <>
+inline void SetParamVal<ParamType::TEGLSyncKHR>(EGLSyncKHR valueIn, ParamValue *valueOut)
+{
+    valueOut->EGLSyncKHRVal = valueIn;
 }
 
 template <>
@@ -2831,6 +2991,9 @@ void InitParamValue(ParamType paramType, T valueIn, ParamValue *valueOut)
         case ParamType::TEGLAttribPointer:
             SetParamVal<ParamType::TEGLAttribPointer>(valueIn, valueOut);
             break;
+        case ParamType::TEGLBoolean:
+            SetParamVal<ParamType::TEGLBoolean>(valueIn, valueOut);
+            break;
         case ParamType::TEGLBooleanPointer:
             SetParamVal<ParamType::TEGLBooleanPointer>(valueIn, valueOut);
             break;
@@ -2840,14 +3003,29 @@ void InitParamValue(ParamType paramType, T valueIn, ParamValue *valueOut)
         case ParamType::TEGLConfigPointer:
             SetParamVal<ParamType::TEGLConfigPointer>(valueIn, valueOut);
             break;
+        case ParamType::TEGLContext:
+            SetParamVal<ParamType::TEGLContext>(valueIn, valueOut);
+            break;
         case ParamType::TEGLDEBUGPROCKHR:
             SetParamVal<ParamType::TEGLDEBUGPROCKHR>(valueIn, valueOut);
+            break;
+        case ParamType::TEGLDeviceEXT:
+            SetParamVal<ParamType::TEGLDeviceEXT>(valueIn, valueOut);
+            break;
+        case ParamType::TEGLDisplay:
+            SetParamVal<ParamType::TEGLDisplay>(valueIn, valueOut);
             break;
         case ParamType::TEGLFrameTokenANGLE:
             SetParamVal<ParamType::TEGLFrameTokenANGLE>(valueIn, valueOut);
             break;
         case ParamType::TEGLGetBlobFuncANDROID:
             SetParamVal<ParamType::TEGLGetBlobFuncANDROID>(valueIn, valueOut);
+            break;
+        case ParamType::TEGLImage:
+            SetParamVal<ParamType::TEGLImage>(valueIn, valueOut);
+            break;
+        case ParamType::TEGLImageKHR:
+            SetParamVal<ParamType::TEGLImageKHR>(valueIn, valueOut);
             break;
         case ParamType::TEGLLabelKHR:
             SetParamVal<ParamType::TEGLLabelKHR>(valueIn, valueOut);
@@ -2866,6 +3044,18 @@ void InitParamValue(ParamType paramType, T valueIn, ParamValue *valueOut)
             break;
         case ParamType::TEGLSetBlobFuncANDROID:
             SetParamVal<ParamType::TEGLSetBlobFuncANDROID>(valueIn, valueOut);
+            break;
+        case ParamType::TEGLStreamKHR:
+            SetParamVal<ParamType::TEGLStreamKHR>(valueIn, valueOut);
+            break;
+        case ParamType::TEGLSurface:
+            SetParamVal<ParamType::TEGLSurface>(valueIn, valueOut);
+            break;
+        case ParamType::TEGLSync:
+            SetParamVal<ParamType::TEGLSync>(valueIn, valueOut);
+            break;
+        case ParamType::TEGLSyncKHR:
+            SetParamVal<ParamType::TEGLSyncKHR>(valueIn, valueOut);
             break;
         case ParamType::TEGLTime:
             SetParamVal<ParamType::TEGLTime>(valueIn, valueOut);

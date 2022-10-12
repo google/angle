@@ -110,7 +110,7 @@ extern EGLImageMap gEGLImageMap;
 // TODO(http://www.anglebug.com/5878): avoid std::unordered_map, it's slow
 using SyncResourceMap = std::unordered_map<uintptr_t, GLsync>;
 extern SyncResourceMap gSyncMap;
-using ContextMap = std::unordered_map<uint32_t, EGLContext>;
+using ContextMap = std::unordered_map<uintptr_t, EGLContext>;
 extern ContextMap gContextMap;
 
 using SurfaceMap = std::unordered_map<uintptr_t, EGLSurface>;
@@ -137,7 +137,6 @@ void UpdateShaderProgramID(GLuint id, GLsizei readBufferOffset);
 void UpdateTextureID(GLuint id, GLsizei readBufferOffset);
 void UpdateTransformFeedbackID(GLuint id, GLsizei readBufferOffset);
 void UpdateVertexArrayID(GLuint id, GLsizei readBufferOffset);
-void UpdateBufferID2(GLuint id, GLsizei readBufferOffset);
 
 void UpdateClientBuffer(EGLClientBuffer key, EGLClientBuffer data);
 EGLClientBuffer GetClientBuffer(EGLenum target, uint64_t key);

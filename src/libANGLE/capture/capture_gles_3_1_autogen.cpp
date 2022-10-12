@@ -19,7 +19,6 @@ using namespace angle;
 
 namespace gl
 {
-
 CallCapture CaptureActiveShaderProgram(const State &glState,
                                        bool isCallValid,
                                        ProgramPipelineID pipelinePacked,

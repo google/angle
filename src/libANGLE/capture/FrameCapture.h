@@ -13,6 +13,7 @@
 #include "common/PackedEnums.h"
 #include "common/system_utils.h"
 #include "libANGLE/Context.h"
+#include "libANGLE/Thread.h"
 #include "libANGLE/angletypes.h"
 #include "libANGLE/capture/frame_capture_utils_autogen.h"
 #include "libANGLE/entry_points_utils.h"
@@ -882,10 +883,10 @@ class FrameCaptureShared final : angle::NonCopyable
 };
 
 template <typename CaptureFuncT, typename... ArgsT>
-void CaptureCallToFrameCapture(CaptureFuncT captureFunc,
-                               bool isCallValid,
-                               gl::Context *context,
-                               ArgsT... captureParams)
+void CaptureGLCallToFrameCapture(CaptureFuncT captureFunc,
+                                 bool isCallValid,
+                                 gl::Context *context,
+                                 ArgsT... captureParams)
 {
     FrameCaptureShared *frameCaptureShared = context->getShareGroup()->getFrameCaptureShared();
     if (!frameCaptureShared->isCapturing())
@@ -894,8 +895,30 @@ void CaptureCallToFrameCapture(CaptureFuncT captureFunc,
     }
 
     CallCapture call = captureFunc(context->getState(), isCallValid, captureParams...);
-
     frameCaptureShared->captureCall(context, std::move(call), isCallValid);
+}
+
+template <typename CaptureFuncT, typename... ArgsT>
+void CaptureEGLCallToFrameCapture(CaptureFuncT captureFunc,
+                                  bool isCallValid,
+                                  egl::Thread *thread,
+                                  ArgsT... captureParams)
+{
+    gl::Context *context = thread->getContext();
+    if (!context)
+    {
+        return;
+    }
+
+    angle::FrameCaptureShared *frameCaptureShared =
+        context->getShareGroup()->getFrameCaptureShared();
+    if (!frameCaptureShared->isCapturing())
+    {
+        return;
+    }
+
+    angle::CallCapture call = captureFunc(thread, isCallValid, captureParams...);
+    frameCaptureShared->captureCall(context, std::move(call), true);
 }
 
 template <typename T>
@@ -1149,6 +1172,11 @@ void WriteParamValueReplay<ParamType::Tegl_DisplayPointer>(std::ostream &os,
                                                            egl::Display *value);
 
 template <>
+void WriteParamValueReplay<ParamType::Tegl_ImagePointer>(std::ostream &os,
+                                                         const CallCapture &call,
+                                                         egl::Image *value);
+
+template <>
 void WriteParamValueReplay<ParamType::Tegl_SurfacePointer>(std::ostream &os,
                                                            const CallCapture &call,
                                                            egl::Surface *value);
@@ -1182,6 +1210,26 @@ void WriteParamValueReplay<ParamType::Tegl_SurfacePointer>(std::ostream &os,
                                                            const CallCapture &call,
                                                            egl::Surface *value);
 
+template <>
+void WriteParamValueReplay<ParamType::TEGLClientBuffer>(std::ostream &os,
+                                                        const CallCapture &call,
+                                                        EGLClientBuffer value);
+
+template <>
+void WriteParamValueReplay<ParamType::Tegl_SyncPointer>(std::ostream &os,
+                                                        const CallCapture &call,
+                                                        egl::Sync *value);
+
+template <>
+void WriteParamValueReplay<ParamType::TEGLTime>(std::ostream &os,
+                                                const CallCapture &call,
+                                                EGLTime value);
+
+template <>
+void WriteParamValueReplay<ParamType::TEGLTimeKHR>(std::ostream &os,
+                                                   const CallCapture &call,
+                                                   EGLTimeKHR value);
+
 // General fallback for any unspecific type.
 template <ParamType ParamT, typename T>
 void WriteParamValueReplay(std::ostream &os, const CallCapture &call, T value)
@@ -1204,5 +1252,10 @@ void CaptureTextureAndSamplerParameter_params(GLenum pname,
         CaptureMemory(param, sizeof(T), paramCapture);
     }
 }
+
+namespace egl
+{
+angle::ParamCapture CaptureAttributeMap(const egl::AttributeMap &attribMap);
+}  // namespace egl
 
 #endif  // LIBANGLE_FRAME_CAPTURE_H_

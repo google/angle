@@ -19,7 +19,6 @@ using namespace angle;
 
 namespace gl
 {
-
 CallCapture CaptureAlphaFunc(const State &glState,
                              bool isCallValid,
                              AlphaTestFunc funcPacked,
