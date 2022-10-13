@@ -1051,6 +1051,12 @@
             "category": "Workarounds",
             "description":["Submit commands to driver when last GL_ANY_SAMPLES_PASSED query is made for performance improvements."],
             "issue": "https://issuetracker.google.com/250706693"
+        },
+	{
+            "name": "force_wait_for_submission_to_complete_for_query_result",
+            "category": "Workarounds",
+            "description":["Force wait for submission to complete before calling getQueryResult(wait)."],
+            "issue": "https://issuetracker.google.com/253522366"
         }
     ]
 }

@@ -776,6 +776,11 @@ struct FeaturesVk : FeatureSetBase
         "Submit commands to driver when last GL_ANY_SAMPLES_PASSED query is made for performance "
         "improvements.",
         &members, "https://issuetracker.google.com/250706693"};
+
+    FeatureInfo forceWaitForSubmissionToCompleteForQueryResult = {
+        "forceWaitForSubmissionToCompleteForQueryResult", FeatureCategory::VulkanWorkarounds,
+        "Force wait for submission to complete before calling getQueryResult(wait).", &members,
+        "https://issuetracker.google.com/253522366"};
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

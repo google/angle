@@ -3485,12 +3485,8 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsProtectedMemory,
                             (mProtectedMemoryFeatures.protectedMemory == VK_TRUE) && !isARM);
 
-    // Workaround for nvidia earlier version driver which appears having a bug that
-    // vkGetQueryPoolResult() with VK_QUERY_RESULT_WAIT_BIT may result in incorrect result. In that
-    // case we force into CPU wait for submission to complete. http://anglebug.com/6692
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsHostQueryReset,
-                            (mHostQueryResetFeatures.hostQueryReset == VK_TRUE &&
-                             !(isNvidia && nvidiaVersion.major < 470u)));
+                            (mHostQueryResetFeatures.hostQueryReset == VK_TRUE));
 
     // VK_EXT_pipeline_creation_feedback is promoted to core in Vulkan 1.3.
     ANGLE_FEATURE_CONDITION(
@@ -4076,6 +4072,16 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     // https://issuetracker.google.com/250706693
     ANGLE_FEATURE_CONDITION(&mFeatures, preferSubmitOnAnySamplesPassedQueryEnd,
                             isTileBasedRenderer);
+
+    // ARM driver appears having a bug that if we did not wait for submission to complete, but call
+    // vkGetQueryPoolResults(VK_QUERY_RESULT_WAIT_BIT), it may result VK_NOT_READY.
+    // https://issuetracker.google.com/253522366
+    //
+    // Workaround for nvidia earlier version driver which appears having a bug that On older nvidia
+    // driver, vkGetQueryPoolResult() with VK_QUERY_RESULT_WAIT_BIT may result in incorrect result.
+    // In that case we force into CPU wait for submission to complete. http://anglebug.com/6692
+    ANGLE_FEATURE_CONDITION(&mFeatures, forceWaitForSubmissionToCompleteForQueryResult,
+                            isARM || (isNvidia && nvidiaVersion.major < 470u));
 
     ApplyFeatureOverrides(&mFeatures, displayVk->getState());
 

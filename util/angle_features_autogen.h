@@ -135,6 +135,7 @@ enum class Feature
     ForceTextureLodOffset2,
     ForceTextureLodOffset3,
     ForceTextureLodOffset4,
+    ForceWaitForSubmissionToCompleteForQueryResult,
     GenerateSPIRVThroughGlslang,
     GetDimensionsIgnoresBaseLevel,
     HasBaseVertexInstancedDraw,

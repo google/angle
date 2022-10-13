@@ -540,7 +540,9 @@ angle::Result QueryVk::getResult(const gl::Context *context, bool wait)
     // a race condition in this case, wait for the batch to finish first before querying (or return
     // not-ready if not waiting).
     if (isCurrentlyInUse(contextVk->getLastCompletedQueueSerial()) &&
-        !renderer->getFeatures().supportsHostQueryReset.enabled)
+        (!renderer->getFeatures().supportsHostQueryReset.enabled ||
+         renderer->getFeatures().forceWaitForSubmissionToCompleteForQueryResult.enabled ||
+         renderer->isAsyncCommandQueueEnabled()))
     {
         // The query might appear busy because there was no check for completed commands
         // recently. Do that now and see if the query is still busy.  If the application is
