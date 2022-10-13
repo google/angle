@@ -3847,7 +3847,7 @@
       {
         "args": [
           "--test-timeout=300",
-          "--batch-size=10"
+          "--batch-size=256"
         ],
         "merge": {
           "args": [],
