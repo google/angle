@@ -1,22 +1,50 @@
 # ANGLE Performance Tests
 
-`angle_perftests` is a standalone testing suite that contains targeted tests for OpenGL, Vulkan and ANGLE internal classes. The tests currently run on the Chromium ANGLE infrastructure and report results to the [Chromium perf dashboard](https://chromeperf.appspot.com/report).
+`angle_perftests` is a standalone microbenchmark testing suite that contains
+tests for the OpenGL API. `angle_trace_tests` is a suite to run captures traces for correctness and
+performance. Because the traces contain confidential data, they are not publicly available. 
+For more details on ANGLE's tracer please see the [docs](../restricted_traces/README.md).
 
-You can also build your own dashboards. For example, a comparison of ANGLE's back-end draw call performance on Windows NVIDIA can be found [at this link](https://chromeperf.appspot.com/report?sid=1fdf94a308f52b6bf02c08f6f36e87ca0d0075e2d2eefc61e6cf90c919c1643a&start_rev=577814&end_rev=582136). Note that this link is not kept current.
+The tests currently run on the Chromium ANGLE infrastructure and report
+results to the [Chromium perf dashboard](https://chromeperf.appspot.com/report).
+ Please refer to the[public dashboard docs][DashboardDocs] for help
+
+[DashboardDocs]: https://chromium.googlesource.com/catapult/+/HEAD/dashboard/README.md
 
 ## Running the Tests
 
-You can follow the usual instructions to [check out and build ANGLE](../../../doc/DevSetup.md). Build the `angle_perftests` target. Note that all test scores are higher-is-better. You should also ensure `is_debug=false` in your build. Running with `angle_assert_always_on` or debug validation enabled is not recommended.
+You can follow the usual instructions to [check out and build ANGLE](../../../doc/DevSetup.md).
+ Build the `angle_perftests` or `angle_trace_tests` targets. Note that all
+test scores are higher-is-better. You should also ensure `is_debug=false` in
+your build. Running with `angle_assert_always_on` or debug validation enabled
+is not recommended.
 
-Variance can be a problem when benchmarking. We have a test harness to run a single test in an infinite loop and print some statistics to help mitigate variance. See [`scripts/perf_test_runner.py`](https://chromium.googlesource.com/angle/angle/+/main/scripts/perf_test_runner.py). To use the script first compile `angle_perftests` into a folder with the word `Release` in it. Then provide the name of the test as the argument to the script. The script will automatically pick up the most current `angle_perftests` and run in an infinite loop.
+Variance can be a problem when benchmarking. We have a test harness to run a
+tests repeatedly to find a lower variance measurement. See [`src/tests/run_perf_tests.py`][RunPerfTests].
+
+To use the script first build `angle_perftests` or `angle_trace_tests`, set
+your working directory your build directory, and invoke the
+`run_perf_tests.py` script. Use `--test-suite` to specify your test suite,
+and `--filter` to specify a test filter.
+
+[RunPerfTests]: https://chromium.googlesource.com/angle/angle/+/main/scripts/perf_test_runner.py
 
 ### Choosing the Test to Run
 
-You can choose individual tests to run with `--gtest_filter=*TestName*`. To select a particular ANGLE back-end, add the name of the back-end to the test filter. For example: `DrawCallPerfBenchmark.Run/gl` or `DrawCallPerfBenchmark.Run/d3d11`. Many tests have sub-tests that run slightly different code paths. You might need to experiment to find the right sub-test and its name.
+You can choose individual tests to run with `--gtest_filter=*TestName*`. To
+select a particular ANGLE back-end, add the name of the back-end to the test
+filter. For example: `DrawCallPerfBenchmark.Run/gl` or
+`DrawCallPerfBenchmark.Run/d3d11`. Many tests have sub-tests that run
+slightly different code paths. You might need to experiment to find the right
+sub-test and its name.
 
 ### Null/No-op Configurations
 
-ANGLE implements a no-op driver for OpenGL, D3D11 and Vulkan. To run on these configurations use the `gl_null`, `d3d11_null` or `vulkan_null` test configurations. These null drivers will not do any GPU work. They will skip the driver entirely. These null configs are useful for diagnosing performance overhead in ANGLE code.
+ANGLE implements a no-op driver for OpenGL, D3D11 and Vulkan. To run on these
+configurations use the `gl_null`, `d3d11_null` or `vulkan_null` test
+configurations. These null drivers will not do any GPU work. They will skip
+the driver entirely. These null configs are useful for diagnosing performance
+overhead in ANGLE code.
 
 ### Command-line Arguments
 
@@ -54,6 +82,8 @@ The command line arguments implementations are located in [`ANGLEPerfTestArgs.cp
 
 ## Test Breakdown
 
+### Microbenchmarks
+
 * [`DrawCallPerfBenchmark`](DrawCallPerf.cpp): Runs a tight loop around DrawArarys calls.
   * `validation_only`: Skips all rendering.
   * `render_to_texture`: Render to a user Framebuffer instead of the default FBO.
@@ -74,9 +104,13 @@ The command line arguments implementations are located in [`ANGLEPerfTestArgs.cp
 * [`TextureBenchmark`](TexturesPerf.cpp): Tests Texture state change performance.
 * [`LinkProgramBenchmark`](LinkProgramPerfTest.cpp): Tests performance of `glLinkProgram`.
 * [`glmark2`](glmark2.cpp): Runs the glmark2 benchmark.
-* [`TracePerfTest`](TracePerfTest.cpp): Runs replays of restricted traces, not available publicly. To enable, read more in [`RestrictedTraceTests`](../restricted_traces/README.md)
 
 Many other tests can be found that have documentation in their classes.
+
+### Trace Tests
+
+* [`TracePerfTest`](TracePerfTest.cpp): Runs replays of restricted traces, not
+  available publicly. To enable, read more in [`RestrictedTraceTests`](../restricted_traces/README.md)
 
 ## Understanding the Metrics
 

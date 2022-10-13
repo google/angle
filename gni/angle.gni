@@ -89,6 +89,14 @@ if (angle_has_build) {
   }
 }
 
+if (!defined(checkout_angle_internal)) {
+  checkout_angle_internal = false
+}
+
+if (!defined(checkout_angle_restricted_traces)) {
+  checkout_angle_restricted_traces = false
+}
+
 # Subdirectory to place data files (e.g. layer JSON files).
 angle_data_dir = "angledata"
 

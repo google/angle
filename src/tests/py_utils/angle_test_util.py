@@ -23,6 +23,9 @@ import common
 import xvfb
 
 
+ANGLE_TRACE_TEST_SUITE = 'angle_trace_tests'
+
+
 def Initialize(suite_name):
     android_helper.Initialize(suite_name)
 

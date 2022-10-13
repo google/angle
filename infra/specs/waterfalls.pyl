@@ -40,7 +40,7 @@
           'timeout_120m',
         ],
         'test_suites': {
-          'isolated_scripts': 'angle_perf_isolated_scripts',
+          'isolated_scripts': 'common_perf_isolated_scripts',
         },
       },
       'android-arm64-pixel6': {
@@ -89,7 +89,7 @@
           'timeout_120m',
         ],
         'test_suites': {
-          'isolated_scripts': 'angle_perf_isolated_scripts',
+          'isolated_scripts': 'common_perf_isolated_scripts',
         },
       },
       'linux-nvidia': {
@@ -109,7 +109,7 @@
           'timeout_120m',
         ],
         'test_suites': {
-          'isolated_scripts': 'angle_perf_isolated_scripts',
+          'isolated_scripts': 'common_perf_isolated_scripts',
         },
       },
       'linux-swiftshader': {
@@ -237,7 +237,7 @@
           'win10_nvidia_gtx_1660_stable',
         ],
         'test_suites': {
-          'isolated_scripts': 'angle_perf_isolated_scripts',
+          'isolated_scripts': 'common_perf_isolated_scripts',
         },
       },
       'win10-x64-swiftshader': {

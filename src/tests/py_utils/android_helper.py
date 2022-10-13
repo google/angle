@@ -21,6 +21,7 @@ import time
 
 import angle_path_util
 
+from angle_test_util import ANGLE_TRACE_TEST_SUITE
 
 # Currently we only support a single test package name.
 TEST_PACKAGE_NAME = 'com.android.angle.test'
@@ -206,7 +207,7 @@ def _PrepareTestSuite(suite_name):
 
     _AdbShell('mkdir -p /sdcard/chromium_tests_root/')
 
-    if suite_name == 'angle_perftests':
+    if suite_name == ANGLE_TRACE_TEST_SUITE:
         _AddRestrictedTracesJson()
 
     if suite_name == 'angle_end2end_tests':
@@ -363,7 +364,7 @@ def _RemoveFlag(args, f):
 
 
 def RunSmokeTest():
-    _EnsureTestSuite('angle_perftests')
+    _EnsureTestSuite(ANGLE_TRACE_TEST_SUITE)
 
     test_name = 'TracePerfTest.Run/vulkan_words_with_friends_2'
     run_instrumentation_timeout = 60

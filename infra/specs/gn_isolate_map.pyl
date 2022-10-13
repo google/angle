@@ -104,6 +104,15 @@
     "script": "//src/tests/restricted_traces/restricted_trace_gold_tests.py",
     "type": "script",
   },
+  "angle_trace_tests": {
+    "label": "//src/tests:angle_trace_tests",
+    "type": "windowed_test_launcher",
+  },
+  "angle_trace_perf_tests": {
+    "label": "//src/tests:angle_trace_perf_tests",
+    "script": "//src/tests/run_perf_tests.py",
+    "type": "script",
+  },
   "angle_unittests": {
     "label": "//src/tests:angle_unittests",
     "type": "windowed_test_launcher",

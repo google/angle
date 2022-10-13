@@ -12,10 +12,12 @@
 #include "test_utils/runner/TestSuite.h"
 
 void ANGLEProcessPerfTestArgs(int *argc, char **argv);
+void RegisterTraceTests();
 
 int main(int argc, char **argv)
 {
     ANGLEProcessPerfTestArgs(&argc, argv);
+    RegisterTraceTests();
     angle::TestSuite testSuite(&argc, argv);
     return testSuite.run();
 }

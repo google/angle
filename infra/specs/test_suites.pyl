@@ -753,6 +753,53 @@
       }
     },
 
+    'angle_trace_perf_isolated_scripts': {
+      'angle_trace_perf_tests': {
+        'android_args': {
+          '--trial-time=10',
+        },
+        'args': [
+          '--log=debug',
+          '--show-test-stdout',
+          '--split-shard-samples',
+          '--test-suite=angle_trace_tests',
+        ],
+        'merge': {
+          'script': '//scripts/process_angle_perf_results.py',
+        },
+        'android_swarming': {
+          'shards': 30,
+        },
+        'swarming': {
+          'shards': 10,
+        },
+      },
+    },
+
+    'angle_trace_perf_smoke_isolated_scripts': {
+      'angle_trace_perf_tests': {
+        'args': [
+          '--log=debug',
+          '--smoke-test-mode',
+          '--show-test-stdout',
+          '--test-suite=angle_trace_tests',
+        ],
+        'merge': {
+          'script': '//scripts/process_angle_perf_results.py',
+          # Does not upload to the perf dashboard
+          'args': [
+            '--smoke-test-mode',
+          ],
+        },
+        'swarming': {
+          'shards': 2,
+        },
+        'android_swarming': {
+          'shards': 6,
+        },
+      },
+    },
+
     'angle_unit_gtests': {
       'angle_unittests': {
         'android_args': [
@@ -1029,6 +1076,12 @@
     'common_isolated_scripts': [
       'angle_perf_smoke_isolated_scripts',
       'angle_restricted_trace_gold_isolated_scripts',
+      'angle_trace_perf_smoke_isolated_scripts',
+    ],
+
+    'common_perf_isolated_scripts': [
+      'angle_perf_isolated_scripts',
+      'angle_trace_perf_isolated_scripts',
     ],
 
     'linux_intel_gtests': [

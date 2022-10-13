@@ -470,6 +470,38 @@
           "shards": 6
         },
         "test_id_prefix": "ninja://src/tests/restricted_traces:angle_restricted_trace_gold_tests/"
+      },
+      {
+        "args": [
+          "--log=debug",
+          "--smoke-test-mode",
+          "--show-test-stdout",
+          "--test-suite=angle_trace_tests"
+        ],
+        "isolate_name": "angle_trace_perf_tests",
+        "merge": {
+          "args": [
+            "--smoke-test-mode"
+          ],
+          "script": "//scripts/process_angle_perf_results.py"
+        },
+        "name": "angle_trace_perf_tests",
+        "swarming": {
+          "can_use_on_swarming_builders": true,
+          "containment_type": "AUTO",
+          "dimension_sets": [
+            {
+              "device_os": "R",
+              "device_os_type": "userdebug",
+              "device_type": "flame",
+              "os": "Android",
+              "pool": "chromium.tests.gpu"
+            }
+          ],
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
+          "shards": 6
+        },
+        "test_id_prefix": "ninja://src/tests:angle_trace_perf_tests/"
       }
     ]
   },
@@ -505,6 +537,38 @@
           "shards": 30
         },
         "test_id_prefix": "ninja://src/tests:angle_perftests/"
+      },
+      {
+        "args": [
+          "--log=debug",
+          "--show-test-stdout",
+          "--split-shard-samples",
+          "--test-suite=angle_trace_tests",
+          "--trial-time=10"
+        ],
+        "isolate_name": "angle_trace_perf_tests",
+        "merge": {
+          "script": "//scripts/process_angle_perf_results.py"
+        },
+        "name": "angle_trace_perf_tests",
+        "swarming": {
+          "can_use_on_swarming_builders": true,
+          "containment_type": "AUTO",
+          "dimension_sets": [
+            {
+              "device_os": "R",
+              "device_os_type": "userdebug",
+              "device_type": "flame",
+              "os": "Android",
+              "pool": "chromium.tests.gpu"
+            }
+          ],
+          "hard_timeout": 7200,
+          "io_timeout": 300,
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
+          "shards": 30
+        },
+        "test_id_prefix": "ninja://src/tests:angle_trace_perf_tests/"
       }
     ]
   },
@@ -1032,6 +1096,36 @@
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
         },
         "test_id_prefix": "ninja://src/tests/restricted_traces:angle_restricted_trace_gold_tests/"
+      },
+      {
+        "args": [
+          "--log=debug",
+          "--smoke-test-mode",
+          "--show-test-stdout",
+          "--test-suite=angle_trace_tests"
+        ],
+        "isolate_name": "angle_trace_perf_tests",
+        "merge": {
+          "args": [
+            "--smoke-test-mode"
+          ],
+          "script": "//scripts/process_angle_perf_results.py"
+        },
+        "name": "angle_trace_perf_tests",
+        "swarming": {
+          "can_use_on_swarming_builders": true,
+          "containment_type": "AUTO",
+          "dimension_sets": [
+            {
+              "gpu": "8086:9bc5-20.0.8",
+              "os": "Ubuntu-18.04.6",
+              "pool": "chromium.tests.gpu"
+            }
+          ],
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
+          "shards": 2
+        },
+        "test_id_prefix": "ninja://src/tests:angle_trace_perf_tests/"
       }
     ]
   },
@@ -1064,6 +1158,35 @@
           "shards": 10
         },
         "test_id_prefix": "ninja://src/tests:angle_perftests/"
+      },
+      {
+        "args": [
+          "--log=debug",
+          "--show-test-stdout",
+          "--split-shard-samples",
+          "--test-suite=angle_trace_tests"
+        ],
+        "isolate_name": "angle_trace_perf_tests",
+        "merge": {
+          "script": "//scripts/process_angle_perf_results.py"
+        },
+        "name": "angle_trace_perf_tests",
+        "swarming": {
+          "can_use_on_swarming_builders": true,
+          "containment_type": "AUTO",
+          "dimension_sets": [
+            {
+              "gpu": "8086:9bc5-20.0.8",
+              "os": "Ubuntu-18.04.6",
+              "pool": "chromium.tests.gpu"
+            }
+          ],
+          "hard_timeout": 7200,
+          "io_timeout": 300,
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
+          "shards": 10
+        },
+        "test_id_prefix": "ninja://src/tests:angle_trace_perf_tests/"
       }
     ]
   },
@@ -1687,6 +1810,36 @@
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
         },
         "test_id_prefix": "ninja://src/tests/restricted_traces:angle_restricted_trace_gold_tests/"
+      },
+      {
+        "args": [
+          "--log=debug",
+          "--smoke-test-mode",
+          "--show-test-stdout",
+          "--test-suite=angle_trace_tests"
+        ],
+        "isolate_name": "angle_trace_perf_tests",
+        "merge": {
+          "args": [
+            "--smoke-test-mode"
+          ],
+          "script": "//scripts/process_angle_perf_results.py"
+        },
+        "name": "angle_trace_perf_tests",
+        "swarming": {
+          "can_use_on_swarming_builders": true,
+          "containment_type": "AUTO",
+          "dimension_sets": [
+            {
+              "gpu": "10de:2184-440.100",
+              "os": "Ubuntu-18.04.5|Ubuntu-18.04.6",
+              "pool": "chromium.tests.gpu"
+            }
+          ],
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
+          "shards": 2
+        },
+        "test_id_prefix": "ninja://src/tests:angle_trace_perf_tests/"
       }
     ]
   },
@@ -1719,6 +1872,35 @@
           "shards": 10
         },
         "test_id_prefix": "ninja://src/tests:angle_perftests/"
+      },
+      {
+        "args": [
+          "--log=debug",
+          "--show-test-stdout",
+          "--split-shard-samples",
+          "--test-suite=angle_trace_tests"
+        ],
+        "isolate_name": "angle_trace_perf_tests",
+        "merge": {
+          "script": "//scripts/process_angle_perf_results.py"
+        },
+        "name": "angle_trace_perf_tests",
+        "swarming": {
+          "can_use_on_swarming_builders": true,
+          "containment_type": "AUTO",
+          "dimension_sets": [
+            {
+              "gpu": "10de:2184-440.100",
+              "os": "Ubuntu-18.04.5|Ubuntu-18.04.6",
+              "pool": "chromium.tests.gpu"
+            }
+          ],
+          "hard_timeout": 7200,
+          "io_timeout": 300,
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
+          "shards": 10
+        },
+        "test_id_prefix": "ninja://src/tests:angle_trace_perf_tests/"
       }
     ]
   },
@@ -3951,6 +4133,36 @@
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
         },
         "test_id_prefix": "ninja://src/tests/restricted_traces:angle_restricted_trace_gold_tests/"
+      },
+      {
+        "args": [
+          "--log=debug",
+          "--smoke-test-mode",
+          "--show-test-stdout",
+          "--test-suite=angle_trace_tests"
+        ],
+        "isolate_name": "angle_trace_perf_tests",
+        "merge": {
+          "args": [
+            "--smoke-test-mode"
+          ],
+          "script": "//scripts/process_angle_perf_results.py"
+        },
+        "name": "angle_trace_perf_tests",
+        "swarming": {
+          "can_use_on_swarming_builders": true,
+          "containment_type": "AUTO",
+          "dimension_sets": [
+            {
+              "gpu": "8086:5912-26.20.100.8141|8086:3e92-26.20.100.8141",
+              "os": "Windows-10",
+              "pool": "chromium.tests.gpu"
+            }
+          ],
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
+          "shards": 2
+        },
+        "test_id_prefix": "ninja://src/tests:angle_trace_perf_tests/"
       }
     ]
   },
@@ -4649,6 +4861,36 @@
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
         },
         "test_id_prefix": "ninja://src/tests/restricted_traces:angle_restricted_trace_gold_tests/"
+      },
+      {
+        "args": [
+          "--log=debug",
+          "--smoke-test-mode",
+          "--show-test-stdout",
+          "--test-suite=angle_trace_tests"
+        ],
+        "isolate_name": "angle_trace_perf_tests",
+        "merge": {
+          "args": [
+            "--smoke-test-mode"
+          ],
+          "script": "//scripts/process_angle_perf_results.py"
+        },
+        "name": "angle_trace_perf_tests",
+        "swarming": {
+          "can_use_on_swarming_builders": true,
+          "containment_type": "AUTO",
+          "dimension_sets": [
+            {
+              "gpu": "10de:2184-27.21.14.5638",
+              "os": "Windows-10-18363",
+              "pool": "chromium.tests.gpu"
+            }
+          ],
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
+          "shards": 2
+        },
+        "test_id_prefix": "ninja://src/tests:angle_trace_perf_tests/"
       }
     ]
   },
@@ -4681,6 +4923,35 @@
           "shards": 10
         },
         "test_id_prefix": "ninja://src/tests:angle_perftests/"
+      },
+      {
+        "args": [
+          "--log=debug",
+          "--show-test-stdout",
+          "--split-shard-samples",
+          "--test-suite=angle_trace_tests"
+        ],
+        "isolate_name": "angle_trace_perf_tests",
+        "merge": {
+          "script": "//scripts/process_angle_perf_results.py"
+        },
+        "name": "angle_trace_perf_tests",
+        "swarming": {
+          "can_use_on_swarming_builders": true,
+          "containment_type": "AUTO",
+          "dimension_sets": [
+            {
+              "gpu": "10de:2184-27.21.14.5638",
+              "os": "Windows-10-18363",
+              "pool": "chromium.tests.gpu"
+            }
+          ],
+          "hard_timeout": 7200,
+          "io_timeout": 300,
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
+          "shards": 10
+        },
+        "test_id_prefix": "ninja://src/tests:angle_trace_perf_tests/"
       }
     ]
   },

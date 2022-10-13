@@ -53,24 +53,24 @@
   # is not necessarily so (i.e., we might have mac, win, and linux
   # bots all using the 'release_bot' config).
   'configs': {
-    'angle_asan_bot': ['angle', 'opencl', 'traces', 'goma', 'asan', 'release', 'desktop'],
-    'angle_asan_lsan_bot': ['angle', 'opencl', 'traces', 'goma', 'asan', 'lsan', 'release', 'desktop'],
-    'angle_goma_android_arm64_debug_bot': ['angle', 'opencl', 'traces', 'goma', 'android', 'arm64', 'debug'],
-    'angle_goma_android_arm64_release_bot': ['angle', 'opencl', 'traces', 'goma', 'android', 'arm64', 'release'],
-    'angle_goma_android_arm_debug_bot': ['angle', 'opencl', 'traces', 'goma', 'android', 'arm', 'debug'],
-    'angle_goma_android_arm_release_bot': ['angle', 'opencl', 'traces', 'goma', 'android', 'arm', 'release'],
-    'angle_goma_android_perf_bot': ['angle', 'traces', 'goma', 'android', 'arm64', 'perf'],
-    'angle_goma_debug_bot': ['angle', 'opencl', 'traces', 'goma', 'debug', 'desktop'],
-    'angle_goma_perf_bot': ['angle', 'traces', 'goma', 'perf'],
-    'angle_goma_release_bot': ['angle', 'opencl', 'traces', 'goma', 'release', 'desktop'],
-    'angle_goma_x86_debug_bot': ['angle', 'opencl', 'traces', 'goma', 'x86', 'debug', 'desktop'],
-    'angle_goma_x86_release_bot': ['angle', 'opencl', 'traces', 'goma', 'x86', 'release', 'desktop'],
+    'angle_asan_bot': ['angle', 'opencl', 'goma', 'asan', 'release', 'desktop'],
+    'angle_asan_lsan_bot': ['angle', 'opencl', 'goma', 'asan', 'lsan', 'release', 'desktop'],
+    'angle_goma_android_arm64_debug_bot': ['angle', 'opencl', 'goma', 'android', 'arm64', 'debug'],
+    'angle_goma_android_arm64_release_bot': ['angle', 'opencl', 'goma', 'android', 'arm64', 'release'],
+    'angle_goma_android_arm_debug_bot': ['angle', 'opencl', 'goma', 'android', 'arm', 'debug'],
+    'angle_goma_android_arm_release_bot': ['angle', 'opencl', 'goma', 'android', 'arm', 'release'],
+    'angle_goma_android_perf_bot': ['angle', 'goma', 'android', 'arm64', 'perf'],
+    'angle_goma_debug_bot': ['angle', 'opencl', 'goma', 'debug', 'desktop'],
+    'angle_goma_perf_bot': ['angle', 'goma', 'perf'],
+    'angle_goma_release_bot': ['angle', 'opencl', 'goma', 'release', 'desktop'],
+    'angle_goma_x86_debug_bot': ['angle', 'opencl', 'goma', 'x86', 'debug', 'desktop'],
+    'angle_goma_x86_release_bot': ['angle', 'opencl', 'goma', 'x86', 'release', 'desktop'],
     'angle_non_clang_debug_bot': ['angle', 'opencl', 'non_clang', 'debug', 'desktop'],
     'angle_non_clang_release_bot': ['angle', 'opencl', 'non_clang', 'release', 'desktop'],
     'angle_non_clang_x86_debug_bot': ['angle', 'opencl', 'non_clang', 'x86', 'debug'],
     'angle_non_clang_x86_release_bot': ['angle', 'opencl', 'non_clang', 'x86', 'release'],
-    'angle_tsan_bot': ['angle', 'opencl', 'traces', 'goma', 'tsan', 'release', 'desktop'],
-    'angle_ubsan_bot': ['angle', 'opencl', 'traces', 'goma', 'ubsan', 'release', 'desktop'],
+    'angle_tsan_bot': ['angle', 'opencl', 'goma', 'tsan', 'release', 'desktop'],
+    'angle_ubsan_bot': ['angle', 'opencl', 'goma', 'ubsan', 'release', 'desktop'],
     'angle_winuwp_non_clang_debug_bot': ['angle', 'winuwp', 'non_clang', 'debug'],
     'angle_winuwp_non_clang_release_bot': ['angle', 'winuwp', 'non_clang', 'release'],
   },
@@ -82,7 +82,7 @@
       'gn_args': 'target_os="android"',
     },
     'angle': {
-      'gn_args': 'build_angle_gles1_conform_tests=true is_component_build=true',
+      'gn_args': 'is_component_build=true',
     },
     'arm': {
       'gn_args': 'target_cpu="arm"',
@@ -106,7 +106,7 @@
       'gn_args': 'is_lsan=true',
     },
     'non_clang': {
-      'gn_args': 'is_clang=false',
+      'gn_args': 'is_clang=false build_angle_trace_tests=false',
     },
     'opencl': {
       'gn_args': 'angle_enable_cl=true',
@@ -116,9 +116,6 @@
     },
     'release': {
       'gn_args': 'is_debug=false dcheck_always_on=true symbol_level=1',
-    },
-    'traces': {
-      'gn_args': 'build_angle_trace_perf_tests=true',
     },
     'tsan': {
       'gn_args': 'is_tsan=true',

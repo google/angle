@@ -8,6 +8,8 @@ use_relative_paths = True
 gclient_gn_args_file = 'build/config/gclient_args.gni'
 
 gclient_gn_args = [
+  'checkout_angle_internal',
+  'checkout_angle_restricted_traces',
   'generate_location_tags',
 ]
 

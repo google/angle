@@ -37,7 +37,7 @@ from tracing.value import histogram
 from tracing.value import histogram_set
 from tracing.value import merge_histograms
 
-ANGLE_PERFTESTS = 'angle_perftests'
+DEFAULT_TEST_SUITE = 'angle_perftests'
 DEFAULT_LOG = 'info'
 DEFAULT_SAMPLES = 4
 DEFAULT_TRIALS = 3
@@ -421,6 +421,9 @@ def _find_test_suite_directory(test_suite):
     if os.path.exists(angle_test_util.ExecutablePathInCurrentDir(test_suite)):
         return '.'
 
+    if angle_test_util.IsWindows():
+        test_suite += '.exe'
+
     # Find most recent binary in search paths.
     newest_binary = None
     newest_mtime = None
@@ -452,7 +455,7 @@ def main():
     parser.add_argument(
         '-f', '--filter', '--isolated-script-test-filter', type=str, help='Test filter.')
     parser.add_argument(
-        '--test-suite', '--suite', help='Test suite to run.', default=ANGLE_PERFTESTS)
+        '--test-suite', '--suite', help='Test suite to run.', default=DEFAULT_TEST_SUITE)
     parser.add_argument('--xvfb', help='Use xvfb.', action='store_true')
     parser.add_argument(
         '--shard-count',
@@ -569,7 +572,7 @@ def main():
         logging.error('No tests to run.')
         return EXIT_FAILURE
 
-    if angle_test_util.IsAndroid() and args.test_suite == ANGLE_PERFTESTS:
+    if angle_test_util.IsAndroid() and args.test_suite == android_helper.ANGLE_TRACE_TEST_SUITE:
         android_helper.RunSmokeTest()
 
     logging.info('Running %d test%s' % (len(tests), 's' if len(tests) > 1 else ' '))
