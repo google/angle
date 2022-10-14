@@ -1786,7 +1786,7 @@ angle::Result ContextVk::handleDirtyGraphicsPipelineDesc(DirtyBits::Iterator *di
         SpecConstUsageBits usageBits = getCurrentProgramSpecConstUsageBits();
         updateGraphicsPipelineDescWithSpecConstUsageBits(usageBits);
 
-        // Draw call shader patching, shader compilation, and pipeline cache query.
+        // Draw-time SPIR-V patching if necessary, and pipeline creation.
         ANGLE_TRY(executableVk->getGraphicsPipeline(
             this, mCurrentDrawMode, &pipelineCache, PipelineSource::Draw, *mGraphicsPipelineDesc,
             glExecutable, &descPtr, &mCurrentGraphicsPipeline));

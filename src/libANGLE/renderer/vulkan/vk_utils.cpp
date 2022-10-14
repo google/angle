@@ -389,6 +389,11 @@ VkDevice Context::getDevice() const
     return mRenderer->getDevice();
 }
 
+const angle::FeaturesVk &Context::getFeatures() const
+{
+    return mRenderer->getFeatures();
+}
+
 // MemoryProperties implementation.
 MemoryProperties::MemoryProperties() : mMemoryProperties{} {}
 

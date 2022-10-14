@@ -688,7 +688,7 @@ class GraphicsPipelineDesc final
         return reinterpret_cast<const T *>(this);
     }
 
-    angle::Result initializePipeline(ContextVk *contextVk,
+    angle::Result initializePipeline(Context *context,
                                      PipelineCacheAccess *pipelineCache,
                                      const RenderPass &compatibleRenderPass,
                                      const PipelineLayout &pipelineLayout,
@@ -846,6 +846,8 @@ class GraphicsPipelineDesc final
         mVertexInput.inputAssembly.bits.supportsDynamicState1        = supports;
         mVertexInput.inputAssembly.bits.forceStaticVertexStrideState = false;
         mShaders.shaders.bits.nonZeroStencilWriteMaskWorkaround      = false;
+        mFragmentOutput.blendMaskAndLogic.bits.pipelineSubset =
+            static_cast<uint32_t>(GraphicsPipelineSubset::Complete);
     }
 
     // Helpers to dump the state
@@ -875,26 +877,26 @@ class GraphicsPipelineDesc final
     const void *getPipelineSubsetMemory(size_t *sizeOut) const;
 
     void initializePipelineVertexInputState(
-        ContextVk *contextVk,
+        Context *context,
         const gl::AttributesMask &activeAttribLocationsMask,
         const gl::ComponentTypeMask &programAttribsTypeMask,
         GraphicsPipelineVertexInputVulkanStructs *stateOut,
         GraphicsPipelineDynamicStateList *dynamicStateListOut) const;
 
     void initializePipelineShadersState(
-        ContextVk *contextVk,
+        Context *context,
         const ShaderAndSerialMap &shaders,
         const SpecializationConstants &specConsts,
         GraphicsPipelineShadersVulkanStructs *stateOut,
         GraphicsPipelineDynamicStateList *dynamicStateListOut) const;
 
     void initializePipelineSharedNonVertexInputState(
-        ContextVk *contextVk,
+        Context *context,
         GraphicsPipelineSharedNonVertexInputVulkanStructs *stateOut,
         GraphicsPipelineDynamicStateList *dynamicStateListOut) const;
 
     void initializePipelineFragmentOutputState(
-        ContextVk *contextVk,
+        Context *context,
         const gl::DrawBufferMask &missingOutputsMask,
         GraphicsPipelineFragmentOutputVulkanStructs *stateOut,
         GraphicsPipelineDynamicStateList *dynamicStateListOut) const;

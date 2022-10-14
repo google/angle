@@ -2895,7 +2895,7 @@ void GraphicsPipelineDesc::initDefaults(const ContextVk *contextVk, GraphicsPipe
 }
 
 angle::Result GraphicsPipelineDesc::initializePipeline(
-    ContextVk *contextVk,
+    Context *context,
     PipelineCacheAccess *pipelineCache,
     const RenderPass &compatibleRenderPass,
     const PipelineLayout &pipelineLayout,
@@ -2927,7 +2927,7 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
 
     if (hasVertexInput)
     {
-        initializePipelineVertexInputState(contextVk, activeAttribLocationsMask,
+        initializePipelineVertexInputState(context, activeAttribLocationsMask,
                                            programAttribsTypeMask, &vertexInputState,
                                            &dynamicStateList);
 
@@ -2937,7 +2937,7 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
 
     if (hasShaders)
     {
-        initializePipelineShadersState(contextVk, shaders, specConsts, &shadersState,
+        initializePipelineShadersState(context, shaders, specConsts, &shadersState,
                                        &dynamicStateList);
 
         createInfo.stageCount          = static_cast<uint32_t>(shadersState.shaderStages.size());
@@ -2951,7 +2951,7 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
 
     if (hasShadersOrFragmentOutput)
     {
-        initializePipelineSharedNonVertexInputState(contextVk, &sharedNonVertexInputState,
+        initializePipelineSharedNonVertexInputState(context, &sharedNonVertexInputState,
                                                     &dynamicStateList);
 
         createInfo.pMultisampleState = &sharedNonVertexInputState.multisampleState;
@@ -2959,7 +2959,7 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
 
     if (hasFragmentOutput)
     {
-        initializePipelineFragmentOutputState(contextVk, missingOutputsMask, &fragmentOutputState,
+        initializePipelineFragmentOutputState(context, missingOutputsMask, &fragmentOutputState,
                                               &dynamicStateList);
 
         createInfo.pColorBlendState = &fragmentOutputState.blendState;
@@ -2979,7 +2979,7 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     if ((hasVertexInput && mVertexInput.inputAssembly.bits.isRobustContext) ||
         (hasShaders && mShaders.shaders.bits.isRobustContext))
     {
-        ASSERT(contextVk->getFeatures().supportsPipelineRobustness.enabled);
+        ASSERT(context->getFeatures().supportsPipelineRobustness.enabled);
 
         robustness.storageBuffers = VK_PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS_EXT;
         robustness.uniformBuffers = VK_PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS_EXT;
@@ -2995,7 +2995,7 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     VkPipelineCreationFeedbackCreateInfo feedbackInfo = {};
     feedbackInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO;
 
-    const bool supportsFeedback = contextVk->getFeatures().supportsPipelineCreationFeedback.enabled;
+    const bool supportsFeedback = context->getFeatures().supportsPipelineCreationFeedback.enabled;
     if (supportsFeedback)
     {
         feedbackInfo.pPipelineCreationFeedback = &feedback;
@@ -3009,7 +3009,7 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
         AddToPNextChain(&createInfo, &feedbackInfo);
     }
 
-    ANGLE_TRY(pipelineCache->createGraphicsPipeline(contextVk, createInfo, pipelineOut));
+    ANGLE_TRY(pipelineCache->createGraphicsPipeline(context, createInfo, pipelineOut));
 
     if (supportsFeedback)
     {
@@ -3018,14 +3018,14 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
             0;
 
         *feedbackOut = cacheHit ? CacheLookUpFeedback::Hit : CacheLookUpFeedback::Miss;
-        ApplyPipelineCreationFeedback(contextVk, feedback);
+        ApplyPipelineCreationFeedback(context, feedback);
     }
 
     return angle::Result::Continue;
 }
 
 void GraphicsPipelineDesc::initializePipelineVertexInputState(
-    ContextVk *contextVk,
+    Context *context,
     const gl::AttributesMask &activeAttribLocationsMask,
     const gl::ComponentTypeMask &programAttribsTypeMask,
     GraphicsPipelineVertexInputVulkanStructs *stateOut,
@@ -3063,7 +3063,7 @@ void GraphicsPipelineDesc::initializePipelineVertexInputState(
 
         // Get the corresponding VkFormat for the attrib's format.
         angle::FormatID formatID            = static_cast<angle::FormatID>(packedAttrib.format);
-        const Format &format                = contextVk->getRenderer()->getFormat(formatID);
+        const Format &format                = context->getRenderer()->getFormat(formatID);
         const angle::Format &intendedFormat = format.getIntendedFormat();
         VkFormat vkFormat = format.getActualBufferVkFormat(packedAttrib.compressed);
 
@@ -3075,8 +3075,8 @@ void GraphicsPipelineDesc::initializePipelineVertexInputState(
         // If using dynamic state for stride, the value for stride is unconditionally 0 here.
         // |ContextVk::handleDirtyGraphicsVertexBuffers| implements the same fix when setting stride
         // dynamically.
-        ASSERT(!contextVk->getFeatures().supportsExtendedDynamicState.enabled ||
-               contextVk->getFeatures().forceStaticVertexStrideState.enabled ||
+        ASSERT(!context->getFeatures().supportsExtendedDynamicState.enabled ||
+               context->getFeatures().forceStaticVertexStrideState.enabled ||
                bindingDesc.stride == 0);
 
         // This forces stride to 0 when glVertexAttribPointer specifies a different type from the
@@ -3096,7 +3096,7 @@ void GraphicsPipelineDesc::initializePipelineVertexInputState(
                 // match the bit width.
                 angle::FormatID convertedFormatID = gl::ConvertFormatSignedness(intendedFormat);
                 const Format &convertedFormat =
-                    contextVk->getRenderer()->getFormat(convertedFormatID);
+                    context->getRenderer()->getFormat(convertedFormatID);
                 ASSERT(intendedFormat.channelCount ==
                        convertedFormat.getIntendedFormat().channelCount);
                 ASSERT(intendedFormat.redBits == convertedFormat.getIntendedFormat().redBits);
@@ -3107,7 +3107,7 @@ void GraphicsPipelineDesc::initializePipelineVertexInputState(
                 vkFormat = convertedFormat.getActualBufferVkFormat(packedAttrib.compressed);
             }
 
-            ASSERT(contextVk->getNativeExtensions().relaxedVertexAttributeTypeANGLE);
+            ASSERT(context->getRenderer()->getNativeExtensions().relaxedVertexAttributeTypeANGLE);
 
             if (programAttribType == gl::ComponentType::Float ||
                 attribType == gl::ComponentType::Float)
@@ -3148,21 +3148,21 @@ void GraphicsPipelineDesc::initializePipelineVertexInputState(
         static_cast<VkBool32>(inputAssembly.bits.primitiveRestartEnable);
 
     // Dynamic state
-    if (contextVk->getFeatures().supportsExtendedDynamicState.enabled)
+    if (context->getFeatures().supportsExtendedDynamicState.enabled)
     {
-        if (vertexAttribCount > 0 && !contextVk->getFeatures().forceStaticVertexStrideState.enabled)
+        if (vertexAttribCount > 0 && !context->getFeatures().forceStaticVertexStrideState.enabled)
         {
             dynamicStateListOut->push_back(VK_DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE);
         }
     }
-    if (contextVk->getFeatures().supportsExtendedDynamicState2.enabled)
+    if (context->getFeatures().supportsExtendedDynamicState2.enabled)
     {
         dynamicStateListOut->push_back(VK_DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE);
     }
 }
 
 void GraphicsPipelineDesc::initializePipelineShadersState(
-    ContextVk *contextVk,
+    Context *context,
     const ShaderAndSerialMap &shaders,
     const SpecializationConstants &specConsts,
     GraphicsPipelineShadersVulkanStructs *stateOut,
@@ -3235,7 +3235,7 @@ void GraphicsPipelineDesc::initializePipelineShadersState(
     stateOut->viewportState.scissorCount  = 1;
     stateOut->viewportState.pScissors     = nullptr;
 
-    if (contextVk->getFeatures().supportsDepthClipControl.enabled)
+    if (context->getFeatures().supportsDepthClipControl.enabled)
     {
         stateOut->depthClipControl.sType =
             VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_DEPTH_CLIP_CONTROL_CREATE_INFO_EXT;
@@ -3276,7 +3276,7 @@ void GraphicsPipelineDesc::initializePipelineShadersState(
     if (multisample.bits.rasterizationSamplesMinusOne == 0 &&
         !mShaders.shaders.bits.rasterizerDiscardEnable && !multisample.bits.alphaToCoverageEnable &&
         !multisample.bits.alphaToOneEnable && !multisample.bits.sampleShadingEnable &&
-        contextVk->getFeatures().bresenhamLineRasterization.enabled)
+        context->getFeatures().bresenhamLineRasterization.enabled)
     {
         stateOut->rasterLineState.lineRasterizationMode = VK_LINE_RASTERIZATION_MODE_BRESENHAM_EXT;
         *pNextPtr                                       = &stateOut->rasterLineState;
@@ -3284,7 +3284,7 @@ void GraphicsPipelineDesc::initializePipelineShadersState(
     }
 
     // Always set provoking vertex mode to last if available.
-    if (contextVk->getFeatures().provokingVertex.enabled)
+    if (context->getFeatures().provokingVertex.enabled)
     {
         stateOut->provokingVertexState.sType =
             VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_PROVOKING_VERTEX_STATE_CREATE_INFO_EXT;
@@ -3298,7 +3298,7 @@ void GraphicsPipelineDesc::initializePipelineShadersState(
     // When the 'depthClamping' feature is enabled, we'll be using depth clamping
     // to work around a driver issue, not as an alternative to depth clipping. Therefore we need to
     // explicitly re-enable depth clipping.
-    if (contextVk->getFeatures().depthClamping.enabled)
+    if (context->getFeatures().depthClamping.enabled)
     {
         stateOut->depthClipState.sType =
             VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_DEPTH_CLIP_STATE_CREATE_INFO_EXT;
@@ -3307,7 +3307,7 @@ void GraphicsPipelineDesc::initializePipelineShadersState(
         pNextPtr                                 = &stateOut->depthClipState.pNext;
     }
 
-    if (contextVk->getFeatures().supportsGeometryStreamsCapability.enabled)
+    if (context->getFeatures().supportsGeometryStreamsCapability.enabled)
     {
         stateOut->rasterStreamState.sType =
             VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_STREAM_CREATE_INFO_EXT;
@@ -3361,7 +3361,7 @@ void GraphicsPipelineDesc::initializePipelineShadersState(
     dynamicStateListOut->push_back(VK_DYNAMIC_STATE_STENCIL_COMPARE_MASK);
     dynamicStateListOut->push_back(VK_DYNAMIC_STATE_STENCIL_WRITE_MASK);
     dynamicStateListOut->push_back(VK_DYNAMIC_STATE_STENCIL_REFERENCE);
-    if (contextVk->getFeatures().supportsExtendedDynamicState.enabled)
+    if (context->getFeatures().supportsExtendedDynamicState.enabled)
     {
         dynamicStateListOut->push_back(VK_DYNAMIC_STATE_CULL_MODE_EXT);
         dynamicStateListOut->push_back(VK_DYNAMIC_STATE_FRONT_FACE_EXT);
@@ -3371,19 +3371,19 @@ void GraphicsPipelineDesc::initializePipelineShadersState(
         dynamicStateListOut->push_back(VK_DYNAMIC_STATE_STENCIL_TEST_ENABLE);
         dynamicStateListOut->push_back(VK_DYNAMIC_STATE_STENCIL_OP);
     }
-    if (contextVk->getFeatures().supportsExtendedDynamicState2.enabled)
+    if (context->getFeatures().supportsExtendedDynamicState2.enabled)
     {
         dynamicStateListOut->push_back(VK_DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE);
         dynamicStateListOut->push_back(VK_DYNAMIC_STATE_DEPTH_BIAS_ENABLE);
     }
-    if (contextVk->getFeatures().supportsFragmentShadingRate.enabled)
+    if (context->getFeatures().supportsFragmentShadingRate.enabled)
     {
         dynamicStateListOut->push_back(VK_DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR);
     }
 }
 
 void GraphicsPipelineDesc::initializePipelineSharedNonVertexInputState(
-    ContextVk *contextVk,
+    Context *context,
     GraphicsPipelineSharedNonVertexInputVulkanStructs *stateOut,
     GraphicsPipelineDynamicStateList *dynamicStateListOut) const
 {
@@ -3408,7 +3408,7 @@ void GraphicsPipelineDesc::initializePipelineSharedNonVertexInputState(
 }
 
 void GraphicsPipelineDesc::initializePipelineFragmentOutputState(
-    ContextVk *contextVk,
+    Context *context,
     const gl::DrawBufferMask &missingOutputsMask,
     GraphicsPipelineFragmentOutputVulkanStructs *stateOut,
     GraphicsPipelineDynamicStateList *dynamicStateListOut) const
@@ -3435,7 +3435,7 @@ void GraphicsPipelineDesc::initializePipelineFragmentOutputState(
 
     // Specify rasterization order for color when available.  This allows implementation of coherent
     // framebuffer fetch / advanced blend.
-    if (contextVk->getFeatures().supportsRasterizationOrderAttachmentAccess.enabled)
+    if (context->getFeatures().supportsRasterizationOrderAttachmentAccess.enabled)
     {
         stateOut->blendState.flags |=
             VK_PIPELINE_COLOR_BLEND_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_BIT_EXT;
@@ -3461,7 +3461,7 @@ void GraphicsPipelineDesc::initializePipelineFragmentOutputState(
             // From OpenGL ES clients, this means disabling blending for integer formats.
             if (!angle::Format::Get(mSharedNonVertexInput.renderPass[colorIndexGL]).isInt())
             {
-                ASSERT(!contextVk->getRenderer()
+                ASSERT(!context->getRenderer()
                             ->getFormat(mSharedNonVertexInput.renderPass[colorIndexGL])
                             .getActualRenderableImageFormat()
                             .isInt());
@@ -3472,7 +3472,7 @@ void GraphicsPipelineDesc::initializePipelineFragmentOutputState(
                 const PackedColorBlendAttachmentState &packedBlendState =
                     colorBlend.attachments[colorIndexGL];
                 if (packedBlendState.colorBlendOp <= static_cast<uint8_t>(VK_BLEND_OP_MAX) ||
-                    contextVk->getFeatures().supportsBlendOperationAdvanced.enabled)
+                    context->getFeatures().supportsBlendOperationAdvanced.enabled)
                 {
                     state.blendEnable = VK_TRUE;
                     UnpackBlendAttachmentState(packedBlendState, &state);
@@ -3480,8 +3480,8 @@ void GraphicsPipelineDesc::initializePipelineFragmentOutputState(
             }
         }
 
-        if (contextVk->getExtensions().robustFragmentShaderOutputANGLE &&
-            missingOutputsMask[colorIndexGL])
+        ASSERT(context->getRenderer()->getNativeExtensions().robustFragmentShaderOutputANGLE);
+        if (missingOutputsMask[colorIndexGL])
         {
             state.colorWriteMask = 0;
         }
@@ -3494,7 +3494,7 @@ void GraphicsPipelineDesc::initializePipelineFragmentOutputState(
 
     // Dynamic state
     dynamicStateListOut->push_back(VK_DYNAMIC_STATE_BLEND_CONSTANTS);
-    if (contextVk->getFeatures().supportsLogicOpDynamicState.enabled)
+    if (context->getFeatures().supportsLogicOpDynamicState.enabled)
     {
         dynamicStateListOut->push_back(VK_DYNAMIC_STATE_LOGIC_OP_EXT);
     }

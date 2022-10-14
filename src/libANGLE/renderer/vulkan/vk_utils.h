@@ -26,6 +26,7 @@
 #include "libANGLE/renderer/vulkan/SecondaryCommandBuffer.h"
 #include "libANGLE/renderer/vulkan/VulkanSecondaryCommandBuffer.h"
 #include "libANGLE/renderer/vulkan/vk_wrapper.h"
+#include "platform/FeaturesVk_autogen.h"
 #include "vulkan/vulkan_fuchsia_ext.h"
 
 #define ANGLE_GL_OBJECTS_X(PROC) \
@@ -196,6 +197,7 @@ class Context : angle::NonCopyable
                              unsigned int line) = 0;
     VkDevice getDevice() const;
     RendererVk *getRenderer() const { return mRenderer; }
+    const angle::FeaturesVk &getFeatures() const;
 
     const angle::VulkanPerfCounters &getPerfCounters() const { return mPerfCounters; }
     angle::VulkanPerfCounters &getPerfCounters() { return mPerfCounters; }

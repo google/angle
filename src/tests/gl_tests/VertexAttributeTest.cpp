@@ -5,7 +5,6 @@
 //
 #include "anglebase/numerics/safe_conversions.h"
 #include "common/mathutil.h"
-#include "platform/FeaturesVk_autogen.h"
 #include "test_utils/ANGLETest.h"
 #include "test_utils/gl_raii.h"
 #include "util/random_utils.h"
