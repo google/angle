@@ -157,6 +157,7 @@ enum class SurfaceType
 
 struct RenderTestParams : public angle::PlatformParameters
 {
+    RenderTestParams();
     virtual ~RenderTestParams() {}
 
     virtual std::string backend() const;

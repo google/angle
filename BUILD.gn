@@ -215,6 +215,10 @@ config("internal_config") {
   if (angle_test_enable_system_egl) {
     defines += [ "ANGLE_TEST_ENABLE_SYSTEM_EGL" ]
   }
+
+  if (angle_debug_layers_enabled) {
+    defines += [ "ANGLE_DEBUG_LAYERS_ENABLED" ]
+  }
 }
 
 config("constructor_and_destructor_warnings") {

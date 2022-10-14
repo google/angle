@@ -331,10 +331,11 @@ def _run_tests(args, tests, extra_flags, env, screenshot_dir, results, test_resu
                     gtest_filter,
                     '--one-frame-only',
                     '--verbose-logging',
-                    '--enable-all-trace-tests',
                     '--render-test-output-dir=%s' % screenshot_dir,
                     '--save-screenshots',
                 ] + extra_flags
+                if args.swiftshader:
+                    cmd_args += ['--use-angle=swiftshader']
                 result, _, json_results = angle_test_util.RunTestSuite(
                     args.test_suite, cmd_args, env, use_xvfb=args.xvfb)
                 batch_result = PASS if result == 0 else FAIL

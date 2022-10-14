@@ -638,6 +638,15 @@ int ANGLEPerfTest::getStepAlignment() const
     return 1;
 }
 
+RenderTestParams::RenderTestParams()
+{
+#if defined(ANGLE_DEBUG_LAYERS_ENABLED)
+    eglParameters.debugLayersEnabled = true;
+#else
+    eglParameters.debugLayersEnabled = false;
+#endif
+}
+
 std::string RenderTestParams::backend() const
 {
     std::stringstream strstr;

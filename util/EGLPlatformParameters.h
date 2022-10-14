@@ -30,6 +30,8 @@ enum class GLESDriverType
     SystemEGL,
     SystemWGL,
 };
+
+GLESDriverType GetDriverTypeFromString(const char *driverName, GLESDriverType defaultDriverType);
 }  // namespace angle
 
 struct EGLPlatformParameters

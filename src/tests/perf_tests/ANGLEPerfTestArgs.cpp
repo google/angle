@@ -11,185 +11,164 @@
 #include <string.h>
 #include <sstream>
 
+#include "util/test_utils.h"
+
 namespace angle
 {
-bool gCalibration              = false;
-int gStepsPerTrial             = std::numeric_limits<int>::max();
-int gMaxStepsPerformed         = 0;
-bool gEnableTrace              = false;
-const char *gTraceFile         = "ANGLETrace.json";
-const char *gScreenShotDir     = nullptr;
-bool gSaveScreenshots          = false;
-int gScreenShotFrame           = 1;
-bool gVerboseLogging           = false;
-double gCalibrationTimeSeconds = 1.0;
-double gMaxTrialTimeSeconds    = 10.0;
-int gTestTrials                = 3;
-bool gNoFinish                 = false;
-bool gEnableAllTraceTests      = false;
-bool gRetraceMode              = false;
-bool gMinimizeGPUWork          = false;
-bool gTraceTestValidation      = false;
-const char *gPerfCounters      = nullptr;
+bool gCalibration                = false;
+int gStepsPerTrial               = std::numeric_limits<int>::max();
+int gMaxStepsPerformed           = 0;
+bool gEnableTrace                = false;
+const char *gTraceFile           = "ANGLETrace.json";
+const char *gScreenshotDir       = nullptr;
+const char *gRenderTestOutputDir = nullptr;
+bool gSaveScreenshots            = false;
+int gScreenshotFrame             = 1;
+bool gVerboseLogging             = false;
+int gCalibrationTimeSeconds      = 1;
+int gMaxTrialTimeSeconds         = 0;
+int gTestTrials                  = 3;
+bool gNoFinish                   = false;
+bool gRetraceMode                = false;
+bool gMinimizeGPUWork            = false;
+bool gTraceTestValidation        = false;
+const char *gPerfCounters        = nullptr;
+const char *gUseANGLE            = nullptr;
+const char *gUseGL               = nullptr;
+bool gOffscreen                  = false;
+bool gVsync                      = false;
+bool gOneFrameOnly               = false;
+bool gNoWarmup                   = false;
+int gFixedTestTime               = 0;
 
 // Default to three warmup trials. There's no science to this. More than two was experimentally
 // helpful on a Windows NVIDIA setup when testing with Vulkan and native trace tests.
 int gWarmupTrials = 3;
 int gWarmupSteps  = std::numeric_limits<int>::max();
-}  // namespace angle
 
 namespace
 {
-int ReadIntArgument(const char *arg)
+bool PerfTestArg(int *argc, char **argv, int argIndex)
 {
-    std::stringstream strstr;
-    strstr << arg;
-
-    int value;
-    strstr >> value;
-    return value;
+    return ParseFlag("--one-frame-only", argc, argv, argIndex, &gOneFrameOnly) ||
+           ParseFlag("--enable-trace", argc, argv, argIndex, &gEnableTrace) ||
+           ParseFlag("--calibration", argc, argv, argIndex, &gCalibration) ||
+           ParseFlag("-v", argc, argv, argIndex, &gVerboseLogging) ||
+           ParseFlag("--verbose", argc, argv, argIndex, &gVerboseLogging) ||
+           ParseFlag("--verbose-logging", argc, argv, argIndex, &gVerboseLogging) ||
+           ParseFlag("--no-warmup", argc, argv, argIndex, &gNoWarmup) ||
+           ParseFlag("--no-finish", argc, argv, argIndex, &gNoFinish) ||
+           ParseFlag("--minimize-gpu-work", argc, argv, argIndex, &gMinimizeGPUWork) ||
+           ParseCStringArg("--trace-file", argc, argv, argIndex, &gTraceFile) ||
+           ParseCStringArg("--perf-counters", argc, argv, argIndex, &gPerfCounters) ||
+           ParseIntArg("--steps-per-trial", argc, argv, argIndex, &gStepsPerTrial) ||
+           ParseIntArg("--max-steps-performed", argc, argv, argIndex, &gMaxStepsPerformed) ||
+           ParseIntArg("--fixed-test-time", argc, argv, argIndex, &gFixedTestTime) ||
+           ParseIntArg("--warmup-trials", argc, argv, argIndex, &gWarmupTrials) ||
+           ParseIntArg("--warmup-steps", argc, argv, argIndex, &gWarmupSteps) ||
+           ParseIntArg("--calibration-time", argc, argv, argIndex, &gCalibrationTimeSeconds) ||
+           ParseIntArg("--trial-time", argc, argv, argIndex, &gMaxTrialTimeSeconds) ||
+           ParseIntArg("--max-trial-time", argc, argv, argIndex, &gMaxTrialTimeSeconds) ||
+           ParseIntArg("--trials", argc, argv, argIndex, &gTestTrials);
 }
 
-constexpr char kRenderTestOutputDir[] = "--render-test-output-dir=";
+bool TraceTestArg(int *argc, char **argv, int argIndex)
+{
+    return ParseFlag("--retrace-mode", argc, argv, argIndex, &gRetraceMode) ||
+           ParseFlag("--validation", argc, argv, argIndex, &gTraceTestValidation) ||
+           ParseFlag("--save-screenshots", argc, argv, argIndex, &gSaveScreenshots) ||
+           ParseFlag("--offscreen", argc, argv, argIndex, &gOffscreen) ||
+           ParseFlag("--vsync", argc, argv, argIndex, &gVsync) ||
+           ParseIntArg("--screenshot-frame", argc, argv, argIndex, &gScreenshotFrame) ||
+           ParseCStringArg("--render-test-output-dir", argc, argv, argIndex,
+                           &gRenderTestOutputDir) ||
+           ParseCStringArg("--screenshot-dir", argc, argv, argIndex, &gScreenshotDir) ||
+           ParseCStringArg("--use-angle", argc, argv, argIndex, &gUseANGLE) ||
+           ParseCStringArg("--use-gl", argc, argv, argIndex, &gUseGL);
+}
 }  // namespace
+}  // namespace angle
 
 using namespace angle;
 
 void ANGLEProcessPerfTestArgs(int *argc, char **argv)
 {
-    for (int argIndex = 0; argIndex < *argc; argIndex++)
+    for (int argIndex = 1; argIndex < *argc;)
     {
-        if (strcmp("--one-frame-only", argv[argIndex]) == 0)
+        if (!PerfTestArg(argc, argv, argIndex))
         {
-            gStepsPerTrial = 1;
-            gWarmupTrials  = 0;
-        }
-        else if (strcmp("--enable-trace", argv[argIndex]) == 0)
-        {
-            gEnableTrace = true;
-        }
-        else if (strcmp("--trace-file", argv[argIndex]) == 0 && argIndex < *argc - 1)
-        {
-            gTraceFile = argv[argIndex + 1];
-            // Skip an additional argument.
             argIndex++;
         }
-        else if (strcmp("--calibration", argv[argIndex]) == 0)
+    }
+
+    if (gOneFrameOnly)
+    {
+        gStepsPerTrial = 1;
+        gWarmupTrials  = 0;
+    }
+
+    if (gCalibration)
+    {
+        gTestTrials = 0;
+    }
+
+    if (gMaxStepsPerformed > 0)
+    {
+        gWarmupTrials        = 0;
+        gTestTrials          = 1;
+        gMaxTrialTimeSeconds = 36000;
+    }
+
+    if (gFixedTestTime != 0)
+    {
+        gMaxTrialTimeSeconds = gFixedTestTime;
+        gStepsPerTrial       = std::numeric_limits<int>::max();
+        gTestTrials          = 1;
+        gWarmupTrials        = 0;
+    }
+
+    if (gNoWarmup)
+    {
+        gWarmupTrials = 0;
+    }
+
+    if (gMaxTrialTimeSeconds == 0)
+    {
+        gMaxTrialTimeSeconds = 10;
+    }
+    else
+    {
+        gCalibrationTimeSeconds = gMaxTrialTimeSeconds;
+    }
+}
+
+void ANGLEProcessTraceTestArgs(int *argc, char **argv)
+{
+    ANGLEProcessPerfTestArgs(argc, argv);
+
+    for (int argIndex = 1; argIndex < *argc;)
+    {
+        if (!TraceTestArg(argc, argv, argIndex))
         {
-            gCalibration = true;
-            gTestTrials  = 0;
-        }
-        else if (strcmp("--steps-per-trial", argv[argIndex]) == 0 && argIndex < *argc - 1)
-        {
-            gStepsPerTrial = ReadIntArgument(argv[argIndex + 1]);
-            // Skip an additional argument.
             argIndex++;
         }
-        else if (strcmp("--max-steps-performed", argv[argIndex]) == 0 && argIndex < *argc - 1)
-        {
-            gMaxStepsPerformed   = ReadIntArgument(argv[argIndex + 1]);
-            gWarmupTrials        = 0;
-            gTestTrials          = 1;
-            gMaxTrialTimeSeconds = 36000;
-            // Skip an additional argument.
-            argIndex++;
-        }
-        else if (strcmp("--fixed-test-time", argv[argIndex]) == 0 && argIndex < *argc - 1)
-        {
-            gMaxTrialTimeSeconds = ReadIntArgument(argv[argIndex + 1]);
-            gStepsPerTrial       = std::numeric_limits<int>::max();
-            gTestTrials          = 1;
-            gWarmupTrials        = 0;
-            // Skip an additional argument.
-            argIndex++;
-        }
-        else if (strcmp("--screenshot-dir", argv[argIndex]) == 0 && argIndex < *argc - 1)
-        {
-            gScreenShotDir   = argv[argIndex + 1];
-            gSaveScreenshots = true;  // implicitly set here but not when using kRenderTestOutputDir
-            argIndex++;
-        }
-        else if (strncmp(kRenderTestOutputDir, argv[argIndex], strlen(kRenderTestOutputDir)) == 0)
-        {
-            gScreenShotDir = argv[argIndex] + strlen(kRenderTestOutputDir);
-        }
-        else if (strcmp("--save-screenshots", argv[argIndex]) == 0)
-        {
-            gSaveScreenshots = true;
-        }
-        else if (strcmp("--screenshot-frame", argv[argIndex]) == 0 && argIndex < *argc - 1)
-        {
-            gScreenShotFrame = ReadIntArgument(argv[argIndex + 1]);
-            argIndex++;
-        }
-        else if (strcmp("--verbose-logging", argv[argIndex]) == 0 ||
-                 strcmp("--verbose", argv[argIndex]) == 0 || strcmp("-v", argv[argIndex]) == 0)
-        {
-            gVerboseLogging = true;
-        }
-        else if (strcmp("--warmup-trials", argv[argIndex]) == 0)
-        {
-            gWarmupTrials = ReadIntArgument(argv[argIndex + 1]);
-            // Skip an additional argument.
-            argIndex++;
-        }
-        else if (strcmp("--warmup-steps", argv[argIndex]) == 0)
-        {
-            gWarmupSteps = ReadIntArgument(argv[argIndex + 1]);
-            // Skip an additional argument.
-            argIndex++;
-        }
-        else if (strcmp("--no-warmup", argv[argIndex]) == 0)
-        {
-            gWarmupTrials = 0;
-        }
-        else if (strcmp("--calibration-time", argv[argIndex]) == 0)
-        {
-            gCalibrationTimeSeconds = ReadIntArgument(argv[argIndex + 1]);
-            // Skip an additional argument.
-            argIndex++;
-        }
-        else if ((strcmp("--max-trial-time", argv[argIndex]) == 0) ||
-                 (strcmp("--trial-time", argv[argIndex]) == 0))
-        {
-            gMaxTrialTimeSeconds    = ReadIntArgument(argv[argIndex + 1]);
-            gCalibrationTimeSeconds = gMaxTrialTimeSeconds;
-            // Skip an additional argument.
-            argIndex++;
-        }
-        else if (strcmp("--trials", argv[argIndex]) == 0)
-        {
-            gTestTrials = ReadIntArgument(argv[argIndex + 1]);
-            // Skip an additional argument.
-            argIndex++;
-        }
-        else if (strcmp("--no-finish", argv[argIndex]) == 0)
-        {
-            gNoFinish = true;
-        }
-        else if (strcmp("--enable-all-trace-tests", argv[argIndex]) == 0)
-        {
-            gEnableAllTraceTests = true;
-        }
-        else if (strcmp("--retrace-mode", argv[argIndex]) == 0)
-        {
-            gRetraceMode = true;
-        }
-        else if (strcmp("--minimize-gpu-work", argv[argIndex]) == 0)
-        {
-            gMinimizeGPUWork = true;
-        }
-        else if (strcmp("--validation", argv[argIndex]) == 0)
-        {
-            gTraceTestValidation = true;
-            gWarmupTrials        = 0;
-            gTestTrials          = 1;
-            gMaxTrialTimeSeconds = 600.0;
-        }
-        else if (strcmp("--perf-counters", argv[argIndex]) == 0 && argIndex < *argc - 1)
-        {
-            gPerfCounters = argv[argIndex + 1];
-            argIndex++;
-        }
+    }
+
+    if (gScreenshotDir)
+    {
+        // implicitly set here but not when using kRenderTestOutputDir
+        gSaveScreenshots = true;
+    }
+
+    if (gRenderTestOutputDir)
+    {
+        gScreenshotDir = gRenderTestOutputDir;
+    }
+
+    if (gTraceTestValidation)
+    {
+        gWarmupTrials        = 0;
+        gTestTrials          = 1;
+        gMaxTrialTimeSeconds = 600;
     }
 }

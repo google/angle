@@ -798,4 +798,32 @@ void SetSelectedConfig(const char *selectedConfig)
     gSelectedConfig.fill(0);
     strncpy(gSelectedConfig.data(), selectedConfig, kMaxConfigNameLen - 1);
 }
+
+GLESDriverType GetDriverTypeFromString(const char *driverName, GLESDriverType defaultDriverType)
+{
+    if (!driverName)
+    {
+        return defaultDriverType;
+    }
+
+    if (strcmp(driverName, "angle") == 0)
+    {
+        return GLESDriverType::AngleEGL;
+    }
+
+    if (strcmp(driverName, "native") == 0 || strcmp(driverName, "system") == 0)
+    {
+        if (IsWindows())
+        {
+            return GLESDriverType::SystemWGL;
+        }
+        else
+        {
+            return GLESDriverType::SystemEGL;
+        }
+    }
+
+    printf("Unknown driver type: %s\n", driverName);
+    exit(EXIT_FAILURE);
+}
 }  // namespace angle
