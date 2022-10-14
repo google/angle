@@ -3845,31 +3845,6 @@
         "use_isolated_scripts_api": true
       },
       {
-        "args": [
-          "--test-timeout=300",
-          "--batch-size=256"
-        ],
-        "merge": {
-          "args": [],
-          "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
-        },
-        "swarming": {
-          "can_use_on_swarming_builders": true,
-          "containment_type": "AUTO",
-          "dimension_sets": [
-            {
-              "gpu": "8086:5912-26.20.100.8141|8086:3e92-26.20.100.8141",
-              "os": "Windows-10",
-              "pool": "chromium.tests.gpu"
-            }
-          ],
-          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
-        },
-        "test": "angle_gles1_conformance_tests",
-        "test_id_prefix": "ninja://src/tests:angle_gles1_conformance_tests/",
-        "use_isolated_scripts_api": true
-      },
-      {
         "merge": {
           "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
