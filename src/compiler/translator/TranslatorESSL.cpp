@@ -140,6 +140,12 @@ void TranslatorESSL::writeExtensionBehavior(const ShCompileOptions &compileOptio
                 sink << "#extension GL_NV_draw_buffers : " << GetBehaviorString(iter->second)
                      << "\n";
             }
+            else if (getResources().EXT_clip_cull_distance &&
+                     iter->first == TExtension::APPLE_clip_distance)
+            {
+                sink << "#extension GL_EXT_clip_cull_distance : " << GetBehaviorString(iter->second)
+                     << "\n";
+            }
             else if (isMultiview)
             {
                 // Only either OVR_multiview OR OVR_multiview2 should be emitted.

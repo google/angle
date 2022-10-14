@@ -645,6 +645,14 @@
             "issue": "http://anglebug.com/7527"
         },
         {
+            "name": "disable_clip_cull_distance",
+            "category": "Workarounds",
+            "description": [
+                "Shader compiler does not handle redeclared built-ins."
+            ],
+            "issue": "https://anglebug.com/7763"
+        },
+        {
             "name": "supports_fragment_shader_interlock_NV",
             "category": "Features",
             "description": [

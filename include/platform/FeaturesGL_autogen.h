@@ -467,6 +467,11 @@ struct FeaturesGL : FeatureSetBase
         "packUnorm4x8 fails on Pixel 4 if it is not passed a highp vec4.", &members,
         "http://anglebug.com/7527"};
 
+    FeatureInfo disableClipCullDistance = {"disableClipCullDistance",
+                                           FeatureCategory::OpenGLWorkarounds,
+                                           "Shader compiler does not handle redeclared built-ins.",
+                                           &members, "https://anglebug.com/7763"};
+
     FeatureInfo supportsFragmentShaderInterlockNV = {
         "supportsFragmentShaderInterlockNV", FeatureCategory::OpenGLFeatures,
         "Backend GL context supports NV_fragment_shader_interlock extension", &members,

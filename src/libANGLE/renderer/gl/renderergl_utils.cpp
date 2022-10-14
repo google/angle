@@ -1880,14 +1880,26 @@ void GenerateCaps(const FunctionsGL *functions,
                                     functions->hasGLESExtension("GL_EXT_shadow_samplers");
 
     // GL_APPLE_clip_distance
-    extensions->clipDistanceAPPLE = functions->isAtLeastGL(gl::Version(3, 0));
+    extensions->clipDistanceAPPLE = !features.disableClipCullDistance.enabled &&
+                                    (functions->isAtLeastGL(gl::Version(3, 0)) ||
+                                     functions->hasGLESExtension("GL_APPLE_clip_distance") ||
+                                     functions->hasGLESExtension("GL_EXT_clip_cull_distance"));
     if (extensions->clipDistanceAPPLE)
     {
         caps->maxClipDistances = QuerySingleGLInt(functions, GL_MAX_CLIP_DISTANCES_EXT);
     }
-    else
+
+    // GL_EXT_clip_cull_distance
+    extensions->clipCullDistanceEXT = !features.disableClipCullDistance.enabled &&
+                                      ((functions->isAtLeastGL(gl::Version(3, 0)) &&
+                                        functions->hasGLExtension("GL_ARB_cull_distance")) ||
+                                       functions->isAtLeastGL(gl::Version(4, 5)) ||
+                                       functions->hasGLESExtension("GL_EXT_clip_cull_distance"));
+    if (extensions->clipCullDistanceEXT)
     {
-        caps->maxClipDistances = 0;
+        caps->maxCullDistances = QuerySingleGLInt(functions, GL_MAX_CULL_DISTANCES_EXT);
+        caps->maxCombinedClipAndCullDistances =
+            QuerySingleGLInt(functions, GL_MAX_COMBINED_CLIP_AND_CULL_DISTANCES_EXT);
     }
 
     // GL_OES_shader_image_atomic
@@ -2369,6 +2381,9 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
 
     // https://anglebug.com/7527
     ANGLE_FEATURE_CONDITION(features, passHighpToPackUnormSnormBuiltins, isQualcomm);
+
+    // https://anglebug.com/7763
+    ANGLE_FEATURE_CONDITION(features, disableClipCullDistance, isQualcomm);
 
     // Desktop GLSL-only fragment synchronization extensions. These are injected internally by the
     // compiler to make pixel local storage coherent.

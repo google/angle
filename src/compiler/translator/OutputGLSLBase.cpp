@@ -373,7 +373,9 @@ const char *TOutputGLSLBase::mapQualifierToString(TQualifier qualifier)
         // gl_ClipDistance / gl_CullDistance require different qualifiers based on shader type.
         case EvqClipDistance:
         case EvqCullDistance:
-            return mShaderType == GL_FRAGMENT_SHADER ? "in" : "out";
+            return (sh::IsGLSL130OrNewer(mOutput) || mShaderVersion > 100)
+                       ? (mShaderType == GL_FRAGMENT_SHADER ? "in" : "out")
+                       : "varying";
 
         // gl_LastFragColor / gl_LastFragData have no qualifiers.
         case EvqLastFragData:

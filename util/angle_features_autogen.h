@@ -64,6 +64,7 @@ enum class Feature
     DisableAnisotropicFiltering,
     DisableB5G6R5Support,
     DisableBlendFuncExtended,
+    DisableClipCullDistance,
     DisableDrawBuffersIndexed,
     DisableFifoPresentMode,
     DisableFlippingBlitWithCommand,
