@@ -1715,7 +1715,8 @@ enum class PipelineState
 using UnpackedPipelineState = angle::PackedEnumMap<PipelineState, uint32_t>;
 using PipelineStateBitSet   = angle::BitSetArray<angle::EnumSize<PipelineState>()>;
 
-void UnpackPipelineState(const vk::GraphicsPipelineDesc &state, UnpackedPipelineState *valuesOut)
+[[maybe_unused]] void UnpackPipelineState(const vk::GraphicsPipelineDesc &state,
+                                          UnpackedPipelineState *valuesOut)
 {
     const PipelineVertexInputState &vertexInputState = state.getVertexInputStateForLog();
     const PipelineShadersState &shadersState         = state.getShadersStateForLog();
@@ -1833,7 +1834,8 @@ void UnpackPipelineState(const vk::GraphicsPipelineDesc &state, UnpackedPipeline
     (*valuesOut)[PipelineState::LogicOp]         = blendMaskAndLogic.bits.logicOp;
 }
 
-PipelineStateBitSet GetCommonPipelineState(const std::vector<UnpackedPipelineState> &pipelines)
+[[maybe_unused]] PipelineStateBitSet GetCommonPipelineState(
+    const std::vector<UnpackedPipelineState> &pipelines)
 {
     PipelineStateBitSet commonState;
     commonState.set();
@@ -1908,7 +1910,7 @@ PipelineState GetPipelineState(size_t stateIndex, bool *isRangedOut, size_t *sub
     return static_cast<PipelineState>(stateIndex);
 }
 
-void OutputPipelineState(std::ostream &out, size_t stateIndex, uint32_t state)
+[[maybe_unused]] void OutputPipelineState(std::ostream &out, size_t stateIndex, uint32_t state)
 {
     size_t subIndex             = 0;
     bool isRanged               = false;
@@ -2300,11 +2302,11 @@ void OutputPipelineState(std::ostream &out, size_t stateIndex, uint32_t state)
     out << "\\n";
 }
 
-void OutputAllPipelineState(ContextVk *contextVk,
-                            std::ostream &out,
-                            const UnpackedPipelineState &pipeline,
-                            const PipelineStateBitSet &include,
-                            bool isCommonState)
+[[maybe_unused]] void OutputAllPipelineState(ContextVk *contextVk,
+                                             std::ostream &out,
+                                             const UnpackedPipelineState &pipeline,
+                                             const PipelineStateBitSet &include,
+                                             bool isCommonState)
 {
     const angle::PackedEnumMap<PipelineState, uint32_t> kDefaultState = {{
         {PipelineState::VertexAttribFormat,
@@ -2391,14 +2393,20 @@ void OutputAllPipelineState(ContextVk *contextVk,
     }
 }
 
+template <typename Hash>
 void DumpPipelineCacheGraph(
     ContextVk *contextVk,
-    const std::unordered_map<vk::GraphicsPipelineDesc, vk::PipelineHelper> &cache)
+    const std::unordered_map<vk::GraphicsPipelineDesc,
+                             vk::PipelineHelper,
+                             Hash,
+                             typename GraphicsPipelineCacheTypeHelper<Hash>::KeyEqual> &cache)
 {
     std::ostream &out = contextVk->getPipelineCacheGraphStream();
 
     static std::atomic<uint32_t> sCacheSerial(0);
-    angle::HashMap<vk::GraphicsPipelineDesc, uint32_t> descToId;
+    angle::HashMap<vk::GraphicsPipelineDesc, uint32_t, Hash,
+                   typename GraphicsPipelineCacheTypeHelper<Hash>::KeyEqual>
+        descToId;
 
     uint32_t cacheSerial = sCacheSerial.fetch_add(1);
     uint32_t descId      = 0;
@@ -2676,35 +2684,12 @@ GraphicsPipelineDesc::GraphicsPipelineDesc(const GraphicsPipelineDesc &other)
 
 GraphicsPipelineDesc &GraphicsPipelineDesc::operator=(const GraphicsPipelineDesc &other)
 {
-    mFragmentOutput.blendMaskAndLogic.bits.pipelineSubset =
-        other.mFragmentOutput.blendMaskAndLogic.bits.pipelineSubset;
-
-    switch (getPipelineSubset())
-    {
-        case GraphicsPipelineSubset::VertexInput:
-            mVertexInput = other.mVertexInput;
-            break;
-
-        case GraphicsPipelineSubset::Shaders:
-            mShaders              = other.mShaders;
-            mSharedNonVertexInput = other.mSharedNonVertexInput;
-            break;
-
-        case GraphicsPipelineSubset::FragmentOutput:
-            mSharedNonVertexInput = other.mSharedNonVertexInput;
-            mFragmentOutput       = other.mFragmentOutput;
-            break;
-
-        case GraphicsPipelineSubset::Complete:
-        default:
-            memcpy(this, &other, sizeof(*this));
-            break;
-    }
-
+    memcpy(this, &other, sizeof(*this));
     return *this;
 }
 
-const void *GraphicsPipelineDesc::getPipelineSubsetMemory(size_t *sizeOut) const
+const void *GraphicsPipelineDesc::getPipelineSubsetMemory(GraphicsPipelineSubset subset,
+                                                          size_t *sizeOut) const
 {
     // GraphicsPipelineDesc must be laid out such that the three subsets are contiguous.  The layout
     // is:
@@ -2726,6 +2711,12 @@ const void *GraphicsPipelineDesc::getPipelineSubsetMemory(size_t *sizeOut) const
                       kGraphicsPipelineSharedNonVertexInputStateSize);
     static_assert(offsetof(GraphicsPipelineDesc, mVertexInput) == kPipelineVertexInputDescOffset);
 
+    // Exclude vertex strides from the hash. It's conveniently placed last, so it would be easy to
+    // exclude it from hash.
+    static_assert(offsetof(GraphicsPipelineDesc, mVertexInput.vertex.strides) +
+                      sizeof(PackedVertexInputAttributes::strides) ==
+                  sizeof(GraphicsPipelineDesc));
+
     size_t vertexInputReduceSize = 0;
     if (mVertexInput.inputAssembly.bits.supportsDynamicState1 &&
         !mVertexInput.inputAssembly.bits.forceStaticVertexStrideState)
@@ -2733,7 +2724,7 @@ const void *GraphicsPipelineDesc::getPipelineSubsetMemory(size_t *sizeOut) const
         vertexInputReduceSize = sizeof(PackedVertexInputAttributes::strides);
     }
 
-    switch (getPipelineSubset())
+    switch (subset)
     {
         case GraphicsPipelineSubset::VertexInput:
             *sizeOut = kPipelineVertexInputDescSize - vertexInputReduceSize;
@@ -2754,29 +2745,22 @@ const void *GraphicsPipelineDesc::getPipelineSubsetMemory(size_t *sizeOut) const
     }
 }
 
-size_t GraphicsPipelineDesc::hash() const
+size_t GraphicsPipelineDesc::hash(GraphicsPipelineSubset subset) const
 {
-    // Exclude vertex strides from the hash. It's conveniently placed last, so it would be easy to
-    // exclude it from hash.
-    static_assert(offsetof(GraphicsPipelineDesc, mVertexInput.vertex.strides) +
-                      sizeof(PackedVertexInputAttributes::strides) ==
-                  sizeof(GraphicsPipelineDesc));
-
     size_t keySize  = 0;
-    const void *key = getPipelineSubsetMemory(&keySize);
+    const void *key = getPipelineSubsetMemory(subset, &keySize);
 
     return angle::ComputeGenericHash(key, keySize);
 }
 
-bool GraphicsPipelineDesc::operator==(const GraphicsPipelineDesc &other) const
+bool GraphicsPipelineDesc::keyEqual(const GraphicsPipelineDesc &other,
+                                    GraphicsPipelineSubset subset) const
 {
-    ASSERT(getPipelineSubset() == other.getPipelineSubset());
-
     size_t keySize  = 0;
-    const void *key = getPipelineSubsetMemory(&keySize);
+    const void *key = getPipelineSubsetMemory(subset, &keySize);
 
     size_t otherKeySize  = 0;
-    const void *otherKey = other.getPipelineSubsetMemory(&otherKeySize);
+    const void *otherKey = other.getPipelineSubsetMemory(subset, &otherKeySize);
 
     // Compare the relevant part of the desc memory.  Note that due to workarounds (e.g.
     // forceStaticVertexStrideState), |this| or |other| may produce different key sizes.  In that
@@ -2794,8 +2778,6 @@ bool GraphicsPipelineDesc::operator==(const GraphicsPipelineDesc &other) const
 // copies of isRobustContext, one for vertex input and one for shader stages).
 void GraphicsPipelineDesc::initDefaults(const ContextVk *contextVk, GraphicsPipelineSubset subset)
 {
-    SetBitField(mFragmentOutput.blendMaskAndLogic.bits.pipelineSubset, subset);
-
     if (GraphicsPipelineHasVertexInput(subset))
     {
         // Set all vertex input attributes to default, the default format is Float
@@ -2897,6 +2879,7 @@ void GraphicsPipelineDesc::initDefaults(const ContextVk *contextVk, GraphicsPipe
 angle::Result GraphicsPipelineDesc::initializePipeline(
     Context *context,
     PipelineCacheAccess *pipelineCache,
+    GraphicsPipelineSubset subset,
     const RenderPass &compatibleRenderPass,
     const PipelineLayout &pipelineLayout,
     const gl::AttributesMask &activeAttribLocationsMask,
@@ -2919,11 +2902,10 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     createInfo.renderPass                   = compatibleRenderPass.getHandle();
     createInfo.subpass                      = mSharedNonVertexInput.multisample.bits.subpass;
 
-    const bool hasVertexInput = GraphicsPipelineHasVertexInput(getPipelineSubset());
-    const bool hasShaders     = GraphicsPipelineHasShaders(getPipelineSubset());
-    const bool hasShadersOrFragmentOutput =
-        GraphicsPipelineHasShadersOrFragmentOutput(getPipelineSubset());
-    const bool hasFragmentOutput = GraphicsPipelineHasFragmentOutput(getPipelineSubset());
+    const bool hasVertexInput             = GraphicsPipelineHasVertexInput(subset);
+    const bool hasShaders                 = GraphicsPipelineHasShaders(subset);
+    const bool hasShadersOrFragmentOutput = GraphicsPipelineHasShadersOrFragmentOutput(subset);
+    const bool hasFragmentOutput          = GraphicsPipelineHasFragmentOutput(subset);
 
     if (hasVertexInput)
     {
@@ -6099,14 +6081,8 @@ void PipelineCacheAccess::merge(RendererVk *renderer, const vk::PipelineCache &p
 }
 
 // GraphicsPipelineCache implementation.
-GraphicsPipelineCache::GraphicsPipelineCache() = default;
-
-GraphicsPipelineCache::~GraphicsPipelineCache()
-{
-    ASSERT(mPayload.empty());
-}
-
-void GraphicsPipelineCache::destroy(RendererVk *rendererVk)
+template <typename Hash>
+void GraphicsPipelineCache<Hash>::destroy(RendererVk *rendererVk)
 {
     accumulateCacheStats(rendererVk);
 
@@ -6121,11 +6097,12 @@ void GraphicsPipelineCache::destroy(RendererVk *rendererVk)
     mPayload.clear();
 }
 
-void GraphicsPipelineCache::release(ContextVk *contextVk)
+template <typename Hash>
+void GraphicsPipelineCache<Hash>::release(ContextVk *contextVk)
 {
     if (kDumpPipelineCacheGraph && !mPayload.empty())
     {
-        vk::DumpPipelineCacheGraph(contextVk, mPayload);
+        vk::DumpPipelineCacheGraph<Hash>(contextVk, mPayload);
     }
 
     for (auto &item : mPayload)
@@ -6137,12 +6114,8 @@ void GraphicsPipelineCache::release(ContextVk *contextVk)
     mPayload.clear();
 }
 
-void GraphicsPipelineCache::reset()
-{
-    mPayload.clear();
-}
-
-angle::Result GraphicsPipelineCache::insertPipeline(
+template <typename Hash>
+angle::Result GraphicsPipelineCache<Hash>::insertPipeline(
     ContextVk *contextVk,
     PipelineCacheAccess *pipelineCache,
     const vk::RenderPass &compatibleRenderPass,
@@ -6163,7 +6136,10 @@ angle::Result GraphicsPipelineCache::insertPipeline(
     // This "if" is left here for the benefit of VulkanPipelineCachePerfTest.
     if (contextVk != nullptr)
     {
-        ANGLE_TRY(desc.initializePipeline(contextVk, pipelineCache, compatibleRenderPass,
+        constexpr vk::GraphicsPipelineSubset kSubset =
+            GraphicsPipelineCacheTypeHelper<Hash>::kSubset;
+
+        ANGLE_TRY(desc.initializePipeline(contextVk, pipelineCache, kSubset, compatibleRenderPass,
                                           pipelineLayout, activeAttribLocationsMask,
                                           programAttribsTypeMask, missingOutputsMask, shaders,
                                           specConsts, &newPipeline, &feedback));
@@ -6184,7 +6160,9 @@ angle::Result GraphicsPipelineCache::insertPipeline(
     return angle::Result::Continue;
 }
 
-void GraphicsPipelineCache::populate(const vk::GraphicsPipelineDesc &desc, vk::Pipeline &&pipeline)
+template <typename Hash>
+void GraphicsPipelineCache<Hash>::populate(const vk::GraphicsPipelineDesc &desc,
+                                           vk::Pipeline &&pipeline)
 {
     auto item = mPayload.find(desc);
     if (item != mPayload.end())
@@ -6196,6 +6174,29 @@ void GraphicsPipelineCache::populate(const vk::GraphicsPipelineDesc &desc, vk::P
     mPayload.emplace(std::piecewise_construct, std::forward_as_tuple(desc),
                      std::forward_as_tuple(std::move(pipeline), vk::CacheLookUpFeedback::None));
 }
+
+// Instantiate the pipeline cache functions
+template void GraphicsPipelineCache<GraphicsPipelineDescCompleteHash>::destroy(
+    RendererVk *rendererVk);
+template void GraphicsPipelineCache<GraphicsPipelineDescCompleteHash>::release(
+    ContextVk *contextVk);
+template angle::Result GraphicsPipelineCache<GraphicsPipelineDescCompleteHash>::insertPipeline(
+    ContextVk *contextVk,
+    PipelineCacheAccess *pipelineCache,
+    const vk::RenderPass &compatibleRenderPass,
+    const vk::PipelineLayout &pipelineLayout,
+    const gl::AttributesMask &activeAttribLocationsMask,
+    const gl::ComponentTypeMask &programAttribsTypeMask,
+    const gl::DrawBufferMask &missingOutputsMask,
+    const vk::ShaderAndSerialMap &shaders,
+    const vk::SpecializationConstants &specConsts,
+    PipelineSource source,
+    const vk::GraphicsPipelineDesc &desc,
+    const vk::GraphicsPipelineDesc **descPtrOut,
+    vk::PipelineHelper **pipelineOut);
+template void GraphicsPipelineCache<GraphicsPipelineDescCompleteHash>::populate(
+    const vk::GraphicsPipelineDesc &desc,
+    vk::Pipeline &&pipeline);
 
 // DescriptorSetLayoutCache implementation.
 DescriptorSetLayoutCache::DescriptorSetLayoutCache() = default;

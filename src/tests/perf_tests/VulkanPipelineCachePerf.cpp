@@ -34,7 +34,7 @@ class VulkanPipelineCachePerfTest : public ANGLEPerfTest,
     void SetUp() override;
     void step() override;
 
-    GraphicsPipelineCache mCache;
+    GraphicsPipelineCache<GraphicsPipelineDescCompleteHash> mCache;
     angle::RNG mRNG;
 
     std::vector<vk::GraphicsPipelineDesc> mCacheHits;

@@ -3043,7 +3043,7 @@ class ShaderProgramHelper : angle::NonCopyable
 
   private:
     ShaderAndSerialMap mShaders;
-    GraphicsPipelineCache mGraphicsPipelines;
+    GraphicsPipelineCache<GraphicsPipelineDescCompleteHash> mGraphicsPipelines;
 
     ComputePipelineSet mComputePipelines;
 

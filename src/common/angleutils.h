@@ -41,15 +41,23 @@ using Microsoft::WRL::ComPtr;
 #endif  // defined(ANGLE_ENABLE_D3D9) || defined(ANGLE_ENABLE_D3D11)
 
 #if defined(ANGLE_USE_ABSEIL)
-template <typename Key, typename T, class Hash = absl::container_internal::hash_default_hash<Key>>
-using HashMap = absl::flat_hash_map<Key, T, Hash>;
-template <typename Key, class Hash = absl::container_internal::hash_default_hash<Key>>
-using HashSet = absl::flat_hash_set<Key, Hash>;
+template <typename Key,
+          typename T,
+          class Hash = absl::container_internal::hash_default_hash<Key>,
+          class Eq   = absl::container_internal::hash_default_eq<Key>>
+using HashMap = absl::flat_hash_map<Key, T, Hash, Eq>;
+template <typename Key,
+          class Hash = absl::container_internal::hash_default_hash<Key>,
+          class Eq   = absl::container_internal::hash_default_eq<Key>>
+using HashSet = absl::flat_hash_set<Key, Hash, Eq>;
 #else
-template <typename Key, typename T, class Hash = std::hash<Key>>
-using HashMap = std::unordered_map<Key, T, Hash>;
-template <typename Key, class Hash = std::hash<Key>>
-using HashSet = std::unordered_set<Key, Hash>;
+template <typename Key,
+          typename T,
+          class Hash     = std::hash<Key>,
+          class KeyEqual = std::equal_to<Key>>
+using HashMap = std::unordered_map<Key, T, Hash, KeyEqual>;
+template <typename Key, class Hash = std::hash<Key>, class KeyEqual = std::equal_to<Key>>
+using HashSet = std::unordered_set<Key, Hash, KeyEqual>;
 #endif  // defined(ANGLE_USE_ABSEIL)
 
 class NonCopyable

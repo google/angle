@@ -542,13 +542,7 @@ struct PackedBlendMaskAndLogicOpState final
         // Dynamic in VK_EXT_extended_dynamic_state2
         uint32_t logicOp : 4;
 
-        uint32_t padding : 17;
-
-        // The following bits are hijacked from this state to store the subset of the pipeline being
-        // compiled.  The separate subsets and the full pipeline are stored in separate caches, so
-        // these bits don't actually need to participate in the hash key of the respective subset.
-        // Takes one of GraphicsPipelineSubset values.
-        uint32_t pipelineSubset : 2;
+        uint32_t padding : 19;
     } bits;
 };
 
@@ -676,8 +670,8 @@ class GraphicsPipelineDesc final
     GraphicsPipelineDesc(const GraphicsPipelineDesc &other);
     GraphicsPipelineDesc &operator=(const GraphicsPipelineDesc &other);
 
-    size_t hash() const;
-    bool operator==(const GraphicsPipelineDesc &other) const;
+    size_t hash(GraphicsPipelineSubset subset) const;
+    bool keyEqual(const GraphicsPipelineDesc &other, GraphicsPipelineSubset subset) const;
 
     void initDefaults(const ContextVk *contextVk, GraphicsPipelineSubset subset);
 
@@ -690,6 +684,7 @@ class GraphicsPipelineDesc final
 
     angle::Result initializePipeline(Context *context,
                                      PipelineCacheAccess *pipelineCache,
+                                     GraphicsPipelineSubset subset,
                                      const RenderPass &compatibleRenderPass,
                                      const PipelineLayout &pipelineLayout,
                                      const gl::AttributesMask &activeAttribLocationsMask,
@@ -846,8 +841,6 @@ class GraphicsPipelineDesc final
         mVertexInput.inputAssembly.bits.supportsDynamicState1        = supports;
         mVertexInput.inputAssembly.bits.forceStaticVertexStrideState = false;
         mShaders.shaders.bits.nonZeroStencilWriteMaskWorkaround      = false;
-        mFragmentOutput.blendMaskAndLogic.bits.pipelineSubset =
-            static_cast<uint32_t>(GraphicsPipelineSubset::Complete);
     }
 
     // Helpers to dump the state
@@ -865,16 +858,7 @@ class GraphicsPipelineDesc final
   private:
     void updateSubpass(GraphicsPipelineTransitionBits *transition, uint32_t subpass);
 
-    // Get the subset of the desc that corresponds to the pipeline subset being specified.
-    // GraphicsPipelineDesc includes all pipeline state, but is also used in caches that create
-    // partial pipelines.  For those pipelines, only the relevant subset of the state is hashed,
-    // compared, copied, etc, even though the entire class is used as key.
-    GraphicsPipelineSubset getPipelineSubset() const
-    {
-        return static_cast<GraphicsPipelineSubset>(
-            mFragmentOutput.blendMaskAndLogic.bits.pipelineSubset);
-    }
-    const void *getPipelineSubsetMemory(size_t *sizeOut) const;
+    const void *getPipelineSubsetMemory(GraphicsPipelineSubset subset, size_t *sizeOut) const;
 
     void initializePipelineVertexInputState(
         Context *context,
@@ -1809,12 +1793,6 @@ struct hash<rx::vk::AttachmentOpsArray>
 };
 
 template <>
-struct hash<rx::vk::GraphicsPipelineDesc>
-{
-    size_t operator()(const rx::vk::GraphicsPipelineDesc &key) const { return key.hash(); }
-};
-
-template <>
 struct hash<rx::vk::DescriptorSetLayoutDesc>
 {
     size_t operator()(const rx::vk::DescriptorSetLayoutDesc &key) const { return key.hash(); }
@@ -2112,12 +2090,103 @@ enum class PipelineSource
     Utils,
 };
 
+struct GraphicsPipelineDescCompleteHash
+{
+    size_t operator()(const rx::vk::GraphicsPipelineDesc &key) const
+    {
+        return key.hash(vk::GraphicsPipelineSubset::Complete);
+    }
+};
+struct GraphicsPipelineDescVertexInputHash
+{
+    size_t operator()(const rx::vk::GraphicsPipelineDesc &key) const
+    {
+        return key.hash(vk::GraphicsPipelineSubset::VertexInput);
+    }
+};
+struct GraphicsPipelineDescShadersHash
+{
+    size_t operator()(const rx::vk::GraphicsPipelineDesc &key) const
+    {
+        return key.hash(vk::GraphicsPipelineSubset::Shaders);
+    }
+};
+struct GraphicsPipelineDescFragmentOutputHash
+{
+    size_t operator()(const rx::vk::GraphicsPipelineDesc &key) const
+    {
+        return key.hash(vk::GraphicsPipelineSubset::FragmentOutput);
+    }
+};
+
+struct GraphicsPipelineDescCompleteKeyEqual
+{
+    size_t operator()(const rx::vk::GraphicsPipelineDesc &first,
+                      const rx::vk::GraphicsPipelineDesc &second) const
+    {
+        return first.keyEqual(second, vk::GraphicsPipelineSubset::Complete);
+    }
+};
+struct GraphicsPipelineDescVertexInputKeyEqual
+{
+    size_t operator()(const rx::vk::GraphicsPipelineDesc &first,
+                      const rx::vk::GraphicsPipelineDesc &second) const
+    {
+        return first.keyEqual(second, vk::GraphicsPipelineSubset::VertexInput);
+    }
+};
+struct GraphicsPipelineDescShadersKeyEqual
+{
+    size_t operator()(const rx::vk::GraphicsPipelineDesc &first,
+                      const rx::vk::GraphicsPipelineDesc &second) const
+    {
+        return first.keyEqual(second, vk::GraphicsPipelineSubset::Shaders);
+    }
+};
+struct GraphicsPipelineDescFragmentOutputKeyEqual
+{
+    size_t operator()(const rx::vk::GraphicsPipelineDesc &first,
+                      const rx::vk::GraphicsPipelineDesc &second) const
+    {
+        return first.keyEqual(second, vk::GraphicsPipelineSubset::FragmentOutput);
+    }
+};
+
+// Derive the KeyEqual and GraphicsPipelineSubset enum from the Hash struct
+template <typename Hash>
+struct GraphicsPipelineCacheTypeHelper
+{
+    using KeyEqual                                      = GraphicsPipelineDescCompleteKeyEqual;
+    static constexpr vk::GraphicsPipelineSubset kSubset = vk::GraphicsPipelineSubset::Complete;
+};
+
+template <>
+struct GraphicsPipelineCacheTypeHelper<GraphicsPipelineDescVertexInputHash>
+{
+    using KeyEqual                                      = GraphicsPipelineDescVertexInputKeyEqual;
+    static constexpr vk::GraphicsPipelineSubset kSubset = vk::GraphicsPipelineSubset::VertexInput;
+};
+template <>
+struct GraphicsPipelineCacheTypeHelper<GraphicsPipelineDescShadersHash>
+{
+    using KeyEqual                                      = GraphicsPipelineDescShadersKeyEqual;
+    static constexpr vk::GraphicsPipelineSubset kSubset = vk::GraphicsPipelineSubset::Shaders;
+};
+template <>
+struct GraphicsPipelineCacheTypeHelper<GraphicsPipelineDescFragmentOutputHash>
+{
+    using KeyEqual = GraphicsPipelineDescFragmentOutputKeyEqual;
+    static constexpr vk::GraphicsPipelineSubset kSubset =
+        vk::GraphicsPipelineSubset::FragmentOutput;
+};
+
 // TODO(jmadill): Add cache trimming/eviction.
+template <typename Hash>
 class GraphicsPipelineCache final : public HasCacheStats<VulkanCacheType::GraphicsPipeline>
 {
   public:
-    GraphicsPipelineCache();
-    ~GraphicsPipelineCache() override;
+    GraphicsPipelineCache() = default;
+    ~GraphicsPipelineCache() override { ASSERT(mPayload.empty()); }
 
     void destroy(RendererVk *rendererVk);
     void release(ContextVk *contextVk);
@@ -2154,7 +2223,7 @@ class GraphicsPipelineCache final : public HasCacheStats<VulkanCacheType::Graphi
     }
 
     // Helper for VulkanPipelineCachePerf that resets the object without destroying any object.
-    void reset();
+    void reset() { mPayload.clear(); }
 
   private:
     angle::Result insertPipeline(ContextVk *contextVk,
@@ -2171,7 +2240,8 @@ class GraphicsPipelineCache final : public HasCacheStats<VulkanCacheType::Graphi
                                  const vk::GraphicsPipelineDesc **descPtrOut,
                                  vk::PipelineHelper **pipelineOut);
 
-    std::unordered_map<vk::GraphicsPipelineDesc, vk::PipelineHelper> mPayload;
+    using KeyEqual = typename GraphicsPipelineCacheTypeHelper<Hash>::KeyEqual;
+    std::unordered_map<vk::GraphicsPipelineDesc, vk::PipelineHelper, Hash, KeyEqual> mPayload;
 };
 
 class DescriptorSetLayoutCache final : angle::NonCopyable
