@@ -783,7 +783,6 @@
 // so that TIMEOUT expectations above don't override more precise SKIP expectations
 
 7629 VULKAN : EGLRobustnessTestES3.Context*ResetOnInvalidLocalShaderVariableAccess_ShareGroupAfterProgramCreation/* = SKIP
-7629 SWIFTSHADER : EGLRobustnessTestES31.NonRobustContextThenOOBInSharedRobustContext/* = SKIP
 
 // EXT_multisample_compatibility exposed for the sake of GLES1, but not implemented on Vulkan
 7657 VULKAN : EXTMultisampleCompatibilityTest.* = SKIP

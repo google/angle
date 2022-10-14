@@ -711,8 +711,11 @@ angle::Result ProgramExecutableVk::warmUpPipelineCache(ContextVk *contextVk,
         // There is no state associated with compute programs, so only one pipeline needs creation
         // to warm up the cache.
         vk::PipelineHelper *pipeline = nullptr;
-        return getComputePipeline(contextVk, &pipelineCache, PipelineSource::WarmUp, glExecutable,
-                                  &pipeline);
+        ANGLE_TRY(getComputePipeline(contextVk, &pipelineCache, PipelineSource::WarmUp,
+                                     glExecutable, &pipeline));
+
+        // Merge the cache with RendererVk's
+        return contextVk->getRenderer()->mergeIntoPipelineCache(mPipelineCache);
     }
 
     const vk::GraphicsPipelineDesc *descPtr = nullptr;
