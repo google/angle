@@ -686,9 +686,9 @@
 // Regression after a buffer change.
 6881 INTEL VULKAN LINUX : Texture2DTest.TexStorageWithPBOMiddlePixelDifferent/* = SKIP
 
-// Flaky on Linux/Vulkan/NV/Async Command Queue.
-7548 NVIDIA LINUX VULKAN : TimerQueriesTest.TimeElapsed/*_AsyncCommandQueue = SKIP
-7548 NVIDIA LINUX VULKAN : TimerQueriesTest.Timestamp/*_AsyncCommandQueue = SKIP
+// Flaky Generally on AsyncCommandQueue.
+7548 VULKAN : TimerQueriesTest.TimeElapsed/*_AsyncCommandQueue = SKIP
+7548 VULKAN : TimerQueriesTest.Timestamp/*_AsyncCommandQueue = SKIP
 
 // Cubemap sampling with explicit derivatives
 3814 PIXEL4ORXL VULKAN : CubeMapTextureTest.SampleCoordinateTransformGrad/* = SKIP
