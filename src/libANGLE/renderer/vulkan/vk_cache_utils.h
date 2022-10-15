@@ -2244,6 +2244,8 @@ class GraphicsPipelineCache final : public HasCacheStats<VulkanCacheType::Graphi
     std::unordered_map<vk::GraphicsPipelineDesc, vk::PipelineHelper, Hash, KeyEqual> mPayload;
 };
 
+using CompleteGraphicsPipelineCache = GraphicsPipelineCache<GraphicsPipelineDescCompleteHash>;
+
 class DescriptorSetLayoutCache final : angle::NonCopyable
 {
   public:

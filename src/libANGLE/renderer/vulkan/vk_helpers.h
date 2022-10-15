@@ -2992,7 +2992,7 @@ enum class ComputePipelineFlag : uint8_t
 };
 
 using ComputePipelineFlags = angle::PackedEnumBitSet<ComputePipelineFlag, uint8_t>;
-using ComputePipelineSet   = std::array<PipelineHelper, 1u << ComputePipelineFlags::size()>;
+using ComputePipelineCache = std::array<PipelineHelper, 1u << ComputePipelineFlags::size()>;
 
 class ShaderProgramHelper : angle::NonCopyable
 {
@@ -3004,51 +3004,41 @@ class ShaderProgramHelper : angle::NonCopyable
     void destroy(RendererVk *rendererVk);
     void release(ContextVk *contextVk);
 
-    ShaderAndSerial &getShader(gl::ShaderType shaderType) { return mShaders[shaderType].get(); }
-
     void setShader(gl::ShaderType shaderType, RefCounted<ShaderAndSerial> *shader);
-    void setSpecializationConstant(sh::vk::SpecializationConstantId id, uint32_t value);
 
-    // For getting a Pipeline and from the pipeline cache.
+    // For getting a Pipeline from the pipeline cache.
+    template <typename PipelineHash>
     ANGLE_INLINE angle::Result getGraphicsPipeline(
         ContextVk *contextVk,
-        RenderPassCache *renderPassCache,
+        GraphicsPipelineCache<PipelineHash> *graphicsPipelines,
         PipelineCacheAccess *pipelineCache,
+        const vk::RenderPass &compatibleRenderPass,
         const PipelineLayout &pipelineLayout,
         PipelineSource source,
         const GraphicsPipelineDesc &pipelineDesc,
         const gl::AttributesMask &activeAttribLocationsMask,
         const gl::ComponentTypeMask &programAttribsTypeMask,
         const gl::DrawBufferMask &missingOutputsMask,
+        const vk::SpecializationConstants &specConsts,
         const GraphicsPipelineDesc **descPtrOut,
-        PipelineHelper **pipelineOut)
+        PipelineHelper **pipelineOut) const
     {
-        // Pull in a compatible RenderPass.
-        RenderPass *compatibleRenderPass = nullptr;
-        ANGLE_TRY(renderPassCache->getCompatibleRenderPass(
-            contextVk, pipelineDesc.getRenderPassDesc(), &compatibleRenderPass));
-
-        return mGraphicsPipelines.getPipeline(
-            contextVk, pipelineCache, *compatibleRenderPass, pipelineLayout,
+        return graphicsPipelines->getPipeline(
+            contextVk, pipelineCache, compatibleRenderPass, pipelineLayout,
             activeAttribLocationsMask, programAttribsTypeMask, missingOutputsMask, mShaders,
-            mSpecializationConstants, source, pipelineDesc, descPtrOut, pipelineOut);
+            specConsts, source, pipelineDesc, descPtrOut, pipelineOut);
     }
 
     angle::Result getComputePipeline(ContextVk *contextVk,
+                                     ComputePipelineCache *computePipelines,
                                      PipelineCacheAccess *pipelineCache,
                                      const PipelineLayout &pipelineLayout,
                                      ComputePipelineFlags pipelineFlags,
                                      PipelineSource source,
-                                     PipelineHelper **pipelineOut);
+                                     PipelineHelper **pipelineOut) const;
 
   private:
     ShaderAndSerialMap mShaders;
-    GraphicsPipelineCache<GraphicsPipelineDescCompleteHash> mGraphicsPipelines;
-
-    ComputePipelineSet mComputePipelines;
-
-    // Specialization constants, currently only used by the graphics queue.
-    SpecializationConstants mSpecializationConstants;
 };
 
 // Tracks current handle allocation counts in the back-end. Useful for debugging and profiling.

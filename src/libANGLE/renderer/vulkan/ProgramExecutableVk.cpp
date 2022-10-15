@@ -25,6 +25,11 @@ namespace rx
 {
 namespace
 {
+uint8_t GetGraphicsProgramIndex(ProgramTransformOptions transformOptions)
+{
+    return gl::bitCast<uint8_t, ProgramTransformOptions>(transformOptions);
+}
+
 void LoadShaderInterfaceVariableXfbInfo(gl::BinaryInputStream *stream,
                                         ShaderInterfaceVariableXfbInfo *xfb)
 {
@@ -340,9 +345,6 @@ angle::Result ProgramInfo::initProgram(ContextVk *contextVk,
 
     mProgramHelper.setShader(shaderType, &mShaders[shaderType]);
 
-    mProgramHelper.setSpecializationConstant(sh::vk::SpecializationConstantId::SurfaceRotation,
-                                             optionBits.surfaceRotation);
-
     return angle::Result::Continue;
 }
 
@@ -404,6 +406,15 @@ void ProgramExecutableVk::resetLayout(ContextVk *contextVk)
         programInfo.release(contextVk);
     }
     mComputeProgramInfo.release(contextVk);
+
+    for (CompleteGraphicsPipelineCache &pipelines : mCompleteGraphicsPipelines)
+    {
+        pipelines.release(contextVk);
+    }
+    for (vk::PipelineHelper &pipeline : mComputePipelines)
+    {
+        pipeline.release(contextVk);
+    }
 
     contextVk->onProgramExecutableReset(this);
 }
@@ -1034,7 +1045,9 @@ angle::Result ProgramExecutableVk::getGraphicsPipelineImpl(
 {
     ASSERT(glExecutable.hasLinkedShaderStage(gl::ShaderType::Vertex));
 
-    ProgramInfo &programInfo                  = getGraphicsProgramInfo(transformOptions);
+    const uint8_t programIndex                = GetGraphicsProgramIndex(transformOptions);
+    ProgramInfo &programInfo                  = mGraphicsProgramInfos[programIndex];
+    CompleteGraphicsPipelineCache &pipelines  = mCompleteGraphicsPipelines[programIndex];
     const gl::ShaderBitSet linkedShaderStages = glExecutable.getLinkedShaderStages();
     gl::ShaderType lastPreFragmentStage       = gl::GetLastPreFragmentStage(linkedShaderStages);
 
@@ -1051,12 +1064,11 @@ angle::Result ProgramExecutableVk::getGraphicsPipelineImpl(
     vk::ShaderProgramHelper *shaderProgram = programInfo.getShaderProgram();
     ASSERT(shaderProgram);
 
-    // Dither is part of specialization constant, but does not have its own dedicated
-    // programInfo entry. We pick the programInfo entry based on the transformOptions and then
-    // update the dither specialization constant. It will go through desc matching and if
-    // spec constant does not match, it will recompile pipeline program.
-    shaderProgram->setSpecializationConstant(sh::vk::SpecializationConstantId::Dither,
-                                             desc.getEmulatedDitherControl());
+    // Set specialization constants.  These are also a part of GraphicsPipelineDesc, so that a
+    // change in specialization constants also results in a new pipeline.
+    vk::SpecializationConstants specConsts;
+    specConsts.surfaceRotation = transformOptions.surfaceRotation;
+    specConsts.dither          = desc.getEmulatedDitherControl();
 
     // Compare the fragment output interface with the framebuffer interface.
     const gl::AttributesMask &activeAttribLocations =
@@ -1066,10 +1078,15 @@ angle::Result ProgramExecutableVk::getGraphicsPipelineImpl(
     const gl::DrawBufferMask shaderOutMask = glExecutable.getActiveOutputVariablesMask();
     gl::DrawBufferMask missingOutputsMask  = ~shaderOutMask & framebufferMask;
 
+    // Pull in a compatible RenderPass.
+    vk::RenderPass *compatibleRenderPass = nullptr;
+    ANGLE_TRY(contextVk->getRenderPassCache().getCompatibleRenderPass(
+        contextVk, desc.getRenderPassDesc(), &compatibleRenderPass));
+
     return shaderProgram->getGraphicsPipeline(
-        contextVk, &contextVk->getRenderPassCache(), pipelineCache, getPipelineLayout(), source,
+        contextVk, &pipelines, pipelineCache, *compatibleRenderPass, getPipelineLayout(), source,
         desc, activeAttribLocations, glExecutable.getAttributesTypeMask(), missingOutputsMask,
-        descPtrOut, pipelineOut);
+        specConsts, descPtrOut, pipelineOut);
 }
 
 angle::Result ProgramExecutableVk::getGraphicsPipeline(ContextVk *contextVk,
@@ -1113,9 +1130,9 @@ angle::Result ProgramExecutableVk::getComputePipeline(ContextVk *contextVk,
 
     vk::ShaderProgramHelper *shaderProgram = mComputeProgramInfo.getShaderProgram();
     ASSERT(shaderProgram);
-    return shaderProgram->getComputePipeline(contextVk, pipelineCache, getPipelineLayout(),
-                                             contextVk->getComputePipelineFlags(), source,
-                                             pipelineOut);
+    return shaderProgram->getComputePipeline(
+        contextVk, &mComputePipelines, pipelineCache, getPipelineLayout(),
+        contextVk->getComputePipelineFlags(), source, pipelineOut);
 }
 
 angle::Result ProgramExecutableVk::createPipelineLayout(

@@ -483,13 +483,24 @@ class UtilsVk : angle::NonCopyable
         EnumCount = InvalidEnum,
     };
 
+    struct GraphicsShaderProgramAndPipelines
+    {
+        vk::ShaderProgramHelper program;
+        CompleteGraphicsPipelineCache pipelines;
+    };
+    struct ComputeShaderProgramAndPipelines
+    {
+        vk::ShaderProgramHelper program;
+        vk::ComputePipelineCache pipelines;
+    };
+
     // Common functions that create the pipeline for the specified function, binds it and prepares
     // the draw/dispatch call.
     angle::Result setupComputeProgram(
         ContextVk *contextVk,
         Function function,
         vk::RefCounted<vk::ShaderAndSerial> *csShader,
-        vk::ShaderProgramHelper *program,
+        ComputeShaderProgramAndPipelines *programAndPipelines,
         const VkDescriptorSet descriptorSet,
         const void *pushConstants,
         size_t pushConstantsSize,
@@ -498,7 +509,7 @@ class UtilsVk : angle::NonCopyable
                                        Function function,
                                        vk::RefCounted<vk::ShaderAndSerial> *vsShader,
                                        vk::RefCounted<vk::ShaderAndSerial> *fsShader,
-                                       vk::ShaderProgramHelper *program,
+                                       GraphicsShaderProgramAndPipelines *programAndPipelines,
                                        const vk::GraphicsPipelineDesc *pipelineDesc,
                                        const VkDescriptorSet descriptorSet,
                                        const void *pushConstants,
@@ -572,29 +583,30 @@ class UtilsVk : angle::NonCopyable
     angle::PackedEnumMap<Function, vk::BindingPointer<vk::PipelineLayout>> mPipelineLayouts;
     angle::PackedEnumMap<Function, vk::DynamicDescriptorPool> mDescriptorPools;
 
-    vk::ShaderProgramHelper mConvertIndexPrograms[vk::InternalShader::ConvertIndex_comp::kArrayLen];
-    vk::ShaderProgramHelper mConvertIndexIndirectLineLoopPrograms
+    ComputeShaderProgramAndPipelines
+        mConvertIndex[vk::InternalShader::ConvertIndex_comp::kArrayLen];
+    ComputeShaderProgramAndPipelines mConvertIndexIndirectLineLoop
         [vk::InternalShader::ConvertIndexIndirectLineLoop_comp::kArrayLen];
-    vk::ShaderProgramHelper mConvertIndirectLineLoopPrograms
-        [vk::InternalShader::ConvertIndirectLineLoop_comp::kArrayLen];
-    vk::ShaderProgramHelper
-        mConvertVertexPrograms[vk::InternalShader::ConvertVertex_comp::kArrayLen];
-    vk::ShaderProgramHelper mImageClearProgramVSOnly;
-    vk::ShaderProgramHelper mImageClearPrograms[vk::InternalShader::ImageClear_frag::kArrayLen];
-    vk::ShaderProgramHelper mImageCopyPrograms[vk::InternalShader::ImageCopy_frag::kArrayLen];
-    vk::ShaderProgramHelper mBlitResolvePrograms[vk::InternalShader::BlitResolve_frag::kArrayLen];
-    vk::ShaderProgramHelper mBlitResolveStencilNoExportPrograms
-        [vk::InternalShader::BlitResolveStencilNoExport_comp::kArrayLen];
-    vk::ShaderProgramHelper mExportStencilProgram;
-    vk::ShaderProgramHelper mOverlayDrawProgram;
-    vk::ShaderProgramHelper
-        mGenerateMipmapPrograms[vk::InternalShader::GenerateMipmap_comp::kArrayLen];
-    vk::ShaderProgramHelper mEtcToBcPrograms[vk::InternalShader::EtcToBc_comp::kArrayLen];
+    ComputeShaderProgramAndPipelines
+        mConvertIndirectLineLoop[vk::InternalShader::ConvertIndirectLineLoop_comp::kArrayLen];
+    ComputeShaderProgramAndPipelines
+        mConvertVertex[vk::InternalShader::ConvertVertex_comp::kArrayLen];
+    GraphicsShaderProgramAndPipelines mImageClearVSOnly;
+    GraphicsShaderProgramAndPipelines mImageClear[vk::InternalShader::ImageClear_frag::kArrayLen];
+    GraphicsShaderProgramAndPipelines mImageCopy[vk::InternalShader::ImageCopy_frag::kArrayLen];
+    GraphicsShaderProgramAndPipelines mBlitResolve[vk::InternalShader::BlitResolve_frag::kArrayLen];
+    ComputeShaderProgramAndPipelines
+        mBlitResolveStencilNoExport[vk::InternalShader::BlitResolveStencilNoExport_comp::kArrayLen];
+    GraphicsShaderProgramAndPipelines mExportStencil;
+    GraphicsShaderProgramAndPipelines mOverlayDraw;
+    ComputeShaderProgramAndPipelines
+        mGenerateMipmap[vk::InternalShader::GenerateMipmap_comp::kArrayLen];
+    ComputeShaderProgramAndPipelines mEtcToBc[vk::InternalShader::EtcToBc_comp::kArrayLen];
 
     // Unresolve shaders are special as they are generated on the fly due to the large number of
     // combinations.
     std::unordered_map<uint32_t, vk::RefCounted<vk::ShaderAndSerial>> mUnresolveFragShaders;
-    std::unordered_map<uint32_t, vk::ShaderProgramHelper> mUnresolvePrograms;
+    std::unordered_map<uint32_t, GraphicsShaderProgramAndPipelines> mUnresolve;
 
     vk::Sampler mPointSampler;
     vk::Sampler mLinearSampler;

@@ -10179,8 +10179,7 @@ ImageOrBufferViewSubresourceSerial BufferViewHelper::getSerial() const
 }
 
 // ShaderProgramHelper implementation.
-ShaderProgramHelper::ShaderProgramHelper() : mSpecializationConstants{} {}
-
+ShaderProgramHelper::ShaderProgramHelper()  = default;
 ShaderProgramHelper::~ShaderProgramHelper() = default;
 
 bool ShaderProgramHelper::valid(const gl::ShaderType shaderType) const
@@ -10190,11 +10189,6 @@ bool ShaderProgramHelper::valid(const gl::ShaderType shaderType) const
 
 void ShaderProgramHelper::destroy(RendererVk *rendererVk)
 {
-    mGraphicsPipelines.destroy(rendererVk);
-    for (PipelineHelper &computePipeline : mComputePipelines)
-    {
-        computePipeline.destroy(rendererVk->getDevice());
-    }
     for (BindingPointer<ShaderAndSerial> &shader : mShaders)
     {
         shader.reset();
@@ -10203,11 +10197,6 @@ void ShaderProgramHelper::destroy(RendererVk *rendererVk)
 
 void ShaderProgramHelper::release(ContextVk *contextVk)
 {
-    mGraphicsPipelines.release(contextVk);
-    for (PipelineHelper &computePipeline : mComputePipelines)
-    {
-        computePipeline.release(contextVk);
-    }
     for (BindingPointer<ShaderAndSerial> &shader : mShaders)
     {
         shader.reset();
@@ -10216,35 +10205,20 @@ void ShaderProgramHelper::release(ContextVk *contextVk)
 
 void ShaderProgramHelper::setShader(gl::ShaderType shaderType, RefCounted<ShaderAndSerial> *shader)
 {
+    // The shaders must be set once and are not expected to change.
+    ASSERT(!mShaders[shaderType].valid());
     mShaders[shaderType].set(shader);
 }
 
-void ShaderProgramHelper::setSpecializationConstant(sh::vk::SpecializationConstantId id,
-                                                    uint32_t value)
-{
-    ASSERT(id < sh::vk::SpecializationConstantId::EnumCount);
-    switch (id)
-    {
-        case sh::vk::SpecializationConstantId::SurfaceRotation:
-            mSpecializationConstants.surfaceRotation = value;
-            break;
-        case sh::vk::SpecializationConstantId::Dither:
-            mSpecializationConstants.dither = value;
-            break;
-        default:
-            UNREACHABLE();
-            break;
-    }
-}
-
 angle::Result ShaderProgramHelper::getComputePipeline(ContextVk *contextVk,
+                                                      ComputePipelineCache *computePipelines,
                                                       PipelineCacheAccess *pipelineCache,
                                                       const PipelineLayout &pipelineLayout,
                                                       ComputePipelineFlags pipelineFlags,
                                                       PipelineSource source,
-                                                      PipelineHelper **pipelineOut)
+                                                      PipelineHelper **pipelineOut) const
 {
-    PipelineHelper *computePipeline = &mComputePipelines[pipelineFlags.bits()];
+    PipelineHelper *computePipeline = &(*computePipelines)[pipelineFlags.bits()];
 
     if (computePipeline->valid())
     {

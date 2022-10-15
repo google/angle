@@ -124,12 +124,6 @@ class ProgramExecutableVk
 
     void clearVariableInfoMap();
 
-    ProgramInfo &getGraphicsProgramInfo(ProgramTransformOptions transformOptions)
-    {
-        uint8_t index = gl::bitCast<uint8_t, ProgramTransformOptions>(transformOptions);
-        return mGraphicsProgramInfos[index];
-    }
-    ProgramInfo &getComputeProgramInfo() { return mComputeProgramInfo; }
     vk::BufferSerial getCurrentDefaultUniformBufferSerial() const
     {
         return mCurrentDefaultUniformBufferSerial;
@@ -358,6 +352,10 @@ class ProgramExecutableVk
     // need some LRU algorithm to free least used programs to reduce the number of programs.
     ProgramInfo mGraphicsProgramInfos[ProgramTransformOptions::kPermutationCount];
     ProgramInfo mComputeProgramInfo;
+
+    CompleteGraphicsPipelineCache
+        mCompleteGraphicsPipelines[ProgramTransformOptions::kPermutationCount];
+    vk::ComputePipelineCache mComputePipelines;
 
     DefaultUniformBlockMap mDefaultUniformBlocks;
     gl::ShaderBitSet mDefaultUniformBlocksDirty;
