@@ -81,6 +81,8 @@ class ANGLEPerfTest : public testing::Test, angle::NonCopyable
     // Can be overridden in child tests that require a certain number of steps per trial.
     virtual int getStepAlignment() const;
 
+    virtual bool isRenderTest() const { return false; }
+
   protected:
     enum class RunTrialPolicy
     {
@@ -106,7 +108,8 @@ class ANGLEPerfTest : public testing::Test, angle::NonCopyable
     virtual void saveScreenshot(const std::string &screenshotName) {}
     virtual void computeGPUTime() {}
 
-    void calibrateStepsToRun(RunTrialPolicy policy);
+    void calibrateStepsToRun();
+    int estimateStepsToRun() const;
 
     void processResults();
     void processClockResult(const char *metric, double resultSeconds);
@@ -127,12 +130,13 @@ class ANGLEPerfTest : public testing::Test, angle::NonCopyable
     std::string mName;
     std::string mBackend;
     std::string mStory;
-    Timer mTimer;
+    Timer mTrialTimer;
     uint64_t mGPUTimeNs;
     bool mSkipTest;
     std::string mSkipTestReason;
     std::unique_ptr<perf_test::PerfResultReporter> mReporter;
     int mStepsToRun;
+    int mTrialTimeLimitSeconds;
     int mTrialNumStepsPerformed;
     int mTotalNumStepsPerformed;
     int mIterationsPerStep;
@@ -202,6 +206,7 @@ class ANGLERenderTest : public ANGLEPerfTest
 
     uint32_t getCurrentThreadSerial();
     std::mutex &getTraceEventMutex() { return mTraceEventMutex; }
+    bool isRenderTest() const override { return true; }
 
   protected:
     const RenderTestParams &mTestParams;

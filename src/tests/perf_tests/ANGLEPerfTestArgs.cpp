@@ -16,7 +16,7 @@
 namespace angle
 {
 bool gCalibration                = false;
-int gStepsPerTrial               = std::numeric_limits<int>::max();
+int gStepsPerTrial               = 0;
 int gMaxStepsPerformed           = 0;
 bool gEnableTrace                = false;
 const char *gTraceFile           = "ANGLETrace.json";
@@ -26,7 +26,7 @@ bool gSaveScreenshots            = false;
 int gScreenshotFrame             = 1;
 bool gVerboseLogging             = false;
 int gCalibrationTimeSeconds      = 1;
-int gMaxTrialTimeSeconds         = 0;
+int gTrialTimeSeconds            = 0;
 int gTestTrials                  = 3;
 bool gNoFinish                   = false;
 bool gRetraceMode                = false;
@@ -66,8 +66,8 @@ bool PerfTestArg(int *argc, char **argv, int argIndex)
            ParseIntArg("--warmup-trials", argc, argv, argIndex, &gWarmupTrials) ||
            ParseIntArg("--warmup-steps", argc, argv, argIndex, &gWarmupSteps) ||
            ParseIntArg("--calibration-time", argc, argv, argIndex, &gCalibrationTimeSeconds) ||
-           ParseIntArg("--trial-time", argc, argv, argIndex, &gMaxTrialTimeSeconds) ||
-           ParseIntArg("--max-trial-time", argc, argv, argIndex, &gMaxTrialTimeSeconds) ||
+           ParseIntArg("--trial-time", argc, argv, argIndex, &gTrialTimeSeconds) ||
+           ParseIntArg("--max-trial-time", argc, argv, argIndex, &gTrialTimeSeconds) ||
            ParseIntArg("--trials", argc, argv, argIndex, &gTestTrials);
 }
 
@@ -114,17 +114,17 @@ void ANGLEProcessPerfTestArgs(int *argc, char **argv)
 
     if (gMaxStepsPerformed > 0)
     {
-        gWarmupTrials        = 0;
-        gTestTrials          = 1;
-        gMaxTrialTimeSeconds = 36000;
+        gWarmupTrials     = 0;
+        gTestTrials       = 1;
+        gTrialTimeSeconds = 36000;
     }
 
     if (gFixedTestTime != 0)
     {
-        gMaxTrialTimeSeconds = gFixedTestTime;
-        gStepsPerTrial       = std::numeric_limits<int>::max();
-        gTestTrials          = 1;
-        gWarmupTrials        = 0;
+        gTrialTimeSeconds = gFixedTestTime;
+        gStepsPerTrial    = std::numeric_limits<int>::max();
+        gTestTrials       = 1;
+        gWarmupTrials     = 0;
     }
 
     if (gNoWarmup)
@@ -132,13 +132,13 @@ void ANGLEProcessPerfTestArgs(int *argc, char **argv)
         gWarmupTrials = 0;
     }
 
-    if (gMaxTrialTimeSeconds == 0)
+    if (gTrialTimeSeconds == 0)
     {
-        gMaxTrialTimeSeconds = 10;
+        gTrialTimeSeconds = 10;
     }
     else
     {
-        gCalibrationTimeSeconds = gMaxTrialTimeSeconds;
+        gCalibrationTimeSeconds = gTrialTimeSeconds;
     }
 }
 
@@ -167,8 +167,8 @@ void ANGLEProcessTraceTestArgs(int *argc, char **argv)
 
     if (gTraceTestValidation)
     {
-        gWarmupTrials        = 0;
-        gTestTrials          = 1;
-        gMaxTrialTimeSeconds = 600;
+        gWarmupTrials     = 0;
+        gTestTrials       = 1;
+        gTrialTimeSeconds = 600;
     }
 }

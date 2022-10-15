@@ -39,13 +39,13 @@ from tracing.value import merge_histograms
 
 DEFAULT_TEST_SUITE = 'angle_perftests'
 DEFAULT_LOG = 'info'
-DEFAULT_SAMPLES = 4
-DEFAULT_TRIALS = 3
+DEFAULT_SAMPLES = 10
+DEFAULT_TRIALS = 4
 DEFAULT_MAX_ERRORS = 3
 
 # These parameters condition the test warmup to stabilize the scores across runs.
-DEFAULT_WARMUP_TRIALS = 1
-DEFAULT_TRIAL_TIME = 4
+DEFAULT_WARMUP_TRIALS = 2
+DEFAULT_TRIAL_TIME = 3
 
 # Test expectations
 FAIL = 'FAIL'

@@ -26,7 +26,7 @@ extern bool gVerboseLogging;
 extern int gWarmupTrials;
 extern int gWarmupSteps;
 extern int gCalibrationTimeSeconds;
-extern int gMaxTrialTimeSeconds;
+extern int gTrialTimeSeconds;
 extern int gTestTrials;
 extern bool gNoFinish;
 extern bool gRetraceMode;
