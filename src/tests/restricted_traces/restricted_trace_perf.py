@@ -191,7 +191,7 @@ def run_trace(trace, args):
 
     adb_command = 'shell am instrument -w '
     adb_command += '-e org.chromium.native_test.NativeTestInstrumentationTestRunner.StdoutFile /sdcard/Download/out.txt '
-    adb_command += '-e org.chromium.native_test.NativeTest.CommandLineFlags "--gtest_filter=TracePerfTest.Run/native' + mode + '_' + trace + '\ '
+    adb_command += '-e org.chromium.native_test.NativeTest.CommandLineFlags --use-gl=native "--gtest_filter=TraceTest.' + trace + '\ '
     if args.maxsteps != '':
         adb_command += '--max-steps-performed\ ' + args.maxsteps + '\ '
     if args.fixedtime != '':

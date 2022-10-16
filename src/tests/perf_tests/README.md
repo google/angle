@@ -56,9 +56,6 @@ Several command-line arguments control how the tests run:
 * `--calibration`: Prints the number of steps a test runs in a fixed time. Used by `perf_test_runner.py`.
 * `--steps-per-trial x`: Fixed number of steps to run for each test trial.
 * `--max-steps-performed x`: Upper maximum on total number of steps for the entire test run.
-* `--screenshot-dir dir`: Directory to store test screenshots. Implies `--save-screenshots`. On Android this directory is on device, not local (see also `--render-test-output-dir`). Only implemented in `TracePerfTest`.
-* `--save-screenshots`: Save screenshots. Only implemented in `TracePerfTest`.
-* `--screenshot-frame <frame>`: Which frame to capture a screenshot of. Defaults to first frame (1). Only implemented in `TracePerfTest`.
 * `--render-test-output-dir=dir`: Directory to store test artifacts (including screenshots but unlike `--screenshot-dir`, `dir` here is always a local directory regardless of platform and `--save-screenshots` isn't implied).
 * `--verbose`: Print extra timing information.
 * `--warmup-trials x`: Number of times to warm up the test before starting timing. Defaults to 3.
@@ -69,14 +66,8 @@ Several command-line arguments control how the tests run:
 * `--fixed-test-time x`: Run the tests until this much time has elapsed.
 * `--trials`: Number of times to repeat testing. Defaults to 3.
 * `--no-finish`: Don't call glFinish after each test trial.
-* `--enable-all-trace-tests`: Offscreen and vsync-limited trace tests are disabled by default to reduce test time.
-* `--minimize-gpu-work`: Modify API calls so that GPU work is reduced to minimum.
 * `--validation`: Enable serialization validation in the trace tests. Normally used with SwiftShader and retracing.
 * `--perf-counters`: Additional performance counters to include in the result output. Separate multiple entries with colons: ':'.
-
-For example, for an endless run with no warmup, run:
-
-`angle_perftests --gtest_filter=TracePerfTest.Run/vulkan_trex_200 --steps 1000000 --no-warmup`
 
 The command line arguments implementations are located in [`ANGLEPerfTestArgs.cpp`](ANGLEPerfTestArgs.cpp).
 
@@ -111,6 +102,21 @@ Many other tests can be found that have documentation in their classes.
 
 * [`TracePerfTest`](TracePerfTest.cpp): Runs replays of restricted traces, not
   available publicly. To enable, read more in [`RestrictedTraceTests`](../restricted_traces/README.md)
+
+Trace tests take command line arguments that pick the run configuration:
+
+* `--use-gl=native`: Runs the tests against the default system GLES implementation instad of your local ANGLE.
+* `--use-angle=backend`: Picks an ANGLE back-end. e.g. vulkan, d3d11, d3d9, gl, gles, metal, or swiftshader. Vulkan is the default.
+* `--offscreen`: Run with an offscreen surface instead of swapping every frame.
+* `--vsync`: Run with vsync enabled, and measure CPU and GPU work insead of wall clock time.
+* `--minimize-gpu-work`: Modify API calls so that GPU work is reduced to minimum.
+* `--screenshot-dir dir`: Directory to store test screenshots. Implies `--save-screenshots`. On Android this directory is on device, not local (see also `--render-test-output-dir`). Only implemented in `TracePerfTest`.
+* `--save-screenshots`: Save screenshots. Only implemented in `TracePerfTest`.
+* `--screenshot-frame <frame>`: Which frame to capture a screenshot of. Defaults to first frame (1). Only implemented in `TracePerfTest`.
+
+For example, for an endless run with no warmup on swiftshader, run:
+
+`angle_trace_tests --gtest_filter=TraceTest.trex_200 --use-angle=swiftshader --steps 1000000 --no-warmup`
 
 ## Understanding the Metrics
 

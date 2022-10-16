@@ -58,7 +58,6 @@ bool PerfTestArg(int *argc, char **argv, int argIndex)
            ParseFlag("--verbose-logging", argc, argv, argIndex, &gVerboseLogging) ||
            ParseFlag("--no-warmup", argc, argv, argIndex, &gNoWarmup) ||
            ParseFlag("--no-finish", argc, argv, argIndex, &gNoFinish) ||
-           ParseFlag("--minimize-gpu-work", argc, argv, argIndex, &gMinimizeGPUWork) ||
            ParseCStringArg("--trace-file", argc, argv, argIndex, &gTraceFile) ||
            ParseCStringArg("--perf-counters", argc, argv, argIndex, &gPerfCounters) ||
            ParseIntArg("--steps-per-trial", argc, argv, argIndex, &gStepsPerTrial) ||
@@ -79,6 +78,7 @@ bool TraceTestArg(int *argc, char **argv, int argIndex)
            ParseFlag("--save-screenshots", argc, argv, argIndex, &gSaveScreenshots) ||
            ParseFlag("--offscreen", argc, argv, argIndex, &gOffscreen) ||
            ParseFlag("--vsync", argc, argv, argIndex, &gVsync) ||
+           ParseFlag("--minimize-gpu-work", argc, argv, argIndex, &gMinimizeGPUWork) ||
            ParseIntArg("--screenshot-frame", argc, argv, argIndex, &gScreenshotFrame) ||
            ParseCStringArg("--render-test-output-dir", argc, argv, argIndex,
                            &gRenderTestOutputDir) ||

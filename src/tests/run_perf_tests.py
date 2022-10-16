@@ -447,8 +447,14 @@ def main():
     parser.add_argument('--isolated-script-test-perf-output', type=str)
     parser.add_argument(
         '-f', '--filter', '--isolated-script-test-filter', type=str, help='Test filter.')
-    parser.add_argument(
+    suite_group = parser.add_mutually_exclusive_group()
+    suite_group.add_argument(
         '--test-suite', '--suite', help='Test suite to run.', default=DEFAULT_TEST_SUITE)
+    suite_group.add_argument(
+        '-T',
+        '--trace-tests',
+        help='Run with the angle_trace_tests test suite.',
+        action='store_true')
     parser.add_argument('--xvfb', help='Use xvfb.', action='store_true')
     parser.add_argument(
         '--shard-count',
@@ -514,6 +520,9 @@ def main():
         action='store_true')
 
     args, extra_flags = parser.parse_known_args()
+
+    if args.trace_tests:
+        args.test_suite = angle_test_util.ANGLE_TRACE_TEST_SUITE
 
     angle_test_util.SetupLogging(args.log.upper())
 

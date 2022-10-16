@@ -108,12 +108,6 @@ struct TracePerfParams final : public RenderTestParams
     TraceInfo traceInfo = {};
 };
 
-std::ostream &operator<<(std::ostream &os, const TracePerfParams &params)
-{
-    os << params.backendAndStory().substr(1);
-    return os;
-}
-
 class TracePerfTest : public ANGLERenderTest
 {
   public:
@@ -2189,11 +2183,7 @@ void RegisterTraceTests()
         auto factory = [params]() {
             return new TracePerfTest(std::make_unique<TracePerfParams>(params));
         };
-        std::string paramName = testing::PrintToString(params);
-        std::stringstream testNameStr;
-        testNameStr << "Run/" << paramName;
-        std::string testName = testNameStr.str();
-        testing::RegisterTest("TracePerfTest", testName.c_str(), nullptr, paramName.c_str(),
-                              __FILE__, __LINE__, factory);
+        testing::RegisterTest("TraceTest", traceInfo.name, nullptr, nullptr, __FILE__, __LINE__,
+                              factory);
     }
 }

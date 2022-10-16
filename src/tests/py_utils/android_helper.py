@@ -356,12 +356,16 @@ def _RemoveFlag(args, f):
 def RunSmokeTest():
     _EnsureTestSuite(ANGLE_TRACE_TEST_SUITE)
 
-    test_name = 'TracePerfTest.Run/vulkan_words_with_friends_2'
+    test_name = 'TraceTest.words_with_friends_2'
     run_instrumentation_timeout = 60
 
     logging.info('Running smoke test (%s)', test_name)
 
-    PrepareRestrictedTraces([GetTraceFromTestName(test_name)])
+    trace_name = GetTraceFromTestName(test_name)
+    if not trace_name:
+        raise Exception('Cannot find trace name from %s.' % test_name)
+
+    PrepareRestrictedTraces([trace_name])
 
     with _TempDeviceFile() as device_test_output_path:
         flags = [
@@ -369,7 +373,7 @@ def RunSmokeTest():
             '1', '--isolated-script-test-output=' + device_test_output_path
         ]
         try:
-            _RunInstrumentationWithTimeout(flags, run_instrumentation_timeout)
+            output = _RunInstrumentationWithTimeout(flags, run_instrumentation_timeout)
         except TimeoutError:
             raise Exception('Smoke test did not finish in %s seconds' %
                             run_instrumentation_timeout)
@@ -378,7 +382,7 @@ def RunSmokeTest():
 
     output_json = json.loads(test_output)
     if output_json['tests'][test_name]['actual'] != 'PASS':
-        raise Exception('Smoke test (%s) failed' % test_name)
+        raise Exception('Smoke test (%s) failed. Output:\n%s' % (test_name, output))
 
     logging.info('Smoke test passed')
 
@@ -447,11 +451,6 @@ def RunTests(test_suite, args, stdoutfile=None, log_output=True):
 
 
 def GetTraceFromTestName(test_name):
-    m = re.search(r'TracePerfTest.Run/(native|vulkan)_(.*)', test_name)
-    if m:
-        return m.group(2)
-
-    if test_name.startswith('TracePerfTest.Run/'):
-        raise Exception('Unexpected test: %s' % test_name)
-
+    if test_name.startswith('TraceTest.'):
+        return test_name[len('TraceTest.'):]
     return None

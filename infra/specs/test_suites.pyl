@@ -762,8 +762,8 @@
           '--log=debug',
           '--show-test-stdout',
           '--split-shard-samples',
-          '--test-suite=angle_trace_tests',
           '--use-gl=native',
+          '--trace-tests',
         ],
         'merge': {
           'script': '//scripts/process_angle_perf_results.py',
@@ -784,8 +784,8 @@
           '--log=debug',
           '--smoke-test-mode',
           '--show-test-stdout',
-          '--test-suite=angle_trace_tests',
           '--use-gl=native',
+          '--trace-tests',
         ],
         'merge': {
           'script': '//scripts/process_angle_perf_results.py',
@@ -813,8 +813,8 @@
           '--log=debug',
           '--show-test-stdout',
           '--split-shard-samples',
-          '--test-suite=angle_trace_tests',
           '--use-angle=vulkan',
+          '--trace-tests',
         ],
         'merge': {
           'script': '//scripts/process_angle_perf_results.py',
@@ -835,8 +835,8 @@
           '--log=debug',
           '--smoke-test-mode',
           '--show-test-stdout',
-          '--test-suite=angle_trace_tests',
           '--use-angle=vulkan',
+          '--trace-tests',
         ],
         'merge': {
           'script': '//scripts/process_angle_perf_results.py',

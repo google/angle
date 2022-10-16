@@ -312,7 +312,7 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
         "SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_WRITE, write_barriers: 0, command: "
         "vkCmdBeginRenderPass, seq_no:",
     },
-    // From: TracePerfTest.Run/vulkan_aztec_ruins
+    // From: TraceTest.vulkan_aztec_ruins
     {
         "SYNC-HAZARD-READ-AFTER-WRITE",
         "type: VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, imageLayout: VK_IMAGE_LAYOUT_GENERAL, "
@@ -338,7 +338,7 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
         "SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_READ|SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_"
         "ATTACHMENT_WRITE, command: vkCmdEndRenderPass",
     },
-    // From: TracePerfTest.Run/vulkan_swiftshader_manhattan_31 and
+    // From: TraceTest.manhattan_31 with SwiftShader and
     // VulkanPerformanceCounterTest.NewTextureDoesNotBreakRenderPass for both depth and stencil
     // aspect. http://anglebug.com/6701
     {
@@ -403,7 +403,7 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
         "EXT_"
         "TRANSFORM_FEEDBACK_COUNTER_WRITE_EXT",
     },
-    // From: TracePerfTest.Run/vulkan_swiftshader_manhattan_31. These failures appears related to
+    // From: TraceTest.manhattan_31 with SwiftShader. These failures appears related to
     // dynamic uniform buffers. The failures are gone if I force mUniformBufferDescriptorType to
     // VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER. My guess is that syncval is not doing a fine grain enough
     // range tracking with dynamic uniform buffers. http://anglebug.com/6725
@@ -427,8 +427,8 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
     // needed behavior, even though this is not specified in the Vulkan spec.  These generate
     // syncval errors that are benign on those platforms.
     // http://anglebug.com/6870
-    // From: TracePerfTest.Run/vulkan_dead_by_daylight
-    // From: TracePerfTest.Run/vulkan_genshin_impact
+    // From: TraceTest.dead_by_daylight
+    // From: TraceTest.genshin_impact
     {"SYNC-HAZARD-READ-AFTER-WRITE",
      "vkCmdBeginRenderPass: Hazard READ_AFTER_WRITE in subpass 0 for attachment ",
      "aspect color during load with loadOp VK_ATTACHMENT_LOAD_OP_LOAD. Access info (usage: "
@@ -449,19 +449,19 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
         "prior_usage: SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_WRITE, write_barriers: 0, "
         "command: vkCmdBeginRenderPass",
     },
-    // From: TracePerfTest.Run/vulkan_car_chase http://anglebug.com/7125
+    // From: TraceTest.car_chase http://anglebug.com/7125
     {
         "SYNC-HAZARD-WRITE-AFTER-READ",
         "type: VK_DESCRIPTOR_TYPE_STORAGE_BUFFER",
     },
-    // From: TracePerfTest.Run/vulkan_car_chase http://anglebug.com/7125#c6
+    // From: TraceTest.car_chase http://anglebug.com/7125#c6
     {
         "SYNC-HAZARD-WRITE-AFTER-READ",
         "Access info (usage: SYNC_COPY_TRANSFER_WRITE, "
         "prior_usage: SYNC_FRAGMENT_SHADER_UNIFORM_READ, "
         "read_barriers: VK_PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT, command: vkCmdDrawIndexed",
     },
-    // From: TracePerfTest.Run/vulkan_special_forces_group_2 http://anglebug.com/5592
+    // From: TraceTest.special_forces_group_2 http://anglebug.com/5592
     {
         "SYNC-HAZARD-WRITE-AFTER-READ",
         "Access info (usage: SYNC_IMAGE_LAYOUT_TRANSITION, prior_usage: "
@@ -527,14 +527,14 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
      "Access info (usage: SYNC_FRAGMENT_SHADER_SHADER_STORAGE_READ, "
      "prior_usage: SYNC_FRAGMENT_SHADER_SHADER_STORAGE_WRITE, "
      "write_barriers: 0"},
-    // From: TracePerfTest.Run/vulkan_life_is_strange http://anglebug.com/7711
+    // From: TraceTest.life_is_strange http://anglebug.com/7711
     {"SYNC-HAZARD-WRITE-AFTER-READ",
      "vkCmdEndRenderPass: Hazard WRITE_AFTER_READ in subpass 0 for attachment 1 "
      "depth aspect during store with storeOp VK_ATTACHMENT_STORE_OP_DONT_CARE. "
      "Access info (usage: SYNC_LATE_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE, "
      "prior_usage: SYNC_FRAGMENT_SHADER_SHADER_STORAGE_READ, "
      "read_barriers: VK_PIPELINE_STAGE_2_NONE, command: vkCmdDrawIndexed,"},
-    // From: TracePerfTest.Run/vulkan_life_is_strange http://anglebug.com/7711
+    // From: TraceTest.life_is_strange http://anglebug.com/7711
     {"SYNC-HAZARD-READ-AFTER-WRITE",
      "type: VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, "
      "imageLayout: VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL",

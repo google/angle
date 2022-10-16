@@ -7,8 +7,8 @@
 # run_angle_android_test.py:
 #   Runs ANGLE tests using android_helper wrapper. Example:
 #     (cd out/Android; ../../src/tests/run_angle_android_test.py \
-#       angle_perftests \
-#       --filter='TracePerfTest.Run/*_words_with_friends_2' \
+#       angle_trace_tests \
+#       --filter='TraceTest.words_with_friends_2' \
 #       --no-warmup --steps-per-trial 1000 --trials 1)
 
 import argparse

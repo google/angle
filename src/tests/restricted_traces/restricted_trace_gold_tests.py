@@ -39,8 +39,7 @@ import common
 
 
 DEFAULT_TEST_SUITE = angle_test_util.ANGLE_TRACE_TEST_SUITE
-DEFAULT_TEST_PREFIX = 'TracePerfTest.Run/vulkan_'
-SWIFTSHADER_TEST_PREFIX = 'TracePerfTest.Run/vulkan_swiftshader_'
+DEFAULT_TEST_PREFIX = 'TraceTest.'
 DEFAULT_SCREENSHOT_PREFIX = 'angle_vulkan_'
 SWIFTSHADER_SCREENSHOT_PREFIX = 'angle_vulkan_swiftshader_'
 DEFAULT_BATCH_SIZE = 5
@@ -281,8 +280,7 @@ def _get_batches(traces, batch_size):
 
 
 def _get_gtest_filter_for_batch(args, batch):
-    prefix = SWIFTSHADER_TEST_PREFIX if args.swiftshader else DEFAULT_TEST_PREFIX
-    expanded = ['%s%s' % (prefix, trace) for trace in batch]
+    expanded = ['%s%s' % (DEFAULT_TEST_PREFIX, trace) for trace in batch]
     return '--gtest_filter=%s' % ':'.join(expanded)
 
 
@@ -345,8 +343,7 @@ def _run_tests(args, tests, extra_flags, env, screenshot_dir, results, test_resu
                     artifacts = {}
 
                     if batch_result == PASS:
-                        test_prefix = SWIFTSHADER_TEST_PREFIX if args.swiftshader else DEFAULT_TEST_PREFIX
-                        test_name = test_prefix + trace
+                        test_name = DEFAULT_TEST_PREFIX + trace
                         if json_results['tests'][test_name]['actual'] == 'SKIP':
                             logging.info('Test skipped by suite: %s' % test_name)
                             result = SKIP
