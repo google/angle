@@ -407,6 +407,9 @@ class Display final : public LabeledObject,
     size_t mGlobalTextureShareGroupUsers;
     size_t mGlobalSemaphoreShareGroupUsers;
 
+    gl::HandleAllocator mImageHandleAllocator;
+    gl::HandleAllocator mSurfaceHandleAllocator;
+
     angle::FrontendFeatures mFrontendFeatures;
 
     angle::FeatureList mFeatures;

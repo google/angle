@@ -170,6 +170,23 @@ using PackedEnumBitSet = BitSetT<EnumSize<E>(), DataT, E>;
 
 }  // namespace angle
 
+#define ANGLE_DEFINE_ID_TYPE(Type)          \
+    class Type;                             \
+    struct Type##ID                         \
+    {                                       \
+        GLuint value;                       \
+    };                                      \
+    template <>                             \
+    struct ResourceTypeToID<Type>           \
+    {                                       \
+        using IDType = Type##ID;            \
+    };                                      \
+    template <>                             \
+    struct IsResourceIDType<Type##ID>       \
+    {                                       \
+        static constexpr bool value = true; \
+    };
+
 namespace gl
 {
 
@@ -676,45 +693,24 @@ struct ResourceTypeToID;
 template <typename T>
 struct IsResourceIDType;
 
-// Clang Format doesn't like the following X macro.
-// clang-format off
-#define ANGLE_ID_TYPES_OP(X) \
-    X(Buffer)                \
-    X(FenceNV)               \
-    X(Framebuffer)           \
-    X(MemoryObject)          \
-    X(Path)                  \
-    X(ProgramPipeline)       \
-    X(Query)                 \
-    X(Renderbuffer)          \
-    X(Sampler)               \
-    X(Semaphore)             \
-    X(Texture)               \
-    X(TransformFeedback)     \
+#define ANGLE_GL_ID_TYPES_OP(X) \
+    X(Buffer)                   \
+    X(FenceNV)                  \
+    X(Framebuffer)              \
+    X(MemoryObject)             \
+    X(Path)                     \
+    X(ProgramPipeline)          \
+    X(Query)                    \
+    X(Renderbuffer)             \
+    X(Sampler)                  \
+    X(Semaphore)                \
+    X(Texture)                  \
+    X(TransformFeedback)        \
     X(VertexArray)
-// clang-format on
 
-#define ANGLE_DEFINE_ID_TYPE(Type)          \
-    class Type;                             \
-    struct Type##ID                         \
-    {                                       \
-        GLuint value;                       \
-    };                                      \
-    template <>                             \
-    struct ResourceTypeToID<Type>           \
-    {                                       \
-        using IDType = Type##ID;            \
-    };                                      \
-    template <>                             \
-    struct IsResourceIDType<Type##ID>       \
-    {                                       \
-        static constexpr bool value = true; \
-    };
+ANGLE_GL_ID_TYPES_OP(ANGLE_DEFINE_ID_TYPE)
 
-ANGLE_ID_TYPES_OP(ANGLE_DEFINE_ID_TYPE)
-
-#undef ANGLE_DEFINE_ID_TYPE
-#undef ANGLE_ID_TYPES_OP
+#undef ANGLE_GL_ID_TYPES_OP
 
 // Shaders and programs are a bit special as they share IDs.
 struct ShaderProgramID
@@ -855,7 +851,24 @@ class Image;
 class Surface;
 class Stream;
 class Sync;
+
+#define ANGLE_EGL_ID_TYPES_OP(X) \
+    X(Image)                     \
+    X(Surface)
+
+template <typename T>
+struct ResourceTypeToID;
+
+template <typename T>
+struct IsResourceIDType;
+
+ANGLE_EGL_ID_TYPES_OP(ANGLE_DEFINE_ID_TYPE)
+
+#undef ANGLE_EGL_ID_TYPES_OP
+
 }  // namespace egl
+
+#undef ANGLE_DEFINE_ID_TYPE
 
 namespace egl_gl
 {

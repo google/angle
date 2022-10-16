@@ -1294,7 +1294,8 @@ Error Display::createWindowSurface(const Config *configuration,
         ANGLE_TRY(restoreLostDevice());
     }
 
-    SurfacePointer surface(new WindowSurface(mImplementation, configuration, window, attribs,
+    SurfaceID id = {mSurfaceHandleAllocator.allocate()};
+    SurfacePointer surface(new WindowSurface(mImplementation, id, configuration, window, attribs,
                                              mFrontendFeatures.forceRobustResourceInit.enabled),
                            this);
     ANGLE_TRY(surface->initialize(this));
@@ -1323,7 +1324,8 @@ Error Display::createPbufferSurface(const Config *configuration,
         ANGLE_TRY(restoreLostDevice());
     }
 
-    SurfacePointer surface(new PbufferSurface(mImplementation, configuration, attribs,
+    SurfaceID id = {mSurfaceHandleAllocator.allocate()};
+    SurfacePointer surface(new PbufferSurface(mImplementation, id, configuration, attribs,
                                               mFrontendFeatures.forceRobustResourceInit.enabled),
                            this);
     ANGLE_TRY(surface->initialize(this));
@@ -1348,8 +1350,9 @@ Error Display::createPbufferFromClientBuffer(const Config *configuration,
         ANGLE_TRY(restoreLostDevice());
     }
 
+    SurfaceID id = {mSurfaceHandleAllocator.allocate()};
     SurfacePointer surface(
-        new PbufferSurface(mImplementation, configuration, buftype, clientBuffer, attribs,
+        new PbufferSurface(mImplementation, id, configuration, buftype, clientBuffer, attribs,
                            mFrontendFeatures.forceRobustResourceInit.enabled),
         this);
     ANGLE_TRY(surface->initialize(this));
@@ -1373,9 +1376,11 @@ Error Display::createPixmapSurface(const Config *configuration,
         ANGLE_TRY(restoreLostDevice());
     }
 
-    SurfacePointer surface(new PixmapSurface(mImplementation, configuration, nativePixmap, attribs,
-                                             mFrontendFeatures.forceRobustResourceInit.enabled),
-                           this);
+    SurfaceID id = {mSurfaceHandleAllocator.allocate()};
+    SurfacePointer surface(
+        new PixmapSurface(mImplementation, id, configuration, nativePixmap, attribs,
+                          mFrontendFeatures.forceRobustResourceInit.enabled),
+        this);
     ANGLE_TRY(surface->initialize(this));
 
     ASSERT(outSurface != nullptr);
@@ -1417,8 +1422,9 @@ Error Display::createImage(const gl::Context *context,
     }
     ASSERT(sibling != nullptr);
 
+    ImageID id = {mImageHandleAllocator.allocate()};
     angle::UniqueObjectPointer<Image, Display> imagePtr(
-        new Image(mImplementation, context, target, sibling, attribs), this);
+        new Image(mImplementation, id, context, target, sibling, attribs), this);
     ANGLE_TRY(imagePtr->initialize(this));
 
     Image *image = imagePtr.release();
@@ -1666,6 +1672,7 @@ Error Display::destroySurfaceImpl(Surface *surface, SurfaceSet *surfaces)
 
     auto iter = surfaces->find(surface);
     ASSERT(iter != surfaces->end());
+    mSurfaceHandleAllocator.release(surface->id().value);
     surfaces->erase(iter);
     ANGLE_TRY(surface->onDestroy(this));
     return NoError();
@@ -1675,6 +1682,7 @@ void Display::destroyImageImpl(Image *image, ImageSet *images)
 {
     auto iter = images->find(image);
     ASSERT(iter != images->end());
+    mImageHandleAllocator.release(image->id().value);
     (*iter)->release(this);
     images->erase(iter);
 }
