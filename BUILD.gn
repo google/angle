@@ -395,6 +395,11 @@ config("angle_common_config") {
   if (is_android) {
     libs = [ "log" ]
   }
+
+  defines = []
+  if (angle_delegate_workers) {
+    defines += [ "ANGLE_DELEGATE_WORKERS" ]
+  }
 }
 
 # Silences the "indirect call of a function with wrong dynamic type" cfi error
@@ -817,10 +822,6 @@ angle_source_set("angle_version_info") {
 
 config("angle_backend_config") {
   defines = []
-
-  if (angle_delegate_workers) {
-    defines += [ "ANGLE_DELEGATE_WORKERS" ]
-  }
 
   if (angle_force_context_check_every_call) {
     defines += [ "ANGLE_FORCE_CONTEXT_CHECK_EVERY_CALL=1" ]

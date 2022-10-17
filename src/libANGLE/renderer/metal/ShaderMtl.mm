@@ -9,13 +9,14 @@
 
 #include "libANGLE/renderer/metal/ShaderMtl.h"
 
+#include "common/WorkerThread.h"
 #include "common/debug.h"
 #include "compiler/translator/TranslatorMetal.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Shader.h"
-#include "libANGLE/WorkerThread.h"
 #include "libANGLE/renderer/metal/ContextMtl.h"
 #include "libANGLE/renderer/metal/DisplayMtl.h"
+#include "libANGLE/trace.h"
 
 namespace rx
 {
@@ -33,6 +34,7 @@ class TranslateTask : public angle::Closure
 
     void operator()() override
     {
+        ANGLE_TRACE_EVENT1("gpu.angle", "TranslateTaskMetal::run", "source", mSource);
         const char *source = mSource.c_str();
         mResult            = sh::Compile(mHandle, &source, 1, mOptions);
     }

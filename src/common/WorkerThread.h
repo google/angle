@@ -8,15 +8,15 @@
 //   Can be implemented as different targets, depending on platform.
 //
 
-#ifndef LIBANGLE_WORKER_THREAD_H_
-#define LIBANGLE_WORKER_THREAD_H_
+#ifndef COMMON_WORKER_THREAD_H_
+#define COMMON_WORKER_THREAD_H_
 
 #include <array>
 #include <memory>
 #include <vector>
 
 #include "common/debug.h"
-#include "libANGLE/features.h"
+#include "platform/PlatformMethods.h"
 
 namespace angle
 {
@@ -77,7 +77,7 @@ class WorkerThreadPool : angle::NonCopyable
     // Other numbers indicate how many threads the pool should spawn.
     // Note that based on build options, this class may not actually run tasks in threads, or it may
     // hook into the provided PlatformMethods::postWorkerTask, in which case numThreads is ignored.
-    static std::shared_ptr<WorkerThreadPool> Create(size_t numThreads);
+    static std::shared_ptr<WorkerThreadPool> Create(size_t numThreads, PlatformMethods *platform);
     static std::shared_ptr<WaitableEvent> PostWorkerTask(std::shared_ptr<WorkerThreadPool> pool,
                                                          std::shared_ptr<Closure> task);
 
@@ -91,4 +91,4 @@ class WorkerThreadPool : angle::NonCopyable
 
 }  // namespace angle
 
-#endif  // LIBANGLE_WORKER_THREAD_H_
+#endif  // COMMON_WORKER_THREAD_H_

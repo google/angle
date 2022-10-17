@@ -4411,12 +4411,13 @@ void Context::updateCaps()
 
     if (!mState.mExtensions.parallelShaderCompileKHR)
     {
-        mSingleThreadPool = angle::WorkerThreadPool::Create(1);
+        mSingleThreadPool = angle::WorkerThreadPool::Create(1, ANGLEPlatformCurrent());
     }
     const bool multithreaded =
         mState.mExtensions.parallelShaderCompileKHR ||
         getFrontendFeatures().enableCompressingPipelineCacheInThreadPool.enabled;
-    mMultiThreadPool = angle::WorkerThreadPool::Create(multithreaded ? 0 : 1);
+    mMultiThreadPool =
+        angle::WorkerThreadPool::Create(multithreaded ? 0 : 1, ANGLEPlatformCurrent());
 
     // Reinitialize some dirty bits that depend on extensions.
     if (mState.isRobustResourceInitEnabled())
@@ -9453,7 +9454,8 @@ void Context::maxShaderCompilerThreads(GLuint count)
     if ((oldCount == 0 || count == 0) && (oldCount != 0 || count != 0))
     {
         const bool multithreaded = count > 0;
-        mMultiThreadPool         = angle::WorkerThreadPool::Create(multithreaded ? count : 1);
+        mMultiThreadPool =
+            angle::WorkerThreadPool::Create(multithreaded ? count : 1, ANGLEPlatformCurrent());
     }
     mImplementation->setMaxShaderCompilerThreads(count);
 }

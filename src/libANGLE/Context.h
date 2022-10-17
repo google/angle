@@ -17,6 +17,7 @@
 #include "angle_gl.h"
 #include "common/MemoryBuffer.h"
 #include "common/PackedEnums.h"
+#include "common/WorkerThread.h"
 #include "common/angleutils.h"
 #include "libANGLE/Caps.h"
 #include "libANGLE/Constants.h"
@@ -38,7 +39,6 @@
 #include "libANGLE/ResourceMap.h"
 #include "libANGLE/State.h"
 #include "libANGLE/VertexAttribute.h"
-#include "libANGLE/WorkerThread.h"
 #include "libANGLE/angletypes.h"
 
 namespace angle

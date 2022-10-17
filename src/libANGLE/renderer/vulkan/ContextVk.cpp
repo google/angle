@@ -40,8 +40,6 @@
 #include "libANGLE/renderer/vulkan/TransformFeedbackVk.h"
 #include "libANGLE/renderer/vulkan/VertexArrayVk.h"
 
-#include "libANGLE/trace.h"
-
 #include <iostream>
 
 namespace rx

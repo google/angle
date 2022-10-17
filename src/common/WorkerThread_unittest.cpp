@@ -9,7 +9,7 @@
 #include <gtest/gtest.h>
 #include <array>
 
-#include "libANGLE/WorkerThread.h"
+#include "common/WorkerThread.h"
 
 using namespace angle;
 
@@ -28,7 +28,8 @@ TEST(WorkerPoolTest, SimpleTask)
     };
 
     std::array<std::shared_ptr<WorkerThreadPool>, 2> pools = {
-        {WorkerThreadPool::Create(1), WorkerThreadPool::Create(0)}};
+        {WorkerThreadPool::Create(1, ANGLEPlatformCurrent()),
+         WorkerThreadPool::Create(0, ANGLEPlatformCurrent())}};
     for (auto &pool : pools)
     {
         std::array<std::shared_ptr<TestTask>, 4> tasks = {
