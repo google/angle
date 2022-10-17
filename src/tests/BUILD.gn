@@ -1717,13 +1717,15 @@ group("angle_tests") {
     ":angle_end2end_tests",
     ":angle_system_info_test",
     ":angle_unittests",
-    "capture_replay_tests",
   ]
   if (build_angle_perftests) {
     deps += [ ":angle_perftests" ]
   }
   if (build_angle_trace_tests) {
     deps += [ ":angle_trace_tests" ]
+  }
+  if (is_clang) {
+    deps += [ "capture_replay_tests" ]
   }
   if (!is_fuchsia) {
     deps += [
