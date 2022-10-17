@@ -465,7 +465,7 @@ std::shared_ptr<WaitableCompileEvent> ShaderGL::compile(const gl::Context *conte
             compileAndCheckShader(source);
         };
         return std::make_shared<WaitableCompileEventWorkerContext>(
-            angle::WorkerThreadPool::PostWorkerTask(workerThreadPool, translateTask),
+            workerThreadPool->postWorkerTask(translateTask),
             std::move(compileAndCheckShaderFunctor), std::move(postTranslateFunctor),
             translateTask);
     }

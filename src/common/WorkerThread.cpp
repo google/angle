@@ -91,6 +91,8 @@ class SingleThreadedWorkerPool final : public WorkerThreadPool
 std::shared_ptr<WaitableEvent> SingleThreadedWorkerPool::postWorkerTask(
     std::shared_ptr<Closure> task)
 {
+    // Thread safety: This function is thread-safe because the task is run on the calling thread
+    // itself.
     (*task)();
     return std::make_shared<WaitableEventDone>();
 }
@@ -153,6 +155,8 @@ AsyncWorkerPool::~AsyncWorkerPool()
 
 std::shared_ptr<WaitableEvent> AsyncWorkerPool::postWorkerTask(std::shared_ptr<Closure> task)
 {
+    // Thread safety: This function is thread-safe because access to |mTaskQueue| is protected by
+    // |mMutex|.
     auto waitable = std::make_shared<AsyncWaitableEvent>();
     {
         std::lock_guard<std::mutex> lock(mMutex);
@@ -241,6 +245,9 @@ class DelegateWorkerTask
 
 std::shared_ptr<WaitableEvent> DelegateWorkerPool::postWorkerTask(std::shared_ptr<Closure> task)
 {
+    // Thread safety: This function is thread-safe because the |postWorkerTask| platform method is
+    // expected to be thread safe.  For Chromium, that forwards the call to the |TaskTracker| class
+    // in base/task/thread_pool/task_tracker.h which is thread-safe.
     auto waitable = std::make_shared<AsyncWaitableEvent>();
 
     // The task will be deleted by DelegateWorkerTask::RunTask(...) after its execution.
@@ -283,13 +290,4 @@ std::shared_ptr<WorkerThreadPool> WorkerThreadPool::Create(size_t numThreads,
     }
     return pool;
 }
-
-// static
-std::shared_ptr<WaitableEvent> WorkerThreadPool::PostWorkerTask(
-    std::shared_ptr<WorkerThreadPool> pool,
-    std::shared_ptr<Closure> task)
-{
-    return pool->postWorkerTask(task);
-}
-
 }  // namespace angle

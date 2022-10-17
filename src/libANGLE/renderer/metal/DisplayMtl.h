@@ -44,6 +44,8 @@ class DisplayMtl : public DisplayImpl
     egl::Error initialize(egl::Display *display) override;
     void terminate() override;
 
+    egl::Display *getDisplay() const { return mDisplay; }
+
     bool testDeviceLost() override;
     egl::Error restoreLostDevice(const egl::Display *display) override;
 
@@ -182,6 +184,8 @@ class DisplayMtl : public DisplayImpl
     mtl::AutoObjCPtr<id<MTLDevice>> getMetalDeviceMatchingAttribute(
         const egl::AttributeMap &attribs);
     angle::Result initializeShaderLibrary();
+
+    egl::Display *mDisplay;
 
     mtl::AutoObjCPtr<id<MTLDevice>> mMetalDevice = nil;
     uint32_t mMetalDeviceVendorId                = 0;

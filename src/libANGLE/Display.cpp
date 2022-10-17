@@ -28,6 +28,7 @@
 #include "common/tls.h"
 #include "common/utilities.h"
 #include "gpu_info_util/SystemInfo.h"
+#include "image_util/loadimage.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Device.h"
 #include "libANGLE/EGLSync.h"
@@ -2517,6 +2518,16 @@ Error Display::queryDmaBufModifiers(EGLint format,
     ANGLE_TRY(mImplementation->queryDmaBufModifiers(format, max_modifiers, modifiers, external_only,
                                                     num_modifiers));
     return NoError();
+}
+
+angle::ImageLoadContext Display::getImageLoadContext() const
+{
+    angle::ImageLoadContext imageLoadContext;
+
+    imageLoadContext.singleThreadPool = mSingleThreadPool;
+    imageLoadContext.multiThreadPool  = mMultiThreadPool;
+
+    return imageLoadContext;
 }
 
 }  // namespace egl

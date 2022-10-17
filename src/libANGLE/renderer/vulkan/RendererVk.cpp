@@ -4325,8 +4325,7 @@ angle::Result RendererVk::syncPipelineCacheVk(DisplayVk *displayVk, const gl::Co
             std::make_shared<CompressAndStorePipelineCacheTask>(
                 displayVk, contextVk, std::move(pipelineCacheData), kMaxTotalSize);
         mCompressEvent = std::make_shared<WaitableCompressEventImpl>(
-            angle::WorkerThreadPool::PostWorkerTask(context->getWorkerThreadPool(),
-                                                    compressAndStorePipelineCacheTask),
+            context->getWorkerThreadPool()->postWorkerTask(compressAndStorePipelineCacheTask),
             compressAndStorePipelineCacheTask);
     }
     else

@@ -785,6 +785,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     vk::ComputePipelineFlags getComputePipelineFlags() const;
 
+    angle::ImageLoadContext getImageLoadContext() const;
+
   private:
     // Dirty bits.
     enum DirtyBitType : size_t

@@ -336,6 +336,8 @@ class Display final : public LabeledObject,
     }
     std::shared_ptr<angle::WorkerThreadPool> getMultiThreadPool() const { return mMultiThreadPool; }
 
+    angle::ImageLoadContext getImageLoadContext() const;
+
   private:
     Display(EGLenum platform, EGLNativeDisplayType displayId, Device *eglDevice);
 
@@ -432,7 +434,7 @@ class Display final : public LabeledObject,
     ThreadSet mActiveThreads;
 
     // Single-threaded and multithread pools for use by various parts of ANGLE, such as shader
-    // compilation.
+    // compilation.  These pools are internally synchronized.
     std::shared_ptr<angle::WorkerThreadPool> mSingleThreadPool;
     std::shared_ptr<angle::WorkerThreadPool> mMultiThreadPool;
 };

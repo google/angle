@@ -379,7 +379,7 @@ std::shared_ptr<WaitableCompileEvent> ShaderD3D::compile(const gl::Context *cont
                                                             source, sourcePath);
 
     return std::make_shared<WaitableCompileEventD3D>(
-        angle::WorkerThreadPool::PostWorkerTask(workerThreadPool, translateTask), compilerInstance,
+        workerThreadPool->postWorkerTask(translateTask), compilerInstance,
         std::move(postTranslateFunctor), translateTask);
 }
 

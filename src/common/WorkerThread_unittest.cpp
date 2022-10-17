@@ -36,10 +36,8 @@ TEST(WorkerPoolTest, SimpleTask)
             {std::make_shared<TestTask>(), std::make_shared<TestTask>(),
              std::make_shared<TestTask>(), std::make_shared<TestTask>()}};
         std::array<std::shared_ptr<WaitableEvent>, 4> waitables = {
-            {WorkerThreadPool::PostWorkerTask(pool, tasks[0]),
-             WorkerThreadPool::PostWorkerTask(pool, tasks[1]),
-             WorkerThreadPool::PostWorkerTask(pool, tasks[2]),
-             WorkerThreadPool::PostWorkerTask(pool, tasks[3])}};
+            {pool->postWorkerTask(tasks[0]), pool->postWorkerTask(tasks[1]),
+             pool->postWorkerTask(tasks[2]), pool->postWorkerTask(tasks[3])}};
 
         WaitableEvent::WaitMany(&waitables);
 

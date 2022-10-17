@@ -198,8 +198,8 @@ class ProgramGL::LinkEventGL final : public LinkEvent
                 std::shared_ptr<ProgramGL::LinkTask> linkTask,
                 PostLinkImplFunctor &&functor)
         : mLinkTask(linkTask),
-          mWaitableEvent(std::shared_ptr<angle::WaitableEvent>(
-              angle::WorkerThreadPool::PostWorkerTask(workerPool, mLinkTask))),
+          mWaitableEvent(
+              std::shared_ptr<angle::WaitableEvent>(workerPool->postWorkerTask(mLinkTask))),
           mPostLinkImplFunctor(functor)
     {}
 

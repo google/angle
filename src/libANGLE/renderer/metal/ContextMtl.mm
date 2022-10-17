@@ -14,6 +14,8 @@
 
 #include "GLSLANG/ShaderLang.h"
 #include "common/debug.h"
+#include "image_util/loadimage.h"
+#include "libANGLE/Display.h"
 #include "libANGLE/TransformFeedback.h"
 #include "libANGLE/renderer/OverlayImpl.h"
 #include "libANGLE/renderer/metal/BufferMtl.h"
@@ -2764,4 +2766,8 @@ angle::Result ContextMtl::copyTextureSliceLevelToWorkBuffer(
     return angle::Result::Continue;
 }
 
+angle::ImageLoadContext ContextMtl::getImageLoadContext() const
+{
+    return getDisplay()->getDisplay()->getImageLoadContext();
+}
 }  // namespace rx

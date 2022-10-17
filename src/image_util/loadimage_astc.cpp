@@ -15,7 +15,8 @@
 namespace angle
 {
 
-void LoadASTCToRGBA8Inner(size_t width,
+void LoadASTCToRGBA8Inner(const ImageLoadContext &context,
+                          size_t width,
                           size_t height,
                           size_t depth,
                           uint32_t blockWidth,
@@ -46,8 +47,8 @@ void LoadASTCToRGBA8Inner(size_t width,
 
     constexpr unsigned int kThreadCount = 1;
 
-    astcenc_context *context;
-    status = astcenc_context_alloc(&config, kThreadCount, &context);
+    astcenc_context *ASTCContext;
+    status = astcenc_context_alloc(&config, kThreadCount, &ASTCContext);
     if (status != ASTCENC_SUCCESS)
     {
         WARN() << "Could not allocate astcenc context: " << astcenc_get_error_string(status);
@@ -70,13 +71,13 @@ void LoadASTCToRGBA8Inner(size_t width,
 
     constexpr astcenc_swizzle swizzle{ASTCENC_SWZ_R, ASTCENC_SWZ_G, ASTCENC_SWZ_B, ASTCENC_SWZ_A};
 
-    status = astcenc_decompress_image(context, input, blockSize, &image, &swizzle, 0);
+    status = astcenc_decompress_image(ASTCContext, input, blockSize, &image, &swizzle, 0);
     if (status != ASTCENC_SUCCESS)
     {
         WARN() << "astcenc decompress failed: " << astcenc_get_error_string(status);
     }
 
-    astcenc_context_free(context);
+    astcenc_context_free(ASTCContext);
 #else
     ERR() << "Trying to decode ASTC without having ASTC support built.";
 #endif

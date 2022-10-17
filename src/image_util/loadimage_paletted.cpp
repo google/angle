@@ -113,7 +113,8 @@ R8G8B8A8 DecodeColor(const uint8_t *src,
 }  // namespace
 
 // See LoadPalettedToRGBA8.
-void LoadPalettedToRGBA8Impl(size_t width,
+void LoadPalettedToRGBA8Impl(const ImageLoadContext &context,
+                             size_t width,
                              size_t height,
                              size_t depth,
                              uint32_t indexBits,

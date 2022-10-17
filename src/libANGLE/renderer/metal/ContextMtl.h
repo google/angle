@@ -396,6 +396,8 @@ class ContextMtl : public ContextImpl, public mtl::Context
     const mtl::BufferRef &getWorkBuffer() const { return mWorkBuffer; }
     mtl::BufferManager &getBufferManager() { return mBufferManager; }
 
+    angle::ImageLoadContext getImageLoadContext() const;
+
   private:
     void ensureCommandBufferReady();
     void endBlitAndComputeEncoding();

@@ -97,8 +97,7 @@ std::shared_ptr<WaitableCompileEvent> ShaderMtl::compileImplMtl(
         std::make_shared<TranslateTask>(compilerInstance->getHandle(), *compileOptions, source);
 
     return std::make_shared<MTLWaitableCompileEventImpl>(
-        this, angle::WorkerThreadPool::PostWorkerTask(workerThreadPool, translateTask),
-        translateTask);
+        this, workerThreadPool->postWorkerTask(translateTask), translateTask);
 }
 
 std::shared_ptr<WaitableCompileEvent> ShaderMtl::compile(const gl::Context *context,

@@ -22,6 +22,7 @@
 #include "common/platform.h"
 #include "common/system_utils.h"
 #include "common/utilities.h"
+#include "image_util/loadimage.h"
 #include "libANGLE/Buffer.h"
 #include "libANGLE/Compiler.h"
 #include "libANGLE/Display.h"
