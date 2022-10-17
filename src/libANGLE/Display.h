@@ -15,6 +15,7 @@
 #include <set>
 #include <vector>
 
+#include "common/WorkerThread.h"
 #include "libANGLE/AttributeMap.h"
 #include "libANGLE/BlobCache.h"
 #include "libANGLE/Caps.h"
@@ -329,6 +330,12 @@ class Display final : public LabeledObject,
                                EGLBoolean *external_only,
                                EGLint *num_modifiers);
 
+    std::shared_ptr<angle::WorkerThreadPool> getSingleThreadPool() const
+    {
+        return mSingleThreadPool;
+    }
+    std::shared_ptr<angle::WorkerThreadPool> getMultiThreadPool() const { return mMultiThreadPool; }
+
   private:
     Display(EGLenum platform, EGLNativeDisplayType displayId, Device *eglDevice);
 
@@ -423,6 +430,11 @@ class Display final : public LabeledObject,
 
     bool mTerminatedByApi;
     ThreadSet mActiveThreads;
+
+    // Single-threaded and multithread pools for use by various parts of ANGLE, such as shader
+    // compilation.
+    std::shared_ptr<angle::WorkerThreadPool> mSingleThreadPool;
+    std::shared_ptr<angle::WorkerThreadPool> mMultiThreadPool;
 };
 
 }  // namespace egl
