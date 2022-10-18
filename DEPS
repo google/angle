@@ -39,7 +39,7 @@ vars = {
   'checkout_android_native_support': 'checkout_android or checkout_chromeos',
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '9ac79e275a41e58081c4b1367360ec6f53f6f175',
+  'chromium_revision': '2ee62a7f9f78ed2b8118ddb7998b3eed20cf3449',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -84,11 +84,11 @@ vars = {
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling catapult
   # and whatever else without interference from each other.
-  'catapult_revision': '98d333e8aebd9658a465e71e51214072b0ac205e',
+  'catapult_revision': 'b049f00cff9843f42aa34303111616424071e543',
 
   # the commit queue can handle CLs rolling Fuchsia sdk
   # and whatever else without interference from each other.
-  'fuchsia_version': 'version:10.20221017.2.1',
+  'fuchsia_version': 'version:10.20221018.0.1',
 
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling luci-go
@@ -195,12 +195,12 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@58b7594b440d990b46dca88be9db3c9e5c94df55',
+    'url': '{chromium_git}/chromium/src/testing@20937c1154d17a3fb1380901e9c25ca401061edb',
     'condition': 'not build_with_chromium',
   },
 
   'third_party/abseil-cpp': {
-    'url': '{chromium_git}/chromium/src/third_party/abseil-cpp@89d1071f12d80284bce6a1a5db57f6c3dded253e',
+    'url': '{chromium_git}/chromium/src/third_party/abseil-cpp@3027824279196af3649130aacd8a349dae31c1a0',
     'condition': 'not build_with_chromium',
   },
 
