@@ -59,7 +59,7 @@ class WaitableEvent : angle::NonCopyable
     std::shared_ptr<WorkerThreadPool> mPool;
 };
 
-// A waitable event that is always ready.
+// A mock waitable event.
 class WaitableEventDone final : public WaitableEvent
 {
   public:
@@ -75,15 +75,11 @@ class WorkerThreadPool : angle::NonCopyable
     WorkerThreadPool();
     virtual ~WorkerThreadPool();
 
-    // Creates a new thread pool.
-    // If numThreads is 0, the pool will choose the best number of threads to run.
-    // If numThreads is 1, the pool will be single-threaded. Tasks will run on the calling thread.
-    // Other numbers indicate how many threads the pool should spawn.
-    // Note that based on build options, this class may not actually run tasks in threads, or it may
-    // hook into the provided PlatformMethods::postWorkerTask, in which case numThreads is ignored.
-    static std::shared_ptr<WorkerThreadPool> Create(size_t numThreads);
+    static std::shared_ptr<WorkerThreadPool> Create(bool multithreaded);
     static std::shared_ptr<WaitableEvent> PostWorkerTask(std::shared_ptr<WorkerThreadPool> pool,
                                                          std::shared_ptr<Closure> task);
+
+    virtual void setMaxThreads(size_t maxThreads) = 0;
 
     virtual bool isAsync() = 0;
 

@@ -28,7 +28,7 @@ TEST(WorkerPoolTest, SimpleTask)
     };
 
     std::array<std::shared_ptr<WorkerThreadPool>, 2> pools = {
-        {WorkerThreadPool::Create(1), WorkerThreadPool::Create(0)}};
+        {WorkerThreadPool::Create(false), WorkerThreadPool::Create(true)}};
     for (auto &pool : pools)
     {
         std::array<std::shared_ptr<TestTask>, 4> tasks = {
