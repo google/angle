@@ -333,16 +333,6 @@ def GetBuildFingerprint():
     return _AdbShell('getprop ro.build.fingerprint').decode('ascii').strip()
 
 
-def ListTests(suite_name):
-    _EnsureTestSuite(suite_name)
-
-    out_lines = _RunInstrumentation(["--list-tests"]).decode('ascii').split('\n')
-
-    start = out_lines.index('Tests list:')
-    end = out_lines.index('End tests list.')
-    return out_lines[start + 1:end]
-
-
 def _PullDir(device_dir, local_dir):
     files = _AdbShell('ls -1 %s' % device_dir).decode('ascii').split('\n')
     for f in files:

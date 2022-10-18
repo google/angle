@@ -151,7 +151,6 @@ def run_command_with_output(argv, stdoutfile, env=None, cwd=None, log=True):
 def RunTestSuite(test_suite,
                  cmd_args,
                  env,
-                 runner_args=None,
                  show_test_stdout=True,
                  use_xvfb=False):
     if android_helper.IsAndroid():
@@ -161,7 +160,7 @@ def RunTestSuite(test_suite,
 
     cmd = ExecutablePathInCurrentDir(test_suite) if os.path.exists(
         os.path.basename(test_suite)) else test_suite
-    runner_cmd = [cmd] + cmd_args + (runner_args or [])
+    runner_cmd = [cmd] + cmd_args
 
     logging.debug(' '.join(runner_cmd))
     with contextlib.ExitStack() as stack:

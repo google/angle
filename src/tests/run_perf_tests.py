@@ -229,17 +229,10 @@ def _wall_times_stats(wall_times):
 
 
 def _run_test_suite(args, cmd_args, env):
-    android_test_runner_args = [
-        '--extract-test-list-from-filter',
-        '--enable-device-cache',
-        '--skip-clear-data',
-        '--use-existing-test-data',
-    ]
     return angle_test_util.RunTestSuite(
         args.test_suite,
         cmd_args,
         env,
-        runner_args=android_test_runner_args,
         use_xvfb=args.xvfb,
         show_test_stdout=args.show_test_stdout)
 
@@ -548,13 +541,10 @@ def main():
     angle_test_util.Initialize(args.test_suite)
 
     # Get test list
-    if angle_test_util.IsAndroid():
-        tests = android_helper.ListTests(args.test_suite)
-    else:
-        exit_code, output, _ = _run_test_suite(args, ['--list-tests', '--verbose'], env)
-        if exit_code != EXIT_SUCCESS:
-            logging.fatal('Could not find test list from test output:\n%s' % output)
-        tests = _get_tests_from_output(output)
+    exit_code, output, _ = _run_test_suite(args, ['--list-tests', '--verbose'] + extra_flags, env)
+    if exit_code != EXIT_SUCCESS:
+        logging.fatal('Could not find test list from test output:\n%s' % output)
+    tests = _get_tests_from_output(output)
 
     if args.filter:
         tests = _filter_tests(tests, args.filter)
