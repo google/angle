@@ -98,8 +98,6 @@ void VulkanPipelineCachePerfTest::step()
     vk::ShaderAndSerialMap ssm;
     const vk::GraphicsPipelineDesc *desc = nullptr;
     vk::PipelineHelper *result           = nullptr;
-    gl::AttributesMask am;
-    gl::ComponentTypeMask ctm;
     gl::DrawBufferMask dbm;
 
     // The Vulkan handle types are difficult to cast to without #ifdefs.
@@ -120,8 +118,8 @@ void VulkanPipelineCachePerfTest::step()
     {
         for (const auto &hit : mCacheHits)
         {
-            (void)mCache.getPipeline(VK_NULL_HANDLE, &spc, rp, pl, am, ctm, dbm, ssm,
-                                     defaultSpecConsts, PipelineSource::Draw, hit, &desc, &result);
+            (void)mCache.getPipeline(VK_NULL_HANDLE, &spc, rp, pl, dbm, ssm, defaultSpecConsts,
+                                     PipelineSource::Draw, hit, &desc, &result);
         }
     }
 
@@ -129,7 +127,7 @@ void VulkanPipelineCachePerfTest::step()
          ++missCount, ++mMissIndex)
     {
         const auto &miss = mCacheMisses[mMissIndex];
-        (void)mCache.getPipeline(VK_NULL_HANDLE, &spc, rp, pl, am, ctm, dbm, ssm, defaultSpecConsts,
+        (void)mCache.getPipeline(VK_NULL_HANDLE, &spc, rp, pl, dbm, ssm, defaultSpecConsts,
                                  PipelineSource::Draw, miss, &desc, &result);
     }
 

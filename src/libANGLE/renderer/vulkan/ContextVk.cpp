@@ -4764,6 +4764,10 @@ angle::Result ContextVk::invalidateProgramExecutableHelper(const gl::Context *co
         }
 
         updateStencilWriteWorkaround();
+
+        mGraphicsPipelineDesc->updateVertexShaderComponentTypes(
+            &mGraphicsPipelineTransition, executable->getNonBuiltinAttribLocationsMask(),
+            executable->getAttributesTypeMask());
     }
 
     return angle::Result::Continue;

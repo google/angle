@@ -387,6 +387,10 @@ struct PackedVertexInputAttributes final
 {
     PackedAttribDesc attribs[gl::MAX_VERTEX_ATTRIBS];
 
+    // Component type of the corresponding input in the program.  Used to adjust the format if
+    // necessary.  Takes values from gl::ComponentType.
+    uint32_t shaderAttribComponentType;
+
     // Although technically stride can be any value in ES 2.0, in practice supporting stride
     // greater than MAX_USHORT should not be that helpful. Note that stride limits are
     // introduced in ES 3.1.
@@ -395,7 +399,7 @@ struct PackedVertexInputAttributes final
 };
 
 constexpr size_t kPackedVertexInputAttributesSize = sizeof(PackedVertexInputAttributes);
-static_assert(kPackedVertexInputAttributesSize == 96, "Size mismatch");
+static_assert(kPackedVertexInputAttributesSize == 100, "Size mismatch");
 
 struct PackedInputAssemblyState final
 {
@@ -415,7 +419,10 @@ struct PackedInputAssemblyState final
         // Whether the pipeline is robust (vertex input copy)
         uint32_t isRobustContext : 1;
 
-        uint32_t padding : 24;
+        // Which attributes are actually active in the program and should affect the pipeline.
+        uint32_t programActiveAttributeLocations : gl::MAX_VERTEX_ATTRIBS;
+
+        uint32_t padding : 24 - gl::MAX_VERTEX_ATTRIBS;
     } bits;
 };
 
@@ -687,8 +694,6 @@ class GraphicsPipelineDesc final
                                      GraphicsPipelineSubset subset,
                                      const RenderPass &compatibleRenderPass,
                                      const PipelineLayout &pipelineLayout,
-                                     const gl::AttributesMask &activeAttribLocationsMask,
-                                     const gl::ComponentTypeMask &programAttribsTypeMask,
                                      const gl::DrawBufferMask &missingOutputsMask,
                                      const ShaderAndSerialMap &shaders,
                                      const SpecializationConstants &specConsts,
@@ -704,6 +709,9 @@ class GraphicsPipelineDesc final
                            angle::FormatID format,
                            bool compressed,
                            GLuint relativeOffset);
+    void updateVertexShaderComponentTypes(GraphicsPipelineTransitionBits *transition,
+                                          gl::AttributesMask activeAttribLocations,
+                                          gl::ComponentTypeMask componentTypeMask);
 
     // Input assembly info
     void setTopology(gl::PrimitiveMode drawMode);
@@ -862,8 +870,6 @@ class GraphicsPipelineDesc final
 
     void initializePipelineVertexInputState(
         Context *context,
-        const gl::AttributesMask &activeAttribLocationsMask,
-        const gl::ComponentTypeMask &programAttribsTypeMask,
         GraphicsPipelineVertexInputVulkanStructs *stateOut,
         GraphicsPipelineDynamicStateList *dynamicStateListOut) const;
 
@@ -2197,8 +2203,6 @@ class GraphicsPipelineCache final : public HasCacheStats<VulkanCacheType::Graphi
                                            PipelineCacheAccess *pipelineCache,
                                            const vk::RenderPass &compatibleRenderPass,
                                            const vk::PipelineLayout &pipelineLayout,
-                                           const gl::AttributesMask &activeAttribLocationsMask,
-                                           const gl::ComponentTypeMask &programAttribsTypeMask,
                                            const gl::DrawBufferMask &missingOutputsMask,
                                            const vk::ShaderAndSerialMap &shaders,
                                            const vk::SpecializationConstants &specConsts,
@@ -2218,8 +2222,8 @@ class GraphicsPipelineCache final : public HasCacheStats<VulkanCacheType::Graphi
 
         mCacheStats.missAndIncrementSize();
         return insertPipeline(contextVk, pipelineCache, compatibleRenderPass, pipelineLayout,
-                              activeAttribLocationsMask, programAttribsTypeMask, missingOutputsMask,
-                              shaders, specConsts, source, desc, descPtrOut, pipelineOut);
+                              missingOutputsMask, shaders, specConsts, source, desc, descPtrOut,
+                              pipelineOut);
     }
 
     // Helper for VulkanPipelineCachePerf that resets the object without destroying any object.
@@ -2230,8 +2234,6 @@ class GraphicsPipelineCache final : public HasCacheStats<VulkanCacheType::Graphi
                                  PipelineCacheAccess *pipelineCache,
                                  const vk::RenderPass &compatibleRenderPass,
                                  const vk::PipelineLayout &pipelineLayout,
-                                 const gl::AttributesMask &activeAttribLocationsMask,
-                                 const gl::ComponentTypeMask &programAttribsTypeMask,
                                  const gl::DrawBufferMask &missingOutputsMask,
                                  const vk::ShaderAndSerialMap &shaders,
                                  const vk::SpecializationConstants &specConsts,

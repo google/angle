@@ -1070,10 +1070,6 @@ angle::Result ProgramExecutableVk::getGraphicsPipelineImpl(
     specConsts.surfaceRotation = transformOptions.surfaceRotation;
     specConsts.dither          = desc.getEmulatedDitherControl();
 
-    // Compare the fragment output interface with the framebuffer interface.
-    const gl::AttributesMask &activeAttribLocations =
-        glExecutable.getNonBuiltinAttribLocationsMask();
-
     // Calculate missing shader outputs.
     const gl::DrawBufferMask shaderOutMask = glExecutable.getActiveOutputVariablesMask();
     gl::DrawBufferMask missingOutputsMask  = ~shaderOutMask & framebufferMask;
@@ -1085,8 +1081,7 @@ angle::Result ProgramExecutableVk::getGraphicsPipelineImpl(
 
     return shaderProgram->getGraphicsPipeline(
         contextVk, &pipelines, pipelineCache, *compatibleRenderPass, getPipelineLayout(), source,
-        desc, activeAttribLocations, glExecutable.getAttributesTypeMask(), missingOutputsMask,
-        specConsts, descPtrOut, pipelineOut);
+        desc, missingOutputsMask, specConsts, descPtrOut, pipelineOut);
 }
 
 angle::Result ProgramExecutableVk::getGraphicsPipeline(ContextVk *contextVk,
