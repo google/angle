@@ -3652,6 +3652,77 @@ TEST_P(GLSLTest, NestedPowStatements)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// This test covers a crash seen in an application during SPIR-V compilation
+TEST_P(GLSLTest_ES3, NestedPowFromUniform)
+{
+    constexpr char kVS[] = R"(#version 300 es
+in vec2 position;
+void main()
+{
+    gl_Position = vec4(position, 0, 1);
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+precision mediump int;
+
+uniform highp vec4 scale;
+out mediump vec4 out_FragColor;
+void main()
+{
+    highp vec4 v0;
+    v0 = scale;
+    highp vec3 v1;
+    v1.xyz = v0.xyz;
+    if ((v0.y!=1.0))
+    {
+        vec3 v3;
+        v3.xyz = pow(v0.xyz,v0.xxx);
+        float h0;
+        if ((v3.x < 3.13))
+        {
+            h0 = (v3.x * 1.29);
+        }
+        else
+        {
+            h0 = ((pow(v3.x,4.16)*1.055)+-5.5);
+        }
+        float h1;
+        if ((v3.y<3.13))
+        {
+            h1 = (v3.y*1.29);
+        }
+        else
+        {
+            h1 = ((pow(v3.y,4.16)*1.055)+-5.5);
+        }
+        float h2;
+        if ((v3.z<3.13))
+        {
+            h2 = (v3.z*1.29);
+        }
+        else
+        {
+            h2 = ((pow(v3.z,4.16)*1.055)+-5.5);
+        }
+        v1.xyz = vec3(h0, h1, h2);
+    }
+    out_FragColor = vec4(v1, v0.w);
+}
+)";
+
+    ANGLE_GL_PROGRAM(prog, kVS, kFS);
+
+    GLint scaleIndex = glGetUniformLocation(prog.get(), "scale");
+    ASSERT_NE(-1, scaleIndex);
+
+    glUseProgram(prog.get());
+    glUniform4f(scaleIndex, 0.5, 0.5, 0.5, 0.5);
+
+    // Don't crash
+    drawQuad(prog.get(), "position", 0.5f);
+}
+
 // Test that -float calculation is correct.
 TEST_P(GLSLTest_ES3, UnaryMinusOperatorFloat)
 {

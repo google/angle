@@ -577,6 +577,9 @@
 // skipped.
 7376 PIXEL6 VULKAN : *_EmulateTransformFeedback_NoSupportsTransformFeedbackExtension_NoSupportsGeometryStreamsCapability = SKIP
 
+// Crashing in Mali shader compiler
+217922015 PIXEL6 VULKAN : GLSLTest_ES3.NestedPowFromUniform/* = SKIP
+
 // iOS
 7653 IOS : BufferDataTestES3.DrawWithNotCallingBufferData/ES3_OpenGL = SKIP
 7653 IOS : DepthStencilFormatsTest.DepthStencilReadback_DepthStencil/ES2_OpenGL = SKIP
