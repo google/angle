@@ -225,6 +225,16 @@ double ComputeMean(const std::vector<double> &values)
     double mean = sum / static_cast<double>(values.size());
     return mean;
 }
+
+void FinishAndCheckForContextLoss()
+{
+    glFinish();
+    if (glGetError() == GL_CONTEXT_LOST)
+    {
+        FAIL() << "Context lost";
+    }
+}
+
 }  // anonymous namespace
 
 TraceEvent::TraceEvent(char phaseIn,
@@ -377,7 +387,7 @@ void ANGLEPerfTest::runTrial(double maxRunTime, int maxStepsToRun, RunTrialPolic
 
             if (runPolicy == RunTrialPolicy::FinishEveryStep)
             {
-                glFinish();
+                FinishAndCheckForContextLoss();
             }
 
             if (mRunning)
@@ -1193,7 +1203,7 @@ void ANGLERenderTest::finishTest()
     if (mTestParams.eglParameters.deviceType != EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE &&
         !gNoFinish && !gRetraceMode)
     {
-        glFinish();
+        FinishAndCheckForContextLoss();
     }
 }
 
