@@ -23,7 +23,7 @@ from pathlib import Path
 
 from gen_restricted_traces import read_json as read_json
 
-DEFAULT_TEST_SUITE = 'angle_perftests'
+DEFAULT_TEST_SUITE = 'angle_trace_tests'
 DEFAULT_TEST_JSON = 'restricted_traces.json'
 DEFAULT_LOG_LEVEL = 'info'
 DEFAULT_BACKUP_FOLDER = 'retrace-backups'
