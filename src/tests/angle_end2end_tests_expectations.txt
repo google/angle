@@ -665,6 +665,13 @@
 5491 IOS : IOSurfaceClientBufferTest.MakeCurrent/ES2_OpenGL = SKIP
 5491 IOS : IOSurfaceClientBufferTest.MakeCurrent/ES3_OpenGL = SKIP
 
+7768 IOS : ClipDistanceTest.OneClipDistance/ES2_OpenGL = SKIP
+7768 IOS : ClipDistanceTest.OneClipDistance/ES3_OpenGL = SKIP
+7768 IOS : ClipDistanceTest.ThreeClipDistances/ES2_OpenGL = SKIP
+7768 IOS : ClipDistanceTest.ThreeClipDistances/ES3_OpenGL = SKIP
+7768 IOS : ClipDistanceTest.ThreeClipDistancesRedeclared/ES2_OpenGL = SKIP
+7768 IOS : ClipDistanceTest.ThreeClipDistancesRedeclared/ES3_OpenGL = SKIP
+
 // Test is disabled as it only pertains to desktop GLSL
 6197 : GLSLTest_ES31.InterpolateAtWithSwizzle/* = SKIP
 
