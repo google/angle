@@ -471,6 +471,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
                                        gl::SamplerFormat format,
                                        gl::Texture **textureOut);
     void updateColorMasks();
+    void updateMissingOutputsMask();
     void updateBlendFuncsAndEquations();
     void updateSampleMaskWithRasterizationSamples(const uint32_t rasterizationSamples);
     void updateFrameBufferFetchSamples(const uint32_t prevSamples, const uint32_t curSamples);

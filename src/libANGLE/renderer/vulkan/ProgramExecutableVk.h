@@ -303,7 +303,6 @@ class ProgramExecutableVk
     angle::Result getGraphicsPipelineImpl(ContextVk *contextVk,
                                           ProgramTransformOptions transformOptions,
                                           gl::PrimitiveMode mode,
-                                          gl::DrawBufferMask framebufferMask,
                                           PipelineCacheAccess *pipelineCache,
                                           PipelineSource source,
                                           const vk::GraphicsPipelineDesc &desc,

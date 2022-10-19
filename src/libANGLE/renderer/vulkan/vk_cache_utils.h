@@ -549,7 +549,12 @@ struct PackedBlendMaskAndLogicOpState final
         // Dynamic in VK_EXT_extended_dynamic_state2
         uint32_t logicOp : 4;
 
-        uint32_t padding : 19;
+        // Output that is present in the framebuffer but is never written to in the shader.  Used by
+        // GL_ANGLE_robust_fragment_shader_output which defines the behavior in this case (which is
+        // to mask these outputs)
+        uint32_t missingOutputsMask : gl::IMPLEMENTATION_MAX_DRAW_BUFFERS;
+
+        uint32_t padding : 19 - gl::IMPLEMENTATION_MAX_DRAW_BUFFERS;
     } bits;
 };
 
@@ -694,7 +699,6 @@ class GraphicsPipelineDesc final
                                      GraphicsPipelineSubset subset,
                                      const RenderPass &compatibleRenderPass,
                                      const PipelineLayout &pipelineLayout,
-                                     const gl::DrawBufferMask &missingOutputsMask,
                                      const ShaderAndSerialMap &shaders,
                                      const SpecializationConstants &specConsts,
                                      Pipeline *pipelineOut,
@@ -785,6 +789,8 @@ class GraphicsPipelineDesc final
                                gl::BlendStateExt::ColorMaskStorage::Type colorMasks,
                                const gl::DrawBufferMask &alphaMask,
                                const gl::DrawBufferMask &enabledDrawBuffers);
+    void updateMissingOutputsMask(GraphicsPipelineTransitionBits *transition,
+                                  gl::DrawBufferMask missingOutputsMask);
 
     // Logic op
     void updateLogicOpEnabled(GraphicsPipelineTransitionBits *transition, bool enable);
@@ -887,7 +893,6 @@ class GraphicsPipelineDesc final
 
     void initializePipelineFragmentOutputState(
         Context *context,
-        const gl::DrawBufferMask &missingOutputsMask,
         GraphicsPipelineFragmentOutputVulkanStructs *stateOut,
         GraphicsPipelineDynamicStateList *dynamicStateListOut) const;
 
@@ -2203,7 +2208,6 @@ class GraphicsPipelineCache final : public HasCacheStats<VulkanCacheType::Graphi
                                            PipelineCacheAccess *pipelineCache,
                                            const vk::RenderPass &compatibleRenderPass,
                                            const vk::PipelineLayout &pipelineLayout,
-                                           const gl::DrawBufferMask &missingOutputsMask,
                                            const vk::ShaderAndSerialMap &shaders,
                                            const vk::SpecializationConstants &specConsts,
                                            PipelineSource source,
@@ -2222,8 +2226,7 @@ class GraphicsPipelineCache final : public HasCacheStats<VulkanCacheType::Graphi
 
         mCacheStats.missAndIncrementSize();
         return insertPipeline(contextVk, pipelineCache, compatibleRenderPass, pipelineLayout,
-                              missingOutputsMask, shaders, specConsts, source, desc, descPtrOut,
-                              pipelineOut);
+                              shaders, specConsts, source, desc, descPtrOut, pipelineOut);
     }
 
     // Helper for VulkanPipelineCachePerf that resets the object without destroying any object.
@@ -2234,7 +2237,6 @@ class GraphicsPipelineCache final : public HasCacheStats<VulkanCacheType::Graphi
                                  PipelineCacheAccess *pipelineCache,
                                  const vk::RenderPass &compatibleRenderPass,
                                  const vk::PipelineLayout &pipelineLayout,
-                                 const gl::DrawBufferMask &missingOutputsMask,
                                  const vk::ShaderAndSerialMap &shaders,
                                  const vk::SpecializationConstants &specConsts,
                                  PipelineSource source,

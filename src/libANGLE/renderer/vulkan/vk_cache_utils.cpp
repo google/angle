@@ -1686,6 +1686,7 @@ enum class PipelineState
     RasterizerDiscardEnable,
     ColorWriteMask,
     BlendEnableMask = ColorWriteMask + gl::IMPLEMENTATION_MAX_DRAW_BUFFERS,
+    MissingOutputsMask,
     SrcColorBlendFactor,
     DstColorBlendFactor   = SrcColorBlendFactor + gl::IMPLEMENTATION_MAX_DRAW_BUFFERS,
     ColorBlendOp          = DstColorBlendFactor + gl::IMPLEMENTATION_MAX_DRAW_BUFFERS,
@@ -1833,9 +1834,10 @@ using PipelineStateBitSet   = angle::BitSetArray<angle::EnumSize<PipelineState>(
     }
 
     const PackedBlendMaskAndLogicOpState &blendMaskAndLogic = fragmentOutputState.blendMaskAndLogic;
-    (*valuesOut)[PipelineState::BlendEnableMask] = blendMaskAndLogic.bits.blendEnableMask;
-    (*valuesOut)[PipelineState::LogicOpEnable]   = blendMaskAndLogic.bits.logicOpEnable;
-    (*valuesOut)[PipelineState::LogicOp]         = blendMaskAndLogic.bits.logicOp;
+    (*valuesOut)[PipelineState::BlendEnableMask]    = blendMaskAndLogic.bits.blendEnableMask;
+    (*valuesOut)[PipelineState::LogicOpEnable]      = blendMaskAndLogic.bits.logicOpEnable;
+    (*valuesOut)[PipelineState::LogicOp]            = blendMaskAndLogic.bits.logicOp;
+    (*valuesOut)[PipelineState::MissingOutputsMask] = blendMaskAndLogic.bits.missingOutputsMask;
 }
 
 [[maybe_unused]] PipelineStateBitSet GetCommonPipelineState(
@@ -1960,6 +1962,7 @@ PipelineState GetPipelineState(size_t stateIndex, bool *isRangedOut, size_t *sub
         {PipelineState::RasterizerDiscardEnable, "rasterization_discard"},
         {PipelineState::ColorWriteMask, "color_write"},
         {PipelineState::BlendEnableMask, "blend_mask"},
+        {PipelineState::MissingOutputsMask, "missing_outputs_mask"},
         {PipelineState::SrcColorBlendFactor, "src_color_blend"},
         {PipelineState::DstColorBlendFactor, "dst_color_blend"},
         {PipelineState::ColorBlendOp, "color_blend"},
@@ -2319,6 +2322,7 @@ PipelineState GetPipelineState(size_t stateIndex, bool *isRangedOut, size_t *sub
         case PipelineState::SampleMask:
         case PipelineState::ColorWriteMask:
         case PipelineState::BlendEnableMask:
+        case PipelineState::MissingOutputsMask:
         case PipelineState::EmulatedDitherControl:
             out << "=0x" << std::hex << state << std::dec;
             break;
@@ -2379,6 +2383,7 @@ PipelineState GetPipelineState(size_t stateIndex, bool *isRangedOut, size_t *sub
         {PipelineState::RasterizerDiscardEnable, 0},
         {PipelineState::ColorWriteMask, 0},
         {PipelineState::BlendEnableMask, 0},
+        {PipelineState::MissingOutputsMask, 0},
         {PipelineState::SrcColorBlendFactor, VK_BLEND_FACTOR_ONE},
         {PipelineState::DstColorBlendFactor, VK_BLEND_FACTOR_ZERO},
         {PipelineState::ColorBlendOp, VK_BLEND_OP_ADD},
@@ -2913,7 +2918,6 @@ angle::Result GraphicsPipelineDesc::initializePipeline(Context *context,
                                                        GraphicsPipelineSubset subset,
                                                        const RenderPass &compatibleRenderPass,
                                                        const PipelineLayout &pipelineLayout,
-                                                       const gl::DrawBufferMask &missingOutputsMask,
                                                        const ShaderAndSerialMap &shaders,
                                                        const SpecializationConstants &specConsts,
                                                        Pipeline *pipelineOut,
@@ -2968,8 +2972,7 @@ angle::Result GraphicsPipelineDesc::initializePipeline(Context *context,
 
     if (hasFragmentOutput)
     {
-        initializePipelineFragmentOutputState(context, missingOutputsMask, &fragmentOutputState,
-                                              &dynamicStateList);
+        initializePipelineFragmentOutputState(context, &fragmentOutputState, &dynamicStateList);
 
         createInfo.pColorBlendState = &fragmentOutputState.blendState;
     }
@@ -3417,7 +3420,6 @@ void GraphicsPipelineDesc::initializePipelineSharedNonVertexInputState(
 
 void GraphicsPipelineDesc::initializePipelineFragmentOutputState(
     Context *context,
-    const gl::DrawBufferMask &missingOutputsMask,
     GraphicsPipelineFragmentOutputVulkanStructs *stateOut,
     GraphicsPipelineDynamicStateList *dynamicStateListOut) const
 {
@@ -3489,7 +3491,7 @@ void GraphicsPipelineDesc::initializePipelineFragmentOutputState(
         }
 
         ASSERT(context->getRenderer()->getNativeExtensions().robustFragmentShaderOutputANGLE);
-        if (missingOutputsMask[colorIndexGL])
+        if ((mFragmentOutput.blendMaskAndLogic.bits.missingOutputsMask >> colorIndexGL & 1) != 0)
         {
             state.colorWriteMask = 0;
         }
@@ -3828,6 +3830,17 @@ void GraphicsPipelineDesc::updateColorWriteMasks(
     {
         transition->set(ANGLE_GET_INDEXED_TRANSITION_BIT(mFragmentOutput.blend.colorWriteMaskBits,
                                                          colorIndexGL, 4));
+    }
+}
+
+void GraphicsPipelineDesc::updateMissingOutputsMask(GraphicsPipelineTransitionBits *transition,
+                                                    gl::DrawBufferMask missingOutputsMask)
+{
+    if (mFragmentOutput.blendMaskAndLogic.bits.missingOutputsMask != missingOutputsMask.bits())
+    {
+        SetBitField(mFragmentOutput.blendMaskAndLogic.bits.missingOutputsMask,
+                    missingOutputsMask.bits());
+        transition->set(ANGLE_GET_TRANSITION_BIT(mFragmentOutput.blendMaskAndLogic.bits));
     }
 }
 
@@ -6169,7 +6182,6 @@ angle::Result GraphicsPipelineCache<Hash>::insertPipeline(
     PipelineCacheAccess *pipelineCache,
     const vk::RenderPass &compatibleRenderPass,
     const vk::PipelineLayout &pipelineLayout,
-    const gl::DrawBufferMask &missingOutputsMask,
     const vk::ShaderAndSerialMap &shaders,
     const vk::SpecializationConstants &specConsts,
     PipelineSource source,
@@ -6187,8 +6199,8 @@ angle::Result GraphicsPipelineCache<Hash>::insertPipeline(
             GraphicsPipelineCacheTypeHelper<Hash>::kSubset;
 
         ANGLE_TRY(desc.initializePipeline(contextVk, pipelineCache, kSubset, compatibleRenderPass,
-                                          pipelineLayout, missingOutputsMask, shaders, specConsts,
-                                          &newPipeline, &feedback));
+                                          pipelineLayout, shaders, specConsts, &newPipeline,
+                                          &feedback));
     }
 
     if (source == PipelineSource::WarmUp)
@@ -6231,7 +6243,6 @@ template angle::Result GraphicsPipelineCache<GraphicsPipelineDescCompleteHash>::
     PipelineCacheAccess *pipelineCache,
     const vk::RenderPass &compatibleRenderPass,
     const vk::PipelineLayout &pipelineLayout,
-    const gl::DrawBufferMask &missingOutputsMask,
     const vk::ShaderAndSerialMap &shaders,
     const vk::SpecializationConstants &specConsts,
     PipelineSource source,

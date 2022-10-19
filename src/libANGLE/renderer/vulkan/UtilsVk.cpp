@@ -1693,8 +1693,7 @@ angle::Result UtilsVk::setupGraphicsProgram(ContextVk *contextVk,
     vk::PipelineHelper *helper;
     ANGLE_TRY(programAndPipelines->program.getGraphicsPipeline(
         contextVk, &programAndPipelines->pipelines, &pipelineCache, *compatibleRenderPass,
-        pipelineLayout.get(), PipelineSource::Utils, *pipelineDesc, gl::DrawBufferMask(), {},
-        &descPtr, &helper));
+        pipelineLayout.get(), PipelineSource::Utils, *pipelineDesc, {}, &descPtr, &helper));
     contextVk->getStartedRenderPassCommands().retainResource(helper);
     commandBuffer->bindGraphicsPipeline(helper->getPipeline());
 

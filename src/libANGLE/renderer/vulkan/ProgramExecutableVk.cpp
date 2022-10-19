@@ -760,14 +760,13 @@ angle::Result ProgramExecutableVk::warmUpPipelineCache(ContextVk *contextVk,
         surfaceRotationVariations.push_back(true);
     }
 
-    const gl::DrawBufferMask shaderOutMask = glExecutable.getActiveOutputVariablesMask();
     for (bool rotation : surfaceRotationVariations)
     {
         transformOptions.surfaceRotation = rotation;
 
-        ANGLE_TRY(getGraphicsPipelineImpl(contextVk, transformOptions, mode, shaderOutMask,
-                                          &pipelineCache, PipelineSource::WarmUp,
-                                          graphicsPipelineDesc, glExecutable, &descPtr, &pipeline));
+        ANGLE_TRY(getGraphicsPipelineImpl(contextVk, transformOptions, mode, &pipelineCache,
+                                          PipelineSource::WarmUp, graphicsPipelineDesc,
+                                          glExecutable, &descPtr, &pipeline));
     }
 
     // Merge the cache with RendererVk's
@@ -1035,7 +1034,6 @@ angle::Result ProgramExecutableVk::getGraphicsPipelineImpl(
     ContextVk *contextVk,
     ProgramTransformOptions transformOptions,
     gl::PrimitiveMode mode,
-    gl::DrawBufferMask framebufferMask,
     PipelineCacheAccess *pipelineCache,
     PipelineSource source,
     const vk::GraphicsPipelineDesc &desc,
@@ -1070,18 +1068,14 @@ angle::Result ProgramExecutableVk::getGraphicsPipelineImpl(
     specConsts.surfaceRotation = transformOptions.surfaceRotation;
     specConsts.dither          = desc.getEmulatedDitherControl();
 
-    // Calculate missing shader outputs.
-    const gl::DrawBufferMask shaderOutMask = glExecutable.getActiveOutputVariablesMask();
-    gl::DrawBufferMask missingOutputsMask  = ~shaderOutMask & framebufferMask;
-
     // Pull in a compatible RenderPass.
     vk::RenderPass *compatibleRenderPass = nullptr;
     ANGLE_TRY(contextVk->getRenderPassCache().getCompatibleRenderPass(
         contextVk, desc.getRenderPassDesc(), &compatibleRenderPass));
 
-    return shaderProgram->getGraphicsPipeline(
-        contextVk, &pipelines, pipelineCache, *compatibleRenderPass, getPipelineLayout(), source,
-        desc, missingOutputsMask, specConsts, descPtrOut, pipelineOut);
+    return shaderProgram->getGraphicsPipeline(contextVk, &pipelines, pipelineCache,
+                                              *compatibleRenderPass, getPipelineLayout(), source,
+                                              desc, specConsts, descPtrOut, pipelineOut);
 }
 
 angle::Result ProgramExecutableVk::getGraphicsPipeline(ContextVk *contextVk,
@@ -1106,11 +1100,8 @@ angle::Result ProgramExecutableVk::getGraphicsPipeline(ContextVk *contextVk,
     const bool isMultisampled      = drawFrameBuffer->getSamples() > 1;
     transformOptions.multiSampleFramebufferFetch = hasFramebufferFetch && isMultisampled;
 
-    const gl::DrawBufferMask framebufferMask = glState.getDrawFramebuffer()->getDrawBufferMask();
-
-    return getGraphicsPipelineImpl(contextVk, transformOptions, mode, framebufferMask,
-                                   pipelineCache, source, desc, glExecutable, descPtrOut,
-                                   pipelineOut);
+    return getGraphicsPipelineImpl(contextVk, transformOptions, mode, pipelineCache, source, desc,
+                                   glExecutable, descPtrOut, pipelineOut);
 }
 
 angle::Result ProgramExecutableVk::getComputePipeline(ContextVk *contextVk,
