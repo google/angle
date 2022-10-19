@@ -544,6 +544,7 @@ def main():
     exit_code, output, _ = _run_test_suite(args, ['--list-tests', '--verbose'] + extra_flags, env)
     if exit_code != EXIT_SUCCESS:
         logging.fatal('Could not find test list from test output:\n%s' % output)
+        sys.exit(EXIT_FAILURE)
     tests = _get_tests_from_output(output)
 
     if args.filter:
