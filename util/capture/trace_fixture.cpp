@@ -112,6 +112,8 @@ EGLClientBuffer GetClientBuffer(EGLenum target, uintptr_t key)
 
 ValidateSerializedStateCallback gValidateSerializedStateCallback;
 std::unordered_map<GLuint, std::vector<GLint>> gInternalUniformLocationsMap;
+
+constexpr size_t kMaxClientArrays = 16;
 }  // namespace
 
 GLint **gUniformLocations;

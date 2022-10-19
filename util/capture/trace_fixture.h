@@ -12,34 +12,42 @@
 
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
+#include <stddef.h>
+#include <stdint.h>
+
 #include "angle_gl.h"
+#include "traces_export.h"
 
-#include <cstdint>
-#include <cstdio>
-#include <cstring>
-#include <limits>
-#include <unordered_map>
-#include <vector>
+#if defined(__cplusplus)
+#    include <cstdio>
+#    include <cstring>
+#    include <limits>
+#    include <unordered_map>
+#    include <vector>
 
-#if !defined(ANGLE_REPLAY_EXPORT)
-#    if defined(_WIN32)
-#        if defined(ANGLE_REPLAY_IMPLEMENTATION)
-#            define ANGLE_REPLAY_EXPORT __declspec(dllexport)
-#        else
-#            define ANGLE_REPLAY_EXPORT __declspec(dllimport)
-#        endif
-#    elif defined(__GNUC__)
-#        define ANGLE_REPLAY_EXPORT __attribute__((visibility("default")))
-#    else
-#        define ANGLE_REPLAY_EXPORT
-#    endif
-#endif  // !defined(ANGLE_REPLAY_EXPORT)
+// TODO(jmadill): Consolidate. http://anglebug.com/7753
+using BlockIndexesMap = std::unordered_map<GLuint, std::unordered_map<GLuint, GLuint>>;
+extern BlockIndexesMap gUniformBlockIndexes;
+using BufferHandleMap = std::unordered_map<GLuint, void *>;
+extern BufferHandleMap gMappedBufferData;
+using ClientBufferMap = std::unordered_map<uintptr_t, EGLClientBuffer>;
+extern ClientBufferMap gClientBufferMap;
+using EGLImageMap = std::unordered_map<uintptr_t, GLeglImageOES>;
+extern EGLImageMap gEGLImageMap;
+using SyncResourceMap = std::unordered_map<uintptr_t, GLsync>;
+extern SyncResourceMap gSyncMap;
+using SurfaceMap = std::unordered_map<uintptr_t, EGLSurface>;
+extern SurfaceMap gSurfaceMap;
+using ContextMap = std::unordered_map<uintptr_t, EGLContext>;
+extern ContextMap gContextMap;
 
 using DecompressCallback              = uint8_t *(*)(const std::vector<uint8_t> &);
 using DeleteCallback                  = void (*)(uint8_t *);
 using ValidateSerializedStateCallback = void (*)(const char *, const char *, uint32_t);
 
+// Exported trace functions.
 extern "C" {
+
 ANGLE_REPLAY_EXPORT void SetBinaryDataDecompressCallback(DecompressCallback decompressCallback,
                                                          DeleteCallback deleteCallback);
 ANGLE_REPLAY_EXPORT void SetBinaryDataDir(const char *dataDir);
@@ -52,21 +60,18 @@ ANGLE_REPLAY_EXPORT void SetValidateSerializedStateCallback(
 
 // Only defined if serialization is enabled.
 ANGLE_REPLAY_EXPORT const char *GetSerializedContextState(uint32_t frameIndex);
-}  // extern "C"
+
+#endif  // defined(__cplusplus)
+
+// Exported trace functions.
+ANGLE_REPLAY_EXPORT void SetupReplay(void);
+ANGLE_REPLAY_EXPORT void ReplayFrame(uint32_t frameIndex);
+ANGLE_REPLAY_EXPORT void ResetReplay(void);
+ANGLE_REPLAY_EXPORT const char *GetSerializedContextState(uint32_t frameIndex);
 
 // Maps from <captured Program ID, captured location> to run-time location.
 extern GLint **gUniformLocations;
 extern GLuint gCurrentProgram;
-
-// TODO(jmadill): Hide from the traces. http://anglebug.com/7753
-using BlockIndexesMap = std::unordered_map<GLuint, std::unordered_map<GLuint, GLuint>>;
-extern BlockIndexesMap gUniformBlockIndexes;
-using BufferHandleMap = std::unordered_map<GLuint, void *>;
-extern BufferHandleMap gMappedBufferData;
-using ClientBufferMap = std::unordered_map<uintptr_t, EGLClientBuffer>;
-extern ClientBufferMap gClientBufferMap;
-using SyncResourceMap = std::unordered_map<uintptr_t, GLsync>;
-extern SyncResourceMap gSyncMap;
 
 void UpdateUniformLocation(GLuint program, const char *name, GLint location, GLint count);
 void DeleteUniformLocations(GLuint program);
@@ -76,11 +81,9 @@ void UpdateCurrentProgram(GLuint program);
 
 // Global state
 
-constexpr size_t kMaxClientArrays = 16;
-
 extern uint8_t *gBinaryData;
 extern uint8_t *gReadBuffer;
-extern uint8_t *gClientArrays[kMaxClientArrays];
+extern uint8_t *gClientArrays[];
 
 extern GLuint *gBufferMap;
 extern GLuint *gFenceNVMap;
@@ -121,13 +124,6 @@ void InitializeReplay2(const char *binaryDataFileName,
                        uint32_t maxTexture,
                        uint32_t maxTransformFeedback,
                        uint32_t maxVertexArray);
-
-using EGLImageMap = std::unordered_map<GLuint, GLeglImageOES>;
-extern EGLImageMap gEGLImageMap;
-using SurfaceMap = std::unordered_map<GLuint, EGLSurface>;
-extern SurfaceMap gSurfaceMap;
-using ContextMap = std::unordered_map<GLuint, EGLContext>;
-extern ContextMap gContextMap;
 
 void InitializeReplay(const char *binaryDataFileName,
                       size_t maxClientArraySize,
@@ -212,5 +208,9 @@ void CreateContext(GLuint contextID);
 
 void ValidateSerializedState(const char *serializedState, const char *fileName, uint32_t line);
 #define VALIDATE_CHECKPOINT(STATE) ValidateSerializedState(STATE, __FILE__, __LINE__)
+
+#if defined(__cplusplus)
+}  // extern "C"
+#endif  // defined(__cplusplus)
 
 #endif  // ANGLE_TRACE_FIXTURE_H_

@@ -40,9 +40,30 @@
 #    endif
 #endif  // !defined(ANGLE_TRACE_LOADER_EXPORT)
 
-using GenericProc = void (*)();
-using LoadProc    = GenericProc(KHRONOS_APIENTRY *)(const char *);
+#if !defined(ANGLE_REPLAY_EXPORT)
+#    if defined(_WIN32)
+#        if defined(ANGLE_REPLAY_IMPLEMENTATION)
+#            define ANGLE_REPLAY_EXPORT __declspec(dllexport)
+#        else
+#            define ANGLE_REPLAY_EXPORT __declspec(dllimport)
+#        endif
+#    elif defined(__GNUC__)
+#        define ANGLE_REPLAY_EXPORT __attribute__((visibility("default")))
+#    else
+#        define ANGLE_REPLAY_EXPORT
+#    endif
+#endif  // !defined(ANGLE_REPLAY_EXPORT)
+
+typedef void (*GenericProc)(void);
+typedef GenericProc(KHRONOS_APIENTRY *LoadProc)(const char *);
+
+#if defined(__cplusplus)
+extern "C" {
+#endif  // defined(__cplusplus)
 ANGLE_TRACE_LOADER_EXPORT void LoadTraceEGL(LoadProc loadProc);
 ANGLE_TRACE_LOADER_EXPORT void LoadTraceGLES(LoadProc loadProc);
+#if defined(__cplusplus)
+}  // extern "C"
+#endif  // defined(__cplusplus)
 
 #endif  // ANGLE_TRACES_EXPORT_H_
