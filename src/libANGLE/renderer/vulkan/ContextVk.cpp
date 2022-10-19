@@ -1780,11 +1780,6 @@ angle::Result ContextVk::handleDirtyGraphicsPipelineDesc(DirtyBits::Iterator *di
     {
         const vk::GraphicsPipelineDesc *descPtr;
 
-        // The desc's specialization constant depends on program's
-        // specConstUsageBits. We need to update it if program has changed.
-        SpecConstUsageBits usageBits = getCurrentProgramSpecConstUsageBits();
-        updateGraphicsPipelineDescWithSpecConstUsageBits(usageBits);
-
         // Draw-time SPIR-V patching if necessary, and pipeline creation.
         ANGLE_TRY(executableVk->getGraphicsPipeline(
             this, mCurrentDrawMode, &pipelineCache, PipelineSource::Draw, *mGraphicsPipelineDesc,
@@ -5054,8 +5049,6 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 drawFramebufferVk->setReadOnlyDepthFeedbackLoopMode(false);
                 updateFlipViewportDrawFramebuffer(glState);
                 updateSurfaceRotationDrawFramebuffer(glState, context->getCurrentDrawSurface());
-                SpecConstUsageBits usageBits = getCurrentProgramSpecConstUsageBits();
-                updateGraphicsPipelineDescWithSpecConstUsageBits(usageBits);
                 updateViewport(drawFramebufferVk, glState.getViewport(), glState.getNearPlane(),
                                glState.getFarPlane());
                 updateColorMasks();
@@ -5322,12 +5315,6 @@ angle::Result ContextVk::onMakeCurrent(const gl::Context *context)
     updateSurfaceRotationReadFramebuffer(glState, readSurface);
 
     invalidateDriverUniforms();
-    if (!getFeatures().preferDriverUniformOverSpecConst.enabled)
-    {
-        // Force update mGraphicsPipelineDesc
-        mCurrentGraphicsPipeline = nullptr;
-        invalidateCurrentGraphicsPipeline();
-    }
 
     const gl::ProgramExecutable *executable = mState.getProgramExecutable();
     if (executable && executable->hasTransformFeedbackOutput() &&
@@ -5377,38 +5364,25 @@ void ContextVk::updateFlipViewportReadFramebuffer(const gl::State &glState)
     mFlipViewportForReadFramebuffer  = readFramebuffer->isDefault();
 }
 
-SpecConstUsageBits ContextVk::getCurrentProgramSpecConstUsageBits() const
-{
-    SpecConstUsageBits usageBits;
-    if (mState.getProgram())
-    {
-        usageBits = mState.getProgram()->getState().getSpecConstUsageBits();
-    }
-    else if (mState.getProgramPipeline())
-    {
-        usageBits = mState.getProgramPipeline()->getState().getSpecConstUsageBits();
-    }
-    return usageBits;
-}
-
-void ContextVk::updateGraphicsPipelineDescWithSpecConstUsageBits(SpecConstUsageBits usageBits)
-{
-    SurfaceRotation rotation = mCurrentRotationDrawFramebuffer;
-
-    if (IsRotatedAspectRatio(rotation) != mGraphicsPipelineDesc->getSurfaceRotation())
-    {
-        // surface rotation are specialization constants, which affects program compilation. When
-        // rotation changes, we need to update GraphicsPipelineDesc so that the correct pipeline
-        // program object will be retrieved.
-        mGraphicsPipelineDesc->updateSurfaceRotation(&mGraphicsPipelineTransition, rotation);
-    }
-}
-
 void ContextVk::updateSurfaceRotationDrawFramebuffer(const gl::State &glState,
                                                      const egl::Surface *currentDrawSurface)
 {
-    mCurrentRotationDrawFramebuffer =
+    const SurfaceRotation rotation =
         getSurfaceRotationImpl(glState.getDrawFramebuffer(), currentDrawSurface);
+    mCurrentRotationDrawFramebuffer = rotation;
+
+    if (!getFeatures().preferDriverUniformOverSpecConst.enabled)
+    {
+        // Update spec consts
+        if (IsRotatedAspectRatio(rotation) != mGraphicsPipelineDesc->getSurfaceRotation())
+        {
+            // surface rotation are specialization constants, which affects program compilation.
+            // When rotation changes, we need to update GraphicsPipelineDesc so that the correct
+            // pipeline program object will be retrieved.
+            mGraphicsPipelineDesc->updateSurfaceRotation(&mGraphicsPipelineTransition, rotation);
+            invalidateCurrentGraphicsPipeline();
+        }
+    }
 }
 
 void ContextVk::updateSurfaceRotationReadFramebuffer(const gl::State &glState,

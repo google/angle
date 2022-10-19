@@ -1317,9 +1317,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     // avoided however, as on the affected driver that would disable certain optimizations.
     void updateStencilWriteWorkaround();
 
-    SpecConstUsageBits getCurrentProgramSpecConstUsageBits() const;
-    void updateGraphicsPipelineDescWithSpecConstUsageBits(SpecConstUsageBits usageBits);
-
     angle::Result updateShaderResourcesDescriptorDesc(PipelineType pipelineType);
 
     std::array<GraphicsDirtyBitHandler, DIRTY_BIT_MAX> mGraphicsDirtyBitHandlers;
