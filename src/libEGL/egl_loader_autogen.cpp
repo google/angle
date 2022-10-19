@@ -10,6 +10,7 @@
 
 #include "egl_loader_autogen.h"
 
+extern "C" {
 PFNEGLCHOOSECONFIGPROC l_EGL_ChooseConfig;
 PFNEGLCOPYBUFFERSPROC l_EGL_CopyBuffers;
 PFNEGLCREATECONTEXTPROC l_EGL_CreateContext;
@@ -318,3 +319,4 @@ void LoadLibEGL_EGL(LoadProc loadProc)
         reinterpret_cast<PFNEGLSTREAMCONSUMERGLTEXTUREEXTERNALATTRIBSNVPROC>(
             loadProc("EGL_StreamConsumerGLTextureExternalAttribsNV"));
 }
+}  // extern "C"

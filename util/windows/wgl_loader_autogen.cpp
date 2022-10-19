@@ -10,6 +10,7 @@
 
 #include "wgl_loader_autogen.h"
 
+extern "C" {
 PFNCHOOSEPIXELFORMATPROC l__ChoosePixelFormat;
 PFNDESCRIBEPIXELFORMATPROC l__DescribePixelFormat;
 PFNGETENHMETAFILEPIXELFORMATPROC l__GetEnhMetaFilePixelFormat;
@@ -104,3 +105,4 @@ void LoadWGL(LoadProc loadProc)
     l__wglSwapIntervalEXT =
         reinterpret_cast<PFNWGLSWAPINTERVALEXTPROC>(loadProc("wglSwapIntervalEXT"));
 }
+}  // extern "C"

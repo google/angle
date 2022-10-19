@@ -10,6 +10,7 @@
 
 #include "trace_gles_loader_autogen.h"
 
+extern "C" {
 ANGLE_TRACE_LOADER_EXPORT PFNGLALPHAFUNCPROC t_glAlphaFunc;
 ANGLE_TRACE_LOADER_EXPORT PFNGLCLIPPLANEFPROC t_glClipPlanef;
 ANGLE_TRACE_LOADER_EXPORT PFNGLCOLOR4FPROC t_glColor4f;
@@ -2241,3 +2242,4 @@ void LoadTraceGLES(LoadProc loadProc)
     t_glTexGenxOES      = reinterpret_cast<PFNGLTEXGENXOESPROC>(loadProc("glTexGenxOES"));
     t_glTexGenxvOES     = reinterpret_cast<PFNGLTEXGENXVOESPROC>(loadProc("glTexGenxvOES"));
 }
+}  // extern "C"

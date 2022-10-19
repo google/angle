@@ -836,6 +836,10 @@
 #define glTexGenivOES l_glTexGenivOES
 #define glTexGenxOES l_glTexGenxOES
 #define glTexGenxvOES l_glTexGenxvOES
+
+#if defined(__cplusplus)
+extern "C" {
+#endif  // defined(__cplusplus)
 ANGLE_UTIL_EXPORT extern PFNGLALPHAFUNCPROC l_glAlphaFunc;
 ANGLE_UTIL_EXPORT extern PFNGLCLIPPLANEFPROC l_glClipPlanef;
 ANGLE_UTIL_EXPORT extern PFNGLCOLOR4FPROC l_glColor4f;
@@ -1695,8 +1699,12 @@ ANGLE_UTIL_EXPORT extern PFNGLTEXGENIVOESPROC l_glTexGenivOES;
 ANGLE_UTIL_EXPORT extern PFNGLTEXGENXOESPROC l_glTexGenxOES;
 ANGLE_UTIL_EXPORT extern PFNGLTEXGENXVOESPROC l_glTexGenxvOES;
 
-using GenericProc = void (*)();
-using LoadProc    = GenericProc(KHRONOS_APIENTRY *)(const char *);
+typedef void (*GenericProc)(void);
+typedef GenericProc(KHRONOS_APIENTRY *LoadProc)(const char *);
 ANGLE_UTIL_EXPORT void LoadUtilGLES(LoadProc loadProc);
+
+#if defined(__cplusplus)
+}  // extern "C"
+#endif  // defined(__cplusplus)
 
 #endif  // UTIL_GLES_LOADER_AUTOGEN_H_

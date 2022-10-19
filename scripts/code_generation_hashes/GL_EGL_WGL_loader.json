@@ -2,15 +2,15 @@
   "scripts/egl_angle_ext.xml":
     "a325465cb2fd6e5bad81ab508e51885a",
   "scripts/generate_loader.py":
-    "e2a560777802620b27b99d0d10473d58",
+    "93c78a8d11323fa311fed5118fbcf083",
   "scripts/gl_angle_ext.xml":
     "8dd9662655c39ce22fecdc2449594e54",
   "scripts/registry_xml.py":
     "a532782ba7caa6af314e535b7e467a5b",
   "src/libEGL/egl_loader_autogen.cpp":
-    "0d2f3d26eb1214f6d17ac91797796349",
+    "1742cbfa95f2337d69164d573bb5c09a",
   "src/libEGL/egl_loader_autogen.h":
-    "532a5de05e40aa853f78258a30d94b2a",
+    "901fd3262845ce7b7f179de16dabacf6",
   "third_party/EGL-Registry/src/api/egl.xml":
     "2056d54ea07156f1988ca1366bdee21a",
   "third_party/OpenCL-Docs/src/xml/cl.xml":
@@ -22,23 +22,23 @@
   "third_party/OpenGL-Registry/src/xml/wgl.xml":
     "eae784bf4d1b983a42af5671b140b7c4",
   "util/capture/trace_egl_loader_autogen.cpp":
-    "ed267043f0078d0b8910d6da388bf35b",
+    "b79476571f7af9477360a6ddcdaa71db",
   "util/capture/trace_egl_loader_autogen.h":
-    "abbb750fab0b01f51b3730c84f49a09e",
+    "2bfa2e4bd11749ab7e6ce4b9765d1450",
   "util/capture/trace_gles_loader_autogen.cpp":
-    "01b25c54f1a0a895f69f5e30bc58cda6",
+    "a62f41b3b56b9454bdad919d8167bbcf",
   "util/capture/trace_gles_loader_autogen.h":
-    "7bc2bbe810f47c85567ab2ad66eb2efe",
+    "05c8419a7285198f02651d757cdf934b",
   "util/egl_loader_autogen.cpp":
-    "89b342dcfd31b0efb0cf52c991ee12cc",
+    "7aa5b75db6b748f2131edf6f9c170825",
   "util/egl_loader_autogen.h":
-    "2e667afeab740cbad87ffada0f6b0aa7",
+    "4d2cf7529fdd9d542415f325062a0f00",
   "util/gles_loader_autogen.cpp":
-    "09a6929777e2f3e9f66ef97d17f2411b",
+    "63607a814918619be4bd9df28e173a76",
   "util/gles_loader_autogen.h":
-    "f0fac0302f09d1675d9100b8f5c4609a",
+    "991b63a72e39c6f4e8eb0a85333167df",
   "util/windows/wgl_loader_autogen.cpp":
-    "e62135b1dc8997ef6eb3c944550acc78",
+    "373b062587eab8a163121255f54597dc",
   "util/windows/wgl_loader_autogen.h":
-    "0007c5b1362fe52056b82fe8533ea890"
+    "0551e9c28a8d3902bcd5d6e5b1ed3c6f"
 }

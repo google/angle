@@ -10,6 +10,7 @@
 
 #include "gles_loader_autogen.h"
 
+extern "C" {
 ANGLE_UTIL_EXPORT PFNGLALPHAFUNCPROC l_glAlphaFunc;
 ANGLE_UTIL_EXPORT PFNGLCLIPPLANEFPROC l_glClipPlanef;
 ANGLE_UTIL_EXPORT PFNGLCOLOR4FPROC l_glColor4f;
@@ -2210,3 +2211,4 @@ void LoadUtilGLES(LoadProc loadProc)
     l_glTexGenxOES      = reinterpret_cast<PFNGLTEXGENXOESPROC>(loadProc("glTexGenxOES"));
     l_glTexGenxvOES     = reinterpret_cast<PFNGLTEXGENXVOESPROC>(loadProc("glTexGenxvOES"));
 }
+}  // extern "C"

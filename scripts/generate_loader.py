@@ -360,11 +360,19 @@ template_loader_h = """// GENERATED FILE - DO NOT EDIT.
 
 {preamble}
 {defines}
+
+#if defined(__cplusplus)
+extern "C" {{
+#endif  // defined(__cplusplus)
 {function_pointers}
 
-using GenericProc = void (*)();
-using LoadProc = GenericProc (KHRONOS_APIENTRY *)(const char *);
+typedef void (*GenericProc)(void);
+typedef GenericProc (KHRONOS_APIENTRY *LoadProc)(const char *);
 {export}void {load_fn_name}(LoadProc loadProc);
+
+#if defined(__cplusplus)
+}}  // extern "C"
+#endif  // defined(__cplusplus)
 
 #endif  // {lib}_{api_upper}_LOADER_AUTOGEN_H_
 """
@@ -381,12 +389,14 @@ template_loader_cpp = """// GENERATED FILE - DO NOT EDIT.
 
 #include "{file_prefix}{api_lower}_loader_autogen.h"
 
+extern "C" {{
 {function_pointers}
 
 void {load_fn_name}(LoadProc loadProc)
 {{
 {set_pointers}
 }}
+}}  // extern "C"
 """
 
 if __name__ == '__main__':

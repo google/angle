@@ -836,6 +836,10 @@
 #define glTexGenivOES t_glTexGenivOES
 #define glTexGenxOES t_glTexGenxOES
 #define glTexGenxvOES t_glTexGenxvOES
+
+#if defined(__cplusplus)
+extern "C" {
+#endif  // defined(__cplusplus)
 ANGLE_TRACE_LOADER_EXPORT extern PFNGLALPHAFUNCPROC t_glAlphaFunc;
 ANGLE_TRACE_LOADER_EXPORT extern PFNGLCLIPPLANEFPROC t_glClipPlanef;
 ANGLE_TRACE_LOADER_EXPORT extern PFNGLCOLOR4FPROC t_glColor4f;
@@ -1754,8 +1758,12 @@ ANGLE_TRACE_LOADER_EXPORT extern PFNGLTEXGENIVOESPROC t_glTexGenivOES;
 ANGLE_TRACE_LOADER_EXPORT extern PFNGLTEXGENXOESPROC t_glTexGenxOES;
 ANGLE_TRACE_LOADER_EXPORT extern PFNGLTEXGENXVOESPROC t_glTexGenxvOES;
 
-using GenericProc = void (*)();
-using LoadProc    = GenericProc(KHRONOS_APIENTRY *)(const char *);
+typedef void (*GenericProc)(void);
+typedef GenericProc(KHRONOS_APIENTRY *LoadProc)(const char *);
 ANGLE_TRACE_LOADER_EXPORT void LoadTraceGLES(LoadProc loadProc);
+
+#if defined(__cplusplus)
+}  // extern "C"
+#endif  // defined(__cplusplus)
 
 #endif  // ANGLE_TRACES_UTIL_GLES_LOADER_AUTOGEN_H_
