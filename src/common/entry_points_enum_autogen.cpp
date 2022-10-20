@@ -1184,6 +1184,12 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glFramebufferParameteri";
         case EntryPoint::GLFramebufferParameteriMESA:
             return "glFramebufferParameteriMESA";
+        case EntryPoint::GLFramebufferPixelLocalClearValuefvANGLE:
+            return "glFramebufferPixelLocalClearValuefvANGLE";
+        case EntryPoint::GLFramebufferPixelLocalClearValueivANGLE:
+            return "glFramebufferPixelLocalClearValueivANGLE";
+        case EntryPoint::GLFramebufferPixelLocalClearValueuivANGLE:
+            return "glFramebufferPixelLocalClearValueuivANGLE";
         case EntryPoint::GLFramebufferRenderbuffer:
             return "glFramebufferRenderbuffer";
         case EntryPoint::GLFramebufferRenderbufferOES:
@@ -1364,6 +1370,10 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glGetFramebufferParameterivMESA";
         case EntryPoint::GLGetFramebufferParameterivRobustANGLE:
             return "glGetFramebufferParameterivRobustANGLE";
+        case EntryPoint::GLGetFramebufferPixelLocalStorageParameterfvANGLE:
+            return "glGetFramebufferPixelLocalStorageParameterfvANGLE";
+        case EntryPoint::GLGetFramebufferPixelLocalStorageParameterivANGLE:
+            return "glGetFramebufferPixelLocalStorageParameterivANGLE";
         case EntryPoint::GLGetGraphicsResetStatus:
             return "glGetGraphicsResetStatus";
         case EntryPoint::GLGetGraphicsResetStatusEXT:

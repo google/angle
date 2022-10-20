@@ -203,7 +203,7 @@ bool PixelLocalStoragePlane::isTextureIDDeleted(const Context *context) const
     return mTextureRef != nullptr && context->getTexture(mTextureRef->id()) != mTextureRef;
 }
 
-GLint PixelLocalStoragePlane::getIntegeri(const Context *context, GLenum target, GLuint index) const
+GLint PixelLocalStoragePlane::getIntegeri(const Context *context, GLenum target) const
 {
     if (!isDeinitialized())
     {
@@ -339,8 +339,7 @@ void ClampArray(std::array<T, N> &arr, T lo, T hi)
 
 void PixelLocalStoragePlane::issueClearCommand(ClearCommands *clearCommands,
                                                int target,
-                                               GLenum loadop,
-                                               const void *cleardata) const
+                                               GLenum loadop) const
 {
     switch (mInternalformat)
     {
@@ -350,7 +349,7 @@ void PixelLocalStoragePlane::issueClearCommand(ClearCommands *clearCommands,
             std::array<GLfloat, 4> clearValue = {0, 0, 0, 0};
             if (loadop == GL_CLEAR_ANGLE)
             {
-                memcpy(clearValue.data(), cleardata, sizeof(clearValue));
+                clearValue = mClearValuef;
                 if (mInternalformat == GL_RGBA8)
                 {
                     ClampArray(clearValue, 0.f, 1.f);
@@ -364,7 +363,7 @@ void PixelLocalStoragePlane::issueClearCommand(ClearCommands *clearCommands,
             std::array<GLint, 4> clearValue = {0, 0, 0, 0};
             if (loadop == GL_CLEAR_ANGLE)
             {
-                memcpy(clearValue.data(), cleardata, sizeof(clearValue));
+                clearValue = mClearValuei;
                 ClampArray(clearValue, -128, 127);
             }
             clearCommands->cleariv(target, clearValue.data());
@@ -376,7 +375,7 @@ void PixelLocalStoragePlane::issueClearCommand(ClearCommands *clearCommands,
             std::array<GLuint, 4> clearValue = {0, 0, 0, 0};
             if (loadop == GL_CLEAR_ANGLE)
             {
-                memcpy(clearValue.data(), cleardata, sizeof(clearValue));
+                clearValue = mClearValueui;
                 if (mInternalformat == GL_RGBA8UI)
                 {
                     ClampArray(clearValue, 0u, 255u);
@@ -465,10 +464,7 @@ void PixelLocalStorage::deleteContextObjects(Context *context)
     }
 }
 
-void PixelLocalStorage::begin(Context *context,
-                              GLsizei n,
-                              const GLenum loadops[],
-                              const void *cleardata)
+void PixelLocalStorage::begin(Context *context, GLsizei n, const GLenum loadops[])
 {
     // Convert planes whose backing texture has been deleted to memoryless, and find the pixel local
     // storage rendering dimensions.
@@ -502,7 +498,7 @@ void PixelLocalStorage::begin(Context *context,
         ASSERT(plsExtents.depth == 0);
     }
 
-    onBegin(context, n, loadops, reinterpret_cast<const char *>(cleardata), plsExtents);
+    onBegin(context, n, loadops, plsExtents);
 }
 
 void PixelLocalStorage::end(Context *context)
@@ -544,11 +540,7 @@ class PixelLocalStorageImageLoadStore : public PixelLocalStorage
         }
     }
 
-    void onBegin(Context *context,
-                 GLsizei n,
-                 const GLenum loadops[],
-                 const char *cleardata,
-                 Extents plsExtents) override
+    void onBegin(Context *context, GLsizei n, const GLenum loadops[], Extents plsExtents) override
     {
         // Save the image bindings so we can restore them during onEnd().
         const State &state = context->getState();
@@ -621,9 +613,8 @@ class PixelLocalStorageImageLoadStore : public PixelLocalStorage
             for (size_t drawBufferIdx = 0; drawBufferIdx < pendingClears.size(); ++drawBufferIdx)
             {
                 int plsIdx = pendingClears[drawBufferIdx];
-                getPlane(plsIdx).issueClearCommand(&clearBufferCommands,
-                                                   static_cast<int>(drawBufferIdx), loadops[plsIdx],
-                                                   cleardata + plsIdx * 4 * 4);
+                getPlane(plsIdx).issueClearCommand(
+                    &clearBufferCommands, static_cast<int>(drawBufferIdx), loadops[plsIdx]);
             }
             maxClearedAttachments = std::max(maxClearedAttachments, pendingClears.size());
         }
@@ -702,11 +693,7 @@ class PixelLocalStorageFramebufferFetch : public PixelLocalStorage
 
     void onDeleteContextObjects(Context *) override {}
 
-    void onBegin(Context *context,
-                 GLsizei n,
-                 const GLenum loadops[],
-                 const char *cleardata,
-                 Extents plsExtents) override
+    void onBegin(Context *context, GLsizei n, const GLenum loadops[], Extents plsExtents) override
     {
         const State &state                              = context->getState();
         const Caps &caps                                = context->getCaps();
@@ -814,8 +801,7 @@ class PixelLocalStorageFramebufferFetch : public PixelLocalStorage
                 if (loadop != GL_DISABLE_ANGLE && loadop != GL_KEEP)
                 {
                     GLuint drawBufferIdx = GetDrawBufferIdx(caps, i);
-                    getPlane(i).issueClearCommand(&clearBufferCommands, drawBufferIdx, loadop,
-                                                  cleardata + i * 4 * 4);
+                    getPlane(i).issueClearCommand(&clearBufferCommands, drawBufferIdx, loadop);
                 }
             }
         }
@@ -916,11 +902,7 @@ class PixelLocalStorageEXT : public PixelLocalStorage
 
     void onDeleteContextObjects(Context *) override {}
 
-    void onBegin(Context *context,
-                 GLsizei n,
-                 const GLenum loadops[],
-                 const char *cleardata,
-                 Extents plsExtents) override
+    void onBegin(Context *context, GLsizei n, const GLenum loadops[], Extents plsExtents) override
     {
         const State &state       = context->getState();
         Framebuffer *framebuffer = state.getDrawFramebuffer();
@@ -944,7 +926,7 @@ class PixelLocalStorageEXT : public PixelLocalStorage
         context->framebufferParameteri(GL_DRAW_FRAMEBUFFER, GL_FRAMEBUFFER_DEFAULT_HEIGHT,
                                        plsExtents.height);
 
-        context->drawPixelLocalStorageEXTEnable(n, getPlanes(), loadops, cleardata);
+        context->drawPixelLocalStorageEXTEnable(n, getPlanes(), loadops);
 
         memcpy(mActiveLoadOps.data(), loadops, sizeof(GLenum) * n);
     }

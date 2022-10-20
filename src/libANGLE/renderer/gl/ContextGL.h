@@ -291,8 +291,7 @@ class ContextGL : public ContextImpl
     angle::Result drawPixelLocalStorageEXTEnable(gl::Context *,
                                                  GLsizei n,
                                                  const gl::PixelLocalStoragePlane[],
-                                                 const GLenum loadops[],
-                                                 const void *cleardata) override;
+                                                 const GLenum loadops[]) override;
     angle::Result drawPixelLocalStorageEXTDisable(gl::Context *,
                                                   const gl::PixelLocalStoragePlane[],
                                                   const GLenum loadops[]) override;

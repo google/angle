@@ -399,8 +399,7 @@ PLSProgram::~PLSProgram()
 }
 
 void PLSProgram::setClearValues(const gl::PixelLocalStoragePlane planes[],
-                                const GLenum loadops[],
-                                const void *cleardata) const
+                                const GLenum loadops[]) const
 {
     ASSERT(mKey.type() == PLSProgramType::Load);
 
@@ -433,13 +432,11 @@ void PLSProgram::setClearValues(const gl::PixelLocalStoragePlane planes[],
     };
 
     ClearUniformCommands clearUniformCommands(mGL, mClearValueUniformLocations.data());
-    const char *clearBytes = reinterpret_cast<const char *>(cleardata);
     for (auto [binding, formatKey, preserved] : mKey)
     {
         if (!preserved)
         {
-            planes[binding].issueClearCommand(&clearUniformCommands, binding, loadops[binding],
-                                              clearBytes + binding * 4 * 4);
+            planes[binding].issueClearCommand(&clearUniformCommands, binding, loadops[binding]);
         }
     }
 }

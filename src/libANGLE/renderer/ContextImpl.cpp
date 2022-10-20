@@ -89,8 +89,7 @@ const angle::PerfMonitorCounterGroups &ContextImpl::getPerfMonitorCounters()
 angle::Result ContextImpl::drawPixelLocalStorageEXTEnable(gl::Context *,
                                                           GLsizei n,
                                                           const gl::PixelLocalStoragePlane[],
-                                                          const GLenum loadops[],
-                                                          const void *cleardata)
+                                                          const GLenum loadops[])
 {
     ASSERT(getNativePixelLocalStorageType() == ShPixelLocalStorageType::PixelLocalStorageEXT);
     UNREACHABLE();

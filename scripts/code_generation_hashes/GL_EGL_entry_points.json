@@ -8,13 +8,13 @@
   "scripts/generate_entry_points.py":
     "0ea0e8dc52c8d2dd3be1430c36a5ceba",
   "scripts/gl_angle_ext.xml":
-    "541ac4b4b94ed518c4f014c53eeeb7ed",
+    "14d2478f5d85d15ead185182686805a9",
   "scripts/registry_xml.py":
     "4837b4beda7a0e2698e2be7e8e74fd88",
   "src/common/entry_points_enum_autogen.cpp":
-    "83173a70fac8de4de597818aba434e85",
+    "7326a28c3c03d554d511712d182dfc38",
   "src/common/entry_points_enum_autogen.h":
-    "b39e694db46a88e1be849683fcb0a9d4",
+    "b3a70dad130202c969f3f98680477c7b",
   "src/common/frame_capture_utils_autogen.cpp":
     "3fd090d87434ffcf5b4bc04b0e88a457",
   "src/common/frame_capture_utils_autogen.h":
@@ -38,7 +38,7 @@
   "src/libANGLE/Context_gles_3_2_autogen.h":
     "48567dca16fd881dfe6d61fee0e3106f",
   "src/libANGLE/Context_gles_ext_autogen.h":
-    "d38299e6df7eb2d90d1806a45df626a2",
+    "4023219c94052b39d5706cbc5f9263d9",
   "src/libANGLE/capture/capture_egl_autogen.cpp":
     "592bc4286183e250f28218ee8c4d2d51",
   "src/libANGLE/capture/capture_egl_autogen.h":
@@ -80,9 +80,9 @@
   "src/libANGLE/capture/capture_gles_3_2_autogen.h":
     "74ed7366af3a46c0661397cfa29ec6fc",
   "src/libANGLE/capture/capture_gles_ext_autogen.cpp":
-    "511c34873325a11b238affd592e41d4e",
+    "e86b5bb2400c09ffcb195d1e24f9852e",
   "src/libANGLE/capture/capture_gles_ext_autogen.h":
-    "7bf6a9d542cdeef6b97e4caa83a71ae2",
+    "d8cad3fc32723e76f222387beea5809b",
   "src/libANGLE/validationCL_autogen.h":
     "0022d0cdb6a9e2ef4a59b71164f62333",
   "src/libANGLE/validationEGL_autogen.h":
@@ -98,7 +98,7 @@
   "src/libANGLE/validationES3_autogen.h":
     "d34affed6670d9748af70c9b2d9b6f05",
   "src/libANGLE/validationESEXT_autogen.h":
-    "329026103d407bd14f623f1e309f388c",
+    "a6bee3ac05d4f66f6cd5807959b6137a",
   "src/libANGLE/validationGL1_autogen.h":
     "a247dddc40418180d4b2dbefeb75f233",
   "src/libANGLE/validationGL2_autogen.h":
@@ -168,17 +168,17 @@
   "src/libGLESv2/entry_points_gles_3_2_autogen.h":
     "647f932a299cdb4726b60bbba059f0d2",
   "src/libGLESv2/entry_points_gles_ext_autogen.cpp":
-    "c111c0a90baf1383255dc2363f9f6b31",
+    "52ff856150b1ccf798e3d65e5f1ddf3d",
   "src/libGLESv2/entry_points_gles_ext_autogen.h":
-    "20844022b652ccc15f294c03da7255fc",
+    "e8c89e9b23579b0bb1a0bac9c20db5b8",
   "src/libGLESv2/libGLESv2_autogen.cpp":
-    "e3d4791f3c9df1b6e7bbbbfb4075b2ce",
+    "8251921aec777c0b8e268d86b2669ecc",
   "src/libGLESv2/libGLESv2_autogen.def":
-    "e150d390b5d42841c266e656a464230f",
+    "97dc41a4eaf03db22435900b9499f554",
   "src/libGLESv2/libGLESv2_no_capture_autogen.def":
-    "874fd3a36dab15e6c6b5e4ef3de42245",
+    "005d5f5ca55a80de45a138168ac70725",
   "src/libGLESv2/libGLESv2_with_capture_autogen.def":
-    "ecce87aa987821f782010b15aeb26255",
+    "0a8df34dac613f9d5cf1c4593e40e615",
   "src/libOpenCL/libOpenCL_autogen.cpp":
     "10849978c910dc1af5dd4f0c815d1581",
   "third_party/EGL-Registry/src/api/egl.xml":
@@ -192,5 +192,5 @@
   "third_party/OpenGL-Registry/src/xml/wgl.xml":
     "eae784bf4d1b983a42af5671b140b7c4",
   "util/capture/frame_capture_replay_autogen.cpp":
-    "1144161ff3acc6b037ccc605eef75255"
+    "2ca1891e5ce93f49ee5c47afb283267d"
 }

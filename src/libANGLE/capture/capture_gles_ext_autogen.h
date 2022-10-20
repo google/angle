@@ -863,13 +863,34 @@ angle::CallCapture CaptureFramebufferTexturePixelLocalStorageANGLE(const State &
                                                                    TextureID backingtexturePacked,
                                                                    GLint level,
                                                                    GLint layer);
+angle::CallCapture CaptureFramebufferPixelLocalClearValuefvANGLE(const State &glState,
+                                                                 bool isCallValid,
+                                                                 GLint plane,
+                                                                 const GLfloat *value);
+angle::CallCapture CaptureFramebufferPixelLocalClearValueivANGLE(const State &glState,
+                                                                 bool isCallValid,
+                                                                 GLint plane,
+                                                                 const GLint *value);
+angle::CallCapture CaptureFramebufferPixelLocalClearValueuivANGLE(const State &glState,
+                                                                  bool isCallValid,
+                                                                  GLint plane,
+                                                                  const GLuint *value);
 angle::CallCapture CaptureBeginPixelLocalStorageANGLE(const State &glState,
                                                       bool isCallValid,
                                                       GLsizei planes,
-                                                      const GLenum *loadops,
-                                                      const void *cleardata);
+                                                      const GLenum *loadops);
 angle::CallCapture CaptureEndPixelLocalStorageANGLE(const State &glState, bool isCallValid);
 angle::CallCapture CapturePixelLocalStorageBarrierANGLE(const State &glState, bool isCallValid);
+angle::CallCapture CaptureGetFramebufferPixelLocalStorageParameterfvANGLE(const State &glState,
+                                                                          bool isCallValid,
+                                                                          GLint plane,
+                                                                          GLenum pname,
+                                                                          GLfloat *params);
+angle::CallCapture CaptureGetFramebufferPixelLocalStorageParameterivANGLE(const State &glState,
+                                                                          bool isCallValid,
+                                                                          GLint plane,
+                                                                          GLenum pname,
+                                                                          GLint *params);
 
 // GL_ANGLE_texture_compression_dxt3
 
@@ -4092,18 +4113,40 @@ void CaptureGetQueryObjectui64vRobustANGLE_params(const State &glState,
                                                   GLsizei *length,
                                                   GLuint64 *params,
                                                   angle::ParamCapture *paramCapture);
+void CaptureFramebufferPixelLocalClearValuefvANGLE_value(const State &glState,
+                                                         bool isCallValid,
+                                                         GLint plane,
+                                                         const GLfloat *value,
+                                                         angle::ParamCapture *paramCapture);
+void CaptureFramebufferPixelLocalClearValueivANGLE_value(const State &glState,
+                                                         bool isCallValid,
+                                                         GLint plane,
+                                                         const GLint *value,
+                                                         angle::ParamCapture *paramCapture);
+void CaptureFramebufferPixelLocalClearValueuivANGLE_value(const State &glState,
+                                                          bool isCallValid,
+                                                          GLint plane,
+                                                          const GLuint *value,
+                                                          angle::ParamCapture *paramCapture);
 void CaptureBeginPixelLocalStorageANGLE_loadops(const State &glState,
                                                 bool isCallValid,
                                                 GLsizei planes,
                                                 const GLenum *loadops,
-                                                const void *cleardata,
                                                 angle::ParamCapture *paramCapture);
-void CaptureBeginPixelLocalStorageANGLE_cleardata(const State &glState,
-                                                  bool isCallValid,
-                                                  GLsizei planes,
-                                                  const GLenum *loadops,
-                                                  const void *cleardata,
-                                                  angle::ParamCapture *paramCapture);
+void CaptureGetFramebufferPixelLocalStorageParameterfvANGLE_params(
+    const State &glState,
+    bool isCallValid,
+    GLint plane,
+    GLenum pname,
+    GLfloat *params,
+    angle::ParamCapture *paramCapture);
+void CaptureGetFramebufferPixelLocalStorageParameterivANGLE_params(
+    const State &glState,
+    bool isCallValid,
+    GLint plane,
+    GLenum pname,
+    GLint *params,
+    angle::ParamCapture *paramCapture);
 void CaptureGetMultisamplefvANGLE_val(const State &glState,
                                       bool isCallValid,
                                       GLenum pname,

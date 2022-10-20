@@ -1571,10 +1571,11 @@ bool ValidateImportSemaphoreZirconHandleANGLE(const Context *context,
 
 namespace
 {
-enum class PLSExpectedStatus : bool
+enum class PLSExpectedStatus
 {
     Inactive,
-    Active
+    Active,
+    Any
 };
 
 bool ValidatePLSCommon(const Context *context,
@@ -1588,8 +1589,23 @@ bool ValidatePLSCommon(const Context *context,
         return false;
     }
 
-    if (expectedStatus == PLSExpectedStatus::Inactive)
+    if (expectedStatus == PLSExpectedStatus::Active)
     {
+        // INVALID_OPERATION is generated if PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE is zero.
+        if (context->getState().getPixelLocalStorageActivePlanes() == 0)
+        {
+            context->validationError(entryPoint, GL_INVALID_OPERATION, kPLSInactive);
+            return false;
+        }
+    }
+    else
+    {
+        // PLSExpectedStatus::Inactive is validated by the allow list.
+        if (expectedStatus == PLSExpectedStatus::Inactive)
+        {
+            ASSERT(context->getState().getPixelLocalStorageActivePlanes() == 0);
+        }
+
         // INVALID_FRAMEBUFFER_OPERATION is generated if the default framebuffer object name 0 is
         // bound to DRAW_FRAMEBUFFER.
         if (context->getState().getDrawFramebuffer()->id().value == 0)
@@ -1599,24 +1615,16 @@ bool ValidatePLSCommon(const Context *context,
             return false;
         }
     }
-    else
-    {
-        ASSERT(expectedStatus == PLSExpectedStatus::Active);
-
-        // INVALID_OPERATION is generated if PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE is 0.
-        if (context->getState().getPixelLocalStorageActivePlanes() == 0)
-        {
-            context->validationError(entryPoint, GL_INVALID_OPERATION, kPLSInactive);
-            return false;
-        }
-    }
 
     return true;
 }
 
-bool ValidatePLSCommon(const Context *context, angle::EntryPoint entryPoint, GLint plane)
+bool ValidatePLSCommon(const Context *context,
+                       angle::EntryPoint entryPoint,
+                       GLint plane,
+                       PLSExpectedStatus expectedStatus)
 {
-    if (!ValidatePLSCommon(context, entryPoint, PLSExpectedStatus::Inactive))
+    if (!ValidatePLSCommon(context, entryPoint, expectedStatus))
     {
         return false;
     }
@@ -1707,7 +1715,7 @@ bool ValidateFramebufferMemorylessPixelLocalStorageANGLE(const Context *context,
                                                          GLint plane,
                                                          GLenum internalformat)
 {
-    if (!ValidatePLSCommon(context, entryPoint, plane))
+    if (!ValidatePLSCommon(context, entryPoint, plane, PLSExpectedStatus::Inactive))
     {
         return false;
     }
@@ -1732,7 +1740,7 @@ bool ValidateFramebufferTexturePixelLocalStorageANGLE(const Context *context,
                                                       GLint level,
                                                       GLint layer)
 {
-    if (!ValidatePLSCommon(context, entryPoint, plane))
+    if (!ValidatePLSCommon(context, entryPoint, plane, PLSExpectedStatus::Inactive))
     {
         return false;
     }
@@ -1805,11 +1813,34 @@ bool ValidateFramebufferTexturePixelLocalStorageANGLE(const Context *context,
     return true;
 }
 
+bool ValidateFramebufferPixelLocalClearValuefvANGLE(const Context *context,
+                                                    angle::EntryPoint entryPoint,
+                                                    GLint plane,
+                                                    const GLfloat[])
+{
+    return ValidatePLSCommon(context, entryPoint, plane, PLSExpectedStatus::Inactive);
+}
+
+bool ValidateFramebufferPixelLocalClearValueivANGLE(const Context *context,
+                                                    angle::EntryPoint entryPoint,
+                                                    GLint plane,
+                                                    const GLint[])
+{
+    return ValidatePLSCommon(context, entryPoint, plane, PLSExpectedStatus::Inactive);
+}
+
+bool ValidateFramebufferPixelLocalClearValueuivANGLE(const Context *context,
+                                                     angle::EntryPoint entryPoint,
+                                                     GLint plane,
+                                                     const GLuint[])
+{
+    return ValidatePLSCommon(context, entryPoint, plane, PLSExpectedStatus::Inactive);
+}
+
 bool ValidateBeginPixelLocalStorageANGLE(const Context *context,
                                          angle::EntryPoint entryPoint,
                                          GLsizei planes,
-                                         const GLenum loadops[],
-                                         const void *cleardata)
+                                         const GLenum loadops[])
 {
     if (!ValidatePLSCommon(context, entryPoint, PLSExpectedStatus::Inactive))
     {
@@ -1930,14 +1961,6 @@ bool ValidateBeginPixelLocalStorageANGLE(const Context *context,
             continue;
         }
 
-        // INVALID_VALUE is generated if <loadops>[0..<planes>-1] is CLEAR_ANGLE and <cleardata> is
-        // NULL.
-        if (loadops[i] == GL_CLEAR_ANGLE && !cleardata)
-        {
-            context->validationError(entryPoint, GL_INVALID_VALUE, kPLSNullClearData);
-            return false;
-        }
-
         // INVALID_OPERATION is generated if <loadops>[0..<planes>-1] is not DISABLE_ANGLE, and
         // the pixel local storage plane at that same index is is in a deinitialized state.
         if (pls == nullptr || pls->getPlane(i).isDeinitialized())
@@ -2033,6 +2056,51 @@ bool ValidateEndPixelLocalStorageANGLE(const Context *context, angle::EntryPoint
 bool ValidatePixelLocalStorageBarrierANGLE(const Context *context, angle::EntryPoint entryPoint)
 {
     return ValidatePLSCommon(context, entryPoint, PLSExpectedStatus::Active);
+}
+
+bool ValidateGetFramebufferPixelLocalStorageParameterfvANGLE(const Context *context,
+                                                             angle::EntryPoint entryPoint,
+                                                             GLint plane,
+                                                             GLenum pname,
+                                                             const GLfloat *params)
+{
+    if (!ValidatePLSCommon(context, entryPoint, plane, PLSExpectedStatus::Any))
+    {
+        return false;
+    }
+    switch (pname)
+    {
+        case GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE:
+            return true;
+        default:
+            context->validationErrorF(entryPoint, GL_INVALID_ENUM, kEnumNotSupported, pname);
+            return false;
+    }
+}
+
+bool ValidateGetFramebufferPixelLocalStorageParameterivANGLE(const Context *context,
+                                                             angle::EntryPoint entryPoint,
+                                                             GLint plane,
+                                                             GLenum pname,
+                                                             const GLint *params)
+{
+    if (!ValidatePLSCommon(context, entryPoint, plane, PLSExpectedStatus::Any))
+    {
+        return false;
+    }
+    switch (pname)
+    {
+        case GL_PIXEL_LOCAL_FORMAT_ANGLE:
+        case GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE:
+        case GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE:
+        case GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE:
+        case GL_PIXEL_LOCAL_CLEAR_VALUE_INT_ANGLE:
+        case GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE:
+            return true;
+        default:
+            context->validationErrorF(entryPoint, GL_INVALID_ENUM, kEnumNotSupported, pname);
+            return false;
+    }
 }
 
 bool ValidateFramebufferFetchBarrierEXT(const Context *context, angle::EntryPoint entryPoint)

@@ -1044,8 +1044,7 @@ void ContextGL::resetDrawStateForPixelLocalStorageEXT(const gl::Context *context
 angle::Result ContextGL::drawPixelLocalStorageEXTEnable(gl::Context *context,
                                                         GLsizei n,
                                                         const gl::PixelLocalStoragePlane planes[],
-                                                        const GLenum loadops[],
-                                                        const void *cleardata)
+                                                        const GLenum loadops[])
 {
     ASSERT(getNativePixelLocalStorageType() == ShPixelLocalStorageType::PixelLocalStorageEXT);
 
@@ -1071,7 +1070,7 @@ angle::Result ContextGL::drawPixelLocalStorageEXTEnable(gl::Context *context,
     PLSProgramCache *cache       = mRenderer->getPLSProgramCache();
     const PLSProgram *plsProgram = cache->getProgram(key);
     getStateManager()->forceUseProgram(plsProgram->getProgramID());
-    plsProgram->setClearValues(planes, loadops, cleardata);
+    plsProgram->setClearValues(planes, loadops);
     getStateManager()->bindVertexArray(cache->getEmptyVAO(), cache->getEmptyVAOState());
     resetDrawStateForPixelLocalStorageEXT(context);
 

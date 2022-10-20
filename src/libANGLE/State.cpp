@@ -3268,17 +3268,6 @@ void State::getIntegeri_v(const Context *context, GLenum target, GLuint index, G
             ASSERT(static_cast<size_t>(index) < mImageUnits.size());
             *data = mImageUnits[index].format;
             break;
-        // GL_ANGLE_shader_pixel_local_storage.
-        case GL_PIXEL_LOCAL_FORMAT_ANGLE:
-        case GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE:
-        case GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE:
-        case GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE:
-        {
-            ASSERT(mDrawFramebuffer);
-            *data = mDrawFramebuffer->getPixelLocalStorage(context).getPlane(index).getIntegeri(
-                context, target, index);
-            break;
-        }
         default:
             UNREACHABLE();
             break;

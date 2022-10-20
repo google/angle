@@ -3368,35 +3368,6 @@ bool ValidateIndexedStateQuery(const Context *context,
                 return false;
             }
             break;
-        // GL_ANGLE_shader_pixel_local_storage
-        case GL_PIXEL_LOCAL_FORMAT_ANGLE:
-        case GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE:
-        case GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE:
-        case GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE:
-        {
-            // Check that the pixel local storage extension is enabled at all.
-            if (!context->getExtensions().shaderPixelLocalStorageANGLE)
-            {
-                context->validationError(entryPoint, GL_INVALID_OPERATION, kPLSExtensionNotEnabled);
-                return false;
-            }
-            // INVALID_FRAMEBUFFER_OPERATION is generated if the default framebuffer object name 0
-            // is bound to DRAW_FRAMEBUFFER.
-            Framebuffer *framebuffer = context->getState().getDrawFramebuffer();
-            if (framebuffer->id().value == 0)
-            {
-                context->validationError(entryPoint, GL_INVALID_FRAMEBUFFER_OPERATION,
-                                         kPLSDefaultFramebufferBound);
-                return false;
-            }
-            // INVALID_VALUE is generated if <index> >= MAX_PIXEL_LOCAL_STORAGE_PLANES_ANGLE.
-            if (index >= context->getCaps().maxPixelLocalStoragePlanes)
-            {
-                context->validationError(entryPoint, GL_INVALID_OPERATION, kPLSPlaneOutOfRange);
-                return false;
-            }
-            break;
-        }
         default:
             context->validationErrorF(entryPoint, GL_INVALID_ENUM, kEnumNotSupported, pname);
             return false;

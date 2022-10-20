@@ -147,9 +147,7 @@ class PLSProgram : angle::NonCopyable
 
     GLuint getProgramID() const { return mProgramID; }
 
-    void setClearValues(const gl::PixelLocalStoragePlane[],
-                        const GLenum loadops[],
-                        const void *cleardata) const;
+    void setClearValues(const gl::PixelLocalStoragePlane[], const GLenum loadops[]) const;
 
   private:
     const FunctionsGL *const mGL;

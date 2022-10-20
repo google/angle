@@ -66,7 +66,7 @@ class PixelLocalStoragePlane : angle::NonCopyable
     // Implements glGetIntegeri_v() for GL_PIXEL_LOCAL_FORMAT_ANGLE,
     // GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE, GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE, and
     // GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE
-    GLint getIntegeri(const Context *, GLenum target, GLuint index) const;
+    GLint getIntegeri(const Context *, GLenum target) const;
 
     // If this plane is texture backed, stores the bound texture image's {width, height, 0} to
     // Extents and returns true. Otherwise returns false, meaning the plane is either deinitialized
@@ -86,12 +86,10 @@ class PixelLocalStoragePlane : angle::NonCopyable
         virtual void clearuiv(int target, const GLuint[]) const = 0;
     };
 
-    // Issues the approprite command from ClearCommands for this plane's internalformat. Reads the
-    // clear value from 'data' if 'loadop' is GL_CLEAR_ANGLE, otherwise clears to zero.
-    //
-    // 'data' is interpereted as either 4 GLfloats, 4 GLints, or 4 GLuints, depending on
-    // mInternalFormat.
-    void issueClearCommand(ClearCommands *, int target, GLenum loadop, const void *data) const;
+    // Issues the approprite command from ClearCommands for this plane's internalformat. Uses the
+    // clear state value that corresponds to mInternalFormat, and potentially clamps it to ensure it
+    // is representable.
+    void issueClearCommand(ClearCommands *, int target, GLenum loadop) const;
 
     // Binds this PLS plane to a texture image unit for image load/store shader operations.
     void bindToImage(Context *, Extents plsExtents, GLuint unit, bool needsR32Packing);
@@ -99,6 +97,14 @@ class PixelLocalStoragePlane : angle::NonCopyable
     // Low-level access to the backing texture. The plane must not be memoryless or deinitialized.
     const ImageIndex &getTextureImageIndex() const { return mTextureImageIndex; }
     const Texture *getBackingTexture(const Context *context) const;
+
+    void setClearValuef(const GLfloat value[4]) { memcpy(mClearValuef.data(), value, 4 * 4); }
+    void setClearValuei(const GLint value[4]) { memcpy(mClearValuei.data(), value, 4 * 4); }
+    void setClearValueui(const GLuint value[4]) { memcpy(mClearValueui.data(), value, 4 * 4); }
+
+    void getClearValuef(GLfloat value[4]) const { memcpy(value, mClearValuef.data(), 4 * 4); }
+    void getClearValuei(GLint value[4]) const { memcpy(value, mClearValuei.data(), 4 * 4); }
+    void getClearValueui(GLuint value[4]) const { memcpy(value, mClearValueui.data(), 4 * 4); }
 
   private:
     // Ensures we have an internal backing texture for memoryless planes. In GL, we need a backing
@@ -111,6 +117,11 @@ class PixelLocalStoragePlane : angle::NonCopyable
     TextureID mMemorylessTextureID{};  // We own memoryless backing textures and must delete them.
     ImageIndex mTextureImageIndex;
     Texture *mTextureRef = nullptr;
+
+    // Clear value state.
+    std::array<GLfloat, 4> mClearValuef{};
+    std::array<GLint, 4> mClearValuei{};
+    std::array<GLuint, 4> mClearValueui{};
 };
 
 // Manages a collection of PixelLocalStoragePlanes and applies them to ANGLE's GL state.
@@ -156,7 +167,10 @@ class PixelLocalStorage
     {
         mPlanes[plane].setTextureBacked(context, tex, level, layer);
     }
-    void begin(Context *, GLsizei n, const GLenum loadops[], const void *cleardata);
+    void setClearValuef(GLint plane, const GLfloat val[4]) { mPlanes[plane].setClearValuef(val); }
+    void setClearValuei(GLint plane, const GLint val[4]) { mPlanes[plane].setClearValuei(val); }
+    void setClearValueui(GLint plane, const GLuint val[4]) { mPlanes[plane].setClearValueui(val); }
+    void begin(Context *, GLsizei n, const GLenum loadops[]);
     void end(Context *);
     void barrier(Context *);
 
@@ -170,13 +184,9 @@ class PixelLocalStorage
     virtual void onDeleteContextObjects(Context *) = 0;
 
     // ANGLE_shader_pixel_local_storage API.
-    virtual void onBegin(Context *,
-                         GLsizei n,
-                         const GLenum loadops[],
-                         const char *cleardata,
-                         Extents plsSize) = 0;
-    virtual void onEnd(Context *)         = 0;
-    virtual void onBarrier(Context *)     = 0;
+    virtual void onBegin(Context *, GLsizei n, const GLenum loadops[], Extents plsSize) = 0;
+    virtual void onEnd(Context *)                                                       = 0;
+    virtual void onBarrier(Context *)                                                   = 0;
 
   private:
     std::array<PixelLocalStoragePlane, IMPLEMENTATION_MAX_PIXEL_LOCAL_STORAGE_PLANES> mPlanes;

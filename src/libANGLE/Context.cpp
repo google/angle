@@ -9211,13 +9211,37 @@ void Context::framebufferTexturePixelLocalStorage(GLint plane,
     }
 }
 
-void Context::beginPixelLocalStorage(GLsizei planes, const GLenum loadops[], const void *cleardata)
+void Context::framebufferPixelLocalClearValuefv(GLint plane, const GLfloat value[])
+{
+    Framebuffer *framebuffer = mState.getDrawFramebuffer();
+    ASSERT(framebuffer);
+    PixelLocalStorage &pls = framebuffer->getPixelLocalStorage(this);
+    pls.setClearValuef(plane, value);
+}
+
+void Context::framebufferPixelLocalClearValueiv(GLint plane, const GLint value[])
+{
+    Framebuffer *framebuffer = mState.getDrawFramebuffer();
+    ASSERT(framebuffer);
+    PixelLocalStorage &pls = framebuffer->getPixelLocalStorage(this);
+    pls.setClearValuei(plane, value);
+}
+
+void Context::framebufferPixelLocalClearValueuiv(GLint plane, const GLuint value[])
+{
+    Framebuffer *framebuffer = mState.getDrawFramebuffer();
+    ASSERT(framebuffer);
+    PixelLocalStorage &pls = framebuffer->getPixelLocalStorage(this);
+    pls.setClearValueui(plane, value);
+}
+
+void Context::beginPixelLocalStorage(GLsizei planes, const GLenum loadops[])
 {
     Framebuffer *framebuffer = mState.getDrawFramebuffer();
     ASSERT(framebuffer);
     PixelLocalStorage &pls = framebuffer->getPixelLocalStorage(this);
 
-    pls.begin(this, planes, loadops, cleardata);
+    pls.begin(this, planes, loadops);
     mState.setPixelLocalStorageActivePlanes(planes);
 }
 
@@ -9243,6 +9267,48 @@ void Context::pixelLocalStorageBarrier()
     PixelLocalStorage &pls = framebuffer->getPixelLocalStorage(this);
 
     pls.barrier(this);
+}
+
+void Context::getFramebufferPixelLocalStorageParameterfv(GLint plane, GLenum pname, GLfloat *params)
+{
+    Framebuffer *framebuffer = mState.getDrawFramebuffer();
+    ASSERT(framebuffer);
+    PixelLocalStorage &pls = framebuffer->getPixelLocalStorage(this);
+
+    switch (pname)
+    {
+        case GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE:
+            pls.getPlane(plane).getClearValuef(params);
+            break;
+    }
+}
+
+void Context::getFramebufferPixelLocalStorageParameteriv(GLint plane, GLenum pname, GLint *params)
+{
+    Framebuffer *framebuffer = mState.getDrawFramebuffer();
+    ASSERT(framebuffer);
+    PixelLocalStorage &pls = framebuffer->getPixelLocalStorage(this);
+
+    switch (pname)
+    {
+        // GL_ANGLE_shader_pixel_local_storage.
+        case GL_PIXEL_LOCAL_FORMAT_ANGLE:
+        case GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE:
+        case GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE:
+        case GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE:
+            *params = pls.getPlane(plane).getIntegeri(this, pname);
+            break;
+        case GL_PIXEL_LOCAL_CLEAR_VALUE_INT_ANGLE:
+            pls.getPlane(plane).getClearValuei(params);
+            break;
+        case GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE:
+        {
+            GLuint valueui[4];
+            pls.getPlane(plane).getClearValueui(valueui);
+            memcpy(params, valueui, sizeof(valueui));
+            break;
+        }
+    }
 }
 
 void Context::eGLImageTargetTexStorage(GLenum target, egl::ImageID image, const GLint *attrib_list)
@@ -9337,20 +9403,6 @@ bool Context::getIndexedQueryParameterInfo(GLenum target,
                 *numParams = 4;
                 return true;
             }
-        }
-    }
-
-    if (mSupportedExtensions.shaderPixelLocalStorageANGLE)
-    {
-        switch (target)
-        {
-            case GL_PIXEL_LOCAL_FORMAT_ANGLE:
-            case GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE:
-            case GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE:
-            case GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE:
-                *type      = GL_INT;
-                *numParams = 1;
-                return true;
         }
     }
 
@@ -9971,15 +10023,13 @@ const angle::PerfMonitorCounterGroups &Context::getPerfMonitorCounterGroups() co
 
 void Context::drawPixelLocalStorageEXTEnable(GLsizei n,
                                              const PixelLocalStoragePlane planes[],
-                                             const GLenum loadops[],
-                                             const void *cleardata)
+                                             const GLenum loadops[])
 {
     ASSERT(mImplementation->getNativePixelLocalStorageType() ==
            ShPixelLocalStorageType::PixelLocalStorageEXT);
     ANGLE_CONTEXT_TRY(syncState(mPixelLocalStorageEXTEnableDisableDirtyBits,
                                 mPixelLocalStorageEXTEnableDisableDirtyObjects, Command::Draw));
-    ANGLE_CONTEXT_TRY(
-        mImplementation->drawPixelLocalStorageEXTEnable(this, n, planes, loadops, cleardata));
+    ANGLE_CONTEXT_TRY(mImplementation->drawPixelLocalStorageEXTEnable(this, n, planes, loadops));
 }
 
 void Context::drawPixelLocalStorageEXTDisable(const PixelLocalStoragePlane planes[],

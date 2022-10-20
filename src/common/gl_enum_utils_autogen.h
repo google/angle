@@ -108,6 +108,8 @@ enum class GLESEnum
     MemoryObjectParameterName,
     NormalPointerType,
     ObjectIdentifier,
+    PLSQueryFloat,
+    PLSQueryInt,
     PatchParameterName,
     PathColor,
     PathColorFormat,

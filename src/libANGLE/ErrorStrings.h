@@ -502,7 +502,6 @@ MSG kPLSMaxCombinedDrawBuffersAndPlanesExceded = "Framebuffer cannot have images
 MSG kPLSMismatchedBackingTextureSizes = "Mismatched pixel local storage backing texture sizes.";
 MSG kPLSMultisamplingEnabled = "Attempted to begin pixel local storage with a multisampled framebuffer.";
 MSG kPLSNoAttachmentsNoTextureBacked = "Draw framebuffer has no attachments and no enabled, texture-backed pixel local storage planes.";
-MSG kPLSNullClearData = "cleardata cannot null if Load Operation GL_CLEAR_ANGLE is specified.";
 MSG kPLSNullLoadOps = "loadops cannot null.";
 MSG kPLSPlaneLessThanZero = "Plane cannot be less than 0.";
 MSG kPLSPlaneOutOfRange = "Plane must be less than GL_MAX_PIXEL_LOCAL_STORAGE_PLANES_ANGLE.";

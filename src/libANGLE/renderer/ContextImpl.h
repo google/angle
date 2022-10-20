@@ -271,8 +271,7 @@ class ContextImpl : public GLImplFactory
     virtual angle::Result drawPixelLocalStorageEXTEnable(gl::Context *,
                                                          GLsizei n,
                                                          const gl::PixelLocalStoragePlane[],
-                                                         const GLenum loadops[],
-                                                         const void *cleardata);
+                                                         const GLenum loadops[]);
 
     // Stores texture-backed PLS planes via fullscreen draw and disables
     // GL_SHADER_PIXEL_LOCAL_STORAGE_EXT.
