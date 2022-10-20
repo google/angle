@@ -2405,7 +2405,7 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     // EXT_shader_framebuffer_fetch_non_coherent
     ANGLE_FEATURE_CONDITION(
         features, supportsShaderFramebufferFetchNonCoherentEXT,
-        functions->hasGLESExtension("EXT_shader_framebuffer_fetch_non_coherent"));
+        functions->hasGLESExtension("GL_EXT_shader_framebuffer_fetch_non_coherent"));
 }
 
 void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFeatures *features)
