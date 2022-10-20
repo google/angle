@@ -3708,6 +3708,9 @@ Extensions Context::generateSupportedExtensions() const
         // GL_EXT_YUV_target requires ESSL3
         supportedExtensions.YUVTargetEXT = false;
 
+        // GL_EXT_clip_cull_distance requires ESSL3
+        supportedExtensions.clipCullDistanceEXT = false;
+
         // ANGLE_shader_pixel_local_storage requires ES3
         supportedExtensions.shaderPixelLocalStorageANGLE         = false;
         supportedExtensions.shaderPixelLocalStorageCoherentANGLE = false;
