@@ -5742,7 +5742,8 @@
     "gtest_tests": [
       {
         "args": [
-          "--gtest_filter=*Vulkan_SwiftShader*"
+          "--gtest_filter=*Vulkan_SwiftShader*",
+          "--flaky-retries=2"
         ],
         "merge": {
           "args": [],

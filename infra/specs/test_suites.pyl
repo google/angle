@@ -1049,6 +1049,8 @@
       'angle_end2end_tests': {
         'args': [
           '--gtest_filter=*Vulkan_SwiftShader*',
+          # Flaky retries enabled on ASAN/TSAN. http://anglebug.com/7772
+          '--flaky-retries=2',
         ],
         'use_isolated_scripts_api': True,
         'swarming': {
