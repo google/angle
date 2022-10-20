@@ -6177,7 +6177,7 @@ void GraphicsPipelineCache<Hash>::release(ContextVk *contextVk)
 }
 
 template <typename Hash>
-angle::Result GraphicsPipelineCache<Hash>::insertPipeline(
+angle::Result GraphicsPipelineCache<Hash>::createPipeline(
     ContextVk *contextVk,
     PipelineCacheAccess *pipelineCache,
     const vk::RenderPass &compatibleRenderPass,
@@ -6189,6 +6189,10 @@ angle::Result GraphicsPipelineCache<Hash>::insertPipeline(
     const vk::GraphicsPipelineDesc **descPtrOut,
     vk::PipelineHelper **pipelineOut)
 {
+    ASSERT(mPayload.find(desc) == mPayload.end());
+
+    mCacheStats.missAndIncrementSize();
+
     vk::Pipeline newPipeline;
     vk::CacheLookUpFeedback feedback = vk::CacheLookUpFeedback::None;
 
@@ -6238,7 +6242,7 @@ template void GraphicsPipelineCache<GraphicsPipelineDescCompleteHash>::destroy(
     RendererVk *rendererVk);
 template void GraphicsPipelineCache<GraphicsPipelineDescCompleteHash>::release(
     ContextVk *contextVk);
-template angle::Result GraphicsPipelineCache<GraphicsPipelineDescCompleteHash>::insertPipeline(
+template angle::Result GraphicsPipelineCache<GraphicsPipelineDescCompleteHash>::createPipeline(
     ContextVk *contextVk,
     PipelineCacheAccess *pipelineCache,
     const vk::RenderPass &compatibleRenderPass,

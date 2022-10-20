@@ -655,8 +655,10 @@ void ProgramExecutableVk::save(ContextVk *contextVk,
         stream->writeInt(mDefaultUniformBlocks[shaderType]->uniformData.size());
     }
 
-    // Compress and save mPipelineCache.  Separable programs cannot warm up the cache until
-    // VK_EXT_graphics_pipeline_library is supported.
+    // Compress and save mPipelineCache.  Separable programs don't warm up the cache, while program
+    // pipelines do.  However, currently ANGLE doesn't sync program pipelines to cache.  ANGLE could
+    // potentially use VK_EXT_graphics_pipeline_library to create separate pipelines for
+    // pre-rasterization and fragment subsets, but currently those subsets are bundled together.
     if (!isSeparable)
     {
         angle::MemoryBuffer cacheData;
@@ -722,8 +724,8 @@ angle::Result ProgramExecutableVk::warmUpPipelineCache(ContextVk *contextVk,
         // There is no state associated with compute programs, so only one pipeline needs creation
         // to warm up the cache.
         vk::PipelineHelper *pipeline = nullptr;
-        ANGLE_TRY(getComputePipeline(contextVk, &pipelineCache, PipelineSource::WarmUp,
-                                     glExecutable, &pipeline));
+        ANGLE_TRY(getOrCreateComputePipeline(contextVk, &pipelineCache, PipelineSource::WarmUp,
+                                             glExecutable, &pipeline));
 
         // Merge the cache with RendererVk's
         return contextVk->getRenderer()->mergeIntoPipelineCache(mPipelineCache);
@@ -764,9 +766,9 @@ angle::Result ProgramExecutableVk::warmUpPipelineCache(ContextVk *contextVk,
     {
         transformOptions.surfaceRotation = rotation;
 
-        ANGLE_TRY(getGraphicsPipelineImpl(contextVk, transformOptions, mode, &pipelineCache,
-                                          PipelineSource::WarmUp, graphicsPipelineDesc,
-                                          glExecutable, &descPtr, &pipeline));
+        ANGLE_TRY(createGraphicsPipelineImpl(
+            contextVk, transformOptions, vk::GraphicsPipelineSubset::Complete, &pipelineCache,
+            PipelineSource::WarmUp, graphicsPipelineDesc, glExecutable, &descPtr, &pipeline));
     }
 
     // Merge the cache with RendererVk's
@@ -1030,22 +1032,35 @@ angle::Result ProgramExecutableVk::addTextureDescriptorSetDesc(
     return angle::Result::Continue;
 }
 
-angle::Result ProgramExecutableVk::getGraphicsPipelineImpl(
+ProgramTransformOptions ProgramExecutableVk::getTransformOptions(
+    ContextVk *contextVk,
+    const vk::GraphicsPipelineDesc &desc,
+    const gl::ProgramExecutable &glExecutable)
+{
+    ProgramTransformOptions transformOptions = {};
+
+    transformOptions.surfaceRotation = desc.getSurfaceRotation();
+    transformOptions.removeTransformFeedbackEmulation =
+        contextVk->getFeatures().emulateTransformFeedback.enabled &&
+        !contextVk->getState().isTransformFeedbackActiveUnpaused();
+    FramebufferVk *drawFrameBuffer = vk::GetImpl(contextVk->getState().getDrawFramebuffer());
+    const bool hasFramebufferFetch = glExecutable.usesFramebufferFetch();
+    const bool isMultisampled      = drawFrameBuffer->getSamples() > 1;
+    transformOptions.multiSampleFramebufferFetch = hasFramebufferFetch && isMultisampled;
+
+    return transformOptions;
+}
+
+angle::Result ProgramExecutableVk::initGraphicsShaderPrograms(
     ContextVk *contextVk,
     ProgramTransformOptions transformOptions,
-    gl::PrimitiveMode mode,
-    PipelineCacheAccess *pipelineCache,
-    PipelineSource source,
-    const vk::GraphicsPipelineDesc &desc,
     const gl::ProgramExecutable &glExecutable,
-    const vk::GraphicsPipelineDesc **descPtrOut,
-    vk::PipelineHelper **pipelineOut)
+    vk::ShaderProgramHelper **shaderProgramOut)
 {
     ASSERT(glExecutable.hasLinkedShaderStage(gl::ShaderType::Vertex));
 
     const uint8_t programIndex                = GetGraphicsProgramIndex(transformOptions);
     ProgramInfo &programInfo                  = mGraphicsProgramInfos[programIndex];
-    CompleteGraphicsPipelineCache &pipelines  = mCompleteGraphicsPipelines[programIndex];
     const gl::ShaderBitSet linkedShaderStages = glExecutable.getLinkedShaderStages();
     gl::ShaderType lastPreFragmentStage       = gl::GetLastPreFragmentStage(linkedShaderStages);
 
@@ -1059,8 +1074,28 @@ angle::Result ProgramExecutableVk::getGraphicsPipelineImpl(
             transformOptions, &programInfo, mVariableInfoMap));
     }
 
-    vk::ShaderProgramHelper *shaderProgram = programInfo.getShaderProgram();
-    ASSERT(shaderProgram);
+    *shaderProgramOut = programInfo.getShaderProgram();
+    ASSERT(*shaderProgramOut);
+
+    return angle::Result::Continue;
+}
+
+angle::Result ProgramExecutableVk::createGraphicsPipelineImpl(
+    ContextVk *contextVk,
+    ProgramTransformOptions transformOptions,
+    vk::GraphicsPipelineSubset pipelineSubset,
+    PipelineCacheAccess *pipelineCache,
+    PipelineSource source,
+    const vk::GraphicsPipelineDesc &desc,
+    const gl::ProgramExecutable &glExecutable,
+    const vk::GraphicsPipelineDesc **descPtrOut,
+    vk::PipelineHelper **pipelineOut)
+{
+    vk::ShaderProgramHelper *shaderProgram = nullptr;
+    ANGLE_TRY(
+        initGraphicsShaderPrograms(contextVk, transformOptions, glExecutable, &shaderProgram));
+
+    const uint8_t programIndex = GetGraphicsProgramIndex(transformOptions);
 
     // Set specialization constants.  These are also a part of GraphicsPipelineDesc, so that a
     // change in specialization constants also results in a new pipeline.
@@ -1073,42 +1108,57 @@ angle::Result ProgramExecutableVk::getGraphicsPipelineImpl(
     ANGLE_TRY(contextVk->getRenderPassCache().getCompatibleRenderPass(
         contextVk, desc.getRenderPassDesc(), &compatibleRenderPass));
 
-    return shaderProgram->getGraphicsPipeline(contextVk, &pipelines, pipelineCache,
-                                              *compatibleRenderPass, getPipelineLayout(), source,
-                                              desc, specConsts, descPtrOut, pipelineOut);
+    CompleteGraphicsPipelineCache &pipelines = mCompleteGraphicsPipelines[programIndex];
+    return shaderProgram->createGraphicsPipeline(contextVk, &pipelines, pipelineCache,
+                                                 *compatibleRenderPass, getPipelineLayout(), source,
+                                                 desc, specConsts, descPtrOut, pipelineOut);
 }
 
 angle::Result ProgramExecutableVk::getGraphicsPipeline(ContextVk *contextVk,
-                                                       gl::PrimitiveMode mode,
-                                                       PipelineCacheAccess *pipelineCache,
-                                                       PipelineSource source,
+                                                       vk::GraphicsPipelineSubset pipelineSubset,
                                                        const vk::GraphicsPipelineDesc &desc,
                                                        const gl::ProgramExecutable &glExecutable,
                                                        const vk::GraphicsPipelineDesc **descPtrOut,
                                                        vk::PipelineHelper **pipelineOut)
 {
-    const gl::State &glState = contextVk->getState();
+    ProgramTransformOptions transformOptions = getTransformOptions(contextVk, desc, glExecutable);
 
-    ProgramTransformOptions transformOptions = {};
+    vk::ShaderProgramHelper *shaderProgram = nullptr;
+    ANGLE_TRY(
+        initGraphicsShaderPrograms(contextVk, transformOptions, glExecutable, &shaderProgram));
 
-    transformOptions.surfaceRotation = desc.getSurfaceRotation();
-    transformOptions.removeTransformFeedbackEmulation =
-        contextVk->getFeatures().emulateTransformFeedback.enabled &&
-        !glState.isTransformFeedbackActiveUnpaused();
-    FramebufferVk *drawFrameBuffer = vk::GetImpl(contextVk->getState().getDrawFramebuffer());
-    const bool hasFramebufferFetch = glExecutable.usesFramebufferFetch();
-    const bool isMultisampled      = drawFrameBuffer->getSamples() > 1;
-    transformOptions.multiSampleFramebufferFetch = hasFramebufferFetch && isMultisampled;
+    const uint8_t programIndex = GetGraphicsProgramIndex(transformOptions);
 
-    return getGraphicsPipelineImpl(contextVk, transformOptions, mode, pipelineCache, source, desc,
-                                   glExecutable, descPtrOut, pipelineOut);
+    *descPtrOut  = nullptr;
+    *pipelineOut = nullptr;
+
+    mCompleteGraphicsPipelines[programIndex].getPipeline(desc, descPtrOut, pipelineOut);
+
+    return angle::Result::Continue;
 }
 
-angle::Result ProgramExecutableVk::getComputePipeline(ContextVk *contextVk,
-                                                      PipelineCacheAccess *pipelineCache,
-                                                      PipelineSource source,
-                                                      const gl::ProgramExecutable &glExecutable,
-                                                      vk::PipelineHelper **pipelineOut)
+angle::Result ProgramExecutableVk::createGraphicsPipeline(
+    ContextVk *contextVk,
+    vk::GraphicsPipelineSubset pipelineSubset,
+    PipelineCacheAccess *pipelineCache,
+    PipelineSource source,
+    const vk::GraphicsPipelineDesc &desc,
+    const gl::ProgramExecutable &glExecutable,
+    const vk::GraphicsPipelineDesc **descPtrOut,
+    vk::PipelineHelper **pipelineOut)
+{
+    ProgramTransformOptions transformOptions = getTransformOptions(contextVk, desc, glExecutable);
+
+    return createGraphicsPipelineImpl(contextVk, transformOptions, pipelineSubset, pipelineCache,
+                                      source, desc, glExecutable, descPtrOut, pipelineOut);
+}
+
+angle::Result ProgramExecutableVk::getOrCreateComputePipeline(
+    ContextVk *contextVk,
+    PipelineCacheAccess *pipelineCache,
+    PipelineSource source,
+    const gl::ProgramExecutable &glExecutable,
+    vk::PipelineHelper **pipelineOut)
 {
     ASSERT(glExecutable.hasLinkedShaderStage(gl::ShaderType::Compute));
 
@@ -1116,7 +1166,7 @@ angle::Result ProgramExecutableVk::getComputePipeline(ContextVk *contextVk,
 
     vk::ShaderProgramHelper *shaderProgram = mComputeProgramInfo.getShaderProgram();
     ASSERT(shaderProgram);
-    return shaderProgram->getComputePipeline(
+    return shaderProgram->getOrCreateComputePipeline(
         contextVk, &mComputePipelines, pipelineCache, getPipelineLayout(),
         contextVk->getComputePipelineFlags(), source, pipelineOut);
 }

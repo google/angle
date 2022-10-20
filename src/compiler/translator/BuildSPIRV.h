@@ -223,9 +223,7 @@ struct SpirvTypeData
 // are:
 //
 //     RelaxedPrecision: used to implement |lowp| and |mediump|
-//     NoContraction: used to implement |precise|.  TODO: support this.  It requires the precise
-//                    property to be promoted through the nodes in the AST, which currently isn't.
-//                    http://anglebug.com/4889
+//     NoContraction: used to implement |precise|.
 //     Invariant: used to implement |invariant|, which is applied to output variables.
 //     Memory qualifiers: used to implement |coherent, volatile, restrict, readonly, writeonly|,
 //                        which apply to shader storage blocks, variables declared within shader

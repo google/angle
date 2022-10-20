@@ -3006,9 +3006,10 @@ class ShaderProgramHelper : angle::NonCopyable
 
     void setShader(gl::ShaderType shaderType, RefCounted<ShaderAndSerial> *shader);
 
-    // For getting a Pipeline from the pipeline cache.
+    // Create a graphics pipeline and place it in the cache.  Must not be called if the pipeline
+    // exists in cache.
     template <typename PipelineHash>
-    ANGLE_INLINE angle::Result getGraphicsPipeline(
+    ANGLE_INLINE angle::Result createGraphicsPipeline(
         ContextVk *contextVk,
         GraphicsPipelineCache<PipelineHash> *graphicsPipelines,
         PipelineCacheAccess *pipelineCache,
@@ -3020,18 +3021,18 @@ class ShaderProgramHelper : angle::NonCopyable
         const GraphicsPipelineDesc **descPtrOut,
         PipelineHelper **pipelineOut) const
     {
-        return graphicsPipelines->getPipeline(contextVk, pipelineCache, compatibleRenderPass,
-                                              pipelineLayout, mShaders, specConsts, source,
-                                              pipelineDesc, descPtrOut, pipelineOut);
+        return graphicsPipelines->createPipeline(contextVk, pipelineCache, compatibleRenderPass,
+                                                 pipelineLayout, mShaders, specConsts, source,
+                                                 pipelineDesc, descPtrOut, pipelineOut);
     }
 
-    angle::Result getComputePipeline(ContextVk *contextVk,
-                                     ComputePipelineCache *computePipelines,
-                                     PipelineCacheAccess *pipelineCache,
-                                     const PipelineLayout &pipelineLayout,
-                                     ComputePipelineFlags pipelineFlags,
-                                     PipelineSource source,
-                                     PipelineHelper **pipelineOut) const;
+    angle::Result getOrCreateComputePipeline(ContextVk *contextVk,
+                                             ComputePipelineCache *computePipelines,
+                                             PipelineCacheAccess *pipelineCache,
+                                             const PipelineLayout &pipelineLayout,
+                                             ComputePipelineFlags pipelineFlags,
+                                             PipelineSource source,
+                                             PipelineHelper **pipelineOut) const;
 
   private:
     ShaderAndSerialMap mShaders;

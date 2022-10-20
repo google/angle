@@ -2204,36 +2204,26 @@ class GraphicsPipelineCache final : public HasCacheStats<VulkanCacheType::Graphi
 
     void populate(const vk::GraphicsPipelineDesc &desc, vk::Pipeline &&pipeline);
 
-    ANGLE_INLINE angle::Result getPipeline(ContextVk *contextVk,
-                                           PipelineCacheAccess *pipelineCache,
-                                           const vk::RenderPass &compatibleRenderPass,
-                                           const vk::PipelineLayout &pipelineLayout,
-                                           const vk::ShaderAndSerialMap &shaders,
-                                           const vk::SpecializationConstants &specConsts,
-                                           PipelineSource source,
-                                           const vk::GraphicsPipelineDesc &desc,
-                                           const vk::GraphicsPipelineDesc **descPtrOut,
-                                           vk::PipelineHelper **pipelineOut)
+    // Get a pipeline from the cache, if it exists
+    ANGLE_INLINE bool getPipeline(const vk::GraphicsPipelineDesc &desc,
+                                  const vk::GraphicsPipelineDesc **descPtrOut,
+                                  vk::PipelineHelper **pipelineOut)
     {
         auto item = mPayload.find(desc);
-        if (item != mPayload.end())
+        if (item == mPayload.end())
         {
-            *descPtrOut  = &item->first;
-            *pipelineOut = &item->second;
-            mCacheStats.hit();
-            return angle::Result::Continue;
+            return false;
         }
 
-        mCacheStats.missAndIncrementSize();
-        return insertPipeline(contextVk, pipelineCache, compatibleRenderPass, pipelineLayout,
-                              shaders, specConsts, source, desc, descPtrOut, pipelineOut);
+        *descPtrOut  = &item->first;
+        *pipelineOut = &item->second;
+
+        mCacheStats.hit();
+
+        return true;
     }
 
-    // Helper for VulkanPipelineCachePerf that resets the object without destroying any object.
-    void reset() { mPayload.clear(); }
-
-  private:
-    angle::Result insertPipeline(ContextVk *contextVk,
+    angle::Result createPipeline(ContextVk *contextVk,
                                  PipelineCacheAccess *pipelineCache,
                                  const vk::RenderPass &compatibleRenderPass,
                                  const vk::PipelineLayout &pipelineLayout,
@@ -2244,6 +2234,10 @@ class GraphicsPipelineCache final : public HasCacheStats<VulkanCacheType::Graphi
                                  const vk::GraphicsPipelineDesc **descPtrOut,
                                  vk::PipelineHelper **pipelineOut);
 
+    // Helper for VulkanPipelineCachePerf that resets the object without destroying any object.
+    void reset() { mPayload.clear(); }
+
+  private:
     using KeyEqual = typename GraphicsPipelineCacheTypeHelper<Hash>::KeyEqual;
     std::unordered_map<vk::GraphicsPipelineDesc, vk::PipelineHelper, Hash, KeyEqual> mPayload;
 };

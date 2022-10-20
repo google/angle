@@ -129,20 +129,28 @@ class ProgramExecutableVk
         return mCurrentDefaultUniformBufferSerial;
     }
 
+    // Get the graphics pipeline if already created.
     angle::Result getGraphicsPipeline(ContextVk *contextVk,
-                                      gl::PrimitiveMode mode,
-                                      PipelineCacheAccess *pipelineCache,
-                                      PipelineSource source,
+                                      vk::GraphicsPipelineSubset pipelineSubset,
                                       const vk::GraphicsPipelineDesc &desc,
                                       const gl::ProgramExecutable &glExecutable,
                                       const vk::GraphicsPipelineDesc **descPtrOut,
                                       vk::PipelineHelper **pipelineOut);
 
-    angle::Result getComputePipeline(ContextVk *contextVk,
-                                     PipelineCacheAccess *pipelineCache,
-                                     PipelineSource source,
-                                     const gl::ProgramExecutable &glExecutable,
-                                     vk::PipelineHelper **pipelineOut);
+    angle::Result createGraphicsPipeline(ContextVk *contextVk,
+                                         vk::GraphicsPipelineSubset pipelineSubset,
+                                         PipelineCacheAccess *pipelineCache,
+                                         PipelineSource source,
+                                         const vk::GraphicsPipelineDesc &desc,
+                                         const gl::ProgramExecutable &glExecutable,
+                                         const vk::GraphicsPipelineDesc **descPtrOut,
+                                         vk::PipelineHelper **pipelineOut);
+
+    angle::Result getOrCreateComputePipeline(ContextVk *contextVk,
+                                             PipelineCacheAccess *pipelineCache,
+                                             PipelineSource source,
+                                             const gl::ProgramExecutable &glExecutable,
+                                             vk::PipelineHelper **pipelineOut);
 
     const vk::PipelineLayout &getPipelineLayout() const { return mPipelineLayout.get(); }
     angle::Result createPipelineLayout(ContextVk *contextVk,
@@ -300,15 +308,22 @@ class ProgramExecutableVk
                            programInfo, variableInfoMap);
     }
 
-    angle::Result getGraphicsPipelineImpl(ContextVk *contextVk,
-                                          ProgramTransformOptions transformOptions,
-                                          gl::PrimitiveMode mode,
-                                          PipelineCacheAccess *pipelineCache,
-                                          PipelineSource source,
-                                          const vk::GraphicsPipelineDesc &desc,
-                                          const gl::ProgramExecutable &glExecutable,
-                                          const vk::GraphicsPipelineDesc **descPtrOut,
-                                          vk::PipelineHelper **pipelineOut);
+    ProgramTransformOptions getTransformOptions(ContextVk *contextVk,
+                                                const vk::GraphicsPipelineDesc &desc,
+                                                const gl::ProgramExecutable &glExecutable);
+    angle::Result initGraphicsShaderPrograms(ContextVk *contextVk,
+                                             ProgramTransformOptions transformOptions,
+                                             const gl::ProgramExecutable &glExecutable,
+                                             vk::ShaderProgramHelper **shaderProgramOut);
+    angle::Result createGraphicsPipelineImpl(ContextVk *contextVk,
+                                             ProgramTransformOptions transformOptions,
+                                             vk::GraphicsPipelineSubset pipelineSubset,
+                                             PipelineCacheAccess *pipelineCache,
+                                             PipelineSource source,
+                                             const vk::GraphicsPipelineDesc &desc,
+                                             const gl::ProgramExecutable &glExecutable,
+                                             const vk::GraphicsPipelineDesc **descPtrOut,
+                                             vk::PipelineHelper **pipelineOut);
 
     angle::Result resizeUniformBlockMemory(ContextVk *contextVk,
                                            const gl::ProgramExecutable &glExecutable,

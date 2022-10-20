@@ -10209,13 +10209,14 @@ void ShaderProgramHelper::setShader(gl::ShaderType shaderType, RefCounted<Shader
     mShaders[shaderType].set(shader);
 }
 
-angle::Result ShaderProgramHelper::getComputePipeline(ContextVk *contextVk,
-                                                      ComputePipelineCache *computePipelines,
-                                                      PipelineCacheAccess *pipelineCache,
-                                                      const PipelineLayout &pipelineLayout,
-                                                      ComputePipelineFlags pipelineFlags,
-                                                      PipelineSource source,
-                                                      PipelineHelper **pipelineOut) const
+angle::Result ShaderProgramHelper::getOrCreateComputePipeline(
+    ContextVk *contextVk,
+    ComputePipelineCache *computePipelines,
+    PipelineCacheAccess *pipelineCache,
+    const PipelineLayout &pipelineLayout,
+    ComputePipelineFlags pipelineFlags,
+    PipelineSource source,
+    PipelineHelper **pipelineOut) const
 {
     PipelineHelper *computePipeline = &(*computePipelines)[pipelineFlags.bits()];
 
