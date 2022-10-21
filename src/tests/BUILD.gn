@@ -15,8 +15,8 @@ declare_args() {
 }
 
 declare_args() {
-  build_angle_trace_tests =
-      build_angle_trace_perf_tests || checkout_angle_restricted_traces
+  build_angle_trace_tests = is_clang && (build_angle_trace_perf_tests ||
+                                         checkout_angle_restricted_traces)
 }
 
 if (is_android) {

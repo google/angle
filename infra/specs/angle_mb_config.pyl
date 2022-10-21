@@ -62,7 +62,7 @@
     'angle_goma_android_perf_bot': ['angle', 'goma', 'android', 'arm64', 'perf'],
     'angle_goma_debug_bot': ['angle', 'opencl', 'goma', 'debug', 'desktop'],
     'angle_goma_perf_bot': ['angle', 'goma', 'perf'],
-    'angle_goma_release_bot': ['angle', 'opencl', 'goma', 'release', 'desktop'],
+    'angle_goma_release_bot': ['angle', 'capture', 'opencl', 'goma', 'release', 'desktop'],
     'angle_goma_x86_debug_bot': ['angle', 'opencl', 'goma', 'x86', 'debug', 'desktop'],
     'angle_goma_x86_release_bot': ['angle', 'opencl', 'goma', 'x86', 'release', 'desktop'],
     'angle_non_clang_debug_bot': ['angle', 'opencl', 'non_clang', 'debug', 'desktop'],
@@ -93,6 +93,9 @@
     'asan': {
       'gn_args': 'is_asan=true',
     },
+    'capture': {
+      'gn_args': 'angle_with_capture_by_default=true',
+    },
     'debug': {
       'gn_args': 'is_debug=true',
     },
@@ -106,7 +109,7 @@
       'gn_args': 'is_lsan=true',
     },
     'non_clang': {
-      'gn_args': 'is_clang=false build_angle_trace_tests=false',
+      'gn_args': 'is_clang=false',
     },
     'opencl': {
       'gn_args': 'angle_enable_cl=true',
