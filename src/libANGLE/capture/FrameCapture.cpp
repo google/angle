@@ -3357,8 +3357,9 @@ void CaptureFenceSyncResetCalls(const gl::Context *context,
 {
     // Track calls to regenerate a given fence sync
     FenceSyncCalls &fenceSyncRegenCalls = resourceTracker->getFenceSyncRegenCalls();
-    Capture(&fenceSyncRegenCalls[syncID],
-            CaptureFenceSync(replayState, true, sync->getCondition(), sync->getFlags(), syncID));
+    CallCapture fenceSync =
+        CaptureFenceSync(replayState, true, sync->getCondition(), sync->getFlags(), syncID);
+    CaptureCustomFenceSync(fenceSync, fenceSyncRegenCalls[syncID]);
     MaybeCaptureUpdateResourceIDs(context, resourceTracker, &fenceSyncRegenCalls[syncID]);
 }
 
@@ -4096,7 +4097,9 @@ void CaptureShareGroupMidExecutionSetup(
         {
             continue;
         }
-        cap(CaptureFenceSync(replayState, true, sync->getCondition(), sync->getFlags(), syncID));
+        CallCapture fenceSync =
+            CaptureFenceSync(replayState, true, sync->getCondition(), sync->getFlags(), syncID);
+        CaptureCustomFenceSync(fenceSync, *setupCalls);
         CaptureFenceSyncResetCalls(context, replayState, resourceTracker, syncID, sync);
         resourceTracker->getStartingFenceSyncs().insert(syncID);
     }
