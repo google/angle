@@ -409,13 +409,12 @@ def RunTests(test_suite, args, stdoutfile=None, log_output=True):
 
             output = _RunInstrumentationWithTimeout(args, timeout=10 * 60)
 
-            # When listing tests, there may be no output file. Use the same behaviour here
-            # as in the non-Android run function where we allow a missing output file.
-            try:
-                test_output = _ReadDeviceFile(device_test_output_path)
-            except subprocess.CalledProcessError:
-                logging.debug('No test output from process')
+            if '--list-tests' in args:
+                # When listing tests, there may be no output file. We parse stdout anyways.
                 test_output = '{"interrupted": false}'
+            else:
+                test_output = _ReadDeviceFile(device_test_output_path)
+
             if test_output_path:
                 with open(test_output_path, 'wb') as f:
                     f.write(test_output)
