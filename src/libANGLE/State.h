@@ -616,8 +616,8 @@ class State : angle::NonCopyable
     GLuint getPatchVertices() const { return mPatchVertices; }
 
     // GL_ANGLE_shader_pixel_local_storage
-    void setPixelLocalStorageActive(bool active);
-    bool getPixelLocalStorageActive() const { return mPixelLocalStorageActive; }
+    void setPixelLocalStorageActivePlanes(GLuint planes);
+    GLuint getPixelLocalStorageActivePlanes() const { return mPixelLocalStorageActivePlanes; }
 
     // State query functions
     void getBooleanv(GLenum pname, GLboolean *params) const;
@@ -1195,7 +1195,7 @@ class State : angle::NonCopyable
     GLuint mPatchVertices;
 
     // GL_ANGLE_shader_pixel_local_storage
-    bool mPixelLocalStorageActive;
+    GLuint mPixelLocalStorageActivePlanes;
 
     // GLES1 emulation: state specific to GLES1
     GLES1State mGLES1State;

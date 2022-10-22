@@ -161,15 +161,12 @@ class PixelLocalStorage
                          GLsizei n,
                          const GLenum loadops[],
                          const char *cleardata,
-                         Extents plsSize)                     = 0;
-    virtual void onEnd(Context *, GLsizei numActivePLSPlanes) = 0;
-    virtual void onBarrier(Context *)                         = 0;
+                         Extents plsSize) = 0;
+    virtual void onEnd(Context *)         = 0;
+    virtual void onBarrier(Context *)     = 0;
 
   private:
     std::array<PixelLocalStoragePlane, IMPLEMENTATION_MAX_PIXEL_LOCAL_STORAGE_PLANES> mPlanes;
-
-    // "n" from the last call to begin(), or 0 if pixel local storage is not active.
-    GLsizei mNumActivePLSPlanes = 0;
 };
 
 }  // namespace gl

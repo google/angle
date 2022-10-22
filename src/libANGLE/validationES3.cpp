@@ -21,6 +21,7 @@
 #include "libANGLE/VertexArray.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/validationES.h"
+#include "libANGLE/validationES3.h"
 
 using namespace angle;
 
@@ -2429,6 +2430,10 @@ bool ValidateClearBufferiv(const Context *context,
     switch (buffer)
     {
         case GL_COLOR:
+            if (!ValidateDrawBufferIndexIfActivePLS(context, entryPoint, drawbuffer, "drawbuffer"))
+            {
+                return false;
+            }
             if (drawbuffer < 0 || drawbuffer >= context->getCaps().maxDrawBuffers)
             {
                 context->validationError(entryPoint, GL_INVALID_VALUE, kIndexExceedsMaxDrawBuffer);
@@ -2472,6 +2477,10 @@ bool ValidateClearBufferuiv(const Context *context,
     switch (buffer)
     {
         case GL_COLOR:
+            if (!ValidateDrawBufferIndexIfActivePLS(context, entryPoint, drawbuffer, "drawbuffer"))
+            {
+                return false;
+            }
             if (drawbuffer < 0 || drawbuffer >= context->getCaps().maxDrawBuffers)
             {
                 context->validationError(entryPoint, GL_INVALID_VALUE, kIndexExceedsMaxDrawBuffer);
@@ -2506,6 +2515,10 @@ bool ValidateClearBufferfv(const Context *context,
     switch (buffer)
     {
         case GL_COLOR:
+            if (!ValidateDrawBufferIndexIfActivePLS(context, entryPoint, drawbuffer, "drawbuffer"))
+            {
+                return false;
+            }
             if (drawbuffer < 0 || drawbuffer >= context->getCaps().maxDrawBuffers)
             {
                 context->validationError(entryPoint, GL_INVALID_VALUE, kIndexExceedsMaxDrawBuffer);
@@ -5307,5 +5320,30 @@ bool ValidateSampleMaskiANGLE(const Context *context,
     }
 
     return ValidateSampleMaskiBase(context, entryPoint, maskNumber, mask);
+}
+
+bool ValidateDrawBufferIndexIfActivePLS(const Context *context,
+                                        angle::EntryPoint entryPoint,
+                                        GLuint drawBufferIdx,
+                                        const char *argumentName)
+{
+    int numPLSPlanes = context->getState().getPixelLocalStorageActivePlanes();
+    if (numPLSPlanes != 0)
+    {
+        if (drawBufferIdx >= context->getCaps().maxColorAttachmentsWithActivePixelLocalStorage)
+        {
+            context->validationErrorF(entryPoint, GL_INVALID_OPERATION,
+                                      kPLSDrawBufferExceedsAttachmentLimit, argumentName);
+            return false;
+        }
+        if (drawBufferIdx >=
+            context->getCaps().maxCombinedDrawBuffersAndPixelLocalStoragePlanes - numPLSPlanes)
+        {
+            context->validationErrorF(entryPoint, GL_INVALID_OPERATION,
+                                      kPLSDrawBufferExceedsCombinedAttachmentLimit, argumentName);
+            return false;
+        }
+    }
+    return true;
 }
 }  // namespace gl

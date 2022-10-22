@@ -9195,7 +9195,7 @@ void Context::beginPixelLocalStorage(GLsizei planes, const GLenum loadops[], con
     PixelLocalStorage &pls = framebuffer->getPixelLocalStorage(this);
 
     pls.begin(this, planes, loadops, cleardata);
-    mState.setPixelLocalStorageActive(true);
+    mState.setPixelLocalStorageActivePlanes(planes);
 }
 
 void Context::endPixelLocalStorage()
@@ -9205,7 +9205,7 @@ void Context::endPixelLocalStorage()
     PixelLocalStorage &pls = framebuffer->getPixelLocalStorage(this);
 
     pls.end(this);
-    mState.setPixelLocalStorageActive(false);
+    mState.setPixelLocalStorageActivePlanes(0);
 }
 
 void Context::pixelLocalStorageBarrier()

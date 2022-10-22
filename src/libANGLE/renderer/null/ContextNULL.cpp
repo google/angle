@@ -70,6 +70,7 @@ ContextNULL::ContextNULL(const gl::State &state,
     mExtensions.copyCompressedTextureCHROMIUM = true;
     mExtensions.copyTextureCHROMIUM           = true;
     mExtensions.debugMarkerEXT                = true;
+    mExtensions.drawBuffersIndexedOES         = true;
     mExtensions.fenceNV                       = true;
     mExtensions.framebufferBlitANGLE          = true;
     mExtensions.framebufferBlitNV             = true;

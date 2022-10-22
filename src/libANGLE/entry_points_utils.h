@@ -102,6 +102,15 @@ inline int CID(const Context *context)
 {
     return context == nullptr ? 0 : static_cast<int>(context->id().value);
 }
+
+bool GeneratePixelLocalStorageActiveError(const Context *context, angle::EntryPoint entryPoint);
+
+ANGLE_INLINE bool ValidatePixelLocalStorageInactive(const Context *context,
+                                                    angle::EntryPoint entryPoint)
+{
+    return context->getState().getPixelLocalStorageActivePlanes() == 0 ||
+           GeneratePixelLocalStorageActiveError(context, entryPoint);
+}
 }  // namespace gl
 
 namespace egl

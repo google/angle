@@ -9,6 +9,7 @@
 #   NOTE: don't run this script directly. Run scripts/run_code_generation.py.
 
 import sys, os, pprint, json
+import fnmatch
 import registry_xml
 from registry_xml import apis, script_relative, strip_api_prefix, api_enums
 
@@ -50,6 +51,64 @@ INIT_DICT = {
     "clCreateContextFromType": "false",
     "clIcdGetPlatformIDsKHR": "true",
 }
+
+# These are the only entry points that are allowed while pixel local storage is active.
+PLS_ALLOW_LIST = {
+    "ActiveTexture",
+    "BindBuffer",
+    "BindBufferBase",
+    "BindBufferRange",
+    "BindSampler",
+    "BindTexture",
+    "BindVertexArray",
+    "BufferData",
+    "BufferSubData",
+    "CheckFramebufferStatus",
+    "CullFace",
+    "DepthFunc",
+    "DepthMask",
+    "DepthRangef",
+    "Disable",
+    "DisableVertexAttribArray",
+    "DispatchComputeIndirect",
+    "Enable",
+    "EnableClientState",
+    "EnableVertexAttribArray",
+    "EndPixelLocalStorageANGLE",
+    "FrontFace",
+    "MapBufferRange",
+    "PixelLocalStorageBarrierANGLE",
+    "Scissor",
+    "StencilFunc",
+    "StencilFuncSeparate",
+    "StencilMask",
+    "StencilMaskSeparate",
+    "StencilOp",
+    "StencilOpSeparate",
+    "UnmapBuffer",
+    "UseProgram",
+    "ValidateProgram",
+    "Viewport",
+}
+PLS_ALLOW_WILDCARDS = [
+    "BlendEquationSeparatei*",
+    "BlendEquationi*",
+    "BlendFuncSeparatei*",
+    "BlendFunci*",
+    "ClearBuffer*",
+    "ColorMaski*",
+    "Disablei*",
+    "DrawArrays*",
+    "DrawElements*",
+    "DrawRangeElements*",
+    "Enablei*",
+    "Get*",
+    "Is*",
+    "SamplerParameter*",
+    "TexParameter*",
+    "Uniform*",
+    "VertexAttrib*",
+]
 
 TEMPLATE_ENTRY_POINT_HEADER = """\
 // GENERATED FILE - DO NOT EDIT.
@@ -175,7 +234,7 @@ void GL_APIENTRY GL_{name}({params})
     if ({valid_context_check})
     {{{packed_gl_enum_conversions}
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() || Validate{name}({validate_params}));
+        bool isCallValid = (context->skipValidation() || {validation_expression});
         if (isCallValid)
         {{
             context->{name_lower_no_suffix}({internal_params});
@@ -199,7 +258,7 @@ TEMPLATE_GLES_ENTRY_POINT_WITH_RETURN = """\
     if ({valid_context_check})
     {{{packed_gl_enum_conversions}
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() || Validate{name}({validate_params}));
+        bool isCallValid = (context->skipValidation() || {validation_expression});
         if (isCallValid)
         {{
             returnValue = context->{name_lower_no_suffix}({internal_params});
@@ -1274,6 +1333,21 @@ def is_aliasing_excepted(api, cmd_name):
     return api == apis.GLES and cmd_name in ALIASING_EXCEPTIONS
 
 
+def is_allowed_with_active_pixel_local_storage(name):
+    return name in PLS_ALLOW_LIST or any(
+        [fnmatch.fnmatchcase(name, x) for x in PLS_ALLOW_WILDCARDS])
+
+
+def get_validation_expression(cmd_name, entry_point_name, internal_params):
+    name = strip_api_prefix(cmd_name)
+    expr = "Validate{name}({params})".format(
+        name=name, params=", ".join(["context", entry_point_name] + internal_params))
+    if not is_allowed_with_active_pixel_local_storage(name):
+        expr = "(ValidatePixelLocalStorageInactive(context, {entry_point_name}) && {expr})".format(
+            entry_point_name=entry_point_name, expr=expr)
+    return expr
+
+
 def entry_point_export(api):
     if api == apis.CL:
         return ""
@@ -1589,8 +1663,8 @@ def format_entry_point_def(api, command_node, cmd_name, proto, params, cmd_packe
             ", ".join(["context"] + internal_params),
         "egl_capture_params":
             ", ".join(["thread"] + internal_params),
-        "validate_params":
-            ", ".join(["context"] + [entry_point_name] + internal_params),
+        "validation_expression":
+            get_validation_expression(cmd_name, entry_point_name, internal_params),
         "format_params":
             ", ".join(format_params),
         "context_getter":

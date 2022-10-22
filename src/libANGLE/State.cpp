@@ -412,7 +412,7 @@ State::State(const State *shareContextState,
       mLogicOp(LogicalOperation::Copy),
       mMaxShaderCompilerThreads(std::numeric_limits<GLuint>::max()),
       mPatchVertices(3),
-      mPixelLocalStorageActive(false),
+      mPixelLocalStorageActivePlanes(0),
       mOverlay(overlay),
       mNoSimultaneousConstantColorAndAlphaBlendFunc(false),
       mSetBlendIndexedInvoked(false),
@@ -2410,9 +2410,9 @@ void State::setPatchVertices(GLuint value)
     }
 }
 
-void State::setPixelLocalStorageActive(bool active)
+void State::setPixelLocalStorageActivePlanes(GLuint planes)
 {
-    mPixelLocalStorageActive = active;
+    mPixelLocalStorageActivePlanes = planes;
 }
 
 void State::setShadingRate(GLenum rate)
@@ -2541,10 +2541,6 @@ void State::getBooleanv(GLenum pname, GLboolean *params) const
             break;
         case GL_ROBUST_FRAGMENT_SHADER_OUTPUT_ANGLE:
             *params = mExtensions.robustFragmentShaderOutputANGLE ? GL_TRUE : GL_FALSE;
-            break;
-        // GL_ANGLE_shader_pixel_local_storage
-        case GL_PIXEL_LOCAL_STORAGE_ACTIVE_ANGLE:
-            *params = mPixelLocalStorageActive ? GL_TRUE : GL_FALSE;
             break;
         default:
             UNREACHABLE();
@@ -3148,6 +3144,11 @@ angle::Result State::getIntegerv(const Context *context, GLenum pname, GLint *pa
         // GL_QCOM_shading_rate
         case GL_SHADING_RATE_QCOM:
             *params = ToGLenum(mShadingRate);
+            break;
+
+        // GL_ANGLE_shader_pixel_local_storage
+        case GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE:
+            *params = mPixelLocalStorageActivePlanes;
             break;
 
         default:
