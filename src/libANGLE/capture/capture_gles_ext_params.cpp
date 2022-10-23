@@ -4273,11 +4273,20 @@ void CaptureFramebufferPixelLocalClearValueuivANGLE_value(const State &glState,
 
 void CaptureBeginPixelLocalStorageANGLE_loadops(const State &glState,
                                                 bool isCallValid,
-                                                GLsizei planes,
+                                                GLsizei n,
                                                 const GLenum loadops[],
                                                 angle::ParamCapture *paramCapture)
 {
-    CaptureArray(loadops, planes, paramCapture);
+    CaptureArray(loadops, n, paramCapture);
+}
+
+void CaptureEndPixelLocalStorageANGLE_storeops(const State &glState,
+                                               bool isCallValid,
+                                               GLsizei n,
+                                               const GLenum *storeops,
+                                               angle::ParamCapture *paramCapture)
+{
+    CaptureArray(storeops, n, paramCapture);
 }
 
 void CaptureGetFramebufferPixelLocalStorageParameterfvANGLE_params(

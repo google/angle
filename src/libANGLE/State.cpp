@@ -2410,9 +2410,9 @@ void State::setPatchVertices(GLuint value)
     }
 }
 
-void State::setPixelLocalStorageActivePlanes(GLuint planes)
+void State::setPixelLocalStorageActivePlanes(GLsizei n)
 {
-    mPixelLocalStorageActivePlanes = planes;
+    mPixelLocalStorageActivePlanes = n;
 }
 
 void State::setShadingRate(GLenum rate)

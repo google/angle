@@ -61,6 +61,10 @@ class PixelLocalStoragePlane : angle::NonCopyable
         return mMemoryless;
     }
 
+    // Ensures we have an internal backing texture for memoryless planes. In some implementations we
+    // need a backing texture even if the plane is memoryless.
+    void ensureBackingTextureIfMemoryless(Context *, Extents plsSize);
+
     GLenum getInternalformat() const { return mInternalformat; }
 
     // Implements glGetIntegeri_v() for GL_PIXEL_LOCAL_FORMAT_ANGLE,
@@ -74,7 +78,7 @@ class PixelLocalStoragePlane : angle::NonCopyable
     bool getTextureImageExtents(const Context *, Extents *extents) const;
 
     // Attaches this plane to the specified color attachment point on the current draw framebuffer.
-    void attachToDrawFramebuffer(Context *, Extents plsExtents, GLenum colorAttachment);
+    void attachToDrawFramebuffer(Context *, Extents plsExtents, GLenum colorAttachment) const;
 
     // Interface for clearing typed pixel local storage planes.
     class ClearCommands
@@ -92,7 +96,7 @@ class PixelLocalStoragePlane : angle::NonCopyable
     void issueClearCommand(ClearCommands *, int target, GLenum loadop) const;
 
     // Binds this PLS plane to a texture image unit for image load/store shader operations.
-    void bindToImage(Context *, Extents plsExtents, GLuint unit, bool needsR32Packing);
+    void bindToImage(Context *, Extents plsExtents, GLuint unit, bool needsR32Packing) const;
 
     // Low-level access to the backing texture. The plane must not be memoryless or deinitialized.
     const ImageIndex &getTextureImageIndex() const { return mTextureImageIndex; }
@@ -106,12 +110,11 @@ class PixelLocalStoragePlane : angle::NonCopyable
     void getClearValuei(GLint value[4]) const { memcpy(value, mClearValuei.data(), 4 * 4); }
     void getClearValueui(GLuint value[4]) const { memcpy(value, mClearValueui.data(), 4 * 4); }
 
-  private:
-    // Ensures we have an internal backing texture for memoryless planes. In GL, we need a backing
-    // texture even if the plane is memoryless; glInvalidateFramebuffer() will ideally prevent the
-    // driver from writing out data where possible.
-    void ensureBackingIfMemoryless(Context *, Extents plsSize);
+    // True if PLS is currently active and this plane is enabled.
+    bool isActive() const { return mActive; }
+    void markActive(bool active) { mActive = active; }
 
+  private:
     GLenum mInternalformat = GL_NONE;  // GL_NONE if this plane is in a deinitialized state.
     bool mMemoryless       = false;
     TextureID mMemorylessTextureID{};  // We own memoryless backing textures and must delete them.
@@ -122,6 +125,9 @@ class PixelLocalStoragePlane : angle::NonCopyable
     std::array<GLfloat, 4> mClearValuef{};
     std::array<GLint, 4> mClearValuei{};
     std::array<GLuint, 4> mClearValueui{};
+
+    // True if PLS is currently active and this plane is enabled.
+    bool mActive = false;
 };
 
 // Manages a collection of PixelLocalStoragePlanes and applies them to ANGLE's GL state.
@@ -133,7 +139,6 @@ class PixelLocalStorage
   public:
     static std::unique_ptr<PixelLocalStorage> Make(const Context *);
 
-    PixelLocalStorage();
     virtual ~PixelLocalStorage();
 
     // Called when the owning framebuffer is being destroyed.
@@ -144,12 +149,6 @@ class PixelLocalStorage
     void deleteContextObjects(Context *);
 
     const PixelLocalStoragePlane &getPlane(GLint plane) const
-    {
-        ASSERT(0 <= plane && plane < IMPLEMENTATION_MAX_PIXEL_LOCAL_STORAGE_PLANES);
-        return mPlanes[plane];
-    }
-
-    PixelLocalStoragePlane &getPlane(GLint plane)
     {
         ASSERT(0 <= plane && plane < IMPLEMENTATION_MAX_PIXEL_LOCAL_STORAGE_PLANES);
         return mPlanes[plane];
@@ -171,10 +170,21 @@ class PixelLocalStorage
     void setClearValuei(GLint plane, const GLint val[4]) { mPlanes[plane].setClearValuei(val); }
     void setClearValueui(GLint plane, const GLuint val[4]) { mPlanes[plane].setClearValueui(val); }
     void begin(Context *, GLsizei n, const GLenum loadops[]);
-    void end(Context *);
+    void end(Context *, const GLenum storeops[]);
     void barrier(Context *);
 
   protected:
+    // In some implementations we need to allocate backing textures even for memoryless planes.
+    // glInvalidateFramebuffer() will ideally prevent memory transactions with these textures where
+    // possible.
+    enum class MemorylessBackingType : bool
+    {
+        TrueMemoryless,   // No allocations necessary for memoryless planes.
+        InternalTextures  // Allocate internal textures for memoryless planes.
+    };
+
+    PixelLocalStorage(MemorylessBackingType);
+
     // Called when the context is lost or destroyed. Causes the subclass to clear its GL object
     // handles.
     virtual void onContextObjectsLost() = 0;
@@ -185,10 +195,11 @@ class PixelLocalStorage
 
     // ANGLE_shader_pixel_local_storage API.
     virtual void onBegin(Context *, GLsizei n, const GLenum loadops[], Extents plsSize) = 0;
-    virtual void onEnd(Context *)                                                       = 0;
+    virtual void onEnd(Context *, const GLenum storeops[])                              = 0;
     virtual void onBarrier(Context *)                                                   = 0;
 
   private:
+    const MemorylessBackingType mMemorylessBackingType;
     std::array<PixelLocalStoragePlane, IMPLEMENTATION_MAX_PIXEL_LOCAL_STORAGE_PLANES> mPlanes;
 };
 

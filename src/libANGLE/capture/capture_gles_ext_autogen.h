@@ -877,9 +877,12 @@ angle::CallCapture CaptureFramebufferPixelLocalClearValueuivANGLE(const State &g
                                                                   const GLuint *value);
 angle::CallCapture CaptureBeginPixelLocalStorageANGLE(const State &glState,
                                                       bool isCallValid,
-                                                      GLsizei planes,
+                                                      GLsizei n,
                                                       const GLenum *loadops);
-angle::CallCapture CaptureEndPixelLocalStorageANGLE(const State &glState, bool isCallValid);
+angle::CallCapture CaptureEndPixelLocalStorageANGLE(const State &glState,
+                                                    bool isCallValid,
+                                                    GLsizei n,
+                                                    const GLenum *storeops);
 angle::CallCapture CapturePixelLocalStorageBarrierANGLE(const State &glState, bool isCallValid);
 angle::CallCapture CaptureGetFramebufferPixelLocalStorageParameterfvANGLE(const State &glState,
                                                                           bool isCallValid,
@@ -4130,9 +4133,14 @@ void CaptureFramebufferPixelLocalClearValueuivANGLE_value(const State &glState,
                                                           angle::ParamCapture *paramCapture);
 void CaptureBeginPixelLocalStorageANGLE_loadops(const State &glState,
                                                 bool isCallValid,
-                                                GLsizei planes,
+                                                GLsizei n,
                                                 const GLenum *loadops,
                                                 angle::ParamCapture *paramCapture);
+void CaptureEndPixelLocalStorageANGLE_storeops(const State &glState,
+                                               bool isCallValid,
+                                               GLsizei n,
+                                               const GLenum *storeops,
+                                               angle::ParamCapture *paramCapture);
 void CaptureGetFramebufferPixelLocalStorageParameterfvANGLE_params(
     const State &glState,
     bool isCallValid,

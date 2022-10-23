@@ -603,8 +603,8 @@ typedef void (GL_APIENTRYP PFNGLFRAMEBUFFERTEXTUREPIXELLOCALSTORAGEANGLEPROC) (G
 typedef void (GL_APIENTRYP PFNGLFRAMEBUFFERPIXELLOCALCLEARVALUEFVANGLEPROC) (GLint plane, const GLfloat value[4]);
 typedef void (GL_APIENTRYP PFNGLFRAMEBUFFERPIXELLOCALCLEARVALUEIVANGLEPROC) (GLint plane, const GLint value[4]);
 typedef void (GL_APIENTRYP PFNGLFRAMEBUFFERPIXELLOCALCLEARVALUEUIVANGLEPROC) (GLint plane, const GLuint value[4]);
-typedef void (GL_APIENTRYP PFNGLBEGINPIXELLOCALSTORAGEANGLEPROC) (GLsizei planes, const GLenum loadops[]);
-typedef void (GL_APIENTRYP PFNGLENDPIXELLOCALSTORAGEANGLEPROC) (void);
+typedef void (GL_APIENTRYP PFNGLBEGINPIXELLOCALSTORAGEANGLEPROC) (GLsizei n, const GLenum loadops[]);
+typedef void (GL_APIENTRYP PFNGLENDPIXELLOCALSTORAGEANGLEPROC) (GLsizei n, const GLenum storeops[]);
 typedef void (GL_APIENTRYP PFNGLPIXELLOCALSTORAGEBARRIERANGLEPROC) (void);
 typedef void (GL_APIENTRYP PFNGLGETFRAMEBUFFERPIXELLOCALSTORAGEPARAMETERFVANGLEPROC) (GLint plane, GLenum pname, GLfloat* params);
 typedef void (GL_APIENTRYP PFNGLGETFRAMEBUFFERPIXELLOCALSTORAGEPARAMETERIVANGLEPROC) (GLint plane, GLenum pname, GLint* params);
@@ -614,8 +614,8 @@ GL_APICALL void GL_APIENTRY glFramebufferTexturePixelLocalStorageANGLE (GLint pl
 GL_APICALL void GL_APIENTRY glFramebufferPixelLocalClearValuefvANGLE (GLint plane, const GLfloat value[4]);
 GL_APICALL void GL_APIENTRY glFramebufferPixelLocalClearValueivANGLE (GLint plane, const GLint value[4]);
 GL_APICALL void GL_APIENTRY glFramebufferPixelLocalClearValueuivANGLE (GLint plane, const GLuint value[4]);
-GL_APICALL void GL_APIENTRY glBeginPixelLocalStorageANGLE (GLsizei planes, const GLenum loadops[]);
-GL_APICALL void GL_APIENTRY glEndPixelLocalStorageANGLE (void);
+GL_APICALL void GL_APIENTRY glBeginPixelLocalStorageANGLE (GLsizei n, const GLenum loadops[]);
+GL_APICALL void GL_APIENTRY glEndPixelLocalStorageANGLE (GLsizei n, const GLenum storeops[]);
 GL_APICALL void GL_APIENTRY glPixelLocalStorageBarrierANGLE (void);
 GL_APICALL void GL_APIENTRY glGetFramebufferPixelLocalStorageParameterfvANGLE (GLint plane, GLenum pname, GLfloat* params);
 GL_APICALL void GL_APIENTRY glGetFramebufferPixelLocalStorageParameterivANGLE (GLint plane, GLenum pname, GLint* params);

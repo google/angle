@@ -687,7 +687,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     // GL_SHADER_PIXEL_LOCAL_STORAGE_EXT.
     //
     // The implementation's ShPixelLocalStorageType must be "PixelLocalStorageEXT".
-    void drawPixelLocalStorageEXTDisable(const PixelLocalStoragePlane[], const GLenum loadops[]);
+    void drawPixelLocalStorageEXTDisable(const PixelLocalStoragePlane[], const GLenum storeops[]);
 
   private:
     void initializeDefaultResources();

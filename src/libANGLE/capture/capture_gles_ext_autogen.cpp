@@ -4766,19 +4766,18 @@ CallCapture CaptureFramebufferPixelLocalClearValueuivANGLE(const State &glState,
 
 CallCapture CaptureBeginPixelLocalStorageANGLE(const State &glState,
                                                bool isCallValid,
-                                               GLsizei planes,
+                                               GLsizei n,
                                                const GLenum *loadops)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("planes", ParamType::TGLsizei, planes);
+    paramBuffer.addValueParam("n", ParamType::TGLsizei, n);
 
     if (isCallValid)
     {
         ParamCapture loadopsParam("loadops", ParamType::TGLenumConstPointer);
         InitParamValue(ParamType::TGLenumConstPointer, loadops, &loadopsParam.value);
-        CaptureBeginPixelLocalStorageANGLE_loadops(glState, isCallValid, planes, loadops,
-                                                   &loadopsParam);
+        CaptureBeginPixelLocalStorageANGLE_loadops(glState, isCallValid, n, loadops, &loadopsParam);
         paramBuffer.addParam(std::move(loadopsParam));
     }
     else
@@ -4792,9 +4791,30 @@ CallCapture CaptureBeginPixelLocalStorageANGLE(const State &glState,
     return CallCapture(angle::EntryPoint::GLBeginPixelLocalStorageANGLE, std::move(paramBuffer));
 }
 
-CallCapture CaptureEndPixelLocalStorageANGLE(const State &glState, bool isCallValid)
+CallCapture CaptureEndPixelLocalStorageANGLE(const State &glState,
+                                             bool isCallValid,
+                                             GLsizei n,
+                                             const GLenum *storeops)
 {
     ParamBuffer paramBuffer;
+
+    paramBuffer.addValueParam("n", ParamType::TGLsizei, n);
+
+    if (isCallValid)
+    {
+        ParamCapture storeopsParam("storeops", ParamType::TGLenumConstPointer);
+        InitParamValue(ParamType::TGLenumConstPointer, storeops, &storeopsParam.value);
+        CaptureEndPixelLocalStorageANGLE_storeops(glState, isCallValid, n, storeops,
+                                                  &storeopsParam);
+        paramBuffer.addParam(std::move(storeopsParam));
+    }
+    else
+    {
+        ParamCapture storeopsParam("storeops", ParamType::TGLenumConstPointer);
+        InitParamValue(ParamType::TGLenumConstPointer, static_cast<const GLenum *>(nullptr),
+                       &storeopsParam.value);
+        paramBuffer.addParam(std::move(storeopsParam));
+    }
 
     return CallCapture(angle::EntryPoint::GLEndPixelLocalStorageANGLE, std::move(paramBuffer));
 }

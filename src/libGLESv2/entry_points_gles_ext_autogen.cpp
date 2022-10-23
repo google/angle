@@ -3932,12 +3932,11 @@ void GL_APIENTRY GL_FramebufferPixelLocalClearValueuivANGLE(GLint plane, const G
     }
 }
 
-void GL_APIENTRY GL_BeginPixelLocalStorageANGLE(GLsizei planes, const GLenum *loadops)
+void GL_APIENTRY GL_BeginPixelLocalStorageANGLE(GLsizei n, const GLenum *loadops)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLBeginPixelLocalStorageANGLE,
-          "context = %d, planes = %d, loadops = 0x%016" PRIxPTR "", CID(context), planes,
-          (uintptr_t)loadops);
+          "context = %d, n = %d, loadops = 0x%016" PRIxPTR "", CID(context), n, (uintptr_t)loadops);
 
     if (context)
     {
@@ -3947,12 +3946,12 @@ void GL_APIENTRY GL_BeginPixelLocalStorageANGLE(GLsizei planes, const GLenum *lo
              (ValidatePixelLocalStorageInactive(context,
                                                 angle::EntryPoint::GLBeginPixelLocalStorageANGLE) &&
               ValidateBeginPixelLocalStorageANGLE(
-                  context, angle::EntryPoint::GLBeginPixelLocalStorageANGLE, planes, loadops)));
+                  context, angle::EntryPoint::GLBeginPixelLocalStorageANGLE, n, loadops)));
         if (isCallValid)
         {
-            context->beginPixelLocalStorage(planes, loadops);
+            context->beginPixelLocalStorage(n, loadops);
         }
-        ANGLE_CAPTURE_GL(BeginPixelLocalStorageANGLE, isCallValid, context, planes, loadops);
+        ANGLE_CAPTURE_GL(BeginPixelLocalStorageANGLE, isCallValid, context, n, loadops);
     }
     else
     {
@@ -3960,22 +3959,25 @@ void GL_APIENTRY GL_BeginPixelLocalStorageANGLE(GLsizei planes, const GLenum *lo
     }
 }
 
-void GL_APIENTRY GL_EndPixelLocalStorageANGLE()
+void GL_APIENTRY GL_EndPixelLocalStorageANGLE(GLsizei n, const GLenum *storeops)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, GLEndPixelLocalStorageANGLE, "context = %d", CID(context));
+    EVENT(context, GLEndPixelLocalStorageANGLE,
+          "context = %d, n = %d, storeops = 0x%016" PRIxPTR "", CID(context), n,
+          (uintptr_t)storeops);
 
     if (context)
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateEndPixelLocalStorageANGLE(
-                                context, angle::EntryPoint::GLEndPixelLocalStorageANGLE));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateEndPixelLocalStorageANGLE(
+                 context, angle::EntryPoint::GLEndPixelLocalStorageANGLE, n, storeops));
         if (isCallValid)
         {
-            context->endPixelLocalStorage();
+            context->endPixelLocalStorage(n, storeops);
         }
-        ANGLE_CAPTURE_GL(EndPixelLocalStorageANGLE, isCallValid, context);
+        ANGLE_CAPTURE_GL(EndPixelLocalStorageANGLE, isCallValid, context, n, storeops);
     }
     else
     {

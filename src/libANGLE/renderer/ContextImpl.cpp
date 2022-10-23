@@ -98,7 +98,7 @@ angle::Result ContextImpl::drawPixelLocalStorageEXTEnable(gl::Context *,
 
 angle::Result ContextImpl::drawPixelLocalStorageEXTDisable(gl::Context *,
                                                            const gl::PixelLocalStoragePlane[],
-                                                           const GLenum loadops[])
+                                                           const GLenum storeops[])
 {
     ASSERT(getNativePixelLocalStorageType() == ShPixelLocalStorageType::PixelLocalStorageEXT);
     UNREACHABLE();

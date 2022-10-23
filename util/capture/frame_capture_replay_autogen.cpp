@@ -937,7 +937,8 @@ void ReplayTraceFunctionCall(const CallCapture &call, const TraceFunctionMap &cu
             glEndPerfMonitorAMD(captures[0].value.GLuintVal);
             break;
         case angle::EntryPoint::GLEndPixelLocalStorageANGLE:
-            glEndPixelLocalStorageANGLE();
+            glEndPixelLocalStorageANGLE(captures[0].value.GLsizeiVal,
+                                        captures[1].value.GLenumConstPointerVal);
             break;
         case angle::EntryPoint::GLEndQuery:
             glEndQuery(captures[0].value.GLenumVal);

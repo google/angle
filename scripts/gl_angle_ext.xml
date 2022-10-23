@@ -982,11 +982,13 @@
         </command>
         <command>
             <proto>void <name>glBeginPixelLocalStorageANGLE</name></proto>
-            <param><ptype>GLsizei</ptype> <name>planes</name></param>
-            <param len="planes">const <ptype>GLenum</ptype> *<name>loadops</name></param>
+            <param><ptype>GLsizei</ptype> <name>n</name></param>
+            <param len="n">const <ptype>GLenum</ptype> *<name>loadops</name></param>
         </command>
         <command>
             <proto>void <name>glEndPixelLocalStorageANGLE</name></proto>
+            <param><ptype>GLsizei</ptype> <name>n</name></param>
+            <param len="n">const <ptype>GLenum</ptype> *<name>storeops</name></param>
         </command>
         <command>
             <proto>void <name>glPixelLocalStorageBarrierANGLE</name></proto>

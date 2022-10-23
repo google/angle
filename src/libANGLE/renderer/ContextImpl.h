@@ -279,7 +279,7 @@ class ContextImpl : public GLImplFactory
     // The implementation's ShPixelLocalStorageType must be "PixelLocalStorageEXT".
     virtual angle::Result drawPixelLocalStorageEXTDisable(gl::Context *,
                                                           const gl::PixelLocalStoragePlane[],
-                                                          const GLenum loadops[]);
+                                                          const GLenum storeops[]);
 
   protected:
     const gl::State &mState;

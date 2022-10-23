@@ -508,7 +508,7 @@ TEST_P(PixelLocalStorageTest, RGBA8)
                         {FULLSCREEN, {0, 0, 1, 0}, {0, 0, -70, 0}, {0, 0, 100, 0}},
                         {FULLSCREEN, {0, 0, 0, -1}, {128, 0, 0, 500}, {0, 0, 0, 300}}});
 
-    glEndPixelLocalStorageANGLE();
+    glEndPixelLocalStorageANGLE(3, GLenumArray({GL_KEEP, GL_KEEP, GL_KEEP}));
 
     attachTextureToScratchFBO(tex1);
     EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor(255, 255, 255, 0));
@@ -554,7 +554,7 @@ TEST_P(PixelLocalStorageTest, R32)
                         {FULLSCREEN, {-100, 0, 0, 0}, {0x00ff0000, 0, 0, 0}},
                         {FULLSCREEN, {.25, 0, 0, 0}, {0xff000000, 0, 0, 22}}});
 
-    glEndPixelLocalStorageANGLE();
+    glEndPixelLocalStorageANGLE(2, GLenumArray({GL_KEEP, GL_KEEP}));
 
     // These values should be exact matches.
     //
@@ -626,6 +626,7 @@ TEST_P(PixelLocalStorageTest, ClearState)
     glFramebufferTexturePixelLocalStorageANGLE(1, tex8i, 0, 0);
     glFramebufferTexturePixelLocalStorageANGLE(2, tex8ui, 0, 0);
     auto clearLoads = GLenumArray({GL_CLEAR_ANGLE, GL_CLEAR_ANGLE, GL_CLEAR_ANGLE});
+    auto keepStores = GLenumArray({GL_KEEP, GL_KEEP, GL_KEEP});
 
     // Clear values are initially zero.
     EXPECT_PIXEL_LOCAL_CLEAR_VALUE_FLOAT(0, ({0, 0, 0, 0}));
@@ -633,7 +634,7 @@ TEST_P(PixelLocalStorageTest, ClearState)
     EXPECT_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT(2, ({0, 0, 0, 0}));
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
     glBeginPixelLocalStorageANGLE(3, clearLoads);
-    glEndPixelLocalStorageANGLE();
+    glEndPixelLocalStorageANGLE(3, keepStores);
     attachTextureToScratchFBO(tex8f);
     EXPECT_PIXEL_RECT_EQ(0, 0, 1, 1, GLColor(0, 0, 0, 0));
     attachTextureToScratchFBO(tex8i);
@@ -650,7 +651,7 @@ TEST_P(PixelLocalStorageTest, ClearState)
     EXPECT_PIXEL_LOCAL_CLEAR_VALUE_FLOAT(0, ({100.5, 0, 0, 0}));
     EXPECT_PIXEL_LOCAL_CLEAR_VALUE_INT(1, ({-1, 2, -3, 4}));
     EXPECT_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT(2, ({5, 6, 7, 8}));
-    glEndPixelLocalStorageANGLE();
+    glEndPixelLocalStorageANGLE(3, keepStores);
     attachTextureToScratchFBO(tex8f);
     EXPECT_PIXEL_RECT_EQ(0, 0, 1, 1, GLColor(255, 0, 0, 0));
     attachTextureToScratchFBO(tex8i);
@@ -668,7 +669,7 @@ TEST_P(PixelLocalStorageTest, ClearState)
     EXPECT_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT(0, ({0, 0, 0, 0}));
     EXPECT_PIXEL_LOCAL_CLEAR_VALUE_FLOAT(1, ({0, 0, 0, 0}));
     EXPECT_PIXEL_LOCAL_CLEAR_VALUE_INT(2, ({0, 0, 0, 0}));
-    glEndPixelLocalStorageANGLE();
+    glEndPixelLocalStorageANGLE(3, keepStores);
     attachTextureToScratchFBO(tex8ui);
     EXPECT_PIXEL_RECT32UI_EQ(0, 0, 1, 1, GLColor32UI(0, 0, 0, 0));
     attachTextureToScratchFBO(tex8f);
@@ -685,7 +686,7 @@ TEST_P(PixelLocalStorageTest, ClearState)
     EXPECT_PIXEL_LOCAL_CLEAR_VALUE_FLOAT(1, ({-1, 0, 1, 2}));
     EXPECT_PIXEL_LOCAL_CLEAR_VALUE_INT(2, ({-129, -128, 127, 128}));
     glBeginPixelLocalStorageANGLE(3, clearLoads);
-    glEndPixelLocalStorageANGLE();
+    glEndPixelLocalStorageANGLE(3, keepStores);
     attachTextureToScratchFBO(tex8ui);
     EXPECT_PIXEL_RECT32UI_EQ(0, 0, 1, 1, GLColor32UI(254, 255, 255, 255));
     attachTextureToScratchFBO(tex8f);
@@ -703,7 +704,7 @@ TEST_P(PixelLocalStorageTest, ClearState)
     EXPECT_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT(1, ({0, 0, 0, 0}));
     EXPECT_PIXEL_LOCAL_CLEAR_VALUE_FLOAT(2, ({0, 0, 0, 0}));
     glBeginPixelLocalStorageANGLE(3, clearLoads);
-    glEndPixelLocalStorageANGLE();
+    glEndPixelLocalStorageANGLE(3, keepStores);
     attachTextureToScratchFBO(tex8i);
     EXPECT_PIXEL_RECT32I_EQ(0, 0, 1, 1, GLColor32I(0, 0, 0, 0));
     attachTextureToScratchFBO(tex8ui);
@@ -720,7 +721,7 @@ TEST_P(PixelLocalStorageTest, ClearState)
     EXPECT_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT(1, ({0, 0, 999, 999}));
     EXPECT_PIXEL_LOCAL_CLEAR_VALUE_FLOAT(2, ({999, 999, -999, -999}));
     glBeginPixelLocalStorageANGLE(3, clearLoads);
-    glEndPixelLocalStorageANGLE();
+    glEndPixelLocalStorageANGLE(3, keepStores);
     attachTextureToScratchFBO(tex8i);
     EXPECT_PIXEL_RECT32I_EQ(0, 0, 1, 1, GLColor32I(127, 127, -128, -128));
     attachTextureToScratchFBO(tex8ui);
@@ -731,7 +732,7 @@ TEST_P(PixelLocalStorageTest, ClearState)
     // GL_ZERO shouldn't be affected by previous clear colors.
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
     glBeginPixelLocalStorageANGLE(3, GLenumArray({GL_ZERO, GL_ZERO, GL_ZERO}));
-    glEndPixelLocalStorageANGLE();
+    glEndPixelLocalStorageANGLE(3, keepStores);
     attachTextureToScratchFBO(tex8f);
     EXPECT_PIXEL_RECT_EQ(0, 0, 1, 1, GLColor(0, 0, 0, 0));
     attachTextureToScratchFBO(tex8i);
@@ -748,7 +749,7 @@ TEST_P(PixelLocalStorageTest, ClearState)
     EXPECT_PIXEL_LOCAL_CLEAR_VALUE_INT(1, ({-1, 2, -3, 4}));
     EXPECT_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT(2, ({5, 6, 7, 8}));
     glBeginPixelLocalStorageANGLE(3, clearLoads);
-    glEndPixelLocalStorageANGLE();
+    glEndPixelLocalStorageANGLE(3, keepStores);
     attachTextureToScratchFBO(tex8f);
     EXPECT_PIXEL_RECT_EQ(0, 0, 1, 1, GLColor(255, 0, 0, 0));
     attachTextureToScratchFBO(tex8i);
@@ -767,7 +768,7 @@ TEST_P(PixelLocalStorageTest, ClearState)
     EXPECT_PIXEL_LOCAL_CLEAR_VALUE_FLOAT(0, ({0, 0, 0, 0}));
     EXPECT_PIXEL_LOCAL_CLEAR_VALUE_INT(1, ({0, 0, 0, 0}));
     EXPECT_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT(2, ({0, 0, 0, 0}));
-    glEndPixelLocalStorageANGLE();
+    glEndPixelLocalStorageANGLE(3, keepStores);
     attachTextureToScratchFBO(tex8f);
     EXPECT_PIXEL_RECT_EQ(0, 0, 1, 1, GLColor(0, 0, 0, 0));
     attachTextureToScratchFBO(tex8i);
@@ -786,7 +787,7 @@ TEST_P(PixelLocalStorageTest, ClearState)
                                   GLenumArray({GL_CLEAR_ANGLE, GL_DISABLE_ANGLE, GL_CLEAR_ANGLE}));
     EXPECT_PIXEL_LOCAL_CLEAR_VALUE_FLOAT(0, ({100.5f, 0, 0, 0}));
     EXPECT_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT(2, ({0xbaadbeef, 1, 1, 0}));
-    glEndPixelLocalStorageANGLE();
+    glEndPixelLocalStorageANGLE(3, GLenumArray({GL_KEEP, GL_DONT_CARE, GL_KEEP}));
     attachTextureToScratchFBO(tex32f);
     EXPECT_PIXEL_RECT32F_EQ(0, 0, 1, 1, GLColor32F(100.5f, 0, 0, 1));
     attachTextureToScratchFBO(tex32ui);
@@ -838,13 +839,14 @@ TEST_P(PixelLocalStorageTest, LoadOps)
         glFramebufferPixelLocalClearValuefvANGLE(i, ClearF(0, 0, 0, 1));
         loadOps[i] = (i & 1) ? GL_CLEAR_ANGLE : GL_KEEP;
     }
+    std::vector<GLenum> storeOps(MAX_PIXEL_LOCAL_STORAGE_PLANES, GL_KEEP);
     glViewport(0, 0, W, H);
     glDrawBuffers(0, nullptr);
 
     // Draw transparent green into all pls attachments.
     glBeginPixelLocalStorageANGLE(MAX_PIXEL_LOCAL_STORAGE_PLANES, loadOps.data());
     mProgram.drawBoxes({{{FULLSCREEN}, {0, 1, 0, 0}}});
-    glEndPixelLocalStorageANGLE();
+    glEndPixelLocalStorageANGLE(MAX_PIXEL_LOCAL_STORAGE_PLANES, storeOps.data());
 
     for (int i = 0; i < MAX_PIXEL_LOCAL_STORAGE_PLANES; ++i)
     {
@@ -873,7 +875,7 @@ TEST_P(PixelLocalStorageTest, LoadOps)
 
     // Execute a pls pass without a draw.
     glBeginPixelLocalStorageANGLE(MAX_PIXEL_LOCAL_STORAGE_PLANES, loadOps.data());
-    glEndPixelLocalStorageANGLE();
+    glEndPixelLocalStorageANGLE(MAX_PIXEL_LOCAL_STORAGE_PLANES, storeOps.data());
 
     for (int i = 0; i < MAX_PIXEL_LOCAL_STORAGE_PLANES; ++i)
     {
@@ -964,7 +966,7 @@ TEST_P(PixelLocalStorageTest, FragmentReject_stencil)
     GLint zero = 0;
     glClearBufferiv(GL_STENCIL, 0, &zero);
     mProgram.drawBoxes({{{0, 0, FRAG_REJECT_TEST_WIDTH, FRAG_REJECT_TEST_HEIGHT}}});
-    glEndPixelLocalStorageANGLE();
+    glEndPixelLocalStorageANGLE(1, GLenumArray({GL_KEEP}));
     glDisable(GL_STENCIL_TEST);
     attachTextureToScratchFBO(tex);
     EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor::black);
@@ -978,7 +980,7 @@ TEST_P(PixelLocalStorageTest, FragmentReject_stencil)
     glStencilOp(GL_ZERO, GL_ZERO, GL_ZERO);
     mProgram.drawBoxes({FRAG_REJECT_TEST_BOX});
     glDisable(GL_STENCIL_TEST);
-    glEndPixelLocalStorageANGLE();
+    glEndPixelLocalStorageANGLE(1, GLenumArray({GL_KEEP}));
     renderTextureToDefaultFramebuffer(tex);
     EXPECT_PIXEL_RECT_EQ(0, 0, FRAG_REJECT_TEST_WIDTH, FRAG_REJECT_TEST_HEIGHT, GLColor::green);
     EXPECT_PIXEL_RECT_EQ(FRAG_REJECT_TEST_WIDTH, 0, W - FRAG_REJECT_TEST_WIDTH,
@@ -1019,7 +1021,7 @@ TEST_P(PixelLocalStorageTest, FragmentReject_depth)
     glDisable(GL_SCISSOR_TEST);
     glDepthFunc(GL_LESS);
     mProgram.drawBoxes({FRAG_REJECT_TEST_BOX});
-    glEndPixelLocalStorageANGLE();
+    glEndPixelLocalStorageANGLE(1, GLenumArray({GL_KEEP}));
     glDisable(GL_DEPTH_TEST);
 
     renderTextureToDefaultFramebuffer(tex);
@@ -1049,7 +1051,7 @@ TEST_P(PixelLocalStorageTest, FragmentReject_viewport)
     glBeginPixelLocalStorageANGLE(1, GLenumArray({GL_CLEAR_ANGLE}));
     glViewport(0, 0, FRAG_REJECT_TEST_WIDTH, FRAG_REJECT_TEST_HEIGHT);
     mProgram.drawBoxes({FRAG_REJECT_TEST_BOX});
-    glEndPixelLocalStorageANGLE();
+    glEndPixelLocalStorageANGLE(1, GLenumArray({GL_KEEP}));
     glViewport(0, 0, W, H);
 
     renderTextureToDefaultFramebuffer(tex);
@@ -1117,7 +1119,7 @@ TEST_P(PixelLocalStorageTest, ForgetBarrier)
     mProgram.drawBoxes(boxesA_100, UseBarriers::No);
     glPixelLocalStorageBarrierANGLE();
     mProgram.drawBoxes(boxesB_7, UseBarriers::No);
-    glEndPixelLocalStorageANGLE();
+    glEndPixelLocalStorageANGLE(1, GLenumArray({GL_KEEP}));
 
     attachTextureToScratchFBO(tex);
     EXPECT_PIXEL_RECT32F_EQ(0, 0, W, H, GLColor32F(211, 0, 0, 1));
@@ -1136,7 +1138,7 @@ TEST_P(PixelLocalStorageTest, ForgetBarrier)
     mProgram.drawBoxes(boxesA_100, UseBarriers::No);
     // OOPS! We forgot to insert a barrier!
     mProgram.drawBoxes(boxesB_7, UseBarriers::No);
-    glEndPixelLocalStorageANGLE();
+    glEndPixelLocalStorageANGLE(1, GLenumArray({GL_KEEP}));
 
     float pixels[H * W * 4];
     attachTextureToScratchFBO(tex);
@@ -1223,7 +1225,7 @@ TEST_P(PixelLocalStorageTest, MemorylessStorage)
     transferToTextureProgram.bind();
     transferToTextureProgram.drawBoxes({{FULLSCREEN}});
 
-    glEndPixelLocalStorageANGLE();
+    glEndPixelLocalStorageANGLE(2, GLenumArray({GL_KEEP, GL_DONT_CARE}));
 
     attachTextureToScratchFBO(tex);
     EXPECT_PIXEL_RECT_EQ(0, 60, W, H - 60, GLColor(0, 0, 0, 255));
@@ -1316,7 +1318,8 @@ TEST_P(PixelLocalStorageTest, MaxCombinedDrawBuffersAndPLSPlanes)
         glBeginPixelLocalStorageANGLE(numPLSPlanes,
                                       std::vector<GLenum>(numPLSPlanes, GL_ZERO).data());
         mProgram.drawBoxes({{FULLSCREEN, {255, 254, 253, 252}, {0, 1, 2, 3}}});
-        glEndPixelLocalStorageANGLE();
+        glEndPixelLocalStorageANGLE(numPLSPlanes,
+                                    std::vector<GLenum>(numPLSPlanes, GL_KEEP).data());
 
         for (int i = 0; i < numPLSPlanes; ++i)
         {
@@ -1407,7 +1410,7 @@ TEST_P(PixelLocalStorageTest, LoadOnly)
     pass3.bind();
     pass3.drawBoxes({{FULLSCREEN}});
 
-    glEndPixelLocalStorageANGLE();
+    glEndPixelLocalStorageANGLE(2, GLenumArray({GL_DONT_CARE, GL_KEEP}));
 
     attachTextureToScratchFBO(tex);
     EXPECT_PIXEL_RECT_EQ(0, 0, 64, 64, GLColor(255, 255, 255, 255));
@@ -1454,7 +1457,9 @@ TEST_P(PixelLocalStorageTest, LoadOnly)
 
     mProgram.drawBoxes({{FULLSCREEN}});
 
-    glEndPixelLocalStorageANGLE();
+    int n;
+    glGetIntegerv(GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE, &n);
+    glEndPixelLocalStorageANGLE(n, GLenumArray({GL_DONT_CARE, GL_KEEP, GL_KEEP}));
 
     // Ensure "tex" was properly read in the shader.
     if (MAX_COLOR_ATTACHMENTS_WITH_ACTIVE_PIXEL_LOCAL_STORAGE == 0)
@@ -1510,7 +1515,7 @@ TEST_P(PixelLocalStorageTest, LoadAfterStore)
 
     glBeginPixelLocalStorageANGLE(1, GLenumArray({GL_ZERO}));
     mProgram.drawBoxes({{FULLSCREEN}});
-    glEndPixelLocalStorageANGLE();
+    glEndPixelLocalStorageANGLE(1, GLenumArray({GL_KEEP}));
 
     attachTextureToScratchFBO(tex);
     EXPECT_PIXEL_RECT32UI_EQ(0, 0, W, H, GLColor32UI(233, 144, 89, 55));  // fib(13, 12, 11, 10)
@@ -1568,8 +1573,12 @@ TEST_P(PixelLocalStorageTest, LoadAfterStore)
 
         glBeginPixelLocalStorageANGLE(3, GLenumArray({GL_ZERO, GL_ZERO, GL_DONT_CARE}));
     }
+
     mProgram.drawBoxes({{FULLSCREEN}});
-    glEndPixelLocalStorageANGLE();
+
+    int n;
+    glGetIntegerv(GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE, &n);
+    glEndPixelLocalStorageANGLE(n, GLenumArray({GL_DONT_CARE, GL_DONT_CARE, GL_KEEP}));
 
     if (MAX_COLOR_ATTACHMENTS_WITH_ACTIVE_PIXEL_LOCAL_STORAGE == 0)
     {
@@ -1633,7 +1642,7 @@ TEST_P(PixelLocalStorageTest, FunctionArguments)
     glFramebufferPixelLocalClearValuefvANGLE(2, ClearF(1, 0, 0, 1));
     glBeginPixelLocalStorageANGLE(3, GLenumArray({GL_ZERO, GL_CLEAR_ANGLE, GL_CLEAR_ANGLE}));
     mProgram.drawBoxes({{FULLSCREEN}});
-    glEndPixelLocalStorageANGLE();
+    glEndPixelLocalStorageANGLE(3, GLenumArray({GL_KEEP, GL_DONT_CARE, GL_DONT_CARE}));
 
     attachTextureToScratchFBO(dst);
     EXPECT_PIXEL_RECT_EQ(0, 0, 25, H, GLColor(0, 255, 255, 0));
@@ -1740,7 +1749,7 @@ TEST_P(PixelLocalStorageTest, Coherency)
     {
         mProgram.drawBoxes(boxes);
     }
-    glEndPixelLocalStorageANGLE();
+    glEndPixelLocalStorageANGLE(2, GLenumArray({GL_KEEP, GL_DONT_CARE}));
 
     attachTextureToScratchFBO(tex);
     std::vector<uint8_t> actual(H * W * 4);
@@ -1794,7 +1803,7 @@ TEST_P(PixelLocalStorageTest, MipMapLevels)
         mProgram.drawBoxes({{{0, 0, (float)levelWidth - 3, (float)levelHeight}, {0, 0, 1, 0}},
                             {{0, 0, (float)levelWidth - 2, (float)levelHeight}, {0, 1, 0, 0}},
                             {{0, 0, (float)levelWidth - 1, (float)levelHeight}, {1, 0, 0, 0}}});
-        glEndPixelLocalStorageANGLE();
+        glEndPixelLocalStorageANGLE(1, GLenumArray({GL_KEEP}));
         attachTextureToScratchFBO(tex, level);
         EXPECT_PIXEL_RECT_EQ(0, 0, levelWidth - 3, levelHeight, GLColor::white);
         EXPECT_PIXEL_RECT_EQ(levelWidth - 3, 0, 1, levelHeight, GLColor::yellow);
@@ -1880,7 +1889,8 @@ void PixelLocalStorageTest::doStateRestorationTest()
     glFramebufferPixelLocalClearValuefvANGLE(2, ClearF(.1, .2, .3, .4));
     glBeginPixelLocalStorageANGLE(4, GLenumArray({GL_ZERO, GL_KEEP, GL_CLEAR_ANGLE, GL_DONT_CARE}));
     glPixelLocalStorageBarrierANGLE();
-    glEndPixelLocalStorageANGLE();
+    glEndPixelLocalStorageANGLE(4,
+                                GLenumArray({GL_DONT_CARE, GL_KEEP, GL_DONT_CARE, GL_DONT_CARE}));
 
     // Check state.
     GLint textureBinding2D;
@@ -2052,7 +2062,7 @@ void PixelLocalStorageTest::doDrawStateTest()
 
     // Store PLS to the texture. This should work again even though the blocking draw state was
     // synced for the previous draw.
-    glEndPixelLocalStorageANGLE();
+    glEndPixelLocalStorageANGLE(1, GLenumArray({GL_KEEP}));
 
     attachTextureToScratchFBO(tex);
     EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor(0, 255, 0, 255));
@@ -2163,7 +2173,10 @@ TEST_P(PixelLocalStorageTest, BlendAndColorMask)
     }
 
     mProgram.drawBoxes({{FULLSCREEN}});
-    glEndPixelLocalStorageANGLE();
+
+    int n;
+    glGetIntegerv(GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE, &n);
+    glEndPixelLocalStorageANGLE(n, GLenumArray({GL_KEEP, GL_KEEP, GL_KEEP, GL_KEEP}));
 
     attachTextureToScratchFBO(tex1);
     EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor::red);
@@ -2214,7 +2227,7 @@ TEST_P(PixelLocalStorageTest, ParallelFramebufferFetch)
     // Swap pls and fbfetch.
     mProgram.drawBoxes({{FULLSCREEN}});
 
-    glEndPixelLocalStorageANGLE();
+    glEndPixelLocalStorageANGLE(1, GLenumArray({GL_KEEP}));
 
     EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor::green);
 
@@ -2603,7 +2616,8 @@ TEST_P(PixelLocalStorageValidationTest, FramebufferMemorylessPixelLocalStorageAN
         glFramebufferMemorylessPixelLocalStorageANGLE(3, GL_R32UI);
         EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
         EXPECT_GL_SINGLE_ERROR_MSG("Operation not permitted while pixel local storage is active.");
-        glEndPixelLocalStorageANGLE();
+        // The store operation is ignored if its plane is memoryless or disabled.
+        glEndPixelLocalStorageANGLE(2, GLenumArray({GL_KEEP, GL_KEEP}));
         glFramebufferTexturePixelLocalStorageANGLE(1, 0, 0, 0);
     }
 
@@ -2723,7 +2737,8 @@ TEST_P(PixelLocalStorageValidationTest, FramebufferTexturePixelLocalStorageANGLE
         glFramebufferTexturePixelLocalStorageANGLE(0, tmp, 0, 0);
         EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
         EXPECT_GL_SINGLE_ERROR_MSG("Operation not permitted while pixel local storage is active.");
-        glEndPixelLocalStorageANGLE();
+        // The store operation is ignored if its plane is memoryless or disabled.
+        glEndPixelLocalStorageANGLE(2, GLenumArray({GL_KEEP, GL_DONT_CARE}));
         glFramebufferTexturePixelLocalStorageANGLE(1, 0, 0, 0);
     }
 
@@ -2947,7 +2962,7 @@ TEST_P(PixelLocalStorageValidationTest, glFramebufferPixelLocalClearValuesANGLE)
     EXPECT_GL_SINGLE_ERROR_MSG("Operation not permitted while pixel local storage is active.");
 
     ASSERT_GL_INTEGER(GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE, 1);
-    glEndPixelLocalStorageANGLE();
+    glEndPixelLocalStorageANGLE(1, GLenumArray({GL_KEEP}));
     ASSERT_GL_INTEGER(GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE, 0);
 
     ASSERT_GL_NO_ERROR();
@@ -2979,7 +2994,7 @@ TEST_P(PixelLocalStorageValidationTest, BeginPixelLocalStorageANGLE_context_stat
     EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
     EXPECT_GL_SINGLE_ERROR_MSG("Operation not permitted while pixel local storage is active.");
     ASSERT_GL_INTEGER(GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE, 1);
-    glEndPixelLocalStorageANGLE();
+    glEndPixelLocalStorageANGLE(1, GLenumArray({GL_DONT_CARE}));
     EXPECT_GL_NO_ERROR();
     ASSERT_GL_INTEGER(GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE, 0);
 
@@ -3046,8 +3061,7 @@ TEST_P(PixelLocalStorageValidationTest, BeginPixelLocalStorageANGLE_framebuffer_
     PLSTestTexture pls0(GL_RGBA8, 100, 100);
     glFramebufferTexturePixelLocalStorageANGLE(0, pls0, 0, 0);
 
-    // INVALID_VALUE is generated if <planes> < 1 or <planes> >
-    // MAX_PIXEL_LOCAL_STORAGE_PLANES_ANGLE.
+    // INVALID_VALUE is generated if <n> < 1 or <n> > MAX_PIXEL_LOCAL_STORAGE_PLANES_ANGLE.
     glBeginPixelLocalStorageANGLE(0, nullptr);
     EXPECT_GL_SINGLE_ERROR(GL_INVALID_VALUE);
     EXPECT_GL_SINGLE_ERROR_MSG("Planes must be greater than 0.");
@@ -3087,9 +3101,7 @@ TEST_P(PixelLocalStorageValidationTest, BeginPixelLocalStorageANGLE_framebuffer_
     // INVALID_FRAMEBUFFER_OPERATION is generated if the draw framebuffer has an image attached to
     // any color attachment point on or after:
     //
-    //   COLOR_ATTACHMENT0 +
-    //   MAX_COMBINED_DRAW_BUFFERS_AND_PIXEL_LOCAL_STORAGE_PLANES_ANGLE -
-    //   <planes>
+    //   COLOR_ATTACHMENT0 + MAX_COMBINED_DRAW_BUFFERS_AND_PIXEL_LOCAL_STORAGE_PLANES_ANGLE - <n>
     //
     int maxColorAttachmentsWithMaxPLSPlanes =
         MAX_COMBINED_DRAW_BUFFERS_AND_PIXEL_LOCAL_STORAGE_PLANES - MAX_PIXEL_LOCAL_STORAGE_PLANES;
@@ -3108,7 +3120,7 @@ TEST_P(PixelLocalStorageValidationTest, BeginPixelLocalStorageANGLE_framebuffer_
             EXPECT_GL_SINGLE_ERROR_MSG(
                 "Framebuffer cannot have images attached to color attachment points on or after "
                 "COLOR_ATTACHMENT0 + "
-                "MAX_COMBINED_DRAW_BUFFERS_AND_PIXEL_LOCAL_STORAGE_PLANES_ANGLE - <planes>.");
+                "MAX_COMBINED_DRAW_BUFFERS_AND_PIXEL_LOCAL_STORAGE_PLANES_ANGLE - <n>.");
             ASSERT_GL_INTEGER(GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE, 0);
         }
     }
@@ -3127,29 +3139,29 @@ TEST_P(PixelLocalStorageValidationTest, BeginPixelLocalStorageANGLE_loadops)
     EXPECT_GL_SINGLE_ERROR(GL_INVALID_VALUE);
     EXPECT_GL_SINGLE_ERROR_MSG("loadops cannot null.");
 
-    // INVALID_ENUM is generated if <loadops>[0..<planes>-1] is not one of the Load Operations
-    // enumerated in Table X.1.
+    // INVALID_ENUM is generated if <loadops>[0..<n>-1] is not one of the Load Operations enumerated
+    // in Table X.1.
     {
         glBeginPixelLocalStorageANGLE(1, GLenumArray({GL_REPLACE}));
 
         EXPECT_GL_SINGLE_ERROR(GL_INVALID_ENUM);
-        EXPECT_GL_SINGLE_ERROR_MSG("Invalid pixel local storage Load Operation.");
+        EXPECT_GL_SINGLE_ERROR_MSG("Invalid pixel local storage Load Operation: 0x1E01.");
         ASSERT_GL_INTEGER(GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE, 0);
 
         std::vector<GLenum> loadops(MAX_PIXEL_LOCAL_STORAGE_PLANES, GL_DISABLE_ANGLE);
         loadops.back() = GL_SCISSOR_BOX;
         glBeginPixelLocalStorageANGLE(MAX_PIXEL_LOCAL_STORAGE_PLANES, loadops.data());
         EXPECT_GL_SINGLE_ERROR(GL_INVALID_ENUM);
-        EXPECT_GL_SINGLE_ERROR_MSG("Invalid pixel local storage Load Operation.");
+        EXPECT_GL_SINGLE_ERROR_MSG("Invalid pixel local storage Load Operation: 0x0C10.");
         ASSERT_GL_INTEGER(GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE, 0);
     }
 
-    // INVALID_OPERATION is generated if <loadops>[0..<planes>-1] is not DISABLE_ANGLE, and the
-    // pixel local storage plane at that same index is is in a deinitialized state.
+    // INVALID_OPERATION is generated if <loadops>[0..<n>-1] is not DISABLE_ANGLE, and the pixel
+    // local storage plane at that same index is is in a deinitialized state.
     {
         glBeginPixelLocalStorageANGLE(1, GLenumArray({GL_CLEAR_ANGLE}));
         EXPECT_GL_NO_ERROR();
-        glEndPixelLocalStorageANGLE();
+        glEndPixelLocalStorageANGLE(1, GLenumArray({GL_DONT_CARE}));
         EXPECT_GL_NO_ERROR();
 
         glBeginPixelLocalStorageANGLE(2, GLenumArray({GL_CLEAR_ANGLE, GL_DONT_CARE}));
@@ -3170,7 +3182,7 @@ TEST_P(PixelLocalStorageValidationTest, BeginPixelLocalStorageANGLE_loadops)
         glFramebufferTexturePixelLocalStorageANGLE(0, pls0, 0, 0);
         glBeginPixelLocalStorageANGLE(1, GLenumArray({GL_ZERO}));
         EXPECT_GL_NO_ERROR();
-        glEndPixelLocalStorageANGLE();
+        glEndPixelLocalStorageANGLE(1, GLenumArray({GL_DONT_CARE}));
         EXPECT_GL_NO_ERROR();
 
         // If <internalformat> is NONE, the pixel local storage plane at index <plane> is
@@ -3183,8 +3195,8 @@ TEST_P(PixelLocalStorageValidationTest, BeginPixelLocalStorageANGLE_loadops)
         ASSERT_GL_INTEGER(GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE, 0);
     }
 
-    // INVALID_OPERATION is generated if <loadops>[0..<planes>-1] is KEEP and the pixel local
-    // storage plane at that same index is memoryless.
+    // INVALID_OPERATION is generated if <loadops>[0..<n>-1] is KEEP and the pixel local storage
+    // plane at that same index is memoryless.
     glFramebufferMemorylessPixelLocalStorageANGLE(0, GL_RGBA8);
     glBeginPixelLocalStorageANGLE(1, GLenumArray({GL_KEEP}));
     EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
@@ -3215,7 +3227,7 @@ TEST_P(PixelLocalStorageValidationTest, BeginPixelLocalStorageANGLE_pls_planes)
         // Disabling the mismatched size plane is fine.
         glBeginPixelLocalStorageANGLE(3, GLenumArray({GL_KEEP, GL_DISABLE_ANGLE, GL_KEEP}));
         EXPECT_GL_NO_ERROR();
-        glEndPixelLocalStorageANGLE();
+        glEndPixelLocalStorageANGLE(3, GLenumArray({GL_DONT_CARE, GL_KEEP, GL_DONT_CARE}));
         EXPECT_GL_NO_ERROR();
 
         // Enabling the mismatched size plane errors.
@@ -3228,7 +3240,7 @@ TEST_P(PixelLocalStorageValidationTest, BeginPixelLocalStorageANGLE_pls_planes)
         pls1.reset();
         glBeginPixelLocalStorageANGLE(3, GLenumArray({GL_KEEP, GL_ZERO, GL_KEEP}));
         EXPECT_GL_NO_ERROR();
-        glEndPixelLocalStorageANGLE();
+        glEndPixelLocalStorageANGLE(3, GLenumArray({GL_KEEP, GL_KEEP, GL_KEEP}));
         EXPECT_GL_NO_ERROR();
 
         ASSERT_GL_INTEGER(GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE, 0);
@@ -3262,7 +3274,7 @@ TEST_P(PixelLocalStorageValidationTest, BeginPixelLocalStorageANGLE_pls_planes)
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, rt0, 0);
         glBeginPixelLocalStorageANGLE(2, GLenumArray({GL_KEEP, GL_CLEAR_ANGLE}));
         EXPECT_GL_NO_ERROR();
-        glEndPixelLocalStorageANGLE();
+        glEndPixelLocalStorageANGLE(2, GLenumArray({GL_KEEP, GL_DONT_CARE}));
 
         ASSERT_GL_INTEGER(GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE, 0);
     }
@@ -3276,8 +3288,7 @@ TEST_P(PixelLocalStorageValidationTest, BeginPixelLocalStorageANGLE_pls_planes)
         EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
         EXPECT_GL_SINGLE_ERROR_MSG(
             "Draw framebuffer has no attachments and no enabled, texture-backed pixel local "
-            "storage "
-            "planes.");
+            "storage planes.");
         ASSERT_GL_INTEGER(GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE, 0);
 
         glFramebufferMemorylessPixelLocalStorageANGLE(0, GL_RGBA8);
@@ -3285,8 +3296,7 @@ TEST_P(PixelLocalStorageValidationTest, BeginPixelLocalStorageANGLE_pls_planes)
         EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
         EXPECT_GL_SINGLE_ERROR_MSG(
             "Draw framebuffer has no attachments and no enabled, texture-backed pixel local "
-            "storage "
-            "planes.");
+            "storage planes.");
         ASSERT_GL_INTEGER(GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE, 0);
     }
 }
@@ -3308,7 +3318,7 @@ TEST_P(PixelLocalStorageValidationTest, BeginPixelLocalStorageANGLE_pls_planes)
 TEST_P(PixelLocalStorageValidationTest, EndAndBarrierANGLE)
 {
     // INVALID_OPERATION is generated if PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE is zero.
-    glEndPixelLocalStorageANGLE();
+    glEndPixelLocalStorageANGLE(0, nullptr);
     EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
     EXPECT_GL_SINGLE_ERROR_MSG("Pixel local storage is not active.");
     ASSERT_GL_INTEGER(GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE, 0);
@@ -3322,7 +3332,7 @@ TEST_P(PixelLocalStorageValidationTest, EndAndBarrierANGLE)
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
     ASSERT_GL_INTEGER(GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE, 0);
 
-    glEndPixelLocalStorageANGLE();
+    glEndPixelLocalStorageANGLE(1, nullptr);
     EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
     EXPECT_GL_SINGLE_ERROR_MSG("Pixel local storage is not active.");
 
@@ -3339,7 +3349,7 @@ TEST_P(PixelLocalStorageValidationTest, EndAndBarrierANGLE)
     EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
     EXPECT_GL_SINGLE_ERROR_MSG("Pixel local storage is not active.");
 
-    glEndPixelLocalStorageANGLE();
+    glEndPixelLocalStorageANGLE(2, nullptr);
     EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
     EXPECT_GL_SINGLE_ERROR_MSG("Pixel local storage is not active.");
 
@@ -3358,19 +3368,59 @@ TEST_P(PixelLocalStorageValidationTest, EndAndBarrierANGLE)
     glPixelLocalStorageBarrierANGLE();
     EXPECT_GL_NO_ERROR();
 
-    glEndPixelLocalStorageANGLE();
+    glEndPixelLocalStorageANGLE(
+        MAX_PIXEL_LOCAL_STORAGE_PLANES,
+        std::vector<GLenum>(MAX_PIXEL_LOCAL_STORAGE_PLANES, GL_DONT_CARE).data());
     EXPECT_GL_NO_ERROR();
 
     ASSERT_GL_INTEGER(GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE, 0);
     EXPECT_GL_NO_ERROR();
 
-    glEndPixelLocalStorageANGLE();
+    glEndPixelLocalStorageANGLE(0, nullptr);
     EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
     EXPECT_GL_SINGLE_ERROR_MSG("Pixel local storage is not active.");
 
     glPixelLocalStorageBarrierANGLE();
     EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
     EXPECT_GL_SINGLE_ERROR_MSG("Pixel local storage is not active.");
+
+    ASSERT_GL_NO_ERROR();
+
+    // INVALID_VALUE is generated if <n> != PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE.
+    glBeginPixelLocalStorageANGLE(2, GLenumArray({GL_KEEP, GL_DISABLE_ANGLE}));
+    ASSERT_GL_NO_ERROR();
+
+    glEndPixelLocalStorageANGLE(3, GLenumArray({GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE}));
+    EXPECT_GL_SINGLE_ERROR(GL_INVALID_VALUE);
+    EXPECT_GL_SINGLE_ERROR_MSG("<n> != ACTIVE_PIXEL_LOCAL_STORAGE_PLANES_ANGLE");
+
+    glEndPixelLocalStorageANGLE(1, GLenumArray({GL_DONT_CARE}));
+    EXPECT_GL_SINGLE_ERROR(GL_INVALID_VALUE);
+    EXPECT_GL_SINGLE_ERROR_MSG("<n> != ACTIVE_PIXEL_LOCAL_STORAGE_PLANES_ANGLE");
+
+    glEndPixelLocalStorageANGLE(2, GLenumArray({GL_DONT_CARE, GL_DONT_CARE}));
+    ASSERT_GL_NO_ERROR();
+
+    // INVALID_ENUM is generated if <storeops>[0..PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE-1] is not
+    // one of the Store Operations enumerated in Table X.2.
+    glBeginPixelLocalStorageANGLE(3, GLenumArray({GL_KEEP, GL_DISABLE_ANGLE, GL_CLEAR_ANGLE}));
+    ASSERT_GL_NO_ERROR();
+
+    glEndPixelLocalStorageANGLE(3, GLenumArray({GL_CLEAR_ANGLE, GL_DONT_CARE, GL_KEEP}));
+    EXPECT_GL_SINGLE_ERROR(GL_INVALID_ENUM);
+    EXPECT_GL_SINGLE_ERROR_MSG("Invalid pixel local storage Store Operation: 0x96E4.");
+
+    glEndPixelLocalStorageANGLE(3, GLenumArray({GL_DONT_CARE, GL_DISABLE_ANGLE, GL_KEEP}));
+    EXPECT_GL_SINGLE_ERROR(GL_INVALID_ENUM);
+    EXPECT_GL_SINGLE_ERROR_MSG("Invalid pixel local storage Store Operation: 0x96E5.");
+
+    glEndPixelLocalStorageANGLE(3, GLenumArray({GL_DONT_CARE, GL_KEEP, GL_ZERO}));
+    EXPECT_GL_SINGLE_ERROR(GL_INVALID_ENUM);
+    EXPECT_GL_SINGLE_ERROR_MSG("Invalid pixel local storage Store Operation: 0x0000.");
+
+    glEndPixelLocalStorageANGLE(3, GLenumArray({GL_DONT_CARE, GL_SCISSOR_BOX, GL_KEEP}));
+    EXPECT_GL_SINGLE_ERROR(GL_INVALID_ENUM);
+    EXPECT_GL_SINGLE_ERROR_MSG("Invalid pixel local storage Store Operation: 0x0C10.");
 
     ASSERT_GL_NO_ERROR();
 }

@@ -9235,23 +9235,23 @@ void Context::framebufferPixelLocalClearValueuiv(GLint plane, const GLuint value
     pls.setClearValueui(plane, value);
 }
 
-void Context::beginPixelLocalStorage(GLsizei planes, const GLenum loadops[])
+void Context::beginPixelLocalStorage(GLsizei n, const GLenum loadops[])
 {
     Framebuffer *framebuffer = mState.getDrawFramebuffer();
     ASSERT(framebuffer);
     PixelLocalStorage &pls = framebuffer->getPixelLocalStorage(this);
 
-    pls.begin(this, planes, loadops);
-    mState.setPixelLocalStorageActivePlanes(planes);
+    pls.begin(this, n, loadops);
+    mState.setPixelLocalStorageActivePlanes(n);
 }
 
-void Context::endPixelLocalStorage()
+void Context::endPixelLocalStorage(GLsizei n, const GLenum storeops[])
 {
     Framebuffer *framebuffer = mState.getDrawFramebuffer();
     ASSERT(framebuffer);
     PixelLocalStorage &pls = framebuffer->getPixelLocalStorage(this);
 
-    pls.end(this);
+    pls.end(this, storeops);
     mState.setPixelLocalStorageActivePlanes(0);
 }
 
@@ -10033,13 +10033,13 @@ void Context::drawPixelLocalStorageEXTEnable(GLsizei n,
 }
 
 void Context::drawPixelLocalStorageEXTDisable(const PixelLocalStoragePlane planes[],
-                                              const GLenum loadops[])
+                                              const GLenum storeops[])
 {
     ASSERT(mImplementation->getNativePixelLocalStorageType() ==
            ShPixelLocalStorageType::PixelLocalStorageEXT);
     ANGLE_CONTEXT_TRY(syncState(mPixelLocalStorageEXTEnableDisableDirtyBits,
                                 mPixelLocalStorageEXTEnableDisableDirtyObjects, Command::Draw));
-    ANGLE_CONTEXT_TRY(mImplementation->drawPixelLocalStorageEXTDisable(this, planes, loadops));
+    ANGLE_CONTEXT_TRY(mImplementation->drawPixelLocalStorageEXTDisable(this, planes, storeops));
 }
 
 // ErrorSet implementation.

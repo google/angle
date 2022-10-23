@@ -238,7 +238,7 @@ bool PixelLocalStoragePlane::getTextureImageExtents(const Context *context, Exte
     return true;
 }
 
-void PixelLocalStoragePlane::ensureBackingIfMemoryless(Context *context, Extents plsExtents)
+void PixelLocalStoragePlane::ensureBackingTextureIfMemoryless(Context *context, Extents plsExtents)
 {
     ASSERT(!isDeinitialized());
     ASSERT(!isTextureIDDeleted(context));  // Convert to memoryless first in this case.
@@ -284,11 +284,10 @@ void PixelLocalStoragePlane::ensureBackingIfMemoryless(Context *context, Extents
 
 void PixelLocalStoragePlane::attachToDrawFramebuffer(Context *context,
                                                      Extents plsExtents,
-                                                     GLenum colorAttachment)
+                                                     GLenum colorAttachment) const
 {
     ASSERT(!isDeinitialized());
-    ensureBackingIfMemoryless(context, plsExtents);
-    ASSERT(mTextureRef != nullptr);
+    ASSERT(mTextureRef != nullptr);      // Call ensureBackingTextureIfMemoryless() first!
     if (mTextureImageIndex.usesTex3D())  // GL_TEXTURE_3D or GL_TEXTURE_2D_ARRAY.
     {
         context->framebufferTextureLayer(GL_DRAW_FRAMEBUFFER, colorAttachment, mTextureRef->id(),
@@ -393,11 +392,10 @@ void PixelLocalStoragePlane::issueClearCommand(ClearCommands *clearCommands,
 void PixelLocalStoragePlane::bindToImage(Context *context,
                                          Extents plsExtents,
                                          GLuint unit,
-                                         bool needsR32Packing)
+                                         bool needsR32Packing) const
 {
     ASSERT(!isDeinitialized());
-    ensureBackingIfMemoryless(context, plsExtents);
-    ASSERT(mTextureRef != nullptr);
+    ASSERT(mTextureRef != nullptr);  // Call ensureBackingTextureIfMemoryless() first!
     GLenum imageBindingFormat = mInternalformat;
     if (needsR32Packing)
     {
@@ -433,7 +431,10 @@ const Texture *PixelLocalStoragePlane::getBackingTexture(const Context *context)
     return mTextureRef;
 }
 
-PixelLocalStorage::PixelLocalStorage() {}
+PixelLocalStorage::PixelLocalStorage(MemorylessBackingType memorylessBackingType)
+    : mMemorylessBackingType(memorylessBackingType)
+{}
+
 PixelLocalStorage::~PixelLocalStorage() {}
 
 void PixelLocalStorage::onFramebufferDestroyed(const Context *context)
@@ -470,7 +471,7 @@ void PixelLocalStorage::begin(Context *context, GLsizei n, const GLenum loadops[
     // storage rendering dimensions.
     Extents plsExtents;
     bool hasPLSExtents = false;
-    for (int i = 0; i < n; ++i)
+    for (GLsizei i = 0; i < n; ++i)
     {
         if (loadops[i] == GL_DISABLE_ANGLE)
         {
@@ -497,13 +498,32 @@ void PixelLocalStorage::begin(Context *context, GLsizei n, const GLenum loadops[
             context->getState().getDrawFramebuffer()->getState().getAttachmentExtentsIntersection();
         ASSERT(plsExtents.depth == 0);
     }
+    for (GLsizei i = 0; i < n; ++i)
+    {
+        if (loadops[i] == GL_DISABLE_ANGLE)
+        {
+            continue;
+        }
+        PixelLocalStoragePlane &plane = mPlanes[i];
+        if (mMemorylessBackingType == MemorylessBackingType::InternalTextures)
+        {
+            plane.ensureBackingTextureIfMemoryless(context, plsExtents);
+        }
+        plane.markActive(true);
+    }
 
     onBegin(context, n, loadops, plsExtents);
 }
 
-void PixelLocalStorage::end(Context *context)
+void PixelLocalStorage::end(Context *context, const GLenum storeops[])
 {
-    onEnd(context);
+    onEnd(context, storeops);
+
+    GLsizei n = context->getState().getPixelLocalStorageActivePlanes();
+    for (GLsizei i = 0; i < n; ++i)
+    {
+        mPlanes[i].markActive(false);
+    }
 }
 
 void PixelLocalStorage::barrier(Context *context)
@@ -518,7 +538,10 @@ namespace
 class PixelLocalStorageImageLoadStore : public PixelLocalStorage
 {
   public:
-    PixelLocalStorageImageLoadStore(bool needsR32Packing) : mNeedsR32Packing(needsR32Packing) {}
+    PixelLocalStorageImageLoadStore(bool needsR32Packing)
+        : PixelLocalStorage(MemorylessBackingType::InternalTextures),
+          mNeedsR32Packing(needsR32Packing)
+    {}
 
     // Call deleteContextObjects or onContextObjectsLost first!
     ~PixelLocalStorageImageLoadStore() override
@@ -547,7 +570,7 @@ class PixelLocalStorageImageLoadStore : public PixelLocalStorage
         ASSERT(static_cast<size_t>(n) <= state.getImageUnits().size());
         mSavedImageBindings.clear();
         mSavedImageBindings.reserve(n);
-        for (int i = 0; i < n; ++i)
+        for (GLsizei i = 0; i < n; ++i)
         {
             mSavedImageBindings.emplace_back(state.getImageUnit(i));
         }
@@ -585,7 +608,7 @@ class PixelLocalStorageImageLoadStore : public PixelLocalStorage
 
         // Bind and clear the PLS planes.
         size_t maxClearedAttachments = 0;
-        for (int i = 0; i < n;)
+        for (GLsizei i = 0; i < n;)
         {
             DrawBuffersVector<int> pendingClears;
             for (; pendingClears.size() < maxDrawBuffers && i < n; ++i)
@@ -595,7 +618,7 @@ class PixelLocalStorageImageLoadStore : public PixelLocalStorage
                 {
                     continue;
                 }
-                PixelLocalStoragePlane &plane = getPlane(i);
+                const PixelLocalStoragePlane &plane = getPlane(i);
                 ASSERT(!plane.isDeinitialized());
                 plane.bindToImage(context, plsExtents, i, mNeedsR32Packing);
                 if (loadop == GL_ZERO || loadop == GL_CLEAR_ANGLE)
@@ -640,7 +663,7 @@ class PixelLocalStorageImageLoadStore : public PixelLocalStorage
         context->memoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
     }
 
-    void onEnd(Context *context) override
+    void onEnd(Context *context, const GLenum storeops[]) override
     {
         GLsizei n = context->getState().getPixelLocalStorageActivePlanes();
 
@@ -689,6 +712,9 @@ class PixelLocalStorageImageLoadStore : public PixelLocalStorage
 class PixelLocalStorageFramebufferFetch : public PixelLocalStorage
 {
   public:
+    PixelLocalStorageFramebufferFetch() : PixelLocalStorage(MemorylessBackingType::InternalTextures)
+    {}
+
     void onContextObjectsLost() override {}
 
     void onDeleteContextObjects(Context *) override {}
@@ -716,7 +742,6 @@ class PixelLocalStorageFramebufferFetch : public PixelLocalStorage
 
         mBlendsToReEnable.reset();
         mColorMasksToRestore.reset();
-        mInvalidateList.clear();
         bool needsClear = false;
 
         bool hasIndexedBlendAndColorMask = context->getExtensions().drawBuffersIndexedAny();
@@ -749,7 +774,7 @@ class PixelLocalStorageFramebufferFetch : public PixelLocalStorage
                 continue;
             }
 
-            PixelLocalStoragePlane &plane = getPlane(i);
+            const PixelLocalStoragePlane &plane = getPlane(i);
             ASSERT(!plane.isDeinitialized());
 
             // Attach our PLS texture to the framebuffer. Validation should have already ensured
@@ -775,12 +800,6 @@ class PixelLocalStorageFramebufferFetch : public PixelLocalStorage
                     context->colorMaski(drawBufferIdx, GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
                     mColorMasksToRestore.set(drawBufferIdx);
                 }
-            }
-
-            if (plane.isMemoryless())
-            {
-                // Memoryless planes don't need to be preserved after glEndPixelLocalStorageANGLE().
-                mInvalidateList.push_back(colorAttachment);
             }
 
             needsClear = needsClear || (loadop != GL_KEEP);
@@ -814,18 +833,30 @@ class PixelLocalStorageFramebufferFetch : public PixelLocalStorage
         }
     }
 
-    void onEnd(Context *context) override
+    void onEnd(Context *context, const GLenum storeops[]) override
     {
         GLsizei n        = context->getState().getPixelLocalStorageActivePlanes();
         const Caps &caps = context->getCaps();
 
-        // Invalidate the memoryless PLS attachments.
-        if (!mInvalidateList.empty())
+        // Invalidate the non-preserved PLS attachments.
+        DrawBuffersVector<GLenum> invalidateList;
+        for (GLsizei i = n - 1; i >= 0; --i)
+        {
+            if (!getPlane(i).isActive())
+            {
+                continue;
+            }
+            if (storeops[i] != GL_KEEP || getPlane(i).isMemoryless())
+            {
+                int drawBufferIdx = GetDrawBufferIdx(caps, i);
+                invalidateList.push_back(GL_COLOR_ATTACHMENT0 + drawBufferIdx);
+            }
+        }
+        if (!invalidateList.empty())
         {
             context->invalidateFramebuffer(GL_DRAW_FRAMEBUFFER,
-                                           static_cast<GLsizei>(mInvalidateList.size()),
-                                           mInvalidateList.data());
-            mInvalidateList.clear();
+                                           static_cast<GLsizei>(invalidateList.size()),
+                                           invalidateList.data());
         }
 
         bool hasIndexedBlendAndColorMask = context->getExtensions().drawBuffersIndexedAny();
@@ -891,12 +922,14 @@ class PixelLocalStorageFramebufferFetch : public PixelLocalStorage
     DrawBufferMask mBlendsToReEnable;
     DrawBufferMask mColorMasksToRestore;
     DrawBuffersArray<std::array<bool, 4>> mSavedColorMasks;
-    DrawBuffersVector<GLenum> mInvalidateList;
 };
 
 // Implements ANGLE_shader_pixel_local_storage directly via EXT_shader_pixel_local_storage.
 class PixelLocalStorageEXT : public PixelLocalStorage
 {
+  public:
+    PixelLocalStorageEXT() : PixelLocalStorage(MemorylessBackingType::TrueMemoryless) {}
+
   private:
     void onContextObjectsLost() override {}
 
@@ -931,9 +964,9 @@ class PixelLocalStorageEXT : public PixelLocalStorage
         memcpy(mActiveLoadOps.data(), loadops, sizeof(GLenum) * n);
     }
 
-    void onEnd(Context *context) override
+    void onEnd(Context *context, const GLenum storeops[]) override
     {
-        context->drawPixelLocalStorageEXTDisable(getPlanes(), mActiveLoadOps.data());
+        context->drawPixelLocalStorageEXTDisable(getPlanes(), storeops);
 
         // Restore the default framebuffer width/height.
         context->framebufferParameteri(GL_DRAW_FRAMEBUFFER, GL_FRAMEBUFFER_DEFAULT_WIDTH,

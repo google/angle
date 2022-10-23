@@ -3797,14 +3797,14 @@ void GL_APIENTRY glFramebufferPixelLocalClearValueuivANGLE(GLint plane, const GL
     return GL_FramebufferPixelLocalClearValueuivANGLE(plane, value);
 }
 
-void GL_APIENTRY glBeginPixelLocalStorageANGLE(GLsizei planes, const GLenum *loadops)
+void GL_APIENTRY glBeginPixelLocalStorageANGLE(GLsizei n, const GLenum *loadops)
 {
-    return GL_BeginPixelLocalStorageANGLE(planes, loadops);
+    return GL_BeginPixelLocalStorageANGLE(n, loadops);
 }
 
-void GL_APIENTRY glEndPixelLocalStorageANGLE()
+void GL_APIENTRY glEndPixelLocalStorageANGLE(GLsizei n, const GLenum *storeops)
 {
-    return GL_EndPixelLocalStorageANGLE();
+    return GL_EndPixelLocalStorageANGLE(n, storeops);
 }
 
 void GL_APIENTRY glPixelLocalStorageBarrierANGLE()
