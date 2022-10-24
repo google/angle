@@ -426,6 +426,8 @@ def main():
         'traces', help='Traces to validate. Supports fnmatch expressions.', default='*')
     validate_parser.add_argument(
         '-L', '--limit', '--frame-limit', type=int, help='Limits the number of tested frames.')
+    validate_parser.add_argument(
+        '--show-test-stdout', help='Log test output.', action='store_true', default=False)
 
     interpret_parser = subparsers.add_parser(
         'interpret', help='Complete trace interpreter self-test.')
