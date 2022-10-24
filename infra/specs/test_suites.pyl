@@ -695,6 +695,7 @@
         },
         'args': [
           '--log=debug',
+          '--samples-per-test=6',
           '--show-test-stdout',
           '--split-shard-samples',
         ],

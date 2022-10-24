@@ -546,6 +546,7 @@
       {
         "args": [
           "--log=debug",
+          "--samples-per-test=6",
           "--show-test-stdout",
           "--split-shard-samples",
           "--trial-time=10"
@@ -1268,6 +1269,7 @@
       {
         "args": [
           "--log=debug",
+          "--samples-per-test=6",
           "--show-test-stdout",
           "--split-shard-samples"
         ],
@@ -2077,6 +2079,7 @@
       {
         "args": [
           "--log=debug",
+          "--samples-per-test=6",
           "--show-test-stdout",
           "--split-shard-samples"
         ],
@@ -5285,6 +5288,7 @@
       {
         "args": [
           "--log=debug",
+          "--samples-per-test=6",
           "--show-test-stdout",
           "--split-shard-samples"
         ],
