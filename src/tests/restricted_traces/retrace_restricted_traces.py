@@ -447,18 +447,22 @@ def main():
 
     traces = [trace.split(' ')[0] for trace in traces['traces']]
 
-    if args.command == 'backup':
-        return backup_traces(args, traces)
-    elif args.command == 'restore':
-        return restore_traces(args, traces)
-    elif args.command == 'upgrade':
-        return upgrade_traces(args, traces)
-    elif args.command == 'validate':
-        return validate_traces(args, traces)
-    elif args.command == 'interpret':
-        return interpret_traces(args, traces)
-    else:
-        logging.fatal('Unknown command: %s' % args.command)
+    try:
+        if args.command == 'backup':
+            return backup_traces(args, traces)
+        elif args.command == 'restore':
+            return restore_traces(args, traces)
+        elif args.command == 'upgrade':
+            return upgrade_traces(args, traces)
+        elif args.command == 'validate':
+            return validate_traces(args, traces)
+        elif args.command == 'interpret':
+            return interpret_traces(args, traces)
+        else:
+            logging.fatal('Unknown command: %s' % args.command)
+            return EXIT_FAILURE
+    except subprocess.CalledProcessError as e:
+        logging.exception('There was an exception running "%s": %s' % (traces, e.output.decode()))
         return EXIT_FAILURE
 
 
