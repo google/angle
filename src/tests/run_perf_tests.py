@@ -81,13 +81,6 @@ def _get_results_from_output(output, result):
     return [float(value) for value in m]
 
 
-def _get_tests_from_output(output):
-    out_lines = output.split('\n')
-    start = out_lines.index('Tests list:')
-    end = out_lines.index('End tests list.')
-    return out_lines[start + 1:end]
-
-
 def _truncated_list(data, n):
     """Compute a truncated list, n is truncation size"""
     if len(data) < n * 2:
@@ -554,7 +547,7 @@ def main():
     if exit_code != EXIT_SUCCESS:
         logging.fatal('Could not find test list from test output:\n%s' % output)
         sys.exit(EXIT_FAILURE)
-    tests = _get_tests_from_output(output)
+    tests = angle_test_util.GetTestsFromOutput(output)
 
     if args.filter:
         tests = _filter_tests(tests, args.filter)

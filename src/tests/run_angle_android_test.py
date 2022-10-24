@@ -22,6 +22,7 @@ PY_UTILS = str(pathlib.Path(__file__).resolve().parent / 'py_utils')
 if PY_UTILS not in sys.path:
     os.stat(PY_UTILS) and sys.path.insert(0, PY_UTILS)
 import android_helper
+import angle_test_util
 
 
 def main():
@@ -45,7 +46,13 @@ def main():
     android_helper.Initialize(args.suite)
     assert android_helper.IsAndroid()
 
-    tests = android_helper.ListTests(args.suite)
+    rc, output, _ = android_helper.RunTests(
+        args.suite, ['--list-tests', '--verbose'] + extra_flags, log_output=False)
+    if rc != 0:
+        logging.fatal('Could not find test list from test output:\n%s' % output)
+        return rc
+
+    tests = angle_test_util.GetTestsFromOutput(output)
     if args.filter:
         tests = [test for test in tests if fnmatch.fnmatch(test, args.filter)]
 

@@ -156,7 +156,7 @@ def RunTestSuite(test_suite,
     if android_helper.IsAndroid():
         result, output, json_results = android_helper.RunTests(
             test_suite, cmd_args, log_output=show_test_stdout)
-        return result, output.decode(), json_results
+        return result, output, json_results
 
     cmd = ExecutablePathInCurrentDir(test_suite) if os.path.exists(
         os.path.basename(test_suite)) else test_suite
@@ -188,3 +188,10 @@ def RunTestSuite(test_suite,
             json_results = json.loads(data) if data else None  # --list-tests => empty file
 
     return exit_code, output, json_results
+
+
+def GetTestsFromOutput(output):
+    out_lines = output.split('\n')
+    start = out_lines.index('Tests list:')
+    end = out_lines.index('End tests list.')
+    return out_lines[start + 1:end]

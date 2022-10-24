@@ -447,7 +447,7 @@ def RunTests(test_suite, args, stdoutfile=None, log_output=True):
         logging.exception(e)
         result = 1
 
-    return result, output, output_json
+    return result, output.decode(), output_json
 
 
 def GetTraceFromTestName(test_name):
