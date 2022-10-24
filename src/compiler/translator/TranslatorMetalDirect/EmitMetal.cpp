@@ -804,6 +804,10 @@ void GenMetalTraverser::emitPostQualifier(const EmitVariableDeclarationConfig &e
             mOut << " [[position]]";
             break;
 
+        case TQualifier::EvqClipDistance:
+            mOut << " [[clip_distance]] [" << decl.type().getOutermostArraySize() << "]";
+            break;
+
         case TQualifier::EvqPointSize:
             mOut << " [[point_size]]";
             break;
@@ -1302,7 +1306,17 @@ void GenMetalTraverser::emitOrdinaryVariableDeclaration(
     etConfig.evdConfig = &evdConfig;
 
     const TType &type = decl.type();
-    emitType(type, etConfig);
+    if (type.getQualifier() == TQualifier::EvqClipDistance)
+    {
+        // Clip distance output uses float[n] type instead of metal::array.
+        // The element count is emitted after the post qualifier.
+        ASSERT(type.getBasicType() == TBasicType::EbtFloat);
+        mOut << "float";
+    }
+    else
+    {
+        emitType(type, etConfig);
+    }
     if (decl.symbolType() != SymbolType::Empty)
     {
         mOut << " ";

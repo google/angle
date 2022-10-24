@@ -886,7 +886,7 @@ void DisplayMtl::ensureCapsInitialized() const
     mNativeCaps.programBinaryFormats.push_back(GL_PROGRAM_BINARY_ANGLE);
 
     // GL_APPLE_clip_distance
-    mNativeCaps.maxClipDistances = mFeatures.directMetalGeneration.enabled ? 0 : 8;
+    mNativeCaps.maxClipDistances = 8;
 
     // Metal doesn't support GL_TEXTURE_COMPARE_MODE=GL_NONE for shadow samplers
     mNativeLimitations.noShadowSamplerCompareModeNone = true;
@@ -998,7 +998,7 @@ void DisplayMtl::initializeExtensions() const
     mNativeExtensions.getProgramBinaryOES = true;
 
     // GL_APPLE_clip_distance
-    mNativeExtensions.clipDistanceAPPLE = !mFeatures.directMetalGeneration.enabled;
+    mNativeExtensions.clipDistanceAPPLE = true;
 
     // GL_NV_pixel_buffer_object
     mNativeExtensions.pixelBufferObjectNV = true;

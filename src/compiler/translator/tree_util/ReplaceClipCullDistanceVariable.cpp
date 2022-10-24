@@ -15,6 +15,7 @@
 #include "compiler/translator/Compiler.h"
 #include "compiler/translator/SymbolTable.h"
 #include "compiler/translator/tree_util/BuiltIn.h"
+#include "compiler/translator/tree_util/FindMain.h"
 #include "compiler/translator/tree_util/IntermNode_util.h"
 #include "compiler/translator/tree_util/IntermTraverse.h"
 #include "compiler/translator/tree_util/ReplaceVariable.h"
@@ -559,7 +560,13 @@ bool ReplaceClipCullDistanceAssignments::assignANGLEValueToOriginalVariableImpl(
 
         TVariable *resizedVar = new TVariable(symbolTable, name, resizedType, SymbolType::BuiltIn);
 
-        return ReplaceVariable(compiler, root, builtInVar, resizedVar);
+        if (!ReplaceVariable(compiler, root, builtInVar, resizedVar))
+        {
+            return false;
+        }
+
+        // Built-in was not redeclared in the original shader, add it to the vertex out struct
+        return root->insertChildNodes(FindMainIndex(root), {new TIntermDeclaration{resizedVar}});
     }
 
     return true;
