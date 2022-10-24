@@ -52,23 +52,34 @@ When that is working, add the following GN arg to your setup:
 ```
 build_angle_trace_perf_tests = true
 ```
-To build the angle_perftests:
-```
-autoninja -C out/<config> angle_perftests
-```
-Run them like so:
-```
-out/<config>/angle_perftests --gtest_filter=TracePerfTest*
-```
+### (Optional) Reducing the trace count
 
-## (Optional) Reducing the trace count
-
-Since the traces are numerous, you can limit build to a subset of them if needed with the
-`angle_restricted_traces` GN arg.  This arg takes a list of traces as found in
-`restricted_traces.json`.  For example:
-
+Since the traces are numerous, you can limit compilation to a subset with the following GN arg:
 ```
 angle_restricted_traces = ["world_of_kings 5", "worms_zone_io 5"]
+```
+To build the trace tests:
+```
+autoninja -C out/<config> angle_trace_tests
+```
+## Running the trace tests
+The trace tests can be run with default options like so:
+```
+out/<config>/angle_trace_tests
+```
+To select a specific trace to run, provide it with a filter:
+```
+out/<config>/angle_trace_tests --gtest_filter=TraceTest.<trace_name>
+```
+The specific options available with traces can be found in the PerfTests [`README`](../perf_tests/README.md#trace-tests)
+
+Common options used are:
+```
+# Use ANGLE as the driver with the system's Vulkan driver as backend
+--use-angle=vulkan
+
+# Use the system's native GLES driver
+--use-gl=native
 ```
 
 # Capturing and adding new Android traces
@@ -451,7 +462,7 @@ to find the exact command line and environment variables the script uses to
 produce the failure. For example:
 
 ```
-INFO:root:ANGLE_CAPTURE_LABEL=trex_200 ANGLE_CAPTURE_OUT_DIR=C:\src\angle\retrace-wip\trex_200 ANGLE_CAPTURE_FRAME_START=2 ANGLE_CAPTURE_FRAME_END=4 ANGLE_CAPTURE_VALIDATION=1 ANGLE_FEATURE_OVERRIDES_ENABLED=allocateNonZeroMemory:forceInitShaderVariables ANGLE_CAPTURE_TRIM_ENABLED=1 out/Debug\angle_perftests.exe --gtest_filter=TracePerfTest.Run/vulkan_swiftshader_trex_200 --max-steps-performed 3 --retrace-mode --enable-all-trace-tests
+INFO:root:ANGLE_CAPTURE_LABEL=trex_200 ANGLE_CAPTURE_OUT_DIR=C:\src\angle\retrace-wip\trex_200 ANGLE_CAPTURE_FRAME_START=2 ANGLE_CAPTURE_FRAME_END=4 ANGLE_CAPTURE_VALIDATION=1 ANGLE_FEATURE_OVERRIDES_ENABLED=allocateNonZeroMemory:forceInitShaderVariables ANGLE_CAPTURE_TRIM_ENABLED=1 out\Debug\angle_trace_tests.exe --gtest_filter=TraceTest.trex_200 --use-angle=swiftshader --max-steps-performed 3 --retrace-mode
 ```
 
 Once you can reproduce the issue you can use a debugger or other standard
