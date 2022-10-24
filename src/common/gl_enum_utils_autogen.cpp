@@ -13,6 +13,8 @@
 #include "common/debug.h"
 #include "common/gl_enum_utils.h"
 
+#include <cstring>
+
 namespace gl
 {
 namespace

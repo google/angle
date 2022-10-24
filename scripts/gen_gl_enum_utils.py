@@ -57,6 +57,8 @@ template_gl_enums_source = """// GENERATED FILE - DO NOT EDIT.
 #include "common/debug.h"
 #include "common/gl_enum_utils.h"
 
+#include <cstring>
+
 namespace gl
 {{
 namespace
