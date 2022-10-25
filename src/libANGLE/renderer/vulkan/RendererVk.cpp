@@ -2548,10 +2548,6 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     if (getFeatures().supportsTimestampSurfaceAttribute.enabled)
     {
         mEnabledDeviceExtensions.push_back(VK_GOOGLE_DISPLAY_TIMING_EXTENSION_NAME);
-#if !defined(ANGLE_SHARED_LIBVULKAN)
-        InitGetPastPresentationTimingGoogleFunction(mDevice);
-#endif  // !defined(ANGLE_SHARED_LIBVULKAN)
-        ASSERT(vkGetPastPresentationTimingGOOGLE);
     }
 
     std::sort(mEnabledDeviceExtensions.begin(), mEnabledDeviceExtensions.end(), StrLess);
@@ -2988,6 +2984,11 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     {
                        InitFragmentShadingRateKHRDeviceFunction(mDevice);
                        ASSERT(vkCmdSetFragmentShadingRateKHR);
+    }
+    if (getFeatures().supportsTimestampSurfaceAttribute.enabled)
+    {
+                       InitGetPastPresentationTimingGoogleFunction(mDevice);
+                       ASSERT(vkGetPastPresentationTimingGOOGLE);
     }
 #endif  // !defined(ANGLE_SHARED_LIBVULKAN)
 
