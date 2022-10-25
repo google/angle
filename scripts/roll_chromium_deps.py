@@ -59,6 +59,8 @@ ANGLE_CHROMIUM_DEPS = [
     'third_party/catapult',
     'third_party/colorama/src',
     'third_party/depot_tools',
+    'third_party/flatbuffers',
+    'third_party/flatbuffers/src',
     'third_party/fuchsia-sdk/sdk',
     'third_party/ijar',
     'third_party/jdk',
