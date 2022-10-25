@@ -1490,6 +1490,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_traces',
   },
+  'src/tests/restricted_traces/grimvalor': {
+      'packages': [
+        {
+            'package': 'angle/traces/grimvalor',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_traces',
+  },
   'src/tests/restricted_traces/happy_color': {
       'packages': [
         {
