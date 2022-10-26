@@ -943,8 +943,8 @@ bool TranslatorMetalDirect::translateImpl(TInfoSinkBase &sink,
         }
 
         if (useClipDistance &&
-            !ReplaceClipDistanceAssignments(this, root, &getSymbolTable(), getShaderType(),
-                                            driverUniforms->getClipDistancesEnabled()))
+            !ZeroDisabledClipDistanceAssignments(this, root, &getSymbolTable(), getShaderType(),
+                                                 driverUniforms->getClipDistancesEnabled()))
         {
             return false;
         }
