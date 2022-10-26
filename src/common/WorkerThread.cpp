@@ -116,6 +116,8 @@ class AsyncWorkerPool final : public WorkerThreadPool
     bool isAsync() override;
 
   private:
+    void createThreads();
+
     using Task = std::pair<std::shared_ptr<AsyncWaitableEvent>, std::shared_ptr<Closure>>;
 
     // Thread's main loop
@@ -126,17 +128,14 @@ class AsyncWorkerPool final : public WorkerThreadPool
     std::condition_variable mCondVar;  // Signals when work is available in the queue
     std::queue<Task> mTaskQueue;
     std::deque<std::thread> mThreads;
+    size_t mDesiredThreadCount;
 };
 
 // AsyncWorkerPool implementation.
 
-AsyncWorkerPool::AsyncWorkerPool(size_t numThreads)
+AsyncWorkerPool::AsyncWorkerPool(size_t numThreads) : mDesiredThreadCount(numThreads)
 {
     ASSERT(numThreads != 0);
-    for (size_t i = 0; i < numThreads; ++i)
-    {
-        mThreads.emplace_back(&AsyncWorkerPool::threadLoop, this);
-    }
 }
 
 AsyncWorkerPool::~AsyncWorkerPool()
@@ -153,6 +152,20 @@ AsyncWorkerPool::~AsyncWorkerPool()
     }
 }
 
+void AsyncWorkerPool::createThreads()
+{
+    if (mDesiredThreadCount == mThreads.size())
+    {
+        return;
+    }
+    ASSERT(mThreads.empty());
+
+    for (size_t i = 0; i < mDesiredThreadCount; ++i)
+    {
+        mThreads.emplace_back(&AsyncWorkerPool::threadLoop, this);
+    }
+}
+
 std::shared_ptr<WaitableEvent> AsyncWorkerPool::postWorkerTask(std::shared_ptr<Closure> task)
 {
     // Thread safety: This function is thread-safe because access to |mTaskQueue| is protected by
@@ -160,6 +173,10 @@ std::shared_ptr<WaitableEvent> AsyncWorkerPool::postWorkerTask(std::shared_ptr<C
     auto waitable = std::make_shared<AsyncWaitableEvent>();
     {
         std::lock_guard<std::mutex> lock(mMutex);
+
+        // Lazily create the threads on first task
+        createThreads();
+
         mTaskQueue.push(std::make_pair(waitable, task));
     }
     mCondVar.notify_one();
