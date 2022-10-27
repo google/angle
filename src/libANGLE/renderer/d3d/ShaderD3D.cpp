@@ -114,6 +114,8 @@ void ShaderD3D::uncompile()
     // set by compileToHLSL
     mCompilerOutputType = SH_ESSL_OUTPUT;
 
+    mUsesClipDistance            = false;
+    mUsesCullDistance            = false;
     mUsesMultipleRenderTargets   = false;
     mUsesFragColor               = false;
     mUsesFragData                = false;
@@ -303,6 +305,8 @@ std::shared_ptr<WaitableCompileEvent> ShaderD3D::compile(const gl::Context *cont
 
         const std::string &translatedSource = mState.getTranslatedSource();
 
+        mUsesClipDistance = translatedSource.find("GL_USES_CLIP_DISTANCE") != std::string::npos;
+        mUsesCullDistance = translatedSource.find("GL_USES_CULL_DISTANCE") != std::string::npos;
         mUsesMultipleRenderTargets = translatedSource.find("GL_USES_MRT") != std::string::npos;
         mUsesFragColor      = translatedSource.find("GL_USES_FRAG_COLOR") != std::string::npos;
         mUsesFragData       = translatedSource.find("GL_USES_FRAG_DATA") != std::string::npos;

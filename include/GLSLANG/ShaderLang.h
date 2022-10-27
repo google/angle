@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 308
+#define ANGLE_SH_VERSION 309
 
 enum ShShaderSpec
 {
@@ -408,6 +408,9 @@ struct ShCompileOptions
     // TODO(anglebug.com/7527): This workaround is currently only applied for pixel local storage.
     // We may want to apply it generally.
     uint64_t passHighpToPackUnormSnormBuiltins : 1;
+
+    // When clip and cull distances are used simultaneously, D3D11 can support up to four of each.
+    uint64_t limitSimultaneousClipAndCullDistanceUsage : 1;
 
     ShCompileOptionsMetal metal;
     ShCompileOptionsPLS pls;

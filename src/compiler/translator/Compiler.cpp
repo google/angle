@@ -844,7 +844,8 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     if (parseContext.isExtensionEnabled(TExtension::EXT_clip_cull_distance))
     {
         if (!ValidateClipCullDistance(root, &mDiagnostics,
-                                      mResources.MaxCombinedClipAndCullDistances))
+                                      mResources.MaxCombinedClipAndCullDistances,
+                                      compileOptions.limitSimultaneousClipAndCullDistanceUsage))
         {
             return false;
         }

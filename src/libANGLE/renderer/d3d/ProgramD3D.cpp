@@ -433,6 +433,18 @@ bool ProgramD3DMetadata::usesSecondaryColor() const
     return (shader && shader->usesSecondaryColor());
 }
 
+bool ProgramD3DMetadata::usesClipDistance() const
+{
+    const rx::ShaderD3D *shader = mAttachedShaders[gl::ShaderType::Vertex];
+    return shader && shader->usesClipDistance();
+}
+
+bool ProgramD3DMetadata::usesCullDistance() const
+{
+    const rx::ShaderD3D *shader = mAttachedShaders[gl::ShaderType::Vertex];
+    return shader && shader->usesCullDistance();
+}
+
 bool ProgramD3DMetadata::usesFragDepth() const
 {
     const rx::ShaderD3D *shader = mAttachedShaders[gl::ShaderType::Fragment];
