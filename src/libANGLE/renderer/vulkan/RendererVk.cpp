@@ -3884,10 +3884,23 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     // natively anyway.
     ANGLE_FEATURE_CONDITION(&mFeatures, overrideSurfaceFormatRGB8ToRGBA8, true);
 
+    // We set
+    //
+    // - VK_PIPELINE_COLOR_BLEND_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_BIT_EXT
+    // - VK_SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_COLOR_ACCESS_BIT_EXT
+    //
+    // when this feature is supported and there is framebuffer fetch.  But the
+    // check for framebuffer fetch is not accurate enough and those bits can
+    // have great impact on Qualcomm (it only affects the open source driver
+    // because the proprietary driver does not expose the extension).  Let's
+    // disable it on Qualcomm.
+    //
+    // https://issuetracker.google.com/issues/255837430
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsRasterizationOrderAttachmentAccess,
-        mRasterizationOrderAttachmentAccessFeatures.rasterizationOrderColorAttachmentAccess ==
-            VK_TRUE);
+        !isQualcomm &&
+            mRasterizationOrderAttachmentAccessFeatures.rasterizationOrderColorAttachmentAccess ==
+                VK_TRUE);
 
     // http://anglebug.com/6872
     // On ARM hardware, framebuffer-fetch-like behavior on Vulkan is already coherent, so we can
