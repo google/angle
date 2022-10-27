@@ -35,8 +35,14 @@ MESA_OPTIONS = [
     '-Dvalgrind=disabled',
 ]
 LIBDRM_OPTIONS = [
-    '-Dtests=false', '-Dintel=disabled', '-Dnouveau=disabled', '-Damdgpu=disabled',
-    '-Dradeon=disabled', '-Dvmwgfx=disabled'
+    '-Dtests=false',
+    '-Dintel=disabled',
+    '-Dnouveau=disabled',
+    '-Damdgpu=disabled',
+    '-Dradeon=disabled',
+    '-Dvmwgfx=disabled',
+    '-Dvalgrind=disabled',
+    '-Dman-pages=disabled',
 ]
 
 
