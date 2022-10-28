@@ -173,7 +173,7 @@ angle::Result BufferManager::queueBlitCopyDataToBuffer(ContextMtl *contextMtl,
                                                        size_t offset,
                                                        mtl::BufferRef &dstMetalBuffer)
 {
-    const uint8 *src = reinterpret_cast<const uint8 *>(srcPtr);
+    const uint8_t *src = reinterpret_cast<const uint8_t *>(srcPtr);
     bool useShared =
         !contextMtl->getDisplay()->getFeatures().alwaysUseManagedStorageModeForBuffers.enabled;
 
