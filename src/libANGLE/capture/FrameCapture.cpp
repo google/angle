@@ -3932,23 +3932,38 @@ void CaptureShareGroupMidExecutionSetup(
 
                 if (index.getType() == gl::TextureType::External)
                 {
+                    // Look up the attribs used when the image was created
+                    // Firstly, lookup the eglImage ID associated with this texture when the app
+                    // issued glEGLImageTargetTexture2DOES()
                     auto eglImageIter = resourceTracker->getTextureIDToImageTable().find(id.value);
                     ASSERT(eglImageIter != resourceTracker->getTextureIDToImageTable().end());
-                    void *eglImage = eglImageIter->second;
-                    ASSERT(eglImage != nullptr);
+
+                    const egl::ImageID eglImageID = eglImageIter->second;
+                    const EGLImage eglImage =
+                        reinterpret_cast<EGLImage>(static_cast<uintptr_t>(eglImageID.value));
+
+                    // Secondly, lookup the attrib we used to create the eglImage
                     auto eglImageAttribIter =
                         resourceTracker->getImageToAttribTable().find(eglImage);
                     ASSERT(eglImageAttribIter != resourceTracker->getImageToAttribTable().end());
+
                     const egl::AttributeMap &retrievedAttribs = eglImageAttribIter->second;
 
-                    // Create the image on demand
-                    egl::Image *image = nullptr;
-                    Capture(setupCalls,
-                            egl::CaptureCreateImage(nullptr, true, nullptr, context->id(),
-                                                    EGL_GL_TEXTURE_2D_KHR,
-                                                    reinterpret_cast<EGLClientBuffer>(
-                                                        static_cast<GLuint64>(stagingTexId.value)),
-                                                    retrievedAttribs, image));
+                    // Create the image on demand with the same attrib retrieved above
+                    CallCapture eglCreateImageKHRCall = egl::CaptureCreateImageKHR(
+                        nullptr, true, nullptr, context->id(), EGL_GL_TEXTURE_2D_KHR,
+                        reinterpret_cast<EGLClientBuffer>(
+                            static_cast<GLuint64>(stagingTexId.value)),
+                        retrievedAttribs, eglImage);
+
+                    // Convert the CaptureCreateImageKHR CallCapture to the customized CallCapture
+                    std::vector<CallCapture> eglCustomCreateImageKHRCall;
+                    CaptureCustomCreateEGLImage("CreateEGLImageKHR", eglCreateImageKHRCall,
+                                                eglCustomCreateImageKHRCall);
+                    ASSERT(eglCustomCreateImageKHRCall.size() > 0);
+
+                    // Append the customized CallCapture to the setupCalls list
+                    Capture(setupCalls, std::move(eglCustomCreateImageKHRCall[0]));
 
                     // Pass the eglImage to the texture that is bound to GL_TEXTURE_EXTERNAL_OES
                     // target
@@ -3956,7 +3971,7 @@ void CaptureShareGroupMidExecutionSetup(
                     {
                         Capture(calls,
                                 CaptureEGLImageTargetTexture2DOES(
-                                    replayState, true, gl::TextureType::External, image->id()));
+                                    replayState, true, gl::TextureType::External, eglImageID));
                     }
 
                     // Delete the staging texture
@@ -6331,7 +6346,7 @@ void CreateEGLImagePreCallUpdate(const CallCapture &call,
     egl::AttributeMap attributeMap = factory(attribs);
     attributeMap.initializeWithoutValidation();
     resourceTracker.getImageToAttribTable().insert(
-        std::pair<void *, egl::AttributeMap>(image, attributeMap));
+        std::pair<EGLImage, egl::AttributeMap>(image, attributeMap));
 }
 
 void FrameCaptureShared::maybeCapturePreCallUpdates(
@@ -6850,9 +6865,8 @@ void FrameCaptureShared::maybeCapturePreCallUpdates(
                     .value.TextureTypeVal;
             egl::ImageID imageID =
                 call.params.getParam("imagePacked", ParamType::TImageID, 1).value.ImageIDVal;
-            egl::Image *image = context->getDisplay()->getImage(imageID);
-            mResourceTracker.getTextureIDToImageTable().insert(std::pair<GLuint, void *>(
-                context->getState().getTargetTexture(target)->getId(), image));
+            mResourceTracker.getTextureIDToImageTable().insert(std::pair<GLuint, egl::ImageID>(
+                context->getState().getTargetTexture(target)->getId(), imageID));
             break;
         }
 
