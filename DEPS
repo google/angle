@@ -9,6 +9,7 @@ gclient_gn_args_file = 'build/config/gclient_args.gni'
 
 gclient_gn_args = [
   'checkout_angle_internal',
+  'checkout_angle_mesa',
   'checkout_angle_restricted_traces',
   'generate_location_tags',
 ]
@@ -39,7 +40,7 @@ vars = {
   'checkout_android_native_support': 'checkout_android or checkout_chromeos',
 
   # Check out Mesa and libdrm in ANGLE's third_party folder.
-  'angle_mesa': False,
+  'checkout_angle_mesa': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
   'chromium_revision': 'c8d10c0b09aba42a2849e283bfea79db014d2ac5',
