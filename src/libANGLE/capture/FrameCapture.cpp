@@ -8082,8 +8082,8 @@ void FrameCaptureShared::writeMainContextCppReplay(const gl::Context *context,
             if (shareContextSet.size() > 1)
             {
                 out << "\n";
-                out << "    eglMakeCurrent(nullptr, nullptr, nullptr, gContextMap[" << context->id()
-                    << "]);\n";
+                out << "    eglMakeCurrent(nullptr, nullptr, nullptr, gContextMap2["
+                    << context->id() << "]);\n";
             }
 
             out << "}\n";
@@ -8191,7 +8191,7 @@ void FrameCaptureShared::writeMainContextCppReplay(const gl::Context *context,
                 if (anyResourceReset && contextID != context->id())
                 {
                     contextChanged = true;
-                    bodyStream << "    eglMakeCurrent(nullptr, nullptr, nullptr, gContextMap["
+                    bodyStream << "    eglMakeCurrent(nullptr, nullptr, nullptr, gContextMap2["
                                << contextID.value << "]);\n\n";
                 }
 
@@ -8210,7 +8210,7 @@ void FrameCaptureShared::writeMainContextCppReplay(const gl::Context *context,
         // Bind the main context again if we bound any additional contexts
         if (contextChanged)
         {
-            resetBodyStream << "    eglMakeCurrent(nullptr, nullptr, nullptr, gContextMap["
+            resetBodyStream << "    eglMakeCurrent(nullptr, nullptr, nullptr, gContextMap2["
                             << context->id().value << "]);\n";
         }
 

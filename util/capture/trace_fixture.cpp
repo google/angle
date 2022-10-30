@@ -249,6 +249,7 @@ void InitializeReplay2(const char *binaryDataFileName,
     gEGLImageMap2 = AllocateZeroedValues<EGLImage>(maxImage);
     gSurfaceMap2  = AllocateZeroedValues<EGLSurface>(maxSurface);
 
+    gContextMap2[0]         = EGL_NO_CONTEXT;
     gShareContextId         = contextId;
     gContextMap2[contextId] = eglGetCurrentContext();
 }
@@ -533,7 +534,7 @@ void CreateNativeClientBufferANDROID(const EGLint *attrib_list, uintptr_t client
 
 void CreateContext(GLuint contextID)
 {
-    EGLContext shareContext = gContextMap[gShareContextId];
+    EGLContext shareContext = gContextMap2[gShareContextId];
     EGLContext context      = eglCreateContext(nullptr, nullptr, shareContext, nullptr);
     gContextMap2[contextID] = context;
 }
