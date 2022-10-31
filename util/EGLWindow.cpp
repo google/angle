@@ -782,6 +782,11 @@ EGLBoolean EGLWindow::destroyImageKHR(Image image)
     return eglDestroyImageKHR(getDisplay(), image);
 }
 
+EGLint EGLWindow::getEGLError()
+{
+    return eglGetError();
+}
+
 GLWindowBase::Surface EGLWindow::createPbufferSurface(const EGLint *attrib_list)
 {
     return eglCreatePbufferSurface(getDisplay(), getConfig(), attrib_list);

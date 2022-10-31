@@ -139,6 +139,7 @@ class TracePerfTest : public ANGLERenderTest
                                     const EGLint *attrib_list);
     EGLBoolean onEglDestroyImage(EGLDisplay display, EGLImage image);
     EGLBoolean onEglDestroyImageKHR(EGLDisplay display, EGLImage image);
+    EGLint onEglGetError();
 
     void onReplayFramebufferChange(GLenum target, GLuint framebuffer);
     void onReplayInvalidateFramebuffer(GLenum target,
@@ -278,6 +279,11 @@ EGLBoolean KHRONOS_APIENTRY EglDestroyImage(EGLDisplay display, EGLImage image)
 EGLBoolean KHRONOS_APIENTRY EglDestroyImageKHR(EGLDisplay display, EGLImage image)
 {
     return gCurrentTracePerfTest->onEglDestroyImageKHR(display, image);
+}
+
+EGLint KHRONOS_APIENTRY EglGetError()
+{
+    return gCurrentTracePerfTest->onEglGetError();
 }
 
 void KHRONOS_APIENTRY BindFramebufferProc(GLenum target, GLuint framebuffer)
@@ -591,6 +597,10 @@ angle::GenericProc KHRONOS_APIENTRY TraceLoadProc(const char *procName)
     if (strcmp(procName, "eglDestroyImageKHR") == 0)
     {
         return reinterpret_cast<angle::GenericProc>(EglDestroyImageKHR);
+    }
+    if (strcmp(procName, "eglGetError") == 0)
+    {
+        return reinterpret_cast<angle::GenericProc>(EglGetError);
     }
 
     // GLES
@@ -1789,6 +1799,11 @@ EGLBoolean TracePerfTest::onEglDestroyImage(EGLDisplay display, EGLImage image)
 EGLBoolean TracePerfTest::onEglDestroyImageKHR(EGLDisplay display, EGLImage image)
 {
     return getGLWindow()->destroyImageKHR(image);
+}
+
+EGLint TracePerfTest::onEglGetError()
+{
+    return getGLWindow()->getEGLError();
 }
 
 // Triggered when the replay calls glBindFramebuffer.
