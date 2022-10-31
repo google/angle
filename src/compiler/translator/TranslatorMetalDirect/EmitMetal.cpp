@@ -1891,7 +1891,7 @@ void GenMetalTraverser::emitFunctionParameter(const TFunction &func, const TVari
         {
             mOut << " [[texture(" << (mMainTextureIndex) << ")]]";
             const std::string originalName = reflection->getOriginalName(param.uniqueId().get());
-            reflection->addTextureBinding(originalName, mMainSamplerIndex);
+            reflection->addTextureBinding(originalName, mMainTextureIndex);
             mMainTextureIndex += type.getArraySizeProduct();
         }
         else if (Name(param) == Pipeline{Pipeline::Type::InstanceId, nullptr}.getStructInstanceName(

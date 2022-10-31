@@ -345,6 +345,7 @@ class PipelineFunctionEnv
     const std::unordered_set<const TFunction *> &mPipelineFunctions;
     const PipelineScoped<TStructure> mPipelineStruct;
     PipelineScoped<TVariable> &mPipelineMainLocalVar;
+    size_t mFirstParamIdxInMainFn = 0;
 
     std::unordered_map<const TFunction *, const TFunction *> mFuncMap;
 
@@ -394,6 +395,10 @@ class PipelineFunctionEnv
         if (it == mFuncMap.end())
         {
             const bool isMain = func.isMain();
+            if (isMain)
+            {
+                mFirstParamIdxInMainFn = func.getParamCount();
+            }
 
             if (isMain && mPipeline.isPipelineOut())
             {
@@ -566,6 +571,8 @@ class PipelineFunctionEnv
 
     // If not null, this is the value we need to initialize the pipeline main local variable with.
     TIntermTyped *getOptionalPipelineInitExpr() { return mPipelineInitExpr; }
+
+    size_t getFirstParamIdxInMainFn() const { return mFirstParamIdxInMainFn; }
 };
 
 class UpdatePipelineFunctions : private TIntermRebuild
@@ -808,8 +815,8 @@ class UpdatePipelineFunctions : private TIntermRebuild
             {
                 const TFieldList &fields = mPipelineStruct.external->fields();
 
-                ASSERT(func.getParamCount() >= 2 * fields.size());
-                size_t paramIndex = func.getParamCount() - 2 * fields.size();
+                ASSERT(func.getParamCount() >= mEnv.getFirstParamIdxInMainFn() + 2 * fields.size());
+                size_t paramIndex = mEnv.getFirstParamIdxInMainFn();
 
                 for (const TField *field : fields)
                 {
