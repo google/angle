@@ -3687,8 +3687,6 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsMultiDrawIndirect,
                             mPhysicalDeviceFeatures.multiDrawIndirect == VK_TRUE);
 
-    ANGLE_FEATURE_CONDITION(&mFeatures, disableFifoPresentMode, IsLinux() && isIntel);
-
     ANGLE_FEATURE_CONDITION(&mFeatures, perFrameWindowSizeQuery,
                             IsAndroid() || isIntel || (IsWindows() && isAMD) || IsFuchsia() ||
                                 isSamsung || displayVk->isWayland());

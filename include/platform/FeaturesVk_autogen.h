@@ -214,10 +214,6 @@ struct FeaturesVk : FeatureSetBase
                                      "VkDevice supports the VK_KHR_multiview extension", &members,
                                      "http://anglebug.com/6048"};
 
-    FeatureInfo disableFifoPresentMode = {
-        "disableFifoPresentMode", FeatureCategory::VulkanWorkarounds,
-        "VK_PRESENT_MODE_FIFO_KHR causes random timeouts", &members, "http://anglebug.com/3153"};
-
     FeatureInfo forceD16TexFilter = {
         "forceD16TexFilter", FeatureCategory::VulkanWorkarounds,
         "VK_FORMAT_D16_UNORM does not support VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT, "

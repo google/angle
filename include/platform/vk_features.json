@@ -257,14 +257,6 @@
             "issue": "http://anglebug.com/6048"
         },
         {
-            "name": "disable_fifo_present_mode",
-            "category": "Workarounds",
-            "description": [
-                "VK_PRESENT_MODE_FIFO_KHR causes random timeouts"
-            ],
-            "issue": "http://anglebug.com/3153"
-        },
-        {
             "name": "force_D16_tex_filter",
             "category": "Workarounds",
             "description": [

@@ -66,7 +66,6 @@ enum class Feature
     DisableBlendFuncExtended,
     DisableClipCullDistance,
     DisableDrawBuffersIndexed,
-    DisableFifoPresentMode,
     DisableFlippingBlitWithCommand,
     DisableGPUSwitchingSupport,
     DisableMultisampledRenderToTexture,

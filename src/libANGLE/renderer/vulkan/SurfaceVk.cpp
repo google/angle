@@ -987,12 +987,7 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk)
 
     // Select appropriate present mode based on vsync parameter. Default to 1 (FIFO), though it
     // will get clamped to the min/max values specified at display creation time.
-    EGLint preferredSwapInterval = mState.getPreferredSwapInterval();
-    if (renderer->getFeatures().disableFifoPresentMode.enabled)
-    {
-        preferredSwapInterval = 0;
-    }
-    setSwapInterval(preferredSwapInterval);
+    setSwapInterval(mState.getPreferredSwapInterval());
 
     // Ensure that the format and colorspace pair is supported.
     const vk::Format &format = renderer->getFormat(mState.config->renderTargetFormat);

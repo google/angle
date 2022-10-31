@@ -69,7 +69,6 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::DisableBlendFuncExtended, "disableBlendFuncExtended"},
     {Feature::DisableClipCullDistance, "disableClipCullDistance"},
     {Feature::DisableDrawBuffersIndexed, "disableDrawBuffersIndexed"},
-    {Feature::DisableFifoPresentMode, "disableFifoPresentMode"},
     {Feature::DisableFlippingBlitWithCommand, "disableFlippingBlitWithCommand"},
     {Feature::DisableGPUSwitchingSupport, "disableGPUSwitchingSupport"},
     {Feature::DisableMultisampledRenderToTexture, "disableMultisampledRenderToTexture"},
