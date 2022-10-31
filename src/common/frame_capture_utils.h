@@ -339,6 +339,21 @@ void WriteParamValueReplay<ParamType::TEGLClientBuffer>(std::ostream &os,
                                                         EGLClientBuffer value);
 
 template <>
+void WriteParamValueReplay<ParamType::TEGLAttribPointer>(std::ostream &os,
+                                                         const CallCapture &call,
+                                                         const EGLAttrib *value);
+
+template <>
+void WriteParamValueReplay<ParamType::TEGLintPointer>(std::ostream &os,
+                                                      const CallCapture &call,
+                                                      EGLint *value);
+
+template <>
+void WriteParamValueReplay<ParamType::TEGLintConstPointer>(std::ostream &os,
+                                                           const CallCapture &call,
+                                                           const EGLint *value);
+
+template <>
 void WriteParamValueReplay<ParamType::Tegl_ConfigPointer>(std::ostream &os,
                                                           const CallCapture &call,
                                                           egl::Config *value);

@@ -552,6 +552,51 @@ void WriteParamValueReplay<ParamType::Tegl_SyncPointer>(std::ostream &os,
 }
 
 template <>
+void WriteParamValueReplay<ParamType::TEGLAttribPointer>(std::ostream &os,
+                                                         const CallCapture &call,
+                                                         const EGLAttrib *value)
+{
+    if (value == 0)
+    {
+        os << kNullPointerString;
+    }
+    else
+    {
+        os << "(const EGLAttrib *)" << static_cast<int>(reinterpret_cast<uintptr_t>(value));
+    }
+}
+
+template <>
+void WriteParamValueReplay<ParamType::TEGLintConstPointer>(std::ostream &os,
+                                                           const CallCapture &call,
+                                                           const EGLint *value)
+{
+    if (value == 0)
+    {
+        os << kNullPointerString;
+    }
+    else
+    {
+        os << "(const EGLint *)" << static_cast<int>(reinterpret_cast<uintptr_t>(value));
+    }
+}
+
+template <>
+void WriteParamValueReplay<ParamType::TEGLintPointer>(std::ostream &os,
+                                                      const CallCapture &call,
+                                                      EGLint *value)
+{
+    if (value == 0)
+    {
+        os << kNullPointerString;
+    }
+    else
+    {
+        os << "(const EGLint *)" << static_cast<int>(reinterpret_cast<uintptr_t>(value));
+    }
+}
+
+template <>
 void WriteParamValueReplay<ParamType::TEGLTime>(std::ostream &os,
                                                 const CallCapture &call,
                                                 EGLTime value)
