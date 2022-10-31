@@ -3950,8 +3950,11 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsExtendedDynamicState2,
                             mExtendedDynamicState2Features.extendedDynamicState2 == VK_TRUE);
 
-    ANGLE_FEATURE_CONDITION(&mFeatures, supportsLogicOpDynamicState,
-                            mExtendedDynamicState2Features.extendedDynamicState2LogicOp == VK_TRUE);
+    // Disabled on Intel/Mesa due to driver bug (crbug.com/1379201)
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, supportsLogicOpDynamicState,
+        mExtendedDynamicState2Features.extendedDynamicState2LogicOp == VK_TRUE &&
+            !(IsLinux() && isIntel));
 
     // Avoid dynamic state for vertex input binding stride on buggy drivers.
     ANGLE_FEATURE_CONDITION(&mFeatures, forceStaticVertexStrideState,
