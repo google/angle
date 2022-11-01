@@ -241,7 +241,7 @@ def upgrade_single_trace(args, trace_binary, trace, out_path, no_overwrite, c_so
 
         run_test_suite(args, trace_binary, trace, max_steps, additional_args, additional_env)
 
-        json_file = get_trace_json_path(trace)
+        json_file = "{}/{}.json".format(trace_path, trace)
         if not os.path.exists(json_file):
             logging.error(
                 f'There was a problem tracing "{trace}", could not find json file: {json_file}')
