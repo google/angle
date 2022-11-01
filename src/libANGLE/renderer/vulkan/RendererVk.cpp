@@ -149,26 +149,6 @@ constexpr const char *kSkippedMessages[] = {
     "UNASSIGNED-CoreValidation-Shader-InputNotProduced",
     // http://anglebug.com/2796
     "UNASSIGNED-CoreValidation-Shader-PointSizeMissing",
-    // Best Practices Skips https://issuetracker.google.com/issues/166641492
-    // https://issuetracker.google.com/issues/166793850
-    "UNASSIGNED-BestPractices-vkCreateCommandPool-command-buffer-reset",
-    "UNASSIGNED-BestPractices-pipeline-stage-flags",
-    "UNASSIGNED-BestPractices-Error-Result",
-    "UNASSIGNED-BestPractices-vkAllocateMemory-small-allocation",
-    "UNASSIGNED-BestPractices-vkBindMemory-small-dedicated-allocation",
-    "UNASSIGNED-BestPractices-vkAllocateMemory-too-many-objects",
-    "UNASSIGNED-BestPractices-vkCreateDevice-deprecated-extension",
-    "UNASSIGNED-BestPractices-vkCreateRenderPass-image-requires-memory",
-    "UNASSIGNED-BestPractices-vkCreateGraphicsPipelines-too-many-instanced-vertex-buffers",
-    "UNASSIGNED-BestPractices-DrawState-ClearCmdBeforeDraw",
-    "UNASSIGNED-BestPractices-vkCmdClearAttachments-clear-after-load",
-    "UNASSIGNED-BestPractices-TransitionUndefinedToReadOnly",
-    // http://anglebug.com/5336
-    "UNASSIGNED-BestPractices-vkCreateDevice-specialuse-extension",
-    // http://anglebug.com/7470
-    "UNASSIGNED-BestPractices-vkCmdBeginRenderPass-ClearValueWithoutLoadOpClear",
-    // http://anglebug.com/7795
-    "UNASSIGNED-BestPractices-ImageBarrierAccessLayout",
     // http://anglebug.com/4928
     "VUID-vkMapMemory-memory-00683",
     // http://anglebug.com/5027
@@ -1663,25 +1643,16 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     instanceInfo.enabledLayerCount   = static_cast<uint32_t>(enabledInstanceLayerNames.size());
     instanceInfo.ppEnabledLayerNames = enabledInstanceLayerNames.data();
 
-    VkValidationFeatureEnableEXT enabledFeatures[] = {
-        VK_VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT};
-    VkValidationFeaturesEXT validationFeatures       = {};
-    validationFeatures.sType                         = VK_STRUCTURE_TYPE_VALIDATION_FEATURES_EXT;
-    validationFeatures.enabledValidationFeatureCount = 1;
-    validationFeatures.pEnabledValidationFeatures    = enabledFeatures;
-
     // http://anglebug.com/7050 - Shader validation caching is broken on Android
+    VkValidationFeaturesEXT validationFeatures       = {};
     VkValidationFeatureDisableEXT disabledFeatures[] = {
         VK_VALIDATION_FEATURE_DISABLE_SHADER_VALIDATION_CACHE_EXT};
-    if (IsAndroid())
+    if (mEnableValidationLayers && IsAndroid())
     {
+        validationFeatures.sType = VK_STRUCTURE_TYPE_VALIDATION_FEATURES_EXT;
         validationFeatures.disabledValidationFeatureCount = 1;
         validationFeatures.pDisabledValidationFeatures    = disabledFeatures;
-    }
 
-    if (mEnableValidationLayers)
-    {
-        // Enable best practices output which includes perfdoc layer
         vk::AddToPNextChain(&instanceInfo, &validationFeatures);
     }
 
