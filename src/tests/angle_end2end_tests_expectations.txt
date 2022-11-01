@@ -838,6 +838,40 @@
 // Flat shading bug with lighting
 6201 VULKAN : LightsTest.FlatLitMesh/* = SKIP
 
+// Adreno drivers erroneously reject certain sub-image uploads
+7473 PIXEL4ORXL GLES : CompressedTextureASTCTest.Test/* = SKIP
+7473 PIXEL4ORXL GLES : CompressedTextureASTCSliced3DTest.Test/* = SKIP
+7473 PIXEL4ORXL GLES : CompressedTextureETC1SubTest.Test/* = SKIP
+7473 PIXEL4ORXL GLES : CompressedTextureEACR11STest.Test/* = SKIP
+7473 PIXEL4ORXL GLES : CompressedTextureEACR11UTest.Test/* = SKIP
+7473 PIXEL4ORXL GLES : CompressedTextureEACRG11STest.Test/* = SKIP
+7473 PIXEL4ORXL GLES : CompressedTextureEACRG11UTest.Test/* = SKIP
+7473 PIXEL4ORXL GLES : CompressedTextureETC2RGB8A1SRGBTest.Test/* = SKIP
+7473 PIXEL4ORXL GLES : CompressedTextureETC2RGB8A1Test.Test/* = SKIP
+7473 PIXEL4ORXL GLES : CompressedTextureETC2RGB8SRGBTest.Test/* = SKIP
+7473 PIXEL4ORXL GLES : CompressedTextureETC2RGB8Test.Test/* = SKIP
+7473 PIXEL4ORXL GLES : CompressedTextureETC2RGBA8SRGBTest.Test/* = SKIP
+7473 PIXEL4ORXL GLES : CompressedTextureETC2RGBA8Test.Test/* = SKIP
+
+// Intel drivers erroneously reject certain sub-image uploads
+7473 WIN INTEL OPENGL : CompressedTextureDXT1Test.Test/* = SKIP
+7473 WIN INTEL OPENGL : CompressedTextureDXT3Test.Test/* = SKIP
+7473 WIN INTEL OPENGL : CompressedTextureDXT5Test.Test/* = SKIP
+7473 WIN INTEL OPENGL : CompressedTextureS3TCSRGBTest.Test/* = SKIP
+7473 WIN INTEL OPENGL : CompressedTextureRGTCTest.Test/* = SKIP
+7473 WIN INTEL OPENGL : CompressedTextureBPTCTest.Test/* = SKIP
+7473 WIN INTEL OPENGL : CompressedTextureETC1SubTest.Test/* = SKIP
+7473 WIN INTEL OPENGL : CompressedTextureEACR11STest.Test/* = SKIP
+7473 WIN INTEL OPENGL : CompressedTextureEACR11UTest.Test/* = SKIP
+7473 WIN INTEL OPENGL : CompressedTextureEACRG11STest.Test/* = SKIP
+7473 WIN INTEL OPENGL : CompressedTextureEACRG11UTest.Test/* = SKIP
+7473 WIN INTEL OPENGL : CompressedTextureETC2RGB8A1SRGBTest.Test/* = SKIP
+7473 WIN INTEL OPENGL : CompressedTextureETC2RGB8A1Test.Test/* = SKIP
+7473 WIN INTEL OPENGL : CompressedTextureETC2RGB8SRGBTest.Test/* = SKIP
+7473 WIN INTEL OPENGL : CompressedTextureETC2RGB8Test.Test/* = SKIP
+7473 WIN INTEL OPENGL : CompressedTextureETC2RGBA8SRGBTest.Test/* = SKIP
+7473 WIN INTEL OPENGL : CompressedTextureETC2RGBA8Test.Test/* = SKIP
+
 // Slow tests, should appear last in this file
 5076 : GLSLTest.VerifyMaxVertexUniformVectors* = TIMEOUT
 5076 : GLSLTest.VerifyMaxFragmentUniformVectors* = TIMEOUT
