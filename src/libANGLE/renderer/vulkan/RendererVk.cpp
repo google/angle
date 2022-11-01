@@ -4229,8 +4229,9 @@ ShPixelLocalStorageType RendererVk::getNativePixelLocalStorageType() const
 
 void RendererVk::initializeFrontendFeatures(angle::FrontendFeatures *features) const
 {
-    bool isSwiftShader =
+    const bool isSwiftShader =
         IsSwiftshader(mPhysicalDeviceProperties.vendorID, mPhysicalDeviceProperties.deviceID);
+    const bool isMesaVenus = mDriverProperties.driverID == VK_DRIVER_ID_MESA_VENUS;
 
     // Hopefully-temporary work-around for a crash on SwiftShader.  An Android process is turning
     // off GL error checking, and then asking ANGLE to write past the end of a buffer.
@@ -4238,6 +4239,8 @@ void RendererVk::initializeFrontendFeatures(angle::FrontendFeatures *features) c
     ANGLE_FEATURE_CONDITION(features, forceGlErrorChecking, (IsAndroid() && isSwiftShader));
 
     ANGLE_FEATURE_CONDITION(features, cacheCompiledShader, true);
+
+    ANGLE_FEATURE_CONDITION(features, enableCompressingPipelineCacheInThreadPool, isMesaVenus);
 }
 
 angle::Result RendererVk::getPipelineCacheSize(DisplayVk *displayVk, size_t *pipelineCacheSizeOut)
@@ -4335,9 +4338,9 @@ angle::Result RendererVk::syncPipelineCacheVk(DisplayVk *displayVk, const gl::Co
 
     if (context->getFrontendFeatures().enableCompressingPipelineCacheInThreadPool.enabled)
     {
-        // The function zlib_internal::GzipCompressHelper() can compress 10M pipeline cache data
-        // into about 2M, to save the time of compression, set kMaxTotalSize to 10M.
-        constexpr size_t kMaxTotalSize = 10 * 1024 * 1024;
+        // zlib compression ratio normally ranges from 2:1 to 5:1. Set kMaxTotalSize to 64M to
+        // ensure the size can fit into the 32MB blob cache limit on supported platforms.
+        constexpr size_t kMaxTotalSize = 64 * 1024 * 1024;
 
         // Create task to compress.
         auto compressAndStorePipelineCacheTask =
