@@ -423,7 +423,7 @@ deps = {
   # We use the upstream/main branch.
   'third_party/libdrm': {
     'url': '{chromium_git}/chromiumos/third_party/libdrm@474894ed17a037a464e5bd845a0765a50f647898',
-    'condition': 'angle_mesa',
+    'condition': 'checkout_angle_mesa',
   },
 
   # libjpeg_turbo is used by glmark2.
@@ -477,13 +477,13 @@ deps = {
   # We use the upstream/main branch.
   'third_party/mesa/src': {
     'url': '{chromium_git}/external/github.com/Mesa3D/mesa@0a6aa58acae2a5b27ef783c22e976ec9b0d33ddc',
-    'condition': 'angle_mesa',
+    'condition': 'checkout_angle_mesa',
   },
 
   # We use the upstream/master branch.
   'third_party/meson': {
     'url': '{chromium_git}/external/github.com/mesonbuild/meson@9fd5eb605674067ce6f8876dc27e5e116024e8a6',
-    'condition': 'angle_mesa',
+    'condition': 'checkout_angle_mesa',
   },
 
   'third_party/nasm': {
@@ -4558,7 +4558,7 @@ hooks = [
   {
     'name': 'mesa_input',
     'pattern': '.',
-    'condition': 'angle_mesa',
+    'condition': 'checkout_angle_mesa',
     'action': [ 'python3', 'third_party/mesa/mesa_build.py', 'runhook', ],
   }
 ]
