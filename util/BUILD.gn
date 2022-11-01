@@ -117,6 +117,27 @@ if (is_android) {
   ]
 }
 
+# Backtrace utils
+if (is_linux) {
+  _util_sources += [ "linux/linux_backtrace.cpp" ]
+}
+
+if (is_fuchsia) {
+  _util_sources += [ "fuchsia/fuchsia_backtrace.cpp" ]
+}
+
+if (is_ios) {
+  _util_sources += [ "ios/ios_backtrace.cpp" ]
+}
+
+if (is_mac) {
+  _util_sources += [ "osx/osx_backtrace.cpp" ]
+}
+
+if (is_android) {
+  _util_sources += [ "android/android_backtrace.cpp" ]
+}
+
 config("angle_util_loader_config") {
   defines = [ "ANGLE_USE_UTIL_LOADER" ]
 }

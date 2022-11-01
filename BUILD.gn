@@ -176,6 +176,9 @@ config("internal_config") {
     defines += [ "ANGLE_ENABLE_TRACE_EVENTS=1" ]
   }
 
+  # Checks that unwind backtrace support for Android is enabled only for debug mode.
+  assert(is_debug || !angle_enable_unwind_backtrace_support)
+
   if (is_chromeos) {
     defines += [ "ANGLE_PLATFORM_CHROMEOS" ]
   }

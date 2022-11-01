@@ -233,6 +233,10 @@ declare_args() {
   angle_enable_trace_android_logcat = false
   angle_enable_trace_events = false
 
+  # Unwind backtrace support. This feature is currently only implemented
+  # on Android for debugging purposes. Disabled by default.
+  angle_enable_unwind_backtrace_support = false
+
   # Disable the layers in ubsan builds because of really slow builds.
   # Vulkan Validation Layers require Android NDK API level 26, i.e. Oreo, due to
   # Vulkan Validation Layers compatibility issues, see http://crrev/c/1405714.
