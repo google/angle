@@ -268,6 +268,7 @@ void Trace(LogSeverity severity, const char *message)
             switch (severity)
             {
                 case LOG_INFO:
+                case LOG_EVENT:
                     apple_log_type = OS_LOG_TYPE_INFO;
                     break;
                 case LOG_WARN:
