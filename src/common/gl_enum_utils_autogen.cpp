@@ -1988,7 +1988,7 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                 case 0x8E4E:
                     return "GL_LAST_VERTEX_CONVENTION";
                 case 0x8E4F:
-                    return "GL_PROVOKING_VERTEX";
+                    return "GL_PROVOKING_VERTEX_ANGLE";
                 case 0x8E50:
                     return "GL_SAMPLE_POSITION";
                 case 0x8E51:
@@ -4874,7 +4874,7 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                 case 0x8E28:
                     return "GL_TIMESTAMP_EXT";
                 case 0x8E4F:
-                    return "GL_PROVOKING_VERTEX";
+                    return "GL_PROVOKING_VERTEX_ANGLE";
                 case 0x8E59:
                     return "GL_MAX_SAMPLE_MASK_WORDS";
                 case 0x8E89:
@@ -24805,6 +24805,10 @@ unsigned int StringToGLenum(const char *str)
     {
         return 0x8E4D;
     }
+    if (strcmp(str, "GL_FIRST_VERTEX_CONVENTION_ANGLE") == 0)
+    {
+        return 0x8E4D;
+    }
     if (strcmp(str, "GL_FIRST_VERTEX_CONVENTION_EXT") == 0)
     {
         return 0x8E4D;
@@ -27736,6 +27740,10 @@ unsigned int StringToGLenum(const char *str)
         return 0x0018;
     }
     if (strcmp(str, "GL_LAST_VERTEX_CONVENTION") == 0)
+    {
+        return 0x8E4E;
+    }
+    if (strcmp(str, "GL_LAST_VERTEX_CONVENTION_ANGLE") == 0)
     {
         return 0x8E4E;
     }
@@ -34248,6 +34256,10 @@ unsigned int StringToGLenum(const char *str)
         return 0x959B;
     }
     if (strcmp(str, "GL_PROVOKING_VERTEX") == 0)
+    {
+        return 0x8E4F;
+    }
+    if (strcmp(str, "GL_PROVOKING_VERTEX_ANGLE") == 0)
     {
         return 0x8E4F;
     }

@@ -8,7 +8,7 @@
   "scripts/generate_entry_points.py":
     "0ea0e8dc52c8d2dd3be1430c36a5ceba",
   "scripts/gl_angle_ext.xml":
-    "87693dfe98fd0359b586d8665fc1c22b",
+    "56e513e5731c4d162ff289aaaf4161dc",
   "scripts/registry_xml.py":
     "4837b4beda7a0e2698e2be7e8e74fd88",
   "src/common/entry_points_enum_autogen.cpp":

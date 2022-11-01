@@ -3112,7 +3112,7 @@ angle::Result State::getIntegerv(const Context *context, GLenum pname, GLint *pa
             break;
 
         // GL_ANGLE_provoking_vertex
-        case GL_PROVOKING_VERTEX:
+        case GL_PROVOKING_VERTEX_ANGLE:
             *params = ToGLenum(mProvokingVertex);
             break;
 

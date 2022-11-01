@@ -1153,9 +1153,9 @@
         </extension>
         <extension name="GL_ANGLE_provoking_vertex" supported='gles2'>
             <require>
-                <enum name="GL_FIRST_VERTEX_CONVENTION"/>
-                <enum name="GL_LAST_VERTEX_CONVENTION"/>
-                <enum name="GL_PROVOKING_VERTEX"/>
+                <enum name="GL_FIRST_VERTEX_CONVENTION_ANGLE"/>
+                <enum name="GL_LAST_VERTEX_CONVENTION_ANGLE"/>
+                <enum name="GL_PROVOKING_VERTEX_ANGLE"/>
                 <command name="glProvokingVertexANGLE"/>
             </require>
         </extension>
@@ -1283,6 +1283,12 @@
     </extensions>
 
     <!-- SECTION: GL enumerant (token) definitions. -->
+    <enums namespace="GL" start="0x8E4D" end="0x8E4F" vendor="ANGLE">
+        <enum value="0x8E4D" name="GL_FIRST_VERTEX_CONVENTION_ANGLE" group="VertexProvokingMode"/>
+        <enum value="0x8E4E" name="GL_LAST_VERTEX_CONVENTION_ANGLE" group="VertexProvokingMode"/>
+        <enum value="0x8E4F" name="GL_PROVOKING_VERTEX_ANGLE" group="GetPName"/>
+    </enums>
+
     <enums namespace="GL" start="0x93A7" end="0x93A7" vendor="ANGLE">
         <enum value="0x93A7" name="GL_ROBUST_RESOURCE_INITIALIZATION_ANGLE"/>
     </enums>
