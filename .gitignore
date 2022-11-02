@@ -43,6 +43,7 @@
 /third_party/colorama/src
 /third_party/depot_tools
 /third_party/EGL-Registry/src
+/third_party/flatbuffers/src
 /third_party/fuchsia-sdk
 /third_party/gles1_conform
 /third_party/glmark2/src
