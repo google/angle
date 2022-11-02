@@ -2722,7 +2722,7 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                 case 0x96E2:
                     return "GL_MAX_COMBINED_DRAW_BUFFERS_AND_PIXEL_LOCAL_STORAGE_PLANES_ANGLE";
                 case 0x96E3:
-                    return "GL_PIXEL_LOCAL_STORAGE_ACTIVE_ANGLE";
+                    return "GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE";
                 case 0x96E4:
                     return "GL_PIXEL_LOCAL_FORMAT_ANGLE";
                 case 0x96E5:
@@ -33105,7 +33105,7 @@ unsigned int StringToGLenum(const char *str)
     {
         return 0x96E4;
     }
-    if (strcmp(str, "GL_PIXEL_LOCAL_STORAGE_ACTIVE_ANGLE") == 0)
+    if (strcmp(str, "GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE") == 0)
     {
         return 0x96E3;
     }
