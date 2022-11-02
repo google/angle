@@ -167,9 +167,9 @@ def run_autoninja(args):
     autoninja_args = [autoninja_binary, '-C', args.gn_path, args.test_suite]
     logging.debug('Calling %s' % ' '.join(autoninja_args))
     if args.show_test_stdout:
-        subprocess.check_call(autoninja_args)
+        subprocess.run(autoninja_args, check=True)
     else:
-        subprocess.check_call(autoninja_args, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        subprocess.check_output(autoninja_args)
 
 
 def run_test_suite(args, trace_binary, trace, max_steps, additional_args, additional_env):
@@ -639,7 +639,11 @@ def main():
             logging.fatal('Unknown command: %s' % args.command)
             return EXIT_FAILURE
     except subprocess.CalledProcessError as e:
-        logging.exception('There was an exception running "%s": %s' % (traces, e.output.decode()))
+        if args.show_test_stdout:
+            logging.exception('There was an exception running "%s"' % traces)
+        else:
+            logging.exception('There was an exception running "%s": %s' %
+                              (traces, e.output.decode()))
 
         return EXIT_FAILURE
 
