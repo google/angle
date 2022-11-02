@@ -216,7 +216,12 @@ ContextMtl::ContextMtl(const gl::State &state,
       mDriverUniforms{},
       mProvokingVertexHelper(this),
       mContextDevice(GetOwnershipIdentity(attribs))
-{}
+{
+    if (@available(iOS 12.0, macOS 10.14, *))
+    {
+        mHasMetalSharedEvents = true;
+    }
+}
 
 ContextMtl::~ContextMtl() {}
 
@@ -285,7 +290,22 @@ angle::Result ContextMtl::ensureIncompleteTexturesCreated(const gl::Context *con
 // Flush and finish.
 angle::Result ContextMtl::flush(const gl::Context *context)
 {
-    flushCommandBuffer(mtl::NoWait);
+    if (mHasMetalSharedEvents)
+    {
+        // MTLSharedEvent is available on these platforms, and callers
+        // are expected to use the EGL_ANGLE_metal_shared_event_sync
+        // extension to synchronize with ANGLE's Metal backend, if
+        // needed. This is typically required if two MTLDevices are
+        // operating on the same IOSurface.
+        flushCommandBuffer(mtl::NoWait);
+    }
+    else
+    {
+        // Older operating systems do not have this primitive available.
+        // Make every flush operation wait until it's scheduled in order to
+        // achieve callers' expected synchronization behavior.
+        flushCommandBuffer(mtl::WaitUntilScheduled);
+    }
     return angle::Result::Continue;
 }
 angle::Result ContextMtl::finish(const gl::Context *context)
