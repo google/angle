@@ -499,7 +499,7 @@ class UtilsVk : angle::NonCopyable
     angle::Result setupComputeProgram(
         ContextVk *contextVk,
         Function function,
-        vk::RefCounted<vk::ShaderAndSerial> *csShader,
+        vk::RefCounted<vk::ShaderModule> *csShader,
         ComputeShaderProgramAndPipelines *programAndPipelines,
         const VkDescriptorSet descriptorSet,
         const void *pushConstants,
@@ -507,8 +507,8 @@ class UtilsVk : angle::NonCopyable
         vk::OutsideRenderPassCommandBufferHelper *commandBufferHelper);
     angle::Result setupGraphicsProgram(ContextVk *contextVk,
                                        Function function,
-                                       vk::RefCounted<vk::ShaderAndSerial> *vsShader,
-                                       vk::RefCounted<vk::ShaderAndSerial> *fsShader,
+                                       vk::RefCounted<vk::ShaderModule> *vsShader,
+                                       vk::RefCounted<vk::ShaderModule> *fsShader,
                                        GraphicsShaderProgramAndPipelines *programAndPipelines,
                                        const vk::GraphicsPipelineDesc *pipelineDesc,
                                        const VkDescriptorSet descriptorSet,
@@ -605,7 +605,7 @@ class UtilsVk : angle::NonCopyable
 
     // Unresolve shaders are special as they are generated on the fly due to the large number of
     // combinations.
-    std::unordered_map<uint32_t, vk::RefCounted<vk::ShaderAndSerial>> mUnresolveFragShaders;
+    std::unordered_map<uint32_t, vk::RefCounted<vk::ShaderModule>> mUnresolveFragShaders;
     std::unordered_map<uint32_t, GraphicsShaderProgramAndPipelines> mUnresolve;
 
     vk::Sampler mPointSampler;

@@ -4360,11 +4360,6 @@ angle::Result RendererVk::syncPipelineCacheVk(DisplayVk *displayVk, const gl::Co
     return angle::Result::Continue;
 }
 
-Serial RendererVk::issueShaderSerial()
-{
-    return mShaderSerialFactory.generate();
-}
-
 // These functions look at the mandatory format for support, and fallback to querying the device (if
 // necessary) to test the availability of the bits.
 bool RendererVk::hasLinearImageFormatFeatureBits(angle::FormatID formatID,

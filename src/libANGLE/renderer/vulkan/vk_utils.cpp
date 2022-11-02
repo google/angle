@@ -646,10 +646,10 @@ angle::Result AllocateBufferMemoryWithRequirements(Context *context,
                                               buffer, deviceMemoryOut);
 }
 
-angle::Result InitShaderAndSerial(Context *context,
-                                  ShaderAndSerial *shaderAndSerial,
-                                  const uint32_t *shaderCode,
-                                  size_t shaderCodeSize)
+angle::Result InitShaderModule(Context *context,
+                               ShaderModule *shaderModule,
+                               const uint32_t *shaderCode,
+                               size_t shaderCodeSize)
 {
     VkShaderModuleCreateInfo createInfo = {};
     createInfo.sType                    = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
@@ -657,8 +657,7 @@ angle::Result InitShaderAndSerial(Context *context,
     createInfo.codeSize                 = shaderCodeSize;
     createInfo.pCode                    = shaderCode;
 
-    ANGLE_VK_TRY(context, shaderAndSerial->get().init(context->getDevice(), createInfo));
-    shaderAndSerial->updateSerial(context->getRenderer()->issueShaderSerial());
+    ANGLE_VK_TRY(context, shaderModule->init(context->getDevice(), createInfo));
     return angle::Result::Continue;
 }
 

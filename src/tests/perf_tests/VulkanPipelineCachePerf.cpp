@@ -93,9 +93,9 @@ void VulkanPipelineCachePerfTest::step()
     vk::PipelineLayout pl;
     vk::PipelineCache pc;
     PipelineCacheAccess spc;
-    vk::RefCounted<vk::ShaderAndSerial> vsAndSerial;
-    vk::RefCounted<vk::ShaderAndSerial> fsAndSerial;
-    vk::ShaderAndSerialMap ssm;
+    vk::RefCounted<vk::ShaderModule> vsRefCounted;
+    vk::RefCounted<vk::ShaderModule> fsRefCounted;
+    vk::ShaderModuleMap ssm;
     const vk::GraphicsPipelineDesc *desc = nullptr;
     vk::PipelineHelper *result           = nullptr;
 
@@ -103,11 +103,11 @@ void VulkanPipelineCachePerfTest::step()
     VkShaderModule vs = (VkShaderModule)1;
     VkShaderModule fs = (VkShaderModule)2;
 
-    vsAndSerial.get().get().setHandle(vs);
-    fsAndSerial.get().get().setHandle(fs);
+    vsRefCounted.get().setHandle(vs);
+    fsRefCounted.get().setHandle(fs);
 
-    ssm[gl::ShaderType::Vertex].set(&vsAndSerial);
-    ssm[gl::ShaderType::Fragment].set(&fsAndSerial);
+    ssm[gl::ShaderType::Vertex].set(&vsRefCounted);
+    ssm[gl::ShaderType::Fragment].set(&fsRefCounted);
 
     spc.init(&pc, nullptr);
 
@@ -136,8 +136,8 @@ void VulkanPipelineCachePerfTest::step()
         }
     }
 
-    vsAndSerial.get().get().setHandle(VK_NULL_HANDLE);
-    fsAndSerial.get().get().setHandle(VK_NULL_HANDLE);
+    vsRefCounted.get().setHandle(VK_NULL_HANDLE);
+    fsRefCounted.get().setHandle(VK_NULL_HANDLE);
 }
 
 }  // anonymous namespace

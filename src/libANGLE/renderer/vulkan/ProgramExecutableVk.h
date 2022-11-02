@@ -85,7 +85,7 @@ class ProgramInfo final : angle::NonCopyable
 
   private:
     vk::ShaderProgramHelper mProgramHelper;
-    gl::ShaderMap<vk::RefCounted<vk::ShaderAndSerial>> mShaders;
+    gl::ShaderMap<vk::RefCounted<vk::ShaderModule>> mShaders;
 };
 
 // State for the default uniform blocks.

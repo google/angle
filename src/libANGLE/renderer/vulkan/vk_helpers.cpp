@@ -10188,7 +10188,7 @@ bool ShaderProgramHelper::valid(const gl::ShaderType shaderType) const
 
 void ShaderProgramHelper::destroy(RendererVk *rendererVk)
 {
-    for (BindingPointer<ShaderAndSerial> &shader : mShaders)
+    for (BindingPointer<ShaderModule> &shader : mShaders)
     {
         shader.reset();
     }
@@ -10196,13 +10196,13 @@ void ShaderProgramHelper::destroy(RendererVk *rendererVk)
 
 void ShaderProgramHelper::release(ContextVk *contextVk)
 {
-    for (BindingPointer<ShaderAndSerial> &shader : mShaders)
+    for (BindingPointer<ShaderModule> &shader : mShaders)
     {
         shader.reset();
     }
 }
 
-void ShaderProgramHelper::setShader(gl::ShaderType shaderType, RefCounted<ShaderAndSerial> *shader)
+void ShaderProgramHelper::setShader(gl::ShaderType shaderType, RefCounted<ShaderModule> *shader)
 {
     // The shaders must be set once and are not expected to change.
     ASSERT(!mShaders[shaderType].valid());
@@ -10232,7 +10232,7 @@ angle::Result ShaderProgramHelper::getOrCreateComputePipeline(
     shaderStage.sType               = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
     shaderStage.flags               = 0;
     shaderStage.stage               = VK_SHADER_STAGE_COMPUTE_BIT;
-    shaderStage.module              = mShaders[gl::ShaderType::Compute].get().get().getHandle();
+    shaderStage.module              = mShaders[gl::ShaderType::Compute].get().getHandle();
     shaderStage.pName               = "main";
     shaderStage.pSpecializationInfo = nullptr;
 

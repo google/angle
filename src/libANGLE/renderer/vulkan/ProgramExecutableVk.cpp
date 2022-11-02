@@ -339,9 +339,9 @@ angle::Result ProgramInfo::initProgram(ContextVk *contextVk,
 
     ANGLE_TRY(GlslangWrapperVk::TransformSpirV(options, variableInfoMap, originalSpirvBlob,
                                                &transformedSpirvBlob));
-    ANGLE_TRY(vk::InitShaderAndSerial(contextVk, &mShaders[shaderType].get(),
-                                      transformedSpirvBlob.data(),
-                                      transformedSpirvBlob.size() * sizeof(uint32_t)));
+    ANGLE_TRY(vk::InitShaderModule(contextVk, &mShaders[shaderType].get(),
+                                   transformedSpirvBlob.data(),
+                                   transformedSpirvBlob.size() * sizeof(uint32_t)));
 
     mProgramHelper.setShader(shaderType, &mShaders[shaderType]);
 
@@ -352,7 +352,7 @@ void ProgramInfo::release(ContextVk *contextVk)
 {
     mProgramHelper.release(contextVk);
 
-    for (vk::RefCounted<vk::ShaderAndSerial> &shader : mShaders)
+    for (vk::RefCounted<vk::ShaderModule> &shader : mShaders)
     {
         shader.get().destroy(contextVk->getDevice());
     }

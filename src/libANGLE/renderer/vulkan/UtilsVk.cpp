@@ -1005,7 +1005,7 @@ angle::Result GetUnresolveFrag(
     gl::DrawBuffersArray<UnresolveColorAttachmentType> &colorAttachmentTypes,
     bool unresolveDepth,
     bool unresolveStencil,
-    vk::RefCounted<vk::ShaderAndSerial> *shader)
+    vk::RefCounted<vk::ShaderModule> *shader)
 {
     if (shader->get().valid())
     {
@@ -1019,8 +1019,7 @@ angle::Result GetUnresolveFrag(
     ASSERT(spirv::Validate(shaderCode));
 
     // Create shader lazily. Access will need to be locked for multi-threading.
-    return vk::InitShaderAndSerial(context, &shader->get(), shaderCode.data(),
-                                   shaderCode.size() * 4);
+    return vk::InitShaderModule(context, &shader->get(), shaderCode.data(), shaderCode.size() * 4);
 }
 
 gl::DrawBufferMask MakeColorBufferMask(uint32_t colorAttachmentIndexGL)
@@ -1257,7 +1256,7 @@ void UtilsVk::destroy(RendererVk *renderer)
 
     for (auto &shaderIter : mUnresolveFragShaders)
     {
-        vk::RefCounted<vk::ShaderAndSerial> &shader = shaderIter.second;
+        vk::RefCounted<vk::ShaderModule> &shader = shaderIter.second;
         shader.get().destroy(device);
     }
     mUnresolveFragShaders.clear();
@@ -1606,7 +1605,7 @@ angle::Result UtilsVk::ensureSamplersInitialized(ContextVk *contextVk)
 angle::Result UtilsVk::setupComputeProgram(
     ContextVk *contextVk,
     Function function,
-    vk::RefCounted<vk::ShaderAndSerial> *csShader,
+    vk::RefCounted<vk::ShaderModule> *csShader,
     ComputeShaderProgramAndPipelines *programAndPipelines,
     const VkDescriptorSet descriptorSet,
     const void *pushConstants,
@@ -1656,8 +1655,8 @@ angle::Result UtilsVk::setupComputeProgram(
 
 angle::Result UtilsVk::setupGraphicsProgram(ContextVk *contextVk,
                                             Function function,
-                                            vk::RefCounted<vk::ShaderAndSerial> *vsShader,
-                                            vk::RefCounted<vk::ShaderAndSerial> *fsShader,
+                                            vk::RefCounted<vk::ShaderModule> *vsShader,
+                                            vk::RefCounted<vk::ShaderModule> *fsShader,
                                             GraphicsShaderProgramAndPipelines *programAndPipelines,
                                             const vk::GraphicsPipelineDesc *pipelineDesc,
                                             const VkDescriptorSet descriptorSet,
@@ -1767,7 +1766,7 @@ angle::Result UtilsVk::convertIndexBuffer(ContextVk *contextVk,
         flags |= vk::InternalShader::ConvertIndex_comp::kIsPrimitiveRestartEnabled;
     }
 
-    vk::RefCounted<vk::ShaderAndSerial> *shader = nullptr;
+    vk::RefCounted<vk::ShaderModule> *shader = nullptr;
     ANGLE_TRY(contextVk->getShaderLibrary().getConvertIndex_comp(contextVk, flags, &shader));
 
     ANGLE_TRY(setupComputeProgram(contextVk, Function::ConvertIndexBuffer, shader,
@@ -1837,7 +1836,7 @@ angle::Result UtilsVk::convertIndexIndirectBuffer(ContextVk *contextVk,
         flags |= vk::InternalShader::ConvertIndex_comp::kIsPrimitiveRestartEnabled;
     }
 
-    vk::RefCounted<vk::ShaderAndSerial> *shader = nullptr;
+    vk::RefCounted<vk::ShaderModule> *shader = nullptr;
     ANGLE_TRY(contextVk->getShaderLibrary().getConvertIndex_comp(contextVk, flags, &shader));
 
     ANGLE_TRY(setupComputeProgram(contextVk, Function::ConvertIndexIndirectBuffer, shader,
@@ -1907,7 +1906,7 @@ angle::Result UtilsVk::convertLineLoopIndexIndirectBuffer(
 
     uint32_t flags = GetConvertIndexIndirectLineLoopFlag(params.indicesBitsWidth);
 
-    vk::RefCounted<vk::ShaderAndSerial> *shader = nullptr;
+    vk::RefCounted<vk::ShaderModule> *shader = nullptr;
     ANGLE_TRY(contextVk->getShaderLibrary().getConvertIndexIndirectLineLoop_comp(contextVk, flags,
                                                                                  &shader));
 
@@ -1969,7 +1968,7 @@ angle::Result UtilsVk::convertLineLoopArrayIndirectBuffer(
 
     uint32_t flags = 0;
 
-    vk::RefCounted<vk::ShaderAndSerial> *shader = nullptr;
+    vk::RefCounted<vk::ShaderModule> *shader = nullptr;
     ANGLE_TRY(
         contextVk->getShaderLibrary().getConvertIndirectLineLoop_comp(contextVk, flags, &shader));
 
@@ -2127,7 +2126,7 @@ angle::Result UtilsVk::convertVertexBufferImpl(
 
     vkUpdateDescriptorSets(contextVk->getDevice(), 1, &writeInfo, 0, nullptr);
 
-    vk::RefCounted<vk::ShaderAndSerial> *shader = nullptr;
+    vk::RefCounted<vk::ShaderModule> *shader = nullptr;
     ANGLE_TRY(contextVk->getShaderLibrary().getConvertVertex_comp(contextVk, flags, &shader));
 
     ANGLE_TRY(setupComputeProgram(contextVk, Function::ConvertVertexBuffer, shader,
@@ -2253,9 +2252,9 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
         SetStencilStateForWrite(&pipelineDesc);
     }
 
-    vk::ShaderLibrary &shaderLibrary                    = contextVk->getShaderLibrary();
-    vk::RefCounted<vk::ShaderAndSerial> *vertexShader   = nullptr;
-    vk::RefCounted<vk::ShaderAndSerial> *fragmentShader = nullptr;
+    vk::ShaderLibrary &shaderLibrary                 = contextVk->getShaderLibrary();
+    vk::RefCounted<vk::ShaderModule> *vertexShader   = nullptr;
+    vk::RefCounted<vk::ShaderModule> *fragmentShader = nullptr;
     GraphicsShaderProgramAndPipelines *imageClearProgramAndPipelines = &mImageClearVSOnly;
 
     ANGLE_TRY(shaderLibrary.getFullScreenTri_vert(contextVk, 0, &vertexShader));
@@ -2402,9 +2401,9 @@ angle::Result UtilsVk::clearImage(ContextVk *contextVk,
 
     const uint32_t flags = GetImageClearFlags(dstActualFormat, 0, false);
 
-    vk::ShaderLibrary &shaderLibrary                    = contextVk->getShaderLibrary();
-    vk::RefCounted<vk::ShaderAndSerial> *vertexShader   = nullptr;
-    vk::RefCounted<vk::ShaderAndSerial> *fragmentShader = nullptr;
+    vk::ShaderLibrary &shaderLibrary                 = contextVk->getShaderLibrary();
+    vk::RefCounted<vk::ShaderModule> *vertexShader   = nullptr;
+    vk::RefCounted<vk::ShaderModule> *fragmentShader = nullptr;
     ANGLE_TRY(shaderLibrary.getFullScreenTri_vert(contextVk, 0, &vertexShader));
     ANGLE_TRY(shaderLibrary.getImageClear_frag(contextVk, flags, &fragmentShader));
 
@@ -2672,9 +2671,9 @@ angle::Result UtilsVk::blitResolveImpl(ContextVk *contextVk,
                            nullptr);
     vkUpdateDescriptorSets(contextVk->getDevice(), 1, &writeInfos[2], 0, nullptr);
 
-    vk::ShaderLibrary &shaderLibrary                    = contextVk->getShaderLibrary();
-    vk::RefCounted<vk::ShaderAndSerial> *vertexShader   = nullptr;
-    vk::RefCounted<vk::ShaderAndSerial> *fragmentShader = nullptr;
+    vk::ShaderLibrary &shaderLibrary                 = contextVk->getShaderLibrary();
+    vk::RefCounted<vk::ShaderModule> *vertexShader   = nullptr;
+    vk::RefCounted<vk::ShaderModule> *fragmentShader = nullptr;
     ANGLE_TRY(shaderLibrary.getFullScreenTri_vert(contextVk, 0, &vertexShader));
     ANGLE_TRY(shaderLibrary.getBlitResolve_frag(contextVk, flags, &fragmentShader));
 
@@ -2861,7 +2860,7 @@ angle::Result UtilsVk::stencilBlitResolveNoShaderExport(ContextVk *contextVk,
 
     vkUpdateDescriptorSets(contextVk->getDevice(), 3, writeInfos, 0, nullptr);
 
-    vk::RefCounted<vk::ShaderAndSerial> *shader = nullptr;
+    vk::RefCounted<vk::ShaderModule> *shader = nullptr;
     ANGLE_TRY(contextVk->getShaderLibrary().getBlitResolveStencilNoExport_comp(contextVk, flags,
                                                                                &shader));
 
@@ -3061,9 +3060,9 @@ angle::Result UtilsVk::copyImage(ContextVk *contextVk,
 
     vkUpdateDescriptorSets(contextVk->getDevice(), 1, &writeInfo, 0, nullptr);
 
-    vk::ShaderLibrary &shaderLibrary                    = contextVk->getShaderLibrary();
-    vk::RefCounted<vk::ShaderAndSerial> *vertexShader   = nullptr;
-    vk::RefCounted<vk::ShaderAndSerial> *fragmentShader = nullptr;
+    vk::ShaderLibrary &shaderLibrary                 = contextVk->getShaderLibrary();
+    vk::RefCounted<vk::ShaderModule> *vertexShader   = nullptr;
+    vk::RefCounted<vk::ShaderModule> *fragmentShader = nullptr;
     ANGLE_TRY(shaderLibrary.getFullScreenTri_vert(contextVk, 0, &vertexShader));
     ANGLE_TRY(shaderLibrary.getImageCopy_frag(contextVk, flags, &fragmentShader));
 
@@ -3388,9 +3387,9 @@ angle::Result UtilsVk::transCodeEtcToBc(ContextVk *contextVk,
 
     vk::OutsideRenderPassCommandBufferHelper *commandBufferHelper;
     ANGLE_TRY(contextVk->getOutsideRenderPassCommandBufferHelper({}, &commandBufferHelper));
-    const angle::Format &format                 = dstImage->getIntendedFormat();
-    uint32_t flags                              = GetEtcToBcFlags(format);
-    vk::RefCounted<vk::ShaderAndSerial> *shader = nullptr;
+    const angle::Format &format              = dstImage->getIntendedFormat();
+    uint32_t flags                           = GetEtcToBcFlags(format);
+    vk::RefCounted<vk::ShaderModule> *shader = nullptr;
     ANGLE_TRY(contextVk->getShaderLibrary().getEtcToBc_comp(contextVk, flags, &shader));
 
     vk::OutsideRenderPassCommandBuffer *commandBuffer;
@@ -3522,7 +3521,7 @@ angle::Result UtilsVk::generateMipmap(ContextVk *contextVk,
 
     vkUpdateDescriptorSets(contextVk->getDevice(), 2, writeInfos, 0, nullptr);
 
-    vk::RefCounted<vk::ShaderAndSerial> *shader = nullptr;
+    vk::RefCounted<vk::ShaderModule> *shader = nullptr;
     ANGLE_TRY(contextVk->getShaderLibrary().getGenerateMipmap_comp(contextVk, flags, &shader));
 
     // Note: onImageRead/onImageWrite is expected to be called by the caller.  This avoids inserting
@@ -3619,8 +3618,8 @@ angle::Result UtilsVk::unresolve(ContextVk *contextVk,
     vk::RenderPassCommandBuffer *commandBuffer =
         &contextVk->getStartedRenderPassCommands().getCommandBuffer();
 
-    vk::ShaderLibrary &shaderLibrary                  = contextVk->getShaderLibrary();
-    vk::RefCounted<vk::ShaderAndSerial> *vertexShader = nullptr;
+    vk::ShaderLibrary &shaderLibrary               = contextVk->getShaderLibrary();
+    vk::RefCounted<vk::ShaderModule> *vertexShader = nullptr;
     ANGLE_TRY(shaderLibrary.getFullScreenTri_vert(contextVk, 0, &vertexShader));
 
     // Set dynamic state
@@ -3712,7 +3711,7 @@ angle::Result UtilsVk::unresolve(ContextVk *contextVk,
         uint32_t flags = GetUnresolveFlags(colorAttachmentCount, colorSrc, params.unresolveDepth,
                                            unresolveStencilWithShaderExport, &colorAttachmentTypes);
 
-        vk::RefCounted<vk::ShaderAndSerial> *fragmentShader = &mUnresolveFragShaders[flags];
+        vk::RefCounted<vk::ShaderModule> *fragmentShader = &mUnresolveFragShaders[flags];
         ANGLE_TRY(GetUnresolveFrag(contextVk, colorAttachmentCount, colorAttachmentTypes,
                                    params.unresolveDepth, params.unresolveStencil, fragmentShader));
 
@@ -3765,7 +3764,7 @@ angle::Result UtilsVk::unresolve(ContextVk *contextVk,
             SetStencilStateForWrite(&pipelineDesc);
         }
 
-        vk::RefCounted<vk::ShaderAndSerial> *exportStencilShader = nullptr;
+        vk::RefCounted<vk::ShaderModule> *exportStencilShader = nullptr;
         ANGLE_TRY(shaderLibrary.getExportStencil_frag(contextVk, 0, &exportStencilShader));
 
         // A new descriptor set is needed to match the layout of the ExportStencil program.
@@ -3930,9 +3929,9 @@ angle::Result UtilsVk::drawOverlay(ContextVk *contextVk,
 
     vkUpdateDescriptorSets(contextVk->getDevice(), 3, writeInfos, 0, nullptr);
 
-    vk::ShaderLibrary &shaderLibrary                    = contextVk->getShaderLibrary();
-    vk::RefCounted<vk::ShaderAndSerial> *vertexShader   = nullptr;
-    vk::RefCounted<vk::ShaderAndSerial> *fragmentShader = nullptr;
+    vk::ShaderLibrary &shaderLibrary                 = contextVk->getShaderLibrary();
+    vk::RefCounted<vk::ShaderModule> *vertexShader   = nullptr;
+    vk::RefCounted<vk::ShaderModule> *fragmentShader = nullptr;
     ANGLE_TRY(shaderLibrary.getOverlayDraw_vert(contextVk, 0, &vertexShader));
     ANGLE_TRY(shaderLibrary.getOverlayDraw_frag(contextVk, 0, &fragmentShader));
 

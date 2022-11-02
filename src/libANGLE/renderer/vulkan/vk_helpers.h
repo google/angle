@@ -3004,7 +3004,7 @@ class ShaderProgramHelper : angle::NonCopyable
     void destroy(RendererVk *rendererVk);
     void release(ContextVk *contextVk);
 
-    void setShader(gl::ShaderType shaderType, RefCounted<ShaderAndSerial> *shader);
+    void setShader(gl::ShaderType shaderType, RefCounted<ShaderModule> *shader);
 
     // Create a graphics pipeline and place it in the cache.  Must not be called if the pipeline
     // exists in cache.
@@ -3035,7 +3035,7 @@ class ShaderProgramHelper : angle::NonCopyable
                                              PipelineHelper **pipelineOut) const;
 
   private:
-    ShaderAndSerialMap mShaders;
+    ShaderModuleMap mShaders;
 };
 
 // Tracks current handle allocation counts in the back-end. Useful for debugging and profiling.

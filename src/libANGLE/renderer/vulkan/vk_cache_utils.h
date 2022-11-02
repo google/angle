@@ -699,7 +699,7 @@ class GraphicsPipelineDesc final
                                      GraphicsPipelineSubset subset,
                                      const RenderPass &compatibleRenderPass,
                                      const PipelineLayout &pipelineLayout,
-                                     const ShaderAndSerialMap &shaders,
+                                     const ShaderModuleMap &shaders,
                                      const SpecializationConstants &specConsts,
                                      Pipeline *pipelineOut,
                                      CacheLookUpFeedback *feedbackOut) const;
@@ -881,7 +881,7 @@ class GraphicsPipelineDesc final
 
     void initializePipelineShadersState(
         Context *context,
-        const ShaderAndSerialMap &shaders,
+        const ShaderModuleMap &shaders,
         const SpecializationConstants &specConsts,
         GraphicsPipelineShadersVulkanStructs *stateOut,
         GraphicsPipelineDynamicStateList *dynamicStateListOut) const;
@@ -2227,7 +2227,7 @@ class GraphicsPipelineCache final : public HasCacheStats<VulkanCacheType::Graphi
                                  PipelineCacheAccess *pipelineCache,
                                  const vk::RenderPass &compatibleRenderPass,
                                  const vk::PipelineLayout &pipelineLayout,
-                                 const vk::ShaderAndSerialMap &shaders,
+                                 const vk::ShaderModuleMap &shaders,
                                  const vk::SpecializationConstants &specConsts,
                                  PipelineSource source,
                                  const vk::GraphicsPipelineDesc &desc,

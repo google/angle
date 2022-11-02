@@ -205,9 +205,6 @@ class RendererVk : angle::NonCopyable
     angle::Result getPipelineCacheSize(DisplayVk *displayVk, size_t *pipelineCacheSizeOut);
     angle::Result syncPipelineCacheVk(DisplayVk *displayVk, const gl::Context *context);
 
-    // Issues a new serial for linked shader modules. Used in the pipeline cache.
-    Serial issueShaderSerial();
-
     const angle::FeaturesVk &getFeatures() const { return mFeatures; }
     uint32_t getMaxVertexAttribDivisor() const { return mMaxVertexAttribDivisor; }
     VkDeviceSize getMaxVertexAttribStride() const { return mMaxVertexAttribStride; }
