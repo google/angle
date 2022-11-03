@@ -1044,7 +1044,6 @@ void DisplayMtl::initializeExtensions() const
 
             // Raster order groups are required to make PLS coherent when using read_write textures.
             bool rasterOrderGroupsSupported = !mFeatures.disableRasterOrderGroups.enabled &&
-                                              !isAMD() && !isIntel() &&  // anglebug.com/7792
                                               [mMetalDevice areRasterOrderGroupsSupported];
             mNativePLSOptions.fragmentSyncType =
                 rasterOrderGroupsSupported ? ShFragmentSynchronizationType::RasterOrderGroups_Metal
@@ -1053,6 +1052,15 @@ void DisplayMtl::initializeExtensions() const
             mNativePLSOptions.supportsNativeRGBA8ImageFormats =
                 !mFeatures.disableRWTextureTier2Support.enabled &&
                 readWriteTextureTier == MTLReadWriteTextureTier2;
+
+            if (isAMD())
+            {
+                // anglebug.com/7792 -- [[raster_order_group()]] does not work for read_write
+                // textures on AMD when the render pass doesn't have a color attachment on slot 0.
+                // To work around this we attach one of the PLS textures to GL_COLOR_ATTACHMENT0, if
+                // there isn't one already.
+                mNativePLSOptions.renderPassNeedsAMDRasterOrderGroupsWorkaround = true;
+            }
 
             mNativeExtensions.shaderPixelLocalStorageANGLE         = true;
             mNativeExtensions.shaderPixelLocalStorageCoherentANGLE = rasterOrderGroupsSupported;
@@ -1063,11 +1071,8 @@ void DisplayMtl::initializeExtensions() const
                           gl::IMPLEMENTATION_MAX_PIXEL_LOCAL_STORAGE_PLANES);
             mNativeCaps.maxPixelLocalStoragePlanes =
                 gl::IMPLEMENTATION_MAX_PIXEL_LOCAL_STORAGE_PLANES;
-            if (!isAMD())  // anglebug.com/7803
-            {
-                mNativeCaps.maxColorAttachmentsWithActivePixelLocalStorage =
-                    gl::IMPLEMENTATION_MAX_DRAW_BUFFERS;
-            }
+            mNativeCaps.maxColorAttachmentsWithActivePixelLocalStorage =
+                gl::IMPLEMENTATION_MAX_DRAW_BUFFERS;
             mNativeCaps.maxCombinedDrawBuffersAndPixelLocalStoragePlanes =
                 gl::IMPLEMENTATION_MAX_PIXEL_LOCAL_STORAGE_PLANES +
                 gl::IMPLEMENTATION_MAX_DRAW_BUFFERS;

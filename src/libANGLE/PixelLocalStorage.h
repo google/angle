@@ -79,7 +79,7 @@ class PixelLocalStoragePlane : angle::NonCopyable
     bool getTextureImageExtents(const Context *, Extents *extents) const;
 
     // Attaches this plane to the specified color attachment point on the current draw framebuffer.
-    void attachToDrawFramebuffer(Context *, Extents plsExtents, GLenum colorAttachment) const;
+    void attachToDrawFramebuffer(Context *, GLenum colorAttachment) const;
 
     // Interface for clearing typed pixel local storage planes.
     class ClearCommands
@@ -97,7 +97,7 @@ class PixelLocalStoragePlane : angle::NonCopyable
     void issueClearCommand(ClearCommands *, int target, GLenum loadop) const;
 
     // Binds this PLS plane to a texture image unit for image load/store shader operations.
-    void bindToImage(Context *, Extents plsExtents, GLuint unit, bool needsR32Packing) const;
+    void bindToImage(Context *, GLuint unit, bool needsR32Packing) const;
 
     // Low-level access to the backing texture. The plane must not be memoryless or deinitialized.
     const ImageIndex &getTextureImageIndex() const { return mTextureImageIndex; }

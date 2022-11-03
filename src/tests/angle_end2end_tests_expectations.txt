@@ -895,5 +895,8 @@
 // bits 24..31 from glClearValueuiv value don't work on Intel Metal.
 7794 MAC INTEL METAL : PixelLocalStorageTest.ClearValues_r32/* = SKIP
 
+// Flaky synchronization on Intel
+7818 MAC INTEL METAL : PixelLocalStorageTest.Coherency/* = SKIP
+
 // GL program cache failure with shader images.
 7797 WIN OPENGL : PixelLocalStorageTest.ProgramCache/* = SKIP
