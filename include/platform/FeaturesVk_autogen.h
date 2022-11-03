@@ -449,10 +449,6 @@ struct FeaturesVk : FeatureSetBase
                                           "Emulate 270-degree prerotation.", &members,
                                           "http://anglebug.com/4901"};
 
-    FeatureInfo generateSPIRVThroughGlslang = {
-        "generateSPIRVThroughGlslang", FeatureCategory::VulkanFeatures,
-        "Translate SPIR-V through glslang.", &members, "http://anglebug.com/4889"};
-
     FeatureInfo preferDriverUniformOverSpecConst = {
         "preferDriverUniformOverSpecConst", FeatureCategory::VulkanFeatures,
         "Prefer using driver uniforms instead of specialization constants.", &members,

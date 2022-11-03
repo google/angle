@@ -98,11 +98,6 @@ std::shared_ptr<WaitableCompileEvent> ShaderVk::compile(const gl::Context *conte
         options->addVulkanXfbEmulationSupportCode = true;
     }
 
-    if (contextVk->getFeatures().generateSPIRVThroughGlslang.enabled)
-    {
-        options->generateSpirvThroughGlslang = true;
-    }
-
     if (contextVk->getFeatures().roundOutputAfterDithering.enabled)
     {
         options->roundOutputAfterDithering = true;
@@ -125,8 +120,7 @@ std::shared_ptr<WaitableCompileEvent> ShaderVk::compile(const gl::Context *conte
             else
             {
                 ASSERT(contextVk->getFeatures().supportsFragmentShaderPixelInterlock.enabled);
-                // GL_ARB_fragment_shader_interlock compiles to SPV_EXT_fragment_shader_interlock in
-                // both Vulkan Glslang and our own backend.
+                // GL_ARB_fragment_shader_interlock compiles to SPV_EXT_fragment_shader_interlock
                 options->pls.fragmentSynchronizationType =
                     ShFragmentSynchronizationType::FragmentShaderInterlock_ARB_GL;
             }

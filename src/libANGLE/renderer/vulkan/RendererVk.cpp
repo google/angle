@@ -47,12 +47,6 @@ constexpr bool kExposeNonConformantExtensionsAndVersions = true;
 #else
 constexpr bool kExposeNonConformantExtensionsAndVersions = false;
 #endif
-
-#if defined(ANGLE_USE_SPIRV_GENERATION_THROUGH_GLSLANG)
-constexpr bool kUseSpirvGenThroughGlslang = true;
-#else
-constexpr bool kUseSpirvGenThroughGlslang                = false;
-#endif
 }  // anonymous namespace
 
 namespace rx
@@ -1371,8 +1365,6 @@ void RendererVk::onDestroy(vk::Context *context)
 
     mAllocator.destroy();
 
-    sh::FinalizeGlslang();
-
     if (mDevice)
     {
         vkDestroyDevice(mDevice, nullptr);
@@ -1817,11 +1809,6 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     }
 
     ANGLE_TRY(initializeMemoryAllocator(displayVk));
-
-    {
-        ANGLE_TRACE_EVENT0("gpu.angle,startup", "GlslangWarmup");
-        sh::InitializeGlslang();
-    }
 
     // Initialize the format table.
     mFormatTable.initialize(this, &mNativeTextureCaps);
@@ -2970,45 +2957,45 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
 #else
     if (getFeatures().supportsHostQueryReset.enabled)
     {
-                       InitHostQueryResetFunctions(mInstance);
+        InitHostQueryResetFunctions(mInstance);
     }
     if (hasGetMemoryRequirements2KHR)
     {
-                       InitGetMemoryRequirements2KHRFunctions(mDevice);
+        InitGetMemoryRequirements2KHRFunctions(mDevice);
     }
     if (hasBindMemory2KHR)
     {
-                       InitBindMemory2KHRFunctions(mDevice);
+        InitBindMemory2KHRFunctions(mDevice);
     }
     if (getFeatures().supportsTransformFeedbackExtension.enabled)
     {
-                       InitTransformFeedbackEXTFunctions(mDevice);
+        InitTransformFeedbackEXTFunctions(mDevice);
     }
     if (getFeatures().supportsYUVSamplerConversion.enabled)
     {
-                       InitSamplerYcbcrKHRFunctions(mDevice);
+        InitSamplerYcbcrKHRFunctions(mDevice);
     }
     if (getFeatures().supportsRenderpass2.enabled)
     {
-                       InitRenderPass2KHRFunctions(mDevice);
+        InitRenderPass2KHRFunctions(mDevice);
     }
     if (getFeatures().supportsExtendedDynamicState.enabled)
     {
-                       InitExtendedDynamicStateEXTFunctions(mDevice);
+        InitExtendedDynamicStateEXTFunctions(mDevice);
     }
     if (getFeatures().supportsExtendedDynamicState2.enabled)
     {
-                       InitExtendedDynamicState2EXTFunctions(mDevice);
+        InitExtendedDynamicState2EXTFunctions(mDevice);
     }
     if (getFeatures().supportsFragmentShadingRate.enabled)
     {
-                       InitFragmentShadingRateKHRDeviceFunction(mDevice);
-                       ASSERT(vkCmdSetFragmentShadingRateKHR);
+        InitFragmentShadingRateKHRDeviceFunction(mDevice);
+        ASSERT(vkCmdSetFragmentShadingRateKHR);
     }
     if (getFeatures().supportsTimestampSurfaceAttribute.enabled)
     {
-                       InitGetPastPresentationTimingGoogleFunction(mDevice);
-                       ASSERT(vkGetPastPresentationTimingGOOGLE);
+        InitGetPastPresentationTimingGoogleFunction(mDevice);
+        ASSERT(vkGetPastPresentationTimingGOOGLE);
     }
 #endif  // !defined(ANGLE_SHARED_LIBVULKAN)
 
@@ -3983,8 +3970,6 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
 
     // Retain debug info in SPIR-V blob.
     ANGLE_FEATURE_CONDITION(&mFeatures, retainSPIRVDebugInfo, getEnableValidationLayers());
-
-    ANGLE_FEATURE_CONDITION(&mFeatures, generateSPIRVThroughGlslang, kUseSpirvGenThroughGlslang);
 
     // For discrete GPUs, most of device local memory is host invisible. We should not force the
     // host visible flag for them and result in allocation failure.

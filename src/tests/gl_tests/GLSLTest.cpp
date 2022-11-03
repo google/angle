@@ -12872,9 +12872,9 @@ void main() { v_varying = a_position.x; gl_Position = a_position; })";
     EXPECT_EQ(0u, program);
 }
 
-// Test that reusing the same variable name for different uses across stages links fine.  Glslang
-// wrapper's SPIR-V transformation should ignore all names for non-shader-interface variables and
-// not get confused by them.
+// Test that reusing the same variable name for different uses across stages links fine.  The SPIR-V
+// transformation should ignore all names for non-shader-interface variables and not get confused by
+// them.
 TEST_P(GLSLTest_ES31, VariableNameReuseAcrossStages)
 {
     constexpr char kVS[] = R"(#version 310 es
@@ -17324,29 +17324,23 @@ void main()
 
 }  // anonymous namespace
 
-ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(GLSLTest,
-                                       ES2_VULKAN().enable(Feature::GenerateSPIRVThroughGlslang));
+ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(GLSLTest);
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(GLSLTestNoValidation);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLTest_ES3);
-ANGLE_INSTANTIATE_TEST_ES3_AND(GLSLTest_ES3,
-                               ES3_VULKAN().enable(Feature::GenerateSPIRVThroughGlslang));
+ANGLE_INSTANTIATE_TEST_ES3(GLSLTest_ES3);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLTestLoops);
-ANGLE_INSTANTIATE_TEST_ES3_AND(GLSLTestLoops,
-                               ES3_VULKAN().enable(Feature::GenerateSPIRVThroughGlslang));
+ANGLE_INSTANTIATE_TEST_ES3(GLSLTestLoops);
 
-ANGLE_INSTANTIATE_TEST_ES2_AND(WebGLGLSLTest,
-                               ES2_VULKAN().enable(Feature::GenerateSPIRVThroughGlslang));
+ANGLE_INSTANTIATE_TEST_ES2(WebGLGLSLTest);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(WebGL2GLSLTest);
-ANGLE_INSTANTIATE_TEST_ES3_AND(WebGL2GLSLTest,
-                               ES3_VULKAN().enable(Feature::GenerateSPIRVThroughGlslang));
+ANGLE_INSTANTIATE_TEST_ES3(WebGL2GLSLTest);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLTest_ES31);
-ANGLE_INSTANTIATE_TEST_ES31_AND(GLSLTest_ES31,
-                                ES31_VULKAN().enable(Feature::GenerateSPIRVThroughGlslang));
+ANGLE_INSTANTIATE_TEST_ES31(GLSLTest_ES31);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLTest_ES31_InitShaderVariables);
 ANGLE_INSTANTIATE_TEST(GLSLTest_ES31_InitShaderVariables,

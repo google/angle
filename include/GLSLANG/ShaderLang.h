@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 311
+#define ANGLE_SH_VERSION 312
 
 enum ShShaderSpec
 {
@@ -387,9 +387,9 @@ struct ShCompileOptions
     // if gl_FragColor is not written.
     uint64_t initFragmentOutputVariables : 1;
 
-    // Transitory flag to select between producing SPIR-V directly vs using glslang.  Ignored in
-    // non-assert-enabled builds to avoid increasing ANGLE's binary size.
-    uint64_t generateSpirvThroughGlslang : 1;
+    // Unused.  Kept to avoid unnecessarily changing the layout of this structure and tripping up
+    // the fuzzer's hash->bug map.
+    uint64_t unused : 1;
 
     // Insert explicit casts for float/double/unsigned/signed int on macOS 10.15 with Intel driver
     uint64_t addExplicitBoolCasts : 1;
@@ -985,12 +985,6 @@ extern const char kRasterizerDiscardEnabledConstName[];
 // Specialization constant to enable depth write in fragment shaders.
 extern const char kDepthWriteEnabledConstName[];
 }  // namespace mtl
-
-// For backends that use glslang (the Vulkan shader compiler), i.e. Vulkan and Metal, call these to
-// initialize and finalize glslang itself.  This can be called independently from Initialize() and
-// Finalize().
-void InitializeGlslang();
-void FinalizeGlslang();
 
 }  // namespace sh
 

@@ -90,9 +90,6 @@ int main(int argc, char *argv[])
     ShShaderSpec spec               = SH_GLES2_SPEC;
     ShShaderOutput output           = SH_ESSL_OUTPUT;
 
-#if defined(ANGLE_ENABLE_VULKAN)
-    sh::InitializeGlslang();
-#endif
     sh::Initialize();
 
     ShBuiltInResources resources;
@@ -437,9 +434,6 @@ int main(int argc, char *argv[])
     }
 
     sh::Finalize();
-#if defined(ANGLE_ENABLE_VULKAN)
-    sh::FinalizeGlslang();
-#endif
 
     return failCode;
 }

@@ -147,7 +147,6 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::ForceTextureLodOffset4, "forceTextureLodOffset4"},
     {Feature::ForceWaitForSubmissionToCompleteForQueryResult,
      "forceWaitForSubmissionToCompleteForQueryResult"},
-    {Feature::GenerateSPIRVThroughGlslang, "generateSPIRVThroughGlslang"},
     {Feature::GetDimensionsIgnoresBaseLevel, "getDimensionsIgnoresBaseLevel"},
     {Feature::HasBaseVertexInstancedDraw, "hasBaseVertexInstancedDraw"},
     {Feature::HasCheapRenderPass, "hasCheapRenderPass"},

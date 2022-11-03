@@ -2265,60 +2265,52 @@ TEST_P(PixelLocalStorageTest, LeakFramebufferAndTexture)
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(PixelLocalStorageTest);
 #define PLATFORM(API, BACKEND) API##_##BACKEND()
-#define PLS_INSTANTIATE_RENDERING_TEST_AND(TEST, API, ...)                                         \
-    ANGLE_INSTANTIATE_TEST(                                                                        \
-        TEST,                                                                                      \
-        PLATFORM(API, D3D11) /* D3D coherent. */                                                   \
-            .enable(Feature::EmulatePixelLocalStorage),                                            \
-        PLATFORM(API, D3D11) /* D3D noncoherent. */                                                \
-            .enable(Feature::DisableRasterizerOrderViews)                                          \
-            .enable(Feature::EmulatePixelLocalStorage),                                            \
-        PLATFORM(API, OPENGL) /* OpenGL coherent. */                                               \
-            .enable(Feature::EmulatePixelLocalStorage),                                            \
-        PLATFORM(API, OPENGL) /* OpenGL noncoherent. */                                            \
-            .enable(Feature::EmulatePixelLocalStorage)                                             \
-            .disable(Feature::SupportsFragmentShaderInterlockNV)                                   \
-            .disable(Feature::SupportsFragmentShaderOrderingINTEL)                                 \
-            .disable(Feature::SupportsFragmentShaderInterlockARB),                                 \
-        PLATFORM(API, OPENGLES) /* OpenGL ES coherent */                                           \
-            .enable(Feature::EmulatePixelLocalStorage),                                            \
-        PLATFORM(API, OPENGLES) /* OpenGL ES noncoherent                                           \
-                                   (EXT_shader_framebuffer_fetch_non_coherent). */                 \
-            .enable(Feature::EmulatePixelLocalStorage)                                             \
-            .disable(Feature::SupportsShaderFramebufferFetchEXT)                                   \
-            .disable(Feature::SupportsShaderPixelLocalStorageEXT),                                 \
-        PLATFORM(API, OPENGLES) /* OpenGL ES noncoherent (shader images). */                       \
-            .enable(Feature::EmulatePixelLocalStorage)                                             \
-            .disable(Feature::SupportsShaderFramebufferFetchEXT)                                   \
-            .disable(Feature::SupportsShaderFramebufferFetchNonCoherentEXT)                        \
-            .disable(Feature::SupportsShaderPixelLocalStorageEXT),                                 \
-        PLATFORM(API, VULKAN) /* Vulkan coherent. */                                               \
-            .enable(Feature::AsyncCommandQueue)                                                    \
-            .enable(Feature::EmulatePixelLocalStorage),                                            \
-        PLATFORM(API, VULKAN) /* Vulkan noncoherent. */                                            \
-            .disable(Feature::SupportsShaderFramebufferFetch)                                      \
-            .disable(Feature::SupportsFragmentShaderPixelInterlock)                                \
-            .enable(Feature::EmulatePixelLocalStorage),                                            \
-        PLATFORM(API, VULKAN) /* Vulkan coherent, Glslang: Test that Glslang is fully coherent via \
-                                 ARB_fragment_shader_interlock. */                                 \
-            .enable(Feature::EmulatePixelLocalStorage)                                             \
-            .enable(Feature::GenerateSPIRVThroughGlslang),                                         \
-        PLATFORM(API, VULKAN_SWIFTSHADER) /* Swiftshader coherent (framebuffer fetch). */          \
-            .enable(Feature::AsyncCommandQueue)                                                    \
-            .enable(Feature::EmulatePixelLocalStorage),                                            \
-        PLATFORM(API, VULKAN_SWIFTSHADER) /* Swiftshader coherent (framebuffer fetch, Glslang). */ \
-            .enable(Feature::AsyncCommandQueue)                                                    \
-            .enable(Feature::EmulatePixelLocalStorage)                                             \
-            .enable(Feature::GenerateSPIRVThroughGlslang),                                         \
-        PLATFORM(API, VULKAN_SWIFTSHADER) /* Swiftshader noncoherent. */                           \
-            .disable(Feature::SupportsShaderFramebufferFetch)                                      \
-            .disable(Feature::SupportsFragmentShaderPixelInterlock)                                \
-            .enable(Feature::AsyncCommandQueue)                                                    \
-            .enable(Feature::EmulatePixelLocalStorage),                                            \
-        PLATFORM(API, VULKAN_SWIFTSHADER) /* Test PLS not having access to                         \
-                                             glEnablei/glDisablei/glColorMaski. */                 \
-            .enable(Feature::EmulatePixelLocalStorage)                                             \
-            .enable(Feature::DisableDrawBuffersIndexed),                                           \
+#define PLS_INSTANTIATE_RENDERING_TEST_AND(TEST, API, ...)                                \
+    ANGLE_INSTANTIATE_TEST(                                                               \
+        TEST,                                                                             \
+        PLATFORM(API, D3D11) /* D3D coherent. */                                          \
+            .enable(Feature::EmulatePixelLocalStorage),                                   \
+        PLATFORM(API, D3D11) /* D3D noncoherent. */                                       \
+            .enable(Feature::DisableRasterizerOrderViews)                                 \
+            .enable(Feature::EmulatePixelLocalStorage),                                   \
+        PLATFORM(API, OPENGL) /* OpenGL coherent. */                                      \
+            .enable(Feature::EmulatePixelLocalStorage),                                   \
+        PLATFORM(API, OPENGL) /* OpenGL noncoherent. */                                   \
+            .enable(Feature::EmulatePixelLocalStorage)                                    \
+            .disable(Feature::SupportsFragmentShaderInterlockNV)                          \
+            .disable(Feature::SupportsFragmentShaderOrderingINTEL)                        \
+            .disable(Feature::SupportsFragmentShaderInterlockARB),                        \
+        PLATFORM(API, OPENGLES) /* OpenGL ES coherent */                                  \
+            .enable(Feature::EmulatePixelLocalStorage),                                   \
+        PLATFORM(API, OPENGLES) /* OpenGL ES noncoherent                                  \
+                                   (EXT_shader_framebuffer_fetch_non_coherent). */        \
+            .enable(Feature::EmulatePixelLocalStorage)                                    \
+            .disable(Feature::SupportsShaderFramebufferFetchEXT)                          \
+            .disable(Feature::SupportsShaderPixelLocalStorageEXT),                        \
+        PLATFORM(API, OPENGLES) /* OpenGL ES noncoherent (shader images). */              \
+            .enable(Feature::EmulatePixelLocalStorage)                                    \
+            .disable(Feature::SupportsShaderFramebufferFetchEXT)                          \
+            .disable(Feature::SupportsShaderFramebufferFetchNonCoherentEXT)               \
+            .disable(Feature::SupportsShaderPixelLocalStorageEXT),                        \
+        PLATFORM(API, VULKAN) /* Vulkan coherent. */                                      \
+            .enable(Feature::AsyncCommandQueue)                                           \
+            .enable(Feature::EmulatePixelLocalStorage),                                   \
+        PLATFORM(API, VULKAN) /* Vulkan noncoherent. */                                   \
+            .disable(Feature::SupportsShaderFramebufferFetch)                             \
+            .disable(Feature::SupportsFragmentShaderPixelInterlock)                       \
+            .enable(Feature::EmulatePixelLocalStorage),                                   \
+        PLATFORM(API, VULKAN_SWIFTSHADER) /* Swiftshader coherent (framebuffer fetch). */ \
+            .enable(Feature::AsyncCommandQueue)                                           \
+            .enable(Feature::EmulatePixelLocalStorage),                                   \
+        PLATFORM(API, VULKAN_SWIFTSHADER) /* Swiftshader noncoherent. */                  \
+            .disable(Feature::SupportsShaderFramebufferFetch)                             \
+            .disable(Feature::SupportsFragmentShaderPixelInterlock)                       \
+            .enable(Feature::AsyncCommandQueue)                                           \
+            .enable(Feature::EmulatePixelLocalStorage),                                   \
+        PLATFORM(API, VULKAN_SWIFTSHADER) /* Test PLS not having access to                \
+                                             glEnablei/glDisablei/glColorMaski. */        \
+            .enable(Feature::EmulatePixelLocalStorage)                                    \
+            .enable(Feature::DisableDrawBuffersIndexed),                                  \
         __VA_ARGS__)
 
 #define PLS_INSTANTIATE_RENDERING_TEST(TEST, API) PLS_INSTANTIATE_RENDERING_TEST_AND(TEST, API)

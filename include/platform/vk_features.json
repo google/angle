@@ -591,14 +591,6 @@
             "issue": "http://anglebug.com/4901"
         },
         {
-            "name": "generate_SPIRV_through_glslang",
-            "category": "Features",
-            "description": [
-                "Translate SPIR-V through glslang."
-            ],
-            "issue": "http://anglebug.com/4889"
-        },
-        {
             "name": "prefer_driver_uniform_over_spec_const",
             "category": "Features",
             "description": [
