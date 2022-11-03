@@ -162,10 +162,6 @@ class RendererVk : angle::NonCopyable
     {
         return mPhysicalDeviceProperties;
     }
-    const VkPhysicalDeviceDrmPropertiesEXT &getPhysicalDeviceDrmProperties() const
-    {
-        return mDrmProperties;
-    }
     const VkPhysicalDevicePrimitivesGeneratedQueryFeaturesEXT &
     getPhysicalDevicePrimitivesGeneratedQueryFeatures() const
     {
@@ -729,7 +725,6 @@ class RendererVk : angle::NonCopyable
     VkPhysicalDevicePipelineRobustnessFeaturesEXT mPipelineRobustnessFeatures;
     VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT
         mRasterizationOrderAttachmentAccessFeatures;
-    VkPhysicalDeviceDrmPropertiesEXT mDrmProperties;
     angle::PackedEnumBitSet<gl::ShadingRate, uint8_t> mSupportedFragmentShadingRates;
     std::vector<VkQueueFamilyProperties> mQueueFamilyProperties;
     uint32_t mMaxVertexAttribDivisor;

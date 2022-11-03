@@ -11,7 +11,6 @@
 
 #include "common/linux/dma_buf_utils.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
-#include "libANGLE/renderer/vulkan/linux/DeviceVkLinux.h"
 #include "libANGLE/renderer/vulkan/linux/DmaBufImageSiblingVkLinux.h"
 
 namespace rx
@@ -20,11 +19,6 @@ namespace rx
 DisplayVkLinux::DisplayVkLinux(const egl::DisplayState &state)
     : DisplayVk(state), mDrmFormatsInitialized(false)
 {}
-
-DeviceImpl *DisplayVkLinux::createDevice()
-{
-    return new DeviceVkLinux(this);
-}
 
 ExternalImageSiblingImpl *DisplayVkLinux::createExternalImageSibling(
     const gl::Context *context,

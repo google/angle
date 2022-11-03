@@ -21,8 +21,6 @@ class DisplayVkLinux : public DisplayVk
   public:
     DisplayVkLinux(const egl::DisplayState &state);
 
-    DeviceImpl *createDevice() override;
-
     ExternalImageSiblingImpl *createExternalImageSibling(const gl::Context *context,
                                                          EGLenum target,
                                                          EGLClientBuffer buffer,
