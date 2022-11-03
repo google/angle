@@ -654,8 +654,14 @@ angle::Result FramebufferMtl::syncState(const gl::Context *context,
                 ANGLE_TRY(updateStencilRenderTarget(context));
                 break;
             case gl::Framebuffer::DIRTY_BIT_DEPTH_BUFFER_CONTENTS:
+                // Restore depth attachment load action as its content may have been updated
+                // after framebuffer invalidation.
+                mRenderPassDesc.depthAttachment.loadAction = MTLLoadActionLoad;
+                break;
             case gl::Framebuffer::DIRTY_BIT_STENCIL_BUFFER_CONTENTS:
-                // NOTE(hqle): What are we supposed to do?
+                // Restore stencil attachment load action as its content may have been updated
+                // after framebuffer invalidation.
+                mRenderPassDesc.stencilAttachment.loadAction = MTLLoadActionLoad;
                 break;
             case gl::Framebuffer::DIRTY_BIT_DRAW_BUFFERS:
                 mustNotifyContext = true;
@@ -680,6 +686,12 @@ angle::Result FramebufferMtl::syncState(const gl::Context *context,
                     ASSERT(dirtyBit >= gl::Framebuffer::DIRTY_BIT_COLOR_BUFFER_CONTENTS_0 &&
                            dirtyBit < gl::Framebuffer::DIRTY_BIT_COLOR_BUFFER_CONTENTS_MAX);
                     // NOTE: might need to notify context.
+
+                    // Restore color attachment load action as its content may have been updated
+                    // after framebuffer invalidation.
+                    size_t colorIndexGL = static_cast<size_t>(
+                        dirtyBit - gl::Framebuffer::DIRTY_BIT_COLOR_BUFFER_CONTENTS_0);
+                    mRenderPassDesc.colorAttachments[colorIndexGL].loadAction = MTLLoadActionLoad;
                 }
                 break;
             }
