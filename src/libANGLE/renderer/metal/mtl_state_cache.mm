@@ -620,7 +620,10 @@ void RenderPipelineOutputDesc::updateEnabledDrawBuffers(gl::DrawBufferMask enabl
     {
         if (!enabledBuffers.test(colorIndex))
         {
-            this->colorAttachments[colorIndex].writeMask = MTLColorWriteMaskNone;
+            // GL allows data types of fragment shader color outputs to be incompatible with
+            // disabled color attachments. Reset pixel format when the attachment is disabled to
+            // avoid Metal validation error.
+            this->colorAttachments[colorIndex].reset(MTLPixelFormatInvalid, MTLColorWriteMaskNone);
         }
     }
 }
