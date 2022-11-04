@@ -1117,7 +1117,7 @@ void RenderCommandEncoder::reset()
     mCommands.clear();
 }
 
-void RenderCommandEncoder::finalizeLoadStoreAction(
+bool RenderCommandEncoder::finalizeLoadStoreAction(
     MTLRenderPassAttachmentDescriptor *objCRenderPassAttachment)
 {
     if (!objCRenderPassAttachment.texture)
@@ -1125,7 +1125,7 @@ void RenderCommandEncoder::finalizeLoadStoreAction(
         objCRenderPassAttachment.loadAction     = MTLLoadActionDontCare;
         objCRenderPassAttachment.storeAction    = MTLStoreActionDontCare;
         objCRenderPassAttachment.resolveTexture = nil;
-        return;
+        return false;
     }
 
     if (objCRenderPassAttachment.resolveTexture)
@@ -1152,6 +1152,8 @@ void RenderCommandEncoder::finalizeLoadStoreAction(
         // If storeAction hasn't been set for this attachment, we set to dontcare.
         objCRenderPassAttachment.storeAction = MTLStoreActionDontCare;
     }
+
+    return true;
 }
 
 void RenderCommandEncoder::endEncoding()
@@ -1164,6 +1166,8 @@ void RenderCommandEncoder::endEncodingImpl(bool considerDiscardSimulation)
     if (!valid())
         return;
 
+    bool hasAttachment = false;
+
     // Last minute correcting the store options.
     MTLRenderPassDescriptor *objCRenderPassDesc = mCachedRenderPassDescObjC.get();
     for (uint32_t i = 0; i < mRenderPassDesc.numColorAttachments; ++i)
@@ -1171,17 +1175,20 @@ void RenderCommandEncoder::endEncodingImpl(bool considerDiscardSimulation)
         // Update store action set between restart() and endEncoding()
         objCRenderPassDesc.colorAttachments[i].storeAction =
             mRenderPassDesc.colorAttachments[i].storeAction;
-        finalizeLoadStoreAction(objCRenderPassDesc.colorAttachments[i]);
+        if (finalizeLoadStoreAction(objCRenderPassDesc.colorAttachments[i]))
+            hasAttachment = true;
     }
 
     // Update store action set between restart() and endEncoding()
     objCRenderPassDesc.depthAttachment.storeAction = mRenderPassDesc.depthAttachment.storeAction;
-    finalizeLoadStoreAction(objCRenderPassDesc.depthAttachment);
+    if (finalizeLoadStoreAction(objCRenderPassDesc.depthAttachment))
+        hasAttachment = true;
 
     // Update store action set between restart() and endEncoding()
     objCRenderPassDesc.stencilAttachment.storeAction =
         mRenderPassDesc.stencilAttachment.storeAction;
-    finalizeLoadStoreAction(objCRenderPassDesc.stencilAttachment);
+    if (finalizeLoadStoreAction(objCRenderPassDesc.stencilAttachment))
+        hasAttachment = true;
 
     // Set visibility result buffer
     if (mOcclusionQueryPool.getNumRenderPassAllocatedQueries())
@@ -1194,8 +1201,15 @@ void RenderCommandEncoder::endEncodingImpl(bool considerDiscardSimulation)
         objCRenderPassDesc.visibilityResultBuffer = nil;
     }
 
-    // Encode the actual encoder
-    encodeMetalEncoder();
+    // Encode the actual encoder. It will not be created when there are no attachments.
+    if (hasAttachment)
+    {
+        encodeMetalEncoder();
+    }
+    else
+    {
+        mCommands.clear();
+    }
 
     CommandEncoder::endEncoding();
 
