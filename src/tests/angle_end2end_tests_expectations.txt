@@ -636,7 +636,7 @@
 7653 IOS : TransformFeedbackTest.RenderOnceChangeXfbBufferRenderAgain/ES3_OpenGL = SKIP
 7653 IOS : VertexAttributeTestES3.emptyBuffer/ES3_OpenGL = SKIP
 
-7756 IOS : PixelLocalStorageTest.ClearData/ES3_OpenGL_EmulatePixelLocalStorage* = SKIP
+7756 IOS : PixelLocalStorageTest.ClearState/ES3_OpenGL_EmulatePixelLocalStorage* = SKIP
 7756 IOS : PixelLocalStorageTest.Coherency/ES3_OpenGL_EmulatePixelLocalStorage* = SKIP
 7756 IOS : PixelLocalStorageTest.ForgetBarrier/ES3_OpenGL_EmulatePixelLocalStorage* = SKIP
 7756 IOS : PixelLocalStorageTest.FunctionArguments/ES3_OpenGL_EmulatePixelLocalStorage* = SKIP
