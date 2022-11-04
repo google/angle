@@ -5201,6 +5201,7 @@ bool SkipCall(EntryPoint entryPoint)
 
         case EntryPoint::GLGetActiveUniformBlockiv:
         case EntryPoint::GLGetActiveUniformName:
+        case EntryPoint::GLGetActiveUniformBlockName:
             // Skip these calls because:
             // - We don't use the return values.
             // - It reduces the number of references to the uniform block index map.
