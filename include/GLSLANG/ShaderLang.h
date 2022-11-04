@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 313
+#define ANGLE_SH_VERSION 314
 
 enum ShShaderSpec
 {
@@ -76,20 +76,31 @@ enum ShShaderOutput
     SH_MSL_METAL_OUTPUT = 0x8B4D,
 };
 
+struct ShCompileOptionsMetal
+{
+    // Direct-to-metal backend constants:
+
+    // Binding index for driver uniforms:
+    int driverUniformsBindingIndex;
+    // Binding index for default uniforms:
+    int defaultUniformsBindingIndex;
+    // Binding index for UBO's argument buffer
+    int UBOArgumentBufferBindingIndex;
+};
+
 // For ANGLE_shader_pixel_local_storage.
 // Instructs the compiler which pixel local storage configuration to generate code for.
-enum class ShPixelLocalStorageType
+enum class ShPixelLocalStorageType : uint8_t
 {
     NotSupported,
-    ImageStoreR32PackedFormats,
-    ImageStoreNativeFormats,
+    ImageLoadStore,
     FramebufferFetch,
     PixelLocalStorageEXT,  // GL_EXT_shader_pixel_local_storage.
 };
 
 // For ANGLE_shader_pixel_local_storage_coherent.
 // Instructs the compiler which fragment synchronization method to use, if any.
-enum class ShFragmentSynchronizationType
+enum class ShFragmentSynchronizationType : uint8_t
 {
     NotSupported,  // Fragments cannot be ordered or synchronized.
 
@@ -107,25 +118,16 @@ enum class ShFragmentSynchronizationType
     EnumCount = InvalidEnum,
 };
 
-// Compile options.
-struct ShCompileOptionsMetal
-{
-    // Direct-to-metal backend constants:
-
-    // Binding index for driver uniforms:
-    int driverUniformsBindingIndex;
-    // Binding index for default uniforms:
-    int defaultUniformsBindingIndex;
-    // Binding index for UBO's argument buffer
-    int UBOArgumentBufferBindingIndex;
-};
-
-struct ShCompileOptionsPLS
+struct ShPixelLocalStorageOptions
 {
     ShPixelLocalStorageType type = ShPixelLocalStorageType::NotSupported;
+
     // For ANGLE_shader_pixel_local_storage_coherent.
-    ShFragmentSynchronizationType fragmentSynchronizationType =
-        ShFragmentSynchronizationType::NotSupported;
+    ShFragmentSynchronizationType fragmentSyncType = ShFragmentSynchronizationType::NotSupported;
+
+    // ShPixelLocalStorageType::ImageLoadStore only: Can we use rgba8/rgba8i/rgba8ui image formats?
+    // Or do we need to manually pack and unpack from r32i/r32ui?
+    bool supportsNativeRGBA8ImageFormats = false;
 };
 
 struct ShCompileOptions
@@ -411,7 +413,7 @@ struct ShCompileOptions
     uint64_t limitSimultaneousClipAndCullDistanceUsage : 1;
 
     ShCompileOptionsMetal metal;
-    ShCompileOptionsPLS pls;
+    ShPixelLocalStorageOptions pls;
 };
 
 // The 64 bits hash function. The first parameter is the input string; the

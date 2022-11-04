@@ -1419,7 +1419,8 @@ void GenerateCaps(ID3D11Device *device,
                   gl::Caps *caps,
                   gl::TextureCapsMap *textureCapsMap,
                   gl::Extensions *extensions,
-                  gl::Limitations *limitations)
+                  gl::Limitations *limitations,
+                  ShPixelLocalStorageOptions *plsOptions)
 {
     D3D_FEATURE_LEVEL featureLevel  = renderer11DeviceCaps.featureLevel;
     const gl::FormatSet &allFormats = gl::GetAllSizedInternalFormats();
@@ -1721,9 +1722,17 @@ void GenerateCaps(ID3D11Device *device,
     extensions->textureBufferOES = extensions->textureBufferEXT;
 
     // ANGLE_shader_pixel_local_storage -- fragment shader UAVs appear in D3D 11.0.
-    extensions->shaderPixelLocalStorageANGLE = (featureLevel >= D3D_FEATURE_LEVEL_11_0);
-    extensions->shaderPixelLocalStorageCoherentANGLE =
-        renderer11DeviceCaps.supportsRasterizerOrderViews;
+    if (featureLevel >= D3D_FEATURE_LEVEL_11_0)
+    {
+        extensions->shaderPixelLocalStorageANGLE = true;
+        plsOptions->type                         = ShPixelLocalStorageType::ImageLoadStore;
+        if (renderer11DeviceCaps.supportsRasterizerOrderViews)
+        {
+            extensions->shaderPixelLocalStorageCoherentANGLE = true;
+            plsOptions->fragmentSyncType = ShFragmentSynchronizationType::RasterizerOrderViews_D3D;
+        }
+        ASSERT(!plsOptions->supportsNativeRGBA8ImageFormats);
+    }
 
     // D3D11 Feature Level 10_0+ uses SV_IsFrontFace in HLSL to emulate gl_FrontFacing.
     // D3D11 Feature Level 9_3 doesn't support SV_IsFrontFace, and has no equivalent, so can't

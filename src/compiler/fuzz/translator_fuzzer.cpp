@@ -134,8 +134,8 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
     }
 
     // Make sure the rest of the options are in a valid range.
-    options.pls.fragmentSynchronizationType = static_cast<ShFragmentSynchronizationType>(
-        static_cast<uint32_t>(options.pls.fragmentSynchronizationType) %
+    options.pls.fragmentSyncType = static_cast<ShFragmentSynchronizationType>(
+        static_cast<uint32_t>(options.pls.fragmentSyncType) %
         static_cast<uint32_t>(ShFragmentSynchronizationType::InvalidEnum));
 
     std::vector<uint32_t> validOutputs;

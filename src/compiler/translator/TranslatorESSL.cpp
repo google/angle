@@ -36,7 +36,7 @@ bool TranslatorESSL::translate(TIntermBlock *root,
 
     int shaderVer = getShaderVersion();  // Frontend shader version.
     if (hasPixelLocalStorageUniforms() &&
-        ShPixelLocalStorageTypeUsesImages(compileOptions.pls.type))
+        compileOptions.pls.type == ShPixelLocalStorageType::ImageLoadStore)
     {
         // The backend translator emits shader image code. Use a minimum version of 310.
         shaderVer = std::max(shaderVer, 310);

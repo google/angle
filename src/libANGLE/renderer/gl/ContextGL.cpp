@@ -937,9 +937,9 @@ const gl::Limitations &ContextGL::getNativeLimitations() const
     return mRenderer->getNativeLimitations();
 }
 
-ShPixelLocalStorageType ContextGL::getNativePixelLocalStorageType() const
+const ShPixelLocalStorageOptions &ContextGL::getNativePixelLocalStorageOptions() const
 {
-    return mRenderer->getNativePixelLocalStorageType();
+    return mRenderer->getNativePixelLocalStorageOptions();
 }
 
 StateManagerGL *ContextGL::getStateManager()
@@ -1046,7 +1046,8 @@ angle::Result ContextGL::drawPixelLocalStorageEXTEnable(gl::Context *context,
                                                         const gl::PixelLocalStoragePlane planes[],
                                                         const GLenum loadops[])
 {
-    ASSERT(getNativePixelLocalStorageType() == ShPixelLocalStorageType::PixelLocalStorageEXT);
+    ASSERT(getNativePixelLocalStorageOptions().type ==
+           ShPixelLocalStorageType::PixelLocalStorageEXT);
 
     getFunctions()->enable(GL_SHADER_PIXEL_LOCAL_STORAGE_EXT);
 
@@ -1084,7 +1085,9 @@ angle::Result ContextGL::drawPixelLocalStorageEXTDisable(gl::Context *context,
                                                          const gl::PixelLocalStoragePlane planes[],
                                                          const GLenum storeops[])
 {
-    ASSERT(getNativePixelLocalStorageType() == ShPixelLocalStorageType::PixelLocalStorageEXT);
+    ASSERT(getNativePixelLocalStorageOptions().type ==
+           ShPixelLocalStorageType::PixelLocalStorageEXT);
+
     GLsizei n = context->getState().getPixelLocalStorageActivePlanes();
 
     PLSProgramKeyBuilder b;

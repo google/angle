@@ -325,7 +325,7 @@ class TextureMtl : public TextureImpl
 
     angle::Result generateMipmapCPU(const gl::Context *context);
 
-    bool needsFormatViewForPixelLocalStorage(const gl::Context *) const;
+    bool needsFormatViewForPixelLocalStorage(const ShPixelLocalStorageOptions &) const;
 
     mtl::Format mFormat;
     egl::Surface *mBoundSurface = nullptr;

@@ -431,8 +431,8 @@ const Texture *PixelLocalStoragePlane::getBackingTexture(const Context *context)
     return mTextureRef;
 }
 
-PixelLocalStorage::PixelLocalStorage(MemorylessBackingType memorylessBackingType)
-    : mMemorylessBackingType(memorylessBackingType)
+PixelLocalStorage::PixelLocalStorage(const ShPixelLocalStorageOptions &plsOptions)
+    : mPLSOptions(plsOptions)
 {}
 
 PixelLocalStorage::~PixelLocalStorage() {}
@@ -505,7 +505,8 @@ void PixelLocalStorage::begin(Context *context, GLsizei n, const GLenum loadops[
             continue;
         }
         PixelLocalStoragePlane &plane = mPlanes[i];
-        if (mMemorylessBackingType == MemorylessBackingType::InternalTextures)
+        if (mPLSOptions.type == ShPixelLocalStorageType::ImageLoadStore ||
+            mPLSOptions.type == ShPixelLocalStorageType::FramebufferFetch)
         {
             plane.ensureBackingTextureIfMemoryless(context, plsExtents);
         }
@@ -538,10 +539,11 @@ namespace
 class PixelLocalStorageImageLoadStore : public PixelLocalStorage
 {
   public:
-    PixelLocalStorageImageLoadStore(bool needsR32Packing)
-        : PixelLocalStorage(MemorylessBackingType::InternalTextures),
-          mNeedsR32Packing(needsR32Packing)
-    {}
+    PixelLocalStorageImageLoadStore(const ShPixelLocalStorageOptions &plsOptions)
+        : PixelLocalStorage(plsOptions)
+    {
+        ASSERT(mPLSOptions.type == ShPixelLocalStorageType::ImageLoadStore);
+    }
 
     // Call deleteContextObjects or onContextObjectsLost first!
     ~PixelLocalStorageImageLoadStore() override
@@ -620,7 +622,8 @@ class PixelLocalStorageImageLoadStore : public PixelLocalStorage
                 }
                 const PixelLocalStoragePlane &plane = getPlane(i);
                 ASSERT(!plane.isDeinitialized());
-                plane.bindToImage(context, plsExtents, i, mNeedsR32Packing);
+                plane.bindToImage(context, plsExtents, i,
+                                  !mPLSOptions.supportsNativeRGBA8ImageFormats);
                 if (loadop == GL_ZERO || loadop == GL_CLEAR_ANGLE)
                 {
                     plane.attachToDrawFramebuffer(
@@ -699,7 +702,6 @@ class PixelLocalStorageImageLoadStore : public PixelLocalStorage
 
   private:
     // D3D and ES require us to pack all PLS formats into r32f, r32i, or r32ui images.
-    const bool mNeedsR32Packing;
     FramebufferID mScratchFramebufferForClearing{};
 
     // Saved values to restore during onEnd().
@@ -712,8 +714,11 @@ class PixelLocalStorageImageLoadStore : public PixelLocalStorage
 class PixelLocalStorageFramebufferFetch : public PixelLocalStorage
 {
   public:
-    PixelLocalStorageFramebufferFetch() : PixelLocalStorage(MemorylessBackingType::InternalTextures)
-    {}
+    PixelLocalStorageFramebufferFetch(const ShPixelLocalStorageOptions &plsOptions)
+        : PixelLocalStorage(plsOptions)
+    {
+        ASSERT(mPLSOptions.type == ShPixelLocalStorageType::FramebufferFetch);
+    }
 
     void onContextObjectsLost() override {}
 
@@ -928,7 +933,11 @@ class PixelLocalStorageFramebufferFetch : public PixelLocalStorage
 class PixelLocalStorageEXT : public PixelLocalStorage
 {
   public:
-    PixelLocalStorageEXT() : PixelLocalStorage(MemorylessBackingType::TrueMemoryless) {}
+    PixelLocalStorageEXT(const ShPixelLocalStorageOptions &plsOptions)
+        : PixelLocalStorage(plsOptions)
+    {
+        ASSERT(mPLSOptions.type == ShPixelLocalStorageType::PixelLocalStorageEXT);
+    }
 
   private:
     void onContextObjectsLost() override {}
@@ -993,16 +1002,16 @@ class PixelLocalStorageEXT : public PixelLocalStorage
 
 std::unique_ptr<PixelLocalStorage> PixelLocalStorage::Make(const Context *context)
 {
-    switch (context->getImplementation()->getNativePixelLocalStorageType())
+    const ShPixelLocalStorageOptions &plsOptions =
+        context->getImplementation()->getNativePixelLocalStorageOptions();
+    switch (plsOptions.type)
     {
-        case ShPixelLocalStorageType::ImageStoreR32PackedFormats:
-            return std::make_unique<PixelLocalStorageImageLoadStore>(true);
-        case ShPixelLocalStorageType::ImageStoreNativeFormats:
-            return std::make_unique<PixelLocalStorageImageLoadStore>(false);
+        case ShPixelLocalStorageType::ImageLoadStore:
+            return std::make_unique<PixelLocalStorageImageLoadStore>(plsOptions);
         case ShPixelLocalStorageType::FramebufferFetch:
-            return std::make_unique<PixelLocalStorageFramebufferFetch>();
+            return std::make_unique<PixelLocalStorageFramebufferFetch>(plsOptions);
         case ShPixelLocalStorageType::PixelLocalStorageEXT:
-            return std::make_unique<PixelLocalStorageEXT>();
+            return std::make_unique<PixelLocalStorageEXT>(plsOptions);
         default:
             UNREACHABLE();
             return nullptr;

@@ -1406,9 +1406,9 @@ const gl::Limitations &ContextMtl::getNativeLimitations() const
 {
     return getDisplay()->getNativeLimitations();
 }
-ShPixelLocalStorageType ContextMtl::getNativePixelLocalStorageType() const
+const ShPixelLocalStorageOptions &ContextMtl::getNativePixelLocalStorageOptions() const
 {
-    return getDisplay()->getNativePixelLocalStorageType();
+    return getDisplay()->getNativePixelLocalStorageOptions();
 }
 
 // Shader creation

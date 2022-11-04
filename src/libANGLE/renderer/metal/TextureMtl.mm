@@ -714,10 +714,11 @@ angle::Result TextureMtl::createNativeTexture(const gl::Context *context,
     mCurrentBaseLevel = mState.getEffectiveBaseLevel();
     mCurrentMaxLevel  = mState.getEffectiveMaxLevel();
 
-    mSlices          = 1;
-    int numCubeFaces = 1;
-    bool allowFormatView =
-        mFormat.hasDepthAndStencilBits() || needsFormatViewForPixelLocalStorage(context);
+    mSlices              = 1;
+    int numCubeFaces     = 1;
+    bool allowFormatView = mFormat.hasDepthAndStencilBits() ||
+                           needsFormatViewForPixelLocalStorage(
+                               contextMtl->getDisplay()->getNativePixelLocalStorageOptions());
     switch (type)
     {
         case gl::TextureType::_2D:
@@ -1382,22 +1383,21 @@ angle::Result TextureMtl::generateMipmapCPU(const gl::Context *context)
     return angle::Result::Continue;
 }
 
-bool TextureMtl::needsFormatViewForPixelLocalStorage(const gl::Context *context) const
+bool TextureMtl::needsFormatViewForPixelLocalStorage(
+    const ShPixelLocalStorageOptions &plsOptions) const
 {
     // On iOS devices with GPU family 5 and later, Metal doesn't apply lossless compression to
     // the texture if we set MTLTextureUsagePixelFormatView. This shouldn't be a problem though
     // because iOS devices implement pixel local storage with framebuffer fetch instead of shader
     // images.
-    if (context->getImplementation()->getNativePixelLocalStorageType() ==
-        ShPixelLocalStorageType::ImageStoreR32PackedFormats)
+    if (plsOptions.type == ShPixelLocalStorageType::ImageLoadStore)
     {
-        // Only non-"r32" pixel local storage formats need MTLTextureUsagePixelFormatView.
         switch (mFormat.metalFormat)
         {
             case MTLPixelFormatRGBA8Unorm:
             case MTLPixelFormatRGBA8Uint:
             case MTLPixelFormatRGBA8Sint:
-                return true;
+                return !plsOptions.supportsNativeRGBA8ImageFormats;
             default:
                 break;
         }
@@ -1647,9 +1647,10 @@ angle::Result TextureMtl::redefineImage(const gl::Context *context,
     }
     else
     {
-        imageDef.formatID = mtlFormat.intendedFormatId;
-        bool allowFormatView =
-            mFormat.hasDepthAndStencilBits() || needsFormatViewForPixelLocalStorage(context);
+        imageDef.formatID    = mtlFormat.intendedFormatId;
+        bool allowFormatView = mFormat.hasDepthAndStencilBits() ||
+                               needsFormatViewForPixelLocalStorage(
+                                   contextMtl->getDisplay()->getNativePixelLocalStorageOptions());
         // Create image to hold texture's data at this level & slice:
         switch (index.getType())
         {

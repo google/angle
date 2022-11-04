@@ -518,9 +518,8 @@ void State::initialize(Context *context)
         mShaderStorageBuffers.resize(mCaps.maxShaderStorageBufferBindings);
     }
     if (clientVersion >= Version(3, 1) ||
-        (nativeExtensions.shaderPixelLocalStorageANGLE &&
-         ShPixelLocalStorageTypeUsesImages(
-             context->getImplementation()->getNativePixelLocalStorageType())))
+        (context->getImplementation()->getNativePixelLocalStorageOptions().type ==
+         ShPixelLocalStorageType::ImageLoadStore))
     {
         mImageUnits.resize(mCaps.maxImageUnits);
     }

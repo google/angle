@@ -338,12 +338,6 @@ class RewritePLSToImagesTraverser : public RewritePLSTraverser
                          OriginalNode::IS_DROPPED);
     }
 
-    // Do all PLS formats need to be packed into r32f, r32i, or r32ui image2Ds?
-    bool needsR32Packing() const
-    {
-        return mCompileOptions->pls.type == ShPixelLocalStorageType::ImageStoreR32PackedFormats;
-    }
-
     // Creates an image2D that replaces a pixel local storage handle.
     TVariable *createPLSImageReplacement(const TIntermSymbol *plsSymbol)
     {
@@ -356,7 +350,7 @@ class RewritePLSToImagesTraverser : public RewritePLSTraverser
         switch (layoutQualifier.imageInternalFormat)
         {
             case TLayoutImageInternalFormat::EiifRGBA8:
-                if (needsR32Packing())
+                if (!mCompileOptions->pls.supportsNativeRGBA8ImageFormats)
                 {
                     layoutQualifier.imageInternalFormat = EiifR32UI;
                     imageType->setPrecision(EbpHigh);
@@ -368,7 +362,7 @@ class RewritePLSToImagesTraverser : public RewritePLSTraverser
                 }
                 break;
             case TLayoutImageInternalFormat::EiifRGBA8I:
-                if (needsR32Packing())
+                if (!mCompileOptions->pls.supportsNativeRGBA8ImageFormats)
                 {
                     layoutQualifier.imageInternalFormat = EiifR32I;
                     imageType->setPrecision(EbpHigh);
@@ -376,7 +370,7 @@ class RewritePLSToImagesTraverser : public RewritePLSTraverser
                 imageType->setBasicType(EbtIImage2D);
                 break;
             case TLayoutImageInternalFormat::EiifRGBA8UI:
-                if (needsR32Packing())
+                if (!mCompileOptions->pls.supportsNativeRGBA8ImageFormats)
                 {
                     layoutQualifier.imageInternalFormat = EiifR32UI;
                     imageType->setPrecision(EbpHigh);
@@ -393,9 +387,9 @@ class RewritePLSToImagesTraverser : public RewritePLSTraverser
                 UNREACHABLE();
         }
         layoutQualifier.rasterOrdered =
-            mCompileOptions->pls.fragmentSynchronizationType ==
+            mCompileOptions->pls.fragmentSyncType ==
                 ShFragmentSynchronizationType::RasterizerOrderViews_D3D ||
-            mCompileOptions->pls.fragmentSynchronizationType ==
+            mCompileOptions->pls.fragmentSyncType ==
                 ShFragmentSynchronizationType::RasterOrderGroups_Metal;
         imageType->setLayoutQualifier(layoutQualifier);
 
@@ -439,10 +433,10 @@ class RewritePLSToImagesTraverser : public RewritePLSTraverser
         {
             return data;  // This PLS storage isn't packed.
         }
-        ASSERT(needsR32Packing());
         switch (plsFormat)
         {
             case EiifRGBA8:
+                ASSERT(!mCompileOptions->pls.supportsNativeRGBA8ImageFormats);
                 // Unpack and normalize r,g,b,a from a single 32-bit unsigned int:
                 //
                 //     unpackUnorm4x8(data.r)
@@ -453,6 +447,7 @@ class RewritePLSToImagesTraverser : public RewritePLSTraverser
             case EiifRGBA8I:
             case EiifRGBA8UI:
             {
+                ASSERT(!mCompileOptions->pls.supportsNativeRGBA8ImageFormats);
                 constexpr unsigned shifts[] = {24, 16, 8, 0};
                 // Unpack r,g,b,a form a single (signed or unsigned) 32-bit int. Shift left,
                 // then right, to preserve the sign for ints. (highp integers are exactly
@@ -515,11 +510,11 @@ class RewritePLSToImagesTraverser : public RewritePLSTraverser
         {
             return result;  // This PLS storage isn't packed.
         }
-        ASSERT(needsR32Packing());
         switch (plsFormat)
         {
             case EiifRGBA8:
             {
+                ASSERT(!mCompileOptions->pls.supportsNativeRGBA8ImageFormats);
                 if (mCompileOptions->passHighpToPackUnormSnormBuiltins)
                 {
                     // anglebug.com/7527: unpackUnorm4x8 doesn't work on Pixel 4 when passed
@@ -545,6 +540,7 @@ class RewritePLSToImagesTraverser : public RewritePLSTraverser
             case EiifRGBA8I:
             case EiifRGBA8UI:
             {
+                ASSERT(!mCompileOptions->pls.supportsNativeRGBA8ImageFormats);
                 if (plsFormat == EiifRGBA8I)
                 {
                     // Mask off extra sign bits beyond 8.
@@ -594,7 +590,7 @@ class RewritePLSToImagesTraverser : public RewritePLSTraverser
         //         GL_INTEL_fragment_shader_ordering
         //         GL_ARB_fragment_shader_interlock (may compile to
         //                                           SPV_EXT_fragment_shader_interlock)
-        switch (compileOptions.pls.fragmentSynchronizationType)
+        switch (compileOptions.pls.fragmentSyncType)
         {
             // Raster ordered resources don't need explicit synchronization calls.
             case ShFragmentSynchronizationType::RasterizerOrderViews_D3D:
@@ -635,7 +631,7 @@ class RewritePLSToImagesTraverser : public RewritePLSTraverser
         // Either: GL_NV_fragment_shader_interlock
         //         GL_ARB_fragment_shader_interlock (may compile to
         //                                           SPV_EXT_fragment_shader_interlock)
-        switch (compileOptions.pls.fragmentSynchronizationType)
+        switch (compileOptions.pls.fragmentSyncType)
         {
             // Raster ordered resources don't need explicit synchronization calls.
             case ShFragmentSynchronizationType::RasterizerOrderViews_D3D:
@@ -799,8 +795,7 @@ class RewritePLSToFramebufferFetchTraverser : public RewritePLSTraverser
                 compiler->getResources().MaxCombinedDrawBuffersAndPixelLocalStoragePlanes -
                 plsType.getLayoutQualifier().binding - 1;
             layoutQualifier.locationsSpecified = 1;
-            if (compileOptions.pls.fragmentSynchronizationType ==
-                ShFragmentSynchronizationType::NotSupported)
+            if (compileOptions.pls.fragmentSyncType == ShFragmentSynchronizationType::NotSupported)
             {
                 // We're using EXT_shader_framebuffer_fetch_non_coherent, which requires the
                 // "noncoherent" qualifier.
@@ -986,8 +981,7 @@ bool RewritePixelLocalStorage(TCompiler *compiler,
     std::unique_ptr<RewritePLSTraverser> traverser;
     switch (compileOptions.pls.type)
     {
-        case ShPixelLocalStorageType::ImageStoreR32PackedFormats:
-        case ShPixelLocalStorageType::ImageStoreNativeFormats:
+        case ShPixelLocalStorageType::ImageLoadStore:
             traverser = std::make_unique<RewritePLSToImagesTraverser>(
                 compiler, symbolTable, compileOptions, shaderVersion);
             break;

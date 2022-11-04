@@ -11,6 +11,7 @@
 #ifndef LIBANGLE_PIXEL_LOCAL_STORAGE_H_
 #define LIBANGLE_PIXEL_LOCAL_STORAGE_H_
 
+#include "GLSLANG/ShaderLang.h"
 #include "angle_gl.h"
 #include "libANGLE/ImageIndex.h"
 #include "libANGLE/angletypes.h"
@@ -174,16 +175,7 @@ class PixelLocalStorage
     void barrier(Context *);
 
   protected:
-    // In some implementations we need to allocate backing textures even for memoryless planes.
-    // glInvalidateFramebuffer() will ideally prevent memory transactions with these textures where
-    // possible.
-    enum class MemorylessBackingType : bool
-    {
-        TrueMemoryless,   // No allocations necessary for memoryless planes.
-        InternalTextures  // Allocate internal textures for memoryless planes.
-    };
-
-    PixelLocalStorage(MemorylessBackingType);
+    PixelLocalStorage(const ShPixelLocalStorageOptions &);
 
     // Called when the context is lost or destroyed. Causes the subclass to clear its GL object
     // handles.
@@ -198,8 +190,9 @@ class PixelLocalStorage
     virtual void onEnd(Context *, const GLenum storeops[])                              = 0;
     virtual void onBarrier(Context *)                                                   = 0;
 
+    const ShPixelLocalStorageOptions mPLSOptions;
+
   private:
-    const MemorylessBackingType mMemorylessBackingType;
     std::array<PixelLocalStoragePlane, IMPLEMENTATION_MAX_PIXEL_LOCAL_STORAGE_PLANES> mPlanes;
 };
 

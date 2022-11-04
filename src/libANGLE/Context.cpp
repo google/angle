@@ -4247,10 +4247,9 @@ void Context::initCaps()
     {
         int maxDrawableAttachments =
             std::min(mState.mCaps.maxDrawBuffers, mState.mCaps.maxColorAttachments);
-        switch (mImplementation->getNativePixelLocalStorageType())
+        switch (mImplementation->getNativePixelLocalStorageOptions().type)
         {
-            case ShPixelLocalStorageType::ImageStoreNativeFormats:
-            case ShPixelLocalStorageType::ImageStoreR32PackedFormats:
+            case ShPixelLocalStorageType::ImageLoadStore:
                 mState.mCaps.maxPixelLocalStoragePlanes =
                     mState.mCaps.maxShaderImageUniforms[ShaderType::Fragment];
                 ANGLE_LIMIT_CAP(mState.mCaps.maxPixelLocalStoragePlanes,
@@ -10049,7 +10048,7 @@ void Context::drawPixelLocalStorageEXTEnable(GLsizei n,
                                              const PixelLocalStoragePlane planes[],
                                              const GLenum loadops[])
 {
-    ASSERT(mImplementation->getNativePixelLocalStorageType() ==
+    ASSERT(mImplementation->getNativePixelLocalStorageOptions().type ==
            ShPixelLocalStorageType::PixelLocalStorageEXT);
     ANGLE_CONTEXT_TRY(syncState(mPixelLocalStorageEXTEnableDisableDirtyBits,
                                 mPixelLocalStorageEXTEnableDisableDirtyObjects, Command::Draw));
@@ -10059,7 +10058,7 @@ void Context::drawPixelLocalStorageEXTEnable(GLsizei n,
 void Context::drawPixelLocalStorageEXTDisable(const PixelLocalStoragePlane planes[],
                                               const GLenum storeops[])
 {
-    ASSERT(mImplementation->getNativePixelLocalStorageType() ==
+    ASSERT(mImplementation->getNativePixelLocalStorageOptions().type ==
            ShPixelLocalStorageType::PixelLocalStorageEXT);
     ANGLE_CONTEXT_TRY(syncState(mPixelLocalStorageEXTEnableDisableDirtyBits,
                                 mPixelLocalStorageEXTEnableDisableDirtyObjects, Command::Draw));

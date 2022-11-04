@@ -669,15 +669,10 @@ const gl::Limitations &DisplayMtl::getNativeLimitations() const
     ensureCapsInitialized();
     return mNativeLimitations;
 }
-ShPixelLocalStorageType DisplayMtl::getNativePixelLocalStorageType() const
+const ShPixelLocalStorageOptions &DisplayMtl::getNativePixelLocalStorageOptions() const
 {
     ensureCapsInitialized();
-    return mPixelLocalStorageType;
-}
-ShFragmentSynchronizationType DisplayMtl::getPLSSynchronizationType() const
-{
-    ensureCapsInitialized();
-    return mPLSSynchronizationType;
+    return mNativePLSOptions;
 }
 
 void DisplayMtl::ensureCapsInitialized() const
@@ -1026,16 +1021,16 @@ void DisplayMtl::initializeExtensions() const
     if (!mFeatures.disableProgrammableBlending.enabled && supportsAppleGPUFamily(1))
     {
         // Programmable blending is supported on all Apple GPU families, and is always coherent.
-        mPixelLocalStorageType = ShPixelLocalStorageType::FramebufferFetch;
+        mNativePLSOptions.type = ShPixelLocalStorageType::FramebufferFetch;
 
         // Raster order groups are NOT required to make framebuffer fetch coherent, however, they
         // may improve performance by allowing finer grained synchronization (e.g., by assigning
         // attachments to different raster order groups when they don't depend on each other).
         bool rasterOrderGroupsSupported =
             !mFeatures.disableRasterOrderGroups.enabled && supportsAppleGPUFamily(4);
-        mPLSSynchronizationType = rasterOrderGroupsSupported
-                                      ? ShFragmentSynchronizationType::RasterOrderGroups_Metal
-                                      : ShFragmentSynchronizationType::Automatic;
+        mNativePLSOptions.fragmentSyncType =
+            rasterOrderGroupsSupported ? ShFragmentSynchronizationType::RasterOrderGroups_Metal
+                                       : ShFragmentSynchronizationType::Automatic;
 
         mNativeExtensions.shaderPixelLocalStorageANGLE         = true;
         mNativeExtensions.shaderPixelLocalStorageCoherentANGLE = true;
@@ -1045,21 +1040,19 @@ void DisplayMtl::initializeExtensions() const
         MTLReadWriteTextureTier readWriteTextureTier = [mMetalDevice readWriteTextureSupport];
         if (readWriteTextureTier != MTLReadWriteTextureTierNone)
         {
-            if (mFeatures.disableRWTextureTier2Support.enabled)
-            {
-                readWriteTextureTier = MTLReadWriteTextureTier1;
-            }
-            mPixelLocalStorageType = (readWriteTextureTier == MTLReadWriteTextureTier1)
-                                         ? ShPixelLocalStorageType::ImageStoreR32PackedFormats
-                                         : ShPixelLocalStorageType::ImageStoreNativeFormats;
+            mNativePLSOptions.type = ShPixelLocalStorageType::ImageLoadStore;
 
             // Raster order groups are required to make PLS coherent when using read_write textures.
             bool rasterOrderGroupsSupported = !mFeatures.disableRasterOrderGroups.enabled &&
                                               !isAMD() && !isIntel() &&  // anglebug.com/7792
                                               [mMetalDevice areRasterOrderGroupsSupported];
-            mPLSSynchronizationType = rasterOrderGroupsSupported
-                                          ? ShFragmentSynchronizationType::RasterOrderGroups_Metal
-                                          : ShFragmentSynchronizationType::NotSupported;
+            mNativePLSOptions.fragmentSyncType =
+                rasterOrderGroupsSupported ? ShFragmentSynchronizationType::RasterOrderGroups_Metal
+                                           : ShFragmentSynchronizationType::NotSupported;
+
+            mNativePLSOptions.supportsNativeRGBA8ImageFormats =
+                !mFeatures.disableRWTextureTier2Support.enabled &&
+                readWriteTextureTier == MTLReadWriteTextureTier2;
 
             mNativeExtensions.shaderPixelLocalStorageANGLE         = true;
             mNativeExtensions.shaderPixelLocalStorageCoherentANGLE = rasterOrderGroupsSupported;
