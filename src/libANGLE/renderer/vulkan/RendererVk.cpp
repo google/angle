@@ -1506,6 +1506,9 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
         ANGLE_VK_TRY(displayVk,
                      vkEnumerateInstanceExtensionProperties(nullptr, &instanceExtensionCount,
                                                             instanceExtensionProps.data()));
+        // In case fewer items were returned than requested, resize instanceExtensionProps to the
+        // number of extensions returned (i.e. instanceExtensionCount).
+        instanceExtensionProps.resize(instanceExtensionCount);
     }
 
     // Enumerate instance extensions that are provided by explicit layers.
@@ -1527,6 +1530,9 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
                                         layerName, &instanceLayerExtensionCount,
                                         instanceExtensionProps.data() + previousExtensionCount));
         }
+        // In case fewer items were returned than requested, resize instanceExtensionProps to the
+        // number of extensions returned (i.e. instanceLayerExtensionCount).
+        instanceExtensionProps.resize(previousExtensionCount + instanceLayerExtensionCount);
     }
 
     vk::ExtensionNameList instanceExtensionNames;
@@ -2377,6 +2383,9 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
         ANGLE_VK_TRY(displayVk, vkEnumerateDeviceExtensionProperties(
                                     mPhysicalDevice, layerName, &deviceLayerExtensionCount,
                                     deviceExtensionProps.data() + previousExtensionCount));
+        // In case fewer items were returned than requested, resize deviceExtensionProps to the
+        // number of extensions returned (i.e. deviceLayerExtensionCount).
+        deviceExtensionProps.resize(previousExtensionCount + deviceLayerExtensionCount);
     }
 
     vk::ExtensionNameList deviceExtensionNames;
