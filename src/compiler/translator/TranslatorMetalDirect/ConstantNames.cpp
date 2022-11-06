@@ -3,9 +3,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// TranslatorMetalConstantNames:
-// Implementation of constant values used in both translator
-// backends.
+// ConstantNames:
+// Implementation of constant values used by the metal backend.
 
 #include <stdio.h>
 

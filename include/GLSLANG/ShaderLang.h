@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 310
+#define ANGLE_SH_VERSION 311
 
 enum ShShaderSpec
 {
@@ -71,9 +71,6 @@ enum ShShaderOutput
 
     // Output SPIR-V for the Vulkan backend.
     SH_SPIRV_VULKAN_OUTPUT = 0x8B4B,
-
-    // Output SPIR-V to be cross compiled to Metal.
-    SH_SPIRV_METAL_OUTPUT = 0x8B4C,
 
     // Output for MSL
     SH_MSL_METAL_OUTPUT = 0x8B4D,

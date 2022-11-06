@@ -511,8 +511,7 @@ void Shader::resolveCompile(const Context *context)
     }
 
     const ShShaderOutput outputType = mCompilingState->shCompilerInstance.getShaderOutputType();
-    const bool isBinaryOutput =
-        outputType == SH_SPIRV_VULKAN_OUTPUT || outputType == SH_SPIRV_METAL_OUTPUT;
+    const bool isBinaryOutput       = outputType == SH_SPIRV_VULKAN_OUTPUT;
 
     if (isBinaryOutput)
     {

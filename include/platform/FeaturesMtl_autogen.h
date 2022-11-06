@@ -155,10 +155,6 @@ struct FeaturesMtl : FeatureSetBase
         &members,
     };
 
-    FeatureInfo directMetalGeneration = {"directMetalGeneration", FeatureCategory::MetalFeatures,
-                                         "Direct translation to Metal.", &members,
-                                         "http://anglebug.com/5505"};
-
     FeatureInfo forceNonCSBaseMipmapGeneration = {
         "forceNonCSBaseMipmapGeneration",
         FeatureCategory::MetalFeatures,

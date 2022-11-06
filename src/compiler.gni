@@ -90,7 +90,6 @@ angle_translator_sources = [
   "src/compiler/translator/TranslatorESSL.h",
   "src/compiler/translator/TranslatorGLSL.h",
   "src/compiler/translator/TranslatorHLSL.h",
-  "src/compiler/translator/TranslatorMetal.h",
   "src/compiler/translator/TranslatorMetalDirect.h",
   "src/compiler/translator/TranslatorVulkan.h",
   "src/compiler/translator/Types.cpp",
@@ -378,13 +377,12 @@ angle_translator_glsl_symbol_table_sources = [
 
 angle_translator_lib_metal_sources = [
   "src/compiler/translator/DriverUniformMetal.cpp",
-  "src/compiler/translator/TranslatorMetal.cpp",
-  "src/compiler/translator/TranslatorMetalConstantNames.cpp",
   "src/compiler/translator/TranslatorMetalDirect.cpp",
   "src/compiler/translator/TranslatorMetalDirect/AddExplicitTypeCasts.cpp",
   "src/compiler/translator/TranslatorMetalDirect/AddExplicitTypeCasts.h",
   "src/compiler/translator/TranslatorMetalDirect/AstHelpers.cpp",
   "src/compiler/translator/TranslatorMetalDirect/AstHelpers.h",
+  "src/compiler/translator/TranslatorMetalDirect/ConstantNames.cpp",
   "src/compiler/translator/TranslatorMetalDirect/DebugSink.h",
   "src/compiler/translator/TranslatorMetalDirect/DiscoverDependentFunctions.cpp",
   "src/compiler/translator/TranslatorMetalDirect/DiscoverDependentFunctions.h",

@@ -63,7 +63,6 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::DeferFlushUntilEndRenderPass, "deferFlushUntilEndRenderPass"},
     {Feature::DepthClamping, "depthClamping"},
     {Feature::DepthStencilBlitExtraCopy, "depthStencilBlitExtraCopy"},
-    {Feature::DirectMetalGeneration, "directMetalGeneration"},
     {Feature::DisableAnisotropicFiltering, "disableAnisotropicFiltering"},
     {Feature::DisableB5G6R5Support, "disableB5G6R5Support"},
     {Feature::DisableBlendFuncExtended, "disableBlendFuncExtended"},

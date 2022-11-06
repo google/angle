@@ -11,7 +11,6 @@
 
 #include "common/WorkerThread.h"
 #include "common/debug.h"
-#include "compiler/translator/TranslatorMetal.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Shader.h"
 #include "libANGLE/renderer/metal/ContextMtl.h"
@@ -128,14 +127,8 @@ std::shared_ptr<WaitableCompileEvent> ShaderMtl::compile(const gl::Context *cont
     {
         options->rewriteRowMajorMatrices = true;
     }
-    // If compiling through SPIR-V
-    options->addVulkanXfbEmulationSupportCode = true;
-    options->addVulkanDepthCorrection         = true;
-    // If compiling through SPIR-V.  This path outputs text, so cannot use the direct SPIR-V gen
-    // path unless fixed.
-    options->generateSpirvThroughGlslang = true;
 
-    // Direct-to-metal constants:
+    // Constants:
     options->metal.driverUniformsBindingIndex    = mtl::kDriverUniformsBindingIndex;
     options->metal.defaultUniformsBindingIndex   = mtl::kDefaultUniformsBindingIndex;
     options->metal.UBOArgumentBufferBindingIndex = mtl::kUBOArgumentBufferBindingIndex;

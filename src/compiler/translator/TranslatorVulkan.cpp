@@ -1107,12 +1107,6 @@ bool TranslatorVulkan::translateImpl(TInfoSinkBase &sink,
                 }
             }
 
-            // Append depth range translation to main.
-            if (!transformDepthBeforeCorrection(root, driverUniforms))
-            {
-                return false;
-            }
-
             break;
         }
 

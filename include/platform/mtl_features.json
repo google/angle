@@ -143,14 +143,6 @@
             ]
         },
         {
-            "name": "direct_metal_generation",
-            "category": "Features",
-            "description": [
-                "Direct translation to Metal."
-            ],
-            "issue": "http://anglebug.com/5505"
-        },
-        {
             "name": "force_non_CS_base_mipmap_generation",
             "category": "Features",
             "description": [

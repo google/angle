@@ -1414,9 +1414,7 @@ ShPixelLocalStorageType ContextMtl::getNativePixelLocalStorageType() const
 // Shader creation
 CompilerImpl *ContextMtl::createCompiler()
 {
-    ShShaderOutput outputType =
-        getDisplay()->useDirectToMetalCompiler() ? SH_MSL_METAL_OUTPUT : SH_SPIRV_METAL_OUTPUT;
-    return new CompilerMtl(outputType);
+    return new CompilerMtl();
 }
 ShaderImpl *ContextMtl::createShader(const gl::ShaderState &state)
 {

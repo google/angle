@@ -802,10 +802,6 @@ bool IsOutputVulkan(ShShaderOutput output)
 {
     return output == SH_SPIRV_VULKAN_OUTPUT;
 }
-bool IsOutputMetal(ShShaderOutput output)
-{
-    return output == SH_SPIRV_METAL_OUTPUT;
-}
 bool IsOutputMetalDirect(ShShaderOutput output)
 {
     return output == SH_MSL_METAL_OUTPUT;

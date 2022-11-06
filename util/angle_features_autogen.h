@@ -60,7 +60,6 @@ enum class Feature
     DeferFlushUntilEndRenderPass,
     DepthClamping,
     DepthStencilBlitExtraCopy,
-    DirectMetalGeneration,
     DisableAnisotropicFiltering,
     DisableB5G6R5Support,
     DisableBlendFuncExtended,

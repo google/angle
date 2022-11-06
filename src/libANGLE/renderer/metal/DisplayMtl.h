@@ -166,8 +166,6 @@ class DisplayMtl : public DisplayImpl
     mtl::AutoObjCObj<MTLSharedEventListener> getOrCreateSharedEventListener();
 #endif
 
-    bool useDirectToMetalCompiler() const;
-
   protected:
     void generateExtensions(egl::DisplayExtensions *outExtensions) const override;
     void generateCaps(egl::Caps *outCaps) const override;
