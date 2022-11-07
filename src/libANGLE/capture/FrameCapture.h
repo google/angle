@@ -680,7 +680,7 @@ class FrameCaptureShared final : angle::NonCopyable
 
     void runMidExecutionCapture(gl::Context *context);
 
-    void scanSetupCalls(const gl::Context *context, std::vector<CallCapture> &setupCalls);
+    void scanSetupCalls(std::vector<CallCapture> &setupCalls);
 
     std::vector<CallCapture> mFrameCalls;
     gl::ContextID mLastContextId;

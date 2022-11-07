@@ -7352,8 +7352,7 @@ void FrameCaptureShared::checkForCaptureTrigger()
     }
 }
 
-void FrameCaptureShared::scanSetupCalls(const gl::Context *context,
-                                        std::vector<CallCapture> &setupCalls)
+void FrameCaptureShared::scanSetupCalls(std::vector<CallCapture> &setupCalls)
 {
     // Scan all the instructions in the list for tracking
     for (CallCapture &call : setupCalls)
@@ -7385,7 +7384,7 @@ void FrameCaptureShared::runMidExecutionCapture(gl::Context *mainContext)
     CaptureShareGroupMidExecutionSetup(mainContext, &mShareGroupSetupCalls, &mResourceTracker,
                                        mainContextReplayState, mMaxAccessedResourceIDs);
 
-    scanSetupCalls(mainContext, mShareGroupSetupCalls);
+    scanSetupCalls(mShareGroupSetupCalls);
 
     for (gl::Context *shareContext : shareGroup->getContexts())
     {
@@ -7399,7 +7398,7 @@ void FrameCaptureShared::runMidExecutionCapture(gl::Context *mainContext)
                                      &mShareGroupSetupCalls, &mResourceIDToSetupCalls,
                                      &mResourceTracker, mainContextReplayState,
                                      mValidateSerializedState);
-            scanSetupCalls(mainContext, frameCapture->getSetupCalls());
+            scanSetupCalls(frameCapture->getSetupCalls());
         }
         else
         {
@@ -7417,7 +7416,7 @@ void FrameCaptureShared::runMidExecutionCapture(gl::Context *mainContext)
                                      &mResourceTracker, auxContextReplayState,
                                      mValidateSerializedState);
 
-            scanSetupCalls(mainContext, frameCapture->getSetupCalls());
+            scanSetupCalls(frameCapture->getSetupCalls());
 
             WriteAuxiliaryContextCppSetupReplay(
                 mReplayWriter, mCompression, mOutDirectory, shareContext, mCaptureLabel, 1,
