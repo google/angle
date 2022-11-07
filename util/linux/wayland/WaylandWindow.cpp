@@ -7,6 +7,7 @@
 // WaylandWindow.cpp: Implementation of OSWindow for Wayland
 
 #include "util/linux/wayland/WaylandWindow.h"
+#include <cerrno>
 #include <cstring>
 
 WaylandWindow::WaylandWindow()
