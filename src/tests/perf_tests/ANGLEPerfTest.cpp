@@ -374,46 +374,61 @@ void ANGLEPerfTest::runTrial(double maxRunTime, int maxStepsToRun, RunTrialPolic
     mTrialNumStepsPerformed = 0;
     mRunning                = true;
     mGPUTimeNs              = 0;
+    int stepAlignment       = getStepAlignment();
     mTrialTimer.start();
     startTest();
 
     while (mRunning)
     {
-        if (gMaxStepsPerformed > 0 && mTotalNumStepsPerformed >= gMaxStepsPerformed)
+        // Only stop on aligned steps or in --smoke-test-mode (single step per trial).
+        if (mTrialNumStepsPerformed % stepAlignment == 0 || gStepsPerTrial == 1)
         {
-            if (gVerboseLogging)
+            if (gMaxStepsPerformed > 0 && mTotalNumStepsPerformed >= gMaxStepsPerformed)
             {
-                printf("Stopping test after %d steps.\n", mTotalNumStepsPerformed);
+                if (gVerboseLogging)
+                {
+                    printf("Stopping test after %d total steps.\n", mTotalNumStepsPerformed);
+                }
+                mRunning = false;
+                break;
             }
-            mRunning = false;
+            if (mTrialTimer.getElapsedWallClockTime() > maxRunTime)
+            {
+                if (gVerboseLogging)
+                {
+                    printf("Stopping test after %.2lf seconds.\n",
+                           mTrialTimer.getElapsedWallClockTime());
+                }
+                mRunning = false;
+                break;
+            }
+            if (mTrialNumStepsPerformed >= maxStepsToRun)
+            {
+                if (gVerboseLogging)
+                {
+                    printf("Stopping test after %d trial steps.\n", mTrialNumStepsPerformed);
+                }
+                mRunning = false;
+                break;
+            }
         }
-        else if (mTrialTimer.getElapsedWallClockTime() > maxRunTime)
+
+        step();
+
+        if (runPolicy == RunTrialPolicy::FinishEveryStep)
         {
-            mRunning = false;
+            FinishAndCheckForContextLoss();
         }
-        else if (mTrialNumStepsPerformed >= maxStepsToRun)
+
+        if (mRunning)
         {
-            mRunning = false;
+            mTrialNumStepsPerformed++;
+            mTotalNumStepsPerformed++;
         }
-        else
+
+        if ((mTotalNumStepsPerformed % kNumberOfStepsPerformedToComputeGPUTime) == 0)
         {
-            step();
-
-            if (runPolicy == RunTrialPolicy::FinishEveryStep)
-            {
-                FinishAndCheckForContextLoss();
-            }
-
-            if (mRunning)
-            {
-                mTrialNumStepsPerformed++;
-                mTotalNumStepsPerformed++;
-            }
-
-            if ((mTotalNumStepsPerformed % kNumberOfStepsPerformedToComputeGPUTime) == 0)
-            {
-                computeGPUTime();
-            }
+            computeGPUTime();
         }
     }
     finishTest();
@@ -612,9 +627,8 @@ void ANGLEPerfTest::calibrateStepsToRun()
 
             if (gVerboseLogging)
             {
-                printf("Calibration trial %d: %d steps in %.2lf seconds -> %d steps to run.\n",
-                       trial, mTrialNumStepsPerformed, mTrialTimer.getElapsedWallClockTime(),
-                       mStepsToRun);
+                printf("Calibration trial %d: %d steps in %.2lf seconds.\n", trial,
+                       mTrialNumStepsPerformed, mTrialTimer.getElapsedWallClockTime());
             }
         }
     }
