@@ -9,6 +9,8 @@
 
 #include "libANGLE/renderer/vulkan/linux/DeviceVkLinux.h"
 
+#include <unistd.h>
+
 #include "common/debug.h"
 #include "common/vulkan/vulkan_icd.h"
 #include "libANGLE/Display.h"
