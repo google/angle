@@ -4238,7 +4238,7 @@ void CaptureShareGroupMidExecutionSetup(
     }
 }
 
-void CaptureMidExecutionSetup(gl::Context *context,
+void CaptureMidExecutionSetup(const gl::Context *context,
                               std::vector<CallCapture> *setupCalls,
                               CallResetMap &resetCalls,
                               std::vector<CallCapture> *shareGroupSetupCalls,
