@@ -7772,6 +7772,9 @@ void FrameCaptureShared::runMidExecutionCapture(gl::Context *mainContext)
         FrameCapture *frameCapture = shareContext->getFrameCapture();
         ASSERT(frameCapture->getSetupCalls().empty());
 
+        // Track that this context was created before MEC started
+        mCapturedContextSetups.insert(shareContext->id().value);
+
         if (shareContext->id() == mainContext->id())
         {
             CaptureMidExecutionSetup(shareContext, &frameCapture->getSetupCalls(),
@@ -8464,9 +8467,15 @@ void FrameCaptureShared::writeMainContextCppReplay(const gl::Context *context,
                 // MEC.
                 if (usesMidExecutionCapture())
                 {
-                    out << "    "
-                        << FmtSetupFunction(kNoPartId, shareContext->id(), FuncUsage::Call)
-                        << ";\n";
+                    // Only call SetupReplayContext for contexts that were current before MEC
+                    // started
+                    if (mCapturedContextSetups.find(context->id().value) !=
+                        mCapturedContextSetups.end())
+                    {
+                        out << "    "
+                            << FmtSetupFunction(kNoPartId, shareContext->id(), FuncUsage::Call)
+                            << ";\n";
+                    }
                 }
             }
 
