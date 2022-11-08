@@ -841,7 +841,7 @@ class GraphicsPipelineDesc final
     uint32_t getSubpass() const;
 
     void updateSurfaceRotation(GraphicsPipelineTransitionBits *transition,
-                               const SurfaceRotation surfaceRotation);
+                               bool isRotatedAspectRatio);
     bool getSurfaceRotation() const { return mShaders.shaders.bits.surfaceRotation; }
 
     void updateEmulatedDitherControl(GraphicsPipelineTransitionBits *transition, uint16_t value);

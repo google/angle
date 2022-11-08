@@ -565,7 +565,7 @@ struct FeaturesVk : FeatureSetBase
     FeatureInfo permanentlySwitchToFramebufferFetchMode = {
         "permanentlySwitchToFramebufferFetchMode",
         FeatureCategory::VulkanFeatures,
-        "Whether the context should permanently switch to framebuffer fetch mode on first"
+        "Whether the context should permanently switch to framebuffer fetch mode on first "
         "encounter",
         &members,
     };
@@ -599,7 +599,7 @@ struct FeaturesVk : FeatureSetBase
     FeatureInfo precisionSafeDivision = {
         "precisionSafeDivision",
         FeatureCategory::VulkanWorkarounds,
-        "Special case handling for platforms that do not generate 1.0f even when the dividend and"
+        "Special case handling for platforms that do not generate 1.0f even when the dividend and "
         "divisor have the same value",
         &members,
     };
@@ -631,7 +631,7 @@ struct FeaturesVk : FeatureSetBase
 
     FeatureInfo forceStaticVertexStrideState = {
         "forceStaticVertexStrideState", FeatureCategory::VulkanWorkarounds,
-        "Force static state for VK_DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT due to"
+        "Force static state for VK_DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT due to "
         "driver bugs",
         &members, "https://bugs.fuchsia.dev/p/fuchsia/issues/detail?id=107106"};
 
@@ -697,7 +697,7 @@ struct FeaturesVk : FeatureSetBase
 
     FeatureInfo useNonZeroStencilWriteMaskStaticState = {
         "useNonZeroStencilWriteMaskStaticState", FeatureCategory::VulkanWorkarounds,
-        "Work around a driver bug where 0 in stencil write mask static state would make the"
+        "Work around a driver bug where 0 in stencil write mask static state would make the "
         "corresponding dynamic state malfunction in the presence of discard or alpha to coverage",
         &members, "http://anglebug.com/7556"};
 
@@ -757,6 +757,25 @@ struct FeaturesVk : FeatureSetBase
         "supportsGraphicsPipelineLibrary", FeatureCategory::VulkanFeatures,
         "VkDevice supports the VK_EXT_graphics_pipeline_library extension", &members,
         "https://anglebug.com/7369"};
+
+    FeatureInfo preferMonolithicPipelinesOverLibraries = {
+        "preferMonolithicPipelinesOverLibraries", FeatureCategory::VulkanWorkarounds,
+        "Whether monolithic pipelines perform significantly better than libraries", &members,
+        "https://anglebug.com/7369"};
+
+    FeatureInfo syncMonolithicPipelinesToBlobCache = {
+        "syncMonolithicPipelinesToBlobCache", FeatureCategory::VulkanWorkarounds,
+        "Whether it's beneficial to store monolithic pipelines in the blob cache when "
+        "VK_EXT_graphics_pipeline_library is in use.  Otherwise the libraries are stored "
+        "only, and monolithic pipelines are recreated on every run",
+        &members, "https://anglebug.com/7369"};
+
+    FeatureInfo mergeProgramPipelineCachesToGlobalCache = {
+        "mergeProgramPipelineCachesToGlobalCache", FeatureCategory::VulkanWorkarounds,
+        "Whether it's beneficial to merge the pipeline cache for the shaders subset of the "
+        "pipeline into the monolithic pipeline cache.  Only useful on platforms where "
+        "monolithic pipelines can reuse blobs from partial pipelines",
+        &members, "https://anglebug.com/7369"};
 
     FeatureInfo supportsPipelineProtectedAccess = {
         "supportsPipelineProtectedAccess", FeatureCategory::VulkanFeatures,

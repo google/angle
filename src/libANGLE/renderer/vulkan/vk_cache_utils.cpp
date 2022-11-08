@@ -3939,9 +3939,9 @@ void GraphicsPipelineDesc::updateDepthFunc(GraphicsPipelineTransitionBits *trans
 }
 
 void GraphicsPipelineDesc::updateSurfaceRotation(GraphicsPipelineTransitionBits *transition,
-                                                 const SurfaceRotation surfaceRotation)
+                                                 bool isRotatedAspectRatio)
 {
-    SetBitField(mShaders.shaders.bits.surfaceRotation, IsRotatedAspectRatio(surfaceRotation));
+    SetBitField(mShaders.shaders.bits.surfaceRotation, isRotatedAspectRatio);
     transition->set(ANGLE_GET_TRANSITION_BIT(mShaders.shaders.bits));
 }
 
