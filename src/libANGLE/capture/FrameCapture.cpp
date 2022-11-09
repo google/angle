@@ -8784,10 +8784,22 @@ void CaptureShaderStrings(GLsizei count,
     for (GLsizei index = 0; index < count; ++index)
     {
         size_t len = ((length && length[index] >= 0) ? length[index] : strlen(strings[index]));
+
+        // Count trailing zeros
+        uint32_t i = 1;
+        while (i < len && strings[index][len - i] == 0)
+        {
+            i++;
+        }
+
+        // Don't copy trailing zeros
+        len -= (i - 1);
+
         data.resize(offset + len);
         std::copy(strings[index], strings[index] + len, data.begin() + offset);
         offset += len;
     }
+
     data.push_back(0);
     paramCapture->data.emplace_back(std::move(data));
 }
