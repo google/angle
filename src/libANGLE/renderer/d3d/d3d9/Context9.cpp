@@ -433,7 +433,8 @@ angle::Result Context9::syncState(const gl::Context *context,
 
 GLint Context9::getGPUDisjoint()
 {
-    return mRenderer->getGPUDisjoint();
+    // Disjoint timer queries are not supported.
+    return false;
 }
 
 GLint64 Context9::getTimestamp()

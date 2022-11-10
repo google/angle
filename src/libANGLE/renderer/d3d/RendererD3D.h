@@ -400,9 +400,6 @@ class RendererD3D : public BufferFactoryD3D
     virtual RendererClass getRendererClass() const = 0;
     virtual void *getD3DDevice()                   = 0;
 
-    void setGPUDisjoint();
-
-    GLint getGPUDisjoint();
     GLint64 getTimestamp();
 
     virtual angle::Result clearRenderTarget(const gl::Context *context,
@@ -474,7 +471,6 @@ class RendererD3D : public BufferFactoryD3D
     mutable bool mFeaturesInitialized;
     mutable angle::FeaturesD3D mFeatures;
 
-    bool mDisjoint;
     bool mDeviceLost;
 
     UniqueSerialFactory mSerialFactory;

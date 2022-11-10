@@ -38,7 +38,6 @@ RendererD3D::RendererD3D(egl::Display *display)
       mPresentPathFastEnabled(false),
       mCapsInitialized(false),
       mFeaturesInitialized(false),
-      mDisjoint(false),
       mDeviceLost(false)
 {}
 
@@ -96,21 +95,6 @@ gl::GraphicsResetStatus RendererD3D::getResetStatus()
 void RendererD3D::notifyDeviceLost()
 {
     mDisplay->notifyDeviceLost();
-}
-
-void RendererD3D::setGPUDisjoint()
-{
-    mDisjoint = true;
-}
-
-GLint RendererD3D::getGPUDisjoint()
-{
-    bool disjoint = mDisjoint;
-
-    // Disjoint flag is cleared when read
-    mDisjoint = false;
-
-    return disjoint;
 }
 
 GLint64 RendererD3D::getTimestamp()

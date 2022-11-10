@@ -282,7 +282,7 @@ angle::Result Query11::testQuery(Context11 *context11, QueryState *queryState)
                         queryState->finished = true;
                         if (timeStats.Disjoint)
                         {
-                            mRenderer->setGPUDisjoint();
+                            context11->setGPUDisjoint();
                         }
                         static_assert(sizeof(UINT64) == sizeof(unsigned long long),
                                       "D3D UINT64 isn't 64 bits");
@@ -300,7 +300,7 @@ angle::Result Query11::testQuery(Context11 *context11, QueryState *queryState)
                             mResult = std::numeric_limits<GLuint64>::max() / timeStats.Frequency;
                             // If an overflow does somehow occur, there is no way the elapsed time
                             // is accurate, so we generate a disjoint event
-                            mRenderer->setGPUDisjoint();
+                            context11->setGPUDisjoint();
                         }
                     }
                 }

@@ -262,6 +262,8 @@ class Context11 : public ContextD3D, public MultisampleTextureInitializer
                       const char *function,
                       unsigned int line) override;
 
+    void setGPUDisjoint();
+
   private:
     angle::Result drawElementsImpl(const gl::Context *context,
                                    gl::PrimitiveMode mode,
@@ -277,6 +279,7 @@ class Context11 : public ContextD3D, public MultisampleTextureInitializer
     Renderer11 *mRenderer;
     IncompleteTextureSet mIncompleteTextures;
     std::stack<std::string> mMarkerStack;
+    bool mDisjoint;
 };
 }  // namespace rx
 

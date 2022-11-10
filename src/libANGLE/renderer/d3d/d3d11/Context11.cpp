@@ -116,7 +116,7 @@ angle::Result ReadbackIndirectBuffer(const gl::Context *context,
 }  // anonymous namespace
 
 Context11::Context11(const gl::State &state, gl::ErrorSet *errorSet, Renderer11 *renderer)
-    : ContextD3D(state, errorSet), mRenderer(renderer)
+    : ContextD3D(state, errorSet), mRenderer(renderer), mDisjoint(false)
 {}
 
 Context11::~Context11() {}
@@ -800,9 +800,19 @@ angle::Result Context11::syncState(const gl::Context *context,
     return angle::Result::Continue;
 }
 
+void Context11::setGPUDisjoint()
+{
+    mDisjoint = true;
+}
+
 GLint Context11::getGPUDisjoint()
 {
-    return mRenderer->getGPUDisjoint();
+    bool disjoint = mDisjoint;
+
+    // Disjoint flag is cleared when read
+    mDisjoint = false;
+
+    return disjoint;
 }
 
 GLint64 Context11::getTimestamp()
