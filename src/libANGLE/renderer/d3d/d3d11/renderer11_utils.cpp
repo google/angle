@@ -1602,8 +1602,10 @@ void GenerateCaps(ID3D11Device *device,
 
     caps->maxTextureAnisotropy        = GetMaximumAnisotropy(featureLevel);
     caps->queryCounterBitsTimeElapsed = 64;
-    caps->queryCounterBitsTimestamp = 0;  // Timestamps cannot be supported due to D3D11 limitations
-    caps->maxDualSourceDrawBuffers  = 1;
+
+    caps->queryCounterBitsTimestamp = features.enableTimestampQueries.enabled ? 64 : 0;
+
+    caps->maxDualSourceDrawBuffers = 1;
 
     // GL extension support
     extensions->setTextureExtensionSupport(*textureCapsMap);
@@ -2122,6 +2124,9 @@ D3D11_QUERY ConvertQueryType(gl::QueryType type)
             return D3D11_QUERY_SO_STATISTICS;
         case gl::QueryType::TimeElapsed:
             // Two internal queries are also created for begin/end timestamps
+            return D3D11_QUERY_TIMESTAMP_DISJOINT;
+        case gl::QueryType::Timestamp:
+            // A disjoint query is also created for timestamp
             return D3D11_QUERY_TIMESTAMP_DISJOINT;
         case gl::QueryType::CommandsCompleted:
             return D3D11_QUERY_EVENT;

@@ -3174,6 +3174,7 @@ bool GetQueryParameterInfo(const State &glState,
         case GL_TEXTURE_BINDING_2D:
         case GL_TEXTURE_BINDING_CUBE_MAP:
         case GL_RESET_NOTIFICATION_STRATEGY_EXT:
+        case GL_QUERY_COUNTER_BITS_EXT:
         {
             *type      = GL_INT;
             *numParams = 1;
