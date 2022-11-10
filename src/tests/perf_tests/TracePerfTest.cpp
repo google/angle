@@ -1589,7 +1589,7 @@ void TracePerfTest::drawBenchmark()
     }
 
     char frameName[32];
-    sprintf(frameName, "Frame %u", mCurrentFrame);
+    snprintf(frameName, sizeof(frameName), "Frame %u", mCurrentFrame);
     beginInternalTraceEvent(frameName);
 
     startGpuTimer();
@@ -1689,7 +1689,7 @@ void TracePerfTest::drawBenchmark()
         if (endResultAvailable == GL_TRUE)
         {
             char fboName[32];
-            sprintf(fboName, "FBO %u", query.framebuffer);
+            snprintf(fboName, sizeof(fboName), "FBO %u", query.framebuffer);
 
             GLint64 beginTimestamp = 0;
             glGetQueryObjecti64vEXT(query.beginTimestampQuery, GL_QUERY_RESULT, &beginTimestamp);
