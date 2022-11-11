@@ -9,7 +9,7 @@
 
 #include "libANGLE/renderer/gl/egl/DmaBufImageSiblingEGL.h"
 
-#include "common/linux/dma_buf_utils.h"
+#include "common/dma_buf_utils.h"
 
 namespace rx
 {

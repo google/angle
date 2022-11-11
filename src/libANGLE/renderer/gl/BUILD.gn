@@ -21,9 +21,6 @@ config("angle_gl_backend_config") {
   if (angle_enable_gl_null) {
     defines += [ "ANGLE_ENABLE_OPENGL_NULL" ]
   }
-  if (ozone_platform_gbm) {
-    defines += [ "ANGLE_USE_GBM" ]
-  }
   if (is_apple) {
     defines += [ "GL_SILENCE_DEPRECATION" ]
   }
@@ -51,9 +48,6 @@ angle_source_set("angle_gl_backend") {
       "Xi",
       "Xext",
     ]
-  }
-  if (is_android || is_linux || is_chromeos) {
-    deps += [ "$angle_root/src/common/linux:angle_dma_buf" ]
   }
   if (is_apple) {
     frameworks = [

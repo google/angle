@@ -10,10 +10,11 @@
 #define COMMON_LINUX_DMA_BUF_UTILS_H_
 
 #include <angle_gl.h>
+#include "common/platform.h"
 
 #if defined(ANGLE_ENABLE_VULKAN)
-#    include <vulkan/vulkan_core.h>
 #    include <vector>
+#    include "common/vulkan/vk_headers.h"
 #endif
 
 // Refer to:
@@ -43,7 +44,7 @@ namespace angle
 {
 GLenum DrmFourCCFormatToGLInternalFormat(int format, bool *isYUV);
 
-#if defined(ANGLE_PLATFORM_LINUX) && defined(ANGLE_USES_GBM)
+#if defined(ANGLE_PLATFORM_LINUX) && defined(ANGLE_USE_GBM)
 int GLInternalFormatToGbmFourCCFormat(GLenum internalFormat);
 #endif
 

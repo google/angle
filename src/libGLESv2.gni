@@ -193,6 +193,11 @@ libangle_gpu_info_util_ios_sources = [
   "src/gpu_info_util/SystemInfo_ios.cpp",
 ]
 
+libangle_dma_buf_util_sources = [
+  "src/common/dma_buf_utils.cpp",
+  "src/common/dma_buf_utils.h",
+]
+
 libangle_includes = [
   "include/angle_gl.h",
   "include/export.h",

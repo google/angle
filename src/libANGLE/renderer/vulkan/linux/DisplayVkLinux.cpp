@@ -9,7 +9,7 @@
 
 #include "libANGLE/renderer/vulkan/linux/DisplayVkLinux.h"
 
-#include "common/linux/dma_buf_utils.h"
+#include "common/dma_buf_utils.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
 #include "libANGLE/renderer/vulkan/linux/DeviceVkLinux.h"
 #include "libANGLE/renderer/vulkan/linux/DmaBufImageSiblingVkLinux.h"

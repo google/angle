@@ -136,7 +136,6 @@ template("angle_vulkan_backend_template") {
     }
 
     if (is_linux || is_chromeos) {
-      deps += [ "$angle_root/src/common/linux:angle_dma_buf" ]
       if (angle_use_gbm) {
         deps += [ "//third_party/minigbm" ]
       }
