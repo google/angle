@@ -4698,7 +4698,7 @@ angle::Result RendererVk::getCommandBufferOneOff(vk::Context *context,
     }
 
     if (!mPendingOneOffCommands.empty() &&
-        mPendingOneOffCommands.front().serial < getLastCompletedQueueSerial())
+        mPendingOneOffCommands.front().serial <= getLastCompletedQueueSerial())
     {
         *commandBufferOut = std::move(mPendingOneOffCommands.front().commandBuffer);
         mPendingOneOffCommands.pop_front();
