@@ -5273,10 +5273,10 @@ void UpdatePreCacheActiveTextures(const std::vector<gl::SamplerBinding> &sampler
         bool isSamplerExternalY2Y = samplerBinding.samplerType == GL_SAMPLER_EXTERNAL_2D_Y2Y_EXT;
         for (uint32_t arrayElement = 0; arrayElement < arraySize; ++arrayElement)
         {
-            size_t textureIndex = samplerBinding.boundTextureUnits[arrayElement];
-            if (!activeTextures.test(textureIndex))
+            GLuint textureUnit = samplerBinding.boundTextureUnits[arrayElement];
+            if (!activeTextures.test(textureUnit))
                 continue;
-            TextureVk *textureVk = textures[textureIndex];
+            TextureVk *textureVk = textures[textureUnit];
 
             DescriptorInfoDesc infoDesc = {};
 
@@ -5288,7 +5288,7 @@ void UpdatePreCacheActiveTextures(const std::vector<gl::SamplerBinding> &sampler
             }
             else
             {
-                gl::Sampler *sampler       = samplers[textureIndex].get();
+                gl::Sampler *sampler       = samplers[textureUnit].get();
                 const SamplerVk *samplerVk = sampler ? vk::GetImpl(sampler) : nullptr;
 
                 const SamplerHelper &samplerHelper =
@@ -5308,7 +5308,7 @@ void UpdatePreCacheActiveTextures(const std::vector<gl::SamplerBinding> &sampler
                        sizeof(uint32_t));
             }
 
-            desc->updateInfoDesc(static_cast<uint32_t>(textureIndex), infoDesc);
+            desc->updateInfoDesc(static_cast<uint32_t>(textureUnit), infoDesc);
         }
     }
 }
@@ -5349,10 +5349,10 @@ angle::Result DescriptorSetDescBuilder::updateExecutableActiveTexturesForShader(
     const std::vector<gl::LinkedUniform> &uniforms         = executable.getUniforms();
     const gl::ActiveTextureTypeArray &textureTypes         = executable.getActiveSamplerTypes();
 
-    for (uint32_t textureIndex = 0; textureIndex < samplerBindings.size(); ++textureIndex)
+    for (uint32_t samplerIndex = 0; samplerIndex < samplerBindings.size(); ++samplerIndex)
     {
-        const gl::SamplerBinding &samplerBinding = samplerBindings[textureIndex];
-        uint32_t uniformIndex = executable.getUniformIndexFromSamplerIndex(textureIndex);
+        const gl::SamplerBinding &samplerBinding = samplerBindings[samplerIndex];
+        uint32_t uniformIndex = executable.getUniformIndexFromSamplerIndex(samplerIndex);
         const gl::LinkedUniform &samplerUniform = uniforms[uniformIndex];
 
         if (!samplerUniform.isActive(shaderType))
@@ -5361,7 +5361,7 @@ angle::Result DescriptorSetDescBuilder::updateExecutableActiveTexturesForShader(
         }
 
         const ShaderInterfaceVariableInfo &info = variableInfoMap.getIndexedVariableInfo(
-            shaderType, ShaderVariableType::Texture, textureIndex);
+            shaderType, ShaderVariableType::Texture, samplerIndex);
         if (info.isDuplicate)
         {
             continue;
