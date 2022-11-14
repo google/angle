@@ -5778,6 +5778,7 @@ bool CoherentBufferTracker::canProtectDirectly(gl::Context *context)
         ERR() << "Could not unmap buffer.";
     }
     context->bindBuffer(targetPacked, {0});
+    context->deleteBuffer(buffer->id());
 
     return canProtect;
 }

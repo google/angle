@@ -2223,7 +2223,7 @@ angle::Result State::detachBuffer(Context *context, const Buffer *buffer)
         context->getStateCache().onActiveTransformFeedbackChange(context);
     }
 
-    if (getVertexArray()->detachBuffer(context, bufferID))
+    if (mVertexArray && mVertexArray->detachBuffer(context, bufferID))
     {
         mDirtyObjects.set(DIRTY_OBJECT_VERTEX_ARRAY);
         context->getStateCache().onVertexArrayStateChange(context);
