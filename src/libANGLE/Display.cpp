@@ -57,9 +57,6 @@
 #        include "libANGLE/renderer/gl/apple/DisplayApple_api.h"
 #    elif defined(ANGLE_PLATFORM_LINUX)
 #        include "libANGLE/renderer/gl/egl/DisplayEGL.h"
-#        if defined(ANGLE_USE_GBM)
-#            include "libANGLE/renderer/gl/egl/gbm/DisplayGbm.h"
-#        endif
 #        if defined(ANGLE_USE_X11)
 #            include "libANGLE/renderer/gl/glx/DisplayGLX.h"
 #        endif
@@ -350,9 +347,7 @@ rx::DisplayImpl *CreateDisplayFromAttribs(EGLAttrib displayType,
 #        if defined(ANGLE_USE_GBM)
             if (platformType == 0)
             {
-                // If platformType is unknown, use DisplayGbm now. In the future, it should use
-                // DisplayEGL letting native EGL decide what display to use.
-                impl = new rx::DisplayGbm(state);
+                impl = new rx::DisplayEGL(state);
                 break;
             }
 #        endif
@@ -394,11 +389,9 @@ rx::DisplayImpl *CreateDisplayFromAttribs(EGLAttrib displayType,
             if (platformType == 0 ||
                 platformType == EGL_PLATFORM_VULKAN_DISPLAY_MODE_HEADLESS_ANGLE)
             {
-                // If platformType is unknown, use DisplayGbm now. In the future, it should use
-                // DisplayEGL letting native EGL decide what display to use.
                 // platformType == EGL_PLATFORM_VULKAN_DISPLAY_MODE_HEADLESS_ANGLE is a hack,
                 // to allow ChromeOS GLES backend to continue functioning when Vulkan is enabled.
-                impl = new rx::DisplayGbm(state);
+                impl = new rx::DisplayEGL(state);
                 break;
             }
 #        endif

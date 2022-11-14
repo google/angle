@@ -160,19 +160,6 @@ if (is_android || is_linux || is_chromeos) {
   ]
 }
 
-if (ozone_platform_gbm) {
-  _gl_backend_sources += [
-    "egl/gbm/DisplayGbm.cpp",
-    "egl/gbm/DisplayGbm.h",
-    "egl/gbm/SurfaceGbm.cpp",
-    "egl/gbm/SurfaceGbm.h",
-  ]
-
-  pkg_config("libdrm") {
-    packages = [ "libdrm" ]
-  }
-}
-
 if (is_android) {
   _gl_backend_sources += [
     "egl/android/DisplayAndroid.cpp",
@@ -284,9 +271,5 @@ angle_source_set("angle_gl_backend") {
     if (is_mac) {
       frameworks += [ "Cocoa.framework" ]
     }
-  }
-  if (ozone_platform_gbm) {
-    public_configs += [ ":libdrm" ]
-    deps += [ "//third_party/minigbm" ]
   }
 }
