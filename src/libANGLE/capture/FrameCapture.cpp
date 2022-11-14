@@ -1243,14 +1243,25 @@ void MaybeResetResources(gl::ContextID contextID,
         }
         case ResourceIDType::ShaderProgram:
         {
-            ResourceSet &newPrograms =
+            ResourceSet &newShaderPrograms =
                 resourceTracker->getTrackedResource(contextID, ResourceIDType::ShaderProgram)
                     .getNewResources();
 
-            // If we have any new programs created and not deleted during the run, delete them now
-            for (const GLuint &newProgram : newPrograms)
+            // If we have any new shaders or programs created and not deleted during the run, delete
+            // them now
+            for (const GLuint &newShaderProgram : newShaderPrograms)
             {
-                out << "    glDeleteProgram(gShaderProgramMap[" << newProgram << "]);\n";
+                if (resourceTracker->getShaderProgramType({newShaderProgram}) ==
+                    ShaderProgramType::ShaderType)
+                {
+                    out << "    glDeleteShader(gShaderProgramMap[" << newShaderProgram << "]);\n";
+                }
+                else
+                {
+                    ASSERT(resourceTracker->getShaderProgramType({newShaderProgram}) ==
+                           ShaderProgramType::ProgramType);
+                    out << "    glDeleteProgram(gShaderProgramMap[" << newShaderProgram << "]);\n";
+                }
             }
 
             // TODO (http://anglebug.com/5968): Handle programs that need regen
@@ -6900,6 +6911,8 @@ void FrameCaptureShared::maybeCapturePreCallUpdates(
             // If we're capturing, track which programs have been created
             gl::ShaderProgramID programID = {call.params.getReturnValue().value.GLuintVal};
             handleGennedResource(context, programID);
+
+            mResourceTracker.setShaderProgramType(programID, ShaderProgramType::ProgramType);
             break;
         }
 
@@ -6909,6 +6922,32 @@ void FrameCaptureShared::maybeCapturePreCallUpdates(
             const ParamCapture &param =
                 call.params.getParam("programPacked", ParamType::TShaderProgramID, 0);
             handleDeletedResource(context, param.value.ShaderProgramIDVal);
+
+            mResourceTracker.setShaderProgramType(param.value.ShaderProgramIDVal,
+                                                  ShaderProgramType::NoneType);
+
+            break;
+        }
+
+        case EntryPoint::GLCreateShader:
+        {
+            // If we're capturing, track which shaders have been created
+            gl::ShaderProgramID shaderID = {call.params.getReturnValue().value.GLuintVal};
+            handleGennedResource(context, shaderID);
+
+            mResourceTracker.setShaderProgramType(shaderID, ShaderProgramType::ShaderType);
+            break;
+        }
+
+        case EntryPoint::GLDeleteShader:
+        {
+            // If we're capturing, track which shaders have been deleted
+            const ParamCapture &param =
+                call.params.getParam("shaderPacked", ParamType::TShaderProgramID, 0);
+            handleDeletedResource(context, param.value.ShaderProgramIDVal);
+
+            mResourceTracker.setShaderProgramType(param.value.ShaderProgramIDVal,
+                                                  ShaderProgramType::NoneType);
             break;
         }
 

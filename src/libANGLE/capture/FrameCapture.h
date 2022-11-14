@@ -203,6 +203,13 @@ class TrackedResource final : angle::NonCopyable
 using TrackedResourceArray =
     std::array<TrackedResource, static_cast<uint32_t>(ResourceIDType::EnumCount)>;
 
+enum class ShaderProgramType
+{
+    NoneType,
+    ShaderType,
+    ProgramType
+};
+
 // Helper to track resource changes during the capture
 class ResourceTracker final : angle::NonCopyable
 {
@@ -266,6 +273,16 @@ class ResourceTracker final : angle::NonCopyable
 
     std::map<GLuint, egl::ImageID> &getTextureIDToImageTable() { return mMatchTextureIDToImage; }
 
+    void setShaderProgramType(gl::ShaderProgramID id, angle::ShaderProgramType type)
+    {
+        mShaderProgramType[id] = type;
+    }
+    ShaderProgramType getShaderProgramType(gl::ShaderProgramID id)
+    {
+        ASSERT(mShaderProgramType.find(id) != mShaderProgramType.end());
+        return mShaderProgramType[id];
+    }
+
   private:
     // Buffer map calls will map a buffer with correct offset, length, and access flags
     BufferCalls mBufferMapCalls;
@@ -305,6 +322,8 @@ class ResourceTracker final : angle::NonCopyable
 
     std::map<EGLImage, egl::AttributeMap> mMatchImageToAttribs;
     std::map<GLuint, egl::ImageID> mMatchTextureIDToImage;
+
+    std::map<gl::ShaderProgramID, ShaderProgramType> mShaderProgramType;
 };
 
 // Used by the CPP replay to filter out unnecessary code.
