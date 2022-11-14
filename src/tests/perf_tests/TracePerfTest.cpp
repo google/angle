@@ -1379,6 +1379,12 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
         }
     }
 
+    if (traceNameIs("minetest"))
+    {
+        addExtensionPrerequisite("GL_EXT_texture_format_BGRA8888");
+        addIntegerPrerequisite(GL_MAX_TEXTURE_UNITS, 4);
+    }
+
     // glDebugMessageControlKHR and glDebugMessageCallbackKHR crash on ARM GLES1.
     if (IsARM() && mParams->traceInfo.contextClientMajorVersion == 1)
     {
