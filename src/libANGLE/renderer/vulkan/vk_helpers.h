@@ -2625,6 +2625,12 @@ class ImageHelper final : public Resource, public angle::Subject
     gl::TexLevelArray<LevelContentDefinedMask> mStencilContentDefined;
 
     std::vector<vk::GarbageObject> mImageAndViewGarbage;
+
+    // Used for memory allocation tracking.
+    // Memory size allocated for the image in the memory during the initialization.
+    VkDeviceSize mAllocationSize;
+    // Type of the memory allocation for the image (Image or ImageExternal).
+    MemoryAllocationType mMemoryAllocationType;
 };
 
 ANGLE_INLINE bool RenderPassCommandBufferHelper::usesImage(const ImageHelper &image) const

@@ -92,6 +92,25 @@ struct SkippedSyncvalMessage
     const char *messageContents2                      = "";
     bool isDueToNonConformantCoherentFramebufferFetch = false;
 };
+
+// Used to designate memory allocation type for tracking purposes.
+enum class MemoryAllocationType
+{
+    Unspecified    = 0,
+    Image          = 1,
+    ImageExternal  = 2,
+    Buffer         = 3,
+    BufferExternal = 4,
+
+    InvalidEnum = 5,
+    EnumCount   = InvalidEnum,
+};
+
+constexpr const char *kMemoryAllocationTypeMessage[] = {
+    "Unspecified", "Image", "ImageExternal", "Buffer", "BufferExternal", "Invalid",
+};
+constexpr const uint32_t kMemoryAllocationTypeCount =
+    static_cast<uint32_t>(MemoryAllocationType::EnumCount);
 }  // namespace vk
 
 // Supports one semaphore from current surface, and one semaphore passed to
@@ -633,6 +652,25 @@ class RendererVk : angle::NonCopyable
         return hasUnsubmittedUse(sharedUse.getResourceUse());
     }
 
+    void onMemoryAlloc(vk::MemoryAllocationType allocType, VkDeviceSize size)
+    {
+        ASSERT(allocType != vk::MemoryAllocationType::InvalidEnum && size != 0);
+
+        // Add the new allocation to the allocation tracker.
+        uint32_t allocTypeIndex = ToUnderlying(allocType);
+        mActiveMemoryAllocationsSize[allocTypeIndex] += size;
+    }
+
+    void onMemoryDealloc(vk::MemoryAllocationType allocType, VkDeviceSize size)
+    {
+        ASSERT(allocType != vk::MemoryAllocationType::InvalidEnum && size != 0);
+
+        // Remove the allocation from the allocation tracker.
+        uint32_t allocTypeIndex = ToUnderlying(allocType);
+        ASSERT(mActiveMemoryAllocationsSize[allocTypeIndex] >= size);
+        mActiveMemoryAllocationsSize[allocTypeIndex] -= size;
+    }
+
   private:
     angle::Result initializeDevice(DisplayVk *displayVk, uint32_t queueFamilyIndex);
     void ensureCapsInitialized() const;
@@ -904,6 +942,10 @@ class RendererVk : angle::NonCopyable
 
     vk::ExtensionNameList mEnabledInstanceExtensions;
     vk::ExtensionNameList mEnabledDeviceExtensions;
+
+    // For memory allocation tracking.
+    std::array<std::atomic<VkDeviceSize>, vk::kMemoryAllocationTypeCount>
+        mActiveMemoryAllocationsSize;
 };
 
 ANGLE_INLINE bool RendererVk::hasUnfinishedUse(const vk::ResourceUse &use) const

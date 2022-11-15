@@ -1267,6 +1267,12 @@ RendererVk::RendererVk()
     // a number of places in the Vulkan backend that make this assumption.  This assertion is made
     // early to fail immediately on big-endian platforms.
     ASSERT(IsLittleEndian());
+
+    // Allocation counters are initialized here to keep track of the size of the memory allocations.
+    for (uint32_t i = 0; i < mActiveMemoryAllocationsSize.size(); i++)
+    {
+        mActiveMemoryAllocationsSize[i] = 0;
+    }
 }
 
 RendererVk::~RendererVk()

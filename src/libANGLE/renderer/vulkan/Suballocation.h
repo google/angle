@@ -21,6 +21,7 @@
 namespace rx
 {
 class RendererVk;
+enum class MemoryAllocationType;
 
 namespace vk
 {
@@ -43,9 +44,11 @@ class BufferBlock final : angle::NonCopyable
                        VkDeviceSize size);
     void initWithoutVirtualBlock(Context *context,
                                  Buffer &buffer,
+                                 MemoryAllocationType memoryAllocationType,
                                  DeviceMemory &deviceMemory,
                                  VkMemoryPropertyFlags memoryPropertyFlags,
-                                 VkDeviceSize size);
+                                 VkDeviceSize size,
+                                 VkDeviceSize allocatedBufferSize);
 
     BufferBlock &operator=(BufferBlock &&other);
 
@@ -89,7 +92,14 @@ class BufferBlock final : angle::NonCopyable
     Buffer mBuffer;
     DeviceMemory mDeviceMemory;
     VkMemoryPropertyFlags mMemoryPropertyFlags;
+
+    // Memory size that user of this object thinks we have.
     VkDeviceSize mSize;
+    // Memory size that was actually allocated for this object.
+    VkDeviceSize mAllocatedBufferSize;
+    // Memory allocation type used for this object.
+    MemoryAllocationType mMemoryAllocationType;
+
     uint8_t *mMappedMemory;
     BufferSerial mSerial;
     // Heuristic information for pruneEmptyBuffer. This tracks how many times (consecutively) this
@@ -112,16 +122,17 @@ class BufferSuballocation final : angle::NonCopyable
 
     void destroy(RendererVk *renderer);
 
-    void init(VkDevice device,
-              BufferBlock *block,
+    void init(BufferBlock *block,
               VmaVirtualAllocation allocation,
               VkDeviceSize offset,
               VkDeviceSize size);
     void initWithEntireBuffer(Context *context,
                               Buffer &buffer,
+                              MemoryAllocationType memoryAllocationType,
                               DeviceMemory &deviceMemory,
                               VkMemoryPropertyFlags memoryPropertyFlags,
-                              VkDeviceSize size);
+                              VkDeviceSize size,
+                              VkDeviceSize allocatedBufferSize);
 
     const Buffer &getBuffer() const;
     VkDeviceSize getSize() const;
@@ -224,16 +235,6 @@ ANGLE_INLINE uint8_t *BufferBlock::getMappedMemory() const
     return mMappedMemory;
 }
 
-ANGLE_INLINE VkResult BufferBlock::allocate(VkDeviceSize size,
-                                            VkDeviceSize alignment,
-                                            VmaVirtualAllocation *allocationOut,
-                                            VkDeviceSize *offsetOut)
-{
-    std::unique_lock<std::mutex> lock(mVirtualBlockMutex);
-    mCountRemainsEmpty = 0;
-    return mVirtualBlock.allocate(size, alignment, allocationOut, offsetOut);
-}
-
 // BufferSuballocation implementation.
 ANGLE_INLINE BufferSuballocation::BufferSuballocation()
     : mBufferBlock(nullptr), mAllocation(VK_NULL_HANDLE), mOffset(0), mSize(0)
@@ -283,8 +284,7 @@ ANGLE_INLINE void BufferSuballocation::destroy(RendererVk *renderer)
     }
 }
 
-ANGLE_INLINE void BufferSuballocation::init(VkDevice device,
-                                            BufferBlock *block,
+ANGLE_INLINE void BufferSuballocation::init(BufferBlock *block,
                                             VmaVirtualAllocation allocation,
                                             VkDeviceSize offset,
                                             VkDeviceSize size)
@@ -304,14 +304,17 @@ ANGLE_INLINE void BufferSuballocation::init(VkDevice device,
 ANGLE_INLINE void BufferSuballocation::initWithEntireBuffer(
     Context *context,
     Buffer &buffer,
+    MemoryAllocationType memoryAllocationType,
     DeviceMemory &deviceMemory,
     VkMemoryPropertyFlags memoryPropertyFlags,
-    VkDeviceSize size)
+    VkDeviceSize size,
+    VkDeviceSize allocatedBufferSize)
 {
     ASSERT(!valid());
 
     std::unique_ptr<BufferBlock> block = std::make_unique<BufferBlock>();
-    block->initWithoutVirtualBlock(context, buffer, deviceMemory, memoryPropertyFlags, size);
+    block->initWithoutVirtualBlock(context, buffer, memoryAllocationType, deviceMemory,
+                                   memoryPropertyFlags, size, allocatedBufferSize);
 
     mBufferBlock = block.release();
     mAllocation  = VK_NULL_HANDLE;

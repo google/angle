@@ -10,6 +10,7 @@
 
 #include "common/android_util.h"
 #include "libANGLE/renderer/vulkan/ContextVk.h"
+#include "libANGLE/renderer/vulkan/RendererVk.h"
 #include "libANGLE/renderer/vulkan/vk_utils.h"
 
 #if defined(ANGLE_PLATFORM_ANDROID)
@@ -61,7 +62,8 @@ angle::Result InitAndroidExternalMemory(ContextVk *contextVk,
                                         VkMemoryPropertyFlags memoryProperties,
                                         Buffer *buffer,
                                         VkMemoryPropertyFlags *memoryPropertyFlagsOut,
-                                        DeviceMemory *deviceMemoryOut)
+                                        DeviceMemory *deviceMemoryOut,
+                                        VkDeviceSize *sizeOut)
 {
 #if defined(ANGLE_PLATFORM_ANDROID)
     const AHBFunctions &functions =
@@ -80,9 +82,11 @@ angle::Result InitAndroidExternalMemory(ContextVk *contextVk,
     importHardwareBufferInfo.sType  = VK_STRUCTURE_TYPE_IMPORT_ANDROID_HARDWARE_BUFFER_INFO_ANDROID;
     importHardwareBufferInfo.buffer = hardwareBuffer;
 
-    ANGLE_TRY(AllocateBufferMemoryWithRequirements(
-        contextVk, memoryProperties, externalMemoryRequirements, &importHardwareBufferInfo, buffer,
-        memoryPropertyFlagsOut, deviceMemoryOut));
+    ANGLE_TRY(AllocateBufferMemoryWithRequirements(contextVk, MemoryAllocationType::BufferExternal,
+                                                   memoryProperties, externalMemoryRequirements,
+                                                   &importHardwareBufferInfo, buffer,
+                                                   memoryPropertyFlagsOut, deviceMemoryOut));
+    *sizeOut = externalMemoryRequirements.size;
 
     functions.acquire(hardwareBuffer);
 
