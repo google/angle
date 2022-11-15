@@ -150,11 +150,13 @@ angle::Result SyncHelper::serverWait(ContextVk *contextVk)
 
 angle::Result SyncHelper::getStatus(Context *context, ContextVk *contextVk, bool *signaled)
 {
+    RendererVk *renderer = context->getRenderer();
+
     // Submit commands if it was deferred on the context that issued the sync object
     ANGLE_TRY(submitSyncIfDeferred(contextVk, RenderPassClosureReason::SyncObjectClientWait));
 
     ANGLE_TRY(context->getRenderer()->checkCompletedCommands(context));
-    *signaled = !isCurrentlyInUse(context->getRenderer()->getLastCompletedQueueSerial());
+    *signaled = !isCurrentlyInUse(renderer);
     return angle::Result::Continue;
 }
 
@@ -162,7 +164,7 @@ angle::Result SyncHelper::submitSyncIfDeferred(ContextVk *contextVk, RenderPassC
 {
     if (mUse.getSerial().valid())
     {
-        ASSERT(!usedInRecordedCommands());
+        ASSERT(!usedInRecordedCommands(contextVk));
         return angle::Result::Continue;
     }
 
@@ -196,7 +198,7 @@ angle::Result SyncHelper::submitSyncIfDeferred(ContextVk *contextVk, RenderPassC
         }
     }
 
-    ASSERT(mUse.getSerial().valid() && !usedInRecordedCommands());
+    ASSERT(mUse.getSerial().valid() && !usedInRecordedCommands(contextVk));
 
     return angle::Result::Continue;
 }
@@ -375,7 +377,7 @@ angle::Result SyncHelperNativeFence::getStatus(Context *context,
     // We've got a serial, check if the serial is still in use
     if (mUse.getSerial().valid())
     {
-        *signaled = !isCurrentlyInUse(context->getRenderer()->getLastCompletedQueueSerial());
+        *signaled = !isCurrentlyInUse(context->getRenderer());
         return angle::Result::Continue;
     }
 

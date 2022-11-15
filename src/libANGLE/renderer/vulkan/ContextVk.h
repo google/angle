@@ -493,8 +493,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     void addWaitSemaphore(VkSemaphore semaphore, VkPipelineStageFlags stageMask);
 
-    Serial getLastCompletedQueueSerial() const { return mRenderer->getLastCompletedQueueSerial(); }
-
     template <typename T>
     void addGarbage(T *object)
     {

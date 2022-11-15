@@ -2691,8 +2691,7 @@ angle::Result DynamicBuffer::allocate(Context *context,
 
     // The front of the free list should be the oldest. Thus if it is in use the rest of the
     // free list should be in use as well.
-    if (mBufferFreeList.empty() ||
-        mBufferFreeList.front()->isCurrentlyInUse(renderer->getLastCompletedQueueSerial()))
+    if (mBufferFreeList.empty() || mBufferFreeList.front()->isCurrentlyInUse(renderer))
     {
         ANGLE_TRY(allocateNewBuffer(context));
     }
@@ -3184,7 +3183,7 @@ angle::Result DescriptorPoolHelper::init(Context *context,
 
     if (mDescriptorPool.valid())
     {
-        ASSERT(!isCurrentlyInUse(renderer->getLastCompletedQueueSerial()));
+        ASSERT(!isCurrentlyInUse(renderer));
         mDescriptorPool.destroy(renderer->getDevice());
     }
 
@@ -3235,11 +3234,10 @@ bool DescriptorPoolHelper::allocateDescriptorSet(Context *context,
     // Try to reuse descriptorSet garbage first
     if (!mDescriptorSetGarbageList.empty())
     {
-        RendererVk *rendererVk          = context->getRenderer();
-        Serial lastCompletedQueueSerial = rendererVk->getLastCompletedQueueSerial();
+        RendererVk *rendererVk = context->getRenderer();
 
         DescriptorSetHelper &garbage = mDescriptorSetGarbageList.front();
-        if (!garbage.isCurrentlyInUse(lastCompletedQueueSerial))
+        if (!garbage.isCurrentlyInUse(rendererVk))
         {
             *descriptorSetsOut = garbage.getDescriptorSet();
             mDescriptorSetGarbageList.pop_front();
@@ -3420,7 +3418,6 @@ angle::Result DynamicDescriptorPool::allocateNewPool(Context *context)
     // Eviction logic: Before we allocate a new pool, check to see if there is any existing pool is
     // not bound to program and is GPU compete. We destroy one pool in exchange for allocate a new
     // pool to keep total descriptorPool count under control.
-    Serial lastCompletedSerial = context->getRenderer()->getLastCompletedQueueSerial();
     for (size_t poolIndex = 0; poolIndex < mDescriptorPools.size();)
     {
         if (!mDescriptorPools[poolIndex]->get().valid())
@@ -3429,7 +3426,7 @@ angle::Result DynamicDescriptorPool::allocateNewPool(Context *context)
             continue;
         }
         if (!mDescriptorPools[poolIndex]->isReferenced() &&
-            !mDescriptorPools[poolIndex]->get().isCurrentlyInUse(lastCompletedSerial))
+            !mDescriptorPools[poolIndex]->get().isCurrentlyInUse(context->getRenderer()))
         {
             mDescriptorPools[poolIndex]->get().destroy(context->getRenderer());
             mDescriptorPools.erase(mDescriptorPools.begin() + poolIndex);
@@ -3572,11 +3569,11 @@ void DynamicallyGrowingPool<Pool>::destroyEntryPool(VkDevice device)
 template <typename Pool>
 bool DynamicallyGrowingPool<Pool>::findFreeEntryPool(ContextVk *contextVk)
 {
-    Serial lastCompletedQueueSerial = contextVk->getLastCompletedQueueSerial();
+    RendererVk *renderer = contextVk->getRenderer();
     for (size_t poolIndex = 0; poolIndex < mPools.size(); ++poolIndex)
     {
         PoolResource &pool = mPools[poolIndex];
-        if (pool.freedCount == mPoolSize && !pool.isCurrentlyInUse(lastCompletedQueueSerial))
+        if (pool.freedCount == mPoolSize && !pool.isCurrentlyInUse(renderer))
         {
             mCurrentPool      = poolIndex;
             mCurrentFreeEntry = 0;
@@ -4536,7 +4533,7 @@ angle::Result BufferHelper::allocateForVertexConversion(ContextVk *contextVk,
         if (size <= getSize() &&
             (hostVisibility == MemoryHostVisibility::Visible) == isHostVisible())
         {
-            if (!isCurrentlyInUse(contextVk->getLastCompletedQueueSerial()))
+            if (!isCurrentlyInUse(renderer))
             {
                 initializeBarrierTracker(contextVk);
                 return angle::Result::Continue;
@@ -4717,7 +4714,7 @@ void BufferHelper::release(RendererVk *renderer)
     {
         renderer->collectSuballocationGarbage(mReadOnlyUse, std::move(mSuballocation),
                                               std::move(mBufferForVertexArray));
-        if (mReadWriteUse.isCurrentlyInUse(renderer->getLastCompletedQueueSerial()))
+        if (isCurrentlyInUseForWrite(renderer))
         {
             mReadWriteUse.release();
             mReadWriteUse.init();
@@ -4730,7 +4727,7 @@ void BufferHelper::releaseBufferAndDescriptorSetCache(ContextVk *contextVk)
 {
     RendererVk *renderer = contextVk->getRenderer();
 
-    if (mReadOnlyUse.isCurrentlyInUse(renderer->getLastCompletedQueueSerial()))
+    if (isCurrentlyInUse(renderer))
     {
         mDescriptorSetCacheManager.releaseKeys(contextVk);
     }

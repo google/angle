@@ -31,13 +31,13 @@ angle::Result WaitForIdle(ContextVk *contextVk,
                           RenderPassClosureReason reason)
 {
     // If there are pending commands for the resource, flush them.
-    if (resource->usedInRecordedCommands())
+    if (resource->usedInRecordedCommands(contextVk))
     {
         ANGLE_TRY(contextVk->flushImpl(nullptr, reason));
     }
 
     // Make sure the driver is done with the resource.
-    if (resource->usedInRunningCommands(contextVk->getLastCompletedQueueSerial()))
+    if (resource->usedInRunningCommands(contextVk->getRenderer()))
     {
         if (debugMessage)
         {
@@ -46,7 +46,7 @@ angle::Result WaitForIdle(ContextVk *contextVk,
         ANGLE_TRY(resource->finishRunningCommands(contextVk));
     }
 
-    ASSERT(!resource->isCurrentlyInUse(contextVk->getLastCompletedQueueSerial()));
+    ASSERT(!resource->isCurrentlyInUse(contextVk->getRenderer()));
 
     return angle::Result::Continue;
 }
@@ -72,6 +72,21 @@ Resource &Resource::operator=(Resource &&rhs)
 Resource::~Resource()
 {
     mUse.release();
+}
+
+bool Resource::usedInRecordedCommands(Context *context) const
+{
+    return mUse.usedInRecordedCommands();
+}
+
+bool Resource::usedInRunningCommands(RendererVk *renderer) const
+{
+    return renderer->useInRunningCommands(mUse);
+}
+
+bool Resource::isCurrentlyInUse(RendererVk *renderer) const
+{
+    return renderer->hasUnfinishedUse(mUse);
 }
 
 angle::Result Resource::finishRunningCommands(ContextVk *contextVk)
@@ -109,6 +124,27 @@ ReadWriteResource &ReadWriteResource::operator=(ReadWriteResource &&other)
     mReadOnlyUse  = std::move(other.mReadOnlyUse);
     mReadWriteUse = std::move(other.mReadWriteUse);
     return *this;
+}
+
+bool ReadWriteResource::usedInRecordedCommands(Context *context) const
+{
+    return mReadOnlyUse.usedInRecordedCommands();
+}
+
+// Determine if the driver has finished execution with this resource.
+bool ReadWriteResource::usedInRunningCommands(RendererVk *renderer) const
+{
+    return renderer->useInRunningCommands(mReadOnlyUse);
+}
+
+bool ReadWriteResource::isCurrentlyInUse(RendererVk *renderer) const
+{
+    return renderer->hasUnfinishedUse(mReadOnlyUse);
+}
+
+bool ReadWriteResource::isCurrentlyInUseForWrite(RendererVk *renderer) const
+{
+    return renderer->hasUnfinishedUse(mReadWriteUse);
 }
 
 angle::Result ReadWriteResource::finishRunningCommands(ContextVk *contextVk)
@@ -151,9 +187,9 @@ SharedGarbage &SharedGarbage::operator=(SharedGarbage &&rhs)
     return *this;
 }
 
-bool SharedGarbage::destroyIfComplete(RendererVk *renderer, Serial completedSerial)
+bool SharedGarbage::destroyIfComplete(RendererVk *renderer)
 {
-    if (mLifetime.isCurrentlyInUse(completedSerial))
+    if (renderer->hasUnfinishedUse(mLifetime))
     {
         return false;
     }
@@ -166,6 +202,11 @@ bool SharedGarbage::destroyIfComplete(RendererVk *renderer, Serial completedSeri
     mLifetime.release();
 
     return true;
+}
+
+bool SharedGarbage::hasUnsubmittedUse(RendererVk *renderer) const
+{
+    return renderer->hasUnsubmittedUse(mLifetime);
 }
 
 // ResourceUseList implementation.

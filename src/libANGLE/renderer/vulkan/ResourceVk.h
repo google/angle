@@ -117,15 +117,10 @@ class SharedResourceUse final : angle::NonCopyable
         return mUse->counter > 1;
     }
 
-    ANGLE_INLINE bool usedInRunningCommands(Serial lastCompletedSerial) const
+    ANGLE_INLINE const ResourceUse getResourceUse() const
     {
         ASSERT(valid());
-        return mUse->serial > lastCompletedSerial;
-    }
-
-    ANGLE_INLINE bool isCurrentlyInUse(Serial lastCompletedSerial) const
-    {
-        return usedInRecordedCommands() || usedInRunningCommands(lastCompletedSerial);
+        return *mUse;
     }
 
     ANGLE_INLINE Serial getSerial() const
@@ -168,8 +163,8 @@ class SharedGarbage
     ~SharedGarbage();
     SharedGarbage &operator=(SharedGarbage &&rhs);
 
-    bool destroyIfComplete(RendererVk *renderer, Serial completedSerial);
-    bool usedInRecordedCommands() const { return mLifetime.usedInRecordedCommands(); }
+    bool destroyIfComplete(RendererVk *renderer);
+    bool hasUnsubmittedUse(RendererVk *renderer) const;
 
   private:
     SharedResourceUse mLifetime;
@@ -215,19 +210,13 @@ class Resource : angle::NonCopyable
     virtual ~Resource();
 
     // Returns true if the resource is used by ANGLE in an unflushed command buffer.
-    bool usedInRecordedCommands() const { return mUse.usedInRecordedCommands(); }
+    bool usedInRecordedCommands(Context *context) const;
 
     // Determine if the driver has finished execution with this resource.
-    bool usedInRunningCommands(Serial lastCompletedSerial) const
-    {
-        return mUse.usedInRunningCommands(lastCompletedSerial);
-    }
+    bool usedInRunningCommands(RendererVk *renderer) const;
 
     // Returns true if the resource is in use by ANGLE or the driver.
-    bool isCurrentlyInUse(Serial lastCompletedSerial) const
-    {
-        return mUse.isCurrentlyInUse(lastCompletedSerial);
-    }
+    bool isCurrentlyInUse(RendererVk *renderer) const;
 
     // Ensures the driver is caught up to this resource and it is only in use by ANGLE.
     angle::Result finishRunningCommands(ContextVk *contextVk);
@@ -281,23 +270,14 @@ class ReadWriteResource : public angle::NonCopyable
     virtual ~ReadWriteResource();
 
     // Returns true if the resource is used by ANGLE in an unflushed command buffer.
-    bool usedInRecordedCommands() const { return mReadOnlyUse.usedInRecordedCommands(); }
+    bool usedInRecordedCommands(Context *context) const;
 
     // Determine if the driver has finished execution with this resource.
-    bool usedInRunningCommands(Serial lastCompletedSerial) const
-    {
-        return mReadOnlyUse.usedInRunningCommands(lastCompletedSerial);
-    }
+    bool usedInRunningCommands(RendererVk *renderer) const;
 
     // Returns true if the resource is in use by ANGLE or the driver.
-    bool isCurrentlyInUse(Serial lastCompletedSerial) const
-    {
-        return mReadOnlyUse.isCurrentlyInUse(lastCompletedSerial);
-    }
-    bool isCurrentlyInUseForWrite(Serial lastCompletedSerial) const
-    {
-        return mReadWriteUse.isCurrentlyInUse(lastCompletedSerial);
-    }
+    bool isCurrentlyInUse(RendererVk *renderer) const;
+    bool isCurrentlyInUseForWrite(RendererVk *renderer) const;
 
     // Ensures the driver is caught up to this resource and it is only in use by ANGLE.
     angle::Result finishRunningCommands(ContextVk *contextVk);

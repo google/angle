@@ -439,18 +439,18 @@ angle::Result QueryVk::queryCounter(const gl::Context *context)
     return mQueryHelper.get().flushAndWriteTimestamp(contextVk);
 }
 
-bool QueryVk::isUsedInRecordedCommands() const
+bool QueryVk::isUsedInRecordedCommands(vk::Context *context) const
 {
     ASSERT(mQueryHelper.isReferenced());
 
-    if (mQueryHelper.get().usedInRecordedCommands())
+    if (mQueryHelper.get().usedInRecordedCommands(context))
     {
         return true;
     }
 
     for (const vk::Shared<vk::QueryHelper> &query : mStashedQueryHelpers)
     {
-        if (query.get().usedInRecordedCommands())
+        if (query.get().usedInRecordedCommands(context))
         {
             return true;
         }
@@ -459,18 +459,18 @@ bool QueryVk::isUsedInRecordedCommands() const
     return false;
 }
 
-bool QueryVk::isCurrentlyInUse(Serial lastCompletedSerial) const
+bool QueryVk::isCurrentlyInUse(RendererVk *renderer) const
 {
     ASSERT(mQueryHelper.isReferenced());
 
-    if (mQueryHelper.get().isCurrentlyInUse(lastCompletedSerial))
+    if (mQueryHelper.get().isCurrentlyInUse(renderer))
     {
         return true;
     }
 
     for (const vk::Shared<vk::QueryHelper> &query : mStashedQueryHelpers)
     {
-        if (query.get().isCurrentlyInUse(lastCompletedSerial))
+        if (query.get().isCurrentlyInUse(renderer))
         {
             return true;
         }
@@ -481,20 +481,18 @@ bool QueryVk::isCurrentlyInUse(Serial lastCompletedSerial) const
 
 angle::Result QueryVk::finishRunningCommands(ContextVk *contextVk)
 {
-    Serial lastCompletedSerial = contextVk->getLastCompletedQueueSerial();
+    RendererVk *renderer = contextVk->getRenderer();
 
-    if (mQueryHelper.get().usedInRunningCommands(lastCompletedSerial))
+    if (mQueryHelper.get().usedInRunningCommands(renderer))
     {
         ANGLE_TRY(mQueryHelper.get().finishRunningCommands(contextVk));
-        lastCompletedSerial = contextVk->getLastCompletedQueueSerial();
     }
 
     for (vk::Shared<vk::QueryHelper> &query : mStashedQueryHelpers)
     {
-        if (query.get().usedInRunningCommands(lastCompletedSerial))
+        if (query.get().usedInRunningCommands(renderer))
         {
             ANGLE_TRY(query.get().finishRunningCommands(contextVk));
-            lastCompletedSerial = contextVk->getLastCompletedQueueSerial();
         }
     }
     return angle::Result::Continue;
@@ -527,19 +525,19 @@ angle::Result QueryVk::getResult(const gl::Context *context, bool wait)
     // Note regarding time-elapsed: end should have been called after begin, so flushing when end
     // has pending work should flush begin too.
 
-    if (isUsedInRecordedCommands())
+    if (isUsedInRecordedCommands(contextVk))
     {
         ANGLE_TRY(contextVk->flushImpl(nullptr, RenderPassClosureReason::GetQueryResult));
 
-        ASSERT(!mQueryHelperTimeElapsedBegin.usedInRecordedCommands());
-        ASSERT(!mQueryHelper.get().usedInRecordedCommands());
+        ASSERT(!mQueryHelperTimeElapsedBegin.usedInRecordedCommands(contextVk));
+        ASSERT(!mQueryHelper.get().usedInRecordedCommands(contextVk));
     }
 
     // If the command buffer this query is being written to is still in flight and uses
     // vkCmdResetQueryPool, its reset command may not have been performed by the GPU yet.  To avoid
     // a race condition in this case, wait for the batch to finish first before querying (or return
     // not-ready if not waiting).
-    if (isCurrentlyInUse(contextVk->getLastCompletedQueueSerial()) &&
+    if (isCurrentlyInUse(renderer) &&
         (!renderer->getFeatures().supportsHostQueryReset.enabled ||
          renderer->getFeatures().forceWaitForSubmissionToCompleteForQueryResult.enabled ||
          renderer->isAsyncCommandQueueEnabled()))
@@ -550,7 +548,7 @@ angle::Result QueryVk::getResult(const gl::Context *context, bool wait)
         // progress without this.
         ANGLE_TRY(contextVk->checkCompletedCommands());
 
-        if (isCurrentlyInUse(contextVk->getLastCompletedQueueSerial()))
+        if (isCurrentlyInUse(renderer))
         {
             if (!wait)
             {
@@ -560,7 +558,7 @@ angle::Result QueryVk::getResult(const gl::Context *context, bool wait)
                                   "GPU stall due to waiting on uncompleted query");
 
             // Assert that the work has been sent to the GPU
-            ASSERT(!isUsedInRecordedCommands());
+            ASSERT(!isUsedInRecordedCommands(contextVk));
             ANGLE_TRY(finishRunningCommands(contextVk));
         }
     }

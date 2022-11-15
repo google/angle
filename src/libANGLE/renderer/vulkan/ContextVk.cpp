@@ -1364,8 +1364,7 @@ angle::Result ContextVk::setupIndexedDraw(const gl::Context *context,
             BufferVk *bufferVk             = vk::GetImpl(elementArrayBuffer);
             vk::BufferHelper &bufferHelper = bufferVk->getBuffer();
 
-            if (bufferHelper.isHostVisible() &&
-                !bufferHelper.isCurrentlyInUse(getLastCompletedQueueSerial()))
+            if (bufferHelper.isHostVisible() && !bufferHelper.isCurrentlyInUse(mRenderer))
             {
                 uint8_t *src = nullptr;
                 ANGLE_TRY(
@@ -3358,12 +3357,10 @@ angle::Result ContextVk::checkCompletedGpuEvents()
 
     int finishedCount = 0;
 
-    Serial lastCompletedSerial = getLastCompletedQueueSerial();
-
     for (GpuEventQuery &eventQuery : mInFlightGpuEventQueries)
     {
         // Only check the timestamp query if the submission has finished.
-        if (eventQuery.queryHelper.usedInRunningCommands(lastCompletedSerial))
+        if (eventQuery.queryHelper.usedInRunningCommands(mRenderer))
         {
             break;
         }

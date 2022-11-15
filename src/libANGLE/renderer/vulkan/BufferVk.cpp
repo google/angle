@@ -404,8 +404,9 @@ angle::Result BufferVk::setDataWithMemoryType(const gl::Context *context,
         return angle::Result::Continue;
     }
 
-    const bool bufferSizeChanged              = size != static_cast<size_t>(mState.getSize());
-    const bool inUseAndRespecifiedWithoutData = (data == nullptr && isCurrentlyInUse(contextVk));
+    const bool bufferSizeChanged = size != static_cast<size_t>(mState.getSize());
+    const bool inUseAndRespecifiedWithoutData =
+        (data == nullptr && isCurrentlyInUse(contextVk->getRenderer()));
 
     // The entire buffer is being respecified, possibly with null data.
     // Release and init a new mBuffer with requested size.
@@ -500,7 +501,7 @@ angle::Result BufferVk::allocStagingBuffer(ContextVk *contextVk,
     {
         if (size <= mStagingBuffer.getSize() &&
             (coherency == vk::MemoryCoherency::Coherent) == mStagingBuffer.isCoherent() &&
-            !mStagingBuffer.isCurrentlyInUse(contextVk->getLastCompletedQueueSerial()))
+            !mStagingBuffer.isCurrentlyInUse(contextVk->getRenderer()))
         {
             // If size is big enough and it is idle, then just reuse the existing staging buffer
             *mapPtr                = mStagingBuffer.getMappedMemory();
@@ -667,10 +668,10 @@ angle::Result BufferVk::mapRangeImpl(ContextVk *contextVk,
     {
         // If app is not going to write, all we need is to ensure GPU write is finished.
         // Concurrent reads from CPU and GPU is allowed.
-        if (mBuffer.isCurrentlyInUseForWrite(contextVk->getLastCompletedQueueSerial()))
+        if (mBuffer.isCurrentlyInUseForWrite(contextVk->getRenderer()))
         {
             // If there are pending commands for the resource, flush them.
-            if (mBuffer.usedInRecordedCommands())
+            if (mBuffer.usedInRecordedCommands(contextVk))
             {
                 ANGLE_TRY(
                     contextVk->flushImpl(nullptr, RenderPassClosureReason::BufferWriteThenMap));
@@ -691,7 +692,7 @@ angle::Result BufferVk::mapRangeImpl(ContextVk *contextVk,
     }
 
     // Write case, buffer not in use.
-    if (isExternalBuffer() || !isCurrentlyInUse(contextVk))
+    if (isExternalBuffer() || !isCurrentlyInUse(contextVk->getRenderer()))
     {
         return mBuffer.mapWithOffset(contextVk, mapPtrBytes, static_cast<size_t>(offset));
     }
@@ -723,7 +724,7 @@ angle::Result BufferVk::mapRangeImpl(ContextVk *contextVk,
         return angle::Result::Continue;
     }
 
-    if (!mBuffer.isCurrentlyInUseForWrite(contextVk->getLastCompletedQueueSerial()))
+    if (!mBuffer.isCurrentlyInUseForWrite(contextVk->getRenderer()))
     {
         // This will keep the new buffer mapped and update mapPtr, so return immediately.
         return ghostMappedBuffer(contextVk, offset, length, access, mapPtr);
@@ -909,8 +910,7 @@ angle::Result BufferVk::acquireAndUpdate(ContextVk *contextVk,
 
         // If the buffer is host visible and the GPU is not writing to it, we use the CPU to do the
         // copy. We need to save the source buffer pointer before we acquire a new buffer.
-        if (src.isHostVisible() &&
-            !src.isCurrentlyInUseForWrite(contextVk->getLastCompletedQueueSerial()) &&
+        if (src.isHostVisible() && !src.isCurrentlyInUseForWrite(contextVk->getRenderer()) &&
             ShouldUseCPUToCopyData(contextVk, copySize, bufferSize))
         {
             uint8_t *mapPointer = nullptr;
@@ -981,7 +981,7 @@ angle::Result BufferVk::setDataImpl(ContextVk *contextVk,
     //          acquire a new BufferHelper from the pool
     //     else stage the update
     // else update the buffer directly
-    if (isCurrentlyInUse(contextVk))
+    if (isCurrentlyInUse(contextVk->getRenderer()))
     {
         // If storage has just been redefined, don't go down acquireAndUpdate code path. There is no
         // reason you acquire another new buffer right after redefined. And if we do go into
@@ -1086,9 +1086,8 @@ angle::Result BufferVk::acquireBufferHelper(ContextVk *contextVk, size_t sizeInB
     return angle::Result::Continue;
 }
 
-bool BufferVk::isCurrentlyInUse(ContextVk *contextVk) const
+bool BufferVk::isCurrentlyInUse(RendererVk *renderer) const
 {
-    return mBuffer.isCurrentlyInUse(contextVk->getLastCompletedQueueSerial());
+    return mBuffer.isCurrentlyInUse(renderer);
 }
-
 }  // namespace rx

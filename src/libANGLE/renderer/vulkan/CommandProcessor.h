@@ -408,8 +408,6 @@ class CommandQueue final : public CommandQueueInterface
 
     angle::Result ensureNoPendingWork(Context *context) override { return angle::Result::Continue; }
 
-    Serial getLastCompletedQueueSerial() const { return mLastCompletedQueueSerial.getSerial(); }
-
     bool isBusy() const override;
 
     angle::Result queueSubmit(Context *context,
@@ -428,6 +426,13 @@ class CommandQueue final : public CommandQueueInterface
 
     const angle::VulkanPerfCounters &getPerfCounters() const { return mPerfCounters; }
     void resetPerFramePerfCounters();
+
+    // The ResourceUse still have unfinished queue serial by ANGLE or vulkan.
+    bool hasUnfinishedUse(const ResourceUse &use) const;
+    // The ResourceUse still have unfinished queue serial by vulkan.
+    bool useInRunningCommands(const ResourceUse &use) const;
+    // The ResourceUse still have queue serial not yet submitted to vulkan.
+    bool hasUnsubmittedUse(const ResourceUse &use) const;
 
   private:
     void releaseToCommandBatch(bool hasProtectedContent,
@@ -567,11 +572,6 @@ class CommandProcessor final : public Context, public CommandQueueInterface
 
     angle::Result ensureNoPendingWork(Context *context) override;
 
-    Serial getLastCompletedQueueSerial() const
-    {
-        return mCommandQueue.getLastCompletedQueueSerial();
-    }
-
     bool isBusy() const override;
 
     egl::ContextPriority getDriverPriority(egl::ContextPriority priority)
@@ -588,6 +588,18 @@ class CommandProcessor final : public Context, public CommandQueueInterface
         return mCommandQueue.getPerfCounters();
     }
     void resetPerFramePerfCounters() { mCommandQueue.resetPerFramePerfCounters(); }
+
+    ANGLE_INLINE bool hasUnfinishedUse(const ResourceUse &use) const
+    {
+        return mCommandQueue.hasUnfinishedUse(use);
+    }
+
+    ANGLE_INLINE bool useInRunningCommands(const ResourceUse &use) const
+    {
+        return mCommandQueue.useInRunningCommands(use);
+    }
+
+    bool hasUnsubmittedUse(const ResourceUse &use) const;
 
   private:
     bool hasPendingError() const
@@ -627,6 +639,11 @@ class CommandProcessor final : public Context, public CommandQueueInterface
     // Track worker thread Idle state for assertion purposes
     bool mWorkerThreadIdle;
     CommandQueue mCommandQueue;
+
+    // Tracks last serial that was submitted to command processor. Note: this maybe different from
+    // mLastSubmittedQueueSerial in CommandQueue since submission from CommandProcessor to
+    // CommandQueue occur in a separate thread.
+    Serial mLastSubmittedQueueSerial;
 
     mutable std::mutex mQueueSerialMutex;
 
