@@ -861,6 +861,8 @@ void ANGLETestBase::ReleaseFixtures()
             }
         }
     }
+
+    gFixtures.clear();
 }
 
 void ANGLETestBase::swapBuffers()
