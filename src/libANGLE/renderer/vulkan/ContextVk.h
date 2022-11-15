@@ -495,8 +495,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     Serial getLastCompletedQueueSerial() const { return mRenderer->getLastCompletedQueueSerial(); }
 
-    bool isSerialInUse(Serial serial) const;
-
     template <typename T>
     void addGarbage(T *object)
     {

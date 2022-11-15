@@ -4724,15 +4724,16 @@ angle::Result RendererVk::getCommandBufferOneOff(vk::Context *context,
     return angle::Result::Continue;
 }
 
-angle::Result RendererVk::submitFrame(vk::Context *context,
-                                      bool hasProtectedContent,
-                                      egl::ContextPriority contextPriority,
-                                      std::vector<VkSemaphore> &&waitSemaphores,
-                                      std::vector<VkPipelineStageFlags> &&waitSemaphoreStageMasks,
-                                      const vk::Semaphore *signalSemaphore,
-                                      vk::GarbageList &&currentGarbage,
-                                      vk::SecondaryCommandPools *commandPools,
-                                      Serial *submitSerialOut)
+angle::Result RendererVk::submitCommands(
+    vk::Context *context,
+    bool hasProtectedContent,
+    egl::ContextPriority contextPriority,
+    std::vector<VkSemaphore> &&waitSemaphores,
+    std::vector<VkPipelineStageFlags> &&waitSemaphoreStageMasks,
+    const vk::Semaphore *signalSemaphore,
+    vk::GarbageList &&currentGarbage,
+    vk::SecondaryCommandPools *commandPools,
+    Serial *submitSerialOut)
 {
     std::unique_lock<std::mutex> lock(mCommandQueueMutex);
 
@@ -4745,7 +4746,7 @@ angle::Result RendererVk::submitFrame(vk::Context *context,
     {
         *submitSerialOut = mCommandProcessor.reserveSubmitSerial();
 
-        ANGLE_TRY(mCommandProcessor.submitFrame(
+        ANGLE_TRY(mCommandProcessor.submitCommands(
             context, hasProtectedContent, contextPriority, waitSemaphores, waitSemaphoreStageMasks,
             signalSemaphore, std::move(currentGarbage), std::move(commandBuffersToReset),
             commandPools, *submitSerialOut));
@@ -4754,7 +4755,7 @@ angle::Result RendererVk::submitFrame(vk::Context *context,
     {
         *submitSerialOut = mCommandQueue.reserveSubmitSerial();
 
-        ANGLE_TRY(mCommandQueue.submitFrame(
+        ANGLE_TRY(mCommandQueue.submitCommands(
             context, hasProtectedContent, contextPriority, waitSemaphores, waitSemaphoreStageMasks,
             signalSemaphore, std::move(currentGarbage), std::move(commandBuffersToReset),
             commandPools, *submitSerialOut));

@@ -38,10 +38,10 @@ class FenceRecycler
   public:
     FenceRecycler() {}
     ~FenceRecycler() {}
-    void destroy(vk::Context *context);
+    void destroy(Context *context);
 
-    angle::Result newSharedFence(vk::Context *context, vk::Shared<vk::Fence> *sharedFenceOut);
-    inline void resetSharedFence(vk::Shared<vk::Fence> *sharedFenceIn)
+    angle::Result newSharedFence(Context *context, Shared<Fence> *sharedFenceOut);
+    inline void resetSharedFence(Shared<Fence> *sharedFenceIn)
     {
         std::lock_guard<std::mutex> lock(mMutex);
         sharedFenceIn->resetAndRecycle(&mRecyler);
@@ -49,7 +49,7 @@ class FenceRecycler
 
   private:
     std::mutex mMutex;
-    vk::Recycler<vk::Fence> mRecyler;
+    Recycler<Fence> mRecyler;
 };
 
 enum class CustomTask
@@ -263,7 +263,7 @@ class DeviceQueueMap : public angle::PackedEnumMap<egl::ContextPriority, VkQueue
     friend QueueFamily;
 
   public:
-    DeviceQueueMap() : mIndex(vk::QueueFamily::kInvalidIndex), mIsProtected(false) {}
+    DeviceQueueMap() : mIndex(QueueFamily::kInvalidIndex), mIsProtected(false) {}
     DeviceQueueMap(uint32_t queueFamilyIndex, bool isProtected)
         : mIndex(queueFamilyIndex), mIsProtected(isProtected)
     {}
@@ -298,7 +298,7 @@ class CommandQueueInterface : angle::NonCopyable
                                          uint64_t timeout)             = 0;
     virtual angle::Result waitIdle(Context *context, uint64_t timeout) = 0;
     virtual Serial reserveSubmitSerial()                               = 0;
-    virtual angle::Result submitFrame(
+    virtual angle::Result submitCommands(
         Context *context,
         bool hasProtectedContent,
         egl::ContextPriority priority,
@@ -321,7 +321,7 @@ class CommandQueueInterface : angle::NonCopyable
     virtual VkResult queuePresent(egl::ContextPriority contextPriority,
                                   const VkPresentInfoKHR &presentInfo) = 0;
 
-    virtual angle::Result waitForSerialWithUserTimeout(vk::Context *context,
+    virtual angle::Result waitForSerialWithUserTimeout(Context *context,
                                                        Serial serial,
                                                        uint64_t timeout,
                                                        VkResult *result) = 0;
@@ -365,16 +365,16 @@ class CommandQueue final : public CommandQueueInterface
 
     Serial reserveSubmitSerial() override;
 
-    angle::Result submitFrame(Context *context,
-                              bool hasProtectedContent,
-                              egl::ContextPriority priority,
-                              const std::vector<VkSemaphore> &waitSemaphores,
-                              const std::vector<VkPipelineStageFlags> &waitSemaphoreStageMasks,
-                              const Semaphore *signalSemaphore,
-                              GarbageList &&currentGarbage,
-                              SecondaryCommandBufferList &&commandBuffersToReset,
-                              SecondaryCommandPools *commandPools,
-                              Serial submitQueueSerial) override;
+    angle::Result submitCommands(Context *context,
+                                 bool hasProtectedContent,
+                                 egl::ContextPriority priority,
+                                 const std::vector<VkSemaphore> &waitSemaphores,
+                                 const std::vector<VkPipelineStageFlags> &waitSemaphoreStageMasks,
+                                 const Semaphore *signalSemaphore,
+                                 GarbageList &&currentGarbage,
+                                 SecondaryCommandBufferList &&commandBuffersToReset,
+                                 SecondaryCommandPools *commandPools,
+                                 Serial submitQueueSerial) override;
 
     angle::Result queueSubmitOneOff(Context *context,
                                     bool hasProtectedContent,
@@ -389,7 +389,7 @@ class CommandQueue final : public CommandQueueInterface
     VkResult queuePresent(egl::ContextPriority contextPriority,
                           const VkPresentInfoKHR &presentInfo) override;
 
-    angle::Result waitForSerialWithUserTimeout(vk::Context *context,
+    angle::Result waitForSerialWithUserTimeout(Context *context,
                                                Serial serial,
                                                uint64_t timeout,
                                                VkResult *result) override;
@@ -506,7 +506,7 @@ class CommandProcessor final : public Context, public CommandQueueInterface
         return getLastAndClearPresentResult(swapchain);
     }
 
-    // vk::Context
+    // Context
     void handleError(VkResult result,
                      const char *file,
                      const char *function,
@@ -525,16 +525,16 @@ class CommandProcessor final : public Context, public CommandQueueInterface
 
     Serial reserveSubmitSerial() override;
 
-    angle::Result submitFrame(Context *context,
-                              bool hasProtectedContent,
-                              egl::ContextPriority priority,
-                              const std::vector<VkSemaphore> &waitSemaphores,
-                              const std::vector<VkPipelineStageFlags> &waitSemaphoreStageMasks,
-                              const Semaphore *signalSemaphore,
-                              GarbageList &&currentGarbage,
-                              SecondaryCommandBufferList &&commandBuffersToReset,
-                              SecondaryCommandPools *commandPools,
-                              Serial submitQueueSerial) override;
+    angle::Result submitCommands(Context *context,
+                                 bool hasProtectedContent,
+                                 egl::ContextPriority priority,
+                                 const std::vector<VkSemaphore> &waitSemaphores,
+                                 const std::vector<VkPipelineStageFlags> &waitSemaphoreStageMasks,
+                                 const Semaphore *signalSemaphore,
+                                 GarbageList &&currentGarbage,
+                                 SecondaryCommandBufferList &&commandBuffersToReset,
+                                 SecondaryCommandPools *commandPools,
+                                 Serial submitQueueSerial) override;
 
     angle::Result queueSubmitOneOff(Context *context,
                                     bool hasProtectedContent,
@@ -548,7 +548,7 @@ class CommandProcessor final : public Context, public CommandQueueInterface
     VkResult queuePresent(egl::ContextPriority contextPriority,
                           const VkPresentInfoKHR &presentInfo) override;
 
-    angle::Result waitForSerialWithUserTimeout(vk::Context *context,
+    angle::Result waitForSerialWithUserTimeout(Context *context,
                                                Serial serial,
                                                uint64_t timeout,
                                                VkResult *result) override;
@@ -581,7 +581,7 @@ class CommandProcessor final : public Context, public CommandQueueInterface
     uint32_t getDeviceQueueIndex() const { return mCommandQueue.getDeviceQueueIndex(); }
     VkQueue getQueue(egl::ContextPriority priority) { return mCommandQueue.getQueue(priority); }
 
-    // Note that due to inheritance from vk::Context, this class has a set of perf counters as well,
+    // Note that due to inheritance from Context, this class has a set of perf counters as well,
     // but currently only the counters in the member command queue are of interest.
     const angle::VulkanPerfCounters &getPerfCounters() const
     {

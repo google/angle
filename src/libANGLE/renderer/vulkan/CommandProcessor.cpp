@@ -23,10 +23,10 @@ constexpr bool kOutputVmaStatsString    = false;
 constexpr VkDeviceSize kMaxBufferSuballocationGarbageSize = 64 * 1024 * 1024;
 
 void InitializeSubmitInfo(VkSubmitInfo *submitInfo,
-                          const vk::PrimaryCommandBuffer &commandBuffer,
+                          const PrimaryCommandBuffer &commandBuffer,
                           const std::vector<VkSemaphore> &waitSemaphores,
                           const std::vector<VkPipelineStageFlags> &waitSemaphoreStageMasks,
-                          const vk::Semaphore *signalSemaphore)
+                          const Semaphore *signalSemaphore)
 {
     // Verify that the submitInfo has been zero'd out.
     ASSERT(submitInfo->signalSemaphoreCount == 0);
@@ -45,10 +45,10 @@ void InitializeSubmitInfo(VkSubmitInfo *submitInfo,
     }
 }
 
-bool CommandsHaveValidOrdering(const std::vector<vk::CommandBatch> &commands)
+bool CommandsHaveValidOrdering(const std::vector<CommandBatch> &commands)
 {
     Serial currentSerial;
-    for (const vk::CommandBatch &commandBatch : commands)
+    for (const CommandBatch &commandBatch : commands)
     {
         if (commandBatch.serial <= currentSerial)
         {
@@ -62,7 +62,7 @@ bool CommandsHaveValidOrdering(const std::vector<vk::CommandBatch> &commands)
 
 template <typename SecondaryCommandBufferListT>
 void ResetSecondaryCommandBuffers(VkDevice device,
-                                  vk::CommandPool *commandPool,
+                                  CommandPool *commandPool,
                                   SecondaryCommandBufferListT *commandBuffers)
 {
     // Nothing to do when using ANGLE secondary command buffers.
@@ -71,7 +71,7 @@ void ResetSecondaryCommandBuffers(VkDevice device,
 template <>
 [[maybe_unused]] void ResetSecondaryCommandBuffers<std::vector<VulkanSecondaryCommandBuffer>>(
     VkDevice device,
-    vk::CommandPool *commandPool,
+    CommandPool *commandPool,
     std::vector<VulkanSecondaryCommandBuffer> *commandBuffers)
 {
     // Note: we currently free the command buffers individually, but we could potentially reset the
@@ -106,11 +106,10 @@ size_t GetBatchCountUpToSerial(std::vector<CommandBatch> &inFlightCommands,
 }
 }  // namespace
 
-angle::Result FenceRecycler::newSharedFence(vk::Context *context,
-                                            vk::Shared<vk::Fence> *sharedFenceOut)
+angle::Result FenceRecycler::newSharedFence(Context *context, Shared<Fence> *sharedFenceOut)
 {
     bool gotRecycledFence = false;
-    vk::Fence fence;
+    Fence fence;
     {
         std::lock_guard<std::mutex> lock(mMutex);
         if (!mRecyler.empty())
@@ -136,7 +135,7 @@ angle::Result FenceRecycler::newSharedFence(vk::Context *context,
     return angle::Result::Continue;
 }
 
-void FenceRecycler::destroy(vk::Context *context)
+void FenceRecycler::destroy(Context *context)
 {
     std::lock_guard<std::mutex> lock(mMutex);
     mRecyler.destroy(context->getDevice());
@@ -514,8 +513,8 @@ angle::Result CommandProcessor::processTask(CommandProcessorTask *task)
             ANGLE_TRACE_EVENT0("gpu.angle", "processTask::FlushAndQueueSubmit");
             // End command buffer
 
-            // Call submitFrame()
-            ANGLE_TRY(mCommandQueue.submitFrame(
+            // Call submitCommands()
+            ANGLE_TRY(mCommandQueue.submitCommands(
                 this, task->hasProtectedContent(), task->getPriority(), task->getWaitSemaphores(),
                 task->getWaitSemaphoreStageMasks(), task->getSemaphore(),
                 std::move(task->getGarbage()), std::move(task->getCommandBuffersToReset()),
@@ -732,7 +731,7 @@ VkResult CommandProcessor::present(egl::ContextPriority priority,
     return result;
 }
 
-angle::Result CommandProcessor::submitFrame(
+angle::Result CommandProcessor::submitCommands(
     Context *context,
     bool hasProtectedContent,
     egl::ContextPriority priority,
@@ -798,7 +797,7 @@ VkResult CommandProcessor::queuePresent(egl::ContextPriority contextPriority,
     return VK_SUCCESS;
 }
 
-angle::Result CommandProcessor::waitForSerialWithUserTimeout(vk::Context *context,
+angle::Result CommandProcessor::waitForSerialWithUserTimeout(Context *context,
                                                              Serial serial,
                                                              uint64_t timeout,
                                                              VkResult *result)
@@ -880,7 +879,7 @@ void CommandQueue::destroy(Context *context)
     ASSERT(mInFlightCommands.empty() && mGarbageQueue.empty());
 }
 
-angle::Result CommandQueue::init(Context *context, const vk::DeviceQueueMap &queueMap)
+angle::Result CommandQueue::init(Context *context, const DeviceQueueMap &queueMap)
 {
     // Initialize the command pool now that we know the queue family index.
     ANGLE_TRY(mPrimaryCommandPool.init(context, false, queueMap.getIndex()));
@@ -1091,7 +1090,7 @@ Serial CommandQueue::reserveSubmitSerial()
     return returnSerial;
 }
 
-angle::Result CommandQueue::submitFrame(
+angle::Result CommandQueue::submitCommands(
     Context *context,
     bool hasProtectedContent,
     egl::ContextPriority priority,
@@ -1195,7 +1194,7 @@ angle::Result CommandQueue::submitFrame(
     return angle::Result::Continue;
 }
 
-angle::Result CommandQueue::waitForSerialWithUserTimeout(vk::Context *context,
+angle::Result CommandQueue::waitForSerialWithUserTimeout(Context *context,
                                                          Serial serial,
                                                          uint64_t timeout,
                                                          VkResult *result)

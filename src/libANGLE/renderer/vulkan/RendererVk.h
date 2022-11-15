@@ -479,15 +479,15 @@ class RendererVk : angle::NonCopyable
     void cleanupCompletedCommandsGarbage();
     void cleanupPendingSubmissionGarbage();
 
-    angle::Result submitFrame(vk::Context *context,
-                              bool hasProtectedContent,
-                              egl::ContextPriority contextPriority,
-                              std::vector<VkSemaphore> &&waitSemaphores,
-                              std::vector<VkPipelineStageFlags> &&waitSemaphoreStageMasks,
-                              const vk::Semaphore *signalSemaphore,
-                              vk::GarbageList &&currentGarbage,
-                              vk::SecondaryCommandPools *commandPools,
-                              Serial *submitSerialOut);
+    angle::Result submitCommands(vk::Context *context,
+                                 bool hasProtectedContent,
+                                 egl::ContextPriority contextPriority,
+                                 std::vector<VkSemaphore> &&waitSemaphores,
+                                 std::vector<VkPipelineStageFlags> &&waitSemaphoreStageMasks,
+                                 const vk::Semaphore *signalSemaphore,
+                                 vk::GarbageList &&currentGarbage,
+                                 vk::SecondaryCommandPools *commandPools,
+                                 Serial *submitSerialOut);
 
     void handleDeviceLost();
     angle::Result finishToSerial(vk::Context *context, Serial serial);
