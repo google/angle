@@ -295,43 +295,6 @@ inline OverlayVk *GetImpl(const gl::MockOverlay *glObject)
     return nullptr;
 }
 
-template <typename ObjT>
-class ObjectAndSerial final : angle::NonCopyable
-{
-  public:
-    ObjectAndSerial() {}
-
-    ObjectAndSerial(ObjT &&object, Serial serial) : mObject(std::move(object)), mSerial(serial) {}
-
-    ObjectAndSerial(ObjectAndSerial &&other)
-        : mObject(std::move(other.mObject)), mSerial(std::move(other.mSerial))
-    {}
-    ObjectAndSerial &operator=(ObjectAndSerial &&other)
-    {
-        mObject = std::move(other.mObject);
-        mSerial = std::move(other.mSerial);
-        return *this;
-    }
-
-    Serial getSerial() const { return mSerial; }
-    void updateSerial(Serial newSerial) { mSerial = newSerial; }
-
-    const ObjT &get() const { return mObject; }
-    ObjT &get() { return mObject; }
-
-    bool valid() const { return mObject.valid(); }
-
-    void destroy(VkDevice device)
-    {
-        mObject.destroy(device);
-        mSerial = Serial();
-    }
-
-  private:
-    ObjT mObject;
-    Serial mSerial;
-};
-
 // Reference to a deleted object. The object is due to be destroyed at some point in the future.
 // |mHandleType| determines the type of the object and which destroy function should be called.
 class GarbageObject
@@ -371,11 +334,39 @@ GarbageObject GetGarbage(T *obj)
 using GarbageList = std::vector<GarbageObject>;
 
 // A list of garbage objects and the associated serial after which the objects can be destroyed.
-using GarbageAndSerial = ObjectAndSerial<GarbageList>;
+class GarbageAndQueueSerial final : angle::NonCopyable
+{
+  public:
+    GarbageAndQueueSerial() {}
+
+    GarbageAndQueueSerial(GarbageList &&object, Serial serial)
+        : mObject(std::move(object)), mSerial(serial)
+    {}
+
+    GarbageAndQueueSerial(GarbageAndQueueSerial &&other)
+        : mObject(std::move(other.mObject)), mSerial(std::move(other.mSerial))
+    {}
+    GarbageAndQueueSerial &operator=(GarbageAndQueueSerial &&other)
+    {
+        mObject = std::move(other.mObject);
+        mSerial = std::move(other.mSerial);
+        return *this;
+    }
+
+    Serial getSerial() const { return mSerial; }
+    void updateSerial(Serial newSerial) { mSerial = newSerial; }
+
+    const GarbageList &get() const { return mObject; }
+    GarbageList &get() { return mObject; }
+
+  private:
+    GarbageList mObject;
+    Serial mSerial;
+};
 
 // Houses multiple lists of garbage objects. Each sub-list has a different lifetime. They should be
 // sorted such that later-living garbage is ordered later in the list.
-using GarbageQueue = std::queue<GarbageAndSerial>;
+using GarbageQueue = std::queue<GarbageAndQueueSerial>;
 
 class MemoryProperties final : angle::NonCopyable
 {

@@ -960,7 +960,7 @@ angle::Result CommandQueue::retireFinishedCommands(Context *context, size_t fini
 
     while (!mGarbageQueue.empty())
     {
-        GarbageAndSerial &garbageList = mGarbageQueue.front();
+        GarbageAndQueueSerial &garbageList = mGarbageQueue.front();
         if (garbageList.getSerial() <= lastCompletedQueueSerial)
         {
             for (GarbageObject &garbage : garbageList.get())
@@ -997,7 +997,7 @@ void CommandQueue::clearAllGarbage(RendererVk *renderer)
 {
     while (!mGarbageQueue.empty())
     {
-        GarbageAndSerial &garbageList = mGarbageQueue.front();
+        GarbageAndQueueSerial &garbageList = mGarbageQueue.front();
         for (GarbageObject &garbage : garbageList.get())
         {
             garbage.destroy(renderer);
