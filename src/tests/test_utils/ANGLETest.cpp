@@ -824,7 +824,6 @@ void ANGLETestBase::ANGLETestTearDown()
         mFixture->eglWindow->destroySurface();
     }
 
-    // Check for quit message
     Event myEvent;
     while (mFixture->osWindow->popEvent(&myEvent))
     {
@@ -839,9 +838,27 @@ void ANGLETestBase::ReleaseFixtures()
 {
     for (auto it = gFixtures.begin(); it != gFixtures.end(); it++)
     {
-        if (it->second.eglWindow)
+        TestFixture &fixture = it->second;
+        if (fixture.eglWindow != nullptr)
         {
-            it->second.eglWindow->destroyGL();
+            fixture.eglWindow->destroyGL();
+            EGLWindow::Delete(&fixture.eglWindow);
+        }
+
+        if (IsAndroid())
+        {
+            if (mOSWindowSingleton != nullptr)
+            {
+                OSWindow::Delete(&mOSWindowSingleton);
+            }
+            fixture.osWindow = nullptr;
+        }
+        else
+        {
+            if (fixture.osWindow != nullptr)
+            {
+                OSWindow::Delete(&fixture.osWindow);
+            }
         }
     }
 }
