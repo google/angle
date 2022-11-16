@@ -356,6 +356,10 @@ class VulkanPerformanceCounterTest : public ANGLETest<>
     {
         return isFeatureEnabled(Feature::WarmUpPipelineCacheAtLink);
     }
+    bool hasEffectivePipelineCacheSerialization() const
+    {
+        return isFeatureEnabled(Feature::HasEffectivePipelineCacheSerialization);
+    }
     bool hasPreferCPUForBufferSubData() const
     {
         return isFeatureEnabled(Feature::PreferCPUForBufferSubData);
@@ -6563,7 +6567,8 @@ TEST_P(VulkanPerformanceCounterTest, PipelineCacheIsWarmedUpAtLinkTime)
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled(kPerfMonitorExtensionName));
 
     // Test is only valid when pipeline creation feedback is available
-    ANGLE_SKIP_TEST_IF(!hasSupportsPipelineCreationFeedback() || !hasWarmUpPipelineCacheAtLink());
+    ANGLE_SKIP_TEST_IF(!hasSupportsPipelineCreationFeedback() || !hasWarmUpPipelineCacheAtLink() ||
+                       !hasEffectivePipelineCacheSerialization());
 
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Passthrough(), essl1_shaders::fs::UniformColor());
 
@@ -6576,7 +6581,8 @@ TEST_P(VulkanPerformanceCounterTest, PipelineCacheIsRestoredWithProgramBinary)
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled(kPerfMonitorExtensionName));
 
     // Test is only valid when pipeline creation feedback is available
-    ANGLE_SKIP_TEST_IF(!hasSupportsPipelineCreationFeedback() || !hasWarmUpPipelineCacheAtLink());
+    ANGLE_SKIP_TEST_IF(!hasSupportsPipelineCreationFeedback() || !hasWarmUpPipelineCacheAtLink() ||
+                       !hasEffectivePipelineCacheSerialization());
 
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Passthrough(), essl1_shaders::fs::UniformColor());
     GLProgram reloadedProgram;
@@ -6591,7 +6597,8 @@ TEST_P(VulkanPerformanceCounterTest, PipelineCacheIsRestoredWithProgramBinaryTwi
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled(kPerfMonitorExtensionName));
 
     // Test is only valid when pipeline creation feedback is available
-    ANGLE_SKIP_TEST_IF(!hasSupportsPipelineCreationFeedback() || !hasWarmUpPipelineCacheAtLink());
+    ANGLE_SKIP_TEST_IF(!hasSupportsPipelineCreationFeedback() || !hasWarmUpPipelineCacheAtLink() ||
+                       !hasEffectivePipelineCacheSerialization());
 
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Passthrough(), essl1_shaders::fs::UniformColor());
     GLProgram reloadedProgram;

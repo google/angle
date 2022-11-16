@@ -656,6 +656,66 @@ bool IsAnySamplesQuery(gl::QueryType type)
 {
     return type == gl::QueryType::AnySamples || type == gl::QueryType::AnySamplesConservative;
 }
+
+enum class GraphicsPipelineSubsetRenderPass
+{
+    Unused,
+    Required,
+};
+
+template <typename Cache>
+angle::Result CreateGraphicsPipelineSubset(ContextVk *contextVk,
+                                           const vk::GraphicsPipelineDesc &desc,
+                                           vk::GraphicsPipelineTransitionBits transition,
+                                           GraphicsPipelineSubsetRenderPass renderPass,
+                                           Cache *cache,
+                                           PipelineCacheAccess *pipelineCache,
+                                           vk::PipelineHelper **pipelineOut)
+{
+    const vk::PipelineLayout unusedPipelineLayout;
+    const vk::ShaderModuleMap unusedShaders;
+    const vk::SpecializationConstants unusedSpecConsts = {};
+
+    if (*pipelineOut != nullptr && !transition.any())
+    {
+        return angle::Result::Continue;
+    }
+
+    if (*pipelineOut != nullptr)
+    {
+        ASSERT((*pipelineOut)->valid());
+        if ((*pipelineOut)->findTransition(transition, desc, pipelineOut))
+        {
+            return angle::Result::Continue;
+        }
+    }
+
+    vk::PipelineHelper *oldPipeline = *pipelineOut;
+
+    const vk::GraphicsPipelineDesc *descPtr = nullptr;
+    if (!cache->getPipeline(desc, &descPtr, pipelineOut))
+    {
+        const vk::RenderPass unusedRenderPass;
+        const vk::RenderPass *compatibleRenderPass = &unusedRenderPass;
+        if (renderPass == GraphicsPipelineSubsetRenderPass::Required)
+        {
+            // Pull in a compatible RenderPass if used by this subset.
+            ANGLE_TRY(contextVk->getCompatibleRenderPass(desc.getRenderPassDesc(),
+                                                         &compatibleRenderPass));
+        }
+
+        ANGLE_TRY(cache->createPipeline(contextVk, pipelineCache, *compatibleRenderPass,
+                                        unusedPipelineLayout, unusedShaders, unusedSpecConsts,
+                                        PipelineSource::Draw, desc, &descPtr, pipelineOut));
+    }
+
+    if (oldPipeline)
+    {
+        oldPipeline->addTransition(transition, descPtr, *pipelineOut);
+    }
+
+    return angle::Result::Continue;
+}
 }  // anonymous namespace
 
 void ContextVk::flushDescriptorSetUpdates()
@@ -691,6 +751,9 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
       mComputeDirtyBitHandlers{},
       mRenderPassCommandBuffer(nullptr),
       mCurrentGraphicsPipeline(nullptr),
+      mCurrentGraphicsPipelineShaders(nullptr),
+      mCurrentGraphicsPipelineVertexInput(nullptr),
+      mCurrentGraphicsPipelineFragmentOutput(nullptr),
       mCurrentComputePipeline(nullptr),
       mCurrentDrawMode(gl::PrimitiveMode::InvalidEnum),
       mCurrentWindowSurface(nullptr),
@@ -1027,6 +1090,9 @@ void ContextVk::onDestroy(const gl::Context *context)
     // Recycle current commands buffers.
     mRenderer->recycleOutsideRenderPassCommandBufferHelper(device, &mOutsideRenderPassCommands);
     mRenderer->recycleRenderPassCommandBufferHelper(device, &mRenderPassCommands);
+
+    mVertexInputGraphicsPipelineCache.destroy(mRenderer);
+    mFragmentOutputGraphicsPipelineCache.destroy(mRenderer);
 
     mUtils.destroy(mRenderer);
 
@@ -1760,13 +1826,8 @@ angle::Result ContextVk::handleDirtyGraphicsDefaultAttribs(DirtyBits::Iterator *
     return angle::Result::Continue;
 }
 
-angle::Result ContextVk::handleDirtyGraphicsPipelineDesc(DirtyBits::Iterator *dirtyBitsIterator,
-                                                         DirtyBits dirtyBitMask)
+angle::Result ContextVk::createGraphicsPipeline()
 {
-    const VkPipeline previousPipeline = mCurrentGraphicsPipeline
-                                            ? mCurrentGraphicsPipeline->getPipeline().getHandle()
-                                            : VK_NULL_HANDLE;
-
     ASSERT(mState.getProgramExecutable() != nullptr);
     const gl::ProgramExecutable &glExecutable = *mState.getProgramExecutable();
     ProgramExecutableVk *executableVk         = getExecutable();
@@ -1774,6 +1835,127 @@ angle::Result ContextVk::handleDirtyGraphicsPipelineDesc(DirtyBits::Iterator *di
 
     PipelineCacheAccess pipelineCache;
     ANGLE_TRY(mRenderer->getPipelineCache(&pipelineCache));
+
+    vk::PipelineHelper *oldGraphicsPipeline = mCurrentGraphicsPipeline;
+
+    // Attempt to use an existing pipeline.
+    const vk::GraphicsPipelineDesc *descPtr = nullptr;
+    ANGLE_TRY(executableVk->getGraphicsPipeline(this, vk::GraphicsPipelineSubset::Complete,
+                                                *mGraphicsPipelineDesc, glExecutable, &descPtr,
+                                                &mCurrentGraphicsPipeline));
+
+    // If no such pipeline exists:
+    //
+    // - If VK_EXT_graphics_pipeline_library is not supported, create a new monolithic pipeline
+    // - If VK_EXT_graphics_pipeline_library is supported:
+    //   * Create the Shaders subset of the pipeline through the program executable
+    //   * Create the VertexInput and FragmentOutput subsets
+    //   * Link them together through the program executable
+    if (mCurrentGraphicsPipeline == nullptr)
+    {
+        // Not found in cache
+        ASSERT(descPtr == nullptr);
+        if (!getFeatures().supportsGraphicsPipelineLibrary.enabled)
+        {
+            ANGLE_TRY(executableVk->createGraphicsPipeline(
+                this, vk::GraphicsPipelineSubset::Complete, &pipelineCache, PipelineSource::Draw,
+                *mGraphicsPipelineDesc, glExecutable, &descPtr, &mCurrentGraphicsPipeline));
+        }
+        else
+        {
+            const vk::GraphicsPipelineTransitionBits kShadersTransitionBitsMask =
+                vk::GetGraphicsPipelineTransitionBitsMask(vk::GraphicsPipelineSubset::Shaders);
+            const vk::GraphicsPipelineTransitionBits kVertexInputTransitionBitsMask =
+                vk::GetGraphicsPipelineTransitionBitsMask(vk::GraphicsPipelineSubset::VertexInput);
+            const vk::GraphicsPipelineTransitionBits kFragmentOutputTransitionBitsMask =
+                vk::GetGraphicsPipelineTransitionBitsMask(
+                    vk::GraphicsPipelineSubset::FragmentOutput);
+
+            // Recreate the shaders subset if necessary
+            if (mCurrentGraphicsPipelineShaders == nullptr ||
+                (mGraphicsPipelineLibraryTransition & kShadersTransitionBitsMask).any())
+            {
+                bool shouldRecreatePipeline = true;
+                if (mCurrentGraphicsPipelineShaders != nullptr)
+                {
+                    ASSERT(mCurrentGraphicsPipelineShaders->valid());
+                    shouldRecreatePipeline = !mCurrentGraphicsPipelineShaders->findTransition(
+                        mGraphicsPipelineLibraryTransition, *mGraphicsPipelineDesc,
+                        &mCurrentGraphicsPipelineShaders);
+                }
+
+                if (shouldRecreatePipeline)
+                {
+                    vk::PipelineHelper *oldGraphicsPipelineShaders =
+                        mCurrentGraphicsPipelineShaders;
+
+                    const vk::GraphicsPipelineDesc *shadersDescPtr = nullptr;
+                    ANGLE_TRY(executableVk->getGraphicsPipeline(
+                        this, vk::GraphicsPipelineSubset::Shaders, *mGraphicsPipelineDesc,
+                        glExecutable, &shadersDescPtr, &mCurrentGraphicsPipelineShaders));
+                    if (shadersDescPtr == nullptr)
+                    {
+                        ANGLE_TRY(executableVk->createGraphicsPipeline(
+                            this, vk::GraphicsPipelineSubset::Shaders, &pipelineCache,
+                            PipelineSource::Draw, *mGraphicsPipelineDesc, glExecutable,
+                            &shadersDescPtr, &mCurrentGraphicsPipelineShaders));
+                    }
+                    if (oldGraphicsPipelineShaders)
+                    {
+                        oldGraphicsPipelineShaders->addTransition(
+                            mGraphicsPipelineLibraryTransition & kShadersTransitionBitsMask,
+                            shadersDescPtr, mCurrentGraphicsPipelineShaders);
+                    }
+                }
+            }
+
+            // Recreate the vertex input subset if necessary
+            ANGLE_TRY(CreateGraphicsPipelineSubset(
+                this, *mGraphicsPipelineDesc,
+                mGraphicsPipelineLibraryTransition & kVertexInputTransitionBitsMask,
+                GraphicsPipelineSubsetRenderPass::Unused, &mVertexInputGraphicsPipelineCache,
+                &pipelineCache, &mCurrentGraphicsPipelineVertexInput));
+
+            // Recreate the fragment output subset if necessary
+            ANGLE_TRY(CreateGraphicsPipelineSubset(
+                this, *mGraphicsPipelineDesc,
+                mGraphicsPipelineLibraryTransition & kFragmentOutputTransitionBitsMask,
+                GraphicsPipelineSubsetRenderPass::Required, &mFragmentOutputGraphicsPipelineCache,
+                &pipelineCache, &mCurrentGraphicsPipelineFragmentOutput));
+
+            // Link the three subsets into one pipeline.
+            ANGLE_TRY(executableVk->linkGraphicsPipelineLibraries(
+                this, &pipelineCache, *mGraphicsPipelineDesc, glExecutable,
+                *mCurrentGraphicsPipelineVertexInput, *mCurrentGraphicsPipelineShaders,
+                *mCurrentGraphicsPipelineFragmentOutput, &descPtr, &mCurrentGraphicsPipeline));
+
+            // Reset the transition bits for pipeline libraries, they are only made to be up-to-date
+            // here.
+            mGraphicsPipelineLibraryTransition.reset();
+        }
+    }
+
+    // Maintain the transition cache
+    if (oldGraphicsPipeline)
+    {
+        oldGraphicsPipeline->addTransition(mGraphicsPipelineTransition, descPtr,
+                                           mCurrentGraphicsPipeline);
+    }
+
+    return angle::Result::Continue;
+}
+
+angle::Result ContextVk::handleDirtyGraphicsPipelineDesc(DirtyBits::Iterator *dirtyBitsIterator,
+                                                         DirtyBits dirtyBitMask)
+{
+    const VkPipeline previousPipeline = mCurrentGraphicsPipeline
+                                            ? mCurrentGraphicsPipeline->getPipeline().getHandle()
+                                            : VK_NULL_HANDLE;
+
+    // Accumulate transition bits for the sake of pipeline libraries.  If a cache is hit in this
+    // path, |mGraphicsPipelineTransition| is reset while the partial pipelines are left stale.  A
+    // future partial library recreation would need to know the bits that have changed since.
+    mGraphicsPipelineLibraryTransition |= mGraphicsPipelineTransition;
 
     // Recreate the pipeline if necessary.
     bool shouldRecreatePipeline =
@@ -1790,28 +1972,7 @@ angle::Result ContextVk::handleDirtyGraphicsPipelineDesc(DirtyBits::Iterator *di
     // Otherwise either retrieve the pipeline from the cache, or create a new one.
     if (shouldRecreatePipeline)
     {
-        vk::PipelineHelper *oldGraphicsPipeline = mCurrentGraphicsPipeline;
-
-        const vk::GraphicsPipelineDesc *descPtr = nullptr;
-        ANGLE_TRY(executableVk->getGraphicsPipeline(this, vk::GraphicsPipelineSubset::Complete,
-                                                    *mGraphicsPipelineDesc, glExecutable, &descPtr,
-                                                    &mCurrentGraphicsPipeline));
-
-        if (descPtr == nullptr)
-        {
-            // Not found in cache
-            ASSERT(mCurrentGraphicsPipeline == nullptr);
-            ANGLE_TRY(executableVk->createGraphicsPipeline(
-                this, vk::GraphicsPipelineSubset::Complete, &pipelineCache, PipelineSource::Draw,
-                *mGraphicsPipelineDesc, glExecutable, &descPtr, &mCurrentGraphicsPipeline));
-        }
-
-        // Maintain the transition cache
-        if (oldGraphicsPipeline)
-        {
-            oldGraphicsPipeline->addTransition(mGraphicsPipelineTransition, descPtr,
-                                               mCurrentGraphicsPipeline);
-        }
+        ANGLE_TRY(createGraphicsPipeline());
     }
 
     mGraphicsPipelineTransition.reset();
@@ -4750,8 +4911,7 @@ angle::Result ContextVk::invalidateProgramExecutableHelper(const gl::Context *co
         bool useVertexBuffer = (executable->getMaxActiveAttribLocation() > 0);
         mNonIndexedDirtyBitsMask.set(DIRTY_BIT_VERTEX_BUFFERS, useVertexBuffer);
         mIndexedDirtyBitsMask.set(DIRTY_BIT_VERTEX_BUFFERS, useVertexBuffer);
-        mCurrentGraphicsPipeline = nullptr;
-        mGraphicsPipelineTransition.reset();
+        resetCurrentGraphicsPipeline();
 
         const bool hasFramebufferFetch = executable->usesFramebufferFetch();
         if (mIsInFramebufferFetchMode != hasFramebufferFetch)

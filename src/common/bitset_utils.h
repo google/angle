@@ -515,7 +515,7 @@ class BitSetArray final
     constexpr BitSetArray();
     constexpr explicit BitSetArray(std::initializer_list<param_type> init);
 
-    BitSetArray(const BitSetArray<N> &other);
+    constexpr BitSetArray(const BitSetArray<N> &other);
 
     class Reference final
     {
@@ -729,7 +729,7 @@ constexpr BitSetArray<N>::BitSetArray(std::initializer_list<param_type> init)
 }
 
 template <size_t N>
-BitSetArray<N>::BitSetArray(const BitSetArray<N> &other)
+constexpr BitSetArray<N>::BitSetArray(const BitSetArray<N> &other)
 {
     for (std::size_t index = 0; index < kArraySize; index++)
     {

@@ -150,6 +150,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::HasBaseVertexInstancedDraw, "hasBaseVertexInstancedDraw"},
     {Feature::HasCheapRenderPass, "hasCheapRenderPass"},
     {Feature::HasDepthAutoResolve, "hasDepthAutoResolve"},
+    {Feature::HasEffectivePipelineCacheSerialization, "hasEffectivePipelineCacheSerialization"},
     {Feature::HasEvents, "hasEvents"},
     {Feature::HasExplicitMemBarrier, "hasExplicitMemBarrier"},
     {Feature::HasNonUniformDispatch, "hasNonUniformDispatch"},

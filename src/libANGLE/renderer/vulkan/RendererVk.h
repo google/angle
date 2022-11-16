@@ -730,6 +730,7 @@ class RendererVk : angle::NonCopyable
     VkPhysicalDeviceExtendedDynamicStateFeaturesEXT mExtendedDynamicStateFeatures;
     VkPhysicalDeviceExtendedDynamicState2FeaturesEXT mExtendedDynamicState2Features;
     VkPhysicalDeviceGraphicsPipelineLibraryFeaturesEXT mGraphicsPipelineLibraryFeatures;
+    VkPhysicalDeviceGraphicsPipelineLibraryPropertiesEXT mGraphicsPipelineLibraryProperties;
     VkPhysicalDeviceFragmentShadingRateFeaturesKHR mFragmentShadingRateFeatures;
     VkPhysicalDeviceFragmentShaderInterlockFeaturesEXT mFragmentShaderInterlockFeatures;
     VkPhysicalDeviceImagelessFramebufferFeaturesKHR mImagelessFramebufferFeatures;

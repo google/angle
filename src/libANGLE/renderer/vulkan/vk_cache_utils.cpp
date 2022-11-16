@@ -64,6 +64,11 @@ VkAttachmentStoreOp ConvertRenderPassStoreOpToVkStoreOp(RenderPassStoreOp storeO
                                               : static_cast<VkAttachmentStoreOp>(storeOp);
 }
 
+constexpr size_t TransitionBits(size_t size)
+{
+    return size / kGraphicsPipelineDirtyBitBytes;
+}
+
 constexpr size_t kPipelineShadersDescOffset = 0;
 constexpr size_t kPipelineShadersDescSize =
     kGraphicsPipelineShadersStateSize + kGraphicsPipelineSharedNonVertexInputStateSize;
@@ -75,6 +80,30 @@ constexpr size_t kPipelineFragmentOutputDescSize =
 constexpr size_t kPipelineVertexInputDescOffset =
     kGraphicsPipelineShadersStateSize + kPipelineFragmentOutputDescSize;
 constexpr size_t kPipelineVertexInputDescSize = kGraphicsPipelineVertexInputStateSize;
+
+static_assert(kPipelineShadersDescOffset % kGraphicsPipelineDirtyBitBytes == 0);
+static_assert(kPipelineShadersDescSize % kGraphicsPipelineDirtyBitBytes == 0);
+
+static_assert(kPipelineFragmentOutputDescOffset % kGraphicsPipelineDirtyBitBytes == 0);
+static_assert(kPipelineFragmentOutputDescSize % kGraphicsPipelineDirtyBitBytes == 0);
+
+static_assert(kPipelineVertexInputDescOffset % kGraphicsPipelineDirtyBitBytes == 0);
+static_assert(kPipelineVertexInputDescSize % kGraphicsPipelineDirtyBitBytes == 0);
+
+constexpr GraphicsPipelineTransitionBits kPipelineShadersTransitionBitsMask =
+    GraphicsPipelineTransitionBits::Mask(TransitionBits(kPipelineShadersDescSize) +
+                                         TransitionBits(kPipelineShadersDescOffset)) &
+    ~GraphicsPipelineTransitionBits::Mask(TransitionBits(kPipelineShadersDescOffset));
+
+constexpr GraphicsPipelineTransitionBits kPipelineFragmentOutputTransitionBitsMask =
+    GraphicsPipelineTransitionBits::Mask(TransitionBits(kPipelineFragmentOutputDescSize) +
+                                         TransitionBits(kPipelineFragmentOutputDescOffset)) &
+    ~GraphicsPipelineTransitionBits::Mask(TransitionBits(kPipelineFragmentOutputDescOffset));
+
+constexpr GraphicsPipelineTransitionBits kPipelineVertexInputTransitionBitsMask =
+    GraphicsPipelineTransitionBits::Mask(TransitionBits(kPipelineVertexInputDescSize) +
+                                         TransitionBits(kPipelineVertexInputDescOffset)) &
+    ~GraphicsPipelineTransitionBits::Mask(TransitionBits(kPipelineVertexInputDescOffset));
 
 bool GraphicsPipelineHasVertexInput(GraphicsPipelineSubset subset)
 {
@@ -2544,7 +2573,89 @@ void DestroyCachedObject(RendererVk *renderer, const DescriptorSetDescAndPool &d
     ASSERT(descAndPool.mPool != nullptr);
     descAndPool.mPool->destroyCachedDescriptorSet(renderer, descAndPool.mDesc);
 }
+
+angle::Result InitializePipelineFromLibraries(Context *context,
+                                              PipelineCacheAccess *pipelineCache,
+                                              const vk::PipelineLayout &pipelineLayout,
+                                              const vk::PipelineHelper &vertexInputPipeline,
+                                              const vk::PipelineHelper &shadersPipeline,
+                                              const vk::PipelineHelper &fragmentOutputPipeline,
+                                              Pipeline *pipelineOut,
+                                              CacheLookUpFeedback *feedbackOut)
+{
+    // Nothing in the create info, everything comes from the libraries.
+    VkGraphicsPipelineCreateInfo createInfo = {};
+    createInfo.sType                        = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
+
+    // Note: the pipeline layout is not necessary when linking libraries as ANGLE does not use
+    // VK_PIPELINE_LAYOUT_CREATE_INDEPENDENT_SETS_BIT_EXT.  However, some drivers have come to
+    // expect a non-null value for the layout, so the layout is provided here as a workaround.
+    createInfo.layout = pipelineLayout.getHandle();
+
+    const std::array<VkPipeline, 3> pipelines = {
+        vertexInputPipeline.getPipeline().getHandle(),
+        shadersPipeline.getPipeline().getHandle(),
+        fragmentOutputPipeline.getPipeline().getHandle(),
+    };
+
+    // Specify the three subsets as input libraries.
+    VkPipelineLibraryCreateInfoKHR libraryInfo = {};
+    libraryInfo.sType                          = VK_STRUCTURE_TYPE_PIPELINE_LIBRARY_CREATE_INFO_KHR;
+    libraryInfo.libraryCount                   = 3;
+    libraryInfo.pLibraries                     = pipelines.data();
+
+    AddToPNextChain(&createInfo, &libraryInfo);
+
+    // If supported, get feedback.
+    VkPipelineCreationFeedback feedback               = {};
+    VkPipelineCreationFeedbackCreateInfo feedbackInfo = {};
+    feedbackInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO;
+
+    const bool supportsFeedback = context->getFeatures().supportsPipelineCreationFeedback.enabled;
+    if (supportsFeedback)
+    {
+        feedbackInfo.pPipelineCreationFeedback = &feedback;
+        AddToPNextChain(&createInfo, &feedbackInfo);
+    }
+
+    // Create the pipeline
+    ANGLE_TRY(pipelineCache->createGraphicsPipeline(context, createInfo, pipelineOut));
+
+    if (supportsFeedback)
+    {
+        const bool cacheHit =
+            (feedback.flags & VK_PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT) !=
+            0;
+
+        *feedbackOut = cacheHit ? CacheLookUpFeedback::Hit : CacheLookUpFeedback::Miss;
+        ApplyPipelineCreationFeedback(context, feedback);
+    }
+
+    return angle::Result::Continue;
+}
 }  // anonymous namespace
+
+GraphicsPipelineTransitionBits GetGraphicsPipelineTransitionBitsMask(GraphicsPipelineSubset subset)
+{
+    switch (subset)
+    {
+        case GraphicsPipelineSubset::VertexInput:
+            return kPipelineVertexInputTransitionBitsMask;
+        case GraphicsPipelineSubset::Shaders:
+            return kPipelineShadersTransitionBitsMask;
+        case GraphicsPipelineSubset::FragmentOutput:
+            return kPipelineFragmentOutputTransitionBitsMask;
+        default:
+            break;
+    }
+
+    ASSERT(subset == GraphicsPipelineSubset::Complete);
+
+    GraphicsPipelineTransitionBits allBits;
+    allBits.set();
+
+    return allBits;
+}
 
 // RenderPassDesc implementation.
 RenderPassDesc::RenderPassDesc()
@@ -2984,6 +3095,34 @@ angle::Result GraphicsPipelineDesc::initializePipeline(Context *context,
     dynamicState.dynamicStateCount = static_cast<uint32_t>(dynamicStateList.size());
     dynamicState.pDynamicStates    = dynamicStateList.data();
     createInfo.pDynamicState       = dynamicStateList.empty() ? nullptr : &dynamicState;
+
+    // If not a complete pipeline, specify which subset is being created
+    VkGraphicsPipelineLibraryCreateInfoEXT libraryInfo = {};
+    libraryInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_LIBRARY_CREATE_INFO_EXT;
+
+    if (subset != GraphicsPipelineSubset::Complete)
+    {
+        switch (subset)
+        {
+            case GraphicsPipelineSubset::VertexInput:
+                libraryInfo.flags = VK_GRAPHICS_PIPELINE_LIBRARY_VERTEX_INPUT_INTERFACE_BIT_EXT;
+                break;
+            case GraphicsPipelineSubset::Shaders:
+                libraryInfo.flags = VK_GRAPHICS_PIPELINE_LIBRARY_PRE_RASTERIZATION_SHADERS_BIT_EXT |
+                                    VK_GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_SHADER_BIT_EXT;
+                break;
+            case GraphicsPipelineSubset::FragmentOutput:
+                libraryInfo.flags = VK_GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_OUTPUT_INTERFACE_BIT_EXT;
+                break;
+            default:
+                UNREACHABLE();
+                break;
+        }
+
+        createInfo.flags |= VK_PIPELINE_CREATE_LIBRARY_BIT_KHR;
+
+        AddToPNextChain(&createInfo, &libraryInfo);
+    }
 
     VkPipelineRobustnessCreateInfoEXT robustness = {};
     robustness.sType = VK_STRUCTURE_TYPE_PIPELINE_ROBUSTNESS_CREATE_INFO_EXT;
@@ -6199,10 +6338,6 @@ angle::Result GraphicsPipelineCache<Hash>::createPipeline(
     const vk::GraphicsPipelineDesc **descPtrOut,
     vk::PipelineHelper **pipelineOut)
 {
-    ASSERT(mPayload.find(desc) == mPayload.end());
-
-    mCacheStats.missAndIncrementSize();
-
     vk::Pipeline newPipeline;
     vk::CacheLookUpFeedback feedback = vk::CacheLookUpFeedback::None;
 
@@ -6217,19 +6352,56 @@ angle::Result GraphicsPipelineCache<Hash>::createPipeline(
                                           &feedback));
     }
 
+    addToCache(source, desc, std::move(newPipeline), feedback, descPtrOut, pipelineOut);
+    return angle::Result::Continue;
+}
+
+template <typename Hash>
+angle::Result GraphicsPipelineCache<Hash>::linkLibraries(
+    ContextVk *contextVk,
+    PipelineCacheAccess *pipelineCache,
+    const vk::GraphicsPipelineDesc &desc,
+    const vk::PipelineLayout &pipelineLayout,
+    const vk::PipelineHelper &vertexInputPipeline,
+    const vk::PipelineHelper &shadersPipeline,
+    const vk::PipelineHelper &fragmentOutputPipeline,
+    const vk::GraphicsPipelineDesc **descPtrOut,
+    vk::PipelineHelper **pipelineOut)
+{
+    vk::Pipeline newPipeline;
+    vk::CacheLookUpFeedback feedback = vk::CacheLookUpFeedback::None;
+
+    ANGLE_TRY(vk::InitializePipelineFromLibraries(contextVk, pipelineCache, pipelineLayout,
+                                                  vertexInputPipeline, shadersPipeline,
+                                                  fragmentOutputPipeline, &newPipeline, &feedback));
+
+    addToCache(PipelineSource::Draw, desc, std::move(newPipeline), feedback, descPtrOut,
+               pipelineOut);
+    return angle::Result::Continue;
+}
+
+template <typename Hash>
+void GraphicsPipelineCache<Hash>::addToCache(PipelineSource source,
+                                             const vk::GraphicsPipelineDesc &desc,
+                                             vk::Pipeline &&pipeline,
+                                             vk::CacheLookUpFeedback feedback,
+                                             const vk::GraphicsPipelineDesc **descPtrOut,
+                                             vk::PipelineHelper **pipelineOut)
+{
+    ASSERT(mPayload.find(desc) == mPayload.end());
+
+    mCacheStats.missAndIncrementSize();
+
     if (source == PipelineSource::WarmUp)
     {
         feedback = feedback == vk::CacheLookUpFeedback::Hit ? vk::CacheLookUpFeedback::WarmUpHit
                                                             : vk::CacheLookUpFeedback::WarmUpMiss;
     }
 
-    // The Serial will be updated outside of this query.
     auto insertedItem = mPayload.emplace(std::piecewise_construct, std::forward_as_tuple(desc),
-                                         std::forward_as_tuple(std::move(newPipeline), feedback));
+                                         std::forward_as_tuple(std::move(pipeline), feedback));
     *descPtrOut       = &insertedItem.first->first;
     *pipelineOut      = &insertedItem.first->second;
-
-    return angle::Result::Continue;
 }
 
 template <typename Hash>
@@ -6263,7 +6435,74 @@ template angle::Result GraphicsPipelineCache<GraphicsPipelineDescCompleteHash>::
     const vk::GraphicsPipelineDesc &desc,
     const vk::GraphicsPipelineDesc **descPtrOut,
     vk::PipelineHelper **pipelineOut);
+template angle::Result GraphicsPipelineCache<GraphicsPipelineDescCompleteHash>::linkLibraries(
+    ContextVk *contextVk,
+    PipelineCacheAccess *pipelineCache,
+    const vk::GraphicsPipelineDesc &desc,
+    const vk::PipelineLayout &pipelineLayout,
+    const vk::PipelineHelper &vertexInputPipeline,
+    const vk::PipelineHelper &shadersPipeline,
+    const vk::PipelineHelper &fragmentOutputPipeline,
+    const vk::GraphicsPipelineDesc **descPtrOut,
+    vk::PipelineHelper **pipelineOut);
 template void GraphicsPipelineCache<GraphicsPipelineDescCompleteHash>::populate(
+    const vk::GraphicsPipelineDesc &desc,
+    vk::Pipeline &&pipeline);
+
+template void GraphicsPipelineCache<GraphicsPipelineDescVertexInputHash>::destroy(
+    RendererVk *rendererVk);
+template void GraphicsPipelineCache<GraphicsPipelineDescVertexInputHash>::release(
+    ContextVk *contextVk);
+template angle::Result GraphicsPipelineCache<GraphicsPipelineDescVertexInputHash>::createPipeline(
+    ContextVk *contextVk,
+    PipelineCacheAccess *pipelineCache,
+    const vk::RenderPass &compatibleRenderPass,
+    const vk::PipelineLayout &pipelineLayout,
+    const vk::ShaderModuleMap &shaders,
+    const vk::SpecializationConstants &specConsts,
+    PipelineSource source,
+    const vk::GraphicsPipelineDesc &desc,
+    const vk::GraphicsPipelineDesc **descPtrOut,
+    vk::PipelineHelper **pipelineOut);
+template void GraphicsPipelineCache<GraphicsPipelineDescVertexInputHash>::populate(
+    const vk::GraphicsPipelineDesc &desc,
+    vk::Pipeline &&pipeline);
+
+template void GraphicsPipelineCache<GraphicsPipelineDescShadersHash>::destroy(
+    RendererVk *rendererVk);
+template void GraphicsPipelineCache<GraphicsPipelineDescShadersHash>::release(ContextVk *contextVk);
+template angle::Result GraphicsPipelineCache<GraphicsPipelineDescShadersHash>::createPipeline(
+    ContextVk *contextVk,
+    PipelineCacheAccess *pipelineCache,
+    const vk::RenderPass &compatibleRenderPass,
+    const vk::PipelineLayout &pipelineLayout,
+    const vk::ShaderModuleMap &shaders,
+    const vk::SpecializationConstants &specConsts,
+    PipelineSource source,
+    const vk::GraphicsPipelineDesc &desc,
+    const vk::GraphicsPipelineDesc **descPtrOut,
+    vk::PipelineHelper **pipelineOut);
+template void GraphicsPipelineCache<GraphicsPipelineDescShadersHash>::populate(
+    const vk::GraphicsPipelineDesc &desc,
+    vk::Pipeline &&pipeline);
+
+template void GraphicsPipelineCache<GraphicsPipelineDescFragmentOutputHash>::destroy(
+    RendererVk *rendererVk);
+template void GraphicsPipelineCache<GraphicsPipelineDescFragmentOutputHash>::release(
+    ContextVk *contextVk);
+template angle::Result
+GraphicsPipelineCache<GraphicsPipelineDescFragmentOutputHash>::createPipeline(
+    ContextVk *contextVk,
+    PipelineCacheAccess *pipelineCache,
+    const vk::RenderPass &compatibleRenderPass,
+    const vk::PipelineLayout &pipelineLayout,
+    const vk::ShaderModuleMap &shaders,
+    const vk::SpecializationConstants &specConsts,
+    PipelineSource source,
+    const vk::GraphicsPipelineDesc &desc,
+    const vk::GraphicsPipelineDesc **descPtrOut,
+    vk::PipelineHelper **pipelineOut);
+template void GraphicsPipelineCache<GraphicsPipelineDescFragmentOutputHash>::populate(
     const vk::GraphicsPipelineDesc &desc,
     vk::Pipeline &&pipeline);
 

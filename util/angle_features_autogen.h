@@ -142,6 +142,7 @@ enum class Feature
     HasBaseVertexInstancedDraw,
     HasCheapRenderPass,
     HasDepthAutoResolve,
+    HasEffectivePipelineCacheSerialization,
     HasEvents,
     HasExplicitMemBarrier,
     HasNonUniformDispatch,

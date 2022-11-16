@@ -777,6 +777,13 @@ struct FeaturesVk : FeatureSetBase
         "monolithic pipelines can reuse blobs from partial pipelines",
         &members, "https://anglebug.com/7369"};
 
+    FeatureInfo hasEffectivePipelineCacheSerialization = {
+        "hasEffectivePipelineCacheSerialization", FeatureCategory::VulkanFeatures,
+        "Whether the implementation serializes the Vulkan pipeline cache effectively. "
+        "On some implementations, pipeline cache serialization returns no data, so there "
+        "is no benefit to serializing it",
+        &members, "https://anglebug.com/7369"};
+
     FeatureInfo enableAsyncPipelineCacheCompression = {
         "enableAsyncPipelineCacheCompression", FeatureCategory::VulkanWorkarounds,
         "Enable compressing pipeline cache in a thread.", &members, "http://anglebug.com/4722"};

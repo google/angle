@@ -2009,6 +2009,10 @@ void RendererVk::queryDeviceExtensionFeatures(const vk::ExtensionNameList &devic
     mGraphicsPipelineLibraryFeatures.sType =
         VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GRAPHICS_PIPELINE_LIBRARY_FEATURES_EXT;
 
+    mGraphicsPipelineLibraryProperties = {};
+    mGraphicsPipelineLibraryProperties.sType =
+        VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GRAPHICS_PIPELINE_LIBRARY_PROPERTIES_EXT;
+
     mFragmentShadingRateFeatures = {};
     mFragmentShadingRateFeatures.sType =
         VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_FEATURES_KHR;
@@ -2202,6 +2206,7 @@ void RendererVk::queryDeviceExtensionFeatures(const vk::ExtensionNameList &devic
     if (ExtensionFound(VK_EXT_GRAPHICS_PIPELINE_LIBRARY_EXTENSION_NAME, deviceExtensionNames))
     {
         vk::AddToPNextChain(&deviceFeatures, &mGraphicsPipelineLibraryFeatures);
+        vk::AddToPNextChain(&deviceProperties, &mGraphicsPipelineLibraryProperties);
     }
 
     if (ExtensionFound(VK_KHR_FRAGMENT_SHADING_RATE_EXTENSION_NAME, deviceExtensionNames))
@@ -2276,6 +2281,7 @@ void RendererVk::queryDeviceExtensionFeatures(const vk::ExtensionNameList &devic
     mExtendedDynamicStateFeatures.pNext                     = nullptr;
     mExtendedDynamicState2Features.pNext                    = nullptr;
     mGraphicsPipelineLibraryFeatures.pNext                  = nullptr;
+    mGraphicsPipelineLibraryProperties.pNext                = nullptr;
     mFragmentShadingRateFeatures.pNext                      = nullptr;
     mFragmentShaderInterlockFeatures.pNext                  = nullptr;
     mImagelessFramebufferFeatures.pNext                     = nullptr;
@@ -3966,9 +3972,6 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
         mExtendedDynamicState2Features.extendedDynamicState2LogicOp == VK_TRUE &&
             (!(IsLinux() && isIntel) || isAtLeastMesa22_2));
 
-    ANGLE_FEATURE_CONDITION(&mFeatures, supportsGraphicsPipelineLibrary,
-                            mGraphicsPipelineLibraryFeatures.graphicsPipelineLibrary == VK_TRUE);
-
     // Avoid dynamic state for vertex input binding stride on buggy drivers.
     ANGLE_FEATURE_CONDITION(&mFeatures, forceStaticVertexStrideState,
                             mFeatures.supportsExtendedDynamicState.enabled && isARM);
@@ -3991,6 +3994,14 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
                             mPipelineRobustnessFeatures.pipelineRobustness == VK_TRUE &&
                                 mPhysicalDeviceFeatures.robustBufferAccess);
 
+    // TODO(anglebug.com/7369): Remove depenency to graphicsPipelineLibraryFastLinking when async
+    // pipeline creation is added and the preferMonolithicPipelinesOverLibraries feature is
+    // appropriately set.
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, supportsGraphicsPipelineLibrary,
+        mGraphicsPipelineLibraryFeatures.graphicsPipelineLibrary == VK_TRUE &&
+            mGraphicsPipelineLibraryProperties.graphicsPipelineLibraryFastLinking);
+
     // The following drivers are known to key the pipeline cache blobs with vertex input and
     // fragment output state, causing draw-time pipeline creation to miss the cache regardless of
     // warmup:
@@ -4009,11 +4020,36 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     // Additionally, numerous tests that previously never created a Vulkan pipeline fail or crash on
     // proprietary Qualcomm drivers when they do during cache warm up.  On Intel/Linux, one trace
     // shows flakiness with this.
+    const bool libraryBlobsAreReusedByMonolithicPipelines = !isARM && !isPowerVR;
     ANGLE_FEATURE_CONDITION(&mFeatures, warmUpPipelineCacheAtLink,
-                            !isARM && !isPowerVR && !isQualcommProprietary &&
+                            libraryBlobsAreReusedByMonolithicPipelines && !isQualcommProprietary &&
                                 !(IsLinux() && isIntel) && !(IsChromeOS() && isSwiftShader));
 
+    // On SwiftShader, no data is retrieved from the pipeline cache, so there is no reason to
+    // serialize it or put it in the blob cache.
+    ANGLE_FEATURE_CONDITION(&mFeatures, hasEffectivePipelineCacheSerialization, !isSwiftShader);
+
+    // Whether the pipeline caches should merge into the global pipeline cache.  This should only be
+    // enabled on platforms if:
+    //
+    // - VK_EXT_graphics_pipeline_library is not supported.  In that case, only the program's cache
+    //   used during warm up is merged into the global cache for later monolithic pipeline creation.
+    ANGLE_FEATURE_CONDITION(&mFeatures, mergeProgramPipelineCachesToGlobalCache,
+                            !mFeatures.supportsGraphicsPipelineLibrary.enabled);
+
     ANGLE_FEATURE_CONDITION(&mFeatures, enableAsyncPipelineCacheCompression, true);
+
+    // Sync monolithic pipelines to the blob cache occasionally on platforms that would benefit from
+    // it:
+    //
+    // - VK_EXT_graphics_pipeline_library is not supported, and the program cache is not warmed up:
+    //   If the pipeline cache is being warmed up at link time, the blobs corresponding to each
+    //   program is individually retrieved and stored in the blob cache already.
+    //
+    ANGLE_FEATURE_CONDITION(&mFeatures, syncMonolithicPipelinesToBlobCache,
+                            mFeatures.hasEffectivePipelineCacheSerialization.enabled &&
+                                !mFeatures.supportsGraphicsPipelineLibrary.enabled &&
+                                !mFeatures.warmUpPipelineCacheAtLink.enabled);
 
     // On ARM, dynamic state for stencil write mask doesn't work correctly in the presence of
     // discard or alpha to coverage, if the static state provided when creating the pipeline has a
@@ -4232,12 +4268,7 @@ angle::Result RendererVk::syncPipelineCacheVk(DisplayVk *displayVk, const gl::Co
 {
     ASSERT(mPipelineCache.valid());
 
-    // If the pipeline cache is being warmed up at link time, the blobs corresponding to each
-    // program is individually retrieved and stored in the blob cache.  This should be enabled only
-    // on platforms where draw time pipeline creation hits the cache due to said warm up.  As a
-    // result, there's no need to store the aggregate cache (the one owned by RendererVk) in the
-    // blob cache too.
-    if (mFeatures.warmUpPipelineCacheAtLink.enabled)
+    if (!mFeatures.syncMonolithicPipelinesToBlobCache.enabled)
     {
         return angle::Result::Continue;
     }

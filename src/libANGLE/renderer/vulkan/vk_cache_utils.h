@@ -611,6 +611,8 @@ static_assert(kNumGraphicsPipelineDirtyBits <= 64, "Too many pipeline dirty bits
 // Set of dirty bits. Each bit represents kGraphicsPipelineDirtyBitBytes in the desc.
 using GraphicsPipelineTransitionBits = angle::BitSet<kNumGraphicsPipelineDirtyBits>;
 
+GraphicsPipelineTransitionBits GetGraphicsPipelineTransitionBitsMask(GraphicsPipelineSubset subset);
+
 // Disable padding warnings for a few helper structs that aggregate Vulkan state objects.  These are
 // not used as hash keys, they just simplify passing them around to functions.
 ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
@@ -1212,6 +1214,7 @@ class PipelineHelper final : public Resource
 
     bool valid() const { return mPipeline.valid(); }
     Pipeline &getPipeline() { return mPipeline; }
+    const Pipeline &getPipeline() const { return mPipeline; }
 
     ANGLE_INLINE bool findTransition(GraphicsPipelineTransitionBits bits,
                                      const GraphicsPipelineDesc &desc,
@@ -2234,15 +2237,36 @@ class GraphicsPipelineCache final : public HasCacheStats<VulkanCacheType::Graphi
                                  const vk::GraphicsPipelineDesc **descPtrOut,
                                  vk::PipelineHelper **pipelineOut);
 
+    angle::Result linkLibraries(ContextVk *contextVk,
+                                PipelineCacheAccess *pipelineCache,
+                                const vk::GraphicsPipelineDesc &desc,
+                                const vk::PipelineLayout &pipelineLayout,
+                                const vk::PipelineHelper &vertexInputPipeline,
+                                const vk::PipelineHelper &shadersPipeline,
+                                const vk::PipelineHelper &fragmentOutputPipeline,
+                                const vk::GraphicsPipelineDesc **descPtrOut,
+                                vk::PipelineHelper **pipelineOut);
+
     // Helper for VulkanPipelineCachePerf that resets the object without destroying any object.
     void reset() { mPayload.clear(); }
 
   private:
+    void addToCache(PipelineSource source,
+                    const vk::GraphicsPipelineDesc &desc,
+                    vk::Pipeline &&pipeline,
+                    vk::CacheLookUpFeedback feedback,
+                    const vk::GraphicsPipelineDesc **descPtrOut,
+                    vk::PipelineHelper **pipelineOut);
+
     using KeyEqual = typename GraphicsPipelineCacheTypeHelper<Hash>::KeyEqual;
     std::unordered_map<vk::GraphicsPipelineDesc, vk::PipelineHelper, Hash, KeyEqual> mPayload;
 };
 
-using CompleteGraphicsPipelineCache = GraphicsPipelineCache<GraphicsPipelineDescCompleteHash>;
+using CompleteGraphicsPipelineCache    = GraphicsPipelineCache<GraphicsPipelineDescCompleteHash>;
+using VertexInputGraphicsPipelineCache = GraphicsPipelineCache<GraphicsPipelineDescVertexInputHash>;
+using ShadersGraphicsPipelineCache     = GraphicsPipelineCache<GraphicsPipelineDescShadersHash>;
+using FragmentOutputGraphicsPipelineCache =
+    GraphicsPipelineCache<GraphicsPipelineDescFragmentOutputHash>;
 
 class DescriptorSetLayoutCache final : angle::NonCopyable
 {
