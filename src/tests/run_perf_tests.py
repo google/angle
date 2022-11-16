@@ -8,6 +8,7 @@
 #   Runs ANGLE perf tests using some statistical averaging.
 
 import argparse
+import contextlib
 import fnmatch
 import glob
 import importlib
@@ -434,6 +435,46 @@ def _split_shard_samples(tests, samples_per_test, shard_count, shard_index):
     return [test for (test, sample) in shard_test_samples]
 
 
+def _should_lock_gpu_clocks():
+    if not angle_test_util.IsWindows():
+        return False
+
+    try:
+        gpu_info = subprocess.check_output(
+            ['nvidia-smi', '--query-gpu=gpu_name', '--format=csv,noheader']).decode()
+    except FileNotFoundError:
+        # expected in some cases, e.g. non-nvidia bots
+        return False
+
+    logging.info('nvidia-smi --query-gpu=gpu_name output: %s' % gpu_info)
+
+    return gpu_info.strip() == 'GeForce GTX 1660'
+
+
+def _log_nvidia_gpu_temperature():
+    t = subprocess.check_output(
+        ['nvidia-smi', '--query-gpu=temperature.gpu', '--format=csv,noheader']).decode().strip()
+    logging.info('Current GPU temperature: %s ' % t)
+
+
+@contextlib.contextmanager
+def _maybe_lock_gpu_clocks():
+    if not _should_lock_gpu_clocks():
+        yield
+        return
+
+    # Lock to 1410Mhz (`nvidia-smi --query-supported-clocks=gr --format=csv`)
+    lgc_out = subprocess.check_output(['nvidia-smi', '--lock-gpu-clocks=1410,1410']).decode()
+    logging.info('Lock GPU clocks output: %s' % lgc_out)
+    _log_nvidia_gpu_temperature()
+    try:
+        yield
+    finally:
+        rgc_out = subprocess.check_output(['nvidia-smi', '--reset-gpu-clocks']).decode()
+        logging.info('Reset GPU clocks output: %s' % rgc_out)
+        _log_nvidia_gpu_temperature()
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--isolated-script-test-output', type=str)
@@ -571,7 +612,8 @@ def main():
     logging.info('Running %d test%s' % (len(tests), 's' if len(tests) > 1 else ' '))
 
     try:
-        results, histograms = _run_tests(tests, args, extra_flags, env)
+        with _maybe_lock_gpu_clocks():
+            results, histograms = _run_tests(tests, args, extra_flags, env)
     except _MaxErrorsException:
         logging.error('Error count exceeded max errors (%d). Aborting.' % args.max_errors)
         return EXIT_FAILURE
