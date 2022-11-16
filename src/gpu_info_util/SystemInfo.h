@@ -155,6 +155,7 @@ void GetDualGPUInfo(SystemInfo *info);
 void PrintSystemInfo(const SystemInfo &info);
 
 VersionInfo ParseNvidiaDriverVersion(uint32_t version);
+VersionInfo ParseMesaDriverVersion(uint32_t version);
 
 #if defined(ANGLE_PLATFORM_MACOS) || defined(ANGLE_PLATFORM_MACCATALYST)
 // Helper to get the active GPU ID from a given Core Graphics display ID.
