@@ -192,7 +192,8 @@ Shader::Shader(ShaderProgramManager *manager,
       mRefCount(0),
       mDeleteStatus(false),
       mResourceManager(manager),
-      mCurrentMaxComputeWorkGroupInvocations(0u)
+      mCurrentMaxComputeWorkGroupInvocations(0u),
+      mMaxComputeSharedMemory(0u)
 {
     ASSERT(mImplementation);
 }
