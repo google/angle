@@ -2236,10 +2236,6 @@ void Display::initializeFrontendFeatures()
     // No longer enable this on any Impl - crbug.com/1165751
     ANGLE_FEATURE_CONDITION((&mFrontendFeatures), scalarizeVecAndMatConstructorArgs, false);
 
-    // Disabled by default. To reduce the risk, create a feature to enable
-    // compressing pipeline cache in multi-thread pool.
-    ANGLE_FEATURE_CONDITION(&mFrontendFeatures, enableCompressingPipelineCacheInThreadPool, false);
-
     // Disabled by default until work on the extension is complete - anglebug.com/7279.
     ANGLE_FEATURE_CONDITION(&mFrontendFeatures, emulatePixelLocalStorage, false);
 

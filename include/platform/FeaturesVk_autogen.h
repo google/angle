@@ -777,6 +777,10 @@ struct FeaturesVk : FeatureSetBase
         "monolithic pipelines can reuse blobs from partial pipelines",
         &members, "https://anglebug.com/7369"};
 
+    FeatureInfo enableAsyncPipelineCacheCompression = {
+        "enableAsyncPipelineCacheCompression", FeatureCategory::VulkanWorkarounds,
+        "Enable compressing pipeline cache in a thread.", &members, "http://anglebug.com/4722"};
+
     FeatureInfo supportsPipelineProtectedAccess = {
         "supportsPipelineProtectedAccess", FeatureCategory::VulkanFeatures,
         "VkDevice supports the VK_EXT_pipeline_protected_access extension", &members,

@@ -1051,6 +1051,14 @@
             "issue": "https://anglebug.com/7369"
         },
         {
+            "name": "enable_async_pipeline_cache_compression",
+            "category": "Workarounds",
+            "description": [
+                "Enable compressing pipeline cache in a thread."
+            ],
+            "issue": "http://anglebug.com/4722"
+        },
+        {
             "name": "supports_pipeline_protected_access",
             "category": "Features",
             "description": [

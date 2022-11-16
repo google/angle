@@ -1117,8 +1117,6 @@ class WaitableCompressEventImpl : public WaitableCompressEvent
         : WaitableCompressEvent(waitableEvent), mCompressTask(compressTask)
     {}
 
-    bool getResult() override { return true; }
-
   private:
     std::shared_ptr<CompressAndStorePipelineCacheTask> mCompressTask;
 };
@@ -3409,6 +3407,8 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
                              mPhysicalDeviceProperties.deviceName);
     const bool isQualcommProprietary = isQualcomm && !isQualcommOpenSource;
 
+    const bool isMesaVenus = mDriverProperties.driverID == VK_DRIVER_ID_MESA_VENUS;
+
     // Parse the ARM driver version to be readable/comparable
     const ARMDriverVersion armDriverVersion =
         ParseARMDriverVersion(mPhysicalDeviceProperties.driverVersion);
@@ -4015,6 +4015,8 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
                             !isARM && !isPowerVR && !isQualcommProprietary &&
                                 !(IsLinux() && isIntel) && !(IsChromeOS() && isSwiftShader));
 
+    ANGLE_FEATURE_CONDITION(&mFeatures, enableAsyncPipelineCacheCompression, isMesaVenus);
+
     // On ARM, dynamic state for stencil write mask doesn't work correctly in the presence of
     // discard or alpha to coverage, if the static state provided when creating the pipeline has a
     // value of 0.
@@ -4211,7 +4213,6 @@ void RendererVk::initializeFrontendFeatures(angle::FrontendFeatures *features) c
 {
     const bool isSwiftShader =
         IsSwiftshader(mPhysicalDeviceProperties.vendorID, mPhysicalDeviceProperties.deviceID);
-    const bool isMesaVenus = mDriverProperties.driverID == VK_DRIVER_ID_MESA_VENUS;
 
     // Hopefully-temporary work-around for a crash on SwiftShader.  An Android process is turning
     // off GL error checking, and then asking ANGLE to write past the end of a buffer.
@@ -4219,8 +4220,6 @@ void RendererVk::initializeFrontendFeatures(angle::FrontendFeatures *features) c
     ANGLE_FEATURE_CONDITION(features, forceGlErrorChecking, (IsAndroid() && isSwiftShader));
 
     ANGLE_FEATURE_CONDITION(features, cacheCompiledShader, true);
-
-    ANGLE_FEATURE_CONDITION(features, enableCompressingPipelineCacheInThreadPool, isMesaVenus);
 }
 
 angle::Result RendererVk::getPipelineCacheSize(DisplayVk *displayVk, size_t *pipelineCacheSizeOut)
@@ -4316,7 +4315,7 @@ angle::Result RendererVk::syncPipelineCacheVk(DisplayVk *displayVk, const gl::Co
                pipelineCacheData.size() - pipelineCacheSize);
     }
 
-    if (context->getFrontendFeatures().enableCompressingPipelineCacheInThreadPool.enabled)
+    if (mFeatures.enableAsyncPipelineCacheCompression.enabled)
     {
         // zlib compression ratio normally ranges from 2:1 to 5:1. Set kMaxTotalSize to 64M to
         // ensure the size can fit into the 32MB blob cache limit on supported platforms.
@@ -4332,8 +4331,8 @@ angle::Result RendererVk::syncPipelineCacheVk(DisplayVk *displayVk, const gl::Co
     }
     else
     {
-        // If enableCompressingPipelineCacheInThreadPool is diabled, to avoid the risk, set
-        // kMaxTotalSize to 64k.
+        // If enableAsyncPipelineCacheCompression is disabled, to avoid the risk, set kMaxTotalSize
+        // to 64k.
         constexpr size_t kMaxTotalSize = 64 * 1024;
         CompressAndStorePipelineCacheVk(mPhysicalDeviceProperties, displayVk, contextVk,
                                         pipelineCacheData, kMaxTotalSize);

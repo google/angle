@@ -123,8 +123,6 @@ class WaitableCompressEvent
 
     bool isReady() { return mWaitableEvent->isReady(); }
 
-    virtual bool getResult() = 0;
-
   private:
     std::shared_ptr<angle::WaitableEvent> mWaitableEvent;
 };
