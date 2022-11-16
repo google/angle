@@ -1684,7 +1684,7 @@ angle::Result UtilsVk::setupGraphicsProgram(ContextVk *contextVk,
     ANGLE_TRY(renderer->getPipelineCache(&pipelineCache));
 
     // Pull in a compatible RenderPass.
-    vk::RenderPass *compatibleRenderPass = nullptr;
+    const vk::RenderPass *compatibleRenderPass = nullptr;
     ANGLE_TRY(contextVk->getRenderPassCache().getCompatibleRenderPass(
         contextVk, pipelineDesc->getRenderPassDesc(), &compatibleRenderPass));
 
@@ -2145,7 +2145,7 @@ angle::Result UtilsVk::startRenderPass(ContextVk *contextVk,
                                        const gl::Rectangle &renderArea,
                                        vk::RenderPassCommandBuffer **commandBufferOut)
 {
-    vk::RenderPass *compatibleRenderPass = nullptr;
+    const vk::RenderPass *compatibleRenderPass = nullptr;
     ANGLE_TRY(contextVk->getCompatibleRenderPass(renderPassDesc, &compatibleRenderPass));
 
     VkFramebufferCreateInfo framebufferInfo = {};

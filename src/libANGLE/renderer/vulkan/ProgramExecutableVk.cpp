@@ -1104,7 +1104,7 @@ angle::Result ProgramExecutableVk::createGraphicsPipelineImpl(
     specConsts.dither          = desc.getEmulatedDitherControl();
 
     // Pull in a compatible RenderPass.
-    vk::RenderPass *compatibleRenderPass = nullptr;
+    const vk::RenderPass *compatibleRenderPass = nullptr;
     ANGLE_TRY(contextVk->getRenderPassCache().getCompatibleRenderPass(
         contextVk, desc.getRenderPassDesc(), &compatibleRenderPass));
 

@@ -1419,7 +1419,7 @@ angle::Result InitializeRenderPassFromDesc(ContextVk *contextVk,
 void GetRenderPassAndUpdateCounters(ContextVk *contextVk,
                                     bool updatePerfCounters,
                                     RenderPassHelper *renderPassHelper,
-                                    RenderPass **renderPassOut)
+                                    const RenderPass **renderPassOut)
 {
     *renderPassOut = &renderPassHelper->getRenderPass();
     if (updatePerfCounters)
@@ -6021,7 +6021,7 @@ void RenderPassCache::clear(ContextVk *contextVk)
 
 angle::Result RenderPassCache::addRenderPass(ContextVk *contextVk,
                                              const vk::RenderPassDesc &desc,
-                                             vk::RenderPass **renderPassOut)
+                                             const vk::RenderPass **renderPassOut)
 {
     // Insert some placeholder attachment ops.  Note that render passes with different ops are still
     // compatible. The load/store values are not important as they are aren't used for real RPs.
@@ -6061,7 +6061,7 @@ angle::Result RenderPassCache::addRenderPass(ContextVk *contextVk,
 angle::Result RenderPassCache::getRenderPassWithOps(ContextVk *contextVk,
                                                     const vk::RenderPassDesc &desc,
                                                     const vk::AttachmentOpsArray &attachmentOps,
-                                                    vk::RenderPass **renderPassOut)
+                                                    const vk::RenderPass **renderPassOut)
 {
     return getRenderPassWithOpsImpl(contextVk, desc, attachmentOps, true, renderPassOut);
 }
@@ -6070,7 +6070,7 @@ angle::Result RenderPassCache::getRenderPassWithOpsImpl(ContextVk *contextVk,
                                                         const vk::RenderPassDesc &desc,
                                                         const vk::AttachmentOpsArray &attachmentOps,
                                                         bool updatePerfCounters,
-                                                        vk::RenderPass **renderPassOut)
+                                                        const vk::RenderPass **renderPassOut)
 {
     auto outerIt = mPayload.find(desc);
     if (outerIt != mPayload.end())
