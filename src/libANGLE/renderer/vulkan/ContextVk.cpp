@@ -3210,7 +3210,7 @@ void ContextVk::addOverlayUsedBuffersCount(vk::CommandBufferHelperCommon *comman
 
 angle::Result ContextVk::submitFrame(const vk::Semaphore *signalSemaphore,
                                      Submit submission,
-                                     Serial *submitSerialOut)
+                                     QueueSerial *submitSerialOut)
 {
     getShareGroup()->acquireResourceUseList(
         std::move(mOutsideRenderPassCommands->releaseResourceUseList()));
@@ -3225,7 +3225,7 @@ angle::Result ContextVk::submitFrame(const vk::Semaphore *signalSemaphore,
     return angle::Result::Continue;
 }
 
-angle::Result ContextVk::submitFrameOutsideCommandBufferOnly(Serial *submitSerialOut)
+angle::Result ContextVk::submitFrameOutsideCommandBufferOnly(QueueSerial *submitSerialOut)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "ContextVk::submitFrameOutsideCommandBufferOnly");
     getShareGroup()->acquireResourceUseList(
@@ -3236,7 +3236,7 @@ angle::Result ContextVk::submitFrameOutsideCommandBufferOnly(Serial *submitSeria
 
 angle::Result ContextVk::submitCommands(const vk::Semaphore *signalSemaphore,
                                         Submit submission,
-                                        Serial *submitSerialOut)
+                                        QueueSerial *submitSerialOut)
 {
     if (mCurrentWindowSurface)
     {
@@ -3418,7 +3418,7 @@ angle::Result ContextVk::synchronizeCpuGpuTime()
 
         ANGLE_VK_TRY(this, commandBuffer.end());
 
-        Serial submitSerial;
+        QueueSerial submitSerial;
         // vkEvent's are externally synchronized, therefore need work to be submitted before calling
         // vkGetEventStatus
         ANGLE_TRY(mRenderer->queueSubmitOneOff(
@@ -3456,7 +3456,7 @@ angle::Result ContextVk::synchronizeCpuGpuTime()
         double TeS = platform->monotonicallyIncreasingTime(platform);
 
         // Get the query results
-        ANGLE_TRY(finishToSerial(submitSerial));
+        ANGLE_TRY(mRenderer->finishQueueSerial(this, submitSerial));
 
         vk::QueryResult gpuTimestampCycles(1);
         ANGLE_TRY(timestampQuery.getUint64Result(this, &gpuTimestampCycles));
@@ -6706,12 +6706,12 @@ angle::Result ContextVk::updateActiveImages(CommandBufferHelperT *commandBufferH
 angle::Result ContextVk::flushImpl(const vk::Semaphore *signalSemaphore,
                                    RenderPassClosureReason renderPassClosureReason)
 {
-    Serial unusedSerial;
+    QueueSerial unusedSerial;
     return flushAndGetSerial(signalSemaphore, &unusedSerial, renderPassClosureReason);
 }
 
 angle::Result ContextVk::flushAndGetSerial(const vk::Semaphore *signalSemaphore,
-                                           Serial *submitSerialOut,
+                                           QueueSerial *submitSerialOut,
                                            RenderPassClosureReason renderPassClosureReason)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "ContextVk::flushImpl");
@@ -6839,11 +6839,6 @@ angle::Result ContextVk::checkCompletedCommands()
     return mRenderer->checkCompletedCommands(this);
 }
 
-angle::Result ContextVk::finishToSerial(Serial serial)
-{
-    return mRenderer->finishToSerial(this, serial);
-}
-
 angle::Result ContextVk::getCompatibleRenderPass(const vk::RenderPassDesc &desc,
                                                  const vk::RenderPass **renderPassOut)
 {
@@ -6909,7 +6904,7 @@ angle::Result ContextVk::getTimestamp(uint64_t *timestampOut)
     vk::DeviceScoped<vk::Fence> fence(device);
     ANGLE_VK_TRY(this, fence.get().init(device, fenceInfo));
 
-    Serial throwAwaySerial;
+    QueueSerial throwAwaySerial;
     ANGLE_TRY(mRenderer->queueSubmitOneOff(this, std::move(commandBuffer), hasProtectedContent(),
                                            mContextPriority, nullptr, 0, &fence.get(),
                                            vk::SubmitPolicy::EnsureSubmitted, &throwAwaySerial));
@@ -7340,7 +7335,7 @@ angle::Result ContextVk::submitOutsideRenderPassCommandsImpl()
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "ContextVk::submitOutsideRenderPassCommandsImpl");
     ANGLE_TRY(flushOutsideRenderPassCommands());
-    Serial unusedSerial;
+    QueueSerial unusedSerial;
     ANGLE_TRY(submitFrameOutsideCommandBufferOnly(&unusedSerial));
     return angle::Result::Continue;
 }

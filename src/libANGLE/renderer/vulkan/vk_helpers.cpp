@@ -618,7 +618,7 @@ uint32_t GetImageLayerCountForView(const ImageHelper &image)
     return image.getExtents().depth > 1 ? image.getExtents().depth : image.getLayerCount();
 }
 
-void ReleaseImageViews(ImageViewVector *imageViewVector, std::vector<GarbageObject> *garbage)
+void ReleaseImageViews(ImageViewVector *imageViewVector, GarbageList *garbage)
 {
     for (ImageView &imageView : *imageViewVector)
     {
@@ -3921,7 +3921,7 @@ void QueryHelper::writeTimestamp(ContextVk *contextVk,
 
 bool QueryHelper::hasSubmittedCommands() const
 {
-    return mUse.getSerial().valid();
+    return mUse.getSerials().size() > 0;
 }
 
 angle::Result QueryHelper::getUint64ResultNonBlocking(ContextVk *contextVk,
@@ -4634,16 +4634,16 @@ angle::Result BufferHelper::initializeNonZeroMemory(Context *context,
 
         ANGLE_VK_TRY(context, commandBuffer.end());
 
-        Serial serial;
+        QueueSerial queueSerial;
         ANGLE_TRY(renderer->queueSubmitOneOff(context, std::move(commandBuffer), false,
                                               egl::ContextPriority::Medium, nullptr, 0, nullptr,
-                                              vk::SubmitPolicy::AllowDeferred, &serial));
+                                              vk::SubmitPolicy::AllowDeferred, &queueSerial));
 
-        stagingBuffer.collectGarbage(renderer, serial);
+        stagingBuffer.collectGarbage(renderer, queueSerial);
         // Update both SharedResourceUse objects, since mReadOnlyUse tracks when the buffer can be
         // destroyed, and mReadWriteUse tracks when the write has completed.
-        mReadOnlyUse.updateSerialOneOff(serial);
-        mReadWriteUse.updateSerialOneOff(serial);
+        mReadOnlyUse.updateSerialOneOff(queueSerial);
+        mReadWriteUse.updateSerialOneOff(queueSerial);
     }
     else if (isHostVisible())
     {
@@ -5420,7 +5420,10 @@ void ImageHelper::collectViewGarbage(RendererVk *renderer, vk::ImageViewHelper *
         // clone ImageHelper::mUse
         rx::vk::SharedResourceUse clonedmUse;
         clonedmUse.init();
-        clonedmUse.updateSerialOneOff(mUse.getSerial());
+        if (mUse.getSerials().size() > 0)
+        {
+            clonedmUse.updateSerialOneOff(QueueSerial(0, mUse.getSerials()[0]));
+        }
         renderer->collectGarbage(std::move(clonedmUse), std::move(mImageAndViewGarbage));
     }
     ASSERT(mImageAndViewGarbage.size() <= 1000);
@@ -5566,16 +5569,16 @@ angle::Result ImageHelper::initializeNonZeroMemory(Context *context,
 
     ANGLE_VK_TRY(context, commandBuffer.end());
 
-    Serial serial;
+    QueueSerial queueSerial;
     ANGLE_TRY(renderer->queueSubmitOneOff(context, std::move(commandBuffer), hasProtectedContent,
                                           egl::ContextPriority::Medium, nullptr, 0, nullptr,
-                                          vk::SubmitPolicy::AllowDeferred, &serial));
+                                          vk::SubmitPolicy::AllowDeferred, &queueSerial));
 
     if (isCompressedFormat)
     {
-        stagingBuffer.collectGarbage(renderer, serial);
+        stagingBuffer.collectGarbage(renderer, queueSerial);
     }
-    mUse.updateSerialOneOff(serial);
+    mUse.updateSerialOneOff(queueSerial);
 
     return angle::Result::Continue;
 }
@@ -8645,10 +8648,10 @@ angle::Result ImageHelper::copySurfaceImageToBuffer(DisplayVk *displayVk,
     vk::DeviceScoped<vk::Fence> fence(rendererVk->getDevice());
     ANGLE_VK_TRY(displayVk, fence.get().init(rendererVk->getDevice(), fenceInfo));
 
-    Serial serial;
+    QueueSerial queueSerial;
     ANGLE_TRY(rendererVk->queueSubmitOneOff(displayVk, std::move(primaryCommandBuffer), false,
                                             egl::ContextPriority::Medium, nullptr, 0, &fence.get(),
-                                            vk::SubmitPolicy::EnsureSubmitted, &serial));
+                                            vk::SubmitPolicy::EnsureSubmitted, &queueSerial));
 
     ANGLE_VK_TRY(displayVk,
                  fence.get().wait(rendererVk->getDevice(), rendererVk->getMaxFenceWaitTimeNs()));
@@ -8699,10 +8702,10 @@ angle::Result ImageHelper::copyBufferToSurfaceImage(DisplayVk *displayVk,
     vk::DeviceScoped<vk::Fence> fence(rendererVk->getDevice());
     ANGLE_VK_TRY(displayVk, fence.get().init(rendererVk->getDevice(), fenceInfo));
 
-    Serial serial;
+    QueueSerial queueSerial;
     ANGLE_TRY(rendererVk->queueSubmitOneOff(displayVk, std::move(commandBuffer), false,
                                             egl::ContextPriority::Medium, nullptr, 0, &fence.get(),
-                                            vk::SubmitPolicy::EnsureSubmitted, &serial));
+                                            vk::SubmitPolicy::EnsureSubmitted, &queueSerial));
 
     ANGLE_VK_TRY(displayVk,
                  fence.get().wait(rendererVk->getDevice(), rendererVk->getMaxFenceWaitTimeNs()));
@@ -10110,7 +10113,7 @@ void BufferViewHelper::release(ContextVk *contextVk)
 {
     contextVk->flushDescriptorSetUpdates();
 
-    std::vector<GarbageObject> garbage;
+    GarbageList garbage;
 
     for (auto &formatAndView : mViews)
     {

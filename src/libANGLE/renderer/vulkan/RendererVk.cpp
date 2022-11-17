@@ -4431,13 +4431,13 @@ angle::Result RendererVk::queueSubmitOneOff(vk::Context *context,
                                             VkPipelineStageFlags waitSemaphoreStageMasks,
                                             const vk::Fence *fence,
                                             vk::SubmitPolicy submitPolicy,
-                                            Serial *serialOut)
+                                            QueueSerial *queueSerialOut)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "RendererVk::queueSubmitOneOff");
 
     std::unique_lock<std::mutex> lock(mCommandQueueMutex);
 
-    Serial submitQueueSerial;
+    QueueSerial submitQueueSerial;
     if (isAsyncCommandQueueEnabled())
     {
         submitQueueSerial = mCommandProcessor.reserveSubmitSerial();
@@ -4453,7 +4453,7 @@ angle::Result RendererVk::queueSubmitOneOff(vk::Context *context,
             waitSemaphoreStageMasks, fence, submitPolicy, submitQueueSerial));
     }
 
-    *serialOut = submitQueueSerial;
+    *queueSerialOut = submitQueueSerial;
 
     if (primary.valid())
     {
@@ -4776,7 +4776,7 @@ angle::Result RendererVk::submitCommands(
     const vk::Semaphore *signalSemaphore,
     vk::GarbageList &&currentGarbage,
     vk::SecondaryCommandPools *commandPools,
-    Serial *submitSerialOut)
+    QueueSerial *submitSerialOut)
 {
     std::unique_lock<std::mutex> lock(mCommandQueueMutex);
 
@@ -4823,38 +4823,57 @@ void RendererVk::handleDeviceLost()
     }
 }
 
-angle::Result RendererVk::finishToSerial(vk::Context *context, Serial serial)
+angle::Result RendererVk::finishResourceUse(vk::Context *context, const vk::ResourceUse &use)
 {
     std::unique_lock<std::mutex> lock(mCommandQueueMutex);
 
     if (isAsyncCommandQueueEnabled())
     {
-        ANGLE_TRY(mCommandProcessor.finishToSerial(context, serial, getMaxFenceWaitTimeNs()));
+        ANGLE_TRY(mCommandProcessor.finishResourceUse(context, use, getMaxFenceWaitTimeNs()));
     }
     else
     {
-        ANGLE_TRY(mCommandQueue.finishToSerial(context, serial, getMaxFenceWaitTimeNs()));
+        ANGLE_TRY(mCommandQueue.finishResourceUse(context, use, getMaxFenceWaitTimeNs()));
     }
 
     return angle::Result::Continue;
 }
 
-angle::Result RendererVk::waitForSerialWithUserTimeout(vk::Context *context,
-                                                       Serial serial,
-                                                       uint64_t timeout,
-                                                       VkResult *result)
+angle::Result RendererVk::finishQueueSerial(vk::Context *context, const QueueSerial &queueSerial)
 {
-    ANGLE_TRACE_EVENT0("gpu.angle", "RendererVk::waitForSerialWithUserTimeout");
+    ASSERT(queueSerial.valid());
+    std::unique_lock<std::mutex> lock(mCommandQueueMutex);
+    if (isAsyncCommandQueueEnabled())
+    {
+        vk::ResourceUse use(queueSerial);
+        ANGLE_TRY(mCommandProcessor.finishResourceUse(context, use, getMaxFenceWaitTimeNs()));
+    }
+    else
+    {
+        ANGLE_TRY(mCommandQueue.finishQueueSerial(context, queueSerial, getMaxFenceWaitTimeNs()));
+    }
+
+    return angle::Result::Continue;
+}
+
+angle::Result RendererVk::waitForResourceUseToFinishWithUserTimeout(vk::Context *context,
+                                                                    const vk::ResourceUse &use,
+                                                                    uint64_t timeout,
+                                                                    VkResult *result)
+{
+    ANGLE_TRACE_EVENT0("gpu.angle", "RendererVk::waitForResourceUseToFinishWithUserTimeout");
 
     std::unique_lock<std::mutex> lock(mCommandQueueMutex);
 
     if (isAsyncCommandQueueEnabled())
     {
-        ANGLE_TRY(mCommandProcessor.waitForSerialWithUserTimeout(context, serial, timeout, result));
+        ANGLE_TRY(mCommandProcessor.waitForResourceUseToFinishWithUserTimeout(context, use, timeout,
+                                                                              result));
     }
     else
     {
-        ANGLE_TRY(mCommandQueue.waitForSerialWithUserTimeout(context, serial, timeout, result));
+        ANGLE_TRY(
+            mCommandQueue.waitForResourceUseToFinishWithUserTimeout(context, use, timeout, result));
     }
 
     return angle::Result::Continue;

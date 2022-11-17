@@ -57,7 +57,7 @@ class ShareGroupVk : public ShareGroupImpl
         return mMetaDescriptorPools[descriptorSetIndex];
     }
 
-    void releaseResourceUseLists(const Serial &submitSerial);
+    void releaseResourceUseLists(const QueueSerial &submitSerial);
     void acquireResourceUseList(vk::ResourceUseList &&resourceUseList)
     {
         mResourceUseLists.emplace_back(std::move(resourceUseList));

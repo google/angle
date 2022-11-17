@@ -659,7 +659,7 @@ void ShareGroupVk::onDestroy(const egl::Display *display)
     ASSERT(mResourceUseLists.empty());
 }
 
-void ShareGroupVk::releaseResourceUseLists(const Serial &submitSerial)
+void ShareGroupVk::releaseResourceUseLists(const QueueSerial &submitSerial)
 {
     if (!mResourceUseLists.empty())
     {

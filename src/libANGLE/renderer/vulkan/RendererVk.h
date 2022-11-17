@@ -316,7 +316,7 @@ class RendererVk : angle::NonCopyable
                                     VkPipelineStageFlags waitSemaphoreStageMasks,
                                     const vk::Fence *fence,
                                     vk::SubmitPolicy submitPolicy,
-                                    Serial *serialOut);
+                                    QueueSerial *queueSerialOut);
 
     template <typename... ArgsT>
     void collectGarbageAndReinit(vk::SharedResourceUse *use, ArgsT... garbageIn)
@@ -492,14 +492,15 @@ class RendererVk : angle::NonCopyable
                                  const vk::Semaphore *signalSemaphore,
                                  vk::GarbageList &&currentGarbage,
                                  vk::SecondaryCommandPools *commandPools,
-                                 Serial *submitSerialOut);
+                                 QueueSerial *submitSerialOut);
 
     void handleDeviceLost();
-    angle::Result finishToSerial(vk::Context *context, Serial serial);
-    angle::Result waitForSerialWithUserTimeout(vk::Context *context,
-                                               Serial serial,
-                                               uint64_t timeout,
-                                               VkResult *result);
+    angle::Result finishResourceUse(vk::Context *context, const vk::ResourceUse &use);
+    angle::Result finishQueueSerial(vk::Context *context, const QueueSerial &queueSerial);
+    angle::Result waitForResourceUseToFinishWithUserTimeout(vk::Context *context,
+                                                            const vk::ResourceUse &use,
+                                                            uint64_t timeout,
+                                                            VkResult *result);
     angle::Result finish(vk::Context *context, bool hasProtectedContent);
     angle::Result checkCompletedCommands(vk::Context *context);
 
@@ -865,10 +866,10 @@ class RendererVk : angle::NonCopyable
 
     struct PendingOneOffCommands
     {
-        PendingOneOffCommands(Serial serial, vk::PrimaryCommandBuffer &&command)
+        PendingOneOffCommands(const QueueSerial &queueSerial, vk::PrimaryCommandBuffer &&command)
         {
             use.init();
-            use.updateSerialOneOff(serial);
+            use.updateSerialOneOff(queueSerial);
             commandBuffer = std::move(command);
         }
         PendingOneOffCommands(PendingOneOffCommands &&other)

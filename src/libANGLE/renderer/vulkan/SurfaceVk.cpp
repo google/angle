@@ -1653,12 +1653,13 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
     RendererVk *renderer = contextVk->getRenderer();
 
     // Throttle the submissions to avoid getting too far ahead of the GPU.
-    Serial *swapSerial = &mSwapHistory.front();
+    QueueSerial *swapSerial = &mSwapHistory.front();
     mSwapHistory.next();
 
+    if (swapSerial->valid())
     {
         ANGLE_TRACE_EVENT0("gpu.angle", "WindowSurfaceVk::present: Throttle CPU");
-        ANGLE_TRY(renderer->finishToSerial(contextVk, *swapSerial));
+        ANGLE_TRY(renderer->finishQueueSerial(contextVk, *swapSerial));
     }
 
     SwapchainImage &image               = mSwapchainImages[mCurrentSwapchainImageIndex];
@@ -1987,11 +1988,11 @@ VkResult WindowSurfaceVk::acquireNextSwapchainImage(vk::Context *context)
                 mDesiredSwapchainPresentMode = vk::PresentMode::FifoKHR;
                 return VK_ERROR_OUT_OF_DATE_KHR;
             }
-            Serial serial;
+            QueueSerial queueSerial;
             if (rendererVk->queueSubmitOneOff(
                     context, std::move(primaryCommandBuffer), false, egl::ContextPriority::Medium,
                     acquireImageSemaphore, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, nullptr,
-                    vk::SubmitPolicy::EnsureSubmitted, &serial) != angle::Result::Continue)
+                    vk::SubmitPolicy::EnsureSubmitted, &queueSerial) != angle::Result::Continue)
             {
                 mDesiredSwapchainPresentMode = vk::PresentMode::FifoKHR;
                 return VK_ERROR_OUT_OF_DATE_KHR;

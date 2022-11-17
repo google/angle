@@ -10,6 +10,7 @@
 #ifndef LIBANGLE_RENDERER_SERIAL_UTILS_H_
 #define LIBANGLE_RENDERER_SERIAL_UTILS_H_
 
+#include <array>
 #include <atomic>
 #include <limits>
 
@@ -121,6 +122,77 @@ using SerialFactory           = SerialFactoryBase<uint64_t>;
 using AtomicSerialFactory     = SerialFactoryBase<std::atomic<uint64_t>>;
 using RenderPassSerialFactory = SerialFactoryBase<uint64_t>;
 
+// For backend that supports multiple queue serials, QueueSerial includes a Serial and an index.
+using SerialIndex                                     = uint32_t;
+static constexpr SerialIndex kInvalidQueueSerialIndex = SerialIndex(-1);
+
+class QueueSerial;
+// For now we limit to only one queue serial
+constexpr size_t kMaxQueueSerialIndexCount = 1;
+// Fixed array of queue serials
+class AtomicQueueSerialFixedArray final
+{
+  public:
+    AtomicQueueSerialFixedArray()  = default;
+    ~AtomicQueueSerialFixedArray() = default;
+
+    void setQueueSerial(const QueueSerial &queueSerial);
+    void fill(Serial serial) { std::fill(mSerials.begin(), mSerials.end(), serial); }
+    Serial operator[](SerialIndex index) const { return mSerials[index].getSerial(); }
+    size_t size() const { return mSerials.size(); }
+
+  private:
+    std::array<AtomicQueueSerial, kMaxQueueSerialIndexCount> mSerials;
+};
+
+class QueueSerial final
+{
+  public:
+    QueueSerial() : mIndex(kInvalidQueueSerialIndex) {}
+    QueueSerial(SerialIndex index, Serial serial) : mIndex(index), mSerial(serial)
+    {
+        ASSERT(index != kInvalidQueueSerialIndex);
+        ASSERT(serial.valid());
+    }
+    constexpr QueueSerial(const QueueSerial &other)  = default;
+    QueueSerial &operator=(const QueueSerial &other) = default;
+
+    constexpr bool operator==(const QueueSerial &other) const
+    {
+        return mIndex == other.mIndex && mSerial == other.mSerial;
+    }
+    constexpr bool operator!=(const QueueSerial &other) const
+    {
+        return mIndex != other.mIndex || mSerial != other.mSerial;
+    }
+
+    constexpr bool operator>(const AtomicQueueSerialFixedArray &serials) const
+    {
+        return mSerial > serials[mIndex];
+    }
+    constexpr bool operator<=(const AtomicQueueSerialFixedArray &serials) const
+    {
+        return mSerial <= serials[mIndex];
+    }
+
+    constexpr bool valid() const { return mSerial.valid(); }
+
+    SerialIndex getIndex() const { return mIndex; }
+    Serial getSerial() const { return mSerial; }
+
+  private:
+    SerialIndex mIndex;
+    Serial mSerial;
+};
+
+ANGLE_INLINE void AtomicQueueSerialFixedArray::setQueueSerial(const QueueSerial &queueSerial)
+{
+    ASSERT(queueSerial.getIndex() != kInvalidQueueSerialIndex);
+    ASSERT(queueSerial.getIndex() < mSerials.size());
+    // Serial can only increase
+    ASSERT(queueSerial.getSerial() > mSerials[queueSerial.getIndex()].getSerial());
+    mSerials[queueSerial.getIndex()] = queueSerial.getSerial();
+}
 }  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_SERIAL_UTILS_H_

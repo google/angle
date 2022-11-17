@@ -487,7 +487,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     angle::Result flushImpl(const vk::Semaphore *semaphore,
                             RenderPassClosureReason renderPassClosureReason);
     angle::Result flushAndGetSerial(const vk::Semaphore *semaphore,
-                                    Serial *submitSerialOut,
+                                    QueueSerial *submitSerialOut,
                                     RenderPassClosureReason renderPassClosureReason);
     angle::Result finishImpl(RenderPassClosureReason renderPassClosureReason);
 
@@ -504,9 +504,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     // It would be nice if we didn't have to expose this for QueryVk::getResult.
     angle::Result checkCompletedCommands();
-
-    // Wait for completion of batches until (at least) batch with given serial is finished.
-    angle::Result finishToSerial(Serial serial);
 
     angle::Result getCompatibleRenderPass(const vk::RenderPassDesc &desc,
                                           const vk::RenderPass **renderPassOut);
@@ -1213,11 +1210,11 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     angle::Result submitFrame(const vk::Semaphore *signalSemaphore,
                               Submit submission,
-                              Serial *submitSerialOut);
-    angle::Result submitFrameOutsideCommandBufferOnly(Serial *submitSerialOut);
+                              QueueSerial *submitSerialOut);
+    angle::Result submitFrameOutsideCommandBufferOnly(QueueSerial *submitSerialOut);
     angle::Result submitCommands(const vk::Semaphore *signalSemaphore,
                                  Submit submission,
-                                 Serial *submitSerialOut);
+                                 QueueSerial *submitSerialOut);
 
     angle::Result synchronizeCpuGpuTime();
     angle::Result traceGpuEventImpl(vk::OutsideRenderPassCommandBuffer *commandBuffer,

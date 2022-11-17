@@ -541,7 +541,7 @@ void StagingBuffer::release(ContextVk *contextVk)
     contextVk->addGarbage(&mAllocation);
 }
 
-void StagingBuffer::collectGarbage(RendererVk *renderer, Serial serial)
+void StagingBuffer::collectGarbage(RendererVk *renderer, const QueueSerial &queueSerial)
 {
     GarbageList garbageList;
     garbageList.emplace_back(GetGarbage(&mBuffer));
@@ -549,7 +549,7 @@ void StagingBuffer::collectGarbage(RendererVk *renderer, Serial serial)
 
     SharedResourceUse sharedUse;
     sharedUse.init();
-    sharedUse.updateSerialOneOff(serial);
+    sharedUse.updateSerialOneOff(queueSerial);
     renderer->collectGarbage(std::move(sharedUse), std::move(garbageList));
 }
 

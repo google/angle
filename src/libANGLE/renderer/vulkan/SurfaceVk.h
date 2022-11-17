@@ -379,7 +379,7 @@ class WindowSurfaceVk : public SurfaceVk
 
     // A circular buffer that stores the serial of the submission fence of the context on every
     // swap. The CPU is throttled by waiting for the 2nd previous serial to finish.
-    angle::CircularBuffer<Serial, impl::kSwapHistorySize> mSwapHistory;
+    angle::CircularBuffer<QueueSerial, impl::kSwapHistorySize> mSwapHistory;
 
     // The previous swapchain which needs to be scheduled for destruction when appropriate.  This
     // will be done when the first image of the current swapchain is presented.  If there were

@@ -19,9 +19,9 @@ namespace
 {
 constexpr size_t kDefaultResourceUseCount = 4096;
 
-angle::Result FinishRunningCommands(ContextVk *contextVk, Serial serial)
+angle::Result FinishRunningCommands(Context *context, const ResourceUse &use)
 {
-    return contextVk->finishToSerial(serial);
+    return context->getRenderer()->finishResourceUse(context, use);
 }
 
 template <typename T>
@@ -91,7 +91,7 @@ bool Resource::isCurrentlyInUse(RendererVk *renderer) const
 
 angle::Result Resource::finishRunningCommands(ContextVk *contextVk)
 {
-    return FinishRunningCommands(contextVk, mUse.getSerial());
+    return FinishRunningCommands(contextVk, mUse.getResourceUse());
 }
 
 angle::Result Resource::waitForIdle(ContextVk *contextVk,
@@ -150,13 +150,13 @@ bool ReadWriteResource::isCurrentlyInUseForWrite(RendererVk *renderer) const
 angle::Result ReadWriteResource::finishRunningCommands(ContextVk *contextVk)
 {
     ASSERT(!mReadOnlyUse.usedInRecordedCommands());
-    return FinishRunningCommands(contextVk, mReadOnlyUse.getSerial());
+    return FinishRunningCommands(contextVk, mReadOnlyUse.getResourceUse());
 }
 
 angle::Result ReadWriteResource::finishGPUWriteCommands(ContextVk *contextVk)
 {
     ASSERT(!mReadWriteUse.usedInRecordedCommands());
-    return FinishRunningCommands(contextVk, mReadWriteUse.getSerial());
+    return FinishRunningCommands(contextVk, mReadWriteUse.getResourceUse());
 }
 
 angle::Result ReadWriteResource::waitForIdle(ContextVk *contextVk,
@@ -174,7 +174,7 @@ SharedGarbage::SharedGarbage(SharedGarbage &&other)
     *this = std::move(other);
 }
 
-SharedGarbage::SharedGarbage(SharedResourceUse &&use, std::vector<GarbageObject> &&garbage)
+SharedGarbage::SharedGarbage(SharedResourceUse &&use, GarbageList &&garbage)
     : mLifetime(std::move(use)), mGarbage(std::move(garbage))
 {}
 
@@ -242,11 +242,11 @@ void ResourceUseList::releaseResourceUses()
     mResourceUses.clear();
 }
 
-void ResourceUseList::releaseResourceUsesAndUpdateSerials(Serial serial)
+void ResourceUseList::releaseResourceUsesAndUpdateSerials(const QueueSerial &queueSerial)
 {
     for (SharedResourceUse &use : mResourceUses)
     {
-        use.releaseAndUpdateSerial(serial);
+        use.releaseAndUpdateSerial(queueSerial);
     }
 
     mResourceUses.clear();

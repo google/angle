@@ -19,6 +19,16 @@ namespace rx
 {
 namespace vk
 {
+// For now, this is only size of 1 and will never grow.
+static constexpr size_t kMaxFastQueueSerials = 1;
+// Serials is an array of queue serials, which when paired with the index of the serials in the
+// array result in QueueSerials. The array may expand if needed. Since it owned by Resource object
+// which is protected by shared lock, it is safe to reallocate storage if needed. When it passes to
+// renderer at garbage collection time, we will make a copy. The array size is expected to be small.
+// But in future if we run into situation that array size is too big, we can change to packed array
+// of QueueSerials.
+using Serials = angle::FastVector<Serial, kMaxFastQueueSerials>;
+
 // Estimated maximum command buffers in a normal session. Beyond this we will lose performance.
 constexpr size_t kMaxFastCommandBuffers = 64;
 
@@ -42,9 +52,52 @@ using ResourceCommandBuffers = angle::FlatUnorderedSet<CommandBufferID, kMaxFast
 // of times a resource is retained by ANGLE. The serial indicates the most recent use of a resource
 // in the VkQueue. The reference count and serial together can determine if a resource is currently
 // in use.
-struct ResourceUse
+class ResourceUse final
 {
+  public:
     ResourceUse() = default;
+    ResourceUse(const QueueSerial &queueSerial) { setQueueSerial(queueSerial); }
+    ResourceUse(const Serials &otherSerials) { mSerials = otherSerials; }
+
+    ANGLE_INLINE const Serials &getSerials() const { return mSerials; }
+
+    ANGLE_INLINE void setSerial(SerialIndex index, Serial serial)
+    {
+        ASSERT(index != kInvalidQueueSerialIndex);
+        ASSERT(serial.valid());
+        if (mSerials.size() <= index)
+        {
+            mSerials.resize(index + 1);
+        }
+        mSerials[index] = serial;
+    }
+
+    ANGLE_INLINE void setQueueSerial(const QueueSerial &queueSerial)
+    {
+        setSerial(queueSerial.getIndex(), queueSerial.getSerial());
+    }
+
+    // Returns true if there is at least one serial is greater than
+    bool operator>(const AtomicQueueSerialFixedArray &serials) const
+    {
+        ASSERT(mSerials.size() <= serials.size());
+        for (SerialIndex i = 0; i < mSerials.size(); ++i)
+        {
+            if (mSerials[i] > serials[i])
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Returns true if it contains a serial that is greater than
+    bool operator>(const QueueSerial &queuSerial) const
+    {
+        ASSERT(queuSerial.valid());
+        return mSerials.size() > queuSerial.getIndex() &&
+               mSerials[queuSerial.getIndex()] > queuSerial.getSerial();
+    }
 
     // The number of times a resource is retained by a Context/ShareGroup/Renderer.
     uint32_t counter = 0;
@@ -52,8 +105,9 @@ struct ResourceUse
     // Open command buffers using this resource.
     ResourceCommandBuffers commandBuffers;
 
+  private:
     // The most recent time of use in a VkQueue.
-    Serial serial;
+    Serials mSerials;
 };
 
 class SharedResourceUse final : angle::NonCopyable
@@ -78,7 +132,7 @@ class SharedResourceUse final : angle::NonCopyable
     }
 
     // Specifically for use with command buffers that are used as one-offs.
-    void updateSerialOneOff(Serial serial) { mUse->serial = serial; }
+    void updateSerialOneOff(const QueueSerial &queueSerial) { mUse->setQueueSerial(queueSerial); }
 
     ANGLE_INLINE void release()
     {
@@ -91,12 +145,13 @@ class SharedResourceUse final : angle::NonCopyable
         mUse = nullptr;
     }
 
-    ANGLE_INLINE void releaseAndUpdateSerial(Serial serial)
+    ANGLE_INLINE void releaseAndUpdateSerial(const QueueSerial &queueSerial)
     {
         ASSERT(valid());
         ASSERT(mUse->counter > 0);
-        ASSERT(mUse->serial <= serial);
-        mUse->serial = serial;
+        // For now we only support one queue index
+        ASSERT(queueSerial.getIndex() == 0);
+        mUse->setQueueSerial(queueSerial);
         release();
     }
 
@@ -123,10 +178,10 @@ class SharedResourceUse final : angle::NonCopyable
         return *mUse;
     }
 
-    ANGLE_INLINE Serial getSerial() const
+    ANGLE_INLINE const Serials &getSerials() const
     {
         ASSERT(valid());
-        return mUse->serial;
+        return mUse->getSerials();
     }
 
     ANGLE_INLINE void setCommandBuffer(CommandBufferID commandBufferID)
@@ -159,7 +214,7 @@ class SharedGarbage
   public:
     SharedGarbage();
     SharedGarbage(SharedGarbage &&other);
-    SharedGarbage(SharedResourceUse &&use, std::vector<GarbageObject> &&garbage);
+    SharedGarbage(SharedResourceUse &&use, GarbageList &&garbage);
     ~SharedGarbage();
     SharedGarbage &operator=(SharedGarbage &&rhs);
 
@@ -168,7 +223,7 @@ class SharedGarbage
 
   private:
     SharedResourceUse mLifetime;
-    std::vector<GarbageObject> mGarbage;
+    GarbageList mGarbage;
 };
 
 using SharedGarbageList = std::queue<SharedGarbage>;
@@ -185,7 +240,7 @@ class ResourceUseList final : angle::NonCopyable
     void add(const SharedResourceUse &resourceUse);
 
     void releaseResourceUses();
-    void releaseResourceUsesAndUpdateSerials(Serial serial);
+    void releaseResourceUsesAndUpdateSerials(const QueueSerial &queueSerial);
 
     void clearCommandBuffer(CommandBufferID commandBufferID);
 
