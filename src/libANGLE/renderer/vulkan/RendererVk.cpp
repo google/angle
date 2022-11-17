@@ -3960,13 +3960,13 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
                             mExtendedDynamicState2Features.extendedDynamicState2 == VK_TRUE);
 
     // Disabled on Intel/Mesa due to driver bug (crbug.com/1379201).  This bug is fixed since Mesa
-    // 22.1.0.
-    const bool isAtLeastMesa22_1 =
-        mesaVersion.major >= 22 || (mesaVersion.major == 22 && mesaVersion.minor >= 1);
+    // 22.2.0.
+    const bool isAtLeastMesa22_2 =
+        mesaVersion.major >= 22 || (mesaVersion.major == 22 && mesaVersion.minor >= 2);
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsLogicOpDynamicState,
         mExtendedDynamicState2Features.extendedDynamicState2LogicOp == VK_TRUE &&
-            (!(IsLinux() && isIntel) || isAtLeastMesa22_1));
+            (!(IsLinux() && isIntel) || isAtLeastMesa22_2));
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsGraphicsPipelineLibrary,
                             mGraphicsPipelineLibraryFeatures.graphicsPipelineLibrary == VK_TRUE);
