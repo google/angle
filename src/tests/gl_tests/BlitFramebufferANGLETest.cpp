@@ -2773,6 +2773,42 @@ TEST_P(BlitFramebufferTest, BlitSRGBToRGBOversizedDestArea)
     EXPECT_PIXEL_COLOR_EQ(7 * kWidth / 8, 7 * kHeight / 8, GLColor::yellow);
 }
 
+// This test is to demonstrate a bug that when a program is created and used and then destroyed, we
+// should not have a dangling PipelineHelper pointer in the context point to the already destroyed
+// object.
+TEST_P(BlitFramebufferTest, useAndDestroyProgramThenBlit)
+{
+    constexpr const GLsizei kWidth  = 256;
+    constexpr const GLsizei kHeight = 256;
+
+    GLRenderbuffer sourceRBO, targetRBO;
+    GLFramebuffer sourceFBO, targetFBO;
+
+    {
+        initColorFBO(&sourceFBO, &sourceRBO, GL_SRGB8_ALPHA8, kWidth, kHeight);
+        // checkerProgram will be created and destroyed in this code block
+        ANGLE_GL_PROGRAM(checkerProgram, essl1_shaders::vs::Passthrough(),
+                         essl1_shaders::fs::Checkered());
+        glViewport(0, 0, kWidth, kHeight);
+        glBindFramebuffer(GL_FRAMEBUFFER, sourceFBO);
+        drawQuad(checkerProgram.get(), essl1_shaders::PositionAttrib(), 0.5f);
+        EXPECT_PIXEL_COLOR_EQ(1, 1, GLColor::red);
+    }
+    initColorFBO(&targetFBO, &targetRBO, GL_RGBA8, kWidth, kHeight);
+    EXPECT_GL_NO_ERROR();
+
+    glViewport(0, 0, kWidth, kHeight);
+    glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Blit call should not crash or assert
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, sourceFBO);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, targetFBO);
+    glBlitFramebuffer(0, 0, kWidth, kHeight, -kWidth / 2, -kHeight / 2, 3 * kWidth / 2,
+                      3 * kHeight / 2, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    EXPECT_GL_NO_ERROR();
+}
+
 // Test blitFramebuffer size overflow checks. WebGL 2.0 spec section 5.41. We do validation for
 // overflows also in non-WebGL mode to avoid triggering driver bugs.
 TEST_P(BlitFramebufferTest, BlitFramebufferSizeOverflow)
