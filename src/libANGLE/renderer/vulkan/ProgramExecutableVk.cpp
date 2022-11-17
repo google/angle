@@ -222,6 +222,17 @@ void GetPipelineCacheData(ContextVk *contextVk,
         cacheDataOut->clear();
     }
 }
+
+vk::SpecializationConstants MakeSpecConsts(ProgramTransformOptions transformOptions,
+                                           const vk::GraphicsPipelineDesc &desc)
+{
+    vk::SpecializationConstants specConsts;
+
+    specConsts.surfaceRotation = transformOptions.surfaceRotation;
+    specConsts.dither          = desc.getEmulatedDitherControl();
+
+    return specConsts;
+}
 }  // namespace
 
 DefaultUniformBlock::DefaultUniformBlock() = default;
@@ -392,7 +403,6 @@ void ProgramExecutableVk::resetLayout(ContextVk *contextVk)
     }
     mImmutableSamplersMaxDescriptorCount = 1;
     mImmutableSamplerIndexMap.clear();
-    mPipelineLayout.reset();
 
     mDescriptorSets.fill(VK_NULL_HANDLE);
     mNumDefaultUniformDescriptors = 0;
@@ -410,12 +420,6 @@ void ProgramExecutableVk::resetLayout(ContextVk *contextVk)
     // Initialize with an invalid BufferSerial
     mCurrentDefaultUniformBufferSerial = vk::BufferSerial();
 
-    for (ProgramInfo &programInfo : mGraphicsProgramInfos)
-    {
-        programInfo.release(contextVk);
-    }
-    mComputeProgramInfo.release(contextVk);
-
     for (CompleteGraphicsPipelineCache &pipelines : mCompleteGraphicsPipelines)
     {
         pipelines.release(contextVk);
@@ -428,6 +432,16 @@ void ProgramExecutableVk::resetLayout(ContextVk *contextVk)
     {
         pipeline.release(contextVk);
     }
+
+    // Program infos and pipeline layout must be released after pipelines are; they might be having
+    // pending jobs that are referencing them.
+    for (ProgramInfo &programInfo : mGraphicsProgramInfos)
+    {
+        programInfo.release(contextVk);
+    }
+    mComputeProgramInfo.release(contextVk);
+
+    mPipelineLayout.reset();
 
     contextVk->onProgramExecutableReset(this);
 }
@@ -1144,9 +1158,7 @@ angle::Result ProgramExecutableVk::createGraphicsPipelineImpl(
 
     // Set specialization constants.  These are also a part of GraphicsPipelineDesc, so that a
     // change in specialization constants also results in a new pipeline.
-    vk::SpecializationConstants specConsts;
-    specConsts.surfaceRotation = transformOptions.surfaceRotation;
-    specConsts.dither          = desc.getEmulatedDitherControl();
+    vk::SpecializationConstants specConsts = MakeSpecConsts(transformOptions, desc);
 
     // Pull in a compatible RenderPass.
     const vk::RenderPass *compatibleRenderPass = nullptr;
@@ -1260,6 +1272,18 @@ angle::Result ProgramExecutableVk::linkGraphicsPipelineLibraries(
     ANGLE_TRY(mCompleteGraphicsPipelines[programIndex].linkLibraries(
         contextVk, pipelineCache, desc, getPipelineLayout(), vertexInputPipeline, shadersPipeline,
         fragmentOutputPipeline, descPtrOut, pipelineOut));
+
+    // If monolithic pipelines are preferred over libraries, create a task so that it can be created
+    // asynchronously.
+    if (contextVk->getFeatures().preferMonolithicPipelinesOverLibraries.enabled)
+    {
+        vk::SpecializationConstants specConsts = MakeSpecConsts(transformOptions, desc);
+
+        mGraphicsProgramInfos[programIndex]
+            .getShaderProgram()
+            ->createMonolithicPipelineCreationTask(contextVk, pipelineCache, desc,
+                                                   getPipelineLayout(), specConsts, *pipelineOut);
+    }
 
     return angle::Result::Continue;
 }

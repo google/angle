@@ -7049,8 +7049,59 @@ TEST_P(VulkanPerformanceCounterTest, EndXfbAfterRenderPassClosed)
     EXPECT_EQ(getPerfCounters().renderPasses, expectedRenderPassCount);
 }
 
+// Verify that monolithic pipeline handles correctly replace the linked pipelines, if
+// VK_EXT_graphics_pipeline_library is supported.
+TEST_P(VulkanPerformanceCounterTest, AsyncMonolithicPipelineCreation)
+{
+    const bool hasAsyncMonolithicPipelineCreation =
+        isFeatureEnabled(Feature::SupportsGraphicsPipelineLibrary) &&
+        isFeatureEnabled(Feature::PreferMonolithicPipelinesOverLibraries);
+    ANGLE_SKIP_TEST_IF(!hasAsyncMonolithicPipelineCreation);
+
+    uint64_t expectedMonolithicPipelineCreationCount =
+        getPerfCounters().monolithicPipelineCreation + 2;
+
+    // Create two programs:
+    ANGLE_GL_PROGRAM(drawRed, essl3_shaders::vs::Simple(), essl3_shaders::fs::Red());
+    ANGLE_GL_PROGRAM(drawGreen, essl3_shaders::vs::Simple(), essl3_shaders::fs::Green());
+
+    // Ping pong between the programs, letting async monolithic pipeline creation happen.
+    uint32_t drawCount                 = 0;
+    constexpr uint32_t kDrawCountLimit = 200;
+
+    while (getPerfCounters().monolithicPipelineCreation < expectedMonolithicPipelineCreationCount)
+    {
+        drawQuad(drawGreen, essl3_shaders::PositionAttrib(), 0.0f);
+        drawQuad(drawRed, essl3_shaders::PositionAttrib(), 0.0f);
+
+        ++drawCount;
+        if (drawCount > kDrawCountLimit)
+        {
+            drawCount = 0;
+            EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+        }
+    }
+
+    // Make sure the monolithic pipelines are replaced correctly
+    drawQuad(drawGreen, essl3_shaders::PositionAttrib(), 0.0f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    drawQuad(drawRed, essl3_shaders::PositionAttrib(), 0.0f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+}
+
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(VulkanPerformanceCounterTest);
-ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest, ES3_VULKAN(), ES3_VULKAN_SWIFTSHADER());
+ANGLE_INSTANTIATE_TEST(
+    VulkanPerformanceCounterTest,
+    ES3_VULKAN(),
+    ES3_VULKAN_SWIFTSHADER().disable(Feature::PreferMonolithicPipelinesOverLibraries),
+    ES3_VULKAN_SWIFTSHADER().enable(Feature::PreferMonolithicPipelinesOverLibraries),
+    ES3_VULKAN_SWIFTSHADER()
+        .enable(Feature::PreferMonolithicPipelinesOverLibraries)
+        .enable(Feature::SlowDownMonolithicPipelineCreationForTesting),
+    ES3_VULKAN_SWIFTSHADER()
+        .enable(Feature::PreferMonolithicPipelinesOverLibraries)
+        .disable(Feature::MergeProgramPipelineCachesToGlobalCache));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(VulkanPerformanceCounterTest_ES31);
 ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest_ES31, ES31_VULKAN(), ES31_VULKAN_SWIFTSHADER());

@@ -43,6 +43,7 @@
 7854 GLES : MultithreadingTestES3.UnsynchronizedTextureReads/* = SKIP
 7854 GLES : MultithreadingTestES3.UnsynchronizedTextureReads2/* = SKIP
 7854 GLES : MultithreadingTestES3.UnsynchronizedTextureReads3/* = SKIP
+7854 GLES : MultithreadingTestES3.ProgramUseAndDestroyInTwoContexts/* = SKIP
 
 // Vulkan generic
 6641 VULKAN : UniformTest.UnusedStructInlineUniform/* = SKIP

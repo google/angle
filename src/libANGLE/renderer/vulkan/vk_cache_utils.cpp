@@ -11,6 +11,7 @@
 #include "libANGLE/renderer/vulkan/vk_cache_utils.h"
 
 #include "common/aligned_memory.h"
+#include "common/system_utils.h"
 #include "common/vulkan/vk_google_filtering_precision.h"
 #include "libANGLE/BlobCache.h"
 #include "libANGLE/VertexAttribute.h"
@@ -2714,7 +2715,7 @@ angle::Result InitializePipelineFromLibraries(Context *context,
     }
 
     // Create the pipeline
-    ANGLE_TRY(pipelineCache->createGraphicsPipeline(context, createInfo, pipelineOut));
+    ANGLE_VK_TRY(context, pipelineCache->createGraphicsPipeline(context, createInfo, pipelineOut));
 
     if (supportsFeedback)
     {
@@ -3126,15 +3127,15 @@ void GraphicsPipelineDesc::initDefaults(const ContextVk *contextVk, GraphicsPipe
             contextVk->shouldRestrictPipelineToProtectedAccess();
 }
 
-angle::Result GraphicsPipelineDesc::initializePipeline(Context *context,
-                                                       PipelineCacheAccess *pipelineCache,
-                                                       GraphicsPipelineSubset subset,
-                                                       const RenderPass &compatibleRenderPass,
-                                                       const PipelineLayout &pipelineLayout,
-                                                       const ShaderModuleMap &shaders,
-                                                       const SpecializationConstants &specConsts,
-                                                       Pipeline *pipelineOut,
-                                                       CacheLookUpFeedback *feedbackOut) const
+VkResult GraphicsPipelineDesc::initializePipeline(Context *context,
+                                                  PipelineCacheAccess *pipelineCache,
+                                                  GraphicsPipelineSubset subset,
+                                                  const RenderPass &compatibleRenderPass,
+                                                  const PipelineLayout &pipelineLayout,
+                                                  const ShaderModuleMap &shaders,
+                                                  const SpecializationConstants &specConsts,
+                                                  Pipeline *pipelineOut,
+                                                  CacheLookUpFeedback *feedbackOut) const
 {
     GraphicsPipelineVertexInputVulkanStructs vertexInputState;
     GraphicsPipelineShadersVulkanStructs shadersState;
@@ -3274,7 +3275,7 @@ angle::Result GraphicsPipelineDesc::initializePipeline(Context *context,
         AddToPNextChain(&createInfo, &feedbackInfo);
     }
 
-    ANGLE_TRY(pipelineCache->createGraphicsPipeline(context, createInfo, pipelineOut));
+    VkResult result = pipelineCache->createGraphicsPipeline(context, createInfo, pipelineOut);
 
     if (supportsFeedback)
     {
@@ -3286,7 +3287,7 @@ angle::Result GraphicsPipelineDesc::initializePipeline(Context *context,
         ApplyPipelineCreationFeedback(context, feedback);
     }
 
-    return angle::Result::Continue;
+    return result;
 }
 
 void GraphicsPipelineDesc::initializePipelineVertexInputState(
@@ -4564,6 +4565,68 @@ void PipelineLayoutDesc::updatePushConstantRange(VkShaderStageFlags stageMask,
     SetBitField(mPushConstantRange.stageMask, stageMask);
 }
 
+// CreateMonolithicPipelineTask implementation.
+CreateMonolithicPipelineTask::CreateMonolithicPipelineTask(
+    RendererVk *renderer,
+    const PipelineCacheAccess &pipelineCache,
+    const PipelineLayout &pipelineLayout,
+    const ShaderModuleMap &shaders,
+    const SpecializationConstants &specConsts,
+    const GraphicsPipelineDesc &desc)
+    : Context(renderer),
+      mPipelineCache(pipelineCache),
+      mCompatibleRenderPass(nullptr),
+      mPipelineLayout(pipelineLayout),
+      mShaders(shaders),
+      mSpecConsts(specConsts),
+      mDesc(desc),
+      mResult(VK_NOT_READY),
+      mFeedback(CacheLookUpFeedback::None)
+{
+    // Make sure the given pipeline cache has an associated mutex as this task will be running
+    // asynchronously.
+    ASSERT(pipelineCache.isThreadSafe());
+}
+
+void CreateMonolithicPipelineTask::setCompatibleRenderPass(const RenderPass *compatibleRenderPass)
+{
+    mCompatibleRenderPass = compatibleRenderPass;
+}
+
+void CreateMonolithicPipelineTask::operator()()
+{
+    ANGLE_TRACE_EVENT0("gpu.angle", "CreateMonolithicPipelineTask");
+    mResult = mDesc.initializePipeline(this, &mPipelineCache, vk::GraphicsPipelineSubset::Complete,
+                                       *mCompatibleRenderPass, mPipelineLayout, mShaders,
+                                       mSpecConsts, &mPipeline, &mFeedback);
+
+    if (mRenderer->getFeatures().slowDownMonolithicPipelineCreationForTesting.enabled)
+    {
+        constexpr double kSlowdownTime = 0.05;
+
+        double startTime = angle::GetCurrentSystemTime();
+        while (angle::GetCurrentSystemTime() - startTime < kSlowdownTime)
+        {
+            // Busy waiting
+        }
+    }
+}
+
+void CreateMonolithicPipelineTask::handleError(VkResult result,
+                                               const char *file,
+                                               const char *function,
+                                               unsigned int line)
+{
+    UNREACHABLE();
+}
+
+// WaitableMonolithicPipelineCreationTask implementation
+WaitableMonolithicPipelineCreationTask::~WaitableMonolithicPipelineCreationTask()
+{
+    ASSERT(!mWaitableEvent);
+    ASSERT(!mTask);
+}
+
 // PipelineHelper implementation.
 PipelineHelper::PipelineHelper() = default;
 
@@ -4572,20 +4635,87 @@ PipelineHelper::~PipelineHelper() = default;
 void PipelineHelper::destroy(VkDevice device)
 {
     mPipeline.destroy(device);
+    mLinkedPipelineToRelease.destroy(device);
+
+    // If there is a pending task, wait for it before destruction.
+    if (mMonolithicPipelineCreationTask.isValid())
+    {
+        if (mMonolithicPipelineCreationTask.isPosted())
+        {
+            mMonolithicPipelineCreationTask.wait();
+            mMonolithicPipelineCreationTask.getTask()->getPipeline().destroy(device);
+        }
+        mMonolithicPipelineCreationTask.reset();
+    }
+
     reset();
 }
 
 void PipelineHelper::release(ContextVk *contextVk)
 {
     contextVk->getRenderer()->collectGarbage(mUse, &mPipeline);
+    contextVk->getRenderer()->collectGarbage(mUse, &mLinkedPipelineToRelease);
+
+    // If there is a pending task, wait for it before release.
+    if (mMonolithicPipelineCreationTask.isValid())
+    {
+        if (mMonolithicPipelineCreationTask.isPosted())
+        {
+            mMonolithicPipelineCreationTask.wait();
+            contextVk->getRenderer()->collectGarbage(
+                mUse, &mMonolithicPipelineCreationTask.getTask()->getPipeline());
+        }
+        mMonolithicPipelineCreationTask.reset();
+    }
+
     reset();
 }
 
 void PipelineHelper::reset()
 {
-    mCacheLookUpFeedback = CacheLookUpFeedback::None;
+    mCacheLookUpFeedback           = CacheLookUpFeedback::None;
+    mMonolithicCacheLookUpFeedback = CacheLookUpFeedback::None;
 
     mLinkedShaders = nullptr;
+}
+
+angle::Result PipelineHelper::getPreferredPipeline(ContextVk *contextVk,
+                                                   const Pipeline **pipelineOut)
+{
+    if (mMonolithicPipelineCreationTask.isValid())
+    {
+        // If there is a monolithic task pending, attempt to post it if not already.  Once the task
+        // is done, retrieve the results and replace the pipeline.
+        if (!mMonolithicPipelineCreationTask.isPosted())
+        {
+            ANGLE_TRY(contextVk->getShareGroup()->scheduleMonolithicPipelineCreationTask(
+                contextVk, &mMonolithicPipelineCreationTask));
+        }
+        else if (mMonolithicPipelineCreationTask.isReady())
+        {
+            CreateMonolithicPipelineTask *task = &*mMonolithicPipelineCreationTask.getTask();
+            ANGLE_VK_TRY(contextVk, task->getResult());
+
+            mMonolithicCacheLookUpFeedback = task->getFeedback();
+
+            // The pipeline will not be used anymore.  Every context that has used this pipeline has
+            // already updated the serial.
+            mLinkedPipelineToRelease = std::move(mPipeline);
+
+            // Replace it with the monolithic one.
+            mPipeline = std::move(task->getPipeline());
+
+            mLinkedShaders = nullptr;
+
+            mMonolithicPipelineCreationTask.reset();
+
+            ++contextVk->getPerfCounters().monolithicPipelineCreation;
+        }
+    }
+
+    *pipelineOut = &mPipeline;
+
+    return angle::Result::Continue;
 }
 
 void PipelineHelper::addTransition(GraphicsPipelineTransitionBits bits,
@@ -6214,30 +6344,22 @@ std::unique_lock<std::mutex> PipelineCacheAccess::getLock()
     return std::unique_lock<std::mutex>(*mMutex);
 }
 
-angle::Result PipelineCacheAccess::createGraphicsPipeline(
-    vk::Context *context,
-    const VkGraphicsPipelineCreateInfo &createInfo,
-    vk::Pipeline *pipelineOut)
+VkResult PipelineCacheAccess::createGraphicsPipeline(vk::Context *context,
+                                                     const VkGraphicsPipelineCreateInfo &createInfo,
+                                                     vk::Pipeline *pipelineOut)
 {
     std::unique_lock<std::mutex> lock = getLock();
 
-    ANGLE_VK_TRY(context,
-                 pipelineOut->initGraphics(context->getDevice(), createInfo, *mPipelineCache));
-
-    return angle::Result::Continue;
+    return pipelineOut->initGraphics(context->getDevice(), createInfo, *mPipelineCache);
 }
 
-angle::Result PipelineCacheAccess::createComputePipeline(
-    vk::Context *context,
-    const VkComputePipelineCreateInfo &createInfo,
-    vk::Pipeline *pipelineOut)
+VkResult PipelineCacheAccess::createComputePipeline(vk::Context *context,
+                                                    const VkComputePipelineCreateInfo &createInfo,
+                                                    vk::Pipeline *pipelineOut)
 {
     std::unique_lock<std::mutex> lock = getLock();
 
-    ANGLE_VK_TRY(context,
-                 pipelineOut->initCompute(context->getDevice(), createInfo, *mPipelineCache));
-
-    return angle::Result::Continue;
+    return pipelineOut->initCompute(context->getDevice(), createInfo, *mPipelineCache);
 }
 
 void PipelineCacheAccess::merge(RendererVk *renderer, const vk::PipelineCache &pipelineCache)
@@ -6331,6 +6453,9 @@ void RenderPassCache::destroy(RendererVk *rendererVk)
 
 void RenderPassCache::clear(ContextVk *contextVk)
 {
+    // Make sure there are no jobs referencing the render pass cache.
+    contextVk->getShareGroup()->waitForCurrentMonolithicPipelineCreationTask();
+
     for (auto &outerIt : mPayload)
     {
         for (auto &innerIt : outerIt.second)
@@ -6461,7 +6586,7 @@ void GraphicsPipelineCache<Hash>::release(ContextVk *contextVk)
     for (auto &item : mPayload)
     {
         vk::PipelineHelper &pipeline = item.second;
-        contextVk->addGarbage(&pipeline.getPipeline());
+        pipeline.release(contextVk);
     }
 
     mPayload.clear();
@@ -6489,9 +6614,9 @@ angle::Result GraphicsPipelineCache<Hash>::createPipeline(
         constexpr vk::GraphicsPipelineSubset kSubset =
             GraphicsPipelineCacheTypeHelper<Hash>::kSubset;
 
-        ANGLE_TRY(desc.initializePipeline(contextVk, pipelineCache, kSubset, compatibleRenderPass,
-                                          pipelineLayout, shaders, specConsts, &newPipeline,
-                                          &feedback));
+        ANGLE_VK_TRY(contextVk, desc.initializePipeline(
+                                    contextVk, pipelineCache, kSubset, compatibleRenderPass,
+                                    pipelineLayout, shaders, specConsts, &newPipeline, &feedback));
     }
 
     addToCache(source, desc, std::move(newPipeline), feedback, descPtrOut, pipelineOut);

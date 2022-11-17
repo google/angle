@@ -2992,6 +2992,13 @@ class ShaderProgramHelper : angle::NonCopyable
                                                  pipelineDesc, descPtrOut, pipelineOut);
     }
 
+    void createMonolithicPipelineCreationTask(ContextVk *contextVk,
+                                              PipelineCacheAccess *pipelineCache,
+                                              const GraphicsPipelineDesc &desc,
+                                              const PipelineLayout &pipelineLayout,
+                                              const SpecializationConstants &specConsts,
+                                              PipelineHelper *pipeline) const;
+
     angle::Result getOrCreateComputePipeline(ContextVk *contextVk,
                                              ComputePipelineCache *computePipelines,
                                              PipelineCacheAccess *pipelineCache,

@@ -31,8 +31,9 @@ binding and location indices set in step 1. Additionally, component and various 
 decorations are added, inactive varyings are removed, early fragment tests are enabled or disabled,
 debug info is removed and pre-rotation is applied. At this time, `VkShaderModule`s are created (and
 cached). The appropriate specialization constants are then resolved and the `VkPipeline` object is
-created.  Note that we currently don't use [SPIRV-Tools][SPIRV-Tools] to perform any SPIR-V
-optimization. This could be something to improve on in the future.
+created (see details [here](PipelineCreation)).  Note that we currently don't use
+[SPIRV-Tools][SPIRV-Tools] to perform any SPIR-V optimization. This could be something to improve on
+in the future.
 
 See the below diagram for a high-level view of the shader translation flow:
 
@@ -85,3 +86,4 @@ Note right of "Vulkan Back-end": We init VkShaderModules\nand VkPipeline then\nr
 [translator]: https://chromium.googlesource.com/angle/angle/+/refs/heads/main/src/compiler/translator/
 [TranslatorVulkan.cpp]: https://chromium.googlesource.com/angle/angle/+/refs/heads/main/src/compiler/translator/TranslatorVulkan.cpp
 [VkShaderModule]: https://www.khronos.org/registry/vulkan/specs/1.1-extensions/man/html/VkShaderModule.html
+[PipelineCreation]: PipelineCreation.md

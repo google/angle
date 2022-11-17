@@ -35,6 +35,12 @@ constexpr size_t kDescriptorWriteInfosInitialSize =
     kDescriptorBufferInfosInitialSize + kDescriptorImageInfosInitialSize;
 constexpr size_t kDescriptorBufferViewsInitialSize = 0;
 
+// How often monolithic pipelines should be created, if preferMonolithicPipelinesOverLibraries is
+// enabled.  Pipeline creation is typically O(hundreds of microseconds).  A value of 2ms is chosen
+// arbitrarily; it ensures that there is always at most a single pipeline job in progress, while
+// maintaining a high throughput of 500 pipelines / second for heavier applications.
+constexpr double kMonolithicPipelineJobPeriod = 0.002;
+
 // Query surface format and colorspace support.
 void GetSupportedFormatColorspaces(VkPhysicalDevice physicalDevice,
                                    const angle::FeaturesVk &featuresVk,
@@ -616,7 +622,7 @@ void DisplayVk::populateFeatureList(angle::FeatureList *features)
     mRenderer->getFeatures().populateFeatureList(features);
 }
 
-ShareGroupVk::ShareGroupVk() : mOrphanNonEmptyBufferBlock(false)
+ShareGroupVk::ShareGroupVk() : mLastMonolithicPipelineJobTime(0), mOrphanNonEmptyBufferBlock(false)
 {
     mLastPruneTime = angle::GetCurrentSystemTime();
 }
@@ -672,6 +678,53 @@ angle::Result ShareGroupVk::onMutableTextureUpload(ContextVk *contextVk, Texture
 void ShareGroupVk::onTextureRelease(TextureVk *textureVk)
 {
     mTextureUpload.onTextureRelease(textureVk);
+}
+
+angle::Result ShareGroupVk::scheduleMonolithicPipelineCreationTask(
+    ContextVk *contextVk,
+    vk::WaitableMonolithicPipelineCreationTask *taskOut)
+{
+    ASSERT(contextVk->getFeatures().preferMonolithicPipelinesOverLibraries.enabled);
+
+    // Limit to a single task to avoid hogging all the cores.
+    if (mMonolithicPipelineCreationEvent && !mMonolithicPipelineCreationEvent->isReady())
+    {
+        return angle::Result::Continue;
+    }
+
+    // Additionally, rate limit the job postings.
+    double currentTime = angle::GetCurrentSystemTime();
+    if (currentTime - mLastMonolithicPipelineJobTime < kMonolithicPipelineJobPeriod)
+    {
+        return angle::Result::Continue;
+    }
+
+    mLastMonolithicPipelineJobTime = currentTime;
+
+    const vk::RenderPass *compatibleRenderPass = nullptr;
+    // Pull in a compatible RenderPass to be used by the task.  This is done at the last minute,
+    // just before the task is scheduled, to minimize the time this reference to the render pass
+    // cache is held.  If the render pass cache needs to be cleared, the main thread will wait for
+    // the job to complete.
+    ANGLE_TRY(contextVk->getCompatibleRenderPass(taskOut->getTask()->getRenderPassDesc(),
+                                                 &compatibleRenderPass));
+    taskOut->setRenderPass(compatibleRenderPass);
+
+    egl::Display *display = contextVk->getRenderer()->getDisplay();
+    mMonolithicPipelineCreationEvent =
+        display->getMultiThreadPool()->postWorkerTask(taskOut->getTask());
+
+    taskOut->onSchedule(mMonolithicPipelineCreationEvent);
+
+    return angle::Result::Continue;
+}
+
+void ShareGroupVk::waitForCurrentMonolithicPipelineCreationTask()
+{
+    if (mMonolithicPipelineCreationEvent)
+    {
+        mMonolithicPipelineCreationEvent->wait();
+    }
 }
 
 angle::Result TextureUpload::onMutableTextureUpload(ContextVk *contextVk, TextureVk *newTexture)

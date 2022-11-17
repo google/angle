@@ -110,6 +110,11 @@ class ShareGroupVk : public ShareGroupImpl
 
     void onTextureRelease(TextureVk *textureVk);
 
+    angle::Result scheduleMonolithicPipelineCreationTask(
+        ContextVk *contextVk,
+        vk::WaitableMonolithicPipelineCreationTask *taskOut);
+    void waitForCurrentMonolithicPipelineCreationTask();
+
   private:
     // VkFramebuffer caches
     FramebufferCache mFramebufferCache;
@@ -140,6 +145,12 @@ class ShareGroupVk : public ShareGroupImpl
 
     // The system time when last pruneEmptyBuffer gets called.
     double mLastPruneTime;
+
+    // The system time when the last monolithic pipeline creation job was launched.  This is
+    // rate-limited to avoid hogging all cores and interfering with the application threads.  A
+    // single pipeline creation job is currently supported.
+    double mLastMonolithicPipelineJobTime;
+    std::shared_ptr<angle::WaitableEvent> mMonolithicPipelineCreationEvent;
 
     // Texture update manager used to flush uploaded mutable textures.
     TextureUpload mTextureUpload;
