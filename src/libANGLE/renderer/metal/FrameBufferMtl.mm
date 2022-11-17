@@ -1048,8 +1048,6 @@ angle::Result FramebufferMtl::getReadableViewForRenderTarget(
 angle::Result FramebufferMtl::prepareRenderPass(const gl::Context *context,
                                                 mtl::RenderPassDesc *pDescOut)
 {
-    const gl::DrawBufferMask enabledDrawBuffers = getState().getEnabledDrawBuffers();
-
     mtl::RenderPassDesc &desc = *pDescOut;
 
     mRenderPassFirstColorAttachmentFormat = nullptr;
@@ -1064,10 +1062,7 @@ angle::Result FramebufferMtl::prepareRenderPass(const gl::Context *context,
         mtl::RenderPassColorAttachmentDesc &colorAttachment = desc.colorAttachments[colorIndexGL];
         const RenderTargetMtl *colorRenderTarget            = mColorRenderTargets[colorIndexGL];
 
-        // Pipeline color attachment descriptors for disabled attachments do not have valid pixel
-        // formats. To prevent Metal from mapping color outputs to wrong render pass color
-        // attachments, assign textures only to enabled color attachments.
-        if (colorRenderTarget && enabledDrawBuffers.test(colorIndexGL))
+        if (colorRenderTarget)
         {
             colorRenderTarget->toRenderPassAttachmentDesc(&colorAttachment);
 
