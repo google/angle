@@ -709,7 +709,7 @@ angle::Result ProgramExecutableVk::warmUpPipelineCache(ContextVk *contextVk,
 
     // No synchronization necessary when accessing the program executable's cache as there is no
     // access to it from other threads at this point.
-    PipelineCacheAccess pipelineCache;
+    vk::PipelineCacheAccess pipelineCache;
     pipelineCache.init(&mPipelineCache, nullptr);
 
     // Create a set of pipelines.  Ideally, that would be the entire set of possible pipelines so
@@ -1099,7 +1099,7 @@ angle::Result ProgramExecutableVk::createGraphicsPipelineImpl(
     ContextVk *contextVk,
     ProgramTransformOptions transformOptions,
     vk::GraphicsPipelineSubset pipelineSubset,
-    PipelineCacheAccess *pipelineCache,
+    vk::PipelineCacheAccess *pipelineCache,
     PipelineSource source,
     const vk::GraphicsPipelineDesc &desc,
     const gl::ProgramExecutable &glExecutable,
@@ -1180,7 +1180,7 @@ angle::Result ProgramExecutableVk::getGraphicsPipeline(ContextVk *contextVk,
 angle::Result ProgramExecutableVk::createGraphicsPipeline(
     ContextVk *contextVk,
     vk::GraphicsPipelineSubset pipelineSubset,
-    PipelineCacheAccess *pipelineCache,
+    vk::PipelineCacheAccess *pipelineCache,
     PipelineSource source,
     const vk::GraphicsPipelineDesc &desc,
     const gl::ProgramExecutable &glExecutable,
@@ -1191,7 +1191,7 @@ angle::Result ProgramExecutableVk::createGraphicsPipeline(
 
     // When creating monolithic pipelines, the renderer's pipeline cache is used as passed in.
     // When creating the shaders subset of pipelines, the program's own pipeline cache is used.
-    PipelineCacheAccess perProgramPipelineCache;
+    vk::PipelineCacheAccess perProgramPipelineCache;
     const bool useProgramPipelineCache = pipelineSubset == vk::GraphicsPipelineSubset::Shaders;
     if (useProgramPipelineCache)
     {
@@ -1213,7 +1213,7 @@ angle::Result ProgramExecutableVk::createGraphicsPipeline(
 
 angle::Result ProgramExecutableVk::linkGraphicsPipelineLibraries(
     ContextVk *contextVk,
-    PipelineCacheAccess *pipelineCache,
+    vk::PipelineCacheAccess *pipelineCache,
     const vk::GraphicsPipelineDesc &desc,
     const gl::ProgramExecutable &glExecutable,
     const vk::PipelineHelper &vertexInputPipeline,
@@ -1234,7 +1234,7 @@ angle::Result ProgramExecutableVk::linkGraphicsPipelineLibraries(
 
 angle::Result ProgramExecutableVk::getOrCreateComputePipeline(
     ContextVk *contextVk,
-    PipelineCacheAccess *pipelineCache,
+    vk::PipelineCacheAccess *pipelineCache,
     PipelineSource source,
     const gl::ProgramExecutable &glExecutable,
     vk::PipelineHelper **pipelineOut)

@@ -4169,7 +4169,7 @@ angle::Result RendererVk::initPipelineCache(DisplayVk *display,
     return angle::Result::Continue;
 }
 
-angle::Result RendererVk::getPipelineCache(PipelineCacheAccess *pipelineCacheOut)
+angle::Result RendererVk::getPipelineCache(vk::PipelineCacheAccess *pipelineCacheOut)
 {
     DisplayVk *displayVk = vk::GetImpl(mDisplay);
 
@@ -4200,7 +4200,7 @@ angle::Result RendererVk::getPipelineCache(PipelineCacheAccess *pipelineCacheOut
 
 angle::Result RendererVk::mergeIntoPipelineCache(const vk::PipelineCache &pipelineCache)
 {
-    PipelineCacheAccess globalCache;
+    vk::PipelineCacheAccess globalCache;
     ANGLE_TRY(getPipelineCache(&globalCache));
 
     globalCache.merge(this, pipelineCache);

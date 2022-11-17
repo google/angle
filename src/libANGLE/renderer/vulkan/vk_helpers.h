@@ -3019,11 +3019,11 @@ class ShaderProgramHelper : angle::NonCopyable
         ContextVk *contextVk,
         GraphicsPipelineCache<PipelineHash> *graphicsPipelines,
         PipelineCacheAccess *pipelineCache,
-        const vk::RenderPass &compatibleRenderPass,
+        const RenderPass &compatibleRenderPass,
         const PipelineLayout &pipelineLayout,
         PipelineSource source,
         const GraphicsPipelineDesc &pipelineDesc,
-        const vk::SpecializationConstants &specConsts,
+        const SpecializationConstants &specConsts,
         const GraphicsPipelineDesc **descPtrOut,
         PipelineHelper **pipelineOut) const
     {

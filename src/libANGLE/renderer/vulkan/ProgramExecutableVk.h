@@ -139,7 +139,7 @@ class ProgramExecutableVk
 
     angle::Result createGraphicsPipeline(ContextVk *contextVk,
                                          vk::GraphicsPipelineSubset pipelineSubset,
-                                         PipelineCacheAccess *pipelineCache,
+                                         vk::PipelineCacheAccess *pipelineCache,
                                          PipelineSource source,
                                          const vk::GraphicsPipelineDesc &desc,
                                          const gl::ProgramExecutable &glExecutable,
@@ -147,7 +147,7 @@ class ProgramExecutableVk
                                          vk::PipelineHelper **pipelineOut);
 
     angle::Result linkGraphicsPipelineLibraries(ContextVk *contextVk,
-                                                PipelineCacheAccess *pipelineCache,
+                                                vk::PipelineCacheAccess *pipelineCache,
                                                 const vk::GraphicsPipelineDesc &desc,
                                                 const gl::ProgramExecutable &glExecutable,
                                                 const vk::PipelineHelper &vertexInputPipeline,
@@ -157,7 +157,7 @@ class ProgramExecutableVk
                                                 vk::PipelineHelper **pipelineOut);
 
     angle::Result getOrCreateComputePipeline(ContextVk *contextVk,
-                                             PipelineCacheAccess *pipelineCache,
+                                             vk::PipelineCacheAccess *pipelineCache,
                                              PipelineSource source,
                                              const gl::ProgramExecutable &glExecutable,
                                              vk::PipelineHelper **pipelineOut);
@@ -330,7 +330,7 @@ class ProgramExecutableVk
     angle::Result createGraphicsPipelineImpl(ContextVk *contextVk,
                                              ProgramTransformOptions transformOptions,
                                              vk::GraphicsPipelineSubset pipelineSubset,
-                                             PipelineCacheAccess *pipelineCache,
+                                             vk::PipelineCacheAccess *pipelineCache,
                                              PipelineSource source,
                                              const vk::GraphicsPipelineDesc &desc,
                                              const gl::ProgramExecutable &glExecutable,

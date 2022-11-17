@@ -384,7 +384,7 @@ class RendererVk : angle::NonCopyable
         }
     }
 
-    angle::Result getPipelineCache(PipelineCacheAccess *pipelineCacheOut);
+    angle::Result getPipelineCache(vk::PipelineCacheAccess *pipelineCacheOut);
     angle::Result mergeIntoPipelineCache(const vk::PipelineCache &pipelineCache);
 
     void onNewValidationMessage(const std::string &message);

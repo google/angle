@@ -1624,7 +1624,7 @@ angle::Result UtilsVk::setupComputeProgram(
     }
 
     vk::PipelineHelper *pipeline;
-    PipelineCacheAccess pipelineCache;
+    vk::PipelineCacheAccess pipelineCache;
     ANGLE_TRY(renderer->getPipelineCache(&pipelineCache));
     ANGLE_TRY(programAndPipelines->program.getOrCreateComputePipeline(
         contextVk, &programAndPipelines->pipelines, &pipelineCache, pipelineLayout.get(),
@@ -1680,7 +1680,7 @@ angle::Result UtilsVk::setupGraphicsProgram(ContextVk *contextVk,
     }
 
     // This value is not used but is passed to getGraphicsPipeline to avoid a nullptr check.
-    PipelineCacheAccess pipelineCache;
+    vk::PipelineCacheAccess pipelineCache;
     ANGLE_TRY(renderer->getPipelineCache(&pipelineCache));
 
     // Pull in a compatible RenderPass.

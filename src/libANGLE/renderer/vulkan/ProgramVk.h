@@ -142,7 +142,7 @@ class ProgramVk : public ProgramImpl
     void linkResources(const gl::Context *context, const gl::ProgramLinkedResources &resources);
 
     angle::Result createGraphicsPipelineWithDefaultState(const gl::Context *context,
-                                                         PipelineCacheAccess *pipelineCache);
+                                                         vk::PipelineCacheAccess *pipelineCache);
 
     // We keep the SPIR-V code to use for draw call pipeline creation.
     GlslangProgramInterfaceInfo mGlslangProgramInterfaceInfo;
