@@ -7724,6 +7724,10 @@ void FrameCaptureShared::runMidExecutionCapture(gl::Context *mainContext)
 
     scanSetupCalls(mShareGroupSetupCalls);
 
+    egl::Display *display = mainContext->getDisplay();
+    egl::Surface *draw    = mainContext->getCurrentDrawSurface();
+    egl::Surface *read    = mainContext->getCurrentReadSurface();
+
     for (gl::Context *shareContext : shareGroup->getContexts())
     {
         FrameCapture *frameCapture = shareContext->getFrameCapture();
@@ -7748,6 +7752,12 @@ void FrameCaptureShared::runMidExecutionCapture(gl::Context *mainContext)
                 shareContextState.hasRobustAccess(), shareContextState.hasProtectedContent());
             auxContextReplayState.initializeForCapture(shareContext);
 
+            egl::Error error = shareContext->makeCurrent(display, draw, read);
+            if (error.isError())
+            {
+                INFO() << "MEC unable to make secondary context current";
+            }
+
             CaptureMidExecutionSetup(shareContext, &frameCapture->getSetupCalls(),
                                      frameCapture->getStateResetHelper().getResetCalls(),
                                      &mShareGroupSetupCalls, &mResourceIDToSetupCalls,
@@ -7760,6 +7770,12 @@ void FrameCaptureShared::runMidExecutionCapture(gl::Context *mainContext)
                 mReplayWriter, mCompression, mOutDirectory, shareContext, mCaptureLabel, 1,
                 frameCapture->getSetupCalls(), &mBinaryData, mSerializeStateEnabled, *this);
         }
+    }
+
+    egl::Error error = mainContext->makeCurrent(display, draw, read);
+    if (error.isError())
+    {
+        INFO() << "MEC unable to make main context current again";
     }
 }
 
