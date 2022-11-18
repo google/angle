@@ -55,12 +55,6 @@ enum class GraphicsEventCmdBuf
     EnumCount   = 3,
 };
 
-enum class QueueSubmitType
-{
-    PerformQueueSubmit,
-    SkipQueueSubmit,
-};
-
 class UpdateDescriptorSetsBuilder final : angle::NonCopyable
 {
   public:
@@ -658,8 +652,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
                                   bool *renderPassDescChangedOut);
     angle::Result startNextSubpass();
     angle::Result flushCommandsAndEndRenderPass(RenderPassClosureReason reason);
-    angle::Result flushCommandsAndEndRenderPassWithoutQueueSubmit(RenderPassClosureReason reason);
-    angle::Result submitOutsideRenderPassCommandsImpl();
+    angle::Result flushCommandsAndEndRenderPassWithoutSubmit(RenderPassClosureReason reason);
+    angle::Result flushAndSubmitOutsideRenderPassCommands();
 
     angle::Result syncExternalMemory();
 
@@ -1208,10 +1202,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         AllCommands,
     };
 
-    angle::Result submitFrame(const vk::Semaphore *signalSemaphore,
-                              Submit submission,
-                              QueueSerial *submitSerialOut);
-    angle::Result submitFrameOutsideCommandBufferOnly(QueueSerial *submitSerialOut);
     angle::Result submitCommands(const vk::Semaphore *signalSemaphore,
                                  Submit submission,
                                  QueueSerial *submitSerialOut);
@@ -1231,8 +1221,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     // flushCommandsAndEndRenderPass() and flushDirtyGraphicsRenderPass() will set the dirty bits
     // directly or through the iterator respectively.  Outside those two functions, this shouldn't
     // be called directly.
-    angle::Result flushCommandsAndEndRenderPassImpl(QueueSubmitType queueSubmit,
-                                                    RenderPassClosureReason reason);
     angle::Result flushDirtyGraphicsRenderPass(DirtyBits::Iterator *dirtyBitsIterator,
                                                DirtyBits dirtyBitMask,
                                                RenderPassClosureReason reason);

@@ -3208,32 +3208,6 @@ void ContextVk::addOverlayUsedBuffersCount(vk::CommandBufferHelperCommon *comman
     }
 }
 
-angle::Result ContextVk::submitFrame(const vk::Semaphore *signalSemaphore,
-                                     Submit submission,
-                                     QueueSerial *submitSerialOut)
-{
-    getShareGroup()->acquireResourceUseList(
-        std::move(mOutsideRenderPassCommands->releaseResourceUseList()));
-    getShareGroup()->acquireResourceUseList(
-        std::move(mRenderPassCommands->releaseResourceUseList()));
-
-    ANGLE_TRY(submitCommands(signalSemaphore, submission, submitSerialOut));
-
-    mHasAnyCommandsPendingSubmission = false;
-
-    onRenderPassFinished(RenderPassClosureReason::AlreadySpecifiedElsewhere);
-    return angle::Result::Continue;
-}
-
-angle::Result ContextVk::submitFrameOutsideCommandBufferOnly(QueueSerial *submitSerialOut)
-{
-    ANGLE_TRACE_EVENT0("gpu.angle", "ContextVk::submitFrameOutsideCommandBufferOnly");
-    getShareGroup()->acquireResourceUseList(
-        std::move(mOutsideRenderPassCommands->releaseResourceUseList()));
-
-    return submitCommands(nullptr, Submit::OutsideRenderPassCommandsOnly, submitSerialOut);
-}
-
 angle::Result ContextVk::submitCommands(const vk::Semaphore *signalSemaphore,
                                         Submit submission,
                                         QueueSerial *submitSerialOut)
@@ -3292,7 +3266,7 @@ angle::Result ContextVk::onCopyUpdate(VkDeviceSize size)
     // If the copy size exceeds the specified threshold, submit the outside command buffer.
     if (mTotalBufferToImageCopySize >= kMaxBufferToImageCopySize)
     {
-        ANGLE_TRY(submitOutsideRenderPassCommandsImpl());
+        ANGLE_TRY(flushAndSubmitOutsideRenderPassCommands());
     }
     return angle::Result::Continue;
 }
@@ -6716,12 +6690,8 @@ angle::Result ContextVk::flushAndGetSerial(const vk::Semaphore *signalSemaphore,
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "ContextVk::flushImpl");
 
-    // We must set this to false before calling flushCommandsAndEndRenderPass to prevent it from
-    // calling back to flushImpl.
-    mHasDeferredFlush = false;
-
-    // Avoid calling vkQueueSubmit() twice, since submitFrame() below will do that.
-    ANGLE_TRY(flushCommandsAndEndRenderPassWithoutQueueSubmit(renderPassClosureReason));
+    // Avoid calling vkQueueSubmit() twice, since submitCommands() below will do that.
+    ANGLE_TRY(flushCommandsAndEndRenderPassWithoutSubmit(renderPassClosureReason));
 
     if (mIsAnyHostVisibleBufferWritten)
     {
@@ -6775,7 +6745,16 @@ angle::Result ContextVk::flushAndGetSerial(const vk::Semaphore *signalSemaphore,
         mHasInFlightStreamedVertexBuffers.reset();
     }
 
-    ANGLE_TRY(submitFrame(signalSemaphore, Submit::AllCommands, submitSerialOut));
+    getShareGroup()->acquireResourceUseList(
+        std::move(mOutsideRenderPassCommands->releaseResourceUseList()));
+    getShareGroup()->acquireResourceUseList(
+        std::move(mRenderPassCommands->releaseResourceUseList()));
+
+    ANGLE_TRY(submitCommands(signalSemaphore, Submit::AllCommands, submitSerialOut));
+
+    mHasAnyCommandsPendingSubmission = false;
+
+    onRenderPassFinished(RenderPassClosureReason::AlreadySpecifiedElsewhere);
 
     ASSERT(mWaitSemaphores.empty());
     ASSERT(mWaitSemaphoreStageMasks.empty());
@@ -6797,6 +6776,8 @@ angle::Result ContextVk::flushAndGetSerial(const vk::Semaphore *signalSemaphore,
         mShareGroupVk->pruneDefaultBufferPools(mRenderer);
     }
 
+    // Since we just flushed, deferred flush is no longer deferred.
+    mHasDeferredFlush = false;
     return angle::Result::Continue;
 }
 
@@ -7077,8 +7058,7 @@ uint32_t ContextVk::getCurrentViewCount() const
     return drawFBO->getRenderPassDesc().viewCount();
 }
 
-angle::Result ContextVk::flushCommandsAndEndRenderPassImpl(QueueSubmitType queueSubmit,
-                                                           RenderPassClosureReason reason)
+angle::Result ContextVk::flushCommandsAndEndRenderPassWithoutSubmit(RenderPassClosureReason reason)
 {
     // Ensure we flush the RenderPass *after* the prior commands.
     ANGLE_TRY(flushOutsideRenderPassCommands());
@@ -7139,25 +7119,19 @@ angle::Result ContextVk::flushCommandsAndEndRenderPassImpl(QueueSubmitType queue
     }
 
     mHasAnyCommandsPendingSubmission = true;
-
-    if (mHasDeferredFlush && queueSubmit == QueueSubmitType::PerformQueueSubmit)
-    {
-        // If we have deferred glFlush call in the middle of renderpass, flush them now.
-        ANGLE_TRY(flushImpl(nullptr, RenderPassClosureReason::AlreadySpecifiedElsewhere));
-    }
-
     return angle::Result::Continue;
 }
 
 angle::Result ContextVk::flushCommandsAndEndRenderPass(RenderPassClosureReason reason)
 {
-    return flushCommandsAndEndRenderPassImpl(QueueSubmitType::PerformQueueSubmit, reason);
-}
+    ANGLE_TRY(flushCommandsAndEndRenderPassWithoutSubmit(reason));
 
-angle::Result ContextVk::flushCommandsAndEndRenderPassWithoutQueueSubmit(
-    RenderPassClosureReason reason)
-{
-    return flushCommandsAndEndRenderPassImpl(QueueSubmitType::SkipQueueSubmit, reason);
+    if (mHasDeferredFlush)
+    {
+        // If we have deferred glFlush call in the middle of renderpass, flush them now.
+        ANGLE_TRY(flushImpl(nullptr, RenderPassClosureReason::AlreadySpecifiedElsewhere));
+    }
+    return angle::Result::Continue;
 }
 
 angle::Result ContextVk::flushDirtyGraphicsRenderPass(DirtyBits::Iterator *dirtyBitsIterator,
@@ -7166,7 +7140,7 @@ angle::Result ContextVk::flushDirtyGraphicsRenderPass(DirtyBits::Iterator *dirty
 {
     ASSERT(mRenderPassCommands->started());
 
-    ANGLE_TRY(flushCommandsAndEndRenderPassImpl(QueueSubmitType::PerformQueueSubmit, reason));
+    ANGLE_TRY(flushCommandsAndEndRenderPass(reason));
 
     // Set dirty bits that need processing on new render pass on the dirty bits iterator that's
     // being processed right now.
@@ -7247,7 +7221,8 @@ angle::Result ContextVk::flushCommandsAndEndRenderPassIfDeferredSyncInit(
         return angle::Result::Continue;
     }
 
-    return flushCommandsAndEndRenderPassImpl(QueueSubmitType::PerformQueueSubmit, reason);
+    // If we have deferred glFlush call in the middle of renderpass, flush them now.
+    return flushCommandsAndEndRenderPass(reason);
 }
 
 void ContextVk::addCommandBufferDiagnostics(const std::string &commandBufferDiagnostics)
@@ -7331,13 +7306,16 @@ uint32_t ContextVk::getDriverUniformSize(PipelineType pipelineType) const
     }
 }
 
-angle::Result ContextVk::submitOutsideRenderPassCommandsImpl()
+angle::Result ContextVk::flushAndSubmitOutsideRenderPassCommands()
 {
-    ANGLE_TRACE_EVENT0("gpu.angle", "ContextVk::submitOutsideRenderPassCommandsImpl");
+    ANGLE_TRACE_EVENT0("gpu.angle", "ContextVk::flushAndSubmitOutsideRenderPassCommands");
     ANGLE_TRY(flushOutsideRenderPassCommands());
+
+    getShareGroup()->acquireResourceUseList(
+        std::move(mOutsideRenderPassCommands->releaseResourceUseList()));
+
     QueueSerial unusedSerial;
-    ANGLE_TRY(submitFrameOutsideCommandBufferOnly(&unusedSerial));
-    return angle::Result::Continue;
+    return submitCommands(nullptr, Submit::OutsideRenderPassCommandsOnly, &unusedSerial);
 }
 
 angle::Result ContextVk::flushOutsideRenderPassCommands()

@@ -1203,7 +1203,7 @@ angle::Result CommandQueue::submitCommands(
             submitInfo.pNext                    = &protectedSubmitInfo;
         }
 
-        ANGLE_TRACE_EVENT0("gpu.angle", "CommandQueue::submitFrame");
+        ANGLE_TRACE_EVENT0("gpu.angle", "CommandQueue::submitCommands");
 
         ANGLE_TRY(mFenceRecycler.newSharedFence(context, &batch.fence));
         ANGLE_TRY(
