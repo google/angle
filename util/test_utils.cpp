@@ -50,7 +50,7 @@ const char *GetSingleArg(const char *flag,
             return ptr + 1;
         }
 
-        if (argIndex < *argc - 1)
+        if (*ptr == '\0' && argIndex < *argc - 1)
         {
             ptr = argv[argIndex + 1];
             if (handling == ArgHandling::Delete)
