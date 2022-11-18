@@ -299,7 +299,6 @@ class CommandQueueInterface : angle::NonCopyable
                                             const ResourceUse &use,
                                             uint64_t timeout)          = 0;
     virtual angle::Result waitIdle(Context *context, uint64_t timeout) = 0;
-    virtual QueueSerial reserveSubmitSerial()                          = 0;
     virtual angle::Result submitCommands(
         Context *context,
         bool hasProtectedContent,
@@ -370,8 +369,6 @@ class CommandQueue final : public CommandQueueInterface
                                     uint64_t timeout) override;
     angle::Result waitIdle(Context *context, uint64_t timeout) override;
 
-    QueueSerial reserveSubmitSerial() override;
-
     angle::Result submitCommands(Context *context,
                                  bool hasProtectedContent,
                                  egl::ContextPriority priority,
@@ -440,6 +437,7 @@ class CommandQueue final : public CommandQueueInterface
     bool useInRunningCommands(const ResourceUse &use) const;
     // The ResourceUse still have queue serial not yet submitted to vulkan.
     bool hasUnsubmittedUse(const ResourceUse &use) const;
+    Serial getLastSubmittedSerial(SerialIndex index) const { return mLastSubmittedSerials[index]; }
 
   private:
     void releaseToCommandBatch(bool hasProtectedContent,
@@ -447,8 +445,14 @@ class CommandQueue final : public CommandQueueInterface
                                SecondaryCommandPools *commandPools,
                                CommandBatch *batch);
     angle::Result retireFinishedCommands(Context *context, size_t finishedCount);
+    angle::Result retireFinishedCommandsAndCleanupGarbage(Context *context, size_t finishedCount);
     angle::Result ensurePrimaryCommandBufferValid(Context *context, bool hasProtectedContent);
 
+    size_t getBatchCountUpToSerials(RendererVk *renderer,
+                                    const Serials &serials,
+                                    Shared<Fence> **fenceToWaitOnOut);
+
+    // For validation only. Should only be called with ASSERT macro.
     bool allInFlightCommandsAreAfterSerials(const Serials &serials);
 
     PrimaryCommandBuffer &getCommandBuffer(bool hasProtectedContent)
@@ -486,9 +490,7 @@ class CommandQueue final : public CommandQueueInterface
     PersistentCommandPool mProtectedPrimaryCommandPool;
 
     // Queue serial management.
-    AtomicSerialFactory mQueueSerialFactory;
     AtomicQueueSerialFixedArray mLastSubmittedSerials;
-    Serial mCurrentQueueSerial;
     // This queue serial can be read/write from different threads, so we need to use atomic
     // operations to access the underline value. Since we only do load/store on this value, it
     // should be just a normal uint64_t load/store on most platforms.
@@ -536,8 +538,6 @@ class CommandProcessor final : public Context, public CommandQueueInterface
                                     uint64_t timeout) override;
 
     angle::Result waitIdle(Context *context, uint64_t timeout) override;
-
-    QueueSerial reserveSubmitSerial() override;
 
     angle::Result submitCommands(Context *context,
                                  bool hasProtectedContent,
@@ -609,6 +609,7 @@ class CommandProcessor final : public Context, public CommandQueueInterface
     }
 
     bool hasUnsubmittedUse(const ResourceUse &use) const;
+    Serial getLastSubmittedSerial(SerialIndex index) const { return mLastSubmittedSerials[index]; }
 
   private:
     bool hasPendingError() const

@@ -57,12 +57,6 @@ class ShareGroupVk : public ShareGroupImpl
         return mMetaDescriptorPools[descriptorSetIndex];
     }
 
-    void releaseResourceUseLists(const QueueSerial &submitSerial);
-    void acquireResourceUseList(vk::ResourceUseList &&resourceUseList)
-    {
-        mResourceUseLists.emplace_back(std::move(resourceUseList));
-    }
-
     // Used to flush the mutable textures more often.
     angle::Result onMutableTextureUpload(ContextVk *contextVk, TextureVk *newTexture);
 
@@ -97,10 +91,6 @@ class ShareGroupVk : public ShareGroupImpl
 
     // The list of contexts within the share group
     ContextVkSet mContexts;
-
-    // List of resources currently used that need to be freed when any ContextVk in this
-    // ShareGroupVk submits the next command.
-    std::vector<vk::ResourceUseList> mResourceUseLists;
 
     // The per shared group buffer pools that all buffers should sub-allocate from.
     vk::BufferPoolPointerArray mDefaultBufferPools;

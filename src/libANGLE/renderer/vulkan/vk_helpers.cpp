@@ -1321,8 +1321,6 @@ void CommandBufferHelperCommon::resetImpl()
     mAllocator.push();
 
     mUsedBufferCount = 0;
-
-    ASSERT(mResourceUseList.empty());
 }
 
 void CommandBufferHelperCommon::bufferRead(ContextVk *contextVk,
@@ -1337,9 +1335,9 @@ void CommandBufferHelperCommon::bufferRead(ContextVk *contextVk,
     }
 
     ASSERT(!usesBufferForWrite(*buffer));
-    if (!buffer->usedByCommandBuffer(mID))
+    if (!buffer->usedByCommandBuffer(mQueueSerial))
     {
-        buffer->retainReadOnly(mID, &mResourceUseList);
+        buffer->retainReadOnly(mQueueSerial);
         mUsedBufferCount++;
     }
 }
@@ -1349,9 +1347,9 @@ void CommandBufferHelperCommon::bufferWrite(ContextVk *contextVk,
                                             PipelineStage writeStage,
                                             BufferHelper *buffer)
 {
-    if (!buffer->writtenByCommandBuffer(mID))
+    if (!buffer->writtenByCommandBuffer(mQueueSerial))
     {
-        buffer->retainReadWrite(mID, &mResourceUseList);
+        buffer->retainReadWrite(mQueueSerial);
         mUsedBufferCount++;
     }
 
@@ -1372,12 +1370,12 @@ void CommandBufferHelperCommon::bufferWrite(ContextVk *contextVk,
 
 bool CommandBufferHelperCommon::usesBuffer(const BufferHelper &buffer) const
 {
-    return buffer.usedByCommandBuffer(mID);
+    return buffer.usedByCommandBuffer(mQueueSerial);
 }
 
 bool CommandBufferHelperCommon::usesBufferForWrite(const BufferHelper &buffer) const
 {
-    return buffer.writtenByCommandBuffer(mID);
+    return buffer.writtenByCommandBuffer(mQueueSerial);
 }
 
 void CommandBufferHelperCommon::executeBarriers(const angle::FeaturesVk &features,
@@ -1464,33 +1462,19 @@ void CommandBufferHelperCommon::addCommandDiagnosticsCommon(std::ostringstream *
     *out << "\\l";
 }
 
-ResourceUseList &&CommandBufferHelperCommon::releaseResourceUseList()
-{
-    // Update the resource uses to indicate they're no longer used by the command buffer.
-    mResourceUseList.clearCommandBuffer(mID);
-    return std::move(mResourceUseList);
-}
-
 void CommandBufferHelperCommon::retainResource(Resource *resource)
 {
-    resource->retainCommands(mID, &mResourceUseList);
+    resource->retainCommands(mQueueSerial);
 }
 
 void CommandBufferHelperCommon::retainReadOnlyResource(ReadWriteResource *readWriteResource)
 {
-    readWriteResource->retainReadOnly(mID, &mResourceUseList);
+    readWriteResource->retainReadOnly(mQueueSerial);
 }
 
 void CommandBufferHelperCommon::retainReadWriteResource(ReadWriteResource *readWriteResource)
 {
-    readWriteResource->retainReadWrite(mID, &mResourceUseList);
-}
-
-CommandBufferID CommandBufferHelperCommon::releaseID()
-{
-    CommandBufferID id = mID;
-    mID.value          = 0;
-    return id;
+    readWriteResource->retainReadWrite(mQueueSerial);
 }
 
 // OutsideRenderPassCommandBufferHelper implementation.
@@ -1512,6 +1496,9 @@ angle::Result OutsideRenderPassCommandBufferHelper::initializeCommandBuffer(Cont
 
 angle::Result OutsideRenderPassCommandBufferHelper::reset(Context *context)
 {
+    // Since we may generate and flush multiple outside renderpass commands without submission, they
+    // will use the same queue serials. We do not reset queue serial until we submit to avoid false
+    // positive for barrier needs.
     resetImpl();
 
     // Reset and re-initialize the command buffer
@@ -1526,7 +1513,7 @@ void OutsideRenderPassCommandBufferHelper::imageRead(ContextVk *contextVk,
 {
     bool needLayoutTransition = false;
     imageReadImpl(contextVk, aspectFlags, imageLayout, image, &needLayoutTransition);
-    image->retainCommands(mID, &mResourceUseList);
+    image->retainCommands(mQueueSerial);
 }
 
 void OutsideRenderPassCommandBufferHelper::imageWrite(ContextVk *contextVk,
@@ -1636,6 +1623,9 @@ angle::Result RenderPassCommandBufferHelper::reset(Context *context)
     // Reset the image views used for imageless framebuffer (if any)
     std::fill(mImageViews.begin(), mImageViews.end(), VK_NULL_HANDLE);
 
+    // Invalidate the queue serial here. We will get a new queue serial when we begin renderpass.
+    mQueueSerial = QueueSerial();
+
     return initializeCommandBuffer(context);
 }
 
@@ -1696,9 +1686,9 @@ void RenderPassCommandBufferHelper::colorImagesDraw(gl::LevelIndex level,
 
 void RenderPassCommandBufferHelper::retainImage(ImageHelper *imageHelper)
 {
-    if (!imageHelper->usedByCommandBuffer(mID))
+    if (!imageHelper->usedByCommandBuffer(mQueueSerial))
     {
-        imageHelper->retainCommands(mID, &mResourceUseList);
+        imageHelper->retainCommands(mQueueSerial);
     }
 }
 
@@ -1714,7 +1704,7 @@ void RenderPassCommandBufferHelper::depthStencilImagesDraw(gl::LevelIndex level,
     // Because depthStencil buffer's read/write property can change while we build renderpass, we
     // defer the image layout changes until endRenderPass time or when images going away so that we
     // only insert layout change barrier once.
-    image->retainCommands(mID, &mResourceUseList);
+    image->retainCommands(mQueueSerial);
 
     mDepthAttachment.init(image, level, layerStart, layerCount, VK_IMAGE_ASPECT_DEPTH_BIT);
     mStencilAttachment.init(image, level, layerStart, layerCount, VK_IMAGE_ASPECT_STENCIL_BIT);
@@ -1724,7 +1714,7 @@ void RenderPassCommandBufferHelper::depthStencilImagesDraw(gl::LevelIndex level,
         // Note that the resolve depth/stencil image has the same level/layer index as the
         // depth/stencil image as currently it can only ever come from
         // multisampled-render-to-texture renderbuffers.
-        resolveImage->retainCommands(mID, &mResourceUseList);
+        resolveImage->retainCommands(mQueueSerial);
 
         mDepthResolveAttachment.init(resolveImage, level, layerStart, layerCount,
                                      VK_IMAGE_ASPECT_DEPTH_BIT);
@@ -2097,6 +2087,7 @@ angle::Result RenderPassCommandBufferHelper::beginRenderPass(
     const PackedAttachmentIndex depthStencilAttachmentIndex,
     const PackedClearValuesArray &clearValues,
     const RenderPassSerial renderPassSerial,
+    const QueueSerial &queueSerial,
     RenderPassCommandBuffer **commandBufferOut)
 {
     ASSERT(!mRenderPassStarted);
@@ -2109,6 +2100,7 @@ angle::Result RenderPassCommandBufferHelper::beginRenderPass(
     mRenderArea                  = renderArea;
     mClearValues                 = clearValues;
     mRenderPassSerial            = renderPassSerial;
+    mQueueSerial                 = queueSerial;
     *commandBufferOut            = &getCommandBuffer();
 
     mRenderPassStarted = true;
@@ -2482,7 +2474,6 @@ template <typename CommandBufferT, typename CommandBufferHelperT>
 angle::Result CommandBufferRecycler<CommandBufferT, CommandBufferHelperT>::getCommandBufferHelper(
     Context *context,
     CommandPool *commandPool,
-    CommandBufferHandleAllocator *freeCommandBuffers,
     CommandBufferHelperT **commandBufferHelperOut)
 {
     if (mCommandBufferHelperFreeList.empty())
@@ -2498,35 +2489,25 @@ angle::Result CommandBufferRecycler<CommandBufferT, CommandBufferHelperT>::getCo
         *commandBufferHelperOut = commandBuffer;
     }
 
-    GLuint handle = freeCommandBuffers->allocate();
-    (*commandBufferHelperOut)->assignID({handle});
     return angle::Result::Continue;
 }
 
 template angle::Result
 CommandBufferRecycler<OutsideRenderPassCommandBuffer, OutsideRenderPassCommandBufferHelper>::
-    getCommandBufferHelper(Context *,
-                           CommandPool *,
-                           CommandBufferHandleAllocator *,
-                           OutsideRenderPassCommandBufferHelper **);
+    getCommandBufferHelper(Context *, CommandPool *, OutsideRenderPassCommandBufferHelper **);
 template angle::Result CommandBufferRecycler<
     RenderPassCommandBuffer,
     RenderPassCommandBufferHelper>::getCommandBufferHelper(Context *,
                                                            CommandPool *,
-                                                           CommandBufferHandleAllocator *,
                                                            RenderPassCommandBufferHelper **);
 
 template <typename CommandBufferT, typename CommandBufferHelperT>
 void CommandBufferRecycler<CommandBufferT, CommandBufferHelperT>::recycleCommandBufferHelper(
     VkDevice device,
-    CommandBufferHandleAllocator *freeCommandBuffers,
     CommandBufferHelperT **commandBuffer)
 {
     ASSERT((*commandBuffer)->empty());
     (*commandBuffer)->markOpen();
-
-    GLuint handle = (*commandBuffer)->releaseID().value;
-    freeCommandBuffers->release(handle);
 
     RecycleCommandBufferHelper(device, &mCommandBufferHelperFreeList, commandBuffer,
                                &(*commandBuffer)->getCommandBuffer());
@@ -2534,13 +2515,9 @@ void CommandBufferRecycler<CommandBufferT, CommandBufferHelperT>::recycleCommand
 
 template void
 CommandBufferRecycler<OutsideRenderPassCommandBuffer, OutsideRenderPassCommandBufferHelper>::
-    recycleCommandBufferHelper(VkDevice,
-                               CommandBufferHandleAllocator *,
-                               OutsideRenderPassCommandBufferHelper **);
+    recycleCommandBufferHelper(VkDevice, OutsideRenderPassCommandBufferHelper **);
 template void CommandBufferRecycler<RenderPassCommandBuffer, RenderPassCommandBufferHelper>::
-    recycleCommandBufferHelper(VkDevice,
-                               CommandBufferHandleAllocator *,
-                               RenderPassCommandBufferHelper **);
+    recycleCommandBufferHelper(VkDevice, RenderPassCommandBufferHelper **);
 
 template <typename CommandBufferT, typename CommandBufferHelperT>
 void CommandBufferRecycler<CommandBufferT, CommandBufferHelperT>::resetCommandBuffer(
@@ -2727,16 +2704,15 @@ void DynamicBuffer::release(RendererVk *renderer)
     }
 }
 
-void DynamicBuffer::releaseInFlightBuffersToResourceUseList(ContextVk *contextVk)
+void DynamicBuffer::updateQueueSerialAndReleaseInFlightBuffers(ContextVk *contextVk,
+                                                               const QueueSerial &queueSerial)
 {
-    ResourceUseList resourceUseList;
-
     for (std::unique_ptr<BufferHelper> &bufferHelper : mInFlightBuffers)
     {
         // This function is used only for internal buffers, and they are all read-only.
         // It's possible this may change in the future, but there isn't a good way to detect that,
         // unfortunately.
-        bufferHelper->retainReadOnlyOneOff(&resourceUseList);
+        bufferHelper->retainReadOnly(queueSerial);
 
         // We only keep free buffers that have the same size. Note that bufferHelper's size is
         // suballocation's size. We need to use the whole block memory size here.
@@ -2750,8 +2726,6 @@ void DynamicBuffer::releaseInFlightBuffersToResourceUseList(ContextVk *contextVk
         }
     }
     mInFlightBuffers.clear();
-
-    contextVk->getShareGroup()->acquireResourceUseList(std::move(resourceUseList));
 }
 
 void DynamicBuffer::destroy(RendererVk *renderer)
@@ -3226,8 +3200,8 @@ void DescriptorPoolHelper::release(RendererVk *renderer)
 
     GarbageList garbageList;
     garbageList.emplace_back(GetGarbage(&mDescriptorPool));
-    renderer->collectGarbage(std::move(mUse), std::move(garbageList));
-    mUse.init();
+    renderer->collectGarbage(mUse, std::move(garbageList));
+    mUse.reset();
 }
 
 bool DescriptorPoolHelper::allocateDescriptorSet(Context *context,
@@ -3605,9 +3579,11 @@ template <typename Pool>
 void DynamicallyGrowingPool<Pool>::onEntryFreed(ContextVk *contextVk, size_t poolIndex)
 {
     ASSERT(poolIndex < mPools.size() && mPools[poolIndex].freedCount < mPoolSize);
-    ResourceUseList resourceUseList;
-    mPools[poolIndex].retain(&resourceUseList);
-    contextVk->getShareGroup()->acquireResourceUseList(std::move(resourceUseList));
+    if (contextVk->getCurrentQueueSerialIndex() != kInvalidQueueSerialIndex)
+    {
+        mPools[poolIndex].retainCommands(
+            QueueSerial(contextVk->getCurrentQueueSerialIndex(), contextVk->getCurrentSerial()));
+    }
     ++mPools[poolIndex].freedCount;
 }
 
@@ -3785,8 +3761,7 @@ void QueryHelper::deinit()
     mQueryPoolIndex   = 0;
     mQuery            = 0;
     mQueryCount       = 0;
-    mUse.release();
-    mUse.init();
+    mUse.reset();
     mStatus = QueryStatus::Inactive;
 }
 
@@ -3921,7 +3896,7 @@ void QueryHelper::writeTimestamp(ContextVk *contextVk,
 
 bool QueryHelper::hasSubmittedCommands() const
 {
-    return mUse.getSerials().size() > 0;
+    return mUse.valid();
 }
 
 angle::Result QueryHelper::getUint64ResultNonBlocking(ContextVk *contextVk,
@@ -4640,10 +4615,10 @@ angle::Result BufferHelper::initializeNonZeroMemory(Context *context,
                                               vk::SubmitPolicy::AllowDeferred, &queueSerial));
 
         stagingBuffer.collectGarbage(renderer, queueSerial);
-        // Update both SharedResourceUse objects, since mReadOnlyUse tracks when the buffer can be
+        // Update both ResourceUse objects, since mReadOnlyUse tracks when the buffer can be
         // destroyed, and mReadWriteUse tracks when the write has completed.
-        mReadOnlyUse.updateSerialOneOff(queueSerial);
-        mReadWriteUse.updateSerialOneOff(queueSerial);
+        mReadOnlyUse.setQueueSerial(queueSerial);
+        mReadWriteUse.setQueueSerial(queueSerial);
     }
     else if (isHostVisible())
     {
@@ -4720,12 +4695,9 @@ void BufferHelper::release(RendererVk *renderer)
     {
         renderer->collectSuballocationGarbage(mReadOnlyUse, std::move(mSuballocation),
                                               std::move(mBufferForVertexArray));
-        if (isCurrentlyInUseForWrite(renderer))
-        {
-            mReadWriteUse.release();
-            mReadWriteUse.init();
-        }
     }
+    mReadOnlyUse.reset();
+    mReadWriteUse.reset();
     ASSERT(!mBufferForVertexArray.valid());
 }
 
@@ -5415,16 +5387,9 @@ void ImageHelper::collectViewGarbage(RendererVk *renderer, vk::ImageViewHelper *
     imageView->release(renderer, mImageAndViewGarbage);
     // If we do not have any ImageHelper::mUse retained in ResourceUseList, make a cloned copy of
     // ImageHelper::mUse and use it to free any garbage in mImageAndViewGarbage immediately.
-    if (!mUse.usedInRecordedCommands() && !mImageAndViewGarbage.empty())
+    if (!mImageAndViewGarbage.empty())
     {
-        // clone ImageHelper::mUse
-        rx::vk::SharedResourceUse clonedmUse;
-        clonedmUse.init();
-        if (mUse.getSerials().size() > 0)
-        {
-            clonedmUse.updateSerialOneOff(QueueSerial(0, mUse.getSerials()[0]));
-        }
-        renderer->collectGarbage(std::move(clonedmUse), std::move(mImageAndViewGarbage));
+        renderer->collectGarbage(mUse, std::move(mImageAndViewGarbage));
     }
     ASSERT(mImageAndViewGarbage.size() <= 1000);
 }
@@ -5460,13 +5425,9 @@ void ImageHelper::releaseImageAndViewGarbage(RendererVk *renderer)
 {
     if (!mImageAndViewGarbage.empty())
     {
-        renderer->collectGarbage(std::move(mUse), std::move(mImageAndViewGarbage));
+        renderer->collectGarbage(mUse, std::move(mImageAndViewGarbage));
     }
-    else
-    {
-        mUse.release();
-    }
-    mUse.init();
+    mUse.reset();
     mImageSerial = kInvalidImageSerial;
 }
 
@@ -5578,7 +5539,7 @@ angle::Result ImageHelper::initializeNonZeroMemory(Context *context,
     {
         stagingBuffer.collectGarbage(renderer, queueSerial);
     }
-    mUse.updateSerialOneOff(queueSerial);
+    mUse.setQueueSerial(queueSerial);
 
     return angle::Result::Continue;
 }
@@ -10126,17 +10087,13 @@ void BufferViewHelper::release(ContextVk *contextVk)
     if (!garbage.empty())
     {
         RendererVk *rendererVk = contextVk->getRenderer();
-        rendererVk->collectGarbage(std::move(mUse), std::move(garbage));
-
-        // Ensure the resource use is always valid.
-        mUse.init();
-
+        rendererVk->collectGarbage(mUse, std::move(garbage));
         // Update image view serial.
         mViewSerial = rendererVk->getResourceSerialFactory().generateImageOrBufferViewSerial();
     }
 
+    mUse.reset();
     mViews.clear();
-
     mOffset = 0;
     mSize   = 0;
 }

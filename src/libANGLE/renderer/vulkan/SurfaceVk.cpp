@@ -1742,8 +1742,7 @@ vk::Framebuffer &WindowSurfaceVk::chooseFramebuffer(const SwapchainResolveMode s
 }
 
 angle::Result WindowSurfaceVk::prePresentSubmit(ContextVk *contextVk,
-                                                const vk::Semaphore &presentSemaphore,
-                                                QueueSerial *swapSerial)
+                                                const vk::Semaphore &presentSemaphore)
 {
     RendererVk *renderer = contextVk->getRenderer();
 
@@ -1809,15 +1808,15 @@ angle::Result WindowSurfaceVk::prePresentSubmit(ContextVk *contextVk,
     // with other functionality, especially counters used to validate said functionality.
     const bool shouldDrawOverlay = overlayHasEnabledWidget(contextVk);
 
-    ANGLE_TRY(contextVk->flushAndGetSerial(shouldDrawOverlay ? nullptr : &presentSemaphore,
-                                           swapSerial, RenderPassClosureReason::EGLSwapBuffers));
+    ANGLE_TRY(contextVk->flushImpl(shouldDrawOverlay ? nullptr : &presentSemaphore,
+                                   RenderPassClosureReason::EGLSwapBuffers));
 
     if (shouldDrawOverlay)
     {
         updateOverlay(contextVk);
         ANGLE_TRY(drawOverlay(contextVk, &image));
-        ANGLE_TRY(contextVk->flushAndGetSerial(&presentSemaphore, swapSerial,
-                                               RenderPassClosureReason::AlreadySpecifiedElsewhere));
+        ANGLE_TRY(contextVk->flushImpl(&presentSemaphore,
+                                       RenderPassClosureReason::AlreadySpecifiedElsewhere));
     }
 
     return angle::Result::Continue;
@@ -1838,8 +1837,7 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
 
     // Make a submission before present to flush whatever's pending.  In the very least, a
     // submission is necessary to make sure the present semaphore is signaled.
-    QueueSerial swapSerial;
-    ANGLE_TRY(prePresentSubmit(contextVk, presentSemaphore, &swapSerial));
+    ANGLE_TRY(prePresentSubmit(contextVk, presentSemaphore));
 
     VkPresentInfoKHR presentInfo   = {};
     presentInfo.sType              = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
@@ -1897,6 +1895,9 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
 
     ANGLE_TRY(computePresentOutOfDate(contextVk, result, presentOutOfDate));
 
+    // Now update swapSerial With last submitted queue serial and apply CPU throttle if needed
+    QueueSerial swapSerial =
+        QueueSerial(contextVk->getCurrentQueueSerialIndex(), contextVk->getLastSubmittedSerial());
     ANGLE_TRY(throttleCPU(contextVk, swapSerial));
 
     contextVk->resetPerFramePerfCounters();

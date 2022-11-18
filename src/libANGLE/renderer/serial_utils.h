@@ -75,6 +75,7 @@ class Serial final
   private:
     template <typename T>
     friend class SerialFactoryBase;
+    friend class RangedSerialFactory;
     friend class AtomicQueueSerial;
     constexpr explicit Serial(uint64_t value) : mValue(value) {}
     uint64_t mValue;
@@ -101,6 +102,39 @@ class AtomicQueueSerial final
 // Used as default/initial serial
 static constexpr Serial kZeroSerial = Serial();
 
+// The factory to generate a serial number within the range [mSerial, mSerial+mCount}
+class RangedSerialFactory final : angle::NonCopyable
+{
+  public:
+    RangedSerialFactory() : mSerial(0), mCount(0) {}
+
+    void reset() { mCount = 0; }
+    bool empty() const { return mCount == 0; }
+    bool generate(Serial *serialOut)
+    {
+        if (mCount > 0)
+        {
+            uint64_t current = mSerial++;
+            ASSERT(mSerial > current);  // Integer overflow
+            *serialOut = Serial(current);
+            mCount--;
+            return true;
+        }
+        return false;
+    }
+
+  private:
+    template <typename T>
+    friend class SerialFactoryBase;
+    void initialize(uint64_t initialSerial, size_t count)
+    {
+        mSerial = initialSerial;
+        mCount  = count;
+    }
+    uint64_t mSerial;
+    size_t mCount;
+};
+
 template <typename SerialBaseType>
 class SerialFactoryBase final : angle::NonCopyable
 {
@@ -112,6 +146,14 @@ class SerialFactoryBase final : angle::NonCopyable
         uint64_t current = mSerial++;
         ASSERT(mSerial > current);  // Integer overflow
         return Serial(current);
+    }
+
+    void reserve(RangedSerialFactory *rangeFactory, size_t count)
+    {
+        uint64_t current = mSerial;
+        mSerial += count;
+        ASSERT(mSerial > current);  // Integer overflow
+        rangeFactory->initialize(current, count);
     }
 
   private:
@@ -127,8 +169,10 @@ using SerialIndex                                     = uint32_t;
 static constexpr SerialIndex kInvalidQueueSerialIndex = SerialIndex(-1);
 
 class QueueSerial;
-// For now we limit to only one queue serial
-constexpr size_t kMaxQueueSerialIndexCount = 1;
+// Because we release queue index when context becomes non-current, in order to use up all index
+// count, you will need to have 256 threads each has a context current. This is not a reasonable
+// usage case.
+constexpr size_t kMaxQueueSerialIndexCount = 256;
 // Fixed array of queue serials
 class AtomicQueueSerialFixedArray final
 {
@@ -136,6 +180,7 @@ class AtomicQueueSerialFixedArray final
     AtomicQueueSerialFixedArray()  = default;
     ~AtomicQueueSerialFixedArray() = default;
 
+    void setQueueSerial(SerialIndex index, Serial serial);
     void setQueueSerial(const QueueSerial &queueSerial);
     void fill(Serial serial) { std::fill(mSerials.begin(), mSerials.end(), serial); }
     Serial operator[](SerialIndex index) const { return mSerials[index].getSerial(); }
@@ -152,7 +197,6 @@ class QueueSerial final
     QueueSerial(SerialIndex index, Serial serial) : mIndex(index), mSerial(serial)
     {
         ASSERT(index != kInvalidQueueSerialIndex);
-        ASSERT(serial.valid());
     }
     constexpr QueueSerial(const QueueSerial &other)  = default;
     QueueSerial &operator=(const QueueSerial &other) = default;
@@ -185,13 +229,18 @@ class QueueSerial final
     Serial mSerial;
 };
 
+ANGLE_INLINE void AtomicQueueSerialFixedArray::setQueueSerial(SerialIndex index, Serial serial)
+{
+    ASSERT(index != kInvalidQueueSerialIndex);
+    ASSERT(index < mSerials.size());
+    // Serial can only increase
+    ASSERT(serial > mSerials[index].getSerial());
+    mSerials[index] = serial;
+}
+
 ANGLE_INLINE void AtomicQueueSerialFixedArray::setQueueSerial(const QueueSerial &queueSerial)
 {
-    ASSERT(queueSerial.getIndex() != kInvalidQueueSerialIndex);
-    ASSERT(queueSerial.getIndex() < mSerials.size());
-    // Serial can only increase
-    ASSERT(queueSerial.getSerial() > mSerials[queueSerial.getIndex()].getSerial());
-    mSerials[queueSerial.getIndex()] = queueSerial.getSerial();
+    setQueueSerial(queueSerial.getIndex(), queueSerial.getSerial());
 }
 }  // namespace rx
 

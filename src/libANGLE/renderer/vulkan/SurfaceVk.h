@@ -355,9 +355,7 @@ class WindowSurfaceVk : public SurfaceVk
     angle::Result computePresentOutOfDate(vk::Context *context,
                                           VkResult result,
                                           bool *presentOutOfDate);
-    angle::Result prePresentSubmit(ContextVk *contextVk,
-                                   const vk::Semaphore &presentSemaphore,
-                                   QueueSerial *swapSerial);
+    angle::Result prePresentSubmit(ContextVk *contextVk, const vk::Semaphore &presentSemaphore);
     angle::Result present(ContextVk *contextVk,
                           const EGLint *rects,
                           EGLint n_rects,

@@ -172,16 +172,14 @@ class SharedBufferSuballocationGarbage
   public:
     SharedBufferSuballocationGarbage() = default;
     SharedBufferSuballocationGarbage(SharedBufferSuballocationGarbage &&other)
-        : mLifetime(std::move(other.mLifetime)),
+        : mLifetime(other.mLifetime),
           mSuballocation(std::move(other.mSuballocation)),
           mBuffer(std::move(other.mBuffer))
     {}
-    SharedBufferSuballocationGarbage(SharedResourceUse &&use,
+    SharedBufferSuballocationGarbage(const ResourceUse &use,
                                      BufferSuballocation &&suballocation,
                                      Buffer &&buffer)
-        : mLifetime(std::move(use)),
-          mSuballocation(std::move(suballocation)),
-          mBuffer(std::move(buffer))
+        : mLifetime(use), mSuballocation(std::move(suballocation)), mBuffer(std::move(buffer))
     {}
     ~SharedBufferSuballocationGarbage() = default;
 
@@ -191,7 +189,7 @@ class SharedBufferSuballocationGarbage
     bool isSuballocated() const { return mSuballocation.isSuballocated(); }
 
   private:
-    SharedResourceUse mLifetime;
+    ResourceUse mLifetime;
     BufferSuballocation mSuballocation;
     Buffer mBuffer;
 };

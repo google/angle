@@ -388,7 +388,9 @@ VkImageAspectFlags GetFormatAspectFlags(const angle::Format &format)
 }
 
 // Context implementation.
-Context::Context(RendererVk *renderer) : mRenderer(renderer), mPerfCounters{} {}
+Context::Context(RendererVk *renderer)
+    : mRenderer(renderer), mPerfCounters{}, mCurrentQueueSerialIndex(kInvalidQueueSerialIndex)
+{}
 
 Context::~Context() {}
 
@@ -547,10 +549,8 @@ void StagingBuffer::collectGarbage(RendererVk *renderer, const QueueSerial &queu
     garbageList.emplace_back(GetGarbage(&mBuffer));
     garbageList.emplace_back(GetGarbage(&mAllocation));
 
-    SharedResourceUse sharedUse;
-    sharedUse.init();
-    sharedUse.updateSerialOneOff(queueSerial);
-    renderer->collectGarbage(std::move(sharedUse), std::move(garbageList));
+    ResourceUse use(queueSerial);
+    renderer->collectGarbage(use, std::move(garbageList));
 }
 
 angle::Result InitMappableAllocation(Context *context,
