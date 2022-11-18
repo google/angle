@@ -271,6 +271,7 @@ ANGLEPerfTest::ANGLEPerfTest(const std::string &name,
       mStory(story),
       mGPUTimeNs(0),
       mSkipTest(false),
+      mWarmupSteps(gWarmupSteps),
       mStepsToRun(std::max(gStepsPerTrial, gMaxStepsPerformed)),
       mTrialTimeLimitSeconds(gTrialTimeSeconds),
       mTrialNumStepsPerformed(0),
@@ -1008,7 +1009,7 @@ void ANGLERenderTest::SetUp()
 
     mTestTrialResults.reserve(gTestTrials);
 
-    if (mStepsToRun <= 0)
+    if (mStepsToRun <= 0 && mWarmupSteps <= 0)
     {
         calibrateStepsToRun();
     }
@@ -1016,12 +1017,12 @@ void ANGLERenderTest::SetUp()
     {
         if (gVerboseLogging)
         {
-            printf("Warmup: %d trials, %d steps per trial\n", gWarmupTrials, mStepsToRun);
+            printf("Warmup: %d trials, %d steps per trial\n", gWarmupTrials, mWarmupSteps);
         }
 
         for (int warmupTrial = 0; warmupTrial < gWarmupTrials; ++warmupTrial)
         {
-            runTrial(mTrialTimeLimitSeconds, mStepsToRun, RunTrialPolicy::RunContinuously);
+            runTrial(mTrialTimeLimitSeconds, mWarmupSteps, RunTrialPolicy::RunContinuously);
             if (gVerboseLogging)
             {
                 printf("Warm-up trial took %.2lf seconds.\n",
