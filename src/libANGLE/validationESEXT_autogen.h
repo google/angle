@@ -332,7 +332,7 @@ bool ValidateMultiDrawElementsInstancedANGLE(const Context *context,
 // GL_ANGLE_provoking_vertex
 bool ValidateProvokingVertexANGLE(const Context *context,
                                   angle::EntryPoint entryPoint,
-                                  ProvokingVertexConvention modePacked);
+                                  ProvokingVertexConvention provokeModePacked);
 
 // GL_ANGLE_request_extension
 bool ValidateRequestExtensionANGLE(const Context *context,

@@ -6390,29 +6390,6 @@ bool ValidateMultiDrawElementsANGLE(const Context *context,
     return true;
 }
 
-bool ValidateProvokingVertexANGLE(const Context *context,
-                                  angle::EntryPoint entryPoint,
-                                  ProvokingVertexConvention modePacked)
-{
-    if (!context->getExtensions().provokingVertexANGLE)
-    {
-        context->validationError(entryPoint, GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
-
-    switch (modePacked)
-    {
-        case ProvokingVertexConvention::FirstVertexConvention:
-        case ProvokingVertexConvention::LastVertexConvention:
-            break;
-        default:
-            context->validationError(entryPoint, GL_INVALID_ENUM, kInvalidProvokingVertex);
-            return false;
-    }
-
-    return true;
-}
-
 bool ValidateFramebufferTexture2DMultisampleEXT(const Context *context,
                                                 angle::EntryPoint entryPoint,
                                                 GLenum target,

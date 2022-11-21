@@ -828,7 +828,7 @@
         </command>
         <command>
             <proto>void <name>glProvokingVertexANGLE</name></proto>
-            <param group="VertexProvokingMode"><ptype>GLenum</ptype> <name>mode</name></param>
+            <param group="VertexProvokingMode"><ptype>GLenum</ptype> <name>provokeMode</name></param>
             <alias name="glProvokingVertex"/>
         </command>
         <command>

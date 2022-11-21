@@ -3102,9 +3102,9 @@ void GL_APIENTRY glMultiDrawElementsInstancedANGLE(GLenum mode,
 // GL_ANGLE_program_binary
 
 // GL_ANGLE_provoking_vertex
-void GL_APIENTRY glProvokingVertexANGLE(GLenum mode)
+void GL_APIENTRY glProvokingVertexANGLE(GLenum provokeMode)
 {
-    return GL_ProvokingVertexANGLE(mode);
+    return GL_ProvokingVertexANGLE(provokeMode);
 }
 
 // GL_ANGLE_request_extension

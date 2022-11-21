@@ -1403,26 +1403,28 @@ void GL_APIENTRY GL_MultiDrawElementsInstancedANGLE(GLenum mode,
 // GL_ANGLE_program_binary
 
 // GL_ANGLE_provoking_vertex
-void GL_APIENTRY GL_ProvokingVertexANGLE(GLenum mode)
+void GL_APIENTRY GL_ProvokingVertexANGLE(GLenum provokeMode)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, GLProvokingVertexANGLE, "context = %d, mode = %s", CID(context),
-          GLenumToString(GLESEnum::VertexProvokingMode, mode));
+    EVENT(context, GLProvokingVertexANGLE, "context = %d, provokeMode = %s", CID(context),
+          GLenumToString(GLESEnum::VertexProvokingMode, provokeMode));
 
     if (context)
     {
-        ProvokingVertexConvention modePacked = PackParam<ProvokingVertexConvention>(mode);
+        ProvokingVertexConvention provokeModePacked =
+            PackParam<ProvokingVertexConvention>(provokeMode);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            (ValidatePixelLocalStorageInactive(
-                                 context, angle::EntryPoint::GLProvokingVertexANGLE) &&
-                             ValidateProvokingVertexANGLE(
-                                 context, angle::EntryPoint::GLProvokingVertexANGLE, modePacked)));
+        bool isCallValid =
+            (context->skipValidation() ||
+             (ValidatePixelLocalStorageInactive(context,
+                                                angle::EntryPoint::GLProvokingVertexANGLE) &&
+              ValidateProvokingVertexANGLE(context, angle::EntryPoint::GLProvokingVertexANGLE,
+                                           provokeModePacked)));
         if (isCallValid)
         {
-            context->provokingVertex(modePacked);
+            context->provokingVertex(provokeModePacked);
         }
-        ANGLE_CAPTURE_GL(ProvokingVertexANGLE, isCallValid, context, modePacked);
+        ANGLE_CAPTURE_GL(ProvokingVertexANGLE, isCallValid, context, provokeModePacked);
     }
     else
     {

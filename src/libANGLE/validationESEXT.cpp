@@ -927,6 +927,29 @@ bool ValidateIsEnablediOES(const Context *context,
     return ValidateIsEnabledi(context, entryPoint, target, index);
 }
 
+bool ValidateProvokingVertexANGLE(const Context *context,
+                                  angle::EntryPoint entryPoint,
+                                  ProvokingVertexConvention provokeModePacked)
+{
+    if (!context->getExtensions().provokingVertexANGLE)
+    {
+        context->validationError(entryPoint, GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    switch (provokeModePacked)
+    {
+        case ProvokingVertexConvention::FirstVertexConvention:
+        case ProvokingVertexConvention::LastVertexConvention:
+            break;
+        default:
+            context->validationError(entryPoint, GL_INVALID_ENUM, kInvalidProvokingVertex);
+            return false;
+    }
+
+    return true;
+}
+
 bool ValidateGetInteger64vEXT(const Context *context,
                               angle::EntryPoint entryPoint,
                               GLenum pname,

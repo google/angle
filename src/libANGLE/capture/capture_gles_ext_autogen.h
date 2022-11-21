@@ -333,7 +333,7 @@ angle::CallCapture CaptureMultiDrawElementsInstancedANGLE(const State &glState,
 // GL_ANGLE_provoking_vertex
 angle::CallCapture CaptureProvokingVertexANGLE(const State &glState,
                                                bool isCallValid,
-                                               ProvokingVertexConvention modePacked);
+                                               ProvokingVertexConvention provokeModePacked);
 
 // GL_ANGLE_request_extension
 angle::CallCapture CaptureRequestExtensionANGLE(const State &glState,

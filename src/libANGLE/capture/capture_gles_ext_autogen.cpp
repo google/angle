@@ -1501,11 +1501,12 @@ CallCapture CaptureMultiDrawElementsInstancedANGLE(const State &glState,
 
 CallCapture CaptureProvokingVertexANGLE(const State &glState,
                                         bool isCallValid,
-                                        ProvokingVertexConvention modePacked)
+                                        ProvokingVertexConvention provokeModePacked)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("modePacked", ParamType::TProvokingVertexConvention, modePacked);
+    paramBuffer.addValueParam("provokeModePacked", ParamType::TProvokingVertexConvention,
+                              provokeModePacked);
 
     return CallCapture(angle::EntryPoint::GLProvokingVertexANGLE, std::move(paramBuffer));
 }

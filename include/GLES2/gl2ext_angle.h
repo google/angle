@@ -42,7 +42,7 @@ GL_APICALL void GL_APIENTRY glDisableExtensionANGLE (const GLchar *name);
 #define GL_PROVOKING_VERTEX_ANGLE                    0x8E4F
 typedef void (GL_APIENTRYP PFNGLPROVOKINGVERTEXANGLEPROC) (GLenum);
 #ifdef GL_GLEXT_PROTOTYPES
-GL_APICALL void GL_APIENTRY glProvokingVertexANGLE(GLenum mode);
+GL_APICALL void GL_APIENTRY glProvokingVertexANGLE(GLenum provokeMode);
 #endif
 #endif /* GL_ANGLE_provoking_vertex */
 

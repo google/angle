@@ -1420,6 +1420,7 @@
         "location": "UniformLocation"
     },
     "glProvokingVertex": {
+        "provokeMode": "ProvokingVertexConvention",
         "mode": "ProvokingVertexConvention"
     },
     "glQueryCounter": {
