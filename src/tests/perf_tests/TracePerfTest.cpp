@@ -140,6 +140,12 @@ class TracePerfTest : public ANGLERenderTest
                                     const EGLint *attrib_list);
     EGLBoolean onEglDestroyImage(EGLDisplay display, EGLImage image);
     EGLBoolean onEglDestroyImageKHR(EGLDisplay display, EGLImage image);
+    EGLSync onEglCreateSync(EGLDisplay dpy, EGLenum type, const EGLAttrib *attrib_list);
+    EGLSync onEglCreateSyncKHR(EGLDisplay dpy, EGLenum type, const EGLint *attrib_list);
+    EGLBoolean onEglDestroySync(EGLDisplay dpy, EGLSync sync);
+    EGLBoolean onEglDestroySyncKHR(EGLDisplay dpy, EGLSync sync);
+    EGLint onEglClientWaitSync(EGLDisplay dpy, EGLSync sync, EGLint flags, EGLTimeKHR timeout);
+    EGLint onEglClientWaitSyncKHR(EGLDisplay dpy, EGLSync sync, EGLint flags, EGLTimeKHR timeout);
     EGLint onEglGetError();
 
     void onReplayFramebufferChange(GLenum target, GLuint framebuffer);
@@ -280,6 +286,41 @@ EGLBoolean KHRONOS_APIENTRY EglDestroyImage(EGLDisplay display, EGLImage image)
 EGLBoolean KHRONOS_APIENTRY EglDestroyImageKHR(EGLDisplay display, EGLImage image)
 {
     return gCurrentTracePerfTest->onEglDestroyImageKHR(display, image);
+}
+
+EGLSync KHRONOS_APIENTRY EglCreateSync(EGLDisplay dpy, EGLenum type, const EGLAttrib *attrib_list)
+{
+    return gCurrentTracePerfTest->onEglCreateSync(dpy, type, attrib_list);
+}
+
+EGLSync KHRONOS_APIENTRY EglCreateSyncKHR(EGLDisplay dpy, EGLenum type, const EGLint *attrib_list)
+{
+    return gCurrentTracePerfTest->onEglCreateSyncKHR(dpy, type, attrib_list);
+}
+
+EGLBoolean KHRONOS_APIENTRY EglDestroySync(EGLDisplay dpy, EGLSync sync)
+{
+    return gCurrentTracePerfTest->onEglDestroySync(dpy, sync);
+}
+
+EGLBoolean KHRONOS_APIENTRY EglDestroySyncKHR(EGLDisplay dpy, EGLSync sync)
+{
+    return gCurrentTracePerfTest->onEglDestroySyncKHR(dpy, sync);
+}
+
+EGLint KHRONOS_APIENTRY EglClientWaitSync(EGLDisplay dpy,
+                                          EGLSync sync,
+                                          EGLint flags,
+                                          EGLTimeKHR timeout)
+{
+    return gCurrentTracePerfTest->onEglClientWaitSync(dpy, sync, flags, timeout);
+}
+EGLint KHRONOS_APIENTRY EglClientWaitSyncKHR(EGLDisplay dpy,
+                                             EGLSync sync,
+                                             EGLint flags,
+                                             EGLTimeKHR timeout)
+{
+    return gCurrentTracePerfTest->onEglClientWaitSyncKHR(dpy, sync, flags, timeout);
 }
 
 EGLint KHRONOS_APIENTRY EglGetError()
@@ -598,6 +639,30 @@ angle::GenericProc KHRONOS_APIENTRY TraceLoadProc(const char *procName)
     if (strcmp(procName, "eglDestroyImageKHR") == 0)
     {
         return reinterpret_cast<angle::GenericProc>(EglDestroyImageKHR);
+    }
+    if (strcmp(procName, "eglCreateSync") == 0)
+    {
+        return reinterpret_cast<angle::GenericProc>(EglCreateSync);
+    }
+    if (strcmp(procName, "eglCreateSyncKHR") == 0)
+    {
+        return reinterpret_cast<angle::GenericProc>(EglCreateSyncKHR);
+    }
+    if (strcmp(procName, "eglDestroySync") == 0)
+    {
+        return reinterpret_cast<angle::GenericProc>(EglDestroySync);
+    }
+    if (strcmp(procName, "eglDestroySyncKHR") == 0)
+    {
+        return reinterpret_cast<angle::GenericProc>(EglDestroySyncKHR);
+    }
+    if (strcmp(procName, "eglClientWaitSync") == 0)
+    {
+        return reinterpret_cast<angle::GenericProc>(EglClientWaitSync);
+    }
+    if (strcmp(procName, "eglClientWaitSyncKHR") == 0)
+    {
+        return reinterpret_cast<angle::GenericProc>(EglClientWaitSyncKHR);
     }
     if (strcmp(procName, "eglGetError") == 0)
     {
@@ -1812,6 +1877,42 @@ EGLBoolean TracePerfTest::onEglDestroyImage(EGLDisplay display, EGLImage image)
 EGLBoolean TracePerfTest::onEglDestroyImageKHR(EGLDisplay display, EGLImage image)
 {
     return getGLWindow()->destroyImageKHR(image);
+}
+
+EGLSync TracePerfTest::onEglCreateSync(EGLDisplay dpy, EGLenum type, const EGLAttrib *attrib_list)
+{
+    return getGLWindow()->createSync(dpy, type, attrib_list);
+}
+
+EGLSync TracePerfTest::onEglCreateSyncKHR(EGLDisplay dpy, EGLenum type, const EGLint *attrib_list)
+{
+    return getGLWindow()->createSyncKHR(dpy, type, attrib_list);
+}
+
+EGLBoolean TracePerfTest::onEglDestroySync(EGLDisplay dpy, EGLSync sync)
+{
+    return getGLWindow()->destroySync(dpy, sync);
+}
+
+EGLBoolean TracePerfTest::onEglDestroySyncKHR(EGLDisplay dpy, EGLSync sync)
+{
+    return getGLWindow()->destroySyncKHR(dpy, sync);
+}
+
+EGLint TracePerfTest::onEglClientWaitSync(EGLDisplay dpy,
+                                          EGLSync sync,
+                                          EGLint flags,
+                                          EGLTimeKHR timeout)
+{
+    return getGLWindow()->clientWaitSync(dpy, sync, flags, timeout);
+}
+
+EGLint TracePerfTest::onEglClientWaitSyncKHR(EGLDisplay dpy,
+                                             EGLSync sync,
+                                             EGLint flags,
+                                             EGLTimeKHR timeout)
+{
+    return getGLWindow()->clientWaitSyncKHR(dpy, sync, flags, timeout);
 }
 
 EGLint TracePerfTest::onEglGetError()

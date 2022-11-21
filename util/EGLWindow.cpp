@@ -782,6 +782,36 @@ EGLBoolean EGLWindow::destroyImageKHR(Image image)
     return eglDestroyImageKHR(getDisplay(), image);
 }
 
+EGLWindow::Sync EGLWindow::createSync(EGLDisplay dpy, EGLenum type, const EGLAttrib *attrib_list)
+{
+    return eglCreateSync(dpy, type, attrib_list);
+}
+
+EGLWindow::Sync EGLWindow::createSyncKHR(EGLDisplay dpy, EGLenum type, const EGLint *attrib_list)
+{
+    return eglCreateSyncKHR(dpy, type, attrib_list);
+}
+
+EGLBoolean EGLWindow::destroySync(EGLDisplay dpy, Sync sync)
+{
+    return eglDestroySync(dpy, sync);
+}
+
+EGLBoolean EGLWindow::destroySyncKHR(EGLDisplay dpy, Sync sync)
+{
+    return eglDestroySyncKHR(dpy, sync);
+}
+
+EGLint EGLWindow::clientWaitSync(EGLDisplay dpy, Sync sync, EGLint flags, EGLTimeKHR timeout)
+{
+    return eglClientWaitSync(dpy, sync, flags, timeout);
+}
+
+EGLint EGLWindow::clientWaitSyncKHR(EGLDisplay dpy, Sync sync, EGLint flags, EGLTimeKHR timeout)
+{
+    return eglClientWaitSyncKHR(dpy, sync, flags, timeout);
+}
+
 EGLint EGLWindow::getEGLError()
 {
     return eglGetError();
