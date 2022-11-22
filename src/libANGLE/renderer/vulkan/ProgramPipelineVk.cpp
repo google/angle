@@ -98,6 +98,11 @@ angle::Result ProgramPipelineVk::link(const gl::Context *glContext,
 
     mExecutable.setAllDefaultUniformsDirty(glExecutable);
 
+    if (contextVk->getFeatures().enablePrecisionQualifiers.enabled)
+    {
+        mExecutable.resolvePrecisionMismatch(mergedVaryings);
+    }
+
     ANGLE_TRY(mExecutable.createPipelineLayout(contextVk, mState.getExecutable(), nullptr));
 
     return mExecutable.warmUpPipelineCache(contextVk, mState.getExecutable());

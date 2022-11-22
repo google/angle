@@ -508,8 +508,9 @@ std::unique_ptr<rx::LinkEvent> ProgramExecutableVk::load(ContextVk *contextVk,
                 {
                     LoadShaderInterfaceVariableXfbInfo(stream, &xfb);
                 }
-                info.builtinIsInput          = stream->readBool();
-                info.builtinIsOutput         = stream->readBool();
+                info.useRelaxedPrecision     = stream->readBool();
+                info.varyingIsInput          = stream->readBool();
+                info.varyingIsOutput         = stream->readBool();
                 info.attributeComponentCount = stream->readInt<uint8_t>();
                 info.attributeLocationCount  = stream->readInt<uint8_t>();
                 info.isDuplicate             = stream->readBool();
@@ -624,8 +625,9 @@ void ProgramExecutableVk::save(ContextVk *contextVk,
                 {
                     SaveShaderInterfaceVariableXfbInfo(xfb, stream);
                 }
-                stream->writeBool(info.builtinIsInput);
-                stream->writeBool(info.builtinIsOutput);
+                stream->writeBool(info.useRelaxedPrecision);
+                stream->writeBool(info.varyingIsInput);
+                stream->writeBool(info.varyingIsOutput);
                 stream->writeInt(info.attributeComponentCount);
                 stream->writeInt(info.attributeLocationCount);
                 stream->writeBool(info.isDuplicate);
@@ -1429,6 +1431,47 @@ angle::Result ProgramExecutableVk::createPipelineLayout(
     }
 
     return angle::Result::Continue;
+}
+
+void ProgramExecutableVk::resolvePrecisionMismatch(const gl::ProgramMergedVaryings &mergedVaryings)
+{
+    for (const gl::ProgramVaryingRef &mergedVarying : mergedVaryings)
+    {
+        if (!mergedVarying.frontShader || !mergedVarying.backShader)
+        {
+            continue;
+        }
+
+        GLenum frontPrecision = mergedVarying.frontShader->precision;
+        GLenum backPrecision  = mergedVarying.backShader->precision;
+        if (frontPrecision == backPrecision)
+        {
+            continue;
+        }
+
+        ASSERT(frontPrecision >= GL_LOW_FLOAT && frontPrecision <= GL_HIGH_INT);
+        ASSERT(backPrecision >= GL_LOW_FLOAT && backPrecision <= GL_HIGH_INT);
+
+        if (frontPrecision > backPrecision)
+        {
+            // The output is higher precision than the input
+            ShaderInterfaceVariableInfo &info = mVariableInfoMap.getMutable(
+                mergedVarying.frontShaderStage, ShaderVariableType::Varying,
+                mergedVarying.frontShader->mappedName);
+            info.varyingIsOutput     = true;
+            info.useRelaxedPrecision = true;
+        }
+        else
+        {
+            // The output is lower precision than the input, adjust the input
+            ASSERT(backPrecision > frontPrecision);
+            ShaderInterfaceVariableInfo &info = mVariableInfoMap.getMutable(
+                mergedVarying.backShaderStage, ShaderVariableType::Varying,
+                mergedVarying.backShader->mappedName);
+            info.varyingIsInput      = true;
+            info.useRelaxedPrecision = true;
+        }
+    }
 }
 
 angle::Result ProgramExecutableVk::getOrAllocateDescriptorSet(
