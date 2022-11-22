@@ -510,7 +510,7 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
     {
         // If a render pass is open with commands, it must be for this framebuffer.  Otherwise,
         // either FramebufferVk::syncState() or ContextVk::syncState() would have closed it.
-        ASSERT(contextVk->hasStartedRenderPassWithSerial(mLastRenderPassSerial));
+        ASSERT(contextVk->hasStartedRenderPassWithQueueSerial(mLastRenderPassQueueSerial));
 
         // Emit debug-util markers for this mid-render-pass clear
         ANGLE_TRY(
@@ -1236,7 +1236,8 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
             bool isCurrentFramebufferValid = srcFramebufferVk->mCurrentFramebuffer.valid();
             if (isCurrentFramebufferValid)
             {
-                contextVk->restoreFinishedRenderPass(srcFramebufferVk->getLastRenderPassSerial());
+                contextVk->restoreFinishedRenderPass(
+                    srcFramebufferVk->getLastRenderPassQueueSerial());
             }
 
             // glBlitFramebuffer() needs to copy the read color attachment to all enabled
@@ -1247,8 +1248,8 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
             bool canResolveWithSubpass = isCurrentFramebufferValid &&
                                          mState.getEnabledDrawBuffers().count() == 1 &&
                                          mCurrentFramebufferDesc.getLayerCount() == 1 &&
-                                         contextVk->hasStartedRenderPassWithSerial(
-                                             srcFramebufferVk->getLastRenderPassSerial());
+                                         contextVk->hasStartedRenderPassWithQueueSerial(
+                                             srcFramebufferVk->getLastRenderPassQueueSerial());
 
             // Additionally, when resolving with a resolve attachment, the src and destination
             // offsets must match, the render area must match the resolve area, and there should be
@@ -1691,7 +1692,7 @@ angle::Result FramebufferVk::invalidateImpl(ContextVk *contextVk,
     //- Bind FBO 2, draw
     //- Bind FBO 1, invalidate D/S
     // to invalidate the D/S of FBO 2 since it would be the currently active renderpass.
-    if (contextVk->hasStartedRenderPassWithSerial(mLastRenderPassSerial))
+    if (contextVk->hasStartedRenderPassWithQueueSerial(mLastRenderPassQueueSerial))
     {
         // Mark the invalidated attachments in the render pass for loadOp and storeOp determination
         // at its end.
@@ -2983,7 +2984,8 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
 
     ANGLE_TRY(contextVk->beginNewRenderPass(
         framebuffer, renderArea, mRenderPassDesc, renderPassAttachmentOps, colorIndexVk,
-        depthStencilAttachmentIndex, packedClearValues, commandBufferOut, &mLastRenderPassSerial));
+        depthStencilAttachmentIndex, packedClearValues, commandBufferOut));
+    mLastRenderPassQueueSerial = contextVk->getStartedRenderPassCommands().getQueueSerial();
 
     // Add the images to the renderpass tracking list (through onColorDraw).
     vk::PackedAttachmentIndex colorAttachmentIndex(0);

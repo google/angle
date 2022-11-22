@@ -6999,29 +6999,21 @@ angle::Result ContextVk::beginNewRenderPass(
     const vk::PackedAttachmentCount colorAttachmentCount,
     const vk::PackedAttachmentIndex depthStencilAttachmentIndex,
     const vk::PackedClearValuesArray &clearValues,
-    vk::RenderPassCommandBuffer **commandBufferOut,
-    vk::RenderPassSerial *renderPassSerialOut)
+    vk::RenderPassCommandBuffer **commandBufferOut)
 {
     // End any currently outstanding render pass. The render pass is normally closed before reaching
     // here for various reasons, except typically when UtilsVk needs to start one.
     ANGLE_TRY(flushCommandsAndEndRenderPass(RenderPassClosureReason::NewRenderPass));
-
-    // The last render pass serial is also incremented and used to update the render pass command
-    // buffer helper and the framebuffer object (via the output argument). Note that UtilsVk ignores
-    // the output serial.
-    ASSERT(renderPassSerialOut);
-    mCurrentRenderPassSerial = mRenderPassSerialFactory.generate();
-    *renderPassSerialOut     = mCurrentRenderPassSerial;
 
     // Now generate queueSerial for the renderPass.
     QueueSerial renderPassQueueSerial;
     generateRenderPassCommandsQueueSerial(&renderPassQueueSerial);
 
     mPerfCounters.renderPasses++;
-    ANGLE_TRY(mRenderPassCommands->beginRenderPass(
-        this, framebuffer, renderArea, renderPassDesc, renderPassAttachmentOps,
-        colorAttachmentCount, depthStencilAttachmentIndex, clearValues, mCurrentRenderPassSerial,
-        renderPassQueueSerial, commandBufferOut));
+    ANGLE_TRY(mRenderPassCommands->beginRenderPass(this, framebuffer, renderArea, renderPassDesc,
+                                                   renderPassAttachmentOps, colorAttachmentCount,
+                                                   depthStencilAttachmentIndex, clearValues,
+                                                   renderPassQueueSerial, commandBufferOut));
 
     if (mCurrentGraphicsPipeline)
     {
@@ -7065,7 +7057,7 @@ angle::Result ContextVk::startNextSubpass()
     return mRenderPassCommands->nextSubpass(this, &mRenderPassCommandBuffer);
 }
 
-void ContextVk::restoreFinishedRenderPass(const vk::RenderPassSerial renderPassSerial)
+void ContextVk::restoreFinishedRenderPass(const QueueSerial &queueSerial)
 {
     if (mRenderPassCommandBuffer != nullptr)
     {
@@ -7073,8 +7065,7 @@ void ContextVk::restoreFinishedRenderPass(const vk::RenderPassSerial renderPassS
         return;
     }
 
-    if (mRenderPassCommands->started() &&
-        mRenderPassCommands->getRenderPassSerial() == renderPassSerial)
+    if (mRenderPassCommands->started() && mRenderPassCommands->getQueueSerial() == queueSerial)
     {
         // There is already a render pass open for this framebuffer, so just restore the
         // pointer rather than starting a whole new render pass. One possible path here

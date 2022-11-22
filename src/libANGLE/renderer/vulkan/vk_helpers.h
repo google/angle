@@ -1278,8 +1278,6 @@ class MaybeImagelessFramebuffer : angle::NonCopyable
     ImagelessStatus mImageless;
 };
 
-using RenderPassSerial = Serial;
-
 class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
 {
   public:
@@ -1343,7 +1341,6 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
                                   const PackedAttachmentCount colorAttachmentCount,
                                   const PackedAttachmentIndex depthStencilAttachmentIndex,
                                   const PackedClearValuesArray &clearValues,
-                                  const RenderPassSerial renderPassSerial,
                                   const QueueSerial &queueSerial,
                                   RenderPassCommandBuffer **commandBufferOut);
 
@@ -1434,8 +1431,6 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
     }
     void addCommandDiagnostics(ContextVk *contextVk);
 
-    RenderPassSerial getRenderPassSerial() const { return mRenderPassSerial; }
-
   private:
     angle::Result initializeCommandBuffer(Context *context);
     angle::Result beginRenderPassCommandBuffer(ContextVk *contextVk);
@@ -1518,10 +1513,6 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
     // This is last renderpass before present and this is the image will be presented. We can use
     // final layout of the renderpass to transition it to the presentable layout
     ImageHelper *mImageOptimizeForPresent;
-
-    // This serial is updated when a render pass starts, and is used to identify the framebuffer
-    // that has opened it.
-    RenderPassSerial mRenderPassSerial;
 };
 
 // The following class helps support both Vulkan and ANGLE secondary command buffers by

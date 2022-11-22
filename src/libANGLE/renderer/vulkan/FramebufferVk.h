@@ -146,7 +146,7 @@ class FramebufferVk : public FramebufferImpl
 
     void releaseCurrentFramebuffer(ContextVk *contextVk);
 
-    vk::RenderPassSerial getLastRenderPassSerial() const { return mLastRenderPassSerial; }
+    const QueueSerial &getLastRenderPassQueueSerial() const { return mLastRenderPassQueueSerial; }
 
     enum class RenderTargetImage
     {
@@ -284,7 +284,7 @@ class FramebufferVk : public FramebufferImpl
     bool mIsCurrentFramebufferCached;
 
     // Serial of the render pass this framebuffer has opened, if any.
-    vk::RenderPassSerial mLastRenderPassSerial;
+    QueueSerial mLastRenderPassQueueSerial;
 };
 }  // namespace rx
 
