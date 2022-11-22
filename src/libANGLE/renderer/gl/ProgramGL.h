@@ -152,6 +152,8 @@ class ProgramGL : public ProgramImpl
     std::vector<GLint> mUniformRealLocationMap;
     std::vector<GLuint> mUniformBlockRealLocationMap;
 
+    bool mHasAppliedTransformFeedbackVaryings;
+
     GLint mMultiviewBaseViewLayerIndexUniformLocation;
 
     GLuint mProgramID;
