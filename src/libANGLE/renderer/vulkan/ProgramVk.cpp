@@ -206,7 +206,8 @@ std::unique_ptr<LinkEvent> ProgramVk::link(const gl::Context *context,
                                     &mGlslangProgramInterfaceInfo, &spirvBlobs,
                                     &mExecutable.mVariableInfoMap);
 
-    if (contextVk->getFeatures().enablePrecisionQualifiers.enabled)
+    if (contextVk->getFeatures().varyingsRequireMatchingPrecisionInSpirv.enabled &&
+        contextVk->getFeatures().enablePrecisionQualifiers.enabled)
     {
         mExecutable.resolvePrecisionMismatch(mergedVaryings);
     }

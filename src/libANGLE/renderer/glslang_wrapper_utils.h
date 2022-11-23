@@ -61,6 +61,7 @@ struct GlslangSpirvOptions
     bool isTransformFeedbackEmulated    = false;
     bool isMultisampledFramebufferFetch = false;
     bool validate                       = true;
+    bool useSpirvVaryingPrecisionFixer  = false;
 };
 
 struct UniformBindingInfo final

@@ -373,6 +373,15 @@
             "issue": "http://anglebug.com/3078"
         },
         {
+            "name": "varyings_require_matching_precision_in_spirv",
+            "category": "Workarounds",
+            "description": [
+                "Add additional SPIRV instructions to make sure precision ",
+                "between shader stages match with each other"
+            ],
+            "issue": "http://anglebug.com/7488"
+        },
+        {
             "name": "prefer_aggregate_barrier_calls",
             "category": "Workarounds",
             "description": [

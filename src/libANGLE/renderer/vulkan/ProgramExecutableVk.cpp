@@ -66,7 +66,8 @@ void SaveShaderInterfaceVariableXfbInfo(const ShaderInterfaceVariableXfbInfo &xf
     }
 }
 
-bool ValidateTransformedSpirV(const gl::ShaderBitSet &linkedShaderStages,
+bool ValidateTransformedSpirV(const ContextVk *contextVk,
+                              const gl::ShaderBitSet &linkedShaderStages,
                               const ShaderInterfaceVariableInfoMap &variableInfoMap,
                               const gl::ShaderMap<angle::spirv::Blob> &spirvBlobs)
 {
@@ -80,6 +81,8 @@ bool ValidateTransformedSpirV(const gl::ShaderBitSet &linkedShaderStages,
         options.removeDebugInfo           = true;
         options.isLastPreFragmentStage    = shaderType == lastPreFragmentStage;
         options.isTransformFeedbackStage  = shaderType == lastPreFragmentStage;
+        options.useSpirvVaryingPrecisionFixer =
+            contextVk->getFeatures().varyingsRequireMatchingPrecisionInSpirv.enabled;
 
         angle::spirv::Blob transformed;
         if (GlslangWrapperVk::TransformSpirV(options, variableInfoMap, spirvBlobs[shaderType],
@@ -249,7 +252,8 @@ angle::Result ShaderInfo::initShaders(ContextVk *contextVk,
     // will naturally be validated.  This improves GLES1 test run times.
     if (!contextVk->getState().isGLES1())
     {
-        ASSERT(ValidateTransformedSpirV(linkedShaderStages, variableInfoMap, mSpirvBlobs));
+        ASSERT(
+            ValidateTransformedSpirV(contextVk, linkedShaderStages, variableInfoMap, mSpirvBlobs));
     }
 
     mIsInitialized = true;
@@ -337,6 +341,9 @@ angle::Result ProgramInfo::initProgram(ContextVk *contextVk,
     // time.
     options.validate =
         !(contextVk->getState().isGLES1() && contextVk->getRenderer()->getEnableValidationLayers());
+
+    options.useSpirvVaryingPrecisionFixer =
+        contextVk->getFeatures().varyingsRequireMatchingPrecisionInSpirv.enabled;
 
     ANGLE_TRY(GlslangWrapperVk::TransformSpirV(options, variableInfoMap, originalSpirvBlob,
                                                &transformedSpirvBlob));

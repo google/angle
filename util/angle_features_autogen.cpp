@@ -328,6 +328,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::UseSystemMemoryForConstantBuffers, "useSystemMemoryForConstantBuffers"},
     {Feature::UseUnusedBlocksWithStandardOrSharedLayout,
      "useUnusedBlocksWithStandardOrSharedLayout"},
+    {Feature::VaryingsRequireMatchingPrecisionInSpirv, "varyingsRequireMatchingPrecisionInSpirv"},
     {Feature::VertexIDDoesNotIncludeBaseVertex, "vertexIDDoesNotIncludeBaseVertex"},
     {Feature::WaitIdleBeforeSwapchainRecreation, "waitIdleBeforeSwapchainRecreation"},
     {Feature::WarmUpPipelineCacheAtLink, "warmUpPipelineCacheAtLink"},

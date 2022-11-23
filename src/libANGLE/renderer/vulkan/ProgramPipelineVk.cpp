@@ -98,7 +98,8 @@ angle::Result ProgramPipelineVk::link(const gl::Context *glContext,
 
     mExecutable.setAllDefaultUniformsDirty(glExecutable);
 
-    if (contextVk->getFeatures().enablePrecisionQualifiers.enabled)
+    if (contextVk->getFeatures().varyingsRequireMatchingPrecisionInSpirv.enabled &&
+        contextVk->getFeatures().enablePrecisionQualifiers.enabled)
     {
         mExecutable.resolvePrecisionMismatch(mergedVaryings);
     }

@@ -304,6 +304,7 @@ enum class Feature
     UseShadowBuffersWhenAppropriate,
     UseSystemMemoryForConstantBuffers,
     UseUnusedBlocksWithStandardOrSharedLayout,
+    VaryingsRequireMatchingPrecisionInSpirv,
     VertexIDDoesNotIncludeBaseVertex,
     WaitIdleBeforeSwapchainRecreation,
     WarmUpPipelineCacheAtLink,
