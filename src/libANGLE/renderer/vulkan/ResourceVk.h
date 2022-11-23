@@ -142,14 +142,8 @@ class Resource : angle::NonCopyable
   public:
     virtual ~Resource();
 
-    // Determine if the driver has finished execution with this resource.
-    bool usedInRunningCommands(RendererVk *renderer) const;
-
     // Returns true if the resource is in use by ANGLE or the driver.
     bool isCurrentlyInUse(RendererVk *renderer) const;
-
-    // Ensures the driver is caught up to this resource and it is only in use by ANGLE.
-    angle::Result finishRunningCommands(ContextVk *contextVk);
 
     // Complete all recorded and in-flight commands involving this resource
     angle::Result waitForIdle(ContextVk *contextVk,
@@ -188,15 +182,9 @@ class ReadWriteResource : public angle::NonCopyable
   public:
     virtual ~ReadWriteResource();
 
-    // Determine if the driver has finished execution with this resource.
-    bool usedInRunningCommands(RendererVk *renderer) const;
-
     // Returns true if the resource is in use by ANGLE or the driver.
     bool isCurrentlyInUse(RendererVk *renderer) const;
     bool isCurrentlyInUseForWrite(RendererVk *renderer) const;
-
-    // Ensures the driver is caught up to this resource and it is only in use by ANGLE.
-    angle::Result finishRunningCommands(ContextVk *contextVk);
 
     // Ensures the GPU write commands is completed.
     angle::Result finishGPUWriteCommands(ContextVk *contextVk);

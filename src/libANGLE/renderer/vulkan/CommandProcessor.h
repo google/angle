@@ -433,8 +433,6 @@ class CommandQueue final : public CommandQueueInterface
 
     // The ResourceUse still have unfinished queue serial by ANGLE or vulkan.
     bool hasUnfinishedUse(const ResourceUse &use) const;
-    // The ResourceUse still have unfinished queue serial by vulkan.
-    bool useInRunningCommands(const ResourceUse &use) const;
     // The ResourceUse still have queue serial not yet submitted to vulkan.
     bool hasUnsubmittedUse(const ResourceUse &use) const;
     Serial getLastSubmittedSerial(SerialIndex index) const { return mLastSubmittedSerials[index]; }
@@ -601,11 +599,6 @@ class CommandProcessor final : public Context, public CommandQueueInterface
     ANGLE_INLINE bool hasUnfinishedUse(const ResourceUse &use) const
     {
         return mCommandQueue.hasUnfinishedUse(use);
-    }
-
-    ANGLE_INLINE bool useInRunningCommands(const ResourceUse &use) const
-    {
-        return mCommandQueue.useInRunningCommands(use);
     }
 
     bool hasUnsubmittedUse(const ResourceUse &use) const;

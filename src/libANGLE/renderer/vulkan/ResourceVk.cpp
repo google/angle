@@ -35,13 +35,14 @@ angle::Result WaitForIdle(ContextVk *contextVk,
     }
 
     // Make sure the driver is done with the resource.
-    if (resource->usedInRunningCommands(contextVk->getRenderer()))
+    if (contextVk->getRenderer()->hasUnfinishedUse(resource->getResourceUse()))
     {
         if (debugMessage)
         {
             ANGLE_VK_PERF_WARNING(contextVk, GL_DEBUG_SEVERITY_HIGH, "%s", debugMessage);
         }
-        ANGLE_TRY(resource->finishRunningCommands(contextVk));
+        ANGLE_TRY(
+            contextVk->getRenderer()->finishResourceUse(contextVk, resource->getResourceUse()));
     }
 
     ASSERT(!resource->isCurrentlyInUse(contextVk->getRenderer()));
@@ -66,19 +67,9 @@ Resource &Resource::operator=(Resource &&rhs)
 
 Resource::~Resource() {}
 
-bool Resource::usedInRunningCommands(RendererVk *renderer) const
-{
-    return renderer->useInRunningCommands(mUse);
-}
-
 bool Resource::isCurrentlyInUse(RendererVk *renderer) const
 {
     return renderer->hasUnfinishedUse(mUse);
-}
-
-angle::Result Resource::finishRunningCommands(ContextVk *contextVk)
-{
-    return FinishRunningCommands(contextVk, mUse);
 }
 
 angle::Result Resource::waitForIdle(ContextVk *contextVk,
@@ -105,12 +96,6 @@ ReadWriteResource &ReadWriteResource::operator=(ReadWriteResource &&other)
     return *this;
 }
 
-// Determine if the driver has finished execution with this resource.
-bool ReadWriteResource::usedInRunningCommands(RendererVk *renderer) const
-{
-    return renderer->useInRunningCommands(mReadOnlyUse);
-}
-
 bool ReadWriteResource::isCurrentlyInUse(RendererVk *renderer) const
 {
     return renderer->hasUnfinishedUse(mReadOnlyUse);
@@ -119,12 +104,6 @@ bool ReadWriteResource::isCurrentlyInUse(RendererVk *renderer) const
 bool ReadWriteResource::isCurrentlyInUseForWrite(RendererVk *renderer) const
 {
     return renderer->hasUnfinishedUse(mReadWriteUse);
-}
-
-angle::Result ReadWriteResource::finishRunningCommands(ContextVk *contextVk)
-{
-    ASSERT(!contextVk->getRenderer()->hasUnsubmittedUse(mReadOnlyUse));
-    return FinishRunningCommands(contextVk, mReadOnlyUse);
 }
 
 angle::Result ReadWriteResource::finishGPUWriteCommands(ContextVk *contextVk)

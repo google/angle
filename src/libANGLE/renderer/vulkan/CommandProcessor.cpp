@@ -1482,11 +1482,6 @@ bool CommandQueue::hasUnfinishedUse(const vk::ResourceUse &use) const
     return use > mLastCompletedSerials;
 }
 
-bool CommandQueue::useInRunningCommands(const vk::ResourceUse &use) const
-{
-    return use > mLastCompletedSerials;
-}
-
 bool CommandQueue::hasUnsubmittedUse(const vk::ResourceUse &use) const
 {
     return use > mLastSubmittedSerials;
