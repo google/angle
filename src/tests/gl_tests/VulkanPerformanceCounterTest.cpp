@@ -649,6 +649,7 @@ TEST_P(VulkanPerformanceCounterTest, SubmittingOutsideCommandBufferDoesNotCollec
     ASSERT_EQ(posLoc, glGetAttribLocation(program2, essl1_shaders::PositionAttrib()));
 
     // Issue uploads until there's an implicit submission
+    size_t textureCount = 0;
     while (getPerfCounters().vkQueueSubmitCallsTotal == submitCommandsCount)
     {
         GLTexture newTexture;
@@ -660,7 +661,10 @@ TEST_P(VulkanPerformanceCounterTest, SubmittingOutsideCommandBufferDoesNotCollec
 
         glDrawArrays(GL_TRIANGLES, 0, 6);
         ASSERT_GL_NO_ERROR();
+        textureCount++;
     }
+    // 256x256 texture upload should not trigger a submission
+    ASSERT(textureCount > 1);
 
     ++submitCommandsCount;
     EXPECT_EQ(getPerfCounters().vkQueueSubmitCallsTotal, submitCommandsCount);
@@ -678,13 +682,6 @@ TEST_P(VulkanPerformanceCounterTest, SubmittingOutsideCommandBufferDoesNotCollec
     // crash.
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
     ++submitCommandsCount;
-
-    // When the preferSubmitAtFBOBoundary feature is enabled, the render pass closure causes an
-    // extra submission.
-    if (hasPreferSubmitAtFBOBoundary())
-    {
-        ++submitCommandsCount;
-    }
 
     // Verify counters.
     EXPECT_EQ(getPerfCounters().renderPasses, expectedRenderPassCount);
