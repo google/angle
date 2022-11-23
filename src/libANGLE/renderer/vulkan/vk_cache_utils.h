@@ -299,8 +299,12 @@ enum class CacheLookUpFeedback
     None,
     Hit,
     Miss,
+    LinkedDrawHit,
+    LinkedDrawMiss,
     WarmUpHit,
     WarmUpMiss,
+    UtilsHit,
+    UtilsMiss,
 };
 
 struct PackedAttachmentOpsDesc final
@@ -2098,8 +2102,13 @@ class RenderPassCache final : angle::NonCopyable
 
 enum class PipelineSource
 {
+    // Pipeline created when warming up the program's pipeline cache
     WarmUp,
+    // Monolithic pipeline created at draw time
     Draw,
+    // Pipeline created at draw time by linking partial pipeline libraries
+    DrawLinked,
+    // Pipeline created for UtilsVk
     Utils,
 };
 
@@ -2201,7 +2210,7 @@ class GraphicsPipelineCache final : public HasCacheStats<VulkanCacheType::Graphi
     GraphicsPipelineCache() = default;
     ~GraphicsPipelineCache() override { ASSERT(mPayload.empty()); }
 
-    void destroy(RendererVk *rendererVk);
+    void destroy(ContextVk *contextVk);
     void release(ContextVk *contextVk);
 
     void populate(const vk::GraphicsPipelineDesc &desc, vk::Pipeline &&pipeline);

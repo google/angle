@@ -1155,9 +1155,10 @@ UtilsVk::UtilsVk() = default;
 
 UtilsVk::~UtilsVk() = default;
 
-void UtilsVk::destroy(RendererVk *renderer)
+void UtilsVk::destroy(ContextVk *contextVk)
 {
-    VkDevice device = renderer->getDevice();
+    RendererVk *renderer = contextVk->getRenderer();
+    VkDevice device      = renderer->getDevice();
 
     for (Function f : angle::AllEnums<Function>())
     {
@@ -1202,21 +1203,21 @@ void UtilsVk::destroy(RendererVk *renderer)
         }
     }
     mImageClearVSOnly.program.destroy(renderer);
-    mImageClearVSOnly.pipelines.destroy(renderer);
+    mImageClearVSOnly.pipelines.destroy(contextVk);
     for (GraphicsShaderProgramAndPipelines &programAndPipelines : mImageClear)
     {
         programAndPipelines.program.destroy(renderer);
-        programAndPipelines.pipelines.destroy(renderer);
+        programAndPipelines.pipelines.destroy(contextVk);
     }
     for (GraphicsShaderProgramAndPipelines &programAndPipelines : mImageCopy)
     {
         programAndPipelines.program.destroy(renderer);
-        programAndPipelines.pipelines.destroy(renderer);
+        programAndPipelines.pipelines.destroy(contextVk);
     }
     for (GraphicsShaderProgramAndPipelines &programAndPipelines : mBlitResolve)
     {
         programAndPipelines.program.destroy(renderer);
-        programAndPipelines.pipelines.destroy(renderer);
+        programAndPipelines.pipelines.destroy(contextVk);
     }
     for (ComputeShaderProgramAndPipelines &programAndPipelines : mBlitResolveStencilNoExport)
     {
@@ -1227,9 +1228,9 @@ void UtilsVk::destroy(RendererVk *renderer)
         }
     }
     mExportStencil.program.destroy(renderer);
-    mExportStencil.pipelines.destroy(renderer);
+    mExportStencil.pipelines.destroy(contextVk);
     mOverlayDraw.program.destroy(renderer);
-    mOverlayDraw.pipelines.destroy(renderer);
+    mOverlayDraw.pipelines.destroy(contextVk);
     for (ComputeShaderProgramAndPipelines &programAndPipelines : mGenerateMipmap)
     {
         programAndPipelines.program.destroy(renderer);
@@ -1250,7 +1251,7 @@ void UtilsVk::destroy(RendererVk *renderer)
     {
         GraphicsShaderProgramAndPipelines &programAndPipelines = programIter.second;
         programAndPipelines.program.destroy(renderer);
-        programAndPipelines.pipelines.destroy(renderer);
+        programAndPipelines.pipelines.destroy(contextVk);
     }
     mUnresolve.clear();
 
