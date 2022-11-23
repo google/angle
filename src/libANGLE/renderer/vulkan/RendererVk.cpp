@@ -47,6 +47,18 @@ constexpr bool kExposeNonConformantExtensionsAndVersions = true;
 #else
 constexpr bool kExposeNonConformantExtensionsAndVersions = false;
 #endif
+
+// This flag is used for memory allocation tracking using allocation size counters.
+constexpr bool kTrackMemoryAllocation = true;
+#if defined(ANGLE_ENABLE_MEMORY_ALLOC_LOGGING)
+// Flag used for logging memory allocations and deallocations.
+constexpr bool kDebugMemoryAllocationLogs = true;
+static_assert(kTrackMemoryAllocation,
+              "kTrackMemoryAllocation must be enabled to use kDebugMemoryAllocationLogs.");
+#else
+// Only the allocation size counters are used (if enabled).
+constexpr bool kDebugMemoryAllocationLogs = false;
+#endif
 }  // anonymous namespace
 
 namespace rx
@@ -1236,6 +1248,24 @@ ANGLE_INLINE gl::ShadingRate GetShadingRateFromVkExtent(const VkExtent2D &extent
 
     return gl::ShadingRate::_1x1;
 }
+
+// Check for remaining memory allocations at the end of the renderer object.
+void checkForRemainingMemoryAllocations(RendererVk *renderer)
+{
+    if (kDebugMemoryAllocationLogs)
+    {
+        for (uint32_t i = 0; i < vk::kMemoryAllocationTypeCount; i++)
+        {
+            if (renderer->getActiveMemoryAllocationsSize(i) != 0)
+            {
+                INFO() << "Remaining allocated size for memory allocation type ("
+                       << vk::kMemoryAllocationTypeMessage[i]
+                       << "): " << renderer->getActiveMemoryAllocationsSize(i)
+                       << " | Count: " << renderer->getActiveMemoryAllocationsCount(i);
+            }
+        }
+    }
+}
 }  // namespace
 
 // RendererVk implementation.
@@ -1274,7 +1304,8 @@ RendererVk::RendererVk()
       mValidationMessageCount(0),
       mCommandProcessor(this),
       mSupportedVulkanPipelineStageMask(0),
-      mSupportedVulkanShaderStageMask(0)
+      mSupportedVulkanShaderStageMask(0),
+      mMemoryAllocationID(0)
 {
     VkFormatProperties invalid = {0, 0, kInvalidFormatFeatureFlags};
     mFormatProperties.fill(invalid);
@@ -1287,7 +1318,8 @@ RendererVk::RendererVk()
     // Allocation counters are initialized here to keep track of the size of the memory allocations.
     for (uint32_t i = 0; i < mActiveMemoryAllocationsSize.size(); i++)
     {
-        mActiveMemoryAllocationsSize[i] = 0;
+        mActiveMemoryAllocationsSize[i]  = 0;
+        mActiveMemoryAllocationsCount[i] = 0;
     }
 }
 
@@ -1364,6 +1396,10 @@ void RendererVk::onDestroy(vk::Context *context)
     mRenderPassCommandBufferRecycler.onDestroy();
 
     mAllocator.destroy();
+
+    // When the renderer is being destroyed, it is possible to check if all the allocated memory
+    // throughout the execution has been freed.
+    checkForRemainingMemoryAllocations(this);
 
     if (mDevice)
     {
@@ -5059,6 +5095,115 @@ void RendererVk::logCacheStats() const
     for (const CacheStats &stats : mVulkanCacheStats)
     {
         INFO() << "    CacheType " << cacheType++ << ": " << stats.getHitRatio();
+    }
+}
+
+void RendererVk::onMemoryAllocImpl(vk::MemoryAllocationType allocType,
+                                   VkDeviceSize size,
+                                   void *handle)
+{
+    ASSERT(allocType != vk::MemoryAllocationType::InvalidEnum && size != 0);
+
+    if (kDebugMemoryAllocationLogs)
+    {
+        // If enabled (debug layers), we keep more details in the memory tracker, such as handle,
+        // and log the action to the output.
+        std::unique_lock<std::mutex> lock(mMemoryAllocationMutex);
+
+        uint32_t allocTypeIndex = ToUnderlying(allocType);
+        mActiveMemoryAllocationsCount[allocTypeIndex]++;
+        mActiveMemoryAllocationsSize[allocTypeIndex] += size;
+
+        // Add the new allocation to the memory tracker.
+        vk::MemoryAllocationInfo memAllocLogInfo;
+        memAllocLogInfo.id        = ++mMemoryAllocationID;
+        memAllocLogInfo.allocType = allocType;
+        memAllocLogInfo.size      = size;
+        memAllocLogInfo.handle    = handle;
+
+        vk::MemoryAllocInfoMapKey memoryAllocInfoMapKey(memAllocLogInfo.handle);
+        mMemoryAllocationTracker[angle::getBacktraceInfo()].insert(
+            std::make_pair(memoryAllocInfoMapKey, memAllocLogInfo));
+
+        INFO() << "Memory allocation: (id " << memAllocLogInfo.id << ") for object "
+               << memAllocLogInfo.handle << " | Size: " << memAllocLogInfo.size
+               << " | Type: " << vk::kMemoryAllocationTypeMessage[allocTypeIndex];
+    }
+    else if (kTrackMemoryAllocation)
+    {
+        // Add the new allocation size to the allocation counter.
+        uint32_t allocTypeIndex = ToUnderlying(allocType);
+        mActiveMemoryAllocationsSize[allocTypeIndex] += size;
+    }
+}
+
+void RendererVk::onMemoryDeallocImpl(vk::MemoryAllocationType allocType,
+                                     VkDeviceSize size,
+                                     void *handle)
+{
+    ASSERT(allocType != vk::MemoryAllocationType::InvalidEnum && size != 0);
+
+    if (kDebugMemoryAllocationLogs)
+    {
+        // If enabled (debug layers), we keep more details in the memory tracker, such as handle,
+        // and log the action to the output. The memory allocation tracker uses the backtrace info
+        // as key, if available.
+        for (auto &memInfoPerBacktrace : mMemoryAllocationTracker)
+        {
+            vk::MemoryAllocInfoMapKey memoryAllocInfoMapKey(handle);
+            MemoryAllocInfoMap &memInfoMap = memInfoPerBacktrace.second;
+            std::unique_lock<std::mutex> lock(mMemoryAllocationMutex);
+
+            if (memInfoMap.find(memoryAllocInfoMapKey) != memInfoMap.end())
+            {
+                // Object found; remove it from the allocation tracker.
+                vk::MemoryAllocationInfo *memInfoEntry = &memInfoMap[memoryAllocInfoMapKey];
+                ASSERT(memInfoEntry->allocType == allocType && memInfoEntry->size == size);
+
+                uint32_t allocTypeIndex = ToUnderlying(memInfoEntry->allocType);
+                ASSERT(mActiveMemoryAllocationsCount[allocTypeIndex] != 0 &&
+                       mActiveMemoryAllocationsSize[allocTypeIndex] >= size);
+                mActiveMemoryAllocationsCount[allocTypeIndex]--;
+                mActiveMemoryAllocationsSize[allocTypeIndex] -= size;
+
+                INFO() << "Memory deallocation: (id " << memInfoEntry->id << ") for object "
+                       << memInfoEntry->handle << " | Size: " << memInfoEntry->size
+                       << " | Type: " << vk::kMemoryAllocationTypeMessage[allocTypeIndex];
+
+                memInfoMap.erase(memoryAllocInfoMapKey);
+            }
+        }
+    }
+    else if (kTrackMemoryAllocation)
+    {
+        // Remove the allocation size from the allocation counter.
+        uint32_t allocTypeIndex = ToUnderlying(allocType);
+        ASSERT(mActiveMemoryAllocationsSize[allocTypeIndex] >= size);
+        mActiveMemoryAllocationsSize[allocTypeIndex] -= size;
+    }
+}
+
+VkDeviceSize RendererVk::getActiveMemoryAllocationsSize(uint32_t allocTypeIndex)
+{
+    if (kDebugMemoryAllocationLogs)
+    {
+        return mActiveMemoryAllocationsSize[allocTypeIndex];
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+VkDeviceSize RendererVk::getActiveMemoryAllocationsCount(uint32_t allocTypeIndex)
+{
+    if (kDebugMemoryAllocationLogs)
+    {
+        return mActiveMemoryAllocationsCount[allocTypeIndex];
+    }
+    else
+    {
+        return 0;
     }
 }
 

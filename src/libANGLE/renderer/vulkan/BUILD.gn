@@ -279,6 +279,12 @@ config("angle_vulkan_backend_config") {
   if (angle_enable_vulkan_validation_layers) {
     defines += [ "ANGLE_ENABLE_VULKAN_VALIDATION_LAYERS" ]
   }
+
+  # Ensures that the memory allocation logging can only be enabled with debug layers.
+  assert(angle_debug_layers_enabled || !angle_enable_memory_alloc_logging)
+  if (angle_enable_memory_alloc_logging) {
+    defines += [ "ANGLE_ENABLE_MEMORY_ALLOC_LOGGING=1" ]
+  }
 }
 
 template("angle_vulkan_backend_template") {

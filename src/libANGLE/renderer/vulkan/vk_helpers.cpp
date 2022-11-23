@@ -5357,7 +5357,8 @@ void ImageHelper::releaseImage(RendererVk *renderer)
 {
     if (mMemoryAllocationType != MemoryAllocationType::InvalidEnum && mAllocationSize != 0)
     {
-        renderer->onMemoryDealloc(mMemoryAllocationType, mAllocationSize);
+        renderer->onMemoryDealloc(mMemoryAllocationType, mAllocationSize,
+                                  mDeviceMemory.getHandle());
     }
 
     CollectGarbage(&mImageAndViewGarbage, &mImage, &mDeviceMemory);
@@ -5760,7 +5761,8 @@ void ImageHelper::destroy(RendererVk *renderer)
 {
     if (mImage.valid())
     {
-        renderer->onMemoryDealloc(mMemoryAllocationType, mAllocationSize);
+        renderer->onMemoryDealloc(mMemoryAllocationType, mAllocationSize,
+                                  mDeviceMemory.getHandle());
     }
 
     // destroy any pending garbage objects (most likely from ImageViewHelper) at this point
