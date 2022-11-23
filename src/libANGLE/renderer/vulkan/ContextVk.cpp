@@ -6908,24 +6908,16 @@ angle::Result ContextVk::getTimestamp(uint64_t *timestampOut)
     timestampQuery.writeTimestampToPrimary(this, &commandBuffer);
     ANGLE_VK_TRY(this, commandBuffer.end());
 
-    // Create fence for the submission
-    VkFenceCreateInfo fenceInfo = {};
-    fenceInfo.sType             = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-    fenceInfo.flags             = 0;
-
-    vk::DeviceScoped<vk::Fence> fence(device);
-    ANGLE_VK_TRY(this, fence.get().init(device, fenceInfo));
-
-    QueueSerial submitSerial;
+    QueueSerial submitQueueSerial;
     ANGLE_TRY(mRenderer->queueSubmitOneOff(this, std::move(commandBuffer), hasProtectedContent(),
-                                           mContextPriority, nullptr, 0, &fence.get(),
-                                           vk::SubmitPolicy::EnsureSubmitted, &submitSerial));
+                                           mContextPriority, nullptr, 0, nullptr,
+                                           vk::SubmitPolicy::EnsureSubmitted, &submitQueueSerial));
     // Track it with the submitSerial.
-    timestampQuery.retainCommands(submitSerial);
+    timestampQuery.retainCommands(submitQueueSerial);
 
     // Wait for the submission to finish.  Given no semaphores, there is hope that it would execute
     // in parallel with what's already running on the GPU.
-    ANGLE_VK_TRY(this, fence.get().wait(device, mRenderer->getMaxFenceWaitTimeNs()));
+    ANGLE_TRY(mRenderer->finishQueueSerial(this, submitQueueSerial));
 
     // Get the query results
     vk::QueryResult result(1);

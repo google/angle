@@ -1351,14 +1351,6 @@ void RendererVk::onDestroy(vk::Context *context)
     {
         handleDeviceLost();
     }
-    else
-    {
-        // ToDo: OneoffSubmission is doing wait on fence directly which by pass the
-        // retireFinishedCommands logic and may leave mInFlightCommands non-empty. For now call
-        // finish here to ensure everything is finished. We should chnage OneOffSUbmission code go
-        // through the code path just like others.
-        (void)finish(context, false);
-    }
 
     for (std::unique_ptr<vk::BufferBlock> &block : mOrphanedBufferBlocks)
     {

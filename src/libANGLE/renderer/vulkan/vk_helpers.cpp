@@ -8571,22 +8571,12 @@ angle::Result ImageHelper::copySurfaceImageToBuffer(DisplayVk *displayVk,
 
     ANGLE_VK_TRY(displayVk, primaryCommandBuffer.end());
 
-    // Create fence for the submission
-    VkFenceCreateInfo fenceInfo = {};
-    fenceInfo.sType             = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-    fenceInfo.flags             = 0;
-
-    vk::DeviceScoped<vk::Fence> fence(rendererVk->getDevice());
-    ANGLE_VK_TRY(displayVk, fence.get().init(rendererVk->getDevice(), fenceInfo));
-
-    QueueSerial queueSerial;
+    QueueSerial submitQueueSerial;
     ANGLE_TRY(rendererVk->queueSubmitOneOff(displayVk, std::move(primaryCommandBuffer), false,
-                                            egl::ContextPriority::Medium, nullptr, 0, &fence.get(),
-                                            vk::SubmitPolicy::EnsureSubmitted, &queueSerial));
+                                            egl::ContextPriority::Medium, nullptr, 0, nullptr,
+                                            vk::SubmitPolicy::EnsureSubmitted, &submitQueueSerial));
 
-    ANGLE_VK_TRY(displayVk,
-                 fence.get().wait(rendererVk->getDevice(), rendererVk->getMaxFenceWaitTimeNs()));
-    return angle::Result::Continue;
+    return rendererVk->finishQueueSerial(displayVk, submitQueueSerial);
 }
 
 angle::Result ImageHelper::copyBufferToSurfaceImage(DisplayVk *displayVk,
@@ -8625,22 +8615,12 @@ angle::Result ImageHelper::copyBufferToSurfaceImage(DisplayVk *displayVk,
 
     ANGLE_VK_TRY(displayVk, commandBuffer.end());
 
-    // Create fence for the submission
-    VkFenceCreateInfo fenceInfo = {};
-    fenceInfo.sType             = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-    fenceInfo.flags             = 0;
-
-    vk::DeviceScoped<vk::Fence> fence(rendererVk->getDevice());
-    ANGLE_VK_TRY(displayVk, fence.get().init(rendererVk->getDevice(), fenceInfo));
-
-    QueueSerial queueSerial;
+    QueueSerial submitQueueSerial;
     ANGLE_TRY(rendererVk->queueSubmitOneOff(displayVk, std::move(commandBuffer), false,
-                                            egl::ContextPriority::Medium, nullptr, 0, &fence.get(),
-                                            vk::SubmitPolicy::EnsureSubmitted, &queueSerial));
+                                            egl::ContextPriority::Medium, nullptr, 0, nullptr,
+                                            vk::SubmitPolicy::EnsureSubmitted, &submitQueueSerial));
 
-    ANGLE_VK_TRY(displayVk,
-                 fence.get().wait(rendererVk->getDevice(), rendererVk->getMaxFenceWaitTimeNs()));
-    return angle::Result::Continue;
+    return rendererVk->finishQueueSerial(displayVk, submitQueueSerial);
 }
 
 // static
