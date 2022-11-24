@@ -666,7 +666,6 @@ def main():
                 "--extra-packages com.android.angle.common",
             ],
             'srcs': [':ANGLE_srcs'],
-            'plugins': ['java_api_finder',],
             'privileged': True,
             'product_specific': True,
             'owner': 'google',
