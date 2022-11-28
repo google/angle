@@ -101,7 +101,7 @@ class CommandProcessorTask
 
     void initFlushAndQueueSubmit(const std::vector<VkSemaphore> &waitSemaphores,
                                  const std::vector<VkPipelineStageFlags> &waitSemaphoreStageMasks,
-                                 const Semaphore *semaphore,
+                                 const VkSemaphore semaphore,
                                  bool hasProtectedContent,
                                  egl::ContextPriority priority,
                                  SecondaryCommandPools *commandPools,
@@ -132,7 +132,7 @@ class CommandProcessorTask
     {
         return mWaitSemaphoreStageMasks;
     }
-    const Semaphore *getSemaphore() { return mSemaphore; }
+    VkSemaphore getSemaphore() { return mSemaphore; }
     GarbageList &getGarbage() { return mGarbage; }
     SecondaryCommandBufferList &&getCommandBuffersToReset()
     {
@@ -169,7 +169,7 @@ class CommandProcessorTask
     // Flush data
     std::vector<VkSemaphore> mWaitSemaphores;
     std::vector<VkPipelineStageFlags> mWaitSemaphoreStageMasks;
-    const Semaphore *mSemaphore;
+    VkSemaphore mSemaphore;
     SecondaryCommandPools *mCommandPools;
     GarbageList mGarbage;
     SecondaryCommandBufferList mCommandBuffersToReset;
@@ -306,7 +306,7 @@ class CommandQueueInterface : angle::NonCopyable
         egl::ContextPriority priority,
         const std::vector<VkSemaphore> &waitSemaphores,
         const std::vector<VkPipelineStageFlags> &waitSemaphoreStageMasks,
-        const Semaphore *signalSemaphore,
+        const VkSemaphore signalSemaphore,
         GarbageList &&currentGarbage,
         SecondaryCommandBufferList &&commandBuffersToReset,
         SecondaryCommandPools *commandPools,
@@ -377,7 +377,7 @@ class CommandQueue final : public CommandQueueInterface
                                  egl::ContextPriority priority,
                                  const std::vector<VkSemaphore> &waitSemaphores,
                                  const std::vector<VkPipelineStageFlags> &waitSemaphoreStageMasks,
-                                 const Semaphore *signalSemaphore,
+                                 const VkSemaphore signalSemaphore,
                                  GarbageList &&currentGarbage,
                                  SecondaryCommandBufferList &&commandBuffersToReset,
                                  SecondaryCommandPools *commandPools,
@@ -544,7 +544,7 @@ class CommandProcessor final : public Context, public CommandQueueInterface
                                  egl::ContextPriority priority,
                                  const std::vector<VkSemaphore> &waitSemaphores,
                                  const std::vector<VkPipelineStageFlags> &waitSemaphoreStageMasks,
-                                 const Semaphore *signalSemaphore,
+                                 const VkSemaphore signalSemaphore,
                                  GarbageList &&currentGarbage,
                                  SecondaryCommandBufferList &&commandBuffersToReset,
                                  SecondaryCommandPools *commandPools,
