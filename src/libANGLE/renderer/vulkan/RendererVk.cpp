@@ -1588,11 +1588,6 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
         ANGLE_FEATURE_CONDITION(&mFeatures, supportsSurfacelessQueryExtension, !isMockICDEnabled());
     }
 
-    // Verify the required extensions are in the extension names set. Fail if not.
-    std::sort(mEnabledInstanceExtensions.begin(), mEnabledInstanceExtensions.end(), StrLess);
-    ANGLE_VK_TRY(displayVk,
-                 VerifyExtensionsPresent(instanceExtensionNames, mEnabledInstanceExtensions));
-
     // Enable VK_KHR_get_physical_device_properties_2 if available.
     if (ExtensionFound(VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME,
                        instanceExtensionNames))
@@ -1613,6 +1608,11 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
         mEnabledInstanceExtensions.push_back(VK_KHR_EXTERNAL_SEMAPHORE_CAPABILITIES_EXTENSION_NAME);
         ANGLE_FEATURE_CONDITION(&mFeatures, supportsExternalSemaphoreCapabilities, true);
     }
+
+    // Verify the required extensions are in the extension names set. Fail if not.
+    std::sort(mEnabledInstanceExtensions.begin(), mEnabledInstanceExtensions.end(), StrLess);
+    ANGLE_VK_TRY(displayVk,
+                 VerifyExtensionsPresent(instanceExtensionNames, mEnabledInstanceExtensions));
 
     mApplicationInfo                    = {};
     mApplicationInfo.sType              = VK_STRUCTURE_TYPE_APPLICATION_INFO;
@@ -1658,7 +1658,6 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     instanceInfo.enabledExtensionCount = static_cast<uint32_t>(mEnabledInstanceExtensions.size());
     instanceInfo.ppEnabledExtensionNames =
         mEnabledInstanceExtensions.empty() ? nullptr : mEnabledInstanceExtensions.data();
-    mEnabledInstanceExtensions.push_back(nullptr);
 
     instanceInfo.enabledLayerCount   = static_cast<uint32_t>(enabledInstanceLayerNames.size());
     instanceInfo.ppEnabledLayerNames = enabledInstanceLayerNames.data();
@@ -1805,6 +1804,9 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     mFormatTable.initialize(this, &mNativeTextureCaps);
 
     setGlobalDebugAnnotator();
+
+    // Null terminate the extension list returned for EGL_VULKAN_INSTANCE_EXTENSIONS_ANGLE.
+    mEnabledInstanceExtensions.push_back(nullptr);
 
     return angle::Result::Continue;
 }
