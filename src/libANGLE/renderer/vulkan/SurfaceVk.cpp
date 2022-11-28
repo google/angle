@@ -1390,6 +1390,11 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context,
     swapchainInfo.clipped     = VK_TRUE;
     swapchainInfo.oldSwapchain = lastSwapchain;
 
+    if (context->getFeatures().supportsSwapchainMaintenance1.enabled)
+    {
+        swapchainInfo.flags |= VK_SWAPCHAIN_CREATE_DEFERRED_MEMORY_ALLOCATION_BIT_EXT;
+    }
+
     if (isSharedPresentModeDesired())
     {
         swapchainInfo.minImageCount = 1;
