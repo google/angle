@@ -8,6 +8,7 @@
 //
 
 #include "libANGLE/renderer/vulkan/CommandProcessor.h"
+#include "common/system_utils.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
 
 namespace rx
@@ -657,6 +658,19 @@ angle::Result CommandProcessor::processTasksImpl(bool *exitThread)
         {
             CommandProcessorTask task(std::move(mTasks.front()));
             mTasks.pop();
+
+            // Artificially make the task take longer to catch threading issues.
+            if (getFeatures().slowAsyncCommandQueueForTesting.enabled)
+            {
+                constexpr double kSlowdownTime = 0.005;
+
+                double startTime = angle::GetCurrentSystemTime();
+                while (angle::GetCurrentSystemTime() - startTime < kSlowdownTime)
+                {
+                    // Busy waiting
+                }
+            }
+
             ANGLE_TRY(processTask(&task));
         }
     }

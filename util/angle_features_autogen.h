@@ -223,6 +223,7 @@ enum class Feature
     ShiftInstancedArrayDataWithOffset,
     SingleThreadedTextureDecompression,
     SkipVSConstantRegisterZero,
+    SlowAsyncCommandQueueForTesting,
     SlowDownMonolithicPipelineCreationForTesting,
     SupportsAndroidHardwareBuffer,
     SupportsAndroidNativeFenceSync,

@@ -237,6 +237,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::ShiftInstancedArrayDataWithOffset, "shiftInstancedArrayDataWithOffset"},
     {Feature::SingleThreadedTextureDecompression, "singleThreadedTextureDecompression"},
     {Feature::SkipVSConstantRegisterZero, "skipVSConstantRegisterZero"},
+    {Feature::SlowAsyncCommandQueueForTesting, "slowAsyncCommandQueueForTesting"},
     {Feature::SlowDownMonolithicPipelineCreationForTesting,
      "slowDownMonolithicPipelineCreationForTesting"},
     {Feature::SupportsAndroidHardwareBuffer, "supportsAndroidHardwareBuffer"},

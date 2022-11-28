@@ -1073,13 +1073,6 @@
 5458 ASAN VULKAN SWIFTSHADER : ClipCullDistanceTest.SizeCheckCombined/* = SKIP
 7922 TSAN VULKAN SWIFTSHADER : ClipCullDistanceTest.SizeCheckCombined/* = SKIP
 
-// Slow tests, should appear last in this file
-5076 : GLSLTest.VerifyMaxVertexUniformVectors* = TIMEOUT
-5076 : GLSLTest.VerifyMaxFragmentUniformVectors* = TIMEOUT
-6261 : MultithreadingTest* = TIMEOUT
-// Please do not add expectations below this line,
-// so that TIMEOUT expectations above don't override more precise SKIP expectations
-
 7629 VULKAN : EGLRobustnessTestES3.Context*ResetOnInvalidLocalShaderVariableAccess_ShareGroupAfterProgramCreation/* = SKIP
 
 // EXT_multisample_compatibility exposed for the sake of GLES1, but not implemented on Vulkan
@@ -1102,3 +1095,9 @@
 // GL program cache failure with shader images.
 7797 WIN OPENGL : PixelLocalStorageTest.ProgramCache/* = SKIP
 
+// Slow tests, should appear last in this file
+5076 : GLSLTest.VerifyMaxVertexUniformVectors* = TIMEOUT
+5076 : GLSLTest.VerifyMaxFragmentUniformVectors* = TIMEOUT
+6261 : MultithreadingTest* = TIMEOUT
+// Please do not add expectations below this line,
+// so that TIMEOUT expectations above don't override more precise SKIP expectations
