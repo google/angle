@@ -1832,23 +1832,14 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
     ANGLE_TRACE_EVENT0("gpu.angle", "WindowSurfaceVk::present");
     RendererVk *renderer = contextVk->getRenderer();
 
-    // Throttle the submissions to avoid getting too far ahead of the GPU.
-    QueueSerial *swapSerial = &mSwapHistory.front();
-    mSwapHistory.next();
-
-    if (swapSerial->valid())
-    {
-        ANGLE_TRACE_EVENT0("gpu.angle", "WindowSurfaceVk::present: Throttle CPU");
-        ANGLE_TRY(renderer->finishQueueSerial(contextVk, *swapSerial));
-    }
-
     // Get a new semaphore to use for present.
     vk::Semaphore presentSemaphore;
     ANGLE_TRY(NewSemaphore(contextVk, &mPresentSemaphoreRecycler, &presentSemaphore));
 
     // Make a submission before present to flush whatever's pending.  In the very least, a
     // submission is necessary to make sure the present semaphore is signaled.
-    ANGLE_TRY(prePresentSubmit(contextVk, presentSemaphore, swapSerial));
+    QueueSerial swapSerial;
+    ANGLE_TRY(prePresentSubmit(contextVk, presentSemaphore, &swapSerial));
 
     VkPresentInfoKHR presentInfo   = {};
     presentInfo.sType              = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
@@ -1906,7 +1897,29 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
 
     ANGLE_TRY(computePresentOutOfDate(contextVk, result, presentOutOfDate));
 
+    ANGLE_TRY(throttleCPU(contextVk, swapSerial));
+
     contextVk->resetPerFramePerfCounters();
+
+    return angle::Result::Continue;
+}
+
+angle::Result WindowSurfaceVk::throttleCPU(ContextVk *contextVk,
+                                           const QueueSerial &currentSubmitSerial)
+{
+    RendererVk *renderer = contextVk->getRenderer();
+
+    // Wait on the oldest serial and replace it with the newest as the circular buffer moves
+    // forward.
+    QueueSerial swapSerial = mSwapHistory.front();
+    mSwapHistory.front()   = currentSubmitSerial;
+    mSwapHistory.next();
+
+    if (swapSerial.valid())
+    {
+        ANGLE_TRACE_EVENT0("gpu.angle", "WindowSurfaceVk::throttleCPU");
+        ANGLE_TRY(renderer->finishQueueSerial(contextVk, swapSerial));
+    }
 
     return angle::Result::Continue;
 }

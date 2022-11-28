@@ -366,6 +366,12 @@ class WindowSurfaceVk : public SurfaceVk
 
     angle::Result cleanUpPresentHistory(vk::Context *context);
 
+    // Throttle the CPU such that application's logic and command buffer recording doesn't get more
+    // than two frame ahead of the frame being rendered (and three frames ahead of the one being
+    // presented).  This is a failsafe, as the application should ensure command buffer recording is
+    // not ahead of the frame being rendered by *one* frame.
+    angle::Result throttleCPU(ContextVk *contextVk, const QueueSerial &currentSubmitSerial);
+
     void updateOverlay(ContextVk *contextVk) const;
     bool overlayHasEnabledWidget(ContextVk *contextVk) const;
     angle::Result drawOverlay(ContextVk *contextVk, impl::SwapchainImage *image) const;
@@ -386,7 +392,10 @@ class WindowSurfaceVk : public SurfaceVk
     VkCompositeAlphaFlagBitsKHR mCompositeAlpha;
 
     // A circular buffer that stores the serial of the submission fence of the context on every
-    // swap. The CPU is throttled by waiting for the 2nd previous serial to finish.
+    // swap. The CPU is throttled by waiting for the 2nd previous serial to finish.  This should
+    // normally be a no-op, as the application should pace itself to avoid input lag, and is
+    // implemented in ANGLE as a fail safe.  Removing this throttling requires untangling it from
+    // acquire semaphore recycling (see mAcquireImageSemaphores below)
     angle::CircularBuffer<QueueSerial, impl::kSwapHistorySize> mSwapHistory;
 
     // The previous swapchain which needs to be scheduled for destruction when appropriate.  This
@@ -406,16 +415,18 @@ class WindowSurfaceVk : public SurfaceVk
     // number of semaphores that are used to acquire swapchain images, and that is
     // kSwapHistorySize+1:
     //
-    //                    Unrelated submission in      Submission as part of
-    //                      the middle of frame            buffer swap
-    //                               |                          |
-    //                               V                          V
-    //     Frame i:     ... ANI ... QS (fence Fa) ... Wait(..) QS (Fence Fb) QP
-    //     Frame i+1:   ... ANI ... QS (fence Fc) ... Wait(..) QS (Fence Fd) QP
-    //     Frame i+2:   ... ANI ... QS (fence Fe) ... Wait(Fb) QS (Fence Ff) QP
-    //                                                 ^
-    //                                                 |
-    //                                          CPU throttling
+    //             Unrelated submission in     Submission as part of
+    //               the middle of frame          buffer swap
+    //                              |                 |
+    //                              V                 V
+    //     Frame i:     ... ANI ... QS (fence Fa) ... QS (Fence Fb) QP Wait(..)
+    //     Frame i+1:   ... ANI ... QS (fence Fc) ... QS (Fence Fd) QP Wait(..) <--\
+    //     Frame i+2:   ... ANI ... QS (fence Fe) ... QS (Fence Ff) QP Wait(Fb)    |
+    //                                                                  ^          |
+    //                                                                  |          |
+    //                                                           CPU throttling    |
+    //                                                                             |
+    //                               Note: app should throttle itself here (equivalent of Wait(Fb))
     //
     // In frame i+2 (2 is kSwapHistorySize), ANGLE waits on fence Fb which means that the semaphore
     // used for Frame i's ANI can be reused (because Fb-is-signalled implies Fa-is-signalled).
