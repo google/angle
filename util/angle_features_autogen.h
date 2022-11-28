@@ -290,6 +290,7 @@ enum class Feature
     SupportsSurfacelessQueryExtension,
     SupportsSurfaceProtectedCapabilitiesExtension,
     SupportsSurfaceProtectedSwapchains,
+    SupportsSwapchainMaintenance1,
     SupportsTimestampSurfaceAttribute,
     SupportsTransformFeedbackExtension,
     SupportsVertexInputDynamicState,

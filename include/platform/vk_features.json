@@ -1100,6 +1100,14 @@
             ],
             "issue": "https://anglebug.com/7899"
 	},
+        {
+            "name": "supports_swapchain_maintenance1",
+            "category": "Features",
+            "description": [
+                "VkDevice supports the VK_EXT_surface_maintenance1 and VK_EXT_swapchain_maintenance1 extensions"
+            ],
+            "issue": "https://anglebug.com/7847"
+	},
 	{
             "name": "prefer_submit_on_any_samples_passed_query_end",
             "category": "Workarounds",

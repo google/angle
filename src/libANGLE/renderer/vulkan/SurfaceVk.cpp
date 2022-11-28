@@ -1872,7 +1872,20 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
         presentRegions.swapchainCount = 1;
         presentRegions.pRegions       = &presentRegion;
 
-        presentInfo.pNext = &presentRegions;
+        vk::AddToPNextChain(&presentInfo, &presentRegions);
+    }
+
+    VkSwapchainPresentFenceInfoEXT presentFenceInfo = {};
+    vk::Fence presentFence;
+    if (contextVk->getFeatures().supportsSwapchainMaintenance1.enabled)
+    {
+        ANGLE_VK_TRY(contextVk, NewFence(contextVk, &mPresentFenceRecycler, &presentFence));
+
+        presentFenceInfo.sType          = VK_STRUCTURE_TYPE_SWAPCHAIN_PRESENT_FENCE_INFO_EXT;
+        presentFenceInfo.swapchainCount = 1;
+        presentFenceInfo.pFences        = presentFence.ptr();
+
+        vk::AddToPNextChain(&presentInfo, &presentFenceInfo);
     }
 
     ASSERT(mAcquireImageSemaphore == nullptr);
@@ -1887,7 +1900,18 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
     mPresentHistory.emplace_back();
     mPresentHistory.back().semaphore     = std::move(presentSemaphore);
     mPresentHistory.back().oldSwapchains = std::move(mOldSwapchains);
-    mPresentHistory.back().imageIndex    = mCurrentSwapchainImageIndex;
+    if (contextVk->getFeatures().supportsSwapchainMaintenance1.enabled)
+    {
+        mPresentHistory.back().imageIndex = kInvalidImageIndex;
+        mPresentHistory.back().fence      = std::move(presentFence);
+    }
+    else
+    {
+        // The fence needed to know when the semaphore can be recycled will be one that is passed to
+        // vkAcquireNextImageKHR that returns the same image index.  That is why the image index
+        // needs to be tracked in this case.
+        mPresentHistory.back().imageIndex = mCurrentSwapchainImageIndex;
+    }
 
     // Clean up whatever present is already finished.
     ANGLE_TRY(cleanUpPresentHistory(contextVk));
@@ -1964,7 +1988,7 @@ angle::Result WindowSurfaceVk::cleanUpPresentHistory(vk::Context *context)
         impl::ImagePresentOperation presentOperation = std::move(mPresentHistory.front());
         mPresentHistory.pop_front();
 
-        // We can't be stuck on an a presentation to an old swapchain without a fence.
+        // We can't be stuck on a presentation to an old swapchain without a fence.
         ASSERT(presentOperation.imageIndex != kInvalidImageIndex);
 
         // Move clean up data to the next (now first) present operation, if any.  Note that there
@@ -2138,13 +2162,18 @@ VkResult WindowSurfaceVk::acquireNextSwapchainImage(vk::Context *context)
     // vkAcquireNextImageKHR, it's actually about the present operation.  There is currently no way
     // to associate the fence with the present operation itself, so this is a hack.
     vk::Fence presentFence;
-    VkResult result = NewFence(context, &mPresentFenceRecycler, &presentFence);
-    if (result != VK_SUCCESS)
+    const bool presentFenceInferredFromAcquire =
+        !context->getFeatures().supportsSwapchainMaintenance1.enabled;
+    if (presentFenceInferredFromAcquire)
     {
-        return result;
+        const VkResult result = NewFence(context, &mPresentFenceRecycler, &presentFence);
+        if (result != VK_SUCCESS)
+        {
+            return result;
+        }
     }
 
-    result =
+    VkResult result =
         vkAcquireNextImageKHR(device, mSwapchain, UINT64_MAX, acquireImageSemaphore->getHandle(),
                               presentFence.getHandle(), &mCurrentSwapchainImageIndex);
 
@@ -2152,13 +2181,19 @@ VkResult WindowSurfaceVk::acquireNextSwapchainImage(vk::Context *context)
     if (ANGLE_UNLIKELY(result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR))
     {
         // On failure, the fence is going to be untouched, so it can be recycled right away.
-        mPresentFenceRecycler.recycle(std::move(presentFence));
+        if (presentFenceInferredFromAcquire)
+        {
+            mPresentFenceRecycler.recycle(std::move(presentFence));
+        }
         return result;
     }
 
     // Associate the present fence with the last present operation.
-    AssociateFenceWithPresentHistory(mCurrentSwapchainImageIndex, std::move(presentFence),
-                                     &mPresentHistory);
+    if (presentFenceInferredFromAcquire)
+    {
+        AssociateFenceWithPresentHistory(mCurrentSwapchainImageIndex, std::move(presentFence),
+                                         &mPresentHistory);
+    }
 
     SwapchainImage &image = mSwapchainImages[mCurrentSwapchainImageIndex];
 

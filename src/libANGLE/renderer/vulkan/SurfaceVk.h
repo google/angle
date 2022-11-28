@@ -169,6 +169,8 @@ struct ImagePresentOperation : angle::NonCopyable
     std::vector<SwapchainCleanupData> oldSwapchains;
 
     // Used to associate an acquire fence with the previous present operation of the image.
+    // Only relevant when VK_EXT_swapchain_maintenance1 is not supported; otherwise a fence is
+    // always associated with the present operation.
     uint32_t imageIndex;
 };
 

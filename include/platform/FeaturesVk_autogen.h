@@ -812,6 +812,12 @@ struct FeaturesVk : FeatureSetBase
         "VK_KHR_maintenance2",
         &members, "https://anglebug.com/7899"};
 
+    FeatureInfo supportsSwapchainMaintenance1 = {
+        "supportsSwapchainMaintenance1", FeatureCategory::VulkanFeatures,
+        "VkDevice supports the VK_EXT_surface_maintenance1 and VK_EXT_swapchain_maintenance1 "
+        "extensions",
+        &members, "https://anglebug.com/7847"};
+
     FeatureInfo preferSubmitOnAnySamplesPassedQueryEnd = {
         "preferSubmitOnAnySamplesPassedQueryEnd", FeatureCategory::VulkanWorkarounds,
         "Submit commands to driver when last GL_ANY_SAMPLES_PASSED query is made for performance "
