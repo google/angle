@@ -227,7 +227,7 @@ TEMPLATE_ENTRY_POINT_DECL = """{angle_export}{return_type} {export_def} {name}({
 
 TEMPLATE_GLES_ENTRY_POINT_NO_RETURN = """\
 void GL_APIENTRY GL_{name}({params})
-{{
+{{{optional_gl_entry_point_locks}
     Context *context = {context_getter};
     {event_comment}EVENT(context, GL{name}, "context = %d{comma_if_needed}{format_params}", CID(context){comma_if_needed}{pass_params});
 
@@ -250,7 +250,7 @@ void GL_APIENTRY GL_{name}({params})
 
 TEMPLATE_GLES_ENTRY_POINT_WITH_RETURN = """\
 {return_type} GL_APIENTRY GL_{name}({params})
-{{
+{{{optional_gl_entry_point_locks}
     Context *context = {context_getter};
     {event_comment}EVENT(context, GL{name}, "context = %d{comma_if_needed}{format_params}", CID(context){comma_if_needed}{pass_params});
 
@@ -1679,6 +1679,8 @@ def format_entry_point_def(api, command_node, cmd_name, proto, params, cmd_packe
             get_egl_entry_point_labeled_object(ep_to_object, cmd_name, params, packed_enums),
         "entry_point_locks":
             get_locks(api, cmd_name, params),
+        "optional_gl_entry_point_locks":
+            get_optional_gl_locks(api, cmd_name, params),
         "preamble":
             get_preamble(api, cmd_name, params)
     }
@@ -2677,6 +2679,18 @@ def get_locks(api, cmd_name, params):
 
     if has_surface:
         return ordered_lock_statements(LOCK_GLOBAL_SURFACE, LOCK_GLOBAL)
+
+    return ordered_lock_statements(LOCK_GLOBAL)
+
+
+def get_optional_gl_locks(api, cmd_name, params):
+    if api != apis.GLES:
+        return ""
+
+    # EGLImage related commands need to access EGLImage and Display which should
+    # be protected with global lock
+    if not cmd_name.startswith("glEGLImage"):
+        return ""
 
     return ordered_lock_statements(LOCK_GLOBAL)
 
