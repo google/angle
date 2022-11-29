@@ -3678,7 +3678,7 @@ void CaptureShareGroupMidExecutionSetup(
     if (currentUnpackState.alignment != 1)
     {
         cap(CapturePixelStorei(replayState, true, GL_UNPACK_ALIGNMENT, 1));
-        currentUnpackState.alignment = 1;
+        replayState.setUnpackAlignment(1);
     }
 
     // Capture Texture setup and data.
@@ -4255,7 +4255,7 @@ void CaptureShareGroupMidExecutionSetup(
     if (savedUnpackAlignment != currentUnpackState.alignment)
     {
         cap(CapturePixelStorei(replayState, true, GL_UNPACK_ALIGNMENT, savedUnpackAlignment));
-        currentUnpackState.alignment = savedUnpackAlignment;
+        replayState.setUnpackAlignment(savedUnpackAlignment);
     }
 }
 
@@ -4394,7 +4394,7 @@ void CaptureMidExecutionSetup(const gl::Context *context,
     if (currentUnpackState.alignment != 1)
     {
         cap(CapturePixelStorei(replayState, true, GL_UNPACK_ALIGNMENT, 1));
-        currentUnpackState.alignment = 1;
+        replayState.setUnpackAlignment(1);
     }
 
     // Capture Texture setup and data.
@@ -5164,7 +5164,7 @@ void CaptureMidExecutionSetup(const gl::Context *context,
     if (savedUnpackAlignment != currentUnpackState.alignment)
     {
         cap(CapturePixelStorei(replayState, true, GL_UNPACK_ALIGNMENT, savedUnpackAlignment));
-        currentUnpackState.alignment = savedUnpackAlignment;
+        replayState.setUnpackAlignment(savedUnpackAlignment);
     }
 
     if (validationEnabled)
