@@ -4594,6 +4594,7 @@ void GL_APIENTRY GL_EGLImageTargetTexStorageEXT(GLenum target,
                                                 GLeglImageOES image,
                                                 const GLint *attrib_list)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     Context *context = GetValidGlobalContext();
     EVENT(context, GLEGLImageTargetTexStorageEXT,
           "context = %d, target = %s, image = 0x%016" PRIxPTR ", attrib_list = 0x%016" PRIxPTR "",
@@ -4627,6 +4628,7 @@ void GL_APIENTRY GL_EGLImageTargetTextureStorageEXT(GLuint texture,
                                                     GLeglImageOES image,
                                                     const GLint *attrib_list)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     Context *context = GetValidGlobalContext();
     EVENT(context, GLEGLImageTargetTextureStorageEXT,
           "context = %d, texture = %u, image = 0x%016" PRIxPTR ", attrib_list = 0x%016" PRIxPTR "",
@@ -9917,6 +9919,7 @@ void GL_APIENTRY GL_BlitFramebufferNV(GLint srcX0,
 // GL_OES_EGL_image
 void GL_APIENTRY GL_EGLImageTargetRenderbufferStorageOES(GLenum target, GLeglImageOES image)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     Context *context = GetValidGlobalContext();
     EVENT(context, GLEGLImageTargetRenderbufferStorageOES,
           "context = %d, target = %s, image = 0x%016" PRIxPTR "", CID(context),
@@ -9948,6 +9951,7 @@ void GL_APIENTRY GL_EGLImageTargetRenderbufferStorageOES(GLenum target, GLeglIma
 
 void GL_APIENTRY GL_EGLImageTargetTexture2DOES(GLenum target, GLeglImageOES image)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     Context *context = GetValidGlobalContext();
     EVENT(context, GLEGLImageTargetTexture2DOES,
           "context = %d, target = %s, image = 0x%016" PRIxPTR "", CID(context),
