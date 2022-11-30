@@ -365,7 +365,7 @@ libangle_headers = [
   "src/libANGLE/validationGL2_autogen.h",
   "src/libANGLE/validationGL3_autogen.h",
   "src/libANGLE/validationGL4_autogen.h",
-  "src/third_party/trace_event/trace_event.h",
+  "src/common/base/anglebase/trace_event/trace_event.h",
 ]
 
 libangle_sources = [

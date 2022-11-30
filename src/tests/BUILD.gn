@@ -384,7 +384,7 @@ template("angle_perftests_common") {
       check_includes = false
     }
     sources = [
-      "../third_party/trace_event/trace_event.h",
+      "../common/base/anglebase/trace_event/trace_event.h",
       "perf_tests/ANGLEPerfTest.cpp",
       "perf_tests/ANGLEPerfTest.h",
       "perf_tests/ANGLEPerfTestArgs.cpp",
