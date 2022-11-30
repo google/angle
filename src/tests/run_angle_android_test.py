@@ -28,7 +28,9 @@ import angle_test_util
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        'suite', help='Test suite to run.', choices=['angle_perftests', 'angle_end2end_tests'])
+        'suite',
+        help='Test suite to run.',
+        choices=['angle_end2end_tests', 'angle_perftests', 'angle_trace_tests'])
     parser.add_argument(
         '-f',
         '--filter',
@@ -61,7 +63,7 @@ def main():
             print(test)
         return 0
 
-    if args.suite == 'angle_perftests':
+    if args.suite == 'angle_trace_tests':
         traces = set(android_helper.GetTraceFromTestName(test) for test in tests)
         android_helper.PrepareRestrictedTraces(traces)
 
