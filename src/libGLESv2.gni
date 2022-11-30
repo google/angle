@@ -71,8 +71,6 @@ libangle_common_sources = [
   "src/common/third_party/base/anglebase/sha1.cc",
   "src/common/third_party/base/anglebase/sha1.h",
   "src/common/third_party/base/anglebase/sys_byteorder.h",
-  "src/common/third_party/smhasher/src/PMurHash.cpp",
-  "src/common/third_party/smhasher/src/PMurHash.h",
   "src/common/tls.cpp",
   "src/common/tls.h",
   "src/common/uniform_type_info_autogen.cpp",
