@@ -19,6 +19,12 @@
 
 namespace
 {
+bool IsANGLE(angle::GLESDriverType driverType)
+{
+    return driverType == angle::GLESDriverType::AngleEGL ||
+           driverType == angle::GLESDriverType::AngleVulkanSecondariesEGL;
+}
+
 constexpr EGLint kDefaultSwapInterval = 1;
 }  // anonymous namespace
 
@@ -280,8 +286,7 @@ bool EGLWindow::initializeDisplay(OSWindow *osWindow,
     if (driverType == angle::GLESDriverType::SystemWGL)
         return false;
 
-    if (driverType == angle::GLESDriverType::AngleEGL &&
-        strstr(extensionString, "EGL_ANGLE_platform_angle"))
+    if (IsANGLE(driverType) && strstr(extensionString, "EGL_ANGLE_platform_angle"))
     {
         mDisplay = eglGetPlatformDisplay(EGL_PLATFORM_ANGLE_ANGLE,
                                          reinterpret_cast<void *>(osWindow->getNativeDisplay()),

@@ -1027,7 +1027,7 @@ void EnsureEGLLoaded()
     }
 
     std::string errorOut;
-    gEntryPointsLib = OpenSystemLibraryAndGetError(ANGLE_GLESV2_LIBRARY_NAME, angle::SearchType::ModuleDir, &errorOut);
+    gEntryPointsLib = OpenSystemLibraryAndGetError(ANGLE_DISPATCH_LIBRARY, angle::SearchType::ModuleDir, &errorOut);
     if (gEntryPointsLib)
     {
         LoadLibEGL_EGL(GlobalLoad);
@@ -3382,14 +3382,19 @@ def main():
 
     everything = "Khronos and ANGLE XML files"
 
-    for lib in ["libGLESv2" + suffix for suffix in ["", "_no_capture", "_with_capture"]]:
+    for lib in [
+            "libGLESv2" + suffix
+            for suffix in ["", "_no_capture", "_with_capture", "_vulkan_secondaries"]
+    ]:
         write_windows_def_file(everything, lib, lib, "libGLESv2", libgles_ep_exports)
 
     write_windows_def_file(everything, "opengl32_with_wgl", "opengl32", "libGLESv2",
                            libgl_ep_exports + sorted(wgl_commands))
     write_windows_def_file(everything, "opengl32", "opengl32", "libGLESv2", libgl_ep_exports)
-    write_windows_def_file("egl.xml and egl_angle_ext.xml", "libEGL", "libEGL", "libEGL",
-                           libegl_windows_def_exports)
+
+    for lib in ["libEGL" + suffix for suffix in ["", "_vulkan_secondaries"]]:
+        write_windows_def_file("egl.xml and egl_angle_ext.xml", lib, lib, "libEGL",
+                               libegl_windows_def_exports)
 
     all_gles_param_types = sorted(GLEntryPoints.all_param_types)
     all_egl_param_types = sorted(EGLEntryPoints.all_param_types)

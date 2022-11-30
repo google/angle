@@ -38,7 +38,9 @@ namespace angle
 {
 namespace
 {
-bool IsAngleEGLConfigSupported(const PlatformParameters &param, OSWindow *osWindow)
+bool IsEGLConfigSupported(const PlatformParameters &param,
+                          OSWindow *osWindow,
+                          const char *eglLibraryName)
 {
     std::unique_ptr<angle::Library> eglLibrary;
 
@@ -56,6 +58,16 @@ bool IsAngleEGLConfigSupported(const PlatformParameters &param, OSWindow *osWind
     eglWindow->destroyGL();
     EGLWindow::Delete(&eglWindow);
     return result;
+}
+
+bool IsAngleEGLConfigSupported(const PlatformParameters &param, OSWindow *osWindow)
+{
+    return IsEGLConfigSupported(param, osWindow, ANGLE_EGL_LIBRARY_NAME);
+}
+
+bool IsAngleVulkanSecondariesEGLConfigSupported(const PlatformParameters &param, OSWindow *osWindow)
+{
+    return IsEGLConfigSupported(param, osWindow, ANGLE_VULKAN_SECONDARIES_EGL_LIBRARY_NAME);
 }
 
 bool IsSystemWGLConfigSupported(const PlatformParameters &param, OSWindow *osWindow)
@@ -102,23 +114,7 @@ bool IsSystemEGLConfigSupported(const PlatformParameters &param, OSWindow *osWin
 
 bool IsZinkEGLConfigSupported(const PlatformParameters &param, OSWindow *osWindow)
 {
-    std::unique_ptr<angle::Library> eglLibrary;
-
-#if defined(ANGLE_USE_UTIL_LOADER)
-    eglLibrary.reset(
-        angle::OpenSharedLibrary(ANGLE_MESA_EGL_LIBRARY_NAME, angle::SearchType::ModuleDir));
-#endif
-
-    EGLWindow *eglWindow =
-        EGLWindow::New(param.clientType, param.majorVersion, param.minorVersion, param.profileMask);
-    ConfigParameters configParams;
-    bool result =
-        eglWindow->initializeGL(osWindow, eglLibrary.get(), angle::GLESDriverType::ZinkEGL,
-                                param.eglParameters, configParams);
-    eglWindow->destroyGL();
-    EGLWindow::Delete(&eglWindow);
-
-    return result;
+    return IsEGLConfigSupported(param, osWindow, ANGLE_MESA_EGL_LIBRARY_NAME);
 }
 
 bool IsAndroidDevice(const std::string &deviceName)
@@ -477,6 +473,20 @@ bool IsConfigAllowlisted(const SystemInfo &systemInfo, const PlatformParameters 
     }
 #endif
 
+    if (param.driver == GLESDriverType::AngleVulkanSecondariesEGL)
+    {
+        if (param.getRenderer() != EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE)
+        {
+            return false;
+        }
+        if (IsAndroid() &&
+            param.getDeviceType() == EGL_PLATFORM_ANGLE_DEVICE_TYPE_SWIFTSHADER_ANGLE)
+        {
+            return false;
+        }
+        return true;
+    }
+
     if (IsWindows())
     {
         switch (param.driver)
@@ -675,6 +685,9 @@ bool IsConfigSupported(const PlatformParameters &param)
             case GLESDriverType::AngleEGL:
                 result = IsAngleEGLConfigSupported(param, osWindow);
                 break;
+            case GLESDriverType::AngleVulkanSecondariesEGL:
+                result = IsAngleVulkanSecondariesEGLConfigSupported(param, osWindow);
+                break;
             case GLESDriverType::SystemEGL:
                 result = IsSystemEGLConfigSupported(param, osWindow);
                 break;
@@ -844,6 +857,11 @@ GLESDriverType GetDriverTypeFromString(const char *driverName, GLESDriverType de
     if (strcmp(driverName, "angle") == 0)
     {
         return GLESDriverType::AngleEGL;
+    }
+
+    if (strcmp(driverName, "angle-vulkan-secondaries") == 0)
+    {
+        return GLESDriverType::AngleVulkanSecondariesEGL;
     }
 
     if (strcmp(driverName, "zink") == 0)

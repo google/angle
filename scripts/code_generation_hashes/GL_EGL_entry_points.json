@@ -6,7 +6,7 @@
   "scripts/entry_point_packed_gl_enums.json":
     "4d5018871615ae745a34305fbb0f8093",
   "scripts/generate_entry_points.py":
-    "63df9e5509d9615fb74a916156ae6bfa",
+    "ae3199c03943c31275d4e36b5f1c7309",
   "scripts/gl_angle_ext.xml":
     "98a3ec3a18a0ea57bca6c8c27c8575cf",
   "scripts/registry_xml.py":
@@ -108,7 +108,7 @@
   "src/libANGLE/validationGL4_autogen.h":
     "cd7ad03880470cae2fe26fc9b7902ce9",
   "src/libEGL/libEGL_autogen.cpp":
-    "ef6a511ff42a4bd089fa03dedb1a4ede",
+    "05049cc6c46b9857836e9a617f9e7d86",
   "src/libEGL/libEGL_autogen.def":
     "aee187cf3515a96c9114dab81b636ce7",
   "src/libGLESv2/cl_stubs_autogen.h":

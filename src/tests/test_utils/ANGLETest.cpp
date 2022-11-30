@@ -177,7 +177,8 @@ GPUTestConfig::API GetTestConfigAPIFromRenderer(angle::GLESDriverType driverType
                                                 EGLenum renderer,
                                                 EGLenum deviceType)
 {
-    if (driverType != angle::GLESDriverType::AngleEGL)
+    if (driverType != angle::GLESDriverType::AngleEGL &&
+        driverType != angle::GLESDriverType::AngleVulkanSecondariesEGL)
     {
         return GPUTestConfig::kAPIUnknown;
     }
@@ -554,6 +555,7 @@ void ANGLETestBase::initOSWindow()
     switch (mCurrentParams->driver)
     {
         case GLESDriverType::AngleEGL:
+        case GLESDriverType::AngleVulkanSecondariesEGL:
         case GLESDriverType::SystemEGL:
         case GLESDriverType::ZinkEGL:
         {
@@ -1543,6 +1545,7 @@ Optional<EGLint> ANGLETestBase::mLastRendererType;
 Optional<angle::GLESDriverType> ANGLETestBase::mLastLoadedDriver;
 
 std::unique_ptr<Library> ANGLETestEnvironment::gAngleEGLLibrary;
+std::unique_ptr<Library> ANGLETestEnvironment::gAngleVulkanSecondariesEGLLibrary;
 std::unique_ptr<Library> ANGLETestEnvironment::gMesaEGLLibrary;
 std::unique_ptr<Library> ANGLETestEnvironment::gSystemEGLLibrary;
 std::unique_ptr<Library> ANGLETestEnvironment::gSystemWGLLibrary;
@@ -1561,6 +1564,8 @@ Library *ANGLETestEnvironment::GetDriverLibrary(angle::GLESDriverType driver)
     {
         case angle::GLESDriverType::AngleEGL:
             return GetAngleEGLLibrary();
+        case angle::GLESDriverType::AngleVulkanSecondariesEGL:
+            return GetAngleVulkanSecondariesEGLLibrary();
         case angle::GLESDriverType::SystemEGL:
             return GetSystemEGLLibrary();
         case angle::GLESDriverType::SystemWGL:
@@ -1582,6 +1587,19 @@ Library *ANGLETestEnvironment::GetAngleEGLLibrary()
     }
 #endif  // defined(ANGLE_USE_UTIL_LOADER)
     return gAngleEGLLibrary.get();
+}
+
+// static
+Library *ANGLETestEnvironment::GetAngleVulkanSecondariesEGLLibrary()
+{
+#if defined(ANGLE_USE_UTIL_LOADER)
+    if (!gAngleVulkanSecondariesEGLLibrary)
+    {
+        gAngleVulkanSecondariesEGLLibrary.reset(
+            OpenSharedLibrary(ANGLE_VULKAN_SECONDARIES_EGL_LIBRARY_NAME, SearchType::ModuleDir));
+    }
+#endif  // defined(ANGLE_USE_UTIL_LOADER)
+    return gAngleVulkanSecondariesEGLLibrary.get();
 }
 
 // static

@@ -27,6 +27,7 @@ struct PlatformMethods;
 enum class GLESDriverType
 {
     AngleEGL,
+    AngleVulkanSecondariesEGL,
     SystemEGL,
     SystemWGL,
     ZinkEGL,

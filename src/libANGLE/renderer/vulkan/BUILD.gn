@@ -246,25 +246,6 @@ if (is_mac) {
   ]
 }
 
-config("angle_vulkan_backend_config") {
-  defines = [ "ANGLE_ENABLE_VULKAN" ]
-  if (angle_enable_swiftshader) {
-    defines += [ "ANGLE_ENABLE_SWIFTSHADER" ]
-  }
-  if (angle_enable_custom_vulkan_outside_render_pass_cmd_buffers) {
-    defines += [ "ANGLE_USE_CUSTOM_VULKAN_OUTSIDE_RENDER_PASS_CMD_BUFFERS=1" ]
-  }
-  if (angle_enable_custom_vulkan_render_pass_cmd_buffers) {
-    defines += [ "ANGLE_USE_CUSTOM_VULKAN_RENDER_PASS_CMD_BUFFERS=1" ]
-  }
-  if (angle_enable_vulkan_gpu_trace_events) {
-    defines += [ "ANGLE_ENABLE_VULKAN_GPU_TRACE_EVENTS=1" ]
-  }
-  if (angle_enable_vulkan_validation_layers) {
-    defines += [ "ANGLE_ENABLE_VULKAN_VALIDATION_LAYERS" ]
-  }
-}
-
 angle_source_set("angle_vk_mem_alloc_wrapper") {
   deps = [
     "$angle_root/src/common/vulkan:angle_vulkan_headers",
@@ -287,58 +268,98 @@ angle_source_set("angle_vk_mem_alloc_wrapper") {
   }
 }
 
-angle_source_set("angle_vulkan_backend") {
-  sources = _vulkan_backend_sources
-  libs = []
-  deps = [
-    ":angle_vk_mem_alloc_wrapper",
-    "$angle_root:angle_abseil",
-    "$angle_root:angle_compression",
-    "$angle_root:angle_gpu_info_util",
-    "$angle_root:angle_image_util",
-    "$angle_root/src/common/spirv:angle_spirv_builder",
-    "$angle_spirv_headers_dir:spv_headers",
-  ]
-
-  if (angle_enable_cl || is_android) {
-    deps += [ "$angle_root:angle_version_info" ]
+config("angle_vulkan_backend_config") {
+  defines = [ "ANGLE_ENABLE_VULKAN" ]
+  if (angle_enable_swiftshader) {
+    defines += [ "ANGLE_ENABLE_SWIFTSHADER" ]
   }
-
-  public_deps = [
-    "$angle_root:angle_glslang_wrapper",
-    "$angle_root:libANGLE_headers",
-    "$angle_root/src/common/vulkan",
-    "$angle_root/src/common/vulkan:angle_libvulkan_loader",
-    "$angle_root/src/common/vulkan:angle_vulkan_entry_points",
-    "$angle_root/src/common/vulkan:angle_vulkan_headers",
-  ]
-  public_configs = [ ":angle_vulkan_backend_config" ]
-
-  if (angle_use_wayland) {
-    public_configs += [ "$angle_root:angle_wayland_config" ]
+  if (angle_enable_vulkan_gpu_trace_events) {
+    defines += [ "ANGLE_ENABLE_VULKAN_GPU_TRACE_EVENTS=1" ]
   }
-
-  data_deps = []
-
-  defines = []
-
   if (angle_enable_vulkan_validation_layers) {
-    defines += [ "ANGLE_ENABLE_VULKAN_VALIDATION_LAYERS_BY_DEFAULT" ]
-    data_deps += [ "$angle_root/src/common/vulkan:vulkan_validation_layers" ]
+    defines += [ "ANGLE_ENABLE_VULKAN_VALIDATION_LAYERS" ]
   }
+}
 
-  if (is_linux || is_chromeos) {
-    deps += [ "$angle_root/src/common/linux:angle_dma_buf" ]
-    if (angle_use_gbm) {
-      deps += [ "//third_party/minigbm" ]
+template("angle_vulkan_backend_template") {
+  config("${target_name}_internal_config") {
+    defines = []
+    if (invoker.enable_custom_outside_render_pass_cmd_buffers) {
+      defines += [ "ANGLE_USE_CUSTOM_VULKAN_OUTSIDE_RENDER_PASS_CMD_BUFFERS=1" ]
+    }
+    if (invoker.enable_custom_render_pass_cmd_buffers) {
+      defines += [ "ANGLE_USE_CUSTOM_VULKAN_RENDER_PASS_CMD_BUFFERS=1" ]
     }
   }
 
-  if (is_fuchsia) {
-    public_deps += [ "$angle_root/src/common/fuchsia_egl:backend" ]
-  }
+  angle_source_set(target_name) {
+    sources = _vulkan_backend_sources
+    libs = []
+    deps = [
+      ":angle_vk_mem_alloc_wrapper",
+      "$angle_root:angle_abseil",
+      "$angle_root:angle_compression",
+      "$angle_root:angle_gpu_info_util",
+      "$angle_root:angle_image_util",
+      "$angle_root/src/common/spirv:angle_spirv_builder",
+      "$angle_spirv_headers_dir:spv_headers",
+    ]
 
-  # Include generated shaders.
-  import("vk_internal_shaders_autogen.gni")
-  sources += angle_vulkan_internal_shaders
+    if (angle_enable_cl || is_android) {
+      deps += [ "$angle_root:angle_version_info" ]
+    }
+
+    public_deps = [
+      "$angle_root:angle_glslang_wrapper",
+      "$angle_root:libANGLE_headers",
+      "$angle_root/src/common/vulkan",
+      "$angle_root/src/common/vulkan:angle_libvulkan_loader",
+      "$angle_root/src/common/vulkan:angle_vulkan_entry_points",
+      "$angle_root/src/common/vulkan:angle_vulkan_headers",
+    ]
+    public_configs = [
+      ":angle_vulkan_backend_config",
+      ":${target_name}_internal_config",
+    ]
+
+    if (angle_use_wayland) {
+      public_configs += [ "$angle_root:angle_wayland_config" ]
+    }
+
+    data_deps = []
+
+    defines = []
+
+    if (angle_enable_vulkan_validation_layers) {
+      defines += [ "ANGLE_ENABLE_VULKAN_VALIDATION_LAYERS_BY_DEFAULT" ]
+      data_deps += [ "$angle_root/src/common/vulkan:vulkan_validation_layers" ]
+    }
+
+    if (is_linux || is_chromeos) {
+      deps += [ "$angle_root/src/common/linux:angle_dma_buf" ]
+      if (angle_use_gbm) {
+        deps += [ "//third_party/minigbm" ]
+      }
+    }
+
+    if (is_fuchsia) {
+      public_deps += [ "$angle_root/src/common/fuchsia_egl:backend" ]
+    }
+
+    # Include generated shaders.
+    import("vk_internal_shaders_autogen.gni")
+    sources += angle_vulkan_internal_shaders
+  }
+}
+
+angle_vulkan_backend_template("angle_vulkan_backend") {
+  enable_custom_outside_render_pass_cmd_buffers =
+      angle_enable_custom_vulkan_outside_render_pass_cmd_buffers
+  enable_custom_render_pass_cmd_buffers =
+      angle_enable_custom_vulkan_render_pass_cmd_buffers
+}
+
+angle_vulkan_backend_template("angle_vulkan_secondaries_backend") {
+  enable_custom_outside_render_pass_cmd_buffers = false
+  enable_custom_render_pass_cmd_buffers = false
 }

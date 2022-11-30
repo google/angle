@@ -341,6 +341,7 @@ libangle_headers = [
   "src/libANGLE/renderer/TextureImpl.h",
   "src/libANGLE/renderer/TransformFeedbackImpl.h",
   "src/libANGLE/renderer/VertexArrayImpl.h",
+  "src/libANGLE/renderer/vulkan/DisplayVk_api.h",
   "src/libANGLE/renderer/copyvertex.h",
   "src/libANGLE/renderer/copyvertex.inc.h",
   "src/libANGLE/renderer/load_functions_table.h",

@@ -685,6 +685,9 @@ std::string RenderTestParams::backend() const
     {
         case GLESDriverType::AngleEGL:
             break;
+        case GLESDriverType::AngleVulkanSecondariesEGL:
+            strstr << "_vulkan_secondaries";
+            break;
         case GLESDriverType::SystemWGL:
         case GLESDriverType::SystemEGL:
             strstr << "_native";
@@ -800,6 +803,12 @@ ANGLERenderTest::ANGLERenderTest(const std::string &name,
             mGLWindow = EGLWindow::New(testParams.clientType, testParams.majorVersion,
                                        testParams.minorVersion, testParams.profileMask);
             mEntryPointsLib.reset(OpenSharedLibrary(ANGLE_EGL_LIBRARY_NAME, SearchType::ModuleDir));
+            break;
+        case GLESDriverType::AngleVulkanSecondariesEGL:
+            mGLWindow = EGLWindow::New(testParams.clientType, testParams.majorVersion,
+                                       testParams.minorVersion, testParams.profileMask);
+            mEntryPointsLib.reset(OpenSharedLibrary(ANGLE_VULKAN_SECONDARIES_EGL_LIBRARY_NAME,
+                                                    SearchType::ModuleDir));
             break;
         case GLESDriverType::SystemEGL:
 #if defined(ANGLE_USE_UTIL_LOADER) && !defined(ANGLE_PLATFORM_WINDOWS)
