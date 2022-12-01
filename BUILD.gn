@@ -402,7 +402,7 @@ config("angle_asserts_config") {
 
 config("angle_common_config") {
   include_dirs = [
-    "src/common/third_party/base",
+    "src/common/base",
     "src/common/third_party/xxhash",
   ]
   if (is_android) {

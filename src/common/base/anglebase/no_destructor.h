@@ -55,7 +55,7 @@ class NoDestructor
     // Not constexpr; just write static constexpr T x = ...; if the value should
     // be a constexpr.
     template <typename... Args>
-    explicit NoDestructor(Args &&... args)
+    explicit NoDestructor(Args &&...args)
     {
         new (storage_) T(std::forward<Args>(args)...);
     }
@@ -65,7 +65,7 @@ class NoDestructor
     explicit NoDestructor(const T &x) { new (storage_) T(x); }
     explicit NoDestructor(T &&x) { new (storage_) T(std::move(x)); }
 
-    NoDestructor(const NoDestructor &) = delete;
+    NoDestructor(const NoDestructor &)            = delete;
     NoDestructor &operator=(const NoDestructor &) = delete;
 
     ~NoDestructor() = default;

@@ -291,10 +291,10 @@ template <
     typename Src,
     template <typename>
     class Bounds,
-    IntegerRepresentation DstSign = std::is_signed<Dst>::value ? INTEGER_REPRESENTATION_SIGNED
-                                                               : INTEGER_REPRESENTATION_UNSIGNED,
-    IntegerRepresentation SrcSign = std::is_signed<Src>::value ? INTEGER_REPRESENTATION_SIGNED
-                                                               : INTEGER_REPRESENTATION_UNSIGNED,
+    IntegerRepresentation DstSign       = std::is_signed<Dst>::value ? INTEGER_REPRESENTATION_SIGNED
+                                                                     : INTEGER_REPRESENTATION_UNSIGNED,
+    IntegerRepresentation SrcSign       = std::is_signed<Src>::value ? INTEGER_REPRESENTATION_SIGNED
+                                                                     : INTEGER_REPRESENTATION_UNSIGNED,
     NumericRangeRepresentation DstRange = StaticDstRangeRelationToSrcRange<Dst, Src>::value>
 struct DstRangeRelationToSrcRangeImpl;
 
