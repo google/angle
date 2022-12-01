@@ -5571,13 +5571,22 @@ bool ValidateGetFramebufferAttachmentParameterivBase(const Context *context,
             }
             break;
 
+        case GL_FRAMEBUFFER_ATTACHMENT_COMPONENT_TYPE:
+            if (clientVersion < 3 && !context->getExtensions().colorBufferHalfFloatEXT &&
+                !context->getExtensions().colorBufferFloatRgbCHROMIUM &&
+                !context->getExtensions().colorBufferFloatRgbaCHROMIUM)
+            {
+                context->validationErrorF(entryPoint, GL_INVALID_ENUM, kEnumNotSupported, pname);
+                return false;
+            }
+            break;
+
         case GL_FRAMEBUFFER_ATTACHMENT_RED_SIZE:
         case GL_FRAMEBUFFER_ATTACHMENT_GREEN_SIZE:
         case GL_FRAMEBUFFER_ATTACHMENT_BLUE_SIZE:
         case GL_FRAMEBUFFER_ATTACHMENT_ALPHA_SIZE:
         case GL_FRAMEBUFFER_ATTACHMENT_DEPTH_SIZE:
         case GL_FRAMEBUFFER_ATTACHMENT_STENCIL_SIZE:
-        case GL_FRAMEBUFFER_ATTACHMENT_COMPONENT_TYPE:
         case GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LAYER:
             if (clientVersion < 3)
             {
