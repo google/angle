@@ -528,6 +528,141 @@ TEST_P(MultithreadingTest, MultiCreateContext)
     EXPECT_EGL_SUCCESS();
 }
 
+// Create multiple shared context and draw with shared vertex buffer simutanously
+TEST_P(MultithreadingTest, CreateMultiSharedContextAndDraw)
+{
+    // Supported by CGL, GLX, and WGL (https://anglebug.com/4725)
+    // Not supported on Ozone (https://crbug.com/1103009)
+    ANGLE_SKIP_TEST_IF(!(IsWindows() || IsLinux() || IsOSX()) || IsOzone());
+    EGLWindow *window             = getEGLWindow();
+    EGLDisplay dpy                = window->getDisplay();
+    EGLConfig config              = window->getConfig();
+    constexpr EGLint kPBufferSize = 256;
+
+    // Initialize the pbuffer and context
+    EGLint pbufferAttributes[] = {
+        EGL_WIDTH, kPBufferSize, EGL_HEIGHT, kPBufferSize, EGL_NONE, EGL_NONE,
+    };
+    EGLSurface sharedSurface = eglCreatePbufferSurface(dpy, config, pbufferAttributes);
+    EXPECT_EGL_SUCCESS();
+    EGLContext sharedCtx = createMultithreadedContext(window, EGL_NO_CONTEXT);
+    EXPECT_NE(EGL_NO_CONTEXT, sharedCtx);
+    EXPECT_EGL_TRUE(eglMakeCurrent(dpy, sharedSurface, sharedSurface, sharedCtx));
+    EXPECT_EGL_SUCCESS();
+
+    // Create a shared vertextBuffer
+    auto quadVertices = GetQuadVertices();
+    GLBuffer sharedVertexBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, sharedVertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 3 * 6, quadVertices.data(), GL_STATIC_DRAW);
+    ASSERT_GL_NO_ERROR();
+
+    // Now draw with the buffer and verify
+    {
+        ANGLE_GL_PROGRAM(sharedProgram, essl1_shaders::vs::Simple(),
+                         essl1_shaders::fs::UniformColor());
+        glUseProgram(sharedProgram);
+        GLint colorLocation = glGetUniformLocation(sharedProgram, essl1_shaders::ColorUniform());
+        GLint positionLocation =
+            glGetAttribLocation(sharedProgram, essl1_shaders::PositionAttrib());
+        glEnableVertexAttribArray(positionLocation);
+        glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, 0);
+        const GLColor color(0, 0, 0, 255);
+        const angle::Vector4 floatColor = color.toNormalizedVector();
+        glUniform4fv(colorLocation, 1, floatColor.data());
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, color);
+    }
+
+    // Create shared context in their own threads and draw with the shared vertex buffer at the same
+    // time.
+    size_t threadCount                    = 16;
+    constexpr size_t kIterationsPerThread = 3;
+    constexpr size_t kDrawsPerIteration   = 50;
+    std::vector<std::thread> threads(threadCount);
+    std::atomic<uint32_t> numOfContextsCreated(0);
+    std::mutex mutex;
+    for (size_t threadIdx = 0; threadIdx < threadCount; threadIdx++)
+    {
+        threads[threadIdx] = std::thread([&, threadIdx]() {
+            EGLSurface surface = EGL_NO_SURFACE;
+            EGLContext ctx     = EGL_NO_CONTEXT;
+
+            {
+                std::lock_guard<decltype(mutex)> lock(mutex);
+                // Initialize the pbuffer and context
+                surface = eglCreatePbufferSurface(dpy, config, pbufferAttributes);
+                EXPECT_EGL_SUCCESS();
+                ctx = createMultithreadedContext(window, /*EGL_NO_CONTEXT*/ sharedCtx);
+                EXPECT_NE(EGL_NO_CONTEXT, ctx);
+                EXPECT_EGL_TRUE(eglMakeCurrent(dpy, surface, surface, ctx));
+                EXPECT_EGL_SUCCESS();
+                numOfContextsCreated++;
+            }
+
+            // Wait for all contexts created.
+            while (numOfContextsCreated < threadCount)
+            {}
+
+            // Now draw with shared vertex buffer
+            {
+                ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(),
+                                 essl1_shaders::fs::UniformColor());
+                glUseProgram(program);
+
+                GLint colorLocation = glGetUniformLocation(program, essl1_shaders::ColorUniform());
+                GLint positionLocation =
+                    glGetAttribLocation(program, essl1_shaders::PositionAttrib());
+
+                // Use sharedVertexBuffer
+                glBindBuffer(GL_ARRAY_BUFFER, sharedVertexBuffer);
+                glEnableVertexAttribArray(positionLocation);
+                glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+                for (size_t iteration = 0; iteration < kIterationsPerThread; iteration++)
+                {
+                    // Base the clear color on the thread and iteration indexes so every clear color
+                    // is unique
+                    const GLColor color(static_cast<GLubyte>(threadIdx % 255),
+                                        static_cast<GLubyte>(iteration % 255), 0, 255);
+                    const angle::Vector4 floatColor = color.toNormalizedVector();
+                    glUniform4fv(colorLocation, 1, floatColor.data());
+
+                    for (size_t draw = 0; draw < kDrawsPerIteration; draw++)
+                    {
+                        glDrawArrays(GL_TRIANGLES, 0, 6);
+                    }
+
+                    EXPECT_PIXEL_COLOR_EQ(0, 0, color);
+                }
+            }
+
+            // tear down shared context
+            {
+                std::lock_guard<decltype(mutex)> lock(mutex);
+                EXPECT_EGL_TRUE(
+                    eglMakeCurrent(dpy, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT));
+                EXPECT_EGL_SUCCESS();
+                eglDestroySurface(dpy, surface);
+                eglDestroyContext(dpy, ctx);
+            }
+        });
+    }
+
+    for (std::thread &thread : threads)
+    {
+        thread.join();
+    }
+
+    eglDestroySurface(dpy, sharedSurface);
+    eglDestroyContext(dpy, sharedCtx);
+
+    // Re-make current the test window's context for teardown.
+    EXPECT_EGL_TRUE(
+        eglMakeCurrent(dpy, window->getSurface(), window->getSurface(), window->getContext()));
+    EXPECT_EGL_SUCCESS();
+}
+
 void MultithreadingTestES3::textureThreadFunction(bool useDraw)
 {
     EGLWindow *window  = getEGLWindow();

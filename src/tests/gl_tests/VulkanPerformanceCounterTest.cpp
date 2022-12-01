@@ -688,6 +688,60 @@ TEST_P(VulkanPerformanceCounterTest, SubmittingOutsideCommandBufferDoesNotCollec
     EXPECT_EQ(getPerfCounters().vkQueueSubmitCallsTotal, submitCommandsCount);
 }
 
+// Tests that submitting the outside command buffer due to texture upload size and triggers
+// endRenderPass works correctly.
+TEST_P(VulkanPerformanceCounterTest, SubmittingOutsideCommandBufferTriggersEndRenderPass)
+{
+    const int width                  = getWindowWidth();
+    const int height                 = getWindowHeight();
+    uint64_t expectedRenderPassCount = getPerfCounters().renderPasses + 1;
+    uint64_t submitCommandsCount     = getPerfCounters().vkQueueSubmitCallsTotal;
+
+    // Start a new renderpass with red quad on left.
+    ANGLE_GL_PROGRAM(redProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    glScissor(0, 0, width / 2, height);
+    glEnable(GL_SCISSOR_TEST);
+    drawQuad(redProgram, essl1_shaders::PositionAttrib(), 0.5f);
+
+    // Issue texture uploads and draw green quad on right until endRenderPass is triggered
+    glScissor(width / 2, 0, width / 2, height);
+    ANGLE_GL_PROGRAM(textureProgram, essl1_shaders::vs::Texture2D(),
+                     essl1_shaders::fs::Texture2D());
+    glUseProgram(textureProgram);
+    GLint textureLoc = glGetUniformLocation(textureProgram, essl1_shaders::Texture2DUniform());
+    ASSERT_NE(-1, textureLoc);
+    glUniform1i(textureLoc, 0);
+
+    // This test is specifically try to test outsideRPCommands submission drain the reserved
+    // queueSerials. Right now we are reserving 15 queue Serials. This is to ensure if the
+    // implementation changes, we do not end up with infinite loop here.
+    constexpr GLsizei kMaxOutsideRPCommandsSubmitCount = 17;
+    constexpr GLsizei kTexDim                          = 1024;
+    std::vector<GLColor> kInitialData(kTexDim * kTexDim, GLColor::green);
+    // Put a limit on the loop to avoid infinite loop in bad case.
+    while (getPerfCounters().renderPasses == expectedRenderPassCount &&
+           getPerfCounters().vkQueueSubmitCallsTotal <
+               submitCommandsCount + kMaxOutsideRPCommandsSubmitCount)
+    {
+        GLTexture newTexture;
+        glBindTexture(GL_TEXTURE_2D, newTexture);
+        glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kTexDim, kTexDim);
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kTexDim, kTexDim, GL_RGBA, GL_UNSIGNED_BYTE,
+                        kInitialData.data());
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        drawQuad(textureProgram, essl1_shaders::PositionAttrib(), 0.5f);
+        ASSERT_GL_NO_ERROR();
+    }
+
+    ++expectedRenderPassCount;
+    EXPECT_EQ(getPerfCounters().renderPasses, expectedRenderPassCount);
+
+    // Verify renderpass draw quads correctly
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(width / 2 + 1, 0, GLColor::green);
+}
+
 // Tests that mutable texture is uploaded with appropriate mip level attributes.
 TEST_P(VulkanPerformanceCounterTest, MutableTextureCompatibleMipLevelsInit)
 {
