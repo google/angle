@@ -208,7 +208,7 @@
         ],
         'test_suites': {
           'gtest_tests': 'win10_intel_gtests',
-          'isolated_scripts': 'common_isolated_scripts',
+          'isolated_scripts': 'win10_intel_isolated_scripts',
         },
       },
       'win10-x64-intel-perf': {
