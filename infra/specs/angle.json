@@ -4239,6 +4239,7 @@
       }
     ]
   },
+  "win10-x64-exp-intel": {},
   "win10-x64-intel": {
     "gtest_tests": [
       {
