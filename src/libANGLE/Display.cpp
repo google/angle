@@ -1266,6 +1266,9 @@ void Display::threadCleanup(Thread *thread)
 
     (void)terminate(thread, noActiveThreads ? TerminateReason::NoActiveThreads
                                             : TerminateReason::InternalCleanup);
+
+    // This "thread" is no longer active, reset its cached context
+    thread->setCurrent(nullptr);
 }
 
 std::vector<const Config *> Display::getConfigs(const egl::AttributeMap &attribs) const
