@@ -7772,9 +7772,6 @@ void FrameCaptureShared::runMidExecutionCapture(gl::Context *mainContext)
         FrameCapture *frameCapture = shareContext->getFrameCapture();
         ASSERT(frameCapture->getSetupCalls().empty());
 
-        // Track that this context was created before MEC started
-        mCapturedContextSetups.insert(shareContext->id().value);
-
         if (shareContext->id() == mainContext->id())
         {
             CaptureMidExecutionSetup(shareContext, &frameCapture->getSetupCalls(),
@@ -7786,6 +7783,9 @@ void FrameCaptureShared::runMidExecutionCapture(gl::Context *mainContext)
         }
         else
         {
+            // Track that this context was created as shared context before MEC started
+            mActiveSecondaryContexts.insert(shareContext->id().value);
+
             const gl::State &shareContextState = shareContext->getState();
             gl::State auxContextReplayState(
                 nullptr, nullptr, nullptr, nullptr, nullptr, shareContextState.getClientType(),
@@ -8467,10 +8467,10 @@ void FrameCaptureShared::writeMainContextCppReplay(const gl::Context *context,
                 // MEC.
                 if (usesMidExecutionCapture())
                 {
-                    // Only call SetupReplayContext for contexts that were current before MEC
-                    // started
-                    if (mCapturedContextSetups.find(context->id().value) !=
-                        mCapturedContextSetups.end())
+                    // Only call SetupReplayContext for secondary contexts that were current before
+                    // MEC started
+                    if (mActiveSecondaryContexts.find(context->id().value) !=
+                        mActiveSecondaryContexts.end())
                     {
                         out << "    "
                             << FmtSetupFunction(kNoPartId, shareContext->id(), FuncUsage::Call)

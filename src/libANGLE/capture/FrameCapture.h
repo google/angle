@@ -778,7 +778,7 @@ class FrameCaptureShared final : angle::NonCopyable
     std::vector<CallCapture> mShareGroupSetupCalls;
     // Track which Contexts were created and made current at least once before MEC,
     // requiring setup for replay
-    std::unordered_set<GLuint> mCapturedContextSetups;
+    std::unordered_set<GLuint> mActiveSecondaryContexts;
 };
 
 template <typename CaptureFuncT, typename... ArgsT>
