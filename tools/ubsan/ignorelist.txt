@@ -8,4 +8,5 @@ src:*/usr/*
 [alignment]
 src:*src/libANGLE/renderer/vulkan/SecondaryCommandBuffer*
 src:*third_party/zlib*
+src:*third_party/SwiftShader*
 
