@@ -19,12 +19,6 @@
 
 namespace
 {
-bool IsANGLE(angle::GLESDriverType driverType)
-{
-    return driverType == angle::GLESDriverType::AngleEGL ||
-           driverType == angle::GLESDriverType::AngleVulkanSecondariesEGL;
-}
-
 constexpr EGLint kDefaultSwapInterval = 1;
 }  // anonymous namespace
 

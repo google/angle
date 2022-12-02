@@ -1298,20 +1298,15 @@ _angle_glesv2_vulkan_secondaries_library_name =
 
 config("library_name_config") {
   _egllib = "libEGL${angle_libs_suffix}${_cr_suffix}"
+  _vk2egllib = "libEGL_vulkan_secondaries${angle_libs_suffix}${_cr_suffix}"
   defines = [
     "ANGLE_EGL_LIBRARY_NAME=\"${_egllib}\"",
     "ANGLE_GLESV2_LIBRARY_NAME=\"${_angle_glesv2_library_name}\"",
     "ANGLE_MESA_EGL_LIBRARY_NAME=\"mesa/src/egl/libEGL\"",
     "ANGLE_MESA_GLESV2_LIBRARY_NAME=\"mesa/src/mapi/es2api/libGLESv2\"",
+    "ANGLE_VULKAN_SECONDARIES_EGL_LIBRARY_NAME=\"${_vk2egllib}\"",
+    "ANGLE_VULKAN_SECONDARIES_GLESV2_LIBRARY_NAME=\"${_angle_glesv2_vulkan_secondaries_library_name}\"",
   ]
-
-  if (angle_enable_vulkan) {
-    _vk2egllib = "libEGL_vulkan_secondaries${angle_libs_suffix}${_cr_suffix}"
-    defines += [
-      "ANGLE_VULKAN_SECONDARIES_EGL_LIBRARY_NAME=\"${_vk2egllib}\"",
-      "ANGLE_VULKAN_SECONDARIES_GLESV2_LIBRARY_NAME=\"${_angle_glesv2_vulkan_secondaries_library_name}\"",
-    ]
-  }
 }
 
 # This config controls export definitions on ANGLE API calls.
