@@ -1246,9 +1246,15 @@ void MaybeResetResources(gl::ContextID contextID,
         }
         case ResourceIDType::ShaderProgram:
         {
-            ResourceSet &newShaderPrograms =
-                resourceTracker->getTrackedResource(contextID, ResourceIDType::ShaderProgram)
-                    .getNewResources();
+            TrackedResource &trackedShaderPrograms =
+                resourceTracker->getTrackedResource(contextID, ResourceIDType::ShaderProgram);
+            ResourceSet &newShaderPrograms         = trackedShaderPrograms.getNewResources();
+            ResourceSet &shaderProgramsToDelete    = trackedShaderPrograms.getResourcesToDelete();
+            ResourceSet &shaderProgramsToRegen     = trackedShaderPrograms.getResourcesToRegen();
+            ResourceSet &shaderProgramsToRestore   = trackedShaderPrograms.getResourcesToRestore();
+            ResourceCalls &shaderProgramRegenCalls = trackedShaderPrograms.getResourceRegenCalls();
+            ResourceCalls &shaderProgramRestoreCalls =
+                trackedShaderPrograms.getResourceRestoreCalls();
 
             // If we have any new shaders or programs created and not deleted during the run, delete
             // them now
@@ -1267,13 +1273,46 @@ void MaybeResetResources(gl::ContextID contextID,
                 }
             }
 
-            // TODO (http://anglebug.com/5968): Handle programs that need regen
-            // This would only happen if a starting program was deleted during the run
-            // Note - this would also require an update to default uniform handling.  A program
-            // deleted or recreated wouldn't need partial uniform updates.
-            ASSERT(resourceTracker->getTrackedResource(contextID, ResourceIDType::ShaderProgram)
-                       .getResourcesToRegen()
-                       .empty());
+            // Do the same for shaders/programs to be deleted
+            for (const GLuint &shaderProgramToDelete : shaderProgramsToDelete)
+            {
+                if (resourceTracker->getShaderProgramType({shaderProgramToDelete}) ==
+                    ShaderProgramType::ShaderType)
+                {
+                    out << "    glDeleteShader(gShaderProgramMap[" << shaderProgramToDelete
+                        << "]);\n";
+                }
+                else
+                {
+                    ASSERT(resourceTracker->getShaderProgramType({shaderProgramToDelete}) ==
+                           ShaderProgramType::ProgramType);
+                    out << "    glDeleteProgram(gShaderProgramMap[" << shaderProgramToDelete
+                        << "]);\n";
+                }
+            }
+
+            for (const GLuint id : shaderProgramsToRegen)
+            {
+                // Emit their regen calls
+                for (CallCapture &call : shaderProgramRegenCalls[id])
+                {
+                    out << "    ";
+                    WriteCppReplayForCall(call, replayWriter, out, header, binaryData);
+                    out << ";\n";
+                }
+            }
+
+            for (const GLuint id : shaderProgramsToRestore)
+            {
+                // Emit their restore calls
+                for (CallCapture &call : shaderProgramRestoreCalls[id])
+                {
+                    out << "    ";
+                    WriteCppReplayForCall(call, replayWriter, out, header, binaryData);
+                    out << ";\n";
+                }
+            }
+
             break;
         }
         case ResourceIDType::Texture:
@@ -1452,10 +1491,33 @@ void CaptureUpdateCurrentProgram(const CallCapture &call,
     callsOut->emplace_back("UpdateCurrentProgram", std::move(paramBuffer));
 }
 
+bool ProgramNeedsReset(const gl::ContextID contextID,
+                       ResourceTracker *resourceTracker,
+                       gl::ShaderProgramID programID)
+{
+    // Check whether the program is listed in programs to regen or restore
+    TrackedResource &trackedShaderPrograms =
+        resourceTracker->getTrackedResource(contextID, ResourceIDType::ShaderProgram);
+
+    ResourceSet &shaderProgramsToRegen = trackedShaderPrograms.getResourcesToRegen();
+    if (shaderProgramsToRegen.count(programID.value) != 0)
+    {
+        return true;
+    }
+
+    ResourceSet &shaderProgramsToRestore = trackedShaderPrograms.getResourcesToRestore();
+    if (shaderProgramsToRestore.count(programID.value) != 0)
+    {
+        return true;
+    }
+
+    return false;
+}
+
 void MaybeResetDefaultUniforms(std::stringstream &out,
                                ReplayWriter &replayWriter,
                                std::stringstream &header,
-                               const gl::State &replayState,
+                               const gl::Context *context,
                                ResourceTracker *resourceTracker,
                                std::vector<uint8_t> *binaryData)
 {
@@ -1467,9 +1529,15 @@ void MaybeResetDefaultUniforms(std::stringstream &out,
         gl::ShaderProgramID programID               = uniformIter.first;
         const DefaultUniformLocationsSet &locations = uniformIter.second;
 
+        if (ProgramNeedsReset(context->id(), resourceTracker, programID))
+        {
+            // Skip programs marked for reset as they will update their own uniforms
+            return;
+        }
+
         // Bind the program to update its uniforms
         std::vector<CallCapture> bindCalls;
-        Capture(&bindCalls, CaptureUseProgram(replayState, true, programID));
+        Capture(&bindCalls, CaptureUseProgram(context->getState(), true, programID));
         CaptureUpdateCurrentProgram((&bindCalls)->back(), 0, &bindCalls);
         for (CallCapture &call : bindCalls)
         {
@@ -1513,13 +1581,13 @@ void MaybeResetDefaultUniforms(std::stringstream &out,
 void MaybeResetOpaqueTypeObjects(ReplayWriter &replayWriter,
                                  std::stringstream &out,
                                  std::stringstream &header,
-                                 const gl::State &replayState,
+                                 const gl::Context *context,
                                  ResourceTracker *resourceTracker,
                                  std::vector<uint8_t> *binaryData)
 {
     MaybeResetFenceSyncObjects(out, replayWriter, header, resourceTracker, binaryData);
 
-    MaybeResetDefaultUniforms(out, replayWriter, header, replayState, resourceTracker, binaryData);
+    MaybeResetDefaultUniforms(out, replayWriter, header, context, resourceTracker, binaryData);
 }
 
 void MaybeResetContextState(ReplayWriter &replayWriter,
@@ -4071,6 +4139,9 @@ void CaptureShareGroupMidExecutionSetup(
     const gl::ResourceMap<gl::Program, gl::ShaderProgramID> &programs =
         shadersAndPrograms.getProgramsForCaptureAndPerf();
 
+    TrackedResource &trackedShaderPrograms =
+        resourceTracker->getTrackedResource(context->id(), ResourceIDType::ShaderProgram);
+
     // Capture Program binary state.
     gl::ShaderProgramID tempShaderStartID = {resourceTracker->getMaxShaderPrograms()};
     for (const auto &programIter : programs)
@@ -4091,11 +4162,25 @@ void CaptureShareGroupMidExecutionSetup(
         const ProgramSources &linkedSources =
             context->getShareGroup()->getFrameCaptureShared()->getProgramSources(id);
 
-        CallCapture createProgram = CaptureCreateProgram(replayState, true, id.value);
-        CaptureCustomShaderProgram("CreateProgram", createProgram, *setupCalls);
+        // Create two lists for program regen calls
+        ResourceCalls &shaderProgramRegenCalls = trackedShaderPrograms.getResourceRegenCalls();
+        CallVector programRegenCalls({setupCalls, &shaderProgramRegenCalls[id.value]});
 
-        GenerateLinkedProgram(context, replayState, resourceTracker, setupCalls, program, id,
-                              tempShaderStartID, linkedSources);
+        for (std::vector<CallCapture> *calls : programRegenCalls)
+        {
+            CallCapture createProgram = CaptureCreateProgram(replayState, true, id.value);
+            CaptureCustomShaderProgram("CreateProgram", createProgram, *calls);
+        }
+
+        // Create two lists for program restore calls
+        ResourceCalls &shaderProgramRestoreCalls = trackedShaderPrograms.getResourceRestoreCalls();
+        CallVector programRestoreCalls({setupCalls, &shaderProgramRestoreCalls[id.value]});
+
+        for (std::vector<CallCapture> *calls : programRestoreCalls)
+        {
+            GenerateLinkedProgram(context, replayState, resourceTracker, calls, program, id,
+                                  tempShaderStartID, linkedSources);
+        }
 
         // Update the program in replayState
         if (!replayState.getProgram() || replayState.getProgram()->id() != program->id())
@@ -4107,6 +4192,7 @@ void CaptureShareGroupMidExecutionSetup(
         resourceTracker->getTrackedResource(context->id(), ResourceIDType::ShaderProgram)
             .getStartingResources()
             .insert(id.value);
+        resourceTracker->setShaderProgramType(id, ShaderProgramType::ProgramType);
 
         size_t programSetupEnd = setupCalls->size();
 
@@ -4131,12 +4217,23 @@ void CaptureShareGroupMidExecutionSetup(
 
         size_t shaderSetupStart = setupCalls->size();
 
-        CallCapture createShader =
-            CaptureCreateShader(replayState, true, shader->getType(), id.value);
-        CaptureCustomShaderProgram("CreateShader", createShader, *setupCalls);
+        // Create two lists for shader regen calls
+        ResourceCalls &shaderProgramRegenCalls = trackedShaderPrograms.getResourceRegenCalls();
+        CallVector shaderRegenCalls({setupCalls, &shaderProgramRegenCalls[id.value]});
+
+        for (std::vector<CallCapture> *calls : shaderRegenCalls)
+        {
+            CallCapture createShader =
+                CaptureCreateShader(replayState, true, shader->getType(), id.value);
+            CaptureCustomShaderProgram("CreateShader", createShader, *calls);
+        }
 
         std::string shaderSource  = shader->getSourceString();
         const char *sourcePointer = shaderSource.empty() ? nullptr : shaderSource.c_str();
+
+        // Create two lists for shader restore calls
+        ResourceCalls &shaderProgramRestoreCalls = trackedShaderPrograms.getResourceRestoreCalls();
+        CallVector shaderRestoreCalls({setupCalls, &shaderProgramRestoreCalls[id.value]});
 
         // This does not handle some more tricky situations like attaching shaders to a non-linked
         // program. Or attaching uncompiled shaders. Or attaching and then deleting a shader.
@@ -4151,14 +4248,22 @@ void CaptureShareGroupMidExecutionSetup(
                 sourcePointer = capturedSource.c_str();
             }
 
-            cap(CaptureShaderSource(replayState, true, id, 1, &sourcePointer, nullptr));
-            cap(CaptureCompileShader(replayState, true, id));
+            for (std::vector<CallCapture> *calls : shaderRestoreCalls)
+            {
+                Capture(calls,
+                        CaptureShaderSource(replayState, true, id, 1, &sourcePointer, nullptr));
+                Capture(calls, CaptureCompileShader(replayState, true, id));
+            }
         }
 
         if (sourcePointer &&
             (!shader->isCompiled(context) || sourcePointer != shaderSource.c_str()))
         {
-            cap(CaptureShaderSource(replayState, true, id, 1, &sourcePointer, nullptr));
+            for (std::vector<CallCapture> *calls : shaderRestoreCalls)
+            {
+                Capture(calls,
+                        CaptureShaderSource(replayState, true, id, 1, &sourcePointer, nullptr));
+            }
         }
 
         size_t shaderSetupEnd = setupCalls->size();
@@ -4167,6 +4272,11 @@ void CaptureShareGroupMidExecutionSetup(
         frameCaptureShared->markResourceSetupCallsInactive(
             setupCalls, ResourceIDType::ShaderProgram, id.value,
             gl::Range<size_t>(shaderSetupStart, shaderSetupEnd));
+
+        resourceTracker->getTrackedResource(context->id(), ResourceIDType::ShaderProgram)
+            .getStartingResources()
+            .insert(id.value);
+        resourceTracker->setShaderProgramType(id, ShaderProgramType::ShaderType);
     }
 
     // Capture Sampler Objects
@@ -6908,6 +7018,7 @@ void FrameCaptureShared::maybeCapturePreCallUpdates(
             source[shaderType] = sourceString.str();
             setProgramSources(programID, source);
             handleGennedResource(context, programID);
+            mResourceTracker.setShaderProgramType(programID, ShaderProgramType::ProgramType);
             break;
         }
 
@@ -6928,8 +7039,10 @@ void FrameCaptureShared::maybeCapturePreCallUpdates(
                 call.params.getParam("programPacked", ParamType::TShaderProgramID, 0);
             handleDeletedResource(context, param.value.ShaderProgramIDVal);
 
-            mResourceTracker.setShaderProgramType(param.value.ShaderProgramIDVal,
-                                                  ShaderProgramType::NoneType);
+            // If this assert fires, it means a ShaderProgramID has changed from program to shader
+            // which is unsupported
+            ASSERT(mResourceTracker.getShaderProgramType(param.value.ShaderProgramIDVal) ==
+                   ShaderProgramType::ProgramType);
 
             break;
         }
@@ -6951,8 +7064,10 @@ void FrameCaptureShared::maybeCapturePreCallUpdates(
                 call.params.getParam("shaderPacked", ParamType::TShaderProgramID, 0);
             handleDeletedResource(context, param.value.ShaderProgramIDVal);
 
-            mResourceTracker.setShaderProgramType(param.value.ShaderProgramIDVal,
-                                                  ShaderProgramType::NoneType);
+            // If this assert fires, it means a ShaderProgramID has changed from shader to program
+            // which is unsupported
+            ASSERT(mResourceTracker.getShaderProgramType(param.value.ShaderProgramIDVal) ==
+                   ShaderProgramType::ShaderType);
             break;
         }
 
@@ -8563,8 +8678,8 @@ void FrameCaptureShared::writeMainContextCppReplay(const gl::Context *context,
             }
 
             // Reset opaque type objects that don't have IDs, so are not ResourceIDTypes.
-            MaybeResetOpaqueTypeObjects(mReplayWriter, bodyStream, headerStream,
-                                        context->getState(), &mResourceTracker, &mBinaryData);
+            MaybeResetOpaqueTypeObjects(mReplayWriter, bodyStream, headerStream, context,
+                                        &mResourceTracker, &mBinaryData);
 
             bodyStream << "}\n";
 
