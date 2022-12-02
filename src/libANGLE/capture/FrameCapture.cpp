@@ -1002,6 +1002,7 @@ void MaybeResetResources(gl::ContextID contextID,
             TrackedResource &trackedBuffers =
                 resourceTracker->getTrackedResource(contextID, ResourceIDType::Buffer);
             ResourceSet &newBuffers           = trackedBuffers.getNewResources();
+            ResourceSet &buffersToDelete      = trackedBuffers.getResourcesToDelete();
             ResourceSet &buffersToRegen       = trackedBuffers.getResourcesToRegen();
             ResourceCalls &bufferRegenCalls   = trackedBuffers.getResourceRegenCalls();
             ResourceCalls &bufferRestoreCalls = trackedBuffers.getResourceRestoreCalls();
@@ -1011,13 +1012,13 @@ void MaybeResetResources(gl::ContextID contextID,
 
             // If we have any new buffers generated and not deleted during the run, or any buffers
             // that we need to regen, delete them now
-            if (!newBuffers.empty() || !buffersToRegen.empty())
+            if (!newBuffers.empty() || !buffersToDelete.empty())
             {
                 size_t count = 0;
 
                 out << "    const GLuint deleteBuffers[] = {";
 
-                for (auto &oldBuffer : buffersToRegen)
+                for (auto &oldBuffer : buffersToDelete)
                 {
                     formatResourceIndex(out, count);
                     out << "gBufferMap[" << oldBuffer << "]";
@@ -1122,19 +1123,20 @@ void MaybeResetResources(gl::ContextID contextID,
             TrackedResource &trackedFramebuffers =
                 resourceTracker->getTrackedResource(contextID, ResourceIDType::Framebuffer);
             ResourceSet &newFramebuffers           = trackedFramebuffers.getNewResources();
+            ResourceSet &framebuffersToDelete      = trackedFramebuffers.getResourcesToDelete();
             ResourceSet &framebuffersToRegen       = trackedFramebuffers.getResourcesToRegen();
             ResourceCalls &framebufferRegenCalls   = trackedFramebuffers.getResourceRegenCalls();
             ResourceCalls &framebufferRestoreCalls = trackedFramebuffers.getResourceRestoreCalls();
 
             // If we have any new framebuffers generated and not deleted during the run, or any
             // framebuffers that we need to regen, delete them now
-            if (!newFramebuffers.empty() || !framebuffersToRegen.empty())
+            if (!newFramebuffers.empty() || !framebuffersToDelete.empty())
             {
                 size_t count = 0;
 
                 out << "    const GLuint deleteFramebuffers[] = {";
 
-                for (auto &oldFb : framebuffersToRegen)
+                for (auto &oldFb : framebuffersToDelete)
                 {
                     formatResourceIndex(out, count);
                     out << "gFramebufferMap[" << oldFb << "]";
@@ -1184,6 +1186,7 @@ void MaybeResetResources(gl::ContextID contextID,
             TrackedResource &trackedRenderbuffers =
                 resourceTracker->getTrackedResource(contextID, ResourceIDType::Renderbuffer);
             ResourceSet &newRenderbuffers         = trackedRenderbuffers.getNewResources();
+            ResourceSet &renderbuffersToDelete    = trackedRenderbuffers.getResourcesToDelete();
             ResourceSet &renderbuffersToRegen     = trackedRenderbuffers.getResourcesToRegen();
             ResourceCalls &renderbufferRegenCalls = trackedRenderbuffers.getResourceRegenCalls();
             ResourceCalls &renderbufferRestoreCalls =
@@ -1191,13 +1194,13 @@ void MaybeResetResources(gl::ContextID contextID,
 
             // If we have any new renderbuffers generated and not deleted during the run, or any
             // renderbuffers that we need to regen, delete them now
-            if (!newRenderbuffers.empty() || !renderbuffersToRegen.empty())
+            if (!newRenderbuffers.empty() || !renderbuffersToDelete.empty())
             {
                 size_t count = 0;
 
                 out << "    const GLuint deleteRenderbuffers[] = {";
 
-                for (auto &oldRb : renderbuffersToRegen)
+                for (auto &oldRb : renderbuffersToDelete)
                 {
                     formatResourceIndex(out, count);
                     out << "gRenderbufferMap[" << oldRb << "]";
@@ -1278,19 +1281,20 @@ void MaybeResetResources(gl::ContextID contextID,
             TrackedResource &trackedTextures =
                 resourceTracker->getTrackedResource(contextID, ResourceIDType::Texture);
             ResourceSet &newTextures           = trackedTextures.getNewResources();
+            ResourceSet &texturesToDelete      = trackedTextures.getResourcesToDelete();
             ResourceSet &texturesToRegen       = trackedTextures.getResourcesToRegen();
             ResourceCalls &textureRegenCalls   = trackedTextures.getResourceRegenCalls();
             ResourceCalls &textureRestoreCalls = trackedTextures.getResourceRestoreCalls();
 
             // If we have any new textures generated and not deleted during the run, or any textures
             // modified during the run that we need to regen, delete them now
-            if (!newTextures.empty() || !texturesToRegen.empty())
+            if (!newTextures.empty() || !texturesToDelete.empty())
             {
                 size_t count = 0;
 
                 out << "    const GLuint deleteTextures[] = {";
 
-                for (auto &oldTex : texturesToRegen)
+                for (auto &oldTex : texturesToDelete)
                 {
                     formatResourceIndex(out, count);
                     out << "gTextureMap[" << oldTex << "]";
@@ -1339,6 +1343,7 @@ void MaybeResetResources(gl::ContextID contextID,
             TrackedResource &trackedVertexArrays =
                 resourceTracker->getTrackedResource(contextID, ResourceIDType::VertexArray);
             ResourceSet &newVertexArrays           = trackedVertexArrays.getNewResources();
+            ResourceSet &vertexArraysToDelete      = trackedVertexArrays.getResourcesToDelete();
             ResourceSet &vertexArraysToRegen       = trackedVertexArrays.getResourcesToRegen();
             ResourceSet &vertexArraysToRestore     = trackedVertexArrays.getResourcesToRestore();
             ResourceCalls &vertexArrayRegenCalls   = trackedVertexArrays.getResourceRegenCalls();
@@ -1346,13 +1351,13 @@ void MaybeResetResources(gl::ContextID contextID,
 
             // If we have any new vertex arrays generated and not deleted during the run, or any
             // vertex arrays we need to regen, delete them now
-            if (!newVertexArrays.empty() || !vertexArraysToRegen.empty())
+            if (!newVertexArrays.empty() || !vertexArraysToDelete.empty())
             {
                 size_t count = 0;
 
                 out << "    const GLuint deleteVertexArrays[] = {";
 
-                for (auto &oldVA : vertexArraysToRegen)
+                for (auto &oldVA : vertexArraysToDelete)
                 {
                     formatResourceIndex(out, count);
                     out << "gVertexArrayMap[" << oldVA << "]";
@@ -8077,7 +8082,14 @@ void TrackedResource::setGennedResource(GLuint id)
     {
         // This is a resource created after MEC was initialized, track it
         mNewResources.insert(id);
-        return;
+    }
+    else
+    {
+        // In this case, the app is genning a resource with starting ID after previously deleting it
+        ASSERT(mResourcesToRegen.find(id) != mResourcesToRegen.end());
+
+        // For this, we need to delete it again to recreate it.
+        mResourcesToDelete.insert(id);
     }
 }
 
@@ -8106,6 +8118,11 @@ void TrackedResource::setDeletedResource(GLuint id)
     if (mStartingResources.find(id) != mStartingResources.end())
     {
         // In this case, the app is deleting a resource we started with, we need to regen on loop
+
+        // Mark that we don't need to delete this
+        mResourcesToDelete.erase(id);
+
+        // Generate the resource again
         mResourcesToRegen.insert(id);
 
         // Also restore its contents
