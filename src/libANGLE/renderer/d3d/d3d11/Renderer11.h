@@ -58,6 +58,8 @@ struct Renderer11DeviceCaps
                                                  // when multisampled.  Textures will need to be
                                                  // resolved before reading. crbug.com/656989
     bool supportsTypedUAVLoadAdditionalFormats;  //
+    // https://learn.microsoft.com/en-us/windows/win32/direct3d11/typed-unordered-access-view-loads
+    bool supportsUAVLoadStoreCommonFormats;  // Do the common additional formats support load/store?
     bool supportsRasterizerOrderViews;
     bool allowES3OnFL10_0;
     UINT B5G6R5support;     // Bitfield of D3D11_FORMAT_SUPPORT values for DXGI_FORMAT_B5G6R5_UNORM

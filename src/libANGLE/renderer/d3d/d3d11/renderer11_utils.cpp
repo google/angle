@@ -1731,7 +1731,11 @@ void GenerateCaps(ID3D11Device *device,
             extensions->shaderPixelLocalStorageCoherentANGLE = true;
             plsOptions->fragmentSyncType = ShFragmentSynchronizationType::RasterizerOrderViews_D3D;
         }
-        ASSERT(!plsOptions->supportsNativeRGBA8ImageFormats);
+        // TODO(anglebug.com/7279): If we add RG* support to pixel local storage, these are *NOT*
+        // in the set of common formats, so we need to query support for each individualy:
+        // https://learn.microsoft.com/en-us/windows/win32/direct3d11/typed-unordered-access-view-loads
+        plsOptions->supportsNativeRGBA8ImageFormats =
+            renderer11DeviceCaps.supportsUAVLoadStoreCommonFormats;
     }
 
     // D3D11 Feature Level 10_0+ uses SV_IsFrontFace in HLSL to emulate gl_FrontFacing.
