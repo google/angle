@@ -190,7 +190,8 @@ void GetPipelineCacheData(ContextVk *contextVk,
                           angle::MemoryBuffer *cacheDataOut)
 {
     ASSERT(pipelineCache.valid() || contextVk->getState().isGLES1() ||
-           !contextVk->getFeatures().warmUpPipelineCacheAtLink.enabled);
+           !contextVk->getFeatures().warmUpPipelineCacheAtLink.enabled ||
+           !contextVk->getFeatures().hasEffectivePipelineCacheSerialization.enabled);
     if (!pipelineCache.valid() ||
         !contextVk->getFeatures().hasEffectivePipelineCacheSerialization.enabled)
     {
@@ -475,6 +476,26 @@ angle::Result ProgramExecutableVk::initializePipelineCache(
     return angle::Result::Continue;
 }
 
+angle::Result ProgramExecutableVk::ensurePipelineCacheInitialized(ContextVk *contextVk)
+{
+    if (!mPipelineCache.valid())
+    {
+        VkPipelineCacheCreateInfo pipelineCacheCreateInfo = {};
+        pipelineCacheCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
+
+        if (contextVk->getFeatures().supportsPipelineCreationCacheControl.enabled)
+        {
+            pipelineCacheCreateInfo.flags |=
+                VK_PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT;
+        }
+
+        ANGLE_VK_TRY(contextVk,
+                     mPipelineCache.init(contextVk->getDevice(), pipelineCacheCreateInfo));
+    }
+
+    return angle::Result::Continue;
+}
+
 std::unique_ptr<rx::LinkEvent> ProgramExecutableVk::load(ContextVk *contextVk,
                                                          const gl::ProgramExecutable &glExecutable,
                                                          bool isSeparable,
@@ -713,6 +734,8 @@ angle::Result ProgramExecutableVk::warmUpPipelineCache(ContextVk *contextVk,
     {
         return angle::Result::Continue;
     }
+
+    ANGLE_TRY(ensurePipelineCacheInitialized(contextVk));
 
     // No synchronization necessary when accessing the program executable's cache as there is no
     // access to it from other threads at this point.
@@ -1202,6 +1225,8 @@ angle::Result ProgramExecutableVk::createGraphicsPipeline(
     const bool useProgramPipelineCache = pipelineSubset == vk::GraphicsPipelineSubset::Shaders;
     if (useProgramPipelineCache)
     {
+        ANGLE_TRY(ensurePipelineCacheInitialized(contextVk));
+
         perProgramPipelineCache.init(&mPipelineCache, nullptr);
         pipelineCache = &perProgramPipelineCache;
     }
@@ -1412,29 +1437,6 @@ angle::Result ProgramExecutableVk::createPipelineLayout(
         glExecutable.usesFramebufferFetch())
     {
         ANGLE_TRY(contextVk->switchToFramebufferFetchMode(true));
-    }
-
-    // Initialize the pipeline cache if not already.  The cache might have been initialized from
-    // data from the blob cache.  The per-program cache is used only when the context is not GLES1,
-    // and either warmUpPipelineCacheAtLink or supportsGraphicsPipelineLibrary are enabled.
-    //
-    const bool usePerProgramCache =
-        !contextVk->getState().isGLES1() &&
-        (contextVk->getFeatures().warmUpPipelineCacheAtLink.enabled ||
-         contextVk->getFeatures().supportsGraphicsPipelineLibrary.enabled);
-    if (!mPipelineCache.valid() && usePerProgramCache)
-    {
-        VkPipelineCacheCreateInfo pipelineCacheCreateInfo = {};
-        pipelineCacheCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
-
-        if (contextVk->getFeatures().supportsPipelineCreationCacheControl.enabled)
-        {
-            pipelineCacheCreateInfo.flags |=
-                VK_PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT;
-        }
-
-        ANGLE_VK_TRY(contextVk,
-                     mPipelineCache.init(contextVk->getDevice(), pipelineCacheCreateInfo));
     }
 
     return angle::Result::Continue;

@@ -348,8 +348,11 @@ class ProgramExecutableVk
                                              DescriptorSetIndex setIndex,
                                              vk::SharedDescriptorSetCacheKey *newSharedCacheKeyOut);
 
+    // When loading from cache / binary, initialize the pipeline cache with given data.  Otherwise
+    // the cache is lazily created as needed.
     angle::Result initializePipelineCache(ContextVk *contextVk,
                                           const std::vector<uint8_t> &compressedPipelineData);
+    angle::Result ensurePipelineCacheInitialized(ContextVk *contextVk);
 
     void resetLayout(ContextVk *contextVk);
 
