@@ -4899,8 +4899,8 @@ angle::Result RendererVk::finishQueueSerial(vk::Context *context, const QueueSer
     std::unique_lock<std::mutex> lock(mCommandQueueMutex);
     if (isAsyncCommandQueueEnabled())
     {
-        vk::ResourceUse use(queueSerial);
-        ANGLE_TRY(mCommandProcessor.finishResourceUse(context, use, getMaxFenceWaitTimeNs()));
+        ANGLE_TRY(
+            mCommandProcessor.finishQueueSerial(context, queueSerial, getMaxFenceWaitTimeNs()));
     }
     else
     {

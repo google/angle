@@ -62,10 +62,6 @@ enum class CustomTask
     FlushAndQueueSubmit,
     // Submit custom command buffer, excludes some state management
     OneOffQueueSubmit,
-    // Finish queue commands up to given serial value, process garbage
-    FinishResourceUse,
-    // Finish all pending work
-    WaitIdle,
     // Execute QueuePresent
     Present,
     // do cleanup processing on completed commands
@@ -95,10 +91,6 @@ class CommandProcessorTask
 
     void initPresent(egl::ContextPriority priority, const VkPresentInfoKHR &presentInfo);
 
-    void initResourceUseToFinish(const ResourceUse &use);
-
-    void initWaitIdle();
-
     void initFlushAndQueueSubmit(const std::vector<VkSemaphore> &waitSemaphores,
                                  const std::vector<VkPipelineStageFlags> &waitSemaphoreStageMasks,
                                  const VkSemaphore semaphore,
@@ -125,7 +117,6 @@ class CommandProcessorTask
     }
 
     const QueueSerial &getSubmitQueueSerial() const { return mSubmitQueueSerial; }
-    const ResourceUse &getResourceUseToFinish() const { return mResourceUseToFinish; }
     CustomTask getTaskCommand() { return mTask; }
     std::vector<VkSemaphore> &getWaitSemaphores() { return mWaitSemaphores; }
     std::vector<VkPipelineStageFlags> &getWaitSemaphoreStageMasks()
@@ -176,8 +167,6 @@ class CommandProcessorTask
 
     // Flush command data
     QueueSerial mSubmitQueueSerial;
-    // FinishResourceUse
-    ResourceUse mResourceUseToFinish;
 
     // Present command data
     VkPresentInfoKHR mPresentInfo;
@@ -531,6 +520,9 @@ class CommandProcessor final : public Context, public CommandQueueInterface
 
     void handleDeviceLost(RendererVk *renderer) override;
 
+    angle::Result finishQueueSerial(Context *context,
+                                    const QueueSerial &queueSerial,
+                                    uint64_t timeout);
     angle::Result finishResourceUse(Context *context,
                                     const ResourceUse &use,
                                     uint64_t timeout) override;

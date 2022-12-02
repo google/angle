@@ -291,19 +291,6 @@ void CommandProcessorTask::initPresent(egl::ContextPriority priority,
     copyPresentInfo(presentInfo);
 }
 
-void CommandProcessorTask::initResourceUseToFinish(const ResourceUse &use)
-{
-    // Note: sometimes the serial is not valid and that's okay, the finish will early exit in the
-    // TaskProcessor::finishResourceUse
-    mTask                = CustomTask::FinishResourceUse;
-    mResourceUseToFinish = use;
-}
-
-void CommandProcessorTask::initWaitIdle()
-{
-    mTask = CustomTask::WaitIdle;
-}
-
 void CommandProcessorTask::initFlushAndQueueSubmit(
     const std::vector<VkSemaphore> &waitSemaphores,
     const std::vector<VkPipelineStageFlags> &waitSemaphoreStageMasks,
@@ -365,7 +352,6 @@ CommandProcessorTask &CommandProcessorTask::operator=(CommandProcessorTask &&rhs
     std::swap(mCommandPools, rhs.mCommandPools);
     std::swap(mGarbage, rhs.mGarbage);
     std::swap(mCommandBuffersToReset, rhs.mCommandBuffersToReset);
-    std::swap(mResourceUseToFinish, rhs.mResourceUseToFinish);
     std::swap(mSubmitQueueSerial, rhs.mSubmitQueueSerial);
     std::swap(mPriority, rhs.mPriority);
     std::swap(mHasProtectedContent, rhs.mHasProtectedContent);
@@ -570,17 +556,6 @@ angle::Result CommandProcessor::processTask(CommandProcessorTask *task)
             ANGLE_TRY(mCommandQueue.checkCompletedCommands(this));
             break;
         }
-        case CustomTask::FinishResourceUse:
-        {
-            ANGLE_TRY(mCommandQueue.finishResourceUse(this, task->getResourceUseToFinish(),
-                                                      mRenderer->getMaxFenceWaitTimeNs()));
-            break;
-        }
-        case CustomTask::WaitIdle:
-        {
-            ANGLE_TRY(mCommandQueue.waitIdle(this, mRenderer->getMaxFenceWaitTimeNs()));
-            break;
-        }
         case CustomTask::Present:
         {
             VkResult result = present(task->getPriority(), task->getPresentInfo());
@@ -692,32 +667,33 @@ bool CommandProcessor::isBusy() const
 }
 
 // Wait until all commands up to and including serial have been processed
+angle::Result CommandProcessor::finishQueueSerial(Context *context,
+                                                  const QueueSerial &queueSerial,
+                                                  uint64_t timeout)
+{
+    ANGLE_TRACE_EVENT0("gpu.angle", "CommandProcessor::finishQueueSerial");
+    // TODO: Only call waitForWorkComplete if mUse still have inflight commands in processor that
+    // references this queueSerial. https://issuetracker.google.com/261098465
+    ANGLE_TRY(waitForWorkComplete(context));
+    return mCommandQueue.finishQueueSerial(context, queueSerial, timeout);
+}
+
 angle::Result CommandProcessor::finishResourceUse(Context *context,
                                                   const ResourceUse &use,
                                                   uint64_t timeout)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "CommandProcessor::finishResourceUse");
-
-    ANGLE_TRY(checkAndPopPendingError(context));
-
-    CommandProcessorTask task;
-    task.initResourceUseToFinish(use);
-    queueCommand(std::move(task));
-
-    // Wait until the worker is idle. At that point we know that the finishResourceUse command has
-    // completed executing, including any associated state cleanup.
-    return waitForWorkComplete(context);
+    // TODO: Only call waitForWorkComplete if mUse still have inflight commands in processor that
+    // references this queueSerial. https://issuetracker.google.com/261098465
+    ANGLE_TRY(waitForWorkComplete(context));
+    return mCommandQueue.finishResourceUse(context, use, timeout);
 }
 
 angle::Result CommandProcessor::waitIdle(Context *context, uint64_t timeout)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "CommandProcessor::waitIdle");
-
-    CommandProcessorTask task;
-    task.initWaitIdle();
-    queueCommand(std::move(task));
-
-    return waitForWorkComplete(context);
+    ANGLE_TRY(waitForWorkComplete(context));
+    return mCommandQueue.waitIdle(this, mRenderer->getMaxFenceWaitTimeNs());
 }
 
 void CommandProcessor::handleDeviceLost(RendererVk *renderer)
