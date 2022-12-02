@@ -43,7 +43,7 @@ vars = {
   'checkout_angle_mesa': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '366b354bb4e36bedf5c24267e901e71f5590daef',
+  'chromium_revision': '5d807d6fc7dd5529de62210ad088c66aef55867c',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -136,7 +136,7 @@ vars = {
 deps = {
 
   'build': {
-    'url': '{chromium_git}/chromium/src/build.git@961774e1759a074f448b04b84c7f2a55086a187e',
+    'url': '{chromium_git}/chromium/src/build.git@d5942868d8db2c03a17b71f8670cf23807a47c15',
     'condition': 'not build_with_chromium',
   },
 
@@ -199,7 +199,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@c1f7bc4f7367248579cefac2892cee98e590c523',
+    'url': '{chromium_git}/chromium/src/testing@952f26fb1117b31591cb83356431786109e8ba80',
     'condition': 'not build_with_chromium',
   },
 
@@ -569,7 +569,7 @@ deps = {
       'packages': [
           {
               'package': 'chromium/third_party/r8',
-              'version': 'NhcNRQ45-HIXvuu5CxFmUsIbvW9Or8_tkceuhByYJywC',
+              'version': 'FNMbaJ4o3bVeGVnIwu9D0VSqXEZIi5v2LV9ycHFpqrkC',
           },
       ],
       'condition': 'checkout_android and not build_with_chromium',
@@ -696,7 +696,7 @@ deps = {
   },
 
   'tools/perf': {
-    'url': '{chromium_git}/chromium/src/tools/perf@b187174108a78114b3ca683563b3779618480811',
+    'url': '{chromium_git}/chromium/src/tools/perf@b1111b1e0a9ba6784672e2b79083e06830df9d82',
     'condition': 'not build_with_chromium',
   },
 
