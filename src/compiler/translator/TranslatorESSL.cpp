@@ -10,6 +10,7 @@
 #include "common/utilities.h"
 #include "compiler/translator/BuiltInFunctionEmulatorGLSL.h"
 #include "compiler/translator/OutputESSL.h"
+#include "compiler/translator/tree_ops/DeclarePerVertexBlocks.h"
 #include "compiler/translator/tree_ops/RecordConstantPrecision.h"
 
 namespace sh
@@ -35,10 +36,12 @@ bool TranslatorESSL::translate(TIntermBlock *root,
     TInfoSinkBase &sink = getInfoSink().obj;
 
     int shaderVer = getShaderVersion();  // Frontend shader version.
-    if (hasPixelLocalStorageUniforms() &&
-        compileOptions.pls.type == ShPixelLocalStorageType::ImageLoadStore)
+    if ((shaderVer > 100 && getResources().EXT_clip_cull_distance) ||
+        (hasPixelLocalStorageUniforms() &&
+         compileOptions.pls.type == ShPixelLocalStorageType::ImageLoadStore))
     {
-        // The backend translator emits shader image code. Use a minimum version of 310.
+        // The backend translator emits interface blocks or shader image code.
+        // Use a minimum version of 310.
         shaderVer = std::max(shaderVer, 310);
     }
     if (shaderVer > 100)
@@ -77,6 +80,17 @@ bool TranslatorESSL::translate(TIntermBlock *root,
 
         getBuiltInFunctionEmulator().outputEmulatedFunctions(sink);
         sink << "// END: Generated code for built-in function emulation\n\n";
+    }
+
+    if (getShaderType() == GL_VERTEX_SHADER)
+    {
+        // Move gl_ClipDistance and/or gl_CullDistance redeclarations to gl_PerVertex.
+        if (IsExtensionEnabled(getExtensionBehavior(), TExtension::EXT_clip_cull_distance) &&
+            areClipDistanceOrCullDistanceRedeclared() &&
+            !DeclarePerVertexBlocks(this, root, &getSymbolTable()))
+        {
+            return false;
+        }
     }
 
     if (getShaderType() == GL_FRAGMENT_SHADER)
@@ -177,6 +191,14 @@ void TranslatorESSL::writeExtensionBehavior(const ShCompileOptions &compileOptio
                 // Don't emit anything. This extension is emulated
                 ASSERT(compileOptions.emulateGLBaseVertexBaseInstance);
                 continue;
+            }
+            else if (iter->first == TExtension::EXT_clip_cull_distance &&
+                     areClipDistanceOrCullDistanceRedeclared())
+            {
+                sink << "#extension GL_EXT_clip_cull_distance : " << GetBehaviorString(iter->second)
+                     << "\n"
+                     << "#extension GL_EXT_shader_io_blocks : " << GetBehaviorString(iter->second)
+                     << "\n";
             }
             else if (iter->first == TExtension::ANGLE_shader_pixel_local_storage)
             {

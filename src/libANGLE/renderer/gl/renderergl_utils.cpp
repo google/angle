@@ -1941,12 +1941,14 @@ void GenerateCaps(const FunctionsGL *functions,
         caps->maxClipDistances = QuerySingleGLInt(functions, GL_MAX_CLIP_DISTANCES_APPLE);
     }
 
-    // GL_EXT_clip_cull_distance
+    // GL_EXT_clip_cull_distance spec requires shader interface blocks to support
+    // built-in array redeclarations on OpenGL ES.
     extensions->clipCullDistanceEXT = !features.disableClipCullDistance.enabled &&
-                                      ((functions->isAtLeastGL(gl::Version(3, 0)) &&
+                                      (functions->isAtLeastGL(gl::Version(4, 5)) ||
+                                       (functions->isAtLeastGL(gl::Version(3, 0)) &&
                                         functions->hasGLExtension("GL_ARB_cull_distance")) ||
-                                       functions->isAtLeastGL(gl::Version(4, 5)) ||
-                                       functions->hasGLESExtension("GL_EXT_clip_cull_distance"));
+                                       (extensions->shaderIoBlocksEXT &&
+                                        functions->hasGLESExtension("GL_EXT_clip_cull_distance")));
     if (extensions->clipCullDistanceEXT)
     {
         caps->maxClipDistances = QuerySingleGLInt(functions, GL_MAX_CLIP_DISTANCES_EXT);

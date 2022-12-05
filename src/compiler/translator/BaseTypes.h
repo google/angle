@@ -1615,7 +1615,7 @@ inline const char *getQualifierString(TQualifier q)
     case EvqPatchOut:               return "patch out";
     case EvqTessControlIn:          return "in";
     case EvqTessControlOut:         return "out";
-    case EvqPerVertexOut:           return "gl_out";
+    case EvqPerVertexOut:           return "out";
     case EvqPatchVerticesIn:        return "PatchVerticesIn";
     case EvqTessLevelOuter:         return "TessLevelOuter";
     case EvqTessLevelInner:         return "TessLevelInner";

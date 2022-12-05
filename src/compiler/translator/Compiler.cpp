@@ -841,11 +841,13 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         return false;
     }
 
-    if (parseContext.isExtensionEnabled(TExtension::EXT_clip_cull_distance))
+    if (parseContext.isExtensionEnabled(TExtension::EXT_clip_cull_distance) ||
+        parseContext.isExtensionEnabled(TExtension::APPLE_clip_distance))
     {
-        if (!ValidateClipCullDistance(root, &mDiagnostics,
-                                      mResources.MaxCombinedClipAndCullDistances,
-                                      compileOptions.limitSimultaneousClipAndCullDistanceUsage))
+        if (!ValidateClipCullDistance(
+                root, &mDiagnostics, mResources.MaxCombinedClipAndCullDistances,
+                compileOptions.limitSimultaneousClipAndCullDistanceUsage, &mClipDistanceSize,
+                &mCullDistanceSize, &mClipDistanceMaxIndex, &mCullDistanceMaxIndex))
         {
             return false;
         }
@@ -1435,6 +1437,11 @@ void TCompiler::clearResults()
     mGLPositionInitialized = false;
 
     mNumViews = -1;
+
+    mClipDistanceSize     = 0;
+    mCullDistanceSize     = 0;
+    mClipDistanceMaxIndex = -1;
+    mCullDistanceMaxIndex = -1;
 
     mGeometryShaderInputPrimitiveType  = EptUndefined;
     mGeometryShaderOutputPrimitiveType = EptUndefined;

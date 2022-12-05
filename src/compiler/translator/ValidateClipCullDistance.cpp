@@ -31,17 +31,21 @@ class ValidateClipCullDistanceTraverser : public TIntermTraverser
     ValidateClipCullDistanceTraverser();
     void validate(TDiagnostics *diagnostics,
                   const unsigned int maxCombinedClipAndCullDistances,
-                  const bool limitSimultaneousClipAndCullDistanceUsage);
+                  const bool limitSimultaneousClipAndCullDistanceUsage,
+                  uint8_t *clipDistanceSizeOut,
+                  uint8_t *cullDistanceSizeOut,
+                  int8_t *clipDistanceMaxIndexOut,
+                  int8_t *cullDistanceMaxIndexOut);
 
   private:
     bool visitDeclaration(Visit visit, TIntermDeclaration *node) override;
     bool visitBinary(Visit visit, TIntermBinary *node) override;
 
-    unsigned int mClipDistanceSize;
-    unsigned int mCullDistanceSize;
+    uint8_t mClipDistanceSize;
+    uint8_t mCullDistanceSize;
 
-    unsigned int mMaxClipDistanceIndex;
-    unsigned int mMaxCullDistanceIndex;
+    int8_t mMaxClipDistanceIndex;
+    int8_t mMaxCullDistanceIndex;
 
     const TIntermSymbol *mClipDistance;
     const TIntermSymbol *mCullDistance;
@@ -51,8 +55,8 @@ ValidateClipCullDistanceTraverser::ValidateClipCullDistanceTraverser()
     : TIntermTraverser(true, false, false),
       mClipDistanceSize(0),
       mCullDistanceSize(0),
-      mMaxClipDistanceIndex(0),
-      mMaxCullDistanceIndex(0),
+      mMaxClipDistanceIndex(-1),
+      mMaxCullDistanceIndex(-1),
       mClipDistance(nullptr),
       mCullDistance(nullptr)
 {}
@@ -74,12 +78,12 @@ bool ValidateClipCullDistanceTraverser::visitDeclaration(Visit visit, TIntermDec
 
     if (symbol->getName() == "gl_ClipDistance")
     {
-        mClipDistanceSize = symbol->getOutermostArraySize();
+        mClipDistanceSize = static_cast<uint8_t>(symbol->getOutermostArraySize());
         mClipDistance     = symbol;
     }
     else if (symbol->getName() == "gl_CullDistance")
     {
-        mCullDistanceSize = symbol->getOutermostArraySize();
+        mCullDistanceSize = static_cast<uint8_t>(symbol->getOutermostArraySize());
         mCullDistance     = symbol;
     }
 
@@ -109,7 +113,7 @@ bool ValidateClipCullDistanceTraverser::visitBinary(Visit visit, TIntermBinary *
     const TConstantUnion *constIdx = node->getRight()->getConstantValue();
     if (constIdx)
     {
-        unsigned int idx = 0;
+        int idx = 0;
         switch (constIdx->getType())
         {
             case EbtInt:
@@ -119,7 +123,7 @@ bool ValidateClipCullDistanceTraverser::visitBinary(Visit visit, TIntermBinary *
                 idx = constIdx->getUConst();
                 break;
             case EbtFloat:
-                idx = static_cast<unsigned int>(constIdx->getFConst());
+                idx = static_cast<int>(constIdx->getFConst());
                 break;
             case EbtBool:
                 idx = constIdx->getBConst() ? 1 : 0;
@@ -133,7 +137,7 @@ bool ValidateClipCullDistanceTraverser::visitBinary(Visit visit, TIntermBinary *
         {
             if (idx > mMaxClipDistanceIndex)
             {
-                mMaxClipDistanceIndex = idx;
+                mMaxClipDistanceIndex = static_cast<int8_t>(idx);
                 if (!mClipDistance)
                 {
                     mClipDistance = left;
@@ -145,7 +149,7 @@ bool ValidateClipCullDistanceTraverser::visitBinary(Visit visit, TIntermBinary *
             ASSERT(varName == "gl_CullDistance");
             if (idx > mMaxCullDistanceIndex)
             {
-                mMaxCullDistanceIndex = idx;
+                mMaxCullDistanceIndex = static_cast<int8_t>(idx);
                 if (!mCullDistance)
                 {
                     mCullDistance = left;
@@ -160,7 +164,11 @@ bool ValidateClipCullDistanceTraverser::visitBinary(Visit visit, TIntermBinary *
 void ValidateClipCullDistanceTraverser::validate(
     TDiagnostics *diagnostics,
     const unsigned int maxCombinedClipAndCullDistances,
-    const bool limitSimultaneousClipAndCullDistanceUsage)
+    const bool limitSimultaneousClipAndCullDistanceUsage,
+    uint8_t *clipDistanceSizeOut,
+    uint8_t *cullDistanceSizeOut,
+    int8_t *clipDistanceMaxIndexOut,
+    int8_t *cullDistanceMaxIndexOut)
 {
     ASSERT(diagnostics);
 
@@ -196,6 +204,12 @@ void ValidateClipCullDistanceTraverser::validate(
               "not be greater than 4.",
               diagnostics);
     }
+
+    // Update the compiler state
+    *clipDistanceSizeOut     = mClipDistanceSize;
+    *cullDistanceSizeOut     = mCullDistanceSize;
+    *clipDistanceMaxIndexOut = mMaxClipDistanceIndex;
+    *cullDistanceMaxIndexOut = mMaxCullDistanceIndex;
 }
 
 }  // anonymous namespace
@@ -203,13 +217,18 @@ void ValidateClipCullDistanceTraverser::validate(
 bool ValidateClipCullDistance(TIntermBlock *root,
                               TDiagnostics *diagnostics,
                               const unsigned int maxCombinedClipAndCullDistances,
-                              const bool limitSimultaneousClipAndCullDistanceUsage)
+                              const bool limitSimultaneousClipAndCullDistanceUsage,
+                              uint8_t *clipDistanceSizeOut,
+                              uint8_t *cullDistanceSizeOut,
+                              int8_t *clipDistanceMaxIndexOut,
+                              int8_t *cullDistanceMaxIndexOut)
 {
     ValidateClipCullDistanceTraverser varyingValidator;
     root->traverse(&varyingValidator);
     int numErrorsBefore = diagnostics->numErrors();
-    varyingValidator.validate(diagnostics, maxCombinedClipAndCullDistances,
-                              limitSimultaneousClipAndCullDistanceUsage);
+    varyingValidator.validate(
+        diagnostics, maxCombinedClipAndCullDistances, limitSimultaneousClipAndCullDistanceUsage,
+        clipDistanceSizeOut, cullDistanceSizeOut, clipDistanceMaxIndexOut, cullDistanceMaxIndexOut);
     return (diagnostics->numErrors() == numErrorsBefore);
 }
 

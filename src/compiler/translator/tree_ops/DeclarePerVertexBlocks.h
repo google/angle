@@ -3,12 +3,12 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// DeclarePerVertexBlocks: If gl_PerVertex is not already declared, it is declared and builts are
+// DeclarePerVertexBlocks: If gl_PerVertex is not already declared, it is declared and builtins are
 // turned into references into that I/O block.
 //
 
-#ifndef COMPILER_TRANSLATOR_TREEOPS_VULKAN_DECLAREPERVERTEXBLOCKS_H_
-#define COMPILER_TRANSLATOR_TREEOPS_VULKAN_DECLAREPERVERTEXBLOCKS_H_
+#ifndef COMPILER_TRANSLATOR_TREEOPS_DECLAREPERVERTEXBLOCKS_H_
+#define COMPILER_TRANSLATOR_TREEOPS_DECLAREPERVERTEXBLOCKS_H_
 
 #include "common/angleutils.h"
 
@@ -23,4 +23,4 @@ class TSymbolTable;
                                           TSymbolTable *symbolTable);
 }  // namespace sh
 
-#endif  // COMPILER_TRANSLATOR_TREEOPS_VULKAN_DECLAREPERVERTEXBLOCKS_H_
+#endif  // COMPILER_TRANSLATOR_TREEOPS_DECLAREPERVERTEXBLOCKS_H_

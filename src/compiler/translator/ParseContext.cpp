@@ -4991,7 +4991,7 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
             if (field->name() == "gl_Position" || field->name() == "gl_PointSize" ||
                 field->name() == "gl_ClipDistance" || field->name() == "gl_CullDistance")
             {
-                // These builtins can be redifined only when used within a redefiend gl_PerVertex
+                // These builtins can be redefined only when used within a redefined gl_PerVertex
                 // block
                 if (interfaceBlock->name() != "gl_PerVertex")
                 {
