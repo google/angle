@@ -25,6 +25,7 @@
 // coordinates, and highp for everything else.
 
 // The following variables are added in GLES1Renderer::initializeRendererProgram
+// #define kTexUnits
 // bool clip_plane_enables
 // bool enable_alpha_test
 // bool enable_clip_planes
@@ -61,6 +62,8 @@
 // int alpha_func;
 // int fog_mode;
 
+constexpr char kGLES1TexUnitsDefine[] = R"(#define kTexUnits )";
+
 constexpr char kGLES1DrawVShaderHeader[] = R"(#version 300 es
 precision highp float;
 
@@ -74,10 +77,18 @@ in vec4 pos;
 in vec3 normal;
 in mediump vec4 color;
 in float pointsize;
+#if kTexUnits >= 1
 in mediump vec4 texcoord0;
+#endif
+#if kTexUnits >= 2
 in mediump vec4 texcoord1;
+#endif
+#if kTexUnits >= 3
 in mediump vec4 texcoord2;
+#endif
+#if kTexUnits >= 4
 in mediump vec4 texcoord3;
+#endif
 
 uniform mat4 projection;
 uniform mat4 modelview;
@@ -123,10 +134,18 @@ out vec4 pos_varying;
 out vec3 normal_varying;
 out mediump vec4 color_varying;
 flat out mediump vec4 color_varying_flat;
+#if kTexUnits >= 1
 out mediump vec4 texcoord0_varying;
+#endif
+#if kTexUnits >= 2
 out mediump vec4 texcoord1_varying;
+#endif
+#if kTexUnits >= 3
 out mediump vec4 texcoord2_varying;
+#endif
+#if kTexUnits >= 4
 out mediump vec4 texcoord3_varying;
+#endif
 
 float posDot(vec3 a, vec3 b)
 {
@@ -256,28 +275,19 @@ const mediump vec4 drawTextureVertices[6] = vec4[](
 
 mediump vec4 drawTexturePosition(int vertexId)
 {
-
-    mediump float drawTexX = draw_texture_coords[0];
-    mediump float drawTexY = draw_texture_coords[1];
-    mediump float drawTexZ = draw_texture_coords[2];
-    mediump float drawTexW = draw_texture_dims[0];
-    mediump float drawTexH = draw_texture_dims[1];
-
-    return vec4(drawTexX, drawTexY, drawTexZ, 0.0) +
-           drawTextureVertices[vertexId] *
-           vec4(drawTexW, drawTexH, 1.0, 1.0);
+    // The texture is drawn in the XY plane, so Z is constant.
+    vec2 positionXY = draw_texture_coords.xy + drawTextureVertices[vertexId].xy * draw_texture_dims;
+    return vec4(positionXY, draw_texture_coords.z, 1.0);
 }
 
 mediump vec4 drawTextureTexCoord(int vertexId, int textureUnit)
 {
-    mediump float texCropU = draw_texture_normalized_crop_rect[textureUnit].x;
-    mediump float texCropV = draw_texture_normalized_crop_rect[textureUnit].y;
-    mediump float texCropW = draw_texture_normalized_crop_rect[textureUnit].z;
-    mediump float texCropH = draw_texture_normalized_crop_rect[textureUnit].w;
+    // The texture is drawn in the XY plane, so Z is 0.
+    mediump vec2 texCropPos = draw_texture_normalized_crop_rect[textureUnit].xy;
+    mediump vec2 texCropDim = draw_texture_normalized_crop_rect[textureUnit].zw;
+    mediump vec2 texCoords  = texCropPos + drawTextureVertices[vertexId].xy * texCropDim;
 
-    return vec4(texCropU, texCropV, 0.0, 0.0) +
-           drawTextureVertices[vertexId] *
-           vec4(texCropW, texCropH, 0.0, 0.0);
+    return vec4(texCoords, 0.0, 0.0);
 }
 
 vec4 calcWorldPosition(vec4 posInput)
@@ -341,10 +351,18 @@ void main()
 
         gl_PointSize = pointsize;
 
+#if kTexUnits >= 1
         texcoord0_varying = drawTextureTexCoord(vertexId, 0);
+#endif
+#if kTexUnits >= 2
         texcoord1_varying = drawTextureTexCoord(vertexId, 1);
+#endif
+#if kTexUnits >= 3
         texcoord2_varying = drawTextureTexCoord(vertexId, 2);
+#endif
+#if kTexUnits >= 4
         texcoord3_varying = drawTextureTexCoord(vertexId, 3);
+#endif
     }
     else
     {
@@ -367,10 +385,18 @@ void main()
             gl_PointSize = pointsize;
         }
 
+#if kTexUnits >= 1
         texcoord0_varying = texture_matrix[0] * texcoord0;
+#endif
+#if kTexUnits >= 2
         texcoord1_varying = texture_matrix[1] * texcoord1;
+#endif
+#if kTexUnits >= 3
         texcoord2_varying = texture_matrix[2] * texcoord2;
+#endif
+#if kTexUnits >= 4
         texcoord3_varying = texture_matrix[3] * texcoord3;
+#endif
     }
 
     mediump vec4 vertex_color = color;
@@ -487,10 +513,18 @@ in vec4 pos_varying;
 in vec3 normal_varying;
 in mediump vec4 color_varying;
 flat in mediump vec4 color_varying_flat;
+#if kTexUnits >= 1
 in mediump vec4 texcoord0_varying;
+#endif
+#if kTexUnits >= 2
 in mediump vec4 texcoord1_varying;
+#endif
+#if kTexUnits >= 3
 in mediump vec4 texcoord2_varying;
+#endif
+#if kTexUnits >= 4
 in mediump vec4 texcoord3_varying;
+#endif
 
 // Alpha test///////////////////////////////////////////////////////////////////
 
@@ -716,6 +750,7 @@ mediump vec4 getTextureColor(int unit)
 
     switch (unit)
     {
+#if kTexUnits >= 1
         case 0:
             if (enable_texture_2d[0])
             {
@@ -726,6 +761,8 @@ mediump vec4 getTextureColor(int unit)
                 res = texture(tex_cube_sampler0, texcoord0_varying.xyz);
             }
             break;
+#endif
+#if kTexUnits >= 2
         case 1:
             if (enable_texture_2d[1])
             {
@@ -736,6 +773,8 @@ mediump vec4 getTextureColor(int unit)
                 res = texture(tex_cube_sampler1, texcoord1_varying.xyz);
             }
             break;
+#endif
+#if kTexUnits >= 3
         case 2:
             if (enable_texture_2d[2])
             {
@@ -746,6 +785,8 @@ mediump vec4 getTextureColor(int unit)
                 res = texture(tex_cube_sampler2, texcoord2_varying.xyz);
             }
             break;
+#endif
+#if kTexUnits >= 4
         case 3:
             if (enable_texture_2d[3])
             {
@@ -757,6 +798,7 @@ mediump vec4 getTextureColor(int unit)
                 // res = texture(tex_cube_sampler3, texcoord3_varying.xyz);
             }
             break;
+#endif
         default:
             break;
     }
@@ -1201,7 +1243,7 @@ void main()
 
     mediump vec4 texturePrevColor = currentFragment;
 
-    for (int i = 0; i < kMaxTexUnits; i++)
+    for (int i = 0; i < kTexUnits; i++)
     {
         mediump vec4 textureColor;
 
