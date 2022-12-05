@@ -192,7 +192,7 @@ struct Error
 class QueueSerialIndexAllocator final
 {
   public:
-    QueueSerialIndexAllocator() : mLargestAllocatedIndex(kInvalidQueueSerialIndex)
+    QueueSerialIndexAllocator() : mLargestIndexEverAllocated(kInvalidQueueSerialIndex)
     {
         // Start with every index is free
         mFreeIndexBitSetArray.set();
@@ -210,28 +210,30 @@ class QueueSerialIndexAllocator final
         SerialIndex index = static_cast<SerialIndex>(mFreeIndexBitSetArray.first());
         ASSERT(index < kMaxQueueSerialIndexCount);
         mFreeIndexBitSetArray.reset(index);
-        mLargestAllocatedIndex = (~mFreeIndexBitSetArray).last();
+        mLargestIndexEverAllocated = (~mFreeIndexBitSetArray).last();
         return index;
     }
 
     void release(SerialIndex index)
     {
         std::lock_guard<std::mutex> lock(mMutex);
-        ASSERT(index <= mLargestAllocatedIndex);
+        ASSERT(index <= mLargestIndexEverAllocated);
         ASSERT(!mFreeIndexBitSetArray.test(index));
         mFreeIndexBitSetArray.set(index);
-        if (index == mLargestAllocatedIndex)
-        {
-            mLargestAllocatedIndex = mFreeIndexBitSetArray.all() ? kInvalidQueueSerialIndex
-                                                                 : (~mFreeIndexBitSetArray).last();
-        }
+        // mLargestIndexEverAllocated is for optimization. Even if we released queueIndex, we may
+        // still have resources still have serial the index. Thus do not decrement
+        // mLargestIndexEverAllocated here. The only downside is that we may get into slightly less
+        // optimal code path in GetBatchCountUpToSerials.
     }
 
-    size_t getLarrgestAllocatedIndex() const { return mLargestAllocatedIndex; }
+    size_t getLargestIndexEverAllocated() const
+    {
+        return mLargestIndexEverAllocated.load(std::memory_order_consume);
+    }
 
   private:
     angle::BitSetArray<kMaxQueueSerialIndexCount> mFreeIndexBitSetArray;
-    size_t mLargestAllocatedIndex;
+    std::atomic<size_t> mLargestIndexEverAllocated;
     std::mutex mMutex;
 };
 
