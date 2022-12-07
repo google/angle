@@ -439,26 +439,6 @@ angle::Result QueryVk::queryCounter(const gl::Context *context)
     return mQueryHelper.get().flushAndWriteTimestamp(contextVk);
 }
 
-bool QueryVk::hasUnsubmittedUse(ContextVk *contextVk) const
-{
-    ASSERT(mQueryHelper.isReferenced());
-
-    if (contextVk->hasUnsubmittedUse(mQueryHelper.get()))
-    {
-        return true;
-    }
-
-    for (const vk::Shared<vk::QueryHelper> &query : mStashedQueryHelpers)
-    {
-        if (contextVk->hasUnsubmittedUse(query.get()))
-        {
-            return true;
-        }
-    }
-
-    return false;
-}
-
 bool QueryVk::isCurrentlyInUse(RendererVk *renderer) const
 {
     ASSERT(mQueryHelper.isReferenced());
@@ -489,12 +469,10 @@ angle::Result QueryVk::finishRunningCommands(ContextVk *contextVk)
         ANGLE_TRY(renderer->finishResourceUse(contextVk, mQueryHelper.get().getResourceUse()));
     }
 
+    // Since mStashedQueryHelpers are older than mQueryHelper, these must also finished.
     for (vk::Shared<vk::QueryHelper> &query : mStashedQueryHelpers)
     {
-        if (renderer->hasUnfinishedUse(query.get().getResourceUse()))
-        {
-            ANGLE_TRY(renderer->finishResourceUse(contextVk, query.get().getResourceUse()));
-        }
+        ASSERT(!renderer->hasUnfinishedUse(query.get().getResourceUse()));
     }
     return angle::Result::Continue;
 }
@@ -525,8 +503,8 @@ angle::Result QueryVk::getResult(const gl::Context *context, bool wait)
     // finite time.
     // Note regarding time-elapsed: end should have been called after begin, so flushing when end
     // has pending work should flush begin too.
-
-    if (hasUnsubmittedUse(contextVk))
+    // We only need to check mQueryHelper, not mStashedQueryHelper, since they are always in order.
+    if (contextVk->hasUnsubmittedUse(mQueryHelper.get()))
     {
         ANGLE_TRY(contextVk->flushImpl(nullptr, RenderPassClosureReason::GetQueryResult));
 
@@ -560,7 +538,7 @@ angle::Result QueryVk::getResult(const gl::Context *context, bool wait)
                                   "GPU stall due to waiting on uncompleted query");
 
             // Assert that the work has been sent to the GPU
-            ASSERT(!hasUnsubmittedUse(contextVk));
+            ASSERT(!contextVk->hasUnsubmittedUse(mQueryHelper.get()));
             ANGLE_TRY(finishRunningCommands(contextVk));
         }
     }
