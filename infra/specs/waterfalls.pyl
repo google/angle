@@ -152,19 +152,6 @@
           'gtest_tests': 'swangle_slow_flaky_gtests',
         },
       },
-      'linux-swiftshader-ubsan': {
-        'os_type': 'linux',
-        'mixins': [
-          'gpu-swarming-pool',
-          'no_gpu',
-          'linux-bionic',
-          'timeout_15m',
-          'x86-64',
-        ],
-        'test_suites': {
-          'gtest_tests': 'swangle_gtests',
-        },
-      },
       'mac-amd': {
         'os_type': 'mac',
         'mixins': [
