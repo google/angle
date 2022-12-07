@@ -640,8 +640,6 @@ class CommandProcessor final : public Context, public CommandQueueInterface
     // CommandQueue occur in a separate thread.
     AtomicQueueSerialFixedArray mLastSubmittedSerials;
 
-    mutable std::mutex mQueueSerialMutex;
-
     mutable std::mutex mErrorMutex;
     std::queue<Error> mErrors;
 

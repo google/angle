@@ -661,7 +661,6 @@ void CommandProcessor::destroy(Context *context)
 
 bool CommandProcessor::isBusy() const
 {
-    std::lock_guard<std::mutex> serialLock(mQueueSerialMutex);
     std::lock_guard<std::mutex> workerLock(mWorkerMutex);
     return !mTasks.empty() || mCommandQueue.isBusy();
 }
