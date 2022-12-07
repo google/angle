@@ -603,6 +603,13 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         return flushOutsideRenderPassCommands();
     }
 
+    angle::Result onEGLImageQueueChange()
+    {
+        // Flush the barrier inserted to change the queue and layout of an EGL image.  Another
+        // thread may start using this image without issuing a sync object.
+        return flushOutsideRenderPassCommands();
+    }
+
     angle::Result beginNewRenderPass(vk::MaybeImagelessFramebuffer &framebuffer,
                                      const gl::Rectangle &renderArea,
                                      const vk::RenderPassDesc &renderPassDesc,
