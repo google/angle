@@ -344,7 +344,7 @@ void PixelLocalStoragePlane::issueClearCommand(ClearCommands *clearCommands,
         case GL_R32F:
         {
             std::array<GLfloat, 4> clearValue = {0, 0, 0, 0};
-            if (loadop == GL_CLEAR_ANGLE)
+            if (loadop == GL_LOAD_OP_CLEAR_ANGLE)
             {
                 clearValue = mClearValuef;
                 if (mInternalformat == GL_RGBA8)
@@ -358,7 +358,7 @@ void PixelLocalStoragePlane::issueClearCommand(ClearCommands *clearCommands,
         case GL_RGBA8I:
         {
             std::array<GLint, 4> clearValue = {0, 0, 0, 0};
-            if (loadop == GL_CLEAR_ANGLE)
+            if (loadop == GL_LOAD_OP_CLEAR_ANGLE)
             {
                 clearValue = mClearValuei;
                 ClampArray(clearValue, -128, 127);
@@ -370,7 +370,7 @@ void PixelLocalStoragePlane::issueClearCommand(ClearCommands *clearCommands,
         case GL_R32UI:
         {
             std::array<GLuint, 4> clearValue = {0, 0, 0, 0};
-            if (loadop == GL_CLEAR_ANGLE)
+            if (loadop == GL_LOAD_OP_CLEAR_ANGLE)
             {
                 clearValue = mClearValueui;
                 if (mInternalformat == GL_RGBA8UI)
@@ -468,7 +468,7 @@ void PixelLocalStorage::begin(Context *context, GLsizei n, const GLenum loadops[
     bool hasPLSExtents = false;
     for (GLsizei i = 0; i < n; ++i)
     {
-        if (loadops[i] == GL_DISABLE_ANGLE)
+        if (loadops[i] == GL_LOAD_OP_DISABLE_ANGLE)
         {
             continue;
         }
@@ -495,7 +495,7 @@ void PixelLocalStorage::begin(Context *context, GLsizei n, const GLenum loadops[
     }
     for (GLsizei i = 0; i < n; ++i)
     {
-        if (loadops[i] == GL_DISABLE_ANGLE)
+        if (loadops[i] == GL_LOAD_OP_DISABLE_ANGLE)
         {
             continue;
         }
@@ -601,7 +601,7 @@ class PixelLocalStorageImageLoadStore : public PixelLocalStorage
                 // Attach one of the PLS textures to GL_COLOR_ATTACHMENT0.
                 for (GLsizei i = 0; i < n; ++i)
                 {
-                    if (loadops[i] == GL_DISABLE_ANGLE)
+                    if (loadops[i] == GL_LOAD_OP_DISABLE_ANGLE)
                     {
                         continue;
                     }
@@ -651,14 +651,14 @@ class PixelLocalStorageImageLoadStore : public PixelLocalStorage
             for (; pendingClears.size() < maxDrawBuffers && i < n; ++i)
             {
                 GLenum loadop = loadops[i];
-                if (loadop == GL_DISABLE_ANGLE)
+                if (loadop == GL_LOAD_OP_DISABLE_ANGLE)
                 {
                     continue;
                 }
                 const PixelLocalStoragePlane &plane = getPlane(i);
                 ASSERT(!plane.isDeinitialized());
                 plane.bindToImage(context, i, !mPLSOptions.supportsNativeRGBA8ImageFormats);
-                if (loadop == GL_ZERO || loadop == GL_CLEAR_ANGLE)
+                if (loadop == GL_LOAD_OP_ZERO_ANGLE || loadop == GL_LOAD_OP_CLEAR_ANGLE)
                 {
                     plane.attachToDrawFramebuffer(
                         context, GL_COLOR_ATTACHMENT0 + static_cast<GLenum>(pendingClears.size()));
@@ -830,7 +830,7 @@ class PixelLocalStorageFramebufferFetch : public PixelLocalStorage
         {
             GLuint drawBufferIdx = GetDrawBufferIdx(caps, i);
             GLenum loadop        = loadops[i];
-            if (loadop == GL_DISABLE_ANGLE)
+            if (loadop == GL_LOAD_OP_DISABLE_ANGLE)
             {
                 plsDrawBuffers[drawBufferIdx] = GL_NONE;
                 continue;
@@ -864,14 +864,14 @@ class PixelLocalStorageFramebufferFetch : public PixelLocalStorage
                 }
             }
 
-            needsClear = needsClear || (loadop != GL_KEEP);
+            needsClear = needsClear || (loadop != GL_LOAD_OP_LOAD_ANGLE);
         }
 
         // Turn on the PLS draw buffers.
         context->drawBuffers(caps.maxCombinedDrawBuffersAndPixelLocalStoragePlanes,
                              plsDrawBuffers.data());
 
-        // Clear the non-KEEP PLS planes now that their draw buffers are turned on.
+        // Clear the non-LOAD_OP_LOAD PLS planes now that their draw buffers are turned on.
         if (needsClear)
         {
             ScopedDisableScissor scopedDisableScissor(context);
@@ -879,7 +879,7 @@ class PixelLocalStorageFramebufferFetch : public PixelLocalStorage
             for (GLsizei i = 0; i < n; ++i)
             {
                 GLenum loadop = loadops[i];
-                if (loadop != GL_DISABLE_ANGLE && loadop != GL_KEEP)
+                if (loadop != GL_LOAD_OP_DISABLE_ANGLE && loadop != GL_LOAD_OP_LOAD_ANGLE)
                 {
                     GLuint drawBufferIdx = GetDrawBufferIdx(caps, i);
                     getPlane(i).issueClearCommand(&clearBufferCommands, drawBufferIdx, loadop);
@@ -908,7 +908,7 @@ class PixelLocalStorageFramebufferFetch : public PixelLocalStorage
             {
                 continue;
             }
-            if (storeops[i] != GL_KEEP || getPlane(i).isMemoryless())
+            if (storeops[i] != GL_STORE_OP_STORE_ANGLE || getPlane(i).isMemoryless())
             {
                 int drawBufferIdx = GetDrawBufferIdx(caps, i);
                 invalidateList.push_back(GL_COLOR_ATTACHMENT0 + drawBufferIdx);

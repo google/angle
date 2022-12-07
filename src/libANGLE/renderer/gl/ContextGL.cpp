@@ -1056,8 +1056,9 @@ angle::Result ContextGL::drawPixelLocalStorageEXTEnable(gl::Context *context,
     {
         const gl::PixelLocalStoragePlane &plane = planes[i];
         GLenum loadop                           = loadops[i];
-        bool preserved                          = loadop == GL_KEEP;
-        b.prependPlane(loadop != GL_DISABLE_ANGLE ? plane.getInternalformat() : GL_NONE, preserved);
+        bool preserved                          = loadop == GL_LOAD_OP_LOAD_ANGLE;
+        b.prependPlane(loadop != GL_LOAD_OP_DISABLE_ANGLE ? plane.getInternalformat() : GL_NONE,
+                       preserved);
         if (preserved)
         {
             const gl::ImageIndex &idx = plane.getTextureImageIndex();
@@ -1094,7 +1095,8 @@ angle::Result ContextGL::drawPixelLocalStorageEXTDisable(gl::Context *context,
     for (GLsizei i = n - 1; i >= 0; --i)
     {
         const gl::PixelLocalStoragePlane &plane = planes[i];
-        bool preserved = plane.isActive() && !plane.isMemoryless() && storeops[i] == GL_KEEP;
+        bool preserved =
+            plane.isActive() && !plane.isMemoryless() && storeops[i] == GL_STORE_OP_STORE_ANGLE;
         b.prependPlane(plane.isActive() ? plane.getInternalformat() : GL_NONE, preserved);
         if (preserved)
         {
