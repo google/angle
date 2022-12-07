@@ -642,6 +642,7 @@ angle::Result BufferVk::mapRangeImpl(ContextVk *contextVk,
                                      GLbitfield access,
                                      void **mapPtr)
 {
+    RendererVk *renderer = contextVk->getRenderer();
     ASSERT(mBuffer.valid());
 
     // Record map call parameters in case this call is from angle internal (the access/offset/length
@@ -668,15 +669,15 @@ angle::Result BufferVk::mapRangeImpl(ContextVk *contextVk,
     {
         // If app is not going to write, all we need is to ensure GPU write is finished.
         // Concurrent reads from CPU and GPU is allowed.
-        if (mBuffer.isCurrentlyInUseForWrite(contextVk->getRenderer()))
+        if (renderer->hasUnfinishedUse(mBuffer.getWriteResourceUse()))
         {
-            // If there are pending commands for the resource, flush them.
-            if (contextVk->hasUnsubmittedUse(mBuffer))
+            // If there are unflushed write commands for the resource, flush them.
+            if (contextVk->hasUnsubmittedUse(mBuffer.getWriteResourceUse()))
             {
                 ANGLE_TRY(
                     contextVk->flushImpl(nullptr, RenderPassClosureReason::BufferWriteThenMap));
             }
-            ANGLE_TRY(mBuffer.finishGPUWriteCommands(contextVk));
+            ANGLE_TRY(renderer->finishResourceUse(contextVk, mBuffer.getWriteResourceUse()));
         }
         if (hostVisible)
         {
@@ -724,7 +725,7 @@ angle::Result BufferVk::mapRangeImpl(ContextVk *contextVk,
         return angle::Result::Continue;
     }
 
-    if (!mBuffer.isCurrentlyInUseForWrite(contextVk->getRenderer()))
+    if (!renderer->hasUnfinishedUse(mBuffer.getWriteResourceUse()))
     {
         // This will keep the new buffer mapped and update mapPtr, so return immediately.
         return ghostMappedBuffer(contextVk, offset, length, access, mapPtr);
@@ -910,7 +911,8 @@ angle::Result BufferVk::acquireAndUpdate(ContextVk *contextVk,
 
         // If the buffer is host visible and the GPU is not writing to it, we use the CPU to do the
         // copy. We need to save the source buffer pointer before we acquire a new buffer.
-        if (src.isHostVisible() && !src.isCurrentlyInUseForWrite(contextVk->getRenderer()) &&
+        if (src.isHostVisible() &&
+            !contextVk->getRenderer()->hasUnfinishedUse(src.getWriteResourceUse()) &&
             ShouldUseCPUToCopyData(contextVk, copySize, bufferSize))
         {
             uint8_t *mapPointer = nullptr;

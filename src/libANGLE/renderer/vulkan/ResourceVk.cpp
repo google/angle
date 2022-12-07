@@ -17,11 +17,6 @@ namespace vk
 {
 namespace
 {
-angle::Result FinishRunningCommands(Context *context, const ResourceUse &use)
-{
-    return context->getRenderer()->finishResourceUse(context, use);
-}
-
 template <typename T>
 angle::Result WaitForIdle(ContextVk *contextVk,
                           T *resource,
@@ -99,17 +94,6 @@ ReadWriteResource &ReadWriteResource::operator=(ReadWriteResource &&other)
 bool ReadWriteResource::isCurrentlyInUse(RendererVk *renderer) const
 {
     return renderer->hasUnfinishedUse(mReadOnlyUse);
-}
-
-bool ReadWriteResource::isCurrentlyInUseForWrite(RendererVk *renderer) const
-{
-    return renderer->hasUnfinishedUse(mReadWriteUse);
-}
-
-angle::Result ReadWriteResource::finishGPUWriteCommands(ContextVk *contextVk)
-{
-    ASSERT(!contextVk->getRenderer()->hasUnsubmittedUse(mReadWriteUse));
-    return FinishRunningCommands(contextVk, mReadWriteUse);
 }
 
 angle::Result ReadWriteResource::waitForIdle(ContextVk *contextVk,
