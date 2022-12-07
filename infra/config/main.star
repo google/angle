@@ -245,9 +245,11 @@ def angle_builder(name, cpu):
         toolchain = "clang"
 
     if is_uwp:
-        os_name = "winuwp"
+        os_toolchain_name = "win-uwp"
+    elif is_msvc:
+        os_toolchain_name = "win-msvc"
     else:
-        os_name = config_os.console_name
+        os_toolchain_name = config_os.console_name
 
     if is_perf:
         short_name = get_gpu_type_from_builder_name(name)
@@ -309,7 +311,7 @@ def angle_builder(name, cpu):
     luci.console_view_entry(
         console_view = "ci",
         builder = "ci/" + name,
-        category = category + "|" + os_name + "|" + toolchain + "|" + cpu,
+        category = category + "|" + os_toolchain_name + "|" + cpu,
         short_name = short_name,
     )
 
