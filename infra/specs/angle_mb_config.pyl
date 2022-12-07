@@ -20,7 +20,7 @@
       'android-arm64-exp-test': 'angle_goma_android_arm64_release_bot',
       'android-arm64-test': 'angle_goma_android_arm64_release_bot',
       'android-pixel4-perf': 'angle_goma_android_perf_bot',
-      'linux-asan-test': 'angle_asan_lsan_bot',
+      'linux-asan-test': 'angle_asan_lsan_ubsan_bot',
       'linux-dbg-compile': 'angle_goma_debug_bot',
       'linux-exp-test': 'angle_goma_release_bot',
       'linux-intel-uhd630-perf': 'angle_goma_perf_bot',
@@ -55,7 +55,7 @@
   # bots all using the 'release_bot' config).
   'configs': {
     'angle_asan_bot': ['angle', 'opencl', 'goma', 'asan', 'release', 'desktop'],
-    'angle_asan_lsan_bot': ['angle', 'opencl', 'goma', 'asan', 'lsan', 'release', 'desktop'],
+    'angle_asan_lsan_ubsan_bot': ['angle', 'opencl', 'goma', 'asan', 'lsan', 'ubsan', 'release', 'desktop'],
     'angle_goma_android_arm64_debug_bot': ['angle', 'opencl', 'goma', 'android', 'arm64', 'debug'],
     'angle_goma_android_arm64_release_bot': ['angle', 'opencl', 'goma', 'android', 'arm64', 'release'],
     'angle_goma_android_arm_debug_bot': ['angle', 'opencl', 'goma', 'android', 'arm', 'debug'],
