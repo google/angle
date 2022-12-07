@@ -3292,7 +3292,7 @@ void TextureVk::releaseImageViews(ContextVk *contextVk)
 
     for (vk::ImageViewHelper &imageViewHelper : mMultisampledImageViews)
     {
-        mImage->collectViewGarbage(renderer, &imageViewHelper);
+        imageViewHelper.release(renderer, mImage->getResourceUse());
     }
 
     for (auto &renderTargets : mSingleLayerRenderTargets)
@@ -3604,7 +3604,7 @@ angle::Result TextureVk::refreshImageViews(ContextVk *contextVk)
     else
     {
         RendererVk *renderer = contextVk->getRenderer();
-        mImage->collectViewGarbage(renderer, &imageView);
+        imageView.release(renderer, mImage->getResourceUse());
 
         for (auto &renderTargets : mSingleLayerRenderTargets)
         {

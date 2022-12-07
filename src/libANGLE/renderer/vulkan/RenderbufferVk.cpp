@@ -306,8 +306,8 @@ void RenderbufferVk::releaseImage(ContextVk *contextVk)
     else
     {
         mRenderTarget.release(contextVk);
-        mImage->collectViewGarbage(renderer, &mImageViews);
-        mImage->collectViewGarbage(renderer, &mMultisampledImageViews);
+        mImageViews.release(renderer, mImage->getResourceUse());
+        mMultisampledImageViews.release(renderer, mImage->getResourceUse());
     }
 
     if (mImage && mOwnsImage)

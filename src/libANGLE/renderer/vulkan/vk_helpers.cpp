@@ -4950,7 +4950,6 @@ ImageHelper::ImageHelper(ImageHelper &&other)
       mCurrentSingleClearValue(std::move(other.mCurrentSingleClearValue)),
       mContentDefined(std::move(other.mContentDefined)),
       mStencilContentDefined(std::move(other.mStencilContentDefined)),
-      mImageAndViewGarbage(std::move(other.mImageAndViewGarbage)),
       mAllocationSize(std::move(other.mAllocationSize)),
       mMemoryAllocationType(std::move(other.mMemoryAllocationType))
 {
@@ -5359,11 +5358,9 @@ void ImageHelper::releaseImage(RendererVk *renderer)
                                   mDeviceMemory.getHandle());
     }
 
-    CollectGarbage(&mImageAndViewGarbage, &mImage, &mDeviceMemory);
-    // Notify us if the application pattern causes the views to keep getting reallocated and create
-    // infinite garbage
-    ASSERT(mImageAndViewGarbage.size() <= 1000);
-    releaseImageAndViewGarbage(renderer);
+    renderer->collectGarbage(mUse, &mImage, &mDeviceMemory);
+    mUse.reset();
+    mImageSerial = kInvalidImageSerial;
     setEntireContentUndefined();
 }
 
@@ -5379,18 +5376,6 @@ void ImageHelper::releaseImageFromShareContexts(RendererVk *renderer, ContextVk 
     }
 
     releaseImage(renderer);
-}
-
-void ImageHelper::collectViewGarbage(RendererVk *renderer, vk::ImageViewHelper *imageView)
-{
-    imageView->release(renderer, mImageAndViewGarbage);
-    // If we do not have any ImageHelper::mUse retained in ResourceUseList, make a cloned copy of
-    // ImageHelper::mUse and use it to free any garbage in mImageAndViewGarbage immediately.
-    if (!mImageAndViewGarbage.empty())
-    {
-        renderer->collectGarbage(mUse, std::move(mImageAndViewGarbage));
-    }
-    ASSERT(mImageAndViewGarbage.size() <= 1000);
 }
 
 void ImageHelper::releaseStagedUpdates(RendererVk *renderer)
@@ -5418,16 +5403,6 @@ void ImageHelper::resetImageWeakReference()
     mImage.reset();
     mImageSerial        = kInvalidImageSerial;
     mRotatedAspectRatio = false;
-}
-
-void ImageHelper::releaseImageAndViewGarbage(RendererVk *renderer)
-{
-    if (!mImageAndViewGarbage.empty())
-    {
-        renderer->collectGarbage(mUse, std::move(mImageAndViewGarbage));
-    }
-    mUse.reset();
-    mImageSerial = kInvalidImageSerial;
 }
 
 angle::Result ImageHelper::initializeNonZeroMemory(Context *context,
@@ -5757,19 +5732,13 @@ angle::Result ImageHelper::initReinterpretedLayerImageView(Context *context,
 
 void ImageHelper::destroy(RendererVk *renderer)
 {
+    VkDevice device = renderer->getDevice();
+
     if (mImage.valid())
     {
         renderer->onMemoryDealloc(mMemoryAllocationType, mAllocationSize,
                                   mDeviceMemory.getHandle());
     }
-
-    // destroy any pending garbage objects (most likely from ImageViewHelper) at this point
-    for (GarbageObject &object : mImageAndViewGarbage)
-    {
-        object.destroy(renderer);
-    }
-
-    VkDevice device = renderer->getDevice();
 
     mImage.destroy(device);
     mDeviceMemory.destroy(device);
@@ -7793,7 +7762,6 @@ void ImageHelper::stageSelfAsSubresourceUpdates(ContextVk *contextVk,
     prevImage->get().mImageSerial                 = mImageSerial;
     prevImage->get().mAllocationSize              = mAllocationSize;
     prevImage->get().mMemoryAllocationType        = mMemoryAllocationType;
-    prevImage->get().mImageAndViewGarbage         = std::move(mImageAndViewGarbage);
 
     // Reset information for current (invalid) image.
     mCurrentLayout               = ImageLayout::Undefined;
@@ -9534,10 +9502,11 @@ void ImageViewHelper::init(RendererVk *renderer)
     }
 }
 
-void ImageViewHelper::release(RendererVk *renderer, std::vector<vk::GarbageObject> &garbage)
+void ImageViewHelper::release(RendererVk *renderer, const ResourceUse &use)
 {
     mCurrentBaseMaxLevelHash = 0;
 
+    std::vector<vk::GarbageObject> garbage;
     // Release the read views
     ReleaseImageViews(&mPerLevelRangeLinearReadImageViews, &garbage);
     ReleaseImageViews(&mPerLevelRangeSRGBReadImageViews, &garbage);
@@ -9594,6 +9563,11 @@ void ImageViewHelper::release(RendererVk *renderer, std::vector<vk::GarbageObjec
         }
     }
     mLayerLevelStorageImageViews.clear();
+
+    if (!garbage.empty())
+    {
+        renderer->collectGarbage(use, std::move(garbage));
+    }
 
     // Update image view serial.
     mImageViewSerial = renderer->getResourceSerialFactory().generateImageOrBufferViewSerial();
