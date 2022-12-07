@@ -695,6 +695,8 @@
 
 7778 IOS : FramebufferTest_ES3.DrawWithDifferentPreRotations/ES3_OpenGL = SKIP
 
+7853 IOS : FramebufferExtensionsTest.ColorBufferHalfFloat/ES2_OpenGL = SKIP
+
 // Test is disabled as it only pertains to desktop GLSL
 6197 : GLSLTest_ES31.InterpolateAtWithSwizzle/* = SKIP
 
