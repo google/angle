@@ -501,7 +501,7 @@ angle::Result BufferVk::allocStagingBuffer(ContextVk *contextVk,
     {
         if (size <= mStagingBuffer.getSize() &&
             (coherency == vk::MemoryCoherency::Coherent) == mStagingBuffer.isCoherent() &&
-            !mStagingBuffer.isCurrentlyInUse(contextVk->getRenderer()))
+            !contextVk->getRenderer()->hasUnfinishedUse(mStagingBuffer.getResourceUse()))
         {
             // If size is big enough and it is idle, then just reuse the existing staging buffer
             *mapPtr                = mStagingBuffer.getMappedMemory();
@@ -1090,6 +1090,6 @@ angle::Result BufferVk::acquireBufferHelper(ContextVk *contextVk, size_t sizeInB
 
 bool BufferVk::isCurrentlyInUse(RendererVk *renderer) const
 {
-    return mBuffer.isCurrentlyInUse(renderer);
+    return renderer->hasUnfinishedUse(mBuffer.getResourceUse());
 }
 }  // namespace rx

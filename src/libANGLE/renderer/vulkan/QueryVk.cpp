@@ -443,14 +443,14 @@ bool QueryVk::isCurrentlyInUse(RendererVk *renderer) const
 {
     ASSERT(mQueryHelper.isReferenced());
 
-    if (mQueryHelper.get().isCurrentlyInUse(renderer))
+    if (renderer->hasUnfinishedUse(mQueryHelper.get().getResourceUse()))
     {
         return true;
     }
 
     for (const vk::Shared<vk::QueryHelper> &query : mStashedQueryHelpers)
     {
-        if (query.get().isCurrentlyInUse(renderer))
+        if (renderer->hasUnfinishedUse(query.get().getResourceUse()))
         {
             return true;
         }

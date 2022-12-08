@@ -29,18 +29,18 @@ angle::Result WaitForIdle(ContextVk *contextVk,
         ANGLE_TRY(contextVk->flushImpl(nullptr, reason));
     }
 
+    RendererVk *renderer = contextVk->getRenderer();
     // Make sure the driver is done with the resource.
-    if (contextVk->getRenderer()->hasUnfinishedUse(resource->getResourceUse()))
+    if (renderer->hasUnfinishedUse(resource->getResourceUse()))
     {
         if (debugMessage)
         {
             ANGLE_VK_PERF_WARNING(contextVk, GL_DEBUG_SEVERITY_HIGH, "%s", debugMessage);
         }
-        ANGLE_TRY(
-            contextVk->getRenderer()->finishResourceUse(contextVk, resource->getResourceUse()));
+        ANGLE_TRY(renderer->finishResourceUse(contextVk, resource->getResourceUse()));
     }
 
-    ASSERT(!resource->isCurrentlyInUse(contextVk->getRenderer()));
+    ASSERT(!renderer->hasUnfinishedUse(resource->getResourceUse()));
 
     return angle::Result::Continue;
 }
@@ -61,11 +61,6 @@ Resource &Resource::operator=(Resource &&rhs)
 }
 
 Resource::~Resource() {}
-
-bool Resource::isCurrentlyInUse(RendererVk *renderer) const
-{
-    return renderer->hasUnfinishedUse(mUse);
-}
 
 angle::Result Resource::waitForIdle(ContextVk *contextVk,
                                     const char *debugMessage,
@@ -89,11 +84,6 @@ ReadWriteResource &ReadWriteResource::operator=(ReadWriteResource &&other)
     mReadOnlyUse  = std::move(other.mReadOnlyUse);
     mReadWriteUse = std::move(other.mReadWriteUse);
     return *this;
-}
-
-bool ReadWriteResource::isCurrentlyInUse(RendererVk *renderer) const
-{
-    return renderer->hasUnfinishedUse(mReadOnlyUse);
 }
 
 angle::Result ReadWriteResource::waitForIdle(ContextVk *contextVk,

@@ -156,7 +156,7 @@ angle::Result SyncHelper::getStatus(Context *context, ContextVk *contextVk, bool
     ANGLE_TRY(submitSyncIfDeferred(contextVk, RenderPassClosureReason::SyncObjectClientWait));
 
     ANGLE_TRY(renderer->checkCompletedCommands(context));
-    *signaled = !isCurrentlyInUse(renderer);
+    *signaled = !renderer->hasUnfinishedUse(getResourceUse());
     return angle::Result::Continue;
 }
 
@@ -369,7 +369,7 @@ angle::Result SyncHelperNativeFence::getStatus(Context *context,
     // We've got a serial, check if the serial is still in use
     if (mUse.valid())
     {
-        *signaled = !isCurrentlyInUse(context->getRenderer());
+        *signaled = !context->getRenderer()->hasUnfinishedUse(getResourceUse());
         return angle::Result::Continue;
     }
 

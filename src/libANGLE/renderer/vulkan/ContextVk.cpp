@@ -1435,7 +1435,8 @@ angle::Result ContextVk::setupIndexedDraw(const gl::Context *context,
             BufferVk *bufferVk             = vk::GetImpl(elementArrayBuffer);
             vk::BufferHelper &bufferHelper = bufferVk->getBuffer();
 
-            if (bufferHelper.isHostVisible() && !bufferHelper.isCurrentlyInUse(mRenderer))
+            if (bufferHelper.isHostVisible() &&
+                !mRenderer->hasUnfinishedUse(bufferHelper.getResourceUse()))
             {
                 uint8_t *src = nullptr;
                 ANGLE_TRY(

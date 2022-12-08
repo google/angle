@@ -142,9 +142,6 @@ class Resource : angle::NonCopyable
   public:
     virtual ~Resource();
 
-    // Returns true if the resource is in use by ANGLE or the driver.
-    bool isCurrentlyInUse(RendererVk *renderer) const;
-
     // Complete all recorded and in-flight commands involving this resource
     angle::Result waitForIdle(ContextVk *contextVk,
                               const char *debugMessage,
@@ -181,9 +178,6 @@ class ReadWriteResource : public angle::NonCopyable
 {
   public:
     virtual ~ReadWriteResource();
-
-    // Returns true if the resource is in use by ANGLE or the driver.
-    bool isCurrentlyInUse(RendererVk *renderer) const;
 
     // Complete all recorded and in-flight commands involving this resource
     angle::Result waitForIdle(ContextVk *contextVk,
