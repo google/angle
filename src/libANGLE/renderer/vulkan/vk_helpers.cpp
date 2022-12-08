@@ -4617,8 +4617,7 @@ angle::Result BufferHelper::initializeNonZeroMemory(Context *context,
         stagingBuffer.collectGarbage(renderer, queueSerial);
         // Update both ResourceUse objects, since mReadOnlyUse tracks when the buffer can be
         // destroyed, and mReadWriteUse tracks when the write has completed.
-        mReadOnlyUse.setQueueSerial(queueSerial);
-        mReadWriteUse.setQueueSerial(queueSerial);
+        retainReadWrite(queueSerial);
     }
     else if (isHostVisible())
     {
@@ -4693,11 +4692,11 @@ void BufferHelper::release(RendererVk *renderer)
 
     if (mSuballocation.valid())
     {
-        renderer->collectSuballocationGarbage(mReadOnlyUse, std::move(mSuballocation),
+        renderer->collectSuballocationGarbage(mUse, std::move(mSuballocation),
                                               std::move(mBufferForVertexArray));
     }
-    mReadOnlyUse.reset();
-    mReadWriteUse.reset();
+    mUse.reset();
+    mWriteUse.reset();
     ASSERT(!mBufferForVertexArray.valid());
 }
 
