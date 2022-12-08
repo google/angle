@@ -117,8 +117,8 @@ constexpr const uint32_t kMemoryAllocationTypeCount =
 // glSignalSemaphoreEXT.
 using SignalSemaphoreVector = angle::FixedVector<VkSemaphore, 2>;
 
+// Recursive function to process variable arguments for garbage collection
 inline void CollectGarbage(std::vector<vk::GarbageObject> *garbageOut) {}
-
 template <typename ArgT, typename... ArgsT>
 void CollectGarbage(std::vector<vk::GarbageObject> *garbageOut, ArgT object, ArgsT... objectsIn)
 {
@@ -127,6 +127,18 @@ void CollectGarbage(std::vector<vk::GarbageObject> *garbageOut, ArgT object, Arg
         garbageOut->emplace_back(vk::GarbageObject::Get(object));
     }
     CollectGarbage(garbageOut, objectsIn...);
+}
+
+// Recursive function to process variable arguments for garbage destroy
+inline void DestroyGarbage(VkDevice device) {}
+template <typename ArgT, typename... ArgsT>
+void DestroyGarbage(VkDevice device, ArgT object, ArgsT... objectsIn)
+{
+    if (object->valid())
+    {
+        object->destroy(device);
+    }
+    DestroyGarbage(device, objectsIn...);
 }
 
 class WaitableCompressEvent
@@ -320,11 +332,18 @@ class RendererVk : angle::NonCopyable
     template <typename... ArgsT>
     void collectGarbage(const vk::ResourceUse &use, ArgsT... garbageIn)
     {
-        std::vector<vk::GarbageObject> sharedGarbage;
-        CollectGarbage(&sharedGarbage, garbageIn...);
-        if (!sharedGarbage.empty())
+        if (hasUnfinishedUse(use))
         {
-            collectGarbage(use, std::move(sharedGarbage));
+            std::vector<vk::GarbageObject> sharedGarbage;
+            CollectGarbage(&sharedGarbage, garbageIn...);
+            if (!sharedGarbage.empty())
+            {
+                collectGarbage(use, std::move(sharedGarbage));
+            }
+        }
+        else
+        {
+            DestroyGarbage(mDevice, garbageIn...);
         }
     }
 

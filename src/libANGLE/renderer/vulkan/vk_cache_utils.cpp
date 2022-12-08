@@ -4577,7 +4577,7 @@ void PipelineHelper::destroy(VkDevice device)
 
 void PipelineHelper::release(ContextVk *contextVk)
 {
-    contextVk->addGarbage(&mPipeline);
+    contextVk->getRenderer()->collectGarbage(mUse, &mPipeline);
     mCacheLookUpFeedback = CacheLookUpFeedback::None;
 }
 
