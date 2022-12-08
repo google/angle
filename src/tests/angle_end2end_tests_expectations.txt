@@ -740,10 +740,6 @@
 6358 SWIFTSHADER : GLSLTest_ES3.UnsuccessfulRelinkWithBindAttribLocation/* = SKIP
 6358 METAL : GLSLTest_ES3.UnsuccessfulRelinkWithBindAttribLocation/* = SKIP
 
-// Assigning an assignment expression to swizzled vector field fails on Swiftshader
-7863 WIN SWIFTSHADER : GLSLTest_ES3.AssignAssignmentToSwizzled/* = SKIP
-7863 LINUX SWIFTSHADER : GLSLTest_ES3.AssignAssignmentToSwizzled/* = SKIP
-
 // HLSL compiler bug
 2445 D3D11 : GLSLTest_ES3.ComplexCrossExpression/* = SKIP
 
