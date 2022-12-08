@@ -711,7 +711,7 @@ bool IsPlatformAvailable(const PlatformParameters &param)
     // Disable "null" device when not on ANGLE or in D3D9.
     if (param.getDeviceType() == EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE)
     {
-        if (param.driver != GLESDriverType::AngleEGL)
+        if (!IsANGLE(param.driver))
             return false;
         if (param.getRenderer() == EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE)
             return false;

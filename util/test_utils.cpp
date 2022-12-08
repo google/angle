@@ -76,6 +76,7 @@ const DisplayTypeInfo kDisplayTypes[] = {
     {"null", EGL_PLATFORM_ANGLE_TYPE_NULL_ANGLE},
     {"swiftshader", EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE},
     {"vulkan", EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE},
+    {"vulkan-null", EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE},
 };
 }  // anonymous namespace
 
@@ -248,13 +249,17 @@ uint32_t GetPlatformANGLETypeFromArg(const char *useANGLEArg, uint32_t defaultPl
 
 uint32_t GetANGLEDeviceTypeFromArg(const char *useANGLEArg, uint32_t defaultDeviceType)
 {
-    if (useANGLEArg && strcmp(useANGLEArg, "swiftshader") == 0)
+    if (useANGLEArg)
     {
-        return EGL_PLATFORM_ANGLE_DEVICE_TYPE_SWIFTSHADER_ANGLE;
+        if (strcmp(useANGLEArg, "swiftshader") == 0)
+        {
+            return EGL_PLATFORM_ANGLE_DEVICE_TYPE_SWIFTSHADER_ANGLE;
+        }
+        if (strstr(useANGLEArg, "null") != 0)
+        {
+            return EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE;
+        }
     }
-    else
-    {
-        return defaultDeviceType;
-    }
+    return defaultDeviceType;
 }
 }  // namespace angle
