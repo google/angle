@@ -8475,10 +8475,6 @@ void FrameCaptureShared::writeMainContextCppReplay(const gl::Context *context,
                     continue;
                 }
 
-                // TODO(http://anglebug.com/5878): Support capture/replay of eglCreateContext()
-                // so this block can be moved into SetupReplayContextXX() by injecting them into the
-                // beginning of the setup call stream.
-                out << "    CreateContext(" << shareContext->id() << ");\n";
                 // The SetupReplayContextXX() calls only exist if this is a mid-execution capture
                 // and we can only call them if they exist, so only output the calls if this is a
                 // MEC.
@@ -8489,6 +8485,11 @@ void FrameCaptureShared::writeMainContextCppReplay(const gl::Context *context,
                     if (mActiveSecondaryContexts.find(context->id().value) !=
                         mActiveSecondaryContexts.end())
                     {
+                        // TODO(http://anglebug.com/5878): Support capture/replay of
+                        // eglCreateContext() so this block can be moved into SetupReplayContextXX()
+                        // by injecting them into the beginning of the setup call stream.
+                        out << "    CreateContext(" << shareContext->id() << ");\n";
+
                         out << "    "
                             << FmtSetupFunction(kNoPartId, shareContext->id(), FuncUsage::Call)
                             << ";\n";
