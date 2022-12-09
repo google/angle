@@ -39,6 +39,12 @@
   },
   'angle_restricted_trace_gold_tests': {
     'modifications': {
+      # anglebug.com/5415 flaky 4x8 pixel artifacts on Win Intel
+      'win10-x64-exp-intel': {
+        'args': [
+          '--flaky-retries=1',
+        ],
+      },
       'win10-x64-intel': {
         'args': [
           '--flaky-retries=1',
