@@ -158,7 +158,7 @@ const ShPixelLocalStorageOptions &RendererD3D::getNativePixelLocalStorageOptions
     return mNativePLSOptions;
 }
 
-Serial RendererD3D::generateSerial()
+UniqueSerial RendererD3D::generateSerial()
 {
     return mSerialFactory.generate();
 }

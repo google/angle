@@ -439,7 +439,7 @@ class RendererD3D : public BufferFactoryD3D
                                                gl::TextureType type,
                                                gl::Texture **textureOut) = 0;
 
-    Serial generateSerial();
+    UniqueSerial generateSerial();
 
     virtual bool canSelectViewInVertexShader() const = 0;
 
@@ -477,7 +477,7 @@ class RendererD3D : public BufferFactoryD3D
     bool mDisjoint;
     bool mDeviceLost;
 
-    SerialFactory mSerialFactory;
+    UniqueSerialFactory mSerialFactory;
 };
 
 unsigned int GetBlendSampleMask(const gl::State &glState, int samples);

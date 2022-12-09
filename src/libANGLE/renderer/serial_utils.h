@@ -40,6 +40,54 @@ class ResourceSerial
     uintptr_t mValue;
 };
 
+// Class UniqueSerial defines unique serial number for object identification. It has only
+// equal/unequal comparison but no greater/smaller comparison. The default constructor creates an
+// invalid value.
+class UniqueSerial final
+{
+  public:
+    constexpr UniqueSerial() : mValue(kInvalid) {}
+    constexpr UniqueSerial(const UniqueSerial &other)  = default;
+    UniqueSerial &operator=(const UniqueSerial &other) = default;
+
+    constexpr bool operator==(const UniqueSerial &other) const
+    {
+        return mValue != kInvalid && mValue == other.mValue;
+    }
+    constexpr bool operator!=(const UniqueSerial &other) const
+    {
+        return mValue == kInvalid || mValue != other.mValue;
+    }
+
+    // Useful for serialization.
+    constexpr uint64_t getValue() const { return mValue; }
+    constexpr bool valid() const { return mValue != kInvalid; }
+
+  private:
+    friend class UniqueSerialFactory;
+    constexpr explicit UniqueSerial(uint64_t value) : mValue(value) {}
+    uint64_t mValue;
+    static constexpr uint64_t kInvalid = 0;
+};
+
+class UniqueSerialFactory final : angle::NonCopyable
+{
+  public:
+    UniqueSerialFactory() : mSerial(1) {}
+
+    UniqueSerial generate()
+    {
+        uint64_t current = mSerial++;
+        ASSERT(mSerial > current);  // Integer overflow
+        return UniqueSerial(current);
+    }
+
+  private:
+    uint64_t mSerial;
+};
+
+// Class Serial defines a monotonically increasing serial number that indicates the timeline of
+// execution.
 class Serial final
 {
   public:
@@ -53,10 +101,6 @@ class Serial final
     {
         return mValue != kInvalid && mValue == other.mValue;
     }
-    constexpr bool operator==(uint32_t value) const
-    {
-        return mValue != kInvalid && mValue == static_cast<uint64_t>(value);
-    }
     constexpr bool operator!=(const Serial &other) const
     {
         return mValue == kInvalid || mValue != other.mValue;
@@ -66,15 +110,12 @@ class Serial final
     constexpr bool operator<(const Serial &other) const { return mValue < other.mValue; }
     constexpr bool operator<=(const Serial &other) const { return mValue <= other.mValue; }
 
-    constexpr bool operator<(uint32_t value) const { return mValue < static_cast<uint64_t>(value); }
-
     // Useful for serialization.
     constexpr uint64_t getValue() const { return mValue; }
     constexpr bool valid() const { return mValue != kInvalid; }
 
   private:
-    template <typename T>
-    friend class SerialFactoryBase;
+    friend class AtomicSerialFactory;
     friend class RangedSerialFactory;
     friend class AtomicQueueSerial;
     constexpr explicit Serial(uint64_t value) : mValue(value) {}
@@ -124,8 +165,7 @@ class RangedSerialFactory final : angle::NonCopyable
     }
 
   private:
-    template <typename T>
-    friend class SerialFactoryBase;
+    friend class AtomicSerialFactory;
     void initialize(uint64_t initialSerial, size_t count)
     {
         mSerial = initialSerial;
@@ -135,11 +175,10 @@ class RangedSerialFactory final : angle::NonCopyable
     size_t mCount;
 };
 
-template <typename SerialBaseType>
-class SerialFactoryBase final : angle::NonCopyable
+class AtomicSerialFactory final : angle::NonCopyable
 {
   public:
-    SerialFactoryBase() : mSerial(1) {}
+    AtomicSerialFactory() : mSerial(1) {}
 
     Serial generate()
     {
@@ -157,11 +196,8 @@ class SerialFactoryBase final : angle::NonCopyable
     }
 
   private:
-    SerialBaseType mSerial;
+    std::atomic<uint64_t> mSerial;
 };
-
-using SerialFactory       = SerialFactoryBase<uint64_t>;
-using AtomicSerialFactory = SerialFactoryBase<std::atomic<uint64_t>>;
 
 // For backend that supports multiple queue serials, QueueSerial includes a Serial and an index.
 using SerialIndex                                     = uint32_t;

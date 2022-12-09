@@ -170,8 +170,8 @@ class Surface : public LabeledObject, public gl::FramebufferAttachmentObject
     bool isYUV() const override;
     bool isCreatedWithAHB() const override;
 
-    void onAttach(const gl::Context *context, rx::Serial framebufferSerial) override {}
-    void onDetach(const gl::Context *context, rx::Serial framebufferSerial) override {}
+    void onAttach(const gl::Context *context, rx::UniqueSerial framebufferSerial) override {}
+    void onDetach(const gl::Context *context, rx::UniqueSerial framebufferSerial) override {}
     SurfaceID id() const { return mState.id; }
     GLuint getId() const override;
 

@@ -60,14 +60,14 @@ class FramebufferAttachment final
                           GLenum binding,
                           const ImageIndex &textureIndex,
                           FramebufferAttachmentObject *resource,
-                          rx::Serial framebufferSerial);
+                          rx::UniqueSerial framebufferSerial);
 
     FramebufferAttachment(FramebufferAttachment &&other);
     FramebufferAttachment &operator=(FramebufferAttachment &&other);
 
     ~FramebufferAttachment();
 
-    void detach(const Context *context, rx::Serial framebufferSerial);
+    void detach(const Context *context, rx::UniqueSerial framebufferSerial);
     void attach(const Context *context,
                 GLenum type,
                 GLenum binding,
@@ -77,7 +77,7 @@ class FramebufferAttachment final
                 GLuint baseViewIndex,
                 bool isMultiview,
                 GLsizei samples,
-                rx::Serial framebufferSerial);
+                rx::UniqueSerial framebufferSerial);
 
     // Helper methods
     GLuint getRedSize() const;
@@ -221,9 +221,9 @@ class FramebufferAttachmentObject : public angle::Subject, public angle::Observe
     virtual bool isCreatedWithAHB() const                                                  = 0;
     virtual bool hasProtectedContent() const                                               = 0;
 
-    virtual void onAttach(const Context *context, rx::Serial framebufferSerial) = 0;
-    virtual void onDetach(const Context *context, rx::Serial framebufferSerial) = 0;
-    virtual GLuint getId() const                                                = 0;
+    virtual void onAttach(const Context *context, rx::UniqueSerial framebufferSerial) = 0;
+    virtual void onDetach(const Context *context, rx::UniqueSerial framebufferSerial) = 0;
+    virtual GLuint getId() const                                                      = 0;
 
     // These are used for robust resource initialization.
     virtual InitState initState(GLenum binding, const ImageIndex &imageIndex) const = 0;

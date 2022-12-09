@@ -777,7 +777,7 @@ class Program final : public LabeledObject, public angle::Subject
     // Writes a program's binary to the output memory buffer.
     angle::Result serialize(const Context *context, angle::MemoryBuffer *binaryOut) const;
 
-    rx::Serial serial() const { return mSerial; }
+    rx::UniqueSerial serial() const { return mSerial; }
 
     const ProgramExecutable &getExecutable() const { return mState.getExecutable(); }
     ProgramExecutable &getExecutable() { return mState.getExecutable(); }
@@ -867,7 +867,7 @@ class Program final : public LabeledObject, public angle::Subject
                                  GLboolean transpose,
                                  const UniformT *v);
 
-    rx::Serial mSerial;
+    rx::UniqueSerial mSerial;
     ProgramState mState;
     rx::ProgramImpl *mProgram;
 

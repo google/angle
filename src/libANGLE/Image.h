@@ -106,8 +106,8 @@ class ExternalImageSibling : public ImageSibling
     bool isCubeMap() const;
     bool hasProtectedContent() const override;
 
-    void onAttach(const gl::Context *context, rx::Serial framebufferSerial) override;
-    void onDetach(const gl::Context *context, rx::Serial framebufferSerial) override;
+    void onAttach(const gl::Context *context, rx::UniqueSerial framebufferSerial) override;
+    void onDetach(const gl::Context *context, rx::UniqueSerial framebufferSerial) override;
     GLuint getId() const override;
 
     gl::InitState initState(GLenum binding, const gl::ImageIndex &imageIndex) const override;

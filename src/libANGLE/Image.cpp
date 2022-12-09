@@ -231,9 +231,11 @@ bool ExternalImageSibling::hasProtectedContent() const
     return mImplementation->hasProtectedContent();
 }
 
-void ExternalImageSibling::onAttach(const gl::Context *context, rx::Serial framebufferSerial) {}
+void ExternalImageSibling::onAttach(const gl::Context *context, rx::UniqueSerial framebufferSerial)
+{}
 
-void ExternalImageSibling::onDetach(const gl::Context *context, rx::Serial framebufferSerial) {}
+void ExternalImageSibling::onDetach(const gl::Context *context, rx::UniqueSerial framebufferSerial)
+{}
 
 GLuint ExternalImageSibling::getId() const
 {

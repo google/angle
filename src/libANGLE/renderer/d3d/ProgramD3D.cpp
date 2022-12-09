@@ -1684,9 +1684,9 @@ angle::Result ProgramD3D::getGeometryExecutableForPrimitiveType(d3d::Context *co
 
     ShaderExecutableD3D *geometryExecutable = nullptr;
     angle::Result result                    = mRenderer->compileToExecutable(
-                           context, *currentInfoLog, geometryHLSL, gl::ShaderType::Geometry, mStreamOutVaryings,
-                           (mState.getTransformFeedbackBufferMode() == GL_SEPARATE_ATTRIBS), CompilerWorkaroundsD3D(),
-                           &geometryExecutable);
+        context, *currentInfoLog, geometryHLSL, gl::ShaderType::Geometry, mStreamOutVaryings,
+        (mState.getTransformFeedbackBufferMode() == GL_SEPARATE_ATTRIBS), CompilerWorkaroundsD3D(),
+        &geometryExecutable);
 
     if (!infoLog && result == angle::Result::Stop)
     {
@@ -3148,7 +3148,7 @@ void ProgramD3D::initAttribLocationsToD3DSemantic(const gl::Context *context)
     }
 }
 
-void ProgramD3D::updateCachedInputLayout(Serial associatedSerial, const gl::State &state)
+void ProgramD3D::updateCachedInputLayout(UniqueSerial associatedSerial, const gl::State &state)
 {
     if (mCurrentVertexArrayStateSerial == associatedSerial)
     {

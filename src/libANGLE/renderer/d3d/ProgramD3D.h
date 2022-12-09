@@ -325,7 +325,7 @@ class ProgramD3D : public ProgramImpl
         return mAttribLocationToD3DSemantic;
     }
 
-    void updateCachedInputLayout(Serial associatedSerial, const gl::State &state);
+    void updateCachedInputLayout(UniqueSerial associatedSerial, const gl::State &state);
     void updateCachedOutputLayout(const gl::Context *context, const gl::Framebuffer *framebuffer);
     void updateCachedComputeImage2DBindLayout(const gl::Context *context);
 
@@ -608,7 +608,7 @@ class ProgramD3D : public ProgramImpl
     static unsigned int issueSerial();
     static unsigned int mCurrentSerial;
 
-    Serial mCurrentVertexArrayStateSerial;
+    UniqueSerial mCurrentVertexArrayStateSerial;
 };
 }  // namespace rx
 
