@@ -46,6 +46,14 @@ std::string GetModulePath(void *moduleOrSymbol)
         return "";
     }
 
+    // Chrome changes process title that causes dladdr returns wrong module file name for executable
+    // binary, so return GetExecutablePath() if dli_fname doesn't exist
+    struct stat buf;
+    if (stat(dlInfo.dli_fname, &buf) != 0)
+    {
+        return GetExecutablePath();
+    }
+
     return dlInfo.dli_fname;
 }
 
