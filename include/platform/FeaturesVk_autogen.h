@@ -272,11 +272,6 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
-    FeatureInfo shadowBuffers = {
-        "shadowBuffers", FeatureCategory::VulkanFeatures,
-        "Allocate a shadow buffer for GL buffer objects to reduce glMap* latency.", &members,
-        "http://anglebug.com/4339"};
-
     FeatureInfo preferCPUForBufferSubData = {
         "preferCPUForBufferSubData", FeatureCategory::VulkanFeatures,
         "Prefer use CPU to do bufferSubData instead of staged update.", &members,

@@ -3774,8 +3774,6 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     // that can cause OOM and timeouts.
     ANGLE_FEATURE_CONDITION(&mFeatures, allocateNonZeroMemory, false);
 
-    ANGLE_FEATURE_CONDITION(&mFeatures, shadowBuffers, false);
-
     // ARM does buffer copy on geometry pipeline, which may create a GPU pipeline bubble that
     // prevents vertex shader to overlap with fragment shader. For now we always choose CPU to do
     // copy on ARM. This may need to test with future ARM GPU architecture as well.

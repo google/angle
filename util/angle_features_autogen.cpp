@@ -229,7 +229,6 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::SetPrimitiveRestartFixedIndexForDrawArrays,
      "setPrimitiveRestartFixedIndexForDrawArrays"},
     {Feature::SetZeroLevelBeforeGenerateMipmap, "setZeroLevelBeforeGenerateMipmap"},
-    {Feature::ShadowBuffers, "shadowBuffers"},
     {Feature::ShiftInstancedArrayDataWithOffset, "shiftInstancedArrayDataWithOffset"},
     {Feature::SingleThreadedTextureDecompression, "singleThreadedTextureDecompression"},
     {Feature::SkipVSConstantRegisterZero, "skipVSConstantRegisterZero"},

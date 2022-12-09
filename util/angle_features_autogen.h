@@ -215,7 +215,6 @@ enum class Feature
     SetDataFasterThanImageUpload,
     SetPrimitiveRestartFixedIndexForDrawArrays,
     SetZeroLevelBeforeGenerateMipmap,
-    ShadowBuffers,
     ShiftInstancedArrayDataWithOffset,
     SingleThreadedTextureDecompression,
     SkipVSConstantRegisterZero,

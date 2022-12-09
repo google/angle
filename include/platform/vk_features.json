@@ -333,14 +333,6 @@
             ]
         },
         {
-            "name": "shadow_buffers",
-            "category": "Features",
-            "description": [
-                "Allocate a shadow buffer for GL buffer objects to reduce glMap* latency."
-            ],
-            "issue": "http://anglebug.com/4339"
-        },
-        {
             "name": "prefer_CPU_for_buffer_sub_data",
             "category": "Features",
             "description": [
