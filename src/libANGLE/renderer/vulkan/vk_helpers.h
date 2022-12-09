@@ -364,7 +364,7 @@ class DynamicallyGrowingPool : angle::NonCopyable
     angle::Result allocateNewEntryPool(ContextVk *contextVk, Pool &&pool);
 
     // Called by the implementation whenever an entry is freed.
-    void onEntryFreed(ContextVk *contextVk, size_t poolIndex);
+    void onEntryFreed(ContextVk *contextVk, size_t poolIndex, const ResourceUse &use);
 
     const Pool &getPool(size_t index) const
     {
@@ -561,36 +561,6 @@ class QueryHelper final : public Resource
         Ended
     };
     QueryStatus mStatus;
-};
-
-// DynamicSemaphorePool allocates semaphores as needed.  It uses a std::vector
-// as a pool to allocate many semaphores at once.  The pools live permanently,
-// but are recycled as semaphores get freed.
-
-// These are arbitrary default sizes for semaphore pools.
-constexpr uint32_t kDefaultSemaphorePoolSize = 64;
-
-class SemaphoreHelper;
-
-class DynamicSemaphorePool final : public DynamicallyGrowingPool<std::vector<Semaphore>>
-{
-  public:
-    DynamicSemaphorePool();
-    ~DynamicSemaphorePool() override;
-
-    angle::Result init(ContextVk *contextVk, uint32_t poolSize);
-    void destroy(VkDevice device);
-
-    // autoFree can be used to allocate a semaphore that's expected to be freed at the end of the
-    // frame.  This renders freeSemaphore unnecessary and saves an eventual search.
-    angle::Result allocateSemaphore(ContextVk *contextVk, SemaphoreHelper *semaphoreOut);
-    void freeSemaphore(ContextVk *contextVk, SemaphoreHelper *semaphore);
-
-  private:
-    angle::Result allocatePoolImpl(ContextVk *contextVk,
-                                   std::vector<Semaphore> &poolToAllocate,
-                                   uint32_t entriesToAllocate) override;
-    void destroyPoolImpl(VkDevice device, std::vector<Semaphore> &poolToDestroy) override;
 };
 
 // Semaphores that are allocated from the semaphore pool are encapsulated in a helper object,

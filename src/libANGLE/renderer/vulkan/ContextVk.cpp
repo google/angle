@@ -7981,8 +7981,8 @@ ANGLE_INLINE void ContextVk::generateOutsideRenderPassCommandsQueueSerial()
         return;
     }
 
-    mCurrentSerial = mRenderer->generateQueueSerial(mCurrentQueueSerialIndex);
-    mOutsideRenderPassCommands->setQueueSerial(mCurrentQueueSerialIndex, mCurrentSerial);
+    serial = mRenderer->generateQueueSerial(mCurrentQueueSerialIndex);
+    mOutsideRenderPassCommands->setQueueSerial(mCurrentQueueSerialIndex, serial);
 }
 
 ANGLE_INLINE void ContextVk::generateRenderPassCommandsQueueSerial(QueueSerial *queueSerialOut)
@@ -7995,8 +7995,8 @@ ANGLE_INLINE void ContextVk::generateRenderPassCommandsQueueSerial(QueueSerial *
                                    kMaxReservedOutsideRenderPassQueueSerials,
                                    &mOutsideRenderPassSerialFactory);
 
-    mCurrentSerial  = mRenderer->generateQueueSerial(mCurrentQueueSerialIndex);
-    *queueSerialOut = QueueSerial(mCurrentQueueSerialIndex, mCurrentSerial);
+    Serial serial   = mRenderer->generateQueueSerial(mCurrentQueueSerialIndex);
+    *queueSerialOut = QueueSerial(mCurrentQueueSerialIndex, serial);
 }
 
 void ContextVk::resetPerFramePerfCounters()

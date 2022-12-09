@@ -71,7 +71,7 @@ class ResourceUse final
         ASSERT(serial.valid());
         if (mSerials.size() <= index)
         {
-            mSerials.resize(index + 1);
+            mSerials.resize(index + 1, kZeroSerial);
         }
         mSerials[index] = serial;
     }
@@ -109,6 +109,23 @@ class ResourceUse final
                mSerials.size() > commandBufferQueueSerial.getIndex() &&
                mSerials[commandBufferQueueSerial.getIndex()] ==
                    commandBufferQueueSerial.getSerial();
+    }
+
+    // Merge other's serials into this object.
+    ANGLE_INLINE void merge(const ResourceUse &other)
+    {
+        if (mSerials.size() < other.mSerials.size())
+        {
+            mSerials.resize(other.mSerials.size(), kZeroSerial);
+        }
+
+        for (SerialIndex i = 0; i < other.mSerials.size(); ++i)
+        {
+            if (mSerials[i] < other.mSerials[i])
+            {
+                mSerials[i] = other.mSerials[i];
+            }
+        }
     }
 
   private:
@@ -157,6 +174,8 @@ class Resource : angle::NonCopyable
     }
 
     const ResourceUse &getResourceUse() const { return mUse; }
+
+    void mergeResourceUse(const ResourceUse &use) { mUse.merge(use); }
 
   protected:
     Resource();
