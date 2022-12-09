@@ -68,7 +68,6 @@ class ResourceUse final
     void setSerial(SerialIndex index, Serial serial)
     {
         ASSERT(index != kInvalidQueueSerialIndex);
-        ASSERT(serial.valid());
         if (mSerials.size() <= index)
         {
             mSerials.resize(index + 1, kZeroSerial);

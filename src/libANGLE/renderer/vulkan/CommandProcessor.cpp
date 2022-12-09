@@ -83,13 +83,10 @@ size_t GetBatchCountUpToSerials(std::vector<CommandBatch> &inFlightCommands,
     BitSetArrayT serialBitMaskToFinish;
     for (SerialIndex i = 0; i < serials.size(); i++)
     {
-        if (serials[i].valid())
+        ASSERT(serials[i] <= lastSubmittedSerials[i]);
+        if (serials[i] > lastCompletedSerials[i])
         {
-            ASSERT(serials[i] <= lastSubmittedSerials[i]);
-            if (serials[i] > lastCompletedSerials[i])
-            {
-                serialBitMaskToFinish.set(i);
-            }
+            serialBitMaskToFinish.set(i);
         }
     }
 
@@ -1004,7 +1001,8 @@ angle::Result CommandQueue::retireFinishedCommands(Context *context, size_t fini
 
     for (SerialIndex index = 0; index < lastCompletedQueueSerials.size(); index++)
     {
-        if (lastCompletedQueueSerials[index].valid())
+        // Set mLastCompletedSerials only if there is a lastCompletedQueueSerials in the index.
+        if (lastCompletedQueueSerials[index] != kZeroSerial)
         {
             mLastCompletedSerials.setQueueSerial(index, lastCompletedQueueSerials[index]);
         }
@@ -1110,7 +1108,7 @@ bool CommandQueue::allInFlightCommandsAreAfterSerials(const Serials &serials)
     for (const CommandBatch &batch : mInFlightCommands)
     {
         if (batch.queueSerial.getIndex() < serials.size() &&
-            serials[batch.queueSerial.getIndex()].valid() &&
+            serials[batch.queueSerial.getIndex()] != kZeroSerial &&
             batch.queueSerial.getSerial() <= serials[batch.queueSerial.getIndex()])
         {
             return false;
