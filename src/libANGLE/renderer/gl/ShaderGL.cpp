@@ -376,6 +376,11 @@ std::shared_ptr<WaitableCompileEvent> ShaderGL::compile(const gl::Context *conte
         options->passHighpToPackUnormSnormBuiltins = true;
     }
 
+    if (features.emulateClipDistanceState.enabled)
+    {
+        options->emulateClipDistanceState = true;
+    }
+
     if (mRenderer->getNativeExtensions().shaderPixelLocalStorageANGLE)
     {
         options->pls = mRenderer->getNativePixelLocalStorageOptions();

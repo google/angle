@@ -231,6 +231,7 @@ class ProgramExecutable final : public angle::Subject
     const RangeUI &getImageUniformRange() const { return mImageUniformRange; }
     const RangeUI &getAtomicCounterUniformRange() const { return mAtomicCounterUniformRange; }
     const RangeUI &getFragmentInoutRange() const { return mFragmentInoutRange; }
+    bool hasClipDistance() const { return mHasClipDistance; }
     bool hasDiscard() const { return mHasDiscard; }
     bool enablesPerSampleShading() const { return mEnablesPerSampleShading; }
     BlendEquationBitSet getAdvancedBlendEquations() const { return mAdvancedBlendEquations; }
@@ -473,6 +474,7 @@ class ProgramExecutable final : public angle::Subject
     std::vector<InterfaceBlock> mShaderStorageBlocks;
 
     RangeUI mFragmentInoutRange;
+    bool mHasClipDistance;
     bool mHasDiscard;
     bool mEnablesPerSampleShading;
 

@@ -731,6 +731,17 @@ const std::set<std::string> *GetUsedImage2DFunctionNames(const ShHandle handle)
 #endif  // ANGLE_ENABLE_HLSL
 }
 
+bool HasClipDistanceInVertexShader(const ShHandle handle)
+{
+    ASSERT(handle);
+
+    TShHandleBase *base = static_cast<TShHandleBase *>(handle);
+    TCompiler *compiler = base->getAsCompiler();
+    ASSERT(compiler);
+
+    return compiler->getShaderType() == GL_VERTEX_SHADER && compiler->hasClipDistance();
+}
+
 bool HasDiscardInFragmentShader(const ShHandle handle)
 {
     ASSERT(handle);

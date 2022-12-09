@@ -396,6 +396,7 @@ void Shader::compile(const Context *context)
     mState.mTessGenVertexOrder        = 0;
     mState.mTessGenPointMode          = 0;
     mState.mAdvancedBlendEquations.reset();
+    mState.mHasClipDistance         = false;
     mState.mHasDiscard              = false;
     mState.mEnablesPerSampleShading = false;
     mState.mSpecConstUsageBits.reset();
@@ -607,6 +608,7 @@ void Shader::resolveCompile(const Context *context)
             mState.mOutputVaryings   = GetShaderVariables(sh::GetOutputVaryings(compilerHandle));
             mState.mAllAttributes    = GetShaderVariables(sh::GetAttributes(compilerHandle));
             mState.mActiveAttributes = GetActiveShaderVariables(&mState.mAllAttributes);
+            mState.mHasClipDistance  = sh::HasClipDistanceInVertexShader(compilerHandle);
             mState.mNumViews         = sh::GetVertexShaderNumViews(compilerHandle);
             break;
         }

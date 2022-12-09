@@ -222,6 +222,8 @@ class TCompiler : public TShHandleBase
         return mCullDistanceSize ? mCullDistanceSize : (mCullDistanceMaxIndex + 1);
     }
 
+    bool hasClipDistance() const { return getClipDistanceArraySize() != 0; }
+
   protected:
     // Add emulated functions to the built-in function emulator.
     virtual void initBuiltInFunctionEmulator(BuiltInFunctionEmulator *emu,

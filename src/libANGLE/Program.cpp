@@ -1338,7 +1338,8 @@ angle::Result Program::linkImpl(const Context *context)
         gl::Shader *vertexShader = mState.mAttachedShaders[ShaderType::Vertex];
         if (vertexShader)
         {
-            mState.mNumViews = vertexShader->getNumViews(context);
+            mState.mNumViews                     = vertexShader->getNumViews(context);
+            mState.mExecutable->mHasClipDistance = vertexShader->hasClipDistance();
             mState.mSpecConstUsageBits |= vertexShader->getSpecConstUsageBits();
         }
 

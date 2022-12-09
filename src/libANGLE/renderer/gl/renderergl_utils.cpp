@@ -1943,12 +1943,11 @@ void GenerateCaps(const FunctionsGL *functions,
 
     // GL_EXT_clip_cull_distance spec requires shader interface blocks to support
     // built-in array redeclarations on OpenGL ES.
-    extensions->clipCullDistanceEXT = !features.disableClipCullDistance.enabled &&
-                                      (functions->isAtLeastGL(gl::Version(4, 5)) ||
-                                       (functions->isAtLeastGL(gl::Version(3, 0)) &&
-                                        functions->hasGLExtension("GL_ARB_cull_distance")) ||
-                                       (extensions->shaderIoBlocksEXT &&
-                                        functions->hasGLESExtension("GL_EXT_clip_cull_distance")));
+    extensions->clipCullDistanceEXT =
+        functions->isAtLeastGL(gl::Version(4, 5)) ||
+        (functions->isAtLeastGL(gl::Version(3, 0)) &&
+         functions->hasGLExtension("GL_ARB_cull_distance")) ||
+        (extensions->shaderIoBlocksEXT && functions->hasGLESExtension("GL_EXT_clip_cull_distance"));
     if (extensions->clipCullDistanceEXT)
     {
         caps->maxClipDistances = QuerySingleGLInt(functions, GL_MAX_CLIP_DISTANCES_EXT);
@@ -2437,8 +2436,8 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     // https://anglebug.com/7527
     ANGLE_FEATURE_CONDITION(features, passHighpToPackUnormSnormBuiltins, isQualcomm);
 
-    // https://anglebug.com/7763
-    ANGLE_FEATURE_CONDITION(features, disableClipCullDistance, isQualcomm);
+    // https://anglebug.com/7880
+    ANGLE_FEATURE_CONDITION(features, emulateClipDistanceState, isQualcomm);
 
     // Desktop GLSL-only fragment synchronization extensions. These are injected internally by the
     // compiler to make pixel local storage coherent.

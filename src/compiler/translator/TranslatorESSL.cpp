@@ -10,8 +10,11 @@
 #include "common/utilities.h"
 #include "compiler/translator/BuiltInFunctionEmulatorGLSL.h"
 #include "compiler/translator/OutputESSL.h"
+#include "compiler/translator/StaticType.h"
 #include "compiler/translator/tree_ops/DeclarePerVertexBlocks.h"
 #include "compiler/translator/tree_ops/RecordConstantPrecision.h"
+#include "compiler/translator/tree_util/ReplaceClipCullDistanceVariable.h"
+#include "compiler/translator/util.h"
 
 namespace sh
 {
@@ -84,12 +87,50 @@ bool TranslatorESSL::translate(TIntermBlock *root,
 
     if (getShaderType() == GL_VERTEX_SHADER)
     {
-        // Move gl_ClipDistance and/or gl_CullDistance redeclarations to gl_PerVertex.
-        if (IsExtensionEnabled(getExtensionBehavior(), TExtension::EXT_clip_cull_distance) &&
-            areClipDistanceOrCullDistanceRedeclared() &&
-            !DeclarePerVertexBlocks(this, root, &getSymbolTable()))
+        // Emulate GL_CLIP_DISTANCEi_EXT state if needed
+        if (hasClipDistance() && compileOptions.emulateClipDistanceState)
         {
-            return false;
+            constexpr const ImmutableString kClipDistanceEnabledName("angle_ClipDistanceEnabled");
+
+            const TType *type = StaticType::Get<EbtUInt, EbpLow, EvqUniform, 1, 1>();
+            const TVariable *clipDistanceEnabled = new TVariable(
+                &getSymbolTable(), kClipDistanceEnabledName, type, SymbolType::AngleInternal);
+            const TIntermSymbol *clipDistanceEnabledSymbol = new TIntermSymbol(clipDistanceEnabled);
+
+            // AngleInternal variables don't get collected
+            if (shouldCollectVariables(compileOptions))
+            {
+                ShaderVariable uniform;
+                uniform.name          = kClipDistanceEnabledName.data();
+                uniform.mappedName    = kClipDistanceEnabledName.data();
+                uniform.type          = GLVariableType(*type);
+                uniform.precision     = GLVariablePrecision(*type);
+                uniform.staticUse     = true;
+                uniform.active        = true;
+                uniform.binding       = type->getLayoutQualifier().binding;
+                uniform.location      = type->getLayoutQualifier().location;
+                uniform.offset        = type->getLayoutQualifier().offset;
+                uniform.rasterOrdered = type->getLayoutQualifier().rasterOrdered;
+                uniform.readonly      = type->getMemoryQualifier().readonly;
+                uniform.writeonly     = type->getMemoryQualifier().writeonly;
+                mUniforms.push_back(uniform);
+            }
+            DeclareGlobalVariable(root, clipDistanceEnabled);
+            if (!ZeroDisabledClipDistanceAssignments(this, root, &getSymbolTable(), getShaderType(),
+                                                     clipDistanceEnabledSymbol))
+                return false;
+
+            // The previous operation always redeclares gl_ClipDistance
+            if (!DeclarePerVertexBlocks(this, root, &getSymbolTable()))
+                return false;
+        }
+        else if (IsExtensionEnabled(getExtensionBehavior(), TExtension::EXT_clip_cull_distance) &&
+                 areClipDistanceOrCullDistanceRedeclared())
+        {
+            // When clip distance state emulation is not needed,
+            // the redeclared extension built-ins still should be moved to gl_PerVertex
+            if (!DeclarePerVertexBlocks(this, root, &getSymbolTable()))
+                return false;
         }
     }
 
@@ -193,7 +234,8 @@ void TranslatorESSL::writeExtensionBehavior(const ShCompileOptions &compileOptio
                 continue;
             }
             else if (iter->first == TExtension::EXT_clip_cull_distance &&
-                     areClipDistanceOrCullDistanceRedeclared())
+                     (areClipDistanceOrCullDistanceRedeclared() ||
+                      (hasClipDistance() && compileOptions.emulateClipDistanceState)))
             {
                 sink << "#extension GL_EXT_clip_cull_distance : " << GetBehaviorString(iter->second)
                      << "\n"
