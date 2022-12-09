@@ -880,6 +880,16 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
         }
     }
 
+    if (IsWindows() && IsIntel() && mParams->isVulkan() && traceNameIs("black_desert_mobile"))
+    {
+        skipTest("TODO: http://anglebug.com/7879 Non-deterministic image on 31.0.101.2111 driver");
+    }
+
+    if (IsWindows() && IsIntel() && mParams->isVulkan() && traceNameIs("the_gardens_between"))
+    {
+        skipTest("TODO: http://anglebug.com/7879 Non-deterministic image on 31.0.101.2111 driver");
+    }
+
     if (traceNameIs("brawl_stars"))
     {
         addExtensionPrerequisite("GL_EXT_shadow_samplers");
