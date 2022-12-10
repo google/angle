@@ -2723,6 +2723,16 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                     return "GL_MAX_COMBINED_DRAW_BUFFERS_AND_PIXEL_LOCAL_STORAGE_PLANES_ANGLE";
                 case 0x96E3:
                     return "GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE";
+                case 0x96E4:
+                    return "GL_LOAD_OP_ZERO_ANGLE";
+                case 0x96E5:
+                    return "GL_LOAD_OP_CLEAR_ANGLE";
+                case 0x96E6:
+                    return "GL_LOAD_OP_LOAD_ANGLE";
+                case 0x96E7:
+                    return "GL_LOAD_OP_DISABLE_ANGLE";
+                case 0x96E8:
+                    return "GL_STORE_OP_STORE_ANGLE";
                 case 0x96E9:
                     return "GL_PIXEL_LOCAL_FORMAT_ANGLE";
                 case 0x96EA:
@@ -28115,6 +28125,22 @@ unsigned int StringToGLenum(const char *str)
     {
         return 0x0101;
     }
+    if (strcmp(str, "GL_LOAD_OP_CLEAR_ANGLE") == 0)
+    {
+        return 0x96E5;
+    }
+    if (strcmp(str, "GL_LOAD_OP_DISABLE_ANGLE") == 0)
+    {
+        return 0x96E7;
+    }
+    if (strcmp(str, "GL_LOAD_OP_LOAD_ANGLE") == 0)
+    {
+        return 0x96E6;
+    }
+    if (strcmp(str, "GL_LOAD_OP_ZERO_ANGLE") == 0)
+    {
+        return 0x96E4;
+    }
     if (strcmp(str, "GL_LOCAL_CONSTANT_DATATYPE_EXT") == 0)
     {
         return 0x87ED;
@@ -37971,6 +37997,10 @@ unsigned int StringToGLenum(const char *str)
     {
         return 0x85BF;
     }
+    if (strcmp(str, "GL_STORE_OP_STORE_ANGLE") == 0)
+    {
+        return 0x96E8;
+    }
     if (strcmp(str, "GL_STREAM_COPY") == 0)
     {
         return 0x88E2;
@@ -42866,26 +42896,6 @@ unsigned int StringToGLenum(const char *str)
     if (strcmp(str, "GL_Z_EXT") == 0)
     {
         return 0x87D7;
-    }
-    if (strcmp(str, "LOAD_OP_CLEAR_ANGLE") == 0)
-    {
-        return 0x96E5;
-    }
-    if (strcmp(str, "LOAD_OP_DISABLE_ANGLE") == 0)
-    {
-        return 0x96E7;
-    }
-    if (strcmp(str, "LOAD_OP_LOAD_ANGLE") == 0)
-    {
-        return 0x96E6;
-    }
-    if (strcmp(str, "LOAD_OP_ZERO_ANGLE") == 0)
-    {
-        return 0x96E4;
-    }
-    if (strcmp(str, "STORE_OP_STORE_ANGLE") == 0)
-    {
-        return 0x96E8;
     }
 
     UNREACHABLE();
