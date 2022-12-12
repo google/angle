@@ -3415,7 +3415,7 @@ angle::Result ContextVk::synchronizeCpuGpuTime()
             nullptr, vk::SubmitPolicy::EnsureSubmitted, &submitSerial));
 
         // Track it with the submitSerial.
-        timestampQuery.retainCommands(submitSerial);
+        timestampQuery.setQueueSerial(submitSerial);
 
         // Wait for GPU to be ready.  This is a short busy wait.
         VkResult result = VK_EVENT_RESET;
@@ -6918,7 +6918,7 @@ angle::Result ContextVk::getTimestamp(uint64_t *timestampOut)
                                            mContextPriority, nullptr, 0, nullptr,
                                            vk::SubmitPolicy::EnsureSubmitted, &submitQueueSerial));
     // Track it with the submitSerial.
-    timestampQuery.retainCommands(submitQueueSerial);
+    timestampQuery.setQueueSerial(submitQueueSerial);
 
     // Wait for the submission to finish.  Given no semaphores, there is hope that it would execute
     // in parallel with what's already running on the GPU.
@@ -7231,7 +7231,7 @@ angle::Result ContextVk::onSyncObjectInit(vk::SyncHelper *syncHelper, bool isEGL
 
         if (mLastSubmittedSerial.valid())
         {
-            syncHelper->retainCommands(QueueSerial(mCurrentQueueSerialIndex, mLastSubmittedSerial));
+            syncHelper->setSerial(mCurrentQueueSerialIndex, mLastSubmittedSerial);
         }
         return angle::Result::Continue;
     }

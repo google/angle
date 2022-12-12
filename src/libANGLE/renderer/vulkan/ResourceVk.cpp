@@ -15,82 +15,31 @@ namespace rx
 {
 namespace vk
 {
-namespace
-{
-template <typename T>
-angle::Result WaitForIdle(ContextVk *contextVk,
-                          T *resource,
-                          const char *debugMessage,
-                          RenderPassClosureReason reason)
+// Resource implementation.
+angle::Result Resource::waitForIdle(ContextVk *contextVk,
+                                    const char *debugMessage,
+                                    RenderPassClosureReason reason)
 {
     // If there are pending commands for the resource, flush them.
-    if (contextVk->hasUnsubmittedUse(resource->getResourceUse()))
+    if (contextVk->hasUnsubmittedUse(mUse))
     {
         ANGLE_TRY(contextVk->flushImpl(nullptr, reason));
     }
 
     RendererVk *renderer = contextVk->getRenderer();
     // Make sure the driver is done with the resource.
-    if (renderer->hasUnfinishedUse(resource->getResourceUse()))
+    if (renderer->hasUnfinishedUse(mUse))
     {
         if (debugMessage)
         {
             ANGLE_VK_PERF_WARNING(contextVk, GL_DEBUG_SEVERITY_HIGH, "%s", debugMessage);
         }
-        ANGLE_TRY(renderer->finishResourceUse(contextVk, resource->getResourceUse()));
+        ANGLE_TRY(renderer->finishResourceUse(contextVk, mUse));
     }
 
-    ASSERT(!renderer->hasUnfinishedUse(resource->getResourceUse()));
+    ASSERT(!renderer->hasUnfinishedUse(mUse));
 
     return angle::Result::Continue;
-}
-}  // namespace
-
-// Resource implementation.
-Resource::Resource() {}
-
-Resource::Resource(Resource &&other) : Resource()
-{
-    mUse = std::move(other.mUse);
-}
-
-Resource &Resource::operator=(Resource &&rhs)
-{
-    std::swap(mUse, rhs.mUse);
-    return *this;
-}
-
-Resource::~Resource() {}
-
-angle::Result Resource::waitForIdle(ContextVk *contextVk,
-                                    const char *debugMessage,
-                                    RenderPassClosureReason reason)
-{
-    return WaitForIdle(contextVk, this, debugMessage, reason);
-}
-
-// ReadWriteResource implementation.
-ReadWriteResource::ReadWriteResource() {}
-
-ReadWriteResource::ReadWriteResource(ReadWriteResource &&other) : ReadWriteResource()
-{
-    *this = std::move(other);
-}
-
-ReadWriteResource::~ReadWriteResource() {}
-
-ReadWriteResource &ReadWriteResource::operator=(ReadWriteResource &&other)
-{
-    Resource::operator=(std::move(other));
-    mWriteUse = std::move(other.mWriteUse);
-    return *this;
-}
-
-angle::Result ReadWriteResource::waitForIdle(ContextVk *contextVk,
-                                             const char *debugMessage,
-                                             RenderPassClosureReason reason)
-{
-    return Resource::waitForIdle(contextVk, debugMessage, reason);
 }
 
 // SharedGarbage implementation.

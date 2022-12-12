@@ -1329,7 +1329,7 @@ void CommandBufferHelperCommon::bufferRead(ContextVk *contextVk,
     ASSERT(!usesBufferForWrite(*buffer));
     if (!buffer->usedByCommandBuffer(mQueueSerial))
     {
-        buffer->retainReadOnly(mQueueSerial);
+        buffer->setQueueSerial(mQueueSerial);
         mUsedBufferCount++;
     }
 }
@@ -1341,7 +1341,7 @@ void CommandBufferHelperCommon::bufferWrite(ContextVk *contextVk,
 {
     if (!buffer->writtenByCommandBuffer(mQueueSerial))
     {
-        buffer->retainReadWrite(mQueueSerial);
+        buffer->setWriteQueueSerial(mQueueSerial);
         mUsedBufferCount++;
     }
 
@@ -1456,17 +1456,17 @@ void CommandBufferHelperCommon::addCommandDiagnosticsCommon(std::ostringstream *
 
 void CommandBufferHelperCommon::retainResource(Resource *resource)
 {
-    resource->retainCommands(mQueueSerial);
+    resource->setQueueSerial(mQueueSerial);
 }
 
 void CommandBufferHelperCommon::retainReadOnlyResource(ReadWriteResource *readWriteResource)
 {
-    readWriteResource->retainReadOnly(mQueueSerial);
+    readWriteResource->setQueueSerial(mQueueSerial);
 }
 
 void CommandBufferHelperCommon::retainReadWriteResource(ReadWriteResource *readWriteResource)
 {
-    readWriteResource->retainReadWrite(mQueueSerial);
+    readWriteResource->setWriteQueueSerial(mQueueSerial);
 }
 
 // OutsideRenderPassCommandBufferHelper implementation.
@@ -1505,7 +1505,7 @@ void OutsideRenderPassCommandBufferHelper::imageRead(ContextVk *contextVk,
 {
     bool needLayoutTransition = false;
     imageReadImpl(contextVk, aspectFlags, imageLayout, image, &needLayoutTransition);
-    image->retainCommands(mQueueSerial);
+    image->setQueueSerial(mQueueSerial);
 }
 
 void OutsideRenderPassCommandBufferHelper::imageWrite(ContextVk *contextVk,
@@ -1693,7 +1693,7 @@ void RenderPassCommandBufferHelper::retainImage(ImageHelper *imageHelper)
 {
     if (!imageHelper->usedByCommandBuffer(mQueueSerial))
     {
-        imageHelper->retainCommands(mQueueSerial);
+        imageHelper->setQueueSerial(mQueueSerial);
     }
 }
 
@@ -1709,7 +1709,7 @@ void RenderPassCommandBufferHelper::depthStencilImagesDraw(gl::LevelIndex level,
     // Because depthStencil buffer's read/write property can change while we build renderpass, we
     // defer the image layout changes until endRenderPass time or when images going away so that we
     // only insert layout change barrier once.
-    image->retainCommands(mQueueSerial);
+    image->setQueueSerial(mQueueSerial);
 
     mDepthAttachment.init(image, level, layerStart, layerCount, VK_IMAGE_ASPECT_DEPTH_BIT);
     mStencilAttachment.init(image, level, layerStart, layerCount, VK_IMAGE_ASPECT_STENCIL_BIT);
@@ -1719,7 +1719,7 @@ void RenderPassCommandBufferHelper::depthStencilImagesDraw(gl::LevelIndex level,
         // Note that the resolve depth/stencil image has the same level/layer index as the
         // depth/stencil image as currently it can only ever come from
         // multisampled-render-to-texture renderbuffers.
-        resolveImage->retainCommands(mQueueSerial);
+        resolveImage->setQueueSerial(mQueueSerial);
 
         mDepthResolveAttachment.init(resolveImage, level, layerStart, layerCount,
                                      VK_IMAGE_ASPECT_DEPTH_BIT);
@@ -2736,7 +2736,7 @@ void DynamicBuffer::updateQueueSerialAndReleaseInFlightBuffers(ContextVk *contex
         // This function is used only for internal buffers, and they are all read-only.
         // It's possible this may change in the future, but there isn't a good way to detect that,
         // unfortunately.
-        bufferHelper->retainReadOnly(queueSerial);
+        bufferHelper->setQueueSerial(queueSerial);
 
         // We only keep free buffers that have the same size. Note that bufferHelper's size is
         // suballocation's size. We need to use the whole block memory size here.
@@ -4584,7 +4584,7 @@ angle::Result BufferHelper::initializeNonZeroMemory(Context *context,
         stagingBuffer.collectGarbage(renderer, queueSerial);
         // Update both ResourceUse objects, since mReadOnlyUse tracks when the buffer can be
         // destroyed, and mReadWriteUse tracks when the write has completed.
-        retainReadWrite(queueSerial);
+        setWriteQueueSerial(queueSerial);
     }
     else if (isHostVisible())
     {
