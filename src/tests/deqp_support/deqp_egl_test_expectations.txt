@@ -89,7 +89,6 @@
 
 // Linux Vulkan failures
 2716 LINUX VULKAN : dEQP-EGL.functional.preserve_swap.no_preserve.* = FAIL
-5753 LINUX VULKAN : dEQP-EGL.functional.resize.surface_size.* = FAIL
 
 // Mac failures
 2546 MAC : dEQP-EGL.functional.native_color_mapping.native_window.* = FAIL
