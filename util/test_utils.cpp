@@ -176,6 +176,7 @@ bool ParseIntArgWithHandling(const char *flag,
     }
 
     *valueOut = static_cast<int>(longValue);
+    // Note: return value is always false with ArgHandling::Preserve handling
     return handling == ArgHandling::Delete;
 }
 
@@ -207,16 +208,27 @@ bool ParseStringArg(const char *flag, int *argc, char **argv, int argIndex, std:
     return true;
 }
 
-bool ParseCStringArg(const char *flag, int *argc, char **argv, int argIndex, const char **valueOut)
+bool ParseCStringArgWithHandling(const char *flag,
+                                 int *argc,
+                                 char **argv,
+                                 int argIndex,
+                                 const char **valueOut,
+                                 ArgHandling handling)
 {
-    const char *value = GetSingleArg(flag, argc, argv, argIndex, ArgHandling::Delete);
+    const char *value = GetSingleArg(flag, argc, argv, argIndex, handling);
     if (!value)
     {
         return false;
     }
 
     *valueOut = value;
-    return true;
+    // Note: return value is always false with ArgHandling::Preserve handling
+    return handling == ArgHandling::Delete;
+}
+
+bool ParseCStringArg(const char *flag, int *argc, char **argv, int argIndex, const char **valueOut)
+{
+    return ParseCStringArgWithHandling(flag, argc, argv, argIndex, valueOut, ArgHandling::Delete);
 }
 
 void AddArg(int *argc, char **argv, const char *arg)

@@ -97,8 +97,8 @@ bool TraceTestArg(int *argc, char **argv, int argIndex)
            ParseFlag("--trace-interpreter", argc, argv, argIndex, &gTraceInterpreter) ||
            ParseFlag("--interpreter", argc, argv, argIndex, &gTraceInterpreter) ||
            ParseIntArg("--screenshot-frame", argc, argv, argIndex, &gScreenshotFrame) ||
-           ParseCStringArg("--render-test-output-dir", argc, argv, argIndex,
-                           &gRenderTestOutputDir) ||
+           ParseCStringArgWithHandling("--render-test-output-dir", argc, argv, argIndex,
+                                       &gRenderTestOutputDir, ArgHandling::Preserve) ||
            ParseCStringArg("--screenshot-dir", argc, argv, argIndex, &gScreenshotDir) ||
            ParseCStringArg("--use-angle", argc, argv, argIndex, &gUseANGLE) ||
            ParseCStringArg("--use-gl", argc, argv, argIndex, &gUseGL) ||
