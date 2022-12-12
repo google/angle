@@ -1315,25 +1315,6 @@ void CommandBufferHelperCommon::resetImpl()
     mUsedBufferCount = 0;
 }
 
-void CommandBufferHelperCommon::bufferRead(ContextVk *contextVk,
-                                           VkAccessFlags readAccessType,
-                                           PipelineStage readStage,
-                                           BufferHelper *buffer)
-{
-    VkPipelineStageFlagBits stageBits = kPipelineStageFlagBitMap[readStage];
-    if (buffer->recordReadBarrier(readAccessType, stageBits, &mPipelineBarriers[readStage]))
-    {
-        mPipelineBarrierMask.set(readStage);
-    }
-
-    ASSERT(!usesBufferForWrite(*buffer));
-    if (!buffer->usedByCommandBuffer(mQueueSerial))
-    {
-        buffer->setQueueSerial(mQueueSerial);
-        mUsedBufferCount++;
-    }
-}
-
 void CommandBufferHelperCommon::bufferWrite(ContextVk *contextVk,
                                             VkAccessFlags writeAccessType,
                                             PipelineStage writeStage,
@@ -1498,6 +1479,38 @@ angle::Result OutsideRenderPassCommandBufferHelper::reset(Context *context)
     return initializeCommandBuffer(context);
 }
 
+void OutsideRenderPassCommandBufferHelper::bufferRead(ContextVk *contextVk,
+                                                      VkAccessFlags readAccessType,
+                                                      PipelineStage readStage,
+                                                      BufferHelper *buffer)
+{
+    VkPipelineStageFlagBits stageBits = kPipelineStageFlagBitMap[readStage];
+    if (buffer->recordReadBarrier(readAccessType, stageBits, &mPipelineBarriers[readStage]))
+    {
+        mPipelineBarrierMask.set(readStage);
+    }
+
+    ASSERT(!buffer->writtenByCommandBuffer(mQueueSerial));
+    if (contextVk->hasStartedRenderPass() &&
+        contextVk->getStartedRenderPassCommands().usesBuffer(*buffer))
+    {
+        // We should not run into situation that RP is writing to it while we are reading it here
+        ASSERT(!contextVk->getStartedRenderPassCommands().usesBufferForWrite(*buffer));
+        // A buffer could have read accessed by both renderPassCommands and
+        // outsideRenderPassCommands and there is no need to endRP or flush. In this case, the
+        // renderPassCommands' read will override the outsideRenderPassCommands' read, since its
+        // queueSerial must be greater than outsideRP. The only negative effect here is that
+        // mUsedBufferCount maybe inaccurate when it is being read by both commands, but that is
+        // okay given it is only used by informational widgets.
+        mUsedBufferCount++;
+    }
+    else if (!buffer->usedByCommandBuffer(mQueueSerial))
+    {
+        buffer->setQueueSerial(mQueueSerial);
+        mUsedBufferCount++;
+    }
+}
+
 void OutsideRenderPassCommandBufferHelper::imageRead(ContextVk *contextVk,
                                                      VkImageAspectFlags aspectFlags,
                                                      ImageLayout imageLayout,
@@ -1632,6 +1645,25 @@ angle::Result RenderPassCommandBufferHelper::reset(Context *context)
     mQueueSerial = QueueSerial();
 
     return initializeCommandBuffer(context);
+}
+
+void RenderPassCommandBufferHelper::bufferRead(ContextVk *contextVk,
+                                               VkAccessFlags readAccessType,
+                                               PipelineStage readStage,
+                                               BufferHelper *buffer)
+{
+    VkPipelineStageFlagBits stageBits = kPipelineStageFlagBitMap[readStage];
+    if (buffer->recordReadBarrier(readAccessType, stageBits, &mPipelineBarriers[readStage]))
+    {
+        mPipelineBarrierMask.set(readStage);
+    }
+
+    ASSERT(!usesBufferForWrite(*buffer));
+    if (!usesBuffer(*buffer))
+    {
+        buffer->setQueueSerial(mQueueSerial);
+        mUsedBufferCount++;
+    }
 }
 
 void RenderPassCommandBufferHelper::imageRead(ContextVk *contextVk,

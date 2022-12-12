@@ -471,10 +471,11 @@ vk::ImageLayout GetImageWriteLayoutAndSubresource(const gl::ImageUnit &imageUnit
     return kShaderWriteImageLayouts[firstShader];
 }
 
+template <typename CommandBufferT>
 void OnTextureBufferRead(ContextVk *contextVk,
                          BufferVk *bufferVk,
                          gl::ShaderBitSet stages,
-                         vk::CommandBufferHelperCommon *commandBufferHelper)
+                         CommandBufferT *commandBufferHelper)
 {
     vk::BufferHelper &buffer = bufferVk->getBuffer();
 
@@ -2472,8 +2473,8 @@ angle::Result ContextVk::handleDirtyShaderResourcesImpl(CommandBufferHelperT *co
     return angle::Result::Continue;
 }
 
-void ContextVk::handleDirtyShaderBufferResourcesImpl(
-    vk::CommandBufferHelperCommon *commandBufferHelper)
+template <typename CommandBufferT>
+void ContextVk::handleDirtyShaderBufferResourcesImpl(CommandBufferT *commandBufferHelper)
 {
     const gl::ProgramExecutable *executable = mState.getProgramExecutable();
     ASSERT(executable);
