@@ -4572,13 +4572,22 @@ PipelineHelper::~PipelineHelper() = default;
 void PipelineHelper::destroy(VkDevice device)
 {
     mPipeline.destroy(device);
-    mCacheLookUpFeedback = CacheLookUpFeedback::None;
+    reset();
 }
 
 void PipelineHelper::release(ContextVk *contextVk)
 {
     contextVk->getRenderer()->collectGarbage(mUse, &mPipeline);
+    reset();
+}
+
+void PipelineHelper::reset()
+{
     mCacheLookUpFeedback = CacheLookUpFeedback::None;
+
+    mLinkedVertexInput    = nullptr;
+    mLinkedShaders        = nullptr;
+    mLinkedFragmentOutput = nullptr;
 }
 
 void PipelineHelper::addTransition(GraphicsPipelineTransitionBits bits,
@@ -4586,6 +4595,31 @@ void PipelineHelper::addTransition(GraphicsPipelineTransitionBits bits,
                                    PipelineHelper *pipeline)
 {
     mTransitions.emplace_back(bits, desc, pipeline);
+}
+
+void PipelineHelper::setLinkedLibraryReferences(vk::PipelineHelper *vertexInputPipeline,
+                                                vk::PipelineHelper *shadersPipeline,
+                                                vk::PipelineHelper *fragmentOutputPipeline)
+{
+    mLinkedVertexInput    = vertexInputPipeline;
+    mLinkedShaders        = shadersPipeline;
+    mLinkedFragmentOutput = fragmentOutputPipeline;
+}
+
+void PipelineHelper::retainInRenderPass(RenderPassCommandBufferHelper *renderPassCommands)
+{
+    renderPassCommands->retainResource(this);
+
+    // Keep references to the linked libraries alive
+    if (mLinkedVertexInput != nullptr)
+    {
+        ASSERT(mLinkedShaders != nullptr);
+        ASSERT(mLinkedFragmentOutput != nullptr);
+
+        renderPassCommands->retainResource(mLinkedVertexInput);
+        renderPassCommands->retainResource(mLinkedShaders);
+        renderPassCommands->retainResource(mLinkedFragmentOutput);
+    }
 }
 
 // FramebufferHelper implementation.
@@ -6479,21 +6513,24 @@ angle::Result GraphicsPipelineCache<Hash>::linkLibraries(
     vk::PipelineCacheAccess *pipelineCache,
     const vk::GraphicsPipelineDesc &desc,
     const vk::PipelineLayout &pipelineLayout,
-    const vk::PipelineHelper &vertexInputPipeline,
-    const vk::PipelineHelper &shadersPipeline,
-    const vk::PipelineHelper &fragmentOutputPipeline,
+    vk::PipelineHelper *vertexInputPipeline,
+    vk::PipelineHelper *shadersPipeline,
+    vk::PipelineHelper *fragmentOutputPipeline,
     const vk::GraphicsPipelineDesc **descPtrOut,
     vk::PipelineHelper **pipelineOut)
 {
     vk::Pipeline newPipeline;
     vk::CacheLookUpFeedback feedback = vk::CacheLookUpFeedback::None;
 
-    ANGLE_TRY(vk::InitializePipelineFromLibraries(contextVk, pipelineCache, pipelineLayout,
-                                                  vertexInputPipeline, shadersPipeline,
-                                                  fragmentOutputPipeline, &newPipeline, &feedback));
+    ANGLE_TRY(vk::InitializePipelineFromLibraries(
+        contextVk, pipelineCache, pipelineLayout, *vertexInputPipeline, *shadersPipeline,
+        *fragmentOutputPipeline, &newPipeline, &feedback));
 
     addToCache(PipelineSource::DrawLinked, desc, std::move(newPipeline), feedback, descPtrOut,
                pipelineOut);
+    (*pipelineOut)
+        ->setLinkedLibraryReferences(vertexInputPipeline, shadersPipeline, fragmentOutputPipeline);
+
     return angle::Result::Continue;
 }
 
@@ -6572,9 +6609,9 @@ template angle::Result GraphicsPipelineCache<GraphicsPipelineDescCompleteHash>::
     vk::PipelineCacheAccess *pipelineCache,
     const vk::GraphicsPipelineDesc &desc,
     const vk::PipelineLayout &pipelineLayout,
-    const vk::PipelineHelper &vertexInputPipeline,
-    const vk::PipelineHelper &shadersPipeline,
-    const vk::PipelineHelper &fragmentOutputPipeline,
+    vk::PipelineHelper *vertexInputPipeline,
+    vk::PipelineHelper *shadersPipeline,
+    vk::PipelineHelper *fragmentOutputPipeline,
     const vk::GraphicsPipelineDesc **descPtrOut,
     vk::PipelineHelper **pipelineOut);
 template void GraphicsPipelineCache<GraphicsPipelineDescCompleteHash>::populate(

@@ -1937,8 +1937,8 @@ angle::Result ContextVk::createGraphicsPipeline()
             // Link the three subsets into one pipeline.
             ANGLE_TRY(executableVk->linkGraphicsPipelineLibraries(
                 this, &pipelineCache, *mGraphicsPipelineDesc, glExecutable,
-                *mCurrentGraphicsPipelineVertexInput, *mCurrentGraphicsPipelineShaders,
-                *mCurrentGraphicsPipelineFragmentOutput, &descPtr, &mCurrentGraphicsPipeline));
+                mCurrentGraphicsPipelineVertexInput, mCurrentGraphicsPipelineShaders,
+                mCurrentGraphicsPipelineFragmentOutput, &descPtr, &mCurrentGraphicsPipeline));
 
             // Reset the transition bits for pipeline libraries, they are only made to be up-to-date
             // here.
@@ -2006,7 +2006,7 @@ angle::Result ContextVk::handleDirtyGraphicsPipelineDesc(DirtyBits::Iterator *di
     // feedback counter buffer.
     if (mRenderPassCommands->started())
     {
-        mRenderPassCommands->retainResource(mCurrentGraphicsPipeline);
+        mCurrentGraphicsPipeline->retainInRenderPass(mRenderPassCommands);
 
         if (mRenderPassCommands->isTransformFeedbackActiveUnpaused())
         {
@@ -7012,7 +7012,7 @@ angle::Result ContextVk::beginNewRenderPass(
     if (mCurrentGraphicsPipeline)
     {
         ASSERT(mCurrentGraphicsPipeline->valid());
-        mRenderPassCommands->retainResource(mCurrentGraphicsPipeline);
+        mCurrentGraphicsPipeline->retainInRenderPass(mRenderPassCommands);
     }
     return angle::Result::Continue;
 }

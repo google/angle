@@ -150,9 +150,9 @@ class ProgramExecutableVk
                                                 vk::PipelineCacheAccess *pipelineCache,
                                                 const vk::GraphicsPipelineDesc &desc,
                                                 const gl::ProgramExecutable &glExecutable,
-                                                const vk::PipelineHelper &vertexInputPipeline,
-                                                const vk::PipelineHelper &shadersPipeline,
-                                                const vk::PipelineHelper &fragmentOutputPipeline,
+                                                vk::PipelineHelper *vertexInputPipeline,
+                                                vk::PipelineHelper *shadersPipeline,
+                                                vk::PipelineHelper *fragmentOutputPipeline,
                                                 const vk::GraphicsPipelineDesc **descPtrOut,
                                                 vk::PipelineHelper **pipelineOut);
 

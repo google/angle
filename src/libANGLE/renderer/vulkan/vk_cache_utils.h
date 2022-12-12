@@ -64,6 +64,7 @@ class ImageHelper;
 class SamplerHelper;
 enum class ImageLayout;
 class PipelineCacheAccess;
+class RenderPassCommandBufferHelper;
 
 using RefCountedDescriptorSetLayout    = RefCounted<DescriptorSetLayout>;
 using RefCountedPipelineLayout         = RefCounted<PipelineLayout>;
@@ -1286,10 +1287,24 @@ class PipelineHelper final : public Resource
     }
     CacheLookUpFeedback getCacheLookUpFeedback() const { return mCacheLookUpFeedback; }
 
+    void setLinkedLibraryReferences(vk::PipelineHelper *vertexInputPipeline,
+                                    vk::PipelineHelper *shadersPipeline,
+                                    vk::PipelineHelper *fragmentOutputPipeline);
+
+    void retainInRenderPass(RenderPassCommandBufferHelper *renderPassCommands);
+
   private:
+    void reset();
+
     std::vector<GraphicsPipelineTransition> mTransitions;
     Pipeline mPipeline;
     CacheLookUpFeedback mCacheLookUpFeedback = CacheLookUpFeedback::None;
+
+    // The list of pipeline helpers that were referenced when creating a linked pipeline.  These
+    // pipelines must be kept alive, so their serial is updated at the same time as this object.
+    PipelineHelper *mLinkedVertexInput    = nullptr;
+    PipelineHelper *mLinkedShaders        = nullptr;
+    PipelineHelper *mLinkedFragmentOutput = nullptr;
 };
 
 class FramebufferHelper : public Resource
@@ -2256,9 +2271,9 @@ class GraphicsPipelineCache final : public HasCacheStats<VulkanCacheType::Graphi
                                 vk::PipelineCacheAccess *pipelineCache,
                                 const vk::GraphicsPipelineDesc &desc,
                                 const vk::PipelineLayout &pipelineLayout,
-                                const vk::PipelineHelper &vertexInputPipeline,
-                                const vk::PipelineHelper &shadersPipeline,
-                                const vk::PipelineHelper &fragmentOutputPipeline,
+                                vk::PipelineHelper *vertexInputPipeline,
+                                vk::PipelineHelper *shadersPipeline,
+                                vk::PipelineHelper *fragmentOutputPipeline,
                                 const vk::GraphicsPipelineDesc **descPtrOut,
                                 vk::PipelineHelper **pipelineOut);
 
