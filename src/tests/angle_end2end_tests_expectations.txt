@@ -685,14 +685,35 @@
 7653 IOS : TransformFeedbackTest.RenderOnceChangeXfbBufferRenderAgain/ES3_OpenGL = SKIP
 7653 IOS : VertexAttributeTestES3.emptyBuffer/ES3_OpenGL = SKIP
 
+7756 IOS : PixelLocalStorageTest.BlendAndColorMask/ES3_OpenGL_EmulatePixelLocalStorage* = SKIP
 7756 IOS : PixelLocalStorageTest.ClearValues_r32/ES3_OpenGL_EmulatePixelLocalStorage* = SKIP
+7756 IOS : PixelLocalStorageTest.ClearValues_rgba8/ES3_OpenGL_EmulatePixelLocalStorage* = SKIP
 7756 IOS : PixelLocalStorageTest.Coherency/ES3_OpenGL_EmulatePixelLocalStorage* = SKIP
+7756 IOS : PixelLocalStorageTest.DrawStateReset/ES3_OpenGL_EmulatePixelLocalStorage* = SKIP
 7756 IOS : PixelLocalStorageTest.ForgetBarrier/ES3_OpenGL_EmulatePixelLocalStorage* = SKIP
+7756 IOS : PixelLocalStorageTest.FragmentReject_depth/ES3_OpenGL_EmulatePixelLocalStorage* = SKIP
+7756 IOS : PixelLocalStorageTest.FragmentReject_stencil/ES3_OpenGL_EmulatePixelLocalStorage* = SKIP
+7756 IOS : PixelLocalStorageTest.FragmentReject_viewport/ES3_OpenGL_EmulatePixelLocalStorage* = SKIP
 7756 IOS : PixelLocalStorageTest.FunctionArguments/ES3_OpenGL_EmulatePixelLocalStorage* = SKIP
 7756 IOS : PixelLocalStorageTest.LoadAfterStore/ES3_OpenGL_EmulatePixelLocalStorage* = SKIP
 7756 IOS : PixelLocalStorageTest.LoadOnly/ES3_OpenGL_EmulatePixelLocalStorage* = SKIP
+7756 IOS : PixelLocalStorageTest.LoadOps/ES3_OpenGL_EmulatePixelLocalStorage* = SKIP
+7756 IOS : PixelLocalStorageTest.MaxCombinedDrawBuffersAndPLSPlanes/ES3_OpenGL_EmulatePixelLocalStorage* = SKIP
+7756 IOS : PixelLocalStorageTest.MemorylessStorage/ES3_OpenGL_EmulatePixelLocalStorage* = SKIP
+7756 IOS : PixelLocalStorageTest.MipMapLevels/ES3_OpenGL_EmulatePixelLocalStorage* = SKIP
+7756 IOS : PixelLocalStorageTest.PLSWithSamplers/ES3_OpenGL_EmulatePixelLocalStorage* = SKIP
+7756 IOS : PixelLocalStorageTest.ProgramCache/ES3_OpenGL_EmulatePixelLocalStorage* = SKIP
 7756 IOS : PixelLocalStorageTest.R32/ES3_OpenGL_EmulatePixelLocalStorage* = SKIP
 7756 IOS : PixelLocalStorageTest.RGBA8/ES3_OpenGL_EmulatePixelLocalStorage* = SKIP
+7756 IOS : PixelLocalStorageTest.StateRestoration/ES3_OpenGL_EmulatePixelLocalStorage* = SKIP
+7756 IOS : PixelLocalStorageValidationTest.BeginPixelLocalStorageANGLE_loadops/ES3_1_Null_EmulatePixelLocalStorage* = SKIP
+7756 IOS : PixelLocalStorageValidationTest.BeginPixelLocalStorageANGLE_pls_planes/ES3_1_Null_EmulatePixelLocalStorage* = SKIP
+7756 IOS : PixelLocalStorageValidationTest.EndAndBarrierANGLE/ES3_1_Null_EmulatePixelLocalStorage* = SKIP
+7756 IOS : PixelLocalStorageValidationTest.FramebufferMemorylessPixelLocalStorageANGLE/ES3_1_Null_EmulatePixelLocalStorage* = SKIP
+7756 IOS : PixelLocalStorageValidationTest.FramebufferTexturePixelLocalStorageANGLE/ES3_1_Null_EmulatePixelLocalStorage* = SKIP
+7756 IOS : PixelLocalStorageValidationTest.GetFramebufferPixelLocalStorageParametersANGLE/ES3_1_Null_EmulatePixelLocalStorage* = SKIP
+7756 IOS : PixelLocalStorageValidationTest.InitialValues/ES3_1_Null_EmulatePixelLocalStorage* = SKIP
+7756 IOS : PixelLocalStorageValidationTest.glFramebufferPixelLocalClearValuesANGLE/ES3_1_Null_EmulatePixelLocalStorage* = SKIP
 
 5491 IOS : IOSurfaceClientBufferTest.RenderToBGRX8888IOSurface/ES2_OpenGL = SKIP
 5491 IOS : IOSurfaceClientBufferTest.RenderToBGRX8888IOSurface/ES3_OpenGL = SKIP
