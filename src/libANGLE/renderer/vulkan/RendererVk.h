@@ -110,6 +110,13 @@ constexpr const char *kMemoryAllocationTypeMessage[] = {
 };
 constexpr const uint32_t kMemoryAllocationTypeCount =
     static_cast<uint32_t>(MemoryAllocationType::EnumCount);
+
+// Used to select the severity for memory allocation logs.
+enum class MemoryLogSeverity
+{
+    INFO,
+    WARN,
+};
 }  // namespace vk
 
 // Supports one semaphore from current surface, and one semaphore passed to
@@ -668,6 +675,14 @@ class RendererVk : angle::NonCopyable
         onMemoryDeallocImpl(allocType, size, reinterpret_cast<void *>(handle));
     }
 
+    // Pending memory allocation information is used for logging in case of an unsuccessful
+    // allocation. It is cleared in onMemoryAlloc().
+    void resetPendingMemoryAlloc();
+    void setPendingMemoryAlloc(vk::MemoryAllocationType allocType, VkDeviceSize size);
+
+    // Memory statistics are logged when handling a context error.
+    void logMemoryStatsOnError();
+
     // Allocation statistics functions below are currently used for debugging only.
     VkDeviceSize getActiveMemoryAllocationsSize(uint32_t allocTypeIndex);
     VkDeviceSize getActiveMemoryAllocationsCount(uint32_t allocTypeIndex);
@@ -940,6 +955,12 @@ class RendererVk : angle::NonCopyable
     std::array<std::atomic<VkDeviceSize>, vk::kMemoryAllocationTypeCount>
         mActiveMemoryAllocationsSize;
     std::array<std::atomic<uint64_t>, vk::kMemoryAllocationTypeCount> mActiveMemoryAllocationsCount;
+
+    // Pending memory allocation information is used for logging in case of an allocation error. It
+    // includes the size and type of the last attempted allocation, which are cleared after the
+    // allocation is successful.
+    std::atomic<VkDeviceSize> mPendingMemoryAllocationSize;
+    vk::MemoryAllocationType mPendingMemoryAllocationType;
 
     // For memory allocation with debug layers.
     std::mutex mMemoryAllocationMutex;

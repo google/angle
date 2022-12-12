@@ -56,6 +56,13 @@ struct FeaturesVk : FeatureSetBase
         "Enable uploading the previously defined mutable mipmap texture.", &members,
         "https://anglebug.com/7308"};
 
+    FeatureInfo supportsMemoryBudget = {
+        "supportsMemoryBudget",
+        FeatureCategory::VulkanFeatures,
+        "VkDevice supports the VK_EXT_memory_budget extension.",
+        &members,
+    };
+
     FeatureInfo supportsRenderpass2 = {
         "supportsRenderpass2",
         FeatureCategory::VulkanFeatures,

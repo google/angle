@@ -101,10 +101,12 @@ angle::Result FindAndAllocateCompatibleMemory(vk::Context *context,
     allocInfo.memoryTypeIndex      = memoryTypeIndex;
     allocInfo.allocationSize       = memoryRequirements.size;
 
-    ANGLE_VK_TRY(context, deviceMemoryOut->allocate(device, allocInfo));
-
     // Add the new allocation for tracking.
     RendererVk *renderer = context->getRenderer();
+    renderer->setPendingMemoryAlloc(memoryAllocationType, allocInfo.allocationSize);
+
+    ANGLE_VK_TRY(context, deviceMemoryOut->allocate(device, allocInfo));
+
     renderer->onMemoryAlloc(memoryAllocationType, allocInfo.allocationSize,
                             deviceMemoryOut->getHandle());
 
@@ -220,9 +222,9 @@ angle::Result AllocateBufferOrImageMemory(vk::Context *context,
 constexpr char kVkKhronosValidationLayerName[]  = "VK_LAYER_KHRONOS_validation";
 constexpr char kVkStandardValidationLayerName[] = "VK_LAYER_LUNARG_standard_validation";
 const char *kVkValidationLayerNames[]           = {
-              "VK_LAYER_GOOGLE_threading", "VK_LAYER_LUNARG_parameter_validation",
-              "VK_LAYER_LUNARG_object_tracker", "VK_LAYER_LUNARG_core_validation",
-              "VK_LAYER_GOOGLE_unique_objects"};
+    "VK_LAYER_GOOGLE_threading", "VK_LAYER_LUNARG_parameter_validation",
+    "VK_LAYER_LUNARG_object_tracker", "VK_LAYER_LUNARG_core_validation",
+    "VK_LAYER_GOOGLE_unique_objects"};
 
 bool HasValidationLayer(const std::vector<VkLayerProperties> &layerProps, const char *layerName)
 {

@@ -53,6 +53,13 @@
             "issue": "https://anglebug.com/7308"
         },
         {
+            "name": "supports_memory_budget",
+            "category": "Features",
+            "description": [
+                "VkDevice supports the VK_EXT_memory_budget extension."
+            ]
+        },
+        {
             "name": "supports_renderpass2",
             "category": "Features",
             "description": [
