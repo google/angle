@@ -9,7 +9,6 @@
 #include "libANGLE/renderer/vulkan/ProgramExecutableVk.h"
 
 #include "common/string_utils.h"
-#include "libANGLE/renderer/glslang_wrapper_utils.h"
 #include "libANGLE/renderer/vulkan/BufferVk.h"
 #include "libANGLE/renderer/vulkan/DisplayVk.h"
 #include "libANGLE/renderer/vulkan/FramebufferVk.h"
@@ -75,7 +74,7 @@ bool ValidateTransformedSpirV(const ContextVk *contextVk,
 
     for (gl::ShaderType shaderType : linkedShaderStages)
     {
-        GlslangSpirvOptions options;
+        SpvTransformOptions options;
         options.shaderType                = shaderType;
         options.negativeViewportSupported = false;
         options.removeDebugInfo           = true;
@@ -336,7 +335,7 @@ angle::Result ProgramInfo::initProgram(ContextVk *contextVk,
     gl::ShaderMap<angle::spirv::Blob> transformedSpirvBlobs;
     angle::spirv::Blob &transformedSpirvBlob = transformedSpirvBlobs[shaderType];
 
-    GlslangSpirvOptions options;
+    SpvTransformOptions options;
     options.shaderType               = shaderType;
     options.removeDebugInfo          = !contextVk->getFeatures().retainSPIRVDebugInfo.enabled;
     options.isLastPreFragmentStage   = isLastPreFragmentStage;

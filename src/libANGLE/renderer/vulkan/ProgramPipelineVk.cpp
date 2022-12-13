@@ -9,7 +9,6 @@
 
 #include "libANGLE/renderer/vulkan/ProgramPipelineVk.h"
 
-#include "libANGLE/renderer/glslang_wrapper_utils.h"
 #include "libANGLE/renderer/vulkan/GlslangWrapperVk.h"
 
 namespace rx
@@ -38,9 +37,9 @@ angle::Result ProgramPipelineVk::link(const gl::Context *glContext,
 {
     ContextVk *contextVk                      = vk::GetImpl(glContext);
     const gl::ProgramExecutable &glExecutable = mState.getExecutable();
-    GlslangSourceOptions options =
+    SpvSourceOptions options =
         GlslangWrapperVk::CreateSourceOptions(contextVk->getRenderer()->getFeatures());
-    GlslangProgramInterfaceInfo glslangProgramInterfaceInfo;
+    SpvProgramInterfaceInfo glslangProgramInterfaceInfo;
     GlslangWrapperVk::ResetGlslangProgramInterfaceInfo(&glslangProgramInterfaceInfo);
 
     reset(contextVk);
@@ -64,7 +63,7 @@ angle::Result ProgramPipelineVk::link(const gl::Context *glContext,
                     shaderType == linkedTransformFeedbackStage &&
                     !glProgram->getState().getLinkedTransformFeedbackVaryings().empty();
 
-                GlslangAssignTransformFeedbackLocations(
+                SpvAssignTransformFeedbackLocations(
                     shaderType, glProgram->getExecutable(), isTransformFeedbackStage,
                     &glslangProgramInterfaceInfo, &mExecutable.mVariableInfoMap);
             }
@@ -81,9 +80,9 @@ angle::Result ProgramPipelineVk::link(const gl::Context *glContext,
             shaderType == linkedTransformFeedbackStage &&
             !glExecutable.getLinkedTransformFeedbackVaryings().empty();
 
-        GlslangAssignLocations(options, glExecutable, varyingPacking, shaderType, frontShaderType,
-                               isTransformFeedbackStage, &glslangProgramInterfaceInfo,
-                               &uniformBindingIndexMap, &mExecutable.mVariableInfoMap);
+        SpvAssignLocations(options, glExecutable, varyingPacking, shaderType, frontShaderType,
+                           isTransformFeedbackStage, &glslangProgramInterfaceInfo,
+                           &uniformBindingIndexMap, &mExecutable.mVariableInfoMap);
         frontShaderType = shaderType;
 
         const gl::Program *program               = mState.getShaderProgram(shaderType);

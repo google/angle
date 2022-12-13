@@ -3,16 +3,15 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// Header for the shared ShaderInterfaceVariableInfoMap class, used by both the
-// Direct-to-Metal and Metal-SPIRV backends
+// ShaderInterfaceVariableInfoMap: Maps shader interface variable names to their Vulkan mapping.
 
-#ifndef LIBANGLE_RENDERER_SHADERINTERFACEVARIABLEINFOMAP_H_
-#define LIBANGLE_RENDERER_SHADERINTERFACEVARIABLEINFOMAP_H_
+#ifndef LIBANGLE_RENDERER_VULKAN_SHADERINTERFACEVARIABLEINFOMAP_H_
+#define LIBANGLE_RENDERER_VULKAN_SHADERINTERFACEVARIABLEINFOMAP_H_
 
 #include "common/FastVector.h"
 #include "libANGLE/renderer/ProgramImpl.h"
-#include "libANGLE/renderer/glslang_wrapper_utils.h"
 #include "libANGLE/renderer/renderer_utils.h"
+#include "libANGLE/renderer/vulkan/spv_utils.h"
 
 #include <functional>
 
@@ -189,4 +188,4 @@ ANGLE_INLINE uint32_t ShaderInterfaceVariableInfoMap::getAtomicCounterBufferBind
     return getAtomicCounterInfo(shaderType).binding + atomicCounterBufferIndex;
 }
 }  // namespace rx
-#endif  // LIBANGLE_RENDERER_SHADERINTERFACEVARIABLEINFOMAP_H_
+#endif  // LIBANGLE_RENDERER_VULKAN_SHADERINTERFACEVARIABLEINFOMAP_H_

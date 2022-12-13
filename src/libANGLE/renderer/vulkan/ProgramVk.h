@@ -14,7 +14,6 @@
 
 #include "common/utilities.h"
 #include "libANGLE/renderer/ProgramImpl.h"
-#include "libANGLE/renderer/glslang_wrapper_utils.h"
 #include "libANGLE/renderer/vulkan/ContextVk.h"
 #include "libANGLE/renderer/vulkan/ProgramExecutableVk.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
@@ -115,10 +114,7 @@ class ProgramVk : public ProgramImpl
     const ProgramExecutableVk &getExecutable() const { return mExecutable; }
     ProgramExecutableVk &getExecutable() { return mExecutable; }
 
-    const GlslangProgramInterfaceInfo &getGlslangProgramInterfaceInfo()
-    {
-        return mGlslangProgramInterfaceInfo;
-    }
+    const SpvProgramInterfaceInfo &getSpvProgramInterfaceInfo() { return mSpvProgramInterfaceInfo; }
 
   private:
     template <int cols, int rows>
@@ -145,7 +141,7 @@ class ProgramVk : public ProgramImpl
                                                          vk::PipelineCacheAccess *pipelineCache);
 
     // We keep the SPIR-V code to use for draw call pipeline creation.
-    GlslangProgramInterfaceInfo mGlslangProgramInterfaceInfo;
+    SpvProgramInterfaceInfo mSpvProgramInterfaceInfo;
 
     ProgramExecutableVk mExecutable;
 };

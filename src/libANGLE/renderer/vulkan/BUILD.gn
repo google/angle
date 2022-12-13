@@ -87,6 +87,8 @@ _vulkan_backend_sources = [
   "SecondaryCommandBuffer.h",
   "SemaphoreVk.cpp",
   "SemaphoreVk.h",
+  "ShaderInterfaceVariableInfoMap.cpp",
+  "ShaderInterfaceVariableInfoMap.h",
   "ShaderVk.cpp",
   "ShaderVk.h",
   "Suballocation.cpp",
@@ -109,6 +111,8 @@ _vulkan_backend_sources = [
   "VulkanSecondaryCommandBuffer.h",
   "android/vk_android_utils.cpp",
   "android/vk_android_utils.h",
+  "spv_utils.cpp",
+  "spv_utils.h",
   "vk_cache_utils.cpp",
   "vk_cache_utils.h",
   "vk_caps_utils.cpp",
@@ -319,7 +323,10 @@ template("angle_vulkan_backend_template") {
       "$angle_root:angle_compression",
       "$angle_root:angle_gpu_info_util",
       "$angle_root:angle_image_util",
+      "$angle_root/src/common/spirv:angle_spirv_base",
       "$angle_root/src/common/spirv:angle_spirv_builder",
+      "$angle_root/src/common/spirv:angle_spirv_headers",
+      "$angle_root/src/common/spirv:angle_spirv_parser",
       "$angle_spirv_headers_dir:spv_headers",
     ]
 
@@ -328,7 +335,6 @@ template("angle_vulkan_backend_template") {
     }
 
     public_deps = [
-      "$angle_root:angle_glslang_wrapper",
       "$angle_root:libANGLE_headers",
       "$angle_root/src/common/vulkan",
       "$angle_root/src/common/vulkan:angle_libvulkan_loader",

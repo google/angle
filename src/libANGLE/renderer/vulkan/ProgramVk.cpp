@@ -13,7 +13,6 @@
 #include "common/utilities.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/ProgramLinkedResources.h"
-#include "libANGLE/renderer/glslang_wrapper_utils.h"
 #include "libANGLE/renderer/renderer_utils.h"
 #include "libANGLE/renderer/vulkan/BufferVk.h"
 #include "libANGLE/renderer/vulkan/GlslangWrapperVk.h"
@@ -140,7 +139,7 @@ class Std140BlockLayoutEncoderFactory : public gl::CustomBlockLayoutEncoderFacto
 // ProgramVk implementation.
 ProgramVk::ProgramVk(const gl::ProgramState &state) : ProgramImpl(state)
 {
-    GlslangWrapperVk::ResetGlslangProgramInterfaceInfo(&mGlslangProgramInterfaceInfo);
+    GlslangWrapperVk::ResetGlslangProgramInterfaceInfo(&mSpvProgramInterfaceInfo);
 }
 
 ProgramVk::~ProgramVk() = default;
@@ -153,7 +152,7 @@ void ProgramVk::destroy(const gl::Context *context)
 
 void ProgramVk::reset(ContextVk *contextVk)
 {
-    GlslangWrapperVk::ResetGlslangProgramInterfaceInfo(&mGlslangProgramInterfaceInfo);
+    GlslangWrapperVk::ResetGlslangProgramInterfaceInfo(&mSpvProgramInterfaceInfo);
 
     mExecutable.reset(contextVk);
 }
@@ -203,7 +202,7 @@ std::unique_ptr<LinkEvent> ProgramVk::link(const gl::Context *context,
     // Gather variable info and compiled SPIR-V binaries.
     gl::ShaderMap<const angle::spirv::Blob *> spirvBlobs;
     GlslangWrapperVk::GetShaderCode(context, contextVk->getFeatures(), mState, resources,
-                                    &mGlslangProgramInterfaceInfo, &spirvBlobs,
+                                    &mSpvProgramInterfaceInfo, &spirvBlobs,
                                     &mExecutable.mVariableInfoMap);
 
     if (contextVk->getFeatures().varyingsRequireMatchingPrecisionInSpirv.enabled &&
@@ -215,8 +214,8 @@ std::unique_ptr<LinkEvent> ProgramVk::link(const gl::Context *context,
     // Compile the shaders.
     const gl::ProgramExecutable &programExecutable = mState.getExecutable();
     angle::Result status                           = mExecutable.mOriginalShaderInfo.initShaders(
-                                  contextVk, programExecutable.getLinkedShaderStages(), spirvBlobs,
-                                  mExecutable.mVariableInfoMap);
+        contextVk, programExecutable.getLinkedShaderStages(), spirvBlobs,
+        mExecutable.mVariableInfoMap);
     if (status != angle::Result::Continue)
     {
         return std::make_unique<LinkEventDone>(status);

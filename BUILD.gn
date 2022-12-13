@@ -937,26 +937,6 @@ angle_source_set("libANGLE_headers") {
   public_configs += [ ":libANGLE_config" ]
 }
 
-# Don't even try to build the SPIR-V transformer if Vulkan is disabled.
-if (angle_enable_vulkan) {
-  angle_source_set("angle_glslang_wrapper") {
-    sources = [
-      "src/libANGLE/renderer/ShaderInterfaceVariableInfoMap.cpp",
-      "src/libANGLE/renderer/ShaderInterfaceVariableInfoMap.h",
-      "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
-      "src/libANGLE/renderer/glslang_wrapper_utils.h",
-    ]
-    deps = [
-      ":libANGLE_headers",
-      "$angle_root/src/common/spirv:angle_spirv_base",
-      "$angle_root/src/common/spirv:angle_spirv_builder",
-      "$angle_root/src/common/spirv:angle_spirv_headers",
-      "$angle_root/src/common/spirv:angle_spirv_parser",
-      "${angle_spirv_headers_dir}:spv_headers",
-    ]
-  }
-}
-
 if ((is_win && angle_enable_gl) || angle_enable_d3d11 || angle_enable_d3d9) {
   angle_source_set("angle_d3d_format_tables") {
     sources = [

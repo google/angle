@@ -10,7 +10,7 @@
 #define LIBANGLE_RENDERER_VULKAN_GLSLANG_WRAPPER_H_
 
 #include "libANGLE/renderer/ProgramImpl.h"
-#include "libANGLE/renderer/glslang_wrapper_utils.h"
+#include "libANGLE/renderer/vulkan/spv_utils.h"
 #include "libANGLE/renderer/vulkan/vk_utils.h"
 
 namespace angle
@@ -25,20 +25,20 @@ namespace rx
 class GlslangWrapperVk
 {
   public:
-    static GlslangSourceOptions CreateSourceOptions(const angle::FeaturesVk &features);
+    static SpvSourceOptions CreateSourceOptions(const angle::FeaturesVk &features);
 
     static void ResetGlslangProgramInterfaceInfo(
-        GlslangProgramInterfaceInfo *glslangProgramInterfaceInfo);
+        SpvProgramInterfaceInfo *glslangProgramInterfaceInfo);
 
     static void GetShaderCode(const gl::Context *context,
                               const angle::FeaturesVk &features,
                               const gl::ProgramState &programState,
                               const gl::ProgramLinkedResources &resources,
-                              GlslangProgramInterfaceInfo *programInterfaceInfo,
+                              SpvProgramInterfaceInfo *programInterfaceInfo,
                               gl::ShaderMap<const angle::spirv::Blob *> *spirvBlobsOut,
                               ShaderInterfaceVariableInfoMap *variableInfoMapOut);
 
-    static angle::Result TransformSpirV(const GlslangSpirvOptions &options,
+    static angle::Result TransformSpirV(const SpvTransformOptions &options,
                                         const ShaderInterfaceVariableInfoMap &variableInfoMap,
                                         const angle::spirv::Blob &initialSpirvBlob,
                                         angle::spirv::Blob *shaderCodeOut);

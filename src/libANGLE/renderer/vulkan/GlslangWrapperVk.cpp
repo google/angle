@@ -14,9 +14,9 @@
 namespace rx
 {
 // static
-GlslangSourceOptions GlslangWrapperVk::CreateSourceOptions(const angle::FeaturesVk &features)
+SpvSourceOptions GlslangWrapperVk::CreateSourceOptions(const angle::FeaturesVk &features)
 {
-    GlslangSourceOptions options;
+    SpvSourceOptions options;
 
     options.supportsTransformFeedbackExtension =
         features.supportsTransformFeedbackExtension.enabled;
@@ -28,7 +28,7 @@ GlslangSourceOptions GlslangWrapperVk::CreateSourceOptions(const angle::Features
 
 // static
 void GlslangWrapperVk::ResetGlslangProgramInterfaceInfo(
-    GlslangProgramInterfaceInfo *glslangProgramInterfaceInfo)
+    SpvProgramInterfaceInfo *glslangProgramInterfaceInfo)
 {
     glslangProgramInterfaceInfo->uniformsAndXfbDescriptorSetIndex =
         ToUnderlying(DescriptorSetIndex::UniformsAndXfb);
@@ -53,22 +53,22 @@ void GlslangWrapperVk::GetShaderCode(const gl::Context *context,
                                      const angle::FeaturesVk &features,
                                      const gl::ProgramState &programState,
                                      const gl::ProgramLinkedResources &resources,
-                                     GlslangProgramInterfaceInfo *programInterfaceInfo,
+                                     SpvProgramInterfaceInfo *programInterfaceInfo,
                                      gl::ShaderMap<const angle::spirv::Blob *> *spirvBlobsOut,
                                      ShaderInterfaceVariableInfoMap *variableInfoMapOut)
 {
-    GlslangSourceOptions options = CreateSourceOptions(features);
-    GlslangGetShaderSpirvCode(context, options, programState, resources, programInterfaceInfo,
-                              spirvBlobsOut, variableInfoMapOut);
+    SpvSourceOptions options = CreateSourceOptions(features);
+    SpvGetShaderSpirvCode(context, options, programState, resources, programInterfaceInfo,
+                          spirvBlobsOut, variableInfoMapOut);
 }
 
 // static
 angle::Result GlslangWrapperVk::TransformSpirV(
-    const GlslangSpirvOptions &options,
+    const SpvTransformOptions &options,
     const ShaderInterfaceVariableInfoMap &variableInfoMap,
     const angle::spirv::Blob &initialSpirvBlob,
     angle::spirv::Blob *shaderCodeOut)
 {
-    return GlslangTransformSpirvCode(options, variableInfoMap, initialSpirvBlob, shaderCodeOut);
+    return SpvTransformSpirvCode(options, variableInfoMap, initialSpirvBlob, shaderCodeOut);
 }
 }  // namespace rx

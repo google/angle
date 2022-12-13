@@ -3,14 +3,13 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// ShaderInterfaceVariableInfoMap.cpp:
-//    Implements helper class for shader compilers
+// ShaderInterfaceVariableInfoMap: Maps shader interface variable names to their Vulkan mapping.
 //
 
-#include "libANGLE/renderer/ShaderInterfaceVariableInfoMap.h"
+#include "libANGLE/renderer/vulkan/ShaderInterfaceVariableInfoMap.h"
+
 namespace rx
 {
-
 ShaderInterfaceVariableInfo::ShaderInterfaceVariableInfo() {}
 
 // ShaderInterfaceVariableInfoMap implementation.
@@ -117,7 +116,7 @@ const ShaderInterfaceVariableInfo &ShaderInterfaceVariableInfoMap::getVariableBy
 bool ShaderInterfaceVariableInfoMap::hasTransformFeedbackInfo(gl::ShaderType shaderType,
                                                               uint32_t bufferIndex) const
 {
-    std::string bufferName = rx::GetXfbBufferName(bufferIndex);
+    std::string bufferName = rx::SpvGetXfbBufferName(bufferIndex);
     return hasVariable(shaderType, bufferName);
 }
 
