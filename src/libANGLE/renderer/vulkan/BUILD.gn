@@ -55,8 +55,6 @@ _vulkan_backend_sources = [
   "FenceNVVk.h",
   "FramebufferVk.cpp",
   "FramebufferVk.h",
-  "GlslangWrapperVk.cpp",
-  "GlslangWrapperVk.h",
   "ImageVk.cpp",
   "ImageVk.h",
   "MemoryObjectVk.cpp",

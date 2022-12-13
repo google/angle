@@ -21,6 +21,7 @@
 #include "libANGLE/Caps.h"
 #include "libANGLE/ProgramLinkedResources.h"
 #include "libANGLE/renderer/vulkan/ShaderInterfaceVariableInfoMap.h"
+#include "libANGLE/renderer/vulkan/vk_cache_utils.h"
 #include "libANGLE/trace.h"
 
 namespace spirv = angle::spirv;
@@ -236,7 +237,7 @@ void AssignTransformFeedbackEmulationBindings(gl::ShaderType shaderType,
     {
         AddResourceInfo(variableInfoMapOut, gl::ShaderBitSet().set(shaderType), shaderType,
                         ShaderVariableType::TransformFeedback, SpvGetXfbBufferName(bufferIndex),
-                        programInterfaceInfo->uniformsAndXfbDescriptorSetIndex,
+                        ToUnderlying(DescriptorSetIndex::UniformsAndXfb),
                         programInterfaceInfo->currentUniformBindingIndex);
         ++programInterfaceInfo->currentUniformBindingIndex;
     }
@@ -685,15 +686,14 @@ void AssignUniformBindings(const SpvSourceOptions &options,
     {
         AddResourceInfo(variableInfoMapOut, gl::ShaderBitSet().set(shaderType), shaderType,
                         ShaderVariableType::DefaultUniform, kDefaultUniformNames[shaderType],
-                        programInterfaceInfo->uniformsAndXfbDescriptorSetIndex,
+                        ToUnderlying(DescriptorSetIndex::UniformsAndXfb),
                         programInterfaceInfo->currentUniformBindingIndex);
         ++programInterfaceInfo->currentUniformBindingIndex;
 
         // Assign binding to the driver uniforms block
-        AddResourceInfoToAllStages(variableInfoMapOut, shaderType,
-                                   ShaderVariableType::DriverUniform,
-                                   sh::vk::kDriverUniformsBlockName,
-                                   programInterfaceInfo->driverUniformsDescriptorSetIndex, 0);
+        AddResourceInfoToAllStages(
+            variableInfoMapOut, shaderType, ShaderVariableType::DriverUniform,
+            sh::vk::kDriverUniformsBlockName, ToUnderlying(DescriptorSetIndex::Internal), 0);
     }
 }
 
@@ -774,8 +774,7 @@ void AssignInputAttachmentBindings(const SpvSourceOptions &options,
                 baseInputAttachmentBindingIndex + inputAttachmentUniform.location;
             AddAndUpdateResourceMaps(shaderType, ShaderVariableType::FramebufferFetch,
                                      mappedInputAttachmentName, &(inputAttachmentBindingIndex),
-                                     false, false,
-                                     programInterfaceInfo->shaderResourceDescriptorSetIndex,
+                                     false, false, ToUnderlying(DescriptorSetIndex::ShaderResource),
                                      uniformBindingIndexMapOut, variableInfoMapOut);
             hasFragmentInOutVars = true;
         }
@@ -810,7 +809,7 @@ void AssignInterfaceBlockBindings(const SpvSourceOptions &options,
                 AddAndUpdateResourceMaps(shaderType, variableType, block.mappedName,
                                          &(programInterfaceInfo->currentShaderResourceBindingIndex),
                                          true, false,
-                                         programInterfaceInfo->shaderResourceDescriptorSetIndex,
+                                         ToUnderlying(DescriptorSetIndex::ShaderResource),
                                          uniformBindingIndexMapOut, variableInfoMapOut);
             }
             variableInfoMapOut->mapIndexedResourceByName(shaderType, variableType, blockIndex,
@@ -837,7 +836,7 @@ void AssignAtomicCounterBufferBindings(const SpvSourceOptions &options,
         AddAndUpdateResourceMaps(shaderType, ShaderVariableType::AtomicCounter,
                                  sh::vk::kAtomicCountersBlockName,
                                  &(programInterfaceInfo->currentShaderResourceBindingIndex), true,
-                                 false, programInterfaceInfo->shaderResourceDescriptorSetIndex,
+                                 false, ToUnderlying(DescriptorSetIndex::ShaderResource),
                                  uniformBindingIndexMapOut, variableInfoMapOut);
     }
 }
@@ -869,7 +868,7 @@ void AssignImageBindings(const SpvSourceOptions &options,
                 AddAndUpdateResourceMaps(shaderType, ShaderVariableType::Image, name,
                                          &(programInterfaceInfo->currentShaderResourceBindingIndex),
                                          true, updateFrontShaderType,
-                                         programInterfaceInfo->shaderResourceDescriptorSetIndex,
+                                         ToUnderlying(DescriptorSetIndex::ShaderResource),
                                          uniformBindingIndexMapOut, variableInfoMapOut);
             }
             uint32_t imageIndex = uniformIndex - imageUniformRange.low();
@@ -942,7 +941,7 @@ void AssignTextureBindings(const SpvSourceOptions &options,
             ASSERT(UniformNameIsIndexZero(samplerUniform.name));
             AddAndUpdateResourceMaps(shaderType, ShaderVariableType::Texture, samplerName,
                                      &(programInterfaceInfo->currentTextureBindingIndex), true,
-                                     false, programInterfaceInfo->textureDescriptorSetIndex,
+                                     false, ToUnderlying(DescriptorSetIndex::Texture),
                                      uniformBindingIndexMapOut, variableInfoMapOut);
         }
 
@@ -4985,6 +4984,18 @@ bool HasAliasingAttributes(const ShaderInterfaceVariableInfoMap &variableInfoMap
     return false;
 }
 }  // anonymous namespace
+
+SpvSourceOptions SpvCreateSourceOptions(const angle::FeaturesVk &features)
+{
+    SpvSourceOptions options;
+
+    options.supportsTransformFeedbackExtension =
+        features.supportsTransformFeedbackExtension.enabled;
+    options.supportsTransformFeedbackEmulation = features.emulateTransformFeedback.enabled;
+    options.enableTransformFeedbackEmulation   = options.supportsTransformFeedbackEmulation;
+
+    return options;
+}
 
 UniformBindingInfo::UniformBindingInfo(uint32_t bindingIndex,
                                        gl::ShaderBitSet shaderBitSet,

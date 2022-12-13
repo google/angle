@@ -9,8 +9,6 @@
 
 #include "libANGLE/renderer/vulkan/ProgramPipelineVk.h"
 
-#include "libANGLE/renderer/vulkan/GlslangWrapperVk.h"
-
 namespace rx
 {
 
@@ -37,10 +35,9 @@ angle::Result ProgramPipelineVk::link(const gl::Context *glContext,
 {
     ContextVk *contextVk                      = vk::GetImpl(glContext);
     const gl::ProgramExecutable &glExecutable = mState.getExecutable();
-    SpvSourceOptions options =
-        GlslangWrapperVk::CreateSourceOptions(contextVk->getRenderer()->getFeatures());
-    SpvProgramInterfaceInfo glslangProgramInterfaceInfo;
-    GlslangWrapperVk::ResetGlslangProgramInterfaceInfo(&glslangProgramInterfaceInfo);
+    SpvSourceOptions options                  = SpvCreateSourceOptions(contextVk->getFeatures());
+    SpvProgramInterfaceInfo spvProgramInterfaceInfo;
+    spvProgramInterfaceInfo = {};
 
     reset(contextVk);
     mExecutable.clearVariableInfoMap();
@@ -65,7 +62,7 @@ angle::Result ProgramPipelineVk::link(const gl::Context *glContext,
 
                 SpvAssignTransformFeedbackLocations(
                     shaderType, glProgram->getExecutable(), isTransformFeedbackStage,
-                    &glslangProgramInterfaceInfo, &mExecutable.mVariableInfoMap);
+                    &spvProgramInterfaceInfo, &mExecutable.mVariableInfoMap);
             }
         }
     }
@@ -81,7 +78,7 @@ angle::Result ProgramPipelineVk::link(const gl::Context *glContext,
             !glExecutable.getLinkedTransformFeedbackVaryings().empty();
 
         SpvAssignLocations(options, glExecutable, varyingPacking, shaderType, frontShaderType,
-                           isTransformFeedbackStage, &glslangProgramInterfaceInfo,
+                           isTransformFeedbackStage, &spvProgramInterfaceInfo,
                            &uniformBindingIndexMap, &mExecutable.mVariableInfoMap);
         frontShaderType = shaderType;
 

@@ -15,6 +15,7 @@
 #include "common/spirv/spirv_types.h"
 #include "libANGLE/renderer/ProgramImpl.h"
 #include "libANGLE/renderer/renderer_utils.h"
+#include "platform/FeaturesVk_autogen.h"
 
 namespace rx
 {
@@ -30,19 +31,11 @@ constexpr gl::ShaderMap<const char *> kDefaultUniformNames = {
 
 struct SpvProgramInterfaceInfo
 {
-    // Uniforms set index:
-    uint32_t uniformsAndXfbDescriptorSetIndex;
-    uint32_t currentUniformBindingIndex;
-    // Textures set index:
-    uint32_t textureDescriptorSetIndex;
-    uint32_t currentTextureBindingIndex;
-    // Other shader resources set index:
-    uint32_t shaderResourceDescriptorSetIndex;
-    uint32_t currentShaderResourceBindingIndex;
-    // ANGLE driver uniforms set index:
-    uint32_t driverUniformsDescriptorSetIndex;
+    uint32_t currentUniformBindingIndex        = 0;
+    uint32_t currentTextureBindingIndex        = 0;
+    uint32_t currentShaderResourceBindingIndex = 0;
 
-    uint32_t locationsUsedForXfbExtension;
+    uint32_t locationsUsedForXfbExtension = 0;
 };
 
 struct SpvSourceOptions
@@ -51,6 +44,8 @@ struct SpvSourceOptions
     bool supportsTransformFeedbackEmulation = false;
     bool enableTransformFeedbackEmulation   = false;
 };
+
+SpvSourceOptions SpvCreateSourceOptions(const angle::FeaturesVk &features);
 
 struct SpvTransformOptions
 {

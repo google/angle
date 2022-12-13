@@ -15,7 +15,6 @@
 #include "libANGLE/ProgramLinkedResources.h"
 #include "libANGLE/renderer/renderer_utils.h"
 #include "libANGLE/renderer/vulkan/BufferVk.h"
-#include "libANGLE/renderer/vulkan/GlslangWrapperVk.h"
 #include "libANGLE/renderer/vulkan/TextureVk.h"
 
 namespace rx
@@ -137,10 +136,7 @@ class Std140BlockLayoutEncoderFactory : public gl::CustomBlockLayoutEncoderFacto
 }  // anonymous namespace
 
 // ProgramVk implementation.
-ProgramVk::ProgramVk(const gl::ProgramState &state) : ProgramImpl(state)
-{
-    GlslangWrapperVk::ResetGlslangProgramInterfaceInfo(&mSpvProgramInterfaceInfo);
-}
+ProgramVk::ProgramVk(const gl::ProgramState &state) : ProgramImpl(state) {}
 
 ProgramVk::~ProgramVk() = default;
 
@@ -152,7 +148,7 @@ void ProgramVk::destroy(const gl::Context *context)
 
 void ProgramVk::reset(ContextVk *contextVk)
 {
-    GlslangWrapperVk::ResetGlslangProgramInterfaceInfo(&mSpvProgramInterfaceInfo);
+    mSpvProgramInterfaceInfo = {};
 
     mExecutable.reset(contextVk);
 }
@@ -201,9 +197,9 @@ std::unique_ptr<LinkEvent> ProgramVk::link(const gl::Context *context,
 
     // Gather variable info and compiled SPIR-V binaries.
     gl::ShaderMap<const angle::spirv::Blob *> spirvBlobs;
-    GlslangWrapperVk::GetShaderCode(context, contextVk->getFeatures(), mState, resources,
-                                    &mSpvProgramInterfaceInfo, &spirvBlobs,
-                                    &mExecutable.mVariableInfoMap);
+    SpvSourceOptions options = SpvCreateSourceOptions(contextVk->getFeatures());
+    SpvGetShaderSpirvCode(context, options, mState, resources, &mSpvProgramInterfaceInfo,
+                          &spirvBlobs, &mExecutable.mVariableInfoMap);
 
     if (contextVk->getFeatures().varyingsRequireMatchingPrecisionInSpirv.enabled &&
         contextVk->getFeatures().enablePrecisionQualifiers.enabled)
