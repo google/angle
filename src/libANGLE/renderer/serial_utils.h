@@ -209,11 +209,11 @@ class QueueSerial final
         return mIndex != other.mIndex || mSerial != other.mSerial;
     }
 
-    constexpr bool operator>(const AtomicQueueSerialFixedArray &serials) const
+    bool operator>(const AtomicQueueSerialFixedArray &serials) const
     {
         return mSerial > serials[mIndex];
     }
-    constexpr bool operator<=(const AtomicQueueSerialFixedArray &serials) const
+    bool operator<=(const AtomicQueueSerialFixedArray &serials) const
     {
         return mSerial <= serials[mIndex];
     }
