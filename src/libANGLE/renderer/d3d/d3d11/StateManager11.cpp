@@ -1285,7 +1285,7 @@ angle::Result StateManager11::syncBlendState(const gl::Context *context,
 {
     const d3d11::BlendState *dxBlendState = nullptr;
     const d3d11::BlendStateKey &key       = RenderStateCache::GetBlendStateKey(
-              context, mFramebuffer11, blendStateExt, sampleAlphaToCoverage);
+        context, mFramebuffer11, blendStateExt, sampleAlphaToCoverage);
 
     ANGLE_TRY(mRenderer->getBlendState(context, key, &dxBlendState));
 
@@ -2160,10 +2160,10 @@ bool StateManager11::setInputLayoutInternal(const d3d11::InputLayout *inputLayou
     ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
     if (inputLayout == nullptr)
     {
-        if (!mCurrentInputLayout.empty())
+        if (mCurrentInputLayout.valid())
         {
             deviceContext->IASetInputLayout(nullptr);
-            mCurrentInputLayout.clear();
+            mCurrentInputLayout = UniqueSerial();
             return true;
         }
     }
@@ -2458,7 +2458,7 @@ void StateManager11::setDrawShaders(const d3d11::VertexShader *vertexShader,
 
 void StateManager11::setVertexShader(const d3d11::VertexShader *shader)
 {
-    ResourceSerial serial = shader ? shader->getSerial() : ResourceSerial(0);
+    UniqueSerial serial = shader ? shader->getSerial() : UniqueSerial();
 
     if (serial != mAppliedShaders[gl::ShaderType::Vertex])
     {
@@ -2471,7 +2471,7 @@ void StateManager11::setVertexShader(const d3d11::VertexShader *shader)
 
 void StateManager11::setGeometryShader(const d3d11::GeometryShader *shader)
 {
-    ResourceSerial serial = shader ? shader->getSerial() : ResourceSerial(0);
+    UniqueSerial serial = shader ? shader->getSerial() : UniqueSerial();
 
     if (serial != mAppliedShaders[gl::ShaderType::Geometry])
     {
@@ -2484,7 +2484,7 @@ void StateManager11::setGeometryShader(const d3d11::GeometryShader *shader)
 
 void StateManager11::setPixelShader(const d3d11::PixelShader *shader)
 {
-    ResourceSerial serial = shader ? shader->getSerial() : ResourceSerial(0);
+    UniqueSerial serial = shader ? shader->getSerial() : UniqueSerial();
 
     if (serial != mAppliedShaders[gl::ShaderType::Fragment])
     {
@@ -2497,7 +2497,7 @@ void StateManager11::setPixelShader(const d3d11::PixelShader *shader)
 
 void StateManager11::setComputeShader(const d3d11::ComputeShader *shader)
 {
-    ResourceSerial serial = shader ? shader->getSerial() : ResourceSerial(0);
+    UniqueSerial serial = shader ? shader->getSerial() : UniqueSerial();
 
     if (serial != mAppliedShaders[gl::ShaderType::Compute])
     {
@@ -2527,11 +2527,11 @@ void StateManager11::setVertexConstantBuffer(unsigned int slot, const d3d11::Buf
     }
     else
     {
-        if (!currentSerial.empty())
+        if (currentSerial.valid())
         {
             ID3D11Buffer *nullBuffer = nullptr;
             deviceContext->VSSetConstantBuffers(slot, 1, &nullBuffer);
-            currentSerial.clear();
+            currentSerial = UniqueSerial();
             invalidateConstantBuffer(slot);
         }
     }
@@ -2556,11 +2556,11 @@ void StateManager11::setPixelConstantBuffer(unsigned int slot, const d3d11::Buff
     }
     else
     {
-        if (!currentSerial.empty())
+        if (currentSerial.valid())
         {
             ID3D11Buffer *nullBuffer = nullptr;
             deviceContext->PSSetConstantBuffers(slot, 1, &nullBuffer);
-            currentSerial.clear();
+            currentSerial = UniqueSerial();
             invalidateConstantBuffer(slot);
         }
     }

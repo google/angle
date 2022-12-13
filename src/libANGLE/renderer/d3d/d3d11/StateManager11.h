@@ -606,7 +606,7 @@ class StateManager11 final : angle::NonCopyable
     std::vector<TranslatedAttribute> mCurrentValueAttribs;
 
     // Current applied input layout.
-    ResourceSerial mCurrentInputLayout;
+    UniqueSerial mCurrentInputLayout;
 
     // Current applied vertex states.
     // TODO(jmadill): Figure out how to use ResourceSerial here.
@@ -621,7 +621,7 @@ class StateManager11 final : angle::NonCopyable
     bool mCullEverything;
 
     // Currently applied shaders
-    gl::ShaderMap<ResourceSerial> mAppliedShaders;
+    gl::ShaderMap<UniqueSerial> mAppliedShaders;
 
     // Currently applied sampler states
     gl::ShaderMap<std::vector<bool>> mForceSetShaderSamplerStates;
@@ -651,8 +651,8 @@ class StateManager11 final : angle::NonCopyable
     // Driver Constants.
     gl::ShaderMap<d3d11::Buffer> mShaderDriverConstantBuffers;
 
-    ResourceSerial mCurrentComputeConstantBuffer;
-    ResourceSerial mCurrentGeometryConstantBuffer;
+    UniqueSerial mCurrentComputeConstantBuffer;
+    UniqueSerial mCurrentGeometryConstantBuffer;
 
     d3d11::Buffer mPointSpriteVertexBuffer;
     d3d11::Buffer mPointSpriteIndexBuffer;
@@ -661,7 +661,7 @@ class StateManager11 final : angle::NonCopyable
     using VertexConstantBufferArray =
         std::array<T, gl::IMPLEMENTATION_MAX_VERTEX_SHADER_UNIFORM_BUFFERS>;
 
-    VertexConstantBufferArray<ResourceSerial> mCurrentConstantBufferVS;
+    VertexConstantBufferArray<UniqueSerial> mCurrentConstantBufferVS;
     VertexConstantBufferArray<GLintptr> mCurrentConstantBufferVSOffset;
     VertexConstantBufferArray<GLsizeiptr> mCurrentConstantBufferVSSize;
 
@@ -669,7 +669,7 @@ class StateManager11 final : angle::NonCopyable
     using FragmentConstantBufferArray =
         std::array<T, gl::IMPLEMENTATION_MAX_FRAGMENT_SHADER_UNIFORM_BUFFERS>;
 
-    FragmentConstantBufferArray<ResourceSerial> mCurrentConstantBufferPS;
+    FragmentConstantBufferArray<UniqueSerial> mCurrentConstantBufferPS;
     FragmentConstantBufferArray<GLintptr> mCurrentConstantBufferPSOffset;
     FragmentConstantBufferArray<GLsizeiptr> mCurrentConstantBufferPSSize;
 
@@ -677,7 +677,7 @@ class StateManager11 final : angle::NonCopyable
     using ComputeConstantBufferArray =
         std::array<T, gl::IMPLEMENTATION_MAX_COMPUTE_SHADER_UNIFORM_BUFFERS>;
 
-    ComputeConstantBufferArray<ResourceSerial> mCurrentConstantBufferCS;
+    ComputeConstantBufferArray<UniqueSerial> mCurrentConstantBufferCS;
     ComputeConstantBufferArray<GLintptr> mCurrentConstantBufferCSOffset;
     ComputeConstantBufferArray<GLsizeiptr> mCurrentConstantBufferCSSize;
 
