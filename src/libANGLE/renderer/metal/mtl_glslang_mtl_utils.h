@@ -10,7 +10,6 @@
 #define mtl_glslang_mtl_utils_h
 #include "libANGLE/Context.h"
 #include "libANGLE/renderer/ProgramImpl.h"
-#include "libANGLE/renderer/glslang_wrapper_utils.h"
 #include "libANGLE/renderer/metal/mtl_common.h"
 
 namespace rx
@@ -40,14 +39,12 @@ struct TranslatedShaderInfo
 void MSLGetShaderSource(const gl::Context *context,
                         const gl::ProgramState &programState,
                         const gl::ProgramLinkedResources &resources,
-                        gl::ShaderMap<std::string> *shaderSourcesOut,
-                        ShaderInterfaceVariableInfoMap *variableInfoMapOut);
+                        gl::ShaderMap<std::string> *shaderSourcesOut);
 
 angle::Result GlslangGetMSL(const gl::Context *glContext,
                             const gl::ProgramState &programState,
                             const gl::Caps &glCaps,
                             const gl::ShaderMap<std::string> &shaderSources,
-                            const ShaderInterfaceVariableInfoMap &variableInfoMap,
                             gl::ShaderMap<TranslatedShaderInfo> *mslShaderInfoOut,
                             gl::ShaderMap<std::string> *mslCodeOut,
                             size_t xfbBufferCount);

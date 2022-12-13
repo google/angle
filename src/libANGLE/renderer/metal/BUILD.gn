@@ -106,7 +106,6 @@ angle_source_set("angle_metal_backend") {
 
   public_deps = [
     "${angle_root}:angle_common",
-    "${angle_root}:angle_glslang_wrapper",
     "${angle_root}:angle_gpu_info_util",
     "${angle_root}:angle_image_util",
     "${angle_root}:libANGLE_headers",

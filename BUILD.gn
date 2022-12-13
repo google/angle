@@ -937,8 +937,8 @@ angle_source_set("libANGLE_headers") {
   public_configs += [ ":libANGLE_config" ]
 }
 
-# Don't even try to build the SPIR-V transformer if Metal and Vulkan are disabled.
-if (angle_enable_vulkan || angle_enable_metal) {
+# Don't even try to build the SPIR-V transformer if Vulkan is disabled.
+if (angle_enable_vulkan) {
   angle_source_set("angle_glslang_wrapper") {
     sources = [
       "src/libANGLE/renderer/ShaderInterfaceVariableInfoMap.cpp",
