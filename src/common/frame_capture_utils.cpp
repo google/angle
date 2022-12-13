@@ -390,11 +390,11 @@ void WriteParamValueReplay<ParamType::TShaderProgramID>(std::ostream &os,
 }
 
 template <>
-void WriteParamValueReplay<ParamType::TGLsync>(std::ostream &os,
+void WriteParamValueReplay<ParamType::TSyncID>(std::ostream &os,
                                                const CallCapture &call,
-                                               GLsync value)
+                                               gl::SyncID value)
 {
-    os << "gSyncMap[" << FmtPointerIndex(value) << "]";
+    os << "gSyncMap2[" << value.value << "]";
 }
 
 template <>
