@@ -1170,7 +1170,7 @@ angle::Result InitializeRenderPassFromDesc(ContextVk *contextVk,
         colorRef.layout     = needInputAttachments
                                   ? VK_IMAGE_LAYOUT_GENERAL
                                   : ConvertImageLayoutToVkImageLayout(
-                                        static_cast<ImageLayout>(ops[attachmentCount].initialLayout));
+                                    static_cast<ImageLayout>(ops[attachmentCount].initialLayout));
         colorAttachmentRefs.push_back(colorRef);
 
         UnpackAttachmentDesc(&attachmentDescs[attachmentCount.get()], attachmentFormatID,
@@ -1205,7 +1205,7 @@ angle::Result InitializeRenderPassFromDesc(ContextVk *contextVk,
 
         depthStencilAttachmentRef.attachment = attachmentCount.get();
         depthStencilAttachmentRef.layout     = ConvertImageLayoutToVkImageLayout(
-                static_cast<ImageLayout>(ops[attachmentCount].initialLayout));
+            static_cast<ImageLayout>(ops[attachmentCount].initialLayout));
 
         UnpackAttachmentDesc(&attachmentDescs[attachmentCount.get()], attachmentFormatID,
                              attachmentSamples, ops[attachmentCount]);
@@ -4585,9 +4585,7 @@ void PipelineHelper::reset()
 {
     mCacheLookUpFeedback = CacheLookUpFeedback::None;
 
-    mLinkedVertexInput    = nullptr;
-    mLinkedShaders        = nullptr;
-    mLinkedFragmentOutput = nullptr;
+    mLinkedShaders = nullptr;
 }
 
 void PipelineHelper::addTransition(GraphicsPipelineTransitionBits bits,
@@ -4597,28 +4595,21 @@ void PipelineHelper::addTransition(GraphicsPipelineTransitionBits bits,
     mTransitions.emplace_back(bits, desc, pipeline);
 }
 
-void PipelineHelper::setLinkedLibraryReferences(vk::PipelineHelper *vertexInputPipeline,
-                                                vk::PipelineHelper *shadersPipeline,
-                                                vk::PipelineHelper *fragmentOutputPipeline)
+void PipelineHelper::setLinkedLibraryReferences(vk::PipelineHelper *shadersPipeline)
 {
-    mLinkedVertexInput    = vertexInputPipeline;
-    mLinkedShaders        = shadersPipeline;
-    mLinkedFragmentOutput = fragmentOutputPipeline;
+    mLinkedShaders = shadersPipeline;
 }
 
 void PipelineHelper::retainInRenderPass(RenderPassCommandBufferHelper *renderPassCommands)
 {
     renderPassCommands->retainResource(this);
 
-    // Keep references to the linked libraries alive
-    if (mLinkedVertexInput != nullptr)
+    // Keep references to the linked libraries alive.  Note that currently only need to do this for
+    // the shaders library, as the vertex and fragment libraries live in the context until
+    // destruction.
+    if (mLinkedShaders != nullptr)
     {
-        ASSERT(mLinkedShaders != nullptr);
-        ASSERT(mLinkedFragmentOutput != nullptr);
-
-        renderPassCommands->retainResource(mLinkedVertexInput);
         renderPassCommands->retainResource(mLinkedShaders);
-        renderPassCommands->retainResource(mLinkedFragmentOutput);
     }
 }
 
@@ -4905,8 +4896,8 @@ angle::Result YcbcrConversionDesc::init(Context *context,
     samplerYcbcrConversionInfo.ycbcrRange   = static_cast<VkSamplerYcbcrRange>(mColorRange);
     samplerYcbcrConversionInfo.chromaFilter = static_cast<VkFilter>(mChromaFilter);
     samplerYcbcrConversionInfo.components   = {
-          static_cast<VkComponentSwizzle>(mRSwizzle), static_cast<VkComponentSwizzle>(mGSwizzle),
-          static_cast<VkComponentSwizzle>(mBSwizzle), static_cast<VkComponentSwizzle>(mASwizzle)};
+        static_cast<VkComponentSwizzle>(mRSwizzle), static_cast<VkComponentSwizzle>(mGSwizzle),
+        static_cast<VkComponentSwizzle>(mBSwizzle), static_cast<VkComponentSwizzle>(mASwizzle)};
 
 #ifdef VK_USE_PLATFORM_ANDROID_KHR
     VkExternalFormatANDROID externalFormat = {};
@@ -6528,8 +6519,7 @@ angle::Result GraphicsPipelineCache<Hash>::linkLibraries(
 
     addToCache(PipelineSource::DrawLinked, desc, std::move(newPipeline), feedback, descPtrOut,
                pipelineOut);
-    (*pipelineOut)
-        ->setLinkedLibraryReferences(vertexInputPipeline, shadersPipeline, fragmentOutputPipeline);
+    (*pipelineOut)->setLinkedLibraryReferences(shadersPipeline);
 
     return angle::Result::Continue;
 }

@@ -1287,9 +1287,7 @@ class PipelineHelper final : public Resource
     }
     CacheLookUpFeedback getCacheLookUpFeedback() const { return mCacheLookUpFeedback; }
 
-    void setLinkedLibraryReferences(vk::PipelineHelper *vertexInputPipeline,
-                                    vk::PipelineHelper *shadersPipeline,
-                                    vk::PipelineHelper *fragmentOutputPipeline);
+    void setLinkedLibraryReferences(vk::PipelineHelper *shadersPipeline);
 
     void retainInRenderPass(RenderPassCommandBufferHelper *renderPassCommands);
 
@@ -1302,9 +1300,9 @@ class PipelineHelper final : public Resource
 
     // The list of pipeline helpers that were referenced when creating a linked pipeline.  These
     // pipelines must be kept alive, so their serial is updated at the same time as this object.
-    PipelineHelper *mLinkedVertexInput    = nullptr;
-    PipelineHelper *mLinkedShaders        = nullptr;
-    PipelineHelper *mLinkedFragmentOutput = nullptr;
+    // Not necessary for vertex input and fragment output as they stay alive until context's
+    // destruction.
+    PipelineHelper *mLinkedShaders = nullptr;
 };
 
 class FramebufferHelper : public Resource
