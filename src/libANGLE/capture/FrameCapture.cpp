@@ -956,7 +956,7 @@ void WriteInitReplayCall(bool compression,
     }
 
     std::string binaryDataFileName = GetBinaryDataFilePath(compression, captureLabel);
-    out << "    InitializeReplay2(\"" << binaryDataFileName << "\", " << maxClientArraySize << ", "
+    out << "    InitializeReplay3(\"" << binaryDataFileName << "\", " << maxClientArraySize << ", "
         << readBufferSize << ", " << contextID;
 
     for (ResourceIDType resourceID : AllEnums<ResourceIDType>())
@@ -1460,10 +1460,10 @@ void MaybeResetFenceSyncObjects(std::stringstream &out,
 
     // If any of our starting fence sync objects were deleted during the run, recreate them
     FenceSyncSet &fenceSyncsToRegen = resourceTracker->getFenceSyncsToRegen();
-    for (const GLsync sync : fenceSyncsToRegen)
+    for (const gl::SyncID syncID : fenceSyncsToRegen)
     {
         // Emit their regen calls
-        for (CallCapture &call : fenceSyncRegenCalls[sync])
+        for (CallCapture &call : fenceSyncRegenCalls[syncID])
         {
             out << "    ";
             WriteCppReplayForCall(call, replayWriter, out, header, binaryData);
@@ -2274,6 +2274,10 @@ bool IsSharedObjectResource(ResourceIDType type)
             // 2.6.7 Sampler Objects: Sampler objects may be shared
             return true;
 
+        case ResourceIDType::Sync:
+            // 2.6.13 Sync Objects: Sync objects may be shared.
+            return true;
+
         case ResourceIDType::Texture:
             // 2.6.6 Texture Objects: Texture objects may be shared
             return true;
@@ -2298,7 +2302,7 @@ bool IsSharedObjectResource(ResourceIDType type)
             // Return false for all EGL object types.
             return false;
 
-        case ResourceIDType::InvalidEnum:
+        case ResourceIDType::EnumCount:
         default:
             ERR() << "Unhandled ResourceIDType= " << static_cast<int>(type);
             UNREACHABLE();
@@ -3299,7 +3303,7 @@ void CaptureCustomFenceSync(CallCapture &call, std::vector<CallCapture> &callsOu
     ParamBuffer &&params = std::move(call.params);
     params.addValueParam("fenceSync", ParamType::TGLuint64,
                          params.getReturnValue().value.GLuint64Val);
-    call.customFunctionName = "FenceSync";
+    call.customFunctionName = "FenceSync2";
     callsOut.emplace_back(std::move(call));
 }
 
@@ -3562,13 +3566,14 @@ void CaptureBufferResetCalls(const gl::Context *context,
 void CaptureFenceSyncResetCalls(const gl::Context *context,
                                 const gl::State &replayState,
                                 ResourceTracker *resourceTracker,
-                                GLsync syncID,
+                                gl::SyncID syncID,
+                                GLsync syncObject,
                                 const gl::Sync *sync)
 {
     // Track calls to regenerate a given fence sync
     FenceSyncCalls &fenceSyncRegenCalls = resourceTracker->getFenceSyncRegenCalls();
     CallCapture fenceSync =
-        CaptureFenceSync(replayState, true, sync->getCondition(), sync->getFlags(), syncID);
+        CaptureFenceSync(replayState, true, sync->getCondition(), sync->getFlags(), syncObject);
     CaptureCustomFenceSync(fenceSync, fenceSyncRegenCalls[syncID]);
     MaybeCaptureUpdateResourceIDs(context, resourceTracker, &fenceSyncRegenCalls[syncID]);
 }
@@ -4356,17 +4361,18 @@ void CaptureShareGroupMidExecutionSetup(
     const gl::SyncManager &syncs = apiState.getSyncManagerForCapture();
     for (const auto &syncIter : syncs)
     {
-        GLsync syncID        = gl::bitCast<GLsync>(static_cast<size_t>(syncIter.first));
+        gl::SyncID syncID    = {syncIter.first};
         const gl::Sync *sync = syncIter.second;
+        GLsync syncObject    = gl::unsafe_int_to_pointer_cast<GLsync>(syncID.value);
 
         if (!sync)
         {
             continue;
         }
         CallCapture fenceSync =
-            CaptureFenceSync(replayState, true, sync->getCondition(), sync->getFlags(), syncID);
+            CaptureFenceSync(replayState, true, sync->getCondition(), sync->getFlags(), syncObject);
         CaptureCustomFenceSync(fenceSync, *setupCalls);
-        CaptureFenceSyncResetCalls(context, replayState, resourceTracker, syncID, sync);
+        CaptureFenceSyncResetCalls(context, replayState, resourceTracker, syncID, syncObject, sync);
         resourceTracker->getStartingFenceSyncs().insert(syncID);
     }
 
@@ -6959,7 +6965,8 @@ void FrameCaptureShared::maybeCapturePreCallUpdates(
 
         case EntryPoint::GLDeleteSync:
         {
-            GLsync sync = call.params.getParam("sync", ParamType::TGLsync, 0).value.GLsyncVal;
+            gl::SyncID sync =
+                call.params.getParam("syncPacked", ParamType::TSyncID, 0).value.SyncIDVal;
             FrameCaptureShared *frameCaptureShared =
                 context->getShareGroup()->getFrameCaptureShared();
             // If we're capturing, track which fence sync has been deleted
@@ -8156,9 +8163,9 @@ void StateResetHelper::setDefaultResetCalls(const gl::Context *context,
     }
 }
 
-void ResourceTracker::setDeletedFenceSync(GLsync sync)
+void ResourceTracker::setDeletedFenceSync(gl::SyncID sync)
 {
-    ASSERT(sync != nullptr);
+    ASSERT(sync.value != 0);
     if (mStartingFenceSyncs.find(sync) == mStartingFenceSyncs.end())
     {
         // This is a fence sync created after MEC was initialized. Ignore it.

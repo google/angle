@@ -42952,6 +42952,7 @@ unsigned int StringToGLenum(const char *str)
         return 0x87D7;
     }
 
+    printf("Unknown enum string: %s\n", str);
     UNREACHABLE();
     return 0;
 }

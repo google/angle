@@ -2493,7 +2493,10 @@ def format_replay_params(api, command_name, param_text_list, packed_enums, resou
             cmd_no_suffix = strip_suffix(api, command_name)
             if cmd_no_suffix in packed_enums and param_name in packed_enums[cmd_no_suffix]:
                 packed_type = remove_id_suffix(packed_enums[cmd_no_suffix][param_name])
-                if packed_type in resource_id_types:
+                if packed_type == 'Sync':
+                    param_access = 'g%sMap[reinterpret_cast<uintptr_t>(%s)]' % (packed_type,
+                                                                                param_access)
+                elif packed_type in resource_id_types:
                     param_access = 'g%sMap[%s]' % (packed_type, param_access)
                 elif packed_type == 'UniformLocation':
                     param_access = 'gUniformLocations[gCurrentProgram][%s]' % param_access
