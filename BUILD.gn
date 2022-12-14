@@ -94,6 +94,7 @@ if (angle_build_all) {
   }
 }
 
+import("src/angle_program_serialize_data_version.gni")
 import("src/compiler.gni")
 import("src/libGLESv2.gni")
 
@@ -768,6 +769,32 @@ angle_source_set("translator_fuzzer") {
   deps = [ ":translator" ]
 }
 
+config("angle_program_version_id_config") {
+  include_dirs = [ "$root_gen_dir/angle" ]
+  visibility = [ ":angle_program_version_id" ]
+}
+
+action("angle_program_version_id") {
+  write_file("$root_gen_dir/angle_code_affecting_program_serialize",
+             angle_code_affecting_program_serialize)
+
+  _program_version_header = "$root_gen_dir/angle/ANGLEShaderProgramVersion.h"
+  script = "src/program_serialize_data_version.py"
+  outputs = [ _program_version_header ]
+
+  visibility = [ ":angle_version" ]
+
+  inputs = angle_code_affecting_program_serialize
+
+  args = [
+    rebase_path(_program_version_header, root_build_dir),
+    rebase_path("$root_gen_dir/angle_code_affecting_program_serialize",
+                angle_root),
+  ]
+
+  public_configs = [ ":angle_program_version_id_config" ]
+}
+
 config("angle_commit_id_config") {
   include_dirs = [ "$root_gen_dir/angle" ]
   visibility = [ ":angle_commit_id" ]
@@ -812,7 +839,10 @@ action("angle_commit_id") {
 
 angle_source_set("angle_version") {
   sources = [ "src/common/angle_version.h" ]
-  public_deps = [ ":angle_commit_id" ]
+  public_deps = [
+    ":angle_commit_id",
+    ":angle_program_version_id",
+  ]
   visibility = [ ":angle_version_info" ]
 
   # The version headers are used directly in Windows .RC files.
@@ -838,7 +868,10 @@ angle_source_set("angle_version_info") {
     "src/common/angle_version_info.cpp",
     "src/common/angle_version_info.h",
   ]
-  deps = [ ":angle_version" ]
+  deps = [
+    ":angle_translator_headers",
+    ":angle_version",
+  ]
 }
 
 config("angle_backend_config") {
