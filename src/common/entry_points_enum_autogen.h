@@ -240,6 +240,7 @@ enum class EntryPoint
     EGLWaitNative,
     EGLWaitSync,
     EGLWaitSyncKHR,
+    EGLWaitUntilWorkScheduledANGLE,
     GLAccum,
     GLAcquireTexturesANGLE,
     GLActiveShaderProgram,

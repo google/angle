@@ -625,6 +625,13 @@ EGLBoolean EGLAPIENTRY eglExportVkImageANGLE(EGLDisplay dpy,
     return EGL_ExportVkImageANGLE(dpy, image, vk_image, vk_image_create_info);
 }
 
+// EGL_ANGLE_wait_until_work_scheduled
+void EGLAPIENTRY eglWaitUntilWorkScheduledANGLE(EGLDisplay dpy)
+{
+    EnsureEGLLoaded();
+    return EGL_WaitUntilWorkScheduledANGLE(dpy);
+}
+
 // EGL_CHROMIUM_sync_control
 EGLBoolean EGLAPIENTRY eglGetSyncValuesCHROMIUM(EGLDisplay dpy,
                                                 EGLSurface surface,

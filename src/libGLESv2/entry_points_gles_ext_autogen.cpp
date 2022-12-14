@@ -1682,7 +1682,8 @@ void GL_APIENTRY GL_GetProgramivRobustANGLE(GLuint program,
                          bufSize, length, params);
     }
     else
-    {}
+    {
+    }
 }
 
 void GL_APIENTRY GL_GetRenderbufferParameterivRobustANGLE(GLenum target,
@@ -1747,7 +1748,8 @@ void GL_APIENTRY GL_GetShaderivRobustANGLE(GLuint shader,
                          length, params);
     }
     else
-    {}
+    {
+    }
 }
 
 void GL_APIENTRY GL_GetTexParameterfvRobustANGLE(GLenum target,
@@ -3674,7 +3676,8 @@ void GL_APIENTRY GL_GetQueryObjectivRobustANGLE(GLuint id,
                          bufSize, length, params);
     }
     else
-    {}
+    {
+    }
 }
 
 void GL_APIENTRY GL_GetQueryObjecti64vRobustANGLE(GLuint id,
@@ -3706,7 +3709,8 @@ void GL_APIENTRY GL_GetQueryObjecti64vRobustANGLE(GLuint id,
                          bufSize, length, params);
     }
     else
-    {}
+    {
+    }
 }
 
 void GL_APIENTRY GL_GetQueryObjectui64vRobustANGLE(GLuint id,
@@ -5365,7 +5369,8 @@ void GL_APIENTRY GL_GetQueryObjecti64vEXT(GLuint id, GLenum pname, GLint64 *para
         ANGLE_CAPTURE_GL(GetQueryObjecti64vEXT, isCallValid, context, idPacked, pname, params);
     }
     else
-    {}
+    {
+    }
 }
 
 void GL_APIENTRY GL_GetQueryObjectivEXT(GLuint id, GLenum pname, GLint *params)
@@ -5390,7 +5395,8 @@ void GL_APIENTRY GL_GetQueryObjectivEXT(GLuint id, GLenum pname, GLint *params)
         ANGLE_CAPTURE_GL(GetQueryObjectivEXT, isCallValid, context, idPacked, pname, params);
     }
     else
-    {}
+    {
+    }
 }
 
 void GL_APIENTRY GL_GetQueryObjectui64vEXT(GLuint id, GLenum pname, GLuint64 *params)

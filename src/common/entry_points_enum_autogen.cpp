@@ -468,6 +468,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "eglWaitSync";
         case EntryPoint::EGLWaitSyncKHR:
             return "eglWaitSyncKHR";
+        case EntryPoint::EGLWaitUntilWorkScheduledANGLE:
+            return "eglWaitUntilWorkScheduledANGLE";
         case EntryPoint::GLAccum:
             return "glAccum";
         case EntryPoint::GLAcquireTexturesANGLE:

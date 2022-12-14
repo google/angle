@@ -313,6 +313,8 @@ class Display final : public LabeledObject,
     egl::Error handleGPUSwitch();
     egl::Error forceGPUSwitch(EGLint gpuIDHigh, EGLint gpuIDLow);
 
+    egl::Error waitUntilWorkScheduled();
+
     std::mutex &getDisplayGlobalMutex() { return mDisplayGlobalMutex; }
     std::mutex &getProgramCacheMutex() { return mProgramCacheMutex; }
 

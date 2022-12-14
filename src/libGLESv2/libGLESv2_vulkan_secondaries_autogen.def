@@ -1299,6 +1299,9 @@ EXPORTS
     ; EGL_ANGLE_vulkan_image
     EGL_ExportVkImageANGLE
 
+    ; EGL_ANGLE_wait_until_work_scheduled
+    EGL_WaitUntilWorkScheduledANGLE
+
     ; EGL_CHROMIUM_sync_control
     EGL_GetSyncValuesCHROMIUM
 

@@ -574,6 +574,9 @@ struct DisplayExtensions
     // EGL_ANGLE_power_preference
     bool powerPreference = false;
 
+    // EGL_ANGLE_wait_until_work_scheduled
+    bool waitUntilWorkScheduled = false;
+
     // EGL_ANGLE_image_d3d11_texture
     bool imageD3D11Texture = false;
 

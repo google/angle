@@ -876,6 +876,16 @@ void ForceGPUSwitchANGLE(Thread *thread, Display *display, EGLint gpuIDHigh, EGL
     thread->setSuccess();
 }
 
+void WaitUntilWorkScheduledANGLE(Thread *thread, Display *display)
+{
+    ANGLE_EGL_TRY(thread, display->prepareForCall(), "eglWaitUntilWorkScheduledANGLE",
+                  GetDisplayIfValid(display));
+    ANGLE_EGL_TRY(thread, display->waitUntilWorkScheduled(), "eglWaitUntilWorkScheduledANGLE",
+                  GetDisplayIfValid(display));
+
+    thread->setSuccess();
+}
+
 EGLBoolean QueryDisplayAttribANGLE(Thread *thread,
                                    Display *display,
                                    EGLint attribute,

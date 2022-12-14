@@ -6420,6 +6420,12 @@ bool ValidateForceGPUSwitchANGLE(const ValidationContext *val,
     return true;
 }
 
+bool ValidateWaitUntilWorkScheduledANGLE(const ValidationContext *val, const Display *display)
+{
+    ANGLE_VALIDATION_TRY(ValidateDisplay(val, display));
+    return true;
+}
+
 bool ValidateGetCurrentDisplay(const ValidationContext *val)
 {
     return true;

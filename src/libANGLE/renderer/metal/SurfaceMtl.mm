@@ -18,6 +18,7 @@
 #include "libANGLE/renderer/metal/FrameBufferMtl.h"
 #include "libANGLE/renderer/metal/mtl_format_utils.h"
 #include "libANGLE/renderer/metal/mtl_utils.h"
+#include "mtl_command_buffer.h"
 
 // Compiler can turn on programmatical frame capture in release build by defining
 // ANGLE_METAL_FRAME_CAPTURE flag.

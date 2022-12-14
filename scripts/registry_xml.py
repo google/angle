@@ -319,6 +319,7 @@ supported_egl_extensions = [
     "EGL_ANGLE_swap_with_frame_token",
     "EGL_ANGLE_sync_control_rate",
     "EGL_ANGLE_vulkan_image",
+    "EGL_ANGLE_wait_until_work_scheduled",
     "EGL_ANGLE_window_fixed_size",
     "EGL_CHROMIUM_sync_control",
     "EGL_EXT_create_context_robustness",

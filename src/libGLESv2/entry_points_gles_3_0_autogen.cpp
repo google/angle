@@ -1576,7 +1576,8 @@ GL_GetSynciv(GLsync sync, GLenum pname, GLsizei count, GLsizei *length, GLint *v
         ANGLE_CAPTURE_GL(GetSynciv, isCallValid, context, sync, pname, count, length, values);
     }
     else
-    {}
+    {
+    }
 }
 
 void GL_APIENTRY GL_GetTransformFeedbackVarying(GLuint program,

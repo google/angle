@@ -2504,6 +2504,12 @@ Error Display::forceGPUSwitch(EGLint gpuIDHigh, EGLint gpuIDLow)
     return NoError();
 }
 
+Error Display::waitUntilWorkScheduled()
+{
+    ANGLE_TRY(mImplementation->waitUntilWorkScheduled());
+    return NoError();
+}
+
 bool Display::supportsDmaBufFormat(EGLint format) const
 {
     return mImplementation->supportsDmaBufFormat(format);

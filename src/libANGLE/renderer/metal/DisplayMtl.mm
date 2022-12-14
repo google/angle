@@ -26,6 +26,7 @@
 #include "libANGLE/renderer/metal/mtl_common.h"
 #include "libANGLE/renderer/metal/shaders/mtl_default_shaders_src_autogen.inc"
 #include "libANGLE/trace.h"
+#include "mtl_command_buffer.h"
 #include "platform/PlatformMethods.h"
 
 #ifdef ANGLE_METAL_XCODE_BUILDS_SHADERS
@@ -318,6 +319,27 @@ egl::Error DisplayMtl::waitNative(const gl::Context *context, EGLint engine)
     return egl::NoError();
 }
 
+egl::Error DisplayMtl::waitUntilWorkScheduled()
+{
+    for (auto context : mState.contextSet)
+    {
+        auto contextMtl = GetImplAs<ContextMtl>(context);
+
+        // TODO(anglebug.com/7890) if this context doesn't currently
+        // have a pending command buffer then this will be a no-op.
+        // If the previous command buffer was committed with NoWait
+        // then it's possible we won't be waiting as expected.
+        // If we track how the last command buffer, that actually had
+        // commands in it, was committed (NoWait, WaitUntilScheduled, etc..)
+        // Then, if there is no command buffer, there's been no commits
+        // with that were WaitUntilScheduled/WaitUntilCompleted since
+        // the last command buffer with commands, then create a command
+        // buffer so we can wait on it?
+        contextMtl->flushCommandBuffer(mtl::WaitUntilScheduled);
+    }
+    return egl::NoError();
+}
+
 SurfaceImpl *DisplayMtl::createWindowSurface(const egl::SurfaceState &state,
                                              EGLNativeWindowType window,
                                              const egl::AttributeMap &attribs)
@@ -452,6 +474,7 @@ void DisplayMtl::generateExtensions(egl::DisplayExtensions *outExtensions) const
     outExtensions->displayTextureShareGroup   = true;
     outExtensions->displaySemaphoreShareGroup = true;
     outExtensions->mtlTextureClientBuffer     = true;
+    outExtensions->waitUntilWorkScheduled     = true;
 
     if (mFeatures.hasEvents.enabled)
     {

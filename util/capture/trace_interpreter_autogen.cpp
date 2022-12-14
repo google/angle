@@ -732,6 +732,13 @@ CallCapture ParseCallCapture(const Token &nameToken,
             ParseParameters<std::remove_pointer<PFNEGLWAITSYNCKHRPROC>::type>(paramTokens, shaders);
         return CallCapture(EntryPoint::EGLWaitSyncKHR, std::move(params));
     }
+    if (strcmp(nameToken, "eglWaitUntilWorkScheduledANGLE") == 0)
+    {
+        ParamBuffer params =
+            ParseParameters<std::remove_pointer<PFNEGLWAITUNTILWORKSCHEDULEDANGLEPROC>::type>(
+                paramTokens, shaders);
+        return CallCapture(EntryPoint::EGLWaitUntilWorkScheduledANGLE, std::move(params));
+    }
     if (strcmp(nameToken, "glAcquireTexturesANGLE") == 0)
     {
         ParamBuffer params =
