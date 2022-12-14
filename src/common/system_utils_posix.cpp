@@ -46,14 +46,6 @@ std::string GetModulePath(void *moduleOrSymbol)
         return "";
     }
 
-    // Chrome changes process title that causes dladdr returns wrong module file name for executable
-    // binary, so return GetExecutablePath() if dli_fname doesn't exist
-    struct stat buf;
-    if (stat(dlInfo.dli_fname, &buf) != 0)
-    {
-        return GetExecutablePath();
-    }
-
     return dlInfo.dli_fname;
 }
 
@@ -330,7 +322,7 @@ double GetCurrentProcessCpuTime()
     // underneath that has higher resolution.
     struct rusage usage;
     getrusage(RUSAGE_SELF, &usage);
-    double userTime = usage.ru_utime.tv_sec + usage.ru_utime.tv_usec * 1e-6;
+    double userTime   = usage.ru_utime.tv_sec + usage.ru_utime.tv_usec * 1e-6;
     double systemTime = usage.ru_stime.tv_sec + usage.ru_stime.tv_usec * 1e-6;
     return userTime + systemTime;
 #endif
