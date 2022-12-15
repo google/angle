@@ -188,6 +188,14 @@ enum {
      *   OpenGL ES: GL_STENCIL_INDEX8
      */
     ANGLE_AHB_FORMAT_IMPLEMENTATION_DEFINED   = 0x22,
+
+    /**
+     * Corresponding formats:
+     *   Android: AHARDWAREBUFFER_FORMAT_R8_UNORM
+     *   Vulkan: VK_FORMAT_R8_UNORM
+     *   OpenGL ES: GL_R8
+     */
+    ANGLE_AHB_FORMAT_R8_UNORM   = 0x38,
 };
 // clang-format on
 
