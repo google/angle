@@ -1900,6 +1900,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_traces',
   },
+  'src/tests/restricted_traces/plants_vs_zombies_heroes': {
+      'packages': [
+        {
+            'package': 'angle/traces/plants_vs_zombies_heroes',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_traces',
+  },
   'src/tests/restricted_traces/pokemon_go': {
       'packages': [
         {
