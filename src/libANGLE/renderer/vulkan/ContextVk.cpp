@@ -2669,7 +2669,7 @@ angle::Result ContextVk::handleDirtyGraphicsTransformFeedbackBuffersExtension(
                                      vk::PipelineStage::TransformFeedback, &counterBuffers[0]);
     for (size_t bufferIndex = 1; bufferIndex < bufferCount; ++bufferIndex)
     {
-        mRenderPassCommands->retainReadWriteResource(&counterBuffers[bufferIndex]);
+        mRenderPassCommands->retainResourceForWrite(&counterBuffers[bufferIndex]);
     }
 
     const gl::TransformFeedbackBuffersArray<VkBuffer> &bufferHandles =
@@ -7698,7 +7698,7 @@ angle::Result ContextVk::onResourceAccess(const vk::CommandBufferAccess &access)
     for (const vk::CommandBufferBufferExternalAcquireRelease &bufferAcquireRelease :
          access.getExternalAcquireReleaseBuffers())
     {
-        mOutsideRenderPassCommands->retainReadWriteResource(bufferAcquireRelease.buffer);
+        mOutsideRenderPassCommands->retainResourceForWrite(bufferAcquireRelease.buffer);
     }
 
     for (const vk::CommandBufferResourceAccess &resourceAccess : access.getAccessResources())

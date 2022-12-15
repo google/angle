@@ -138,6 +138,11 @@ class DescriptorSetHelper final : public Resource
 {
   public:
     DescriptorSetHelper(const VkDescriptorSet &descriptorSet) { mDescriptorSet = descriptorSet; }
+    DescriptorSetHelper(const ResourceUse &use, const VkDescriptorSet &descriptorSet)
+    {
+        mUse           = use;
+        mDescriptorSet = descriptorSet;
+    }
     DescriptorSetHelper(DescriptorSetHelper &&other) : Resource(std::move(other))
     {
         mDescriptorSet       = other.mDescriptorSet;
@@ -1085,10 +1090,12 @@ class CommandBufferHelperCommon : angle::NonCopyable
 
     bool hasGLMemoryBarrierIssued() const { return mHasGLMemoryBarrierIssued; }
 
-    void retainResource(Resource *resource);
+    void retainResource(Resource *resource) { resource->setQueueSerial(mQueueSerial); }
 
-    void retainReadOnlyResource(ReadWriteResource *readWriteResource);
-    void retainReadWriteResource(ReadWriteResource *readWriteResource);
+    void retainResourceForWrite(ReadWriteResource *writeResource)
+    {
+        writeResource->setWriteQueueSerial(mQueueSerial);
+    }
 
     const QueueSerial &getQueueSerial() const { return mQueueSerial; }
 
@@ -1440,8 +1447,6 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
     void finalizeColorImageLayoutAndLoadStore(Context *context,
                                               PackedAttachmentIndex packedAttachmentIndex);
     void finalizeDepthStencilImageLayoutAndLoadStore(Context *context);
-
-    void retainImage(ImageHelper *imageHelper);
 
     // When using Vulkan secondary command buffers, each subpass must be recorded in a separate
     // command buffer.  Currently ANGLE produces render passes with at most 2 subpasses.  Once

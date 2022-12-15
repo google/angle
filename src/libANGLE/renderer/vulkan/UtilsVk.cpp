@@ -3883,8 +3883,8 @@ angle::Result UtilsVk::drawOverlay(ContextVk *contextVk,
 
     UpdateColorAccess(contextVk, MakeColorBufferMask(0), MakeColorBufferMask(0));
 
-    commandBufferHelper->retainReadOnlyResource(textWidgetsBuffer);
-    commandBufferHelper->retainReadOnlyResource(graphWidgetsBuffer);
+    commandBufferHelper->retainResource(textWidgetsBuffer);
+    commandBufferHelper->retainResource(graphWidgetsBuffer);
     contextVk->onImageRenderPassRead(VK_IMAGE_ASPECT_COLOR_BIT,
                                      vk::ImageLayout::FragmentShaderReadOnly, font);
     contextVk->onImageRenderPassWrite(gl::LevelIndex(0), 0, 1, VK_IMAGE_ASPECT_COLOR_BIT,

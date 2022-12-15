@@ -735,10 +735,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     std::ostringstream &getPipelineCacheGraphStream() { return mPipelineCacheGraph; }
 
-    // Add resource to the resource use list tracking the last CommandBuffer (i.e,
-    // RenderpassCommands if exists, or outsideRenderPassCommands)
-    void retainResource(vk::Resource *resource);
-
     // Whether VK_EXT_pipeline_robustness should be used to enable robust buffer access in the
     // pipeline.
     bool shouldUsePipelineRobustness() const
@@ -1605,18 +1601,6 @@ ANGLE_INLINE angle::Result ContextVk::onVertexAttributeChange(size_t attribIndex
         divisor > mRenderer->getMaxVertexAttribDivisor() ? 1 : divisor, format, compressed,
         relativeOffset);
     return onVertexBufferChange(vertexBuffer);
-}
-
-ANGLE_INLINE void ContextVk::retainResource(vk::Resource *resource)
-{
-    if (hasStartedRenderPass())
-    {
-        mRenderPassCommands->retainResource(resource);
-    }
-    else
-    {
-        mOutsideRenderPassCommands->retainResource(resource);
-    }
 }
 
 ANGLE_INLINE bool ContextVk::hasUnsubmittedUse(const vk::ResourceUse &use) const

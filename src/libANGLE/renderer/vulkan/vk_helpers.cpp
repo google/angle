@@ -1421,21 +1421,6 @@ void CommandBufferHelperCommon::addCommandDiagnosticsCommon(std::ostringstream *
     *out << "\\l";
 }
 
-void CommandBufferHelperCommon::retainResource(Resource *resource)
-{
-    resource->setQueueSerial(mQueueSerial);
-}
-
-void CommandBufferHelperCommon::retainReadOnlyResource(ReadWriteResource *readWriteResource)
-{
-    readWriteResource->setQueueSerial(mQueueSerial);
-}
-
-void CommandBufferHelperCommon::retainReadWriteResource(ReadWriteResource *readWriteResource)
-{
-    readWriteResource->setWriteQueueSerial(mQueueSerial);
-}
-
 // OutsideRenderPassCommandBufferHelper implementation.
 OutsideRenderPassCommandBufferHelper::OutsideRenderPassCommandBufferHelper() {}
 
@@ -1658,7 +1643,7 @@ void RenderPassCommandBufferHelper::imageRead(ContextVk *contextVk,
 
     // As noted in the header we don't support multiple read layouts for Images.
     // We allow duplicate uses in the RP to accommodate for normal GL sampler usage.
-    retainImage(image);
+    retainResource(image);
 }
 
 void RenderPassCommandBufferHelper::imageWrite(ContextVk *contextVk,
@@ -1674,7 +1659,7 @@ void RenderPassCommandBufferHelper::imageWrite(ContextVk *contextVk,
     {
         mRenderPassImagesWithLayoutTransition.insert(image->getImageSerial());
     }
-    retainImage(image);
+    retainResource(image);
 }
 
 void RenderPassCommandBufferHelper::colorImagesDraw(gl::LevelIndex level,
@@ -1686,22 +1671,17 @@ void RenderPassCommandBufferHelper::colorImagesDraw(gl::LevelIndex level,
 {
     ASSERT(packedAttachmentIndex < mColorAttachmentsCount);
 
-    retainImage(image);
+    retainResource(image);
 
     mColorAttachments[packedAttachmentIndex].init(image, level, layerStart, layerCount,
                                                   VK_IMAGE_ASPECT_COLOR_BIT);
 
     if (resolveImage)
     {
-        retainImage(resolveImage);
+        retainResource(resolveImage);
         mColorResolveAttachments[packedAttachmentIndex].init(resolveImage, level, layerStart,
                                                              layerCount, VK_IMAGE_ASPECT_COLOR_BIT);
     }
-}
-
-void RenderPassCommandBufferHelper::retainImage(ImageHelper *imageHelper)
-{
-    imageHelper->setQueueSerial(mQueueSerial);
 }
 
 void RenderPassCommandBufferHelper::depthStencilImagesDraw(gl::LevelIndex level,
@@ -3472,8 +3452,7 @@ void DynamicDescriptorPool::releaseCachedDescriptorSet(ContextVk *contextVk,
         mCacheStats.decrementSize();
 
         // Wrap it with helper object so that it can be GPU tracked and add it to resource list.
-        DescriptorSetHelper descriptorSetHelper(descriptorSet);
-        contextVk->retainResource(&descriptorSetHelper);
+        DescriptorSetHelper descriptorSetHelper(poolOut->get().getResourceUse(), descriptorSet);
         poolOut->get().addGarbage(std::move(descriptorSetHelper));
         checkAndReleaseUnusedPool(contextVk->getRenderer(), poolOut);
     }
