@@ -1296,8 +1296,7 @@ CommandBufferHelperCommon::CommandBufferHelperCommon()
       mPipelineBarrierMask(),
       mCommandPool(nullptr),
       mHasShaderStorageOutput(false),
-      mHasGLMemoryBarrierIssued(false),
-      mUsedBufferCount(0)
+      mHasGLMemoryBarrierIssued(false)
 {}
 
 CommandBufferHelperCommon::~CommandBufferHelperCommon() {}
@@ -1305,14 +1304,12 @@ CommandBufferHelperCommon::~CommandBufferHelperCommon() {}
 void CommandBufferHelperCommon::initializeImpl(CommandPool *commandPool)
 {
     mCommandAllocator.init();
-    mUsedBufferCount = 0;
-    mCommandPool     = commandPool;
+    mCommandPool = commandPool;
 }
 
 void CommandBufferHelperCommon::resetImpl()
 {
     mCommandAllocator.resetAllocator();
-    mUsedBufferCount = 0;
 }
 
 void CommandBufferHelperCommon::bufferWrite(ContextVk *contextVk,
@@ -1323,7 +1320,6 @@ void CommandBufferHelperCommon::bufferWrite(ContextVk *contextVk,
     if (!buffer->writtenByCommandBuffer(mQueueSerial))
     {
         buffer->setWriteQueueSerial(mQueueSerial);
-        mUsedBufferCount++;
     }
 
     VkPipelineStageFlagBits stageBits = kPipelineStageFlagBitMap[writeStage];
@@ -1339,16 +1335,6 @@ void CommandBufferHelperCommon::bufferWrite(ContextVk *contextVk,
     {
         contextVk->onHostVisibleBufferWrite();
     }
-}
-
-bool CommandBufferHelperCommon::usesBuffer(const BufferHelper &buffer) const
-{
-    return buffer.usedByCommandBuffer(mQueueSerial);
-}
-
-bool CommandBufferHelperCommon::usesBufferForWrite(const BufferHelper &buffer) const
-{
-    return buffer.writtenByCommandBuffer(mQueueSerial);
 }
 
 void CommandBufferHelperCommon::executeBarriers(const angle::FeaturesVk &features,
@@ -1499,15 +1485,11 @@ void OutsideRenderPassCommandBufferHelper::bufferRead(ContextVk *contextVk,
         // A buffer could have read accessed by both renderPassCommands and
         // outsideRenderPassCommands and there is no need to endRP or flush. In this case, the
         // renderPassCommands' read will override the outsideRenderPassCommands' read, since its
-        // queueSerial must be greater than outsideRP. The only negative effect here is that
-        // mUsedBufferCount maybe inaccurate when it is being read by both commands, but that is
-        // okay given it is only used by informational widgets.
-        mUsedBufferCount++;
+        // queueSerial must be greater than outsideRP.
     }
-    else if (!buffer->usedByCommandBuffer(mQueueSerial))
+    else
     {
         buffer->setQueueSerial(mQueueSerial);
-        mUsedBufferCount++;
     }
 }
 
@@ -1659,11 +1641,7 @@ void RenderPassCommandBufferHelper::bufferRead(ContextVk *contextVk,
     }
 
     ASSERT(!usesBufferForWrite(*buffer));
-    if (!usesBuffer(*buffer))
-    {
-        buffer->setQueueSerial(mQueueSerial);
-        mUsedBufferCount++;
-    }
+    buffer->setQueueSerial(mQueueSerial);
 }
 
 void RenderPassCommandBufferHelper::imageRead(ContextVk *contextVk,
@@ -1723,10 +1701,7 @@ void RenderPassCommandBufferHelper::colorImagesDraw(gl::LevelIndex level,
 
 void RenderPassCommandBufferHelper::retainImage(ImageHelper *imageHelper)
 {
-    if (!imageHelper->usedByCommandBuffer(mQueueSerial))
-    {
-        imageHelper->setQueueSerial(mQueueSerial);
-    }
+    imageHelper->setQueueSerial(mQueueSerial);
 }
 
 void RenderPassCommandBufferHelper::depthStencilImagesDraw(gl::LevelIndex level,

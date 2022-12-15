@@ -1060,9 +1060,15 @@ class CommandBufferHelperCommon : angle::NonCopyable
                      PipelineStage writeStage,
                      BufferHelper *buffer);
 
-    bool usesBuffer(const BufferHelper &buffer) const;
-    bool usesBufferForWrite(const BufferHelper &buffer) const;
-    size_t getUsedBuffersCount() const { return mUsedBufferCount; }
+    bool usesBuffer(const BufferHelper &buffer) const
+    {
+        return buffer.usedByCommandBuffer(mQueueSerial);
+    }
+
+    bool usesBufferForWrite(const BufferHelper &buffer) const
+    {
+        return buffer.writtenByCommandBuffer(mQueueSerial);
+    }
 
     void executeBarriers(const angle::FeaturesVk &features, PrimaryCommandBuffer *primary);
 
@@ -1141,7 +1147,6 @@ class CommandBufferHelperCommon : angle::NonCopyable
 
     // Tracks resources used in the command buffer.
     QueueSerial mQueueSerial;
-    uint32_t mUsedBufferCount;
 };
 
 class OutsideRenderPassCommandBufferHelper final : public CommandBufferHelperCommon

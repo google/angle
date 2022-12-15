@@ -219,13 +219,28 @@ void ApplySampleCoverage(const gl::State &glState, uint32_t coverageSampleCount,
     *maskOut &= coverageMask;
 }
 
-bool IsRenderPassStartedAndUsesImage(const vk::RenderPassCommandBufferHelper &renderPassCommands,
-                                     const vk::ImageHelper &image)
+ANGLE_INLINE bool IsRenderPassStartedAndUsesBuffer(
+    const vk::RenderPassCommandBufferHelper &renderPassCommands,
+    const vk::BufferHelper &buffer)
+{
+    return renderPassCommands.started() && renderPassCommands.usesBuffer(buffer);
+}
+
+ANGLE_INLINE bool IsRenderPassStartedAndUsesBufferForWrite(
+    const vk::RenderPassCommandBufferHelper &renderPassCommands,
+    const vk::BufferHelper &buffer)
+{
+    return renderPassCommands.started() && renderPassCommands.usesBufferForWrite(buffer);
+}
+
+ANGLE_INLINE bool IsRenderPassStartedAndUsesImage(
+    const vk::RenderPassCommandBufferHelper &renderPassCommands,
+    const vk::ImageHelper &image)
 {
     return renderPassCommands.started() && renderPassCommands.usesImage(image);
 }
 
-bool IsRenderPassStartedAndTransitionsImageLayout(
+ANGLE_INLINE bool IsRenderPassStartedAndTransitionsImageLayout(
     const vk::RenderPassCommandBufferHelper &renderPassCommands,
     vk::ImageHelper &image)
 {
@@ -1629,6 +1644,11 @@ bool ContextVk::renderPassUsesStorageResources() const
     const gl::ProgramExecutable *executable = mState.getProgramExecutable();
     ASSERT(executable);
 
+    if (!hasStartedRenderPass())
+    {
+        return false;
+    }
+
     // Storage images:
     for (size_t imageUnitIndex : executable->getActiveImagesMask())
     {
@@ -1654,7 +1674,7 @@ bool ContextVk::renderPassUsesStorageResources() const
             // Images only need to close the render pass if they need a layout transition.  Outside
             // render pass command buffer doesn't need closing as the layout transition barriers are
             // recorded in sequence with the rest of the commands.
-            if (IsRenderPassStartedAndUsesImage(*mRenderPassCommands, image))
+            if (mRenderPassCommands->usesImage(image))
             {
                 return true;
             }
@@ -3213,15 +3233,6 @@ void ContextVk::addOverlayUsedBuffersCount(vk::CommandBufferHelperCommon *comman
     if (!overlay->isEnabled())
     {
         return;
-    }
-
-    gl::RunningGraphWidget *widget =
-        overlay->getRunningGraphWidget(gl::WidgetId::VulkanRenderPassBufferCount);
-    size_t buffersCount = commandBuffer->getUsedBuffersCount();
-    if (buffersCount > 0)
-    {
-        widget->add(buffersCount);
-        widget->next();
     }
 
     {
@@ -5939,15 +5950,18 @@ angle::Result ContextVk::onBeginTransformFeedback(
 
     bool shouldEndRenderPass = false;
 
-    // If any of the buffers were previously used in the render pass, break the render pass as a
-    // barrier is needed.
-    for (size_t bufferIndex = 0; bufferIndex < bufferCount; ++bufferIndex)
+    if (hasStartedRenderPass())
     {
-        const vk::BufferHelper *buffer = buffers[bufferIndex];
-        if (mRenderPassCommands->usesBuffer(*buffer))
+        // If any of the buffers were previously used in the render pass, break the render pass as a
+        // barrier is needed.
+        for (size_t bufferIndex = 0; bufferIndex < bufferCount; ++bufferIndex)
         {
-            shouldEndRenderPass = true;
-            break;
+            const vk::BufferHelper *buffer = buffers[bufferIndex];
+            if (mRenderPassCommands->usesBuffer(*buffer))
+            {
+                shouldEndRenderPass = true;
+                break;
+            }
         }
     }
 
@@ -5958,7 +5972,8 @@ angle::Result ContextVk::onBeginTransformFeedback(
         // same render pass.  Note additionally that we don't need to test all counters being used
         // in the render pass, as outside of the transform feedback object these buffers are
         // inaccessible and are therefore always used together.
-        if (!shouldEndRenderPass && mRenderPassCommands->usesBuffer(counterBuffers[0]))
+        if (!shouldEndRenderPass &&
+            IsRenderPassStartedAndUsesBuffer(*mRenderPassCommands, counterBuffers[0]))
         {
             shouldEndRenderPass = true;
         }
@@ -7663,7 +7678,8 @@ angle::Result ContextVk::onResourceAccess(const vk::CommandBufferAccess &access)
 
     for (const vk::CommandBufferBufferAccess &bufferAccess : access.getReadBuffers())
     {
-        ASSERT(!mRenderPassCommands->usesBufferForWrite(*bufferAccess.buffer));
+        ASSERT(
+            !IsRenderPassStartedAndUsesBufferForWrite(*mRenderPassCommands, *bufferAccess.buffer));
         ASSERT(!mOutsideRenderPassCommands->usesBufferForWrite(*bufferAccess.buffer));
 
         mOutsideRenderPassCommands->bufferRead(this, bufferAccess.accessType, bufferAccess.stage,
@@ -7672,7 +7688,7 @@ angle::Result ContextVk::onResourceAccess(const vk::CommandBufferAccess &access)
 
     for (const vk::CommandBufferBufferAccess &bufferAccess : access.getWriteBuffers())
     {
-        ASSERT(!mRenderPassCommands->usesBuffer(*bufferAccess.buffer));
+        ASSERT(!IsRenderPassStartedAndUsesBuffer(*mRenderPassCommands, *bufferAccess.buffer));
         ASSERT(!mOutsideRenderPassCommands->usesBuffer(*bufferAccess.buffer));
 
         mOutsideRenderPassCommands->bufferWrite(this, bufferAccess.accessType, bufferAccess.stage,
@@ -7729,7 +7745,7 @@ angle::Result ContextVk::flushCommandBuffersIfNecessary(const vk::CommandBufferA
     // Read buffers only need a new command buffer if previously used for write.
     for (const vk::CommandBufferBufferAccess &bufferAccess : access.getReadBuffers())
     {
-        if (mRenderPassCommands->usesBufferForWrite(*bufferAccess.buffer))
+        if (IsRenderPassStartedAndUsesBufferForWrite(*mRenderPassCommands, *bufferAccess.buffer))
         {
             return flushCommandsAndEndRenderPass(
                 RenderPassClosureReason::BufferWriteThenOutOfRPRead);
@@ -7743,7 +7759,7 @@ angle::Result ContextVk::flushCommandBuffersIfNecessary(const vk::CommandBufferA
     // Write buffers always need a new command buffer if previously used.
     for (const vk::CommandBufferBufferAccess &bufferAccess : access.getWriteBuffers())
     {
-        if (mRenderPassCommands->usesBuffer(*bufferAccess.buffer))
+        if (IsRenderPassStartedAndUsesBuffer(*mRenderPassCommands, *bufferAccess.buffer))
         {
             return flushCommandsAndEndRenderPass(
                 RenderPassClosureReason::BufferUseThenOutOfRPWrite);
