@@ -100,7 +100,7 @@ def main(cpp_output_path):
 
 
 if __name__ == '__main__':
-    inputs = registry_xml.khronos_xml_inputs + [FIXTURE_H]
+    inputs = registry_xml.xml_inputs + [FIXTURE_H]
     outputs = [
         '%s.cpp' % BASE_PATH,
     ]

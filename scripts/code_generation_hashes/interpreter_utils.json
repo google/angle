@@ -1,6 +1,12 @@
 {
+  "scripts/egl_angle_ext.xml":
+    "a325465cb2fd6e5bad81ab508e51885a",
   "scripts/gen_interpreter_utils.py":
-    "318f0e766e025f9d072cee9204f84922",
+    "3205333b38fd39263a6a63c1d1b66ca6",
+  "scripts/gl_angle_ext.xml":
+    "d82fab64415e4d276ce0e67d82cb9445",
+  "scripts/registry_xml.py":
+    "4837b4beda7a0e2698e2be7e8e74fd88",
   "third_party/EGL-Registry/src/api/egl.xml":
     "2056d54ea07156f1988ca1366bdee21a",
   "third_party/OpenCL-Docs/src/xml/cl.xml":
@@ -14,5 +20,5 @@
   "util/capture/trace_fixture.h":
     "89256da141793ba367c1d0fb8d8e5eb8",
   "util/capture/trace_interpreter_autogen.cpp":
-    "4be0f78467f54d43729b1831f04ed12c"
+    "488532220df05f3d777b363e528aac1b"
 }

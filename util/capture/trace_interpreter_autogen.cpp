@@ -2177,6 +2177,28 @@ CallCapture ParseCallCapture(const Token &nameToken,
                 paramTokens, shaders);
         return CallCapture(EntryPoint::GLFramebufferParameteriMESA, std::move(params));
     }
+    if (strcmp(nameToken, "glFramebufferPixelLocalClearValuefvANGLE") == 0)
+    {
+        ParamBuffer params = ParseParameters<
+            std::remove_pointer<PFNGLFRAMEBUFFERPIXELLOCALCLEARVALUEFVANGLEPROC>::type>(paramTokens,
+                                                                                        shaders);
+        return CallCapture(EntryPoint::GLFramebufferPixelLocalClearValuefvANGLE, std::move(params));
+    }
+    if (strcmp(nameToken, "glFramebufferPixelLocalClearValueivANGLE") == 0)
+    {
+        ParamBuffer params = ParseParameters<
+            std::remove_pointer<PFNGLFRAMEBUFFERPIXELLOCALCLEARVALUEIVANGLEPROC>::type>(paramTokens,
+                                                                                        shaders);
+        return CallCapture(EntryPoint::GLFramebufferPixelLocalClearValueivANGLE, std::move(params));
+    }
+    if (strcmp(nameToken, "glFramebufferPixelLocalClearValueuivANGLE") == 0)
+    {
+        ParamBuffer params = ParseParameters<
+            std::remove_pointer<PFNGLFRAMEBUFFERPIXELLOCALCLEARVALUEUIVANGLEPROC>::type>(
+            paramTokens, shaders);
+        return CallCapture(EntryPoint::GLFramebufferPixelLocalClearValueuivANGLE,
+                           std::move(params));
+    }
     if (strcmp(nameToken, "glFramebufferRenderbuffer") == 0)
     {
         ParamBuffer params =
@@ -2648,6 +2670,22 @@ CallCapture ParseCallCapture(const Token &nameToken,
             std::remove_pointer<PFNGLGETFRAMEBUFFERPARAMETERIVROBUSTANGLEPROC>::type>(paramTokens,
                                                                                       shaders);
         return CallCapture(EntryPoint::GLGetFramebufferParameterivRobustANGLE, std::move(params));
+    }
+    if (strcmp(nameToken, "glGetFramebufferPixelLocalStorageParameterfvANGLE") == 0)
+    {
+        ParamBuffer params = ParseParameters<
+            std::remove_pointer<PFNGLGETFRAMEBUFFERPIXELLOCALSTORAGEPARAMETERFVANGLEPROC>::type>(
+            paramTokens, shaders);
+        return CallCapture(EntryPoint::GLGetFramebufferPixelLocalStorageParameterfvANGLE,
+                           std::move(params));
+    }
+    if (strcmp(nameToken, "glGetFramebufferPixelLocalStorageParameterivANGLE") == 0)
+    {
+        ParamBuffer params = ParseParameters<
+            std::remove_pointer<PFNGLGETFRAMEBUFFERPIXELLOCALSTORAGEPARAMETERIVANGLEPROC>::type>(
+            paramTokens, shaders);
+        return CallCapture(EntryPoint::GLGetFramebufferPixelLocalStorageParameterivANGLE,
+                           std::move(params));
     }
     if (strcmp(nameToken, "glGetGraphicsResetStatus") == 0)
     {
