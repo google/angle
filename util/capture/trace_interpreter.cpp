@@ -446,6 +446,11 @@ void PackConstPointerParameter(ParamBuffer &params, ParamType paramType, const T
         ASSERT(BeginsWith(token, "&gBinaryData[") && EndsWith(token, "]"));
         PackMemPointer<const T *>(params, paramType, &token[strlen("&gBinaryData[")], gBinaryData);
     }
+    else if (token[0] == 'g')
+    {
+        ASSERT(strcmp(token, "gResourceIDBuffer") == 0);
+        params.addUnnamedParam(paramType, reinterpret_cast<const T *>(gResourceIDBuffer));
+    }
     else
     {
         ASSERT(isdigit(token[0]));

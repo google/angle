@@ -307,7 +307,7 @@ void ReplayTraceFunctionCall(const CallCapture &call, const TraceFunctionMap &cu
             glClientActiveTexture(captures[0].value.GLenumVal);
             break;
         case angle::EntryPoint::GLClientWaitSync:
-            glClientWaitSync(gSyncMap[reinterpret_cast<uintptr_t>(captures[0].value.GLsyncVal)],
+            glClientWaitSync(gSyncMap2[captures[0].value.GLuintVal],
                              captures[1].value.GLbitfieldVal, captures[2].value.GLuint64Val);
             break;
         case angle::EntryPoint::GLClipControlEXT:
@@ -654,7 +654,7 @@ void ReplayTraceFunctionCall(const CallCapture &call, const TraceFunctionMap &cu
             glDeleteShader(gShaderProgramMap[captures[0].value.GLuintVal]);
             break;
         case angle::EntryPoint::GLDeleteSync:
-            glDeleteSync(gSyncMap[reinterpret_cast<uintptr_t>(captures[0].value.GLsyncVal)]);
+            glDeleteSync(gSyncMap2[captures[0].value.GLuintVal]);
             break;
         case angle::EntryPoint::GLDeleteTextures:
             glDeleteTextures(captures[0].value.GLsizeiVal, captures[1].value.GLuintConstPointerVal);
@@ -1759,9 +1759,9 @@ void ReplayTraceFunctionCall(const CallCapture &call, const TraceFunctionMap &cu
             glGetStringi(captures[0].value.GLenumVal, captures[1].value.GLuintVal);
             break;
         case angle::EntryPoint::GLGetSynciv:
-            glGetSynciv(gSyncMap[reinterpret_cast<uintptr_t>(captures[0].value.GLsyncVal)],
-                        captures[1].value.GLenumVal, captures[2].value.GLsizeiVal,
-                        captures[3].value.GLsizeiPointerVal, captures[4].value.GLintPointerVal);
+            glGetSynciv(gSyncMap2[captures[0].value.GLuintVal], captures[1].value.GLenumVal,
+                        captures[2].value.GLsizeiVal, captures[3].value.GLsizeiPointerVal,
+                        captures[4].value.GLintPointerVal);
             break;
         case angle::EntryPoint::GLGetTexEnvfv:
             glGetTexEnvfv(captures[0].value.GLenumVal, captures[1].value.GLenumVal,
@@ -2145,7 +2145,7 @@ void ReplayTraceFunctionCall(const CallCapture &call, const TraceFunctionMap &cu
             glIsShader(gShaderProgramMap[captures[0].value.GLuintVal]);
             break;
         case angle::EntryPoint::GLIsSync:
-            glIsSync(gSyncMap[reinterpret_cast<uintptr_t>(captures[0].value.GLsyncVal)]);
+            glIsSync(gSyncMap2[captures[0].value.GLuintVal]);
             break;
         case angle::EntryPoint::GLIsTexture:
             glIsTexture(gTextureMap[captures[0].value.GLuintVal]);
@@ -3787,8 +3787,8 @@ void ReplayTraceFunctionCall(const CallCapture &call, const TraceFunctionMap &cu
                                captures[5].value.GLenumConstPointerVal);
             break;
         case angle::EntryPoint::GLWaitSync:
-            glWaitSync(gSyncMap[reinterpret_cast<uintptr_t>(captures[0].value.GLsyncVal)],
-                       captures[1].value.GLbitfieldVal, captures[2].value.GLuint64Val);
+            glWaitSync(gSyncMap2[captures[0].value.GLuintVal], captures[1].value.GLbitfieldVal,
+                       captures[2].value.GLuint64Val);
             break;
         case angle::EntryPoint::GLWeightPointerOES:
             glWeightPointerOES(captures[0].value.GLintVal, captures[1].value.GLenumVal,

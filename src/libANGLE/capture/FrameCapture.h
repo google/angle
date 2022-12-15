@@ -752,6 +752,7 @@ class FrameCaptureShared final : angle::NonCopyable
     SurfaceParamsMap mDrawSurfaceParams;
     gl::AttribArray<size_t> mClientArraySizes;
     size_t mReadBufferSize;
+    size_t mResourceIDBufferSize;
     HasResourceTypeMap mHasResourceType;
     ResourceIDToSetupCallsMap mResourceIDToSetupCalls;
     BufferDataMap mBufferDataMap;
