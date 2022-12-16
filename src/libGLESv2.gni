@@ -678,11 +678,3 @@ libegl_sources = [
   "src/libGLESv2/entry_points_egl_autogen.h",
   "src/libGLESv2/entry_points_egl_ext_autogen.h",
 ]
-
-angle_program_binary_version_sources = [
-  libangle_capture_sources,
-  libangle_common_sources,
-  libangle_headers,
-  libangle_includes,
-  libangle_sources,
-]

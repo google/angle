@@ -3602,11 +3602,8 @@ angle::Result Program::serialize(const Context *context, angle::MemoryBuffer *bi
 {
     BinaryOutputStream stream;
 
-    stream.writeBytes(
-        reinterpret_cast<const unsigned char *>(angle::GetANGLEShaderProgramVersion()),
-        angle::GetANGLEShaderProgramVersionHashSize());
-
-    stream.writeInt(angle::GetANGLESHVersion());
+    stream.writeBytes(reinterpret_cast<const unsigned char *>(angle::GetANGLECommitHash()),
+                      angle::GetANGLECommitHashSize());
 
     // nullptr context is supported when computing binary length.
     if (context)
@@ -3700,21 +3697,11 @@ angle::Result Program::deserialize(const Context *context,
                                    BinaryInputStream &stream,
                                    InfoLog &infoLog)
 {
-    std::vector<uint8_t> angleShaderProgramVersionString(
-        angle::GetANGLEShaderProgramVersionHashSize(), 0);
-    stream.readBytes(angleShaderProgramVersionString.data(),
-                     angleShaderProgramVersionString.size());
-    if (memcmp(angleShaderProgramVersionString.data(), angle::GetANGLEShaderProgramVersion(),
-               angleShaderProgramVersionString.size()) != 0)
+    std::vector<uint8_t> commitString(angle::GetANGLECommitHashSize(), 0);
+    stream.readBytes(commitString.data(), commitString.size());
+    if (memcmp(commitString.data(), angle::GetANGLECommitHash(), commitString.size()) != 0)
     {
         infoLog << "Invalid program binary version.";
-        return angle::Result::Stop;
-    }
-
-    int angleSHVersion = stream.readInt<int>();
-    if (angleSHVersion != angle::GetANGLESHVersion())
-    {
-        infoLog << "cannot load program binaries across different angle sh version.";
         return angle::Result::Stop;
     }
 
