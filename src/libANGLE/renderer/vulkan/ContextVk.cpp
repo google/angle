@@ -1421,12 +1421,12 @@ angle::Result ContextVk::setupIndexedDraw(const gl::Context *context,
         BufferBindingDirty bindingDirty;
         ANGLE_TRY(vertexArrayVk->convertIndexBufferCPU(this, indexType, indexCount, indices,
                                                        &bindingDirty));
+        mCurrentIndexBufferOffset = 0;
 
         // We only set dirty bit when the bound buffer actually changed.
         if (bindingDirty == BufferBindingDirty::Yes)
         {
             mGraphicsDirtyBits.set(DIRTY_BIT_INDEX_BUFFER);
-            mCurrentIndexBufferOffset = 0;
         }
     }
     else
