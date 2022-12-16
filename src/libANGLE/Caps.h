@@ -165,9 +165,6 @@ struct Limitations
     bool compressedBaseMipLevelMultipleOfFour = false;
 
     bool limitWebglMaxTextureSizeTo4096 = false;
-
-    // When clip and cull distances are used simultaneously, D3D11 can support up to four of each.
-    bool limitSimultaneousClipAndCullDistanceUsage = false;
 };
 
 struct TypePrecision

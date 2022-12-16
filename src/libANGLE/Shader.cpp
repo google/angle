@@ -435,12 +435,6 @@ void Shader::compile(const Context *context)
         options.validateLoopIndexing = true;
     }
 
-    // When clip and cull distances are used simultaneously, D3D11 can support up to four of each.
-    if (context->isWebGL() || mRendererLimitations.limitSimultaneousClipAndCullDistanceUsage)
-    {
-        options.limitSimultaneousClipAndCullDistanceUsage = true;
-    }
-
     if (context->getFrontendFeatures().scalarizeVecAndMatConstructorArgs.enabled)
     {
         options.scalarizeVecAndMatConstructorArgs = true;

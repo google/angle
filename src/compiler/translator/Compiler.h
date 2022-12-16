@@ -313,6 +313,8 @@ class TCompiler : public TShHandleBase
                              const TParseContext &parseContext,
                              const ShCompileOptions &compileOptions);
 
+    bool resizeClipAndCullDistanceBuiltins(TIntermBlock *root);
+
     bool postParseChecks(const TParseContext &parseContext);
 
     sh::GLenum mShaderType;

@@ -731,6 +731,26 @@ const std::set<std::string> *GetUsedImage2DFunctionNames(const ShHandle handle)
 #endif  // ANGLE_ENABLE_HLSL
 }
 
+uint8_t GetClipDistanceArraySize(const ShHandle handle)
+{
+    ASSERT(handle);
+    TShHandleBase *base = static_cast<TShHandleBase *>(handle);
+    TCompiler *compiler = base->getAsCompiler();
+    ASSERT(compiler);
+
+    return compiler->getClipDistanceArraySize();
+}
+
+uint8_t GetCullDistanceArraySize(const ShHandle handle)
+{
+    ASSERT(handle);
+    TShHandleBase *base = static_cast<TShHandleBase *>(handle);
+    TCompiler *compiler = base->getAsCompiler();
+    ASSERT(compiler);
+
+    return compiler->getCullDistanceArraySize();
+}
+
 bool HasClipDistanceInVertexShader(const ShHandle handle)
 {
     ASSERT(handle);

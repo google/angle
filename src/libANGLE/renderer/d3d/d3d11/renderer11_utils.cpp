@@ -1770,9 +1770,6 @@ void GenerateCaps(ID3D11Device *device,
     // D3D11 does not support compressed textures where the base mip level is not a multiple of 4
     limitations->compressedBaseMipLevelMultipleOfFour = true;
 
-    // When clip and cull distances are used simultaneously, D3D11 can support up to four of each.
-    limitations->limitSimultaneousClipAndCullDistanceUsage = true;
-
     if (extensions->textureBufferAny())
     {
         caps->maxTextureBufferSize = 1 << D3D11_REQ_BUFFER_RESOURCE_TEXEL_COUNT_2_TO_EXP;

@@ -153,8 +153,6 @@ class ProgramD3DMetadata final : angle::NonCopyable
     int getRendererMajorShaderModel() const;
     bool usesBroadcast(const gl::State &data) const;
     bool usesSecondaryColor() const;
-    bool usesClipDistance() const;
-    bool usesCullDistance() const;
     bool usesFragDepth() const;
     bool usesPointCoord() const;
     bool usesFragCoord() const;
@@ -171,6 +169,8 @@ class ProgramD3DMetadata final : angle::NonCopyable
     bool usesMultipleFragmentOuts() const;
     bool usesCustomOutVars() const;
     const ShaderD3D *getFragmentShader() const;
+    uint8_t getClipDistanceArraySize() const;
+    uint8_t getCullDistanceArraySize() const;
 
   private:
     const int mRendererMajorShaderModel;

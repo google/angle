@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 316
+#define ANGLE_SH_VERSION 317
 
 enum ShShaderSpec
 {
@@ -413,9 +413,6 @@ struct ShCompileOptions
     // TODO(anglebug.com/7527): This workaround is currently only applied for pixel local storage.
     // We may want to apply it generally.
     uint64_t passHighpToPackUnormSnormBuiltins : 1;
-
-    // When clip and cull distances are used simultaneously, D3D11 can support up to four of each.
-    uint64_t limitSimultaneousClipAndCullDistanceUsage : 1;
 
     // Use an integer uniform to pass a bitset of enabled clip distances.
     uint64_t emulateClipDistanceState : 1;
@@ -860,6 +857,8 @@ unsigned int GetImage2DRegisterIndex(const ShHandle handle);
 // handle: Specifies the compiler
 const std::set<std::string> *GetUsedImage2DFunctionNames(const ShHandle handle);
 
+uint8_t GetClipDistanceArraySize(const ShHandle handle);
+uint8_t GetCullDistanceArraySize(const ShHandle handle);
 bool HasClipDistanceInVertexShader(const ShHandle handle);
 bool HasDiscardInFragmentShader(const ShHandle handle);
 bool HasValidGeometryShaderInputPrimitiveType(const ShHandle handle);

@@ -743,19 +743,19 @@
 5491 IOS : IOSurfaceClientBufferTest.MakeCurrent/ES2_OpenGL = SKIP
 5491 IOS : IOSurfaceClientBufferTest.MakeCurrent/ES3_OpenGL = SKIP
 
-4452 MAC AMD OPENGL : ClipDistanceTest.EachClipDistance/ES2_OpenGL = SKIP
-4452 MAC AMD OPENGL : ClipDistanceTest.EachClipDistance/ES3_OpenGL = SKIP
+4452 MAC AMD OPENGL : ClipDistanceAPPLETest.EachClipDistance/ES2_OpenGL = SKIP
+4452 MAC AMD OPENGL : ClipDistanceAPPLETest.EachClipDistance/ES3_OpenGL = SKIP
 
-7768 IOS : ClipDistanceTest.OneClipDistance/ES2_OpenGL = SKIP
-7768 IOS : ClipDistanceTest.OneClipDistance/ES3_OpenGL = SKIP
-7768 IOS : ClipDistanceTest.EachClipDistance/ES2_OpenGL = SKIP
-7768 IOS : ClipDistanceTest.EachClipDistance/ES3_OpenGL = SKIP
-7768 IOS : ClipDistanceTest.Octagon/ES2_OpenGL = SKIP
-7768 IOS : ClipDistanceTest.Octagon/ES3_OpenGL = SKIP
-7768 IOS : ClipDistanceTest.ThreeClipDistances/ES2_OpenGL = SKIP
-7768 IOS : ClipDistanceTest.ThreeClipDistances/ES3_OpenGL = SKIP
-7768 IOS : ClipDistanceTest.ThreeClipDistancesRedeclared/ES2_OpenGL = SKIP
-7768 IOS : ClipDistanceTest.ThreeClipDistancesRedeclared/ES3_OpenGL = SKIP
+7768 IOS : ClipDistanceAPPLETest.OneClipDistance/ES2_OpenGL = SKIP
+7768 IOS : ClipDistanceAPPLETest.OneClipDistance/ES3_OpenGL = SKIP
+7768 IOS : ClipDistanceAPPLETest.EachClipDistance/ES2_OpenGL = SKIP
+7768 IOS : ClipDistanceAPPLETest.EachClipDistance/ES3_OpenGL = SKIP
+7768 IOS : ClipDistanceAPPLETest.Octagon/ES2_OpenGL = SKIP
+7768 IOS : ClipDistanceAPPLETest.Octagon/ES3_OpenGL = SKIP
+7768 IOS : ClipDistanceAPPLETest.ThreeClipDistances/ES2_OpenGL = SKIP
+7768 IOS : ClipDistanceAPPLETest.ThreeClipDistances/ES3_OpenGL = SKIP
+7768 IOS : ClipDistanceAPPLETest.ThreeClipDistancesRedeclared/ES2_OpenGL = SKIP
+7768 IOS : ClipDistanceAPPLETest.ThreeClipDistancesRedeclared/ES3_OpenGL = SKIP
 
 7778 IOS : FramebufferTest_ES3.DrawWithDifferentPreRotations/ES3_OpenGL = SKIP
 
@@ -946,6 +946,9 @@
 7473 WIN INTEL OPENGL : CompressedTextureETC2RGBA8SRGBTest.Test/* = SKIP
 7473 WIN INTEL OPENGL : CompressedTextureETC2RGBA8Test.Test/* = SKIP
 
+// Takes several minutes to complete with ASAN
+5458 ASAN VULKAN SWIFTSHADER : ClipCullDistanceEXTTest.SizeCheckCombined/* = SKIP
+
 // Slow tests, should appear last in this file
 5076 : GLSLTest.VerifyMaxVertexUniformVectors* = TIMEOUT
 5076 : GLSLTest.VerifyMaxFragmentUniformVectors* = TIMEOUT
@@ -959,12 +962,12 @@
 7657 VULKAN : EXTMultisampleCompatibilityTest.* = SKIP
 
 // Missing geometry & tesselation shader interactions with clip / cull distance
-5466 VULKAN : ClipCullDistanceTest.ClipDistanceInteractWithGeometryShader/* = SKIP
-5466 VULKAN : ClipCullDistanceTest.CullDistanceInteractWithGeometryShader/* = SKIP
-5466 OPENGL : ClipCullDistanceTest.ClipDistanceInteractWithGeometryShader/* = SKIP
-5466 OPENGL : ClipCullDistanceTest.CullDistanceInteractWithGeometryShader/* = SKIP
-5466 GLES : ClipCullDistanceTest.ClipDistanceInteractWithGeometryShader/* = SKIP
-5466 GLES : ClipCullDistanceTest.CullDistanceInteractWithGeometryShader/* = SKIP
+5466 VULKAN : ClipCullDistanceEXTTest.ClipDistanceInteractWithGeometryShader/* = SKIP
+5466 VULKAN : ClipCullDistanceEXTTest.CullDistanceInteractWithGeometryShader/* = SKIP
+5466 OPENGL : ClipCullDistanceEXTTest.ClipDistanceInteractWithGeometryShader/* = SKIP
+5466 OPENGL : ClipCullDistanceEXTTest.CullDistanceInteractWithGeometryShader/* = SKIP
+5466 GLES : ClipCullDistanceEXTTest.ClipDistanceInteractWithGeometryShader/* = SKIP
+5466 GLES : ClipCullDistanceEXTTest.CullDistanceInteractWithGeometryShader/* = SKIP
 
 // bits 24..31 from glClearValueuiv value don't work on Intel Metal.
 7794 MAC INTEL METAL : PixelLocalStorageTest.ClearValues_r32/* = SKIP

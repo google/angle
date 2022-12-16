@@ -13,10 +13,10 @@
 
 using namespace angle;
 
-class ClipDistanceTest : public ANGLETest<>
+class ClipDistanceAPPLETest : public ANGLETest<>
 {
   protected:
-    ClipDistanceTest()
+    ClipDistanceAPPLETest()
     {
         setWindowWidth(64);
         setWindowHeight(64);
@@ -25,43 +25,164 @@ class ClipDistanceTest : public ANGLETest<>
         setConfigBlueBits(8);
         setConfigAlphaBits(8);
         setConfigDepthBits(24);
+        setExtensionsEnabled(false);
     }
 };
 
 // Query max clip distances and enable, disable states of clip distances
-TEST_P(ClipDistanceTest, StateQuery)
+TEST_P(ClipDistanceAPPLETest, StateQuery)
 {
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_APPLE_clip_distance"));
+    GLint maxClipDistances = 0;
+    glGetIntegerv(GL_MAX_CLIP_DISTANCES_APPLE, &maxClipDistances);
+    EXPECT_EQ(maxClipDistances, 0);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+    for (size_t i = 0; i < 8; i++)
+    {
+        EXPECT_FALSE(glIsEnabled(GL_CLIP_DISTANCE0_APPLE + i));
+        EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+        glEnable(GL_CLIP_DISTANCE0_APPLE + i);
+        EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+        EXPECT_FALSE(glIsEnabled(GL_CLIP_DISTANCE0_APPLE + i));
+        EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+        glDisable(GL_CLIP_DISTANCE0_APPLE + i);
+        EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+        EXPECT_FALSE(glIsEnabled(GL_CLIP_DISTANCE0_APPLE + i));
+        EXPECT_GL_ERROR(GL_INVALID_ENUM);
+    }
+
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_APPLE_clip_distance"));
+
+    ASSERT_GL_NO_ERROR();
+
+    glGetIntegerv(GL_MAX_CLIP_DISTANCES_APPLE, &maxClipDistances);
+    EXPECT_EQ(maxClipDistances, 8);
+    EXPECT_GL_NO_ERROR();
+
+    for (size_t i = 0; i < 8; i++)
+    {
+        EXPECT_FALSE(glIsEnabled(GL_CLIP_DISTANCE0_APPLE + i));
+        EXPECT_GL_NO_ERROR();
+
+        glEnable(GL_CLIP_DISTANCE0_APPLE + i);
+        EXPECT_GL_NO_ERROR();
+
+        EXPECT_TRUE(glIsEnabled(GL_CLIP_DISTANCE0_APPLE + i));
+        EXPECT_GL_NO_ERROR();
+
+        glDisable(GL_CLIP_DISTANCE0_APPLE + i);
+        EXPECT_GL_NO_ERROR();
+
+        EXPECT_FALSE(glIsEnabled(GL_CLIP_DISTANCE0_APPLE + i));
+        EXPECT_GL_NO_ERROR();
+    }
+}
+
+// Check that gl_ClipDistance is not defined for fragment shaders
+TEST_P(ClipDistanceAPPLETest, FragmentShader)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_APPLE_clip_distance"));
+
+    constexpr char kVS[] = R"(
+#extension GL_APPLE_clip_distance : require
+
+void main()
+{
+    gl_Position = vec4(0.0, 0.0, 0.0, 1.0);
+
+    gl_ClipDistance[0] = gl_Position.w;
+})";
+
+    constexpr char kFS[] = R"(
+#extension GL_APPLE_clip_distance : require
+
+void main()
+{
+    gl_FragColor = vec4(gl_ClipDistance[0], 1.0, 1.0, 1.0);
+})";
+
+    GLProgram prg;
+    prg.makeRaster(kVS, kFS);
+    EXPECT_FALSE(prg.valid());
+}
+
+// Check that gl_ClipDistance size cannot be undefined
+TEST_P(ClipDistanceAPPLETest, UndefinedArraySize)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_APPLE_clip_distance"));
+
+    constexpr char kVS[] = R"(
+#extension GL_APPLE_clip_distance : require
+
+void main()
+{
+    gl_Position = vec4(0.0, 0.0, 0.0, 1.0);
+    for (int i = 0; i < 8; i++)
+    {
+        gl_ClipDistance[i] = gl_Position.w;
+    }
+})";
+
+    GLProgram prg;
+    prg.makeRaster(kVS, essl1_shaders::fs::Red());
+    EXPECT_FALSE(prg.valid());
+}
+
+// Check that gl_ClipDistance size cannot be more than maximum
+TEST_P(ClipDistanceAPPLETest, OutOfRangeArraySize)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_APPLE_clip_distance"));
 
     GLint maxClipDistances = 0;
     glGetIntegerv(GL_MAX_CLIP_DISTANCES_APPLE, &maxClipDistances);
 
-    EXPECT_GL_NO_ERROR();
-    EXPECT_GE(maxClipDistances, 8);
+    std::stringstream vsImplicit;
+    vsImplicit << R"(#extension GL_APPLE_clip_distance : require
+void main()
+{
+    gl_Position = vec4(0.0, 0.0, 0.0, 1.0);
+    gl_ClipDistance[)"
+               << maxClipDistances << R"(] = gl_Position.w;
+})";
 
-    GLboolean enabled = glIsEnabled(GL_CLIP_DISTANCE1_APPLE);
-    EXPECT_GL_NO_ERROR();
-    EXPECT_EQ(enabled, GL_FALSE);
+    std::stringstream vsRedeclared;
+    vsRedeclared << R"(#extension GL_APPLE_clip_distance : require
+varying highp float gl_ClipDistance[)"
+                 << (maxClipDistances + 1) << R"(];
+void main()
+{
+    gl_Position = vec4(0.0, 0.0, 0.0, 1.0);
+    gl_ClipDistance[)"
+                 << (maxClipDistances - 1) << R"(] = gl_Position.w;
+})";
 
-    glEnable(GL_CLIP_DISTANCE1_APPLE);
-    EXPECT_GL_NO_ERROR();
-    glEnable(GL_CLIP_DISTANCE7_APPLE);
-    EXPECT_GL_NO_ERROR();
-    enabled = glIsEnabled(GL_CLIP_DISTANCE1_APPLE);
-    EXPECT_EQ(enabled, GL_TRUE);
+    std::stringstream vsRedeclaredInvalidIndex;
+    vsRedeclaredInvalidIndex << R"(#extension GL_APPLE_clip_distance : require
+varying highp float gl_ClipDistance[)"
+                             << (maxClipDistances - 2) << R"(];
+void main()
+{
+    gl_Position = vec4(0.0, 0.0, 0.0, 1.0);
+    gl_ClipDistance[)" << (maxClipDistances - 1)
+                             << R"(] = gl_Position.w;
+})";
 
-    glDisable(GL_CLIP_DISTANCE1_APPLE);
-    EXPECT_GL_NO_ERROR();
-    enabled = glIsEnabled(GL_CLIP_DISTANCE1_APPLE);
-    EXPECT_EQ(enabled, GL_FALSE);
-
-    EXPECT_EQ(glIsEnabled(GL_CLIP_DISTANCE7_APPLE), GL_TRUE);
+    for (auto stream : {&vsImplicit, &vsRedeclared, &vsRedeclaredInvalidIndex})
+    {
+        GLProgram prg;
+        prg.makeRaster(stream->str().c_str(), essl1_shaders::fs::Red());
+        EXPECT_FALSE(prg.valid());
+    }
 }
 
 // Write to one gl_ClipDistance element
-TEST_P(ClipDistanceTest, OneClipDistance)
+TEST_P(ClipDistanceAPPLETest, OneClipDistance)
 {
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_APPLE_clip_distance"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_APPLE_clip_distance"));
 
     constexpr char kVS[] = R"(
 #extension GL_APPLE_clip_distance : require
@@ -145,9 +266,9 @@ void main()
 }
 
 // Write to each gl_ClipDistance element
-TEST_P(ClipDistanceTest, EachClipDistance)
+TEST_P(ClipDistanceAPPLETest, EachClipDistance)
 {
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_APPLE_clip_distance"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_APPLE_clip_distance"));
 
     for (size_t i = 0; i < 8; i++)
     {
@@ -237,9 +358,9 @@ TEST_P(ClipDistanceTest, EachClipDistance)
 }
 
 // Use 8 clip distances to draw an octagon
-TEST_P(ClipDistanceTest, Octagon)
+TEST_P(ClipDistanceAPPLETest, Octagon)
 {
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_APPLE_clip_distance"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_APPLE_clip_distance"));
 
     constexpr char kVS[] = R"(
 #extension GL_APPLE_clip_distance : require
@@ -316,9 +437,9 @@ void main()
 }
 
 // Write to 3 clip distances
-TEST_P(ClipDistanceTest, ThreeClipDistances)
+TEST_P(ClipDistanceAPPLETest, ThreeClipDistances)
 {
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_APPLE_clip_distance"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_APPLE_clip_distance"));
 
     constexpr char kVS[] = R"(
 #extension GL_APPLE_clip_distance : require
@@ -457,9 +578,9 @@ void main()
 
 // Redeclare gl_ClipDistance in shader with explicit size, also use it in a global function
 // outside main()
-TEST_P(ClipDistanceTest, ThreeClipDistancesRedeclared)
+TEST_P(ClipDistanceAPPLETest, ThreeClipDistancesRedeclared)
 {
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_APPLE_clip_distance"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_APPLE_clip_distance"));
 
     constexpr char kVS[] = R"(
 #extension GL_APPLE_clip_distance : require
@@ -550,190 +671,414 @@ void main()
     }
 }
 
-class ClipCullDistanceTest : public ClipDistanceTest
+class ClipCullDistanceEXTTest : public ClipDistanceAPPLETest
 {};
 
 // Query max clip distances and enable, disable states of clip distances
-TEST_P(ClipCullDistanceTest, StateQuery)
+TEST_P(ClipCullDistanceEXTTest, StateQuery)
 {
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_clip_cull_distance"));
-
     GLint maxClipDistances = 0;
     glGetIntegerv(GL_MAX_CLIP_DISTANCES_EXT, &maxClipDistances);
-
-    EXPECT_GL_NO_ERROR();
-    EXPECT_GE(maxClipDistances, 8);
+    EXPECT_EQ(maxClipDistances, 0);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
 
     GLint maxCullDistances = 0;
     glGetIntegerv(GL_MAX_CULL_DISTANCES_EXT, &maxCullDistances);
-
-    EXPECT_GL_NO_ERROR();
-    EXPECT_GE(maxCullDistances, 8);
+    EXPECT_EQ(maxCullDistances, 0);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
 
     GLint maxCombinedClipAndCullDistances = 0;
     glGetIntegerv(GL_MAX_COMBINED_CLIP_AND_CULL_DISTANCES_EXT, &maxCombinedClipAndCullDistances);
+    EXPECT_EQ(maxCombinedClipAndCullDistances, 0);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
 
+    for (size_t i = 0; i < 8; i++)
+    {
+        EXPECT_FALSE(glIsEnabled(GL_CLIP_DISTANCE0_EXT + i));
+        EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+        glEnable(GL_CLIP_DISTANCE0_EXT + i);
+        EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+        EXPECT_FALSE(glIsEnabled(GL_CLIP_DISTANCE0_EXT + i));
+        EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+        glDisable(GL_CLIP_DISTANCE0_EXT + i);
+        EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+        EXPECT_FALSE(glIsEnabled(GL_CLIP_DISTANCE0_EXT + i));
+        EXPECT_GL_ERROR(GL_INVALID_ENUM);
+    }
+
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_clip_cull_distance"));
+
+    ASSERT_GL_NO_ERROR();
+
+    glGetIntegerv(GL_MAX_CLIP_DISTANCES_EXT, &maxClipDistances);
+    EXPECT_GE(maxClipDistances, 8);
     EXPECT_GL_NO_ERROR();
+
+    glGetIntegerv(GL_MAX_CULL_DISTANCES_EXT, &maxCullDistances);
+    EXPECT_GE(maxCullDistances, 8);
+    EXPECT_GL_NO_ERROR();
+
+    glGetIntegerv(GL_MAX_COMBINED_CLIP_AND_CULL_DISTANCES_EXT, &maxCombinedClipAndCullDistances);
     EXPECT_GE(maxCombinedClipAndCullDistances, 8);
-
-    GLboolean enabled = glIsEnabled(GL_CLIP_DISTANCE1_EXT);
     EXPECT_GL_NO_ERROR();
-    EXPECT_EQ(enabled, GL_FALSE);
 
-    glEnable(GL_CLIP_DISTANCE1_EXT);
-    EXPECT_GL_NO_ERROR();
-    glEnable(GL_CLIP_DISTANCE7_EXT);
-    EXPECT_GL_NO_ERROR();
-    enabled = glIsEnabled(GL_CLIP_DISTANCE1_EXT);
-    EXPECT_EQ(enabled, GL_TRUE);
+    for (size_t i = 0; i < 8; i++)
+    {
+        EXPECT_FALSE(glIsEnabled(GL_CLIP_DISTANCE0_EXT + i));
+        EXPECT_GL_NO_ERROR();
 
-    glDisable(GL_CLIP_DISTANCE1_EXT);
-    EXPECT_GL_NO_ERROR();
-    enabled = glIsEnabled(GL_CLIP_DISTANCE1_EXT);
-    EXPECT_EQ(enabled, GL_FALSE);
+        glEnable(GL_CLIP_DISTANCE0_EXT + i);
+        EXPECT_GL_NO_ERROR();
 
-    EXPECT_EQ(glIsEnabled(GL_CLIP_DISTANCE7_EXT), GL_TRUE);
+        EXPECT_TRUE(glIsEnabled(GL_CLIP_DISTANCE0_EXT + i));
+        EXPECT_GL_NO_ERROR();
+
+        glDisable(GL_CLIP_DISTANCE0_EXT + i);
+        EXPECT_GL_NO_ERROR();
+
+        EXPECT_FALSE(glIsEnabled(GL_CLIP_DISTANCE0_EXT + i));
+        EXPECT_GL_NO_ERROR();
+    }
 }
 
-// Check that the validation for EXT_clip_cull_distance extension is correct
-// If gl_ClipDistance or gl_CullDistance is redeclared in some shader stages, the array size of the
-// redeclared variables should match
-TEST_P(ClipCullDistanceTest, SizeCheck)
+// Check that gl_ClipDistance and gl_CullDistance sizes cannot be undefined
+TEST_P(ClipCullDistanceEXTTest, UndefinedArraySize)
 {
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_clip_cull_distance"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_clip_cull_distance"));
 
-    // Validate array size match of redeclared ClipDistance built-in
-    constexpr char kVSErrorClipDistance[] = R"(#version 300 es
+    constexpr char kVSClip[] = R"(#version 300 es
 #extension GL_EXT_clip_cull_distance : require
-
-out highp float gl_ClipDistance[1];
-
-uniform vec4 u_plane;
-
-in vec2 a_position;
 
 void main()
 {
-    gl_Position = vec4(a_position, 0.0, 1.0);
-
-    gl_ClipDistance[0] = dot(gl_Position, u_plane);
-
-    gl_CullDistance[0] = dot(gl_Position, u_plane);
-    gl_CullDistance[1] = dot(gl_Position, u_plane);
+    gl_Position = vec4(0.0, 0.0, 0.0, 1.0);
+    for (int i = 0; i < gl_MaxClipDistances; i++)
+    {
+        gl_ClipDistance[i] = gl_Position.w;
+    }
 })";
 
-    constexpr char kFSErrorClipDistance[] = R"(#version 300 es
+    constexpr char kVSCull[] = R"(#version 300 es
 #extension GL_EXT_clip_cull_distance : require
-in highp float gl_ClipDistance[2];
-precision highp float;
-out vec4 my_FragColor;
-void main()
-{
-    my_FragColor = vec4(gl_ClipDistance[0], gl_ClipDistance[1], gl_CullDistance[0], 1.0f);
-})";
-
-    GLProgram programClipDistance;
-    programClipDistance.makeRaster(kVSErrorClipDistance, kFSErrorClipDistance);
-    EXPECT_GL_FALSE(programClipDistance.valid());
-
-    // Validate array size match of redeclared CullDistance built-in
-    constexpr char kVSErrorCullDistance[] = R"(#version 300 es
-#extension GL_EXT_clip_cull_distance : require
-
-out highp float gl_CullDistance[1];
-
-uniform vec4 u_plane;
-
-in vec2 a_position;
 
 void main()
 {
-    gl_Position = vec4(a_position, 0.0, 1.0);
-
-    gl_CullDistance[0] = dot(gl_Position, u_plane);
-
-    gl_ClipDistance[0] = dot(gl_Position, u_plane);
-    gl_ClipDistance[1] = dot(gl_Position, u_plane);
+    gl_Position = vec4(0.0, 0.0, 0.0, 1.0);
+    for (int i = 0; i < gl_MaxCullDistances; i++)
+    {
+        gl_CullDistance[i] = gl_Position.w;
+    }
 })";
 
-    constexpr char kFSErrorCullDistance[] = R"(#version 300 es
-#extension GL_EXT_clip_cull_distance : require
-in highp float gl_CullDistance[2];
-precision highp float;
-out vec4 my_FragColor;
-void main()
-{
-    my_FragColor = vec4(gl_CullDistance[0], gl_CullDistance[1], gl_ClipDistance[0], 1.0f);
-})";
-
-    GLProgram programCullDistance;
-    programCullDistance.makeRaster(kVSErrorCullDistance, kFSErrorCullDistance);
-    EXPECT_GL_FALSE(programCullDistance.valid());
-}
-
-// Check the D3D11-specific limitation for EXT_clip_cull_distance extension.
-// If both gl_ClipDistance and gl_CullDistance are used, their sizes must not be greater than 4.
-TEST_P(ClipCullDistanceTest, SizeCheckD3D11)
-{
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_clip_cull_distance"));
-
-    constexpr char kVSErrorClipDistanceExplicit[] = R"(#version 300 es
-#extension GL_EXT_clip_cull_distance : require
-out highp float gl_ClipDistance[5];
-out highp float gl_CullDistance[3];
-in vec2 a_position;
-void main()
-{
-    gl_Position = vec4(a_position, 0.0, 1.0);
-    gl_ClipDistance[4] = dot(gl_Position, vec4(1.0, 2.0, 3.0, 4.0));
-    gl_CullDistance[2] = dot(gl_Position, vec4(5.0, 6.0, 7.0, 8.0));
-})";
-
-    constexpr char kVSErrorClipDistanceImplicit[] = R"(#version 300 es
-#extension GL_EXT_clip_cull_distance : require
-in vec2 a_position;
-void main()
-{
-    gl_Position = vec4(a_position, 0.0, 1.0);
-    gl_ClipDistance[4] = dot(gl_Position, vec4(1.0, 2.0, 3.0, 4.0));
-    gl_CullDistance[2] = dot(gl_Position, vec4(5.0, 6.0, 7.0, 8.0));
-})";
-
-    constexpr char kVSErrorCullDistanceExplicit[] = R"(#version 300 es
-#extension GL_EXT_clip_cull_distance : require
-out highp float gl_ClipDistance[3];
-out highp float gl_CullDistance[5];
-in vec2 a_position;
-void main()
-{
-    gl_Position = vec4(a_position, 0.0, 1.0);
-    gl_ClipDistance[2] = dot(gl_Position, vec4(1.0, 2.0, 3.0, 4.0));
-    gl_CullDistance[4] = dot(gl_Position, vec4(5.0, 6.0, 7.0, 8.0));
-})";
-
-    constexpr char kVSErrorCullDistanceImplicit[] = R"(#version 300 es
-#extension GL_EXT_clip_cull_distance : require
-in vec2 a_position;
-void main()
-{
-    gl_Position = vec4(a_position, 0.0, 1.0);
-    gl_ClipDistance[2] = dot(gl_Position, vec4(1.0, 2.0, 3.0, 4.0));
-    gl_CullDistance[4] = dot(gl_Position, vec4(5.0, 6.0, 7.0, 8.0));
-})";
-
-    for (auto vs : {kVSErrorClipDistanceExplicit, kVSErrorClipDistanceImplicit,
-                    kVSErrorCullDistanceExplicit, kVSErrorCullDistanceImplicit})
+    for (auto vs : {kVSClip, kVSCull})
     {
         GLProgram prg;
-        prg.makeRaster(vs, essl3_shaders::fs::Red());
-        EXPECT_EQ(prg.valid(), !IsD3D11());
+        prg.makeRaster(vs, essl1_shaders::fs::Red());
+        EXPECT_FALSE(prg.valid());
+    }
+}
+
+// Check that array sizes cannot be more than maximum
+TEST_P(ClipCullDistanceEXTTest, OutOfRangeArraySize)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_clip_cull_distance"));
+
+    auto test = [](std::string name, int maxSize) {
+        std::stringstream vsImplicit;
+        vsImplicit << R"(#version 300 es
+        #extension GL_EXT_clip_cull_distance : require
+void main()
+{
+    gl_Position = vec4(0.0, 0.0, 0.0, 1.0);
+    )" << name << "["
+                   << maxSize << R"(] = gl_Position.w;
+})";
+
+        std::stringstream vsRedeclared;
+        vsRedeclared << R"(#version 300 es
+#extension GL_EXT_clip_cull_distance : require
+out highp float )" << name
+                     << "[" << (maxSize + 1) << R"(];
+void main()
+{
+    gl_Position = vec4(0.0, 0.0, 0.0, 1.0);
+    )" << name << "[" << (maxSize - 1)
+                     << R"(] = gl_Position.w;
+})";
+
+        std::stringstream vsRedeclaredInvalidIndex;
+        vsRedeclaredInvalidIndex << R"(#version 300 es
+#extension GL_EXT_clip_cull_distance : require
+out highp float )" << name << "[" << (maxSize - 2)
+                                 << R"(];
+void main()
+{
+    gl_Position = vec4(0.0, 0.0, 0.0, 1.0);
+    )" << name << "[" << (maxSize - 1)
+                                 << R"(] = gl_Position.w;
+})";
+
+        for (auto stream : {&vsImplicit, &vsRedeclared, &vsRedeclaredInvalidIndex})
+        {
+            GLProgram prg;
+            prg.makeRaster(stream->str().c_str(), essl1_shaders::fs::Red());
+            EXPECT_FALSE(prg.valid());
+        }
+    };
+
+    GLint maxClipDistances = 0;
+    glGetIntegerv(GL_MAX_CLIP_DISTANCES_EXT, &maxClipDistances);
+    ASSERT_GT(maxClipDistances, 0);
+
+    GLint maxCullDistances = 0;
+    glGetIntegerv(GL_MAX_CULL_DISTANCES_EXT, &maxCullDistances);
+    ASSERT_GT(maxCullDistances, 0);
+
+    test("gl_ClipDistance", maxClipDistances);
+    test("gl_CullDistance", maxCullDistances);
+}
+
+// Check that shader validation enforces matching array sizes between shader stages
+TEST_P(ClipCullDistanceEXTTest, SizeCheck)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_clip_cull_distance"));
+
+    std::stringstream vertexSource;
+    auto vs = [&vertexSource](std::string name, bool declare, int size) {
+        vertexSource.str(std::string());
+        vertexSource.clear();
+        vertexSource << "#version 300 es\n"
+                     << "#extension GL_EXT_clip_cull_distance : require\n";
+        if (declare)
+        {
+            ASSERT(size);
+            vertexSource << "out highp float " << name << "[" << size << "];\n";
+        }
+        vertexSource << "void main()\n"
+                     << "{\n"
+                     << "    gl_Position = vec4(0.0, 0.0, 0.0, 1.0);\n";
+        if (size)
+        {
+            vertexSource << "    " << name << "[" << (size - 1) << "] = 1.0;\n";
+        }
+        vertexSource << "}";
+    };
+
+    std::stringstream fragmentSource;
+    auto fs = [&fragmentSource](std::string name, bool declare, int size) {
+        fragmentSource.str(std::string());
+        fragmentSource.clear();
+        fragmentSource << "#version 300 es\n"
+                       << "#extension GL_EXT_clip_cull_distance : require\n";
+        if (declare)
+        {
+            ASSERT(size);
+            fragmentSource << "in highp float " << name << "[" << size << "];\n";
+        }
+        fragmentSource << "out highp vec4 my_FragColor;\n"
+                       << "void main()\n"
+                       << "{\n"
+                       << "    my_FragColor = vec4(";
+        if (size)
+        {
+            fragmentSource << name << "[" << (size - 1) << "]";
+        }
+        else
+        {
+            fragmentSource << "1.0";
+        }
+        fragmentSource << ", 0.0, 0.0, 1.0);\n"
+                       << "}\n";
+    };
+
+    auto checkProgram = [=, &vertexSource, &fragmentSource](std::string name, bool declareVertex,
+                                                            int sizeVertex, bool declareFragment,
+                                                            int sizeFragment) {
+        GLProgram program;
+        vs(name, declareVertex, sizeVertex);
+        fs(name, declareFragment, sizeFragment);
+        program.makeRaster(vertexSource.str().c_str(), fragmentSource.str().c_str());
+        return program.valid();
+    };
+
+    GLint maxClipDistances = 0;
+    glGetIntegerv(GL_MAX_CLIP_DISTANCES_EXT, &maxClipDistances);
+    ASSERT_GT(maxClipDistances, 0);
+
+    GLint maxCullDistances = 0;
+    glGetIntegerv(GL_MAX_CULL_DISTANCES_EXT, &maxCullDistances);
+    ASSERT_GT(maxCullDistances, 0);
+
+    std::pair<std::string, int> entries[2] = {{"gl_ClipDistance", maxClipDistances},
+                                              {"gl_CullDistance", maxCullDistances}};
+    for (auto entry : entries)
+    {
+        const std::string name = entry.first;
+        const int maxSize      = entry.second;
+
+        // Any VS array size is valid when the value is not accessed in the fragment shader
+        for (int i = 1; i <= maxSize; i++)
+        {
+            EXPECT_TRUE(checkProgram(name, false, i, false, 0));
+            EXPECT_TRUE(checkProgram(name, true, i, false, 0));
+        }
+
+        // Any FS array size is invalid when the value is not written in the vertex shader
+        for (int i = 1; i <= maxSize; i++)
+        {
+            EXPECT_FALSE(checkProgram(name, false, 0, false, i));
+            EXPECT_FALSE(checkProgram(name, false, 0, true, i));
+        }
+
+        // Matching sizes are valid both for redeclared and implicitly sized arrays
+        for (int i = 1; i <= maxSize; i++)
+        {
+            EXPECT_TRUE(checkProgram(name, false, i, false, i));
+            EXPECT_TRUE(checkProgram(name, false, i, true, i));
+            EXPECT_TRUE(checkProgram(name, true, i, false, i));
+            EXPECT_TRUE(checkProgram(name, true, i, true, i));
+        }
+
+        // Non-matching sizes are invalid both for redeclared and implicitly sized arrays
+        for (int i = 2; i <= maxSize; i++)
+        {
+            EXPECT_FALSE(checkProgram(name, false, i - 1, false, i));
+            EXPECT_FALSE(checkProgram(name, false, i - 1, true, i));
+            EXPECT_FALSE(checkProgram(name, true, i - 1, false, i));
+            EXPECT_FALSE(checkProgram(name, true, i - 1, true, i));
+
+            EXPECT_FALSE(checkProgram(name, false, i, false, i - 1));
+            EXPECT_FALSE(checkProgram(name, false, i, true, i - 1));
+            EXPECT_FALSE(checkProgram(name, true, i, false, i - 1));
+            EXPECT_FALSE(checkProgram(name, true, i, true, i - 1));
+        }
+
+        // Out-of-range sizes are invalid
+        {
+            EXPECT_FALSE(checkProgram(name, false, 0, false, maxSize + 1));
+            EXPECT_FALSE(checkProgram(name, false, maxSize + 1, false, 0));
+            EXPECT_FALSE(checkProgram(name, false, maxSize + 1, false, maxSize + 1));
+            EXPECT_FALSE(checkProgram(name, false, 0, true, maxSize + 1));
+            EXPECT_FALSE(checkProgram(name, false, maxSize + 1, true, maxSize + 1));
+            EXPECT_FALSE(checkProgram(name, true, maxSize + 1, false, 0));
+            EXPECT_FALSE(checkProgram(name, true, maxSize + 1, false, maxSize + 1));
+            EXPECT_FALSE(checkProgram(name, true, maxSize + 1, true, maxSize + 1));
+        }
+    }
+}
+
+// Check that the sum of clip and cull distance array sizes is valid
+TEST_P(ClipCullDistanceEXTTest, SizeCheckCombined)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_clip_cull_distance"));
+
+    std::stringstream vertexSource;
+    auto vs = [&vertexSource](bool declareClip, int sizeClip, bool declareCull, int sizeCull) {
+        vertexSource.str(std::string());
+        vertexSource.clear();
+        vertexSource << "#version 300 es\n"
+                     << "#extension GL_EXT_clip_cull_distance : require\n";
+        if (declareClip)
+        {
+            ASSERT(sizeClip);
+            vertexSource << "out highp float gl_ClipDistance[" << sizeClip << "];\n";
+        }
+        if (declareCull)
+        {
+            ASSERT(sizeCull);
+            vertexSource << "out highp float gl_CullDistance[" << sizeCull << "];\n";
+        }
+        vertexSource << "void main()\n"
+                     << "{\n"
+                     << "    gl_Position = vec4(0.0, 0.0, 0.0, 1.0);\n"
+                     << "    gl_ClipDistance[" << (sizeClip - 1) << "] = 1.0;\n"
+                     << "    gl_CullDistance[" << (sizeCull - 1) << "] = 1.0;\n"
+                     << "}";
+    };
+
+    std::stringstream fragmentSource;
+    auto fs = [&fragmentSource](bool declareClip, int sizeClip, bool declareCull, int sizeCull) {
+        fragmentSource.str(std::string());
+        fragmentSource.clear();
+        fragmentSource << "#version 300 es\n"
+                       << "#extension GL_EXT_clip_cull_distance : require\n";
+        if (declareClip)
+        {
+            ASSERT(sizeClip);
+            fragmentSource << "in highp float gl_ClipDistance[" << sizeClip << "];\n";
+        }
+        if (declareCull)
+        {
+            ASSERT(sizeClip);
+            fragmentSource << "in highp float gl_CullDistance[" << sizeCull << "];\n";
+        }
+        fragmentSource << "out highp vec4 my_FragColor;\n"
+                       << "void main()\n"
+                       << "{\n"
+                       << "    my_FragColor = vec4("
+                       << "gl_ClipDistance[" << (sizeClip - 1) << "], "
+                       << "gl_CullDistance[" << (sizeCull - 1) << "], "
+                       << "0.0, 1.0);\n"
+                       << "}\n";
+    };
+
+    auto checkProgram = [=, &vertexSource, &fragmentSource](
+                            bool declareVertexClip, bool declareFragmentClip, int sizeClip,
+                            bool declareVertexCull, bool declareFragmentCull, int sizeCull) {
+        GLProgram program;
+        vs(declareVertexClip, sizeClip, declareVertexCull, sizeCull);
+        fs(declareVertexClip, sizeClip, declareVertexCull, sizeCull);
+        program.makeRaster(vertexSource.str().c_str(), fragmentSource.str().c_str());
+        return program.valid();
+    };
+
+    GLint maxClipDistances = 0;
+    glGetIntegerv(GL_MAX_CLIP_DISTANCES_EXT, &maxClipDistances);
+    ASSERT_GT(maxClipDistances, 0);
+
+    GLint maxCullDistances = 0;
+    glGetIntegerv(GL_MAX_CULL_DISTANCES_EXT, &maxCullDistances);
+    ASSERT_GT(maxCullDistances, 0);
+
+    GLint maxCombinedClipAndCullDistances = 0;
+    glGetIntegerv(GL_MAX_COMBINED_CLIP_AND_CULL_DISTANCES_EXT, &maxCombinedClipAndCullDistances);
+    ASSERT_GT(maxCombinedClipAndCullDistances, 0);
+
+    for (int sizeClip = 1; sizeClip <= maxClipDistances; sizeClip++)
+    {
+        for (int sizeCull = 1; sizeCull <= maxCullDistances; sizeCull++)
+        {
+            // clang-format off
+            const bool valid = sizeClip + sizeCull <= maxCombinedClipAndCullDistances;
+            EXPECT_EQ(checkProgram(false, false, sizeClip, false, false, sizeCull), valid);
+            EXPECT_EQ(checkProgram(false, false, sizeClip, false, true,  sizeCull), valid);
+            EXPECT_EQ(checkProgram(false, false, sizeClip, true,  false, sizeCull), valid);
+            EXPECT_EQ(checkProgram(false, false, sizeClip, true,  true,  sizeCull), valid);
+            EXPECT_EQ(checkProgram(false, true,  sizeClip, false, false, sizeCull), valid);
+            EXPECT_EQ(checkProgram(false, true,  sizeClip, false, true,  sizeCull), valid);
+            EXPECT_EQ(checkProgram(false, true,  sizeClip, true,  false, sizeCull), valid);
+            EXPECT_EQ(checkProgram(false, true,  sizeClip, true,  true,  sizeCull), valid);
+            EXPECT_EQ(checkProgram(true,  false, sizeClip, false, false, sizeCull), valid);
+            EXPECT_EQ(checkProgram(true,  false, sizeClip, false, true,  sizeCull), valid);
+            EXPECT_EQ(checkProgram(true,  false, sizeClip, true,  false, sizeCull), valid);
+            EXPECT_EQ(checkProgram(true,  false, sizeClip, true,  true,  sizeCull), valid);
+            EXPECT_EQ(checkProgram(true,  true,  sizeClip, false, false, sizeCull), valid);
+            EXPECT_EQ(checkProgram(true,  true,  sizeClip, false, true,  sizeCull), valid);
+            EXPECT_EQ(checkProgram(true,  true,  sizeClip, true,  false, sizeCull), valid);
+            EXPECT_EQ(checkProgram(true,  true,  sizeClip, true,  true,  sizeCull), valid);
+            // clang-format on
+        }
     }
 }
 
 // Write to one gl_ClipDistance element
-TEST_P(ClipCullDistanceTest, OneClipDistance)
+TEST_P(ClipCullDistanceEXTTest, OneClipDistance)
 {
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_clip_cull_distance"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_clip_cull_distance"));
 
     constexpr char kVS[] = R"(#version 300 es
 #extension GL_EXT_clip_cull_distance : require
@@ -817,9 +1162,9 @@ void main()
 }
 
 // Write to each gl_ClipDistance element
-TEST_P(ClipCullDistanceTest, EachClipDistance)
+TEST_P(ClipCullDistanceEXTTest, EachClipDistance)
 {
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_clip_cull_distance"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_clip_cull_distance"));
 
     for (size_t i = 0; i < 8; i++)
     {
@@ -910,9 +1255,9 @@ TEST_P(ClipCullDistanceTest, EachClipDistance)
 }
 
 // Use 8 clip distances to draw an octagon
-TEST_P(ClipCullDistanceTest, Octagon)
+TEST_P(ClipCullDistanceEXTTest, Octagon)
 {
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_clip_cull_distance"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_clip_cull_distance"));
 
     constexpr char kVS[] = R"(#version 300 es
 #extension GL_EXT_clip_cull_distance : require
@@ -989,9 +1334,9 @@ void main()
 }
 
 // Write to 3 clip distances
-TEST_P(ClipCullDistanceTest, ThreeClipDistances)
+TEST_P(ClipCullDistanceEXTTest, ThreeClipDistances)
 {
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_clip_cull_distance"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_clip_cull_distance"));
 
     constexpr char kVS[] = R"(#version 300 es
 #extension GL_EXT_clip_cull_distance : require
@@ -1130,9 +1475,9 @@ void main()
 
 // Redeclare gl_ClipDistance in shader with explicit size, also use it in a global function
 // outside main()
-TEST_P(ClipCullDistanceTest, ThreeClipDistancesRedeclared)
+TEST_P(ClipCullDistanceEXTTest, ThreeClipDistancesRedeclared)
 {
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_clip_cull_distance"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_clip_cull_distance"));
 
     constexpr char kVS[] = R"(#version 300 es
 #extension GL_EXT_clip_cull_distance : require
@@ -1224,9 +1569,9 @@ void main()
 }
 
 // Read clip distance varyings in fragment shaders
-TEST_P(ClipCullDistanceTest, ClipInterpolation)
+TEST_P(ClipCullDistanceEXTTest, ClipInterpolation)
 {
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_clip_cull_distance"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_clip_cull_distance"));
 
     constexpr char kVS[] = R"(#version 300 es
 #extension GL_EXT_clip_cull_distance : require
@@ -1302,9 +1647,9 @@ void main()
 }
 
 // Write to one gl_CullDistance element
-TEST_P(ClipCullDistanceTest, OneCullDistance)
+TEST_P(ClipCullDistanceEXTTest, OneCullDistance)
 {
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_clip_cull_distance"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_clip_cull_distance"));
 
     constexpr char kVS[] = R"(#version 300 es
 #extension GL_EXT_clip_cull_distance : require
@@ -1377,9 +1722,9 @@ void main()
 }
 
 // Read cull distance varyings in fragment shaders
-TEST_P(ClipCullDistanceTest, CullInterpolation)
+TEST_P(ClipCullDistanceEXTTest, CullInterpolation)
 {
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_clip_cull_distance"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_clip_cull_distance"));
 
     constexpr char kVS[] = R"(#version 300 es
 #extension GL_EXT_clip_cull_distance : require
@@ -1446,9 +1791,9 @@ void main()
 }
 
 // Read both clip and cull distance varyings in fragment shaders
-TEST_P(ClipCullDistanceTest, ClipCullInterpolation)
+TEST_P(ClipCullDistanceEXTTest, ClipCullInterpolation)
 {
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_clip_cull_distance"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_clip_cull_distance"));
 
     constexpr char kVS[] = R"(#version 300 es
 #extension GL_EXT_clip_cull_distance : require
@@ -1521,9 +1866,9 @@ void main()
 }
 
 // Write to 4 clip distances
-TEST_P(ClipCullDistanceTest, FourClipDistances)
+TEST_P(ClipCullDistanceEXTTest, FourClipDistances)
 {
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_clip_cull_distance"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_clip_cull_distance"));
 
     constexpr char kVS[] = R"(#version 300 es
 #extension GL_EXT_clip_cull_distance : require
@@ -1627,9 +1972,9 @@ void main()
 }
 
 // Write to 4 cull distances
-TEST_P(ClipCullDistanceTest, FourCullDistances)
+TEST_P(ClipCullDistanceEXTTest, FourCullDistances)
 {
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_clip_cull_distance"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_clip_cull_distance"));
 
     // SwiftShader bug: http://anglebug.com/5451
     ANGLE_SKIP_TEST_IF(isSwiftshader());
@@ -1716,10 +2061,10 @@ void main()
 }
 
 // Verify that EXT_clip_cull_distance works with EXT_geometry_shader
-TEST_P(ClipCullDistanceTest, ClipDistanceInteractWithGeometryShader)
+TEST_P(ClipCullDistanceEXTTest, ClipDistanceInteractWithGeometryShader)
 {
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_clip_cull_distance") ||
-                       !IsGLExtensionEnabled("GL_EXT_geometry_shader"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_clip_cull_distance") ||
+                       !EnsureGLExtensionEnabled("GL_EXT_geometry_shader"));
 
     constexpr char kVS[] = R"(#version 310 es
 #extension GL_EXT_clip_cull_distance : require
@@ -1866,10 +2211,10 @@ void main()
 }
 
 // Verify that EXT_clip_cull_distance works with EXT_geometry_shader
-TEST_P(ClipCullDistanceTest, CullDistanceInteractWithGeometryShader)
+TEST_P(ClipCullDistanceEXTTest, CullDistanceInteractWithGeometryShader)
 {
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_clip_cull_distance") ||
-                       !IsGLExtensionEnabled("GL_EXT_geometry_shader"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_clip_cull_distance") ||
+                       !EnsureGLExtensionEnabled("GL_EXT_geometry_shader"));
 
     constexpr char kVS[] = R"(#version 310 es
 #extension GL_EXT_clip_cull_distance : require
@@ -1994,7 +2339,7 @@ void main()
     }
 }
 
-ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(ClipDistanceTest);
+ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(ClipDistanceAPPLETest);
 
-GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ClipCullDistanceTest);
-ANGLE_INSTANTIATE_TEST_ES3_AND_ES31(ClipCullDistanceTest);
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ClipCullDistanceEXTTest);
+ANGLE_INSTANTIATE_TEST_ES3_AND_ES31(ClipCullDistanceEXTTest);
