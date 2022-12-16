@@ -19,13 +19,33 @@
 
 namespace rx
 {
+class ResourceSerial
+{
+  public:
+    constexpr ResourceSerial() : mValue(kDirty) {}
+    explicit constexpr ResourceSerial(uintptr_t value) : mValue(value) {}
+    constexpr bool operator==(ResourceSerial other) const { return mValue == other.mValue; }
+    constexpr bool operator!=(ResourceSerial other) const { return mValue != other.mValue; }
+
+    void dirty() { mValue = kDirty; }
+    void clear() { mValue = kEmpty; }
+
+    constexpr bool valid() const { return mValue != kEmpty && mValue != kDirty; }
+    constexpr bool empty() const { return mValue == kEmpty; }
+
+  private:
+    constexpr static uintptr_t kDirty = std::numeric_limits<uintptr_t>::max();
+    constexpr static uintptr_t kEmpty = 0;
+
+    uintptr_t mValue;
+};
+
 // Class UniqueSerial defines unique serial number for object identification. It has only
 // equal/unequal comparison but no greater/smaller comparison. The default constructor creates an
 // invalid value.
 class UniqueSerial final
 {
   public:
-    constexpr explicit UniqueSerial(uint64_t value) : mValue(value) {}
     constexpr UniqueSerial() : mValue(kInvalid) {}
     constexpr UniqueSerial(const UniqueSerial &other)  = default;
     UniqueSerial &operator=(const UniqueSerial &other) = default;
@@ -44,6 +64,8 @@ class UniqueSerial final
     constexpr bool valid() const { return mValue != kInvalid; }
 
   private:
+    friend class UniqueSerialFactory;
+    constexpr explicit UniqueSerial(uint64_t value) : mValue(value) {}
     uint64_t mValue;
     static constexpr uint64_t kInvalid = 0;
 };

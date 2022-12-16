@@ -228,9 +228,9 @@ class Resource11Base : angle::NonCopyable
             mData.reset(new DataT());
     }
 
-    UniqueSerial getSerial() const
+    ResourceSerial getSerial() const
     {
-        return UniqueSerial(static_cast<uint64_t>(reinterpret_cast<uintptr_t>(mData->object)));
+        return ResourceSerial(reinterpret_cast<uintptr_t>(mData->object));
     }
 
   protected:
