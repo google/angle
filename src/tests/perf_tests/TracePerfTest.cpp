@@ -1095,7 +1095,8 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
         }
     }
 
-    if (traceNameIs("hill_climb_racing") || traceNameIs("dead_trigger_2"))
+    if (traceNameIs("hill_climb_racing") || traceNameIs("dead_trigger_2") ||
+        traceNameIs("disney_mirrorverse"))
     {
         if (IsAndroid() && (IsPixel4() || IsPixel4XL()) &&
             mParams->driver == GLESDriverType::SystemEGL)
