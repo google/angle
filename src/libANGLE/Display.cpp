@@ -1205,10 +1205,6 @@ Error Display::terminate(Thread *thread, TerminateReason terminateReason)
         return NoError();
     }
 
-    mMemoryProgramCache.clear();
-    mMemoryShaderCache.clear();
-    mBlobCache.setBlobCacheFuncs(nullptr, nullptr);
-
     // The global texture and semaphore managers should be deleted with the last context that uses
     // it.
     ASSERT(mGlobalTextureShareGroupUsers == 0 && mTextureManager == nullptr);
@@ -1227,6 +1223,10 @@ Error Display::terminate(Thread *thread, TerminateReason terminateReason)
     }
 
     mImplementation->terminate();
+
+    mMemoryProgramCache.clear();
+    mMemoryShaderCache.clear();
+    mBlobCache.setBlobCacheFuncs(nullptr, nullptr);
 
     mSingleThreadPool.reset();
     mMultiThreadPool.reset();
