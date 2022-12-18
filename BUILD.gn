@@ -495,10 +495,12 @@ angle_static_library("angle_common") {
     frameworks = [ "Metal.framework" ]
   }
 
-  if ((is_linux || is_chromeos || is_android) && angle_enable_vulkan) {
+  if (is_linux || is_chromeos || is_android) {
     sources += libangle_dma_buf_util_sources
-    defines += [ "ANGLE_ENABLE_VULKAN" ]
-    public_deps += [ "src/common/vulkan:angle_vulkan_headers" ]
+    if (angle_enable_vulkan) {
+      defines += [ "ANGLE_ENABLE_VULKAN" ]
+      public_deps += [ "src/common/vulkan:angle_vulkan_headers" ]
+    }
   }
 }
 
