@@ -1840,6 +1840,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_traces',
   },
+  'src/tests/restricted_traces/my_friend_pedro': {
+      'packages': [
+        {
+            'package': 'angle/traces/my_friend_pedro',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_traces',
+  },
   'src/tests/restricted_traces/my_talking_tom2': {
       'packages': [
         {
