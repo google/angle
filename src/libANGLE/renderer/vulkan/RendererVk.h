@@ -288,6 +288,8 @@ class RendererVk : angle::NonCopyable
                              const char *wsiLayer);
     // Reload volk vk* function ptrs if needed for an already initialized RendererVk
     void reloadVolkIfNeeded() const;
+    // Initialize extension entry points from core ones if needed
+    void initializeEntryPointsFromCore() const;
     void onDestroy(vk::Context *context);
 
     void notifyDeviceLost();
@@ -301,7 +303,7 @@ class RendererVk : angle::NonCopyable
     gl::Version getMaxSupportedESVersion() const;
     gl::Version getMaxConformantESVersion() const;
 
-    uint32_t getApiVersion() const { return mApiVersion; }
+    uint32_t getDeviceVersion();
     VkInstance getInstance() const { return mInstance; }
     VkPhysicalDevice getPhysicalDevice() const { return mPhysicalDevice; }
     const VkPhysicalDeviceProperties &getPhysicalDeviceProperties() const
@@ -323,6 +325,9 @@ class RendererVk : angle::NonCopyable
     }
     const VkPhysicalDeviceFeatures2KHR &getEnabledFeatures() const { return mEnabledFeatures; }
     VkDevice getDevice() const { return mDevice; }
+
+    bool isVulkan11Instance() const;
+    bool isVulkan11Device() const;
 
     const vk::Allocator &getAllocator() const { return mAllocator; }
 
@@ -772,6 +777,35 @@ class RendererVk : angle::NonCopyable
     void initializeValidationMessageSuppressions();
 
     void queryDeviceExtensionFeatures(const vk::ExtensionNameList &deviceExtensionNames);
+    void appendDeviceExtensionFeaturesNotPromoted(const vk::ExtensionNameList &deviceExtensionNames,
+                                                  VkPhysicalDeviceFeatures2KHR *deviceFeatures,
+                                                  VkPhysicalDeviceProperties2 *deviceProperties);
+    void appendDeviceExtensionFeaturesPromotedTo11(
+        const vk::ExtensionNameList &deviceExtensionNames,
+        VkPhysicalDeviceFeatures2KHR *deviceFeatures,
+        VkPhysicalDeviceProperties2 *deviceProperties);
+    void appendDeviceExtensionFeaturesPromotedTo12(
+        const vk::ExtensionNameList &deviceExtensionNames,
+        VkPhysicalDeviceFeatures2KHR *deviceFeatures,
+        VkPhysicalDeviceProperties2 *deviceProperties);
+    void appendDeviceExtensionFeaturesPromotedTo13(
+        const vk::ExtensionNameList &deviceExtensionNames,
+        VkPhysicalDeviceFeatures2KHR *deviceFeatures,
+        VkPhysicalDeviceProperties2 *deviceProperties);
+
+    angle::Result enableInstanceExtensions(DisplayVk *displayVk,
+                                           const VulkanLayerVector &enabledInstanceLayerNames,
+                                           const char *wsiExtension,
+                                           bool canLoadDebugUtils);
+    angle::Result enableDeviceExtensions(DisplayVk *displayVk,
+                                         const VulkanLayerVector &enabledDeviceLayerNames);
+
+    void enableDeviceExtensionsNotPromoted(const vk::ExtensionNameList &deviceExtensionNames);
+    void enableDeviceExtensionsPromotedTo11(const vk::ExtensionNameList &deviceExtensionNames);
+    void enableDeviceExtensionsPromotedTo12(const vk::ExtensionNameList &deviceExtensionNames);
+    void enableDeviceExtensionsPromotedTo13(const vk::ExtensionNameList &deviceExtensionNames);
+
+    void initExtensionEntryPoints();
 
     void initFeatures(DisplayVk *display, const vk::ExtensionNameList &extensions);
     void appBasedFeatureOverrides(DisplayVk *display, const vk::ExtensionNameList &extensions);
@@ -814,7 +848,18 @@ class RendererVk : angle::NonCopyable
     mutable ShPixelLocalStorageOptions mNativePLSOptions;
     mutable angle::FeaturesVk mFeatures;
 
-    uint32_t mApiVersion;
+    // The instance and device versions.  The instance version is the one from the Vulkan loader,
+    // while the device version comes from VkPhysicalDeviceProperties::apiVersion.  With instance
+    // version 1.0, only device version 1.0 can be used.  If instance version is at least 1.1, any
+    // device version (even higher than that) can be used.  Some extensions have been promoted to
+    // Vulkan 1.1 or higher, but the version check must be done against the instance or device
+    // version, depending on whether it's an instance or device extension.
+    //
+    // Note that mDeviceVersion is technically redundant with mPhysicalDeviceProperties.apiVersion,
+    // but ANGLE may use a smaller version with problematic ICDs.
+    uint32_t mInstanceVersion;
+    uint32_t mDeviceVersion;
+
     VkInstance mInstance;
     bool mEnableValidationLayers;
     // True if ANGLE is enabling the VK_EXT_debug_utils extension.
@@ -827,8 +872,13 @@ class RendererVk : angle::NonCopyable
     angle::vk::ICD mEnabledICD;
     VkDebugUtilsMessengerEXT mDebugUtilsMessenger;
     VkPhysicalDevice mPhysicalDevice;
+
     VkPhysicalDeviceProperties mPhysicalDeviceProperties;
+    VkPhysicalDeviceVulkan11Properties mPhysicalDevice11Properties;
+
     VkPhysicalDeviceFeatures mPhysicalDeviceFeatures;
+    VkPhysicalDeviceVulkan11Features mPhysicalDevice11Features;
+
     VkPhysicalDeviceLineRasterizationFeaturesEXT mLineRasterizationFeatures;
     VkPhysicalDeviceProvokingVertexFeaturesEXT mProvokingVertexFeatures;
     VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT mVertexAttributeDivisorFeatures;
@@ -853,12 +903,11 @@ class RendererVk : angle::NonCopyable
     VkPhysicalDeviceDriverPropertiesKHR mDriverProperties;
     VkPhysicalDeviceCustomBorderColorFeaturesEXT mCustomBorderColorFeatures;
     VkPhysicalDeviceProtectedMemoryFeatures mProtectedMemoryFeatures;
-    VkPhysicalDeviceProtectedMemoryProperties mProtectedMemoryProperties;
     VkPhysicalDeviceHostQueryResetFeaturesEXT mHostQueryResetFeatures;
+    VkPhysicalDeviceDepthClipEnableFeaturesEXT mDepthClipEnableFeatures;
     VkPhysicalDeviceDepthClipControlFeaturesEXT mDepthClipControlFeatures;
     VkPhysicalDevicePrimitivesGeneratedQueryFeaturesEXT mPrimitivesGeneratedQueryFeatures;
     VkPhysicalDevicePrimitiveTopologyListRestartFeaturesEXT mPrimitiveTopologyListRestartFeatures;
-    VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT mBlendOperationAdvancedFeatures;
     VkPhysicalDeviceSamplerYcbcrConversionFeatures mSamplerYcbcrConversionFeatures;
     VkPhysicalDevicePipelineCreationCacheControlFeaturesEXT mPipelineCreationCacheControlFeatures;
     VkPhysicalDeviceExtendedDynamicStateFeaturesEXT mExtendedDynamicStateFeatures;
@@ -872,8 +921,9 @@ class RendererVk : angle::NonCopyable
     VkPhysicalDevicePipelineProtectedAccessFeaturesEXT mPipelineProtectedAccessFeatures;
     VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT
         mRasterizationOrderAttachmentAccessFeatures;
-    VkPhysicalDeviceSwapchainMaintenance1FeaturesEXT mSwapchainMaintenance1FeaturesEXT;
+    VkPhysicalDeviceSwapchainMaintenance1FeaturesEXT mSwapchainMaintenance1Features;
     VkPhysicalDeviceDrmPropertiesEXT mDrmProperties;
+
     angle::PackedEnumBitSet<gl::ShadingRate, uint8_t> mSupportedFragmentShadingRates;
     std::vector<VkQueueFamilyProperties> mQueueFamilyProperties;
     uint32_t mMaxVertexAttribDivisor;
