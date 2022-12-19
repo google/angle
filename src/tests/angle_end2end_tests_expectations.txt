@@ -887,6 +887,9 @@
 7419 WIN SWIFTSHADER : MultithreadingTestES3.CreateFramebufferFetchMidRenderPass/* = SKIP
 7419 SWIFTSHADER : MultithreadingTestES3.Thread* = SKIP
 
+// Flaky timeout on Windows SwANGLE
+7900 WIN SWIFTSHADER : InstancingTestES3.LargeDivisor/ES3_Vulkan_SwiftShader/* = SKIP
+
 // Timeout with SwiftShader and MAC OpenGL due to large workloads
 7389 SWIFTSHADER : Texture2DTest.ManySupersedingTextureUpdates/* = SKIP
 7389 MAC OPENGL : Texture2DTest.ManySupersedingTextureUpdates/* = SKIP
