@@ -960,7 +960,7 @@ class RendererVk : angle::NonCopyable
     // includes the size and type of the last attempted allocation, which are cleared after the
     // allocation is successful.
     std::atomic<VkDeviceSize> mPendingMemoryAllocationSize;
-    vk::MemoryAllocationType mPendingMemoryAllocationType;
+    std::atomic<vk::MemoryAllocationType> mPendingMemoryAllocationType;
 
     // For memory allocation with debug layers.
     std::mutex mMemoryAllocationMutex;
