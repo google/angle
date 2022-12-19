@@ -496,7 +496,6 @@ class RendererVk : angle::NonCopyable
     bool haveSameFormatFeatureBits(angle::FormatID formatID1, angle::FormatID formatID2) const;
 
     void cleanupGarbage();
-    void cleanupCompletedCommandsGarbage();
     void cleanupPendingSubmissionGarbage();
 
     angle::Result submitCommands(vk::Context *context,
@@ -505,7 +504,6 @@ class RendererVk : angle::NonCopyable
                                  std::vector<VkSemaphore> &&waitSemaphores,
                                  std::vector<VkPipelineStageFlags> &&waitSemaphoreStageMasks,
                                  const vk::Semaphore *signalSemaphore,
-                                 vk::GarbageList &&currentGarbage,
                                  vk::SecondaryCommandPools *commandPools,
                                  const QueueSerial &submitSerialOut);
 

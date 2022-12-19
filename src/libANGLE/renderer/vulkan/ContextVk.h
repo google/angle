@@ -1438,6 +1438,9 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     // We use a single pool for recording commands. We also keep a free list for pool recycling.
     vk::SecondaryCommandPools mCommandPools;
 
+    // The garbage list for single context use objects. The list will be GPU tracked by next
+    // submission queueSerial. Note: Resource based shared object should always be added to
+    // renderer's mSharedGarbage.
     vk::GarbageList mCurrentGarbage;
 
     RenderPassCache mRenderPassCache;

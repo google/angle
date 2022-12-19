@@ -3275,25 +3275,25 @@ angle::Result ContextVk::submitCommands(const vk::Semaphore *signalSemaphore, Su
         dumpCommandStreamDiagnostics();
     }
 
-    // Clean up garbage only when submitting all commands.  Otherwise there may be garbage
-    // associated with commands that are not yet flushed.
-    vk::GarbageList garbage;
     if (submission == Submit::AllCommands)
     {
-        garbage = std::move(mCurrentGarbage);
+        // Clean up garbage.
+        vk::ResourceUse use;
+        use.setSerial(mCurrentQueueSerialIndex, mLastFlushedSerial);
+        mRenderer->collectGarbage(use, std::move(mCurrentGarbage));
     }
 
     ASSERT(mLastFlushedSerial > mLastSubmittedSerial);
 
     ANGLE_TRY(mRenderer->submitCommands(
         this, hasProtectedContent(), mContextPriority, std::move(mWaitSemaphores),
-        std::move(mWaitSemaphoreStageMasks), signalSemaphore, std::move(garbage), &mCommandPools,
+        std::move(mWaitSemaphoreStageMasks), signalSemaphore, &mCommandPools,
         QueueSerial(mCurrentQueueSerialIndex, mLastFlushedSerial)));
 
     ASSERT(mLastSubmittedSerial < mLastFlushedSerial);
     mLastSubmittedSerial = mLastFlushedSerial;
 
-    // Now that we have processed resourceUseList, some of pending garbage may no longer pending
+    // Now that we have submitted commands, some of pending garbage may no longer pending
     // and should be moved to garbage list.
     mRenderer->cleanupPendingSubmissionGarbage();
 
@@ -3640,7 +3640,7 @@ void ContextVk::clearAllGarbage()
     // The VMA virtual allocator code has assertion to ensure all sub-ranges are freed before
     // virtual block gets freed. We need to ensure all completed garbage objects are actually freed
     // to avoid hitting that assertion.
-    mRenderer->cleanupCompletedCommandsGarbage();
+    mRenderer->cleanupGarbage();
 
     for (vk::GarbageObject &garbage : mCurrentGarbage)
     {

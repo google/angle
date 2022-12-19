@@ -97,7 +97,6 @@ class CommandProcessorTask
                                  bool hasProtectedContent,
                                  egl::ContextPriority priority,
                                  SecondaryCommandPools *commandPools,
-                                 GarbageList &&currentGarbage,
                                  SecondaryCommandBufferList &&commandBuffersToReset,
                                  const QueueSerial &submitQueueSerial);
 
@@ -124,7 +123,6 @@ class CommandProcessorTask
         return mWaitSemaphoreStageMasks;
     }
     VkSemaphore getSemaphore() { return mSemaphore; }
-    GarbageList &getGarbage() { return mGarbage; }
     SecondaryCommandBufferList &&getCommandBuffersToReset()
     {
         return std::move(mCommandBuffersToReset);
@@ -162,7 +160,6 @@ class CommandProcessorTask
     std::vector<VkPipelineStageFlags> mWaitSemaphoreStageMasks;
     VkSemaphore mSemaphore;
     SecondaryCommandPools *mCommandPools;
-    GarbageList mGarbage;
     SecondaryCommandBufferList mCommandBuffersToReset;
 
     // Flush command data
@@ -295,7 +292,6 @@ class CommandQueueInterface : angle::NonCopyable
         const std::vector<VkSemaphore> &waitSemaphores,
         const std::vector<VkPipelineStageFlags> &waitSemaphoreStageMasks,
         const VkSemaphore signalSemaphore,
-        GarbageList &&currentGarbage,
         SecondaryCommandBufferList &&commandBuffersToReset,
         SecondaryCommandPools *commandPools,
         const QueueSerial &submitQueueSerial)                                     = 0;
@@ -346,7 +342,6 @@ class CommandQueue final : public CommandQueueInterface
 
     angle::Result init(Context *context, const DeviceQueueMap &queueMap) override;
     void destroy(Context *context) override;
-    void clearAllGarbage(RendererVk *renderer);
 
     void handleDeviceLost(RendererVk *renderer) override;
 
@@ -364,7 +359,6 @@ class CommandQueue final : public CommandQueueInterface
                                  const std::vector<VkSemaphore> &waitSemaphores,
                                  const std::vector<VkPipelineStageFlags> &waitSemaphoreStageMasks,
                                  const VkSemaphore signalSemaphore,
-                                 GarbageList &&currentGarbage,
                                  SecondaryCommandBufferList &&commandBuffersToReset,
                                  SecondaryCommandPools *commandPools,
                                  const QueueSerial &submitQueueSerial) override;
@@ -466,8 +460,6 @@ class CommandQueue final : public CommandQueueInterface
         }
     }
 
-    GarbageQueue mGarbageQueue;
-
     std::vector<CommandBatch> mInFlightCommands;
 
     // Keeps a free list of reusable primary command buffers.
@@ -535,7 +527,6 @@ class CommandProcessor final : public Context, public CommandQueueInterface
                                  const std::vector<VkSemaphore> &waitSemaphores,
                                  const std::vector<VkPipelineStageFlags> &waitSemaphoreStageMasks,
                                  const VkSemaphore signalSemaphore,
-                                 GarbageList &&currentGarbage,
                                  SecondaryCommandBufferList &&commandBuffersToReset,
                                  SecondaryCommandPools *commandPools,
                                  const QueueSerial &submitQueueSerial) override;

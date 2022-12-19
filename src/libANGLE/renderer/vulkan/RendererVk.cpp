@@ -4826,11 +4826,6 @@ void RendererVk::cleanupGarbage()
                                                        std::memory_order_release);
 }
 
-void RendererVk::cleanupCompletedCommandsGarbage()
-{
-    cleanupGarbage();
-}
-
 void RendererVk::cleanupPendingSubmissionGarbage()
 {
     std::unique_lock<std::mutex> lock(mGarbageMutex);
@@ -5012,7 +5007,6 @@ angle::Result RendererVk::submitCommands(
     std::vector<VkSemaphore> &&waitSemaphores,
     std::vector<VkPipelineStageFlags> &&waitSemaphoreStageMasks,
     const vk::Semaphore *signalSemaphore,
-    vk::GarbageList &&currentGarbage,
     vk::SecondaryCommandPools *commandPools,
     const QueueSerial &submitQueueSerial)
 {
@@ -5030,15 +5024,13 @@ angle::Result RendererVk::submitCommands(
     {
         ANGLE_TRY(mCommandProcessor.submitCommands(
             context, hasProtectedContent, contextPriority, waitSemaphores, waitSemaphoreStageMasks,
-            signalVkSemaphore, std::move(currentGarbage), std::move(commandBuffersToReset),
-            commandPools, submitQueueSerial));
+            signalVkSemaphore, std::move(commandBuffersToReset), commandPools, submitQueueSerial));
     }
     else
     {
         ANGLE_TRY(mCommandQueue.submitCommands(
             context, hasProtectedContent, contextPriority, waitSemaphores, waitSemaphoreStageMasks,
-            signalVkSemaphore, std::move(currentGarbage), std::move(commandBuffersToReset),
-            commandPools, submitQueueSerial));
+            signalVkSemaphore, std::move(commandBuffersToReset), commandPools, submitQueueSerial));
     }
 
     waitSemaphores.clear();
