@@ -768,7 +768,7 @@ egl::Error OffscreenSurfaceMtl::releaseTexImage(const gl::Context *context, EGLi
     }
 
     // NOTE(hqle): Should we finishCommandBuffer or flush is enough?
-    contextMtl->flushCommandBuffer(mtl::WaitUntilScheduled);
+    contextMtl->flushCommandBuffer(mtl::NoWait);
     return egl::NoError();
 }
 

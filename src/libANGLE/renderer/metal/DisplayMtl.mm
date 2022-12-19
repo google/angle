@@ -324,17 +324,6 @@ egl::Error DisplayMtl::waitUntilWorkScheduled()
     for (auto context : mState.contextSet)
     {
         auto contextMtl = GetImplAs<ContextMtl>(context);
-
-        // TODO(anglebug.com/7890) if this context doesn't currently
-        // have a pending command buffer then this will be a no-op.
-        // If the previous command buffer was committed with NoWait
-        // then it's possible we won't be waiting as expected.
-        // If we track how the last command buffer, that actually had
-        // commands in it, was committed (NoWait, WaitUntilScheduled, etc..)
-        // Then, if there is no command buffer, there's been no commits
-        // with that were WaitUntilScheduled/WaitUntilCompleted since
-        // the last command buffer with commands, then create a command
-        // buffer so we can wait on it?
         contextMtl->flushCommandBuffer(mtl::WaitUntilScheduled);
     }
     return egl::NoError();

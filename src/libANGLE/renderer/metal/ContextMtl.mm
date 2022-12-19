@@ -805,9 +805,9 @@ angle::Result ContextMtl::drawElementsImpl(const gl::Context *context,
         size_t outIndexCount      = 0;
         gl::PrimitiveMode newMode = gl::PrimitiveMode::InvalidEnum;
         drawIdxBuffer             = mProvokingVertexHelper.preconditionIndexBuffer(
-                        mtl::GetImpl(context), idxBuffer, count, convertedOffset,
-                        mState.isPrimitiveRestartEnabled(), mode, convertedType, outIndexCount,
-                        provokingVertexAdditionalOffset, newMode);
+            mtl::GetImpl(context), idxBuffer, count, convertedOffset,
+            mState.isPrimitiveRestartEnabled(), mode, convertedType, outIndexCount,
+            provokingVertexAdditionalOffset, newMode);
         if (!drawIdxBuffer)
         {
             return angle::Result::Stop;
@@ -1772,14 +1772,16 @@ void ContextMtl::endEncoding(bool forceSaveRenderPassContent)
 
 void ContextMtl::flushCommandBuffer(mtl::CommandBufferFinishOperation operation)
 {
-    if (!mCmdBuffer.ready())
+    if (mCmdBuffer.ready())
     {
-        return;
+        endEncoding(true);
+        mCmdBuffer.commit(operation);
+        mRenderPassesSinceFlush = 0;
     }
-
-    endEncoding(true);
-    mCmdBuffer.commit(operation);
-    mRenderPassesSinceFlush = 0;
+    else
+    {
+        mCmdBuffer.wait(operation);
+    }
 }
 
 void ContextMtl::flushCommandBufferIfNeeded()

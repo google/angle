@@ -114,6 +114,7 @@ class CommandBuffer final : public WrappedObject<id<MTLCommandBuffer>>, angle::N
     // and hasn't been restarted.
     bool ready() const;
     void commit(CommandBufferFinishOperation operation);
+    void wait(CommandBufferFinishOperation operation);
 
     void present(id<CAMetalDrawable> presentationDrawable);
 
@@ -169,8 +170,9 @@ class CommandBuffer final : public WrappedObject<id<MTLCommandBuffer>>, angle::N
     std::vector<std::string> mDebugGroups;
 
     std::unordered_set<id> mResourceList;
-    size_t mWorkingResourceSize = 0;
-    bool mCommitted             = false;
+    size_t mWorkingResourceSize              = 0;
+    bool mCommitted                          = false;
+    CommandBufferFinishOperation mLastWaitOp = mtl::NoWait;
 };
 
 class CommandEncoder : public WrappedObject<id<MTLCommandEncoder>>, angle::NonCopyable
