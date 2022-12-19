@@ -6,8 +6,8 @@
 
 // BinaryStream.h: Provides binary serialization of simple types.
 
-#ifndef LIBANGLE_BINARYSTREAM_H_
-#define LIBANGLE_BINARYSTREAM_H_
+#ifndef COMMON_BINARYSTREAM_H_
+#define COMMON_BINARYSTREAM_H_
 
 #include <stdint.h>
 #include <cstddef>
@@ -283,4 +283,4 @@ inline BinaryOutputStream::~BinaryOutputStream() = default;
 
 }  // namespace gl
 
-#endif  // LIBANGLE_BINARYSTREAM_H_
+#endif  // COMMON_BINARYSTREAM_H_

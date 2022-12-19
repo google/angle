@@ -8,7 +8,7 @@
 
 #include <gtest/gtest.h>
 
-#include "libANGLE/BinaryStream.h"
+#include "common/BinaryStream.h"
 
 namespace angle
 {

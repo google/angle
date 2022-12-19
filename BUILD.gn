@@ -443,53 +443,64 @@ if (angle_has_build) {
   }
 }
 
-angle_static_library("angle_common") {
+template("angle_common_lib") {
+  angle_static_library(target_name) {
+    sources = invoker.sources
+
+    configs += [
+      ":angle_common_config",
+      ":debug_annotations_config",
+    ]
+
+    deps = [ ":xxhash" ]
+
+    public_deps = [
+      ":angle_abseil",
+      ":includes",
+    ]
+    public_configs += [ ":angle_common_config" ]
+    if (angle_has_build && use_fuzzing_engine) {
+      all_dependent_configs = [ ":angle_disable_pool_alloc" ]
+    }
+
+    if (is_linux || is_chromeos) {
+      libs = [ "dl" ]
+    }
+
+    if (is_android && (angle_enable_gl || angle_enable_vulkan)) {
+      # In API level 26 ANativeWindow APIs were moved from libandroid.so
+      # into a separate library, libnativewindow.so
+      if (ndk_api_level_at_least_26) {
+        libs = [ "nativewindow" ]
+      } else {
+        libs = [ "android" ]
+      }
+    }
+
+    if (angle_expose_non_conformant_extensions_and_versions) {
+      defines = [ "ANGLE_EXPOSE_NON_CONFORMANT_EXTENSIONS_AND_VERSIONS" ]
+    }
+
+    if (using_sanitizer && !build_with_chromium) {
+      data_deps =
+          [ "//build/config/clang:llvm-symbolizer_data($host_toolchain)" ]
+    }
+
+    if (is_apple) {
+      frameworks = [ "Metal.framework" ]
+    }
+  }
+}
+
+angle_common_lib("angle_common") {
   sources = libangle_common_sources
   if (angle_enable_cl) {
     sources += libangle_common_cl_sources
   }
+}
 
-  configs += [
-    ":angle_common_config",
-    ":debug_annotations_config",
-  ]
-
-  deps = [ ":xxhash" ]
-
-  public_deps = [
-    ":angle_abseil",
-    ":includes",
-  ]
-  public_configs += [ ":angle_common_config" ]
-  if (angle_has_build && use_fuzzing_engine) {
-    all_dependent_configs = [ ":angle_disable_pool_alloc" ]
-  }
-
-  if (is_linux || is_chromeos) {
-    libs = [ "dl" ]
-  }
-
-  if (is_android && (angle_enable_gl || angle_enable_vulkan)) {
-    # In API level 26 ANativeWindow APIs were moved from libandroid.so
-    # into a separate library, libnativewindow.so
-    if (ndk_api_level_at_least_26) {
-      libs = [ "nativewindow" ]
-    } else {
-      libs = [ "android" ]
-    }
-  }
-
-  if (angle_expose_non_conformant_extensions_and_versions) {
-    defines = [ "ANGLE_EXPOSE_NON_CONFORMANT_EXTENSIONS_AND_VERSIONS" ]
-  }
-
-  if (using_sanitizer && !build_with_chromium) {
-    data_deps = [ "//build/config/clang:llvm-symbolizer_data($host_toolchain)" ]
-  }
-
-  if (is_apple) {
-    frameworks = [ "Metal.framework" ]
-  }
+angle_common_lib("angle_common_shader_state") {
+  sources = libangle_common_shader_state_sources
 }
 
 angle_source_set("angle_capture_common") {
@@ -932,6 +943,7 @@ angle_source_set("libANGLE_headers") {
   }
   public_deps = [
     ":angle_common",
+    ":angle_common_shader_state",
     ":angle_translator_headers",
   ]
   public_configs += [ ":libANGLE_config" ]
@@ -977,6 +989,7 @@ angle_source_set("libANGLE_no_vulkan") {
   }
   public_deps = [
     ":angle_common",
+    ":angle_common_shader_state",
     ":angle_gpu_info_util",
     ":angle_image_util",
     ":angle_version_info",

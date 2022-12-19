@@ -12,9 +12,9 @@
 #include <GLSLANG/ShaderVars.h>
 #include <anglebase/sha1.h>
 
+#include "common/BinaryStream.h"
 #include "common/angle_version_info.h"
 #include "common/utilities.h"
-#include "libANGLE/BinaryStream.h"
 #include "libANGLE/Compiler.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Debug.h"

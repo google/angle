@@ -105,14 +105,8 @@ bool IsActiveInterfaceBlock(const sh::InterfaceBlock &interfaceBlock);
 void WriteBlockMemberInfo(BinaryOutputStream *stream, const sh::BlockMemberInfo &var);
 void LoadBlockMemberInfo(BinaryInputStream *stream, sh::BlockMemberInfo *var);
 
-void WriteShaderVar(BinaryOutputStream *stream, const sh::ShaderVariable &var);
-void LoadShaderVar(BinaryInputStream *stream, sh::ShaderVariable *var);
-
 void WriteInterfaceBlock(BinaryOutputStream *stream, const InterfaceBlock &block);
 void LoadInterfaceBlock(BinaryInputStream *stream, InterfaceBlock *block);
-
-void WriteShInterfaceBlock(BinaryOutputStream *stream, const sh::InterfaceBlock &block);
-void LoadShInterfaceBlock(BinaryInputStream *stream, sh::InterfaceBlock *block);
 
 void WriteShaderVariableBuffer(BinaryOutputStream *stream, const ShaderVariableBuffer &var);
 void LoadShaderVariableBuffer(BinaryInputStream *stream, ShaderVariableBuffer *var);
