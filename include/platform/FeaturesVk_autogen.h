@@ -799,6 +799,11 @@ struct FeaturesVk : FeatureSetBase
         "VkDevice supports the VK_EXT_pipeline_protected_access extension", &members,
         "https://anglebug.com/7714"};
 
+    FeatureInfo supportsSeparateDepthStencilLayouts = {
+        "supportsSeparateDepthStencilLayouts", FeatureCategory::VulkanFeatures,
+        "VkDevice supports the VK_KHR_separate_depth_stencil_layouts extension", &members,
+        "https://anglebug.com/7899"};
+
     FeatureInfo preferSubmitOnAnySamplesPassedQueryEnd = {
         "preferSubmitOnAnySamplesPassedQueryEnd", FeatureCategory::VulkanWorkarounds,
         "Submit commands to driver when last GL_ANY_SAMPLES_PASSED query is made for performance "

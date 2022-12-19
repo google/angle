@@ -784,6 +784,7 @@ class RendererVk : angle::NonCopyable
     VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT
         mRasterizationOrderAttachmentAccessFeatures;
     VkPhysicalDeviceDrmPropertiesEXT mDrmProperties;
+    VkPhysicalDeviceSeparateDepthStencilLayoutsFeaturesKHR mSeparateDepthStencilLayoutsFeatures;
     angle::PackedEnumBitSet<gl::ShadingRate, uint8_t> mSupportedFragmentShadingRates;
     std::vector<VkQueueFamilyProperties> mQueueFamilyProperties;
     uint32_t mMaxVertexAttribDivisor;

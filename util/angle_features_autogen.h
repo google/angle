@@ -274,6 +274,7 @@ enum class Feature
     SupportsRenderpass2,
     SupportsRenderPassLoadStoreOpNone,
     SupportsRenderPassStoreOpNone,
+    SupportsSeparateDepthStencilLayouts,
     SupportsShaderFloat16,
     SupportsShaderFramebufferFetch,
     SupportsShaderFramebufferFetchEXT,

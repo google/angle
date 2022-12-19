@@ -1085,6 +1085,14 @@
             ],
             "issue": "https://anglebug.com/7714"
 	},
+        {
+            "name": "supports_separate_depth_stencil_layouts",
+            "category": "Features",
+            "description": [
+                "VkDevice supports the VK_KHR_separate_depth_stencil_layouts extension"
+            ],
+            "issue": "https://anglebug.com/7899"
+	},
 	{
             "name": "prefer_submit_on_any_samples_passed_query_end",
             "category": "Workarounds",
