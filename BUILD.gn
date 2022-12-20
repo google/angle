@@ -484,7 +484,7 @@ angle_static_library("angle_common") {
   }
 
   if (angle_expose_non_conformant_extensions_and_versions) {
-    defines += [ "ANGLE_EXPOSE_NON_CONFORMANT_EXTENSIONS_AND_VERSIONS" ]
+    defines = [ "ANGLE_EXPOSE_NON_CONFORMANT_EXTENSIONS_AND_VERSIONS" ]
   }
 
   if (using_sanitizer && !build_with_chromium) {
@@ -497,7 +497,7 @@ angle_static_library("angle_common") {
 
   if ((is_linux || is_chromeos || is_android) && angle_enable_vulkan) {
     sources += libangle_dma_buf_util_sources
-    defines += [ "ANGLE_ENABLE_VULKAN" ]
+    defines = [ "ANGLE_ENABLE_VULKAN" ]
     public_deps += [ "src/common/vulkan:angle_vulkan_headers" ]
   }
 }
