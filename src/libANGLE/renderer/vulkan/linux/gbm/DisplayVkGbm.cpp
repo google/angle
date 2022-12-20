@@ -11,7 +11,7 @@
 
 #include <gbm.h>
 
-#include "common/dma_buf_utils.h"
+#include "common/linux/dma_buf_utils.h"
 #include "libANGLE/Display.h"
 #include "libANGLE/renderer/vulkan/vk_caps_utils.h"
 

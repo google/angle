@@ -12,7 +12,7 @@
 #include <wayland-client.h>
 
 #include "common/angleutils.h"
-#include "common/dma_buf_utils.h"
+#include "common/linux/dma_buf_utils.h"
 #include "common/system_utils.h"
 #include "libANGLE/Display.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"

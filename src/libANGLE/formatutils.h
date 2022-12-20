@@ -15,17 +15,12 @@
 
 #include "angle_gl.h"
 #include "common/android_util.h"
-#include "common/platform.h"
 #include "libANGLE/Caps.h"
 #include "libANGLE/Config.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/Version.h"
 #include "libANGLE/VertexAttribute.h"
 #include "libANGLE/angletypes.h"
-
-#if defined(ANGLE_PLATFORM_LINUX) && defined(ANGLE_USE_GBM)
-#    include "common/dma_buf_utils.h"
-#endif
 
 namespace gl
 {
@@ -314,7 +309,7 @@ ANGLE_INLINE int GetNativeVisualID(const InternalFormat &internalFormat)
     nativeVisualId =
         angle::android::GLInternalFormatToNativePixelFormat(internalFormat.internalFormat);
 #endif
-#if defined(ANGLE_PLATFORM_LINUX) && defined(ANGLE_USE_GBM)
+#if defined(ANGLE_PLATFORM_LINUX) && defined(ANGLE_USES_GBM)
     nativeVisualId = angle::GLInternalFormatToGbmFourCCFormat(internalFormat.internalFormat);
 #endif
 

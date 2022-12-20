@@ -128,7 +128,7 @@ std::vector<VkFormat> DrmFourCCFormatToVkFormats(int fourccFormat)
 
 #endif  // ANGLE_ENABLE_VULKAN
 
-#if defined(ANGLE_PLATFORM_LINUX) && defined(ANGLE_USE_GBM)
+#if defined(ANGLE_PLATFORM_LINUX) && defined(ANGLE_USES_GBM)
 #    include <gbm.h>
 
 int GLInternalFormatToGbmFourCCFormat(GLenum internalFormat)
