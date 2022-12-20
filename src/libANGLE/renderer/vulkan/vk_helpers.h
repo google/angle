@@ -1046,6 +1046,26 @@ class PackedRenderPassAttachmentArray final
     gl::AttachmentArray<RenderPassAttachment> mAttachments;
 };
 
+// How the ImageHelper object is being used by the renderpass
+enum class RenderPassUsage
+{
+    // Attached to the render taget of the current renderpass commands. It could be read/write or
+    // read only access.
+    RenderTargetAttachment,
+    // This is special case of RenderTargetAttachment where the render target access is read only.
+    // Right now it is only tracked for depth stencil attachment
+    DepthReadOnlyAttachment,
+    StencilReadOnlyAttachment,
+    // Attached to the texture sampler of the current renderpass commands
+    ColorTextureSampler,
+    DepthTextureSampler,
+    StencilTextureSampler,
+
+    InvalidEnum,
+    EnumCount = InvalidEnum,
+};
+using RenderPassUsageFlags = angle::PackedEnumBitSet<RenderPassUsage, uint16_t>;
+
 // The following are used to help track the state of an invalidated attachment.
 // This value indicates an "infinite" CmdCount that is not valid for comparing
 constexpr uint32_t kInfiniteCmdCount = 0xFFFFFFFF;
@@ -1337,7 +1357,8 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
 
     angle::Result nextSubpass(ContextVk *contextVk, RenderPassCommandBuffer **commandBufferOut);
 
-    void updateStartedRenderPassWithDepthMode(bool readOnlyDepthStencilMode);
+    void updateStartedRenderPassWithDepthMode(bool readOnlyDepthMode);
+    void updateStartedRenderPassWithStencilMode(bool readOnlyStencilMode);
 
     void beginTransformFeedback(size_t validBufferCount,
                                 const VkBuffer *counterBuffers,
@@ -1398,10 +1419,15 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
                                     MaybeImagelessFramebuffer &newFramebuffer,
                                     const RenderPassDesc &renderPassDesc);
 
-    bool hasDepthStencilWriteOrClear() const
+    bool hasDepthWriteOrClear() const
     {
-        return mDepthAttachment.hasWriteAccess() || mStencilAttachment.hasWriteAccess() ||
-               mAttachmentOps[mDepthStencilAttachmentIndex].loadOp == VK_ATTACHMENT_LOAD_OP_CLEAR ||
+        return mDepthAttachment.hasWriteAccess() ||
+               mAttachmentOps[mDepthStencilAttachmentIndex].loadOp == VK_ATTACHMENT_LOAD_OP_CLEAR;
+    }
+
+    bool hasStencilWriteOrClear() const
+    {
+        return mStencilAttachment.hasWriteAccess() ||
                mAttachmentOps[mDepthStencilAttachmentIndex].stencilLoadOp ==
                    VK_ATTACHMENT_LOAD_OP_CLEAR;
     }
@@ -1431,6 +1457,9 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
         // considered continuous among subpasses.
         return mPreviousSubpassesCmdCount + getCommandBuffer().getRenderPassWriteCommandCount();
     }
+
+    void updateStartedRenderPassWithDepthStencilMode(bool readOnlyDepthStencilMode,
+                                                     RenderPassUsage readOnlyAttachmentUsage);
 
     // We can't determine the image layout at the renderpass start time since their full usage
     // aren't known until later time. We finalize the layout when either ImageHelper object is
@@ -1630,23 +1659,6 @@ ImageLayout GetImageLayoutFromGLImageLayout(Context *context, GLenum layout);
 GLenum ConvertImageLayoutToGLImageLayout(ImageLayout imageLayout);
 
 VkImageLayout ConvertImageLayoutToVkImageLayout(Context *context, ImageLayout imageLayout);
-
-// How the ImageHelper object is being used by the renderpass
-enum class RenderPassUsage
-{
-    // Attached to the render taget of the current renderpass commands. It could be read/write or
-    // read only access.
-    RenderTargetAttachment,
-    // This is special case of RenderTargetAttachment where the render target access is read only.
-    // Right now it is only tracked for depth stencil attachment
-    ReadOnlyAttachment,
-    // Attached to the texture sampler of the current renderpass commands
-    TextureSampler,
-
-    InvalidEnum,
-    EnumCount = InvalidEnum,
-};
-using RenderPassUsageFlags = angle::PackedEnumBitSet<RenderPassUsage, uint16_t>;
 
 // The source of update to an ImageHelper
 enum class UpdateSource
@@ -1941,7 +1953,7 @@ class ImageHelper final : public Resource, public angle::Subject
     void clearRenderPassUsageFlag(RenderPassUsage flag);
     void resetRenderPassUsageFlags();
     bool hasRenderPassUsageFlag(RenderPassUsage flag) const;
-    bool usedByCurrentRenderPassAsAttachmentAndSampler() const;
+    bool usedByCurrentRenderPassAsAttachmentAndSampler(RenderPassUsage textureSamplerUsage) const;
 
     static void Copy(Context *context,
                      ImageHelper *srcImage,

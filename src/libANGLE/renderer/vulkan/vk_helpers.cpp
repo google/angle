@@ -1023,6 +1023,8 @@ VkImageCreateFlags GetImageCreateFlags(gl::TextureType textureType)
 
 ImageLayout GetImageLayoutFromGLImageLayout(Context *context, GLenum layout)
 {
+    const bool supportsMixedReadWriteDepthStencilLayouts =
+        context->getFeatures().supportsMixedReadWriteDepthStencilLayouts.enabled;
     switch (layout)
     {
         case GL_NONE:
@@ -1032,16 +1034,15 @@ ImageLayout GetImageLayoutFromGLImageLayout(Context *context, GLenum layout)
         case GL_LAYOUT_COLOR_ATTACHMENT_EXT:
             return ImageLayout::ColorWrite;
         case GL_LAYOUT_DEPTH_STENCIL_ATTACHMENT_EXT:
-        case GL_LAYOUT_DEPTH_STENCIL_READ_ONLY_EXT:
-        case GL_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_EXT:
-        case GL_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_EXT:
-            // Note: once VK_KHR_separate_depth_stencil_layouts becomes core or ubiquitous, we
-            // should optimize depth/stencil image layout transitions to only be performed on the
-            // aspect that needs transition.  In that case, these four layouts can be distinguished
-            // and optimized.  Note that the exact equivalent of these layouts are specified in
-            // VK_KHR_maintenance2, which are also usable, granted we transition the pair of
-            // depth/stencil layouts accordingly elsewhere in ANGLE.
             return ImageLayout::DepthWriteStencilWrite;
+        case GL_LAYOUT_DEPTH_STENCIL_READ_ONLY_EXT:
+            return ImageLayout::DepthReadStencilRead;
+        case GL_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_EXT:
+            return supportsMixedReadWriteDepthStencilLayouts ? ImageLayout::DepthReadStencilWrite
+                                                             : ImageLayout::DepthWriteStencilWrite;
+        case GL_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_EXT:
+            return supportsMixedReadWriteDepthStencilLayouts ? ImageLayout::DepthWriteStencilRead
+                                                             : ImageLayout::DepthWriteStencilWrite;
         case GL_LAYOUT_SHADER_READ_ONLY_EXT:
             return ImageLayout::ExternalShadersReadOnly;
         case GL_LAYOUT_TRANSFER_SRC_EXT:
@@ -1087,7 +1088,30 @@ GLenum ConvertImageLayoutToGLImageLayout(ImageLayout layout)
 
 VkImageLayout ConvertImageLayoutToVkImageLayout(Context *context, ImageLayout imageLayout)
 {
-    return kImageMemoryBarrierData[imageLayout].layout;
+    const ImageMemoryBarrierData &transition = kImageMemoryBarrierData[imageLayout];
+    VkImageLayout layout                     = transition.layout;
+
+    if (ANGLE_LIKELY(context->getFeatures().supportsMixedReadWriteDepthStencilLayouts.enabled))
+    {
+        return layout;
+    }
+
+    // If the layouts are not supported, substitute them with what's available.  This may be
+    // less optimal and/or introduce synchronization hazards.
+    if (layout == VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL ||
+        layout == VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL)
+    {
+        layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+
+        // If the replacement layout causes a feedback loop, use the GENERAL layout
+        if ((transition.dstStageMask &
+             (VK_PIPELINE_STAGE_VERTEX_SHADER_BIT | VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT)) != 0)
+        {
+            layout = VK_IMAGE_LAYOUT_GENERAL;
+        }
+    }
+
+    return layout;
 }
 
 bool FormatHasNecessaryFeature(RendererVk *renderer,
@@ -1226,9 +1250,15 @@ void RenderPassAttachment::finalizeLoadStore(Context *context,
                                              RenderPassStoreOp *storeOp,
                                              bool *isInvalidatedOut)
 {
-    // Ensure we don't write to a read-only attachment. (ReadOnly -> !Write)
-    ASSERT(!mImage->hasRenderPassUsageFlag(RenderPassUsage::ReadOnlyAttachment) ||
-           mAccess != ResourceAccess::Write);
+    if (mAspect != VK_IMAGE_ASPECT_COLOR_BIT)
+    {
+        const RenderPassUsage readOnlyAttachmentUsage =
+            mAspect == VK_IMAGE_ASPECT_STENCIL_BIT ? RenderPassUsage::StencilReadOnlyAttachment
+                                                   : RenderPassUsage::DepthReadOnlyAttachment;
+        // Ensure we don't write to a read-only attachment. (ReadOnly -> !Write)
+        ASSERT(!mImage->hasRenderPassUsageFlag(readOnlyAttachmentUsage) ||
+               mAccess != ResourceAccess::Write);
+    }
 
     // If the attachment is invalidated, skip the store op.  If we are not loading or clearing the
     // attachment and the attachment has not been used, auto-invalidate it.
@@ -1822,41 +1852,40 @@ void RenderPassCommandBufferHelper::onStencilAccess(ResourceAccess access)
     mStencilAttachment.onAccess(access, getRenderPassWriteCommandCount());
 }
 
-void RenderPassCommandBufferHelper::updateStartedRenderPassWithDepthMode(
-    bool readOnlyDepthStencilMode)
+void RenderPassCommandBufferHelper::updateStartedRenderPassWithDepthMode(bool readOnlyDepthMode)
+{
+    updateStartedRenderPassWithDepthStencilMode(readOnlyDepthMode,
+                                                RenderPassUsage::DepthReadOnlyAttachment);
+}
+
+void RenderPassCommandBufferHelper::updateStartedRenderPassWithStencilMode(bool readOnlyStencilMode)
+{
+    updateStartedRenderPassWithDepthStencilMode(readOnlyStencilMode,
+                                                RenderPassUsage::StencilReadOnlyAttachment);
+}
+
+void RenderPassCommandBufferHelper::updateStartedRenderPassWithDepthStencilMode(
+    bool readOnlyDepthStencilMode,
+    RenderPassUsage readOnlyAttachmentUsage)
 {
     ASSERT(mRenderPassStarted);
     ASSERT(mDepthAttachment.getImage() == mStencilAttachment.getImage());
     ASSERT(mDepthResolveAttachment.getImage() == mStencilResolveAttachment.getImage());
 
-    ImageHelper *depthStencilImage        = mDepthAttachment.getImage();
-    ImageHelper *depthStencilResolveImage = mDepthResolveAttachment.getImage();
-
+    ImageHelper *depthStencilImage = mDepthAttachment.getImage();
     if (depthStencilImage)
     {
         if (readOnlyDepthStencilMode)
         {
-            depthStencilImage->setRenderPassUsageFlag(RenderPassUsage::ReadOnlyAttachment);
+            depthStencilImage->setRenderPassUsageFlag(readOnlyAttachmentUsage);
         }
         else
         {
-            depthStencilImage->clearRenderPassUsageFlag(RenderPassUsage::ReadOnlyAttachment);
-        }
-
-        if (depthStencilResolveImage)
-        {
-            if (readOnlyDepthStencilMode)
-            {
-                depthStencilResolveImage->setRenderPassUsageFlag(
-                    RenderPassUsage::ReadOnlyAttachment);
-            }
-            else
-            {
-                depthStencilResolveImage->clearRenderPassUsageFlag(
-                    RenderPassUsage::ReadOnlyAttachment);
-            }
+            depthStencilImage->clearRenderPassUsageFlag(readOnlyAttachmentUsage);
         }
     }
+
+    // The depth/stencil resolve image is never in read-only mode
 }
 
 void RenderPassCommandBufferHelper::finalizeColorImageLayout(
@@ -1870,7 +1899,7 @@ void RenderPassCommandBufferHelper::finalizeColorImageLayout(
 
     // Do layout change.
     ImageLayout imageLayout;
-    if (image->usedByCurrentRenderPassAsAttachmentAndSampler())
+    if (image->usedByCurrentRenderPassAsAttachmentAndSampler(RenderPassUsage::ColorTextureSampler))
     {
         // texture code already picked layout and inserted barrier
         imageLayout = image->getCurrentImageLayout();
@@ -1960,33 +1989,54 @@ void RenderPassCommandBufferHelper::finalizeDepthStencilImageLayout(Context *con
     ImageLayout imageLayout;
     bool barrierRequired;
 
-    if (depthStencilImage->usedByCurrentRenderPassAsAttachmentAndSampler())
+    const bool isDepthAttachmentAndSampler =
+        depthStencilImage->usedByCurrentRenderPassAsAttachmentAndSampler(
+            RenderPassUsage::DepthTextureSampler);
+    const bool isStencilAttachmentAndSampler =
+        depthStencilImage->usedByCurrentRenderPassAsAttachmentAndSampler(
+            RenderPassUsage::StencilTextureSampler);
+    const bool isReadOnlyDepth =
+        depthStencilImage->hasRenderPassUsageFlag(RenderPassUsage::DepthReadOnlyAttachment);
+    const bool isReadOnlyStencil =
+        depthStencilImage->hasRenderPassUsageFlag(RenderPassUsage::StencilReadOnlyAttachment);
+
+    if (isDepthAttachmentAndSampler || isStencilAttachmentAndSampler)
     {
         // texture code already picked layout and inserted barrier
         imageLayout = depthStencilImage->getCurrentImageLayout();
-        if (depthStencilImage->hasRenderPassUsageFlag(RenderPassUsage::ReadOnlyAttachment))
-        {
-            ASSERT(imageLayout == ImageLayout::DepthReadStencilReadFragmentShaderRead ||
-                   imageLayout == ImageLayout::DepthReadStencilReadAllShadersRead);
-            barrierRequired = depthStencilImage->isReadBarrierNecessary(imageLayout);
-        }
-        else
+        if ((isDepthAttachmentAndSampler && !isReadOnlyDepth) ||
+            (isStencilAttachmentAndSampler && !isReadOnlyStencil))
         {
             ASSERT(imageLayout == ImageLayout::DepthStencilFragmentShaderFeedback ||
                    imageLayout == ImageLayout::DepthStencilAllShadersFeedback);
             barrierRequired = true;
         }
-    }
-    else if (depthStencilImage->hasRenderPassUsageFlag(RenderPassUsage::ReadOnlyAttachment))
-    {
-        imageLayout     = ImageLayout::DepthReadStencilRead;
-        barrierRequired = depthStencilImage->isReadBarrierNecessary(imageLayout);
+        else
+        {
+            ASSERT(imageLayout == ImageLayout::DepthWriteStencilReadFragmentShaderStencilRead ||
+                   imageLayout == ImageLayout::DepthWriteStencilReadAllShadersStencilRead ||
+                   imageLayout == ImageLayout::DepthReadStencilWriteFragmentShaderDepthRead ||
+                   imageLayout == ImageLayout::DepthReadStencilWriteAllShadersDepthRead ||
+                   imageLayout == ImageLayout::DepthReadStencilReadFragmentShaderRead ||
+                   imageLayout == ImageLayout::DepthReadStencilReadAllShadersRead);
+            barrierRequired = depthStencilImage->isReadBarrierNecessary(imageLayout);
+        }
     }
     else
     {
-        // Write always requires a barrier
-        imageLayout     = ImageLayout::DepthWriteStencilWrite;
-        barrierRequired = true;
+        if (isReadOnlyDepth)
+        {
+            imageLayout = isReadOnlyStencil ? ImageLayout::DepthReadStencilRead
+                                            : ImageLayout::DepthReadStencilWrite;
+        }
+        else
+        {
+            imageLayout = isReadOnlyStencil ? ImageLayout::DepthWriteStencilRead
+                                            : ImageLayout::DepthWriteStencilWrite;
+        }
+
+        barrierRequired = !isReadOnlyDepth || !isReadOnlyStencil ||
+                          depthStencilImage->isReadBarrierNecessary(imageLayout);
     }
 
     mAttachmentOps.setLayouts(mDepthStencilAttachmentIndex, imageLayout, imageLayout);
@@ -2006,7 +2056,6 @@ void RenderPassCommandBufferHelper::finalizeDepthStencilResolveImageLayout(Conte
     ASSERT(mDepthResolveAttachment.getImage() == mStencilResolveAttachment.getImage());
 
     ImageHelper *depthStencilResolveImage = mDepthResolveAttachment.getImage();
-    ASSERT(!depthStencilResolveImage->hasRenderPassUsageFlag(RenderPassUsage::ReadOnlyAttachment));
 
     ImageLayout imageLayout     = ImageLayout::DepthStencilResolve;
     const angle::Format &format = depthStencilResolveImage->getActualFormat();
@@ -2015,20 +2064,22 @@ void RenderPassCommandBufferHelper::finalizeDepthStencilResolveImageLayout(Conte
 
     updateImageLayoutAndBarrier(context, depthStencilResolveImage, aspectFlags, imageLayout);
 
-    if (!depthStencilResolveImage->hasRenderPassUsageFlag(RenderPassUsage::ReadOnlyAttachment))
-    {
-        ASSERT(mDepthStencilAttachmentIndex != kAttachmentIndexInvalid);
-        const PackedAttachmentOpsDesc &dsOps = mAttachmentOps[mDepthStencilAttachmentIndex];
+    // The resolve image can never be read-only.
+    ASSERT(!depthStencilResolveImage->hasRenderPassUsageFlag(
+        RenderPassUsage::DepthReadOnlyAttachment));
+    ASSERT(!depthStencilResolveImage->hasRenderPassUsageFlag(
+        RenderPassUsage::StencilReadOnlyAttachment));
+    ASSERT(mDepthStencilAttachmentIndex != kAttachmentIndexInvalid);
+    const PackedAttachmentOpsDesc &dsOps = mAttachmentOps[mDepthStencilAttachmentIndex];
 
-        // If the image is being written to, mark its contents defined.
-        if (!dsOps.isInvalidated)
-        {
-            mDepthResolveAttachment.restoreContent();
-        }
-        if (!dsOps.isStencilInvalidated)
-        {
-            mStencilResolveAttachment.restoreContent();
-        }
+    // If the image is being written to, mark its contents defined.
+    if (!dsOps.isInvalidated)
+    {
+        mDepthResolveAttachment.restoreContent();
+    }
+    if (!dsOps.isStencilInvalidated)
+    {
+        mStencilResolveAttachment.restoreContent();
     }
 
     depthStencilResolveImage->resetRenderPassUsageFlags();
@@ -2118,15 +2169,20 @@ void RenderPassCommandBufferHelper::finalizeDepthStencilLoadStore(Context *conte
         dsOps.isStencilInvalidated = true;
     }
 
+    // If the image is being written to, mark its contents defined.
     // This has to be done after storeOp has been finalized.
     ASSERT(mDepthAttachment.getImage() == mStencilAttachment.getImage());
-    if (!mDepthAttachment.getImage()->hasRenderPassUsageFlag(RenderPassUsage::ReadOnlyAttachment))
+    if (!mDepthAttachment.getImage()->hasRenderPassUsageFlag(
+            RenderPassUsage::DepthReadOnlyAttachment))
     {
-        // If the image is being written to, mark its contents defined.
         if (depthStoreOp == RenderPassStoreOp::Store)
         {
             mDepthAttachment.restoreContent();
         }
+    }
+    if (!mStencilAttachment.getImage()->hasRenderPassUsageFlag(
+            RenderPassUsage::StencilReadOnlyAttachment))
+    {
         if (stencilStoreOp == RenderPassStoreOp::Store)
         {
             mStencilAttachment.restoreContent();
@@ -6044,10 +6100,11 @@ bool ImageHelper::hasRenderPassUsageFlag(RenderPassUsage flag) const
     return mRenderPassUsageFlags.test(flag);
 }
 
-bool ImageHelper::usedByCurrentRenderPassAsAttachmentAndSampler() const
+bool ImageHelper::usedByCurrentRenderPassAsAttachmentAndSampler(
+    RenderPassUsage textureSamplerUsage) const
 {
     return mRenderPassUsageFlags[RenderPassUsage::RenderTargetAttachment] &&
-           mRenderPassUsageFlags[RenderPassUsage::TextureSampler];
+           mRenderPassUsageFlags[textureSamplerUsage];
 }
 
 bool ImageHelper::isReadBarrierNecessary(ImageLayout newLayout) const

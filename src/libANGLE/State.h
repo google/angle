@@ -213,6 +213,11 @@ class State : angle::NonCopyable
 
     // Stencil state maniupulation
     bool isStencilTestEnabled() const { return mDepthStencil.stencilTest; }
+    bool isStencilWriteEnabled() const
+    {
+        return mDepthStencil.stencilTest &&
+               !(mDepthStencil.isStencilNoOp() && mDepthStencil.isStencilBackNoOp());
+    }
     void setStencilTest(bool enabled);
     void setStencilParams(GLenum stencilFunc, GLint stencilRef, GLuint stencilMask);
     void setStencilBackParams(GLenum stencilBackFunc, GLint stencilBackRef, GLuint stencilBackMask);

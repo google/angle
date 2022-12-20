@@ -6491,14 +6491,19 @@ void RenderPassCache::clear(ContextVk *contextVk)
     mPayload.clear();
 }
 
-angle::Result RenderPassCache::addRenderPass(ContextVk *contextVk,
-                                             const vk::RenderPassDesc &desc,
-                                             const vk::RenderPass **renderPassOut)
+angle::Result RenderPassCache::addCompatibleRenderPass(ContextVk *contextVk,
+                                                       const vk::RenderPassDesc &desc,
+                                                       const vk::RenderPass **renderPassOut)
 {
-    // Insert some placeholder attachment ops.  Note that render passes with different ops are still
-    // compatible. The load/store values are not important as they are aren't used for real RPs.
+    // This API is only used by getCompatibleRenderPass() to create a compatible render pass.  The
+    // following does not participate in render pass compatibility, so could take any value:
     //
-    // It would be nice to pre-populate the cache in the Renderer so we rarely miss here.
+    // - Load and store ops
+    // - Attachment layouts
+    // - Existance of resolve attachment (if single subpass)
+    //
+    // The values chosen here are arbitrary.
+    //
     vk::AttachmentOpsArray ops;
 
     vk::PackedAttachmentIndex colorIndexVk(0);
@@ -6509,21 +6514,14 @@ angle::Result RenderPassCache::addRenderPass(ContextVk *contextVk,
             continue;
         }
 
-        ops.initWithLoadStore(colorIndexVk, vk::ImageLayout::ColorWrite,
-                              vk::ImageLayout::ColorWrite);
+        const vk::ImageLayout imageLayout = vk::ImageLayout::ColorWrite;
+        ops.initWithLoadStore(colorIndexVk, imageLayout, imageLayout);
         ++colorIndexVk;
     }
 
     if (desc.hasDepthStencilAttachment())
     {
-        // This API is only called by getCompatibleRenderPass(). What we need here is to create a
-        // compatible renderpass with the desc. Vulkan spec says image layout are not counted toward
-        // render pass compatibility: "Two render passes are compatible if their corresponding
-        // color, input, resolve, and depth/stencil attachment references are compatible and if they
-        // are otherwise identical except for: Initial and final image layout in attachment
-        // descriptions; Image layout in attachment references". We pick the most used layout here
-        // since it doesn't matter.
-        vk::ImageLayout imageLayout = vk::ImageLayout::DepthWriteStencilWrite;
+        const vk::ImageLayout imageLayout = vk::ImageLayout::DepthWriteStencilWrite;
         ops.initWithLoadStore(colorIndexVk, imageLayout, imageLayout);
     }
 

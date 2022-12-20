@@ -359,6 +359,72 @@ egl::ContextPriority GetContextPriority(const gl::State &state)
     return egl::FromEGLenum<egl::ContextPriority>(state.getContextPriority());
 }
 
+bool IsStencilSamplerBinding(const gl::ProgramExecutable &executable, size_t textureUnit)
+{
+    const gl::SamplerFormat format = executable.getSamplerFormatForTextureUnitIndex(textureUnit);
+    const bool isStencilTexture    = format == gl::SamplerFormat::Unsigned;
+    return isStencilTexture;
+}
+
+vk::ImageLayout GetDepthStencilAttachmentImageReadLayout(const vk::ImageHelper &image,
+                                                         gl::ShaderType firstShader)
+{
+    const bool isDepthTexture =
+        image.hasRenderPassUsageFlag(vk::RenderPassUsage::DepthTextureSampler);
+    const bool isStencilTexture =
+        image.hasRenderPassUsageFlag(vk::RenderPassUsage::StencilTextureSampler);
+
+    const bool isDepthReadOnlyAttachment =
+        image.hasRenderPassUsageFlag(vk::RenderPassUsage::DepthReadOnlyAttachment);
+    const bool isStencilReadOnlyAttachment =
+        image.hasRenderPassUsageFlag(vk::RenderPassUsage::StencilReadOnlyAttachment);
+
+    const bool isFS = firstShader == gl::ShaderType::Fragment;
+
+    // Only called when at least one aspect of the image is bound as texture
+    ASSERT(isDepthTexture || isStencilTexture);
+
+    // Check for feedback loop; this is when depth or stencil is both bound as a texture and is used
+    // in a non-read-only way as attachment.
+    if ((isDepthTexture && !isDepthReadOnlyAttachment) ||
+        (isStencilTexture && !isStencilReadOnlyAttachment))
+    {
+        return isFS ? vk::ImageLayout::DepthStencilFragmentShaderFeedback
+                    : vk::ImageLayout::DepthStencilAllShadersFeedback;
+    }
+
+    if (isDepthReadOnlyAttachment)
+    {
+        if (isStencilReadOnlyAttachment)
+        {
+            // Depth read + stencil read
+            return isFS ? vk::ImageLayout::DepthReadStencilReadFragmentShaderRead
+                        : vk::ImageLayout::DepthReadStencilReadAllShadersRead;
+        }
+        else
+        {
+            // Depth read + stencil write
+            return isFS ? vk::ImageLayout::DepthReadStencilWriteFragmentShaderDepthRead
+                        : vk::ImageLayout::DepthReadStencilWriteAllShadersDepthRead;
+        }
+    }
+    else
+    {
+        if (isStencilReadOnlyAttachment)
+        {
+            // Depth write + stencil read
+            return isFS ? vk::ImageLayout::DepthWriteStencilReadFragmentShaderStencilRead
+                        : vk::ImageLayout::DepthWriteStencilReadAllShadersStencilRead;
+        }
+        else
+        {
+            // Depth write + stencil write: This is definitely a feedback loop and is handled above.
+            UNREACHABLE();
+            return vk::ImageLayout::DepthStencilAllShadersFeedback;
+        }
+    }
+}
+
 vk::ImageLayout GetImageReadLayout(TextureVk *textureVk,
                                    const gl::ProgramExecutable &executable,
                                    size_t textureUnit,
@@ -382,32 +448,35 @@ vk::ImageLayout GetImageReadLayout(TextureVk *textureVk,
     remainingShaderBits.reset(firstShader);
     remainingShaderBits.reset(lastShader);
 
+    const bool isFragmentShaderOnly = firstShader == gl::ShaderType::Fragment;
+    if (isFragmentShaderOnly)
+    {
+        ASSERT(remainingShaderBits.none() && lastShader == firstShader);
+    }
+
     if (image.hasRenderPassUsageFlag(vk::RenderPassUsage::RenderTargetAttachment))
     {
-        // Right now we set this flag only when RenderTargetAttachment is set since we do
-        // not track all textures in the renderpass.
-        image.setRenderPassUsageFlag(vk::RenderPassUsage::TextureSampler);
+        // Right now we set the *TextureSampler flag only when RenderTargetAttachment is set since
+        // we do not track all textures in the renderpass.
 
         if (image.isDepthOrStencil())
         {
-            if (image.hasRenderPassUsageFlag(vk::RenderPassUsage::ReadOnlyAttachment))
+            if (IsStencilSamplerBinding(executable, textureUnit))
             {
-                if (firstShader == gl::ShaderType::Fragment)
-                {
-                    ASSERT(remainingShaderBits.none() && lastShader == firstShader);
-                    return vk::ImageLayout::DepthReadStencilReadFragmentShaderRead;
-                }
-                return vk::ImageLayout::DepthReadStencilReadAllShadersRead;
+                image.setRenderPassUsageFlag(vk::RenderPassUsage::StencilTextureSampler);
+            }
+            else
+            {
+                image.setRenderPassUsageFlag(vk::RenderPassUsage::DepthTextureSampler);
             }
 
-            return firstShader == gl::ShaderType::Fragment
-                       ? vk::ImageLayout::DepthStencilFragmentShaderFeedback
-                       : vk::ImageLayout::DepthStencilAllShadersFeedback;
+            return GetDepthStencilAttachmentImageReadLayout(image, firstShader);
         }
 
-        return firstShader == gl::ShaderType::Fragment
-                   ? vk::ImageLayout::ColorWriteFragmentShaderFeedback
-                   : vk::ImageLayout::ColorWriteAllShadersFeedback;
+        image.setRenderPassUsageFlag(vk::RenderPassUsage::ColorTextureSampler);
+
+        return isFragmentShaderOnly ? vk::ImageLayout::ColorWriteFragmentShaderFeedback
+                                    : vk::ImageLayout::ColorWriteAllShadersFeedback;
     }
 
     if (image.isDepthOrStencil())
@@ -417,12 +486,8 @@ vk::ImageLayout GetImageReadLayout(TextureVk *textureVk,
         // split a RenderPass to transition a depth texture from shader-read to read-only.
         // This improves performance in Manhattan. Future optimizations are likely possible
         // here including using specialized barriers without breaking the RenderPass.
-        if (firstShader == gl::ShaderType::Fragment)
-        {
-            ASSERT(remainingShaderBits.none() && lastShader == firstShader);
-            return vk::ImageLayout::DepthReadStencilReadFragmentShaderRead;
-        }
-        return vk::ImageLayout::DepthReadStencilReadAllShadersRead;
+        return isFragmentShaderOnly ? vk::ImageLayout::DepthReadStencilReadFragmentShaderRead
+                                    : vk::ImageLayout::DepthReadStencilReadAllShadersRead;
     }
 
     // We barrier against either:
@@ -436,6 +501,54 @@ vk::ImageLayout GetImageReadLayout(TextureVk *textureVk,
     }
 
     return kShaderReadOnlyImageLayouts[firstShader];
+}
+
+angle::Result SwitchToReadOnlyDepthStencilFeedbackLoopMode(ContextVk *contextVk,
+                                                           TextureVk *texture,
+                                                           FramebufferVk *drawFramebuffer,
+                                                           bool isStencilTexture)
+{
+    // Special handling for deferred clears.
+    ANGLE_TRY(drawFramebuffer->flushDeferredClears(contextVk));
+
+    if (contextVk->hasStartedRenderPass())
+    {
+        const vk::RenderPassUsage readOnlyAttachmentUsage =
+            isStencilTexture ? vk::RenderPassUsage::StencilReadOnlyAttachment
+                             : vk::RenderPassUsage::DepthReadOnlyAttachment;
+
+        if (!texture->getImage().hasRenderPassUsageFlag(readOnlyAttachmentUsage))
+        {
+            // Break the render pass to enter read-only depth/stencil feedback loop; the previous
+            // usage was not read-only and will use a non-read-only layout.
+            ANGLE_TRY(contextVk->flushCommandsAndEndRenderPass(
+                RenderPassClosureReason::DepthStencilUseInFeedbackLoop));
+        }
+        else
+        {
+            if (isStencilTexture)
+            {
+                drawFramebuffer->updateRenderPassStencilReadOnlyMode(
+                    contextVk, &contextVk->getStartedRenderPassCommands());
+            }
+            else
+            {
+                drawFramebuffer->updateRenderPassDepthReadOnlyMode(
+                    contextVk, &contextVk->getStartedRenderPassCommands());
+            }
+        }
+    }
+
+    if (isStencilTexture)
+    {
+        drawFramebuffer->setReadOnlyStencilFeedbackLoopMode(true);
+    }
+    else
+    {
+        drawFramebuffer->setReadOnlyDepthFeedbackLoopMode(true);
+    }
+
+    return angle::Result::Continue;
 }
 
 vk::ImageLayout GetImageWriteLayoutAndSubresource(const gl::ImageUnit &imageUnit,
@@ -2073,8 +2186,10 @@ angle::Result ContextVk::updateRenderPassDepthFeedbackLoopModeImpl(
     vk::ResourceAccess depthAccess       = GetDepthAccess(dsState, depthReason);
     vk::ResourceAccess stencilAccess     = GetStencilAccess(dsState, stencilReason);
 
-    if ((depthAccess == vk::ResourceAccess::Write || stencilAccess == vk::ResourceAccess::Write) &&
-        drawFramebufferVk->isReadOnlyDepthFeedbackLoopMode())
+    if ((depthAccess == vk::ResourceAccess::Write &&
+         drawFramebufferVk->isReadOnlyDepthFeedbackLoopMode()) ||
+        (stencilAccess == vk::ResourceAccess::Write &&
+         drawFramebufferVk->isReadOnlyStencilFeedbackLoopMode()))
     {
         // If we are switching out of read only mode and we are in feedback loop, we must end
         // renderpass here. Otherwise, updating it to writeable layout will produce a writable
@@ -2091,8 +2206,9 @@ angle::Result ContextVk::updateRenderPassDepthFeedbackLoopModeImpl(
             ANGLE_TRY(flushCommandsAndEndRenderPass(
                 RenderPassClosureReason::DepthStencilWriteAfterFeedbackLoop));
         }
-        // Clear read-only depth feedback mode.
+        // Clear read-only depth/stencil feedback mode.
         drawFramebufferVk->setReadOnlyDepthFeedbackLoopMode(false);
+        drawFramebufferVk->setReadOnlyStencilFeedbackLoopMode(false);
     }
 
     return angle::Result::Continue;
@@ -2195,7 +2311,8 @@ angle::Result ContextVk::handleDirtyGraphicsDepthStencilAccess(
     mRenderPassCommands->onDepthAccess(depthAccess);
     mRenderPassCommands->onStencilAccess(stencilAccess);
 
-    drawFramebufferVk->updateRenderPassReadOnlyDepthMode(this, mRenderPassCommands);
+    drawFramebufferVk->updateRenderPassDepthReadOnlyMode(this, mRenderPassCommands);
+    drawFramebufferVk->updateRenderPassStencilReadOnlyMode(this, mRenderPassCommands);
 
     return angle::Result::Continue;
 }
@@ -5232,6 +5349,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 }
 
                 drawFramebufferVk->setReadOnlyDepthFeedbackLoopMode(false);
+                drawFramebufferVk->setReadOnlyStencilFeedbackLoopMode(false);
                 updateFlipViewportDrawFramebuffer(glState);
                 updateSurfaceRotationDrawFramebuffer(glState, context->getCurrentDrawSurface());
                 updateViewport(drawFramebufferVk, glState.getViewport(), glState.getNearPlane(),
@@ -6573,30 +6691,15 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context, gl::Co
             continue;
         }
 
-        if (!isIncompleteTexture && texture->isDepthOrStencil() &&
-            shouldSwitchToReadOnlyDepthFeedbackLoopMode(texture, command))
+        if (!isIncompleteTexture && texture->isDepthOrStencil())
         {
-            FramebufferVk *drawFramebufferVk = getDrawFramebuffer();
-            // Special handling for deferred clears.
-            ANGLE_TRY(drawFramebufferVk->flushDeferredClears(this));
-
-            if (hasStartedRenderPass())
+            const bool isStencilTexture = IsStencilSamplerBinding(*executable, textureUnit);
+            if (shouldSwitchToReadOnlyDepthStencilFeedbackLoopMode(texture, command,
+                                                                   isStencilTexture))
             {
-                if (!textureVk->getImage().hasRenderPassUsageFlag(
-                        vk::RenderPassUsage::ReadOnlyAttachment))
-                {
-                    // To enter depth feedback loop, we must flush and start a new renderpass.
-                    // Otherwise it will stick with writable layout and cause validation error.
-                    ANGLE_TRY(flushCommandsAndEndRenderPass(
-                        RenderPassClosureReason::DepthStencilUseInFeedbackLoop));
-                }
-                else
-                {
-                    drawFramebufferVk->updateRenderPassReadOnlyDepthMode(this, mRenderPassCommands);
-                }
+                ANGLE_TRY(SwitchToReadOnlyDepthStencilFeedbackLoopMode(
+                    this, textureVk, getDrawFramebuffer(), isStencilTexture));
             }
-
-            drawFramebufferVk->setReadOnlyDepthFeedbackLoopMode(true);
         }
 
         gl::Sampler *sampler = mState.getSampler(static_cast<uint32_t>(textureUnit));
@@ -7613,8 +7716,9 @@ void ContextVk::onProgramExecutableReset(ProgramExecutableVk *executableVk)
     invalidateCurrentGraphicsPipeline();
 }
 
-bool ContextVk::shouldSwitchToReadOnlyDepthFeedbackLoopMode(gl::Texture *texture,
-                                                            gl::Command command) const
+bool ContextVk::shouldSwitchToReadOnlyDepthStencilFeedbackLoopMode(gl::Texture *texture,
+                                                                   gl::Command command,
+                                                                   bool isStencilTexture) const
 {
     ASSERT(texture->isDepthOrStencil());
 
@@ -7624,14 +7728,28 @@ bool ContextVk::shouldSwitchToReadOnlyDepthFeedbackLoopMode(gl::Texture *texture
         return false;
     }
 
-    // The "readOnlyDepthMode" feature enables read-only depth-stencil feedback loops. We
-    // only switch to "read-only" mode when there's loop. We track the depth-stencil access
-    // mode in the RenderPass. The tracking tells us when we can retroactively go back and
-    // change the RenderPass to read-only. If there are any writes we need to break and
-    // finish the current RP before starting the read-only one.
+    // The readOnlyDepth/StencilMode flag enables read-only depth-stencil feedback loops.  We only
+    // switch to read-only mode when there's a loop.  The render pass tracks the depth and stencil
+    // access modes, which indicates whether it's possible to retroactively go back and change the
+    // attachment layouts to read-only.
+    //
+    // If there are any writes, the render pass needs to break, so that one using the read-only
+    // layouts can start.
     FramebufferVk *drawFramebufferVk = getDrawFramebuffer();
-    return texture->isBoundToFramebuffer(drawFramebufferVk->getState().getFramebufferSerial()) &&
-           !mState.isDepthWriteEnabled() && !drawFramebufferVk->isReadOnlyDepthFeedbackLoopMode();
+
+    if (!texture->isBoundToFramebuffer(drawFramebufferVk->getState().getFramebufferSerial()))
+    {
+        return false;
+    }
+
+    if (isStencilTexture)
+    {
+        // Switch to read-only stencil feedback loop if not already
+        return !mState.isStencilWriteEnabled() &&
+               !drawFramebufferVk->isReadOnlyStencilFeedbackLoopMode();
+    }
+    // Switch to read-only depth feedback loop if not already
+    return !mState.isDepthWriteEnabled() && !drawFramebufferVk->isReadOnlyDepthFeedbackLoopMode();
 }
 
 angle::Result ContextVk::onResourceAccess(const vk::CommandBufferAccess &access)

@@ -133,9 +133,16 @@ class FramebufferVk : public FramebufferImpl
     {
         mReadOnlyDepthFeedbackLoopMode = readOnlyDepthFeedbackModeEnabled;
     }
+    void setReadOnlyStencilFeedbackLoopMode(bool readOnlyStencilFeedbackModeEnabled)
+    {
+        mReadOnlyStencilFeedbackLoopMode = readOnlyStencilFeedbackModeEnabled;
+    }
     bool isReadOnlyDepthFeedbackLoopMode() const { return mReadOnlyDepthFeedbackLoopMode; }
-    void updateRenderPassReadOnlyDepthMode(ContextVk *contextVk,
+    bool isReadOnlyStencilFeedbackLoopMode() const { return mReadOnlyStencilFeedbackLoopMode; }
+    void updateRenderPassDepthReadOnlyMode(ContextVk *contextVk,
                                            vk::RenderPassCommandBufferHelper *renderPass);
+    void updateRenderPassStencilReadOnlyMode(ContextVk *contextVk,
+                                             vk::RenderPassCommandBufferHelper *renderPass);
 
     void switchToFramebufferFetchMode(ContextVk *contextVk, bool hasFramebufferFetch);
 
@@ -249,6 +256,10 @@ class FramebufferVk : public FramebufferImpl
     RenderTargetVk *getReadPixelsRenderTarget(GLenum format) const;
     VkImageAspectFlagBits getReadPixelsAspectFlags(GLenum format) const;
 
+    void updateRenderPassDepthStencilReadOnlyMode(ContextVk *contextVk,
+                                                  VkImageAspectFlags dsAspectFlags,
+                                                  vk::RenderPassCommandBufferHelper *renderPass);
+
     VkClearValue getCorrectedColorClearValue(size_t colorIndexGL,
                                              const VkClearColorValue &clearColor) const;
 
@@ -283,10 +294,11 @@ class FramebufferVk : public FramebufferImpl
 
     vk::ClearValuesArray mDeferredClears;
 
-    // Tracks if we are in depth feedback loop. Depth read only feedback loop is a special kind of
-    // depth stencil read only mode. When we are in feedback loop, we must flush renderpass to exit
-    // the loop instead of update the layout.
+    // Tracks if we are in depth/stencil *read-only* feedback loop.  This is specially allowed as
+    // both usages (attachment and texture) are read-only.  When switching away from read-only
+    // feedback loop, the render pass is broken is to accommodate the new writable layout.
     bool mReadOnlyDepthFeedbackLoopMode;
+    bool mReadOnlyStencilFeedbackLoopMode;
 
     gl::DrawBufferMask mIsAHBColorAttachments;
 

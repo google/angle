@@ -1059,17 +1059,15 @@ void UpdateDepthStencilAccess(ContextVk *contextVk,
     {
         // Explicitly mark a depth write because we are modifying the depth buffer.
         renderPassCommands->onDepthAccess(vk::ResourceAccess::Write);
+        // Because we may have changed the depth access mode, update read only depth mode.
+        framebuffer->updateRenderPassDepthReadOnlyMode(contextVk, renderPassCommands);
     }
     if (stencilWrite)
     {
         // Explicitly mark a stencil write because we are modifying the stencil buffer.
         renderPassCommands->onStencilAccess(vk::ResourceAccess::Write);
-    }
-    if (depthWrite || stencilWrite)
-    {
-        // Because we may have changed the depth stencil access mode, update read only depth mode
-        // now.
-        framebuffer->updateRenderPassReadOnlyDepthMode(contextVk, renderPassCommands);
+        // Because we may have changed the stencil access mode, update read only stencil mode.
+        framebuffer->updateRenderPassStencilReadOnlyMode(contextVk, renderPassCommands);
     }
 }
 

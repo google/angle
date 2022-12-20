@@ -2198,7 +2198,7 @@ class RenderPassCache final : angle::NonCopyable
         }
 
         mCompatibleRenderPassCacheStats.missAndIncrementSize();
-        return addRenderPass(contextVk, desc, renderPassOut);
+        return addCompatibleRenderPass(contextVk, desc, renderPassOut);
     }
 
     angle::Result getRenderPassWithOps(ContextVk *contextVk,
@@ -2213,9 +2213,9 @@ class RenderPassCache final : angle::NonCopyable
                                            bool updatePerfCounters,
                                            const vk::RenderPass **renderPassOut);
 
-    angle::Result addRenderPass(ContextVk *contextVk,
-                                const vk::RenderPassDesc &desc,
-                                const vk::RenderPass **renderPassOut);
+    angle::Result addCompatibleRenderPass(ContextVk *contextVk,
+                                          const vk::RenderPassDesc &desc,
+                                          const vk::RenderPass **renderPassOut);
 
     // Use a two-layer caching scheme. The top level matches the "compatible" RenderPass elements.
     // The second layer caches the attachment load/store ops and initial/final layout.

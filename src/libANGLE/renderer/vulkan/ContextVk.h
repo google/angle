@@ -1260,8 +1260,9 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         DirtyBits dirtyBitMask,
         UpdateDepthFeedbackLoopReason depthReason,
         UpdateDepthFeedbackLoopReason stencilReason);
-    bool shouldSwitchToReadOnlyDepthFeedbackLoopMode(gl::Texture *texture,
-                                                     gl::Command command) const;
+    bool shouldSwitchToReadOnlyDepthStencilFeedbackLoopMode(gl::Texture *texture,
+                                                            gl::Command command,
+                                                            bool isStencilTexture) const;
 
     angle::Result onResourceAccess(const vk::CommandBufferAccess &access);
     angle::Result flushCommandBuffersIfNecessary(const vk::CommandBufferAccess &access);
