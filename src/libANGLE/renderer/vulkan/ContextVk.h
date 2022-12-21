@@ -588,15 +588,21 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
                                      vk::RenderPassCommandBuffer **commandBufferOut);
 
     // Only returns true if we have a started RP and we've run setupDraw.
-    bool hasStartedRenderPass() const
+    bool hasActiveRenderPass() const
     {
+        // If mRenderPassCommandBuffer is not null, mRenderPassCommands must already started, we
+        // call this active render pass. A started render pass will have null
+        // mRenderPassCommandBuffer after onRenderPassFinished call, we call this state started but
+        // inactive.
+        ASSERT(mRenderPassCommandBuffer == nullptr || mRenderPassCommands->started());
         // Checking mRenderPassCommandBuffer ensures we've called setupDraw.
-        return mRenderPassCommandBuffer && mRenderPassCommands->started();
+        return mRenderPassCommandBuffer != nullptr;
     }
 
     bool hasStartedRenderPassWithQueueSerial(const QueueSerial &queueSerial) const
     {
-        return hasStartedRenderPass() && mRenderPassCommands->getQueueSerial() == queueSerial;
+        return mRenderPassCommands->started() &&
+               mRenderPassCommands->getQueueSerial() == queueSerial;
     }
 
     bool isRenderPassStartedAndUsesBuffer(const vk::BufferHelper &buffer) const
@@ -614,9 +620,9 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         return mRenderPassCommands->started() && mRenderPassCommands->usesImage(image);
     }
 
-    bool hasStartedRenderPassWithCommands() const
+    bool hasActiveRenderPassWithCommands() const
     {
-        return hasStartedRenderPass() && !mRenderPassCommands->getCommandBuffer().empty();
+        return hasActiveRenderPass() && !mRenderPassCommands->getCommandBuffer().empty();
     }
 
     vk::RenderPassCommandBufferHelper &getStartedRenderPassCommands()
@@ -624,9 +630,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         ASSERT(mRenderPassCommands->started());
         return *mRenderPassCommands;
     }
-
-    // TODO(https://anglebug.com/4968): Support multiple open render passes.
-    void restoreFinishedRenderPass(const QueueSerial &queueSerial);
 
     uint32_t getCurrentSubpassIndex() const;
     uint32_t getCurrentViewCount() const;

@@ -147,7 +147,7 @@ bool ShouldUseCPUToCopyData(ContextVk *contextVk, size_t copySize, size_t buffer
 
 bool RenderPassUsesBufferForReadOnly(ContextVk *contextVk, const vk::BufferHelper &buffer)
 {
-    if (!contextVk->hasStartedRenderPass())
+    if (!contextVk->hasActiveRenderPass())
     {
         return false;
     }

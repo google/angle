@@ -1855,6 +1855,69 @@ TEST_P(BlitFramebufferTest, MultisampleDepthClear)
     ASSERT_GL_NO_ERROR();
 }
 
+// Tests clearing a multisampled depth buffer with a glFenceSync in between.
+TEST_P(BlitFramebufferTest, MultisampleDepthClearWithFenceSync)
+{
+    // http://anglebug.com/4092
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
+
+    GLRenderbuffer depthMS;
+    glBindRenderbuffer(GL_RENDERBUFFER, depthMS.get());
+    glRenderbufferStorageMultisample(GL_RENDERBUFFER, 2, GL_DEPTH_COMPONENT24, 256, 256);
+
+    GLRenderbuffer colorMS;
+    glBindRenderbuffer(GL_RENDERBUFFER, colorMS.get());
+    glRenderbufferStorageMultisample(GL_RENDERBUFFER, 2, GL_RGBA8, 256, 256);
+
+    GLRenderbuffer colorResolved;
+    glBindRenderbuffer(GL_RENDERBUFFER, colorResolved.get());
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, 256, 256);
+
+    GLFramebuffer framebufferMS;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebufferMS.get());
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthMS.get());
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, colorMS.get());
+
+    // Clear depth buffer to 0.5 and color to green.
+    glClearDepthf(0.5f);
+    glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+    glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+
+    glFlush();
+
+    // Draw red into the multisampled color buffer.
+    ANGLE_GL_PROGRAM(drawRed, essl3_shaders::vs::Simple(), essl3_shaders::fs::Red());
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_EQUAL);
+    drawQuad(drawRed.get(), essl3_shaders::PositionAttrib(), 0.0f);
+
+    // This should trigger a deferred renderPass end
+    GLsync sync = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
+    EXPECT_GL_NO_ERROR();
+
+    // Resolve the color buffer to make sure the above draw worked correctly, which in turn implies
+    // that the multisampled depth clear worked.
+    GLFramebuffer framebufferResolved;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebufferResolved.get());
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER,
+                              colorResolved.get());
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, framebufferMS.get());
+    glBlitFramebuffer(0, 0, 256, 256, 0, 0, 256, 256, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, framebufferResolved.get());
+
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(255, 0, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(0, 255, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(255, 255, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(127, 127, GLColor::red);
+
+    glClientWaitSync(sync, GL_SYNC_FLUSH_COMMANDS_BIT, GL_TIMEOUT_IGNORED);
+    ASSERT_GL_NO_ERROR();
+}
+
 // Test resolving a multisampled stencil buffer.
 TEST_P(BlitFramebufferTest, MultisampleStencil)
 {
