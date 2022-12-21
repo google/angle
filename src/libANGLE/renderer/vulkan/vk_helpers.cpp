@@ -1553,11 +1553,10 @@ void OutsideRenderPassCommandBufferHelper::bufferRead(ContextVk *contextVk,
     }
 
     ASSERT(!buffer->writtenByCommandBuffer(mQueueSerial));
-    if (contextVk->hasStartedRenderPass() &&
-        contextVk->getStartedRenderPassCommands().usesBuffer(*buffer))
+    if (contextVk->isRenderPassStartedAndUsesBuffer(*buffer))
     {
         // We should not run into situation that RP is writing to it while we are reading it here
-        ASSERT(!contextVk->getStartedRenderPassCommands().usesBufferForWrite(*buffer));
+        ASSERT(!contextVk->isRenderPassStartedAndUsesBufferForWrite(*buffer));
         // A buffer could have read accessed by both renderPassCommands and
         // outsideRenderPassCommands and there is no need to endRP or flush. In this case, the
         // renderPassCommands' read will override the outsideRenderPassCommands' read, since its
