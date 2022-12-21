@@ -6509,8 +6509,8 @@ angle::Result RenderPassCache::addRenderPass(ContextVk *contextVk,
             continue;
         }
 
-        ops.initWithLoadStore(colorIndexVk, vk::ImageLayout::ColorAttachment,
-                              vk::ImageLayout::ColorAttachment);
+        ops.initWithLoadStore(colorIndexVk, vk::ImageLayout::ColorWrite,
+                              vk::ImageLayout::ColorWrite);
         ++colorIndexVk;
     }
 
@@ -6523,7 +6523,7 @@ angle::Result RenderPassCache::addRenderPass(ContextVk *contextVk,
         // are otherwise identical except for: Initial and final image layout in attachment
         // descriptions; Image layout in attachment references". We pick the most used layout here
         // since it doesn't matter.
-        vk::ImageLayout imageLayout = vk::ImageLayout::DepthStencilAttachment;
+        vk::ImageLayout imageLayout = vk::ImageLayout::DepthWriteStencilWrite;
         ops.initWithLoadStore(colorIndexVk, imageLayout, imageLayout);
     }
 

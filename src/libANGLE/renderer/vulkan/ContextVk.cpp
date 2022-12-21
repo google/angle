@@ -409,19 +409,19 @@ vk::ImageLayout GetImageReadLayout(TextureVk *textureVk,
                 if (firstShader == gl::ShaderType::Fragment)
                 {
                     ASSERT(remainingShaderBits.none() && lastShader == firstShader);
-                    return vk::ImageLayout::DSAttachmentReadAndFragmentShaderRead;
+                    return vk::ImageLayout::DepthReadStencilReadFragmentShaderRead;
                 }
-                return vk::ImageLayout::DSAttachmentReadAndAllShadersRead;
+                return vk::ImageLayout::DepthReadStencilReadAllShadersRead;
             }
 
             return firstShader == gl::ShaderType::Fragment
-                       ? vk::ImageLayout::DSAttachmentWriteAndFragmentShaderRead
-                       : vk::ImageLayout::DSAttachmentWriteAndAllShadersRead;
+                       ? vk::ImageLayout::DepthStencilFragmentShaderFeedback
+                       : vk::ImageLayout::DepthStencilAllShadersFeedback;
         }
 
         return firstShader == gl::ShaderType::Fragment
-                   ? vk::ImageLayout::ColorAttachmentAndFragmentShaderRead
-                   : vk::ImageLayout::ColorAttachmentAndAllShadersRead;
+                   ? vk::ImageLayout::ColorWriteFragmentShaderFeedback
+                   : vk::ImageLayout::ColorWriteAllShadersFeedback;
     }
 
     if (image.isDepthOrStencil())
@@ -434,9 +434,9 @@ vk::ImageLayout GetImageReadLayout(TextureVk *textureVk,
         if (firstShader == gl::ShaderType::Fragment)
         {
             ASSERT(remainingShaderBits.none() && lastShader == firstShader);
-            return vk::ImageLayout::DSAttachmentReadAndFragmentShaderRead;
+            return vk::ImageLayout::DepthReadStencilReadFragmentShaderRead;
         }
-        return vk::ImageLayout::DSAttachmentReadAndAllShadersRead;
+        return vk::ImageLayout::DepthReadStencilReadAllShadersRead;
     }
 
     // We barrier against either:
@@ -4200,7 +4200,7 @@ angle::Result ContextVk::optimizeRenderPassForPresent(VkFramebuffer framebufferH
                                                        drawFramebufferVk->getRenderPassDesc());
 
         onImageRenderPassWrite(gl::LevelIndex(0), 0, 1, VK_IMAGE_ASPECT_COLOR_BIT,
-                               vk::ImageLayout::ColorAttachment, colorImage);
+                               vk::ImageLayout::ColorWrite, colorImage);
 
         // Invalidate the surface.  See comment in WindowSurfaceVk::doDeferredAcquireNextImage on
         // why this is not done when in DEMAND_REFRESH mode.

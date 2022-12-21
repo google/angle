@@ -1525,11 +1525,11 @@ angle::Result TextureVk::setEGLImageTarget(const gl::Context *context,
         vk::ImageLayout newLayout = vk::ImageLayout::AllGraphicsShadersWrite;
         if (mImage->getUsage() & VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT)
         {
-            newLayout = vk::ImageLayout::ColorAttachment;
+            newLayout = vk::ImageLayout::ColorWrite;
         }
         else if (mImage->getUsage() & VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT)
         {
-            newLayout = vk::ImageLayout::DepthStencilAttachment;
+            newLayout = vk::ImageLayout::DepthWriteStencilWrite;
         }
         else if (mImage->getUsage() &
                  (VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT))

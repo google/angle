@@ -1567,16 +1567,38 @@ enum class ImageLayout
     Undefined = 0,
     // Framebuffer attachment layouts are placed first, so they can fit in fewer bits in
     // PackedAttachmentOpsDesc.
-    ColorAttachment,
-    ColorAttachmentAndFragmentShaderRead,
-    ColorAttachmentAndAllShadersRead,
-    DSAttachmentWriteAndFragmentShaderRead,
-    DSAttachmentWriteAndAllShadersRead,
-    DSAttachmentReadAndFragmentShaderRead,
-    DSAttachmentReadAndAllShadersRead,
-    DepthStencilAttachmentReadOnly,
-    DepthStencilAttachment,
-    DepthStencilResolveAttachment,
+
+    // Color (Write):
+    ColorWrite,
+
+    // Depth (Write), Stencil (Write)
+    DepthWriteStencilWrite,
+
+    // Depth (Write), Stencil (Read)
+    DepthWriteStencilRead,
+    DepthWriteStencilReadFragmentShaderStencilRead,
+    DepthWriteStencilReadAllShadersStencilRead,
+
+    // Depth (Read), Stencil (Write)
+    DepthReadStencilWrite,
+    DepthReadStencilWriteFragmentShaderDepthRead,
+    DepthReadStencilWriteAllShadersDepthRead,
+
+    // Depth (Read), Stencil (Read)
+    DepthReadStencilRead,
+    DepthReadStencilReadFragmentShaderRead,
+    DepthReadStencilReadAllShadersRead,
+
+    // The GENERAL layout is used when there's a feedback loop.  For depth/stencil it does't matter
+    // which aspect is participating in feedback and whether the other aspect is read-only.
+    ColorWriteFragmentShaderFeedback,
+    ColorWriteAllShadersFeedback,
+    DepthStencilFragmentShaderFeedback,
+    DepthStencilAllShadersFeedback,
+
+    // Depth/stencil resolve is special because it uses the _color_ output stage and mask
+    DepthStencilResolve,
+
     Present,
     SharedPresent,
     // The rest of the layouts.
