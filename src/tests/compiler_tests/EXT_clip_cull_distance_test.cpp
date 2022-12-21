@@ -167,7 +167,7 @@ const char FragmentShaderCompileSucceeds2[] =
         fragColor.y = gl_ClipDistance[gl_MaxClipDistances - int(aPosition.x)];
         fragColor.z = gl_CullDistance[gl_MaxCullDistances - 6 + 1];
         fragColor.w = gl_CullDistance[gl_MaxCullDistances - int(aPosition.x)];
-        fragColot *= gl_CullDistance[gl_MaxCombinedClipAndCullDistances - 5];
+        fragColor *= gl_CullDistance[gl_MaxCombinedClipAndCullDistances - 5];
     })";
 
 #if defined(ANGLE_ENABLE_VULKAN)
@@ -356,9 +356,7 @@ TEST_P(EXTClipCullDistanceForFragmentShaderTest, CompileFailsWithExtensionWithou
 
 #if defined(ANGLE_ENABLE_VULKAN)
 // With extension flag and extension directive, compiling using TranslatorVulkan succeeds.
-//
-// Test is disabled due to translation bug.  http://anglebug.com/5747
-TEST_P(EXTClipCullDistanceForFragmentShaderTest, DISABLED_CompileSucceedsVulkan)
+TEST_P(EXTClipCullDistanceForFragmentShaderTest, CompileSucceedsVulkan)
 {
     SetExtensionEnable(true);
 
