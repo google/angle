@@ -806,10 +806,11 @@ struct FeaturesVk : FeatureSetBase
         "VkDevice supports the VK_EXT_pipeline_protected_access extension", &members,
         "https://anglebug.com/7714"};
 
-    FeatureInfo supportsSeparateDepthStencilLayouts = {
-        "supportsSeparateDepthStencilLayouts", FeatureCategory::VulkanFeatures,
-        "VkDevice supports the VK_KHR_separate_depth_stencil_layouts extension", &members,
-        "https://anglebug.com/7899"};
+    FeatureInfo supportsMixedReadWriteDepthStencilLayouts = {
+        "supportsMixedReadWriteDepthStencilLayouts", FeatureCategory::VulkanFeatures,
+        "VkDevice supports the mixed read and write depth/stencil layouts introduced by "
+        "VK_KHR_maintenance2",
+        &members, "https://anglebug.com/7899"};
 
     FeatureInfo preferSubmitOnAnySamplesPassedQueryEnd = {
         "preferSubmitOnAnySamplesPassedQueryEnd", FeatureCategory::VulkanWorkarounds,

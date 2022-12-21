@@ -1598,7 +1598,8 @@ class DescriptorSetDesc
         return mWriteDescriptors[bindingIndex].descriptorCount;
     }
 
-    void updateDescriptorSet(UpdateDescriptorSetsBuilder *updateBuilder,
+    void updateDescriptorSet(Context *context,
+                             UpdateDescriptorSetsBuilder *updateBuilder,
                              const DescriptorDescHandles *handles,
                              VkDescriptorSet descriptorSet) const;
 
@@ -1716,7 +1717,8 @@ class DescriptorSetDescBuilder final
                                            PipelineType pipelineType,
                                            const SharedDescriptorSetCacheKey &sharedCacheKey);
 
-    void updateDescriptorSet(UpdateDescriptorSetsBuilder *updateBuilder,
+    void updateDescriptorSet(Context *context,
+                             UpdateDescriptorSetsBuilder *updateBuilder,
                              VkDescriptorSet descriptorSet) const;
 
     // If sharedCacheKey is not null, it means a new cache entry for descriptoret has been created.

@@ -235,7 +235,8 @@ uint8_t PackGLBlendFactor(GLenum blendFactor)
     }
 }
 
-void UnpackAttachmentDesc(VkAttachmentDescription2 *desc,
+void UnpackAttachmentDesc(Context *context,
+                          VkAttachmentDescription2 *desc,
                           angle::FormatID formatID,
                           uint8_t samples,
                           const PackedAttachmentOpsDesc &ops)
@@ -252,9 +253,9 @@ void UnpackAttachmentDesc(VkAttachmentDescription2 *desc,
     desc->stencilStoreOp =
         ConvertRenderPassStoreOpToVkStoreOp(static_cast<RenderPassStoreOp>(ops.stencilStoreOp));
     desc->initialLayout =
-        ConvertImageLayoutToVkImageLayout(static_cast<ImageLayout>(ops.initialLayout));
+        ConvertImageLayoutToVkImageLayout(context, static_cast<ImageLayout>(ops.initialLayout));
     desc->finalLayout =
-        ConvertImageLayoutToVkImageLayout(static_cast<ImageLayout>(ops.finalLayout));
+        ConvertImageLayoutToVkImageLayout(context, static_cast<ImageLayout>(ops.finalLayout));
 }
 
 void UnpackColorResolveAttachmentDesc(VkAttachmentDescription2 *desc,
@@ -1195,14 +1196,15 @@ angle::Result InitializeRenderPassFromDesc(ContextVk *contextVk,
         VkAttachmentReference2 colorRef = {};
         colorRef.sType                  = VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2;
         colorRef.attachment             = attachmentCount.get();
-        colorRef.layout                 = needInputAttachments
-                                              ? VK_IMAGE_LAYOUT_GENERAL
-                                              : ConvertImageLayoutToVkImageLayout(
-                                    static_cast<ImageLayout>(ops[attachmentCount].initialLayout));
-        colorRef.aspectMask             = VK_IMAGE_ASPECT_COLOR_BIT;
+        colorRef.layout =
+            needInputAttachments
+                ? VK_IMAGE_LAYOUT_GENERAL
+                : ConvertImageLayoutToVkImageLayout(
+                      contextVk, static_cast<ImageLayout>(ops[attachmentCount].initialLayout));
+        colorRef.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
         colorAttachmentRefs.push_back(colorRef);
 
-        UnpackAttachmentDesc(&attachmentDescs[attachmentCount.get()], attachmentFormatID,
+        UnpackAttachmentDesc(contextVk, &attachmentDescs[attachmentCount.get()], attachmentFormatID,
                              attachmentSamples, ops[attachmentCount]);
 
         // If this renderpass uses EXT_srgb_write_control, we need to override the format to its
@@ -1235,11 +1237,11 @@ angle::Result InitializeRenderPassFromDesc(ContextVk *contextVk,
         depthStencilAttachmentRef.sType      = VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2;
         depthStencilAttachmentRef.attachment = attachmentCount.get();
         depthStencilAttachmentRef.layout     = ConvertImageLayoutToVkImageLayout(
-            static_cast<ImageLayout>(ops[attachmentCount].initialLayout));
+            contextVk, static_cast<ImageLayout>(ops[attachmentCount].initialLayout));
         depthStencilAttachmentRef.aspectMask =
             VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
 
-        UnpackAttachmentDesc(&attachmentDescs[attachmentCount.get()], attachmentFormatID,
+        UnpackAttachmentDesc(contextVk, &attachmentDescs[attachmentCount.get()], attachmentFormatID,
                              attachmentSamples, ops[attachmentCount]);
 
         isDepthInvalidated   = ops[attachmentCount].isInvalidated;
@@ -5400,7 +5402,8 @@ void DescriptorSetDesc::updateWriteDesc(const WriteDescriptorDesc &writeDesc)
     destDesc = writeDesc;
 }
 
-void DescriptorSetDesc::updateDescriptorSet(UpdateDescriptorSetsBuilder *updateBuilder,
+void DescriptorSetDesc::updateDescriptorSet(Context *context,
+                                            UpdateDescriptorSetsBuilder *updateBuilder,
                                             const DescriptorDescHandles *handles,
                                             VkDescriptorSet descriptorSet) const
 {
@@ -5476,7 +5479,7 @@ void DescriptorSetDesc::updateDescriptorSet(UpdateDescriptorSetsBuilder *updateB
 
                     ImageLayout imageLayout = static_cast<ImageLayout>(infoDesc.imageLayoutOrRange);
 
-                    imageInfo.imageLayout = ConvertImageLayoutToVkImageLayout(imageLayout);
+                    imageInfo.imageLayout = ConvertImageLayoutToVkImageLayout(context, imageLayout);
                     imageInfo.imageView   = handles[infoDescIndex + arrayElement].imageView;
                     imageInfo.sampler     = handles[infoDescIndex + arrayElement].sampler;
                 }
@@ -6238,10 +6241,11 @@ angle::Result DescriptorSetDescBuilder::updateInputAttachments(
     return angle::Result::Continue;
 }
 
-void DescriptorSetDescBuilder::updateDescriptorSet(UpdateDescriptorSetsBuilder *updateBuilder,
+void DescriptorSetDescBuilder::updateDescriptorSet(Context *context,
+                                                   UpdateDescriptorSetsBuilder *updateBuilder,
                                                    VkDescriptorSet descriptorSet) const
 {
-    mDesc.updateDescriptorSet(updateBuilder, mHandles.data(), descriptorSet);
+    mDesc.updateDescriptorSet(context, updateBuilder, mHandles.data(), descriptorSet);
 }
 
 void DescriptorSetDescBuilder::updateImagesAndBuffersWithSharedCacheKey(

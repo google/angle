@@ -1145,7 +1145,7 @@ angle::Result TextureVk::copySubImageImplWithTransfer(ContextVk *contextVk,
             extents.depth = 1;
         }
 
-        vk::ImageHelper::Copy(srcImage, mImage, srcOffset, dstOffsetModified, extents,
+        vk::ImageHelper::Copy(contextVk, srcImage, mImage, srcOffset, dstOffsetModified, extents,
                               srcSubresource, destSubresource, commandBuffer);
     }
     else
@@ -1178,8 +1178,8 @@ angle::Result TextureVk::copySubImageImplWithTransfer(ContextVk *contextVk,
             extents.depth = 1;
         }
 
-        vk::ImageHelper::Copy(srcImage, &stagingImage->get(), srcOffset, gl::kOffsetZero, extents,
-                              srcSubresource, destSubresource, commandBuffer);
+        vk::ImageHelper::Copy(contextVk, srcImage, &stagingImage->get(), srcOffset, gl::kOffsetZero,
+                              extents, srcSubresource, destSubresource, commandBuffer);
 
         // Stage the copy for when the image storage is actually created.
         VkImageType imageType = gl_vk::GetImageType(mState.getType());
@@ -1894,7 +1894,7 @@ angle::Result TextureVk::copyBufferDataToImage(ContextVk *contextVk,
     ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(access, &commandBuffer));
 
     commandBuffer->copyBufferToImage(srcBuffer->getBuffer().getHandle(), mImage->getImage(),
-                                     mImage->getCurrentLayout(), 1, &region);
+                                     mImage->getCurrentLayout(contextVk), 1, &region);
 
     return angle::Result::Continue;
 }
@@ -2195,9 +2195,9 @@ angle::Result TextureVk::copyAndStageImageData(ContextVk *contextVk,
         copyRegion.dstSubresource.mipLevel = levelVk.get();
         gl_vk::GetExtent(levelExtents, &copyRegion.extent);
 
-        commandBuffer->copyImage(srcImage->getImage(), srcImage->getCurrentLayout(),
+        commandBuffer->copyImage(srcImage->getImage(), srcImage->getCurrentLayout(contextVk),
                                  stagingImage->get().getImage(),
-                                 stagingImage->get().getCurrentLayout(), 1, &copyRegion);
+                                 stagingImage->get().getCurrentLayout(contextVk), 1, &copyRegion);
     }
 
     // Stage the staging image in the destination

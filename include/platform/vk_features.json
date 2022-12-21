@@ -1093,10 +1093,10 @@
             "issue": "https://anglebug.com/7714"
 	},
         {
-            "name": "supports_separate_depth_stencil_layouts",
+            "name": "supports_mixed_read_write_depth_stencil_layouts",
             "category": "Features",
             "description": [
-                "VkDevice supports the VK_KHR_separate_depth_stencil_layouts extension"
+                "VkDevice supports the mixed read and write depth/stencil layouts introduced by VK_KHR_maintenance2"
             ],
             "issue": "https://anglebug.com/7899"
 	},

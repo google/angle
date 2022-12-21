@@ -1603,11 +1603,11 @@ enum class ImageLayout
 
 VkImageCreateFlags GetImageCreateFlags(gl::TextureType textureType);
 
-ImageLayout GetImageLayoutFromGLImageLayout(GLenum layout);
+ImageLayout GetImageLayoutFromGLImageLayout(Context *context, GLenum layout);
 
 GLenum ConvertImageLayoutToGLImageLayout(ImageLayout imageLayout);
 
-VkImageLayout ConvertImageLayoutToVkImageLayout(ImageLayout imageLayout);
+VkImageLayout ConvertImageLayoutToVkImageLayout(Context *context, ImageLayout imageLayout);
 
 // How the ImageHelper object is being used by the renderpass
 enum class RenderPassUsage
@@ -1905,7 +1905,7 @@ class ImageHelper final : public Resource, public angle::Subject
         mCurrentLayout = newLayout;
     }
     ImageLayout getCurrentImageLayout() const { return mCurrentLayout; }
-    VkImageLayout getCurrentLayout() const;
+    VkImageLayout getCurrentLayout(Context *context) const;
 
     gl::Extents getLevelExtents(LevelIndex levelVk) const;
     // Helper function to calculate the extents of a render target created for a certain mip of the
@@ -1921,7 +1921,8 @@ class ImageHelper final : public Resource, public angle::Subject
     bool hasRenderPassUsageFlag(RenderPassUsage flag) const;
     bool usedByCurrentRenderPassAsAttachmentAndSampler() const;
 
-    static void Copy(ImageHelper *srcImage,
+    static void Copy(Context *context,
+                     ImageHelper *srcImage,
                      ImageHelper *dstImage,
                      const gl::Offset &srcOffset,
                      const gl::Offset &dstOffset,
@@ -2386,7 +2387,8 @@ class ImageHelper final : public Resource, public angle::Subject
     // extents are not known).
     void removeSupersededUpdates(ContextVk *contextVk, gl::TexLevelMask skipLevelsMask);
 
-    void initImageMemoryBarrierStruct(VkImageAspectFlags aspectMask,
+    void initImageMemoryBarrierStruct(Context *context,
+                                      VkImageAspectFlags aspectMask,
                                       ImageLayout newLayout,
                                       uint32_t newQueueFamilyIndex,
                                       VkImageMemoryBarrier *imageMemoryBarrier) const;
@@ -2406,21 +2408,24 @@ class ImageHelper final : public Resource, public angle::Subject
     bool verifyEmulatedClearsAreBeforeOtherUpdates(const std::vector<SubresourceUpdate> &updates);
 
     // Clear either color or depth/stencil based on image format.
-    void clear(VkImageAspectFlags aspectFlags,
+    void clear(Context *context,
+               VkImageAspectFlags aspectFlags,
                const VkClearValue &value,
                LevelIndex mipLevel,
                uint32_t baseArrayLayer,
                uint32_t layerCount,
                OutsideRenderPassCommandBuffer *commandBuffer);
 
-    void clearColor(const VkClearColorValue &color,
+    void clearColor(Context *context,
+                    const VkClearColorValue &color,
                     LevelIndex baseMipLevelVk,
                     uint32_t levelCount,
                     uint32_t baseArrayLayer,
                     uint32_t layerCount,
                     OutsideRenderPassCommandBuffer *commandBuffer);
 
-    void clearDepthStencil(VkImageAspectFlags clearAspectFlags,
+    void clearDepthStencil(Context *context,
+                           VkImageAspectFlags clearAspectFlags,
                            const VkClearDepthStencilValue &depthStencil,
                            LevelIndex baseMipLevelVk,
                            uint32_t levelCount,

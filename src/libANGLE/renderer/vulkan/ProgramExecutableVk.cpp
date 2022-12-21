@@ -1522,7 +1522,7 @@ angle::Result ProgramExecutableVk::getOrAllocateDescriptorSet(
     if (*newSharedCacheKeyOut != nullptr)
     {
         // Cache miss. A new cache entry has been created.
-        descriptorSetDesc.updateDescriptorSet(updateBuilder, mDescriptorSets[setIndex]);
+        descriptorSetDesc.updateDescriptorSet(context, updateBuilder, mDescriptorSets[setIndex]);
     }
     else
     {
@@ -1604,7 +1604,8 @@ angle::Result ProgramExecutableVk::updateTexturesDescriptorSet(
         ANGLE_TRY(fullDesc.updateFullActiveTextures(context, mVariableInfoMap, executable, textures,
                                                     samplers, emulateSeamfulCubeMapSampling,
                                                     pipelineType, newSharedCacheKey));
-        fullDesc.updateDescriptorSet(updateBuilder, mDescriptorSets[DescriptorSetIndex::Texture]);
+        fullDesc.updateDescriptorSet(context, updateBuilder,
+                                     mDescriptorSets[DescriptorSetIndex::Texture]);
     }
     else
     {

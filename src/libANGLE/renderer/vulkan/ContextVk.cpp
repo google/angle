@@ -380,7 +380,7 @@ vk::ImageLayout GetImageReadLayout(TextureVk *textureVk,
 {
     vk::ImageHelper &image = textureVk->getImage();
 
-    // If this texture has been bound as image and currently executable program accesses images,
+    // If this texture has been bound as image and the current executable program accesses images,
     // we consider this image's layout as writeable.
     if (textureVk->hasBeenBoundAsImage() && executable.hasImages())
     {
@@ -6250,7 +6250,7 @@ angle::Result ContextVk::acquireTextures(const gl::Context *context,
     {
         TextureVk *textureVk   = vk::GetImpl(textureBarrier.texture);
         vk::ImageHelper &image = textureVk->getImage();
-        vk::ImageLayout layout = vk::GetImageLayoutFromGLImageLayout(textureBarrier.layout);
+        vk::ImageLayout layout = vk::GetImageLayoutFromGLImageLayout(this, textureBarrier.layout);
         // Image should not be accessed while unowned. Emulated formats may have staged updates
         // to clear the image after initialization.
         ASSERT(!image.hasStagedUpdatesInAllocatedLevels() || image.hasEmulatedImageChannels());
@@ -6264,7 +6264,6 @@ angle::Result ContextVk::releaseTextures(const gl::Context *context,
 {
     for (gl::TextureAndLayout &textureBarrier : *textureBarriers)
     {
-
         TextureVk *textureVk = vk::GetImpl(textureBarrier.texture);
 
         ANGLE_TRY(textureVk->ensureImageInitialized(this, ImageMipLevels::EnabledLevels));
