@@ -637,7 +637,7 @@ bool ValidCap(const Context *context, GLenum cap, bool queryOnly)
         case GL_TEXTURE_RECTANGLE_ANGLE:
             return context->isWebGL();
 
-        // GL_APPLE_clip_distance/GL_EXT_clip_cull_distance
+        // GL_APPLE_clip_distance / GL_EXT_clip_cull_distance / GL_ANGLE_clip_cull_distance
         case GL_CLIP_DISTANCE0_EXT:
         case GL_CLIP_DISTANCE1_EXT:
         case GL_CLIP_DISTANCE2_EXT:
@@ -647,7 +647,7 @@ bool ValidCap(const Context *context, GLenum cap, bool queryOnly)
         case GL_CLIP_DISTANCE6_EXT:
         case GL_CLIP_DISTANCE7_EXT:
             if (context->getExtensions().clipDistanceAPPLE ||
-                context->getExtensions().clipCullDistanceEXT)
+                context->getExtensions().clipCullDistanceAny())
             {
                 return true;
             }

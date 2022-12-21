@@ -1188,7 +1188,7 @@ class State : angle::NonCopyable
     // GL_KHR_parallel_shader_compile
     GLuint mMaxShaderCompilerThreads;
 
-    // GL_APPLE_clip_distance/GL_EXT_clip_cull_distance
+    // GL_APPLE_clip_distance / GL_EXT_clip_cull_distance / GL_ANGLE_clip_cull_distance
     ClipDistanceEnableBits mClipDistancesEnabled;
 
     // GL_EXT_tessellation_shader

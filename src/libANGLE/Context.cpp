@@ -2189,7 +2189,7 @@ void Context::getIntegervImpl(GLenum pname, GLint *params) const
         case GL_MAX_CLIP_PLANES:
             if (getClientVersion().major >= 2)
             {
-                // GL_APPLE_clip_distance/GL_EXT_clip_cull_distance
+                // GL_APPLE_clip_distance / GL_EXT_clip_cull_distance / GL_ANGLE_clip_cull_distance
                 *params = mState.mCaps.maxClipDistances;
             }
             else
@@ -3708,8 +3708,9 @@ Extensions Context::generateSupportedExtensions() const
         // GL_EXT_YUV_target requires ESSL3
         supportedExtensions.YUVTargetEXT = false;
 
-        // GL_EXT_clip_cull_distance requires ESSL3
-        supportedExtensions.clipCullDistanceEXT = false;
+        // GL_EXT_clip_cull_distance / GL_ANGLE_clip_cull_distance require ESSL3
+        supportedExtensions.clipCullDistanceEXT   = false;
+        supportedExtensions.clipCullDistanceANGLE = false;
 
         // ANGLE_shader_pixel_local_storage requires ES3
         supportedExtensions.shaderPixelLocalStorageANGLE         = false;

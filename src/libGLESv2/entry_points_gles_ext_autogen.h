@@ -90,6 +90,8 @@ GL_MultiDrawElementsInstancedBaseVertexBaseInstanceANGLE(GLenum mode,
                                                          const GLuint *baseInstances,
                                                          GLsizei drawcount);
 
+// GL_ANGLE_clip_cull_distance
+
 // GL_ANGLE_copy_texture_3d
 ANGLE_EXPORT void GL_APIENTRY GL_CopyTexture3DANGLE(GLuint sourceId,
                                                     GLint sourceLevel,

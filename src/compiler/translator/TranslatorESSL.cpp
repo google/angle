@@ -39,7 +39,8 @@ bool TranslatorESSL::translate(TIntermBlock *root,
     TInfoSinkBase &sink = getInfoSink().obj;
 
     int shaderVer = getShaderVersion();  // Frontend shader version.
-    if ((shaderVer > 100 && getResources().EXT_clip_cull_distance) ||
+    if ((shaderVer > 100 &&
+         (getResources().EXT_clip_cull_distance || getResources().ANGLE_clip_cull_distance)) ||
         (hasPixelLocalStorageUniforms() &&
          compileOptions.pls.type == ShPixelLocalStorageType::ImageLoadStore))
     {
@@ -124,7 +125,9 @@ bool TranslatorESSL::translate(TIntermBlock *root,
             if (!DeclarePerVertexBlocks(this, root, &getSymbolTable()))
                 return false;
         }
-        else if (IsExtensionEnabled(getExtensionBehavior(), TExtension::EXT_clip_cull_distance) &&
+        else if ((IsExtensionEnabled(getExtensionBehavior(), TExtension::EXT_clip_cull_distance) ||
+                  IsExtensionEnabled(getExtensionBehavior(),
+                                     TExtension::ANGLE_clip_cull_distance)) &&
                  areClipDistanceOrCullDistanceRedeclared())
         {
             // When clip distance state emulation is not needed,
@@ -233,14 +236,17 @@ void TranslatorESSL::writeExtensionBehavior(const ShCompileOptions &compileOptio
                 ASSERT(compileOptions.emulateGLBaseVertexBaseInstance);
                 continue;
             }
-            else if (iter->first == TExtension::EXT_clip_cull_distance &&
-                     (areClipDistanceOrCullDistanceRedeclared() ||
-                      (hasClipDistance() && compileOptions.emulateClipDistanceState)))
+            else if (iter->first == TExtension::EXT_clip_cull_distance ||
+                     iter->first == TExtension::ANGLE_clip_cull_distance)
             {
                 sink << "#extension GL_EXT_clip_cull_distance : " << GetBehaviorString(iter->second)
-                     << "\n"
-                     << "#extension GL_EXT_shader_io_blocks : " << GetBehaviorString(iter->second)
                      << "\n";
+                if (areClipDistanceOrCullDistanceRedeclared() ||
+                    (hasClipDistance() && compileOptions.emulateClipDistanceState))
+                {
+                    sink << "#extension GL_EXT_shader_io_blocks : "
+                         << GetBehaviorString(iter->second) << "\n";
+                }
             }
             else if (iter->first == TExtension::ANGLE_shader_pixel_local_storage)
             {

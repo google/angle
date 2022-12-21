@@ -189,6 +189,10 @@ void InitExtensionBehavior(const ShBuiltInResources &resources, TExtensionBehavi
     {
         extBehavior[TExtension::EXT_clip_cull_distance] = EBhUndefined;
     }
+    if (resources.ANGLE_clip_cull_distance)
+    {
+        extBehavior[TExtension::ANGLE_clip_cull_distance] = EBhUndefined;
+    }
     if (resources.ANDROID_extension_pack_es31a)
     {
         extBehavior[TExtension::ANDROID_extension_pack_es31a] = EBhUndefined;

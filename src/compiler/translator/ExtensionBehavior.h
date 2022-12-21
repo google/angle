@@ -21,6 +21,7 @@ enum class TExtension : uint8_t
 
     ANDROID_extension_pack_es31a,
     ANGLE_base_vertex_base_instance_shader_builtin,
+    ANGLE_clip_cull_distance,
     ANGLE_multi_draw,
     ANGLE_shader_pixel_local_storage,
     ANGLE_texture_multisample,

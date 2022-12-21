@@ -842,12 +842,14 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         return false;
     }
 
-    if (parseContext.isExtensionEnabled(TExtension::EXT_clip_cull_distance) ||
+    if (parseContext.isExtensionEnabled(TExtension::ANGLE_clip_cull_distance) ||
+        parseContext.isExtensionEnabled(TExtension::EXT_clip_cull_distance) ||
         parseContext.isExtensionEnabled(TExtension::APPLE_clip_distance))
     {
-        if (!ValidateClipCullDistance(
-                root, &mDiagnostics, mResources.MaxCombinedClipAndCullDistances, &mClipDistanceSize,
-                &mCullDistanceSize, &mClipDistanceMaxIndex, &mCullDistanceMaxIndex))
+        if (!ValidateClipCullDistance(root, &mDiagnostics, mResources.MaxCullDistances,
+                                      mResources.MaxCombinedClipAndCullDistances,
+                                      &mClipDistanceSize, &mCullDistanceSize,
+                                      &mClipDistanceMaxIndex, &mCullDistanceMaxIndex))
         {
             return false;
         }
@@ -1383,6 +1385,7 @@ void TCompiler::setResourceString()
         << ":EXT_texture_buffer:" << mResources.EXT_texture_buffer
         << ":OES_sample_variables:" << mResources.OES_sample_variables
         << ":EXT_clip_cull_distance:" << mResources.EXT_clip_cull_distance
+        << ":ANGLE_clip_cull_distance:" << mResources.ANGLE_clip_cull_distance
         << ":MinProgramTextureGatherOffset:" << mResources.MinProgramTextureGatherOffset
         << ":MaxProgramTextureGatherOffset:" << mResources.MaxProgramTextureGatherOffset
         << ":MaxImageUnits:" << mResources.MaxImageUnits

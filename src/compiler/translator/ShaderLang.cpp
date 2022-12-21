@@ -222,6 +222,7 @@ void InitBuiltInResources(ShBuiltInResources *resources)
     resources->EXT_texture_buffer                             = 0;
     resources->OES_sample_variables                           = 0;
     resources->EXT_clip_cull_distance                         = 0;
+    resources->ANGLE_clip_cull_distance                       = 0;
     resources->KHR_blend_equation_advanced                    = 0;
 
     resources->MaxClipDistances                = 8;

@@ -47,6 +47,7 @@ angle_toggleable_extensions = [
 angle_requestable_extensions = [
     "GL_ANGLE_base_vertex_base_instance",
     "GL_ANGLE_base_vertex_base_instance_shader_builtin",
+    "GL_ANGLE_clip_cull_distance",
     "GL_ANGLE_compressed_texture_etc",
     "GL_ANGLE_copy_texture_3d",
     "GL_ANGLE_framebuffer_multisample",

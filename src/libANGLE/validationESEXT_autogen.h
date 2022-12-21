@@ -117,6 +117,8 @@ bool ValidateMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE(const Context
                                                                    const GLuint *baseInstances,
                                                                    GLsizei drawcount);
 
+// GL_ANGLE_clip_cull_distance
+
 // GL_ANGLE_copy_texture_3d
 bool ValidateCopyTexture3DANGLE(const Context *context,
                                 angle::EntryPoint entryPoint,

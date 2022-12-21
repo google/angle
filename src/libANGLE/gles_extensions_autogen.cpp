@@ -207,6 +207,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_CHROMIUM_bind_generates_resource"] = esOnlyExtension(&Extensions::bindGeneratesResourceCHROMIUM);
         map["GL_CHROMIUM_bind_uniform_location"] = esOnlyExtension(&Extensions::bindUniformLocationCHROMIUM);
         map["GL_ANGLE_client_arrays"] = esOnlyExtension(&Extensions::clientArraysANGLE);
+        map["GL_ANGLE_clip_cull_distance"] = enableableExtension(&Extensions::clipCullDistanceANGLE);
         map["GL_CHROMIUM_color_buffer_float_rgb"] = enableableExtension(&Extensions::colorBufferFloatRgbCHROMIUM);
         map["GL_CHROMIUM_color_buffer_float_rgba"] = enableableExtension(&Extensions::colorBufferFloatRgbaCHROMIUM);
         map["GL_ANGLE_compressed_texture_etc"] = enableableExtension(&Extensions::compressedTextureEtcANGLE);

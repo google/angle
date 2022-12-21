@@ -1067,7 +1067,7 @@ void RendererVk::ensureCapsInitialized() const
         }
     }
 
-    // GL_APPLE_clip_distance/GL_EXT_clip_cull_distance
+    // GL_APPLE_clip_distance / GL_EXT_clip_cull_distance / GL_ANGLE_clip_cull_distance
     // From the EXT_clip_cull_distance extension spec:
     //
     // > Modify Section 7.2, "Built-In Constants" (p. 126)
@@ -1086,8 +1086,9 @@ void RendererVk::ensureCapsInitialized() const
     if (mPhysicalDeviceFeatures.shaderClipDistance &&
         limitsVk.maxClipDistances >= kMaxClipDistancePerSpec)
     {
-        mNativeExtensions.clipDistanceAPPLE = true;
-        mNativeCaps.maxClipDistances        = limitsVk.maxClipDistances;
+        mNativeExtensions.clipDistanceAPPLE     = true;
+        mNativeExtensions.clipCullDistanceANGLE = true;
+        mNativeCaps.maxClipDistances            = limitsVk.maxClipDistances;
 
         if (mPhysicalDeviceFeatures.shaderCullDistance &&
             limitsVk.maxCullDistances >= kMaxCullDistancePerSpec &&

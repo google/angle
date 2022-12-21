@@ -352,6 +352,7 @@
         const GLuint *baseInstances, GLsizei drawcount);                                           \
     /* GL_ANGLE_base_vertex_base_instance_shader_builtin */                                        \
     /* GL_ANGLE_client_arrays */                                                                   \
+    /* GL_ANGLE_clip_cull_distance */                                                              \
     /* GL_ANGLE_compressed_texture_etc */                                                          \
     /* GL_ANGLE_copy_texture_3d */                                                                 \
     void copyTexture3D(TextureID sourceIdPacked, GLint sourceLevel,                                \

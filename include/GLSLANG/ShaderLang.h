@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 317
+#define ANGLE_SH_VERSION 318
 
 enum ShShaderSpec
 {
@@ -491,6 +491,7 @@ struct ShBuiltInResources
     int EXT_texture_buffer;
     int OES_sample_variables;
     int EXT_clip_cull_distance;
+    int ANGLE_clip_cull_distance;
     int EXT_primitive_bounding_box;
     int OES_primitive_bounding_box;
     int EXT_separate_shader_objects;
@@ -661,7 +662,7 @@ struct ShBuiltInResources
     // Subpixel bits used in rasterization.
     int SubPixelBits;
 
-    // APPLE_clip_distance/EXT_clip_cull_distance constant
+    // APPLE_clip_distance / EXT_clip_cull_distance / ANGLE_clip_cull_distance constants
     int MaxClipDistances;
     int MaxCullDistances;
     int MaxCombinedClipAndCullDistances;

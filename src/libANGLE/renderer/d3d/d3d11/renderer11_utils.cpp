@@ -1705,9 +1705,10 @@ void GenerateCaps(ID3D11Device *device,
     // GL_EXT_clip_control
     extensions->clipControlEXT = (renderer11DeviceCaps.featureLevel >= D3D_FEATURE_LEVEL_9_3);
 
-    // GL_APPLE_clip_distance / GL_EXT_clip_cull_distance
+    // GL_APPLE_clip_distance / GL_EXT_clip_cull_distance / GL_ANGLE_clip_cull_distance
     extensions->clipDistanceAPPLE         = true;
     extensions->clipCullDistanceEXT       = true;
+    extensions->clipCullDistanceANGLE     = true;
     caps->maxClipDistances                = D3D11_CLIP_OR_CULL_DISTANCE_COUNT;
     caps->maxCullDistances                = D3D11_CLIP_OR_CULL_DISTANCE_COUNT;
     caps->maxCombinedClipAndCullDistances = D3D11_CLIP_OR_CULL_DISTANCE_COUNT;

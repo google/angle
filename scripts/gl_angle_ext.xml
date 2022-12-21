@@ -1151,6 +1151,21 @@
                 <command name="glMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE"/>
             </require>
         </extension>
+        <extension name="GL_ANGLE_clip_cull_distance" supported='gles2'>
+            <require>
+                <enum name="GL_MAX_CLIP_DISTANCES_ANGLE"/>
+                <enum name="GL_MAX_CULL_DISTANCES_ANGLE"/>
+                <enum name="GL_MAX_COMBINED_CLIP_AND_CULL_DISTANCES_ANGLE"/>
+                <enum name="GL_CLIP_DISTANCE0_ANGLE"/>
+                <enum name="GL_CLIP_DISTANCE1_ANGLE"/>
+                <enum name="GL_CLIP_DISTANCE2_ANGLE"/>
+                <enum name="GL_CLIP_DISTANCE3_ANGLE"/>
+                <enum name="GL_CLIP_DISTANCE4_ANGLE"/>
+                <enum name="GL_CLIP_DISTANCE5_ANGLE"/>
+                <enum name="GL_CLIP_DISTANCE6_ANGLE"/>
+                <enum name="GL_CLIP_DISTANCE7_ANGLE"/>
+            </require>
+        </extension>
         <extension name="GL_ANGLE_provoking_vertex" supported='gles2'>
             <require>
                 <enum name="GL_FIRST_VERTEX_CONVENTION_ANGLE"/>
@@ -1290,6 +1305,20 @@
         <enum value="0x8E4D" name="GL_FIRST_VERTEX_CONVENTION_ANGLE" group="VertexProvokingMode"/>
         <enum value="0x8E4E" name="GL_LAST_VERTEX_CONVENTION_ANGLE" group="VertexProvokingMode"/>
         <enum value="0x8E4F" name="GL_PROVOKING_VERTEX_ANGLE" group="GetPName"/>
+    </enums>
+
+    <enums namespace="GL" vendor="ANGLE">
+        <enum value="0x0D32" name="GL_MAX_CLIP_DISTANCES_ANGLE" group="GetPName"/>
+        <enum value="0x82F9" name="GL_MAX_CULL_DISTANCES_ANGLE" group="GetPName"/>
+        <enum value="0x82FA" name="GL_MAX_COMBINED_CLIP_AND_CULL_DISTANCES_ANGLE" group="GetPName"/>
+        <enum value="0x3000" name="GL_CLIP_DISTANCE0_ANGLE" group="EnableCap"/>
+        <enum value="0x3001" name="GL_CLIP_DISTANCE1_ANGLE" group="EnableCap"/>
+        <enum value="0x3002" name="GL_CLIP_DISTANCE2_ANGLE" group="EnableCap"/>
+        <enum value="0x3003" name="GL_CLIP_DISTANCE3_ANGLE" group="EnableCap"/>
+        <enum value="0x3004" name="GL_CLIP_DISTANCE4_ANGLE" group="EnableCap"/>
+        <enum value="0x3005" name="GL_CLIP_DISTANCE5_ANGLE" group="EnableCap"/>
+        <enum value="0x3006" name="GL_CLIP_DISTANCE6_ANGLE" group="EnableCap"/>
+        <enum value="0x3007" name="GL_CLIP_DISTANCE7_ANGLE" group="EnableCap"/>
     </enums>
 
     <enums namespace="GL" start="0x93A7" end="0x93A7" vendor="ANGLE">

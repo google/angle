@@ -3329,7 +3329,7 @@ bool GetQueryParameterInfo(const State &glState,
             {
                 break;
             }
-            if (!extensions.clipDistanceAPPLE && !extensions.clipCullDistanceEXT)
+            if (!extensions.clipDistanceAPPLE && !extensions.clipCullDistanceAny())
             {
                 // NOTE(hqle): if client version is 1. GL_MAX_CLIP_DISTANCES_EXT is equal
                 // to GL_MAX_CLIP_PLANES which is a valid enum.
@@ -3340,7 +3340,7 @@ bool GetQueryParameterInfo(const State &glState,
             return true;
         case GL_MAX_CULL_DISTANCES_EXT:
         case GL_MAX_COMBINED_CLIP_AND_CULL_DISTANCES_EXT:
-            if (!extensions.clipCullDistanceEXT)
+            if (!extensions.clipCullDistanceAny())
             {
                 return false;
             }

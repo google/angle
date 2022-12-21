@@ -46,6 +46,21 @@ GL_APICALL void GL_APIENTRY glProvokingVertexANGLE(GLenum provokeMode);
 #endif
 #endif /* GL_ANGLE_provoking_vertex */
 
+#ifndef GL_ANGLE_clip_cull_distance
+#define GL_ANGLE_clip_cull_distance 1
+#define GL_MAX_CLIP_DISTANCES_ANGLE                   0x0D32
+#define GL_MAX_CULL_DISTANCES_ANGLE                   0x82F9
+#define GL_MAX_COMBINED_CLIP_AND_CULL_DISTANCES_ANGLE 0x82FA
+#define GL_CLIP_DISTANCE0_ANGLE                       0x3000
+#define GL_CLIP_DISTANCE1_ANGLE                       0x3001
+#define GL_CLIP_DISTANCE2_ANGLE                       0x3002
+#define GL_CLIP_DISTANCE3_ANGLE                       0x3003
+#define GL_CLIP_DISTANCE4_ANGLE                       0x3004
+#define GL_CLIP_DISTANCE5_ANGLE                       0x3005
+#define GL_CLIP_DISTANCE6_ANGLE                       0x3006
+#define GL_CLIP_DISTANCE7_ANGLE                       0x3007
+#endif /* GL_ANGLE_clip_cull_distance */
+
 #ifndef GL_CHROMIUM_framebuffer_mixed_samples
 #define GL_CHROMIUM_frambuffer_mixed_samples 1
 #define GL_COVERAGE_MODULATION_CHROMIUM 0x9332

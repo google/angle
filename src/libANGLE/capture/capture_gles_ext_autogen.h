@@ -118,6 +118,8 @@ angle::CallCapture CaptureMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE(
     const GLuint *baseInstances,
     GLsizei drawcount);
 
+// GL_ANGLE_clip_cull_distance
+
 // GL_ANGLE_copy_texture_3d
 angle::CallCapture CaptureCopyTexture3DANGLE(const State &glState,
                                              bool isCallValid,

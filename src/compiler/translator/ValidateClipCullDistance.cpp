@@ -30,6 +30,7 @@ class ValidateClipCullDistanceTraverser : public TIntermTraverser
   public:
     ValidateClipCullDistanceTraverser();
     void validate(TDiagnostics *diagnostics,
+                  const unsigned int maxCullDistances,
                   const unsigned int maxCombinedClipAndCullDistances,
                   uint8_t *clipDistanceSizeOut,
                   uint8_t *cullDistanceSizeOut,
@@ -186,6 +187,7 @@ bool ValidateClipCullDistanceTraverser::visitBinary(Visit visit, TIntermBinary *
 }
 
 void ValidateClipCullDistanceTraverser::validate(TDiagnostics *diagnostics,
+                                                 const unsigned int maxCullDistances,
                                                  const unsigned int maxCombinedClipAndCullDistances,
                                                  uint8_t *clipDistanceSizeOut,
                                                  uint8_t *cullDistanceSizeOut,
@@ -221,6 +223,11 @@ void ValidateClipCullDistanceTraverser::validate(TDiagnostics *diagnostics,
              ? enabledClipDistances + enabledCullDistances
              : 0);
 
+    if (enabledCullDistances > 0 && maxCullDistances == 0)
+    {
+        error(*mCullDistance, "Cull distance functionality is not available", diagnostics);
+    }
+
     if (combinedClipAndCullDistances > maxCombinedClipAndCullDistances)
     {
         const TIntermSymbol *greaterSymbol =
@@ -244,6 +251,7 @@ void ValidateClipCullDistanceTraverser::validate(TDiagnostics *diagnostics,
 
 bool ValidateClipCullDistance(TIntermBlock *root,
                               TDiagnostics *diagnostics,
+                              const unsigned int maxCullDistances,
                               const unsigned int maxCombinedClipAndCullDistances,
                               uint8_t *clipDistanceSizeOut,
                               uint8_t *cullDistanceSizeOut,
@@ -253,8 +261,8 @@ bool ValidateClipCullDistance(TIntermBlock *root,
     ValidateClipCullDistanceTraverser varyingValidator;
     root->traverse(&varyingValidator);
     int numErrorsBefore = diagnostics->numErrors();
-    varyingValidator.validate(diagnostics, maxCombinedClipAndCullDistances, clipDistanceSizeOut,
-                              cullDistanceSizeOut, clipDistanceMaxIndexOut,
+    varyingValidator.validate(diagnostics, maxCullDistances, maxCombinedClipAndCullDistances,
+                              clipDistanceSizeOut, cullDistanceSizeOut, clipDistanceMaxIndexOut,
                               cullDistanceMaxIndexOut);
     return (diagnostics->numErrors() == numErrorsBefore);
 }

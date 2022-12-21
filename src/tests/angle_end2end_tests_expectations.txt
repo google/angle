@@ -745,6 +745,7 @@
 
 4452 MAC AMD OPENGL : ClipDistanceAPPLETest.EachClipDistance/ES2_OpenGL = SKIP
 4452 MAC AMD OPENGL : ClipDistanceAPPLETest.EachClipDistance/ES3_OpenGL = SKIP
+4452 MAC AMD OPENGL : ClipCullDistanceTest.EachClipDistance/ES3_OpenGL__ANGLE = SKIP
 
 7768 IOS : ClipDistanceAPPLETest.OneClipDistance/ES2_OpenGL = SKIP
 7768 IOS : ClipDistanceAPPLETest.OneClipDistance/ES3_OpenGL = SKIP
@@ -947,7 +948,7 @@
 7473 WIN INTEL OPENGL : CompressedTextureETC2RGBA8Test.Test/* = SKIP
 
 // Takes several minutes to complete with ASAN
-5458 ASAN VULKAN SWIFTSHADER : ClipCullDistanceEXTTest.SizeCheckCombined/* = SKIP
+5458 ASAN VULKAN SWIFTSHADER : ClipCullDistanceTest.SizeCheckCombined/* = SKIP
 
 // Slow tests, should appear last in this file
 5076 : GLSLTest.VerifyMaxVertexUniformVectors* = TIMEOUT
@@ -962,12 +963,12 @@
 7657 VULKAN : EXTMultisampleCompatibilityTest.* = SKIP
 
 // Missing geometry & tesselation shader interactions with clip / cull distance
-5466 VULKAN : ClipCullDistanceEXTTest.ClipDistanceInteractWithGeometryShader/* = SKIP
-5466 VULKAN : ClipCullDistanceEXTTest.CullDistanceInteractWithGeometryShader/* = SKIP
-5466 OPENGL : ClipCullDistanceEXTTest.ClipDistanceInteractWithGeometryShader/* = SKIP
-5466 OPENGL : ClipCullDistanceEXTTest.CullDistanceInteractWithGeometryShader/* = SKIP
-5466 GLES : ClipCullDistanceEXTTest.ClipDistanceInteractWithGeometryShader/* = SKIP
-5466 GLES : ClipCullDistanceEXTTest.CullDistanceInteractWithGeometryShader/* = SKIP
+5466 VULKAN : ClipCullDistanceTest.ClipDistanceInteractWithGeometryShader/* = SKIP
+5466 VULKAN : ClipCullDistanceTest.CullDistanceInteractWithGeometryShader/* = SKIP
+5466 OPENGL : ClipCullDistanceTest.ClipDistanceInteractWithGeometryShader/* = SKIP
+5466 OPENGL : ClipCullDistanceTest.CullDistanceInteractWithGeometryShader/* = SKIP
+5466 GLES : ClipCullDistanceTest.ClipDistanceInteractWithGeometryShader/* = SKIP
+5466 GLES : ClipCullDistanceTest.CullDistanceInteractWithGeometryShader/* = SKIP
 
 // bits 24..31 from glClearValueuiv value don't work on Intel Metal.
 7794 MAC INTEL METAL : PixelLocalStorageTest.ClearValues_r32/* = SKIP

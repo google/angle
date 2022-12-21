@@ -1346,7 +1346,7 @@ void State::setEnableFeature(GLenum feature, bool enabled)
         case GL_SAMPLE_SHADING:
             setSampleShading(enabled);
             return;
-        // GL_APPLE_clip_distance/GL_EXT_clip_cull_distance
+        // GL_APPLE_clip_distance / GL_EXT_clip_cull_distance / GL_ANGLE_clip_cull_distance
         case GL_CLIP_DISTANCE0_EXT:
         case GL_CLIP_DISTANCE1_EXT:
         case GL_CLIP_DISTANCE2_EXT:
@@ -1502,7 +1502,7 @@ bool State::getEnableFeature(GLenum feature) const
             return mTextureRectangleEnabled;
         case GL_SAMPLE_SHADING:
             return isSampleShadingEnabled();
-        // GL_APPLE_clip_distance/GL_EXT_clip_cull_distance
+        // GL_APPLE_clip_distance / GL_EXT_clip_cull_distance / GL_ANGLE_clip_cull_distance
         case GL_CLIP_DISTANCE0_EXT:
         case GL_CLIP_DISTANCE1_EXT:
         case GL_CLIP_DISTANCE2_EXT:

@@ -1956,6 +1956,11 @@ void GenerateCaps(const FunctionsGL *functions,
             QuerySingleGLInt(functions, GL_MAX_COMBINED_CLIP_AND_CULL_DISTANCES_EXT);
     }
 
+    // Same as GL_EXT_clip_cull_distance but with cull distance support being optional.
+    extensions->clipCullDistanceANGLE =
+        functions->isAtLeastGL(gl::Version(3, 0)) || extensions->clipCullDistanceEXT;
+    ASSERT(!extensions->clipCullDistanceANGLE || caps->maxClipDistances > 0);
+
     // GL_OES_shader_image_atomic
     //
     // Note that imageAtomicExchange() is allowed to accept float textures (of r32f format) in this

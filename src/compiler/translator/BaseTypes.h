@@ -1076,8 +1076,8 @@ enum TQualifier
     EvqViewIDOVR,      // OVR_multiview
     EvqViewportIndex,  // gl_ViewportIndex
 
-    EvqClipDistance,  // APPLE_clip_distance/EXT_clip_cull_distance
-    EvqCullDistance,  // EXT_clip_cull_distance
+    EvqClipDistance,  // APPLE_clip_distance / EXT_clip_cull_distance / ANGLE_clip_cull_distance
+    EvqCullDistance,  // EXT_clip_cull_distance / ANGLE_clip_cull_distance
 
     // built-ins written by the shader_framebuffer_fetch extension(s)
     EvqLastFragColor,

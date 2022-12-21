@@ -369,7 +369,7 @@ struct Caps
     GLuint maxDebugGroupStackDepth = 0;
     GLuint maxLabelLength          = 0;
 
-    // GL_APPLE_clip_distance/GL_EXT_clip_cull_distance
+    // GL_APPLE_clip_distance / GL_EXT_clip_cull_distance / GL_ANGLE_clip_cull_distance
     GLuint maxClipDistances                = 0;
     GLuint maxCullDistances                = 0;
     GLuint maxCombinedClipAndCullDistances = 0;
