@@ -2030,11 +2030,8 @@ static ClientExtensions GenerateClientExtensions()
 #endif
 
 #if defined(ANGLE_ENABLE_METAL)
-    if (rx::IsMetalDisplayAvailable())
-    {
-        extensions.platformANGLEMetal    = true;
-        extensions.platformANGLEDeviceId = true;
-    }
+    extensions.platformANGLEMetal    = true;
+    extensions.platformANGLEDeviceId = true;
 #endif
 
 #if defined(ANGLE_USE_X11)
