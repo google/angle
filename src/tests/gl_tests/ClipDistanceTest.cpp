@@ -38,22 +38,29 @@ TEST_P(ClipDistanceAPPLETest, StateQuery)
     EXPECT_EQ(maxClipDistances, 0);
     EXPECT_GL_ERROR(GL_INVALID_ENUM);
 
+    auto assertState = [](GLenum pname, bool valid, bool expectedState) {
+        EXPECT_EQ(glIsEnabled(pname), valid ? expectedState : false);
+        EXPECT_GL_ERROR(valid ? GL_NO_ERROR : GL_INVALID_ENUM);
+
+        GLboolean result = false;
+        glGetBooleanv(pname, &result);
+        EXPECT_EQ(result, valid ? expectedState : false);
+        EXPECT_GL_ERROR(valid ? GL_NO_ERROR : GL_INVALID_ENUM);
+    };
+
     for (size_t i = 0; i < 8; i++)
     {
-        EXPECT_FALSE(glIsEnabled(GL_CLIP_DISTANCE0_APPLE + i));
-        EXPECT_GL_ERROR(GL_INVALID_ENUM);
+        assertState(GL_CLIP_DISTANCE0_APPLE + i, false, false);
 
         glEnable(GL_CLIP_DISTANCE0_APPLE + i);
         EXPECT_GL_ERROR(GL_INVALID_ENUM);
 
-        EXPECT_FALSE(glIsEnabled(GL_CLIP_DISTANCE0_APPLE + i));
-        EXPECT_GL_ERROR(GL_INVALID_ENUM);
+        assertState(GL_CLIP_DISTANCE0_APPLE + i, false, false);
 
         glDisable(GL_CLIP_DISTANCE0_APPLE + i);
         EXPECT_GL_ERROR(GL_INVALID_ENUM);
 
-        EXPECT_FALSE(glIsEnabled(GL_CLIP_DISTANCE0_APPLE + i));
-        EXPECT_GL_ERROR(GL_INVALID_ENUM);
+        assertState(GL_CLIP_DISTANCE0_APPLE + i, false, false);
     }
 
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_APPLE_clip_distance"));
@@ -66,20 +73,17 @@ TEST_P(ClipDistanceAPPLETest, StateQuery)
 
     for (size_t i = 0; i < 8; i++)
     {
-        EXPECT_FALSE(glIsEnabled(GL_CLIP_DISTANCE0_APPLE + i));
-        EXPECT_GL_NO_ERROR();
+        assertState(GL_CLIP_DISTANCE0_APPLE + i, true, false);
 
         glEnable(GL_CLIP_DISTANCE0_APPLE + i);
         EXPECT_GL_NO_ERROR();
 
-        EXPECT_TRUE(glIsEnabled(GL_CLIP_DISTANCE0_APPLE + i));
-        EXPECT_GL_NO_ERROR();
+        assertState(GL_CLIP_DISTANCE0_APPLE + i, true, true);
 
         glDisable(GL_CLIP_DISTANCE0_APPLE + i);
         EXPECT_GL_NO_ERROR();
 
-        EXPECT_FALSE(glIsEnabled(GL_CLIP_DISTANCE0_APPLE + i));
-        EXPECT_GL_NO_ERROR();
+        assertState(GL_CLIP_DISTANCE0_APPLE + i, true, false);
     }
 }
 
@@ -746,22 +750,29 @@ TEST_P(ClipCullDistanceTest, StateQuery)
     EXPECT_EQ(maxCombinedClipAndCullDistances, 0);
     EXPECT_GL_ERROR(GL_INVALID_ENUM);
 
+    auto assertState = [](GLenum pname, bool valid, bool expectedState) {
+        EXPECT_EQ(glIsEnabled(pname), valid ? expectedState : false);
+        EXPECT_GL_ERROR(valid ? GL_NO_ERROR : GL_INVALID_ENUM);
+
+        GLboolean result = false;
+        glGetBooleanv(pname, &result);
+        EXPECT_EQ(result, valid ? expectedState : false);
+        EXPECT_GL_ERROR(valid ? GL_NO_ERROR : GL_INVALID_ENUM);
+    };
+
     for (size_t i = 0; i < 8; i++)
     {
-        EXPECT_FALSE(glIsEnabled(GL_CLIP_DISTANCE0_EXT + i));
-        EXPECT_GL_ERROR(GL_INVALID_ENUM);
+        assertState(GL_CLIP_DISTANCE0_EXT + i, false, false);
 
         glEnable(GL_CLIP_DISTANCE0_EXT + i);
         EXPECT_GL_ERROR(GL_INVALID_ENUM);
 
-        EXPECT_FALSE(glIsEnabled(GL_CLIP_DISTANCE0_EXT + i));
-        EXPECT_GL_ERROR(GL_INVALID_ENUM);
+        assertState(GL_CLIP_DISTANCE0_EXT + i, false, false);
 
         glDisable(GL_CLIP_DISTANCE0_EXT + i);
         EXPECT_GL_ERROR(GL_INVALID_ENUM);
 
-        EXPECT_FALSE(glIsEnabled(GL_CLIP_DISTANCE0_EXT + i));
-        EXPECT_GL_ERROR(GL_INVALID_ENUM);
+        assertState(GL_CLIP_DISTANCE0_EXT + i, false, false);
     }
 
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled(kExtensionName));
@@ -796,20 +807,17 @@ TEST_P(ClipCullDistanceTest, StateQuery)
 
     for (size_t i = 0; i < 8; i++)
     {
-        EXPECT_FALSE(glIsEnabled(GL_CLIP_DISTANCE0_EXT + i));
-        EXPECT_GL_NO_ERROR();
+        assertState(GL_CLIP_DISTANCE0_EXT + i, true, false);
 
         glEnable(GL_CLIP_DISTANCE0_EXT + i);
         EXPECT_GL_NO_ERROR();
 
-        EXPECT_TRUE(glIsEnabled(GL_CLIP_DISTANCE0_EXT + i));
-        EXPECT_GL_NO_ERROR();
+        assertState(GL_CLIP_DISTANCE0_EXT + i, true, true);
 
         glDisable(GL_CLIP_DISTANCE0_EXT + i);
         EXPECT_GL_NO_ERROR();
 
-        EXPECT_FALSE(glIsEnabled(GL_CLIP_DISTANCE0_EXT + i));
-        EXPECT_GL_NO_ERROR();
+        assertState(GL_CLIP_DISTANCE0_EXT + i, true, false);
     }
 }
 
