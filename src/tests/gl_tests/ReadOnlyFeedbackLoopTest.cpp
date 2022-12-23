@@ -1036,4 +1036,5 @@ void main()
 // Instantiate the test for ES3.
 ANGLE_INSTANTIATE_TEST_ES3(ReadOnlyFeedbackLoopTest);
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ReadOnlyFeedbackLoopTestES31);
 ANGLE_INSTANTIATE_TEST_ES31(ReadOnlyFeedbackLoopTestES31);
