@@ -1479,7 +1479,7 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context,
 
         member.image.init2DWeakReference(context, swapchainImages[imageIndex], extents,
                                          Is90DegreeRotation(getPreTransform()), intendedFormatID,
-                                         actualFormatID, 1, robustInit);
+                                         actualFormatID, 0, 1, robustInit);
         member.imageViews.init(renderer);
         member.mFrameNumber = 0;
     }

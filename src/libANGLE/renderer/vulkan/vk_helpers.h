@@ -1861,6 +1861,7 @@ class ImageHelper final : public Resource, public angle::Subject
                              bool rotatedAspectRatio,
                              angle::FormatID intendedFormatID,
                              angle::FormatID actualFormatID,
+                             VkImageUsageFlags usage,
                              GLint samples,
                              bool isRobustResourceInitEnabled);
     void resetImageWeakReference();
@@ -2411,6 +2412,10 @@ class ImageHelper final : public Resource, public angle::Subject
     using LevelContentDefinedMask = angle::BitSet8<kMaxContentDefinedLayerCount>;
 
     void deriveExternalImageTiling(const void *createInfoChain);
+
+    // Used to initialize ImageFormats from actual format, with no pNext from a VkImageCreateInfo
+    // object.
+    void setImageFormatsFromActualFormat(VkFormat actualFormat, ImageFormats &imageFormatsOut);
 
     // Called from flushStagedUpdates, removes updates that are later superseded by another.  This
     // cannot be done at the time the updates were staged, as the image is not created (and thus the
