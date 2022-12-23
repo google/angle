@@ -222,6 +222,8 @@ class TCompiler : public TShHandleBase
         return mCullDistanceSize ? mCullDistanceSize : (mCullDistanceMaxIndex + 1);
     }
 
+    bool isClipDistanceRedeclared() const { return mClipDistanceSize != 0; }
+
     bool hasClipDistance() const { return getClipDistanceArraySize() != 0; }
 
   protected:

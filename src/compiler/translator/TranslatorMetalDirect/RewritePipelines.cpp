@@ -939,7 +939,7 @@ bool UpdatePipelineSymbols(Pipeline::Type pipelineType,
             return symbol;
         }
         const TVariable *structInstanceVar;
-        if (owner->isMain())
+        if (owner->isMain() && pipelineType != Pipeline::Type::FragmentIn)
         {
             ASSERT(pipelineMainLocalVar.internal);
             structInstanceVar = pipelineMainLocalVar.internal;
@@ -1053,6 +1053,16 @@ bool sh::RewritePipelines(TCompiler &compiler,
 
     for (Info &info : infos)
     {
+        if ((compiler.getShaderType() != GL_VERTEX_SHADER &&
+             (info.pipelineType == Pipeline::Type::VertexIn ||
+              info.pipelineType == Pipeline::Type::VertexOut ||
+              info.pipelineType == Pipeline::Type::InvocationVertexGlobals)) ||
+            (compiler.getShaderType() != GL_FRAGMENT_SHADER &&
+             (info.pipelineType == Pipeline::Type::FragmentIn ||
+              info.pipelineType == Pipeline::Type::FragmentOut ||
+              info.pipelineType == Pipeline::Type::InvocationFragmentGlobals)))
+            continue;
+
         Pipeline pipeline{info.pipelineType, info.globalInstanceVar};
         if (!RewritePipeline(compiler, root, idGen, pipeline, symbolEnv, info.variableInfo,
                              info.outStruct))

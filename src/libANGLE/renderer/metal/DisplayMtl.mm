@@ -884,7 +884,7 @@ void DisplayMtl::ensureCapsInitialized() const
     // GL_OES_get_program_binary
     mNativeCaps.programBinaryFormats.push_back(GL_PROGRAM_BINARY_ANGLE);
 
-    // GL_APPLE_clip_distance
+    // GL_APPLE_clip_distance / GL_ANGLE_clip_cull_distance
     mNativeCaps.maxClipDistances = 8;
 
     // Metal doesn't support GL_TEXTURE_COMPARE_MODE=GL_NONE for shadow samplers
@@ -998,6 +998,9 @@ void DisplayMtl::initializeExtensions() const
 
     // GL_APPLE_clip_distance
     mNativeExtensions.clipDistanceAPPLE = true;
+
+    // GL_ANGLE_clip_cull_distance
+    mNativeExtensions.clipCullDistanceANGLE = true;
 
     // GL_NV_pixel_buffer_object
     mNativeExtensions.pixelBufferObjectNV = true;
