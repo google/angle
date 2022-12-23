@@ -150,7 +150,9 @@ AutoObjCPtr<MTLRenderPipelineDescriptor *> CreateMTLRenderPipelineDescriptor(
     }
     ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), desc.outputDescriptor, depthAttachmentPixelFormat);
     ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), desc.outputDescriptor, stencilAttachmentPixelFormat);
+    ANGLE_APPLE_ALLOW_DEPRECATED_BEGIN
     ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), desc.outputDescriptor, sampleCount);
+    ANGLE_APPLE_ALLOW_DEPRECATED_END
 
 #if ANGLE_MTL_PRIMITIVE_TOPOLOGY_CLASS_AVAILABLE
     ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), desc, inputPrimitiveTopology);

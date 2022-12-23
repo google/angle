@@ -1350,16 +1350,20 @@ bool SupportsMacGPUFamily(id<MTLDevice> device, uint8_t macFamily)
         switch (macFamily)
         {
 #        if TARGET_OS_MACCATALYST
+            ANGLE_APPLE_ALLOW_DEPRECATED_BEGIN
             case 1:
                 family = MTLGPUFamilyMacCatalyst1;
                 break;
             case 2:
                 family = MTLGPUFamilyMacCatalyst2;
                 break;
+                ANGLE_APPLE_ALLOW_DEPRECATED_END
 #        else   // TARGET_OS_MACCATALYST
+            ANGLE_APPLE_ALLOW_DEPRECATED_BEGIN
             case 1:
                 family = MTLGPUFamilyMac1;
                 break;
+                ANGLE_APPLE_ALLOW_DEPRECATED_END
             case 2:
                 family = MTLGPUFamilyMac2;
                 break;
@@ -1378,6 +1382,8 @@ bool SupportsMacGPUFamily(id<MTLDevice> device, uint8_t macFamily)
     UNREACHABLE();
     return false;
 #    else
+
+    ANGLE_APPLE_ALLOW_DEPRECATED_BEGIN
     MTLFeatureSet featureSet;
     switch (macFamily)
     {
@@ -1393,6 +1399,7 @@ bool SupportsMacGPUFamily(id<MTLDevice> device, uint8_t macFamily)
             return false;
     }
     return [device supportsFeatureSet:featureSet];
+    ANGLE_APPLE_ALLOW_DEPRECATED_END
 #    endif  // TARGET_OS_MACCATALYST
 #else       // #if TARGET_OS_OSX || TARGET_OS_MACCATALYST
 
@@ -1472,7 +1479,9 @@ NSUInteger ComputeTotalSizeUsedForMTLRenderPipelineDescriptor(
     const mtl::ContextDevice &device)
 {
     NSUInteger currentRenderTargetSize = 0;
-    bool isMsaa                        = descriptor.sampleCount > 1;
+    ANGLE_APPLE_ALLOW_DEPRECATED_BEGIN
+    bool isMsaa = descriptor.sampleCount > 1;
+    ANGLE_APPLE_ALLOW_DEPRECATED_END
     for (NSUInteger i = 0; i < GetMaxNumberOfRenderTargetsForDevice(device); i++)
     {
         MTLRenderPipelineColorAttachmentDescriptor *color = descriptor.colorAttachments[i];

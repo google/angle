@@ -378,7 +378,9 @@ inline void UseResourceCmd(id<MTLRenderCommandEncoder> encoder, IntermediateComm
     else
 #endif
     {
+        ANGLE_APPLE_ALLOW_DEPRECATED_BEGIN
         [encoder useResource:resource usage:usage];
+        ANGLE_APPLE_ALLOW_DEPRECATED_END
     }
     [resource ANGLE_MTL_RELEASE];
 }
