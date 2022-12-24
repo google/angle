@@ -6321,6 +6321,13 @@ void FrameCaptureShared::trackTextureUpdate(const gl::Context *context, const Ca
         {
             GLenum target =
                 call.params.getParam(paramName.c_str(), ParamType::TGLenum, index).value.GLenumVal;
+
+            if (target == GL_TEXTURE_CUBE_MAP)
+            {
+                // CopyImageSubData doesn't support cube faces, but PackedParams requires one
+                target = GL_TEXTURE_CUBE_MAP_POSITIVE_X;
+            }
+
             gl::TextureTarget targetPacked = gl::PackParam<gl::TextureTarget>(target);
             gl::TextureType textureType    = gl::TextureTargetToType(targetPacked);
             gl::Texture *texture           = context->getState().getTargetTexture(textureType);
