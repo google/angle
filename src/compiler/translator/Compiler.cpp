@@ -846,10 +846,10 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         parseContext.isExtensionEnabled(TExtension::EXT_clip_cull_distance) ||
         parseContext.isExtensionEnabled(TExtension::APPLE_clip_distance))
     {
-        if (!ValidateClipCullDistance(root, &mDiagnostics, mResources.MaxCullDistances,
-                                      mResources.MaxCombinedClipAndCullDistances,
-                                      &mClipDistanceSize, &mCullDistanceSize,
-                                      &mClipDistanceMaxIndex, &mCullDistanceMaxIndex))
+        if (!ValidateClipCullDistance(
+                root, &mDiagnostics, mResources.MaxCullDistances,
+                mResources.MaxCombinedClipAndCullDistances, &mClipDistanceSize, &mCullDistanceSize,
+                &mClipDistanceRedeclared, &mCullDistanceRedeclared, &mClipDistanceUsed))
         {
             return false;
         }
@@ -1170,15 +1170,15 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
 
 bool TCompiler::resizeClipAndCullDistanceBuiltins(TIntermBlock *root)
 {
-    auto resizeVariable = [=](const ImmutableString &name, int maxIndex, int maxSize) {
+    auto resizeVariable = [=](const ImmutableString &name, uint32_t size, uint32_t maxSize) {
         // Skip if the variable is not used or implicitly has the maximum size
-        if (maxIndex == -1 || maxIndex + 1 == maxSize)
+        if (size == 0 || size == maxSize)
             return true;
-        ASSERT(maxIndex >= 0 && maxIndex + 1 < maxSize);
+        ASSERT(size < maxSize);
         const TVariable *builtInVar =
             static_cast<const TVariable *>(mSymbolTable.findBuiltIn(name, getShaderVersion()));
         TType *resizedType = new TType(builtInVar->getType());
-        resizedType->setArraySize(0, maxIndex + 1);
+        resizedType->setArraySize(0, size);
 
         TVariable *resizedVar =
             new TVariable(&mSymbolTable, name, resizedType, SymbolType::BuiltIn);
@@ -1186,16 +1186,14 @@ bool TCompiler::resizeClipAndCullDistanceBuiltins(TIntermBlock *root)
         return ReplaceVariable(this, root, builtInVar, resizedVar);
     };
 
-    if (mClipDistanceSize == 0 &&
-        !resizeVariable(ImmutableString("gl_ClipDistance"), mClipDistanceMaxIndex,
-                        mResources.MaxClipDistances))
+    if (!mClipDistanceRedeclared && !resizeVariable(ImmutableString("gl_ClipDistance"),
+                                                    mClipDistanceSize, mResources.MaxClipDistances))
     {
         return false;
     }
 
-    if (mCullDistanceSize == 0 &&
-        !resizeVariable(ImmutableString("gl_CullDistance"), mCullDistanceMaxIndex,
-                        mResources.MaxCullDistances))
+    if (!mCullDistanceRedeclared && !resizeVariable(ImmutableString("gl_CullDistance"),
+                                                    mCullDistanceSize, mResources.MaxCullDistances))
     {
         return false;
     }
@@ -1481,10 +1479,11 @@ void TCompiler::clearResults()
 
     mNumViews = -1;
 
-    mClipDistanceSize     = 0;
-    mCullDistanceSize     = 0;
-    mClipDistanceMaxIndex = -1;
-    mCullDistanceMaxIndex = -1;
+    mClipDistanceSize       = 0;
+    mCullDistanceSize       = 0;
+    mClipDistanceRedeclared = false;
+    mCullDistanceRedeclared = false;
+    mClipDistanceUsed       = false;
 
     mGeometryShaderInputPrimitiveType  = EptUndefined;
     mGeometryShaderOutputPrimitiveType = EptUndefined;

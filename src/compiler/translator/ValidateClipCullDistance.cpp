@@ -34,8 +34,9 @@ class ValidateClipCullDistanceTraverser : public TIntermTraverser
                   const unsigned int maxCombinedClipAndCullDistances,
                   uint8_t *clipDistanceSizeOut,
                   uint8_t *cullDistanceSizeOut,
-                  int8_t *clipDistanceMaxIndexOut,
-                  int8_t *cullDistanceMaxIndexOut);
+                  bool *clipDistanceRedeclaredOut,
+                  bool *cullDistanceRedeclaredOut,
+                  bool *clipDistanceUsedOut);
 
   private:
     bool visitDeclaration(Visit visit, TIntermDeclaration *node) override;
@@ -191,8 +192,9 @@ void ValidateClipCullDistanceTraverser::validate(TDiagnostics *diagnostics,
                                                  const unsigned int maxCombinedClipAndCullDistances,
                                                  uint8_t *clipDistanceSizeOut,
                                                  uint8_t *cullDistanceSizeOut,
-                                                 int8_t *clipDistanceMaxIndexOut,
-                                                 int8_t *cullDistanceMaxIndexOut)
+                                                 bool *clipDistanceRedeclaredOut,
+                                                 bool *cullDistanceRedeclaredOut,
+                                                 bool *clipDistanceUsedOut)
 {
     ASSERT(diagnostics);
 
@@ -241,10 +243,11 @@ void ValidateClipCullDistanceTraverser::validate(TDiagnostics *diagnostics,
     }
 
     // Update the compiler state
-    *clipDistanceSizeOut     = mClipDistanceSize;
-    *cullDistanceSizeOut     = mCullDistanceSize;
-    *clipDistanceMaxIndexOut = mMaxClipDistanceIndex;
-    *cullDistanceMaxIndexOut = mMaxCullDistanceIndex;
+    *clipDistanceSizeOut = mClipDistanceSize ? mClipDistanceSize : (mMaxClipDistanceIndex + 1);
+    *cullDistanceSizeOut = mCullDistanceSize ? mCullDistanceSize : (mMaxCullDistanceIndex + 1);
+    *clipDistanceRedeclaredOut = mClipDistanceSize != 0;
+    *cullDistanceRedeclaredOut = mCullDistanceSize != 0;
+    *clipDistanceUsedOut       = (mMaxClipDistanceIndex != -1) || mHasNonConstClipDistanceIndex;
 }
 
 }  // anonymous namespace
@@ -255,15 +258,16 @@ bool ValidateClipCullDistance(TIntermBlock *root,
                               const unsigned int maxCombinedClipAndCullDistances,
                               uint8_t *clipDistanceSizeOut,
                               uint8_t *cullDistanceSizeOut,
-                              int8_t *clipDistanceMaxIndexOut,
-                              int8_t *cullDistanceMaxIndexOut)
+                              bool *clipDistanceRedeclaredOut,
+                              bool *cullDistanceRedeclaredOut,
+                              bool *clipDistanceUsedOut)
 {
     ValidateClipCullDistanceTraverser varyingValidator;
     root->traverse(&varyingValidator);
     int numErrorsBefore = diagnostics->numErrors();
     varyingValidator.validate(diagnostics, maxCullDistances, maxCombinedClipAndCullDistances,
-                              clipDistanceSizeOut, cullDistanceSizeOut, clipDistanceMaxIndexOut,
-                              cullDistanceMaxIndexOut);
+                              clipDistanceSizeOut, cullDistanceSizeOut, clipDistanceRedeclaredOut,
+                              cullDistanceRedeclaredOut, clipDistanceUsedOut);
     return (diagnostics->numErrors() == numErrorsBefore);
 }
 

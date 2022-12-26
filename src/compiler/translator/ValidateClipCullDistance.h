@@ -24,8 +24,9 @@ bool ValidateClipCullDistance(TIntermBlock *root,
                               const unsigned int maxCombinedClipAndCullDistances,
                               uint8_t *clipDistanceSizeOut,
                               uint8_t *cullDistanceSizeOut,
-                              int8_t *clipDistanceMaxIndexOut,
-                              int8_t *cullDistanceMaxIndexOut);
+                              bool *clipDistanceRedeclaredOut,
+                              bool *cullDistanceRedeclaredOut,
+                              bool *clipDistanceUsedOut);
 
 }  // namespace sh
 

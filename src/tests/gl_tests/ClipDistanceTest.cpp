@@ -1153,6 +1153,73 @@ TEST_P(ClipCullDistanceTest, SizeCheckCombined)
     }
 }
 
+// Test that declared but unused built-ins do not cause frontend failures. The internal uniform,
+// which is used for passing GL state on some platforms, could be removed when built-ins are not
+// accessed.
+TEST_P(ClipCullDistanceTest, Unused)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled(kExtensionName));
+
+    std::stringstream vertexSource;
+    auto vs = [=, &vertexSource](std::string name) {
+        vertexSource.str(std::string());
+        vertexSource.clear();
+        vertexSource << "#version 300 es\n"
+                     << "#extension " << kExtensionName << " : require\n"
+                     << "out highp float " << name << "[8];\n"
+                     << "void main() { gl_Position = vec4(0.0, 0.0, 0.0, 1.0); }";
+    };
+
+    std::stringstream fragmentSource;
+    auto fs = [=, &fragmentSource](std::string name, bool declare) {
+        fragmentSource.str(std::string());
+        fragmentSource.clear();
+        fragmentSource << "#version 300 es\n"
+                       << "#extension " << kExtensionName << " : require\n";
+        if (declare)
+        {
+            fragmentSource << "in highp float " << name << "[8];\n";
+        }
+        fragmentSource << "out highp vec4 my_FragColor;\n"
+                       << "void main() { my_FragColor = vec4(1.0, 0.0, 0.0, 1.0); }\n";
+    };
+
+    auto checkProgram = [=, &vertexSource, &fragmentSource](std::string name,
+                                                            bool declareFragment) {
+        GLProgram program;
+        vs(name);
+        fs(name, declareFragment);
+        program.makeRaster(vertexSource.str().c_str(), fragmentSource.str().c_str());
+        return program.valid();
+    };
+
+    GLint maxClipDistances = 0;
+    glGetIntegerv(GL_MAX_CLIP_DISTANCES_EXT, &maxClipDistances);
+    ASSERT_GT(maxClipDistances, 0);
+
+    GLint maxCullDistances = 0;
+    glGetIntegerv(GL_MAX_CULL_DISTANCES_EXT, &maxCullDistances);
+    if (mCullDistanceSupportRequired)
+    {
+        ASSERT_GT(maxCullDistances, 0);
+    }
+    else
+    {
+        ASSERT_GE(maxCullDistances, 0);
+    }
+
+    std::pair<std::string, int> entries[2] = {{"gl_ClipDistance", maxClipDistances},
+                                              {"gl_CullDistance", maxCullDistances}};
+    for (auto entry : entries)
+    {
+        if (entry.second == 0)
+            continue;
+
+        EXPECT_TRUE(checkProgram(entry.first, false));
+        EXPECT_TRUE(checkProgram(entry.first, true));
+    }
+}
+
 // Write to one gl_ClipDistance element
 TEST_P(ClipCullDistanceTest, OneClipDistance)
 {
