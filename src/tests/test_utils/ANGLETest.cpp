@@ -352,7 +352,7 @@ void LoadEntryPointsWithUtilLoader(angle::GLESDriverType driverType)
 #if defined(ANGLE_USE_UTIL_LOADER)
     PFNEGLGETPROCADDRESSPROC getProcAddress;
     ANGLETestEnvironment::GetDriverLibrary(driverType)->getAs("eglGetProcAddress", &getProcAddress);
-    ASSERT_NE(nullptr, getProcAddress);
+    ASSERT(nullptr != getProcAddress);
 
     LoadUtilEGL(getProcAddress);
     LoadUtilGLES(getProcAddress);
