@@ -43,7 +43,7 @@ vars = {
   'checkout_angle_mesa': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': 'a12033d4d6716ab856cf01c44e6b87d2d58916f1',
+  'chromium_revision': 'c546b7bba9bcdfdc6652c47e436b93c6f25a3fe8',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -88,11 +88,11 @@ vars = {
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling catapult
   # and whatever else without interference from each other.
-  'catapult_revision': '27863274a2f25b92973c10f29b3c4e476fd01a34',
+  'catapult_revision': '816a551043358dcb0a5979d2c3af739948a9217d',
 
   # the commit queue can handle CLs rolling Fuchsia sdk
   # and whatever else without interference from each other.
-  'fuchsia_version': 'version:11.20221226.3.1',
+  'fuchsia_version': 'version:11.20221227.3.1',
 
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling luci-go
@@ -136,7 +136,7 @@ vars = {
 deps = {
 
   'build': {
-    'url': '{chromium_git}/chromium/src/build.git@4e331315b661d1a4f130e23178f82e9898ee62b4',
+    'url': '{chromium_git}/chromium/src/build.git@fe0a447f97b25284042631238dc0ff30bb4cab24',
     'condition': 'not build_with_chromium',
   },
 
@@ -199,7 +199,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@991e141f2b1312e1e1b5b16d138da3b0d8187699',
+    'url': '{chromium_git}/chromium/src/testing@11a564bce85ec50f02f2f91782c2f712e43819ef',
     'condition': 'not build_with_chromium',
   },
 
@@ -372,7 +372,7 @@ deps = {
   },
 
   'third_party/depot_tools': {
-    'url': '{chromium_git}/chromium/tools/depot_tools.git@0b96058844728db8040a7348cc4c61fde453401a',
+    'url': '{chromium_git}/chromium/tools/depot_tools.git@03af44a5163e9448e375a6bbe7bef1fc0e2bb205',
     'condition': 'not build_with_chromium',
   },
 
@@ -465,7 +465,7 @@ deps = {
   },
 
   'third_party/jinja2': {
-    'url': '{chromium_git}/chromium/src/third_party/jinja2@4633bf431193690c3491244f5a0acbe9ac776233',
+    'url': '{chromium_git}/chromium/src/third_party/jinja2@264c07d7e64f2874434a3b8039e101ddf1b01e7e',
     'condition': 'checkout_android and not build_with_chromium',
   },
 
