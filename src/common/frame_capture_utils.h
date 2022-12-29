@@ -36,6 +36,8 @@ struct ParamCapture : angle::NonCopyable
     size_t readBufferSizeBytes  = 0;
 };
 
+using Captures = std::vector<ParamCapture>;
+
 class ParamBuffer final : angle::NonCopyable
 {
   public:

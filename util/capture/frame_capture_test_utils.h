@@ -212,6 +212,119 @@ void ReplayCustomFunctionCall(const CallCapture &call, const TraceFunctionMap &c
 template <typename T>
 struct AssertFalse : std::false_type
 {};
+
+template <typename T>
+T GetParamValue(const ParamValue &value);
+
+template <>
+inline GLuint GetParamValue<GLuint>(const ParamValue &value)
+{
+    return value.GLuintVal;
+}
+
+template <>
+inline GLint GetParamValue<GLint>(const ParamValue &value)
+{
+    return value.GLintVal;
+}
+
+template <>
+inline const void *GetParamValue<const void *>(const ParamValue &value)
+{
+    return value.voidConstPointerVal;
+}
+
+template <>
+inline GLuint64 GetParamValue<GLuint64>(const ParamValue &value)
+{
+    return value.GLuint64Val;
+}
+
+template <>
+inline GLint64 GetParamValue<GLint64>(const ParamValue &value)
+{
+    return value.GLint64Val;
+}
+
+template <>
+inline const char *GetParamValue<const char *>(const ParamValue &value)
+{
+    return value.GLcharConstPointerVal;
+}
+
+template <>
+inline void *GetParamValue<void *>(const ParamValue &value)
+{
+    return value.voidPointerVal;
+}
+
+#if defined(ANGLE_IS_64_BIT_CPU)
+template <>
+inline const EGLAttrib *GetParamValue<const EGLAttrib *>(const ParamValue &value)
+{
+    return value.EGLAttribConstPointerVal;
+}
+#endif  // defined(ANGLE_IS_64_BIT_CPU)
+
+template <>
+inline const EGLint *GetParamValue<const EGLint *>(const ParamValue &value)
+{
+    return value.EGLintConstPointerVal;
+}
+
+template <>
+inline const GLchar *const *GetParamValue<const GLchar *const *>(const ParamValue &value)
+{
+    return value.GLcharConstPointerPointerVal;
+}
+
+// On Apple platforms, std::is_same<uint64_t, long> is false despite being both 8 bits.
+#if defined(ANGLE_PLATFORM_APPLE) || !defined(ANGLE_IS_64_BIT_CPU)
+template <>
+inline long GetParamValue<long>(const ParamValue &value)
+{
+    return static_cast<long>(value.GLint64Val);
+}
+
+template <>
+inline unsigned long GetParamValue<unsigned long>(const ParamValue &value)
+{
+    return static_cast<unsigned long>(value.GLuint64Val);
+}
+#endif  // defined(ANGLE_PLATFORM_APPLE)
+
+template <typename T>
+T GetParamValue(const ParamValue &value)
+{
+    static_assert(AssertFalse<T>::value, "No specialization for type.");
+}
+
+template <typename T>
+struct Traits;
+
+template <typename... Args>
+struct Traits<void(Args...)>
+{
+    static constexpr size_t NArgs = sizeof...(Args);
+    template <size_t Idx>
+    struct Arg
+    {
+        typedef typename std::tuple_element<Idx, std::tuple<Args...>>::type Type;
+    };
+};
+
+template <typename Fn, size_t Idx>
+using FnArg = typename Traits<Fn>::template Arg<Idx>::Type;
+
+template <typename Fn, size_t NArgs>
+using EnableIfNArgs = typename std::enable_if_t<Traits<Fn>::NArgs == NArgs, int>;
+
+template <typename Fn, size_t Idx>
+FnArg<Fn, Idx> Arg(const Captures &cap)
+{
+    ASSERT(Idx < cap.size());
+    return GetParamValue<FnArg<Fn, Idx>>(cap[Idx].value);
+}
 }  // namespace angle
 
 #endif  // UTIL_CAPTURE_FRAME_CAPTURE_TEST_UTILS_H_
