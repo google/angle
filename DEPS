@@ -43,7 +43,7 @@ vars = {
   'checkout_angle_mesa': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': 'c546b7bba9bcdfdc6652c47e436b93c6f25a3fe8',
+  'chromium_revision': '6dd45e16083b490ced23ab1a6beb8c9bc64cf11e',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -88,11 +88,11 @@ vars = {
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling catapult
   # and whatever else without interference from each other.
-  'catapult_revision': '816a551043358dcb0a5979d2c3af739948a9217d',
+  'catapult_revision': 'fa82fd2fd92b7482e28a8257c3cc79d99e0897ff',
 
   # the commit queue can handle CLs rolling Fuchsia sdk
   # and whatever else without interference from each other.
-  'fuchsia_version': 'version:11.20221227.3.1',
+  'fuchsia_version': 'version:11.20221229.0.1',
 
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling luci-go
@@ -136,7 +136,7 @@ vars = {
 deps = {
 
   'build': {
-    'url': '{chromium_git}/chromium/src/build.git@fe0a447f97b25284042631238dc0ff30bb4cab24',
+    'url': '{chromium_git}/chromium/src/build.git@d9fb377a525169334fb2aa7970f111d672bab811',
     'condition': 'not build_with_chromium',
   },
 
@@ -199,7 +199,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@11a564bce85ec50f02f2f91782c2f712e43819ef',
+    'url': '{chromium_git}/chromium/src/testing@b26bae660a27e2f84dc0b8ea0061535326d92356',
     'condition': 'not build_with_chromium',
   },
 
@@ -696,7 +696,7 @@ deps = {
   },
 
   'tools/perf': {
-    'url': '{chromium_git}/chromium/src/tools/perf@a3770c06639f3f10b9a2afa489aeb50e1e86fe61',
+    'url': '{chromium_git}/chromium/src/tools/perf@522525fc09c97d3460fbdb3233c53c5e9c26a0d5',
     'condition': 'not build_with_chromium',
   },
 
