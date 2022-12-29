@@ -790,6 +790,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_traces',
   },
+  'src/tests/restricted_traces/agent_a': {
+      'packages': [
+        {
+            'package': 'angle/traces/agent_a',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_traces',
+  },
   'src/tests/restricted_traces/aliexpress': {
       'packages': [
         {
