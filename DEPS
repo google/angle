@@ -43,7 +43,7 @@ vars = {
   'checkout_angle_mesa': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '6dd45e16083b490ced23ab1a6beb8c9bc64cf11e',
+  'chromium_revision': '021aa77ec4a7b1fb863cf890bafd4845a181b0a8',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -88,11 +88,11 @@ vars = {
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling catapult
   # and whatever else without interference from each other.
-  'catapult_revision': 'fa82fd2fd92b7482e28a8257c3cc79d99e0897ff',
+  'catapult_revision': 'a404e6d108a230c0c4080a71705c6e6d7c30557a',
 
   # the commit queue can handle CLs rolling Fuchsia sdk
   # and whatever else without interference from each other.
-  'fuchsia_version': 'version:11.20221229.0.1',
+  'fuchsia_version': 'version:11.20221229.3.1',
 
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling luci-go
@@ -136,12 +136,12 @@ vars = {
 deps = {
 
   'build': {
-    'url': '{chromium_git}/chromium/src/build.git@d9fb377a525169334fb2aa7970f111d672bab811',
+    'url': '{chromium_git}/chromium/src/build.git@bd72f1bcd37188ba6997f8cd31985b245df00e14',
     'condition': 'not build_with_chromium',
   },
 
   'buildtools': {
-    'url': '{chromium_git}/chromium/src/buildtools.git@134af4c91bb9ab46fe1165ff1cf0f76900fa5a7e',
+    'url': '{chromium_git}/chromium/src/buildtools.git@cf8d11e41138ca777f3eaa09df41bf968c8be6ba',
     'condition': 'not build_with_chromium',
   },
 
@@ -204,12 +204,12 @@ deps = {
   },
 
   'third_party/abseil-cpp': {
-    'url': '{chromium_git}/chromium/src/third_party/abseil-cpp@d12fb9a66ffb6cfaaede3e6eda756f9b3bcaddf0',
+    'url': '{chromium_git}/chromium/src/third_party/abseil-cpp@6a7478b4959189b9655ee95d5764e084d215a3ff',
     'condition': 'not build_with_chromium',
   },
 
   'third_party/android_build_tools': {
-    'url': '{chromium_git}/chromium/src/third_party/android_build_tools@3ec81a68ed219b1291acd8a3053e5f80a7d7d7f4',
+    'url': '{chromium_git}/chromium/src/third_party/android_build_tools@226f6e2047d5ab128d16bb9f57a3806b1f1ffcf3',
     'condition': 'checkout_android and not build_with_chromium',
   },
 
@@ -250,7 +250,7 @@ deps = {
       'packages': [
           {
                'package': 'chromium/third_party/android_build_tools/lint',
-               'version': '9qiQ29AZRZapFWdlmgjd22gc1RxJ1oXZKPAsTq_3G88C',
+               'version': 'J-5WRwQBFHGawLX-f-wZAyfdYMmyLPTltnrTVG1HrvwC',
           },
       ],
       'condition': 'checkout_android and not build_with_chromium',
