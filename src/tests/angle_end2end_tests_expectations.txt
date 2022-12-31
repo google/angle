@@ -556,6 +556,7 @@
 7697 PIXEL4ORXL VULKAN : FramebufferTest_ES31.ChangeFBOSizeAndAttachmentsCount/* = SKIP
 7697 PIXEL4ORXL VULKAN : FramebufferTest_ES31.RenderingLimitToDefaultFBOSizeWithNoAttachments/* = SKIP
 7705 PIXEL4ORXL GLES : FramebufferTest_ES31.ChangeFBOSizeWithNoAttachments/* = SKIP
+7916 PIXEL4ORXL GLES : DepthStencilFormatsTestES31.DrawReadDrawDispatch/* = SKIP
 
 // Internal driver failures on both GLES and Vulkan
 3839 NEXUS5X : GLSLTest_ES31.TypesUsedInDifferentBlockStorages/* = SKIP

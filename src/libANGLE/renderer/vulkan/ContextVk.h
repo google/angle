@@ -610,6 +610,11 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         return mRenderPassCommands->started() && mRenderPassCommands->usesBufferForWrite(buffer);
     }
 
+    bool isRenderPassStartedAndUsesImage(const vk::ImageHelper &image) const
+    {
+        return mRenderPassCommands->started() && mRenderPassCommands->usesImage(image);
+    }
+
     bool hasStartedRenderPassWithCommands() const
     {
         return hasStartedRenderPass() && !mRenderPassCommands->getCommandBuffer().empty();

@@ -1605,7 +1605,15 @@ void OutsideRenderPassCommandBufferHelper::imageRead(ContextVk *contextVk,
 {
     bool needLayoutTransition = false;
     imageReadImpl(contextVk, aspectFlags, imageLayout, image, &needLayoutTransition);
-    image->setQueueSerial(mQueueSerial);
+
+    if (!contextVk->isRenderPassStartedAndUsesImage(*image))
+    {
+        // Usually an image can only used by a RenderPassCommands or OutsideRenderPassCommands
+        // because the layout will be different, except with image sampled from compute shader. In
+        // this case, the renderPassCommands' read will override the outsideRenderPassCommands'
+        // read, since its queueSerial must be greater than outsideRP.
+        image->setQueueSerial(mQueueSerial);
+    }
 }
 
 void OutsideRenderPassCommandBufferHelper::imageWrite(ContextVk *contextVk,
