@@ -1120,6 +1120,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_traces',
   },
+  'src/tests/restricted_traces/catalyst_black': {
+      'packages': [
+        {
+            'package': 'angle/traces/catalyst_black',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_traces',
+  },
   'src/tests/restricted_traces/clash_of_clans': {
       'packages': [
         {

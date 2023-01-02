@@ -1478,6 +1478,11 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
         addExtensionPrerequisite("GL_OES_EGL_image_external");
     }
 
+    if (traceNameIs("catalyst_black"))
+    {
+        addExtensionPrerequisite("GL_EXT_shader_framebuffer_fetch");
+    }
+
     // glDebugMessageControlKHR and glDebugMessageCallbackKHR crash on ARM GLES1.
     if (IsARM() && mParams->traceInfo.contextClientMajorVersion == 1)
     {

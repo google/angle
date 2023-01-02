@@ -547,6 +547,13 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
      "VK_PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT|VK_PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT|VK_"
      "PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT|VK_PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT, "
      "command: vkCmdDraw"},
+    // From: TraceTest.catalyst_black http://anglebug.com/7924
+    {"SYNC-HAZARD-WRITE-AFTER-READ",
+     "vkCmdEndRenderPass: Hazard WRITE_AFTER_READ in subpass 0 for attachment 1 depth aspect "
+     "during store with storeOp VK_ATTACHMENT_STORE_OP_STORE. Access info (usage: "
+     "SYNC_LATE_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE, prior_usage: "
+     "SYNC_FRAGMENT_SHADER_SHADER_STORAGE_READ, read_barriers: ",
+     "VK_PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT, command: vkCmdDraw"},
 };
 
 // Messages that shouldn't be generated if storeOp=NONE is supported, otherwise they are expected.
