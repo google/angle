@@ -33,27 +33,35 @@ bool ShouldSkipFile(const std::string &file)
 class Parser : angle::NonCopyable
 {
   public:
-    Parser(const std::string &stream, bool verboseLogging)
-        : mStream(stream), mIndex(0), mVerboseLogging(verboseLogging)
+    Parser(const std::string &stream,
+           TraceFunctionMap &functionsIn,
+           TraceStringMap &stringsIn,
+           bool verboseLogging)
+        : mStream(stream),
+          mFunctions(functionsIn),
+          mStrings(stringsIn),
+          mIndex(0),
+          mVerboseLogging(verboseLogging)
     {}
 
-    void getFunctionsAndStrings(TraceFunctionMap &functionsOut, TraceStringMap &stringsOut)
+    void parse()
     {
-        parse();
-        for (auto &iter : mFunctions)
+        while (mIndex < mStream.size())
         {
-            std::string name    = iter.first;
-            TraceFunction &func = iter.second;
-            functionsOut.emplace(std::move(name), std::move(func));
+            if (peek() == '#' || peek() == '/')
+            {
+                skipLine();
+            }
+            else if (peek() == 'v')
+            {
+                ASSERT(check("void "));
+                readFunction();
+            }
+            else
+            {
+                readMultilineString();
+            }
         }
-        mFunctions.clear();
-        for (auto &iter : mStrings)
-        {
-            std::string name      = iter.first;
-            TraceString &traceStr = iter.second;
-            stringsOut.emplace(std::move(name), std::move(traceStr));
-        }
-        mStrings.clear();
     }
 
   private:
@@ -302,30 +310,10 @@ class Parser : angle::NonCopyable
         mFunctions[funcName] = std::move(func);
     }
 
-    void parse()
-    {
-        while (mIndex < mStream.size())
-        {
-            if (peek() == '#' || peek() == '/')
-            {
-                skipLine();
-            }
-            else if (peek() == 'v')
-            {
-                ASSERT(check("void "));
-                readFunction();
-            }
-            else
-            {
-                readMultilineString();
-            }
-        }
-    }
-
     const std::string &mStream;
+    TraceFunctionMap &mFunctions;
+    TraceStringMap &mStrings;
     size_t mIndex;
-    TraceFunctionMap mFunctions;
-    TraceStringMap mStrings;
     bool mVerboseLogging = false;
 };
 
@@ -412,7 +400,14 @@ void PackIntParameter(ParamBuffer &params, ParamType paramType, const Token &tok
     else
     {
         ASSERT(isdigit(token[0]));
-        value = static_cast<IntT>(atoi(token));
+        if (token[0] == '0' && token[1] == 'x')
+        {
+            value = static_cast<IntT>(strtol(token, nullptr, 16));
+        }
+        else
+        {
+            value = static_cast<IntT>(atoi(token));
+        }
     }
 
     params.addUnnamedParam(paramType, value);
@@ -535,8 +530,8 @@ void TraceInterpreter::setupReplay()
             UNREACHABLE();
         }
 
-        Parser parser(fileData, mVerboseLogging);
-        parser.getFunctionsAndStrings(mTraceFunctions, mTraceStrings);
+        Parser parser(fileData, mTraceFunctions, mTraceStrings, mVerboseLogging);
+        parser.parse();
     }
 
     if (mTraceFunctions.count("SetupReplay") == 0)
@@ -635,7 +630,7 @@ void PackParameter<int32_t *>(ParamBuffer &params,
                               const Token &token,
                               const TraceStringMap &strings)
 {
-    UNREACHABLE();
+    PackMutablePointerParameter<int32_t>(params, ParamType::TGLintPointer, token);
 }
 
 template <>
@@ -761,7 +756,11 @@ void PackParameter<const char *const *>(ParamBuffer &params,
 {
     // Find the string that corresponds to "token". Currently we only support string arrays.
     auto iter = strings.find(token);
-    ASSERT(iter != strings.end());
+    if (iter == strings.end())
+    {
+        printf("Could not find string: %s\n", token);
+        UNREACHABLE();
+    }
     const TraceString &traceStr = iter->second;
     params.addUnnamedParam(ParamType::TGLcharConstPointerPointer, traceStr.pointers.data());
 }

@@ -339,8 +339,10 @@ def interpret_traces(args, traces):
                     logging.debug('Using temporary path %s.' % out_path)
                     if upgrade_single_trace(args, trace_binary, trace, out_path, False, True):
                         if restore_single_trace(trace, out_path):
-                            if validate_single_trace(args, trace_binary, trace,
-                                                     ['--trace-interpreter'], {}):
+                            validate_args = ['--trace-interpreter']
+                            if args.verbose:
+                                validate_args += ['--verbose-logging']
+                            if validate_single_trace(args, trace_binary, trace, validate_args, {}):
                                 logging.info('%s passed!' % trace)
                                 result = PASS
             finally:
@@ -600,6 +602,12 @@ def main():
     add_upgrade_args(interpret_parser)
     interpret_parser.add_argument(
         '--show-test-stdout', help='Log test output.', action='store_true', default=False)
+    interpret_parser.add_argument(
+        '-v',
+        '--verbose',
+        help='Verbose logging in the trace tests.',
+        action='store_true',
+        default=False)
 
     get_min_reqs_parser = subparsers.add_parser(
         'get_min_reqs',
