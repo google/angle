@@ -12,6 +12,7 @@
 
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
+#include <math.h>
 #include <stddef.h>
 #include <stdint.h>
 

@@ -36,7 +36,7 @@ CPP_TEMPLATE = """\
 
 namespace angle
 {{
-CallCapture ParseCallCapture(const Token &nameToken, size_t numParamTokens, const Token *paramTokens, const TraceShaderMap &shaders)
+CallCapture ParseCallCapture(const Token &nameToken, size_t numParamTokens, const Token *paramTokens, const TraceStringMap &strings)
 {{
 {parse_cases}
     if (numParamTokens > 0)
@@ -78,7 +78,7 @@ void ReplayCustomFunctionCall(const CallCapture &call, const TraceFunctionMap &c
 PARSE_CASE = """\
     if (strcmp(nameToken, "{ep}") == 0)
     {{
-        ParamBuffer params = ParseParameters<{pfn}>(paramTokens, shaders);
+        ParamBuffer params = ParseParameters<{pfn}>(paramTokens, strings);
         return CallCapture({call}, std::move(params));
     }}
 """

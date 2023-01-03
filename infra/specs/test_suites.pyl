@@ -759,7 +759,7 @@
         'args': [
           '--log=debug',
           'interpret',
-          'among_us:trex_200',
+          'among_us:manhattan_10:trex_200',
           '-L=2',
           '--show-test-stdout',
         ],

@@ -467,11 +467,11 @@ void WriteGLFloatValue(std::ostream &out, GLfloat value)
         {
             out << "-";
         }
-        out << "std::numeric_limits<float>::infinity()";
+        out << "INFINITY";
     }
     else if (std::isnan(value))
     {
-        out << "std::numeric_limits<float>::quiet_NaN()";
+        out << "NAN";
     }
     else
     {
