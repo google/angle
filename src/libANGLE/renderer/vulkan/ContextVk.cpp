@@ -1386,6 +1386,11 @@ angle::Result ContextVk::flush(const gl::Context *context)
     const bool isSingleBuffer =
         mCurrentWindowSurface != nullptr && mCurrentWindowSurface->isSharedPresentMode();
 
+    FramebufferVk *drawFramebufferVk = getDrawFramebuffer();
+    ASSERT(drawFramebufferVk == vk::GetImpl(mState.getDrawFramebuffer()));
+
+    const bool isAndroidHardwareBuffer = drawFramebufferVk->attachmentHasAHB();
+
     if (!mHasAnyCommandsPendingSubmission && !hasStartedRenderPass() &&
         mOutsideRenderPassCommands->empty() &&
         !(isSingleBuffer && mCurrentWindowSurface->hasStagedUpdates()))
@@ -1395,8 +1400,13 @@ angle::Result ContextVk::flush(const gl::Context *context)
 
     // Don't defer flushes in single-buffer mode.  In this mode, the application is not required to
     // call eglSwapBuffers(), and glFlush() is expected to ensure that work is submitted.
+    // Don't defer flushes when the FBO attachment is Android Hardware Buffer.
+    // Android Hardware Buffer (AHB) read access is outside of ANGLE code control,
+    // we don't know when the app is going to read from AHB, if we defer flush it is possible that
+    // when app is reading from AHB, the draw commands have not been flushed and executed yet,
+    // causing app to read unexpected data from AHB.
     if (mRenderer->getFeatures().deferFlushUntilEndRenderPass.enabled && hasStartedRenderPass() &&
-        !isSingleBuffer)
+        !isSingleBuffer && !isAndroidHardwareBuffer)
     {
         mHasDeferredFlush = true;
         return angle::Result::Continue;

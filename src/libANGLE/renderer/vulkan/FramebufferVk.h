@@ -155,6 +155,8 @@ class FramebufferVk : public FramebufferImpl
 
     const QueueSerial &getLastRenderPassQueueSerial() const { return mLastRenderPassQueueSerial; }
 
+    bool attachmentHasAHB() const { return mIsAHBColorAttachments.any(); }
+
     enum class RenderTargetImage
     {
         AttachmentImage,

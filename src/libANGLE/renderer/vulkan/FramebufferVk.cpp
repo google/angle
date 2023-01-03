@@ -620,7 +620,7 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
                 // corner cases, such as with 3D or AHB attachments.  In those cases, a clear can
                 // open a render pass that's otherwise empty, and additional clears can continue to
                 // be accumulated in the render pass loadOps.
-                ASSERT(isAnyAttachment3DWithoutAllLayers || mIsAHBColorAttachments.any());
+                ASSERT(isAnyAttachment3DWithoutAllLayers || attachmentHasAHB());
                 clearWithLoadOp(contextVk);
             }
 
@@ -636,8 +636,7 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
             //
             // For imported images such as from AHBs, the clears are not deferred so that they are
             // definitely applied before the application uses them outside of the control of ANGLE.
-            if (clearAnyWithDraw || isAnyAttachment3DWithoutAllLayers ||
-                mIsAHBColorAttachments.any())
+            if (clearAnyWithDraw || isAnyAttachment3DWithoutAllLayers || attachmentHasAHB())
             {
                 ANGLE_TRY(flushDeferredClears(contextVk));
             }
