@@ -9,7 +9,6 @@
 
 import argparse
 import contextlib
-import fnmatch
 import glob
 import importlib
 import io
@@ -55,10 +54,6 @@ SKIP = 'SKIP'
 
 EXIT_FAILURE = 1
 EXIT_SUCCESS = 0
-
-
-def _filter_tests(tests, pattern):
-    return [test for test in tests if fnmatch.fnmatch(test, pattern)]
 
 
 def _shard_tests(tests, shard_count, shard_index):
@@ -591,7 +586,7 @@ def main():
     tests = angle_test_util.GetTestsFromOutput(output)
 
     if args.filter:
-        tests = _filter_tests(tests, args.filter)
+        tests = angle_test_util.FilterTests(tests, args.filter)
 
     # Get tests for this shard (if using sharding args)
     if args.split_shard_samples and args.shard_count >= args.samples_per_test:
