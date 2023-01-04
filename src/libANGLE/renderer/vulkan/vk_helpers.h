@@ -1135,8 +1135,7 @@ class CommandBufferHelperCommon : angle::NonCopyable
     void imageReadImpl(ContextVk *contextVk,
                        VkImageAspectFlags aspectFlags,
                        ImageLayout imageLayout,
-                       ImageHelper *image,
-                       bool *needLayoutTransition);
+                       ImageHelper *image);
     void imageWriteImpl(ContextVk *contextVk,
                         gl::LevelIndex level,
                         uint32_t layerStart,
@@ -1331,7 +1330,7 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
                                 ImageHelper *resolveImage);
 
     bool usesImage(const ImageHelper &image) const;
-    bool isImageWithLayoutTransition(const ImageHelper &image) const;
+    bool startedAndUsesImageWithBarrier(const ImageHelper &image) const;
 
     angle::Result flushToPrimary(Context *context,
                                  PrimaryCommandBuffer *primary,
@@ -1506,11 +1505,6 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
 
     // Keep track of the depth/stencil attachment index
     PackedAttachmentIndex mDepthStencilAttachmentIndex;
-
-    // This can be used to track implicit image layout transition.
-    // Tracks the read images involved with barrier.
-    static constexpr uint32_t kFlatMapSize = 16;
-    angle::FlatUnorderedSet<ImageSerial, kFlatMapSize> mRenderPassImagesWithLayoutTransition;
 
     // Array size of mColorAttachments
     PackedAttachmentCount mColorAttachmentsCount;
@@ -1940,6 +1934,7 @@ class ImageHelper final : public Resource, public angle::Subject
     }
     ImageLayout getCurrentImageLayout() const { return mCurrentLayout; }
     VkImageLayout getCurrentLayout(Context *context) const;
+    const QueueSerial &getBarrierQueueSerial() const { return mBarrierQueueSerial; }
 
     gl::Extents getLevelExtents(LevelIndex levelVk) const;
     // Helper function to calculate the extents of a render target created for a certain mip of the
@@ -2164,6 +2159,7 @@ class ImageHelper final : public Resource, public angle::Subject
     bool updateLayoutAndBarrier(Context *context,
                                 VkImageAspectFlags aspectMask,
                                 ImageLayout newLayout,
+                                const QueueSerial &queueSerial,
                                 PipelineBarrier *barrier);
 
     // Performs an ownership transfer from an external instance or API.
@@ -2609,6 +2605,8 @@ class ImageHelper final : public Resource, public angle::Subject
     VkPipelineStageFlags mCurrentShaderReadStageMask;
     // Track how it is being used by current open renderpass.
     RenderPassUsageFlags mRenderPassUsageFlags;
+    // The QueueSerial that associated with the last barrier.
+    QueueSerial mBarrierQueueSerial;
 
     // For imported images
     YcbcrConversionDesc mYcbcrConversionDesc;
@@ -2650,10 +2648,10 @@ ANGLE_INLINE bool RenderPassCommandBufferHelper::usesImage(const ImageHelper &im
     return image.usedByCommandBuffer(mQueueSerial);
 }
 
-ANGLE_INLINE bool RenderPassCommandBufferHelper::isImageWithLayoutTransition(
+ANGLE_INLINE bool RenderPassCommandBufferHelper::startedAndUsesImageWithBarrier(
     const ImageHelper &image) const
 {
-    return mRenderPassImagesWithLayoutTransition.contains(image.getImageSerial());
+    return mRenderPassStarted && image.getBarrierQueueSerial() == mQueueSerial;
 }
 
 // A vector of image views, such as one per level or one per layer.

@@ -443,7 +443,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
                      const char *file,
                      const char *function,
                      unsigned int line) override;
-    const gl::ActiveTextureArray<TextureVk *> &getActiveImages() const { return mActiveImages; }
 
     angle::Result onIndexBufferChange(const vk::BufferHelper *currentIndexBuffer);
 

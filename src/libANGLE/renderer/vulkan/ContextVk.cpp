@@ -219,13 +219,6 @@ void ApplySampleCoverage(const gl::State &glState, uint32_t coverageSampleCount,
     *maskOut &= coverageMask;
 }
 
-ANGLE_INLINE bool IsRenderPassStartedAndTransitionsImageLayout(
-    const vk::RenderPassCommandBufferHelper &renderPassCommands,
-    vk::ImageHelper &image)
-{
-    return renderPassCommands.started() && renderPassCommands.isImageWithLayoutTransition(image);
-}
-
 SurfaceRotation DetermineSurfaceRotation(const gl::Framebuffer *framebuffer,
                                          const WindowSurfaceVk *windowSurface)
 {
@@ -7949,7 +7942,7 @@ angle::Result ContextVk::endRenderPassIfComputeAccessAfterGraphicsImageAccess()
 
             // This is to handle the implicit layout transition in renderpass of this image,
             // while it currently be bound and used by current compute program.
-            if (IsRenderPassStartedAndTransitionsImageLayout(*mRenderPassCommands, image))
+            if (mRenderPassCommands->startedAndUsesImageWithBarrier(image))
             {
                 return flushCommandsAndEndRenderPass(
                     RenderPassClosureReason::GraphicsTextureImageAccessThenComputeAccess);
@@ -7985,7 +7978,7 @@ angle::Result ContextVk::endRenderPassIfComputeAccessAfterGraphicsImageAccess()
         }
 
         // Take care of the read image layout transition require implicit synchronization.
-        if (IsRenderPassStartedAndTransitionsImageLayout(*mRenderPassCommands, image))
+        if (mRenderPassCommands->startedAndUsesImageWithBarrier(image))
         {
             return flushCommandsAndEndRenderPass(
                 RenderPassClosureReason::GraphicsTextureImageAccessThenComputeAccess);
