@@ -213,6 +213,7 @@
           'win10_intel_uhd_630_stable',
         ],
         'test_suites': {
+          'isolated_scripts': 'common_perf_isolated_scripts',
         },
       },
       'win10-x64-nvidia': {
