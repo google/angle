@@ -1291,13 +1291,6 @@
       'angle_white_box_gtests',
     ],
 
-    'win10_intel_isolated_scripts': [
-      'angle_perf_smoke_isolated_scripts',
-      'angle_trace_interpreter_isolated_scripts',
-      'angle_trace_perf_native_smoke_isolated_scripts',
-      'angle_trace_perf_vulkan_smoke_isolated_scripts',
-    ],
-
     'win10_nvidia_gtests': [
       'angle_deqp_egl_d3d11_gtests',
       'angle_deqp_egl_gl_gtests',

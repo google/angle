@@ -194,25 +194,23 @@
           'win10_intel_uhd_630_experimental',
         ],
         'test_suites': {
-          'gtest_tests': 'win10_intel_gtests',
-          'isolated_scripts': 'common_isolated_scripts',
         },
       },
       'win10-x64-intel': {
         'os_type': 'win',
         'mixins': [
-          'win10_intel_hd_630_stable',
+          'win10_intel_uhd_630_stable',
         ],
         'test_suites': {
           'gtest_tests': 'win10_intel_gtests',
-          'isolated_scripts': 'win10_intel_isolated_scripts',
+          'isolated_scripts': 'common_isolated_scripts',
         },
       },
       'win10-x64-intel-perf': {
         'os_type': 'win',
         'mixins': [
           'timeout_120m',
-          'win10_intel_hd_630_stable',
+          'win10_intel_uhd_630_stable',
         ],
         'test_suites': {
         },

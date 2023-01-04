@@ -19,7 +19,6 @@
           '--max-processes=1',
         ],
       },
-      # anglebug.com/5328 suspecting blue screen caused by multiprocess
       'win10-x64-intel': {
         'args': [
           '--max-processes=1',
@@ -66,7 +65,6 @@
           '--max-processes=1',
         ],
       },
-      # anglebug.com/5328 suspecting blue screen caused by multiprocess
       'win10-x64-intel': {
         'args': [
           '--max-processes=1',
