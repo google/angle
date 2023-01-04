@@ -1024,6 +1024,11 @@ TestSuite::TestSuite(int *argc, char **argv, std::function<void()> registerTests
         ++argIndex;
     }
 
+    if (mTestArtifactDirectory.empty())
+    {
+        mTestArtifactDirectory = GetEnvironmentVar("ISOLATED_OUTDIR");
+    }
+
 #if defined(ANGLE_PLATFORM_FUCHSIA)
     if (mBotMode)
     {
