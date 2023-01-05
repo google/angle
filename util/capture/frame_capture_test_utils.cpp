@@ -147,4 +147,39 @@ void ReplayTraceFunction(const TraceFunction &func, const TraceFunctionMap &cust
         ReplayTraceFunctionCall(call, customFunctions);
     }
 }
+
+GLuint GetResourceIDMapValue(ResourceIDType resourceIDType, GLuint key)
+{
+    switch (resourceIDType)
+    {
+        case ResourceIDType::Buffer:
+            return gBufferMap[key];
+        case ResourceIDType::FenceNV:
+            return gFenceNVMap[key];
+        case ResourceIDType::Framebuffer:
+            return gFramebufferMap[key];
+        case ResourceIDType::ProgramPipeline:
+            return gProgramPipelineMap[key];
+        case ResourceIDType::Query:
+            return gQueryMap[key];
+        case ResourceIDType::Renderbuffer:
+            return gRenderbufferMap[key];
+        case ResourceIDType::Sampler:
+            return gSamplerMap[key];
+        case ResourceIDType::Semaphore:
+            return gSemaphoreMap[key];
+        case ResourceIDType::ShaderProgram:
+            return gShaderProgramMap[key];
+        case ResourceIDType::Texture:
+            return gTextureMap[key];
+        case ResourceIDType::TransformFeedback:
+            return gTransformFeedbackMap[key];
+        case ResourceIDType::VertexArray:
+            return gVertexArrayMap[key];
+        default:
+            printf("Incompatible resource ID type: %d\n", static_cast<int>(resourceIDType));
+            UNREACHABLE();
+            return 0;
+    }
+}
 }  // namespace angle
