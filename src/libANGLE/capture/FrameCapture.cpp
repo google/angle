@@ -3742,7 +3742,6 @@ void CaptureShareGroupMidExecutionSetup(
     // Set a unpack alignment of 1. Otherwise, computeRowPitch() will compute the wrong value,
     // leading to a crash in memcpy() when capturing the texture contents.
     gl::PixelUnpackState &currentUnpackState = replayState.getUnpackState();
-    GLint savedUnpackAlignment               = currentUnpackState.alignment;
     if (currentUnpackState.alignment != 1)
     {
         cap(CapturePixelStorei(replayState, true, GL_UNPACK_ALIGNMENT, 1));
@@ -4362,10 +4361,11 @@ void CaptureShareGroupMidExecutionSetup(
         resourceTracker->getStartingFenceSyncs().insert(syncID);
     }
 
-    if (savedUnpackAlignment != currentUnpackState.alignment)
+    GLint contextUnpackAlignment = context->getState().getUnpackState().alignment;
+    if (currentUnpackState.alignment != contextUnpackAlignment)
     {
-        cap(CapturePixelStorei(replayState, true, GL_UNPACK_ALIGNMENT, savedUnpackAlignment));
-        replayState.setUnpackAlignment(savedUnpackAlignment);
+        cap(CapturePixelStorei(replayState, true, GL_UNPACK_ALIGNMENT, contextUnpackAlignment));
+        replayState.setUnpackAlignment(contextUnpackAlignment);
     }
 }
 
@@ -4500,7 +4500,6 @@ void CaptureMidExecutionSetup(const gl::Context *context,
     // Set a unpack alignment of 1. Otherwise, computeRowPitch() will compute the wrong value,
     // leading to a crash in memcpy() when capturing the texture contents.
     gl::PixelUnpackState &currentUnpackState = replayState.getUnpackState();
-    GLint savedUnpackAlignment               = currentUnpackState.alignment;
     if (currentUnpackState.alignment != 1)
     {
         cap(CapturePixelStorei(replayState, true, GL_UNPACK_ALIGNMENT, 1));
@@ -5271,10 +5270,11 @@ void CaptureMidExecutionSetup(const gl::Context *context,
     // Clean up the replay state.
     replayState.reset(context);
 
-    if (savedUnpackAlignment != currentUnpackState.alignment)
+    GLint contextUnpackAlignment = context->getState().getUnpackState().alignment;
+    if (currentUnpackState.alignment != contextUnpackAlignment)
     {
-        cap(CapturePixelStorei(replayState, true, GL_UNPACK_ALIGNMENT, savedUnpackAlignment));
-        replayState.setUnpackAlignment(savedUnpackAlignment);
+        cap(CapturePixelStorei(replayState, true, GL_UNPACK_ALIGNMENT, contextUnpackAlignment));
+        replayState.setUnpackAlignment(contextUnpackAlignment);
     }
 
     if (validationEnabled)
