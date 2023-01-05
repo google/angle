@@ -1483,6 +1483,22 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
         addExtensionPrerequisite("GL_EXT_shader_framebuffer_fetch");
     }
 
+    if (traceNameIs("five_nights_at_freddys"))
+    {
+        if (IsWindows() && IsIntel() && mParams->isVulkan())
+        {
+            skipTest("http://anglebug.com/7929 Too slow on Win Intel Vulkan");
+        }
+    }
+
+    if (traceNameIs("pubg_mobile_launch"))
+    {
+        if (IsWindows() && IsIntel() && mParams->driver != GLESDriverType::AngleEGL)
+        {
+            skipTest("http://anglebug.com/7929 Too slow on Win Intel native");
+        }
+    }
+
     // glDebugMessageControlKHR and glDebugMessageCallbackKHR crash on ARM GLES1.
     if (IsARM() && mParams->traceInfo.contextClientMajorVersion == 1)
     {
