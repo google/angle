@@ -399,7 +399,11 @@ void PackIntParameter(ParamBuffer &params, ParamType paramType, const Token &tok
     }
     else
     {
-        ASSERT(isdigit(token[0]));
+        if (!isdigit(token[0]) && !(token[0] == '-' && isdigit(token[1])))
+        {
+            printf("Expected number, got %s\n", token);
+            UNREACHABLE();
+        }
         if (token[0] == '0' && token[1] == 'x')
         {
             value = static_cast<IntT>(strtol(token, nullptr, 16));
@@ -427,7 +431,11 @@ void PackMemPointer(ParamBuffer &params,
 template <typename T>
 void PackMutablePointerParameter(ParamBuffer &params, ParamType paramType, const Token &token)
 {
-    if (token[0] == '&')
+    if (token[0] == '0' && token[1] == 0)
+    {
+        params.addUnnamedParam(paramType, reinterpret_cast<T *>(0));
+    }
+    else if (token[0] == '&')
     {
         ASSERT(BeginsWith(token, "&gReadBuffer[") && EndsWith(token, "]"));
         PackMemPointer<T *>(params, paramType, &token[strlen("&gReadBuffer[")], gReadBuffer);
