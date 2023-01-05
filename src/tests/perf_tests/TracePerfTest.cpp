@@ -1359,11 +1359,6 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
             skipTest("http://anglebug.com/7125 Renders incorrectly on NVIDIA");
         }
 
-        if (IsPixel6() && mParams->isVulkan())
-        {
-            skipTest("http://anglebug.com/7916 Assert on Pixel 6");
-        }
-
         addExtensionPrerequisite("GL_EXT_geometry_shader");
         addExtensionPrerequisite("GL_EXT_primitive_bounding_box");
         addExtensionPrerequisite("GL_EXT_tessellation_shader");
