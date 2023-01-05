@@ -11,7 +11,7 @@ Metal and MacOS, Chrome OS, and Fuchsia support.
 |                |  Direct3D 9   |  Direct3D 11     |   Desktop GL   |    GL ES      |    Vulkan     |    Metal      |
 |----------------|:-------------:|:----------------:|:--------------:|:-------------:|:-------------:|:-------------:|
 | OpenGL ES 2.0  |    complete   |    complete      |    complete    |    complete   |    complete   |    complete   |
-| OpenGL ES 3.0  |               |    complete      |    complete    |    complete   |    complete   |  in progress  |
+| OpenGL ES 3.0  |               |    complete      |    complete    |    complete   |    complete   |    complete   |
 | OpenGL ES 3.1  |               | [incomplete](doc/ES31StatusOnD3D11.md) |    complete    |    complete   |    complete   |               |
 | OpenGL ES 3.2  |               |                  |  in progress   |  in progress  |  in progress  |               |
 
@@ -21,8 +21,8 @@ Metal and MacOS, Chrome OS, and Fuchsia support.
 |-------------:|:--------------:|:--------------:|:-------------:|:-----------:|:-----------:|:-----------:|
 | Windows      |    complete    |    complete    |   complete    |   complete  |   complete  |             |
 | Linux        |                |                |   complete    |             |   complete  |             |
-| Mac OS X     |                |                |   complete    |             |             | in progress |
-| iOS          |                |                |               |             |             | in progress |
+| Mac OS X     |                |                |   complete    |             |             |   complete  |
+| iOS          |                |                |               |             |             |   complete  |
 | Chrome OS    |                |                |               |   complete  |   planned   |             |
 | Android      |                |                |               |   complete  |   complete  |             |
 | GGP (Stadia) |                |                |               |             |   complete  |             |
