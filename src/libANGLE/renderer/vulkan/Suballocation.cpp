@@ -24,6 +24,7 @@ BufferBlock::BufferBlock()
       mSize(0),
       mAllocatedBufferSize(0),
       mMemoryAllocationType(MemoryAllocationType::InvalidEnum),
+      mMemoryTypeIndex(kInvalidMemoryTypeIndex),
       mMappedMemory(nullptr)
 {}
 
@@ -35,6 +36,7 @@ BufferBlock::BufferBlock(BufferBlock &&other)
       mSize(other.mSize),
       mAllocatedBufferSize(other.mAllocatedBufferSize),
       mMemoryAllocationType(other.mMemoryAllocationType),
+      mMemoryTypeIndex(other.mMemoryTypeIndex),
       mMappedMemory(other.mMappedMemory),
       mSerial(other.mSerial),
       mCountRemainsEmpty(0)
@@ -49,6 +51,7 @@ BufferBlock &BufferBlock::operator=(BufferBlock &&other)
     std::swap(mSize, other.mSize);
     std::swap(mAllocatedBufferSize, other.mAllocatedBufferSize);
     std::swap(mMemoryAllocationType, other.mMemoryAllocationType);
+    std::swap(mMemoryTypeIndex, other.mMemoryTypeIndex);
     std::swap(mMappedMemory, other.mMappedMemory);
     std::swap(mSerial, other.mSerial);
     std::swap(mCountRemainsEmpty, other.mCountRemainsEmpty);
@@ -73,7 +76,7 @@ void BufferBlock::destroy(RendererVk *renderer)
         unmap(device);
     }
 
-    renderer->onMemoryDealloc(mMemoryAllocationType, mAllocatedBufferSize,
+    renderer->onMemoryDealloc(mMemoryAllocationType, mAllocatedBufferSize, mMemoryTypeIndex,
                               mDeviceMemory.getHandle());
 
     mVirtualBlock.destroy(device);
@@ -83,6 +86,7 @@ void BufferBlock::destroy(RendererVk *renderer)
 
 angle::Result BufferBlock::init(Context *context,
                                 Buffer &buffer,
+                                uint32_t memoryTypeIndex,
                                 vma::VirtualBlockCreateFlags flags,
                                 DeviceMemory &deviceMemory,
                                 VkMemoryPropertyFlags memoryPropertyFlags,
@@ -101,6 +105,7 @@ angle::Result BufferBlock::init(Context *context,
     mSize                 = size;
     mAllocatedBufferSize  = size;
     mMemoryAllocationType = MemoryAllocationType::Buffer;
+    mMemoryTypeIndex      = memoryTypeIndex;
     mMappedMemory         = nullptr;
     mSerial               = renderer->getResourceSerialFactory().generateBufferSerial();
 
@@ -110,6 +115,7 @@ angle::Result BufferBlock::init(Context *context,
 void BufferBlock::initWithoutVirtualBlock(Context *context,
                                           Buffer &buffer,
                                           MemoryAllocationType memoryAllocationType,
+                                          uint32_t memoryTypeIndex,
                                           DeviceMemory &deviceMemory,
                                           VkMemoryPropertyFlags memoryPropertyFlags,
                                           VkDeviceSize size,
@@ -126,6 +132,7 @@ void BufferBlock::initWithoutVirtualBlock(Context *context,
     mSize                 = size;
     mAllocatedBufferSize  = allocatedBufferSize;
     mMemoryAllocationType = memoryAllocationType;
+    mMemoryTypeIndex      = memoryTypeIndex;
     mMappedMemory         = nullptr;
     mSerial               = renderer->getResourceSerialFactory().generateBufferSerial();
 }

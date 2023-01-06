@@ -62,6 +62,7 @@ angle::Result InitAndroidExternalMemory(ContextVk *contextVk,
                                         VkMemoryPropertyFlags memoryProperties,
                                         Buffer *buffer,
                                         VkMemoryPropertyFlags *memoryPropertyFlagsOut,
+                                        uint32_t *memoryTypeIndexOut,
                                         DeviceMemory *deviceMemoryOut,
                                         VkDeviceSize *sizeOut)
 {
@@ -82,10 +83,10 @@ angle::Result InitAndroidExternalMemory(ContextVk *contextVk,
     importHardwareBufferInfo.sType  = VK_STRUCTURE_TYPE_IMPORT_ANDROID_HARDWARE_BUFFER_INFO_ANDROID;
     importHardwareBufferInfo.buffer = hardwareBuffer;
 
-    ANGLE_TRY(AllocateBufferMemoryWithRequirements(contextVk, MemoryAllocationType::BufferExternal,
-                                                   memoryProperties, externalMemoryRequirements,
-                                                   &importHardwareBufferInfo, buffer,
-                                                   memoryPropertyFlagsOut, deviceMemoryOut));
+    ANGLE_TRY(AllocateBufferMemoryWithRequirements(
+        contextVk, MemoryAllocationType::BufferExternal, memoryProperties,
+        externalMemoryRequirements, &importHardwareBufferInfo, buffer, memoryPropertyFlagsOut,
+        memoryTypeIndexOut, deviceMemoryOut));
     *sizeOut = externalMemoryRequirements.size;
 
     functions.acquire(hardwareBuffer);

@@ -2646,6 +2646,8 @@ class ImageHelper final : public Resource, public angle::Subject
     VkDeviceSize mAllocationSize;
     // Type of the memory allocation for the image (Image or ImageExternal).
     MemoryAllocationType mMemoryAllocationType;
+    // Memory type index used for the allocation. It can be used to determine the heap index.
+    uint32_t mMemoryTypeIndex;
 };
 
 ANGLE_INLINE bool RenderPassCommandBufferHelper::usesImage(const ImageHelper &image) const

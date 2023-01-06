@@ -662,28 +662,39 @@ class RendererVk : angle::NonCopyable
 
     // Memory statistics can be updated on allocation and deallocation.
     template <typename HandleT>
-    void onMemoryAlloc(vk::MemoryAllocationType allocType, VkDeviceSize size, HandleT handle)
+    void onMemoryAlloc(vk::MemoryAllocationType allocType,
+                       VkDeviceSize size,
+                       uint32_t memoryTypeIndex,
+                       HandleT handle)
     {
-        onMemoryAllocImpl(allocType, size, reinterpret_cast<void *>(handle));
+        onMemoryAllocImpl(allocType, size, memoryTypeIndex, reinterpret_cast<void *>(handle));
     }
 
     template <typename HandleT>
-    void onMemoryDealloc(vk::MemoryAllocationType allocType, VkDeviceSize size, HandleT handle)
+    void onMemoryDealloc(vk::MemoryAllocationType allocType,
+                         VkDeviceSize size,
+                         uint32_t memoryTypeIndex,
+                         HandleT handle)
     {
-        onMemoryDeallocImpl(allocType, size, reinterpret_cast<void *>(handle));
+        onMemoryDeallocImpl(allocType, size, memoryTypeIndex, reinterpret_cast<void *>(handle));
     }
 
     // Pending memory allocation information is used for logging in case of an unsuccessful
     // allocation. It is cleared in onMemoryAlloc().
     void resetPendingMemoryAlloc();
-    void setPendingMemoryAlloc(vk::MemoryAllocationType allocType, VkDeviceSize size);
+    void setPendingMemoryAlloc(vk::MemoryAllocationType allocType,
+                               VkDeviceSize size,
+                               uint32_t memoryTypeIndex);
 
     // Memory statistics are logged when handling a context error.
     void logMemoryStatsOnError();
 
-    // Allocation statistics functions below are currently used for debugging only.
-    VkDeviceSize getActiveMemoryAllocationsSize(uint32_t allocTypeIndex);
-    VkDeviceSize getActiveMemoryAllocationsCount(uint32_t allocTypeIndex);
+    // Memory allocation statistics functions.
+    VkDeviceSize getActiveMemoryAllocationsSize(uint32_t allocTypeIndex) const;
+    VkDeviceSize getActiveHeapMemoryAllocationsSize(uint32_t allocTypeIndex,
+                                                    uint32_t heapIndex) const;
+    uint64_t getActiveMemoryAllocationsCount(uint32_t allocTypeIndex) const;
+    uint64_t getActiveHeapMemoryAllocationsCount(uint32_t allocTypeIndex, uint32_t heapIndex) const;
 
   private:
     angle::Result initializeDevice(DisplayVk *displayVk, uint32_t queueFamilyIndex);
@@ -722,8 +733,14 @@ class RendererVk : angle::NonCopyable
                                        CommandBufferHelperT **commandBufferHelperOut);
 
     // Collect information about memory allocations for debugging.
-    void onMemoryAllocImpl(vk::MemoryAllocationType allocType, VkDeviceSize size, void *handle);
-    void onMemoryDeallocImpl(vk::MemoryAllocationType allocType, VkDeviceSize size, void *handle);
+    void onMemoryAllocImpl(vk::MemoryAllocationType allocType,
+                           VkDeviceSize size,
+                           uint32_t memoryTypeIndex,
+                           void *handle);
+    void onMemoryDeallocImpl(vk::MemoryAllocationType allocType,
+                             VkDeviceSize size,
+                             uint32_t memoryTypeIndex,
+                             void *handle);
 
     egl::Display *mDisplay;
 
@@ -952,16 +969,24 @@ class RendererVk : angle::NonCopyable
         mActiveMemoryAllocationsSize;
     std::array<std::atomic<uint64_t>, vk::kMemoryAllocationTypeCount> mActiveMemoryAllocationsCount;
 
+    // Memory allocation data per memory heap. To update the data, a mutex is used.
+    using PerHeapMemoryAllocationSizeVector  = std::vector<VkDeviceSize>;
+    using PerHeapMemoryAllocationCountVector = std::vector<uint64_t>;
+    std::array<PerHeapMemoryAllocationSizeVector, vk::kMemoryAllocationTypeCount>
+        mActivePerHeapMemoryAllocationsSize;
+    std::array<PerHeapMemoryAllocationCountVector, vk::kMemoryAllocationTypeCount>
+        mActivePerHeapMemoryAllocationsCount;
+    std::mutex mMemoryAllocationMutex;
+
     // Pending memory allocation information is used for logging in case of an allocation error. It
     // includes the size and type of the last attempted allocation, which are cleared after the
     // allocation is successful.
     std::atomic<VkDeviceSize> mPendingMemoryAllocationSize;
     std::atomic<vk::MemoryAllocationType> mPendingMemoryAllocationType;
+    std::atomic<uint32_t> mPendingMemoryTypeIndex;
 
     // For memory allocation with debug layers.
-    std::mutex mMemoryAllocationMutex;
     uint64_t mMemoryAllocationID;
-
     using MemoryAllocInfoMap = angle::HashMap<vk::MemoryAllocInfoMapKey, vk::MemoryAllocationInfo>;
     angle::HashMap<angle::BacktraceInfo, MemoryAllocInfoMap> mMemoryAllocationTracker;
 };

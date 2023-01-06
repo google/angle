@@ -30,6 +30,7 @@ angle::Result InitAndroidExternalMemory(ContextVk *contextVk,
                                         VkMemoryPropertyFlags memoryProperties,
                                         Buffer *buffer,
                                         VkMemoryPropertyFlags *memoryPropertyFlagsOut,
+                                        uint32_t *memoryTypeIndexOut,
                                         DeviceMemory *deviceMemoryOut,
                                         VkDeviceSize *sizeOut);
 

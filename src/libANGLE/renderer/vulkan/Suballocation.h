@@ -38,6 +38,7 @@ class BufferBlock final : angle::NonCopyable
     void destroy(RendererVk *renderer);
     angle::Result init(Context *context,
                        Buffer &buffer,
+                       uint32_t memoryTypeIndex,
                        vma::VirtualBlockCreateFlags flags,
                        DeviceMemory &deviceMemory,
                        VkMemoryPropertyFlags memoryPropertyFlags,
@@ -45,6 +46,7 @@ class BufferBlock final : angle::NonCopyable
     void initWithoutVirtualBlock(Context *context,
                                  Buffer &buffer,
                                  MemoryAllocationType memoryAllocationType,
+                                 uint32_t memoryTypeIndex,
                                  DeviceMemory &deviceMemory,
                                  VkMemoryPropertyFlags memoryPropertyFlags,
                                  VkDeviceSize size,
@@ -99,6 +101,8 @@ class BufferBlock final : angle::NonCopyable
     VkDeviceSize mAllocatedBufferSize;
     // Memory allocation type used for this object.
     MemoryAllocationType mMemoryAllocationType;
+    // Memory type index used for the allocation. It can be used to determine the heap index.
+    uint32_t mMemoryTypeIndex;
 
     uint8_t *mMappedMemory;
     BufferSerial mSerial;
@@ -129,6 +133,7 @@ class BufferSuballocation final : angle::NonCopyable
     void initWithEntireBuffer(Context *context,
                               Buffer &buffer,
                               MemoryAllocationType memoryAllocationType,
+                              uint32_t memoryTypeIndex,
                               DeviceMemory &deviceMemory,
                               VkMemoryPropertyFlags memoryPropertyFlags,
                               VkDeviceSize size,
@@ -303,6 +308,7 @@ ANGLE_INLINE void BufferSuballocation::initWithEntireBuffer(
     Context *context,
     Buffer &buffer,
     MemoryAllocationType memoryAllocationType,
+    uint32_t memoryTypeIndex,
     DeviceMemory &deviceMemory,
     VkMemoryPropertyFlags memoryPropertyFlags,
     VkDeviceSize size,
@@ -311,8 +317,8 @@ ANGLE_INLINE void BufferSuballocation::initWithEntireBuffer(
     ASSERT(!valid());
 
     std::unique_ptr<BufferBlock> block = std::make_unique<BufferBlock>();
-    block->initWithoutVirtualBlock(context, buffer, memoryAllocationType, deviceMemory,
-                                   memoryPropertyFlags, size, allocatedBufferSize);
+    block->initWithoutVirtualBlock(context, buffer, memoryAllocationType, memoryTypeIndex,
+                                   deviceMemory, memoryPropertyFlags, size, allocatedBufferSize);
 
     mBufferBlock = block.release();
     mAllocation  = VK_NULL_HANDLE;
