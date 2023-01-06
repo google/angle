@@ -1510,6 +1510,14 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
         }
     }
 
+    if (traceNameIs("final_fantasy"))
+    {
+        if (IsAndroid() && IsPixel6() && mParams->driver == GLESDriverType::SystemEGL)
+        {
+            skipTest("http://anglebug.com/7936 Crashes on Pixel 6 native");
+        }
+    }
+
     // glDebugMessageControlKHR and glDebugMessageCallbackKHR crash on ARM GLES1.
     if (IsARM() && mParams->traceInfo.contextClientMajorVersion == 1)
     {
