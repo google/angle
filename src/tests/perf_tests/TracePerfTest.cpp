@@ -1494,6 +1494,22 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
         }
     }
 
+    if (traceNameIs("beach_buggy_racing"))
+    {
+        if (IsWindows() && IsIntel() && mParams->isVulkan())
+        {
+            skipTest("http://anglebug.com/7934 Flaky context lost on Win Intel Vulkan");
+        }
+    }
+
+    if (traceNameIs("aliexpress"))
+    {
+        if (IsWindows() && IsIntel() && mParams->driver != GLESDriverType::AngleEGL)
+        {
+            skipTest("http://anglebug.com/7934 Flaky failure on Win Intel native");
+        }
+    }
+
     // glDebugMessageControlKHR and glDebugMessageCallbackKHR crash on ARM GLES1.
     if (IsARM() && mParams->traceInfo.contextClientMajorVersion == 1)
     {
