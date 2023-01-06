@@ -156,7 +156,8 @@ void UpdateUniformBlockIndex(GLuint program, const char *name, GLuint index)
 void UniformBlockBinding(GLuint program, GLuint uniformblockIndex, GLuint binding)
 {
     glUniformBlockBinding(gShaderProgramMap[program],
-                          gUniformBlockIndexes[program][uniformblockIndex], binding);
+                          gUniformBlockIndexes[gShaderProgramMap[program]][uniformblockIndex],
+                          binding);
 }
 
 void UpdateCurrentProgram(GLuint program)
