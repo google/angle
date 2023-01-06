@@ -1272,10 +1272,14 @@ void checkForCurrentMemoryAllocations(RendererVk *renderer)
         {
             if (renderer->getActiveMemoryAllocationsSize(i) != 0)
             {
-                INFO() << "Currently allocated size for memory allocation type ("
-                       << vk::kMemoryAllocationTypeMessage[i]
-                       << "): " << renderer->getActiveMemoryAllocationsSize(i)
-                       << " | Count: " << renderer->getActiveMemoryAllocationsCount(i);
+                std::stringstream outStream;
+                outStream.imbue(std::locale(""));
+
+                outStream << "Currently allocated size for memory allocation type ("
+                          << vk::kMemoryAllocationTypeMessage[i]
+                          << "): " << renderer->getActiveMemoryAllocationsSize(i)
+                          << " | Count: " << renderer->getActiveMemoryAllocationsCount(i);
+                INFO() << outStream.str();
             }
         }
     }
@@ -1285,9 +1289,13 @@ void checkForCurrentMemoryAllocations(RendererVk *renderer)
         {
             if (renderer->getActiveMemoryAllocationsSize(i) != 0)
             {
-                INFO() << "Currently allocated size for memory allocation type ("
-                       << vk::kMemoryAllocationTypeMessage[i]
-                       << "): " << renderer->getActiveMemoryAllocationsSize(i);
+                std::stringstream outStream;
+                outStream.imbue(std::locale(""));
+
+                outStream << "Currently allocated size for memory allocation type ("
+                          << vk::kMemoryAllocationTypeMessage[i]
+                          << "): " << renderer->getActiveMemoryAllocationsSize(i);
+                INFO() << outStream.str();
             }
         }
     }
@@ -1303,8 +1311,13 @@ void logPendingMemoryAllocation(vk::MemoryAllocationType allocInfo, VkDeviceSize
 
     if (allocSize != 0)
     {
-        WARN() << "Pending allocation size for memory allocation type ("
-               << vk::kMemoryAllocationTypeMessage[ToUnderlying(allocInfo)] << "): " << allocSize;
+        std::stringstream outStream;
+        outStream.imbue(std::locale(""));
+
+        outStream << "Pending allocation size for memory allocation type ("
+                  << vk::kMemoryAllocationTypeMessage[ToUnderlying(allocInfo)]
+                  << "): " << allocSize;
+        WARN() << outStream.str();
     }
 }
 
@@ -1340,6 +1353,7 @@ void logMemoryHeapStats(RendererVk *renderer, vk::MemoryLogSeverity severity)
 
     // Log stream for the heap information.
     std::stringstream outStream;
+    outStream.imbue(std::locale(""));
 
     // VkPhysicalDeviceMemoryProperties2 enables the use of memory budget properties if supported.
     VkPhysicalDeviceMemoryProperties2KHR memoryProperties;
@@ -1360,31 +1374,32 @@ void logMemoryHeapStats(RendererVk *renderer, vk::MemoryLogSeverity severity)
     // Add memory heap information to the stream.
     outStream << "Memory heap info" << std::endl;
 
-    outStream << "* Available memory heaps:" << std::endl;
+    outStream << std::endl << "* Available memory heaps:" << std::endl;
     for (uint32_t i = 0; i < memoryProperties.memoryProperties.memoryHeapCount; i++)
     {
-        outStream << i << " | Size: " << memoryProperties.memoryProperties.memoryHeaps[i].size
-                  << " | Flags: " << memoryProperties.memoryProperties.memoryHeaps[i].flags
-                  << std::endl;
-    }
-
-    outStream << "* Available memory types:" << std::endl;
-    for (uint32_t i = 0; i < memoryProperties.memoryProperties.memoryTypeCount; i++)
-    {
-        outStream << i
-                  << " | Heap index: " << memoryProperties.memoryProperties.memoryTypes[i].heapIndex
-                  << " | Property flags: "
-                  << memoryProperties.memoryProperties.memoryTypes[i].propertyFlags << std::endl;
+        outStream << std::dec << i
+                  << " | Heap size: " << memoryProperties.memoryProperties.memoryHeaps[i].size
+                  << " | Flags: 0x" << std::hex
+                  << memoryProperties.memoryProperties.memoryHeaps[i].flags << std::endl;
     }
 
     if (renderer->getFeatures().supportsMemoryBudget.enabled)
     {
-        outStream << "* Available memory budget and usage:" << std::endl;
-        for (uint32_t i = 0; i < VK_MAX_MEMORY_HEAPS; i++)
+        outStream << std::endl << "* Available memory budget and usage per heap:" << std::endl;
+        for (uint32_t i = 0; i < memoryProperties.memoryProperties.memoryHeapCount; i++)
         {
-            outStream << i << " | Heap budget: " << memoryBudgetProperties.heapBudget[i]
+            outStream << std::dec << i << " | Heap budget: " << memoryBudgetProperties.heapBudget[i]
                       << " | Heap usage: " << memoryBudgetProperties.heapUsage[i] << std::endl;
         }
+    }
+
+    outStream << std::endl << "* Available memory types:" << std::endl;
+    for (uint32_t i = 0; i < memoryProperties.memoryProperties.memoryTypeCount; i++)
+    {
+        outStream << std::dec << i
+                  << " | Heap index: " << memoryProperties.memoryProperties.memoryTypes[i].heapIndex
+                  << " | Property flags: 0x" << std::hex
+                  << memoryProperties.memoryProperties.memoryTypes[i].propertyFlags << std::endl;
     }
 
     // Output the log stream based on the level of severity.
