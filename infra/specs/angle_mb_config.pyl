@@ -20,6 +20,7 @@
       'android-arm64-exp-test': 'angle_goma_android_arm64_release_bot',
       'android-arm64-test': 'angle_goma_android_arm64_release_bot',
       'android-pixel4-perf': 'angle_goma_android_perf_bot',
+      'android-pixel6-perf': 'angle_goma_android_perf_bot',
       'linux-asan-test': 'angle_asan_lsan_ubsan_bot',
       'linux-dbg-compile': 'angle_goma_debug_bot',
       'linux-exp-test': 'angle_goma_release_bot',

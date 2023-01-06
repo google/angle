@@ -432,6 +432,7 @@ angle_builder("linux-trace", cpu = "x64")
 angle_builder("win-trace", cpu = "x64")
 
 angle_builder("android-pixel4-perf", cpu = "arm64")
+angle_builder("android-pixel6-perf", cpu = "arm64")
 angle_builder("linux-intel-uhd630-perf", cpu = "x64")
 angle_builder("linux-nvidia-gtx1660-perf", cpu = "x64")
 angle_builder("win10-intel-uhd630-perf", cpu = "x64")
