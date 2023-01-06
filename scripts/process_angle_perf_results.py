@@ -300,7 +300,7 @@ def process_perf_results(output_json,
         for directory in directories:
             with open(os.path.join(directory, 'angle_metrics.json')) as f:
                 metrics = json.load(f)
-                metric_names = list(set(d['metric'] for d in group for group in metrics))
+                metric_names = list(set(d['metric'] for group in metrics for d in group))
                 logging.info('angle_metrics: len=%d metrics=%s (directory=%s)' %
                              (len(metrics), '|'.join(metric_names), directory))
 
