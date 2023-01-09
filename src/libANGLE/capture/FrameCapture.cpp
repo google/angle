@@ -8604,7 +8604,7 @@ void FrameCaptureShared::writeMainContextCppReplay(const gl::Context *context,
                 {
                     // Only call SetupReplayContext for secondary contexts that were current before
                     // MEC started
-                    if (mActiveSecondaryContexts.find(context->id().value) !=
+                    if (mActiveSecondaryContexts.find(shareContext->id().value) !=
                         mActiveSecondaryContexts.end())
                     {
                         // TODO(http://anglebug.com/5878): Support capture/replay of
