@@ -488,7 +488,10 @@ void DisplayMtl::generateExtensions(egl::DisplayExtensions *outExtensions) const
     outExtensions->mtlSyncSharedEventANGLE = true;
 }
 
-void DisplayMtl::generateCaps(egl::Caps *outCaps) const {}
+void DisplayMtl::generateCaps(egl::Caps *outCaps) const 
+{
+    outCaps->textureNPOT = true;
+}
 
 void DisplayMtl::populateFeatureList(angle::FeatureList *features)
 {
