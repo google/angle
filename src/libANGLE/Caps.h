@@ -411,10 +411,10 @@ struct Caps
     Caps();
 
     // Support for NPOT surfaces
-    bool textureNPOT;
+    bool textureNPOT = false;
 
     // Support for Stencil8 configs
-    bool stencil8;
+    bool stencil8 = false;
 };
 
 struct DisplayExtensions
