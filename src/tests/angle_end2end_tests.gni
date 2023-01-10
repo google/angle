@@ -170,6 +170,7 @@ angle_end2end_tests_sources = [
   "gl_tests/gles1/ClientActiveTextureTest.cpp",
   "gl_tests/gles1/ClientStateEnable.cpp",
   "gl_tests/gles1/ClipPlaneTest.cpp",
+  "gl_tests/gles1/ColorMaterialTest.cpp",
   "gl_tests/gles1/CurrentColorTest.cpp",
   "gl_tests/gles1/CurrentNormalTest.cpp",
   "gl_tests/gles1/CurrentTextureCoordsTest.cpp",
