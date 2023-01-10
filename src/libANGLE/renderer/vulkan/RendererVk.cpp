@@ -4267,7 +4267,7 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     // VK_EXT_graphics_pipeline_library without graphicsPipelineLibraryFastLinking
     ANGLE_FEATURE_CONDITION(
         &mFeatures, preferMonolithicPipelinesOverLibraries,
-        !mGraphicsPipelineLibraryProperties.graphicsPipelineLibraryFastLinking || isSwiftShader);
+        false /* !mGraphicsPipelineLibraryProperties.graphicsPipelineLibraryFastLinking || isSwiftShader */);
 
     // Whether the pipeline caches should merge into the global pipeline cache.  This should only be
     // enabled on platforms if:
