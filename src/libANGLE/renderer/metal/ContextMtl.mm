@@ -1570,7 +1570,7 @@ angle::Result ContextMtl::memoryBarrier(const gl::Context *context, GLbitfield b
             scope = MTLBarrierScopeTextures | MTLBarrierScopeBuffers;
             if (getDisplay()->hasFragmentMemoryBarriers())
             {
-                scope |= MTLBarrierScopeRenderTargets;
+                scope |= mtl::kBarrierScopeRenderTargets;
             }
             break;
         case GL_SHADER_IMAGE_ACCESS_BARRIER_BIT:
@@ -1585,7 +1585,7 @@ angle::Result ContextMtl::memoryBarrier(const gl::Context *context, GLbitfield b
                 // NOTE: Apple Silicon doesn't support MTLBarrierScopeRenderTargets. This seems to
                 // work anyway though, and on that hardware we use programmable blending for pixel
                 // local storage instead of read_write textures anyway.
-                scope |= MTLBarrierScopeRenderTargets;
+                scope |= mtl::kBarrierScopeRenderTargets;
             }
             break;
         default:

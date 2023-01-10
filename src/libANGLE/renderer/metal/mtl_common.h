@@ -181,6 +181,12 @@ constexpr MTLBlitOption kBlitOptionRowLinearPVRTC = MTLBlitOptionNone;
 constexpr MTLBlitOption kBlitOptionRowLinearPVRTC          = MTLBlitOptionRowLinearPVRTC;
 #endif
 
+#if defined(__MAC_10_14) && (TARGET_OS_OSX || TARGET_OS_MACCATALYST)
+constexpr MTLBarrierScope kBarrierScopeRenderTargets = MTLBarrierScopeRenderTargets;
+#else
+constexpr MTLBarrierScope kBarrierScopeRenderTargets       = MTLBarrierScope(0);
+#endif
+
 #if defined(__IPHONE_13_0) || defined(__MAC_10_15)
 #    define ANGLE_MTL_SWIZZLE_AVAILABLE 1
 using TextureSwizzleChannels                   = MTLTextureSwizzleChannels;
