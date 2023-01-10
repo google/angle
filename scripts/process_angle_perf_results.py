@@ -716,7 +716,7 @@ def main():
     # away tools/perf/core/chromium.perf.fyi.extras.json
     parser.add_argument('--configuration-name', help=argparse.SUPPRESS)
     parser.add_argument('--build-properties', help=argparse.SUPPRESS)
-    parser.add_argument('--summary-json', help=argparse.SUPPRESS)
+    parser.add_argument('--summary-json', required=True, help=argparse.SUPPRESS)
     parser.add_argument('--task-output-dir', required=True, help=argparse.SUPPRESS)
     parser.add_argument('-o', '--output-json', required=True, help=argparse.SUPPRESS)
     parser.add_argument(
@@ -738,15 +738,27 @@ def main():
 
     args = parser.parse_args()
 
+    with open(args.summary_json) as f:
+        shard_summary = json.load(f)
+    shard_failed = any(int(shard['exit_code']) != 0 for shard in shard_summary['shards'])
+
     output_results_dir = tempfile.mkdtemp('outputresults')
     try:
         return_code, _ = process_perf_results(args.output_json, args.configuration_name,
                                               args.build_properties, args.task_output_dir,
                                               args.smoke_test_mode, output_results_dir,
                                               args.lightweight, args.skip_perf)
-        return return_code
+    except Exception:
+        logging.exception('process_perf_results raised an exception')
+        return_code = 1
     finally:
         shutil.rmtree(output_results_dir)
+
+    if return_code != 0 and shard_failed:
+        logging.warning('Perf processing failed but one or more shards failed earlier')
+        return_code = 0  # Enables the failed build info to be rendered normally
+
+    return return_code
 
 
 if __name__ == '__main__':
