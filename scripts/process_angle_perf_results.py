@@ -60,6 +60,9 @@ JSON_CONTENT_TYPE = 'application/json'
 MACHINE_GROUP = 'ANGLE'
 BUILD_URL = 'https://ci.chromium.org/ui/p/angle/builders/ci/%s/%d'
 
+GSUTIL_PY_PATH = str(
+    pathlib.Path(__file__).resolve().parents[1] / 'third_party' / 'depot_tools' / 'gsutil.py')
+
 
 def _upload_perf_results(json_to_upload, name, configuration_name, build_properties,
                          output_json_file):
@@ -274,7 +277,7 @@ def _upload_to_skia_perf(benchmark_directory_map, benchmark_enabled_map, build_p
             json.dump(skia_data, f, indent=2)
         gs_dir = 'gs://angle-perf-skia/angle_perftests/%s/' % (
             datetime.datetime.now().strftime('%Y/%m/%d/%H'))
-        upload_cmd = ['gsutil', 'cp', local_file, gs_dir]
+        upload_cmd = ['vpython3', GSUTIL_PY_PATH, 'cp', local_file, gs_dir]
         logging.info('Skia upload: %s', ' '.join(upload_cmd))
         subprocess.check_call(upload_cmd)
     finally:
@@ -355,8 +358,7 @@ def process_perf_results(output_json,
                                  build_properties_map)
         except Exception:
             logging.exception('Error uploading to skia perf')
-            if sys.platform != 'win32':  # TODO: gsutil on Windows
-                return_code = 1
+            return_code = 1
 
     if handle_non_perf:
         # Finally, merge all test results json, add the extra links and write out to
