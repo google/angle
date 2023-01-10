@@ -1748,6 +1748,10 @@ group("angle") {
       ":libGLESv2_vulkan_secondaries",
     ]
   }
+  if (is_ios) {
+    # Need to bundle the libraries inside the .app.
+    deps = data_deps
+  }
 }
 
 group("angle_static") {
