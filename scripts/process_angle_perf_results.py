@@ -355,7 +355,8 @@ def process_perf_results(output_json,
                                  build_properties_map)
         except Exception:
             logging.exception('Error uploading to skia perf')
-            return_code = 1
+            if sys.platform != 'win32':  # TODO: gsutil on Windows
+                return_code = 1
 
     if handle_non_perf:
         # Finally, merge all test results json, add the extra links and write out to
