@@ -127,10 +127,20 @@ class PLSProgram
         }
     }
 
-    ~PLSProgram()
+    ~PLSProgram() { reset(); }
+
+    void reset()
     {
-        glDeleteVertexArrays(1, &mVertexArray);
-        glDeleteBuffers(1, &mVertexBuffer);
+        if (mVertexArray != 0)
+        {
+            glDeleteVertexArrays(1, &mVertexArray);
+            mVertexArray = 0;
+        }
+        if (mVertexBuffer != 0)
+        {
+            glDeleteBuffers(1, &mVertexBuffer);
+            mVertexBuffer = 0;
+        }
     }
 
     int widthUniform() const { return mWidthUniform; }
@@ -346,8 +356,10 @@ class PixelLocalStorageTest : public ANGLETest<>
         setConfigAlphaBits(8);
     }
 
-    ~PixelLocalStorageTest()
+    void testTearDown() override
     {
+        mProgram.reset();
+        mRenderTextureProgram.reset();
         if (mScratchFBO)
         {
             glDeleteFramebuffers(1, &mScratchFBO);
