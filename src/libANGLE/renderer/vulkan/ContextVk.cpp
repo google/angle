@@ -1200,7 +1200,7 @@ void ContextVk::onDestroy(const gl::Context *context)
 
     mUtils.destroy(this);
 
-    mRenderPassCache.destroy(mRenderer);
+    mRenderPassCache.destroy(this);
     mShaderLibrary.destroy(device);
     mGpuEventQueryPool.destroy(device);
     mCommandPools.outsideRenderPassPool.destroy(device);

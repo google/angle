@@ -2178,7 +2178,7 @@ class RenderPassCache final : angle::NonCopyable
     RenderPassCache();
     ~RenderPassCache();
 
-    void destroy(RendererVk *rendererVk);
+    void destroy(ContextVk *contextVk);
     void clear(ContextVk *contextVk);
 
     ANGLE_INLINE angle::Result getCompatibleRenderPass(ContextVk *contextVk,

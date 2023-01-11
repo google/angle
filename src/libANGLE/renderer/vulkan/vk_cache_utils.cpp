@@ -6457,14 +6457,19 @@ RenderPassCache::~RenderPassCache()
     ASSERT(mPayload.empty());
 }
 
-void RenderPassCache::destroy(RendererVk *rendererVk)
+void RenderPassCache::destroy(ContextVk *contextVk)
 {
-    rendererVk->accumulateCacheStats(VulkanCacheType::CompatibleRenderPass,
-                                     mCompatibleRenderPassCacheStats);
-    rendererVk->accumulateCacheStats(VulkanCacheType::RenderPassWithOps,
-                                     mRenderPassWithOpsCacheStats);
+    RendererVk *renderer = contextVk->getRenderer();
 
-    VkDevice device = rendererVk->getDevice();
+    renderer->accumulateCacheStats(VulkanCacheType::CompatibleRenderPass,
+                                   mCompatibleRenderPassCacheStats);
+    renderer->accumulateCacheStats(VulkanCacheType::RenderPassWithOps,
+                                   mRenderPassWithOpsCacheStats);
+
+    VkDevice device = renderer->getDevice();
+
+    // Make sure there are no jobs referencing the render pass cache.
+    contextVk->getShareGroup()->waitForCurrentMonolithicPipelineCreationTask();
 
     for (auto &outerIt : mPayload)
     {
