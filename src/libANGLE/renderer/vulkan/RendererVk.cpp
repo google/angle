@@ -199,8 +199,6 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-vkCmdDrawIndexed-None-06538",
     // http://anglebug.com/7325
     "VUID-vkCmdBindVertexBuffers2-pStrides-06209",
-    // http://anglebug.com/7513
-    "VUID-VkGraphicsPipelineCreateInfo-pStages-06896",
     // http://anglebug.com/7685
     "UNASSIGNED-input-attachment-descriptor-not-in-subpass",
     "VUID-vkCmdDraw-None-02686",
