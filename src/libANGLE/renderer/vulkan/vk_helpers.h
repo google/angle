@@ -1545,12 +1545,14 @@ class CommandBufferRecycler
 
     void resetCommandBuffer(CommandBufferT &&commandBuffer);
 
-    std::vector<CommandBufferT> &&releaseCommandBuffersToReset()
+    void releaseCommandBuffersToReset(std::vector<CommandBufferT> *vectorOut)
     {
-        return std::move(mSecondaryCommandBuffersToReset);
+        std::unique_lock<std::mutex> lock(mMutex);
+        (*vectorOut) = std::move(mSecondaryCommandBuffersToReset);
     }
 
   private:
+    std::mutex mMutex;
     std::vector<CommandBufferHelperT *> mCommandBufferHelperFreeList;
     std::vector<CommandBufferT> mSecondaryCommandBuffersToReset;
 };

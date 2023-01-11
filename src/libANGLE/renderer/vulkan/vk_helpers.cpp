@@ -2596,6 +2596,7 @@ void RenderPassCommandBufferHelper::addCommandDiagnostics(ContextVk *contextVk)
 template <typename CommandBufferT, typename CommandBufferHelperT>
 void CommandBufferRecycler<CommandBufferT, CommandBufferHelperT>::onDestroy()
 {
+    std::unique_lock<std::mutex> lock(mMutex);
     for (CommandBufferHelperT *commandBufferHelper : mCommandBufferHelperFreeList)
     {
         SafeDelete(commandBufferHelper);
@@ -2617,6 +2618,7 @@ angle::Result CommandBufferRecycler<CommandBufferT, CommandBufferHelperT>::getCo
     SecondaryCommandMemoryAllocator *commandsAllocator,
     CommandBufferHelperT **commandBufferHelperOut)
 {
+    std::unique_lock<std::mutex> lock(mMutex);
     if (mCommandBufferHelperFreeList.empty())
     {
         CommandBufferHelperT *commandBuffer = new CommandBufferHelperT();
@@ -2654,6 +2656,7 @@ void CommandBufferRecycler<CommandBufferT, CommandBufferHelperT>::recycleCommand
     VkDevice device,
     CommandBufferHelperT **commandBuffer)
 {
+    std::unique_lock<std::mutex> lock(mMutex);
     ASSERT((*commandBuffer)->empty() && !(*commandBuffer)->getAllocator()->hasAllocatorLinks());
     (*commandBuffer)->markOpen();
 
