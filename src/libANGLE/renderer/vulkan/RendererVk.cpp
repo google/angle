@@ -167,9 +167,6 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-vkCmdDrawIndexed-magFilter-04553",
     // http://anglebug.com/5309
     "VUID-VkImageViewCreateInfo-usage-02652",
-    // http://anglebug.com/5331
-    "VUID-VkSubpassDescriptionDepthStencilResolve-depthResolveMode-parameter",
-    "VUID-VkSubpassDescriptionDepthStencilResolve-stencilResolveMode-parameter",
     // http://issuetracker.google.com/175584609
     "VUID-vkCmdDraw-None-04584",
     "VUID-vkCmdDrawIndexed-None-04584",
