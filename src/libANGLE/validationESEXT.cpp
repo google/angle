@@ -2444,6 +2444,22 @@ bool ValidateNamedBufferStorageExternalEXT(const Context *context,
     return false;
 }
 
+// GL_EXT_polygon_offset_clamp
+bool ValidatePolygonOffsetClampEXT(const Context *context,
+                                   angle::EntryPoint entryPoint,
+                                   GLfloat factor,
+                                   GLfloat units,
+                                   GLfloat clamp)
+{
+    if (!context->getExtensions().polygonOffsetClampEXT)
+    {
+        context->validationError(entryPoint, GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return true;
+}
+
 // GL_EXT_primitive_bounding_box
 bool ValidatePrimitiveBoundingBoxEXT(const Context *context,
                                      angle::EntryPoint entryPoint,

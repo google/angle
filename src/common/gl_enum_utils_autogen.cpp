@@ -1961,6 +1961,8 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                     return "GL_MAX_VARYING_VECTORS";
                 case 0x8DFD:
                     return "GL_MAX_FRAGMENT_UNIFORM_VECTORS";
+                case 0x8E1B:
+                    return "GL_POLYGON_OFFSET_CLAMP_EXT";
                 case 0x8E1E:
                     return "GL_MAX_COMBINED_TESS_CONTROL_UNIFORM_COMPONENTS";
                 case 0x8E1F:

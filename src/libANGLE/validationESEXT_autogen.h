@@ -1466,6 +1466,13 @@ bool ValidateRenderbufferStorageMultisampleEXT(const Context *context,
 
 // GL_EXT_occlusion_query_boolean
 
+// GL_EXT_polygon_offset_clamp
+bool ValidatePolygonOffsetClampEXT(const Context *context,
+                                   angle::EntryPoint entryPoint,
+                                   GLfloat factor,
+                                   GLfloat units,
+                                   GLfloat clamp);
+
 // GL_EXT_primitive_bounding_box
 bool ValidatePrimitiveBoundingBoxEXT(const Context *context,
                                      angle::EntryPoint entryPoint,

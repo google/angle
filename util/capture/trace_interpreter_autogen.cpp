@@ -4310,6 +4310,13 @@ CallCapture ParseCallCapture(const Token &nameToken,
             paramTokens, shaders);
         return CallCapture(EntryPoint::GLPolygonOffset, std::move(params));
     }
+    if (strcmp(nameToken, "glPolygonOffsetClampEXT") == 0)
+    {
+        ParamBuffer params =
+            ParseParameters<std::remove_pointer<PFNGLPOLYGONOFFSETCLAMPEXTPROC>::type>(paramTokens,
+                                                                                       shaders);
+        return CallCapture(EntryPoint::GLPolygonOffsetClampEXT, std::move(params));
+    }
     if (strcmp(nameToken, "glPolygonOffsetx") == 0)
     {
         ParamBuffer params = ParseParameters<std::remove_pointer<PFNGLPOLYGONOFFSETXPROC>::type>(

@@ -7036,6 +7036,21 @@ CallCapture CaptureRenderbufferStorageMultisampleEXT(const State &glState,
                        std::move(paramBuffer));
 }
 
+CallCapture CapturePolygonOffsetClampEXT(const State &glState,
+                                         bool isCallValid,
+                                         GLfloat factor,
+                                         GLfloat units,
+                                         GLfloat clamp)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addValueParam("factor", ParamType::TGLfloat, factor);
+    paramBuffer.addValueParam("units", ParamType::TGLfloat, units);
+    paramBuffer.addValueParam("clamp", ParamType::TGLfloat, clamp);
+
+    return CallCapture(angle::EntryPoint::GLPolygonOffsetClampEXT, std::move(paramBuffer));
+}
+
 CallCapture CapturePrimitiveBoundingBoxEXT(const State &glState,
                                            bool isCallValid,
                                            GLfloat minX,

@@ -1053,6 +1053,7 @@ const ProcEntry g_procTable[] = {
     DESKTOP_ONLY("glPolygonMode", GL_PolygonMode)
     {"glPolygonOffset", P(GL_PolygonOffset)},
     DESKTOP_ONLY("glPolygonOffsetClamp", GL_PolygonOffsetClamp)
+    {"glPolygonOffsetClampEXT", P(GL_PolygonOffsetClampEXT)},
     {"glPolygonOffsetx", P(GL_PolygonOffsetx)},
     DESKTOP_ONLY("glPolygonStipple", GL_PolygonStipple)
     DESKTOP_ONLY("glPopAttrib", GL_PopAttrib)

@@ -1139,6 +1139,7 @@ enum class EntryPoint
     GLPolygonMode,
     GLPolygonOffset,
     GLPolygonOffsetClamp,
+    GLPolygonOffsetClampEXT,
     GLPolygonOffsetx,
     GLPolygonStipple,
     GLPopAttrib,

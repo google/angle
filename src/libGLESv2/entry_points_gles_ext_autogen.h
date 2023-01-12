@@ -1035,6 +1035,11 @@ ANGLE_EXPORT void GL_APIENTRY GL_RenderbufferStorageMultisampleEXT(GLenum target
 
 // GL_EXT_occlusion_query_boolean
 
+// GL_EXT_polygon_offset_clamp
+ANGLE_EXPORT void GL_APIENTRY GL_PolygonOffsetClampEXT(GLfloat factor,
+                                                       GLfloat units,
+                                                       GLfloat clamp);
+
 // GL_EXT_primitive_bounding_box
 ANGLE_EXPORT void GL_APIENTRY GL_PrimitiveBoundingBoxEXT(GLfloat minX,
                                                          GLfloat minY,

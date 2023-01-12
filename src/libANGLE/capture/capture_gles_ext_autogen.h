@@ -1477,6 +1477,13 @@ angle::CallCapture CaptureRenderbufferStorageMultisampleEXT(const State &glState
 
 // GL_EXT_occlusion_query_boolean
 
+// GL_EXT_polygon_offset_clamp
+angle::CallCapture CapturePolygonOffsetClampEXT(const State &glState,
+                                                bool isCallValid,
+                                                GLfloat factor,
+                                                GLfloat units,
+                                                GLfloat clamp);
+
 // GL_EXT_primitive_bounding_box
 angle::CallCapture CapturePrimitiveBoundingBoxEXT(const State &glState,
                                                   bool isCallValid,

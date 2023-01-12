@@ -114,6 +114,7 @@ gles_requestable_extensions = [
     "GL_EXT_multisampled_render_to_texture",
     "GL_EXT_multisampled_render_to_texture2",
     "GL_EXT_occlusion_query_boolean",
+    "GL_EXT_polygon_offset_clamp",
     "GL_EXT_protected_textures",
     "GL_EXT_pvrtc_sRGB",
     "GL_EXT_read_format_bgra",

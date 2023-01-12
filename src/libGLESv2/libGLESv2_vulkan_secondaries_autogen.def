@@ -793,6 +793,9 @@ EXPORTS
 
     ; GL_EXT_occlusion_query_boolean
 
+    ; GL_EXT_polygon_offset_clamp
+    glPolygonOffsetClampEXT
+
     ; GL_EXT_primitive_bounding_box
     glPrimitiveBoundingBoxEXT
 

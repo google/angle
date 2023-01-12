@@ -324,6 +324,9 @@ struct Extensions
     // GL_NV_pixel_buffer_object
     bool pixelBufferObjectNV = false;
 
+    // GL_EXT_polygon_offset_clamp
+    bool polygonOffsetClampEXT = false;
+
     // GL_EXT_primitive_bounding_box
     bool primitiveBoundingBoxEXT = false;
 

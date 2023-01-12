@@ -183,6 +183,8 @@
                                            GLsizei width, GLsizei height);                         \
     /* GL_EXT_multisampled_render_to_texture2 */                                                   \
     /* GL_EXT_occlusion_query_boolean */                                                           \
+    /* GL_EXT_polygon_offset_clamp */                                                              \
+    void polygonOffsetClamp(GLfloat factor, GLfloat units, GLfloat clamp);                         \
     /* GL_EXT_primitive_bounding_box */                                                            \
     /* GL_EXT_protected_textures */                                                                \
     /* GL_EXT_pvrtc_sRGB */                                                                        \

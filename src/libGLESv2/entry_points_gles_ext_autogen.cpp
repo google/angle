@@ -6819,6 +6819,34 @@ void GL_APIENTRY GL_RenderbufferStorageMultisampleEXT(GLenum target,
 
 // IsQueryEXT is already defined.
 
+// GL_EXT_polygon_offset_clamp
+void GL_APIENTRY GL_PolygonOffsetClampEXT(GLfloat factor, GLfloat units, GLfloat clamp)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT(context, GLPolygonOffsetClampEXT, "context = %d, factor = %f, units = %f, clamp = %f",
+          CID(context), factor, units, clamp);
+
+    if (context)
+    {
+        SCOPED_SHARE_CONTEXT_LOCK(context);
+        bool isCallValid =
+            (context->skipValidation() ||
+             (ValidatePixelLocalStorageInactive(context,
+                                                angle::EntryPoint::GLPolygonOffsetClampEXT) &&
+              ValidatePolygonOffsetClampEXT(context, angle::EntryPoint::GLPolygonOffsetClampEXT,
+                                            factor, units, clamp)));
+        if (isCallValid)
+        {
+            context->polygonOffsetClamp(factor, units, clamp);
+        }
+        ANGLE_CAPTURE_GL(PolygonOffsetClampEXT, isCallValid, context, factor, units, clamp);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
+}
+
 // GL_EXT_primitive_bounding_box
 void GL_APIENTRY GL_PrimitiveBoundingBoxEXT(GLfloat minX,
                                             GLfloat minY,

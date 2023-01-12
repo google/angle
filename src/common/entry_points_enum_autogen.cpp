@@ -2266,6 +2266,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glPolygonOffset";
         case EntryPoint::GLPolygonOffsetClamp:
             return "glPolygonOffsetClamp";
+        case EntryPoint::GLPolygonOffsetClampEXT:
+            return "glPolygonOffsetClampEXT";
         case EntryPoint::GLPolygonOffsetx:
             return "glPolygonOffsetx";
         case EntryPoint::GLPolygonStipple:

@@ -4487,6 +4487,12 @@ void GL_APIENTRY glRenderbufferStorageMultisampleEXT(GLenum target,
 
 // GL_EXT_occlusion_query_boolean
 
+// GL_EXT_polygon_offset_clamp
+void GL_APIENTRY glPolygonOffsetClampEXT(GLfloat factor, GLfloat units, GLfloat clamp)
+{
+    return GL_PolygonOffsetClampEXT(factor, units, clamp);
+}
+
 // GL_EXT_primitive_bounding_box
 void GL_APIENTRY glPrimitiveBoundingBoxEXT(GLfloat minX,
                                            GLfloat minY,

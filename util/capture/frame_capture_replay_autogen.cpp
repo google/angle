@@ -2431,6 +2431,10 @@ void ReplayTraceFunctionCall(const CallCapture &call, const TraceFunctionMap &cu
         case angle::EntryPoint::GLPolygonOffset:
             glPolygonOffset(captures[0].value.GLfloatVal, captures[1].value.GLfloatVal);
             break;
+        case angle::EntryPoint::GLPolygonOffsetClampEXT:
+            glPolygonOffsetClampEXT(captures[0].value.GLfloatVal, captures[1].value.GLfloatVal,
+                                    captures[2].value.GLfloatVal);
+            break;
         case angle::EntryPoint::GLPolygonOffsetx:
             glPolygonOffsetx(captures[0].value.GLfixedVal, captures[1].value.GLfixedVal);
             break;
