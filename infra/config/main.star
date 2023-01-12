@@ -320,8 +320,7 @@ def angle_builder(name, cpu):
     )
 
     # Do not include perf tests in "try".
-    # TSAN is also excluded from "try" due to excessive flakiness: crbug.com/1275223
-    if not is_perf and not is_tsan:
+    if not is_perf:
         luci.list_view_entry(
             list_view = "try",
             builder = "try/" + name,
