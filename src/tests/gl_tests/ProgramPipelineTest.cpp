@@ -70,7 +70,7 @@ TEST_P(ProgramPipelineTest, GenerateProgramPipelineObjectEXT)
 class ProgramPipelineTest31 : public ProgramPipelineTest
 {
   protected:
-    ~ProgramPipelineTest31()
+    void testTearDown() override
     {
         glDeleteProgram(mVertProg);
         glDeleteProgram(mFragProg);
