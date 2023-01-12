@@ -76,8 +76,7 @@ template <typename BitSetArrayT>
 size_t GetBatchCountUpToSerials(std::vector<CommandBatch> &inFlightCommands,
                                 const AtomicQueueSerialFixedArray &lastSubmittedSerials,
                                 const AtomicQueueSerialFixedArray &lastCompletedSerials,
-                                const Serials &serials,
-                                Shared<Fence> **fenceToWaitOnOut)
+                                const Serials &serials)
 {
     // First calculate the bitmask of which index we should wait
     BitSetArrayT serialBitMaskToFinish;
@@ -124,53 +123,154 @@ size_t GetBatchCountUpToSerials(std::vector<CommandBatch> &inFlightCommands,
     }
 
     ASSERT(batchCountToFinish > 0);
-    // Now search for the nearest fence to wait on.
-    for (int i = static_cast<int>(batchCountToFinish) - 1; i >= 0; i--)
-    {
-        if (inFlightCommands[i].fence.isReferenced())
-        {
-            *fenceToWaitOnOut = &inFlightCommands[i].fence;
-            break;
-        }
-    }
-
     return batchCountToFinish;
 }
 }  // namespace
 
-angle::Result FenceRecycler::newSharedFence(Context *context, Shared<Fence> *sharedFenceOut)
+// SharedFence implementation
+SharedFence::SharedFence() : mRefCountedFence(nullptr), mRecycler(nullptr) {}
+SharedFence::SharedFence(const SharedFence &other)
+    : mRefCountedFence(other.mRefCountedFence), mRecycler(other.mRecycler)
 {
-    bool gotRecycledFence = false;
-    Fence fence;
+    if (mRefCountedFence != nullptr)
     {
-        std::lock_guard<std::mutex> lock(mMutex);
-        if (!mRecyler.empty())
-        {
-            mRecyler.fetch(&fence);
-            gotRecycledFence = true;
-        }
+        mRefCountedFence->addRef();
     }
+}
+SharedFence::SharedFence(SharedFence &&other)
+    : mRefCountedFence(other.mRefCountedFence), mRecycler(other.mRecycler)
+{
+    other.mRecycler        = nullptr;
+    other.mRefCountedFence = nullptr;
+}
 
-    VkDevice device(context->getDevice());
-    if (gotRecycledFence)
-    {
-        ANGLE_VK_TRY(context, fence.reset(device));
-    }
-    else
+SharedFence::~SharedFence()
+{
+    release();
+}
+
+VkResult SharedFence::init(VkDevice device, FenceRecycler *recycler)
+{
+    ASSERT(mRecycler == nullptr && mRefCountedFence == nullptr);
+    Fence fence;
+
+    // First try to fetch from recycler. If that failed, try to create a new VkFence
+    recycler->fetch(device, &fence);
+    if (!fence.valid())
     {
         VkFenceCreateInfo fenceCreateInfo = {};
         fenceCreateInfo.sType             = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
         fenceCreateInfo.flags             = 0;
-        ANGLE_VK_TRY(context, fence.init(device, fenceCreateInfo));
+        VkResult result                   = fence.init(device, fenceCreateInfo);
+        if (result != VK_SUCCESS)
+        {
+            return result;
+        }
     }
-    sharedFenceOut->assign(device, std::move(fence));
-    return angle::Result::Continue;
+
+    // Create a new refcounted object to hold onto VkFence
+    mRefCountedFence = new RefCounted<Fence>(std::move(fence));
+    mRefCountedFence->addRef();
+    mRecycler = recycler;
+
+    return VK_SUCCESS;
 }
 
+SharedFence &SharedFence::operator=(const SharedFence &other)
+{
+    release();
+
+    mRecycler = other.mRecycler;
+    if (other.mRefCountedFence != nullptr)
+    {
+        mRefCountedFence = other.mRefCountedFence;
+        mRefCountedFence->addRef();
+    }
+    return *this;
+}
+
+SharedFence &SharedFence::operator=(SharedFence &&other)
+{
+    release();
+    mRecycler              = other.mRecycler;
+    mRefCountedFence       = other.mRefCountedFence;
+    other.mRecycler        = nullptr;
+    other.mRefCountedFence = nullptr;
+    return *this;
+}
+
+void SharedFence::destroy(VkDevice device)
+{
+    if (mRefCountedFence != nullptr)
+    {
+        mRefCountedFence->releaseRef();
+        if (!mRefCountedFence->isReferenced())
+        {
+            mRefCountedFence->get().destroy(device);
+        }
+        mRefCountedFence = nullptr;
+    }
+}
+
+void SharedFence::release()
+{
+    if (mRefCountedFence != nullptr)
+    {
+        mRefCountedFence->releaseRef();
+        if (!mRefCountedFence->isReferenced())
+        {
+            mRecycler->recycle(std::move(mRefCountedFence->get()));
+        }
+        mRefCountedFence = nullptr;
+    }
+}
+
+SharedFence::operator bool() const
+{
+    ASSERT(mRefCountedFence == nullptr || mRefCountedFence->isReferenced());
+    return mRefCountedFence != nullptr;
+}
+
+VkResult SharedFence::getStatus(VkDevice device) const
+{
+    if (mRefCountedFence != nullptr)
+    {
+        return mRefCountedFence->get().getStatus(device);
+    }
+    return VK_SUCCESS;
+}
+
+VkResult SharedFence::wait(VkDevice device, uint64_t timeout) const
+{
+    if (mRefCountedFence != nullptr)
+    {
+        return mRefCountedFence->get().wait(device, timeout);
+    }
+    return VK_SUCCESS;
+}
+
+// FenceRecycler implementation
 void FenceRecycler::destroy(Context *context)
 {
     std::lock_guard<std::mutex> lock(mMutex);
     mRecyler.destroy(context->getDevice());
+}
+
+void FenceRecycler::fetch(VkDevice device, Fence *fenceOut)
+{
+    ASSERT(fenceOut != nullptr && !fenceOut->valid());
+    std::lock_guard<std::mutex> lock(mMutex);
+    if (!mRecyler.empty())
+    {
+        mRecyler.fetch(fenceOut);
+        fenceOut->reset(device);
+    }
+}
+
+void FenceRecycler::recycle(Fence &&fence)
+{
+    std::lock_guard<std::mutex> lock(mMutex);
+    mRecyler.recycle(std::move(fence));
 }
 
 // CommandProcessorTask implementation
@@ -399,7 +499,7 @@ CommandBatch &CommandBatch::operator=(CommandBatch &&other)
 void CommandBatch::destroy(VkDevice device)
 {
     primaryCommands.destroy(device);
-    fence.reset(device);
+    fence.destroy(device);
     hasProtectedContent = false;
 }
 
@@ -667,7 +767,7 @@ void CommandProcessor::destroy(Context *context)
     }
 }
 
-bool CommandProcessor::isBusy() const
+bool CommandProcessor::isBusy(RendererVk *renderer) const
 {
     std::lock_guard<std::mutex> workerLock(mWorkerMutex);
     return !mTasks.empty() || mCommandQueue.isBusy();
@@ -954,9 +1054,9 @@ angle::Result CommandQueue::checkCompletedCommands(Context *context)
         // For empty submissions, fence is not set but there may be garbage to be collected.  In
         // such a case, the empty submission is "completed" at the same time as the last submission
         // that actually happened.
-        if (batch.fence.isReferenced())
+        if (batch.fence)
         {
-            VkResult result = batch.fence.get().getStatus(device);
+            VkResult result = batch.fence.getStatus(device);
             if (result == VK_NOT_READY)
             {
                 break;
@@ -988,9 +1088,9 @@ angle::Result CommandQueue::retireFinishedCommands(Context *context, size_t fini
 
         lastCompletedQueueSerials[batch.queueSerial.getIndex()] = batch.queueSerial.getSerial();
 
-        if (batch.fence.isReferenced())
+        if (batch.fence)
         {
-            mFenceRecycler.resetSharedFence(&batch.fence);
+            batch.fence.release();
         }
         if (batch.primaryCommands.valid())
         {
@@ -1056,13 +1156,13 @@ void CommandQueue::handleDeviceLost(RendererVk *renderer)
     for (CommandBatch &batch : mInFlightCommands)
     {
         // On device loss we need to wait for fence to be signaled before destroying it
-        if (batch.fence.isReferenced())
+        if (batch.fence)
         {
-            VkResult status = batch.fence.get().wait(device, renderer->getMaxFenceWaitTimeNs());
+            VkResult status = batch.fence.wait(device, renderer->getMaxFenceWaitTimeNs());
             // If the wait times out, it is probably not possible to recover from lost device
             ASSERT(status == VK_SUCCESS || status == VK_ERROR_DEVICE_LOST);
 
-            batch.fence.reset(device);
+            batch.fence.destroy(device);
         }
 
         // On device lost, here simply destroy the CommandBuffer, it will fully cleared later
@@ -1105,29 +1205,23 @@ angle::Result CommandQueue::finishResourceUse(Context *context,
                                               const ResourceUse &use,
                                               uint64_t timeout)
 {
-    if (mInFlightCommands.empty())
-    {
-        return angle::Result::Continue;
-    }
-
-    ANGLE_TRACE_EVENT0("gpu.angle", "CommandQueue::finishResourceUse");
-
-    Shared<Fence> *fenceToWaitOn = nullptr;
-    size_t finishCount =
-        getBatchCountUpToSerials(context->getRenderer(), use.getSerials(), &fenceToWaitOn);
-
+    size_t finishCount = getBatchCountUpToSerials(context->getRenderer(), use.getSerials());
     if (finishCount == 0)
     {
         return angle::Result::Continue;
     }
 
+    const SharedFence &sharedFence = getSharedFenceToWait(finishCount);
     // Wait for it finish.  If no fence, the serial is already finished, it might just have garbage
     // to clean up.
-    if (fenceToWaitOn != nullptr)
+    if (!sharedFence)
     {
-        VkDevice device = context->getDevice();
-        VkResult status = fenceToWaitOn->get().wait(device, timeout);
-
+        return angle::Result::Continue;
+    }
+    else
+    {
+        ANGLE_TRACE_EVENT0("gpu.angle", "CommandQueue::finishResourceUse");
+        VkResult status = sharedFence.wait(context->getDevice(), timeout);
         ANGLE_VK_TRY(context, status);
     }
 
@@ -1197,7 +1291,7 @@ angle::Result CommandQueue::submitCommands(
 
         ANGLE_TRACE_EVENT0("gpu.angle", "CommandQueue::submitCommands");
 
-        ANGLE_TRY(mFenceRecycler.newSharedFence(context, &batch.fence));
+        ANGLE_VK_TRY(context, batch.fence.init(context->getDevice(), &mFenceRecycler));
         ANGLE_TRY(
             queueSubmit(context, priority, submitInfo, &batch.fence.get(), batch.queueSerial));
     }
@@ -1252,9 +1346,7 @@ angle::Result CommandQueue::waitForResourceUseToFinishWithUserTimeout(Context *c
                                                                       uint64_t timeout,
                                                                       VkResult *result)
 {
-    Shared<Fence> *fenceToWaitOn = nullptr;
-    size_t finishCount =
-        getBatchCountUpToSerials(context->getRenderer(), use.getSerials(), &fenceToWaitOn);
+    size_t finishCount = getBatchCountUpToSerials(context->getRenderer(), use.getSerials());
 
     // The serial is already complete if:
     //
@@ -1262,7 +1354,14 @@ angle::Result CommandQueue::waitForResourceUseToFinishWithUserTimeout(Context *c
     // - The given serial is smaller than the smallest serial, or
     // - Every batch up to this serial is a garbage-clean-up-only batch (i.e. empty submission
     //   that's optimized out)
-    if (finishCount == 0 || fenceToWaitOn == nullptr)
+    if (finishCount == 0)
+    {
+        *result = VK_SUCCESS;
+        return angle::Result::Continue;
+    }
+
+    const SharedFence &sharedFence = getSharedFenceToWait(finishCount);
+    if (!sharedFence)
     {
         *result = VK_SUCCESS;
         return angle::Result::Continue;
@@ -1276,7 +1375,7 @@ angle::Result CommandQueue::waitForResourceUseToFinishWithUserTimeout(Context *c
         return angle::Result::Continue;
     }
 
-    *result = fenceToWaitOn->get().wait(context->getDevice(), timeout);
+    *result = sharedFence.wait(context->getDevice(), timeout);
 
     // Don't trigger an error on timeout.
     if (*result != VK_TIMEOUT)
@@ -1348,7 +1447,7 @@ angle::Result CommandQueue::queueSubmitOneOff(Context *context,
     // go through normal waitForQueueSerial code path to wait for it to finish.
     if (fence == nullptr)
     {
-        ANGLE_TRY(mFenceRecycler.newSharedFence(context, &batch.fence));
+        ANGLE_VK_TRY(context, batch.fence.init(context->getDevice(), &mFenceRecycler));
         fence = &batch.fence.get();
     }
 
@@ -1444,22 +1543,161 @@ bool CommandQueue::hasUnsubmittedUse(const vk::ResourceUse &use) const
     return use > mLastSubmittedSerials;
 }
 
-size_t CommandQueue::getBatchCountUpToSerials(RendererVk *renderer,
-                                              const Serials &serials,
-                                              Shared<Fence> **fenceToWaitOnOut)
+size_t CommandQueue::getBatchCountUpToSerials(RendererVk *renderer, const Serials &serials)
 {
+    if (mInFlightCommands.empty())
+    {
+        return 0;
+    }
+
     if (renderer->getLargestQueueSerialIndexEverAllocated() < 64)
     {
         return GetBatchCountUpToSerials<angle::BitSet64<64>>(
-            mInFlightCommands, mLastSubmittedSerials, mLastCompletedSerials, serials,
-            fenceToWaitOnOut);
+            mInFlightCommands, mLastSubmittedSerials, mLastCompletedSerials, serials);
     }
     else
     {
         return GetBatchCountUpToSerials<angle::BitSetArray<kMaxQueueSerialIndexCount>>(
-            mInFlightCommands, mLastSubmittedSerials, mLastCompletedSerials, serials,
-            fenceToWaitOnOut);
+            mInFlightCommands, mLastSubmittedSerials, mLastCompletedSerials, serials);
     }
+}
+
+const SharedFence &CommandQueue::getSharedFenceToWait(size_t finishCount)
+{
+    ASSERT(finishCount > 0);
+    // Because some submission maybe empty submission, we have to search for the closest non-empty
+    // submission for the fence to wait on
+    for (int i = static_cast<int>(finishCount) - 1; i >= 0; i--)
+    {
+        if (mInFlightCommands[i].fence)
+        {
+            return mInFlightCommands[i].fence;
+        }
+    }
+    // If everything is finished, we just return the first one (which is also finished).
+    return mInFlightCommands[0].fence;
+}
+
+// ThreadSafeCommandQueue implementation
+angle::Result ThreadSafeCommandQueue::finishResourceUse(Context *context,
+                                                        const ResourceUse &use,
+                                                        uint64_t timeout)
+{
+    std::unique_lock<std::mutex> lock(mMutex);
+    size_t finishCount = getBatchCountUpToSerials(context->getRenderer(), use.getSerials());
+    if (finishCount == 0)
+    {
+        return angle::Result::Continue;
+    }
+
+    const SharedFence &sharedFence = getSharedFenceToWait(finishCount);
+    // Wait for it finish.
+    if (!sharedFence)
+    {
+        return angle::Result::Continue;
+    }
+    else
+    {
+        const SharedFence localSharedFenceToWaitOn = sharedFence;
+        lock.unlock();
+        ANGLE_TRACE_EVENT0("gpu.angle", "CommandQueue::finishResourceUse");
+        // You can only use the local copy of the sharedFence without lock;
+        VkResult status = localSharedFenceToWaitOn.wait(context->getDevice(), timeout);
+        ANGLE_VK_TRY(context, status);
+        lock.lock();
+    }
+
+    // Clean up finished batches. After we unlocked, finishCount may have changed, recheck the
+    // mInFlightCommands for all finished commands.
+    ANGLE_TRY(CommandQueue::checkCompletedCommands(context));
+    ASSERT(allInFlightCommandsAreAfterSerials(use.getSerials()));
+
+    return angle::Result::Continue;
+}
+
+angle::Result ThreadSafeCommandQueue::finishQueueSerial(Context *context,
+                                                        const QueueSerial &queueSerial,
+                                                        uint64_t timeout)
+{
+    vk::ResourceUse use(queueSerial);
+    return finishResourceUse(context, use, timeout);
+}
+
+angle::Result ThreadSafeCommandQueue::waitIdle(Context *context, uint64_t timeout)
+{
+    // Fill the local variable with lock
+    vk::ResourceUse use;
+    {
+        std::unique_lock<std::mutex> lock(mMutex);
+        if (mInFlightCommands.empty())
+        {
+            return angle::Result::Continue;
+        }
+        use.setQueueSerial(mInFlightCommands.back().queueSerial);
+    }
+
+    return finishResourceUse(context, use, timeout);
+}
+
+angle::Result ThreadSafeCommandQueue::waitForResourceUseToFinishWithUserTimeout(
+    Context *context,
+    const ResourceUse &use,
+    uint64_t timeout,
+    VkResult *result)
+{
+    std::unique_lock<std::mutex> lock(mMutex);
+    size_t finishCount = getBatchCountUpToSerials(context->getRenderer(), use.getSerials());
+    // The serial is already complete if there is no in-flight work (i.e. mInFlightCommands is
+    // empty), or the given serial is smaller than the smallest serial, or
+    if (finishCount == 0)
+    {
+        *result = VK_SUCCESS;
+        return angle::Result::Continue;
+    }
+    // The serial is already complete if every batch up to this serial is a garbage-clean-up-only
+    // batch (i.e. empty submission that's optimized out)
+    const SharedFence &sharedFence = getSharedFenceToWait(finishCount);
+    if (!sharedFence)
+    {
+        *result = VK_SUCCESS;
+        return angle::Result::Continue;
+    }
+
+    // Serial is not yet submitted. This is undefined behaviour, so we can do anything.
+    if (hasUnsubmittedUse(use))
+    {
+        WARN() << "Waiting on an unsubmitted serial.";
+        *result = VK_TIMEOUT;
+        return angle::Result::Continue;
+    }
+
+    // Make a local copy of SharedFence with lock being held. Since SharedFence is refCounted, this
+    // local copy of SharedFence will ensure underline VkFence will not go away.
+    SharedFence localSharedFenceToWaitOn = sharedFence;
+    lock.unlock();
+    // You can only use the local copy of the sharedFence without lock;
+    *result = localSharedFenceToWaitOn.wait(context->getDevice(), timeout);
+    lock.lock();
+    // Don't trigger an error on timeout.
+    if (*result != VK_TIMEOUT)
+    {
+        ANGLE_VK_TRY(context, *result);
+    }
+
+    return angle::Result::Continue;
+}
+
+bool ThreadSafeCommandQueue::isBusy(RendererVk *renderer)
+{
+    size_t maxIndex = renderer->getLargestQueueSerialIndexEverAllocated();
+    for (SerialIndex i = 0; i <= maxIndex; ++i)
+    {
+        if (mLastSubmittedSerials[i] > mLastCompletedSerials[i])
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 // QueuePriorities:
