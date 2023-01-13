@@ -185,6 +185,81 @@ class OneOffCommandPool : angle::NonCopyable
     std::deque<PendingOneOffCommands> mPendingCommands;
 };
 
+// Memory tracker for allocations and deallocations, which is used in RendererVk.
+class MemoryAllocationTracker : angle::NonCopyable
+{
+  public:
+    MemoryAllocationTracker(RendererVk *renderer);
+    void initMemoryTrackers();
+
+    // Collect information regarding memory allocations and deallocations.
+    void onMemoryAllocImpl(vk::MemoryAllocationType allocType,
+                           VkDeviceSize size,
+                           uint32_t memoryTypeIndex,
+                           void *handle);
+    void onMemoryDeallocImpl(vk::MemoryAllocationType allocType,
+                             VkDeviceSize size,
+                             uint32_t memoryTypeIndex,
+                             void *handle);
+
+    // Memory allocation statistics functions.
+    VkDeviceSize getActiveMemoryAllocationsSize(uint32_t allocTypeIndex) const;
+    VkDeviceSize getActiveHeapMemoryAllocationsSize(uint32_t allocTypeIndex,
+                                                    uint32_t heapIndex) const;
+
+    uint64_t getActiveMemoryAllocationsCount(uint32_t allocTypeIndex) const;
+    uint64_t getActiveHeapMemoryAllocationsCount(uint32_t allocTypeIndex, uint32_t heapIndex) const;
+
+    // Pending memory allocation information is used for logging in case of an unsuccessful
+    // allocation. It is cleared in onMemoryAlloc().
+    VkDeviceSize getPendingMemoryAllocationSize() const;
+    vk::MemoryAllocationType getPendingMemoryAllocationType() const;
+    uint32_t getPendingMemoryTypeIndex() const;
+
+    void resetPendingMemoryAlloc();
+    void setPendingMemoryAlloc(vk::MemoryAllocationType allocType,
+                               VkDeviceSize size,
+                               uint32_t memoryTypeIndex);
+
+    std::locale getLocale() { return mLocale; }
+
+  private:
+    // Pointer to parent renderer object.
+    RendererVk *const mRenderer;
+
+    // For tracking the overall memory allocation sizes and counts per memory allocation type.
+    std::array<std::atomic<VkDeviceSize>, vk::kMemoryAllocationTypeCount>
+        mActiveMemoryAllocationsSize;
+    std::array<std::atomic<uint64_t>, vk::kMemoryAllocationTypeCount> mActiveMemoryAllocationsCount;
+
+    // Memory allocation data per memory heap. To update the data, a mutex is used.
+    std::mutex mMemoryAllocationMutex;
+
+    using PerHeapMemoryAllocationSizeVector  = std::vector<VkDeviceSize>;
+    using PerHeapMemoryAllocationCountVector = std::vector<uint64_t>;
+
+    std::array<PerHeapMemoryAllocationSizeVector, vk::kMemoryAllocationTypeCount>
+        mActivePerHeapMemoryAllocationsSize;
+    std::array<PerHeapMemoryAllocationCountVector, vk::kMemoryAllocationTypeCount>
+        mActivePerHeapMemoryAllocationsCount;
+
+    // Pending memory allocation information is used for logging in case of an allocation error.
+    // It includes the size and type of the last attempted allocation, which are cleared after
+    // the allocation is successful.
+    std::atomic<VkDeviceSize> mPendingMemoryAllocationSize;
+    std::atomic<vk::MemoryAllocationType> mPendingMemoryAllocationType;
+    std::atomic<uint32_t> mPendingMemoryTypeIndex;
+
+    // Additional information regarding memory allocation with debug layers enabled, including
+    // allocation ID and a record of all active allocations.
+    uint64_t mMemoryAllocationID;
+    using MemoryAllocInfoMap = angle::HashMap<vk::MemoryAllocInfoMapKey, vk::MemoryAllocationInfo>;
+    angle::HashMap<angle::BacktraceInfo, MemoryAllocInfoMap> mMemoryAllocationRecord;
+
+    // Custom locale used for number formatting.
+    std::locale mLocale;
+};
+
 class RendererVk : angle::NonCopyable
 {
   public:
@@ -277,9 +352,9 @@ class RendererVk : angle::NonCopyable
     angle::vk::ICD getEnabledICD() const { return mEnabledICD; }
     bool isMockICDEnabled() const { return mEnabledICD == angle::vk::ICD::Mock; }
 
-    // Query the format properties for select bits (linearTilingFeatures, optimalTilingFeatures and
-    // bufferFeatures).  Looks through mandatory features first, and falls back to querying the
-    // device (first time only).
+    // Query the format properties for select bits (linearTilingFeatures, optimalTilingFeatures
+    // and bufferFeatures).  Looks through mandatory features first, and falls back to querying
+    // the device (first time only).
     bool hasLinearImageFormatFeatureBits(angle::FormatID format,
                                          const VkFormatFeatureFlags featureBits) const;
     VkFormatFeatureFlags getLinearImageFormatFeatureBits(
@@ -415,8 +490,8 @@ class RendererVk : angle::NonCopyable
         }
         else
         {
-            // mSuballocationGarbageDestroyed is atomic, so we dont need mGarbageMutex to protect
-            // it.
+            // mSuballocationGarbageDestroyed is atomic, so we dont need mGarbageMutex to
+            // protect it.
             mSuballocationGarbageDestroyed += suballocation.getSize();
             buffer.destroy(mDevice);
             suballocation.destroy(this);
@@ -688,7 +763,8 @@ class RendererVk : angle::NonCopyable
                        uint32_t memoryTypeIndex,
                        HandleT handle)
     {
-        onMemoryAllocImpl(allocType, size, memoryTypeIndex, reinterpret_cast<void *>(handle));
+        mMemoryAllocationTracker.onMemoryAllocImpl(allocType, size, memoryTypeIndex,
+                                                   reinterpret_cast<void *>(handle));
     }
 
     template <typename HandleT>
@@ -697,25 +773,14 @@ class RendererVk : angle::NonCopyable
                          uint32_t memoryTypeIndex,
                          HandleT handle)
     {
-        onMemoryDeallocImpl(allocType, size, memoryTypeIndex, reinterpret_cast<void *>(handle));
+        mMemoryAllocationTracker.onMemoryDeallocImpl(allocType, size, memoryTypeIndex,
+                                                     reinterpret_cast<void *>(handle));
     }
-
-    // Pending memory allocation information is used for logging in case of an unsuccessful
-    // allocation. It is cleared in onMemoryAlloc().
-    void resetPendingMemoryAlloc();
-    void setPendingMemoryAlloc(vk::MemoryAllocationType allocType,
-                               VkDeviceSize size,
-                               uint32_t memoryTypeIndex);
 
     // Memory statistics are logged when handling a context error.
     void logMemoryStatsOnError();
 
-    // Memory allocation statistics functions.
-    VkDeviceSize getActiveMemoryAllocationsSize(uint32_t allocTypeIndex) const;
-    VkDeviceSize getActiveHeapMemoryAllocationsSize(uint32_t allocTypeIndex,
-                                                    uint32_t heapIndex) const;
-    uint64_t getActiveMemoryAllocationsCount(uint32_t allocTypeIndex) const;
-    uint64_t getActiveHeapMemoryAllocationsCount(uint32_t allocTypeIndex, uint32_t heapIndex) const;
+    MemoryAllocationTracker *getMemoryAllocationTracker() { return &mMemoryAllocationTracker; }
 
   private:
     angle::Result initializeDevice(DisplayVk *displayVk, uint32_t queueFamilyIndex);
@@ -753,16 +818,6 @@ class RendererVk : angle::NonCopyable
                                        RecyclerT *recycler,
                                        CommandBufferHelperT **commandBufferHelperOut);
 
-    // Collect information about memory allocations for debugging.
-    void onMemoryAllocImpl(vk::MemoryAllocationType allocType,
-                           VkDeviceSize size,
-                           uint32_t memoryTypeIndex,
-                           void *handle);
-    void onMemoryDeallocImpl(vk::MemoryAllocationType allocType,
-                             VkDeviceSize size,
-                             uint32_t memoryTypeIndex,
-                             void *handle);
-
     egl::Display *mDisplay;
 
     void *mLibVulkanLibrary;
@@ -780,10 +835,10 @@ class RendererVk : angle::NonCopyable
     bool mEnableValidationLayers;
     // True if ANGLE is enabling the VK_EXT_debug_utils extension.
     bool mEnableDebugUtils;
-    // True if ANGLE should call the vkCmd*DebugUtilsLabelEXT functions in order to communicate to
-    // debuggers (e.g. AGI) the OpenGL ES commands that the application uses.  This is independent
-    // of mEnableDebugUtils, as an external graphics debugger can enable the VK_EXT_debug_utils
-    // extension and cause this to be set true.
+    // True if ANGLE should call the vkCmd*DebugUtilsLabelEXT functions in order to communicate
+    // to debuggers (e.g. AGI) the OpenGL ES commands that the application uses.  This is
+    // independent of mEnableDebugUtils, as an external graphics debugger can enable the
+    // VK_EXT_debug_utils extension and cause this to be set true.
     bool mAngleDebuggerMode;
     angle::vk::ICD mEnabledICD;
     VkDebugUtilsMessengerEXT mDebugUtilsMessenger;
@@ -849,10 +904,10 @@ class RendererVk : angle::NonCopyable
     bool mDeviceLost;
 
     // We group garbage into four categories: mSharedGarbage is the garbage that has already
-    // submitted to vulkan, we expect them to finish in finite time. mPendingSubmissionGarbage is
-    // the garbage that is still referenced in the recorded commands. suballocations have its own
-    // dedicated garbage list for performance optimization since they tend to be the most common
-    // garbage objects. All these four groups of garbage share the same mutex lock.
+    // submitted to vulkan, we expect them to finish in finite time. mPendingSubmissionGarbage
+    // is the garbage that is still referenced in the recorded commands. suballocations have its
+    // own dedicated garbage list for performance optimization since they tend to be the most
+    // common garbage objects. All these four groups of garbage share the same mutex lock.
     std::mutex mGarbageMutex;
     vk::SharedGarbageList mSharedGarbage;
     vk::SharedGarbageList mPendingSubmissionGarbage;
@@ -861,12 +916,12 @@ class RendererVk : angle::NonCopyable
     // Total suballocation garbage size in bytes.
     VkDeviceSize mSuballocationGarbageSizeInBytes;
 
-    // Total bytes of suballocation that been destroyed since last prune call. This can be accessed
-    // without mGarbageMutex, thus needs to be atomic to avoid tsan complain.
+    // Total bytes of suballocation that been destroyed since last prune call. This can be
+    // accessed without mGarbageMutex, thus needs to be atomic to avoid tsan complain.
     std::atomic<VkDeviceSize> mSuballocationGarbageDestroyed;
     // This is the cached value of mSuballocationGarbageSizeInBytes but is accessed with atomic
-    // operation. This can be accessed from different threads without mGarbageMutex, so that thread
-    // sanitizer won't complain.
+    // operation. This can be accessed from different threads without mGarbageMutex, so that
+    // thread sanitizer won't complain.
     std::atomic<VkDeviceSize> mSuballocationGarbageSizeInBytesCachedAtomic;
 
     vk::FormatTable mFormatTable;
@@ -891,8 +946,8 @@ class RendererVk : angle::NonCopyable
     // Holds orphaned BufferBlocks when ShareGroup gets destroyed
     vk::BufferBlockPointerVector mOrphanedBufferBlocks;
 
-    // All access to the pipeline cache is done through EGL objects so it is thread safe to not use
-    // a lock.
+    // All access to the pipeline cache is done through EGL objects so it is thread safe to not
+    // use a lock.
     std::mutex mPipelineCacheMutex;
     vk::PipelineCache mPipelineCache;
     uint32_t mPipelineCacheVkUpdateTimeout;
@@ -903,8 +958,8 @@ class RendererVk : angle::NonCopyable
     std::string mLastValidationMessage;
     uint32_t mValidationMessageCount;
 
-    // Skipped validation messages.  The exact contents of the list depends on the availability of
-    // certain extensions.
+    // Skipped validation messages.  The exact contents of the list depends on the availability
+    // of certain extensions.
     std::vector<const char *> mSkippedValidationMessages;
     // Syncval skipped messages.  The exact contents of the list depends on the availability of
     // certain extensions.
@@ -963,11 +1018,13 @@ class RendererVk : angle::NonCopyable
     // where multiple stages are prespecified (for example with image layout transitions):
     //
     // - Excludes GEOMETRY if geometry shaders are not supported.
-    // - Excludes TESSELLATION_CONTROL and TESSELLATION_EVALUATION if tessellation shaders are not
+    // - Excludes TESSELLATION_CONTROL and TESSELLATION_EVALUATION if tessellation shaders are
+    // not
     //   supported.
     //
-    // Note that this mask can have bits set that don't correspond to valid stages, so it's strictly
-    // only useful for masking out unsupported stages in an otherwise valid set of stages.
+    // Note that this mask can have bits set that don't correspond to valid stages, so it's
+    // strictly only useful for masking out unsupported stages in an otherwise valid set of
+    // stages.
     VkPipelineStageFlags mSupportedVulkanPipelineStageMask;
     VkShaderStageFlags mSupportedVulkanShaderStageMask;
 
@@ -977,31 +1034,8 @@ class RendererVk : angle::NonCopyable
     vk::ExtensionNameList mEnabledInstanceExtensions;
     vk::ExtensionNameList mEnabledDeviceExtensions;
 
-    // For memory allocation tracking.
-    std::array<std::atomic<VkDeviceSize>, vk::kMemoryAllocationTypeCount>
-        mActiveMemoryAllocationsSize;
-    std::array<std::atomic<uint64_t>, vk::kMemoryAllocationTypeCount> mActiveMemoryAllocationsCount;
-
-    // Memory allocation data per memory heap. To update the data, a mutex is used.
-    using PerHeapMemoryAllocationSizeVector  = std::vector<VkDeviceSize>;
-    using PerHeapMemoryAllocationCountVector = std::vector<uint64_t>;
-    std::array<PerHeapMemoryAllocationSizeVector, vk::kMemoryAllocationTypeCount>
-        mActivePerHeapMemoryAllocationsSize;
-    std::array<PerHeapMemoryAllocationCountVector, vk::kMemoryAllocationTypeCount>
-        mActivePerHeapMemoryAllocationsCount;
-    std::mutex mMemoryAllocationMutex;
-
-    // Pending memory allocation information is used for logging in case of an allocation error. It
-    // includes the size and type of the last attempted allocation, which are cleared after the
-    // allocation is successful.
-    std::atomic<VkDeviceSize> mPendingMemoryAllocationSize;
-    std::atomic<vk::MemoryAllocationType> mPendingMemoryAllocationType;
-    std::atomic<uint32_t> mPendingMemoryTypeIndex;
-
-    // For memory allocation with debug layers.
-    uint64_t mMemoryAllocationID;
-    using MemoryAllocInfoMap = angle::HashMap<vk::MemoryAllocInfoMapKey, vk::MemoryAllocationInfo>;
-    angle::HashMap<angle::BacktraceInfo, MemoryAllocInfoMap> mMemoryAllocationTracker;
+    // Memory tracker for allocations and deallocations.
+    MemoryAllocationTracker mMemoryAllocationTracker;
 };
 
 ANGLE_INLINE Serial RendererVk::generateQueueSerial(SerialIndex index)

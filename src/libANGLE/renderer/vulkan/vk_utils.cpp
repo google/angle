@@ -103,8 +103,8 @@ angle::Result FindAndAllocateCompatibleMemory(vk::Context *context,
 
     // Add the new allocation for tracking.
     RendererVk *renderer = context->getRenderer();
-    renderer->setPendingMemoryAlloc(memoryAllocationType, allocInfo.allocationSize,
-                                    *memoryTypeIndexOut);
+    renderer->getMemoryAllocationTracker()->setPendingMemoryAlloc(
+        memoryAllocationType, allocInfo.allocationSize, *memoryTypeIndexOut);
     ANGLE_VK_TRY(context, deviceMemoryOut->allocate(device, allocInfo));
 
     renderer->onMemoryAlloc(memoryAllocationType, allocInfo.allocationSize, *memoryTypeIndexOut,
