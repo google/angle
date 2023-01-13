@@ -767,42 +767,7 @@ void CommandProcessor::destroy(Context *context)
     }
 }
 
-bool CommandProcessor::isBusy(RendererVk *renderer) const
-{
-    std::lock_guard<std::mutex> workerLock(mWorkerMutex);
-    return !mTasks.empty() || mCommandQueue.isBusy();
-}
-
 // Wait until all commands up to and including serial have been processed
-angle::Result CommandProcessor::finishQueueSerial(Context *context,
-                                                  const QueueSerial &queueSerial,
-                                                  uint64_t timeout)
-{
-    ANGLE_TRACE_EVENT0("gpu.angle", "CommandProcessor::finishQueueSerial");
-    // TODO: Only call waitForWorkComplete if mUse still have inflight commands in processor that
-    // references this queueSerial. https://issuetracker.google.com/261098465
-    ANGLE_TRY(waitForWorkComplete(context));
-    return mCommandQueue.finishQueueSerial(context, queueSerial, timeout);
-}
-
-angle::Result CommandProcessor::finishResourceUse(Context *context,
-                                                  const ResourceUse &use,
-                                                  uint64_t timeout)
-{
-    ANGLE_TRACE_EVENT0("gpu.angle", "CommandProcessor::finishResourceUse");
-    // TODO: Only call waitForWorkComplete if mUse still have inflight commands in processor that
-    // references this queueSerial. https://issuetracker.google.com/261098465
-    ANGLE_TRY(waitForWorkComplete(context));
-    return mCommandQueue.finishResourceUse(context, use, timeout);
-}
-
-angle::Result CommandProcessor::waitIdle(Context *context, uint64_t timeout)
-{
-    ANGLE_TRACE_EVENT0("gpu.angle", "CommandProcessor::waitIdle");
-    ANGLE_TRY(waitForWorkComplete(context));
-    return mCommandQueue.waitIdle(this, mRenderer->getMaxFenceWaitTimeNs());
-}
-
 void CommandProcessor::handleDeviceLost(RendererVk *renderer)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "CommandProcessor::handleDeviceLost");
@@ -914,16 +879,6 @@ VkResult CommandProcessor::queuePresent(egl::ContextPriority contextPriority,
     return VK_SUCCESS;
 }
 
-angle::Result CommandProcessor::waitForResourceUseToFinishWithUserTimeout(Context *context,
-                                                                          const ResourceUse &use,
-                                                                          uint64_t timeout,
-                                                                          VkResult *result)
-{
-    // If finishResourceUse times out we generate an error. Therefore we a large timeout.
-    // TODO: https://issuetracker.google.com/170312581 - Wait with timeout.
-    return finishResourceUse(context, use, mRenderer->getMaxFenceWaitTimeNs());
-}
-
 angle::Result CommandProcessor::flushOutsideRPCommands(
     Context *context,
     bool hasProtectedContent,
@@ -985,6 +940,56 @@ bool CommandProcessor::hasUnsubmittedUse(const vk::ResourceUse &use) const
         }
     }
     return false;
+}
+
+// ThreadSafeCommandProcessor implementation.
+angle::Result ThreadSafeCommandProcessor::finishResourceUse(Context *context,
+                                                            const ResourceUse &use,
+                                                            uint64_t timeout)
+{
+    ANGLE_TRACE_EVENT0("gpu.angle", "CommandProcessor::finishResourceUse");
+    {
+        std::unique_lock<std::mutex> lock(mMutex);
+        // TODO: Only call waitForWorkComplete if mUse still have inflight commands in processor
+        // that references this queueSerial. https://issuetracker.google.com/261098465
+        ANGLE_TRY(waitForWorkComplete(context));
+    }
+    return mCommandQueue.finishResourceUse(context, use, timeout);
+}
+
+angle::Result ThreadSafeCommandProcessor::finishQueueSerial(Context *context,
+                                                            const QueueSerial &queueSerial,
+                                                            uint64_t timeout)
+{
+    const ResourceUse use(queueSerial);
+    return finishResourceUse(context, use, timeout);
+}
+
+angle::Result ThreadSafeCommandProcessor::waitIdle(Context *context, uint64_t timeout)
+{
+    ANGLE_TRACE_EVENT0("gpu.angle", "CommandProcessor::waitIdle");
+    {
+        std::unique_lock<std::mutex> lock(mMutex);
+        ANGLE_TRY(waitForWorkComplete(context));
+    }
+    return mCommandQueue.waitIdle(this, mRenderer->getMaxFenceWaitTimeNs());
+}
+
+angle::Result ThreadSafeCommandProcessor::waitForResourceUseToFinishWithUserTimeout(
+    Context *context,
+    const ResourceUse &use,
+    uint64_t timeout,
+    VkResult *result)
+{
+    // If finishResourceUse times out we generate an error. Therefore we a large timeout.
+    // TODO: https://issuetracker.google.com/170312581 - Wait with timeout.
+    return finishResourceUse(context, use, mRenderer->getMaxFenceWaitTimeNs());
+}
+
+bool ThreadSafeCommandProcessor::isBusy(RendererVk *renderer) const
+{
+    std::lock_guard<std::mutex> workerLock(mWorkerMutex);
+    return !mTasks.empty() || mCommandQueue.isBusy(renderer);
 }
 
 // CommandQueue implementation.
@@ -1232,16 +1237,6 @@ angle::Result CommandQueue::finishResourceUse(Context *context,
     return angle::Result::Continue;
 }
 
-angle::Result CommandQueue::waitIdle(Context *context, uint64_t timeout)
-{
-    if (mInFlightCommands.empty())
-    {
-        return angle::Result::Continue;
-    }
-
-    return finishQueueSerial(context, mInFlightCommands.back().queueSerial, timeout);
-}
-
 angle::Result CommandQueue::submitCommands(
     Context *context,
     bool hasProtectedContent,
@@ -1336,51 +1331,6 @@ angle::Result CommandQueue::submitCommands(
         const QueueSerial &finishSerial = mInFlightCommands.back().queueSerial;
         ANGLE_TRY(finishQueueSerial(context, finishSerial, renderer->getMaxFenceWaitTimeNs()));
         suballocationGarbageSize = renderer->getSuballocationGarbageSize();
-    }
-
-    return angle::Result::Continue;
-}
-
-angle::Result CommandQueue::waitForResourceUseToFinishWithUserTimeout(Context *context,
-                                                                      const ResourceUse &use,
-                                                                      uint64_t timeout,
-                                                                      VkResult *result)
-{
-    size_t finishCount = getBatchCountUpToSerials(context->getRenderer(), use.getSerials());
-
-    // The serial is already complete if:
-    //
-    // - There is no in-flight work (i.e. mInFlightCommands is empty), or
-    // - The given serial is smaller than the smallest serial, or
-    // - Every batch up to this serial is a garbage-clean-up-only batch (i.e. empty submission
-    //   that's optimized out)
-    if (finishCount == 0)
-    {
-        *result = VK_SUCCESS;
-        return angle::Result::Continue;
-    }
-
-    const SharedFence &sharedFence = getSharedFenceToWait(finishCount);
-    if (!sharedFence)
-    {
-        *result = VK_SUCCESS;
-        return angle::Result::Continue;
-    }
-
-    // Serial is not yet submitted. This is undefined behaviour, so we can do anything.
-    if (hasUnsubmittedUse(use))
-    {
-        WARN() << "Waiting on an unsubmitted serial.";
-        *result = VK_TIMEOUT;
-        return angle::Result::Continue;
-    }
-
-    *result = sharedFence.wait(context->getDevice(), timeout);
-
-    // Don't trigger an error on timeout.
-    if (*result != VK_TIMEOUT)
-    {
-        ANGLE_VK_TRY(context, *result);
     }
 
     return angle::Result::Continue;
@@ -1519,18 +1469,6 @@ VkResult CommandQueue::queuePresent(egl::ContextPriority contextPriority,
 {
     VkQueue queue = getQueue(contextPriority);
     return vkQueuePresentKHR(queue, &presentInfo);
-}
-
-bool CommandQueue::isBusy() const
-{
-    for (SerialIndex i = 0; i < mLastSubmittedSerials.size(); ++i)
-    {
-        if (mLastSubmittedSerials[i] > mLastCompletedSerials[i])
-        {
-            return true;
-        }
-    }
-    return false;
 }
 
 bool CommandQueue::hasUnfinishedUse(const vk::ResourceUse &use) const
@@ -1687,7 +1625,7 @@ angle::Result ThreadSafeCommandQueue::waitForResourceUseToFinishWithUserTimeout(
     return angle::Result::Continue;
 }
 
-bool ThreadSafeCommandQueue::isBusy(RendererVk *renderer)
+bool ThreadSafeCommandQueue::isBusy(RendererVk *renderer) const
 {
     size_t maxIndex = renderer->getLargestQueueSerialIndexEverAllocated();
     for (SerialIndex i = 0; i <= maxIndex; ++i)
