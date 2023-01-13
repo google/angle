@@ -134,6 +134,7 @@ class FramebufferAttachment final
     bool isRenderable(const Context *context) const;
     bool isYUV() const;
     bool isCreatedWithAHB() const;
+    bool hasFrontBufferUsage() const;
 
     Renderbuffer *getRenderbuffer() const;
     Texture *getTexture() const;
@@ -219,6 +220,7 @@ class FramebufferAttachmentObject : public angle::Subject, public angle::Observe
                               const ImageIndex &imageIndex) const                          = 0;
     virtual bool isYUV() const                                                             = 0;
     virtual bool isCreatedWithAHB() const                                                  = 0;
+    virtual bool hasFrontBufferUsage() const                                               = 0;
     virtual bool hasProtectedContent() const                                               = 0;
 
     virtual void onAttach(const Context *context, rx::UniqueSerial framebufferSerial) = 0;
@@ -300,6 +302,12 @@ inline bool FramebufferAttachment::isCreatedWithAHB() const
 {
     ASSERT(mResource);
     return mResource->isCreatedWithAHB();
+}
+
+inline bool FramebufferAttachment::hasFrontBufferUsage() const
+{
+    ASSERT(mResource);
+    return mResource->hasFrontBufferUsage();
 }
 
 }  // namespace gl

@@ -143,6 +143,11 @@ bool ImageSibling::isCreatedWithAHB() const
     return mTargetOf.get() && mTargetOf->isCreatedWithAHB();
 }
 
+bool ImageSibling::hasFrontBufferUsage() const
+{
+    return mTargetOf.get() && mTargetOf->hasFrontBufferUsage();
+}
+
 bool ImageSibling::hasProtectedContent() const
 {
     return mTargetOf.get() && mTargetOf->hasProtectedContent();
@@ -219,6 +224,11 @@ bool ExternalImageSibling::isTextureable(const gl::Context *context) const
 bool ExternalImageSibling::isYUV() const
 {
     return mImplementation->isYUV();
+}
+
+bool ExternalImageSibling::hasFrontBufferUsage() const
+{
+    return mImplementation->hasFrontBufferUsage();
 }
 
 bool ExternalImageSibling::isCubeMap() const
@@ -445,6 +455,17 @@ bool Image::isYUV() const
 bool Image::isCreatedWithAHB() const
 {
     return mState.target == EGL_NATIVE_BUFFER_ANDROID;
+}
+
+bool Image::hasFrontBufferUsage() const
+{
+    if (IsExternalImageTarget(mState.target))
+    {
+        ExternalImageSibling *externalSibling = rx::GetAs<ExternalImageSibling>(mState.source);
+        return externalSibling->hasFrontBufferUsage();
+    }
+
+    return false;
 }
 
 bool Image::isCubeMap() const

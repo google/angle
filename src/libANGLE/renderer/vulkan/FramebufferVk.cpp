@@ -1843,6 +1843,8 @@ angle::Result FramebufferVk::updateColorAttachment(const gl::Context *context,
         mCurrentFramebufferDesc.updateColor(colorIndexGL, renderTarget->getDrawSubresourceSerial());
         const bool isCreatedWithAHB = mState.getColorAttachments()[colorIndexGL].isCreatedWithAHB();
         mIsAHBColorAttachments.set(colorIndexGL, isCreatedWithAHB);
+        mAttachmentHasFrontBufferUsage.set(
+            colorIndexGL, mState.getColorAttachments()[colorIndexGL].hasFrontBufferUsage());
     }
     else
     {

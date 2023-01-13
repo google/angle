@@ -157,6 +157,11 @@ class FramebufferVk : public FramebufferImpl
 
     bool attachmentHasAHB() const { return mIsAHBColorAttachments.any(); }
 
+    bool hasFrontBufferUsage() const
+    {
+        return (mAttachmentHasFrontBufferUsage & mState.getColorAttachmentsMask()).any();
+    }
+
     enum class RenderTargetImage
     {
         AttachmentImage,
@@ -303,6 +308,7 @@ class FramebufferVk : public FramebufferImpl
     bool mReadOnlyStencilFeedbackLoopMode;
 
     gl::DrawBufferMask mIsAHBColorAttachments;
+    gl::DrawBufferMask mAttachmentHasFrontBufferUsage;
 
     bool mIsCurrentFramebufferCached;
 

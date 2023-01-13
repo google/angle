@@ -1367,40 +1367,40 @@ angle::Result ContextVk::initialize()
 
 angle::Result ContextVk::flush(const gl::Context *context)
 {
-    // Skip the flush if there's nothing recorded.  For single-buffer swapchains, flush should
-    // ensure updates reach the screen, so even staged updates are considered something pending
-    // submission.
-    const bool isSingleBuffer =
+    // Skip the flush if there's nothing recorded.
+    //
+    // Don't skip flushes for single-buffered windows with staged updates. It is expected that a
+    // flush call on a single-buffered window ensures any pending updates reach the screen.
+    const bool isSingleBufferedWindow =
         mCurrentWindowSurface != nullptr && mCurrentWindowSurface->isSharedPresentMode();
-
-    FramebufferVk *drawFramebufferVk = getDrawFramebuffer();
-    ASSERT(drawFramebufferVk == vk::GetImpl(mState.getDrawFramebuffer()));
-
-    const bool isAndroidHardwareBuffer = drawFramebufferVk->attachmentHasAHB();
+    const bool isSingleBufferedWindowWithStagedUpdates =
+        isSingleBufferedWindow && mCurrentWindowSurface->hasStagedUpdates();
 
     if (!mHasAnyCommandsPendingSubmission && !hasActiveRenderPass() &&
-        mOutsideRenderPassCommands->empty() &&
-        !(isSingleBuffer && mCurrentWindowSurface->hasStagedUpdates()))
+        mOutsideRenderPassCommands->empty() && !isSingleBufferedWindowWithStagedUpdates)
     {
         return angle::Result::Continue;
     }
 
-    // Don't defer flushes in single-buffer mode.  In this mode, the application is not required to
-    // call eglSwapBuffers(), and glFlush() is expected to ensure that work is submitted.
-    // Don't defer flushes when the FBO attachment is Android Hardware Buffer.
-    // Android Hardware Buffer (AHB) read access is outside of ANGLE code control,
-    // we don't know when the app is going to read from AHB, if we defer flush it is possible that
-    // when app is reading from AHB, the draw commands have not been flushed and executed yet,
-    // causing app to read unexpected data from AHB.
+    // Don't defer flushes when performing front buffer rendering. This can happen when -
+    // 1. we have a single-buffered window, in this mode the application is not required to
+    //    call eglSwapBuffers(), and glFlush() is expected to ensure that work is submitted.
+    // 2. the framebuffer attachment has FRONT_BUFFER usage. Attachments being rendered to with such
+    //    usage flags are expected to behave similar to a single-buffered window
+    FramebufferVk *drawFramebufferVk = getDrawFramebuffer();
+    ASSERT(drawFramebufferVk == vk::GetImpl(mState.getDrawFramebuffer()));
+    const bool frontBufferRenderingEnabled =
+        isSingleBufferedWindow || drawFramebufferVk->hasFrontBufferUsage();
+
     if (mRenderer->getFeatures().deferFlushUntilEndRenderPass.enabled && hasActiveRenderPass() &&
-        !isSingleBuffer && !isAndroidHardwareBuffer)
+        !frontBufferRenderingEnabled)
     {
         mHasDeferredFlush = true;
         return angle::Result::Continue;
     }
 
-    if (mRenderer->getFeatures().swapbuffersOnFlushOrFinishWithSingleBuffer.enabled &&
-        isSingleBuffer)
+    if (isSingleBufferedWindow &&
+        mRenderer->getFeatures().swapbuffersOnFlushOrFinishWithSingleBuffer.enabled)
     {
         return mCurrentWindowSurface->onSharedPresentContextFlush(context);
     }
