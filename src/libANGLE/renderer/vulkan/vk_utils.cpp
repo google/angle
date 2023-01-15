@@ -953,10 +953,6 @@ PFN_vkCmdEndDebugUtilsLabelEXT vkCmdEndDebugUtilsLabelEXT           = nullptr;
 PFN_vkCmdInsertDebugUtilsLabelEXT vkCmdInsertDebugUtilsLabelEXT     = nullptr;
 PFN_vkSetDebugUtilsObjectNameEXT vkSetDebugUtilsObjectNameEXT       = nullptr;
 
-// VK_EXT_debug_report
-PFN_vkCreateDebugReportCallbackEXT vkCreateDebugReportCallbackEXT   = nullptr;
-PFN_vkDestroyDebugReportCallbackEXT vkDestroyDebugReportCallbackEXT = nullptr;
-
 // VK_KHR_get_physical_device_properties2
 PFN_vkGetPhysicalDeviceProperties2KHR vkGetPhysicalDeviceProperties2KHR             = nullptr;
 PFN_vkGetPhysicalDeviceFeatures2KHR vkGetPhysicalDeviceFeatures2KHR                 = nullptr;
@@ -1074,12 +1070,6 @@ void InitDebugUtilsEXTFunctions(VkInstance instance)
     GET_INSTANCE_FUNC(vkCmdEndDebugUtilsLabelEXT);
     GET_INSTANCE_FUNC(vkCmdInsertDebugUtilsLabelEXT);
     GET_INSTANCE_FUNC(vkSetDebugUtilsObjectNameEXT);
-}
-
-void InitDebugReportEXTFunctions(VkInstance instance)
-{
-    GET_INSTANCE_FUNC(vkCreateDebugReportCallbackEXT);
-    GET_INSTANCE_FUNC(vkDestroyDebugReportCallbackEXT);
 }
 
 void InitGetPhysicalDeviceProperties2KHRFunctions(VkInstance instance)

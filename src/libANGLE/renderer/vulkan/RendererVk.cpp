@@ -636,8 +636,6 @@ const char *GetVkObjectTypeName(VkObjectType type)
             return "Display";
         case VK_OBJECT_TYPE_DISPLAY_MODE_KHR:
             return "Display Mode";
-        case VK_OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT:
-            return "Debug Report Callback";
         case VK_OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV:
             return "Indirect Commands Layout";
         case VK_OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT:
@@ -734,42 +732,6 @@ DebugUtilsMessenger(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
     else
     {
         WARN() << msg;
-    }
-
-    return VK_FALSE;
-}
-
-VKAPI_ATTR VkBool32 VKAPI_CALL DebugReportCallback(VkDebugReportFlagsEXT flags,
-                                                   VkDebugReportObjectTypeEXT objectType,
-                                                   uint64_t object,
-                                                   size_t location,
-                                                   int32_t messageCode,
-                                                   const char *layerPrefix,
-                                                   const char *message,
-                                                   void *userData)
-{
-    RendererVk *rendererVk = static_cast<RendererVk *>(userData);
-
-    if (ShouldReportDebugMessage(rendererVk, message, message) == DebugMessageReport::Ignore)
-    {
-        return VK_FALSE;
-    }
-    if ((flags & VK_DEBUG_REPORT_ERROR_BIT_EXT) != 0)
-    {
-        ERR() << message;
-#if !defined(NDEBUG)
-        // Abort the call in Debug builds.
-        return VK_TRUE;
-#endif
-    }
-    else if ((flags & VK_DEBUG_REPORT_WARNING_BIT_EXT) != 0)
-    {
-        WARN() << message;
-    }
-    else
-    {
-        // Uncomment this if you want Vulkan spam.
-        // WARN() << message;
     }
 
     return VK_FALSE;
@@ -1238,7 +1200,6 @@ RendererVk::RendererVk()
       mAngleDebuggerMode(false),
       mEnabledICD(angle::vk::ICD::Default),
       mDebugUtilsMessenger(VK_NULL_HANDLE),
-      mDebugReportCallback(VK_NULL_HANDLE),
       mPhysicalDevice(VK_NULL_HANDLE),
       mMaxVertexAttribDivisor(1),
       mCurrentQueueFamilyIndex(std::numeric_limits<uint32_t>::max()),
@@ -1365,12 +1326,6 @@ void RendererVk::onDestroy(vk::Context *context)
     if (mDebugUtilsMessenger)
     {
         vkDestroyDebugUtilsMessengerEXT(mInstance, mDebugUtilsMessenger, nullptr);
-
-        ASSERT(mDebugReportCallback == VK_NULL_HANDLE);
-    }
-    else if (mDebugReportCallback)
-    {
-        vkDestroyDebugReportCallbackEXT(mInstance, mDebugReportCallback, nullptr);
     }
 
     logCacheStats();
@@ -1548,17 +1503,9 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     mEnableDebugUtils = canLoadDebugUtils && mEnableValidationLayers &&
                         ExtensionFound(VK_EXT_DEBUG_UTILS_EXTENSION_NAME, instanceExtensionNames);
 
-    bool enableDebugReport =
-        mEnableValidationLayers && !mEnableDebugUtils &&
-        ExtensionFound(VK_EXT_DEBUG_REPORT_EXTENSION_NAME, instanceExtensionNames);
-
     if (mEnableDebugUtils)
     {
         mEnabledInstanceExtensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
-    }
-    else if (enableDebugReport)
-    {
-        mEnabledInstanceExtensions.push_back(VK_EXT_DEBUG_REPORT_EXTENSION_NAME);
     }
 
     if (ExtensionFound(VK_KHR_GET_SURFACE_CAPABILITIES_2_EXTENSION_NAME, instanceExtensionNames))
@@ -1705,23 +1652,6 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
 
         ANGLE_VK_TRY(displayVk, vkCreateDebugUtilsMessengerEXT(mInstance, &messengerInfo, nullptr,
                                                                &mDebugUtilsMessenger));
-    }
-    else if (enableDebugReport)
-    {
-        // Fallback to EXT_debug_report.
-#if !defined(ANGLE_SHARED_LIBVULKAN)
-        InitDebugReportEXTFunctions(mInstance);
-#endif  // !defined(ANGLE_SHARED_LIBVULKAN)
-
-        VkDebugReportCallbackCreateInfoEXT debugReportInfo = {};
-
-        debugReportInfo.sType = VK_STRUCTURE_TYPE_DEBUG_REPORT_CREATE_INFO_EXT;
-        debugReportInfo.flags = VK_DEBUG_REPORT_ERROR_BIT_EXT | VK_DEBUG_REPORT_WARNING_BIT_EXT;
-        debugReportInfo.pfnCallback = &DebugReportCallback;
-        debugReportInfo.pUserData   = this;
-
-        ANGLE_VK_TRY(displayVk, vkCreateDebugReportCallbackEXT(mInstance, &debugReportInfo, nullptr,
-                                                               &mDebugReportCallback));
     }
 
     if (std::find(mEnabledInstanceExtensions.begin(), mEnabledInstanceExtensions.end(),
