@@ -355,6 +355,7 @@ void RendererVk::ensureCapsInitialized() const
     mNativeExtensions.discardFramebufferEXT         = true;
     mNativeExtensions.textureBorderClampOES = getFeatures().supportsCustomBorderColor.enabled;
     mNativeExtensions.textureBorderClampEXT = getFeatures().supportsCustomBorderColor.enabled;
+    mNativeExtensions.polygonOffsetClampEXT = mPhysicalDeviceFeatures.depthBiasClamp == VK_TRUE;
     // Enable EXT_texture_type_2_10_10_10_REV
     mNativeExtensions.textureType2101010REVEXT = true;
 

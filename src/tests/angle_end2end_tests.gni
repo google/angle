@@ -114,6 +114,7 @@ angle_end2end_tests_sources = [
   "gl_tests/PixelLocalStorageTest.cpp",
   "gl_tests/PixmapTest.cpp",
   "gl_tests/PointSpritesTest.cpp",
+  "gl_tests/PolygonOffsetClampTest.cpp",
   "gl_tests/ProgramBinaryTest.cpp",
   "gl_tests/ProgramInterfaceTest.cpp",
   "gl_tests/ProgramParameterTest.cpp",

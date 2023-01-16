@@ -2651,6 +2651,8 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     mEnabledFeatures.features.sampleRateShading = mPhysicalDeviceFeatures.sampleRateShading;
     // Used to support depth clears through draw calls.
     mEnabledFeatures.features.depthClamp = mPhysicalDeviceFeatures.depthClamp;
+    // Used to support EXT_polygon_offset_clamp
+    mEnabledFeatures.features.depthBiasClamp = mPhysicalDeviceFeatures.depthBiasClamp;
     // Used to support EXT_clip_cull_distance
     mEnabledFeatures.features.shaderCullDistance = mPhysicalDeviceFeatures.shaderCullDistance;
     // Used to support tessellation Shader:

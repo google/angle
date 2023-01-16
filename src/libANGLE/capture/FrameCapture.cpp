@@ -4926,10 +4926,20 @@ void CaptureMidExecutionSetup(const gl::Context *context,
     }
 
     if (currentRasterState.polygonOffsetFactor != defaultRasterState.polygonOffsetFactor ||
-        currentRasterState.polygonOffsetUnits != defaultRasterState.polygonOffsetUnits)
+        currentRasterState.polygonOffsetUnits != defaultRasterState.polygonOffsetUnits ||
+        currentRasterState.polygonOffsetClamp != defaultRasterState.polygonOffsetClamp)
     {
-        cap(CapturePolygonOffset(replayState, true, currentRasterState.polygonOffsetFactor,
-                                 currentRasterState.polygonOffsetUnits));
+        if (currentRasterState.polygonOffsetClamp == 0.0f)
+        {
+            cap(CapturePolygonOffset(replayState, true, currentRasterState.polygonOffsetFactor,
+                                     currentRasterState.polygonOffsetUnits));
+        }
+        else
+        {
+            cap(CapturePolygonOffsetClampEXT(
+                replayState, true, currentRasterState.polygonOffsetFactor,
+                currentRasterState.polygonOffsetUnits, currentRasterState.polygonOffsetClamp));
+        }
     }
 
     // pointDrawMode/multiSample are only used in the D3D back-end right now.

@@ -2816,7 +2816,7 @@ angle::Result ContextMtl::handleDirtyDepthBias(const gl::Context *context)
     else
     {
         mRenderEncoder.setDepthBias(rasterState.polygonOffsetUnits, rasterState.polygonOffsetFactor,
-                                    0);
+                                    rasterState.polygonOffsetClamp);
     }
 
     return angle::Result::Continue;

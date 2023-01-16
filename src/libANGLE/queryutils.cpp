@@ -3270,6 +3270,14 @@ bool GetQueryParameterInfo(const State &glState,
             *numParams = 1;
             return true;
         }
+        case GL_POLYGON_OFFSET_CLAMP_EXT:
+            if (!extensions.polygonOffsetClampEXT)
+            {
+                return false;
+            }
+            *type      = GL_FLOAT;
+            *numParams = 1;
+            return true;
         case GL_ALIASED_LINE_WIDTH_RANGE:
         case GL_ALIASED_POINT_SIZE_RANGE:
         case GL_DEPTH_RANGE:

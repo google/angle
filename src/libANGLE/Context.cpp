@@ -6065,7 +6065,12 @@ void Context::pixelStorei(GLenum pname, GLint param)
 
 void Context::polygonOffset(GLfloat factor, GLfloat units)
 {
-    mState.setPolygonOffsetParams(factor, units);
+    mState.setPolygonOffsetParams(factor, units, 0.0f);
+}
+
+void Context::polygonOffsetClamp(GLfloat factor, GLfloat units, GLfloat clamp)
+{
+    mState.setPolygonOffsetParams(factor, units, clamp);
 }
 
 void Context::sampleCoverage(GLfloat value, GLboolean invert)

@@ -1470,6 +1470,7 @@ void GenerateCaps(const FunctionsGL *functions,
                                       functions->hasGLESExtension("GL_EXT_shader_texture_lod");
     extensions->fragDepthEXT = functions->standard == STANDARD_GL_DESKTOP ||
                                functions->hasGLESExtension("GL_EXT_frag_depth");
+    extensions->polygonOffsetClampEXT = functions->hasExtension("GL_EXT_polygon_offset_clamp");
 
     // Support video texture extension on non Android backends.
     // TODO(crbug.com/776222): support Android and Apple devices.

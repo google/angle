@@ -7136,9 +7136,9 @@ TEST_P(ImageRespecificationTest, ImageTarget2DOESSwitch)
 
     EGLWindow *window = getEGLWindow();
     EGLint attribs[]  = {
-         EGL_IMAGE_PRESERVED,
-         EGL_TRUE,
-         EGL_NONE,
+        EGL_IMAGE_PRESERVED,
+        EGL_TRUE,
+        EGL_NONE,
     };
     EGLImageKHR firstEGLImage = eglCreateImageKHR(
         window->getDisplay(), window->getContext(), EGL_GL_TEXTURE_2D_KHR,
@@ -8466,7 +8466,7 @@ void main()
     //          | __/__/   _|/
     //          |/__/   __/ |
     //          |/   __/    |
-    //          | __/    Draw 3 (blue): factor width/2, offset -1, depth test: Less
+    //          | __/    Draw 3 (blue): factor width/2, offset -2, depth test: Less
     //          |/
     //          |
     //          |
@@ -8493,6 +8493,88 @@ void main()
 
     EXPECT_PIXEL_RECT_EQ(0, 0, w / 2 - 1, h, GLColor::blue);
     EXPECT_PIXEL_RECT_EQ(w / 2 + 1, 0, w / 4 - 1, h, GLColor::green);
+    EXPECT_PIXEL_RECT_EQ(3 * w / 4 + 1, 0, w / 4 - 1, h, GLColor::red);
+
+    ASSERT_GL_NO_ERROR();
+}
+
+// Tests state change for glPolygonOffsetClampEXT.
+TEST_P(StateChangeTestES3, PolygonOffsetClamp)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_polygon_offset_clamp"));
+
+    constexpr char kVS[] = R"(#version 300 es
+precision highp float;
+uniform float height;
+void main()
+{
+    // gl_VertexID    x    y
+    //      0        -1   -1
+    //      1         1   -1
+    //      2        -1    1
+    //      3         1    1
+    int bit0 = gl_VertexID & 1;
+    int bit1 = gl_VertexID >> 1;
+    gl_Position = vec4(bit0 * 2 - 1, bit1 * 2 - 1, gl_VertexID % 2 == 0 ? -1 : 1, 1);
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 colorOut;
+uniform vec4 color;
+void main()
+{
+    colorOut = color;
+})";
+
+    glEnable(GL_POLYGON_OFFSET_FILL);
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+
+    GLint colorLoc = glGetUniformLocation(program, "color");
+    ASSERT_NE(-1, colorLoc);
+
+    glClearColor(0, 0, 0, 1);
+    glClearDepthf(0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_ALWAYS);
+
+    // The shader creates a depth slope from left (0) to right (1).
+    //
+    // This test issues two draw calls:
+    //
+    //           Draw 2 (green): factor width, offset 0, clamp 0.5, depth test: Greater
+    //          ^     |       __________________
+    //          |     |    __/      __/
+    //          |     V __/      __/  <--- Draw 1 (red): factor width, offset 0, clamp 0.25
+    //          |    __/      __/
+    //          | __/      __/
+    //          |/      __/
+    //          |    __/
+    //          | __/
+    //          |/
+    //          |
+    //          |
+    //          +------------------------------->
+    //
+    // Result:  <---------green--------><--red-->
+
+    const int w = getWindowWidth();
+    const int h = getWindowHeight();
+
+    glUniform4f(colorLoc, 1, 0, 0, 1);
+    glPolygonOffsetClampEXT(getWindowWidth(), 0, 0.25);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+    glUniform4f(colorLoc, 0, 1, 0, 1);
+    glPolygonOffsetClampEXT(getWindowWidth(), 0, 0.5);
+    glDepthFunc(GL_GREATER);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, 3 * w / 4 - 1, h, GLColor::green);
     EXPECT_PIXEL_RECT_EQ(3 * w / 4 + 1, 0, w / 4 - 1, h, GLColor::red);
 
     ASSERT_GL_NO_ERROR();
