@@ -138,9 +138,9 @@ bool ImageSibling::isYUV() const
     return mTargetOf.get() && mTargetOf->isYUV();
 }
 
-bool ImageSibling::isCreatedWithAHB() const
+bool ImageSibling::isExternalImageWithoutIndividualSync() const
 {
-    return mTargetOf.get() && mTargetOf->isCreatedWithAHB();
+    return mTargetOf.get() && mTargetOf->isExternalImageWithoutIndividualSync();
 }
 
 bool ImageSibling::hasFrontBufferUsage() const
@@ -452,9 +452,10 @@ bool Image::isYUV() const
     return mState.yuv;
 }
 
-bool Image::isCreatedWithAHB() const
+bool Image::isExternalImageWithoutIndividualSync() const
 {
-    return mState.target == EGL_NATIVE_BUFFER_ANDROID;
+    // Only Vulkan images are individually synced.
+    return IsExternalImageTarget(mState.sourceType) && mState.sourceType != EGL_VULKAN_IMAGE_ANGLE;
 }
 
 bool Image::hasFrontBufferUsage() const
