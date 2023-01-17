@@ -3836,6 +3836,18 @@ void GraphicsPipelineDesc::updateVertexInput(ContextVk *contextVk,
     }
 }
 
+void GraphicsPipelineDesc::setVertexShaderComponentTypes(gl::AttributesMask activeAttribLocations,
+                                                         gl::ComponentTypeMask componentTypeMask)
+{
+    SetBitField(mVertexInput.inputAssembly.bits.programActiveAttributeLocations,
+                activeAttribLocations.bits());
+
+    const gl::ComponentTypeMask activeComponentTypeMask =
+        componentTypeMask & gl::GetActiveComponentTypeMask(activeAttribLocations);
+
+    SetBitField(mVertexInput.vertex.shaderAttribComponentType, activeComponentTypeMask.bits());
+}
+
 void GraphicsPipelineDesc::updateVertexShaderComponentTypes(
     GraphicsPipelineTransitionBits *transition,
     gl::AttributesMask activeAttribLocations,
