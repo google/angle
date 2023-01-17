@@ -1880,9 +1880,10 @@ egl::Error WindowSurfaceVk::prepareSwap(const gl::Context *context)
     {
         return angle::ToEGL(result, EGL_BAD_SURFACE);
     }
-    if (swapchainRecreated)
+    if (swapchainRecreated || isSharedPresentMode())
     {
-        // If swapchain is recreated, acquire the image right away; it's not going to block.
+        // If swapchain is recreated or it is a shred present mode, acquire the image right away;
+        // it's not going to block.
         result = doDeferredAcquireNextImageWithUsableSwapchain(context);
         return angle::ToEGL(result, EGL_BAD_SURFACE);
     }
@@ -2480,7 +2481,7 @@ angle::Result WindowSurfaceVk::doDeferredAcquireNextImageWithUsableSwapchain(
 
 bool WindowSurfaceVk::skipAcquireNextSwapchainImageForSharedPresentMode() const
 {
-    if (isSharedPresentMode() && !needsAcquireImageOrProcessResult())
+    if (isSharedPresentMode())
     {
         ASSERT(mSwapchainImages.size());
         const SwapchainImage &image = mSwapchainImages[0];
@@ -2502,9 +2503,17 @@ VkResult WindowSurfaceVk::acquireNextSwapchainImage(vk::Context *context)
 
     if (skipAcquireNextSwapchainImageForSharedPresentMode())
     {
+        ASSERT(!NeedToProcessAcquireNextImageResult(mAcquireOperation.unlockedTryAcquireResult));
         // This will check for OUT_OF_DATE when in single image mode. and prevent
         // re-AcquireNextImage.
-        return vkGetSwapchainStatusKHR(device, mSwapchain);
+        VkResult result = vkGetSwapchainStatusKHR(device, mSwapchain);
+        if (ANGLE_UNLIKELY(result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR))
+        {
+            return result;
+        }
+        // Note that an acquire is no longer needed.
+        mAcquireOperation.needToAcquireNextSwapchainImage = false;
+        return VK_SUCCESS;
     }
 
     // If calling vkAcquireNextImageKHR is necessary, do so first.
@@ -2538,6 +2547,7 @@ VkResult WindowSurfaceVk::postProcessUnlockedTryAcquire(vk::Context *context)
     }
 
     mCurrentSwapchainImageIndex = mAcquireOperation.unlockedTryAcquireResult.imageIndex;
+    ASSERT(!isSharedPresentMode() || mCurrentSwapchainImageIndex == 0);
 
     SwapchainImage &image = mSwapchainImages[mCurrentSwapchainImageIndex];
 
@@ -2552,6 +2562,8 @@ VkResult WindowSurfaceVk::postProcessUnlockedTryAcquire(vk::Context *context)
     // Single Image Mode
     if (isSharedPresentMode())
     {
+        ASSERT(image.image->valid() &&
+               image.image->getCurrentImageLayout() != vk::ImageLayout::SharedPresent);
         rx::RendererVk *rendererVk = context->getRenderer();
         rx::vk::PrimaryCommandBuffer primaryCommandBuffer;
         auto protectionType = vk::ConvertProtectionBoolToType(mState.hasProtectedContent());
@@ -2559,19 +2571,9 @@ VkResult WindowSurfaceVk::postProcessUnlockedTryAcquire(vk::Context *context)
             angle::Result::Continue)
         {
             VkSemaphore semaphore;
-            if (image.image->getCurrentImageLayout() != vk::ImageLayout::SharedPresent)
-            {
-                // Note return errors is early exit may leave new Image and Swapchain in unknown
-                // state.
-                image.image->recordWriteBarrierOneOff(context, vk::ImageLayout::SharedPresent,
-                                                      &primaryCommandBuffer, &semaphore);
-            }
-            else
-            {
-                // Ensure we always wait for ANI semaphore
-                semaphore = image.image->getAcquireNextImageSemaphore().getHandle();
-                image.image->resetAcquireNextImageSemaphore();
-            }
+            // Note return errors is early exit may leave new Image and Swapchain in unknown state.
+            image.image->recordWriteBarrierOneOff(context, vk::ImageLayout::SharedPresent,
+                                                  &primaryCommandBuffer, &semaphore);
             ASSERT(semaphore == acquireImageSemaphore);
             if (primaryCommandBuffer.end() != VK_SUCCESS)
             {
