@@ -1565,13 +1565,14 @@ angle::Result OutsideRenderPassCommandBufferHelper::initializeCommandBuffer(Cont
 
 angle::Result OutsideRenderPassCommandBufferHelper::reset(Context *context)
 {
-    // Since we may generate and flush multiple outside renderpass commands without submission, they
-    // will use the same queue serials. We do not reset queue serial until we submit to avoid false
-    // positive for barrier needs.
     resetImpl();
 
     // Reset and re-initialize the command buffer
     context->getRenderer()->resetOutsideRenderPassCommandBuffer(std::move(mCommandBuffer));
+
+    // Invalidate the queue serial here. We will get a new queue serial after commands flush.
+    mQueueSerial = QueueSerial();
+
     return initializeCommandBuffer(context);
 }
 

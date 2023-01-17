@@ -6852,12 +6852,7 @@ angle::Result ContextVk::flushImpl(const vk::Semaphore *signalSemaphore,
         // This is when someone already called flushCommandsAndEndRenderPassWithoutQueueSubmit.
         ASSERT(mLastFlushedQueueSerial > mLastSubmittedQueueSerial);
     }
-    else if (signalSemaphore != nullptr)
-    {
-        // We have to do empty submission to get the signalSemaphore.
-        mLastFlushedQueueSerial = mOutsideRenderPassCommands->getQueueSerial();
-    }
-    else
+    else if (signalSemaphore == nullptr)
     {
         // We have nothing to submit.
         return angle::Result::Continue;
@@ -6899,6 +6894,14 @@ angle::Result ContextVk::flushImpl(const vk::Semaphore *signalSemaphore,
     }
     ANGLE_TRY(flushOutsideRenderPassCommands());
 
+    if (mLastFlushedQueueSerial == mLastSubmittedQueueSerial)
+    {
+        // We have to do empty submission...
+        ASSERT(allCommandsEmpty);
+        mLastFlushedQueueSerial = mOutsideRenderPassCommands->getQueueSerial();
+        generateOutsideRenderPassCommandsQueueSerial();
+    }
+
     // We must add the per context dynamic buffers into resourceUseList before submission so that
     // they get retained properly until GPU completes. We do not add current buffer into
     // resourceUseList since they never get reused or freed until context gets destroyed, at which
@@ -6918,7 +6921,7 @@ angle::Result ContextVk::flushImpl(const vk::Semaphore *signalSemaphore,
 
     ANGLE_TRY(submitCommands(signalSemaphore, Submit::AllCommands));
 
-    generateOutsideRenderPassCommandsQueueSerial();
+    ASSERT(mOutsideRenderPassCommands->getQueueSerial() > mLastSubmittedQueueSerial);
 
     mHasAnyCommandsPendingSubmission = false;
     onRenderPassFinished(RenderPassClosureReason::AlreadySpecifiedElsewhere);
