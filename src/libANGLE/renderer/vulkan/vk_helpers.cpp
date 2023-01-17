@@ -1187,6 +1187,7 @@ RenderPassAttachment::RenderPassAttachment()
 }
 
 void RenderPassAttachment::init(ImageHelper *image,
+                                UniqueSerial imageSiblingSerial,
                                 gl::LevelIndex levelIndex,
                                 uint32_t layerIndex,
                                 uint32_t layerCount,
@@ -1194,11 +1195,12 @@ void RenderPassAttachment::init(ImageHelper *image,
 {
     ASSERT(mImage == nullptr);
 
-    mImage      = image;
-    mLevelIndex = levelIndex;
-    mLayerIndex = layerIndex;
-    mLayerCount = layerCount;
-    mAspect     = aspect;
+    mImage              = image;
+    mImageSiblingSerial = imageSiblingSerial;
+    mLevelIndex         = levelIndex;
+    mLayerIndex         = layerIndex;
+    mLayerCount         = layerCount;
+    mAspect             = aspect;
 
     mImage->setRenderPassUsageFlag(RenderPassUsage::RenderTargetAttachment);
 }
@@ -1797,20 +1799,22 @@ void RenderPassCommandBufferHelper::colorImagesDraw(gl::LevelIndex level,
                                                     uint32_t layerCount,
                                                     ImageHelper *image,
                                                     ImageHelper *resolveImage,
+                                                    UniqueSerial imageSiblingSerial,
                                                     PackedAttachmentIndex packedAttachmentIndex)
 {
     ASSERT(packedAttachmentIndex < mColorAttachmentsCount);
 
     image->setQueueSerial(mQueueSerial);
 
-    mColorAttachments[packedAttachmentIndex].init(image, level, layerStart, layerCount,
-                                                  VK_IMAGE_ASPECT_COLOR_BIT);
+    mColorAttachments[packedAttachmentIndex].init(image, imageSiblingSerial, level, layerStart,
+                                                  layerCount, VK_IMAGE_ASPECT_COLOR_BIT);
 
     if (resolveImage)
     {
         resolveImage->setQueueSerial(mQueueSerial);
-        mColorResolveAttachments[packedAttachmentIndex].init(resolveImage, level, layerStart,
-                                                             layerCount, VK_IMAGE_ASPECT_COLOR_BIT);
+        mColorResolveAttachments[packedAttachmentIndex].init(resolveImage, imageSiblingSerial,
+                                                             level, layerStart, layerCount,
+                                                             VK_IMAGE_ASPECT_COLOR_BIT);
     }
 }
 
@@ -1818,7 +1822,8 @@ void RenderPassCommandBufferHelper::depthStencilImagesDraw(gl::LevelIndex level,
                                                            uint32_t layerStart,
                                                            uint32_t layerCount,
                                                            ImageHelper *image,
-                                                           ImageHelper *resolveImage)
+                                                           ImageHelper *resolveImage,
+                                                           UniqueSerial imageSiblingSerial)
 {
     ASSERT(!usesImage(*image));
     ASSERT(!resolveImage || !usesImage(*resolveImage));
@@ -1828,8 +1833,10 @@ void RenderPassCommandBufferHelper::depthStencilImagesDraw(gl::LevelIndex level,
     // only insert layout change barrier once.
     image->setQueueSerial(mQueueSerial);
 
-    mDepthAttachment.init(image, level, layerStart, layerCount, VK_IMAGE_ASPECT_DEPTH_BIT);
-    mStencilAttachment.init(image, level, layerStart, layerCount, VK_IMAGE_ASPECT_STENCIL_BIT);
+    mDepthAttachment.init(image, imageSiblingSerial, level, layerStart, layerCount,
+                          VK_IMAGE_ASPECT_DEPTH_BIT);
+    mStencilAttachment.init(image, imageSiblingSerial, level, layerStart, layerCount,
+                            VK_IMAGE_ASPECT_STENCIL_BIT);
 
     if (resolveImage)
     {
@@ -1838,10 +1845,10 @@ void RenderPassCommandBufferHelper::depthStencilImagesDraw(gl::LevelIndex level,
         // multisampled-render-to-texture renderbuffers.
         resolveImage->setQueueSerial(mQueueSerial);
 
-        mDepthResolveAttachment.init(resolveImage, level, layerStart, layerCount,
-                                     VK_IMAGE_ASPECT_DEPTH_BIT);
-        mStencilResolveAttachment.init(resolveImage, level, layerStart, layerCount,
-                                       VK_IMAGE_ASPECT_STENCIL_BIT);
+        mDepthResolveAttachment.init(resolveImage, imageSiblingSerial, level, layerStart,
+                                     layerCount, VK_IMAGE_ASPECT_DEPTH_BIT);
+        mStencilResolveAttachment.init(resolveImage, imageSiblingSerial, level, layerStart,
+                                       layerCount, VK_IMAGE_ASPECT_STENCIL_BIT);
     }
 }
 
@@ -2095,19 +2102,21 @@ void RenderPassCommandBufferHelper::finalizeDepthStencilResolveImageLayout(Conte
     depthStencilResolveImage->resetRenderPassUsageFlags();
 }
 
-void RenderPassCommandBufferHelper::finalizeImageLayout(Context *context, const ImageHelper *image)
+void RenderPassCommandBufferHelper::finalizeImageLayout(Context *context,
+                                                        const ImageHelper *image,
+                                                        UniqueSerial imageSiblingSerial)
 {
     if (image->hasRenderPassUsageFlag(RenderPassUsage::RenderTargetAttachment))
     {
         for (PackedAttachmentIndex index = kAttachmentIndexZero; index < mColorAttachmentsCount;
              ++index)
         {
-            if (mColorAttachments[index].getImage() == image)
+            if (mColorAttachments[index].hasImage(image, imageSiblingSerial))
             {
                 finalizeColorImageLayoutAndLoadStore(context, index);
                 mColorAttachments[index].reset();
             }
-            else if (mColorResolveAttachments[index].getImage() == image)
+            else if (mColorResolveAttachments[index].hasImage(image, imageSiblingSerial))
             {
                 finalizeColorImageLayout(context, mColorResolveAttachments[index].getImage(), index,
                                          true);
@@ -2116,14 +2125,14 @@ void RenderPassCommandBufferHelper::finalizeImageLayout(Context *context, const 
         }
     }
 
-    if (mDepthAttachment.getImage() == image)
+    if (mDepthAttachment.hasImage(image, imageSiblingSerial))
     {
         finalizeDepthStencilImageLayoutAndLoadStore(context);
         mDepthAttachment.reset();
         mStencilAttachment.reset();
     }
 
-    if (mDepthResolveAttachment.getImage() == image)
+    if (mDepthResolveAttachment.hasImage(image, imageSiblingSerial))
     {
         finalizeDepthStencilResolveImageLayout(context);
         mDepthResolveAttachment.reset();
@@ -5471,18 +5480,26 @@ void ImageHelper::releaseImage(RendererVk *renderer)
     setEntireContentUndefined();
 }
 
-void ImageHelper::releaseImageFromShareContexts(RendererVk *renderer, ContextVk *contextVk)
+void ImageHelper::releaseImageFromShareContexts(RendererVk *renderer,
+                                                ContextVk *contextVk,
+                                                UniqueSerial imageSiblingSerial)
+{
+    finalizeImageLayoutInShareContexts(renderer, contextVk, imageSiblingSerial);
+    releaseImage(renderer);
+}
+
+void ImageHelper::finalizeImageLayoutInShareContexts(RendererVk *renderer,
+                                                     ContextVk *contextVk,
+                                                     UniqueSerial imageSiblingSerial)
 {
     if (contextVk && mImageSerial.valid())
     {
         const ContextVkSet &shareContextSet = contextVk->getShareGroup()->getContexts();
         for (ContextVk *ctx : shareContextSet)
         {
-            ctx->finalizeImageLayout(this);
+            ctx->finalizeImageLayout(this, imageSiblingSerial);
         }
     }
-
-    releaseImage(renderer);
 }
 
 void ImageHelper::releaseStagedUpdates(RendererVk *renderer)
@@ -7913,7 +7930,7 @@ void ImageHelper::stageSelfAsSubresourceUpdates(ContextVk *contextVk,
     // Because we are cloning this object to another object, we must finalize the layout if it is
     // being used by current renderpass as attachment. Otherwise we are copying the incorrect layout
     // since it is determined at endRenderPass time.
-    contextVk->finalizeImageLayout(this);
+    contextVk->finalizeImageLayout(this, {});
 
     std::unique_ptr<RefCounted<ImageHelper>> prevImage =
         std::make_unique<RefCounted<ImageHelper>>();

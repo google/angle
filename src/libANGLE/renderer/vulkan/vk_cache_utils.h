@@ -55,7 +55,6 @@ namespace vk
 {
 class BufferHelper;
 class DynamicDescriptorPool;
-class ImageHelper;
 class SamplerHelper;
 enum class ImageLayout;
 class PipelineCacheAccess;
