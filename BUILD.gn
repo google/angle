@@ -823,8 +823,9 @@ action("angle_commit_id") {
   if (angle_enable_commit_id &&
       exec_script("src/commit_id.py", [ "check" ], "value") == 1) {
     # commit id should depend on angle's HEAD revision
-    inputs = [ ".git/HEAD" ]
-    branch = read_file(".git/HEAD", "string")
+    git_dirs = exec_script("src/commit_id.py", [ "get_git_dirs" ], "list lines")
+    inputs = [ git_dirs[0] + "/HEAD" ]
+    branch = read_file(git_dirs[0] + "/HEAD", "string")
     result = string_split(branch)
     if (result[0] == "ref:") {
       _ref_file = result[1]
@@ -837,7 +838,7 @@ action("angle_commit_id") {
                     _ref_file,
                   ],
                   "")
-      inputs += [ ".git/" + _ref_file ]
+      inputs += [ git_dirs[1] + "/" + _ref_file ]
     }
   }
 
