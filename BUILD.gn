@@ -74,6 +74,8 @@ declare_args() {
     # Use Android TLS slot to store current context.
     angle_use_android_tls_slot = !build_with_chromium
   }
+
+  angle_enable_global_mutex_recursion = is_android && angle_enable_vulkan
 }
 
 if (angle_build_all) {
@@ -159,6 +161,10 @@ config("internal_config") {
     if (angle_use_android_tls_slot) {
       defines += [ "ANGLE_USE_ANDROID_TLS_SLOT=1" ]
     }
+  }
+
+  if (angle_enable_global_mutex_recursion) {
+    defines += [ "ANGLE_ENABLE_GLOBAL_MUTEX_RECURSION=1" ]
   }
 
   # Enables debug/trace-related functionality, including logging every GLES/EGL API command to the

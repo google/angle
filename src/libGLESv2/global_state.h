@@ -11,6 +11,7 @@
 
 #include "libANGLE/Context.h"
 #include "libANGLE/Debug.h"
+#include "libANGLE/GlobalMutex.h"
 #include "libANGLE/Thread.h"
 #include "libANGLE/features.h"
 
@@ -22,8 +23,6 @@
 
 namespace angle
 {
-using GlobalMutex = std::recursive_mutex;
-
 //  - TLS_SLOT_OPENGL and TLS_SLOT_OPENGL_API: These two aren't used by bionic
 //    itself, but allow the graphics code to access TLS directly rather than
 //    using the pthread API.
@@ -107,7 +106,6 @@ extern void SetCurrentThreadTLS(Thread *thread);
 extern thread_local Thread *gCurrentThread;
 #endif
 
-angle::GlobalMutex &GetGlobalMutex();
 gl::Context *GetGlobalLastContext();
 void SetGlobalLastContext(gl::Context *context);
 Thread *GetCurrentThread();
@@ -126,9 +124,7 @@ class [[nodiscard]] ScopedSyncCurrentContextFromThread
 
 }  // namespace egl
 
-#define ANGLE_GLOBAL_LOCK_VAR_NAME globalMutexLock
-#define ANGLE_SCOPED_GLOBAL_LOCK() \
-    std::lock_guard<angle::GlobalMutex> ANGLE_GLOBAL_LOCK_VAR_NAME(egl::GetGlobalMutex())
+#define ANGLE_SCOPED_GLOBAL_LOCK() egl::ScopedGlobalMutexLock globalMutexLock
 
 namespace gl
 {
@@ -196,19 +192,13 @@ static ANGLE_INLINE void DirtyContextIfNeeded(Context *context)
 #    define SCOPED_GLOBAL_AND_SHARE_CONTEXT_LOCK(context) ANGLE_SCOPED_GLOBAL_LOCK()
 #else
 #    if defined(ANGLE_FORCE_CONTEXT_CHECK_EVERY_CALL)
-#        define SCOPED_SHARE_CONTEXT_LOCK(context)                                       \
-            std::lock_guard<angle::GlobalMutex> shareContextLock(egl::GetGlobalMutex()); \
+#        define SCOPED_SHARE_CONTEXT_LOCK(context)       \
+            egl::ScopedGlobalMutexLock shareContextLock; \
             DirtyContextIfNeeded(context)
 #        define SCOPED_GLOBAL_AND_SHARE_CONTEXT_LOCK(context) SCOPED_SHARE_CONTEXT_LOCK(context)
 #    else
-ANGLE_INLINE std::unique_lock<angle::GlobalMutex> GetContextLock(Context *context)
-{
-    return context->isShared() ? std::unique_lock<angle::GlobalMutex>(egl::GetGlobalMutex())
-                               : std::unique_lock<angle::GlobalMutex>();
-}
-
 #        define SCOPED_SHARE_CONTEXT_LOCK(context) \
-            std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context)
+            egl::ScopedOptionalGlobalMutexLock shareContextLock(context->isShared())
 #        define SCOPED_GLOBAL_AND_SHARE_CONTEXT_LOCK(context) ANGLE_SCOPED_GLOBAL_LOCK()
 #    endif
 #endif

@@ -23,10 +23,6 @@ namespace egl
 {
 namespace
 {
-ANGLE_REQUIRE_CONSTANT_INIT std::atomic<angle::GlobalMutex *> g_Mutex(nullptr);
-static_assert(std::is_trivially_destructible<decltype(g_Mutex)>::value,
-              "global mutex is not trivially destructible");
-
 ANGLE_REQUIRE_CONSTANT_INIT gl::Context *g_LastContext(nullptr);
 static_assert(std::is_trivially_destructible<decltype(g_LastContext)>::value,
               "global last context is not trivially destructible");
@@ -90,24 +86,6 @@ Thread *AllocateCurrentThread()
     return thread;
 }
 
-void AllocateGlobalMutex(std::atomic<angle::GlobalMutex *> &mutex)
-{
-    if (mutex == nullptr)
-    {
-        std::unique_ptr<angle::GlobalMutex> newMutex(new angle::GlobalMutex());
-        angle::GlobalMutex *expected = nullptr;
-        if (mutex.compare_exchange_strong(expected, newMutex.get()))
-        {
-            newMutex.release();
-        }
-    }
-}
-
-void AllocateMutex()
-{
-    AllocateGlobalMutex(g_Mutex);
-}
-
 }  // anonymous namespace
 
 #if defined(ANGLE_PLATFORM_APPLE)
@@ -141,12 +119,6 @@ void SetCurrentThreadTLS(Thread *thread)
 #else
 thread_local Thread *gCurrentThread = nullptr;
 #endif
-
-angle::GlobalMutex &GetGlobalMutex()
-{
-    AllocateMutex();
-    return *g_Mutex;
-}
 
 gl::Context *GetGlobalLastContext()
 {
@@ -233,41 +205,22 @@ namespace egl
 namespace
 {
 
-void DeallocateGlobalMutex(std::atomic<angle::GlobalMutex *> &mutex)
-{
-    angle::GlobalMutex *toDelete = mutex.exchange(nullptr);
-    if (toDelete == nullptr)
-    {
-        return;
-    }
-    {
-        // Wait for toDelete to become released by other threads before deleting.
-        std::lock_guard<angle::GlobalMutex> lock(*toDelete);
-    }
-    SafeDelete(toDelete);
-}
-
 void DeallocateCurrentThread()
 {
     SafeDelete(gCurrentThread);
 }
 
-void DeallocateMutex()
-{
-    DeallocateGlobalMutex(g_Mutex);
-}
-
 bool InitializeProcess()
 {
     EnsureDebugAllocated();
-    AllocateMutex();
+    AllocateGlobalMutex();
     return AllocateCurrentThread() != nullptr;
 }
 
 void TerminateProcess()
 {
     DeallocateDebug();
-    DeallocateMutex();
+    DeallocateGlobalMutex();
     DeallocateCurrentThread();
 }
 
