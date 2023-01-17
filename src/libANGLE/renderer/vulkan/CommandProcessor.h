@@ -139,7 +139,6 @@ class CommandProcessorTask
     void initFlushAndQueueSubmit(const VkSemaphore semaphore,
                                  ProtectionType protectionType,
                                  egl::ContextPriority priority,
-                                 SecondaryCommandPools *commandPools,
                                  SecondaryCommandBufferList &&commandBuffersToReset,
                                  const QueueSerial &submitQueueSerial);
 
@@ -184,7 +183,6 @@ class CommandProcessorTask
     {
         return mRenderPassCommandBuffer;
     }
-    SecondaryCommandPools *getCommandPools() const { return mCommandPools; }
 
   private:
     void copyPresentInfo(const VkPresentInfoKHR &other);
@@ -202,7 +200,6 @@ class CommandProcessorTask
 
     // Flush data
     VkSemaphore mSemaphore;
-    SecondaryCommandPools *mCommandPools;
     SecondaryCommandBufferList mCommandBuffersToReset;
 
     // Flush command data
@@ -250,8 +247,6 @@ struct CommandBatch final : angle::NonCopyable
     void resetSecondaryCommandBuffers(VkDevice device);
 
     PrimaryCommandBuffer primaryCommands;
-    // commandPools is for secondary CommandBuffer allocation
-    SecondaryCommandPools *commandPools;
     SecondaryCommandBufferList commandBuffersToReset;
     SharedFence fence;
     QueueSerial queueSerial;
@@ -384,7 +379,6 @@ class CommandQueue : angle::NonCopyable
                                  egl::ContextPriority priority,
                                  const VkSemaphore signalSemaphore,
                                  SecondaryCommandBufferList &&commandBuffersToReset,
-                                 SecondaryCommandPools *commandPools,
                                  const QueueSerial &submitQueueSerial);
 
     angle::Result queueSubmitOneOff(Context *context,
@@ -527,7 +521,6 @@ class CommandProcessor : public Context
                                         egl::ContextPriority priority,
                                         const VkSemaphore signalSemaphore,
                                         SecondaryCommandBufferList &&commandBuffersToReset,
-                                        SecondaryCommandPools *commandPools,
                                         const QueueSerial &submitQueueSerial);
 
     void requestCommandsAndGarbageCleanup();

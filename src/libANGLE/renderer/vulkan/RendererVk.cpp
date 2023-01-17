@@ -5138,7 +5138,6 @@ angle::Result RendererVk::submitCommands(vk::Context *context,
                                          vk::ProtectionType protectionType,
                                          egl::ContextPriority contextPriority,
                                          const vk::Semaphore *signalSemaphore,
-                                         vk::SecondaryCommandPools *commandPools,
                                          const QueueSerial &submitQueueSerial)
 {
     vk::SecondaryCommandBufferList commandBuffersToReset;
@@ -5154,13 +5153,13 @@ angle::Result RendererVk::submitCommands(vk::Context *context,
     {
         ANGLE_TRY(mCommandProcessor.enqueueSubmitCommands(
             context, protectionType, contextPriority, signalVkSemaphore,
-            std::move(commandBuffersToReset), commandPools, submitQueueSerial));
+            std::move(commandBuffersToReset), submitQueueSerial));
     }
     else
     {
         ANGLE_TRY(mCommandQueue.submitCommands(context, protectionType, contextPriority,
                                                signalVkSemaphore, std::move(commandBuffersToReset),
-                                               commandPools, submitQueueSerial));
+                                               submitQueueSerial));
     }
 
     ANGLE_TRY(mCommandQueue.postSubmitCheck(context));

@@ -3384,7 +3384,7 @@ angle::Result ContextVk::submitCommands(const vk::Semaphore *signalSemaphore, Su
     ASSERT(mLastFlushedQueueSerial > mLastSubmittedQueueSerial);
 
     ANGLE_TRY(mRenderer->submitCommands(this, getProtectionType(), mContextPriority,
-                                        signalSemaphore, &mCommandPools, mLastFlushedQueueSerial));
+                                        signalSemaphore, mLastFlushedQueueSerial));
 
     ASSERT(mLastSubmittedQueueSerial < mLastFlushedQueueSerial);
     mLastSubmittedQueueSerial = mLastFlushedQueueSerial;

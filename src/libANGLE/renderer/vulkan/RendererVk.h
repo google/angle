@@ -625,7 +625,6 @@ class RendererVk : angle::NonCopyable
                                  vk::ProtectionType protectionType,
                                  egl::ContextPriority contextPriority,
                                  const vk::Semaphore *signalSemaphore,
-                                 vk::SecondaryCommandPools *commandPools,
                                  const QueueSerial &submitSerialOut);
 
     void handleDeviceLost();

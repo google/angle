@@ -60,6 +60,7 @@ angle::Result VulkanSecondaryCommandBuffer::initialize(Context *context,
 {
     VkDevice device = context->getDevice();
 
+    mCommandPool = pool;
     mCommandTracker.reset();
     mAnyCommand = false;
 
@@ -81,6 +82,15 @@ angle::Result VulkanSecondaryCommandBuffer::initialize(Context *context,
     }
 
     return angle::Result::Continue;
+}
+
+void VulkanSecondaryCommandBuffer::free(VkDevice device)
+{
+    if (mHandle != VK_NULL_HANDLE)
+    {
+        mCommandPool->freeCommandBuffers(device, 1, &mHandle);
+        mHandle = VK_NULL_HANDLE;
+    }
 }
 
 angle::Result VulkanSecondaryCommandBuffer::begin(
