@@ -925,28 +925,6 @@ char GetStoreOpShorthand(RenderPassStoreOp storeOp)
     }
 }
 
-template <typename CommandBufferHelperT>
-void RecycleCommandBufferHelper(std::vector<CommandBufferHelperT *> *freeList,
-                                CommandBufferHelperT **commandBufferHelper,
-                                priv::SecondaryCommandBuffer *commandBuffer)
-{
-    freeList->push_back(*commandBufferHelper);
-}
-
-// Can only be called from ContextVk::onDestroy(), asyncCommandQueue must be disabled.
-// Support for asyncCommandQueue requires other changes in the code which will also remove
-// the SecondaryCommandPool::collect() call.
-template <typename CommandBufferHelperT>
-void RecycleCommandBufferHelper(std::vector<CommandBufferHelperT *> *freeList,
-                                CommandBufferHelperT **commandBufferHelper,
-                                VulkanSecondaryCommandBuffer *commandBuffer)
-{
-    SecondaryCommandPool *pool = (*commandBufferHelper)->getCommandPool();
-
-    pool->collect(commandBuffer);
-    SafeDelete(*commandBufferHelper);
-}
-
 bool IsClear(UpdateSource updateSource)
 {
     return updateSource == UpdateSource::Clear ||
@@ -1425,15 +1403,111 @@ CommandBufferHelperCommon::CommandBufferHelperCommon()
 
 CommandBufferHelperCommon::~CommandBufferHelperCommon() {}
 
-void CommandBufferHelperCommon::initializeImpl(SecondaryCommandPool *commandPool)
+void CommandBufferHelperCommon::initializeImpl()
 {
     mCommandAllocator.init();
-    mCommandPool = commandPool;
 }
 
 void CommandBufferHelperCommon::resetImpl()
 {
     mCommandAllocator.resetAllocator();
+}
+
+template <class DerivedT>
+angle::Result CommandBufferHelperCommon::attachCommandPoolImpl(Context *context,
+                                                               SecondaryCommandPool *commandPool)
+{
+    if constexpr (!DerivedT::ExecutesInline())
+    {
+        DerivedT *derived = static_cast<DerivedT *>(this);
+        ASSERT(commandPool != nullptr);
+        ASSERT(mCommandPool == nullptr);
+        ASSERT(!derived->getCommandBuffer().valid());
+
+        mCommandPool = commandPool;
+
+        ANGLE_TRY(derived->initializeCommandBuffer(context));
+    }
+    return angle::Result::Continue;
+}
+
+template <class DerivedT, bool kIsRenderPassBuffer>
+angle::Result CommandBufferHelperCommon::detachCommandPoolImpl(
+    Context *context,
+    SecondaryCommandPool **commandPoolOut)
+{
+    if constexpr (!DerivedT::ExecutesInline())
+    {
+        DerivedT *derived = static_cast<DerivedT *>(this);
+        ASSERT(mCommandPool != nullptr);
+        ASSERT(derived->getCommandBuffer().valid());
+
+        if constexpr (!kIsRenderPassBuffer)
+        {
+            ASSERT(!derived->getCommandBuffer().empty());
+            ANGLE_TRY(derived->endCommandBuffer(context));
+        }
+
+        *commandPoolOut = mCommandPool;
+        mCommandPool    = nullptr;
+    }
+    ASSERT(mCommandPool == nullptr);
+    return angle::Result::Continue;
+}
+
+template <class DerivedT>
+void CommandBufferHelperCommon::releaseCommandPoolImpl()
+{
+    if constexpr (!DerivedT::ExecutesInline())
+    {
+        DerivedT *derived = static_cast<DerivedT *>(this);
+        ASSERT(mCommandPool != nullptr);
+
+        if (derived->getCommandBuffer().valid())
+        {
+            ASSERT(derived->getCommandBuffer().empty());
+            mCommandPool->collect(&derived->getCommandBuffer());
+        }
+
+        mCommandPool = nullptr;
+    }
+    ASSERT(mCommandPool == nullptr);
+}
+
+template <class DerivedT>
+void CommandBufferHelperCommon::attachAllocatorImpl(SecondaryCommandMemoryAllocator *allocator)
+{
+    if constexpr (DerivedT::ExecutesInline())
+    {
+        auto &commandBuffer = static_cast<DerivedT *>(this)->getCommandBuffer();
+        mCommandAllocator.attachAllocator(allocator);
+        commandBuffer.attachAllocator(mCommandAllocator.getAllocator());
+    }
+}
+
+template <class DerivedT>
+SecondaryCommandMemoryAllocator *CommandBufferHelperCommon::detachAllocatorImpl()
+{
+    SecondaryCommandMemoryAllocator *result = nullptr;
+    if constexpr (DerivedT::ExecutesInline())
+    {
+        auto &commandBuffer = static_cast<DerivedT *>(this)->getCommandBuffer();
+        commandBuffer.detachAllocator(mCommandAllocator.getAllocator());
+        result = mCommandAllocator.detachAllocator(commandBuffer.empty());
+    }
+    return result;
+}
+
+template <class DerivedT>
+void CommandBufferHelperCommon::assertCanBeRecycledImpl()
+{
+    DerivedT *derived = static_cast<DerivedT *>(this);
+    ASSERT(mCommandPool == nullptr);
+    ASSERT(!mCommandAllocator.hasAllocatorLinks());
+    // Vulkan secondary command buffers must be invalid (collected).
+    ASSERT(DerivedT::ExecutesInline() || !derived->getCommandBuffer().valid());
+    // ANGLEs Custom secondary command buffers must be empty (reset).
+    ASSERT(!DerivedT::ExecutesInline() || derived->getCommandBuffer().empty());
 }
 
 void CommandBufferHelperCommon::bufferWrite(ContextVk *contextVk,
@@ -1545,14 +1619,18 @@ OutsideRenderPassCommandBufferHelper::OutsideRenderPassCommandBufferHelper() {}
 
 OutsideRenderPassCommandBufferHelper::~OutsideRenderPassCommandBufferHelper() {}
 
-angle::Result OutsideRenderPassCommandBufferHelper::initialize(Context *context,
-                                                               SecondaryCommandPool *commandPool)
+angle::Result OutsideRenderPassCommandBufferHelper::initialize(Context *context)
 {
-    initializeImpl(commandPool);
+    initializeImpl();
     return initializeCommandBuffer(context);
 }
 angle::Result OutsideRenderPassCommandBufferHelper::initializeCommandBuffer(Context *context)
 {
+    // Skip initialization in the Pool-detached state.
+    if (!ExecutesInline() && mCommandPool == nullptr)
+    {
+        return angle::Result::Continue;
+    }
     return mCommandBuffer.initialize(context, mCommandPool, false,
                                      mCommandAllocator.getAllocator());
 }
@@ -1565,6 +1643,7 @@ angle::Result OutsideRenderPassCommandBufferHelper::reset(
 
     // Collect/Reset the command buffer
     commandBufferCollector->collectCommandBuffer(std::move(mCommandBuffer));
+    mIsCommandBufferEnded = false;
 
     // Invalidate the queue serial here. We will get a new queue serial after commands flush.
     mQueueSerial = QueueSerial();
@@ -1636,27 +1715,73 @@ angle::Result OutsideRenderPassCommandBufferHelper::flushToPrimary(
     ANGLE_TRACE_EVENT0("gpu.angle", "OutsideRenderPassCommandBufferHelper::flushToPrimary");
     ASSERT(!empty());
 
-    // Commands that are added to primary before beginRenderPass command
-    executeBarriers(context->getRenderer()->getFeatures(), primary);
+    RendererVk *renderer = context->getRenderer();
 
-    ANGLE_TRY(mCommandBuffer.end(context));
+    // Commands that are added to primary before beginRenderPass command
+    executeBarriers(renderer->getFeatures(), primary);
+
+    // When using Vulkan secondary command buffers and "asyncCommandQueue" is enabled, command
+    // buffer MUST be already ended in the detachCommandPool() (called in the CommandProcessor).
+    // After the detach, nothing is written to the buffer (the barriers above are written directly
+    // to the primary buffer).
+    // Note: RenderPass Command Buffers are explicitly ended in the endRenderPass().
+    if (ExecutesInline() || !renderer->isAsyncCommandQueueEnabled())
+    {
+        ANGLE_TRY(endCommandBuffer(context));
+    }
+    ASSERT(mIsCommandBufferEnded);
     mCommandBuffer.executeCommands(primary);
 
     // Restart the command buffer.
     return reset(context, commandBufferCollector);
 }
 
+angle::Result OutsideRenderPassCommandBufferHelper::endCommandBuffer(Context *context)
+{
+    ASSERT(ExecutesInline() || mCommandPool != nullptr);
+    ASSERT(mCommandBuffer.valid());
+    ASSERT(!mIsCommandBufferEnded);
+
+    ANGLE_TRY(mCommandBuffer.end(context));
+    mIsCommandBufferEnded = true;
+
+    return angle::Result::Continue;
+}
+
+angle::Result OutsideRenderPassCommandBufferHelper::attachCommandPool(
+    Context *context,
+    SecondaryCommandPool *commandPool)
+{
+    return attachCommandPoolImpl<OutsideRenderPassCommandBufferHelper>(context, commandPool);
+}
+
+angle::Result OutsideRenderPassCommandBufferHelper::detachCommandPool(
+    Context *context,
+    SecondaryCommandPool **commandPoolOut)
+{
+    return detachCommandPoolImpl<OutsideRenderPassCommandBufferHelper, false>(context,
+                                                                              commandPoolOut);
+}
+
+void OutsideRenderPassCommandBufferHelper::releaseCommandPool()
+{
+    releaseCommandPoolImpl<OutsideRenderPassCommandBufferHelper>();
+}
+
 void OutsideRenderPassCommandBufferHelper::attachAllocator(
     SecondaryCommandMemoryAllocator *allocator)
 {
-    mCommandAllocator.attachAllocator(allocator);
-    getCommandBuffer().attachAllocator(mCommandAllocator.getAllocator());
+    attachAllocatorImpl<OutsideRenderPassCommandBufferHelper>(allocator);
 }
 
 SecondaryCommandMemoryAllocator *OutsideRenderPassCommandBufferHelper::detachAllocator()
 {
-    getCommandBuffer().detachAllocator(mCommandAllocator.getAllocator());
-    return mCommandAllocator.detachAllocator(getCommandBuffer().empty());
+    return detachAllocatorImpl<OutsideRenderPassCommandBufferHelper>();
+}
+
+void OutsideRenderPassCommandBufferHelper::assertCanBeRecycled()
+{
+    assertCanBeRecycledImpl<OutsideRenderPassCommandBufferHelper>();
 }
 
 void OutsideRenderPassCommandBufferHelper::addCommandDiagnostics(ContextVk *contextVk)
@@ -1690,14 +1815,18 @@ RenderPassCommandBufferHelper::~RenderPassCommandBufferHelper()
     mFramebuffer.setHandle(VK_NULL_HANDLE);
 }
 
-angle::Result RenderPassCommandBufferHelper::initialize(Context *context,
-                                                        SecondaryCommandPool *commandPool)
+angle::Result RenderPassCommandBufferHelper::initialize(Context *context)
 {
-    initializeImpl(commandPool);
+    initializeImpl();
     return initializeCommandBuffer(context);
 }
 angle::Result RenderPassCommandBufferHelper::initializeCommandBuffer(Context *context)
 {
+    // Skip initialization in the Pool-detached state.
+    if (!ExecutesInline() && mCommandPool == nullptr)
+    {
+        return angle::Result::Continue;
+    }
     return getCommandBuffer().initialize(context, mCommandPool, true,
                                          mCommandAllocator.getAllocator());
 }
@@ -2313,7 +2442,7 @@ angle::Result RenderPassCommandBufferHelper::endRenderPassCommandBuffer(ContextV
 angle::Result RenderPassCommandBufferHelper::nextSubpass(ContextVk *contextVk,
                                                          RenderPassCommandBuffer **commandBufferOut)
 {
-    if (RenderPassCommandBuffer::ExecutesInline())
+    if (ExecutesInline())
     {
         // When using ANGLE secondary command buffers, the commands are inline and are executed on
         // the primary command buffer.  This means that vkCmdNextSubpass can be intermixed with the
@@ -2446,8 +2575,8 @@ angle::Result RenderPassCommandBufferHelper::flushToPrimary(
 
     // Run commands inside the RenderPass.
     constexpr VkSubpassContents kSubpassContents =
-        RenderPassCommandBuffer::ExecutesInline() ? VK_SUBPASS_CONTENTS_INLINE
-                                                  : VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS;
+        ExecutesInline() ? VK_SUBPASS_CONTENTS_INLINE
+                         : VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS;
 
     primary->beginRenderPass(beginInfo, kSubpassContents);
     for (uint32_t subpass = 0; subpass < getSubpassCommandBufferCount(); ++subpass)
@@ -2539,18 +2668,46 @@ void RenderPassCommandBufferHelper::growRenderArea(ContextVk *contextVk,
     mStencilAttachment.onRenderAreaGrowth(contextVk, mRenderArea);
 }
 
+angle::Result RenderPassCommandBufferHelper::attachCommandPool(Context *context,
+                                                               SecondaryCommandPool *commandPool)
+{
+    ASSERT(!mRenderPassStarted);
+    ASSERT(getSubpassCommandBufferCount() == 1);
+    return attachCommandPoolImpl<RenderPassCommandBufferHelper>(context, commandPool);
+}
+
+void RenderPassCommandBufferHelper::detachCommandPool(SecondaryCommandPool **commandPoolOut)
+{
+    ASSERT(mRenderPassStarted);
+    angle::Result result =
+        detachCommandPoolImpl<RenderPassCommandBufferHelper, true>(nullptr, commandPoolOut);
+    ASSERT(result == angle::Result::Continue);
+}
+
+void RenderPassCommandBufferHelper::releaseCommandPool()
+{
+    ASSERT(!mRenderPassStarted);
+    ASSERT(getSubpassCommandBufferCount() == 1);
+    releaseCommandPoolImpl<RenderPassCommandBufferHelper>();
+}
+
 void RenderPassCommandBufferHelper::attachAllocator(SecondaryCommandMemoryAllocator *allocator)
 {
     ASSERT(CheckSubpassCommandBufferCount(getSubpassCommandBufferCount()));
-    mCommandAllocator.attachAllocator(allocator);
-    getCommandBuffer().attachAllocator(mCommandAllocator.getAllocator());
+    attachAllocatorImpl<RenderPassCommandBufferHelper>(allocator);
 }
 
 SecondaryCommandMemoryAllocator *RenderPassCommandBufferHelper::detachAllocator()
 {
     ASSERT(CheckSubpassCommandBufferCount(getSubpassCommandBufferCount()));
-    getCommandBuffer().detachAllocator(mCommandAllocator.getAllocator());
-    return mCommandAllocator.detachAllocator(getCommandBuffer().empty());
+    return detachAllocatorImpl<RenderPassCommandBufferHelper>();
+}
+
+void RenderPassCommandBufferHelper::assertCanBeRecycled()
+{
+    ASSERT(!mRenderPassStarted);
+    ASSERT(getSubpassCommandBufferCount() == 1);
+    assertCanBeRecycledImpl<RenderPassCommandBufferHelper>();
 }
 
 void RenderPassCommandBufferHelper::addCommandDiagnostics(ContextVk *contextVk)
@@ -2643,7 +2800,7 @@ angle::Result CommandBufferRecycler<CommandBufferHelperT>::getCommandBufferHelpe
     {
         CommandBufferHelperT *commandBuffer = new CommandBufferHelperT();
         *commandBufferHelperOut             = commandBuffer;
-        ANGLE_TRY(commandBuffer->initialize(context, commandPool));
+        ANGLE_TRY(commandBuffer->initialize(context));
     }
     else
     {
@@ -2651,6 +2808,8 @@ angle::Result CommandBufferRecycler<CommandBufferHelperT>::getCommandBufferHelpe
         mCommandBufferHelperFreeList.pop_back();
         *commandBufferHelperOut = commandBuffer;
     }
+
+    ANGLE_TRY((*commandBufferHelperOut)->attachCommandPool(context, commandPool));
 
     // Attach functions are only used for ring buffer allocators.
     (*commandBufferHelperOut)->attachAllocator(commandsAllocator);
@@ -2674,12 +2833,15 @@ template <typename CommandBufferHelperT>
 void CommandBufferRecycler<CommandBufferHelperT>::recycleCommandBufferHelper(
     CommandBufferHelperT **commandBuffer)
 {
-    std::unique_lock<std::mutex> lock(mMutex);
-    ASSERT((*commandBuffer)->empty() && !(*commandBuffer)->hasAllocatorLinks());
+    (*commandBuffer)->assertCanBeRecycled();
     (*commandBuffer)->markOpen();
 
-    RecycleCommandBufferHelper(&mCommandBufferHelperFreeList, commandBuffer,
-                               &(*commandBuffer)->getCommandBuffer());
+    {
+        std::unique_lock<std::mutex> lock(mMutex);
+        mCommandBufferHelperFreeList.push_back(*commandBuffer);
+    }
+
+    *commandBuffer = nullptr;
 }
 
 template void

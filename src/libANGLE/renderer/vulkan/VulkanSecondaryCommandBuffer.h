@@ -234,9 +234,14 @@ class VulkanSecondaryCommandBuffer : public priv::CommandBuffer
 
     void open() const {}
     void close() const {}
-    bool empty() const { return !mAnyCommand; }
+    bool empty() const
+    {
+        ASSERT(valid());
+        return !mAnyCommand;
+    }
     uint32_t getRenderPassWriteCommandCount() const
     {
+        ASSERT(valid());
         return mCommandTracker.getRenderPassWriteCommandCount();
     }
     std::string dumpCommands(const char *separator) const { return ""; }
