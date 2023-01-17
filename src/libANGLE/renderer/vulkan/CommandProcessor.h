@@ -121,20 +121,23 @@ class CommandProcessorTask
 
     void initTask();
 
+    void initFlushWaitSemaphores(ProtectionType protectionType,
+                                 egl::ContextPriority priority,
+                                 std::vector<VkSemaphore> &&waitSemaphores,
+                                 std::vector<VkPipelineStageFlags> &&waitSemaphoreStageMasks);
+
     void initOutsideRenderPassProcessCommands(ProtectionType protectionType,
+                                              egl::ContextPriority priority,
                                               OutsideRenderPassCommandBufferHelper *commandBuffer);
 
     void initRenderPassProcessCommands(ProtectionType protectionType,
+                                       egl::ContextPriority priority,
                                        RenderPassCommandBufferHelper *commandBuffer,
                                        const RenderPass *renderPass);
 
     void initPresent(egl::ContextPriority priority,
                      const VkPresentInfoKHR &presentInfo,
                      SwapchainStatus *swapchainStatus);
-
-    void initFlushWaitSemaphores(ProtectionType protectionType,
-                                 std::vector<VkSemaphore> &&waitSemaphores,
-                                 std::vector<VkPipelineStageFlags> &&waitSemaphoreStageMasks);
 
     void initFlushAndQueueSubmit(const VkSemaphore semaphore,
                                  ProtectionType protectionType,
@@ -417,13 +420,16 @@ class CommandQueue : angle::NonCopyable
     }
 
     void flushWaitSemaphores(ProtectionType protectionType,
+                             egl::ContextPriority priority,
                              std::vector<VkSemaphore> &&waitSemaphores,
                              std::vector<VkPipelineStageFlags> &&waitSemaphoreStageMasks);
     angle::Result flushOutsideRPCommands(Context *context,
                                          ProtectionType protectionType,
+                                         egl::ContextPriority priority,
                                          OutsideRenderPassCommandBufferHelper **outsideRPCommands);
     angle::Result flushRenderPassCommands(Context *context,
                                           ProtectionType protectionType,
+                                          egl::ContextPriority priority,
                                           const RenderPass &renderPass,
                                           RenderPassCommandBufferHelper **renderPassCommands);
 
@@ -461,7 +467,9 @@ class CommandQueue : angle::NonCopyable
                               DeviceScoped<CommandBatch> &commandBatch,
                               const QueueSerial &submitQueueSerial);
 
-    angle::Result ensurePrimaryCommandBufferValid(Context *context, ProtectionType protectionType);
+    angle::Result ensurePrimaryCommandBufferValid(Context *context,
+                                                  ProtectionType protectionType,
+                                                  egl::ContextPriority priority);
 
     struct CommandsState
     {
@@ -470,7 +478,9 @@ class CommandQueue : angle::NonCopyable
         PrimaryCommandBuffer primaryCommands;
     };
 
-    using CommandsStateMap      = angle::PackedEnumMap<ProtectionType, CommandsState>;
+    using CommandsStateMap =
+        angle::PackedEnumMap<egl::ContextPriority,
+                             angle::PackedEnumMap<ProtectionType, CommandsState>>;
     using PrimaryCommandPoolMap = angle::PackedEnumMap<ProtectionType, PersistentCommandPool>;
 
     angle::Result initCommandPool(Context *context, ProtectionType protectionType)
@@ -555,15 +565,18 @@ class CommandProcessor : public Context
 
     angle::Result enqueueFlushWaitSemaphores(
         ProtectionType protectionType,
+        egl::ContextPriority priority,
         std::vector<VkSemaphore> &&waitSemaphores,
         std::vector<VkPipelineStageFlags> &&waitSemaphoreStageMasks);
     angle::Result enqueueFlushOutsideRPCommands(
         Context *context,
         ProtectionType protectionType,
+        egl::ContextPriority priority,
         OutsideRenderPassCommandBufferHelper **outsideRPCommands);
     angle::Result enqueueFlushRenderPassCommands(
         Context *context,
         ProtectionType protectionType,
+        egl::ContextPriority priority,
         const RenderPass &renderPass,
         RenderPassCommandBufferHelper **renderPassCommands);
 

@@ -5132,18 +5132,20 @@ angle::Result RendererVk::finish(vk::Context *context)
 
 angle::Result RendererVk::flushWaitSemaphores(
     vk::ProtectionType protectionType,
+    egl::ContextPriority priority,
     std::vector<VkSemaphore> &&waitSemaphores,
     std::vector<VkPipelineStageFlags> &&waitSemaphoreStageMasks)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "RendererVk::flushWaitSemaphores");
     if (isAsyncCommandQueueEnabled())
     {
-        ANGLE_TRY(mCommandProcessor.enqueueFlushWaitSemaphores(
-            protectionType, std::move(waitSemaphores), std::move(waitSemaphoreStageMasks)));
+        ANGLE_TRY(mCommandProcessor.enqueueFlushWaitSemaphores(protectionType, priority,
+                                                               std::move(waitSemaphores),
+                                                               std::move(waitSemaphoreStageMasks)));
     }
     else
     {
-        mCommandQueue.flushWaitSemaphores(protectionType, std::move(waitSemaphores),
+        mCommandQueue.flushWaitSemaphores(protectionType, priority, std::move(waitSemaphores),
                                           std::move(waitSemaphoreStageMasks));
     }
 
@@ -5153,19 +5155,20 @@ angle::Result RendererVk::flushWaitSemaphores(
 angle::Result RendererVk::flushRenderPassCommands(
     vk::Context *context,
     vk::ProtectionType protectionType,
+    egl::ContextPriority priority,
     const vk::RenderPass &renderPass,
     vk::RenderPassCommandBufferHelper **renderPassCommands)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "RendererVk::flushRenderPassCommands");
     if (isAsyncCommandQueueEnabled())
     {
-        ANGLE_TRY(mCommandProcessor.enqueueFlushRenderPassCommands(context, protectionType,
-                                                                   renderPass, renderPassCommands));
+        ANGLE_TRY(mCommandProcessor.enqueueFlushRenderPassCommands(
+            context, protectionType, priority, renderPass, renderPassCommands));
     }
     else
     {
-        ANGLE_TRY(mCommandQueue.flushRenderPassCommands(context, protectionType, renderPass,
-                                                        renderPassCommands));
+        ANGLE_TRY(mCommandQueue.flushRenderPassCommands(context, protectionType, priority,
+                                                        renderPass, renderPassCommands));
     }
 
     return angle::Result::Continue;
@@ -5174,17 +5177,19 @@ angle::Result RendererVk::flushRenderPassCommands(
 angle::Result RendererVk::flushOutsideRPCommands(
     vk::Context *context,
     vk::ProtectionType protectionType,
+    egl::ContextPriority priority,
     vk::OutsideRenderPassCommandBufferHelper **outsideRPCommands)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "RendererVk::flushOutsideRPCommands");
     if (isAsyncCommandQueueEnabled())
     {
-        ANGLE_TRY(mCommandProcessor.enqueueFlushOutsideRPCommands(context, protectionType,
+        ANGLE_TRY(mCommandProcessor.enqueueFlushOutsideRPCommands(context, protectionType, priority,
                                                                   outsideRPCommands));
     }
     else
     {
-        ANGLE_TRY(mCommandQueue.flushOutsideRPCommands(context, protectionType, outsideRPCommands));
+        ANGLE_TRY(mCommandQueue.flushOutsideRPCommands(context, protectionType, priority,
+                                                       outsideRPCommands));
     }
 
     return angle::Result::Continue;
