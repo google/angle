@@ -268,8 +268,6 @@ class WindowSurfaceVk : public SurfaceVk
                                         const SwapchainResolveMode swapchainResolveMode,
                                         vk::MaybeImagelessFramebuffer *framebufferOut);
 
-    const vk::Semaphore *getAndResetAcquireImageSemaphore();
-
     VkSurfaceTransformFlagBitsKHR getPreTransform() const
     {
         if (mEmulatedPreTransform != VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR)
@@ -353,6 +351,7 @@ class WindowSurfaceVk : public SurfaceVk
     // This method is called when a swapchain image is presented.  It schedules
     // acquireNextSwapchainImage() to be called later.
     void deferAcquireNextImage();
+    void flushAcquireImageSemaphore(const gl::Context *context);
 
     angle::Result computePresentOutOfDate(vk::Context *context,
                                           VkResult result,

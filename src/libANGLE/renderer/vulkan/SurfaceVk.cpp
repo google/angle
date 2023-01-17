@@ -1186,6 +1186,10 @@ angle::Result WindowSurfaceVk::getAttachmentRenderTarget(const gl::Context *cont
         ANGLE_VK_TRACE_EVENT_AND_MARKER(contextVk, "First Swap Image Use");
         ANGLE_TRY(doDeferredAcquireNextImage(context, false));
     }
+    if (mAcquireImageSemaphore)
+    {
+        flushAcquireImageSemaphore(context);
+    }
     return SurfaceVk::getAttachmentRenderTarget(context, binding, imageIndex, samples, rtOut);
 }
 
@@ -1743,6 +1747,10 @@ angle::Result WindowSurfaceVk::prepareSwapImpl(const gl::Context *context)
         ANGLE_TRACE_EVENT0("gpu.angle", "Acquire Swap Image Before Swap");
         ANGLE_TRY(doDeferredAcquireNextImage(context, false));
     }
+    if (mAcquireImageSemaphore)
+    {
+        flushAcquireImageSemaphore(context);
+    }
     return angle::Result::Continue;
 }
 
@@ -2220,6 +2228,15 @@ angle::Result WindowSurfaceVk::doDeferredAcquireNextImage(const gl::Context *con
     return angle::Result::Continue;
 }
 
+void WindowSurfaceVk::flushAcquireImageSemaphore(const gl::Context *context)
+{
+    ASSERT(mAcquireImageSemaphore);
+    ContextVk *contextVk = vk::GetImpl(context);
+    contextVk->addWaitSemaphore(mAcquireImageSemaphore->getHandle(),
+                                VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT);
+    mAcquireImageSemaphore = nullptr;
+}
+
 // This method will either return VK_SUCCESS or VK_ERROR_*.  Thus, it is appropriate to ASSERT that
 // the return value won't be VK_SUBOPTIMAL_KHR.
 VkResult WindowSurfaceVk::acquireNextSwapchainImage(vk::Context *context)
@@ -2608,13 +2625,6 @@ angle::Result WindowSurfaceVk::getCurrentFramebuffer(
     return angle::Result::Continue;
 }
 
-const vk::Semaphore *WindowSurfaceVk::getAndResetAcquireImageSemaphore()
-{
-    const vk::Semaphore *acquireSemaphore = mAcquireImageSemaphore;
-    mAcquireImageSemaphore                = nullptr;
-    return acquireSemaphore;
-}
-
 angle::Result WindowSurfaceVk::initializeContents(const gl::Context *context,
                                                   GLenum binding,
                                                   const gl::ImageIndex &imageIndex)
@@ -2628,6 +2638,10 @@ angle::Result WindowSurfaceVk::initializeContents(const gl::Context *context,
         // because of dirty-object processing.
         ANGLE_VK_TRACE_EVENT_AND_MARKER(contextVk, "Initialize Swap Image");
         ANGLE_TRY(doDeferredAcquireNextImage(context, false));
+    }
+    if (mAcquireImageSemaphore)
+    {
+        flushAcquireImageSemaphore(context);
     }
 
     ASSERT(mSwapchainImages.size() > 0);

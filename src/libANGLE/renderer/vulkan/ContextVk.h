@@ -1535,9 +1535,12 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     // buffer for the outside render pass.
     VkDeviceSize mTotalBufferToImageCopySize;
 
-    // Semaphores that must be waited on in the next submission.
+    // Semaphores that must be flushed before the current commands. Flushed semaphores will be
+    // waited on in the next submission.
     std::vector<VkSemaphore> mWaitSemaphores;
     std::vector<VkPipelineStageFlags> mWaitSemaphoreStageMasks;
+    // Whether this context has wait semaphores (flushed and unflushed) that must be submitted.
+    bool mHasWaitSemaphoresPendingSubmission;
 
     // Hold information from the last gpu clock sync for future gpu-to-cpu timestamp conversions.
     GpuClockSyncInfo mGpuClockSync;

@@ -121,9 +121,7 @@ class CommandProcessorTask
 
     void initPresent(egl::ContextPriority priority, const VkPresentInfoKHR &presentInfo);
 
-    void initFlushAndQueueSubmit(const std::vector<VkSemaphore> &waitSemaphores,
-                                 const std::vector<VkPipelineStageFlags> &waitSemaphoreStageMasks,
-                                 const VkSemaphore semaphore,
+    void initFlushAndQueueSubmit(const VkSemaphore semaphore,
                                  bool hasProtectedContent,
                                  egl::ContextPriority priority,
                                  SecondaryCommandPools *commandPools,
@@ -147,11 +145,6 @@ class CommandProcessorTask
 
     const QueueSerial &getSubmitQueueSerial() const { return mSubmitQueueSerial; }
     CustomTask getTaskCommand() { return mTask; }
-    std::vector<VkSemaphore> &getWaitSemaphores() { return mWaitSemaphores; }
-    std::vector<VkPipelineStageFlags> &getWaitSemaphoreStageMasks()
-    {
-        return mWaitSemaphoreStageMasks;
-    }
     VkSemaphore getSemaphore() { return mSemaphore; }
     SecondaryCommandBufferList &&getCommandBuffersToReset()
     {
@@ -186,8 +179,6 @@ class CommandProcessorTask
     const RenderPass *mRenderPass;
 
     // Flush data
-    std::vector<VkSemaphore> mWaitSemaphores;
-    std::vector<VkPipelineStageFlags> mWaitSemaphoreStageMasks;
     VkSemaphore mSemaphore;
     SecondaryCommandPools *mCommandPools;
     SecondaryCommandBufferList mCommandBuffersToReset;
@@ -352,8 +343,6 @@ class CommandQueue : angle::NonCopyable
     angle::Result submitCommands(Context *context,
                                  bool hasProtectedContent,
                                  egl::ContextPriority priority,
-                                 const std::vector<VkSemaphore> &waitSemaphores,
-                                 const std::vector<VkPipelineStageFlags> &waitSemaphoreStageMasks,
                                  const VkSemaphore signalSemaphore,
                                  SecondaryCommandBufferList &&commandBuffersToReset,
                                  SecondaryCommandPools *commandPools,
@@ -377,6 +366,9 @@ class CommandQueue : angle::NonCopyable
     // result). It would be nice if we didn't have to expose this for QueryVk::getResult.
     angle::Result checkCompletedCommands(Context *context);
 
+    void flushWaitSemaphores(bool hasProtectedContent,
+                             std::vector<VkSemaphore> &&waitSemaphores,
+                             std::vector<VkPipelineStageFlags> &&waitSemaphoreStageMasks);
     angle::Result flushOutsideRPCommands(Context *context,
                                          bool hasProtectedContent,
                                          OutsideRenderPassCommandBufferHelper **outsideRPCommands);
@@ -412,6 +404,8 @@ class CommandQueue : angle::NonCopyable
 
     struct CommandsState
     {
+        std::vector<VkSemaphore> waitSemaphores;
+        std::vector<VkPipelineStageFlags> waitSemaphoreStageMasks;
         PrimaryCommandBuffer primaryCommands;
         // Keeps a free list of reusable primary command buffers.
         PersistentCommandPool primaryCommandPool;
@@ -486,8 +480,6 @@ class CommandProcessor : public Context
     angle::Result submitCommands(Context *context,
                                  bool hasProtectedContent,
                                  egl::ContextPriority priority,
-                                 const std::vector<VkSemaphore> &waitSemaphores,
-                                 const std::vector<VkPipelineStageFlags> &waitSemaphoreStageMasks,
                                  const VkSemaphore signalSemaphore,
                                  SecondaryCommandBufferList &&commandBuffersToReset,
                                  SecondaryCommandPools *commandPools,
