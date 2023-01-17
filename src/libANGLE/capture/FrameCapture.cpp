@@ -3411,12 +3411,21 @@ void GenerateLinkedProgram(const gl::Context *context,
 
     // Force the attributes to be bound the same way as in the existing program.
     // This can affect attributes that are optimized out in some implementations.
-    if (program->getExecutable().hasLinkedShaderStage(gl::ShaderType::Vertex))
+    for (const sh::ShaderVariable &attrib : program->getState().getProgramInputs())
     {
-        for (const auto &[attrib_name, location] : program->getAttributeBindings())
+        if (gl::IsBuiltInName(attrib.name))
         {
-            Capture(setupCalls, CaptureBindAttribLocation(replayState, true, id, location,
-                                                          attrib_name.c_str()));
+            // Don't try to bind built-in attributes
+            continue;
+        }
+
+        // Separable programs may not have a VS, meaning it may not have attributes.
+        if (program->getExecutable().hasLinkedShaderStage(gl::ShaderType::Vertex))
+        {
+            ASSERT(attrib.location != -1);
+            Capture(setupCalls, CaptureBindAttribLocation(replayState, true, id,
+                                                          static_cast<GLuint>(attrib.location),
+                                                          attrib.name.c_str()));
         }
     }
 
