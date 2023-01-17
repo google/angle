@@ -1324,7 +1324,7 @@ RendererVk::RendererVk()
       mPipelineCacheSizeAtLastSync(0),
       mPipelineCacheInitialized(false),
       mValidationMessageCount(0),
-      mCommandProcessor(this),
+      mCommandProcessor(this, &mCommandQueue),
       mSupportedVulkanPipelineStageMask(0),
       mSupportedVulkanShaderStageMask(0),
       mMemoryAllocationTracker(MemoryAllocationTracker(this))
@@ -1375,10 +1375,8 @@ void RendererVk::onDestroy(vk::Context *context)
     {
         mCommandProcessor.destroy(context);
     }
-    else
-    {
-        mCommandQueue.destroy(context);
-    }
+
+    mCommandQueue.destroy(context);
 
     // mCommandQueue.destroy should already set "last completed" serials to infinite.
     cleanupGarbage();
@@ -3000,13 +2998,11 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     vk::DeviceQueueMap graphicsQueueMap =
         queueFamily.initializeQueueMap(mDevice, enableProtectedContent, 0, queueCount);
 
+    ANGLE_TRY(mCommandQueue.init(displayVk, graphicsQueueMap));
+
     if (isAsyncCommandQueueEnabled())
     {
-        ANGLE_TRY(mCommandProcessor.init(displayVk, graphicsQueueMap));
-    }
-    else
-    {
-        ANGLE_TRY(mCommandQueue.init(displayVk, graphicsQueueMap));
+        ANGLE_TRY(mCommandProcessor.init());
     }
 
 #if defined(ANGLE_SHARED_LIBVULKAN)
@@ -4896,14 +4892,9 @@ angle::Result RendererVk::finishResourceUse(vk::Context *context, const vk::Reso
 {
     if (isAsyncCommandQueueEnabled())
     {
-        ANGLE_TRY(mCommandProcessor.finishResourceUse(context, use, getMaxFenceWaitTimeNs()));
+        ANGLE_TRY(mCommandProcessor.waitForResourceUseToBeSubmitted(context, use));
     }
-    else
-    {
-        ANGLE_TRY(mCommandQueue.finishResourceUse(context, use, getMaxFenceWaitTimeNs()));
-    }
-
-    return angle::Result::Continue;
+    return mCommandQueue.finishResourceUse(context, use, getMaxFenceWaitTimeNs());
 }
 
 angle::Result RendererVk::finishQueueSerial(vk::Context *context, const QueueSerial &queueSerial)
@@ -4911,15 +4902,9 @@ angle::Result RendererVk::finishQueueSerial(vk::Context *context, const QueueSer
     ASSERT(queueSerial.valid());
     if (isAsyncCommandQueueEnabled())
     {
-        ANGLE_TRY(
-            mCommandProcessor.finishQueueSerial(context, queueSerial, getMaxFenceWaitTimeNs()));
+        ANGLE_TRY(mCommandProcessor.waitForQueueSerialToBeSubmitted(context, queueSerial));
     }
-    else
-    {
-        ANGLE_TRY(mCommandQueue.finishQueueSerial(context, queueSerial, getMaxFenceWaitTimeNs()));
-    }
-
-    return angle::Result::Continue;
+    return mCommandQueue.finishQueueSerial(context, queueSerial, getMaxFenceWaitTimeNs());
 }
 
 angle::Result RendererVk::waitForResourceUseToFinishWithUserTimeout(vk::Context *context,
@@ -4930,47 +4915,23 @@ angle::Result RendererVk::waitForResourceUseToFinishWithUserTimeout(vk::Context 
     ANGLE_TRACE_EVENT0("gpu.angle", "RendererVk::waitForResourceUseToFinishWithUserTimeout");
     if (isAsyncCommandQueueEnabled())
     {
-        ANGLE_TRY(mCommandProcessor.waitForResourceUseToFinishWithUserTimeout(context, use, timeout,
-                                                                              result));
+        ANGLE_TRY(mCommandProcessor.waitForResourceUseToBeSubmitted(context, use));
     }
-    else
-    {
-        ANGLE_TRY(
-            mCommandQueue.waitForResourceUseToFinishWithUserTimeout(context, use, timeout, result));
-    }
-
-    return angle::Result::Continue;
+    return mCommandQueue.waitForResourceUseToFinishWithUserTimeout(context, use, timeout, result);
 }
 
 angle::Result RendererVk::finish(vk::Context *context, bool hasProtectedContent)
 {
     if (isAsyncCommandQueueEnabled())
     {
-        ANGLE_TRY(mCommandProcessor.waitIdle(context, getMaxFenceWaitTimeNs()));
+        ANGLE_TRY(mCommandProcessor.waitForAllWorkToBeSubmitted(context));
     }
-    else
-    {
-        ANGLE_TRY(mCommandQueue.waitIdle(context, getMaxFenceWaitTimeNs()));
-    }
-
-    return angle::Result::Continue;
+    return mCommandQueue.waitIdle(context, getMaxFenceWaitTimeNs());
 }
 
 angle::Result RendererVk::checkCompletedCommands(vk::Context *context)
 {
-    // TODO: https://issuetracker.google.com/169788986 - would be better if we could just wait
-    // for the work we need but that requires QueryHelper to use the actual serial for the
-    // query.
-    if (isAsyncCommandQueueEnabled())
-    {
-        ANGLE_TRY(mCommandProcessor.checkCompletedCommands(context));
-    }
-    else
-    {
-        ANGLE_TRY(mCommandQueue.checkCompletedCommands(context));
-    }
-
-    return angle::Result::Continue;
+    return mCommandQueue.checkCompletedCommands(context);
 }
 
 angle::Result RendererVk::flushRenderPassCommands(
