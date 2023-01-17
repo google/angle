@@ -5046,27 +5046,19 @@ angle::Result RendererVk::submitCommands(vk::Context *context,
                                          const vk::Semaphore *signalSemaphore,
                                          const QueueSerial &submitQueueSerial)
 {
-    vk::SecondaryCommandBufferList commandBuffersToReset;
-    mOutsideRenderPassCommandBufferRecycler.releaseCommandBuffersToReset(
-        &commandBuffersToReset.outsideRenderPassCommandBuffers);
-    mRenderPassCommandBufferRecycler.releaseCommandBuffersToReset(
-        &commandBuffersToReset.renderPassCommandBuffers);
-
     ASSERT(signalSemaphore == nullptr || signalSemaphore->valid());
     const VkSemaphore signalVkSemaphore =
         signalSemaphore ? signalSemaphore->getHandle() : VK_NULL_HANDLE;
 
     if (isAsyncCommandQueueEnabled())
     {
-        ANGLE_TRY(mCommandProcessor.enqueueSubmitCommands(
-            context, protectionType, contextPriority, signalVkSemaphore,
-            std::move(commandBuffersToReset), submitQueueSerial));
+        ANGLE_TRY(mCommandProcessor.enqueueSubmitCommands(context, protectionType, contextPriority,
+                                                          signalVkSemaphore, submitQueueSerial));
     }
     else
     {
         ANGLE_TRY(mCommandQueue.submitCommands(context, protectionType, contextPriority,
-                                               signalVkSemaphore, std::move(commandBuffersToReset),
-                                               submitQueueSerial));
+                                               signalVkSemaphore, submitQueueSerial));
     }
 
     ANGLE_TRY(mCommandQueue.postSubmitCheck(context));

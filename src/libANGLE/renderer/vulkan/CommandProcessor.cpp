@@ -44,25 +44,6 @@ void InitializeSubmitInfo(VkSubmitInfo *submitInfo,
         submitInfo->pSignalSemaphores    = &signalSemaphore;
     }
 }
-
-template <typename SecondaryCommandBufferListT>
-void ResetSecondaryCommandBuffers(SecondaryCommandBufferListT *commandBuffers)
-{
-    // Nothing to do when using ANGLE secondary command buffers.
-}
-
-template <>
-[[maybe_unused]] void ResetSecondaryCommandBuffers<std::vector<VulkanSecondaryCommandBuffer>>(
-    std::vector<VulkanSecondaryCommandBuffer> *commandBuffers)
-{
-    // Note: we currently free the command buffers individually, but we could potentially reset the
-    // entire command pool.  https://issuetracker.google.com/issues/166793850
-    for (VulkanSecondaryCommandBuffer &secondary : *commandBuffers)
-    {
-        secondary.destroy();
-    }
-    commandBuffers->clear();
-}
 }  // namespace
 
 // SharedFence implementation
@@ -387,19 +368,16 @@ void CommandProcessorTask::initPresent(egl::ContextPriority priority,
     copyPresentInfo(presentInfo);
 }
 
-void CommandProcessorTask::initFlushAndQueueSubmit(
-    VkSemaphore semaphore,
-    ProtectionType protectionType,
-    egl::ContextPriority priority,
-    SecondaryCommandBufferList &&commandBuffersToReset,
-    const QueueSerial &submitQueueSerial)
+void CommandProcessorTask::initFlushAndQueueSubmit(VkSemaphore semaphore,
+                                                   ProtectionType protectionType,
+                                                   egl::ContextPriority priority,
+                                                   const QueueSerial &submitQueueSerial)
 {
-    mTask                  = CustomTask::FlushAndQueueSubmit;
-    mSemaphore             = semaphore;
-    mCommandBuffersToReset = std::move(commandBuffersToReset);
-    mPriority              = priority;
-    mProtectionType        = protectionType;
-    mSubmitQueueSerial     = submitQueueSerial;
+    mTask              = CustomTask::FlushAndQueueSubmit;
+    mSemaphore         = semaphore;
+    mPriority          = priority;
+    mProtectionType    = protectionType;
+    mSubmitQueueSerial = submitQueueSerial;
 }
 
 void CommandProcessorTask::initOneOffQueueSubmit(VkCommandBuffer commandBufferHandle,
@@ -437,7 +415,6 @@ CommandProcessorTask &CommandProcessorTask::operator=(CommandProcessorTask &&rhs
     std::swap(mOneOffWaitSemaphore, rhs.mOneOffWaitSemaphore);
     std::swap(mOneOffWaitSemaphoreStageMask, rhs.mOneOffWaitSemaphoreStageMask);
     std::swap(mOneOffFence, rhs.mOneOffFence);
-    std::swap(mCommandBuffersToReset, rhs.mCommandBuffersToReset);
     std::swap(mSubmitQueueSerial, rhs.mSubmitQueueSerial);
     std::swap(mPriority, rhs.mPriority);
     std::swap(mProtectionType, rhs.mProtectionType);
@@ -465,7 +442,7 @@ CommandBatch::CommandBatch(CommandBatch &&other) : CommandBatch()
 CommandBatch &CommandBatch::operator=(CommandBatch &&other)
 {
     std::swap(primaryCommands, other.primaryCommands);
-    std::swap(commandBuffersToReset, other.commandBuffersToReset);
+    std::swap(secondaryCommands, other.secondaryCommands);
     std::swap(fence, other.fence);
     std::swap(queueSerial, other.queueSerial);
     std::swap(protectionType, other.protectionType);
@@ -475,14 +452,9 @@ CommandBatch &CommandBatch::operator=(CommandBatch &&other)
 void CommandBatch::destroy(VkDevice device)
 {
     primaryCommands.destroy(device);
+    secondaryCommands.retireCommandBuffers();
     fence.destroy(device);
     protectionType = ProtectionType::InvalidEnum;
-}
-
-void CommandBatch::resetSecondaryCommandBuffers(VkDevice device)
-{
-    ResetSecondaryCommandBuffers(&commandBuffersToReset.outsideRenderPassCommandBuffers);
-    ResetSecondaryCommandBuffers(&commandBuffersToReset.renderPassCommandBuffers);
 }
 
 // CommandProcessor implementation.
@@ -666,9 +638,9 @@ angle::Result CommandProcessor::processTask(CommandProcessorTask *task)
             // End command buffer
 
             // Call submitCommands()
-            ANGLE_TRY(mCommandQueue->submitCommands(
-                this, task->getProtectionType(), task->getPriority(), task->getSemaphore(),
-                std::move(task->getCommandBuffersToReset()), task->getSubmitQueueSerial()));
+            ANGLE_TRY(mCommandQueue->submitCommands(this, task->getProtectionType(),
+                                                    task->getPriority(), task->getSemaphore(),
+                                                    task->getSubmitQueueSerial()));
             mNeedCommandsAndGarbageCleanup = true;
             break;
         }
@@ -818,19 +790,16 @@ void CommandProcessor::present(egl::ContextPriority priority,
     swapchainStatus->isPending = false;
 }
 
-angle::Result CommandProcessor::enqueueSubmitCommands(
-    Context *context,
-    ProtectionType protectionType,
-    egl::ContextPriority priority,
-    VkSemaphore signalSemaphore,
-    SecondaryCommandBufferList &&commandBuffersToReset,
-    const QueueSerial &submitQueueSerial)
+angle::Result CommandProcessor::enqueueSubmitCommands(Context *context,
+                                                      ProtectionType protectionType,
+                                                      egl::ContextPriority priority,
+                                                      VkSemaphore signalSemaphore,
+                                                      const QueueSerial &submitQueueSerial)
 {
     ANGLE_TRY(checkAndPopPendingError(context));
 
     CommandProcessorTask task;
-    task.initFlushAndQueueSubmit(signalSemaphore, protectionType, priority,
-                                 std::move(commandBuffersToReset), submitQueueSerial);
+    task.initFlushAndQueueSubmit(signalSemaphore, protectionType, priority, submitQueueSerial);
 
     ANGLE_TRY(queueCommand(std::move(task)));
 
@@ -1027,6 +996,7 @@ void CommandQueue::destroy(Context *context)
             state.waitSemaphores.clear();
             state.waitSemaphoreStageMasks.clear();
             state.primaryCommands.destroy(renderer->getDevice());
+            state.secondaryCommands.retireCommandBuffers();
         }
     }
 
@@ -1090,7 +1060,7 @@ void CommandQueue::handleDeviceLost(RendererVk *renderer)
             batch.primaryCommands.destroy(device);
         }
 
-        batch.resetSecondaryCommandBuffers(device);
+        batch.secondaryCommands.retireCommandBuffers();
 
         mLastCompletedSerials.setQueueSerial(batch.queueSerial);
         mInFlightCommands.pop();
@@ -1286,7 +1256,8 @@ angle::Result CommandQueue::flushOutsideRPCommands(
     std::lock_guard<std::mutex> lock(mMutex);
     ANGLE_TRY(ensurePrimaryCommandBufferValid(context, protectionType, priority));
     CommandsState &state = mCommandsStateMap[priority][protectionType];
-    return (*outsideRPCommands)->flushToPrimary(context, &state.primaryCommands);
+    return (*outsideRPCommands)
+        ->flushToPrimary(context, &state.primaryCommands, &state.secondaryCommands);
 }
 
 angle::Result CommandQueue::flushRenderPassCommands(
@@ -1299,14 +1270,14 @@ angle::Result CommandQueue::flushRenderPassCommands(
     std::lock_guard<std::mutex> lock(mMutex);
     ANGLE_TRY(ensurePrimaryCommandBufferValid(context, protectionType, priority));
     CommandsState &state = mCommandsStateMap[priority][protectionType];
-    return (*renderPassCommands)->flushToPrimary(context, &state.primaryCommands, &renderPass);
+    return (*renderPassCommands)
+        ->flushToPrimary(context, &state.primaryCommands, &renderPass, &state.secondaryCommands);
 }
 
 angle::Result CommandQueue::submitCommands(Context *context,
                                            ProtectionType protectionType,
                                            egl::ContextPriority priority,
                                            VkSemaphore signalSemaphore,
-                                           SecondaryCommandBufferList &&commandBuffersToReset,
                                            const QueueSerial &submitQueueSerial)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "CommandQueue::submitCommands");
@@ -1320,13 +1291,16 @@ angle::Result CommandQueue::submitCommands(Context *context,
     DeviceScoped<CommandBatch> scopedBatch(device);
     CommandBatch &batch = scopedBatch.get();
 
-    batch.queueSerial           = submitQueueSerial;
-    batch.protectionType        = protectionType;
-    batch.commandBuffersToReset = std::move(commandBuffersToReset);
+    batch.queueSerial    = submitQueueSerial;
+    batch.protectionType = protectionType;
 
     CommandsState &state = mCommandsStateMap[priority][protectionType];
     // Store the primary CommandBuffer in the in-flight list.
     batch.primaryCommands = std::move(state.primaryCommands);
+
+    // Store secondary Command Buffers.
+    batch.secondaryCommands = std::move(state.secondaryCommands);
+    ASSERT(batch.primaryCommands.valid() || batch.secondaryCommands.empty());
 
     // Move to local copy of vectors since queueSubmit will release the lock.
     std::vector<VkSemaphore> waitSemaphores = std::move(state.waitSemaphores);
@@ -1573,8 +1547,6 @@ angle::Result CommandQueue::finishOneCommandBatchAndCleanup(Context *context, ui
 angle::Result CommandQueue::retireFinishedCommandsLocked(Context *context)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "retireFinishedCommandsLocked");
-    RendererVk *renderer = context->getRenderer();
-    VkDevice device      = renderer->getDevice();
 
     while (!mFinishedCommandBatches.empty())
     {
@@ -1591,7 +1563,7 @@ angle::Result CommandQueue::retireFinishedCommandsLocked(Context *context)
             ANGLE_TRY(commandPool.collect(context, std::move(batch.primaryCommands)));
         }
 
-        batch.resetSecondaryCommandBuffers(device);
+        batch.secondaryCommands.retireCommandBuffers();
 
         mFinishedCommandBatches.pop();
     }
