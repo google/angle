@@ -605,6 +605,16 @@ void OffscreenSurfaceVk::destroy(const egl::Display *display)
     SurfaceVk::destroy(display);
 }
 
+egl::Error OffscreenSurfaceVk::unMakeCurrent(const gl::Context *context)
+{
+    ContextVk *contextVk = vk::GetImpl(context);
+    DisplayVk *displayVk = vk::GetImpl(context->getDisplay());
+
+    angle::Result result = contextVk->onSurfaceUnMakeCurrent(this);
+
+    return angle::ToEGL(result, displayVk, EGL_BAD_CURRENT_SURFACE);
+}
+
 egl::Error OffscreenSurfaceVk::swap(const gl::Context *context)
 {
     return egl::NoError();
@@ -946,6 +956,16 @@ egl::Error WindowSurfaceVk::initialize(const egl::Display *display)
     {
         return angle::ToEGL(result, displayVk, EGL_BAD_SURFACE);
     }
+}
+
+egl::Error WindowSurfaceVk::unMakeCurrent(const gl::Context *context)
+{
+    ContextVk *contextVk = vk::GetImpl(context);
+    DisplayVk *displayVk = vk::GetImpl(context->getDisplay());
+
+    angle::Result result = contextVk->onSurfaceUnMakeCurrent(this);
+
+    return angle::ToEGL(result, displayVk, EGL_BAD_CURRENT_SURFACE);
 }
 
 angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk)

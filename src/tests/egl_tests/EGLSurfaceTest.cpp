@@ -313,6 +313,7 @@ class EGLSurfaceTest : public ANGLETest<>
     }
 
     void runWaitSemaphoreTest(bool useSecondContext);
+    void runDestroyNotCurrentSurfaceTest(bool testWindowsSurface);
 
     void drawQuadThenTearDown();
 
@@ -2340,6 +2341,82 @@ TEST_P(EGLSurfaceTest, WaitSemaphoreAddedAfterCommands)
 TEST_P(EGLSurfaceTest, CommandsSubmittedWithoutWaitSemaphore)
 {
     runWaitSemaphoreTest(true);
+}
+
+void EGLSurfaceTest::runDestroyNotCurrentSurfaceTest(bool testWindowsSurface)
+{
+    initializeDisplay();
+
+    // Initialize an RGBA8 window and pbuffer surface
+    constexpr EGLint kSurfaceAttributes[] = {EGL_RED_SIZE,     8,
+                                             EGL_GREEN_SIZE,   8,
+                                             EGL_BLUE_SIZE,    8,
+                                             EGL_ALPHA_SIZE,   8,
+                                             EGL_SURFACE_TYPE, EGL_WINDOW_BIT | EGL_PBUFFER_BIT,
+                                             EGL_NONE};
+
+    EGLint configCount      = 0;
+    EGLConfig surfaceConfig = nullptr;
+    ASSERT_EGL_TRUE(eglChooseConfig(mDisplay, kSurfaceAttributes, &surfaceConfig, 1, &configCount));
+    ASSERT_NE(configCount, 0);
+    ASSERT_NE(surfaceConfig, nullptr);
+
+    initializeSurface(surfaceConfig);
+    initializeMainContext();
+    ASSERT_NE(mWindowSurface, EGL_NO_SURFACE);
+    ASSERT_NE(mPbufferSurface, EGL_NO_SURFACE);
+
+    EGLSurface &testSurface  = testWindowsSurface ? mWindowSurface : mPbufferSurface;
+    EGLSurface &otherSurface = testWindowsSurface ? mPbufferSurface : mWindowSurface;
+
+    eglMakeCurrent(mDisplay, testSurface, testSurface, mContext);
+    ASSERT_EGL_SUCCESS();
+
+    // Start RenderPass in the testSurface
+    glEnable(GL_SCISSOR_TEST);
+    glScissor(0, 0, 4, 4);
+    glClearColor(0.5f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glDisable(GL_SCISSOR_TEST);
+    ASSERT_GL_NO_ERROR();
+
+    // Make other surface current keeping the context.
+    // If bug present, the context may have unflushed work, related to the testSurface.
+    eglMakeCurrent(mDisplay, otherSurface, otherSurface, mContext);
+    ASSERT_EGL_SUCCESS();
+
+    if (testWindowsSurface)
+    {
+        // This may flush Window Surface RenderPass
+        glEnable(GL_SCISSOR_TEST);
+        glScissor(0, 0, 4, 4);
+        glClearColor(0.5f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        glDisable(GL_SCISSOR_TEST);
+        ASSERT_GL_NO_ERROR();
+    }
+
+    // Destroy the surface
+    eglDestroySurface(mDisplay, testSurface);
+    testSurface = EGL_NO_SURFACE;
+
+    // This will submit all work (if bug present - include work related to the deleted testSurface).
+    eglMakeCurrent(mDisplay, otherSurface, otherSurface, mContext);
+    ASSERT_EGL_SUCCESS();
+}
+
+// Test that there is no crash because of the bug when not current PBuffer Surface destroyed, while
+// there are still unflushed work in the Context.
+TEST_P(EGLSurfaceTest, DestroyNotCurrentPbufferSurface)
+{
+    runDestroyNotCurrentSurfaceTest(false);
+}
+
+// Test that there is no crash because of the bug when not current Window Surface destroyed, while
+// there are still unflushed work in the Context.
+TEST_P(EGLSurfaceTest, DestroyNotCurrentWindowSurface)
+{
+    runDestroyNotCurrentSurfaceTest(true);
 }
 
 }  // anonymous namespace

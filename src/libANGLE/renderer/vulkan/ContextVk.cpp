@@ -616,6 +616,8 @@ constexpr angle::PackedEnumMap<RenderPassClosureReason, const char *> kRenderPas
     {RenderPassClosureReason::GLFinish, "Render pass closed due to glFinish()"},
     {RenderPassClosureReason::EGLSwapBuffers, "Render pass closed due to eglSwapBuffers()"},
     {RenderPassClosureReason::EGLWaitClient, "Render pass closed due to eglWaitClient()"},
+    {RenderPassClosureReason::SurfaceUnMakeCurrent,
+     "Render pass closed due to onSurfaceUnMakeCurrent()"},
     {RenderPassClosureReason::FramebufferBindingChange,
      "Render pass closed due to framebuffer binding change"},
     {RenderPassClosureReason::FramebufferChange, "Render pass closed due to framebuffer change"},
@@ -5639,6 +5641,57 @@ angle::Result ContextVk::onUnMakeCurrent(const gl::Context *context)
     {
         releaseQueueSerialIndex();
     }
+    return angle::Result::Continue;
+}
+
+angle::Result ContextVk::onSurfaceUnMakeCurrent(WindowSurfaceVk *surface)
+{
+    // It is possible to destroy "WindowSurfaceVk" while not all rendering commands are submitted:
+    // 1. Make "WindowSurfaceVk" current.
+    // 2. Draw something.
+    // 3. Make other Surface current (same Context).
+    // 4. (optional) Draw something.
+    // 5. Delete "WindowSurfaceVk".
+    // 6. UnMake the Context from current.
+    // Flush all command to the GPU while still having access to the Context.
+
+    // The above "onUnMakeCurrent()" may have already been called.
+    if (mCurrentQueueSerialIndex != kInvalidQueueSerialIndex)
+    {
+        // May be nullptr if only used as a readSurface.
+        ASSERT(mCurrentWindowSurface == surface || mCurrentWindowSurface == nullptr);
+        ANGLE_TRY(flushImpl(nullptr, RenderPassClosureReason::SurfaceUnMakeCurrent));
+        mCurrentWindowSurface = nullptr;
+    }
+
+    ASSERT(mCurrentWindowSurface == nullptr);
+    ASSERT(mOutsideRenderPassCommands->empty() && mRenderPassCommands->empty());
+    ASSERT(!mHasWaitSemaphoresPendingSubmission);
+    ASSERT(mLastSubmittedQueueSerial == mLastFlushedQueueSerial);
+    return angle::Result::Continue;
+}
+
+angle::Result ContextVk::onSurfaceUnMakeCurrent(OffscreenSurfaceVk *surface)
+{
+    // It is possible to destroy "OffscreenSurfaceVk" while RenderPass is still opened:
+    // 1. Make "OffscreenSurfaceVk" current.
+    // 2. Draw something with RenderPass.
+    // 3. Make other Surface current (same Context)
+    // 4. Delete "OffscreenSurfaceVk".
+    // 5. UnMake the Context from current.
+    // End RenderPass to avoid crash in the "RenderPassCommandBufferHelper::endRenderPass()".
+    // Flush commands unconditionally even if surface is not used in the RenderPass to fix possible
+    // problems related to other accesses. "flushImpl()" is not required because
+    // "OffscreenSurfaceVk" uses GC.
+
+    // The above "onUnMakeCurrent()" may have already been called.
+    if (mCurrentQueueSerialIndex != kInvalidQueueSerialIndex)
+    {
+        ANGLE_TRY(flushCommandsAndEndRenderPass(RenderPassClosureReason::SurfaceUnMakeCurrent));
+    }
+
+    ASSERT(mOutsideRenderPassCommands->empty() && mRenderPassCommands->empty());
+    ASSERT(!mHasWaitSemaphoresPendingSubmission);
     return angle::Result::Continue;
 }
 
