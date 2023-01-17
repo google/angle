@@ -4700,7 +4700,7 @@ FramebufferHelper::FramebufferHelper(FramebufferHelper &&other) : Resource(std::
 
 FramebufferHelper &FramebufferHelper::operator=(FramebufferHelper &&other)
 {
-    std::swap(mUse, other.mUse);
+    Resource::operator=(std::move(other));
     std::swap(mFramebuffer, other.mFramebuffer);
     return *this;
 }

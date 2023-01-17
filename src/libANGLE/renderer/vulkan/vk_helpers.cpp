@@ -3794,7 +3794,7 @@ DynamicallyGrowingPool<Pool>::PoolResource::PoolResource(Pool &&poolIn, uint32_t
 
 template <typename Pool>
 DynamicallyGrowingPool<Pool>::PoolResource::PoolResource(PoolResource &&other)
-    : pool(std::move(other.pool)), freedCount(other.freedCount)
+    : Resource(std::move(other)), pool(std::move(other.pool)), freedCount(other.freedCount)
 {}
 
 // DynamicQueryPool implementation
@@ -3901,20 +3901,24 @@ QueryHelper::QueryHelper(QueryHelper &&rhs)
       mDynamicQueryPool(rhs.mDynamicQueryPool),
       mQueryPoolIndex(rhs.mQueryPoolIndex),
       mQuery(rhs.mQuery),
-      mQueryCount(rhs.mQueryCount)
+      mQueryCount(rhs.mQueryCount),
+      mStatus(rhs.mStatus)
 {
     rhs.mDynamicQueryPool = nullptr;
     rhs.mQueryPoolIndex   = 0;
     rhs.mQuery            = 0;
     rhs.mQueryCount       = 0;
+    rhs.mStatus           = QueryStatus::Inactive;
 }
 
 QueryHelper &QueryHelper::operator=(QueryHelper &&rhs)
 {
+    Resource::operator=(std::move(rhs));
     std::swap(mDynamicQueryPool, rhs.mDynamicQueryPool);
     std::swap(mQueryPoolIndex, rhs.mQueryPoolIndex);
     std::swap(mQuery, rhs.mQuery);
     std::swap(mQueryCount, rhs.mQueryCount);
+    std::swap(mStatus, rhs.mStatus);
     return *this;
 }
 
