@@ -689,7 +689,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     // Keeping track of the buffer copy size. Used to determine when to submit the outside command
     // buffer.
-    angle::Result onCopyUpdate(VkDeviceSize size);
+    angle::Result onCopyUpdate(VkDeviceSize size, bool *commandBufferWasFlushedOut);
 
     // Implementation of MultisampleTextureInitializer
     angle::Result initializeMultisampleTextureToBlack(const gl::Context *context,

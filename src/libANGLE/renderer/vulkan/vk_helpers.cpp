@@ -8280,12 +8280,19 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
                     commandBuffer->copyBufferToImage(currentBuffer->getBuffer().getHandle(), mImage,
                                                      getCurrentLayout(contextVk), 1, copyRegion);
                 }
-                ANGLE_TRY(contextVk->onCopyUpdate(currentBuffer->getSize()));
+                bool commandBufferWasFlushed = false;
+                ANGLE_TRY(
+                    contextVk->onCopyUpdate(currentBuffer->getSize(), &commandBufferWasFlushed));
                 onWrite(updateMipLevelGL, 1, updateBaseLayer, updateLayerCount,
                         copyRegion->imageSubresource.aspectMask);
 
                 // Update total staging buffer size
                 mTotalStagedBufferUpdateSize -= bufferUpdate.bufferHelper->getSize();
+
+                if (commandBufferWasFlushed)
+                {
+                    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer({}, &commandBuffer));
+                }
             }
             else
             {

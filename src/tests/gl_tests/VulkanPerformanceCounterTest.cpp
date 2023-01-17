@@ -7196,6 +7196,55 @@ TEST_P(VulkanPerformanceCounterTest, FBOChangeAndBackDoesNotBreakRenderPass)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 }
 
+class VulkanPerformanceCounterTest_AsyncCQ : public VulkanPerformanceCounterTest
+{};
+
+// Tests that submitting the outside command buffer during flushing staged updates and
+// "asyncCommandQueue" enabled, properly updates old command buffer with the new one.
+TEST_P(VulkanPerformanceCounterTest_AsyncCQ, SubmittingOutsideCommandBufferAssertIsOpen)
+{
+    uint64_t submitCommandsCount = getPerfCounters().vkQueueSubmitCallsTotal;
+
+    ANGLE_GL_PROGRAM(textureProgram, essl1_shaders::vs::Texture2D(),
+                     essl1_shaders::fs::Texture2D());
+    glUseProgram(textureProgram);
+    GLint textureLoc = glGetUniformLocation(textureProgram, essl1_shaders::Texture2DUniform());
+    ASSERT_NE(-1, textureLoc);
+    glUniform1i(textureLoc, 0);
+
+    // This loop shouls update texture with multiple staged updates. When kMaxBufferToImageCopySize
+    // threshold reached, outside command buffer will be submitted in the middle of staged updates
+    // flushing. If "asyncCommandQueue" enabled and bug present, old command buffer will not be
+    // replaced by a new one, casing "ASSERT(mIsOpen)" or UB in release.
+    constexpr GLsizei kMaxOutsideRPCommandsSubmitCount = 10;
+    constexpr GLsizei kTexDim                          = 1024;
+    constexpr GLint kMaxSubOffset                      = 10;
+    std::vector<GLColor> kInitialData(kTexDim * kTexDim, GLColor::green);
+    while (getPerfCounters().vkQueueSubmitCallsTotal <
+           submitCommandsCount + kMaxOutsideRPCommandsSubmitCount)
+    {
+        GLTexture newTexture;
+        glBindTexture(GL_TEXTURE_2D, newTexture);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        // Provide data for the texture without previously defining a storage.
+        // This should prevent immediate staged update flushing.
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kTexDim, kTexDim, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     kInitialData.data());
+        // Append staged updates...
+        for (GLsizei offset = 1; offset <= kMaxSubOffset; ++offset)
+        {
+            glTexSubImage2D(GL_TEXTURE_2D, 0, offset, offset, kTexDim - offset, kTexDim - offset,
+                            GL_RGBA, GL_UNSIGNED_BYTE, kInitialData.data());
+        }
+        // This will flush multiple staged updates
+        drawQuad(textureProgram, essl1_shaders::PositionAttrib(), 0.5f);
+        ASSERT_GL_NO_ERROR();
+    }
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(VulkanPerformanceCounterTest);
 ANGLE_INSTANTIATE_TEST(
     VulkanPerformanceCounterTest,
@@ -7217,5 +7266,10 @@ ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest_MSAA, ES3_VULKAN(), ES3_VULK
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(VulkanPerformanceCounterTest_SingleBuffer);
 ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest_SingleBuffer, ES3_VULKAN());
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(VulkanPerformanceCounterTest_AsyncCQ);
+ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest_AsyncCQ,
+                       ES3_VULKAN(),
+                       ES3_VULKAN().enable(Feature::AsyncCommandQueue));
 
 }  // anonymous namespace

@@ -3406,15 +3406,17 @@ angle::Result ContextVk::submitCommands(const vk::Semaphore *signalSemaphore, Su
     return angle::Result::Continue;
 }
 
-angle::Result ContextVk::onCopyUpdate(VkDeviceSize size)
+angle::Result ContextVk::onCopyUpdate(VkDeviceSize size, bool *commandBufferWasFlushedOut)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "ContextVk::onCopyUpdate");
+    *commandBufferWasFlushedOut = false;
 
     mTotalBufferToImageCopySize += size;
     // If the copy size exceeds the specified threshold, submit the outside command buffer.
     if (mTotalBufferToImageCopySize >= kMaxBufferToImageCopySize)
     {
         ANGLE_TRY(flushAndSubmitOutsideRenderPassCommands());
+        *commandBufferWasFlushedOut = true;
     }
     return angle::Result::Continue;
 }
