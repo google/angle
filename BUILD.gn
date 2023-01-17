@@ -1132,7 +1132,7 @@ angle_source_set("angle_gl_enum_utils") {
 
 if (angle_use_wayland) {
   config("angle_wayland_config") {
-    if (use_system_libwayland) {
+    if ("$wayland_gn_dir" == "") {
       libs = [
         "wayland-client",
         "wayland-egl",
@@ -1148,7 +1148,7 @@ if (angle_use_wayland) {
   group("angle_wayland") {
     public_configs = [ ":angle_wayland_config" ]
 
-    if (!use_system_libwayland) {
+    if ("$wayland_gn_dir" != "") {
       # Use third-party targets
       public_deps = [
         "$wayland_gn_dir:wayland_client",
