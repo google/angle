@@ -530,16 +530,18 @@ class RendererVk : angle::NonCopyable
         }
     }
 
-    angle::Result ensureNoPendingWork(vk::Context *context)
+    angle::Result waitForQueueSerialToBeSubmitted(vk::Context *context,
+                                                  const QueueSerial &queueSerial)
     {
+        // This is only needed for async submission code path. For immediate submission, it is a nop
+        // since everything is submitted immediately.
         if (isAsyncCommandQueueEnabled())
         {
-            return mCommandProcessor.ensureNoPendingWork(context);
+            return mCommandProcessor.waitForQueueSerialToBeSubmitted(context, queueSerial);
         }
-        else
-        {
-            return mCommandQueue.ensureNoPendingWork(context);
-        }
+        // This queueSerial must have been submitted.
+        ASSERT(!mCommandQueue.hasUnsubmittedUse(vk::ResourceUse(queueSerial)));
+        return angle::Result::Continue;
     }
 
     angle::VulkanPerfCounters getCommandQueuePerfCounters()

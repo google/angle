@@ -924,11 +924,6 @@ angle::Result CommandProcessor::flushRenderPassCommands(
     return angle::Result::Continue;
 }
 
-angle::Result CommandProcessor::ensureNoPendingWork(Context *context)
-{
-    return waitForWorkComplete(context);
-}
-
 bool CommandProcessor::hasUnsubmittedUse(const vk::ResourceUse &use) const
 {
     const Serials &serials = use.getSerials();
@@ -943,17 +938,32 @@ bool CommandProcessor::hasUnsubmittedUse(const vk::ResourceUse &use) const
 }
 
 // ThreadSafeCommandProcessor implementation.
+angle::Result ThreadSafeCommandProcessor::waitForQueueSerialToBeSubmitted(
+    vk::Context *context,
+    const QueueSerial &queueSerial)
+{
+    const ResourceUse use(queueSerial);
+    return waitForResourceUseToBeSubmitted(context, use);
+}
+
+angle::Result ThreadSafeCommandProcessor::waitForResourceUseToBeSubmitted(vk::Context *context,
+                                                                          const ResourceUse &use)
+{
+    if (mCommandQueue.hasUnsubmittedUse(use))
+    {
+        std::unique_lock<std::mutex> lock(mMutex);
+        // TODO: https://issuetracker.google.com/261098465 stop wait when use has been submitted.
+        ANGLE_TRY(waitForWorkComplete(context));
+    }
+    return angle::Result::Continue;
+}
+
 angle::Result ThreadSafeCommandProcessor::finishResourceUse(Context *context,
                                                             const ResourceUse &use,
                                                             uint64_t timeout)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "CommandProcessor::finishResourceUse");
-    {
-        std::unique_lock<std::mutex> lock(mMutex);
-        // TODO: Only call waitForWorkComplete if mUse still have inflight commands in processor
-        // that references this queueSerial. https://issuetracker.google.com/261098465
-        ANGLE_TRY(waitForWorkComplete(context));
-    }
+    ANGLE_TRY(waitForResourceUseToBeSubmitted(context, use));
     return mCommandQueue.finishResourceUse(context, use, timeout);
 }
 
