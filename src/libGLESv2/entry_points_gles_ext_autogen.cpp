@@ -4895,7 +4895,7 @@ void GL_APIENTRY GL_EGLImageTargetTexStorageEXT(GLenum target,
     if (context)
     {
         egl::ImageID imagePacked = PackParam<egl::ImageID>(image);
-        SCOPED_GLOBAL_AND_SHARE_CONTEXT_LOCK(context);
+        SCOPED_EGL_IMAGE_SHARE_CONTEXT_LOCK(context, imagePacked);
         bool isCallValid = (context->skipValidation() ||
                             (ValidatePixelLocalStorageInactive(
                                  context, angle::EntryPoint::GLEGLImageTargetTexStorageEXT) &&
@@ -4928,7 +4928,7 @@ void GL_APIENTRY GL_EGLImageTargetTextureStorageEXT(GLuint texture,
     if (context)
     {
         egl::ImageID imagePacked = PackParam<egl::ImageID>(image);
-        SCOPED_GLOBAL_AND_SHARE_CONTEXT_LOCK(context);
+        SCOPED_EGL_IMAGE_SHARE_CONTEXT_LOCK(context, imagePacked);
         bool isCallValid = (context->skipValidation() ||
                             (ValidatePixelLocalStorageInactive(
                                  context, angle::EntryPoint::GLEGLImageTargetTextureStorageEXT) &&
@@ -10423,7 +10423,7 @@ void GL_APIENTRY GL_EGLImageTargetRenderbufferStorageOES(GLenum target, GLeglIma
     if (context)
     {
         egl::ImageID imagePacked = PackParam<egl::ImageID>(image);
-        SCOPED_GLOBAL_AND_SHARE_CONTEXT_LOCK(context);
+        SCOPED_EGL_IMAGE_SHARE_CONTEXT_LOCK(context, imagePacked);
         bool isCallValid =
             (context->skipValidation() ||
              (ValidatePixelLocalStorageInactive(
@@ -10456,7 +10456,7 @@ void GL_APIENTRY GL_EGLImageTargetTexture2DOES(GLenum target, GLeglImageOES imag
     {
         TextureType targetPacked = PackParam<TextureType>(target);
         egl::ImageID imagePacked = PackParam<egl::ImageID>(image);
-        SCOPED_GLOBAL_AND_SHARE_CONTEXT_LOCK(context);
+        SCOPED_EGL_IMAGE_SHARE_CONTEXT_LOCK(context, imagePacked);
         bool isCallValid = (context->skipValidation() ||
                             (ValidatePixelLocalStorageInactive(
                                  context, angle::EntryPoint::GLEGLImageTargetTexture2DOES) &&

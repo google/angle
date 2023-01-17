@@ -584,9 +584,24 @@ EGLBoolean QuerySurface(Thread *thread,
 
     ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglQuerySurface",
                          GetDisplayIfValid(display), EGL_FALSE);
-    ANGLE_EGL_TRY_RETURN(
-        thread, QuerySurfaceAttrib(display, thread->getContext(), eglSurface, attribute, value),
-        "eglQuerySurface", GetSurfaceIfValid(display, surfaceID), EGL_FALSE);
+
+    // Update GetContextLock_QuerySurface() switch accordingly to take a ContextMutex lock for
+    // attributes that require current Context.
+    const gl::Context *context;
+    switch (attribute)
+    {
+        // EGL_BUFFER_AGE_EXT uses Context, so lock was taken in GetContextLock_QuerySurface().
+        case EGL_BUFFER_AGE_EXT:
+            context = thread->getContext();
+            break;
+        // Other attributes are not using Context, pass nullptr to be explicit about that.
+        default:
+            context = nullptr;
+            break;
+    }
+
+    ANGLE_EGL_TRY_RETURN(thread, QuerySurfaceAttrib(display, context, eglSurface, attribute, value),
+                         "eglQuerySurface", GetSurfaceIfValid(display, surfaceID), EGL_FALSE);
 
     thread->setSuccess();
     return EGL_TRUE;

@@ -11,7 +11,6 @@
 #include "common/debug.h"
 #include "common/platform.h"
 #include "common/system_utils.h"
-#include "libANGLE/Display.h"
 #include "libANGLE/ErrorStrings.h"
 #include "libANGLE/Thread.h"
 #include "libGLESv2/resource.h"

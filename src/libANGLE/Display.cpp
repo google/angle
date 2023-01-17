@@ -91,6 +91,8 @@ namespace egl
 
 namespace
 {
+// Use standard mutex for now.
+using ContextMutexType = std::mutex;
 
 struct TLSData
 {
@@ -922,6 +924,7 @@ Display::Display(EGLenum platform, EGLNativeDisplayType displayId, Device *eglDe
       mDevice(eglDevice),
       mSurface(nullptr),
       mPlatform(platform),
+      mManagersMutex(nullptr),
       mTextureManager(nullptr),
       mSemaphoreManager(nullptr),
       mBlobCache(gl::kDefaultMaxProgramCacheMemoryBytes),
@@ -1132,6 +1135,16 @@ Error Display::initialize()
     mSingleThreadPool = angle::WorkerThreadPool::Create(1, ANGLEPlatformCurrent());
     mMultiThreadPool  = angle::WorkerThreadPool::Create(0, ANGLEPlatformCurrent());
 
+    if (kIsSharedContextMutexEnabled)
+    {
+        ASSERT(!mSharedContextMutexManager);
+        mSharedContextMutexManager.reset(new SharedContextMutexManager<ContextMutexType>());
+
+        ASSERT(mManagersMutex == nullptr);
+        mManagersMutex = mSharedContextMutexManager->create();
+        mManagersMutex->addRef();
+    }
+
     mInitialized = true;
 
     return NoError();
@@ -1143,6 +1156,10 @@ Error Display::destroyInvalidEglObjects()
     while (!mInvalidContextMap.empty())
     {
         gl::Context *context = mInvalidContextMap.begin()->second;
+        // eglReleaseThread() may call to this method when there are still Contexts, that may
+        // potentially acces shared state of the "context".
+        // Need AddRefLock because there may be ContextMutex destruction.
+        ScopedContextMutexAddRefLock lock(context->getContextMutex());
         context->setIsDestroyed();
         ANGLE_TRY(releaseContextImpl(context, &mInvalidContextMap));
     }
@@ -1218,7 +1235,7 @@ Error Display::terminate(Thread *thread, TerminateReason terminateReason)
     size_t contextSetSizeBeforeInvalidation = mState.contextMap.size() + mInvalidContextMap.size();
 
     // If app called eglTerminate and no active threads remain,
-    // force realease any context that is still current.
+    // force release any context that is still current.
     ContextMap contextsStillCurrent = {};
     for (auto context : mState.contextMap)
     {
@@ -1264,6 +1281,14 @@ Error Display::terminate(Thread *thread, TerminateReason terminateReason)
     // it.
     ASSERT(mGlobalTextureShareGroupUsers == 0 && mTextureManager == nullptr);
     ASSERT(mGlobalSemaphoreShareGroupUsers == 0 && mSemaphoreManager == nullptr);
+
+    mSharedContextMutexManager.reset();
+
+    if (mManagersMutex != nullptr)
+    {
+        mManagersMutex->release();
+        mManagersMutex = nullptr;
+    }
 
     // Clean up all invalid objects
     ANGLE_TRY(destroyInvalidEglObjects());
@@ -1580,6 +1605,24 @@ Error Display::createContext(const Config *configuration,
         shareSemaphores = mSemaphoreManager;
     }
 
+    ContextMutex *sharedContextMutex = nullptr;
+    if (kIsSharedContextMutexEnabled)
+    {
+        if (shareContext != nullptr)
+        {
+            ASSERT(shareContext->isSharedContextMutexActive());
+            sharedContextMutex = shareContext->getContextMutex();
+        }
+        else if (shareTextures != nullptr || shareSemaphores != nullptr)
+        {
+            sharedContextMutex = mManagersMutex;
+        }
+        // When using shareTextures/Semaphores all Contexts in the Group must use mManagersMutex.
+        ASSERT(mManagersMutex != nullptr);
+        ASSERT((shareTextures == nullptr && shareSemaphores == nullptr) ||
+               sharedContextMutex == mManagersMutex);
+    }
+
     gl::MemoryProgramCache *programCachePointer = &mMemoryProgramCache;
     // Check context creation attributes to see if we are using EGL_ANGLE_program_cache_control.
     // If not, keep caching enabled for EGL_ANDROID_blob_cache, which can have its callbacks set
@@ -1603,9 +1646,10 @@ Error Display::createContext(const Config *configuration,
         shaderCachePointer = nullptr;
     }
 
-    gl::Context *context = new gl::Context(
-        this, configuration, shareContext, shareTextures, shareSemaphores, programCachePointer,
-        shaderCachePointer, clientType, attribs, mDisplayExtensions, GetClientExtensions());
+    gl::Context *context =
+        new gl::Context(this, configuration, shareContext, shareTextures, shareSemaphores,
+                        sharedContextMutex, programCachePointer, shaderCachePointer, clientType,
+                        attribs, mDisplayExtensions, GetClientExtensions());
     Error error = context->initialize();
     if (error.isError())
     {
@@ -1668,6 +1712,9 @@ Error Display::makeCurrent(Thread *thread,
     bool contextChanged = context != previousContext;
     if (previousContext != nullptr && contextChanged)
     {
+        // Need AddRefLock because there may be ContextMutex destruction.
+        ScopedContextMutexAddRefLock lock(previousContext->getContextMutex());
+
         previousContext->release();
         thread->setCurrent(nullptr);
 
@@ -1681,16 +1728,22 @@ Error Display::makeCurrent(Thread *thread,
         ANGLE_TRY(error);
     }
 
-    thread->setCurrent(context);
-
-    ANGLE_TRY(mImplementation->makeCurrent(this, drawSurface, readSurface, context));
-
-    if (context != nullptr)
     {
-        ANGLE_TRY(context->makeCurrent(this, drawSurface, readSurface));
-        if (contextChanged)
+        ASSERT(context == nullptr || context->getContextMutex() != nullptr);
+        ScopedContextMutexLock lock(context != nullptr ? context->getContextMutex() : nullptr,
+                                    kContextMutexMayBeNull);
+
+        thread->setCurrent(context);
+
+        ANGLE_TRY(mImplementation->makeCurrent(this, drawSurface, readSurface, context));
+
+        if (context != nullptr)
         {
-            context->addRef();
+            ANGLE_TRY(context->makeCurrent(this, drawSurface, readSurface));
+            if (contextChanged)
+            {
+                context->addRef();
+            }
         }
     }
 
@@ -1763,7 +1816,11 @@ void Display::destroyImageImpl(Image *image, ImageMap *images)
     auto iter = images->find(image->id().value);
     ASSERT(iter != images->end());
     mImageHandleAllocator.release(image->id().value);
-    iter->second->release(this);
+    {
+        // Need AddRefLock because there may be ContextMutex destruction.
+        ScopedContextMutexAddRefLock lock(image->getSharedContextMutex(), kContextMutexMayBeNull);
+        iter->second->release(this);
+    }
     images->erase(iter);
 }
 
@@ -1843,6 +1900,8 @@ Error Display::destroyContext(Thread *thread, gl::Context *context)
     // make sure the native context is current.
     if (context->isExternal())
     {
+        // Need AddRefLock because there may be ContextMutex destruction.
+        ScopedContextMutexAddRefLock lock(context->getContextMutex());
         ANGLE_TRY(releaseContext(context, thread));
     }
     else

@@ -77,6 +77,37 @@ egl::ShareGroup *AllocateOrGetShareGroup(egl::Display *display, const gl::Contex
     }
 }
 
+egl::ContextMutex *TryAllocateOrUseSharedContextMutex(egl::Display *display,
+                                                      egl::ContextMutex *sharedContextMutex)
+{
+    if (egl::kIsSharedContextMutexEnabled)
+    {
+        if (sharedContextMutex == nullptr)
+        {
+            ASSERT(display->getSharedContextMutexManager() != nullptr);
+            sharedContextMutex = display->getSharedContextMutexManager()->create();
+        }
+        sharedContextMutex->addRef();
+    }
+    else
+    {
+        ASSERT(sharedContextMutex == nullptr);
+    }
+    return sharedContextMutex;
+}
+
+egl::SingleContextMutex *TryAllocateSingleContextMutex(egl::ContextMutex *sharedContextMutex)
+{
+    egl::SingleContextMutex *singleContextMutex = nullptr;
+    if (!egl::kIsSharedContextMutexEnabled || sharedContextMutex == nullptr)
+    {
+        ASSERT(sharedContextMutex == nullptr);
+        singleContextMutex = new egl::SingleContextMutex();
+        singleContextMutex->addRef();
+    }
+    return singleContextMutex;
+}
+
 template <typename T>
 angle::Result GetQueryObjectParameter(const Context *context, Query *query, GLenum pname, T *params)
 {
@@ -470,6 +501,7 @@ Context::Context(egl::Display *display,
                  const Context *shareContext,
                  TextureManager *shareTextures,
                  SemaphoreManager *shareSemaphores,
+                 egl::ContextMutex *sharedContextMutex,
                  MemoryProgramCache *memoryProgramCache,
                  MemoryShaderCache *memoryShaderCache,
                  const EGLenum clientType,
@@ -480,6 +512,8 @@ Context::Context(egl::Display *display,
              AllocateOrGetShareGroup(display, shareContext),
              shareTextures,
              shareSemaphores,
+             TryAllocateOrUseSharedContextMutex(display, sharedContextMutex),
+             TryAllocateSingleContextMutex(sharedContextMutex),
              &mOverlay,
              clientType,
              GetClientVersion(display, attribs, clientType),
@@ -527,6 +561,8 @@ Context::Context(egl::Display *display,
       mSaveAndRestoreState(GetSaveAndRestoreState(attribs)),
       mIsDestroyed(false)
 {
+    ASSERT(mState.mSharedContextMutex != nullptr || mState.mSingleContextMutex != nullptr);
+
     for (angle::SubjectIndex uboIndex = kUniformBuffer0SubjectIndex;
          uboIndex < kUniformBufferMaxSubjectIndex; ++uboIndex)
     {
@@ -875,6 +911,15 @@ egl::Error Context::onDestroy(const egl::Display *display)
 
     // Backend requires implementation to be destroyed first to close down all the objects
     mState.mShareGroup->release(display);
+
+    if (mState.mSharedContextMutex != nullptr)
+    {
+        mState.mSharedContextMutex->release();
+    }
+    if (mState.mSingleContextMutex != nullptr)
+    {
+        mState.mSingleContextMutex->release();
+    }
 
     mOverlay.destroy(this);
 
@@ -9552,6 +9597,68 @@ void Context::getFramebufferPixelLocalStorageParameterivRobust(GLint plane,
             break;
         }
     }
+}
+
+bool Context::isSharedContextMutexActive() const
+{
+    if (!mState.mIsSharedContextMutexActive)
+    {
+        return false;
+    }
+    ASSERT(mState.mSharedContextMutex != nullptr);
+    ASSERT(getContextMutex() == mState.mSharedContextMutex);
+    return true;
+}
+
+egl::ScopedContextMutexLock Context::lockAndActivateSharedContextMutex()
+{
+    constexpr uint32_t kActivationDelayMicro = 100;
+
+    ASSERT(mState.mSharedContextMutex != nullptr);
+
+    // All state updates must be protected by "SharedContextMutex".
+    egl::ScopedContextMutexLock lock(mState.mSharedContextMutex);
+
+    if (!mState.mIsSharedContextMutexActive)
+    {
+        ASSERT(mState.mSingleContextMutex != nullptr);
+
+        // First, start using "SharedContextMutex".
+        mState.mContextMutex.store(mState.mSharedContextMutex);
+
+        // Second, sleep some time so that currently active Context thread start using new mutex.
+        // Logic assumes that there will be no new "SingleContextMutex" locks after this.
+        // In very rare cases when this happens, new Context may start executing commands using the
+        // "SharedContextMutex", while existing Context will continue execute a command (or few) in
+        // parallel, because it is still using the "SingleContextMutex". Commands from new and old
+        // Contexts may access same shared state and cause undefined behaviour. So for a problem to
+        // happened, not only mutex replacement should fail (from the the point of view of existing
+        // Context), but also current and new Contexts must execute commands (right after mutex
+        // replacement) that both access shared state in a way that may cause undefined behaviour.
+        std::this_thread::sleep_for(std::chrono::microseconds(kActivationDelayMicro));
+
+        // Next, wait while "SingleContextMutex" is locked (until unlocked).
+        // In real-world applications this condition will almost always be "false"
+        while (mState.mSingleContextMutex->isLocked(std::memory_order_acquire))
+        {
+            std::this_thread::sleep_for(std::chrono::microseconds(100));
+        }
+
+        // Finally, activate "SharedContextMutex".
+        mState.mIsSharedContextMutexActive = true;
+    }
+
+    ASSERT(getContextMutex() == mState.mSharedContextMutex);
+
+    return lock;
+}
+
+void Context::mergeSharedContextMutexes(egl::ContextMutex *otherMutex)
+{
+    ASSERT(otherMutex != nullptr);
+    ASSERT(isSharedContextMutexActive());
+    egl::ContextMutexManager *mutexManager = mDisplay->getSharedContextMutexManager();
+    mutexManager->merge(mState.mSharedContextMutex, otherMutex);
 }
 
 void Context::eGLImageTargetTexStorage(GLenum target, egl::ImageID image, const GLint *attrib_list)

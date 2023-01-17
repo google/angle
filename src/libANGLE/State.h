@@ -33,6 +33,8 @@
 namespace egl
 {
 class ShareGroup;
+class ContextMutex;
+class SingleContextMutex;
 }  // namespace egl
 
 namespace gl
@@ -91,6 +93,8 @@ class State : angle::NonCopyable
           egl::ShareGroup *shareGroup,
           TextureManager *shareTextures,
           SemaphoreManager *shareSemaphores,
+          egl::ContextMutex *sharedContextMutex,
+          egl::SingleContextMutex *singleContextMutex,
           const OverlayType *overlay,
           const EGLenum clientType,
           const Version &clientVersion,
@@ -1060,6 +1064,10 @@ class State : angle::NonCopyable
     Limitations mLimitations;
 
     egl::ShareGroup *mShareGroup;
+    egl::ContextMutex *const mSharedContextMutex;
+    egl::SingleContextMutex *const mSingleContextMutex;
+    std::atomic<egl::ContextMutex *> mContextMutex;  // Simple pointer without reference counting
+    bool mIsSharedContextMutexActive;
 
     // Resource managers.
     BufferManager *mBufferManager;
