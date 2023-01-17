@@ -2118,6 +2118,69 @@ TEST_P(EGLSingleBufferTest, MutableRenderBuffer)
     context = EGL_NO_CONTEXT;
 }
 
+// Tests bug with incorrect ImageLayout::SharedPresent barrier.
+TEST_P(EGLSingleBufferTest, SharedPresentBarrier)
+{
+    ANGLE_SKIP_TEST_IF(!IsEGLDisplayExtensionEnabled(mDisplay, "EGL_KHR_mutable_render_buffer"));
+
+    EGLConfig config = EGL_NO_CONFIG_KHR;
+    ANGLE_SKIP_TEST_IF(!chooseConfig(&config, true));
+
+    EGLContext context = EGL_NO_CONTEXT;
+    EXPECT_EGL_TRUE(createContext(config, &context));
+    ASSERT_EGL_SUCCESS() << "eglCreateContext failed.";
+
+    EGLSurface surface = EGL_NO_SURFACE;
+    OSWindow *osWindow = OSWindow::New();
+    osWindow->initialize("EGLSingleBufferTest", kWidth, kHeight);
+    EXPECT_EGL_TRUE(
+        createWindowSurface(config, osWindow->getNativeWindow(), &surface, EGL_BACK_BUFFER));
+    ASSERT_EGL_SUCCESS() << "eglCreateWindowSurface failed.";
+
+    EXPECT_EGL_TRUE(eglMakeCurrent(mDisplay, surface, surface, context));
+    ASSERT_EGL_SUCCESS() << "eglMakeCurrent failed.";
+
+    if (eglSurfaceAttrib(mDisplay, surface, EGL_RENDER_BUFFER, EGL_SINGLE_BUFFER))
+    {
+        // Transition into EGL_SINGLE_BUFFER mode.
+        glClearColor(1.0, 1.0, 1.0, 1.0);
+        glClear(GL_COLOR_BUFFER_BIT);
+        EXPECT_EGL_TRUE(eglSwapBuffers(mDisplay, surface));
+
+        EGLint actualRenderbuffer;
+        EXPECT_EGL_TRUE(eglQueryContext(mDisplay, context, EGL_RENDER_BUFFER, &actualRenderbuffer));
+        EXPECT_EGL_TRUE(actualRenderbuffer == EGL_SINGLE_BUFFER);
+
+        for (int i = 0; i < 5; ++i)
+        {
+            GLColor testColor(rand() % 255, rand() % 255, rand() % 255, 255);
+            angle::Vector4 clearColor = testColor.toNormalizedVector();
+            glClearColor(clearColor.x(), clearColor.y(), clearColor.z(), clearColor.w());
+            glClear(GL_COLOR_BUFFER_BIT);
+            // Skip flush because present operations may add other barriers that will make appear
+            // that everything works as expected.
+
+            // Check color without flush - may get invalid result if have incorrect barrier bug.
+            EXPECT_PIXEL_COLOR_EQ(1, 1, testColor);
+        }
+    }
+    else
+    {
+        std::cout << "EGL_SINGLE_BUFFER mode is not supported." << std::endl;
+    }
+
+    EXPECT_EGL_TRUE(eglMakeCurrent(mDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, context));
+    ASSERT_EGL_SUCCESS() << "eglMakeCurrent - uncurrent failed.";
+
+    eglDestroySurface(mDisplay, surface);
+    surface = EGL_NO_SURFACE;
+    osWindow->destroy();
+    OSWindow::Delete(&osWindow);
+
+    eglDestroyContext(mDisplay, context);
+    context = EGL_NO_CONTEXT;
+}
+
 // Test that setting a surface to EGL_SINGLE_BUFFER after enabling
 // EGL_FRONT_BUFFER_AUTO_REFRESH_ANDROID does not disable auto refresh
 TEST_P(EGLAndroidAutoRefreshTest, Basic)
