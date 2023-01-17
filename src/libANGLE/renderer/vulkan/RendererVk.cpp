@@ -4094,8 +4094,11 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
         &mFeatures, supportsFragmentShaderPixelInterlock,
         mFragmentShaderInterlockFeatures.fragmentShaderPixelInterlock == VK_TRUE);
 
+    // Samsung Vulkan driver crashes in vkCmdClearAttachments() when imageless Framebuffer
+    // is used to begin Secondary Command Buffer before the corresponding vkCmdBeginRenderPass().
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsImagelessFramebuffer,
-                            mImagelessFramebufferFeatures.imagelessFramebuffer == VK_TRUE);
+                            mImagelessFramebufferFeatures.imagelessFramebuffer == VK_TRUE &&
+                                (vk::RenderPassCommandBuffer::ExecutesInline() || !isSamsung));
 
     // The VK_PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS_EXT behavior is used by
     // ANGLE, which requires the robustBufferAccess feature to be available.
