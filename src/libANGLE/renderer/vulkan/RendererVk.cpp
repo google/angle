@@ -194,14 +194,6 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-vkCmdDrawIndexed-None-06538",
     // http://anglebug.com/7325
     "VUID-vkCmdBindVertexBuffers2-pStrides-06209",
-    // http://anglebug.com/7685
-    "UNASSIGNED-input-attachment-descriptor-not-in-subpass",
-    "VUID-vkCmdDraw-None-02686",
-    "VUID-vkCmdDrawIndexed-None-02686",
-    "VUID-vkCmdDrawIndirect-None-02686",
-    "VUID-vkCmdDrawIndirectCount-None-02686",
-    "VUID-vkCmdDrawIndexedIndirect-None-02686",
-    "VUID-vkCmdDrawIndexedIndirectCount-None-02686",
     // http://anglebug.com/7729
     "VUID-vkDestroySemaphore-semaphore-01137",
     // http://anglebug.com/7843
