@@ -490,19 +490,17 @@ class RendererVk : angle::NonCopyable
 
     void collectGarbage(const vk::ResourceUse &use, vk::GarbageList &&sharedGarbage)
     {
-        if (!sharedGarbage.empty())
+        ASSERT(!sharedGarbage.empty());
+        vk::SharedGarbage garbage(use, std::move(sharedGarbage));
+        if (!hasResourceUseSubmitted(use))
         {
-            vk::SharedGarbage garbage(use, std::move(sharedGarbage));
-            if (!hasResourceUseSubmitted(use))
-            {
-                std::unique_lock<std::mutex> lock(mGarbageMutex);
-                mPendingSubmissionGarbage.push(std::move(garbage));
-            }
-            else if (!garbage.destroyIfComplete(this))
-            {
-                std::unique_lock<std::mutex> lock(mGarbageMutex);
-                mSharedGarbage.push(std::move(garbage));
-            }
+            std::unique_lock<std::mutex> lock(mGarbageMutex);
+            mPendingSubmissionGarbage.push(std::move(garbage));
+        }
+        else if (!garbage.destroyIfComplete(this))
+        {
+            std::unique_lock<std::mutex> lock(mGarbageMutex);
+            mSharedGarbage.push(std::move(garbage));
         }
     }
 

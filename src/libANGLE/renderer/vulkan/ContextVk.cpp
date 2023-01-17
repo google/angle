@@ -3374,7 +3374,7 @@ angle::Result ContextVk::submitCommands(const vk::Semaphore *signalSemaphore, Su
         dumpCommandStreamDiagnostics();
     }
 
-    if (submission == Submit::AllCommands)
+    if (!mCurrentGarbage.empty() && submission == Submit::AllCommands)
     {
         // Clean up garbage.
         vk::ResourceUse use(mLastFlushedQueueSerial);
