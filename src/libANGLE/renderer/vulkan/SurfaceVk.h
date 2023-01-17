@@ -133,7 +133,7 @@ namespace impl
 {
 static constexpr size_t kSwapHistorySize = 2;
 
-// Old swapchain and associated present semaphores that need to be scheduled for
+// Old swapchain and associated present fences/semaphores that need to be scheduled for
 // recycling/destruction when appropriate.
 struct SwapchainCleanupData : angle::NonCopyable
 {
@@ -141,12 +141,15 @@ struct SwapchainCleanupData : angle::NonCopyable
     SwapchainCleanupData(SwapchainCleanupData &&other);
     ~SwapchainCleanupData();
 
-    void destroy(VkDevice device, vk::Recycler<vk::Semaphore> *semaphoreRecycler);
+    void destroy(VkDevice device,
+                 vk::Recycler<vk::Fence> *fenceRecycler,
+                 vk::Recycler<vk::Semaphore> *semaphoreRecycler);
 
     // The swapchain to be destroyed.
     VkSwapchainKHR swapchain = VK_NULL_HANDLE;
-    // Any present semaphores that were pending recycle at the time the swapchain was recreated will
-    // be scheduled for recycling at the same time as the swapchain's destruction.
+    // Any present fences/semaphores that were pending recycle at the time the swapchain was
+    // recreated will be scheduled for recycling at the same time as the swapchain's destruction.
+    std::vector<vk::Fence> fences;
     std::vector<vk::Semaphore> semaphores;
 };
 
