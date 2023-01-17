@@ -302,6 +302,7 @@ void CommandProcessorTask::initTask()
     mPresentInfo.pNext              = nullptr;
     mPresentInfo.pWaitSemaphores    = nullptr;
     mPresentFence                   = VK_NULL_HANDLE;
+    mSwapchainStatus                = nullptr;
     mOneOffCommandBufferVk          = VK_NULL_HANDLE;
     mPriority                       = egl::ContextPriority::Medium;
     mProtectionType                 = ProtectionType::InvalidEnum;
@@ -422,10 +423,12 @@ void CommandProcessorTask::copyPresentInfo(const VkPresentInfoKHR &other)
 }
 
 void CommandProcessorTask::initPresent(egl::ContextPriority priority,
-                                       const VkPresentInfoKHR &presentInfo)
+                                       const VkPresentInfoKHR &presentInfo,
+                                       SwapchainStatus *swapchainStatus)
 {
-    mTask     = CustomTask::Present;
-    mPriority = priority;
+    mTask            = CustomTask::Present;
+    mPriority        = priority;
+    mSwapchainStatus = swapchainStatus;
     copyPresentInfo(presentInfo);
 }
 
@@ -487,6 +490,7 @@ CommandProcessorTask &CommandProcessorTask::operator=(CommandProcessorTask &&rhs
     std::swap(mOneOffCommandBufferVk, rhs.mOneOffCommandBufferVk);
 
     copyPresentInfo(rhs.mPresentInfo);
+    std::swap(mSwapchainStatus, rhs.mSwapchainStatus);
 
     // clear rhs now that everything has moved.
     rhs.initTask();
@@ -702,7 +706,8 @@ angle::Result CommandProcessor::processTask(CommandProcessorTask *task)
         }
         case CustomTask::Present:
         {
-            VkResult result = present(task->getPriority(), task->getPresentInfo());
+            VkResult result =
+                present(task->getPriority(), task->getPresentInfo(), task->getSwapchainStatus());
             if (ANGLE_UNLIKELY(result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR))
             {
                 // We get to ignore these as they are not fatal
@@ -801,36 +806,35 @@ void CommandProcessor::handleDeviceLost(RendererVk *renderer)
     mCommandQueue->handleDeviceLost(renderer);
 }
 
-VkResult CommandProcessor::getLastAndClearPresentResult(VkSwapchainKHR swapchain)
-{
-    std::unique_lock<std::mutex> lock(mSwapchainStatusMutex);
-    if (mSwapchainStatus.find(swapchain) == mSwapchainStatus.end())
-    {
-        // Wake when required swapchain status becomes available
-        mSwapchainStatusCondition.wait(lock, [this, swapchain] {
-            return mSwapchainStatus.find(swapchain) != mSwapchainStatus.end();
-        });
-    }
-    VkResult result = mSwapchainStatus[swapchain];
-    mSwapchainStatus.erase(swapchain);
-    return result;
-}
-
 VkResult CommandProcessor::present(egl::ContextPriority priority,
-                                   const VkPresentInfoKHR &presentInfo)
+                                   const VkPresentInfoKHR &presentInfo,
+                                   SwapchainStatus *swapchainStatus)
 {
-    std::lock_guard<std::mutex> lock(mSwapchainStatusMutex);
     ANGLE_TRACE_EVENT0("gpu.angle", "vkQueuePresentKHR");
-    VkResult result = mCommandQueue->queuePresent(priority, presentInfo);
+    VkResult result = mCommandQueue->queuePresent(priority, presentInfo, nullptr);
 
     // Verify that we are presenting one and only one swapchain
     ASSERT(presentInfo.swapchainCount == 1);
     ASSERT(presentInfo.pResults == nullptr);
-    mSwapchainStatus[presentInfo.pSwapchains[0]] = result;
-
-    mSwapchainStatusCondition.notify_all();
+    updateSwapchainStatus(swapchainStatus, result);
 
     return result;
+}
+
+void CommandProcessor::updateSwapchainStatus(SwapchainStatus *swapchainStatus,
+                                             VkResult presentResult)
+{
+    ASSERT(swapchainStatus);
+
+    swapchainStatus->lastPresentResult = presentResult;
+
+    {
+        std::unique_lock<std::mutex> lock(swapchainStatus->mutex);
+        ASSERT(swapchainStatus->isPending);
+        swapchainStatus->isPending = false;
+    }
+
+    swapchainStatus->condVar.notify_all();
 }
 
 angle::Result CommandProcessor::submitCommands(Context *context,
@@ -884,10 +888,17 @@ angle::Result CommandProcessor::queueSubmitOneOff(Context *context,
 }
 
 VkResult CommandProcessor::queuePresent(egl::ContextPriority contextPriority,
-                                        const VkPresentInfoKHR &presentInfo)
+                                        const VkPresentInfoKHR &presentInfo,
+                                        SwapchainStatus *swapchainStatus)
 {
+    {
+        std::lock_guard<std::mutex> lock(swapchainStatus->mutex);
+        ASSERT(!swapchainStatus->isPending);
+        swapchainStatus->isPending = true;
+    }
+
     CommandProcessorTask task;
-    task.initPresent(contextPriority, presentInfo);
+    task.initPresent(contextPriority, presentInfo, swapchainStatus);
 
     ANGLE_TRACE_EVENT0("gpu.angle", "CommandProcessor::queuePresent");
     (void)queueCommand(std::move(task));
@@ -1390,11 +1401,21 @@ angle::Result CommandQueue::queueSubmitOneOff(Context *context,
 }
 
 VkResult CommandQueue::queuePresent(egl::ContextPriority contextPriority,
-                                    const VkPresentInfoKHR &presentInfo)
+                                    const VkPresentInfoKHR &presentInfo,
+                                    SwapchainStatus *swapchainStatus)
 {
     std::lock_guard<std::mutex> lock(mMutex);
-    VkQueue queue = getQueue(contextPriority);
-    return vkQueuePresentKHR(queue, &presentInfo);
+    VkQueue queue   = getQueue(contextPriority);
+    VkResult result = vkQueuePresentKHR(queue, &presentInfo);
+    // "swapchainStatus" will be "nullptr" when called from the CommandProcessor
+    if (swapchainStatus)
+    {
+        // Mutex lock is not required.
+        ASSERT(!swapchainStatus->isPending);
+        // Assigned "lastPresentResult" is not used, but assigned for consistency anyway.
+        swapchainStatus->lastPresentResult = result;
+    }
+    return result;
 }
 
 const angle::VulkanPerfCounters CommandQueue::getPerfCounters() const

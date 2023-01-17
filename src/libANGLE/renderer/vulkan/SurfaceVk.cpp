@@ -886,6 +886,8 @@ void WindowSurfaceVk::destroy(const egl::Display *display)
     // flush the pipe.
     (void)renderer->finish(displayVk);
 
+    waitPendingPresent();
+
     if (mLockBufferHelper.valid())
     {
         mLockBufferHelper.destroy(renderer);
@@ -1195,6 +1197,8 @@ angle::Result WindowSurfaceVk::getAttachmentRenderTarget(const gl::Context *cont
 
 angle::Result WindowSurfaceVk::recreateSwapchain(ContextVk *contextVk, const gl::Extents &extents)
 {
+    ASSERT(!mSwapchainStatus.isPending);
+
     // If no present operation has been done on the new swapchain, it can be destroyed right away.
     // This means that a new swapchain was created, but before any of its images were presented,
     // it's asked to be recreated.  This can happen for example if vkQueuePresentKHR returns
@@ -1982,7 +1986,8 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
 
     ASSERT(mAcquireImageSemaphore == nullptr);
 
-    VkResult result = renderer->queuePresent(contextVk, contextVk->getPriority(), presentInfo);
+    VkResult result =
+        renderer->queuePresent(contextVk, contextVk->getPriority(), presentInfo, &mSwapchainStatus);
 
     // Set FrameNumber for the presented image.
     mSwapchainImages[mCurrentSwapchainImageIndex].mFrameNumber = mFrameCount++;
@@ -2017,6 +2022,15 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
     contextVk->resetPerFramePerfCounters();
 
     return angle::Result::Continue;
+}
+
+void WindowSurfaceVk::waitPendingPresent() const
+{
+    std::unique_lock<std::mutex> lock(mSwapchainStatus.mutex);
+    while (mSwapchainStatus.isPending)
+    {
+        mSwapchainStatus.condVar.wait(lock);
+    }
 }
 
 angle::Result WindowSurfaceVk::throttleCPU(ContextVk *contextVk,
@@ -2166,7 +2180,8 @@ angle::Result WindowSurfaceVk::doDeferredAcquireNextImage(const gl::Context *con
     // TODO(jmadill): Expose in CommandQueueInterface, or manage in CommandQueue. b/172704839
     if (contextVk->getRenderer()->isAsyncCommandQueueEnabled())
     {
-        VkResult result = contextVk->getRenderer()->getLastPresentResult(mSwapchain);
+        waitPendingPresent();
+        VkResult result = mSwapchainStatus.lastPresentResult;
 
         // Now that we have the result from the last present need to determine if it's out of date
         // or not.

@@ -4998,16 +4998,17 @@ angle::Result RendererVk::flushOutsideRPCommands(
 
 VkResult RendererVk::queuePresent(vk::Context *context,
                                   egl::ContextPriority priority,
-                                  const VkPresentInfoKHR &presentInfo)
+                                  const VkPresentInfoKHR &presentInfo,
+                                  vk::SwapchainStatus *swapchainStatus)
 {
     VkResult result = VK_SUCCESS;
     if (isAsyncCommandQueueEnabled())
     {
-        result = mCommandProcessor.queuePresent(priority, presentInfo);
+        result = mCommandProcessor.queuePresent(priority, presentInfo, swapchainStatus);
     }
     else
     {
-        result = mCommandQueue.queuePresent(priority, presentInfo);
+        result = mCommandQueue.queuePresent(priority, presentInfo, swapchainStatus);
     }
 
     if (getFeatures().logMemoryReportStats.enabled)
