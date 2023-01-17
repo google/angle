@@ -18,9 +18,10 @@
 namespace angle
 {
 
-static constexpr uint32_t kMinRingBufferAllocatiorCapacity = 1024;
+static constexpr uint32_t kMinRingBufferAllocationCapacity = 1024;
 static constexpr uint32_t kDefaultDecaySpeedFactor         = 10;
 
+// Only called from RingBufferAllocator::allocate(). Other function may also change the fragment.
 class RingBufferAllocateListener
 {
   public:
@@ -59,9 +60,9 @@ class RingBufferAllocatorBuffer final
 
     uint64_t getId() const { return mId; }
     void resetId() { mId = 0; }
-    void incrementId() { mId++; }
+    void incrementId() { ++mId; }
 
-    size_t getStorageSize() { return mStorage.size(); }
+    bool isEmpty() const { return mStorage.empty(); }
 
   private:
     uint64_t mId = 0;
@@ -71,7 +72,6 @@ class RingBufferAllocatorBuffer final
 class RingBufferAllocator final : angle::NonCopyable
 {
   public:
-    // Only called from allocate(). Other function may also change the fragment.
     RingBufferAllocator() = default;
     RingBufferAllocator(RingBufferAllocator &&other);
     RingBufferAllocator &operator=(RingBufferAllocator &&other);
