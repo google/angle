@@ -69,6 +69,7 @@ def _InitializeAndroid(apk_path):
     assert _FindPackageName(apk_path) == TEST_PACKAGE_NAME
 
     if logging.getLogger().isEnabledFor(logging.DEBUG):
+        logging.debug(_AdbShell('dumpsys nfc | grep mScreenState || true').decode())
         logging.debug(_AdbShell('df -h').decode())
 
 

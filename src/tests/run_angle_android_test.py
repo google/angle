@@ -42,7 +42,7 @@ def main():
 
     args, extra_flags = parser.parse_known_args()
 
-    logging.basicConfig(level=args.log.upper())
+    angle_test_util.SetupLogging(args.log.upper())
 
     android_helper.Initialize(args.suite)
     assert android_helper.IsAndroid()
