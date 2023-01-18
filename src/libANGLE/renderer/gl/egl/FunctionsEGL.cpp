@@ -29,6 +29,19 @@ bool SetPtr(T *dst, void *src)
     }
     return false;
 }
+
+bool IsValidPlatformTypeForPlatformDisplayConnection(EGLAttrib platformType)
+{
+    switch (platformType)
+    {
+        case EGL_PLATFORM_SURFACELESS_MESA:
+            return true;
+        default:
+            break;
+    }
+    return false;
+}
+
 }  // namespace
 
 namespace rx
@@ -175,7 +188,7 @@ FunctionsEGL::~FunctionsEGL()
     SafeDelete(mFnPtrs);
 }
 
-egl::Error FunctionsEGL::initialize(EGLNativeDisplayType nativeDisplay)
+egl::Error FunctionsEGL::initialize(EGLAttrib platformType, EGLNativeDisplayType nativeDisplay)
 {
 #define ANGLE_GET_PROC_OR_WARNING(MEMBER, NAME)                \
     do                                                         \
@@ -218,7 +231,15 @@ egl::Error FunctionsEGL::initialize(EGLNativeDisplayType nativeDisplay)
     ANGLE_GET_PROC_OR_ERROR(&mFnPtrs->surfaceAttribPtr, eglSurfaceAttrib);
     ANGLE_GET_PROC_OR_ERROR(&mFnPtrs->swapIntervalPtr, eglSwapInterval);
 
-    mEGLDisplay = mFnPtrs->getDisplayPtr(nativeDisplay);
+    if (IsValidPlatformTypeForPlatformDisplayConnection(platformType))
+    {
+        mEGLDisplay = getPlatformDisplay(platformType, nativeDisplay);
+    }
+    else
+    {
+        mEGLDisplay = mFnPtrs->getDisplayPtr(nativeDisplay);
+    }
+
     if (mEGLDisplay != EGL_NO_DISPLAY)
     {
         if (mFnPtrs->initializePtr(mEGLDisplay, &majorVersion, &minorVersion) != EGL_TRUE)
@@ -350,6 +371,43 @@ egl::Error FunctionsEGL::terminate()
         return egl::NoError();
     }
     return egl::Error(mFnPtrs->getErrorPtr());
+}
+
+EGLDisplay FunctionsEGL::getPlatformDisplay(EGLAttrib platformType,
+                                            EGLNativeDisplayType nativeDisplay)
+{
+    // As in getNativeDisplay(), querying EGL_EXTENSIONS string and loading it into the mExtensions
+    // vector will at this point retrieve the client extensions since mEGLDisplay is still
+    // EGL_NO_DISPLAY. This is desired, and mExtensions will later be reinitialized with the display
+    // extensions once the display is created and initialized.
+    const char *extensions = queryString(EGL_EXTENSIONS);
+    if (!extensions)
+    {
+        return EGL_NO_DISPLAY;
+    }
+    angle::SplitStringAlongWhitespace(extensions, &mExtensions);
+
+    PFNEGLGETPLATFORMDISPLAYEXTPROC getPlatformDisplayEXTPtr;
+    if (!hasExtension("EGL_EXT_platform_base") ||
+        !SetPtr(&getPlatformDisplayEXTPtr, getProcAddress("eglGetPlatformDisplayEXT")))
+    {
+        return EGL_NO_DISPLAY;
+    }
+
+    ASSERT(IsValidPlatformTypeForPlatformDisplayConnection(platformType));
+    switch (platformType)
+    {
+        case EGL_PLATFORM_SURFACELESS_MESA:
+            if (!hasExtension("EGL_MESA_platform_surfaceless"))
+                return EGL_NO_DISPLAY;
+            break;
+        default:
+            UNREACHABLE();
+            return EGL_NO_DISPLAY;
+    }
+
+    return getPlatformDisplayEXTPtr(static_cast<EGLenum>(platformType),
+                                    reinterpret_cast<void *>(nativeDisplay), nullptr);
 }
 
 EGLDisplay FunctionsEGL::getNativeDisplay(int *major, int *minor)
