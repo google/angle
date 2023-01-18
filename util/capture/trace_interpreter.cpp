@@ -140,9 +140,7 @@ class Parser : angle::NonCopyable
     {
         size_t startIndex = mIndex;
         advanceTo(delim);
-        size_t tokenSize = mIndex - startIndex;
-        ASSERT(tokenSize < kMaxTokenSize);
-        memcpy(token, &mStream[startIndex], tokenSize);
+        memcpy(token, &mStream[startIndex], mIndex - startIndex);
         token[mIndex - startIndex] = 0;
     }
 
@@ -204,13 +202,11 @@ class Parser : angle::NonCopyable
                 // Skip casts.
                 if (peek() == ',' || (peek() == ')' && mIndex != tokenStart))
                 {
-                    ASSERT(numParams < kMaxParameters);
-                    size_t tokenSize = mIndex - tokenStart;
-                    ASSERT(tokenSize < kMaxTokenSize);
+                    ASSERT(numParams <= kMaxParameters);
                     Token &token = paramTokens[numParams++];
 
-                    memcpy(token, &mStream[tokenStart], tokenSize);
-                    token[tokenSize] = 0;
+                    memcpy(token, &mStream[tokenStart], mIndex - tokenStart);
+                    token[mIndex - tokenStart] = 0;
                     advance();
                     skipWhitespace();
                     skipCast();
@@ -355,20 +351,10 @@ void PackResourceID(ParamBuffer &params, const Token &token)
         gl::FramebufferID id = {value};
         params.addUnnamedParam(ParamType::TFramebufferID, id);
     }
-    else if (BeginsWith(token, "gSyncMap"))
-    {
-        gl::SyncID id = {value};
-        params.addUnnamedParam(ParamType::TSyncID, id);
-    }
     else if (BeginsWith(token, "gTransformFeedbackMap"))
     {
         gl::TransformFeedbackID id = {value};
         params.addUnnamedParam(ParamType::TTransformFeedbackID, id);
-    }
-    else if (BeginsWith(token, "gVertexArrayMap"))
-    {
-        gl::VertexArrayID id = {value};
-        params.addUnnamedParam(ParamType::TVertexArrayID, id);
     }
     else
     {
@@ -521,7 +507,7 @@ void TraceInterpreter::setupReplay()
 
     if (mTraceFunctions.count("SetupReplay") == 0)
     {
-        printf("Did not find a SetupReplay function to run among %zu parsed functions.\n",
+        printf("Did not find a SetupReplay function to run among %zu parsed functions.",
                mTraceFunctions.size());
         exit(1);
     }
@@ -731,7 +717,7 @@ void PackParameter<const float *>(ParamBuffer &params,
 template <>
 void PackParameter<GLsync>(ParamBuffer &params, const Token &token, const TraceShaderMap &shaders)
 {
-    PackResourceID(params, token);
+    UNREACHABLE();
 }
 
 template <>

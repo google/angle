@@ -160,7 +160,6 @@ enum class ParamType
     TShaderType,
     TShadingModel,
     TSurfaceID,
-    TSyncID,
     TTextureEnvParameter,
     TTextureEnvTarget,
     TTextureID,
@@ -190,7 +189,7 @@ enum class ParamType
     TvoidPointerPointer,
 };
 
-constexpr uint32_t kParamTypeCount = 171;
+constexpr uint32_t kParamTypeCount = 170;
 
 union ParamValue
 {
@@ -337,7 +336,6 @@ union ParamValue
     gl::ShaderType ShaderTypeVal;
     gl::ShadingModel ShadingModelVal;
     egl::SurfaceID SurfaceIDVal;
-    gl::SyncID SyncIDVal;
     gl::TextureEnvParameter TextureEnvParameterVal;
     gl::TextureEnvTarget TextureEnvTargetVal;
     gl::TextureID TextureIDVal;
@@ -1307,12 +1305,6 @@ inline egl::SurfaceID GetParamVal<ParamType::TSurfaceID, egl::SurfaceID>(const P
 }
 
 template <>
-inline gl::SyncID GetParamVal<ParamType::TSyncID, gl::SyncID>(const ParamValue &value)
-{
-    return value.SyncIDVal;
-}
-
-template <>
 inline gl::TextureEnvParameter
 GetParamVal<ParamType::TTextureEnvParameter, gl::TextureEnvParameter>(const ParamValue &value)
 {
@@ -1793,8 +1785,6 @@ T AccessParamValue(ParamType paramType, const ParamValue &value)
             return GetParamVal<ParamType::TShadingModel, T>(value);
         case ParamType::TSurfaceID:
             return GetParamVal<ParamType::TSurfaceID, T>(value);
-        case ParamType::TSyncID:
-            return GetParamVal<ParamType::TSyncID, T>(value);
         case ParamType::TTextureEnvParameter:
             return GetParamVal<ParamType::TTextureEnvParameter, T>(value);
         case ParamType::TTextureEnvTarget:
@@ -2772,12 +2762,6 @@ inline void SetParamVal<ParamType::TSurfaceID>(egl::SurfaceID valueIn, ParamValu
 }
 
 template <>
-inline void SetParamVal<ParamType::TSyncID>(gl::SyncID valueIn, ParamValue *valueOut)
-{
-    valueOut->SyncIDVal = valueIn;
-}
-
-template <>
 inline void SetParamVal<ParamType::TTextureEnvParameter>(gl::TextureEnvParameter valueIn,
                                                          ParamValue *valueOut)
 {
@@ -3392,9 +3376,6 @@ void InitParamValue(ParamType paramType, T valueIn, ParamValue *valueOut)
         case ParamType::TSurfaceID:
             SetParamVal<ParamType::TSurfaceID>(valueIn, valueOut);
             break;
-        case ParamType::TSyncID:
-            SetParamVal<ParamType::TSyncID>(valueIn, valueOut);
-            break;
         case ParamType::TTextureEnvParameter:
             SetParamVal<ParamType::TTextureEnvParameter>(valueIn, valueOut);
             break;
@@ -3500,7 +3481,6 @@ enum class ResourceIDType
     Semaphore,
     ShaderProgram,
     Surface,
-    Sync,
     Texture,
     TransformFeedback,
     VertexArray,
@@ -3590,12 +3570,6 @@ template <>
 struct GetResourceIDTypeFromType<egl::SurfaceID>
 {
     static constexpr ResourceIDType IDType = ResourceIDType::Surface;
-};
-
-template <>
-struct GetResourceIDTypeFromType<gl::SyncID>
-{
-    static constexpr ResourceIDType IDType = ResourceIDType::Sync;
 };
 
 template <>

@@ -148,9 +148,6 @@
     "glClearTexSubImage": {
         "texture": "TextureID"
     },
-    "glClientWaitSync": {
-        "sync": "SyncID"
-    },
     "glColorPointer": {
         "type": "VertexAttribType"
     },
@@ -310,9 +307,6 @@
     },
     "glDeleteShader": {
         "shader": "ShaderProgramID"
-    },
-    "glDeleteSync": {
-        "sync": "SyncID"
     },
     "glDeleteTextures": {
         "textures": "const TextureID *"
@@ -801,9 +795,6 @@
     "glGetSubroutineUniformLocation": {
         "program": "ShaderProgramID"
     },
-    "glGetSynciv": {
-        "sync": "SyncID"
-    },
     "glGetTexEnvfv": {
         "pname": "TextureEnvParameter",
         "target": "TextureEnvTarget"
@@ -1001,9 +992,6 @@
     },
     "glIsProgramPipeline": {
         "pipeline": "ProgramPipelineID"
-    },
-    "glIsSync": {
-        "sync": "SyncID"
     },
     "glIsQuery": {
         "id": "QueryID"
@@ -1945,8 +1933,5 @@
         "buffers": "const BufferID *",
         "semaphore": "SemaphoreID",
         "textures": "const TextureID *"
-    },
-    "glWaitSync": {
-        "sync": "SyncID"
     }
 }

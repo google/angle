@@ -95,7 +95,6 @@ const char *GLenumToString(BigGLEnum enumGroup, unsigned int value)
 unsigned int StringToGLenum(const char *str)
 {{
 {string_to_enum_table}
-    printf("Unknown enum string: %s\\n", str);
     UNREACHABLE();
     return 0;
 }}

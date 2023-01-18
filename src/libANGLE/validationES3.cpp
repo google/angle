@@ -3741,7 +3741,7 @@ bool ValidateVertexAttribIPointer(const Context *context,
 
 bool ValidateGetSynciv(const Context *context,
                        angle::EntryPoint entryPoint,
-                       SyncID syncPacked,
+                       GLsync sync,
                        GLenum pname,
                        GLsizei bufSize,
                        const GLsizei *length,
@@ -3775,7 +3775,7 @@ bool ValidateGetSynciv(const Context *context,
         }
     }
 
-    Sync *syncObject = context->getSync(syncPacked);
+    Sync *syncObject = context->getSync(sync);
     if (!syncObject)
     {
         context->validationError(entryPoint, GL_INVALID_VALUE, kSyncMissing);
@@ -4749,7 +4749,7 @@ bool ValidateFenceSync(const Context *context,
     return true;
 }
 
-bool ValidateIsSync(const Context *context, angle::EntryPoint entryPoint, SyncID syncPacked)
+bool ValidateIsSync(const Context *context, angle::EntryPoint entryPoint, GLsync sync)
 {
     if ((context->getClientMajorVersion() < 3) && !context->getExtensions().syncARB)
     {
@@ -4760,7 +4760,7 @@ bool ValidateIsSync(const Context *context, angle::EntryPoint entryPoint, SyncID
     return true;
 }
 
-bool ValidateDeleteSync(const Context *context, angle::EntryPoint entryPoint, SyncID syncPacked)
+bool ValidateDeleteSync(const Context *context, angle::EntryPoint entryPoint, GLsync sync)
 {
     if ((context->getClientMajorVersion() < 3) && !context->getExtensions().syncARB)
     {
@@ -4768,7 +4768,7 @@ bool ValidateDeleteSync(const Context *context, angle::EntryPoint entryPoint, Sy
         return false;
     }
 
-    if (syncPacked.value != 0 && !context->getSync(syncPacked))
+    if (sync != static_cast<GLsync>(0) && !context->getSync(sync))
     {
         context->validationError(entryPoint, GL_INVALID_VALUE, kSyncMissing);
         return false;
@@ -4779,7 +4779,7 @@ bool ValidateDeleteSync(const Context *context, angle::EntryPoint entryPoint, Sy
 
 bool ValidateClientWaitSync(const Context *context,
                             angle::EntryPoint entryPoint,
-                            SyncID syncPacked,
+                            GLsync sync,
                             GLbitfield flags,
                             GLuint64 timeout)
 {
@@ -4795,7 +4795,7 @@ bool ValidateClientWaitSync(const Context *context,
         return false;
     }
 
-    Sync *clientWaitSync = context->getSync(syncPacked);
+    Sync *clientWaitSync = context->getSync(sync);
     if (!clientWaitSync)
     {
         context->validationError(entryPoint, GL_INVALID_VALUE, kSyncMissing);
@@ -4807,7 +4807,7 @@ bool ValidateClientWaitSync(const Context *context,
 
 bool ValidateWaitSync(const Context *context,
                       angle::EntryPoint entryPoint,
-                      SyncID syncPacked,
+                      GLsync sync,
                       GLbitfield flags,
                       GLuint64 timeout)
 {
@@ -4829,7 +4829,7 @@ bool ValidateWaitSync(const Context *context,
         return false;
     }
 
-    Sync *waitSync = context->getSync(syncPacked);
+    Sync *waitSync = context->getSync(sync);
     if (!waitSync)
     {
         context->validationError(entryPoint, GL_INVALID_VALUE, kSyncMissing);

@@ -364,23 +364,21 @@ GLenum GL_APIENTRY GL_ClientWaitSync(GLsync sync, GLbitfield flags, GLuint64 tim
     GLenum returnValue;
     if (context)
     {
-        SyncID syncPacked = PackParam<SyncID>(sync);
         SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
              (ValidatePixelLocalStorageInactive(context, angle::EntryPoint::GLClientWaitSync) &&
-              ValidateClientWaitSync(context, angle::EntryPoint::GLClientWaitSync, syncPacked,
-                                     flags, timeout)));
+              ValidateClientWaitSync(context, angle::EntryPoint::GLClientWaitSync, sync, flags,
+                                     timeout)));
         if (isCallValid)
         {
-            returnValue = context->clientWaitSync(syncPacked, flags, timeout);
+            returnValue = context->clientWaitSync(sync, flags, timeout);
         }
         else
         {
             returnValue = GetDefaultReturnValue<angle::EntryPoint::GLClientWaitSync, GLenum>();
         }
-        ANGLE_CAPTURE_GL(ClientWaitSync, isCallValid, context, syncPacked, flags, timeout,
-                         returnValue);
+        ANGLE_CAPTURE_GL(ClientWaitSync, isCallValid, context, sync, flags, timeout, returnValue);
     }
     else
     {
@@ -620,17 +618,16 @@ void GL_APIENTRY GL_DeleteSync(GLsync sync)
 
     if (context)
     {
-        SyncID syncPacked = PackParam<SyncID>(sync);
         SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
              (ValidatePixelLocalStorageInactive(context, angle::EntryPoint::GLDeleteSync) &&
-              ValidateDeleteSync(context, angle::EntryPoint::GLDeleteSync, syncPacked)));
+              ValidateDeleteSync(context, angle::EntryPoint::GLDeleteSync, sync)));
         if (isCallValid)
         {
-            context->deleteSync(syncPacked);
+            context->deleteSync(sync);
         }
-        ANGLE_CAPTURE_GL(DeleteSync, isCallValid, context, syncPacked);
+        ANGLE_CAPTURE_GL(DeleteSync, isCallValid, context, sync);
     }
     else
     {
@@ -1568,16 +1565,15 @@ GL_GetSynciv(GLsync sync, GLenum pname, GLsizei count, GLsizei *length, GLint *v
 
     if (context)
     {
-        SyncID syncPacked = PackParam<SyncID>(sync);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateGetSynciv(context, angle::EntryPoint::GLGetSynciv, syncPacked,
-                                              pname, count, length, values));
+        bool isCallValid =
+            (context->skipValidation() || ValidateGetSynciv(context, angle::EntryPoint::GLGetSynciv,
+                                                            sync, pname, count, length, values));
         if (isCallValid)
         {
-            context->getSynciv(syncPacked, pname, count, length, values);
+            context->getSynciv(sync, pname, count, length, values);
         }
-        ANGLE_CAPTURE_GL(GetSynciv, isCallValid, context, syncPacked, pname, count, length, values);
+        ANGLE_CAPTURE_GL(GetSynciv, isCallValid, context, sync, pname, count, length, values);
     }
     else
     {
@@ -1909,19 +1905,18 @@ GLboolean GL_APIENTRY GL_IsSync(GLsync sync)
     GLboolean returnValue;
     if (context)
     {
-        SyncID syncPacked = PackParam<SyncID>(sync);
         SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid = (context->skipValidation() ||
-                            ValidateIsSync(context, angle::EntryPoint::GLIsSync, syncPacked));
+                            ValidateIsSync(context, angle::EntryPoint::GLIsSync, sync));
         if (isCallValid)
         {
-            returnValue = context->isSync(syncPacked);
+            returnValue = context->isSync(sync);
         }
         else
         {
             returnValue = GetDefaultReturnValue<angle::EntryPoint::GLIsSync, GLboolean>();
         }
-        ANGLE_CAPTURE_GL(IsSync, isCallValid, context, syncPacked, returnValue);
+        ANGLE_CAPTURE_GL(IsSync, isCallValid, context, sync, returnValue);
     }
     else
     {
@@ -3111,18 +3106,16 @@ void GL_APIENTRY GL_WaitSync(GLsync sync, GLbitfield flags, GLuint64 timeout)
 
     if (context)
     {
-        SyncID syncPacked = PackParam<SyncID>(sync);
         SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
              (ValidatePixelLocalStorageInactive(context, angle::EntryPoint::GLWaitSync) &&
-              ValidateWaitSync(context, angle::EntryPoint::GLWaitSync, syncPacked, flags,
-                               timeout)));
+              ValidateWaitSync(context, angle::EntryPoint::GLWaitSync, sync, flags, timeout)));
         if (isCallValid)
         {
-            context->waitSync(syncPacked, flags, timeout);
+            context->waitSync(sync, flags, timeout);
         }
-        ANGLE_CAPTURE_GL(WaitSync, isCallValid, context, syncPacked, flags, timeout);
+        ANGLE_CAPTURE_GL(WaitSync, isCallValid, context, sync, flags, timeout);
     }
     else
     {

@@ -292,9 +292,9 @@ void WriteParamValueReplay<ParamType::TUniformBlockIndex>(std::ostream &os,
                                                           gl::UniformBlockIndex value);
 
 template <>
-void WriteParamValueReplay<ParamType::TSyncID>(std::ostream &os,
+void WriteParamValueReplay<ParamType::TGLsync>(std::ostream &os,
                                                const CallCapture &call,
-                                               gl::SyncID value);
+                                               GLsync value);
 
 template <>
 void WriteParamValueReplay<ParamType::TGLubyte>(std::ostream &os,

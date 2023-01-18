@@ -194,7 +194,6 @@ SurfaceMap gSurfaceMap;
 GLeglImageOES *gEGLImageMap2;
 EGLSurface *gSurfaceMap2;
 EGLContext *gContextMap2;
-GLsync *gSyncMap2;
 
 void SetBinaryDataDecompressCallback(DecompressCallback decompressCallback,
                                      DeleteCallback deleteCallback)
@@ -219,37 +218,6 @@ T *AllocateZeroedValues(size_t count)
 GLuint *AllocateZeroedUints(size_t count)
 {
     return AllocateZeroedValues<GLuint>(count);
-}
-
-void InitializeReplay3(const char *binaryDataFileName,
-                       size_t maxClientArraySize,
-                       size_t readBufferSize,
-                       GLuint contextId,
-                       uint32_t maxBuffer,
-                       uint32_t maxContext,
-                       uint32_t maxFenceNV,
-                       uint32_t maxFramebuffer,
-                       uint32_t maxImage,
-                       uint32_t maxMemoryObject,
-                       uint32_t maxProgramPipeline,
-                       uint32_t maxQuery,
-                       uint32_t maxRenderbuffer,
-                       uint32_t maxSampler,
-                       uint32_t maxSemaphore,
-                       uint32_t maxShaderProgram,
-                       uint32_t maxSurface,
-                       uint32_t maxSync,
-                       uint32_t maxTexture,
-                       uint32_t maxTransformFeedback,
-                       uint32_t maxVertexArray)
-{
-    InitializeReplay2(binaryDataFileName, maxClientArraySize, readBufferSize, contextId, maxBuffer,
-                      maxContext, maxFenceNV, maxFramebuffer, maxImage, maxMemoryObject,
-                      maxProgramPipeline, maxQuery, maxRenderbuffer, maxSampler, maxSemaphore,
-                      maxShaderProgram, maxSurface, maxTexture, maxTransformFeedback,
-                      maxVertexArray);
-
-    gSyncMap2 = AllocateZeroedValues<GLsync>(maxSync);
 }
 
 void InitializeReplay2(const char *binaryDataFileName,
@@ -355,7 +323,6 @@ void FinishReplay()
     delete[] gSamplerMap;
     delete[] gSemaphoreMap;
     delete[] gSurfaceMap2;
-    delete[] gSyncMap2;
     delete[] gTransformFeedbackMap;
     delete[] gVertexArrayMap;
 
@@ -529,11 +496,6 @@ void CreateShaderProgramv(GLenum type,
 void FenceSync(GLenum condition, GLbitfield flags, uintptr_t fenceSync)
 {
     gSyncMap[fenceSync] = glFenceSync(condition, flags);
-}
-
-void FenceSync2(GLenum condition, GLbitfield flags, uintptr_t fenceSync)
-{
-    gSyncMap2[fenceSync] = glFenceSync(condition, flags);
 }
 
 void CreateEGLImage(EGLDisplay dpy,

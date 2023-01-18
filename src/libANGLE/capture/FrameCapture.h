@@ -137,8 +137,8 @@ using BufferCalls = std::map<GLuint, std::vector<CallCapture>>;
 // true means mapped, false means unmapped
 using BufferMapStatusMap = std::map<GLuint, bool>;
 
-using FenceSyncSet   = std::set<gl::SyncID>;
-using FenceSyncCalls = std::map<gl::SyncID, std::vector<CallCapture>>;
+using FenceSyncSet   = std::set<GLsync>;
+using FenceSyncCalls = std::map<GLsync, std::vector<CallCapture>>;
 
 // For default uniforms, we need to track which ones are dirty, and the series of calls to reset.
 // Each program has unique default uniforms, and each uniform has one or more locations in the
@@ -246,7 +246,7 @@ class ResourceTracker final : angle::NonCopyable
     FenceSyncSet &getStartingFenceSyncs() { return mStartingFenceSyncs; }
     FenceSyncCalls &getFenceSyncRegenCalls() { return mFenceSyncRegenCalls; }
     FenceSyncSet &getFenceSyncsToRegen() { return mFenceSyncsToRegen; }
-    void setDeletedFenceSync(gl::SyncID sync);
+    void setDeletedFenceSync(GLsync sync);
 
     DefaultUniformLocationsPerProgramMap &getDefaultUniformsToReset()
     {

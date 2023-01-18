@@ -1093,13 +1093,13 @@ void Context::deleteRenderbuffer(RenderbufferID renderbuffer)
     mState.mRenderbufferManager->deleteObject(this, renderbuffer);
 }
 
-void Context::deleteSync(SyncID syncPacked)
+void Context::deleteSync(GLsync sync)
 {
     // The spec specifies the underlying Fence object is not deleted until all current
     // wait commands finish. However, since the name becomes invalid, we cannot query the fence,
     // and since our API is currently designed for being called from a single thread, we can delete
     // the fence immediately.
-    mState.mSyncManager->deleteObject(this, syncPacked);
+    mState.mSyncManager->deleteObject(this, static_cast<GLuint>(reinterpret_cast<uintptr_t>(sync)));
 }
 
 void Context::deleteProgramPipeline(ProgramPipelineID pipelineID)
@@ -1187,9 +1187,9 @@ EGLenum Context::getContextPriority() const
     return egl::ToEGLenum(mImplementation->getContextPriority());
 }
 
-Sync *Context::getSync(SyncID syncPacked) const
+Sync *Context::getSync(GLsync handle) const
 {
-    return mState.mSyncManager->getSync(syncPacked);
+    return mState.mSyncManager->getSync(static_cast<GLuint>(reinterpret_cast<uintptr_t>(handle)));
 }
 
 VertexArray *Context::getVertexArray(VertexArrayID handle) const
@@ -1252,7 +1252,7 @@ gl::LabeledObject *Context::getLabeledObject(GLenum identifier, GLuint name) con
 
 gl::LabeledObject *Context::getLabeledObjectFromPtr(const void *ptr) const
 {
-    return getSync({unsafe_pointer_to_int_cast<uint32_t>(ptr)});
+    return getSync(reinterpret_cast<GLsync>(const_cast<void *>(ptr)));
 }
 
 void Context::objectLabel(GLenum identifier, GLuint name, GLsizei length, const GLchar *label)
@@ -6732,16 +6732,12 @@ void Context::framebufferTexture2DMultisample(GLenum target,
     mState.setObjectDirty(target);
 }
 
-void Context::getSynciv(SyncID syncPacked,
-                        GLenum pname,
-                        GLsizei bufSize,
-                        GLsizei *length,
-                        GLint *values)
+void Context::getSynciv(GLsync sync, GLenum pname, GLsizei bufSize, GLsizei *length, GLint *values)
 {
     const Sync *syncObject = nullptr;
     if (!isContextLost())
     {
-        syncObject = getSync(syncPacked);
+        syncObject = getSync(sync);
     }
     ANGLE_CONTEXT_TRY(QuerySynciv(this, syncObject, pname, bufSize, length, values));
 }
@@ -8248,25 +8244,27 @@ void Context::uniformBlockBinding(ShaderProgramID program,
 
 GLsync Context::fenceSync(GLenum condition, GLbitfield flags)
 {
-    SyncID syncHandle = mState.mSyncManager->createSync(mImplementation.get());
-    Sync *syncObject  = getSync(syncHandle);
+    GLuint handle     = mState.mSyncManager->createSync(mImplementation.get());
+    GLsync syncHandle = reinterpret_cast<GLsync>(static_cast<uintptr_t>(handle));
+
+    Sync *syncObject = getSync(syncHandle);
     if (syncObject->set(this, condition, flags) == angle::Result::Stop)
     {
         deleteSync(syncHandle);
         return nullptr;
     }
 
-    return unsafe_int_to_pointer_cast<GLsync>(syncHandle.value);
+    return syncHandle;
 }
 
-GLboolean Context::isSync(SyncID syncPacked) const
+GLboolean Context::isSync(GLsync sync) const
 {
-    return (getSync(syncPacked) != nullptr);
+    return (getSync(sync) != nullptr);
 }
 
-GLenum Context::clientWaitSync(SyncID syncPacked, GLbitfield flags, GLuint64 timeout)
+GLenum Context::clientWaitSync(GLsync sync, GLbitfield flags, GLuint64 timeout)
 {
-    Sync *syncObject = getSync(syncPacked);
+    Sync *syncObject = getSync(sync);
 
     GLenum result = GL_WAIT_FAILED;
     if (syncObject->clientWait(this, flags, timeout, &result) == angle::Result::Stop)
@@ -8276,9 +8274,9 @@ GLenum Context::clientWaitSync(SyncID syncPacked, GLbitfield flags, GLuint64 tim
     return result;
 }
 
-void Context::waitSync(SyncID syncPacked, GLbitfield flags, GLuint64 timeout)
+void Context::waitSync(GLsync sync, GLbitfield flags, GLuint64 timeout)
 {
-    Sync *syncObject = getSync(syncPacked);
+    Sync *syncObject = getSync(sync);
     ANGLE_CONTEXT_TRY(syncObject->serverWait(this, flags, timeout));
 }
 
