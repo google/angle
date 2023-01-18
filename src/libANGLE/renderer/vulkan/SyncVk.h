@@ -45,11 +45,14 @@ class SyncHelper : public vk::Resource
                                      uint64_t timeout,
                                      VkResult *outResult);
     virtual angle::Result serverWait(ContextVk *contextVk);
-    virtual angle::Result getStatus(Context *context, ContextVk *contextVk, bool *signaled);
+    virtual angle::Result getStatus(Context *context, ContextVk *contextVk, bool *signaledOut);
     virtual angle::Result dupNativeFenceFD(Context *context, int *fdOut) const
     {
         return angle::Result::Stop;
     }
+
+  protected:
+    angle::Result getStatusFromUse(Context *context, bool *signaledOut);
 
   private:
     angle::Result submitSyncIfDeferred(ContextVk *contextVk, RenderPassClosureReason reason);
@@ -71,7 +74,7 @@ class SyncHelperNativeFence : public SyncHelper
                              uint64_t timeout,
                              VkResult *outResult) override;
     angle::Result serverWait(ContextVk *contextVk) override;
-    angle::Result getStatus(Context *context, ContextVk *contextVk, bool *signaled) override;
+    angle::Result getStatus(Context *context, ContextVk *contextVk, bool *signaledOut) override;
     angle::Result dupNativeFenceFD(Context *context, int *fdOut) const override;
 
   private:
