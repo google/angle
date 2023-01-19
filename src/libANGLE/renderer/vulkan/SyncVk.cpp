@@ -152,12 +152,6 @@ angle::Result SyncHelper::getStatus(Context *context, ContextVk *contextVk, bool
 {
     // Submit commands if it was deferred on the context that issued the sync object
     ANGLE_TRY(submitSyncIfDeferred(contextVk, RenderPassClosureReason::SyncObjectClientWait));
-
-    return getStatusFromUse(context, signaledOut);
-}
-
-angle::Result SyncHelper::getStatusFromUse(Context *context, bool *signaledOut)
-{
     ASSERT(mUse.valid());
     RendererVk *renderer = context->getRenderer();
     if (renderer->hasResourceUseFinished(mUse))
@@ -329,8 +323,6 @@ angle::Result SyncHelperNativeFence::initializeWithFd(ContextVk *contextVk, int 
                                    RenderPassClosureReason::SyncObjectWithFdInit));
     QueueSerial submitSerial = contextVk->getLastSubmittedQueueSerial();
 
-    mUse.setQueueSerial(submitSerial);
-
     // exportFd is exporting VK_EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT_KHR type handle which
     // obeys copy semantics. This means that the fence must already be signaled or the work to
     // signal it is in the graphics pipeline at the time we export the fd. Thus we need to
@@ -372,22 +364,10 @@ angle::Result SyncHelperNativeFence::clientWait(Context *context,
             contextVk->flushImpl(nullptr, nullptr, RenderPassClosureReason::SyncObjectClientWait));
     }
 
-    VkResult status = VK_SUCCESS;
-    if (mUse.valid())
+    VkResult status = mExternalFence->wait(renderer->getDevice(), timeout);
+    if (status != VK_TIMEOUT)
     {
-        // We have a valid serial to wait on
-        ANGLE_TRY(
-            renderer->waitForResourceUseToFinishWithUserTimeout(context, mUse, timeout, &status));
-    }
-    else
-    {
-        // We need to wait on the file descriptor
-
-        status = mExternalFence->wait(renderer->getDevice(), timeout);
-        if (status != VK_TIMEOUT)
-        {
-            ANGLE_VK_TRY(contextVk, status);
-        }
+        ANGLE_VK_TRY(contextVk, status);
     }
 
     *outResult = status;
@@ -423,13 +403,6 @@ angle::Result SyncHelperNativeFence::getStatus(Context *context,
                                                ContextVk *contextVk,
                                                bool *signaledOut)
 {
-    // We've got a serial, check if the serial is still in use
-    if (mUse.valid())
-    {
-        return getStatusFromUse(context, signaledOut);
-    }
-
-    // We don't have a serial, check status of the file descriptor
     VkResult result = mExternalFence->getStatus(context->getDevice());
     if (result != VK_NOT_READY)
     {
@@ -534,7 +507,7 @@ EGLSyncVk::EGLSyncVk(const egl::AttributeMap &attribs)
 
 EGLSyncVk::~EGLSyncVk()
 {
-    SafeDelete<vk::SyncHelper>(mSyncHelper);
+    SafeDelete(mSyncHelper);
 }
 
 void EGLSyncVk::onDestroy(const egl::Display *display)
@@ -552,12 +525,15 @@ egl::Error EGLSyncVk::initialize(const egl::Display *display,
     switch (type)
     {
         case EGL_SYNC_FENCE_KHR:
-            mSyncHelper = new vk::SyncHelper();
-            if (mSyncHelper->initialize(vk::GetImpl(context), true) == angle::Result::Stop)
+        {
+            vk::SyncHelper *syncHelper = new vk::SyncHelper();
+            mSyncHelper                = syncHelper;
+            if (syncHelper->initialize(vk::GetImpl(context), true) == angle::Result::Stop)
             {
                 return egl::Error(EGL_BAD_ALLOC, "eglCreateSyncKHR failed to create sync object");
             }
             return egl::NoError();
+        }
         case EGL_SYNC_NATIVE_FENCE_ANDROID:
         {
             vk::SyncHelperNativeFence *syncHelper = new vk::SyncHelperNativeFence();
