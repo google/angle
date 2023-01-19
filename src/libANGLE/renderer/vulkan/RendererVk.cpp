@@ -30,6 +30,7 @@
 #include "libANGLE/renderer/vulkan/FramebufferVk.h"
 #include "libANGLE/renderer/vulkan/ProgramVk.h"
 #include "libANGLE/renderer/vulkan/ResourceVk.h"
+#include "libANGLE/renderer/vulkan/SyncVk.h"
 #include "libANGLE/renderer/vulkan/VertexArrayVk.h"
 #include "libANGLE/renderer/vulkan/vk_caps_utils.h"
 #include "libANGLE/renderer/vulkan/vk_format_utils.h"
@@ -5153,25 +5154,29 @@ angle::Result RendererVk::submitCommands(vk::Context *context,
                                          vk::ProtectionType protectionType,
                                          egl::ContextPriority contextPriority,
                                          const vk::Semaphore *signalSemaphore,
-                                         const vk::Fence *externalFence,
+                                         const vk::SharedExternalFence *externalFence,
                                          const QueueSerial &submitQueueSerial)
 {
     ASSERT(signalSemaphore == nullptr || signalSemaphore->valid());
-    ASSERT(externalFence == nullptr || externalFence->valid());
     const VkSemaphore signalVkSemaphore =
         signalSemaphore ? signalSemaphore->getHandle() : VK_NULL_HANDLE;
-    const VkFence externalVkFence = externalFence ? externalFence->getHandle() : VK_NULL_HANDLE;
+
+    vk::SharedExternalFence externalFenceCopy;
+    if (externalFence != nullptr)
+    {
+        externalFenceCopy = *externalFence;
+    }
 
     if (isAsyncCommandQueueEnabled())
     {
-        ANGLE_TRY(mCommandProcessor.enqueueSubmitCommands(context, protectionType, contextPriority,
-                                                          signalVkSemaphore, externalVkFence,
-                                                          submitQueueSerial));
+        ANGLE_TRY(mCommandProcessor.enqueueSubmitCommands(
+            context, protectionType, contextPriority, signalVkSemaphore,
+            std::move(externalFenceCopy), submitQueueSerial));
     }
     else
     {
         ANGLE_TRY(mCommandQueue.submitCommands(context, protectionType, contextPriority,
-                                               signalVkSemaphore, externalVkFence,
+                                               signalVkSemaphore, std::move(externalFenceCopy),
                                                submitQueueSerial));
     }
 
