@@ -2072,14 +2072,14 @@ angle::Result WindowSurfaceVk::prePresentSubmit(ContextVk *contextVk,
     // with other functionality, especially counters used to validate said functionality.
     const bool shouldDrawOverlay = overlayHasEnabledWidget(contextVk);
 
-    ANGLE_TRY(contextVk->flushImpl(shouldDrawOverlay ? nullptr : &presentSemaphore,
+    ANGLE_TRY(contextVk->flushImpl(shouldDrawOverlay ? nullptr : &presentSemaphore, nullptr,
                                    RenderPassClosureReason::EGLSwapBuffers));
 
     if (shouldDrawOverlay)
     {
         updateOverlay(contextVk);
         ANGLE_TRY(drawOverlay(contextVk, &image));
-        ANGLE_TRY(contextVk->flushImpl(&presentSemaphore,
+        ANGLE_TRY(contextVk->flushImpl(&presentSemaphore, nullptr,
                                        RenderPassClosureReason::AlreadySpecifiedElsewhere));
     }
 
@@ -2595,7 +2595,7 @@ VkResult WindowSurfaceVk::postProcessUnlockedTryAcquire(vk::Context *context)
             if (rendererVk->queueSubmitOneOff(
                     context, std::move(primaryCommandBuffer), protectionType,
                     egl::ContextPriority::Medium, semaphore,
-                    VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, nullptr,
+                    VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
                     vk::SubmitPolicy::EnsureSubmitted, &queueSerial) != angle::Result::Continue)
             {
                 mDesiredSwapchainPresentMode = vk::PresentMode::FifoKHR;

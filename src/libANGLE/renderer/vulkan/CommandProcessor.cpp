@@ -212,9 +212,9 @@ void CommandProcessorTask::initTask()
     mRenderPassCommandBuffer        = nullptr;
     mRenderPass                     = nullptr;
     mSemaphore                      = VK_NULL_HANDLE;
+    mExternalFence                  = VK_NULL_HANDLE;
     mOneOffWaitSemaphore            = VK_NULL_HANDLE;
     mOneOffWaitSemaphoreStageMask   = 0;
-    mOneOffFence                    = VK_NULL_HANDLE;
     mPresentInfo                    = {};
     mPresentInfo.pResults           = nullptr;
     mPresentInfo.pSwapchains        = nullptr;
@@ -370,12 +370,14 @@ void CommandProcessorTask::initPresent(egl::ContextPriority priority,
 }
 
 void CommandProcessorTask::initFlushAndQueueSubmit(VkSemaphore semaphore,
+                                                   VkFence externalFence,
                                                    ProtectionType protectionType,
                                                    egl::ContextPriority priority,
                                                    const QueueSerial &submitQueueSerial)
 {
     mTask              = CustomTask::FlushAndQueueSubmit;
     mSemaphore         = semaphore;
+    mExternalFence     = externalFence;
     mPriority          = priority;
     mProtectionType    = protectionType;
     mSubmitQueueSerial = submitQueueSerial;
@@ -386,14 +388,12 @@ void CommandProcessorTask::initOneOffQueueSubmit(VkCommandBuffer commandBufferHa
                                                  egl::ContextPriority priority,
                                                  VkSemaphore waitSemaphore,
                                                  VkPipelineStageFlags waitSemaphoreStageMask,
-                                                 VkFence fence,
                                                  const QueueSerial &submitQueueSerial)
 {
     mTask                         = CustomTask::OneOffQueueSubmit;
     mOneOffCommandBuffer          = commandBufferHandle;
     mOneOffWaitSemaphore          = waitSemaphore;
     mOneOffWaitSemaphoreStageMask = waitSemaphoreStageMask;
-    mOneOffFence                  = fence;
     mPriority                     = priority;
     mProtectionType               = protectionType;
     mSubmitQueueSerial            = submitQueueSerial;
@@ -413,9 +413,9 @@ CommandProcessorTask &CommandProcessorTask::operator=(CommandProcessorTask &&rhs
     std::swap(mWaitSemaphores, rhs.mWaitSemaphores);
     std::swap(mWaitSemaphoreStageMasks, rhs.mWaitSemaphoreStageMasks);
     std::swap(mSemaphore, rhs.mSemaphore);
+    std::swap(mExternalFence, rhs.mExternalFence);
     std::swap(mOneOffWaitSemaphore, rhs.mOneOffWaitSemaphore);
     std::swap(mOneOffWaitSemaphoreStageMask, rhs.mOneOffWaitSemaphoreStageMask);
-    std::swap(mOneOffFence, rhs.mOneOffFence);
     std::swap(mSubmitQueueSerial, rhs.mSubmitQueueSerial);
     std::swap(mPriority, rhs.mPriority);
     std::swap(mProtectionType, rhs.mProtectionType);
@@ -639,9 +639,9 @@ angle::Result CommandProcessor::processTask(CommandProcessorTask *task)
             // End command buffer
 
             // Call submitCommands()
-            ANGLE_TRY(mCommandQueue->submitCommands(this, task->getProtectionType(),
-                                                    task->getPriority(), task->getSemaphore(),
-                                                    task->getSubmitQueueSerial()));
+            ANGLE_TRY(mCommandQueue->submitCommands(
+                this, task->getProtectionType(), task->getPriority(), task->getSemaphore(),
+                task->getExternalFence(), task->getSubmitQueueSerial()));
             mNeedCommandsAndGarbageCleanup = true;
             break;
         }
@@ -652,8 +652,8 @@ angle::Result CommandProcessor::processTask(CommandProcessorTask *task)
             ANGLE_TRY(mCommandQueue->queueSubmitOneOff(
                 this, task->getProtectionType(), task->getPriority(),
                 task->getOneOffCommandBuffer(), task->getOneOffWaitSemaphore(),
-                task->getOneOffWaitSemaphoreStageMask(), task->getOneOffFence(),
-                SubmitPolicy::EnsureSubmitted, task->getSubmitQueueSerial()));
+                task->getOneOffWaitSemaphoreStageMask(), SubmitPolicy::EnsureSubmitted,
+                task->getSubmitQueueSerial()));
             mNeedCommandsAndGarbageCleanup = true;
             break;
         }
@@ -795,12 +795,14 @@ angle::Result CommandProcessor::enqueueSubmitCommands(Context *context,
                                                       ProtectionType protectionType,
                                                       egl::ContextPriority priority,
                                                       VkSemaphore signalSemaphore,
+                                                      VkFence externalFence,
                                                       const QueueSerial &submitQueueSerial)
 {
     ANGLE_TRY(checkAndPopPendingError(context));
 
     CommandProcessorTask task;
-    task.initFlushAndQueueSubmit(signalSemaphore, protectionType, priority, submitQueueSerial);
+    task.initFlushAndQueueSubmit(signalSemaphore, externalFence, protectionType, priority,
+                                 submitQueueSerial);
 
     ANGLE_TRY(queueCommand(std::move(task)));
 
@@ -816,7 +818,6 @@ angle::Result CommandProcessor::enqueueSubmitOneOffCommands(
     VkCommandBuffer commandBufferHandle,
     VkSemaphore waitSemaphore,
     VkPipelineStageFlags waitSemaphoreStageMask,
-    VkFence fence,
     SubmitPolicy submitPolicy,
     const QueueSerial &submitQueueSerial)
 {
@@ -824,7 +825,7 @@ angle::Result CommandProcessor::enqueueSubmitOneOffCommands(
 
     CommandProcessorTask task;
     task.initOneOffQueueSubmit(commandBufferHandle, protectionType, contextPriority, waitSemaphore,
-                               waitSemaphoreStageMask, fence, submitQueueSerial);
+                               waitSemaphoreStageMask, submitQueueSerial);
     ANGLE_TRY(queueCommand(std::move(task)));
 
     mLastEnqueuedSerials.setQueueSerial(submitQueueSerial);
@@ -1283,6 +1284,7 @@ angle::Result CommandQueue::submitCommands(Context *context,
                                            ProtectionType protectionType,
                                            egl::ContextPriority priority,
                                            VkSemaphore signalSemaphore,
+                                           VkFence externalFence,
                                            const QueueSerial &submitQueueSerial)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "CommandQueue::submitCommands");
@@ -1316,10 +1318,10 @@ angle::Result CommandQueue::submitCommands(Context *context,
 
     // Don't make a submission if there is nothing to submit.
     const bool needsQueueSubmit = batch.primaryCommands.valid() ||
-                                  signalSemaphore != VK_NULL_HANDLE || !waitSemaphores.empty();
+                                  signalSemaphore != VK_NULL_HANDLE ||
+                                  externalFence != VK_NULL_HANDLE || !waitSemaphores.empty();
     VkSubmitInfo submitInfo                   = {};
     VkProtectedSubmitInfo protectedSubmitInfo = {};
-    VkFence fence                             = VK_NULL_HANDLE;
 
     if (needsQueueSubmit)
     {
@@ -1341,15 +1343,14 @@ angle::Result CommandQueue::submitCommands(Context *context,
         }
 
         ANGLE_VK_TRY(context, batch.fence.init(context->getDevice(), &mFenceRecycler));
-        fence = batch.fence.get().getHandle();
 
         ++mPerfCounters.vkQueueSubmitCallsTotal;
         ++mPerfCounters.vkQueueSubmitCallsPerFrame;
     }
 
     // Note queueSubmit will release the lock.
-    ANGLE_TRY(queueSubmit(context, std::move(lock), priority, submitInfo, fence, scopedBatch,
-                          submitQueueSerial));
+    ANGLE_TRY(queueSubmit(context, std::move(lock), priority, submitInfo, externalFence,
+                          scopedBatch, submitQueueSerial));
 
     // Clear local vector without lock.
     waitSemaphores.clear();
@@ -1364,7 +1365,6 @@ angle::Result CommandQueue::queueSubmitOneOff(Context *context,
                                               VkCommandBuffer commandBufferHandle,
                                               VkSemaphore waitSemaphore,
                                               VkPipelineStageFlags waitSemaphoreStageMask,
-                                              VkFence fence,
                                               SubmitPolicy submitPolicy,
                                               const QueueSerial &submitQueueSerial)
 {
@@ -1374,13 +1374,7 @@ angle::Result CommandQueue::queueSubmitOneOff(Context *context,
     batch.queueSerial    = submitQueueSerial;
     batch.protectionType = protectionType;
 
-    // If caller passed in a fence, use it. Otherwise create an internal fence. That way if we can
-    // go through normal waitForQueueSerial code path to wait for it to finish.
-    if (fence == VK_NULL_HANDLE)
-    {
-        ANGLE_VK_TRY(context, batch.fence.init(context->getDevice(), &mFenceRecycler));
-        fence = batch.fence.get().getHandle();
-    }
+    ANGLE_VK_TRY(context, batch.fence.init(context->getDevice(), &mFenceRecycler));
 
     VkSubmitInfo submitInfo = {};
     submitInfo.sType        = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -1413,15 +1407,15 @@ angle::Result CommandQueue::queueSubmitOneOff(Context *context,
     ++mPerfCounters.vkQueueSubmitCallsPerFrame;
 
     // Note queueSubmit will release the lock.
-    return queueSubmit(context, std::move(lock), contextPriority, submitInfo, fence, scopedBatch,
-                       submitQueueSerial);
+    return queueSubmit(context, std::move(lock), contextPriority, submitInfo, VK_NULL_HANDLE,
+                       scopedBatch, submitQueueSerial);
 }
 
 angle::Result CommandQueue::queueSubmit(Context *context,
                                         std::unique_lock<std::mutex> &&dequeueLock,
                                         egl::ContextPriority contextPriority,
                                         const VkSubmitInfo &submitInfo,
-                                        VkFence fence,
+                                        VkFence externalFence,
                                         DeviceScoped<CommandBatch> &commandBatch,
                                         const QueueSerial &submitQueueSerial)
 {
@@ -1446,7 +1440,24 @@ angle::Result CommandQueue::queueSubmit(Context *context,
     if (submitInfo.sType == VK_STRUCTURE_TYPE_SUBMIT_INFO)
     {
         VkQueue queue = getQueue(contextPriority);
-        ANGLE_VK_TRY(context, vkQueueSubmit(queue, 1, &submitInfo, fence));
+        VkFence fence = commandBatch.get().fence.get().getHandle();
+        ASSERT(fence != VK_NULL_HANDLE);
+        if (externalFence == VK_NULL_HANDLE)
+        {
+            // Submit as usual if no externalFence provided.
+            ANGLE_VK_TRY(context, vkQueueSubmit(queue, 1, &submitInfo, fence));
+        }
+        else
+        {
+            // Submit the batch using the provided externalFence.
+            ANGLE_VK_TRY(context, vkQueueSubmit(queue, 1, &submitInfo, externalFence));
+            // Submit fence alone to be able to wait for completion using QueueSerial.
+            VkSubmitInfo fenceSubmitInfo = {};
+            fenceSubmitInfo.sType        = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+            ANGLE_VK_TRY(context, vkQueueSubmit(queue, 1, &fenceSubmitInfo, fence));
+            // Possible problem with double submissions: externalFence may be already in signaled
+            // state, while QueueSerial (based on fence) will still be not finished.
+        }
     }
 
     mInFlightCommands.push(commandBatch.release());
