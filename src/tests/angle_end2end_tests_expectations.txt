@@ -48,11 +48,6 @@
 // Vulkan generic
 6641 VULKAN : UniformTest.UnusedStructInlineUniform/* = SKIP
 6641 VULKAN : UniformTest.UnusedStructInlineUniformWithSampler/* = SKIP
-6663 VULKAN : Texture2DTest.UploadThenFSThenNewRPThenFSThenVS/* = SKIP
-6663 VULKAN : Texture2DTest.UploadThenFSThenNewRPThenVS/* = SKIP
-6663 VULKAN : Texture2DTest.UploadThenFSThenNewRPThenVSThenFS/* = SKIP
-6663 VULKAN : Texture2DTest.UploadThenFSThenVS/* = SKIP
-6663 VULKAN : Texture2DTest.UploadThenFSThenVSThenNewRPThenFS/* = SKIP
 6926 VULKAN : Texture2DTestES3.TextureRGBUpdateWithPBO/ES3_Vulkan* = SKIP
 6730 VULKAN : GLSLTest_ES3.GLVertexIDIntegerTextureDrawElementsU8Line/* = SKIP
 6730 VULKAN : GLSLTest_ES3.GLVertexIDIntegerTextureDrawElementsU8LineIds/* = SKIP

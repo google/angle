@@ -448,6 +448,12 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessagesWithoutStoreOpNone[] 
         "imageLayout: VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL",
         "usage: SYNC_FRAGMENT_SHADER_SHADER_",
     },
+    // From: TraceTest.antutu_refinery http://anglebug.com/6663
+    {
+        "SYNC-HAZARD-READ-AFTER-WRITE",
+        "imageLayout: VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL",
+        "usage: SYNC_COMPUTE_SHADER_SHADER_SAMPLED_READ",
+    },
 };
 
 // Messages that shouldn't be generated if both loadOp=NONE and storeOp=NONE are supported,

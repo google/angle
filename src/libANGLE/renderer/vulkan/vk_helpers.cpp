@@ -6327,12 +6327,14 @@ bool ImageHelper::updateLayoutAndBarrier(Context *context,
         VkPipelineStageFlags srcStageMask = GetImageLayoutSrcStageMask(context, transitionFrom);
         VkPipelineStageFlags dstStageMask = GetImageLayoutDstStageMask(context, transitionTo);
 
-        if (transitionFrom.layout == transitionTo.layout && IsShaderReadOnlyLayout(transitionTo))
+        if (transitionFrom.layout == transitionTo.layout && IsShaderReadOnlyLayout(transitionTo) &&
+            mBarrierQueueSerial == queueSerial)
         {
-            // If we are switching between different shader stage reads, then there is no actual
-            // layout change or access type change. We only need a barrier if we are making a read
-            // that is from a new stage. Also note that we barrier against previous non-shaderRead
-            // layout. We do not barrier between one shaderRead and another shaderRead.
+            // If we are switching between different shader stage reads of the same render pass,
+            // then there is no actual layout change or access type change. We only need a barrier
+            // if we are making a read that is from a new stage. Also note that we do barrier
+            // against previous non-shaderRead layout. We do not barrier between one shaderRead and
+            // another shaderRead.
             bool isNewReadStage = (mCurrentShaderReadStageMask & dstStageMask) != dstStageMask;
             if (isNewReadStage)
             {
