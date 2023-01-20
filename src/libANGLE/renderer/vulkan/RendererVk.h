@@ -269,15 +269,15 @@ class MemoryAllocationTracker : angle::NonCopyable
         mActiveMemoryAllocationsSize;
     std::array<std::atomic<uint64_t>, vk::kMemoryAllocationTypeCount> mActiveMemoryAllocationsCount;
 
-    // Memory allocation data per memory heap. To update the data, a mutex is used.
-    std::mutex mMemoryAllocationMutex;
+    // Memory allocation data per memory heap.
+    using PerHeapMemoryAllocationSizeArray =
+        std::array<std::atomic<VkDeviceSize>, VK_MAX_MEMORY_HEAPS>;
+    using PerHeapMemoryAllocationCountArray =
+        std::array<std::atomic<uint64_t>, VK_MAX_MEMORY_HEAPS>;
 
-    using PerHeapMemoryAllocationSizeVector  = std::vector<VkDeviceSize>;
-    using PerHeapMemoryAllocationCountVector = std::vector<uint64_t>;
-
-    std::array<PerHeapMemoryAllocationSizeVector, vk::kMemoryAllocationTypeCount>
+    std::array<PerHeapMemoryAllocationSizeArray, vk::kMemoryAllocationTypeCount>
         mActivePerHeapMemoryAllocationsSize;
-    std::array<PerHeapMemoryAllocationCountVector, vk::kMemoryAllocationTypeCount>
+    std::array<PerHeapMemoryAllocationCountArray, vk::kMemoryAllocationTypeCount>
         mActivePerHeapMemoryAllocationsCount;
 
     // Pending memory allocation information is used for logging in case of an allocation error.
@@ -286,6 +286,9 @@ class MemoryAllocationTracker : angle::NonCopyable
     std::atomic<VkDeviceSize> mPendingMemoryAllocationSize;
     std::atomic<vk::MemoryAllocationType> mPendingMemoryAllocationType;
     std::atomic<uint32_t> mPendingMemoryTypeIndex;
+
+    // Mutex is used to update the data when debug layers are enabled.
+    std::mutex mMemoryAllocationMutex;
 
     // Additional information regarding memory allocation with debug layers enabled, including
     // allocation ID and a record of all active allocations.
