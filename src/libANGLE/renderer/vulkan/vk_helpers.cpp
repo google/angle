@@ -8740,7 +8740,7 @@ angle::Result ImageHelper::copySurfaceImageToBuffer(DisplayVk *displayVk,
     QueueSerial submitQueueSerial;
     ANGLE_TRY(rendererVk->queueSubmitOneOff(displayVk, std::move(primaryCommandBuffer), false,
                                             egl::ContextPriority::Medium, nullptr, 0, nullptr,
-                                            vk::SubmitPolicy::EnsureSubmitted, &submitQueueSerial));
+                                            vk::SubmitPolicy::AllowDeferred, &submitQueueSerial));
 
     return rendererVk->finishQueueSerial(displayVk, submitQueueSerial);
 }
@@ -8784,7 +8784,7 @@ angle::Result ImageHelper::copyBufferToSurfaceImage(DisplayVk *displayVk,
     QueueSerial submitQueueSerial;
     ANGLE_TRY(rendererVk->queueSubmitOneOff(displayVk, std::move(commandBuffer), false,
                                             egl::ContextPriority::Medium, nullptr, 0, nullptr,
-                                            vk::SubmitPolicy::EnsureSubmitted, &submitQueueSerial));
+                                            vk::SubmitPolicy::AllowDeferred, &submitQueueSerial));
 
     return rendererVk->finishQueueSerial(displayVk, submitQueueSerial);
 }

@@ -7046,7 +7046,7 @@ angle::Result ContextVk::getTimestamp(uint64_t *timestampOut)
     QueueSerial submitQueueSerial;
     ANGLE_TRY(mRenderer->queueSubmitOneOff(this, std::move(commandBuffer), hasProtectedContent(),
                                            mContextPriority, nullptr, 0, nullptr,
-                                           vk::SubmitPolicy::EnsureSubmitted, &submitQueueSerial));
+                                           vk::SubmitPolicy::AllowDeferred, &submitQueueSerial));
     // Track it with the submitSerial.
     timestampQuery.setQueueSerial(submitQueueSerial);
 
