@@ -1190,6 +1190,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_traces',
   },
+  'src/tests/restricted_traces/csr2_drag_racing': {
+      'packages': [
+        {
+            'package': 'angle/traces/csr2_drag_racing',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_traces',
+  },
   'src/tests/restricted_traces/cut_the_rope': {
       'packages': [
         {
