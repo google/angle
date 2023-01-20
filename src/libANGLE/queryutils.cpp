@@ -3656,6 +3656,14 @@ bool GetQueryParameterInfo(const State &glState,
         return true;
     }
 
+    if (extensions.shaderFramebufferFetchARM &&
+        (pname == GL_FETCH_PER_SAMPLE_ARM || pname == GL_FRAGMENT_SHADER_FRAMEBUFFER_FETCH_MRT_ARM))
+    {
+        *type      = GL_BOOL;
+        *numParams = 1;
+        return true;
+    }
+
     if (glState.getClientVersion() < Version(2, 0))
     {
         switch (pname)
