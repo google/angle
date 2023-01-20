@@ -98,10 +98,6 @@ enum class CustomTask
     OneOffQueueSubmit,
     // Execute QueuePresent
     Present,
-    // do cleanup processing on completed commands
-    // TODO: https://issuetracker.google.com/170312581 - should be able to remove
-    // checkCompletedCommands command with fence refactor.
-    CheckCompletedCommands,
     // Exit the command processor thread
     Exit,
 };
