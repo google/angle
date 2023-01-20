@@ -140,6 +140,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_EXT_semaphore"] = enableableExtension(&Extensions::semaphoreEXT);
         map["GL_EXT_semaphore_fd"] = enableableExtension(&Extensions::semaphoreFdEXT);
         map["GL_EXT_separate_shader_objects"] = enableableExtension(&Extensions::separateShaderObjectsEXT);
+        map["GL_ARM_shader_framebuffer_fetch"] = enableableExtension(&Extensions::shaderFramebufferFetchARM);
         map["GL_EXT_shader_framebuffer_fetch"] = enableableExtension(&Extensions::shaderFramebufferFetchEXT);
         map["GL_EXT_shader_framebuffer_fetch_non_coherent"] = enableableExtension(&Extensions::shaderFramebufferFetchNonCoherentEXT);
         map["GL_OES_shader_image_atomic"] = enableableExtension(&Extensions::shaderImageAtomicOES);
