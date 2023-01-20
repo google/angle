@@ -1390,6 +1390,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_traces',
   },
+  'src/tests/restricted_traces/family_island': {
+      'packages': [
+        {
+            'package': 'angle/traces/family_island',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_traces',
+  },
   'src/tests/restricted_traces/farm_heroes_saga': {
       'packages': [
         {
