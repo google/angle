@@ -25,6 +25,7 @@
 #include "common/MemoryBuffer.h"
 #include "common/Optional.h"
 #include "common/angleutils.h"
+#include "libANGLE/BlobCache.h"
 #include "libANGLE/Caps.h"
 #include "libANGLE/Compiler.h"
 #include "libANGLE/Debug.h"
@@ -252,8 +253,6 @@ class Shader final : angle::NonCopyable, public LabeledObject
     GLenum getTessGenVertexOrder(const Context *context);
     GLenum getTessGenPointMode(const Context *context);
 
-    const std::string &getCompilerResourcesString() const;
-
     const ShaderState &getState() const { return mState; }
 
     GLuint getCurrentMaxComputeWorkGroupInvocations() const
@@ -272,6 +271,13 @@ class Shader final : angle::NonCopyable, public LabeledObject
     angle::Result deserialize(const Context *context, BinaryInputStream &stream);
     angle::Result loadBinary(const Context *context, const void *binary, GLsizei length);
 
+    void writeShaderKey(BinaryOutputStream *streamOut) const
+    {
+        ASSERT(streamOut && !mShaderHash.empty());
+        streamOut->writeBytes(mShaderHash.data(), egl::BlobCache::kKeyLength);
+        return;
+    }
+
   private:
     struct CompilingState;
 
@@ -280,6 +286,11 @@ class Shader final : angle::NonCopyable, public LabeledObject
                               GLsizei bufSize,
                               GLsizei *length,
                               char *buffer);
+
+    // Compute a key to uniquely identify the shader object in memory caches.
+    void setShaderKey(const Context *context,
+                      const ShCompileOptions &compileOptions,
+                      const ShCompilerInstance &compilerInstance);
 
     ShaderState mState;
     std::unique_ptr<rx::ShaderImpl> mImplementation;
@@ -293,7 +304,7 @@ class Shader final : angle::NonCopyable, public LabeledObject
     // We keep a reference to the translator in order to defer compiles while preserving settings.
     BindingPointer<Compiler> mBoundCompiler;
     std::unique_ptr<CompilingState> mCompilingState;
-    std::string mCompilerResourcesString;
+    egl::BlobCache::Key mShaderHash;
 
     ShaderProgramManager *mResourceManager;
 

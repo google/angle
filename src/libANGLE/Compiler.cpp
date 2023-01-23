@@ -415,11 +415,6 @@ ShBuiltInResources ShCompilerInstance::getBuiltInResources() const
     return sh::GetBuiltInResources(mHandle);
 }
 
-const std::string &ShCompilerInstance::getBuiltinResourcesString() const
-{
-    return sh::GetBuiltInResourcesString(mHandle);
-}
-
 ShShaderOutput ShCompilerInstance::getShaderOutputType() const
 {
     return mOutputType;

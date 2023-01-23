@@ -14,6 +14,7 @@
 #include <sstream>
 
 #include "GLSLANG/ShaderLang.h"
+#include "common/angle_version_info.h"
 #include "common/utilities.h"
 #include "libANGLE/Caps.h"
 #include "libANGLE/Compiler.h"
@@ -77,7 +78,6 @@ struct Shader::CompilingState
 {
     std::shared_ptr<rx::WaitableCompileEvent> compileEvent;
     ShCompilerInstance shCompilerInstance;
-    egl::BlobCache::Key shaderHash;
 };
 
 ShaderState::ShaderState(ShaderType shaderType)
@@ -359,15 +359,15 @@ void Shader::compile(const Context *context)
     ShCompilerInstance compilerInstance = mBoundCompiler->getInstance(mType);
     ShHandle compilerHandle             = compilerInstance.getHandle();
     ASSERT(compilerHandle);
-    mCompilerResourcesString = compilerInstance.getBuiltinResourcesString();
 
     // Find a shader in Blob Cache
-    egl::BlobCache::Key shaderHash = {0};
+    setShaderKey(context, options, compilerInstance);
+    ASSERT(!mShaderHash.empty());
     MemoryShaderCache *shaderCache = context->getMemoryShaderCache();
     if (shaderCache)
     {
         angle::Result cacheResult =
-            shaderCache->getShader(context, this, options, compilerInstance, &shaderHash);
+            shaderCache->getShader(context, this, options, compilerInstance, mShaderHash);
 
         if (cacheResult == angle::Result::Continue)
         {
@@ -380,7 +380,6 @@ void Shader::compile(const Context *context)
     mState.mCompileStatus = CompileStatus::COMPILE_REQUESTED;
     mCompilingState.reset(new CompilingState());
     mCompilingState->shCompilerInstance = std::move(compilerInstance);
-    mCompilingState->shaderHash         = shaderHash;
     mCompilingState->compileEvent =
         mImplementation->compile(context, &(mCompilingState->shCompilerInstance), &options);
 }
@@ -494,8 +493,7 @@ void Shader::resolveCompile(const Context *context)
     if (success && shaderCache)
     {
         // Save to the shader cache.
-        if (shaderCache->putShader(context, mCompilingState->shaderHash, this) !=
-            angle::Result::Continue)
+        if (shaderCache->putShader(context, mShaderHash, this) != angle::Result::Continue)
         {
             ANGLE_PERF_WARNING(context->getState().getDebug(), GL_DEBUG_SEVERITY_LOW,
                                "Failed to save compiled shader to memory shader cache.");
@@ -718,17 +716,11 @@ GLenum Shader::getTessGenPointMode(const Context *context)
     return mState.mCompiledShaderState.tessGenPointMode;
 }
 
-const std::string &Shader::getCompilerResourcesString() const
-{
-    return mCompilerResourcesString;
-}
-
 angle::Result Shader::serialize(const Context *context, angle::MemoryBuffer *binaryOut) const
 {
     BinaryOutputStream stream;
 
     stream.writeInt(kShaderCacheIdentifier);
-    stream.writeString(mCompilerResourcesString);
     mState.mCompiledShaderState.serialize(stream);
 
     ASSERT(binaryOut);
@@ -753,7 +745,6 @@ angle::Result Shader::deserialize(const Context *context, BinaryInputStream &str
     {
         return angle::Result::Stop;
     }
-    stream.readString(&mCompilerResourcesString);
     mState.mCompiledShaderState.deserialize(stream);
 
     return angle::Result::Continue;
@@ -769,6 +760,36 @@ angle::Result Shader::loadBinary(const Context *context, const void *binary, GLs
     mState.mCompileStatus = CompileStatus::COMPILED;
 
     return angle::Result::Continue;
+}
+
+void Shader::setShaderKey(const Context *context,
+                          const ShCompileOptions &compileOptions,
+                          const ShCompilerInstance &compilerInstance)
+{
+    // Compute shader key.
+    BinaryOutputStream hashStream;
+
+    // Start with the shader type and source.
+    hashStream.writeEnum(mType);
+    hashStream.writeString(mState.getSource());
+
+    // Include the commit hash
+    hashStream.writeString(angle::GetANGLEShaderProgramVersion());
+
+    hashStream.writeEnum(Compiler::SelectShaderSpec(context->getState()));
+    hashStream.writeEnum(compilerInstance.getShaderOutputType());
+    hashStream.writeBytes(reinterpret_cast<const uint8_t *>(&compileOptions),
+                          sizeof(compileOptions));
+
+    // Include the ShBuiltInResources, which represent the extensions and constants used by the
+    // shader.
+    const ShBuiltInResources resources = compilerInstance.getBuiltInResources();
+    hashStream.writeBytes(reinterpret_cast<const uint8_t *>(&resources), sizeof(resources));
+
+    // Call the secure SHA hashing function.
+    const std::vector<uint8_t> &shaderKey = hashStream.getData();
+    mShaderHash                           = {0};
+    angle::base::SHA1HashBytes(shaderKey.data(), shaderKey.size(), mShaderHash.data());
 }
 
 }  // namespace gl
