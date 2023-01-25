@@ -61,6 +61,13 @@ struct FeaturesVk : FeatureSetBase
         "Enable uploading the previously defined mutable mipmap texture.", &members,
         "https://anglebug.com/7308"};
 
+    FeatureInfo useVmaForImageSuballocation = {
+        "useVmaForImageSuballocation",
+        FeatureCategory::VulkanFeatures,
+        "Utilize VMA for image memory suballocation.",
+        &members,
+    };
+
     FeatureInfo supportsMemoryBudget = {
         "supportsMemoryBudget",
         FeatureCategory::VulkanFeatures,

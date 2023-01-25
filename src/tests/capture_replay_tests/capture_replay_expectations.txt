@@ -184,3 +184,10 @@
 
 7814 WIN : PBOExtensionTest.PBOWithExistingData/ES2_Vulkan_SwiftShader = FLAKY
 7814 WIN : PBOExtensionTest.PBOWithOtherTarget/ES2_Vulkan_SwiftShader = FLAKY
+
+# Related to uninitialized memory/buffers when using image suballocation
+8033 WIN : FramebufferTestWithFormatFallback.R4G4B4A4_OutOfRangeStagedUpdateReformated/* = SKIP_FOR_CAPTURE
+8033 WIN : ClearTestES3.RepeatedStencilClear/* = SKIP_FOR_CAPTURE
+8033 WIN : ClearTestES3.RepeatedStencilClearWithBlitAfterClearAndDrawInBetween/* = SKIP_FOR_CAPTURE
+8033 WIN : StateChangeTestES3.StencilReferenceAndCompareMask/* = SKIP_FOR_CAPTURE
+8033 WIN : StateChangeTestES3.StencilWriteMask/* = SKIP_FOR_CAPTURE

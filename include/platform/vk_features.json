@@ -61,6 +61,13 @@
             "issue": "https://anglebug.com/7308"
         },
         {
+            "name": "use_vma_for_image_suballocation",
+            "category": "Features",
+            "description": [
+                "Utilize VMA for image memory suballocation."
+            ]
+        },
+        {
             "name": "supports_memory_budget",
             "category": "Features",
             "description": [

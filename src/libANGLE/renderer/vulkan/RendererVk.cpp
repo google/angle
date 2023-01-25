@@ -1414,6 +1414,7 @@ void RendererVk::onDestroy(vk::Context *context)
     mOutsideRenderPassCommandBufferRecycler.onDestroy();
     mRenderPassCommandBufferRecycler.onDestroy();
 
+    mImageMemorySuballocator.destroy(this);
     mAllocator.destroy();
 
     // When the renderer is being destroyed, it is possible to check if all the allocated memory
@@ -4315,6 +4316,9 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     // textures.
     ANGLE_FEATURE_CONDITION(&mFeatures, mutableMipmapTextureUpload, false);
 
+    // Use VMA for image suballocation.
+    ANGLE_FEATURE_CONDITION(&mFeatures, useVmaForImageSuballocation, true);
+
     // Retain debug info in SPIR-V blob.
     ANGLE_FEATURE_CONDITION(&mFeatures, retainSPIRVDebugInfo, getEnableValidationLayers());
 
@@ -5851,5 +5855,27 @@ void MemoryReport::logMemoryReportStats() const
                << " (max=" << std::setw(10) << importedMemoryMax << ")";
     }
 }
+
+ImageMemorySuballocator::ImageMemorySuballocator() {}
+ImageMemorySuballocator::~ImageMemorySuballocator() {}
+
+void ImageMemorySuballocator::destroy(RendererVk *renderer) {}
+
+VkResult ImageMemorySuballocator::allocateAndBindMemory(RendererVk *renderer,
+                                                        Image *image,
+                                                        VkMemoryPropertyFlags requiredFlags,
+                                                        VkMemoryPropertyFlags preferredFlags,
+                                                        Allocation *allocationOut,
+                                                        uint32_t *memoryTypeIndexOut,
+                                                        VkDeviceSize *sizeOut)
+{
+    ASSERT(image && image->valid());
+    ASSERT(allocationOut && !allocationOut->valid());
+    const Allocator &allocator = renderer->getAllocator();
+    return vma::AllocateAndBindMemoryForImage(allocator.getHandle(), &image->mHandle, requiredFlags,
+                                              preferredFlags, &allocationOut->mHandle,
+                                              memoryTypeIndexOut, sizeOut);
+}
+
 }  // namespace vk
 }  // namespace rx

@@ -2591,6 +2591,7 @@ class ImageHelper final : public Resource, public angle::Subject
     // Vulkan objects.
     Image mImage;
     DeviceMemory mDeviceMemory;
+    Allocation mVmaAllocation;
 
     // Image properties.
     VkImageCreateInfo mVkImageCreateInfo;

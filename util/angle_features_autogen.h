@@ -315,6 +315,7 @@ enum class Feature
     UseNonZeroStencilWriteMaskStaticState,
     UseSystemMemoryForConstantBuffers,
     UseUnusedBlocksWithStandardOrSharedLayout,
+    UseVmaForImageSuballocation,
     VaryingsRequireMatchingPrecisionInSpirv,
     VertexIDDoesNotIncludeBaseVertex,
     WaitIdleBeforeSwapchainRecreation,
