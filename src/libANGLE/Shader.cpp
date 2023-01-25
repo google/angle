@@ -15,6 +15,8 @@
 
 #include "GLSLANG/ShaderLang.h"
 #include "common/angle_version_info.h"
+#include "common/string_utils.h"
+#include "common/system_utils.h"
 #include "common/utilities.h"
 #include "libANGLE/Caps.h"
 #include "libANGLE/Compiler.h"
@@ -34,6 +36,34 @@ namespace gl
 namespace
 {
 constexpr uint32_t kShaderCacheIdentifier = 0x12345678;
+
+// Environment variable (and associated Android property) for the path to read and write shader
+// dumps
+constexpr char kShaderDumpPathVarName[]       = "ANGLE_SHADER_DUMP_PATH";
+constexpr char kEShaderDumpPathPropertyName[] = "debug.angle.shader_dump_path";
+
+std::string GetShaderDumpFilePath(ShaderType type, const std::string &mergedSource)
+{
+    size_t sourceHash = std::hash<std::string>{}(mergedSource);
+
+    // Check the environment variable for the path to save and read shader dump files. If it doesn't
+    // exist, default to the temp dir. If that doesn't exist, use the current working directory.
+    std::string shaderDumpDir = angle::GetAndSetEnvironmentVarOrUnCachedAndroidProperty(
+        kShaderDumpPathVarName, kEShaderDumpPathPropertyName);
+    if (shaderDumpDir.empty() || shaderDumpDir.compare("0") == 0)
+    {
+        shaderDumpDir = angle::GetTempDirectory().valueOr("");
+    }
+
+    std::stringstream path;
+    if (!shaderDumpDir.empty())
+    {
+        path << shaderDumpDir << "/";
+    }
+    path << type << "_" << sourceHash << ".essl";
+
+    return path.str();
+}
 }  // anonymous namespace
 
 const char *GetShaderTypeString(ShaderType type)
@@ -140,7 +170,10 @@ ShaderProgramID Shader::getHandle() const
     return mHandle;
 }
 
-void Shader::setSource(GLsizei count, const char *const *string, const GLint *length)
+void Shader::setSource(const Context *context,
+                       GLsizei count,
+                       const char *const *string,
+                       const GLint *length)
 {
     std::ostringstream stream;
 
@@ -156,7 +189,35 @@ void Shader::setSource(GLsizei count, const char *const *string, const GLint *le
         }
     }
 
-    mState.mSource = stream.str();
+    std::string source = stream.str();
+
+    const angle::FrontendFeatures &frontendFeatures = context->getFrontendFeatures();
+
+    bool substitutedShader = false;
+    if (frontendFeatures.enableShaderSubstitution.enabled)
+    {
+        std::string subsitutionShaderPath = GetShaderDumpFilePath(mState.getShaderType(), source);
+
+        std::string substituteShader;
+        if (angle::ReadFileToString(subsitutionShaderPath, &substituteShader))
+        {
+            source            = std::move(substituteShader);
+            substitutedShader = true;
+            INFO() << "Shader substitute found, loading from " << subsitutionShaderPath;
+        }
+    }
+
+    // Only dump shaders that have not been previously substituted. It would write the same data
+    // back to the file.
+    if (frontendFeatures.dumpShaderSource.enabled && !substitutedShader)
+    {
+        std::string dumpFile = GetShaderDumpFilePath(mState.getShaderType(), source);
+
+        writeFile(dumpFile.c_str(), source.c_str(), source.length());
+        INFO() << "Dumped shader source: " << dumpFile;
+    }
+
+    mState.mSource = std::move(source);
 }
 
 int Shader::getInfoLogLength(const Context *context)

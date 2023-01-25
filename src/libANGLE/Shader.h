@@ -178,7 +178,10 @@ class Shader final : angle::NonCopyable, public LabeledObject
 
     rx::ShaderImpl *getImplementation() const { return mImplementation.get(); }
 
-    void setSource(GLsizei count, const char *const *string, const GLint *length);
+    void setSource(const Context *context,
+                   GLsizei count,
+                   const char *const *string,
+                   const GLint *length);
     int getInfoLogLength(const Context *context);
     void getInfoLog(const Context *context, GLsizei bufSize, GLsizei *length, char *infoLog);
     std::string getInfoLogString() const { return mInfoLog; }
