@@ -294,10 +294,7 @@ void ProgramMtl::save(const gl::Context *context, gl::BinaryOutputStream *stream
     saveDefaultUniformBlocksInfo(stream);
 }
 
-void ProgramMtl::setBinaryRetrievableHint(bool retrievable)
-{
-    UNIMPLEMENTED();
-}
+void ProgramMtl::setBinaryRetrievableHint(bool retrievable) {}
 
 void ProgramMtl::setSeparable(bool separable)
 {
