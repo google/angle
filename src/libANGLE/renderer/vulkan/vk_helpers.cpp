@@ -2694,6 +2694,7 @@ template <typename CommandBufferT, typename CommandBufferHelperT>
 void CommandBufferRecycler<CommandBufferT, CommandBufferHelperT>::resetCommandBuffer(
     CommandBufferT &&commandBuffer)
 {
+    std::unique_lock<std::mutex> lock(mMutex);
     ResetSecondaryCommandBuffer(&mSecondaryCommandBuffersToReset, std::move(commandBuffer));
 }
 
