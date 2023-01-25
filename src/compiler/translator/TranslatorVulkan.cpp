@@ -159,8 +159,8 @@ bool DeclareDefaultUniforms(TCompiler *compiler,
     TLayoutQualifier layoutQualifier = TLayoutQualifier::Create();
     layoutQualifier.blockStorage     = EbsStd140;
     const TVariable *uniformBlock    = DeclareInterfaceBlock(
-           root, symbolTable, uniformList, EvqUniform, layoutQualifier, TMemoryQualifier::Create(), 0,
-           ImmutableString(kDefaultUniformNames[shaderType]), ImmutableString(""));
+        root, symbolTable, uniformList, EvqUniform, layoutQualifier, TMemoryQualifier::Create(), 0,
+        ImmutableString(kDefaultUniformNames[shaderType]), ImmutableString(""));
 
     // Create a map from the uniform variables to new variables that reference the fields of the
     // block.
@@ -641,7 +641,7 @@ bool HasFramebufferFetch(const TExtensionBehavior &extBehavior,
 }  // anonymous namespace
 
 TranslatorVulkan::TranslatorVulkan(sh::GLenum type, ShShaderSpec spec)
-    : TCompiler(type, spec, SH_GLSL_450_CORE_OUTPUT)
+    : TCompiler(type, spec, SH_SPIRV_VULKAN_OUTPUT)
 {}
 
 bool TranslatorVulkan::translateImpl(TIntermBlock *root,

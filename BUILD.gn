@@ -654,7 +654,10 @@ angle_static_library("angle_gpu_info_util") {
 
 angle_source_set("angle_translator_headers") {
   sources = angle_translator_exported_headers
-  public_deps = [ ":includes" ]
+  public_deps = [
+    ":angle_common_shader_state",
+    ":includes",
+  ]
 }
 
 template("translator_lib") {
@@ -749,6 +752,7 @@ template("translator_lib") {
     public_deps = [
       ":angle_common",
       ":angle_translator_headers",
+      ":angle_version_info",
     ]
 
     if (is_win) {

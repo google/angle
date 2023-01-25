@@ -569,6 +569,7 @@
     /* GL_ANGLE_semaphore_fuchsia */                                                               \
     void importSemaphoreZirconHandle(SemaphoreID semaphorePacked, HandleType handleTypePacked,     \
                                      GLuint handle);                                               \
+    /* GL_ANGLE_shader_binary */                                                                   \
     /* GL_ANGLE_shader_pixel_local_storage */                                                      \
     void framebufferMemorylessPixelLocalStorage(GLint plane, GLenum internalformat);               \
     void framebufferTexturePixelLocalStorage(GLint plane, TextureID backingtexturePacked,          \
