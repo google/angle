@@ -2399,11 +2399,10 @@ ANGLE_INLINE angle::Result ContextVk::handleDirtyTexturesImpl(
 
     if (executable->hasTextures())
     {
-        UpdatePreCacheActiveTextures(executable->getSamplerBindings(),
+        ProgramExecutableVk *executableVk = getExecutable();
+        UpdatePreCacheActiveTextures(*executable, *executableVk, executable->getSamplerBindings(),
                                      executable->getActiveSamplersMask(), mActiveTextures,
                                      mState.getSamplers(), &mActiveTexturesDesc);
-
-        ProgramExecutableVk *executableVk = getExecutable();
 
         ANGLE_TRY(executableVk->updateTexturesDescriptorSet(
             this, *executable, mActiveTextures, mState.getSamplers(),
