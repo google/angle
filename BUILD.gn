@@ -731,6 +731,7 @@ template("translator_lib") {
     public_configs += [ ":external_config" ]
 
     deps = [
+      ":angle_common_shader_state",
       ":includes",
       ":preprocessor",
       "$angle_root/src/common/spirv:angle_spirv_headers",
@@ -749,6 +750,7 @@ template("translator_lib") {
     public_deps = [
       ":angle_common",
       ":angle_translator_headers",
+      ":angle_version_info",
     ]
 
     if (is_win) {
@@ -975,7 +977,6 @@ angle_source_set("libANGLE_headers") {
   }
   public_deps = [
     ":angle_common",
-    ":angle_common_shader_state",
     ":angle_translator_headers",
   ]
   public_configs += [ ":libANGLE_config" ]

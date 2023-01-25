@@ -7580,8 +7580,9 @@ void Context::shaderBinary(GLsizei n,
                            const void *binary,
                            GLsizei length)
 {
-    // No binary shader formats are supported.
-    UNIMPLEMENTED();
+    Shader *shaderObject = getShader(*shaders);
+    ASSERT(shaderObject != nullptr);
+    ANGLE_CONTEXT_TRY(shaderObject->loadShaderBinary(this, binary, length));
 }
 
 void Context::bindFragDataLocationIndexed(ShaderProgramID program,

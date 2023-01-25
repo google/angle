@@ -240,6 +240,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_ANGLE_robust_fragment_shader_output"] = enableableExtension(&Extensions::robustFragmentShaderOutputANGLE);
         map["GL_ANGLE_robust_resource_initialization"] = esOnlyExtension(&Extensions::robustResourceInitializationANGLE);
         map["GL_ANGLE_semaphore_fuchsia"] = enableableExtension(&Extensions::semaphoreFuchsiaANGLE);
+        map["GL_ANGLE_shader_binary"] = esOnlyExtension(&Extensions::shaderBinaryANGLE);
         map["GL_ANGLE_shader_pixel_local_storage"] = esOnlyExtension(&Extensions::shaderPixelLocalStorageANGLE);
         map["GL_ANGLE_shader_pixel_local_storage_coherent"] = esOnlyExtension(&Extensions::shaderPixelLocalStorageCoherentANGLE);
         map["GL_CHROMIUM_sync_query"] = enableableExtension(&Extensions::syncQueryCHROMIUM);

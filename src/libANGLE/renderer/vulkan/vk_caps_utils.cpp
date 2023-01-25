@@ -951,6 +951,9 @@ void RendererVk::ensureCapsInitialized() const
     mNativeExtensions.getProgramBinaryOES = true;
     mNativeCaps.programBinaryFormats.push_back(GL_PROGRAM_BINARY_ANGLE);
 
+    // Enable Shader Binary extension.
+    mNativeCaps.shaderBinaryFormats.push_back(GL_SHADER_BINARY_ANGLE);
+
     // Enable GL_NV_pixel_buffer_object extension.
     mNativeExtensions.pixelBufferObjectNV = true;
 
