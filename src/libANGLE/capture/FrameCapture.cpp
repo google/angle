@@ -536,12 +536,22 @@ void WriteInlineData<GLchar>(const std::vector<uint8_t> &vec, std::ostream &out)
 // Note we need to emit extra escapes to ensure quotes and other special characters are preserved.
 struct FmtMultiLineString
 {
-    FmtMultiLineString(const std::string &str)
-        : strings(angle::SplitString(str,
-                                     "\n",
-                                     WhitespaceHandling::KEEP_WHITESPACE,
-                                     SplitResult::SPLIT_WANT_ALL))
-    {}
+    FmtMultiLineString(const std::string &str) : strings()
+    {
+        std::string str2;
+
+        // Strip any carriage returns before splitting, for consistency
+        if (str.find("\r") != std::string::npos)
+        {
+            // str is const, so have to make a copy of it first
+            str2 = str;
+            ReplaceAllSubstrings(&str2, "\r", "");
+        }
+
+        strings =
+            angle::SplitString(str2.empty() ? str : str2, "\n", WhitespaceHandling::KEEP_WHITESPACE,
+                               SplitResult::SPLIT_WANT_ALL);
+    }
 
     std::vector<std::string> strings;
 };
