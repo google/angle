@@ -213,6 +213,7 @@ void SharedFence::destroy(VkDevice device)
         {
             mRefCountedFence = nullptr;
         }
+        mRecycler = nullptr;
     }
 }
 
@@ -231,6 +232,7 @@ void SharedFence::release()
         {
             mRefCountedFence = nullptr;
         }
+        mRecycler = nullptr;
     }
 }
 
