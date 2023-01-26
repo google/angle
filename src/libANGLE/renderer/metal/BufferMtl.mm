@@ -499,20 +499,9 @@ const std::vector<IndexRange> BufferMtl::getRestartIndicesFromClientData(
 
 namespace
 {
-
-bool useSharedMemory(ContextMtl *contextMtl, gl::BufferUsage usage)
+MTLStorageMode getStorageModeForUsage(ContextMtl *contextMtl, gl::BufferUsage usage)
 {
-    const angle::FeaturesMtl &features = contextMtl->getDisplay()->getFeatures();
-    if (features.alwaysUseManagedStorageModeForBuffers.enabled)
-    {
-        return false;
-    }
-
-    if (features.alwaysUseSharedStorageModeForBuffers.enabled)
-    {
-        return true;
-    }
-
+    mtl::Buffer::AccessPattern access;
     switch (usage)
     {
         case gl::BufferUsage::StaticCopy:
@@ -520,12 +509,14 @@ bool useSharedMemory(ContextMtl *contextMtl, gl::BufferUsage usage)
         case gl::BufferUsage::StaticRead:
         case gl::BufferUsage::DynamicRead:
         case gl::BufferUsage::StreamRead:
-            return true;
+            access = mtl::Buffer::AccessPattern::FrequentCPU;
+            break;
         default:
-            return false;
+            access = mtl::Buffer::AccessPattern::FrequentGPU;
+            break;
     }
+    return mtl::Buffer::getStorageModeForAccessPattern(contextMtl, access);
 }
-
 }  // namespace
 
 angle::Result BufferMtl::setDataImpl(const gl::Context *context,
@@ -571,8 +562,8 @@ angle::Result BufferMtl::setDataImpl(const gl::Context *context,
     }
 
     // Get a new buffer
-    bool useSharedMem = useSharedMemory(contextMtl, usage);
-    ANGLE_TRY(bufferManager.getBuffer(contextMtl, adjustedSize, useSharedMem, mBuffer));
+    auto storageMode = getStorageModeForUsage(contextMtl, usage);
+    ANGLE_TRY(bufferManager.getBuffer(contextMtl, storageMode, adjustedSize, mBuffer));
 
 #ifndef NDEBUG
     ANGLE_MTL_OBJC_SCOPE
@@ -654,9 +645,9 @@ angle::Result BufferMtl::putDataInNewBufferAndStartUsingNewBuffer(ContextMtl *co
 
     mtl::BufferManager &bufferManager = contextMtl->getBufferManager();
     mtl::BufferRef oldBuffer          = mBuffer;
-    bool useSharedMem                 = useSharedMemory(contextMtl, mUsage);
+    auto storageMode                  = getStorageModeForUsage(contextMtl, mUsage);
 
-    ANGLE_TRY(bufferManager.getBuffer(contextMtl, mGLSize, useSharedMem, mBuffer));
+    ANGLE_TRY(bufferManager.getBuffer(contextMtl, storageMode, mGLSize, mBuffer));
     mBuffer->get().label = [NSString stringWithFormat:@"BufferMtl=%p(%lu)", this, ++mRevisionCount];
 
     uint8_t *ptr = mBuffer->mapWithOpt(contextMtl, false, true);
@@ -778,10 +769,10 @@ angle::Result BufferMtl::commitShadowCopy(ContextMtl *contextMtl)
 angle::Result BufferMtl::commitShadowCopy(ContextMtl *contextMtl, size_t size)
 {
     mtl::BufferManager &bufferManager = contextMtl->getBufferManager();
-    bool useSharedMem                 = useSharedMemory(contextMtl, mUsage);
+    auto storageMode                  = getStorageModeForUsage(contextMtl, mUsage);
 
     bufferManager.returnBuffer(contextMtl, mBuffer);
-    ANGLE_TRY(bufferManager.getBuffer(contextMtl, mGLSize, useSharedMem, mBuffer));
+    ANGLE_TRY(bufferManager.getBuffer(contextMtl, storageMode, mGLSize, mBuffer));
 
     if (size)
     {

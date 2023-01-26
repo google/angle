@@ -368,32 +368,30 @@ class Texture final : public Resource,
 class Buffer final : public Resource, public WrappedObject<id<MTLBuffer>>
 {
   public:
+    enum class AccessPattern
+    {
+        FrequentCPU,
+        SmallBuffer = FrequentCPU,
+        FrequentGPU,
+        LargeBuffer = FrequentGPU
+    };
+    static MTLStorageMode getStorageModeForAccessPattern(ContextMtl *context, AccessPattern access);
+
     static angle::Result MakeBuffer(ContextMtl *context,
                                     size_t size,
                                     const uint8_t *data,
                                     BufferRef *bufferOut);
 
-    static angle::Result MakeBufferWithSharedMemOpt(ContextMtl *context,
-                                                    bool forceUseSharedMem,
-                                                    size_t size,
-                                                    const uint8_t *data,
-                                                    BufferRef *bufferOut);
+    static angle::Result MakeBufferWithStorageMode(ContextMtl *context,
+                                                   MTLStorageMode storageMode,
+                                                   size_t size,
+                                                   const uint8_t *data,
+                                                   BufferRef *bufferOut);
 
-    static angle::Result MakeBufferWithResOpt(ContextMtl *context,
-                                              MTLResourceOptions resourceOptions,
-                                              size_t size,
-                                              const uint8_t *data,
-                                              BufferRef *bufferOut);
-
-    angle::Result reset(ContextMtl *context, size_t size, const uint8_t *data);
-    angle::Result resetWithSharedMemOpt(ContextMtl *context,
-                                        bool forceUseSharedMem,
-                                        size_t size,
-                                        const uint8_t *data);
-    angle::Result resetWithResOpt(ContextMtl *context,
-                                  MTLResourceOptions resourceOptions,
-                                  size_t size,
-                                  const uint8_t *data);
+    angle::Result reset(ContextMtl *context,
+                        MTLStorageMode storageMode,
+                        size_t size,
+                        const uint8_t *data);
 
     const uint8_t *mapReadOnly(ContextMtl *context);
     uint8_t *map(ContextMtl *context);
@@ -406,7 +404,7 @@ class Buffer final : public Resource, public WrappedObject<id<MTLBuffer>>
     void flush(ContextMtl *context, size_t offsetWritten, size_t sizeWritten);
 
     size_t size() const;
-    bool useSharedMem() const;
+    MTLStorageMode storageMode() const;
 
     // Explicitly sync content between CPU and GPU
     void syncContent(ContextMtl *context, mtl::BlitCommandEncoder *encoder);
@@ -415,11 +413,7 @@ class Buffer final : public Resource, public WrappedObject<id<MTLBuffer>>
     id getID() const override { return get(); }
 
   private:
-    Buffer(ContextMtl *context, bool forceUseSharedMem, size_t size, const uint8_t *data);
-    Buffer(ContextMtl *context,
-           MTLResourceOptions resourceOptions,
-           size_t size,
-           const uint8_t *data);
+    Buffer(ContextMtl *context, MTLStorageMode storageMode, size_t size, const uint8_t *data);
 
     bool mMapReadOnly = true;
 };

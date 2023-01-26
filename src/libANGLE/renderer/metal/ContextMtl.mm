@@ -2915,8 +2915,10 @@ angle::Result ContextMtl::copyTextureSliceLevelToWorkBuffer(
     // Expand the buffer if it is not big enough.
     if (!mWorkBuffer || mWorkBuffer->size() < sizeInBytes)
     {
-        ANGLE_TRY(mtl::Buffer::MakeBufferWithSharedMemOpt(this, true, sizeInBytes, nullptr,
-                                                          &mWorkBuffer));
+        auto storageMode = mtl::Buffer::getStorageModeForAccessPattern(
+            this, mtl::Buffer::AccessPattern::FrequentCPU);
+        ANGLE_TRY(mtl::Buffer::MakeBufferWithStorageMode(this, storageMode, sizeInBytes, nullptr,
+                                                         &mWorkBuffer));
     }
 
     gl::Rectangle region(0, 0, width, height);
