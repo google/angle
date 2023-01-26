@@ -1320,6 +1320,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_traces',
   },
+  'src/tests/restricted_traces/dragon_ball_z_dokkan_battle': {
+      'packages': [
+        {
+            'package': 'angle/traces/dragon_ball_z_dokkan_battle',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_traces',
+  },
   'src/tests/restricted_traces/dragon_mania_legends': {
       'packages': [
         {
