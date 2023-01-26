@@ -361,8 +361,7 @@ void Shader::compile(const Context *context)
     ASSERT(compilerHandle);
 
     // Find a shader in Blob Cache
-    setShaderKey(context, options, compilerInstance.getShaderOutputType(),
-                 compilerInstance.getBuiltInResources());
+    setShaderKey(context, options, compilerInstance);
     ASSERT(!mShaderHash.empty());
     MemoryShaderCache *shaderCache = context->getMemoryShaderCache();
     if (shaderCache)
@@ -740,81 +739,24 @@ angle::Result Shader::serialize(const Context *context, angle::MemoryBuffer *bin
     return angle::Result::Continue;
 }
 
-angle::Result Shader::deserialize(BinaryInputStream &stream)
+angle::Result Shader::deserialize(const Context *context, BinaryInputStream &stream)
 {
-    mState.mCompiledShaderState.deserialize(stream);
-
-    if (stream.error())
+    if (stream.readInt<uint32_t>() != kShaderCacheIdentifier)
     {
-        // Error while deserializing binary stream
         return angle::Result::Stop;
     }
+    mState.mCompiledShaderState.deserialize(stream);
 
     return angle::Result::Continue;
 }
 
 angle::Result Shader::loadBinary(const Context *context, const void *binary, GLsizei length)
 {
-    return loadBinaryImpl(context, binary, length, false);
-}
-
-angle::Result Shader::loadShaderBinary(const Context *context, const void *binary, GLsizei length)
-{
-    return loadBinaryImpl(context, binary, length, true);
-}
-
-angle::Result Shader::loadBinaryImpl(const Context *context,
-                                     const void *binary,
-                                     GLsizei length,
-                                     bool generatedWithOfflineCompiler)
-{
     BinaryInputStream stream(binary, length);
+    ANGLE_TRY(deserialize(context, stream));
 
-    // Shader binaries generated with offline compiler have additional fields
-    if (generatedWithOfflineCompiler)
-    {
-        // Load binary from a glShaderBinary call.
-        // Validation layer should have already verified that the shader program version and shader
-        // type match
-        std::vector<uint8_t> commitString(angle::GetANGLEShaderProgramVersionHashSize(), 0);
-        stream.readBytes(commitString.data(), commitString.size());
-        ASSERT(memcmp(commitString.data(), angle::GetANGLEShaderProgramVersion(),
-                      commitString.size()) == 0);
-
-        gl::ShaderType shaderType;
-        stream.readEnum(&shaderType);
-        ASSERT(mType == shaderType);
-
-        // Get fields needed to generate the key for memory caches.
-        ShShaderOutput outputType;
-        stream.readEnum<ShShaderOutput>(&outputType);
-
-        // Get the shader's source string.
-        mState.mSource = stream.readString();
-
-        // In the absence of element-by-element serialize/deserialize functions, read
-        // ShCompileOptions and ShBuiltInResources as raw binary blobs.
-        ShCompileOptions compileOptions;
-        stream.readBytes(reinterpret_cast<uint8_t *>(&compileOptions), sizeof(ShCompileOptions));
-
-        ShBuiltInResources resources;
-        stream.readBytes(reinterpret_cast<uint8_t *>(&resources), sizeof(ShBuiltInResources));
-
-        setShaderKey(context, compileOptions, outputType, resources);
-    }
-    else
-    {
-        // Load binary from shader cache.
-        if (stream.readInt<uint32_t>() != kShaderCacheIdentifier)
-        {
-            return angle::Result::Stop;
-        }
-    }
-
-    ANGLE_TRY(deserialize(stream));
-
-    // Only successfully-compiled shaders are serialized. If deserialization is successful, we can
-    // assume the CompileStatus.
+    // Only successfully-compiled shaders are serialized. If deserialization is successful,
+    // we can assume the CompileStatus.
     mState.mCompileStatus = CompileStatus::COMPILED;
 
     return angle::Result::Continue;
@@ -822,8 +764,7 @@ angle::Result Shader::loadBinaryImpl(const Context *context,
 
 void Shader::setShaderKey(const Context *context,
                           const ShCompileOptions &compileOptions,
-                          const ShShaderOutput &outputType,
-                          const ShBuiltInResources &resources)
+                          const ShCompilerInstance &compilerInstance)
 {
     // Compute shader key.
     BinaryOutputStream hashStream;
@@ -832,16 +773,17 @@ void Shader::setShaderKey(const Context *context,
     hashStream.writeEnum(mType);
     hashStream.writeString(mState.getSource());
 
-    // Include the shader program version hash.
+    // Include the commit hash
     hashStream.writeString(angle::GetANGLEShaderProgramVersion());
 
     hashStream.writeEnum(Compiler::SelectShaderSpec(context->getState()));
-    hashStream.writeEnum(outputType);
+    hashStream.writeEnum(compilerInstance.getShaderOutputType());
     hashStream.writeBytes(reinterpret_cast<const uint8_t *>(&compileOptions),
                           sizeof(compileOptions));
 
     // Include the ShBuiltInResources, which represent the extensions and constants used by the
     // shader.
+    const ShBuiltInResources resources = compilerInstance.getBuiltInResources();
     hashStream.writeBytes(reinterpret_cast<const uint8_t *>(&resources), sizeof(resources));
 
     // Call the secure SHA hashing function.

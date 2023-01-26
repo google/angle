@@ -227,7 +227,6 @@ using data from registry_xml.py and gl.xml.
 | [GL_ANGLE_robust_fragment_shader_output](https://chromium.googlesource.com/angle/angle/+/refs/heads/main/extensions/ANGLE_robust_fragment_shader_output.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
 | [GL_ANGLE_robust_resource_initialization](https://chromium.googlesource.com/angle/angle/+/refs/heads/main/extensions/ANGLE_robust_resource_initialization.txt) |  |  |  |  |  |  |  |
 | [GL_ANGLE_semaphore_fuchsia](https://chromium.googlesource.com/angle/angle/+/refs/heads/main/extensions/ANGLE_semaphore_fuchsia.txt) |  |  |  |  |  |  |  |
-| [GL_ANGLE_shader_binary](https://chromium.googlesource.com/angle/angle/+/refs/heads/main/extensions/ANGLE_shader_binary.txt) |  |  |  |  |  |  |  |
 | [GL_ANGLE_shader_pixel_local_storage](https://chromium.googlesource.com/angle/angle/+/refs/heads/main/extensions/ANGLE_shader_pixel_local_storage.txt) |  |  |  |  |  |  |  |
 | [GL_ANGLE_shader_pixel_local_storage_coherent](https://chromium.googlesource.com/angle/angle/+/refs/heads/main/extensions/ANGLE_shader_pixel_local_storage.txt) |  |  |  |  |  |  |  |
 | [GL_CHROMIUM_sync_query](https://chromium.googlesource.com/angle/angle/+/refs/heads/main/extensions/CHROMIUM_sync_query.txt) |  |  |  |  |  |  |  |
