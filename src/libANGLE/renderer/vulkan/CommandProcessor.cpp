@@ -207,8 +207,12 @@ void SharedFence::destroy(VkDevice device)
         if (!mRefCountedFence->isReferenced())
         {
             mRefCountedFence->get().destroy(device);
+            SafeDelete(mRefCountedFence);
         }
-        mRefCountedFence = nullptr;
+        else
+        {
+            mRefCountedFence = nullptr;
+        }
     }
 }
 
@@ -220,8 +224,13 @@ void SharedFence::release()
         if (!mRefCountedFence->isReferenced())
         {
             mRecycler->recycle(std::move(mRefCountedFence->get()));
+            ASSERT(!mRefCountedFence->get().valid());
+            SafeDelete(mRefCountedFence);
         }
-        mRefCountedFence = nullptr;
+        else
+        {
+            mRefCountedFence = nullptr;
+        }
     }
 }
 
