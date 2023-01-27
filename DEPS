@@ -1550,6 +1550,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_traces',
   },
+  'src/tests/restricted_traces/goddess_of_victory_nikke': {
+      'packages': [
+        {
+            'package': 'angle/traces/goddess_of_victory_nikke',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_traces',
+  },
   'src/tests/restricted_traces/google_maps': {
       'packages': [
         {
