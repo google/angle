@@ -515,8 +515,22 @@ class CommandProcessor : public Context
                                           const RenderPass &renderPass,
                                           RenderPassCommandBufferHelper **renderPassCommands);
 
-    // Used by main thread to wait for worker thread to submit outstanding work.
+    // Wait until the desired serial has been submitted.
+    angle::Result waitForQueueSerialToBeSubmitted(vk::Context *context,
+                                                  const QueueSerial &queueSerial)
+    {
+        const ResourceUse use(queueSerial);
+        return waitForResourceUseToBeSubmitted(context, use);
+    }
+    angle::Result waitForResourceUseToBeSubmitted(vk::Context *context, const ResourceUse &use);
+    // Wait for worker thread to submit all outstanding work.
     angle::Result waitForAllWorkToBeSubmitted(Context *context);
+
+    bool isBusy(RendererVk *renderer) const
+    {
+        std::lock_guard<std::mutex> workerLock(mWorkerMutex);
+        return !mTasks.empty() || mCommandQueue->isBusy(renderer);
+    }
 
     bool hasUnsubmittedUse(const ResourceUse &use) const;
     Serial getLastSubmittedSerial(SerialIndex index) const { return mLastSubmittedSerials[index]; }
@@ -547,6 +561,11 @@ class CommandProcessor : public Context
     VkResult getLastAndClearPresentResult(VkSwapchainKHR swapchain);
     VkResult present(egl::ContextPriority priority, const VkPresentInfoKHR &presentInfo);
 
+    // The mutex to block submission from context while we wait for mTask to drain. We always take
+    // this lock when we enqueue to mTasks. We will also take lock when we need to wait fort mTasks
+    // to be empty. But we do not take this lock for normal work processing.
+    std::mutex mSubmissionMutex;
+
     std::queue<CommandProcessorTask> mTasks;
     mutable std::mutex mWorkerMutex;
     // Signal worker thread when work is available
@@ -572,96 +591,6 @@ class CommandProcessor : public Context
 
     // Command queue worker thread.
     std::thread mTaskThread;
-};
-
-class ThreadSafeCommandProcessor : public CommandProcessor
-{
-  public:
-    ThreadSafeCommandProcessor(RendererVk *renderer, CommandQueue *commandQueue)
-        : CommandProcessor(renderer, commandQueue)
-    {}
-
-    angle::Result init()
-    {
-        std::unique_lock<std::mutex> lock(mMutex);
-        return CommandProcessor::init();
-    }
-    void destroy(Context *context)
-    {
-        std::unique_lock<std::mutex> lock(mMutex);
-        CommandProcessor::destroy(context);
-    }
-
-    void handleDeviceLost(RendererVk *renderer)
-    {
-        std::unique_lock<std::mutex> lock(mMutex);
-        CommandProcessor::handleDeviceLost(renderer);
-    }
-
-    // Wait until the desired serial has been submitted.
-    angle::Result waitForQueueSerialToBeSubmitted(vk::Context *context,
-                                                  const QueueSerial &queueSerial);
-    angle::Result waitForResourceUseToBeSubmitted(vk::Context *context, const ResourceUse &use);
-    angle::Result waitForAllWorkToBeSubmitted(Context *context);
-
-    bool isBusy(RendererVk *renderer) const;
-
-    angle::Result submitCommands(Context *context,
-                                 bool hasProtectedContent,
-                                 egl::ContextPriority priority,
-                                 const std::vector<VkSemaphore> &waitSemaphores,
-                                 const std::vector<VkPipelineStageFlags> &waitSemaphoreStageMasks,
-                                 const VkSemaphore signalSemaphore,
-                                 SecondaryCommandBufferList &&commandBuffersToReset,
-                                 SecondaryCommandPools *commandPools,
-                                 const QueueSerial &submitQueueSerial)
-    {
-        std::unique_lock<std::mutex> lock(mMutex);
-        return CommandProcessor::submitCommands(
-            context, hasProtectedContent, priority, waitSemaphores, waitSemaphoreStageMasks,
-            signalSemaphore, std::move(commandBuffersToReset), commandPools, submitQueueSerial);
-    }
-    angle::Result queueSubmitOneOff(Context *context,
-                                    bool hasProtectedContent,
-                                    egl::ContextPriority contextPriority,
-                                    VkCommandBuffer commandBufferHandle,
-                                    const Semaphore *waitSemaphore,
-                                    VkPipelineStageFlags waitSemaphoreStageMask,
-                                    const Fence *fence,
-                                    SubmitPolicy submitPolicy,
-                                    const QueueSerial &submitQueueSerial)
-    {
-        std::unique_lock<std::mutex> lock(mMutex);
-        return CommandProcessor::queueSubmitOneOff(
-            context, hasProtectedContent, contextPriority, commandBufferHandle, waitSemaphore,
-            waitSemaphoreStageMask, fence, submitPolicy, submitQueueSerial);
-    }
-    VkResult queuePresent(egl::ContextPriority contextPriority, const VkPresentInfoKHR &presentInfo)
-    {
-        std::unique_lock<std::mutex> lock(mMutex);
-        return CommandProcessor::queuePresent(contextPriority, presentInfo);
-    }
-
-    angle::Result flushOutsideRPCommands(Context *context,
-                                         bool hasProtectedContent,
-                                         OutsideRenderPassCommandBufferHelper **outsideRPCommands)
-    {
-        std::unique_lock<std::mutex> lock(mMutex);
-        return CommandProcessor::flushOutsideRPCommands(context, hasProtectedContent,
-                                                        outsideRPCommands);
-    }
-    angle::Result flushRenderPassCommands(Context *context,
-                                          bool hasProtectedContent,
-                                          const RenderPass &renderPass,
-                                          RenderPassCommandBufferHelper **renderPassCommands)
-    {
-        std::unique_lock<std::mutex> lock(mMutex);
-        return CommandProcessor::flushRenderPassCommands(context, hasProtectedContent, renderPass,
-                                                         renderPassCommands);
-    }
-
-  private:
-    mutable std::mutex mMutex;
 };
 }  // namespace vk
 

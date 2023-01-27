@@ -574,6 +574,7 @@ angle::Result CommandProcessor::checkAndPopPendingError(Context *errorHandlingCo
 void CommandProcessor::queueCommand(CommandProcessorTask &&task)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "CommandProcessor::queueCommand");
+    std::lock_guard<std::mutex> submissionLock(mSubmissionMutex);
     // Grab the worker mutex so that we put things on the queue in the same order as we give out
     // serials.
     std::lock_guard<std::mutex> queueLock(mWorkerMutex);
@@ -724,6 +725,9 @@ angle::Result CommandProcessor::processTask(CommandProcessorTask *task)
 angle::Result CommandProcessor::waitForAllWorkToBeSubmitted(Context *context)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "CommandProcessor::waitForAllWorkToBeSubmitted");
+    // Take mSubmissionMutex lock first to block submisison from context while we try to wait for
+    // mTasks to empty. Otherwise the wait might never finish.
+    std::lock_guard<std::mutex> submissionLock(mSubmissionMutex);
     std::unique_lock<std::mutex> lock(mWorkerMutex);
     mWorkerIdleCondition.wait(lock, [this] { return (mTasks.empty() && mWorkerThreadIdle); });
     // Worker thread is idle and command queue is empty so good to continue
@@ -925,17 +929,8 @@ bool CommandProcessor::hasUnsubmittedUse(const vk::ResourceUse &use) const
     return false;
 }
 
-// ThreadSafeCommandProcessor implementation.
-angle::Result ThreadSafeCommandProcessor::waitForQueueSerialToBeSubmitted(
-    vk::Context *context,
-    const QueueSerial &queueSerial)
-{
-    const ResourceUse use(queueSerial);
-    return waitForResourceUseToBeSubmitted(context, use);
-}
-
-angle::Result ThreadSafeCommandProcessor::waitForResourceUseToBeSubmitted(vk::Context *context,
-                                                                          const ResourceUse &use)
+angle::Result CommandProcessor::waitForResourceUseToBeSubmitted(vk::Context *context,
+                                                                const ResourceUse &use)
 {
     if (mCommandQueue->hasUnsubmittedUse(use))
     {
@@ -943,18 +938,6 @@ angle::Result ThreadSafeCommandProcessor::waitForResourceUseToBeSubmitted(vk::Co
         ANGLE_TRY(waitForAllWorkToBeSubmitted(context));
     }
     return angle::Result::Continue;
-}
-
-angle::Result ThreadSafeCommandProcessor::waitForAllWorkToBeSubmitted(Context *context)
-{
-    std::unique_lock<std::mutex> lock(mMutex);
-    return CommandProcessor::waitForAllWorkToBeSubmitted(context);
-}
-
-bool ThreadSafeCommandProcessor::isBusy(RendererVk *renderer) const
-{
-    std::lock_guard<std::mutex> workerLock(mWorkerMutex);
-    return !mTasks.empty() || mCommandQueue->isBusy(renderer);
 }
 
 // CommandQueue public API implementation. These must be thread safe and never called from
