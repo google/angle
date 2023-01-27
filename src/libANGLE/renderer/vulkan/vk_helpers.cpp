@@ -6898,12 +6898,21 @@ angle::Result ImageHelper::stageSubresourceUpdateImpl(ContextVk *contextVk,
     else
     {
         ASSERT(storageFormat.pixelBytes != 0);
+        const bool stencilOnly = formatInfo.internalFormat == GL_STENCIL_INDEX8;
 
-        if (storageFormat.id == angle::FormatID::D24_UNORM_S8_UINT)
+        if (!stencilOnly && storageFormat.id == angle::FormatID::D24_UNORM_S8_UINT)
         {
-            stencilLoadFunction = angle::LoadX24S8ToS8;
+            switch (type)
+            {
+                case GL_UNSIGNED_INT_24_8:
+                    stencilLoadFunction = angle::LoadX24S8ToS8;
+                    break;
+                case GL_FLOAT_32_UNSIGNED_INT_24_8_REV:
+                    stencilLoadFunction = angle::LoadX32S8ToS8;
+                    break;
+            }
         }
-        if (storageFormat.id == angle::FormatID::D32_FLOAT_S8X24_UINT)
+        if (!stencilOnly && storageFormat.id == angle::FormatID::D32_FLOAT_S8X24_UINT)
         {
             // If depth is D32FLOAT_S8, we must pack D32F tightly (no stencil) for CopyBufferToImage
             outputRowPitch = sizeof(float) * glExtents.width;
@@ -6916,12 +6925,11 @@ angle::Result ImageHelper::stageSubresourceUpdateImpl(ContextVk *contextVk,
                     loadFunctionInfo.loadFunction = angle::LoadD32ToD32F;
                     stencilLoadFunction           = nullptr;
                     break;
-                case GL_DEPTH32F_STENCIL8:
                 case GL_FLOAT_32_UNSIGNED_INT_24_8_REV:
                     loadFunctionInfo.loadFunction = angle::LoadD32FS8X24ToD32F;
                     stencilLoadFunction           = angle::LoadX32S8ToS8;
                     break;
-                case GL_UNSIGNED_INT_24_8_OES:
+                case GL_UNSIGNED_INT_24_8:
                     loadFunctionInfo.loadFunction = angle::LoadD24S8ToD32F;
                     stencilLoadFunction           = angle::LoadX24S8ToS8;
                     break;
@@ -6929,9 +6937,18 @@ angle::Result ImageHelper::stageSubresourceUpdateImpl(ContextVk *contextVk,
                     UNREACHABLE();
             }
         }
-        else
+        else if (!stencilOnly)
         {
             outputRowPitch = storageFormat.pixelBytes * glExtents.width;
+        }
+        else
+        {
+            // Some Vulkan implementations do not support S8_UINT, so stencil-only data is
+            // uploaded using one of combined depth-stencil formats there. Since the uploaded
+            // stencil data must be tightly packed, the actual storage format should be ignored
+            // with regards to its load function and output row pitch.
+            loadFunctionInfo.loadFunction = angle::LoadToNative<GLubyte, 1>;
+            outputRowPitch                = glExtents.width;
         }
         outputDepthPitch = outputRowPitch * glExtents.height;
 

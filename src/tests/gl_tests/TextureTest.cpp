@@ -2632,6 +2632,77 @@ TEST_P(Texture2DTest, PBOWithMultipleDraws)
     EXPECT_EQ(expected, actual);
 }
 
+// Test that stencil texture uploads work.
+TEST_P(Texture2DTestES3, TexImageWithStencilData)
+{
+    constexpr GLsizei kSize = 4;
+
+    const std::array<std::tuple<GLenum, GLenum, int, int>, 3> testConfigs = {
+        std::make_tuple(GL_DEPTH32F_STENCIL8, GL_FLOAT_32_UNSIGNED_INT_24_8_REV, 8, 4),
+        std::make_tuple(GL_DEPTH24_STENCIL8, GL_UNSIGNED_INT_24_8, 4, 0),
+        std::make_tuple(GL_STENCIL_INDEX8, GL_UNSIGNED_BYTE, 1, 0)};
+
+    for (auto testConfig : testConfigs)
+    {
+        const GLenum format     = std::get<0>(testConfig);
+        const GLenum type       = std::get<1>(testConfig);
+        const GLenum typeLength = std::get<2>(testConfig);
+        const GLenum typeOffset = std::get<3>(testConfig);
+
+        ANGLE_SKIP_TEST_IF(format == GL_STENCIL_INDEX8 &&
+                           !IsGLExtensionEnabled("GL_OES_texture_stencil8"));
+
+        // Set up the framebuffer
+        GLTexture colorTexture;
+        glBindTexture(GL_TEXTURE_2D, colorTexture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     nullptr);
+        ASSERT_GL_NO_ERROR();
+
+        GLTexture depthStencilTexture;
+        glBindTexture(GL_TEXTURE_2D, depthStencilTexture);
+
+        GLubyte pixels[kSize * kSize * 8] = {};
+        for (size_t pixelId = 0; pixelId < kSize * kSize; ++pixelId)
+        {
+            pixels[pixelId * typeLength + typeOffset] = 0xD5;
+        }
+        glTexImage2D(GL_TEXTURE_2D, 0, format, kSize, kSize, 0,
+                     format == GL_STENCIL_INDEX8 ? GL_STENCIL_INDEX : GL_DEPTH_STENCIL, type,
+                     pixels);
+        ASSERT_GL_NO_ERROR();
+
+        GLFramebuffer fbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTexture,
+                               0);
+        glFramebufferTexture2D(
+            GL_FRAMEBUFFER,
+            format == GL_STENCIL_INDEX8 ? GL_STENCIL_ATTACHMENT : GL_DEPTH_STENCIL_ATTACHMENT,
+            GL_TEXTURE_2D, depthStencilTexture, 0);
+        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+        ASSERT_GL_NO_ERROR();
+
+        // Clear only color.
+        glClearColor(0, 0, 0, 1);
+        glClear(GL_COLOR_BUFFER_BIT);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+
+        // If stencil is not set to 0xD5, rendering would fail.
+        glEnable(GL_STENCIL_TEST);
+        glStencilFunc(GL_EQUAL, 0xD5, 0xFF);
+        glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+        glStencilMask(0xFF);
+
+        // Draw red
+        ANGLE_GL_PROGRAM(drawRed, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+        drawQuad(drawRed, essl1_shaders::PositionAttrib(), 0.5f);
+        ASSERT_GL_NO_ERROR();
+
+        EXPECT_PIXEL_RECT_EQ(0, 0, kSize, kSize, GLColor::red);
+    }
+}
+
 // Test that glTexSubImage2D combined with a PBO works properly. PBO has all pixels as red
 // except the middle one being green.
 TEST_P(Texture2DTest, TexStorageWithPBOMiddlePixelDifferent)
@@ -3114,9 +3185,6 @@ TEST_P(Texture2DTestES3, TexImageWithStencilPBO)
     // http://anglebug.com/5315
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsOSX());
 
-    // http://anglebug.com/5317
-    ANGLE_SKIP_TEST_IF(IsWindows() && IsD3D());
-
     constexpr GLsizei kSize = 4;
 
     // Set up the framebuffer.
@@ -3188,9 +3256,6 @@ TEST_P(Texture2DTestES3, TexImageWithDepthStencilPBO)
 
     // http://anglebug.com/5315
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsOSX());
-
-    // http://anglebug.com/5317
-    ANGLE_SKIP_TEST_IF(IsWindows() && IsD3D());
 
     constexpr GLsizei kSize = 4;
 
@@ -11140,7 +11205,8 @@ ANGLE_INSTANTIATE_TEST_ES2(SamplerArrayAsFunctionParameterTest);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(Texture2DTestES3);
 ANGLE_INSTANTIATE_TEST_ES3_AND(Texture2DTestES3,
-                               ES3_VULKAN().enable(Feature::AllocateNonZeroMemory));
+                               ES3_VULKAN().enable(Feature::AllocateNonZeroMemory),
+                               ES3_VULKAN().enable(Feature::ForceFallbackFormat));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(Texture2DTestES3YUV);
 ANGLE_INSTANTIATE_TEST_ES3_AND(Texture2DTestES3YUV,
