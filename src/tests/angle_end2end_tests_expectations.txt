@@ -495,7 +495,6 @@
 5981 PIXEL4ORXL VULKAN : ClearTestES3.ScissoredClearHeterogeneousAttachments/* = SKIP
 5981 PIXEL4ORXL VULKAN : CubeMapTextureTest.SampleCoordinateTransform/* = SKIP
 5981 PIXEL4ORXL VULKAN : DepthStencilFormatsTest.DepthTextureRender/* = SKIP
-5981 PIXEL4ORXL VULKAN : EGLSyncTest.AndroidNativeFence_ClientWait/* = SKIP
 5981 PIXEL4ORXL VULKAN : EXTBlendFuncExtendedDrawTest.FragData/* = SKIP
 5981 PIXEL4ORXL VULKAN : EXTBlendFuncExtendedDrawTestES3.FragmentArrayOutputLocationsAPI/* = SKIP
 5981 PIXEL4ORXL VULKAN : EXTBlendFuncExtendedDrawTestES3.FragmentOutputLocationAPI/* = SKIP
@@ -568,7 +567,6 @@
 6931 PIXEL6 VULKAN : BlitFramebufferTest.OOBWrite/* = SKIP
 6931 PIXEL6 VULKAN : BufferDataTestES3.MapInvalidateThenBufferSubData/* = SKIP
 6931 PIXEL6 VULKAN : EGLSurfaceTest.ResizeWindowWithDraw/* = SKIP
-6931 PIXEL6 VULKAN : EGLSyncTest.AndroidNativeFence_ClientWait/* = SKIP
 6931 PIXEL6 VULKAN : ExternalBufferTestES31.* = SKIP
 6931 PIXEL6 VULKAN : FramebufferMultiviewLayeredClearTest.ScissoredClearBufferfi/* = SKIP
 6931 PIXEL6 VULKAN : FramebufferTest_ES31.MultipleTextureMultisampleResolveWithBlitMultipleResolves* = SKIP
