@@ -1063,7 +1063,6 @@ void checkForCurrentMemoryAllocations(RendererVk *renderer)
             }
 
             std::stringstream outStream;
-            outStream.imbue(std::locale(renderer->getMemoryAllocationTracker()->getLocale()));
 
             outStream << "Currently allocated size for memory allocation type ("
                       << vk::kMemoryAllocationTypeMessage[i] << "): "
@@ -1098,7 +1097,6 @@ void checkForCurrentMemoryAllocations(RendererVk *renderer)
             }
 
             std::stringstream outStream;
-            outStream.imbue(std::locale(renderer->getMemoryAllocationTracker()->getLocale()));
 
             outStream << "Currently allocated size for memory allocation type ("
                       << vk::kMemoryAllocationTypeMessage[i] << "): "
@@ -1137,7 +1135,6 @@ void logPendingMemoryAllocation(RendererVk *renderer)
     if (allocSize != 0)
     {
         std::stringstream outStream;
-        outStream.imbue(std::locale(renderer->getMemoryAllocationTracker()->getLocale()));
 
         outStream << "Pending allocation size for memory allocation type ("
                   << vk::kMemoryAllocationTypeMessage[ToUnderlying(allocInfo)]
@@ -1177,7 +1174,6 @@ void logMemoryHeapStats(RendererVk *renderer, vk::MemoryLogSeverity severity)
 
     // Log stream for the heap information.
     std::stringstream outStream;
-    outStream.imbue(std::locale(renderer->getMemoryAllocationTracker()->getLocale()));
 
     // VkPhysicalDeviceMemoryProperties2 enables the use of memory budget properties if supported.
     VkPhysicalDeviceMemoryProperties2KHR memoryProperties;
@@ -5164,9 +5160,7 @@ void RendererVk::releaseQueueSerialIndex(SerialIndex index)
 }
 
 MemoryAllocationTracker::MemoryAllocationTracker(RendererVk *renderer)
-    : mRenderer(renderer),
-      mMemoryAllocationID(0),
-      mLocale(std::locale(std::locale(), new vk::MemoryAllocationLogNumberFormat()))
+    : mRenderer(renderer), mMemoryAllocationID(0)
 {}
 
 void MemoryAllocationTracker::initMemoryTrackers()
