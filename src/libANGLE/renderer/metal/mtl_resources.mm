@@ -64,25 +64,7 @@ void EnsureCPUMemWillBeSynced(ContextMtl *context, T *resource)
     resource->resetCPUReadMemNeedSync();
 }
 
-MTLResourceOptions resourceOptionsForStorageMode(MTLStorageMode storageMode)
-{
-    switch (storageMode)
-    {
-        case MTLStorageModeShared:
-            return MTLResourceStorageModeShared;
-#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
-        case MTLStorageModeManaged:
-            return MTLResourceStorageModeManaged;
-#endif
-        case MTLStorageModePrivate:
-            return MTLResourceStorageModePrivate;
-        case MTLStorageModeMemoryless:
-            return MTLResourceStorageModeMemoryless;
-    }
-}
-
 }  // namespace
-
 // Resource implementation
 Resource::Resource() : mUsageRef(std::make_shared<UsageRef>()) {}
 
@@ -947,49 +929,22 @@ void Texture::set(id<MTLTexture> metalTexture)
 }
 
 // Buffer implementation
-
-MTLStorageMode Buffer::getStorageModeForAccessPattern(ContextMtl *contextMtl, AccessPattern access)
-{
-#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
-    const auto &features = contextMtl->getDisplay()->getFeatures();
-    if (access == AccessPattern::FrequentCPU)
-    {
-        if (features.alwaysUseManagedStorageModeForBuffers.enabled ||
-            ANGLE_UNLIKELY(features.forceBufferGPUStorage.enabled))
-        {
-            return MTLStorageModeManaged;
-        }
-        return MTLStorageModeShared;
-    }
-    if (contextMtl->getMetalDevice().hasUnifiedMemory() ||
-        features.alwaysUseSharedStorageModeForBuffers.enabled)
-    {
-        return MTLStorageModeShared;
-    }
-    return MTLStorageModeManaged;
-#else
-    ANGLE_UNUSED_VARIABLE(contextMtl);
-    ANGLE_UNUSED_VARIABLE(access);
-    return MTLStorageModeShared;
-#endif
-}
-
 angle::Result Buffer::MakeBuffer(ContextMtl *context,
                                  size_t size,
                                  const uint8_t *data,
                                  BufferRef *bufferOut)
 {
-    auto storageMode = getStorageModeForAccessPattern(context, AccessPattern::FrequentGPU);
-    return MakeBufferWithStorageMode(context, storageMode, size, data, bufferOut);
+
+    return MakeBufferWithSharedMemOpt(context, false, size, data, bufferOut);
 }
 
-angle::Result Buffer::MakeBufferWithStorageMode(ContextMtl *context,
-                                                MTLStorageMode storageMode,
-                                                size_t size,
-                                                const uint8_t *data,
-                                                BufferRef *bufferOut)
+angle::Result Buffer::MakeBufferWithSharedMemOpt(ContextMtl *context,
+                                                 bool forceUseSharedMem,
+                                                 size_t size,
+                                                 const uint8_t *data,
+                                                 BufferRef *bufferOut)
 {
-    bufferOut->reset(new Buffer(context, storageMode, size, data));
+    bufferOut->reset(new Buffer(context, forceUseSharedMem, size, data));
 
     if (!(*bufferOut) || !(*bufferOut)->get())
     {
@@ -999,17 +954,64 @@ angle::Result Buffer::MakeBufferWithStorageMode(ContextMtl *context,
     return angle::Result::Continue;
 }
 
-Buffer::Buffer(ContextMtl *context, MTLStorageMode storageMode, size_t size, const uint8_t *data)
+angle::Result Buffer::MakeBufferWithResOpt(ContextMtl *context,
+                                           MTLResourceOptions options,
+                                           size_t size,
+                                           const uint8_t *data,
+                                           BufferRef *bufferOut)
 {
-    (void)reset(context, storageMode, size, data);
+    bufferOut->reset(new Buffer(context, options, size, data));
+
+    if (!(*bufferOut) || !(*bufferOut)->get())
+    {
+        ANGLE_MTL_CHECK(context, false, GL_OUT_OF_MEMORY);
+    }
+
+    return angle::Result::Continue;
 }
 
-angle::Result Buffer::reset(ContextMtl *context,
-                            MTLStorageMode storageMode,
-                            size_t size,
-                            const uint8_t *data)
+Buffer::Buffer(ContextMtl *context, bool forceUseSharedMem, size_t size, const uint8_t *data)
 {
-    auto options = resourceOptionsForStorageMode(storageMode);
+    (void)resetWithSharedMemOpt(context, forceUseSharedMem, size, data);
+}
+
+Buffer::Buffer(ContextMtl *context, MTLResourceOptions options, size_t size, const uint8_t *data)
+{
+    (void)resetWithResOpt(context, options, size, data);
+}
+
+angle::Result Buffer::reset(ContextMtl *context, size_t size, const uint8_t *data)
+{
+    return resetWithSharedMemOpt(context, false, size, data);
+}
+
+angle::Result Buffer::resetWithSharedMemOpt(ContextMtl *context,
+                                            bool forceUseSharedMem,
+                                            size_t size,
+                                            const uint8_t *data)
+{
+    MTLResourceOptions options;
+
+    options = 0;
+#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
+    if (!forceUseSharedMem || context->getDisplay()->getFeatures().forceBufferGPUStorage.enabled)
+    {
+        options |= MTLResourceStorageModeManaged;
+    }
+    else
+#endif
+    {
+        options |= MTLResourceStorageModeShared;
+    }
+
+    return resetWithResOpt(context, options, size, data);
+}
+
+angle::Result Buffer::resetWithResOpt(ContextMtl *context,
+                                      MTLResourceOptions options,
+                                      size_t size,
+                                      const uint8_t *data)
+{
     set([&] {
         const mtl::ContextDevice &metalDevice = context->getMetalDevice();
         if (data)
@@ -1107,9 +1109,9 @@ size_t Buffer::size() const
     return get().length;
 }
 
-MTLStorageMode Buffer::storageMode() const
+bool Buffer::useSharedMem() const
 {
-    return get().storageMode;
+    return get().storageMode == MTLStorageModeShared;
 }
 }  // namespace mtl
 }  // namespace rx
