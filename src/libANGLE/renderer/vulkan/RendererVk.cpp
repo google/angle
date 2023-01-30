@@ -4052,7 +4052,10 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     // http://anglebug.com/7308
     // Flushing mutable textures causes flakes in perf tests using Windows/Intel GPU. Failures are
     // due to lost context/device.
-    ANGLE_FEATURE_CONDITION(&mFeatures, mutableMipmapTextureUpload, !(IsWindows() && isIntel));
+    // http://b/264143971
+    // The mutable texture uploading feature can sometimes result in incorrect rendering of some
+    // textures.
+    ANGLE_FEATURE_CONDITION(&mFeatures, mutableMipmapTextureUpload, false);
 
     // Retain debug info in SPIR-V blob.
     ANGLE_FEATURE_CONDITION(&mFeatures, retainSPIRVDebugInfo, getEnableValidationLayers());
