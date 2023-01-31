@@ -13,6 +13,8 @@
 #include "angleutils.h"
 #include "common/debug.h"
 
+#include <atomic>
+
 namespace angle
 {
 
