@@ -546,7 +546,7 @@ void CommandProcessor::handleError(VkResult errorCode,
 }
 
 CommandProcessor::CommandProcessor(RendererVk *renderer, CommandQueue *commandQueue)
-    : Context(renderer), mWorkerThreadIdle(false), mCommandQueue(commandQueue)
+    : Context(renderer), mCommandQueue(commandQueue), mTaskThreadShouldExit(false)
 {
     std::lock_guard<std::mutex> queueLock(mErrorMutex);
     while (!mErrors.empty())
@@ -564,19 +564,19 @@ angle::Result CommandProcessor::checkAndPopPendingError(Context *errorHandlingCo
     {
         return angle::Result::Continue;
     }
-    else
+
+    while (!mErrors.empty())
     {
         Error err = mErrors.front();
         mErrors.pop();
         errorHandlingContext->handleError(err.errorCode, err.file, err.function, err.line);
-        return angle::Result::Stop;
     }
+    return angle::Result::Stop;
 }
 
 void CommandProcessor::queueCommand(CommandProcessorTask &&task)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "CommandProcessor::queueCommand");
-    std::lock_guard<std::mutex> submissionLock(mSubmissionMutex);
     // Grab the worker mutex so that we put things on the queue in the same order as we give out
     // serials.
     std::lock_guard<std::mutex> queueLock(mWorkerMutex);
@@ -614,41 +614,35 @@ angle::Result CommandProcessor::processTasksImpl(bool *exitThread)
         std::unique_lock<std::mutex> lock(mWorkerMutex);
         if (mTasks.empty())
         {
-            mWorkerThreadIdle = true;
-            mWorkerIdleCondition.notify_all();
             // Only wake if notified and command queue is not empty
-            mWorkAvailableCondition.wait(lock, [this] { return !mTasks.empty(); });
+            mWorkAvailableCondition.wait(
+                lock, [this] { return !mTasks.empty() || mTaskThreadShouldExit; });
         }
-        mWorkerThreadIdle = false;
-        CommandProcessorTask task(std::move(mTasks.front()));
-        mTasks.pop();
-        lock.unlock();
 
-        ANGLE_TRY(processTask(&task));
-        if (task.getTaskCommand() == CustomTask::Exit)
+        if (!mTasks.empty())
         {
+            // Before we unlock the producer lock, take submission lock to ensure the submission are
+            // always in the same order as we received.
+            std::lock_guard<std::mutex> submissionLock(mSubmissionMutex);
+            CommandProcessorTask task(std::move(mTasks.front()));
+            mTasks.pop();
+            lock.unlock();
+            ANGLE_TRY(processTask(&task));
+        }
 
-            *exitThread = true;
-            lock.lock();
-            mWorkerThreadIdle = true;
-            mWorkerIdleCondition.notify_one();
-            return angle::Result::Continue;
+        if (mTaskThreadShouldExit)
+        {
+            break;
         }
     }
-
-    UNREACHABLE();
-    return angle::Result::Stop;
+    *exitThread = true;
+    return angle::Result::Continue;
 }
 
 angle::Result CommandProcessor::processTask(CommandProcessorTask *task)
 {
     switch (task->getTaskCommand())
     {
-        case CustomTask::Exit:
-        {
-            ANGLE_TRY(mCommandQueue->waitIdle(this, mRenderer->getMaxFenceWaitTimeNs()));
-            break;
-        }
         case CustomTask::FlushAndQueueSubmit:
         {
             ANGLE_TRACE_EVENT0("gpu.angle", "processTask::FlushAndQueueSubmit");
@@ -727,20 +721,19 @@ angle::Result CommandProcessor::processTask(CommandProcessorTask *task)
 angle::Result CommandProcessor::waitForAllWorkToBeSubmitted(Context *context)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "CommandProcessor::waitForAllWorkToBeSubmitted");
-    // Take mSubmissionMutex lock first to block submisison from context while we try to wait for
-    // mTasks to empty. Otherwise the wait might never finish.
-    std::lock_guard<std::mutex> submissionLock(mSubmissionMutex);
-    std::unique_lock<std::mutex> lock(mWorkerMutex);
-    mWorkerIdleCondition.wait(lock, [this] { return (mTasks.empty() && mWorkerThreadIdle); });
-    // Worker thread is idle and command queue is empty so good to continue
-
     // Sync any errors to the context
-    bool shouldStop = hasPendingError();
-    while (hasPendingError())
+    ANGLE_TRY(checkAndPopPendingError(context));
+
+    std::lock_guard<std::mutex> enqueueLock(mWorkerMutex);
+    std::lock_guard<std::mutex> submissionLock(mSubmissionMutex);
+    while (!mTasks.empty())
     {
-        (void)checkAndPopPendingError(context);
+        CommandProcessorTask task(std::move(mTasks.front()));
+        mTasks.pop();
+        ANGLE_TRY(processTask(&task));
     }
-    return shouldStop ? angle::Result::Stop : angle::Result::Continue;
+
+    return angle::Result::Continue;
 }
 
 angle::Result CommandProcessor::init()
@@ -752,10 +745,14 @@ angle::Result CommandProcessor::init()
 
 void CommandProcessor::destroy(Context *context)
 {
-    CommandProcessorTask endTask;
-    endTask.initTask(CustomTask::Exit);
-    queueCommand(std::move(endTask));
+    {
+        std::lock_guard<std::mutex> lock(mWorkerMutex);
+        mTaskThreadShouldExit = true;
+        mWorkAvailableCondition.notify_one();
+    }
+
     (void)waitForAllWorkToBeSubmitted(context);
+
     if (mTaskThread.joinable())
     {
         mTaskThread.join();
@@ -765,9 +762,7 @@ void CommandProcessor::destroy(Context *context)
 void CommandProcessor::handleDeviceLost(RendererVk *renderer)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "CommandProcessor::handleDeviceLost");
-    std::unique_lock<std::mutex> lock(mWorkerMutex);
-    mWorkerIdleCondition.wait(lock, [this] { return (mTasks.empty() && mWorkerThreadIdle); });
-
+    (void)waitForAllWorkToBeSubmitted(this);
     // Worker thread is idle and command queue is empty so good to continue
     mCommandQueue->handleDeviceLost(renderer);
 }
@@ -852,7 +847,7 @@ angle::Result CommandProcessor::queueSubmitOneOff(Context *context,
     {
         // Caller has synchronization requirement to have work in GPU pipe when returning from this
         // function.
-        ANGLE_TRY(waitForAllWorkToBeSubmitted(context));
+        ANGLE_TRY(waitForQueueSerialToBeSubmitted(context, submitQueueSerial));
     }
 
     return angle::Result::Continue;
@@ -934,10 +929,23 @@ bool CommandProcessor::hasUnsubmittedUse(const vk::ResourceUse &use) const
 angle::Result CommandProcessor::waitForResourceUseToBeSubmitted(vk::Context *context,
                                                                 const ResourceUse &use)
 {
+    ANGLE_TRY(checkAndPopPendingError(context));
+
     if (mCommandQueue->hasUnsubmittedUse(use))
     {
-        // TODO: https://issuetracker.google.com/261098465 stop wait when use has been submitted.
-        ANGLE_TRY(waitForAllWorkToBeSubmitted(context));
+        // TODD: https://issuetracker.google.com/267348918. Do not hold mWorkerMutex lock while
+        // dequeue.
+        std::lock_guard<std::mutex> enqueueLock(mWorkerMutex);
+        std::lock_guard<std::mutex> submissionLock(mSubmissionMutex);
+        size_t maxTaskCount = mTasks.size();
+        size_t taskCount    = 0;
+        while (taskCount < maxTaskCount && mCommandQueue->hasUnsubmittedUse(use))
+        {
+            CommandProcessorTask task(std::move(mTasks.front()));
+            mTasks.pop();
+            ANGLE_TRY(processTask(&task));
+            taskCount++;
+        }
     }
     return angle::Result::Continue;
 }
