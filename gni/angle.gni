@@ -188,7 +188,7 @@ declare_args() {
   angle_enable_gl_desktop_backend = !is_android && !is_ios
 
   # http://anglebug.com/2634
-  angle_enable_metal = is_mac
+  angle_enable_metal = is_apple
 
   # Enables the OpenCL pass-through back end
   angle_enable_cl_passthrough = angle_enable_cl
