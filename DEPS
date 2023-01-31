@@ -798,6 +798,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_traces',
   },
+  'src/tests/restricted_traces/age_of_origins_z': {
+      'packages': [
+        {
+            'package': 'angle/traces/age_of_origins_z',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_traces',
+  },
   'src/tests/restricted_traces/agent_a': {
       'packages': [
         {
