@@ -371,7 +371,7 @@ class ConvertStructState : angle::NonCopyable
             reflection->addOriginalName(structure.uniqueId().get(), structure.name().data());
             const Name name = idGen.createNewName(structure.name().data());
             if (!TryCreateModifiedStruct(mCompiler, symbolEnv, idGen, config, structure, name,
-                                         outMachineries, isUBORecurse, config.allowPadding))
+                                         outMachineries, isUBORecurse, true))
             {
                 return false;
             }
@@ -783,7 +783,7 @@ bool SaturateMatrixRows(ConvertStructState &state,
     const bool isRowMajor    = type.getLayoutQualifier().matrixPacking == EmpRowMajor;
     const uint8_t rows       = type.getRows();
     const uint8_t saturation = state.config.saturateMatrixRows(field);
-    if (saturation <= rows)
+    if (saturation <= rows && !isRowMajor)
     {
         return false;
     }
@@ -1064,10 +1064,12 @@ bool sh::TryCreateModifiedStruct(TCompiler &compiler,
 
     state.finalize(allowPadding);
 
-    if (identicalFieldCount == originalFields.size() && !state.hasPacking() && !state.hasPadding())
+    if (identicalFieldCount == originalFields.size() && !state.hasPacking() &&
+        !state.hasPadding() && !isUBO)
     {
         return false;
     }
+
     state.publish(originalStruct, modifiedStructName);
 
     return true;

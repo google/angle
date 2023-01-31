@@ -78,11 +78,8 @@ IndexRange IndexConversionBufferMtl::getRangeForConvertedBuffer(size_t count)
 }
 
 // UniformConversionBufferMtl implementation
-UniformConversionBufferMtl::UniformConversionBufferMtl(ContextMtl *context,
-                                                       std::pair<size_t, size_t> offsetIn,
-                                                       size_t uniformBufferBlockSize)
+UniformConversionBufferMtl::UniformConversionBufferMtl(ContextMtl *context, size_t offsetIn)
     : ConversionBufferMtl(context, 0, mtl::kUniformBufferSettingOffsetMinAlignment),
-      uniformBufferBlockSize(uniformBufferBlockSize),
       offset(offsetIn)
 {}
 
@@ -380,21 +377,17 @@ IndexConversionBufferMtl *BufferMtl::getIndexConversionBuffer(ContextMtl *contex
     return &mIndexConversionBuffers.back();
 }
 
-ConversionBufferMtl *BufferMtl::getUniformConversionBuffer(ContextMtl *context,
-                                                           std::pair<size_t, size_t> offset,
-                                                           size_t stdSize)
+ConversionBufferMtl *BufferMtl::getUniformConversionBuffer(ContextMtl *context, size_t offset)
 {
     for (UniformConversionBufferMtl &buffer : mUniformConversionBuffers)
     {
-        if (buffer.offset.first == offset.first)
+        if (buffer.offset == offset)
         {
-            if (buffer.offset.second <= offset.second &&
-                (offset.second - buffer.offset.second) % buffer.uniformBufferBlockSize == 0)
-                return &buffer;
+            return &buffer;
         }
     }
 
-    mUniformConversionBuffers.emplace_back(context, offset, stdSize);
+    mUniformConversionBuffers.emplace_back(context, offset);
     return &mUniformConversionBuffers.back();
 }
 

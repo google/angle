@@ -497,6 +497,5 @@ uint MslGetShaderShadowCompareMode(GLenum mode, GLenum func)
         }
     }
 }
-
 }  // namespace mtl
 }  // namespace rx

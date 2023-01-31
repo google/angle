@@ -82,14 +82,9 @@ struct IndexConversionBufferMtl : public ConversionBufferMtl
 
 struct UniformConversionBufferMtl : public ConversionBufferMtl
 {
-    UniformConversionBufferMtl(ContextMtl *context,
-                               std::pair<size_t, size_t> offsetIn,
-                               size_t blockSize);
+    UniformConversionBufferMtl(ContextMtl *context, size_t offsetIn);
 
-    size_t initialSrcOffset() { return offset.second; }
-
-    const size_t uniformBufferBlockSize;
-    const std::pair<size_t, size_t> offset;
+    const size_t offset;
 };
 
 class BufferHolderMtl
@@ -169,9 +164,7 @@ class BufferMtl : public BufferImpl, public BufferHolderMtl
                                                        bool primitiveRestartEnabled,
                                                        size_t offset);
 
-    ConversionBufferMtl *getUniformConversionBuffer(ContextMtl *context,
-                                                    std::pair<size_t, size_t> offset,
-                                                    size_t blockSize);
+    ConversionBufferMtl *getUniformConversionBuffer(ContextMtl *context, size_t offset);
 
     size_t size() const { return static_cast<size_t>(mState.getSize()); }
 
