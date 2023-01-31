@@ -119,7 +119,6 @@ class Serial final
 class AtomicQueueSerial final
 {
   public:
-    constexpr AtomicQueueSerial() : mValue(kInvalid) { ASSERT(mValue.is_lock_free()); }
     AtomicQueueSerial &operator=(const Serial &other)
     {
         mValue.store(other.mValue, std::memory_order_release);
@@ -128,8 +127,9 @@ class AtomicQueueSerial final
     Serial getSerial() const { return Serial(mValue.load(std::memory_order_consume)); }
 
   private:
-    std::atomic<uint64_t> mValue;
     static constexpr uint64_t kInvalid = 0;
+    std::atomic<uint64_t> mValue       = kInvalid;
+    static_assert(decltype(mValue)::is_always_lock_free, "Must always be lock free");
 };
 
 // Used as default/initial serial
