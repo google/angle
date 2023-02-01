@@ -203,6 +203,8 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-vkCmdDrawIndexed-None-06887",
     // http://anglebug.com/7865
     "VUID-VkDescriptorImageInfo-imageView-06711",
+    // http://crbug.com/1412096
+    "VUID-VkImageCreateInfo-pNext-00990",
 };
 
 // Validation messages that should be ignored only when VK_EXT_primitive_topology_list_restart is
