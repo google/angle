@@ -227,9 +227,9 @@ void InitDefaultUniformBlock(const std::vector<sh::Uniform> &uniforms,
     return;
 }
 
-inline NSDictionary<NSString *, NSObject *> *getDefaultSubstitutionDictionary()
+inline std::map<std::string, std::string> getDefaultSubstitutionDictionary()
 {
-    return @{};
+    return {};
 }
 
 template <typename T>
@@ -779,7 +779,7 @@ angle::Result ProgramMtl::getSpecializedShader(ContextMtl *context,
                 gl::InfoLog infoLog;
                 ANGLE_TRY(createMslShaderLib(context, shaderType, infoLog,
                                              &mMslXfbOnlyVertexShaderInfo,
-                                             @{@"TRANSFORM_FEEDBACK_ENABLED" : @"1"}));
+                                             {{"TRANSFORM_FEEDBACK_ENABLED", "1"}}));
                 translatedMslInfo->metalLibrary.get().label = @"TransformFeedback";
             }
         }
@@ -880,19 +880,19 @@ angle::Result ProgramMtl::createMslShaderLib(
     gl::ShaderType shaderType,
     gl::InfoLog &infoLog,
     mtl::TranslatedShaderInfo *translatedMslInfo,
-    NSDictionary<NSString *, NSObject *> *substitutionMacros)
+    const std::map<std::string, std::string> &substitutionMacros)
 {
     ANGLE_MTL_OBJC_SCOPE
     {
-        const mtl::ContextDevice &metalDevice = context->getMetalDevice();
+        mtl::LibraryCache &libraryCache = context->getDisplay()->getLibraryCache();
 
         // Convert to actual binary shader
         mtl::AutoObjCPtr<NSError *> err = nil;
         bool disableFastMath = (context->getDisplay()->getFeatures().intelDisableFastMath.enabled &&
                                 translatedMslInfo->hasInvariantOrAtan);
         translatedMslInfo->metalLibrary =
-            mtl::CreateShaderLibrary(metalDevice, translatedMslInfo->metalShaderSource,
-                                     substitutionMacros, !disableFastMath, &err);
+            libraryCache.getOrCompileShaderLibrary(context, translatedMslInfo->metalShaderSource,
+                                                   substitutionMacros, !disableFastMath, &err);
         if (err && !translatedMslInfo->metalLibrary)
         {
             std::ostringstream ss;

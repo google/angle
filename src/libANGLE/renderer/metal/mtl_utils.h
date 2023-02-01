@@ -89,7 +89,7 @@ uint32_t GetDeviceVendorId(id<MTLDevice> metalDevice);
 AutoObjCPtr<id<MTLLibrary>> CreateShaderLibrary(
     const mtl::ContextDevice &metalDevice,
     const std::string &source,
-    NSDictionary<NSString *, NSObject *> *substitutionDictionary,
+    const std::map<std::string, std::string> &substitutionDictionary,
     bool enableFastMath,
     AutoObjCPtr<NSError *> *error);
 
@@ -101,16 +101,14 @@ AutoObjCPtr<id<MTLLibrary>> CreateShaderLibrary(
     const mtl::ContextDevice &metalDevice,
     const char *source,
     size_t sourceLen,
-    NSDictionary<NSString *, NSObject *> *substitutionDictionary,
+    const std::map<std::string, std::string> &substitutionDictionary,
     bool enableFastMath,
     AutoObjCPtr<NSError *> *error);
 
-AutoObjCPtr<id<MTLLibrary>> CreateShaderLibraryFromBinary(
-    id<MTLDevice> metalDevice,
-    const uint8_t *binarySource,
-    size_t binarySourceLen,
-    NSDictionary<NSString *, NSObject *> *substitutionDictionary,
-    AutoObjCPtr<NSError *> *error);
+AutoObjCPtr<id<MTLLibrary>> CreateShaderLibraryFromBinary(id<MTLDevice> metalDevice,
+                                                          const uint8_t *binarySource,
+                                                          size_t binarySourceLen,
+                                                          AutoObjCPtr<NSError *> *error);
 
 bool SupportsAppleGPUFamily(id<MTLDevice> device, uint8_t appleFamily);
 

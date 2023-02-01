@@ -197,7 +197,7 @@ class ProgramMtl : public ProgramImpl, public mtl::RenderPipelineCacheSpecialize
         gl::ShaderType shaderType,
         gl::InfoLog &infoLog,
         mtl::TranslatedShaderInfo *translatedMslInfo,
-        NSDictionary<NSString *, NSObject *> *subtitutionDictionary = @{});
+        const std::map<std::string, std::string> &substitutionMacros = {});
     // Calls this before drawing, changedPipelineDesc is passed when vertex attributes desc and/or
     // shader program changed.
     angle::Result setupDraw(const gl::Context *glContext,
