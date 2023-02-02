@@ -29,6 +29,7 @@ class CommandProcessor;
 namespace vk
 {
 constexpr size_t kMaxCommandProcessorTasksLimit = 16u;
+constexpr size_t kInFlightCommandsLimit         = 50u;
 
 enum class SubmitPolicy
 {
@@ -110,8 +111,6 @@ class CommandProcessorTask
     CommandProcessorTask() { initTask(); }
 
     void initTask();
-
-    void initTask(CustomTask command) { mTask = command; }
 
     void initOutsideRenderPassProcessCommands(bool hasProtectedContent,
                                               OutsideRenderPassCommandBufferHelper *commandBuffer);
@@ -240,6 +239,7 @@ struct CommandBatch final : angle::NonCopyable
     QueueSerial queueSerial;
     bool hasProtectedContent;
 };
+using CommandBatchQueue = angle::FixedQueue<CommandBatch, kInFlightCommandsLimit>;
 
 class DeviceQueueMap;
 
@@ -433,7 +433,7 @@ class CommandQueue : angle::NonCopyable
 
     // Protect multi-thread access to mInFlightCommands and other data memebers of this class.
     mutable std::mutex mMutex;
-    std::vector<CommandBatch> mInFlightCommands;
+    CommandBatchQueue mInFlightCommands;
 
     angle::PackedEnumMap<CommandContent, CommandsState> mCommandsStateMap;
 

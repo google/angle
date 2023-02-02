@@ -16,8 +16,7 @@ namespace vk
 {
 namespace
 {
-constexpr size_t kInFlightCommandsLimit = 50u;
-constexpr bool kOutputVmaStatsString    = false;
+constexpr bool kOutputVmaStatsString = false;
 // When suballocation garbages is more than this, we may wait for GPU to finish and free up some
 // memory for allocation.
 constexpr VkDeviceSize kMaxBufferSuballocationGarbageSize = 64 * 1024 * 1024;
@@ -73,7 +72,7 @@ template <>
 // batch with a valid fence is returned for waiting purposes.  Note that due to empty submissions
 // being optimized out, there may not be a fence associated with every batch.
 template <typename BitSetArrayT>
-size_t GetBatchCountUpToSerials(std::vector<CommandBatch> &inFlightCommands,
+size_t GetBatchCountUpToSerials(CommandBatchQueue &inFlightCommands,
                                 const AtomicQueueSerialFixedArray &lastSubmittedSerials,
                                 const AtomicQueueSerialFixedArray &lastCompletedSerials,
                                 const Serials &serials)
@@ -95,11 +94,10 @@ size_t GetBatchCountUpToSerials(std::vector<CommandBatch> &inFlightCommands,
     }
 
     Serials serialsWillBeFinished(serials.size());
-    size_t batchCountToFinish = 0;
-    for (size_t i = 0; i < inFlightCommands.size(); i++)
+    size_t batchCountToFinish = 0, batchCount = 0;
+    for (const CommandBatch &batch : inFlightCommands)
     {
-        CommandBatch &batch = inFlightCommands[i];
-
+        batchCount++;
         if (serialBitMaskToFinish[batch.queueSerial.getIndex()])
         {
             // Update what the serial will look like if this batch is completed.
@@ -110,7 +108,7 @@ size_t GetBatchCountUpToSerials(std::vector<CommandBatch> &inFlightCommands,
             if (serialsWillBeFinished[batch.queueSerial.getIndex()] >=
                 serials[batch.queueSerial.getIndex()])
             {
-                batchCountToFinish = i + 1;
+                batchCountToFinish = batchCount;
 
                 serialBitMaskToFinish.reset(batch.queueSerial.getIndex());
                 if (serialBitMaskToFinish.none())
@@ -1064,6 +1062,13 @@ angle::Result CommandQueue::submitCommands(
     RendererVk *renderer = context->getRenderer();
     VkDevice device      = renderer->getDevice();
 
+    // CPU should be throttled to avoid mInFlightCommands from growing too fast. Important for
+    // off-screen scenarios.
+    while (mInFlightCommands.full())
+    {
+        ANGLE_TRY(finishOneCommandBatch(context, renderer->getMaxFenceWaitTimeNs()));
+    }
+
     ++mPerfCounters.commandQueueSubmitCallsTotal;
     ++mPerfCounters.commandQueueSubmitCallsPerFrame;
 
@@ -1111,7 +1116,7 @@ angle::Result CommandQueue::submitCommands(
 
     // Store the primary CommandBuffer in the in-flight list.
     batch.primaryCommands = std::move(commandBuffer);
-    mInFlightCommands.emplace_back(scopedBatch.release());
+    mInFlightCommands.push(scopedBatch.release());
 
     int finishedCount;
     ANGLE_TRY(checkCompletedCommandCount(context, &finishedCount));
@@ -1120,20 +1125,13 @@ angle::Result CommandQueue::submitCommands(
         ANGLE_TRY(retireFinishedCommandsAndCleanupGarbage(context, finishedCount));
     }
 
-    // CPU should be throttled to avoid mInFlightCommands from growing too fast. Important for
-    // off-screen scenarios.
-    while (mInFlightCommands.size() > kInFlightCommandsLimit)
-    {
-        ANGLE_TRY(finishOneCommandBatch(context, renderer->getMaxFenceWaitTimeNs()));
-    }
-
     // CPU should be throttled to avoid accumulating too much memory garbage waiting to be
     // destroyed. This is important to keep peak memory usage at check when game launched and a lot
     // of staging buffers used for textures upload and then gets released. But if there is only one
     // command buffer in flight, we do not wait here to ensure we keep GPU busy.
     VkDeviceSize suballocationGarbageSize = renderer->getSuballocationGarbageSize();
     while (suballocationGarbageSize > kMaxBufferSuballocationGarbageSize &&
-           mInFlightCommands.size() > 1)
+           !mInFlightCommands.empty())
     {
         ANGLE_TRY(finishOneCommandBatch(context, renderer->getMaxFenceWaitTimeNs()));
         suballocationGarbageSize = renderer->getSuballocationGarbageSize();
@@ -1342,7 +1340,7 @@ angle::Result CommandQueue::queueSubmitOneOff(Context *context,
 
     ANGLE_TRY(queueSubmit(context, contextPriority, submitInfo, fence, submitQueueSerial));
 
-    mInFlightCommands.emplace_back(scopedBatch.release());
+    mInFlightCommands.push(scopedBatch.release());
     return angle::Result::Continue;
 }
 
@@ -1438,7 +1436,7 @@ angle::Result CommandQueue::retireFinishedCommands(Context *context, size_t fini
     angle::FastMap<Serial, kMaxFastQueueSerials> lastCompletedQueueSerials;
     for (size_t commandIndex = 0; commandIndex < finishedCount; ++commandIndex)
     {
-        CommandBatch &batch = mInFlightCommands[commandIndex];
+        CommandBatch &batch = mInFlightCommands.front();
 
         lastCompletedQueueSerials[batch.queueSerial.getIndex()] = batch.queueSerial.getSerial();
 
@@ -1458,6 +1456,7 @@ angle::Result CommandQueue::retireFinishedCommands(Context *context, size_t fini
             ANGLE_TRACE_EVENT0("gpu.angle", "Secondary command buffer recycling");
             batch.resetSecondaryCommandBuffers(device);
         }
+        mInFlightCommands.pop();
     }
 
     for (SerialIndex index = 0; index < lastCompletedQueueSerials.size(); index++)
@@ -1468,10 +1467,6 @@ angle::Result CommandQueue::retireFinishedCommands(Context *context, size_t fini
             mLastCompletedSerials.setQueueSerial(index, lastCompletedQueueSerials[index]);
         }
     }
-
-    auto beginIter = mInFlightCommands.begin();
-    mInFlightCommands.erase(beginIter, beginIter + finishedCount);
-
     return angle::Result::Continue;
 }
 
