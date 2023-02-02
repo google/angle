@@ -2126,7 +2126,8 @@ ANGLE_INSTANTIATE_TEST_ES3_AND(BufferSubDataTest,
                                ES3_VULKAN().enable(Feature::PreferCPUForBufferSubData));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(BufferDataTestES3);
-ANGLE_INSTANTIATE_TEST_ES3(BufferDataTestES3);
+ANGLE_INSTANTIATE_TEST_ES3_AND(BufferDataTestES3,
+                               ES3_METAL().enable(Feature::ForceBufferGPUStorage));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(BufferStorageTestES3);
 ANGLE_INSTANTIATE_TEST_ES3(BufferStorageTestES3);
