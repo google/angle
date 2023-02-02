@@ -1053,9 +1053,31 @@ ANGLE_INLINE gl::ShadingRate GetShadingRateFromVkExtent(const VkExtent2D &extent
     return gl::ShadingRate::_1x1;
 }
 
+// Output memory log stream based on level of severity.
+void outputMemoryLogStream(std::stringstream &outStream, vk::MemoryLogSeverity severity)
+{
+    if (!kTrackMemoryAllocationSizes)
+    {
+        return;
+    }
+
+    switch (severity)
+    {
+        case vk::MemoryLogSeverity::INFO:
+            INFO() << outStream.str();
+            break;
+        case vk::MemoryLogSeverity::WARN:
+            WARN() << outStream.str();
+            break;
+        default:
+            UNREACHABLE();
+            break;
+    }
+}
+
 // Check for currently allocated memory. It is used at the end of the renderer object and when there
 // is an allocation error (from ANGLE_VK_TRY()).
-void checkForCurrentMemoryAllocations(RendererVk *renderer)
+void checkForCurrentMemoryAllocations(RendererVk *renderer, vk::MemoryLogSeverity severity)
 {
     if (kTrackMemoryAllocationDebug)
     {
@@ -1088,7 +1110,7 @@ void checkForCurrentMemoryAllocations(RendererVk *renderer)
                     << std::endl;
             }
 
-            INFO() << outStream.str();
+            outputMemoryLogStream(outStream, severity);
         }
     }
     else if (kTrackMemoryAllocationSizes)
@@ -1116,13 +1138,13 @@ void checkForCurrentMemoryAllocations(RendererVk *renderer)
                           << std::endl;
             }
 
-            INFO() << outStream.str();
+            outputMemoryLogStream(outStream, severity);
         }
     }
 }
 
 // In case of an allocation error, log pending memory allocation if the size in non-zero.
-void logPendingMemoryAllocation(RendererVk *renderer)
+void logPendingMemoryAllocation(RendererVk *renderer, vk::MemoryLogSeverity severity)
 {
     if (!kTrackMemoryAllocationSizes)
     {
@@ -1143,29 +1165,7 @@ void logPendingMemoryAllocation(RendererVk *renderer)
         outStream << "Pending allocation size for memory allocation type ("
                   << vk::kMemoryAllocationTypeMessage[ToUnderlying(allocInfo)]
                   << ") for heap index " << memoryHeapIndex << ": " << allocSize;
-        WARN() << outStream.str();
-    }
-}
-
-// Output memory log stream based on level of severity.
-void outputMemoryLogStream(std::stringstream &outStream, vk::MemoryLogSeverity severity)
-{
-    if (!kTrackMemoryAllocationSizes)
-    {
-        return;
-    }
-
-    switch (severity)
-    {
-        case vk::MemoryLogSeverity::INFO:
-            INFO() << outStream.str();
-            break;
-        case vk::MemoryLogSeverity::WARN:
-            WARN() << outStream.str();
-            break;
-        default:
-            UNREACHABLE();
-            break;
+        outputMemoryLogStream(outStream, severity);
     }
 }
 
@@ -1398,7 +1398,7 @@ void RendererVk::onDestroy(vk::Context *context)
     // throughout the execution has been freed.
     if (kTrackMemoryAllocationDebug)
     {
-        checkForCurrentMemoryAllocations(this);
+        checkForCurrentMemoryAllocations(this, vk::MemoryLogSeverity::INFO);
     }
 
     if (mDevice)
@@ -5072,8 +5072,8 @@ void RendererVk::logCacheStats() const
 
 void RendererVk::logMemoryStatsOnError()
 {
-    checkForCurrentMemoryAllocations(this);
-    logPendingMemoryAllocation(this);
+    checkForCurrentMemoryAllocations(this, vk::MemoryLogSeverity::WARN);
+    logPendingMemoryAllocation(this, vk::MemoryLogSeverity::WARN);
     logMemoryHeapStats(this, vk::MemoryLogSeverity::WARN);
 }
 
