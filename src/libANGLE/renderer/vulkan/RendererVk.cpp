@@ -5262,15 +5262,6 @@ angle::Result RendererVk::waitForResourceUseToFinishWithUserTimeout(vk::Context 
     return mCommandQueue.waitForResourceUseToFinishWithUserTimeout(context, use, timeout, result);
 }
 
-angle::Result RendererVk::finish(vk::Context *context)
-{
-    if (isAsyncCommandQueueEnabled())
-    {
-        ANGLE_TRY(mCommandProcessor.waitForAllWorkToBeSubmitted(context));
-    }
-    return mCommandQueue.waitIdle(context, getMaxFenceWaitTimeNs());
-}
-
 angle::Result RendererVk::flushWaitSemaphores(
     vk::ProtectionType protectionType,
     egl::ContextPriority priority,
