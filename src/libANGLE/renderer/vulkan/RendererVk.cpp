@@ -4554,10 +4554,10 @@ angle::Result RendererVk::queueSubmitOneOff(vk::Context *context,
     ANGLE_TRACE_EVENT0("gpu.angle", "RendererVk::queueSubmitOneOff");
     // Allocate a oneoff submitQueueSerial and generate a serial and then use it and release the
     // index.
-    SerialIndex queueIndex;
-    Serial lastSubmittedSerial;
-    ANGLE_TRY(allocateQueueSerialIndex(&queueIndex, &lastSubmittedSerial));
-    QueueSerial submitQueueSerial(queueIndex, generateQueueSerial(queueIndex));
+    QueueSerial lastSubmittedQueueSerial;
+    ANGLE_TRY(allocateQueueSerialIndex(&lastSubmittedQueueSerial));
+    QueueSerial submitQueueSerial(lastSubmittedQueueSerial.getIndex(),
+                                  generateQueueSerial(lastSubmittedQueueSerial.getIndex()));
 
     if (isAsyncCommandQueueEnabled())
     {
@@ -4573,7 +4573,7 @@ angle::Result RendererVk::queueSubmitOneOff(vk::Context *context,
     }
 
     // Immediately release the queue index since itis an one off use.
-    releaseQueueSerialIndex(queueIndex);
+    releaseQueueSerialIndex(lastSubmittedQueueSerial.getIndex());
 
     *queueSerialOut = submitQueueSerial;
     if (primary.valid())
@@ -5151,16 +5151,16 @@ VkDeviceSize RendererVk::getPreferedBufferBlockSize(uint32_t memoryTypeIndex) co
     return std::min(heapSize / 64, mPreferredLargeHeapBlockSize);
 }
 
-angle::Result RendererVk::allocateQueueSerialIndex(SerialIndex *indexOut, Serial *serialOut)
+angle::Result RendererVk::allocateQueueSerialIndex(QueueSerial *queueSerialOut)
 {
     SerialIndex index = mQueueSerialIndexAllocator.allocate();
     if (index == kInvalidQueueSerialIndex)
     {
         return angle::Result::Stop;
     }
-    *indexOut  = index;
-    *serialOut = isAsyncCommandQueueEnabled() ? mCommandProcessor.getLastSubmittedSerial(index)
-                                              : mCommandQueue.getLastSubmittedSerial(index);
+    Serial serial   = isAsyncCommandQueueEnabled() ? mCommandProcessor.getLastSubmittedSerial(index)
+                                                   : mCommandQueue.getLastSubmittedSerial(index);
+    *queueSerialOut = QueueSerial(index, serial);
     return angle::Result::Continue;
 }
 

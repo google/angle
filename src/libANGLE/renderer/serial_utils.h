@@ -236,6 +236,30 @@ class QueueSerial final
     {
         return mIndex != other.mIndex || mSerial != other.mSerial;
     }
+    constexpr bool operator<(const QueueSerial &other) const
+    {
+        ASSERT(mIndex != kInvalidQueueSerialIndex);
+        ASSERT(mIndex == other.mIndex);
+        return mSerial < other.mSerial;
+    }
+    constexpr bool operator<=(const QueueSerial &other) const
+    {
+        ASSERT(mIndex != kInvalidQueueSerialIndex);
+        ASSERT(mIndex == other.mIndex);
+        return mSerial <= other.mSerial;
+    }
+    constexpr bool operator>(const QueueSerial &other) const
+    {
+        ASSERT(mIndex != kInvalidQueueSerialIndex);
+        ASSERT(mIndex == other.mIndex);
+        return mSerial > other.mSerial;
+    }
+    constexpr bool operator>=(const QueueSerial &other) const
+    {
+        ASSERT(mIndex != kInvalidQueueSerialIndex);
+        ASSERT(mIndex == other.mIndex);
+        return mSerial >= other.mSerial;
+    }
 
     bool operator>(const AtomicQueueSerialFixedArray &serials) const
     {
