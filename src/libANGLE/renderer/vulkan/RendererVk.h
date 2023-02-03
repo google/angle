@@ -95,18 +95,37 @@ struct SkippedSyncvalMessage
 // Used to designate memory allocation type for tracking purposes.
 enum class MemoryAllocationType
 {
-    Unspecified    = 0,
-    Image          = 1,
-    ImageExternal  = 2,
-    Buffer         = 3,
-    BufferExternal = 4,
+    Unspecified                              = 0,
+    ImageExternal                            = 1,
+    OffscreenSurfaceAttachmentImage          = 2,
+    SwapchainMSAAImage                       = 3,
+    SwapchainDepthStencilImage               = 4,
+    StagingImage                             = 5,
+    ImplicitMultisampledRenderToTextureImage = 6,
+    TextureImage                             = 7,
+    FontImage                                = 8,
+    RenderBufferStorageImage                 = 9,
+    Buffer                                   = 10,
+    BufferExternal                           = 11,
 
-    InvalidEnum = 5,
+    InvalidEnum = 12,
     EnumCount   = InvalidEnum,
 };
 
 constexpr const char *kMemoryAllocationTypeMessage[] = {
-    "Unspecified", "Image", "ImageExternal", "Buffer", "BufferExternal", "Invalid",
+    "Unspecified",
+    "ImageExternal",
+    "OffscreenSurfaceAttachmentImage",
+    "SwapchainMSAAImage",
+    "SwapchainDepthStencilImage",
+    "StagingImage",
+    "ImplicitMultisampledRenderToTextureImage",
+    "TextureImage",
+    "FontImage",
+    "RenderBufferStorageImage",
+    "Buffer",
+    "BufferExternal",
+    "Invalid",
 };
 constexpr const uint32_t kMemoryAllocationTypeCount =
     static_cast<uint32_t>(MemoryAllocationType::EnumCount);

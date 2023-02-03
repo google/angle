@@ -1745,7 +1745,8 @@ class ImageHelper final : public Resource, public angle::Subject
     angle::Result initMemory(Context *context,
                              bool hasProtectedContent,
                              const MemoryProperties &memoryProperties,
-                             VkMemoryPropertyFlags flags);
+                             VkMemoryPropertyFlags flags,
+                             vk::MemoryAllocationType);
     angle::Result initExternalMemory(Context *context,
                                      const MemoryProperties &memoryProperties,
                                      const VkMemoryRequirements &memoryRequirements,

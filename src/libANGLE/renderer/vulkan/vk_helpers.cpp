@@ -5644,14 +5644,15 @@ angle::Result ImageHelper::initializeNonZeroMemory(Context *context,
 angle::Result ImageHelper::initMemory(Context *context,
                                       bool hasProtectedContent,
                                       const MemoryProperties &memoryProperties,
-                                      VkMemoryPropertyFlags flags)
+                                      VkMemoryPropertyFlags flags,
+                                      MemoryAllocationType allocationType)
 {
     // TODO(jmadill): Memory sub-allocation. http://anglebug.com/2162
     if (hasProtectedContent)
     {
         flags |= VK_MEMORY_PROPERTY_PROTECTED_BIT;
     }
-    mMemoryAllocationType = MemoryAllocationType::Image;
+    mMemoryAllocationType = allocationType;
     ANGLE_TRY(AllocateImageMemory(context, mMemoryAllocationType, flags, &flags, nullptr, &mImage,
                                   &mMemoryTypeIndex, &mDeviceMemory, &mAllocationSize));
     mCurrentQueueFamilyIndex = context->getRenderer()->getQueueFamilyIndex();
@@ -5985,7 +5986,8 @@ angle::Result ImageHelper::initStaging(Context *context,
     {
         memoryPropertyFlags |= VK_MEMORY_PROPERTY_PROTECTED_BIT;
     }
-    ANGLE_TRY(initMemory(context, hasProtectedContent, memoryProperties, memoryPropertyFlags));
+    ANGLE_TRY(initMemory(context, hasProtectedContent, memoryProperties, memoryPropertyFlags,
+                         vk::MemoryAllocationType::StagingImage));
 
     return angle::Result::Continue;
 }
@@ -6048,7 +6050,8 @@ angle::Result ImageHelper::initImplicitMultisampledRenderToTexture(
     // If this ever fails, it can be retried without the LAZILY_ALLOCATED flag (which will probably
     // still fail), but ideally that means GL_EXT_multisampled_render_to_texture should not be
     // advertized on this platform in the first place.
-    return initMemory(context, hasProtectedContent, memoryProperties, kMultisampledMemoryFlags);
+    return initMemory(context, hasProtectedContent, memoryProperties, kMultisampledMemoryFlags,
+                      vk::MemoryAllocationType::ImplicitMultisampledRenderToTextureImage);
 }
 
 VkImageAspectFlags ImageHelper::getAspectFlags() const
