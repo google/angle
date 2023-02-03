@@ -1459,6 +1459,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     SerialIndex mCurrentQueueSerialIndex;
     QueueSerial mLastFlushedQueueSerial;
     QueueSerial mLastSubmittedQueueSerial;
+    // All submitted queue serials over the life time of this context.
+    vk::ResourceUse mSubmittedResourceUse;
 
     // The garbage list for single context use objects. The list will be GPU tracked by next
     // submission queueSerial. Note: Resource based shared object should always be added to

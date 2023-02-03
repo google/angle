@@ -1172,6 +1172,9 @@ void ContextVk::onDestroy(const gl::Context *context)
     // Flush and complete current outstanding work before destruction.
     (void)finishImpl(RenderPassClosureReason::ContextDestruction);
 
+    // Everything must be finished
+    ASSERT(!mRenderer->hasUnfinishedUse(mSubmittedResourceUse));
+
     VkDevice device = getDevice();
 
     mDefaultUniformStorage.release(mRenderer);
@@ -3394,6 +3397,7 @@ angle::Result ContextVk::submitCommands(const vk::Semaphore *signalSemaphore, Su
 
     ASSERT(mLastSubmittedQueueSerial < mLastFlushedQueueSerial);
     mLastSubmittedQueueSerial = mLastFlushedQueueSerial;
+    mSubmittedResourceUse.setQueueSerial(mLastSubmittedQueueSerial);
 
     // Now that we have submitted commands, some of pending garbage may no longer pending
     // and should be moved to garbage list.
@@ -6378,7 +6382,7 @@ angle::Result ContextVk::releaseTextures(const gl::Context *context,
     }
 
     ANGLE_TRY(flushImpl(nullptr, RenderPassClosureReason::ImageUseThenReleaseToExternal));
-    return mRenderer->waitForQueueSerialToBeSubmitted(this, mLastSubmittedQueueSerial);
+    return mRenderer->waitForResourceUseToBeSubmitted(this, mSubmittedResourceUse);
 }
 
 vk::DynamicQueryPool *ContextVk::getQueryPool(gl::QueryType queryType)
@@ -6949,7 +6953,11 @@ angle::Result ContextVk::finishImpl(RenderPassClosureReason renderPassClosureRea
     ANGLE_TRACE_EVENT0("gpu.angle", "ContextVk::finishImpl");
 
     ANGLE_TRY(flushImpl(nullptr, renderPassClosureReason));
-    ANGLE_TRY(mRenderer->finish(this, hasProtectedContent()));
+
+    // You must have to wait for all queue indices ever used to finish. Just wait for
+    // mLastSubmittedQueueSerial (which only contains current index) to finish is not enough, if it
+    // has ever became unCurrent and then Current again.
+    ANGLE_TRY(mRenderer->finishResourceUse(this, mSubmittedResourceUse));
 
     clearAllGarbage();
 
