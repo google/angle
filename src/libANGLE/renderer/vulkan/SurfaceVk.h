@@ -21,7 +21,7 @@ namespace rx
 {
 class RendererVk;
 
-class SurfaceVk : public SurfaceImpl, public angle::ObserverInterface
+class SurfaceVk : public SurfaceImpl, public angle::ObserverInterface, public vk::Resource
 {
   public:
     angle::Result getAttachmentRenderTarget(const gl::Context *context,
@@ -377,6 +377,9 @@ class WindowSurfaceVk : public SurfaceVk
     // presented).  This is a failsafe, as the application should ensure command buffer recording is
     // not ahead of the frame being rendered by *one* frame.
     angle::Result throttleCPU(ContextVk *contextVk, const QueueSerial &currentSubmitSerial);
+
+    // Finish all GPU operations on the surface
+    angle::Result finish(vk::Context *context);
 
     void updateOverlay(ContextVk *contextVk) const;
     bool overlayHasEnabledWidget(ContextVk *contextVk) const;
