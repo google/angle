@@ -1459,11 +1459,6 @@ angle::Result Program::loadBinary(const Context *context,
     unlink();
     InfoLog &infoLog = mState.mExecutable->getInfoLog();
 
-    if (!angle::GetANGLEHasBinaryLoading())
-    {
-        return angle::Result::Incomplete;
-    }
-
     ASSERT(binaryFormat == GL_PROGRAM_BINARY_ANGLE);
     if (binaryFormat != GL_PROGRAM_BINARY_ANGLE)
     {
