@@ -33,8 +33,13 @@ AutoObjCPtr<id<MTLLibrary>> LibraryCache::getOrCompileShaderLibrary(
     }
 
     LibraryKey::LValueTuple lValueKey = std::tie(source, macros, enableFastMath);
+#if ANGLE_HAS_HASH_MAP_GENERIC_LOOKUP
+    const LibraryKey::LValueTuple &key = lValueKey;
+#else
+    LibraryKey key(lValueKey);
+#endif  // ANGLE_HAS_HASH_MAP_GENERIC_LOOKUP
 
-    auto iter = mCache.find(lValueKey);
+    auto iter = mCache.find(key);
     if (iter != mCache.end())
     {
         return iter->second;
@@ -44,7 +49,7 @@ AutoObjCPtr<id<MTLLibrary>> LibraryCache::getOrCompileShaderLibrary(
         CreateShaderLibrary(context->getMetalDevice(), source, macros, enableFastMath, errorOut);
     if (library)
     {
-        mCache.insert_or_assign(LibraryKey(lValueKey), library);
+        mCache.insert_or_assign(LibraryKey(std::move(key)), library);
     }
 
     return library;
