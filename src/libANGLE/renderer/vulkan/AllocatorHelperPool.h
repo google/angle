@@ -118,7 +118,7 @@ class DedicatedCommandBlockPool final
     {
         if (mCurrentBytesRemaining < requiredSize)
         {
-            ASSERT(requiredSize < kBlockSize);
+            ASSERT(requiredSize <= kBlockSize);
             allocateNewBlock();
         }
 
