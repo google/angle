@@ -986,7 +986,7 @@ void WriteInitReplayCall(bool compression,
         out << "    // max" << name << " = " << maxIDs[resourceID] << "\n";
     }
 
-    out << "    InitializeReplay3(\"" << binaryDataFileName << "\", " << maxClientArraySize << ", "
+    out << "    InitializeReplay4(\"" << binaryDataFileName << "\", " << maxClientArraySize << ", "
         << readBufferSize << ", " << resourceIDBufferSize << ", " << contextID;
 
     for (ResourceIDType resourceID : AllEnums<ResourceIDType>())
@@ -2254,6 +2254,7 @@ bool IsSharedObjectResource(ResourceIDType type)
         case ResourceIDType::Context:
         case ResourceIDType::Image:
         case ResourceIDType::Surface:
+        case ResourceIDType::egl_Sync:
             // Return false for all EGL object types.
             return false;
 
@@ -3271,6 +3272,18 @@ void CaptureCustomCreateEGLImage(const char *name,
     EGLImage returnVal   = params.getReturnValue().value.EGLImageVal;
     egl::ImageID imageID = egl::PackParam<egl::ImageID>(returnVal);
     params.addValueParam("image", ParamType::TGLuint, imageID.value);
+    call.customFunctionName = name;
+    callsOut.emplace_back(std::move(call));
+}
+
+void CaptureCustomCreateEGLSync(const char *name,
+                                CallCapture &call,
+                                std::vector<CallCapture> &callsOut)
+{
+    ParamBuffer &&params = std::move(call.params);
+    EGLSync returnVal    = params.getReturnValue().value.EGLSyncVal;
+    egl::SyncID syncID   = egl::PackParam<egl::SyncID>(returnVal);
+    params.addValueParam("sync", ParamType::TGLuint, syncID.value);
     call.customFunctionName = name;
     callsOut.emplace_back(std::move(call));
 }
@@ -6622,6 +6635,16 @@ void FrameCaptureShared::maybeOverrideEntryPoint(const gl::Context *context,
             CaptureCustomCreateEGLImage("CreateEGLImageKHR", inCall, outCalls);
             break;
         }
+        case EntryPoint::EGLCreateSync:
+        {
+            CaptureCustomCreateEGLSync("CreateEGLSync", inCall, outCalls);
+            break;
+        }
+        case EntryPoint::EGLCreateSyncKHR:
+        {
+            CaptureCustomCreateEGLSync("CreateEGLSyncKHR", inCall, outCalls);
+            break;
+        }
         case EntryPoint::EGLCreatePbufferSurface:
         {
             CaptureCustomCreatePbufferSurface(inCall, outCalls);
@@ -7485,7 +7508,11 @@ void FrameCaptureShared::updateResourceCountsFromCallCapture(const CallCapture &
             updateResourceCountsFromParamCapture(call.params.getReturnValue(),
                                                  ResourceIDType::Sync);
             break;
-
+        case EntryPoint::EGLCreateSync:
+        case EntryPoint::EGLCreateSyncKHR:
+            updateResourceCountsFromParamCapture(call.params.getReturnValue(),
+                                                 ResourceIDType::egl_Sync);
+            break;
         default:
             break;
     }

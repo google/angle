@@ -1574,13 +1574,15 @@ Error Display::createSync(const gl::Context *currentContext,
 {
     ASSERT(isInitialized());
 
+    SyncID id = {mSyncHandleAllocator.allocate()};
+
     if (mImplementation->testDeviceLost())
     {
         ANGLE_TRY(restoreLostDevice());
     }
 
-    angle::UniqueObjectPointer<egl::Sync, Display> syncPtr(new Sync(mImplementation, type, attribs),
-                                                           this);
+    angle::UniqueObjectPointer<egl::Sync, Display> syncPtr(
+        new Sync(mImplementation, id, type, attribs), this);
 
     ANGLE_TRY(syncPtr->initialize(this, currentContext));
 
@@ -1826,6 +1828,7 @@ void Display::destroySyncImpl(Sync *sync, SyncSet *syncs)
 {
     auto iter = syncs->find(sync);
     ASSERT(iter != syncs->end());
+    mSyncHandleAllocator.release((*iter)->id().value);
     (*iter)->release(this);
     syncs->erase(iter);
 }
@@ -1963,9 +1966,9 @@ bool Display::isValidStream(const Stream *stream) const
     return mStreamSet.find(const_cast<Stream *>(stream)) != mStreamSet.end();
 }
 
-bool Display::isValidSync(const Sync *sync) const
+bool Display::isValidSync(SyncID syncID) const
 {
-    return mSyncSet.find(const_cast<Sync *>(sync)) != mSyncSet.end();
+    return getSync(syncID) != nullptr;
 }
 
 bool Display::hasExistingWindowSurface(EGLNativeWindowType window)
@@ -2558,6 +2561,11 @@ const egl::Image *Display::getImage(egl::ImageID imageID) const
     return GetResourceFromHashSet<const egl::Image *>(imageID, mImageSet);
 }
 
+const egl::Sync *Display::getSync(egl::SyncID syncID) const
+{
+    return GetResourceFromHashSet<const egl::Sync *>(syncID, mSyncSet);
+}
+
 gl::Context *Display::getContext(gl::ContextID contextID)
 {
     return GetResourceFromHashSet<gl::Context *>(contextID, mState.contextSet);
@@ -2571,4 +2579,10 @@ egl::Image *Display::getImage(egl::ImageID imageID)
 {
     return GetResourceFromHashSet<egl::Image *>(imageID, mImageSet);
 }
+
+egl::Sync *Display::getSync(egl::SyncID syncID)
+{
+    return GetResourceFromHashSet<egl::Sync *>(syncID, mSyncSet);
+}
+
 }  // namespace egl
