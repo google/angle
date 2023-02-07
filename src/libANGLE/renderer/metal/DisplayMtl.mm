@@ -988,8 +988,8 @@ void DisplayMtl::initializeExtensions() const
 
     mNativeExtensions.occlusionQueryBooleanEXT = true;
 
-    mNativeExtensions.disjointTimerQueryEXT = false;
-    mNativeCaps.queryCounterBitsTimeElapsed = 0;
+    mNativeExtensions.disjointTimerQueryEXT = true;
+    mNativeCaps.queryCounterBitsTimeElapsed = 64;
     mNativeCaps.queryCounterBitsTimestamp   = 0;
 
     mNativeExtensions.textureFilterAnisotropicEXT = true;
