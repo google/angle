@@ -1360,8 +1360,11 @@ angle::Result CommandQueue::submitCommandsImpl(Context *context,
         ++mPerfCounters.vkQueueSubmitCallsPerFrame;
     }
 
-    ANGLE_TRY(queueSubmit(context, priority, submitInfo, fence, scopedBatch, submitQueueSerial));
+    // Note queueSubmit will release the lock.
+    ANGLE_TRY(queueSubmit(context, std::move(lock), priority, submitInfo, fence, scopedBatch,
+                          submitQueueSerial));
 
+    // Clear local vector without lock.
     waitSemaphores.clear();
     waitSemaphoreStageMasks.clear();
 
@@ -1422,10 +1425,13 @@ angle::Result CommandQueue::queueSubmitOneOff(Context *context,
     ++mPerfCounters.vkQueueSubmitCallsTotal;
     ++mPerfCounters.vkQueueSubmitCallsPerFrame;
 
-    return queueSubmit(context, contextPriority, submitInfo, fence, scopedBatch, submitQueueSerial);
+    // Note queueSubmit will release the lock.
+    return queueSubmit(context, std::move(lock), contextPriority, submitInfo, fence, scopedBatch,
+                       submitQueueSerial);
 }
 
 angle::Result CommandQueue::queueSubmit(Context *context,
+                                        std::unique_lock<std::mutex> &&dequeueLock,
                                         egl::ContextPriority contextPriority,
                                         const VkSubmitInfo &submitInfo,
                                         const Fence *fence,
@@ -1435,12 +1441,20 @@ angle::Result CommandQueue::queueSubmit(Context *context,
     ANGLE_TRACE_EVENT0("gpu.angle", "CommandQueue::queueSubmit");
     RendererVk *renderer = context->getRenderer();
 
+    // Lock relay to ensure the ordering of submission strictly follow the context's submission
+    // order. This lock relay (first take mMutex and then mQueueSubmitMutex, and then release
+    // mMutex) ensures we always have a lock covering the entire call which ensures the strict
+    // submission order.
+    std::lock_guard<std::mutex> queueSubmitLock(mQueueSubmitMutex);
     // CPU should be throttled to avoid mInFlightCommands from growing too fast. Important for
     // off-screen scenarios.
     if (mInFlightCommands.full())
     {
         ANGLE_TRY(finishOneCommandBatch(context, renderer->getMaxFenceWaitTimeNs()));
     }
+    // Release the dequeue lock while doing potentially lengthy vkQueueSubmit call.
+    // Note: after this point, you can not reference anything that required mMutex lock.
+    dequeueLock.unlock();
 
     if (submitInfo.sType == VK_STRUCTURE_TYPE_SUBMIT_INFO)
     {
@@ -1450,8 +1464,10 @@ angle::Result CommandQueue::queueSubmit(Context *context,
     }
 
     mInFlightCommands.push(commandBatch.release());
-    mLastSubmittedSerials.setQueueSerial(submitQueueSerial);
 
+    // This must set last so that when this submission appears submitted, it actually already
+    // submitted and enqueued to mInFlightCommands.
+    mLastSubmittedSerials.setQueueSerial(submitQueueSerial);
     return angle::Result::Continue;
 }
 
@@ -1459,9 +1475,10 @@ VkResult CommandQueue::queuePresent(egl::ContextPriority contextPriority,
                                     const VkPresentInfoKHR &presentInfo,
                                     SwapchainStatus *swapchainStatus)
 {
-    std::lock_guard<std::mutex> lock(mMutex);
+    std::lock_guard<std::mutex> queueSubmitLock(mQueueSubmitMutex);
     VkQueue queue   = getQueue(contextPriority);
     VkResult result = vkQueuePresentKHR(queue, &presentInfo);
+
     // "swapchainStatus" will be "nullptr" when called from the CommandProcessor
     if (swapchainStatus)
     {

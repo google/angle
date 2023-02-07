@@ -408,6 +408,7 @@ class CommandQueue : angle::NonCopyable
                                      SecondaryCommandPools *commandPools,
                                      const QueueSerial &submitQueueSerial);
     angle::Result queueSubmit(Context *context,
+                              std::unique_lock<std::mutex> &&dequeueLock,
                               egl::ContextPriority contextPriority,
                               const VkSubmitInfo &submitInfo,
                               const Fence *fence,
@@ -441,8 +442,12 @@ class CommandQueue : angle::NonCopyable
         return commandPool.init(context, protectionType, mQueueMap.getIndex());
     }
 
-    // Protect multi-thread access to mInFlightCommands and other data memebers of this class.
+    // Protect multi-thread access to mInFlightCommands.pop and ensure ordering of submission.
     mutable std::mutex mMutex;
+    // Protect multi-thread access to mInFlightCommands.push as well as does lock relay for mMutex
+    // so that we can release mMutex while doing potential lengthy vkQueueSubmit and vkQueuePresent
+    // call.
+    std::mutex mQueueSubmitMutex;
     CommandBatchQueue mInFlightCommands;
 
     angle::PackedEnumMap<ProtectionType, CommandsState> mCommandsStateMap;
