@@ -400,11 +400,20 @@ class CommandQueue : angle::NonCopyable
     angle::Result checkCompletedCommandCount(Context *context, int *finishedCountOut);
     angle::Result finishOneCommandBatch(Context *context, uint64_t timeout);
 
+    angle::Result submitCommandsImpl(Context *context,
+                                     ProtectionType protectionType,
+                                     egl::ContextPriority priority,
+                                     const VkSemaphore signalSemaphore,
+                                     SecondaryCommandBufferList &&commandBuffersToReset,
+                                     SecondaryCommandPools *commandPools,
+                                     const QueueSerial &submitQueueSerial);
     angle::Result queueSubmit(Context *context,
                               egl::ContextPriority contextPriority,
                               const VkSubmitInfo &submitInfo,
                               const Fence *fence,
+                              DeviceScoped<CommandBatch> &commandBatch,
                               const QueueSerial &submitQueueSerial);
+    angle::Result postSubmitCheck(Context *context);
 
     angle::Result retireFinishedCommands(Context *context, size_t finishedCount);
     angle::Result retireFinishedCommandsAndCleanupGarbage(Context *context, size_t finishedCount);
