@@ -3147,13 +3147,6 @@ void RendererVk::initExtensionEntryPoints()
 
     // For promoted extensions, initialize their entry points from the core version.
     initializeEntryPointsFromCore();
-
-    // crbug:1273344 In some driver we are seeing vkResetQueryPoolEXT is null but feature is
-    // enabled. Disable the feature flag in this case
-    if (mFeatures.supportsHostQueryReset.enabled && vkResetQueryPoolEXT == nullptr)
-    {
-        mFeatures.supportsHostQueryReset.enabled = false;
-    }
 }
 
 angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueFamilyIndex)
