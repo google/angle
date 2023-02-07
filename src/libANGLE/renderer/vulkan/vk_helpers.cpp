@@ -1672,7 +1672,7 @@ void OutsideRenderPassCommandBufferHelper::addCommandDiagnostics(ContextVk *cont
 
 // RenderPassCommandBufferHelper implementation.
 RenderPassCommandBufferHelper::RenderPassCommandBufferHelper()
-    : mCurrentSubpass(0),
+    : mCurrentSubpassCommandBufferIndex(0),
       mCounter(0),
       mClearValues{},
       mRenderPassStarted(false),
@@ -1732,12 +1732,12 @@ angle::Result RenderPassCommandBufferHelper::reset(Context *context)
     ASSERT(CheckSubpassCommandBufferCount(getSubpassCommandBufferCount()));
 
     // Reset and re-initialize the command buffers
-    for (uint32_t subpass = 0; subpass <= mCurrentSubpass; ++subpass)
+    for (uint32_t subpass = 0; subpass < getSubpassCommandBufferCount(); ++subpass)
     {
         context->getRenderer()->resetRenderPassCommandBuffer(std::move(mCommandBuffers[subpass]));
     }
 
-    mCurrentSubpass = 0;
+    mCurrentSubpassCommandBufferIndex = 0;
 
     // Reset the image views used for imageless framebuffer (if any)
     std::fill(mImageViews.begin(), mImageViews.end(), VK_NULL_HANDLE);
@@ -2254,7 +2254,7 @@ angle::Result RenderPassCommandBufferHelper::beginRenderPassCommandBuffer(Contex
     VkCommandBufferInheritanceInfo inheritanceInfo = {};
     ANGLE_TRY(RenderPassCommandBuffer::InitializeRenderPassInheritanceInfo(
         contextVk, mFramebuffer.getFramebuffer(), mRenderPassDesc, &inheritanceInfo));
-    inheritanceInfo.subpass = mCurrentSubpass;
+    inheritanceInfo.subpass = mCurrentSubpassCommandBufferIndex;
 
     return getCommandBuffer().begin(contextVk, inheritanceInfo);
 }
@@ -2330,8 +2330,8 @@ angle::Result RenderPassCommandBufferHelper::nextSubpass(ContextVk *contextVk,
     ANGLE_TRY(endRenderPassCommandBuffer(contextVk));
     markClosed();
 
-    ++mCurrentSubpass;
-    ASSERT(mCurrentSubpass < kMaxSubpassCount);
+    ++mCurrentSubpassCommandBufferIndex;
+    ASSERT(getSubpassCommandBufferCount() <= kMaxSubpassCount);
 
     ANGLE_TRY(initializeCommandBuffer(contextVk));
     ANGLE_TRY(beginRenderPassCommandBuffer(contextVk));
@@ -2440,7 +2440,7 @@ angle::Result RenderPassCommandBufferHelper::flushToPrimary(Context *context,
                                                   : VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS;
 
     primary->beginRenderPass(beginInfo, kSubpassContents);
-    for (uint32_t subpass = 0; subpass <= mCurrentSubpass; ++subpass)
+    for (uint32_t subpass = 0; subpass < getSubpassCommandBufferCount(); ++subpass)
     {
         if (subpass > 0)
         {
@@ -2594,7 +2594,7 @@ void RenderPassCommandBufferHelper::addCommandDiagnostics(ContextVk *contextVk)
         out << "StoreOp: " << storeOps << "\\l";
     }
 
-    for (uint32_t subpass = 0; subpass <= mCurrentSubpass; ++subpass)
+    for (uint32_t subpass = 0; subpass < getSubpassCommandBufferCount(); ++subpass)
     {
         if (subpass > 0)
         {

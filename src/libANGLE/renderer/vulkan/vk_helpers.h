@@ -1288,7 +1288,10 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
 
     angle::Result reset(Context *context);
 
-    RenderPassCommandBuffer &getCommandBuffer() { return mCommandBuffers[mCurrentSubpass]; }
+    RenderPassCommandBuffer &getCommandBuffer()
+    {
+        return mCommandBuffers[mCurrentSubpassCommandBufferIndex];
+    }
 
     bool empty() const { return !started(); }
 
@@ -1446,7 +1449,7 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
     void addCommandDiagnostics(ContextVk *contextVk);
 
   private:
-    uint32_t getSubpassCommandBufferCount() const { return mCurrentSubpass + 1; }
+    uint32_t getSubpassCommandBufferCount() const { return mCurrentSubpassCommandBufferIndex + 1; }
 
     angle::Result initializeCommandBuffer(Context *context);
     angle::Result beginRenderPassCommandBuffer(ContextVk *contextVk);
@@ -1484,7 +1487,7 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
     // dynamic.
     static constexpr size_t kMaxSubpassCount = 2;
     std::array<RenderPassCommandBuffer, kMaxSubpassCount> mCommandBuffers;
-    uint32_t mCurrentSubpass;
+    uint32_t mCurrentSubpassCommandBufferIndex;
 
     // RenderPass state
     uint32_t mCounter;
