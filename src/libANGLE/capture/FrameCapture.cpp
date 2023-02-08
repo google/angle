@@ -251,10 +251,6 @@ std::ostream &operator<<(std::ostream &os, const FmtCapturePrefix &fmt)
     {
         os << "_shared";
     }
-    else if (fmt.contextId != kNoContextId)
-    {
-        os << "_context" << fmt.contextId;
-    }
 
     return os;
 }
@@ -305,15 +301,11 @@ struct FmtReplayFunction
 
 std::ostream &operator<<(std::ostream &os, const FmtReplayFunction &fmt)
 {
-    os << "ReplayContext";
+    os << "Replay";
 
     if (fmt.contextId == kSharedContextId)
     {
         os << "Shared";
-    }
-    else
-    {
-        os << fmt.contextId;
     }
 
     os << "Frame" << fmt.frameIndex;
@@ -9169,9 +9161,6 @@ void ReplayWriter::setFilenamePattern(const std::string &pattern)
     if (mFilenamePattern != pattern)
     {
         mFilenamePattern = pattern;
-
-        // Reset the frame counter if the filename pattern changes.
-        mFrameIndex = 1;
     }
 }
 
