@@ -1095,9 +1095,7 @@ angle::Result SetDebugUtilsObjectName(ContextVk *contextVk,
 #if !defined(ANGLE_SHARED_LIBVULKAN)
 // Lazily load entry points for each extension as necessary.
 void InitDebugUtilsEXTFunctions(VkInstance instance);
-void InitGetPhysicalDeviceProperties2KHRFunctions(VkInstance instance);
 void InitTransformFeedbackEXTFunctions(VkDevice device);
-void InitSamplerYcbcrKHRFunctions(VkDevice device);
 void InitRenderPass2KHRFunctions(VkDevice device);
 
 #    if defined(ANGLE_PLATFORM_FUCHSIA)
@@ -1121,20 +1119,8 @@ void InitExternalSemaphoreFdFunctions(VkInstance instance);
 // VK_EXT_host_query_reset
 void InitHostQueryResetFunctions(VkDevice instance);
 
-// VK_KHR_external_fence_capabilities
-void InitExternalFenceCapabilitiesFunctions(VkInstance instance);
-
-// VK_KHR_get_memory_requirements2
-void InitGetMemoryRequirements2KHRFunctions(VkDevice device);
-
-// VK_KHR_bind_memory2
-void InitBindMemory2KHRFunctions(VkDevice device);
-
 // VK_KHR_external_fence_fd
 void InitExternalFenceFdFunctions(VkInstance instance);
-
-// VK_KHR_external_semaphore_capabilities
-void InitExternalSemaphoreCapabilitiesFunctions(VkInstance instance);
 
 // VK_KHR_shared_presentable_image
 void InitGetSwapchainStatusKHRFunctions(VkDevice device);

@@ -78,6 +78,9 @@ constexpr uint16_t kPipelineCacheVersion = 1;
 
 // Update the pipeline cache every this many swaps.
 constexpr uint32_t kPipelineCacheVkUpdatePeriod = 60;
+// The minimum version of Vulkan that ANGLE requires.  If an instance or device below this version
+// is encountered, initialization will fail.
+constexpr uint32_t kMinimumVulkanAPIVersion = VK_API_VERSION_1_1;
 // Per the Vulkan specification, ANGLE must indicate the highest version of Vulkan functionality
 // that it uses.  The Vulkan validation layers will issue messages for any core functionality that
 // requires a higher version.
@@ -1544,16 +1547,6 @@ bool RendererVk::isDeviceLost() const
     return mDeviceLost;
 }
 
-bool RendererVk::isVulkan11Instance() const
-{
-    return IsVulkan11(mInstanceVersion);
-}
-
-bool RendererVk::isVulkan11Device() const
-{
-    return IsVulkan11(mDeviceVersion);
-}
-
 angle::Result RendererVk::enableInstanceExtensions(
     DisplayVk *displayVk,
     const VulkanLayerVector &enabledInstanceLayerNames,
@@ -1636,16 +1629,8 @@ angle::Result RendererVk::enableInstanceExtensions(
 
     // VK_KHR_external_fence_capabilities and VK_KHR_extenral_semaphore_capabilities are promoted to
     // core in Vulkan 1.1
-    ANGLE_FEATURE_CONDITION(
-        &mFeatures, supportsExternalFenceCapabilities,
-        isVulkan11Instance() || ExtensionFound(VK_KHR_EXTERNAL_FENCE_CAPABILITIES_EXTENSION_NAME,
-                                               instanceExtensionNames));
-
-    ANGLE_FEATURE_CONDITION(
-        &mFeatures, supportsExternalSemaphoreCapabilities,
-        isVulkan11Instance() ||
-            ExtensionFound(VK_KHR_EXTERNAL_SEMAPHORE_CAPABILITIES_EXTENSION_NAME,
-                           instanceExtensionNames));
+    ANGLE_FEATURE_CONDITION(&mFeatures, supportsExternalFenceCapabilities, true);
+    ANGLE_FEATURE_CONDITION(&mFeatures, supportsExternalSemaphoreCapabilities, true);
 
     // On macOS, there is no native Vulkan driver, so we need to enable the
     // portability enumeration extension to allow use of MoltenVK.
@@ -1697,27 +1682,6 @@ angle::Result RendererVk::enableInstanceExtensions(
     if (ExtensionFound(VK_EXT_SURFACE_MAINTENANCE_1_EXTENSION_NAME, instanceExtensionNames))
     {
         mEnabledInstanceExtensions.push_back(VK_EXT_SURFACE_MAINTENANCE_1_EXTENSION_NAME);
-    }
-
-    if (!isVulkan11Instance())
-    {
-        if (ExtensionFound(VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME,
-                           instanceExtensionNames))
-        {
-            mEnabledInstanceExtensions.push_back(
-                VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME);
-        }
-
-        if (mFeatures.supportsExternalFenceCapabilities.enabled)
-        {
-            mEnabledInstanceExtensions.push_back(VK_KHR_EXTERNAL_FENCE_CAPABILITIES_EXTENSION_NAME);
-        }
-
-        if (mFeatures.supportsExternalSemaphoreCapabilities.enabled)
-        {
-            mEnabledInstanceExtensions.push_back(
-                VK_KHR_EXTERNAL_SEMAPHORE_CAPABILITIES_EXTENSION_NAME);
-        }
     }
 
     if (mFeatures.enablePortabilityEnumeration.enabled)
@@ -1812,13 +1776,19 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
             ANGLE_VK_TRY(displayVk, enumerateInstanceVersion(&mInstanceVersion));
         }
 
-        if (isVulkan11Instance())
+        if (IsVulkan11(mInstanceVersion))
         {
             // This is the highest version of core Vulkan functionality that ANGLE uses.  Per the
             // Vulkan spec, the application is allowed to specify a higher version than supported by
             // the instance.  ANGLE still respects the *device's* version.
             highestApiVersion = kPreferredVulkanAPIVersion;
         }
+    }
+
+    if (mInstanceVersion < kMinimumVulkanAPIVersion)
+    {
+        WARN() << "ANGLE Requires a minimum Vulkan instance version of 1.1";
+        ANGLE_VK_TRY(displayVk, VK_ERROR_INCOMPATIBLE_DRIVER);
     }
 
     ANGLE_TRY(enableInstanceExtensions(displayVk, enabledInstanceLayerNames, wsiExtension,
@@ -1907,21 +1877,6 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
                                                                &mDebugUtilsMessenger));
     }
 
-    if (isVulkan11Instance() ||
-        std::find(mEnabledInstanceExtensions.begin(), mEnabledInstanceExtensions.end(),
-                  VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME) !=
-            mEnabledInstanceExtensions.end())
-    {
-#if !defined(ANGLE_SHARED_LIBVULKAN)
-        if (!isVulkan11Instance())
-        {
-            InitGetPhysicalDeviceProperties2KHRFunctions(mInstance);
-        }
-#endif  // !defined(ANGLE_SHARED_LIBVULKAN)
-
-        ASSERT(vkGetPhysicalDeviceProperties2KHR);
-    }
-
     uint32_t physicalDeviceCount = 0;
     ANGLE_VK_TRY(displayVk, vkEnumeratePhysicalDevices(mInstance, &physicalDeviceCount, nullptr));
     ANGLE_VK_CHECK(displayVk, physicalDeviceCount > 0, VK_ERROR_INITIALIZATION_FAILED);
@@ -1941,6 +1896,12 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     // The device version that is assumed by ANGLE is the minimum of the actual device version and
     // the highest it's allowed to use.
     mDeviceVersion = std::min(mPhysicalDeviceProperties.apiVersion, highestApiVersion);
+
+    if (mDeviceVersion < kMinimumVulkanAPIVersion)
+    {
+        WARN() << "ANGLE Requires a minimum Vulkan device version of 1.1";
+        ANGLE_VK_TRY(displayVk, VK_ERROR_INCOMPATIBLE_DRIVER);
+    }
 
     mGarbageCollectionFlushThreshold =
         static_cast<uint32_t>(mPhysicalDeviceProperties.limits.maxMemoryAllocationCount *
@@ -2312,11 +2273,8 @@ void RendererVk::appendDeviceExtensionFeaturesPromotedTo11(
     VkPhysicalDeviceFeatures2KHR *deviceFeatures,
     VkPhysicalDeviceProperties2 *deviceProperties)
 {
-    if (isVulkan11Device())
-    {
-        vk::AddToPNextChain(deviceProperties, &mSubgroupProperties);
-        vk::AddToPNextChain(deviceFeatures, &mProtectedMemoryFeatures);
-    }
+    vk::AddToPNextChain(deviceProperties, &mSubgroupProperties);
+    vk::AddToPNextChain(deviceFeatures, &mProtectedMemoryFeatures);
 
     if (ExtensionFound(VK_KHR_SAMPLER_YCBCR_CONVERSION_EXTENSION_NAME, deviceExtensionNames))
     {
@@ -2590,11 +2548,6 @@ void RendererVk::queryDeviceExtensionFeatures(const vk::ExtensionNameList &devic
     mHostImageCopyProperties.sType =
         VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_IMAGE_COPY_PROPERTIES_EXT;
 
-    if (!vkGetPhysicalDeviceProperties2KHR || !vkGetPhysicalDeviceFeatures2KHR)
-    {
-        return;
-    }
-
     // Query features and properties.
     VkPhysicalDeviceFeatures2KHR deviceFeatures = {};
     deviceFeatures.sType                        = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
@@ -2611,8 +2564,8 @@ void RendererVk::queryDeviceExtensionFeatures(const vk::ExtensionNameList &devic
     appendDeviceExtensionFeaturesPromotedTo13(deviceExtensionNames, &deviceFeatures,
                                               &deviceProperties);
 
-    vkGetPhysicalDeviceFeatures2KHR(mPhysicalDevice, &deviceFeatures);
-    vkGetPhysicalDeviceProperties2KHR(mPhysicalDevice, &deviceProperties);
+    vkGetPhysicalDeviceFeatures2(mPhysicalDevice, &deviceFeatures);
+    vkGetPhysicalDeviceProperties2(mPhysicalDevice, &deviceProperties);
 
     // Clean up pNext chains
     mPhysicalDevice11Properties.pNext                       = nullptr;
@@ -2990,73 +2943,13 @@ void RendererVk::enableDeviceExtensionsPromotedTo11(
         mPhysicalDevice11Features.protectedMemory = VK_FALSE;
     }
 
-    if (isVulkan11Device())
-    {
-        if (mFeatures.supportsMultiview.enabled)
-        {
-            vk::AddToPNextChain(&mEnabledFeatures, &mMultiviewFeatures);
-        }
-
-        if (mFeatures.supportsYUVSamplerConversion.enabled)
-        {
-            vk::AddToPNextChain(&mEnabledFeatures, &mSamplerYcbcrConversionFeatures);
-        }
-
-        if (mFeatures.supportsProtectedMemory.enabled)
-        {
-            vk::AddToPNextChain(&mEnabledFeatures, &mProtectedMemoryFeatures);
-        }
-
-        return;
-    }
-
-    if (mFeatures.supportsGetMemoryRequirements2.enabled)
-    {
-        mEnabledDeviceExtensions.push_back(VK_KHR_GET_MEMORY_REQUIREMENTS_2_EXTENSION_NAME);
-    }
-
-    if (ExtensionFound(VK_KHR_DEDICATED_ALLOCATION_EXTENSION_NAME, deviceExtensionNames))
-    {
-        mEnabledDeviceExtensions.push_back(VK_KHR_DEDICATED_ALLOCATION_EXTENSION_NAME);
-    }
-
-    if (mFeatures.supportsBindMemory2.enabled)
-    {
-        mEnabledDeviceExtensions.push_back(VK_KHR_BIND_MEMORY_2_EXTENSION_NAME);
-    }
-
-    if (mFeatures.supportsNegativeViewport.enabled)
-    {
-        mEnabledDeviceExtensions.push_back(VK_KHR_MAINTENANCE1_EXTENSION_NAME);
-    }
-
-    if (mFeatures.supportsAndroidHardwareBuffer.enabled ||
-        mFeatures.supportsExternalMemoryFd.enabled ||
-        mFeatures.supportsExternalMemoryFuchsia.enabled)
-    {
-        mEnabledDeviceExtensions.push_back(VK_KHR_EXTERNAL_MEMORY_EXTENSION_NAME);
-    }
-
-    if (mFeatures.supportsExternalSemaphoreFd.enabled ||
-        mFeatures.supportsExternalSemaphoreFuchsia.enabled)
-    {
-        mEnabledDeviceExtensions.push_back(VK_KHR_EXTERNAL_SEMAPHORE_EXTENSION_NAME);
-    }
-
-    if (mFeatures.supportsExternalFenceFd.enabled)
-    {
-        mEnabledDeviceExtensions.push_back(VK_KHR_EXTERNAL_FENCE_EXTENSION_NAME);
-    }
-
     if (mFeatures.supportsMultiview.enabled)
     {
-        mEnabledDeviceExtensions.push_back(VK_KHR_MULTIVIEW_EXTENSION_NAME);
         vk::AddToPNextChain(&mEnabledFeatures, &mMultiviewFeatures);
     }
 
     if (mFeatures.supportsYUVSamplerConversion.enabled)
     {
-        mEnabledDeviceExtensions.push_back(VK_KHR_SAMPLER_YCBCR_CONVERSION_EXTENSION_NAME);
         vk::AddToPNextChain(&mEnabledFeatures, &mSamplerYcbcrConversionFeatures);
     }
 
@@ -3255,18 +3148,6 @@ void RendererVk::initInstanceExtensionEntryPoints()
         InitExternalMemoryHardwareBufferANDROIDFunctions(mInstance);
     }
 #    endif
-
-    if (!isVulkan11Instance())
-    {
-        if (mFeatures.supportsExternalFenceCapabilities.enabled)
-        {
-            InitExternalFenceCapabilitiesFunctions(mInstance);
-        }
-        if (mFeatures.supportsExternalSemaphoreCapabilities.enabled)
-        {
-            InitExternalSemaphoreCapabilitiesFunctions(mInstance);
-        }
-    }
 #endif
 
     // For promoted extensions, initialize their entry points from the core version.
@@ -3295,21 +3176,6 @@ void RendererVk::initDeviceExtensionEntryPoints()
     if (mFeatures.supportsTimestampSurfaceAttribute.enabled)
     {
         InitGetPastPresentationTimingGoogleFunction(mDevice);
-    }
-    if (!isVulkan11Device())
-    {
-        if (mFeatures.supportsGetMemoryRequirements2.enabled)
-        {
-            InitGetMemoryRequirements2KHRFunctions(mDevice);
-        }
-        if (mFeatures.supportsBindMemory2.enabled)
-        {
-            InitBindMemory2KHRFunctions(mDevice);
-        }
-        if (mFeatures.supportsYUVSamplerConversion.enabled)
-        {
-            InitSamplerYcbcrKHRFunctions(mDevice);
-        }
     }
     // Extensions promoted to Vulkan 1.2
     {
@@ -4016,25 +3882,15 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
         WARN() << "Unknown GPU architecture";
     }
 
-    bool supportsNegativeViewport =
-        isVulkan11Device() ||
-        ExtensionFound(VK_KHR_MAINTENANCE1_EXTENSION_NAME, deviceExtensionNames);
-
     ANGLE_FEATURE_CONDITION(&mFeatures, appendAliasedMemoryDecorations, true);
 
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsSharedPresentableImageExtension,
         ExtensionFound(VK_KHR_SHARED_PRESENTABLE_IMAGE_EXTENSION_NAME, deviceExtensionNames));
 
-    ANGLE_FEATURE_CONDITION(
-        &mFeatures, supportsGetMemoryRequirements2,
-        isVulkan11Device() ||
-            ExtensionFound(VK_KHR_GET_MEMORY_REQUIREMENTS_2_EXTENSION_NAME, deviceExtensionNames));
+    ANGLE_FEATURE_CONDITION(&mFeatures, supportsGetMemoryRequirements2, true);
 
-    ANGLE_FEATURE_CONDITION(
-        &mFeatures, supportsBindMemory2,
-        isVulkan11Device() ||
-            ExtensionFound(VK_KHR_BIND_MEMORY_2_EXTENSION_NAME, deviceExtensionNames));
+    ANGLE_FEATURE_CONDITION(&mFeatures, supportsBindMemory2, true);
 
     ANGLE_FEATURE_CONDITION(&mFeatures, bresenhamLineRasterization,
                             mLineRasterizationFeatures.bresenhamLines == VK_TRUE);
@@ -4062,10 +3918,8 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
 
     // VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL and
     // VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL are introduced by
-    // VK_KHR_maintenance2 and promoted to Vulkan 1.1.  For simplicity, this feature is only enabled
-    // on Vulkan 1.1.
-    ANGLE_FEATURE_CONDITION(&mFeatures, supportsMixedReadWriteDepthStencilLayouts,
-                            isVulkan11Device());
+    // VK_KHR_maintenance2 and promoted to Vulkan 1.1.
+    ANGLE_FEATURE_CONDITION(&mFeatures, supportsMixedReadWriteDepthStencilLayouts, true);
 
     // VK_EXT_pipeline_creation_feedback is promoted to core in Vulkan 1.3.
     ANGLE_FEATURE_CONDITION(
@@ -4174,8 +4028,8 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
         externalFenceInfo.sType      = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_FENCE_INFO;
         externalFenceInfo.handleType = VK_EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT_KHR;
 
-        vkGetPhysicalDeviceExternalFencePropertiesKHR(mPhysicalDevice, &externalFenceInfo,
-                                                      &externalFenceProperties);
+        vkGetPhysicalDeviceExternalFenceProperties(mPhysicalDevice, &externalFenceInfo,
+                                                   &externalFenceProperties);
 
         VkExternalSemaphoreProperties externalSemaphoreProperties = {};
         externalSemaphoreProperties.sType = VK_STRUCTURE_TYPE_EXTERNAL_SEMAPHORE_PROPERTIES;
@@ -4184,8 +4038,8 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
         externalSemaphoreInfo.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_SEMAPHORE_INFO;
         externalSemaphoreInfo.handleType = VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT_KHR;
 
-        vkGetPhysicalDeviceExternalSemaphorePropertiesKHR(mPhysicalDevice, &externalSemaphoreInfo,
-                                                          &externalSemaphoreProperties);
+        vkGetPhysicalDeviceExternalSemaphoreProperties(mPhysicalDevice, &externalSemaphoreInfo,
+                                                       &externalSemaphoreProperties);
 
         ANGLE_FEATURE_CONDITION(
             &mFeatures, supportsAndroidNativeFenceSync,
@@ -4331,8 +4185,7 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
             ExtensionFound(VK_EXT_IMAGE_DRM_FORMAT_MODIFIER_EXTENSION_NAME, deviceExtensionNames));
 
     // Android pre-rotation support can be disabled.
-    ANGLE_FEATURE_CONDITION(&mFeatures, enablePreRotateSurfaces,
-                            IsAndroid() && supportsNegativeViewport);
+    ANGLE_FEATURE_CONDITION(&mFeatures, enablePreRotateSurfaces, IsAndroid());
 
     // http://anglebug.com/3078
     ANGLE_FEATURE_CONDITION(
@@ -4467,9 +4320,6 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     // r32f image emulation is done unconditionally so VK_FORMAT_FEATURE_STORAGE_*_ATOMIC_BIT is not
     // required.
     ANGLE_FEATURE_CONDITION(&mFeatures, emulateR32fImageAtomicExchange, true);
-
-    // Negative viewports are exposed in the Maintenance1 extension and in core Vulkan 1.1+.
-    ANGLE_FEATURE_CONDITION(&mFeatures, supportsNegativeViewport, supportsNegativeViewport);
 
     // Whether non-conformant configurations and extensions should be exposed. Always disable for
     // MESA Virtio-GPU Venus driver for production purpose.
@@ -5505,36 +5355,32 @@ void RendererVk::reloadVolkIfNeeded() const
 
 void RendererVk::initializeInstanceExtensionEntryPointsFromCore() const
 {
-    if (isVulkan11Instance())
+    // Initialize extension entry points from core ones.  In some cases, such as VMA, the extension
+    // entry point is unconditionally used.
+    InitGetPhysicalDeviceProperties2KHRFunctionsFromCore();
+    if (mFeatures.supportsExternalFenceCapabilities.enabled)
     {
-        InitGetPhysicalDeviceProperties2KHRFunctionsFromCore();
-        if (mFeatures.supportsExternalFenceCapabilities.enabled)
-        {
-            InitExternalFenceCapabilitiesFunctionsFromCore();
-        }
-        if (mFeatures.supportsExternalSemaphoreCapabilities.enabled)
-        {
-            InitExternalSemaphoreCapabilitiesFunctionsFromCore();
-        }
+        InitExternalFenceCapabilitiesFunctionsFromCore();
+    }
+    if (mFeatures.supportsExternalSemaphoreCapabilities.enabled)
+    {
+        InitExternalSemaphoreCapabilitiesFunctionsFromCore();
     }
 }
 
 void RendererVk::initializeDeviceExtensionEntryPointsFromCore() const
 {
-    if (isVulkan11Device())
+    if (mFeatures.supportsGetMemoryRequirements2.enabled)
     {
-        if (mFeatures.supportsGetMemoryRequirements2.enabled)
-        {
-            InitGetMemoryRequirements2KHRFunctionsFromCore();
-        }
-        if (mFeatures.supportsBindMemory2.enabled)
-        {
-            InitBindMemory2KHRFunctionsFromCore();
-        }
-        if (mFeatures.supportsYUVSamplerConversion.enabled)
-        {
-            InitSamplerYcbcrKHRFunctionsFromCore();
-        }
+        InitGetMemoryRequirements2KHRFunctionsFromCore();
+    }
+    if (mFeatures.supportsBindMemory2.enabled)
+    {
+        InitBindMemory2KHRFunctionsFromCore();
+    }
+    if (mFeatures.supportsYUVSamplerConversion.enabled)
+    {
+        InitSamplerYcbcrKHRFunctionsFromCore();
     }
 }
 

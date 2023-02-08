@@ -626,13 +626,6 @@ struct FeaturesVk : FeatureSetBase
         &members, "http://anglebug.com/5535"
     };
 
-    FeatureInfo supportsNegativeViewport = {
-        "supportsNegativeViewport",
-        FeatureCategory::VulkanFeatures,
-        "The driver supports inverting the viewport with a negative height.",
-        &members,
-    };
-
     FeatureInfo forceFragmentShaderPrecisionHighpToMediump = {
         "forceFragmentShaderPrecisionHighpToMediump",
         FeatureCategory::VulkanWorkarounds,

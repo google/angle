@@ -218,9 +218,6 @@ class RendererVk : angle::NonCopyable
     const VkPhysicalDeviceFeatures2KHR &getEnabledFeatures() const { return mEnabledFeatures; }
     VkDevice getDevice() const { return mDevice; }
 
-    bool isVulkan11Instance() const;
-    bool isVulkan11Device() const;
-
     const vk::Allocator &getAllocator() const { return mAllocator; }
     vk::ImageMemorySuballocator &getImageMemorySuballocator() { return mImageMemorySuballocator; }
 

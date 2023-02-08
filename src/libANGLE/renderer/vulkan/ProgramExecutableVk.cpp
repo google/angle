@@ -38,8 +38,7 @@ bool ValidateTransformedSpirV(vk::Context *context,
     for (gl::ShaderType shaderType : linkedShaderStages)
     {
         SpvTransformOptions options;
-        options.shaderType                = shaderType;
-        options.negativeViewportSupported = false;
+        options.shaderType = shaderType;
         options.isLastPreFragmentStage =
             shaderType == lastPreFragmentStage && shaderType != gl::ShaderType::TessControl;
         options.isTransformFeedbackStage = options.isLastPreFragmentStage;
@@ -326,7 +325,6 @@ angle::Result ProgramInfo::initProgram(vk::Context *context,
     options.isTransformFeedbackStage = isLastPreFragmentStage && isTransformFeedbackProgram &&
                                        !optionBits.removeTransformFeedbackEmulation;
     options.isTransformFeedbackEmulated = context->getFeatures().emulateTransformFeedback.enabled;
-    options.negativeViewportSupported   = context->getFeatures().supportsNegativeViewport.enabled;
     options.isMultisampledFramebufferFetch =
         optionBits.multiSampleFramebufferFetch && shaderType == gl::ShaderType::Fragment;
     options.enableSampleShading = optionBits.enableSampleShading;

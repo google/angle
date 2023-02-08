@@ -670,13 +670,6 @@
             "issue": "http://anglebug.com/5535"
         },
         {
-            "name": "supports_negative_viewport",
-            "category": "Features",
-            "description": [
-                "The driver supports inverting the viewport with a negative height."
-            ]
-        },
-        {
             "name": "force_fragment_shader_precision_highp_to_mediump",
             "category": "Workarounds",
             "description": [
