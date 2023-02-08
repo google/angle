@@ -1219,7 +1219,7 @@ void InitExtendedDynamicState2EXTFunctions(VkDevice device)
 // VK_KHR_fragment_shading_rate
 void InitFragmentShadingRateKHRInstanceFunction(VkInstance instance)
 {
-    GET_INSTANCE_FUNC(vkGetPhysicalDeviceExternalSemaphorePropertiesKHR);
+    GET_INSTANCE_FUNC(vkGetPhysicalDeviceFragmentShadingRatesKHR);
 }
 
 void InitFragmentShadingRateKHRDeviceFunction(VkDevice device)
