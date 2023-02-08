@@ -187,7 +187,7 @@ class OneOffCommandPool : angle::NonCopyable
 {
   public:
     angle::Result getCommandBuffer(vk::Context *context,
-                                   bool hasProtectedContent,
+                                   vk::ProtectionType protectionType,
                                    vk::PrimaryCommandBuffer *commandBufferOut);
     void releaseCommandBuffer(const QueueSerial &submitQueueSerial,
                               vk::PrimaryCommandBuffer &&primary);
@@ -393,10 +393,10 @@ class RendererVk : angle::NonCopyable
 
     // This command buffer should be submitted immediately via queueSubmitOneOff.
     angle::Result getCommandBufferOneOff(vk::Context *context,
-                                         bool hasProtectedContent,
+                                         vk::ProtectionType protectionType,
                                          vk::PrimaryCommandBuffer *commandBufferOut)
     {
-        return mOneOffCommandPool.getCommandBuffer(context, hasProtectedContent, commandBufferOut);
+        return mOneOffCommandPool.getCommandBuffer(context, protectionType, commandBufferOut);
     }
 
     void resetOutsideRenderPassCommandBuffer(vk::OutsideRenderPassCommandBuffer &&commandBuffer)
@@ -413,7 +413,7 @@ class RendererVk : angle::NonCopyable
     // Command buffer must be allocated with getCommandBufferOneOff and is reclaimed.
     angle::Result queueSubmitOneOff(vk::Context *context,
                                     vk::PrimaryCommandBuffer &&primary,
-                                    bool hasProtectedContent,
+                                    vk::ProtectionType protectionType,
                                     egl::ContextPriority priority,
                                     const vk::Semaphore *waitSemaphore,
                                     VkPipelineStageFlags waitSemaphoreStageMasks,
@@ -580,7 +580,7 @@ class RendererVk : angle::NonCopyable
     void cleanupPendingSubmissionGarbage();
 
     angle::Result submitCommands(vk::Context *context,
-                                 bool hasProtectedContent,
+                                 vk::ProtectionType protectionType,
                                  egl::ContextPriority contextPriority,
                                  const vk::Semaphore *signalSemaphore,
                                  vk::SecondaryCommandPools *commandPools,
@@ -593,24 +593,24 @@ class RendererVk : angle::NonCopyable
                                                             const vk::ResourceUse &use,
                                                             uint64_t timeout,
                                                             VkResult *result);
-    angle::Result finish(vk::Context *context, bool hasProtectedContent);
+    angle::Result finish(vk::Context *context);
     angle::Result checkCompletedCommands(vk::Context *context);
 
-    void flushWaitSemaphores(bool hasProtectedContent,
+    void flushWaitSemaphores(vk::ProtectionType protectionType,
                              std::vector<VkSemaphore> &&waitSemaphores,
                              std::vector<VkPipelineStageFlags> &&waitSemaphoreStageMasks)
     {
-        mCommandQueue.flushWaitSemaphores(hasProtectedContent, std::move(waitSemaphores),
+        mCommandQueue.flushWaitSemaphores(protectionType, std::move(waitSemaphores),
                                           std::move(waitSemaphoreStageMasks));
     }
 
     angle::Result flushRenderPassCommands(vk::Context *context,
-                                          bool hasProtectedContent,
+                                          vk::ProtectionType protectionType,
                                           const vk::RenderPass &renderPass,
                                           vk::RenderPassCommandBufferHelper **renderPassCommands);
     angle::Result flushOutsideRPCommands(
         vk::Context *context,
-        bool hasProtectedContent,
+        vk::ProtectionType protectionType,
         vk::OutsideRenderPassCommandBufferHelper **outsideRPCommands);
 
     VkResult queuePresent(vk::Context *context,

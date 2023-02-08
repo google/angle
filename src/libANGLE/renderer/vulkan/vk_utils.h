@@ -263,15 +263,6 @@ class Context : angle::NonCopyable
 
 class RenderPassDesc;
 
-enum class CommandContent
-{
-    Unprotected = 0,
-    Protected   = 1,
-
-    InvalidEnum = 2,
-    EnumCount   = 2,
-};
-
 #if ANGLE_USE_CUSTOM_VULKAN_OUTSIDE_RENDER_PASS_CMD_BUFFERS
 using OutsideRenderPassCommandBuffer = priv::SecondaryCommandBuffer;
 #else

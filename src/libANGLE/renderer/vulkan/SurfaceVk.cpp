@@ -884,7 +884,7 @@ void WindowSurfaceVk::destroy(const egl::Display *display)
     VkInstance instance  = renderer->getInstance();
 
     // flush the pipe.
-    (void)renderer->finish(displayVk, mState.hasProtectedContent());
+    (void)renderer->finish(displayVk);
 
     if (mLockBufferHelper.valid())
     {
@@ -1270,7 +1270,7 @@ angle::Result WindowSurfaceVk::recreateSwapchain(ContextVk *contextVk, const gl:
     static constexpr size_t kMaxOldSwapchains = 5;
     if (mOldSwapchains.size() > kMaxOldSwapchains)
     {
-        ANGLE_TRY(contextVk->getRenderer()->finish(contextVk, contextVk->hasProtectedContent()));
+        ANGLE_TRY(contextVk->getRenderer()->finish(contextVk));
         for (SwapchainCleanupData &oldSwapchain : mOldSwapchains)
         {
             oldSwapchain.destroy(contextVk->getDevice(), &mPresentSemaphoreRecycler);
@@ -1474,7 +1474,7 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context,
     // that case as a workaround.
     if (lastSwapchain && renderer->getFeatures().waitIdleBeforeSwapchainRecreation.enabled)
     {
-        ANGLE_TRY(renderer->finish(context, mState.hasProtectedContent()));
+        ANGLE_TRY(renderer->finish(context));
     }
 
     // TODO: Once EGL_SWAP_BEHAVIOR_PRESERVED_BIT is supported, the contents of the old swapchain
@@ -2303,8 +2303,9 @@ VkResult WindowSurfaceVk::acquireNextSwapchainImage(vk::Context *context)
     {
         rx::RendererVk *rendererVk = context->getRenderer();
         rx::vk::PrimaryCommandBuffer primaryCommandBuffer;
-        if (rendererVk->getCommandBufferOneOff(context, mState.hasProtectedContent(),
-                                               &primaryCommandBuffer) == angle::Result::Continue)
+        auto protectionType = vk::ConvertProtectionBoolToType(mState.hasProtectedContent());
+        if (rendererVk->getCommandBufferOneOff(context, protectionType, &primaryCommandBuffer) ==
+            angle::Result::Continue)
         {
             // Note return errors is early exit may leave new Image and Swapchain in unknown state.
             image.image.recordWriteBarrierOneOff(context, vk::ImageLayout::SharedPresent,
@@ -2316,8 +2317,9 @@ VkResult WindowSurfaceVk::acquireNextSwapchainImage(vk::Context *context)
             }
             QueueSerial queueSerial;
             if (rendererVk->queueSubmitOneOff(
-                    context, std::move(primaryCommandBuffer), false, egl::ContextPriority::Medium,
-                    acquireImageSemaphore, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, nullptr,
+                    context, std::move(primaryCommandBuffer), vk::ProtectionType::Unprotected,
+                    egl::ContextPriority::Medium, acquireImageSemaphore,
+                    VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, nullptr,
                     vk::SubmitPolicy::EnsureSubmitted, &queueSerial) != angle::Result::Continue)
             {
                 mDesiredSwapchainPresentMode = vk::PresentMode::FifoKHR;

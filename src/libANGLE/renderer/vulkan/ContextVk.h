@@ -365,7 +365,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     VkDevice getDevice() const;
     egl::ContextPriority getPriority() const { return mContextPriority; }
-    bool hasProtectedContent() const { return mState.hasProtectedContent(); }
+    vk::ProtectionType getProtectionType() const { return mProtectionType; }
 
     ANGLE_INLINE const angle::FeaturesVk &getFeatures() const { return mRenderer->getFeatures(); }
 
@@ -1556,6 +1556,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     gl::State::DirtyBits mPipelineDirtyBitsMask;
 
     egl::ContextPriority mContextPriority;
+    vk::ProtectionType mProtectionType;
 
     ShareGroupVk *mShareGroupVk;
 

@@ -1243,7 +1243,7 @@ void OneOffCommandPool::destroy(VkDevice device)
 }
 
 angle::Result OneOffCommandPool::getCommandBuffer(vk::Context *context,
-                                                  bool hasProtectedContent,
+                                                  vk::ProtectionType protectionType,
                                                   vk::PrimaryCommandBuffer *commandBufferOut)
 {
     std::unique_lock<std::mutex> lock(mMutex);
@@ -1261,8 +1261,13 @@ angle::Result OneOffCommandPool::getCommandBuffer(vk::Context *context,
         {
             VkCommandPoolCreateInfo createInfo = {};
             createInfo.sType                   = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-            createInfo.flags                   = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT |
-                               (hasProtectedContent ? VK_COMMAND_POOL_CREATE_PROTECTED_BIT : 0);
+            createInfo.flags                   = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
+            ASSERT(protectionType == vk::ProtectionType::Unprotected ||
+                   protectionType == vk::ProtectionType::Protected);
+            if (protectionType == vk::ProtectionType::Protected)
+            {
+                createInfo.flags |= VK_COMMAND_POOL_CREATE_PROTECTED_BIT;
+            }
             ANGLE_VK_TRY(context, mCommandPool.init(context->getDevice(), createInfo));
         }
 
@@ -4543,7 +4548,7 @@ void RendererVk::outputVmaStatString()
 
 angle::Result RendererVk::queueSubmitOneOff(vk::Context *context,
                                             vk::PrimaryCommandBuffer &&primary,
-                                            bool hasProtectedContent,
+                                            vk::ProtectionType protectionType,
                                             egl::ContextPriority priority,
                                             const vk::Semaphore *waitSemaphore,
                                             VkPipelineStageFlags waitSemaphoreStageMasks,
@@ -4562,13 +4567,13 @@ angle::Result RendererVk::queueSubmitOneOff(vk::Context *context,
     if (isAsyncCommandQueueEnabled())
     {
         ANGLE_TRY(mCommandProcessor.queueSubmitOneOff(
-            context, hasProtectedContent, priority, primary.getHandle(), waitSemaphore,
+            context, protectionType, priority, primary.getHandle(), waitSemaphore,
             waitSemaphoreStageMasks, fence, submitPolicy, submitQueueSerial));
     }
     else
     {
         ANGLE_TRY(mCommandQueue.queueSubmitOneOff(
-            context, hasProtectedContent, priority, primary.getHandle(), waitSemaphore,
+            context, protectionType, priority, primary.getHandle(), waitSemaphore,
             waitSemaphoreStageMasks, fence, submitPolicy, submitQueueSerial));
     }
 
@@ -4845,7 +4850,7 @@ void RendererVk::reloadVolkIfNeeded() const
 }
 
 angle::Result RendererVk::submitCommands(vk::Context *context,
-                                         bool hasProtectedContent,
+                                         vk::ProtectionType protectionType,
                                          egl::ContextPriority contextPriority,
                                          const vk::Semaphore *signalSemaphore,
                                          vk::SecondaryCommandPools *commandPools,
@@ -4863,12 +4868,12 @@ angle::Result RendererVk::submitCommands(vk::Context *context,
     if (isAsyncCommandQueueEnabled())
     {
         ANGLE_TRY(mCommandProcessor.submitCommands(
-            context, hasProtectedContent, contextPriority, signalVkSemaphore,
+            context, protectionType, contextPriority, signalVkSemaphore,
             std::move(commandBuffersToReset), commandPools, submitQueueSerial));
     }
     else
     {
-        ANGLE_TRY(mCommandQueue.submitCommands(context, hasProtectedContent, contextPriority,
+        ANGLE_TRY(mCommandQueue.submitCommands(context, protectionType, contextPriority,
                                                signalVkSemaphore, std::move(commandBuffersToReset),
                                                commandPools, submitQueueSerial));
     }
@@ -4920,7 +4925,7 @@ angle::Result RendererVk::waitForResourceUseToFinishWithUserTimeout(vk::Context 
     return mCommandQueue.waitForResourceUseToFinishWithUserTimeout(context, use, timeout, result);
 }
 
-angle::Result RendererVk::finish(vk::Context *context, bool hasProtectedContent)
+angle::Result RendererVk::finish(vk::Context *context)
 {
     if (isAsyncCommandQueueEnabled())
     {
@@ -4936,19 +4941,19 @@ angle::Result RendererVk::checkCompletedCommands(vk::Context *context)
 
 angle::Result RendererVk::flushRenderPassCommands(
     vk::Context *context,
-    bool hasProtectedContent,
+    vk::ProtectionType protectionType,
     const vk::RenderPass &renderPass,
     vk::RenderPassCommandBufferHelper **renderPassCommands)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "RendererVk::flushRenderPassCommands");
     if (isAsyncCommandQueueEnabled())
     {
-        ANGLE_TRY(mCommandProcessor.flushRenderPassCommands(context, hasProtectedContent,
-                                                            renderPass, renderPassCommands));
+        ANGLE_TRY(mCommandProcessor.flushRenderPassCommands(context, protectionType, renderPass,
+                                                            renderPassCommands));
     }
     else
     {
-        ANGLE_TRY(mCommandQueue.flushRenderPassCommands(context, hasProtectedContent, renderPass,
+        ANGLE_TRY(mCommandQueue.flushRenderPassCommands(context, protectionType, renderPass,
                                                         renderPassCommands));
     }
 
@@ -4957,19 +4962,18 @@ angle::Result RendererVk::flushRenderPassCommands(
 
 angle::Result RendererVk::flushOutsideRPCommands(
     vk::Context *context,
-    bool hasProtectedContent,
+    vk::ProtectionType protectionType,
     vk::OutsideRenderPassCommandBufferHelper **outsideRPCommands)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "RendererVk::flushOutsideRPCommands");
     if (isAsyncCommandQueueEnabled())
     {
-        ANGLE_TRY(mCommandProcessor.flushOutsideRPCommands(context, hasProtectedContent,
-                                                           outsideRPCommands));
+        ANGLE_TRY(
+            mCommandProcessor.flushOutsideRPCommands(context, protectionType, outsideRPCommands));
     }
     else
     {
-        ANGLE_TRY(
-            mCommandQueue.flushOutsideRPCommands(context, hasProtectedContent, outsideRPCommands));
+        ANGLE_TRY(mCommandQueue.flushOutsideRPCommands(context, protectionType, outsideRPCommands));
     }
 
     return angle::Result::Continue;
