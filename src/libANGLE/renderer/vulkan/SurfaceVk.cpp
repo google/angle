@@ -2332,7 +2332,7 @@ VkResult WindowSurfaceVk::acquireNextSwapchainImage(vk::Context *context)
             }
             QueueSerial queueSerial;
             if (rendererVk->queueSubmitOneOff(
-                    context, std::move(primaryCommandBuffer), vk::ProtectionType::Unprotected,
+                    context, std::move(primaryCommandBuffer), protectionType,
                     egl::ContextPriority::Medium, acquireImageSemaphore,
                     VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, nullptr,
                     vk::SubmitPolicy::EnsureSubmitted, &queueSerial) != angle::Result::Continue)
