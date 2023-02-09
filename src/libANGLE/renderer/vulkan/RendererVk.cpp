@@ -205,8 +205,6 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-VkDescriptorImageInfo-imageView-06711",
     // http://crbug.com/1412096
     "VUID-VkImageCreateInfo-pNext-00990",
-    "VUID-VkAttachmentDescription2-stencilStoreOp-parameter",
-    "VUID-VkAttachmentDescription2-storeOp-parameter",
 };
 
 // Validation messages that should be ignored only when VK_EXT_primitive_topology_list_restart is
