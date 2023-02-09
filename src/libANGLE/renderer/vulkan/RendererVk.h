@@ -405,6 +405,10 @@ class RendererVk : angle::NonCopyable
                                     const VkFormatFeatureFlags featureBits) const;
 
     bool isAsyncCommandQueueEnabled() const { return mFeatures.asyncCommandQueue.enabled; }
+    bool isAsyncCommandBufferResetEnabled() const
+    {
+        return mFeatures.asyncCommandBufferReset.enabled;
+    }
 
     ANGLE_INLINE egl::ContextPriority getDriverPriority(egl::ContextPriority priority)
     {
@@ -814,6 +818,8 @@ class RendererVk : angle::NonCopyable
 
     MemoryAllocationTracker *getMemoryAllocationTracker() { return &mMemoryAllocationTracker; }
 
+    void requestAsyncCommandsAndGarbageCleanup(vk::Context *context);
+
   private:
     angle::Result initializeDevice(DisplayVk *displayVk, uint32_t queueFamilyIndex);
     void ensureCapsInitialized() const;
@@ -1176,6 +1182,17 @@ ANGLE_INLINE angle::Result RendererVk::waitForPresentToBeSubmitted(
     }
     ASSERT(!swapchainStatus->isPending);
     return angle::Result::Continue;
+}
+
+ANGLE_INLINE void RendererVk::requestAsyncCommandsAndGarbageCleanup(vk::Context *context)
+{
+    ASSERT(isAsyncCommandBufferResetEnabled());
+    mCommandProcessor.requestCommandsAndGarbageCleanup();
+}
+
+ANGLE_INLINE angle::Result RendererVk::checkCompletedCommands(vk::Context *context)
+{
+    return mCommandQueue.checkCompletedCommands(context);
 }
 }  // namespace rx
 

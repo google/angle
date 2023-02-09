@@ -39,6 +39,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
      "allowTranslateUniformBlockToStructuredBuffer"},
     {Feature::AlwaysCallUseProgramAfterLink, "alwaysCallUseProgramAfterLink"},
     {Feature::AlwaysUnbindFramebufferTexture2D, "alwaysUnbindFramebufferTexture2D"},
+    {Feature::AsyncCommandBufferReset, "asyncCommandBufferReset"},
     {Feature::AsyncCommandQueue, "asyncCommandQueue"},
     {Feature::Avoid1BitAlphaTextureFormats, "avoid1BitAlphaTextureFormats"},
     {Feature::BindTransformFeedbackBufferBeforeBindBufferRange,

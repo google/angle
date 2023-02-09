@@ -854,6 +854,11 @@ struct FeaturesVk : FeatureSetBase
         "forceWaitForSubmissionToCompleteForQueryResult", FeatureCategory::VulkanWorkarounds,
         "Force wait for submission to complete before calling getQueryResult(wait).", &members,
         "https://issuetracker.google.com/253522366"};
+
+    FeatureInfo asyncCommandBufferReset = {"asyncCommandBufferReset",
+                                           FeatureCategory::VulkanFeatures,
+                                           "Reset command buffer in async thread.", &members,
+                                           "https://issuetracker.google.com/255411748"};
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

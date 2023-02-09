@@ -1158,6 +1158,12 @@
             "category": "Workarounds",
             "description":["Force wait for submission to complete before calling getQueryResult(wait)."],
             "issue": "https://issuetracker.google.com/253522366"
+        },
+        {
+            "name": "async_command_buffer_reset",
+            "category": "Features",
+            "description":["Reset command buffer in async thread."],
+            "issue": "https://issuetracker.google.com/255411748"
         }
     ]
 }
