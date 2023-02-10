@@ -7981,12 +7981,23 @@ void FrameCaptureShared::runMidExecutionCapture(gl::Context *mainContext)
                                      &mResourceTracker, mainContextReplayState,
                                      mValidateSerializedState);
             scanSetupCalls(frameCapture->getSetupCalls());
+
+            std::stringstream protoStream;
+            std::stringstream headerStream;
+            std::stringstream bodyStream;
+
+            protoStream << "void "
+                        << FmtSetupFunction(kNoPartId, mainContext->id(), FuncUsage::Prototype);
+            std::string proto = protoStream.str();
+
+            WriteCppReplayFunctionWithParts(mainContext->id(), ReplayFunc::Setup, mReplayWriter, 1,
+                                            &mBinaryData, frameCapture->getSetupCalls(),
+                                            headerStream, bodyStream, &mResourceIDBufferSize);
+
+            mReplayWriter.addPrivateFunction(proto, headerStream, bodyStream);
         }
         else
         {
-            // Track that this context was created as shared context before MEC started
-            mActiveSecondaryContexts.insert(shareContext->id().value);
-
             const gl::State &shareContextState = shareContext->getState();
             gl::State auxContextReplayState(
                 nullptr, nullptr, nullptr, nullptr, nullptr, shareContextState.getClientType(),
@@ -8014,6 +8025,8 @@ void FrameCaptureShared::runMidExecutionCapture(gl::Context *mainContext)
                 frameCapture->getSetupCalls(), &mBinaryData, mSerializeStateEnabled, *this,
                 &mResourceIDBufferSize);
         }
+        // Track that this context was created before MEC started
+        mActiveContexts.insert(shareContext->id().value);
     }
 
     egl::Error error = mainContext->makeCurrent(display, draw, read);
@@ -8048,8 +8061,6 @@ void FrameCaptureShared::onEndFrame(gl::Context *context)
         }
     }
 
-    // Assume that the context performing the swap is the "main" context.
-    ASSERT(mWindowSurfaceContextID.value == 0 || mWindowSurfaceContextID == context->id());
     mWindowSurfaceContextID = context->id();
 
     // On Android, we can trigger a capture during the run
@@ -8671,22 +8682,6 @@ void FrameCaptureShared::writeMainContextCppReplay(const gl::Context *context,
     if (frameIndex == 1)
     {
         {
-            std::stringstream protoStream;
-            std::stringstream headerStream;
-            std::stringstream bodyStream;
-
-            protoStream << "void "
-                        << FmtSetupFunction(kNoPartId, context->id(), FuncUsage::Prototype);
-            std::string proto = protoStream.str();
-
-            WriteCppReplayFunctionWithParts(context->id(), ReplayFunc::Setup, mReplayWriter,
-                                            frameIndex, &mBinaryData, setupCalls, headerStream,
-                                            bodyStream, &mResourceIDBufferSize);
-
-            mReplayWriter.addPrivateFunction(proto, headerStream, bodyStream);
-        }
-
-        {
             std::string proto = "void SetupReplay(void)";
 
             std::stringstream out;
@@ -8700,21 +8695,25 @@ void FrameCaptureShared::writeMainContextCppReplay(const gl::Context *context,
             {
                 out << "    " << FmtSetupFunction(kNoPartId, kSharedContextId, FuncUsage::Call)
                     << ";\n";
+                // Make sure that the current context is mapped correctly
+                out << "    SetCurrentContextID(" << context->id() << ");\n";
             }
-
-            // Setup the presentation (this) context first.
-            out << "    " << FmtSetupFunction(kNoPartId, context->id(), FuncUsage::Call) << ";\n";
-            out << "\n";
 
             // Setup each of the auxiliary contexts.
             egl::ShareGroup *shareGroup            = context->getShareGroup();
             const egl::ContextSet &shareContextSet = shareGroup->getContexts();
             for (gl::Context *shareContext : shareContextSet)
             {
-                // Skip the presentation context, since that context was created by the test
-                // framework.
                 if (shareContext->id() == context->id())
                 {
+                    if (usesMidExecutionCapture())
+                    {
+                        // Setup the presentation (this) context first.
+                        out << "    " << FmtSetupFunction(kNoPartId, context->id(), FuncUsage::Call)
+                            << ";\n";
+                        out << "\n";
+                    }
+
                     continue;
                 }
 
@@ -8725,8 +8724,7 @@ void FrameCaptureShared::writeMainContextCppReplay(const gl::Context *context,
                 {
                     // Only call SetupReplayContext for secondary contexts that were current before
                     // MEC started
-                    if (mActiveSecondaryContexts.find(shareContext->id().value) !=
-                        mActiveSecondaryContexts.end())
+                    if (mActiveContexts.find(shareContext->id().value) != mActiveContexts.end())
                     {
                         // TODO(http://anglebug.com/5878): Support capture/replay of
                         // eglCreateContext() so this block can be moved into SetupReplayContextXX()
