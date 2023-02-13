@@ -1130,7 +1130,7 @@ angle::Result CommandQueue::postSubmitCheck(Context *context)
     // command buffer in flight, we do not wait here to ensure we keep GPU busy.
     VkDeviceSize suballocationGarbageSize = renderer->getSuballocationGarbageSize();
     while (suballocationGarbageSize > kMaxBufferSuballocationGarbageSize &&
-           !mInFlightCommands.empty())
+           mInFlightCommands.size() > 1)
     {
         ANGLE_TRY(finishOneCommandBatch(context, renderer->getMaxFenceWaitTimeNs()));
         suballocationGarbageSize = renderer->getSuballocationGarbageSize();
