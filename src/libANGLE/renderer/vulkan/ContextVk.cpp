@@ -6444,7 +6444,7 @@ angle::Result ContextVk::releaseTextures(const gl::Context *context,
     }
 
     ANGLE_TRY(flushImpl(nullptr, RenderPassClosureReason::ImageUseThenReleaseToExternal));
-    return mRenderer->waitForResourceUseToBeSubmitted(this, mSubmittedResourceUse);
+    return mRenderer->waitForResourceUseToBeSubmittedToDevice(this, mSubmittedResourceUse);
 }
 
 vk::DynamicQueryPool *ContextVk::getQueryPool(gl::QueryType queryType)
