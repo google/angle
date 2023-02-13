@@ -362,10 +362,6 @@ class RendererVk : angle::NonCopyable
     uint32_t getMaxVertexAttribDivisor() const { return mMaxVertexAttribDivisor; }
     VkDeviceSize getMaxVertexAttribStride() const { return mMaxVertexAttribStride; }
 
-    VkDeviceSize getMinImportedHostPointerAlignment() const
-    {
-        return mMinImportedHostPointerAlignment;
-    }
     uint32_t getDefaultUniformBufferSize() const { return mDefaultUniformBufferSize; }
 
     angle::vk::ICD getEnabledICD() const { return mEnabledICD; }
@@ -896,7 +892,6 @@ class RendererVk : angle::NonCopyable
     VkPhysicalDeviceShaderSubgroupExtendedTypesFeaturesKHR mSubgroupExtendedTypesFeatures;
     VkPhysicalDeviceDeviceMemoryReportFeaturesEXT mMemoryReportFeatures;
     VkDeviceDeviceMemoryReportCreateInfoEXT mMemoryReportCallback;
-    VkPhysicalDeviceExternalMemoryHostPropertiesEXT mExternalMemoryHostProperties;
     VkPhysicalDeviceShaderFloat16Int8FeaturesKHR mShaderFloat16Int8Features;
     VkPhysicalDeviceDepthStencilResolvePropertiesKHR mDepthStencilResolveProperties;
     VkPhysicalDeviceMultisampledRenderToSingleSampledFeaturesGOOGLEX
@@ -936,7 +931,6 @@ class RendererVk : angle::NonCopyable
     uint32_t mMaxVertexAttribDivisor;
     uint32_t mCurrentQueueFamilyIndex;
     VkDeviceSize mMaxVertexAttribStride;
-    VkDeviceSize mMinImportedHostPointerAlignment;
     uint32_t mDefaultUniformBufferSize;
     VkDevice mDevice;
     AtomicSerialFactory mShaderSerialFactory;

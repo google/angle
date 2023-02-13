@@ -972,9 +972,6 @@ PFN_vkGetPhysicalDeviceMemoryProperties2KHR vkGetPhysicalDeviceMemoryProperties2
 // VK_KHR_external_semaphore_fd
 PFN_vkImportSemaphoreFdKHR vkImportSemaphoreFdKHR = nullptr;
 
-// VK_EXT_external_memory_host
-PFN_vkGetMemoryHostPointerPropertiesEXT vkGetMemoryHostPointerPropertiesEXT = nullptr;
-
 // VK_EXT_host_query_reset
 PFN_vkResetQueryPoolEXT vkResetQueryPoolEXT = nullptr;
 
@@ -1138,11 +1135,6 @@ void InitGGPStreamDescriptorSurfaceFunctions(VkInstance instance)
 void InitExternalSemaphoreFdFunctions(VkInstance instance)
 {
     GET_INSTANCE_FUNC(vkImportSemaphoreFdKHR);
-}
-
-void InitExternalMemoryHostFunctions(VkInstance instance)
-{
-    GET_INSTANCE_FUNC(vkGetMemoryHostPointerPropertiesEXT);
 }
 
 void InitHostQueryResetFunctions(VkDevice device)
