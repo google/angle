@@ -288,8 +288,6 @@ class RendererVk : angle::NonCopyable
                              const char *wsiLayer);
     // Reload volk vk* function ptrs if needed for an already initialized RendererVk
     void reloadVolkIfNeeded() const;
-    // Initialize extension entry points from core ones if needed
-    void initializeEntryPointsFromCore() const;
     void onDestroy(vk::Context *context);
 
     void notifyDeviceLost();
@@ -805,7 +803,11 @@ class RendererVk : angle::NonCopyable
     void enableDeviceExtensionsPromotedTo12(const vk::ExtensionNameList &deviceExtensionNames);
     void enableDeviceExtensionsPromotedTo13(const vk::ExtensionNameList &deviceExtensionNames);
 
-    void initExtensionEntryPoints();
+    void initInstanceExtensionEntryPoints();
+    void initDeviceExtensionEntryPoints();
+    // Initialize extension entry points from core ones if needed
+    void initializeInstanceExtensionEntryPointsFromCore() const;
+    void initializeDeviceExtensionEntryPointsFromCore() const;
 
     void initFeatures(DisplayVk *display, const vk::ExtensionNameList &extensions);
     void appBasedFeatureOverrides(DisplayVk *display, const vk::ExtensionNameList &extensions);

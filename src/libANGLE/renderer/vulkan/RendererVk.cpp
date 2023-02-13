@@ -1776,6 +1776,8 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
         // Load volk if we are linking dynamically
         volkLoadInstance(mInstance);
 #endif  // defined(ANGLE_SHARED_LIBVULKAN)
+
+        initInstanceExtensionEntryPoints();
     }
 
     if (mEnableDebugUtils)
@@ -1818,11 +1820,6 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
             InitGetPhysicalDeviceProperties2KHRFunctions(mInstance);
         }
 #endif  // !defined(ANGLE_SHARED_LIBVULKAN)
-
-        if (isVulkan11Instance())
-        {
-            InitGetPhysicalDeviceProperties2KHRFunctionsFromCore();
-        }
 
         ASSERT(vkGetPhysicalDeviceProperties2KHR);
     }
@@ -3047,7 +3044,7 @@ angle::Result RendererVk::enableDeviceExtensions(DisplayVk *displayVk,
     return angle::Result::Continue;
 }
 
-void RendererVk::initExtensionEntryPoints()
+void RendererVk::initInstanceExtensionEntryPoints()
 {
 #if !defined(ANGLE_SHARED_LIBVULKAN)
     // Instance entry points
@@ -3085,7 +3082,15 @@ void RendererVk::initExtensionEntryPoints()
             InitExternalSemaphoreCapabilitiesFunctions(mInstance);
         }
     }
+#endif
 
+    // For promoted extensions, initialize their entry points from the core version.
+    initializeInstanceExtensionEntryPointsFromCore();
+}
+
+void RendererVk::initDeviceExtensionEntryPoints()
+{
+#if !defined(ANGLE_SHARED_LIBVULKAN)
     // Device entry points
     if (mFeatures.supportsTransformFeedbackExtension.enabled)
     {
@@ -3146,7 +3151,7 @@ void RendererVk::initExtensionEntryPoints()
 #endif  // !defined(ANGLE_SHARED_LIBVULKAN)
 
     // For promoted extensions, initialize their entry points from the core version.
-    initializeEntryPointsFromCore();
+    initializeDeviceExtensionEntryPointsFromCore();
 }
 
 angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueFamilyIndex)
@@ -3307,7 +3312,7 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     volkLoadDevice(mDevice);
 #endif  // defined(ANGLE_SHARED_LIBVULKAN)
 
-    initExtensionEntryPoints();
+    initDeviceExtensionEntryPoints();
 
     vk::DeviceQueueMap graphicsQueueMap =
         queueFamily.initializeQueueMap(mDevice, enableProtectedContent, 0, queueCount);
@@ -5139,11 +5144,12 @@ void RendererVk::reloadVolkIfNeeded() const
         volkLoadDevice(mDevice);
     }
 
-    initializeEntryPointsFromCore();
+    initializeInstanceExtensionEntryPointsFromCore();
+    initializeDeviceExtensionEntryPointsFromCore();
 #endif  // defined(ANGLE_SHARED_LIBVULKAN)
 }
 
-void RendererVk::initializeEntryPointsFromCore() const
+void RendererVk::initializeInstanceExtensionEntryPointsFromCore() const
 {
     if (isVulkan11Instance())
     {
@@ -5157,6 +5163,10 @@ void RendererVk::initializeEntryPointsFromCore() const
             InitExternalSemaphoreCapabilitiesFunctionsFromCore();
         }
     }
+}
+
+void RendererVk::initializeDeviceExtensionEntryPointsFromCore() const
+{
     if (isVulkan11Device())
     {
         if (mFeatures.supportsGetMemoryRequirements2.enabled)
