@@ -873,6 +873,28 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
         addExtensionPrerequisite(extension);
     }
 
+    if (!mParams->traceInfo.keyFrames.empty())
+    {
+        // Only support one keyFrame for now
+        if (mParams->traceInfo.keyFrames.size() != 1)
+        {
+            WARN() << "Multiple keyframes detected, only using the first";
+        }
+
+        // Only use keyFrame if the user didn't specify a value.
+        if (gScreenshotFrame == kDefaultScreenshotFrame)
+        {
+            gScreenshotFrame = mParams->traceInfo.keyFrames[0];
+            INFO() << "Trace contains keyframe, using frame " << gScreenshotFrame
+                   << " for screenshot";
+        }
+        else
+        {
+            WARN() << "Ignoring keyframe, user requested frame " << gScreenshotFrame
+                   << " for screenshot";
+        }
+    }
+
     if (isIntelWinANGLE && traceNameIs("manhattan_10"))
     {
         skipTest(
@@ -1567,6 +1589,22 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
     if (gWarmupSteps == kAllFrames)
     {
         mWarmupSteps = frameCount();
+    }
+
+    if (gRunToKeyFrame)
+    {
+        if (mParams->traceInfo.keyFrames.empty())
+        {
+            // If we don't have a keyFrame, run one step
+            INFO() << "No keyframe available for trace, running to frame 1";
+            mStepsToRun = 1;
+        }
+        else
+        {
+            int keyFrame = mParams->traceInfo.keyFrames[0];
+            INFO() << "Running to keyframe: " << keyFrame;
+            mStepsToRun = keyFrame;
+        }
     }
 }
 

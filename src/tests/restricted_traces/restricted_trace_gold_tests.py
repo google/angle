@@ -197,8 +197,25 @@ def output_diff_local_files(gold_session, image_name):
     logging.error('Diff image: %s', diff_file or failure_message)
 
 
+def get_trace_key_frame(trace):
+    # read trace info
+    json_name = os.path.join(angle_path_util.ANGLE_ROOT_DIR, 'src', 'tests', 'restricted_traces',
+                             trace, trace + '.json')
+    with open(json_name) as fp:
+        trace_info = json.load(fp)
+
+    # Check its metadata for a keyframe
+    keyframe = ''
+    if 'KeyFrames' in trace_info['TraceMetadata']:
+        # KeyFrames is an array, but we only use the first value for now
+        keyframe = str(trace_info['TraceMetadata']['KeyFrames'][0])
+        logging.info('trace %s is using a keyframe of %s' % (trace, keyframe))
+
+    return keyframe
+
+
 def upload_test_result_to_skia_gold(args, gold_session_manager, gold_session, gold_properties,
-                                    screenshot_dir, image_name, artifacts):
+                                    screenshot_dir, trace, artifacts):
     """Compares the given image using Skia Gold and uploads the result.
 
     No uploading is done if the test is being run in local run mode. Compares
@@ -211,11 +228,18 @@ def upload_test_result_to_skia_gold(args, gold_session_manager, gold_session, go
       gold_session: Skia Gold session.
       gold_properties: Skia Gold properties.
       screenshot_dir: directory where the test stores screenshots.
-      image_name: the name of the image being checked.
+      trace: base name of the trace being checked.
       artifacts: dictionary of JSON artifacts to pass to the result merger.
     """
 
     use_luci = not (gold_properties.local_pixel_tests or gold_properties.no_luci_auth)
+
+    # Determine if this trace is using a keyframe
+    image_name = trace
+    keyframe = get_trace_key_frame(trace)
+    if keyframe != '':
+        image_name = trace + '_frame' + keyframe
+        logging.debug('Using %s as image_name for upload' % image_name)
 
     # Note: this would be better done by iterating the screenshot directory.
     prefix = SWIFTSHADER_SCREENSHOT_PREFIX if args.swiftshader else DEFAULT_SCREENSHOT_PREFIX
@@ -333,7 +357,7 @@ def _run_tests(args, tests, extra_flags, env, screenshot_dir, results, test_resu
                 gtest_filter = _get_gtest_filter_for_batch(args, batch)
                 cmd_args = [
                     gtest_filter,
-                    '--one-frame-only',
+                    '--run-to-key-frame',
                     '--verbose-logging',
                     '--render-test-output-dir=%s' % screenshot_dir,
                     '--save-screenshots',
