@@ -778,10 +778,12 @@ angle::Result CommandProcessor::processTask(CommandProcessorTask *task)
 angle::Result CommandProcessor::waitForAllWorkToBeSubmitted(Context *context)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "CommandProcessor::waitForAllWorkToBeSubmitted");
+    std::lock_guard<std::mutex> dequeueLock(mSubmissionMutex);
+
     // Sync any errors to the context
+    // Do this inside the mutex to prevent new errors adding to the list.
     ANGLE_TRY(checkAndPopPendingError(context));
 
-    std::lock_guard<std::mutex> dequeueLock(mSubmissionMutex);
     while (!mTasks.empty())
     {
         CommandProcessorTask task(std::move(mTasks.front()));
@@ -1003,13 +1005,15 @@ bool CommandProcessor::hasUnsubmittedUse(const vk::ResourceUse &use) const
 angle::Result CommandProcessor::waitForResourceUseToBeSubmitted(vk::Context *context,
                                                                 const ResourceUse &use)
 {
-    ANGLE_TRY(checkAndPopPendingError(context));
-
     if (mCommandQueue->hasUnsubmittedUse(use))
     {
         // We do not hold mWorkerMutex lock, so that we still allow other context to enqueue work
         // while we are processing them.
         std::lock_guard<std::mutex> dequeueLock(mSubmissionMutex);
+
+        // Do this inside the mutex to prevent new errors adding to the list.
+        ANGLE_TRY(checkAndPopPendingError(context));
+
         size_t maxTaskCount = mTasks.size();
         size_t taskCount    = 0;
         while (taskCount < maxTaskCount && mCommandQueue->hasUnsubmittedUse(use))
@@ -1019,6 +1023,10 @@ angle::Result CommandProcessor::waitForResourceUseToBeSubmitted(vk::Context *con
             ANGLE_TRY(processTask(&task));
             taskCount++;
         }
+    }
+    else
+    {
+        ANGLE_TRY(checkAndPopPendingError(context));
     }
     return angle::Result::Continue;
 }
