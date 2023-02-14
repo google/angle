@@ -6532,6 +6532,28 @@ void main()
     ANGLE_GL_PROGRAM(program, kVS, kFS);
 }
 
+// Similar test to SamplerInStructNoMemberIndexing, but the struct variable is an array.
+TEST_P(GLSLTest, SamplerInStructArrayNoMemberIndexing)
+{
+    constexpr char kVS[] = R"(
+uniform struct
+{
+    sampler2D K;
+    vec4 c;
+} s[6];
+void main()
+{
+    s[0];
+})";
+
+    constexpr char kFS[] = R"(void main()
+{
+    gl_FragColor = vec4(1);
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+}
+
 // Tests that rewriting samplers in structs doesn't mess up indexing.
 TEST_P(GLSLTest, SamplerInStructMemberIndexing)
 {
