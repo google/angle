@@ -348,11 +348,26 @@ class CommandQueue : angle::NonCopyable
 
     VkQueue getQueue(egl::ContextPriority priority) const { return mQueueMap[priority]; }
 
-    // The ResourceUse still have unfinished queue serial by ANGLE or vulkan.
-    bool hasUnfinishedUse(const ResourceUse &use) const { return use > mLastCompletedSerials; }
-    // The ResourceUse still have queue serial not yet submitted to vulkan.
-    bool hasUnsubmittedUse(const ResourceUse &use) const { return use > mLastSubmittedSerials; }
     Serial getLastSubmittedSerial(SerialIndex index) const { return mLastSubmittedSerials[index]; }
+
+    // The ResourceUse still have unfinished queue serial by ANGLE or vulkan.
+    bool hasResourceUseFinished(const ResourceUse &use) const
+    {
+        return use <= mLastCompletedSerials;
+    }
+    bool hasQueueSerialFinished(const QueueSerial &queueSerial) const
+    {
+        return queueSerial <= mLastCompletedSerials;
+    }
+    // The ResourceUse still have queue serial not yet submitted to vulkan.
+    bool hasResourceUseSubmitted(const ResourceUse &use) const
+    {
+        return use <= mLastSubmittedSerials;
+    }
+    bool hasQueueSerialSubmitted(const QueueSerial &queueSerial) const
+    {
+        return queueSerial <= mLastSubmittedSerials;
+    }
 
     // Wait until the desired serial has been completed.
     angle::Result finishResourceUse(Context *context, const ResourceUse &use, uint64_t timeout);
@@ -556,7 +571,11 @@ class CommandProcessor : public Context
 
     bool hasResourceUseEnqueued(const ResourceUse &use) const
     {
-        return !(use > mLastEnqueuedSerials);
+        return use <= mLastEnqueuedSerials;
+    }
+    bool hasQueueSerialEnqueued(const QueueSerial &queueSerial) const
+    {
+        return queueSerial <= mLastEnqueuedSerials;
     }
     Serial getLastEnqueuedSerial(SerialIndex index) const { return mLastEnqueuedSerials[index]; }
 

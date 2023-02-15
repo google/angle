@@ -28,7 +28,7 @@ angle::Result Resource::waitForIdle(ContextVk *contextVk,
 
     RendererVk *renderer = contextVk->getRenderer();
     // Make sure the driver is done with the resource.
-    if (renderer->hasUnfinishedUse(mUse))
+    if (!renderer->hasResourceUseFinished(mUse))
     {
         if (debugMessage)
         {
@@ -37,7 +37,7 @@ angle::Result Resource::waitForIdle(ContextVk *contextVk,
         ANGLE_TRY(renderer->finishResourceUse(contextVk, mUse));
     }
 
-    ASSERT(!renderer->hasUnfinishedUse(mUse));
+    ASSERT(renderer->hasResourceUseFinished(mUse));
 
     return angle::Result::Continue;
 }
@@ -81,22 +81,20 @@ SharedGarbage &SharedGarbage::operator=(SharedGarbage &&rhs)
 
 bool SharedGarbage::destroyIfComplete(RendererVk *renderer)
 {
-    if (renderer->hasUnfinishedUse(mLifetime))
+    if (renderer->hasResourceUseFinished(mLifetime))
     {
-        return false;
+        for (GarbageObject &object : mGarbage)
+        {
+            object.destroy(renderer);
+        }
+        return true;
     }
-
-    for (GarbageObject &object : mGarbage)
-    {
-        object.destroy(renderer);
-    }
-
-    return true;
+    return false;
 }
 
-bool SharedGarbage::hasUnsubmittedUse(RendererVk *renderer) const
+bool SharedGarbage::hasResourceUseSubmitted(RendererVk *renderer) const
 {
-    return renderer->hasUnsubmittedUse(mLifetime);
+    return renderer->hasResourceUseSubmitted(mLifetime);
 }
 }  // namespace vk
 }  // namespace rx

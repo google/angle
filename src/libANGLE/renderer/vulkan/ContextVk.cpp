@@ -1177,7 +1177,7 @@ void ContextVk::onDestroy(const gl::Context *context)
     (void)finishImpl(RenderPassClosureReason::ContextDestruction);
 
     // Everything must be finished
-    ASSERT(!mRenderer->hasUnfinishedUse(mSubmittedResourceUse));
+    ASSERT(mRenderer->hasResourceUseFinished(mSubmittedResourceUse));
 
     VkDevice device = getDevice();
 
@@ -1563,7 +1563,7 @@ angle::Result ContextVk::setupIndexedDraw(const gl::Context *context,
             vk::BufferHelper &bufferHelper = bufferVk->getBuffer();
 
             if (bufferHelper.isHostVisible() &&
-                !mRenderer->hasUnfinishedUse(bufferHelper.getResourceUse()))
+                mRenderer->hasResourceUseFinished(bufferHelper.getResourceUse()))
             {
                 uint8_t *src = nullptr;
                 ANGLE_TRY(
@@ -3643,9 +3643,9 @@ angle::Result ContextVk::checkCompletedGpuEvents()
 
     for (GpuEventQuery &eventQuery : mInFlightGpuEventQueries)
     {
-        ASSERT(!mRenderer->hasUnsubmittedUse(eventQuery.queryHelper.getResourceUse()));
+        ASSERT(mRenderer->hasResourceUseSubmitted(eventQuery.queryHelper.getResourceUse()));
         // Only check the timestamp query if the submission has finished.
-        if (mRenderer->hasUnfinishedUse(eventQuery.queryHelper.getResourceUse()))
+        if (!mRenderer->hasResourceUseFinished(eventQuery.queryHelper.getResourceUse()))
         {
             break;
         }

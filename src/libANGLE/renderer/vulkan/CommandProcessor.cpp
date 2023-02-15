@@ -994,7 +994,11 @@ angle::Result CommandProcessor::enqueueFlushRenderPassCommands(
 angle::Result CommandProcessor::waitForResourceUseToBeSubmitted(vk::Context *context,
                                                                 const ResourceUse &use)
 {
-    if (mCommandQueue->hasUnsubmittedUse(use))
+    if (mCommandQueue->hasResourceUseSubmitted(use))
+    {
+        ANGLE_TRY(checkAndPopPendingError(context));
+    }
+    else
     {
         // We do not hold mTaskEnqueueMutex lock, so that we still allow other context to enqueue
         // work while we are processing them.
@@ -1005,17 +1009,13 @@ angle::Result CommandProcessor::waitForResourceUseToBeSubmitted(vk::Context *con
 
         size_t maxTaskCount = mTaskQueue.size();
         size_t taskCount    = 0;
-        while (taskCount < maxTaskCount && mCommandQueue->hasUnsubmittedUse(use))
+        while (taskCount < maxTaskCount && !mCommandQueue->hasResourceUseSubmitted(use))
         {
             CommandProcessorTask task(std::move(mTaskQueue.front()));
             mTaskQueue.pop();
             ANGLE_TRY(processTask(&task));
             taskCount++;
         }
-    }
-    else
-    {
-        ANGLE_TRY(checkAndPopPendingError(context));
     }
     return angle::Result::Continue;
 }
@@ -1178,7 +1178,7 @@ angle::Result CommandQueue::finishResourceUse(Context *context,
         ANGLE_TRY(retireFinishedCommandsAndCleanupGarbage(context, finishedCount));
     }
     ASSERT(allInFlightCommandsAreAfterSerials(use.getSerials()));
-    ASSERT(!hasUnfinishedUse(use));
+    ASSERT(hasResourceUseFinished(use));
 
     return angle::Result::Continue;
 }
@@ -1231,7 +1231,7 @@ angle::Result CommandQueue::waitForResourceUseToFinishWithUserTimeout(Context *c
     }
 
     // Serial is not yet submitted. This is undefined behaviour, so we can do anything.
-    if (hasUnsubmittedUse(use))
+    if (!hasResourceUseSubmitted(use))
     {
         WARN() << "Waiting on an unsubmitted serial.";
         *result = VK_TIMEOUT;

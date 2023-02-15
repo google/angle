@@ -2835,7 +2835,7 @@ angle::Result DynamicBuffer::allocate(Context *context,
     // The front of the free list should be the oldest. Thus if it is in use the rest of the
     // free list should be in use as well.
     if (mBufferFreeList.empty() ||
-        renderer->hasUnfinishedUse(mBufferFreeList.front()->getResourceUse()))
+        !renderer->hasResourceUseFinished(mBufferFreeList.front()->getResourceUse()))
     {
         ANGLE_TRY(allocateNewBuffer(context));
     }
@@ -3329,7 +3329,7 @@ angle::Result DescriptorPoolHelper::init(Context *context,
 
     if (mDescriptorPool.valid())
     {
-        ASSERT(!renderer->hasUnfinishedUse(getResourceUse()));
+        ASSERT(renderer->hasResourceUseFinished(getResourceUse()));
         mDescriptorPool.destroy(renderer->getDevice());
     }
 
@@ -3383,7 +3383,7 @@ bool DescriptorPoolHelper::allocateDescriptorSet(Context *context,
         RendererVk *rendererVk = context->getRenderer();
 
         DescriptorSetHelper &garbage = mDescriptorSetGarbageList.front();
-        if (!rendererVk->hasUnfinishedUse(garbage.getResourceUse()))
+        if (rendererVk->hasResourceUseFinished(garbage.getResourceUse()))
         {
             *descriptorSetsOut = garbage.getDescriptorSet();
             mDescriptorSetGarbageList.pop_front();
@@ -3573,7 +3573,7 @@ angle::Result DynamicDescriptorPool::allocateNewPool(Context *context)
             continue;
         }
         if (!mDescriptorPools[poolIndex]->isReferenced() &&
-            !renderer->hasUnfinishedUse(mDescriptorPools[poolIndex]->get().getResourceUse()))
+            renderer->hasResourceUseFinished(mDescriptorPools[poolIndex]->get().getResourceUse()))
         {
             mDescriptorPools[poolIndex]->get().destroy(renderer);
             mDescriptorPools.erase(mDescriptorPools.begin() + poolIndex);
@@ -3719,7 +3719,7 @@ bool DynamicallyGrowingPool<Pool>::findFreeEntryPool(ContextVk *contextVk)
     for (size_t poolIndex = 0; poolIndex < mPools.size(); ++poolIndex)
     {
         PoolResource &pool = mPools[poolIndex];
-        if (pool.freedCount == mPoolSize && !renderer->hasUnfinishedUse(pool.getResourceUse()))
+        if (pool.freedCount == mPoolSize && renderer->hasResourceUseFinished(pool.getResourceUse()))
         {
             mCurrentPool      = poolIndex;
             mCurrentFreeEntry = 0;
@@ -3750,7 +3750,7 @@ void DynamicallyGrowingPool<Pool>::onEntryFreed(ContextVk *contextVk,
                                                 const ResourceUse &use)
 {
     ASSERT(poolIndex < mPools.size() && mPools[poolIndex].freedCount < mPoolSize);
-    if (contextVk->getRenderer()->hasUnfinishedUse(use))
+    if (!contextVk->getRenderer()->hasResourceUseFinished(use))
     {
         mPools[poolIndex].mergeResourceUse(use);
     }
@@ -4627,7 +4627,7 @@ angle::Result BufferHelper::allocateForVertexConversion(ContextVk *contextVk,
         if (size <= getSize() &&
             (hostVisibility == MemoryHostVisibility::Visible) == isHostVisible())
         {
-            if (!renderer->hasUnfinishedUse(getResourceUse()))
+            if (renderer->hasResourceUseFinished(getResourceUse()))
             {
                 initializeBarrierTracker(contextVk);
                 return angle::Result::Continue;
@@ -4819,13 +4819,13 @@ void BufferHelper::releaseBufferAndDescriptorSetCache(ContextVk *contextVk)
 {
     RendererVk *renderer = contextVk->getRenderer();
 
-    if (renderer->hasUnfinishedUse(getResourceUse()))
+    if (renderer->hasResourceUseFinished(getResourceUse()))
     {
-        mDescriptorSetCacheManager.releaseKeys(contextVk);
+        mDescriptorSetCacheManager.destroyKeys(renderer);
     }
     else
     {
-        mDescriptorSetCacheManager.destroyKeys(renderer);
+        mDescriptorSetCacheManager.releaseKeys(contextVk);
     }
 
     release(renderer);

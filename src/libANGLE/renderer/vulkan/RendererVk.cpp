@@ -1263,7 +1263,7 @@ angle::Result OneOffCommandPool::getCommandBuffer(vk::Context *context,
     std::unique_lock<std::mutex> lock(mMutex);
 
     if (!mPendingCommands.empty() &&
-        !context->getRenderer()->hasUnfinishedUse(mPendingCommands.front().use))
+        context->getRenderer()->hasResourceUseFinished(mPendingCommands.front().use))
     {
         *commandBufferOut = std::move(mPendingCommands.front().commandBuffer);
         mPendingCommands.pop_front();
@@ -5021,7 +5021,7 @@ void RendererVk::cleanupPendingSubmissionGarbage()
     while (!mPendingSubmissionGarbage.empty())
     {
         vk::SharedGarbage &garbage = mPendingSubmissionGarbage.front();
-        if (!garbage.hasUnsubmittedUse(this))
+        if (garbage.hasResourceUseSubmitted(this))
         {
             mSharedGarbage.push(std::move(garbage));
         }
@@ -5041,7 +5041,7 @@ void RendererVk::cleanupPendingSubmissionGarbage()
     {
         vk::SharedBufferSuballocationGarbage &suballocationGarbage =
             mPendingSubmissionSuballocationGarbage.front();
-        if (!suballocationGarbage.hasUnsubmittedUse(this))
+        if (suballocationGarbage.hasResourceUseSubmitted(this))
         {
             mSuballocationGarbageSizeInBytes += suballocationGarbage.getSize();
             mSuballocationGarbage.push(std::move(suballocationGarbage));
