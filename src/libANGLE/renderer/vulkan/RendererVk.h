@@ -608,10 +608,10 @@ class RendererVk : angle::NonCopyable
         vk::ProtectionType protectionType,
         vk::OutsideRenderPassCommandBufferHelper **outsideRPCommands);
 
-    VkResult queuePresent(vk::Context *context,
-                          egl::ContextPriority priority,
-                          const VkPresentInfoKHR &presentInfo,
-                          vk::SwapchainStatus *swapchainStatus);
+    void queuePresent(vk::Context *context,
+                      egl::ContextPriority priority,
+                      const VkPresentInfoKHR &presentInfo,
+                      vk::SwapchainStatus *swapchainStatus);
 
     angle::Result getOutsideRenderPassCommandBufferHelper(
         vk::Context *context,

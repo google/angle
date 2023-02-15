@@ -726,13 +726,12 @@ angle::Result CommandProcessor::processTask(CommandProcessorTask *task)
         }
         case CustomTask::Present:
         {
-            VkResult result =
-                present(task->getPriority(), task->getPresentInfo(), task->getSwapchainStatus());
-            if (ANGLE_UNLIKELY(result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR))
-            {
-                // We get to ignore these as they are not fatal
-            }
-            else if (ANGLE_UNLIKELY(result != VK_SUCCESS))
+            present(task->getPriority(), task->getPresentInfo(), task->getSwapchainStatus());
+
+            VkResult result = task->getSwapchainStatus()->lastPresentResult;
+            // We get to ignore these as they are not fatal
+            if (result != VK_ERROR_OUT_OF_DATE_KHR && result != VK_SUBOPTIMAL_KHR &&
+                result != VK_SUCCESS)
             {
                 // Save the error so that we can handle it.
                 // Don't leave processing loop, don't consider errors from present to be fatal.
@@ -828,34 +827,24 @@ void CommandProcessor::handleDeviceLost(RendererVk *renderer)
     mCommandQueue->handleDeviceLost(renderer);
 }
 
-VkResult CommandProcessor::present(egl::ContextPriority priority,
-                                   const VkPresentInfoKHR &presentInfo,
-                                   SwapchainStatus *swapchainStatus)
+void CommandProcessor::present(egl::ContextPriority priority,
+                               const VkPresentInfoKHR &presentInfo,
+                               SwapchainStatus *swapchainStatus)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "vkQueuePresentKHR");
-    VkResult result = mCommandQueue->queuePresent(priority, presentInfo, nullptr);
-
     // Verify that we are presenting one and only one swapchain
     ASSERT(presentInfo.swapchainCount == 1);
     ASSERT(presentInfo.pResults == nullptr);
-    updateSwapchainStatus(swapchainStatus, result);
 
-    return result;
-}
-
-void CommandProcessor::updateSwapchainStatus(SwapchainStatus *swapchainStatus,
-                                             VkResult presentResult)
-{
-    ASSERT(swapchainStatus);
-
-    swapchainStatus->lastPresentResult = presentResult;
+    SwapchainStatus localStatus;
+    mCommandQueue->queuePresent(priority, presentInfo, &localStatus);
 
     {
         std::unique_lock<std::mutex> lock(swapchainStatus->mutex);
         ASSERT(swapchainStatus->isPending);
-        swapchainStatus->isPending = false;
+        swapchainStatus->isPending         = false;
+        swapchainStatus->lastPresentResult = localStatus.lastPresentResult;
     }
-
     swapchainStatus->condVar.notify_all();
 }
 
@@ -911,26 +900,23 @@ angle::Result CommandProcessor::enqueueSubmitOneOffCommands(
     return angle::Result::Continue;
 }
 
-VkResult CommandProcessor::enqueuePresent(egl::ContextPriority contextPriority,
-                                          const VkPresentInfoKHR &presentInfo,
-                                          SwapchainStatus *swapchainStatus)
+void CommandProcessor::enqueuePresent(egl::ContextPriority contextPriority,
+                                      const VkPresentInfoKHR &presentInfo,
+                                      SwapchainStatus *swapchainStatus)
 {
     {
         std::lock_guard<std::mutex> lock(swapchainStatus->mutex);
         ASSERT(!swapchainStatus->isPending);
         swapchainStatus->isPending = true;
+        // Always return with VK_SUCCESS initially. When we call acquireNextImage we'll check the
+        // return code again. This allows the app to continue working until we really need to know
+        // the return code from present.
+        swapchainStatus->lastPresentResult = VK_SUCCESS;
     }
 
     CommandProcessorTask task;
     task.initPresent(contextPriority, presentInfo, swapchainStatus);
-
-    ANGLE_TRACE_EVENT0("gpu.angle", "CommandProcessor::queuePresent");
     (void)queueCommand(std::move(task));
-
-    // Always return success, when we call acquireNextImage we'll check the return code. This
-    // allows the app to continue working until we really need to know the return code from
-    // present.
-    return VK_SUCCESS;
 }
 
 angle::Result CommandProcessor::enqueueFlushWaitSemaphores(
@@ -1501,23 +1487,16 @@ angle::Result CommandQueue::queueSubmit(Context *context,
     return angle::Result::Continue;
 }
 
-VkResult CommandQueue::queuePresent(egl::ContextPriority contextPriority,
-                                    const VkPresentInfoKHR &presentInfo,
-                                    SwapchainStatus *swapchainStatus)
+void CommandQueue::queuePresent(egl::ContextPriority contextPriority,
+                                const VkPresentInfoKHR &presentInfo,
+                                SwapchainStatus *swapchainStatus)
 {
     std::lock_guard<std::mutex> queueSubmitLock(mQueueSubmitMutex);
-    VkQueue queue   = getQueue(contextPriority);
-    VkResult result = vkQueuePresentKHR(queue, &presentInfo);
+    VkQueue queue = getQueue(contextPriority);
 
-    // "swapchainStatus" will be "nullptr" when called from the CommandProcessor
-    if (swapchainStatus)
-    {
-        // Mutex lock is not required.
-        ASSERT(!swapchainStatus->isPending);
-        // Assigned "lastPresentResult" is not used, but assigned for consistency anyway.
-        swapchainStatus->lastPresentResult = result;
-    }
-    return result;
+    // Mutex lock is not required.
+    ASSERT(!swapchainStatus->isPending);
+    swapchainStatus->lastPresentResult = vkQueuePresentKHR(queue, &presentInfo);
 }
 
 const angle::VulkanPerfCounters CommandQueue::getPerfCounters() const

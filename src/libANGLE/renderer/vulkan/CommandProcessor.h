@@ -399,9 +399,10 @@ class CommandQueue : angle::NonCopyable
                                     SubmitPolicy submitPolicy,
                                     const QueueSerial &submitQueueSerial);
 
-    VkResult queuePresent(egl::ContextPriority contextPriority,
-                          const VkPresentInfoKHR &presentInfo,
-                          SwapchainStatus *swapchainStatus);
+    // Errors from present is not considered to be fatal.
+    void queuePresent(egl::ContextPriority contextPriority,
+                      const VkPresentInfoKHR &presentInfo,
+                      SwapchainStatus *swapchainStatus);
 
     // Check to see which batches have finished completion (forward progress for
     // the last completed serial, for example for when the application busy waits on a query
@@ -534,9 +535,9 @@ class CommandProcessor : public Context
                                               const Fence *fence,
                                               SubmitPolicy submitPolicy,
                                               const QueueSerial &submitQueueSerial);
-    VkResult enqueuePresent(egl::ContextPriority contextPriority,
-                            const VkPresentInfoKHR &presentInfo,
-                            SwapchainStatus *swapchainStatus);
+    void enqueuePresent(egl::ContextPriority contextPriority,
+                        const VkPresentInfoKHR &presentInfo,
+                        SwapchainStatus *swapchainStatus);
 
     angle::Result enqueueFlushWaitSemaphores(
         ProtectionType protectionType,
@@ -602,10 +603,9 @@ class CommandProcessor : public Context
     // Command processor thread, process a task
     angle::Result processTask(CommandProcessorTask *task);
 
-    VkResult present(egl::ContextPriority priority,
-                     const VkPresentInfoKHR &presentInfo,
-                     SwapchainStatus *swapchainStatus);
-    void updateSwapchainStatus(SwapchainStatus *swapchainStatus, VkResult presentResult);
+    void present(egl::ContextPriority priority,
+                 const VkPresentInfoKHR &presentInfo,
+                 SwapchainStatus *swapchainStatus);
 
     // The mutex lock that serializes dequeue from mTask and submit to mCommandQueue so that only
     // one mTaskQueue consumer at a time

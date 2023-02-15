@@ -2006,8 +2006,7 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
 
     ASSERT(mAcquireImageSemaphore == nullptr);
 
-    VkResult result =
-        renderer->queuePresent(contextVk, contextVk->getPriority(), presentInfo, &mSwapchainStatus);
+    renderer->queuePresent(contextVk, contextVk->getPriority(), presentInfo, &mSwapchainStatus);
 
     // Set FrameNumber for the presented image.
     mSwapchainImages[mCurrentSwapchainImageIndex].mFrameNumber = mFrameCount++;
@@ -2033,7 +2032,8 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
     // Clean up whatever present is already finished.
     ANGLE_TRY(cleanUpPresentHistory(contextVk));
 
-    ANGLE_TRY(computePresentOutOfDate(contextVk, result, presentOutOfDate));
+    ANGLE_TRY(
+        computePresentOutOfDate(contextVk, mSwapchainStatus.lastPresentResult, presentOutOfDate));
 
     // Now update swapSerial With last submitted queue serial and apply CPU throttle if needed
     QueueSerial swapSerial = contextVk->getLastSubmittedQueueSerial();

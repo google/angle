@@ -5335,27 +5335,24 @@ angle::Result RendererVk::flushOutsideRPCommands(
     return angle::Result::Continue;
 }
 
-VkResult RendererVk::queuePresent(vk::Context *context,
-                                  egl::ContextPriority priority,
-                                  const VkPresentInfoKHR &presentInfo,
-                                  vk::SwapchainStatus *swapchainStatus)
+void RendererVk::queuePresent(vk::Context *context,
+                              egl::ContextPriority priority,
+                              const VkPresentInfoKHR &presentInfo,
+                              vk::SwapchainStatus *swapchainStatus)
 {
-    VkResult result = VK_SUCCESS;
     if (isAsyncCommandQueueEnabled())
     {
-        result = mCommandProcessor.enqueuePresent(priority, presentInfo, swapchainStatus);
+        mCommandProcessor.enqueuePresent(priority, presentInfo, swapchainStatus);
     }
     else
     {
-        result = mCommandQueue.queuePresent(priority, presentInfo, swapchainStatus);
+        mCommandQueue.queuePresent(priority, presentInfo, swapchainStatus);
     }
 
     if (getFeatures().logMemoryReportStats.enabled)
     {
         mMemoryReport.logMemoryReportStats();
     }
-
-    return result;
 }
 
 template <typename CommandBufferHelperT, typename RecyclerT>
