@@ -547,8 +547,8 @@ class CommandProcessor : public Context
 
     bool isBusy(RendererVk *renderer) const
     {
-        std::lock_guard<std::mutex> workerLock(mWorkerMutex);
-        return !mTasks.empty() || mCommandQueue->isBusy(renderer);
+        std::lock_guard<std::mutex> enqueueLock(mTaskEnqueueMutex);
+        return !mTaskQueue.empty() || mCommandQueue->isBusy(renderer);
     }
 
     bool hasUnsubmittedUse(const ResourceUse &use) const;
@@ -583,11 +583,11 @@ class CommandProcessor : public Context
     void updateSwapchainStatus(SwapchainStatus *swapchainStatus, VkResult presentResult);
 
     // The mutex lock that serializes dequeue from mTask and submit to mCommandQueue so that only
-    // one mTasks consumer at a time
-    std::mutex mSubmissionMutex;
+    // one mTaskQueue consumer at a time
+    std::mutex mTaskDequeueMutex;
 
-    CommandProcessorTaskQueue mTasks;
-    mutable std::mutex mWorkerMutex;
+    CommandProcessorTaskQueue mTaskQueue;
+    mutable std::mutex mTaskEnqueueMutex;
     // Signal worker thread when work is available
     std::condition_variable mWorkAvailableCondition;
     CommandQueue *const mCommandQueue;
