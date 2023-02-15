@@ -859,13 +859,14 @@ void CommandProcessor::updateSwapchainStatus(SwapchainStatus *swapchainStatus,
     swapchainStatus->condVar.notify_all();
 }
 
-angle::Result CommandProcessor::submitCommands(Context *context,
-                                               ProtectionType protectionType,
-                                               egl::ContextPriority priority,
-                                               const VkSemaphore signalSemaphore,
-                                               SecondaryCommandBufferList &&commandBuffersToReset,
-                                               SecondaryCommandPools *commandPools,
-                                               const QueueSerial &submitQueueSerial)
+angle::Result CommandProcessor::enqueueSubmitCommands(
+    Context *context,
+    ProtectionType protectionType,
+    egl::ContextPriority priority,
+    const VkSemaphore signalSemaphore,
+    SecondaryCommandBufferList &&commandBuffersToReset,
+    SecondaryCommandPools *commandPools,
+    const QueueSerial &submitQueueSerial)
 {
     ANGLE_TRY(checkAndPopPendingError(context));
 
@@ -875,20 +876,21 @@ angle::Result CommandProcessor::submitCommands(Context *context,
 
     ANGLE_TRY(queueCommand(std::move(task)));
 
-    mLastSubmittedSerials.setQueueSerial(submitQueueSerial);
+    mLastEnqueuedSerials.setQueueSerial(submitQueueSerial);
 
     return angle::Result::Continue;
 }
 
-angle::Result CommandProcessor::queueSubmitOneOff(Context *context,
-                                                  ProtectionType protectionType,
-                                                  egl::ContextPriority contextPriority,
-                                                  VkCommandBuffer commandBufferHandle,
-                                                  const Semaphore *waitSemaphore,
-                                                  VkPipelineStageFlags waitSemaphoreStageMask,
-                                                  const Fence *fence,
-                                                  SubmitPolicy submitPolicy,
-                                                  const QueueSerial &submitQueueSerial)
+angle::Result CommandProcessor::enqueueSubmitOneOffCommands(
+    Context *context,
+    ProtectionType protectionType,
+    egl::ContextPriority contextPriority,
+    VkCommandBuffer commandBufferHandle,
+    const Semaphore *waitSemaphore,
+    VkPipelineStageFlags waitSemaphoreStageMask,
+    const Fence *fence,
+    SubmitPolicy submitPolicy,
+    const QueueSerial &submitQueueSerial)
 {
     ANGLE_TRY(checkAndPopPendingError(context));
 
@@ -897,7 +899,7 @@ angle::Result CommandProcessor::queueSubmitOneOff(Context *context,
                                waitSemaphoreStageMask, fence, submitQueueSerial);
     ANGLE_TRY(queueCommand(std::move(task)));
 
-    mLastSubmittedSerials.setQueueSerial(submitQueueSerial);
+    mLastEnqueuedSerials.setQueueSerial(submitQueueSerial);
 
     if (submitPolicy == SubmitPolicy::EnsureSubmitted)
     {
@@ -909,9 +911,9 @@ angle::Result CommandProcessor::queueSubmitOneOff(Context *context,
     return angle::Result::Continue;
 }
 
-VkResult CommandProcessor::queuePresent(egl::ContextPriority contextPriority,
-                                        const VkPresentInfoKHR &presentInfo,
-                                        SwapchainStatus *swapchainStatus)
+VkResult CommandProcessor::enqueuePresent(egl::ContextPriority contextPriority,
+                                          const VkPresentInfoKHR &presentInfo,
+                                          SwapchainStatus *swapchainStatus)
 {
     {
         std::lock_guard<std::mutex> lock(swapchainStatus->mutex);
@@ -931,7 +933,7 @@ VkResult CommandProcessor::queuePresent(egl::ContextPriority contextPriority,
     return VK_SUCCESS;
 }
 
-angle::Result CommandProcessor::flushWaitSemaphores(
+angle::Result CommandProcessor::enqueueFlushWaitSemaphores(
     ProtectionType protectionType,
     std::vector<VkSemaphore> &&waitSemaphores,
     std::vector<VkPipelineStageFlags> &&waitSemaphoreStageMasks)
@@ -944,7 +946,7 @@ angle::Result CommandProcessor::flushWaitSemaphores(
     return angle::Result::Continue;
 }
 
-angle::Result CommandProcessor::flushOutsideRPCommands(
+angle::Result CommandProcessor::enqueueFlushOutsideRPCommands(
     Context *context,
     ProtectionType protectionType,
     OutsideRenderPassCommandBufferHelper **outsideRPCommands)
@@ -966,7 +968,7 @@ angle::Result CommandProcessor::flushOutsideRPCommands(
     return angle::Result::Continue;
 }
 
-angle::Result CommandProcessor::flushRenderPassCommands(
+angle::Result CommandProcessor::enqueueFlushRenderPassCommands(
     Context *context,
     ProtectionType protectionType,
     const RenderPass &renderPass,
@@ -987,19 +989,6 @@ angle::Result CommandProcessor::flushRenderPassCommands(
         context, (*renderPassCommands)->getCommandPool(), allocator, renderPassCommands));
 
     return angle::Result::Continue;
-}
-
-bool CommandProcessor::hasUnsubmittedUse(const vk::ResourceUse &use) const
-{
-    const Serials &serials = use.getSerials();
-    for (SerialIndex i = 0; i < serials.size(); ++i)
-    {
-        if (serials[i] > mLastSubmittedSerials[i])
-        {
-            return true;
-        }
-    }
-    return false;
 }
 
 angle::Result CommandProcessor::waitForResourceUseToBeSubmitted(vk::Context *context,

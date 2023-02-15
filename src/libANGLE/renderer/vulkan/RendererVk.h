@@ -1095,7 +1095,7 @@ ANGLE_INLINE bool RendererVk::hasUnsubmittedUse(const vk::ResourceUse &use) cons
 {
     if (isAsyncCommandQueueEnabled())
     {
-        return mCommandProcessor.hasUnsubmittedUse(use);
+        return !mCommandProcessor.hasResourceUseEnqueued(use);
     }
     else
     {
