@@ -782,6 +782,7 @@ bool ValidateGetPlatformDisplayCommon(const ValidationContext *val,
                     break;
                 case EGL_PLATFORM_ANGLE_DEVICE_ID_HIGH_ANGLE:
                 case EGL_PLATFORM_ANGLE_DEVICE_ID_LOW_ANGLE:
+                case EGL_PLATFORM_ANGLE_DISPLAY_KEY_ANGLE:
                     if (!clientExtensions.platformANGLEDeviceId)
                     {
                         val->setError(EGL_BAD_ATTRIBUTE,
