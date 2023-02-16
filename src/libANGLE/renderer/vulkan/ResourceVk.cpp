@@ -42,6 +42,22 @@ angle::Result Resource::waitForIdle(ContextVk *contextVk,
     return angle::Result::Continue;
 }
 
+std::ostream &operator<<(std::ostream &os, const ResourceUse &use)
+{
+    const Serials &serials = use.getSerials();
+    os << '{';
+    for (size_t i = 0; i < serials.size(); i++)
+    {
+        os << serials[i].getValue();
+        if (i < serials.size() - 1)
+        {
+            os << ",";
+        }
+    }
+    os << '}';
+    return os;
+}
+
 // SharedGarbage implementation.
 SharedGarbage::SharedGarbage() = default;
 

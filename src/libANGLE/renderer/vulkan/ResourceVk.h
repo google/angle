@@ -132,6 +132,7 @@ class ResourceUse final
     // The most recent time of use in a VkQueue.
     Serials mSerials;
 };
+std::ostream &operator<<(std::ostream &os, const ResourceUse &use);
 
 class SharedGarbage
 {
