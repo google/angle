@@ -1135,6 +1135,8 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                     return "GL_DOT3_RGBA";
                 case 0x8741:
                     return "GL_PROGRAM_BINARY_LENGTH";
+                case 0x8743:
+                    return "GL_MIRROR_CLAMP_TO_EDGE_EXT";
                 case 0x8764:
                     return "GL_BUFFER_SIZE";
                 case 0x8765:

@@ -511,6 +511,9 @@ struct Extensions
     // GL_OES_texture_half_float_linear
     bool textureHalfFloatLinearOES = false;
 
+    // GL_EXT_texture_mirror_clamp_to_edge
+    bool textureMirrorClampToEdgeEXT = false;
+
     // GL_EXT_texture_norm16
     bool textureNorm16EXT = false;
 

@@ -140,6 +140,7 @@ gles_requestable_extensions = [
     "GL_EXT_texture_cube_map_array",
     "GL_EXT_texture_filter_anisotropic",
     "GL_EXT_texture_format_BGRA8888",
+    "GL_EXT_texture_mirror_clamp_to_edge",
     "GL_EXT_texture_norm16",
     "GL_EXT_texture_rg",
     "GL_EXT_texture_sRGB_R8",

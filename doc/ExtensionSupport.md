@@ -167,6 +167,7 @@ using data from registry_xml.py and gl.xml.
 | [GL_EXT_texture_format_sRGB_override](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_texture_format_sRGB_override.txt) |  | &#x2714; |  |  |  |  |  |
 | [GL_OES_texture_half_float](https://khronos.org/registry/OpenGL/extensions/OES/OES_texture_half_float.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
 | [GL_OES_texture_half_float_linear](https://khronos.org/registry/OpenGL/extensions/OES/OES_texture_half_float_linear.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
+| [GL_EXT_texture_mirror_clamp_to_edge](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_texture_mirror_clamp_to_edge.txt) |  |  |  |  |  |  |  |
 | [GL_EXT_texture_norm16](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_texture_norm16.txt) |  | &#x2714; |  | &#x2714; |  |  |  |
 | [GL_OES_texture_npot](https://khronos.org/registry/OpenGL/extensions/OES/OES_texture_npot.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
 | [GL_EXT_texture_rg](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_texture_rg.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
