@@ -836,16 +836,10 @@ void CommandProcessor::present(egl::ContextPriority priority,
     ASSERT(presentInfo.swapchainCount == 1);
     ASSERT(presentInfo.pResults == nullptr);
 
-    SwapchainStatus localStatus;
-    mCommandQueue->queuePresent(priority, presentInfo, &localStatus);
-
-    {
-        std::unique_lock<std::mutex> lock(swapchainStatus->mutex);
-        ASSERT(swapchainStatus->isPending);
-        swapchainStatus->isPending         = false;
-        swapchainStatus->lastPresentResult = localStatus.lastPresentResult;
-    }
-    swapchainStatus->condVar.notify_all();
+    mCommandQueue->queuePresent(priority, presentInfo, swapchainStatus);
+    ASSERT(swapchainStatus->isPending);
+    // Always make sure update isPending after status has been updated.
+    swapchainStatus->isPending = false;
 }
 
 angle::Result CommandProcessor::enqueueSubmitCommands(
@@ -904,15 +898,12 @@ void CommandProcessor::enqueuePresent(egl::ContextPriority contextPriority,
                                       const VkPresentInfoKHR &presentInfo,
                                       SwapchainStatus *swapchainStatus)
 {
-    {
-        std::lock_guard<std::mutex> lock(swapchainStatus->mutex);
-        ASSERT(!swapchainStatus->isPending);
-        swapchainStatus->isPending = true;
-        // Always return with VK_SUCCESS initially. When we call acquireNextImage we'll check the
-        // return code again. This allows the app to continue working until we really need to know
-        // the return code from present.
-        swapchainStatus->lastPresentResult = VK_SUCCESS;
-    }
+    ASSERT(!swapchainStatus->isPending);
+    swapchainStatus->isPending = true;
+    // Always return with VK_SUCCESS initially. When we call acquireNextImage we'll check the
+    // return code again. This allows the app to continue working until we really need to know
+    // the return code from present.
+    swapchainStatus->lastPresentResult = VK_SUCCESS;
 
     CommandProcessorTask task;
     task.initPresent(contextPriority, presentInfo, swapchainStatus);
@@ -977,7 +968,7 @@ angle::Result CommandProcessor::enqueueFlushRenderPassCommands(
     return angle::Result::Continue;
 }
 
-angle::Result CommandProcessor::waitForResourceUseToBeSubmitted(vk::Context *context,
+angle::Result CommandProcessor::waitForResourceUseToBeSubmitted(Context *context,
                                                                 const ResourceUse &use)
 {
     if (mCommandQueue->hasResourceUseSubmitted(use))
@@ -1003,6 +994,27 @@ angle::Result CommandProcessor::waitForResourceUseToBeSubmitted(vk::Context *con
             taskCount++;
         }
     }
+    return angle::Result::Continue;
+}
+
+angle::Result CommandProcessor::waitForPresentToBeSubmitted(SwapchainStatus *swapchainStatus)
+{
+    if (!swapchainStatus->isPending)
+    {
+        return angle::Result::Continue;
+    }
+
+    std::lock_guard<std::mutex> dequeueLock(mTaskDequeueMutex);
+    size_t maxTaskCount = mTaskQueue.size();
+    size_t taskCount    = 0;
+    while (taskCount < maxTaskCount && swapchainStatus->isPending)
+    {
+        CommandProcessorTask task(std::move(mTaskQueue.front()));
+        mTaskQueue.pop();
+        ANGLE_TRY(processTask(&task));
+        taskCount++;
+    }
+    ASSERT(!swapchainStatus->isPending);
     return angle::Result::Continue;
 }
 
@@ -1492,10 +1504,7 @@ void CommandQueue::queuePresent(egl::ContextPriority contextPriority,
                                 SwapchainStatus *swapchainStatus)
 {
     std::lock_guard<std::mutex> queueSubmitLock(mQueueSubmitMutex);
-    VkQueue queue = getQueue(contextPriority);
-
-    // Mutex lock is not required.
-    ASSERT(!swapchainStatus->isPending);
+    VkQueue queue                      = getQueue(contextPriority);
     swapchainStatus->lastPresentResult = vkQueuePresentKHR(queue, &presentInfo);
 }
 

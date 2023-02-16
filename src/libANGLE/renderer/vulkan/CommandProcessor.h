@@ -92,10 +92,7 @@ class FenceRecycler
 
 struct SwapchainStatus
 {
-    mutable std::mutex mutex;
-    mutable std::condition_variable condVar;
-    bool isPending = false;
-
+    std::atomic<bool> isPending;
     VkResult lastPresentResult = VK_NOT_READY;
 };
 
@@ -563,6 +560,8 @@ class CommandProcessor : public Context
     angle::Result waitForResourceUseToBeSubmitted(vk::Context *context, const ResourceUse &use);
     // Wait for worker thread to submit all outstanding work.
     angle::Result waitForAllWorkToBeSubmitted(Context *context);
+    // Wait for enqueued present to be submitted.
+    angle::Result waitForPresentToBeSubmitted(SwapchainStatus *swapchainStatus);
 
     bool isBusy(RendererVk *renderer) const
     {

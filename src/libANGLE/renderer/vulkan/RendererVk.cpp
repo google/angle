@@ -5343,10 +5343,13 @@ void RendererVk::queuePresent(vk::Context *context,
     if (isAsyncCommandQueueEnabled())
     {
         mCommandProcessor.enqueuePresent(priority, presentInfo, swapchainStatus);
+        // lastPresentResult should always VK_SUCCESS when isPending is true
+        ASSERT(!swapchainStatus->isPending || swapchainStatus->lastPresentResult == VK_SUCCESS);
     }
     else
     {
         mCommandQueue.queuePresent(priority, presentInfo, swapchainStatus);
+        ASSERT(!swapchainStatus->isPending);
     }
 
     if (getFeatures().logMemoryReportStats.enabled)

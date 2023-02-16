@@ -878,6 +878,7 @@ WindowSurfaceVk::WindowSurfaceVk(const egl::SurfaceState &surfaceState, EGLNativ
                                    gl::LevelIndex(0), 0, 1, RenderTargetTransience::Default);
     mDepthStencilImageBinding.bind(&mDepthStencilImage);
     mColorImageMSBinding.bind(&mColorImageMS);
+    mSwapchainStatus.isPending = false;
 }
 
 WindowSurfaceVk::~WindowSurfaceVk()
@@ -896,7 +897,7 @@ void WindowSurfaceVk::destroy(const egl::Display *display)
     // flush the pipe.
     (void)renderer->finish(displayVk);
 
-    waitPendingPresent();
+    (void)renderer->waitForPresentToBeSubmitted(&mSwapchainStatus);
 
     if (mLockBufferHelper.valid())
     {
@@ -2044,15 +2045,6 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
     return angle::Result::Continue;
 }
 
-void WindowSurfaceVk::waitPendingPresent() const
-{
-    std::unique_lock<std::mutex> lock(mSwapchainStatus.mutex);
-    while (mSwapchainStatus.isPending)
-    {
-        mSwapchainStatus.condVar.wait(lock);
-    }
-}
-
 angle::Result WindowSurfaceVk::throttleCPU(ContextVk *contextVk,
                                            const QueueSerial &currentSubmitSerial)
 {
@@ -2197,11 +2189,12 @@ angle::Result WindowSurfaceVk::doDeferredAcquireNextImage(const gl::Context *con
                                                           bool presentOutOfDate)
 {
     ContextVk *contextVk = vk::GetImpl(context);
+    RendererVk *renderer = contextVk->getRenderer();
 
     // TODO(jmadill): Expose in CommandQueueInterface, or manage in CommandQueue. b/172704839
-    if (contextVk->getRenderer()->isAsyncCommandQueueEnabled())
+    if (renderer->isAsyncCommandQueueEnabled())
     {
-        waitPendingPresent();
+        ANGLE_TRY(renderer->waitForPresentToBeSubmitted(&mSwapchainStatus));
         VkResult result = mSwapchainStatus.lastPresentResult;
 
         // Now that we have the result from the last present need to determine if it's out of date

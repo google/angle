@@ -369,7 +369,6 @@ class WindowSurfaceVk : public SurfaceVk
                           EGLint n_rects,
                           const void *pNextChain,
                           bool *presentOutOfDate);
-    void waitPendingPresent() const;
 
     angle::Result cleanUpPresentHistory(vk::Context *context);
 

@@ -613,6 +613,9 @@ class RendererVk : angle::NonCopyable
                       const VkPresentInfoKHR &presentInfo,
                       vk::SwapchainStatus *swapchainStatus);
 
+    // Only useful if async submission is enabled
+    angle::Result waitForPresentToBeSubmitted(vk::SwapchainStatus *swapchainStatus);
+
     angle::Result getOutsideRenderPassCommandBufferHelper(
         vk::Context *context,
         vk::CommandPool *commandPool,
@@ -1120,6 +1123,17 @@ ANGLE_INLINE bool RendererVk::hasResourceUseFinished(const vk::ResourceUse &use)
 ANGLE_INLINE bool RendererVk::hasQueueSerialFinished(const QueueSerial &queueSerial) const
 {
     return mCommandQueue.hasQueueSerialFinished(queueSerial);
+}
+
+ANGLE_INLINE angle::Result RendererVk::waitForPresentToBeSubmitted(
+    vk::SwapchainStatus *swapchainStatus)
+{
+    if (isAsyncCommandQueueEnabled())
+    {
+        return mCommandProcessor.waitForPresentToBeSubmitted(swapchainStatus);
+    }
+    ASSERT(!swapchainStatus->isPending);
+    return angle::Result::Continue;
 }
 }  // namespace rx
 
