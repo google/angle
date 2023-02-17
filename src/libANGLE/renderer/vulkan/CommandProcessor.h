@@ -402,10 +402,9 @@ class CommandQueue : angle::NonCopyable
                       const VkPresentInfoKHR &presentInfo,
                       SwapchainStatus *swapchainStatus);
 
-    // Check to see which batches have finished completion (forward progress for
-    // the last completed serial, for example for when the application busy waits on a query
-    // result). It would be nice if we didn't have to expose this for QueryVk::getResult.
-    angle::Result checkCompletedCommands(Context *context);
+    // Walk mInFlightCommands, check and update mLastCompletedSerials for all commands that are
+    // finished
+    angle::Result checkCompletedCommands(Context *context, bool *anyCommandFinished);
 
     void flushWaitSemaphores(ProtectionType protectionType,
                              std::vector<VkSemaphore> &&waitSemaphores,
@@ -438,9 +437,6 @@ class CommandQueue : angle::NonCopyable
     angle::Result checkOneCommandBatch(Context *context, bool *finished);
     // Similar to checkOneCommandBatch, except we will wait for it to finish
     angle::Result finishOneCommandBatch(Context *context, uint64_t timeout);
-    // Walk mInFlightCommands, check and update mLastCompletedSerials for all commands that are
-    // finished
-    angle::Result checkCompletedCommandsLocked(Context *context, bool *anyCommandFinished);
     // Walk mFinishedCommands, reset and recycle all command buffers.
     angle::Result retireFinishedCommandsLocked(Context *context);
 

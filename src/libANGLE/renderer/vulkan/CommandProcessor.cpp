@@ -607,12 +607,6 @@ angle::Result CommandProcessor::processTasksImpl(bool *exitThread)
         std::unique_lock<std::mutex> enqueueLock(mTaskEnqueueMutex);
         if (mTaskQueue.empty())
         {
-            if (mNeedCommandsAndGarbageCleanup.exchange(false))
-            {
-                ANGLE_TRY(mCommandQueue->retireFinishedCommands(this));
-                mRenderer->cleanupGarbage();
-            }
-
             if (mTaskThreadShouldExit)
             {
                 break;
@@ -648,6 +642,19 @@ angle::Result CommandProcessor::processTasksImpl(bool *exitThread)
             }
 
             ANGLE_TRY(processTask(&task));
+        }
+
+        if (mNeedCommandsAndGarbageCleanup.exchange(false))
+        {
+            // Always check completed commands again in case anything new has been finished.
+            bool anyCommandFinished;
+            ANGLE_TRY(mCommandQueue->checkCompletedCommands(this, &anyCommandFinished));
+            // Reset command buffer and clean up garbage
+            if (mRenderer->isAsyncCommandBufferResetEnabled())
+            {
+                ANGLE_TRY(mCommandQueue->retireFinishedCommands(this));
+            }
+            mRenderer->cleanupGarbage();
         }
     }
     *exitThread = true;
@@ -1090,7 +1097,12 @@ angle::Result CommandQueue::postSubmitCheck(Context *context)
     RendererVk *renderer = context->getRenderer();
 
     // Update mLastCompletedQueueSerial immediately in case any command has been finished.
-    ANGLE_TRY(checkCompletedCommands(context));
+    bool anyCommandFinished;
+    ANGLE_TRY(checkCompletedCommands(context, &anyCommandFinished));
+    if (anyCommandFinished)
+    {
+        ANGLE_TRY(retireFinishedCommandsAndCleanupGarbage(context));
+    }
 
     VkDeviceSize suballocationGarbageSize = renderer->getSuballocationGarbageSize();
     if (suballocationGarbageSize > kMaxBufferSuballocationGarbageSize)
@@ -1487,35 +1499,39 @@ void CommandQueue::resetPerFramePerfCounters()
     mPerfCounters.vkQueueSubmitCallsPerFrame      = 0;
 }
 
-angle::Result CommandQueue::checkCompletedCommands(Context *context)
-{
-    bool anyCommandFinished;
-    {
-        std::lock_guard<std::mutex> lock(mMutex);
-        ANGLE_TRY(checkCompletedCommandsLocked(context, &anyCommandFinished));
-    }
-
-    if (anyCommandFinished)
-    {
-        ANGLE_TRY(retireFinishedCommandsAndCleanupGarbage(context));
-    }
-    return angle::Result::Continue;
-}
-
 angle::Result CommandQueue::retireFinishedCommandsAndCleanupGarbage(Context *context)
 {
     RendererVk *renderer = context->getRenderer();
-    if (renderer->isAsyncCommandBufferResetEnabled())
+    if (!renderer->isAsyncCommandBufferResetEnabled())
     {
-        renderer->requestAsyncCommandsAndGarbageCleanup(context);
-    }
-    else
-    {
-        // Do immediate clean up
+        // Do immediate command buffer reset
         ANGLE_TRY(retireFinishedCommands(context));
-        renderer->cleanupGarbage();
     }
 
+    renderer->requestAsyncCommandsAndGarbageCleanup(context);
+
+    return angle::Result::Continue;
+}
+
+angle::Result CommandQueue::checkCompletedCommands(Context *context, bool *anyCommandFinished)
+{
+    std::lock_guard<std::mutex> lock(mMutex);
+    int finishedCount = 0;
+    while (!mInFlightCommands.empty())
+    {
+        bool finished;
+        ANGLE_TRY(checkOneCommandBatch(context, &finished));
+        if (finished)
+        {
+            finishedCount++;
+        }
+        else
+        {
+            break;
+        }
+    }
+
+    *anyCommandFinished = finishedCount > 0;
     return angle::Result::Continue;
 }
 
@@ -1571,27 +1587,6 @@ angle::Result CommandQueue::finishOneCommandBatch(Context *context, uint64_t tim
     mFinishedCommandBatches.push(std::move(batch));
     mInFlightCommands.pop();
 
-    return angle::Result::Continue;
-}
-
-angle::Result CommandQueue::checkCompletedCommandsLocked(Context *context, bool *anyCommandFinished)
-{
-    int finishedCount = 0;
-    while (!mInFlightCommands.empty())
-    {
-        bool finished;
-        ANGLE_TRY(checkOneCommandBatch(context, &finished));
-        if (finished)
-        {
-            finishedCount++;
-        }
-        else
-        {
-            break;
-        }
-    }
-
-    *anyCommandFinished = finishedCount > 0;
     return angle::Result::Continue;
 }
 

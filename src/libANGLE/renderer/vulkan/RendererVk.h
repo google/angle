@@ -1186,13 +1186,18 @@ ANGLE_INLINE angle::Result RendererVk::waitForPresentToBeSubmitted(
 
 ANGLE_INLINE void RendererVk::requestAsyncCommandsAndGarbageCleanup(vk::Context *context)
 {
-    ASSERT(isAsyncCommandBufferResetEnabled());
     mCommandProcessor.requestCommandsAndGarbageCleanup();
 }
 
 ANGLE_INLINE angle::Result RendererVk::checkCompletedCommands(vk::Context *context)
 {
-    return mCommandQueue.checkCompletedCommands(context);
+    bool anyCommandFinished;
+    ANGLE_TRY(mCommandQueue.checkCompletedCommands(context, &anyCommandFinished));
+    if (anyCommandFinished)
+    {
+        ANGLE_TRY(mCommandQueue.retireFinishedCommandsAndCleanupGarbage(context));
+    }
+    return angle::Result::Continue;
 }
 }  // namespace rx
 
