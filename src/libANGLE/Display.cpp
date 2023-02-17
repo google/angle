@@ -1449,7 +1449,7 @@ Error Display::createImage(const gl::Context *context,
     ImageID id = {mImageHandleAllocator.allocate()};
     angle::UniqueObjectPointer<Image, Display> imagePtr(
         new Image(mImplementation, id, context, target, sibling, attribs), this);
-    ANGLE_TRY(imagePtr->initialize(this));
+    ANGLE_TRY(imagePtr->initialize(this, context));
 
     Image *image = imagePtr.release();
 
