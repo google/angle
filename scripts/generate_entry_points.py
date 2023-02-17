@@ -2267,6 +2267,8 @@ def add_namespace(param_type):
         return param_type.replace('gl_', 'gl::')
     elif param_type.startswith('egl_'):
         return param_type.replace('egl_', 'egl::')
+    elif param_type.startswith('wl_'):
+        return param_type
     elif param_type in egl_namespace:
         return "egl::" + param_type
     else:
