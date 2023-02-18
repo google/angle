@@ -2608,18 +2608,17 @@ angle::Result WindowSurfaceVk::getCurrentFramebuffer(
 
         if (swapchainResolveMode == SwapchainResolveMode::Enabled)
         {
+            SwapchainImage &swapchainImage = mSwapchainImages[mCurrentSwapchainImageIndex];
+
             framebufferInfo.attachmentCount = attachmentCount + 1;
 
-            for (SwapchainImage &swapchainImage : mSwapchainImages)
-            {
-                ANGLE_TRY(swapchainImage.imageViews.getLevelLayerDrawImageView(
-                    contextVk, swapchainImage.image, vk::LevelIndex(0), 0,
-                    gl::SrgbWriteControlMode::Default, &imageView));
-                imageViews[attachmentCount] = imageView->getHandle();
+            ANGLE_TRY(swapchainImage.imageViews.getLevelLayerDrawImageView(
+                contextVk, swapchainImage.image, vk::LevelIndex(0), 0,
+                gl::SrgbWriteControlMode::Default, &imageView));
+            imageViews[attachmentCount] = imageView->getHandle();
 
-                ANGLE_VK_TRY(contextVk, swapchainImage.framebufferResolveMS.init(
-                                            contextVk->getDevice(), framebufferInfo));
-            }
+            ANGLE_VK_TRY(contextVk, swapchainImage.framebufferResolveMS.init(contextVk->getDevice(),
+                                                                             framebufferInfo));
         }
         else
         {
@@ -2629,25 +2628,24 @@ angle::Result WindowSurfaceVk::getCurrentFramebuffer(
     }
     else
     {
-        for (SwapchainImage &swapchainImage : mSwapchainImages)
+        SwapchainImage &swapchainImage = mSwapchainImages[mCurrentSwapchainImageIndex];
+
+        const vk::ImageView *imageView = nullptr;
+        ANGLE_TRY(swapchainImage.imageViews.getLevelLayerDrawImageView(
+            contextVk, swapchainImage.image, vk::LevelIndex(0), 0,
+            gl::SrgbWriteControlMode::Default, &imageView));
+
+        imageViews[0] = imageView->getHandle();
+
+        if (fetchMode == FramebufferFetchMode::Enabled)
         {
-            const vk::ImageView *imageView = nullptr;
-            ANGLE_TRY(swapchainImage.imageViews.getLevelLayerDrawImageView(
-                contextVk, swapchainImage.image, vk::LevelIndex(0), 0,
-                gl::SrgbWriteControlMode::Default, &imageView));
-
-            imageViews[0] = imageView->getHandle();
-
-            if (fetchMode == FramebufferFetchMode::Enabled)
-            {
-                ANGLE_VK_TRY(contextVk, swapchainImage.fetchFramebuffer.init(contextVk->getDevice(),
-                                                                             framebufferInfo));
-            }
-            else
-            {
-                ANGLE_VK_TRY(contextVk, swapchainImage.framebuffer.init(contextVk->getDevice(),
-                                                                        framebufferInfo));
-            }
+            ANGLE_VK_TRY(contextVk, swapchainImage.fetchFramebuffer.init(contextVk->getDevice(),
+                                                                         framebufferInfo));
+        }
+        else
+        {
+            ANGLE_VK_TRY(contextVk,
+                         swapchainImage.framebuffer.init(contextVk->getDevice(), framebufferInfo));
         }
     }
 

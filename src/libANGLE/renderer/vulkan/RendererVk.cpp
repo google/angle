@@ -4248,9 +4248,8 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     // - Avoiding swapchain recreation when present modes change
     // - Amortizing the cost of memory allocation for swapchain creation over multiple frames
     //
-    ANGLE_FEATURE_CONDITION(
-        &mFeatures, supportsSwapchainMaintenance1,
-        !IsAndroid() && mSwapchainMaintenance1Features.swapchainMaintenance1 == VK_TRUE);
+    ANGLE_FEATURE_CONDITION(&mFeatures, supportsSwapchainMaintenance1,
+                            mSwapchainMaintenance1Features.swapchainMaintenance1 == VK_TRUE);
 
     // http://anglebug.com/6872
     // On ARM hardware, framebuffer-fetch-like behavior on Vulkan is already coherent, so we can
