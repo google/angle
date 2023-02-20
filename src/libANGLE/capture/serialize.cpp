@@ -958,7 +958,9 @@ void SerializeShader(const gl::Context *context,
     GroupScope group(json, "Shader", id);
     SerializeShaderState(json, shader->getState());
     json->addScalar("Handle", shader->getHandle().value);
-    json->addScalar("RefCount", shader->getRefCount());
+    // TODO: implement MEC context validation only after all contexts have been initialized
+    // http://anglebug.com/8029
+    // json->addScalar("RefCount", shader->getRefCount());
     json->addScalar("FlaggedForDeletion", shader->isFlaggedForDeletion());
     // Do not serialize mType because it is already serialized in SerializeShaderState.
     json->addString("InfoLogString", shader->getInfoLogString());
@@ -1093,7 +1095,9 @@ void SerializeProgram(JsonSerializer *json,
     SerializeProgramAliasedBindings(json, program->getFragmentOutputIndexes());
     json->addScalar("IsLinked", program->isLinked());
     json->addScalar("IsFlaggedForDeletion", program->isFlaggedForDeletion());
-    json->addScalar("RefCount", program->getRefCount());
+    // TODO: implement MEC context validation only after all contexts have been initialized
+    // http://anglebug.com/8029
+    // json->addScalar("RefCount", program->getRefCount());
     json->addScalar("ID", program->id().value);
 
     // Serialize uniforms.
