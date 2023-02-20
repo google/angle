@@ -1677,6 +1677,7 @@ void GenerateCaps(ID3D11Device *device,
         ((extensions->multiviewOVR || extensions->multiview2OVR) &&
          extensions->textureStorageMultisample2dArrayOES);
     extensions->copyTexture3dANGLE      = true;
+    extensions->textureBorderClampEXT   = true;
     extensions->textureBorderClampOES   = true;
     extensions->multiDrawIndirectEXT    = true;
     extensions->textureMultisampleANGLE = true;

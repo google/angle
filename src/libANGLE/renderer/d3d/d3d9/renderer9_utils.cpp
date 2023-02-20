@@ -760,6 +760,7 @@ void GenerateCaps(IDirect3D9 *d3d9,
     extensions->packSubimageNV        = true;
     extensions->syncQueryCHROMIUM     = extensions->fenceNV;
     extensions->copyTextureCHROMIUM   = true;
+    extensions->textureBorderClampEXT = true;
     extensions->textureBorderClampOES = true;
     extensions->videoTextureWEBGL     = true;
 
@@ -826,7 +827,7 @@ void MakeValidSize(bool isImage,
     *levelOffset = upsampleCount;
 }
 
-void InitializeFeatures(angle::FeaturesD3D *features)
+void InitializeFeatures(angle::FeaturesD3D *features, DWORD vendorID)
 {
     ANGLE_FEATURE_CONDITION(features, mrtPerfWorkaround, true);
     ANGLE_FEATURE_CONDITION(features, setDataFasterThanImageUpload, false);
@@ -837,6 +838,8 @@ void InitializeFeatures(angle::FeaturesD3D *features)
 
     // crbug.com/1011627 Turn this on for D3D9.
     ANGLE_FEATURE_CONDITION(features, allowClearForRobustResourceInit, true);
+
+    ANGLE_FEATURE_CONDITION(features, borderColorSrgb, IsNvidia(vendorID));
 }
 
 }  // namespace d3d9

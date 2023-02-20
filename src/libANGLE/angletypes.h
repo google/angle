@@ -368,6 +368,12 @@ class SamplerState final
 
     bool setWrapR(GLenum wrapR);
 
+    bool usesBorderColor() const
+    {
+        return mWrapS == GL_CLAMP_TO_BORDER || mWrapT == GL_CLAMP_TO_BORDER ||
+               mWrapR == GL_CLAMP_TO_BORDER;
+    }
+
     float getMaxAnisotropy() const { return mMaxAnisotropy; }
 
     bool setMaxAnisotropy(float maxAnisotropy);

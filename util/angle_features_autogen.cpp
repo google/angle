@@ -43,6 +43,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::Avoid1BitAlphaTextureFormats, "avoid1BitAlphaTextureFormats"},
     {Feature::BindTransformFeedbackBufferBeforeBindBufferRange,
      "bindTransformFeedbackBufferBeforeBindBufferRange"},
+    {Feature::BorderColorSrgb, "borderColorSrgb"},
     {Feature::BottomLeftOriginPresentRegionRectangles, "bottomLeftOriginPresentRegionRectangles"},
     {Feature::BresenhamLineRasterization, "bresenhamLineRasterization"},
     {Feature::CacheCompiledShader, "cacheCompiledShader"},

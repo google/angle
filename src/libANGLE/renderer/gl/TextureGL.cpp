@@ -1585,18 +1585,30 @@ angle::Result TextureGL::syncState(const gl::Context *context,
             {
                 const LevelInfoGL &levelInfo    = getBaseLevelInfo();
                 angle::ColorGeneric borderColor = mState.getSamplerState().getBorderColor();
-                if (levelInfo.lumaWorkaround.enabled)
+                if (levelInfo.sourceFormat == GL_ALPHA)
                 {
-                    if (levelInfo.sourceFormat == GL_ALPHA)
+                    if (levelInfo.lumaWorkaround.enabled)
                     {
                         ASSERT(levelInfo.lumaWorkaround.workaroundFormat == GL_RED);
                         borderColor.colorF.red = borderColor.colorF.alpha;
                     }
-                    else if (levelInfo.sourceFormat == GL_LUMINANCE_ALPHA)
+                    else
                     {
-                        ASSERT(levelInfo.lumaWorkaround.workaroundFormat == GL_RG);
+                        // Some ES drivers treat ALPHA as swizzled RG, triplicating
+                        // border's red to RGB and sampling border's green as alpha.
+                        borderColor.colorF.red   = 0.0f;
                         borderColor.colorF.green = borderColor.colorF.alpha;
                     }
+                }
+                else if (levelInfo.sourceFormat == GL_LUMINANCE_ALPHA)
+                {
+                    if (levelInfo.lumaWorkaround.enabled)
+                    {
+                        ASSERT(levelInfo.lumaWorkaround.workaroundFormat == GL_RG);
+                    }
+                    // When using desktop GL, this format is emulated as swizzled RG.
+                    // Some ES drivers do the same without adjusting the border color.
+                    borderColor.colorF.green = borderColor.colorF.alpha;
                 }
 
                 mAppliedSampler.setBorderColor(borderColor);
