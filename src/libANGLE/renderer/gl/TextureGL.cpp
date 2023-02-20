@@ -74,7 +74,8 @@ bool GetEmulatedAlphaChannel(const angle::FeaturesGL &features,
                              const gl::InternalFormat &originalInternalFormat)
 {
     return (features.RGBDXT1TexturesSampleZeroAlpha.enabled &&
-            originalInternalFormat.sizedInternalFormat == GL_COMPRESSED_RGB_S3TC_DXT1_EXT) ||
+            (originalInternalFormat.sizedInternalFormat == GL_COMPRESSED_RGB_S3TC_DXT1_EXT ||
+             originalInternalFormat.sizedInternalFormat == GL_COMPRESSED_SRGB_S3TC_DXT1_EXT)) ||
            (features.emulateRGB10.enabled && originalInternalFormat.format == GL_RGB &&
             originalInternalFormat.type == GL_UNSIGNED_INT_2_10_10_10_REV_EXT);
 }
