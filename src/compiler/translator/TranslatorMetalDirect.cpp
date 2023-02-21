@@ -337,9 +337,9 @@ void AddSampleMaskDeclaration(TIntermBlock &root, TSymbolTable &symbolTable)
     TIntermSequence declareGLFragdataSequence;
 
     // Create gl_FragData_i or gl_SecondaryFragDataEXT_i
-    constexpr const char fragData[]             = "gl_FragData";
-    constexpr const char secondaryFragDataEXT[] = "gl_SecondaryFragDataEXT";
-    const char *name                            = secondary ? secondaryFragDataEXT : fragData;
+    const char *fragData             = "gl_FragData";
+    const char *secondaryFragDataEXT = "gl_SecondaryFragDataEXT";
+    const char *name                 = secondary ? secondaryFragDataEXT : fragData;
     for (int i = 0; i < maxDrawBuffers; i++)
     {
         ImmutableStringBuilder builder(strlen(name) + 3);
