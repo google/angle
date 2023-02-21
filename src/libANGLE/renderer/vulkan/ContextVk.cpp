@@ -673,7 +673,6 @@ constexpr angle::PackedEnumMap<RenderPassClosureReason, const char *> kRenderPas
      "Render pass closed due to image (used by render pass) release to external"},
     {RenderPassClosureReason::BufferInUseWhenSynchronizedMap,
      "Render pass closed due to mapping buffer in use by GPU without GL_MAP_UNSYNCHRONIZED_BIT"},
-    {RenderPassClosureReason::ImageOrphan, "Render pass closed due to EGL image being orphaned"},
     {RenderPassClosureReason::GLMemoryBarrierThenStorageResource,
      "Render pass closed due to glMemoryBarrier before storage output in render pass"},
     {RenderPassClosureReason::StorageResourceUseThenGLMemoryBarrier,
