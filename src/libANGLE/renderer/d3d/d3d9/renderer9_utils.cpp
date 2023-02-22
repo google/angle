@@ -201,14 +201,17 @@ D3DTEXTUREADDRESS ConvertTextureWrap(GLenum wrap)
         case GL_REPEAT:
             d3dWrap = D3DTADDRESS_WRAP;
             break;
+        case GL_MIRRORED_REPEAT:
+            d3dWrap = D3DTADDRESS_MIRROR;
+            break;
         case GL_CLAMP_TO_EDGE:
             d3dWrap = D3DTADDRESS_CLAMP;
             break;
         case GL_CLAMP_TO_BORDER:
             d3dWrap = D3DTADDRESS_BORDER;
             break;
-        case GL_MIRRORED_REPEAT:
-            d3dWrap = D3DTADDRESS_MIRROR;
+        case GL_MIRROR_CLAMP_TO_EDGE_EXT:
+            d3dWrap = D3DTADDRESS_MIRRORONCE;
             break;
         default:
             UNREACHABLE();
@@ -750,6 +753,7 @@ void GenerateCaps(IDirect3D9 *d3d9,
     extensions->textureUsageANGLE           = true;
     extensions->translatedShaderSourceANGLE = true;
     extensions->fboRenderMipmapOES          = true;
+    extensions->textureMirrorClampToEdgeEXT = true;
     extensions->discardFramebufferEXT = false;  // It would be valid to set this to true, since
                                                 // glDiscardFramebufferEXT is just a hint
     extensions->colorBufferFloatEXT   = false;

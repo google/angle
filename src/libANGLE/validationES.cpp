@@ -259,13 +259,33 @@ bool ValidateTextureWrapModeValue(const Context *context,
                 context->validationError(entryPoint, GL_INVALID_ENUM, kExtensionNotEnabled);
                 return false;
             }
+            if (restrictedWrapModes)
+            {
+                // OES_EGL_image_external and ANGLE_texture_rectangle specify this error.
+                context->validationError(entryPoint, GL_INVALID_ENUM, kInvalidWrapModeTexture);
+                return false;
+            }
             break;
 
         case GL_REPEAT:
         case GL_MIRRORED_REPEAT:
             if (restrictedWrapModes)
             {
-                // OES_EGL_image_external and ANGLE_texture_rectangle specifies this error.
+                // OES_EGL_image_external and ANGLE_texture_rectangle specify this error.
+                context->validationError(entryPoint, GL_INVALID_ENUM, kInvalidWrapModeTexture);
+                return false;
+            }
+            break;
+
+        case GL_MIRROR_CLAMP_TO_EDGE_EXT:
+            if (!context->getExtensions().textureMirrorClampToEdgeEXT)
+            {
+                context->validationError(entryPoint, GL_INVALID_ENUM, kExtensionNotEnabled);
+                return false;
+            }
+            if (restrictedWrapModes)
+            {
+                // OES_EGL_image_external and ANGLE_texture_rectangle specify this error.
                 context->validationError(entryPoint, GL_INVALID_ENUM, kInvalidWrapModeTexture);
                 return false;
             }

@@ -360,6 +360,10 @@ void RendererVk::ensureCapsInitialized() const
     // Enable EXT_texture_type_2_10_10_10_REV
     mNativeExtensions.textureType2101010REVEXT = true;
 
+    // Enable EXT_texture_mirror_clamp_to_edge
+    mNativeExtensions.textureMirrorClampToEdgeEXT =
+        getFeatures().supportsSamplerMirrorClampToEdge.enabled;
+
     // Enable EXT_multi_draw_indirect
     mNativeExtensions.multiDrawIndirectEXT = true;
 

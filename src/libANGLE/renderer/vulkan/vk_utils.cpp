@@ -1350,6 +1350,8 @@ VkSamplerAddressMode GetSamplerAddressMode(const GLenum wrap)
             return VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER;
         case GL_CLAMP_TO_EDGE:
             return VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+        case GL_MIRROR_CLAMP_TO_EDGE_EXT:
+            return VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE;
         default:
             UNIMPLEMENTED();
             return VK_SAMPLER_ADDRESS_MODE_MAX_ENUM;

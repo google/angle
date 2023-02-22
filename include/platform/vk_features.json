@@ -1148,6 +1148,13 @@
             "issue": "https://anglebug.com/4966"
         },
         {
+            "name": "supports_sampler_mirror_clamp_to_edge",
+            "category": "Features",
+            "description": [
+                "VkDevice supports the VK_KHR_sampler_mirror_clamp_to_edge extension"
+            ]
+        },
+        {
             "name": "prefer_submit_on_any_samples_passed_query_end",
             "category": "Workarounds",
             "description":["Submit commands to driver when last GL_ANY_SAMPLES_PASSED query is made for performance improvements."],

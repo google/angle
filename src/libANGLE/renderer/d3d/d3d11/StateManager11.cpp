@@ -155,20 +155,9 @@ ID3D11Resource *GetViewResource(ID3D11View *view)
 
 int GetWrapBits(GLenum wrap)
 {
-    switch (wrap)
-    {
-        case GL_CLAMP_TO_EDGE:
-            return 0x0;
-        case GL_REPEAT:
-            return 0x1;
-        case GL_MIRRORED_REPEAT:
-            return 0x2;
-        case GL_CLAMP_TO_BORDER:
-            return 0x3;
-        default:
-            UNREACHABLE();
-            return 0;
-    }
+    const int wrapBits = gl_d3d11::ConvertTextureWrap(wrap);
+    ASSERT(wrapBits >= 1 && wrapBits <= 5);
+    return wrapBits;
 }
 
 Optional<size_t> FindFirstNonInstanced(
@@ -377,7 +366,7 @@ bool ShaderConstants11::updateSamplerMetadata(SamplerMetadata *data,
     const GLenum wrapT = samplerState.getWrapT();
     const GLenum wrapR = samplerState.getWrapR();
     const int wrapModes =
-        GetWrapBits(wrapS) | (GetWrapBits(wrapT) << 2) | (GetWrapBits(wrapR) << 4);
+        GetWrapBits(wrapS) | (GetWrapBits(wrapT) << 3) | (GetWrapBits(wrapR) << 6);
     if (data->wrapModes != wrapModes)
     {
         data->wrapModes = wrapModes;

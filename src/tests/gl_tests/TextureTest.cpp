@@ -7664,6 +7664,260 @@ TEST_P(TextureBorderClampIntegerTestES3, TextureBorderClampIntegerUnsigned2)
 
 // ~GL_OES_texture_border_clamp
 
+// GL_EXT_texture_mirror_clamp_to_edge
+class TextureMirrorClampToEdgeTest : public Texture2DTest
+{
+  protected:
+    TextureMirrorClampToEdgeTest() : Texture2DTest() {}
+
+    const char *getVertexShaderSource() override
+    {
+        return R"(precision highp float;
+attribute vec4 position;
+varying vec2 texcoord;
+
+void main()
+{
+    gl_Position = vec4(position.xy, 0.0, 1.0);
+    texcoord = position.xy * 2.0;
+})";
+    }
+
+    void uploadTexture(bool isInteger, bool isSigned, GLuint sampler)
+    {
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, mTexture2D);
+        if (isInteger && isSigned)
+        {
+            const int8_t data[] = {0, 0, 0, -1, -1, 0, 0, -1, 0, -1, 0, -1, 0, 0, -1, -1};
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8I, 2, 2, 0, GL_RGBA_INTEGER, GL_BYTE, data);
+        }
+        else if (isInteger)
+        {
+            const uint8_t data[] = {0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1};
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8UI, 2, 2, 0, GL_RGBA_INTEGER, GL_UNSIGNED_BYTE,
+                         data);
+        }
+        else
+        {
+            const uint8_t data[] = {0, 0, 0, 255, 255, 0, 0, 255, 0, 255, 0, 255, 0, 0, 255, 255};
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+        }
+
+        if (sampler != 0)
+        {
+            glSamplerParameteri(sampler, GL_TEXTURE_WRAP_S, GL_MIRROR_CLAMP_TO_EDGE_EXT);
+            glSamplerParameteri(sampler, GL_TEXTURE_WRAP_T, GL_MIRROR_CLAMP_TO_EDGE_EXT);
+            glSamplerParameteri(sampler, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            glSamplerParameteri(sampler, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        }
+        else
+        {
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRROR_CLAMP_TO_EDGE_EXT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRROR_CLAMP_TO_EDGE_EXT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        }
+        ASSERT_GL_NO_ERROR();
+    }
+
+    void checkTextureSampling()
+    {
+        auto screenX = [&](float x) { return getWindowWidth() * (x * 0.25 + 0.5); };
+        auto screenY = [&](float y) { return getWindowHeight() * (y * 0.25 + 0.5); };
+
+        // +S, +T
+        EXPECT_PIXEL_COLOR_EQ(screenX(0.25), screenY(0.25), GLColor::black);
+        EXPECT_PIXEL_COLOR_EQ(screenX(0.75), screenY(0.25), GLColor::red);
+        EXPECT_PIXEL_COLOR_EQ(screenX(1.50), screenY(0.25), GLColor::red);
+        EXPECT_PIXEL_COLOR_EQ(screenX(0.25), screenY(0.75), GLColor::green);
+        EXPECT_PIXEL_COLOR_EQ(screenX(0.25), screenY(1.50), GLColor::green);
+        EXPECT_PIXEL_COLOR_EQ(screenX(0.75), screenY(0.75), GLColor::blue);
+        EXPECT_PIXEL_COLOR_EQ(screenX(1.50), screenY(0.75), GLColor::blue);
+        EXPECT_PIXEL_COLOR_EQ(screenX(0.75), screenY(1.50), GLColor::blue);
+        EXPECT_PIXEL_COLOR_EQ(screenX(1.50), screenY(1.50), GLColor::blue);
+
+        // -S, +T
+        EXPECT_PIXEL_COLOR_EQ(screenX(-0.25), screenY(0.25), GLColor::black);
+        EXPECT_PIXEL_COLOR_EQ(screenX(-0.75), screenY(0.25), GLColor::red);
+        EXPECT_PIXEL_COLOR_EQ(screenX(-1.50), screenY(0.25), GLColor::red);
+        EXPECT_PIXEL_COLOR_EQ(screenX(-0.25), screenY(0.75), GLColor::green);
+        EXPECT_PIXEL_COLOR_EQ(screenX(-0.25), screenY(1.50), GLColor::green);
+        EXPECT_PIXEL_COLOR_EQ(screenX(-0.75), screenY(0.75), GLColor::blue);
+        EXPECT_PIXEL_COLOR_EQ(screenX(-1.50), screenY(0.75), GLColor::blue);
+        EXPECT_PIXEL_COLOR_EQ(screenX(-0.75), screenY(1.50), GLColor::blue);
+        EXPECT_PIXEL_COLOR_EQ(screenX(-1.50), screenY(1.50), GLColor::blue);
+
+        // +S, -T
+        EXPECT_PIXEL_COLOR_EQ(screenX(0.25), screenY(-0.25), GLColor::black);
+        EXPECT_PIXEL_COLOR_EQ(screenX(0.75), screenY(-0.25), GLColor::red);
+        EXPECT_PIXEL_COLOR_EQ(screenX(1.50), screenY(-0.25), GLColor::red);
+        EXPECT_PIXEL_COLOR_EQ(screenX(0.25), screenY(-0.75), GLColor::green);
+        EXPECT_PIXEL_COLOR_EQ(screenX(0.25), screenY(-1.50), GLColor::green);
+        EXPECT_PIXEL_COLOR_EQ(screenX(0.75), screenY(-0.75), GLColor::blue);
+        EXPECT_PIXEL_COLOR_EQ(screenX(1.50), screenY(-0.75), GLColor::blue);
+        EXPECT_PIXEL_COLOR_EQ(screenX(0.75), screenY(-1.50), GLColor::blue);
+        EXPECT_PIXEL_COLOR_EQ(screenX(1.50), screenY(-1.50), GLColor::blue);
+
+        // -S, -T
+        EXPECT_PIXEL_COLOR_EQ(screenX(-0.25), screenY(-0.25), GLColor::black);
+        EXPECT_PIXEL_COLOR_EQ(screenX(-0.75), screenY(-0.25), GLColor::red);
+        EXPECT_PIXEL_COLOR_EQ(screenX(-1.50), screenY(-0.25), GLColor::red);
+        EXPECT_PIXEL_COLOR_EQ(screenX(-0.25), screenY(-0.75), GLColor::green);
+        EXPECT_PIXEL_COLOR_EQ(screenX(-0.25), screenY(-1.50), GLColor::green);
+        EXPECT_PIXEL_COLOR_EQ(screenX(-0.75), screenY(-0.75), GLColor::blue);
+        EXPECT_PIXEL_COLOR_EQ(screenX(-1.50), screenY(-0.75), GLColor::blue);
+        EXPECT_PIXEL_COLOR_EQ(screenX(-0.75), screenY(-1.50), GLColor::blue);
+        EXPECT_PIXEL_COLOR_EQ(screenX(-1.50), screenY(-1.50), GLColor::blue);
+    }
+};
+
+// Test that the texture is correctly mirrored in negative directions
+// and clamped to edge pixels outside of the normalized range.
+TEST_P(TextureMirrorClampToEdgeTest, TexParameter)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_mirror_clamp_to_edge"));
+
+    setUpProgram();
+    uploadTexture(false, false, 0);
+    drawQuad(mProgram, "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    checkTextureSampling();
+}
+
+class TextureMirrorClampToEdgeTestES3 : public TextureMirrorClampToEdgeTest
+{
+  protected:
+    TextureMirrorClampToEdgeTestES3() : TextureMirrorClampToEdgeTest() {}
+};
+
+// Test that the texture is correctly mirrored in negative directions and clamped
+// to edge pixels outside of the normalized range with mode set via glSamplerParameter.
+TEST_P(TextureMirrorClampToEdgeTestES3, SamplerParameter)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_mirror_clamp_to_edge"));
+
+    GLSampler sampler;
+    glBindSampler(0, sampler);
+
+    setUpProgram();
+    uploadTexture(false, false, sampler);
+    drawQuad(mProgram, "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    checkTextureSampling();
+}
+
+class TextureMirrorClampToEdgeIntegerTestES3 : public TextureMirrorClampToEdgeTestES3
+{
+  protected:
+    TextureMirrorClampToEdgeIntegerTestES3() : TextureMirrorClampToEdgeTestES3() {}
+
+    const char *getVertexShaderSource() override
+    {
+        return R"(#version 300 es
+precision highp float;
+in vec4 position;
+out vec2 texcoord;
+
+void main()
+{
+    gl_Position = vec4(position.xy, 0.0, 1.0);
+    texcoord = position.xy * 2.0;
+})";
+    }
+
+    const char *getFragmentShaderSource() override
+    {
+        if (mIsSigned)
+        {
+            return R"(#version 300 es
+precision highp float;
+uniform highp isampler2D tex;
+in vec2 texcoord;
+out vec4 fragColor;
+void main() { fragColor = vec4(-texture(tex, texcoord)); })";
+        }
+        else
+        {
+            return R"(#version 300 es
+precision highp float;
+uniform highp usampler2D tex;
+in vec2 texcoord;
+out vec4 fragColor;
+void main() { fragColor = vec4(texture(tex, texcoord)); })";
+        }
+    }
+
+    bool mIsSigned = false;
+};
+
+// Test that the texture is correctly mirrored in negative directions and clamped
+// to edge pixels outside of the normalized range with mode set with glTexParameter.
+TEST_P(TextureMirrorClampToEdgeIntegerTestES3, TexParameterSigned)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_mirror_clamp_to_edge"));
+
+    mIsSigned = true;
+    setUpProgram();
+    uploadTexture(true, true, 0);
+    drawQuad(mProgram, "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    checkTextureSampling();
+}
+
+// Test that the texture is correctly mirrored in negative directions and clamped
+// to edge pixels outside of the normalized range with mode set with glSamplerParameter.
+TEST_P(TextureMirrorClampToEdgeIntegerTestES3, SamplerParameterSigned)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_mirror_clamp_to_edge"));
+
+    GLSampler sampler;
+    glBindSampler(0, sampler);
+
+    mIsSigned = true;
+    setUpProgram();
+    uploadTexture(true, true, sampler);
+    drawQuad(mProgram, "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    checkTextureSampling();
+}
+
+// Test that the unsigned integer texture is correctly mirrored in negative directions and clamped
+// to edge pixels outside of the normalized range with mode set with glTexParameter.
+TEST_P(TextureMirrorClampToEdgeIntegerTestES3, TexParameterUnsigned)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_mirror_clamp_to_edge"));
+
+    setUpProgram();
+    uploadTexture(true, false, 0);
+    drawQuad(mProgram, "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    checkTextureSampling();
+}
+
+// Test that the unsigned integer texture is correctly mirrored in negative directions and clamped
+// to edge pixels outside of the normalized range with mode set with glSamplerParameter.
+TEST_P(TextureMirrorClampToEdgeIntegerTestES3, SamplerParameterUnsigned)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_mirror_clamp_to_edge"));
+
+    GLSampler sampler;
+    glBindSampler(0, sampler);
+
+    setUpProgram();
+    uploadTexture(true, false, sampler);
+    drawQuad(mProgram, "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    checkTextureSampling();
+}
+// ~GL_EXT_texture_mirror_clamp_to_edge
+
 class TextureLimitsTest : public ANGLETest<>
 {
   protected:
@@ -11600,6 +11854,14 @@ ANGLE_INSTANTIATE_TEST_ES3(TextureBorderClampTestES3);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TextureBorderClampIntegerTestES3);
 ANGLE_INSTANTIATE_TEST_ES3(TextureBorderClampIntegerTestES3);
+
+ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(TextureMirrorClampToEdgeTest);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TextureMirrorClampToEdgeTestES3);
+ANGLE_INSTANTIATE_TEST_ES3(TextureMirrorClampToEdgeTestES3);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TextureMirrorClampToEdgeIntegerTestES3);
+ANGLE_INSTANTIATE_TEST_ES3(TextureMirrorClampToEdgeIntegerTestES3);
 
 ANGLE_INSTANTIATE_TEST_ES2(TextureLimitsTest);
 

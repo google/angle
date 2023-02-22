@@ -1509,6 +1509,15 @@ void GenerateCaps(const FunctionsGL *functions,
          functions->hasGLESExtension("GL_NV_texture_border_clamp"));
     extensions->textureBorderClampOES = extensions->textureBorderClampEXT;
 
+    // This functionality is supported on macOS but the extension
+    // strings are not listed there for historical reasons.
+    extensions->textureMirrorClampToEdgeEXT =
+        IsMac() || functions->isAtLeastGL(gl::Version(4, 4)) ||
+        functions->hasGLExtension("GL_ARB_texture_mirror_clamp_to_edge") ||
+        functions->hasGLExtension("GL_EXT_texture_mirror_clamp") ||
+        functions->hasGLExtension("GL_ATI_texture_mirror_once") ||
+        functions->hasGLESExtension("GL_EXT_texture_mirror_clamp_to_edge");
+
     extensions->multiDrawIndirectEXT = true;
     extensions->instancedArraysANGLE = functions->isAtLeastGL(gl::Version(3, 1)) ||
                                        (functions->hasGLExtension("GL_ARB_instanced_arrays") &&

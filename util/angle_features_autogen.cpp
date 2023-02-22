@@ -303,6 +303,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::SupportsRenderpass2, "supportsRenderpass2"},
     {Feature::SupportsRenderPassLoadStoreOpNone, "supportsRenderPassLoadStoreOpNone"},
     {Feature::SupportsRenderPassStoreOpNone, "supportsRenderPassStoreOpNone"},
+    {Feature::SupportsSamplerMirrorClampToEdge, "supportsSamplerMirrorClampToEdge"},
     {Feature::SupportsShaderFloat16, "supportsShaderFloat16"},
     {Feature::SupportsShaderFramebufferFetch, "supportsShaderFramebufferFetch"},
     {Feature::SupportsShaderFramebufferFetchEXT, "supportsShaderFramebufferFetchEXT"},

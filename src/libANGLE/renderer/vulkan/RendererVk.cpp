@@ -2844,6 +2844,7 @@ void RendererVk::enableDeviceExtensionsPromotedTo11(
 //
 // - VK_KHR_create_renderpass2
 // - VK_KHR_image_format_list
+// - VK_KHR_sampler_mirror_clamp_to_edge
 //
 void RendererVk::enableDeviceExtensionsPromotedTo12(
     const vk::ExtensionNameList &deviceExtensionNames)
@@ -2856,6 +2857,11 @@ void RendererVk::enableDeviceExtensionsPromotedTo12(
     if (mFeatures.supportsImageFormatList.enabled)
     {
         mEnabledDeviceExtensions.push_back(VK_KHR_IMAGE_FORMAT_LIST_EXTENSION_NAME);
+    }
+
+    if (mFeatures.supportsSamplerMirrorClampToEdge.enabled)
+    {
+        mEnabledDeviceExtensions.push_back(VK_KHR_SAMPLER_MIRROR_CLAMP_TO_EDGE_EXTENSION_NAME);
     }
 
     if (mFeatures.supportsDepthStencilResolve.enabled)
@@ -4116,6 +4122,10 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsImageFormatList,
         ExtensionFound(VK_KHR_IMAGE_FORMAT_LIST_EXTENSION_NAME, deviceExtensionNames));
+
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, supportsSamplerMirrorClampToEdge,
+        ExtensionFound(VK_KHR_SAMPLER_MIRROR_CLAMP_TO_EDGE_EXTENSION_NAME, deviceExtensionNames));
 
     // Emulation of GL_EXT_multisampled_render_to_texture is only really useful on tiling hardware,
     // but is exposed on any configuration deployed on Android, such as Samsung's AMD-based GPU.

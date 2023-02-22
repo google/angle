@@ -844,6 +844,13 @@ struct FeaturesVk : FeatureSetBase
                                        "VkDevice supports the VK_KHR_bind_memory2 extension",
                                        &members, "https://anglebug.com/4966"};
 
+    FeatureInfo supportsSamplerMirrorClampToEdge = {
+        "supportsSamplerMirrorClampToEdge",
+        FeatureCategory::VulkanFeatures,
+        "VkDevice supports the VK_KHR_sampler_mirror_clamp_to_edge extension",
+        &members,
+    };
+
     FeatureInfo preferSubmitOnAnySamplesPassedQueryEnd = {
         "preferSubmitOnAnySamplesPassedQueryEnd", FeatureCategory::VulkanWorkarounds,
         "Submit commands to driver when last GL_ANY_SAMPLES_PASSED query is made for performance "
