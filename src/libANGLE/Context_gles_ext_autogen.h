@@ -110,6 +110,7 @@
     /* GL_EXT_color_buffer_float */                                                                \
     /* GL_EXT_color_buffer_half_float */                                                           \
     /* GL_EXT_compressed_ETC1_RGB8_sub_texture */                                                  \
+    /* GL_EXT_conservative_depth */                                                                \
     /* GL_EXT_copy_image */                                                                        \
     /* GL_EXT_debug_label */                                                                       \
     void labelObject(GLenum type, GLuint object, GLsizei length, const GLchar *label);             \
@@ -117,6 +118,7 @@
     void insertEventMarker(GLsizei length, const GLchar *marker);                                  \
     void popGroupMarker();                                                                         \
     void pushGroupMarker(GLsizei length, const GLchar *marker);                                    \
+    /* GL_EXT_depth_clamp */                                                                       \
     /* GL_EXT_discard_framebuffer */                                                               \
     void discardFramebuffer(GLenum target, GLsizei numAttachments, const GLenum *attachments);     \
     /* GL_EXT_disjoint_timer_query */                                                              \
@@ -190,6 +192,7 @@
     /* GL_EXT_protected_textures */                                                                \
     /* GL_EXT_pvrtc_sRGB */                                                                        \
     /* GL_EXT_read_format_bgra */                                                                  \
+    /* GL_EXT_render_snorm */                                                                      \
     /* GL_EXT_robustness */                                                                        \
     /* GL_EXT_sRGB */                                                                              \
     /* GL_EXT_sRGB_write_control */                                                                \

@@ -148,6 +148,9 @@ struct Extensions
     // GL_OES_compressed_paletted_texture
     bool compressedPalettedTextureOES = false;
 
+    // GL_EXT_conservative_depth
+    bool conservativeDepthEXT = false;
+
     // GL_EXT_copy_image
     bool copyImageEXT = false;
 
@@ -171,6 +174,9 @@ struct Extensions
 
     // GL_NV_depth_buffer_float2
     bool depthBufferFloat2NV = false;
+
+    // GL_EXT_depth_clamp
+    bool depthClampEXT = false;
 
     // GL_ANGLE_depth_texture
     bool depthTextureANGLE = false;
@@ -357,6 +363,9 @@ struct Extensions
 
     // GL_QCOM_render_shared_exponent
     bool renderSharedExponentQCOM = false;
+
+    // GL_EXT_render_snorm
+    bool renderSnormEXT = false;
 
     // GL_OES_rgb8_rgba8
     bool rgb8Rgba8OES = false;

@@ -1111,6 +1111,8 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                     return "GL_CURRENT_VERTEX_ATTRIB";
                 case 0x8645:
                     return "GL_VERTEX_ATTRIB_ARRAY_POINTER";
+                case 0x864F:
+                    return "GL_DEPTH_CLAMP_EXT";
                 case 0x86A1:
                     return "GL_TEXTURE_COMPRESSED";
                 case 0x86A2:

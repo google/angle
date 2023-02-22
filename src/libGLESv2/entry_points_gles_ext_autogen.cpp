@@ -4991,6 +4991,8 @@ void GL_APIENTRY GL_ClipControlEXT(GLenum origin, GLenum depth)
 
 // GL_EXT_color_buffer_half_float
 
+// GL_EXT_conservative_depth
+
 // GL_EXT_copy_image
 void GL_APIENTRY GL_CopyImageSubDataEXT(GLuint srcName,
                                         GLenum srcTarget,
@@ -5185,6 +5187,8 @@ void GL_APIENTRY GL_PushGroupMarkerEXT(GLsizei length, const GLchar *marker)
         GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
+
+// GL_EXT_depth_clamp
 
 // GL_EXT_discard_framebuffer
 void GL_APIENTRY GL_DiscardFramebufferEXT(GLenum target,
@@ -6892,6 +6896,8 @@ void GL_APIENTRY GL_PrimitiveBoundingBoxEXT(GLfloat minX,
 // GL_EXT_pvrtc_sRGB
 
 // GL_EXT_read_format_bgra
+
+// GL_EXT_render_snorm
 
 // GL_EXT_robustness
 GLenum GL_APIENTRY GL_GetGraphicsResetStatusEXT()

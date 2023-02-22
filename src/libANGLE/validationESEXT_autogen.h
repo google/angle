@@ -1101,6 +1101,8 @@ bool ValidateClipControlEXT(const Context *context,
 
 // GL_EXT_color_buffer_half_float
 
+// GL_EXT_conservative_depth
+
 // GL_EXT_copy_image
 bool ValidateCopyImageSubDataEXT(const Context *context,
                                  angle::EntryPoint entryPoint,
@@ -1145,6 +1147,8 @@ bool ValidatePushGroupMarkerEXT(const Context *context,
                                 angle::EntryPoint entryPoint,
                                 GLsizei length,
                                 const GLchar *marker);
+
+// GL_EXT_depth_clamp
 
 // GL_EXT_discard_framebuffer
 bool ValidateDiscardFramebufferEXT(const Context *context,
@@ -1492,6 +1496,8 @@ bool ValidatePrimitiveBoundingBoxEXT(const Context *context,
 // GL_EXT_pvrtc_sRGB
 
 // GL_EXT_read_format_bgra
+
+// GL_EXT_render_snorm
 
 // GL_EXT_robustness
 bool ValidateGetGraphicsResetStatusEXT(const Context *context, angle::EntryPoint entryPoint);

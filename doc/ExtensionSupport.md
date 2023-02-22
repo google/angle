@@ -46,6 +46,7 @@ using data from registry_xml.py and gl.xml.
 | [GL_OES_compressed_ETC2_sRGB8_alpha8_texture](https://khronos.org/registry/OpenGL/extensions/OES/OES_compressed_ETC2_sRGB8_alpha8_texture.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
 | [GL_OES_compressed_ETC2_sRGB8_texture](https://khronos.org/registry/OpenGL/extensions/OES/OES_compressed_ETC2_sRGB8_texture.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
 | [GL_OES_compressed_paletted_texture](https://khronos.org/registry/OpenGL/extensions/OES/OES_compressed_paletted_texture.txt) |  |  |  |  |  |  |  |
+| [GL_EXT_conservative_depth](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_conservative_depth.txt) |  |  |  |  |  |  |  |
 | [GL_EXT_copy_image](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_copy_image.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
 | [GL_OES_copy_image](https://khronos.org/registry/OpenGL/extensions/OES/OES_copy_image.txt) |  |  |  |  |  |  |  |
 | [GL_KHR_debug](https://khronos.org/registry/OpenGL/extensions/KHR/KHR_debug.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
@@ -54,6 +55,7 @@ using data from registry_xml.py and gl.xml.
 | [GL_OES_depth24](https://khronos.org/registry/OpenGL/extensions/OES/OES_depth24.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
 | [GL_OES_depth32](https://khronos.org/registry/OpenGL/extensions/OES/OES_depth32.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
 | [GL_NV_depth_buffer_float2](https://khronos.org/registry/OpenGL/extensions/NV/NV_depth_buffer_float2.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
+| [GL_EXT_depth_clamp](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_depth_clamp.txt) |  |  |  |  |  |  |  |
 | [GL_ANGLE_depth_texture](https://khronos.org/registry/OpenGL/extensions/ANGLE/ANGLE_depth_texture.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
 | [GL_OES_depth_texture](https://khronos.org/registry/OpenGL/extensions/OES/OES_depth_texture.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
 | [GL_OES_depth_texture_cube_map](https://khronos.org/registry/OpenGL/extensions/OES/OES_depth_texture_cube_map.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
@@ -116,6 +118,7 @@ using data from registry_xml.py and gl.xml.
 | [GL_EXT_read_format_bgra](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_read_format_bgra.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
 | [GL_NV_read_stencil](https://khronos.org/registry/OpenGL/extensions/NV/NV_read_stencil.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
 | [GL_QCOM_render_shared_exponent](https://khronos.org/registry/OpenGL/extensions/QCOM/QCOM_render_shared_exponent.txt) |  |  |  |  |  |  |  |
+| [GL_EXT_render_snorm](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_render_snorm.txt) |  |  |  |  |  |  |  |
 | [GL_OES_rgb8_rgba8](https://khronos.org/registry/OpenGL/extensions/OES/OES_rgb8_rgba8.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
 | [GL_KHR_robust_buffer_access_behavior](https://khronos.org/registry/OpenGL/extensions/KHR/KHR_robust_buffer_access_behavior.txt) |  |  |  |  |  |  |  |
 | [GL_EXT_robustness](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_robustness.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |

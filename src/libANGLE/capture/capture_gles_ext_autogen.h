@@ -1106,6 +1106,8 @@ angle::CallCapture CaptureClipControlEXT(const State &glState,
 
 // GL_EXT_color_buffer_half_float
 
+// GL_EXT_conservative_depth
+
 // GL_EXT_copy_image
 angle::CallCapture CaptureCopyImageSubDataEXT(const State &glState,
                                               bool isCallValid,
@@ -1150,6 +1152,8 @@ angle::CallCapture CapturePushGroupMarkerEXT(const State &glState,
                                              bool isCallValid,
                                              GLsizei length,
                                              const GLchar *marker);
+
+// GL_EXT_depth_clamp
 
 // GL_EXT_discard_framebuffer
 angle::CallCapture CaptureDiscardFramebufferEXT(const State &glState,
@@ -1503,6 +1507,8 @@ angle::CallCapture CapturePrimitiveBoundingBoxEXT(const State &glState,
 // GL_EXT_pvrtc_sRGB
 
 // GL_EXT_read_format_bgra
+
+// GL_EXT_render_snorm
 
 // GL_EXT_robustness
 angle::CallCapture CaptureGetGraphicsResetStatusEXT(const State &glState,

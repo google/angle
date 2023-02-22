@@ -62,6 +62,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_OES_compressed_ETC2_sRGB8_alpha8_texture"] = enableableExtension(&Extensions::compressedETC2SRGB8Alpha8TextureOES);
         map["GL_OES_compressed_ETC2_sRGB8_texture"] = enableableExtension(&Extensions::compressedETC2SRGB8TextureOES);
         map["GL_OES_compressed_paletted_texture"] = enableableExtension(&Extensions::compressedPalettedTextureOES);
+        map["GL_EXT_conservative_depth"] = enableableExtension(&Extensions::conservativeDepthEXT);
         map["GL_EXT_copy_image"] = enableableExtension(&Extensions::copyImageEXT);
         map["GL_OES_copy_image"] = enableableExtension(&Extensions::copyImageOES);
         map["GL_KHR_debug"] = esOnlyExtension(&Extensions::debugKHR);
@@ -70,6 +71,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_OES_depth24"] = esOnlyExtension(&Extensions::depth24OES);
         map["GL_OES_depth32"] = esOnlyExtension(&Extensions::depth32OES);
         map["GL_NV_depth_buffer_float2"] = enableableExtension(&Extensions::depthBufferFloat2NV);
+        map["GL_EXT_depth_clamp"] = enableableExtension(&Extensions::depthClampEXT);
         map["GL_ANGLE_depth_texture"] = esOnlyExtension(&Extensions::depthTextureANGLE);
         map["GL_OES_depth_texture"] = esOnlyExtension(&Extensions::depthTextureOES);
         map["GL_OES_depth_texture_cube_map"] = enableableExtension(&Extensions::depthTextureCubeMapOES);
@@ -132,6 +134,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_EXT_read_format_bgra"] = enableableExtension(&Extensions::readFormatBgraEXT);
         map["GL_NV_read_stencil"] = enableableExtension(&Extensions::readStencilNV);
         map["GL_QCOM_render_shared_exponent"] = enableableExtension(&Extensions::renderSharedExponentQCOM);
+        map["GL_EXT_render_snorm"] = enableableExtension(&Extensions::renderSnormEXT);
         map["GL_OES_rgb8_rgba8"] = enableableExtension(&Extensions::rgb8Rgba8OES);
         map["GL_KHR_robust_buffer_access_behavior"] = esOnlyExtension(&Extensions::robustBufferAccessBehaviorKHR);
         map["GL_EXT_robustness"] = esOnlyExtension(&Extensions::robustnessEXT);
