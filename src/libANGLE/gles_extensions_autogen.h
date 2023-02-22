@@ -355,6 +355,9 @@ struct Extensions
     // GL_NV_read_stencil
     bool readStencilNV = false;
 
+    // GL_QCOM_render_shared_exponent
+    bool renderSharedExponentQCOM = false;
+
     // GL_OES_rgb8_rgba8
     bool rgb8Rgba8OES = false;
 

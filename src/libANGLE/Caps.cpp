@@ -838,6 +838,16 @@ static bool DetermineStencilIndex8Support(const TextureCapsMap &textureCaps)
     return GetFormatSupport(textureCaps, requiredFormats, true, false, true, false, false);
 }
 
+// Checks for GL_QCOM_render_shared_exponent support
+static bool DetermineRenderSharedExponentSupport(const TextureCapsMap &textureCaps)
+{
+    constexpr GLenum requiredFormats[] = {
+        GL_RGB9_E5,
+    };
+
+    return GetFormatSupport(textureCaps, requiredFormats, false, false, true, true, true);
+}
+
 void Extensions::setTextureExtensionSupport(const TextureCapsMap &textureCaps)
 {
     // TODO(ynovikov): rgb8Rgba8OES, colorBufferHalfFloatEXT, textureHalfFloatOES,
@@ -896,6 +906,7 @@ void Extensions::setTextureExtensionSupport(const TextureCapsMap &textureCaps)
     textureCompressionPvrtcIMG          = DeterminePVRTCTextureSupport(textureCaps);
     pvrtcSRGBEXT                        = DeterminePVRTCsRGBTextureSupport(textureCaps);
     textureStencil8OES                  = DetermineStencilIndex8Support(textureCaps);
+    renderSharedExponentQCOM            = DetermineRenderSharedExponentSupport(textureCaps);
 }
 
 TypePrecision::TypePrecision() = default;

@@ -12557,6 +12557,8 @@ void GL_APIENTRY GL_FramebufferTextureMultiviewOVR(GLenum target,
 
 // GL_OVR_multiview2
 
+// GL_QCOM_render_shared_exponent
+
 // GL_QCOM_shading_rate
 void GL_APIENTRY GL_ShadingRateQCOM(GLenum rate)
 {

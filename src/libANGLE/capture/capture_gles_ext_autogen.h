@@ -2702,6 +2702,8 @@ angle::CallCapture CaptureFramebufferTextureMultiviewOVR(const State &glState,
 
 // GL_OVR_multiview2
 
+// GL_QCOM_render_shared_exponent
+
 // GL_QCOM_shading_rate
 angle::CallCapture CaptureShadingRateQCOM(const State &glState, bool isCallValid, GLenum rate);
 

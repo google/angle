@@ -2676,6 +2676,8 @@ bool ValidateFramebufferTextureMultiviewOVR(const Context *context,
 
 // GL_OVR_multiview2
 
+// GL_QCOM_render_shared_exponent
+
 // GL_QCOM_shading_rate
 bool ValidateShadingRateQCOM(const Context *context, angle::EntryPoint entryPoint, GLenum rate);
 }  // namespace gl
