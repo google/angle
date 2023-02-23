@@ -5169,6 +5169,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 break;
             case gl::State::DIRTY_BIT_DEPTH_FUNC:
                 updateDepthFunc(glState);
+                onDepthStencilAccessChange();
                 break;
             case gl::State::DIRTY_BIT_DEPTH_MASK:
                 updateDepthWriteEnabled(glState);
