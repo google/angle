@@ -39,8 +39,10 @@ declare_args() {
 
   # Don't build extra (test, samples etc) for Windows UWP. We don't have
   # infrastructure (e.g. windowing helper functions) in place to run them.
+  # Also don't build them with MSVC, because tests and unused dependencies
+  # often have problems building with it, e.g. for C++20.
   angle_build_all = !build_with_chromium && !angle_is_winuwp &&
-                    angle_has_build && angle_build_tests
+                    !angle_is_msvc && angle_has_build && angle_build_tests
 
   # Enable generating current commit information using git
   angle_enable_commit_id = true
