@@ -248,25 +248,45 @@ def upload_test_result_to_skia_gold(args, gold_session_manager, gold_session, go
     if not os.path.isfile(png_file_name):
         raise Exception('Screenshot not found: ' + png_file_name)
 
-    # These arguments cause Gold to use the fuzzy inexact matching algorithm.
-    # It is set to allow up to 20k pixels to differ by 1 on all channels,
-    # which is meant to help reduce triage overhead caused by new images from
-    # rounding differences.
-    #
-    # The max number of pixels is fairly arbitrary, but the diff threshold is
-    # intentional since we don't want to let in any changes that can't be
-    # attributed to rounding errors.
-    #
-    # An image that passes due to this logic is auto-approved as a new good
-    # image.
-    inexact_matching_args = [
-        '--add-test-optional-key',
-        'image_matching_algorithm:fuzzy',
-        '--add-test-optional-key',
-        'fuzzy_max_different_pixels:20000',
-        '--add-test-optional-key',
-        'fuzzy_pixel_per_channel_delta_threshold:1',
-    ]
+    if args.use_permissive_pixel_comparison:
+        # These arguments cause Gold to use the sample area inexact matching
+        # algorithm. It is set to allow any of up to 3 pixels in each 4x4 group
+        # of pixels to differ by any amount. Pixels that differ by a max of 1
+        # on all channels (i.e. have differences that can be attributed to
+        # rounding errors) do not count towards this limit.
+        #
+        # An image that passes due to this logic is auto-approved as a new good
+        # image.
+        inexact_matching_args = [
+            '--add-test-optional-key',
+            'image_matching_algorithm:sample_area',
+            '--add-test-optional-key',
+            'sample_area_width:4',
+            '--add-test-optional-key',
+            'sample_area_max_different_pixels_per_area:3',
+            '--add-test-optional-key',
+            'sample_area_channel_delta_threshold:1',
+        ]
+    else:
+        # These arguments cause Gold to use the fuzzy inexact matching
+        # algorithm. It is set to allow up to 20k pixels to differ by 1 on all
+        # channels, which is meant to help reduce triage overhead caused by new
+        # images from rounding differences.
+        #
+        # The max number of pixels is fairly arbitrary, but the diff threshold
+        # is intentional since we don't want to let in any changes that can't be
+        # attributed to rounding errors.
+        #
+        # An image that passes due to this logic is auto-approved as a new good
+        # image.
+        inexact_matching_args = [
+            '--add-test-optional-key',
+            'image_matching_algorithm:fuzzy',
+            '--add-test-optional-key',
+            'fuzzy_max_different_pixels:20000',
+            '--add-test-optional-key',
+            'fuzzy_pixel_per_channel_delta_threshold:1',
+        ]
 
     status, error = gold_session.RunComparison(
         name=image_name,
@@ -443,6 +463,14 @@ def main():
         '--skia-gold-instance',
         help='Skia Gold instance. Default is "%s".' % DEFAULT_GOLD_INSTANCE,
         default=DEFAULT_GOLD_INSTANCE)
+    parser.add_argument(
+        '--use-permissive-pixel-comparison',
+        type=int,
+        help='Use a more permissive pixel comparison algorithm than the '
+        'default "allow rounding errors" one. This is intended for use on CLs '
+        'that are likely to cause differences in many tests, e.g. SwiftShader '
+        'or driver changes. Can be enabled on bots by adding a '
+        '"Use-Permissive-Angle-Pixel-Comparison: True" footer.')
 
     add_skia_gold_args(parser)
 

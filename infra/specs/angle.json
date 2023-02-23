@@ -315,7 +315,8 @@
         "precommit_args": [
           "--gerrit-issue=${patch_issue}",
           "--gerrit-patchset=${patch_set}",
-          "--buildbucket-id=${buildbucket_build_id}"
+          "--buildbucket-id=${buildbucket_build_id}",
+          "--use-permissive-pixel-comparison=${use_permissive_angle_pixel_comparison}"
         ],
         "swarming": {
           "can_use_on_swarming_builders": true,
@@ -788,7 +789,8 @@
         "precommit_args": [
           "--gerrit-issue=${patch_issue}",
           "--gerrit-patchset=${patch_set}",
-          "--buildbucket-id=${buildbucket_build_id}"
+          "--buildbucket-id=${buildbucket_build_id}",
+          "--use-permissive-pixel-comparison=${use_permissive_angle_pixel_comparison}"
         ],
         "swarming": {
           "can_use_on_swarming_builders": true,
@@ -1285,7 +1287,8 @@
         "precommit_args": [
           "--gerrit-issue=${patch_issue}",
           "--gerrit-patchset=${patch_set}",
-          "--buildbucket-id=${buildbucket_build_id}"
+          "--buildbucket-id=${buildbucket_build_id}",
+          "--use-permissive-pixel-comparison=${use_permissive_angle_pixel_comparison}"
         ],
         "swarming": {
           "can_use_on_swarming_builders": true,
@@ -1583,7 +1586,8 @@
         "precommit_args": [
           "--gerrit-issue=${patch_issue}",
           "--gerrit-patchset=${patch_set}",
-          "--buildbucket-id=${buildbucket_build_id}"
+          "--buildbucket-id=${buildbucket_build_id}",
+          "--use-permissive-pixel-comparison=${use_permissive_angle_pixel_comparison}"
         ],
         "swarming": {
           "can_use_on_swarming_builders": true,
@@ -2393,7 +2397,8 @@
         "precommit_args": [
           "--gerrit-issue=${patch_issue}",
           "--gerrit-patchset=${patch_set}",
-          "--buildbucket-id=${buildbucket_build_id}"
+          "--buildbucket-id=${buildbucket_build_id}",
+          "--use-permissive-pixel-comparison=${use_permissive_angle_pixel_comparison}"
         ],
         "swarming": {
           "can_use_on_swarming_builders": true,
@@ -3054,7 +3059,8 @@
         "precommit_args": [
           "--gerrit-issue=${patch_issue}",
           "--gerrit-patchset=${patch_set}",
-          "--buildbucket-id=${buildbucket_build_id}"
+          "--buildbucket-id=${buildbucket_build_id}",
+          "--use-permissive-pixel-comparison=${use_permissive_angle_pixel_comparison}"
         ],
         "swarming": {
           "can_use_on_swarming_builders": true,
@@ -4402,7 +4408,8 @@
         "precommit_args": [
           "--gerrit-issue=${patch_issue}",
           "--gerrit-patchset=${patch_set}",
-          "--buildbucket-id=${buildbucket_build_id}"
+          "--buildbucket-id=${buildbucket_build_id}",
+          "--use-permissive-pixel-comparison=${use_permissive_angle_pixel_comparison}"
         ],
         "swarming": {
           "can_use_on_swarming_builders": true,
@@ -5286,7 +5293,8 @@
         "precommit_args": [
           "--gerrit-issue=${patch_issue}",
           "--gerrit-patchset=${patch_set}",
-          "--buildbucket-id=${buildbucket_build_id}"
+          "--buildbucket-id=${buildbucket_build_id}",
+          "--use-permissive-pixel-comparison=${use_permissive_angle_pixel_comparison}"
         ],
         "swarming": {
           "can_use_on_swarming_builders": true,
@@ -5945,7 +5953,8 @@
         "precommit_args": [
           "--gerrit-issue=${patch_issue}",
           "--gerrit-patchset=${patch_set}",
-          "--buildbucket-id=${buildbucket_build_id}"
+          "--buildbucket-id=${buildbucket_build_id}",
+          "--use-permissive-pixel-comparison=${use_permissive_angle_pixel_comparison}"
         ],
         "swarming": {
           "can_use_on_swarming_builders": true,
