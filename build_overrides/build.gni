@@ -56,6 +56,9 @@ if (is_win) {
   # in sync on Windows. This is a bit of a hack but "OK" since the performance
   # concerns for standalone ANGLE builds are not relevant on Windows.
   enable_safe_libcxx = true
+} else if (is_linux) {
+  # https://anglebug.com/8040: turning off safe_libcxx breaks TSAN
+  enable_safe_libcxx = true
 } else {
   enable_safe_libcxx = false
 }
