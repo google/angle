@@ -306,6 +306,12 @@ class RendererVk : angle::NonCopyable
                                     vk::SubmitPolicy submitPolicy,
                                     QueueSerial *queueSerialOut);
 
+    angle::Result queueSubmitWaitSemaphore(vk::Context *context,
+                                           egl::ContextPriority priority,
+                                           const vk::Semaphore *waitSemaphore,
+                                           VkPipelineStageFlags waitSemaphoreStageMasks,
+                                           QueueSerial submitQueueSerial);
+
     template <typename... ArgsT>
     void collectGarbage(const vk::ResourceUse &use, ArgsT... garbageIn)
     {
@@ -484,6 +490,12 @@ class RendererVk : angle::NonCopyable
                                  egl::ContextPriority contextPriority,
                                  const vk::Semaphore *signalSemaphore,
                                  const QueueSerial &submitSerialOut);
+
+    angle::Result submitPriorityDependency(vk::Context *context,
+                                           vk::ProtectionTypes protectionTypes,
+                                           egl::ContextPriority srcContextPriority,
+                                           egl::ContextPriority dstContextPriority,
+                                           SerialIndex index);
 
     void handleDeviceLost();
     angle::Result finishResourceUse(vk::Context *context, const vk::ResourceUse &use);

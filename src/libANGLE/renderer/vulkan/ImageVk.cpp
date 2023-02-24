@@ -57,6 +57,12 @@ void ImageVk::onDestroy(const egl::Display *display)
 
 egl::Error ImageVk::initialize(const egl::Display *display)
 {
+    if (mContext != nullptr)
+    {
+        ContextVk *contextVk = vk::GetImpl(mContext);
+        ANGLE_TRY(ResultToEGL(contextVk->getShareGroup()->lockDefaultContextsPriority(contextVk)));
+    }
+
     if (egl::IsTextureTarget(mState.target))
     {
         ASSERT(mContext != nullptr);

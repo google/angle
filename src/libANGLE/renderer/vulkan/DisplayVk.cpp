@@ -622,13 +622,21 @@ void DisplayVk::populateFeatureList(angle::FeatureList *features)
     mRenderer->getFeatures().populateFeatureList(features);
 }
 
-ShareGroupVk::ShareGroupVk() : mLastMonolithicPipelineJobTime(0), mOrphanNonEmptyBufferBlock(false)
+ShareGroupVk::ShareGroupVk()
+    : mContextsPriority(egl::ContextPriority::InvalidEnum),
+      mIsContextsPriorityLocked(false),
+      mLastMonolithicPipelineJobTime(0),
+      mOrphanNonEmptyBufferBlock(false)
 {
     mLastPruneTime = angle::GetCurrentSystemTime();
 }
 
 void ShareGroupVk::addContext(ContextVk *contextVk)
 {
+    // All mContexts must have mContextsPriority set
+    ASSERT(mContextsPriority != egl::ContextPriority::InvalidEnum);
+    ASSERT(contextVk->getPriority() == mContextsPriority);
+
     mContexts.insert(contextVk);
 
     if (contextVk->getState().hasDisplayTextureShareGroup())
@@ -640,6 +648,85 @@ void ShareGroupVk::addContext(ContextVk *contextVk)
 void ShareGroupVk::removeContext(ContextVk *contextVk)
 {
     mContexts.erase(contextVk);
+}
+
+angle::Result ShareGroupVk::unifyContextsPriority(ContextVk *newContextVk)
+{
+    const egl::ContextPriority newContextPriority = newContextVk->getPriority();
+    ASSERT(newContextPriority != egl::ContextPriority::InvalidEnum);
+
+    if (mContextsPriority == egl::ContextPriority::InvalidEnum)
+    {
+        ASSERT(!mIsContextsPriorityLocked);
+        ASSERT(mContexts.empty());
+        mContextsPriority = newContextPriority;
+        return angle::Result::Continue;
+    }
+
+    static_assert(egl::ContextPriority::Low < egl::ContextPriority::Medium);
+    static_assert(egl::ContextPriority::Medium < egl::ContextPriority::High);
+    if (mContextsPriority >= newContextPriority || mIsContextsPriorityLocked)
+    {
+        newContextVk->setPriority(mContextsPriority);
+        return angle::Result::Continue;
+    }
+
+    ANGLE_TRY(updateContextsPriority(newContextVk, newContextPriority));
+
+    return angle::Result::Continue;
+}
+
+angle::Result ShareGroupVk::lockDefaultContextsPriority(ContextVk *contextVk)
+{
+    constexpr egl::ContextPriority kDefaultPriority = egl::ContextPriority::Medium;
+    if (!mIsContextsPriorityLocked)
+    {
+        if (mContextsPriority != kDefaultPriority)
+        {
+            ANGLE_TRY(updateContextsPriority(contextVk, kDefaultPriority));
+        }
+        mIsContextsPriorityLocked = true;
+    }
+    ASSERT(mContextsPriority == kDefaultPriority);
+    return angle::Result::Continue;
+}
+
+angle::Result ShareGroupVk::updateContextsPriority(ContextVk *contextVk,
+                                                   egl::ContextPriority newPriority)
+{
+    ASSERT(!mIsContextsPriorityLocked);
+    ASSERT(newPriority != egl::ContextPriority::InvalidEnum);
+    ASSERT(newPriority != mContextsPriority);
+    if (mContextsPriority == egl::ContextPriority::InvalidEnum)
+    {
+        ASSERT(mContexts.empty());
+        mContextsPriority = newPriority;
+        return angle::Result::Continue;
+    }
+
+    vk::ProtectionTypes protectionTypes;
+    protectionTypes.set(contextVk->getProtectionType());
+    for (ContextVk *ctx : mContexts)
+    {
+        protectionTypes.set(ctx->getProtectionType());
+    }
+
+    {
+        vk::ScopedQueueSerialIndex index;
+        RendererVk *renderer = contextVk->getRenderer();
+        ANGLE_TRY(renderer->allocateScopedQueueSerialIndex(&index));
+        ANGLE_TRY(renderer->submitPriorityDependency(contextVk, protectionTypes, mContextsPriority,
+                                                     newPriority, index.get()));
+    }
+
+    for (ContextVk *ctx : mContexts)
+    {
+        ASSERT(ctx->getPriority() == mContextsPriority);
+        ctx->setPriority(newPriority);
+    }
+    mContextsPriority = newPriority;
+
+    return angle::Result::Continue;
 }
 
 void ShareGroupVk::onDestroy(const egl::Display *display)

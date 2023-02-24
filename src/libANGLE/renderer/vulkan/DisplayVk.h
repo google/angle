@@ -103,6 +103,11 @@ class ShareGroupVk : public ShareGroupImpl
     void addContext(ContextVk *contextVk);
     void removeContext(ContextVk *contextVk);
 
+    // Temporary workaround until VkSemaphore(s) will be used between different priorities.
+    angle::Result unifyContextsPriority(ContextVk *newContextVk);
+    // Temporary workaround until VkSemaphore(s) will be used between different priorities.
+    angle::Result lockDefaultContextsPriority(ContextVk *contextVk);
+
     UpdateDescriptorSetsBuilder *getUpdateDescriptorSetsBuilder()
     {
         return &mUpdateDescriptorSetsBuilder;
@@ -116,6 +121,8 @@ class ShareGroupVk : public ShareGroupImpl
     void waitForCurrentMonolithicPipelineCreationTask();
 
   private:
+    angle::Result updateContextsPriority(ContextVk *contextVk, egl::ContextPriority newPriority);
+
     // VkFramebuffer caches
     FramebufferCache mFramebufferCache;
 
@@ -132,6 +139,10 @@ class ShareGroupVk : public ShareGroupImpl
 
     // The list of contexts within the share group
     ContextVkSet mContexts;
+
+    // Priority of all Contexts in the mContexts
+    egl::ContextPriority mContextsPriority;
+    bool mIsContextsPriorityLocked;
 
     // Storage for vkUpdateDescriptorSets
     UpdateDescriptorSetsBuilder mUpdateDescriptorSetsBuilder;
