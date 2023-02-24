@@ -121,19 +121,12 @@ void ANGLEProcessPerfTestArgs(int *argc, char **argv)
         }
     }
 
-    if (gRunToKeyFrame)
-    {
-        ASSERT(gWarmupTrials == kDefaultWarmupTrials && gTestTrials == kDefaultTestTrials);
-        gWarmupTrials = 0;
-        gTestTrials   = 1;
-    }
-
     if (gCalibration)
     {
         gTestTrials = 0;
     }
 
-    if (gMaxStepsPerformed > 0)
+    if (gRunToKeyFrame || gMaxStepsPerformed > 0)
     {
         // Ensure defaults were provided for params we're about to set
         ASSERT(gWarmupTrials == kDefaultWarmupTrials && gTestTrials == kDefaultTestTrials &&

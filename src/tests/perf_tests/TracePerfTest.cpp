@@ -232,6 +232,7 @@ class TracePerfTest : public ANGLERenderTest
     uint32_t mOffscreenFrameCount                                       = 0;
     uint32_t mTotalFrameCount                                           = 0;
     bool mScreenshotSaved                                               = false;
+    uint32_t mScreenshotFrame                                           = gScreenshotFrame;
     std::unique_ptr<TraceReplayInterface> mTraceReplay;
 };
 
@@ -884,13 +885,13 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
         // Only use keyFrame if the user didn't specify a value.
         if (gScreenshotFrame == kDefaultScreenshotFrame)
         {
-            gScreenshotFrame = mParams->traceInfo.keyFrames[0];
-            INFO() << "Trace contains keyframe, using frame " << gScreenshotFrame
+            mScreenshotFrame = mParams->traceInfo.keyFrames[0];
+            INFO() << "Trace contains keyframe, using frame " << mScreenshotFrame
                    << " for screenshot";
         }
         else
         {
-            WARN() << "Ignoring keyframe, user requested frame " << gScreenshotFrame
+            WARN() << "Ignoring keyframe, user requested frame " << mScreenshotFrame
                    << " for screenshot";
         }
     }
@@ -2338,7 +2339,7 @@ void TracePerfTest::swap()
 {
     // Capture a screenshot if enabled.
     if (gScreenshotDir != nullptr && gSaveScreenshots && !mScreenshotSaved &&
-        static_cast<uint32_t>(gScreenshotFrame) == mCurrentIteration)
+        mScreenshotFrame == mCurrentIteration)
     {
         std::stringstream screenshotNameStr;
         screenshotNameStr << gScreenshotDir << GetPathSeparator() << "angle" << mBackend << "_"
