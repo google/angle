@@ -1571,6 +1571,14 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
         addExtensionPrerequisite("GL_EXT_texture_storage");
     }
 
+    if (traceNameIs("into_the_dead_2"))
+    {
+        if (isNVIDIAWinANGLE)
+        {
+            skipTest("http://anglebug.com/8042 Non-deterministic trace");
+        }
+    }
+
     // glDebugMessageControlKHR and glDebugMessageCallbackKHR crash on ARM GLES1.
     if (IsARM() && mParams->traceInfo.contextClientMajorVersion == 1)
     {
