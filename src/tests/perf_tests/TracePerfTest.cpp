@@ -2346,9 +2346,9 @@ void TracePerfTest::swap()
                           << mStory;
 
         // Add a marker to the name for any screenshot that isn't start frame
-        if (mStartFrame != static_cast<uint32_t>(gScreenshotFrame))
+        if (mStartFrame != mScreenshotFrame)
         {
-            screenshotNameStr << "_frame" << gScreenshotFrame;
+            screenshotNameStr << "_frame" << mScreenshotFrame;
         }
 
         screenshotNameStr << ".png";
