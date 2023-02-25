@@ -230,6 +230,10 @@ config("internal_config") {
   if (angle_build_mesa) {
     defines += [ "ANGLE_HAS_MESA" ]
   }
+
+  if (angle_standalone || build_with_chromium) {
+    defines += [ "ANGLE_OUTSIDE_WEBKIT" ]
+  }
 }
 
 config("constructor_and_destructor_warnings") {
