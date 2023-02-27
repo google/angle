@@ -1156,9 +1156,8 @@ angle::Result CommandQueue::finishResourceUse(Context *context,
             }
         }
         finishedCount = mFinishedCommandBatches.size();
-        ASSERT(allInFlightCommandsAreAfterSerials(use.getSerials()));
-        ASSERT(hasResourceUseFinished(use));
     }
+    ASSERT(hasResourceUseFinished(use));
 
     if (finishedCount > 0)
     {
@@ -1619,20 +1618,6 @@ angle::Result CommandQueue::retireFinishedCommandsLocked(Context *context)
     }
 
     return angle::Result::Continue;
-}
-
-bool CommandQueue::allInFlightCommandsAreAfterSerials(const Serials &serials)
-{
-    for (const CommandBatch &batch : mInFlightCommands)
-    {
-        if (batch.queueSerial.getIndex() < serials.size() &&
-            serials[batch.queueSerial.getIndex()] != kZeroSerial &&
-            batch.queueSerial.getSerial() <= serials[batch.queueSerial.getIndex()])
-        {
-            return false;
-        }
-    }
-    return true;
 }
 
 angle::Result CommandQueue::ensurePrimaryCommandBufferValid(Context *context,

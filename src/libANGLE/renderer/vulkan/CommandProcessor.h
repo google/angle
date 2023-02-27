@@ -450,9 +450,6 @@ class CommandQueue : angle::NonCopyable
 
     angle::Result ensurePrimaryCommandBufferValid(Context *context, ProtectionType protectionType);
 
-    // For validation only. Should only be called with ASSERT macro.
-    bool allInFlightCommandsAreAfterSerials(const Serials &serials);
-
     struct CommandsState
     {
         std::vector<VkSemaphore> waitSemaphores;
