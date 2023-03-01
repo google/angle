@@ -3971,6 +3971,7 @@
       }
     ]
   },
+  "mac-exp-amd": {},
   "mac-exp-intel": {},
   "mac-intel": {
     "gtest_tests": [
