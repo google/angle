@@ -666,6 +666,8 @@ ANGLE_EXPORT void GL_APIENTRY GL_GetFramebufferPixelLocalStorageParameterivANGLE
                                                                                  GLenum pname,
                                                                                  GLint *params);
 
+// GL_ANGLE_stencil_texturing
+
 // GL_ANGLE_texture_compression_dxt3
 
 // GL_ANGLE_texture_compression_dxt5

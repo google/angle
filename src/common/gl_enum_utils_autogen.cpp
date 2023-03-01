@@ -23487,6 +23487,10 @@ unsigned int StringToGLenum(const char *str)
     {
         return 0x90EA;
     }
+    if (strcmp(str, "GL_DEPTH_STENCIL_TEXTURE_MODE_ANGLE") == 0)
+    {
+        return 0x90EA;
+    }
     if (strcmp(str, "GL_DEPTH_STENCIL_TO_BGRA_NV") == 0)
     {
         return 0x886F;

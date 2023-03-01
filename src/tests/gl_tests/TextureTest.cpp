@@ -1847,16 +1847,20 @@ class ETC1CompressedTextureTest : public Texture2DTest
     void testTearDown() override { Texture2DTest::testTearDown(); }
 };
 
-class Texture2DTestES31 : public Texture2DTest
+class Texture2DDepthStencilTestES3 : public Texture2DTest
 {
   protected:
-    Texture2DTestES31() : Texture2DTest() {}
+    Texture2DDepthStencilTestES3() : Texture2DTest() {}
 
     void TestSampleWithDepthStencilMode(GLenum format, GLenum mode, bool swizzle);
 };
 
-void Texture2DTestES31::TestSampleWithDepthStencilMode(GLenum format, GLenum mode, bool swizzle)
+void Texture2DDepthStencilTestES3::TestSampleWithDepthStencilMode(GLenum format,
+                                                                  GLenum mode,
+                                                                  bool swizzle)
 {
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_stencil_texturing"));
+
     constexpr GLsizei kSize = 4;
 
     ASSERT(mode == GL_STENCIL_INDEX || mode == GL_DEPTH_COMPONENT);
@@ -1896,7 +1900,7 @@ void Texture2DTestES31::TestSampleWithDepthStencilMode(GLenum format, GLenum mod
     glTexStorage2D(GL_TEXTURE_2D, 1, format, kSize, kSize);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_DEPTH_STENCIL_TEXTURE_MODE, mode);
+    glTexParameteri(GL_TEXTURE_2D, GL_DEPTH_STENCIL_TEXTURE_MODE_ANGLE, mode);
     if (swizzle)
     {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_R, GL_ALPHA);
@@ -3204,7 +3208,7 @@ TEST_P(Texture2DTestES3, TexImageWithDepthPBO)
 }
 
 // Test sampling modes with a DEPTH_COMPONENT16 texture.
-TEST_P(Texture2DTestES31, TexSampleModesWithDepth16)
+TEST_P(Texture2DDepthStencilTestES3, TexSampleModesWithDepth16)
 {
     TestSampleWithDepthStencilMode(GL_DEPTH_COMPONENT16, GL_DEPTH_COMPONENT, false);
     TestSampleWithDepthStencilMode(GL_DEPTH_COMPONENT16, GL_DEPTH_COMPONENT, true);
@@ -3213,7 +3217,7 @@ TEST_P(Texture2DTestES31, TexSampleModesWithDepth16)
 }
 
 // Test sampling modes with a DEPTH_COMPONENT24 texture.
-TEST_P(Texture2DTestES31, TexSampleModesWithDepth24)
+TEST_P(Texture2DDepthStencilTestES3, TexSampleModesWithDepth24)
 {
     TestSampleWithDepthStencilMode(GL_DEPTH_COMPONENT24, GL_DEPTH_COMPONENT, false);
     TestSampleWithDepthStencilMode(GL_DEPTH_COMPONENT24, GL_DEPTH_COMPONENT, true);
@@ -3222,7 +3226,7 @@ TEST_P(Texture2DTestES31, TexSampleModesWithDepth24)
 }
 
 // Test depth sampling with a DEPTH_COMPONENT32F texture.
-TEST_P(Texture2DTestES31, TexSampleModesWithDepth32f)
+TEST_P(Texture2DDepthStencilTestES3, TexSampleModesWithDepth32f)
 {
     TestSampleWithDepthStencilMode(GL_DEPTH_COMPONENT32F, GL_DEPTH_COMPONENT, false);
     TestSampleWithDepthStencilMode(GL_DEPTH_COMPONENT32F, GL_DEPTH_COMPONENT, true);
@@ -3231,7 +3235,7 @@ TEST_P(Texture2DTestES31, TexSampleModesWithDepth32f)
 }
 
 // Test sampling modes with a DEPTH24_STENCIL8 texture.
-TEST_P(Texture2DTestES31, TexSampleModesWithDepth24Stencil8)
+TEST_P(Texture2DDepthStencilTestES3, TexSampleModesWithDepth24Stencil8)
 {
     TestSampleWithDepthStencilMode(GL_DEPTH24_STENCIL8, GL_DEPTH_COMPONENT, false);
     TestSampleWithDepthStencilMode(GL_DEPTH24_STENCIL8, GL_DEPTH_COMPONENT, true);
@@ -3240,7 +3244,7 @@ TEST_P(Texture2DTestES31, TexSampleModesWithDepth24Stencil8)
 }
 
 // Test sampling modes with a DEPTH32F_STENCIL8 texture.
-TEST_P(Texture2DTestES31, TexSampleModesWithDepth32fStencil8)
+TEST_P(Texture2DDepthStencilTestES3, TexSampleModesWithDepth32fStencil8)
 {
     TestSampleWithDepthStencilMode(GL_DEPTH32F_STENCIL8, GL_DEPTH_COMPONENT, false);
     TestSampleWithDepthStencilMode(GL_DEPTH32F_STENCIL8, GL_DEPTH_COMPONENT, true);
@@ -3249,7 +3253,7 @@ TEST_P(Texture2DTestES31, TexSampleModesWithDepth32fStencil8)
 }
 
 // Test sampling modes with a STENCIL_INDEX8 texture.
-TEST_P(Texture2DTestES31, TexSampleModesWithStencil8)
+TEST_P(Texture2DDepthStencilTestES3, TexSampleModesWithStencil8)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_texture_stencil8"));
     TestSampleWithDepthStencilMode(GL_STENCIL_INDEX8, GL_DEPTH_COMPONENT, false);
@@ -11651,8 +11655,8 @@ ANGLE_INSTANTIATE_TEST_ES3(TextureChangeStorageUploadTest);
 
 ANGLE_INSTANTIATE_TEST_ES3(ExtraSamplerCubeShadowUseTest);
 
-GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(Texture2DTestES31);
-ANGLE_INSTANTIATE_TEST_ES31_AND(Texture2DTestES31,
-                                ES31_VULKAN().enable(Feature::ForceFallbackFormat));
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(Texture2DDepthStencilTestES3);
+ANGLE_INSTANTIATE_TEST_ES3_AND(Texture2DDepthStencilTestES3,
+                               ES3_VULKAN().enable(Feature::ForceFallbackFormat));
 
 }  // anonymous namespace

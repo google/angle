@@ -7089,6 +7089,14 @@ bool ValidateGetTexParameterBase(const Context *context,
             break;
 
         case GL_DEPTH_STENCIL_TEXTURE_MODE:
+            if (context->getClientVersion() < ES_3_1 &&
+                !context->getExtensions().stencilTexturingANGLE)
+            {
+                context->validationErrorF(entryPoint, GL_INVALID_ENUM, kEnumNotSupported, pname);
+                return false;
+            }
+            break;
+
         case GL_IMAGE_FORMAT_COMPATIBILITY_TYPE:
             if (context->getClientVersion() < ES_3_1)
             {
@@ -7806,9 +7814,10 @@ bool ValidateTexParameterBase(const Context *context,
             break;
 
         case GL_DEPTH_STENCIL_TEXTURE_MODE:
-            if (context->getClientVersion() < Version(3, 1))
+            if (context->getClientVersion() < ES_3_1 &&
+                !context->getExtensions().stencilTexturingANGLE)
             {
-                context->validationError(entryPoint, GL_INVALID_ENUM, kEnumRequiresGLES31);
+                context->validationErrorF(entryPoint, GL_INVALID_ENUM, kEnumNotSupported, pname);
                 return false;
             }
             switch (ConvertToGLenum(params[0]))

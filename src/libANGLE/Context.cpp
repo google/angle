@@ -3659,6 +3659,7 @@ Extensions Context::generateSupportedExtensions() const
         supportedExtensions.drawBuffersIndexedEXT        = false;
         supportedExtensions.drawBuffersIndexedOES        = false;
         supportedExtensions.EGLImageArrayEXT             = false;
+        supportedExtensions.stencilTexturingANGLE        = false;
         supportedExtensions.textureFormatSRGBOverrideEXT = false;
         supportedExtensions.renderSharedExponentQCOM     = false;
 

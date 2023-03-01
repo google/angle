@@ -700,6 +700,9 @@ struct Extensions
     // GL_ANGLE_shader_pixel_local_storage_coherent
     bool shaderPixelLocalStorageCoherentANGLE = false;
 
+    // GL_ANGLE_stencil_texturing
+    bool stencilTexturingANGLE = false;
+
     // GL_CHROMIUM_sync_query
     bool syncQueryCHROMIUM = false;
 

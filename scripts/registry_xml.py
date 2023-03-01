@@ -64,6 +64,7 @@ angle_requestable_extensions = [
     "GL_ANGLE_read_only_depth_stencil_feedback_loops",
     "GL_ANGLE_robust_fragment_shader_output",
     "GL_ANGLE_semaphore_fuchsia",
+    "GL_ANGLE_stencil_texturing",
     "GL_ANGLE_texture_compression_dxt3",
     "GL_ANGLE_texture_compression_dxt5",
     "GL_ANGLE_texture_external_update",

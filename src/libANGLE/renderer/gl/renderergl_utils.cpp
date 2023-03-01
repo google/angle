@@ -1161,6 +1161,13 @@ void GenerateCaps(const FunctionsGL *functions,
         LimitVersion(maxSupportedESVersion, gl::Version(2, 0));
     }
 
+    if (!functions->isAtLeastGL(gl::Version(4, 3)) &&
+        !functions->hasGLExtension("GL_ARB_stencil_texturing") &&
+        !functions->isAtLeastGLES(gl::Version(3, 1)))
+    {
+        LimitVersion(maxSupportedESVersion, gl::Version(3, 0));
+    }
+
     if (functions->isAtLeastGL(gl::Version(4, 3)) || functions->isAtLeastGLES(gl::Version(3, 1)) ||
         functions->hasGLExtension("GL_ARB_framebuffer_no_attachments"))
     {
@@ -1576,6 +1583,10 @@ void GenerateCaps(const FunctionsGL *functions,
         extensions->robustnessEXT &&
         (functions->hasGLExtension("GL_ARB_robust_buffer_access_behavior") ||
          functions->hasGLESExtension("GL_KHR_robust_buffer_access_behavior"));
+
+    extensions->stencilTexturingANGLE = functions->isAtLeastGL(gl::Version(4, 3)) ||
+                                        functions->hasGLExtension("GL_ARB_stencil_texturing") ||
+                                        functions->isAtLeastGLES(gl::Version(3, 1));
 
     // ANGLE_shader_pixel_local_storage.
     if (features.supportsShaderPixelLocalStorageEXT.enabled &&

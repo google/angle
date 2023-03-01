@@ -1174,6 +1174,11 @@
                 <command name="glProvokingVertexANGLE"/>
             </require>
         </extension>
+        <extension name="GL_ANGLE_stencil_texturing" supported='gles2'>
+            <require>
+                <enum name="GL_DEPTH_STENCIL_TEXTURE_MODE_ANGLE"/>
+            </require>
+        </extension>
         <extension name="GL_CHROMIUM_lose_context" supported='gles2'>
             <require>
                 <enum name="GL_GUILTY_CONTEXT_RESET"/>
@@ -1319,6 +1324,10 @@
         <enum value="0x3005" name="GL_CLIP_DISTANCE5_ANGLE" group="EnableCap"/>
         <enum value="0x3006" name="GL_CLIP_DISTANCE6_ANGLE" group="EnableCap"/>
         <enum value="0x3007" name="GL_CLIP_DISTANCE7_ANGLE" group="EnableCap"/>
+    </enums>
+
+    <enums namespace="GL" vendor="ANGLE">
+        <enum value="0x90EA" name="GL_DEPTH_STENCIL_TEXTURE_MODE_ANGLE" group="TextureParameterName"/>
     </enums>
 
     <enums namespace="GL" start="0x93A7" end="0x93A7" vendor="ANGLE">
