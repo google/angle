@@ -882,6 +882,7 @@
 7994 IOS METAL : VertexAttributeTestES3.DrawWithUnalignedData/ES3_Metal_NoHasExplicitMemBarrier_NoHasCheapRenderPass = SKIP
 7994 IOS METAL : WebGL2ReadOutsideFramebufferTest.CopyTexSubImage3D/ES2_Metal = SKIP
 7994 IOS METAL : WebGL2ValidationStateChangeTest.MultiAttachmentDrawFramebufferNegativeAPI/ES3_Metal = SKIP
+8043 IOS METAL : FramebufferTest_ES3.RenderSharedExponent/ES3_Metal = SKIP
 
 // Test is disabled as it only pertains to desktop GLSL
 6197 : GLSLTest_ES31.InterpolateAtWithSwizzle/* = SKIP
