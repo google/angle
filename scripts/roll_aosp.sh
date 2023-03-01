@@ -119,6 +119,7 @@ third_party_deps=(
     "third_party/vulkan-deps/spirv-tools/src"
     "third_party/vulkan-deps/vulkan-headers/src"
     "third_party/vulkan_memory_allocator"
+    "third_party/zlib"
 )
 
 root_add_deps=(
@@ -155,7 +156,6 @@ unsupported_third_party_deps=(
    "third_party/llvm-build"
    "third_party/android_build_tools"
    "third_party/android_sdk"
-   "third_party/zlib"  # Replaced by Android's zlib
 )
 for unsupported_third_party_dep in "${unsupported_third_party_deps[@]}"; do
    rm -rf "$unsupported_third_party_dep"
