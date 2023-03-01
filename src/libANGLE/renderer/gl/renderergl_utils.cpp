@@ -1860,12 +1860,11 @@ void GenerateCaps(const FunctionsGL *functions,
                                 caps->maxShaderAtomicCounterBuffers);
     CapCombinedLimitToESShaders(&caps->maxCombinedAtomicCounters, caps->maxShaderAtomicCounters);
 
-    // EXT_blend_func_extended.
-    // Note that this could be implemented also on top of native EXT_blend_func_extended, but it's
-    // currently not fully implemented.
+    // EXT_blend_func_extended is not implemented on top of ARB_blend_func_extended
+    // because the latter does not support fragment shader output layout qualifiers.
     extensions->blendFuncExtendedEXT = !features.disableBlendFuncExtended.enabled &&
-                                       functions->standard == STANDARD_GL_DESKTOP &&
-                                       functions->hasGLExtension("GL_ARB_blend_func_extended");
+                                       (functions->isAtLeastGL(gl::Version(3, 3)) ||
+                                        functions->hasGLESExtension("GL_EXT_blend_func_extended"));
     if (extensions->blendFuncExtendedEXT)
     {
         // TODO(http://anglebug.com/1085): Support greater values of
@@ -2228,7 +2227,11 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     ANGLE_FEATURE_CONDITION(features, dontUseLoopsToInitializeVariables,
                             (IsAndroid() && isQualcomm) || (isIntel && IsApple()));
 
-    ANGLE_FEATURE_CONDITION(features, disableBlendFuncExtended, isAMD || isIntel);
+    // Adreno drivers do not support glBindFragDataLocation* with MRT
+    // Intel macOS condition ported from gpu_driver_bug_list.json (#327)
+    ANGLE_FEATURE_CONDITION(features, disableBlendFuncExtended,
+                            (IsAndroid() && isQualcomm) ||
+                                (IsApple() && isIntel && GetMacOSVersion() < OSVersion(10, 14, 0)));
 
     ANGLE_FEATURE_CONDITION(features, unsizedSRGBReadPixelsDoesntTransform,
                             IsAndroid() && isQualcomm);
