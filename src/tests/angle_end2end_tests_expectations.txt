@@ -312,6 +312,9 @@
 // Skipped because intel macs use a GPU family that doesn't support swizzle
 5049 MAC METAL INTEL : DXT1CompressedTextureTest.DXT1Alpha/* = SKIP
 
+// Skipped because Intel GPUs fail sampling stencil textures from swizzled views
+8051 MAC METAL INTEL : Texture2DDepthStencilTestES3.TexSampleModesWithStencil8Swizzled/* = SKIP
+
 6447 MAC METAL : FramebufferTest_ES3.AttachmentsWithUnequalDimensions/* = SKIP
 6447 MAC METAL : FramebufferTest_ES3.RenderAndInvalidateImmutableTextureWithBellowBaseLevelLOD/* = SKIP
 6447 MAC METAL : FramebufferTest_ES3.RenderAndInvalidateImmutableTextureWithBeyondMaxLevel/* = SKIP
@@ -883,6 +886,7 @@
 7994 IOS METAL : WebGL2ReadOutsideFramebufferTest.CopyTexSubImage3D/ES2_Metal = SKIP
 7994 IOS METAL : WebGL2ValidationStateChangeTest.MultiAttachmentDrawFramebufferNegativeAPI/ES3_Metal = SKIP
 8043 IOS METAL : FramebufferTest_ES3.RenderSharedExponent/ES3_Metal = SKIP
+8051 IOS METAL : Texture2DDepthStencilTestES3.TexSampleModes*Swizzled/ES3_Metal = SKIP
 
 // Test is disabled as it only pertains to desktop GLSL
 6197 : GLSLTest_ES31.InterpolateAtWithSwizzle/* = SKIP

@@ -41,6 +41,7 @@ enum class Feature
     AsyncCommandBufferReset,
     AsyncCommandQueue,
     Avoid1BitAlphaTextureFormats,
+    AvoidStencilTextureSwizzle,
     BindTransformFeedbackBufferBeforeBindBufferRange,
     BorderColorSrgb,
     BottomLeftOriginPresentRegionRectangles,
