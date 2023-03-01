@@ -6,7 +6,7 @@
   "src/tests/deqp_support/deqp_data_autogen.gni":
     "66f7f626b3f33cd2aaaceb0592680be9",
   "third_party/VK-GL-CTS/src/CMakeLists.txt":
-    "9ff61a163e3045c272a2b3f6317ac4f7",
+    "71f9843d9e42f2f0706d57428d2566fb",
   "third_party/VK-GL-CTS/src/execserver/CMakeLists.txt":
     "38aa187592e6ef9a331fc1ea313fc68d",
   "third_party/VK-GL-CTS/src/executor/CMakeLists.txt":
@@ -140,9 +140,9 @@
   "third_party/VK-GL-CTS/src/external/vulkancts/modules/vulkan/util/CMakeLists.txt":
     "45b7009c88cbfaf2d27499c41e089c3f",
   "third_party/VK-GL-CTS/src/external/vulkancts/modules/vulkan/video/CMakeLists.txt":
-    "91214f03ca47cf217d71a342ccb04c9d",
+    "2c0be4b83e4127db8fd6d383661ec31f",
   "third_party/VK-GL-CTS/src/external/vulkancts/modules/vulkan/wsi/CMakeLists.txt":
-    "c3df2ae8b873ed602838f6ccb37a2987",
+    "4b9b02f3fab98243826e777c3e71e340",
   "third_party/VK-GL-CTS/src/external/vulkancts/modules/vulkan/ycbcr/CMakeLists.txt":
     "2b9240133955f7d8b584e687806142c7",
   "third_party/VK-GL-CTS/src/external/vulkancts/vkscpc/CMakeLists.txt":
