@@ -330,10 +330,6 @@
 2137 MAC OPENGL : dEQP-GLES3.functional.shaders.loops.short_circuit.* = FAIL
 3317 MAC OPENGL : dEQP-GLES3.functional.fbo.blit.rect.out_of_bounds_linear = FAIL
 
-5136 MAC OPENGL : dEQP-GLES3.functional.fbo.completeness.renderable.texture.color0.stencil_index8 = FAIL
-5136 MAC OPENGL : dEQP-GLES3.functional.fbo.completeness.renderable.texture.stencil.stencil_index8 = FAIL
-5136 MAC OPENGL : dEQP-GLES3.functional.fbo.completeness.renderable.texture.depth.stencil_index8 = FAIL
-
 // ETC compressed formats not supported
 3853 MAC OPENGL : dEQP-GLES3.functional.negative_api.texture.compressedtexsubimage* = FAIL
 3853 MAC OPENGL : dEQP-GLES3.functional.negative_api.texture.generatemipmap = FAIL

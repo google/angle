@@ -3656,6 +3656,7 @@ Extensions Context::generateSupportedExtensions() const
         supportedExtensions.multiviewMultisampleANGLE    = false;
         supportedExtensions.copyTexture3dANGLE           = false;
         supportedExtensions.textureMultisampleANGLE      = false;
+        supportedExtensions.textureStencil8OES           = false;
         supportedExtensions.drawBuffersIndexedEXT        = false;
         supportedExtensions.drawBuffersIndexedOES        = false;
         supportedExtensions.EGLImageArrayEXT             = false;
