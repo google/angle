@@ -193,9 +193,9 @@ bool ValidReadPixelsFormatType(const Context *context,
             switch (format)
             {
                 case GL_RGBA:
-                    return ((type == GL_UNSIGNED_BYTE) && info->pixelBytes >= 1) ||
+                    return type == GL_UNSIGNED_BYTE ||
                            (context->getExtensions().textureNorm16EXT &&
-                            (type == GL_UNSIGNED_SHORT) && info->pixelBytes >= 2);
+                            type == GL_UNSIGNED_SHORT && info->type == GL_UNSIGNED_SHORT);
                 case GL_BGRA_EXT:
                     return context->getExtensions().readFormatBgraEXT && (type == GL_UNSIGNED_BYTE);
                 case GL_STENCIL_INDEX_OES:
@@ -212,9 +212,9 @@ bool ValidReadPixelsFormatType(const Context *context,
                     return false;
             }
         case GL_SIGNED_NORMALIZED:
-            return (format == GL_RGBA && type == GL_BYTE && info->pixelBytes >= 1) ||
-                   (context->getExtensions().textureNorm16EXT && format == GL_RGBA &&
-                    type == GL_UNSIGNED_SHORT && info->pixelBytes >= 2);
+            return format == GL_RGBA &&
+                   (type == GL_BYTE || (context->getExtensions().textureNorm16EXT &&
+                                        type == GL_SHORT && info->type == GL_SHORT));
 
         case GL_INT:
             return (format == GL_RGBA_INTEGER && type == GL_INT);
