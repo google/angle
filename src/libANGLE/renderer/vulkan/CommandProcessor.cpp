@@ -1155,6 +1155,8 @@ angle::Result CommandQueue::finishResourceUse(Context *context,
                 ANGLE_VK_TRY(context, status);
             }
         }
+        // Do one more check in case more commands also finished.
+        ANGLE_TRY(checkCompletedCommandsLocked(context));
         finishedCount = mFinishedCommandBatches.size();
     }
     ASSERT(hasResourceUseFinished(use));
@@ -1232,6 +1234,8 @@ angle::Result CommandQueue::waitForResourceUseToFinishWithUserTimeout(Context *c
                 }
             }
         }
+        // Do one more check in case more commands also finished.
+        ANGLE_TRY(checkCompletedCommandsLocked(context));
         finishedCount = mFinishedCommandBatches.size();
     }
 
@@ -1512,23 +1516,6 @@ angle::Result CommandQueue::retireFinishedCommandsAndCleanupGarbage(Context *con
     return angle::Result::Continue;
 }
 
-angle::Result CommandQueue::checkCompletedCommands(Context *context, bool *anyCommandFinished)
-{
-    std::lock_guard<std::mutex> lock(mMutex);
-    while (!mInFlightCommands.empty())
-    {
-        bool finished;
-        ANGLE_TRY(checkOneCommandBatch(context, &finished));
-        if (!finished)
-        {
-            break;
-        }
-    }
-
-    *anyCommandFinished = !mFinishedCommandBatches.empty();
-    return angle::Result::Continue;
-}
-
 // CommandQueue private API implementation. These are called by public API, so lock already held.
 angle::Result CommandQueue::checkOneCommandBatch(Context *context, bool *finished)
 {
@@ -1617,6 +1604,20 @@ angle::Result CommandQueue::retireFinishedCommandsLocked(Context *context)
         mFinishedCommandBatches.pop();
     }
 
+    return angle::Result::Continue;
+}
+
+angle::Result CommandQueue::checkCompletedCommandsLocked(Context *context)
+{
+    while (!mInFlightCommands.empty())
+    {
+        bool finished;
+        ANGLE_TRY(checkOneCommandBatch(context, &finished));
+        if (!finished)
+        {
+            break;
+        }
+    }
     return angle::Result::Continue;
 }
 

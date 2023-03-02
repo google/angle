@@ -402,9 +402,13 @@ class CommandQueue : angle::NonCopyable
                       const VkPresentInfoKHR &presentInfo,
                       SwapchainStatus *swapchainStatus);
 
-    // Walk mInFlightCommands, check and update mLastCompletedSerials for all commands that are
-    // finished
-    angle::Result checkCompletedCommands(Context *context, bool *anyCommandFinished);
+    angle::Result checkCompletedCommands(Context *context, bool *anyCommandFinished)
+    {
+        std::lock_guard<std::mutex> lock(mMutex);
+        ANGLE_TRY(checkCompletedCommandsLocked(context));
+        *anyCommandFinished = !mFinishedCommandBatches.empty();
+        return angle::Result::Continue;
+    }
 
     void flushWaitSemaphores(ProtectionType protectionType,
                              std::vector<VkSemaphore> &&waitSemaphores,
@@ -439,6 +443,9 @@ class CommandQueue : angle::NonCopyable
     angle::Result finishOneCommandBatchAndCleanup(Context *context, uint64_t timeout);
     // Walk mFinishedCommands, reset and recycle all command buffers.
     angle::Result retireFinishedCommandsLocked(Context *context);
+    // Walk mInFlightCommands, check and update mLastCompletedSerials for all commands that are
+    // finished
+    angle::Result checkCompletedCommandsLocked(Context *context);
 
     angle::Result queueSubmit(Context *context,
                               std::unique_lock<std::mutex> &&dequeueLock,
