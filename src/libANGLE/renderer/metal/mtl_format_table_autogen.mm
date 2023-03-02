@@ -704,7 +704,7 @@ void Format::init(const DisplayMtl *display, angle::FormatID intendedFormatId_)
 
             this->metalFormat    = MTLPixelFormatRGBA16Unorm;
             this->actualFormatId = angle::FormatID::R16G16B16A16_UNORM;
-            this->initFunction = Initialize4ComponentData<GLubyte, 0x0000, 0x0000, 0x0000, 0xFFFF>;
+            this->initFunction = Initialize4ComponentData<GLushort, 0x0000, 0x0000, 0x0000, 0xFFFF>;
             break;
 
         case angle::FormatID::R32G32B32_FLOAT:
