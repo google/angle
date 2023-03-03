@@ -866,6 +866,14 @@ struct FeaturesVk : FeatureSetBase
                                            FeatureCategory::VulkanFeatures,
                                            "Reset command buffer in async thread.", &members,
                                            "https://issuetracker.google.com/255411748"};
+
+    FeatureInfo useResetCommandBufferBitForSecondaryPools = {
+        "useResetCommandBufferBitForSecondaryPools",
+        FeatureCategory::VulkanWorkarounds,
+        "Use VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT for initializing "
+        "SecondaryCommandPools when using VulkanSecondaryCommandBuffer. ",
+        &members,
+    };
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

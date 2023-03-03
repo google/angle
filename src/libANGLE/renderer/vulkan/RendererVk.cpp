@@ -4502,6 +4502,10 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     ANGLE_FEATURE_CONDITION(&mFeatures, forceWaitForSubmissionToCompleteForQueryResult,
                             isARM || (isNvidia && nvidiaVersion.major < 470u));
 
+    // Some ARM drivers may not free memory in "vkFreeCommandBuffers()" without
+    // VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT flag.
+    ANGLE_FEATURE_CONDITION(&mFeatures, useResetCommandBufferBitForSecondaryPools, isARM);
+
     ApplyFeatureOverrides(&mFeatures, displayVk->getState());
 
     // Disable async command queue when using Vulkan secondary command buffers temporarily to avoid

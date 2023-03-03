@@ -316,6 +316,7 @@ enum class Feature
     UseInstancedPointSpriteEmulation,
     UseMultipleDescriptorsForExternalFormats,
     UseNonZeroStencilWriteMaskStaticState,
+    UseResetCommandBufferBitForSecondaryPools,
     UseSystemMemoryForConstantBuffers,
     UseUnusedBlocksWithStandardOrSharedLayout,
     UseVmaForImageSuballocation,

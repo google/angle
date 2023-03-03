@@ -341,6 +341,8 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::UseInstancedPointSpriteEmulation, "useInstancedPointSpriteEmulation"},
     {Feature::UseMultipleDescriptorsForExternalFormats, "useMultipleDescriptorsForExternalFormats"},
     {Feature::UseNonZeroStencilWriteMaskStaticState, "useNonZeroStencilWriteMaskStaticState"},
+    {Feature::UseResetCommandBufferBitForSecondaryPools,
+     "useResetCommandBufferBitForSecondaryPools"},
     {Feature::UseSystemMemoryForConstantBuffers, "useSystemMemoryForConstantBuffers"},
     {Feature::UseUnusedBlocksWithStandardOrSharedLayout,
      "useUnusedBlocksWithStandardOrSharedLayout"},

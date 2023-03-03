@@ -1171,6 +1171,14 @@
             "category": "Features",
             "description":["Reset command buffer in async thread."],
             "issue": "https://issuetracker.google.com/255411748"
+        },
+        {
+            "name": "use_reset_command_buffer_bit_for_secondary_pools",
+            "category": "Workarounds",
+            "description": [
+                "Use VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT for initializing ",
+                "SecondaryCommandPools when using VulkanSecondaryCommandBuffer. "
+            ]
         }
     ]
 }
