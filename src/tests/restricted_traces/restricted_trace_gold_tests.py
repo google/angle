@@ -384,9 +384,16 @@ def _run_tests(args, tests, extra_flags, env, screenshot_dir, results, test_resu
                 ] + extra_flags
                 if args.swiftshader:
                     cmd_args += ['--use-angle=swiftshader']
+
+                logging.info('Running batch with args: %s' % cmd_args)
                 result, _, json_results = angle_test_util.RunTestSuite(
                     args.test_suite, cmd_args, env, use_xvfb=args.xvfb)
-                batch_result = PASS if result == 0 else FAIL
+                if result == 0:
+                    batch_result = PASS
+                else:
+                    batch_result = FAIL
+                    logging.error('Batch FAIL! json_results: %s' %
+                                  json.dumps(json_results, indent=2))
 
                 next_batch = []
                 for trace in batch:
