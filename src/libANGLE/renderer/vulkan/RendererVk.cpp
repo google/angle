@@ -4822,23 +4822,22 @@ angle::Result RendererVk::queueSubmitOneOff(vk::Context *context,
     ANGLE_TRACE_EVENT0("gpu.angle", "RendererVk::queueSubmitOneOff");
     // Allocate a one off SerialIndex and generate a QueueSerial and then use it and release the
     // index.
-    SerialIndex index;
-    ANGLE_TRY(allocateQueueSerialIndex(&index));
-    QueueSerial submitQueueSerial(index, generateQueueSerial(index));
+    vk::ScopedQueueSerialIndex index;
+    ANGLE_TRY(allocateScopedQueueSerialIndex(&index));
+    QueueSerial submitQueueSerial(index.get(), generateQueueSerial(index.get()));
 
-    angle::Result result =
-        isAsyncCommandQueueEnabled()
-            ? mCommandProcessor.enqueueSubmitOneOffCommands(
-                  context, protectionType, priority, primary.getHandle(), waitSemaphore,
-                  waitSemaphoreStageMasks, fence, submitPolicy, submitQueueSerial)
-            : mCommandQueue.queueSubmitOneOff(
-                  context, protectionType, priority, primary.getHandle(), waitSemaphore,
-                  waitSemaphoreStageMasks, fence, submitPolicy, submitQueueSerial);
-
-    // Immediately release the queue index since it is an one off use.
-    releaseQueueSerialIndex(index);
-    // Avoid SerialIndex leak
-    ANGLE_TRY(result);
+    if (isAsyncCommandQueueEnabled())
+    {
+        ANGLE_TRY(mCommandProcessor.enqueueSubmitOneOffCommands(
+            context, protectionType, priority, primary.getHandle(), waitSemaphore,
+            waitSemaphoreStageMasks, fence, submitPolicy, submitQueueSerial));
+    }
+    else
+    {
+        ANGLE_TRY(mCommandQueue.queueSubmitOneOff(
+            context, protectionType, priority, primary.getHandle(), waitSemaphore,
+            waitSemaphoreStageMasks, fence, submitPolicy, submitQueueSerial));
+    }
 
     *queueSerialOut = submitQueueSerial;
     if (primary.valid())
@@ -5458,7 +5457,7 @@ VkDeviceSize RendererVk::getPreferedBufferBlockSize(uint32_t memoryTypeIndex) co
     return std::min(heapSize / 64, mPreferredLargeHeapBlockSize);
 }
 
-angle::Result RendererVk::allocateQueueSerialIndex(SerialIndex *indexOut)
+angle::Result RendererVk::allocateQueueSerialIndexImpl(SerialIndex *indexOut)
 {
     *indexOut = mQueueSerialIndexAllocator.allocate();
     if (*indexOut == kInvalidQueueSerialIndex)
@@ -5468,10 +5467,18 @@ angle::Result RendererVk::allocateQueueSerialIndex(SerialIndex *indexOut)
     return angle::Result::Continue;
 }
 
+angle::Result RendererVk::allocateScopedQueueSerialIndex(vk::ScopedQueueSerialIndex *indexOut)
+{
+    SerialIndex index;
+    ANGLE_TRY(allocateQueueSerialIndexImpl(&index));
+    indexOut->init(index, &mQueueSerialIndexAllocator);
+    return angle::Result::Continue;
+}
+
 angle::Result RendererVk::allocateQueueSerialIndex(QueueSerial *queueSerialOut)
 {
     SerialIndex index;
-    ANGLE_TRY(allocateQueueSerialIndex(&index));
+    ANGLE_TRY(allocateQueueSerialIndexImpl(&index));
     Serial serial   = isAsyncCommandQueueEnabled() ? mCommandProcessor.getLastEnqueuedSerial(index)
                                                    : mCommandQueue.getLastSubmittedSerial(index);
     *queueSerialOut = QueueSerial(index, serial);
