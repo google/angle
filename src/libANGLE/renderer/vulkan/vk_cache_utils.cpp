@@ -767,8 +767,7 @@ void InitializeMSRTSS(Context *context,
 
     if (renderer->getFeatures().supportsMultisampledRenderToSingleSampled.enabled)
     {
-        // msrtss->pNext is not null so can't use AddToPNextChain
-        AppendToPNextChain(subpass, msrtss);
+        AddToPNextChain(subpass, msrtss);
     }
     else
     {
