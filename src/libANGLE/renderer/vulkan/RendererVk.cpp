@@ -5042,8 +5042,8 @@ angle::Result RendererVk::submitPriorityDependency(vk::Context *context,
                                                    egl::ContextPriority dstContextPriority,
                                                    SerialIndex index)
 {
-    vk::DeviceScoped<vk::Semaphore> semaphore(mDevice);
-    ANGLE_VK_TRY(context, semaphore.get().init(mDevice));
+    vk::RendererScoped<vk::ReleasableResource<vk::Semaphore>> semaphore(this);
+    ANGLE_VK_TRY(context, semaphore.get().get().init(mDevice));
 
     // First, submit already flushed commands / wait semaphores into the source Priority VkQueue.
     // Commands that are in the Secondary Command Buffers will be flushed into the new VkQueue.
@@ -5060,7 +5060,9 @@ angle::Result RendererVk::submitPriorityDependency(vk::Context *context,
         const vk::Semaphore *signalSemaphore = nullptr;
         if (protectionTypes.none())
         {
-            signalSemaphore = &semaphore.get();
+            // Update QueueSerial to collect semaphore using the latest possible queueSerial.
+            semaphore.get().setQueueSerial(queueSerial);
+            signalSemaphore = &semaphore.get().get();
         }
         ANGLE_TRY(submitCommands(context, protectionType, srcContextPriority, signalSemaphore,
                                  queueSerial));
@@ -5068,14 +5070,9 @@ angle::Result RendererVk::submitPriorityDependency(vk::Context *context,
 
     // Submit only Wait Semaphore into the destination Priority (VkQueue).
     QueueSerial queueSerial(index, generateQueueSerial(index));
-    angle::Result result =
-        queueSubmitWaitSemaphore(context, dstContextPriority, &semaphore.get(),
-                                 VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, queueSerial);
-
-    vk::ResourceUse semaphoreUse(queueSerial);
-    collectGarbage(semaphoreUse, &semaphore.get());
-    // Handle result later to be able to collect semaphore.
-    ANGLE_TRY(result);
+    semaphore.get().setQueueSerial(queueSerial);
+    ANGLE_TRY(queueSubmitWaitSemaphore(context, dstContextPriority, &semaphore.get().get(),
+                                       VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, queueSerial));
 
     return angle::Result::Continue;
 }
