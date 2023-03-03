@@ -50,7 +50,9 @@ Dependencies
     This extension is written against the OpenGL ES 3.0 specification and the
     OpenGL ES Shading Language 3.00 specification.
 
-    This extension interacts with GL_OES_sample_variables.
+    This extension interacts with ANGLE_request_extension.
+
+    This extension interacts with OES_sample_variables.
 
     This extension interacts with OpenGL ES 3.1.
 
@@ -834,6 +836,20 @@ Additions to the OpenGL ES Specification, Version 3.0.6
     _UNSIGNED_INT_ANGLE        4*Z+  StorageParameterivANGLE    0,0,0,0  6.1.X
 
     Table 6.Y: Pixel Local Storage State
+
+
+Interactions with the ANGLE_request_extension specification
+
+    When either ANGLE_shader_pixel_local_storage or
+    ANGLE_shader_pixel_local_storage_coherent is enabled, the following
+    extensions are all implicitly enabled, if supported:
+
+      * OES_draw_buffers_indexed
+      * EXT_draw_buffers_indexed
+      * EXT_color_buffer_float
+      * EXT_color_buffer_half_float
+      * ANGLE_shader_pixel_local_storage_coherent
+      * ANGLE_shader_pixel_local_storage
 
 
 Interactions with OpenGL ES 3.1

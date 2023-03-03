@@ -3549,11 +3549,6 @@ void Context::disableExtension(const char *name)
 
 void Context::setExtensionEnabled(const char *name, bool enabled)
 {
-    // OVR_multiview is implicitly enabled when OVR_multiview2 is enabled
-    if (strcmp(name, "GL_OVR_multiview2") == 0)
-    {
-        setExtensionEnabled("GL_OVR_multiview", enabled);
-    }
     const ExtensionInfoMap &extensionInfos = GetExtensionInfoMap();
     ASSERT(extensionInfos.find(name) != extensionInfos.end());
     const auto &extension = extensionInfos.at(name);
@@ -3567,6 +3562,37 @@ void Context::setExtensionEnabled(const char *name, bool enabled)
     }
 
     mState.mExtensions.*(extension.ExtensionsMember) = enabled;
+
+    if (enabled)
+    {
+        if (strcmp(name, "GL_OVR_multiview2") == 0)
+        {
+            // OVR_multiview is implicitly enabled when OVR_multiview2 is enabled
+            requestExtension("GL_OVR_multiview");
+        }
+        else if (strcmp(name, "GL_ANGLE_shader_pixel_local_storage") == 0 ||
+                 strcmp(name, "GL_ANGLE_shader_pixel_local_storage_coherent") == 0)
+        {
+            // ANGLE_shader_pixel_local_storage/ANGLE_shader_pixel_local_storage_coherent have
+            // various dependency extensions, including each other.
+            const auto enableIfRequestable = [this](const char *extensionName) {
+                for (const char *requestableExtension : mRequestableExtensionStrings)
+                {
+                    if (strcmp(extensionName, requestableExtension) == 0)
+                    {
+                        requestExtension(extensionName);
+                        return;
+                    }
+                }
+            };
+            enableIfRequestable("GL_OES_draw_buffers_indexed");
+            enableIfRequestable("GL_EXT_draw_buffers_indexed");
+            enableIfRequestable("GL_EXT_color_buffer_float");
+            enableIfRequestable("GL_EXT_color_buffer_half_float");
+            enableIfRequestable("GL_ANGLE_shader_pixel_local_storage_coherent");
+            enableIfRequestable("GL_ANGLE_shader_pixel_local_storage");
+        }
+    }
 
     reinitializeAfterExtensionsChanged();
 }
