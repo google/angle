@@ -468,13 +468,14 @@ class CommandQueue : angle::NonCopyable
         std::vector<VkSemaphore> waitSemaphores;
         std::vector<VkPipelineStageFlags> waitSemaphoreStageMasks;
         PrimaryCommandBuffer primaryCommands;
-        // Keeps a free list of reusable primary command buffers.
-        PersistentCommandPool primaryCommandPool;
     };
+
+    using CommandsStateMap      = angle::PackedEnumMap<ProtectionType, CommandsState>;
+    using PrimaryCommandPoolMap = angle::PackedEnumMap<ProtectionType, PersistentCommandPool>;
 
     angle::Result initCommandPool(Context *context, ProtectionType protectionType)
     {
-        PersistentCommandPool &commandPool = mCommandsStateMap[protectionType].primaryCommandPool;
+        PersistentCommandPool &commandPool = mPrimaryCommandPoolMap[protectionType];
         return commandPool.init(context, protectionType, mQueueMap.getIndex());
     }
 
@@ -488,7 +489,9 @@ class CommandQueue : angle::NonCopyable
     // Temporary storage for finished command batches that should be reset.
     angle::FixedQueue<CommandBatch, kMaxFinishedCommandsLimit> mFinishedCommandBatches;
 
-    angle::PackedEnumMap<ProtectionType, CommandsState> mCommandsStateMap;
+    CommandsStateMap mCommandsStateMap;
+    // Keeps a free list of reusable primary command buffers.
+    PrimaryCommandPoolMap mPrimaryCommandPoolMap;
 
     // Queue serial management.
     AtomicQueueSerialFixedArray mLastSubmittedSerials;

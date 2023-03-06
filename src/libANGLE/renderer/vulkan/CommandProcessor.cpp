@@ -1018,7 +1018,11 @@ void CommandQueue::destroy(Context *context)
         state.waitSemaphores.clear();
         state.waitSemaphoreStageMasks.clear();
         state.primaryCommands.destroy(renderer->getDevice());
-        state.primaryCommandPool.destroy(renderer->getDevice());
+    }
+
+    for (PersistentCommandPool &commandPool : mPrimaryCommandPoolMap)
+    {
+        commandPool.destroy(renderer->getDevice());
     }
 
     mFenceRecycler.destroy(context);
@@ -1571,8 +1575,7 @@ angle::Result CommandQueue::retireFinishedCommandsLocked(Context *context)
         }
         if (batch.primaryCommands.valid())
         {
-            PersistentCommandPool &commandPool =
-                mCommandsStateMap[batch.protectionType].primaryCommandPool;
+            PersistentCommandPool &commandPool = mPrimaryCommandPoolMap[batch.protectionType];
             ANGLE_TRY(commandPool.collect(context, std::move(batch.primaryCommands)));
         }
 
@@ -1608,7 +1611,7 @@ angle::Result CommandQueue::ensurePrimaryCommandBufferValid(Context *context,
         return angle::Result::Continue;
     }
 
-    ANGLE_TRY(state.primaryCommandPool.allocate(context, &state.primaryCommands));
+    ANGLE_TRY(mPrimaryCommandPoolMap[protectionType].allocate(context, &state.primaryCommands));
     VkCommandBufferBeginInfo beginInfo = {};
     beginInfo.sType                    = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
     beginInfo.flags                    = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
