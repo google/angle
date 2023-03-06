@@ -677,12 +677,10 @@ void RendererVk::ensureCapsInitialized() const
     }
     mNativeCaps.maxUniformLocations = maxUniformVectors;
 
-    // Every stage has 1 reserved uniform buffer for the default uniforms, and 1 for the driver
-    // uniforms.
+    // Every stage has 1 reserved uniform buffer for the default uniforms.
     constexpr uint32_t kTotalReservedPerStageUniformBuffers =
-        kReservedDriverUniformBindingCount + kReservedPerStageDefaultUniformBindingCount;
-    constexpr uint32_t kTotalReservedUniformBuffers =
-        kReservedDriverUniformBindingCount + kReservedDefaultUniformBindingCount;
+        kReservedPerStageDefaultUniformBindingCount;
+    constexpr uint32_t kTotalReservedUniformBuffers = kReservedDefaultUniformBindingCount;
 
     const int32_t maxPerStageUniformBuffers = LimitToInt(
         limitsVk.maxPerStageDescriptorUniformBuffers - kTotalReservedPerStageUniformBuffers);
@@ -866,14 +864,12 @@ void RendererVk::ensureCapsInitialized() const
 
     // Total number of resources available to the user are as many as Vulkan allows minus everything
     // that ANGLE uses internally.  That is, one dynamic uniform buffer used per stage for default
-    // uniforms and a single dynamic uniform buffer for driver uniforms.  Additionally, Vulkan uses
-    // up to IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS + 1 buffers for transform feedback (Note:
-    // +1 is for the "counter" buffer of transform feedback, which will be necessary for transform
-    // feedback extension and ES3.2 transform feedback emulation, but is not yet present).
+    // uniforms.  Additionally, Vulkan uses up to IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS + 1
+    // buffers for transform feedback (Note: +1 is for the "counter" buffer of
+    // VK_EXT_transform_feedback).
     constexpr uint32_t kReservedPerStageUniformBufferCount = 1;
     constexpr uint32_t kReservedPerStageBindingCount =
-        kReservedDriverUniformBindingCount + kReservedPerStageUniformBufferCount +
-        gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS + 1;
+        kReservedPerStageUniformBufferCount + gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS + 1;
 
     // Note: maxPerStageResources is required to be at least the sum of per stage UBOs, SSBOs etc
     // which total a minimum of 44 resources, so no underflow is possible here.  Limit the total
