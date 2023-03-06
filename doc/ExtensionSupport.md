@@ -165,6 +165,7 @@ using data from registry_xml.py and gl.xml.
 | [GL_EXT_texture_cube_map_array](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_texture_cube_map_array.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
 | [GL_OES_texture_cube_map_array](https://khronos.org/registry/OpenGL/extensions/OES/OES_texture_cube_map_array.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
 | [GL_EXT_texture_filter_anisotropic](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_texture_filter_anisotropic.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
+| [GL_EXT_texture_filter_minmax](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_texture_filter_minmax.txt) |  |  |  |  |  |  |  |
 | [GL_OES_texture_float](https://khronos.org/registry/OpenGL/extensions/OES/OES_texture_float.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
 | [GL_OES_texture_float_linear](https://khronos.org/registry/OpenGL/extensions/OES/OES_texture_float_linear.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |  | &#x2714; |
 | [GL_EXT_texture_format_BGRA8888](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_texture_format_BGRA8888.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |

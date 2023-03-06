@@ -505,6 +505,9 @@ struct Extensions
     // GL_EXT_texture_filter_anisotropic
     bool textureFilterAnisotropicEXT = false;
 
+    // GL_EXT_texture_filter_minmax
+    bool textureFilterMinmaxEXT = false;
+
     // GL_OES_texture_float
     bool textureFloatOES = false;
 

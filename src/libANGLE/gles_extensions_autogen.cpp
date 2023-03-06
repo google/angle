@@ -181,6 +181,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_EXT_texture_cube_map_array"] = enableableExtension(&Extensions::textureCubeMapArrayEXT);
         map["GL_OES_texture_cube_map_array"] = enableableExtension(&Extensions::textureCubeMapArrayOES);
         map["GL_EXT_texture_filter_anisotropic"] = enableableExtension(&Extensions::textureFilterAnisotropicEXT);
+        map["GL_EXT_texture_filter_minmax"] = enableableExtension(&Extensions::textureFilterMinmaxEXT);
         map["GL_OES_texture_float"] = enableableExtension(&Extensions::textureFloatOES);
         map["GL_OES_texture_float_linear"] = enableableExtension(&Extensions::textureFloatLinearOES);
         map["GL_EXT_texture_format_BGRA8888"] = enableableExtension(&Extensions::textureFormatBGRA8888EXT);

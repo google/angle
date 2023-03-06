@@ -2535,6 +2535,10 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                     return "GL_NEGATIVE_ONE_TO_ONE_EXT";
                 case 0x935F:
                     return "GL_ZERO_TO_ONE_EXT";
+                case 0x9366:
+                    return "GL_TEXTURE_REDUCTION_MODE_EXT";
+                case 0x9367:
+                    return "GL_WEIGHTED_AVERAGE_EXT";
                 case 0x9380:
                     return "GL_NUM_SAMPLE_COUNTS";
                 case 0x9381:
@@ -11686,6 +11690,10 @@ const char *GLenumToString(BigGLEnum enumGroup, unsigned int value)
                     return "GL_ZERO_TO_ONE";
                 case 0x9365:
                     return "GL_CLEAR_TEXTURE";
+                case 0x9366:
+                    return "GL_TEXTURE_REDUCTION_MODE_EXT";
+                case 0x9367:
+                    return "GL_WEIGHTED_AVERAGE_EXT";
                 case 0x9380:
                     return "GL_NUM_SAMPLE_COUNTS";
                 case 0x93A1:

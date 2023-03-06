@@ -229,6 +229,7 @@
     /* GL_EXT_texture_compression_s3tc_srgb */                                                     \
     /* GL_EXT_texture_cube_map_array */                                                            \
     /* GL_EXT_texture_filter_anisotropic */                                                        \
+    /* GL_EXT_texture_filter_minmax */                                                             \
     /* GL_EXT_texture_format_BGRA8888 */                                                           \
     /* GL_EXT_texture_format_sRGB_override */                                                      \
     /* GL_EXT_texture_mirror_clamp_to_edge */                                                      \
