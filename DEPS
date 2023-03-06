@@ -1759,6 +1759,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_traces',
   },
+  'src/tests/restricted_traces/jackpot_world': {
+      'packages': [
+        {
+            'package': 'angle/traces/jackpot_world',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_traces',
+  },
   'src/tests/restricted_traces/jetpack_joyride': {
       'packages': [
         {
