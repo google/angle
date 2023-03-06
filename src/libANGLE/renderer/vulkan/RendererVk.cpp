@@ -1741,10 +1741,7 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
         ANGLE_VK_TRY(displayVk, vkCreateInstance(&instanceInfo, nullptr, &mInstance));
 #if defined(ANGLE_SHARED_LIBVULKAN)
         // Load volk if we are linking dynamically
-        if ((mInstance != VK_NULL_HANDLE) && (volkGetLoadedInstance() != mInstance))
-        {
-            volkLoadInstance(mInstance);
-        }
+        volkLoadInstance(mInstance);
 #endif  // defined(ANGLE_SHARED_LIBVULKAN)
 
         initInstanceExtensionEntryPoints();
