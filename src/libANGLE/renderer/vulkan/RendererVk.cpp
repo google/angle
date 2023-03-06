@@ -282,11 +282,6 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
     // being accessed. http://anglebug.com/6725
     {
         "SYNC-HAZARD-READ-AFTER-WRITE",
-        "vkCmdDraw: Hazard READ_AFTER_WRITE for VkBuffer",
-        "usage: SYNC_VERTEX_SHADER_SHADER_STORAGE_READ",
-    },
-    {
-        "SYNC-HAZARD-READ-AFTER-WRITE",
         "vkCmdDrawIndexed: Hazard READ_AFTER_WRITE for vertex",
         "usage: SYNC_VERTEX_ATTRIBUTE_INPUT_VERTEX_ATTRIBUTE_READ",
     },
@@ -337,6 +332,17 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
         "SYNC_TRANSFORM_FEEDBACK_EXT_TRANSFORM_FEEDBACK_COUNTER_READ_EXT|SYNC_TRANSFORM_FEEDBACK_"
         "EXT_"
         "TRANSFORM_FEEDBACK_COUNTER_WRITE_EXT",
+    },
+    // http://anglebug.com/8054 (VkNonDispatchableHandle on x86 bots)
+    {
+        "SYNC-HAZARD-READ-AFTER-WRITE",
+        "vkCmdDraw: Hazard READ_AFTER_WRITE for VkBuffer",
+        "usage: SYNC_VERTEX_SHADER_SHADER_STORAGE_READ",
+    },
+    {
+        "SYNC-HAZARD-READ-AFTER-WRITE",
+        "vkCmdDraw: Hazard READ_AFTER_WRITE for VkNonDispatchableHandle",
+        "usage: SYNC_VERTEX_SHADER_SHADER_STORAGE_READ",
     },
     // From: TraceTest.manhattan_31 with SwiftShader. These failures appears related to
     // dynamic uniform buffers. The failures are gone if I force mUniformBufferDescriptorType to
