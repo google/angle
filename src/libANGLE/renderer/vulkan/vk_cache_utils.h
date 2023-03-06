@@ -2558,10 +2558,8 @@ class DescriptorSetCache final : angle::NonCopyable
     angle::HashMap<vk::DescriptorSetDesc, std::unique_ptr<dsCacheEntry>> mPayload;
 };
 
-// There is 1 default uniform binding used per stage.  Currently, a maximum of three stages are
-// supported.
+// There is 1 default uniform binding used per stage.
 constexpr uint32_t kReservedPerStageDefaultUniformBindingCount = 1;
-constexpr uint32_t kReservedDefaultUniformBindingCount         = 3;
 }  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_VULKAN_VK_CACHE_UTILS_H_
