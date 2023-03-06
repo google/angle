@@ -6056,6 +6056,16 @@ bool OutputSPIRVTraverser::visitDeclaration(Visit visit, TIntermDeclaration *nod
         const spv::Decoration decoration =
             type.getQualifier() == EvqUniform ? spv::DecorationBlock : spv::DecorationBufferBlock;
         spirv::WriteDecorate(mBuilder.getSpirvDecorations(), nonArrayTypeId, decoration, {});
+
+        if (type.getQualifier() == EvqBuffer && !memoryQualifier.restrictQualifier &&
+            mCompileOptions.aliasedSSBOUnlessRestrict)
+        {
+            // Temporary workaround for issuetracker.google.com/266235549
+            // If GLSL does not specify the SSBO has restrict memory qualifier, assume the memory
+            // qualifier is aliased
+            spirv::WriteDecorate(mBuilder.getSpirvDecorations(), variableId, spv::DecorationAliased,
+                                 {});
+        }
     }
 
     // Write DescriptorSet, Binding, Location etc decorations if necessary.

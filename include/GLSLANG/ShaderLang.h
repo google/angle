@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 322
+#define ANGLE_SH_VERSION 323
 
 enum ShShaderSpec
 {
@@ -416,6 +416,10 @@ struct ShCompileOptions
 
     // Use an integer uniform to pass a bitset of enabled clip distances.
     uint64_t emulateClipDistanceState : 1;
+
+    // issuetracker.google.com/266235549 add aliased memory decoration to ssbo if the variable is
+    // not declared with "restrict" memory qualifier in GLSL
+    uint64_t aliasedSSBOUnlessRestrict : 1;
 
     ShCompileOptionsMetal metal;
     ShPixelLocalStorageOptions pls;

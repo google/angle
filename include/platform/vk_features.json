@@ -8,6 +8,14 @@
     ],
     "features": [
         {
+            "name": "append_aliased_memory_decorations_to_ssbo",
+            "category": "Workarounds",
+            "description": [
+                "Append aliased memory decoration to ssbo in SpirV if the ssbo in GLSL is not declared with restrict memory qualifier"
+            ],
+            "issue": "b/266235549"
+        },
+        {
             "name": "bresenham_line_rasterization",
             "category": "Features",
             "description": [

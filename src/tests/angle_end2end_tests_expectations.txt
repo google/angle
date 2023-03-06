@@ -1175,3 +1175,7 @@
 6261 : MultithreadingTest* = TIMEOUT
 // Please do not add expectations below this line,
 // so that TIMEOUT expectations above don't override more precise SKIP expectations
+
+// SSBO Alias Overwrite
+5990 PIXEL4ORXL VULKAN : ComputeShaderTest.SSBOAliasOverWrite/* = SKIP
+266235549 D3D11 : ComputeShaderTest.SSBOAliasOverWrite/* = SKIP

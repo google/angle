@@ -38,6 +38,7 @@ enum class Feature
     AllowTranslateUniformBlockToStructuredBuffer,
     AlwaysCallUseProgramAfterLink,
     AlwaysUnbindFramebufferTexture2D,
+    AppendAliasedMemoryDecorationsToSsbo,
     AsyncCommandBufferReset,
     AsyncCommandQueue,
     Avoid1BitAlphaTextureFormats,
