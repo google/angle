@@ -1188,13 +1188,7 @@ ANGLE_INLINE void RendererVk::requestAsyncCommandsAndGarbageCleanup(vk::Context 
 
 ANGLE_INLINE angle::Result RendererVk::checkCompletedCommands(vk::Context *context)
 {
-    bool anyCommandFinished;
-    ANGLE_TRY(mCommandQueue.checkCompletedCommands(context, &anyCommandFinished));
-    if (anyCommandFinished)
-    {
-        ANGLE_TRY(mCommandQueue.retireFinishedCommandsAndCleanupGarbage(context));
-    }
-    return angle::Result::Continue;
+    return mCommandQueue.checkAndCleanupCompletedCommands(context);
 }
 }  // namespace rx
 

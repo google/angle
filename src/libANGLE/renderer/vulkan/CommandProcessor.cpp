@@ -636,10 +636,11 @@ angle::Result CommandProcessor::processTasksImpl(bool *exitThread)
         if (mNeedCommandsAndGarbageCleanup.exchange(false))
         {
             // Always check completed commands again in case anything new has been finished.
-            bool anyCommandFinished;
-            ANGLE_TRY(mCommandQueue->checkCompletedCommands(this, &anyCommandFinished));
+            ANGLE_TRY(mCommandQueue->checkCompletedCommands(this));
+
             // Reset command buffer and clean up garbage
-            if (mRenderer->isAsyncCommandBufferResetEnabled())
+            if (mRenderer->isAsyncCommandBufferResetEnabled() &&
+                mCommandQueue->hasFinishedCommands())
             {
                 ANGLE_TRY(mCommandQueue->retireFinishedCommands(this));
             }
@@ -1087,12 +1088,7 @@ angle::Result CommandQueue::postSubmitCheck(Context *context)
     RendererVk *renderer = context->getRenderer();
 
     // Update mLastCompletedQueueSerial immediately in case any command has been finished.
-    bool anyCommandFinished;
-    ANGLE_TRY(checkCompletedCommands(context, &anyCommandFinished));
-    if (anyCommandFinished)
-    {
-        ANGLE_TRY(retireFinishedCommandsAndCleanupGarbage(context));
-    }
+    ANGLE_TRY(checkAndCleanupCompletedCommands(context));
 
     VkDeviceSize suballocationGarbageSize = renderer->getSuballocationGarbageSize();
     if (suballocationGarbageSize > kMaxBufferSuballocationGarbageSize)
@@ -1124,7 +1120,6 @@ angle::Result CommandQueue::finishResourceUse(Context *context,
 {
     VkDevice device = context->getDevice();
 
-    size_t finishedCount = 0;
     {
         std::unique_lock<std::mutex> lock(mMutex);
         while (!mInFlightCommands.empty() && !hasResourceUseFinished(use))
@@ -1142,13 +1137,12 @@ angle::Result CommandQueue::finishResourceUse(Context *context,
                 ANGLE_VK_TRY(context, status);
             }
         }
-        // Do one more check in case more commands also finished.
+        // Check the rest of the commands in case they are also finished.
         ANGLE_TRY(checkCompletedCommandsLocked(context));
-        finishedCount = mFinishedCommandBatches.size();
     }
     ASSERT(hasResourceUseFinished(use));
 
-    if (finishedCount > 0)
+    if (!mFinishedCommandBatches.empty())
     {
         ANGLE_TRY(retireFinishedCommandsAndCleanupGarbage(context));
     }
