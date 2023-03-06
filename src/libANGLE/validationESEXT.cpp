@@ -2385,16 +2385,22 @@ bool ValidateBufferStorageEXT(const Context *context,
 // GL_EXT_clip_control
 bool ValidateClipControlEXT(const Context *context,
                             angle::EntryPoint entryPoint,
-                            GLenum origin,
-                            GLenum depth)
+                            ClipOrigin originPacked,
+                            ClipDepthMode depthPacked)
 {
-    if ((origin != GL_LOWER_LEFT_EXT) && (origin != GL_UPPER_LEFT_EXT))
+    if (!context->getExtensions().clipControlEXT)
+    {
+        context->validationError(entryPoint, GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    if (originPacked == ClipOrigin::InvalidEnum)
     {
         context->validationError(entryPoint, GL_INVALID_ENUM, kInvalidOriginEnum);
         return false;
     }
 
-    if ((depth != GL_NEGATIVE_ONE_TO_ONE_EXT) && (depth != GL_ZERO_TO_ONE_EXT))
+    if (depthPacked == ClipDepthMode::InvalidEnum)
     {
         context->validationError(entryPoint, GL_INVALID_ENUM, kInvalidDepthEnum);
         return false;

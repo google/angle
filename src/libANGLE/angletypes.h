@@ -130,12 +130,6 @@ bool operator!=(const RectangleImpl<T> &a, const RectangleImpl<T> &b);
 
 using Rectangle = RectangleImpl<int>;
 
-enum class ClipSpaceOrigin
-{
-    LowerLeft = 0,
-    UpperLeft = 1
-};
-
 // Calculate the intersection of two rectangles.  Returns false if the intersection is empty.
 [[nodiscard]] bool ClipRectangle(const Rectangle &source,
                                  const Rectangle &clip,

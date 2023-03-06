@@ -1957,6 +1957,10 @@ void GenerateCaps(const FunctionsGL *functions,
                                     functions->isAtLeastGLES(gl::Version(3, 0)) ||
                                     functions->hasGLESExtension("GL_EXT_shadow_samplers");
 
+    extensions->clipControlEXT = functions->isAtLeastGL(gl::Version(4, 5)) ||
+                                 functions->hasGLExtension("GL_ARB_clip_control") ||
+                                 functions->hasGLESExtension("GL_EXT_clip_control");
+
     // GL_APPLE_clip_distance cannot be implemented on top of GL_EXT_clip_cull_distance,
     // so require either native support or desktop GL.
     extensions->clipDistanceAPPLE = functions->isAtLeastGL(gl::Version(3, 0)) ||

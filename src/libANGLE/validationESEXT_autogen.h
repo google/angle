@@ -1094,8 +1094,8 @@ bool ValidateBufferStorageEXT(const Context *context,
 // GL_EXT_clip_control
 bool ValidateClipControlEXT(const Context *context,
                             angle::EntryPoint entryPoint,
-                            GLenum origin,
-                            GLenum depth);
+                            ClipOrigin originPacked,
+                            ClipDepthMode depthPacked);
 
 // GL_EXT_clip_cull_distance
 

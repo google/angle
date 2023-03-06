@@ -1099,8 +1099,8 @@ angle::CallCapture CaptureBufferStorageEXT(const State &glState,
 // GL_EXT_clip_control
 angle::CallCapture CaptureClipControlEXT(const State &glState,
                                          bool isCallValid,
-                                         GLenum origin,
-                                         GLenum depth);
+                                         ClipOrigin originPacked,
+                                         ClipDepthMode depthPacked);
 
 // GL_EXT_clip_cull_distance
 

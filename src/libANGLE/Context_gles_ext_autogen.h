@@ -105,7 +105,7 @@
     void bufferStorage(BufferBinding targetPacked, GLsizeiptr size, const void *data,              \
                        GLbitfield flags);                                                          \
     /* GL_EXT_clip_control */                                                                      \
-    void clipControl(GLenum origin, GLenum depth);                                                 \
+    void clipControl(ClipOrigin originPacked, ClipDepthMode depthPacked);                          \
     /* GL_EXT_clip_cull_distance */                                                                \
     /* GL_EXT_color_buffer_float */                                                                \
     /* GL_EXT_color_buffer_half_float */                                                           \

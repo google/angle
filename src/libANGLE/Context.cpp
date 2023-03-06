@@ -2256,14 +2256,6 @@ void Context::getIntegervImpl(GLenum pname, GLint *params) const
             *params = mState.mCaps.textureBufferOffsetAlignment;
             break;
 
-        // GL_EXT_clip_control
-        case GL_CLIP_ORIGIN_EXT:
-            *params = mState.mClipControlOrigin;
-            break;
-        case GL_CLIP_DEPTH_MODE_EXT:
-            *params = mState.mClipControlDepth;
-            break;
-
         // ANGLE_shader_pixel_local_storage
         case GL_MAX_PIXEL_LOCAL_STORAGE_PLANES_ANGLE:
             *params = mState.mCaps.maxPixelLocalStoragePlanes;
@@ -5926,9 +5918,9 @@ void Context::depthRangef(GLfloat zNear, GLfloat zFar)
     mState.setDepthRange(clamp01(zNear), clamp01(zFar));
 }
 
-void Context::clipControl(GLenum origin, GLenum depth)
+void Context::clipControl(ClipOrigin originPacked, ClipDepthMode depthPacked)
 {
-    mState.setClipControl(origin, depth);
+    mState.setClipControl(originPacked, depthPacked);
 }
 
 void Context::disable(GLenum cap)

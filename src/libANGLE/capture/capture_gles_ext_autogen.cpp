@@ -5591,13 +5591,13 @@ CallCapture CaptureBufferStorageEXT(const State &glState,
 
 CallCapture CaptureClipControlEXT(const State &glState,
                                   bool isCallValid,
-                                  GLenum origin,
-                                  GLenum depth)
+                                  ClipOrigin originPacked,
+                                  ClipDepthMode depthPacked)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addEnumParam("origin", GLESEnum::AllEnums, ParamType::TGLenum, origin);
-    paramBuffer.addEnumParam("depth", GLESEnum::AllEnums, ParamType::TGLenum, depth);
+    paramBuffer.addValueParam("originPacked", ParamType::TClipOrigin, originPacked);
+    paramBuffer.addValueParam("depthPacked", ParamType::TClipDepthMode, depthPacked);
 
     return CallCapture(angle::EntryPoint::GLClipControlEXT, std::move(paramBuffer));
 }
