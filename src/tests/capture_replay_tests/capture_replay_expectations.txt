@@ -191,3 +191,8 @@
 8033 WIN : ClearTestES3.RepeatedStencilClearWithBlitAfterClearAndDrawInBetween/* = SKIP_FOR_CAPTURE
 8033 WIN : StateChangeTestES3.StencilReferenceAndCompareMask/* = SKIP_FOR_CAPTURE
 8033 WIN : StateChangeTestES3.StencilWriteMask/* = SKIP_FOR_CAPTURE
+
+# Corrupting memory by writing past readBufferSize due to GL_PACK_SKIP_ROWS etc
+8070 : Texture2DNorm16TestES3.TextureNorm16R16RenderTest/* = SKIP_FOR_CAPTURE
+8070 : Texture2DNorm16TestES3.TextureNorm16RG16RenderTest/* = SKIP_FOR_CAPTURE
+8070 : Texture2DNorm16TestES3.TextureNorm16RGBA16RenderTest/* = SKIP_FOR_CAPTURE
