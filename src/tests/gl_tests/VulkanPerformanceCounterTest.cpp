@@ -7196,6 +7196,35 @@ TEST_P(VulkanPerformanceCounterTest, FBOChangeAndBackDoesNotBreakRenderPass)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 }
 
+// This is test for optimization in vulkan backend. efootball_pes_2021 usage shows this usage
+// pattern and we expect implementation to reuse the storage for performance.
+TEST_P(VulkanPerformanceCounterTest,
+       bufferDataWithSizeFollowedByZeroAndThenSizeAgainShouldReuseStorage)
+{
+    GLBuffer buffer;
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    constexpr size_t count = 288;
+    std::array<uint32_t, count> data;
+    constexpr size_t bufferSize = data.size() * sizeof(uint32_t);
+    data.fill(0x1234567);
+
+    glBufferData(GL_ARRAY_BUFFER, bufferSize, data.data(), GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, 0, nullptr, GL_DYNAMIC_DRAW);
+    // This should get back the original storage with proper BufferVk optimization
+    data.fill(0x89abcdef);
+    uint64_t expectedSuballocationCalls = getPerfCounters().bufferSuballocationCalls;
+    glBufferData(GL_ARRAY_BUFFER, bufferSize, data.data(), GL_DYNAMIC_DRAW);
+    EXPECT_EQ(getPerfCounters().bufferSuballocationCalls, expectedSuballocationCalls);
+
+    uint32_t *mapPtr = reinterpret_cast<uint32_t *>(
+        glMapBufferRange(GL_ARRAY_BUFFER, 0, bufferSize, GL_MAP_READ_BIT));
+    ASSERT_NE(nullptr, mapPtr);
+    EXPECT_EQ(0x89abcdef, mapPtr[0]);
+    EXPECT_EQ(0x89abcdef, mapPtr[count - 1]);
+    glUnmapBuffer(GL_ARRAY_BUFFER);
+    ASSERT_GL_NO_ERROR();
+}
+
 class VulkanPerformanceCounterTest_AsyncCQ : public VulkanPerformanceCounterTest
 {};
 

@@ -370,8 +370,7 @@ angle::Result BufferVk::setDataWithUsageFlags(const gl::Context *context,
 
         return angle::Result::Continue;
     }
-    return setDataWithMemoryType(context, target, data, size, memoryPropertyFlags,
-                                 persistentMapRequired, usage);
+    return setDataWithMemoryType(context, target, data, size, memoryPropertyFlags, usage);
 }
 
 angle::Result BufferVk::setData(const gl::Context *context,
@@ -384,7 +383,7 @@ angle::Result BufferVk::setData(const gl::Context *context,
     // Assume host visible/coherent memory available.
     VkMemoryPropertyFlags memoryPropertyFlags =
         GetPreferredMemoryType(contextVk->getRenderer(), target, usage);
-    return setDataWithMemoryType(context, target, data, size, memoryPropertyFlags, false, usage);
+    return setDataWithMemoryType(context, target, data, size, memoryPropertyFlags, usage);
 }
 
 angle::Result BufferVk::setDataWithMemoryType(const gl::Context *context,
@@ -392,12 +391,12 @@ angle::Result BufferVk::setDataWithMemoryType(const gl::Context *context,
                                               const void *data,
                                               size_t size,
                                               VkMemoryPropertyFlags memoryPropertyFlags,
-                                              bool persistentMapRequired,
                                               gl::BufferUsage usage)
 {
     ContextVk *contextVk = vk::GetImpl(context);
+    RendererVk *renderer = contextVk->getRenderer();
+    BufferUpdateType updateType;
 
-    mUsageType = GetBufferUsageType(usage);
     // Reset the flag since the buffer contents are being reinitialized. If the caller passed in
     // data to fill the buffer, the flag will be updated when the data is copied to the buffer.
     mHasValidData = false;
@@ -408,30 +407,42 @@ angle::Result BufferVk::setDataWithMemoryType(const gl::Context *context,
         return angle::Result::Continue;
     }
 
-    const bool bufferSizeChanged = size != static_cast<size_t>(mState.getSize());
-    const bool inUseAndRespecifiedWithoutData =
-        (data == nullptr && isCurrentlyInUse(contextVk->getRenderer()));
-
-    // The entire buffer is being respecified, possibly with null data.
-    // Release and init a new mBuffer with requested size.
-    if (bufferSizeChanged || inUseAndRespecifiedWithoutData)
+    if (!mBuffer.valid())
     {
-        // Release and re-create the memory and buffer.
-        release(contextVk);
-
+        mUsageType           = GetBufferUsageType(usage);
         mMemoryPropertyFlags = memoryPropertyFlags;
         ANGLE_TRY(GetMemoryTypeIndex(contextVk, size, memoryPropertyFlags, &mMemoryTypeIndex));
-
         ANGLE_TRY(acquireBufferHelper(contextVk, size));
+        updateType = BufferUpdateType::StorageRedefined;
+    }
+    else
+    {
+        const bool inUseAndRespecifiedWithoutData = (data == nullptr && isCurrentlyInUse(renderer));
+        // Optimization: Lets figure out if we can reuse the existing storage.
+        bool redefineStorage = shouldRedefineStorage(renderer, usage, memoryPropertyFlags, size);
+
+        // The entire buffer is being respecified, possibly with null data.
+        // Release and init a new mBuffer with requested size.
+        if (redefineStorage || inUseAndRespecifiedWithoutData)
+        {
+            // Release and re-create the memory and buffer.
+            release(contextVk);
+            mUsageType = GetBufferUsageType(usage);
+            ANGLE_TRY(GetMemoryTypeIndex(contextVk, size, memoryPropertyFlags, &mMemoryTypeIndex));
+            ANGLE_TRY(acquireBufferHelper(contextVk, size));
+            updateType = BufferUpdateType::StorageRedefined;
+        }
+        else
+        {
+            updateType = BufferUpdateType::ContentsUpdate;
+        }
     }
 
     if (data)
     {
         // Treat full-buffer updates as SubData calls.
-        BufferUpdateType updateType = bufferSizeChanged ? BufferUpdateType::StorageRedefined
-                                                        : BufferUpdateType::ContentsUpdate;
-
-        ANGLE_TRY(setDataImpl(contextVk, static_cast<const uint8_t *>(data), size, 0, updateType));
+        ANGLE_TRY(
+            setDataImpl(contextVk, size, static_cast<const uint8_t *>(data), size, 0, updateType));
     }
 
     return angle::Result::Continue;
@@ -446,7 +457,8 @@ angle::Result BufferVk::setSubData(const gl::Context *context,
     ASSERT(mBuffer.valid());
 
     ContextVk *contextVk = vk::GetImpl(context);
-    ANGLE_TRY(setDataImpl(contextVk, static_cast<const uint8_t *>(data), size, offset,
+    ANGLE_TRY(setDataImpl(contextVk, static_cast<size_t>(mState.getSize()),
+                          static_cast<const uint8_t *>(data), size, offset,
                           BufferUpdateType::ContentsUpdate));
 
     return angle::Result::Continue;
@@ -885,23 +897,25 @@ angle::Result BufferVk::stagedUpdate(ContextVk *contextVk,
 }
 
 angle::Result BufferVk::acquireAndUpdate(ContextVk *contextVk,
+                                         size_t bufferSize,
                                          const uint8_t *data,
                                          size_t updateSize,
-                                         size_t offset,
+                                         size_t updateOffset,
                                          BufferUpdateType updateType)
 {
     // We shouldn't get here if this is external memory
     ASSERT(!isExternalBuffer());
     // If StorageRedefined, we can not use mState.getSize() to allocate a new buffer.
     ASSERT(updateType != BufferUpdateType::StorageRedefined);
+    ASSERT(mBuffer.valid());
+    ASSERT(mBuffer.getSize() >= bufferSize);
 
     // Here we acquire a new BufferHelper and directUpdate() the new buffer.
     // If the subData size was less than the buffer's size we additionally enqueue
     // a GPU copy of the remaining regions from the old mBuffer to the new one.
     vk::BufferHelper src;
-    size_t bufferSize              = static_cast<size_t>(mState.getSize());
-    size_t offsetAfterSubdata      = (offset + updateSize);
-    bool updateRegionBeforeSubData = mHasValidData && (offset > 0);
+    size_t offsetAfterSubdata      = (updateOffset + updateSize);
+    bool updateRegionBeforeSubData = mHasValidData && (updateOffset > 0);
     bool updateRegionAfterSubData  = mHasValidData && (offsetAfterSubdata < bufferSize);
 
     uint8_t *srcMapPtrBeforeSubData = nullptr;
@@ -929,7 +943,7 @@ angle::Result BufferVk::acquireAndUpdate(ContextVk *contextVk,
     }
 
     ANGLE_TRY(acquireBufferHelper(contextVk, bufferSize));
-    ANGLE_TRY(updateBuffer(contextVk, data, updateSize, offset));
+    ANGLE_TRY(updateBuffer(contextVk, data, updateSize, updateOffset));
 
     constexpr int kMaxCopyRegions = 2;
     angle::FixedVector<VkBufferCopy, kMaxCopyRegions> copyRegions;
@@ -939,11 +953,11 @@ angle::Result BufferVk::acquireAndUpdate(ContextVk *contextVk,
         if (srcMapPtrBeforeSubData)
         {
             ASSERT(mBuffer.isHostVisible());
-            ANGLE_TRY(directUpdate(contextVk, srcMapPtrBeforeSubData, offset, 0));
+            ANGLE_TRY(directUpdate(contextVk, srcMapPtrBeforeSubData, updateOffset, 0));
         }
         else
         {
-            copyRegions.push_back({src.getOffset(), mBuffer.getOffset(), offset});
+            copyRegions.push_back({src.getOffset(), mBuffer.getOffset(), updateOffset});
         }
     }
 
@@ -977,9 +991,10 @@ angle::Result BufferVk::acquireAndUpdate(ContextVk *contextVk,
 }
 
 angle::Result BufferVk::setDataImpl(ContextVk *contextVk,
+                                    size_t bufferSize,
                                     const uint8_t *data,
-                                    size_t size,
-                                    size_t offset,
+                                    size_t updateSize,
+                                    size_t updateOffset,
                                     BufferUpdateType updateType)
 {
     // if the buffer is currently in use
@@ -1005,13 +1020,11 @@ angle::Result BufferVk::setDataImpl(ContextVk *contextVk,
         const bool canAcquireAndUpdate =
             !isExternalBuffer() && updateType != BufferUpdateType::StorageRedefined;
         if (canAcquireAndUpdate &&
-            (!mHasValidData ||
-             ShouldAvoidRenderPassBreakOnUpdate(contextVk, mBuffer,
-                                                static_cast<size_t>(mState.getSize())) ||
-             ShouldAllocateNewMemoryForUpdate(contextVk, size,
-                                              static_cast<size_t>(mState.getSize()))))
+            (!mHasValidData || ShouldAvoidRenderPassBreakOnUpdate(contextVk, mBuffer, bufferSize) ||
+             ShouldAllocateNewMemoryForUpdate(contextVk, updateSize, bufferSize)))
         {
-            ANGLE_TRY(acquireAndUpdate(contextVk, data, size, offset, updateType));
+            ANGLE_TRY(acquireAndUpdate(contextVk, bufferSize, data, updateSize, updateOffset,
+                                       updateType));
         }
         else
         {
@@ -1021,12 +1034,12 @@ angle::Result BufferVk::setDataImpl(ContextVk *contextVk,
                                       "Breaking the render pass on small upload to large buffer");
             }
 
-            ANGLE_TRY(stagedUpdate(contextVk, data, size, offset));
+            ANGLE_TRY(stagedUpdate(contextVk, data, updateSize, updateOffset));
         }
     }
     else
     {
-        ANGLE_TRY(updateBuffer(contextVk, data, size, offset));
+        ANGLE_TRY(updateBuffer(contextVk, data, updateSize, updateOffset));
     }
 
     // Update conversions
@@ -1095,5 +1108,38 @@ angle::Result BufferVk::acquireBufferHelper(ContextVk *contextVk, size_t sizeInB
 bool BufferVk::isCurrentlyInUse(RendererVk *renderer) const
 {
     return !renderer->hasResourceUseFinished(mBuffer.getResourceUse());
+}
+
+bool BufferVk::shouldRedefineStorage(RendererVk *renderer,
+                                     gl::BufferUsage usage,
+                                     VkMemoryPropertyFlags memoryPropertyFlags,
+                                     size_t size) const
+{
+    if (mUsageType != GetBufferUsageType(usage))
+    {
+        return true;
+    }
+
+    if (mMemoryPropertyFlags != memoryPropertyFlags)
+    {
+        return true;
+    }
+
+    if (size > mBuffer.getSize())
+    {
+        return true;
+    }
+    else
+    {
+        size_t alignment   = renderer->getDefaultBufferAlignment();
+        size_t sizeInBytes = roundUpPow2(size, kBufferSizeGranularity);
+        size_t alignedSize = roundUp(sizeInBytes, alignment);
+        if (alignedSize != mBuffer.getSize())
+        {
+            return true;
+        }
+    }
+
+    return false;
 }
 }  // namespace rx

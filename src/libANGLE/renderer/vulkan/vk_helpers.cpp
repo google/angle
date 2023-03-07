@@ -4622,6 +4622,8 @@ angle::Result BufferHelper::initSuballocation(ContextVk *contextVk,
         ANGLE_TRY(initializeNonZeroMemory(contextVk, GetDefaultBufferUsageFlags(renderer), size));
     }
 
+    contextVk->getPerfCounters().bufferSuballocationCalls++;
+
     return angle::Result::Continue;
 }
 
