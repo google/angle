@@ -177,10 +177,12 @@ bool ShouldAvoidRenderPassBreakOnUpdate(ContextVk *contextVk,
     return RenderPassUsesBufferForReadOnly(contextVk, buffer);
 }
 
-bool IsUsageDynamic(gl::BufferUsage usage)
+BufferUsageType GetBufferUsageType(gl::BufferUsage usage)
 {
     return (usage == gl::BufferUsage::DynamicDraw || usage == gl::BufferUsage::DynamicCopy ||
-            usage == gl::BufferUsage::DynamicRead);
+            usage == gl::BufferUsage::DynamicRead)
+               ? BufferUsageType::Dynamic
+               : BufferUsageType::Static;
 }
 
 angle::Result GetMemoryTypeIndex(ContextVk *contextVk,
@@ -267,6 +269,7 @@ BufferVk::BufferVk(const gl::BufferState &state)
       mIsStagingBufferMapped(false),
       mHasValidData(false),
       mIsMappedForWrite(false),
+      mUsageType(BufferUsageType::Static),
       mMappedOffset(0),
       mMappedLength(0)
 {}
@@ -394,6 +397,7 @@ angle::Result BufferVk::setDataWithMemoryType(const gl::Context *context,
 {
     ContextVk *contextVk = vk::GetImpl(context);
 
+    mUsageType = GetBufferUsageType(usage);
     // Reset the flag since the buffer contents are being reinitialized. If the caller passed in
     // data to fill the buffer, the flag will be updated when the data is copied to the buffer.
     mHasValidData = false;
@@ -856,7 +860,7 @@ angle::Result BufferVk::directUpdate(ContextVk *contextVk,
     // If the buffer has dynamic usage then the intent is frequent client side updates to the
     // buffer. Don't CPU unmap the buffer, we will take care of unmapping when releasing the buffer
     // to either the renderer or mBufferFreeList.
-    if (!IsUsageDynamic(mState.getUsage()))
+    if (GetBufferUsageType(mState.getUsage()) == BufferUsageType::Static)
     {
         mBuffer.unmap(contextVk->getRenderer());
     }
@@ -1077,7 +1081,7 @@ angle::Result BufferVk::acquireBufferHelper(ContextVk *contextVk, size_t sizeInB
     }
 
     // Allocate the buffer directly
-    ANGLE_TRY(mBuffer.initSuballocation(contextVk, mMemoryTypeIndex, size, alignment));
+    ANGLE_TRY(mBuffer.initSuballocation(contextVk, mMemoryTypeIndex, size, alignment, mUsageType));
 
     // Tell the observers (front end) that a new buffer was created, so the necessary
     // dirty bits can be set. This allows the buffer views pointing to the old buffer to

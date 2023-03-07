@@ -221,6 +221,8 @@ class BufferVk : public BufferImpl
     // Otherwise it is mapped from ANGLE internal and will not be consistent with mState access
     // bits, so we have to keep record of it.
     bool mIsMappedForWrite;
+    // True if usage is dynamic. May affect how we allocate memory.
+    BufferUsageType mUsageType;
     // Similar as mIsMappedForWrite, this maybe different from mState's getMapOffset/getMapLength if
     // mapped from angle internal.
     VkDeviceSize mMappedOffset;

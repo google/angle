@@ -93,7 +93,8 @@ class ShareGroupVk : public ShareGroupImpl
 
     vk::BufferPool *getDefaultBufferPool(RendererVk *renderer,
                                          VkDeviceSize size,
-                                         uint32_t memoryTypeIndex);
+                                         uint32_t memoryTypeIndex,
+                                         BufferUsageType usageType);
     void pruneDefaultBufferPools(RendererVk *renderer);
     bool isDueForBufferPoolPrune(RendererVk *renderer);
 
@@ -148,11 +149,15 @@ class ShareGroupVk : public ShareGroupImpl
     UpdateDescriptorSetsBuilder mUpdateDescriptorSetsBuilder;
 
     // The per shared group buffer pools that all buffers should sub-allocate from.
-    vk::BufferPoolPointerArray mDefaultBufferPools;
-
-    // The pool dedicated for small allocations that uses faster buddy algorithm
-    std::unique_ptr<vk::BufferPool> mSmallBufferPool;
-    static constexpr VkDeviceSize kMaxSizeToUseSmallBufferPool = 256;
+    enum class SuballocationAlgorithm : uint8_t
+    {
+        Buddy       = 0,
+        General     = 1,
+        InvalidEnum = 2,
+        EnumCount   = InvalidEnum,
+    };
+    angle::PackedEnumMap<SuballocationAlgorithm, vk::BufferPoolPointerArray> mDefaultBufferPools;
+    angle::PackedEnumMap<BufferUsageType, size_t> mSizeLimitForBuddyAlgorithm;
 
     // The system time when last pruneEmptyBuffer gets called.
     double mLastPruneTime;
