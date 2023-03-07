@@ -997,12 +997,16 @@
             <proto>void <name>glGetFramebufferPixelLocalStorageParameterfvANGLE</name></proto>
             <param><ptype>GLint</ptype> <name>plane</name></param>
             <param group="PLSQueryFloat"><ptype>GLenum</ptype> <name>pname</name></param>
+            <param><ptype>GLsizei</ptype> <name>bufSize</name></param>
+            <param><ptype>GLsizei *</ptype> <name>length</name></param>
             <param><ptype>GLfloat</ptype> *<name>params</name></param>
         </command>
         <command>
             <proto>void <name>glGetFramebufferPixelLocalStorageParameterivANGLE</name></proto>
             <param><ptype>GLint</ptype> <name>plane</name></param>
             <param group="PLSQueryInt"><ptype>GLenum</ptype> <name>pname</name></param>
+            <param><ptype>GLsizei</ptype> <name>bufSize</name></param>
+            <param><ptype>GLsizei *</ptype> <name>length</name></param>
             <param><ptype>GLint</ptype> *<name>params</name></param>
         </command>
         <command>

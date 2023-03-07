@@ -9350,7 +9350,11 @@ void Context::pixelLocalStorageBarrier()
     pls.barrier(this);
 }
 
-void Context::getFramebufferPixelLocalStorageParameterfv(GLint plane, GLenum pname, GLfloat *params)
+void Context::getFramebufferPixelLocalStorageParameterfv(GLint plane,
+                                                         GLenum pname,
+                                                         GLsizei bufSize,
+                                                         GLsizei *length,
+                                                         GLfloat *params)
 {
     Framebuffer *framebuffer = mState.getDrawFramebuffer();
     ASSERT(framebuffer);
@@ -9359,12 +9363,20 @@ void Context::getFramebufferPixelLocalStorageParameterfv(GLint plane, GLenum pna
     switch (pname)
     {
         case GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE:
+            if (length != nullptr)
+            {
+                *length = 4;
+            }
             pls.getPlane(plane).getClearValuef(params);
             break;
     }
 }
 
-void Context::getFramebufferPixelLocalStorageParameteriv(GLint plane, GLenum pname, GLint *params)
+void Context::getFramebufferPixelLocalStorageParameteriv(GLint plane,
+                                                         GLenum pname,
+                                                         GLsizei bufSize,
+                                                         GLsizei *length,
+                                                         GLint *params)
 {
     Framebuffer *framebuffer = mState.getDrawFramebuffer();
     ASSERT(framebuffer);
@@ -9377,13 +9389,25 @@ void Context::getFramebufferPixelLocalStorageParameteriv(GLint plane, GLenum pna
         case GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE:
         case GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE:
         case GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE:
+            if (length != nullptr)
+            {
+                *length = 1;
+            }
             *params = pls.getPlane(plane).getIntegeri(this, pname);
             break;
         case GL_PIXEL_LOCAL_CLEAR_VALUE_INT_ANGLE:
+            if (length != nullptr)
+            {
+                *length = 4;
+            }
             pls.getPlane(plane).getClearValuei(params);
             break;
         case GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE:
         {
+            if (length != nullptr)
+            {
+                *length = 4;
+            }
             GLuint valueui[4];
             pls.getPlane(plane).getClearValueui(valueui);
             memcpy(params, valueui, sizeof(valueui));

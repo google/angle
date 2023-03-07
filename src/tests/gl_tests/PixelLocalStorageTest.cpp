@@ -598,33 +598,33 @@ TEST_P(PixelLocalStorageTest, R32)
     ASSERT_GL_NO_ERROR();
 }
 
-#define EXPECT_PIXEL_LOCAL_CLEAR_VALUE_FLOAT(plane, rgba)                 \
-    {                                                                     \
-        std::array<GLfloat, 4> expected rgba;                             \
-        std::array<GLfloat, 4> value;                                     \
-        glGetFramebufferPixelLocalStorageParameterfvANGLE(                \
-            plane, GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE, value.data()); \
-        EXPECT_EQ(value, expected);                                       \
+#define EXPECT_PIXEL_LOCAL_CLEAR_VALUE_FLOAT(plane, rgba)                             \
+    {                                                                                 \
+        std::array<GLfloat, 4> expected rgba;                                         \
+        std::array<GLfloat, 4> value;                                                 \
+        glGetFramebufferPixelLocalStorageParameterfvANGLE(                            \
+            plane, GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE, 4, nullptr, value.data()); \
+        EXPECT_EQ(value, expected);                                                   \
     }
 
-#define EXPECT_PIXEL_LOCAL_CLEAR_VALUE_INT(plane, rgba)                 \
-    {                                                                   \
-        std::array<GLint, 4> expected rgba;                             \
-        std::array<GLint, 4> value;                                     \
-        glGetFramebufferPixelLocalStorageParameterivANGLE(              \
-            plane, GL_PIXEL_LOCAL_CLEAR_VALUE_INT_ANGLE, value.data()); \
-        EXPECT_EQ(value, expected);                                     \
+#define EXPECT_PIXEL_LOCAL_CLEAR_VALUE_INT(plane, rgba)                             \
+    {                                                                               \
+        std::array<GLint, 4> expected rgba;                                         \
+        std::array<GLint, 4> value;                                                 \
+        glGetFramebufferPixelLocalStorageParameterivANGLE(                          \
+            plane, GL_PIXEL_LOCAL_CLEAR_VALUE_INT_ANGLE, 4, nullptr, value.data()); \
+        EXPECT_EQ(value, expected);                                                 \
     }
 
-#define EXPECT_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT(plane, rgba)                  \
-    {                                                                             \
-        std::array<GLuint, 4> expected rgba;                                      \
-        std::array<GLint, 4> valuei;                                              \
-        glGetFramebufferPixelLocalStorageParameterivANGLE(                        \
-            plane, GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE, valuei.data()); \
-        std::array<GLuint, 4> value;                                              \
-        memcpy(value.data(), valuei.data(), sizeof(value));                       \
-        EXPECT_EQ(value, expected);                                               \
+#define EXPECT_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT(plane, rgba)                              \
+    {                                                                                         \
+        std::array<GLuint, 4> expected rgba;                                                  \
+        std::array<GLint, 4> valuei;                                                          \
+        glGetFramebufferPixelLocalStorageParameterivANGLE(                                    \
+            plane, GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE, 4, nullptr, valuei.data()); \
+        std::array<GLuint, 4> value;                                                          \
+        memcpy(value.data(), valuei.data(), sizeof(value));                                   \
+        EXPECT_EQ(value, expected);                                                           \
     }
 
 // Check proper functioning of the clear value state.
@@ -2726,11 +2726,11 @@ class ScopedEnable
         EXPECT_EQ(value, GLboolean(expected)); \
     }
 
-#define EXPECT_PLS_INTEGER(plane, pname, expected)                               \
-    {                                                                            \
-        GLint value;                                                             \
-        glGetFramebufferPixelLocalStorageParameterivANGLE(plane, pname, &value); \
-        EXPECT_EQ(value, GLint(expected));                                       \
+#define EXPECT_PLS_INTEGER(plane, pname, expected)                                           \
+    {                                                                                        \
+        GLint value;                                                                         \
+        glGetFramebufferPixelLocalStorageParameterivANGLE(plane, pname, 1, nullptr, &value); \
+        EXPECT_EQ(value, GLint(expected));                                                   \
     }
 
 #define EXPECT_GL_SINGLE_ERROR(err)                \
@@ -3339,7 +3339,7 @@ TEST_P(PixelLocalStorageValidationTest, BeginPixelLocalStorageANGLE_loadops)
     // INVALID_VALUE is generated if <loadops> is NULL.
     glBeginPixelLocalStorageANGLE(1, nullptr);
     EXPECT_GL_SINGLE_ERROR(GL_INVALID_VALUE);
-    EXPECT_GL_SINGLE_ERROR_MSG("loadops cannot null.");
+    EXPECT_GL_SINGLE_ERROR_MSG("<loadops> cannot be null.");
 
     // INVALID_ENUM is generated if <loadops>[0..<n>-1] is not one of the Load Operations enumerated
     // in Table X.1.
@@ -3647,17 +3647,19 @@ TEST_P(PixelLocalStorageValidationTest, EndAndBarrierANGLE)
 // Check that glEndPixelLocalStorageANGLE and glPixelLocalStorageBarrierANGLE validate as specified.
 TEST_P(PixelLocalStorageValidationTest, GetFramebufferPixelLocalStorageParametersANGLE)
 {
-    GLfloat floats[4];
-    GLint ints[4];
+    GLfloat floats[5];
+    GLint ints[5];
+    GLsizei length;
 
     // INVALID_FRAMEBUFFER_OPERATION is generated if the default framebuffer object name 0 is bound
     // to DRAW_FRAMEBUFFER.
-    glGetFramebufferPixelLocalStorageParameterfvANGLE(0, GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE,
-                                                      floats);
+    glGetFramebufferPixelLocalStorageParameterfvANGLE(0, GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE, 4,
+                                                      &length, floats);
     EXPECT_GL_SINGLE_ERROR(GL_INVALID_FRAMEBUFFER_OPERATION);
     EXPECT_GL_SINGLE_ERROR_MSG(
         "Default framebuffer object name 0 does not support pixel local storage.");
-    glGetFramebufferPixelLocalStorageParameterivANGLE(1, GL_PIXEL_LOCAL_FORMAT_ANGLE, ints);
+    glGetFramebufferPixelLocalStorageParameterivANGLE(1, GL_PIXEL_LOCAL_FORMAT_ANGLE, 4, &length,
+                                                      ints);
     EXPECT_GL_SINGLE_ERROR(GL_INVALID_FRAMEBUFFER_OPERATION);
     EXPECT_GL_SINGLE_ERROR_MSG(
         "Default framebuffer object name 0 does not support pixel local storage.");
@@ -3666,61 +3668,194 @@ TEST_P(PixelLocalStorageValidationTest, GetFramebufferPixelLocalStorageParameter
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
 
     // INVALID_VALUE is generated if <plane> < 0 or <plane> >= MAX_PIXEL_LOCAL_STORAGE_PLANES_ANGLE.
-    glGetFramebufferPixelLocalStorageParameterfvANGLE(-1, GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE,
-                                                      floats);
+    glGetFramebufferPixelLocalStorageParameterfvANGLE(-1, GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE, 4,
+                                                      &length, floats);
     EXPECT_GL_SINGLE_ERROR(GL_INVALID_VALUE);
     EXPECT_GL_SINGLE_ERROR_MSG("Plane cannot be less than 0.");
 
-    glGetFramebufferPixelLocalStorageParameterivANGLE(-1, GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE, ints);
+    glGetFramebufferPixelLocalStorageParameterivANGLE(-1, GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE, 4,
+                                                      &length, ints);
     EXPECT_GL_SINGLE_ERROR(GL_INVALID_VALUE);
     EXPECT_GL_SINGLE_ERROR_MSG("Plane cannot be less than 0.");
 
     glGetFramebufferPixelLocalStorageParameterfvANGLE(
-        MAX_PIXEL_LOCAL_STORAGE_PLANES, GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE, floats);
+        MAX_PIXEL_LOCAL_STORAGE_PLANES, GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE, 4, &length, floats);
     EXPECT_GL_SINGLE_ERROR(GL_INVALID_VALUE);
     EXPECT_GL_SINGLE_ERROR_MSG("Plane must be less than GL_MAX_PIXEL_LOCAL_STORAGE_PLANES_ANGLE.");
 
-    glGetFramebufferPixelLocalStorageParameterivANGLE(MAX_PIXEL_LOCAL_STORAGE_PLANES,
-                                                      GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE, ints);
+    glGetFramebufferPixelLocalStorageParameterivANGLE(
+        MAX_PIXEL_LOCAL_STORAGE_PLANES, GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE, 1, &length, ints);
     EXPECT_GL_SINGLE_ERROR(GL_INVALID_VALUE);
     EXPECT_GL_SINGLE_ERROR_MSG("Plane must be less than GL_MAX_PIXEL_LOCAL_STORAGE_PLANES_ANGLE.");
 
     // INVALID_ENUM is generated if the command issued is not the associated "Get Command" for
     // <pname> in Table 6.Y.
-    glGetFramebufferPixelLocalStorageParameterivANGLE(0, GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE,
-                                                      ints);
+    glGetFramebufferPixelLocalStorageParameterivANGLE(0, GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE, 4,
+                                                      &length, ints);
     EXPECT_GL_SINGLE_ERROR(GL_INVALID_ENUM);
     EXPECT_GL_SINGLE_ERROR_MSG("Enum 0x96ED is currently not supported.");
-    glGetFramebufferPixelLocalStorageParameterivANGLE(0, GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE,
-                                                      ints);
+    glGetFramebufferPixelLocalStorageParameterivANGLE(0, GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE, 4,
+                                                      &length, ints);
     EXPECT_GL_SINGLE_ERROR(GL_INVALID_ENUM);
     EXPECT_GL_SINGLE_ERROR_MSG("Enum 0x8CD0 is currently not supported.");
-    glGetFramebufferPixelLocalStorageParameterfvANGLE(1, GL_PIXEL_LOCAL_FORMAT_ANGLE, floats);
+    glGetFramebufferPixelLocalStorageParameterfvANGLE(1, GL_PIXEL_LOCAL_FORMAT_ANGLE, 4, &length,
+                                                      floats);
     EXPECT_GL_SINGLE_ERROR(GL_INVALID_ENUM);
     EXPECT_GL_SINGLE_ERROR_MSG("Enum 0x96E9 is currently not supported.");
-    glGetFramebufferPixelLocalStorageParameterfvANGLE(1, GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE, floats);
+    glGetFramebufferPixelLocalStorageParameterfvANGLE(1, GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE, 1,
+                                                      &length, floats);
     EXPECT_GL_SINGLE_ERROR(GL_INVALID_ENUM);
     EXPECT_GL_SINGLE_ERROR_MSG("Enum 0x96EA is currently not supported.");
-    glGetFramebufferPixelLocalStorageParameterfvANGLE(1, GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE,
-                                                      floats);
+    glGetFramebufferPixelLocalStorageParameterfvANGLE(1, GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE, 1,
+                                                      &length, floats);
     EXPECT_GL_SINGLE_ERROR(GL_INVALID_ENUM);
     EXPECT_GL_SINGLE_ERROR_MSG("Enum 0x96EB is currently not supported.");
-    glGetFramebufferPixelLocalStorageParameterfvANGLE(1, GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE,
-                                                      floats);
+    glGetFramebufferPixelLocalStorageParameterfvANGLE(1, GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE, 1,
+                                                      &length, floats);
     EXPECT_GL_SINGLE_ERROR(GL_INVALID_ENUM);
     EXPECT_GL_SINGLE_ERROR_MSG("Enum 0x96EC is currently not supported.");
-    glGetFramebufferPixelLocalStorageParameterfvANGLE(1, GL_PIXEL_LOCAL_CLEAR_VALUE_INT_ANGLE,
-                                                      floats);
+    glGetFramebufferPixelLocalStorageParameterfvANGLE(1, GL_PIXEL_LOCAL_CLEAR_VALUE_INT_ANGLE, 1,
+                                                      &length, floats);
     EXPECT_GL_SINGLE_ERROR(GL_INVALID_ENUM);
     EXPECT_GL_SINGLE_ERROR_MSG("Enum 0x96EE is currently not supported.");
     glGetFramebufferPixelLocalStorageParameterfvANGLE(
-        1, GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE, floats);
+        1, GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE, 1, &length, floats);
     EXPECT_GL_SINGLE_ERROR(GL_INVALID_ENUM);
     EXPECT_GL_SINGLE_ERROR_MSG("Enum 0x96EF is currently not supported.");
     glGetFramebufferPixelLocalStorageParameterfvANGLE(
-        1, GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_CUBE_MAP_FACE, floats);
+        1, GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_CUBE_MAP_FACE, 1, &length, floats);
     EXPECT_GL_SINGLE_ERROR(GL_INVALID_ENUM);
     EXPECT_GL_SINGLE_ERROR_MSG("Enum 0x8CD3 is currently not supported.");
+
+    // INVALID_OPERATION is generated if <bufSize> is not large enough to receive the requested
+    // parameter.
+    //
+    // ... When an error is generated, nothing is written to <length>.
+    constexpr GLsizei kLengthInitValue = 0xbaadc0de;
+    length                             = kLengthInitValue;
+    glGetFramebufferPixelLocalStorageParameterivANGLE(0, GL_PIXEL_LOCAL_FORMAT_ANGLE, 0, &length,
+                                                      ints);
+    EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
+    EXPECT_GL_SINGLE_ERROR_MSG("More parameters are required than were provided.");
+    EXPECT_EQ(length, kLengthInitValue);
+
+    length = kLengthInitValue;
+    glGetFramebufferPixelLocalStorageParameterivANGLE(0, GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE, 0,
+                                                      &length, ints);
+    EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
+    EXPECT_GL_SINGLE_ERROR_MSG("More parameters are required than were provided.");
+    EXPECT_EQ(length, kLengthInitValue);
+
+    length = kLengthInitValue;
+    glGetFramebufferPixelLocalStorageParameterivANGLE(0, GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE, 0,
+                                                      &length, ints);
+    EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
+    EXPECT_GL_SINGLE_ERROR_MSG("More parameters are required than were provided.");
+    EXPECT_EQ(length, kLengthInitValue);
+
+    length = kLengthInitValue;
+    glGetFramebufferPixelLocalStorageParameterivANGLE(0, GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE, 0,
+                                                      &length, ints);
+    EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
+    EXPECT_GL_SINGLE_ERROR_MSG("More parameters are required than were provided.");
+    EXPECT_EQ(length, kLengthInitValue);
+
+    length = kLengthInitValue;
+    glGetFramebufferPixelLocalStorageParameterivANGLE(0, GL_PIXEL_LOCAL_CLEAR_VALUE_INT_ANGLE, 3,
+                                                      &length, ints);
+    EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
+    EXPECT_GL_SINGLE_ERROR_MSG("More parameters are required than were provided.");
+    EXPECT_EQ(length, kLengthInitValue);
+
+    length = kLengthInitValue;
+    glGetFramebufferPixelLocalStorageParameterivANGLE(
+        0, GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE, 3, &length, ints);
+    EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
+    EXPECT_GL_SINGLE_ERROR_MSG("More parameters are required than were provided.");
+    EXPECT_EQ(length, kLengthInitValue);
+
+    length = kLengthInitValue;
+    glGetFramebufferPixelLocalStorageParameterfvANGLE(0, GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE, 3,
+                                                      &length, floats);
+    EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
+    EXPECT_GL_SINGLE_ERROR_MSG("More parameters are required than were provided.");
+    EXPECT_EQ(length, kLengthInitValue);
+
+    // Not quite pure validation, but also ensure that <length> gets written properly.
+    length = kLengthInitValue;
+    glGetFramebufferPixelLocalStorageParameterivANGLE(0, GL_PIXEL_LOCAL_FORMAT_ANGLE, 5, &length,
+                                                      ints);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(length, 1);
+
+    length = kLengthInitValue;
+    glGetFramebufferPixelLocalStorageParameterivANGLE(0, GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE, 5,
+                                                      &length, ints);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(length, 1);
+
+    length = kLengthInitValue;
+    glGetFramebufferPixelLocalStorageParameterivANGLE(0, GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE, 5,
+                                                      &length, ints);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(length, 1);
+
+    length = kLengthInitValue;
+    glGetFramebufferPixelLocalStorageParameterivANGLE(0, GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE, 5,
+                                                      &length, ints);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(length, 1);
+
+    length = kLengthInitValue;
+    glGetFramebufferPixelLocalStorageParameterivANGLE(0, GL_PIXEL_LOCAL_CLEAR_VALUE_INT_ANGLE, 5,
+                                                      &length, ints);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(length, 4);
+
+    length = kLengthInitValue;
+    glGetFramebufferPixelLocalStorageParameterivANGLE(
+        0, GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE, 5, &length, ints);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(length, 4);
+
+    length = kLengthInitValue;
+    glGetFramebufferPixelLocalStorageParameterfvANGLE(0, GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE, 5,
+                                                      &length, floats);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(length, 4);
+
+    // INVALID_VALUE is generated if <params> is NULL.
+    glGetFramebufferPixelLocalStorageParameterivANGLE(0, GL_PIXEL_LOCAL_FORMAT_ANGLE, 5, &length,
+                                                      nullptr);
+    EXPECT_GL_SINGLE_ERROR(GL_INVALID_VALUE);
+    EXPECT_GL_SINGLE_ERROR_MSG("<params> cannot be null.");
+
+    glGetFramebufferPixelLocalStorageParameterivANGLE(0, GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE, 5,
+                                                      &length, nullptr);
+    EXPECT_GL_SINGLE_ERROR(GL_INVALID_VALUE);
+    EXPECT_GL_SINGLE_ERROR_MSG("<params> cannot be null.");
+
+    glGetFramebufferPixelLocalStorageParameterivANGLE(0, GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE, 5,
+                                                      &length, nullptr);
+    EXPECT_GL_SINGLE_ERROR(GL_INVALID_VALUE);
+    EXPECT_GL_SINGLE_ERROR_MSG("<params> cannot be null.");
+
+    glGetFramebufferPixelLocalStorageParameterivANGLE(0, GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE, 5,
+                                                      &length, nullptr);
+    EXPECT_GL_SINGLE_ERROR(GL_INVALID_VALUE);
+    EXPECT_GL_SINGLE_ERROR_MSG("<params> cannot be null.");
+
+    glGetFramebufferPixelLocalStorageParameterivANGLE(0, GL_PIXEL_LOCAL_CLEAR_VALUE_INT_ANGLE, 5,
+                                                      &length, nullptr);
+    EXPECT_GL_SINGLE_ERROR(GL_INVALID_VALUE);
+    EXPECT_GL_SINGLE_ERROR_MSG("<params> cannot be null.");
+
+    glGetFramebufferPixelLocalStorageParameterivANGLE(
+        0, GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE, 5, &length, ints);
+    glGetFramebufferPixelLocalStorageParameterfvANGLE(0, GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE, 5,
+                                                      &length, nullptr);
+    EXPECT_GL_SINGLE_ERROR(GL_INVALID_VALUE);
+    EXPECT_GL_SINGLE_ERROR_MSG("<params> cannot be null.");
 }
 
 #define EXPECT_BANNED(cmd, msg)                   \
@@ -3823,11 +3958,11 @@ TEST_P(PixelLocalStorageValidationTest, BannedCommands)
         MAX_COMBINED_DRAW_BUFFERS_AND_PIXEL_LOCAL_STORAGE_PLANES - numActivePlanes;
 
     // INVALID_OPERATION is generated by ClearBufferfv(), ClearBufferiv(), ClearBufferuiv() if
-    // <buffer> is GL_COLOR and:
+    // <buffer> is GL_COLOR and and any of the following are true:
     //
-    //   <buffer> < MAX_COLOR_ATTACHMENTS_WITH_ACTIVE_PIXEL_LOCAL_STORAGE_ANGLE
-    //   <buffer> < (MAX_COMBINED_DRAW_BUFFERS_AND_PIXEL_LOCAL_STORAGE_PLANES_ANGLE -
-    //               ACTIVE_PIXEL_LOCAL_STORAGE_PLANES_ANGLE)
+    //   <buffer> >= MAX_COLOR_ATTACHMENTS_WITH_ACTIVE_PIXEL_LOCAL_STORAGE_ANGLE
+    //   <buffer> >= (MAX_COMBINED_DRAW_BUFFERS_AND_PIXEL_LOCAL_STORAGE_PLANES_ANGLE -
+    //                ACTIVE_PIXEL_LOCAL_STORAGE_PLANES_ANGLE)
     //
     GLfloat clearf[4]{};
     GLint cleari[4]{};
@@ -3862,10 +3997,11 @@ TEST_P(PixelLocalStorageValidationTest, BannedCommands)
 
     if (IsGLExtensionEnabled("GL_OES_draw_buffers_indexed"))
     {
-        // INVALID_OPERATION is generated by Enablei*(), Disablei*() if:
+        // INVALID_OPERATION is generated by Enablei*(), Disablei*() if and any
+        // of the following are true:
         //
-        //   <index> < MAX_COLOR_ATTACHMENTS_WITH_ACTIVE_PIXEL_LOCAL_STORAGE_ANGLE
-        //   <index> < (MAX_COMBINED_DRAW_BUFFERS_AND_PIXEL_LOCAL_STORAGE_PLANES_ANGLE -
+        //   <index> >= MAX_COLOR_ATTACHMENTS_WITH_ACTIVE_PIXEL_LOCAL_STORAGE_ANGLE
+        //   <index> >= (MAX_COMBINED_DRAW_BUFFERS_AND_PIXEL_LOCAL_STORAGE_PLANES_ANGLE -
         //              ACTIVE_PIXEL_LOCAL_STORAGE_PLANES_ANGLE)
         //
         {
@@ -3889,11 +4025,11 @@ TEST_P(PixelLocalStorageValidationTest, BannedCommands)
         }
 
         // INVALID_OPERATION is generated by BlendEquationi*(), BlendEquationSeparatei*(),
-        // BlendFunci*(), BlendFuncSeparatei*(), ColorMaski*() if:
+        // BlendFunci*(), BlendFuncSeparatei*(), ColorMaski*() if and any of the following are true:
         //
-        //   <buf> < MAX_COLOR_ATTACHMENTS_WITH_ACTIVE_PIXEL_LOCAL_STORAGE_ANGLE
-        //   <buf> < (MAX_COMBINED_DRAW_BUFFERS_AND_PIXEL_LOCAL_STORAGE_PLANES_ANGLE -
-        //            ACTIVE_PIXEL_LOCAL_STORAGE_PLANES_ANGLE)
+        //   <buf> >= MAX_COLOR_ATTACHMENTS_WITH_ACTIVE_PIXEL_LOCAL_STORAGE_ANGLE
+        //   <buf> >= (MAX_COMBINED_DRAW_BUFFERS_AND_PIXEL_LOCAL_STORAGE_PLANES_ANGLE -
+        //             ACTIVE_PIXEL_LOCAL_STORAGE_PLANES_ANGLE)
         //
         {
             const char *msg =

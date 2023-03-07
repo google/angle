@@ -1748,6 +1748,28 @@ bool ValidatePLSStoreOperation(const Context *context, angle::EntryPoint entryPo
             return false;
     }
 }
+
+bool ValidatePLSQueryCommon(const Context *context,
+                            angle::EntryPoint entryPoint,
+                            GLsizei paramCount,
+                            GLsizei bufSize,
+                            const void *params)
+{
+    // INVALID_OPERATION is generated if <bufSize> is not large enough to receive the requested
+    // parameter.
+    if (paramCount > bufSize)
+    {
+        context->validationError(entryPoint, GL_INVALID_OPERATION, kInsufficientParams);
+        return false;
+    }
+    // INVALID_VALUE is generated if <params> is NULL.
+    if (params == nullptr)
+    {
+        context->validationError(entryPoint, GL_INVALID_VALUE, kPLSParamsNULL);
+        return false;
+    }
+    return true;
+}
 }  // namespace
 
 bool ValidateFramebufferMemorylessPixelLocalStorageANGLE(const Context *context,
@@ -1974,9 +1996,9 @@ bool ValidateBeginPixelLocalStorageANGLE(const Context *context,
     }
 
     // INVALID_VALUE is generated if <loadops> is NULL.
-    if (!loadops)
+    if (loadops == nullptr)
     {
-        context->validationError(entryPoint, GL_INVALID_VALUE, kPLSNullLoadOps);
+        context->validationError(entryPoint, GL_INVALID_VALUE, kPLSLoadOpsNULL);
         return false;
     }
 
@@ -2125,45 +2147,61 @@ bool ValidateGetFramebufferPixelLocalStorageParameterfvANGLE(const Context *cont
                                                              angle::EntryPoint entryPoint,
                                                              GLint plane,
                                                              GLenum pname,
+                                                             GLsizei bufSize,
+                                                             const GLsizei *length,
                                                              const GLfloat *params)
 {
     if (!ValidatePLSCommon(context, entryPoint, plane, PLSExpectedStatus::Any))
     {
         return false;
     }
+    GLsizei paramCount = 0;
     switch (pname)
     {
         case GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE:
-            return true;
+            paramCount = 4;
+            break;
         default:
+            // INVALID_ENUM is generated if <pname> is not in Table 6.Y, or if the command issued is
+            // not the associated "Get Command" for <pname> in Table 6.Y.
             context->validationErrorF(entryPoint, GL_INVALID_ENUM, kEnumNotSupported, pname);
             return false;
     }
+    return ValidatePLSQueryCommon(context, entryPoint, paramCount, bufSize, params);
 }
 
 bool ValidateGetFramebufferPixelLocalStorageParameterivANGLE(const Context *context,
                                                              angle::EntryPoint entryPoint,
                                                              GLint plane,
                                                              GLenum pname,
+                                                             GLsizei bufSize,
+                                                             const GLsizei *length,
                                                              const GLint *params)
 {
     if (!ValidatePLSCommon(context, entryPoint, plane, PLSExpectedStatus::Any))
     {
         return false;
     }
+    GLsizei paramCount = 0;
     switch (pname)
     {
         case GL_PIXEL_LOCAL_FORMAT_ANGLE:
         case GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE:
         case GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE:
         case GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE:
+            paramCount = 1;
+            break;
         case GL_PIXEL_LOCAL_CLEAR_VALUE_INT_ANGLE:
         case GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE:
-            return true;
+            paramCount = 4;
+            break;
         default:
+            // INVALID_ENUM is generated if <pname> is not in Table 6.Y, or if the command issued is
+            // not the associated "Get Command" for <pname> in Table 6.Y.
             context->validationErrorF(entryPoint, GL_INVALID_ENUM, kEnumNotSupported, pname);
             return false;
     }
+    return ValidatePLSQueryCommon(context, entryPoint, paramCount, bufSize, params);
 }
 
 bool ValidateFramebufferFetchBarrierEXT(const Context *context, angle::EntryPoint entryPoint)

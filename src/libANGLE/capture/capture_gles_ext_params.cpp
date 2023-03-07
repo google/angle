@@ -4289,15 +4289,43 @@ void CaptureEndPixelLocalStorageANGLE_storeops(const State &glState,
     CaptureArray(storeops, n, paramCapture);
 }
 
+void CaptureGetFramebufferPixelLocalStorageParameterfvANGLE_length(
+    const State &glState,
+    bool isCallValid,
+    GLint plane,
+    GLenum pname,
+    GLsizei bufSize,
+    GLsizei *length,
+    GLfloat *params,
+    angle::ParamCapture *paramCapture)
+{
+    paramCapture->readBufferSizeBytes = sizeof(GLsizei);
+}
+
 void CaptureGetFramebufferPixelLocalStorageParameterfvANGLE_params(
     const State &glState,
     bool isCallValid,
     GLint plane,
     GLenum pname,
+    GLsizei bufSize,
+    GLsizei *length,
     GLfloat *params,
     angle::ParamCapture *paramCapture)
 {
-    CaptureArray(params, pname == GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE ? 4 : 1, paramCapture);
+    CaptureGetParameter(glState, pname, sizeof(GLfloat) * bufSize, paramCapture);
+}
+
+void CaptureGetFramebufferPixelLocalStorageParameterivANGLE_length(
+    const State &glState,
+    bool isCallValid,
+    GLint plane,
+    GLenum pname,
+    GLsizei bufSize,
+    GLsizei *length,
+    GLint *params,
+    angle::ParamCapture *paramCapture)
+{
+    paramCapture->readBufferSizeBytes = sizeof(GLsizei);
 }
 
 void CaptureGetFramebufferPixelLocalStorageParameterivANGLE_params(
@@ -4305,14 +4333,11 @@ void CaptureGetFramebufferPixelLocalStorageParameterivANGLE_params(
     bool isCallValid,
     GLint plane,
     GLenum pname,
+    GLsizei bufSize,
+    GLsizei *length,
     GLint *params,
     angle::ParamCapture *paramCapture)
 {
-    CaptureArray(params,
-                 (pname == GL_PIXEL_LOCAL_CLEAR_VALUE_INT_ANGLE ||
-                  pname == GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE)
-                     ? 4
-                     : 1,
-                 paramCapture);
+    CaptureGetParameter(glState, pname, sizeof(GLint) * bufSize, paramCapture);
 }
 }  // namespace gl

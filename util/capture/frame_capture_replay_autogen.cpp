@@ -1325,14 +1325,16 @@ void ReplayTraceFunctionCall(const CallCapture &call, const TraceFunctionMap &cu
                 captures[4].value.GLintPointerVal);
             break;
         case angle::EntryPoint::GLGetFramebufferPixelLocalStorageParameterfvANGLE:
-            glGetFramebufferPixelLocalStorageParameterfvANGLE(captures[0].value.GLintVal,
-                                                              captures[1].value.GLenumVal,
-                                                              captures[2].value.GLfloatPointerVal);
+            glGetFramebufferPixelLocalStorageParameterfvANGLE(
+                captures[0].value.GLintVal, captures[1].value.GLenumVal,
+                captures[2].value.GLsizeiVal, captures[3].value.GLsizeiPointerVal,
+                captures[4].value.GLfloatPointerVal);
             break;
         case angle::EntryPoint::GLGetFramebufferPixelLocalStorageParameterivANGLE:
-            glGetFramebufferPixelLocalStorageParameterivANGLE(captures[0].value.GLintVal,
-                                                              captures[1].value.GLenumVal,
-                                                              captures[2].value.GLintPointerVal);
+            glGetFramebufferPixelLocalStorageParameterivANGLE(
+                captures[0].value.GLintVal, captures[1].value.GLenumVal,
+                captures[2].value.GLsizeiVal, captures[3].value.GLsizeiPointerVal,
+                captures[4].value.GLintPointerVal);
             break;
         case angle::EntryPoint::GLGetGraphicsResetStatus:
             glGetGraphicsResetStatus();

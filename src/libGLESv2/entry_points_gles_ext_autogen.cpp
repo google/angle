@@ -4018,12 +4018,16 @@ void GL_APIENTRY GL_PixelLocalStorageBarrierANGLE()
 
 void GL_APIENTRY GL_GetFramebufferPixelLocalStorageParameterfvANGLE(GLint plane,
                                                                     GLenum pname,
+                                                                    GLsizei bufSize,
+                                                                    GLsizei *length,
                                                                     GLfloat *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetFramebufferPixelLocalStorageParameterfvANGLE,
-          "context = %d, plane = %d, pname = %s, params = 0x%016" PRIxPTR "", CID(context), plane,
-          GLenumToString(GLESEnum::PLSQueryFloat, pname), (uintptr_t)params);
+          "context = %d, plane = %d, pname = %s, bufSize = %d, length = 0x%016" PRIxPTR
+          ", params = 0x%016" PRIxPTR "",
+          CID(context), plane, GLenumToString(GLESEnum::PLSQueryFloat, pname), bufSize,
+          (uintptr_t)length, (uintptr_t)params);
 
     if (context)
     {
@@ -4032,13 +4036,14 @@ void GL_APIENTRY GL_GetFramebufferPixelLocalStorageParameterfvANGLE(GLint plane,
             (context->skipValidation() ||
              ValidateGetFramebufferPixelLocalStorageParameterfvANGLE(
                  context, angle::EntryPoint::GLGetFramebufferPixelLocalStorageParameterfvANGLE,
-                 plane, pname, params));
+                 plane, pname, bufSize, length, params));
         if (isCallValid)
         {
-            context->getFramebufferPixelLocalStorageParameterfv(plane, pname, params);
+            context->getFramebufferPixelLocalStorageParameterfv(plane, pname, bufSize, length,
+                                                                params);
         }
         ANGLE_CAPTURE_GL(GetFramebufferPixelLocalStorageParameterfvANGLE, isCallValid, context,
-                         plane, pname, params);
+                         plane, pname, bufSize, length, params);
     }
     else
     {
@@ -4048,12 +4053,16 @@ void GL_APIENTRY GL_GetFramebufferPixelLocalStorageParameterfvANGLE(GLint plane,
 
 void GL_APIENTRY GL_GetFramebufferPixelLocalStorageParameterivANGLE(GLint plane,
                                                                     GLenum pname,
+                                                                    GLsizei bufSize,
+                                                                    GLsizei *length,
                                                                     GLint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetFramebufferPixelLocalStorageParameterivANGLE,
-          "context = %d, plane = %d, pname = %s, params = 0x%016" PRIxPTR "", CID(context), plane,
-          GLenumToString(GLESEnum::PLSQueryInt, pname), (uintptr_t)params);
+          "context = %d, plane = %d, pname = %s, bufSize = %d, length = 0x%016" PRIxPTR
+          ", params = 0x%016" PRIxPTR "",
+          CID(context), plane, GLenumToString(GLESEnum::PLSQueryInt, pname), bufSize,
+          (uintptr_t)length, (uintptr_t)params);
 
     if (context)
     {
@@ -4062,13 +4071,14 @@ void GL_APIENTRY GL_GetFramebufferPixelLocalStorageParameterivANGLE(GLint plane,
             (context->skipValidation() ||
              ValidateGetFramebufferPixelLocalStorageParameterivANGLE(
                  context, angle::EntryPoint::GLGetFramebufferPixelLocalStorageParameterivANGLE,
-                 plane, pname, params));
+                 plane, pname, bufSize, length, params));
         if (isCallValid)
         {
-            context->getFramebufferPixelLocalStorageParameteriv(plane, pname, params);
+            context->getFramebufferPixelLocalStorageParameteriv(plane, pname, bufSize, length,
+                                                                params);
         }
         ANGLE_CAPTURE_GL(GetFramebufferPixelLocalStorageParameterivANGLE, isCallValid, context,
-                         plane, pname, params);
+                         plane, pname, bufSize, length, params);
     }
     else
     {
