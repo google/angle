@@ -2659,7 +2659,7 @@ const Format &Format::Get(GLenum internalFormat, const Renderer11DeviceCaps &dev
                                          DXGI_FORMAT_UNKNOWN,
                                          DXGI_FORMAT_R16G16B16A16_TYPELESS,
                                          GL_RGBA16_EXT,
-                                         Initialize4ComponentData<GLushort, 0x0000, 0x0000, 0x0000, 0xFFFF>);
+                                         Initialize4ComponentData<GLubyte, 0x0000, 0x0000, 0x0000, 0xFFFF>);
             return info;
         }
         case GL_RGB16_SNORM_EXT:
