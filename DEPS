@@ -1989,6 +1989,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_traces',
   },
+  'src/tests/restricted_traces/merge_dragons': {
+      'packages': [
+        {
+            'package': 'angle/traces/merge_dragons',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_traces',
+  },
   'src/tests/restricted_traces/messenger_lite': {
       'packages': [
         {
