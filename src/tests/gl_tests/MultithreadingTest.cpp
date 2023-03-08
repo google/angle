@@ -1871,8 +1871,8 @@ TEST_P(MultithreadingTestES3, ProgramUseAndDestroyInTwoContexts)
         EXPECT_TRUE(programs[4].valid());
         EXPECT_TRUE(programs[5].valid());
 
-        // Wait for the other thread to use the programs
         threadSynchronization.nextStep(Step::Thread0CreatePrograms);
+        // Wait for the other thread to use the programs
         ASSERT_TRUE(threadSynchronization.waitForStep(Step::Thread1UsePrograms));
 
         // Destroy them
@@ -1893,12 +1893,10 @@ TEST_P(MultithreadingTestES3, ProgramUseAndDestroyInTwoContexts)
     auto thread1 = [&](EGLDisplay dpy, EGLSurface surface, EGLContext context) {
         ThreadSynchronization<Step> threadSynchronization(&currentStep, &mutex, &condVar);
 
-        ASSERT_TRUE(threadSynchronization.waitForStep(Step::Start));
-
-        EXPECT_EGL_TRUE(eglMakeCurrent(dpy, surface, surface, context));
-
         // Wait for thread 0 to create the programs
         ASSERT_TRUE(threadSynchronization.waitForStep(Step::Thread0CreatePrograms));
+
+        EXPECT_EGL_TRUE(eglMakeCurrent(dpy, surface, surface, context));
 
         // Use them a few times.
         drawQuad(programs[0], essl1_shaders::PositionAttrib(), 0.0f);
