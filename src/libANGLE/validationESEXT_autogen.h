@@ -888,16 +888,26 @@ bool ValidateGetFramebufferPixelLocalStorageParameterfvANGLE(const Context *cont
                                                              angle::EntryPoint entryPoint,
                                                              GLint plane,
                                                              GLenum pname,
-                                                             GLsizei bufSize,
-                                                             const GLsizei *length,
                                                              const GLfloat *params);
 bool ValidateGetFramebufferPixelLocalStorageParameterivANGLE(const Context *context,
                                                              angle::EntryPoint entryPoint,
                                                              GLint plane,
                                                              GLenum pname,
-                                                             GLsizei bufSize,
-                                                             const GLsizei *length,
                                                              const GLint *params);
+bool ValidateGetFramebufferPixelLocalStorageParameterfvRobustANGLE(const Context *context,
+                                                                   angle::EntryPoint entryPoint,
+                                                                   GLint plane,
+                                                                   GLenum pname,
+                                                                   GLsizei bufSize,
+                                                                   const GLsizei *length,
+                                                                   const GLfloat *params);
+bool ValidateGetFramebufferPixelLocalStorageParameterivRobustANGLE(const Context *context,
+                                                                   angle::EntryPoint entryPoint,
+                                                                   GLint plane,
+                                                                   GLenum pname,
+                                                                   GLsizei bufSize,
+                                                                   const GLsizei *length,
+                                                                   const GLint *params);
 
 // GL_ANGLE_stencil_texturing
 

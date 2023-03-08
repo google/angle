@@ -4831,38 +4831,19 @@ CallCapture CaptureGetFramebufferPixelLocalStorageParameterfvANGLE(const State &
                                                                    bool isCallValid,
                                                                    GLint plane,
                                                                    GLenum pname,
-                                                                   GLsizei bufSize,
-                                                                   GLsizei *length,
                                                                    GLfloat *params)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("plane", ParamType::TGLint, plane);
     paramBuffer.addEnumParam("pname", GLESEnum::PLSQueryFloat, ParamType::TGLenum, pname);
-    paramBuffer.addValueParam("bufSize", ParamType::TGLsizei, bufSize);
-
-    if (isCallValid)
-    {
-        ParamCapture lengthParam("length", ParamType::TGLsizeiPointer);
-        InitParamValue(ParamType::TGLsizeiPointer, length, &lengthParam.value);
-        CaptureGetFramebufferPixelLocalStorageParameterfvANGLE_length(
-            glState, isCallValid, plane, pname, bufSize, length, params, &lengthParam);
-        paramBuffer.addParam(std::move(lengthParam));
-    }
-    else
-    {
-        ParamCapture lengthParam("length", ParamType::TGLsizeiPointer);
-        InitParamValue(ParamType::TGLsizeiPointer, static_cast<GLsizei *>(nullptr),
-                       &lengthParam.value);
-        paramBuffer.addParam(std::move(lengthParam));
-    }
 
     if (isCallValid)
     {
         ParamCapture paramsParam("params", ParamType::TGLfloatPointer);
         InitParamValue(ParamType::TGLfloatPointer, params, &paramsParam.value);
-        CaptureGetFramebufferPixelLocalStorageParameterfvANGLE_params(
-            glState, isCallValid, plane, pname, bufSize, length, params, &paramsParam);
+        CaptureGetFramebufferPixelLocalStorageParameterfvANGLE_params(glState, isCallValid, plane,
+                                                                      pname, params, &paramsParam);
         paramBuffer.addParam(std::move(paramsParam));
     }
     else
@@ -4881,9 +4862,89 @@ CallCapture CaptureGetFramebufferPixelLocalStorageParameterivANGLE(const State &
                                                                    bool isCallValid,
                                                                    GLint plane,
                                                                    GLenum pname,
-                                                                   GLsizei bufSize,
-                                                                   GLsizei *length,
                                                                    GLint *params)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addValueParam("plane", ParamType::TGLint, plane);
+    paramBuffer.addEnumParam("pname", GLESEnum::PLSQueryInt, ParamType::TGLenum, pname);
+
+    if (isCallValid)
+    {
+        ParamCapture paramsParam("params", ParamType::TGLintPointer);
+        InitParamValue(ParamType::TGLintPointer, params, &paramsParam.value);
+        CaptureGetFramebufferPixelLocalStorageParameterivANGLE_params(glState, isCallValid, plane,
+                                                                      pname, params, &paramsParam);
+        paramBuffer.addParam(std::move(paramsParam));
+    }
+    else
+    {
+        ParamCapture paramsParam("params", ParamType::TGLintPointer);
+        InitParamValue(ParamType::TGLintPointer, static_cast<GLint *>(nullptr), &paramsParam.value);
+        paramBuffer.addParam(std::move(paramsParam));
+    }
+
+    return CallCapture(angle::EntryPoint::GLGetFramebufferPixelLocalStorageParameterivANGLE,
+                       std::move(paramBuffer));
+}
+
+CallCapture CaptureGetFramebufferPixelLocalStorageParameterfvRobustANGLE(const State &glState,
+                                                                         bool isCallValid,
+                                                                         GLint plane,
+                                                                         GLenum pname,
+                                                                         GLsizei bufSize,
+                                                                         GLsizei *length,
+                                                                         GLfloat *params)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addValueParam("plane", ParamType::TGLint, plane);
+    paramBuffer.addEnumParam("pname", GLESEnum::PLSQueryFloat, ParamType::TGLenum, pname);
+    paramBuffer.addValueParam("bufSize", ParamType::TGLsizei, bufSize);
+
+    if (isCallValid)
+    {
+        ParamCapture lengthParam("length", ParamType::TGLsizeiPointer);
+        InitParamValue(ParamType::TGLsizeiPointer, length, &lengthParam.value);
+        CaptureGetFramebufferPixelLocalStorageParameterfvRobustANGLE_length(
+            glState, isCallValid, plane, pname, bufSize, length, params, &lengthParam);
+        paramBuffer.addParam(std::move(lengthParam));
+    }
+    else
+    {
+        ParamCapture lengthParam("length", ParamType::TGLsizeiPointer);
+        InitParamValue(ParamType::TGLsizeiPointer, static_cast<GLsizei *>(nullptr),
+                       &lengthParam.value);
+        paramBuffer.addParam(std::move(lengthParam));
+    }
+
+    if (isCallValid)
+    {
+        ParamCapture paramsParam("params", ParamType::TGLfloatPointer);
+        InitParamValue(ParamType::TGLfloatPointer, params, &paramsParam.value);
+        CaptureGetFramebufferPixelLocalStorageParameterfvRobustANGLE_params(
+            glState, isCallValid, plane, pname, bufSize, length, params, &paramsParam);
+        paramBuffer.addParam(std::move(paramsParam));
+    }
+    else
+    {
+        ParamCapture paramsParam("params", ParamType::TGLfloatPointer);
+        InitParamValue(ParamType::TGLfloatPointer, static_cast<GLfloat *>(nullptr),
+                       &paramsParam.value);
+        paramBuffer.addParam(std::move(paramsParam));
+    }
+
+    return CallCapture(angle::EntryPoint::GLGetFramebufferPixelLocalStorageParameterfvRobustANGLE,
+                       std::move(paramBuffer));
+}
+
+CallCapture CaptureGetFramebufferPixelLocalStorageParameterivRobustANGLE(const State &glState,
+                                                                         bool isCallValid,
+                                                                         GLint plane,
+                                                                         GLenum pname,
+                                                                         GLsizei bufSize,
+                                                                         GLsizei *length,
+                                                                         GLint *params)
 {
     ParamBuffer paramBuffer;
 
@@ -4895,7 +4956,7 @@ CallCapture CaptureGetFramebufferPixelLocalStorageParameterivANGLE(const State &
     {
         ParamCapture lengthParam("length", ParamType::TGLsizeiPointer);
         InitParamValue(ParamType::TGLsizeiPointer, length, &lengthParam.value);
-        CaptureGetFramebufferPixelLocalStorageParameterivANGLE_length(
+        CaptureGetFramebufferPixelLocalStorageParameterivRobustANGLE_length(
             glState, isCallValid, plane, pname, bufSize, length, params, &lengthParam);
         paramBuffer.addParam(std::move(lengthParam));
     }
@@ -4911,7 +4972,7 @@ CallCapture CaptureGetFramebufferPixelLocalStorageParameterivANGLE(const State &
     {
         ParamCapture paramsParam("params", ParamType::TGLintPointer);
         InitParamValue(ParamType::TGLintPointer, params, &paramsParam.value);
-        CaptureGetFramebufferPixelLocalStorageParameterivANGLE_params(
+        CaptureGetFramebufferPixelLocalStorageParameterivRobustANGLE_params(
             glState, isCallValid, plane, pname, bufSize, length, params, &paramsParam);
         paramBuffer.addParam(std::move(paramsParam));
     }
@@ -4922,7 +4983,7 @@ CallCapture CaptureGetFramebufferPixelLocalStorageParameterivANGLE(const State &
         paramBuffer.addParam(std::move(paramsParam));
     }
 
-    return CallCapture(angle::EntryPoint::GLGetFramebufferPixelLocalStorageParameterivANGLE,
+    return CallCapture(angle::EntryPoint::GLGetFramebufferPixelLocalStorageParameterivRobustANGLE,
                        std::move(paramBuffer));
 }
 

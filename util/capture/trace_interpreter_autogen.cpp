@@ -2686,12 +2686,28 @@ CallCapture ParseCallCapture(const Token &nameToken,
         return CallCapture(EntryPoint::GLGetFramebufferPixelLocalStorageParameterfvANGLE,
                            std::move(params));
     }
+    if (strcmp(nameToken, "glGetFramebufferPixelLocalStorageParameterfvRobustANGLE") == 0)
+    {
+        ParamBuffer params = ParseParameters<std::remove_pointer<
+            PFNGLGETFRAMEBUFFERPIXELLOCALSTORAGEPARAMETERFVROBUSTANGLEPROC>::type>(paramTokens,
+                                                                                   strings);
+        return CallCapture(EntryPoint::GLGetFramebufferPixelLocalStorageParameterfvRobustANGLE,
+                           std::move(params));
+    }
     if (strcmp(nameToken, "glGetFramebufferPixelLocalStorageParameterivANGLE") == 0)
     {
         ParamBuffer params = ParseParameters<
             std::remove_pointer<PFNGLGETFRAMEBUFFERPIXELLOCALSTORAGEPARAMETERIVANGLEPROC>::type>(
             paramTokens, strings);
         return CallCapture(EntryPoint::GLGetFramebufferPixelLocalStorageParameterivANGLE,
+                           std::move(params));
+    }
+    if (strcmp(nameToken, "glGetFramebufferPixelLocalStorageParameterivRobustANGLE") == 0)
+    {
+        ParamBuffer params = ParseParameters<std::remove_pointer<
+            PFNGLGETFRAMEBUFFERPIXELLOCALSTORAGEPARAMETERIVROBUSTANGLEPROC>::type>(paramTokens,
+                                                                                   strings);
+        return CallCapture(EntryPoint::GLGetFramebufferPixelLocalStorageParameterivRobustANGLE,
                            std::move(params));
     }
     if (strcmp(nameToken, "glGetGraphicsResetStatus") == 0)

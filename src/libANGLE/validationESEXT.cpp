@@ -2147,9 +2147,29 @@ bool ValidateGetFramebufferPixelLocalStorageParameterfvANGLE(const Context *cont
                                                              angle::EntryPoint entryPoint,
                                                              GLint plane,
                                                              GLenum pname,
-                                                             GLsizei bufSize,
-                                                             const GLsizei *length,
                                                              const GLfloat *params)
+{
+    return ValidateGetFramebufferPixelLocalStorageParameterfvRobustANGLE(
+        context, entryPoint, plane, pname, std::numeric_limits<GLsizei>::max(), nullptr, params);
+}
+
+bool ValidateGetFramebufferPixelLocalStorageParameterivANGLE(const Context *context,
+                                                             angle::EntryPoint entryPoint,
+                                                             GLint plane,
+                                                             GLenum pname,
+                                                             const GLint *params)
+{
+    return ValidateGetFramebufferPixelLocalStorageParameterivRobustANGLE(
+        context, entryPoint, plane, pname, std::numeric_limits<GLsizei>::max(), nullptr, params);
+}
+
+bool ValidateGetFramebufferPixelLocalStorageParameterfvRobustANGLE(const Context *context,
+                                                                   angle::EntryPoint entryPoint,
+                                                                   GLint plane,
+                                                                   GLenum pname,
+                                                                   GLsizei bufSize,
+                                                                   const GLsizei *length,
+                                                                   const GLfloat *params)
 {
     if (!ValidatePLSCommon(context, entryPoint, plane, PLSExpectedStatus::Any))
     {
@@ -2170,13 +2190,13 @@ bool ValidateGetFramebufferPixelLocalStorageParameterfvANGLE(const Context *cont
     return ValidatePLSQueryCommon(context, entryPoint, paramCount, bufSize, params);
 }
 
-bool ValidateGetFramebufferPixelLocalStorageParameterivANGLE(const Context *context,
-                                                             angle::EntryPoint entryPoint,
-                                                             GLint plane,
-                                                             GLenum pname,
-                                                             GLsizei bufSize,
-                                                             const GLsizei *length,
-                                                             const GLint *params)
+bool ValidateGetFramebufferPixelLocalStorageParameterivRobustANGLE(const Context *context,
+                                                                   angle::EntryPoint entryPoint,
+                                                                   GLint plane,
+                                                                   GLenum pname,
+                                                                   GLsizei bufSize,
+                                                                   const GLsizei *length,
+                                                                   const GLint *params)
 {
     if (!ValidatePLSCommon(context, entryPoint, plane, PLSExpectedStatus::Any))
     {

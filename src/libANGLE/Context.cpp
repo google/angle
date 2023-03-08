@@ -9376,11 +9376,23 @@ void Context::pixelLocalStorageBarrier()
     pls.barrier(this);
 }
 
-void Context::getFramebufferPixelLocalStorageParameterfv(GLint plane,
-                                                         GLenum pname,
-                                                         GLsizei bufSize,
-                                                         GLsizei *length,
-                                                         GLfloat *params)
+void Context::getFramebufferPixelLocalStorageParameterfv(GLint plane, GLenum pname, GLfloat *params)
+{
+    getFramebufferPixelLocalStorageParameterfvRobust(
+        plane, pname, std::numeric_limits<GLsizei>::max(), nullptr, params);
+}
+
+void Context::getFramebufferPixelLocalStorageParameteriv(GLint plane, GLenum pname, GLint *params)
+{
+    getFramebufferPixelLocalStorageParameterivRobust(
+        plane, pname, std::numeric_limits<GLsizei>::max(), nullptr, params);
+}
+
+void Context::getFramebufferPixelLocalStorageParameterfvRobust(GLint plane,
+                                                               GLenum pname,
+                                                               GLsizei bufSize,
+                                                               GLsizei *length,
+                                                               GLfloat *params)
 {
     Framebuffer *framebuffer = mState.getDrawFramebuffer();
     ASSERT(framebuffer);
@@ -9398,11 +9410,11 @@ void Context::getFramebufferPixelLocalStorageParameterfv(GLint plane,
     }
 }
 
-void Context::getFramebufferPixelLocalStorageParameteriv(GLint plane,
-                                                         GLenum pname,
-                                                         GLsizei bufSize,
-                                                         GLsizei *length,
-                                                         GLint *params)
+void Context::getFramebufferPixelLocalStorageParameterivRobust(GLint plane,
+                                                               GLenum pname,
+                                                               GLsizei bufSize,
+                                                               GLsizei *length,
+                                                               GLint *params)
 {
     Framebuffer *framebuffer = mState.getDrawFramebuffer();
     ASSERT(framebuffer);

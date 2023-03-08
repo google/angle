@@ -50,6 +50,8 @@ Dependencies
     This extension is written against the OpenGL ES 3.0 specification and the
     OpenGL ES Shading Language 3.00 specification.
 
+    This extension interacts with ANGLE_robust_client_memory.
+
     This extension interacts with ANGLE_request_extension.
 
     This extension interacts with OES_sample_variables.
@@ -144,9 +146,16 @@ New Procedures and Functions
 
     void GetFramebufferPixelLocalStorageParameter{f,i}vANGLE(int plane,
                                                              enum pname,
-                                                             GLsizei bufSize,
-                                                             GLsizei *length,
                                                              T *params)
+
+    (the following commands are supported only if ANGLE_robust_client_memory is
+     supported)
+
+    void GetFramebufferPixelLocalStorageParameter{f,i}vRobustANGLE(int plane,
+                                                                   enum pname,
+                                                                   GLsizei bufSize,
+                                                                   GLsizei *length,
+                                                                   T *params)
 
 New Tokens
 
@@ -171,7 +180,8 @@ New Tokens
         STORE_OP_STORE_ANGLE                                              0x96E8
 
     Accepted by the <pname> parameter of
-    GetFramebufferPixelLocalStorageParameterivANGLE():
+    GetFramebufferPixelLocalStorageParameterivANGLE() and
+    GetFramebufferPixelLocalStorageParameterivRobustANGLE():
 
         PIXEL_LOCAL_FORMAT_ANGLE                                          0x96E9
         PIXEL_LOCAL_TEXTURE_NAME_ANGLE                                    0x96EA
@@ -179,12 +189,14 @@ New Tokens
         PIXEL_LOCAL_TEXTURE_LAYER_ANGLE                                   0x96EC
 
     Accepted by the <pname> parameter of
-    GetFramebufferPixelLocalStorageParameterfvANGLE():
+    GetFramebufferPixelLocalStorageParameterfvANGLE() and
+    GetFramebufferPixelLocalStorageParameterfvRobustANGLE():
 
         PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE                               0x96ED
 
     Accepted by the <pname> parameter of
-    GetFramebufferPixelLocalStorageParameterivANGLE():
+    GetFramebufferPixelLocalStorageParameterivANGLE() and
+    GetFramebufferPixelLocalStorageParameterivRobustANGLE():
 
         PIXEL_LOCAL_CLEAR_VALUE_INT_ANGLE                                 0x96EE
         PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE                        0x96EF
@@ -731,13 +743,6 @@ Additions to the OpenGL ES Specification, Version 3.0.6
 
       * <pname> specifies the parameter of the plane to query.
 
-      * <bufSize> indicates the maximum number of values that can be written to
-        <params>.
-
-      * <length> may be NULL. If not NULL, it receives the number of values
-        written to <params>. When an error is generated, nothing is written to
-        <length>.
-
       * <params> receives the value(s) for parameter <pname> of the pixel local
         storage plane at index <plane>. When an error is generated, nothing is
         written to <params>.
@@ -781,10 +786,37 @@ Additions to the OpenGL ES Specification, Version 3.0.6
         command issued is not the associated "Get Command" for <pname> in Table
         6.Y.
 
+      * INVALID_VALUE is generated if <params> is NULL.
+
+    If ANGLE_robust_client_memory is supported, the alternative query commands
+    may also be used:
+
+      void GetFramebufferPixelLocalStorageParameterfvRobustANGLE(int plane,
+                                                                 enum pname,
+                                                                 GLsizei bufSize,
+                                                                 GLsizei *length,
+                                                                 GLfloat *params)
+
+      void GetFramebufferPixelLocalStorageParameterivRobustANGLE(int plane,
+                                                                 enum pname,
+                                                                 GLsizei bufSize,
+                                                                 GLsizei *length,
+                                                                 GLint *params)
+
+    Additional Parameters:
+
+      * <bufSize> indicates the maximum number of values that can be written to
+        <params>.
+
+      * <length> may be NULL. If not NULL, it receives the number of values
+        written to <params>. When an error is generated, nothing is written to
+        <length>.
+
+    Additional Errors:
+
       * INVALID_OPERATION is generated if <bufSize> is not large enough to
         receive the requested parameter.
 
-      * INVALID_VALUE is generated if <params> is NULL.
 
   Modify Section 6.1 "State Tables"
 

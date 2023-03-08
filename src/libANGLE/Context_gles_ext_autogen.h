@@ -587,10 +587,12 @@
     void beginPixelLocalStorage(GLsizei n, const GLenum *loadops);                                 \
     void endPixelLocalStorage(GLsizei n, const GLenum *storeops);                                  \
     void pixelLocalStorageBarrier();                                                               \
-    void getFramebufferPixelLocalStorageParameterfv(GLint plane, GLenum pname, GLsizei bufSize,    \
-                                                    GLsizei *length, GLfloat *params);             \
-    void getFramebufferPixelLocalStorageParameteriv(GLint plane, GLenum pname, GLsizei bufSize,    \
-                                                    GLsizei *length, GLint *params);               \
+    void getFramebufferPixelLocalStorageParameterfv(GLint plane, GLenum pname, GLfloat *params);   \
+    void getFramebufferPixelLocalStorageParameteriv(GLint plane, GLenum pname, GLint *params);     \
+    void getFramebufferPixelLocalStorageParameterfvRobust(                                         \
+        GLint plane, GLenum pname, GLsizei bufSize, GLsizei *length, GLfloat *params);             \
+    void getFramebufferPixelLocalStorageParameterivRobust(                                         \
+        GLint plane, GLenum pname, GLsizei bufSize, GLsizei *length, GLint *params);               \
     /* GL_ANGLE_shader_pixel_local_storage_coherent */                                             \
     /* GL_ANGLE_stencil_texturing */                                                               \
     /* GL_ANGLE_texture_compression_dxt3 */                                                        \
