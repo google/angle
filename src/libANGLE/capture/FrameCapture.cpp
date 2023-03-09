@@ -5247,6 +5247,13 @@ void CaptureMidExecutionSetup(const gl::Context *context,
         cap(CaptureDepthRangef(replayState, true, apiState.getNearPlane(), apiState.getFarPlane()));
     }
 
+    if (apiState.getClipOrigin() != gl::ClipOrigin::LowerLeft ||
+        apiState.getClipDepthMode() != gl::ClipDepthMode::NegativeOneToOne)
+    {
+        cap(CaptureClipControlEXT(replayState, true, apiState.getClipOrigin(),
+                                  apiState.getClipDepthMode()));
+    }
+
     if (apiState.isScissorTestEnabled())
     {
         capCap(GL_SCISSOR_TEST, apiState.isScissorTestEnabled());

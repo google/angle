@@ -575,6 +575,8 @@ void SerializeContextState(JsonSerializer *json, const gl::State &state)
     SerializeRectangle(json, "Viewport", state.getViewport());
     json->addScalar("Near", state.getNearPlane());
     json->addScalar("Far", state.getFarPlane());
+    json->addString("ClipOrigin", ToString(state.getClipOrigin()));
+    json->addString("ClipDepthMode", ToString(state.getClipDepthMode()));
     SerializeResourceID(json, "ReadFramebufferID", state.getReadFramebuffer());
     SerializeResourceID(json, "DrawFramebufferID", state.getDrawFramebuffer());
     json->addScalar("RenderbufferID", state.getRenderbufferId().value);
