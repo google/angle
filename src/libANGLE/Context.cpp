@@ -3681,6 +3681,7 @@ Extensions Context::generateSupportedExtensions() const
         supportedExtensions.stencilTexturingANGLE        = false;
         supportedExtensions.textureFormatSRGBOverrideEXT = false;
         supportedExtensions.renderSharedExponentQCOM     = false;
+        supportedExtensions.renderSnormEXT               = false;
 
         // Support GL_EXT_texture_norm16 on non-WebGL ES2 contexts. This is needed for R16/RG16
         // texturing for HDR video playback in Chromium which uses ES2 for compositor contexts.

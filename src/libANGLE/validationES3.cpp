@@ -1085,9 +1085,8 @@ static bool IsValidES3CopyTexImageCombination(const InternalFormat &textureForma
         return false;
     }
 
-    // SNORM is not supported (e.g. is not in the tables of "effective internal format" that
-    // correspond to internal formats.
-    if (textureFormatInfo.componentType == GL_SIGNED_NORMALIZED)
+    if ((textureFormatInfo.componentType == GL_SIGNED_NORMALIZED) !=
+        (framebufferFormatInfo.componentType == GL_SIGNED_NORMALIZED))
     {
         return false;
     }

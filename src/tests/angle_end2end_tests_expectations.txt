@@ -1082,6 +1082,16 @@
 5466 GLES : ClipCullDistanceTest.ClipDistanceInteractWithGeometryShader/* = SKIP
 5466 GLES : ClipCullDistanceTest.CullDistanceInteractWithGeometryShader/* = SKIP
 
+// ReadPixels returns zeros on Red and Red-Green snorm color buffers
+8048 WIN INTEL OPENGL : FramebufferTest_ES3.RenderSnorm* = SKIP
+
+// ReadPixels returns zeros on snorm color buffers
+8048 LINUX INTEL OPENGL : FramebufferTest_ES3.RenderSnorm* = SKIP
+
+// ReadPixels returns zeros on Red and Red-Green 16-bit snorm color buffers
+8048 NVIDIA OPENGL : FramebufferTest_ES3.RenderSnorm16* = SKIP
+8048 NVIDIA GLES : FramebufferTest_ES3.RenderSnorm16* = SKIP
+
 // bits 24..31 from glClearValueuiv value don't work on Intel Metal.
 7794 MAC INTEL METAL : PixelLocalStorageTest.ClearValues_r32/* = SKIP
 

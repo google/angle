@@ -54,6 +54,14 @@
 4019 SWIFTSHADER : KHR-GLES3.shaders.indexing.matrix_subscript.mat4_static_write_static_loop_read_fragment = FAIL
 4019 SWIFTSHADER : KHR-GLES3.shaders.indexing.matrix_subscript.mat4_static_write_static_loop_read_vertex = FAIL
 
+// https://gitlab.khronos.org/opengl/API/-/issues/180
+8048 : KHR-GLES3.packed_pixels.pbo_rectangle.r8_snorm = SKIP
+8048 : KHR-GLES3.packed_pixels.pbo_rectangle.rg8_snorm = SKIP
+8048 : KHR-GLES3.packed_pixels.pbo_rectangle.rgba8_snorm = SKIP
+8048 : KHR-GLES3.packed_pixels.rectangle.r8_snorm = SKIP
+8048 : KHR-GLES3.packed_pixels.rectangle.rg8_snorm = SKIP
+8048 : KHR-GLES3.packed_pixels.rectangle.rgba8_snorm = SKIP
+
 // New failures with latest dEQP roll (2020-04-28)
 4593 SWIFTSHADER : KHR-GLES3.core.nearest_edge.offset_left = FAIL
 
