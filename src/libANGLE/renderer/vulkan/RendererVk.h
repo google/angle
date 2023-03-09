@@ -492,6 +492,7 @@ class RendererVk : angle::NonCopyable
                                                             const vk::ResourceUse &use,
                                                             uint64_t timeout,
                                                             VkResult *result);
+    angle::Result finish(vk::Context *context);
     angle::Result checkCompletedCommands(vk::Context *context);
 
     angle::Result flushWaitSemaphores(vk::ProtectionType protectionType,

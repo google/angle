@@ -896,8 +896,9 @@ void WindowSurfaceVk::destroy(const egl::Display *display)
     VkInstance instance  = renderer->getInstance();
 
     // flush the pipe.
+    (void)renderer->finish(displayVk);
+
     (void)renderer->waitForPresentToBeSubmitted(&mSwapchainStatus);
-    (void)finish(displayVk);
 
     if (mLockBufferHelper.valid())
     {
@@ -965,10 +966,6 @@ egl::Error WindowSurfaceVk::unMakeCurrent(const gl::Context *context)
     DisplayVk *displayVk = vk::GetImpl(context->getDisplay());
 
     angle::Result result = contextVk->onSurfaceUnMakeCurrent(this);
-    // Even though all swap chain images are tracked individually, the semaphores are not tracked by
-    // ResourceUse. This propagates context's queue serial to surface when it detaches from context
-    // so that surface will always wait until context is finished.
-    mUse.setQueueSerial(contextVk->getLastSubmittedQueueSerial());
 
     return angle::ToEGL(result, displayVk, EGL_BAD_CURRENT_SURFACE);
 }
@@ -1299,7 +1296,7 @@ angle::Result WindowSurfaceVk::recreateSwapchain(ContextVk *contextVk, const gl:
     static constexpr size_t kMaxOldSwapchains = 5;
     if (mOldSwapchains.size() > kMaxOldSwapchains)
     {
-        ANGLE_TRY(finish(contextVk));
+        ANGLE_TRY(contextVk->getRenderer()->finish(contextVk));
         for (SwapchainCleanupData &oldSwapchain : mOldSwapchains)
         {
             oldSwapchain.destroy(contextVk->getDevice(), &mPresentSemaphoreRecycler);
@@ -1504,7 +1501,7 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context,
     // that case as a workaround.
     if (lastSwapchain && renderer->getFeatures().waitIdleBeforeSwapchainRecreation.enabled)
     {
-        ANGLE_TRY(finish(context));
+        ANGLE_TRY(renderer->finish(context));
     }
 
     // TODO: Once EGL_SWAP_BEHAVIOR_PRESERVED_BIT is supported, the contents of the old swapchain
@@ -1728,20 +1725,6 @@ void WindowSurfaceVk::releaseSwapchainImages(ContextVk *contextVk)
     }
 
     mSwapchainImages.clear();
-}
-
-angle::Result WindowSurfaceVk::finish(vk::Context *context)
-{
-    RendererVk *renderer = context->getRenderer();
-
-    mUse.merge(mDepthStencilImage.getResourceUse());
-    mUse.merge(mColorImageMS.getResourceUse());
-    for (SwapchainImage &swapchainImage : mSwapchainImages)
-    {
-        mUse.merge(swapchainImage.image->getResourceUse());
-    }
-
-    return renderer->finishResourceUse(context, mUse);
 }
 
 void WindowSurfaceVk::destroySwapChainImages(DisplayVk *displayVk)
