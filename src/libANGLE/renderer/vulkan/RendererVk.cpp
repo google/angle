@@ -203,6 +203,8 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-VkImageCreateInfo-pNext-00990",
     // http://crbug.com/1420265
     "VUID-vkCmdEndDebugUtilsLabelEXT-commandBuffer-01912",
+    // https://anglebug.com/8076
+    "VUID-VkGraphicsPipelineCreateInfo-None-06573",
 };
 
 // Validation messages that should be ignored only when VK_EXT_primitive_topology_list_restart is
