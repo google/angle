@@ -6597,6 +6597,52 @@ TEST_P(ImageTest, TargetRenderbufferDeletedWhileInUse2)
     FramebufferAttachmentDeletedWhileInUseHelper(false, true);
 }
 
+// Test redefining the same GL texture with different EGLImages
+TEST_P(ImageTest, RedefineWithMultipleImages)
+{
+    EGLWindow *window = getEGLWindow();
+
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
+
+    GLubyte originalData[4] = {255, 0, 255, 255};
+    GLubyte updateData[4]   = {0, 255, 0, 255};
+
+    // Create the Images
+    GLTexture source1, source2;
+    EGLImageKHR image1, image2;
+    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kDefaultAttribs, originalData,
+                                  source1, &image1);
+    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kDefaultAttribs, originalData,
+                                  source2, &image2);
+
+    // Create texture & bind to Image
+    GLTexture texture;
+    createEGLImageTargetTexture2D(image1, texture);
+
+    // Upload some data between the redefinition
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, updateData);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    ASSERT_GL_NO_ERROR();
+
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Bind the second image to this texture
+    createEGLImageTargetTexture2D(image2, texture);
+
+    // Delete Image
+    eglDestroyImageKHR(window->getDisplay(), image1);
+    eglDestroyImageKHR(window->getDisplay(), image2);
+
+    ASSERT_EGL_SUCCESS();
+
+    ASSERT_GL_NO_ERROR();
+}
+
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(ImageTest);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ImageTestES3);
