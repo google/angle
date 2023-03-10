@@ -1759,7 +1759,7 @@ spirv::IdRef OutputSPIRVTraverser::createConstructorMatrixFromMatrix(
         const bool needsSwizzle           = parameterType.getRows() > type.getRows();
         spirv::LiteralIntegerList swizzle = {spirv::LiteralInteger(0), spirv::LiteralInteger(1),
                                              spirv::LiteralInteger(2), spirv::LiteralInteger(3)};
-        swizzle.resize(type.getRows());
+        swizzle.resize_down(type.getRows());
 
         for (uint8_t columnIndex = 0; columnIndex < type.getCols(); ++columnIndex)
         {
