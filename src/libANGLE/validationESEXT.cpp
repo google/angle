@@ -1724,7 +1724,6 @@ bool ValidatePLSLoadOperation(const Context *context, angle::EntryPoint entryPoi
         case GL_LOAD_OP_CLEAR_ANGLE:
         case GL_LOAD_OP_LOAD_ANGLE:
         case GL_DONT_CARE:
-        case GL_LOAD_OP_DISABLE_ANGLE:
             return true;
         default:
             context->validationErrorF(entryPoint, GL_INVALID_ENUM, kPLSInvalidLoadOperation,
@@ -2015,13 +2014,8 @@ bool ValidateBeginPixelLocalStorageANGLE(const Context *context,
             return false;
         }
 
-        if (loadops[i] == GL_LOAD_OP_DISABLE_ANGLE)
-        {
-            continue;
-        }
-
-        // INVALID_OPERATION is generated if <loadops>[0..<n>-1] is not LOAD_OP_DISABLE_ANGLE, and
-        // the pixel local storage plane at that same index is is in a deinitialized state.
+        // INVALID_OPERATION is generated if a pixel local storage plane at index [0..<n>-1] is in a
+        // deinitialized state.
         if (pls == nullptr || pls->getPlane(i).isDeinitialized())
         {
             context->validationError(entryPoint, GL_INVALID_OPERATION,

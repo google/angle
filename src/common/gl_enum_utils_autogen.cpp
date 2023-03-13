@@ -2744,22 +2744,20 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                 case 0x96E6:
                     return "GL_LOAD_OP_LOAD_ANGLE";
                 case 0x96E7:
-                    return "GL_LOAD_OP_DISABLE_ANGLE";
-                case 0x96E8:
                     return "GL_STORE_OP_STORE_ANGLE";
-                case 0x96E9:
+                case 0x96E8:
                     return "GL_PIXEL_LOCAL_FORMAT_ANGLE";
-                case 0x96EA:
+                case 0x96E9:
                     return "GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE";
-                case 0x96EB:
+                case 0x96EA:
                     return "GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE";
-                case 0x96EC:
+                case 0x96EB:
                     return "GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE";
-                case 0x96ED:
+                case 0x96EC:
                     return "GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE";
-                case 0x96EE:
+                case 0x96ED:
                     return "GL_PIXEL_LOCAL_CLEAR_VALUE_INT_ANGLE";
-                case 0x96EF:
+                case 0x96EE:
                     return "GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE";
                 case 0xFFFFFFFF:
                     return "GL_INVALID_INDEX";
@@ -5911,7 +5909,7 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
         {
             switch (value)
             {
-                case 0x96ED:
+                case 0x96EC:
                     return "GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE";
                 default:
                     return UnknownEnumToString(value);
@@ -5922,17 +5920,17 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
         {
             switch (value)
             {
-                case 0x96E9:
+                case 0x96E8:
                     return "GL_PIXEL_LOCAL_FORMAT_ANGLE";
-                case 0x96EA:
+                case 0x96E9:
                     return "GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE";
-                case 0x96EB:
+                case 0x96EA:
                     return "GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE";
-                case 0x96EC:
+                case 0x96EB:
                     return "GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE";
-                case 0x96EE:
+                case 0x96ED:
                     return "GL_PIXEL_LOCAL_CLEAR_VALUE_INT_ANGLE";
-                case 0x96EF:
+                case 0x96EE:
                     return "GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE";
                 default:
                     return UnknownEnumToString(value);
@@ -28197,10 +28195,6 @@ unsigned int StringToGLenum(const char *str)
     {
         return 0x96E5;
     }
-    if (strcmp(str, "GL_LOAD_OP_DISABLE_ANGLE") == 0)
-    {
-        return 0x96E7;
-    }
     if (strcmp(str, "GL_LOAD_OP_LOAD_ANGLE") == 0)
     {
         return 0x96E6;
@@ -33247,19 +33241,19 @@ unsigned int StringToGLenum(const char *str)
     }
     if (strcmp(str, "GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE") == 0)
     {
-        return 0x96ED;
+        return 0x96EC;
     }
     if (strcmp(str, "GL_PIXEL_LOCAL_CLEAR_VALUE_INT_ANGLE") == 0)
     {
-        return 0x96EE;
+        return 0x96ED;
     }
     if (strcmp(str, "GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE") == 0)
     {
-        return 0x96EF;
+        return 0x96EE;
     }
     if (strcmp(str, "GL_PIXEL_LOCAL_FORMAT_ANGLE") == 0)
     {
-        return 0x96E9;
+        return 0x96E8;
     }
     if (strcmp(str, "GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE") == 0)
     {
@@ -33267,15 +33261,15 @@ unsigned int StringToGLenum(const char *str)
     }
     if (strcmp(str, "GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE") == 0)
     {
-        return 0x96EC;
+        return 0x96EB;
     }
     if (strcmp(str, "GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE") == 0)
     {
-        return 0x96EB;
+        return 0x96EA;
     }
     if (strcmp(str, "GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE") == 0)
     {
-        return 0x96EA;
+        return 0x96E9;
     }
     if (strcmp(str, "GL_PIXEL_MAG_FILTER_EXT") == 0)
     {
@@ -38079,7 +38073,7 @@ unsigned int StringToGLenum(const char *str)
     }
     if (strcmp(str, "GL_STORE_OP_STORE_ANGLE") == 0)
     {
-        return 0x96E8;
+        return 0x96E7;
     }
     if (strcmp(str, "GL_STREAM_COPY") == 0)
     {

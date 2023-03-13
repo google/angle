@@ -1276,7 +1276,6 @@
                 <enum name="GL_LOAD_OP_ZERO_ANGLE"/>
                 <enum name="GL_LOAD_OP_CLEAR_ANGLE"/>
                 <enum name="GL_LOAD_OP_LOAD_ANGLE"/>
-                <enum name="GL_LOAD_OP_DISABLE_ANGLE"/>
                 <enum name="GL_STORE_OP_STORE_ANGLE"/>
                 <enum name="GL_PIXEL_LOCAL_FORMAT_ANGLE"/>
                 <enum name="GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE"/>
@@ -1372,15 +1371,14 @@
         <enum value="0x96E4" name="GL_LOAD_OP_ZERO_ANGLE"/>
         <enum value="0x96E5" name="GL_LOAD_OP_CLEAR_ANGLE"/>
         <enum value="0x96E6" name="GL_LOAD_OP_LOAD_ANGLE"/>
-        <enum value="0x96E7" name="GL_LOAD_OP_DISABLE_ANGLE"/>
-        <enum value="0x96E8" name="GL_STORE_OP_STORE_ANGLE"/>
-        <enum value="0x96E9" name="GL_PIXEL_LOCAL_FORMAT_ANGLE" group="PLSQueryInt"/>
-        <enum value="0x96EA" name="GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE" group="PLSQueryInt"/>
-        <enum value="0x96EB" name="GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE" group="PLSQueryInt"/>
-        <enum value="0x96EC" name="GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE" group="PLSQueryInt"/>
-        <enum value="0x96ED" name="GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE" group="PLSQueryFloat"/>
-        <enum value="0x96EE" name="GL_PIXEL_LOCAL_CLEAR_VALUE_INT_ANGLE" group="PLSQueryInt"/>
-        <enum value="0x96EF" name="GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE" group="PLSQueryInt"/>
+        <enum value="0x96E7" name="GL_STORE_OP_STORE_ANGLE"/>
+        <enum value="0x96E8" name="GL_PIXEL_LOCAL_FORMAT_ANGLE" group="PLSQueryInt"/>
+        <enum value="0x96E9" name="GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE" group="PLSQueryInt"/>
+        <enum value="0x96EA" name="GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE" group="PLSQueryInt"/>
+        <enum value="0x96EB" name="GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE" group="PLSQueryInt"/>
+        <enum value="0x96EC" name="GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE" group="PLSQueryFloat"/>
+        <enum value="0x96ED" name="GL_PIXEL_LOCAL_CLEAR_VALUE_INT_ANGLE" group="PLSQueryInt"/>
+        <enum value="0x96EE" name="GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE" group="PLSQueryInt"/>
     </enums>
 
     <enums namespace="GL" group="CreateFlagMask" type="bitmask" vendor="ANGLE">
