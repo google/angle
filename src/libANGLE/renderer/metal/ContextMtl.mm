@@ -1362,7 +1362,6 @@ angle::Result ContextMtl::syncState(const gl::Context *context,
                 break;
             case gl::State::DIRTY_BIT_EXTENDED:
                 updateExtendedState(glState);
-                // Nothing to do until EXT_clip_control is implemented.
                 break;
             case gl::State::DIRTY_BIT_SAMPLE_SHADING:
                 // Nothing to do until OES_sample_shading is implemented.
@@ -1381,9 +1380,21 @@ angle::Result ContextMtl::syncState(const gl::Context *context,
 
 void ContextMtl::updateExtendedState(const gl::State &glState)
 {
-    // Handling clip distance enabled flags, mipmap generation hint & shader derivative
-    // hint.
-    invalidateDriverUniforms();
+    gl::State::ExtendedDirtyBits extendedDirtyBits = glState.getAndResetExtendedDirtyBits();
+    for (size_t extendedDirtyBit : extendedDirtyBits)
+    {
+        switch (extendedDirtyBit)
+        {
+            case gl::State::EXTENDED_DIRTY_BIT_CLIP_DISTANCES:
+                invalidateDriverUniforms();
+                break;
+            case gl::State::EXTENDED_DIRTY_BIT_DEPTH_CLAMP_ENABLED:
+                mDirtyBits.set(DIRTY_BIT_DEPTH_CLIP_MODE);
+                break;
+            default:
+                break;
+        }
+    }
 }
 
 // Disjoint timer queries
@@ -2535,6 +2546,10 @@ angle::Result ContextMtl::setupDrawImpl(const gl::Context *context,
                 break;
             case DIRTY_BIT_DEPTH_BIAS:
                 ANGLE_TRY(handleDirtyDepthBias(context));
+                break;
+            case DIRTY_BIT_DEPTH_CLIP_MODE:
+                mRenderEncoder.setDepthClipMode(
+                    mState.isDepthClampEnabled() ? MTLDepthClipModeClamp : MTLDepthClipModeClip);
                 break;
             case DIRTY_BIT_STENCIL_REF:
                 mRenderEncoder.setStencilRefVals(mStencilRefFront, mStencilRefBack);

@@ -867,6 +867,16 @@ void State::setFrontFace(GLenum front)
     }
 }
 
+void State::setDepthClamp(bool enabled)
+{
+    if (mRasterizer.depthClamp != enabled)
+    {
+        mRasterizer.depthClamp = enabled;
+        mDirtyBits.set(DIRTY_BIT_EXTENDED);
+        mExtendedDirtyBits.set(EXTENDED_DIRTY_BIT_DEPTH_CLAMP_ENABLED);
+    }
+}
+
 void State::setDepthTest(bool enabled)
 {
     if (mDepthStencil.depthTest != enabled)
@@ -1294,6 +1304,9 @@ void State::setEnableFeature(GLenum feature, bool enabled)
         case GL_POLYGON_OFFSET_FILL:
             setPolygonOffsetFill(enabled);
             return;
+        case GL_DEPTH_CLAMP_EXT:
+            setDepthClamp(enabled);
+            return;
         case GL_SAMPLE_ALPHA_TO_COVERAGE:
             setSampleAlphaToCoverage(enabled);
             return;
@@ -1462,6 +1475,8 @@ bool State::getEnableFeature(GLenum feature) const
             return isCullFaceEnabled();
         case GL_POLYGON_OFFSET_FILL:
             return isPolygonOffsetFillEnabled();
+        case GL_DEPTH_CLAMP_EXT:
+            return isDepthClampEnabled();
         case GL_SAMPLE_ALPHA_TO_COVERAGE:
             return isSampleAlphaToCoverageEnabled();
         case GL_SAMPLE_COVERAGE:
@@ -2454,6 +2469,9 @@ void State::getBooleanv(GLenum pname, GLboolean *params) const
             break;
         case GL_POLYGON_OFFSET_FILL:
             *params = mRasterizer.polygonOffsetFill;
+            break;
+        case GL_DEPTH_CLAMP_EXT:
+            *params = mRasterizer.depthClamp;
             break;
         case GL_SAMPLE_ALPHA_TO_COVERAGE:
             *params = mSampleAlphaToCoverage;

@@ -142,6 +142,7 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions,
       mPolygonOffsetFactor(0.0f),
       mPolygonOffsetUnits(0.0f),
       mPolygonOffsetClamp(0.0f),
+      mDepthClampEnabled(false),
       mRasterizerDiscardEnabled(false),
       mLineWidth(1.0f),
       mPrimitiveRestartEnabled(false),
@@ -1700,6 +1701,25 @@ void StateManagerGL::setPolygonOffset(float factor, float units, float clamp)
     }
 }
 
+void StateManagerGL::setDepthClampEnabled(bool enabled)
+{
+    if (mDepthClampEnabled != enabled)
+    {
+        mDepthClampEnabled = enabled;
+        if (mDepthClampEnabled)
+        {
+            mFunctions->enable(GL_DEPTH_CLAMP_EXT);
+        }
+        else
+        {
+            mFunctions->disable(GL_DEPTH_CLAMP_EXT);
+        }
+
+        mLocalDirtyBits.set(gl::State::DIRTY_BIT_EXTENDED);
+        mLocalExtendedDirtyBits.set(gl::State::EXTENDED_DIRTY_BIT_DEPTH_CLAMP_ENABLED);
+    }
+}
+
 void StateManagerGL::setRasterizerDiscardEnabled(bool enabled)
 {
     if (mRasterizerDiscardEnabled != enabled)
@@ -2237,6 +2257,9 @@ angle::Result StateManagerGL::syncState(const gl::Context *context,
                                                                 state.getProgram(),
                                                                 state.getEnabledClipDistances());
                             }
+                            break;
+                        case gl::State::EXTENDED_DIRTY_BIT_DEPTH_CLAMP_ENABLED:
+                            setDepthClampEnabled(state.isDepthClampEnabled());
                             break;
                         case gl::State::EXTENDED_DIRTY_BIT_LOGIC_OP_ENABLED:
                             setLogicOpEnabled(state.isLogicOpEnabled());
@@ -2893,6 +2916,17 @@ void StateManagerGL::syncFromNativeContext(const gl::Extensions &extensions,
         }
     }
 
+    if (extensions.depthClampEXT)
+    {
+        get(GL_DEPTH_CLAMP_EXT, &state->enableDepthClamp);
+        if (mDepthClampEnabled != state->enableDepthClamp)
+        {
+            mDepthClampEnabled = state->enableDepthClamp;
+            mLocalDirtyBits.set(gl::State::DIRTY_BIT_EXTENDED);
+            mLocalExtendedDirtyBits.set(gl::State::EXTENDED_DIRTY_BIT_DEPTH_CLAMP_ENABLED);
+        }
+    }
+
     get(GL_SAMPLE_COVERAGE_VALUE, &state->sampleCoverageValue);
     get(GL_SAMPLE_COVERAGE_INVERT, &state->sampleCoverageInvert);
     if (mSampleCoverageValue != state->sampleCoverageValue ||
@@ -2990,6 +3024,11 @@ void StateManagerGL::restoreNativeContext(const gl::Extensions &extensions,
 
     setPolygonOffset(state->polygonOffsetFactor, state->polygonOffsetUnits,
                      state->polygonOffsetClamp);
+
+    if (extensions.depthClampEXT)
+    {
+        setDepthClampEnabled(state->enableDepthClamp);
+    }
 
     setSampleCoverage(state->sampleCoverageValue, state->sampleCoverageInvert);
 
