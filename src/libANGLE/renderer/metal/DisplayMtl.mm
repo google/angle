@@ -943,6 +943,11 @@ void DisplayMtl::initializeExtensions() const
         mNativeExtensions.textureMirrorClampToEdgeEXT = true;
     }
 
+    if (ANGLE_APPLE_AVAILABLE_XCI(10.11, 11.0, 13.1))
+    {
+        mNativeExtensions.depthClampEXT = true;
+    }
+
     // EXT_debug_marker is not implemented yet, but the entry points must be exposed for the
     // Metal backend to be used in Chrome (http://anglebug.com/4946)
     mNativeExtensions.debugMarkerEXT = true;
