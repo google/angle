@@ -25,6 +25,7 @@
 #include "libANGLE/angletypes.h"
 #include "libANGLE/renderer/serial_utils.h"
 #include "libANGLE/renderer/vulkan/SecondaryCommandBuffer.h"
+#include "libANGLE/renderer/vulkan/SecondaryCommandPool.h"
 #include "libANGLE/renderer/vulkan/VulkanSecondaryCommandBuffer.h"
 #include "libANGLE/renderer/vulkan/vk_wrapper.h"
 #include "platform/FeaturesVk_autogen.h"
@@ -319,8 +320,8 @@ struct SecondaryCommandBufferList
 
 struct SecondaryCommandPools
 {
-    CommandPool outsideRenderPassPool;
-    CommandPool renderPassPool;
+    SecondaryCommandPool outsideRenderPassPool;
+    SecondaryCommandPool renderPassPool;
 };
 
 VkImageAspectFlags GetDepthStencilAspectFlags(const angle::Format &format);

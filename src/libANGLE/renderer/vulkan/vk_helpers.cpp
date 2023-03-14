@@ -926,24 +926,24 @@ char GetStoreOpShorthand(RenderPassStoreOp storeOp)
 }
 
 template <typename CommandBufferHelperT>
-void RecycleCommandBufferHelper(VkDevice device,
-                                std::vector<CommandBufferHelperT *> *freeList,
+void RecycleCommandBufferHelper(std::vector<CommandBufferHelperT *> *freeList,
                                 CommandBufferHelperT **commandBufferHelper,
                                 priv::SecondaryCommandBuffer *commandBuffer)
 {
     freeList->push_back(*commandBufferHelper);
 }
 
+// Can only be called from ContextVk::onDestroy(), asyncCommandQueue must be disabled.
+// Support for asyncCommandQueue requires other changes in the code which will also remove
+// the SecondaryCommandPool::collect() call.
 template <typename CommandBufferHelperT>
-void RecycleCommandBufferHelper(VkDevice device,
-                                std::vector<CommandBufferHelperT *> *freeList,
+void RecycleCommandBufferHelper(std::vector<CommandBufferHelperT *> *freeList,
                                 CommandBufferHelperT **commandBufferHelper,
                                 VulkanSecondaryCommandBuffer *commandBuffer)
 {
-    CommandPool *pool = (*commandBufferHelper)->getCommandPool();
+    SecondaryCommandPool *pool = (*commandBufferHelper)->getCommandPool();
 
-    pool->freeCommandBuffers(device, 1, commandBuffer->ptr());
-    commandBuffer->releaseHandle();
+    pool->collect(commandBuffer);
     SafeDelete(*commandBufferHelper);
 }
 
@@ -1439,7 +1439,7 @@ CommandBufferHelperCommon::CommandBufferHelperCommon()
 
 CommandBufferHelperCommon::~CommandBufferHelperCommon() {}
 
-void CommandBufferHelperCommon::initializeImpl(CommandPool *commandPool)
+void CommandBufferHelperCommon::initializeImpl(SecondaryCommandPool *commandPool)
 {
     mCommandAllocator.init();
     mCommandPool = commandPool;
@@ -1560,7 +1560,7 @@ OutsideRenderPassCommandBufferHelper::OutsideRenderPassCommandBufferHelper() {}
 OutsideRenderPassCommandBufferHelper::~OutsideRenderPassCommandBufferHelper() {}
 
 angle::Result OutsideRenderPassCommandBufferHelper::initialize(Context *context,
-                                                               CommandPool *commandPool)
+                                                               SecondaryCommandPool *commandPool)
 {
     initializeImpl(commandPool);
     return initializeCommandBuffer(context);
@@ -1700,7 +1700,8 @@ RenderPassCommandBufferHelper::~RenderPassCommandBufferHelper()
     mFramebuffer.setHandle(VK_NULL_HANDLE);
 }
 
-angle::Result RenderPassCommandBufferHelper::initialize(Context *context, CommandPool *commandPool)
+angle::Result RenderPassCommandBufferHelper::initialize(Context *context,
+                                                        SecondaryCommandPool *commandPool)
 {
     initializeImpl(commandPool);
     return initializeCommandBuffer(context);
@@ -2643,7 +2644,7 @@ CommandBufferRecycler<RenderPassCommandBuffer, RenderPassCommandBufferHelper>::o
 template <typename CommandBufferT, typename CommandBufferHelperT>
 angle::Result CommandBufferRecycler<CommandBufferT, CommandBufferHelperT>::getCommandBufferHelper(
     Context *context,
-    CommandPool *commandPool,
+    SecondaryCommandPool *commandPool,
     SecondaryCommandMemoryAllocator *commandsAllocator,
     CommandBufferHelperT **commandBufferHelperOut)
 {
@@ -2670,34 +2671,33 @@ angle::Result CommandBufferRecycler<CommandBufferT, CommandBufferHelperT>::getCo
 template angle::Result
 CommandBufferRecycler<OutsideRenderPassCommandBuffer, OutsideRenderPassCommandBufferHelper>::
     getCommandBufferHelper(Context *,
-                           CommandPool *,
+                           SecondaryCommandPool *,
                            SecondaryCommandMemoryAllocator *,
                            OutsideRenderPassCommandBufferHelper **);
 template angle::Result CommandBufferRecycler<
     RenderPassCommandBuffer,
     RenderPassCommandBufferHelper>::getCommandBufferHelper(Context *,
-                                                           CommandPool *,
+                                                           SecondaryCommandPool *,
                                                            SecondaryCommandMemoryAllocator *,
                                                            RenderPassCommandBufferHelper **);
 
 template <typename CommandBufferT, typename CommandBufferHelperT>
 void CommandBufferRecycler<CommandBufferT, CommandBufferHelperT>::recycleCommandBufferHelper(
-    VkDevice device,
     CommandBufferHelperT **commandBuffer)
 {
     std::unique_lock<std::mutex> lock(mMutex);
     ASSERT((*commandBuffer)->empty() && !(*commandBuffer)->hasAllocatorLinks());
     (*commandBuffer)->markOpen();
 
-    RecycleCommandBufferHelper(device, &mCommandBufferHelperFreeList, commandBuffer,
+    RecycleCommandBufferHelper(&mCommandBufferHelperFreeList, commandBuffer,
                                &(*commandBuffer)->getCommandBuffer());
 }
 
 template void
 CommandBufferRecycler<OutsideRenderPassCommandBuffer, OutsideRenderPassCommandBufferHelper>::
-    recycleCommandBufferHelper(VkDevice, OutsideRenderPassCommandBufferHelper **);
+    recycleCommandBufferHelper(OutsideRenderPassCommandBufferHelper **);
 template void CommandBufferRecycler<RenderPassCommandBuffer, RenderPassCommandBufferHelper>::
-    recycleCommandBufferHelper(VkDevice, RenderPassCommandBufferHelper **);
+    recycleCommandBufferHelper(RenderPassCommandBufferHelper **);
 
 template <typename CommandBufferT, typename CommandBufferHelperT>
 void CommandBufferRecycler<CommandBufferT, CommandBufferHelperT>::resetCommandBuffer(

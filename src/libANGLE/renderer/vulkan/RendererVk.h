@@ -535,20 +535,18 @@ class RendererVk : angle::NonCopyable
 
     angle::Result getOutsideRenderPassCommandBufferHelper(
         vk::Context *context,
-        vk::CommandPool *commandPool,
+        vk::SecondaryCommandPool *commandPool,
         vk::SecondaryCommandMemoryAllocator *commandsAllocator,
         vk::OutsideRenderPassCommandBufferHelper **commandBufferHelperOut);
     angle::Result getRenderPassCommandBufferHelper(
         vk::Context *context,
-        vk::CommandPool *commandPool,
+        vk::SecondaryCommandPool *commandPool,
         vk::SecondaryCommandMemoryAllocator *commandsAllocator,
         vk::RenderPassCommandBufferHelper **commandBufferHelperOut);
 
     void recycleOutsideRenderPassCommandBufferHelper(
-        VkDevice device,
         vk::OutsideRenderPassCommandBufferHelper **commandBuffer);
-    void recycleRenderPassCommandBufferHelper(VkDevice device,
-                                              vk::RenderPassCommandBufferHelper **commandBuffer);
+    void recycleRenderPassCommandBufferHelper(vk::RenderPassCommandBufferHelper **commandBuffer);
 
     // Process GPU memory reports
     void processMemoryReportCallback(const VkDeviceMemoryReportCallbackDataEXT &callbackData)
@@ -758,7 +756,7 @@ class RendererVk : angle::NonCopyable
 
     template <typename CommandBufferHelperT, typename RecyclerT>
     angle::Result getCommandBufferImpl(vk::Context *context,
-                                       vk::CommandPool *commandPool,
+                                       vk::SecondaryCommandPool *commandPool,
                                        vk::SecondaryCommandMemoryAllocator *commandsAllocator,
                                        RecyclerT *recycler,
                                        CommandBufferHelperT **commandBufferHelperOut);

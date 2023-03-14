@@ -1095,7 +1095,7 @@ constexpr uint32_t kInfiniteCmdCount = 0xFFFFFFFF;
 class CommandBufferHelperCommon : angle::NonCopyable
 {
   public:
-    CommandPool *getCommandPool() { return mCommandPool; }
+    SecondaryCommandPool *getCommandPool() { return mCommandPool; }
 
     void bufferWrite(ContextVk *contextVk,
                      VkAccessFlags writeAccessType,
@@ -1145,7 +1145,7 @@ class CommandBufferHelperCommon : angle::NonCopyable
     CommandBufferHelperCommon();
     ~CommandBufferHelperCommon();
 
-    void initializeImpl(CommandPool *commandPool);
+    void initializeImpl(SecondaryCommandPool *commandPool);
 
     void resetImpl();
 
@@ -1177,7 +1177,7 @@ class CommandBufferHelperCommon : angle::NonCopyable
 
     // The command pool *CommandBufferHelper::mCommandBuffer is allocated from.  Only used with
     // Vulkan secondary command buffers (as opposed to ANGLE's SecondaryCommandBuffer).
-    CommandPool *mCommandPool;
+    SecondaryCommandPool *mCommandPool;
 
     // Whether the command buffers contains any draw/dispatch calls that possibly output data
     // through storage buffers and images.  This is used to determine whether glMemoryBarrier*
@@ -1198,7 +1198,7 @@ class OutsideRenderPassCommandBufferHelper final : public CommandBufferHelperCom
     OutsideRenderPassCommandBufferHelper();
     ~OutsideRenderPassCommandBufferHelper();
 
-    angle::Result initialize(Context *context, CommandPool *commandPool);
+    angle::Result initialize(Context *context, SecondaryCommandPool *commandPool);
 
     angle::Result reset(Context *context);
 
@@ -1301,7 +1301,7 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
     RenderPassCommandBufferHelper();
     ~RenderPassCommandBufferHelper();
 
-    angle::Result initialize(Context *context, CommandPool *commandPool);
+    angle::Result initialize(Context *context, SecondaryCommandPool *commandPool);
 
     angle::Result reset(Context *context);
 
@@ -1563,11 +1563,11 @@ class CommandBufferRecycler
     void onDestroy();
 
     angle::Result getCommandBufferHelper(Context *context,
-                                         CommandPool *commandPool,
+                                         SecondaryCommandPool *commandPool,
                                          SecondaryCommandMemoryAllocator *commandsAllocator,
                                          CommandBufferHelperT **commandBufferHelperOut);
 
-    void recycleCommandBufferHelper(VkDevice device, CommandBufferHelperT **commandBuffer);
+    void recycleCommandBufferHelper(CommandBufferHelperT **commandBuffer);
 
     void resetCommandBuffer(CommandBufferT &&commandBuffer);
 

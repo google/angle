@@ -46,21 +46,20 @@ void InitializeSubmitInfo(VkSubmitInfo *submitInfo,
 }
 
 template <typename SecondaryCommandBufferListT>
-void ResetSecondaryCommandBuffers(VkDevice device, SecondaryCommandBufferListT *commandBuffers)
+void ResetSecondaryCommandBuffers(SecondaryCommandBufferListT *commandBuffers)
 {
     // Nothing to do when using ANGLE secondary command buffers.
 }
 
 template <>
 [[maybe_unused]] void ResetSecondaryCommandBuffers<std::vector<VulkanSecondaryCommandBuffer>>(
-    VkDevice device,
     std::vector<VulkanSecondaryCommandBuffer> *commandBuffers)
 {
     // Note: we currently free the command buffers individually, but we could potentially reset the
     // entire command pool.  https://issuetracker.google.com/issues/166793850
     for (VulkanSecondaryCommandBuffer &secondary : *commandBuffers)
     {
-        secondary.free(device);
+        secondary.destroy();
     }
     commandBuffers->clear();
 }
@@ -482,8 +481,8 @@ void CommandBatch::destroy(VkDevice device)
 
 void CommandBatch::resetSecondaryCommandBuffers(VkDevice device)
 {
-    ResetSecondaryCommandBuffers(device, &commandBuffersToReset.outsideRenderPassCommandBuffers);
-    ResetSecondaryCommandBuffers(device, &commandBuffersToReset.renderPassCommandBuffers);
+    ResetSecondaryCommandBuffers(&commandBuffersToReset.outsideRenderPassCommandBuffers);
+    ResetSecondaryCommandBuffers(&commandBuffersToReset.renderPassCommandBuffers);
 }
 
 // CommandProcessor implementation.
@@ -718,8 +717,7 @@ angle::Result CommandProcessor::processTask(CommandProcessorTask *task)
 
             OutsideRenderPassCommandBufferHelper *originalCommandBuffer =
                 task->getOutsideRenderPassCommandBuffer();
-            mRenderer->recycleOutsideRenderPassCommandBufferHelper(mRenderer->getDevice(),
-                                                                   &originalCommandBuffer);
+            mRenderer->recycleOutsideRenderPassCommandBufferHelper(&originalCommandBuffer);
             break;
         }
         case CustomTask::ProcessRenderPassCommands:
@@ -731,8 +729,7 @@ angle::Result CommandProcessor::processTask(CommandProcessorTask *task)
 
             RenderPassCommandBufferHelper *originalCommandBuffer =
                 task->getRenderPassCommandBuffer();
-            mRenderer->recycleRenderPassCommandBufferHelper(mRenderer->getDevice(),
-                                                            &originalCommandBuffer);
+            mRenderer->recycleRenderPassCommandBufferHelper(&originalCommandBuffer);
             break;
         }
         default:

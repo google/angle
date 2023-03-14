@@ -1199,8 +1199,8 @@ void ContextVk::onDestroy(const gl::Context *context)
     mOutsideRenderPassCommands->detachAllocator();
     mRenderPassCommands->detachAllocator();
 
-    mRenderer->recycleOutsideRenderPassCommandBufferHelper(device, &mOutsideRenderPassCommands);
-    mRenderer->recycleRenderPassCommandBufferHelper(device, &mRenderPassCommands);
+    mRenderer->recycleOutsideRenderPassCommandBufferHelper(&mOutsideRenderPassCommands);
+    mRenderer->recycleRenderPassCommandBufferHelper(&mRenderPassCommands);
 
     mVertexInputGraphicsPipelineCache.destroy(this);
     mFragmentOutputGraphicsPipelineCache.destroy(this);
