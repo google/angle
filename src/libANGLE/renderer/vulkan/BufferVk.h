@@ -174,7 +174,9 @@ class BufferVk : public BufferImpl
     void release(ContextVk *context);
     void dataUpdated();
 
-    angle::Result acquireBufferHelper(ContextVk *contextVk, size_t sizeInBytes);
+    angle::Result acquireBufferHelper(ContextVk *contextVk,
+                                      size_t sizeInBytes,
+                                      BufferUsageType usageType);
 
     bool isExternalBuffer() const { return mClientBuffer != nullptr; }
     bool shouldRedefineStorage(RendererVk *renderer,

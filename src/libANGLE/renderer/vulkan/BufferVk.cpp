@@ -412,7 +412,7 @@ angle::Result BufferVk::setDataWithMemoryType(const gl::Context *context,
         mUsageType           = GetBufferUsageType(usage);
         mMemoryPropertyFlags = memoryPropertyFlags;
         ANGLE_TRY(GetMemoryTypeIndex(contextVk, size, memoryPropertyFlags, &mMemoryTypeIndex));
-        ANGLE_TRY(acquireBufferHelper(contextVk, size));
+        ANGLE_TRY(acquireBufferHelper(contextVk, size, mUsageType));
         updateType = BufferUpdateType::StorageRedefined;
     }
     else
@@ -429,7 +429,7 @@ angle::Result BufferVk::setDataWithMemoryType(const gl::Context *context,
             release(contextVk);
             mUsageType = GetBufferUsageType(usage);
             ANGLE_TRY(GetMemoryTypeIndex(contextVk, size, memoryPropertyFlags, &mMemoryTypeIndex));
-            ANGLE_TRY(acquireBufferHelper(contextVk, size));
+            ANGLE_TRY(acquireBufferHelper(contextVk, size, mUsageType));
             updateType = BufferUpdateType::StorageRedefined;
         }
         else
@@ -611,8 +611,8 @@ angle::Result BufferVk::ghostMappedBuffer(ContextVk *contextVk,
     // also need to copy the contents of the previous buffer into the new buffer, in
     // case the caller only updates a portion of the new buffer.
     vk::BufferHelper src = std::move(mBuffer);
-
-    ANGLE_TRY(acquireBufferHelper(contextVk, static_cast<size_t>(mState.getSize())));
+    ANGLE_TRY(acquireBufferHelper(contextVk, static_cast<size_t>(mState.getSize()),
+                                  BufferUsageType::Dynamic));
 
     // Before returning the new buffer, map the previous buffer and copy its entire
     // contents into the new buffer.
@@ -728,7 +728,8 @@ angle::Result BufferVk::mapRangeImpl(ContextVk *contextVk,
 
     if (entireBufferInvalidated)
     {
-        ANGLE_TRY(acquireBufferHelper(contextVk, static_cast<size_t>(mState.getSize())));
+        ANGLE_TRY(acquireBufferHelper(contextVk, static_cast<size_t>(mState.getSize()),
+                                      BufferUsageType::Dynamic));
         return mBuffer.mapWithOffset(contextVk, mapPtrBytes, static_cast<size_t>(offset));
     }
 
@@ -942,7 +943,7 @@ angle::Result BufferVk::acquireAndUpdate(ContextVk *contextVk,
         }
     }
 
-    ANGLE_TRY(acquireBufferHelper(contextVk, bufferSize));
+    ANGLE_TRY(acquireBufferHelper(contextVk, bufferSize, BufferUsageType::Dynamic));
     ANGLE_TRY(updateBuffer(contextVk, data, updateSize, updateOffset));
 
     constexpr int kMaxCopyRegions = 2;
@@ -1082,7 +1083,9 @@ void BufferVk::onDataChanged()
     dataUpdated();
 }
 
-angle::Result BufferVk::acquireBufferHelper(ContextVk *contextVk, size_t sizeInBytes)
+angle::Result BufferVk::acquireBufferHelper(ContextVk *contextVk,
+                                            size_t sizeInBytes,
+                                            BufferUsageType usageType)
 {
     RendererVk *renderer = contextVk->getRenderer();
     size_t size          = roundUpPow2(sizeInBytes, kBufferSizeGranularity);
@@ -1094,7 +1097,7 @@ angle::Result BufferVk::acquireBufferHelper(ContextVk *contextVk, size_t sizeInB
     }
 
     // Allocate the buffer directly
-    ANGLE_TRY(mBuffer.initSuballocation(contextVk, mMemoryTypeIndex, size, alignment, mUsageType));
+    ANGLE_TRY(mBuffer.initSuballocation(contextVk, mMemoryTypeIndex, size, alignment, usageType));
 
     // Tell the observers (front end) that a new buffer was created, so the necessary
     // dirty bits can be set. This allows the buffer views pointing to the old buffer to
