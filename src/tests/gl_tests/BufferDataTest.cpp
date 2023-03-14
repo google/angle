@@ -1219,7 +1219,8 @@ TEST_P(BufferDataTestES3, BufferDataWithNullFollowedByMap)
     const std::vector<GLfloat> kZeros(6, 0.0f);
     glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * kZeros.size(), nullptr, GL_STATIC_DRAW);
     uint8_t *mapPtr = reinterpret_cast<uint8_t *>(
-        glMapBufferRange(GL_ARRAY_BUFFER, 0, sizeof(GLfloat) * kZeros.size(), GL_MAP_WRITE_BIT));
+        glMapBufferRange(GL_ARRAY_BUFFER, 0, sizeof(GLfloat) * kZeros.size(),
+                         GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT));
     ASSERT_NE(nullptr, mapPtr);
     ASSERT_GL_NO_ERROR();
     memcpy(mapPtr, kZeros.data(), sizeof(GLfloat) * kZeros.size());

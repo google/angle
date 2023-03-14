@@ -417,9 +417,13 @@ angle::Result BufferVk::setDataWithMemoryType(const gl::Context *context,
     }
     else
     {
+        const bool inUseAndRespecifiedWithoutData = (data == nullptr && isCurrentlyInUse(renderer));
         // Optimization: Lets figure out if we can reuse the existing storage.
         bool redefineStorage = shouldRedefineStorage(renderer, usage, memoryPropertyFlags, size);
-        if (redefineStorage)
+
+        // The entire buffer is being respecified, possibly with null data.
+        // Release and init a new mBuffer with requested size.
+        if (redefineStorage || inUseAndRespecifiedWithoutData)
         {
             // Release and re-create the memory and buffer.
             release(contextVk);
