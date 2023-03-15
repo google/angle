@@ -4634,7 +4634,7 @@ angle::Result BufferHelper::allocateForCopyBuffer(ContextVk *contextVk,
     RendererVk *renderer     = contextVk->getRenderer();
     uint32_t memoryTypeIndex = renderer->getStagingBufferMemoryTypeIndex(coherency);
     size_t alignment         = renderer->getStagingBufferAlignment();
-    return initSuballocation(contextVk, memoryTypeIndex, size, alignment, BufferUsageType::Static);
+    return initSuballocation(contextVk, memoryTypeIndex, size, alignment, BufferUsageType::Dynamic);
 }
 
 angle::Result BufferHelper::allocateForVertexConversion(ContextVk *contextVk,
