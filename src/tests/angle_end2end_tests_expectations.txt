@@ -356,6 +356,29 @@
 
 7451 MAC METAL INTEL : PointSpritesTest.PointSizeAboveMaxIsClamped/ES2_Metal = SKIP
 
+// New failures on MacBook Pro 2019 macOS 13.2.1
+8091 MAC METAL AMD : ClearTest.ClearStencilMask/* = SKIP
+8091 MAC METAL AMD : ClearTestES3.ClearBufferivStencilMask/* = SKIP
+8091 MAC METAL AMD : ClearTestES3.RepeatedStencilClear/* = SKIP
+8091 MAC METAL AMD : DepthWriteTest.Test/* = SKIP
+8091 MAC METAL AMD : MaskedScissoredClearTest.Test/* = SKIP
+8091 MAC METAL AMD : PixelLocalStorageTest.Coherency/* = SKIP
+8091 MAC METAL AMD : PixelLocalStorageTest.ForgetBarrier/* = SKIP
+8091 MAC METAL AMD : PixelLocalStorageTest.FragmentReject_viewport/* = SKIP
+8091 MAC METAL AMD : PixelLocalStorageTest.FunctionArguments/* = SKIP
+8091 MAC METAL AMD : PixelLocalStorageTest.Interrupt/* = SKIP
+8091 MAC METAL AMD : PixelLocalStorageTest.LoadAfterStore/* = SKIP
+8091 MAC METAL AMD : PixelLocalStorageTest.LoadOnly/* = SKIP
+8091 MAC METAL AMD : PixelLocalStorageTest.LoadOps/* = SKIP
+8091 MAC METAL AMD : PixelLocalStorageTest.MaxCombinedDrawBuffersAndPLSPlanes/* = SKIP
+8091 MAC METAL AMD : PixelLocalStorageTest.MemorylessStorage/* = SKIP
+8091 MAC METAL AMD : PixelLocalStorageTest.MipMapLevels/* = SKIP
+8091 MAC METAL AMD : PixelLocalStorageTest.PLSWithSamplers/* = SKIP
+8091 MAC METAL AMD : PixelLocalStorageTest.ProgramCache/* = SKIP
+8091 MAC METAL AMD : PixelLocalStorageTest.R32/* = SKIP
+8091 MAC METAL AMD : PixelLocalStorageTest.RGBA8/* = SKIP
+8091 MAC METAL AMD : StateChangeTestES3.StencilReferenceAndCompareMask/* = SKIP
+
 
 // D3D
 6432 WIN D3D9 : GLSLTest.HandleExcessiveLoopBug/* = SKIP

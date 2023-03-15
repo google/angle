@@ -360,6 +360,18 @@
 6222 MAC OPENGL AMD : dEQP-GLES3.functional.texture.specification.teximage3d_pbo.rg8* = FAIL
 6222 MAC OPENGL AMD : dEQP-GLES3.functional.texture.specification.teximage3d_pbo.r16* = FAIL
 
+// New failures on MacBook Pro 2019 macOS 13.2.1
+8091 MAC OPENGL AMD : dEQP-GLES3.functional.fbo.msaa.renderbuffer_resize.ms_to_nonms = FAIL
+8091 MAC OPENGL AMD : dEQP-GLES3.functional.fbo.msaa.renderbuffer_resize.nonms_to_nonms = FAIL
+8091 MAC OPENGL AMD : dEQP-GLES3.functional.pbo.renderbuffer.rgb5_a1_clears = FAIL
+8091 MAC OPENGL AMD : dEQP-GLES3.functional.pbo.renderbuffer.rgb5_a1_triangles = FAIL
+8091 MAC OPENGL AMD : dEQP-GLES3.functional.pbo.renderbuffer.rgba4_clears = FAIL
+8091 MAC OPENGL AMD : dEQP-GLES3.functional.pbo.renderbuffer.rgba4_triangles = FAIL
+8091 MAC OPENGL AMD : dEQP-GLES3.functional.pbo.renderbuffer.rgba8_clears = FAIL
+8091 MAC OPENGL AMD : dEQP-GLES3.functional.pbo.renderbuffer.rgba8_triangles = FAIL
+8091 MAC OPENGL AMD : dEQP-GLES3.functional.pbo.renderbuffer.srgb8_alpha8_clears = FAIL
+8091 MAC OPENGL AMD : dEQP-GLES3.functional.pbo.renderbuffer.srgb8_alpha8_triangles = FAIL
+
 // Mac Intel crashes
 2137 MAC OPENGL INTEL : dEQP-GLES3.functional.shaders.discard.function_static_loop_never = SKIP
 2137 MAC OPENGL INTEL : dEQP-GLES3.functional.shaders.discard.dynamic_loop_never = SKIP
@@ -676,6 +688,12 @@
 // Fails after a test fix in VK-GL-CTS
 5666 MAC METAL AMD : dEQP-GLES3.functional.texture.filtering.2d_array.formats.rgb9_e5_linear_mipmap_linear = FAIL
 5666 MAC METAL AMD : dEQP-GLES3.functional.texture.filtering.2d_array.formats.rgb9_e5_nearest_mipmap_linear = FAIL
+
+// New failures on MacBook Pro 2019 macOS 13.2.1
+8091 MAC METAL AMD : dEQP-GLES3.functional.shaders.builtin_functions.pack_unpack.unpacksnorm2x16_vertex = FAIL
+8091 MAC METAL AMD : dEQP-GLES3.functional.shaders.builtin_functions.pack_unpack.unpackunorm2x16_vertex = FAIL
+8091 MAC METAL AMD : dEQP-GLES3.functional.shaders.function.global_variable_aliasing_fragment = FAIL
+8091 MAC METAL AMD : dEQP-GLES3.functional.shaders.function.global_variable_aliasing_vertex = FAIL
 
 // Test failures introduced by Apple's changes (anglebug.com/5505)
 6467 MAC METAL : dEQP-GLES3.functional.fbo.invalidate.sub.unbind_blit_msaa_color = FAIL
