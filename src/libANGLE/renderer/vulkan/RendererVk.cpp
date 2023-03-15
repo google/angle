@@ -4688,17 +4688,22 @@ angle::Result RendererVk::queueSubmitOneOff(vk::Context *context,
     ANGLE_TRY(allocateScopedQueueSerialIndex(&index));
     QueueSerial submitQueueSerial(index.get(), generateQueueSerial(index.get()));
 
+    ASSERT(waitSemaphore == nullptr || waitSemaphore->valid());
+    ASSERT(fence == nullptr || fence->valid());
+    const VkSemaphore waitVkSemaphore = waitSemaphore ? waitSemaphore->getHandle() : VK_NULL_HANDLE;
+    const VkFence vkFence             = fence ? fence->getHandle() : VK_NULL_HANDLE;
+
     if (isAsyncCommandQueueEnabled())
     {
         ANGLE_TRY(mCommandProcessor.enqueueSubmitOneOffCommands(
-            context, protectionType, priority, primary.getHandle(), waitSemaphore,
-            waitSemaphoreStageMasks, fence, submitPolicy, submitQueueSerial));
+            context, protectionType, priority, primary.getHandle(), waitVkSemaphore,
+            waitSemaphoreStageMasks, vkFence, submitPolicy, submitQueueSerial));
     }
     else
     {
         ANGLE_TRY(mCommandQueue.queueSubmitOneOff(
-            context, protectionType, priority, primary.getHandle(), waitSemaphore,
-            waitSemaphoreStageMasks, fence, submitPolicy, submitQueueSerial));
+            context, protectionType, priority, primary.getHandle(), waitVkSemaphore,
+            waitSemaphoreStageMasks, vkFence, submitPolicy, submitQueueSerial));
     }
 
     *queueSerialOut = submitQueueSerial;
@@ -4715,21 +4720,23 @@ angle::Result RendererVk::queueSubmitOneOff(vk::Context *context,
 
 angle::Result RendererVk::queueSubmitWaitSemaphore(vk::Context *context,
                                                    egl::ContextPriority priority,
-                                                   const vk::Semaphore *waitSemaphore,
+                                                   const vk::Semaphore &waitSemaphore,
                                                    VkPipelineStageFlags waitSemaphoreStageMasks,
                                                    QueueSerial submitQueueSerial)
 {
     if (isAsyncCommandQueueEnabled())
     {
         ANGLE_TRY(mCommandProcessor.enqueueSubmitOneOffCommands(
-            context, vk::ProtectionType::Unprotected, priority, VK_NULL_HANDLE, waitSemaphore,
-            waitSemaphoreStageMasks, nullptr, vk::SubmitPolicy::AllowDeferred, submitQueueSerial));
+            context, vk::ProtectionType::Unprotected, priority, VK_NULL_HANDLE,
+            waitSemaphore.getHandle(), waitSemaphoreStageMasks, VK_NULL_HANDLE,
+            vk::SubmitPolicy::AllowDeferred, submitQueueSerial));
     }
     else
     {
         ANGLE_TRY(mCommandQueue.queueSubmitOneOff(
-            context, vk::ProtectionType::Unprotected, priority, VK_NULL_HANDLE, waitSemaphore,
-            waitSemaphoreStageMasks, nullptr, vk::SubmitPolicy::AllowDeferred, submitQueueSerial));
+            context, vk::ProtectionType::Unprotected, priority, VK_NULL_HANDLE,
+            waitSemaphore.getHandle(), waitSemaphoreStageMasks, VK_NULL_HANDLE,
+            vk::SubmitPolicy::AllowDeferred, submitQueueSerial));
     }
 
     return angle::Result::Continue;
@@ -5045,6 +5052,7 @@ angle::Result RendererVk::submitCommands(vk::Context *context,
     mRenderPassCommandBufferRecycler.releaseCommandBuffersToReset(
         &commandBuffersToReset.renderPassCommandBuffers);
 
+    ASSERT(signalSemaphore == nullptr || signalSemaphore->valid());
     const VkSemaphore signalVkSemaphore =
         signalSemaphore ? signalSemaphore->getHandle() : VK_NULL_HANDLE;
 
@@ -5101,7 +5109,7 @@ angle::Result RendererVk::submitPriorityDependency(vk::Context *context,
     // Submit only Wait Semaphore into the destination Priority (VkQueue).
     QueueSerial queueSerial(index, generateQueueSerial(index));
     semaphore.get().setQueueSerial(queueSerial);
-    ANGLE_TRY(queueSubmitWaitSemaphore(context, dstContextPriority, &semaphore.get().get(),
+    ANGLE_TRY(queueSubmitWaitSemaphore(context, dstContextPriority, semaphore.get().get(),
                                        VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, queueSerial));
 
     return angle::Result::Continue;

@@ -308,7 +308,7 @@ class RendererVk : angle::NonCopyable
 
     angle::Result queueSubmitWaitSemaphore(vk::Context *context,
                                            egl::ContextPriority priority,
-                                           const vk::Semaphore *waitSemaphore,
+                                           const vk::Semaphore &waitSemaphore,
                                            VkPipelineStageFlags waitSemaphoreStageMasks,
                                            QueueSerial submitQueueSerial);
 
