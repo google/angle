@@ -325,6 +325,7 @@ angle::Result TextureGL::setSubImage(const gl::Context *context,
 {
     ASSERT(TextureTargetToType(index.getTarget()) == getType());
 
+    ContextGL *contextGL              = GetImplAs<ContextGL>(context);
     const FunctionsGL *functions      = GetFunctionsGL(context);
     StateManagerGL *stateManager      = GetStateManagerGL(context);
     const angle::FeaturesGL &features = GetFeaturesGL(context);
@@ -344,8 +345,10 @@ angle::Result TextureGL::setSubImage(const gl::Context *context,
     if (features.unpackOverlappingRowsSeparatelyUnpackBuffer.enabled && unpackBuffer &&
         unpack.rowLength != 0 && unpack.rowLength < area.width)
     {
-        return setSubImageRowByRowWorkaround(context, target, level, area, format, type, unpack,
-                                             unpackBuffer, 0, pixels);
+        ANGLE_TRY(setSubImageRowByRowWorkaround(context, target, level, area, format, type, unpack,
+                                                unpackBuffer, 0, pixels));
+        contextGL->markWorkSubmitted();
+        return angle::Result::Continue;
     }
 
     if (features.unpackLastRowSeparatelyForPaddingInclusion.enabled)
@@ -361,16 +364,20 @@ angle::Result TextureGL::setSubImage(const gl::Context *context,
         // by uploading the last row (and last level if 3D) separately.
         if (apply)
         {
-            return setSubImagePaddingWorkaround(context, target, level, area, format, type, unpack,
-                                                unpackBuffer, pixels);
+            ANGLE_TRY(setSubImagePaddingWorkaround(context, target, level, area, format, type,
+                                                   unpack, unpackBuffer, pixels));
+            contextGL->markWorkSubmitted();
+            return angle::Result::Continue;
         }
     }
 
     if (features.uploadTextureDataInChunks.enabled)
     {
-        return setSubImageRowByRowWorkaround(context, target, level, area, format, type, unpack,
-                                             unpackBuffer, kUploadTextureDataInChunksUploadSize,
-                                             pixels);
+        ANGLE_TRY(setSubImageRowByRowWorkaround(context, target, level, area, format, type, unpack,
+                                                unpackBuffer, kUploadTextureDataInChunksUploadSize,
+                                                pixels));
+        contextGL->markWorkSubmitted();
+        return angle::Result::Continue;
     }
 
     if (nativegl::UseTexImage2D(getType()))
@@ -391,6 +398,7 @@ angle::Result TextureGL::setSubImage(const gl::Context *context,
                                   texSubImageFormat.format, texSubImageFormat.type, pixels));
     }
 
+    contextGL->markWorkSubmitted();
     return angle::Result::Continue;
 }
 
@@ -577,6 +585,7 @@ angle::Result TextureGL::setCompressedImage(const gl::Context *context,
                                             size_t imageSize,
                                             const uint8_t *pixels)
 {
+    ContextGL *contextGL              = GetImplAs<ContextGL>(context);
     const FunctionsGL *functions      = GetFunctionsGL(context);
     StateManagerGL *stateManager      = GetStateManagerGL(context);
     const angle::FeaturesGL &features = GetFeaturesGL(context);
@@ -617,6 +626,7 @@ angle::Result TextureGL::setCompressedImage(const gl::Context *context,
     ASSERT(!levelInfo.lumaWorkaround.enabled);
     setLevelInfo(context, target, level, 1, levelInfo);
 
+    contextGL->markWorkSubmitted();
     return angle::Result::Continue;
 }
 
@@ -628,6 +638,7 @@ angle::Result TextureGL::setCompressedSubImage(const gl::Context *context,
                                                size_t imageSize,
                                                const uint8_t *pixels)
 {
+    ContextGL *contextGL              = GetImplAs<ContextGL>(context);
     const FunctionsGL *functions      = GetFunctionsGL(context);
     StateManagerGL *stateManager      = GetStateManagerGL(context);
     const angle::FeaturesGL &features = GetFeaturesGL(context);
@@ -663,6 +674,7 @@ angle::Result TextureGL::setCompressedSubImage(const gl::Context *context,
            !GetLevelInfo(features, originalInternalFormatInfo, compressedTexSubImageFormat.format)
                 .lumaWorkaround.enabled);
 
+    contextGL->markWorkSubmitted();
     return angle::Result::Continue;
 }
 
