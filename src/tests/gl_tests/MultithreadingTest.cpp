@@ -1941,6 +1941,12 @@ TEST_P(MultithreadingTestES3, RenderThenSampleDifferentContextPriority)
 {
     ANGLE_SKIP_TEST_IF(!platformSupportsMultithreading());
 
+    constexpr size_t kIterationCountMax = 10;
+
+    const bool reduceLoad       = isSwiftshader();
+    const size_t iterationCount = reduceLoad ? 3 : kIterationCountMax;
+    const size_t heavyDrawCount = reduceLoad ? 25 : 100;
+
     // Initialize contexts
     EGLWindow *window = getEGLWindow();
     EGLDisplay dpy    = window->getDisplay();
@@ -1987,8 +1993,6 @@ TEST_P(MultithreadingTestES3, RenderThenSampleDifferentContextPriority)
     std::mutex mutex;
     std::condition_variable condVar;
 
-    constexpr size_t kIterationCount = 10;
-
     enum class Step
     {
         Start,
@@ -1996,7 +2000,7 @@ TEST_P(MultithreadingTestES3, RenderThenSampleDifferentContextPriority)
         Thread1Init,
         Thread0Draw,
         Thread1Draw,
-        Finish = Thread0Draw + kIterationCount * 2,
+        Finish = Thread0Draw + kIterationCountMax * 2,
         Abort,
     };
     Step currentStep = Step::Start;
@@ -2040,11 +2044,11 @@ TEST_P(MultithreadingTestES3, RenderThenSampleDifferentContextPriority)
         threadSynchronization.nextStep(Step::Thread0Init);
         ASSERT_TRUE(threadSynchronization.waitForStep(Step::Thread1Init));
 
-        for (size_t i = 0; i < kIterationCount; ++i)
+        for (size_t i = 0; i < iterationCount; ++i)
         {
             // Simulate heavy work...
             glUniform4f(colorLocation, 0.0f, 0.0f, 0.0f, 0.0f);
-            for (int j = 0; j < 100; ++j)
+            for (size_t j = 0; j < heavyDrawCount; ++j)
             {
                 drawQuad(colorProgram, essl1_shaders::PositionAttrib(), 0.5f);
             }
@@ -2060,7 +2064,7 @@ TEST_P(MultithreadingTestES3, RenderThenSampleDifferentContextPriority)
             // Notify second thread that draw is finished.
             threadSynchronization.nextStep(makeStep(Step::Thread0Draw, i));
             ASSERT_TRUE(threadSynchronization.waitForStep(
-                (i == kIterationCount - 1) ? Step::Finish : makeStep(Step::Thread1Draw, i)));
+                (i == iterationCount - 1) ? Step::Finish : makeStep(Step::Thread1Draw, i)));
         }
 
         EXPECT_GL_NO_ERROR();
@@ -2089,7 +2093,7 @@ TEST_P(MultithreadingTestES3, RenderThenSampleDifferentContextPriority)
         // Wait for first thread to draw using the shared texture.
         threadSynchronization.nextStep(Step::Thread1Init);
 
-        for (size_t i = 0; i < kIterationCount; ++i)
+        for (size_t i = 0; i < iterationCount; ++i)
         {
             ASSERT_TRUE(threadSynchronization.waitForStep(makeStep(Step::Thread0Draw, i)));
 
@@ -2112,7 +2116,7 @@ TEST_P(MultithreadingTestES3, RenderThenSampleDifferentContextPriority)
             thread0DrawSyncObj = nullptr;
 
             threadSynchronization.nextStep(
-                (i == kIterationCount - 1) ? Step::Finish : makeStep(Step::Thread1Draw, i));
+                (i == iterationCount - 1) ? Step::Finish : makeStep(Step::Thread1Draw, i));
         }
 
         EXPECT_GL_NO_ERROR();
@@ -2139,6 +2143,9 @@ TEST_P(MultithreadingTestES3, RenderThenSampleInNewContextWithDifferentPriority)
 {
     ANGLE_SKIP_TEST_IF(!platformSupportsMultithreading());
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_disjoint_timer_query"));
+
+    const bool reduceLoad       = isSwiftshader();
+    const size_t heavyDrawCount = reduceLoad ? 75 : 1000;
 
     // Initialize contexts
     EGLWindow *window = getEGLWindow();
@@ -2246,7 +2253,7 @@ TEST_P(MultithreadingTestES3, RenderThenSampleInNewContextWithDifferentPriority)
 
         // Simulate heavy work...
         glUseProgram(redProgram);
-        for (int j = 0; j < 1000; ++j)
+        for (size_t j = 0; j < heavyDrawCount; ++j)
         {
             // Draw with Red color.
             drawQuad(redProgram, essl1_shaders::PositionAttrib(), 0.5f);
@@ -2340,6 +2347,10 @@ TEST_P(MultithreadingTestES3, RenderThenSampleDifferentContextPriorityUsingEGLIm
     ANGLE_SKIP_TEST_IF(!platformSupportsMultithreading());
     ANGLE_SKIP_TEST_IF(!hasWaitSyncExtension() || !hasGLSyncExtension());
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_EGL_image"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_disjoint_timer_query"));
+
+    const bool reduceLoad       = isSwiftshader();
+    const size_t heavyDrawCount = reduceLoad ? 75 : 1000;
 
     // Initialize contexts
     EGLWindow *window = getEGLWindow();
@@ -2427,21 +2438,40 @@ TEST_P(MultithreadingTestES3, RenderThenSampleDifferentContextPriorityUsingEGLIm
 
         ANGLE_GL_PROGRAM(redProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
         ANGLE_GL_PROGRAM(greenProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
-
-        // Simulate heavy work...
-        glUseProgram(redProgram);
-        for (int j = 0; j < 1000; ++j)
-        {
-            drawQuad(redProgram, essl1_shaders::PositionAttrib(), 0.5f);
-        }
-
-        // Draw with test color.
-        glUseProgram(greenProgram);
-        drawQuad(greenProgram, essl1_shaders::PositionAttrib(), 0.5f);
-        ASSERT_GL_NO_ERROR();
+        ANGLE_GL_PROGRAM(blueProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
 
         // Wait for second thread to finish initializing.
         ASSERT_TRUE(threadSynchronization.waitForStep(Step::Thread1Init));
+
+        // Enable additive blend
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_ONE, GL_ONE);
+
+        GLuint query;
+        glGenQueries(1, &query);
+        glBeginQuery(GL_TIME_ELAPSED_EXT, query);
+        ASSERT_GL_NO_ERROR();
+
+        // Simulate heavy work...
+        glUseProgram(redProgram);
+        for (size_t j = 0; j < heavyDrawCount; ++j)
+        {
+            // Draw with Red color.
+            drawQuad(redProgram, essl1_shaders::PositionAttrib(), 0.5f);
+        }
+
+        // Draw with Green color.
+        glUseProgram(greenProgram);
+        drawQuad(greenProgram, essl1_shaders::PositionAttrib(), 0.5f);
+
+        // This should force "flushToPrimary()"
+        glEndQuery(GL_TIME_ELAPSED_EXT);
+        glDeleteQueries(1, &query);
+        ASSERT_GL_NO_ERROR();
+
+        // Continue draw with Blue color after flush...
+        glUseProgram(blueProgram);
+        drawQuad(blueProgram, essl1_shaders::PositionAttrib(), 0.5f);
 
         sync = eglCreateSyncKHR(dpy, EGL_SYNC_FENCE_KHR, nullptr);
         EXPECT_NE(sync, EGL_NO_SYNC_KHR);
@@ -2496,7 +2526,7 @@ TEST_P(MultithreadingTestES3, RenderThenSampleDifferentContextPriorityUsingEGLIm
         ASSERT_GL_NO_ERROR();
 
         // Check test color in four corners.
-        GLColor color = GLColor::green;
+        GLColor color = GLColor::white;
         EXPECT_PIXEL_EQ(0, 0, color.R, color.G, color.B, color.A);
         EXPECT_PIXEL_EQ(0, kTexSize - 1, color.R, color.G, color.B, color.A);
         EXPECT_PIXEL_EQ(kTexSize - 1, 0, color.R, color.G, color.B, color.A);
@@ -2533,6 +2563,12 @@ TEST_P(MultithreadingTestES3, ContextPriorityMixing)
 {
     ANGLE_SKIP_TEST_IF(!platformSupportsMultithreading());
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_disjoint_timer_query"));
+
+    constexpr size_t kIterationCountMax = 10;
+
+    const bool reduceLoad       = isSwiftshader();
+    const size_t iterationCount = reduceLoad ? 3 : kIterationCountMax;
+    const size_t heavyDrawCount = reduceLoad ? 25 : 100;
 
     // Initialize contexts
     EGLWindow *window = getEGLWindow();
@@ -2581,14 +2617,12 @@ TEST_P(MultithreadingTestES3, ContextPriorityMixing)
     std::mutex mutex;
     std::condition_variable condVar;
 
-    constexpr size_t kIterationCount = 10;
-
     enum class Step
     {
         Start,
         Thread1DrawColor,
         Thread0Iterate,
-        Finish = Thread1DrawColor + kIterationCount * 2,
+        Finish = Thread1DrawColor + kIterationCountMax * 2,
         Abort,
     };
     Step currentStep = Step::Start;
@@ -2606,7 +2640,7 @@ TEST_P(MultithreadingTestES3, ContextPriorityMixing)
 
         ANGLE_GL_PROGRAM(redProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
 
-        for (size_t i = 0; i < kIterationCount; ++i)
+        for (size_t i = 0; i < iterationCount; ++i)
         {
             ASSERT_TRUE(threadSynchronization.waitForStep(makeStep(Step::Thread1DrawColor, i)));
 
@@ -2661,7 +2695,7 @@ TEST_P(MultithreadingTestES3, ContextPriorityMixing)
         ANGLE_GL_PROGRAM(textureProgram, essl1_shaders::vs::Texture2D(),
                          essl1_shaders::fs::Texture2D());
 
-        for (size_t i = 0; i < kIterationCount; ++i)
+        for (size_t i = 0; i < iterationCount; ++i)
         {
             glBindFramebuffer(GL_FRAMEBUFFER, fbo);
             glUseProgram(colorProgram);
@@ -2673,7 +2707,7 @@ TEST_P(MultithreadingTestES3, ContextPriorityMixing)
 
             // Simulate heavy work...
             glUniform4f(colorLocation, 0.0f, 0.0f, 0.0f, 0.0f);
-            for (int j = 0; j < 100; ++j)
+            for (size_t j = 0; j < heavyDrawCount; ++j)
             {
                 drawQuad(colorProgram, essl1_shaders::PositionAttrib(), 0.5f);
             }
