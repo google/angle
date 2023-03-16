@@ -78,6 +78,18 @@ bool IsVulkan11(uint32_t apiVersion)
     return apiVersion >= VK_API_VERSION_1_1;
 }
 
+bool IsVenus(uint32_t driverId, const char *deviceName)
+{
+    // Where driver id is available, check against Venus driver id:
+    if (driverId != 0)
+    {
+        return driverId == VK_DRIVER_ID_MESA_VENUS;
+    }
+
+    // Otherwise, look for Venus in the device name.
+    return strstr(deviceName, "Venus") != nullptr;
+}
+
 bool IsQualcommOpenSource(uint32_t vendorId, uint32_t driverId, const char *deviceName)
 {
     if (!IsQualcomm(vendorId))
@@ -3557,6 +3569,9 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     const bool isSwiftShader =
         IsSwiftshader(mPhysicalDeviceProperties.vendorID, mPhysicalDeviceProperties.deviceID);
 
+    // MESA Virtio-GPU Venus driver: https://docs.mesa3d.org/drivers/venus.html
+    const bool isVenus = IsVenus(mDriverProperties.driverID, mPhysicalDeviceProperties.deviceName);
+
     // Distinguish between the open source and proprietary Qualcomm drivers
     const bool isQualcommOpenSource =
         IsQualcommOpenSource(mPhysicalDeviceProperties.vendorID, mDriverProperties.driverID,
@@ -4015,9 +4030,10 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     // Negative viewports are exposed in the Maintenance1 extension and in core Vulkan 1.1+.
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsNegativeViewport, supportsNegativeViewport);
 
-    // Whether non-conformant configurations and extensions should be exposed.
+    // Whether non-conformant configurations and extensions should be exposed. Always disable for
+    // MESA Virtio-GPU Venus driver for production purpose.
     ANGLE_FEATURE_CONDITION(&mFeatures, exposeNonConformantExtensionsAndVersions,
-                            kExposeNonConformantExtensionsAndVersions);
+                            kExposeNonConformantExtensionsAndVersions && !isVenus);
 
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsMemoryBudget,
@@ -4029,8 +4045,10 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
 
     // Testing shows that on ARM GPU, doing implicit flush at framebuffer boundary improves
     // performance. Most app traces shows frame time reduced and manhattan 3.1 offscreen score
-    // improves 7%.
-    ANGLE_FEATURE_CONDITION(&mFeatures, preferSubmitAtFBOBoundary, isARM || isSwiftShader);
+    // improves 7%. Disable for MESA Virtio-GPU Venus driver in virtualized environment where
+    // batching is preferred.
+    ANGLE_FEATURE_CONDITION(&mFeatures, preferSubmitAtFBOBoundary,
+                            (isARM || isSwiftShader) && !isVenus);
 
     // In order to support immutable samplers tied to external formats, we need to overallocate
     // descriptor counts for such immutable samplers
@@ -4114,9 +4132,13 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     //
     // - Intel
     //
+    // The above platforms are not excluded if behind MESA Virtio-GPU Venus driver since WSI is
+    // implemented with external memory there.
+    //
     // Without VK_GOOGLE_surfaceless_query, there is no way to automatically deduce this support.
-    ANGLE_FEATURE_CONDITION(&mFeatures, emulateAdvancedBlendEquations,
-                            !mFeatures.supportsBlendOperationAdvanced.enabled && !isIntel);
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, emulateAdvancedBlendEquations,
+        !mFeatures.supportsBlendOperationAdvanced.enabled && (isVenus || !isIntel));
 
     // Workaround for platforms that do not return 1.0f even when dividend and divisor have the same
     // value.
@@ -4336,6 +4358,14 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     // Some ARM drivers may not free memory in "vkFreeCommandBuffers()" without
     // VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT flag.
     ANGLE_FEATURE_CONDITION(&mFeatures, useResetCommandBufferBitForSecondaryPools, isARM);
+
+    // Required to pass android.media.cts.DecodeAccuracyTest with MESA Virtio-GPU Venus driver in
+    // virtualized environment. https://issuetracker.google.com/246378938
+    ANGLE_FEATURE_CONDITION(&mFeatures, preferLinearFilterForYUV, isVenus);
+
+    // Required to pass android.media.codec.cts.EncodeDecodeTest with MESA Virtio-GPU Venus driver
+    // in virtualized environment. https://issuetracker.google.com/246218584
+    ANGLE_FEATURE_CONDITION(&mFeatures, mapUnspecifiedColorSpaceToPassThrough, isVenus);
 
     ApplyFeatureOverrides(&mFeatures, displayVk->getState());
 
