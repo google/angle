@@ -882,6 +882,7 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
       mHasDeferredFlush(false),
       mHasAnyCommandsPendingSubmission(false),
       mIsInFramebufferFetchMode(false),
+      mAllowRenderPassToReactivate(true),
       mTotalBufferToImageCopySize(0),
       mHasWaitSemaphoresPendingSubmission(false),
       mGpuClockSync{std::numeric_limits<double>::max(), std::numeric_limits<double>::max()},
@@ -2277,7 +2278,10 @@ angle::Result ContextVk::handleDirtyAnySamplePassedQueryEnd(DirtyBits::Iterator 
         // getQueryResult gets unblocked sooner.
         dirtyBitsIterator->setLaterBit(DIRTY_BIT_RENDER_PASS);
 
-        mHasDeferredFlush = true;
+        // Don't let next render pass end up reactivate and reuse the current render pass, which
+        // defeats the purpose of it.
+        mAllowRenderPassToReactivate = false;
+        mHasDeferredFlush            = true;
     }
     return angle::Result::Continue;
 }
@@ -2285,6 +2289,26 @@ angle::Result ContextVk::handleDirtyAnySamplePassedQueryEnd(DirtyBits::Iterator 
 angle::Result ContextVk::handleDirtyGraphicsRenderPass(DirtyBits::Iterator *dirtyBitsIterator,
                                                        DirtyBits dirtyBitMask)
 {
+    FramebufferVk *drawFramebufferVk = getDrawFramebuffer();
+
+    gl::Rectangle renderArea = drawFramebufferVk->getRenderArea(this);
+    // Check to see if we can reactivate the current renderPass, if all arguments that we use to
+    // start the render pass is the same. We don't need to check clear values since mid render pass
+    // clear are handled differently.
+    bool reactivateStartedRenderPass =
+        hasStartedRenderPassWithQueueSerial(drawFramebufferVk->getLastRenderPassQueueSerial()) &&
+        mAllowRenderPassToReactivate && !drawFramebufferVk->hasDeferredClears() &&
+        renderArea == mRenderPassCommands->getRenderArea();
+    if (reactivateStartedRenderPass)
+    {
+        INFO() << "Reactivate already started render pass on draw.";
+        mRenderPassCommandBuffer = &mRenderPassCommands->getCommandBuffer();
+        ASSERT(hasActiveRenderPass());
+        ASSERT(drawFramebufferVk->getRenderPassDesc() == mRenderPassCommands->getRenderPassDesc());
+
+        return angle::Result::Continue;
+    }
+
     // If the render pass needs to be recreated, close it using the special mid-dirty-bit-handling
     // function, so later dirty bits can be set.
     if (mRenderPassCommands->started())
@@ -2294,11 +2318,9 @@ angle::Result ContextVk::handleDirtyGraphicsRenderPass(DirtyBits::Iterator *dirt
                                                RenderPassClosureReason::AlreadySpecifiedElsewhere));
     }
 
-    FramebufferVk *drawFramebufferVk  = getDrawFramebuffer();
-    gl::Rectangle scissoredRenderArea = drawFramebufferVk->getRotatedScissoredRenderArea(this);
-    bool renderPassDescChanged        = false;
+    bool renderPassDescChanged = false;
 
-    ANGLE_TRY(startRenderPass(scissoredRenderArea, nullptr, &renderPassDescChanged));
+    ANGLE_TRY(startRenderPass(renderArea, nullptr, &renderPassDescChanged));
 
     // The render pass desc can change when starting the render pass, for example due to
     // multisampled-render-to-texture needs based on loadOps.  In that case, recreate the graphics
@@ -7274,6 +7296,9 @@ angle::Result ContextVk::beginNewRenderPass(
                                                    renderPassAttachmentOps, colorAttachmentCount,
                                                    depthStencilAttachmentIndex, clearValues,
                                                    renderPassQueueSerial, commandBufferOut));
+
+    // By default all render pass should allow to be reactivated.
+    mAllowRenderPassToReactivate = true;
 
     if (mCurrentGraphicsPipeline)
     {
