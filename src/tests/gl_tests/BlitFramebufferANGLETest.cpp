@@ -2945,7 +2945,7 @@ TEST_P(BlitFramebufferTest, drawBlitAndDrawAgain)
     initFBOWithProgramAndDepth(nullptr, nullptr, 0, nullptr, 0, kWidth, kHeight, drawGreen, 0.7f);
     EXPECT_PIXEL_COLOR_EQ(1, 1, GLColor::green);
 
-    // draw blue quad with depth==0.5f. Since depthFunc is set to less, it should fail depth test
+    // Setup for draw-blit-draw use pattern
     glBindFramebuffer(GL_READ_FRAMEBUFFER, srcFBO);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
     std::array<Vector3, 6> quadVertices = GetQuadVertices();
@@ -2998,7 +2998,7 @@ TEST_P(BlitFramebufferTest, scissorDrawBlitAndDrawAgain)
     initFBOWithProgramAndDepth(nullptr, nullptr, 0, nullptr, 0, kWidth, kHeight, drawGreen, 0.7f);
     EXPECT_PIXEL_COLOR_EQ(1, 1, GLColor::green);
 
-    // draw blue quad with depth==0.5f. Since depthFunc is set to less, it should fail depth test
+    // Setup for draw-blit-draw use pattern
     glBindFramebuffer(GL_READ_FRAMEBUFFER, srcFBO);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
     std::array<Vector3, 6> quadVertices = GetQuadVertices();
