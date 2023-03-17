@@ -43,7 +43,7 @@ vars = {
   'checkout_angle_mesa': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '0abde2e3b92a23d09931c9268b3ffd4db30730f9',
+  'chromium_revision': '7a04676dce36c321250cf767f6055f3fab5df6fc',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -88,11 +88,11 @@ vars = {
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling catapult
   # and whatever else without interference from each other.
-  'catapult_revision': '5bda427934f1067bfe795199b6466828062b99ac',
+  'catapult_revision': '4ca6b4649b46902814bf6cebc5c56912a63ea301',
 
   # the commit queue can handle CLs rolling Fuchsia sdk
   # and whatever else without interference from each other.
-  'fuchsia_version': 'version:12.20230316.0.1',
+  'fuchsia_version': 'version:12.20230316.3.1',
 
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling luci-go
@@ -140,12 +140,12 @@ vars = {
 deps = {
 
   'build': {
-    'url': '{chromium_git}/chromium/src/build.git@a3aa92a8aba5f0764fa79275e034d660a57ac773',
+    'url': '{chromium_git}/chromium/src/build.git@2bf4270421ec3345670d420cd9cbb96db6501b13',
     'condition': 'not build_with_chromium',
   },
 
   'buildtools': {
-    'url': '{chromium_git}/chromium/src/buildtools.git@6f568a60b072eb2ad1bf0c3813e0f106673c7359',
+    'url': '{chromium_git}/chromium/src/buildtools.git@ac6f095ab3b7aba37198c736f7d7c929f9acdab0',
     'condition': 'not build_with_chromium',
   },
 
@@ -158,7 +158,7 @@ deps = {
     'packages': [
       {
         'package': 'gn/gn/linux-${{arch}}',
-        'version': 'git_revision:fe330c0ae1ec29db30b6f830e50771a335e071fb',
+        'version': 'git_revision:77014c1590164715fff8f3f3d3c77e9ff01b4d70',
       }
     ],
     'dep_type': 'cipd',
@@ -169,7 +169,7 @@ deps = {
     'packages': [
       {
         'package': 'gn/gn/mac-${{arch}}',
-        'version': 'git_revision:fe330c0ae1ec29db30b6f830e50771a335e071fb',
+        'version': 'git_revision:77014c1590164715fff8f3f3d3c77e9ff01b4d70',
       }
     ],
     'dep_type': 'cipd',
@@ -177,17 +177,17 @@ deps = {
   },
 
   'buildtools/third_party/libc++/trunk': {
-    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libcxx.git@124c7ee3fcfeb8b31c8cb0e78a967ad9d58c86e8',
+    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libcxx.git@afb9e77fdffa8378151879469d7fa778c3dcac7d',
     'condition': 'not build_with_chromium',
   },
 
   'buildtools/third_party/libc++abi/trunk': {
-    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libcxxabi.git@10804337f26a94fbffb3fff7b76695c080173653',
+    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libcxxabi.git@de45956e5c401cf66b5b5c6e372e1eab7e757ee2',
     'condition': 'not build_with_chromium',
   },
 
   'buildtools/third_party/libunwind/trunk': {
-    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libunwind.git@6289a2147a31827f21a58e451d4ad140562ddf31',
+    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libunwind.git@2b438f460b547d91578b78714b68476e0b7778eb',
     'condition': 'not build_with_chromium',
   },
 
@@ -195,7 +195,7 @@ deps = {
     'packages': [
       {
         'package': 'gn/gn/windows-amd64',
-        'version': 'git_revision:fe330c0ae1ec29db30b6f830e50771a335e071fb',
+        'version': 'git_revision:77014c1590164715fff8f3f3d3c77e9ff01b4d70',
       }
     ],
     'dep_type': 'cipd',
@@ -203,7 +203,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@fb89ba8b5659f653c7dab37f14e98939a4b31d3a',
+    'url': '{chromium_git}/chromium/src/testing@545a98d98de82925534cb6a4b5b9dd341b8ee56b',
     'condition': 'not build_with_chromium',
   },
 
@@ -380,7 +380,7 @@ deps = {
   },
 
   'third_party/depot_tools': {
-    'url': '{chromium_git}/chromium/tools/depot_tools.git@3408652be0f95743987e9bbd0cdb033ebfcf8642',
+    'url': '{chromium_git}/chromium/tools/depot_tools.git@3f3e2f789e27d41d3c20a555fd60a39ebd631e15',
     'condition': 'not build_with_chromium',
   },
 
@@ -588,7 +588,7 @@ deps = {
       'packages': [
           {
               'package': 'chromium/third_party/r8',
-              'version': 'BSk2ZOJgKl80RawP4WlbE938iWkJnsZmJ-6RzW6u2IsC',
+              'version': 'wqg46lewrSzPeyEPseXIDUvMdMjmf74eLWhGvChH6VEC',
           },
       ],
       'condition': 'checkout_android and not build_with_chromium',
@@ -669,7 +669,7 @@ deps = {
   },
 
   'tools/clang': {
-    'url': '{chromium_git}/chromium/src/tools/clang.git@998617f817d50216e4e31c6d90692555573f717d',
+    'url': '{chromium_git}/chromium/src/tools/clang.git@bdb6d43dc1e6a1d0500ee96bdb46a4e2d06c1352',
     'condition': 'not build_with_chromium',
   },
 
@@ -700,7 +700,7 @@ deps = {
   },
 
   'tools/mb': {
-    'url': '{chromium_git}/chromium/src/tools/mb@605d18db44102c8b0667892f0261f022f6fbe423',
+    'url': '{chromium_git}/chromium/src/tools/mb@9bb4e2345eadbcd141399d59e6a80f7930ea6d4e',
     'condition': 'not build_with_chromium',
   },
 
@@ -715,7 +715,7 @@ deps = {
   },
 
   'tools/perf': {
-    'url': '{chromium_git}/chromium/src/tools/perf@7424e47c9dd8ca630b38e38bb782bca80356fdd4',
+    'url': '{chromium_git}/chromium/src/tools/perf@b87bb2fac896aeadb12dbf01256a5a9094900428',
     'condition': 'not build_with_chromium',
   },
 
