@@ -5298,8 +5298,14 @@ angle::Result ImageHelper::initExternal(Context *context,
 
     mYcbcrConversionDesc.reset();
 
-    const angle::Format &actualFormat = angle::Format::Get(actualFormatID);
-    VkFormat actualVkFormat           = GetVkFormatFromFormatID(actualFormatID);
+    const angle::Format &actualFormat   = angle::Format::Get(actualFormatID);
+    const angle::Format &intendedFormat = angle::Format::Get(intendedFormatID);
+    VkFormat actualVkFormat             = GetVkFormatFromFormatID(actualFormatID);
+
+    ANGLE_TRACE_EVENT_INSTANT("gpu.angle.texture_metrics", "ImageHelper::initExternal",
+                              "intended_format", intendedFormat.glInternalFormat, "actual_format",
+                              actualFormat.glInternalFormat, "width", extents.width, "height",
+                              extents.height);
 
     if (actualFormat.isYUV)
     {
