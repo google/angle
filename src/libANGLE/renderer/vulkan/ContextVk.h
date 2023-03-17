@@ -792,6 +792,13 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     const QueueSerial &getLastSubmittedQueueSerial() const { return mLastSubmittedQueueSerial; }
 
+    // Uploading mutable mipmap textures is currently restricted to single-context applications.
+    bool isEligibleForMutableTextureFlush() const
+    {
+        return getFeatures().mutableMipmapTextureUpload.enabled && !hasDisplayTextureShareGroup() &&
+               mShareGroupVk->getContextCount() == 1;
+    }
+
   private:
     // Dirty bits.
     enum DirtyBitType : size_t

@@ -1366,6 +1366,17 @@ angle::Result ContextVk::initialize()
     constexpr VkMemoryPropertyFlags kMemoryType = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
     ANGLE_TRY(mEmptyBuffer.init(this, emptyBufferInfo, kMemoryType));
 
+    // If the share group has one context and is about to add the second one, the first context's
+    // mutable textures should be flushed.
+    if (isEligibleForMutableTextureFlush())
+    {
+        ASSERT(mShareGroupVk->getContextCount() == 1);
+        for (auto context : mShareGroupVk->getContexts())
+        {
+            ANGLE_TRY(context->flushOutsideRenderPassCommands());
+        }
+    }
+
     // Add context into the share group
     mShareGroupVk->addContext(this);
 
