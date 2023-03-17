@@ -4366,18 +4366,6 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
 
     ApplyFeatureOverrides(&mFeatures, displayVk->getState());
 
-    // Disable async command queue when using Vulkan secondary command buffers temporarily to avoid
-    // threading hazards with ContextVk::mCommandPools.  Note that this is done even if the feature
-    // is enabled through an override.
-    // TODO: Investigate whether async command queue is useful with Vulkan secondary command buffers
-    // and enable the feature.  http://anglebug.com/6811
-    if (!vk::OutsideRenderPassCommandBuffer::ExecutesInline() ||
-        !vk::RenderPassCommandBuffer::ExecutesInline())
-    {
-        mFeatures.asyncCommandQueue.enabled       = false;
-        mFeatures.asyncCommandBufferReset.enabled = false;
-    }
-
     // Disable memory report feature overrides if extension is not supported.
     if ((mFeatures.logMemoryReportCallbacks.enabled || mFeatures.logMemoryReportStats.enabled) &&
         !mMemoryReportFeatures.deviceMemoryReport)
