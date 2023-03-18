@@ -613,9 +613,6 @@ bool ValidCap(const Context *context, GLenum cap, bool queryOnly)
         case GL_DITHER:
             return true;
 
-        case GL_DEPTH_CLAMP_EXT:
-            return context->getExtensions().depthClampEXT;
-
         case GL_PRIMITIVE_RESTART_FIXED_INDEX:
         case GL_RASTERIZER_DISCARD:
             return (context->getClientMajorVersion() >= 3);

@@ -67,7 +67,6 @@ struct ExternalContextState
 
     bool enableDither;
     bool enablePolygonOffsetFill;
-    bool enableDepthClamp;
     bool enableSampleAlphaToCoverage;
     bool enableSampleCoverage;
     bool multisampleEnabled;
@@ -232,7 +231,6 @@ class StateManagerGL final : angle::NonCopyable
     void setFrontFace(GLenum frontFace);
     void setPolygonOffsetFillEnabled(bool enabled);
     void setPolygonOffset(float factor, float units, float clamp);
-    void setDepthClampEnabled(bool enabled);
     void setRasterizerDiscardEnabled(bool enabled);
     void setLineWidth(float width);
 
@@ -501,7 +499,6 @@ class StateManagerGL final : angle::NonCopyable
     GLfloat mPolygonOffsetFactor;
     GLfloat mPolygonOffsetUnits;
     GLfloat mPolygonOffsetClamp;
-    bool mDepthClampEnabled;
     bool mRasterizerDiscardEnabled;
     float mLineWidth;
 

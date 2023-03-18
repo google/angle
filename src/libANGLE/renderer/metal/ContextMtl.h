@@ -526,7 +526,6 @@ class ContextMtl : public ContextImpl, public mtl::Context
         DIRTY_BIT_DRIVER_UNIFORMS,
         DIRTY_BIT_DEPTH_STENCIL_DESC,
         DIRTY_BIT_DEPTH_BIAS,
-        DIRTY_BIT_DEPTH_CLIP_MODE,
         DIRTY_BIT_STENCIL_REF,
         DIRTY_BIT_BLEND_COLOR,
         DIRTY_BIT_VIEWPORT,
