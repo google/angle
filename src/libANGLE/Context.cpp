@@ -9377,6 +9377,28 @@ void Context::pixelLocalStorageBarrier()
     pls.barrier(this);
 }
 
+void Context::framebufferPixelLocalStorageInterrupt()
+{
+    Framebuffer *framebuffer = mState.getDrawFramebuffer();
+    ASSERT(framebuffer);
+    if (framebuffer->id().value != 0)
+    {
+        PixelLocalStorage &pls = framebuffer->getPixelLocalStorage(this);
+        pls.interrupt(this);
+    }
+}
+
+void Context::framebufferPixelLocalStorageRestore()
+{
+    Framebuffer *framebuffer = mState.getDrawFramebuffer();
+    ASSERT(framebuffer);
+    if (framebuffer->id().value != 0)
+    {
+        PixelLocalStorage &pls = framebuffer->getPixelLocalStorage(this);
+        pls.restore(this);
+    }
+}
+
 void Context::getFramebufferPixelLocalStorageParameterfv(GLint plane, GLenum pname, GLfloat *params)
 {
     getFramebufferPixelLocalStorageParameterfvRobust(
