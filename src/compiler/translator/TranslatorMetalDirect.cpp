@@ -633,7 +633,10 @@ bool TranslatorMetalDirect::transformDepthBeforeCorrection(TIntermBlock *root,
 //     z_metal = 0.5 * (w_gl + z_gl)
 //
 // where z_metal is the depth output of a Metal vertex shader and z_gl is the same for GL.
-bool TranslatorMetalDirect::appendVertexShaderDepthCorrectionToMain(TIntermBlock *root)
+// This operation is skipped when GL_CLIP_DEPTH_MODE_EXT is set to GL_ZERO_TO_ONE_EXT.
+bool TranslatorMetalDirect::appendVertexShaderDepthCorrectionToMain(
+    TIntermBlock *root,
+    const DriverUniformMetal *driverUniforms)
 {
     const TVariable *position  = BuiltInVariable::gl_Position();
     TIntermSymbol *positionRef = new TIntermSymbol(position);
@@ -654,8 +657,13 @@ bool TranslatorMetalDirect::appendVertexShaderDepthCorrectionToMain(TIntermBlock
     TIntermTyped *positionZLHS = positionZ->deepCopy();
     TIntermBinary *assignment  = new TIntermBinary(TOperator::EOpAssign, positionZLHS, halfZPlusW);
 
+    // Apply depth correction if needed
+    TIntermBlock *block = new TIntermBlock;
+    block->appendStatement(assignment);
+    TIntermIfElse *ifCall = new TIntermIfElse(driverUniforms->getTransformDepth(), block, nullptr);
+
     // Append the assignment as a statement at the end of the shader.
-    return RunAtTheEndOfShader(this, root, assignment, &getSymbolTable());
+    return RunAtTheEndOfShader(this, root, ifCall, &getSymbolTable());
 }
 
 static inline MetalShaderType metalShaderTypeFromGLSL(sh::GLenum shaderType)
@@ -1044,7 +1052,7 @@ bool TranslatorMetalDirect::translateImpl(TInfoSinkBase &sink,
             return false;
         }
 
-        if (!appendVertexShaderDepthCorrectionToMain(root))
+        if (!appendVertexShaderDepthCorrectionToMain(root, driverUniforms))
         {
             return false;
         }

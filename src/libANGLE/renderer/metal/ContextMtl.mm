@@ -1385,6 +1385,10 @@ void ContextMtl::updateExtendedState(const gl::State &glState)
     {
         switch (extendedDirtyBit)
         {
+            case gl::State::EXTENDED_DIRTY_BIT_CLIP_CONTROL:
+                updateFrontFace(glState);
+                invalidateDriverUniforms();
+                break;
             case gl::State::EXTENDED_DIRTY_BIT_CLIP_DISTANCES:
                 invalidateDriverUniforms();
                 break;
@@ -2161,8 +2165,9 @@ void ContextMtl::updateCullMode(const gl::State &glState)
 void ContextMtl::updateFrontFace(const gl::State &glState)
 {
     FramebufferMtl *framebufferMtl = mtl::GetImpl(glState.getDrawFramebuffer());
-    mWinding =
-        mtl::GetFontfaceWinding(glState.getRasterizerState().frontFace, !framebufferMtl->flipY());
+    const bool upperLeftOrigin     = mState.getClipOrigin() == gl::ClipOrigin::UpperLeft;
+    mWinding = mtl::GetFrontfaceWinding(glState.getRasterizerState().frontFace,
+                                        framebufferMtl->flipY() == upperLeftOrigin);
     mDirtyBits.set(DIRTY_BIT_WINDING);
 }
 
@@ -2729,14 +2734,20 @@ angle::Result ContextMtl::handleDirtyDriverUniforms(const gl::Context *context,
 
     const float flipX      = 1.0;
     const float flipY      = mDrawFramebuffer->flipY() ? -1.0f : 1.0f;
-    mDriverUniforms.flipXY = gl::PackSnorm4x8(flipX, flipY, flipX, -flipY);
+    mDriverUniforms.flipXY = gl::PackSnorm4x8(
+        flipX, flipY, flipX, mState.getClipOrigin() == gl::ClipOrigin::LowerLeft ? -flipY : flipY);
 
     // gl_ClipDistance
     const uint32_t enabledClipDistances = mState.getEnabledClipDistances().bits();
     ASSERT((enabledClipDistances & ~sh::vk::kDriverUniformsMiscEnabledClipPlanesMask) == 0);
 
-    mDriverUniforms.misc = enabledClipDistances
-                           << sh::vk::kDriverUniformsMiscEnabledClipPlanesOffset;
+    // GL_CLIP_DEPTH_MODE_EXT
+    const uint32_t transformDepth = !mState.isClipDepthModeZeroToOne();
+    ASSERT((transformDepth & ~sh::vk::kDriverUniformsMiscTransformDepthMask) == 0);
+
+    mDriverUniforms.misc =
+        (enabledClipDistances << sh::vk::kDriverUniformsMiscEnabledClipPlanesOffset) |
+        (transformDepth << sh::vk::kDriverUniformsMiscTransformDepthOffset);
 
     // Sample coverage mask
     const uint32_t sampleBitCount = mDrawFramebuffer->getSamples();

@@ -925,6 +925,7 @@ void DisplayMtl::initializeExtensions() const
     mNativeExtensions.mapbufferOES                  = true;
     mNativeExtensions.mapBufferRangeEXT             = true;
     mNativeExtensions.textureStorageEXT             = true;
+    mNativeExtensions.clipControlEXT                = true;
     mNativeExtensions.drawBuffersEXT                = true;
     mNativeExtensions.drawBuffersIndexedEXT         = true;
     mNativeExtensions.drawBuffersIndexedOES         = true;

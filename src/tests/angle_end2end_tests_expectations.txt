@@ -1126,6 +1126,9 @@
 8077 IOS : DepthWriteTest.Test/*__DepthRangeReduced_Clipped_VertexDepthInsideClipVolume_FragmentDepthNegative_* = SKIP
 8077 IOS : DepthWriteTest.Test/*__DepthRangeReduced_Clipped_VertexDepthInsideClipVolume_FragmentDepthGreaterThanOne_* = SKIP
 
+// gl_PointCoord origin is flipped for non-default framebuffers
+8066 WIN INTEL OPENGL : ClipControlTest.OriginPointCoord/* = SKIP
+
 // bits 24..31 from glClearValueuiv value don't work on Intel Metal.
 7794 MAC INTEL METAL : PixelLocalStorageTest.ClearValues_r32/* = SKIP
 

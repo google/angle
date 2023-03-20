@@ -1061,7 +1061,7 @@ MTLStencilOperation GetStencilOp(GLenum op)
     }
 }
 
-MTLWinding GetFontfaceWinding(GLenum frontFaceMode, bool invert)
+MTLWinding GetFrontfaceWinding(GLenum frontFaceMode, bool invert)
 {
     switch (frontFaceMode)
     {

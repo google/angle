@@ -1400,7 +1400,7 @@ void StateManager11::syncScissorRectangle(const gl::Context *context)
     int scissorX = scissor.x + mCurScissorOffset.x;
     int scissorY = scissor.y + mCurScissorOffset.y;
 
-    if (mCurPresentPathFastEnabled)
+    if (mCurPresentPathFastEnabled && glState.getClipOrigin() == gl::ClipOrigin::LowerLeft)
     {
         scissorY = mCurPresentPathFastColorBufferHeight - scissor.height - scissor.y;
     }
