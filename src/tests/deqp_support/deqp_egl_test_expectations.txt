@@ -98,7 +98,6 @@
 2546 MAC : dEQP-EGL.functional.negative_api.swap_interval = FAIL
 2546 MAC OPENGL : dEQP-EGL.functional.query_surface.simple.pbuffer.rgba8888_depth_stencil = FAIL
 2546 MAC : dEQP-EGL.functional.thread_cleanup.* = SKIP
-1347817 MAC : dEQP-EGL.functional.image.api.create_image_gles2_android_native_* = SKIP
 
 // Android GLES-only failues
 2567 ANDROID GLES : dEQP-EGL.functional.image.api.create_image_gles2_tex2d_red = FAIL
