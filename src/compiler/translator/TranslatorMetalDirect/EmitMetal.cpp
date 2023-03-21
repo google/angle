@@ -1093,6 +1093,13 @@ void GenMetalTraverser::emitFieldDeclaration(const TField &field,
             }
             break;
 
+        case TQualifier::EvqCentroidIn:
+            if (mPipelineStructs.fragmentIn.external == &parent)
+            {
+                mOut << " [[centroid_perspective]]";
+            }
+            break;
+
         case TQualifier::EvqFragColor:
             mOut << " [[color(0)]]";
             break;
