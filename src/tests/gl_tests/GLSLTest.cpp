@@ -6976,6 +6976,39 @@ TEST_P(GLSLTest_ES31, VaryingTessellationSampleInAndOut)
     ASSERT_GL_NO_ERROR();
 }
 
+// Test that `smooth sample` and `flat sample` pass the validation.
+TEST_P(GLSLTest_ES3, AliasedSampleQualifiers)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_shader_multisample_interpolation"));
+
+    constexpr char kVS[] =
+        R"(#version 300 es
+        #extension GL_OES_shader_multisample_interpolation : require
+
+        smooth sample out mediump float f;
+        flat sample out mediump int i;
+        void main()
+        {
+            f = 1.0;
+            i = 1;
+            gl_Position = vec4(0.0, 0.0, 0.0, 1.0);
+        })";
+
+    constexpr char kFS[] =
+        R"(#version 300 es
+        #extension GL_OES_shader_multisample_interpolation : require
+
+        smooth sample in mediump float f;
+        flat sample in mediump int i;
+        out mediump vec4 color;
+        void main()
+        {
+            color = vec4(f, float(i), 0, 1);
+        })";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+}
+
 // Test that a shader with sample in / sample out can be used successfully when the varying
 // precision is different between VS and FS.
 TEST_P(GLSLTest_ES31, VaryingSampleInAndOutDifferentPrecision)

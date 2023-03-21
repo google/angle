@@ -371,6 +371,9 @@ bool JoinVariableStorageQualifier(TQualifier *joinedQualifier, TQualifier storag
                 case EvqCentroid:
                     *joinedQualifier = EvqCentroid;
                     break;
+                case EvqSample:
+                    *joinedQualifier = EvqSample;
+                    break;
                 case EvqVertexOut:
                 case EvqGeometryOut:
                 case EvqTessControlOut:
@@ -393,6 +396,7 @@ bool JoinVariableStorageQualifier(TQualifier *joinedQualifier, TQualifier storag
             switch (storageQualifier)
             {
                 case EvqCentroid:
+                case EvqSample:
                     *joinedQualifier = EvqFlat;
                     break;
                 case EvqVertexOut:
