@@ -337,6 +337,7 @@ void RendererVk::ensureCapsInitialized() const
     mNativeExtensions.textureStorageEXT           = true;
     mNativeExtensions.drawBuffersEXT              = true;
     mNativeExtensions.fragDepthEXT                = true;
+    mNativeExtensions.conservativeDepthEXT        = true;
     mNativeExtensions.framebufferBlitANGLE        = true;
     mNativeExtensions.framebufferBlitNV           = true;
     mNativeExtensions.framebufferMultisampleANGLE = true;

@@ -1001,9 +1001,9 @@ bool IsPrecisionApplicableToType(TBasicType type)
 
 bool IsRedeclarableBuiltIn(const ImmutableString &name)
 {
-    return name == "gl_ClipDistance" || name == "gl_CullDistance" || name == "gl_LastFragData" ||
-           name == "gl_LastFragColorARM" || name == "gl_PerVertex" || name == "gl_Position" ||
-           name == "gl_PointSize";
+    return name == "gl_ClipDistance" || name == "gl_CullDistance" || name == "gl_FragDepth" ||
+           name == "gl_LastFragData" || name == "gl_LastFragColorARM" || name == "gl_PerVertex" ||
+           name == "gl_Position" || name == "gl_PointSize";
 }
 
 size_t FindFieldIndex(const TFieldList &fieldList, const char *fieldName)

@@ -1329,6 +1329,7 @@ bool TParseContext::declareVariable(const TSourceLoc &line,
     {
         case EvqClipDistance:
         case EvqCullDistance:
+        case EvqFragDepth:
         case EvqLastFragData:
         case EvqLastFragColor:
             symbolType = SymbolType::BuiltIn;
@@ -1467,6 +1468,17 @@ bool TParseContext::declareVariable(const TSourceLoc &line,
                   identifier);
             return false;
         }
+    }
+    else if (isExtensionEnabled(TExtension::EXT_conservative_depth) &&
+             mShaderType == GL_FRAGMENT_SHADER && identifier == "gl_FragDepth")
+    {
+        if (type->getBasicType() != EbtFloat || type->getNominalSize() != 1 ||
+            type->getSecondarySize() != 1 || type->isArray())
+        {
+            error(line, "gl_FragDepth can only be redeclared as float", identifier);
+            return false;
+        }
+        needsReservedCheck = false;
     }
     else if (isExtensionEnabled(TExtension::EXT_separate_shader_objects) &&
              mShaderType == GL_VERTEX_SHADER)
@@ -1668,6 +1680,11 @@ void TParseContext::declarationQualifierErrorCheck(const sh::TQualifier qualifie
         error(location, "layout qualifier only valid for interface blocks",
               getBlockStorageString(layoutQualifier.blockStorage));
         return;
+    }
+
+    if (qualifier != EvqFragDepth)
+    {
+        checkDepthIsNotSpecified(location, layoutQualifier.depth);
     }
 
     if (qualifier == EvqFragmentOut)
@@ -2250,6 +2267,15 @@ void TParseContext::checkAttributeLocationInRange(const TSourceLoc &location,
         {
             error(location, "Attribute location out of range", "location");
         }
+    }
+}
+
+void TParseContext::checkDepthIsNotSpecified(const TSourceLoc &location, TLayoutDepth depth)
+{
+    if (depth != EdUnspecified)
+    {
+        error(location, "invalid layout qualifier: only valid on gl_FragDepth",
+              getDepthString(depth));
     }
 }
 
@@ -3274,10 +3300,23 @@ TIntermDeclaration *TParseContext::parseSingleDeclaration(
         }
     }
 
+    if (identifier == "gl_FragDepth")
+    {
+        if (type->getQualifier() == EvqFragmentOut)
+        {
+            type->setQualifier(EvqFragDepth);
+        }
+        else
+        {
+            error(identifierOrTypeLocation,
+                  "gl_FragDepth can only be redeclared as fragment output", identifier);
+        }
+    }
+
     checkGeometryShaderInputAndSetArraySize(identifierOrTypeLocation, identifier, type);
     checkTessellationShaderUnsizedArraysAndSetSize(identifierOrTypeLocation, identifier, type);
 
-    declarationQualifierErrorCheck(publicType.qualifier, publicType.layoutQualifier,
+    declarationQualifierErrorCheck(type->getQualifier(), publicType.layoutQualifier,
                                    identifierOrTypeLocation);
 
     bool emptyDeclaration                  = (identifier == "");
@@ -3974,6 +4013,8 @@ void TParseContext::parseGlobalLayoutQualifier(const TTypeQualifierBuilder &type
     checkMemoryQualifierIsNotSpecified(typeQualifier.memoryQualifier, typeQualifier.line);
 
     checkInternalFormatIsNotSpecified(typeQualifier.line, layoutQualifier.imageInternalFormat);
+
+    checkDepthIsNotSpecified(typeQualifier.line, layoutQualifier.depth);
 
     checkYuvIsNotSpecified(typeQualifier.line, layoutQualifier.yuv);
 
@@ -4809,6 +4850,7 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
                                  typeQualifier.layoutQualifier.binding, arraySize);
     }
 
+    checkDepthIsNotSpecified(typeQualifier.line, typeQualifier.layoutQualifier.depth);
     checkYuvIsNotSpecified(typeQualifier.line, typeQualifier.layoutQualifier.yuv);
     checkEarlyFragmentTestsIsNotSpecified(typeQualifier.line,
                                           typeQualifier.layoutQualifier.earlyFragmentTests);
@@ -5756,6 +5798,22 @@ TLayoutQualifier TParseContext::parseLayoutQualifier(const ImmutableString &qual
         else if (qualifierType == "blend_support_all_equations")
         {
             qualifier.advancedBlendEquations.setAll();
+        }
+        else if (qualifierType == "depth_any")
+        {
+            qualifier.depth = EdAny;
+        }
+        else if (qualifierType == "depth_greater")
+        {
+            qualifier.depth = EdGreater;
+        }
+        else if (qualifierType == "depth_less")
+        {
+            qualifier.depth = EdLess;
+        }
+        else if (qualifierType == "depth_unchanged")
+        {
+            qualifier.depth = EdUnchanged;
         }
         else
         {

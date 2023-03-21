@@ -176,6 +176,12 @@ std::string TOutputGLSLBase::getCommonLayoutQualifiers(TIntermSymbol *variable)
     const TType &type                       = variable->getType();
     const TLayoutQualifier &layoutQualifier = type.getLayoutQualifier();
 
+    if (type.getQualifier() == EvqFragDepth)
+    {
+        ASSERT(layoutQualifier.depth != EdUnspecified);
+        out << listItemPrefix << getDepthString(layoutQualifier.depth);
+    }
+
     if (type.getQualifier() == EvqFragmentOut || type.getQualifier() == EvqFragmentInOut)
     {
         if (layoutQualifier.index >= 0)
@@ -387,6 +393,9 @@ const char *TOutputGLSLBase::mapQualifierToString(TQualifier qualifier)
             return (sh::IsGLSL130OrNewer(mOutput) || mShaderVersion > 100)
                        ? (mShaderType == GL_FRAGMENT_SHADER ? "in" : "out")
                        : "varying";
+
+        case EvqFragDepth:
+            return "out";
 
         // gl_LastFragColor / gl_LastFragData have no qualifiers.
         case EvqLastFragData:
@@ -1439,6 +1448,11 @@ bool TOutputGLSLBase::needsToWriteLayoutQualifier(const TType &type)
         {
             return true;
         }
+    }
+
+    if (type.getQualifier() == EvqFragDepth && layoutQualifier.depth != EdUnspecified)
+    {
+        return true;
     }
 
     if (type.getQualifier() == EvqFragmentOut || type.getQualifier() == EvqFragmentInOut)

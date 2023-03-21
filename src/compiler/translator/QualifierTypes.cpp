@@ -717,6 +717,15 @@ TLayoutQualifier JoinLayoutQualifiers(TLayoutQualifier leftQualifier,
         joinedQualifier.location = rightQualifier.location;
         ++joinedQualifier.locationsSpecified;
     }
+    if (rightQualifier.depth != EdUnspecified)
+    {
+        if (joinedQualifier.depth != EdUnspecified)
+        {
+            diagnostics->error(rightQualifierLocation, "Cannot have multiple depth qualifiers",
+                               getDepthString(rightQualifier.depth));
+        }
+        joinedQualifier.depth = rightQualifier.depth;
+    }
     if (rightQualifier.yuv != false)
     {
         joinedQualifier.yuv = rightQualifier.yuv;

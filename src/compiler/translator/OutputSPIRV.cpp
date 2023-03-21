@@ -552,6 +552,20 @@ spirv::IdRef OutputSPIRVTraverser::getSymbolIdAndStorageClass(const TSymbol *sym
             name              = "gl_FragDepth";
             builtInDecoration = spv::BuiltInFragDepth;
             mBuilder.addExecutionMode(spv::ExecutionModeDepthReplacing);
+            switch (type.getLayoutQualifier().depth)
+            {
+                case EdGreater:
+                    mBuilder.addExecutionMode(spv::ExecutionModeDepthGreater);
+                    break;
+                case EdLess:
+                    mBuilder.addExecutionMode(spv::ExecutionModeDepthLess);
+                    break;
+                case EdUnchanged:
+                    mBuilder.addExecutionMode(spv::ExecutionModeDepthUnchanged);
+                    break;
+                default:
+                    break;
+            }
             break;
         case EvqSampleMask:
             name              = "gl_SampleMask";
@@ -5868,7 +5882,8 @@ bool OutputSPIRVTraverser::visitDeclaration(Visit visit, TIntermDeclaration *nod
     }
 
     // Skip redeclaration of builtins.  They will correctly declare as built-in on first use.
-    if (mInGlobalScope && (qualifier == EvqClipDistance || qualifier == EvqCullDistance))
+    if (mInGlobalScope &&
+        (qualifier == EvqClipDistance || qualifier == EvqCullDistance || qualifier == EvqFragDepth))
     {
         return false;
     }
