@@ -43,6 +43,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::AsyncCommandQueue, "asyncCommandQueue"},
     {Feature::Avoid1BitAlphaTextureFormats, "avoid1BitAlphaTextureFormats"},
     {Feature::AvoidStencilTextureSwizzle, "avoidStencilTextureSwizzle"},
+    {Feature::BindFramebufferForTimerQueries, "bindFramebufferForTimerQueries"},
     {Feature::BindTransformFeedbackBufferBeforeBindBufferRange,
      "bindTransformFeedbackBufferBeforeBindBufferRange"},
     {Feature::BorderColorSrgb, "borderColorSrgb"},

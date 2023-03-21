@@ -454,6 +454,7 @@ class StateManagerGL final : angle::NonCopyable
     // TODO(jmadill): Convert to std::array when available
     std::vector<GLenum> mFramebuffers;
     GLuint mRenderbuffer;
+    GLuint mPlaceholderFbo;
 
     bool mScissorTestEnabled;
     gl::Rectangle mScissor;
