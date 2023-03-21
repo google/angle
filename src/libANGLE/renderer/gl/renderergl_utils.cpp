@@ -136,6 +136,13 @@ bool IsAdreno5xx(const FunctionsGL *functions)
     return number != 0 && number >= 500 && number < 600;
 }
 
+bool IsMali(const FunctionsGL *functions)
+{
+    constexpr char Mali[]        = "Mali";
+    const char *nativeGLRenderer = GetString(functions, GL_RENDERER);
+    return angle::BeginsWith(nativeGLRenderer, Mali);
+}
+
 bool IsMaliT8xxOrOlder(const FunctionsGL *functions)
 {
     int number = getMaliTNumber(functions);
@@ -2475,6 +2482,9 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     // EXT_shader_pixel_local_storage
     ANGLE_FEATURE_CONDITION(features, supportsShaderPixelLocalStorageEXT,
                             functions->hasGLESExtension("GL_EXT_shader_pixel_local_storage"));
+
+    // https://crbug.com/1356053
+    ANGLE_FEATURE_CONDITION(features, bindFramebufferForTimerQueries, IsMali(functions));
 }
 
 void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFeatures *features)

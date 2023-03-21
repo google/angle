@@ -102,6 +102,7 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions,
       mPackSkipPixels(0),
       mFramebuffers(angle::FramebufferBindingSingletonMax, 0),
       mRenderbuffer(0),
+      mPlaceholderFbo(0),
       mScissorTestEnabled(false),
       mScissor(0, 0, 0, 0),
       mViewport(0, 0, 0, 0),
@@ -212,6 +213,10 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions,
 
 StateManagerGL::~StateManagerGL()
 {
+    if (mPlaceholderFbo != 0)
+    {
+        deleteFramebuffer(mPlaceholderFbo);
+    }
     if (mDefaultVAO != 0)
     {
         mFunctions->deleteVertexArrays(1, &mDefaultVAO);
@@ -755,6 +760,17 @@ void StateManagerGL::beginQuery(gl::QueryType type, QueryGL *queryObject, GLuint
     // Make sure this is a valid query type and there is no current active query of this type
     ASSERT(mQueries[type] == nullptr);
     ASSERT(queryId != 0);
+
+    if (mFeatures.bindFramebufferForTimerQueries.enabled &&
+        mFramebuffers[angle::FramebufferBindingDraw] == 0 &&
+        (type == gl::QueryType::TimeElapsed || type == gl::QueryType::Timestamp))
+    {
+        if (!mPlaceholderFbo)
+        {
+            mFunctions->genFramebuffers(1, &mPlaceholderFbo);
+        }
+        bindFramebuffer(GL_FRAMEBUFFER, mPlaceholderFbo);
+    }
 
     mQueries[type] = queryObject;
     mFunctions->beginQuery(ToGLenum(type), queryId);
