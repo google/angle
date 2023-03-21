@@ -297,6 +297,13 @@ void AddFragColorDeclaration(TIntermBlock &root, TSymbolTable &symbolTable, cons
 
 void AddFragDepthDeclaration(TIntermBlock &root, TSymbolTable &symbolTable)
 {
+    // Check if the variable has been already declared.
+    const TIntermSymbol *fragDepthBuiltIn = new TIntermSymbol(BuiltInVariable::gl_FragDepth());
+    const TIntermSymbol *fragDepthSymbol  = FindSymbolNode(&root, ImmutableString("gl_FragDepth"));
+    if (fragDepthSymbol && fragDepthSymbol->uniqueId() != fragDepthBuiltIn->uniqueId())
+    {
+        return;
+    }
     root.insertChildNodes(FindMainIndex(&root),
                           TIntermSequence{new TIntermDeclaration{BuiltInVariable::gl_FragDepth()}});
 }
