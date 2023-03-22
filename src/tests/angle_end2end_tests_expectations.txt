@@ -987,6 +987,9 @@
 6824 METAL INTEL : CubeMapTextureTest.SampleCoordinateTransformGrad/* = SKIP
 6824 METAL INTEL : CubeMapTextureTest.SampleCoordinateTransformGrad_ES3/* = SKIP
 
+// Staged texture uploads causes some incorrect texture data on Intel
+8109 MAC METAL INTEL : Texture2DTest.ManySupersedingTextureUpdates/ES2_Metal = SKIP
+
 2799 NVIDIA OPENGL WIN : RobustBufferAccessBehaviorTest.DrawElementsIndexOutOfRangeWithStaticDraw/* = SKIP
 2799 NVIDIA OPENGL WIN : RobustBufferAccessBehaviorTest.DrawElementsIndexOutOfRangeWithDynamicDraw/* = SKIP
 2861 ANDROID GLES : RobustBufferAccessBehaviorTest.NoBufferData/* = SKIP
