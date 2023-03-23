@@ -85,6 +85,7 @@
 7699 WIN INTEL VULKAN : FramebufferTest_ES31.RenderingLimitToDefaultFBOSizeWithNoAttachments/* = SKIP
 7770 WIN INTEL VULKAN : VertexAttributeTestES31.MismatchingSignsChangingAttributeType/* = SKIP
 7770 WIN INTEL VULKAN : VertexAttributeTestES31.MismatchingSignsChangingProgramType/* = SKIP
+b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = SKIP
 7770 PIXEL6 VULKAN : VertexAttributeTestES31.MismatchingSignsChangingAttributeType/* = SKIP
 7770 PIXEL6 VULKAN : VertexAttributeTestES31.MismatchingSignsChangingProgramType/* = SKIP
 

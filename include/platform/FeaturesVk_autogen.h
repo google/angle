@@ -706,6 +706,11 @@ struct FeaturesVk : FeatureSetBase
         "sample qualifier",
         &members, "http://anglebug.com/6876"};
 
+    FeatureInfo explicitlyCastMediumpFloatTo16Bit = {
+        "explicitlyCastMediumpFloatTo16Bit", FeatureCategory::VulkanWorkarounds,
+        "Explicitly cast mediump floating point values to 16 bit", &members,
+        "https://issuetracker.google.com/274859104"};
+
     FeatureInfo forceContinuousRefreshOnSharedPresent = {
         "forceContinuousRefreshOnSharedPresent", FeatureCategory::VulkanFeatures,
         "Force to create vulkan swapchain with continuous refresh on shared present", &members,

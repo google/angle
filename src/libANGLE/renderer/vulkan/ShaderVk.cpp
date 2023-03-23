@@ -108,6 +108,11 @@ std::shared_ptr<WaitableCompileEvent> ShaderVk::compile(const gl::Context *conte
         options->aliasedSSBOUnlessRestrict = true;
     }
 
+    if (contextVk->getFeatures().explicitlyCastMediumpFloatTo16Bit.enabled)
+    {
+        options->castMediumpFloatTo16Bit = true;
+    }
+
     if (contextVk->getExtensions().shaderPixelLocalStorageANGLE)
     {
         options->pls = contextVk->getNativePixelLocalStorageOptions();

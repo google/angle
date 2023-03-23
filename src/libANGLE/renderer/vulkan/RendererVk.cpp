@@ -4419,6 +4419,8 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     // workaround, per-sample shading is inferred by ANGLE and explicitly enabled by the API.
     ANGLE_FEATURE_CONDITION(&mFeatures, explicitlyEnablePerSampleShading, isARM);
 
+    ANGLE_FEATURE_CONDITION(&mFeatures, explicitlyCastMediumpFloatTo16Bit, isARM);
+
     // Force to create swapchain with continuous refresh on shared present. Disabled by default.
     // Only enable it on integrations without EGL_FRONT_BUFFER_AUTO_REFRESH_ANDROID passthrough.
     ANGLE_FEATURE_CONDITION(&mFeatures, forceContinuousRefreshOnSharedPresent, false);

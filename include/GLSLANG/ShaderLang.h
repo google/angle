@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 326
+#define ANGLE_SH_VERSION 327
 
 enum ShShaderSpec
 {
@@ -405,9 +405,13 @@ struct ShCompileOptions
     // ceil()ed instead.
     uint64_t roundOutputAfterDithering : 1;
 
-    // Unused.  Kept to avoid unnecessarily changing the layout of this structure and tripping up
-    // the fuzzer's hash->bug map.
-    uint64_t unused2 : 1;
+    // issuetracker.google.com/274859104 add OpQuantizeToF16 instruction to cast
+    // mediump floating-point values to 16 bit. ARM compiler utilized RelaxedPrecision
+    // to minimize type case and keep a mediump float as 32 bit when assigning it with
+    // a highp floating-point value. It is possible that GLSL shader code is comparing
+    // two meiump values, but ARM compiler is comparing a 32 bit value with a 16 bit value,
+    // causing the comparison to fail.
+    uint64_t castMediumpFloatTo16Bit : 1;
 
     // anglebug.com/7527: packUnorm4x8 fails on Pixel 4 if it is not passed a highp vec4.
     // TODO(anglebug.com/7527): This workaround is currently only applied for pixel local storage.
