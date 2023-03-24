@@ -517,11 +517,20 @@ void DynamicHLSL::generateVaryingLinkHLSL(const VaryingPacking &varyingPacking,
             case sh::INTERPOLATION_FLAT:
                 hlslStream << "    nointerpolation ";
                 break;
+            case sh::INTERPOLATION_NOPERSPECTIVE:
+                hlslStream << "    noperspective ";
+                break;
             case sh::INTERPOLATION_CENTROID:
                 hlslStream << "    centroid ";
                 break;
             case sh::INTERPOLATION_SAMPLE:
                 hlslStream << "    sample ";
+                break;
+            case sh::INTERPOLATION_NOPERSPECTIVE_CENTROID:
+                hlslStream << "    noperspective centroid ";
+                break;
+            case sh::INTERPOLATION_NOPERSPECTIVE_SAMPLE:
+                hlslStream << "    noperspective sample ";
                 break;
             default:
                 UNREACHABLE();
