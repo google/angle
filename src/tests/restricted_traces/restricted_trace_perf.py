@@ -711,8 +711,11 @@ def main():
                 'shell settings put global angle_gl_driver_selection_pkgs com.android.angle.test')
             run_adb_command('shell settings put global angle_gl_driver_selection_values angle')
         elif renderer == "default":
-            logging.info('Skipping use of Android settings for selection of GLES driver, ' +
+            logging.info('Deleting Android settings for forcing selection of GLES driver, ' +
                          'allowing system to load the default')
+            run_adb_command('shell settings delete global angle_debug_package')
+            run_adb_command('shell settings delete global angle_gl_driver_selection_pkgs')
+            run_adb_command('shell settings delete global angle_gl_driver_selection_values')
         else:
             logging.error('Unsupported renderer {}'.format(renderer))
             exit()
