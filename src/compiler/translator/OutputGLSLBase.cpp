@@ -366,6 +366,12 @@ const char *TOutputGLSLBase::mapQualifierToString(TQualifier qualifier)
                 return "smooth in";
             case EvqCentroidOut:
                 return "smooth out";
+            case EvqNoPerspectiveCentroid:
+                return "noperspective";
+            case EvqNoPerspectiveCentroidIn:
+                return "noperspective in";
+            case EvqNoPerspectiveCentroidOut:
+                return "noperspective out";
             default:
                 break;
         }
@@ -1271,6 +1277,12 @@ const char *getVariableInterpolation(TQualifier qualifier)
             return "noperspective out ";
         case EvqCentroidOut:
             return "centroid out ";
+        case EvqSampleOut:
+            return "sample out ";
+        case EvqNoPerspectiveCentroidOut:
+            return "noperspective centroid out ";
+        case EvqNoPerspectiveSampleOut:
+            return "noperspective sample out ";
         case EvqSmoothIn:
             return "smooth in ";
         case EvqFlatIn:
@@ -1279,6 +1291,12 @@ const char *getVariableInterpolation(TQualifier qualifier)
             return "noperspective in ";
         case EvqCentroidIn:
             return "centroid in ";
+        case EvqSampleIn:
+            return "sample in ";
+        case EvqNoPerspectiveCentroidIn:
+            return "noperspective centroid in ";
+        case EvqNoPerspectiveSampleIn:
+            return "noperspective sample in ";
         default:
             break;
     }

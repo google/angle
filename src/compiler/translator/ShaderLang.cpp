@@ -1067,6 +1067,10 @@ const char *InterpolationTypeToString(InterpolationType type)
             return "flat";
         case InterpolationType::INTERPOLATION_NOPERSPECTIVE:
             return "noperspective";
+        case InterpolationType::INTERPOLATION_NOPERSPECTIVE_CENTROID:
+            return "noperspective centroid";
+        case InterpolationType::INTERPOLATION_NOPERSPECTIVE_SAMPLE:
+            return "noperspective sample";
         default:
             return "invalid";
     }
