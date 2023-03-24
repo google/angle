@@ -1629,6 +1629,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_traces',
   },
+  'src/tests/restricted_traces/geometry_dash': {
+      'packages': [
+        {
+            'package': 'angle/traces/geometry_dash',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_traces',
+  },
   'src/tests/restricted_traces/goddess_of_victory_nikke': {
       'packages': [
         {
