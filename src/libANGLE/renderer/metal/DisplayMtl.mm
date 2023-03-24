@@ -1012,6 +1012,8 @@ void DisplayMtl::initializeExtensions() const
 
     mNativeExtensions.texture3DOES = true;
 
+    mNativeExtensions.shaderNoperspectiveInterpolationNV = true;
+
     mNativeExtensions.shaderTextureLodEXT = true;
 
     mNativeExtensions.standardDerivativesOES = true;

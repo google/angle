@@ -1093,10 +1093,24 @@ void GenMetalTraverser::emitFieldDeclaration(const TField &field,
             }
             break;
 
+        case TQualifier::EvqNoPerspectiveIn:
+            if (mPipelineStructs.fragmentIn.external == &parent)
+            {
+                mOut << " [[center_no_perspective]]";
+            }
+            break;
+
         case TQualifier::EvqCentroidIn:
             if (mPipelineStructs.fragmentIn.external == &parent)
             {
                 mOut << " [[centroid_perspective]]";
+            }
+            break;
+
+        case TQualifier::EvqNoPerspectiveCentroidIn:
+            if (mPipelineStructs.fragmentIn.external == &parent)
+            {
+                mOut << " [[centroid_no_perspective]]";
             }
             break;
 
