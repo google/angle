@@ -2351,8 +2351,7 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
         features, disableTimestampQueries,
         (IsLinux() && isVMWare) || (IsAndroid() && isNvidia) ||
             (IsAndroid() && GetAndroidSdkLevel() < 27 && IsAdreno5xxOrOlder(functions)) ||
-            (IsAndroid() && IsMaliT8xxOrOlder(functions)) ||
-            (IsAndroid() && IsMaliG31OrOlder(functions)));
+            (!isMesa && IsMaliT8xxOrOlder(functions)) || (!isMesa && IsMaliG31OrOlder(functions)));
 
     ANGLE_FEATURE_CONDITION(features, decodeEncodeSRGBForGenerateMipmap, IsApple());
 
