@@ -404,6 +404,7 @@
 7294 WIN D3D11 : StateChangeTestES3.StencilWriteMask/* = SKIP
 7316 WIN D3D11 : StateChangeTestES3.StencilTestAndFunc/* = SKIP
 7329 WIN D3D11 : StateChangeTestES3.PrimitiveRestart/* = SKIP
+8100 WIN D3D11 : WebGL2GLSLTest.InitOutputParams/* = SKIP
 
 // Android
 6095 ANDROID GLES : GLSLTest_ES3.InitGlobalComplexConstant/* = SKIP
@@ -507,6 +508,7 @@
 7414 PIXEL4ORXL GLES : EGLMultiContextTest.ThreadB*BeforeThreadASync* = SKIP
 7703 PIXEL4ORXL GLES : FramebufferFetchES31.ProgramPipeline* = SKIP
 7703 PIXEL4ORXL GLES : FramebufferFetchES31.DrawNonFetchDrawFetchInStorageBuffer* = SKIP
+2046 PIXEL4ORXL GLES : WebGL2GLSLTest.InitOutputParams/* = SKIP
 
 3423 PIXEL4ORXL VULKAN : ClearTestES3.MaskedClearBufferBug/* = SKIP
 3423 PIXEL4ORXL VULKAN : DrawBuffersWebGL2Test.TwoProgramsWithDifferentOutputsAndClear/* = SKIP
