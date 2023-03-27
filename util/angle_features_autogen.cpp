@@ -102,6 +102,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::EglColorspaceAttributePassthrough, "eglColorspaceAttributePassthrough"},
     {Feature::EmulateAbsIntFunction, "emulateAbsIntFunction"},
     {Feature::EmulateAdvancedBlendEquations, "emulateAdvancedBlendEquations"},
+    {Feature::EmulateAlphaToCoverage, "emulateAlphaToCoverage"},
     {Feature::EmulateAtan2Float, "emulateAtan2Float"},
     {Feature::EmulateClipDistanceState, "emulateClipDistanceState"},
     {Feature::EmulateCopyTexImage2D, "emulateCopyTexImage2D"},

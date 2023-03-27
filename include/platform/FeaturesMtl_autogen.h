@@ -206,6 +206,13 @@ struct FeaturesMtl : FeatureSetBase
         &members,
     };
 
+    FeatureInfo emulateAlphaToCoverage = {
+        "emulateAlphaToCoverage",
+        FeatureCategory::MetalWorkarounds,
+        "Some GPUs ignore alpha-to-coverage when [[sample_mask]] is written",
+        &members,
+    };
+
     FeatureInfo multisampleColorFormatShaderReadWorkaround = {
         "multisampleColorFormatShaderReadWorkaround", FeatureCategory::MetalWorkarounds,
         "Add shaderRead usage to some multisampled texture formats", &members,

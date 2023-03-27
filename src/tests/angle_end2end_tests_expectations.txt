@@ -322,9 +322,6 @@
 6447 MAC METAL : FramebufferTest_ES3.RenderAndInvalidateImmutableTextureWithSubImageWithBeyondMaxLevel/* = SKIP
 6447 MAC METAL : FramebufferTest_ES3.RenderSampleDepthTextureWithExcludedLevel/* = SKIP
 
-5087 MAC METAL INTEL : MultisampleTest.AlphaToSampleCoverage/* = SKIP
-5087 MAC METAL AMD : MultisampleTest.AlphaToSampleCoverage/* = SKIP
-
 5100 MAC METAL NVIDIA : OcclusionQueriesTest.ClearNotCounted/* = SKIP
 5100 MAC METAL NVIDIA : OcclusionQueriesTest.CopyNotCounted/* = SKIP
 5443 MAC METAL NVIDIA : OcclusionQueriesTestES3.BlitNotCounted/* = SKIP

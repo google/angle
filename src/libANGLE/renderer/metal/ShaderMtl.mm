@@ -128,6 +128,11 @@ std::shared_ptr<WaitableCompileEvent> ShaderMtl::compile(const gl::Context *cont
         options->rewriteRowMajorMatrices = true;
     }
 
+    if (displayMtl->getFeatures().emulateAlphaToCoverage.enabled)
+    {
+        options->emulateAlphaToCoverage = true;
+    }
+
     // Constants:
     options->metal.driverUniformsBindingIndex    = mtl::kDriverUniformsBindingIndex;
     options->metal.defaultUniformsBindingIndex   = mtl::kDefaultUniformsBindingIndex;

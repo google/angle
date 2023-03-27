@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 325
+#define ANGLE_SH_VERSION 326
 
 enum ShShaderSpec
 {
@@ -420,6 +420,9 @@ struct ShCompileOptions
     // issuetracker.google.com/266235549 add aliased memory decoration to ssbo if the variable is
     // not declared with "restrict" memory qualifier in GLSL
     uint64_t aliasedSSBOUnlessRestrict : 1;
+
+    // Use fragment shaders to compute and set coverage mask based on the alpha value
+    uint64_t emulateAlphaToCoverage : 1;
 
     ShCompileOptionsMetal metal;
     ShPixelLocalStorageOptions pls;
@@ -969,7 +972,8 @@ extern const char kDriverUniformsVarName[];
 // - 6 bits for sample count
 // - 8 bits for enabled clip planes
 // - 1 bit for whether depth should be transformed to Vulkan clip space
-// - 11 bits unused
+// - 1 bit for whether alpha to coverage is enabled
+// - 10 bits unused
 constexpr uint32_t kDriverUniformsMiscSwapXYMask                  = 0x1;
 constexpr uint32_t kDriverUniformsMiscAdvancedBlendEquationOffset = 1;
 constexpr uint32_t kDriverUniformsMiscAdvancedBlendEquationMask   = 0x1F;
@@ -979,6 +983,8 @@ constexpr uint32_t kDriverUniformsMiscEnabledClipPlanesOffset     = 12;
 constexpr uint32_t kDriverUniformsMiscEnabledClipPlanesMask       = 0xFF;
 constexpr uint32_t kDriverUniformsMiscTransformDepthOffset        = 20;
 constexpr uint32_t kDriverUniformsMiscTransformDepthMask          = 0x1;
+constexpr uint32_t kDriverUniformsMiscAlphaToCoverageOffset       = 21;
+constexpr uint32_t kDriverUniformsMiscAlphaToCoverageMask         = 0x1;
 
 // Interface block array name used for atomic counter emulation
 extern const char kAtomicCountersBlockName[];
@@ -1003,8 +1009,8 @@ extern const char kInputAttachmentName[];
 
 namespace mtl
 {
-// Specialization constant to enable GL_SAMPLE_COVERAGE_VALUE emulation.
-extern const char kCoverageMaskEnabledConstName[];
+// Specialization constant to enable sample mask output.
+extern const char kSampleMaskEnabledConstName[];
 
 // Specialization constant to emulate rasterizer discard.
 extern const char kRasterizerDiscardEnabledConstName[];

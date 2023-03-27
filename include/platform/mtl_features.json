@@ -194,6 +194,13 @@
             ]
         },
         {
+            "name": "emulate_alpha_to_coverage",
+            "category": "Workarounds",
+            "description": [
+                "Some GPUs ignore alpha-to-coverage when [[sample_mask]] is written"
+            ]
+        },
+        {
             "name": "multisample_color_format_shader_read_workaround",
             "category": "Workarounds",
             "description": [

@@ -95,6 +95,7 @@ enum class Feature
     EglColorspaceAttributePassthrough,
     EmulateAbsIntFunction,
     EmulateAdvancedBlendEquations,
+    EmulateAlphaToCoverage,
     EmulateAtan2Float,
     EmulateClipDistanceState,
     EmulateCopyTexImage2D,
