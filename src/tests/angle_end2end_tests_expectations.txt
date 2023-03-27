@@ -1156,6 +1156,10 @@
 // gl_PointCoord origin is flipped for non-default framebuffers
 8066 WIN INTEL OPENGL : ClipControlTest.OriginPointCoord/* = SKIP
 
+// Sample coverage must not affect single sample render targets
+8102 D3D11 : SimpleOperationTest.DrawSingleSampleWithCoverage/* = SKIP
+8102 VULKAN : SimpleOperationTest.DrawSingleSampleWithCoverage/* = SKIP
+
 // bits 24..31 from glClearValueuiv value don't work on Intel Metal.
 7794 MAC INTEL METAL : PixelLocalStorageTest.ClearValues_r32/* = SKIP
 
