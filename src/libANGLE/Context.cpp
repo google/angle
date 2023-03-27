@@ -698,8 +698,6 @@ void Context::initializeDefaultResources()
 
     mTexImageDirtyBits.set(State::DIRTY_BIT_UNPACK_STATE);
     mTexImageDirtyBits.set(State::DIRTY_BIT_UNPACK_BUFFER_BINDING);
-    mTexImageDirtyBits.set(State::DIRTY_BIT_EXTENDED);
-    mTexImageExtendedDirtyBits.set();
     // No dirty objects.
 
     // Readpixels uses the pack state and read FBO

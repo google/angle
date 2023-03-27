@@ -5856,6 +5856,27 @@ void main() {
     EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(42, 0, 0, 255), 1);
 }
 
+// Regression test for syncing internal state for TexImage calls while there is an incomplete
+// framebuffer bound
+TEST_P(WebGL2CompatibilityTest, TexImageSyncWithIncompleteFramebufferBug)
+{
+    glColorMask(false, true, false, false);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glViewport(100, 128, 65, 65537);
+
+    GLFramebuffer fb1;
+    glBindFramebuffer(GL_FRAMEBUFFER, fb1);
+
+    GLRenderbuffer rb;
+    glBindRenderbuffer(GL_RENDERBUFFER, rb);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RG8UI, 1304, 2041);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rb);
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, 8, 8, 0, GL_RED_EXT, GL_UNSIGNED_BYTE, nullptr);
+}
+
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(WebGLCompatibilityTest);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(WebGL2CompatibilityTest);
