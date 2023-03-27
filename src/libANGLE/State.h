@@ -490,13 +490,13 @@ class State : angle::NonCopyable
     {
         return mBoundUniformBuffersMask;
     }
-    const angle::BitSet<gl::IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFER_BINDINGS>
-        &getAtomicCounterBuffersMask() const
+    const angle::BitSet<gl::IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFER_BINDINGS> &
+    getAtomicCounterBuffersMask() const
     {
         return mBoundAtomicCounterBuffersMask;
     }
-    const angle::BitSet<gl::IMPLEMENTATION_MAX_SHADER_STORAGE_BUFFER_BINDINGS>
-        &getShaderStorageBuffersMask() const
+    const angle::BitSet<gl::IMPLEMENTATION_MAX_SHADER_STORAGE_BUFFER_BINDINGS> &
+    getShaderStorageBuffersMask() const
     {
         return mBoundShaderStorageBuffersMask;
     }
@@ -773,9 +773,8 @@ class State : angle::NonCopyable
 
     using ExtendedDirtyBits = angle::BitSet32<EXTENDED_DIRTY_BIT_MAX>;
     const ExtendedDirtyBits &getExtendedDirtyBits() const { return mExtendedDirtyBits; }
-    // TODO(https://anglebug.com/5631): Handle extended dirty bits on non-vulkan backends
-    ExtendedDirtyBits getAndResetExtendedDirtyBits() const;
     void clearExtendedDirtyBits() { mExtendedDirtyBits.reset(); }
+    void clearExtendedDirtyBits(const ExtendedDirtyBits &bitset) { mExtendedDirtyBits &= ~bitset; }
 
     using DirtyObjects = angle::BitSet<DIRTY_OBJECT_MAX>;
     void clearDirtyObjects() { mDirtyObjects.reset(); }

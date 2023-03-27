@@ -279,7 +279,9 @@ class StateManagerGL final : angle::NonCopyable
 
     angle::Result syncState(const gl::Context *context,
                             const gl::State::DirtyBits &glDirtyBits,
-                            const gl::State::DirtyBits &bitMask);
+                            const gl::State::DirtyBits &bitMask,
+                            const gl::State::ExtendedDirtyBits &extendedDirtyBits,
+                            const gl::State::ExtendedDirtyBits &extendedBitMask);
 
     ANGLE_INLINE void updateMultiviewBaseViewLayerIndexUniform(
         const gl::Program *program,

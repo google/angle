@@ -5116,6 +5116,8 @@ angle::Result ContextVk::invalidateProgramExecutableHelper(const gl::Context *co
 angle::Result ContextVk::syncState(const gl::Context *context,
                                    const gl::State::DirtyBits &dirtyBits,
                                    const gl::State::DirtyBits &bitMask,
+                                   const gl::State::ExtendedDirtyBits &extendedDirtyBits,
+                                   const gl::State::ExtendedDirtyBits &extendedBitMask,
                                    gl::Command command)
 {
     const gl::State &glState                       = context->getState();
@@ -5535,8 +5537,6 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 break;
             case gl::State::DIRTY_BIT_EXTENDED:
             {
-                gl::State::ExtendedDirtyBits extendedDirtyBits =
-                    glState.getAndResetExtendedDirtyBits();
                 for (size_t extendedDirtyBit : extendedDirtyBits)
                 {
                     switch (extendedDirtyBit)

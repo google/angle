@@ -192,6 +192,8 @@ class ContextMtl : public ContextImpl, public mtl::Context
     angle::Result syncState(const gl::Context *context,
                             const gl::State::DirtyBits &dirtyBits,
                             const gl::State::DirtyBits &bitMask,
+                            const gl::State::ExtendedDirtyBits &extendedDirtyBits,
+                            const gl::State::ExtendedDirtyBits &extendedBitMask,
                             gl::Command command) override;
 
     // Disjoint timer queries
@@ -482,7 +484,8 @@ class ContextMtl : public ContextImpl, public mtl::Context
                                    GLint baseVertex,
                                    GLuint baseInstance);
     void flushCommandBufferIfNeeded();
-    void updateExtendedState(const gl::State &glState);
+    void updateExtendedState(const gl::State &glState,
+                             const gl::State::ExtendedDirtyBits &extendedDirtyBits);
 
     void updateViewport(FramebufferMtl *framebufferMtl,
                         const gl::Rectangle &viewport,

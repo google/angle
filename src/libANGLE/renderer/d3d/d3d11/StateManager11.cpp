@@ -927,6 +927,7 @@ angle::Result StateManager11::updateStateForCompute(const gl::Context *context,
 
 void StateManager11::syncState(const gl::Context *context,
                                const gl::State::DirtyBits &dirtyBits,
+                               const gl::State::ExtendedDirtyBits &extendedDirtyBits,
                                gl::Command command)
 {
     if (!dirtyBits.any())
@@ -1194,9 +1195,6 @@ void StateManager11::syncState(const gl::Context *context,
                 break;
             case gl::State::DIRTY_BIT_EXTENDED:
             {
-                gl::State::ExtendedDirtyBits extendedDirtyBits =
-                    state.getAndResetExtendedDirtyBits();
-
                 for (size_t extendedDirtyBit : extendedDirtyBits)
                 {
                     switch (extendedDirtyBit)

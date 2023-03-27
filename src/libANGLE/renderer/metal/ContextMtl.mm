@@ -1133,6 +1133,8 @@ angle::Result ContextMtl::popDebugGroup(const gl::Context *context)
 angle::Result ContextMtl::syncState(const gl::Context *context,
                                     const gl::State::DirtyBits &dirtyBits,
                                     const gl::State::DirtyBits &bitMask,
+                                    const gl::State::ExtendedDirtyBits &extendedDirtyBits,
+                                    const gl::State::ExtendedDirtyBits &extendedBitMask,
                                     gl::Command command)
 {
     const gl::State &glState = context->getState();
@@ -1361,7 +1363,7 @@ angle::Result ContextMtl::syncState(const gl::Context *context,
             case gl::State::DIRTY_BIT_PROVOKING_VERTEX:
                 break;
             case gl::State::DIRTY_BIT_EXTENDED:
-                updateExtendedState(glState);
+                updateExtendedState(glState, extendedDirtyBits);
                 break;
             case gl::State::DIRTY_BIT_SAMPLE_SHADING:
                 // Nothing to do until OES_sample_shading is implemented.
@@ -1378,9 +1380,9 @@ angle::Result ContextMtl::syncState(const gl::Context *context,
     return angle::Result::Continue;
 }
 
-void ContextMtl::updateExtendedState(const gl::State &glState)
+void ContextMtl::updateExtendedState(const gl::State &glState,
+                                     const gl::State::ExtendedDirtyBits &extendedDirtyBits)
 {
-    gl::State::ExtendedDirtyBits extendedDirtyBits = glState.getAndResetExtendedDirtyBits();
     for (size_t extendedDirtyBit : extendedDirtyBits)
     {
         switch (extendedDirtyBit)
