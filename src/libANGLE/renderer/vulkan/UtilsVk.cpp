@@ -1106,7 +1106,10 @@ void ResetDynamicState(ContextVk *contextVk, vk::RenderPassCommandBuffer *comman
     {
         commandBuffer->setRasterizerDiscardEnable(VK_FALSE);
         commandBuffer->setDepthBiasEnable(VK_FALSE);
-        commandBuffer->setPrimitiveRestartEnable(VK_FALSE);
+        if (!contextVk->getFeatures().forceStaticPrimitiveRestartState.enabled)
+        {
+            commandBuffer->setPrimitiveRestartEnable(VK_FALSE);
+        }
     }
     if (contextVk->getFeatures().supportsFragmentShadingRate.enabled)
     {

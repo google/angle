@@ -953,8 +953,12 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
         mDynamicStateDirtyBits |= DirtyBits{
             DIRTY_BIT_DYNAMIC_RASTERIZER_DISCARD_ENABLE,
             DIRTY_BIT_DYNAMIC_DEPTH_BIAS_ENABLE,
-            DIRTY_BIT_DYNAMIC_PRIMITIVE_RESTART_ENABLE,
         };
+
+        if (!getFeatures().forceStaticPrimitiveRestartState.enabled)
+        {
+            mDynamicStateDirtyBits.set(DIRTY_BIT_DYNAMIC_PRIMITIVE_RESTART_ENABLE);
+        }
     }
     if (getFeatures().supportsLogicOpDynamicState.enabled)
     {
@@ -1136,7 +1140,11 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
     {
         mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_RASTERIZER_DISCARD_ENABLED);
         mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_POLYGON_OFFSET_FILL_ENABLED);
-        mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_PRIMITIVE_RESTART_ENABLED);
+
+        if (!getFeatures().forceStaticPrimitiveRestartState.enabled)
+        {
+            mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_PRIMITIVE_RESTART_ENABLED);
+        }
     }
 
     angle::PerfMonitorCounterGroup vulkanGroup;
@@ -5308,7 +5316,8 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_LINE_WIDTH);
                 break;
             case gl::State::DIRTY_BIT_PRIMITIVE_RESTART_ENABLED:
-                if (getFeatures().supportsExtendedDynamicState2.enabled)
+                if (getFeatures().supportsExtendedDynamicState2.enabled &&
+                    !getFeatures().forceStaticPrimitiveRestartState.enabled)
                 {
                     mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_PRIMITIVE_RESTART_ENABLE);
                 }

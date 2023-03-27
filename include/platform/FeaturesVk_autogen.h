@@ -660,6 +660,12 @@ struct FeaturesVk : FeatureSetBase
         "driver bugs",
         &members, "https://bugs.fuchsia.dev/p/fuchsia/issues/detail?id=107106"};
 
+    FeatureInfo forceStaticPrimitiveRestartState = {
+        "forceStaticPrimitiveRestartState", FeatureCategory::VulkanWorkarounds,
+        "Force static state for VK_DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE due to "
+        "driver bugs",
+        &members, "https://issuetracker.google.com/275210062"};
+
     FeatureInfo supportsExtendedDynamicState = {
         "supportsExtendedDynamicState", FeatureCategory::VulkanFeatures,
         "VkDevice supports VK_EXT_extended_dynamic_state extension", &members,

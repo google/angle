@@ -4185,6 +4185,10 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     ANGLE_FEATURE_CONDITION(&mFeatures, forceStaticVertexStrideState,
                             mFeatures.supportsExtendedDynamicState.enabled && isARM);
 
+    // Avoid dynamic state for primitive restart on buggy drivers.
+    ANGLE_FEATURE_CONDITION(&mFeatures, forceStaticPrimitiveRestartState,
+                            mFeatures.supportsExtendedDynamicState2.enabled && isARM);
+
     // Support GL_QCOM_shading_rate extension
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsFragmentShadingRate,
                             canSupportFragmentShadingRate(deviceExtensionNames));

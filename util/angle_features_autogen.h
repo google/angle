@@ -141,6 +141,7 @@ enum class Feature
     ForceNearestMipFiltering,
     ForceNonCSBaseMipmapGeneration,
     ForceRobustResourceInit,
+    ForceStaticPrimitiveRestartState,
     ForceStaticVertexStrideState,
     ForceSubmitImmutableTextureUpdates,
     ForceTextureLodOffset1,
