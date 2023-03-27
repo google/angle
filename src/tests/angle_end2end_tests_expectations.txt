@@ -1165,6 +1165,12 @@
 // Sample coverage is ignored when replacing a single-sample attachment with a multi-sample one
 8114 MAC INTEL OPENGL : StateChangeTestES3.SampleCoverageFramebufferAttachmentSwitch/* = SKIP
 
+// gl_NumSamples value is not synced with FBO state updates until the program is re-linked
+8097 WIN INTEL OPENGL : SampleVariablesTest.NumSamples/* = SKIP
+
+// Pipeline creation failure
+8120 PIXEL4ORXL VULKAN : SampleVariablesTest.SamplePosition/* = SKIP
+
 // bits 24..31 from glClearValueuiv value don't work on Intel Metal.
 7794 MAC INTEL METAL : PixelLocalStorageTest.ClearValues_r32/* = SKIP
 

@@ -1481,11 +1481,6 @@ void GenerateCaps(const FunctionsGL *functions,
         !features.disableMultisampledRenderToTexture.enabled &&
         extensions->multisampledRenderToTextureEXT &&
         functions->hasGLESExtension("GL_EXT_multisampled_render_to_texture2");
-    extensions->sampleVariablesOES = functions->isAtLeastGL(gl::Version(4, 2)) ||
-                                     (functions->hasGLExtension("GL_ARB_sample_shading") &&
-                                      functions->hasGLExtension("GL_ARB_gpu_shader5")) ||
-                                     functions->isAtLeastGLES(gl::Version(3, 2)) ||
-                                     functions->hasGLESExtension("GL_OES_sample_variables");
     extensions->standardDerivativesOES = functions->isAtLeastGL(gl::Version(2, 0)) ||
                                          functions->hasGLExtension("GL_ARB_fragment_shader") ||
                                          functions->hasGLESExtension("GL_OES_standard_derivatives");
@@ -1501,6 +1496,14 @@ void GenerateCaps(const FunctionsGL *functions,
                                 functions->hasGLExtension("GL_ARB_depth_clamp") ||
                                 functions->hasGLESExtension("GL_EXT_depth_clamp");
     extensions->polygonOffsetClampEXT = functions->hasExtension("GL_EXT_polygon_offset_clamp");
+
+    // This functionality is provided by Shader Model 5 and should be available in GLSL 4.00
+    // or even in older versions with GL_ARB_sample_shading and GL_ARB_gpu_shader5. However,
+    // some OpenGL implementations (e.g., macOS) that do not support higher context versions
+    // do not pass the tests so GLSL 4.20 is required here.
+    extensions->sampleVariablesOES = functions->isAtLeastGL(gl::Version(4, 2)) ||
+                                     functions->isAtLeastGLES(gl::Version(3, 2)) ||
+                                     functions->hasGLESExtension("GL_OES_sample_variables");
 
     // Support video texture extension on non Android backends.
     // TODO(crbug.com/776222): support Android and Apple devices.
