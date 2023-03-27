@@ -2313,7 +2313,8 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
         }
     }
 
-    ASSERT(contextVk->hasActiveRenderPass());
+    ASSERT(contextVk->hasStartedRenderPassWithQueueSerial(
+        framebuffer->getLastRenderPassQueueSerial()));
     // Make sure this draw call doesn't count towards occlusion query results.
     contextVk->pauseRenderPassQueriesIfActive();
     commandBuffer->draw(3, 0);
