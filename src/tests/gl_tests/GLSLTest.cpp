@@ -16202,6 +16202,24 @@ void main()
     ANGLE_GL_PROGRAM(testProgram, kVS, kFS);
 }
 
+// Test that sample variables compile.
+TEST_P(GLSLTest_ES3, SampleVariables)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_sample_variables"));
+
+    const char kFS[] = R"(#version 300 es
+#extension GL_OES_sample_variables : require
+precision highp float;
+out vec4 color;
+void main()
+{
+    gl_SampleMask[0] = gl_SampleMaskIn[0] & 0x55555555;
+    color = vec4(gl_SamplePosition.yx, float(gl_SampleID), float(gl_MaxSamples + gl_NumSamples));
+})";
+
+    ANGLE_GL_PROGRAM(testProgram, essl3_shaders::vs::Simple(), kFS);
+}
+
 // Test that shader caching maintains uniforms across compute shader compilations.
 TEST_P(GLSLTest_ES31, ShaderCacheComputeWithUniform)
 {

@@ -1481,6 +1481,11 @@ void GenerateCaps(const FunctionsGL *functions,
         !features.disableMultisampledRenderToTexture.enabled &&
         extensions->multisampledRenderToTextureEXT &&
         functions->hasGLESExtension("GL_EXT_multisampled_render_to_texture2");
+    extensions->sampleVariablesOES = functions->isAtLeastGL(gl::Version(4, 2)) ||
+                                     (functions->hasGLExtension("GL_ARB_sample_shading") &&
+                                      functions->hasGLExtension("GL_ARB_gpu_shader5")) ||
+                                     functions->isAtLeastGLES(gl::Version(3, 2)) ||
+                                     functions->hasGLESExtension("GL_OES_sample_variables");
     extensions->standardDerivativesOES = functions->isAtLeastGL(gl::Version(2, 0)) ||
                                          functions->hasGLExtension("GL_ARB_fragment_shader") ||
                                          functions->hasGLESExtension("GL_OES_standard_derivatives");
