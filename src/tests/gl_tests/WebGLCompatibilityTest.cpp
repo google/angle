@@ -5283,8 +5283,8 @@ void main()
 
     constexpr char kVSArrayTooLarge[] =
         R"(varying vec4 color;
-// 2 GB / 32 aligned bytes per mat2 = 67108864
-const int array_size = 67108865;
+// 1 MB / 32 aligned bytes per mat2 = 32768
+const int array_size = 32769;
 void main()
 {
     mat2 array[array_size];
@@ -5296,7 +5296,7 @@ void main()
 
     constexpr char kVSArrayMuchTooLarge[] =
         R"(varying vec4 color;
-const int array_size = 556007917;
+const int array_size = 55600;
 void main()
 {
     mat2 array[array_size];
