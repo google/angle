@@ -1941,21 +1941,6 @@ bool ValidateBeginPixelLocalStorageANGLE(const Context *context,
         return false;
     }
 
-    // INVALID_OPERATION is generated if SAMPLE_ALPHA_TO_COVERAGE is enabled.
-    if (state.isSampleAlphaToCoverageEnabled())
-    {
-        context->validationError(entryPoint, GL_INVALID_OPERATION,
-                                 kPLSSampleAlphaToCoverageEnabled);
-        return false;
-    }
-
-    // INVALID_OPERATION is generated if SAMPLE_COVERAGE is enabled.
-    if (state.isSampleCoverageEnabled())
-    {
-        context->validationError(entryPoint, GL_INVALID_OPERATION, kPLSSampleCoverageEnabled);
-        return false;
-    }
-
     // INVALID_VALUE is generated if <n> < 1 or <n> > MAX_PIXEL_LOCAL_STORAGE_PLANES_ANGLE.
     if (n < 1)
     {
