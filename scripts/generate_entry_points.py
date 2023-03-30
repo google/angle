@@ -283,7 +283,7 @@ TEMPLATE_EGL_ENTRY_POINT_NO_RETURN = """\
 void EGLAPIENTRY EGL_{name}({params})
 {{
     {preamble}
-    {entry_point_locks}
+    ANGLE_SCOPED_GLOBAL_LOCK();
     EGL_EVENT({name}, "{format_params}"{comma_if_needed}{pass_params});
 
     Thread *thread = egl::GetCurrentThread();
@@ -308,7 +308,7 @@ TEMPLATE_EGL_ENTRY_POINT_WITH_RETURN = """\
 {return_type} EGLAPIENTRY EGL_{name}({params})
 {{
     {preamble}
-    {entry_point_locks}
+    ANGLE_SCOPED_GLOBAL_LOCK();
     EGL_EVENT({name}, "{format_params}"{comma_if_needed}{pass_params});
 
     Thread *thread = egl::GetCurrentThread();
@@ -1678,8 +1678,6 @@ def format_entry_point_def(api, command_node, cmd_name, proto, params, cmd_packe
             event_comment,
         "labeled_object":
             get_egl_entry_point_labeled_object(ep_to_object, cmd_name, params, packed_enums),
-        "entry_point_locks":
-            get_locks(api, cmd_name, params),
         "optional_gl_entry_point_locks":
             get_optional_gl_locks(api, cmd_name, params),
         "preamble":
@@ -2660,37 +2658,6 @@ def get_egl_entry_point_labeled_object(ep_to_object, cmd_stripped, params, packe
     return "Get%sIfValid(%s, %s)" % (category, display_param, found_param)
 
 
-LOCK_GLOBAL_SURFACE = "ANGLE_SCOPED_GLOBAL_SURFACE_LOCK();"
-LOCK_GLOBAL = "ANGLE_SCOPED_GLOBAL_LOCK();"
-
-LOCK_ORDERING = {
-    LOCK_GLOBAL_SURFACE: 0,
-    LOCK_GLOBAL: 1,
-}
-
-
-def ordered_lock_statements(*locks):
-    return "".join(sorted(locks, key=lambda lock: LOCK_ORDERING[lock]))
-
-
-def get_locks(api, cmd_name, params):
-
-    if api != apis.EGL:
-        return ordered_lock_statements(LOCK_GLOBAL)
-
-    has_surface = False
-
-    for param in params:
-        param_type = just_the_type(param)
-        if param_type == "EGLSurface":
-            has_surface = True
-
-    if has_surface:
-        return ordered_lock_statements(LOCK_GLOBAL_SURFACE, LOCK_GLOBAL)
-
-    return ordered_lock_statements(LOCK_GLOBAL)
-
-
 def get_optional_gl_locks(api, cmd_name, params):
     if api != apis.GLES:
         return ""
@@ -2700,7 +2667,7 @@ def get_optional_gl_locks(api, cmd_name, params):
     if not cmd_name.startswith("glEGLImage"):
         return ""
 
-    return ordered_lock_statements(LOCK_GLOBAL)
+    return "ANGLE_SCOPED_GLOBAL_LOCK();"
 
 
 def get_prepare_swap_buffers_call(api, cmd_name, params):
