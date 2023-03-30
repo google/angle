@@ -76,6 +76,11 @@ TEST(TestUtils, Sleep)
 #    define MAYBE_RunApp DISABLED_RunApp
 #    define MAYBE_RunAppAsync DISABLED_RunAppAsync
 #    define MAYBE_RunAppAsyncRedirectStderrToStdout DISABLED_RunAppAsyncRedirectStderrToStdout
+// TODO: iOS simulator support. http://anglebug.com/8116
+#elif defined(ANGLE_PLATFORM_IOS_SIMULATOR)
+#    define MAYBE_RunApp DISABLED_RunApp
+#    define MAYBE_RunAppAsync DISABLED_RunAppAsync
+#    define MAYBE_RunAppAsyncRedirectStderrToStdout DISABLED_RunAppAsyncRedirectStderrToStdout
 #else
 #    define MAYBE_RunApp RunApp
 #    define MAYBE_RunAppAsync RunAppAsync
