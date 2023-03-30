@@ -5528,7 +5528,10 @@ angle::Result ImageHelper::initExternal(Context *context,
     imageInfo.pQueueFamilyIndices   = nullptr;
     imageInfo.initialLayout         = ConvertImageLayoutToVkImageLayout(context, initialLayout);
 
-    mCurrentLayout = initialLayout;
+    mCurrentLayout               = initialLayout;
+    mCurrentQueueFamilyIndex     = std::numeric_limits<uint32_t>::max();
+    mLastNonShaderReadOnlyLayout = ImageLayout::Undefined;
+    mCurrentShaderReadStageMask  = 0;
 
     ANGLE_VK_TRY(context, mImage.init(context->getDevice(), imageInfo));
 
@@ -5605,6 +5608,9 @@ void ImageHelper::deriveImageViewFormatFromCreateInfoPNext(VkImageCreateInfo &im
         pNextChain = pNextChain->pNext;
     }
 
+    // Clear formatOut in case it has leftovers from previous VkImage in the case of releaseImage
+    // followed by initExternal.
+    std::fill(formatOut.begin(), formatOut.begin() + formatOut.max_size(), VK_FORMAT_UNDEFINED);
     if (pNextChain != nullptr)
     {
         const VkImageFormatListCreateInfoKHR *imageFormatCreateInfo =
