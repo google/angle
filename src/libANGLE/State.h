@@ -233,8 +233,15 @@ class State : angle::NonCopyable
     GLint getStencilRef() const { return mStencilRef; }
     GLint getStencilBackRef() const { return mStencilBackRef; }
 
+    PolygonMode getPolygonMode() const { return mRasterizer.polygonMode; }
+    void setPolygonMode(PolygonMode mode);
+
     // Depth bias/polygon offset state manipulation
+    bool isPolygonOffsetPointEnabled() const { return mRasterizer.polygonOffsetPoint; }
+    bool isPolygonOffsetLineEnabled() const { return mRasterizer.polygonOffsetLine; }
     bool isPolygonOffsetFillEnabled() const { return mRasterizer.polygonOffsetFill; }
+    void setPolygonOffsetPoint(bool enabled);
+    void setPolygonOffsetLine(bool enabled);
     void setPolygonOffsetFill(bool enabled);
     void setPolygonOffsetParams(GLfloat factor, GLfloat units, GLfloat clamp);
 
@@ -726,14 +733,17 @@ class State : angle::NonCopyable
 
     enum ExtendedDirtyBitType
     {
-        EXTENDED_DIRTY_BIT_CLIP_CONTROL,            // EXT_clip_control
-        EXTENDED_DIRTY_BIT_CLIP_DISTANCES,          // clip distances
-        EXTENDED_DIRTY_BIT_DEPTH_CLAMP_ENABLED,     // EXT_depth_clamp
-        EXTENDED_DIRTY_BIT_MIPMAP_GENERATION_HINT,  // mipmap generation hint
-        EXTENDED_DIRTY_BIT_SHADER_DERIVATIVE_HINT,  // shader derivative hint
-        EXTENDED_DIRTY_BIT_SHADING_RATE,            // QCOM_shading_rate
-        EXTENDED_DIRTY_BIT_LOGIC_OP_ENABLED,        // ANGLE_logic_op
-        EXTENDED_DIRTY_BIT_LOGIC_OP,                // ANGLE_logic_op
+        EXTENDED_DIRTY_BIT_CLIP_CONTROL,                  // EXT_clip_control
+        EXTENDED_DIRTY_BIT_CLIP_DISTANCES,                // clip distances
+        EXTENDED_DIRTY_BIT_DEPTH_CLAMP_ENABLED,           // EXT_depth_clamp
+        EXTENDED_DIRTY_BIT_MIPMAP_GENERATION_HINT,        // mipmap generation hint
+        EXTENDED_DIRTY_BIT_POLYGON_MODE,                  // NV_polygon_mode
+        EXTENDED_DIRTY_BIT_POLYGON_OFFSET_POINT_ENABLED,  // NV_polygon_mode
+        EXTENDED_DIRTY_BIT_POLYGON_OFFSET_LINE_ENABLED,   // NV_polygon_mode
+        EXTENDED_DIRTY_BIT_SHADER_DERIVATIVE_HINT,        // shader derivative hint
+        EXTENDED_DIRTY_BIT_SHADING_RATE,                  // QCOM_shading_rate
+        EXTENDED_DIRTY_BIT_LOGIC_OP_ENABLED,              // ANGLE_logic_op
+        EXTENDED_DIRTY_BIT_LOGIC_OP,                      // ANGLE_logic_op
         EXTENDED_DIRTY_BIT_INVALID,
         EXTENDED_DIRTY_BIT_MAX = EXTENDED_DIRTY_BIT_INVALID,
     };

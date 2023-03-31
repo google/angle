@@ -2554,8 +2554,25 @@ bool ValidatePolygonModeANGLE(const Context *context,
                               GLenum face,
                               PolygonMode modePacked)
 {
-    UNIMPLEMENTED();
-    return false;
+    if (!context->getExtensions().polygonModeANGLE)
+    {
+        context->validationError(entryPoint, GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    if (face != GL_FRONT_AND_BACK)
+    {
+        context->validationError(entryPoint, GL_INVALID_ENUM, kInvalidCullMode);
+        return false;
+    }
+
+    if (modePacked == PolygonMode::Point || modePacked == PolygonMode::InvalidEnum)
+    {
+        context->validationError(entryPoint, GL_INVALID_ENUM, kInvalidPolygonMode);
+        return false;
+    }
+
+    return true;
 }
 
 // GL_NV_polygon_mode
@@ -2564,8 +2581,25 @@ bool ValidatePolygonModeNV(const Context *context,
                            GLenum face,
                            PolygonMode modePacked)
 {
-    UNIMPLEMENTED();
-    return false;
+    if (!context->getExtensions().polygonModeNV)
+    {
+        context->validationError(entryPoint, GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    if (face != GL_FRONT_AND_BACK)
+    {
+        context->validationError(entryPoint, GL_INVALID_ENUM, kInvalidCullMode);
+        return false;
+    }
+
+    if (modePacked == PolygonMode::InvalidEnum)
+    {
+        context->validationError(entryPoint, GL_INVALID_ENUM, kInvalidPolygonMode);
+        return false;
+    }
+
+    return true;
 }
 
 // GL_EXT_polygon_offset_clamp

@@ -5068,6 +5068,34 @@ void CaptureMidExecutionSetup(const gl::Context *context,
         cap(CaptureFrontFace(replayState, true, currentRasterState.frontFace));
     }
 
+    if (currentRasterState.polygonMode != defaultRasterState.polygonMode)
+    {
+        if (context->getExtensions().polygonModeNV)
+        {
+            cap(CapturePolygonModeNV(replayState, true, GL_FRONT_AND_BACK,
+                                     currentRasterState.polygonMode));
+        }
+        else if (context->getExtensions().polygonModeANGLE)
+        {
+            cap(CapturePolygonModeANGLE(replayState, true, GL_FRONT_AND_BACK,
+                                        currentRasterState.polygonMode));
+        }
+        else
+        {
+            UNREACHABLE();
+        }
+    }
+
+    if (currentRasterState.polygonOffsetPoint != defaultRasterState.polygonOffsetPoint)
+    {
+        capCap(GL_POLYGON_OFFSET_POINT_NV, currentRasterState.polygonOffsetPoint);
+    }
+
+    if (currentRasterState.polygonOffsetLine != defaultRasterState.polygonOffsetLine)
+    {
+        capCap(GL_POLYGON_OFFSET_LINE_NV, currentRasterState.polygonOffsetLine);
+    }
+
     if (currentRasterState.polygonOffsetFill != defaultRasterState.polygonOffsetFill)
     {
         capCap(GL_POLYGON_OFFSET_FILL, currentRasterState.polygonOffsetFill);

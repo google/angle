@@ -139,6 +139,9 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions,
       mCullFaceEnabled(false),
       mCullFace(gl::CullFaceMode::Back),
       mFrontFace(GL_CCW),
+      mPolygonMode(gl::PolygonMode::Fill),
+      mPolygonOffsetPointEnabled(false),
+      mPolygonOffsetLineEnabled(false),
       mPolygonOffsetFillEnabled(false),
       mPolygonOffsetFactor(0.0f),
       mPolygonOffsetUnits(0.0f),
@@ -1682,6 +1685,64 @@ void StateManagerGL::setFrontFace(GLenum frontFace)
     }
 }
 
+void StateManagerGL::setPolygonMode(gl::PolygonMode mode)
+{
+    if (mPolygonMode != mode)
+    {
+        mPolygonMode = mode;
+        if (mFunctions->standard == STANDARD_GL_DESKTOP)
+        {
+            mFunctions->polygonMode(GL_FRONT_AND_BACK, ToGLenum(mPolygonMode));
+        }
+        else
+        {
+            ASSERT(mFunctions->polygonModeNV);
+            mFunctions->polygonModeNV(GL_FRONT_AND_BACK, ToGLenum(mPolygonMode));
+        }
+
+        mLocalDirtyBits.set(gl::State::DIRTY_BIT_EXTENDED);
+        mLocalExtendedDirtyBits.set(gl::State::EXTENDED_DIRTY_BIT_POLYGON_MODE);
+    }
+}
+
+void StateManagerGL::setPolygonOffsetPointEnabled(bool enabled)
+{
+    if (mPolygonOffsetPointEnabled != enabled)
+    {
+        mPolygonOffsetPointEnabled = enabled;
+        if (mPolygonOffsetPointEnabled)
+        {
+            mFunctions->enable(GL_POLYGON_OFFSET_POINT_NV);
+        }
+        else
+        {
+            mFunctions->disable(GL_POLYGON_OFFSET_POINT_NV);
+        }
+
+        mLocalDirtyBits.set(gl::State::DIRTY_BIT_EXTENDED);
+        mLocalExtendedDirtyBits.set(gl::State::EXTENDED_DIRTY_BIT_POLYGON_OFFSET_POINT_ENABLED);
+    }
+}
+
+void StateManagerGL::setPolygonOffsetLineEnabled(bool enabled)
+{
+    if (mPolygonOffsetLineEnabled != enabled)
+    {
+        mPolygonOffsetLineEnabled = enabled;
+        if (mPolygonOffsetLineEnabled)
+        {
+            mFunctions->enable(GL_POLYGON_OFFSET_LINE_NV);
+        }
+        else
+        {
+            mFunctions->disable(GL_POLYGON_OFFSET_LINE_NV);
+        }
+
+        mLocalDirtyBits.set(gl::State::DIRTY_BIT_EXTENDED);
+        mLocalExtendedDirtyBits.set(gl::State::EXTENDED_DIRTY_BIT_POLYGON_OFFSET_LINE_ENABLED);
+    }
+}
+
 void StateManagerGL::setPolygonOffsetFillEnabled(bool enabled)
 {
     if (mPolygonOffsetFillEnabled != enabled)
@@ -2291,6 +2352,16 @@ angle::Result StateManagerGL::syncState(const gl::Context *context,
                             setLogicOp(state.getLogicOp());
                             break;
                         case gl::State::EXTENDED_DIRTY_BIT_MIPMAP_GENERATION_HINT:
+                            break;
+                        case gl::State::EXTENDED_DIRTY_BIT_POLYGON_MODE:
+                            setPolygonMode(state.getPolygonMode());
+                            break;
+                        case gl::State::EXTENDED_DIRTY_BIT_POLYGON_OFFSET_POINT_ENABLED:
+                            setPolygonOffsetPointEnabled(state.isPolygonOffsetPointEnabled());
+                            break;
+                        case gl::State::EXTENDED_DIRTY_BIT_POLYGON_OFFSET_LINE_ENABLED:
+                            setPolygonOffsetLineEnabled(state.isPolygonOffsetLineEnabled());
+                            break;
                         case gl::State::EXTENDED_DIRTY_BIT_SHADER_DERIVATIVE_HINT:
                             // These hints aren't forwarded to GL yet.
                             break;
@@ -2970,6 +3041,37 @@ void StateManagerGL::syncFromNativeContext(const gl::Extensions &extensions,
         mLocalDirtyBits.set(gl::State::DIRTY_BIT_DITHER_ENABLED);
     }
 
+    if (extensions.polygonModeAny())
+    {
+        get(GL_POLYGON_MODE_NV, &state->polygonMode);
+        if (mPolygonMode != gl::FromGLenum<gl::PolygonMode>(state->polygonMode))
+        {
+            mPolygonMode = gl::FromGLenum<gl::PolygonMode>(state->polygonMode);
+            mLocalDirtyBits.set(gl::State::DIRTY_BIT_EXTENDED);
+            mLocalExtendedDirtyBits.set(gl::State::EXTENDED_DIRTY_BIT_POLYGON_MODE);
+        }
+
+        if (extensions.polygonModeNV)
+        {
+            get(GL_POLYGON_OFFSET_POINT_NV, &state->enablePolygonOffsetPoint);
+            if (mPolygonOffsetPointEnabled != state->enablePolygonOffsetPoint)
+            {
+                mPolygonOffsetPointEnabled = state->enablePolygonOffsetPoint;
+                mLocalDirtyBits.set(gl::State::DIRTY_BIT_EXTENDED);
+                mLocalExtendedDirtyBits.set(
+                    gl::State::EXTENDED_DIRTY_BIT_POLYGON_OFFSET_POINT_ENABLED);
+            }
+        }
+
+        get(GL_POLYGON_OFFSET_LINE_NV, &state->enablePolygonOffsetLine);
+        if (mPolygonOffsetLineEnabled != state->enablePolygonOffsetLine)
+        {
+            mPolygonOffsetLineEnabled = state->enablePolygonOffsetLine;
+            mLocalDirtyBits.set(gl::State::DIRTY_BIT_EXTENDED);
+            mLocalExtendedDirtyBits.set(gl::State::EXTENDED_DIRTY_BIT_POLYGON_OFFSET_LINE_ENABLED);
+        }
+    }
+
     get(GL_POLYGON_OFFSET_FILL, &state->enablePolygonOffsetFill);
     if (mPolygonOffsetFillEnabled != state->enablePolygonOffsetFill)
     {
@@ -3059,6 +3161,16 @@ void StateManagerGL::restoreNativeContext(const gl::Extensions &extensions,
     setSampleCoverage(state->sampleCoverageValue, state->sampleCoverageInvert);
 
     setDitherEnabled(state->enableDither);
+
+    if (extensions.polygonModeAny())
+    {
+        setPolygonMode(gl::FromGLenum<gl::PolygonMode>(state->polygonMode));
+        if (extensions.polygonModeNV)
+        {
+            setPolygonOffsetPointEnabled(state->enablePolygonOffsetPoint);
+        }
+        setPolygonOffsetLineEnabled(state->enablePolygonOffsetLine);
+    }
 
     setPolygonOffsetFillEnabled(state->enablePolygonOffsetFill);
 

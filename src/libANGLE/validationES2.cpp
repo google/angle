@@ -626,6 +626,11 @@ bool ValidCap(const Context *context, GLenum cap, bool queryOnly)
         case GL_DITHER:
             return true;
 
+        case GL_POLYGON_OFFSET_POINT_NV:
+            return context->getExtensions().polygonModeNV;
+        case GL_POLYGON_OFFSET_LINE_NV:  // = GL_POLYGON_OFFSET_LINE_ANGLE
+            return context->getExtensions().polygonModeAny();
+
         case GL_DEPTH_CLAMP_EXT:
             return context->getExtensions().depthClampEXT;
 

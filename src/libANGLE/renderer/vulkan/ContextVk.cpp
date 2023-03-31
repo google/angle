@@ -5644,6 +5644,10 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                             break;
                         case gl::State::EXTENDED_DIRTY_BIT_MIPMAP_GENERATION_HINT:
                             break;
+                        case gl::State::EXTENDED_DIRTY_BIT_POLYGON_MODE:
+                        case gl::State::EXTENDED_DIRTY_BIT_POLYGON_OFFSET_POINT_ENABLED:
+                        case gl::State::EXTENDED_DIRTY_BIT_POLYGON_OFFSET_LINE_ENABLED:
+                            break;
                         case gl::State::EXTENDED_DIRTY_BIT_SHADER_DERIVATIVE_HINT:
                             break;
                         case gl::State::EXTENDED_DIRTY_BIT_LOGIC_OP_ENABLED:

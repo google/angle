@@ -1032,6 +1032,9 @@ void ContextGL::resetDrawStateForPixelLocalStorageEXT(const gl::Context *context
     stateMgr->setCullFaceEnabled(false);
     stateMgr->setDepthTestEnabled(false);
     stateMgr->setFramebufferSRGBEnabled(context, false);
+    stateMgr->setPolygonMode(gl::PolygonMode::Fill);
+    stateMgr->setPolygonOffsetPointEnabled(false);
+    stateMgr->setPolygonOffsetLineEnabled(false);
     stateMgr->setPolygonOffsetFillEnabled(false);
     stateMgr->setRasterizerDiscardEnabled(false);
     stateMgr->setSampleAlphaToCoverageEnabled(false);

@@ -330,6 +330,7 @@ MSG kInvalidPointerQuery = "Invalid pointer query.";
 MSG kInvalidPointParameter = "Invalid point parameter.";
 MSG kInvalidPointParameterValue = "Invalid point parameter value (must be non-negative).";
 MSG kInvalidPointSizeValue = "Invalid point size (must be positive).";
+MSG kInvalidPolygonMode = "Invalid polygon mode.";
 MSG kInvalidPrecision = "Invalid or unsupported precision type.";
 MSG kInvalidPrimitiveMode = "Invalid primitive mode.";
 MSG kInvalidProgramBinaryFormat = "Program binary format is not valid.";

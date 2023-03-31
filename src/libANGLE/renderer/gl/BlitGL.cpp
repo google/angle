@@ -96,6 +96,9 @@ class [[nodiscard]] ScopedGLState : angle::NonCopyable
         stateManager->setDepthTestEnabled(false);
         stateManager->setStencilTestEnabled(false);
         stateManager->setCullFaceEnabled(false);
+        stateManager->setPolygonMode(gl::PolygonMode::Fill);
+        stateManager->setPolygonOffsetPointEnabled(false);
+        stateManager->setPolygonOffsetLineEnabled(false);
         stateManager->setPolygonOffsetFillEnabled(false);
         stateManager->setRasterizerDiscardEnabled(false);
         stateManager->setLogicOpEnabled(false);

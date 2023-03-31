@@ -66,6 +66,9 @@ struct ExternalContextState
     GLenum blendEquationAlpha;
 
     bool enableDither;
+    GLenum polygonMode;
+    bool enablePolygonOffsetPoint;
+    bool enablePolygonOffsetLine;
     bool enablePolygonOffsetFill;
     bool enableDepthClamp;
     bool enableSampleAlphaToCoverage;
@@ -230,6 +233,9 @@ class StateManagerGL final : angle::NonCopyable
     void setCullFaceEnabled(bool enabled);
     void setCullFace(gl::CullFaceMode cullFace);
     void setFrontFace(GLenum frontFace);
+    void setPolygonMode(gl::PolygonMode mode);
+    void setPolygonOffsetPointEnabled(bool enabled);
+    void setPolygonOffsetLineEnabled(bool enabled);
     void setPolygonOffsetFillEnabled(bool enabled);
     void setPolygonOffset(float factor, float units, float clamp);
     void setDepthClampEnabled(bool enabled);
@@ -500,6 +506,9 @@ class StateManagerGL final : angle::NonCopyable
     bool mCullFaceEnabled;
     gl::CullFaceMode mCullFace;
     GLenum mFrontFace;
+    gl::PolygonMode mPolygonMode;
+    bool mPolygonOffsetPointEnabled;
+    bool mPolygonOffsetLineEnabled;
     bool mPolygonOffsetFillEnabled;
     GLfloat mPolygonOffsetFactor;
     GLfloat mPolygonOffsetUnits;

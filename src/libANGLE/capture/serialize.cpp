@@ -405,6 +405,9 @@ void SerializeRasterizerState(JsonSerializer *json, const gl::RasterizerState &r
     json->addScalar("CullFace", rasterizerState.cullFace);
     json->addString("CullMode", ToString(rasterizerState.cullMode));
     json->addScalar("FrontFace", rasterizerState.frontFace);
+    json->addString("PolygonMode", ToString(rasterizerState.polygonMode));
+    json->addScalar("PolygonOffsetPoint", rasterizerState.polygonOffsetPoint);
+    json->addScalar("PolygonOffsetLine", rasterizerState.polygonOffsetLine);
     json->addScalar("PolygonOffsetFill", rasterizerState.polygonOffsetFill);
     json->addScalar("PolygonOffsetFactor", rasterizerState.polygonOffsetFactor);
     json->addScalar("PolygonOffsetUnits", rasterizerState.polygonOffsetUnits);
