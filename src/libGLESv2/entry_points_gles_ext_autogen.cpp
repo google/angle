@@ -1437,6 +1437,36 @@ void GL_APIENTRY GL_MultiDrawElementsInstancedANGLE(GLenum mode,
 
 // GL_ANGLE_pack_reverse_row_order
 
+// GL_ANGLE_polygon_mode
+void GL_APIENTRY GL_PolygonModeANGLE(GLenum face, GLenum mode)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT(context, GLPolygonModeANGLE, "context = %d, face = %s, mode = %s", CID(context),
+          GLenumToString(GLESEnum::TriangleFace, face),
+          GLenumToString(GLESEnum::PolygonMode, mode));
+
+    if (context)
+    {
+        PolygonMode modePacked = PackParam<PolygonMode>(mode);
+        SCOPED_SHARE_CONTEXT_LOCK(context);
+        bool isCallValid =
+            (context->skipValidation() ||
+             (ValidatePixelLocalStorageInactive(context, angle::EntryPoint::GLPolygonModeANGLE) &&
+              ValidatePolygonModeANGLE(context, angle::EntryPoint::GLPolygonModeANGLE, face,
+                                       modePacked)));
+        if (isCallValid)
+        {
+            context->polygonMode(face, modePacked);
+        }
+        ANGLE_CAPTURE_GL(PolygonModeANGLE, isCallValid, context, face, modePacked);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
+}
+
 // GL_ANGLE_program_binary
 
 // GL_ANGLE_provoking_vertex
@@ -10354,6 +10384,36 @@ void GL_APIENTRY GL_BlitFramebufferNV(GLint srcX0,
 }
 
 // GL_NV_pixel_buffer_object
+
+// GL_NV_polygon_mode
+void GL_APIENTRY GL_PolygonModeNV(GLenum face, GLenum mode)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT(context, GLPolygonModeNV, "context = %d, face = %s, mode = %s", CID(context),
+          GLenumToString(GLESEnum::TriangleFace, face),
+          GLenumToString(GLESEnum::PolygonMode, mode));
+
+    if (context)
+    {
+        PolygonMode modePacked = PackParam<PolygonMode>(mode);
+        SCOPED_SHARE_CONTEXT_LOCK(context);
+        bool isCallValid =
+            (context->skipValidation() ||
+             (ValidatePixelLocalStorageInactive(context, angle::EntryPoint::GLPolygonModeNV) &&
+              ValidatePolygonModeNV(context, angle::EntryPoint::GLPolygonModeNV, face,
+                                    modePacked)));
+        if (isCallValid)
+        {
+            context->polygonModeNV(face, modePacked);
+        }
+        ANGLE_CAPTURE_GL(PolygonModeNV, isCallValid, context, face, modePacked);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
+}
 
 // GL_NV_read_depth
 

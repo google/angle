@@ -2446,6 +2446,12 @@ void ReplayTraceFunctionCall(const CallCapture &call, const TraceFunctionMap &cu
         case angle::EntryPoint::GLPointSizex:
             glPointSizex(captures[0].value.GLfixedVal);
             break;
+        case angle::EntryPoint::GLPolygonModeANGLE:
+            glPolygonModeANGLE(captures[0].value.GLenumVal, captures[1].value.GLenumVal);
+            break;
+        case angle::EntryPoint::GLPolygonModeNV:
+            glPolygonModeNV(captures[0].value.GLenumVal, captures[1].value.GLenumVal);
+            break;
         case angle::EntryPoint::GLPolygonOffset:
             glPolygonOffset(captures[0].value.GLfloatVal, captures[1].value.GLfloatVal);
             break;

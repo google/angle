@@ -329,6 +329,12 @@ bool ValidateMultiDrawElementsInstancedANGLE(const Context *context,
 
 // GL_ANGLE_pack_reverse_row_order
 
+// GL_ANGLE_polygon_mode
+bool ValidatePolygonModeANGLE(const Context *context,
+                              angle::EntryPoint entryPoint,
+                              GLenum face,
+                              PolygonMode modePacked);
+
 // GL_ANGLE_program_binary
 
 // GL_ANGLE_provoking_vertex
@@ -2134,6 +2140,12 @@ bool ValidateBlitFramebufferNV(const Context *context,
                                GLenum filter);
 
 // GL_NV_pixel_buffer_object
+
+// GL_NV_polygon_mode
+bool ValidatePolygonModeNV(const Context *context,
+                           angle::EntryPoint entryPoint,
+                           GLenum face,
+                           PolygonMode modePacked);
 
 // GL_NV_read_depth
 

@@ -6114,6 +6114,16 @@ void Context::pixelStorei(GLenum pname, GLint param)
     }
 }
 
+void Context::polygonMode(GLenum face, PolygonMode modePacked)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::polygonModeNV(GLenum face, PolygonMode modePacked)
+{
+    UNIMPLEMENTED();
+}
+
 void Context::polygonOffset(GLfloat factor, GLfloat units)
 {
     mState.setPolygonOffsetParams(factor, units, 0.0f);

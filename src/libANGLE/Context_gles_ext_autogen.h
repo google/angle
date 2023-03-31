@@ -271,6 +271,8 @@
                            GLint dstY0, GLint dstX1, GLint dstY1, GLbitfield mask, GLenum filter); \
     /* GL_NV_pack_subimage */                                                                      \
     /* GL_NV_pixel_buffer_object */                                                                \
+    /* GL_NV_polygon_mode */                                                                       \
+    void polygonModeNV(GLenum face, PolygonMode modePacked);                                       \
     /* GL_NV_read_depth */                                                                         \
     /* GL_NV_read_depth_stencil */                                                                 \
     /* GL_NV_read_stencil */                                                                       \
@@ -420,6 +422,8 @@
                                     DrawElementsType typePacked, const GLvoid *const *indices,     \
                                     const GLsizei *instanceCounts, GLsizei drawcount);             \
     /* GL_ANGLE_multiview_multisample */                                                           \
+    /* GL_ANGLE_polygon_mode */                                                                    \
+    void polygonMode(GLenum face, PolygonMode modePacked);                                         \
     /* GL_ANGLE_program_binary */                                                                  \
     /* GL_ANGLE_program_cache_control */                                                           \
     /* GL_ANGLE_provoking_vertex */                                                                \

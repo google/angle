@@ -3101,6 +3101,12 @@ void GL_APIENTRY glMultiDrawElementsInstancedANGLE(GLenum mode,
 
 // GL_ANGLE_pack_reverse_row_order
 
+// GL_ANGLE_polygon_mode
+void GL_APIENTRY glPolygonModeANGLE(GLenum face, GLenum mode)
+{
+    return GL_PolygonModeANGLE(face, mode);
+}
+
 // GL_ANGLE_program_binary
 
 // GL_ANGLE_provoking_vertex
@@ -5266,6 +5272,12 @@ void GL_APIENTRY glBlitFramebufferNV(GLint srcX0,
 }
 
 // GL_NV_pixel_buffer_object
+
+// GL_NV_polygon_mode
+void GL_APIENTRY glPolygonModeNV(GLenum face, GLenum mode)
+{
+    return GL_PolygonModeNV(face, mode);
+}
 
 // GL_NV_read_depth
 

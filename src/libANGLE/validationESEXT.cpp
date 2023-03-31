@@ -2548,6 +2548,26 @@ bool ValidateNamedBufferStorageExternalEXT(const Context *context,
     return false;
 }
 
+// GL_ANGLE_polygon_mode
+bool ValidatePolygonModeANGLE(const Context *context,
+                              angle::EntryPoint entryPoint,
+                              GLenum face,
+                              PolygonMode modePacked)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+// GL_NV_polygon_mode
+bool ValidatePolygonModeNV(const Context *context,
+                           angle::EntryPoint entryPoint,
+                           GLenum face,
+                           PolygonMode modePacked)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
 // GL_EXT_polygon_offset_clamp
 bool ValidatePolygonOffsetClampEXT(const Context *context,
                                    angle::EntryPoint entryPoint,

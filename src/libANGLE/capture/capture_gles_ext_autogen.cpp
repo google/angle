@@ -1499,6 +1499,19 @@ CallCapture CaptureMultiDrawElementsInstancedANGLE(const State &glState,
                        std::move(paramBuffer));
 }
 
+CallCapture CapturePolygonModeANGLE(const State &glState,
+                                    bool isCallValid,
+                                    GLenum face,
+                                    PolygonMode modePacked)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addEnumParam("face", GLESEnum::TriangleFace, ParamType::TGLenum, face);
+    paramBuffer.addValueParam("modePacked", ParamType::TPolygonMode, modePacked);
+
+    return CallCapture(angle::EntryPoint::GLPolygonModeANGLE, std::move(paramBuffer));
+}
+
 CallCapture CaptureProvokingVertexANGLE(const State &glState,
                                         bool isCallValid,
                                         ProvokingVertexConvention provokeModePacked)
@@ -9819,6 +9832,19 @@ CallCapture CaptureBlitFramebufferNV(const State &glState,
     paramBuffer.addEnumParam("filter", GLESEnum::BlitFramebufferFilter, ParamType::TGLenum, filter);
 
     return CallCapture(angle::EntryPoint::GLBlitFramebufferNV, std::move(paramBuffer));
+}
+
+CallCapture CapturePolygonModeNV(const State &glState,
+                                 bool isCallValid,
+                                 GLenum face,
+                                 PolygonMode modePacked)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addEnumParam("face", GLESEnum::TriangleFace, ParamType::TGLenum, face);
+    paramBuffer.addValueParam("modePacked", ParamType::TPolygonMode, modePacked);
+
+    return CallCapture(angle::EntryPoint::GLPolygonModeNV, std::move(paramBuffer));
 }
 
 CallCapture CaptureEGLImageTargetRenderbufferStorageOES(const State &glState,

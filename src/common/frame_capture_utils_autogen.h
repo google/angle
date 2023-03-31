@@ -138,6 +138,7 @@ enum class ParamType
     TMemoryObjectIDPointer,
     TObjectType,
     TPointParameter,
+    TPolygonMode,
     TPrimitiveMode,
     TProgramPipelineID,
     TProgramPipelineIDConstPointer,
@@ -192,7 +193,7 @@ enum class ParamType
     TvoidPointerPointer,
 };
 
-constexpr uint32_t kParamTypeCount = 173;
+constexpr uint32_t kParamTypeCount = 174;
 
 union ParamValue
 {
@@ -317,6 +318,7 @@ union ParamValue
     gl::MemoryObjectID *MemoryObjectIDPointerVal;
     egl::ObjectType ObjectTypeVal;
     gl::PointParameter PointParameterVal;
+    gl::PolygonMode PolygonModeVal;
     gl::PrimitiveMode PrimitiveModeVal;
     gl::ProgramPipelineID ProgramPipelineIDVal;
     const gl::ProgramPipelineID *ProgramPipelineIDConstPointerVal;
@@ -1160,6 +1162,13 @@ inline gl::PointParameter GetParamVal<ParamType::TPointParameter, gl::PointParam
 }
 
 template <>
+inline gl::PolygonMode GetParamVal<ParamType::TPolygonMode, gl::PolygonMode>(
+    const ParamValue &value)
+{
+    return value.PolygonModeVal;
+}
+
+template <>
 inline gl::PrimitiveMode GetParamVal<ParamType::TPrimitiveMode, gl::PrimitiveMode>(
     const ParamValue &value)
 {
@@ -1766,6 +1775,8 @@ T AccessParamValue(ParamType paramType, const ParamValue &value)
             return GetParamVal<ParamType::TObjectType, T>(value);
         case ParamType::TPointParameter:
             return GetParamVal<ParamType::TPointParameter, T>(value);
+        case ParamType::TPolygonMode:
+            return GetParamVal<ParamType::TPolygonMode, T>(value);
         case ParamType::TPrimitiveMode:
             return GetParamVal<ParamType::TPrimitiveMode, T>(value);
         case ParamType::TProgramPipelineID:
@@ -2645,6 +2656,12 @@ inline void SetParamVal<ParamType::TPointParameter>(gl::PointParameter valueIn,
 }
 
 template <>
+inline void SetParamVal<ParamType::TPolygonMode>(gl::PolygonMode valueIn, ParamValue *valueOut)
+{
+    valueOut->PolygonModeVal = valueIn;
+}
+
+template <>
 inline void SetParamVal<ParamType::TPrimitiveMode>(gl::PrimitiveMode valueIn, ParamValue *valueOut)
 {
     valueOut->PrimitiveModeVal = valueIn;
@@ -3358,6 +3375,9 @@ void InitParamValue(ParamType paramType, T valueIn, ParamValue *valueOut)
             break;
         case ParamType::TPointParameter:
             SetParamVal<ParamType::TPointParameter>(valueIn, valueOut);
+            break;
+        case ParamType::TPolygonMode:
+            SetParamVal<ParamType::TPolygonMode>(valueIn, valueOut);
             break;
         case ParamType::TPrimitiveMode:
             SetParamVal<ParamType::TPrimitiveMode>(valueIn, valueOut);

@@ -454,6 +454,9 @@ void WriteParamCaptureReplay(std::ostream &os, const CallCapture &call, const Pa
             WriteParamValueReplay<ParamType::TPointParameter>(os, call,
                                                               param.value.PointParameterVal);
             break;
+        case ParamType::TPolygonMode:
+            WriteParamValueReplay<ParamType::TPolygonMode>(os, call, param.value.PolygonModeVal);
+            break;
         case ParamType::TPrimitiveMode:
             WriteParamValueReplay<ParamType::TPrimitiveMode>(os, call,
                                                              param.value.PrimitiveModeVal);
@@ -900,6 +903,8 @@ const char *ParamTypeToString(ParamType paramType)
         case ParamType::TObjectType:
             return "GLenum";
         case ParamType::TPointParameter:
+            return "GLenum";
+        case ParamType::TPolygonMode:
             return "GLenum";
         case ParamType::TPrimitiveMode:
             return "GLenum";

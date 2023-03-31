@@ -827,6 +827,11 @@
             <param><ptype>GLbitfield</ptype> <name>mask</name></param>
         </command>
         <command>
+            <proto>void <name>glPolygonModeANGLE</name></proto>
+            <param group="TriangleFace"><ptype>GLenum</ptype> <name>face</name></param>
+            <param group="PolygonMode"><ptype>GLenum</ptype> <name>mode</name></param>
+        </command>
+        <command>
             <proto>void <name>glProvokingVertexANGLE</name></proto>
             <param group="VertexProvokingMode"><ptype>GLenum</ptype> <name>provokeMode</name></param>
             <alias name="glProvokingVertex"/>
@@ -1188,6 +1193,15 @@
                 <enum name="GL_CLIP_DISTANCE7_ANGLE"/>
             </require>
         </extension>
+        <extension name="GL_ANGLE_polygon_mode" supported='gles2'>
+            <require>
+                <enum name="GL_POLYGON_MODE_ANGLE"/>
+                <enum name="GL_LINE_ANGLE"/>
+                <enum name="GL_FILL_ANGLE"/>
+                <enum name="GL_POLYGON_OFFSET_LINE_ANGLE"/>
+                <command name="glPolygonModeANGLE"/>
+            </require>
+        </extension>
         <extension name="GL_ANGLE_provoking_vertex" supported='gles2'>
             <require>
                 <enum name="GL_FIRST_VERTEX_CONVENTION_ANGLE"/>
@@ -1336,6 +1350,13 @@
     </extensions>
 
     <!-- SECTION: GL enumerant (token) definitions. -->
+    <enums namespace="GL" vendor="ANGLE">
+        <enum value="0x0B40" name="GL_POLYGON_MODE_ANGLE" group="GetPName"/>
+        <enum value="0x1B01" name="GL_LINE_ANGLE" group="PolygonMode"/>
+        <enum value="0x1B02" name="GL_FILL_ANGLE" group="PolygonMode"/>
+        <enum value="0x2A02" name="GL_POLYGON_OFFSET_LINE_ANGLE" group="GetPName,EnableCap"/>
+    </enums>
+
     <enums namespace="GL" start="0x8E4D" end="0x8E4F" vendor="ANGLE">
         <enum value="0x8E4D" name="GL_FIRST_VERTEX_CONVENTION_ANGLE" group="VertexProvokingMode"/>
         <enum value="0x8E4E" name="GL_LAST_VERTEX_CONVENTION_ANGLE" group="VertexProvokingMode"/>
