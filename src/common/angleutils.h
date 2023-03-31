@@ -569,6 +569,22 @@ class MsanScopedDisableInterceptorChecks final : angle::NonCopyable
 #    define ANGLE_FORMAT_PRINTF(fmt, args)
 #endif
 
+#if defined(__clang__) || (defined(__GNUC__) && defined(__has_attribute))
+#    define ANGLE_HAS_ATTRIBUTE_CONSTRUCTOR (__has_attribute(constructor))
+#    define ANGLE_HAS_ATTRIBUTE_DESTRUCTOR (__has_attribute(destructor))
+#else
+#    define ANGLE_HAS_ATTRIBUTE_CONSTRUCTOR 0
+#    define ANGLE_HAS_ATTRIBUTE_DESTRUCTOR 0
+#endif
+
+#if ANGLE_HAS_ATTRIBUTE_CONSTRUCTOR
+#    define ANGLE_CONSTRUCTOR __attribute__((constructor))
+#endif
+
+#if ANGLE_HAS_ATTRIBUTE_DESTRUCTOR
+#    define ANGLE_DESTRUCTOR __attribute__((destructor))
+#endif
+
 ANGLE_FORMAT_PRINTF(1, 0)
 size_t FormatStringIntoVector(const char *fmt, va_list vararg, std::vector<char> &buffer);
 

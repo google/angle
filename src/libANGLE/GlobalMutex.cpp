@@ -113,6 +113,26 @@ class GlobalMutex final : angle::NonCopyable
 
 namespace
 {
+#if defined(ANGLE_ENABLE_GLOBAL_MUTEX_LOAD_TIME_ALLOCATE)
+#    if !ANGLE_HAS_ATTRIBUTE_CONSTRUCTOR || !ANGLE_HAS_ATTRIBUTE_DESTRUCTOR
+#        error \
+            "'angle_enable_global_mutex_load_time_allocate' " \
+               "requires constructor/destructor compiler atributes."
+#    endif
+priv::GlobalMutex *g_MutexPtr = nullptr;
+
+void ANGLE_CONSTRUCTOR AllocateGlobalMutex()
+{
+    ASSERT(g_MutexPtr == nullptr);
+    g_MutexPtr = new priv::GlobalMutex();
+}
+
+void ANGLE_DESTRUCTOR DeallocateGlobalMutex()
+{
+    SafeDelete(g_MutexPtr);
+}
+
+#else
 ANGLE_REQUIRE_CONSTANT_INIT std::atomic<priv::GlobalMutex *> g_Mutex(nullptr);
 static_assert(std::is_trivially_destructible<decltype(g_Mutex)>::value,
               "global mutex is not trivially destructible");
@@ -134,9 +154,21 @@ priv::GlobalMutex *GetGlobalMutex()
     priv::GlobalMutex *mutex = g_Mutex.load(std::memory_order_acquire);
     return mutex != nullptr ? mutex : AllocateGlobalMutexImpl();
 }
+#endif
 }  // anonymous namespace
 
 // ScopedGlobalMutexLock implementation.
+#if defined(ANGLE_ENABLE_GLOBAL_MUTEX_LOAD_TIME_ALLOCATE)
+ScopedGlobalMutexLock::ScopedGlobalMutexLock()
+{
+    g_MutexPtr->lock();
+}
+
+ScopedGlobalMutexLock::~ScopedGlobalMutexLock()
+{
+    g_MutexPtr->unlock();
+}
+#else
 ScopedGlobalMutexLock::ScopedGlobalMutexLock() : mMutex(*GetGlobalMutex())
 {
     mMutex.lock();
@@ -146,13 +178,18 @@ ScopedGlobalMutexLock::~ScopedGlobalMutexLock()
 {
     mMutex.unlock();
 }
+#endif
 
 // ScopedOptionalGlobalMutexLock implementation.
 ScopedOptionalGlobalMutexLock::ScopedOptionalGlobalMutexLock(bool enabled)
 {
     if (enabled)
     {
+#if defined(ANGLE_ENABLE_GLOBAL_MUTEX_LOAD_TIME_ALLOCATE)
+        mMutex = g_MutexPtr;
+#else
         mMutex = GetGlobalMutex();
+#endif
         mMutex->lock();
     }
     else
@@ -171,6 +208,10 @@ ScopedOptionalGlobalMutexLock::~ScopedOptionalGlobalMutexLock()
 
 // Global functions.
 #if defined(ANGLE_PLATFORM_WINDOWS) && !defined(ANGLE_STATIC)
+#    if defined(ANGLE_ENABLE_GLOBAL_MUTEX_LOAD_TIME_ALLOCATE)
+#        error "'angle_enable_global_mutex_load_time_allocate' is not supported in Windows DLL."
+#    endif
+
 void AllocateGlobalMutex()
 {
     (void)AllocateGlobalMutexImpl();
