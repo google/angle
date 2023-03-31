@@ -788,8 +788,6 @@
 7853 IOS : FramebufferExtensionsTest.ColorBufferHalfFloat/ES2_OpenGL = SKIP
 
 // Some Metal tests fail on iOS Intel simulator
-7994 IOS METAL : CopyTextureTestES3.ES3FloatFormats/ES3_Metal = SKIP
-7994 IOS METAL : CopyTextureTestES3.CopySubTextureOffsetNonRenderableFloat/ES3_Metal = SKIP
 7994 IOS METAL : CubeMapTextureTest.SampleCoordinateTransformGrad/ES2_Metal = SKIP
 7994 IOS METAL : CubeMapTextureTest.SampleCoordinateTransformGrad/ES3_Metal = SKIP
 7994 IOS METAL : CubeMapTextureTest.SampleCoordinateTransformGrad_ES3/ES3_Metal = SKIP
