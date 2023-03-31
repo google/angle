@@ -1273,7 +1273,7 @@ angle::Result ContextMtl::syncState(const gl::Context *context,
                 break;
             case gl::State::DIRTY_BIT_POLYGON_OFFSET_FILL_ENABLED:
             case gl::State::DIRTY_BIT_POLYGON_OFFSET:
-                updateDepthBias(glState);
+                mDirtyBits.set(DIRTY_BIT_DEPTH_BIAS);
                 break;
             case gl::State::DIRTY_BIT_RASTERIZER_DISCARD_ENABLED:
                 mDirtyBits.set(DIRTY_BIT_RASTERIZER_DISCARD);
@@ -1401,6 +1401,13 @@ void ContextMtl::updateExtendedState(const gl::State &glState,
                 break;
             case gl::State::EXTENDED_DIRTY_BIT_DEPTH_CLAMP_ENABLED:
                 mDirtyBits.set(DIRTY_BIT_DEPTH_CLIP_MODE);
+                break;
+            case gl::State::EXTENDED_DIRTY_BIT_POLYGON_MODE:
+                mDirtyBits.set(DIRTY_BIT_FILL_MODE);
+                mDirtyBits.set(DIRTY_BIT_DEPTH_BIAS);
+                break;
+            case gl::State::EXTENDED_DIRTY_BIT_POLYGON_OFFSET_LINE_ENABLED:
+                mDirtyBits.set(DIRTY_BIT_DEPTH_BIAS);
                 break;
             default:
                 break;
@@ -2178,11 +2185,6 @@ void ContextMtl::updateFrontFace(const gl::State &glState)
     mDirtyBits.set(DIRTY_BIT_WINDING);
 }
 
-void ContextMtl::updateDepthBias(const gl::State &glState)
-{
-    mDirtyBits.set(DIRTY_BIT_DEPTH_BIAS);
-}
-
 // Index rewrite is required if:
 // Provkoing vertex mode is 'last'
 // Program has at least one 'flat' attribute
@@ -2583,6 +2585,11 @@ angle::Result ContextMtl::setupDrawImpl(const gl::Context *context,
             case DIRTY_BIT_CULL_MODE:
                 mRenderEncoder.setCullMode(mCullMode);
                 break;
+            case DIRTY_BIT_FILL_MODE:
+                mRenderEncoder.setTriangleFillMode(mState.getPolygonMode() == gl::PolygonMode::Fill
+                                                       ? MTLTriangleFillModeFill
+                                                       : MTLTriangleFillModeLines);
+                break;
             case DIRTY_BIT_WINDING:
                 mRenderEncoder.setFrontFacingWinding(mWinding);
                 break;
@@ -2638,7 +2645,7 @@ void ContextMtl::filterOutXFBOnlyDirtyBits(const gl::Context *context)
         angle::Bit<size_t>(DIRTY_BIT_DEPTH_BIAS) | angle::Bit<size_t>(DIRTY_BIT_STENCIL_REF) |
         angle::Bit<size_t>(DIRTY_BIT_BLEND_COLOR) | angle::Bit<size_t>(DIRTY_BIT_VIEWPORT) |
         angle::Bit<size_t>(DIRTY_BIT_SCISSOR) | angle::Bit<size_t>(DIRTY_BIT_CULL_MODE) |
-        angle::Bit<size_t>(DIRTY_BIT_WINDING);
+        angle::Bit<size_t>(DIRTY_BIT_FILL_MODE) | angle::Bit<size_t>(DIRTY_BIT_WINDING);
 
     mDirtyBits &= ~kUnneededBits;
 }
@@ -2843,7 +2850,7 @@ angle::Result ContextMtl::handleDirtyDepthBias(const gl::Context *context)
 {
     const gl::RasterizerState &rasterState = mState.getRasterizerState();
     ASSERT(mRenderEncoder.valid());
-    if (!mState.isPolygonOffsetFillEnabled())
+    if (!mState.isPolygonOffsetEnabled())
     {
         mRenderEncoder.setDepthBias(0, 0, 0);
     }

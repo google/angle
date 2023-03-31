@@ -929,6 +929,7 @@ void DisplayMtl::initializeExtensions() const
     mNativeExtensions.framebufferBlitANGLE          = true;
     mNativeExtensions.framebufferBlitNV             = true;
     mNativeExtensions.framebufferMultisampleANGLE   = true;
+    mNativeExtensions.polygonModeANGLE              = true;
     mNativeExtensions.polygonOffsetClampEXT         = true;
     mNativeExtensions.stencilTexturingANGLE         = true;
     mNativeExtensions.copyTextureCHROMIUM           = true;

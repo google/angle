@@ -496,7 +496,6 @@ class ContextMtl : public ContextImpl, public mtl::Context
     void updateScissor(const gl::State &glState);
     void updateCullMode(const gl::State &glState);
     void updateFrontFace(const gl::State &glState);
-    void updateDepthBias(const gl::State &glState);
     void updateDrawFrameBufferBinding(const gl::Context *context);
     void updateProgramExecutable(const gl::Context *context);
     void updateVertexArray(const gl::Context *context);
@@ -536,6 +535,7 @@ class ContextMtl : public ContextImpl, public mtl::Context
         DIRTY_BIT_SCISSOR,
         DIRTY_BIT_DRAW_FRAMEBUFFER,
         DIRTY_BIT_CULL_MODE,
+        DIRTY_BIT_FILL_MODE,
         DIRTY_BIT_WINDING,
         DIRTY_BIT_RENDER_PIPELINE,
         DIRTY_BIT_UNIFORM_BUFFERS_BINDING,
