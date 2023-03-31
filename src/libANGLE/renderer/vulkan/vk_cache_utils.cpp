@@ -1641,6 +1641,7 @@ enum class PipelineState
     Topology,
     PatchVertices,
     PrimitiveRestartEnable,
+    PolygonMode,
     CullMode,
     FrontFace,
     SurfaceRotation,
@@ -1739,6 +1740,7 @@ using PipelineStateBitSet   = angle::BitSetArray<angle::EnumSize<PipelineState>(
         (*valuesOut)[PipelineState::ViewportNegativeOneToOne] =
             shaders.bits.viewportNegativeOneToOne;
         (*valuesOut)[PipelineState::DepthClampEnable]        = shaders.bits.depthClampEnable;
+        (*valuesOut)[PipelineState::PolygonMode]             = shaders.bits.polygonMode;
         (*valuesOut)[PipelineState::CullMode]                = shaders.bits.cullMode;
         (*valuesOut)[PipelineState::FrontFace]               = shaders.bits.frontFace;
         (*valuesOut)[PipelineState::RasterizerDiscardEnable] = shaders.bits.rasterizerDiscardEnable;
@@ -1949,6 +1951,7 @@ PipelineState GetPipelineState(size_t stateIndex, bool *isRangedOut, size_t *sub
         {PipelineState::Topology, "topology"},
         {PipelineState::PatchVertices, "patch_vertices"},
         {PipelineState::PrimitiveRestartEnable, "primitive_restart"},
+        {PipelineState::PolygonMode, "polygon_mode"},
         {PipelineState::CullMode, "cull_mode"},
         {PipelineState::FrontFace, "front_face"},
         {PipelineState::SurfaceRotation, "rotated_surface"},
@@ -2083,6 +2086,23 @@ PipelineState GetPipelineState(size_t stateIndex, bool *isRangedOut, size_t *sub
                     break;
                 case VK_PRIMITIVE_TOPOLOGY_PATCH_LIST:
                     out << "patches";
+                    break;
+                default:
+                    UNREACHABLE();
+            }
+            break;
+        case PipelineState::PolygonMode:
+            out << "=";
+            switch (state)
+            {
+                case VK_POLYGON_MODE_FILL:
+                    out << "fill";
+                    break;
+                case VK_POLYGON_MODE_LINE:
+                    out << "line";
+                    break;
+                case VK_POLYGON_MODE_POINT:
+                    out << "point";
                     break;
                 default:
                     UNREACHABLE();
@@ -2371,6 +2391,7 @@ PipelineState GetPipelineState(size_t stateIndex, bool *isRangedOut, size_t *sub
          hasShaders && contextVk->getFeatures().supportsDepthClipControl.enabled},
         {PipelineState::DepthClampEnable,
          hasShaders && contextVk->getFeatures().depthClamping.enabled},
+        {PipelineState::PolygonMode, hasShaders ? VK_POLYGON_MODE_FILL : 0},
         {PipelineState::CullMode, hasShaders ? VK_CULL_MODE_NONE : 0},
         {PipelineState::FrontFace, hasShaders ? VK_FRONT_FACE_COUNTER_CLOCKWISE : 0},
         {PipelineState::RasterizerDiscardEnable, 0},
@@ -2986,6 +3007,7 @@ void GraphicsPipelineDesc::initDefaults(const ContextVk *contextVk, GraphicsPipe
             contextVk->getFeatures().supportsDepthClipControl.enabled;
         mShaders.shaders.bits.depthClampEnable =
             contextVk->getFeatures().depthClamping.enabled ? VK_TRUE : VK_FALSE;
+        SetBitField(mShaders.shaders.bits.polygonMode, VK_POLYGON_MODE_FILL);
         SetBitField(mShaders.shaders.bits.cullMode, VK_CULL_MODE_NONE);
         SetBitField(mShaders.shaders.bits.frontFace, VK_FRONT_FACE_COUNTER_CLOCKWISE);
         mShaders.shaders.bits.rasterizerDiscardEnable = 0;
@@ -2998,7 +3020,6 @@ void GraphicsPipelineDesc::initDefaults(const ContextVk *contextVk, GraphicsPipe
         mShaders.shaders.bits.nonZeroStencilWriteMaskWorkaround = 0;
         SetBitField(mShaders.shaders.bits.depthCompareOp, VK_COMPARE_OP_LESS);
         mShaders.shaders.bits.surfaceRotation  = 0;
-        mShaders.shaders.bits.padding          = 0;
         mShaders.shaders.emulatedDitherControl = 0;
         mShaders.shaders.padding               = 0;
         SetBitField(mShaders.shaders.front.fail, VK_STENCIL_OP_KEEP);
@@ -3454,7 +3475,8 @@ void GraphicsPipelineDesc::initializePipelineShadersState(
         static_cast<VkBool32>(mShaders.shaders.bits.depthClampEnable);
     stateOut->rasterState.rasterizerDiscardEnable =
         static_cast<VkBool32>(mShaders.shaders.bits.rasterizerDiscardEnable);
-    stateOut->rasterState.polygonMode = VK_POLYGON_MODE_FILL;
+    stateOut->rasterState.polygonMode =
+        static_cast<VkPolygonMode>(mShaders.shaders.bits.polygonMode);
     stateOut->rasterState.cullMode  = static_cast<VkCullModeFlags>(mShaders.shaders.bits.cullMode);
     stateOut->rasterState.frontFace = static_cast<VkFrontFace>(mShaders.shaders.bits.frontFace);
     stateOut->rasterState.depthBiasEnable =
@@ -3811,6 +3833,13 @@ void GraphicsPipelineDesc::updatePrimitiveRestartEnabled(GraphicsPipelineTransit
     mVertexInput.inputAssembly.bits.primitiveRestartEnable =
         static_cast<uint16_t>(primitiveRestartEnabled);
     transition->set(ANGLE_GET_TRANSITION_BIT(mVertexInput.inputAssembly.bits));
+}
+
+void GraphicsPipelineDesc::updatePolygonMode(GraphicsPipelineTransitionBits *transition,
+                                             gl::PolygonMode polygonMode)
+{
+    mShaders.shaders.bits.polygonMode = gl_vk::GetPolygonMode(polygonMode);
+    transition->set(ANGLE_GET_TRANSITION_BIT(mShaders.shaders.bits));
 }
 
 void GraphicsPipelineDesc::updateCullMode(GraphicsPipelineTransitionBits *transition,
@@ -4202,9 +4231,8 @@ void GraphicsPipelineDesc::updateStencilBackOps(GraphicsPipelineTransitionBits *
     transition->set(ANGLE_GET_TRANSITION_BIT(mShaders.shaders.back));
 }
 
-void GraphicsPipelineDesc::updatePolygonOffsetFillEnabled(
-    GraphicsPipelineTransitionBits *transition,
-    bool enabled)
+void GraphicsPipelineDesc::updatePolygonOffsetEnabled(GraphicsPipelineTransitionBits *transition,
+                                                      bool enabled)
 {
     mShaders.shaders.bits.depthBiasEnable = enabled;
     transition->set(ANGLE_GET_TRANSITION_BIT(mShaders.shaders.bits));

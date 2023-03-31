@@ -240,6 +240,7 @@ class State : angle::NonCopyable
     bool isPolygonOffsetPointEnabled() const { return mRasterizer.polygonOffsetPoint; }
     bool isPolygonOffsetLineEnabled() const { return mRasterizer.polygonOffsetLine; }
     bool isPolygonOffsetFillEnabled() const { return mRasterizer.polygonOffsetFill; }
+    bool isPolygonOffsetEnabled() const { return mRasterizer.isPolygonOffsetEnabled(); }
     void setPolygonOffsetPoint(bool enabled);
     void setPolygonOffsetLine(bool enabled);
     void setPolygonOffsetFill(bool enabled);

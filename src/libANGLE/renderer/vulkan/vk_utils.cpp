@@ -1356,6 +1356,22 @@ VkPrimitiveTopology GetPrimitiveTopology(gl::PrimitiveMode mode)
     }
 }
 
+VkPolygonMode GetPolygonMode(const gl::PolygonMode polygonMode)
+{
+    switch (polygonMode)
+    {
+        case gl::PolygonMode::Point:
+            return VK_POLYGON_MODE_POINT;
+        case gl::PolygonMode::Line:
+            return VK_POLYGON_MODE_LINE;
+        case gl::PolygonMode::Fill:
+            return VK_POLYGON_MODE_FILL;
+        default:
+            UNREACHABLE();
+            return VK_POLYGON_MODE_FILL;
+    }
+}
+
 VkCullModeFlagBits GetCullMode(const gl::RasterizerState &rasterState)
 {
     if (!rasterState.cullFace)

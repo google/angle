@@ -451,6 +451,7 @@ struct PackedPreRasterizationAndFragmentStates final
 
         // Affecting VkPipelineRasterizationStateCreateInfo
         uint32_t depthClampEnable : 1;
+        uint32_t polygonMode : 2;
         // Dynamic in VK_EXT_extended_dynamic_state
         uint32_t cullMode : 4;
         uint32_t frontFace : 4;
@@ -478,8 +479,6 @@ struct PackedPreRasterizationAndFragmentStates final
         uint32_t isRobustContext : 1;
         // Whether the pipeline needs access to protected content (shader stages copy)
         uint32_t isProtectedContext : 1;
-
-        uint32_t padding : 2;
     } bits;
 
     // Affecting specialization constants
@@ -738,6 +737,7 @@ class GraphicsPipelineDesc final
     void updateDepthClipControl(GraphicsPipelineTransitionBits *transition, bool negativeOneToOne);
 
     // Raster states
+    void updatePolygonMode(GraphicsPipelineTransitionBits *transition, gl::PolygonMode polygonMode);
     void updateCullMode(GraphicsPipelineTransitionBits *transition,
                         const gl::RasterizerState &rasterState);
     void updateFrontFace(GraphicsPipelineTransitionBits *transition,
@@ -840,7 +840,7 @@ class GraphicsPipelineDesc final
                               const gl::DepthStencilState &depthStencilState);
 
     // Depth offset.
-    void updatePolygonOffsetFillEnabled(GraphicsPipelineTransitionBits *transition, bool enabled);
+    void updatePolygonOffsetEnabled(GraphicsPipelineTransitionBits *transition, bool enabled);
 
     // Tessellation
     void updatePatchVertices(GraphicsPipelineTransitionBits *transition, GLuint value);

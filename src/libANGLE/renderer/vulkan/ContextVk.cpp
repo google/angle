@@ -3119,7 +3119,7 @@ angle::Result ContextVk::handleDirtyGraphicsDynamicDepthBiasEnable(
     DirtyBits::Iterator *dirtyBitsIterator,
     DirtyBits dirtyBitMask)
 {
-    mRenderPassCommandBuffer->setDepthBiasEnable(mState.isPolygonOffsetFillEnabled());
+    mRenderPassCommandBuffer->setDepthBiasEnable(mState.isPolygonOffsetEnabled());
     return angle::Result::Continue;
 }
 
@@ -5360,8 +5360,8 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 }
                 else
                 {
-                    mGraphicsPipelineDesc->updatePolygonOffsetFillEnabled(
-                        &mGraphicsPipelineTransition, glState.isPolygonOffsetFillEnabled());
+                    mGraphicsPipelineDesc->updatePolygonOffsetEnabled(
+                        &mGraphicsPipelineTransition, glState.isPolygonOffsetEnabled());
                 }
                 break;
             case gl::State::DIRTY_BIT_POLYGON_OFFSET:
@@ -5610,8 +5610,11 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 break;
             case gl::State::DIRTY_BIT_EXTENDED:
             {
-                for (size_t extendedDirtyBit : extendedDirtyBits)
+                for (auto extendedIter    = extendedDirtyBits.begin(),
+                          extendedEndIter = extendedDirtyBits.end();
+                     extendedIter != extendedEndIter; ++extendedIter)
                 {
+                    const size_t extendedDirtyBit = *extendedIter;
                     switch (extendedDirtyBit)
                     {
                         case gl::State::EXTENDED_DIRTY_BIT_CLIP_CONTROL:
@@ -5645,8 +5648,28 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                         case gl::State::EXTENDED_DIRTY_BIT_MIPMAP_GENERATION_HINT:
                             break;
                         case gl::State::EXTENDED_DIRTY_BIT_POLYGON_MODE:
+                            // TODO(https://anglebug.com/7713): Use EDS3
+                            mGraphicsPipelineDesc->updatePolygonMode(&mGraphicsPipelineTransition,
+                                                                     glState.getPolygonMode());
+                            // When polygon mode is changed, depth bias might need to be toggled.
+                            static_assert(
+                                gl::State::EXTENDED_DIRTY_BIT_POLYGON_OFFSET_LINE_ENABLED >
+                                    gl::State::EXTENDED_DIRTY_BIT_POLYGON_MODE,
+                                "Dirty bit order");
+                            extendedIter.setLaterBit(
+                                gl::State::EXTENDED_DIRTY_BIT_POLYGON_OFFSET_LINE_ENABLED);
+                            break;
                         case gl::State::EXTENDED_DIRTY_BIT_POLYGON_OFFSET_POINT_ENABLED:
                         case gl::State::EXTENDED_DIRTY_BIT_POLYGON_OFFSET_LINE_ENABLED:
+                            if (getFeatures().supportsExtendedDynamicState2.enabled)
+                            {
+                                mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_DEPTH_BIAS_ENABLE);
+                            }
+                            else
+                            {
+                                mGraphicsPipelineDesc->updatePolygonOffsetEnabled(
+                                    &mGraphicsPipelineTransition, glState.isPolygonOffsetEnabled());
+                            }
                             break;
                         case gl::State::EXTENDED_DIRTY_BIT_SHADER_DERIVATIVE_HINT:
                             break;
