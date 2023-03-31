@@ -3736,7 +3736,7 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
         ExtensionFound(VK_KHR_MAINTENANCE1_EXTENSION_NAME, deviceExtensionNames);
 
     ANGLE_FEATURE_CONDITION(&mFeatures, appendAliasedMemoryDecorationsToSsbo,
-                            isARM && (isVenus || armDriverVersion >= ARMDriverVersion(38, 1, 0)));
+                            isARM && armDriverVersion >= ARMDriverVersion(38, 1, 0));
 
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsSharedPresentableImageExtension,
