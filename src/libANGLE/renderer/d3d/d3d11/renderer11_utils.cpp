@@ -1649,6 +1649,7 @@ void GenerateCaps(ID3D11Device *device,
     extensions->shaderTextureLodEXT         = GetShaderTextureLODSupport(featureLevel);
     extensions->fragDepthEXT                = true;
     extensions->conservativeDepthEXT        = (featureLevel >= D3D_FEATURE_LEVEL_11_0);
+    extensions->polygonModeANGLE            = true;
     extensions->polygonOffsetClampEXT       = (featureLevel >= D3D_FEATURE_LEVEL_10_0);
     extensions->depthClampEXT               = true;
     extensions->stencilTexturingANGLE       = (featureLevel >= D3D_FEATURE_LEVEL_10_1);

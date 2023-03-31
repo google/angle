@@ -710,6 +710,9 @@ StateManager11::StateManager11(Renderer11 *renderer)
     mCurRasterState.cullFace            = false;
     mCurRasterState.cullMode            = gl::CullFaceMode::Back;
     mCurRasterState.frontFace           = GL_CCW;
+    mCurRasterState.polygonMode         = gl::PolygonMode::Fill;
+    mCurRasterState.polygonOffsetPoint  = false;
+    mCurRasterState.polygonOffsetLine   = false;
     mCurRasterState.polygonOffsetFill   = false;
     mCurRasterState.polygonOffsetFactor = 0.0f;
     mCurRasterState.polygonOffsetUnits  = 0.0f;
@@ -1211,6 +1214,20 @@ void StateManager11::syncState(const gl::Context *context,
                             break;
                         case gl::State::EXTENDED_DIRTY_BIT_DEPTH_CLAMP_ENABLED:
                             if (state.getRasterizerState().depthClamp != mCurRasterState.depthClamp)
+                            {
+                                mInternalDirtyBits.set(DIRTY_BIT_RASTERIZER_STATE);
+                            }
+                            break;
+                        case gl::State::EXTENDED_DIRTY_BIT_POLYGON_MODE:
+                            if (state.getRasterizerState().polygonMode !=
+                                mCurRasterState.polygonMode)
+                            {
+                                mInternalDirtyBits.set(DIRTY_BIT_RASTERIZER_STATE);
+                            }
+                            break;
+                        case gl::State::EXTENDED_DIRTY_BIT_POLYGON_OFFSET_LINE_ENABLED:
+                            if (state.getRasterizerState().polygonOffsetLine !=
+                                mCurRasterState.polygonOffsetLine)
                             {
                                 mInternalDirtyBits.set(DIRTY_BIT_RASTERIZER_STATE);
                             }
