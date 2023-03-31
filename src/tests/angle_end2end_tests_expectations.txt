@@ -249,6 +249,7 @@
 3496 MAC INTEL OPENGL : BlitFramebufferTest.ScissoredMultisampleStencil/* = SKIP
 3496 MAC AMD OPENGL : BlitFramebufferTest.ScissoredMultisampleStencil/* = SKIP
 7191 MAC NVIDIA OPENGL : BlitFramebufferTest.ScissoredMultisampleStencil/ES3_OpenGL = SKIP
+273808966 MAC AMD OPENGL : BlitFramebufferTest.scissorDrawBlitAndDrawAgain/* = SKIP
 
 // Mac Metal
 
