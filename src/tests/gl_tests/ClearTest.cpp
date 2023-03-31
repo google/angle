@@ -3357,7 +3357,7 @@ void main()
 TEST_P(ClearTestES3, RepeatedDepthClearWithBlitAfterClearAndDrawInBetween)
 {
     glClearDepthf(0.25f);
-    glClear(GL_DEPTH_BUFFER_BIT);
+    glClear(GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
     // Make sure clear is flushed.
     GLRenderbuffer depth;
@@ -3407,7 +3407,7 @@ TEST_P(ClearTestES3, RepeatedDepthClearWithBlitAfterClearAndDrawInBetween)
 TEST_P(ClearTestES3, RepeatedStencilClearWithBlitAfterClearAndDrawInBetween)
 {
     glClearStencil(0xE4);
-    glClear(GL_STENCIL_BUFFER_BIT);
+    glClear(GL_STENCIL_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Make sure clear is flushed.
     GLRenderbuffer stencil;
