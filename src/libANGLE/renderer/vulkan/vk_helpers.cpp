@@ -5241,6 +5241,35 @@ void BufferHelper::fillWithColor(const angle::Color<uint8_t> &color,
     }
 }
 
+// Used for ImageHelper non-zero memory allocation when useVmaForImageSuballocation is disabled.
+angle::Result InitMappableDeviceMemory(Context *context,
+                                       DeviceMemory *deviceMemory,
+                                       VkDeviceSize size,
+                                       int value,
+                                       VkMemoryPropertyFlags memoryPropertyFlags)
+{
+    ASSERT(!context->getFeatures().useVmaForImageSuballocation.enabled);
+    VkDevice device = context->getDevice();
+
+    uint8_t *mapPointer;
+    ANGLE_VK_TRY(context, deviceMemory->map(device, 0, VK_WHOLE_SIZE, 0, &mapPointer));
+    memset(mapPointer, value, static_cast<size_t>(size));
+
+    // if the memory type is not host coherent, we perform an explicit flush.
+    if ((memoryPropertyFlags & VK_MEMORY_PROPERTY_HOST_COHERENT_BIT) == 0)
+    {
+        VkMappedMemoryRange mappedRange = {};
+        mappedRange.sType               = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
+        mappedRange.memory              = deviceMemory->getHandle();
+        mappedRange.size                = VK_WHOLE_SIZE;
+        ANGLE_VK_TRY(context, vkFlushMappedMemoryRanges(device, 1, &mappedRange));
+    }
+
+    deviceMemory->unmap(device);
+
+    return angle::Result::Continue;
+}
+
 // ImageHelper implementation.
 ImageHelper::ImageHelper()
 {
@@ -5736,8 +5765,32 @@ void ImageHelper::resetImageWeakReference()
 
 angle::Result ImageHelper::initializeNonZeroMemory(Context *context,
                                                    bool hasProtectedContent,
+                                                   VkMemoryPropertyFlags flags,
                                                    VkDeviceSize size)
 {
+    // If available, memory mapping should be used.
+    RendererVk *renderer = context->getRenderer();
+    if ((flags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT) != 0)
+    {
+        // Wipe memory to an invalid value when the 'allocateNonZeroMemory' feature is enabled. The
+        // invalid values ensures our testing doesn't assume zero-initialized memory.
+        constexpr int kNonZeroInitValue = 0x3F;
+        if (renderer->getFeatures().useVmaForImageSuballocation.enabled)
+        {
+            ANGLE_VK_TRY(context,
+                         renderer->getImageMemorySuballocator().mapMemoryAndInitWithNonZeroValue(
+                             renderer, &mVmaAllocation, size, kNonZeroInitValue, flags));
+        }
+        else
+        {
+            ANGLE_TRY(vk::InitMappableDeviceMemory(context, &mDeviceMemory, size, kNonZeroInitValue,
+                                                   flags));
+        }
+
+        return angle::Result::Continue;
+    }
+
+    // If mapping the memory is unavailable, a staging resource is used.
     const angle::Format &angleFormat = getActualFormat();
     bool isCompressedFormat          = angleFormat.isBlock;
 
@@ -5748,8 +5801,6 @@ angle::Result ImageHelper::initializeNonZeroMemory(Context *context,
         // conversion for VK_IMAGE_ASPECT_COLOR_BIT image views
         return angle::Result::Continue;
     }
-
-    RendererVk *renderer = context->getRenderer();
 
     PrimaryCommandBuffer commandBuffer;
     auto protectionType = ConvertProtectionBoolToType(hasProtectedContent);
@@ -5870,11 +5921,8 @@ angle::Result ImageHelper::initMemory(Context *context,
     if (renderer->getFeatures().useVmaForImageSuballocation.enabled)
     {
         ANGLE_VK_TRY(context, renderer->getImageMemorySuballocator().allocateAndBindMemory(
-                                  renderer, &mImage, flags, flags, &mVmaAllocation,
-                                  &mMemoryTypeIndex, &mAllocationSize));
-
-        renderer->onMemoryAlloc(mMemoryAllocationType, mAllocationSize, mMemoryTypeIndex,
-                                mVmaAllocation.getHandle());
+                                  renderer, &mImage, flags, flags, mMemoryAllocationType,
+                                  &mVmaAllocation, &flags, &mMemoryTypeIndex, &mAllocationSize));
     }
     else
     {
@@ -5886,11 +5934,7 @@ angle::Result ImageHelper::initMemory(Context *context,
 
     if (renderer->getFeatures().allocateNonZeroMemory.enabled)
     {
-        // Can't map the memory. Use a staging resource.
-        if ((flags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT) == 0)
-        {
-            ANGLE_TRY(initializeNonZeroMemory(context, hasProtectedContent, mAllocationSize));
-        }
+        ANGLE_TRY(initializeNonZeroMemory(context, hasProtectedContent, flags, mAllocationSize));
     }
 
     return angle::Result::Continue;
