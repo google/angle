@@ -89,6 +89,7 @@ enum class Feature
     DontInitializeUninitializedLocals,
     DontRelinkProgramsInParallel,
     DontUseLoopsToInitializeVariables,
+    DoubleDepthBiasConstantFactor,
     DoWhileGLSLCausesGPUHang,
     DumpShaderSource,
     EglColorspaceAttributePassthrough,

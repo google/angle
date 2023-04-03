@@ -2946,9 +2946,15 @@ angle::Result ContextVk::handleDirtyGraphicsDynamicDepthBias(DirtyBits::Iterator
                                                              DirtyBits dirtyBitMask)
 {
     const gl::RasterizerState &rasterState = mState.getRasterizerState();
+
+    float depthBiasConstantFactor = rasterState.polygonOffsetUnits;
+    if (getFeatures().doubleDepthBiasConstantFactor.enabled)
+    {
+        depthBiasConstantFactor *= 2.0f;
+    }
+
     // Note: depth bias clamp is only exposed in EXT_polygon_offset_clamp.
-    mRenderPassCommandBuffer->setDepthBias(rasterState.polygonOffsetUnits,
-                                           rasterState.polygonOffsetClamp,
+    mRenderPassCommandBuffer->setDepthBias(depthBiasConstantFactor, rasterState.polygonOffsetClamp,
                                            rasterState.polygonOffsetFactor);
     return angle::Result::Continue;
 }
