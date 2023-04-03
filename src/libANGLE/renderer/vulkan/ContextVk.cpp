@@ -2648,8 +2648,9 @@ void ContextVk::handleDirtyShaderBufferResourcesImpl(CommandBufferT *commandBuff
     // Process buffer barriers.
     for (const gl::ShaderType shaderType : executable->getLinkedShaderStages())
     {
-        const std::vector<gl::InterfaceBlock> &ubos = executable->getUniformBlocks();
+        const vk::PipelineStage pipelineStage = vk::GetPipelineStage(shaderType);
 
+        const std::vector<gl::InterfaceBlock> &ubos = executable->getUniformBlocks();
         for (const gl::InterfaceBlock &ubo : ubos)
         {
             const gl::OffsetBindingPointer<gl::Buffer> &bufferBinding =
@@ -2668,8 +2669,8 @@ void ContextVk::handleDirtyShaderBufferResourcesImpl(CommandBufferT *commandBuff
             BufferVk *bufferVk             = vk::GetImpl(bufferBinding.get());
             vk::BufferHelper &bufferHelper = bufferVk->getBuffer();
 
-            commandBufferHelper->bufferRead(this, VK_ACCESS_UNIFORM_READ_BIT,
-                                            vk::GetPipelineStage(shaderType), &bufferHelper);
+            commandBufferHelper->bufferRead(this, VK_ACCESS_UNIFORM_READ_BIT, pipelineStage,
+                                            &bufferHelper);
         }
 
         const std::vector<gl::InterfaceBlock> &ssbos = executable->getShaderStorageBlocks();
@@ -2691,10 +2692,21 @@ void ContextVk::handleDirtyShaderBufferResourcesImpl(CommandBufferT *commandBuff
             BufferVk *bufferVk             = vk::GetImpl(bufferBinding.get());
             vk::BufferHelper &bufferHelper = bufferVk->getBuffer();
 
-            // We set the SHADER_READ_BIT to be conservative.
-            VkAccessFlags accessFlags = VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT;
-            commandBufferHelper->bufferWrite(this, accessFlags, vk::GetPipelineStage(shaderType),
-                                             &bufferHelper);
+            if (ssbo.isReadOnly)
+            {
+                // Avoid unnecessary barriers for readonly SSBOs by making sure the buffers are
+                // marked read-only.  This also helps BufferVk make better decisions during buffer
+                // data uploads and copies by knowing that the buffers are not actually being
+                // written to.
+                commandBufferHelper->bufferRead(this, VK_ACCESS_SHADER_READ_BIT, pipelineStage,
+                                                &bufferHelper);
+            }
+            else
+            {
+                // We set the SHADER_READ_BIT to be conservative.
+                VkAccessFlags accessFlags = VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT;
+                commandBufferHelper->bufferWrite(this, accessFlags, pipelineStage, &bufferHelper);
+            }
         }
 
         const std::vector<gl::AtomicCounterBuffer> &acbs = executable->getAtomicCounterBuffers();
@@ -2715,7 +2727,7 @@ void ContextVk::handleDirtyShaderBufferResourcesImpl(CommandBufferT *commandBuff
             // We set SHADER_READ_BIT to be conservative.
             commandBufferHelper->bufferWrite(this,
                                              VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT,
-                                             vk::GetPipelineStage(shaderType), &bufferHelper);
+                                             pipelineStage, &bufferHelper);
         }
     }
 }
