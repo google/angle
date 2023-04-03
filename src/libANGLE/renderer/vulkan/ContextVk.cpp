@@ -2297,12 +2297,12 @@ angle::Result ContextVk::handleDirtyGraphicsRenderPass(DirtyBits::Iterator *dirt
     // clear are handled differently.
     bool reactivateStartedRenderPass =
         hasStartedRenderPassWithQueueSerial(drawFramebufferVk->getLastRenderPassQueueSerial()) &&
-        mAllowRenderPassToReactivate && renderArea == mRenderPassCommands->getRenderArea();
+        mAllowRenderPassToReactivate && !drawFramebufferVk->hasDeferredClears() &&
+        renderArea == mRenderPassCommands->getRenderArea();
     if (reactivateStartedRenderPass)
     {
         INFO() << "Reactivate already started render pass on draw.";
         mRenderPassCommandBuffer = &mRenderPassCommands->getCommandBuffer();
-        ASSERT(!drawFramebufferVk->hasDeferredClears());
         ASSERT(hasActiveRenderPass());
         ASSERT(drawFramebufferVk->getRenderPassDesc() == mRenderPassCommands->getRenderPassDesc());
 
@@ -7724,11 +7724,13 @@ angle::Result ContextVk::endRenderPassQuery(QueryVk *queryVk)
 
 void ContextVk::pauseRenderPassQueriesIfActive()
 {
+    ASSERT(hasActiveRenderPass());
     for (QueryVk *activeQuery : mActiveRenderPassQueries)
     {
         if (activeQuery)
         {
             activeQuery->onRenderPassEnd(this);
+
             // No need to update rasterizer discard emulation with primitives generated query.  The
             // state will be updated when the next render pass starts.
         }
@@ -7737,6 +7739,7 @@ void ContextVk::pauseRenderPassQueriesIfActive()
 
 angle::Result ContextVk::resumeRenderPassQueriesIfActive()
 {
+    ASSERT(hasActiveRenderPass());
     // Note: these queries should be processed in order.  See comment in QueryVk::onRenderPassStart.
     for (QueryVk *activeQuery : mActiveRenderPassQueries)
     {
@@ -7763,6 +7766,7 @@ angle::Result ContextVk::resumeRenderPassQueriesIfActive()
 
 angle::Result ContextVk::resumeXfbRenderPassQueriesIfActive()
 {
+    ASSERT(hasActiveRenderPass());
     // All other queries are handled separately.
     QueryVk *xfbQuery = mActiveRenderPassQueries[gl::QueryType::TransformFeedbackPrimitivesWritten];
     if (xfbQuery && mState.isTransformFeedbackActiveUnpaused())

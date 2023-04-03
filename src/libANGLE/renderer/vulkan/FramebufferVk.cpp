@@ -523,19 +523,18 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
     bool clearDepthWithDraw   = clearDepth && scissoredClear;
     bool clearStencilWithDraw = clearStencil && (maskedClearStencil || scissoredClear);
 
-    const bool isMidRenderPassClear =
-        contextVk->hasStartedRenderPassWithQueueSerial(mLastRenderPassQueueSerial) &&
-        !contextVk->getStartedRenderPassCommands().getCommandBuffer().empty();
+    const bool isMidRenderPassClear = contextVk->hasActiveRenderPassWithCommands();
     if (isMidRenderPassClear)
     {
+        // If a render pass is open with commands, it must be for this framebuffer.  Otherwise,
+        // either FramebufferVk::syncState() or ContextVk::syncState() would have closed it.
+        ASSERT(contextVk->hasStartedRenderPassWithQueueSerial(mLastRenderPassQueueSerial));
         // Emit debug-util markers for this mid-render-pass clear
         ANGLE_TRY(
             contextVk->handleGraphicsEventLog(rx::GraphicsEventCmdBuf::InRenderPassCmdBufQueryCmd));
     }
     else
     {
-        ASSERT(!contextVk->hasActiveRenderPass() ||
-               contextVk->hasStartedRenderPassWithQueueSerial(mLastRenderPassQueueSerial));
         // Emit debug-util markers for this outside-render-pass clear
         ANGLE_TRY(
             contextVk->handleGraphicsEventLog(rx::GraphicsEventCmdBuf::InOutsideCmdBufQueryCmd));
