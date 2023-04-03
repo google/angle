@@ -1552,9 +1552,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     // avoiding render pass breaks when a framebuffer fetch program is used mid render pass.
     bool mIsInFramebufferFetchMode;
 
-    // True if current started render pass is allowed to reactivate.
-    bool mAllowRenderPassToReactivate;
-
     // The size of copy commands issued between buffers and images. Used to submit the command
     // buffer for the outside render pass.
     VkDeviceSize mTotalBufferToImageCopySize;
