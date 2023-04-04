@@ -1262,8 +1262,7 @@ angle::Result CommandQueue::flushOutsideRPCommands(
     std::lock_guard<std::mutex> lock(mMutex);
     ANGLE_TRY(ensurePrimaryCommandBufferValid(context, protectionType, priority));
     CommandsState &state = mCommandsStateMap[priority][protectionType];
-    return (*outsideRPCommands)
-        ->flushToPrimary(context, &state.primaryCommands, &state.secondaryCommands);
+    return (*outsideRPCommands)->flushToPrimary(context, &state);
 }
 
 angle::Result CommandQueue::flushRenderPassCommands(
@@ -1276,8 +1275,7 @@ angle::Result CommandQueue::flushRenderPassCommands(
     std::lock_guard<std::mutex> lock(mMutex);
     ANGLE_TRY(ensurePrimaryCommandBufferValid(context, protectionType, priority));
     CommandsState &state = mCommandsStateMap[priority][protectionType];
-    return (*renderPassCommands)
-        ->flushToPrimary(context, &state.primaryCommands, &renderPass, &state.secondaryCommands);
+    return (*renderPassCommands)->flushToPrimary(context, &state, &renderPass);
 }
 
 angle::Result CommandQueue::submitCommands(Context *context,

@@ -1875,8 +1875,8 @@ angle::Result WindowSurfaceVk::prePresentSubmit(ContextVk *contextVk,
     contextVk->finalizeImageLayout(image.image.get(), {});
     contextVk->finalizeImageLayout(&mColorImageMS, {});
 
-    vk::OutsideRenderPassCommandBuffer *commandBuffer;
-    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer({}, &commandBuffer));
+    vk::OutsideRenderPassCommandBufferHelper *commandBufferHelper;
+    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBufferHelper({}, &commandBufferHelper));
 
     if (mColorImageMS.valid() && !imageResolved)
     {
@@ -1886,7 +1886,7 @@ angle::Result WindowSurfaceVk::prePresentSubmit(ContextVk *contextVk,
         access.onImageTransferWrite(gl::LevelIndex(0), 1, 0, 1, VK_IMAGE_ASPECT_COLOR_BIT,
                                     image.image.get());
 
-        ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(access, &commandBuffer));
+        ANGLE_TRY(contextVk->getOutsideRenderPassCommandBufferHelper(access, &commandBufferHelper));
 
         VkImageResolve resolveRegion                = {};
         resolveRegion.srcSubresource.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
@@ -1898,7 +1898,8 @@ angle::Result WindowSurfaceVk::prePresentSubmit(ContextVk *contextVk,
         resolveRegion.dstOffset                     = {};
         resolveRegion.extent                        = image.image->getRotatedExtents();
 
-        mColorImageMS.resolve(image.image.get(), resolveRegion, commandBuffer);
+        mColorImageMS.resolve(image.image.get(), resolveRegion,
+                              &commandBufferHelper->getCommandBuffer());
         contextVk->getPerfCounters().swapchainResolveOutsideSubpass++;
     }
 
@@ -1906,7 +1907,7 @@ angle::Result WindowSurfaceVk::prePresentSubmit(ContextVk *contextVk,
     {
         // This does nothing if it's already in the requested layout
         image.image->recordReadBarrier(contextVk, VK_IMAGE_ASPECT_COLOR_BIT,
-                                       vk::ImageLayout::Present, commandBuffer);
+                                       vk::ImageLayout::Present, commandBufferHelper);
     }
 
     // The overlay is drawn after this.  This ensures that drawing the overlay does not interfere

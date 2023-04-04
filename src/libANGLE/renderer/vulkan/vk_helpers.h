@@ -1063,6 +1063,34 @@ class PackedRenderPassAttachmentArray final
     gl::AttachmentArray<RenderPassAttachment> mAttachments;
 };
 
+class SecondaryCommandBufferCollector final
+{
+  public:
+    SecondaryCommandBufferCollector()                                              = default;
+    SecondaryCommandBufferCollector(const SecondaryCommandBufferCollector &)       = delete;
+    SecondaryCommandBufferCollector(SecondaryCommandBufferCollector &&)            = default;
+    void operator=(const SecondaryCommandBufferCollector &)                        = delete;
+    SecondaryCommandBufferCollector &operator=(SecondaryCommandBufferCollector &&) = default;
+    ~SecondaryCommandBufferCollector() { ASSERT(empty()); }
+
+    void collectCommandBuffer(priv::SecondaryCommandBuffer &&commandBuffer);
+    void collectCommandBuffer(VulkanSecondaryCommandBuffer &&commandBuffer);
+    void retireCommandBuffers();
+
+    bool empty() const { return mCollectedCommandBuffers.empty(); }
+
+  private:
+    std::vector<VulkanSecondaryCommandBuffer> mCollectedCommandBuffers;
+};
+
+struct CommandsState
+{
+    std::vector<VkSemaphore> waitSemaphores;
+    std::vector<VkPipelineStageFlags> waitSemaphoreStageMasks;
+    PrimaryCommandBuffer primaryCommands;
+    SecondaryCommandBufferCollector secondaryCommands;
+};
+
 // How the ImageHelper object is being used by the renderpass
 enum class RenderPassUsage
 {
@@ -1110,7 +1138,7 @@ class CommandBufferHelperCommon : angle::NonCopyable
         return buffer.writtenByCommandBuffer(mQueueSerial);
     }
 
-    void executeBarriers(const angle::FeaturesVk &features, PrimaryCommandBuffer *primary);
+    void executeBarriers(const angle::FeaturesVk &features, CommandsState *commandsState);
 
     // The markOpen and markClosed functions are to aid in proper use of the *CommandBufferHelper.
     // saw invalid use due to threading issues that can be easily caught by marking when it's safe
@@ -1255,9 +1283,7 @@ class OutsideRenderPassCommandBufferHelper final : public CommandBufferHelperCom
                     ImageLayout imageLayout,
                     ImageHelper *image);
 
-    angle::Result flushToPrimary(Context *context,
-                                 PrimaryCommandBuffer *primary,
-                                 SecondaryCommandBufferCollector *commandBufferCollector);
+    angle::Result flushToPrimary(Context *context, CommandsState *commandsState);
 
     void setGLMemoryBarrierIssued()
     {
@@ -1393,9 +1419,8 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
     bool startedAndUsesImageWithBarrier(const ImageHelper &image) const;
 
     angle::Result flushToPrimary(Context *context,
-                                 PrimaryCommandBuffer *primary,
-                                 const RenderPass *renderPass,
-                                 SecondaryCommandBufferCollector *commandBufferCollector);
+                                 CommandsState *commandsState,
+                                 const RenderPass *renderPass);
 
     bool started() const { return mRenderPassStarted; }
 
@@ -1613,26 +1638,6 @@ class CommandBufferRecycler
   private:
     std::mutex mMutex;
     std::vector<CommandBufferHelperT *> mCommandBufferHelperFreeList;
-};
-
-class SecondaryCommandBufferCollector final
-{
-  public:
-    SecondaryCommandBufferCollector()                                              = default;
-    SecondaryCommandBufferCollector(const SecondaryCommandBufferCollector &)       = delete;
-    SecondaryCommandBufferCollector(SecondaryCommandBufferCollector &&)            = default;
-    void operator=(const SecondaryCommandBufferCollector &)                        = delete;
-    SecondaryCommandBufferCollector &operator=(SecondaryCommandBufferCollector &&) = default;
-    ~SecondaryCommandBufferCollector() { ASSERT(empty()); }
-
-    void collectCommandBuffer(priv::SecondaryCommandBuffer &&commandBuffer);
-    void collectCommandBuffer(VulkanSecondaryCommandBuffer &&commandBuffer);
-    void retireCommandBuffers();
-
-    bool empty() const { return mCollectedCommandBuffers.empty(); }
-
-  private:
-    std::vector<VulkanSecondaryCommandBuffer> mCollectedCommandBuffers;
 };
 
 // Imagine an image going through a few layout transitions:
@@ -2202,10 +2207,7 @@ class ImageHelper final : public Resource, public angle::Subject
     void recordWriteBarrier(Context *context,
                             VkImageAspectFlags aspectMask,
                             ImageLayout newLayout,
-                            OutsideRenderPassCommandBuffer *commandBuffer)
-    {
-        barrierImpl(context, aspectMask, newLayout, mCurrentQueueFamilyIndex, commandBuffer);
-    }
+                            OutsideRenderPassCommandBufferHelper *commands);
 
     void recordWriteBarrierOneOff(Context *context,
                                   ImageLayout newLayout,
@@ -2220,15 +2222,7 @@ class ImageHelper final : public Resource, public angle::Subject
     void recordReadBarrier(Context *context,
                            VkImageAspectFlags aspectMask,
                            ImageLayout newLayout,
-                           OutsideRenderPassCommandBuffer *commandBuffer)
-    {
-        if (!isReadBarrierNecessary(newLayout))
-        {
-            return;
-        }
-
-        barrierImpl(context, aspectMask, newLayout, mCurrentQueueFamilyIndex, commandBuffer);
-    }
+                           OutsideRenderPassCommandBufferHelper *commands);
 
     bool isQueueChangeNeccesary(uint32_t newQueueFamilyIndex) const
     {
