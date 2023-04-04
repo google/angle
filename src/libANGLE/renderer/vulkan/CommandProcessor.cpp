@@ -1330,7 +1330,8 @@ angle::Result CommandQueue::submitCommands(Context *context,
         InitializeSubmitInfo(&submitInfo, batch.primaryCommands, waitSemaphores,
                              waitSemaphoreStageMasks, signalSemaphore);
 
-        if (protectionType == ProtectionType::Protected)
+        // No need protected submission if no commands to submit.
+        if (protectionType == ProtectionType::Protected && batch.primaryCommands.valid())
         {
             protectedSubmitInfo.sType           = VK_STRUCTURE_TYPE_PROTECTED_SUBMIT_INFO;
             protectedSubmitInfo.pNext           = nullptr;
