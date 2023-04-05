@@ -290,7 +290,7 @@ class RendererVk : angle::NonCopyable
                                     vk::PrimaryCommandBuffer &&primary,
                                     vk::ProtectionType protectionType,
                                     egl::ContextPriority priority,
-                                    const vk::Semaphore *waitSemaphore,
+                                    VkSemaphore waitSemaphore,
                                     VkPipelineStageFlags waitSemaphoreStageMasks,
                                     const vk::Fence *fence,
                                     vk::SubmitPolicy submitPolicy,

@@ -358,7 +358,6 @@ class WindowSurfaceVk : public SurfaceVk
     // This method is called when a swapchain image is presented.  It schedules
     // acquireNextSwapchainImage() to be called later.
     void deferAcquireNextImage();
-    void flushAcquireImageSemaphore(const gl::Context *context);
 
     angle::Result computePresentOutOfDate(vk::Context *context,
                                           VkResult result,
@@ -446,10 +445,6 @@ class WindowSurfaceVk : public SurfaceVk
     // Before this wait, there were three acquire semaphores in use corresponding to frames i, i+1
     // and i+2.  Frame i+3 can reuse the semaphore of frame i.
     angle::CircularBuffer<vk::Semaphore, impl::kSwapHistorySize + 1> mAcquireImageSemaphores;
-    // A pointer to mAcquireImageSemaphores.  This is set when an image is acquired and is waited on
-    // by the next submission (which uses this image), at which point it is reset so future
-    // submissions don't wait on it until the next acquire.
-    const vk::Semaphore *mAcquireImageSemaphore;
 
     // There is no direct signal from Vulkan regarding when a Present semaphore can be be reused.
     // During window resizing when swapchains are recreated every frame, the number of in-flight

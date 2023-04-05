@@ -1162,6 +1162,13 @@ class CommandBufferHelperCommon : angle::NonCopyable
 
     const QueueSerial &getQueueSerial() const { return mQueueSerial; }
 
+    void setAcquireNextImageSemaphore(VkSemaphore semaphore)
+    {
+        ASSERT(semaphore != VK_NULL_HANDLE);
+        ASSERT(!mAcquireNextImageSemaphore.valid());
+        mAcquireNextImageSemaphore.setHandle(semaphore);
+    }
+
     // Dumping the command stream is disabled by default.
     static constexpr bool kEnableCommandStreamDiagnostics = false;
 
@@ -1229,6 +1236,9 @@ class CommandBufferHelperCommon : angle::NonCopyable
 
     // Tracks resources used in the command buffer.
     QueueSerial mQueueSerial;
+
+    // Only used for swapChain images
+    Semaphore mAcquireNextImageSemaphore;
 };
 
 class SecondaryCommandBufferCollector;
@@ -2211,9 +2221,11 @@ class ImageHelper final : public Resource, public angle::Subject
 
     void recordWriteBarrierOneOff(Context *context,
                                   ImageLayout newLayout,
-                                  PrimaryCommandBuffer *commandBuffer)
+                                  PrimaryCommandBuffer *commandBuffer,
+                                  VkSemaphore *acquireNextImageSemaphoreOut)
     {
-        barrierImpl(context, getAspectFlags(), newLayout, mCurrentQueueFamilyIndex, commandBuffer);
+        barrierImpl(context, getAspectFlags(), newLayout, mCurrentQueueFamilyIndex, commandBuffer,
+                    acquireNextImageSemaphoreOut);
     }
 
     // This function can be used to prevent issuing redundant layout transition commands.
@@ -2240,7 +2252,8 @@ class ImageHelper final : public Resource, public angle::Subject
                                 VkImageAspectFlags aspectMask,
                                 ImageLayout newLayout,
                                 const QueueSerial &queueSerial,
-                                PipelineBarrier *barrier);
+                                PipelineBarrier *barrier,
+                                VkSemaphore *semaphoreOut);
 
     // Performs an ownership transfer from an external instance or API.
     void acquireFromExternal(ContextVk *contextVk,
@@ -2400,6 +2413,15 @@ class ImageHelper final : public Resource, public angle::Subject
                                                    gl::LevelIndex levelEnd,
                                                    angle::FormatID formatID) const;
 
+    void setAcquireNextImageSemaphore(VkSemaphore semaphore)
+    {
+        ASSERT(semaphore != VK_NULL_HANDLE);
+        ASSERT(!mAcquireNextImageSemaphore.valid());
+        mAcquireNextImageSemaphore.setHandle(semaphore);
+    }
+    const Semaphore &getAcquireNextImageSemaphore() const { return mAcquireNextImageSemaphore; }
+    void resetAcquireNextImageSemaphore() { mAcquireNextImageSemaphore.release(); }
+
   private:
     ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
     struct ClearUpdate
@@ -2513,7 +2535,8 @@ class ImageHelper final : public Resource, public angle::Subject
                      VkImageAspectFlags aspectMask,
                      ImageLayout newLayout,
                      uint32_t newQueueFamilyIndex,
-                     CommandBufferT *commandBuffer);
+                     CommandBufferT *commandBuffer,
+                     VkSemaphore *acquireNextImageSemaphoreOut);
 
     // If the image has emulated channels, we clear them once so as not to leave garbage on those
     // channels.
@@ -2728,6 +2751,10 @@ class ImageHelper final : public Resource, public angle::Subject
     MemoryAllocationType mMemoryAllocationType;
     // Memory type index used for the allocation. It can be used to determine the heap index.
     uint32_t mMemoryTypeIndex;
+
+    // Only used for swapChain images. This is set when an image is acquired and is waited on
+    // by the next submission (which uses this image), at which point it is released.
+    Semaphore mAcquireNextImageSemaphore;
 };
 
 ANGLE_INLINE bool RenderPassCommandBufferHelper::usesImage(const ImageHelper &image) const

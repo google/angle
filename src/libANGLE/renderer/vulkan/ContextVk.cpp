@@ -3600,7 +3600,7 @@ angle::Result ContextVk::synchronizeCpuGpuTime()
         // vkEvent's are externally synchronized, therefore need work to be submitted before calling
         // vkGetEventStatus
         ANGLE_TRY(mRenderer->queueSubmitOneOff(this, std::move(commandBuffer), getProtectionType(),
-                                               mContextPriority, nullptr, 0, nullptr,
+                                               mContextPriority, VK_NULL_HANDLE, 0, nullptr,
                                                vk::SubmitPolicy::EnsureSubmitted, &submitSerial));
 
         // Track it with the submitSerial.
@@ -7177,7 +7177,7 @@ angle::Result ContextVk::getTimestamp(uint64_t *timestampOut)
 
     QueueSerial submitQueueSerial;
     ANGLE_TRY(mRenderer->queueSubmitOneOff(this, std::move(commandBuffer), getProtectionType(),
-                                           mContextPriority, nullptr, 0, nullptr,
+                                           mContextPriority, VK_NULL_HANDLE, 0, nullptr,
                                            vk::SubmitPolicy::AllowDeferred, &submitQueueSerial));
     // Track it with the submitSerial.
     timestampQuery.setQueueSerial(submitQueueSerial);
