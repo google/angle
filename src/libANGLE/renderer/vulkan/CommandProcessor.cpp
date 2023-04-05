@@ -1313,6 +1313,8 @@ angle::Result CommandQueue::submitCommands(Context *context,
     std::vector<VkPipelineStageFlags> waitSemaphoreStageMasks =
         std::move(state.waitSemaphoreStageMasks);
 
+    mPerfCounters.commandQueueWaitSemaphoresTotal += waitSemaphores.size();
+
     // Don't make a submission if there is nothing to submit.
     const bool needsQueueSubmit = batch.primaryCommands.valid() ||
                                   signalSemaphore != VK_NULL_HANDLE || !waitSemaphores.empty();
