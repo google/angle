@@ -193,22 +193,24 @@ static ANGLE_INLINE void DirtyContextIfNeeded(Context *context)
 
 #if !defined(ANGLE_ENABLE_SHARE_CONTEXT_LOCK)
 #    define SCOPED_SHARE_CONTEXT_LOCK(context)
+#    define SCOPED_GLOBAL_AND_SHARE_CONTEXT_LOCK(context) ANGLE_SCOPED_GLOBAL_LOCK()
 #else
+#    if defined(ANGLE_FORCE_CONTEXT_CHECK_EVERY_CALL)
+#        define SCOPED_SHARE_CONTEXT_LOCK(context)                                       \
+            std::lock_guard<angle::GlobalMutex> shareContextLock(egl::GetGlobalMutex()); \
+            DirtyContextIfNeeded(context)
+#        define SCOPED_GLOBAL_AND_SHARE_CONTEXT_LOCK(context) SCOPED_SHARE_CONTEXT_LOCK(context)
+#    else
 ANGLE_INLINE std::unique_lock<angle::GlobalMutex> GetContextLock(Context *context)
 {
-#    if defined(ANGLE_FORCE_CONTEXT_CHECK_EVERY_CALL)
-    auto lock = std::unique_lock<angle::GlobalMutex>(egl::GetGlobalMutex());
-
-    DirtyContextIfNeeded(context);
-    return lock;
-#    else
     return context->isShared() ? std::unique_lock<angle::GlobalMutex>(egl::GetGlobalMutex())
                                : std::unique_lock<angle::GlobalMutex>();
-#    endif
 }
 
-#    define SCOPED_SHARE_CONTEXT_LOCK(context) \
-        std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context)
+#        define SCOPED_SHARE_CONTEXT_LOCK(context) \
+            std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context)
+#        define SCOPED_GLOBAL_AND_SHARE_CONTEXT_LOCK(context) ANGLE_SCOPED_GLOBAL_LOCK()
+#    endif
 #endif
 
 }  // namespace gl
