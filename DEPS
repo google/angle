@@ -1639,6 +1639,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_traces',
   },
+  'src/tests/restricted_traces/gangstar_vegas': {
+      'packages': [
+        {
+            'package': 'angle/traces/gangstar_vegas',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_traces',
+  },
   'src/tests/restricted_traces/gardenscapes': {
       'packages': [
         {
