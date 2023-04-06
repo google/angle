@@ -295,7 +295,7 @@ TEST(SystemUtils, PageSize)
 #    define MAYBE_PageFaultHandlerProtect DISABLED_PageFaultHandlerProtect
 #    define MAYBE_PageFaultHandlerDefaultHandler DISABLED_PageFaultHandlerDefaultHandler
 // mprotect tests hang on macOS M1. Also applies to the iOS simulator.
-#elif defined(ANGLE_PLATFORM_MACOS) || defined(ANGLE_PLATFORM_IOS_SIMULATOR)
+#elif ANGLE_PLATFORM_MACOS || ANGLE_PLATFORM_IOS_FAMILY_SIMULATOR
 #    define MAYBE_PageFaultHandlerInit PageFaultHandlerInit
 #    define MAYBE_PageFaultHandlerProtect DISABLED_PageFaultHandlerProtect
 #    define MAYBE_PageFaultHandlerDefaultHandler DISABLED_PageFaultHandlerDefaultHandler
