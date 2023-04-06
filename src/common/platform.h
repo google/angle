@@ -132,13 +132,16 @@
 #        if TARGET_OS_SIMULATOR
 #            define ANGLE_PLATFORM_IOS_FAMILY_SIMULATOR 1
 #        endif
-#        if TARGET_OS_MACCATALYST
-#            define ANGLE_PLATFORM_MACCATALYST 1
+#        if TARGET_OS_IOS
+#            define ANGLE_PLATFORM_IOS 1
+#            if TARGET_OS_MACCATALYST
+#                define ANGLE_PLATFORM_MACCATALYST 1
+#            endif
+#        elif TARGET_OS_WATCH
+#            define ANGLE_PLATFORM_WATCHOS 1
+#        elif TARGET_OS_TV
+#            define ANGLE_PLATFORM_APPLETV 1
 #        endif
-#    elif TARGET_OS_WATCH
-#        define ANGLE_PLATFORM_WATCHOS 1
-#    elif TARGET_OS_TV
-#        define ANGLE_PLATFORM_APPLETV 1
 #    endif
 #    // Identify Metal API >= what shipped on macOS Catalina.
 #    if (ANGLE_PLATFORM_MACOS && __MAC_OS_X_VERSION_MAX_ALLOWED >= 101500) || \
