@@ -6,29 +6,25 @@
 
 // DisplayCGL.mm: CGL implementation of egl::Display
 
-#include "common/platform.h"
+#import "libANGLE/renderer/gl/cgl/DisplayCGL.h"
 
-#if defined(ANGLE_PLATFORM_MACOS) || defined(ANGLE_PLATFORM_MACCATALYST)
+#import <Cocoa/Cocoa.h>
+#import <EGL/eglext.h>
+#import <dlfcn.h>
 
-#    include "libANGLE/renderer/gl/cgl/DisplayCGL.h"
-
-#    import <Cocoa/Cocoa.h>
-#    include <EGL/eglext.h>
-#    include <dlfcn.h>
-
-#    include "common/debug.h"
-#    include "common/gl/cgl/FunctionsCGL.h"
-#    include "common/system_utils.h"
-#    include "gpu_info_util/SystemInfo.h"
-#    include "libANGLE/Display.h"
-#    include "libANGLE/Error.h"
-#    include "libANGLE/renderer/gl/cgl/ContextCGL.h"
-#    include "libANGLE/renderer/gl/cgl/DeviceCGL.h"
-#    include "libANGLE/renderer/gl/cgl/IOSurfaceSurfaceCGL.h"
-#    include "libANGLE/renderer/gl/cgl/PbufferSurfaceCGL.h"
-#    include "libANGLE/renderer/gl/cgl/RendererCGL.h"
-#    include "libANGLE/renderer/gl/cgl/WindowSurfaceCGL.h"
-#    include "platform/PlatformMethods.h"
+#import "common/debug.h"
+#import "common/gl/cgl/FunctionsCGL.h"
+#import "common/system_utils.h"
+#import "gpu_info_util/SystemInfo_internal.h"
+#import "libANGLE/Display.h"
+#import "libANGLE/Error.h"
+#import "libANGLE/renderer/gl/cgl/ContextCGL.h"
+#import "libANGLE/renderer/gl/cgl/DeviceCGL.h"
+#import "libANGLE/renderer/gl/cgl/IOSurfaceSurfaceCGL.h"
+#import "libANGLE/renderer/gl/cgl/PbufferSurfaceCGL.h"
+#import "libANGLE/renderer/gl/cgl/RendererCGL.h"
+#import "libANGLE/renderer/gl/cgl/WindowSurfaceCGL.h"
+#import "platform/PlatformMethods.h"
 
 namespace
 {
@@ -743,5 +739,3 @@ void DisplayCGL::setContextToGPU(uint64_t gpuID, GLint virtualScreen)
 }
 
 }  // namespace rx
-
-#endif  // defined(ANGLE_PLATFORM_MACOS) || defined(ANGLE_PLATFORM_MACCATALYST)

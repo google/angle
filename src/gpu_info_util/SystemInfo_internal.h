@@ -9,6 +9,7 @@
 #ifndef GPU_INFO_UTIL_SYSTEM_INFO_INTERNAL_H_
 #define GPU_INFO_UTIL_SYSTEM_INFO_INTERNAL_H_
 
+#include "common/platform.h"
 #include "gpu_info_util/SystemInfo.h"
 
 namespace angle
@@ -35,6 +36,17 @@ bool GetSystemInfo_mac(SystemInfo *info);
 
 #if defined(ANGLE_PLATFORM_IOS) || (defined(ANGLE_PLATFORM_MACCATALYST) && defined(ANGLE_CPU_ARM64))
 bool GetSystemInfo_ios(SystemInfo *info);
+#endif
+
+#if defined(ANGLE_PLATFORM_MACOS) || defined(ANGLE_PLATFORM_MACCATALYST)
+// Helper to get the active GPU ID from a given Core Graphics display ID.
+uint64_t GetGpuIDFromDisplayID(uint32_t displayID);
+
+// Helper to get the active GPU ID from an OpenGL display mask.
+uint64_t GetGpuIDFromOpenGLDisplayMask(uint32_t displayMask);
+
+// Get VendorID from metal device's registry ID
+VendorID GetVendorIDFromMetalDeviceRegistryID(uint64_t registryID);
 #endif
 
 }  // namespace angle

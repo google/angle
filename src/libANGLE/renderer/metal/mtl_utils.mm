@@ -15,7 +15,7 @@
 
 #include "common/MemoryBuffer.h"
 #include "common/system_utils.h"
-#include "gpu_info_util/SystemInfo.h"
+#include "gpu_info_util/SystemInfo_internal.h"
 #include "libANGLE/renderer/metal/ContextMtl.h"
 #include "libANGLE/renderer/metal/DisplayMtl.h"
 #include "libANGLE/renderer/metal/RenderTargetMtl.h"

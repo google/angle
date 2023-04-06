@@ -118,13 +118,15 @@ if (is_apple) {
     "src/common/apple/SoftLinking.h",
     "src/common/apple/apple_platform.h",
     "src/common/apple_platform_utils.mm",
-    "src/common/gl/cgl/FunctionsCGL.cpp",
-    "src/common/gl/cgl/FunctionsCGL.h",
     "src/common/system_utils_apple.cpp",
     "src/common/system_utils_posix.cpp",
   ]
   if (is_mac) {
-    libangle_common_sources += [ "src/common/system_utils_mac.cpp" ]
+    libangle_common_sources += [
+      "src/common/gl/cgl/FunctionsCGL.cpp",
+      "src/common/gl/cgl/FunctionsCGL.h",
+      "src/common/system_utils_mac.cpp",
+    ]
   }
   if (is_ios) {
     libangle_common_sources += [ "src/common/system_utils_ios.cpp" ]
