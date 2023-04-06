@@ -1175,6 +1175,12 @@ Error Display::terminate(Thread *thread, TerminateReason terminateReason)
     if (terminateReason == TerminateReason::Api)
     {
         mTerminatedByApi = true;
+
+        // Remove thread from active thread set if there is no context current.
+        if (thread->getContext() == nullptr)
+        {
+            mActiveThreads.erase(thread);
+        }
     }
 
     // All subsequent calls assume the display to be valid and terminated by app.
