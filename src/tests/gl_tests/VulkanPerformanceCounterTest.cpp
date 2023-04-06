@@ -6380,12 +6380,9 @@ TEST_P(VulkanPerformanceCounterTest, VerifySubmitCounterForSwitchUserFBOToSystem
     drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
     ASSERT_GL_NO_ERROR();
 
-    if (hasPreferSubmitAtFBOBoundary())
-    {
-        // One submission coming from glBindFramebuffer and draw
-        ++expectedCommandQueueSubmitCount;
-        // This submission should not wait for any semaphore.
-    }
+    // One submission coming from glBindFramebuffer and draw
+    ++expectedCommandQueueSubmitCount;
+    // This submission should not wait for any semaphore.
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
