@@ -53,7 +53,7 @@
 #if defined(ANGLE_ENABLE_OPENGL)
 #    if defined(ANGLE_PLATFORM_WINDOWS)
 #        include "libANGLE/renderer/gl/wgl/DisplayWGL.h"
-#    elif defined(ANGLE_PLATFORM_MACOS) || defined(ANGLE_PLATFORM_IOS)
+#    elif defined(ANGLE_PLATFORM_APPLE)
 #        include "libANGLE/renderer/gl/apple/DisplayApple_api.h"
 #    elif defined(ANGLE_PLATFORM_LINUX)
 #        include "libANGLE/renderer/gl/egl/DisplayEGL.h"
@@ -342,7 +342,7 @@ rx::DisplayImpl *CreateDisplayFromAttribs(EGLAttrib displayType,
             impl = new rx::DisplayWGL(state);
             break;
 
-#    elif defined(ANGLE_PLATFORM_MACOS) || defined(ANGLE_PLATFORM_IOS)
+#    elif defined(ANGLE_PLATFORM_APPLE)
             impl = rx::CreateDisplayCGLOrEAGL(state);
             break;
 
@@ -2050,12 +2050,11 @@ static ClientExtensions GenerateClientExtensions()
     extensions.platformANGLEDeviceTypeEGLANGLE = true;
 #endif
 
-#if (defined(ANGLE_PLATFORM_IOS) && !defined(ANGLE_PLATFORM_MACCATALYST)) || \
-    (defined(ANGLE_PLATFORM_MACCATALYST) && defined(ANGLE_CPU_ARM64))
+#if defined(ANGLE_ENABLE_EAGL)
     extensions.platformANGLEDeviceContextVolatileEagl = true;
 #endif
 
-#if defined(ANGLE_PLATFORM_MACOS) || defined(ANGLE_PLATFORM_MACCATALYST)
+#if defined(ANGLE_ENABLE_CGL)
     extensions.platformANGLEDeviceContextVolatileCgl = true;
 #endif
 

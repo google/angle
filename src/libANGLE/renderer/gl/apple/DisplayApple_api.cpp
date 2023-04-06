@@ -7,18 +7,15 @@
 //    Chooses CGL or EAGL either at compile time or runtime based on the platform.
 //
 
-#ifndef LIBANGLE_RENDERER_GL_APPLE_DISPLAYAPPLE_API_H_
-#define LIBANGLE_RENDERER_GL_APPLE_DISPLAYAPPLE_API_H_
+#include "libANGLE/renderer/gl/apple/DisplayApple_api.h"
 
 #include "gpu_info_util/SystemInfo.h"
 #include "libANGLE/renderer/DisplayImpl.h"
 
-#if defined(ANGLE_PLATFORM_MACOS) || defined(ANGLE_PLATFORM_MACCATALYST)
+#if defined(ANGLE_ENABLE_CGL)
 #    include "libANGLE/renderer/gl/cgl/DisplayCGL.h"
-#    if defined(ANGLE_PLATFORM_MACCATALYST) && defined(ANGLE_CPU_ARM64)
-#        include "libANGLE/renderer/gl/eagl/DisplayEAGL.h"
-#    endif
-#elif defined(ANGLE_PLATFORM_IOS)
+#endif
+#if defined(ANGLE_ENABLE_EAGL)
 #    include "libANGLE/renderer/gl/eagl/DisplayEAGL.h"
 #endif
 
@@ -27,10 +24,7 @@ namespace rx
 
 DisplayImpl *CreateDisplayCGLOrEAGL(const egl::DisplayState &state)
 {
-#if defined(ANGLE_PLATFORM_MACOS)
-    return new rx::DisplayCGL(state);
-#elif defined(ANGLE_PLATFORM_MACCATALYST)
-#    if defined(ANGLE_CPU_ARM64)
+#if defined(ANGLE_ENABLE_EAGL) && defined(ANGLE_ENABLE_CGL)
     angle::SystemInfo info;
     if (!angle::GetSystemInfo(&info))
     {
@@ -45,14 +39,11 @@ DisplayImpl *CreateDisplayCGLOrEAGL(const egl::DisplayState &state)
     {
         return new rx::DisplayCGL(state);
     }
-#    else
+#elif defined(ANGLE_ENABLE_CGL)
     return new rx::DisplayCGL(state);
-#    endif
-#elif defined(ANGLE_PLATFORM_IOS)
+#elif defined(ANGLE_ENABLE_EAGL)
     return new rx::DisplayEAGL(state);
 #endif
 }
 
 }  // namespace rx
-
-#endif /* LIBANGLE_RENDERER_GL_APPLE_DISPLAYAPPLE_API_H_ */

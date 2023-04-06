@@ -651,7 +651,7 @@ static bool DetermineDepthTextureANGLESupport(const TextureCapsMap &textureCaps)
     constexpr GLenum requiredFormats[] = {
         GL_DEPTH_COMPONENT16,
 #if !defined(ANGLE_PLATFORM_IOS) && \
-    (!defined(ANGLE_PLATFORM_MACCATALYST) || !defined(ANGLE_CPU_ARM64))
+    (!defined(ANGLE_PLATFORM_MACCATALYST) || !defined(ANGLE_ENABLE_EAGL))
         // anglebug.com/6082
         // TODO(dino): Temporarily Removing the need for GL_DEPTH_COMPONENT32_OES
         // because it is not supported on iOS.
@@ -670,7 +670,7 @@ static bool DetermineDepthTextureOESSupport(const TextureCapsMap &textureCaps)
     constexpr GLenum requiredFormats[] = {
         GL_DEPTH_COMPONENT16,
 #if !defined(ANGLE_PLATFORM_IOS) && \
-    (!defined(ANGLE_PLATFORM_MACCATALYST) || !defined(ANGLE_CPU_ARM64))
+    (!defined(ANGLE_PLATFORM_MACCATALYST) || !defined(ANGLE_ENABLE_EAGL))
         // anglebug.com/6082
         // TODO(dino): Temporarily Removing the need for GL_DEPTH_COMPONENT32_OES
         // because it is not supported on iOS.

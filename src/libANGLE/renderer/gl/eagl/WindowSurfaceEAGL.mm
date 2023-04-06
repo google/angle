@@ -19,7 +19,7 @@
 #import "libANGLE/renderer/gl/eagl/DisplayEAGL.h"
 #import "libANGLE/renderer/gl/eagl/FunctionsEAGL.h"
 
-#if defined(ANGLE_PLATFORM_MACCATALYST) && defined(ANGLE_CPU_ARM64)
+#if defined(ANGLE_PLATFORM_MACCATALYST)
 
 // TODO(dino): Necessary because CAEAGLLayer is not in the public QuartzCore headers in this
 // configuration.

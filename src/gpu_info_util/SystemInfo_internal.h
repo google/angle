@@ -32,9 +32,7 @@ bool CMDeviceIDToDeviceAndVendorID(const std::string &id, uint32_t *vendorId, ui
 
 #if defined(ANGLE_PLATFORM_MACOS) || defined(ANGLE_PLATFORM_MACCATALYST)
 bool GetSystemInfo_mac(SystemInfo *info);
-#endif
-
-#if defined(ANGLE_PLATFORM_IOS) || (defined(ANGLE_PLATFORM_MACCATALYST) && defined(ANGLE_CPU_ARM64))
+#else
 bool GetSystemInfo_ios(SystemInfo *info);
 #endif
 
