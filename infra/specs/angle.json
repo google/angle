@@ -247,7 +247,6 @@
           "--render-test-output-dir=${ISOLATED_OUTDIR}"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -275,7 +274,6 @@
           "-v"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -308,7 +306,6 @@
         ],
         "isolate_name": "angle_restricted_trace_gold_tests",
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "name": "angle_restricted_trace_gold_tests",
@@ -662,7 +659,6 @@
           "--render-test-output-dir=${ISOLATED_OUTDIR}"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -693,7 +689,6 @@
           "-v"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -719,7 +714,6 @@
           "-v"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -782,7 +776,6 @@
         ],
         "isolate_name": "angle_restricted_trace_gold_tests",
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "name": "angle_restricted_trace_gold_tests",
@@ -1221,7 +1214,6 @@
           "--render-test-output-dir=${ISOLATED_OUTDIR}"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -1248,7 +1240,6 @@
           "-v"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -1280,7 +1271,6 @@
         ],
         "isolate_name": "angle_restricted_trace_gold_tests",
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "name": "angle_restricted_trace_gold_tests",
@@ -1449,7 +1439,6 @@
           "--no-xvfb"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -1476,7 +1465,6 @@
           "--no-xvfb"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -1497,7 +1485,6 @@
       },
       {
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -1521,7 +1508,6 @@
           "--no-xvfb"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -1579,7 +1565,6 @@
         ],
         "isolate_name": "angle_restricted_trace_gold_tests",
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "name": "angle_restricted_trace_gold_tests",
@@ -1613,7 +1598,6 @@
         ],
         "isolate_name": "angle_trace_interpreter_tests",
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "name": "angle_trace_interpreter_tests",
@@ -2260,7 +2244,6 @@
           "--no-xvfb"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -2287,7 +2270,6 @@
           "--no-xvfb"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -2308,7 +2290,6 @@
       },
       {
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -2332,7 +2313,6 @@
           "--no-xvfb"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -2390,7 +2370,6 @@
         ],
         "isolate_name": "angle_restricted_trace_gold_tests",
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "name": "angle_restricted_trace_gold_tests",
@@ -2424,7 +2403,6 @@
         ],
         "isolate_name": "angle_trace_interpreter_tests",
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "name": "angle_trace_interpreter_tests",
@@ -2610,7 +2588,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -2637,7 +2614,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -2664,7 +2640,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -2691,7 +2666,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -2718,7 +2692,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -2745,7 +2718,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -2772,7 +2744,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -2800,7 +2771,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -2827,7 +2797,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -2854,7 +2823,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -2881,7 +2849,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -2909,7 +2876,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -2936,7 +2902,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -2963,7 +2928,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -2990,7 +2954,6 @@
           "--gtest_filter=*Vulkan_SwiftShader*"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -3017,7 +2980,6 @@
           "--gtest_filter=*Vulkan_SwiftShader*"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -3052,7 +3014,6 @@
         ],
         "isolate_name": "angle_restricted_trace_gold_tests",
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "name": "angle_restricted_trace_gold_tests",
@@ -3089,7 +3050,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -3116,7 +3076,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -3143,7 +3102,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -3171,7 +3129,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -3198,7 +3155,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -3225,7 +3181,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -3252,7 +3207,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -3280,7 +3234,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -3307,7 +3260,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -3334,7 +3286,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -3361,7 +3312,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -3389,7 +3339,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -3416,7 +3365,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -3443,7 +3391,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -3470,7 +3417,6 @@
           "--gtest_filter=*Vulkan_SwiftShader*"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -3498,7 +3444,6 @@
           "--gtest_filter=*Vulkan_SwiftShader*"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -3531,7 +3476,6 @@
           "--flaky-retries=2"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -3558,7 +3502,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -3586,7 +3529,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -3614,7 +3556,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -3641,7 +3582,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -3668,7 +3608,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -3695,7 +3634,6 @@
           "--gtest_filter=*Vulkan_SwiftShader*"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -3722,7 +3660,6 @@
           "--gtest_filter=*Vulkan_SwiftShader*"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -3922,7 +3859,6 @@
           "--flaky-retries=2"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -3947,7 +3883,6 @@
       },
       {
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -4147,7 +4082,6 @@
           "--flaky-retries=2"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -4172,7 +4106,6 @@
       },
       {
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -4361,7 +4294,6 @@
           "--flaky-retries=2"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -4384,7 +4316,6 @@
       },
       {
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -4414,7 +4345,6 @@
           "--flaky-retries=2"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -4439,7 +4369,6 @@
       },
       {
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -4497,7 +4426,6 @@
           "--max-processes=1"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -4524,7 +4452,6 @@
           "--batch-size=10"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -4546,7 +4473,6 @@
       },
       {
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -4571,7 +4497,6 @@
           "--max-processes=1"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -4632,7 +4557,6 @@
         ],
         "isolate_name": "angle_restricted_trace_gold_tests",
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "name": "angle_restricted_trace_gold_tests",
@@ -4667,7 +4591,6 @@
         ],
         "isolate_name": "angle_trace_interpreter_tests",
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "name": "angle_trace_interpreter_tests",
@@ -5420,7 +5343,6 @@
           "--gtest_filter=-*Vulkan_SwiftShader*"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -5447,7 +5369,6 @@
           "--batch-size=10"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -5469,7 +5390,6 @@
       },
       {
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -5491,7 +5411,6 @@
       },
       {
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -5551,7 +5470,6 @@
         ],
         "isolate_name": "angle_restricted_trace_gold_tests",
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "name": "angle_restricted_trace_gold_tests",
@@ -5586,7 +5504,6 @@
         ],
         "isolate_name": "angle_trace_interpreter_tests",
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "name": "angle_trace_interpreter_tests",
@@ -5778,7 +5695,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -5805,7 +5721,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -5832,7 +5747,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -5859,7 +5773,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -5886,7 +5799,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -5913,7 +5825,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -5940,7 +5851,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -5968,7 +5878,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -5995,7 +5904,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -6022,7 +5930,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -6049,7 +5956,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -6077,7 +5983,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -6104,7 +6009,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -6131,7 +6035,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -6158,7 +6061,6 @@
           "--gtest_filter=*Vulkan_SwiftShader*"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -6185,7 +6087,6 @@
           "--gtest_filter=*Vulkan_SwiftShader*"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -6218,7 +6119,6 @@
         ],
         "isolate_name": "angle_restricted_trace_gold_tests",
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "name": "angle_restricted_trace_gold_tests",
@@ -6256,7 +6156,6 @@
           "--flaky-retries=2"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -6284,7 +6183,6 @@
           "--gtest_filter=*Vulkan_SwiftShader*"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -6315,7 +6213,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -6342,7 +6239,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -6369,7 +6265,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -6396,7 +6291,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -6423,7 +6317,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -6450,7 +6343,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -6477,7 +6369,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -6505,7 +6396,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -6532,7 +6422,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -6559,7 +6448,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -6586,7 +6474,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -6614,7 +6501,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -6641,7 +6527,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -6668,7 +6553,6 @@
           "--use-angle=swiftshader"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -6695,7 +6579,6 @@
           "--gtest_filter=*Vulkan_SwiftShader*"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
@@ -6722,7 +6605,6 @@
           "--gtest_filter=*Vulkan_SwiftShader*"
         ],
         "merge": {
-          "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
         "swarming": {
