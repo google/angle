@@ -739,7 +739,7 @@ void PackParameter<uint8_t>(ParamBuffer &params, const Token &token, const Trace
 template <>
 void PackParameter<float *>(ParamBuffer &params, const Token &token, const TraceStringMap &strings)
 {
-    UNREACHABLE();
+    PackMutablePointerParameter<float>(params, ParamType::TGLfloatPointer, token);
 }
 
 template <>
@@ -845,7 +845,7 @@ void PackParameter<unsigned char *>(ParamBuffer &params,
                                     const Token &token,
                                     const TraceStringMap &strings)
 {
-    UNREACHABLE();
+    PackMutablePointerParameter<GLubyte>(params, ParamType::TGLubytePointer, token);
 }
 
 template <>
