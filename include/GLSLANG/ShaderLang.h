@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 324
+#define ANGLE_SH_VERSION 325
 
 enum ShShaderSpec
 {
@@ -405,9 +405,9 @@ struct ShCompileOptions
     // ceil()ed instead.
     uint64_t roundOutputAfterDithering : 1;
 
-    // Even when the dividend and divisor have the same value some platforms do not return 1.0f.
-    // Need to emit different division code for such platforms.
-    uint64_t precisionSafeDivision : 1;
+    // Unused.  Kept to avoid unnecessarily changing the layout of this structure and tripping up
+    // the fuzzer's hash->bug map.
+    uint64_t unused2 : 1;
 
     // anglebug.com/7527: packUnorm4x8 fails on Pixel 4 if it is not passed a highp vec4.
     // TODO(anglebug.com/7527): This workaround is currently only applied for pixel local storage.

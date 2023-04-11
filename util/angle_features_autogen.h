@@ -191,7 +191,6 @@ enum class Feature
     PermanentlySwitchToFramebufferFetchMode,
     PersistentlyMappedBuffers,
     PreAddTexelFetchOffsets,
-    PrecisionSafeDivision,
     PreemptivelyStartProvokingVertexCommandBuffer,
     PreferAggregateBarrierCalls,
     PreferCPUForBufferSubData,

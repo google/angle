@@ -103,11 +103,6 @@ std::shared_ptr<WaitableCompileEvent> ShaderVk::compile(const gl::Context *conte
         options->roundOutputAfterDithering = true;
     }
 
-    if (contextVk->getFeatures().precisionSafeDivision.enabled)
-    {
-        options->precisionSafeDivision = true;
-    }
-
     if (contextVk->getFeatures().appendAliasedMemoryDecorationsToSsbo.enabled)
     {
         options->aliasedSSBOUnlessRestrict = true;
