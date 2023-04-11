@@ -688,6 +688,7 @@ def main():
         {
             'name': 'ANGLE_java_defaults',
             'sdk_version': 'system_current',
+            'target_sdk_version': 'system_current',
             'min_sdk_version': SDK_VERSION,
             'compile_multilib': 'both',
             'use_embedded_native_libs': True,
@@ -709,6 +710,7 @@ def main():
     blueprint_targets.append(('android_library', {
         'name': 'ANGLE_library',
         'sdk_version': 'system_current',
+        'target_sdk_version': 'system_current',
         'min_sdk_version': SDK_VERSION,
         'resource_dirs': ['src/android_system_settings/res',],
         'asset_dirs': ['src/android_system_settings/assets',],
