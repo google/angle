@@ -759,7 +759,7 @@
         'args': [
           '--log=debug',
           'interpret',
-          'among_us:dota_underlords:genshin_impact:harry_potter_hogwarts_mystery:manhattan_10:trex_200',
+          'among_us:cut_the_rope:dota_underlords:fishdom:genshin_impact:harry_potter_hogwarts_mystery:manhattan_10:trex_200',
           '-L=2',
           '--show-test-stdout',
         ],

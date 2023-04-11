@@ -417,14 +417,16 @@ void PackIntParameter(ParamBuffer &params, ParamType paramType, const Token &tok
     params.addUnnamedParam(paramType, value);
 }
 
+uint32_t GetStringArrayOffset(const Token &token, const char *prefixString)
+{
+    const char *offsetString = &token[strlen(prefixString)];
+    return atoi(offsetString);
+}
+
 template <typename PointerT>
-void PackMemPointer(ParamBuffer &params,
-                    ParamType paramType,
-                    const char *offsetString,
-                    uint8_t *mem)
+void PackMemPointer(ParamBuffer &params, ParamType paramType, uint32_t offset, uint8_t *mem)
 {
     ASSERT(gBinaryData);
-    uint32_t offset = atoi(offsetString);
     params.addUnnamedParam(paramType, reinterpret_cast<PointerT>(&mem[offset]));
 }
 
@@ -438,7 +440,8 @@ void PackMutablePointerParameter(ParamBuffer &params, ParamType paramType, const
     else if (token[0] == '&')
     {
         ASSERT(BeginsWith(token, "&gReadBuffer[") && EndsWith(token, "]"));
-        PackMemPointer<T *>(params, paramType, &token[strlen("&gReadBuffer[")], gReadBuffer);
+        uint32_t offset = GetStringArrayOffset(token, "&gReadBuffer[");
+        PackMemPointer<T *>(params, paramType, offset, gReadBuffer);
     }
     else if (token[0] == 'g')
     {
@@ -462,12 +465,25 @@ void PackConstPointerParameter(ParamBuffer &params, ParamType paramType, const T
     else if (token[0] == '&')
     {
         ASSERT(BeginsWith(token, "&gBinaryData[") && EndsWith(token, "]"));
-        PackMemPointer<const T *>(params, paramType, &token[strlen("&gBinaryData[")], gBinaryData);
+        uint32_t offset = GetStringArrayOffset(token, "&gReadBuffer[");
+        PackMemPointer<const T *>(params, paramType, offset, gBinaryData);
     }
     else if (token[0] == 'g')
     {
-        ASSERT(strcmp(token, "gResourceIDBuffer") == 0);
-        params.addUnnamedParam(paramType, reinterpret_cast<const T *>(gResourceIDBuffer));
+        if (strcmp(token, "gResourceIDBuffer") == 0)
+        {
+            params.addUnnamedParam(paramType, reinterpret_cast<const T *>(gResourceIDBuffer));
+        }
+        else if (BeginsWith(token, "gClientArrays"))
+        {
+            uint32_t offset = GetStringArrayOffset(token, "gClientArrays[");
+            params.addUnnamedParam(paramType, reinterpret_cast<const T *>(gClientArrays[offset]));
+        }
+        else
+        {
+            printf("Unexpected token: %s\n", token);
+            UNREACHABLE();
+        }
     }
     else
     {
@@ -576,7 +592,11 @@ void TraceInterpreter::setValidateSerializedStateCallback(ValidateSerializedStat
 void TraceInterpreter::runTraceFunction(const char *name) const
 {
     auto iter = mTraceFunctions.find(name);
-    ASSERT(iter != mTraceFunctions.end());
+    if (iter == mTraceFunctions.end())
+    {
+        printf("Cannot find function: %s\n", name);
+        UNREACHABLE();
+    }
     const TraceFunction &func = iter->second;
     ReplayTraceFunction(func, mTraceFunctions);
 }
