@@ -809,7 +809,6 @@
 7994 IOS METAL : FramebufferTest_ES3.RenderAndInvalidateImmutableTextureWithBeyondMaxLevel/ES3_Metal = SKIP
 7994 IOS METAL : FramebufferTest_ES3.RenderAndInvalidateImmutableTextureWithSubImageWithBeyondMaxLevel/ES3_Metal = SKIP
 7994 IOS METAL : FramebufferTest_ES3.RenderSampleDepthTextureWithExcludedLevel/ES3_Metal = SKIP
-7994 IOS METAL : FramebufferTest_ES3.SurfaceDimensionsChangeAndFragCoord/ES3_Metal = SKIP
 7994 IOS METAL : GLSLTest.EmbeddedStructUniformArray/ES2_Metal = SKIP
 7994 IOS METAL : GLSLTest.EmbeddedStructUniformArray/ES3_Metal = SKIP
 7994 IOS METAL : KTXCompressedTextureTest.CompressedTexImageETC1/ES2_Metal = SKIP
