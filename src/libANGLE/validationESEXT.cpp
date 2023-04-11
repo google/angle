@@ -1703,15 +1703,12 @@ bool ValidatePLSTextureType(const Context *context,
                             Texture *tex,
                             size_t *textureDepth)
 {
-    // INVALID_ENUM is generated if <backingtexture> is nonzero and not of type GL_TEXTURE_2D,
-    // GL_TEXTURE_CUBE_MAP, GL_TEXTURE_2D_ARRAY, or GL_TEXTURE_3D.
+    // INVALID_OPERATION is generated if <backingtexture> is nonzero and not of type TEXTURE_2D,
+    // TEXTURE_2D_ARRAY, or TEXTURE_3D.
     switch (tex->getType())
     {
         case TextureType::_2D:
             *textureDepth = 1;
-            return true;
-        case TextureType::CubeMap:
-            *textureDepth = 6;
             return true;
         case TextureType::_2DArray:
             *textureDepth = tex->getDepth(TextureTarget::_2DArray, 0);
@@ -1720,7 +1717,7 @@ bool ValidatePLSTextureType(const Context *context,
             *textureDepth = tex->getDepth(TextureTarget::_3D, 0);
             return true;
         default:
-            context->validationError(entryPoint, GL_INVALID_ENUM, kPLSInvalidTextureType);
+            context->validationError(entryPoint, GL_INVALID_OPERATION, kPLSInvalidTextureType);
             return false;
     }
 }

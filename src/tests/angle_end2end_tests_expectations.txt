@@ -1176,6 +1176,10 @@
 // GL program cache failure with shader images.
 7797 WIN OPENGL : PixelLocalStorageTest.ProgramCache/* = SKIP
 
+// GL_TEXTURE_2D_ARRAY and GL_TEXTURE_3D shader images.
+8124 D3D11 : PixelLocalStorageTest.TextureLevelsAndLayers/* = SKIP
+8125 MAC METAL : PixelLocalStorageTest.TextureLevelsAndLayers/* = SKIP
+
 // Slow tests, should appear last in this file
 5076 : GLSLTest.VerifyMaxVertexUniformVectors* = TIMEOUT
 5076 : GLSLTest.VerifyMaxFragmentUniformVectors* = TIMEOUT

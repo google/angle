@@ -706,21 +706,6 @@ Additions to the OpenGL ES Specification, Version 3.0.6
       * <layer> specifies the texture layer to bind:
 
         - Zero if <backingtexture> is a TEXTURE_2D
-        - The Cube Map Face to bind if <backingtexture> is a TEXTURE_CUBE_MAP,
-          as enumerated in Table X.4
-
-          <layer>    Cube Map Face
-          --------------------------------------
-          0          TEXTURE_CUBE_MAP_POSITIVE_X
-          1          TEXTURE_CUBE_MAP_NEGATIVE_X
-          2          TEXTURE_CUBE_MAP_POSITIVE_Y
-          3          TEXTURE_CUBE_MAP_NEGATIVE_Y
-          4          TEXTURE_CUBE_MAP_POSITIVE_Z
-          5          TEXTURE_CUBE_MAP_NEGATIVE_Z
-
-          Table X.4: <layer> numbers of cube map texture faces. The layers are
-          numbered in the same sequence as the cube map face token values.
-
         - The array index to bind if <backingtexture> is a TEXTURE_2D_ARRAY
         - The Z coordinate to bind if <backingtexture> is a TEXTURE_3D
 
@@ -742,8 +727,8 @@ Additions to the OpenGL ES Specification, Version 3.0.6
       * INVALID_OPERATION is generated if <backingtexture> is not the name of an
         existing immutable texture object, or zero.
 
-      * INVALID_ENUM is generated if <backingtexture> is nonzero and not of type
-        TEXTURE_2D, TEXTURE_CUBE_MAP, TEXTURE_2D_ARRAY, or TEXTURE_3D.
+      * INVALID_OPERATION is generated if <backingtexture> is nonzero and not of
+        type TEXTURE_2D, TEXTURE_2D_ARRAY, or TEXTURE_3D.
 
       * INVALID_VALUE is generated if <backingtexture> is nonzero and
         <level> < 0.
@@ -1208,3 +1193,11 @@ Issues
       implementing WebGL will need the ability to interrupt pixel local storage
       rendering passes, which would also be more complicated if we were to
       support enabling and disabling planes individually.
+
+    (4) Should we support binding cube map layers to pixel local storage?
+
+      RESOLVED: No. There is currently a 1:1 mapping on every implementation
+      from pixel local storage shaders to backend shaders, but binding a cube
+      map layer would require a texelFetch() implementation to behave
+      differently in the shader. We can always add cube map support in the
+      future, if the need arises.
