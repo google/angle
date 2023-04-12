@@ -316,7 +316,6 @@
 // Skipped because Intel GPUs fail sampling stencil textures from swizzled views
 8051 MAC METAL INTEL : Texture2DDepthStencilTestES3.TexSampleModesWithStencil8Swizzled/* = SKIP
 
-6447 MAC METAL : FramebufferTest_ES3.AttachmentsWithUnequalDimensions/* = SKIP
 6447 MAC METAL : FramebufferTest_ES3.RenderAndInvalidateImmutableTextureWithBellowBaseLevelLOD/* = SKIP
 6447 MAC METAL : FramebufferTest_ES3.RenderAndInvalidateImmutableTextureWithBeyondMaxLevel/* = SKIP
 6447 MAC METAL : FramebufferTest_ES3.RenderAndInvalidateImmutableTextureWithSubImageWithBeyondMaxLevel/* = SKIP
@@ -801,7 +800,6 @@
 7994 IOS METAL : EGLDisplaySelectionTestDeviceId.DeviceIdConcurrently/ES3_Metal_NoFixture_HighPowerGPU = SKIP
 7994 IOS METAL : EGLDisplaySelectionTestDeviceId.DeviceIdConcurrently/ES3_Metal_NoFixture_LowPowerGPU = SKIP
 7994 IOS METAL : ETC1CompressedTextureTest.ETC1CompressedImageDraws/ES3_Metal = SKIP
-7994 IOS METAL : FramebufferTest_ES3.AttachmentsWithUnequalDimensions/ES3_Metal = SKIP
 7994 IOS METAL : FramebufferTest_ES3.RenderAndInvalidateImmutableTextureWithBellowBaseLevelLOD/ES3_Metal = SKIP
 7994 IOS METAL : FramebufferTest_ES3.RenderAndInvalidateImmutableTextureWithBeyondMaxLevel/ES3_Metal = SKIP
 7994 IOS METAL : FramebufferTest_ES3.RenderAndInvalidateImmutableTextureWithSubImageWithBeyondMaxLevel/ES3_Metal = SKIP
