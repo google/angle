@@ -1873,15 +1873,14 @@ angle::Result WindowSurfaceVk::prePresentSubmit(ContextVk *contextVk,
     ANGLE_TRY(
         image.image->flushStagedUpdates(contextVk, gl::LevelIndex(0), gl::LevelIndex(1), 0, 1, {}));
 
-    // If user calls eglSwapBuffer without use it, image may already in Present layout (if single
-    // buffer mode) or Undefined (first time present). In this case, if acquireNextImageSemaphore
-    // has not been waited, we must add to context will force the semaphore wait so that it will be
-    // in unsignaled state and ready to use for ANI call.
+    // If user calls eglSwapBuffer without use it, image may already in Present layout (if swap
+    // without any draw) or Undefined (first time present). In this case, if
+    // acquireNextImageSemaphore has not been waited, we must add to context will force the
+    // semaphore wait so that it will be in unsignaled state and ready to use for ANI call.
     if (image.image->getAcquireNextImageSemaphore().valid())
     {
         ASSERT(!renderer->getFeatures().supportsPresentation.enabled ||
                image.image->getCurrentImageLayout() == vk::ImageLayout::Present ||
-               image.image->getCurrentImageLayout() == vk::ImageLayout::SharedPresent ||
                image.image->getCurrentImageLayout() == vk::ImageLayout::Undefined);
         contextVk->addWaitSemaphore(image.image->getAcquireNextImageSemaphore().getHandle(),
                                     vk::kSwapchainAcquireImageWaitStageFlags);
@@ -2365,8 +2364,7 @@ VkResult WindowSurfaceVk::acquireNextSwapchainImage(vk::Context *context)
     image.image->setAcquireNextImageSemaphore(acquireImageSemaphore);
 
     // Single Image Mode
-    if (isSharedPresentMode() &&
-        (image.image->getCurrentImageLayout() != vk::ImageLayout::SharedPresent))
+    if (isSharedPresentMode())
     {
         rx::RendererVk *rendererVk = context->getRenderer();
         rx::vk::PrimaryCommandBuffer primaryCommandBuffer;
@@ -2375,9 +2373,20 @@ VkResult WindowSurfaceVk::acquireNextSwapchainImage(vk::Context *context)
             angle::Result::Continue)
         {
             VkSemaphore semaphore;
-            // Note return errors is early exit may leave new Image and Swapchain in unknown state.
-            image.image->recordWriteBarrierOneOff(context, vk::ImageLayout::SharedPresent,
-                                                  &primaryCommandBuffer, &semaphore);
+            if (image.image->getCurrentImageLayout() != vk::ImageLayout::SharedPresent)
+            {
+                // Note return errors is early exit may leave new Image and Swapchain in unknown
+                // state.
+                image.image->recordWriteBarrierOneOff(context, vk::ImageLayout::SharedPresent,
+                                                      &primaryCommandBuffer, &semaphore);
+            }
+            else
+            {
+                // Ensure we always wait for ANI semaphore
+                semaphore = image.image->getAcquireNextImageSemaphore().getHandle();
+                image.image->resetAcquireNextImageSemaphore();
+            }
+            ASSERT(semaphore == acquireImageSemaphore);
             if (primaryCommandBuffer.end() != VK_SUCCESS)
             {
                 mDesiredSwapchainPresentMode = vk::PresentMode::FifoKHR;
