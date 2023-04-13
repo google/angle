@@ -71,6 +71,7 @@ using FinishReplayFunc                       = void (*)();
 using GetSerializedContextStateFunc          = const char *(*)(uint32_t);
 using SetValidateSerializedStateCallbackFunc = void (*)(ValidateSerializedStateCallback);
 using SetTraceInfoFunc                       = void (*)(const std::vector<std::string> &);
+using SetTraceGzPathFunc                     = void (*)(const std::string &);
 
 struct TraceInfo;
 
@@ -113,6 +114,11 @@ class TraceLibrary : angle::NonCopyable
     {
         return callFunc<SetValidateSerializedStateCallbackFunc>(
             "SetValidateSerializedStateCallback", callback);
+    }
+
+    void setTraceGzPath(const std::string &traceGzPath)
+    {
+        callFunc<SetTraceGzPathFunc>("SetTraceGzPath", traceGzPath);
     }
 
   private:

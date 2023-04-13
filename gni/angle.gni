@@ -599,6 +599,10 @@ template("angle_trace") {
       "$angle_root/util:angle_trace_loader",
     ]
 
+    if (defined(invoker.deps)) {
+      deps += invoker.deps
+    }
+
     if (is_android) {
       libs = [ "log" ]
     }
@@ -653,13 +657,24 @@ template("angle_trace_library") {
     } else {
       _target = "${target_name}_$_trace"
     }
+
+    _gen_target = "gen${target_name}_$_trace"
+    action(_gen_target) {
+      script = "//scripts/tracegz.py"
+      args = [ _trace ]
+      outputs = [ "$root_gen_dir/tracegz_$_trace.gz" ]
+    }
+
     angle_trace(_target) {
       sources = rebase_path(_trace_data.TraceFiles, ".", _trace_dir)
 
       data = [
         "$_trace_dir/$_trace.json",
         "$_trace_dir/$_trace.angledata.gz",
+        "$root_gen_dir/tracegz_$_trace.gz",
       ]
+
+      deps = [ ":$_gen_target" ]
 
       if (invoker.short_names) {
         output_name = _trace

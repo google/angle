@@ -14,6 +14,9 @@
 #include "common/string_utils.h"
 #include "trace_fixture.h"
 
+#define USE_SYSTEM_ZLIB
+#include "compression_utils_portable.h"
+
 namespace angle
 {
 namespace
@@ -517,6 +520,8 @@ class TraceInterpreter : angle::NonCopyable
 
   private:
     void runTraceFunction(const char *name) const;
+    void parseTraceUncompressed();
+    void parseTraceGz();
 
     TraceFunctionMap mTraceFunctions;
     TraceStringMap mTraceStrings;
@@ -530,7 +535,7 @@ void TraceInterpreter::replayFrame(uint32_t frameIndex)
     runTraceFunction(funcName);
 }
 
-void TraceInterpreter::setupReplay()
+void TraceInterpreter::parseTraceUncompressed()
 {
     for (const std::string &file : gTraceFiles)
     {
@@ -559,6 +564,58 @@ void TraceInterpreter::setupReplay()
 
         Parser parser(fileData, mTraceFunctions, mTraceStrings, mVerboseLogging);
         parser.parse();
+    }
+}
+
+void TraceInterpreter::parseTraceGz()
+{
+    if (mVerboseLogging)
+    {
+        printf("Parsing functions from %s\n", gTraceGzPath.c_str());
+    }
+
+    FILE *fp = fopen(gTraceGzPath.c_str(), "rb");
+    if (fp == 0)
+    {
+        printf("Error loading trace (gz) from: %s\n", gTraceGzPath.c_str());
+        exit(1);
+    }
+
+    fseek(fp, 0, SEEK_END);
+    long size = ftell(fp);
+    fseek(fp, 0, SEEK_SET);
+
+    std::vector<uint8_t> compressedData(size);
+    (void)fread(compressedData.data(), 1, size, fp);
+
+    uint32_t uncompressedSize =
+        zlib_internal::GetGzipUncompressedSize(compressedData.data(), compressedData.size());
+
+    std::string uncompressedData(uncompressedSize, 0);
+    uLong destLen = uncompressedSize;
+    int zResult = zlib_internal::GzipUncompressHelper((uint8_t *)uncompressedData.data(), &destLen,
+                                                      compressedData.data(),
+                                                      static_cast<uLong>(compressedData.size()));
+
+    if (zResult != Z_OK)
+    {
+        printf("Failure to decompress gz trace: %s\n", gTraceGzPath.c_str());
+        exit(1);
+    }
+
+    Parser parser(uncompressedData, mTraceFunctions, mTraceStrings, mVerboseLogging);
+    parser.parse();
+}
+
+void TraceInterpreter::setupReplay()
+{
+    if (!gTraceGzPath.empty())
+    {
+        parseTraceGz();
+    }
+    else
+    {
+        parseTraceUncompressed();
     }
 
     if (mTraceFunctions.count("SetupReplay") == 0)

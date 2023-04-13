@@ -1637,6 +1637,20 @@ void TracePerfTest::startTest()
     ASSERT(mCurrentFrame == mStartFrame);
 }
 
+std::string FindTraceGzPath(const std::string &traceName)
+{
+    std::stringstream pathStream;
+
+    char genDir[kMaxPath] = {};
+    if (!angle::FindTestDataPath("gen", genDir, kMaxPath))
+    {
+        return "";
+    }
+    pathStream << genDir << angle::GetPathSeparator() << "tracegz_" << traceName << ".gz";
+
+    return pathStream.str();
+}
+
 void TracePerfTest::initializeBenchmark()
 {
     const TraceInfo &traceInfo = mParams->traceInfo;
@@ -1651,6 +1665,16 @@ void TracePerfTest::initializeBenchmark()
     if (gTraceInterpreter)
     {
         mTraceReplay.reset(new TraceLibrary("angle_trace_interpreter", traceInfo));
+        if (strcmp(gTraceInterpreter, "gz") == 0)
+        {
+            std::string traceGzPath = FindTraceGzPath(traceInfo.name);
+            if (traceGzPath.empty())
+            {
+                failTest("Could not find trace gz.");
+                return;
+            }
+            mTraceReplay->setTraceGzPath(traceGzPath);
+        }
     }
     else
     {

@@ -406,10 +406,16 @@ void SetValidateSerializedStateCallback(ValidateSerializedStateCallback callback
 }
 
 std::vector<std::string> gTraceFiles;
+std::string gTraceGzPath;
 
 void SetTraceInfo(const std::vector<std::string> &traceFiles)
 {
     gTraceFiles = traceFiles;
+}
+
+void SetTraceGzPath(const std::string &traceGzPath)
+{
+    gTraceGzPath = traceGzPath;
 }
 
 void UpdateClientArrayPointer(int arrayIndex, const void *data, uint64_t size)
