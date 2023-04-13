@@ -177,8 +177,6 @@ VkResult VerifyExtensionsPresent(const vk::ExtensionNameList &haystack,
 constexpr const char *kSkippedMessages[] = {
     // http://anglebug.com/2866
     "UNASSIGNED-CoreValidation-Shader-OutputNotConsumed",
-    // http://anglebug.com/4883
-    "UNASSIGNED-CoreValidation-Shader-InputNotProduced",
     // http://anglebug.com/4928
     "VUID-vkMapMemory-memory-00683",
     // http://anglebug.com/5027
@@ -197,8 +195,6 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-vkCmdDrawIndexedIndirectCount-None-04584",
     // http://anglebug.com/5912
     "VUID-VkImageViewCreateInfo-pNext-01585",
-    // http://anglebug.com/6442
-    "UNASSIGNED-CoreValidation-Shader-InterfaceTypeMismatch",
     // http://anglebug.com/6514
     "vkEnumeratePhysicalDevices: One or more layers modified physical devices",
     // When using Vulkan secondary command buffers, the command buffer is begun with the current
@@ -228,8 +224,11 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-VkImageCreateInfo-pNext-00990",
     // http://crbug.com/1420265
     "VUID-vkCmdEndDebugUtilsLabelEXT-commandBuffer-01912",
-    // https://anglebug.com/8076
+    // http://anglebug.com/8076
     "VUID-VkGraphicsPipelineCreateInfo-None-06573",
+    // http://anglebug.com/8119
+    "VUID-VkGraphicsPipelineCreateInfo-Input-07905",
+    "UNASSIGNED-CoreValidation-Shader-VertexInputMismatch",
 };
 
 // Validation messages that should be ignored only when VK_EXT_primitive_topology_list_restart is
