@@ -43,7 +43,7 @@ vars = {
   'checkout_angle_mesa': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '902dbf2d835048f3639dd9054fe1ae369a62f923',
+  'chromium_revision': 'f048076954b4aedd134334f4f4998f992faee0bd',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -187,7 +187,7 @@ deps = {
   },
 
   'buildtools/third_party/libunwind/trunk': {
-    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libunwind.git@54cb62e9f8fd711d4b3912c760411151750be5b4',
+    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libunwind.git@123963cbd61d6a5c5a1b6cedb9a8e6845128677b',
     'condition': 'not build_with_chromium',
   },
 
@@ -203,7 +203,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@8024c48463cc078102cbf1105f32798fce7e54a5',
+    'url': '{chromium_git}/chromium/src/testing@768eecf603e35c502322bf6e65310078ee39c2c6',
     'condition': 'not build_with_chromium',
   },
 
