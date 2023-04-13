@@ -42,6 +42,9 @@ extern SurfaceMap gSurfaceMap;
 using ContextMap = std::unordered_map<uintptr_t, EGLContext>;
 extern ContextMap gContextMap;
 
+extern std::string gBinaryDataDir;
+extern std::vector<std::string> gTraceFiles;
+
 using DecompressCallback              = uint8_t *(*)(const std::vector<uint8_t> &);
 using DeleteCallback                  = void (*)(uint8_t *);
 using ValidateSerializedStateCallback = void (*)(const char *, const char *, uint32_t);
@@ -62,6 +65,7 @@ ANGLE_REPLAY_EXPORT void SetValidateSerializedStateCallback(
 // Only defined if serialization is enabled.
 ANGLE_REPLAY_EXPORT const char *GetSerializedContextState(uint32_t frameIndex);
 
+ANGLE_REPLAY_EXPORT void SetTraceInfo(const std::vector<std::string> &traceFiles);
 #endif  // defined(__cplusplus)
 
 // Exported trace functions.

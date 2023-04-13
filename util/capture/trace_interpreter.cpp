@@ -7,10 +7,9 @@
 //   Parser and interpreter for the C-based replays.
 //
 
-#define ANGLE_REPLAY_EXPORT
-
 #include "trace_interpreter.h"
 
+#include "anglebase/no_destructor.h"
 #include "common/gl_enum_utils.h"
 #include "common/string_utils.h"
 #include "trace_fixture.h"
@@ -28,6 +27,14 @@ bool ShouldSkipFile(const std::string &file)
     }
 
     return false;
+}
+
+void ReplayTraceFunction(const TraceFunction &func, const TraceFunctionMap &customFunctions)
+{
+    for (const CallCapture &call : func)
+    {
+        ReplayTraceFunctionCall(call, customFunctions);
+    }
 }
 
 class Parser : angle::NonCopyable
@@ -502,31 +509,25 @@ void PackConstPointerParameter(ParamBuffer &params, ParamType paramType, const T
                                reinterpret_cast<const T *>(static_cast<uintptr_t>(offset)));
     }
 }
-}  // anonymous namespace
 
-TraceInterpreter::TraceInterpreter(const TraceInfo &traceInfo,
-                                   const char *testDataDir,
-                                   bool verboseLogging)
-    : mTraceInfo(traceInfo), mTestDataDir(testDataDir), mVerboseLogging(verboseLogging)
-{}
-
-TraceInterpreter::~TraceInterpreter() = default;
-
-bool TraceInterpreter::valid() const
+class TraceInterpreter : angle::NonCopyable
 {
-    return true;
-}
+  public:
+    TraceInterpreter()  = default;
+    ~TraceInterpreter() = default;
 
-void TraceInterpreter::setBinaryDataDir(const char *dataDir)
-{
-    SetBinaryDataDir(dataDir);
-}
+    void replayFrame(uint32_t frameIndex);
+    void setupReplay();
+    void resetReplay();
+    const char *getSerializedContextState(uint32_t frameIndex);
 
-void TraceInterpreter::setBinaryDataDecompressCallback(DecompressCallback decompressCallback,
-                                                       DeleteCallback deleteCallback)
-{
-    SetBinaryDataDecompressCallback(decompressCallback, deleteCallback);
-}
+  private:
+    void runTraceFunction(const char *name) const;
+
+    TraceFunctionMap mTraceFunctions;
+    TraceStringMap mTraceStrings;
+    bool mVerboseLogging = true;
+};
 
 void TraceInterpreter::replayFrame(uint32_t frameIndex)
 {
@@ -537,7 +538,7 @@ void TraceInterpreter::replayFrame(uint32_t frameIndex)
 
 void TraceInterpreter::setupReplay()
 {
-    for (const std::string &file : mTraceInfo.traceFiles)
+    for (const std::string &file : gTraceFiles)
     {
         if (ShouldSkipFile(file))
         {
@@ -553,7 +554,7 @@ void TraceInterpreter::setupReplay()
             printf("Parsing functions from %s\n", file.c_str());
         }
         std::stringstream pathStream;
-        pathStream << mTestDataDir << GetPathSeparator() << file;
+        pathStream << gBinaryDataDir << GetPathSeparator() << file;
         std::string path = pathStream.str();
 
         std::string fileData;
@@ -581,21 +582,11 @@ void TraceInterpreter::resetReplay()
     runTraceFunction("ResetReplay");
 }
 
-void TraceInterpreter::finishReplay()
-{
-    FinishReplay();
-}
-
 const char *TraceInterpreter::getSerializedContextState(uint32_t frameIndex)
 {
     // TODO: Necessary for complete self-testing. http://anglebug.com/7779
     UNREACHABLE();
     return nullptr;
-}
-
-void TraceInterpreter::setValidateSerializedStateCallback(ValidateSerializedStateCallback callback)
-{
-    SetValidateSerializedStateCallback(callback);
 }
 
 void TraceInterpreter::runTraceFunction(const char *name) const
@@ -609,6 +600,14 @@ void TraceInterpreter::runTraceFunction(const char *name) const
     const TraceFunction &func = iter->second;
     ReplayTraceFunction(func, mTraceFunctions);
 }
+
+TraceInterpreter &GetInterpreter()
+{
+    static angle::base::NoDestructor<std::unique_ptr<TraceInterpreter>> sTraceInterpreter(
+        new TraceInterpreter());
+    return *sTraceInterpreter.get()->get();
+}
+}  // anonymous namespace
 
 template <>
 void PackParameter<uint32_t>(ParamBuffer &params, const Token &token, const TraceStringMap &strings)
@@ -950,4 +949,62 @@ void PackParameter<unsigned long>(ParamBuffer &params,
     PackIntParameter<uint64_t>(params, ParamType::TGLuint64, token);
 }
 #endif  // defined(ANGLE_PLATFORM_APPLE) || !defined(ANGLE_IS_64_BIT_CPU)
+
+GLuint GetResourceIDMapValue(ResourceIDType resourceIDType, GLuint key)
+{
+    switch (resourceIDType)
+    {
+        case ResourceIDType::Buffer:
+            return gBufferMap[key];
+        case ResourceIDType::FenceNV:
+            return gFenceNVMap[key];
+        case ResourceIDType::Framebuffer:
+            return gFramebufferMap[key];
+        case ResourceIDType::ProgramPipeline:
+            return gProgramPipelineMap[key];
+        case ResourceIDType::Query:
+            return gQueryMap[key];
+        case ResourceIDType::Renderbuffer:
+            return gRenderbufferMap[key];
+        case ResourceIDType::Sampler:
+            return gSamplerMap[key];
+        case ResourceIDType::Semaphore:
+            return gSemaphoreMap[key];
+        case ResourceIDType::ShaderProgram:
+            return gShaderProgramMap[key];
+        case ResourceIDType::Texture:
+            return gTextureMap[key];
+        case ResourceIDType::TransformFeedback:
+            return gTransformFeedbackMap[key];
+        case ResourceIDType::VertexArray:
+            return gVertexArrayMap[key];
+        default:
+            printf("Incompatible resource ID type: %d\n", static_cast<int>(resourceIDType));
+            UNREACHABLE();
+            return 0;
+    }
+}
+
 }  // namespace angle
+
+extern "C" {
+void SetupReplay()
+{
+    angle::GetInterpreter().setupReplay();
+}
+
+void ReplayFrame(uint32_t frameIndex)
+{
+    angle::GetInterpreter().replayFrame(frameIndex);
+}
+
+void ResetReplay()
+{
+    angle::GetInterpreter().resetReplay();
+}
+
+const char *GetSerializedContextState(uint32_t frameIndex)
+{
+    return angle::GetInterpreter().getSerializedContextState(frameIndex);
+}
+}  // extern "C"

@@ -511,6 +511,7 @@ if (build_angle_trace_tests) {
       "$angle_root:angle_compression",
       "$angle_root/util:angle_frame_capture_test_utils",
       "$angle_root/util:angle_png_utils",
+      "$angle_root/util:angle_trace_interpreter",
       "restricted_traces:angle_restricted_traces",
     ]
 
