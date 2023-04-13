@@ -57,9 +57,15 @@ class Parser : angle::NonCopyable
                 ASSERT(check("void "));
                 readFunction();
             }
+            else if (peek() == 'c')
+            {
+                ASSERT(check("const "));
+                readMultilineString();
+            }
             else
             {
-                readMultilineString();
+                printf("Unexpected character: '%c'\n", peek());
+                UNREACHABLE();
             }
         }
     }
@@ -127,18 +133,21 @@ class Parser : angle::NonCopyable
             if (peek() == '\\')
             {
                 advance();
-                if (peek() == 'n')
+                switch (peek())
                 {
-                    *stringOut += '\n';
-                }
-                else if (peek() == '\"')
-                {
-                    *stringOut += '\"';
-                }
-                else
-                {
-                    printf("Unrecognized escape character: \\%c\n", peek());
-                    UNREACHABLE();
+                    case 'n':
+                        *stringOut += '\n';
+                        break;
+                    case '\"':
+                        *stringOut += '\"';
+                        break;
+                    case '\\':
+                        *stringOut += '\\';
+                        break;
+                    default:
+                        printf("Unrecognized escape character: \\%c\n", peek());
+                        UNREACHABLE();
+                        break;
                 }
             }
             else
