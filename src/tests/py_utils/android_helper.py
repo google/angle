@@ -183,12 +183,17 @@ def _CompareHashes(local_path, device_path):
     device_hash = _AdbShell('sha256sum -b ' + device_path +
                             ' 2> /dev/null || true').decode().strip()
     if not device_hash:
+        logging.debug('_CompareHashes: File not found on device')
         return False  # file not on device
 
     h = hashlib.sha256()
-    with open(local_path, 'rb') as f:
-        for data in iter(lambda: f.read(65536), b''):
-            h.update(data)
+    try:
+        with open(local_path, 'rb') as f:
+            for data in iter(lambda: f.read(65536), b''):
+                h.update(data)
+    except Exception as e:
+        logging.error('An error occurred in _CompareHashes: %s' % e)
+
     return h.hexdigest() == device_hash
 
 
@@ -230,6 +235,12 @@ def PrepareRestrictedTraces(traces):
     total_size = 0
     skipped = 0
 
+    # In order to get files to the app's home directory and loadable as libraries, we must first
+    # push them to tmp on the device.  We then use `run-as` which allows copying files from tmp.
+    # Note that `mv` is not allowed with `run-as`.  This means there will briefly be two copies
+    # of the trace on the device, so keep that in mind as space becomes a problem in the future.
+    app_tmp_path = '/data/local/tmp/angle_traces/'
+
     def _Push(local_path, path_from_root):
         nonlocal total_size, skipped
         device_path = '/sdcard/chromium_tests_root/' + path_from_root
@@ -239,6 +250,29 @@ def PrepareRestrictedTraces(traces):
             total_size += os.path.getsize(local_path)
             _AdbRun(['push', local_path, device_path])
 
+    def _PushToAppDir(local_path, lib_name):
+        tmp_path = posixpath.join(app_tmp_path, lib_name)
+        logging.debug('_PushToAppDir: Pushing %s to %s' % (local_path, tmp_path))
+        try:
+            _AdbRun(['push', local_path, tmp_path])
+            _AdbShell('run-as ' + TEST_PACKAGE_NAME + ' cp ' + tmp_path + ' ./angle_traces/')
+            _AdbShell('rm ' + tmp_path)
+        except Exception as e:
+            logging.error('An error occurred in _PushToAppDir: %s' % e)
+        finally:
+            _RemoveDeviceFile(tmp_path)
+
+    # Create the directories we need
+    _AdbShell('mkdir -p ' + app_tmp_path)
+    _AdbShell('run-as ' + TEST_PACKAGE_NAME + ' mkdir -p angle_traces')
+
+    # The interpreter is loaded as a trace, it needs to be brought over too
+    interpreter_name = 'libangle_trace_interpreter.so'
+    local_interpreter_path = 'angle_trace_tests_android_binaries__dist/' + interpreter_name
+    if os.path.isfile(local_interpreter_path):
+        _PushToAppDir(local_interpreter_path, interpreter_name)
+
+    # Set up each trace
     for trace in traces:
         path_from_root = 'src/tests/restricted_traces/' + trace + '/' + trace + '.angledata.gz'
         _Push('../../' + path_from_root, path_from_root)
@@ -246,7 +280,22 @@ def PrepareRestrictedTraces(traces):
         tracegz = 'gen/tracegz_' + trace + '.gz'
         _Push(tracegz, tracegz)
 
-    logging.info('Synced %d trace files (%.1fMB, %d files already ok) in %.1fs', len(traces),
+        lib_name = 'libangle_restricted_traces_' + trace + '.so'
+        local_lib_path = 'angle_trace_tests_android_binaries__dist/' + lib_name
+        if not os.path.isfile(local_lib_path):
+            # The Chromium build will insert a '.cr' in the file names, account for that
+            lib_name = 'libangle_restricted_traces_' + trace + '.cr.so'
+            local_lib_path = 'angle_trace_tests_android_binaries__dist/' + lib_name
+        device_lib_path = '/data/user/0/com.android.angle.test/angle_traces/' + lib_name
+
+        if _CompareHashes(local_lib_path, device_lib_path):
+            skipped += 1
+        else:
+            total_size += os.path.getsize(local_lib_path)
+            # Copy into the test app's home directory
+            _PushToAppDir(local_lib_path, lib_name)
+
+    logging.info('Synced files for %d traces (%.1fMB, %d files already ok) in %.1fs', len(traces),
                  total_size / 1e6, skipped,
                  time.time() - start)
 
