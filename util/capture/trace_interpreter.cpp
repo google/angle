@@ -18,15 +18,9 @@ namespace angle
 {
 namespace
 {
-bool ShouldSkipFile(const std::string &file)
+bool ShouldParseFile(const std::string &file)
 {
-    // Skip non-C-source files.
-    if (file.back() != 'c')
-    {
-        return true;
-    }
-
-    return false;
+    return EndsWith(file, ".c") || EndsWith(file, ".cpp");
 }
 
 void ReplayTraceFunction(const TraceFunction &func, const TraceFunctionMap &customFunctions)
@@ -540,7 +534,7 @@ void TraceInterpreter::setupReplay()
 {
     for (const std::string &file : gTraceFiles)
     {
-        if (ShouldSkipFile(file))
+        if (!ShouldParseFile(file))
         {
             if (mVerboseLogging)
             {
