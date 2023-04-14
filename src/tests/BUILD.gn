@@ -1214,6 +1214,17 @@ if (build_angle_deqp_tests && !is_fuchsia) {
       "$deqp_path/framework/delibs/deutil",
       "$deqp_path/framework/delibs/destream",
     ]
+
+    # https://github.com/KhronosGroup/VK-GL-CTS/commit/9f306457b48b3f8258ca44462003ef39b80a7515
+    if (is_clang) {
+      if (target_cpu == "arm") {
+        defines = [ "DE_FENV_ACCESS_ON=" ]
+      } else {
+        defines = [ "DE_FENV_ACCESS_ON=_Pragma(\"STDC FENV_ACCESS ON\")" ]
+      }
+    } else if (is_win) {
+      defines = [ "DE_FENV_ACCESS_ON=__pragma(fenv_access (on))" ]
+    }
   }
 
   angle_deqp_source_set("angle_deqp_framework_delibs") {
