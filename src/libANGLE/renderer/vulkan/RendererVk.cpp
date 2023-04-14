@@ -5524,6 +5524,7 @@ void ImageMemorySuballocator::destroy(RendererVk *renderer) {}
 
 VkResult ImageMemorySuballocator::allocateAndBindMemory(RendererVk *renderer,
                                                         Image *image,
+                                                        const VkImageCreateInfo *imageCreateInfo,
                                                         VkMemoryPropertyFlags requiredFlags,
                                                         VkMemoryPropertyFlags preferredFlags,
                                                         MemoryAllocationType memoryAllocationType,
@@ -5547,6 +5548,16 @@ VkResult ImageMemorySuballocator::allocateAndBindMemory(RendererVk *renderer,
         allocateDedicatedMemory, &allocationOut->mHandle, memoryTypeIndexOut, sizeOut);
     if (result != VK_SUCCESS)
     {
+        // Record the failed memory allocation.
+        uint32_t pendingMemoryTypeIndex;
+        if (vma::FindMemoryTypeIndexForImageInfo(
+                allocator.getHandle(), imageCreateInfo, requiredFlags, preferredFlags,
+                allocateDedicatedMemory, &pendingMemoryTypeIndex) == VK_SUCCESS)
+        {
+            renderer->getMemoryAllocationTracker()->setPendingMemoryAlloc(
+                memoryAllocationType, memoryRequirements.size, pendingMemoryTypeIndex);
+        }
+
         return result;
     }
 
