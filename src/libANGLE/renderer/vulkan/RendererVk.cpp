@@ -67,6 +67,10 @@ constexpr uint32_t kMinDefaultUniformBufferSize = 16 * 1024u;
 // between performance and memory usage.
 constexpr uint32_t kPreferredDefaultUniformBufferSize = 64 * 1024u;
 
+// Maximum size to use VMA image suballocation. Any allocation greater than or equal to this
+// value will use a dedicated VkDeviceMemory.
+constexpr size_t kImageSizeThresholdForDedicatedMemoryAllocation = 4 * 1024 * 1024;
+
 // Update the pipeline cache every this many swaps.
 constexpr uint32_t kPipelineCacheVkUpdatePeriod = 60;
 // Per the Vulkan specification, ANGLE must indicate the highest version of Vulkan functionality
@@ -5549,9 +5553,15 @@ VkResult ImageMemorySuballocator::allocateAndBindMemory(RendererVk *renderer,
     ASSERT(allocationOut && !allocationOut->valid());
     const Allocator &allocator = renderer->getAllocator();
 
+    VkMemoryRequirements memoryRequirements;
+    image->getMemoryRequirements(renderer->getDevice(), &memoryRequirements);
+    bool allocateDedicatedMemory =
+        memoryRequirements.size >= kImageSizeThresholdForDedicatedMemoryAllocation;
+
+    // Allocate and bind memory for the image.
     VkResult result = vma::AllocateAndBindMemoryForImage(
         allocator.getHandle(), &image->mHandle, requiredFlags, preferredFlags,
-        &allocationOut->mHandle, memoryTypeIndexOut, sizeOut);
+        allocateDedicatedMemory, &allocationOut->mHandle, memoryTypeIndexOut, sizeOut);
     if (result != VK_SUCCESS)
     {
         return result;
