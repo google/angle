@@ -95,7 +95,6 @@ bool TraceTestArg(int *argc, char **argv, int argIndex)
            ParseFlag("--vsync", argc, argv, argIndex, &gVsync) ||
            ParseFlag("--minimize-gpu-work", argc, argv, argIndex, &gMinimizeGPUWork) ||
            ParseFlag("--trace-interpreter", argc, argv, argIndex, &gTraceInterpreter) ||
-           ParseFlag("--interpreter", argc, argv, argIndex, &gTraceInterpreter) ||
            ParseIntArg("--screenshot-frame", argc, argv, argIndex, &gScreenshotFrame) ||
            ParseCStringArgWithHandling("--render-test-output-dir", argc, argv, argIndex,
                                        &gRenderTestOutputDir, ArgHandling::Preserve) ||
