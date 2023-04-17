@@ -1504,6 +1504,20 @@ void GenerateCaps(const FunctionsGL *functions,
     extensions->sampleVariablesOES = functions->isAtLeastGL(gl::Version(4, 2)) ||
                                      functions->isAtLeastGLES(gl::Version(3, 2)) ||
                                      functions->hasGLESExtension("GL_OES_sample_variables");
+    // Some drivers do not support sample qualifiers in ESSL 3.00, so ESSL 3.10 is required on ES.
+    extensions->shaderMultisampleInterpolationOES =
+        functions->isAtLeastGL(gl::Version(4, 2)) || functions->isAtLeastGLES(gl::Version(3, 2)) ||
+        (functions->isAtLeastGLES(gl::Version(3, 1)) &&
+         functions->hasGLESExtension("GL_OES_shader_multisample_interpolation"));
+    if (extensions->shaderMultisampleInterpolationOES)
+    {
+        caps->minInterpolationOffset =
+            QuerySingleGLFloat(functions, GL_MIN_FRAGMENT_INTERPOLATION_OFFSET_OES);
+        caps->maxInterpolationOffset =
+            QuerySingleGLFloat(functions, GL_MAX_FRAGMENT_INTERPOLATION_OFFSET_OES);
+        caps->subPixelInterpolationOffsetBits =
+            QuerySingleGLInt(functions, GL_FRAGMENT_INTERPOLATION_OFFSET_BITS_OES);
+    }
 
     // Support video texture extension on non Android backends.
     // TODO(crbug.com/776222): support Android and Apple devices.

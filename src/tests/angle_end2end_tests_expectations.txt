@@ -1165,6 +1165,10 @@
 // Pipeline creation failure
 8120 PIXEL4ORXL VULKAN : SampleVariablesTest.SamplePosition/* = SKIP
 
+// Invalid gl_SampleMaskIn value when sample qualifier is present
+8131 LINUX INTEL : SampleMultisampleInterpolationTest.SampleMaskInPerSample/* = SKIP
+8131 LINUX INTEL : SampleMultisampleInterpolationTest.SampleMaskInPerSampleNoPerspective/* = SKIP
+
 // bits 24..31 from glClearValueuiv value don't work on Intel Metal.
 7794 MAC INTEL METAL : PixelLocalStorageTest.ClearValues_r32/* = SKIP
 
