@@ -504,8 +504,7 @@ rx::DisplayImpl *CreateDisplayFromAttribs(EGLAttrib displayType,
 #        error Unsupported Vulkan platform.
 #    endif
 #else
-            // No display available
-            UNREACHABLE();
+            // Vulkan isn't available
             break;
 #endif  // defined(ANGLE_ENABLE_VULKAN)
 
@@ -517,8 +516,7 @@ rx::DisplayImpl *CreateDisplayFromAttribs(EGLAttrib displayType,
                 break;
             }
 #endif
-            // No display available
-            UNREACHABLE();
+            // Metal isn't available.
             break;
 
         case EGL_PLATFORM_ANGLE_TYPE_NULL_ANGLE:
