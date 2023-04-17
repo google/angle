@@ -661,7 +661,10 @@ template("angle_trace_library") {
     _gen_target = "gen${target_name}_$_trace"
     action(_gen_target) {
       script = "//scripts/tracegz.py"
-      args = [ _trace ]
+      args = [
+        _trace,
+        rebase_path(_trace_dir, root_build_dir),
+      ]
       outputs = [ "$root_gen_dir/tracegz_$_trace.gz" ]
     }
 
