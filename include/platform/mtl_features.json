@@ -312,6 +312,24 @@
                 "Staged GPU upload of some packed texture formats such as RGB9_E5 fail on Intel GPUs."
             ],
             "issue": "http://anglebug.com/8092"
+        },
+        {
+            "name": "compile_metal_shaders",
+            "category": "Features",
+            "description": [
+                "Compiles metal shaders using command line tools and saves to BlobCache. ",
+                "Requires using --no-sandbox and disabling enableParallelMtlLibraryCompilation."
+            ],
+            "issue": "http://crbug.com/1423136"
+        },
+        {
+            "name": "load_metal_shaders_from_blob_cache",
+            "category": "Features",
+            "description": [
+                "Loads metal shaders from blob cache. Useful if compile_metal_shaders was used to ",
+                "generate shaders."
+            ],
+            "issue": "http://crbug.com/1423136"
         }
     ]
 }
