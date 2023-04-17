@@ -8,10 +8,8 @@
 
 #include "angle_gl.h"
 #include "common/utilities.h"
-#include "compiler/translator/BuiltinsWorkaroundGLSL.h"
 #include "compiler/translator/DriverUniformMetal.h"
 #include "compiler/translator/ImmutableStringBuilder.h"
-#include "compiler/translator/OutputGLSLBase.h"
 #include "compiler/translator/StaticType.h"
 #include "compiler/translator/TranslatorMetalDirect/AddExplicitTypeCasts.h"
 #include "compiler/translator/TranslatorMetalDirect/AstHelpers.h"
@@ -43,7 +41,6 @@
 #include "compiler/translator/tree_ops/RewriteDfdy.h"
 #include "compiler/translator/tree_ops/RewriteStructSamplers.h"
 #include "compiler/translator/tree_ops/SeparateStructFromUniformDeclarations.h"
-#include "compiler/translator/tree_ops/apple/RewriteRowMajorMatrices.h"
 #include "compiler/translator/tree_util/BuiltIn.h"
 #include "compiler/translator/tree_util/DriverUniform.h"
 #include "compiler/translator/tree_util/FindFunction.h"
@@ -1344,17 +1341,6 @@ bool TranslatorMetalDirect::translateImpl(TInfoSinkBase &sink,
             return false;
         }
     }
-    else if (getShaderType() == GL_GEOMETRY_SHADER)
-    {
-        WriteGeometryShaderLayoutQualifiers(
-            sink, getGeometryShaderInputPrimitiveType(), getGeometryShaderInvocations(),
-            getGeometryShaderOutputPrimitiveType(), getGeometryShaderMaxVertices());
-    }
-    else
-    {
-        ASSERT(getShaderType() == GL_COMPUTE_SHADER);
-        EmitWorkGroupSizeGLSL(*this, sink);
-    }
 
     if (getShaderType() == GL_VERTEX_SHADER)
     {
@@ -1419,8 +1405,6 @@ bool TranslatorMetalDirect::translateImpl(TInfoSinkBase &sink,
         return false;
     }
 
-    // Note: ReduceInterfaceBlocks removes row_major matrix layout specifiers
-    // so it must come after RewriteRowMajorMatrices.
     if (!ReduceInterfaceBlocks(*this, *root, idGen, &getSymbolTable()))
     {
         return false;

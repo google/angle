@@ -562,11 +562,7 @@ libangle_cl_sources = [
   "src/libANGLE/validationCL.cpp",
 ]
 
-libangle_mac_sources = [
-  "src/libANGLE/renderer/driver_utils_mac.mm",
-  "src/libANGLE/renderer/gl/apple/DisplayApple_api.cpp",
-  "src/libANGLE/renderer/gl/apple/DisplayApple_api.h",
-]
+libangle_mac_sources = [ "src/libANGLE/renderer/driver_utils_mac.mm" ]
 
 # The frame capture headers are always visible to libANGLE.
 libangle_sources += [

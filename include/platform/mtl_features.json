@@ -158,13 +158,6 @@
             ]
         },
         {
-            "name": "rewrite_row_major_matrices",
-            "category": "Features",
-            "description": [
-                "Rewrite row major matrices in shaders as column major."
-            ]
-        },
-        {
             "name": "intel_explicit_bool_cast_workaround",
             "category": "Workarounds",
             "description": [

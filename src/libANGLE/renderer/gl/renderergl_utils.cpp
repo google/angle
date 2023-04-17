@@ -1770,18 +1770,14 @@ void GenerateCaps(const FunctionsGL *functions,
         extensions->compressedETC2RGB8TextureOES || functions->isAtLeastGLES(gl::Version(3, 0)) ||
         functions->hasGLESExtension("GL_EXT_compressed_ETC1_RGB8_sub_texture");
 
-#if defined(ANGLE_PLATFORM_MACOS) || defined(ANGLE_PLATFORM_MACCATALYST)
-    angle::SystemInfo info;
-    if (angle::GetSystemInfo(&info) && !info.needsEAGLOnMac)
+#if ANGLE_ENABLE_CGL
+    VendorID vendor = GetVendorID(functions);
+    if ((IsAMD(vendor) || IsIntel(vendor)) && *maxSupportedESVersion >= gl::Version(3, 0))
     {
-        VendorID vendor = GetVendorID(functions);
-        if ((IsAMD(vendor) || IsIntel(vendor)) && *maxSupportedESVersion >= gl::Version(3, 0))
-        {
-            // Apple Intel/AMD drivers do not correctly use the TEXTURE_SRGB_DECODE property of
-            // sampler states.  Disable this extension when we would advertise any ES version
-            // that has samplers.
-            extensions->textureSRGBDecodeEXT = false;
-        }
+        // Apple Intel/AMD drivers do not correctly use the TEXTURE_SRGB_DECODE property of
+        // sampler states.  Disable this extension when we would advertise any ES version
+        // that has samplers.
+        extensions->textureSRGBDecodeEXT = false;
     }
 #endif
 

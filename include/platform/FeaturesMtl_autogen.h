@@ -170,13 +170,6 @@ struct FeaturesMtl : FeatureSetBase
         &members,
     };
 
-    FeatureInfo rewriteRowMajorMatrices = {
-        "rewriteRowMajorMatrices",
-        FeatureCategory::MetalFeatures,
-        "Rewrite row major matrices in shaders as column major.",
-        &members,
-    };
-
     FeatureInfo intelExplicitBoolCastWorkaround = {
         "intelExplicitBoolCastWorkaround",
         FeatureCategory::MetalWorkarounds,

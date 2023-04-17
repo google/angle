@@ -78,8 +78,6 @@ struct SystemInfo
     bool isAMDSwitchable = false;
     // Only true on dual-GPU Mac laptops.
     bool isMacSwitchable = false;
-    // Only true on Apple Silicon Macs when running in macCatalyst.
-    bool needsEAGLOnMac = false;
 
     // Only available on Android
     std::string machineManufacturer;
