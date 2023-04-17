@@ -189,6 +189,12 @@ void GetIORegistryDevices(std::vector<GPUDeviceInfo> *devices)
 
 void ForceGPUSwitchIndex(SystemInfo *info)
 {
+    // Early-out if on a single-GPU system
+    if (info->gpus.size() < 2)
+    {
+        return;
+    }
+
     VendorID activeVendor = 0;
     DeviceID activeDevice = 0;
 
