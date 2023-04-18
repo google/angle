@@ -500,7 +500,26 @@ void EGLAPIENTRY EGL_ForceGPUSwitchANGLE(EGLDisplay dpy, EGLint gpuIDHigh, EGLin
 // EGL_ANGLE_prepare_swap_buffers
 EGLBoolean EGLAPIENTRY EGL_PrepareSwapBuffersANGLE(EGLDisplay dpy, EGLSurface surface)
 {
-    return PrepareSwapBuffersANGLE(dpy, surface);
+
+    Thread *thread = egl::GetCurrentThread();
+    EGLBoolean returnValue;
+    {
+        ANGLE_SCOPED_GLOBAL_LOCK();
+        EGL_EVENT(PrepareSwapBuffersANGLE, "dpy = 0x%016" PRIxPTR ", surface = 0x%016" PRIxPTR "",
+                  (uintptr_t)dpy, (uintptr_t)surface);
+
+        egl::Display *dpyPacked = PackParam<egl::Display *>(dpy);
+        SurfaceID surfacePacked = PackParam<SurfaceID>(surface);
+
+        ANGLE_EGL_VALIDATE(thread, PrepareSwapBuffersANGLE, GetDisplayIfValid(dpyPacked),
+                           EGLBoolean, dpyPacked, surfacePacked);
+
+        returnValue = PrepareSwapBuffersANGLE(thread, dpyPacked, surfacePacked);
+        ANGLE_CAPTURE_EGL(PrepareSwapBuffersANGLE, true, thread, dpyPacked, surfacePacked,
+                          returnValue);
+    }
+    egl::Display::GetCurrentThreadUnlockedTailCall()->run();
+    return returnValue;
 }
 
 // EGL_ANGLE_program_cache_control
@@ -704,7 +723,7 @@ EGLBoolean EGLAPIENTRY EGL_SwapBuffersWithFrameTokenANGLE(EGLDisplay dpy,
                                                           EGLSurface surface,
                                                           EGLFrameTokenANGLE frametoken)
 {
-    ANGLE_EGLBOOLEAN_TRY(PrepareSwapBuffersANGLE(dpy, surface));
+    ANGLE_EGLBOOLEAN_TRY(EGL_PrepareSwapBuffersANGLE(dpy, surface));
     Thread *thread = egl::GetCurrentThread();
     EGLBoolean returnValue;
     {
@@ -1663,7 +1682,7 @@ EGLBoolean EGLAPIENTRY EGL_SwapBuffersWithDamageKHR(EGLDisplay dpy,
                                                     const EGLint *rects,
                                                     EGLint n_rects)
 {
-    ANGLE_EGLBOOLEAN_TRY(PrepareSwapBuffersANGLE(dpy, surface));
+    ANGLE_EGLBOOLEAN_TRY(EGL_PrepareSwapBuffersANGLE(dpy, surface));
     Thread *thread = egl::GetCurrentThread();
     EGLBoolean returnValue;
     {

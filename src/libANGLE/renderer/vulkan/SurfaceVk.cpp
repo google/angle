@@ -958,8 +958,10 @@ void WindowSurfaceVk::destroy(const egl::Display *display)
     // has returned.
     if (mSurface)
     {
-        egl::Display::GetCurrentThreadUnlockedTailCall()->add(
-            [surface = mSurface, instance]() { vkDestroySurfaceKHR(instance, surface, nullptr); });
+        egl::Display::GetCurrentThreadUnlockedTailCall()->add([surface = mSurface, instance]() {
+            ANGLE_TRACE_EVENT0("gpu.angle", "WindowSurfaceVk::destroy:vkDestroySurfaceKHR");
+            vkDestroySurfaceKHR(instance, surface, nullptr);
+        });
         mSurface = VK_NULL_HANDLE;
     }
 }
@@ -1800,23 +1802,38 @@ void WindowSurfaceVk::destroySwapChainImages(DisplayVk *displayVk)
 
 egl::Error WindowSurfaceVk::prepareSwap(const gl::Context *context)
 {
-    DisplayVk *displayVk = vk::GetImpl(context->getDisplay());
-    angle::Result result = prepareSwapImpl(context);
-    return angle::ToEGL(result, displayVk, EGL_BAD_SURFACE);
-}
-
-angle::Result WindowSurfaceVk::prepareSwapImpl(const gl::Context *context)
-{
-    ANGLE_TRACE_EVENT0("gpu.angle", "WindowSurfaceVk::prepareSwap");
     if (mNeedToAcquireNextSwapchainImage)
     {
-        // Acquire the next image (previously deferred). The image may not have been already
-        // acquired if there was no rendering done at all to the default framebuffer in this frame,
-        // for example if all rendering was done to FBOs.
-        ANGLE_TRACE_EVENT0("gpu.angle", "Acquire Swap Image Before Swap");
-        ANGLE_TRY(doDeferredAcquireNextImage(context, false));
+        // TODO(syoussefi): It is not safe to call doDeferredAcquireNextImage without holding the
+        // lock; it may recreate the swapchain, send notification to observer and a whole lot of
+        // other things.
+        //
+        // This should be fixed such that ANI is split in two:
+        //
+        // - A top call that that takes a fine-grained lock (to protected against simultanous
+        //   acquire calls by other threads), and *only* calls vkAcquireNextImageKHR once
+        //   (conditional to mNeedToAcquireNextSwapchainImage) without checking for errors.  The
+        //   result is stored in a member variable.
+        // - A bottom call that checks for the results of vkAcquireNextImage and recreates the
+        //   swapchain as necessary.
+        //
+        // The latter is called by eglSwapBuffers.  doDeferredAcquireNextImage() itself, if called
+        // through another entry point calls the top and half bottoms in sequence.
+        //
+        // http://anglebug.com/8133
+        egl::Display::GetCurrentThreadUnlockedTailCall()->add([context, this]() {
+            // Acquire the next image (previously deferred). The image may not have been already
+            // acquired if there was no rendering done at all to the default framebuffer in this
+            // frame, for example if all rendering was done to FBOs.
+            if (mNeedToAcquireNextSwapchainImage)
+            {
+                ANGLE_TRACE_EVENT0("gpu.angle", "Acquire Swap Image Before Swap");
+                (void)doDeferredAcquireNextImage(context, false);
+            }
+        });
     }
-    return angle::Result::Continue;
+
+    return egl::NoError();
 }
 
 egl::Error WindowSurfaceVk::swapWithDamage(const gl::Context *context,

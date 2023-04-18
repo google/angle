@@ -9,6 +9,7 @@
 //   Defines the EGL entry points.
 
 #include "libGLESv2/entry_points_egl_autogen.h"
+#include "libGLESv2/entry_points_egl_ext_autogen.h"
 
 #include "libANGLE/capture/capture_egl_autogen.h"
 #include "libANGLE/entry_points_utils.h"
@@ -533,7 +534,7 @@ EGLBoolean EGLAPIENTRY EGL_QuerySurface(EGLDisplay dpy,
 
 EGLBoolean EGLAPIENTRY EGL_SwapBuffers(EGLDisplay dpy, EGLSurface surface)
 {
-    ANGLE_EGLBOOLEAN_TRY(PrepareSwapBuffersANGLE(dpy, surface));
+    ANGLE_EGLBOOLEAN_TRY(EGL_PrepareSwapBuffersANGLE(dpy, surface));
     Thread *thread = egl::GetCurrentThread();
     EGLBoolean returnValue;
     {

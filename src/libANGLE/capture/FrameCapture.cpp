@@ -5488,6 +5488,11 @@ bool SkipCall(EntryPoint entryPoint)
             // - Some EGL types and pointer parameters aren't yet implemented in EGL capture.
             return true;
 
+        case EntryPoint::EGLPrepareSwapBuffersANGLE:
+            // Skip this call because:
+            // - eglPrepareSwapBuffersANGLE is automatically called by eglSwapBuffers
+            return true;
+
         case EntryPoint::EGLSwapBuffers:
             // Skip these calls because:
             // - Swap is handled specially by the trace harness.

@@ -314,13 +314,6 @@ void EGLAPIENTRY EGL_{name}({params})
 }}
 """
 
-TEMPLATE_EGL_ENTRY_POINT_NO_RETURN_CUSTOM = """\
-void EGLAPIENTRY EGL_{name}({params})
-{{
-    {name}({internal_params});
-}}
-"""
-
 TEMPLATE_EGL_ENTRY_POINT_WITH_RETURN = """\
 {return_type} EGLAPIENTRY EGL_{name}({params})
 {{
@@ -340,13 +333,6 @@ TEMPLATE_EGL_ENTRY_POINT_WITH_RETURN = """\
     }}
     {epilog}
     return returnValue;
-}}
-"""
-
-TEMPLATE_EGL_ENTRY_POINT_WITH_RETURN_CUSTOM = """\
-{return_type} EGLAPIENTRY EGL_{name}({params})
-{{
-    return {name}({internal_params});
 }}
 """
 
@@ -963,6 +949,7 @@ EGL_HEADER_INCLUDES = """\
 
 EGL_SOURCE_INCLUDES = """\
 #include "libGLESv2/entry_points_egl_autogen.h"
+#include "libGLESv2/entry_points_egl_ext_autogen.h"
 
 #include "libANGLE/capture/capture_egl_autogen.h"
 #include "libANGLE/entry_points_utils.h"
@@ -1598,14 +1585,9 @@ def get_packed_enums(api, cmd_packed_gl_enums, cmd_name, packed_param_types, par
     return result
 
 
-CUSTOM_EGL_ENTRY_POINTS = ["eglPrepareSwapBuffersANGLE"]
-
-
 def get_def_template(api, cmd_name, return_type, has_errcode_ret):
     if return_type == "void":
         if api == apis.EGL:
-            if cmd_name in CUSTOM_EGL_ENTRY_POINTS:
-                return TEMPLATE_EGL_ENTRY_POINT_NO_RETURN_CUSTOM
             return TEMPLATE_EGL_ENTRY_POINT_NO_RETURN
         elif api == apis.CL:
             return TEMPLATE_CL_ENTRY_POINT_NO_RETURN
@@ -1615,8 +1597,6 @@ def get_def_template(api, cmd_name, return_type, has_errcode_ret):
         return TEMPLATE_CL_ENTRY_POINT_WITH_RETURN_ERROR
     else:
         if api == apis.EGL:
-            if cmd_name in CUSTOM_EGL_ENTRY_POINTS:
-                return TEMPLATE_EGL_ENTRY_POINT_WITH_RETURN_CUSTOM
             return TEMPLATE_EGL_ENTRY_POINT_WITH_RETURN
         elif api == apis.CL:
             if has_errcode_ret:
@@ -1630,10 +1610,7 @@ def get_def_template(api, cmd_name, return_type, has_errcode_ret):
 def format_entry_point_def(api, command_node, cmd_name, proto, params, cmd_packed_enums,
                            packed_param_types, ep_to_object):
     packed_enums = get_packed_enums(api, cmd_packed_enums, cmd_name, packed_param_types, params)
-    if cmd_name in CUSTOM_EGL_ENTRY_POINTS:
-        internal_params = [just_the_name(param) for param in params]
-    else:
-        internal_params = [just_the_name_packed(param, packed_enums) for param in params]
+    internal_params = [just_the_name_packed(param, packed_enums) for param in params]
     if internal_params and internal_params[-1] == "errcode_ret":
         internal_params.pop()
         has_errcode_ret = True
@@ -2704,7 +2681,7 @@ def get_prepare_swap_buffers_call(api, cmd_name, params):
         if param_type == "EGLSurface":
             passed_params[1] = param
 
-    return "ANGLE_EGLBOOLEAN_TRY(PrepareSwapBuffersANGLE(%s));" % (", ".join(
+    return "ANGLE_EGLBOOLEAN_TRY(EGL_PrepareSwapBuffersANGLE(%s));" % (", ".join(
         [just_the_name(param) for param in passed_params]))
 
 
@@ -2722,10 +2699,12 @@ def get_unlocked_tail_call(api, cmd_name):
     #   VkSurfaceKHR in tail call
     # - eglCreateWindowSurface and eglCreatePlatformWindowSurface[EXT] -> May
     #   destroy VkSurfaceKHR in tail call if surface initialization fails
+    # - eglPrepareSwapBuffersANGLE -> Calls vkAcquireNextImageKHR in tail call
     #
     if cmd_name in [
             'eglDestroySurface', 'eglMakeCurrent', 'eglReleaseThread', 'eglCreateWindowSurface',
-            'eglCreatePlatformWindowSurface', 'eglCreatePlatformWindowSurfaceEXT'
+            'eglCreatePlatformWindowSurface', 'eglCreatePlatformWindowSurfaceEXT',
+            'eglPrepareSwapBuffersANGLE'
     ]:
         return 'egl::Display::GetCurrentThreadUnlockedTailCall()->run();'
 
@@ -2752,23 +2731,15 @@ def write_stubs_header(api, annotation, title, data_source, out_file, all_comman
 
         proto_text = "".join(proto.itertext())
 
-        if cmd_name in CUSTOM_EGL_ENTRY_POINTS:
-            params = []
-        else:
-            params = [] if api == apis.CL else ["Thread *thread"]
-
+        params = [] if api == apis.CL else ["Thread *thread"]
         params += ["".join(param.itertext()) for param in command.findall('param')]
         if params and just_the_name(params[-1]) == "errcode_ret":
             params[-1] = "cl_int &errorCode"
         return_type = proto_text[:-len(cmd_name)].strip()
 
-        if cmd_name in CUSTOM_EGL_ENTRY_POINTS:
-            stubs.append("%s %s(%s);" %
-                         (return_type, strip_api_prefix(cmd_name), ", ".join(params)))
-        else:
-            internal_params = get_internal_params(api, cmd_name, params, cmd_packed_egl_enums,
-                                                  packed_param_types)
-            stubs.append("%s %s(%s);" % (return_type, strip_api_prefix(cmd_name), internal_params))
+        internal_params = get_internal_params(api, cmd_name, params, cmd_packed_egl_enums,
+                                              packed_param_types)
+        stubs.append("%s %s(%s);" % (return_type, strip_api_prefix(cmd_name), internal_params))
 
     args = {
         "annotation_lower": annotation.lower(),
