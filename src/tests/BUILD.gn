@@ -548,6 +548,13 @@ if (build_angle_trace_tests) {
     }
 
     data = [ "$angle_root/src/tests/py_utils/android_helper.py" ]
+
+    if (is_android) {
+      data += [ "$angle_root/src/tests/angle_android_test_runner.py" ]
+      android_test_runner_script =
+          "$angle_root/src/tests/angle_android_test_runner.py"
+    }
+
     data_deps = [ "${angle_root}:angle" ]
 
     if (is_clang) {
