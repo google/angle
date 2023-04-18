@@ -2212,7 +2212,7 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
 
     // Triggers a bug on Marshmallow Adreno (4xx?) driver.
     // http://anglebug.com/2046
-    ANGLE_FEATURE_CONDITION(features, dontInitializeUninitializedLocals, IsAndroid() && isQualcomm);
+    ANGLE_FEATURE_CONDITION(features, dontInitializeUninitializedLocals, !isMesa && isQualcomm);
 
     ANGLE_FEATURE_CONDITION(features, finishDoesNotCauseQueriesToBeAvailable,
                             functions->standard == STANDARD_GL_DESKTOP && isNvidia);
@@ -2255,16 +2255,15 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
 
     // Ported from gpu_driver_bug_list.json (#246, #258)
     ANGLE_FEATURE_CONDITION(features, dontUseLoopsToInitializeVariables,
-                            (IsAndroid() && isQualcomm) || (isIntel && IsApple()));
+                            (!isMesa && isQualcomm) || (isIntel && IsApple()));
 
     // Adreno drivers do not support glBindFragDataLocation* with MRT
     // Intel macOS condition ported from gpu_driver_bug_list.json (#327)
     ANGLE_FEATURE_CONDITION(features, disableBlendFuncExtended,
-                            (IsAndroid() && isQualcomm) ||
+                            (!isMesa && isQualcomm) ||
                                 (IsApple() && isIntel && GetMacOSVersion() < OSVersion(10, 14, 0)));
 
-    ANGLE_FEATURE_CONDITION(features, unsizedSRGBReadPixelsDoesntTransform,
-                            IsAndroid() && isQualcomm);
+    ANGLE_FEATURE_CONDITION(features, unsizedSRGBReadPixelsDoesntTransform, !isMesa && isQualcomm);
 
     ANGLE_FEATURE_CONDITION(features, queryCounterBitsGeneratesErrors, IsNexus5X(vendor, device));
 
@@ -2537,8 +2536,11 @@ void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFea
     VendorID vendor = GetVendorID(functions);
     bool isQualcomm = IsQualcomm(vendor);
 
+    std::array<int, 3> mesaVersion = {0, 0, 0};
+    bool isMesa                    = IsMesa(functions, &mesaVersion);
+
     ANGLE_FEATURE_CONDITION(features, disableProgramCachingForTransformFeedback,
-                            IsAndroid() && isQualcomm);
+                            !isMesa && isQualcomm);
     // https://crbug.com/480992
     // Disable shader program cache to workaround PowerVR Rogue issues.
     ANGLE_FEATURE_CONDITION(features, disableProgramBinary, IsPowerVrRogue(functions));
