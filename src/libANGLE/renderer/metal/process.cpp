@@ -87,10 +87,12 @@ class PosixSpawnFileActions
         DPSXCHECK(posix_spawn_file_actions_addinherit_np(&file_actions_, filedes));
     }
 
+#if defined(ANGLE_PLATFORM_MACOS)
     void Chdir(const char *path) API_AVAILABLE(macos(10.15))
     {
         DPSXCHECK(posix_spawn_file_actions_addchdir_np(&file_actions_, path));
     }
+#endif  // defined(ANGLE_PLATFORM_MACOS)
 
     const posix_spawn_file_actions_t *get() const { return &file_actions_; }
 
