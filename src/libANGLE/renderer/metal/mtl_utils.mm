@@ -961,6 +961,30 @@ std::string CompileShaderLibraryToFile(const std::string &source,
     return metallibFileName.value();
 }
 
+AutoObjCPtr<id<MTLLibrary>> CreateShaderLibrary(id<MTLDevice> metalDevice,
+                                                const char *source,
+                                                size_t sourceLen,
+                                                AutoObjCPtr<NSError *> *errorOut)
+{
+    ANGLE_MTL_OBJC_SCOPE
+    {
+        auto nsSource = [[NSString alloc] initWithBytesNoCopy:const_cast<char *>(source)
+                                                       length:sourceLen
+                                                     encoding:NSUTF8StringEncoding
+                                                 freeWhenDone:NO];
+        auto options  = [[[MTLCompileOptions alloc] init] ANGLE_MTL_AUTORELEASE];
+
+        NSError *nsError = nil;
+        auto library = [metalDevice newLibraryWithSource:nsSource options:options error:&nsError];
+
+        [nsSource ANGLE_MTL_AUTORELEASE];
+
+        *errorOut = std::move(nsError);
+
+        return [library ANGLE_MTL_AUTORELEASE];
+    }
+}
+
 AutoObjCPtr<id<MTLLibrary>> CreateShaderLibraryFromBinary(id<MTLDevice> metalDevice,
                                                           const uint8_t *binarySource,
                                                           size_t binarySourceLen,

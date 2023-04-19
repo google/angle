@@ -8,13 +8,11 @@
 
 // C++ string version of combined Metal default shaders.
 
-
-
 static char gDefaultMetallibSrc[] = R"(
 # 1 "temp_master_source.metal"
 # 1 "<built-in>" 1
 # 1 "<built-in>" 3
-# 437 "<built-in>" 3
+# 477 "<built-in>" 3
 # 1 "<command line>" 1
 # 1 "<built-in>" 2
 # 1 "temp_master_source.metal" 2
@@ -1483,7 +1481,9 @@ kernel void generate2DArrayMipmaps(uint lIndex [[thread_index_in_threadgroup]],
 
 
 # 1 "./format_autogen.h" 1
-# 11 "./format_autogen.h"
+
+
+
 namespace rx
 {
 namespace mtl_shader
