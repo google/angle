@@ -2207,28 +2207,35 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
 
     // Now update swapSerial With last submitted queue serial and apply CPU throttle if needed
     QueueSerial swapSerial = contextVk->getLastSubmittedQueueSerial();
-    ANGLE_TRY(throttleCPU(contextVk, swapSerial));
+    ANGLE_TRY(throttleCPU(vk::GetImpl(renderer->getDisplay()), swapSerial));
 
     contextVk->resetPerFramePerfCounters();
 
     return angle::Result::Continue;
 }
 
-angle::Result WindowSurfaceVk::throttleCPU(ContextVk *contextVk,
+angle::Result WindowSurfaceVk::throttleCPU(DisplayVk *displayVk,
                                            const QueueSerial &currentSubmitSerial)
 {
-    RendererVk *renderer = contextVk->getRenderer();
-
     // Wait on the oldest serial and replace it with the newest as the circular buffer moves
     // forward.
     QueueSerial swapSerial = mSwapHistory.front();
     mSwapHistory.front()   = currentSubmitSerial;
     mSwapHistory.next();
 
-    if (swapSerial.valid())
+    if (swapSerial.valid() && !displayVk->getRenderer()->hasQueueSerialFinished(swapSerial))
     {
-        ANGLE_TRACE_EVENT0("gpu.angle", "WindowSurfaceVk::throttleCPU");
-        ANGLE_TRY(renderer->finishQueueSerial(contextVk, swapSerial));
+        // Make this call after unlocking the EGL lock.   The RendererVk::finishQueueSerial is
+        // necessarily thread-safe because it can get called from any number of GL commands, which
+        // don't necessarily hold the EGL lock.
+        //
+        // As this is an unlocked tail call, it must not access anything else in RendererVk.  The
+        // display passed to |finishQueueSerial| is a |vk::Context|, and the only possible
+        // modification to it is through |handleError()|.
+        egl::Display::GetCurrentThreadUnlockedTailCall()->add([displayVk, swapSerial]() {
+            ANGLE_TRACE_EVENT0("gpu.angle", "WindowSurfaceVk::throttleCPU");
+            (void)displayVk->getRenderer()->finishQueueSerial(displayVk, swapSerial);
+        });
     }
 
     return angle::Result::Continue;

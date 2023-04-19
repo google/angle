@@ -2699,12 +2699,17 @@ def get_unlocked_tail_call(api, cmd_name):
     #   VkSurfaceKHR in tail call
     # - eglCreateWindowSurface and eglCreatePlatformWindowSurface[EXT] -> May
     #   destroy VkSurfaceKHR in tail call if surface initialization fails
+    #
     # - eglPrepareSwapBuffersANGLE -> Calls vkAcquireNextImageKHR in tail call
+    #
+    # - eglSwapBuffers, eglSwapBuffersWithDamageKHR and
+    #   eglSwapBuffersWithFrameTokenANGLE -> May throttle the CPU in tail call
     #
     if cmd_name in [
             'eglDestroySurface', 'eglMakeCurrent', 'eglReleaseThread', 'eglCreateWindowSurface',
             'eglCreatePlatformWindowSurface', 'eglCreatePlatformWindowSurfaceEXT',
-            'eglPrepareSwapBuffersANGLE'
+            'eglPrepareSwapBuffersANGLE', 'eglSwapBuffers', 'eglSwapBuffersWithDamageKHR',
+            'eglSwapBuffersWithFrameTokenANGLE'
     ]:
         return 'egl::Display::GetCurrentThreadUnlockedTailCall()->run();'
 

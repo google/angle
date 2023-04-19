@@ -628,10 +628,10 @@ EGLBoolean SwapBuffersWithDamageKHR(Thread *thread,
 {
     Surface *eglSurface = display->getSurface(surfaceID);
 
-    ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglSwapBuffersWithDamageEXT",
+    ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglSwapBuffersWithDamageKHR",
                          GetDisplayIfValid(display), EGL_FALSE);
     ANGLE_EGL_TRY_RETURN(thread, eglSurface->swapWithDamage(thread->getContext(), rects, n_rects),
-                         "eglSwapBuffersWithDamageEXT", GetSurfaceIfValid(display, surfaceID),
+                         "eglSwapBuffersWithDamageKHR", GetSurfaceIfValid(display, surfaceID),
                          EGL_FALSE);
 
     thread->setSuccess();
