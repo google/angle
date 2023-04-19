@@ -233,6 +233,12 @@ constexpr const char *kSkippedMessages[] = {
     // http://anglebug.com/8119
     "VUID-VkGraphicsPipelineCreateInfo-Input-07905",
     "UNASSIGNED-CoreValidation-Shader-VertexInputMismatch",
+    "VUID-vkCmdDraw-None-02859",
+    "VUID-vkCmdDrawIndexed-None-02859",
+    "VUID-vkCmdDrawIndexed-None-07835",
+    "VUID-vkCmdDrawIndexedIndirect-None-02859",
+    "VUID-vkCmdDrawIndirect-None-02859",
+    "VUID-VkGraphicsPipelineCreateInfo-Input-08733",
 };
 
 // Validation messages that should be ignored only when VK_EXT_primitive_topology_list_restart is
