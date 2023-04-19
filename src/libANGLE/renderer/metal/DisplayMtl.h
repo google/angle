@@ -200,7 +200,7 @@ class DisplayMtl : public DisplayImpl
     mtl::RenderUtils mUtils;
 
     // Built-in Shaders
-    std::shared_ptr<DefaultShaderAsyncInfoMtl> mDefaultShadersAsyncInfo;
+    mtl::AutoObjCPtr<id<MTLLibrary>> mDefaultShaders;
 #if ANGLE_MTL_EVENT_AVAILABLE
     mtl::AutoObjCObj<MTLSharedEventListener> mSharedEventListener;
 #endif
