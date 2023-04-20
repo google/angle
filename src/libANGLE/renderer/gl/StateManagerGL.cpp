@@ -2727,6 +2727,7 @@ template <>
 void StateManagerGL::get(GLenum name, GLboolean *value)
 {
     mFunctions->getBooleanv(name, value);
+    ASSERT(mFunctions->getError() == GL_NO_ERROR);
 }
 
 template <>
@@ -2752,6 +2753,7 @@ template <>
 void StateManagerGL::get(GLenum name, GLint *value)
 {
     mFunctions->getIntegerv(name, value);
+    ASSERT(mFunctions->getError() == GL_NO_ERROR);
 }
 
 template <>
@@ -2774,6 +2776,7 @@ template <>
 void StateManagerGL::get(GLenum name, GLfloat *value)
 {
     mFunctions->getFloatv(name, value);
+    ASSERT(mFunctions->getError() == GL_NO_ERROR);
 }
 
 template <>
