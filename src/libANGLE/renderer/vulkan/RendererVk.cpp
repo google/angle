@@ -1078,7 +1078,6 @@ angle::Result GetAndDecompressPipelineCacheVk(VkPhysicalDeviceProperties physica
     UnpackHeaderDataForPipelineCache(headerData, &uncompressedCacheDataSize, &compressedDataCRC,
                                      &numChunks, &chunkIndex0);
     ASSERT(chunkIndex0 == 0);
-    ASSERT(kEnableCRCForPipelineCache || compressedDataCRC == 0);
 
     size_t chunkSize      = keySize - kBlobHeaderSize;
     size_t compressedSize = 0;
@@ -1113,7 +1112,6 @@ angle::Result GetAndDecompressPipelineCacheVk(VkPhysicalDeviceProperties physica
         UnpackHeaderDataForPipelineCache(headerData, &checkUncompressedCacheDataSize,
                                          &checkCompressedDataCRC, &checkNumChunks,
                                          &checkChunkIndex);
-        ASSERT(kEnableCRCForPipelineCache || checkCompressedDataCRC == 0);
 
         chunkSize = keySize - kBlobHeaderSize;
         bool isHeaderDataCorrupted =
@@ -1139,22 +1137,22 @@ angle::Result GetAndDecompressPipelineCacheVk(VkPhysicalDeviceProperties physica
         compressedSize += chunkSize;
     }
 
-    ANGLE_VK_CHECK(
-        displayVk,
-        egl::DecompressBlobCacheData(compressedData.data(), compressedSize, uncompressedData),
-        VK_ERROR_INITIALIZATION_FAILED);
-
     // CRC for compressed data and size for decompressed data should match the values in the header.
     if (kEnableCRCForPipelineCache)
     {
         uint16_t computedCompressedDataCRC = ComputeCRC16(compressedData.data(), compressedSize);
         if (computedCompressedDataCRC != compressedDataCRC)
         {
-            FATAL() << "Expected CRC = " << compressedDataCRC
-                    << ", Actual CRC = " << computedCompressedDataCRC;
-            return angle::Result::Stop;
+            WARN() << "Expected CRC = " << compressedDataCRC
+                   << ", Actual CRC = " << computedCompressedDataCRC;
+            return angle::Result::Continue;
         }
     }
+
+    ANGLE_VK_CHECK(
+        displayVk,
+        egl::DecompressBlobCacheData(compressedData.data(), compressedSize, uncompressedData),
+        VK_ERROR_INITIALIZATION_FAILED);
 
     if (uncompressedData->size() != uncompressedCacheDataSize)
     {
