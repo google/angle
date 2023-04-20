@@ -10255,10 +10255,13 @@ void ErrorSet::validationError(angle::EntryPoint entryPoint, GLenum errorCode, c
 {
     ASSERT(errorCode != GL_NO_ERROR);
     mErrors.insert(errorCode);
-
+    gl::LogSeverity severity = gl::LOG_INFO;
+#if defined(ANGLE_ENABLE_ASSERTS)
+    severity = gl::LOG_WARN;
+#endif  // defined(ANGLE_ENABLE_ASSERTS)
     mContext->getState().getDebug().insertMessage(GL_DEBUG_SOURCE_API, GL_DEBUG_TYPE_ERROR,
                                                   errorCode, GL_DEBUG_SEVERITY_HIGH, message,
-                                                  gl::LOG_INFO, entryPoint);
+                                                  severity, entryPoint);
 }
 
 bool ErrorSet::empty() const
