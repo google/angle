@@ -180,12 +180,9 @@ bool CanMultiDrawIndirectUseCmd(ContextVk *contextVk,
     return canMultiDrawIndirectUseCmd;
 }
 
-uint32_t GetCoverageSampleCount(const gl::State &glState, FramebufferVk *drawFramebuffer)
+uint32_t GetCoverageSampleCount(const gl::State &glState, GLint samples)
 {
-    if (!glState.isSampleCoverageEnabled())
-    {
-        return 0;
-    }
+    ASSERT(glState.isSampleCoverageEnabled());
 
     // Get a fraction of the samples based on the coverage parameters.
     // There are multiple ways to obtain an integer value from a float -
@@ -199,15 +196,12 @@ uint32_t GetCoverageSampleCount(const gl::State &glState, FramebufferVk *drawFra
     // play well with all vendors.
     //
     // We are going with truncation for expediency.
-    return static_cast<uint32_t>(glState.getSampleCoverageValue() * drawFramebuffer->getSamples());
+    return static_cast<uint32_t>(glState.getSampleCoverageValue() * samples);
 }
 
 void ApplySampleCoverage(const gl::State &glState, uint32_t coverageSampleCount, uint32_t *maskOut)
 {
-    if (!glState.isSampleCoverageEnabled())
-    {
-        return;
-    }
+    ASSERT(glState.isSampleCoverageEnabled());
 
     uint32_t coverageMask = angle::BitMask<uint32_t>(coverageSampleCount);
 
@@ -4688,14 +4682,6 @@ void ContextVk::updateBlendFuncsAndEquations()
 
 void ContextVk::updateSampleMaskWithRasterizationSamples(const uint32_t rasterizationSamples)
 {
-    // FramebufferVk::syncState could have been the origin for this call, at which point the
-    // draw FBO may have changed, retrieve the latest draw FBO.
-    FramebufferVk *drawFramebuffer = vk::GetImpl(mState.getDrawFramebuffer());
-
-    // If sample coverage is enabled, emulate it by generating and applying a mask on top of the
-    // sample mask.
-    uint32_t coverageSampleCount = GetCoverageSampleCount(mState, drawFramebuffer);
-
     static_assert(sizeof(uint32_t) == sizeof(GLbitfield), "Vulkan assumes 32-bit sample masks");
     ASSERT(mState.getMaxSampleMaskWords() == 1);
 
@@ -4711,10 +4697,26 @@ void ContextVk::updateSampleMaskWithRasterizationSamples(const uint32_t rasteriz
             mask = mState.getSampleMaskWord(0) & angle::BitMask<uint32_t>(rasterizationSamples);
         }
 
-        ApplySampleCoverage(mState, coverageSampleCount, &mask);
+        // If sample coverage is enabled, emulate it by generating and applying a mask on top of the
+        // sample mask.
+        if (mState.isSampleCoverageEnabled())
+        {
+            ApplySampleCoverage(mState, GetCoverageSampleCount(mState, rasterizationSamples),
+                                &mask);
+        }
     }
 
     mGraphicsPipelineDesc->updateSampleMask(&mGraphicsPipelineTransition, 0, mask);
+}
+
+void ContextVk::updateAlphaToCoverageWithRasterizationSamples(const uint32_t rasterizationSamples)
+{
+    // The following assumes that supported sample counts for multisampled
+    // rendering does not include 1. This is true in the Vulkan backend,
+    // where 1x multisampling is disallowed.
+    mGraphicsPipelineDesc->updateAlphaToCoverageEnable(
+        &mGraphicsPipelineTransition,
+        mState.isSampleAlphaToCoverageEnabled() && rasterizationSamples > 1);
 }
 
 void ContextVk::updateFrameBufferFetchSamples(const uint32_t prevSamples, const uint32_t curSamples)
@@ -4959,6 +4961,7 @@ void ContextVk::updateRasterizationSamples(const uint32_t rasterizationSamples)
                                                       rasterizationSamples);
     updateSampleShadingWithRasterizationSamples(rasterizationSamples);
     updateSampleMaskWithRasterizationSamples(rasterizationSamples);
+    updateAlphaToCoverageWithRasterizationSamples(rasterizationSamples);
 }
 
 void ContextVk::updateRasterizerDiscardEnabled(bool isPrimitivesGeneratedQueryActive)
@@ -5233,8 +5236,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 updateColorMasks();
                 break;
             case gl::State::DIRTY_BIT_SAMPLE_ALPHA_TO_COVERAGE_ENABLED:
-                mGraphicsPipelineDesc->updateAlphaToCoverageEnable(
-                    &mGraphicsPipelineTransition, glState.isSampleAlphaToCoverageEnabled());
+                updateAlphaToCoverageWithRasterizationSamples(drawFramebufferVk->getSamples());
                 updateStencilWriteWorkaround();
 
                 static_assert(gl::State::DIRTY_BIT_PROGRAM_EXECUTABLE >
