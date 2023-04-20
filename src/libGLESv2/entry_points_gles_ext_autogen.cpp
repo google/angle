@@ -1430,6 +1430,8 @@ void GL_APIENTRY GL_ProvokingVertexANGLE(GLenum provokeMode)
     }
 }
 
+// GL_ANGLE_renderability_validation
+
 // GL_ANGLE_request_extension
 void GL_APIENTRY GL_RequestExtensionANGLE(const GLchar *name)
 {

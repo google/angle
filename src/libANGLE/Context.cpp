@@ -3806,6 +3806,12 @@ Extensions Context::generateSupportedExtensions() const
         supportedExtensions.colorBufferFloatRgbaCHROMIUM = false;
     }
 
+    if (getClientVersion() >= ES_3_0)
+    {
+        // Enable this extension for GLES3+.
+        supportedExtensions.renderabilityValidationANGLE = true;
+    }
+
     if (getFrontendFeatures().disableDrawBuffersIndexed.enabled)
     {
         supportedExtensions.drawBuffersIndexedEXT = false;
