@@ -34,6 +34,11 @@ class ContextEGL : public ContextGL
   private:
     std::shared_ptr<RendererEGL> mRendererEGL;
     std::unique_ptr<ExternalContextState> mExtState;
+
+    // Used to restore the default FBO's ID on unmaking an external context
+    // current, as when making an external context current ANGLE sets the
+    // default FBO's ID to that bound in the external context.
+    GLuint mPrevDefaultFramebufferID = 0;
 };
 }  // namespace rx
 

@@ -35,9 +35,12 @@ angle::Result ContextEGL::onMakeCurrent(const gl::Context *context)
         getStateManager()->syncFromNativeContext(getNativeExtensions(), mExtState.get());
 
         // Use current FBO as the default framebuffer when the external context is current.
+        // First save the current ID of the default framebuffer to restore in
+        // onUnMakeCurrent().
         gl::Framebuffer *framebuffer = mState.getDefaultFramebuffer();
-        GetImplAs<FramebufferGL>(framebuffer)
-            ->updateDefaultFramebufferID(mExtState->framebufferBinding);
+        auto framebufferGL           = GetImplAs<FramebufferGL>(framebuffer);
+        mPrevDefaultFramebufferID    = framebufferGL->getFramebufferID();
+        framebufferGL->updateDefaultFramebufferID(mExtState->framebufferBinding);
     }
     return ContextGL::onMakeCurrent(context);
 }
@@ -49,6 +52,13 @@ angle::Result ContextEGL::onUnMakeCurrent(const gl::Context *context)
         ASSERT(context->isExternal());
         ASSERT(mExtState);
         getStateManager()->restoreNativeContext(getNativeExtensions(), mExtState.get());
+    }
+
+    if (context->isExternal())
+    {
+        gl::Framebuffer *framebuffer = mState.getDefaultFramebuffer();
+        auto framebufferGL           = GetImplAs<FramebufferGL>(framebuffer);
+        framebufferGL->updateDefaultFramebufferID(mPrevDefaultFramebufferID);
     }
 
     return ContextGL::onUnMakeCurrent(context);
