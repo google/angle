@@ -3145,8 +3145,8 @@ angle::Result ContextVk::handleDirtyGraphicsDynamicFragmentShadingRate(
     gl::ShadingRate shadingRate = getState().getShadingRate();
     if (shadingRate == gl::ShadingRate::Undefined)
     {
-        // Shading rate has not been set. Nothing to do, early return.
-        return angle::Result::Continue;
+        // Shading rate has not been set. Since this is dynamic state, set it to 1x1
+        shadingRate = gl::ShadingRate::_1x1;
     }
 
     const bool shadingRateSupported = mRenderer->isShadingRateSupported(shadingRate);
@@ -5652,7 +5652,10 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                             }
                             break;
                         case gl::State::EXTENDED_DIRTY_BIT_SHADING_RATE:
-                            mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_FRAGMENT_SHADING_RATE);
+                            if (getFeatures().supportsFragmentShadingRate.enabled)
+                            {
+                                mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_FRAGMENT_SHADING_RATE);
+                            }
                             break;
                         default:
                             UNREACHABLE();
