@@ -46,6 +46,7 @@ void TranslatedShaderInfo::reset()
     metalShaderSource.clear();
     metalLibrary         = nil;
     hasUBOArgumentBuffer = false;
+    hasInvariantOrAtan   = false;
     for (mtl::SamplerBinding &binding : actualSamplerBindings)
     {
         binding.textureBinding = mtl::kMaxShaderSamplers;
