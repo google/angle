@@ -212,6 +212,14 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions,
         mFunctions->bindVertexArray(mDefaultVAO);
         mVAO = mDefaultVAO;
     }
+
+    // By default, desktop GL clamps values read from normalized
+    // color buffers to [0, 1], which does not match expected ES
+    // behavior for signed normalized color buffers.
+    if (mFunctions->clampColor)
+    {
+        mFunctions->clampColor(GL_CLAMP_READ_COLOR, GL_FALSE);
+    }
 }
 
 StateManagerGL::~StateManagerGL()

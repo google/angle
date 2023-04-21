@@ -1108,14 +1108,11 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 5466 GLES : ClipCullDistanceTest.ClipDistanceInteractWithGeometryShader/* = SKIP
 5466 GLES : ClipCullDistanceTest.CullDistanceInteractWithGeometryShader/* = SKIP
 
-// ReadPixels returns zeros on Red and Red-Green snorm color buffers
-8048 WIN INTEL OPENGL : FramebufferTest_ES3.RenderSnorm* = SKIP
-
-// ReadPixels returns zeros on snorm color buffers
+// ReadPixels clamps snorm color values to [0, 1]; fixed in Mesa 21.3.0
 8048 LINUX INTEL OPENGL : FramebufferTest_ES3.RenderSnorm* = SKIP
 
-// ReadPixels returns zeros on Red and Red-Green 16-bit snorm color buffers
-8048 NVIDIA OPENGL : FramebufferTest_ES3.RenderSnorm16* = SKIP
+// ReadPixels clamps Red and Red-Green 16-bit snorm
+// color values to [0, 1] when using GL_RGBA format
 8048 NVIDIA GLES : FramebufferTest_ES3.RenderSnorm16* = SKIP
 
 // D3D needs a workaround to follow OpenGL rules
