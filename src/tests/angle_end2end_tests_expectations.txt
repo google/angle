@@ -1049,6 +1049,13 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 7495 OpenGL : EGLContextSharingTestNoFixture.InactiveThreadDoesntPreventCleanup/* = SKIP
 7495 WIN GLES : EGLContextSharingTestNoFixture.InactiveThreadDoesntPreventCleanup/* = SKIP
 
+// GL, GLES seem to ignore mapped texture buffer updates
+8128 WIN OpenGL : RGBTextureBufferTestES31.*/* = SKIP
+8128 WIN GLES : RGBTextureBufferTestES31.*/* = SKIP
+8128 LINUX NVIDIA OpenGL : RGBTextureBufferTestES31.*/* = SKIP
+// Misbehaves on D3D11 (pixels remain black or reading from wrong offsets)
+8128 D3D11 : RGBTextureBufferTestES31.*/* = SKIP
+
 7546 LINUX VULKAN : FramebufferTest_ES3.SurfaceDimensionsChangeAndFragCoord/* = SKIP
 
 7624 WIN INTEL : *EmulateCopyTexImage2DFromRenderbuffers* = SKIP

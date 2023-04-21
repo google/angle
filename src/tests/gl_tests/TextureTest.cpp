@@ -11836,6 +11836,273 @@ TEST_P(ExtraSamplerCubeShadowUseTest, Basic)
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
+// Tests covering RBG->RGBA emulation path
+class RGBTextureBufferTestES31 : public ANGLETest<>
+{
+  protected:
+    RGBTextureBufferTestES31()
+    {
+        setWindowWidth(128);
+        setWindowHeight(128);
+        setConfigRedBits(8);
+        setConfigGreenBits(8);
+        setConfigBlueBits(8);
+        setConfigAlphaBits(8);
+    }
+    void TestInt(GLuint format);
+};
+
+void SetupTextureBufferDrawProgram(GLProgram &program, GLuint format)
+{
+    constexpr char kVS[] = R"(#version 310 es
+    precision highp float;
+    in vec4 inputAttribute;
+
+    void main()
+    {
+        gl_Position = inputAttribute;
+    })";
+
+    if (format == GL_RGB32UI)
+    {
+        constexpr char kFS[] = R"(#version 310 es
+        #extension GL_EXT_texture_buffer : require
+        precision mediump float;
+        uniform highp usamplerBuffer tex;
+        layout(location = 0) out mediump vec4 color;
+
+        void main()
+        {
+            uvec4 v = texelFetch(tex, 1);
+            color = vec4(float(v.r)/255.0, float(v.g)/255.0, float(v.b)/255.0, v.a);
+        })";
+        program.makeRaster(kVS, kFS);
+    }
+    if (format == GL_RGB32I)
+    {
+        constexpr char kFS[] = R"(#version 310 es
+        #extension GL_EXT_texture_buffer : require
+        precision mediump float;
+        uniform highp isamplerBuffer tex;
+        layout(location = 0) out mediump vec4 color;
+
+        void main()
+        {
+            ivec4 v = texelFetch(tex, 1);
+            color = vec4(float(v.r)/255.0, float(v.g)/255.0, float(v.b)/255.0, v.a);
+        })";
+        program.makeRaster(kVS, kFS);
+    }
+    if (format == GL_RGB32F)
+    {
+        constexpr char kFS[] = R"(#version 310 es
+        #extension GL_EXT_texture_buffer : require
+        precision mediump float;
+        uniform highp samplerBuffer tex;
+        layout(location = 0) out mediump vec4 color;
+
+        void main()
+        {
+            vec4 v = texelFetch(tex, 1);
+            color = vec4(float(v.r)/255.0, float(v.g)/255.0, float(v.b)/255.0, v.a);
+        })";
+        program.makeRaster(kVS, kFS);
+    }
+    ASSERT_TRUE(program.valid());
+}
+
+void RGBTextureBufferTestES31::TestInt(GLuint format)
+{
+    const GLint pixelSize = sizeof(GLuint) * 3;
+
+    // Offset must be aligned to GL_TEXTURE_BUFFER_OFFSET_ALIGNMENT (16, 64, ...)
+    GLint offsetAlignment = 0;
+    glGetIntegerv(GL_TEXTURE_BUFFER_OFFSET_ALIGNMENT, &offsetAlignment);
+    ASSERT(offsetAlignment % sizeof(GLuint) == 0);
+    GLint byteOffset = ((pixelSize * 2) / offsetAlignment + 1) * offsetAlignment;
+
+    GLint intOffset = byteOffset / sizeof(GLuint);
+
+    std::vector<GLuint> texData(intOffset + 3 * 2);
+
+    // first texel(1) col
+    GLColor col = MakeGLColor(11, 22, 33, 255);
+    texData[3]  = col.R;
+    texData[4]  = col.G;
+    texData[5]  = col.B;
+
+    // second texel(1) col2
+    GLColor col2           = MakeGLColor(44, 55, 66, 255);
+    texData[intOffset + 3] = col2.R;
+    texData[intOffset + 4] = col2.G;
+    texData[intOffset + 5] = col2.B;
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_BUFFER, texture);
+
+    GLBuffer buffer;
+    glBindBuffer(GL_TEXTURE_BUFFER, buffer);
+    glBufferData(GL_TEXTURE_BUFFER, sizeof(GLuint) * texData.size(), texData.data(),
+                 GL_STATIC_DRAW);
+    ASSERT_GL_NO_ERROR();
+
+    GLProgram program;
+    SetupTextureBufferDrawProgram(program, format);
+
+    glTexBufferEXT(GL_TEXTURE_BUFFER, format, buffer);
+
+    drawQuad(program.get(), "inputAttribute", 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, col, 1);
+
+    glTexBufferRangeEXT(GL_TEXTURE_BUFFER, format, buffer, byteOffset, pixelSize * 2);
+    ASSERT_GL_NO_ERROR();
+    drawQuad(program.get(), "inputAttribute", 0.5f);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, col2, 1);
+
+    // Now update the buffer to check the converted data also gets updated.
+    GLColor colUpd      = MakeGLColor(77, 88, 99, 255);
+    GLuint texDataUpd[] = {0, 0, 0, colUpd.R, colUpd.G, colUpd.B};  // second texel(1) colUpd
+    glBufferSubData(GL_TEXTURE_BUFFER, byteOffset, sizeof(texDataUpd), texDataUpd);
+    ASSERT_GL_NO_ERROR();
+    drawQuad(program.get(), "inputAttribute", 0.5f);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, colUpd, 1);
+
+    // Update with glMapBuffer (hits a different code path...)
+    GLColor colUpd2      = MakeGLColor(111, 122, 133, 255);
+    GLuint texDataUpd2[] = {0, 0, 0, colUpd2.R, colUpd2.G, colUpd2.B};  // second texel(1) colUpd2
+    void *mappedBuffer =
+        glMapBufferRange(GL_TEXTURE_BUFFER, byteOffset, sizeof(texDataUpd2), GL_MAP_WRITE_BIT);
+    memcpy(mappedBuffer, texDataUpd2, sizeof(texDataUpd2));
+    glUnmapBuffer(GL_TEXTURE_BUFFER);
+    ASSERT_GL_NO_ERROR();
+    drawQuad(program.get(), "inputAttribute", 0.5f);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, colUpd2, 1);
+}
+
+// Tests GL_RGB32UI texture buffer
+TEST_P(RGBTextureBufferTestES31, Uint)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_buffer"));
+
+    TestInt(GL_RGB32UI);
+}
+
+// Tests GL_RGB32I texture buffer
+TEST_P(RGBTextureBufferTestES31, Sint)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_buffer"));
+
+    TestInt(GL_RGB32I);
+}
+
+// Tests GL_RGB32F texture buffer
+TEST_P(RGBTextureBufferTestES31, Float)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_buffer"));
+
+    // first texel(1) col
+    GLColor col = MakeGLColor(11, 22, 33, 255);
+    GLfloat texData[6]{};
+    texData[3] = col.R;
+    texData[4] = col.G;
+    texData[5] = col.B;
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_BUFFER, texture);
+
+    GLBuffer buffer;
+    glBindBuffer(GL_TEXTURE_BUFFER, buffer);
+    glBufferData(GL_TEXTURE_BUFFER, sizeof(texData), texData, GL_STATIC_DRAW);
+    ASSERT_GL_NO_ERROR();
+
+    GLProgram program;
+    SetupTextureBufferDrawProgram(program, GL_RGB32F);
+
+    glTexBufferEXT(GL_TEXTURE_BUFFER, GL_RGB32F, buffer);
+
+    drawQuad(program.get(), "inputAttribute", 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, col, 1);
+
+    // Now update the buffer to check the converted data also gets updated.
+    GLColor colUpd = MakeGLColor(77, 88, 99, 255);
+    GLfloat texDataUpd[6]{};
+    texDataUpd[3] = colUpd.R;
+    texDataUpd[4] = colUpd.G;
+    texDataUpd[5] = colUpd.B;
+    glBufferSubData(GL_TEXTURE_BUFFER, 0, sizeof(texDataUpd), texDataUpd);
+    ASSERT_GL_NO_ERROR();
+    drawQuad(program.get(), "inputAttribute", 0.5f);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, colUpd, 1);
+
+    // Update with glMapBuffer (hits a different code path...)
+    GLColor colUpd2 = MakeGLColor(111, 122, 133, 255);
+    GLfloat texDataUpd2[6]{};
+    texDataUpd2[3] = colUpd2.R;
+    texDataUpd2[4] = colUpd2.G;
+    texDataUpd2[5] = colUpd2.B;
+    void *mappedBuffer =
+        glMapBufferRange(GL_TEXTURE_BUFFER, 0, sizeof(texDataUpd2), GL_MAP_WRITE_BIT);
+    memcpy(mappedBuffer, texDataUpd2, sizeof(texDataUpd2));
+    glUnmapBuffer(GL_TEXTURE_BUFFER);
+    ASSERT_GL_NO_ERROR();
+    drawQuad(program.get(), "inputAttribute", 0.5f);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, colUpd2, 1);
+}
+
+void SetupSSBOProgram(GLProgram &program)
+{
+    constexpr char kVS[] = R"(#version 310 es
+    precision highp float;
+    in vec4 inputAttribute;
+
+    void main()
+    {
+        gl_Position = inputAttribute;
+    })";
+
+    constexpr char kFS[] = R"(#version 310 es
+    layout(location = 0) out mediump vec4 color;
+    layout(std140, binding = 0) buffer outBlock {
+        uvec4 data[2];  // uvec4 to avoid padding
+    };
+    void main (void)
+    {
+        data[0] = uvec4(11u, 22u, 33u, 44u);
+        data[1] = uvec4(55u, 66u, 0u, 0u);
+        color = vec4(0);
+    })";
+
+    program.makeRaster(kVS, kFS);
+    ASSERT_TRUE(program.valid());
+}
+
+// Tests RGB32 texture buffer with a SSBO write
+TEST_P(RGBTextureBufferTestES31, SSBOWrite)
+{
+    GLProgram programSSBO;
+    SetupSSBOProgram(programSSBO);
+
+    GLProgram programBufferDraw;
+    SetupTextureBufferDrawProgram(programBufferDraw, GL_RGB32UI);
+
+    constexpr GLint kBufferSize = 2 * 4 * sizeof(GLuint);
+    GLBuffer buffer;
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, buffer);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, kBufferSize, nullptr, GL_STATIC_DRAW);
+    glBindBufferRange(GL_SHADER_STORAGE_BUFFER, 0, buffer, 0, kBufferSize);
+
+    drawQuad(programSSBO.get(), "inputAttribute", 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    glMemoryBarrier(GL_TEXTURE_FETCH_BARRIER_BIT);
+
+    glTexBufferEXT(GL_TEXTURE_BUFFER, GL_RGB32UI, buffer);
+    drawQuad(programBufferDraw.get(), "inputAttribute", 0.5f);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(44, 55, 66, 255), 1);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 #define ES2_EMULATE_COPY_TEX_IMAGE_VIA_SUB()             \
@@ -11980,5 +12247,8 @@ ANGLE_INSTANTIATE_TEST_ES3(ExtraSamplerCubeShadowUseTest);
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(Texture2DDepthStencilTestES3);
 ANGLE_INSTANTIATE_TEST_ES3_AND(Texture2DDepthStencilTestES3,
                                ES3_VULKAN().enable(Feature::ForceFallbackFormat));
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(RGBTextureBufferTestES31);
+ANGLE_INSTANTIATE_TEST_ES31(RGBTextureBufferTestES31);
 
 }  // anonymous namespace

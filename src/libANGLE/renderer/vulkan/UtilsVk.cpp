@@ -3324,6 +3324,79 @@ angle::Result UtilsVk::copyImageBits(ContextVk *contextVk,
     return angle::Result::Continue;
 }
 
+angle::Result UtilsVk::copyRgbToRgba(ContextVk *contextVk,
+                                     const angle::Format &srcFormat,
+                                     vk::BufferHelper *srcBuffer,
+                                     uint32_t srcOffset,
+                                     uint32_t pixelCount,
+                                     vk::BufferHelper *dstBuffer)
+{
+    vk::OutsideRenderPassCommandBufferHelper *commandBufferHelper;
+    vk::OutsideRenderPassCommandBuffer *commandBuffer;
+    vk::CommandBufferAccess access;
+    access.onBufferComputeShaderRead(srcBuffer);
+    access.onBufferComputeShaderWrite(dstBuffer);
+    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBufferHelper(access, &commandBufferHelper));
+    commandBuffer = &commandBufferHelper->getCommandBuffer();
+
+    rx::UtilsVk::ConvertVertexShaderParams shaderParams;
+    shaderParams.Ns = 3;   // src channels
+    shaderParams.Bs = 4;   // src bytes per channel
+    shaderParams.Ss = 12;  // src stride
+    shaderParams.Nd = 4;   // dest channels
+    shaderParams.Bd = 4;   // dest bytes per channel
+    shaderParams.Sd = 16;  // dest stride
+    shaderParams.Es = 4 / shaderParams.Bs;
+    shaderParams.Ed = 4 / shaderParams.Bd;
+    // Total number of output components is simply the number of pixels by number of components in
+    // each.
+    shaderParams.componentCount = pixelCount * shaderParams.Nd;
+    // Total number of 4-byte outputs is the number of components divided by how many components can
+    // fit in a 4-byte value.  Note that this value is also the invocation size of the shader.
+    shaderParams.outputCount  = UnsignedCeilDivide(shaderParams.componentCount, shaderParams.Ed);
+    shaderParams.srcOffset    = srcOffset;
+    shaderParams.dstOffset    = 0;
+    shaderParams.isSrcHDR     = 0;
+    shaderParams.isSrcA2BGR10 = 0;
+
+    uint32_t flags = 0;
+    switch (srcFormat.id)
+    {
+        case angle::FormatID::R32G32B32_UINT:
+            flags                         = ConvertVertex_comp::kUintToUint;
+            shaderParams.srcEmulatedAlpha = 1;
+            break;
+        case angle::FormatID::R32G32B32_SINT:
+            flags                         = ConvertVertex_comp::kSintToSint;
+            shaderParams.srcEmulatedAlpha = 1;
+            break;
+        case angle::FormatID::R32G32B32_FLOAT:
+            flags                         = ConvertVertex_comp::kFloatToFloat;
+            shaderParams.srcEmulatedAlpha = gl::Float32One;
+            break;
+        default:
+            UNREACHABLE();
+    }
+
+    // Don't need a barrier here, CommandBufferAccess takes care of it.
+
+    ANGLE_TRY(convertVertexBufferImpl(contextVk, dstBuffer, srcBuffer, flags, commandBufferHelper,
+                                      shaderParams));
+
+    // We are circumventing the automatic-barrier management by switching
+    // the buffer view and not the buffer itself, so add a barrier here.
+    VkMemoryBarrier memoryBarrier = {};
+    memoryBarrier.sType           = VK_STRUCTURE_TYPE_MEMORY_BARRIER;
+    memoryBarrier.srcAccessMask   = VK_ACCESS_SHADER_WRITE_BIT;
+    memoryBarrier.dstAccessMask   = VK_ACCESS_SHADER_READ_BIT;
+
+    commandBuffer->memoryBarrier(
+        VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
+        VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT | VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT, &memoryBarrier);
+
+    return angle::Result::Continue;
+}
+
 uint32_t GetEtcToBcFlags(const angle::Format &format)
 {
     switch (format.id)

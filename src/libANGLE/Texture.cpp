@@ -754,6 +754,19 @@ void TextureState::clearImageDescs()
     }
 }
 
+TextureBufferContentsObservers::TextureBufferContentsObservers(Texture *texture) : mTexture(texture)
+{}
+
+void TextureBufferContentsObservers::enableForBuffer(Buffer *buffer)
+{
+    buffer->addContentsObserver(mTexture);
+}
+
+void TextureBufferContentsObservers::disableForBuffer(Buffer *buffer)
+{
+    buffer->removeContentsObserver(mTexture);
+}
+
 Texture::Texture(rx::GLImplFactory *factory, TextureID id, TextureType type)
     : RefCountObject(factory->generateSerial(), id),
       mState(type),
@@ -761,9 +774,14 @@ Texture::Texture(rx::GLImplFactory *factory, TextureID id, TextureType type)
       mImplObserver(this, rx::kTextureImageImplObserverMessageIndex),
       mBufferObserver(this, kBufferSubjectIndex),
       mBoundSurface(nullptr),
-      mBoundStream(nullptr)
+      mBoundStream(nullptr),
+      mBufferContentsObservers(this)
 {
     mImplObserver.bind(mTexture);
+    if (mTexture)
+    {
+        mTexture->setContentsObservers(&mBufferContentsObservers);
+    }
 
     // Initially assume the implementation is dirty.
     mDirtyBits.set(DIRTY_BIT_IMPLEMENTATION);
@@ -2422,8 +2440,16 @@ void Texture::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMess
         case angle::SubjectMessage::SubjectMapped:
         case angle::SubjectMessage::SubjectUnmapped:
         case angle::SubjectMessage::BindingChanged:
+        {
             ASSERT(index == kBufferSubjectIndex);
-            break;
+            gl::Buffer *buffer = mState.mBuffer.get();
+            ASSERT(buffer != nullptr);
+            if (buffer->hasContentsObserver(this))
+            {
+                onBufferContentsChange();
+            }
+        }
+        break;
         case angle::SubjectMessage::InitializationComplete:
             ASSERT(index == rx::kTextureImageImplObserverMessageIndex);
             setInitState(InitState::Initialized);
@@ -2438,6 +2464,13 @@ void Texture::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMess
             UNREACHABLE();
             break;
     }
+}
+
+void Texture::onBufferContentsChange()
+{
+    mState.mInitState = InitState::MayNeedInit;
+    signalDirtyState(DIRTY_BIT_IMPLEMENTATION);
+    onStateChange(angle::SubjectMessage::ContentsChanged);
 }
 
 GLenum Texture::getImplementationColorReadFormat(const Context *context) const

@@ -267,6 +267,18 @@ class TextureState final : private angle::NonCopyable
 bool operator==(const TextureState &a, const TextureState &b);
 bool operator!=(const TextureState &a, const TextureState &b);
 
+class TextureBufferContentsObservers final : angle::NonCopyable
+{
+  public:
+    TextureBufferContentsObservers(Texture *texture);
+    void enableForBuffer(Buffer *buffer);
+    void disableForBuffer(Buffer *buffer);
+    bool isEnabledForBuffer(Buffer *buffer);
+
+  private:
+    Texture *mTexture;
+};
+
 class Texture final : public RefCountObject<TextureID>,
                       public egl::ImageSibling,
                       public LabeledObject
@@ -661,6 +673,9 @@ class Texture final : public RefCountObject<TextureID>,
     // ObserverInterface implementation.
     void onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message) override;
 
+    // Texture buffer updates.
+    void onBufferContentsChange();
+
   private:
     rx::FramebufferAttachmentObjectImpl *getAttachmentImpl() const override;
 
@@ -730,6 +745,7 @@ class Texture final : public RefCountObject<TextureID>,
     };
 
     mutable SamplerCompletenessCache mCompletenessCache;
+    TextureBufferContentsObservers mBufferContentsObservers;
 };
 
 inline bool operator==(const TextureState &a, const TextureState &b)
