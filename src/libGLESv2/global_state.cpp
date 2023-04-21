@@ -27,16 +27,6 @@ ANGLE_REQUIRE_CONSTANT_INIT gl::Context *g_LastContext(nullptr);
 static_assert(std::is_trivially_destructible<decltype(g_LastContext)>::value,
               "global last context is not trivially destructible");
 
-void SetContextToAndroidOpenGLTLSSlot(gl::Context *value)
-{
-#if defined(ANGLE_USE_ANDROID_TLS_SLOT)
-    if (angle::gUseAndroidOpenGLTlsSlot)
-    {
-        ANGLE_ANDROID_GET_GL_TLS()[angle::kAndroidOpenGLTlsSlot] = static_cast<void *>(value);
-    }
-#endif
-}
-
 // Called only on Android platform
 [[maybe_unused]] void ThreadCleanupCallback(void *ptr)
 {
@@ -58,28 +48,22 @@ Thread *AllocateCurrentThread()
 #endif
     }
 
-    // Initialize fast TLS slot
-    SetContextToAndroidOpenGLTLSSlot(nullptr);
-
-#if defined(ANGLE_PLATFORM_APPLE)
-    gl::SetCurrentValidContextTLS(nullptr);
-#else
-    gl::gCurrentValidContext = nullptr;
-#endif
+    // Initialize current-context TLS slot
+    gl::SetCurrentValidContext(nullptr);
 
 #if defined(ANGLE_PLATFORM_ANDROID)
-    static pthread_once_t keyOnce          = PTHREAD_ONCE_INIT;
-    static TLSIndex gThreadCleanupTLSIndex = TLS_INVALID_INDEX;
+    static pthread_once_t keyOnce                 = PTHREAD_ONCE_INIT;
+    static angle::TLSIndex gThreadCleanupTLSIndex = TLS_INVALID_INDEX;
 
     // Create thread cleanup TLS slot
     auto CreateThreadCleanupTLSIndex = []() {
-        gThreadCleanupTLSIndex = CreateTLSIndex(ThreadCleanupCallback);
+        gThreadCleanupTLSIndex = angle::CreateTLSIndex(ThreadCleanupCallback);
     };
     pthread_once(&keyOnce, CreateThreadCleanupTLSIndex);
     ASSERT(gThreadCleanupTLSIndex != TLS_INVALID_INDEX);
 
     // Initialize thread cleanup TLS slot
-    SetTLSValue(gThreadCleanupTLSIndex, thread);
+    angle::SetTLSValue(gThreadCleanupTLSIndex, thread);
 #endif  // ANGLE_PLATFORM_ANDROID
 
     ASSERT(thread);
@@ -94,27 +78,27 @@ Thread *AllocateCurrentThread()
 // local storage instead.
 // https://bugs.webkit.org/show_bug.cgi?id=228240
 
-static TLSIndex GetCurrentThreadTLSIndex()
+static angle::TLSIndex GetCurrentThreadTLSIndex()
 {
-    static TLSIndex CurrentThreadIndex = TLS_INVALID_INDEX;
+    static angle::TLSIndex CurrentThreadIndex = TLS_INVALID_INDEX;
     static dispatch_once_t once;
     dispatch_once(&once, ^{
       ASSERT(CurrentThreadIndex == TLS_INVALID_INDEX);
-      CurrentThreadIndex = CreateTLSIndex(nullptr);
+      CurrentThreadIndex = angle::CreateTLSIndex(nullptr);
     });
     return CurrentThreadIndex;
 }
 Thread *GetCurrentThreadTLS()
 {
-    TLSIndex CurrentThreadIndex = GetCurrentThreadTLSIndex();
+    angle::TLSIndex CurrentThreadIndex = GetCurrentThreadTLSIndex();
     ASSERT(CurrentThreadIndex != TLS_INVALID_INDEX);
-    return static_cast<Thread *>(GetTLSValue(CurrentThreadIndex));
+    return static_cast<Thread *>(angle::GetTLSValue(CurrentThreadIndex));
 }
 void SetCurrentThreadTLS(Thread *thread)
 {
-    TLSIndex CurrentThreadIndex = GetCurrentThreadTLSIndex();
+    angle::TLSIndex CurrentThreadIndex = GetCurrentThreadTLSIndex();
     ASSERT(CurrentThreadIndex != TLS_INVALID_INDEX);
-    SetTLSValue(CurrentThreadIndex, thread);
+    angle::SetTLSValue(CurrentThreadIndex, thread);
 }
 #else
 thread_local Thread *gCurrentThread = nullptr;
@@ -137,7 +121,7 @@ ANGLE_NO_SANITIZE_MEMORY ANGLE_NO_SANITIZE_THREAD Thread *GetCurrentThread()
 #if defined(ANGLE_PLATFORM_APPLE)
     Thread *current = GetCurrentThreadTLS();
 #else
-    Thread *current          = gCurrentThread;
+    Thread *current       = gCurrentThread;
 #endif
     return (current ? current : AllocateCurrentThread());
 }
@@ -147,17 +131,12 @@ void SetContextCurrent(Thread *thread, gl::Context *context)
 #if defined(ANGLE_PLATFORM_APPLE)
     Thread *currentThread = GetCurrentThreadTLS();
 #else
-    Thread *currentThread    = gCurrentThread;
+    Thread *currentThread = gCurrentThread;
 #endif
     ASSERT(currentThread);
     currentThread->setCurrent(context);
-    SetContextToAndroidOpenGLTLSSlot(context);
 
-#if defined(ANGLE_PLATFORM_APPLE)
-    gl::SetCurrentValidContextTLS(context);
-#else
-    gl::gCurrentValidContext = context;
-#endif
+    gl::SetCurrentValidContext(context);
 
 #if defined(ANGLE_FORCE_CONTEXT_CHECK_EVERY_CALL)
     DirtyContextIfNeeded(context);
