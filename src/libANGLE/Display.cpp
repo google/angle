@@ -109,11 +109,12 @@ namespace
 struct TLSData
 {
     angle::UnlockedTailCall unlockedTailCall;
+    Error errorScratchSpace;
 
     TLSData();
 };
 
-TLSData::TLSData() {}
+TLSData::TLSData() : errorScratchSpace(0) {}
 
 #if defined(ANGLE_PLATFORM_APPLE)
 // TODO(angleproject:6479): Due to a bug in Apple's dyld loader, `thread_local` will cause
@@ -2671,5 +2672,15 @@ angle::UnlockedTailCall *Display::GetCurrentThreadUnlockedTailCall()
         InitDisplayTLS();
     }
     return &GetDisplayTLS()->unlockedTailCall;
+}
+
+// static
+Error *Display::GetCurrentThreadErrorScratchSpace()
+{
+    if (GetDisplayTLS() == nullptr)
+    {
+        InitDisplayTLS();
+    }
+    return &GetDisplayTLS()->errorScratchSpace;
 }
 }  // namespace egl

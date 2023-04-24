@@ -191,14 +191,6 @@ void AppendToPNextChain(VulkanStruct1 *chainStart, VulkanStruct2 *ptr)
     endPtr->pNext = reinterpret_cast<VkBaseOutStructure *>(ptr);
 }
 
-struct Error
-{
-    VkResult errorCode;
-    const char *file;
-    const char *function;
-    uint32_t line;
-};
-
 class QueueSerialIndexAllocator final
 {
   public:

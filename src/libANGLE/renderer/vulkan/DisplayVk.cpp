@@ -96,7 +96,6 @@ DisplayVk::DisplayVk(const egl::DisplayState &state)
     : DisplayImpl(state),
       vk::Context(new RendererVk()),
       mScratchBuffer(1000u),
-      mSavedError({VK_SUCCESS, "", "", 0}),
       mSupportedColorspaceFormatsMap{}
 {}
 
@@ -568,29 +567,19 @@ void DisplayVk::handleError(VkResult result,
 {
     ASSERT(result != VK_SUCCESS);
 
-    mSavedError.errorCode = result;
-    mSavedError.file      = file;
-    mSavedError.function  = function;
-    mSavedError.line      = line;
+    std::stringstream errorStream;
+    errorStream << "Internal Vulkan error (" << result << "): " << VulkanResultString(result)
+                << ", in " << file << ", " << function << ":" << line << ".";
+    std::string errorString = errorStream.str();
 
     if (result == VK_ERROR_DEVICE_LOST)
     {
-        WARN() << "Internal Vulkan error (" << result << "): " << VulkanResultString(result)
-               << ", in " << file << ", " << function << ":" << line << ".";
+        WARN() << errorString;
         mRenderer->notifyDeviceLost();
     }
-}
 
-// TODO(jmadill): Remove this. http://anglebug.com/3041
-egl::Error DisplayVk::getEGLError(EGLint errorCode)
-{
-    std::stringstream errorStream;
-    errorStream << "Internal Vulkan error (" << mSavedError.errorCode
-                << "): " << VulkanResultString(mSavedError.errorCode) << ", in " << mSavedError.file
-                << ", " << mSavedError.function << ":" << mSavedError.line << ".";
-    std::string errorString = errorStream.str();
-
-    return egl::Error(errorCode, 0, std::move(errorString));
+    // Note: the errorCode will be set later in angle::ToEGL where it's available.
+    *egl::Display::GetCurrentThreadErrorScratchSpace() = egl::Error(0, 0, std::move(errorString));
 }
 
 void DisplayVk::initializeFrontendFeatures(angle::FrontendFeatures *features) const

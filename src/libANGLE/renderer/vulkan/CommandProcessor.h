@@ -38,6 +38,14 @@ enum class SubmitPolicy
     EnsureSubmitted,
 };
 
+struct Error
+{
+    VkResult errorCode;
+    const char *file;
+    const char *function;
+    uint32_t line;
+};
+
 class FenceRecycler;
 // This is a RAII class manages refcounted vkfence object with auto-release and recycling.
 class SharedFence final

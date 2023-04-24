@@ -10,6 +10,7 @@
 #include "libANGLE/renderer/vulkan/vk_utils.h"
 
 #include "libANGLE/Context.h"
+#include "libANGLE/Display.h"
 #include "libANGLE/renderer/vulkan/BufferVk.h"
 #include "libANGLE/renderer/vulkan/ContextVk.h"
 #include "libANGLE/renderer/vulkan/DisplayVk.h"
@@ -24,7 +25,9 @@ egl::Error ToEGL(Result result, rx::DisplayVk *displayVk, EGLint errorCode)
 {
     if (result != angle::Result::Continue)
     {
-        return displayVk->getEGLError(errorCode);
+        egl::Error error = std::move(*egl::Display::GetCurrentThreadErrorScratchSpace());
+        error.setCode(errorCode);
+        return error;
     }
     else
     {
