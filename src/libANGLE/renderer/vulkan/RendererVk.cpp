@@ -5481,31 +5481,21 @@ VkDeviceSize RendererVk::getPreferedBufferBlockSize(uint32_t memoryTypeIndex) co
     return std::min(heapSize / 64, mPreferredLargeHeapBlockSize);
 }
 
-angle::Result RendererVk::allocateQueueSerialIndexImpl(SerialIndex *indexOut)
-{
-    *indexOut = mQueueSerialIndexAllocator.allocate();
-    if (*indexOut == kInvalidQueueSerialIndex)
-    {
-        return angle::Result::Stop;
-    }
-    return angle::Result::Continue;
-}
-
 angle::Result RendererVk::allocateScopedQueueSerialIndex(vk::ScopedQueueSerialIndex *indexOut)
 {
     SerialIndex index;
-    ANGLE_TRY(allocateQueueSerialIndexImpl(&index));
+    ANGLE_TRY(allocateQueueSerialIndex(&index));
     indexOut->init(index, &mQueueSerialIndexAllocator);
     return angle::Result::Continue;
 }
 
-angle::Result RendererVk::allocateQueueSerialIndex(QueueSerial *queueSerialOut)
+angle::Result RendererVk::allocateQueueSerialIndex(SerialIndex *serialIndexOut)
 {
-    SerialIndex index;
-    ANGLE_TRY(allocateQueueSerialIndexImpl(&index));
-    Serial serial   = isAsyncCommandQueueEnabled() ? mCommandProcessor.getLastEnqueuedSerial(index)
-                                                   : mCommandQueue.getLastSubmittedSerial(index);
-    *queueSerialOut = QueueSerial(index, serial);
+    *serialIndexOut = mQueueSerialIndexAllocator.allocate();
+    if (*serialIndexOut == kInvalidQueueSerialIndex)
+    {
+        return angle::Result::Stop;
+    }
     return angle::Result::Continue;
 }
 

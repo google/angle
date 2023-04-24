@@ -965,10 +965,10 @@ egl::Error WindowSurfaceVk::unMakeCurrent(const gl::Context *context)
     DisplayVk *displayVk = vk::GetImpl(context->getDisplay());
 
     angle::Result result = contextVk->onSurfaceUnMakeCurrent(this);
-    // Even though all swap chain images are tracked individually, the semaphores are not tracked by
-    // ResourceUse. This propagates context's queue serial to surface when it detaches from context
-    // so that surface will always wait until context is finished.
-    mUse.setQueueSerial(contextVk->getLastSubmittedQueueSerial());
+    // Even though all swap chain images are tracked individually, the semaphores are not
+    // tracked by ResourceUse. This propagates context's queue serial to surface when it
+    // detaches from context so that surface will always wait until context is finished.
+    mUse.merge(contextVk->getSubmittedResourceUse());
 
     return angle::ToEGL(result, displayVk, EGL_BAD_CURRENT_SURFACE);
 }
@@ -1295,7 +1295,7 @@ angle::Result WindowSurfaceVk::recreateSwapchain(ContextVk *contextVk, const gl:
     static constexpr size_t kMaxOldSwapchains = 5;
     if (mOldSwapchains.size() > kMaxOldSwapchains)
     {
-        mUse.setQueueSerial(contextVk->getLastSubmittedQueueSerial());
+        mUse.merge(contextVk->getSubmittedResourceUse());
         ANGLE_TRY(finish(contextVk));
         for (SwapchainCleanupData &oldSwapchain : mOldSwapchains)
         {
@@ -1329,7 +1329,7 @@ angle::Result WindowSurfaceVk::recreateSwapchain(ContextVk *contextVk, const gl:
     if (lastSwapchain &&
         contextVk->getRenderer()->getFeatures().waitIdleBeforeSwapchainRecreation.enabled)
     {
-        mUse.setQueueSerial(contextVk->getLastSubmittedQueueSerial());
+        mUse.merge(contextVk->getSubmittedResourceUse());
         ANGLE_TRY(finish(contextVk));
     }
     angle::Result result = createSwapChain(contextVk, swapchainExtents, lastSwapchain);
