@@ -21,7 +21,7 @@
 
 namespace angle
 {
-egl::Error ToEGL(Result result, rx::DisplayVk *displayVk, EGLint errorCode)
+egl::Error ToEGL(Result result, EGLint errorCode)
 {
     if (result != angle::Result::Continue)
     {

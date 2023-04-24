@@ -554,7 +554,7 @@ egl::Error OffscreenSurfaceVk::initialize(const egl::Display *display)
 {
     DisplayVk *displayVk = vk::GetImpl(display);
     angle::Result result = initializeImpl(displayVk);
-    return angle::ToEGL(result, displayVk, EGL_BAD_SURFACE);
+    return angle::ToEGL(result, EGL_BAD_SURFACE);
 }
 
 angle::Result OffscreenSurfaceVk::initializeImpl(DisplayVk *displayVk)
@@ -609,11 +609,10 @@ void OffscreenSurfaceVk::destroy(const egl::Display *display)
 egl::Error OffscreenSurfaceVk::unMakeCurrent(const gl::Context *context)
 {
     ContextVk *contextVk = vk::GetImpl(context);
-    DisplayVk *displayVk = vk::GetImpl(context->getDisplay());
 
     angle::Result result = contextVk->onSurfaceUnMakeCurrent(this);
 
-    return angle::ToEGL(result, displayVk, EGL_BAD_CURRENT_SURFACE);
+    return angle::ToEGL(result, EGL_BAD_CURRENT_SURFACE);
 }
 
 egl::Error OffscreenSurfaceVk::swap(const gl::Context *context)
@@ -731,7 +730,7 @@ egl::Error OffscreenSurfaceVk::lockSurface(const egl::Display *display,
     angle::Result result =
         LockSurfaceImpl(vk::GetImpl(display), image, mLockBufferHelper, getWidth(), getHeight(),
                         usageHint, preservePixels, bufferPtrOut, bufferPitchOut);
-    return angle::ToEGL(result, vk::GetImpl(display), EGL_BAD_ACCESS);
+    return angle::ToEGL(result, EGL_BAD_ACCESS);
 }
 
 egl::Error OffscreenSurfaceVk::unlockSurface(const egl::Display *display, bool preservePixels)
@@ -742,7 +741,7 @@ egl::Error OffscreenSurfaceVk::unlockSurface(const egl::Display *display, bool p
 
     return angle::ToEGL(UnlockSurfaceImpl(vk::GetImpl(display), image, mLockBufferHelper,
                                           getWidth(), getHeight(), preservePixels),
-                        vk::GetImpl(display), EGL_BAD_ACCESS);
+                        EGL_BAD_ACCESS);
 }
 
 EGLint OffscreenSurfaceVk::origin() const
@@ -972,18 +971,17 @@ egl::Error WindowSurfaceVk::initialize(const egl::Display *display)
     angle::Result result = initializeImpl(displayVk);
     if (result == angle::Result::Incomplete)
     {
-        return angle::ToEGL(result, displayVk, EGL_BAD_MATCH);
+        return angle::ToEGL(result, EGL_BAD_MATCH);
     }
     else
     {
-        return angle::ToEGL(result, displayVk, EGL_BAD_SURFACE);
+        return angle::ToEGL(result, EGL_BAD_SURFACE);
     }
 }
 
 egl::Error WindowSurfaceVk::unMakeCurrent(const gl::Context *context)
 {
     ContextVk *contextVk = vk::GetImpl(context);
-    DisplayVk *displayVk = vk::GetImpl(context->getDisplay());
 
     angle::Result result = contextVk->onSurfaceUnMakeCurrent(this);
     // Even though all swap chain images are tracked individually, the semaphores are not
@@ -991,7 +989,7 @@ egl::Error WindowSurfaceVk::unMakeCurrent(const gl::Context *context)
     // detaches from context so that surface will always wait until context is finished.
     mUse.merge(contextVk->getSubmittedResourceUse());
 
-    return angle::ToEGL(result, displayVk, EGL_BAD_CURRENT_SURFACE);
+    return angle::ToEGL(result, EGL_BAD_CURRENT_SURFACE);
 }
 
 angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk)
@@ -1840,15 +1838,12 @@ egl::Error WindowSurfaceVk::swapWithDamage(const gl::Context *context,
                                            const EGLint *rects,
                                            EGLint n_rects)
 {
-    DisplayVk *displayVk       = vk::GetImpl(context->getDisplay());
     const angle::Result result = swapImpl(context, rects, n_rects, nullptr);
-    return angle::ToEGL(result, displayVk, EGL_BAD_SURFACE);
+    return angle::ToEGL(result, EGL_BAD_SURFACE);
 }
 
 egl::Error WindowSurfaceVk::swap(const gl::Context *context)
 {
-    DisplayVk *displayVk = vk::GetImpl(context->getDisplay());
-
     // When in shared present mode, eglSwapBuffers is unnecessary except for mode change.  When mode
     // change is not expected, the eglSwapBuffers call is forwarded to the context as a glFlush.
     // This allows the context to skip it if there's nothing to flush.  Otherwise control is bounced
@@ -1859,11 +1854,11 @@ egl::Error WindowSurfaceVk::swap(const gl::Context *context)
     if (isSharedPresentMode() && mSwapchainPresentMode == mDesiredSwapchainPresentMode)
     {
         const angle::Result result = vk::GetImpl(context)->flush(context);
-        return angle::ToEGL(result, displayVk, EGL_BAD_SURFACE);
+        return angle::ToEGL(result, EGL_BAD_SURFACE);
     }
 
     const angle::Result result = swapImpl(context, nullptr, 0, nullptr);
-    return angle::ToEGL(result, displayVk, EGL_BAD_SURFACE);
+    return angle::ToEGL(result, EGL_BAD_SURFACE);
 }
 
 angle::Result WindowSurfaceVk::computePresentOutOfDate(vk::Context *context,
@@ -2585,7 +2580,7 @@ egl::Error WindowSurfaceVk::getUserWidth(const egl::Display *display, EGLint *va
         ASSERT(surfaceCaps.currentExtent.width != kSurfaceSizedBySwapchain);
         *value = static_cast<EGLint>(surfaceCaps.currentExtent.width);
     }
-    return angle::ToEGL(result, displayVk, EGL_BAD_SURFACE);
+    return angle::ToEGL(result, EGL_BAD_SURFACE);
 }
 
 egl::Error WindowSurfaceVk::getUserHeight(const egl::Display *display, EGLint *value) const
@@ -2607,7 +2602,7 @@ egl::Error WindowSurfaceVk::getUserHeight(const egl::Display *display, EGLint *v
         ASSERT(surfaceCaps.currentExtent.height != kSurfaceSizedBySwapchain);
         *value = static_cast<EGLint>(surfaceCaps.currentExtent.height);
     }
-    return angle::ToEGL(result, displayVk, EGL_BAD_SURFACE);
+    return angle::ToEGL(result, EGL_BAD_SURFACE);
 }
 
 angle::Result WindowSurfaceVk::getUserExtentsImpl(DisplayVk *displayVk,
@@ -2867,9 +2862,8 @@ egl::Error WindowSurfaceVk::getBufferAge(const gl::Context *context, EGLint *age
     if (mNeedToAcquireNextSwapchainImage)
     {
         // Acquire the current image if needed.
-        DisplayVk *displayVk = vk::GetImpl(context->getDisplay());
         egl::Error result =
-            angle::ToEGL(doDeferredAcquireNextImage(context, false), displayVk, EGL_BAD_SURFACE);
+            angle::ToEGL(doDeferredAcquireNextImage(context, false), EGL_BAD_SURFACE);
         if (result.isError())
         {
             return result;
@@ -2952,7 +2946,7 @@ egl::Error WindowSurfaceVk::lockSurface(const egl::Display *display,
     angle::Result result =
         LockSurfaceImpl(vk::GetImpl(display), image, mLockBufferHelper, getWidth(), getHeight(),
                         usageHint, preservePixels, bufferPtrOut, bufferPitchOut);
-    return angle::ToEGL(result, vk::GetImpl(display), EGL_BAD_ACCESS);
+    return angle::ToEGL(result, EGL_BAD_ACCESS);
 }
 
 egl::Error WindowSurfaceVk::unlockSurface(const egl::Display *display, bool preservePixels)
@@ -2963,7 +2957,7 @@ egl::Error WindowSurfaceVk::unlockSurface(const egl::Display *display, bool pres
 
     return angle::ToEGL(UnlockSurfaceImpl(vk::GetImpl(display), image, mLockBufferHelper,
                                           getWidth(), getHeight(), preservePixels),
-                        vk::GetImpl(display), EGL_BAD_ACCESS);
+                        EGL_BAD_ACCESS);
 }
 
 EGLint WindowSurfaceVk::origin() const

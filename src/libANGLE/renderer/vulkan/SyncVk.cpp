@@ -515,7 +515,7 @@ egl::Error EGLSyncVk::initialize(const egl::Display *display,
             vk::SyncHelperNativeFence *syncHelper = new vk::SyncHelperNativeFence();
             mSyncHelper                           = syncHelper;
             return angle::ToEGL(syncHelper->initializeWithFd(vk::GetImpl(context), mNativeFenceFD),
-                                vk::GetImpl(display), EGL_BAD_ALLOC);
+                                EGL_BAD_ALLOC);
         }
         default:
             UNREACHABLE();
@@ -571,10 +571,8 @@ egl::Error EGLSyncVk::serverWait(const egl::Display *display,
     // No flags are currently implemented.
     ASSERT(flags == 0);
 
-    DisplayVk *displayVk = vk::GetImpl(display);
     ContextVk *contextVk = vk::GetImpl(context);
-
-    return angle::ToEGL(mSyncHelper->serverWait(contextVk), displayVk, EGL_BAD_ALLOC);
+    return angle::ToEGL(mSyncHelper->serverWait(contextVk), EGL_BAD_ALLOC);
 }
 
 egl::Error EGLSyncVk::getStatus(const egl::Display *display, EGLint *outStatus)
@@ -595,7 +593,7 @@ egl::Error EGLSyncVk::dupNativeFenceFD(const egl::Display *display, EGLint *fdOu
     {
         case EGL_SYNC_NATIVE_FENCE_ANDROID:
             return angle::ToEGL(mSyncHelper->dupNativeFenceFD(vk::GetImpl(display), fdOut),
-                                vk::GetImpl(display), EGL_BAD_PARAMETER);
+                                EGL_BAD_PARAMETER);
         default:
             return egl::EglBadDisplay();
     }

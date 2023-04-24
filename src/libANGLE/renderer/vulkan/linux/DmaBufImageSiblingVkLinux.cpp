@@ -344,7 +344,7 @@ DmaBufImageSiblingVkLinux::~DmaBufImageSiblingVkLinux() {}
 egl::Error DmaBufImageSiblingVkLinux::initialize(const egl::Display *display)
 {
     DisplayVk *displayVk = vk::GetImpl(display);
-    return angle::ToEGL(initImpl(displayVk), displayVk, EGL_BAD_PARAMETER);
+    return angle::ToEGL(initImpl(displayVk), EGL_BAD_PARAMETER);
 }
 
 VkImageUsageFlags FindSupportedUsageFlagsForFormat(

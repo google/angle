@@ -108,7 +108,7 @@ egl::Error DisplayVk::initialize(egl::Display *display)
 {
     ASSERT(mRenderer != nullptr && display != nullptr);
     angle::Result result = mRenderer->initialize(this, display, getWSIExtension(), getWSILayer());
-    ANGLE_TRY(angle::ToEGL(result, this, EGL_NOT_INITIALIZED));
+    ANGLE_TRY(angle::ToEGL(result, EGL_NOT_INITIALIZED));
     // Query and cache supported surface format and colorspace for later use.
     initSupportedSurfaceFormatColorspaces();
     return egl::NoError();
@@ -182,7 +182,7 @@ egl::Error DisplayVk::waitClient(const gl::Context *context)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "DisplayVk::waitClient");
     ContextVk *contextVk = vk::GetImpl(context);
-    return angle::ToEGL(contextVk->finishImpl(RenderPassClosureReason::EGLWaitClient), this,
+    return angle::ToEGL(contextVk->finishImpl(RenderPassClosureReason::EGLWaitClient),
                         EGL_BAD_ACCESS);
 }
 
