@@ -56,9 +56,15 @@ angle::Result ContextEGL::onUnMakeCurrent(const gl::Context *context)
 
     if (context->isExternal())
     {
+        // If the default framebuffer exists, update its ID (note that there can
+        // be multiple consecutive onUnMakeCurrent() calls in destruction, and
+        // the default FBO will have been unset by the first one).
         gl::Framebuffer *framebuffer = mState.getDefaultFramebuffer();
-        auto framebufferGL           = GetImplAs<FramebufferGL>(framebuffer);
-        framebufferGL->updateDefaultFramebufferID(mPrevDefaultFramebufferID);
+        if (framebuffer)
+        {
+            auto framebufferGL = GetImplAs<FramebufferGL>(framebuffer);
+            framebufferGL->updateDefaultFramebufferID(mPrevDefaultFramebufferID);
+        }
     }
 
     return ContextGL::onUnMakeCurrent(context);
