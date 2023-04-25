@@ -410,13 +410,6 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
         "SYNC-HAZARD-WRITE-AFTER-READ",
         "type: VK_DESCRIPTOR_TYPE_STORAGE_BUFFER",
     },
-    // From: TraceTest.car_chase http://anglebug.com/7125#c6
-    {
-        "SYNC-HAZARD-WRITE-AFTER-READ",
-        "Access info (usage: SYNC_COPY_TRANSFER_WRITE, "
-        "prior_usage: SYNC_FRAGMENT_SHADER_UNIFORM_READ, "
-        "read_barriers: VK_PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT, command: vkCmdDrawIndexed",
-    },
     // From: TraceTest.special_forces_group_2 http://anglebug.com/5592
     {
         "SYNC-HAZARD-WRITE-AFTER-READ",

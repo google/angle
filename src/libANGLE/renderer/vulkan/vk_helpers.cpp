@@ -7070,6 +7070,7 @@ angle::Result ImageHelper::generateMipmapsWithBlit(ContextVk *contextVk,
                                 VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, barrier);
     // [baseLevel:maxLevel-1] from TRANSFER_SRC to SHADER_READ
     barrier.oldLayout                     = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
+    barrier.srcAccessMask                 = VK_ACCESS_TRANSFER_READ_BIT;
     barrier.subresourceRange.baseMipLevel = baseLevel.get();
     barrier.subresourceRange.levelCount   = maxLevel.get() - baseLevel.get();
     commandBuffer->imageBarrier(VK_PIPELINE_STAGE_TRANSFER_BIT,
