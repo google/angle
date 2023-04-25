@@ -405,11 +405,6 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
      "VK_IMAGE_LAYOUT_GENERAL). Access info (usage: SYNC_IMAGE_LAYOUT_TRANSITION, prior_usage: "
      "SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_WRITE, write_barriers:",
      true},
-    // From: TraceTest.car_chase http://anglebug.com/7125
-    {
-        "SYNC-HAZARD-WRITE-AFTER-READ",
-        "type: VK_DESCRIPTOR_TYPE_STORAGE_BUFFER",
-    },
     // From: TraceTest.special_forces_group_2 http://anglebug.com/5592
     {
         "SYNC-HAZARD-WRITE-AFTER-READ",
