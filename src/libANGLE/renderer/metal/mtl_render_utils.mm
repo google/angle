@@ -1578,16 +1578,17 @@ void DepthStencilBlitUtils::onDestroy()
     mStencilCopyBuffer = nullptr;
 }
 
-void DepthStencilBlitUtils::ensureRenderPipelineStateCacheInitialized(ContextMtl *ctx,
-                                                                      int sourceDepthTextureType,
-                                                                      int sourceStencilTextureType,
-                                                                      RenderPipelineCache *cacheOut)
+angle::Result DepthStencilBlitUtils::ensureRenderPipelineStateCacheInitialized(
+    ContextMtl *ctx,
+    int sourceDepthTextureType,
+    int sourceStencilTextureType,
+    RenderPipelineCache *cacheOut)
 {
     RenderPipelineCache &cache = *cacheOut;
     if (cache.getVertexShader() && cache.getFragmentShader())
     {
         // Already initialized.
-        return;
+        return angle::Result::Continue;
     }
 
     ANGLE_MTL_OBJC_SCOPE
@@ -1630,11 +1631,18 @@ void DepthStencilBlitUtils::ensureRenderPipelineStateCacheInitialized(ContextMtl
         id<MTLFunction> fragmentShader =
             [[shaderLib newFunctionWithName:shaderName constantValues:funcConstants
                                       error:&err] ANGLE_MTL_AUTORELEASE];
-        ASSERT(fragmentShader);
+        if (!fragmentShader)
+        {
+            ERR() << "failed to load builtin Metal fragment shader " << shaderName << ": "
+                  << (err ? err.localizedDescription : @"");
+            return angle::Result::Stop;
+        }
 
         cache.setVertexShader(ctx, vertexShader);
         cache.setFragmentShader(ctx, fragmentShader);
     }
+
+    return angle::Result::Continue;
 }
 
 id<MTLComputePipelineState> DepthStencilBlitUtils::getStencilToBufferComputePipelineState(
@@ -1664,10 +1672,11 @@ id<MTLComputePipelineState> DepthStencilBlitUtils::getStencilToBufferComputePipe
     return cache;
 }
 
-id<MTLRenderPipelineState> DepthStencilBlitUtils::getDepthStencilBlitRenderPipelineState(
+angle::Result DepthStencilBlitUtils::getDepthStencilBlitRenderPipelineState(
     const gl::Context *context,
     RenderCommandEncoder *cmdEncoder,
-    const DepthStencilBlitParams &params)
+    const DepthStencilBlitParams &params,
+    id<MTLRenderPipelineState> *outRenderPipelineState)
 {
     ContextMtl *contextMtl = GetImpl(context);
     RenderPipelineDesc pipelineDesc;
@@ -1699,10 +1708,11 @@ id<MTLRenderPipelineState> DepthStencilBlitUtils::getDepthStencilBlitRenderPipel
         pipelineCache = &mStencilBlitRenderPipelineCache[stencilTextureType];
     }
 
-    ensureRenderPipelineStateCacheInitialized(contextMtl, depthTextureType, stencilTextureType,
-                                              pipelineCache);
+    ANGLE_TRY(ensureRenderPipelineStateCacheInitialized(contextMtl, depthTextureType,
+                                                        stencilTextureType, pipelineCache));
 
-    return pipelineCache->getRenderPipelineState(contextMtl, pipelineDesc);
+    *outRenderPipelineState = pipelineCache->getRenderPipelineState(contextMtl, pipelineDesc);
+    return angle::Result::Continue;
 }
 
 angle::Result DepthStencilBlitUtils::setupDepthStencilBlitWithDraw(
@@ -1717,12 +1727,10 @@ angle::Result DepthStencilBlitUtils::setupDepthStencilBlitWithDraw(
     SetupCommonBlitWithDrawStates(context, cmdEncoder, params, false);
 
     // Generate render pipeline state
-    id<MTLRenderPipelineState> renderPipelineState =
-        getDepthStencilBlitRenderPipelineState(context, cmdEncoder, params);
-    if (!renderPipelineState)
-    {
-        return angle::Result::Stop;
-    }
+    id<MTLRenderPipelineState> renderPipelineState;
+    ANGLE_TRY(
+        getDepthStencilBlitRenderPipelineState(context, cmdEncoder, params, &renderPipelineState));
+
     // Setup states
     cmdEncoder->setRenderPipelineState(renderPipelineState);
 
