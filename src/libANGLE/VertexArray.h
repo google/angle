@@ -77,10 +77,12 @@ class VertexArrayState final : angle::NonCopyable
 
     AttributesMask getClientMemoryAttribsMask() const { return mClientMemoryAttribsMask; }
 
-    gl::AttributesMask getNullPointerClientMemoryAttribsMask() const
+    AttributesMask getNullPointerClientMemoryAttribsMask() const
     {
         return mNullPointerClientMemoryAttribsMask;
     }
+
+    VertexArrayBufferBindingMask getBufferBindingMask() const { return mBufferBindingMask; }
 
   private:
     void updateCachedMutableOrNonPersistentArrayBuffers(size_t index);
@@ -94,6 +96,9 @@ class VertexArrayState final : angle::NonCopyable
     ComponentTypeMask mVertexAttributesTypeMask;
     AttributesMask mLastSyncedEnabledAttributesMask;
 
+    // Track which binding index has a buffer bound
+    VertexArrayBufferBindingMask mBufferBindingMask;
+
     // This is a performance optimization for buffer binding. Allows element array buffer updates.
     friend class State;
 
@@ -101,8 +106,8 @@ class VertexArrayState final : angle::NonCopyable
     // When a generic attribute array is sourced from client memory, the vertex attribute binding
     // state is ignored. Thus we don't have to worry about binding state when using client memory
     // attribs.
-    gl::AttributesMask mClientMemoryAttribsMask;
-    gl::AttributesMask mNullPointerClientMemoryAttribsMask;
+    AttributesMask mClientMemoryAttribsMask;
+    AttributesMask mNullPointerClientMemoryAttribsMask;
 
     // Used for validation cache. Indexed by attribute.
     AttributesMask mCachedMappedArrayBuffers;
@@ -143,15 +148,15 @@ class VertexArray final : public angle::ObserverInterface,
 
         // Dirty bits for bindings.
         DIRTY_BIT_BINDING_0,
-        DIRTY_BIT_BINDING_MAX = DIRTY_BIT_BINDING_0 + gl::MAX_VERTEX_ATTRIB_BINDINGS,
+        DIRTY_BIT_BINDING_MAX = DIRTY_BIT_BINDING_0 + MAX_VERTEX_ATTRIB_BINDINGS,
 
         // We keep separate dirty bits for bound buffers whose data changed since last update.
         DIRTY_BIT_BUFFER_DATA_0   = DIRTY_BIT_BINDING_MAX,
-        DIRTY_BIT_BUFFER_DATA_MAX = DIRTY_BIT_BUFFER_DATA_0 + gl::MAX_VERTEX_ATTRIB_BINDINGS,
+        DIRTY_BIT_BUFFER_DATA_MAX = DIRTY_BIT_BUFFER_DATA_0 + MAX_VERTEX_ATTRIB_BINDINGS,
 
         // Dirty bits for attributes.
         DIRTY_BIT_ATTRIB_0   = DIRTY_BIT_BUFFER_DATA_MAX,
-        DIRTY_BIT_ATTRIB_MAX = DIRTY_BIT_ATTRIB_0 + gl::MAX_VERTEX_ATTRIBS,
+        DIRTY_BIT_ATTRIB_MAX = DIRTY_BIT_ATTRIB_0 + MAX_VERTEX_ATTRIBS,
 
         DIRTY_BIT_UNKNOWN = DIRTY_BIT_ATTRIB_MAX,
         DIRTY_BIT_MAX     = DIRTY_BIT_UNKNOWN,
@@ -189,9 +194,9 @@ class VertexArray final : public angle::ObserverInterface,
     using DirtyBits                = angle::BitSet<DIRTY_BIT_MAX>;
     using DirtyAttribBits          = angle::BitSet<DIRTY_ATTRIB_MAX>;
     using DirtyBindingBits         = angle::BitSet<DIRTY_BINDING_MAX>;
-    using DirtyAttribBitsArray     = std::array<DirtyAttribBits, gl::MAX_VERTEX_ATTRIBS>;
-    using DirtyBindingBitsArray    = std::array<DirtyBindingBits, gl::MAX_VERTEX_ATTRIB_BINDINGS>;
-    using DirtyObserverBindingBits = angle::BitSet<gl::MAX_VERTEX_ATTRIB_BINDINGS>;
+    using DirtyAttribBitsArray     = std::array<DirtyAttribBits, MAX_VERTEX_ATTRIBS>;
+    using DirtyBindingBitsArray    = std::array<DirtyBindingBits, MAX_VERTEX_ATTRIB_BINDINGS>;
+    using DirtyObserverBindingBits = angle::BitSet<MAX_VERTEX_ATTRIB_BINDINGS>;
 
     VertexArray(rx::GLImplFactory *factory,
                 VertexArrayID id,
@@ -269,7 +274,7 @@ class VertexArray final : public angle::ObserverInterface,
         return mState.getEnabledAttributesMask();
     }
 
-    gl::AttributesMask getClientAttribsMask() const { return mState.mClientMemoryAttribsMask; }
+    AttributesMask getClientAttribsMask() const { return mState.mClientMemoryAttribsMask; }
 
     bool hasEnabledNullPointerClientArray() const
     {
@@ -298,7 +303,7 @@ class VertexArray final : public angle::ObserverInterface,
     AttributesMask getAttributesMask() const { return mState.mEnabledAttributesMask; }
 
     void onBindingChanged(const Context *context, int incr);
-    bool hasTransformFeedbackBindingConflict(const gl::Context *context) const;
+    bool hasTransformFeedbackBindingConflict(const Context *context) const;
 
     ANGLE_INLINE angle::Result getIndexRange(const Context *context,
                                              DrawElementsType type,

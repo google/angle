@@ -498,6 +498,9 @@ struct PixelPackState : PixelStoreStateBase
     bool reverseRowOrder = false;
 };
 
+// Used in VertexArray.
+using VertexArrayBufferBindingMask = angle::BitSet<MAX_VERTEX_ATTRIB_BINDINGS>;
+
 // Used in Program and VertexArray.
 using AttributesMask = angle::BitSet<MAX_VERTEX_ATTRIBS>;
 
