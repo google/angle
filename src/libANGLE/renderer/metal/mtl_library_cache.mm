@@ -167,6 +167,7 @@ AutoObjCPtr<id<MTLLibrary>> LibraryCache::getOrCompileShaderLibrary(
             entry.library = NewMetalLibraryFromMetallib(context, value.data(), value.size());
         }
         ANGLE_HISTOGRAM_BOOLEAN("GPU.ANGLE.MetalShaderInBlobCache", entry.library);
+        ANGLEPlatformCurrent()->recordShaderCacheUse(entry.library);
         if (entry.library)
         {
             return entry.library;
