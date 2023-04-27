@@ -23,7 +23,9 @@ ContextEGL::~ContextEGL() {}
 
 angle::Result ContextEGL::onMakeCurrent(const gl::Context *context)
 {
-    if (context->isExternal())
+    // If this context is wrapping an external native context, save state from
+    // that external context when first making this context current.
+    if (!mIsCurrent && context->isExternal())
     {
         if (!mExtState)
         {
@@ -42,11 +44,14 @@ angle::Result ContextEGL::onMakeCurrent(const gl::Context *context)
         mPrevDefaultFramebufferID    = framebufferGL->getFramebufferID();
         framebufferGL->updateDefaultFramebufferID(mExtState->framebufferBinding);
     }
+    mIsCurrent = true;
     return ContextGL::onMakeCurrent(context);
 }
 
 angle::Result ContextEGL::onUnMakeCurrent(const gl::Context *context)
 {
+    mIsCurrent = false;
+
     if (context->saveAndRestoreState())
     {
         ASSERT(context->isExternal());
