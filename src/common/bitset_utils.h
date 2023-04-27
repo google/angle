@@ -513,6 +513,7 @@ class BitSetArray final
     using param_type = BaseBitSet::param_type;
 
     constexpr BitSetArray();
+    constexpr explicit BitSetArray(uint64_t value);
     constexpr explicit BitSetArray(std::initializer_list<param_type> init);
 
     constexpr BitSetArray(const BitSetArray<N> &other);
@@ -713,6 +714,31 @@ constexpr BitSetArray<N>::BitSetArray()
 {
     static_assert(N > priv::kDefaultBitSetSize, "BitSetArray type can't support requested size.");
     reset();
+}
+
+template <std::size_t N>
+constexpr BitSetArray<N>::BitSetArray(uint64_t value)
+{
+    reset();
+
+    if (priv::kDefaultBitSetSize < 64)
+    {
+        size_t i = 0;
+        for (; i < kArraySize - 1; ++i)
+        {
+            value_type elemValue =
+                value & priv::BaseBitSetType::Mask(priv::kDefaultBitSetSize).bits();
+            mBaseBitSetArray[i] = priv::BaseBitSetType(elemValue);
+            value >>= priv::kDefaultBitSetSize;
+        }
+        value_type elemValue = value & kLastElementMask;
+        mBaseBitSetArray[i]  = priv::BaseBitSetType(elemValue);
+    }
+    else
+    {
+        value_type elemValue = value & priv::BaseBitSetType::Mask(priv::kDefaultBitSetSize).bits();
+        mBaseBitSetArray[0]  = priv::BaseBitSetType(elemValue);
+    }
 }
 
 template <std::size_t N>

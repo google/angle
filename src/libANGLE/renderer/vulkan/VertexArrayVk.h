@@ -150,6 +150,8 @@ class VertexArrayVk : public VertexArrayImpl
     // The offset into the buffer to the first attrib
     gl::AttribArray<GLuint> mCurrentArrayBufferRelativeOffsets;
     gl::AttribArray<vk::BufferHelper *> mCurrentArrayBuffers;
+    // Tracks BufferSerial of mCurrentArrayBuffers since they are always valid to access.
+    gl::AttribArray<vk::BufferSerial> mCurrentArrayBufferSerial;
     // Cache strides of attributes for a fast pipeline cache update when VAOs are changed
     gl::AttribArray<angle::FormatID> mCurrentArrayBufferFormats;
     gl::AttribArray<GLuint> mCurrentArrayBufferStrides;

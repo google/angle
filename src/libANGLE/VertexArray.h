@@ -121,9 +121,12 @@ class VertexArrayBufferContentsObservers final : angle::NonCopyable
     VertexArrayBufferContentsObservers(VertexArray *vertexArray);
     void enableForBuffer(Buffer *buffer, uint32_t bufferIndex);
     void disableForBuffer(Buffer *buffer, uint32_t bufferIndex);
+    bool any() const { return mBufferObserversBitMask.any(); }
 
   private:
     VertexArray *mVertexArray;
+    // Bit is set when it is observing the buffer content change
+    gl::AttributesMask mBufferObserversBitMask;
 };
 
 class VertexArray final : public angle::ObserverInterface,
@@ -143,6 +146,10 @@ class VertexArray final : public angle::ObserverInterface,
     // the Vulkan back-end to skip performing a pipeline change for performance.
     enum DirtyBitType
     {
+        // This vertex array has lost buffer observation. Check against actual buffer storage is
+        // required.
+        DIRTY_BIT_LOST_OBSERVATION,
+
         DIRTY_BIT_ELEMENT_ARRAY_BUFFER,
         DIRTY_BIT_ELEMENT_ARRAY_BUFFER_DATA,
 
@@ -168,9 +175,11 @@ class VertexArray final : public angle::ObserverInterface,
     // bits when it processes dirtyBits. This assertion ensures these dirty bit order matches what
     // VertexArrayVk::syncState expects.
     static_assert(DIRTY_BIT_BINDING_0 < DIRTY_BIT_BUFFER_DATA_0,
-                  "BINDING dity bits should come before DATA.");
+                  "BINDING dirty bits should come before DATA.");
     static_assert(DIRTY_BIT_BUFFER_DATA_0 < DIRTY_BIT_ATTRIB_0,
-                  "DATA dity bits should come before ATTRIB.");
+                  "DATA dirty bits should come before ATTRIB.");
+    static_assert(DIRTY_BIT_LOST_OBSERVATION < DIRTY_BIT_BINDING_0,
+                  "LOST_OBSERVATION dirty bits should come before BINDING.");
 
     enum DirtyAttribBitType
     {
@@ -391,9 +400,6 @@ class VertexArray final : public angle::ObserverInterface,
     rx::VertexArrayImpl *mVertexArray;
 
     std::vector<angle::ObserverBinding> mArrayBufferObserverBindings;
-    // Track which observer in mArrayBufferObserverBindings is not currently been removed from
-    // subject's observer list.
-    DirtyObserverBindingBits mDirtyObserverBindingBits;
 
     AttributesMask mCachedTransformFeedbackConflictedBindingsMask;
 

@@ -637,6 +637,24 @@ TEST(BitSetArrayTest, InitializerList)
     }
 }
 
+// Test that BitSetArray's constructor with uint64_t.
+TYPED_TEST(BitSetArrayTest, ConstructorWithUInt64)
+{
+    uint64_t value = 0x5555555555555555;
+    TypeParam testBitSet(value);
+    for (size_t i = 0; i < testBitSet.size(); ++i)
+    {
+        if (i < sizeof(uint64_t) * 8 && (value & (0x1ull << i)))
+        {
+            EXPECT_TRUE(testBitSet.test(i));
+        }
+        else
+        {
+            EXPECT_FALSE(testBitSet.test(i));
+        }
+    }
+}
+
 // Test iteration over BitSetArray where there are gaps
 TYPED_TEST(BitSetArrayTest, IterationWithGaps)
 {
