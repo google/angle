@@ -25,6 +25,18 @@ class VulkanImageTest : public ANGLETest<>
 {
   protected:
     VulkanImageTest() { setRobustResourceInit(true); }
+
+    angle::VulkanPerfCounters getPerfCounters()
+    {
+        if (mIndexMap.empty())
+        {
+            mIndexMap = BuildCounterNameToIndexMap();
+        }
+
+        return GetPerfCounters(mIndexMap);
+    }
+
+    CounterNameToIndexMap mIndexMap;
 };
 
 // Check extensions with Vukan backend.
@@ -494,6 +506,83 @@ TEST_P(VulkanImageTest, ClientBufferWithDraw)
     EXPECT_EGL_TRUE(eglDestroyImageKHR(display, eglImage));
     vkDestroyImage(helper.getDevice(), vkImage, nullptr);
     vkFreeMemory(helper.getDevice(), vkDeviceMemory, nullptr);
+}
+
+// Test that when VMA image suballocation is used, image memory can be allocated from the system in
+// case the device memory runs out.
+TEST_P(VulkanImageTest, AllocateVMAImageWhenDeviceOOM)
+{
+    ANGLE_SKIP_TEST_IF(!getEGLWindow()->isFeatureEnabled(Feature::UseVmaForImageSuballocation));
+
+    VulkanHelper helper;
+    helper.initializeFromANGLE();
+    uint64_t expectedAllocationFallbacks =
+        getPerfCounters().deviceMemoryImageAllocationFallbacks + 1;
+    uint64_t expectedAllocationFallbacksAfterLastTexture =
+        getPerfCounters().deviceMemoryImageAllocationFallbacks + 2;
+
+    // Acquire the sizes and memory property flags for all available memory types. There should be
+    // at least one memory heap without the device local bit (VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT).
+    // Otherwise, the test should be skipped.
+    VkPhysicalDeviceMemoryProperties memoryProperties;
+    vkGetPhysicalDeviceMemoryProperties(helper.getPhysicalDevice(), &memoryProperties);
+
+    VkDeviceSize totalDeviceLocalMemoryHeapSize = 0;
+    uint32_t heapsWithoutLocalDeviceMemoryBit   = 0;
+    for (uint32_t i = 0; i < memoryProperties.memoryHeapCount; i++)
+    {
+        if ((memoryProperties.memoryHeaps[i].flags & VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT) == 0)
+        {
+            heapsWithoutLocalDeviceMemoryBit++;
+        }
+        else
+        {
+            totalDeviceLocalMemoryHeapSize += memoryProperties.memoryHeaps[i].size;
+        }
+    }
+    ANGLE_SKIP_TEST_IF(heapsWithoutLocalDeviceMemoryBit == 0 ||
+                       totalDeviceLocalMemoryHeapSize == 0);
+
+    // Device memory is the first choice for image memory allocation. However, in case it runs out,
+    // memory should be allocated from the system if available. Therefore, we want to make sure that
+    // we can still allocate image memory even if the device memory is full.
+    constexpr VkDeviceSize kTextureWidth  = 2048;
+    constexpr VkDeviceSize kTextureHeight = 2048;
+    constexpr VkDeviceSize kTextureSize   = kTextureWidth * kTextureHeight * 4;
+    VkDeviceSize textureCount             = (totalDeviceLocalMemoryHeapSize / kTextureSize) + 1;
+
+    std::vector<GLTexture> textures;
+    textures.resize(textureCount);
+    for (uint32_t i = 0; i < textureCount; i++)
+    {
+        glBindTexture(GL_TEXTURE_2D, textures[i]);
+        glTexStorage2DEXT(GL_TEXTURE_2D, 1, GL_RGBA8, kTextureWidth, kTextureHeight);
+        glDrawArrays(GL_POINTS, 0, 1);
+        EXPECT_GL_NO_ERROR();
+
+        // This process only needs to continue until the allocation is no longer on the device.
+        if (getPerfCounters().deviceMemoryImageAllocationFallbacks == expectedAllocationFallbacks)
+        {
+            break;
+        }
+    }
+    EXPECT_EQ(getPerfCounters().deviceMemoryImageAllocationFallbacks, expectedAllocationFallbacks);
+
+    // Verify that the texture allocated on the system memory can attach to a framebuffer correctly.
+    GLTexture texture;
+    std::vector<GLColor> textureColor(kTextureWidth * kTextureHeight, GLColor::magenta);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexStorage2DEXT(GL_TEXTURE_2D, 1, GL_RGBA8, kTextureWidth, kTextureHeight);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kTextureWidth, kTextureHeight, GL_RGBA,
+                    GL_UNSIGNED_BYTE, textureColor.data());
+    EXPECT_EQ(getPerfCounters().deviceMemoryImageAllocationFallbacks,
+              expectedAllocationFallbacksAfterLastTexture);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, GLColor::magenta);
 }
 
 // Test that texture storage created from VkImage memory is considered pre-initialized in GL.

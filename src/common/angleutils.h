@@ -206,6 +206,7 @@ struct PerfMonitorTriplet
     FN(textureDescriptorSetCacheMisses)            \
     FN(textureDescriptorSetCacheTotalSize)         \
     FN(shaderResourcesDescriptorSetCacheHits)      \
+    FN(deviceMemoryImageAllocationFallbacks)       \
     FN(mutableTexturesUploaded)                    \
     FN(shaderResourcesDescriptorSetCacheMisses)    \
     FN(shaderResourcesDescriptorSetCacheTotalSize) \

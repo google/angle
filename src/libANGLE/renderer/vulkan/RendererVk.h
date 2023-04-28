@@ -77,7 +77,7 @@ class ImageMemorySuballocator : angle::NonCopyable
     void destroy(RendererVk *renderer);
 
     // Allocates memory for the image and binds it.
-    VkResult allocateAndBindMemory(RendererVk *renderer,
+    VkResult allocateAndBindMemory(Context *context,
                                    Image *image,
                                    const VkImageCreateInfo *imageCreateInfo,
                                    VkMemoryPropertyFlags requiredFlags,

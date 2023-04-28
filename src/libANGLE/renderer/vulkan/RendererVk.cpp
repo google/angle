@@ -5540,7 +5540,7 @@ ImageMemorySuballocator::~ImageMemorySuballocator() {}
 
 void ImageMemorySuballocator::destroy(RendererVk *renderer) {}
 
-VkResult ImageMemorySuballocator::allocateAndBindMemory(RendererVk *renderer,
+VkResult ImageMemorySuballocator::allocateAndBindMemory(Context *context,
                                                         Image *image,
                                                         const VkImageCreateInfo *imageCreateInfo,
                                                         VkMemoryPropertyFlags requiredFlags,
@@ -5553,6 +5553,7 @@ VkResult ImageMemorySuballocator::allocateAndBindMemory(RendererVk *renderer,
 {
     ASSERT(image && image->valid());
     ASSERT(allocationOut && !allocationOut->valid());
+    RendererVk *renderer       = context->getRenderer();
     const Allocator &allocator = renderer->getAllocator();
 
     VkMemoryRequirements memoryRequirements;
@@ -5582,6 +5583,16 @@ VkResult ImageMemorySuballocator::allocateAndBindMemory(RendererVk *renderer,
     // We need to get the property flags of the allocated memory.
     *memoryFlagsOut =
         renderer->getMemoryProperties().getMemoryType(*memoryTypeIndexOut).propertyFlags;
+    if ((~(*memoryFlagsOut) & preferredFlags & VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT) != 0)
+    {
+        // For images allocated here, although allocation is preferred on the device, it is not
+        // required.
+        ASSERT((requiredFlags & VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT) == 0);
+        renderer->getMemoryAllocationTracker()->compareExpectedFlagsWithAllocatedFlags(
+            requiredFlags, preferredFlags, *memoryFlagsOut,
+            reinterpret_cast<void *>(allocationOut->getHandle()));
+        context->getPerfCounters().deviceMemoryImageAllocationFallbacks++;
+    }
 
     renderer->onMemoryAlloc(memoryAllocationType, *sizeOut, *memoryTypeIndexOut,
                             allocationOut->getHandle());
