@@ -643,9 +643,9 @@ class CommandProcessor : public Context
     // Command processor thread, process a task
     angle::Result processTask(CommandProcessorTask *task);
 
-    void present(egl::ContextPriority priority,
-                 const VkPresentInfoKHR &presentInfo,
-                 SwapchainStatus *swapchainStatus);
+    VkResult present(egl::ContextPriority priority,
+                     const VkPresentInfoKHR &presentInfo,
+                     SwapchainStatus *swapchainStatus);
 
     // The mutex lock that serializes dequeue from mTask and submit to mCommandQueue so that only
     // one mTaskQueue consumer at a time

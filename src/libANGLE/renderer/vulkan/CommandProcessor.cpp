@@ -721,9 +721,11 @@ angle::Result CommandProcessor::processTask(CommandProcessorTask *task)
         }
         case CustomTask::Present:
         {
-            present(task->getPriority(), task->getPresentInfo(), task->getSwapchainStatus());
+            // Do not access task->getSwapchainStatus() after this call because it is marked as no
+            // longer pending, and so may get deleted or clobbered by another thread.
+            VkResult result =
+                present(task->getPriority(), task->getPresentInfo(), task->getSwapchainStatus());
 
-            VkResult result = task->getSwapchainStatus()->lastPresentResult;
             // We get to ignore these as they are not fatal
             if (result != VK_ERROR_OUT_OF_DATE_KHR && result != VK_SUBOPTIMAL_KHR &&
                 result != VK_SUCCESS)
@@ -838,9 +840,9 @@ void CommandProcessor::handleDeviceLost(RendererVk *renderer)
     mCommandQueue->handleDeviceLost(renderer);
 }
 
-void CommandProcessor::present(egl::ContextPriority priority,
-                               const VkPresentInfoKHR &presentInfo,
-                               SwapchainStatus *swapchainStatus)
+VkResult CommandProcessor::present(egl::ContextPriority priority,
+                                   const VkPresentInfoKHR &presentInfo,
+                                   SwapchainStatus *swapchainStatus)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "vkQueuePresentKHR");
     // Verify that we are presenting one and only one swapchain
@@ -848,9 +850,15 @@ void CommandProcessor::present(egl::ContextPriority priority,
     ASSERT(presentInfo.pResults == nullptr);
 
     mCommandQueue->queuePresent(priority, presentInfo, swapchainStatus);
-    ASSERT(swapchainStatus->isPending);
+    const VkResult result = swapchainStatus->lastPresentResult;
+
     // Always make sure update isPending after status has been updated.
+    // Can't access swapchainStatus after this assignment because it is marked as no longer pending,
+    // and so may get deleted or clobbered by another thread.
+    ASSERT(swapchainStatus->isPending);
     swapchainStatus->isPending = false;
+
+    return result;
 }
 
 angle::Result CommandProcessor::enqueueSubmitCommands(Context *context,
