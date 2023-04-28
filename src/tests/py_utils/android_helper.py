@@ -26,6 +26,10 @@ from angle_test_util import ANGLE_TRACE_TEST_SUITE
 # Currently we only support a single test package name.
 TEST_PACKAGE_NAME = 'com.android.angle.test'
 
+# /sdcard/ is slow (see https://crrev.com/c/3615081 for details)
+# /data/local/tmp/ is not writable by apps
+FAST_TEMP_DEVICE_DIR = '/data/data/' + TEST_PACKAGE_NAME + '/tmp/'
+
 
 class _Global(object):
     initialized = False
@@ -232,6 +236,7 @@ def _PrepareTestSuite(suite_name):
     _AdbShell('appops set %s MANAGE_EXTERNAL_STORAGE allow || true' % TEST_PACKAGE_NAME)
 
     _AdbShell('mkdir -p /sdcard/chromium_tests_root/')
+    _AdbShell('mkdir -p %s' % FAST_TEMP_DEVICE_DIR)
 
     if suite_name == ANGLE_TRACE_TEST_SUITE:
         _AddRestrictedTracesJson()
@@ -314,7 +319,7 @@ def _RandomHex():
 
 @contextlib.contextmanager
 def _TempDeviceDir():
-    path = '/sdcard/Download/temp_dir-%s' % _RandomHex()
+    path = posixpath.join(FAST_TEMP_DEVICE_DIR, 'temp_dir-%s' % _RandomHex())
     _AdbShell('mkdir -p ' + path)
     try:
         yield path
@@ -324,7 +329,7 @@ def _TempDeviceDir():
 
 @contextlib.contextmanager
 def _TempDeviceFile():
-    path = '/sdcard/Download/temp_file-%s' % _RandomHex()
+    path = posixpath.join(FAST_TEMP_DEVICE_DIR, 'temp_file-%s' % _RandomHex())
     try:
         yield path
     finally:
@@ -489,7 +494,11 @@ def RunTests(test_suite, args, stdoutfile=None, log_output=True):
                 # When listing tests, there may be no output file. We parse stdout anyways.
                 test_output = '{"interrupted": false}'
             else:
-                test_output = _ReadDeviceFile(device_test_output_path)
+                try:
+                    test_output = _ReadDeviceFile(device_test_output_path)
+                except subprocess.CalledProcessError:
+                    logging.error('Unable to read test json output. Stdout:\n%s', output.decode())
+                    return result, output.decode(), None
 
             if test_output_path:
                 with open(test_output_path, 'wb') as f:
