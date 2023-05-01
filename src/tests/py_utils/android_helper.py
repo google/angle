@@ -31,6 +31,8 @@ class _Global(object):
     initialized = False
     is_android = False
     current_suite = None
+    lib_extension = None
+    traces_outside_of_apk = False
 
 
 def _ApkPath(suite_name):
@@ -67,6 +69,17 @@ def _FindPackageName(apk_path):
 def _InitializeAndroid(apk_path):
     _GetAdbRoot()
     assert _FindPackageName(apk_path) == TEST_PACKAGE_NAME
+
+    apk_files = subprocess.check_output([_FindAapt(), 'list', apk_path]).decode().split()
+    apk_so_libs = [posixpath.basename(f) for f in apk_files if f.endswith('.so')]
+    if 'libangle_util.cr.so' in apk_so_libs:
+        _Global.lib_extension = '.cr.so'
+    else:
+        assert 'libangle_util.so' in apk_so_libs
+        _Global.lib_extension = '.so'
+    # When traces are outside of the apk this lib is also outside
+    interpreter_so_lib = 'libangle_trace_interpreter' + _Global.lib_extension
+    _Global.traces_outside_of_apk = interpreter_so_lib not in apk_so_libs
 
     if logging.getLogger().isEnabledFor(logging.DEBUG):
         logging.debug(_AdbShell('dumpsys nfc | grep mScreenState || true').decode())
@@ -241,16 +254,26 @@ def PrepareRestrictedTraces(traces):
     # of the trace on the device, so keep that in mind as space becomes a problem in the future.
     app_tmp_path = '/data/local/tmp/angle_traces/'
 
-    def _Push(local_path, path_from_root):
+    def _HashesMatch(local_path, device_path):
         nonlocal total_size, skipped
-        device_path = '/sdcard/chromium_tests_root/' + path_from_root
         if _CompareHashes(local_path, device_path):
             skipped += 1
+            return True
         else:
             total_size += os.path.getsize(local_path)
+            return False
+
+    def _Push(local_path, path_from_root):
+        device_path = '/sdcard/chromium_tests_root/' + path_from_root
+        if not _HashesMatch(local_path, device_path):
             _AdbRun(['push', local_path, device_path])
 
-    def _PushToAppDir(local_path, lib_name):
+    def _PushLibToAppDir(lib_name):
+        local_path = 'angle_trace_tests_android_binaries__dist/' + lib_name
+        device_path = '/data/user/0/com.android.angle.test/angle_traces/' + lib_name
+        if _HashesMatch(local_path, device_path):
+            return
+
         tmp_path = posixpath.join(app_tmp_path, lib_name)
         logging.debug('_PushToAppDir: Pushing %s to %s' % (local_path, tmp_path))
         try:
@@ -266,12 +289,6 @@ def PrepareRestrictedTraces(traces):
     _AdbShell('mkdir -p ' + app_tmp_path)
     _AdbShell('run-as ' + TEST_PACKAGE_NAME + ' mkdir -p angle_traces')
 
-    # The interpreter is loaded as a trace, it needs to be brought over too
-    interpreter_name = 'libangle_trace_interpreter.so'
-    local_interpreter_path = 'angle_trace_tests_android_binaries__dist/' + interpreter_name
-    if os.path.isfile(local_interpreter_path):
-        _PushToAppDir(local_interpreter_path, interpreter_name)
-
     # Set up each trace
     for trace in traces:
         path_from_root = 'src/tests/restricted_traces/' + trace + '/' + trace + '.angledata.gz'
@@ -280,20 +297,11 @@ def PrepareRestrictedTraces(traces):
         tracegz = 'gen/tracegz_' + trace + '.gz'
         _Push(tracegz, tracegz)
 
-        lib_name = 'libangle_restricted_traces_' + trace + '.so'
-        local_lib_path = 'angle_trace_tests_android_binaries__dist/' + lib_name
-        if not os.path.isfile(local_lib_path):
-            # The Chromium build will insert a '.cr' in the file names, account for that
-            lib_name = 'libangle_restricted_traces_' + trace + '.cr.so'
-            local_lib_path = 'angle_trace_tests_android_binaries__dist/' + lib_name
-        device_lib_path = '/data/user/0/com.android.angle.test/angle_traces/' + lib_name
-
-        if _CompareHashes(local_lib_path, device_lib_path):
-            skipped += 1
-        else:
-            total_size += os.path.getsize(local_lib_path)
-            # Copy into the test app's home directory
-            _PushToAppDir(local_lib_path, lib_name)
+    if _Global.traces_outside_of_apk:
+        _PushLibToAppDir('libangle_trace_interpreter' + _Global.lib_extension)
+        for trace in traces:
+            lib_name = 'libangle_restricted_traces_' + trace + _Global.lib_extension
+            _PushLibToAppDir(lib_name)
 
     logging.info('Synced files for %d traces (%.1fMB, %d files already ok) in %.1fs', len(traces),
                  total_size / 1e6, skipped,
