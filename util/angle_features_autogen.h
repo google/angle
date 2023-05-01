@@ -157,6 +157,7 @@ enum class Feature
     ForceTextureLodOffset3,
     ForceTextureLodOffset4,
     ForceWaitForSubmissionToCompleteForQueryResult,
+    GenerateShareableShaders,
     GetDimensionsIgnoresBaseLevel,
     HasBaseVertexInstancedDraw,
     HasCheapRenderPass,

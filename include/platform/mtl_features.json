@@ -331,6 +331,16 @@
                 "Prints the source to a shader before it's compiled."
             ],
             "issue": "http://crbug.com/1423136"
+        },
+        {
+            "name": "generate_shareable_shaders",
+            "category": "Features",
+            "description": [
+                "Attempts to generate shaders that are shareable. More specifically, shaders",
+                " end up with conditionals that are decided at run time via input parameters vs",
+                " compile time. This results in bigger shaders."
+            ],
+            "issue": "http://crbug.com/1423136"
         }
     ]
 }

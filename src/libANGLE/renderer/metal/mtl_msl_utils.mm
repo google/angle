@@ -528,7 +528,8 @@ angle::Result MTLGetMSL(const gl::Context *glContext,
             ASSERT(type == gl::ShaderType::Fragment);
             ContextMtl *contextMtl = mtl::GetImpl(glContext);
             bool defineAlpha0 =
-                contextMtl->getDisplay()->getFeatures().emulateAlphaToCoverage.enabled;
+                contextMtl->getDisplay()->getFeatures().emulateAlphaToCoverage.enabled ||
+                contextMtl->getDisplay()->getFeatures().generateShareableShaders.enabled;
             source = UpdateFragmentShaderOutputs(shaderSources[type], programState, defineAlpha0);
         }
         (*mslCodeOut)[type]                             = source;
