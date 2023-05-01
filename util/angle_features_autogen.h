@@ -121,6 +121,7 @@ enum class Feature
     EnableInMemoryMtlLibraryCache,
     EnableMultisampledRenderToTexture,
     EnableParallelMtlLibraryCompilation,
+    EnablePipelineCacheDataCompression,
     EnablePrecisionQualifiers,
     EnablePreRotateSurfaces,
     EnableProgramBinaryForCapture,

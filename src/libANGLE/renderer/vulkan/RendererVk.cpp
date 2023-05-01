@@ -4512,6 +4512,8 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     // in virtualized environment. https://issuetracker.google.com/246218584
     ANGLE_FEATURE_CONDITION(&mFeatures, mapUnspecifiedColorSpaceToPassThrough, isVenus);
 
+    ANGLE_FEATURE_CONDITION(&mFeatures, enablePipelineCacheDataCompression, true);
+
     ApplyFeatureOverrides(&mFeatures, displayVk->getState());
 
     // Disable memory report feature overrides if extension is not supported.

@@ -891,6 +891,11 @@ struct FeaturesVk : FeatureSetBase
         "SecondaryCommandPools when using VulkanSecondaryCommandBuffer. ",
         &members,
     };
+
+    FeatureInfo enablePipelineCacheDataCompression = {
+        "enablePipelineCacheDataCompression", FeatureCategory::VulkanFeatures,
+        "enable pipeline cache data compression.", &members,
+        "https://issuetracker.google.com/258207403"};
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

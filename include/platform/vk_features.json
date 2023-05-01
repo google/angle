@@ -1204,6 +1204,12 @@
                 "Use VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT for initializing ",
                 "SecondaryCommandPools when using VulkanSecondaryCommandBuffer. "
             ]
+        },
+        {
+            "name": "enable_pipeline_cache_data_compression",
+            "category": "Features",
+            "description":["enable pipeline cache data compression."],
+            "issue": "https://issuetracker.google.com/258207403"
         }
     ]
 }

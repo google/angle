@@ -208,19 +208,36 @@ void GetPipelineCacheData(ContextVk *contextVk,
         return;
     }
 
-    std::vector<uint8_t> pipelineCacheData(pipelineCacheSize);
-    result = pipelineCache.getCacheData(contextVk->getDevice(), &pipelineCacheSize,
-                                        pipelineCacheData.data());
-    if (result != VK_SUCCESS && result != VK_INCOMPLETE)
+    if (contextVk->getFeatures().enablePipelineCacheDataCompression.enabled)
     {
-        return;
-    }
+        std::vector<uint8_t> pipelineCacheData(pipelineCacheSize);
+        result = pipelineCache.getCacheData(contextVk->getDevice(), &pipelineCacheSize,
+                                            pipelineCacheData.data());
+        if (result != VK_SUCCESS && result != VK_INCOMPLETE)
+        {
+            return;
+        }
 
-    // Compress it.
-    if (!egl::CompressBlobCacheData(pipelineCacheData.size(), pipelineCacheData.data(),
-                                    cacheDataOut))
+        // Compress it.
+        if (!egl::CompressBlobCacheData(pipelineCacheData.size(), pipelineCacheData.data(),
+                                        cacheDataOut))
+        {
+            cacheDataOut->clear();
+        }
+    }
+    else
     {
-        cacheDataOut->clear();
+        if (!cacheDataOut->resize(pipelineCacheSize))
+        {
+            ERR() << "Failed to allocate memory for pipeline cache data.";
+            return;
+        }
+        result = pipelineCache.getCacheData(contextVk->getDevice(), &pipelineCacheSize,
+                                            cacheDataOut->data());
+        if (result != VK_SUCCESS && result != VK_INCOMPLETE)
+        {
+            cacheDataOut->clear();
+        }
     }
 }
 
@@ -457,23 +474,30 @@ void ProgramExecutableVk::reset(ContextVk *contextVk)
     }
 }
 
-angle::Result ProgramExecutableVk::initializePipelineCache(
-    ContextVk *contextVk,
-    const std::vector<uint8_t> &compressedPipelineData)
+angle::Result ProgramExecutableVk::initializePipelineCache(ContextVk *contextVk,
+                                                           bool compressed,
+                                                           const std::vector<uint8_t> &pipelineData)
 {
     ASSERT(!mPipelineCache.valid());
 
+    size_t dataSize            = pipelineData.size();
+    const uint8_t *dataPointer = pipelineData.data();
+
     angle::MemoryBuffer uncompressedData;
-    if (!egl::DecompressBlobCacheData(compressedPipelineData.data(), compressedPipelineData.size(),
-                                      &uncompressedData))
+    if (compressed)
     {
-        return angle::Result::Stop;
+        if (!egl::DecompressBlobCacheData(dataPointer, dataSize, &uncompressedData))
+        {
+            return angle::Result::Stop;
+        }
+        dataSize    = uncompressedData.size();
+        dataPointer = uncompressedData.data();
     }
 
     VkPipelineCacheCreateInfo pipelineCacheCreateInfo = {};
     pipelineCacheCreateInfo.sType           = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
-    pipelineCacheCreateInfo.initialDataSize = uncompressedData.size();
-    pipelineCacheCreateInfo.pInitialData    = uncompressedData.data();
+    pipelineCacheCreateInfo.initialDataSize = dataSize;
+    pipelineCacheCreateInfo.pInitialData    = dataPointer;
 
     if (contextVk->getFeatures().supportsPipelineCreationCacheControl.enabled)
     {
@@ -602,10 +626,12 @@ std::unique_ptr<rx::LinkEvent> ProgramExecutableVk::load(ContextVk *contextVk,
         std::vector<uint8_t> compressedPipelineData(compressedPipelineDataSize);
         if (compressedPipelineDataSize > 0)
         {
+            bool compressedData = false;
+            stream->readBool(&compressedData);
             stream->readBytes(compressedPipelineData.data(), compressedPipelineDataSize);
-
             // Initialize the pipeline cache based on cached data.
-            angle::Result status = initializePipelineCache(contextVk, compressedPipelineData);
+            angle::Result status =
+                initializePipelineCache(contextVk, compressedData, compressedPipelineData);
             if (status != angle::Result::Continue)
             {
                 return std::make_unique<LinkEventDone>(status);
@@ -715,11 +741,12 @@ void ProgramExecutableVk::save(ContextVk *contextVk,
     if (!isSeparable)
     {
         angle::MemoryBuffer cacheData;
-        GetPipelineCacheData(contextVk, mPipelineCache, &cacheData);
 
+        GetPipelineCacheData(contextVk, mPipelineCache, &cacheData);
         stream->writeInt(cacheData.size());
         if (cacheData.size() > 0)
         {
+            stream->writeBool(contextVk->getFeatures().enablePipelineCacheDataCompression.enabled);
             stream->writeBytes(cacheData.data(), cacheData.size());
         }
     }
