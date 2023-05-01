@@ -174,7 +174,12 @@ TraceLibrary::TraceLibrary(const std::string &traceName, const TraceInfo &traceI
     libNameStr << ".cr";
 #endif  // defined(ANGLE_PLATFORM_ANDROID) && defined(COMPONENT_BUILD)
     std::string libName = libNameStr.str();
-    mTraceLibrary.reset(OpenSharedLibrary(libName.c_str(), searchType));
+    std::string loadError;
+    mTraceLibrary.reset(OpenSharedLibraryAndGetError(libName.c_str(), searchType, &loadError));
+    if (mTraceLibrary->getNative() == nullptr)
+    {
+        FATAL() << "Failed to load trace library (" << libName << "): " << loadError;
+    }
 
     callFunc<SetTraceInfoFunc>("SetTraceInfo", traceInfo.traceFiles);
 }
