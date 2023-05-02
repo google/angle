@@ -618,7 +618,7 @@
           '--render-test-output-dir=${ISOLATED_OUTDIR}',
         ],
         'android_swarming': {
-          'shards': 4,
+          'shards': 8,
         },
         'args': [
           '--gtest_filter=*Vulkan*:-*Vulkan_SwiftShader*',
