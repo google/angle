@@ -155,19 +155,6 @@ TLSData *GetDisplayTLS()
 }
 #endif
 
-void InitDisplayTLS()
-{
-    // TLS data is intentionally leaked.
-    ANGLE_SCOPED_DISABLE_LSAN();
-    TLSData *tlsData = new TLSData;
-
-#if defined(ANGLE_PLATFORM_APPLE)
-    SetDisplayTLS(tlsData);
-#else
-    gDisplayTLS = tlsData;
-#endif
-}
-
 constexpr angle::SubjectIndex kGPUSwitchedSubjectIndex = 0;
 
 static constexpr size_t kWindowSurfaceMapSize = 32;
@@ -2665,22 +2652,26 @@ egl::Sync *Display::getSync(egl::SyncID syncID)
 }
 
 // static
+void Display::InitTLS()
+{
+    TLSData *tlsData = new TLSData;
+
+#if defined(ANGLE_PLATFORM_APPLE)
+    SetDisplayTLS(tlsData);
+#else
+    gDisplayTLS = tlsData;
+#endif
+}
+
+// static
 angle::UnlockedTailCall *Display::GetCurrentThreadUnlockedTailCall()
 {
-    if (GetDisplayTLS() == nullptr)
-    {
-        InitDisplayTLS();
-    }
     return &GetDisplayTLS()->unlockedTailCall;
 }
 
 // static
 Error *Display::GetCurrentThreadErrorScratchSpace()
 {
-    if (GetDisplayTLS() == nullptr)
-    {
-        InitDisplayTLS();
-    }
     return &GetDisplayTLS()->errorScratchSpace;
 }
 }  // namespace egl
