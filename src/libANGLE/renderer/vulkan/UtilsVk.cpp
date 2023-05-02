@@ -2191,7 +2191,8 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
     vk::RenderPassCommandBuffer *commandBuffer;
 
     // Start a new render pass if not already started
-    if (contextVk->hasStartedRenderPassWithQueueSerial(framebuffer->getLastRenderPassQueueSerial()))
+    if (contextVk->hasActiveRenderPass() &&
+        contextVk->hasStartedRenderPassWithQueueSerial(framebuffer->getLastRenderPassQueueSerial()))
     {
         vk::RenderPassCommandBufferHelper *renderPassCommands =
             &contextVk->getStartedRenderPassCommands();
