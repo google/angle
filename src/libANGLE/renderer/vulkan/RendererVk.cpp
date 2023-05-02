@@ -4400,8 +4400,7 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     // On ARM, dynamic state for stencil write mask doesn't work correctly in the presence of
     // discard or alpha to coverage, if the static state provided when creating the pipeline has a
     // value of 0.
-    ANGLE_FEATURE_CONDITION(&mFeatures, useNonZeroStencilWriteMaskStaticState,
-                            isARM && armDriverVersion < ARMDriverVersion(40, 0, 0));
+    ANGLE_FEATURE_CONDITION(&mFeatures, useNonZeroStencilWriteMaskStaticState, isARM);
 
     // On ARM, per-sample shading is not enabled despite the presence of a Sample decoration.  As a
     // workaround, per-sample shading is inferred by ANGLE and explicitly enabled by the API.
