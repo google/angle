@@ -8,6 +8,7 @@
 #   Runs ANGLE format table and other script code generation scripts.
 
 import argparse
+from concurrent import futures
 import hashlib
 import json
 import os
@@ -18,9 +19,7 @@ import platform
 script_dir = sys.path[0]
 root_dir = os.path.abspath(os.path.join(script_dir, '..'))
 
-hash_dir = 'code_generation_hashes'
-
-# auto_script is a standard way for scripts to return their inputs and outputs.
+hash_dir = os.path.join(script_dir, 'code_generation_hashes')
 
 
 def get_child_script_dirname(script):
@@ -28,54 +27,42 @@ def get_child_script_dirname(script):
     return os.path.dirname(os.path.abspath(os.path.join(root_dir, script)))
 
 
-# Replace all backslashes with forward slashes to be platform independent
-def clean_path_slashes(path):
-    return path.replace("\\", "/")
-
-
-# Takes a script file name which is relative to the code generation script's directory and
-# changes it to be relative to the angle root directory
-def rebase_script_path(script_path, relative_path):
-    return os.path.relpath(os.path.join(os.path.dirname(script_path), relative_path), root_dir)
-
-
 # Check if we need a module from vpython
-def get_executable_name(first_line):
-    binary = os.path.basename(first_line.strip().replace(' ', '/'))
-    if platform.system() == 'Windows':
-        if binary == 'python2':
-            return 'python.bat'
+def get_executable_name(script):
+    with open(script, 'r') as f:
+        binary = os.path.basename(f.readline().strip().replace(' ', '/'))
+        if platform.system() == 'Windows':
+            if binary == 'python2':
+                return 'python.bat'
+            else:
+                return binary + '.bat'
         else:
-            return binary + '.bat'
-    else:
-        return binary
+            return binary
 
 
 def grab_from_script(script, param):
-    res = ''
-    f = open(os.path.basename(script), 'r')
-    exe = get_executable_name(f.readline())
+    script_dir = get_child_script_dirname(script)
+    exe = get_executable_name(script)
     try:
-        res = subprocess.check_output([exe, script, param]).decode().strip()
+        res = subprocess.check_output([exe, os.path.basename(script), param],
+                                      cwd=script_dir).decode().strip()
     except Exception:
         print('Error grabbing script output: %s, executable %s' % (script, exe))
         raise
-    f.close()
     if res == '':
         return []
-    return [clean_path_slashes(rebase_script_path(script, name)) for name in res.split(',')]
+    return [
+        os.path.relpath(os.path.join(script_dir, path), root_dir).replace("\\", "/")
+        for path in res.split(',')
+    ]
 
 
+# auto_script is a standard way for scripts to return their inputs and outputs.
 def auto_script(script):
-    # Set the CWD to the script directory.
-    os.chdir(get_child_script_dirname(script))
-    base_script = os.path.basename(script)
     info = {
-        'inputs': grab_from_script(base_script, 'inputs'),
-        'outputs': grab_from_script(base_script, 'outputs')
+        'inputs': grab_from_script(script, 'inputs'),
+        'outputs': grab_from_script(script, 'outputs')
     }
-    # Reset the CWD to the root ANGLE directory.
-    os.chdir(root_dir)
     return info
 
 
@@ -165,7 +152,7 @@ def any_hash_dirty(name, filenames, new_hashes, old_hashes):
     found_dirty_hash = False
 
     for fname in filenames:
-        if not os.path.isfile(fname):
+        if not os.path.isfile(os.path.join(root_dir, fname)):
             print('File not found: "%s". Code gen dirty for %s' % (fname, name))
             found_dirty_hash = True
         else:
@@ -211,8 +198,6 @@ def load_hashes():
 
 
 def main():
-    os.chdir(script_dir)
-
     all_old_hashes = load_hashes()
     all_new_hashes = {}
     any_dirty = False
@@ -239,8 +224,14 @@ def main():
         print("No valid generators specified.")
         return 1
 
+    # Just get 'inputs' and 'outputs' from scripts but this runs the scripts so it's a bit slow
+    infos = {}
+    with futures.ThreadPoolExecutor(max_workers=8) as executor:
+        for _, script in sorted(ranGenerators.items()):
+            infos[script] = executor.submit(auto_script, script)
+
     for name, script in sorted(ranGenerators.items()):
-        info = auto_script(script)
+        info = infos[script].result()
         fname = get_hash_file_name(name)
         filenames = info['inputs'] + info['outputs'] + [script]
         new_hashes = {}
@@ -252,14 +243,9 @@ def main():
             if not args.verify_only:
                 print('Running ' + name + ' code generator')
 
-                # Set the CWD to the script directory.
-                os.chdir(get_child_script_dirname(script))
-
-                f = open(os.path.basename(script), "r")
-                if subprocess.call([get_executable_name(f.readline()),
-                                    os.path.basename(script)]) != 0:
-                    sys.exit(1)
-                f.close()
+                exe = get_executable_name(script)
+                subprocess.check_call([exe, os.path.basename(script)],
+                                      cwd=get_child_script_dirname(script))
 
         # Update the hash dictionary.
         all_new_hashes[fname] = new_hashes
@@ -274,16 +260,13 @@ def main():
         args = ['git.bat'] if os.name == 'nt' else ['git']
         args += ['cl', 'format']
         print('Calling git cl format')
-        if subprocess.call(args) != 0:
-            sys.exit(1)
+        subprocess.check_call(args)
 
         # Update the output hashes again since they can be formatted.
         for name, script in sorted(ranGenerators.items()):
             info = auto_script(script)
             fname = get_hash_file_name(name)
             update_output_hashes(name, info['outputs'], all_new_hashes[fname])
-
-        os.chdir(script_dir)
 
         for fname, new_hashes in all_new_hashes.items():
             hash_fname = os.path.join(hash_dir, fname)
