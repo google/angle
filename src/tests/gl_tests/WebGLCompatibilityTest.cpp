@@ -5271,11 +5271,12 @@ TEST_P(WebGLCompatibilityTest, ValidateArraySizes)
     // fairly small array.
     constexpr char kVSArrayOK[] =
         R"(varying vec4 color;
-const int array_size = 1000;
+const int array_size = 500;
 void main()
 {
     mat2 array[array_size];
-    if (array[0][0][0] == 2.0)
+    mat2 array2[array_size];
+    if (array[0][0][0] + array2[0][0][0] == 2.0)
         color = vec4(0.0, 1.0, 0.0, 1.0);
     else
         color = vec4(1.0, 0.0, 0.0, 1.0);
@@ -5350,6 +5351,103 @@ void main()
 })";
 
     GLuint program = CompileProgram(essl1_shaders::vs::Simple(), kFSStructTooLarge);
+    EXPECT_EQ(0u, program);
+}
+
+// Reject attempts to allocate too much private memory.
+// This is an implementation-defined limit - crbug.com/1431761.
+TEST_P(WebGLCompatibilityTest, ValidateTotalPrivateSize)
+{
+    constexpr char kTooLargeGlobalMemory1[] =
+        R"(precision mediump float;
+
+// 1 MB / 16 bytes per vec4 = 65536
+vec4 array[32768];
+vec4 array2[32769];
+
+void main()
+{
+    if (array[0].x + array[1].x == 0.)
+        gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
+    else
+        gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+})";
+
+    constexpr char kTooLargeGlobalMemory2[] =
+        R"(precision mediump float;
+
+// 1 MB / 16 bytes per vec4 = 65536
+vec4 array[32767];
+vec4 array2[32767];
+vec4 x, y, z;
+
+void main()
+{
+    if (array[0].x + array[1].x == x.w + y.w + z.w)
+        gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
+    else
+        gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+})";
+
+    constexpr char kTooLargeGlobalAndLocalMemory1[] =
+        R"(precision mediump float;
+
+// 1 MB / 16 bytes per vec4 = 65536
+vec4 array[32768];
+
+void main()
+{
+    vec4 array2[32769];
+    if (array[0].x + array[1].x == 2.0)
+        gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
+    else
+        gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+})";
+
+    // Note: The call stack is not taken into account for the purposes of total memory calculation.
+    constexpr char kTooLargeGlobalAndLocalMemory2[] =
+        R"(precision mediump float;
+
+// 1 MB / 16 bytes per vec4 = 65536
+vec4 array[32768];
+
+float f()
+{
+    vec4 array2[16384];
+    return array2[0].x;
+}
+
+float g()
+{
+    vec4 array3[16383];
+    return array3[0].x;
+}
+
+float h()
+{
+    vec4 value;
+    float value2
+    return value.x + value2;
+}
+
+void main()
+{
+    if (array[0].x + f() + g() + h() == 2.0)
+        gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
+    else
+        gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+})";
+
+    GLuint program = CompileProgram(essl1_shaders::vs::Simple(), kTooLargeGlobalMemory1);
+    EXPECT_EQ(0u, program);
+
+    program = CompileProgram(essl1_shaders::vs::Simple(), kTooLargeGlobalMemory2);
+    EXPECT_EQ(0u, program);
+
+    program = CompileProgram(essl1_shaders::vs::Simple(), kTooLargeGlobalAndLocalMemory1);
+    EXPECT_EQ(0u, program);
+
+    program = CompileProgram(essl1_shaders::vs::Simple(), kTooLargeGlobalAndLocalMemory2);
     EXPECT_EQ(0u, program);
 }
 
