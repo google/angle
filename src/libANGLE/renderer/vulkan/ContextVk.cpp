@@ -1408,6 +1408,10 @@ angle::Result ContextVk::initialize()
     // Allocate queueSerial index and generate queue serial for commands.
     ANGLE_TRY(allocateQueueSerialIndex());
 
+    // Initialize serials to be valid but appear submitted and finished.
+    mLastFlushedQueueSerial   = QueueSerial(mCurrentQueueSerialIndex, Serial());
+    mLastSubmittedQueueSerial = mLastFlushedQueueSerial;
+
     return angle::Result::Continue;
 }
 
@@ -7553,12 +7557,10 @@ angle::Result ContextVk::onSyncObjectInit(vk::SyncHelper *syncHelper, bool isEGL
     if (isEGLSyncObject || !mRenderPassCommands->started())
     {
         ANGLE_TRY(flushImpl(nullptr, nullptr, RenderPassClosureReason::SyncObjectInit));
-        // If sync inserted before any command is generated, and flushImpl bails out, then no need
-        // to set queueSerial. It will always test finished/signaled.
-        if (mLastSubmittedQueueSerial.valid())
-        {
-            syncHelper->setQueueSerial(mLastSubmittedQueueSerial);
-        }
+        // Even if no commands is generated, and flushImpl bails out, queueSerial is valid since
+        // Context initialization. It will always test finished/signaled.
+        ASSERT(mLastSubmittedQueueSerial.valid());
+        syncHelper->setQueueSerial(mLastSubmittedQueueSerial);
         return angle::Result::Continue;
     }
 
