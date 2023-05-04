@@ -12,7 +12,6 @@
 #define LIBANGLE_DISPLAY_H_
 
 #include <mutex>
-#include <set>
 #include <vector>
 
 #include "common/WorkerThread.h"
@@ -59,8 +58,8 @@ class Surface;
 class Sync;
 class Thread;
 
-using ContextSet = angle::HashSet<gl::Context *>;
-using SurfaceSet = angle::HashSet<Surface *>;
+using ContextMap = angle::HashMap<GLuint, gl::Context *>;
+using SurfaceMap = angle::HashMap<GLuint, Surface *>;
 using ThreadSet  = angle::HashSet<Thread *>;
 
 struct DisplayState final : private angle::NonCopyable
@@ -69,8 +68,8 @@ struct DisplayState final : private angle::NonCopyable
     ~DisplayState();
 
     EGLLabelKHR label;
-    ContextSet contextSet;
-    SurfaceSet surfaceSet;
+    ContextMap contextMap;
+    SurfaceMap surfaceMap;
     std::vector<std::string> featureOverridesEnabled;
     std::vector<std::string> featureOverridesDisabled;
     bool featuresAllDisabled;
@@ -94,7 +93,7 @@ class ShareGroup final : angle::NonCopyable
 
     void finishAllContexts();
 
-    const ContextSet &getContexts() const { return mContexts; }
+    const ContextMap &getContexts() const { return mContexts; }
     void addSharedContext(gl::Context *context);
     void removeSharedContext(gl::Context *context);
 
@@ -112,7 +111,7 @@ class ShareGroup final : angle::NonCopyable
     std::unique_ptr<angle::FrameCaptureShared> mFrameCaptureShared;
 
     // The list of contexts within the share group
-    ContextSet mContexts;
+    ContextMap mContexts;
 };
 
 // Constant coded here as a reasonable limit.
@@ -368,7 +367,7 @@ class Display final : public LabeledObject,
 
     Error restoreLostDevice();
     Error releaseContext(gl::Context *context, Thread *thread);
-    Error releaseContextImpl(gl::Context *context, ContextSet *contexts);
+    Error releaseContextImpl(gl::Context *context, ContextMap *contexts);
 
     void initDisplayExtensions();
     void initVendorString();
@@ -390,25 +389,25 @@ class Display final : public LabeledObject,
 
     ConfigSet mConfigSet;
 
-    typedef angle::HashSet<Image *> ImageSet;
-    ImageSet mImageSet;
+    typedef angle::HashMap<GLuint, Image *> ImageMap;
+    ImageMap mImageMap;
 
     typedef angle::HashSet<Stream *> StreamSet;
     StreamSet mStreamSet;
 
-    typedef angle::HashSet<Sync *> SyncSet;
-    SyncSet mSyncSet;
+    typedef angle::HashMap<GLuint, Sync *> SyncMap;
+    SyncMap mSyncMap;
 
-    void destroyImageImpl(Image *image, ImageSet *images);
+    void destroyImageImpl(Image *image, ImageMap *images);
     void destroyStreamImpl(Stream *stream, StreamSet *streams);
-    Error destroySurfaceImpl(Surface *surface, SurfaceSet *surfaces);
-    void destroySyncImpl(Sync *sync, SyncSet *syncs);
+    Error destroySurfaceImpl(Surface *surface, SurfaceMap *surfaces);
+    void destroySyncImpl(Sync *sync, SyncMap *syncs);
 
-    ContextSet mInvalidContextSet;
-    ImageSet mInvalidImageSet;
+    ContextMap mInvalidContextMap;
+    ImageMap mInvalidImageMap;
     StreamSet mInvalidStreamSet;
-    SurfaceSet mInvalidSurfaceSet;
-    SyncSet mInvalidSyncSet;
+    SurfaceMap mInvalidSurfaceMap;
+    SyncMap mInvalidSyncMap;
 
     bool mInitialized;
     bool mDeviceLost;

@@ -320,9 +320,9 @@ egl::Error DisplayMtl::waitNative(const gl::Context *context, EGLint engine)
 
 egl::Error DisplayMtl::waitUntilWorkScheduled()
 {
-    for (auto context : mState.contextSet)
+    for (auto context : mState.contextMap)
     {
-        auto contextMtl = GetImplAs<ContextMtl>(context);
+        auto contextMtl = GetImplAs<ContextMtl>(context.second);
         contextMtl->flushCommandBuffer(mtl::WaitUntilScheduled);
     }
     return egl::NoError();

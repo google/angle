@@ -8145,14 +8145,14 @@ void FrameCaptureShared::runMidExecutionCapture(gl::Context *mainContext)
     egl::Surface *draw    = mainContext->getCurrentDrawSurface();
     egl::Surface *read    = mainContext->getCurrentReadSurface();
 
-    for (gl::Context *shareContext : shareGroup->getContexts())
+    for (auto shareContext : shareGroup->getContexts())
     {
-        FrameCapture *frameCapture = shareContext->getFrameCapture();
+        FrameCapture *frameCapture = shareContext.second->getFrameCapture();
         ASSERT(frameCapture->getSetupCalls().empty());
 
-        if (shareContext->id() == mainContext->id())
+        if (shareContext.second->id() == mainContext->id())
         {
-            CaptureMidExecutionSetup(shareContext, &frameCapture->getSetupCalls(),
+            CaptureMidExecutionSetup(shareContext.second, &frameCapture->getSetupCalls(),
                                      frameCapture->getStateResetHelper().getResetCalls(),
                                      &mShareGroupSetupCalls, &mResourceIDToSetupCalls,
                                      &mResourceTracker, mainContextReplayState,
@@ -8175,21 +8175,21 @@ void FrameCaptureShared::runMidExecutionCapture(gl::Context *mainContext)
         }
         else
         {
-            const gl::State &shareContextState = shareContext->getState();
+            const gl::State &shareContextState = shareContext.second->getState();
             gl::State auxContextReplayState(
                 nullptr, nullptr, nullptr, nullptr, nullptr, shareContextState.getClientType(),
                 shareContextState.getClientVersion(), shareContextState.getProfileMask(), false,
                 true, true, true, false, EGL_CONTEXT_PRIORITY_MEDIUM_IMG,
                 shareContextState.hasRobustAccess(), shareContextState.hasProtectedContent());
-            auxContextReplayState.initializeForCapture(shareContext);
+            auxContextReplayState.initializeForCapture(shareContext.second);
 
-            egl::Error error = shareContext->makeCurrent(display, draw, read);
+            egl::Error error = shareContext.second->makeCurrent(display, draw, read);
             if (error.isError())
             {
                 INFO() << "MEC unable to make secondary context current";
             }
 
-            CaptureMidExecutionSetup(shareContext, &frameCapture->getSetupCalls(),
+            CaptureMidExecutionSetup(shareContext.second, &frameCapture->getSetupCalls(),
                                      frameCapture->getStateResetHelper().getResetCalls(),
                                      &mShareGroupSetupCalls, &mResourceIDToSetupCalls,
                                      &mResourceTracker, auxContextReplayState,
@@ -8198,12 +8198,12 @@ void FrameCaptureShared::runMidExecutionCapture(gl::Context *mainContext)
             scanSetupCalls(frameCapture->getSetupCalls());
 
             WriteAuxiliaryContextCppSetupReplay(
-                mReplayWriter, mCompression, mOutDirectory, shareContext, mCaptureLabel, 1,
+                mReplayWriter, mCompression, mOutDirectory, shareContext.second, mCaptureLabel, 1,
                 frameCapture->getSetupCalls(), &mBinaryData, mSerializeStateEnabled, *this,
                 &mResourceIDBufferSize);
         }
         // Track that this context was created before MEC started
-        mActiveContexts.insert(shareContext->id().value);
+        mActiveContexts.insert(shareContext.first);
     }
 
     egl::Error error = mainContext->makeCurrent(display, draw, read);
@@ -8878,10 +8878,10 @@ void FrameCaptureShared::writeMainContextCppReplay(const gl::Context *context,
 
             // Setup each of the auxiliary contexts.
             egl::ShareGroup *shareGroup            = context->getShareGroup();
-            const egl::ContextSet &shareContextSet = shareGroup->getContexts();
-            for (gl::Context *shareContext : shareContextSet)
+            const egl::ContextMap &shareContextMap = shareGroup->getContexts();
+            for (auto shareContext : shareContextMap)
             {
-                if (shareContext->id() == context->id())
+                if (shareContext.first == context->id().value)
                 {
                     if (usesMidExecutionCapture())
                     {
@@ -8901,15 +8901,16 @@ void FrameCaptureShared::writeMainContextCppReplay(const gl::Context *context,
                 {
                     // Only call SetupReplayContext for secondary contexts that were current before
                     // MEC started
-                    if (mActiveContexts.find(shareContext->id().value) != mActiveContexts.end())
+                    if (mActiveContexts.find(shareContext.first) != mActiveContexts.end())
                     {
                         // TODO(http://anglebug.com/5878): Support capture/replay of
                         // eglCreateContext() so this block can be moved into SetupReplayContextXX()
                         // by injecting them into the beginning of the setup call stream.
-                        out << "    CreateContext(" << shareContext->id() << ");\n";
+                        out << "    CreateContext(" << shareContext.first << ");\n";
 
                         out << "    "
-                            << FmtSetupFunction(kNoPartId, shareContext->id(), FuncUsage::Call)
+                            << FmtSetupFunction(kNoPartId, shareContext.second->id(),
+                                                FuncUsage::Call)
                             << ";\n";
                     }
                 }
@@ -8917,7 +8918,7 @@ void FrameCaptureShared::writeMainContextCppReplay(const gl::Context *context,
 
             // If there are other contexts that were initialized, we need to make the main context
             // current again.
-            if (shareContextSet.size() > 1)
+            if (shareContextMap.size() > 1)
             {
                 out << "\n";
                 out << "    eglMakeCurrent(NULL, NULL, NULL, gContextMap2[" << context->id()

@@ -86,20 +86,6 @@
 #    include "libANGLE/renderer/metal/DisplayMtl_api.h"
 #endif  // defined(ANGLE_ENABLE_METAL)
 
-template <typename T, typename IDType, typename SetT>
-T GetResourceFromHashSet(IDType id, SetT &hashSet)
-{
-    for (T resource : hashSet)
-    {
-        if (resource->id() == id)
-        {
-            return resource;
-        }
-    }
-
-    return nullptr;
-}
-
 namespace egl
 {
 
@@ -674,18 +660,18 @@ ShareGroup::ShareGroup(rx::EGLImplFactory *factory)
 
 void ShareGroup::finishAllContexts()
 {
-    for (gl::Context *shareContext : mContexts)
+    for (auto shareContext : mContexts)
     {
-        if (shareContext->hasBeenCurrent() && !shareContext->isDestroyed())
+        if (shareContext.second->hasBeenCurrent() && !shareContext.second->isDestroyed())
         {
-            shareContext->finish();
+            shareContext.second->finish();
         }
     }
 }
 
 void ShareGroup::addSharedContext(gl::Context *context)
 {
-    mContexts.insert(context);
+    mContexts.insert(std::pair(context->id().value, context));
 
     if (context->isRobustnessEnabled())
     {
@@ -695,7 +681,7 @@ void ShareGroup::addSharedContext(gl::Context *context)
 
 void ShareGroup::removeSharedContext(gl::Context *context)
 {
-    mContexts.erase(context);
+    mContexts.erase(context->id().value);
 }
 
 ShareGroup::~ShareGroup()
@@ -921,11 +907,11 @@ Display::Display(EGLenum platform, EGLNativeDisplayType displayId, Device *eglDe
       mAttributeMap(),
       mConfigSet(),
       mStreamSet(),
-      mInvalidContextSet(),
-      mInvalidImageSet(),
+      mInvalidContextMap(),
+      mInvalidImageMap(),
       mInvalidStreamSet(),
-      mInvalidSurfaceSet(),
-      mInvalidSyncSet(),
+      mInvalidSurfaceMap(),
+      mInvalidSyncMap(),
       mInitialized(false),
       mDeviceLost(false),
       mCaps(),
@@ -1006,9 +992,9 @@ void Display::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMess
 {
     ASSERT(index == kGPUSwitchedSubjectIndex);
     ASSERT(message == angle::SubjectMessage::SubjectChanged);
-    for (gl::Context *context : mState.contextSet)
+    for (auto context : mState.contextMap)
     {
-        context->onGPUSwitch();
+        context.second->onGPUSwitch();
     }
 }
 
@@ -1154,16 +1140,16 @@ Error Display::initialize()
 Error Display::destroyInvalidEglObjects()
 {
     // Destroy invalid EGL objects
-    while (!mInvalidContextSet.empty())
+    while (!mInvalidContextMap.empty())
     {
-        gl::Context *context = *mInvalidContextSet.begin();
+        gl::Context *context = mInvalidContextMap.begin()->second;
         context->setIsDestroyed();
-        ANGLE_TRY(releaseContextImpl(context, &mInvalidContextSet));
+        ANGLE_TRY(releaseContextImpl(context, &mInvalidContextMap));
     }
 
-    while (!mInvalidImageSet.empty())
+    while (!mInvalidImageMap.empty())
     {
-        destroyImageImpl(*mInvalidImageSet.begin(), &mInvalidImageSet);
+        destroyImageImpl(mInvalidImageMap.begin()->second, &mInvalidImageMap);
     }
 
     while (!mInvalidStreamSet.empty())
@@ -1171,14 +1157,14 @@ Error Display::destroyInvalidEglObjects()
         destroyStreamImpl(*mInvalidStreamSet.begin(), &mInvalidStreamSet);
     }
 
-    while (!mInvalidSurfaceSet.empty())
+    while (!mInvalidSurfaceMap.empty())
     {
-        ANGLE_TRY(destroySurfaceImpl(*mInvalidSurfaceSet.begin(), &mInvalidSurfaceSet));
+        ANGLE_TRY(destroySurfaceImpl(mInvalidSurfaceMap.begin()->second, &mInvalidSurfaceMap));
     }
 
-    while (!mInvalidSyncSet.empty())
+    while (!mInvalidSyncMap.empty())
     {
-        destroySyncImpl(*mInvalidSyncSet.begin(), &mInvalidSyncSet);
+        destroySyncImpl(mInvalidSyncMap.begin()->second, &mInvalidSyncMap);
     }
 
     return NoError();
@@ -1209,34 +1195,34 @@ Error Display::terminate(Thread *thread, TerminateReason terminateReason)
     // would only result in a decRef. We instead cache such invalid objects and use other EGL
     // entrypoints like eglReleaseThread or thread exit events (on the Android platform) to
     // perform the necessary cleanup.
-    mInvalidImageSet.insert(mImageSet.begin(), mImageSet.end());
-    mImageSet.clear();
+    mInvalidImageMap.insert(mImageMap.begin(), mImageMap.end());
+    mImageMap.clear();
 
     mInvalidStreamSet.insert(mStreamSet.begin(), mStreamSet.end());
     mStreamSet.clear();
 
-    mInvalidSurfaceSet.insert(mState.surfaceSet.begin(), mState.surfaceSet.end());
-    mState.surfaceSet.clear();
+    mInvalidSurfaceMap.insert(mState.surfaceMap.begin(), mState.surfaceMap.end());
+    mState.surfaceMap.clear();
 
-    mInvalidSyncSet.insert(mSyncSet.begin(), mSyncSet.end());
-    mSyncSet.clear();
+    mInvalidSyncMap.insert(mSyncMap.begin(), mSyncMap.end());
+    mSyncMap.clear();
 
     // Cache total number of contexts before invalidation. This is used as a check to verify that
     // no context is "lost" while being moved between the various sets.
-    size_t contextSetSizeBeforeInvalidation = mState.contextSet.size() + mInvalidContextSet.size();
+    size_t contextSetSizeBeforeInvalidation = mState.contextMap.size() + mInvalidContextMap.size();
 
     // If app called eglTerminate and no active threads remain,
     // force realease any context that is still current.
-    ContextSet contextsStillCurrent = {};
-    for (gl::Context *context : mState.contextSet)
+    ContextMap contextsStillCurrent = {};
+    for (auto context : mState.contextMap)
     {
-        if (context->getRefCount() > 0)
+        if (context.second->getRefCount() > 0)
         {
             if (terminateReason == TerminateReason::NoActiveThreads)
             {
                 ASSERT(mTerminatedByApi);
-                context->release();
-                (void)context->unMakeCurrent(this);
+                context.second->release();
+                (void)context.second->unMakeCurrent(this);
             }
             else
             {
@@ -1246,7 +1232,7 @@ Error Display::terminate(Thread *thread, TerminateReason terminateReason)
         }
 
         // Add context that is not current to mInvalidContextSet for cleanup.
-        mInvalidContextSet.emplace(context);
+        mInvalidContextMap.emplace(context);
     }
 
     // There are many methods that require contexts that are still current to be present in
@@ -1256,13 +1242,13 @@ Error Display::terminate(Thread *thread, TerminateReason terminateReason)
     //
     // "mState.contextSet" will now contain only those contexts that are still current on some
     // thread.
-    mState.contextSet = std::move(contextsStillCurrent);
+    mState.contextMap = std::move(contextsStillCurrent);
 
     // Assert that the total number of contexts is the same before and after context invalidation.
     ASSERT(contextSetSizeBeforeInvalidation ==
-           mState.contextSet.size() + mInvalidContextSet.size());
+           mState.contextMap.size() + mInvalidContextMap.size());
 
-    if (!mState.contextSet.empty())
+    if (!mState.contextMap.empty())
     {
         // There was atleast 1 context that was current on some thread, early return.
         return NoError();
@@ -1388,7 +1374,7 @@ Error Display::createWindowSurface(const Config *configuration,
 
     ASSERT(outSurface != nullptr);
     *outSurface = surface.release();
-    mState.surfaceSet.insert(*outSurface);
+    mState.surfaceMap.insert(std::pair((*outSurface)->id().value, *outSurface));
 
     WindowSurfaceMap *windowSurfaces = GetWindowSurfaces();
     ASSERT(windowSurfaces && windowSurfaces->find(window) == windowSurfaces->end());
@@ -1418,7 +1404,7 @@ Error Display::createPbufferSurface(const Config *configuration,
 
     ASSERT(outSurface != nullptr);
     *outSurface = surface.release();
-    mState.surfaceSet.insert(*outSurface);
+    mState.surfaceMap.insert(std::pair((*outSurface)->id().value, *outSurface));
 
     return NoError();
 }
@@ -1445,7 +1431,7 @@ Error Display::createPbufferFromClientBuffer(const Config *configuration,
 
     ASSERT(outSurface != nullptr);
     *outSurface = surface.release();
-    mState.surfaceSet.insert(*outSurface);
+    mState.surfaceMap.insert(std::pair((*outSurface)->id().value, *outSurface));
 
     return NoError();
 }
@@ -1471,7 +1457,7 @@ Error Display::createPixmapSurface(const Config *configuration,
 
     ASSERT(outSurface != nullptr);
     *outSurface = surface.release();
-    mState.surfaceSet.insert(*outSurface);
+    mState.surfaceMap.insert(std::pair((*outSurface)->id().value, *outSurface));
 
     return NoError();
 }
@@ -1520,7 +1506,7 @@ Error Display::createImage(const gl::Context *context,
 
     // Add this image to the list of all images and hold a ref to it.
     image->addRef();
-    mImageSet.insert(image);
+    mImageMap.insert(std::pair(image->id().value, image));
 
     return NoError();
 }
@@ -1627,7 +1613,7 @@ Error Display::createContext(const Config *configuration,
     }
 
     ASSERT(context != nullptr);
-    mState.contextSet.insert(context);
+    mState.contextMap.insert(std::pair(context->id().value, context));
 
     ASSERT(outContext != nullptr);
     *outContext = context;
@@ -1656,7 +1642,7 @@ Error Display::createSync(const gl::Context *currentContext,
     Sync *sync = syncPtr.release();
 
     sync->addRef();
-    mSyncSet.insert(sync);
+    mSyncMap.insert(std::pair(sync->id().value, sync));
 
     *outSync = sync;
     return NoError();
@@ -1722,10 +1708,10 @@ Error Display::makeCurrent(Thread *thread,
 
 Error Display::restoreLostDevice()
 {
-    for (ContextSet::iterator ctx = mState.contextSet.begin(); ctx != mState.contextSet.end();
+    for (ContextMap::iterator ctx = mState.contextMap.begin(); ctx != mState.contextMap.end();
          ctx++)
     {
-        if ((*ctx)->isResetNotificationEnabled())
+        if (ctx->second->isResetNotificationEnabled())
         {
             // If reset notifications have been requested, application must delete all contexts
             // first
@@ -1736,7 +1722,7 @@ Error Display::restoreLostDevice()
     return mImplementation->restoreLostDevice(this);
 }
 
-Error Display::destroySurfaceImpl(Surface *surface, SurfaceSet *surfaces)
+Error Display::destroySurfaceImpl(Surface *surface, SurfaceMap *surfaces)
 {
     if (surface->getType() == EGL_WINDOW_BIT)
     {
@@ -1758,7 +1744,7 @@ Error Display::destroySurfaceImpl(Surface *surface, SurfaceSet *surfaces)
         ASSERT(surfaceRemoved);
     }
 
-    auto iter = surfaces->find(surface);
+    auto iter = surfaces->find(surface->id().value);
     ASSERT(iter != surfaces->end());
     mSurfaceHandleAllocator.release(surface->id().value);
     surfaces->erase(iter);
@@ -1766,12 +1752,12 @@ Error Display::destroySurfaceImpl(Surface *surface, SurfaceSet *surfaces)
     return NoError();
 }
 
-void Display::destroyImageImpl(Image *image, ImageSet *images)
+void Display::destroyImageImpl(Image *image, ImageMap *images)
 {
-    auto iter = images->find(image);
+    auto iter = images->find(image->id().value);
     ASSERT(iter != images->end());
     mImageHandleAllocator.release(image->id().value);
-    (*iter)->release(this);
+    iter->second->release(this);
     images->erase(iter);
 }
 
@@ -1787,17 +1773,17 @@ void Display::destroyStreamImpl(Stream *stream, StreamSet *streams)
 // as part of destruction.
 Error Display::releaseContext(gl::Context *context, Thread *thread)
 {
-    return releaseContextImpl(context, &mState.contextSet);
+    return releaseContextImpl(context, &mState.contextMap);
 }
 
-Error Display::releaseContextImpl(gl::Context *context, ContextSet *contexts)
+Error Display::releaseContextImpl(gl::Context *context, ContextMap *contexts)
 {
     ASSERT(context->getRefCount() == 0);
 
     // Use scoped_ptr to make sure the context is always freed.
     std::unique_ptr<gl::Context> unique_context(context);
-    ASSERT(contexts->find(context) != contexts->end());
-    contexts->erase(context);
+    ASSERT(contexts->find(context->id().value) != contexts->end());
+    contexts->erase(context->id().value);
 
     if (context->usingDisplayTextureShareGroup())
     {
@@ -1877,9 +1863,9 @@ Error Display::destroyContext(Thread *thread, gl::Context *context)
     // we can now fully terminate the display and release all of its resources.
     if (mTerminatedByApi)
     {
-        for (const gl::Context *ctx : mState.contextSet)
+        for (auto ctx : mState.contextMap)
         {
-            if (ctx->getRefCount() > 0)
+            if (ctx.second->getRefCount() > 0)
             {
                 return NoError();
             }
@@ -1891,18 +1877,18 @@ Error Display::destroyContext(Thread *thread, gl::Context *context)
     return NoError();
 }
 
-void Display::destroySyncImpl(Sync *sync, SyncSet *syncs)
+void Display::destroySyncImpl(Sync *sync, SyncMap *syncs)
 {
-    auto iter = syncs->find(sync);
+    auto iter = syncs->find(sync->id().value);
     ASSERT(iter != syncs->end());
-    mSyncHandleAllocator.release((*iter)->id().value);
-    (*iter)->release(this);
+    mSyncHandleAllocator.release(sync->id().value);
+    iter->second->release(this);
     syncs->erase(iter);
 }
 
 void Display::destroyImage(Image *image)
 {
-    return destroyImageImpl(image, &mImageSet);
+    return destroyImageImpl(image, &mImageMap);
 }
 
 void Display::destroyStream(Stream *stream)
@@ -1912,12 +1898,12 @@ void Display::destroyStream(Stream *stream)
 
 Error Display::destroySurface(Surface *surface)
 {
-    return destroySurfaceImpl(surface, &mState.surfaceSet);
+    return destroySurfaceImpl(surface, &mState.surfaceMap);
 }
 
 void Display::destroySync(Sync *sync)
 {
-    return destroySyncImpl(sync, &mSyncSet);
+    return destroySyncImpl(sync, &mSyncMap);
 }
 
 bool Display::isDeviceLost() const
@@ -1945,10 +1931,9 @@ void Display::notifyDeviceLost()
         return;
     }
 
-    for (ContextSet::iterator context = mState.contextSet.begin();
-         context != mState.contextSet.end(); context++)
+    for (auto context = mState.contextMap.begin(); context != mState.contextMap.end(); context++)
     {
-        (*context)->markContextLost(gl::GraphicsResetStatus::UnknownContextReset);
+        context->second->markContextLost(gl::GraphicsResetStatus::UnknownContextReset);
     }
 
     mDeviceLost = true;
@@ -2614,41 +2599,50 @@ angle::ImageLoadContext Display::getImageLoadContext() const
 
 const gl::Context *Display::getContext(gl::ContextID contextID) const
 {
-    return GetResourceFromHashSet<const gl::Context *>(contextID, mState.contextSet);
+    auto iter = mState.contextMap.find(contextID.value);
+    return iter != mState.contextMap.end() ? iter->second : nullptr;
 }
 
 const egl::Surface *Display::getSurface(egl::SurfaceID surfaceID) const
 {
-    return GetResourceFromHashSet<const egl::Surface *>(surfaceID, mState.surfaceSet);
+    auto iter = mState.surfaceMap.find(surfaceID.value);
+    return iter != mState.surfaceMap.end() ? iter->second : nullptr;
 }
 
 const egl::Image *Display::getImage(egl::ImageID imageID) const
 {
-    return GetResourceFromHashSet<const egl::Image *>(imageID, mImageSet);
+    auto iter = mImageMap.find(imageID.value);
+    return iter != mImageMap.end() ? iter->second : nullptr;
 }
 
 const egl::Sync *Display::getSync(egl::SyncID syncID) const
 {
-    return GetResourceFromHashSet<const egl::Sync *>(syncID, mSyncSet);
+    auto iter = mSyncMap.find(syncID.value);
+    return iter != mSyncMap.end() ? iter->second : nullptr;
 }
 
 gl::Context *Display::getContext(gl::ContextID contextID)
 {
-    return GetResourceFromHashSet<gl::Context *>(contextID, mState.contextSet);
+    auto iter = mState.contextMap.find(contextID.value);
+    return iter != mState.contextMap.end() ? iter->second : nullptr;
 }
 
 egl::Surface *Display::getSurface(egl::SurfaceID surfaceID)
 {
-    return GetResourceFromHashSet<egl::Surface *>(surfaceID, mState.surfaceSet);
+    auto iter = mState.surfaceMap.find(surfaceID.value);
+    return iter != mState.surfaceMap.end() ? iter->second : nullptr;
 }
+
 egl::Image *Display::getImage(egl::ImageID imageID)
 {
-    return GetResourceFromHashSet<egl::Image *>(imageID, mImageSet);
+    auto iter = mImageMap.find(imageID.value);
+    return iter != mImageMap.end() ? iter->second : nullptr;
 }
 
 egl::Sync *Display::getSync(egl::SyncID syncID)
 {
-    return GetResourceFromHashSet<egl::Sync *>(syncID, mSyncSet);
+    auto iter = mSyncMap.find(syncID.value);
+    return iter != mSyncMap.end() ? iter->second : nullptr;
 }
 
 // static
