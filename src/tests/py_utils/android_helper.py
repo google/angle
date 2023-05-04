@@ -28,7 +28,8 @@ TEST_PACKAGE_NAME = 'com.android.angle.test'
 
 # /sdcard/ is slow (see https://crrev.com/c/3615081 for details)
 # /data/local/tmp/ is not writable by apps
-FAST_TEMP_DEVICE_DIR = '/data/data/' + TEST_PACKAGE_NAME + '/tmp/'
+TEMP_DEVICE_DIR_ROOT = '/data/data/' + TEST_PACKAGE_NAME + '/tmp/'
+TEMP_DEVICE_DIR_USER = '/sdcard/Download/'
 
 
 class _Global(object):
@@ -37,6 +38,7 @@ class _Global(object):
     current_suite = None
     lib_extension = None
     traces_outside_of_apk = False
+    temp_dir = None
 
 
 def _ApkPath(suite_name):
@@ -148,16 +150,16 @@ def _AdbShell(cmd):
 
 def _GetAdbRoot():
     _AdbRun(['root'])
-
-    for _ in range(20):
+    logging.info('Checking for root (may take 5 seconds)')
+    for _ in range(10):
         time.sleep(0.5)
-        try:
-            id_out = _AdbShell('id').decode('ascii')
-            if 'uid=0(root)' in id_out:
-                return
-        except Exception:
-            continue
-    raise Exception("adb root failed")
+        id_out = _AdbShell('id').decode('ascii')
+        if 'uid=0(root)' in id_out:
+            logging.info('Root succeeded')
+            _Global.temp_dir = TEMP_DEVICE_DIR_ROOT
+            return
+    logging.warning('Root not available')
+    _Global.temp_dir = TEMP_DEVICE_DIR_USER
 
 
 def _ReadDeviceFile(device_path):
@@ -236,7 +238,7 @@ def _PrepareTestSuite(suite_name):
     _AdbShell('appops set %s MANAGE_EXTERNAL_STORAGE allow || true' % TEST_PACKAGE_NAME)
 
     _AdbShell('mkdir -p /sdcard/chromium_tests_root/')
-    _AdbShell('mkdir -p %s' % FAST_TEMP_DEVICE_DIR)
+    _AdbShell('mkdir -p %s' % _Global.temp_dir)
 
     if suite_name == ANGLE_TRACE_TEST_SUITE:
         _AddRestrictedTracesJson()
@@ -319,7 +321,7 @@ def _RandomHex():
 
 @contextlib.contextmanager
 def _TempDeviceDir():
-    path = posixpath.join(FAST_TEMP_DEVICE_DIR, 'temp_dir-%s' % _RandomHex())
+    path = posixpath.join(_Global.temp_dir, 'temp_dir-%s' % _RandomHex())
     _AdbShell('mkdir -p ' + path)
     try:
         yield path
@@ -329,7 +331,7 @@ def _TempDeviceDir():
 
 @contextlib.contextmanager
 def _TempDeviceFile():
-    path = posixpath.join(FAST_TEMP_DEVICE_DIR, 'temp_file-%s' % _RandomHex())
+    path = posixpath.join(_Global.temp_dir, 'temp_file-%s' % _RandomHex())
     try:
         yield path
     finally:
