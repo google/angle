@@ -337,11 +337,11 @@ ANGLE_INLINE void VertexArray::updateCachedTransformFeedbackBindingValidation(si
     mCachedTransformFeedbackConflictedBindingsMask.set(bindingIndex, hasConflict);
 }
 
-bool VertexArray::bindVertexBufferImpl(const Context *context,
-                                       size_t bindingIndex,
-                                       Buffer *boundBuffer,
-                                       GLintptr offset,
-                                       GLsizei stride)
+VertexArray::DirtyBindingBits VertexArray::bindVertexBufferImpl(const Context *context,
+                                                                size_t bindingIndex,
+                                                                Buffer *boundBuffer,
+                                                                GLintptr offset,
+                                                                GLsizei stride)
 {
     ASSERT(bindingIndex < getMaxBindings());
     ASSERT(context->isCurrentVertexArray(this));
@@ -350,13 +350,14 @@ bool VertexArray::bindVertexBufferImpl(const Context *context,
 
     Buffer *oldBuffer = binding->getBuffer().get();
 
-    const bool sameBuffer = oldBuffer == boundBuffer;
-    const bool sameStride = static_cast<GLuint>(stride) == binding->getStride();
-    const bool sameOffset = offset == binding->getOffset();
+    DirtyBindingBits dirtyBindingBits;
+    dirtyBindingBits.set(DIRTY_BINDING_BUFFER, oldBuffer != boundBuffer);
+    dirtyBindingBits.set(DIRTY_BINDING_STRIDE, static_cast<GLuint>(stride) != binding->getStride());
+    dirtyBindingBits.set(DIRTY_BINDING_OFFSET, offset != binding->getOffset());
 
-    if (sameBuffer && sameStride && sameOffset)
+    if (dirtyBindingBits.none())
     {
-        return false;
+        return dirtyBindingBits;
     }
 
     angle::ObserverBinding *observer = &mArrayBufferObserverBindings[bindingIndex];
@@ -407,7 +408,7 @@ bool VertexArray::bindVertexBufferImpl(const Context *context,
         updateCachedArrayBuffersMasks(false, false, false, binding->getBoundAttributesMask());
     }
 
-    return true;
+    return dirtyBindingBits;
 }
 
 void VertexArray::bindVertexBuffer(const Context *context,
@@ -416,9 +417,12 @@ void VertexArray::bindVertexBuffer(const Context *context,
                                    GLintptr offset,
                                    GLsizei stride)
 {
-    if (bindVertexBufferImpl(context, bindingIndex, boundBuffer, offset, stride))
+    const VertexArray::DirtyBindingBits dirtyBindingBits =
+        bindVertexBufferImpl(context, bindingIndex, boundBuffer, offset, stride);
+    if (dirtyBindingBits.any())
     {
-        setDirtyBindingBit(bindingIndex, DIRTY_BINDING_BUFFER);
+        mDirtyBits.set(DIRTY_BIT_BINDING_0 + bindingIndex);
+        mDirtyBindingBits[bindingIndex] |= dirtyBindingBits;
     }
 }
 
@@ -596,14 +600,14 @@ ANGLE_INLINE void VertexArray::setVertexAttribPointerImpl(const Context *context
     // which is handled within bindVertexBufferImpl and reflected in bufferDirty.
     attrib.pointer  = pointer;
     GLintptr offset = boundBuffer ? reinterpret_cast<GLintptr>(pointer) : 0;
-    const bool bufferDirty =
+    const VertexArray::DirtyBindingBits dirtyBindingBits =
         bindVertexBufferImpl(context, attribIndex, boundBuffer, offset, effectiveStride);
 
     if (attribDirty)
     {
         setDirtyAttribBit(attribIndex, DIRTY_ATTRIB_POINTER);
     }
-    else if (bufferDirty)
+    else if (dirtyBindingBits.any())
     {
         setDirtyAttribBit(attribIndex, DIRTY_ATTRIB_POINTER_BUFFER);
     }

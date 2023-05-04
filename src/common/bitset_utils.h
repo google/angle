@@ -84,6 +84,15 @@ class BitSetT final
             mBitsCopy.reset(index);
         }
 
+        // bits could contain bit that earlier than mCurrentBit. Since mBitCopy can't have bits
+        // earlier than mCurrentBit, the & operation will mask out earlier bits anyway.
+        void resetLaterBits(const BitSetT &bits)
+        {
+            BitSetT maskedBits = ~Mask(mCurrentBit + 1);
+            maskedBits &= bits;
+            mBitsCopy &= ~maskedBits;
+        }
+
         void setLaterBit(std::size_t index)
         {
             ASSERT(index > mCurrentBit);

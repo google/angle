@@ -188,16 +188,16 @@ class VertexArray final : public angle::ObserverInterface,
         DIRTY_ATTRIB_FORMAT,
         DIRTY_ATTRIB_BINDING,
         DIRTY_ATTRIB_POINTER_BUFFER,
-        DIRTY_ATTRIB_UNKNOWN,
-        DIRTY_ATTRIB_MAX = DIRTY_ATTRIB_UNKNOWN,
+        DIRTY_ATTRIB_MAX,
     };
 
     enum DirtyBindingBitType
     {
         DIRTY_BINDING_BUFFER,
         DIRTY_BINDING_DIVISOR,
-        DIRTY_BINDING_UNKNOWN,
-        DIRTY_BINDING_MAX = DIRTY_BINDING_UNKNOWN,
+        DIRTY_BINDING_STRIDE,
+        DIRTY_BINDING_OFFSET,
+        DIRTY_BINDING_MAX,
     };
 
     using DirtyBits                = angle::BitSet<DIRTY_BIT_MAX>;
@@ -380,11 +380,12 @@ class VertexArray final : public angle::ObserverInterface,
                                    bool normalized,
                                    bool pureInteger,
                                    GLuint relativeOffset);
-    bool bindVertexBufferImpl(const Context *context,
-                              size_t bindingIndex,
-                              Buffer *boundBuffer,
-                              GLintptr offset,
-                              GLsizei stride);
+
+    DirtyBindingBits bindVertexBufferImpl(const Context *context,
+                                          size_t bindingIndex,
+                                          Buffer *boundBuffer,
+                                          GLintptr offset,
+                                          GLsizei stride);
 
     void onBind(const Context *context);
     void onUnbind(const Context *context);
