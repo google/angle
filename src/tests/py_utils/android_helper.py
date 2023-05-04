@@ -276,7 +276,7 @@ def PrepareRestrictedTraces(traces):
             _AdbRun(['push', local_path, device_path])
 
     def _PushLibToAppDir(lib_name):
-        local_path = 'angle_trace_tests_android_binaries__dist/' + lib_name
+        local_path = lib_name
         device_path = '/data/user/0/com.android.angle.test/angle_traces/' + lib_name
         if _HashesMatch(local_path, device_path):
             return

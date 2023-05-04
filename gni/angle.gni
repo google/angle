@@ -560,20 +560,10 @@ if (angle_standalone || build_with_chromium) {
 
       if (is_android) {
         public_configs += [ "$angle_root:build_id_config" ]
+        configs -= [ "//build/config/android:hide_all_but_jni" ]
         use_default_launcher = false
-
-        apk_build = true
-        if (defined(invoker.use_raw_android_executable)) {
-          # If the caller of this template has requested binaries only, skip the APK steps below
-          apk_build = !invoker.use_raw_android_executable
-        }
-
-        # Some of our build targets don't want an APK on Android, specifically trace tests which exceed APK size
-        if (apk_build) {
-          generate_final_jni = false
-          android_manifest_template = "$angle_root/src/tests/test_utils/runner/android/java/AndroidManifest.xml.jinja2"
-          configs -= [ "//build/config/android:hide_all_but_jni" ]
-        }
+        generate_final_jni = false
+        android_manifest_template = "$angle_root/src/tests/test_utils/runner/android/java/AndroidManifest.xml.jinja2"
 
         deps += [
           "$angle_root/src/tests:native_test_java",
@@ -646,9 +636,16 @@ set_defaults("angle_trace_library") {
 
 template("angle_trace_library") {
   _trace_targets = []
+  _trace_lib_files = []
 
   if (invoker.short_names) {
     _trace_counter = 1
+  }
+
+  if (is_android && is_component_build) {
+    _cr_suffix = ".cr"
+  } else {
+    _cr_suffix = ""
   }
 
   foreach(_trace_and_version, invoker.trace_list) {
@@ -698,6 +695,21 @@ template("angle_trace_library") {
     }
 
     _trace_targets += [ ":$_target" ]
+    _trace_lib_files += [ "${root_out_dir}/lib${_target}${_cr_suffix}.so" ]
+  }
+
+  if (restricted_traces_outside_of_apk) {
+    group("angle_trace_tests_android_binaries") {
+      testonly = true
+      deps = [
+        ":angle_restricted_traces",
+        "$angle_root/util:angle_trace_interpreter",
+      ]
+
+      # Also need files listed as data to be picked up by isolate
+      data = _trace_lib_files +
+             [ "${root_out_dir}/libangle_trace_interpreter${_cr_suffix}.so" ]
+    }
   }
 
   angle_shared_library(target_name) {

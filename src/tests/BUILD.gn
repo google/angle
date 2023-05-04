@@ -504,29 +504,8 @@ if (build_angle_trace_tests) {
     "$angle_root/util:angle_png_utils",
   ]
 
-  # These go together, either inside or outside of the APK depending on the config
-  _angle_trace_libs = [
-    "$angle_root/util:angle_trace_interpreter",
-    "restricted_traces:angle_restricted_traces",
-  ]
-
   # Allows us to edit traces and remove chunks of code without compile warnings.
   _angle_trace_common_clang_flags = [ "-Wno-unused-const-variable" ]
-
-  if (restricted_traces_outside_of_apk) {
-    # If this flag is set, we want to build the trace libraries independent of the APK, i.e. not packaged.
-    # We're doing this for size reasons - the APK is too large if you include all the traces.
-    # We've repurposed the `angle_test` template for this, although we don't plan to run `restricted_traces_outside_of_apk` as a test itself.
-    # It will be used in conjunction with `angle_trace_tests`.
-    angle_test("angle_trace_tests_android_binaries") {
-      use_raw_android_executable = true
-
-      sources = _angle_trace_common_sources
-      deps = _angle_trace_common_deps +
-             [ "$angle_root/util:angle_trace_fixture" ] + _angle_trace_libs
-      cflags_cc = _angle_trace_common_clang_flags
-    }
-  }
 
   angle_test("angle_trace_tests") {
     # http://anglebug.com/6009: Traces with long shaders are hitting string literal
@@ -541,10 +520,16 @@ if (build_angle_trace_tests) {
     sources = _angle_trace_common_sources
 
     deps = _angle_trace_common_deps
+
+    # If this flag is set, we want to build the trace libraries independent of the APK, i.e. not packaged.
+    # We're doing this for size reasons - the APK is too large if you include all the traces.
     if (restricted_traces_outside_of_apk) {
       deps += [ "$angle_root/util:angle_trace_loader" ]
     } else {
-      deps += _angle_trace_libs
+      deps += [
+        "$angle_root/util:angle_trace_interpreter",
+        "restricted_traces:angle_restricted_traces",
+      ]
     }
 
     data = [ "$angle_root/src/tests/py_utils/android_helper.py" ]
@@ -578,7 +563,7 @@ if (build_angle_trace_tests) {
     ]
 
     if (restricted_traces_outside_of_apk) {
-      data_deps += [ ":angle_trace_tests_android_binaries" ]
+      deps = [ "restricted_traces:angle_trace_tests_android_binaries" ]
     }
   }
 
