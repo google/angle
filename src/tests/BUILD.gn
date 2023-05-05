@@ -563,7 +563,7 @@ if (build_angle_trace_tests) {
     ]
 
     if (restricted_traces_outside_of_apk) {
-      deps = [ "restricted_traces:angle_trace_tests_android_binaries" ]
+      deps = [ "restricted_traces:angle_restricted_traces__unpacked_libs" ]
     }
   }
 
