@@ -26,11 +26,6 @@ from angle_test_util import ANGLE_TRACE_TEST_SUITE
 # Currently we only support a single test package name.
 TEST_PACKAGE_NAME = 'com.android.angle.test'
 
-# /sdcard/ is slow (see https://crrev.com/c/3615081 for details)
-# /data/local/tmp/ is not writable by apps
-TEMP_DEVICE_DIR_ROOT = '/data/data/' + TEST_PACKAGE_NAME + '/tmp/'
-TEMP_DEVICE_DIR_USER = '/sdcard/Download/'
-
 
 class _Global(object):
     initialized = False
@@ -73,7 +68,14 @@ def _FindPackageName(apk_path):
 
 
 def _InitializeAndroid(apk_path):
-    _GetAdbRoot()
+    if _GetAdbRoot():
+        # /data/local/tmp/ is not writable by apps.. So use the app path
+        _Global.temp_dir = '/data/data/' + TEST_PACKAGE_NAME + '/tmp/'
+    else:
+        # /sdcard/ is slow (see https://crrev.com/c/3615081 for details)
+        # logging will be fully-buffered, can be truncated on crashes
+        _Global.temp_dir = '/sdcard/Download/'
+
     assert _FindPackageName(apk_path) == TEST_PACKAGE_NAME
 
     apk_files = subprocess.check_output([_FindAapt(), 'list', apk_path]).decode().split()
@@ -149,17 +151,26 @@ def _AdbShell(cmd):
 
 
 def _GetAdbRoot():
+    shell_id, su_path = _AdbShell('id -u; which su || echo noroot').decode().strip().split('\n')
+    if int(shell_id) == 0:
+        logging.info('adb already got root')
+        return True
+
+    if su_path == 'noroot':
+        logging.warning('adb root not available on this device')
+        return False
+
+    logging.info('Getting adb root (may take a few seconds)')
     _AdbRun(['root'])
-    logging.info('Checking for root (may take 5 seconds)')
-    for _ in range(10):
+    for _ in range(20):  # `adb root` restarts adbd which can take quite a few seconds
         time.sleep(0.5)
-        id_out = _AdbShell('id').decode('ascii')
-        if 'uid=0(root)' in id_out:
-            logging.info('Root succeeded')
-            _Global.temp_dir = TEMP_DEVICE_DIR_ROOT
-            return
-    logging.warning('Root not available')
-    _Global.temp_dir = TEMP_DEVICE_DIR_USER
+        id_out = _AdbShell('id -u').decode('ascii').strip()
+        if id_out == '0':
+            logging.info('adb root succeeded')
+            return True
+
+    # Device has "su" but we couldn't get adb root. Something is wrong.
+    raise Exception('Failed to get adb root')
 
 
 def _ReadDeviceFile(device_path):
