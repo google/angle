@@ -884,7 +884,8 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     }
 
     if (mShaderVersion >= 300 && mShaderType == GL_FRAGMENT_SHADER &&
-        !ValidateOutputs(root, getExtensionBehavior(), mResources.MaxDrawBuffers, &mDiagnostics))
+        !ValidateOutputs(root, getExtensionBehavior(), mResources.MaxDrawBuffers,
+                         hasPixelLocalStorageUniforms(), &mDiagnostics))
     {
         return false;
     }

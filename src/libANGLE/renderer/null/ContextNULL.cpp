@@ -67,6 +67,8 @@ ContextNULL::ContextNULL(const gl::State &state,
     ASSERT(mAllocationTracker != nullptr);
 
     mExtensions                               = gl::Extensions();
+    mExtensions.blendEquationAdvancedKHR      = true;
+    mExtensions.blendFuncExtendedEXT          = true;
     mExtensions.copyCompressedTextureCHROMIUM = true;
     mExtensions.copyTextureCHROMIUM           = true;
     mExtensions.debugMarkerEXT                = true;
