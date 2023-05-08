@@ -96,6 +96,11 @@ and run with (including recommended options):
 out/<config>/angle_trace_tests --filter='*among_us*' --verbose --fixed-test-time-with-warmup 10
 ```
 
+If more than one device is connected, the target device serial should be provided as well:
+```
+ANDROID_SERIAL=<device_serial> out/<config>/angle_trace_tests ...
+```
+
 # Capturing and adding new Android traces
 
 Generally we want to use a Debug setup for recording new traces. That allows us to see asserts and
