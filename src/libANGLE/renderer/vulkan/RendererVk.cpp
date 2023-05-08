@@ -245,6 +245,14 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-vkCmdDraw-None-07844",
     "VUID-vkCmdDraw-None-07845",
     "VUID-vkCmdDraw-None-07848",
+    // http://anglebug.com/8159
+    "VUID-vkCmdDrawIndexed-None-07840",
+    "VUID-vkCmdDrawIndexed-None-07841",
+    "VUID-vkCmdDrawIndexed-None-07843",
+    "VUID-vkCmdDrawIndexed-None-07844",
+    "VUID-vkCmdDrawIndexed-None-07845",
+    "VUID-vkCmdDrawIndexed-None-07847",
+    "VUID-vkCmdDrawIndexed-None-07848",
 };
 
 // Validation messages that should be ignored only when VK_EXT_primitive_topology_list_restart is
