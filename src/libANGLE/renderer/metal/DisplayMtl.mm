@@ -29,8 +29,7 @@
 #include "platform/PlatformMethods.h"
 
 #if TARGET_OS_SIMULATOR
-#    include "libANGLE/renderer/metal/shaders/mtl_internal_shaders_2_0_ios_simulator_autogen.h"
-#    include "libANGLE/renderer/metal/shaders/mtl_internal_shaders_2_1_ios_simulator_autogen.h"
+#    include "libANGLE/renderer/metal/shaders/mtl_internal_shaders_src_autogen.h"
 #elif defined(ANGLE_PLATFORM_MACOS)
 #    include "libANGLE/renderer/metal/shaders/mtl_internal_shaders_2_0_macos_autogen.h"
 #    include "libANGLE/renderer/metal/shaders/mtl_internal_shaders_2_1_macos_autogen.h"
@@ -1309,6 +1308,11 @@ void DisplayMtl::initializeFeatures()
 
 angle::Result DisplayMtl::initializeShaderLibrary()
 {
+    mtl::AutoObjCPtr<NSError *> err = nil;
+#if TARGET_OS_SIMULATOR
+    mDefaultShaders = mtl::CreateShaderLibrary(getMetalDevice(), gDefaultMetallibSrc,
+                                               std::size(gDefaultMetallibSrc), &err);
+#else
     const uint8_t *metalLibData = nullptr;
     size_t metalLibDataSize     = 0;
     if (ANGLE_APPLE_AVAILABLE_XCI(10.14, 13.0, 12.0))
@@ -1322,9 +1326,10 @@ angle::Result DisplayMtl::initializeShaderLibrary()
         metalLibDataSize = std::size(gDefaultMetallib_2_0);
     }
 
-    mtl::AutoObjCPtr<NSError *> err = nil;
     mDefaultShaders =
         mtl::CreateShaderLibraryFromBinary(getMetalDevice(), metalLibData, metalLibDataSize, &err);
+#endif
+
     if (err)
     {
         ERR() << "Internal error: " << err.get().localizedDescription.UTF8String;
