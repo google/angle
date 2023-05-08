@@ -1094,14 +1094,16 @@ void Context::deleteProgram(ShaderProgramID program)
     mState.mShaderProgramManager->deleteProgram(this, program);
 }
 
-void Context::deleteTexture(TextureID texture)
+void Context::deleteTexture(TextureID textureID)
 {
-    if (mState.mTextureManager->getTexture(texture))
+    Texture *texture = mState.mTextureManager->getTexture(textureID);
+    if (texture != nullptr)
     {
-        detachTexture(texture);
+        texture->onStateChange(angle::SubjectMessage::TextureIDDeleted);
+        detachTexture(textureID);
     }
 
-    mState.mTextureManager->deleteObject(this, texture);
+    mState.mTextureManager->deleteObject(this, textureID);
 }
 
 void Context::deleteRenderbuffer(RenderbufferID renderbuffer)
@@ -9498,7 +9500,7 @@ void Context::getFramebufferPixelLocalStorageParameterivRobust(GLint plane,
             {
                 *length = 1;
             }
-            *params = pls.getPlane(plane).getIntegeri(this, pname);
+            *params = pls.getPlane(plane).getIntegeri(pname);
             break;
         case GL_PIXEL_LOCAL_CLEAR_VALUE_INT_ANGLE:
             if (length != nullptr)

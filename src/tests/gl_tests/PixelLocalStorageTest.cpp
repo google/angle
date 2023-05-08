@@ -1745,18 +1745,7 @@ TEST_P(PixelLocalStorageTest, FunctionArguments)
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
     glFramebufferTexturePixelLocalStorageANGLE(0, dst, 0, 0);
     glFramebufferMemorylessPixelLocalStorageANGLE(1, GL_RGBA8);
-
-    // [ANGLE_shader_pixel_local_storage] Section 4.4.2.X "Configuring Pixel Local Storage
-    // on a Framebuffer": When a texture object is deleted, any pixel local storage plane to
-    // which it was bound is automatically converted to a memoryless plane of matching
-    // internalformat.
-    {
-        PLSTestTexture tempTex(GL_R32F, 1, 1);
-        glFramebufferTexturePixelLocalStorageANGLE(2, tempTex, 0, 0);
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        // ~PLSTestTexture deletes the texture and converts plane #2 to memoryless.
-    }
-    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferMemorylessPixelLocalStorageANGLE(2, GL_R32F);
 
     glViewport(0, 0, W, H);
     glDrawBuffers(0, nullptr);
@@ -3321,14 +3310,23 @@ TEST_P(PixelLocalStorageValidationTest, FramebufferTexturePixelLocalStorageANGLE
     EXPECT_PLS_INTEGER(1, GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE, 1);
     EXPECT_PLS_INTEGER(1, GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE, 0);
 
-    // When a texture object is deleted, any pixel local storage plane to which it was bound is
-    // automatically converted to a memoryless plane of matching internalformat.
-    tex.reset();
-    EXPECT_GL_NO_ERROR();
-    EXPECT_PLS_INTEGER(1, GL_PIXEL_LOCAL_FORMAT_ANGLE, GL_RGBA8UI);
-    EXPECT_PLS_INTEGER(1, GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE, 0);
-    EXPECT_PLS_INTEGER(1, GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE, 0);
-    EXPECT_PLS_INTEGER(1, GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE, 0);
+    {
+        // When a texture object is deleted, any pixel local storage plane to which it was bound is
+        // automatically deinitialized.
+        GLFramebuffer keepalive;  // Keep the underlying texture alive after deleting uts ID by
+                                  // binding it to a framebuffer.
+        glBindFramebuffer(GL_FRAMEBUFFER, keepalive);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
+        ASSERT_GL_NO_ERROR();
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        tex.reset();
+        PLSTestTexture newTextureMaybeRecycledID(GL_RGBA8, 1, 1);
+        EXPECT_GL_NO_ERROR();
+        EXPECT_PLS_INTEGER(1, GL_PIXEL_LOCAL_FORMAT_ANGLE, GL_NONE);
+        EXPECT_PLS_INTEGER(1, GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE, 0);
+        EXPECT_PLS_INTEGER(1, GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE, 0);
+        EXPECT_PLS_INTEGER(1, GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE, 0);
+    }
     glBindTexture(GL_TEXTURE_2D, tex);
     glTexStorage2D(GL_TEXTURE_2D, 3, GL_RGBA8UI, 10, 10);
 
@@ -3340,13 +3338,22 @@ TEST_P(PixelLocalStorageValidationTest, FramebufferTexturePixelLocalStorageANGLE
     EXPECT_PLS_INTEGER(1, GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE, 1);
     EXPECT_PLS_INTEGER(1, GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE, 0);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    tex.reset();
-    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-    EXPECT_GL_NO_ERROR();
-    EXPECT_PLS_INTEGER(1, GL_PIXEL_LOCAL_FORMAT_ANGLE, GL_RGBA8UI);
-    EXPECT_PLS_INTEGER(1, GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE, 0);
-    EXPECT_PLS_INTEGER(1, GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE, 0);
-    EXPECT_PLS_INTEGER(1, GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE, 0);
+    {
+        GLFramebuffer keepalive;  // Keep the underlying texture alive after deleting uts ID by
+                                  // binding it to a framebuffer.
+        glBindFramebuffer(GL_FRAMEBUFFER, keepalive);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
+        ASSERT_GL_NO_ERROR();
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        tex.reset();
+        PLSTestTexture newTextureMaybeRecycledID(GL_RGBA8, 1, 1);
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        EXPECT_GL_NO_ERROR();
+        EXPECT_PLS_INTEGER(1, GL_PIXEL_LOCAL_FORMAT_ANGLE, GL_NONE);
+        EXPECT_PLS_INTEGER(1, GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE, 0);
+        EXPECT_PLS_INTEGER(1, GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE, 0);
+        EXPECT_PLS_INTEGER(1, GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE, 0);
+    }
     glBindTexture(GL_TEXTURE_2D, tex);
     glTexStorage2D(GL_TEXTURE_2D, 3, GL_RGBA8UI, 10, 10);
 
@@ -3478,11 +3485,22 @@ TEST_P(PixelLocalStorageValidationTest, FramebufferTexturePixelLocalStorageANGLE
     EXPECT_PLS_INTEGER(2, GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE, tex2DArray);
     EXPECT_PLS_INTEGER(2, GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE, 1);
     EXPECT_PLS_INTEGER(2, GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE, 6);
-    tex2DArray.reset();
-    EXPECT_PLS_INTEGER(2, GL_PIXEL_LOCAL_FORMAT_ANGLE, GL_RGBA8I);
-    EXPECT_PLS_INTEGER(2, GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE, 0);
-    EXPECT_PLS_INTEGER(2, GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE, 0);
-    EXPECT_PLS_INTEGER(2, GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE, 0);
+    // When a texture object is deleted, any pixel local storage plane to which it was bound is
+    // automatically deinitialized.
+    {
+        GLFramebuffer keepalive;  // Keep the underlying texture alive after deleting uts ID by
+                                  // binding it to a framebuffer.
+        glBindFramebuffer(GL_FRAMEBUFFER, keepalive);
+        glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex2DArray, 0, 0);
+        ASSERT_GL_NO_ERROR();
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        tex2DArray.reset();
+        PLSTestTexture newTextureMaybeRecycledID(GL_RGBA8, 1, 1);
+        EXPECT_PLS_INTEGER(2, GL_PIXEL_LOCAL_FORMAT_ANGLE, GL_NONE);
+        EXPECT_PLS_INTEGER(2, GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE, 0);
+        EXPECT_PLS_INTEGER(2, GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE, 0);
+        EXPECT_PLS_INTEGER(2, GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE, 0);
+    }
 
     GLTexture tex3D;
     glBindTexture(GL_TEXTURE_3D, tex3D);
@@ -3500,11 +3518,22 @@ TEST_P(PixelLocalStorageValidationTest, FramebufferTexturePixelLocalStorageANGLE
     EXPECT_PLS_INTEGER(0, GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE, tex3D);
     EXPECT_PLS_INTEGER(0, GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE, 2);
     EXPECT_PLS_INTEGER(0, GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE, 255);
-    tex3D.reset();
-    EXPECT_PLS_INTEGER(0, GL_PIXEL_LOCAL_FORMAT_ANGLE, GL_RGBA8I);
-    EXPECT_PLS_INTEGER(0, GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE, 0);
-    EXPECT_PLS_INTEGER(0, GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE, 0);
-    EXPECT_PLS_INTEGER(0, GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE, 0);
+    // When a texture object is deleted, any pixel local storage plane to which it was bound is
+    // automatically deinitialized.
+    {
+        GLFramebuffer keepalive;  // Keep the underlying texture alive after deleting uts ID by
+                                  // binding it to a framebuffer.
+        glBindFramebuffer(GL_FRAMEBUFFER, keepalive);
+        glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex3D, 0, 0);
+        ASSERT_GL_NO_ERROR();
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        tex3D.reset();
+        PLSTestTexture newTextureMaybeRecycledID(GL_RGBA8, 1, 1);
+        EXPECT_PLS_INTEGER(0, GL_PIXEL_LOCAL_FORMAT_ANGLE, GL_NONE);
+        EXPECT_PLS_INTEGER(0, GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE, 0);
+        EXPECT_PLS_INTEGER(0, GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE, 0);
+        EXPECT_PLS_INTEGER(0, GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE, 0);
+    }
 
     // INVALID_ENUM is generated if <backingtexture> is nonzero and its internalformat is not
     // one of the acceptable values in Table X.2.
@@ -4190,8 +4219,17 @@ TEST_P(PixelLocalStorageValidationTest, BeginPixelLocalStorageANGLE_pls_planes)
         EXPECT_GL_SINGLE_ERROR_MSG("Mismatched pixel local storage backing texture sizes.");
         ASSERT_GL_INTEGER(GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE, 0);
 
-        // Converting the mismatched size plane to memoryless also works.
+        // Deleting a texture deinitializes the plane.
         pls2.reset();
+        PLSTestTexture newTextureMaybeRecycledID(GL_RGBA8, 1, 1);
+        glBeginPixelLocalStorageANGLE(
+            3, GLenumArray({GL_LOAD_OP_LOAD_ANGLE, GL_LOAD_OP_ZERO_ANGLE, GL_LOAD_OP_CLEAR_ANGLE}));
+        EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
+        EXPECT_GL_SINGLE_ERROR_MSG(
+            "Attempted to enable a pixel local storage plane that is in a deinitialized state.");
+
+        // Converting the mismatched size plane to memoryless also works.
+        glFramebufferMemorylessPixelLocalStorageANGLE(2, GL_RGBA8);
         glBeginPixelLocalStorageANGLE(
             3, GLenumArray({GL_LOAD_OP_LOAD_ANGLE, GL_LOAD_OP_ZERO_ANGLE, GL_LOAD_OP_CLEAR_ANGLE}));
         EXPECT_GL_NO_ERROR();
@@ -4202,6 +4240,19 @@ TEST_P(PixelLocalStorageValidationTest, BeginPixelLocalStorageANGLE_pls_planes)
 
         ASSERT_GL_INTEGER(GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE, 0);
     }
+
+    {
+        // pls1 going out of scope deinitialized the PLS plane.
+        PLSTestTexture newTextureMaybeRecycledID(GL_RGBA8, 1, 1);
+        glBeginPixelLocalStorageANGLE(
+            2, GLenumArray({GL_LOAD_OP_LOAD_ANGLE, GL_LOAD_OP_ZERO_ANGLE, GL_LOAD_OP_CLEAR_ANGLE}));
+        EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
+        EXPECT_GL_SINGLE_ERROR_MSG(
+            "Attempted to enable a pixel local storage plane that is in a deinitialized state.");
+    }
+
+    // Convert to memoryless.
+    glFramebufferMemorylessPixelLocalStorageANGLE(1, GL_RGBA8);
 
     // INVALID_OPERATION is generated if the draw framebuffer has other attachments, and its
     // enabled, texture-backed pixel local storage planes do not have identical dimensions with the

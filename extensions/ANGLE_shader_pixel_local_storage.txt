@@ -808,8 +808,7 @@ Additions to the OpenGL ES Specification, Version 3.0.6
     image.
 
     When a texture object is deleted, any pixel local storage plane to which it
-    was bound is automatically converted to a memoryless plane of matching
-    internalformat.
+    is bound is automatically deinitialized.
 
   Section 4.4.2.Y "Pixel Local Clear State"
 

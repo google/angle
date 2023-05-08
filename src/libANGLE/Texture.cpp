@@ -772,6 +772,8 @@ Texture::Texture(rx::GLImplFactory *factory, TextureID id, TextureType type)
 
 void Texture::onDestroy(const Context *context)
 {
+    onStateChange(angle::SubjectMessage::TextureIDDeleted);
+
     if (mBoundSurface)
     {
         ANGLE_SWALLOW_ERR(mBoundSurface->releaseTexImage(context, EGL_BACK_BUFFER));
