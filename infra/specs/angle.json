@@ -3523,8 +3523,7 @@
       {
         "args": [
           "--use-angle=swiftshader",
-          "--batch-timeout=600",
-          "--flaky-retries=2"
+          "--batch-timeout=600"
         ],
         "merge": {
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"

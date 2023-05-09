@@ -896,13 +896,11 @@
       },
     },
 
-    'swangle_deqp_egl_slow_flaky_tests': {
+    'swangle_deqp_egl_slow_tests': {
       'angle_deqp_egl_tests': {
         'args': [
           '--use-angle=swiftshader',
           '--batch-timeout=600',
-          # Mitigate flaky crashes in TSAN. http://crbug.com/1275223
-          '--flaky-retries=2',
         ],
         'use_isolated_scripts_api': True,
       },
@@ -1261,7 +1259,7 @@
     ],
 
     'swangle_slow_flaky_gtests': [
-      'swangle_deqp_egl_slow_flaky_tests',
+      'swangle_deqp_egl_slow_tests',
       'swangle_deqp_gles2_slow_tests',
       'swangle_deqp_gles3_slow_tests',
       'swangle_deqp_khr_gles2_tests',
