@@ -441,8 +441,8 @@ const Texture *PixelLocalStoragePlane::getBackingTexture(const Context *context)
     return tex;
 }
 
-PixelLocalStorage::PixelLocalStorage(const ShPixelLocalStorageOptions &plsOptions)
-    : mPLSOptions(plsOptions)
+PixelLocalStorage::PixelLocalStorage(const ShPixelLocalStorageOptions &plsOptions, const Caps &caps)
+    : mPLSOptions(plsOptions), mPlanes(caps.maxPixelLocalStoragePlanes)
 {}
 
 PixelLocalStorage::~PixelLocalStorage() {}
@@ -450,7 +450,8 @@ PixelLocalStorage::~PixelLocalStorage() {}
 namespace
 {
 bool AllPlanesDeinitialized(
-    const std::array<PixelLocalStoragePlane, IMPLEMENTATION_MAX_PIXEL_LOCAL_STORAGE_PLANES> &planes,
+    const angle::FixedVector<PixelLocalStoragePlane, IMPLEMENTATION_MAX_PIXEL_LOCAL_STORAGE_PLANES>
+        &planes,
     const Context *context)
 {
     for (const PixelLocalStoragePlane &plane : planes)
@@ -551,9 +552,7 @@ void PixelLocalStorage::interrupt(Context *context)
                mActivePlanesAtInterrupt <= IMPLEMENTATION_MAX_PIXEL_LOCAL_STORAGE_PLANES);
         if (mActivePlanesAtInterrupt >= 1)
         {
-            angle::FixedVector<GLenum, IMPLEMENTATION_MAX_PIXEL_LOCAL_STORAGE_PLANES> storeops(
-                mActivePlanesAtInterrupt, GL_STORE_OP_STORE_ANGLE);
-            context->endPixelLocalStorage(mActivePlanesAtInterrupt, storeops.data());
+            context->endPixelLocalStorageWithStoreOpsStore();
         }
     }
     ++mInterruptCount;
@@ -584,8 +583,8 @@ namespace
 class PixelLocalStorageImageLoadStore : public PixelLocalStorage
 {
   public:
-    PixelLocalStorageImageLoadStore(const ShPixelLocalStorageOptions &plsOptions)
-        : PixelLocalStorage(plsOptions)
+    PixelLocalStorageImageLoadStore(const ShPixelLocalStorageOptions &plsOptions, const Caps &caps)
+        : PixelLocalStorage(plsOptions, caps)
     {
         ASSERT(mPLSOptions.type == ShPixelLocalStorageType::ImageLoadStore);
     }
@@ -808,8 +807,9 @@ class PixelLocalStorageImageLoadStore : public PixelLocalStorage
 class PixelLocalStorageFramebufferFetch : public PixelLocalStorage
 {
   public:
-    PixelLocalStorageFramebufferFetch(const ShPixelLocalStorageOptions &plsOptions)
-        : PixelLocalStorage(plsOptions)
+    PixelLocalStorageFramebufferFetch(const ShPixelLocalStorageOptions &plsOptions,
+                                      const Caps &caps)
+        : PixelLocalStorage(plsOptions, caps)
     {
         ASSERT(mPLSOptions.type == ShPixelLocalStorageType::FramebufferFetch);
     }
@@ -1021,8 +1021,8 @@ class PixelLocalStorageFramebufferFetch : public PixelLocalStorage
 class PixelLocalStorageEXT : public PixelLocalStorage
 {
   public:
-    PixelLocalStorageEXT(const ShPixelLocalStorageOptions &plsOptions)
-        : PixelLocalStorage(plsOptions)
+    PixelLocalStorageEXT(const ShPixelLocalStorageOptions &plsOptions, const Caps &caps)
+        : PixelLocalStorage(plsOptions, caps)
     {
         ASSERT(mPLSOptions.type == ShPixelLocalStorageType::PixelLocalStorageEXT);
     }
@@ -1092,14 +1092,15 @@ std::unique_ptr<PixelLocalStorage> PixelLocalStorage::Make(const Context *contex
 {
     const ShPixelLocalStorageOptions &plsOptions =
         context->getImplementation()->getNativePixelLocalStorageOptions();
+    const Caps &caps = context->getState().getCaps();
     switch (plsOptions.type)
     {
         case ShPixelLocalStorageType::ImageLoadStore:
-            return std::make_unique<PixelLocalStorageImageLoadStore>(plsOptions);
+            return std::make_unique<PixelLocalStorageImageLoadStore>(plsOptions, caps);
         case ShPixelLocalStorageType::FramebufferFetch:
-            return std::make_unique<PixelLocalStorageFramebufferFetch>(plsOptions);
+            return std::make_unique<PixelLocalStorageFramebufferFetch>(plsOptions, caps);
         case ShPixelLocalStorageType::PixelLocalStorageEXT:
-            return std::make_unique<PixelLocalStorageEXT>(plsOptions);
+            return std::make_unique<PixelLocalStorageEXT>(plsOptions, caps);
         default:
             UNREACHABLE();
             return nullptr;

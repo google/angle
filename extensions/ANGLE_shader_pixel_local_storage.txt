@@ -451,6 +451,7 @@ Additions to the OpenGL ES Specification, Version 3.0.6
         DebugMessageCallback*
         DebugMessageControl*
         DebugMessageInsert*
+        Delete*
         DepthFunc
         DepthMask
         DepthRangef
@@ -654,7 +655,24 @@ Additions to the OpenGL ES Specification, Version 3.0.6
 
   Modify Section 4.4.2 "Attaching Images to Framebuffer Objects"
 
-  (Insert two new numbered section after 4.4.2.3 "Attaching Texture Images to a
+  (Add a new paragraph to 4.4.2.3 "Attaching Renderbuffer Images to a
+   Framebuffer".)
+
+    If a renderbuffer object is deleted while its image is attached to the
+    currently bound draw framebuffer, and pixel local storage is active, then it
+    is as if EndPixelLocalStorageANGLE() had been called with
+    <n>=PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE and <storeops> of
+    STORE_OP_STORE_ANGLE.
+
+  (Add a new paragraph to 4.4.2.4 "Attaching Texture Images to a Framebuffer".)
+
+    If a texture object is deleted while its image is attached to the currently
+    bound draw framebuffer, and pixel local storage is active, then it is as if
+    EndPixelLocalStorageANGLE() had been called with
+    <n>=PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE and <storeops> of
+    STORE_OP_STORE_ANGLE.
+
+  (Insert two new numbered section after 4.4.2.4 "Attaching Texture Images to a
    Framebuffer".)
 
   Section 4.4.2.X "Configuring Pixel Local Storage on a Framebuffer"
@@ -809,6 +827,12 @@ Additions to the OpenGL ES Specification, Version 3.0.6
 
     When a texture object is deleted, any pixel local storage plane to which it
     is bound is automatically deinitialized.
+
+    If a texture object is deleted while its image is bound to a pixel local
+    storage plane on the currently bound draw framebuffer, and pixel local
+    storage is active, then it is as if EndPixelLocalStorageANGLE() had been
+    called with <n>=PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE and <storeops> of
+    STORE_OP_STORE_ANGLE.
 
   Section 4.4.2.Y "Pixel Local Clear State"
 
@@ -1269,7 +1293,7 @@ Issues
       spec.
 
     (3) Should we support the ability to enable/disable pixel local storage
-    planes on an individual basis? (e.g., "GL_LOAD_OP_DISABLE_ANGLE.)
+    planes on an individual basis? (e.g., "LOAD_OP_DISABLE_ANGLE".)
 
       RESOLVED: No. Some implementations need to reserve color attachments for
       internal use. Allowing any combination of planes to be enabled or disabled

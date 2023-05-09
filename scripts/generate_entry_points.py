@@ -105,6 +105,7 @@ PLS_ALLOW_WILDCARDS = [
     "DebugMessageCallback*",
     "DebugMessageControl*",
     "DebugMessageInsert*",
+    "Delete*",
     "Disablei*",
     "DrawArrays*",
     "DrawElements*",

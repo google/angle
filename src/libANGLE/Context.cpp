@@ -1096,6 +1096,28 @@ void Context::deleteProgram(ShaderProgramID program)
 
 void Context::deleteTexture(TextureID textureID)
 {
+    // If a texture object is deleted while its image is bound to a pixel local storage plane on the
+    // currently bound draw framebuffer, and pixel local storage is active, then it is as if
+    // EndPixelLocalStorageANGLE() had been called with <n>=PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE
+    // and <storeops> of STORE_OP_STORE_ANGLE.
+    if (mState.getPixelLocalStorageActivePlanes() != 0)
+    {
+        PixelLocalStorage *pls = mState.getDrawFramebuffer()->peekPixelLocalStorage();
+        // Even though there is a nonzero number of active PLS planes, peekPixelLocalStorage() may
+        // still return null if we are in the middle of deleting the active framebuffer.
+        if (pls != nullptr)
+        {
+            for (GLuint i = 0; i < mState.mCaps.maxPixelLocalStoragePlanes; ++i)
+            {
+                if (pls->getPlane(i).getTextureID() == textureID)
+                {
+                    endPixelLocalStorageWithStoreOpsStore();
+                    break;
+                }
+            }
+        }
+    }
+
     Texture *texture = mState.mTextureManager->getTexture(textureID);
     if (texture != nullptr)
     {
@@ -9407,6 +9429,15 @@ void Context::endPixelLocalStorage(GLsizei n, const GLenum storeops[])
 
     pls.end(this, storeops);
     mState.setPixelLocalStorageActivePlanes(0);
+}
+
+void Context::endPixelLocalStorageWithStoreOpsStore()
+{
+    GLsizei n = mState.getPixelLocalStorageActivePlanes();
+    ASSERT(n >= 1);
+    angle::FixedVector<GLenum, IMPLEMENTATION_MAX_PIXEL_LOCAL_STORAGE_PLANES> storeops(
+        n, GL_STORE_OP_STORE_ANGLE);
+    endPixelLocalStorage(n, storeops.data());
 }
 
 void Context::pixelLocalStorageBarrier()

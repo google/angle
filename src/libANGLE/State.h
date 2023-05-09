@@ -330,7 +330,7 @@ class State : angle::NonCopyable
     }
 
     TextureID getSamplerTextureId(unsigned int sampler, TextureType type) const;
-    void detachTexture(const Context *context, const TextureMap &zeroTextures, TextureID texture);
+    void detachTexture(Context *context, const TextureMap &zeroTextures, TextureID texture);
     void initializeZeroTextures(const Context *context, const TextureMap &zeroTextures);
 
     void invalidateTextureBindings(TextureType type);
@@ -353,7 +353,7 @@ class State : angle::NonCopyable
     void setRenderbufferBinding(const Context *context, Renderbuffer *renderbuffer);
     RenderbufferID getRenderbufferId() const { return mRenderbuffer.id(); }
     Renderbuffer *getCurrentRenderbuffer() const { return mRenderbuffer.get(); }
-    void detachRenderbuffer(const Context *context, RenderbufferID renderbuffer);
+    void detachRenderbuffer(Context *context, RenderbufferID renderbuffer);
 
     // Framebuffer binding manipulation
     void setReadFramebufferBinding(Framebuffer *framebuffer);

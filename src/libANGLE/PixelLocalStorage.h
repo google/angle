@@ -19,6 +19,7 @@
 namespace gl
 {
 
+struct Caps;
 class Context;
 class Texture;
 
@@ -43,22 +44,13 @@ class PixelLocalStoragePlane : angle::NonCopyable, public angle::ObserverInterfa
     void setTextureBacked(Context *, Texture *, int level, int layer);
     void onSubjectStateChange(angle::SubjectIndex, angle::SubjectMessage) override;
 
-    bool isMemoryless() const
-    {
-        // isMemoryless() should be false if the plane is deinitialized.
-        ASSERT(!mMemoryless || mInternalformat != GL_NONE);
-        return mMemoryless;
-    }
-
     // Returns true if the plane is deinitialized, either explicitly or implicitly via deleting the
     // texture that was attached to it.
     bool isDeinitialized() const;
 
-    // Ensures we have an internal backing texture for memoryless planes. In some implementations we
-    // need a backing texture even if the plane is memoryless.
-    void ensureBackingTextureIfMemoryless(Context *, Extents plsSize);
-
     GLenum getInternalformat() const { return mInternalformat; }
+    bool isMemoryless() const { return mMemoryless; }
+    TextureID getTextureID() const { return mTextureID; }
 
     // Implements glGetIntegeri_v() for GL_PIXEL_LOCAL_FORMAT_ANGLE,
     // GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE, GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE, and
@@ -69,6 +61,10 @@ class PixelLocalStoragePlane : angle::NonCopyable, public angle::ObserverInterfa
     // Extents and returns true. Otherwise returns false, meaning the plane is either deinitialized
     // or memoryless.
     bool getTextureImageExtents(const Context *, Extents *extents) const;
+
+    // Ensures we have an internal backing texture for memoryless planes. In some implementations we
+    // need a backing texture even if the plane is memoryless.
+    void ensureBackingTextureIfMemoryless(Context *, Extents plsSize);
 
     // Attaches this plane to the specified color attachment point on the current draw framebuffer.
     void attachToDrawFramebuffer(Context *, GLenum colorAttachment) const;
@@ -172,7 +168,7 @@ class PixelLocalStorage
     void restore(Context *);
 
   protected:
-    PixelLocalStorage(const ShPixelLocalStorageOptions &);
+    PixelLocalStorage(const ShPixelLocalStorageOptions &, const Caps &);
 
     // Called when the context is lost or destroyed. Causes the subclass to clear its GL object
     // handles.
@@ -190,7 +186,8 @@ class PixelLocalStorage
     const ShPixelLocalStorageOptions mPLSOptions;
 
   private:
-    std::array<PixelLocalStoragePlane, IMPLEMENTATION_MAX_PIXEL_LOCAL_STORAGE_PLANES> mPlanes;
+    angle::FixedVector<PixelLocalStoragePlane, IMPLEMENTATION_MAX_PIXEL_LOCAL_STORAGE_PLANES>
+        mPlanes;
     size_t mInterruptCount           = 0;
     GLsizei mActivePlanesAtInterrupt = 0;
 };

@@ -1745,7 +1745,7 @@ TextureID State::getSamplerTextureId(unsigned int sampler, TextureType type) con
     return mSamplerTextures[type][sampler].id();
 }
 
-void State::detachTexture(const Context *context, const TextureMap &zeroTextures, TextureID texture)
+void State::detachTexture(Context *context, const TextureMap &zeroTextures, TextureID texture)
 {
     // Textures have a detach method on State rather than a simple
     // removeBinding, because the zero/null texture objects are managed
@@ -1857,7 +1857,7 @@ void State::setRenderbufferBinding(const Context *context, Renderbuffer *renderb
     mDirtyBits.set(DIRTY_BIT_RENDERBUFFER_BINDING);
 }
 
-void State::detachRenderbuffer(const Context *context, RenderbufferID renderbuffer)
+void State::detachRenderbuffer(Context *context, RenderbufferID renderbuffer)
 {
     // [OpenGL ES 2.0.24] section 4.4 page 109:
     // If a renderbuffer that is currently bound to RENDERBUFFER is deleted, it is as though

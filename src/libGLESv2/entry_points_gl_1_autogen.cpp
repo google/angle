@@ -1101,8 +1101,7 @@ void GL_APIENTRY GL_DeleteLists(GLuint list, GLsizei range)
         SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
-             (ValidatePixelLocalStorageInactive(context, angle::EntryPoint::GLDeleteLists) &&
-              ValidateDeleteLists(context, angle::EntryPoint::GLDeleteLists, list, range)));
+             ValidateDeleteLists(context, angle::EntryPoint::GLDeleteLists, list, range));
         if (isCallValid)
         {
             context->deleteLists(list, range);
