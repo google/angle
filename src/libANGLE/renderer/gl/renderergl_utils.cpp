@@ -155,6 +155,12 @@ bool IsMaliG31OrOlder(const FunctionsGL *functions)
     return number != 0 && number <= 31;
 }
 
+bool IsMaliG72OrG76(const FunctionsGL *functions)
+{
+    int number = getMaliGNumber(functions);
+    return number == 72 || number == 76;
+}
+
 int GetAndroidSdkLevel()
 {
     if (!IsAndroid())
@@ -2001,9 +2007,12 @@ void GenerateCaps(const FunctionsGL *functions,
                                     functions->isAtLeastGLES(gl::Version(3, 0)) ||
                                     functions->hasGLESExtension("GL_EXT_shadow_samplers");
 
-    extensions->clipControlEXT = functions->isAtLeastGL(gl::Version(4, 5)) ||
-                                 functions->hasGLExtension("GL_ARB_clip_control") ||
-                                 functions->hasGLESExtension("GL_EXT_clip_control");
+    if (!features.disableClipControl.enabled)
+    {
+        extensions->clipControlEXT = functions->isAtLeastGL(gl::Version(4, 5)) ||
+                                     functions->hasGLExtension("GL_ARB_clip_control") ||
+                                     functions->hasGLESExtension("GL_EXT_clip_control");
+    }
 
     // GL_APPLE_clip_distance cannot be implemented on top of GL_EXT_clip_cull_distance,
     // so require either native support or desktop GL.
@@ -2547,6 +2556,9 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
 
     // https://crbug.com/1356053
     ANGLE_FEATURE_CONDITION(features, bindFramebufferForTimerQueries, IsMali(functions));
+
+    // https://crbug.com/1434317
+    ANGLE_FEATURE_CONDITION(features, disableClipControl, IsMaliG72OrG76(functions));
 }
 
 void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFeatures *features)

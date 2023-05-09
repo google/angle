@@ -707,6 +707,14 @@
                 "Backend GL context supports EXT_shader_pixel_local_storage extension"
             ],
             "issue": "http://anglebug.com/7279"
+        },
+        {
+            "name": "disable_clip_control",
+            "category": "Features",
+            "description": [
+                "Some ARM Mali devices genenerate errors when querying the clip control state."
+            ],
+            "issue": "http://crbug.com/1434317"
         }
     ]
 }

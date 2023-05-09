@@ -509,6 +509,11 @@ struct FeaturesGL : FeatureSetBase
         "supportsShaderPixelLocalStorageEXT", FeatureCategory::OpenGLFeatures,
         "Backend GL context supports EXT_shader_pixel_local_storage extension", &members,
         "http://anglebug.com/7279"};
+
+    FeatureInfo disableClipControl = {
+        "disableClipControl", FeatureCategory::OpenGLFeatures,
+        "Some ARM Mali devices genenerate errors when querying the clip control state.", &members,
+        "http://crbug.com/1434317"};
 };
 
 inline FeaturesGL::FeaturesGL()  = default;
