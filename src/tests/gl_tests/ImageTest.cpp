@@ -705,14 +705,13 @@ void main()
     constexpr static uint32_t kDefaultAHBUsage = kAHBUsageGPUSampledImage | kAHBUsageGPUFramebuffer;
     constexpr static uint32_t kDefaultAHBYUVUsage = kAHBUsageGPUSampledImage;
 
-    AHardwareBuffer *createAndroidHardwareBuffer(size_t width,
-                                                 size_t height,
-                                                 size_t depth,
-                                                 int androidFormat,
-                                                 uint32_t usage,
-                                                 const std::vector<AHBPlaneData> &data)
-    {
 #if defined(ANGLE_AHARDWARE_BUFFER_SUPPORT)
+    AHardwareBuffer_Desc createAndroidHardwareBufferDesc(size_t width,
+                                                         size_t height,
+                                                         size_t depth,
+                                                         int androidFormat,
+                                                         uint32_t usage)
+    {
         // The height and width are number of pixels of size format
         AHardwareBuffer_Desc aHardwareBufferDescription = {};
         aHardwareBufferDescription.width                = width;
@@ -743,6 +742,35 @@ void main()
         aHardwareBufferDescription.stride = 0;
         aHardwareBufferDescription.rfu0   = 0;
         aHardwareBufferDescription.rfu1   = 0;
+        return aHardwareBufferDescription;
+    }
+#endif
+
+    bool isAndroidHardwareBufferConfigurationSupported(size_t width,
+                                                       size_t height,
+                                                       size_t depth,
+                                                       int androidFormat,
+                                                       uint32_t usage)
+    {
+#if defined(ANGLE_AHARDWARE_BUFFER_SUPPORT)
+        const AHardwareBuffer_Desc aHardwareBufferDescription =
+            createAndroidHardwareBufferDesc(width, height, depth, androidFormat, usage);
+        return AHardwareBuffer_isSupported(&aHardwareBufferDescription);
+#else
+        return false;
+#endif
+    }
+
+    AHardwareBuffer *createAndroidHardwareBuffer(size_t width,
+                                                 size_t height,
+                                                 size_t depth,
+                                                 int androidFormat,
+                                                 uint32_t usage,
+                                                 const std::vector<AHBPlaneData> &data)
+    {
+#if defined(ANGLE_AHARDWARE_BUFFER_SUPPORT)
+        const AHardwareBuffer_Desc aHardwareBufferDescription =
+            createAndroidHardwareBufferDesc(width, height, depth, androidFormat, usage);
 
         // Allocate memory from Android Hardware Buffer
         AHardwareBuffer *aHardwareBuffer = nullptr;
@@ -2456,6 +2484,11 @@ TEST_P(ImageTest, SourceAHBTarget2DExternalCycleThroughRgbAndYuvSources)
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
 
+    ANGLE_SKIP_TEST_IF(!isAndroidHardwareBufferConfigurationSupported(
+        1, 1, 1, AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM, kDefaultAHBUsage));
+    ANGLE_SKIP_TEST_IF(!isAndroidHardwareBufferConfigurationSupported(
+        2, 2, 1, AHARDWAREBUFFER_FORMAT_Y8Cb8Cr8_420, kDefaultAHBUsage));
+
     // Create RGB Image
     GLubyte rgbColor[4] = {0, 0, 255, 255};
 
@@ -3161,6 +3194,9 @@ TEST_P(ImageTestES3, SourceYUVAHBTargetExternalYUVSampleLinearFiltering)
 
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+
+    ANGLE_SKIP_TEST_IF(!isAndroidHardwareBufferConfigurationSupported(
+        2, 4, 1, AHARDWAREBUFFER_FORMAT_YV12, kDefaultAHBYUVUsage));
 
     // [  Red,   Red]
     // [  Red,   Red]
@@ -4032,6 +4068,9 @@ TEST_P(ImageTestES3, RGBXAHBImportMultipleLayers)
 
     constexpr size_t kLayerCount = 3;
 
+    ANGLE_SKIP_TEST_IF(!isAndroidHardwareBufferConfigurationSupported(
+        1, 1, kLayerCount, AHARDWAREBUFFER_FORMAT_R8G8B8X8_UNORM, kDefaultAHBUsage));
+
     const GLubyte kInitColor[] = {132, 55, 219, 12, 77, 23, 190, 101, 231, 44, 143, 99};
 
     // Create the Image
@@ -4475,10 +4514,14 @@ TEST_P(ImageTestES3, SourceAHBArrayTarget2DArray)
                        !hasEglImageArrayExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
 
+    constexpr size_t kDepth = 2;
+
+    ANGLE_SKIP_TEST_IF(!isAndroidHardwareBufferConfigurationSupported(
+        1, 1, kDepth, AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM, kDefaultAHBUsage));
+
     // Create the Image
     AHardwareBuffer *source;
     EGLImageKHR image;
-    constexpr size_t kDepth = 2;
     createEGLImageAndroidHardwareBufferSource(1, 1, kDepth, AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM,
                                               kDefaultAHBUsage, kDefaultAttribs, {}, &source,
                                               &image);
@@ -4511,6 +4554,10 @@ TEST_P(ImageTestES3, SourceAHBCubeTargetCube)
     ANGLE_SKIP_TEST_IF(!IsAndroid());
     ANGLE_SKIP_TEST_IF(!hasEglImageStorageExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+
+    ANGLE_SKIP_TEST_IF(!isAndroidHardwareBufferConfigurationSupported(
+        1, 1, kCubeFaceCount, AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM,
+        kDefaultAHBUsage | kAHBUsageGPUCubeMap));
 
     // Create the Image
     AHardwareBuffer *source;
@@ -4598,6 +4645,10 @@ TEST_P(ImageTestES3, SourceAHBMipTarget2DMip)
     ANGLE_SKIP_TEST_IF(!hasEglImageStorageExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
 
+    ANGLE_SKIP_TEST_IF(!isAndroidHardwareBufferConfigurationSupported(
+        2, 2, 1, AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM,
+        kDefaultAHBUsage | kAHBUsageGPUMipMapComplete));
+
     // Create the Image
     AHardwareBuffer *source;
     EGLImageKHR image;
@@ -4642,6 +4693,10 @@ TEST_P(ImageTestES3, SourceAHBMipTarget2DMipGenerateMipmap)
     ANGLE_SKIP_TEST_IF(!IsAndroid());
     ANGLE_SKIP_TEST_IF(!hasEglImageStorageExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+
+    ANGLE_SKIP_TEST_IF(!isAndroidHardwareBufferConfigurationSupported(
+        2, 2, 1, AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM,
+        kDefaultAHBUsage | kAHBUsageGPUMipMapComplete));
 
     // Create the Image
     AHardwareBuffer *source;
