@@ -579,7 +579,7 @@ DebugMessageReport ShouldReportDebugMessage(RendererVk *renderer,
                                             const char *messageId,
                                             const char *message)
 {
-    if (message == nullptr)
+    if (message == nullptr || messageId == nullptr)
     {
         return DebugMessageReport::Print;
     }
