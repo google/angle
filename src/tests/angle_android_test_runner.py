@@ -59,8 +59,7 @@ def RunAndroidTestSuite(args, extra_args):
         tests = angle_test_util.FilterTests(tests, args.filter)
 
     if args.list_tests:
-        for test in tests:
-            print(test)
+        print('\n'.join(['Tests list:'] + tests + ['End tests list.']))
         return 0
 
     if args.suite == 'angle_trace_tests':
@@ -71,14 +70,15 @@ def RunAndroidTestSuite(args, extra_args):
     return android_helper.RunTests(args.suite, flags + extra_args)[0]
 
 
-def main(raw_args):
+def main():
     parser = argparse.ArgumentParser()
+    parser.add_argument('test_type', choices=['gtest'])
     parser.add_argument('--output-directory', required=True)
     parser.add_argument('--wrapper-script-args')
     parser.add_argument('--runtime-deps-path')
     AddCommonParserArgs(parser)
 
-    args, extra_args = parser.parse_known_args(raw_args)
+    args, extra_args = parser.parse_known_args()
 
     os.chdir(args.output_directory)
 
@@ -86,4 +86,4 @@ def main(raw_args):
 
 
 if __name__ == "__main__":
-    sys.exit(main(sys.argv[2:]))
+    sys.exit(main())
