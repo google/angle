@@ -639,6 +639,11 @@ class RendererVk : angle::NonCopyable
     {
         return mSuballocationGarbageSizeInBytesCachedAtomic.load(std::memory_order_consume);
     }
+    size_t getPendingSubmissionGarbageSize() const
+    {
+        std::unique_lock<std::mutex> lock(mGarbageMutex);
+        return mPendingSubmissionGarbage.size();
+    }
 
     ANGLE_INLINE VkFilter getPreferredFilterForYUV(VkFilter defaultFilter)
     {
@@ -866,7 +871,7 @@ class RendererVk : angle::NonCopyable
     // is the garbage that is still referenced in the recorded commands. suballocations have its
     // own dedicated garbage list for performance optimization since they tend to be the most
     // common garbage objects. All these four groups of garbage share the same mutex lock.
-    std::mutex mGarbageMutex;
+    mutable std::mutex mGarbageMutex;
     vk::SharedGarbageList mSharedGarbage;
     vk::SharedGarbageList mPendingSubmissionGarbage;
     vk::SharedBufferSuballocationGarbageList mSuballocationGarbage;
