@@ -872,8 +872,8 @@ class CacheDataHeader
   public:
     void setData(uint32_t cacheDataSize,
                  uint16_t compressedDataCRC,
-                 uint8_t numChunks,
-                 uint8_t chunkIndex)
+                 uint16_t numChunks,
+                 uint16_t chunkIndex)
     {
         mChunkIndex        = chunkIndex;
         mNumChunks         = numChunks;
@@ -894,14 +894,15 @@ class CacheDataHeader
 
   private:
     // For pipeline cache, the values stored in key data has the following order:
-    // {chunkIndex, numChunks, compressedDataCRC, originalCacheSize; chunkCompressedData}. The
+    // {originalCacheSize, compressedDataCRC, numChunks, chunkIndex; chunkCompressedData}. The
     // header values are used to validate the data. For example, if the original and compressed
     // sizes are 70000 bytes (68k) and 68841 bytes (67k), the compressed data will be divided into
-    // two chunks: {0,2,crc0,70000;34421 bytes} and {1,2,crc1,70000;34420 bytes}.
-    uint8_t mChunkIndex;
-    uint8_t mNumChunks;
-    uint16_t mCompressedDataCRC;
+    // two chunks: {70000,crc0,2,0;34421 bytes} and {70000,crc1,2,1;34420 bytes}.
     uint32_t mCacheDataSize;
+    uint16_t mCompressedDataCRC;
+    uint16_t mNumChunks;
+    uint16_t mChunkIndex;
+    ANGLE_MAYBE_UNUSED_PRIVATE_FIELD uint16_t mPadding;
 };
 
 ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
@@ -909,8 +910,8 @@ ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
 // Pack header data for the pipeline cache key data.
 void PackHeaderDataForPipelineCache(uint32_t cacheDataSize,
                                     uint16_t compressedDataCRC,
-                                    uint8_t numChunks,
-                                    uint8_t chunkIndex,
+                                    uint16_t numChunks,
+                                    uint16_t chunkIndex,
                                     CacheDataHeader *dataOut)
 {
     dataOut->setData(cacheDataSize, compressedDataCRC, numChunks, chunkIndex);
@@ -986,8 +987,9 @@ void CompressAndStorePipelineCacheVk(VkPhysicalDeviceProperties physicalDevicePr
 
     const size_t numChunks = UnsignedCeilDivide(static_cast<unsigned int>(compressedData.size()),
                                                 kMaxBlobCacheSize - sizeof(CacheDataHeader));
-    size_t chunkSize       = UnsignedCeilDivide(static_cast<unsigned int>(compressedData.size()),
-                                                static_cast<unsigned int>(numChunks));
+    ASSERT(numChunks <= UINT16_MAX);
+    size_t chunkSize = UnsignedCeilDivide(static_cast<unsigned int>(compressedData.size()),
+                                          static_cast<unsigned int>(numChunks));
     uint16_t compressedDataCRC = 0;
     if (kEnableCRCForPipelineCache)
     {
@@ -1010,11 +1012,11 @@ void CompressAndStorePipelineCacheVk(VkPhysicalDeviceProperties physicalDevicePr
         }
 
         // Add the header data, followed by the compressed data.
-        ASSERT(numChunks <= UINT8_MAX && chunkIndex <= UINT8_MAX && cacheData.size() <= UINT32_MAX);
+        ASSERT(cacheData.size() <= UINT32_MAX);
         CacheDataHeader headerData = {};
         PackHeaderDataForPipelineCache(static_cast<uint32_t>(cacheData.size()), compressedDataCRC,
-                                       static_cast<uint8_t>(numChunks),
-                                       static_cast<uint8_t>(chunkIndex), &headerData);
+                                       static_cast<uint16_t>(numChunks),
+                                       static_cast<uint16_t>(chunkIndex), &headerData);
         memcpy(keyData.data(), &headerData, sizeof(CacheDataHeader));
         memcpy(keyData.data() + sizeof(CacheDataHeader), compressedData.data() + compressedOffset,
                chunkSize);
