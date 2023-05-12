@@ -84,13 +84,6 @@ constexpr uint32_t kPipelineCacheVkUpdatePeriod = 60;
 // initialization logic simpler.
 constexpr uint32_t kPreferredVulkanAPIVersion = VK_API_VERSION_1_1;
 
-// For pipeline cache, the values stored in key data has the following format: {originalCacheSize,
-// compressedDataCRC, numChunks, chunkIndex; chunkCompressedData}. The header values are used to
-// validate the data. For example, if the original and compressed sizes are 70000 bytes (68k) and
-// 68841 bytes (67k), the compressed data will be divided into two chunks: {70000,crc0,2,0;34421
-// bytes} and {70000,crc1,2,1;34420 bytes}.
-constexpr size_t kBlobHeaderSize = 8 * sizeof(uint8_t);
-
 bool IsVulkan11(uint32_t apiVersion)
 {
     return apiVersion >= VK_API_VERSION_1_1;
@@ -871,35 +864,66 @@ uint16_t ComputeCRC16(const uint8_t *data, const size_t size)
     return rem;
 }
 
+// Header data type used for the pipeline cache.
+ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
+
+class CacheDataHeader
+{
+  public:
+    void setData(uint32_t cacheDataSize,
+                 uint16_t compressedDataCRC,
+                 uint8_t numChunks,
+                 uint8_t chunkIndex)
+    {
+        mChunkIndex        = chunkIndex;
+        mNumChunks         = numChunks;
+        mCompressedDataCRC = compressedDataCRC;
+        mCacheDataSize     = cacheDataSize;
+    }
+
+    void getData(uint32_t *cacheDataSizeOut,
+                 uint16_t *compressedDataCRCOut,
+                 size_t *numChunksOut,
+                 size_t *chunkIndexOut) const
+    {
+        *chunkIndexOut        = static_cast<size_t>(mChunkIndex);
+        *numChunksOut         = static_cast<size_t>(mNumChunks);
+        *compressedDataCRCOut = mCompressedDataCRC;
+        *cacheDataSizeOut     = mCacheDataSize;
+    }
+
+  private:
+    // For pipeline cache, the values stored in key data has the following order:
+    // {chunkIndex, numChunks, compressedDataCRC, originalCacheSize; chunkCompressedData}. The
+    // header values are used to validate the data. For example, if the original and compressed
+    // sizes are 70000 bytes (68k) and 68841 bytes (67k), the compressed data will be divided into
+    // two chunks: {0,2,crc0,70000;34421 bytes} and {1,2,crc1,70000;34420 bytes}.
+    uint8_t mChunkIndex;
+    uint8_t mNumChunks;
+    uint16_t mCompressedDataCRC;
+    uint32_t mCacheDataSize;
+};
+
+ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
+
 // Pack header data for the pipeline cache key data.
 void PackHeaderDataForPipelineCache(uint32_t cacheDataSize,
                                     uint16_t compressedDataCRC,
                                     uint8_t numChunks,
                                     uint8_t chunkIndex,
-                                    uint64_t *dataOut)
+                                    CacheDataHeader *dataOut)
 {
-    uint64_t concatenatedData = cacheDataSize;
-    concatenatedData          = (concatenatedData << 16) | compressedDataCRC;
-    concatenatedData          = (concatenatedData << 8) | numChunks;
-    concatenatedData          = (concatenatedData << 8) | chunkIndex;
-
-    *dataOut = concatenatedData;
+    dataOut->setData(cacheDataSize, compressedDataCRC, numChunks, chunkIndex);
 }
 
 // Unpack header data from the pipeline cache key data.
-void UnpackHeaderDataForPipelineCache(uint64_t data,
+void UnpackHeaderDataForPipelineCache(CacheDataHeader *data,
                                       uint32_t *cacheDataSizeOut,
                                       uint16_t *compressedDataCRCOut,
                                       size_t *numChunksOut,
                                       size_t *chunkIndexOut)
 {
-    *chunkIndexOut = data & 0xFF;
-    data >>= 8;
-    *numChunksOut = data & 0xFF;
-    data >>= 8;
-    *compressedDataCRCOut = data & 0xFFFF;
-    data >>= 16;
-    *cacheDataSizeOut = static_cast<uint32_t>(data);
+    data->getData(cacheDataSizeOut, compressedDataCRCOut, numChunksOut, chunkIndexOut);
 }
 
 void ComputePipelineCacheVkChunkKey(VkPhysicalDeviceProperties physicalDeviceProperties,
@@ -961,7 +985,7 @@ void CompressAndStorePipelineCacheVk(VkPhysicalDeviceProperties physicalDevicePr
     size_t compressedOffset            = 0;
 
     const size_t numChunks = UnsignedCeilDivide(static_cast<unsigned int>(compressedData.size()),
-                                                kMaxBlobCacheSize - kBlobHeaderSize);
+                                                kMaxBlobCacheSize - sizeof(CacheDataHeader));
     size_t chunkSize       = UnsignedCeilDivide(static_cast<unsigned int>(compressedData.size()),
                                                 static_cast<unsigned int>(numChunks));
     uint16_t compressedDataCRC = 0;
@@ -978,7 +1002,7 @@ void CompressAndStorePipelineCacheVk(VkPhysicalDeviceProperties physicalDevicePr
         }
 
         angle::MemoryBuffer keyData;
-        if (!keyData.resize(kBlobHeaderSize + chunkSize))
+        if (!keyData.resize(sizeof(CacheDataHeader) + chunkSize))
         {
             ANGLE_PERF_WARNING(contextVk->getDebug(), GL_DEBUG_SEVERITY_LOW,
                                "Skip syncing pipeline cache data due to out of memory.");
@@ -987,13 +1011,12 @@ void CompressAndStorePipelineCacheVk(VkPhysicalDeviceProperties physicalDevicePr
 
         // Add the header data, followed by the compressed data.
         ASSERT(numChunks <= UINT8_MAX && chunkIndex <= UINT8_MAX && cacheData.size() <= UINT32_MAX);
-        uint64_t headerData;
+        CacheDataHeader headerData = {};
         PackHeaderDataForPipelineCache(static_cast<uint32_t>(cacheData.size()), compressedDataCRC,
                                        static_cast<uint8_t>(numChunks),
                                        static_cast<uint8_t>(chunkIndex), &headerData);
-        *reinterpret_cast<uint64_t *>(keyData.data()) = headerData;
-
-        memcpy(keyData.data() + kBlobHeaderSize, compressedData.data() + compressedOffset,
+        memcpy(keyData.data(), &headerData, sizeof(CacheDataHeader));
+        memcpy(keyData.data() + sizeof(CacheDataHeader), compressedData.data() + compressedOffset,
                chunkSize);
         compressedOffset += chunkSize;
 
@@ -1060,7 +1083,7 @@ angle::Result GetAndDecompressPipelineCacheVk(VkPhysicalDeviceProperties physica
 
     if (!displayVk->getBlobCache()->get(displayVk->getScratchBuffer(), chunkCacheHash, &keyData,
                                         &keySize) ||
-        keyData.size() < kBlobHeaderSize)
+        keyData.size() < sizeof(CacheDataHeader))
     {
         // Nothing in the cache.
         return angle::Result::Continue;
@@ -1072,12 +1095,20 @@ angle::Result GetAndDecompressPipelineCacheVk(VkPhysicalDeviceProperties physica
     size_t numChunks;
     size_t chunkIndex0;
 
-    uint64_t headerData = *reinterpret_cast<const uint64_t *>(keyData.data());
-    UnpackHeaderDataForPipelineCache(headerData, &uncompressedCacheDataSize, &compressedDataCRC,
+    CacheDataHeader headerData = {};
+    memcpy(&headerData, keyData.data(), sizeof(CacheDataHeader));
+    UnpackHeaderDataForPipelineCache(&headerData, &uncompressedCacheDataSize, &compressedDataCRC,
                                      &numChunks, &chunkIndex0);
-    ASSERT(chunkIndex0 == 0);
+    if (chunkIndex0 != 0 || numChunks == 0 || uncompressedCacheDataSize == 0)
+    {
+        // Either the header structure has been updated, or the header value has been changed.
+        WARN() << "Unexpected values while unpacking chunk index 0: "
+               << "chunkIndex = " << chunkIndex0 << ", numChunks = " << numChunks
+               << ", uncompressedCacheDataSize = " << uncompressedCacheDataSize;
+        return angle::Result::Continue;
+    }
 
-    size_t chunkSize      = keySize - kBlobHeaderSize;
+    size_t chunkSize      = keySize - sizeof(CacheDataHeader);
     size_t compressedSize = 0;
 
     // Allocate enough memory.
@@ -1093,7 +1124,7 @@ angle::Result GetAndDecompressPipelineCacheVk(VkPhysicalDeviceProperties physica
 
         if (!displayVk->getBlobCache()->get(displayVk->getScratchBuffer(), chunkCacheHash, &keyData,
                                             &keySize) ||
-            keyData.size() < kBlobHeaderSize)
+            keyData.size() < sizeof(CacheDataHeader))
         {
             // Can't find every part of the cache data.
             WARN() << "Failed to get pipeline cache chunk " << chunkIndex << " of " << numChunks;
@@ -1106,12 +1137,12 @@ angle::Result GetAndDecompressPipelineCacheVk(VkPhysicalDeviceProperties physica
         size_t checkNumChunks;
         size_t checkChunkIndex;
 
-        headerData = *reinterpret_cast<const uint64_t *>(keyData.data());
-        UnpackHeaderDataForPipelineCache(headerData, &checkUncompressedCacheDataSize,
+        memcpy(&headerData, keyData.data(), sizeof(CacheDataHeader));
+        UnpackHeaderDataForPipelineCache(&headerData, &checkUncompressedCacheDataSize,
                                          &checkCompressedDataCRC, &checkNumChunks,
                                          &checkChunkIndex);
 
-        chunkSize = keySize - kBlobHeaderSize;
+        chunkSize = keySize - sizeof(CacheDataHeader);
         bool isHeaderDataCorrupted =
             (checkNumChunks != numChunks) ||
             (checkUncompressedCacheDataSize != uncompressedCacheDataSize) ||
@@ -1131,7 +1162,8 @@ angle::Result GetAndDecompressPipelineCacheVk(VkPhysicalDeviceProperties physica
             return angle::Result::Continue;
         }
 
-        memcpy(compressedData.data() + compressedSize, keyData.data() + kBlobHeaderSize, chunkSize);
+        memcpy(compressedData.data() + compressedSize, keyData.data() + sizeof(CacheDataHeader),
+               chunkSize);
         compressedSize += chunkSize;
     }
 
