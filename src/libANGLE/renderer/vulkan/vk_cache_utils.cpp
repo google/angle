@@ -1595,12 +1595,6 @@ constexpr size_t kTransitionBitShift = kTransitionByteShift + Log2(kBitsPerByte)
 #define ANGLE_GET_INDEXED_TRANSITION_BIT(Member, Index, BitWidth) \
     (((BitWidth * Index) >> kTransitionBitShift) + ANGLE_GET_TRANSITION_BIT(Member))
 
-constexpr angle::PackedEnumMap<gl::ComponentType, VkFormat> kMismatchedComponentTypeMap = {{
-    {gl::ComponentType::Float, VK_FORMAT_R32G32B32A32_SFLOAT},
-    {gl::ComponentType::Int, VK_FORMAT_R32G32B32A32_SINT},
-    {gl::ComponentType::UnsignedInt, VK_FORMAT_R32G32B32A32_UINT},
-}};
-
 constexpr char kDescriptorTypeNameMap[][30] = {"sampler",
                                                "combined image sampler",
                                                "sampled image",
@@ -3244,6 +3238,66 @@ VkResult GraphicsPipelineDesc::initializePipeline(Context *context,
     return result;
 }
 
+angle::FormatID patchVertexAttribComponentType(angle::FormatID format,
+                                               gl::ComponentType vsInputType)
+{
+    const gl::VertexFormat &vertexFormat = gl::GetVertexFormatFromID(format);
+    // For normalized format, keep the same ?
+    EGLBoolean normalized = vertexFormat.normalized;
+    if (normalized)
+    {
+        return format;
+    }
+    gl::VertexAttribType attribType = gl::FromGLenum<gl::VertexAttribType>(vertexFormat.type);
+    if (vsInputType != gl::ComponentType::Float)
+    {
+        ASSERT(vsInputType == gl::ComponentType::Int ||
+               vsInputType == gl::ComponentType::UnsignedInt);
+        switch (attribType)
+        {
+            case gl::VertexAttribType::Float:
+            case gl::VertexAttribType::Fixed:
+            case gl::VertexAttribType::UnsignedInt:
+            case gl::VertexAttribType::Int:
+                attribType = vsInputType == gl::ComponentType::Int
+                                 ? gl::VertexAttribType::Int
+                                 : gl::VertexAttribType::UnsignedInt;
+                break;
+            case gl::VertexAttribType::HalfFloat:
+            case gl::VertexAttribType::HalfFloatOES:
+            case gl::VertexAttribType::Short:
+            case gl::VertexAttribType::UnsignedShort:
+                attribType = vsInputType == gl::ComponentType::Int
+                                 ? gl::VertexAttribType::Short
+                                 : gl::VertexAttribType::UnsignedShort;
+                break;
+            case gl::VertexAttribType::Byte:
+            case gl::VertexAttribType::UnsignedByte:
+                attribType = vsInputType == gl::ComponentType::Int
+                                 ? gl::VertexAttribType::Byte
+                                 : gl::VertexAttribType::UnsignedByte;
+                break;
+            case gl::VertexAttribType::UnsignedInt2101010:
+            case gl::VertexAttribType::Int2101010:
+                attribType = vsInputType == gl::ComponentType::Int
+                                 ? gl::VertexAttribType::Int2101010
+                                 : gl::VertexAttribType::UnsignedInt2101010;
+                break;
+            case gl::VertexAttribType::UnsignedInt1010102:
+            case gl::VertexAttribType::Int1010102:
+                attribType = vsInputType == gl::ComponentType::Int
+                                 ? gl::VertexAttribType::Int1010102
+                                 : gl::VertexAttribType::UnsignedInt1010102;
+                break;
+            default:
+                ASSERT(0);
+                break;
+        }
+    }
+    return gl::GetVertexFormatID(attribType, vertexFormat.normalized, vertexFormat.components,
+                                 !vertexFormat.pureInteger);
+}
+
 void GraphicsPipelineDesc::initializePipelineVertexInputState(
     Context *context,
     GraphicsPipelineVertexInputVulkanStructs *stateOut,
@@ -3298,16 +3352,17 @@ void GraphicsPipelineDesc::initializePipelineVertexInputState(
                context->getFeatures().forceStaticVertexStrideState.enabled ||
                bindingDesc.stride == 0);
 
-        // This forces stride to 0 when glVertexAttribPointer specifies a different type from the
-        // program's attribute type except when the type mismatch is a mismatched integer sign.
-        if (bindingDesc.stride > 0 && attribType != programAttribType)
+        if (attribType != programAttribType)
         {
+            VkFormat origVkFormat = vkFormat;
             if (attribType == gl::ComponentType::Float ||
                 programAttribType == gl::ComponentType::Float)
             {
-                // When dealing with float to int or unsigned int or vice versa, just override the
-                // format with a compatible one.
-                vkFormat = kMismatchedComponentTypeMap[programAttribType];
+                angle::FormatID patchFormatID =
+                    patchVertexAttribComponentType(formatID, programAttribType);
+                vkFormat = context->getRenderer()
+                               ->getFormat(patchFormatID)
+                               .getActualBufferVkFormat(packedAttrib.compressed);
             }
             else
             {
@@ -3325,14 +3380,13 @@ void GraphicsPipelineDesc::initializePipelineVertexInputState(
 
                 vkFormat = convertedFormat.getActualBufferVkFormat(packedAttrib.compressed);
             }
-
+            const Format &origFormat =
+                context->getRenderer()->getFormat(GetFormatIDFromVkFormat(origVkFormat));
+            const Format &patchFormat =
+                context->getRenderer()->getFormat(GetFormatIDFromVkFormat(vkFormat));
+            ASSERT(origFormat.getIntendedFormat().pixelBytes ==
+                   patchFormat.getIntendedFormat().pixelBytes);
             ASSERT(context->getRenderer()->getNativeExtensions().relaxedVertexAttributeTypeANGLE);
-
-            if (programAttribType == gl::ComponentType::Float ||
-                attribType == gl::ComponentType::Float)
-            {
-                bindingDesc.stride = 0;  // Prevent out-of-bounds accesses.
-            }
         }
 
         attribDesc.binding  = attribIndex;
