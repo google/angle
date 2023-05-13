@@ -242,12 +242,8 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-vkCmdDrawIndirect-None-02859",
     "VUID-VkGraphicsPipelineCreateInfo-Input-08733",
     // http://anglebug.com/8151
-    "VUID-vkCmdDraw-None-07840",
-    "VUID-vkCmdDraw-None-07841",
-    "VUID-vkCmdDraw-None-07843",
     "VUID-vkCmdDraw-None-07844",
     "VUID-vkCmdDraw-None-07845",
-    "VUID-vkCmdDraw-None-07847",
     "VUID-vkCmdDraw-None-07848",
     // http://anglebug.com/8159
     "VUID-vkCmdDrawIndexed-None-07840",
