@@ -180,6 +180,7 @@ enum class Feature
     LimitMaxColorTargetBitsForTesting,
     LimitMaxDrawBuffersForTesting,
     LimitMaxMSAASamplesTo4,
+    LimitSampleCountTo2,
     LimitWebglMaxTextureSizeTo4096,
     LoadMetalShadersFromBlobCache,
     LogMemoryReportCallbacks,

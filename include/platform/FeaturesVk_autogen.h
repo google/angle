@@ -896,6 +896,10 @@ struct FeaturesVk : FeatureSetBase
         "enablePipelineCacheDataCompression", FeatureCategory::VulkanFeatures,
         "enable pipeline cache data compression.", &members,
         "https://issuetracker.google.com/258207403"};
+
+    FeatureInfo limitSampleCountTo2 = {"limitSampleCountTo2", FeatureCategory::VulkanWorkarounds,
+                                       "Limit sample count to 2 to save memory on low end devices.",
+                                       &members, "http://anglebug.com/8162"};
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

@@ -1136,7 +1136,7 @@ VkPrimitiveTopology GetPrimitiveTopology(gl::PrimitiveMode mode);
 VkPolygonMode GetPolygonMode(const gl::PolygonMode polygonMode);
 VkCullModeFlagBits GetCullMode(const gl::RasterizerState &rasterState);
 VkFrontFace GetFrontFace(GLenum frontFace, bool invertCullFace);
-VkSampleCountFlagBits GetSamples(GLint sampleCount);
+VkSampleCountFlagBits GetSamples(GLint sampleCount, bool limitSampleCountTo2);
 VkComponentSwizzle GetSwizzle(const GLenum swizzle);
 VkCompareOp GetCompareOp(const GLenum compareFunc);
 VkStencilOp GetStencilOp(const GLenum compareOp);

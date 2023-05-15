@@ -244,7 +244,7 @@ void UnpackAttachmentDesc(Context *context,
     *desc         = {};
     desc->sType   = VK_STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_2;
     desc->format  = GetVkFormatFromFormatID(formatID);
-    desc->samples = gl_vk::GetSamples(samples);
+    desc->samples = gl_vk::GetSamples(samples, context->getFeatures().limitSampleCountTo2.enabled);
     desc->loadOp  = ConvertRenderPassLoadOpToVkLoadOp(static_cast<RenderPassLoadOp>(ops.loadOp));
     desc->storeOp =
         ConvertRenderPassStoreOpToVkStoreOp(static_cast<RenderPassStoreOp>(ops.storeOp));
@@ -756,7 +756,8 @@ void InitializeMSRTSS(Context *context,
     msrtss->sType = VK_STRUCTURE_TYPE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_INFO_EXT;
     msrtss->pNext = msrtssResolve;
     msrtss->multisampledRenderToSingleSampledEnable = true;
-    msrtss->rasterizationSamples                    = gl_vk::GetSamples(renderToTextureSamples);
+    msrtss->rasterizationSamples                    = gl_vk::GetSamples(
+        renderToTextureSamples, context->getFeatures().limitSampleCountTo2.enabled);
 
     *msrtssGOOGLEX       = {};
     msrtssGOOGLEX->sType = VK_STRUCTURE_TYPE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_INFO_GOOGLEX;
@@ -3619,7 +3620,8 @@ void GraphicsPipelineDesc::initializePipelineSharedNonVertexInputState(
     stateOut->multisampleState.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
     stateOut->multisampleState.flags = 0;
     stateOut->multisampleState.rasterizationSamples =
-        gl_vk::GetSamples(multisample.bits.rasterizationSamplesMinusOne + 1);
+        gl_vk::GetSamples(multisample.bits.rasterizationSamplesMinusOne + 1,
+                          context->getFeatures().limitSampleCountTo2.enabled);
     stateOut->multisampleState.sampleShadingEnable =
         static_cast<VkBool32>(multisample.bits.sampleShadingEnable);
     stateOut->multisampleState.minSampleShading =

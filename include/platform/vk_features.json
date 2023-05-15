@@ -1210,6 +1210,14 @@
             "category": "Features",
             "description":["enable pipeline cache data compression."],
             "issue": "https://issuetracker.google.com/258207403"
+        },
+        {
+            "name": "limit_sample_count_to_2",
+            "category": "Workarounds",
+            "description": [
+              "Limit sample count to 2 to save memory on low end devices."
+            ],
+            "issue": "http://anglebug.com/8162"
         }
     ]
 }

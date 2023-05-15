@@ -1408,8 +1408,17 @@ VkFrontFace GetFrontFace(GLenum frontFace, bool invertCullFace)
     }
 }
 
-VkSampleCountFlagBits GetSamples(GLint sampleCount)
+VkSampleCountFlagBits GetSamples(GLint sampleCount, bool limitSampleCountTo2)
 {
+    if (limitSampleCountTo2)
+    {
+        // Limiting samples to 2 allows multisampling to work while reducing
+        // how much graphics memory is required.  This makes ANGLE nonconformant
+        // (GLES 3.0+ requires 4 samples minimum) but gives low memory systems a
+        // better chance of running applications.
+        sampleCount = std::min(sampleCount, 2);
+    }
+
     switch (sampleCount)
     {
         case 0:
