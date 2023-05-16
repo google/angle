@@ -313,15 +313,15 @@ extern "C" {
 // The application should set any platform methods it cares about on the returned pointer.
 // If display is not valid, behaviour is undefined.
 
-ANGLE_PLATFORM_EXPORT bool ANGLE_APIENTRY ANGLEGetDisplayPlatform(angle::EGLDisplayType display,
-                                                                  const char *const methodNames[],
-                                                                  unsigned int methodNameCount,
-                                                                  void *context,
-                                                                  void *platformMethodsOut);
+bool ANGLE_APIENTRY ANGLEGetDisplayPlatform(angle::EGLDisplayType display,
+                                            const char *const methodNames[],
+                                            unsigned int methodNameCount,
+                                            void *context,
+                                            void *platformMethodsOut);
 
 // Sets the platform methods back to their defaults.
 // If display is not valid, behaviour is undefined.
-ANGLE_PLATFORM_EXPORT void ANGLE_APIENTRY ANGLEResetDisplayPlatform(angle::EGLDisplayType display);
+void ANGLE_APIENTRY ANGLEResetDisplayPlatform(angle::EGLDisplayType display);
 }  // extern "C"
 
 namespace angle
