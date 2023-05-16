@@ -1462,6 +1462,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     vk::DescriptorSetDesc mActiveTexturesDesc;
 
     vk::DescriptorSetDescBuilder mShaderBuffersDescriptorDesc;
+    // The WriteDescriptorDescBuilder from ProgramExecutableVk with InputAttachment update.
+    vk::WriteDescriptorDescBuilder mShaderBufferWriteDescriptorDescBuilder;
 
     gl::ActiveTextureArray<TextureVk *> mActiveImages;
 

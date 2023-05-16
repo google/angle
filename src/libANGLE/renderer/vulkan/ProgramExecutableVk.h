@@ -179,12 +179,14 @@ class ProgramExecutableVk
     angle::Result updateShaderResourcesDescriptorSet(
         vk::Context *context,
         UpdateDescriptorSetsBuilder *updateBuilder,
+        const vk::WriteDescriptorDescs &writeDescriptorDescs,
         vk::CommandBufferHelperCommon *commandBufferHelper,
         const vk::DescriptorSetDescBuilder &shaderResourcesDesc,
         vk::SharedDescriptorSetCacheKey *newSharedCacheKeyOut);
     angle::Result updateUniformsAndXfbDescriptorSet(
         vk::Context *context,
         UpdateDescriptorSetsBuilder *updateBuilder,
+        const vk::WriteDescriptorDescs &writeDescriptorDescs,
         vk::CommandBufferHelperCommon *commandBufferHelper,
         vk::BufferHelper *defaultUniformBuffer,
         vk::DescriptorSetDescBuilder *uniformsAndXfbDesc,
@@ -248,6 +250,18 @@ class ProgramExecutableVk
 
     angle::Result warmUpPipelineCache(ContextVk *contextVk,
                                       const gl::ProgramExecutable &glExecutable);
+
+    const vk::WriteDescriptorDescBuilder &getShaderResourceWriteDescriptorDescBuilder() const
+    {
+        return mShaderResourceWriteDescriptorDescBuilder;
+    }
+    const vk::WriteDescriptorDescs &getDefaultUniformWriteDescriptorDescs(
+        TransformFeedbackVk *transformFeedbackVk) const
+    {
+        return transformFeedbackVk == nullptr
+                   ? mDefaultUniformWriteDescriptorDescBuilder.getDescs()
+                   : mDefaultUniformAndXfbWriteDescriptorDescBuilder.getDescs();
+    }
 
   private:
     friend class ProgramVk;
@@ -350,6 +364,7 @@ class ProgramExecutableVk
                                              UpdateDescriptorSetsBuilder *updateBuilder,
                                              vk::CommandBufferHelperCommon *commandBufferHelper,
                                              const vk::DescriptorSetDescBuilder &descriptorSetDesc,
+                                             const vk::WriteDescriptorDescs &writeDescriptorDescs,
                                              DescriptorSetIndex setIndex,
                                              vk::SharedDescriptorSetCacheKey *newSharedCacheKeyOut);
 
@@ -361,6 +376,8 @@ class ProgramExecutableVk
     angle::Result ensurePipelineCacheInitialized(ContextVk *contextVk);
 
     void resetLayout(ContextVk *contextVk);
+    void initializeWriteDescriptorDesc(ContextVk *contextVk,
+                                       const gl::ProgramExecutable &glExecutable);
 
     // Descriptor sets and pools for shader resources for this program.
     vk::DescriptorSetArray<VkDescriptorSet> mDescriptorSets;
@@ -418,6 +435,12 @@ class ProgramExecutableVk
     // With VK_EXT_graphics_pipeline_library, this cache is used for the "shaders" subset of the
     // pipeline.
     vk::PipelineCache mPipelineCache;
+
+    // The "layout" information for descriptorSets
+    vk::WriteDescriptorDescBuilder mShaderResourceWriteDescriptorDescBuilder;
+    vk::WriteDescriptorDescBuilder mTextureWriteDescriptorDescBuilder;
+    vk::WriteDescriptorDescBuilder mDefaultUniformWriteDescriptorDescBuilder;
+    vk::WriteDescriptorDescBuilder mDefaultUniformAndXfbWriteDescriptorDescBuilder;
 };
 
 }  // namespace rx
