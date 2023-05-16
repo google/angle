@@ -807,6 +807,109 @@ TEST_P(VulkanImageTest, AllocateVMAImageAfterFreeing2DGarbageWhenDeviceOOM)
     EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, GLColor::red);
 }
 
+// Test that when VMA image suballocation is used, it is possible to free space for a new buffer on
+// the device by freeing garbage memory from a 2D texture.
+TEST_P(VulkanImageTest, AllocateBufferAfterFreeing2DGarbageWhenDeviceOOM)
+{
+    // Skipping when major version is below 3. Note that glFenceSync() and glWaitSync() require ES3.
+    ANGLE_SKIP_TEST_IF(getEGLWindow()->getClientMajorVersion() < 3);
+
+    ANGLE_SKIP_TEST_IF(!getEGLWindow()->isFeatureEnabled(Feature::UseVmaForImageSuballocation));
+
+    VulkanHelper helper;
+    helper.initializeFromANGLE();
+    uint64_t expectedAllocationFallbacks =
+        getPerfCounters().deviceMemoryImageAllocationFallbacks + 1;
+
+    // Acquire the sizes and memory property flags for all available memory types. There should be
+    // at least one memory heap without the device local bit (VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT).
+    // Otherwise, the test should be skipped.
+    VkPhysicalDeviceMemoryProperties memoryProperties;
+    vkGetPhysicalDeviceMemoryProperties(helper.getPhysicalDevice(), &memoryProperties);
+
+    VkDeviceSize totalDeviceLocalMemoryHeapSize = 0;
+    uint32_t heapsWithoutLocalDeviceMemoryBit   = 0;
+    for (uint32_t i = 0; i < memoryProperties.memoryHeapCount; i++)
+    {
+        if ((memoryProperties.memoryHeaps[i].flags & VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT) == 0)
+        {
+            heapsWithoutLocalDeviceMemoryBit++;
+        }
+        else
+        {
+            totalDeviceLocalMemoryHeapSize += memoryProperties.memoryHeaps[i].size;
+        }
+    }
+    ANGLE_SKIP_TEST_IF(heapsWithoutLocalDeviceMemoryBit == 0 ||
+                       totalDeviceLocalMemoryHeapSize == 0);
+
+    // Use a large 2D texture to allocate some of the available device memory and draw with it.
+    GLuint firstTexture;
+    constexpr VkDeviceSize kFirstTextureWidth  = 2048;
+    constexpr VkDeviceSize kFirstTextureHeight = 2048;
+    glGenTextures(1, &firstTexture);
+
+    glBindTexture(GL_TEXTURE_2D, firstTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kFirstTextureWidth, kFirstTextureHeight, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+    {
+        std::vector<GLColor> firstTextureColor(kFirstTextureWidth * kFirstTextureHeight,
+                                               GLColor::green);
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kFirstTextureWidth, kFirstTextureHeight, GL_RGBA,
+                        GL_UNSIGNED_BYTE, firstTextureColor.data());
+    }
+
+    ANGLE_GL_PROGRAM(drawTex2D, essl1_shaders::vs::Texture2D(), essl1_shaders::fs::Texture2D());
+    drawQuad(drawTex2D, essl1_shaders::PositionAttrib(), 0.5f);
+
+    // Fill up the device memory until we start allocating on the system memory.
+    // Device memory is the first choice for image memory allocation. However, in case it runs out,
+    // memory should be allocated from the system if available.
+    std::vector<GLTexture> textures2D;
+    constexpr VkDeviceSize kTextureWidth  = 512;
+    constexpr VkDeviceSize kTextureHeight = 512;
+    constexpr VkDeviceSize kTextureSize   = kTextureWidth * kTextureHeight * 4;
+    VkDeviceSize texture2DCount           = (totalDeviceLocalMemoryHeapSize / kTextureSize) + 1;
+    textures2D.resize(texture2DCount);
+
+    for (uint32_t i = 0; i < texture2DCount; i++)
+    {
+        glBindTexture(GL_TEXTURE_2D, textures2D[i]);
+        glTexStorage2DEXT(GL_TEXTURE_2D, 1, GL_RGBA8, kTextureWidth, kTextureHeight);
+        EXPECT_GL_NO_ERROR();
+
+        // This process only needs to continue until the allocation is no longer on the device.
+        if (getPerfCounters().deviceMemoryImageAllocationFallbacks == expectedAllocationFallbacks)
+        {
+            break;
+        }
+    }
+    EXPECT_EQ(getPerfCounters().deviceMemoryImageAllocationFallbacks, expectedAllocationFallbacks);
+
+    // Wait until GPU finishes execution.
+    GLsync sync = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
+    glWaitSync(sync, 0, GL_TIMEOUT_IGNORED);
+    EXPECT_GL_NO_ERROR();
+
+    // Delete the first 2D texture. Even though it is marked as deallocated, the device memory is
+    // not freed from the garbage yet.
+    glDeleteTextures(1, &firstTexture);
+
+    // The buffer should be allocated on the device, which will only be possible after freeing the
+    // garbage.
+    GLBuffer lastBuffer;
+    constexpr VkDeviceSize kBufferSize = kTextureWidth * kTextureHeight * 4;
+    std::vector<uint8_t> bufferData(kBufferSize, 255);
+    glBindBuffer(GL_ARRAY_BUFFER, lastBuffer);
+    glBufferData(GL_ARRAY_BUFFER, kBufferSize, bufferData.data(), GL_STATIC_DRAW);
+    EXPECT_GL_NO_ERROR();
+}
+
 // Test that texture storage created from VkImage memory is considered pre-initialized in GL.
 TEST_P(VulkanImageTest, PreInitializedOnGLImport)
 {

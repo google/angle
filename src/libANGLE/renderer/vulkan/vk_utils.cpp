@@ -108,7 +108,35 @@ angle::Result FindAndAllocateCompatibleMemory(vk::Context *context,
     RendererVk *renderer = context->getRenderer();
     renderer->getMemoryAllocationTracker()->setPendingMemoryAlloc(
         memoryAllocationType, allocInfo.allocationSize, *memoryTypeIndexOut);
-    ANGLE_VK_TRY(context, deviceMemoryOut->allocate(device, allocInfo));
+
+    // If the initial allocation fails, it is possible to retry the allocation after cleaning the
+    // garbage.
+    VkResult result;
+    bool anyBatchCleaned             = false;
+    uint32_t batchesWaitedAndCleaned = 0;
+
+    do
+    {
+        result = deviceMemoryOut->allocate(device, allocInfo);
+        if (result != VK_SUCCESS)
+        {
+            ANGLE_TRY(renderer->finishOneCommandBatchAndCleanup(context, &anyBatchCleaned));
+
+            if (anyBatchCleaned)
+            {
+                batchesWaitedAndCleaned++;
+            }
+        }
+    } while (result != VK_SUCCESS && anyBatchCleaned);
+
+    if (batchesWaitedAndCleaned > 0)
+    {
+        INFO() << "Initial allocation failed. Waited for " << batchesWaitedAndCleaned
+               << " commands to finish and free garbage | Allocation result: "
+               << ((result == VK_SUCCESS) ? "SUCCESS" : "FAIL");
+    }
+
+    ANGLE_VK_CHECK(context, result == VK_SUCCESS, result);
 
     renderer->onMemoryAlloc(memoryAllocationType, allocInfo.allocationSize, *memoryTypeIndexOut,
                             deviceMemoryOut->getHandle());
