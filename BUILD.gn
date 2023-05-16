@@ -975,6 +975,13 @@ config("libANGLE_config") {
   if (angle_enable_perf_counter_output) {
     defines += [ "ANGLE_ENABLE_PERF_COUNTER_OUTPUT=1" ]
   }
+
+  if (!is_android) {
+    # b/283233503
+    # Only export the ANGLE platform methods on Android, the EGL loader depends on them for
+    # detecting ANGLE. Normally, users are expected to load them through eglGetProcAddress.
+    defines += [ "ANGLE_PLATFORM_EXPORT=" ]
+  }
 }
 
 angle_source_set("libANGLE_headers") {
