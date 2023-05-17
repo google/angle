@@ -1175,9 +1175,26 @@ angle::Result GetAndDecompressPipelineCacheVk(VkPhysicalDeviceProperties physica
         uint16_t computedCompressedDataCRC = ComputeCRC16(compressedData.data(), compressedSize);
         if (computedCompressedDataCRC != compressedDataCRC)
         {
-            WARN() << "Expected CRC = " << compressedDataCRC
-                   << ", Actual CRC = " << computedCompressedDataCRC;
-            return angle::Result::Continue;
+            if (compressedDataCRC == 0)
+            {
+                // This could be due to the cache being populated before kEnableCRCForPipelineCache
+                // was enabled.
+                WARN() << "Expected CRC = " << compressedDataCRC
+                       << ", Actual CRC = " << computedCompressedDataCRC;
+                return angle::Result::Continue;
+            }
+
+            // If the expected CRC is non-zero and does not match the actual CRC from the data,
+            // there has been an unexpected data corruption.
+            ERR() << "Expected CRC = " << compressedDataCRC
+                  << ", Actual CRC = " << computedCompressedDataCRC;
+
+            ERR() << "Data extracted from the cache headers: " << std::hex
+                  << ", compressedDataCRC = 0x" << compressedDataCRC << "numChunks = 0x"
+                  << numChunks << ", uncompressedCacheDataSize = 0x" << uncompressedCacheDataSize;
+
+            FATAL() << "CRC check failed; possible pipeline cache data corruption.";
+            return angle::Result::Stop;
         }
     }
 
