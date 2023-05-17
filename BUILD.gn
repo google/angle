@@ -65,10 +65,7 @@ declare_args() {
   angle_glesv2_extension = ""
 
   # Enable share context lock. If it is false, the client need to use gl calls in a threadsafe way.
-  # Chromium only uses share contexts on the GPU thread.
-  # angle_deqp_tests contains threading related tests.
-  angle_enable_share_context_lock =
-      !build_with_chromium || build_angle_deqp_tests
+  angle_enable_share_context_lock = true
 
   if (is_android) {
     # Use Android TLS slot to store current context.
