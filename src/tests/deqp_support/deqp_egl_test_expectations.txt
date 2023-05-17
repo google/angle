@@ -107,6 +107,8 @@
 2567 ANDROID GLES : dEQP-EGL.functional.image.api.create_image_gles2_tex2d_red = FAIL
 2567 ANDROID GLES : dEQP-EGL.functional.image.api.create_image_gles2_tex2d_rg = FAIL
 2716 ANDROID GLES : dEQP-EGL.functional.preserve_swap.preserve.* = FAIL
+// New crash since VK-GL-CTS roller on 2023-05-03
+8169 ANDROID GLES : dEQP-EGL.functional.fence_sync.valid.egl_fence_persistent_buffer = SKIP
 
 // Android failures
 6533 ANDROID : dEQP-EGL.functional.native_color_mapping.native_window.* = SKIP
@@ -255,6 +257,9 @@
 
 // Crashes
 6485 MAC METAL : dEQP-EGL.functional.sharing.gles2.multithread.* = SKIP
+
+// New crash since VK-GL-CTS roller on 2023-05-03
+8167 MAC METAL : dEQP-EGL.functional.fence_sync.valid.egl_fence_persistent_buffer = SKIP
 
 6528 PIXEL4ORXL GLES : dEQP-EGL.functional.image.render_multiple_contexts.gles2_android_native_s8_stencil_buffer = SKIP
 6528 PIXEL4ORXL GLES : dEQP-EGL.functional.image.modify.android_native_s8_renderbuffer_clear_stencil = SKIP

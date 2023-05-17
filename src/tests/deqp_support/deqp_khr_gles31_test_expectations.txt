@@ -276,3 +276,6 @@
 
 // Failure since VK-GL-CTS roll (2023-02-28)
 8045 : KHR-GLES31.shaders.negative.non_precision_qualifiers_in_struct_members = SKIP
+
+// Failure since VK-GL-CTS roll (2023-05-03)
+8166 WIN SWIFTSHADER : KHR-GLES31.core.texture_buffer.texture_buffer_errors = FAIL
