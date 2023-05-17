@@ -299,6 +299,16 @@ struct FeaturesMtl : FeatureSetBase
         " end up with conditionals that are decided at run time via input parameters vs"
         " compile time. This results in bigger shaders.",
         &members, "http://crbug.com/1423136"};
+
+    FeatureInfo disableMetalOnGpuFamily1 = {
+        "disableMetalOnGpuFamily1", FeatureCategory::MetalFeatures,
+        "GPUs that don't support Mac GPU family 2 or greater are unsupported by the Metal backend.",
+        &members, "http://anglebug.com/7952"};
+
+    FeatureInfo disableMetalOnNvidia = {
+        "disableMetalOnNvidia", FeatureCategory::MetalFeatures,
+        "NVIDIA GPUs are unsupported due to scarcity of the hardware.", &members,
+        "http://anglebug.com/8170"};
 };
 
 inline FeaturesMtl::FeaturesMtl()  = default;

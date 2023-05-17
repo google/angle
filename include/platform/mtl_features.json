@@ -341,6 +341,22 @@
                 " compile time. This results in bigger shaders."
             ],
             "issue": "http://crbug.com/1423136"
+        },
+        {
+            "name": "disable_metal_on_gpu_family_1",
+            "category": "Features",
+            "description": [
+                "GPUs that don't support Mac GPU family 2 or greater are unsupported by the Metal backend."
+            ],
+            "issue": "http://anglebug.com/7952"
+        },
+        {
+            "name": "disable_metal_on_nvidia",
+            "category": "Features",
+            "description": [
+                "NVIDIA GPUs are unsupported due to scarcity of the hardware."
+            ],
+            "issue": "http://anglebug.com/8170"
         }
     ]
 }

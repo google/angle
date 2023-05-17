@@ -72,6 +72,8 @@ enum class Feature
     DisableDrawBuffersIndexed,
     DisableFlippingBlitWithCommand,
     DisableGPUSwitchingSupport,
+    DisableMetalOnGpuFamily1,
+    DisableMetalOnNvidia,
     DisableMultisampledRenderToTexture,
     DisableNativeParallelCompile,
     DisableProgramBinary,

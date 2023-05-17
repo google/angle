@@ -134,22 +134,26 @@ angle::Result DisplayMtl::initializeImpl(egl::Display *display)
 
         mMetalDeviceVendorId = mtl::GetDeviceVendorId(mMetalDevice);
 
-        // TODO(anglebug.com/7952): GPUs that don't support Mac GPU family 2 or greater are
-        // unsupported by the Metal backend.
-        if (!supportsEitherGPUFamily(1, 2))
-        {
-            ANGLE_MTL_LOG("Could not initialize: Metal device does not support Mac GPU family 2.");
-            return angle::Result::Stop;
-        }
-
-        mCmdQueue.set([[mMetalDevice newCommandQueue] ANGLE_MTL_AUTORELEASE]);
-
         mCapsInitialized = false;
 
         if (!mState.featuresAllDisabled)
         {
             initializeFeatures();
         }
+
+        if (mFeatures.disableMetalOnGpuFamily1.enabled)
+        {
+            ANGLE_MTL_LOG("Could not initialize: Metal device does not support Mac GPU family 2.");
+            return angle::Result::Stop;
+        }
+
+        if (mFeatures.disableMetalOnNvidia.enabled)
+        {
+            ANGLE_MTL_LOG("Could not initialize: Metal not supported on NVIDIA GPUs.");
+            return angle::Result::Stop;
+        }
+
+        mCmdQueue.set([[mMetalDevice newCommandQueue] ANGLE_MTL_AUTORELEASE]);
 
         ANGLE_TRY(mFormatTable.initialize(this));
         ANGLE_TRY(initializeShaderLibrary());
@@ -1304,6 +1308,13 @@ void DisplayMtl::initializeFeatures()
                             isIntel() || isAMD());
 
     ANGLE_FEATURE_CONDITION((&mFeatures), generateShareableShaders, true);
+
+    // TODO(anglebug.com/7952): GPUs that don't support Mac GPU family 2 or greater are
+    // unsupported by the Metal backend.
+    ANGLE_FEATURE_CONDITION((&mFeatures), disableMetalOnGpuFamily1, !supportsEitherGPUFamily(1, 2));
+
+    // http://anglebug.com/8170: NVIDIA GPUs are unsupported due to scarcity of the hardware.
+    ANGLE_FEATURE_CONDITION((&mFeatures), disableMetalOnNvidia, isNVIDIA());
 
     ApplyFeatureOverrides(&mFeatures, getState());
 }
