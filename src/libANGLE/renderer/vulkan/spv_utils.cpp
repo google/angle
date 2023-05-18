@@ -2795,29 +2795,48 @@ void SpirvPositionTransformer::writePositionTransformation(const SpirvIDDiscover
     spirv::WriteStore(blobOut, positionPointerId, transformedPositionId, nullptr);
 }
 
-class SpirvMultiSampleTransformer final : angle::NonCopyable
+// A transformation to handle both the isMultisampledFramebufferFetch and enableSampleShading
+// options.  The common transformation between these two options is the addition of the
+// SampleRateShading capability.
+class SpirvMultisampleTransformer final : angle::NonCopyable
 {
   public:
-    SpirvMultiSampleTransformer(const SpvTransformOptions &options)
+    SpirvMultisampleTransformer(const SpvTransformOptions &options)
         : mOptions(options),
           mIsSampleRateShadingCapabilityEnabled(false),
           mSampleIDExists(false),
           mAnyImageTypesModified(false)
     {}
-    ~SpirvMultiSampleTransformer()
+    ~SpirvMultisampleTransformer()
     {
         ASSERT(!mOptions.isMultisampledFramebufferFetch || mAnyImageTypesModified);
     }
 
+    void init(size_t indexBound);
+
     void visitCapability(const uint32_t *instruction);
 
-    void visitDecorate(const spirv::IdRef &id,
-                       const spv::Decoration decoration,
+    void visitDecorate(spirv::IdRef id,
+                       spv::Decoration decoration,
                        const spirv::LiteralIntegerList &valueList);
 
-    void visitEntryPoint(const uint32_t *instruction);
+    void visitMemberDecorate(spirv::IdRef id,
+                             spirv::LiteralInteger member,
+                             spv::Decoration decoration);
 
-    TransformationState transformCapability(const spv::Capability capability, spirv::Blob *blobOut);
+    void visitTypeStruct(spirv::IdResult id, const spirv::IdRefList &memberList);
+
+    void visitTypePointer(gl::ShaderType shaderType,
+                          spirv::IdResult id,
+                          spv::StorageClass storageClass,
+                          spirv::IdRef typeId);
+
+    void visitVariable(gl::ShaderType shaderType,
+                       spirv::IdResultType typeId,
+                       spirv::IdResult id,
+                       spv::StorageClass storageClass);
+
+    TransformationState transformCapability(spv::Capability capability, spirv::Blob *blobOut);
 
     TransformationState transformTypeImage(const uint32_t *instruction, spirv::Blob *blobOut);
 
@@ -2828,14 +2847,20 @@ class SpirvMultiSampleTransformer final : angle::NonCopyable
         SpirvIDDiscoverer &ids,
         spirv::Blob *blobOut);
 
-    TransformationState transformDecoration(const spv::Decoration &decoration,
-                                            spirv::Blob *blobOut);
+    TransformationState transformDecorate(const ShaderInterfaceVariableInfo &info,
+                                          gl::ShaderType shaderType,
+                                          spirv::IdRef id,
+                                          spv::Decoration &decoration,
+                                          spirv::Blob *blobOut);
 
     TransformationState transformImageRead(const uint32_t *instruction,
                                            const SpirvIDDiscoverer &ids,
                                            spirv::Blob *blobOut);
 
   private:
+    void visitVarying(gl::ShaderType shaderType, spirv::IdRef id, spv::StorageClass storageClass);
+    bool skipSampleDecoration(spv::Decoration decoration);
+
     SpvTransformOptions mOptions;
     spirv::IdRef mBuiltInGLSampleID;
     spirv::IdRef mIntInputPointerId;
@@ -2843,9 +2868,24 @@ class SpirvMultiSampleTransformer final : angle::NonCopyable
     bool mSampleIDExists;
     // Used to assert that the transformation is not unnecessarily run.
     bool mAnyImageTypesModified;
+
+    struct VaryingInfo
+    {
+        // Whether any variable is a varying
+        bool isVarying = false;
+        // Whether any variable or its members are already sample-, centroid- or flat-qualified.
+        bool skipSampleDecoration = false;
+        std::vector<bool> skipMemberSampleDecoration;
+    };
+    std::vector<VaryingInfo> mVaryingInfoById;
 };
 
-TransformationState SpirvMultiSampleTransformer::transformImageRead(const uint32_t *instruction,
+void SpirvMultisampleTransformer::init(size_t indexBound)
+{
+    mVaryingInfoById.resize(indexBound);
+}
+
+TransformationState SpirvMultisampleTransformer::transformImageRead(const uint32_t *instruction,
                                                                     const SpirvIDDiscoverer &ids,
                                                                     spirv::Blob *blobOut)
 {
@@ -2886,7 +2926,7 @@ TransformationState SpirvMultiSampleTransformer::transformImageRead(const uint32
     return TransformationState::Transformed;
 }
 
-void SpirvMultiSampleTransformer::writePendingDeclarations(
+void SpirvMultisampleTransformer::writePendingDeclarations(
     const std::vector<const ShaderInterfaceVariableInfo *> &variableInfoById,
     SpirvIDDiscoverer &ids,
     spirv::Blob *blobOut)
@@ -2925,7 +2965,7 @@ void SpirvMultiSampleTransformer::writePendingDeclarations(
                          nullptr);
 }
 
-TransformationState SpirvMultiSampleTransformer::transformTypeImage(const uint32_t *instruction,
+TransformationState SpirvMultisampleTransformer::transformTypeImage(const uint32_t *instruction,
                                                                     spirv::Blob *blobOut)
 {
     // Transform the following
@@ -2980,14 +3020,17 @@ bool verifyEntryPointsContainsID(const spirv::IdRefList &interfaceList, const sp
 }
 }  // namespace
 
-void SpirvMultiSampleTransformer::modifyEntryPointInterfaceList(spirv::IdRefList *interfaceList,
+void SpirvMultisampleTransformer::modifyEntryPointInterfaceList(spirv::IdRefList *interfaceList,
                                                                 spirv::Blob *blobOut)
 {
     // Append %gl_sampleID to OpEntryPoint
     // Transform the following
-    // OpEntryPoint Fragment %main "main" %_uo_color
+    //
+    //     OpEntryPoint Fragment %main "main" %_uo_color
+    //
     // To
-    // OpEntryPoint Fragment %main "main" %_uo_color %gl_SampleID
+    //
+    //     OpEntryPoint Fragment %main "main" %_uo_color %gl_SampleID
 
     if (!mOptions.isMultisampledFramebufferFetch)
     {
@@ -3013,21 +3056,25 @@ void SpirvMultiSampleTransformer::modifyEntryPointInterfaceList(spirv::IdRefList
     return;
 }
 
-TransformationState SpirvMultiSampleTransformer::transformCapability(
+TransformationState SpirvMultisampleTransformer::transformCapability(
     const spv::Capability capability,
     spirv::Blob *blobOut)
 {
-    // Add a new OpCapability line: OpCapability SampleRateShading
+    // Add a new OpCapability line:
+    //
+    //     OpCapability SampleRateShading
+    //
     // right before the following instruction
-    // OpCapability InputAttachment
+    //
+    //     OpCapability InputAttachment
 
-    if (!mOptions.isMultisampledFramebufferFetch)
+    if (!mOptions.isMultisampledFramebufferFetch && !mOptions.enableSampleShading)
     {
         return TransformationState::Unchanged;
     }
 
     // If we already have this line "OpCapability SampleRateShading"
-    // Do not add a duplicated line. Return.
+    // Do not add a duplicated line.
     if (mIsSampleRateShadingCapabilityEnabled)
     {
         return TransformationState::Unchanged;
@@ -3036,8 +3083,8 @@ TransformationState SpirvMultiSampleTransformer::transformCapability(
     // Make sure no duplicates
     ASSERT(capability != spv::CapabilitySampleRateShading);
 
-    // Make sure we only add the new line on top of "OpCapability InputAttachment"
-    if (capability != spv::CapabilityInputAttachment)
+    // Make sure we only add the new line on top of "OpCapability Shader"
+    if (capability != spv::CapabilityShader)
     {
         return TransformationState::Unchanged;
     }
@@ -3045,62 +3092,172 @@ TransformationState SpirvMultiSampleTransformer::transformCapability(
     spirv::WriteCapability(blobOut, spv::CapabilitySampleRateShading);
     mIsSampleRateShadingCapabilityEnabled = true;
 
-    // Leave the next line "OpCapability InputAttachment untouched"
+    // Leave the original OpCapability untouched
     return TransformationState::Unchanged;
 }
 
-TransformationState SpirvMultiSampleTransformer::transformDecoration(
-    const spv::Decoration &decoration,
+TransformationState SpirvMultisampleTransformer::transformDecorate(
+    const ShaderInterfaceVariableInfo &info,
+    gl::ShaderType shaderType,
+    spirv::IdRef id,
+    spv::Decoration &decoration,
     spirv::Blob *blobOut)
 {
-    // Add the following declarations if they are not available yet:
-    // OpDecorate %gl_SampleID RelaxedPrecision
-    // OpDecorate %gl_SampleID Flat
-    // OpDecorate %gl_SampleID BuiltIn SampleId
-
-    if (!mOptions.isMultisampledFramebufferFetch ||
-        decoration != spv::DecorationInputAttachmentIndex)
+    if (mOptions.isMultisampledFramebufferFetch &&
+        decoration == spv::DecorationInputAttachmentIndex && !mSampleIDExists)
     {
-        return TransformationState::Unchanged;
+        // Add the following instructions if they are not available yet:
+        //
+        //     OpDecorate %gl_SampleID RelaxedPrecision
+        //     OpDecorate %gl_SampleID Flat
+        //     OpDecorate %gl_SampleID BuiltIn SampleId
+
+        ASSERT(mBuiltInGLSampleID.valid());
+
+        spirv::WriteDecorate(blobOut, mBuiltInGLSampleID, spv::DecorationRelaxedPrecision, {});
+        spirv::WriteDecorate(blobOut, mBuiltInGLSampleID, spv::DecorationFlat, {});
+        spirv::WriteDecorate(blobOut, mBuiltInGLSampleID, spv::DecorationBuiltIn,
+                             {spirv::LiteralInteger(spv::BuiltIn::BuiltInSampleId)});
+    }
+    if (mOptions.enableSampleShading && mVaryingInfoById[id].isVarying &&
+        !mVaryingInfoById[id].skipSampleDecoration)
+    {
+        if (decoration == spv::DecorationLocation && info.activeStages[shaderType])
+        {
+            // Add the following instructions when the Location decoration is met, if the varying is
+            // not already decorated with Sample:
+            //
+            //     OpDecorate %id Sample
+            spirv::WriteDecorate(blobOut, id, spv::DecorationSample, {});
+        }
+        else if (decoration == spv::DecorationBlock)
+        {
+            // Add the following instructions when the Block decoration is met, for any member that
+            // is not already decorated with Sample:
+            //
+            //     OpMemberDecorate %id member Sample
+            for (uint32_t member = 0;
+                 member < mVaryingInfoById[id].skipMemberSampleDecoration.size(); ++member)
+            {
+                if (!mVaryingInfoById[id].skipMemberSampleDecoration[member])
+                {
+                    spirv::WriteMemberDecorate(blobOut, id, spirv::LiteralInteger(member),
+                                               spv::DecorationSample, {});
+                }
+            }
+        }
     }
 
-    if (mSampleIDExists)
-    {
-        return TransformationState::Unchanged;
-    }
-
-    ASSERT(mBuiltInGLSampleID.valid());
-
-    spirv::WriteDecorate(blobOut, mBuiltInGLSampleID, spv::DecorationRelaxedPrecision, {});
-    spirv::WriteDecorate(blobOut, mBuiltInGLSampleID, spv::DecorationFlat, {});
-    spirv::WriteDecorate(blobOut, mBuiltInGLSampleID, spv::DecorationBuiltIn,
-                         {spirv::LiteralInteger(spv::BuiltIn::BuiltInSampleId)});
     return TransformationState::Unchanged;
 }
 
-void SpirvMultiSampleTransformer::visitDecorate(const spirv::IdRef &id,
-                                                const spv::Decoration decoration,
+bool SpirvMultisampleTransformer::skipSampleDecoration(spv::Decoration decoration)
+{
+    // If a variable is already decorated with Sample, Patch or Centroid, it shouldn't be decorated
+    // with Sample.  BuiltIns are also excluded.
+    return decoration == spv::DecorationPatch || decoration == spv::DecorationCentroid ||
+           decoration == spv::DecorationSample || decoration == spv::DecorationBuiltIn;
+}
+
+void SpirvMultisampleTransformer::visitDecorate(spirv::IdRef id,
+                                                spv::Decoration decoration,
                                                 const spirv::LiteralIntegerList &valueList)
 {
-    if (!mOptions.isMultisampledFramebufferFetch)
+    if (mOptions.isMultisampledFramebufferFetch)
     {
-        return;
-    }
-
-    if (decoration == spv::DecorationBuiltIn)
-    {
-        if (valueList[0] == spv::BuiltInSampleId)
+        // Determine whether gl_SampleID is declared already
+        if (decoration == spv::DecorationBuiltIn)
         {
-            mBuiltInGLSampleID = id;
-            mSampleIDExists    = true;
+            if (valueList[0] == spv::BuiltInSampleId)
+            {
+                mBuiltInGLSampleID = id;
+                mSampleIDExists    = true;
+            }
+        }
+    }
+    if (mOptions.enableSampleShading)
+    {
+        // Determine whether the id is already decorated with Sample.
+        if (skipSampleDecoration(decoration))
+        {
+            mVaryingInfoById[id].skipSampleDecoration = true;
         }
     }
     return;
 }
 
-void SpirvMultiSampleTransformer::visitCapability(const uint32_t *instruction)
+void SpirvMultisampleTransformer::visitMemberDecorate(spirv::IdRef id,
+                                                      spirv::LiteralInteger member,
+                                                      spv::Decoration decoration)
 {
-    if (!mOptions.isMultisampledFramebufferFetch)
+    if (!mOptions.enableSampleShading)
+    {
+        return;
+    }
+
+    if (mVaryingInfoById[id].skipMemberSampleDecoration.size() <= member)
+    {
+        mVaryingInfoById[id].skipMemberSampleDecoration.resize(member + 1, false);
+    }
+    // Determine whether the member is already decorated with Sample.
+    if (skipSampleDecoration(decoration))
+    {
+        mVaryingInfoById[id].skipMemberSampleDecoration[member] = true;
+    }
+}
+
+void SpirvMultisampleTransformer::visitVarying(gl::ShaderType shaderType,
+                                               spirv::IdRef id,
+                                               spv::StorageClass storageClass)
+{
+    if (!mOptions.enableSampleShading)
+    {
+        return;
+    }
+
+    // Vertex input and fragment output variables are not varyings and don't need to be decorated
+    // with Sample.
+    if ((shaderType == gl::ShaderType::Fragment && storageClass == spv::StorageClassOutput) ||
+        (shaderType == gl::ShaderType::Vertex && storageClass == spv::StorageClassInput))
+    {
+        return;
+    }
+
+    const bool isVarying =
+        storageClass == spv::StorageClassInput || storageClass == spv::StorageClassOutput;
+    mVaryingInfoById[id].isVarying = isVarying;
+}
+
+void SpirvMultisampleTransformer::visitTypeStruct(spirv::IdResult id,
+                                                  const spirv::IdRefList &memberList)
+{
+    if (mOptions.enableSampleShading)
+    {
+        mVaryingInfoById[id].skipMemberSampleDecoration.resize(memberList.size(), false);
+    }
+}
+
+void SpirvMultisampleTransformer::visitTypePointer(gl::ShaderType shaderType,
+                                                   spirv::IdResult id,
+                                                   spv::StorageClass storageClass,
+                                                   spirv::IdRef typeId)
+{
+    // For I/O blocks, the Sample decoration should be specified on the members of the struct type.
+    // For that purpose, we consider the struct type as the varying instead.
+    visitVarying(shaderType, typeId, storageClass);
+}
+
+void SpirvMultisampleTransformer::visitVariable(gl::ShaderType shaderType,
+                                                spirv::IdResultType typeId,
+                                                spirv::IdResult id,
+                                                spv::StorageClass storageClass)
+{
+    visitVarying(shaderType, id, storageClass);
+}
+
+void SpirvMultisampleTransformer::visitCapability(const uint32_t *instruction)
+{
+    if (!mOptions.isMultisampledFramebufferFetch && !mOptions.enableSampleShading)
     {
         return;
     }
@@ -3125,7 +3282,7 @@ class SpirvTransformer final : public SpirvTransformerBase
           mOptions(options),
           mXfbCodeGenerator(options.isTransformFeedbackEmulated),
           mPositionTransformer(options),
-          mMultiSampleTransformer(options)
+          mMultisampleTransformer(options)
     {}
 
     void transform();
@@ -3140,11 +3297,13 @@ class SpirvTransformer final : public SpirvTransformerBase
     // Instructions that are purely informational:
     void visitDecorate(const uint32_t *instruction);
     void visitName(const uint32_t *instruction);
+    void visitMemberDecorate(const uint32_t *instruction);
     void visitMemberName(const uint32_t *instruction);
     void visitTypeArray(const uint32_t *instruction);
     void visitTypeFloat(const uint32_t *instruction);
     void visitTypeInt(const uint32_t *instruction);
     void visitTypePointer(const uint32_t *instruction);
+    void visitTypeStruct(const uint32_t *instruction);
     void visitTypeVector(const uint32_t *instruction);
     void visitVariable(const uint32_t *instruction);
     void visitCapability(const uint32_t *instruction);
@@ -3188,7 +3347,7 @@ class SpirvTransformer final : public SpirvTransformerBase
     SpirvVaryingPrecisionFixer mVaryingPrecisionFixer;
     SpirvTransformFeedbackCodeGenerator mXfbCodeGenerator;
     SpirvPositionTransformer mPositionTransformer;
-    SpirvMultiSampleTransformer mMultiSampleTransformer;
+    SpirvMultisampleTransformer mMultisampleTransformer;
 };
 
 void SpirvTransformer::transform()
@@ -3214,6 +3373,10 @@ void SpirvTransformer::resolveVariableIds()
     if (mOptions.useSpirvVaryingPrecisionFixer)
     {
         mVaryingPrecisionFixer.init(indexBound);
+    }
+    if (mOptions.isMultisampledFramebufferFetch || mOptions.enableSampleShading)
+    {
+        mMultisampleTransformer.init(indexBound);
     }
 
     // Allocate storage for id-to-info map.  If %i is the id of a name in mVariableInfoMap, index i
@@ -3242,6 +3405,9 @@ void SpirvTransformer::resolveVariableIds()
             case spv::OpName:
                 visitName(instruction);
                 break;
+            case spv::OpMemberDecorate:
+                visitMemberDecorate(instruction);
+                break;
             case spv::OpMemberName:
                 visitMemberName(instruction);
                 break;
@@ -3256,6 +3422,9 @@ void SpirvTransformer::resolveVariableIds()
                 break;
             case spv::OpTypePointer:
                 visitTypePointer(instruction);
+                break;
+            case spv::OpTypeStruct:
+                visitTypeStruct(instruction);
                 break;
             case spv::OpTypeVector:
                 visitTypeVector(instruction);
@@ -3409,7 +3578,7 @@ void SpirvTransformer::transformInstruction()
 // present in the original shader need to be done here.
 void SpirvTransformer::writePendingDeclarations()
 {
-    mMultiSampleTransformer.writePendingDeclarations(mVariableInfoById, mIds, mSpirvBlobOut);
+    mMultisampleTransformer.writePendingDeclarations(mVariableInfoById, mIds, mSpirvBlobOut);
 
     // Pre-rotation and transformation of depth to Vulkan clip space require declarations that may
     // not necessarily be in the shader.  Transform feedback emulation additionally requires a few
@@ -3488,7 +3657,7 @@ void SpirvTransformer::writeOutputPrologue()
 
 void SpirvTransformer::visitCapability(const uint32_t *instruction)
 {
-    mMultiSampleTransformer.visitCapability(instruction);
+    mMultisampleTransformer.visitCapability(instruction);
 }
 
 void SpirvTransformer::visitDecorate(const uint32_t *instruction)
@@ -3512,7 +3681,7 @@ void SpirvTransformer::visitDecorate(const uint32_t *instruction)
         mVariableInfoById[id] = &info;
     }
 
-    mMultiSampleTransformer.visitDecorate(id, decoration, valueList);
+    mMultisampleTransformer.visitDecorate(id, decoration, valueList);
 }
 
 void SpirvTransformer::visitName(const uint32_t *instruction)
@@ -3524,6 +3693,16 @@ void SpirvTransformer::visitName(const uint32_t *instruction)
     mIds.visitName(id, name);
     mXfbCodeGenerator.visitName(id, name);
     mPositionTransformer.visitName(id, name);
+}
+
+void SpirvTransformer::visitMemberDecorate(const uint32_t *instruction)
+{
+    spirv::IdRef typeId;
+    spirv::LiteralInteger member;
+    spv::Decoration decoration;
+    spirv::ParseMemberDecorate(instruction, &typeId, &member, &decoration, nullptr);
+
+    mMultisampleTransformer.visitMemberDecorate(typeId, member, decoration);
 }
 
 void SpirvTransformer::visitMemberName(const uint32_t *instruction)
@@ -3586,6 +3765,16 @@ void SpirvTransformer::visitTypePointer(const uint32_t *instruction)
         mVaryingPrecisionFixer.visitTypePointer(id, storageClass, typeId);
     }
     mXfbCodeGenerator.visitTypePointer(id, storageClass, typeId);
+    mMultisampleTransformer.visitTypePointer(mOptions.shaderType, id, storageClass, typeId);
+}
+
+void SpirvTransformer::visitTypeStruct(const uint32_t *instruction)
+{
+    spirv::IdResult id;
+    spirv::IdRefList memberList;
+    ParseTypeStruct(instruction, &id, &memberList);
+
+    mMultisampleTransformer.visitTypeStruct(id, memberList);
 }
 
 void SpirvTransformer::visitTypeVector(const uint32_t *instruction)
@@ -3643,6 +3832,8 @@ void SpirvTransformer::visitVariable(const uint32_t *instruction)
     {
         mXfbCodeGenerator.visitVariable(info, mOptions.shaderType, name, typeId, id, storageClass);
     }
+
+    mMultisampleTransformer.visitVariable(mOptions.shaderType, typeId, id, storageClass);
 }
 
 TransformationState SpirvTransformer::transformDecorate(const uint32_t *instruction)
@@ -3662,7 +3853,8 @@ TransformationState SpirvTransformer::transformDecorate(const uint32_t *instruct
         return TransformationState::Unchanged;
     }
 
-    mMultiSampleTransformer.transformDecoration(decoration, mSpirvBlobOut);
+    mMultisampleTransformer.transformDecorate(*info, mOptions.shaderType, id, decoration,
+                                              mSpirvBlobOut);
 
     if (mInactiveVaryingRemover.transformDecorate(*info, mOptions.shaderType, id, decoration,
                                                   decorationValues, mSpirvBlobOut) ==
@@ -3784,7 +3976,7 @@ TransformationState SpirvTransformer::transformCapability(const uint32_t *instru
     ASSERT(xfbTransformState == TransformationState::Unchanged);
 
     TransformationState multiSampleTransformState =
-        mMultiSampleTransformer.transformCapability(capability, mSpirvBlobOut);
+        mMultisampleTransformer.transformCapability(capability, mSpirvBlobOut);
     ASSERT(multiSampleTransformState == TransformationState::Unchanged);
 
     return TransformationState::Unchanged;
@@ -3849,7 +4041,7 @@ TransformationState SpirvTransformer::transformEntryPoint(const uint32_t *instru
         mVaryingPrecisionFixer.modifyEntryPointInterfaceList(&interfaceList);
     }
 
-    mMultiSampleTransformer.modifyEntryPointInterfaceList(&interfaceList, mSpirvBlobOut);
+    mMultisampleTransformer.modifyEntryPointInterfaceList(&interfaceList, mSpirvBlobOut);
 
     // Write the entry point with the inactive interface variables removed.
     spirv::WriteEntryPoint(mSpirvBlobOut, executionModel, mEntryPointId, name, interfaceList);
@@ -3957,12 +4149,12 @@ TransformationState SpirvTransformer::transformVariable(const uint32_t *instruct
 
 TransformationState SpirvTransformer::transformTypeImage(const uint32_t *instruction)
 {
-    return mMultiSampleTransformer.transformTypeImage(instruction, mSpirvBlobOut);
+    return mMultisampleTransformer.transformTypeImage(instruction, mSpirvBlobOut);
 }
 
 TransformationState SpirvTransformer::transformImageRead(const uint32_t *instruction)
 {
-    return mMultiSampleTransformer.transformImageRead(instruction, mIds, mSpirvBlobOut);
+    return mMultisampleTransformer.transformImageRead(instruction, mIds, mSpirvBlobOut);
 }
 
 TransformationState SpirvTransformer::transformAccessChain(const uint32_t *instruction)

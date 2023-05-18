@@ -364,6 +364,7 @@ angle::Result ProgramInfo::initProgram(ContextVk *contextVk,
     options.negativeViewportSupported   = contextVk->getFeatures().supportsNegativeViewport.enabled;
     options.isMultisampledFramebufferFetch =
         optionBits.multiSampleFramebufferFetch && shaderType == gl::ShaderType::Fragment;
+    options.enableSampleShading = optionBits.enableSampleShading;
 
     // Don't validate SPIR-V generated for GLES1 shaders when validation layers are enabled.  The
     // layers already validate SPIR-V, and since GLES1 shaders are controlled by ANGLE, they don't
@@ -1194,6 +1195,8 @@ ProgramTransformOptions ProgramExecutableVk::getTransformOptions(
     const bool hasFramebufferFetch = glExecutable.usesFramebufferFetch();
     const bool isMultisampled      = drawFrameBuffer->getSamples() > 1;
     transformOptions.multiSampleFramebufferFetch = hasFramebufferFetch && isMultisampled;
+    transformOptions.enableSampleShading =
+        contextVk->getState().isSampleShadingEnabled() && isMultisampled;
 
     return transformOptions;
 }

@@ -56,6 +56,7 @@ struct SpvTransformOptions
     bool isTransformFeedbackStage       = false;
     bool isTransformFeedbackEmulated    = false;
     bool isMultisampledFramebufferFetch = false;
+    bool enableSampleShading            = false;
     bool validate                       = true;
     bool useSpirvVaryingPrecisionFixer  = false;
 };
