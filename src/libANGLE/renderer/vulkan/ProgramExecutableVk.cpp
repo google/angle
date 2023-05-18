@@ -1594,17 +1594,15 @@ angle::Result ProgramExecutableVk::updateUniformsAndXfbDescriptorSet(
     UpdateDescriptorSetsBuilder *updateBuilder,
     vk::CommandBufferHelperCommon *commandBufferHelper,
     vk::BufferHelper *defaultUniformBuffer,
-    vk::DescriptorSetDescBuilder *uniformsAndXfbDesc)
+    vk::DescriptorSetDescBuilder *uniformsAndXfbDesc,
+    vk::SharedDescriptorSetCacheKey *sharedCacheKeyOut)
 {
     mCurrentDefaultUniformBufferSerial =
         defaultUniformBuffer ? defaultUniformBuffer->getBufferSerial() : vk::kInvalidBufferSerial;
 
-    vk::SharedDescriptorSetCacheKey newSharedCacheKey;
-    ANGLE_TRY(getOrAllocateDescriptorSet(context, updateBuilder, commandBufferHelper,
-                                         *uniformsAndXfbDesc, DescriptorSetIndex::UniformsAndXfb,
-                                         &newSharedCacheKey));
-    uniformsAndXfbDesc->updateImagesAndBuffersWithSharedCacheKey(newSharedCacheKey);
-    return angle::Result::Continue;
+    return getOrAllocateDescriptorSet(context, updateBuilder, commandBufferHelper,
+                                      *uniformsAndXfbDesc, DescriptorSetIndex::UniformsAndXfb,
+                                      sharedCacheKeyOut);
 }
 
 angle::Result ProgramExecutableVk::updateTexturesDescriptorSet(
@@ -1804,8 +1802,19 @@ angle::Result ProgramExecutableVk::updateUniforms(
             isTransformFeedbackActiveUnpaused,
             glExecutable.hasTransformFeedbackOutput() ? transformFeedbackVk : nullptr);
 
+        vk::SharedDescriptorSetCacheKey newSharedCacheKey;
         ANGLE_TRY(updateUniformsAndXfbDescriptorSet(context, updateBuilder, commandBufferHelper,
-                                                    defaultUniformBuffer, &uniformsAndXfbDesc));
+                                                    defaultUniformBuffer, &uniformsAndXfbDesc,
+                                                    &newSharedCacheKey));
+        if (newSharedCacheKey)
+        {
+            defaultUniformBuffer->getBufferBlock()->onNewDescriptorSet(newSharedCacheKey);
+            if (glExecutable.hasTransformFeedbackOutput() &&
+                context->getFeatures().emulateTransformFeedback.enabled)
+            {
+                transformFeedbackVk->onNewDescriptorSet(glExecutable, newSharedCacheKey);
+            }
+        }
     }
 
     return angle::Result::Continue;

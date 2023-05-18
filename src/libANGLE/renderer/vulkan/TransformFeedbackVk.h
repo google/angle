@@ -106,6 +106,9 @@ class TransformFeedbackVk : public TransformFeedbackImpl, public angle::Observer
 
     void onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message) override;
 
+    void onNewDescriptorSet(const gl::ProgramExecutable &executable,
+                            const vk::SharedDescriptorSetCacheKey &sharedCacheKey);
+
   private:
     void writeDescriptorSet(vk::Context *context,
                             UpdateDescriptorSetsBuilder *updateBuilder,

@@ -329,4 +329,22 @@ void TransformFeedbackVk::updateTransformFeedbackDescriptorDesc(
         }
     }
 }
+
+void TransformFeedbackVk::onNewDescriptorSet(const gl::ProgramExecutable &executable,
+                                             const vk::SharedDescriptorSetCacheKey &sharedCacheKey)
+{
+    size_t xfbBufferCount = executable.getTransformFeedbackBufferCount();
+    for (uint32_t bufferIndex = 0; bufferIndex < xfbBufferCount; ++bufferIndex)
+    {
+        const gl::OffsetBindingPointer<gl::Buffer> &binding = mState.getIndexedBuffer(bufferIndex);
+        if (binding.get())
+        {
+            BufferVk *bufferVk = vk::GetImpl(binding.get());
+            if (bufferVk->getBuffer().valid())
+            {
+                bufferVk->getBuffer().getBufferBlock()->onNewDescriptorSet(sharedCacheKey);
+            }
+        }
+    }
+}
 }  // namespace rx

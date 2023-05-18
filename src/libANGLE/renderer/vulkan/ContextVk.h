@@ -1324,6 +1324,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     void updateStencilWriteWorkaround();
 
     angle::Result updateShaderResourcesDescriptorDesc(PipelineType pipelineType);
+    void updateShaderResourcesWithSharedCacheKey(
+        const vk::SharedDescriptorSetCacheKey &sharedCacheKey);
 
     angle::Result createGraphicsPipeline();
 
