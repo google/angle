@@ -2744,6 +2744,12 @@ void RendererVk::enableDeviceExtensionsNotPromoted(
         }
         vk::AddToPNextChain(&mEnabledFeatures, &mRasterizationOrderAttachmentAccessFeatures);
     }
+
+    if (mFeatures.supportsImage2dViewOf3d.enabled)
+    {
+        mEnabledDeviceExtensions.push_back(VK_EXT_IMAGE_2D_VIEW_OF_3D_EXTENSION_NAME);
+        vk::AddToPNextChain(&mEnabledFeatures, &mImage2dViewOf3dFeatures);
+    }
 }
 
 // See comment above appendDeviceExtensionFeaturesPromotedTo11.  Additional extensions are enabled

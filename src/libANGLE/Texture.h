@@ -148,7 +148,6 @@ class TextureState final : private angle::NonCopyable
     GLenum getDepthStencilTextureMode() const { return mDepthStencilTextureMode; }
 
     bool hasBeenBoundAsImage() const { return mHasBeenBoundAsImage; }
-    bool is3DTextureAndHasBeenBoundAs2DImage() const { return mIs3DAndHasBeenBoundAs2DImage; }
     bool hasBeenBoundAsAttachment() const { return mHasBeenBoundAsAttachment; }
 
     gl::SrgbOverride getSRGBOverride() const { return mSrgbOverride; }
@@ -232,7 +231,6 @@ class TextureState final : private angle::NonCopyable
     GLenum mDepthStencilTextureMode;
 
     bool mHasBeenBoundAsImage;
-    bool mIs3DAndHasBeenBoundAs2DImage;
     bool mHasBeenBoundAsAttachment;
 
     bool mImmutableFormat;
@@ -527,7 +525,6 @@ class Texture final : public RefCountObject<TextureID>,
     angle::Result generateMipmap(Context *context);
 
     void onBindAsImageTexture();
-    void onBind3DTextureAs2DImage();
 
     egl::Surface *getBoundSurface() const;
     egl::Stream *getBoundStream() const;

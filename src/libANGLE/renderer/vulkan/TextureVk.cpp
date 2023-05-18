@@ -2720,20 +2720,6 @@ angle::Result TextureVk::respecifyImageStorageIfNecessary(ContextVk *contextVk, 
         mImageCreateFlags |= VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT;
     }
 
-    if (mState.is3DTextureAndHasBeenBoundAs2DImage())
-    {
-        if (contextVk->getRenderer()->getFeatures().supportsImage2dViewOf3d.enabled)
-        {
-            mImageCreateFlags |= VK_IMAGE_CREATE_2D_VIEW_COMPATIBLE_BIT_EXT;
-        }
-        else
-        {
-            // This image may be used with 2d imageviews, despite being a 3d image
-            // The Vulkan core specification does not permit this behavior
-            // Tolerate the VVL errors and move on
-        }
-    }
-
     // Create a new image if used as attachment for the first time. This must be called before
     // prepareForGenerateMipmap since this changes the format which prepareForGenerateMipmap relies
     // on.

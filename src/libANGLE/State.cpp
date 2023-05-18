@@ -3818,13 +3818,6 @@ void State::setImageUnit(const Context *context,
     if (texture)
     {
         texture->onBindAsImageTexture();
-
-        // Using individual layers of a 3d image as 2d may require that the image be respecified in
-        // a compatible layout
-        if (!layered && texture->getType() == TextureType::_3D)
-        {
-            texture->onBind3DTextureAs2DImage();
-        }
     }
     imageUnit.texture.set(context, texture);
     imageUnit.level   = level;
