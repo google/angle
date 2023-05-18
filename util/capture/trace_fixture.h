@@ -113,6 +113,7 @@ extern EGLSurface *gSurfaceMap2;
 extern EGLContext *gContextMap2;
 extern GLsync *gSyncMap2;
 extern EGLSync *gEGLSyncMap;
+extern EGLDisplay gEGLDisplay;
 void InitializeReplay4(const char *binaryDataFileName,
                        size_t maxClientArraySize,
                        size_t readBufferSize,

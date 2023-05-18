@@ -8762,8 +8762,6 @@ void FrameCaptureShared::writeCppReplayIndexFiles(const gl::Context *context,
         source << "#include \"" << FmtCapturePrefix(contextId, mCaptureLabel) << ".h\"\n";
         source << "#include \"trace_fixture.h\"\n";
         source << "#include \"angle_trace_gl.h\"\n";
-        source << "\n";
-        source << "EGLDisplay gEGLDisplay;\n";
 
         std::string sourcePrologue = source.str();
         mReplayWriter.setSourcePrologue(sourcePrologue);
@@ -8891,7 +8889,6 @@ void FrameCaptureShared::writeMainContextCppReplay(const gl::Context *context,
 
             // Setup all of the shared objects.
             out << "    InitReplay();\n";
-            out << "    gEGLDisplay = eglGetCurrentDisplay();\n";
             if (usesMidExecutionCapture())
             {
                 out << "    " << FmtSetupFunction(kNoPartId, kSharedContextId, FuncUsage::Call)
@@ -9521,9 +9518,6 @@ void ReplayWriter::saveHeader()
     SaveFileHelper saveH(headerPath);
 
     saveH << mHeaderPrologue << "\n";
-
-    saveH << "extern EGLDisplay gEGLDisplay;\n";
-    saveH << "\n";
 
     saveH << "// Public functions are declared in trace_fixture.h.\n";
     saveH << "\n";

@@ -146,6 +146,7 @@ class TracePerfTest : public ANGLERenderTest
     EGLint onEglClientWaitSync(EGLDisplay dpy, EGLSync sync, EGLint flags, EGLTimeKHR timeout);
     EGLint onEglClientWaitSyncKHR(EGLDisplay dpy, EGLSync sync, EGLint flags, EGLTimeKHR timeout);
     EGLint onEglGetError();
+    EGLDisplay onEglGetCurrentDisplay();
 
     void onReplayFramebufferChange(GLenum target, GLuint framebuffer);
     void onReplayInvalidateFramebuffer(GLenum target,
@@ -326,6 +327,11 @@ EGLint KHRONOS_APIENTRY EglClientWaitSyncKHR(EGLDisplay dpy,
 EGLint KHRONOS_APIENTRY EglGetError()
 {
     return gCurrentTracePerfTest->onEglGetError();
+}
+
+EGLDisplay KHRONOS_APIENTRY EglGetCurrentDisplay()
+{
+    return gCurrentTracePerfTest->onEglGetCurrentDisplay();
 }
 
 void KHRONOS_APIENTRY BindFramebufferProc(GLenum target, GLuint framebuffer)
@@ -667,6 +673,10 @@ angle::GenericProc KHRONOS_APIENTRY TraceLoadProc(const char *procName)
     if (strcmp(procName, "eglGetError") == 0)
     {
         return reinterpret_cast<angle::GenericProc>(EglGetError);
+    }
+    if (strcmp(procName, "eglGetCurrentDisplay") == 0)
+    {
+        return reinterpret_cast<angle::GenericProc>(EglGetCurrentDisplay);
     }
 
     // GLES
@@ -2111,6 +2121,11 @@ EGLint TracePerfTest::onEglClientWaitSyncKHR(EGLDisplay dpy,
 EGLint TracePerfTest::onEglGetError()
 {
     return getGLWindow()->getEGLError();
+}
+
+EGLDisplay TracePerfTest::onEglGetCurrentDisplay()
+{
+    return getGLWindow()->getCurrentDisplay();
 }
 
 // Triggered when the replay calls glBindFramebuffer.

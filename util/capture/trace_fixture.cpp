@@ -196,6 +196,7 @@ EGLSurface *gSurfaceMap2;
 EGLContext *gContextMap2;
 GLsync *gSyncMap2;
 EGLSync *gEGLSyncMap;
+EGLDisplay gEGLDisplay;
 
 std::string gBinaryDataDir = ".";
 
@@ -254,6 +255,7 @@ void InitializeReplay4(const char *binaryDataFileName,
                       maxSemaphore, maxShaderProgram, maxSurface, maxSync, maxTexture,
                       maxTransformFeedback, maxVertexArray);
     gEGLSyncMap = AllocateZeroedValues<EGLSync>(maxEGLSyncID);
+    gEGLDisplay = eglGetCurrentDisplay();
 }
 
 void InitializeReplay3(const char *binaryDataFileName,
