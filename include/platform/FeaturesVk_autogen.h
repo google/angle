@@ -720,6 +720,11 @@ struct FeaturesVk : FeatureSetBase
         "supportsImage2dViewOf3d", FeatureCategory::VulkanFeatures,
         "VkDevice supports VK_EXT_image_2d_view_of_3d", &members, "https://anglebug.com/7320"};
 
+    FeatureInfo supportsSampler2dViewOf3d = {
+        "supportsSampler2dViewOf3d", FeatureCategory::VulkanFeatures,
+        "VkDevice supports the sampler2DViewOf3D feature of VK_EXT_image_2d_view_of_3d", &members,
+        "https://anglebug.com/7320"};
+
     FeatureInfo supportsImagelessFramebuffer = {
         "supportsImagelessFramebuffer", FeatureCategory::VulkanFeatures,
         "VkDevice supports VK_KHR_imageless_framebuffer extension", &members,

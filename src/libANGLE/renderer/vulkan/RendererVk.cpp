@@ -4002,7 +4002,14 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
                 VK_TRUE);
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsImage2dViewOf3d,
-                            mImage2dViewOf3dFeatures.image2DViewOf3D == VK_TRUE &&
+                            mImage2dViewOf3dFeatures.image2DViewOf3D == VK_TRUE);
+
+    // Note: sampler2DViewOf3D is only useful for supporting EGL_KHR_gl_texture_3D_image.  If the
+    // VK_IMAGE_CREATE_2D_VIEW_COMPATIBLE_BIT_EXT added to 3D images measurable hurts sampling
+    // performance, it might be better to remove support for EGL_KHR_gl_texture_3D_image in favor of
+    // faster 3D images.
+    ANGLE_FEATURE_CONDITION(&mFeatures, supportsSampler2dViewOf3d,
+                            mFeatures.supportsImage2dViewOf3d.enabled &&
                                 mImage2dViewOf3dFeatures.sampler2DViewOf3D == VK_TRUE);
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsMultiview, mMultiviewFeatures.multiview == VK_TRUE);

@@ -458,7 +458,8 @@ void DisplayVk::generateExtensions(egl::DisplayExtensions *outExtensions) const
     outExtensions->imagePixmap           = false;  // ANGLE does not support pixmaps
     outExtensions->glTexture2DImage      = true;
     outExtensions->glTextureCubemapImage = true;
-    outExtensions->glTexture3DImage = getRenderer()->getFeatures().supportsImage2dViewOf3d.enabled;
+    outExtensions->glTexture3DImage =
+        getRenderer()->getFeatures().supportsSampler2dViewOf3d.enabled;
     outExtensions->glRenderbufferImage = true;
     outExtensions->imageNativeBuffer =
         getRenderer()->getFeatures().supportsAndroidHardwareBuffer.enabled;

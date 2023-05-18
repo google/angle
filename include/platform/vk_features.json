@@ -969,6 +969,14 @@
             "issue": "https://anglebug.com/7320"
         },
         {
+            "name": "supports_sampler_2d_view_of_3d",
+            "category": "Features",
+            "description": [
+                "VkDevice supports the sampler2DViewOf3D feature of VK_EXT_image_2d_view_of_3d"
+            ],
+            "issue": "https://anglebug.com/7320"
+        },
+        {
             "name": "supports_imageless_framebuffer",
             "category": "Features",
             "description": [

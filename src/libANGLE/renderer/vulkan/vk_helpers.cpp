@@ -984,7 +984,9 @@ bool CheckSubpassCommandBufferCount(uint32_t count)
 uint32_t DynamicDescriptorPool::mMaxSetsPerPool           = 16;
 uint32_t DynamicDescriptorPool::mMaxSetsPerPoolMultiplier = 2;
 
-VkImageCreateFlags GetImageCreateFlags(RendererVk *renderer, gl::TextureType textureType)
+VkImageCreateFlags GetImageCreateFlags(RendererVk *renderer,
+                                       gl::TextureType textureType,
+                                       VkImageUsageFlags usage)
 {
     switch (textureType)
     {
@@ -993,16 +995,32 @@ VkImageCreateFlags GetImageCreateFlags(RendererVk *renderer, gl::TextureType tex
             return VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT;
 
         case gl::TextureType::_3D:
+        {
             // Slices of this image may be used as:
             //
             // - Render target: The VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT flag is needed for that.
             // - Sampled or storage image: The VK_IMAGE_CREATE_2D_VIEW_COMPATIBLE_BIT_EXT flag is
             //   needed for this.  If VK_EXT_image_2d_view_of_3d is not supported, we tolerate the
             //   VVL error as drivers seem to support this behavior anyway.
-            return VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT |
-                   (renderer->getFeatures().supportsImage2dViewOf3d.enabled
-                        ? VK_IMAGE_CREATE_2D_VIEW_COMPATIBLE_BIT_EXT
-                        : 0);
+            VkImageCreateFlags flags = VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT;
+
+            if ((usage & VK_IMAGE_USAGE_STORAGE_BIT) != 0)
+            {
+                if (renderer->getFeatures().supportsImage2dViewOf3d.enabled)
+                {
+                    flags |= VK_IMAGE_CREATE_2D_VIEW_COMPATIBLE_BIT_EXT;
+                }
+            }
+            else if ((usage & VK_IMAGE_USAGE_SAMPLED_BIT) != 0)
+            {
+                if (renderer->getFeatures().supportsSampler2dViewOf3d.enabled)
+                {
+                    flags |= VK_IMAGE_CREATE_2D_VIEW_COMPATIBLE_BIT_EXT;
+                }
+            }
+
+            return flags;
+        }
 
         default:
             return 0;
@@ -5485,8 +5503,8 @@ angle::Result ImageHelper::initExternal(Context *context,
     mFirstAllocatedLevel = firstLevel;
     mLevelCount          = mipLevels;
     mLayerCount          = layerCount;
-    mCreateFlags         = GetImageCreateFlags(rendererVk, textureType) | additionalCreateFlags;
-    mUsage               = usage;
+    mCreateFlags = GetImageCreateFlags(rendererVk, textureType, usage) | additionalCreateFlags;
+    mUsage       = usage;
 
     // Validate that mLayerCount is compatible with the texture type
     ASSERT(textureType != gl::TextureType::_3D || mLayerCount == 1);
