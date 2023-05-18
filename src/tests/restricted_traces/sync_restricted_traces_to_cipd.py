@@ -29,14 +29,18 @@ MAX_THREADS = 8
 LONG_TIMEOUT = 100000
 
 
-def cipd(*args):
+def cipd(args, suppress_stdout=True):
     logging.debug('running cipd with args: %s', ' '.join(args))
     exe = 'cipd.bat' if platform.system() == 'Windows' else 'cipd'
-    completed = subprocess.run(
-        [exe] + list(args), stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-    if completed.stdout:
-        logging.debug('cipd stdout:\n%s' % completed.stdout.decode())
-    return completed.returncode
+    if suppress_stdout:
+        # Capture stdout, only log if --log=debug after the process terminates
+        process = subprocess.run([exe] + args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        if process.stdout:
+            logging.debug('cipd stdout:\n%s' % process.stdout.decode())
+    else:
+        # Stdout is piped to the caller's stdout, visible immediately
+        process = subprocess.run([exe] + args)
+    return process.returncode
 
 
 def cipd_name_and_version(trace, trace_version):
@@ -55,14 +59,18 @@ def check_trace_exists(args, trace, trace_version):
     cipd_trace_name, cipd_trace_version = cipd_name_and_version(trace, trace_version)
 
     # Determine if this version exists
-    return cipd('describe', cipd_trace_name, '-version', 'version:%s' % cipd_trace_version) == 0
+    return cipd(['describe', cipd_trace_name, '-version', 'version:%s' % cipd_trace_version]) == 0
 
 
 def upload_trace(args, trace, trace_version):
     trace_folder = os.path.join(SCRIPT_DIR, trace)
     cipd_trace_name, cipd_trace_version = cipd_name_and_version(trace, trace_version)
-    if cipd('create', '-name', cipd_trace_name, '-in', trace_folder, '-tag', 'version:%s' %
-            cipd_trace_version, '-log-level', args.log.lower(), '-install-mode', 'copy') != 0:
+    cipd_args = ['create', '-name', cipd_trace_name]
+    cipd_args += ['-in', trace_folder]
+    cipd_args += ['-tag', 'version:%s' % cipd_trace_version]
+    cipd_args += ['-log-level', args.log.lower()]
+    cipd_args += ['-install-mode', 'copy']
+    if cipd(cipd_args, suppress_stdout=False) != 0:
         logging.error('%s version %s: cipd create failed', trace, trace_version)
         sys.exit(1)
 
