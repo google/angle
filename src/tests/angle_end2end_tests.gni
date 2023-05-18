@@ -3,6 +3,7 @@
 # found in the LICENSE file.
 
 angle_end2end_tests_sources = [
+  "capture_tests/CapturedTest.cpp",
   "egl_tests/EGLAndroidFrameBufferTargetTest.cpp",
   "egl_tests/EGLBackwardsCompatibleContextTest.cpp",
   "egl_tests/EGLBlobCacheTest.cpp",

@@ -578,6 +578,15 @@ if (build_angle_trace_tests) {
     ]
     data_deps = [ ":angle_trace_perf_tests" ]
   }
+
+  group("angle_capture_tests") {
+    testonly = true
+    data = [
+      "capture_tests/capture_tests.py",
+      "capture_tests/expected",
+    ]
+    data_deps = [ ":angle_end2end_tests" ]
+  }
 }
 
 ###-----------------------------------------------------
@@ -1730,6 +1739,7 @@ group("angle_tests") {
     ":angle_end2end_tests",
     ":angle_system_info_test",
     ":angle_unittests",
+    "capture_tests:angle_capture_tests_trace",
   ]
   if (build_angle_perftests) {
     deps += [ ":angle_perftests" ]
