@@ -135,6 +135,7 @@ class DisplayMtl : public DisplayImpl
     bool supportsDepth24Stencil8PixelFormat() const;
     bool supports32BitFloatFiltering() const;
     bool isAMD() const;
+    bool isAMDBronzeDriver() const;
     bool isIntel() const;
     bool isNVIDIA() const;
     bool isSimulator() const;
@@ -191,6 +192,10 @@ class DisplayMtl : public DisplayImpl
 
     mtl::AutoObjCPtr<id<MTLDevice>> mMetalDevice = nil;
     uint32_t mMetalDeviceVendorId                = 0;
+
+    // Expensive-to-compute AMD Bronze driver detection
+    mutable bool mComputedAMDBronze = false;
+    mutable bool mIsAMDBronze       = false;
 
     mtl::CommandQueue mCmdQueue;
 

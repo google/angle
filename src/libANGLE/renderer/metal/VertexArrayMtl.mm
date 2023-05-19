@@ -640,6 +640,12 @@ angle::Result VertexArrayMtl::updateClientAttribs(const gl::Context *context,
                                            streamFormat.vertexLoadFunction,
                                            &mConvertedArrayBufferHolders[attribIndex],
                                            &mCurrentArrayBufferOffsets[attribIndex]));
+                if (contextMtl->getDisplay()->getFeatures().flushAfterStreamVertexData.enabled)
+                {
+                    // WaitUntilScheduled is needed for this workaround. NoWait does not have the
+                    // needed effect.
+                    contextMtl->flushCommandBuffer(mtl::WaitUntilScheduled);
+                }
 
                 mCurrentArrayBuffers[attribIndex] = &mConvertedArrayBufferHolders[attribIndex];
             }
@@ -894,7 +900,7 @@ angle::Result VertexArrayMtl::convertIndexBuffer(const gl::Context *glContext,
     {
         // We shouldn't use GPU to convert when we are in a middle of a render pass.
         ANGLE_TRY(StreamIndexData(contextMtl, &conversion->data,
-                                  idxBuffer->getClientShadowCopyData(contextMtl) + offsetModulo,
+                                  idxBuffer->getBufferDataReadOnly(contextMtl) + offsetModulo,
                                   indexType, indexCount, glState.isPrimitiveRestartEnabled(),
                                   &conversion->convertedBuffer, &conversion->convertedOffset));
     }
@@ -1074,7 +1080,7 @@ angle::Result VertexArrayMtl::convertVertexBufferCPU(ContextMtl *contextMtl,
                                                      ConversionBufferMtl *conversion)
 {
 
-    const uint8_t *srcBytes = srcBuffer->getClientShadowCopyData(contextMtl);
+    const uint8_t *srcBytes = srcBuffer->getBufferDataReadOnly(contextMtl);
     ANGLE_CHECK_GL_ALLOC(contextMtl, srcBytes);
     VertexConversionBufferMtl *vertexConverison =
         static_cast<VertexConversionBufferMtl *>(conversion);

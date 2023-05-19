@@ -2102,8 +2102,7 @@ angle::Result IndexGeneratorUtils::generateTriFanBufferFromElementsArray(
              contextMtl->getRenderCommandEncoder()))
         {
             IndexGenerationParams cpuPathParams = params;
-            cpuPathParams.indices =
-                elementBufferMtl->getClientShadowCopyData(contextMtl) + srcOffset;
+            cpuPathParams.indices = elementBufferMtl->getBufferDataReadOnly(contextMtl) + srcOffset;
             return generateTriFanBufferFromElementsArrayCPU(contextMtl, cpuPathParams,
                                                             indicesGenerated);
         }
@@ -2231,8 +2230,7 @@ angle::Result IndexGeneratorUtils::generateLineLoopBufferFromElementsArray(
              contextMtl->getRenderCommandEncoder()))
         {
             IndexGenerationParams cpuPathParams = params;
-            cpuPathParams.indices =
-                elementBufferMtl->getClientShadowCopyData(contextMtl) + srcOffset;
+            cpuPathParams.indices = elementBufferMtl->getBufferDataReadOnly(contextMtl) + srcOffset;
             return generateLineLoopBufferFromElementsArrayCPU(contextMtl, cpuPathParams,
                                                               indicesGenerated);
         }

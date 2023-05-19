@@ -1439,6 +1439,7 @@ angle::Result ContextMtl::onMakeCurrent(const gl::Context *context)
     {
         GetImplAs<QueryMtl>(query)->onContextMakeCurrent(context);
     }
+    mBufferManager.incrementNumContextSwitches();
     return angle::Result::Continue;
 }
 angle::Result ContextMtl::onUnMakeCurrent(const gl::Context *context)
@@ -1797,6 +1798,11 @@ void ContextMtl::endRenderEncoding(mtl::RenderCommandEncoder *encoder)
         disableActiveOcclusionQueryInRenderPass();
     }
 
+    if (mBlitEncoder.valid())
+    {
+        mBlitEncoder.endEncoding();
+    }
+
     encoder->endEncoding();
 
     // Resolve visibility results
@@ -1839,6 +1845,7 @@ void ContextMtl::flushCommandBuffer(mtl::CommandBufferFinishOperation operation)
     {
         endEncoding(true);
         mCmdBuffer.commit(operation);
+        mBufferManager.incrementNumCommandBufferCommits();
         mRenderPassesSinceFlush = 0;
     }
     else
@@ -1889,6 +1896,16 @@ bool ContextMtl::hasStartedRenderPass(const mtl::RenderPassDesc &desc)
 {
     return mRenderEncoder.valid() &&
            mRenderEncoder.renderPassDesc().equalIgnoreLoadStoreOptions(desc);
+}
+
+bool ContextMtl::isCurrentRenderEncoderSerial(uint64_t serial)
+{
+    if (!mRenderEncoder.valid())
+    {
+        return false;
+    }
+
+    return serial == mRenderEncoder.getSerial();
 }
 
 // Get current render encoder
@@ -1992,6 +2009,11 @@ mtl::RenderCommandEncoder *ContextMtl::getRenderTargetCommandEncoder(
 
 mtl::BlitCommandEncoder *ContextMtl::getBlitCommandEncoder()
 {
+    if (mRenderEncoder.valid() || mComputeEncoder.valid())
+    {
+        endEncoding(true);
+    }
+
     if (mBlitEncoder.valid())
     {
         return &mBlitEncoder;
@@ -2018,6 +2040,11 @@ mtl::BlitCommandEncoder *ContextMtl::getBlitCommandEncoderWithoutEndingRenderEnc
 
 mtl::ComputeCommandEncoder *ContextMtl::getComputeCommandEncoder()
 {
+    if (mRenderEncoder.valid() || mBlitEncoder.valid())
+    {
+        endEncoding(true);
+    }
+
     if (mComputeEncoder.valid())
     {
         return &mComputeEncoder;
@@ -2957,7 +2984,9 @@ angle::Result ContextMtl::copyTextureSliceLevelToWorkBuffer(
     // Expand the buffer if it is not big enough.
     if (!mWorkBuffer || mWorkBuffer->size() < sizeInBytes)
     {
-        ANGLE_TRY(mtl::Buffer::MakeBuffer(this, sizeInBytes, nullptr, &mWorkBuffer));
+        ANGLE_TRY(mtl::Buffer::MakeBufferWithStorageMode(
+            this, mtl::Buffer::getStorageModeForSharedBuffer(this), sizeInBytes, nullptr,
+            &mWorkBuffer));
     }
 
     gl::Rectangle region(0, 0, width, height);
