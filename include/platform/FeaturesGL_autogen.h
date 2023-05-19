@@ -480,6 +480,11 @@ struct FeaturesGL : FeatureSetBase
         "Timestampis called.",
         &members, "https://crbug.com/1356053"};
 
+    FeatureInfo disableBaseInstanceVertex = {
+        "disableBaseInstanceVertex", FeatureCategory::OpenGLWorkarounds,
+        "Some Mali drivers have buggy implementations of glDraw*BaseVertex*.", &members,
+        "http://anglebug.com/8172"};
+
     FeatureInfo supportsFragmentShaderInterlockNV = {
         "supportsFragmentShaderInterlockNV", FeatureCategory::OpenGLFeatures,
         "Backend GL context supports NV_fragment_shader_interlock extension", &members,

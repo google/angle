@@ -661,6 +661,14 @@
             "issue": "https://crbug.com/1356053"
         },
         {
+            "name": "disable_base_instance_vertex",
+            "category": "Workarounds",
+            "description": [
+                "Some Mali drivers have buggy implementations of glDraw*BaseVertex*."
+            ],
+            "issue": "http://anglebug.com/8172"
+        },
+        {
             "name": "supports_fragment_shader_interlock_NV",
             "category": "Features",
             "description": [

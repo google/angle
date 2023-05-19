@@ -67,6 +67,7 @@ enum class Feature
     DepthStencilBlitExtraCopy,
     DisableAnisotropicFiltering,
     DisableB5G6R5Support,
+    DisableBaseInstanceVertex,
     DisableBlendFuncExtended,
     DisableClipControl,
     DisableDrawBuffersIndexed,

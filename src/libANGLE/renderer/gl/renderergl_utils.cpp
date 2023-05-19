@@ -161,6 +161,13 @@ bool IsMaliG72OrG76(const FunctionsGL *functions)
     return number == 72 || number == 76;
 }
 
+bool IsMaliValhall(const FunctionsGL *functions)
+{
+    int number = getMaliGNumber(functions);
+    return number == 57 || number == 77 || number == 68 || number == 78 || number == 310 ||
+           number == 510 || number == 610 || number == 710 || number == 615 || number == 715;
+}
+
 int GetAndroidSdkLevel()
 {
     if (!IsAndroid())
@@ -1931,16 +1938,18 @@ void GenerateCaps(const FunctionsGL *functions,
 
     // ANGLE_base_vertex_base_instance
     extensions->baseVertexBaseInstanceANGLE =
-        functions->isAtLeastGL(gl::Version(3, 2)) || functions->isAtLeastGLES(gl::Version(3, 2)) ||
-        functions->hasGLESExtension("GL_OES_draw_elements_base_vertex") ||
-        functions->hasGLESExtension("GL_EXT_draw_elements_base_vertex");
+        !features.disableBaseInstanceVertex.enabled &&
+        (functions->isAtLeastGL(gl::Version(3, 2)) || functions->isAtLeastGLES(gl::Version(3, 2)) ||
+         functions->hasGLESExtension("GL_OES_draw_elements_base_vertex") ||
+         functions->hasGLESExtension("GL_EXT_draw_elements_base_vertex"));
 
     // EXT_base_instance
-    extensions->baseInstanceEXT = functions->isAtLeastGL(gl::Version(3, 2)) ||
-                                  functions->isAtLeastGLES(gl::Version(3, 2)) ||
-                                  functions->hasGLESExtension("GL_OES_draw_elements_base_vertex") ||
-                                  functions->hasGLESExtension("GL_EXT_draw_elements_base_vertex") ||
-                                  functions->hasGLESExtension("GL_EXT_base_instance");
+    extensions->baseInstanceEXT =
+        !features.disableBaseInstanceVertex.enabled &&
+        (functions->isAtLeastGL(gl::Version(3, 2)) || functions->isAtLeastGLES(gl::Version(3, 2)) ||
+         functions->hasGLESExtension("GL_OES_draw_elements_base_vertex") ||
+         functions->hasGLESExtension("GL_EXT_draw_elements_base_vertex") ||
+         functions->hasGLESExtension("GL_EXT_base_instance"));
 
     // ANGLE_base_vertex_base_instance_shader_builtin
     extensions->baseVertexBaseInstanceShaderBuiltinANGLE = extensions->baseVertexBaseInstanceANGLE;
@@ -2559,6 +2568,9 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
 
     // https://crbug.com/1434317
     ANGLE_FEATURE_CONDITION(features, disableClipControl, IsMaliG72OrG76(functions));
+
+    // http://anglebug.com/8172
+    ANGLE_FEATURE_CONDITION(features, disableBaseInstanceVertex, IsMaliValhall(functions));
 }
 
 void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFeatures *features)
