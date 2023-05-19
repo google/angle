@@ -910,21 +910,27 @@ bool VaryingPacking::collectAndPackUserVaryings(gl::InfoLog &infoLog,
             collectTFVarying(tfVarying, ref, &uniqueFullNames);
         }
 
-        if (input && !input->isBuiltIn() &&
-            uniqueFullNames[ref.frontShaderStage].count(input->name) == 0)
+        if (input && !input->isBuiltIn())
         {
-            mInactiveVaryingMappedNames[ref.frontShaderStage].push_back(input->mappedName);
-            if (input->isShaderIOBlock)
+            if (uniqueFullNames[ref.frontShaderStage].count(input->name) == 0)
+            {
+                mInactiveVaryingMappedNames[ref.frontShaderStage].push_back(input->mappedName);
+            }
+            if (input->isShaderIOBlock &&
+                uniqueFullNames[ref.frontShaderStage].count(input->structOrBlockName) == 0)
             {
                 mInactiveVaryingMappedNames[ref.frontShaderStage].push_back(
                     input->mappedStructOrBlockName);
             }
         }
-        if (output && !output->isBuiltIn() &&
-            uniqueFullNames[ref.backShaderStage].count(output->name) == 0)
+        if (output && !output->isBuiltIn())
         {
-            mInactiveVaryingMappedNames[ref.backShaderStage].push_back(output->mappedName);
-            if (output->isShaderIOBlock)
+            if (uniqueFullNames[ref.backShaderStage].count(output->name) == 0)
+            {
+                mInactiveVaryingMappedNames[ref.backShaderStage].push_back(output->mappedName);
+            }
+            if (output->isShaderIOBlock &&
+                uniqueFullNames[ref.backShaderStage].count(output->structOrBlockName) == 0)
             {
                 mInactiveVaryingMappedNames[ref.backShaderStage].push_back(
                     output->mappedStructOrBlockName);
