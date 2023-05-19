@@ -43,7 +43,7 @@ vars = {
   'checkout_angle_mesa': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': 'bc320a94824d73c5d2b758c69329eb9a1a533970',
+  'chromium_revision': 'be870e411d55c8a696267d772f94b125b781291c',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -88,11 +88,11 @@ vars = {
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling catapult
   # and whatever else without interference from each other.
-  'catapult_revision': 'f1f7a299cb157ccc0f9b3751224b30d37d19547f',
+  'catapult_revision': 'ac9d6ede9a944c02ddab627c4480cc7d5629a9d8',
 
   # the commit queue can handle CLs rolling Fuchsia sdk
   # and whatever else without interference from each other.
-  'fuchsia_version': 'version:12.20230517.1.1',
+  'fuchsia_version': 'version:12.20230518.3.1',
 
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling luci-go
@@ -140,7 +140,7 @@ vars = {
 deps = {
 
   'build': {
-    'url': '{chromium_git}/chromium/src/build.git@36246d88fa924a9aecf623c2da2a7f11a70df93b',
+    'url': '{chromium_git}/chromium/src/build.git@8aefde05e43ff0744a736b090b8a8caa7167a727',
     'condition': 'not build_with_chromium',
   },
 
@@ -182,7 +182,7 @@ deps = {
   },
 
   'buildtools/third_party/libc++abi/trunk': {
-    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libcxxabi.git@7454e17b0da5e51309cbebe55a968a64889372fd',
+    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libcxxabi.git@a4c3a6dc75b3f4aef6b39e7a10452b197ec29371',
     'condition': 'not build_with_chromium',
   },
 
@@ -203,7 +203,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@7e91557f2bf22161696b35aaeb1e50958bdee834',
+    'url': '{chromium_git}/chromium/src/testing@60112c1352fa3adef54d98c8e65ccfc7575b543f',
     'condition': 'not build_with_chromium',
   },
 
@@ -273,7 +273,7 @@ deps = {
   },
 
   'third_party/android_deps': {
-    'url': '{chromium_git}/chromium/src/third_party/android_deps@1ab95012c73c4ad03470e98c9ba47a48a21f5764',
+    'url': '{chromium_git}/chromium/src/third_party/android_deps@7a6ed2c936372ff3227e54c98cf75c2970600eb6',
     'condition': 'checkout_android and not build_with_chromium',
   },
 
@@ -380,7 +380,7 @@ deps = {
   },
 
   'third_party/depot_tools': {
-    'url': '{chromium_git}/chromium/tools/depot_tools.git@cdefe67b38c4ae7210fe2829fb8f5a1ad7f3e95d',
+    'url': '{chromium_git}/chromium/tools/depot_tools.git@b0e8e7adbc7e61ad3c501683e13ffd05dcd9b669',
     'condition': 'not build_with_chromium',
   },
 
@@ -669,7 +669,7 @@ deps = {
   },
 
   'tools/clang': {
-    'url': '{chromium_git}/chromium/src/tools/clang.git@096dcd2735dd589d85a4ad8bead644869df9eb0e',
+    'url': '{chromium_git}/chromium/src/tools/clang.git@c419c81c92761667d2bd45536126beed22319600',
     'condition': 'not build_with_chromium',
   },
 
@@ -700,7 +700,7 @@ deps = {
   },
 
   'tools/mb': {
-    'url': '{chromium_git}/chromium/src/tools/mb@f4fa549a2bd9b64b411c9b5c3b2975ad8a842629',
+    'url': '{chromium_git}/chromium/src/tools/mb@182e9e0811b326468d367f0655cbf374ece39c39',
     'condition': 'not build_with_chromium',
   },
 
@@ -715,7 +715,7 @@ deps = {
   },
 
   'tools/perf': {
-    'url': '{chromium_git}/chromium/src/tools/perf@c278749207c9625c02abf34e035d72bdd618f5be',
+    'url': '{chromium_git}/chromium/src/tools/perf@adeff0564b645fa31e1a46715561e1caec728893',
     'condition': 'not build_with_chromium',
   },
 
@@ -4748,7 +4748,7 @@ deps = {
       'packages': [
           {
               'package': 'chromium/third_party/android_deps/libs/org_robolectric_annotations',
-              'version': 'version:2@4.10.2.cr1',
+              'version': 'version:2@4.10.3.cr1',
           },
       ],
       'condition': 'checkout_android and not build_with_chromium',
@@ -4759,7 +4759,7 @@ deps = {
       'packages': [
           {
               'package': 'chromium/third_party/android_deps/libs/org_robolectric_junit',
-              'version': 'version:2@4.10.2.cr1',
+              'version': 'version:2@4.10.3.cr1',
           },
       ],
       'condition': 'checkout_android and not build_with_chromium',
@@ -4770,7 +4770,7 @@ deps = {
       'packages': [
           {
               'package': 'chromium/third_party/android_deps/libs/org_robolectric_nativeruntime',
-              'version': 'version:2@4.10.2.cr1',
+              'version': 'version:2@4.10.3.cr1',
           },
       ],
       'condition': 'checkout_android and not build_with_chromium',
@@ -4792,7 +4792,7 @@ deps = {
       'packages': [
           {
               'package': 'chromium/third_party/android_deps/libs/org_robolectric_pluginapi',
-              'version': 'version:2@4.10.2.cr1',
+              'version': 'version:2@4.10.3.cr1',
           },
       ],
       'condition': 'checkout_android and not build_with_chromium',
@@ -4803,7 +4803,7 @@ deps = {
       'packages': [
           {
               'package': 'chromium/third_party/android_deps/libs/org_robolectric_plugins_maven_dependency_resolver',
-              'version': 'version:2@4.10.2.cr1',
+              'version': 'version:2@4.10.3.cr1',
           },
       ],
       'condition': 'checkout_android and not build_with_chromium',
@@ -4814,7 +4814,7 @@ deps = {
       'packages': [
           {
               'package': 'chromium/third_party/android_deps/libs/org_robolectric_resources',
-              'version': 'version:2@4.10.2.cr1',
+              'version': 'version:2@4.10.3.cr1',
           },
       ],
       'condition': 'checkout_android and not build_with_chromium',
@@ -4825,7 +4825,7 @@ deps = {
       'packages': [
           {
               'package': 'chromium/third_party/android_deps/libs/org_robolectric_robolectric',
-              'version': 'version:2@4.10.2.cr1',
+              'version': 'version:2@4.10.3.cr1',
           },
       ],
       'condition': 'checkout_android and not build_with_chromium',
@@ -4836,7 +4836,7 @@ deps = {
       'packages': [
           {
               'package': 'chromium/third_party/android_deps/libs/org_robolectric_sandbox',
-              'version': 'version:2@4.10.2.cr1',
+              'version': 'version:2@4.10.3.cr1',
           },
       ],
       'condition': 'checkout_android and not build_with_chromium',
@@ -4847,7 +4847,7 @@ deps = {
       'packages': [
           {
               'package': 'chromium/third_party/android_deps/libs/org_robolectric_shadowapi',
-              'version': 'version:2@4.10.2.cr1',
+              'version': 'version:2@4.10.3.cr1',
           },
       ],
       'condition': 'checkout_android and not build_with_chromium',
@@ -4858,7 +4858,7 @@ deps = {
       'packages': [
           {
               'package': 'chromium/third_party/android_deps/libs/org_robolectric_shadows_framework',
-              'version': 'version:2@4.10.2.cr1',
+              'version': 'version:2@4.10.3.cr1',
           },
       ],
       'condition': 'checkout_android and not build_with_chromium',
@@ -4869,7 +4869,7 @@ deps = {
       'packages': [
           {
               'package': 'chromium/third_party/android_deps/libs/org_robolectric_shadows_playservices',
-              'version': 'version:2@4.10.2.cr1',
+              'version': 'version:2@4.10.3.cr1',
           },
       ],
       'condition': 'checkout_android and not build_with_chromium',
@@ -4880,7 +4880,7 @@ deps = {
       'packages': [
           {
               'package': 'chromium/third_party/android_deps/libs/org_robolectric_utils',
-              'version': 'version:2@4.10.2.cr1',
+              'version': 'version:2@4.10.3.cr1',
           },
       ],
       'condition': 'checkout_android and not build_with_chromium',
@@ -4891,7 +4891,7 @@ deps = {
       'packages': [
           {
               'package': 'chromium/third_party/android_deps/libs/org_robolectric_utils_reflector',
-              'version': 'version:2@4.10.2.cr1',
+              'version': 'version:2@4.10.3.cr1',
           },
       ],
       'condition': 'checkout_android and not build_with_chromium',
