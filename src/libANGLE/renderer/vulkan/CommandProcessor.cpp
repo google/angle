@@ -1163,7 +1163,8 @@ angle::Result CommandQueue::postSubmitCheck(Context *context)
         while (suballocationGarbageSize > kMaxBufferSuballocationGarbageSize &&
                mInFlightCommands.size() > 1)
         {
-            ANGLE_TRY(finishOneCommandBatchAndCleanup(context, renderer->getMaxFenceWaitTimeNs()));
+            ANGLE_TRY(
+                finishOneCommandBatchAndCleanupImpl(context, renderer->getMaxFenceWaitTimeNs()));
             suballocationGarbageSize = renderer->getSuballocationGarbageSize();
         }
     }
@@ -1496,7 +1497,7 @@ angle::Result CommandQueue::queueSubmit(Context *context,
     // off-screen scenarios.
     if (mInFlightCommands.full())
     {
-        ANGLE_TRY(finishOneCommandBatchAndCleanup(context, renderer->getMaxFenceWaitTimeNs()));
+        ANGLE_TRY(finishOneCommandBatchAndCleanupImpl(context, renderer->getMaxFenceWaitTimeNs()));
     }
     // Release the dequeue lock while doing potentially lengthy vkQueueSubmit call.
     // Note: after this point, you can not reference anything that required mMutex lock.
@@ -1602,7 +1603,23 @@ angle::Result CommandQueue::checkOneCommandBatch(Context *context, bool *finishe
     return angle::Result::Continue;
 }
 
-angle::Result CommandQueue::finishOneCommandBatchAndCleanup(Context *context, uint64_t timeout)
+angle::Result CommandQueue::finishOneCommandBatchAndCleanup(Context *context,
+                                                            uint64_t timeout,
+                                                            bool *anyFinished)
+{
+    std::lock_guard<std::mutex> lock(mMutex);
+
+    // If there are in-flight submissions in the queue, they can be finished.
+    *anyFinished = false;
+    if (!mInFlightCommands.empty())
+    {
+        ANGLE_TRY(finishOneCommandBatchAndCleanupImpl(context, timeout));
+        *anyFinished = true;
+    }
+    return angle::Result::Continue;
+}
+
+angle::Result CommandQueue::finishOneCommandBatchAndCleanupImpl(Context *context, uint64_t timeout)
 {
     ASSERT(!mInFlightCommands.empty());
     CommandBatch &batch = mInFlightCommands.front();

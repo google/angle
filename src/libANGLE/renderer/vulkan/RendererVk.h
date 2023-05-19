@@ -759,6 +759,10 @@ class RendererVk : angle::NonCopyable
 
     void requestAsyncCommandsAndGarbageCleanup(vk::Context *context);
 
+    // Try to finish a command batch from the queue and free garbage memory in the event of an OOM
+    // error.
+    angle::Result finishOneCommandBatchAndCleanup(vk::Context *context, bool *anyBatchCleaned);
+
     // Static function to get Vulkan object type name.
     static const char *GetVulkanObjectTypeName(VkObjectType type);
 

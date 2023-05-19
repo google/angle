@@ -5739,6 +5739,13 @@ void RendererVk::releaseQueueSerialIndex(SerialIndex index)
     mQueueSerialIndexAllocator.release(index);
 }
 
+angle::Result RendererVk::finishOneCommandBatchAndCleanup(vk::Context *context,
+                                                          bool *anyBatchCleaned)
+{
+    return mCommandQueue.finishOneCommandBatchAndCleanup(context, getMaxFenceWaitTimeNs(),
+                                                         anyBatchCleaned);
+}
+
 // static
 const char *RendererVk::GetVulkanObjectTypeName(VkObjectType type)
 {
@@ -5773,10 +5780,57 @@ VkResult ImageMemorySuballocator::allocateAndBindMemory(Context *context,
     bool allocateDedicatedMemory =
         memoryRequirements.size >= kImageSizeThresholdForDedicatedMemoryAllocation;
 
-    // Allocate and bind memory for the image.
-    VkResult result = vma::AllocateAndBindMemoryForImage(
-        allocator.getHandle(), &image->mHandle, requiredFlags, preferredFlags,
-        allocateDedicatedMemory, &allocationOut->mHandle, memoryTypeIndexOut, sizeOut);
+    // Allocate and bind memory for the image. Try allocating on the device first. If unsuccessful,
+    // it is possible to retry allocation after cleaning the garbage.
+    VkResult result;
+    bool anyBatchCleaned             = false;
+    uint32_t batchesWaitedAndCleaned = 0;
+
+    do
+    {
+        result = vma::AllocateAndBindMemoryForImage(
+            allocator.getHandle(), &image->mHandle, requiredFlags, preferredFlags,
+            allocateDedicatedMemory, &allocationOut->mHandle, memoryTypeIndexOut, sizeOut);
+
+        if (result != VK_SUCCESS)
+        {
+            // If there is an error in command batch finish, a device OOM error will be returned.
+            if (renderer->finishOneCommandBatchAndCleanup(context, &anyBatchCleaned) ==
+                angle::Result::Stop)
+            {
+                return VK_ERROR_OUT_OF_DEVICE_MEMORY;
+            }
+
+            if (anyBatchCleaned)
+            {
+                batchesWaitedAndCleaned++;
+            }
+        }
+    } while (result != VK_SUCCESS && anyBatchCleaned);
+
+    if (batchesWaitedAndCleaned > 0)
+    {
+        INFO() << "Initial allocation failed. Waited for " << batchesWaitedAndCleaned
+               << " commands to finish and free garbage | Allocation result: "
+               << ((result == VK_SUCCESS) ? "SUCCESS" : "FAIL");
+    }
+
+    // If there is still no space for the new allocation, the allocation may still be made outside
+    // the device, although it will result in performance penalty.
+    if (result != VK_SUCCESS)
+    {
+        requiredFlags &= (~VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+        result = vma::AllocateAndBindMemoryForImage(
+            allocator.getHandle(), &image->mHandle, requiredFlags, preferredFlags,
+            allocateDedicatedMemory, &allocationOut->mHandle, memoryTypeIndexOut, sizeOut);
+
+        INFO()
+            << "Allocation failed. Removed the DEVICE_LOCAL bit requirement | Allocation result: "
+            << ((result == VK_SUCCESS) ? "SUCCESS" : "FAIL");
+    }
+
+    // At the end, if all available options fail, we should return the appropriate out-of-memory
+    // error.
     if (result != VK_SUCCESS)
     {
         // Record the failed memory allocation.

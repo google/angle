@@ -1008,6 +1008,8 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 // Flaking due to threading usage of the queue
 7204 : VulkanImageTest.PreInitializedOnGLImport/*AsyncCommandQueue = SKIP
 8174 : VulkanImageTest.AllocateVMAImageWhenDeviceOOM/*AsyncCommandQueue = SKIP
+8174 : VulkanImageTest.AllocateVMAImageAfterFreeing2DGarbageWhenDeviceOOM/*AsyncCommandQueue = SKIP
+8174 : VulkanImageTest.AllocateVMAImageAfterFreeing2DArrayGarbageWhenDeviceOOM/*AsyncCommandQueue = SKIP
 
 // Causes incompatible error in GL back-end.
 7218 OPENGL : TransformFeedbackTest.DrawAfterDeletingPausedBuffer/* = SKIP
@@ -1180,6 +1182,8 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 
 // Skip device OOM tests for Linux/NVIDIA.
 8236 LINUX NVIDIA : VulkanImageTest.AllocateVMAImageWhenDeviceOOM/* = SKIP
+8236 LINUX NVIDIA : VulkanImageTest.AllocateVMAImageAfterFreeing2DGarbageWhenDeviceOOM/* = SKIP
+8236 LINUX NVIDIA : VulkanImageTest.AllocateVMAImageAfterFreeing2DArrayGarbageWhenDeviceOOM/* = SKIP
 
 // Slow tests, should appear last in this file
 5076 : GLSLTest.VerifyMaxVertexUniformVectors* = TIMEOUT
