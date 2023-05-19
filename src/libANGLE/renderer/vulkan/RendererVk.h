@@ -834,6 +834,7 @@ class RendererVk : angle::NonCopyable
     VkPhysicalDeviceCustomBorderColorFeaturesEXT mCustomBorderColorFeatures;
     VkPhysicalDeviceProtectedMemoryFeatures mProtectedMemoryFeatures;
     VkPhysicalDeviceHostQueryResetFeaturesEXT mHostQueryResetFeatures;
+    VkPhysicalDeviceDepthClampZeroOneFeaturesEXT mDepthClampZeroOneFeatures;
     VkPhysicalDeviceDepthClipEnableFeaturesEXT mDepthClipEnableFeatures;
     VkPhysicalDeviceDepthClipControlFeaturesEXT mDepthClipControlFeatures;
     VkPhysicalDevicePrimitivesGeneratedQueryFeaturesEXT mPrimitivesGeneratedQueryFeatures;

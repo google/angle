@@ -645,7 +645,6 @@ struct GraphicsPipelineShadersVulkanStructs
     VkPipelineViewportDepthClipControlCreateInfoEXT depthClipControl              = {};
     VkPipelineRasterizationLineStateCreateInfoEXT rasterLineState                 = {};
     VkPipelineRasterizationProvokingVertexStateCreateInfoEXT provokingVertexState = {};
-    VkPipelineRasterizationDepthClipStateCreateInfoEXT depthClipState             = {};
     VkPipelineRasterizationStateStreamCreateInfoEXT rasterStreamState             = {};
     VkSpecializationInfo specializationInfo                                       = {};
 

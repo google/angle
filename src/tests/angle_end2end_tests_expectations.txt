@@ -1129,12 +1129,6 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 8077 D3D11 : DepthWriteTest.Test/ES3_D3D11__DepthRangeReduced_Clipped_VertexDepthInsideClipVolume_FragmentDepthNegative_* = SKIP
 8077 D3D11 : DepthWriteTest.Test/ES3_D3D11__DepthRangeReduced_Clipped_VertexDepthInsideClipVolume_FragmentDepthGreaterThanOne_* = SKIP
 
-// Vulkan needs a workaround and/or extensions usage to avoid undefined behavior
-8077 VULKAN : DepthWriteTest.Test/*__DepthRangeReduced_Clipped_VertexDepthInsideClipVolume_FragmentDepthBetweenZeroAndNearPlane_* = SKIP
-8077 VULKAN : DepthWriteTest.Test/*__DepthRangeReduced_Clipped_VertexDepthInsideClipVolume_FragmentDepthBetweenFarPlaneAndOne_* = SKIP
-8077 VULKAN : DepthWriteTest.Test/*__DepthRangeReduced_Clipped_VertexDepthInsideClipVolume_FragmentDepthNegative_* = SKIP
-8077 VULKAN : DepthWriteTest.Test/*__DepthRangeReduced_Clipped_VertexDepthInsideClipVolume_FragmentDepthGreaterThanOne_* = SKIP
-
 // Driver bugs
 8077 WIN INTEL OPENGL : DepthWriteTest.Test/*__DepthRangeReduced_Clipped_VertexDepthInsideClipVolume_FragmentDepthBetweenZeroAndNearPlane_* = SKIP
 8077 WIN INTEL OPENGL : DepthWriteTest.Test/*__DepthRangeReduced_Clipped_VertexDepthInsideClipVolume_FragmentDepthBetweenFarPlaneAndOne_* = SKIP

@@ -83,6 +83,11 @@ std::shared_ptr<WaitableCompileEvent> ShaderVk::compile(const gl::Context *conte
         options->useSpecializationConstant = true;
     }
 
+    if (!contextVk->getFeatures().supportsDepthClampZeroOne.enabled)
+    {
+        options->clampFragDepth = true;
+    }
+
     if (!contextVk->getFeatures().supportsDepthClipControl.enabled)
     {
         options->addVulkanDepthCorrection = true;

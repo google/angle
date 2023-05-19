@@ -2008,6 +2008,7 @@ angle::Result RendererVk::initializeMemoryAllocator(DisplayVk *displayVk)
 //                                                     sampler2DViewOf3D (feature)
 // - VK_EXT_custom_border_color:                       customBorderColors (feature)
 //                                                     customBorderColorWithoutFormat (feature)
+// - VK_EXT_depth_clamp_zero_one:                      depthClampZeroOne (feature)
 // - VK_EXT_depth_clip_enable:                         depthClipEnable (feature)
 // - VK_EXT_depth_clip_control:                        depthClipControl (feature)
 // - VK_EXT_primitives_generated_query:                primitivesGeneratedQuery (feature),
@@ -2082,6 +2083,11 @@ void RendererVk::appendDeviceExtensionFeaturesNotPromoted(
     if (ExtensionFound(VK_EXT_CUSTOM_BORDER_COLOR_EXTENSION_NAME, deviceExtensionNames))
     {
         vk::AddToPNextChain(deviceFeatures, &mCustomBorderColorFeatures);
+    }
+
+    if (ExtensionFound(VK_EXT_DEPTH_CLAMP_ZERO_ONE_EXTENSION_NAME, deviceExtensionNames))
+    {
+        vk::AddToPNextChain(deviceFeatures, &mDepthClampZeroOneFeatures);
     }
 
     if (ExtensionFound(VK_EXT_DEPTH_CLIP_ENABLE_EXTENSION_NAME, deviceExtensionNames))
@@ -2358,6 +2364,10 @@ void RendererVk::queryDeviceExtensionFeatures(const vk::ExtensionNameList &devic
     mHostQueryResetFeatures       = {};
     mHostQueryResetFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES_EXT;
 
+    mDepthClampZeroOneFeatures = {};
+    mDepthClampZeroOneFeatures.sType =
+        VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLAMP_ZERO_ONE_FEATURES_EXT;
+
     mDepthClipEnableFeatures = {};
     mDepthClipEnableFeatures.sType =
         VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLIP_ENABLE_FEATURES_EXT;
@@ -2473,6 +2483,7 @@ void RendererVk::queryDeviceExtensionFeatures(const vk::ExtensionNameList &devic
     mSamplerYcbcrConversionFeatures.pNext                   = nullptr;
     mProtectedMemoryFeatures.pNext                          = nullptr;
     mHostQueryResetFeatures.pNext                           = nullptr;
+    mDepthClampZeroOneFeatures.pNext                        = nullptr;
     mDepthClipEnableFeatures.pNext                          = nullptr;
     mDepthClipControlFeatures.pNext                         = nullptr;
     mPrimitivesGeneratedQueryFeatures.pNext                 = nullptr;
@@ -2522,9 +2533,10 @@ void RendererVk::enableDeviceExtensionsNotPromoted(
         mEnabledDeviceExtensions.push_back(VK_KHR_SHARED_PRESENTABLE_IMAGE_EXTENSION_NAME);
     }
 
-    if (mFeatures.depthClamping.enabled)
+    if (mFeatures.supportsDepthClampZeroOne.enabled)
     {
-        mEnabledDeviceExtensions.push_back(VK_EXT_DEPTH_CLIP_ENABLE_EXTENSION_NAME);
+        mEnabledDeviceExtensions.push_back(VK_EXT_DEPTH_CLAMP_ZERO_ONE_EXTENSION_NAME);
+        vk::AddToPNextChain(&mEnabledFeatures, &mDepthClampZeroOneFeatures);
     }
 
     if (mFeatures.supportsMemoryBudget.enabled)
@@ -3849,14 +3861,9 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsDepthClipEnable,
                             mDepthClipEnableFeatures.depthClipEnable == VK_TRUE);
 
-    // http://anglebug.com/3970#c25.
-    // The workaround requires the VK_EXT_depth_clip_enable extension and the 'depthClamp' physical
-    // device feature. This workaround caused test failures on Quadro P400/driver 418.56/Linux.
-    // Therefore, on Linux we require a major version > 418.
-    ANGLE_FEATURE_CONDITION(&mFeatures, depthClamping,
-                            isNvidia && mPhysicalDeviceFeatures.depthClamp &&
-                                mFeatures.supportsDepthClipEnable.enabled &&
-                                (!IsLinux() || nvidiaVersion.major > 418u));
+    // Vulkan implementations are not required to clamp gl_FragDepth to [0, 1] by default.
+    ANGLE_FEATURE_CONDITION(&mFeatures, supportsDepthClampZeroOne,
+                            mDepthClampZeroOneFeatures.depthClampZeroOne == VK_TRUE);
 
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsRenderpass2,

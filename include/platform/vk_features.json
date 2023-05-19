@@ -53,10 +53,10 @@
             "issue": "http://anglebug.com/3970"
         },
         {
-             "name": "depth_clamping",
-             "category": "Workarounds",
+             "name": "supports_depth_clamp_zero_one",
+             "category": "Features",
              "description": [
-                 "The depth value is not clamped to [0,1] for floating point depth buffers."
+                 "VkDevice supports the VK_EXT_depth_clamp_zero_one extension"
              ],
             "issue": "http://anglebug.com/3970"
         },
