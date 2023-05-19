@@ -176,6 +176,7 @@ class ProgramExecutableVk
                                               UpdateDescriptorSetsBuilder *updateBuilder,
                                               vk::CommandBufferHelperCommon *commandBufferHelper,
                                               const vk::DescriptorSetDesc &texturesDesc);
+
     angle::Result updateShaderResourcesDescriptorSet(
         vk::Context *context,
         UpdateDescriptorSetsBuilder *updateBuilder,
@@ -183,6 +184,10 @@ class ProgramExecutableVk
         vk::CommandBufferHelperCommon *commandBufferHelper,
         const vk::DescriptorSetDescBuilder &shaderResourcesDesc,
         vk::SharedDescriptorSetCacheKey *newSharedCacheKeyOut);
+
+    void updateShaderResourcesDynamicOffsets(
+        const vk::DescriptorSetDescBuilder &shaderResourcesDesc);
+
     angle::Result updateUniformsAndXfbDescriptorSet(
         vk::Context *context,
         UpdateDescriptorSetsBuilder *updateBuilder,

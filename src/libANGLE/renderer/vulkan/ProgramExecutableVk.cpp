@@ -1654,6 +1654,18 @@ angle::Result ProgramExecutableVk::updateShaderResourcesDescriptorSet(
     return angle::Result::Continue;
 }
 
+void ProgramExecutableVk::updateShaderResourcesDynamicOffsets(
+    const vk::DescriptorSetDescBuilder &shaderResourcesDesc)
+{
+    size_t numOffsets = shaderResourcesDesc.getDynamicOffsetsSize();
+    mDynamicShaderResourceDescriptorOffsets.resize(numOffsets);
+    if (numOffsets > 0)
+    {
+        memcpy(mDynamicShaderResourceDescriptorOffsets.data(),
+               shaderResourcesDesc.getDynamicOffsets(), numOffsets * sizeof(uint32_t));
+    }
+}
+
 angle::Result ProgramExecutableVk::updateUniformsAndXfbDescriptorSet(
     vk::Context *context,
     UpdateDescriptorSetsBuilder *updateBuilder,

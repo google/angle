@@ -111,13 +111,6 @@ class TransformFeedbackVk : public TransformFeedbackImpl, public angle::Observer
                             const vk::SharedDescriptorSetCacheKey &sharedCacheKey);
 
   private:
-    void writeDescriptorSet(vk::Context *context,
-                            UpdateDescriptorSetsBuilder *updateBuilder,
-                            const ShaderInterfaceVariableInfoMap &variableInfoMap,
-                            size_t xfbBufferCount,
-                            VkDescriptorBufferInfo *bufferInfo,
-                            VkDescriptorSet descSet) const;
-
     void initializeXFBVariables(ContextVk *contextVk, uint32_t xfbBufferCount);
 
     void releaseCounterBuffers(RendererVk *renderer);

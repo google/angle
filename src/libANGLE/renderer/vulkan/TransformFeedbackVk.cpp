@@ -279,30 +279,6 @@ void TransformFeedbackVk::onSubjectStateChange(angle::SubjectIndex index,
     }
 }
 
-void TransformFeedbackVk::writeDescriptorSet(vk::Context *context,
-                                             UpdateDescriptorSetsBuilder *updateBuilder,
-                                             const ShaderInterfaceVariableInfoMap &variableInfoMap,
-                                             size_t xfbBufferCount,
-                                             VkDescriptorBufferInfo *bufferInfo,
-                                             VkDescriptorSet descSet) const
-{
-    ASSERT(context->getRenderer()->getFeatures().emulateTransformFeedback.enabled);
-
-    const ShaderInterfaceVariableInfo &info =
-        variableInfoMap.getTransformFeedbackInfo(gl::ShaderType::Vertex, 0);
-
-    VkWriteDescriptorSet &writeDescriptorInfo = updateBuilder->allocWriteDescriptorSet();
-    writeDescriptorInfo.sType                 = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-    writeDescriptorInfo.dstSet                = descSet;
-    writeDescriptorInfo.dstBinding            = info.binding;
-    writeDescriptorInfo.dstArrayElement       = 0;
-    writeDescriptorInfo.descriptorCount       = static_cast<uint32_t>(xfbBufferCount);
-    writeDescriptorInfo.descriptorType        = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
-    writeDescriptorInfo.pImageInfo            = nullptr;
-    writeDescriptorInfo.pBufferInfo           = bufferInfo;
-    writeDescriptorInfo.pTexelBufferView      = nullptr;
-}
-
 void TransformFeedbackVk::updateTransformFeedbackDescriptorDesc(
     const vk::Context *context,
     const gl::ProgramExecutable &executable,
