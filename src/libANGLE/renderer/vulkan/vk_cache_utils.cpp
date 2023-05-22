@@ -4209,6 +4209,13 @@ void GraphicsPipelineDesc::updateDepthFunc(GraphicsPipelineTransitionBits *trans
     transition->set(ANGLE_GET_TRANSITION_BIT(mShaders.shaders.bits));
 }
 
+void GraphicsPipelineDesc::updateDepthClampEnabled(GraphicsPipelineTransitionBits *transition,
+                                                   bool enabled)
+{
+    setDepthClampEnabled(enabled);
+    transition->set(ANGLE_GET_TRANSITION_BIT(mShaders.shaders.bits));
+}
+
 void GraphicsPipelineDesc::updateSurfaceRotation(GraphicsPipelineTransitionBits *transition,
                                                  bool isRotatedAspectRatio)
 {

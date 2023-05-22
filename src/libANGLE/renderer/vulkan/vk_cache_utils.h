@@ -823,6 +823,7 @@ class GraphicsPipelineDesc final
                                 const gl::Framebuffer *drawFramebuffer);
     void updateDepthFunc(GraphicsPipelineTransitionBits *transition,
                          const gl::DepthStencilState &depthStencilState);
+    void updateDepthClampEnabled(GraphicsPipelineTransitionBits *transition, bool enabled);
     void updateDepthWriteEnabled(GraphicsPipelineTransitionBits *transition,
                                  const gl::DepthStencilState &depthStencilState,
                                  const gl::Framebuffer *drawFramebuffer);

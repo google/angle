@@ -5653,6 +5653,9 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                             invalidateGraphicsDriverUniforms();
                             break;
                         case gl::State::EXTENDED_DIRTY_BIT_DEPTH_CLAMP_ENABLED:
+                            // TODO(https://anglebug.com/7713): Use EDS3
+                            mGraphicsPipelineDesc->updateDepthClampEnabled(
+                                &mGraphicsPipelineTransition, glState.isDepthClampEnabled());
                             break;
                         case gl::State::EXTENDED_DIRTY_BIT_MIPMAP_GENERATION_HINT:
                             break;
