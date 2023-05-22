@@ -314,3 +314,16 @@
 6678 UBSAN : dEQP-GLES2.functional.shaders.random.* = SKIP
 6678 UBSAN : dEQP-GLES2.functional.fragment_ops.interaction.basic_shader.* = SKIP
 6678 UBSAN : dEQP-GLES2.functional.shaders.texture_functions.vertex.texture2dprojlod_vec3 = SKIP
+
+// Samsung Galaxy S23
+8157 GALAXYS23 VULKAN : dEQP-GLES2.functional.fbo.render.color_clear.* = SKIP
+8157 GALAXYS23 VULKAN : dEQP-GLES2.functional.fbo.render.recreate_colorbuffer.* = SKIP
+8157 GALAXYS23 VULKAN : dEQP-GLES2.functional.fbo.render.recreate_stencilbuffer.* = SKIP
+8157 GALAXYS23 VULKAN : dEQP-GLES2.functional.fbo.render.resize.* = SKIP
+8157 GALAXYS23 VULKAN : dEQP-GLES2.functional.fbo.render.shared_colorbuffer.* = SKIP
+8157 GALAXYS23 VULKAN : dEQP-GLES2.functional.fbo.render.stencil_clear.* = SKIP
+8157 GALAXYS23 VULKAN : dEQP-GLES2.functional.fbo.render.stencil.* = SKIP
+8157 GALAXYS23 VULKAN : dEQP-GLES2.functional.fragment_ops.interaction.basic_shader.* = SKIP
+8157 GALAXYS23 VULKAN : dEQP-GLES2.functional.polygon_offset.* = SKIP
+8157 GALAXYS23 VULKAN : dEQP-GLES2.functional.rasterization.primitives.* = SKIP
+8157 GALAXYS23 VULKAN : dEQP-GLES2.functional.shaders.random.* = SKIP

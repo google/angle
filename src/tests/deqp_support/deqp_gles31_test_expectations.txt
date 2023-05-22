@@ -391,3 +391,15 @@ b/266710445 WIN OPENGL NVIDIA : dEQP-GLES31.functional.image_load_store.buffer.a
 6678 UBSAN : dEQP-GLES31.functional.shaders.framebuffer_fetch.framebuffer_format.rgb565 = SKIP
 6678 UBSAN : dEQP-GLES31.functional.shaders.framebuffer_fetch.framebuffer_format.rgb8 = SKIP
 6678 UBSAN : dEQP-GLES31.functional.shaders.framebuffer_fetch.framebuffer_format.rgba32i = SKIP
+
+// Samsung Galaxy S23
+8157 GALAXYS23 VULKAN : dEQP-GLES31.functional.blend_equation_advanced.barrier.* = SKIP
+8157 GALAXYS23 VULKAN : dEQP-GLES31.functional.blend_equation_advanced.basic.* = SKIP
+8157 GALAXYS23 VULKAN : dEQP-GLES31.functional.blend_equation_advanced.msaa.* = SKIP
+8157 GALAXYS23 VULKAN : dEQP-GLES31.functional.blend_equation_advanced.srgb.* = SKIP
+8157 GALAXYS23 VULKAN : dEQP-GLES31.functional.copy_image.non_compressed.* = SKIP
+8157 GALAXYS23 VULKAN : dEQP-GLES31.functional.fbo.no_attachments.* = SKIP
+8157 GALAXYS23 VULKAN : dEQP-GLES31.functional.image_load_store.* = SKIP
+8157 GALAXYS23 VULKAN : dEQP-GLES31.functional.shaders.builtin_functions.pack_unpack.* = SKIP
+8157 GALAXYS23 VULKAN : dEQP-GLES31.functional.shaders.linkage.es31.geometry.varying.types.float_struct = SKIP
+8157 GALAXYS23 VULKAN : dEQP-GLES31.functional.texture.border_clamp.* = SKIP

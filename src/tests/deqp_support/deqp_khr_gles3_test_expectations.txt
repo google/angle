@@ -68,3 +68,6 @@
 6678 UBSAN : KHR-GLES3.core.internalformat.texture2d.*half_float* = SKIP
 6678 UBSAN : KHR-GLES3.packed_pixels.* = SKIP
 6678 UBSAN : KHR-GLES3.copy_tex_image_conversions.required.* = SKIP
+
+// Samsung Galaxy S23
+8157 GALAXYS23 VULKAN : KHR-GLES3.shaders.function.global_variable_aliasing_fragment = SKIP

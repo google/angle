@@ -276,3 +276,13 @@
 
 // Failure since VK-GL-CTS roll (2023-05-03)
 8166 WIN SWIFTSHADER : KHR-GLES31.core.texture_buffer.texture_buffer_errors = FAIL
+
+// Samsung Galaxy S23
+8157 GALAXYS23 VULKAN : KHR-GLES31.core.arrays_of_arrays.InteractionFunctionCalls2 = SKIP
+8157 GALAXYS23 VULKAN : KHR-GLES31.core.blend_equation_advanced.* = SKIP
+8157 GALAXYS23 VULKAN : KHR-GLES31.core.framebuffer_no_attachments.render = SKIP
+8157 GALAXYS23 VULKAN : KHR-GLES31.core.geometry_shader.layered_rendering* = SKIP
+8157 GALAXYS23 VULKAN : KHR-GLES31.core.geometry_shader.limits.max_input_components = SKIP
+8157 GALAXYS23 VULKAN : KHR-GLES31.core.shader_bitfield_operation.* = SKIP
+8157 GALAXYS23 VULKAN : KHR-GLES31.core.texture_cube_map_array.color_depth_attachments = SKIP
+8157 GALAXYS23 VULKAN : KHR-GLES31.core.texture_storage_multisample.FunctionalTests.blitting_multisampled_depth_attachment = SKIP
