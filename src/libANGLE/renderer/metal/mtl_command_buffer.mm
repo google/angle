@@ -379,7 +379,7 @@ inline void UseResourceCmd(id<MTLRenderCommandEncoder> encoder, IntermediateComm
     mtl::RenderStages stages = stream->fetch<mtl::RenderStages>();
     ANGLE_UNUSED_VARIABLE(stages);
 #if defined(__IPHONE_13_0) || defined(__MAC_10_15)
-    if (ANGLE_APPLE_AVAILABLE_XCI(10.15, 13.0, 13.0))
+    if (ANGLE_APPLE_AVAILABLE_XCI(10.15, 13.1, 13.0))
     {
         [encoder useResource:resource usage:usage stages:stages];
     }
@@ -402,7 +402,7 @@ inline void MemoryBarrierCmd(id<MTLRenderCommandEncoder> encoder, IntermediateCo
     ANGLE_UNUSED_VARIABLE(after);
     ANGLE_UNUSED_VARIABLE(before);
 #if defined(__MAC_10_14) && (TARGET_OS_OSX || TARGET_OS_MACCATALYST)
-    if (ANGLE_APPLE_AVAILABLE_XC(10.14, 13.0))
+    if (ANGLE_APPLE_AVAILABLE_XC(10.14, 13.1))
     {
         [encoder memoryBarrierWithScope:scope afterStages:after beforeStages:before];
     }
@@ -418,7 +418,7 @@ inline void MemoryBarrierWithResourceCmd(id<MTLRenderCommandEncoder> encoder,
     ANGLE_UNUSED_VARIABLE(after);
     ANGLE_UNUSED_VARIABLE(before);
 #if defined(__MAC_10_14) && (TARGET_OS_OSX || TARGET_OS_MACCATALYST)
-    if (ANGLE_APPLE_AVAILABLE_XC(10.14, 13.0))
+    if (ANGLE_APPLE_AVAILABLE_XC(10.14, 13.1))
     {
         [encoder memoryBarrierWithResources:&resource
                                       count:1

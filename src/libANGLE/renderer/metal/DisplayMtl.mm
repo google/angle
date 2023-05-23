@@ -902,7 +902,7 @@ void DisplayMtl::ensureCapsInitialized() const
     mNativeLimitations.squarePvrtc1 = true;
 
     // Older Metal does not support compressed formats for TEXTURE_3D target.
-    if (ANGLE_APPLE_AVAILABLE_XCI(10.15, 13.0, 13.0))
+    if (ANGLE_APPLE_AVAILABLE_XCI(10.15, 13.1, 13.0))
     {
         mNativeLimitations.noCompressedTexture3D = !supportsEitherGPUFamily(3, 1);
     }
@@ -945,7 +945,7 @@ void DisplayMtl::initializeExtensions() const
     }
 #endif
 
-    if (ANGLE_APPLE_AVAILABLE_XCI(10.11, 11.0, 13.1))
+    if (ANGLE_APPLE_AVAILABLE_XCI(10.11, 13.1, 11.0))
     {
         mNativeExtensions.depthClampEXT = true;
     }
@@ -1085,7 +1085,7 @@ void DisplayMtl::initializeExtensions() const
     mNativeExtensions.provokingVertexANGLE = true;
 
     // GL_EXT_blend_func_extended
-    if (ANGLE_APPLE_AVAILABLE_XCI(10.12, 11.0, 13.1))
+    if (ANGLE_APPLE_AVAILABLE_XCI(10.12, 13.1, 11.0))
     {
         mNativeExtensions.blendFuncExtendedEXT = true;
         mNativeCaps.maxDualSourceDrawBuffers   = 1;
@@ -1212,12 +1212,12 @@ void DisplayMtl::initializeFeatures()
 {
     bool isMetal2_1 = false;
     bool isMetal2_2 = false;
-    if (ANGLE_APPLE_AVAILABLE_XCI(10.14, 13.0, 12.0))
+    if (ANGLE_APPLE_AVAILABLE_XCI(10.14, 13.1, 12.0))
     {
         isMetal2_1 = true;
     }
 
-    if (ANGLE_APPLE_AVAILABLE_XCI(10.15, 13.0, 13.0))
+    if (ANGLE_APPLE_AVAILABLE_XCI(10.15, 13.1, 13.0))
     {
         isMetal2_2 = true;
     }
@@ -1328,7 +1328,7 @@ angle::Result DisplayMtl::initializeShaderLibrary()
 #else
     const uint8_t *metalLibData = nullptr;
     size_t metalLibDataSize     = 0;
-    if (ANGLE_APPLE_AVAILABLE_XCI(10.14, 13.0, 12.0))
+    if (ANGLE_APPLE_AVAILABLE_XCI(10.14, 13.1, 12.0))
     {
         metalLibData     = gDefaultMetallib_2_1;
         metalLibDataSize = std::size(gDefaultMetallib_2_1);

@@ -596,7 +596,7 @@ gl::FramebufferStatus FramebufferMtl::checkStatus(const gl::Context *context) co
 
 gl::FramebufferStatus FramebufferMtl::checkPackedDepthStencilAttachment() const
 {
-    if (ANGLE_APPLE_AVAILABLE_XCI(10.14, 13.0, 12.0))
+    if (ANGLE_APPLE_AVAILABLE_XCI(10.14, 13.1, 12.0))
     {
         // If depth/stencil attachment has depth & stencil bits, then depth & stencil must not have
         // separate attachment. i.e. They must be the same texture or one of them has no
