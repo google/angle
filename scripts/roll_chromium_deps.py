@@ -33,7 +33,6 @@ def FindSrcDirPath():
 ANGLE_CHROMIUM_DEPS = [
     'build',
     'buildtools',
-    'buildtools/clang_format/script',
     'buildtools/linux64',
     'buildtools/mac',
     'buildtools/third_party/libc++/trunk',
@@ -57,6 +56,7 @@ ANGLE_CHROMIUM_DEPS = [
     'third_party/android_system_sdk',
     'third_party/bazel',
     'third_party/catapult',
+    'third_party/clang_format/script',
     'third_party/colorama/src',
     'third_party/depot_tools',
     'third_party/flatbuffers/src',
