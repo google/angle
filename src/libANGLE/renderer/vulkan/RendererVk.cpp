@@ -3882,6 +3882,9 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsDepthClampZeroOne,
                             mDepthClampZeroOneFeatures.depthClampZeroOne == VK_TRUE);
 
+    ANGLE_FEATURE_CONDITION(&mFeatures, clampFragDepth,
+                            isNvidia && !mFeatures.supportsDepthClampZeroOne.enabled);
+
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsRenderpass2,
         ExtensionFound(VK_KHR_CREATE_RENDERPASS_2_EXTENSION_NAME, deviceExtensionNames));

@@ -61,6 +61,14 @@
             "issue": "http://anglebug.com/3970"
         },
         {
+            "name": "clamp_frag_depth",
+            "category": "Workarounds",
+            "description": [
+                "gl_FragDepth is not clamped when rendering to a floating point depth buffer without VK_EXT_depth_clamp_zero_one"
+            ],
+            "issue": "http://anglebug.com/3970"
+        },
+        {
             "name": "mutable_mipmap_texture_upload",
             "category": "Features",
             "description": [

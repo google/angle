@@ -83,7 +83,7 @@ std::shared_ptr<WaitableCompileEvent> ShaderVk::compile(const gl::Context *conte
         options->useSpecializationConstant = true;
     }
 
-    if (!contextVk->getFeatures().supportsDepthClampZeroOne.enabled)
+    if (contextVk->getFeatures().clampFragDepth.enabled)
     {
         options->clampFragDepth = true;
     }
