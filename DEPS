@@ -1469,6 +1469,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_traces',
   },
+  'src/tests/restricted_traces/empires_and_puzzles': {
+      'packages': [
+        {
+            'package': 'angle/traces/empires_and_puzzles',
+            'version': 'version:2',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_traces',
+  },
   'src/tests/restricted_traces/eve_echoes': {
       'packages': [
         {
