@@ -76,6 +76,7 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions,
     : mFunctions(functions),
       mFeatures(features),
       mProgram(0),
+      mSupportsVertexArrayObjects(nativegl::SupportsVertexArrayObjects(functions)),
       mVAO(0),
       mVertexAttribCurrentValues(rendererCaps.maxVertexAttributes),
       mDefaultVAOState(rendererCaps.maxVertexAttributes, rendererCaps.maxVertexAttribBindings),
@@ -3492,19 +3493,25 @@ void StateManagerGL::restoreTextureUnitsNativeContext(const gl::Extensions &exte
 void StateManagerGL::syncVertexArraysFromNativeContext(const gl::Extensions &extensions,
                                                        ExternalContextState *state)
 {
-    get(GL_VERTEX_ARRAY_BINDING, &state->vertexArrayBinding);
-    if (mVAO != static_cast<GLuint>(state->vertexArrayBinding))
+    if (mSupportsVertexArrayObjects)
     {
-        mVAO                                      = state->vertexArrayBinding;
-        mBuffers[gl::BufferBinding::ElementArray] = 0;
-        mLocalDirtyBits.set(gl::State::DIRTY_BIT_VERTEX_ARRAY_BINDING);
+        get(GL_VERTEX_ARRAY_BINDING, &state->vertexArrayBinding);
+        if (mVAO != static_cast<GLuint>(state->vertexArrayBinding))
+        {
+            mVAO                                      = state->vertexArrayBinding;
+            mBuffers[gl::BufferBinding::ElementArray] = 0;
+            mLocalDirtyBits.set(gl::State::DIRTY_BIT_VERTEX_ARRAY_BINDING);
+        }
     }
 }
 
 void StateManagerGL::restoreVertexArraysNativeContext(const gl::Extensions &extensions,
                                                       const ExternalContextState *state)
 {
-    bindVertexArray(state->vertexArrayBinding, 0);
+    if (mSupportsVertexArrayObjects)
+    {
+        bindVertexArray(state->vertexArrayBinding, 0);
+    }
 }
 
 void StateManagerGL::setDefaultVAOStateDirty()

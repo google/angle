@@ -390,6 +390,7 @@ class StateManagerGL final : angle::NonCopyable
 
     GLuint mProgram;
 
+    const bool mSupportsVertexArrayObjects;
     GLuint mVAO;
     std::vector<gl::VertexAttribCurrentValueData> mVertexAttribCurrentValues;
 
