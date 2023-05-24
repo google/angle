@@ -136,13 +136,6 @@ bool IsAdreno5xx(const FunctionsGL *functions)
     return number != 0 && number >= 500 && number < 600;
 }
 
-bool IsMali(const FunctionsGL *functions)
-{
-    constexpr char Mali[]        = "Mali";
-    const char *nativeGLRenderer = GetString(functions, GL_RENDERER);
-    return angle::BeginsWith(nativeGLRenderer, Mali);
-}
-
 bool IsMaliT8xxOrOlder(const FunctionsGL *functions)
 {
     int number = getMaliTNumber(functions);
@@ -252,6 +245,10 @@ VendorID GetVendorID(const FunctionsGL *functions)
     else if (nativeVendorString.find("Vivante") != std::string::npos)
     {
         return VENDOR_ID_VIVANTE;
+    }
+    else if (nativeVendorString.find("Mali") != std::string::npos)
+    {
+        return VENDOR_ID_ARM;
     }
     else
     {
@@ -2127,8 +2124,10 @@ bool GetSystemInfoVendorIDAndDeviceID(const FunctionsGL *functions,
     *outVendor = GetVendorID(functions);
     *outDevice = 0;
 
-    // Gather additional information from the system to detect multi-GPU scenarios.
-    bool isGetSystemInfoSuccess = angle::GetSystemInfo(outSystemInfo);
+    // Gather additional information from the system to detect multi-GPU scenarios. Do not collect
+    // system info on Android as it may use Vulkan which can crash on older devices. All the system
+    // info we need is available in the version and renderer strings on Android.
+    bool isGetSystemInfoSuccess = !IsAndroid() && angle::GetSystemInfo(outSystemInfo);
 
     // Get the device id from system info, corresponding to the vendor of the active GPU.
     if (isGetSystemInfoSuccess && !outSystemInfo->gpus.empty())
@@ -2192,6 +2191,7 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     bool isVMWare      = IsVMWare(vendor);
     bool hasAMD        = systemInfo.hasAMDGPU();
     bool isImagination = IsPowerVR(vendor);
+    bool isMali        = IsARM(vendor);
 
     std::array<int, 3> mesaVersion = {0, 0, 0};
     bool isMesa                    = IsMesa(functions, &mesaVersion);
@@ -2564,7 +2564,7 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
                             functions->hasGLESExtension("GL_EXT_shader_pixel_local_storage"));
 
     // https://crbug.com/1356053
-    ANGLE_FEATURE_CONDITION(features, bindFramebufferForTimerQueries, IsMali(functions));
+    ANGLE_FEATURE_CONDITION(features, bindFramebufferForTimerQueries, isMali);
 
     // https://crbug.com/1434317
     ANGLE_FEATURE_CONDITION(features, disableClipControl, IsMaliG72OrG76(functions));
