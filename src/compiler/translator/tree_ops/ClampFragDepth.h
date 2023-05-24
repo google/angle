@@ -8,8 +8,8 @@
 // statically accesses gl_FragDepth.
 //
 
-#ifndef COMPILER_TRANSLATOR_TREEOPS_GL_CLAMPFRAGDEPTH_H_
-#define COMPILER_TRANSLATOR_TREEOPS_GL_CLAMPFRAGDEPTH_H_
+#ifndef COMPILER_TRANSLATOR_TREEOPS_CLAMPFRAGDEPTH_H_
+#define COMPILER_TRANSLATOR_TREEOPS_CLAMPFRAGDEPTH_H_
 
 #include "common/angleutils.h"
 #include "common/debug.h"
@@ -21,20 +21,10 @@ class TCompiler;
 class TIntermBlock;
 class TSymbolTable;
 
-#ifdef ANGLE_ENABLE_GLSL
 [[nodiscard]] bool ClampFragDepth(TCompiler *compiler,
                                   TIntermBlock *root,
                                   TSymbolTable *symbolTable);
-#else
-[[nodiscard]] ANGLE_INLINE bool ClampFragDepth(TCompiler *compiler,
-                                               TIntermBlock *root,
-                                               TSymbolTable *symbolTable)
-{
-    UNREACHABLE();
-    return false;
-}
-#endif
 
 }  // namespace sh
 
-#endif  // COMPILER_TRANSLATOR_TREEOPS_GL_CLAMPFRAGDEPTH_H_
+#endif  // COMPILER_TRANSLATOR_TREEOPS_CLAMPFRAGDEPTH_H_

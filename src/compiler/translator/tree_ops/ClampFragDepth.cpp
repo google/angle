@@ -8,7 +8,7 @@
 // statically accesses gl_FragDepth.
 //
 
-#include "compiler/translator/tree_ops/gl/ClampFragDepth.h"
+#include "compiler/translator/tree_ops/ClampFragDepth.h"
 
 #include "compiler/translator/ImmutableString.h"
 #include "compiler/translator/SymbolTable.h"
