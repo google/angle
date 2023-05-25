@@ -117,6 +117,10 @@ class ShareGroup final : angle::NonCopyable
 // Constant coded here as a reasonable limit.
 constexpr EGLAttrib kProgramCacheSizeAbsoluteMax = 0x4000000;
 
+using ImageMap  = angle::HashMap<GLuint, Image *>;
+using StreamSet = angle::HashSet<Stream *>;
+using SyncMap   = angle::HashMap<GLuint, Sync *>;
+
 class Display final : public LabeledObject,
                       public angle::ObserverInterface,
                       public angle::NonCopyable
@@ -348,6 +352,8 @@ class Display final : public LabeledObject,
     egl::Image *getImage(egl::ImageID imageID);
     egl::Sync *getSync(egl::SyncID syncID);
 
+    const SyncMap &getSyncsForCapture() const { return mSyncMap; }
+
     // Initialize thread-local variables used by the Display and its backing implementations.  This
     // includes:
     //
@@ -389,13 +395,8 @@ class Display final : public LabeledObject,
 
     ConfigSet mConfigSet;
 
-    typedef angle::HashMap<GLuint, Image *> ImageMap;
     ImageMap mImageMap;
-
-    typedef angle::HashSet<Stream *> StreamSet;
     StreamSet mStreamSet;
-
-    typedef angle::HashMap<GLuint, Sync *> SyncMap;
     SyncMap mSyncMap;
 
     void destroyImageImpl(Image *image, ImageMap *images);
