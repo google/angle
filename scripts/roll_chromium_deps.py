@@ -56,7 +56,7 @@ ANGLE_CHROMIUM_DEPS = [
     'third_party/android_system_sdk',
     'third_party/bazel',
     'third_party/catapult',
-    'third_party/clang_format/script',
+    'third_party/clang-format/script',
     'third_party/colorama/src',
     'third_party/depot_tools',
     'third_party/flatbuffers/src',

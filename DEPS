@@ -149,7 +149,7 @@ deps = {
     'condition': 'not build_with_chromium',
   },
 
-  'third_party/clang_format/script': {
+  'third_party/clang-format/script': {
     'url': '{chromium_git}/external/github.com/llvm/llvm-project/clang/tools/clang-format.git@f97059df7f8b205064625cdb5f97b56668a125ef',
     'condition': 'not build_with_chromium',
   },
