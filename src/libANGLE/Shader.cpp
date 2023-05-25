@@ -399,7 +399,6 @@ void Shader::compile(const Context *context)
 
     ShCompileOptions options = {};
     options.objectCode       = true;
-    options.variables        = true;
     options.emulateGLDrawID  = true;
 
     // Add default options to WebGL shaders to prevent unexpected behavior during

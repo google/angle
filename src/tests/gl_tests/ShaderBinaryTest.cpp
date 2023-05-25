@@ -34,7 +34,6 @@ class ShaderBinaryTest : public ANGLETest<>
         ASSERT_EQ(sh::Initialize(), true);
 
         mCompileOptions.objectCode                    = true;
-        mCompileOptions.variables                     = true;
         mCompileOptions.emulateGLDrawID               = true;
         mCompileOptions.initializeUninitializedLocals = true;
 
@@ -308,7 +307,6 @@ class ShaderBinaryTestES31 : public ShaderBinaryTest
         ASSERT_EQ(sh::Initialize(), true);
 
         mCompileOptions.objectCode                    = true;
-        mCompileOptions.variables                     = true;
         mCompileOptions.emulateGLDrawID               = true;
         mCompileOptions.initializeUninitializedLocals = true;
 

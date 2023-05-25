@@ -101,23 +101,21 @@ bool TranslatorESSL::translate(TIntermBlock *root,
             const TIntermSymbol *clipDistanceEnabledSymbol = new TIntermSymbol(clipDistanceEnabled);
 
             // AngleInternal variables don't get collected
-            if (shouldCollectVariables(compileOptions))
-            {
-                ShaderVariable uniform;
-                uniform.name          = kClipDistanceEnabledName.data();
-                uniform.mappedName    = kClipDistanceEnabledName.data();
-                uniform.type          = GLVariableType(*type);
-                uniform.precision     = GLVariablePrecision(*type);
-                uniform.staticUse     = true;
-                uniform.active        = true;
-                uniform.binding       = type->getLayoutQualifier().binding;
-                uniform.location      = type->getLayoutQualifier().location;
-                uniform.offset        = type->getLayoutQualifier().offset;
-                uniform.rasterOrdered = type->getLayoutQualifier().rasterOrdered;
-                uniform.readonly      = type->getMemoryQualifier().readonly;
-                uniform.writeonly     = type->getMemoryQualifier().writeonly;
-                mUniforms.push_back(uniform);
-            }
+            ShaderVariable uniform;
+            uniform.name          = kClipDistanceEnabledName.data();
+            uniform.mappedName    = kClipDistanceEnabledName.data();
+            uniform.type          = GLVariableType(*type);
+            uniform.precision     = GLVariablePrecision(*type);
+            uniform.staticUse     = true;
+            uniform.active        = true;
+            uniform.binding       = type->getLayoutQualifier().binding;
+            uniform.location      = type->getLayoutQualifier().location;
+            uniform.offset        = type->getLayoutQualifier().offset;
+            uniform.rasterOrdered = type->getLayoutQualifier().rasterOrdered;
+            uniform.readonly      = type->getMemoryQualifier().readonly;
+            uniform.writeonly     = type->getMemoryQualifier().writeonly;
+            mUniforms.push_back(uniform);
+
             DeclareGlobalVariable(root, clipDistanceEnabled);
             if (!ZeroDisabledClipDistanceAssignments(this, root, &getSymbolTable(), getShaderType(),
                                                      clipDistanceEnabledSymbol))
