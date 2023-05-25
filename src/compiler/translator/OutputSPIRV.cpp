@@ -6098,11 +6098,22 @@ bool OutputSPIRVTraverser::visitDeclaration(Visit visit, TIntermDeclaration *nod
         spirv::WriteDecorate(mBuilder.getSpirvDecorations(), nonArrayTypeId, decoration, {});
 
         if (type.getQualifier() == EvqBuffer && !memoryQualifier.restrictQualifier &&
-            mCompileOptions.aliasedSSBOUnlessRestrict)
+            mCompileOptions.aliasedUnlessRestrict)
         {
-            // If GLSL does not specify the SSBO has restrict memory qualifier, assume the memory
-            // qualifier is aliased
+            // If GLSL does not specify the SSBO has restrict memory qualifier, assume the
+            // memory qualifier is aliased
             // issuetracker.google.com/266235549
+            spirv::WriteDecorate(mBuilder.getSpirvDecorations(), variableId, spv::DecorationAliased,
+                                 {});
+        }
+    }
+    else if (IsImage(type.getBasicType()) && type.getQualifier() == EvqUniform)
+    {
+        // If GLSL does not specify the image has restrict memory qualifier, assume the memory
+        // qualifier is aliased
+        // issuetracker.google.com/266235549
+        if (!memoryQualifier.restrictQualifier && mCompileOptions.aliasedUnlessRestrict)
+        {
             spirv::WriteDecorate(mBuilder.getSpirvDecorations(), variableId, spv::DecorationAliased,
                                  {});
         }

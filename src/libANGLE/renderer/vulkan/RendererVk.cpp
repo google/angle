@@ -3834,7 +3834,7 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
         isVulkan11Device() ||
         ExtensionFound(VK_KHR_MAINTENANCE1_EXTENSION_NAME, deviceExtensionNames);
 
-    ANGLE_FEATURE_CONDITION(&mFeatures, appendAliasedMemoryDecorationsToSsbo, true);
+    ANGLE_FEATURE_CONDITION(&mFeatures, appendAliasedMemoryDecorations, true);
 
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsSharedPresentableImageExtension,

@@ -8,10 +8,10 @@
     ],
     "features": [
         {
-            "name": "append_aliased_memory_decorations_to_ssbo",
+            "name": "append_aliased_memory_decorations",
             "category": "Workarounds",
             "description": [
-                "Append aliased memory decoration to ssbo in SpirV if the ssbo in GLSL is not declared with restrict memory qualifier"
+                "Append aliased memory decoration to ssbo and image in SpirV if they are not declared with restrict memory qualifier in GLSL"
             ],
             "issue": "b/266235549"
         },

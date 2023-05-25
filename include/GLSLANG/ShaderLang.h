@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 329
+#define ANGLE_SH_VERSION 330
 
 enum ShShaderSpec
 {
@@ -425,7 +425,7 @@ struct ShCompileOptions
 
     // issuetracker.google.com/266235549 add aliased memory decoration to ssbo if the variable is
     // not declared with "restrict" memory qualifier in GLSL
-    uint64_t aliasedSSBOUnlessRestrict : 1;
+    uint64_t aliasedUnlessRestrict : 1;
 
     // Use fragment shaders to compute and set coverage mask based on the alpha value
     uint64_t emulateAlphaToCoverage : 1;
