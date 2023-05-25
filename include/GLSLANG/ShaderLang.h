@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 330
+#define ANGLE_SH_VERSION 331
 
 enum ShShaderSpec
 {
@@ -147,8 +147,9 @@ struct ShCompileOptions
     // calling sh::GetObjectCode().
     uint64_t objectCode : 1;
 
-    // Extracts attributes, uniforms, and varyings.  Can be queried by calling ShGetVariableInfo().
-    uint64_t variables : 1;
+    // Unused.  Kept to avoid unnecessarily changing the layout of this structure and tripping up
+    // the fuzzer's hash->bug map.
+    uint64_t unused2 : 1;
 
     // Tracks the source path for shaders.  Can be queried with getSourcePath().
     uint64_t sourcePath : 1;
