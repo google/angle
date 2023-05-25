@@ -1606,6 +1606,10 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
     if (traceNameIs("honkai_star_rail"))
     {
         addExtensionPrerequisite("GL_KHR_texture_compression_astc_ldr");
+        if (isIntelWin)
+        {
+            skipTest("https://anglebug.com/8175 Consistently stuck on Intel/windows");
+        }
     }
 
     if (traceNameIs("gangstar_vegas"))
