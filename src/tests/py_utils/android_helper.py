@@ -516,6 +516,7 @@ def RunTests(test_suite, args, stdoutfile=None, log_output=True):
                     test_output = _ReadDeviceFile(device_test_output_path)
                 except subprocess.CalledProcessError:
                     logging.error('Unable to read test json output. Stdout:\n%s', output.decode())
+                    result = 1
                     return result, output.decode(), None
 
             if test_output_path:
