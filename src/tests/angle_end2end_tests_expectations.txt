@@ -1009,6 +1009,7 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 
 // Flaking due to threading usage of the queue
 7204 : VulkanImageTest.PreInitializedOnGLImport/*AsyncCommandQueue = SKIP
+8174 : VulkanImageTest.AllocateVMAImageWhenDeviceOOM/*AsyncCommandQueue = SKIP
 
 // Causes incompatible error in GL back-end.
 7218 OPENGL : TransformFeedbackTest.DrawAfterDeletingPausedBuffer/* = SKIP
