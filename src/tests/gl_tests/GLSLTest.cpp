@@ -1038,6 +1038,21 @@ void main()
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
 }
 
+// Test that inactive uniforms of struct type don't cause any errors.
+TEST_P(GLSLTest, InactiveStructUniform)
+{
+    constexpr char kVS[] = R"(
+uniform struct
+{
+    vec4 c;
+} s;
+void main()
+{
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, essl1_shaders::fs::Red());
+}
+
 // Test that struct with same name can be declared in inner scope.
 TEST_P(GLSLTest, SameNameStructInInnerScope)
 {

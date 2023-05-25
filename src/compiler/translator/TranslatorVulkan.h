@@ -32,6 +32,9 @@ class TranslatorVulkan final : public TCompiler
                                  PerformanceDiagnostics *perfDiagnostics) override;
     bool shouldFlattenPragmaStdglInvariantAll() override;
 
+    // Need to collect variables so that RemoveInactiveInterfaceVariables works.
+    bool shouldCollectVariables(const ShCompileOptions &compileOptions) override { return true; }
+
     [[nodiscard]] bool translateImpl(TIntermBlock *root,
                                      const ShCompileOptions &compileOptions,
                                      PerformanceDiagnostics *perfDiagnostics,
