@@ -151,9 +151,10 @@ struct SwapchainCleanupData : angle::NonCopyable
 };
 
 // Each present operation is associated with a wait semaphore.  To know when that semaphore can be
-// recycled, a fence is used in the call to vkAcquireNextImageKHR.  When that fence is signaled, the
-// semaphore used in the last present operation involving the returned image can be recycled.  See
-// doc/PresentSemaphores.md for details.
+// recycled, a swapSerial is used.  When that swapSerial is finished, the semaphore used in the
+// previous present operation involving imageIndex can be recycled.  See doc/PresentSemaphores.md
+// for details.
+// When VK_EXT_swapchain_maintenance1 is supported, present fence is used instead of the swapSerial.
 //
 // Old swapchains are scheduled to be destroyed at the same time as the last wait semaphore used to
 // present an image to the old swapchains can be recycled.
@@ -168,14 +169,15 @@ struct ImagePresentOperation : angle::NonCopyable
                  vk::Recycler<vk::Fence> *fenceRecycler,
                  vk::Recycler<vk::Semaphore> *semaphoreRecycler);
 
+    // fence is only used when VK_EXT_swapchain_maintenance1 is supported.
     vk::Fence fence;
     vk::Semaphore semaphore;
     std::vector<SwapchainCleanupData> oldSwapchains;
 
-    // Used to associate an acquire fence with the previous present operation of the image.
-    // Only relevant when VK_EXT_swapchain_maintenance1 is not supported; otherwise a fence is
-    // always associated with the present operation.
+    // Used to associate a swapSerial with the previous present operation of the image.
+    // Only relevant when VK_EXT_swapchain_maintenance1 is not supported.
     uint32_t imageIndex;
+    QueueSerial queueSerial;
 };
 
 // Swapchain images and their associated objects.
@@ -230,9 +232,6 @@ struct UnlockedTryAcquireResult : angle::NonCopyable
     // The result of the call to vkAcquireNextImageKHR.  This result is processed later under the
     // share group lock.
     VkResult result = VK_SUCCESS;
-
-    // Fence to use for acquire, if any.
-    vk::Fence acquireFence;
 
     // Semaphore to signal.
     VkSemaphore acquireSemaphore = VK_NULL_HANDLE;
