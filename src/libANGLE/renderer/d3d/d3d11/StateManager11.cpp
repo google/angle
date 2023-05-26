@@ -1740,6 +1740,8 @@ void StateManager11::setRenderTarget(ID3D11RenderTargetView *rtv, ID3D11DepthSte
     mRenderer->getDeviceContext()->OMSetRenderTargets(1, &rtv, dsv);
     mCurRTVs.clear();
     mCurRTVs.update(0, rtv);
+    mCurrentDSV.clear();
+    mCurrentDSV.update(0, dsv);
     mInternalDirtyBits.set(DIRTY_BIT_RENDER_TARGET);
 }
 
@@ -1763,6 +1765,8 @@ void StateManager11::setRenderTargets(ID3D11RenderTargetView **rtvs,
     {
         mCurRTVs.update(i, rtvs[i]);
     }
+    mCurrentDSV.clear();
+    mCurrentDSV.update(0, dsv);
     mInternalDirtyBits.set(DIRTY_BIT_RENDER_TARGET);
 }
 
@@ -1890,22 +1894,31 @@ void StateManager11::unsetConflictingUAVs(gl::PipelineType pipeline,
     }
 }
 
-void StateManager11::unsetConflictingRTVs(uintptr_t resource)
+template <typename CacheType>
+void StateManager11::unsetConflictingRTVs(uintptr_t resource, CacheType &viewCache)
 {
     ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
-    size_t count                       = std::min(mCurRTVs.size(), mCurRTVs.highestUsed());
+
+    size_t count = std::min(viewCache.size(), viewCache.highestUsed());
     for (size_t resourceIndex = 0; resourceIndex < count; ++resourceIndex)
     {
-        auto &record = mCurRTVs[resourceIndex];
+        auto &record = viewCache[resourceIndex];
 
         if (record.view && record.resource == resource)
         {
             deviceContext->OMSetRenderTargets(0, nullptr, nullptr);
             mCurRTVs.clear();
+            mCurrentDSV.clear();
             mInternalDirtyBits.set(DIRTY_BIT_RENDER_TARGET);
             return;
         }
     }
+}
+
+void StateManager11::unsetConflictingRTVs(uintptr_t resource)
+{
+    unsetConflictingRTVs(resource, mCurRTVs);
+    unsetConflictingRTVs(resource, mCurrentDSV);
 }
 
 void StateManager11::unsetConflictingAttachmentResources(
@@ -1959,6 +1972,7 @@ angle::Result StateManager11::ensureInitialized(const gl::Context *context)
         mCurShaderSamplerStates[shaderType].resize(maxShaderTextureImageUnits);
     }
     mCurRTVs.initialize(caps.maxColorAttachments);
+    mCurrentDSV.initialize(1);
     mCurComputeUAVs.initialize(caps.maxImageUnits);
 
     // Initialize cached NULL SRV block
@@ -2081,6 +2095,8 @@ angle::Result StateManager11::syncFramebuffer(const gl::Context *context)
     {
         mCurRTVs.update(i, framebufferRTVs[i]);
     }
+    mCurrentDSV.clear();
+    mCurrentDSV.update(0, framebufferDSV);
     return angle::Result::Continue;
 }
 
