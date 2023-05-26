@@ -339,6 +339,15 @@ GLboolean ProgramVk::validate(const gl::Caps &caps, gl::InfoLog *infoLog)
     return GL_TRUE;
 }
 
+angle::Result ProgramVk::syncState(const gl::Context *context,
+                                   const gl::Program::DirtyBits &dirtyBits)
+{
+    ASSERT(dirtyBits.any());
+    // Push dirty bits to executable so that they can be used later.
+    mExecutable.mDirtyBits |= dirtyBits;
+    return angle::Result::Continue;
+}
+
 template <typename T>
 void ProgramVk::setUniformImpl(GLint location, GLsizei count, const T *v, GLenum entryPointType)
 {

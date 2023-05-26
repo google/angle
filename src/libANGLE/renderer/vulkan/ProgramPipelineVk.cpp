@@ -105,6 +105,15 @@ angle::Result ProgramPipelineVk::link(const gl::Context *glContext,
     return mExecutable.warmUpPipelineCache(contextVk, mState.getExecutable());
 }  // namespace rx
 
+angle::Result ProgramPipelineVk::syncState(const gl::Context *context,
+                                           const gl::Program::DirtyBits &dirtyBits)
+{
+    ASSERT(dirtyBits.any());
+    // Push dirty bits to executable so that they can be used later.
+    mExecutable.mDirtyBits |= dirtyBits;
+    return angle::Result::Continue;
+}
+
 void ProgramPipelineVk::onProgramUniformUpdate(gl::ShaderType shaderType)
 {
     mExecutable.mDefaultUniformBlocksDirty.set(shaderType);

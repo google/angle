@@ -1315,8 +1315,6 @@ void Program::resolveLinkImpl(const Context *context)
         return;
     }
 
-    initInterfaceBlockBindings();
-
     // According to GLES 3.0/3.1 spec for LinkProgram and UseProgram,
     // Only successfully linked program can replace the executables.
     ASSERT(mLinked);
@@ -2634,9 +2632,27 @@ const InterfaceBlock &Program::getShaderStorageBlockByIndex(GLuint index) const
 void Program::bindUniformBlock(UniformBlockIndex uniformBlockIndex, GLuint uniformBlockBinding)
 {
     ASSERT(!mLinkingState);
+
+    if (mState.mExecutable->mActiveUniformBlockBindings[uniformBlockIndex.value])
+    {
+        GLuint previousBinding =
+            mState.mExecutable->mUniformBlocks[uniformBlockIndex.value].binding;
+        if (previousBinding >= mUniformBlockBindingMasks.size())
+        {
+            mUniformBlockBindingMasks.resize(previousBinding + 1, UniformBlockBindingMask());
+        }
+        mUniformBlockBindingMasks[previousBinding].reset(uniformBlockIndex.value);
+    }
+
     mState.mExecutable->mUniformBlocks[uniformBlockIndex.value].binding = uniformBlockBinding;
+    if (uniformBlockBinding >= mUniformBlockBindingMasks.size())
+    {
+        mUniformBlockBindingMasks.resize(uniformBlockBinding + 1, UniformBlockBindingMask());
+    }
+    mUniformBlockBindingMasks[uniformBlockBinding].set(uniformBlockIndex.value);
     mState.mExecutable->mActiveUniformBlockBindings.set(uniformBlockIndex.value,
                                                         uniformBlockBinding != 0);
+
     mDirtyBits.set(DIRTY_BIT_UNIFORM_BLOCK_BINDING_0 + uniformBlockIndex.value);
 }
 
@@ -3696,6 +3712,8 @@ angle::Result Program::deserialize(const Context *context,
 
 void Program::postResolveLink(const gl::Context *context)
 {
+    initInterfaceBlockBindings();
+
     mState.updateActiveSamplers();
     mState.mExecutable->mActiveImageShaderBits.fill({});
     mState.mExecutable->updateActiveImages(getExecutable());
