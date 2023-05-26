@@ -381,13 +381,29 @@ VkResult NewFence(VkDevice device, vk::Recycler<vk::Fence> *fenceRecycler, vk::F
     else
     {
         fenceRecycler->fetch(fenceOut);
-        result = fenceOut->reset(device);
-        if (result != VK_SUCCESS)
-        {
-            fenceRecycler->recycle(std::move(*fenceOut));
-        }
+        ASSERT(fenceOut->getStatus(device) == VK_NOT_READY);
     }
     return result;
+}
+
+void RecycleUsedFence(VkDevice device, vk::Recycler<vk::Fence> *fenceRecycler, vk::Fence &&fence)
+{
+    // Reset fence now to mitigate Intel driver bug, when accessing fence after Swapchain
+    // destruction causes crash.
+    VkResult result = fence.reset(device);
+    if (result != VK_SUCCESS)
+    {
+        ERR() << "Fence reset failed: " << result << "! Destroying fence...";
+        fence.destroy(device);
+        return;
+    }
+    fenceRecycler->recycle(std::move(fence));
+}
+
+void RecycleUnusedFence(VkDevice device, vk::Recycler<vk::Fence> *fenceRecycler, vk::Fence &&fence)
+{
+    ASSERT(fence.getStatus(device) == VK_NOT_READY);
+    fenceRecycler->recycle(std::move(fence));
 }
 
 void AssociateFenceWithPresentHistory(uint32_t imageIndex,
@@ -880,7 +896,11 @@ void ImagePresentOperation::destroy(VkDevice device,
                                     vk::Recycler<vk::Fence> *fenceRecycler,
                                     vk::Recycler<vk::Semaphore> *semaphoreRecycler)
 {
-    fenceRecycler->recycle(std::move(fence));
+    // Fence may be unassigned when surface is destroyed.
+    if (fence.valid())
+    {
+        RecycleUsedFence(device, fenceRecycler, std::move(fence));
+    }
 
     // On the first acquire of the image, a fence is used but there is no present semaphore to clean
     // up.  That fence is placed in the present history just for clean up purposes.
@@ -2544,8 +2564,8 @@ VkResult WindowSurfaceVk::postProcessUnlockedTryAcquire(vk::Context *context)
         if (mAcquireOperation.unlockedTryAcquireResult.acquireFence.valid())
         {
             ASSERT(!context->getFeatures().supportsSwapchainMaintenance1.enabled);
-            mPresentFenceRecycler.recycle(
-                std::move(mAcquireOperation.unlockedTryAcquireResult.acquireFence));
+            RecycleUnusedFence(context->getDevice(), &mPresentFenceRecycler,
+                               std::move(mAcquireOperation.unlockedTryAcquireResult.acquireFence));
         }
 
         // vkAcquireNextImageKHR still needs to be called after swapchain recreation:
