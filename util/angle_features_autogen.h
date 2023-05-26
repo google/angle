@@ -286,6 +286,7 @@ enum class Feature
     SupportsImagelessFramebuffer,
     SupportsIncrementalPresent,
     SupportsIndexTypeUint8,
+    SupportsLegacyDithering,
     SupportsLockSurfaceExtension,
     SupportsLogicOpDynamicState,
     SupportsMemoryBudget,

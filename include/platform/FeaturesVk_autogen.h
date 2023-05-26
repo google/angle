@@ -907,6 +907,11 @@ struct FeaturesVk : FeatureSetBase
         "enable pipeline cache data compression.", &members,
         "https://issuetracker.google.com/258207403"};
 
+    FeatureInfo supportsLegacyDithering = {
+        "supportsLegacyDithering", FeatureCategory::VulkanFeatures,
+        "VkDevice supports the VK_EXT_legacy_dithering extension", &members,
+        "https://issuetracker.google.com/284462263"};
+
     FeatureInfo limitSampleCountTo2 = {"limitSampleCountTo2", FeatureCategory::VulkanWorkarounds,
                                        "Limit sample count to 2 to save memory on low end devices.",
                                        &members, "http://anglebug.com/8162"};

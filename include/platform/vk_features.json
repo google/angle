@@ -1228,6 +1228,14 @@
             "issue": "https://issuetracker.google.com/258207403"
         },
         {
+            "name": "supports_legacy_dithering",
+            "category": "Features",
+            "description": [
+                "VkDevice supports the VK_EXT_legacy_dithering extension"
+            ],
+            "issue": "https://issuetracker.google.com/284462263"
+        },
+        {
             "name": "limit_sample_count_to_2",
             "category": "Workarounds",
             "description": [
