@@ -40,6 +40,7 @@
 /third_party/bazel/desugar/*.jar
 /third_party/catapult
 /third_party/cherry
+/third_party/clang-format/script
 /third_party/colorama/src
 /third_party/depot_tools
 /third_party/EGL-Registry/src
