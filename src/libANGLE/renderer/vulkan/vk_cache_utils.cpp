@@ -5432,9 +5432,9 @@ void WriteDescriptorDescBuilder::updateShaderBuffers(
 {
     // Initialize the descriptor writes in a first pass. This ensures we can pack the structures
     // corresponding to array elements tightly.
-    for (uint32_t bufferIndex = 0; bufferIndex < blocks.size(); ++bufferIndex)
+    for (uint32_t blockIndex = 0; blockIndex < blocks.size(); ++blockIndex)
     {
-        const gl::InterfaceBlock &block = blocks[bufferIndex];
+        const gl::InterfaceBlock &block = blocks[blockIndex];
 
         if (!block.isActive(shaderType))
         {
@@ -5442,7 +5442,7 @@ void WriteDescriptorDescBuilder::updateShaderBuffers(
         }
 
         const ShaderInterfaceVariableInfo &info =
-            variableInfoMap.getIndexedVariableInfo(shaderType, variableType, bufferIndex);
+            variableInfoMap.getIndexedVariableInfo(shaderType, variableType, blockIndex);
         if (info.isDuplicate)
         {
             continue;
@@ -6054,8 +6054,25 @@ angle::Result DescriptorSetDescBuilder::updateExecutableActiveTexturesForShader(
     return angle::Result::Continue;
 }
 
+bool AssertAllShaderStageHasTheInfoBinding(ShaderVariableType variableType,
+                                           const gl::ActiveVariable &block,
+                                           uint32_t blockIndex,
+                                           const ShaderInterfaceVariableInfoMap &variableInfoMap,
+                                           uint32_t binding)
+{
+    for (gl::ShaderType shaderType : block.activeShaders())
+    {
+        const ShaderInterfaceVariableInfo &info =
+            variableInfoMap.getIndexedVariableInfo(shaderType, variableType, blockIndex);
+        if (info.binding != binding)
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
 void DescriptorSetDescBuilder::updateShaderBuffers(
-    gl::ShaderType shaderType,
     ShaderVariableType variableType,
     const ShaderInterfaceVariableInfoMap &variableInfoMap,
     const gl::BufferVector &buffers,
@@ -6066,24 +6083,21 @@ void DescriptorSetDescBuilder::updateShaderBuffers(
     const WriteDescriptorDescs &writeDescriptorDescs)
 {
     // Now that we have the proper array elements counts, initialize the info structures.
-    for (uint32_t bufferIndex = 0; bufferIndex < blocks.size(); ++bufferIndex)
+    for (uint32_t blockIndex = 0; blockIndex < blocks.size(); ++blockIndex)
     {
-        const gl::InterfaceBlock &block                           = blocks[bufferIndex];
+        const gl::InterfaceBlock &block                           = blocks[blockIndex];
         const gl::OffsetBindingPointer<gl::Buffer> &bufferBinding = buffers[block.binding];
 
-        if (!block.isActive(shaderType))
+        if (block.activeShaders().none())
         {
             continue;
         }
 
-        const ShaderInterfaceVariableInfo &info =
-            variableInfoMap.getIndexedVariableInfo(shaderType, variableType, bufferIndex);
-        if (info.isDuplicate)
-        {
-            continue;
-        }
-
-        uint32_t binding       = info.binding;
+        const ShaderInterfaceVariableInfo &info = variableInfoMap.getIndexedVariableInfo(
+            block.getFirstShaderTypeWhereActive(), variableType, blockIndex);
+        uint32_t binding = info.binding;
+        ASSERT(AssertAllShaderStageHasTheInfoBinding(variableType, block, blockIndex,
+                                                     variableInfoMap, binding));
         uint32_t arrayElement  = block.isArray ? block.arrayElement : 0;
         uint32_t infoDescIndex = writeDescriptorDescs[binding].descriptorInfoIndex + arrayElement;
 
@@ -6140,7 +6154,6 @@ void DescriptorSetDescBuilder::updateShaderBuffers(
 }
 
 void DescriptorSetDescBuilder::updateAtomicCounters(
-    gl::ShaderType shaderType,
     const ShaderInterfaceVariableInfoMap &variableInfoMap,
     const gl::BufferVector &buffers,
     const std::vector<gl::AtomicCounterBuffer> &atomicCounterBuffers,
@@ -6148,7 +6161,7 @@ void DescriptorSetDescBuilder::updateAtomicCounters(
     vk::BufferHelper *emptyBuffer,
     const WriteDescriptorDescs &writeDescriptorDescs)
 {
-    if (atomicCounterBuffers.empty() || !variableInfoMap.hasAtomicCounterInfo(shaderType))
+    if (atomicCounterBuffers.empty())
     {
         return;
     }
@@ -6156,8 +6169,13 @@ void DescriptorSetDescBuilder::updateAtomicCounters(
     static_assert(!IsDynamicDescriptor(kStorageBufferDescriptorType),
                   "This method needs an update to handle dynamic descriptors");
 
-    uint32_t binding = variableInfoMap.getAtomicCounterBufferBinding(shaderType, 0);
+    gl::ShaderType firstShaderType = atomicCounterBuffers[0].getFirstShaderTypeWhereActive();
+    if (!variableInfoMap.hasAtomicCounterInfo(firstShaderType))
+    {
+        return;
+    }
 
+    uint32_t binding       = variableInfoMap.getAtomicCounterBufferBinding(firstShaderType, 0);
     uint32_t baseInfoIndex = writeDescriptorDescs[binding].descriptorInfoIndex;
 
     DescriptorInfoDesc emptyDesc = {};
@@ -6212,7 +6230,6 @@ void DescriptorSetDescBuilder::updateAtomicCounters(
 
 angle::Result DescriptorSetDescBuilder::updateImages(
     Context *context,
-    gl::ShaderType shaderType,
     const gl::ProgramExecutable &executable,
     const ShaderInterfaceVariableInfoMap &variableInfoMap,
     const gl::ActiveTextureArray<TextureVk *> &activeImages,
@@ -6234,18 +6251,16 @@ angle::Result DescriptorSetDescBuilder::updateImages(
         uint32_t uniformIndex                = executable.getUniformIndexFromImageIndex(imageIndex);
         const gl::LinkedUniform &imageUniform = uniforms[uniformIndex];
 
-        if (!imageUniform.isActive(shaderType))
+        if (imageUniform.activeShaders().none())
         {
             continue;
         }
 
+        gl::ShaderType firstShaderType          = imageUniform.getFirstShaderTypeWhereActive();
         const ShaderInterfaceVariableInfo &info = variableInfoMap.getIndexedVariableInfo(
-            shaderType, ShaderVariableType::Image, imageIndex);
-        if (info.isDuplicate)
-        {
-            continue;
-        }
-
+            firstShaderType, ShaderVariableType::Image, imageIndex);
+        ASSERT(AssertAllShaderStageHasTheInfoBinding(ShaderVariableType::Image, imageUniform,
+                                                     imageIndex, variableInfoMap, info.binding));
         uint32_t arraySize = static_cast<uint32_t>(imageBinding.boundImageUnits.size());
 
         // Texture buffers use buffer views, so they are especially handled.
@@ -6315,17 +6330,11 @@ angle::Result DescriptorSetDescBuilder::updateImages(
 
 angle::Result DescriptorSetDescBuilder::updateInputAttachments(
     vk::Context *context,
-    gl::ShaderType shaderType,
     const gl::ProgramExecutable &executable,
     const ShaderInterfaceVariableInfoMap &variableInfoMap,
     FramebufferVk *framebufferVk,
     const WriteDescriptorDescs &writeDescriptorDescs)
 {
-    if (shaderType != gl::ShaderType::Fragment)
-    {
-        return angle::Result::Continue;
-    }
-
     const std::vector<gl::LinkedUniform> &uniforms = executable.getUniforms();
 
     if (!executable.usesFramebufferFetch())
@@ -6337,11 +6346,7 @@ angle::Result DescriptorSetDescBuilder::updateInputAttachments(
     const gl::LinkedUniform &baseInputAttachment = uniforms.at(baseUniformIndex);
 
     const ShaderInterfaceVariableInfo &baseInfo =
-        variableInfoMap.getFramebufferFetchInfo(shaderType);
-    if (baseInfo.isDuplicate)
-    {
-        return angle::Result::Continue;
-    }
+        variableInfoMap.getFramebufferFetchInfo(gl::ShaderType::Fragment);
 
     uint32_t baseBinding = baseInfo.binding - baseInputAttachment.location;
 
