@@ -567,12 +567,10 @@ vk::ImageLayout GetImageWriteLayoutAndSubresource(const gl::ImageUnit &imageUnit
 
 template <typename CommandBufferT>
 void OnTextureBufferRead(ContextVk *contextVk,
-                         BufferVk *bufferVk,
+                         vk::BufferHelper *buffer,
                          gl::ShaderBitSet stages,
                          CommandBufferT *commandBufferHelper)
 {
-    vk::BufferHelper &buffer = bufferVk->getBuffer();
-
     ASSERT(stages.any());
 
     // TODO: accept multiple stages in bufferRead.  http://anglebug.com/3573
@@ -582,7 +580,7 @@ void OnTextureBufferRead(ContextVk *contextVk,
         // such as for transform feedback output, or SSBO, unnecessary barriers can be
         // generated.
         commandBufferHelper->bufferRead(contextVk, VK_ACCESS_SHADER_READ_BIT,
-                                        vk::GetPipelineStage(stage), &buffer);
+                                        vk::GetPipelineStage(stage), buffer);
     }
 }
 
@@ -2581,11 +2579,11 @@ ANGLE_INLINE angle::Result ContextVk::handleDirtyTexturesImpl(
         // If it's a texture buffer, get the attached buffer.
         if (textureVk->getBuffer().get() != nullptr)
         {
-            BufferVk *bufferVk = vk::GetImpl(textureVk->getBuffer().get());
+            vk::BufferHelper *buffer = textureVk->getPossiblyEmulatedTextureBuffer(this);
             const gl::ShaderBitSet stages =
                 executable->getSamplerShaderBitsForTextureUnitIndex(textureUnit);
 
-            OnTextureBufferRead(this, bufferVk, stages, commandBufferHelper);
+            OnTextureBufferRead(this, buffer, stages, commandBufferHelper);
 
             textureVk->retainBufferViews(commandBufferHelper);
             continue;

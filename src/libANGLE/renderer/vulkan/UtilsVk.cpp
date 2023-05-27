@@ -3332,12 +3332,12 @@ angle::Result UtilsVk::copyRgbToRgba(ContextVk *contextVk,
                                      vk::BufferHelper *dstBuffer)
 {
     vk::OutsideRenderPassCommandBufferHelper *commandBufferHelper;
-    vk::OutsideRenderPassCommandBuffer *commandBuffer;
+
     vk::CommandBufferAccess access;
     access.onBufferComputeShaderRead(srcBuffer);
     access.onBufferComputeShaderWrite(dstBuffer);
+
     ANGLE_TRY(contextVk->getOutsideRenderPassCommandBufferHelper(access, &commandBufferHelper));
-    commandBuffer = &commandBufferHelper->getCommandBuffer();
 
     rx::UtilsVk::ConvertVertexShaderParams shaderParams;
     shaderParams.Ns = 3;   // src channels
@@ -3378,23 +3378,8 @@ angle::Result UtilsVk::copyRgbToRgba(ContextVk *contextVk,
             UNREACHABLE();
     }
 
-    // Don't need a barrier here, CommandBufferAccess takes care of it.
-
-    ANGLE_TRY(convertVertexBufferImpl(contextVk, dstBuffer, srcBuffer, flags, commandBufferHelper,
-                                      shaderParams));
-
-    // We are circumventing the automatic-barrier management by switching
-    // the buffer view and not the buffer itself, so add a barrier here.
-    VkMemoryBarrier memoryBarrier = {};
-    memoryBarrier.sType           = VK_STRUCTURE_TYPE_MEMORY_BARRIER;
-    memoryBarrier.srcAccessMask   = VK_ACCESS_SHADER_WRITE_BIT;
-    memoryBarrier.dstAccessMask   = VK_ACCESS_SHADER_READ_BIT;
-
-    commandBuffer->memoryBarrier(
-        VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
-        VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT | VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT, &memoryBarrier);
-
-    return angle::Result::Continue;
+    return convertVertexBufferImpl(contextVk, dstBuffer, srcBuffer, flags, commandBufferHelper,
+                                   shaderParams);
 }
 
 uint32_t GetEtcToBcFlags(const angle::Format &format)
