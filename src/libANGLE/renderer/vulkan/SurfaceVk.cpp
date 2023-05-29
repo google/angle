@@ -960,6 +960,15 @@ void WindowSurfaceVk::destroy(const egl::Display *display)
     (void)renderer->waitForPresentToBeSubmitted(&mSwapchainStatus);
     (void)finish(displayVk);
 
+    if (!needsAcquireImageOrProcessResult() && !mSwapchainImages.empty())
+    {
+        // swapchain image doesn't own ANI semaphore. Release ANI semaphore from image so that it
+        // can destroy cleanly without hitting assertion..
+        // Only single swapchain image may have semaphore associated.
+        ASSERT(mCurrentSwapchainImageIndex < mSwapchainImages.size());
+        mSwapchainImages[mCurrentSwapchainImageIndex].image->resetAcquireNextImageSemaphore();
+    }
+
     if (mLockBufferHelper.valid())
     {
         mLockBufferHelper.destroy(renderer);
@@ -1797,9 +1806,8 @@ void WindowSurfaceVk::releaseSwapchainImages(ContextVk *contextVk)
     {
         ASSERT(swapchainImage.image);
         swapchainImage.imageViews.release(renderer, swapchainImage.image->getResourceUse());
-        // swapchain image doesn't own ANI semaphore. Release ANI semaphore from image so that it
-        // can destroy cleanly without hitting assertion..
-        swapchainImage.image->resetAcquireNextImageSemaphore();
+        // swapchain image must not have ANI semaphore assigned here, since acquired image must be
+        // presented before swapchain recreation.
         swapchainImage.image->resetImageWeakReference();
         swapchainImage.image->destroy(renderer);
 
@@ -1845,9 +1853,8 @@ void WindowSurfaceVk::destroySwapChainImages(DisplayVk *displayVk)
     for (SwapchainImage &swapchainImage : mSwapchainImages)
     {
         ASSERT(swapchainImage.image);
-        // swapchain image doesn't own ANI semaphore. Release ANI semaphore from image so that it
-        // can destroy cleanly without hitting assertion..
-        swapchainImage.image->resetAcquireNextImageSemaphore();
+        // swapchain image must not have ANI semaphore assigned here, because it should be released
+        // in the destroy() prior to calling this method.
         // We don't own the swapchain image handles, so we just remove our reference to it.
         swapchainImage.image->resetImageWeakReference();
         swapchainImage.image->destroy(renderer);
