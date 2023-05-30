@@ -133,7 +133,7 @@ namespace impl
 {
 static constexpr size_t kSwapHistorySize = 2;
 
-// Old swapchain and associated present semaphores that need to be scheduled for
+// Old swapchain and associated present fences/semaphores that need to be scheduled for
 // recycling/destruction when appropriate.
 struct SwapchainCleanupData : angle::NonCopyable
 {
@@ -141,12 +141,20 @@ struct SwapchainCleanupData : angle::NonCopyable
     SwapchainCleanupData(SwapchainCleanupData &&other);
     ~SwapchainCleanupData();
 
-    void destroy(VkDevice device, vk::Recycler<vk::Semaphore> *semaphoreRecycler);
+    // Fences must not be empty (VK_EXT_swapchain_maintenance1 is supported).
+    VkResult getFencesStatus(VkDevice device) const;
+    // Waits fences if any. Use before force destroying the swapchain.
+    void waitFences(VkDevice device, uint64_t timeout) const;
+    void destroy(VkDevice device,
+                 vk::Recycler<vk::Fence> *fenceRecycler,
+                 vk::Recycler<vk::Semaphore> *semaphoreRecycler);
 
     // The swapchain to be destroyed.
     VkSwapchainKHR swapchain = VK_NULL_HANDLE;
-    // Any present semaphores that were pending recycle at the time the swapchain was recreated will
-    // be scheduled for recycling at the same time as the swapchain's destruction.
+    // Any present fences/semaphores that were pending recycle at the time the swapchain was
+    // recreated will be scheduled for recycling at the same time as the swapchain's destruction.
+    // fences must be in the present operation order.
+    std::vector<vk::Fence> fences;
     std::vector<vk::Semaphore> semaphores;
 };
 
@@ -157,7 +165,8 @@ struct SwapchainCleanupData : angle::NonCopyable
 // When VK_EXT_swapchain_maintenance1 is supported, present fence is used instead of the swapSerial.
 //
 // Old swapchains are scheduled to be destroyed at the same time as the last wait semaphore used to
-// present an image to the old swapchains can be recycled.
+// present an image to the old swapchains can be recycled (only relevant when
+// VK_EXT_swapchain_maintenance1 is not supported).
 struct ImagePresentOperation : angle::NonCopyable
 {
     ImagePresentOperation();
@@ -172,12 +181,12 @@ struct ImagePresentOperation : angle::NonCopyable
     // fence is only used when VK_EXT_swapchain_maintenance1 is supported.
     vk::Fence fence;
     vk::Semaphore semaphore;
-    std::vector<SwapchainCleanupData> oldSwapchains;
 
+    // Below members only relevant when VK_EXT_swapchain_maintenance1 is not supported.
     // Used to associate a swapSerial with the previous present operation of the image.
-    // Only relevant when VK_EXT_swapchain_maintenance1 is not supported.
     uint32_t imageIndex;
     QueueSerial queueSerial;
+    std::deque<SwapchainCleanupData> oldSwapchains;
 };
 
 // Swapchain images and their associated objects.
@@ -456,6 +465,7 @@ class WindowSurfaceVk : public SurfaceVk
                           bool *presentOutOfDate);
 
     angle::Result cleanUpPresentHistory(vk::Context *context);
+    angle::Result cleanUpOldSwapchains(vk::Context *context);
 
     // Throttle the CPU such that application's logic and command buffer recording doesn't get more
     // than two frame ahead of the frame being rendered (and three frames ahead of the one being
@@ -500,13 +510,14 @@ class WindowSurfaceVk : public SurfaceVk
     angle::CircularBuffer<QueueSerial, impl::kSwapHistorySize> mSwapHistory;
 
     // The previous swapchain which needs to be scheduled for destruction when appropriate.  This
-    // will be done when the first image of the current swapchain is presented.  If there were
-    // older swapchains pending destruction when the swapchain is recreated, they will accumulate
-    // and be destroyed with the previous swapchain.
+    // will be done when the first image of the current swapchain is presented or when fences are
+    // signaled (when VK_EXT_swapchain_maintenance1 is supported).  If there were older swapchains
+    // pending destruction when the swapchain is recreated, they will accumulate and be destroyed
+    // with the previous swapchain.
     //
     // Note that if the user resizes the window such that the swapchain is recreated every frame,
     // this array can go grow indefinitely.
-    std::vector<impl::SwapchainCleanupData> mOldSwapchains;
+    std::deque<impl::SwapchainCleanupData> mOldSwapchains;
 
     std::vector<impl::SwapchainImage> mSwapchainImages;
     std::vector<angle::ObserverBinding> mSwapchainImageBindings;
