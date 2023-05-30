@@ -2320,17 +2320,14 @@ angle::Result WindowSurfaceVk::swapImpl(const gl::Context *context,
     ContextVk *contextVk = vk::GetImpl(context);
 
     // prepareSwap() has already called vkAcquireNextImageKHR if necessary, but its results need to
-    // be processed now if not already.  doDeferredAcquireNextImageWithUsableSwapchain() will
-    // automatically skip the vkAcquireNextImageKHR call in that case.  Note that
-    // doDeferredAcquireNextImage() is not called so that prepareForAcquireNextSwapchainImage() is
-    // skipped; if the swapchain is out of date, we can't afford to recreate it if one of its images
-    // is used in the current frame.  The swapchain recreation path in
+    // be processed now if not already.  doDeferredAcquireNextImage() will
+    // automatically skip the prepareForAcquireNextSwapchainImage() and vkAcquireNextImageKHR calls
+    // in that case.  The swapchain recreation path in
     // doDeferredAcquireNextImageWithUsableSwapchain() is acceptable because it only happens if
-    // prepareSwap() actually called vkAcquireNextImageKHR, which means the swapchain was unused in
-    // the frame.
+    // previous vkAcquireNextImageKHR failed.
     if (needsAcquireImageOrProcessResult())
     {
-        ANGLE_TRY(doDeferredAcquireNextImageWithUsableSwapchain(context));
+        ANGLE_TRY(doDeferredAcquireNextImage(context, false));
     }
 
     bool presentOutOfDate = false;
@@ -2391,6 +2388,8 @@ angle::Result WindowSurfaceVk::prepareForAcquireNextSwapchainImage(const gl::Con
                                                                    bool presentOutOfDate,
                                                                    bool *swapchainRecreatedOut)
 {
+    ASSERT(!NeedToProcessAcquireNextImageResult(mAcquireOperation.unlockedTryAcquireResult));
+
     ContextVk *contextVk = vk::GetImpl(context);
     RendererVk *renderer = contextVk->getRenderer();
 
@@ -2412,7 +2411,13 @@ angle::Result WindowSurfaceVk::doDeferredAcquireNextImage(const gl::Context *con
                                                           bool presentOutOfDate)
 {
     bool swapchainRecreated = false;
-    ANGLE_TRY(prepareForAcquireNextSwapchainImage(context, presentOutOfDate, &swapchainRecreated));
+    // prepareForAcquireNextSwapchainImage() may recreate Swapchain even if there is an image
+    // acquired. Avoid this, by skipping the prepare call.
+    if (!NeedToProcessAcquireNextImageResult(mAcquireOperation.unlockedTryAcquireResult))
+    {
+        ANGLE_TRY(
+            prepareForAcquireNextSwapchainImage(context, presentOutOfDate, &swapchainRecreated));
+    }
     return doDeferredAcquireNextImageWithUsableSwapchain(context);
 }
 
