@@ -191,6 +191,8 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 7866 WIN INTEL VULKAN : VulkanPerformanceCounterTest.PipelineCacheIsRestoredWithProgramBinary/* = SKIP
 7866 WIN INTEL VULKAN : VulkanPerformanceCounterTest.PipelineCacheIsRestoredWithProgramBinaryTwice/* = SKIP
 7866 WIN INTEL VULKAN : VulkanPerformanceCounterTest.PipelineCacheIsWarmedUpAtLinkTime/* = SKIP
+// vk_icdNegotiateLoaderICDInterfaceVersion crashes (possibly Mesa bug?)
+8179 LINUX INTEL VULKAN : RGBTextureBufferTestES31.* = SKIP
 
 // Linux AMD
 6855 LINUX AMD OPENGL : ClearTestES3.ClearMaxAttachmentsAfterDraw/* = SKIP
