@@ -501,7 +501,7 @@ SPIRVBuilder::SPIRVBuilder(TCompiler *compiler,
     : mCompiler(compiler),
       mCompileOptions(compileOptions),
       mShaderType(gl::FromGLenum<gl::ShaderType>(compiler->getShaderType())),
-      mNextAvailableId(1),
+      mNextAvailableId(vk::spirv::kIdFirstUnreserved),
       mHashFunction(hashFunction),
       mNameMap(nameMap),
       mNextUnusedBinding(0),
@@ -523,6 +523,8 @@ SPIRVBuilder::SPIRVBuilder(TCompiler *compiler,
     }
 
     mExtInstImportIdStd = getNewId({});
+
+    predefineCommonTypes();
 }
 
 spirv::IdRef SPIRVBuilder::getNewId(const SpirvDecorations &decorations)
@@ -746,6 +748,39 @@ spirv::IdRef SPIRVBuilder::getExtInstImportIdStd()
     return mExtInstImportIdStd;
 }
 
+void SPIRVBuilder::predefineCommonTypes()
+{
+    SpirvType type;
+    spirv::IdRef id;
+
+    using namespace vk::spirv;
+
+    // Predefine types that are either practically ubiquitous, or end up generally being useful to
+    // the SPIR-V transformer.
+
+    type.type = EbtVoid;
+    id        = spirv::IdRef(kIdVoid);
+    mTypeMap.insert({type, {id}});
+    spirv::WriteTypeVoid(&mSpirvTypeAndConstantDecls, id);
+
+    type.type = EbtFloat;
+    id        = spirv::IdRef(kIdFloat);
+    mTypeMap.insert({type, {id}});
+    spirv::WriteTypeFloat(&mSpirvTypeAndConstantDecls, id, spirv::LiteralInteger(32));
+
+    type.type = EbtInt;
+    id        = spirv::IdRef(kIdInt);
+    mTypeMap.insert({type, {id}});
+    spirv::WriteTypeInt(&mSpirvTypeAndConstantDecls, id, spirv::LiteralInteger(32),
+                        spirv::LiteralInteger(1));
+
+    type.type = EbtUInt;
+    id        = spirv::IdRef(kIdUint);
+    mTypeMap.insert({type, {id}});
+    spirv::WriteTypeInt(&mSpirvTypeAndConstantDecls, id, spirv::LiteralInteger(32),
+                        spirv::LiteralInteger(0));
+}
+
 SpirvTypeData SPIRVBuilder::declareType(const SpirvType &type, const TSymbol *block)
 {
     // Recursively declare the type.  Type id is allocated afterwards purely for better id order in
@@ -870,24 +905,9 @@ SpirvTypeData SPIRVBuilder::declareType(const SpirvType &type, const TSymbol *bl
         // Declaring a basic type.  There's a different instruction for each.
         switch (type.type)
         {
-            case EbtVoid:
-                spirv::WriteTypeVoid(&mSpirvTypeAndConstantDecls, typeId);
-                break;
-            case EbtFloat:
-                spirv::WriteTypeFloat(&mSpirvTypeAndConstantDecls, typeId,
-                                      spirv::LiteralInteger(32));
-                break;
             case EbtDouble:
                 // TODO: support desktop GLSL.  http://anglebug.com/6197
                 UNIMPLEMENTED();
-                break;
-            case EbtInt:
-                spirv::WriteTypeInt(&mSpirvTypeAndConstantDecls, typeId, spirv::LiteralInteger(32),
-                                    spirv::LiteralInteger(1));
-                break;
-            case EbtUInt:
-                spirv::WriteTypeInt(&mSpirvTypeAndConstantDecls, typeId, spirv::LiteralInteger(32),
-                                    spirv::LiteralInteger(0));
                 break;
             case EbtBool:
                 spirv::WriteTypeBool(&mSpirvTypeAndConstantDecls, typeId);
@@ -2149,6 +2169,8 @@ spirv::Blob SPIRVBuilder::getSpirv()
 
     spirv::Blob result;
 
+    const spirv::IdRef nonSemanticOverviewId = getNewId({});
+
     // Reserve a minimum amount of memory.
     //
     //   5 for header +
@@ -2176,8 +2198,15 @@ spirv::Blob SPIRVBuilder::getSpirv()
     // - OpExtension instructions
     writeExtensions(&result);
 
+    // Enable the SPV_KHR_non_semantic_info extension to more efficiently communicate information to
+    // the SPIR-V transformer in the Vulkan backend.  The relevant instructions are all stripped
+    // away during SPIR-V transformation so the driver never needs to support it.
+    spirv::WriteExtension(&result, "SPV_KHR_non_semantic_info");
+
     // - OpExtInstImport
     spirv::WriteExtInstImport(&result, getExtInstImportIdStd(), "GLSL.std.450");
+    spirv::WriteExtInstImport(&result, spirv::IdRef(vk::spirv::kIdNonSemanticInstructionSet),
+                              "NonSemantic.ANGLE");
 
     // - OpMemoryModel
     spirv::WriteMemoryModel(&result, spv::AddressingModelLogical, spv::MemoryModelGLSL450);
@@ -2212,6 +2241,13 @@ spirv::Blob SPIRVBuilder::getSpirv()
     result.insert(result.end(), mSpirvTypePointerDecls.begin(), mSpirvTypePointerDecls.end());
     result.insert(result.end(), mSpirvFunctionTypeDecls.begin(), mSpirvFunctionTypeDecls.end());
     result.insert(result.end(), mSpirvVariableDecls.begin(), mSpirvVariableDecls.end());
+
+    // The types/constants/variables section is the first place non-semantic instructions can be
+    // output.  These instructions rely on at least the OpVoid type.  The kNonSemanticTypeSectionEnd
+    // instruction additionally carries an overview of the SPIR-V and thus requires a few OpConstant
+    // values.
+    writeNonSemanticOverview(&result, nonSemanticOverviewId);
+
     result.insert(result.end(), mSpirvFunctions.begin(), mSpirvFunctions.end());
 
     result.shrink_to_fit();
@@ -2334,6 +2370,32 @@ void SPIRVBuilder::writeSourceExtensions(spirv::Blob *blob)
                 UNREACHABLE();
         }
     }
+}
+
+void SPIRVBuilder::writeNonSemanticOverview(spirv::Blob *blob, spirv::IdRef id)
+{
+    // Output the kNonSemanticOverview non-semantic instruction with the following payload:
+    //
+    //     DeclaredIds OverviewFlags
+    //
+    // Where DeclaredIds define a 32-bit mask of values in sh::vk::spirv::ReservedIds,
+    // communicating which of the reserved ids are already defined in the SPIR-V.  OverviewFlags is
+    // a 32-bit bitmask of values in sh::vk::spirv::OverviewFlags with additional information.
+    //
+    // TODO: Populate the above information anglebug.com/7220
+
+    using namespace vk::spirv;
+
+    spirv::WriteConstant(blob, spirv::IdResultType(kIdUint),
+                         spirv::IdResult(kIdDeclaredIdsConstant),
+                         spirv::LiteralContextDependentNumber(0));
+    spirv::WriteConstant(blob, spirv::IdResultType(kIdUint),
+                         spirv::IdResult(kIdOverviewFlagsConstant),
+                         spirv::LiteralContextDependentNumber(0));
+    spirv::WriteExtInst(
+        blob, spirv::IdResultType(kIdVoid), id, spirv::IdRef(kIdNonSemanticInstructionSet),
+        spirv::LiteralExtInstInteger(kNonSemanticOverview),
+        {spirv::IdRef(kIdDeclaredIdsConstant), spirv::IdRef(kIdOverviewFlagsConstant)});
 }
 
 }  // namespace sh

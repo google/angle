@@ -27,7 +27,7 @@ class BoxedUint32
     template <typename T>
     T as() const
     {
-        return T{mValue};
+        return static_cast<T>(mValue.value);
     }
     BoxedUint32(const BoxedUint32 &other)            = default;
     BoxedUint32 &operator=(const BoxedUint32 &other) = default;

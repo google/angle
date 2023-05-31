@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 331
+#define ANGLE_SH_VERSION 332
 
 enum ShShaderSpec
 {
@@ -960,6 +960,93 @@ enum ColorAttachmentDitherControl
     kDitherControlDither5551 = 2,
     kDitherControlDither565  = 3,
 };
+
+namespace spirv
+{
+enum NonSemanticInstruction
+{
+    // The overview instruction containing information such as what predefined ids are present in
+    // the SPIR-V.  Simultaneously, this instruction identifies the location where the
+    // types/constants/variables section ends and the functions section starts.
+    kNonSemanticOverview,
+    // The instruction identifying the entry to the shader, i.e. at the start of main()
+    kNonSemanticEnter,
+    // The instruction identifying where vertex data is output.  This is before return from main()
+    // in vertex and tessellation shaders, and before OpEmitVertex in geometry shaders.
+    kNonSemanticVertexOutput,
+    // The instruction identifying the location where transform feedback emulation should be
+    // written.
+    kNonSemanticTransformFeedbackEmulation,
+};
+
+enum OverviewFlags
+{
+    kOverviewHasSampleRateShading,
+};
+
+enum ReservedIds
+{
+    kIdInvalid = 0,
+
+    // Ids that may or may not be declared in the shader.  A bitmask of these ids is returned in the
+    // kNonSemanticOverview instruction for the information of the SPIR-V transformer.
+
+    // Per-vertex
+    kIdInputPerVertexBlock,
+    kIdOutputPerVertexBlock,
+    kIdOutputPerVertexVar,
+
+    // Multisampling support
+    kIdSampleID,
+
+    // Ids that are fixed and are always present in the SPIR-V where applicable.  The SPIR-V
+    // transformer can thus reliably use these ids.
+
+    // Global information
+    kIdNonSemanticInstructionSet,
+    kIdEntryPoint,
+    kIdDeclaredIdsConstant,
+    kIdOverviewFlagsConstant,
+
+    // Basic types
+    kIdVoid,
+    kIdFloat,
+    kIdVec2,
+    kIdVec3,
+    kIdVec4,
+    kIdMat2,
+    kIdMat3,
+    kIdMat4,
+    kIdInt,
+    kIdIVec4,
+    kIdUint,
+
+    // Common constants
+    kIdIntZero,
+    kIdIntOne,
+    kIdIntTwo,
+    kIdIntThree,
+    kIdFloatHalf,
+
+    // Type pointers
+    kIdIntInputTypePointer,
+    kIdVec4OutputTypePointer,
+    kIdIVec4FunctionTypePointer,
+
+    // Pre-rotation and Z-correction support
+    kIdTransformPositionFunction,
+
+    // Transform feedback support
+    kIdXfbEmulationGetOffsetsFunction,
+    kIdXfbEmulationCaptureFunction,
+    kIdXfbEmulationBufferZero,
+    kIdXfbEmulationBufferOne,
+    kIdXfbEmulationBufferTwo,
+    kIdXfbEmulationBufferThree,
+
+    kIdFirstUnreserved,
+};
+}  // namespace spirv
 
 // Interface block name containing the aggregate default uniforms
 extern const char kDefaultUniformsNameVS[];

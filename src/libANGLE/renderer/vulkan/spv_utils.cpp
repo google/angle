@@ -951,6 +951,13 @@ void AssignTextureBindings(const SpvSourceOptions &options,
     }
 }
 
+bool IsNonSemanticInstruction(const uint32_t *instruction)
+{
+    // To avoid parsing the numerous GLSL OpExtInst instructions, take a quick peek at the set and
+    // skip instructions that aren't non-semantic.
+    return instruction[3] == sh::vk::spirv::kIdNonSemanticInstructionSet;
+}
+
 // Base class for SPIR-V transformations.
 class SpirvTransformerBase : angle::NonCopyable
 {
@@ -1064,6 +1071,54 @@ enum class TransformationState
     Unchanged,
 };
 
+class SpirvNonSemanticInstructions final : angle::NonCopyable
+{
+  public:
+    SpirvNonSemanticInstructions(bool isLastPass) : mIsLastPass(isLastPass) {}
+
+    // Returns whether this is a non-semantic instruction (as opposed to GLSL extended
+    // instructions).  If it is non-semantic, returns the instruction code as well as any payload
+    // the instruction may have.
+    bool visitExtInst(const uint32_t *instruction,
+                      sh::vk::spirv::NonSemanticInstruction *instOut,
+                      spirv::IdRefList *operandListOut);
+
+    // Cleans up non-semantic instructions in the last SPIR-V pass.
+    TransformationState transformExtInst(const uint32_t *instruction);
+
+  private:
+    // Whether this is the last SPIR-V pass. The non-semantics instructions are removed from the
+    // SPIR-V in the last pass.
+    const bool mIsLastPass;
+};
+
+bool SpirvNonSemanticInstructions::visitExtInst(const uint32_t *instruction,
+                                                sh::vk::spirv::NonSemanticInstruction *instOut,
+                                                spirv::IdRefList *operandListOut)
+{
+    if (!IsNonSemanticInstruction(instruction))
+    {
+        return false;
+    }
+
+    spirv::IdResultType typeId;
+    spirv::IdResult id;
+    spirv::IdRef set;
+    spirv::LiteralExtInstInteger extInst;
+    spirv::ParseExtInst(instruction, &typeId, &id, &set, &extInst, operandListOut);
+
+    ASSERT(set == sh::vk::spirv::kIdNonSemanticInstructionSet);
+    *instOut = extInst.as<sh::vk::spirv::NonSemanticInstruction>();
+
+    return true;
+}
+
+TransformationState SpirvNonSemanticInstructions::transformExtInst(const uint32_t *instruction)
+{
+    return IsNonSemanticInstruction(instruction) && mIsLastPass ? TransformationState::Transformed
+                                                                : TransformationState::Unchanged;
+}
+
 // Helper class that gathers IDs of interest.  This class would be largely unnecessary when the
 // translator generates SPIR-V directly, as it could communicate these IDs directly.
 class SpirvIDDiscoverer final : angle::NonCopyable
@@ -1081,10 +1136,6 @@ class SpirvIDDiscoverer final : angle::NonCopyable
                          spirv::LiteralInteger member,
                          const spirv::LiteralString &name);
     void visitTypeArray(spirv::IdResult id, spirv::IdRef elementType, spirv::IdRef length);
-    void visitTypeFloat(spirv::IdResult id, spirv::LiteralInteger width);
-    void visitTypeInt(spirv::IdResult id,
-                      spirv::LiteralInteger width,
-                      spirv::LiteralInteger signedness);
     void visitTypePointer(spirv::IdResult id, spv::StorageClass storageClass, spirv::IdRef typeId);
     void visitTypeVector(spirv::IdResult id,
                          spirv::IdRef componentId,
@@ -1112,15 +1163,15 @@ class SpirvIDDiscoverer final : angle::NonCopyable
                                                  : mInputPerVertex.maxActiveMember;
     }
 
-    spirv::IdRef floatId() const { return mFloatId; }
+    spirv::IdRef floatId() const { return spirv::IdRef(sh::vk::spirv::kIdFloat); }
+    spirv::IdRef intId() const { return spirv::IdRef(sh::vk::spirv::kIdInt); }
+    spirv::IdRef uintId() const { return spirv::IdRef(sh::vk::spirv::kIdUint); }
+
     spirv::IdRef vec4Id() const { return mVec4Id; }
     spirv::IdRef vec4OutTypePointerId() const { return mVec4OutTypePointerId; }
-    spirv::IdRef intId() const { return mIntId; }
     spirv::IdRef ivec4Id() const { return mIvec4Id; }
-    spirv::IdRef uintId() const { return mUintId; }
     spirv::IdRef int0Id() const { return mInt0Id; }
     spirv::IdRef floatHalfId() const { return mFloatHalfId; }
-    spirv::IdRef outputPerVertexTypePointerId() const { return mOutputPerVertexTypePointerId; }
     spirv::IdRef outputPerVertexId() const { return mOutputPerVertexId; }
 
   private:
@@ -1155,23 +1206,17 @@ class SpirvIDDiscoverer final : angle::NonCopyable
     // or depth correction).  These IDs are used to load/store gl_Position and apply modifications
     // and swizzles.
     //
-    // - mFloatId: id of OpTypeFloat 32
-    // - mVec4Id: id of OpTypeVector %mFloatId 4
+    // - mVec4Id: id of OpTypeVector %kIdFloat 4
     // - mVec4OutTypePointerId: id of OpTypePointer Output %mVec4Id
-    // - mIntId: id of OpTypeInt 32 1
-    // - mIvecId: id of OpTypeVector %mIntId 4
-    // - mUintId: id of OpTypeInt 32 0
-    // - mInt0Id: id of OpConstant %mIntId 0
-    // - mFloatHalfId: id of OpConstant %mFloatId 0.5f
+    // - mIvecId: id of OpTypeVector %kIdInt 4
+    // - mInt0Id: id of OpConstant %kIdInt 0
+    // - mFloatHalfId: id of OpConstant %kIdFloat 0.5f
     // - mOutputPerVertexTypePointerId: id of OpTypePointer Output %mOutputPerVertex.typeId
     // - mOutputPerVertexId: id of OpVariable %mOutputPerVertexTypePointerId Output
     //
-    spirv::IdRef mFloatId;
     spirv::IdRef mVec4Id;
     spirv::IdRef mVec4OutTypePointerId;
-    spirv::IdRef mIntId;
     spirv::IdRef mIvec4Id;
-    spirv::IdRef mUintId;
     spirv::IdRef mInt0Id;
     spirv::IdRef mFloatHalfId;
     spirv::IdRef mOutputPerVertexTypePointerId;
@@ -1284,38 +1329,6 @@ void SpirvIDDiscoverer::visitTypeArray(spirv::IdResult id,
     }
 }
 
-void SpirvIDDiscoverer::visitTypeFloat(spirv::IdResult id, spirv::LiteralInteger width)
-{
-    // Only interested in OpTypeFloat 32.
-    if (width == 32)
-    {
-        ASSERT(!mFloatId.valid());
-        mFloatId = id;
-    }
-}
-
-void SpirvIDDiscoverer::visitTypeInt(spirv::IdResult id,
-                                     spirv::LiteralInteger width,
-                                     spirv::LiteralInteger signedness)
-{
-    // Only interested in OpTypeInt 32 *.
-    if (width != 32)
-    {
-        return;
-    }
-
-    if (signedness == 0)
-    {
-        ASSERT(!mUintId.valid());
-        mUintId = id;
-    }
-    else
-    {
-        ASSERT(!mIntId.valid());
-        mIntId = id;
-    }
-}
-
 void SpirvIDDiscoverer::visitTypePointer(spirv::IdResult id,
                                          spv::StorageClass storageClass,
                                          spirv::IdRef typeId)
@@ -1358,13 +1371,13 @@ void SpirvIDDiscoverer::visitTypeVector(spirv::IdResult id,
                                         spirv::IdRef componentId,
                                         spirv::LiteralInteger componentCount)
 {
-    // Only interested in OpTypeVector %mFloatId 4 and OpTypeVector %mIntId 4
-    if (componentId == mFloatId && componentCount == 4)
+    // Only interested in OpTypeVector %kIdFloat 4 and OpTypeVector %kIdInt 4
+    if (componentId == floatId() && componentCount == 4)
     {
         ASSERT(!mVec4Id.valid());
         mVec4Id = id;
     }
-    if (componentId == mIntId && componentCount == 4)
+    if (componentId == intId() && componentCount == 4)
     {
         ASSERT(!mIvec4Id.valid());
         mIvec4Id = id;
@@ -1423,16 +1436,10 @@ SpirvVariableType SpirvIDDiscoverer::visitVariable(spirv::IdResultType typeId,
 
 void SpirvIDDiscoverer::writePendingDeclarations(spirv::Blob *blobOut)
 {
-    if (!mFloatId.valid())
-    {
-        mFloatId = SpirvTransformerBase::GetNewId(blobOut);
-        spirv::WriteTypeFloat(blobOut, mFloatId, spirv::LiteralInteger(32));
-    }
-
     if (!mVec4Id.valid())
     {
         mVec4Id = SpirvTransformerBase::GetNewId(blobOut);
-        spirv::WriteTypeVector(blobOut, mVec4Id, mFloatId, spirv::LiteralInteger(4));
+        spirv::WriteTypeVector(blobOut, mVec4Id, floatId(), spirv::LiteralInteger(4));
     }
 
     if (!mVec4OutTypePointerId.valid())
@@ -1441,27 +1448,21 @@ void SpirvIDDiscoverer::writePendingDeclarations(spirv::Blob *blobOut)
         spirv::WriteTypePointer(blobOut, mVec4OutTypePointerId, spv::StorageClassOutput, mVec4Id);
     }
 
-    if (!mIntId.valid())
-    {
-        mIntId = SpirvTransformerBase::GetNewId(blobOut);
-        spirv::WriteTypeInt(blobOut, mIntId, spirv::LiteralInteger(32), spirv::LiteralInteger(1));
-    }
-
     if (!mIvec4Id.valid())
     {
         mIvec4Id = SpirvTransformerBase::GetNewId(blobOut);
-        spirv::WriteTypeVector(blobOut, mIvec4Id, mIntId, spirv::LiteralInteger(4));
+        spirv::WriteTypeVector(blobOut, mIvec4Id, intId(), spirv::LiteralInteger(4));
     }
 
     ASSERT(!mInt0Id.valid());
     mInt0Id = SpirvTransformerBase::GetNewId(blobOut);
-    spirv::WriteConstant(blobOut, mIntId, mInt0Id, spirv::LiteralContextDependentNumber(0));
+    spirv::WriteConstant(blobOut, intId(), mInt0Id, spirv::LiteralContextDependentNumber(0));
 
     constexpr uint32_t kFloatHalfAsUint = 0x3F00'0000;
 
     ASSERT(!mFloatHalfId.valid());
     mFloatHalfId = SpirvTransformerBase::GetNewId(blobOut);
-    spirv::WriteConstant(blobOut, mFloatId, mFloatHalfId,
+    spirv::WriteConstant(blobOut, floatId(), mFloatHalfId,
                          spirv::LiteralContextDependentNumber(kFloatHalfAsUint));
 }
 
@@ -1981,18 +1982,18 @@ class SpirvTransformFeedbackCodeGenerator final : angle::NonCopyable
 
     // Type and constant ids:
     //
-    // - mIVec4Id: id of OpTypeVector %mIntId 4
+    // - mIVec4Id: id of OpTypeVector %kIdInt 4
     //
-    // - mFloatOutputPointerId: id of OpTypePointer Output %mFloatId
-    // - mIntOutputPointerId: id of OpTypePointer Output %mIntId
-    // - mUintOutputPointerId: id of OpTypePointer Output %mUintId
+    // - mFloatOutputPointerId: id of OpTypePointer Output %kIdFloat
+    // - mIntOutputPointerId: id of OpTypePointer Output %kIdInt
+    // - mUintOutputPointerId: id of OpTypePointer Output %kIdUint
     // - mFloatPrivatePointerId, mIntPrivatePointerId, mUintPrivatePointerId: identical to the
     //   above, but with the Private storage class.  Used to load from varyings that have been
     //   replaced as part of precision mismatch fixup.
-    // - mFloatUniformPointerId: id of OpTypePointer Uniform %mFloatId
+    // - mFloatUniformPointerId: id of OpTypePointer Uniform %kIdFloat
     // - mIVec4FuncPointerId: id of OpTypePointer Function %mIVec4Id
     //
-    // - mIntNIds[n]: id of OpConstant %mIntId n
+    // - mIntNIds[n]: id of OpConstant %kIdInt n
     spirv::IdRef mIVec4Id;
     spirv::IdRef mFloatOutputPointerId;
     spirv::IdRef mIntOutputPointerId;
@@ -2059,7 +2060,7 @@ void SpirvTransformFeedbackCodeGenerator::visitTypeVector(const SpirvIDDiscovere
                                                           spirv::IdRef componentId,
                                                           spirv::LiteralInteger componentCount)
 {
-    // Only interested in OpTypeVector %mIntId 4
+    // Only interested in OpTypeVector %kIdInt 4
     if (componentId == ids.intId() && componentCount == 4)
     {
         ASSERT(!mIVec4Id.valid());
@@ -2947,15 +2948,6 @@ void SpirvMultisampleTransformer::writePendingDeclarations(
         return;
     }
 
-    if (!ids.intId().valid())
-    {
-        spirv::IdResult id               = SpirvTransformerBase::GetNewId(blobOut);
-        spirv::LiteralInteger width      = spirv::LiteralInteger(32);
-        spirv::LiteralInteger signedness = spirv::LiteralInteger(1);
-        ids.visitTypeInt(id, width, signedness);
-        spirv::WriteTypeInt(blobOut, id, spirv::LiteralInteger(32), spirv::LiteralInteger(1));
-    }
-    ASSERT(ids.intId().valid());
     mIntInputPointerId = SpirvTransformerBase::GetNewId(blobOut);
     spirv::WriteTypePointer(blobOut, mIntInputPointerId, spv::StorageClassInput, ids.intId());
     ASSERT(mIntInputPointerId.valid());
@@ -3276,10 +3268,12 @@ class SpirvTransformer final : public SpirvTransformerBase
   public:
     SpirvTransformer(const spirv::Blob &spirvBlobIn,
                      const SpvTransformOptions &options,
+                     bool isLastPass,
                      const ShaderInterfaceVariableInfoMap &variableInfoMap,
                      spirv::Blob *spirvBlobOut)
         : SpirvTransformerBase(spirvBlobIn, variableInfoMap, spirvBlobOut),
           mOptions(options),
+          mNonSemanticInstructions(isLastPass),
           mXfbCodeGenerator(options.isTransformFeedbackEmulated),
           mPositionTransformer(options),
           mMultisampleTransformer(options)
@@ -3300,13 +3294,12 @@ class SpirvTransformer final : public SpirvTransformerBase
     void visitMemberDecorate(const uint32_t *instruction);
     void visitMemberName(const uint32_t *instruction);
     void visitTypeArray(const uint32_t *instruction);
-    void visitTypeFloat(const uint32_t *instruction);
-    void visitTypeInt(const uint32_t *instruction);
     void visitTypePointer(const uint32_t *instruction);
     void visitTypeStruct(const uint32_t *instruction);
     void visitTypeVector(const uint32_t *instruction);
     void visitVariable(const uint32_t *instruction);
     void visitCapability(const uint32_t *instruction);
+    bool visitExtInst(const uint32_t *instruction);
 
     // Instructions that potentially need transformation.  They return true if the instruction is
     // transformed.  If false is returned, the instruction should be copied as-is.
@@ -3315,6 +3308,9 @@ class SpirvTransformer final : public SpirvTransformerBase
     TransformationState transformDebugInfo(const uint32_t *instruction, spv::Op op);
     TransformationState transformEmitVertex(const uint32_t *instruction);
     TransformationState transformEntryPoint(const uint32_t *instruction);
+    TransformationState transformExtension(const uint32_t *instruction);
+    TransformationState transformExtInstImport(const uint32_t *instruction);
+    TransformationState transformExtInst(const uint32_t *instruction);
     TransformationState transformDecorate(const uint32_t *instruction);
     TransformationState transformMemberDecorate(const uint32_t *instruction);
     TransformationState transformTypePointer(const uint32_t *instruction);
@@ -3342,6 +3338,7 @@ class SpirvTransformer final : public SpirvTransformerBase
 
     // Transformation state:
 
+    SpirvNonSemanticInstructions mNonSemanticInstructions;
     SpirvPerVertexTrimmer mPerVertexTrimmer;
     SpirvInactiveVaryingRemover mInactiveVaryingRemover;
     SpirvVaryingPrecisionFixer mVaryingPrecisionFixer;
@@ -3414,12 +3411,6 @@ void SpirvTransformer::resolveVariableIds()
             case spv::OpTypeArray:
                 visitTypeArray(instruction);
                 break;
-            case spv::OpTypeFloat:
-                visitTypeFloat(instruction);
-                break;
-            case spv::OpTypeInt:
-                visitTypeInt(instruction);
-                break;
             case spv::OpTypePointer:
                 visitTypePointer(instruction);
                 break;
@@ -3432,13 +3423,12 @@ void SpirvTransformer::resolveVariableIds()
             case spv::OpVariable:
                 visitVariable(instruction);
                 break;
-            case spv::OpFunction:
-                // SPIR-V is structured in sections (SPIR-V 1.0 Section 2.4 Logical Layout of a
-                // Module). Names appear before decorations, which are followed by type+variables
-                // and finally functions.  We are only interested in name and variable declarations
-                // (as well as type declarations for the sake of nameless interface blocks).  Early
-                // out when the function declaration section is met.
-                return;
+            case spv::OpExtInst:
+                if (visitExtInst(instruction))
+                {
+                    return;
+                }
+                break;
             default:
                 break;
         }
@@ -3465,14 +3455,6 @@ void SpirvTransformer::transformInstruction()
         // SPIR-V is structured in sections.  Function declarations come last.  Only a few
         // instructions such as Op*Access* or OpEmitVertex opcodes inside functions need to be
         // inspected.
-        //
-        // If this is the first OpFunction instruction, this is also where the declaration section
-        // finishes, so we need to declare anything that we need but didn't find there already right
-        // now.
-        if (!mIsInFunctionSection)
-        {
-            writePendingDeclarations();
-        }
         mIsInFunctionSection = true;
 
         // Only write function variables for the EntryPoint function for non-compute shaders
@@ -3527,6 +3509,15 @@ void SpirvTransformer::transformInstruction()
         // Look at global declaration opcodes.
         switch (opCode)
         {
+            case spv::OpExtension:
+                transformationState = transformExtension(instruction);
+                break;
+            case spv::OpExtInstImport:
+                transformationState = transformExtInstImport(instruction);
+                break;
+            case spv::OpExtInst:
+                transformationState = transformExtInst(instruction);
+                break;
             case spv::OpName:
             case spv::OpMemberName:
             case spv::OpString:
@@ -3733,25 +3724,6 @@ void SpirvTransformer::visitTypeArray(const uint32_t *instruction)
     mIds.visitTypeArray(id, elementType, length);
 }
 
-void SpirvTransformer::visitTypeFloat(const uint32_t *instruction)
-{
-    spirv::IdResult id;
-    spirv::LiteralInteger width;
-    spirv::ParseTypeFloat(instruction, &id, &width);
-
-    mIds.visitTypeFloat(id, width);
-}
-
-void SpirvTransformer::visitTypeInt(const uint32_t *instruction)
-{
-    spirv::IdResult id;
-    spirv::LiteralInteger width;
-    spirv::LiteralInteger signedness;
-    spirv::ParseTypeInt(instruction, &id, &width, &signedness);
-
-    mIds.visitTypeInt(id, width, signedness);
-}
-
 void SpirvTransformer::visitTypePointer(const uint32_t *instruction)
 {
     spirv::IdResult id;
@@ -3834,6 +3806,38 @@ void SpirvTransformer::visitVariable(const uint32_t *instruction)
     }
 
     mMultisampleTransformer.visitVariable(mOptions.shaderType, typeId, id, storageClass);
+}
+
+bool SpirvTransformer::visitExtInst(const uint32_t *instruction)
+{
+    if (!IsNonSemanticInstruction(instruction))
+    {
+        return false;
+    }
+
+    spirv::IdResultType typeId;
+    spirv::IdResult id;
+    spirv::IdRef set;
+    spirv::LiteralExtInstInteger inst;
+    spirv::IdRefList operandList;
+    spirv::ParseExtInst(instruction, &typeId, &id, &set, &inst, &operandList);
+
+    switch (inst)
+    {
+        case sh::vk::spirv::kNonSemanticOverview:
+            // SPIR-V is structured in sections (SPIR-V 1.0 Section 2.4 Logical Layout of a Module).
+            // Names appear before decorations, which are followed by type+variables and finally
+            // functions.  We are only interested in name and variable declarations (as well as type
+            // declarations for the sake of nameless interface blocks).  Early out when the function
+            // declaration section is met.
+            //
+            // This non-semantic instruction marks the beginning of the functions section.
+            return true;
+        default:
+            UNREACHABLE();
+    }
+
+    return false;
 }
 
 TransformationState SpirvTransformer::transformDecorate(const uint32_t *instruction)
@@ -4063,6 +4067,65 @@ TransformationState SpirvTransformer::transformTypePointer(const uint32_t *instr
                                                         mSpirvBlobOut);
 }
 
+TransformationState SpirvTransformer::transformExtension(const uint32_t *instruction)
+{
+    // Drop the OpExtension "SPV_KHR_non_semantic_info" extension instruction.
+    // SPV_KHR_non_semantic_info is used purely as a means of communication between the compiler and
+    // the SPIR-V transformer, and is stripped away before the SPIR-V is handed off to the driver.
+    spirv::LiteralString name;
+    spirv::ParseExtension(instruction, &name);
+
+    return strcmp(name, "SPV_KHR_non_semantic_info") == 0 ? TransformationState::Transformed
+                                                          : TransformationState::Unchanged;
+}
+
+TransformationState SpirvTransformer::transformExtInstImport(const uint32_t *instruction)
+{
+    // Drop the OpExtInstImport "NonSemantic.ANGLE" instruction.
+    spirv::IdResult id;
+    spirv::LiteralString name;
+    ParseExtInstImport(instruction, &id, &name);
+
+    return id == sh::vk::spirv::kIdNonSemanticInstructionSet ? TransformationState::Transformed
+                                                             : TransformationState::Unchanged;
+}
+
+TransformationState SpirvTransformer::transformExtInst(const uint32_t *instruction)
+{
+    sh::vk::spirv::NonSemanticInstruction inst;
+    spirv::IdRefList operandList;
+    if (!mNonSemanticInstructions.visitExtInst(instruction, &inst, &operandList))
+    {
+        return TransformationState::Unchanged;
+    }
+
+    switch (inst)
+    {
+        case sh::vk::spirv::kNonSemanticOverview:
+            // Declare anything that we need but didn't find there already.
+            writePendingDeclarations();
+            break;
+        case sh::vk::spirv::kNonSemanticEnter:
+            // TODO: http://anglebug.com/7220
+            UNREACHABLE();
+            break;
+        case sh::vk::spirv::kNonSemanticVertexOutput:
+            // TODO: http://anglebug.com/7220
+            UNREACHABLE();
+            break;
+        case sh::vk::spirv::kNonSemanticTransformFeedbackEmulation:
+            // TODO: http://anglebug.com/7220
+            UNREACHABLE();
+            break;
+        default:
+            UNREACHABLE();
+            break;
+    }
+
+    // Drop the instruction if this is the last pass
+    return mNonSemanticInstructions.transformExtInst(instruction);
+}
+
 TransformationState SpirvTransformer::transformTypeStruct(const uint32_t *instruction)
 {
     spirv::IdResult id;
@@ -4229,7 +4292,8 @@ class SpirvVertexAttributeAliasingTransformer final : public SpirvTransformerBas
         const ShaderInterfaceVariableInfoMap &variableInfoMap,
         std::vector<const ShaderInterfaceVariableInfo *> &&variableInfoById,
         spirv::Blob *spirvBlobOut)
-        : SpirvTransformerBase(spirvBlobIn, variableInfoMap, spirvBlobOut)
+        : SpirvTransformerBase(spirvBlobIn, variableInfoMap, spirvBlobOut),
+          mNonSemanticInstructions(true)
     {
         mVariableInfoById = std::move(variableInfoById);
     }
@@ -4248,7 +4312,6 @@ class SpirvVertexAttributeAliasingTransformer final : public SpirvTransformerBas
     bool isMatrixAttribute(spirv::IdRef id) const;
 
     // Instructions that are purely informational:
-    void visitTypeFloat(const uint32_t *instruction);
     void visitTypeVector(const uint32_t *instruction);
     void visitTypeMatrix(const uint32_t *instruction);
     void visitTypePointer(const uint32_t *instruction);
@@ -4256,6 +4319,7 @@ class SpirvVertexAttributeAliasingTransformer final : public SpirvTransformerBas
     // Instructions that potentially need transformation.  They return true if the instruction is
     // transformed.  If false is returned, the instruction should be copied as-is.
     TransformationState transformEntryPoint(const uint32_t *instruction);
+    TransformationState transformExtInst(const uint32_t *instruction);
     TransformationState transformName(const uint32_t *instruction);
     TransformationState transformDecorate(const uint32_t *instruction);
     TransformationState transformVariable(const uint32_t *instruction);
@@ -4300,8 +4364,6 @@ class SpirvVertexAttributeAliasingTransformer final : public SpirvTransformerBas
     // ids of the split vectors are consecutive, so %veci == %vec0 + i.  %veciType is taken from
     // mInputTypePointers.
     std::vector<spirv::IdRef> mExpandedMatrixFirstVectorIdById;
-    // Whether the expanded matrix OpVariables are generated.
-    bool mHaveMatricesExpanded = false;
     // Whether initialization of the matrix attributes should be written at the beginning of the
     // current function.
     bool mWriteExpandedMatrixInitialization = false;
@@ -4329,6 +4391,8 @@ class SpirvVertexAttributeAliasingTransformer final : public SpirvTransformerBas
     // Corresponding to mMatrixTypes, [i]: id of OpTypePointer Private %mMatrixTypes[i].  [0] and
     // [1] are unused.
     std::array<spirv::IdRef, 5> mPrivateMatrixTypePointers;
+
+    SpirvNonSemanticInstructions mNonSemanticInstructions;
 };
 
 void SpirvVertexAttributeAliasingTransformer::transform()
@@ -4350,6 +4414,8 @@ void SpirvVertexAttributeAliasingTransformer::preprocessAliasingAttributes()
     mVariableInfoById.resize(indexBound, nullptr);
     mIsAliasingAttributeById.resize(indexBound, false);
     mExpandedMatrixFirstVectorIdById.resize(indexBound);
+
+    mFloatTypes[1] = spirv::IdRef(sh::vk::spirv::kIdFloat);
 
     // Go through attributes and find out which alias which.
     for (uint32_t idIndex = spirv::kMinValidId; idIndex < indexBound; ++idIndex)
@@ -4437,13 +4503,6 @@ void SpirvVertexAttributeAliasingTransformer::transformInstruction()
 
     if (opCode == spv::OpFunction)
     {
-        // Declare the expanded matrix variables right before the first function declaration.
-        if (!mHaveMatricesExpanded)
-        {
-            declareExpandedMatrixVectors();
-            mHaveMatricesExpanded = true;
-        }
-
         // SPIR-V is structured in sections.  Function declarations come last.
         mIsInFunctionSection = true;
 
@@ -4495,9 +4554,6 @@ void SpirvVertexAttributeAliasingTransformer::transformInstruction()
         switch (opCode)
         {
             // Informational instructions:
-            case spv::OpTypeFloat:
-                visitTypeFloat(instruction);
-                break;
             case spv::OpTypeVector:
                 visitTypeVector(instruction);
                 break;
@@ -4510,6 +4566,9 @@ void SpirvVertexAttributeAliasingTransformer::transformInstruction()
             // Instructions that may need transformation:
             case spv::OpEntryPoint:
                 transformationState = transformEntryPoint(instruction);
+                break;
+            case spv::OpExtInst:
+                transformationState = transformExtInst(instruction);
                 break;
             case spv::OpName:
                 transformationState = transformName(instruction);
@@ -4558,20 +4617,6 @@ spirv::IdRef SpirvVertexAttributeAliasingTransformer::getAliasingAttributeReplac
 bool SpirvVertexAttributeAliasingTransformer::isMatrixAttribute(spirv::IdRef id) const
 {
     return mExpandedMatrixFirstVectorIdById[id].valid();
-}
-
-void SpirvVertexAttributeAliasingTransformer::visitTypeFloat(const uint32_t *instruction)
-{
-    spirv::IdResult id;
-    spirv::LiteralInteger width;
-    spirv::ParseTypeFloat(instruction, &id, &width);
-
-    // Only interested in OpTypeFloat 32.
-    if (width == 32)
-    {
-        ASSERT(!mFloatTypes[1].valid());
-        mFloatTypes[1] = id;
-    }
 }
 
 void SpirvVertexAttributeAliasingTransformer::visitTypeVector(const uint32_t *instruction)
@@ -4721,6 +4766,39 @@ TransformationState SpirvVertexAttributeAliasingTransformer::transformEntryPoint
     spirv::WriteEntryPoint(mSpirvBlobOut, executionModel, mEntryPointId, name, interfaceList);
 
     return TransformationState::Transformed;
+}
+
+TransformationState SpirvVertexAttributeAliasingTransformer::transformExtInst(
+    const uint32_t *instruction)
+{
+    sh::vk::spirv::NonSemanticInstruction inst;
+    spirv::IdRefList operandList;
+    if (!mNonSemanticInstructions.visitExtInst(instruction, &inst, &operandList))
+    {
+        return TransformationState::Unchanged;
+    }
+
+    switch (inst)
+    {
+        case sh::vk::spirv::kNonSemanticOverview:
+            // Declare the expanded matrix variables
+            declareExpandedMatrixVectors();
+            break;
+        case sh::vk::spirv::kNonSemanticEnter:
+            // TODO: http://anglebug.com/7220
+            UNREACHABLE();
+            break;
+        case sh::vk::spirv::kNonSemanticVertexOutput:
+        case sh::vk::spirv::kNonSemanticTransformFeedbackEmulation:
+            // Unused by this transformation
+            break;
+        default:
+            UNREACHABLE();
+            break;
+    }
+
+    // Drop the instruction if this is the last pass
+    return mNonSemanticInstructions.transformExtInst(instruction);
 }
 
 TransformationState SpirvVertexAttributeAliasingTransformer::transformName(
@@ -5431,12 +5509,16 @@ angle::Result SpvTransformSpirvCode(const SpvTransformOptions &options,
         return angle::Result::Continue;
     }
 
+    const bool hasAliasingAttributes =
+        options.shaderType == gl::ShaderType::Vertex && HasAliasingAttributes(variableInfoMap);
+
     // Transform the SPIR-V code by assigning location/set/binding values.
-    SpirvTransformer transformer(initialSpirvBlob, options, variableInfoMap, spirvBlobOut);
+    SpirvTransformer transformer(initialSpirvBlob, options, !hasAliasingAttributes, variableInfoMap,
+                                 spirvBlobOut);
     transformer.transform();
 
     // If there are aliasing vertex attributes, transform the SPIR-V again to remove them.
-    if (options.shaderType == gl::ShaderType::Vertex && HasAliasingAttributes(variableInfoMap))
+    if (hasAliasingAttributes)
     {
         spirv::Blob preTransformBlob = std::move(*spirvBlobOut);
         SpirvVertexAttributeAliasingTransformer aliasingTransformer(

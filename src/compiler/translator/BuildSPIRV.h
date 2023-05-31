@@ -432,6 +432,7 @@ class SPIRVBuilder : angle::NonCopyable
     spirv::Blob getSpirv();
 
   private:
+    void predefineCommonTypes();
     SpirvTypeData declareType(const SpirvType &type, const TSymbol *block);
 
     uint32_t calculateBaseAlignmentAndSize(const SpirvType &type, uint32_t *sizeInStorageBlockOut);
@@ -464,6 +465,7 @@ class SPIRVBuilder : angle::NonCopyable
     void writeExecutionModes(spirv::Blob *blob);
     void writeExtensions(spirv::Blob *blob);
     void writeSourceExtensions(spirv::Blob *blob);
+    void writeNonSemanticOverview(spirv::Blob *blob, spirv::IdRef id);
 
     ANGLE_MAYBE_UNUSED_PRIVATE_FIELD TCompiler *mCompiler;
     const ShCompileOptions &mCompileOptions;
