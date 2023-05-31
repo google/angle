@@ -1715,7 +1715,22 @@ class DescriptorSetDescBuilder final
                               TransformFeedbackVk *transformFeedbackVk);
 
     // Specific helpers for shader resource descriptors.
-    void updateShaderBuffers(ShaderVariableType variableType,
+    template <typename CommandBufferT>
+    void updateOneShaderBuffer(ContextVk *contextVk,
+                               CommandBufferT *commandBufferHelper,
+                               ShaderVariableType variableType,
+                               const ShaderInterfaceVariableInfoMap &variableInfoMap,
+                               const gl::BufferVector &buffers,
+                               const std::vector<gl::InterfaceBlock> &blocks,
+                               uint32_t blockIndex,
+                               VkDescriptorType descriptorType,
+                               VkDeviceSize maxBoundBufferRange,
+                               const BufferHelper &emptyBuffer,
+                               const WriteDescriptorDescs &writeDescriptorDescs);
+    template <typename CommandBufferT>
+    void updateShaderBuffers(ContextVk *contextVk,
+                             CommandBufferT *commandBufferHelper,
+                             ShaderVariableType variableType,
                              const ShaderInterfaceVariableInfoMap &variableInfoMap,
                              const gl::BufferVector &buffers,
                              const std::vector<gl::InterfaceBlock> &blocks,
@@ -1723,11 +1738,14 @@ class DescriptorSetDescBuilder final
                              VkDeviceSize maxBoundBufferRange,
                              const BufferHelper &emptyBuffer,
                              const WriteDescriptorDescs &writeDescriptorDescs);
-    void updateAtomicCounters(const ShaderInterfaceVariableInfoMap &variableInfoMap,
+    template <typename CommandBufferT>
+    void updateAtomicCounters(ContextVk *contextVk,
+                              CommandBufferT *commandBufferHelper,
+                              const ShaderInterfaceVariableInfoMap &variableInfoMap,
                               const gl::BufferVector &buffers,
                               const std::vector<gl::AtomicCounterBuffer> &atomicCounterBuffers,
                               const VkDeviceSize requiredOffsetAlignment,
-                              vk::BufferHelper *emptyBuffer,
+                              const BufferHelper &emptyBuffer,
                               const WriteDescriptorDescs &writeDescriptorDescs);
     angle::Result updateImages(Context *context,
                                const gl::ProgramExecutable &executable,
@@ -1765,6 +1783,9 @@ class DescriptorSetDescBuilder final
     size_t getDynamicOffsetsSize() const { return mDynamicOffsets.size(); }
 
   private:
+    void setEmptyBuffer(uint32_t infoDescIndex,
+                        VkDescriptorType descriptorType,
+                        const BufferHelper &emptyBuffer);
     angle::Result updateExecutableActiveTexturesForShader(
         Context *context,
         gl::ShaderType shaderType,

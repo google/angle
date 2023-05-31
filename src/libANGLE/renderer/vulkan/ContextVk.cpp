@@ -859,90 +859,6 @@ void UpdateBuffersWithSharedCacheKey(const gl::BufferVector &buffers,
         }
     }
 }
-
-template <typename CommandBufferT>
-void UpdateShaderUniformBuffers(ContextVk *contextVk,
-                                CommandBufferT *commandBufferHelper,
-                                gl::ShaderType shaderType,
-                                const vk::PipelineStage pipelineStage,
-                                const std::vector<gl::InterfaceBlock> &ubos,
-                                const gl::BufferVector &bufferBindings)
-{
-    for (const gl::InterfaceBlock &ubo : ubos)
-    {
-        if (!ubo.isActive(shaderType) || bufferBindings[ubo.binding].get() == nullptr)
-        {
-            continue;
-        }
-        BufferVk *bufferVk             = vk::GetImpl(bufferBindings[ubo.binding].get());
-        vk::BufferHelper &bufferHelper = bufferVk->getBuffer();
-
-        commandBufferHelper->bufferRead(contextVk, VK_ACCESS_UNIFORM_READ_BIT, pipelineStage,
-                                        &bufferHelper);
-    }
-}
-
-template <typename CommandBufferT>
-void UpdateShaderStorageBuffers(ContextVk *contextVk,
-                                CommandBufferT *commandBufferHelper,
-                                gl::ShaderType shaderType,
-                                const vk::PipelineStage pipelineStage,
-                                const std::vector<gl::InterfaceBlock> &ssbos,
-                                const gl::BufferVector &bufferBindings)
-{
-    for (const gl::InterfaceBlock &ssbo : ssbos)
-    {
-        if (!ssbo.isActive(shaderType) || bufferBindings[ssbo.binding].get() == nullptr)
-        {
-            continue;
-        }
-
-        BufferVk *bufferVk             = vk::GetImpl(bufferBindings[ssbo.binding].get());
-        vk::BufferHelper &bufferHelper = bufferVk->getBuffer();
-
-        if (ssbo.isReadOnly)
-        {
-            // Avoid unnecessary barriers for readonly SSBOs by making sure the buffers are
-            // marked read-only.  This also helps BufferVk make better decisions during buffer
-            // data uploads and copies by knowing that the buffers are not actually being
-            // written to.
-            commandBufferHelper->bufferRead(contextVk, VK_ACCESS_SHADER_READ_BIT, pipelineStage,
-                                            &bufferHelper);
-        }
-        else
-        {
-            // We set the SHADER_READ_BIT to be conservative.
-            VkAccessFlags accessFlags = VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT;
-            commandBufferHelper->bufferWrite(contextVk, accessFlags, pipelineStage, &bufferHelper);
-        }
-    }
-}
-
-template <typename CommandBufferT>
-void UpdateShaderAtomicCounterBuffers(ContextVk *contextVk,
-                                      CommandBufferT *commandBufferHelper,
-                                      gl::ShaderType shaderType,
-                                      const vk::PipelineStage pipelineStage,
-                                      const std::vector<gl::AtomicCounterBuffer> &acbs,
-                                      const gl::BufferVector &bufferBindings)
-{
-    for (const gl::AtomicCounterBuffer &atomicCounterBuffer : acbs)
-    {
-        uint32_t binding = atomicCounterBuffer.binding;
-        if (bufferBindings[binding].get() == nullptr)
-        {
-            continue;
-        }
-
-        BufferVk *bufferVk             = vk::GetImpl(bufferBindings[binding].get());
-        vk::BufferHelper &bufferHelper = bufferVk->getBuffer();
-
-        // We set SHADER_READ_BIT to be conservative.
-        commandBufferHelper->bufferWrite(contextVk,
-                                         VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT,
-                                         pipelineStage, &bufferHelper);
-    }
-}
 }  // anonymous namespace
 
 void ContextVk::flushDescriptorSetUpdates()
@@ -2796,44 +2712,71 @@ angle::Result ContextVk::handleDirtyShaderResourcesImpl(CommandBufferHelperT *co
     const gl::ProgramExecutable *executable = mState.getProgramExecutable();
     ASSERT(executable);
 
-    const bool hasImages = executable->hasImages();
-    const bool hasStorageBuffers =
-        executable->hasStorageBuffers() || executable->hasAtomicCounterBuffers();
-    const bool hasUniformBuffers = executable->hasUniformBuffers();
+    const bool hasImages               = executable->hasImages();
+    const bool hasStorageBuffers       = executable->hasStorageBuffers();
+    const bool hasAtomicCounterBuffers = executable->hasAtomicCounterBuffers();
+    const bool hasUniformBuffers       = executable->hasUniformBuffers();
+    const bool hasFramebufferFetch     = executable->usesFramebufferFetch();
 
-    if (!hasUniformBuffers && !hasStorageBuffers && !hasImages &&
-        !executable->usesFramebufferFetch())
+    if (!hasUniformBuffers && !hasStorageBuffers && !hasAtomicCounterBuffers && !hasImages &&
+        !hasFramebufferFetch)
     {
         return angle::Result::Continue;
     }
 
+    const VkPhysicalDeviceLimits &limits = mRenderer->getPhysicalDeviceProperties().limits;
+    ProgramExecutableVk &executableVk    = *getExecutable();
+    const ShaderInterfaceVariableInfoMap &variableInfoMap = executableVk.getVariableInfoMap();
+
+    mShaderBufferWriteDescriptorDescBuilder =
+        executableVk.getShaderResourceWriteDescriptorDescBuilder();
+    // Update writeDescriptorDescs with inputAttachments
+    mShaderBufferWriteDescriptorDescBuilder.updateInputAttachments(
+        gl::ShaderType::Fragment, *executable, variableInfoMap,
+        vk::GetImpl(mState.getDrawFramebuffer()));
+
+    mShaderBuffersDescriptorDesc.reset();
+    if (hasUniformBuffers)
+    {
+        mShaderBuffersDescriptorDesc.updateShaderBuffers(
+            this, commandBufferHelper, ShaderVariableType::UniformBuffer, variableInfoMap,
+            mState.getOffsetBindingPointerUniformBuffers(), executable->getUniformBlocks(),
+            executableVk.getUniformBufferDescriptorType(), limits.maxUniformBufferRange,
+            mEmptyBuffer, mShaderBufferWriteDescriptorDescBuilder.getDescs());
+    }
+    if (hasStorageBuffers)
+    {
+        mShaderBuffersDescriptorDesc.updateShaderBuffers(
+            this, commandBufferHelper, ShaderVariableType::ShaderStorageBuffer, variableInfoMap,
+            mState.getOffsetBindingPointerShaderStorageBuffers(),
+            executable->getShaderStorageBlocks(), executableVk.getStorageBufferDescriptorType(),
+            limits.maxStorageBufferRange, mEmptyBuffer,
+            mShaderBufferWriteDescriptorDescBuilder.getDescs());
+    }
+    if (hasAtomicCounterBuffers)
+    {
+        mShaderBuffersDescriptorDesc.updateAtomicCounters(
+            this, commandBufferHelper, variableInfoMap,
+            mState.getOffsetBindingPointerAtomicCounterBuffers(),
+            executable->getAtomicCounterBuffers(), limits.minStorageBufferOffsetAlignment,
+            mEmptyBuffer, mShaderBufferWriteDescriptorDescBuilder.getDescs());
+    }
     if (hasImages)
     {
         ANGLE_TRY(updateActiveImages(commandBufferHelper));
+        ANGLE_TRY(mShaderBuffersDescriptorDesc.updateImages(
+            this, *executable, variableInfoMap, mActiveImages, mState.getImageUnits(),
+            mShaderBufferWriteDescriptorDescBuilder.getDescs()));
     }
-
-    // Process buffer barriers and mUse.
-    for (const gl::ShaderType shaderType : executable->getLinkedShaderStages())
+    if (hasFramebufferFetch)
     {
-        const vk::PipelineStage pipelineStage = vk::GetPipelineStage(shaderType);
-
-        UpdateShaderUniformBuffers(this, commandBufferHelper, shaderType, pipelineStage,
-                                   executable->getUniformBlocks(),
-                                   mState.getOffsetBindingPointerUniformBuffers());
-        UpdateShaderStorageBuffers(this, commandBufferHelper, shaderType, pipelineStage,
-                                   executable->getShaderStorageBlocks(),
-                                   mState.getOffsetBindingPointerShaderStorageBuffers());
-        UpdateShaderAtomicCounterBuffers(this, commandBufferHelper, shaderType, pipelineStage,
-                                         executable->getAtomicCounterBuffers(),
-                                         mState.getOffsetBindingPointerAtomicCounterBuffers());
+        ANGLE_TRY(mShaderBuffersDescriptorDesc.updateInputAttachments(
+            this, *executable, variableInfoMap, vk::GetImpl(mState.getDrawFramebuffer()),
+            mShaderBufferWriteDescriptorDescBuilder.getDescs()));
     }
-
-    ANGLE_TRY(updateShaderResourcesDescriptorDesc(pipelineType));
-
-    ProgramExecutableVk *executableVk = getExecutable();
 
     vk::SharedDescriptorSetCacheKey newSharedCacheKey;
-    ANGLE_TRY(executableVk->updateShaderResourcesDescriptorSet(
+    ANGLE_TRY(executableVk.updateShaderResourcesDescriptorSet(
         this, mShareGroupVk->getUpdateDescriptorSetsBuilder(),
         mShaderBufferWriteDescriptorDescBuilder.getDescs(), commandBufferHelper,
         mShaderBuffersDescriptorDesc, &newSharedCacheKey));
@@ -2847,7 +2790,7 @@ angle::Result ContextVk::handleDirtyShaderResourcesImpl(CommandBufferHelperT *co
 
     // Record usage of storage buffers and images in the command buffer to aid handling of
     // glMemoryBarrier.
-    if (hasImages || hasStorageBuffers)
+    if (hasImages || hasStorageBuffers || hasAtomicCounterBuffers)
     {
         commandBufferHelper->setHasShaderStorageOutput();
     }
@@ -2883,18 +2826,10 @@ angle::Result ContextVk::handleDirtyUniformBuffersImpl(CommandBufferT *commandBu
     const ShaderInterfaceVariableInfoMap &variableInfoMap = executableVk.getVariableInfoMap();
 
     mShaderBuffersDescriptorDesc.updateShaderBuffers(
-        ShaderVariableType::UniformBuffer, variableInfoMap,
+        this, commandBufferHelper, ShaderVariableType::UniformBuffer, variableInfoMap,
         mState.getOffsetBindingPointerUniformBuffers(), executable->getUniformBlocks(),
         executableVk.getUniformBufferDescriptorType(), limits.maxUniformBufferRange, mEmptyBuffer,
         mShaderBufferWriteDescriptorDescBuilder.getDescs());
-
-    for (gl::ShaderType shaderType : executable->getLinkedShaderStages())
-    {
-        const vk::PipelineStage pipelineStage = vk::GetPipelineStage(shaderType);
-        UpdateShaderUniformBuffers(this, commandBufferHelper, shaderType, pipelineStage,
-                                   executable->getUniformBlocks(),
-                                   mState.getOffsetBindingPointerUniformBuffers());
-    }
 
     vk::SharedDescriptorSetCacheKey newSharedCacheKey;
     ANGLE_TRY(executableVk.updateShaderResourcesDescriptorSet(
@@ -6286,63 +6221,6 @@ angle::Result ContextVk::invalidateCurrentShaderUniformBuffers(gl::Command comma
             ANGLE_TRY(endRenderPassIfComputeReadAfterTransformFeedbackWrite());
         }
     }
-    return angle::Result::Continue;
-}
-
-angle::Result ContextVk::updateShaderResourcesDescriptorDesc(PipelineType pipelineType)
-{
-    const gl::ProgramExecutable *executable = mState.getProgramExecutable();
-    ASSERT(executable);
-
-    const bool hasStorageBuffers =
-        executable->hasStorageBuffers() || executable->hasAtomicCounterBuffers();
-    const bool hasUniformBuffers = executable->hasUniformBuffers();
-    const bool hasStorageImages  = executable->hasImages();
-    const bool usesFetch         = executable->usesFramebufferFetch();
-
-    if (!hasUniformBuffers && !hasStorageBuffers && !hasStorageImages && !usesFetch)
-    {
-        return angle::Result::Continue;
-    }
-
-    mShaderBuffersDescriptorDesc.reset();
-
-    const VkPhysicalDeviceLimits &limits    = mRenderer->getPhysicalDeviceProperties().limits;
-    const ProgramExecutableVk &executableVk = *getExecutable();
-    const ShaderInterfaceVariableInfoMap &variableInfoMap = executableVk.getVariableInfoMap();
-
-    mShaderBufferWriteDescriptorDescBuilder =
-        executableVk.getShaderResourceWriteDescriptorDescBuilder();
-    // Update writeDescriptorDescs with inputAttachments
-    mShaderBufferWriteDescriptorDescBuilder.updateInputAttachments(
-        gl::ShaderType::Fragment, *executable, variableInfoMap,
-        vk::GetImpl(mState.getDrawFramebuffer()));
-
-    mShaderBuffersDescriptorDesc.updateShaderBuffers(
-        ShaderVariableType::UniformBuffer, variableInfoMap,
-        mState.getOffsetBindingPointerUniformBuffers(), executable->getUniformBlocks(),
-        executableVk.getUniformBufferDescriptorType(), limits.maxUniformBufferRange, mEmptyBuffer,
-        mShaderBufferWriteDescriptorDescBuilder.getDescs());
-
-    mShaderBuffersDescriptorDesc.updateShaderBuffers(
-        ShaderVariableType::ShaderStorageBuffer, variableInfoMap,
-        mState.getOffsetBindingPointerShaderStorageBuffers(), executable->getShaderStorageBlocks(),
-        executableVk.getStorageBufferDescriptorType(), limits.maxStorageBufferRange, mEmptyBuffer,
-        mShaderBufferWriteDescriptorDescBuilder.getDescs());
-
-    mShaderBuffersDescriptorDesc.updateAtomicCounters(
-        variableInfoMap, mState.getOffsetBindingPointerAtomicCounterBuffers(),
-        executable->getAtomicCounterBuffers(), limits.minStorageBufferOffsetAlignment,
-        &mEmptyBuffer, mShaderBufferWriteDescriptorDescBuilder.getDescs());
-
-    ANGLE_TRY(mShaderBuffersDescriptorDesc.updateImages(
-        this, *executable, variableInfoMap, mActiveImages, mState.getImageUnits(),
-        mShaderBufferWriteDescriptorDescBuilder.getDescs()));
-
-    ANGLE_TRY(mShaderBuffersDescriptorDesc.updateInputAttachments(
-        this, *executable, variableInfoMap, vk::GetImpl(mState.getDrawFramebuffer()),
-        mShaderBufferWriteDescriptorDescBuilder.getDescs()));
-
     return angle::Result::Continue;
 }
 

@@ -1725,6 +1725,37 @@ void OutsideRenderPassCommandBufferHelper::bufferRead(ContextVk *contextVk,
     }
 }
 
+void OutsideRenderPassCommandBufferHelper::bufferRead(ContextVk *contextVk,
+                                                      VkAccessFlags readAccessType,
+                                                      const gl::ShaderBitSet &readShaderStages,
+                                                      BufferHelper *buffer)
+{
+    for (gl::ShaderType shaderType : readShaderStages)
+    {
+        const vk::PipelineStage readStage = vk::GetPipelineStage(shaderType);
+        VkPipelineStageFlagBits stageBits = kPipelineStageFlagBitMap[readStage];
+        if (buffer->recordReadBarrier(readAccessType, stageBits, &mPipelineBarriers[readStage]))
+        {
+            mPipelineBarrierMask.set(readStage);
+        }
+    }
+
+    ASSERT(!buffer->writtenByCommandBuffer(mQueueSerial));
+    if (contextVk->isRenderPassStartedAndUsesBuffer(*buffer))
+    {
+        // We should not run into situation that RP is writing to it while we are reading it here
+        ASSERT(!contextVk->isRenderPassStartedAndUsesBufferForWrite(*buffer));
+        // A buffer could have read accessed by both renderPassCommands and
+        // outsideRenderPassCommands and there is no need to endRP or flush. In this case, the
+        // renderPassCommands' read will override the outsideRenderPassCommands' read, since its
+        // queueSerial must be greater than outsideRP.
+    }
+    else
+    {
+        buffer->setQueueSerial(mQueueSerial);
+    }
+}
+
 void OutsideRenderPassCommandBufferHelper::imageRead(ContextVk *contextVk,
                                                      VkImageAspectFlags aspectFlags,
                                                      ImageLayout imageLayout,
@@ -1932,6 +1963,25 @@ void RenderPassCommandBufferHelper::bufferRead(ContextVk *contextVk,
     if (buffer->recordReadBarrier(readAccessType, stageBits, &mPipelineBarriers[readStage]))
     {
         mPipelineBarrierMask.set(readStage);
+    }
+
+    ASSERT(!usesBufferForWrite(*buffer));
+    buffer->setQueueSerial(mQueueSerial);
+}
+
+void RenderPassCommandBufferHelper::bufferRead(ContextVk *contextVk,
+                                               VkAccessFlags readAccessType,
+                                               const gl::ShaderBitSet &readShaderStages,
+                                               BufferHelper *buffer)
+{
+    for (gl::ShaderType shaderType : readShaderStages)
+    {
+        const vk::PipelineStage readStage = vk::GetPipelineStage(shaderType);
+        VkPipelineStageFlagBits stageBits = kPipelineStageFlagBitMap[readStage];
+        if (buffer->recordReadBarrier(readAccessType, stageBits, &mPipelineBarriers[readStage]))
+        {
+            mPipelineBarrierMask.set(readStage);
+        }
     }
 
     ASSERT(!usesBufferForWrite(*buffer));

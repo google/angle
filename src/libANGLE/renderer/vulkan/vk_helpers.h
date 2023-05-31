@@ -1280,6 +1280,10 @@ class OutsideRenderPassCommandBufferHelper final : public CommandBufferHelperCom
                     VkAccessFlags readAccessType,
                     PipelineStage readStage,
                     BufferHelper *buffer);
+    void bufferRead(ContextVk *contextVk,
+                    VkAccessFlags readAccessType,
+                    const gl::ShaderBitSet &readShaderStages,
+                    BufferHelper *buffer);
 
     void imageRead(ContextVk *contextVk,
                    VkImageAspectFlags aspectFlags,
@@ -1409,6 +1413,10 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
     void bufferRead(ContextVk *contextVk,
                     VkAccessFlags readAccessType,
                     PipelineStage readStage,
+                    BufferHelper *buffer);
+    void bufferRead(ContextVk *contextVk,
+                    VkAccessFlags readAccessType,
+                    const gl::ShaderBitSet &readShaderStages,
                     BufferHelper *buffer);
 
     void colorImagesDraw(gl::LevelIndex level,
