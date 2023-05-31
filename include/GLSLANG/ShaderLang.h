@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 332
+#define ANGLE_SH_VERSION 333
 
 enum ShShaderSpec
 {
@@ -1026,7 +1026,6 @@ enum ReservedIds
     kIdIntOne,
     kIdIntTwo,
     kIdIntThree,
-    kIdFloatHalf,
 
     // Type pointers
     kIdIntInputTypePointer,
@@ -1037,6 +1036,7 @@ enum ReservedIds
     kIdTransformPositionFunction,
 
     // Transform feedback support
+    kIdXfbExtensionPosition,
     kIdXfbEmulationGetOffsetsFunction,
     kIdXfbEmulationCaptureFunction,
     kIdXfbEmulationBufferZero,
@@ -1084,17 +1084,12 @@ constexpr uint32_t kDriverUniformsMiscAlphaToCoverageMask         = 0x1;
 extern const char kAtomicCountersBlockName[];
 
 // Transform feedback emulation support
-extern const char kXfbEmulationGetOffsetsFunctionName[];
-extern const char kXfbEmulationCaptureFunctionName[];
 extern const char kXfbEmulationBufferBlockName[];
 extern const char kXfbEmulationBufferName[];
 extern const char kXfbEmulationBufferFieldName[];
 
 // Transform feedback extension support
 extern const char kXfbExtensionPositionOutName[];
-
-// Pre-rotation support
-extern const char kTransformPositionFunctionName[];
 
 // EXT_shader_framebuffer_fetch and EXT_shader_framebuffer_fetch_non_coherent
 extern const char kInputAttachmentName[];
