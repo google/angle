@@ -211,6 +211,14 @@ std::string DisplayMtl::getVendorString()
 
 std::string DisplayMtl::getVersionString(bool includeFullVersion)
 {
+    if (!includeFullVersion)
+    {
+        // For WebGL contexts it's inappropriate to include any
+        // additional version information, but Chrome requires
+        // something to be present here.
+        return "Unspecified Version";
+    }
+
     ANGLE_MTL_OBJC_SCOPE
     {
         NSProcessInfo *procInfo = [NSProcessInfo processInfo];
