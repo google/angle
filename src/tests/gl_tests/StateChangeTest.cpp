@@ -10553,30 +10553,26 @@ ANGLE_INSTANTIATE_TEST_ES2(LineLoopStateChangeTest);
 ANGLE_INSTANTIATE_TEST_ES2(StateChangeRenderTest);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(StateChangeTestES3);
-ANGLE_INSTANTIATE_TEST_ES3_AND(StateChangeTestES3,
-                               ES3_VULKAN().disable(Feature::SupportsIndexTypeUint8),
-                               ES3_VULKAN()
-                                   .disable(Feature::SupportsExtendedDynamicState)
-                                   .disable(Feature::SupportsExtendedDynamicState2)
-                                   .disable(Feature::SupportsLogicOpDynamicState),
-                               ES3_VULKAN()
-                                   .disable(Feature::SupportsExtendedDynamicState2)
-                                   .disable(Feature::SupportsLogicOpDynamicState),
-                               ES3_VULKAN().enable(Feature::ForceStaticVertexStrideState),
-                               ES3_VULKAN().enable(Feature::ForceStaticPrimitiveRestartState));
+ANGLE_INSTANTIATE_TEST_ES3_AND(
+    StateChangeTestES3,
+    ES3_VULKAN().disable(Feature::SupportsIndexTypeUint8),
+    ES3_VULKAN()
+        .disable(Feature::SupportsExtendedDynamicState)
+        .disable(Feature::SupportsExtendedDynamicState2),
+    ES3_VULKAN().disable(Feature::SupportsExtendedDynamicState2),
+    ES3_VULKAN().disable(Feature::UseVertexInputBindingStrideDynamicState),
+    ES3_VULKAN().disable(Feature::UsePrimitiveRestartEnableDynamicState));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(StateChangeTestES31);
-ANGLE_INSTANTIATE_TEST_ES31_AND(StateChangeTestES31,
-                                ES31_VULKAN().disable(Feature::SupportsIndexTypeUint8),
-                                ES31_VULKAN()
-                                    .disable(Feature::SupportsExtendedDynamicState)
-                                    .disable(Feature::SupportsExtendedDynamicState2)
-                                    .disable(Feature::SupportsLogicOpDynamicState),
-                                ES31_VULKAN()
-                                    .disable(Feature::SupportsExtendedDynamicState2)
-                                    .disable(Feature::SupportsLogicOpDynamicState),
-                                ES31_VULKAN().enable(Feature::ForceStaticVertexStrideState),
-                                ES31_VULKAN().enable(Feature::ForceStaticPrimitiveRestartState));
+ANGLE_INSTANTIATE_TEST_ES31_AND(
+    StateChangeTestES31,
+    ES31_VULKAN().disable(Feature::SupportsIndexTypeUint8),
+    ES31_VULKAN()
+        .disable(Feature::SupportsExtendedDynamicState)
+        .disable(Feature::SupportsExtendedDynamicState2),
+    ES31_VULKAN().disable(Feature::SupportsExtendedDynamicState2),
+    ES31_VULKAN().disable(Feature::UseVertexInputBindingStrideDynamicState),
+    ES31_VULKAN().disable(Feature::UsePrimitiveRestartEnableDynamicState));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(StateChangeTestWebGL2);
 ANGLE_INSTANTIATE_TEST_COMBINE_1(StateChangeTestWebGL2,

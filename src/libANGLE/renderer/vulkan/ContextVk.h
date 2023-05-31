@@ -1655,10 +1655,7 @@ ANGLE_INLINE angle::Result ContextVk::onVertexAttributeChange(size_t attribIndex
                                                               GLuint relativeOffset,
                                                               const vk::BufferHelper *vertexBuffer)
 {
-    const GLuint staticStride = getFeatures().supportsExtendedDynamicState.enabled &&
-                                        !getFeatures().forceStaticVertexStrideState.enabled
-                                    ? 0
-                                    : stride;
+    const GLuint staticStride = mRenderer->useVertexInputBindingStrideDynamicState() ? 0 : stride;
 
     invalidateCurrentGraphicsPipeline();
 

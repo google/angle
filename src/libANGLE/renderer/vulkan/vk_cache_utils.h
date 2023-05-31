@@ -410,11 +410,9 @@ struct PackedInputAssemblyState final
         // Dynamic in VK_EXT_extended_dynamic_state2
         uint32_t primitiveRestartEnable : 1;  // ds2
 
-        // Support for VK_EXT_extended_dynamic_state.  Used by GraphicsPipelineDesc::hash() to
-        // exclude |vertexStrides| from the hash
-        uint32_t supportsDynamicState1 : 1;
-        // Workaround driver bug with dynamic vertex stride.
-        uint32_t forceStaticVertexStrideState : 1;
+        // Whether dynamic state for vertex stride from VK_EXT_extended_dynamic_state can be used
+        // for.  Used by GraphicsPipelineDesc::hash() to exclude |vertexStrides| from the hash
+        uint32_t useVertexInputBindingStrideDynamicState : 1;
 
         // Whether the pipeline is robust (vertex input copy)
         uint32_t isRobustContext : 1;
@@ -424,7 +422,7 @@ struct PackedInputAssemblyState final
         // Which attributes are actually active in the program and should affect the pipeline.
         uint32_t programActiveAttributeLocations : gl::MAX_VERTEX_ATTRIBS;
 
-        uint32_t padding : 23 - gl::MAX_VERTEX_ATTRIBS;
+        uint32_t padding : 24 - gl::MAX_VERTEX_ATTRIBS;
     } bits;
 };
 
@@ -863,9 +861,8 @@ class GraphicsPipelineDesc final
 
     void setSupportsDynamicStateForTest(bool supports)
     {
-        mVertexInput.inputAssembly.bits.supportsDynamicState1        = supports;
-        mVertexInput.inputAssembly.bits.forceStaticVertexStrideState = false;
-        mShaders.shaders.bits.nonZeroStencilWriteMaskWorkaround      = false;
+        mVertexInput.inputAssembly.bits.useVertexInputBindingStrideDynamicState = supports;
+        mShaders.shaders.bits.nonZeroStencilWriteMaskWorkaround                 = false;
     }
 
     // Helpers to dump the state

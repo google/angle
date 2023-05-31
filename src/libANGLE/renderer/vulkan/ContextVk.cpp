@@ -1063,33 +1063,51 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
         DIRTY_BIT_DYNAMIC_BLEND_CONSTANTS,    DIRTY_BIT_DYNAMIC_STENCIL_COMPARE_MASK,
         DIRTY_BIT_DYNAMIC_STENCIL_WRITE_MASK, DIRTY_BIT_DYNAMIC_STENCIL_REFERENCE,
     };
-    if (getFeatures().supportsExtendedDynamicState.enabled)
+    if (mRenderer->useVertexInputBindingStrideDynamicState())
     {
-        mDynamicStateDirtyBits |= DirtyBits{
-            DIRTY_BIT_DYNAMIC_CULL_MODE,         DIRTY_BIT_DYNAMIC_FRONT_FACE,
-            DIRTY_BIT_DYNAMIC_DEPTH_TEST_ENABLE, DIRTY_BIT_DYNAMIC_DEPTH_WRITE_ENABLE,
-            DIRTY_BIT_DYNAMIC_DEPTH_COMPARE_OP,  DIRTY_BIT_DYNAMIC_STENCIL_TEST_ENABLE,
-            DIRTY_BIT_DYNAMIC_STENCIL_OP,
-        };
-
-        if (!getFeatures().forceStaticVertexStrideState.enabled)
-        {
-            mDynamicStateDirtyBits.set(DIRTY_BIT_VERTEX_BUFFERS);
-        }
+        mDynamicStateDirtyBits.set(DIRTY_BIT_VERTEX_BUFFERS);
     }
-    if (getFeatures().supportsExtendedDynamicState2.enabled)
+    if (mRenderer->useCullModeDynamicState())
     {
-        mDynamicStateDirtyBits |= DirtyBits{
-            DIRTY_BIT_DYNAMIC_RASTERIZER_DISCARD_ENABLE,
-            DIRTY_BIT_DYNAMIC_DEPTH_BIAS_ENABLE,
-        };
-
-        if (!getFeatures().forceStaticPrimitiveRestartState.enabled)
-        {
-            mDynamicStateDirtyBits.set(DIRTY_BIT_DYNAMIC_PRIMITIVE_RESTART_ENABLE);
-        }
+        mDynamicStateDirtyBits.set(DIRTY_BIT_DYNAMIC_CULL_MODE);
     }
-    if (getFeatures().supportsLogicOpDynamicState.enabled)
+    if (mRenderer->useFrontFaceDynamicState())
+    {
+        mDynamicStateDirtyBits.set(DIRTY_BIT_DYNAMIC_FRONT_FACE);
+    }
+    if (mRenderer->useDepthTestEnableDynamicState())
+    {
+        mDynamicStateDirtyBits.set(DIRTY_BIT_DYNAMIC_DEPTH_TEST_ENABLE);
+    }
+    if (mRenderer->useDepthWriteEnableDynamicState())
+    {
+        mDynamicStateDirtyBits.set(DIRTY_BIT_DYNAMIC_DEPTH_WRITE_ENABLE);
+    }
+    if (mRenderer->useDepthCompareOpDynamicState())
+    {
+        mDynamicStateDirtyBits.set(DIRTY_BIT_DYNAMIC_DEPTH_COMPARE_OP);
+    }
+    if (mRenderer->useStencilTestEnableDynamicState())
+    {
+        mDynamicStateDirtyBits.set(DIRTY_BIT_DYNAMIC_STENCIL_TEST_ENABLE);
+    }
+    if (mRenderer->useStencilOpDynamicState())
+    {
+        mDynamicStateDirtyBits.set(DIRTY_BIT_DYNAMIC_STENCIL_OP);
+    }
+    if (mRenderer->usePrimitiveRestartEnableDynamicState())
+    {
+        mDynamicStateDirtyBits.set(DIRTY_BIT_DYNAMIC_PRIMITIVE_RESTART_ENABLE);
+    }
+    if (mRenderer->useRasterizerDiscardEnableDynamicState())
+    {
+        mDynamicStateDirtyBits.set(DIRTY_BIT_DYNAMIC_RASTERIZER_DISCARD_ENABLE);
+    }
+    if (mRenderer->useDepthBiasEnableDynamicState())
+    {
+        mDynamicStateDirtyBits.set(DIRTY_BIT_DYNAMIC_DEPTH_BIAS_ENABLE);
+    }
+    if (mRenderer->useLogicOpDynamicState())
     {
         mDynamicStateDirtyBits.set(DIRTY_BIT_DYNAMIC_LOGIC_OP);
     }
@@ -1254,30 +1272,50 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
     }
 
     // Dynamic state in VK_EXT_extended_dynamic_state:
-    if (getFeatures().supportsExtendedDynamicState.enabled)
+    if (mRenderer->useCullModeDynamicState())
     {
         mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_CULL_FACE_ENABLED);
         mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_CULL_FACE);
+    }
+    if (mRenderer->useFrontFaceDynamicState())
+    {
         mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_FRONT_FACE);
+    }
+    if (mRenderer->useDepthTestEnableDynamicState())
+    {
         mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_DEPTH_TEST_ENABLED);
+    }
+    if (mRenderer->useDepthWriteEnableDynamicState())
+    {
         mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_DEPTH_MASK);
+    }
+    if (mRenderer->useDepthCompareOpDynamicState())
+    {
         mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_DEPTH_FUNC);
+    }
+    if (mRenderer->useStencilTestEnableDynamicState())
+    {
         mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_STENCIL_TEST_ENABLED);
+    }
+    if (mRenderer->useStencilOpDynamicState())
+    {
         mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_STENCIL_FUNCS_FRONT);
         mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_STENCIL_FUNCS_BACK);
         mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_STENCIL_OPS_FRONT);
         mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_STENCIL_OPS_BACK);
     }
-
-    if (getFeatures().supportsExtendedDynamicState2.enabled)
+    // Dynamic state in VK_EXT_extended_dynamic_state2:
+    if (mRenderer->usePrimitiveRestartEnableDynamicState())
+    {
+        mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_PRIMITIVE_RESTART_ENABLED);
+    }
+    if (mRenderer->useRasterizerDiscardEnableDynamicState())
     {
         mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_RASTERIZER_DISCARD_ENABLED);
+    }
+    if (mRenderer->useDepthBiasEnableDynamicState())
+    {
         mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_POLYGON_OFFSET_FILL_ENABLED);
-
-        if (!getFeatures().forceStaticPrimitiveRestartState.enabled)
-        {
-            mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_PRIMITIVE_RESTART_ENABLED);
-        }
     }
 
     angle::PerfMonitorCounterGroup vulkanGroup;
@@ -2639,8 +2677,7 @@ angle::Result ContextVk::handleDirtyGraphicsVertexBuffers(DirtyBits::Iterator *d
     const gl::AttribArray<VkDeviceSize> &bufferOffsets =
         vertexArrayVk->getCurrentArrayBufferOffsets();
 
-    if (getFeatures().supportsExtendedDynamicState.enabled &&
-        !getFeatures().forceStaticVertexStrideState.enabled)
+    if (mRenderer->useVertexInputBindingStrideDynamicState())
     {
         const gl::AttribArray<GLuint> &bufferStrides =
             vertexArrayVk->getCurrentArrayBufferStrides();
@@ -4952,7 +4989,7 @@ void ContextVk::updateViewport(FramebufferVk *framebufferVk,
 
 void ContextVk::updateFrontFace()
 {
-    if (getFeatures().supportsExtendedDynamicState.enabled)
+    if (mRenderer->useFrontFaceDynamicState())
     {
         mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_FRONT_FACE);
     }
@@ -5020,7 +5057,7 @@ void ContextVk::updateDepthTestEnabled(const gl::State &glState)
     const gl::DepthStencilState depthStencilState = glState.getDepthStencilState();
     gl::Framebuffer *drawFramebuffer              = glState.getDrawFramebuffer();
 
-    if (getFeatures().supportsExtendedDynamicState.enabled)
+    if (mRenderer->useDepthTestEnableDynamicState())
     {
         mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_DEPTH_TEST_ENABLE);
     }
@@ -5036,7 +5073,7 @@ void ContextVk::updateDepthWriteEnabled(const gl::State &glState)
     const gl::DepthStencilState depthStencilState = glState.getDepthStencilState();
     gl::Framebuffer *drawFramebuffer              = glState.getDrawFramebuffer();
 
-    if (getFeatures().supportsExtendedDynamicState.enabled)
+    if (mRenderer->useDepthWriteEnableDynamicState())
     {
         mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_DEPTH_WRITE_ENABLE);
     }
@@ -5049,7 +5086,7 @@ void ContextVk::updateDepthWriteEnabled(const gl::State &glState)
 
 void ContextVk::updateDepthFunc(const gl::State &glState)
 {
-    if (getFeatures().supportsExtendedDynamicState.enabled)
+    if (mRenderer->useDepthCompareOpDynamicState())
     {
         mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_DEPTH_COMPARE_OP);
     }
@@ -5065,7 +5102,7 @@ void ContextVk::updateStencilTestEnabled(const gl::State &glState)
     const gl::DepthStencilState depthStencilState = glState.getDepthStencilState();
     gl::Framebuffer *drawFramebuffer              = glState.getDrawFramebuffer();
 
-    if (getFeatures().supportsExtendedDynamicState.enabled)
+    if (mRenderer->useStencilTestEnableDynamicState())
     {
         mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_STENCIL_TEST_ENABLE);
     }
@@ -5129,7 +5166,7 @@ void ContextVk::updateRasterizerDiscardEnabled(bool isPrimitivesGeneratedQueryAc
         isEmulatingRasterizerDiscardDuringPrimitivesGeneratedQuery(
             isPrimitivesGeneratedQueryActive);
 
-    if (getFeatures().supportsExtendedDynamicState2.enabled)
+    if (mRenderer->useRasterizerDiscardEnableDynamicState())
     {
         mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_RASTERIZER_DISCARD_ENABLE);
     }
@@ -5423,7 +5460,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 onDepthStencilAccessChange();
                 break;
             case gl::State::DIRTY_BIT_STENCIL_FUNCS_FRONT:
-                if (getFeatures().supportsExtendedDynamicState.enabled)
+                if (mRenderer->useStencilOpDynamicState())
                 {
                     mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_STENCIL_OP);
                 }
@@ -5437,7 +5474,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 onDepthStencilAccessChange();
                 break;
             case gl::State::DIRTY_BIT_STENCIL_FUNCS_BACK:
-                if (getFeatures().supportsExtendedDynamicState.enabled)
+                if (mRenderer->useStencilOpDynamicState())
                 {
                     mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_STENCIL_OP);
                 }
@@ -5451,7 +5488,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 onDepthStencilAccessChange();
                 break;
             case gl::State::DIRTY_BIT_STENCIL_OPS_FRONT:
-                if (getFeatures().supportsExtendedDynamicState.enabled)
+                if (mRenderer->useStencilOpDynamicState())
                 {
                     mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_STENCIL_OP);
                 }
@@ -5463,7 +5500,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 onDepthStencilAccessChange();
                 break;
             case gl::State::DIRTY_BIT_STENCIL_OPS_BACK:
-                if (getFeatures().supportsExtendedDynamicState.enabled)
+                if (mRenderer->useStencilOpDynamicState())
                 {
                     mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_STENCIL_OP);
                 }
@@ -5481,7 +5518,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 break;
             case gl::State::DIRTY_BIT_CULL_FACE_ENABLED:
             case gl::State::DIRTY_BIT_CULL_FACE:
-                if (getFeatures().supportsExtendedDynamicState.enabled)
+                if (mRenderer->useCullModeDynamicState())
                 {
                     mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_CULL_MODE);
                 }
@@ -5495,7 +5532,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 updateFrontFace();
                 break;
             case gl::State::DIRTY_BIT_POLYGON_OFFSET_FILL_ENABLED:
-                if (getFeatures().supportsExtendedDynamicState2.enabled)
+                if (mRenderer->useDepthBiasEnableDynamicState())
                 {
                     mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_DEPTH_BIAS_ENABLE);
                 }
@@ -5517,8 +5554,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_LINE_WIDTH);
                 break;
             case gl::State::DIRTY_BIT_PRIMITIVE_RESTART_ENABLED:
-                if (getFeatures().supportsExtendedDynamicState2.enabled &&
-                    !getFeatures().forceStaticPrimitiveRestartState.enabled)
+                if (mRenderer->usePrimitiveRestartEnableDynamicState())
                 {
                     mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_PRIMITIVE_RESTART_ENABLE);
                 }
@@ -5800,7 +5836,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                             break;
                         case gl::State::EXTENDED_DIRTY_BIT_POLYGON_OFFSET_POINT_ENABLED:
                         case gl::State::EXTENDED_DIRTY_BIT_POLYGON_OFFSET_LINE_ENABLED:
-                            if (getFeatures().supportsExtendedDynamicState2.enabled)
+                            if (mRenderer->useDepthBiasEnableDynamicState())
                             {
                                 mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_DEPTH_BIAS_ENABLE);
                             }
@@ -5817,7 +5853,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                                 &mGraphicsPipelineTransition, glState.isLogicOpEnabled());
                             break;
                         case gl::State::EXTENDED_DIRTY_BIT_LOGIC_OP:
-                            if (getFeatures().supportsLogicOpDynamicState.enabled)
+                            if (mRenderer->useLogicOpDynamicState())
                             {
                                 mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_LOGIC_OP);
                             }

@@ -665,26 +665,69 @@ struct FeaturesVk : FeatureSetBase
         "Prefer adding HOST_VISIBLE flag for DEVICE_LOCAL memory when picking memory types",
         &members, "http://anglebug.com/7047"};
 
-    FeatureInfo forceStaticVertexStrideState = {
-        "forceStaticVertexStrideState", FeatureCategory::VulkanWorkarounds,
-        "Force static state for VK_DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT due to "
-        "driver bugs",
-        &members, "https://bugs.fuchsia.dev/p/fuchsia/issues/detail?id=107106"};
-
-    FeatureInfo forceStaticPrimitiveRestartState = {
-        "forceStaticPrimitiveRestartState", FeatureCategory::VulkanWorkarounds,
-        "Force static state for VK_DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE due to "
-        "driver bugs",
-        &members, "https://issuetracker.google.com/275210062"};
-
     FeatureInfo supportsExtendedDynamicState = {
         "supportsExtendedDynamicState", FeatureCategory::VulkanFeatures,
         "VkDevice supports VK_EXT_extended_dynamic_state extension", &members,
         "http://anglebug.com/5906"};
 
+    FeatureInfo useVertexInputBindingStrideDynamicState = {
+        "useVertexInputBindingStrideDynamicState", FeatureCategory::VulkanWorkarounds,
+        "Use the Vertex Input Bininding Stride dynamic state from VK_EXT_extended_dynamic_state",
+        &members, "http://anglebug.com/5906"};
+
+    FeatureInfo useCullModeDynamicState = {
+        "useCullModeDynamicState", FeatureCategory::VulkanWorkarounds,
+        "Use the Cull Mode dynamic state from VK_EXT_extended_dynamic_state", &members,
+        "http://anglebug.com/5906"};
+
+    FeatureInfo useFrontFaceDynamicState = {
+        "useFrontFaceDynamicState", FeatureCategory::VulkanWorkarounds,
+        "Use the Front Face dynamic state from VK_EXT_extended_dynamic_state", &members,
+        "http://anglebug.com/5906"};
+
+    FeatureInfo useDepthTestEnableDynamicState = {
+        "useDepthTestEnableDynamicState", FeatureCategory::VulkanWorkarounds,
+        "Use the Depth Test Enable dynamic state from VK_EXT_extended_dynamic_state", &members,
+        "http://anglebug.com/5906"};
+
+    FeatureInfo useDepthWriteEnableDynamicState = {
+        "useDepthWriteEnableDynamicState", FeatureCategory::VulkanWorkarounds,
+        "Use the Depth Write Enable dynamic state from VK_EXT_extended_dynamic_state", &members,
+        "http://anglebug.com/5906"};
+
+    FeatureInfo useDepthCompareOpDynamicState = {
+        "useDepthCompareOpDynamicState", FeatureCategory::VulkanWorkarounds,
+        "Use the Depth Compare Op dynamic state from VK_EXT_extended_dynamic_state", &members,
+        "http://anglebug.com/5906"};
+
+    FeatureInfo useStencilTestEnableDynamicState = {
+        "useStencilTestEnableDynamicState", FeatureCategory::VulkanWorkarounds,
+        "Use the Stencil Test Enable dynamic state from VK_EXT_extended_dynamic_state", &members,
+        "http://anglebug.com/5906"};
+
+    FeatureInfo useStencilOpDynamicState = {
+        "useStencilOpDynamicState", FeatureCategory::VulkanWorkarounds,
+        "Use the Stencil Op dynamic state from VK_EXT_extended_dynamic_state", &members,
+        "http://anglebug.com/5906"};
+
     FeatureInfo supportsExtendedDynamicState2 = {
         "supportsExtendedDynamicState2", FeatureCategory::VulkanFeatures,
         "VkDevice supports VK_EXT_extended_dynamic_state2 extension", &members,
+        "http://anglebug.com/5906"};
+
+    FeatureInfo usePrimitiveRestartEnableDynamicState = {
+        "usePrimitiveRestartEnableDynamicState", FeatureCategory::VulkanWorkarounds,
+        "Use the Primitive Restart Enable dynamic state from VK_EXT_extended_dynamic_state2",
+        &members, "http://anglebug.com/5906"};
+
+    FeatureInfo useRasterizerDiscardEnableDynamicState = {
+        "useRasterizerDiscardEnableDynamicState", FeatureCategory::VulkanWorkarounds,
+        "Use the Rasterizer Discard Enable dynamic state from VK_EXT_extended_dynamic_state2",
+        &members, "http://anglebug.com/5906"};
+
+    FeatureInfo useDepthBiasEnableDynamicState = {
+        "useDepthBiasEnableDynamicState", FeatureCategory::VulkanWorkarounds,
+        "Use the Depth Bias Enable dynamic state from VK_EXT_extended_dynamic_state2", &members,
         "http://anglebug.com/5906"};
 
     FeatureInfo supportsLogicOpDynamicState = {

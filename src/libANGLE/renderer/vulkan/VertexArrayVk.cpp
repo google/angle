@@ -172,8 +172,7 @@ VertexArrayVk::VertexArrayVk(ContextVk *contextVk, const gl::VertexArrayState &s
     mCurrentArrayBufferStrides.fill(0);
 
     mBindingDirtyBitsRequiresPipelineUpdate.set(gl::VertexArray::DIRTY_BINDING_DIVISOR);
-    if (!contextVk->getRenderer()->getFeatures().supportsExtendedDynamicState.enabled ||
-        contextVk->getRenderer()->getFeatures().forceStaticVertexStrideState.enabled)
+    if (!contextVk->getRenderer()->useVertexInputBindingStrideDynamicState())
     {
         mBindingDirtyBitsRequiresPipelineUpdate.set(gl::VertexArray::DIRTY_BINDING_STRIDE);
     }

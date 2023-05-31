@@ -2912,8 +2912,7 @@ const void *GraphicsPipelineDesc::getPipelineSubsetMemory(GraphicsPipelineSubset
                   sizeof(GraphicsPipelineDesc));
 
     size_t vertexInputReduceSize = 0;
-    if (mVertexInput.inputAssembly.bits.supportsDynamicState1 &&
-        !mVertexInput.inputAssembly.bits.forceStaticVertexStrideState)
+    if (mVertexInput.inputAssembly.bits.useVertexInputBindingStrideDynamicState)
     {
         vertexInputReduceSize = sizeof(PackedVertexInputAttributes::strides);
     }
@@ -2957,9 +2956,9 @@ bool GraphicsPipelineDesc::keyEqual(const GraphicsPipelineDesc &other,
     const void *otherKey = other.getPipelineSubsetMemory(subset, &otherKeySize);
 
     // Compare the relevant part of the desc memory.  Note that due to workarounds (e.g.
-    // forceStaticVertexStrideState), |this| or |other| may produce different key sizes.  In that
-    // case, comparing the minimum of the two is sufficient; if the workarounds are different, the
-    // comparison would fail anyway.
+    // useVertexInputBindingStrideDynamicState), |this| or |other| may produce different key sizes.
+    // In that case, comparing the minimum of the two is sufficient; if the workarounds are
+    // different, the comparison would fail anyway.
     return memcmp(key, otherKey, std::min(keySize, otherKeySize)) == 0;
 }
 
@@ -2988,10 +2987,8 @@ void GraphicsPipelineDesc::initDefaults(const ContextVk *contextVk, GraphicsPipe
 
         SetBitField(mVertexInput.inputAssembly.bits.topology, VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST);
         mVertexInput.inputAssembly.bits.primitiveRestartEnable = 0;
-        mVertexInput.inputAssembly.bits.supportsDynamicState1 =
-            contextVk->getFeatures().supportsExtendedDynamicState.enabled;
-        mVertexInput.inputAssembly.bits.forceStaticVertexStrideState =
-            contextVk->getFeatures().forceStaticVertexStrideState.enabled;
+        mVertexInput.inputAssembly.bits.useVertexInputBindingStrideDynamicState =
+            contextVk->getRenderer()->useVertexInputBindingStrideDynamicState();
         mVertexInput.inputAssembly.bits.padding = 0;
     }
 
@@ -3348,8 +3345,7 @@ void GraphicsPipelineDesc::initializePipelineVertexInputState(
         // If using dynamic state for stride, the value for stride is unconditionally 0 here.
         // |ContextVk::handleDirtyGraphicsVertexBuffers| implements the same fix when setting stride
         // dynamically.
-        ASSERT(!context->getFeatures().supportsExtendedDynamicState.enabled ||
-               context->getFeatures().forceStaticVertexStrideState.enabled ||
+        ASSERT(!context->getRenderer()->useVertexInputBindingStrideDynamicState() ||
                bindingDesc.stride == 0);
 
         if (attribType != programAttribType)
@@ -3421,19 +3417,13 @@ void GraphicsPipelineDesc::initializePipelineVertexInputState(
         static_cast<VkBool32>(inputAssembly.bits.primitiveRestartEnable);
 
     // Dynamic state
-    if (context->getFeatures().supportsExtendedDynamicState.enabled)
+    if (context->getRenderer()->useVertexInputBindingStrideDynamicState() && vertexAttribCount > 0)
     {
-        if (vertexAttribCount > 0 && !context->getFeatures().forceStaticVertexStrideState.enabled)
-        {
-            dynamicStateListOut->push_back(VK_DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE);
-        }
+        dynamicStateListOut->push_back(VK_DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE);
     }
-    if (context->getFeatures().supportsExtendedDynamicState2.enabled)
+    if (context->getRenderer()->usePrimitiveRestartEnableDynamicState())
     {
-        if (!context->getFeatures().forceStaticPrimitiveRestartState.enabled)
-        {
-            dynamicStateListOut->push_back(VK_DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE);
-        }
+        dynamicStateListOut->push_back(VK_DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE);
     }
 }
 
@@ -3625,19 +3615,40 @@ void GraphicsPipelineDesc::initializePipelineShadersState(
     dynamicStateListOut->push_back(VK_DYNAMIC_STATE_STENCIL_COMPARE_MASK);
     dynamicStateListOut->push_back(VK_DYNAMIC_STATE_STENCIL_WRITE_MASK);
     dynamicStateListOut->push_back(VK_DYNAMIC_STATE_STENCIL_REFERENCE);
-    if (context->getFeatures().supportsExtendedDynamicState.enabled)
+    if (context->getRenderer()->useCullModeDynamicState())
     {
         dynamicStateListOut->push_back(VK_DYNAMIC_STATE_CULL_MODE_EXT);
+    }
+    if (context->getRenderer()->useFrontFaceDynamicState())
+    {
         dynamicStateListOut->push_back(VK_DYNAMIC_STATE_FRONT_FACE_EXT);
+    }
+    if (context->getRenderer()->useDepthTestEnableDynamicState())
+    {
         dynamicStateListOut->push_back(VK_DYNAMIC_STATE_DEPTH_TEST_ENABLE);
+    }
+    if (context->getRenderer()->useDepthWriteEnableDynamicState())
+    {
         dynamicStateListOut->push_back(VK_DYNAMIC_STATE_DEPTH_WRITE_ENABLE);
+    }
+    if (context->getRenderer()->useDepthCompareOpDynamicState())
+    {
         dynamicStateListOut->push_back(VK_DYNAMIC_STATE_DEPTH_COMPARE_OP);
+    }
+    if (context->getRenderer()->useStencilTestEnableDynamicState())
+    {
         dynamicStateListOut->push_back(VK_DYNAMIC_STATE_STENCIL_TEST_ENABLE);
+    }
+    if (context->getRenderer()->useStencilOpDynamicState())
+    {
         dynamicStateListOut->push_back(VK_DYNAMIC_STATE_STENCIL_OP);
     }
-    if (context->getFeatures().supportsExtendedDynamicState2.enabled)
+    if (context->getRenderer()->useRasterizerDiscardEnableDynamicState())
     {
         dynamicStateListOut->push_back(VK_DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE);
+    }
+    if (context->getRenderer()->useDepthBiasEnableDynamicState())
+    {
         dynamicStateListOut->push_back(VK_DYNAMIC_STATE_DEPTH_BIAS_ENABLE);
     }
     if (context->getFeatures().supportsFragmentShadingRate.enabled)
@@ -3766,7 +3777,7 @@ void GraphicsPipelineDesc::initializePipelineFragmentOutputState(
 
     // Dynamic state
     dynamicStateListOut->push_back(VK_DYNAMIC_STATE_BLEND_CONSTANTS);
-    if (context->getFeatures().supportsLogicOpDynamicState.enabled)
+    if (context->getRenderer()->useLogicOpDynamicState())
     {
         dynamicStateListOut->push_back(VK_DYNAMIC_STATE_LOGIC_OP_EXT);
     }
@@ -3803,8 +3814,7 @@ void GraphicsPipelineDesc::updateVertexInput(ContextVk *contextVk,
                   "Adjust transition bits");
     transition->set(kBit);
 
-    if (!contextVk->getFeatures().supportsExtendedDynamicState.enabled ||
-        contextVk->getFeatures().forceStaticVertexStrideState.enabled)
+    if (!contextVk->getRenderer()->useVertexInputBindingStrideDynamicState())
     {
         SetBitField(mVertexInput.vertex.strides[attribIndex], stride);
         transition->set(ANGLE_GET_INDEXED_TRANSITION_BIT(
