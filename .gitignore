@@ -42,6 +42,7 @@
 /third_party/cherry
 /third_party/clang-format/script
 /third_party/colorama/src
+/third_party/cpu_features/src
 /third_party/depot_tools
 /third_party/EGL-Registry/src
 /third_party/flatbuffers/src
