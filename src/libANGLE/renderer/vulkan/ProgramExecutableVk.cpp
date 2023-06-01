@@ -1088,42 +1088,45 @@ void ProgramExecutableVk::initializeWriteDescriptorDesc(ContextVk *contextVk,
     const gl::ShaderBitSet &linkedShaderStages = glExecutable.getLinkedShaderStages();
 
     // Update mShaderResourceWriteDescriptorDescBuilder
-    mShaderResourceWriteDescriptorDescBuilder.reset();
-    mShaderResourceWriteDescriptorDescBuilder.updateShaderBuffers(
+    mShaderResourceWriteDescriptorDescs.reset();
+    mShaderResourceWriteDescriptorDescs.updateShaderBuffers(
         mVariableInfoMap, glExecutable.getUniformBlocks(), getUniformBufferDescriptorType());
-    mShaderResourceWriteDescriptorDescBuilder.updateShaderBuffers(
+    mShaderResourceWriteDescriptorDescs.updateShaderBuffers(
         mVariableInfoMap, glExecutable.getShaderStorageBlocks(), getStorageBufferDescriptorType());
-    mShaderResourceWriteDescriptorDescBuilder.updateAtomicCounters(
+    mShaderResourceWriteDescriptorDescs.updateAtomicCounters(
         mVariableInfoMap, glExecutable.getAtomicCounterBuffers());
-    mShaderResourceWriteDescriptorDescBuilder.updateImages(glExecutable, mVariableInfoMap);
+    mShaderResourceWriteDescriptorDescs.updateImages(glExecutable, mVariableInfoMap);
+    mShaderResourceWriteDescriptorDescs.updateDynamicDescriptorsCount();
 
     // Update mTextureWriteDescriptors
-    mTextureWriteDescriptorDescBuilder.reset();
-    mTextureWriteDescriptorDescBuilder.updateExecutableActiveTextures(mVariableInfoMap,
-                                                                      glExecutable);
+    mTextureWriteDescriptorDescs.reset();
+    mTextureWriteDescriptorDescs.updateExecutableActiveTextures(mVariableInfoMap, glExecutable);
+    mTextureWriteDescriptorDescs.updateDynamicDescriptorsCount();
 
     // Update mDefaultUniformWriteDescriptors
-    mDefaultUniformWriteDescriptorDescBuilder.reset();
-    mDefaultUniformWriteDescriptorDescBuilder.updateDefaultUniform(linkedShaderStages,
-                                                                   mVariableInfoMap, glExecutable);
+    mDefaultUniformWriteDescriptorDescs.reset();
+    mDefaultUniformWriteDescriptorDescs.updateDefaultUniform(linkedShaderStages, mVariableInfoMap,
+                                                             glExecutable);
+    mDefaultUniformWriteDescriptorDescs.updateDynamicDescriptorsCount();
 
-    mDefaultUniformAndXfbWriteDescriptorDescBuilder.reset();
+    mDefaultUniformAndXfbWriteDescriptorDescs.reset();
     if (glExecutable.hasTransformFeedbackOutput() &&
         contextVk->getRenderer()->getFeatures().emulateTransformFeedback.enabled)
     {
         // Update mDefaultUniformAndXfbWriteDescriptorDescs for the emulation code path.
-        mDefaultUniformAndXfbWriteDescriptorDescBuilder.updateDefaultUniform(
+        mDefaultUniformAndXfbWriteDescriptorDescs.updateDefaultUniform(
             linkedShaderStages, mVariableInfoMap, glExecutable);
         if (linkedShaderStages[gl::ShaderType::Vertex])
         {
-            mDefaultUniformAndXfbWriteDescriptorDescBuilder.updateTransformFeedbackWrite(
-                mVariableInfoMap, glExecutable);
+            mDefaultUniformAndXfbWriteDescriptorDescs.updateTransformFeedbackWrite(mVariableInfoMap,
+                                                                                   glExecutable);
         }
+        mDefaultUniformAndXfbWriteDescriptorDescs.updateDynamicDescriptorsCount();
     }
     else
     {
         // Otherwise it will be the same as default uniform
-        mDefaultUniformAndXfbWriteDescriptorDescBuilder = mDefaultUniformWriteDescriptorDescBuilder;
+        mDefaultUniformAndXfbWriteDescriptorDescs = mDefaultUniformWriteDescriptorDescs;
     }
 }
 
@@ -1575,7 +1578,7 @@ angle::Result ProgramExecutableVk::updateShaderResourcesDescriptorSet(
                                          shaderResourcesDesc, writeDescriptorDescs,
                                          DescriptorSetIndex::ShaderResource, newSharedCacheKeyOut));
 
-    size_t numOffsets = shaderResourcesDesc.getDynamicOffsetsSize();
+    size_t numOffsets = writeDescriptorDescs.getDynamicDescriptorSetCount();
     mDynamicShaderResourceDescriptorOffsets.resize(numOffsets);
     if (numOffsets > 0)
     {
@@ -1584,18 +1587,6 @@ angle::Result ProgramExecutableVk::updateShaderResourcesDescriptorSet(
     }
 
     return angle::Result::Continue;
-}
-
-void ProgramExecutableVk::updateShaderResourcesDynamicOffsets(
-    const vk::DescriptorSetDescBuilder &shaderResourcesDesc)
-{
-    size_t numOffsets = shaderResourcesDesc.getDynamicOffsetsSize();
-    mDynamicShaderResourceDescriptorOffsets.resize(numOffsets);
-    if (numOffsets > 0)
-    {
-        memcpy(mDynamicShaderResourceDescriptorOffsets.data(),
-               shaderResourcesDesc.getDynamicOffsets(), numOffsets * sizeof(uint32_t));
-    }
 }
 
 angle::Result ProgramExecutableVk::updateUniformsAndXfbDescriptorSet(
@@ -1636,13 +1627,14 @@ angle::Result ProgramExecutableVk::updateTexturesDescriptorSet(
 
     if (newSharedCacheKey != nullptr)
     {
-        vk::DescriptorSetDescBuilder fullDesc;
+        vk::DescriptorSetDescBuilder fullDesc(
+            mTextureWriteDescriptorDescs.getTotalDescriptorCount());
         // Cache miss. A new cache entry has been created.
         ANGLE_TRY(fullDesc.updateFullActiveTextures(
-            context, mVariableInfoMap, mTextureWriteDescriptorDescBuilder.getDescs(), executable,
-            textures, samplers, emulateSeamfulCubeMapSampling, pipelineType, newSharedCacheKey));
-        fullDesc.updateDescriptorSet(context, mTextureWriteDescriptorDescBuilder.getDescs(),
-                                     updateBuilder, mDescriptorSets[DescriptorSetIndex::Texture]);
+            context, mVariableInfoMap, mTextureWriteDescriptorDescs, executable, textures, samplers,
+            emulateSeamfulCubeMapSampling, pipelineType, newSharedCacheKey));
+        fullDesc.updateDescriptorSet(context, mTextureWriteDescriptorDescs, updateBuilder,
+                                     mDescriptorSets[DescriptorSetIndex::Texture]);
     }
     else
     {
@@ -1806,9 +1798,11 @@ angle::Result ProgramExecutableVk::updateUniforms(
     {
         // We need to reinitialize the descriptor sets if we newly allocated buffers since we can't
         // modify the descriptor sets once initialized.
-        vk::DescriptorSetDescBuilder uniformsAndXfbDesc;
-        const vk::WriteDescriptorDescs writeDescriptorDescs =
+        const vk::WriteDescriptorDescs &writeDescriptorDescs =
             getDefaultUniformWriteDescriptorDescs(transformFeedbackVk);
+
+        vk::DescriptorSetDescBuilder uniformsAndXfbDesc(
+            writeDescriptorDescs.getTotalDescriptorCount());
         uniformsAndXfbDesc.updateUniformsAndXfb(
             context, glExecutable, *this, writeDescriptorDescs, defaultUniformBuffer, *emptyBuffer,
             isTransformFeedbackActiveUnpaused,

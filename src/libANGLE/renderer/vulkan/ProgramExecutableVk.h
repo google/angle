@@ -186,9 +186,6 @@ class ProgramExecutableVk
         const vk::DescriptorSetDescBuilder &shaderResourcesDesc,
         vk::SharedDescriptorSetCacheKey *newSharedCacheKeyOut);
 
-    void updateShaderResourcesDynamicOffsets(
-        const vk::DescriptorSetDescBuilder &shaderResourcesDesc);
-
     angle::Result updateUniformsAndXfbDescriptorSet(
         vk::Context *context,
         UpdateDescriptorSetsBuilder *updateBuilder,
@@ -257,18 +254,21 @@ class ProgramExecutableVk
     angle::Result warmUpPipelineCache(ContextVk *contextVk,
                                       const gl::ProgramExecutable &glExecutable);
 
-    const vk::WriteDescriptorDescBuilder &getShaderResourceWriteDescriptorDescBuilder() const
+    const vk::WriteDescriptorDescs &getShaderResourceWriteDescriptorDescs() const
     {
-        return mShaderResourceWriteDescriptorDescBuilder;
+        return mShaderResourceWriteDescriptorDescs;
     }
     const vk::WriteDescriptorDescs &getDefaultUniformWriteDescriptorDescs(
         TransformFeedbackVk *transformFeedbackVk) const
     {
-        return transformFeedbackVk == nullptr
-                   ? mDefaultUniformWriteDescriptorDescBuilder.getDescs()
-                   : mDefaultUniformAndXfbWriteDescriptorDescBuilder.getDescs();
+        return transformFeedbackVk == nullptr ? mDefaultUniformWriteDescriptorDescs
+                                              : mDefaultUniformAndXfbWriteDescriptorDescs;
     }
 
+    const vk::WriteDescriptorDescs &getTextureWriteDescriptorDescs() const
+    {
+        return mTextureWriteDescriptorDescs;
+    }
     const gl::Program::DirtyBits &getDirtyBits() const { return mDirtyBits; }
     void resetUniformBufferDirtyBits() { mDirtyBits.reset(); }
 
@@ -443,10 +443,10 @@ class ProgramExecutableVk
     vk::PipelineCache mPipelineCache;
 
     // The "layout" information for descriptorSets
-    vk::WriteDescriptorDescBuilder mShaderResourceWriteDescriptorDescBuilder;
-    vk::WriteDescriptorDescBuilder mTextureWriteDescriptorDescBuilder;
-    vk::WriteDescriptorDescBuilder mDefaultUniformWriteDescriptorDescBuilder;
-    vk::WriteDescriptorDescBuilder mDefaultUniformAndXfbWriteDescriptorDescBuilder;
+    vk::WriteDescriptorDescs mShaderResourceWriteDescriptorDescs;
+    vk::WriteDescriptorDescs mTextureWriteDescriptorDescs;
+    vk::WriteDescriptorDescs mDefaultUniformWriteDescriptorDescs;
+    vk::WriteDescriptorDescs mDefaultUniformAndXfbWriteDescriptorDescs;
 
     gl::Program::DirtyBits mDirtyBits;
 };
