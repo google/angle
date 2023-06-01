@@ -365,6 +365,16 @@ void WriteInterpolationDecoration(spv::Decoration decoration,
         spirv::WriteDecorate(decorationsBlob, id, decoration, {});
     }
 }
+
+void ApplyDecorations(spirv::IdRef id,
+                      const SpirvDecorations &decorations,
+                      spirv::Blob *decorationsBlob)
+{
+    for (const spv::Decoration decoration : decorations)
+    {
+        spirv::WriteDecorate(decorationsBlob, id, decoration, {});
+    }
+}
 }  // anonymous namespace
 
 void SpirvTypeSpec::inferDefaults(const TType &type, TCompiler *compiler)
@@ -497,16 +507,19 @@ void SpirvTypeSpec::onVectorComponentSelection()
 SPIRVBuilder::SPIRVBuilder(TCompiler *compiler,
                            const ShCompileOptions &compileOptions,
                            ShHashFunction64 hashFunction,
-                           NameMap &nameMap)
+                           NameMap &nameMap,
+                           const angle::HashMap<int, uint32_t> &uniqueToSpirvIdMap)
     : mCompiler(compiler),
       mCompileOptions(compileOptions),
       mShaderType(gl::FromGLenum<gl::ShaderType>(compiler->getShaderType())),
+      mUniqueToSpirvIdMap(uniqueToSpirvIdMap),
       mNextAvailableId(vk::spirv::kIdFirstUnreserved),
       mHashFunction(hashFunction),
       mNameMap(nameMap),
       mNextUnusedBinding(0),
       mNextUnusedInputLocation(0),
-      mNextUnusedOutputLocation(0)
+      mNextUnusedOutputLocation(0),
+      mOverviewFlags(0)
 {
     // The Shader capability is always defined.
     addCapability(spv::CapabilityShader);
@@ -532,12 +545,23 @@ spirv::IdRef SPIRVBuilder::getNewId(const SpirvDecorations &decorations)
     spirv::IdRef newId = mNextAvailableId;
     mNextAvailableId   = spirv::IdRef(mNextAvailableId + 1);
 
-    for (const spv::Decoration decoration : decorations)
-    {
-        spirv::WriteDecorate(&mSpirvDecorations, newId, decoration, {});
-    }
+    ApplyDecorations(newId, decorations, &mSpirvDecorations);
 
     return newId;
+}
+
+spirv::IdRef SPIRVBuilder::getReservedOrNewId(TSymbolUniqueId uniqueId,
+                                              const SpirvDecorations &decorations)
+{
+    auto iter = mUniqueToSpirvIdMap.find(uniqueId.get());
+    if (iter == mUniqueToSpirvIdMap.end())
+    {
+        return getNewId(decorations);
+    }
+
+    const spirv::IdRef reservedId = spirv::IdRef(iter->second);
+    ApplyDecorations(reservedId, decorations, &mSpirvDecorations);
+    return reservedId;
 }
 
 SpirvType SPIRVBuilder::getSpirvType(const TType &type, const SpirvTypeSpec &typeSpec) const
@@ -654,7 +678,11 @@ spirv::IdRef SPIRVBuilder::getTypePointerId(spirv::IdRef typeId, spv::StorageCla
     auto iter = mTypePointerIdMap.find(key);
     if (iter == mTypePointerIdMap.end())
     {
-        const spirv::IdRef typePointerId = getNewId({});
+        // Note that some type pointers have predefined ids.
+        const spirv::IdRef typePointerId =
+            typeId == vk::spirv::kIdOutputPerVertexBlock
+                ? spirv::IdRef(vk::spirv::kIdOutputPerVertexTypePointer)
+                : getNewId({});
 
         spirv::WriteTypePointer(&mSpirvTypePointerDecls, typePointerId, storageClass, typeId);
 
@@ -924,7 +952,8 @@ SpirvTypeData SPIRVBuilder::declareType(const SpirvType &type, const TSymbol *bl
             fieldTypeIds.push_back(fieldTypeId);
         }
 
-        typeId = getNewId({});
+        // Note that some blocks have predefined ids.
+        typeId = block != nullptr ? getReservedOrNewId(block->uniqueId(), {}) : getNewId({});
         spirv::WriteTypeStruct(&mSpirvTypeAndConstantDecls, typeId, fieldTypeIds);
     }
     else if (IsSampler(type.type) && !type.isSamplerBaseImage)
@@ -1618,7 +1647,8 @@ spirv::IdRef SPIRVBuilder::declareVariable(spirv::IdRef typeId,
                                            spv::StorageClass storageClass,
                                            const SpirvDecorations &decorations,
                                            spirv::IdRef *initializerId,
-                                           const char *name)
+                                           const char *name,
+                                           const TSymbolUniqueId *uniqueId)
 {
     const bool isFunctionLocal = storageClass == spv::StorageClassFunction;
 
@@ -1632,7 +1662,24 @@ spirv::IdRef SPIRVBuilder::declareVariable(spirv::IdRef typeId,
                                     : &mSpirvVariableDecls;
 
     const spirv::IdRef typePointerId = getTypePointerId(typeId, storageClass);
-    const spirv::IdRef variableId    = getNewId(decorations);
+    spirv::IdRef variableId;
+    if (uniqueId)
+    {
+        variableId = getReservedOrNewId(*uniqueId, decorations);
+
+        if (variableId == vk::spirv::kIdOutputPerVertexVar)
+        {
+            mOverviewFlags |= vk::spirv::kOverviewHasOutputPerVertexMask;
+        }
+        else if (variableId == vk::spirv::kIdSampleID)
+        {
+            mOverviewFlags |= vk::spirv::kOverviewHasSampleIDMask;
+        }
+    }
+    else
+    {
+        variableId = getNewId(decorations);
+    }
 
     spirv::WriteVariable(spirvSection, typePointerId, variableId, storageClass, initializerId);
 
@@ -1799,6 +1846,11 @@ bool SPIRVBuilder::isInvariantOutput(const TType &type) const
 void SPIRVBuilder::addCapability(spv::Capability capability)
 {
     mCapabilities.insert(capability);
+
+    if (capability == spv::CapabilitySampleRateShading)
+    {
+        mOverviewFlags |= vk::spirv::kOverviewHasSampleRateShadingMask;
+    }
 }
 
 void SPIRVBuilder::addExecutionMode(spv::ExecutionMode executionMode)
@@ -2461,28 +2513,18 @@ void SPIRVBuilder::writeSourceExtensions(spirv::Blob *blob)
 
 void SPIRVBuilder::writeNonSemanticOverview(spirv::Blob *blob, spirv::IdRef id)
 {
-    // Output the kNonSemanticOverview non-semantic instruction with the following payload:
-    //
-    //     DeclaredIds OverviewFlags
-    //
-    // Where DeclaredIds define a 32-bit mask of values in sh::vk::spirv::ReservedIds,
-    // communicating which of the reserved ids are already defined in the SPIR-V.  OverviewFlags is
-    // a 32-bit bitmask of values in sh::vk::spirv::OverviewFlags with additional information.
-    //
-    // TODO: Populate the above information anglebug.com/7220
+    // Output the kNonSemanticOverview non-semantic instruction.  The top unused bits of the
+    // instruction id are used to communicate addition information already gathered in
+    // mOverviewFlags (bits defined by kOverview*Bit).
 
     using namespace vk::spirv;
 
-    spirv::WriteConstant(blob, spirv::IdResultType(kIdUint),
-                         spirv::IdResult(kIdDeclaredIdsConstant),
-                         spirv::LiteralContextDependentNumber(0));
-    spirv::WriteConstant(blob, spirv::IdResultType(kIdUint),
-                         spirv::IdResult(kIdOverviewFlagsConstant),
-                         spirv::LiteralContextDependentNumber(0));
-    spirv::WriteExtInst(
-        blob, spirv::IdResultType(kIdVoid), id, spirv::IdRef(kIdNonSemanticInstructionSet),
-        spirv::LiteralExtInstInteger(kNonSemanticOverview),
-        {spirv::IdRef(kIdDeclaredIdsConstant), spirv::IdRef(kIdOverviewFlagsConstant)});
+    ASSERT((mOverviewFlags & vk::spirv::kNonSemanticInstructionMask) == 0);
+    const uint32_t overview = kNonSemanticOverview | mOverviewFlags;
+
+    spirv::WriteExtInst(blob, spirv::IdResultType(kIdVoid), id,
+                        spirv::IdRef(kIdNonSemanticInstructionSet),
+                        spirv::LiteralExtInstInteger(overview), {});
 }
 
 }  // namespace sh

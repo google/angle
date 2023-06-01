@@ -77,8 +77,9 @@ bool ValidateTransformedSpirV(const ContextVk *contextVk,
         options.shaderType                = shaderType;
         options.negativeViewportSupported = false;
         options.removeDebugInfo           = true;
-        options.isLastPreFragmentStage    = shaderType == lastPreFragmentStage;
-        options.isTransformFeedbackStage  = shaderType == lastPreFragmentStage;
+        options.isLastPreFragmentStage =
+            shaderType == lastPreFragmentStage && shaderType != gl::ShaderType::TessControl;
+        options.isTransformFeedbackStage = options.isLastPreFragmentStage;
         options.useSpirvVaryingPrecisionFixer =
             contextVk->getFeatures().varyingsRequireMatchingPrecisionInSpirv.enabled;
 

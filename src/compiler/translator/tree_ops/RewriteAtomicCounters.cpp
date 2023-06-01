@@ -317,9 +317,14 @@ class RewriteAtomicCountersTraverser : public TIntermTraverser
 bool RewriteAtomicCounters(TCompiler *compiler,
                            TIntermBlock *root,
                            TSymbolTable *symbolTable,
-                           const TIntermTyped *acbBufferOffsets)
+                           const TIntermTyped *acbBufferOffsets,
+                           const TVariable **atomicCountersOut)
 {
     const TVariable *atomicCounters = DeclareAtomicCountersBuffers(root, symbolTable);
+    if (atomicCountersOut)
+    {
+        *atomicCountersOut = atomicCounters;
+    }
 
     RewriteAtomicCountersTraverser traverser(symbolTable, atomicCounters, acbBufferOffsets);
     root->traverse(&traverser);

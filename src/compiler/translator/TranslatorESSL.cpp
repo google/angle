@@ -122,7 +122,7 @@ bool TranslatorESSL::translate(TIntermBlock *root,
                 return false;
 
             // The previous operation always redeclares gl_ClipDistance
-            if (!DeclarePerVertexBlocks(this, root, &getSymbolTable()))
+            if (!DeclarePerVertexBlocks(this, root, &getSymbolTable(), nullptr, nullptr))
                 return false;
         }
         else if ((IsExtensionEnabled(getExtensionBehavior(), TExtension::EXT_clip_cull_distance) ||
@@ -132,7 +132,7 @@ bool TranslatorESSL::translate(TIntermBlock *root,
         {
             // When clip distance state emulation is not needed,
             // the redeclared extension built-ins still should be moved to gl_PerVertex
-            if (!DeclarePerVertexBlocks(this, root, &getSymbolTable()))
+            if (!DeclarePerVertexBlocks(this, root, &getSymbolTable(), nullptr, nullptr))
                 return false;
         }
     }

@@ -353,7 +353,7 @@ class ReplaceSubpassInputUtils
 ImmutableString ReplaceSubpassInputUtils::getInputAttachmentName(unsigned int index)
 {
     std::stringstream nameStream = sh::InitializeStream<std::stringstream>();
-    nameStream << sh::vk::kInputAttachmentName << index;
+    nameStream << "ANGLEInputAttachment" << index;
     return ImmutableString(nameStream.str());
 }
 

@@ -13,17 +13,10 @@
 
 namespace sh
 {
-bool OutputSPIRV(TCompiler *compiler, TIntermBlock *root, const ShCompileOptions &compileOptions);
-
-namespace vk
-{
-// Transform feedback emulation support
-extern const char kXfbEmulationGetOffsetsFunctionName[];
-extern const char kXfbEmulationCaptureFunctionName[];
-
-// Pre-rotation support
-extern const char kTransformPositionFunctionName[];
-}  // namespace vk
+bool OutputSPIRV(TCompiler *compiler,
+                 TIntermBlock *root,
+                 const ShCompileOptions &compileOptions,
+                 const angle::HashMap<int, uint32_t> &uniqueToSpirvIdMap);
 }  // namespace sh
 
 #endif  // COMPILER_TRANSLATOR_OUTPUTSPIRV_H_

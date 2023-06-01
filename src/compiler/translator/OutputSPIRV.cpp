@@ -36,13 +36,6 @@ namespace spv
 
 namespace sh
 {
-namespace vk
-{
-const char kXfbEmulationGetOffsetsFunctionName[] = "ANGLEGetXfbOffsets";
-const char kXfbEmulationCaptureFunctionName[]    = "ANGLECaptureXfb";
-const char kTransformPositionFunctionName[]      = "ANGLETransformPosition";
-}  // namespace vk
-
 namespace
 {
 // A struct to hold either SPIR-V ids or literal constants.   If id is not valid, a literal is
@@ -186,7 +179,9 @@ bool IsAccessChainRValue(const AccessChain &accessChain)
 class OutputSPIRVTraverser : public TIntermTraverser
 {
   public:
-    OutputSPIRVTraverser(TCompiler *compiler, const ShCompileOptions &compileOptions);
+    OutputSPIRVTraverser(TCompiler *compiler,
+                         const ShCompileOptions &compileOptions,
+                         const angle::HashMap<int, uint32_t> &uniqueToSpirvIdMap);
     ~OutputSPIRVTraverser() override;
 
     spirv::Blob getSpirv();
@@ -503,11 +498,16 @@ spv::StorageClass GetStorageClass(const TType &type, GLenum shaderType)
 }
 
 OutputSPIRVTraverser::OutputSPIRVTraverser(TCompiler *compiler,
-                                           const ShCompileOptions &compileOptions)
+                                           const ShCompileOptions &compileOptions,
+                                           const angle::HashMap<int, uint32_t> &uniqueToSpirvIdMap)
     : TIntermTraverser(true, true, true, &compiler->getSymbolTable()),
       mCompiler(compiler),
       mCompileOptions(compileOptions),
-      mBuilder(compiler, compileOptions, compiler->getHashFunction(), compiler->getNameMap())
+      mBuilder(compiler,
+               compileOptions,
+               compiler->getHashFunction(),
+               compiler->getNameMap(),
+               uniqueToSpirvIdMap)
 {}
 
 OutputSPIRVTraverser::~OutputSPIRVTraverser()
@@ -527,8 +527,9 @@ spirv::IdRef OutputSPIRVTraverser::getSymbolIdAndStorageClass(const TSymbol *sym
     }
 
     // This must be an implicitly defined variable, define it now.
-    const char *name               = nullptr;
-    spv::BuiltIn builtInDecoration = spv::BuiltInMax;
+    const char *name                = nullptr;
+    spv::BuiltIn builtInDecoration  = spv::BuiltInMax;
+    const TSymbolUniqueId *uniqueId = nullptr;
 
     switch (type.getQualifier())
     {
@@ -586,6 +587,7 @@ spirv::IdRef OutputSPIRVTraverser::getSymbolIdAndStorageClass(const TSymbol *sym
             name              = "gl_SampleID";
             builtInDecoration = spv::BuiltInSampleId;
             mBuilder.addCapability(spv::CapabilitySampleRateShading);
+            uniqueId = &symbol->uniqueId();
             break;
         case EvqSamplePosition:
             name              = "gl_SamplePosition";
@@ -693,7 +695,7 @@ spirv::IdRef OutputSPIRVTraverser::getSymbolIdAndStorageClass(const TSymbol *sym
 
     const spirv::IdRef typeId = mBuilder.getTypeData(type, {}).id;
     const spirv::IdRef varId  = mBuilder.declareVariable(
-        typeId, *storageClass, mBuilder.getDecorations(type), nullptr, name);
+        typeId, *storageClass, mBuilder.getDecorations(type), nullptr, name, uniqueId);
 
     mBuilder.addEntryPointInterfaceVariableId(varId);
     spirv::WriteDecorate(mBuilder.getSpirvDecorations(), varId, spv::DecorationBuiltIn,
@@ -973,7 +975,7 @@ spirv::IdRef OutputSPIRVTraverser::accessChainLoad(NodeData *data,
                 // Create a temp variable to hold the rvalue so an access chain can be made on it.
                 const spirv::IdRef tempVar =
                     mBuilder.declareVariable(accessChain.baseTypeId, spv::StorageClassFunction,
-                                             decorations, nullptr, "indexable");
+                                             decorations, nullptr, "indexable", nullptr);
 
                 // Write the rvalue into the temp variable
                 spirv::WriteStore(mBuilder.getSpirvCurrentFunctionBlock(), tempVar, loadResult,
@@ -2119,9 +2121,9 @@ spirv::IdRef OutputSPIRVTraverser::createFunctionCall(TIntermAggregate *node,
 
             // Need to create a temp variable and pass that.
             tempVarTypeIds[paramIndex] = mBuilder.getTypeData(paramType, {}).id;
-            tempVarIds[paramIndex] =
-                mBuilder.declareVariable(tempVarTypeIds[paramIndex], spv::StorageClassFunction,
-                                         mBuilder.getDecorations(argType), nullptr, "param");
+            tempVarIds[paramIndex]     = mBuilder.declareVariable(
+                tempVarTypeIds[paramIndex], spv::StorageClassFunction,
+                mBuilder.getDecorations(argType), nullptr, "param", nullptr);
 
             // If it's an in or inout parameter, the temp variable needs to be initialized with the
             // value of the parameter first.
@@ -5723,26 +5725,14 @@ void OutputSPIRVTraverser::visitFunctionPrototype(TIntermFunctionPrototype *node
     // instruction.
     //
     // Note that some functions have predefined ids.
-    const bool isAngleInternal = function->symbolType() == SymbolType::AngleInternal;
     if (function->isMain())
     {
         ids.functionId = spirv::IdRef(vk::spirv::kIdEntryPoint);
     }
-    else if (isAngleInternal && function->name() == vk::kXfbEmulationGetOffsetsFunctionName)
-    {
-        ids.functionId = spirv::IdRef(vk::spirv::kIdXfbEmulationGetOffsetsFunction);
-    }
-    else if (isAngleInternal && function->name() == vk::kXfbEmulationCaptureFunctionName)
-    {
-        ids.functionId = spirv::IdRef(vk::spirv::kIdXfbEmulationCaptureFunction);
-    }
-    else if (isAngleInternal && function->name() == vk::kTransformPositionFunctionName)
-    {
-        ids.functionId = spirv::IdRef(vk::spirv::kIdTransformPositionFunction);
-    }
     else
     {
-        ids.functionId = mBuilder.getNewId(mBuilder.getDecorations(function->getReturnType()));
+        ids.functionId = mBuilder.getReservedOrNewId(
+            function->uniqueId(), mBuilder.getDecorations(function->getReturnType()));
     }
 
     // Remember the id of the function for future look up.
@@ -6057,7 +6047,7 @@ bool OutputSPIRVTraverser::visitDeclaration(Visit visit, TIntermDeclaration *nod
 
     const spirv::IdRef variableId = mBuilder.declareVariable(
         typeId, storageClass, decorations, initializeWithDeclaration ? &initializerId : nullptr,
-        mBuilder.hashName(variable).data());
+        mBuilder.hashName(variable).data(), &variable->uniqueId());
 
     if (!initializeWithDeclaration && initializerId.valid())
     {
@@ -6469,7 +6459,10 @@ spirv::Blob OutputSPIRVTraverser::getSpirv()
 }
 }  // anonymous namespace
 
-bool OutputSPIRV(TCompiler *compiler, TIntermBlock *root, const ShCompileOptions &compileOptions)
+bool OutputSPIRV(TCompiler *compiler,
+                 TIntermBlock *root,
+                 const ShCompileOptions &compileOptions,
+                 const angle::HashMap<int, uint32_t> &uniqueToSpirvIdMap)
 {
     // Find the list of nodes that require NoContraction (as a result of |precise|).
     if (compiler->hasAnyPreciseType())
@@ -6478,7 +6471,7 @@ bool OutputSPIRV(TCompiler *compiler, TIntermBlock *root, const ShCompileOptions
     }
 
     // Traverse the tree and generate SPIR-V instructions
-    OutputSPIRVTraverser traverser(compiler, compileOptions);
+    OutputSPIRVTraverser traverser(compiler, compileOptions, uniqueToSpirvIdMap);
     root->traverse(&traverser);
 
     // Generate the final SPIR-V and store in the sink

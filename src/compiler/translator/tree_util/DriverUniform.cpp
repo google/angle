@@ -23,6 +23,7 @@ namespace sh
 namespace
 {
 constexpr ImmutableString kEmulatedDepthRangeParams = ImmutableString("ANGLEDepthRangeParams");
+constexpr ImmutableString kDriverUniformsVarName    = ImmutableString("ANGLEUniforms");
 
 constexpr const char kAcbBufferOffsets[] = "acbBufferOffsets";
 constexpr const char kDepthRange[]       = "depthRange";
@@ -67,10 +68,9 @@ bool DriverUniform::addComputeDriverUniformsToShader(TIntermBlock *root, TSymbol
     layoutQualifier.blockStorage     = EbsStd140;
     layoutQualifier.pushConstant     = true;
 
-    mDriverUniforms = DeclareInterfaceBlock(root, symbolTable, driverFieldList, EvqUniform,
-                                            layoutQualifier, TMemoryQualifier::Create(), 0,
-                                            ImmutableString(vk::kDriverUniformsBlockName),
-                                            ImmutableString(vk::kDriverUniformsVarName));
+    mDriverUniforms = DeclareInterfaceBlock(
+        root, symbolTable, driverFieldList, EvqUniform, layoutQualifier, TMemoryQualifier::Create(),
+        0, ImmutableString(vk::kDriverUniformsBlockName), kDriverUniformsVarName);
     return mDriverUniforms != nullptr;
 }
 
@@ -172,7 +172,7 @@ bool DriverUniform::addGraphicsDriverUniformsToShader(TIntermBlock *root, TSymbo
         mDriverUniforms = DeclareInterfaceBlock(root, symbolTable, driverFieldList, EvqUniform,
                                                 layoutQualifier, TMemoryQualifier::Create(), 0,
                                                 ImmutableString(vk::kDriverUniformsBlockName),
-                                                ImmutableString(vk::kDriverUniformsVarName));
+                                                kDriverUniformsVarName);
     }
     else
     {

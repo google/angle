@@ -1051,7 +1051,7 @@ bool TranslatorMetalDirect::translateImpl(TInfoSinkBase &sink,
     if (atomicCounterCount > 0)
     {
         const TIntermTyped *acbBufferOffsets = driverUniforms->getAcbBufferOffsets();
-        if (!RewriteAtomicCounters(this, root, &symbolTable, acbBufferOffsets))
+        if (!RewriteAtomicCounters(this, root, &symbolTable, acbBufferOffsets, nullptr))
         {
             return false;
         }
