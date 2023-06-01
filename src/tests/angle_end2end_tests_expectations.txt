@@ -1185,6 +1185,9 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 5076 : GLSLTest.VerifyMaxFragmentUniformVectors* = TIMEOUT
 6261 : MultithreadingTest* = TIMEOUT
 
+// SSBO Alias Overwrite
+5990 PIXEL4ORXL VULKAN : ComputeShaderTest.SSBOAliasOverWrite/* = SKIP
+b/266235549 D3D11 : ComputeShaderTest.SSBOAliasOverWrite/* = SKIP
 
 // Samsung Galaxy Qualcomm crashes and failures (perhaps with other non-Pixel Qualcomm as well):
 8185 GALAXYQUALCOMM VULKAN : BlitFramebufferTest.BlitStencilScissoredScaled/* = SKIP
@@ -1302,7 +1305,3 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 
 // Please do not add expectations below this line,
 // so that TIMEOUT expectations above don't override more precise SKIP expectations
-
-// SSBO Alias Overwrite
-5990 PIXEL4ORXL VULKAN : ComputeShaderTest.SSBOAliasOverWrite/* = SKIP
-266235549 D3D11 : ComputeShaderTest.SSBOAliasOverWrite/* = SKIP
