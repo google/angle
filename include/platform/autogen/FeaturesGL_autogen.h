@@ -604,10 +604,10 @@ struct FeaturesGL : FeatureSetBase
         &members,
     };
 
-    FeatureInfo bindFramebufferForTimerQueries = {
-        "bindFramebufferForTimerQueries",
+    FeatureInfo bindCompleteFramebufferForTimerQueries = {
+        "bindCompleteFramebufferForTimerQueries",
         FeatureCategory::OpenGLWorkarounds,
-        "Some drivers require a non-zero framebuffer when beginQuery for TimeElapsed or"
+        "Some drivers require a complete framebuffer when beginQuery for TimeElapsed or"
         "Timestampis called.",
         &members, "https://crbug.com/1356053"
     };

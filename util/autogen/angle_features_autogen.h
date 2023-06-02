@@ -47,7 +47,7 @@ enum class Feature
     AsyncCommandQueue,
     Avoid1BitAlphaTextureFormats,
     AvoidStencilTextureSwizzle,
-    BindFramebufferForTimerQueries,
+    BindCompleteFramebufferForTimerQueries,
     BindTransformFeedbackBufferBeforeBindBufferRange,
     BorderColorSrgb,
     BottomLeftOriginPresentRegionRectangles,
