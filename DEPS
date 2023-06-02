@@ -277,11 +277,6 @@ deps = {
     'condition': 'checkout_android and not build_with_chromium',
   },
 
-  'third_party/android_ndk': {
-    'url': '{chromium_git}/android_ndk.git@310956bd122ec2b96049f8d7398de6b717f3452e',
-    'condition': 'checkout_android and not build_with_chromium',
-  },
-
   'third_party/android_toolchain': {
       'packages': [
             {
