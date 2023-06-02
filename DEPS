@@ -282,6 +282,17 @@ deps = {
     'condition': 'checkout_android and not build_with_chromium',
   },
 
+  'third_party/android_toolchain': {
+      'packages': [
+            {
+                'package': 'chromium/third_party/android_toolchain/r23c/android_toolchain',
+                'version': 'version:2@r23c.cr0',
+            },
+      ],
+      'condition': 'checkout_android and not build_with_chromium',
+      'dep_type': 'cipd',
+  },
+
   'third_party/android_platform': {
     'url': '{chromium_git}/chromium/src/third_party/android_platform@a72ec125fae7ab32bdd76f9de3bb3fa89436ea28',
     'condition': 'checkout_android and not build_with_chromium',

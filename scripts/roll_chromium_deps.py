@@ -54,6 +54,7 @@ ANGLE_CHROMIUM_DEPS = [
     'third_party/android_sdk/androidx_browser/src',
     'third_party/android_sdk/public',
     'third_party/android_system_sdk',
+    'third_party/android_toolchain',
     'third_party/bazel',
     'third_party/catapult',
     'third_party/clang-format/script',
