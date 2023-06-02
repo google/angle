@@ -463,6 +463,7 @@ class StateManagerGL final : angle::NonCopyable
     std::vector<GLenum> mFramebuffers;
     GLuint mRenderbuffer;
     GLuint mPlaceholderFbo;
+    GLuint mPlaceholderRbo;
 
     bool mScissorTestEnabled;
     gl::Rectangle mScissor;
