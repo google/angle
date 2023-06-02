@@ -27,27 +27,26 @@ def get_child_script_dirname(script):
     return os.path.dirname(os.path.abspath(os.path.join(root_dir, script)))
 
 
-# Check if we need a module from vpython
 def get_executable_name(script):
     with open(script, 'r') as f:
+        # Check shebang
         binary = os.path.basename(f.readline().strip().replace(' ', '/'))
+        assert binary in ['python3', 'vpython3']
         if platform.system() == 'Windows':
-            if binary == 'python2':
-                return 'python.bat'
-            else:
-                return binary + '.bat'
+            return binary + '.bat'
         else:
             return binary
 
 
-def grab_from_script(script, param):
+def paths_from_auto_script(script, param):
     script_dir = get_child_script_dirname(script)
-    exe = get_executable_name(script)
+    # python3 (not vpython3) to get inputs/outputs faster
+    exe = 'python3'
     try:
         res = subprocess.check_output([exe, os.path.basename(script), param],
                                       cwd=script_dir).decode().strip()
     except Exception:
-        print('Error grabbing script output: %s, executable %s' % (script, exe))
+        print('Error with auto_script %s: %s, executable %s' % (param, script, exe))
         raise
     if res == '':
         return []
@@ -60,8 +59,8 @@ def grab_from_script(script, param):
 # auto_script is a standard way for scripts to return their inputs and outputs.
 def auto_script(script):
     info = {
-        'inputs': grab_from_script(script, 'inputs'),
-        'outputs': grab_from_script(script, 'outputs')
+        'inputs': paths_from_auto_script(script, 'inputs'),
+        'outputs': paths_from_auto_script(script, 'outputs')
     }
     return info
 
