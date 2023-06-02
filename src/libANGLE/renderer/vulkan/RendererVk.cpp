@@ -4615,7 +4615,12 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
 
     // On SwiftShader, no data is retrieved from the pipeline cache, so there is no reason to
     // serialize it or put it in the blob cache.
-    ANGLE_FEATURE_CONDITION(&mFeatures, hasEffectivePipelineCacheSerialization, !isSwiftShader);
+    // For Windows Nvidia Vulkan driver older than 520, Vulkan pipeline cache will only generate one
+    // single huge cache for one process shared by all graphics piplines in the same process, which
+    // can be huge.
+    const bool nvVersionLessThan520 = isNvidia && (nvidiaVersion.major < 520u);
+    ANGLE_FEATURE_CONDITION(&mFeatures, hasEffectivePipelineCacheSerialization,
+                            !isSwiftShader && !nvVersionLessThan520);
 
     // When the driver sets graphicsPipelineLibraryFastLinking, it means that monolithic pipelines
     // are just a bundle of the libraries, and that there is no benefit in creating monolithic
