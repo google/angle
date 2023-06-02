@@ -82,7 +82,7 @@ ANGLE_CHROMIUM_DEPS = [
     'third_party/six',
     'third_party/turbine',
     'third_party/zlib',
-    'tools/android/errorprone_plugin',
+    'tools/android',
     'tools/clang',
     'tools/clang/dsymutil',
     'tools/luci-go',

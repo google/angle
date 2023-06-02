@@ -668,8 +668,8 @@ deps = {
     'condition': 'not build_with_chromium',
   },
 
-  'tools/android/errorprone_plugin': {
-    'url': '{chromium_git}/chromium/src/tools/android/errorprone_plugin@a848535fa482eab8d9f2575bc510347027f978b2',
+  'tools/android': {
+    'url': '{chromium_git}/chromium/src/tools/android@07b548d9931c5855bbccd2bb1ee4b3d09333b979',
     'condition': 'checkout_android and not build_with_chromium',
   },
 
