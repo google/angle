@@ -18,8 +18,6 @@
 6063 GLES : SimpleStateChangeTestES31.DrawThenChangeFBOThenDrawThenFlushInAnotherThreadThenDrawIndexed/* = SKIP
 // Crashes in setUniformValuesFromBindingQualifiers() because mUniformRealLocationMap is not
 // initialized when the program is loaded from cache.
-6073 OPENGL : ProgramInterfaceTestES31.ReloadFromCacheShouldNotCrash/ES3_1_OpenGL__cached = SKIP
-6073 GLES : ProgramInterfaceTestES31.ReloadFromCacheShouldNotCrash/ES3_1_OpenGLES__cached = SKIP
 6142 VULKAN : BlitFramebufferTest.BlitDepthStencilPixelByPixel/* = SKIP
 6153 VULKAN WIN INTEL : GLSLTest_ES31.StructAndArrayEqualOperator/* = SKIP
 6153 VULKAN PIXEL4ORXL : GLSLTest_ES31.StructAndArrayEqualOperator/* = SKIP

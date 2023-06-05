@@ -1309,12 +1309,6 @@ void Program::resolveLinkImpl(const Context *context)
         return;
     }
 
-    if (linkingState->linkingFromBinary)
-    {
-        // All internal Program state is already loaded from the binary.
-        return;
-    }
-
     // According to GLES 3.0/3.1 spec for LinkProgram and UseProgram,
     // Only successfully linked program can replace the executables.
     ASSERT(mLinked);
@@ -1326,6 +1320,12 @@ void Program::resolveLinkImpl(const Context *context)
 
     // Must be called after markUnusedUniformLocations.
     postResolveLink(context);
+
+    if (linkingState->linkingFromBinary)
+    {
+        // All internal Program state is already loaded from the binary.
+        return;
+    }
 
     // Save to the program cache.
     std::lock_guard<std::mutex> cacheLock(context->getProgramCacheMutex());
@@ -3687,7 +3687,6 @@ angle::Result Program::deserialize(const Context *context,
         mState.mExecutable->updateTransformFeedbackStrides();
     }
 
-    postResolveLink(context);
     mState.mExecutable->updateCanDrawWith();
 
     if (context->getShareGroup()->getFrameCaptureShared()->enabled())
