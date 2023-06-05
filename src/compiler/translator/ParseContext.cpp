@@ -5840,7 +5840,7 @@ TLayoutQualifier TParseContext::parseLayoutQualifier(const ImmutableString &qual
         {
             qualifier.depth = EdLess;
         }
-        else if (qualifierType == "depth_unchanged")
+        else if (qualifierType == "depth_unchanged" && !sh::IsWebGLBasedSpec(mShaderSpec))
         {
             qualifier.depth = EdUnchanged;
         }
