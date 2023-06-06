@@ -181,7 +181,8 @@ class OutputSPIRVTraverser : public TIntermTraverser
   public:
     OutputSPIRVTraverser(TCompiler *compiler,
                          const ShCompileOptions &compileOptions,
-                         const angle::HashMap<int, uint32_t> &uniqueToSpirvIdMap);
+                         const angle::HashMap<int, uint32_t> &uniqueToSpirvIdMap,
+                         uint32_t firstUnusedSpirvId);
     ~OutputSPIRVTraverser() override;
 
     spirv::Blob getSpirv();
@@ -499,7 +500,8 @@ spv::StorageClass GetStorageClass(const TType &type, GLenum shaderType)
 
 OutputSPIRVTraverser::OutputSPIRVTraverser(TCompiler *compiler,
                                            const ShCompileOptions &compileOptions,
-                                           const angle::HashMap<int, uint32_t> &uniqueToSpirvIdMap)
+                                           const angle::HashMap<int, uint32_t> &uniqueToSpirvIdMap,
+                                           uint32_t firstUnusedSpirvId)
     : TIntermTraverser(true, true, true, &compiler->getSymbolTable()),
       mCompiler(compiler),
       mCompileOptions(compileOptions),
@@ -507,7 +509,8 @@ OutputSPIRVTraverser::OutputSPIRVTraverser(TCompiler *compiler,
                compileOptions,
                compiler->getHashFunction(),
                compiler->getNameMap(),
-               uniqueToSpirvIdMap)
+               uniqueToSpirvIdMap,
+               firstUnusedSpirvId)
 {}
 
 OutputSPIRVTraverser::~OutputSPIRVTraverser()
@@ -6462,7 +6465,8 @@ spirv::Blob OutputSPIRVTraverser::getSpirv()
 bool OutputSPIRV(TCompiler *compiler,
                  TIntermBlock *root,
                  const ShCompileOptions &compileOptions,
-                 const angle::HashMap<int, uint32_t> &uniqueToSpirvIdMap)
+                 const angle::HashMap<int, uint32_t> &uniqueToSpirvIdMap,
+                 uint32_t firstUnusedSpirvId)
 {
     // Find the list of nodes that require NoContraction (as a result of |precise|).
     if (compiler->hasAnyPreciseType())
@@ -6471,7 +6475,8 @@ bool OutputSPIRV(TCompiler *compiler,
     }
 
     // Traverse the tree and generate SPIR-V instructions
-    OutputSPIRVTraverser traverser(compiler, compileOptions, uniqueToSpirvIdMap);
+    OutputSPIRVTraverser traverser(compiler, compileOptions, uniqueToSpirvIdMap,
+                                   firstUnusedSpirvId);
     root->traverse(&traverser);
 
     // Generate the final SPIR-V and store in the sink

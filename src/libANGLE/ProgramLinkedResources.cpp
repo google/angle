@@ -452,6 +452,7 @@ class FlattenUniformVisitor : public sh::VariableNameVisitor
             linkedUniform.staticUse           = mMarkStaticUse;
             linkedUniform.outerArraySizes     = arraySizes;
             linkedUniform.texelFetchStaticUse = variable.texelFetchStaticUse;
+            linkedUniform.id                  = variable.id;
             linkedUniform.imageUnitFormat     = variable.imageUnitFormat;
             linkedUniform.isFragmentInOut     = variable.isFragmentInOut;
             if (variable.hasParentArrayIndex())
@@ -1421,6 +1422,7 @@ void InterfaceBlockLinker::defineInterfaceBlock(const GetBlockSizeFunc &getBlock
                              firstFieldArraySize, blockBinding);
         block.memberIndexes = blockIndexes;
         block.setActive(shaderType, interfaceBlock.active);
+        block.id = interfaceBlock.id;
 
         // Since all block elements in an array share the same active interface blocks, they
         // will all be active once any block member is used. So, since interfaceBlock.name[0]

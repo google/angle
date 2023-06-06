@@ -309,7 +309,8 @@ class SPIRVBuilder : angle::NonCopyable
                  const ShCompileOptions &compileOptions,
                  ShHashFunction64 hashFunction,
                  NameMap &nameMap,
-                 const angle::HashMap<int, uint32_t> &uniqueToSpirvIdMap);
+                 const angle::HashMap<int, uint32_t> &uniqueToSpirvIdMap,
+                 uint32_t firstUnusedSpirvId);
 
     spirv::IdRef getNewId(const SpirvDecorations &decorations);
     spirv::IdRef getReservedOrNewId(TSymbolUniqueId uniqueId, const SpirvDecorations &decorations);

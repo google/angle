@@ -350,14 +350,14 @@ void AssignSecondaryOutputLocations(const gl::ProgramExecutable &programExecutab
             if (outputVar.name == "gl_SecondaryFragColorEXT")
             {
                 AddLocationInfo(variableInfoMapOut, gl::ShaderType::Fragment,
-                                ShaderVariableType::SecondaryOutput, "webgl_SecondaryFragColor", 0,
-                                ShaderInterfaceVariableInfo::kInvalid, 0, 0);
+                                ShaderVariableType::SecondaryOutput, "webgl_SecondaryFragColorEXT",
+                                0, ShaderInterfaceVariableInfo::kInvalid, 0, 0);
             }
             else if (outputVar.name == "gl_SecondaryFragDataEXT")
             {
                 AddLocationInfo(variableInfoMapOut, gl::ShaderType::Fragment,
-                                ShaderVariableType::SecondaryOutput, "webgl_SecondaryFragData", 0,
-                                ShaderInterfaceVariableInfo::kInvalid, 0, 0);
+                                ShaderVariableType::SecondaryOutput, "webgl_SecondaryFragDataEXT",
+                                0, ShaderInterfaceVariableInfo::kInvalid, 0, 0);
             }
         }
     }

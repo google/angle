@@ -138,6 +138,8 @@ struct InterfaceBlock : public ShaderVariableBuffer
     bool isReadOnly;
     unsigned int arrayElement;
     unsigned int firstFieldArraySize;
+    // The ID of the block, coming from sh::InterfaceBlock::id
+    uint32_t id;
 };
 
 }  // namespace gl

@@ -162,8 +162,8 @@ bool DeclareDefaultUniforms(TranslatorVulkan *compiler,
         root, symbolTable, uniformList, EvqUniform, layoutQualifier, TMemoryQualifier::Create(), 0,
         ImmutableString(kDefaultUniformNames[shaderType]), ImmutableString(""));
 
-    compiler->assignReservedSpirvId(uniformBlock->getType().getInterfaceBlock()->uniqueId(),
-                                    vk::spirv::kIdDefaultUniformsBlock);
+    compiler->assignSpirvId(uniformBlock->getType().getInterfaceBlock()->uniqueId(),
+                            vk::spirv::kIdDefaultUniformsBlock);
 
     // Create a map from the uniform variables to new variables that reference the fields of the
     // block.
@@ -382,8 +382,8 @@ TIntermSequence *GetMainSequence(TIntermBlock *root)
                       ivec4Type, true);
     getOffsetsFunction->addParameter(stridesVar);
 
-    compiler->assignReservedSpirvId(getOffsetsFunction->uniqueId(),
-                                    vk::spirv::kIdXfbEmulationGetOffsetsFunction);
+    compiler->assignSpirvId(getOffsetsFunction->uniqueId(),
+                            vk::spirv::kIdXfbEmulationGetOffsetsFunction);
 
     TIntermFunctionDefinition *functionDef =
         CreateInternalFunctionDefinitionNode(*getOffsetsFunction, body);
@@ -407,8 +407,8 @@ TIntermSequence *GetMainSequence(TIntermBlock *root)
     TFunction *xfbCaptureFunction = new TFunction(symbolTable, ImmutableString("ANGLECaptureXfb"),
                                                   SymbolType::AngleInternal, voidType, false);
 
-    compiler->assignReservedSpirvId(xfbCaptureFunction->uniqueId(),
-                                    vk::spirv::kIdXfbEmulationCaptureFunction);
+    compiler->assignSpirvId(xfbCaptureFunction->uniqueId(),
+                            vk::spirv::kIdXfbEmulationCaptureFunction);
 
     // Insert the function declaration before main().
     root->insertChildNodes(mainIndex,
@@ -489,10 +489,10 @@ TIntermSequence *GetMainSequence(TIntermBlock *root)
         static_assert(vk::spirv::kIdXfbEmulationBufferVarThree ==
                       vk::spirv::kIdXfbEmulationBufferVarZero + 3);
 
-        compiler->assignReservedSpirvId(xfbBuffer->getType().getInterfaceBlock()->uniqueId(),
-                                        vk::spirv::kIdXfbEmulationBufferBlockZero + bufferIndex);
-        compiler->assignReservedSpirvId(xfbBuffer->uniqueId(),
-                                        vk::spirv::kIdXfbEmulationBufferVarZero + bufferIndex);
+        compiler->assignSpirvId(xfbBuffer->getType().getInterfaceBlock()->uniqueId(),
+                                vk::spirv::kIdXfbEmulationBufferBlockZero + bufferIndex);
+        compiler->assignSpirvId(xfbBuffer->uniqueId(),
+                                vk::spirv::kIdXfbEmulationBufferVarZero + bufferIndex);
     }
 
     return compiler->validateAST(root);
@@ -530,7 +530,7 @@ TIntermSequence *GetMainSequence(TIntermBlock *root)
         new TVariable(symbolTable, ImmutableString(vk::kXfbExtensionPositionOutName), vec4Type,
                       SymbolType::AngleInternal);
 
-    compiler->assignReservedSpirvId(varyingVar->uniqueId(), vk::spirv::kIdXfbExtensionPosition);
+    compiler->assignSpirvId(varyingVar->uniqueId(), vk::spirv::kIdXfbExtensionPosition);
 
     TIntermDeclaration *varyingDecl = new TIntermDeclaration();
     varyingDecl->appendDeclarator(new TIntermSymbol(varyingVar));
@@ -625,8 +625,8 @@ TIntermSequence *GetMainSequence(TIntermBlock *root)
                       SymbolType::AngleInternal, vec4Type, true);
     transformPositionFunction->addParameter(positionVar);
 
-    compiler->assignReservedSpirvId(transformPositionFunction->uniqueId(),
-                                    vk::spirv::kIdTransformPositionFunction);
+    compiler->assignSpirvId(transformPositionFunction->uniqueId(),
+                            vk::spirv::kIdTransformPositionFunction);
 
     TIntermFunctionDefinition *functionDef =
         CreateInternalFunctionDefinitionNode(*transformPositionFunction, body);
@@ -670,10 +670,86 @@ bool HasFramebufferFetch(const TExtensionBehavior &extBehavior,
            (compileOptions.pls.type == ShPixelLocalStorageType::FramebufferFetch &&
             IsExtensionEnabled(extBehavior, TExtension::ANGLE_shader_pixel_local_storage));
 }
+
+template <typename Variable>
+Variable *FindShaderVariable(std::vector<Variable> *vars, const ImmutableString &name)
+{
+    for (Variable &var : *vars)
+    {
+        if (name == var.name)
+        {
+            return &var;
+        }
+    }
+    UNREACHABLE();
+    return nullptr;
+}
+
+ShaderVariable *FindIOBlockShaderVariable(std::vector<ShaderVariable> *vars,
+                                          const ImmutableString &name)
+{
+    for (ShaderVariable &var : *vars)
+    {
+        if (name == var.structOrBlockName)
+        {
+            return &var;
+        }
+    }
+    UNREACHABLE();
+    return nullptr;
+}
+
+ShaderVariable *FindUniformFieldShaderVariable(std::vector<ShaderVariable> *vars,
+                                               const ImmutableString &name,
+                                               const char *prefix)
+{
+    for (ShaderVariable &var : *vars)
+    {
+        // The name of the sampler is derived from the uniform name + fields
+        // that reach the uniform, concatenated with '_' per RewriteStructSamplers.
+        std::string varName = prefix;
+        varName += '_';
+        varName += var.name;
+
+        if (name == varName)
+        {
+            return &var;
+        }
+
+        ShaderVariable *field = FindUniformFieldShaderVariable(&var.fields, name, varName.c_str());
+        if (field != nullptr)
+        {
+            return field;
+        }
+    }
+    return nullptr;
+}
+
+ShaderVariable *FindUniformShaderVariable(std::vector<ShaderVariable> *vars,
+                                          const ImmutableString &name)
+{
+    for (ShaderVariable &var : *vars)
+    {
+        if (name == var.name)
+        {
+            return &var;
+        }
+
+        // Note: samplers in structs are moved out.  Such samplers will be found in the fields of
+        // the struct uniform.
+        ShaderVariable *field = FindUniformFieldShaderVariable(&var.fields, name, var.name.c_str());
+        if (field != nullptr)
+        {
+            return field;
+        }
+    }
+    UNREACHABLE();
+    return nullptr;
+}
 }  // anonymous namespace
 
 TranslatorVulkan::TranslatorVulkan(sh::GLenum type, ShShaderSpec spec)
-    : TCompiler(type, spec, SH_SPIRV_VULKAN_OUTPUT)
+    : TCompiler(type, spec, SH_SPIRV_VULKAN_OUTPUT), mFirstUnusedSpirvId(0)
 {}
 
 bool TranslatorVulkan::translateImpl(TIntermBlock *root,
@@ -808,7 +884,7 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
         driverUniforms->addGraphicsDriverUniformsToShader(root, &getSymbolTable());
     }
 
-    assignReservedSpirvId(
+    assignSpirvId(
         driverUniforms->getDriverUniformsVariable()->getType().getInterfaceBlock()->uniqueId(),
         vk::spirv::kIdDriverUniformsBlock);
 
@@ -830,8 +906,8 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
         {
             return false;
         }
-        assignReservedSpirvId(atomicCounters->getType().getInterfaceBlock()->uniqueId(),
-                              vk::spirv::kIdAtomicCounterBlock);
+        assignSpirvId(atomicCounters->getType().getInterfaceBlock()->uniqueId(),
+                      vk::spirv::kIdAtomicCounterBlock);
     }
     else if (getShaderVersion() >= 310)
     {
@@ -1182,15 +1258,19 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
 
     if (inputPerVertex)
     {
-        assignReservedSpirvId(inputPerVertex->getType().getInterfaceBlock()->uniqueId(),
-                              vk::spirv::kIdInputPerVertexBlock);
+        assignSpirvId(inputPerVertex->getType().getInterfaceBlock()->uniqueId(),
+                      vk::spirv::kIdInputPerVertexBlock);
     }
     if (outputPerVertex)
     {
-        assignReservedSpirvId(outputPerVertex->getType().getInterfaceBlock()->uniqueId(),
-                              vk::spirv::kIdOutputPerVertexBlock);
-        assignReservedSpirvId(outputPerVertex->uniqueId(), vk::spirv::kIdOutputPerVertexVar);
+        assignSpirvId(outputPerVertex->getType().getInterfaceBlock()->uniqueId(),
+                      vk::spirv::kIdOutputPerVertexBlock);
+        assignSpirvId(outputPerVertex->uniqueId(), vk::spirv::kIdOutputPerVertexVar);
     }
+
+    // Now that all transformations are done, assign SPIR-V ids to whatever shader variable is still
+    // present in the shader in some form.  This should be the last thing done in this function.
+    assignSpirvIds(root);
 
     return true;
 }
@@ -1200,6 +1280,7 @@ bool TranslatorVulkan::translate(TIntermBlock *root,
                                  PerformanceDiagnostics *perfDiagnostics)
 {
     mUniqueToSpirvIdMap.clear();
+    mFirstUnusedSpirvId = 0;
 
     SpecConst specConst(&getSymbolTable(), compileOptions, getShaderType());
 
@@ -1215,7 +1296,7 @@ bool TranslatorVulkan::translate(TIntermBlock *root,
         return false;
     }
 
-    return OutputSPIRV(this, root, compileOptions, mUniqueToSpirvIdMap);
+    return OutputSPIRV(this, root, compileOptions, mUniqueToSpirvIdMap, mFirstUnusedSpirvId);
 }
 
 bool TranslatorVulkan::shouldFlattenPragmaStdglInvariantAll()
@@ -1224,9 +1305,109 @@ bool TranslatorVulkan::shouldFlattenPragmaStdglInvariantAll()
     return false;
 }
 
-void TranslatorVulkan::assignReservedSpirvId(TSymbolUniqueId uniqueId, uint32_t spirvId)
+void TranslatorVulkan::assignSpirvId(TSymbolUniqueId uniqueId, uint32_t spirvId)
 {
     ASSERT(mUniqueToSpirvIdMap.find(uniqueId.get()) == mUniqueToSpirvIdMap.end());
     mUniqueToSpirvIdMap[uniqueId.get()] = spirvId;
+}
+
+void TranslatorVulkan::assignSpirvIds(TIntermBlock *root)
+{
+    // Match the declarations with collected variables and assign a new id to each, starting from
+    // the first unreserved id.  This makes sure that the reserved ids for internal variables and
+    // ids for shader variables form a minimal contiguous range.  The Vulkan backend takes advantage
+    // of this fact for optimal hashing.
+    mFirstUnusedSpirvId = vk::spirv::kIdFirstUnreserved;
+
+    for (TIntermNode *node : *root->getSequence())
+    {
+        TIntermDeclaration *decl = node->getAsDeclarationNode();
+        if (decl == nullptr)
+        {
+            continue;
+        }
+
+        TIntermSymbol *symbol = decl->getSequence()->front()->getAsSymbolNode();
+        if (symbol == nullptr)
+        {
+            continue;
+        }
+
+        const TType &type          = symbol->getType();
+        const TQualifier qualifier = type.getQualifier();
+
+        // Skip internal symbols, which already have a reserved id.
+        const TSymbolUniqueId uniqueId =
+            type.isInterfaceBlock() ? type.getInterfaceBlock()->uniqueId() : symbol->uniqueId();
+        if (mUniqueToSpirvIdMap.find(uniqueId.get()) != mUniqueToSpirvIdMap.end())
+        {
+            continue;
+        }
+
+        uint32_t *variableId = nullptr;
+        if (type.isInterfaceBlock())
+        {
+            if (IsVaryingIn(qualifier))
+            {
+                ShaderVariable *varying =
+                    FindIOBlockShaderVariable(&mInputVaryings, type.getInterfaceBlock()->name());
+                variableId = &varying->id;
+            }
+            else if (IsVaryingOut(qualifier))
+            {
+                ShaderVariable *varying =
+                    FindIOBlockShaderVariable(&mOutputVaryings, type.getInterfaceBlock()->name());
+                variableId = &varying->id;
+            }
+            else
+            {
+                InterfaceBlock *block =
+                    FindShaderVariable(&mInterfaceBlocks, type.getInterfaceBlock()->name());
+                variableId = &block->id;
+            }
+        }
+        else if (qualifier == EvqUniform)
+        {
+            ShaderVariable *uniform = FindUniformShaderVariable(&mUniforms, symbol->getName());
+            variableId              = &uniform->id;
+        }
+        else if (qualifier == EvqAttribute || qualifier == EvqVertexIn)
+        {
+            ShaderVariable *attribute = FindShaderVariable(&mAttributes, symbol->getName());
+            variableId                = &attribute->id;
+        }
+        else if (IsShaderIn(qualifier))
+        {
+            ShaderVariable *varying = FindShaderVariable(&mInputVaryings, symbol->getName());
+            variableId              = &varying->id;
+        }
+        else if (qualifier == EvqFragmentOut)
+        {
+            // webgl_FragColor, webgl_FragData, webgl_SecondaryFragColor and webgl_SecondaryFragData
+            // are recorded with their original names (starting with gl_)
+            ImmutableString name(symbol->getName());
+            if (angle::BeginsWith(name.data(), "webgl_"))
+            {
+                name = ImmutableString(name.data() + 3, name.length() - 3);
+            }
+
+            ShaderVariable *output = FindShaderVariable(&mOutputVariables, name);
+            variableId             = &output->id;
+        }
+        else if (IsShaderOut(qualifier))
+        {
+            ShaderVariable *varying = FindShaderVariable(&mOutputVaryings, symbol->getName());
+            variableId              = &varying->id;
+        }
+
+        if (variableId == nullptr)
+        {
+            continue;
+        }
+
+        ASSERT(variableId != nullptr);
+        assignSpirvId(uniqueId, mFirstUnusedSpirvId);
+        *variableId = mFirstUnusedSpirvId++;
+    }
 }
 }  // namespace sh

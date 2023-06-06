@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 334
+#define ANGLE_SH_VERSION 335
 
 enum ShShaderSpec
 {
@@ -1027,10 +1027,15 @@ enum ReservedIds
 
     // Pre-rotation and Z-correction support
     kIdTransformPositionFunction,
+    kIdOutputPerVertexVar,
 
     // Transform feedback support
     kIdXfbEmulationGetOffsetsFunction,
     kIdXfbEmulationCaptureFunction,
+    kIdXfbEmulationBufferVarZero,
+    kIdXfbEmulationBufferVarOne,
+    kIdXfbEmulationBufferVarTwo,
+    kIdXfbEmulationBufferVarThree,
 
     // Multisampling support
     kIdSampleID,
@@ -1039,12 +1044,14 @@ enum ReservedIds
     // ANGLE internal shader variables, which are not produced as ShaderVariables.
     // kIdShaderVariablesBegin marks the beginning of these ids.  variableId -> info maps in the
     // backend can use |variableId - kIdShaderVariablesBegin| as key into a flat array.
+    //
+    // Note that for blocks, only the block id is in this section as that is the id used in the
+    // variableId -> info maps.
     kIdShaderVariablesBegin,
 
     // gl_PerVertex
     kIdInputPerVertexBlock = kIdShaderVariablesBegin,
     kIdOutputPerVertexBlock,
-    kIdOutputPerVertexVar,
     // The driver and default uniform blocks
     kIdDriverUniformsBlock,
     kIdDefaultUniformsBlock,
@@ -1055,10 +1062,6 @@ enum ReservedIds
     kIdXfbEmulationBufferBlockOne,
     kIdXfbEmulationBufferBlockTwo,
     kIdXfbEmulationBufferBlockThree,
-    kIdXfbEmulationBufferVarZero,
-    kIdXfbEmulationBufferVarOne,
-    kIdXfbEmulationBufferVarTwo,
-    kIdXfbEmulationBufferVarThree,
     // Additional varying added to hold untransformed gl_Position for transform feedback capture
     kIdXfbExtensionPosition,
 

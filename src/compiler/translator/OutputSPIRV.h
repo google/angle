@@ -16,7 +16,8 @@ namespace sh
 bool OutputSPIRV(TCompiler *compiler,
                  TIntermBlock *root,
                  const ShCompileOptions &compileOptions,
-                 const angle::HashMap<int, uint32_t> &uniqueToSpirvIdMap);
+                 const angle::HashMap<int, uint32_t> &uniqueToSpirvIdMap,
+                 uint32_t firstUnusedSpirvId);
 }  // namespace sh
 
 #endif  // COMPILER_TRANSLATOR_OUTPUTSPIRV_H_
