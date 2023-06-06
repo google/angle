@@ -188,6 +188,18 @@ TEST_P(APPLEClipDistanceTest, CompileSucceedsMetal)
 }
 #endif
 
+#if defined(ANGLE_ENABLE_METAL_SPIRV)
+// With extension flag and extension directive, compiling using TranslatorMetal succeeds.
+TEST_P(APPLEClipDistanceTest, CompileSucceedsMetalSPIRV)
+{
+    mResources.APPLE_clip_distance = 1;
+    mResources.MaxClipDistances    = 8;
+
+    InitializeCompiler(SH_SPIRV_METAL_OUTPUT);
+    EXPECT_TRUE(TestShaderCompile(EXTPragma));
+}
+#endif
+
 // The SL #version 100 shaders that are correct work similarly
 // in both GL2 and GL3, with and without the version string.
 INSTANTIATE_TEST_SUITE_P(CorrectESSL100Shaders,

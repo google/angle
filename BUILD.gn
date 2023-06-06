@@ -704,7 +704,8 @@ template("translator_lib") {
     }
 
     if (!invoker.gl_d3d_only) {
-      if (angle_enable_vulkan || use_fuzzing_engine) {
+      if (angle_enable_vulkan || use_fuzzing_engine ||
+          angle_enable_msl_through_spirv) {
         _needs_glsl_base = true
         _needs_glsl_and_vulkan_base = true
         _uses_spirv = true
@@ -720,6 +721,9 @@ template("translator_lib") {
       if (angle_enable_metal) {
         sources += angle_translator_lib_metal_sources
         defines += [ "ANGLE_ENABLE_METAL" ]
+        if (angle_enable_msl_through_spirv) {
+          defines += [ "ANGLE_ENABLE_METAL_SPIRV" ]
+        }
       }
     }
 

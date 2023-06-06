@@ -153,6 +153,9 @@ declare_args() {
 
   # Frame capture code is enabled by default if rapidjson is available.
   angle_has_frame_capture = angle_has_rapidjson
+
+  # By default, include the SPIR-V based MSL translator (in addition to the direct translator)
+  angle_enable_msl_through_spirv = is_mac
 }
 
 declare_args() {
@@ -178,7 +181,7 @@ declare_args() {
       ((is_win && !angle_is_winuwp) ||
        ((is_linux || is_chromeos) &&
         (angle_use_x11 || angle_use_wayland || angle_use_vulkan_display)) ||
-       is_android || is_fuchsia || is_ggp)
+       is_android || is_fuchsia || is_ggp || angle_enable_msl_through_spirv)
 
   # When set to true, ANGLE will not use VK_KHR_surface and VK_KHR_swapchain
   # extensions. Content can be rendered only off-screen.
