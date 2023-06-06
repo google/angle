@@ -21,10 +21,10 @@ import time
 
 import angle_path_util
 
-from angle_test_util import ANGLE_TRACE_TEST_SUITE
-
 # Currently we only support a single test package name.
 TEST_PACKAGE_NAME = 'com.android.angle.test'
+
+ANGLE_TRACE_TEST_SUITE = 'angle_trace_tests'
 
 
 class _Global(object):
