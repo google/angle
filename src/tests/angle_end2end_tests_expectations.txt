@@ -1255,6 +1255,35 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 // GalaxyS23 ES3_2 tests
 8157 GALAXYS23 VULKAN : TransformFeedbackTestES32.PrimitivesGeneratedVsIndirectDraw/* = SKIP
 
+// Galaxy A23 crashes
+8185 GALAXYA23 VULKAN : BlitFramebufferTest.BlitStencilScissoredScaled/ES3_Vulkan* = SKIP
+8185 GALAXYA23 VULKAN : BlitFramebufferTest.MultisampleStencil/ES3_Vulkan* = SKIP
+8185 GALAXYA23 VULKAN : BlitFramebufferTest.ScissoredMultisampleStencil/ES3_Vulkan* = SKIP
+8185 GALAXYA23 VULKAN : ClearTestES3.RepeatedStencilClearWithBlitInBetween/ES3_Vulkan* = SKIP
+8185 GALAXYA23 VULKAN : ClearTest.Stencil8Scissored/*Vulkan* = SKIP
+8185 GALAXYA23 VULKAN : ClipCullDistanceTest.FourCullDistances/ES3*Vulkan* = SKIP
+8185 GALAXYA23 VULKAN : DepthStencilTestES3.FramebufferClearThenStencilAttachedThenStencilTestState/ES3_Vulkan* = SKIP
+8185 GALAXYA23 VULKAN : DepthStencilTestES3.FramebufferClearThenStencilTestStateThenStencilAttached/ES3_Vulkan* = SKIP
+8185 GALAXYA23 VULKAN : DepthStencilTestES3.StencilTestStateThenFramebufferClearThenStencilAttached/ES3_Vulkan* = SKIP
+8185 GALAXYA23 VULKAN : DepthStencilTest.StencilOnlyDrawThenCopyThenDraw/*Vulkan* = SKIP
+8185 GALAXYA23 VULKAN : DepthStencilTest.StencilOnlyEmulatedWithPacked/*Vulkan* = SKIP
+8185 GALAXYA23 VULKAN : DrawBuffersTest.NoneWithStencil/*Vulkan* = SKIP
+8185 GALAXYA23 VULKAN : FramebufferTest_ES31.ChangeFBOSizeAndAttachmentsCount/ES3_1_Vulkan* = SKIP
+8185 GALAXYA23 VULKAN : FramebufferTest_ES31.ChangeFBOSizeWithNoAttachments/ES3_1_Vulkan* = SKIP
+8185 GALAXYA23 VULKAN : FramebufferTest_ES31.CreateNoAttachmentFBOWithDifferentSize/ES3_1_Vulkan* = SKIP
+8185 GALAXYA23 VULKAN : FramebufferTest_ES31.RenderingLimitToDefaultFBOSizeWithNoAttachments/ES3_1_Vulkan* = SKIP
+8185 GALAXYA23 VULKAN : GLSLTest_ES3.CompareEqualityOfArrayOfMatrices/ES3_Vulkan* = SKIP
+8185 GALAXYA23 VULKAN : GLSLTest_ES3.CompareInequalityOfArrayOfMatrices/ES3_Vulkan* = SKIP
+8185 GALAXYA23 VULKAN : GLSLTest_ES31.StructAndArrayEqualOperator/ES3_1_Vulkan* = SKIP
+8185 GALAXYA23 VULKAN : PixelLocalStorageTest.DrawStateReset/ES3_Vulkan_AsyncCommandQueue_EmulatePixelLocalStorage = SKIP
+8185 GALAXYA23 VULKAN : PixelLocalStorageTestES31.DrawStateReset/ES3_1_Vulkan_AsyncCommandQueue_EmulatePixelLocalStorage = SKIP
+8185 GALAXYA23 VULKAN : PixelLocalStorageTestES31.EarlyFragmentTests/ES3_1_Vulkan* = SKIP
+8185 GALAXYA23 VULKAN : RobustResourceInitTestES3.MaskedStencilClearBuffer/ES3_Vulkan* = SKIP
+8185 GALAXYA23 VULKAN : RobustResourceInitTest.MaskedStencilClear/*Vulkan* = SKIP
+8185 GALAXYA23 VULKAN : SimpleStateChangeTestES3.OutOfBoundsByteAttribute/ES3_Vulkan* = SKIP
+8185 GALAXYA23 VULKAN : Texture2DTestES3.TexImageWithStencilData/ES3_Vulkan* = SKIP
+8185 GALAXYA23 VULKAN : Texture2DTestES3.TexImageWithStencilPBO/ES3_Vulkan* = SKIP
+
 // Please do not add expectations below this line,
 // so that TIMEOUT expectations above don't override more precise SKIP expectations
 
