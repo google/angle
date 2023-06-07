@@ -22,7 +22,6 @@ namespace gl
 
 namespace
 {
-
 // true if varying x has a higher priority in packing than y
 bool ComparePackedVarying(const PackedVarying &x, const PackedVarying &y)
 {
@@ -183,6 +182,53 @@ std::vector<unsigned int> StripVaryingArrayDimension(const sh::ShaderVariable *f
 
     return frontVarying ? frontVarying->arraySizes : backVarying->arraySizes;
 }
+
+PerVertexMember GetPerVertexMember(const std::string &name)
+{
+    if (name == "gl_Position")
+    {
+        return PerVertexMember::Position;
+    }
+    if (name == "gl_PointSize")
+    {
+        return PerVertexMember::PointSize;
+    }
+    if (name == "gl_ClipDistance")
+    {
+        return PerVertexMember::ClipDistance;
+    }
+    if (name == "gl_CullDistance")
+    {
+        return PerVertexMember::CullDistance;
+    }
+    return PerVertexMember::InvalidEnum;
+}
+
+void SetActivePerVertexMembers(const sh::ShaderVariable *var, PerVertexMemberBitSet *bitset)
+{
+    ASSERT(var->isBuiltIn() && var->active);
+
+    // Only process gl_Position, gl_PointSize, gl_ClipDistance, gl_CullDistance and the fields of
+    // gl_in/out.
+    if (var->fields.empty())
+    {
+        PerVertexMember member = GetPerVertexMember(var->name);
+        // Skip gl_TessLevelInner/Outer etc.
+        if (member != PerVertexMember::InvalidEnum)
+        {
+            bitset->set(member);
+        }
+        return;
+    }
+
+    // This must be gl_out.  Note that only `out gl_PerVertex` is processed; the input of the
+    // next stage is implicitly identically active.
+    ASSERT(var->name == "gl_out");
+    for (const sh::ShaderVariable &field : var->fields)
+    {
+        bitset->set(GetPerVertexMember(field.name));
+    }
+}
 }  // anonymous namespace
 
 // Implementation of VaryingInShaderRef
@@ -289,10 +335,8 @@ void VaryingPacking::reset()
         inactiveVaryingMappedNames.clear();
     }
 
-    for (std::vector<std::string> &activeBuiltIns : mActiveOutputBuiltIns)
-    {
-        activeBuiltIns.clear();
-    }
+    std::fill(mOutputPerVertexActiveMembers.begin(), mOutputPerVertexActiveMembers.end(),
+              gl::PerVertexMemberBitSet{});
 }
 
 void VaryingPacking::clearRegisterMap()
@@ -841,16 +885,9 @@ bool VaryingPacking::collectAndPackUserVaryings(gl::InfoLog &infoLog,
         const bool isActiveBuiltInInput  = input && input->isBuiltIn() && input->active;
         const bool isActiveBuiltInOutput = output && output->isBuiltIn() && output->active;
 
-        // Keep track of output builtins that are used by the shader, such as gl_Position,
-        // gl_PointSize etc.
         if (isActiveBuiltInInput)
         {
-            mActiveOutputBuiltIns[ref.frontShaderStage].push_back(input->name);
-            // Keep track of members of builtins, such as gl_out[].gl_Position, too.
-            for (sh::ShaderVariable field : input->fields)
-            {
-                mActiveOutputBuiltIns[ref.frontShaderStage].push_back(field.name);
-            }
+            SetActivePerVertexMembers(input, &mOutputPerVertexActiveMembers[frontShaderStage]);
         }
 
         // Only pack statically used varyings that have a matched input or output, plus special

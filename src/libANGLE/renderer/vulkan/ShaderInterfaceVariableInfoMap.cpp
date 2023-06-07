@@ -28,16 +28,24 @@ void ShaderInterfaceVariableInfoMap::clear()
         }
         mNameToTypeAndIndexMap[shaderType].clear();
     }
+    std::fill(mInputPerVertexActiveMembers.begin(), mInputPerVertexActiveMembers.end(),
+              gl::PerVertexMemberBitSet{});
+    std::fill(mOutputPerVertexActiveMembers.begin(), mOutputPerVertexActiveMembers.end(),
+              gl::PerVertexMemberBitSet{});
 }
 
 void ShaderInterfaceVariableInfoMap::load(
-    const gl::ShaderMap<VariableTypeToInfoMap> &data,
-    const gl::ShaderMap<NameToTypeAndIndexMap> &nameToTypeAndIndexMap,
-    const gl::ShaderMap<VariableTypeToIndexMap> &indexedResourceIndexMap)
+    gl::ShaderMap<VariableTypeToInfoMap> &&data,
+    gl::ShaderMap<NameToTypeAndIndexMap> &&nameToTypeAndIndexMap,
+    gl::ShaderMap<VariableTypeToIndexMap> &&indexedResourceIndexMap,
+    gl::ShaderMap<gl::PerVertexMemberBitSet> &&inputPerVertexActiveMembers,
+    gl::ShaderMap<gl::PerVertexMemberBitSet> &&outputPerVertexActiveMembers)
 {
-    mData                    = data;
-    mNameToTypeAndIndexMap   = nameToTypeAndIndexMap;
-    mIndexedResourceIndexMap = indexedResourceIndexMap;
+    mData.swap(data);
+    mNameToTypeAndIndexMap.swap(nameToTypeAndIndexMap);
+    mIndexedResourceIndexMap.swap(indexedResourceIndexMap);
+    mInputPerVertexActiveMembers.swap(inputPerVertexActiveMembers);
+    mOutputPerVertexActiveMembers.swap(outputPerVertexActiveMembers);
 }
 
 void ShaderInterfaceVariableInfoMap::setActiveStages(gl::ShaderType shaderType,
@@ -48,6 +56,28 @@ void ShaderInterfaceVariableInfoMap::setActiveStages(gl::ShaderType shaderType,
     ASSERT(hasVariable(shaderType, variableName));
     uint32_t index = mNameToTypeAndIndexMap[shaderType][variableName].index;
     mData[shaderType][variableType][index].activeStages = activeStages;
+}
+
+void ShaderInterfaceVariableInfoMap::setInputPerVertexActiveMembers(
+    gl::ShaderType shaderType,
+    gl::PerVertexMemberBitSet activeMembers)
+{
+    // Input gl_PerVertex is only meaningful for tessellation and geometry stages
+    ASSERT(shaderType == gl::ShaderType::TessControl ||
+           shaderType == gl::ShaderType::TessEvaluation || shaderType == gl::ShaderType::Geometry ||
+           activeMembers.none());
+    mInputPerVertexActiveMembers[shaderType] = activeMembers;
+}
+
+void ShaderInterfaceVariableInfoMap::setOutputPerVertexActiveMembers(
+    gl::ShaderType shaderType,
+    gl::PerVertexMemberBitSet activeMembers)
+{
+    // Output gl_PerVertex is only meaningful for vertex, tessellation and geometry stages
+    ASSERT(shaderType == gl::ShaderType::Vertex || shaderType == gl::ShaderType::TessControl ||
+           shaderType == gl::ShaderType::TessEvaluation || shaderType == gl::ShaderType::Geometry ||
+           activeMembers.none());
+    mOutputPerVertexActiveMembers[shaderType] = activeMembers;
 }
 
 ShaderInterfaceVariableInfo &ShaderInterfaceVariableInfoMap::getMutable(
@@ -144,23 +174,5 @@ const ShaderInterfaceVariableInfoMap::VariableInfoArray &
 ShaderInterfaceVariableInfoMap::getAttributes() const
 {
     return mData[gl::ShaderType::Vertex][ShaderVariableType::Attribute];
-}
-
-const gl::ShaderMap<ShaderInterfaceVariableInfoMap::VariableTypeToInfoMap>
-    &ShaderInterfaceVariableInfoMap::getData() const
-{
-    return mData;
-}
-
-const gl::ShaderMap<ShaderInterfaceVariableInfoMap::NameToTypeAndIndexMap>
-    &ShaderInterfaceVariableInfoMap::getNameToTypeAndIndexMap() const
-{
-    return mNameToTypeAndIndexMap;
-}
-
-const gl::ShaderMap<ShaderInterfaceVariableInfoMap::VariableTypeToIndexMap>
-    &ShaderInterfaceVariableInfoMap::getIndexedResourceMap() const
-{
-    return mIndexedResourceIndexMap;
 }
 }  // namespace rx

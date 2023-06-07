@@ -59,9 +59,11 @@ class ShaderInterfaceVariableInfoMap final : angle::NonCopyable
     ~ShaderInterfaceVariableInfoMap();
 
     void clear();
-    void load(const gl::ShaderMap<VariableTypeToInfoMap> &data,
-              const gl::ShaderMap<NameToTypeAndIndexMap> &nameToTypeAndIndexMap,
-              const gl::ShaderMap<VariableTypeToIndexMap> &indexedResourceIndexMap);
+    void load(gl::ShaderMap<VariableTypeToInfoMap> &&data,
+              gl::ShaderMap<NameToTypeAndIndexMap> &&nameToTypeAndIndexMap,
+              gl::ShaderMap<VariableTypeToIndexMap> &&indexedResourceIndexMap,
+              gl::ShaderMap<gl::PerVertexMemberBitSet> &&inputPerVertexActiveMembers,
+              gl::ShaderMap<gl::PerVertexMemberBitSet> &&outputPerVertexActiveMembers);
 
     ShaderInterfaceVariableInfo &add(gl::ShaderType shaderType,
                                      ShaderVariableType variableType,
@@ -77,6 +79,10 @@ class ShaderInterfaceVariableInfoMap final : angle::NonCopyable
                          ShaderVariableType variableType,
                          const std::string &variableName,
                          gl::ShaderBitSet activeStages);
+    void setInputPerVertexActiveMembers(gl::ShaderType shaderType,
+                                        gl::PerVertexMemberBitSet activeMembers);
+    void setOutputPerVertexActiveMembers(gl::ShaderType shaderType,
+                                         gl::PerVertexMemberBitSet activeMembers);
     ShaderInterfaceVariableInfo &getMutable(gl::ShaderType shaderType,
                                             ShaderVariableType variableType,
                                             const std::string &variableName);
@@ -110,14 +116,32 @@ class ShaderInterfaceVariableInfoMap final : angle::NonCopyable
                             uint32_t variableIndex);
 
     const VariableInfoArray &getAttributes() const;
-    const gl::ShaderMap<VariableTypeToInfoMap> &getData() const;
-    const gl::ShaderMap<NameToTypeAndIndexMap> &getNameToTypeAndIndexMap() const;
-    const gl::ShaderMap<VariableTypeToIndexMap> &getIndexedResourceMap() const;
+    const gl::ShaderMap<VariableTypeToInfoMap> &getData() const { return mData; }
+    const gl::ShaderMap<NameToTypeAndIndexMap> &getNameToTypeAndIndexMap() const
+    {
+        return mNameToTypeAndIndexMap;
+    }
+    const gl::ShaderMap<VariableTypeToIndexMap> &getIndexedResourceMap() const
+    {
+        return mIndexedResourceIndexMap;
+    }
+    const gl::ShaderMap<gl::PerVertexMemberBitSet> &getInputPerVertexActiveMembers() const
+    {
+        return mInputPerVertexActiveMembers;
+    }
+    const gl::ShaderMap<gl::PerVertexMemberBitSet> &getOutputPerVertexActiveMembers() const
+    {
+        return mOutputPerVertexActiveMembers;
+    }
 
   private:
     gl::ShaderMap<VariableTypeToInfoMap> mData;
     gl::ShaderMap<NameToTypeAndIndexMap> mNameToTypeAndIndexMap;
     gl::ShaderMap<VariableTypeToIndexMap> mIndexedResourceIndexMap;
+
+    // Active members of `in gl_PerVertex` and `out gl_PerVertex`
+    gl::ShaderMap<gl::PerVertexMemberBitSet> mInputPerVertexActiveMembers;
+    gl::ShaderMap<gl::PerVertexMemberBitSet> mOutputPerVertexActiveMembers;
 };
 
 ANGLE_INLINE const ShaderInterfaceVariableInfo &

@@ -545,6 +545,8 @@ std::unique_ptr<rx::LinkEvent> ProgramExecutableVk::load(ContextVk *contextVk,
     gl::ShaderMap<ShaderInterfaceVariableInfoMap::VariableTypeToInfoMap> data;
     gl::ShaderMap<ShaderInterfaceVariableInfoMap::NameToTypeAndIndexMap> nameToTypeAndIndexMap;
     gl::ShaderMap<ShaderInterfaceVariableInfoMap::VariableTypeToIndexMap> indexedResourceMap;
+    gl::ShaderMap<gl::PerVertexMemberBitSet> inputPerVertexActiveMembers;
+    gl::ShaderMap<gl::PerVertexMemberBitSet> outputPerVertexActiveMembers;
 
     for (gl::ShaderType shaderType : gl::AllShaderTypes())
     {
@@ -596,7 +598,24 @@ std::unique_ptr<rx::LinkEvent> ProgramExecutableVk::load(ContextVk *contextVk,
         }
     }
 
-    mVariableInfoMap.load(data, nameToTypeAndIndexMap, indexedResourceMap);
+    outputPerVertexActiveMembers[gl::ShaderType::Vertex] =
+        gl::PerVertexMemberBitSet(stream->readInt<uint8_t>());
+    inputPerVertexActiveMembers[gl::ShaderType::TessControl] =
+        gl::PerVertexMemberBitSet(stream->readInt<uint8_t>());
+    outputPerVertexActiveMembers[gl::ShaderType::TessControl] =
+        gl::PerVertexMemberBitSet(stream->readInt<uint8_t>());
+    inputPerVertexActiveMembers[gl::ShaderType::TessEvaluation] =
+        gl::PerVertexMemberBitSet(stream->readInt<uint8_t>());
+    outputPerVertexActiveMembers[gl::ShaderType::TessEvaluation] =
+        gl::PerVertexMemberBitSet(stream->readInt<uint8_t>());
+    inputPerVertexActiveMembers[gl::ShaderType::Geometry] =
+        gl::PerVertexMemberBitSet(stream->readInt<uint8_t>());
+    outputPerVertexActiveMembers[gl::ShaderType::Geometry] =
+        gl::PerVertexMemberBitSet(stream->readInt<uint8_t>());
+
+    mVariableInfoMap.load(std::move(data), std::move(nameToTypeAndIndexMap),
+                          std::move(indexedResourceMap), std::move(inputPerVertexActiveMembers),
+                          std::move(outputPerVertexActiveMembers));
 
     mOriginalShaderInfo.load(stream);
 
@@ -662,6 +681,10 @@ void ProgramExecutableVk::save(ContextVk *contextVk,
         &nameToTypeAndIndexMap = mVariableInfoMap.getNameToTypeAndIndexMap();
     const gl::ShaderMap<ShaderInterfaceVariableInfoMap::VariableTypeToIndexMap>
         &indexedResourceMap = mVariableInfoMap.getIndexedResourceMap();
+    const gl::ShaderMap<gl::PerVertexMemberBitSet> &inputPerVertexActiveMembers =
+        mVariableInfoMap.getInputPerVertexActiveMembers();
+    const gl::ShaderMap<gl::PerVertexMemberBitSet> &outputPerVertexActiveMembers =
+        mVariableInfoMap.getOutputPerVertexActiveMembers();
 
     for (gl::ShaderType shaderType : gl::AllShaderTypes())
     {
@@ -714,6 +737,15 @@ void ProgramExecutableVk::save(ContextVk *contextVk,
             }
         }
     }
+
+    // Store gl_PerVertex members only for stages that have it.
+    stream->writeInt(outputPerVertexActiveMembers[gl::ShaderType::Vertex].bits());
+    stream->writeInt(inputPerVertexActiveMembers[gl::ShaderType::TessControl].bits());
+    stream->writeInt(outputPerVertexActiveMembers[gl::ShaderType::TessControl].bits());
+    stream->writeInt(inputPerVertexActiveMembers[gl::ShaderType::TessEvaluation].bits());
+    stream->writeInt(outputPerVertexActiveMembers[gl::ShaderType::TessEvaluation].bits());
+    stream->writeInt(inputPerVertexActiveMembers[gl::ShaderType::Geometry].bits());
+    stream->writeInt(outputPerVertexActiveMembers[gl::ShaderType::Geometry].bits());
 
     mOriginalShaderInfo.save(stream);
 

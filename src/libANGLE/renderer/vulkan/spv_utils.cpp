@@ -482,35 +482,6 @@ void AssignVaryingLocations(const SpvSourceOptions &options,
         ASSERT(info.location == ShaderInterfaceVariableInfo::kInvalid);
     }
 
-    // Add an entry for active builtins varyings.  This will allow inactive builtins, such as
-    // gl_PointSize, gl_ClipDistance etc to be removed.
-    const gl::ShaderMap<std::vector<std::string>> &activeOutputBuiltIns =
-        varyingPacking.getActiveOutputBuiltInNames();
-    for (const std::string &builtInName : activeOutputBuiltIns[shaderType])
-    {
-        ASSERT(gl::IsBuiltInName(builtInName));
-
-        ShaderInterfaceVariableInfo &info =
-            variableInfoMapOut->addOrGet(shaderType, ShaderVariableType::Varying, builtInName);
-        info.activeStages.set(shaderType);
-        info.varyingIsOutput = true;
-    }
-
-    // If an output builtin is active in the previous stage, assume it's active in the input of the
-    // current stage as well.
-    if (frontShaderType != gl::ShaderType::InvalidEnum)
-    {
-        for (const std::string &builtInName : activeOutputBuiltIns[frontShaderType])
-        {
-            ASSERT(gl::IsBuiltInName(builtInName));
-
-            ShaderInterfaceVariableInfo &info =
-                variableInfoMapOut->addOrGet(shaderType, ShaderVariableType::Varying, builtInName);
-            info.activeStages.set(shaderType);
-            info.varyingIsInput = true;
-        }
-    }
-
     // Add an entry for gl_PerVertex, for use with transform feedback capture of built-ins.
     ShaderInterfaceVariableInfo &info =
         variableInfoMapOut->addOrGet(shaderType, ShaderVariableType::Varying, "gl_PerVertex");
@@ -1195,17 +1166,13 @@ namespace
 class SpirvIDDiscoverer final : angle::NonCopyable
 {
   public:
-    SpirvIDDiscoverer() : mOutputPerVertexMaxActiveMember(0), mInputPerVertexMaxActiveMember(0) {}
+    SpirvIDDiscoverer() {}
 
     void init(size_t indexBound);
 
     // Instructions:
     void visitDecorate(spirv::IdRef id, spv::Decoration decoration);
     void visitName(spirv::IdRef id, const spirv::LiteralString &name);
-    void visitMemberName(const ShaderInterfaceVariableInfo &info,
-                         spirv::IdRef id,
-                         spirv::LiteralInteger member,
-                         const spirv::LiteralString &name);
     void visitTypeArray(spirv::IdResult id, spirv::IdRef elementType, spirv::IdRef length);
     void visitTypePointer(spirv::IdResult id, spv::StorageClass storageClass, spirv::IdRef typeId);
     SpirvVariableType visitVariable(spirv::IdResultType typeId,
@@ -1219,16 +1186,6 @@ class SpirvIDDiscoverer final : angle::NonCopyable
     // Getters:
     const spirv::LiteralString &getName(spirv::IdRef id) const { return mNamesById[id]; }
     bool isIOBlock(spirv::IdRef id) const { return mIsIOBlockById[id]; }
-    bool isPerVertex(spirv::IdRef typeId) const
-    {
-        return typeId == ID::OutputPerVertexBlock || typeId == ID::InputPerVertexBlock;
-    }
-    uint32_t getPerVertexMaxActiveMember(spirv::IdRef typeId) const
-    {
-        ASSERT(isPerVertex(typeId));
-        return typeId == ID::OutputPerVertexBlock ? mOutputPerVertexMaxActiveMember
-                                                  : mInputPerVertexMaxActiveMember;
-    }
 
   private:
     // Names associated with ids through OpName.  The same name may be assigned to multiple ids, but
@@ -1242,14 +1199,6 @@ class SpirvIDDiscoverer final : angle::NonCopyable
     // identified by their instance name).  To disambiguate them, the `OpDecorate %N Block`
     // instruction is used which decorates I/O block types.
     std::vector<bool> mIsIOBlockById;
-
-    // gl_PerVertex is unique in that it's the only builtin of struct type.  This struct is pruned
-    // by removing trailing inactive members.  We therefore need to keep track of which is the last
-    // active member. In the case of gl_PerVertex being used in an array, we need to keep track of
-    // the array's id.  Note that intermediate stages, i.e. geometry and tessellation have two
-    // gl_PerVertex declarations, one for input and one for output.
-    uint32_t mOutputPerVertexMaxActiveMember;
-    uint32_t mInputPerVertexMaxActiveMember;
 };
 
 void SpirvIDDiscoverer::init(size_t indexBound)
@@ -1276,24 +1225,6 @@ void SpirvIDDiscoverer::visitName(spirv::IdRef id, const spirv::LiteralString &n
     ASSERT(mNamesById[id] == nullptr);
 
     mNamesById[id] = name;
-}
-
-void SpirvIDDiscoverer::visitMemberName(const ShaderInterfaceVariableInfo &info,
-                                        spirv::IdRef id,
-                                        spirv::LiteralInteger member,
-                                        const spirv::LiteralString &name)
-{
-    // Use varyingIsInput and varyingIsOutput to know which gl_PerVertex the builtin is active in.
-    if (info.varyingIsOutput && id == ID::OutputPerVertexBlock &&
-        member > mOutputPerVertexMaxActiveMember)
-    {
-        mOutputPerVertexMaxActiveMember = member;
-    }
-    else if (info.varyingIsInput && id == ID::InputPerVertexBlock &&
-             member > mInputPerVertexMaxActiveMember)
-    {
-        mInputPerVertexMaxActiveMember = member;
-    }
 }
 
 void SpirvIDDiscoverer::visitTypeHelper(spirv::IdResult id, spirv::IdRef typeId)
@@ -1373,27 +1304,121 @@ SpirvVariableType SpirvIDDiscoverer::visitVariable(spirv::IdResultType typeId,
 }
 
 // Helper class that trims input and output gl_PerVertex declarations to remove inactive builtins.
+//
+// gl_PerVertex is unique in that it's the only builtin of struct type.  This struct is pruned
+// by removing trailing inactive members.  Note that intermediate stages, i.e. geometry and
+// tessellation have two gl_PerVertex declarations, one for input and one for output.
 class SpirvPerVertexTrimmer final : angle::NonCopyable
 {
   public:
-    SpirvPerVertexTrimmer() {}
+    SpirvPerVertexTrimmer(const SpvTransformOptions &options,
+                          const ShaderInterfaceVariableInfoMap &variableInfoMap)
+        : mInputPerVertexMaxActiveMember{gl::PerVertexMember::Position},
+          mOutputPerVertexMaxActiveMember{gl::PerVertexMember::Position},
+          mInputPerVertexMaxActiveMemberIndex(0),
+          mOutputPerVertexMaxActiveMemberIndex(0)
+    {
+        const gl::PerVertexMemberBitSet inputPerVertexActiveMembers =
+            variableInfoMap.getInputPerVertexActiveMembers()[options.shaderType];
+        const gl::PerVertexMemberBitSet outputPerVertexActiveMembers =
+            variableInfoMap.getOutputPerVertexActiveMembers()[options.shaderType];
 
-    TransformationState transformMemberDecorate(const SpirvIDDiscoverer &ids,
-                                                spirv::IdRef typeId,
+        // Currently, this transformation does not trim inactive members in between two active
+        // members.
+        if (inputPerVertexActiveMembers.any())
+        {
+            mInputPerVertexMaxActiveMember = inputPerVertexActiveMembers.last();
+        }
+        if (outputPerVertexActiveMembers.any())
+        {
+            mOutputPerVertexMaxActiveMember = outputPerVertexActiveMembers.last();
+        }
+    }
+
+    void visitMemberDecorate(spirv::IdRef id,
+                             spirv::LiteralInteger member,
+                             spv::Decoration decoration,
+                             const spirv::LiteralIntegerList &valueList);
+
+    TransformationState transformMemberDecorate(spirv::IdRef typeId,
                                                 spirv::LiteralInteger member,
                                                 spv::Decoration decoration);
-    TransformationState transformMemberName(const SpirvIDDiscoverer &ids,
-                                            spirv::IdRef id,
+    TransformationState transformMemberName(spirv::IdRef id,
                                             spirv::LiteralInteger member,
                                             const spirv::LiteralString &name);
-    TransformationState transformTypeStruct(const SpirvIDDiscoverer &ids,
-                                            spirv::IdResult id,
+    TransformationState transformTypeStruct(spirv::IdResult id,
                                             spirv::IdRefList *memberList,
                                             spirv::Blob *blobOut);
+
+  private:
+    bool isPerVertex(spirv::IdRef typeId) const
+    {
+        return typeId == ID::OutputPerVertexBlock || typeId == ID::InputPerVertexBlock;
+    }
+    uint32_t getPerVertexMaxActiveMember(spirv::IdRef typeId) const
+    {
+        ASSERT(isPerVertex(typeId));
+        return typeId == ID::OutputPerVertexBlock ? mOutputPerVertexMaxActiveMemberIndex
+                                                  : mInputPerVertexMaxActiveMemberIndex;
+    }
+
+    gl::PerVertexMember mInputPerVertexMaxActiveMember;
+    gl::PerVertexMember mOutputPerVertexMaxActiveMember;
+
+    // If gl_ClipDistance and gl_CullDistance are not used, they are missing from gl_PerVertex.  So
+    // the index of gl_CullDistance may not be the same as the value of
+    // gl::PerVertexMember::CullDistance.
+    //
+    // By looking at OpMemberDecorate %kIdInput/OutputPerVertexBlock <Index> BuiltIn <Member>, the
+    // <Index> corresponding to mInput/OutputPerVertexMaxActiveMember is discovered and kept in
+    // mInput/OutputPerVertexMaxActiveMemberIndex
+    uint32_t mInputPerVertexMaxActiveMemberIndex;
+    uint32_t mOutputPerVertexMaxActiveMemberIndex;
 };
 
-TransformationState SpirvPerVertexTrimmer::transformMemberDecorate(const SpirvIDDiscoverer &ids,
-                                                                   spirv::IdRef typeId,
+void SpirvPerVertexTrimmer::visitMemberDecorate(spirv::IdRef id,
+                                                spirv::LiteralInteger member,
+                                                spv::Decoration decoration,
+                                                const spirv::LiteralIntegerList &valueList)
+{
+    if (decoration != spv::DecorationBuiltIn || !isPerVertex(id))
+    {
+        return;
+    }
+
+    // Map spv::BuiltIn to gl::PerVertexMember.
+    ASSERT(!valueList.empty());
+    const uint32_t builtIn              = valueList[0];
+    gl::PerVertexMember perVertexMember = gl::PerVertexMember::Position;
+    switch (builtIn)
+    {
+        case spv::BuiltInPosition:
+            perVertexMember = gl::PerVertexMember::Position;
+            break;
+        case spv::BuiltInPointSize:
+            perVertexMember = gl::PerVertexMember::PointSize;
+            break;
+        case spv::BuiltInClipDistance:
+            perVertexMember = gl::PerVertexMember::ClipDistance;
+            break;
+        case spv::BuiltInCullDistance:
+            perVertexMember = gl::PerVertexMember::CullDistance;
+            break;
+        default:
+            UNREACHABLE();
+    }
+
+    if (id == ID::OutputPerVertexBlock && perVertexMember == mOutputPerVertexMaxActiveMember)
+    {
+        mOutputPerVertexMaxActiveMemberIndex = member;
+    }
+    else if (id == ID::InputPerVertexBlock && perVertexMember == mInputPerVertexMaxActiveMember)
+    {
+        mInputPerVertexMaxActiveMemberIndex = member;
+    }
+}
+
+TransformationState SpirvPerVertexTrimmer::transformMemberDecorate(spirv::IdRef typeId,
                                                                    spirv::LiteralInteger member,
                                                                    spv::Decoration decoration)
 {
@@ -1402,7 +1427,7 @@ TransformationState SpirvPerVertexTrimmer::transformMemberDecorate(const SpirvID
     // - OpMemberDecorate %gl_PerVertex N BuiltIn B
     // - OpMemberDecorate %gl_PerVertex N Invariant
     // - OpMemberDecorate %gl_PerVertex N RelaxedPrecision
-    if (!ids.isPerVertex(typeId) ||
+    if (!isPerVertex(typeId) ||
         (decoration != spv::DecorationBuiltIn && decoration != spv::DecorationInvariant &&
          decoration != spv::DecorationRelaxedPrecision))
     {
@@ -1410,32 +1435,30 @@ TransformationState SpirvPerVertexTrimmer::transformMemberDecorate(const SpirvID
     }
 
     // Drop stripped fields.
-    return member > ids.getPerVertexMaxActiveMember(typeId) ? TransformationState::Transformed
-                                                            : TransformationState::Unchanged;
+    return member > getPerVertexMaxActiveMember(typeId) ? TransformationState::Transformed
+                                                        : TransformationState::Unchanged;
 }
 
-TransformationState SpirvPerVertexTrimmer::transformMemberName(const SpirvIDDiscoverer &ids,
-                                                               spirv::IdRef id,
+TransformationState SpirvPerVertexTrimmer::transformMemberName(spirv::IdRef id,
                                                                spirv::LiteralInteger member,
                                                                const spirv::LiteralString &name)
 {
     // Remove the instruction if it's a stripped member of gl_PerVertex.
-    return ids.isPerVertex(id) && member > ids.getPerVertexMaxActiveMember(id)
+    return isPerVertex(id) && member > getPerVertexMaxActiveMember(id)
                ? TransformationState::Transformed
                : TransformationState::Unchanged;
 }
 
-TransformationState SpirvPerVertexTrimmer::transformTypeStruct(const SpirvIDDiscoverer &ids,
-                                                               spirv::IdResult id,
+TransformationState SpirvPerVertexTrimmer::transformTypeStruct(spirv::IdResult id,
                                                                spirv::IdRefList *memberList,
                                                                spirv::Blob *blobOut)
 {
-    if (!ids.isPerVertex(id))
+    if (!isPerVertex(id))
     {
         return TransformationState::Unchanged;
     }
 
-    const uint32_t maxMembers = ids.getPerVertexMaxActiveMember(id);
+    const uint32_t maxMembers = getPerVertexMaxActiveMember(id);
 
     // Change the definition of the gl_PerVertex struct by stripping unused fields at the end.
     const uint32_t memberCount = maxMembers + 1;
@@ -3053,6 +3076,7 @@ class SpirvTransformer final : public SpirvTransformerBase
           mOptions(options),
           mOverviewFlags(0),
           mNonSemanticInstructions(isLastPass),
+          mPerVertexTrimmer(options, variableInfoMap),
           mXfbCodeGenerator(options.isTransformFeedbackEmulated),
           mPositionTransformer(options),
           mMultisampleTransformer(options)
@@ -3071,7 +3095,6 @@ class SpirvTransformer final : public SpirvTransformerBase
     void visitDecorate(const uint32_t *instruction);
     void visitName(const uint32_t *instruction);
     void visitMemberDecorate(const uint32_t *instruction);
-    void visitMemberName(const uint32_t *instruction);
     void visitTypeArray(const uint32_t *instruction);
     void visitTypePointer(const uint32_t *instruction);
     void visitTypeStruct(const uint32_t *instruction);
@@ -3179,9 +3202,6 @@ void SpirvTransformer::resolveVariableIds()
                 break;
             case spv::OpMemberDecorate:
                 visitMemberDecorate(instruction);
-                break;
-            case spv::OpMemberName:
-                visitMemberName(instruction);
                 break;
             case spv::OpTypeArray:
                 visitTypeArray(instruction);
@@ -3457,27 +3477,11 @@ void SpirvTransformer::visitMemberDecorate(const uint32_t *instruction)
     spirv::IdRef typeId;
     spirv::LiteralInteger member;
     spv::Decoration decoration;
-    spirv::ParseMemberDecorate(instruction, &typeId, &member, &decoration, nullptr);
+    spirv::LiteralIntegerList valueList;
+    spirv::ParseMemberDecorate(instruction, &typeId, &member, &decoration, &valueList);
 
+    mPerVertexTrimmer.visitMemberDecorate(typeId, member, decoration, valueList);
     mMultisampleTransformer.visitMemberDecorate(typeId, member, decoration);
-}
-
-void SpirvTransformer::visitMemberName(const uint32_t *instruction)
-{
-    spirv::IdRef id;
-    spirv::LiteralInteger member;
-    spirv::LiteralString name;
-    spirv::ParseMemberName(instruction, &id, &member, &name);
-
-    if (!mVariableInfoMap.hasVariable(mOptions.shaderType, name))
-    {
-        return;
-    }
-
-    const ShaderInterfaceVariableInfo &info =
-        mVariableInfoMap.getVariableByName(mOptions.shaderType, name);
-
-    mIds.visitMemberName(info, id, member, name);
 }
 
 void SpirvTransformer::visitTypeArray(const uint32_t *instruction)
@@ -3715,7 +3719,7 @@ TransformationState SpirvTransformer::transformMemberDecorate(const uint32_t *in
     spv::Decoration decoration;
     spirv::ParseMemberDecorate(instruction, &typeId, &member, &decoration, nullptr);
 
-    return mPerVertexTrimmer.transformMemberDecorate(mIds, typeId, member, decoration);
+    return mPerVertexTrimmer.transformMemberDecorate(typeId, member, decoration);
 }
 
 TransformationState SpirvTransformer::transformCapability(const uint32_t *instruction)
@@ -3750,7 +3754,7 @@ TransformationState SpirvTransformer::transformDebugInfo(const uint32_t *instruc
         spirv::LiteralString name;
         spirv::ParseMemberName(instruction, &id, &member, &name);
 
-        return mPerVertexTrimmer.transformMemberName(mIds, id, member, name);
+        return mPerVertexTrimmer.transformMemberName(id, member, name);
     }
 
     if (op == spv::OpName)
@@ -3881,7 +3885,7 @@ TransformationState SpirvTransformer::transformTypeStruct(const uint32_t *instru
     spirv::IdRefList memberList;
     ParseTypeStruct(instruction, &id, &memberList);
 
-    return mPerVertexTrimmer.transformTypeStruct(mIds, id, &memberList, mSpirvBlobOut);
+    return mPerVertexTrimmer.transformTypeStruct(id, &memberList, mSpirvBlobOut);
 }
 
 TransformationState SpirvTransformer::transformReturn(const uint32_t *instruction)
@@ -5080,11 +5084,29 @@ void SpvAssignLocations(const SpvSourceOptions &options,
         {
             AssignVaryingLocations(options, inputPacking, shaderType, frontShaderType,
                                    programInterfaceInfo, variableInfoMapOut);
+
+            // Record active members of in gl_PerVertex.
+            if (shaderType != gl::ShaderType::Fragment &&
+                frontShaderType != gl::ShaderType::InvalidEnum)
+            {
+                // If an output builtin is active in the previous stage, assume it's active in the
+                // input of the current stage as well.
+                const gl::ShaderMap<gl::PerVertexMemberBitSet> &outputPerVertexActiveMembers =
+                    inputPacking.getOutputPerVertexActiveMembers();
+                variableInfoMapOut->setInputPerVertexActiveMembers(
+                    shaderType, outputPerVertexActiveMembers[frontShaderType]);
+            }
         }
         if (shaderType != gl::ShaderType::Fragment)
         {
             AssignVaryingLocations(options, outputPacking, shaderType, frontShaderType,
                                    programInterfaceInfo, variableInfoMapOut);
+
+            // Record active members of out gl_PerVertex.
+            const gl::ShaderMap<gl::PerVertexMemberBitSet> &outputPerVertexActiveMembers =
+                outputPacking.getOutputPerVertexActiveMembers();
+            variableInfoMapOut->setOutputPerVertexActiveMembers(
+                shaderType, outputPerVertexActiveMembers[shaderType]);
         }
 
         // Assign qualifiers to all varyings captured by transform feedback
