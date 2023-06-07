@@ -45,6 +45,7 @@ enum AndroidDeviceID : uint32_t
     ANDROID_DEVICE_ID_PIXEL2      = 0x5040001,
     ANDROID_DEVICE_ID_PIXEL1XL    = 0x5030004,
     ANDROID_DEVICE_ID_PIXEL4      = 0x6040001,
+    ANDROID_DEVICE_ID_GALAXYA23   = 0x6010901,
     ANDROID_DEVICE_ID_GALAXYS23   = 0x43050A01,
     ANDROID_DEVICE_ID_SWIFTSHADER = 0xC0DE,
 };
@@ -137,6 +138,11 @@ inline bool IsPixel2(uint32_t vendorId, uint32_t deviceId)
 inline bool IsPixel4(uint32_t vendorId, uint32_t deviceId)
 {
     return IsQualcomm(vendorId) && deviceId == ANDROID_DEVICE_ID_PIXEL4;
+}
+
+inline bool IsGalaxyA23(uint32_t vendorId, uint32_t deviceId)
+{
+    return IsQualcomm(vendorId) && deviceId == ANDROID_DEVICE_ID_GALAXYA23;
 }
 
 inline bool IsGalaxyS23(uint32_t vendorId, uint32_t deviceId)
