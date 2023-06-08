@@ -573,28 +573,6 @@ deps = {
     'condition': 'not build_with_chromium',
   },
 
-  'third_party/qemu-linux-x64': {
-      'packages': [
-          {
-              'package': 'fuchsia/third_party/qemu/linux-amd64',
-              'version': 'FFZaD9tecL-z0lq2XP_7UqiAaMgRGwXTyvcmkv7XCQcC'
-          },
-      ],
-      'condition': 'not build_with_chromium and (host_os == "linux" and checkout_fuchsia)',
-      'dep_type': 'cipd',
-  },
-
-  'third_party/qemu-mac-x64': {
-      'packages': [
-          {
-              'package': 'fuchsia/third_party/qemu/mac-amd64',
-              'version': '79L6B9YhuL7uIg_CxwlQcZqLOixVtS2Cctn7dmVg0q4C'
-          },
-      ],
-      'condition': 'not build_with_chromium and (host_os == "mac" and checkout_fuchsia)',
-      'dep_type': 'cipd',
-  },
-
   'third_party/r8': {
       'packages': [
           {
