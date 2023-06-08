@@ -48,7 +48,6 @@ ANGLE_CHROMIUM_DEPS = [
     'third_party/android_build_tools/lint',
     'third_party/android_build_tools/manifest_merger',
     'third_party/android_deps',
-    'third_party/android_ndk',
     'third_party/android_platform',
     'third_party/android_sdk',
     'third_party/android_sdk/androidx_browser/src',
