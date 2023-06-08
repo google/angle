@@ -11,22 +11,35 @@
 namespace gl
 {
 
-ActiveVariable::ActiveVariable() {}
+ActiveVariable::ActiveVariable()
+{
+    std::fill(mIds.begin(), mIds.end(), 0);
+}
 
 ActiveVariable::~ActiveVariable() {}
 
 ActiveVariable::ActiveVariable(const ActiveVariable &rhs)            = default;
 ActiveVariable &ActiveVariable::operator=(const ActiveVariable &rhs) = default;
 
-void ActiveVariable::setActive(ShaderType shaderType, bool used)
+void ActiveVariable::setActive(ShaderType shaderType, bool used, uint32_t id)
 {
     ASSERT(shaderType != ShaderType::InvalidEnum);
     mActiveUseBits.set(shaderType, used);
+    mIds[shaderType] = id;
 }
 
 void ActiveVariable::unionReferencesWith(const ActiveVariable &other)
 {
     mActiveUseBits |= other.mActiveUseBits;
+    for (const ShaderType shaderType : AllShaderTypes())
+    {
+        ASSERT(mIds[shaderType] == 0 || other.mIds[shaderType] == 0 ||
+               mIds[shaderType] == other.mIds[shaderType]);
+        if (mIds[shaderType] == 0)
+        {
+            mIds[shaderType] = other.mIds[shaderType];
+        }
+    }
 }
 
 LinkedUniform::LinkedUniform()
@@ -126,7 +139,7 @@ int ShaderVariableBuffer::numActiveVariables() const
     return static_cast<int>(memberIndexes.size());
 }
 
-InterfaceBlock::InterfaceBlock() : isArray(false), isReadOnly(false), arrayElement(0), id(0) {}
+InterfaceBlock::InterfaceBlock() : isArray(false), isReadOnly(false), arrayElement(0) {}
 
 InterfaceBlock::InterfaceBlock(const std::string &nameIn,
                                const std::string &mappedNameIn,
@@ -140,8 +153,7 @@ InterfaceBlock::InterfaceBlock(const std::string &nameIn,
       isArray(isArrayIn),
       isReadOnly(isReadOnlyIn),
       arrayElement(arrayElementIn),
-      firstFieldArraySize(firstFieldArraySizeIn),
-      id(0)
+      firstFieldArraySize(firstFieldArraySizeIn)
 {
     binding = bindingIn;
 }

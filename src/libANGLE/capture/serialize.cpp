@@ -1004,6 +1004,12 @@ void SerializeBlockMemberInfo(JsonSerializer *json, const sh::BlockMemberInfo &b
 void SerializeActiveVariable(JsonSerializer *json, const gl::ActiveVariable &activeVariable)
 {
     json->addScalar("ActiveShaders", activeVariable.activeShaders().to_ulong());
+    GroupScope group(json, "Ids");
+    for (const gl::ShaderType shaderType : gl::AllShaderTypes())
+    {
+        json->addScalar(gl::ShaderTypeToString(shaderType),
+                        activeVariable.isActive(shaderType) ? activeVariable.getId(shaderType) : 0);
+    }
 }
 
 void SerializeBufferVariablesVector(JsonSerializer *json,

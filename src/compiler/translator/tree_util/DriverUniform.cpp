@@ -23,6 +23,7 @@ namespace sh
 namespace
 {
 constexpr ImmutableString kEmulatedDepthRangeParams = ImmutableString("ANGLEDepthRangeParams");
+constexpr ImmutableString kDriverUniformsBlockName  = ImmutableString("ANGLEUniformBlock");
 constexpr ImmutableString kDriverUniformsVarName    = ImmutableString("ANGLEUniforms");
 
 constexpr const char kAcbBufferOffsets[] = "acbBufferOffsets";
@@ -68,9 +69,9 @@ bool DriverUniform::addComputeDriverUniformsToShader(TIntermBlock *root, TSymbol
     layoutQualifier.blockStorage     = EbsStd140;
     layoutQualifier.pushConstant     = true;
 
-    mDriverUniforms = DeclareInterfaceBlock(
-        root, symbolTable, driverFieldList, EvqUniform, layoutQualifier, TMemoryQualifier::Create(),
-        0, ImmutableString(vk::kDriverUniformsBlockName), kDriverUniformsVarName);
+    mDriverUniforms = DeclareInterfaceBlock(root, symbolTable, driverFieldList, EvqUniform,
+                                            layoutQualifier, TMemoryQualifier::Create(), 0,
+                                            kDriverUniformsBlockName, kDriverUniformsVarName);
     return mDriverUniforms != nullptr;
 }
 
@@ -171,8 +172,7 @@ bool DriverUniform::addGraphicsDriverUniformsToShader(TIntermBlock *root, TSymbo
 
         mDriverUniforms = DeclareInterfaceBlock(root, symbolTable, driverFieldList, EvqUniform,
                                                 layoutQualifier, TMemoryQualifier::Create(), 0,
-                                                ImmutableString(vk::kDriverUniformsBlockName),
-                                                kDriverUniformsVarName);
+                                                kDriverUniformsBlockName, kDriverUniformsVarName);
     }
     else
     {
@@ -180,10 +180,10 @@ bool DriverUniform::addGraphicsDriverUniformsToShader(TIntermBlock *root, TSymbo
         // This code path is taken only by the direct-to-Metal backend, and the assumptions
         // about the naming conventions of ANGLE-internal variables run too deeply to rename
         // this one.
-        auto varName    = ImmutableString("ANGLE_angleUniforms");
-        auto result     = DeclareStructure(root, symbolTable, driverFieldList, EvqUniform,
-                                           TMemoryQualifier::Create(), 0,
-                                           ImmutableString(vk::kDriverUniformsBlockName), &varName);
+        auto varName = ImmutableString("ANGLE_angleUniforms");
+        auto result =
+            DeclareStructure(root, symbolTable, driverFieldList, EvqUniform,
+                             TMemoryQualifier::Create(), 0, kDriverUniformsBlockName, &varName);
         mDriverUniforms = result.second;
     }
 

@@ -3,7 +3,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// ShaderInterfaceVariableInfoMap: Maps shader interface variable names to their Vulkan mapping.
+// ShaderInterfaceVariableInfoMap: Maps shader interface variable SPIR-V ids to their Vulkan
+// mapping.
 
 #ifndef LIBANGLE_RENDERER_VULKAN_SHADERINTERFACEVARIABLEINFOMAP_H_
 #define LIBANGLE_RENDERER_VULKAN_SHADERINTERFACEVARIABLEINFOMAP_H_
@@ -49,7 +50,7 @@ class ShaderInterfaceVariableInfoMap final : angle::NonCopyable
   public:
     using VariableInfoArray     = std::vector<ShaderInterfaceVariableInfo>;
     using VariableTypeToInfoMap = angle::PackedEnumMap<ShaderVariableType, VariableInfoArray>;
-    using NameToTypeAndIndexMap = angle::HashMap<std::string, TypeAndIndex>;
+    using IdToTypeAndIndexMap   = angle::HashMap<uint32_t, TypeAndIndex>;
 
     static constexpr size_t kResourceFastMapMax = 32;
     using ResourceIndexMap                      = angle::FastMap<uint32_t, kResourceFastMapMax>;
@@ -60,24 +61,22 @@ class ShaderInterfaceVariableInfoMap final : angle::NonCopyable
 
     void clear();
     void load(gl::ShaderMap<VariableTypeToInfoMap> &&data,
-              gl::ShaderMap<NameToTypeAndIndexMap> &&nameToTypeAndIndexMap,
+              gl::ShaderMap<IdToTypeAndIndexMap> &&idToTypeAndIndexMap,
               gl::ShaderMap<VariableTypeToIndexMap> &&indexedResourceIndexMap,
               gl::ShaderMap<gl::PerVertexMemberBitSet> &&inputPerVertexActiveMembers,
               gl::ShaderMap<gl::PerVertexMemberBitSet> &&outputPerVertexActiveMembers);
 
     ShaderInterfaceVariableInfo &add(gl::ShaderType shaderType,
                                      ShaderVariableType variableType,
-                                     const std::string &variableName);
-    void markAsDuplicate(gl::ShaderType shaderType,
-                         ShaderVariableType variableType,
-                         const std::string &variableName);
+                                     uint32_t id);
+    void markAsDuplicate(gl::ShaderType shaderType, ShaderVariableType variableType, uint32_t id);
     ShaderInterfaceVariableInfo &addOrGet(gl::ShaderType shaderType,
                                           ShaderVariableType variableType,
-                                          const std::string &variableName);
+                                          uint32_t id);
 
     void setActiveStages(gl::ShaderType shaderType,
                          ShaderVariableType variableType,
-                         const std::string &variableName,
+                         uint32_t id,
                          gl::ShaderBitSet activeStages);
     void setInputPerVertexActiveMembers(gl::ShaderType shaderType,
                                         gl::PerVertexMemberBitSet activeMembers);
@@ -85,7 +84,7 @@ class ShaderInterfaceVariableInfoMap final : angle::NonCopyable
                                          gl::PerVertexMemberBitSet activeMembers);
     ShaderInterfaceVariableInfo &getMutable(gl::ShaderType shaderType,
                                             ShaderVariableType variableType,
-                                            const std::string &variableName);
+                                            uint32_t id);
 
     const ShaderInterfaceVariableInfo &getDefaultUniformInfo(gl::ShaderType shaderType) const;
     const ShaderInterfaceVariableInfo &getIndexedVariableInfo(gl::ShaderType shaderType,
@@ -103,13 +102,13 @@ class ShaderInterfaceVariableInfoMap final : angle::NonCopyable
     uint32_t getAtomicCounterBufferBinding(gl::ShaderType shaderType,
                                            uint32_t atomicCounterBufferIndex) const;
 
-    bool hasVariable(gl::ShaderType shaderType, const std::string &variableName) const;
-    const ShaderInterfaceVariableInfo &getVariableByName(gl::ShaderType shaderType,
-                                                         const std::string &variableName) const;
-    void mapIndexedResourceByName(gl::ShaderType shaderType,
-                                  ShaderVariableType variableType,
-                                  uint32_t resourceIndex,
-                                  const std::string &variableName);
+    bool hasVariable(gl::ShaderType shaderType, uint32_t id) const;
+    const ShaderInterfaceVariableInfo &getVariableById(gl::ShaderType shaderType,
+                                                       uint32_t id) const;
+    void mapIndexedResourceById(gl::ShaderType shaderType,
+                                ShaderVariableType variableType,
+                                uint32_t resourceIndex,
+                                uint32_t id);
     void mapIndexedResource(gl::ShaderType shaderType,
                             ShaderVariableType variableType,
                             uint32_t resourceIndex,
@@ -117,9 +116,9 @@ class ShaderInterfaceVariableInfoMap final : angle::NonCopyable
 
     const VariableInfoArray &getAttributes() const;
     const gl::ShaderMap<VariableTypeToInfoMap> &getData() const { return mData; }
-    const gl::ShaderMap<NameToTypeAndIndexMap> &getNameToTypeAndIndexMap() const
+    const gl::ShaderMap<IdToTypeAndIndexMap> &getIdToTypeAndIndexMap() const
     {
-        return mNameToTypeAndIndexMap;
+        return mIdToTypeAndIndexMap;
     }
     const gl::ShaderMap<VariableTypeToIndexMap> &getIndexedResourceMap() const
     {
@@ -136,7 +135,7 @@ class ShaderInterfaceVariableInfoMap final : angle::NonCopyable
 
   private:
     gl::ShaderMap<VariableTypeToInfoMap> mData;
-    gl::ShaderMap<NameToTypeAndIndexMap> mNameToTypeAndIndexMap;
+    gl::ShaderMap<IdToTypeAndIndexMap> mIdToTypeAndIndexMap;
     gl::ShaderMap<VariableTypeToIndexMap> mIndexedResourceIndexMap;
 
     // Active members of `in gl_PerVertex` and `out gl_PerVertex`

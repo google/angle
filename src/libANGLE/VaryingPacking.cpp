@@ -241,8 +241,7 @@ VaryingInShaderRef::~VaryingInShaderRef() = default;
 VaryingInShaderRef::VaryingInShaderRef(VaryingInShaderRef &&other)
     : varying(other.varying),
       stage(other.stage),
-      parentStructName(std::move(other.parentStructName)),
-      parentStructMappedName(std::move(other.parentStructMappedName))
+      parentStructName(std::move(other.parentStructName))
 {}
 
 VaryingInShaderRef &VaryingInShaderRef::operator=(VaryingInShaderRef &&other)
@@ -250,7 +249,6 @@ VaryingInShaderRef &VaryingInShaderRef::operator=(VaryingInShaderRef &&other)
     std::swap(varying, other.varying);
     std::swap(stage, other.stage);
     std::swap(parentStructName, other.parentStructName);
-    std::swap(parentStructMappedName, other.parentStructMappedName);
 
     return *this;
 }
@@ -330,9 +328,9 @@ void VaryingPacking::reset()
     mRegisterList.clear();
     mPackedVaryings.clear();
 
-    for (std::vector<std::string> &inactiveVaryingMappedNames : mInactiveVaryingMappedNames)
+    for (std::vector<uint32_t> &inactiveVaryingIds : mInactiveVaryingIds)
     {
-        inactiveVaryingMappedNames.clear();
+        inactiveVaryingIds.clear();
     }
 
     std::fill(mOutputPerVertexActiveMembers.begin(), mOutputPerVertexActiveMembers.end(),
@@ -615,28 +613,24 @@ void VaryingPacking::collectUserVaryingField(const ProgramVaryingRef &ref,
     {
         if (frontField->isShaderIOBlock)
         {
-            frontVarying.parentStructName       = input->structOrBlockName;
-            frontVarying.parentStructMappedName = input->mappedStructOrBlockName;
+            frontVarying.parentStructName = input->structOrBlockName;
         }
         else
         {
             ASSERT(!frontField->isStruct() && !frontField->isArray());
-            frontVarying.parentStructName       = input->name;
-            frontVarying.parentStructMappedName = input->mappedName;
+            frontVarying.parentStructName = input->name;
         }
     }
     if (output)
     {
         if (backField->isShaderIOBlock)
         {
-            backVarying.parentStructName       = output->structOrBlockName;
-            backVarying.parentStructMappedName = output->mappedStructOrBlockName;
+            backVarying.parentStructName = output->structOrBlockName;
         }
         else
         {
             ASSERT(!backField->isStruct() && !backField->isArray());
-            backVarying.parentStructName       = output->name;
-            backVarying.parentStructMappedName = output->mappedName;
+            backVarying.parentStructName = output->name;
         }
     }
 
@@ -687,14 +681,12 @@ void VaryingPacking::collectUserVaryingFieldTF(const ProgramVaryingRef &ref,
 
     if (frontField->isShaderIOBlock)
     {
-        frontVarying.parentStructName       = input->structOrBlockName;
-        frontVarying.parentStructMappedName = input->mappedStructOrBlockName;
+        frontVarying.parentStructName = input->structOrBlockName;
     }
     else
     {
         ASSERT(!frontField->isStruct() && !frontField->isArray());
-        frontVarying.parentStructName       = input->name;
-        frontVarying.parentStructMappedName = input->mappedName;
+        frontVarying.parentStructName = input->name;
     }
 
     mPackedVaryings.emplace_back(std::move(frontVarying), std::move(backVarying),
@@ -929,14 +921,9 @@ bool VaryingPacking::collectAndPackUserVaryings(gl::InfoLog &infoLog,
         // program, in which case the input shader may not exist in this program.
         if (!input && !isSeparableProgram)
         {
-            if (!output->isBuiltIn())
+            if (!output->isBuiltIn() && output->id != 0)
             {
-                mInactiveVaryingMappedNames[ref.backShaderStage].push_back(output->mappedName);
-                if (output->isShaderIOBlock)
-                {
-                    mInactiveVaryingMappedNames[ref.backShaderStage].push_back(
-                        output->mappedStructOrBlockName);
-                }
+                mInactiveVaryingIds[ref.backShaderStage].push_back(output->id);
             }
             continue;
         }
@@ -949,28 +936,20 @@ bool VaryingPacking::collectAndPackUserVaryings(gl::InfoLog &infoLog,
 
         if (input && !input->isBuiltIn())
         {
-            if (uniqueFullNames[ref.frontShaderStage].count(input->name) == 0)
+            const std::string &name =
+                input->isShaderIOBlock ? input->structOrBlockName : input->name;
+            if (uniqueFullNames[ref.frontShaderStage].count(name) == 0 && input->id != 0)
             {
-                mInactiveVaryingMappedNames[ref.frontShaderStage].push_back(input->mappedName);
-            }
-            if (input->isShaderIOBlock &&
-                uniqueFullNames[ref.frontShaderStage].count(input->structOrBlockName) == 0)
-            {
-                mInactiveVaryingMappedNames[ref.frontShaderStage].push_back(
-                    input->mappedStructOrBlockName);
+                mInactiveVaryingIds[ref.frontShaderStage].push_back(input->id);
             }
         }
         if (output && !output->isBuiltIn())
         {
-            if (uniqueFullNames[ref.backShaderStage].count(output->name) == 0)
+            const std::string &name =
+                output->isShaderIOBlock ? output->structOrBlockName : output->name;
+            if (uniqueFullNames[ref.backShaderStage].count(name) == 0 && output->id != 0)
             {
-                mInactiveVaryingMappedNames[ref.backShaderStage].push_back(output->mappedName);
-            }
-            if (output->isShaderIOBlock &&
-                uniqueFullNames[ref.backShaderStage].count(output->structOrBlockName) == 0)
-            {
-                mInactiveVaryingMappedNames[ref.backShaderStage].push_back(
-                    output->mappedStructOrBlockName);
+                mInactiveVaryingIds[ref.backShaderStage].push_back(output->id);
             }
         }
     }

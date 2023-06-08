@@ -548,7 +548,7 @@ std::unique_ptr<rx::LinkEvent> ProgramExecutableVk::load(ContextVk *contextVk,
                                                          gl::BinaryInputStream *stream)
 {
     gl::ShaderMap<ShaderInterfaceVariableInfoMap::VariableTypeToInfoMap> data;
-    gl::ShaderMap<ShaderInterfaceVariableInfoMap::NameToTypeAndIndexMap> nameToTypeAndIndexMap;
+    gl::ShaderMap<ShaderInterfaceVariableInfoMap::IdToTypeAndIndexMap> idToTypeAndIndexMap;
     gl::ShaderMap<ShaderInterfaceVariableInfoMap::VariableTypeToIndexMap> indexedResourceMap;
     gl::ShaderMap<gl::PerVertexMemberBitSet> inputPerVertexActiveMembers;
     gl::ShaderMap<gl::PerVertexMemberBitSet> outputPerVertexActiveMembers;
@@ -558,10 +558,10 @@ std::unique_ptr<rx::LinkEvent> ProgramExecutableVk::load(ContextVk *contextVk,
         size_t nameCount = stream->readInt<size_t>();
         for (size_t nameIndex = 0; nameIndex < nameCount; ++nameIndex)
         {
-            const std::string variableName  = stream->readString();
-            ShaderVariableType variableType = stream->readEnum<ShaderVariableType>();
-            uint32_t index                  = stream->readInt<uint32_t>();
-            nameToTypeAndIndexMap[shaderType][variableName] = {variableType, index};
+            uint32_t id                         = stream->readInt<uint32_t>();
+            ShaderVariableType variableType     = stream->readEnum<ShaderVariableType>();
+            uint32_t index                      = stream->readInt<uint32_t>();
+            idToTypeAndIndexMap[shaderType][id] = {variableType, index};
         }
 
         for (ShaderVariableType variableType : angle::AllEnums<ShaderVariableType>())
@@ -618,7 +618,7 @@ std::unique_ptr<rx::LinkEvent> ProgramExecutableVk::load(ContextVk *contextVk,
     outputPerVertexActiveMembers[gl::ShaderType::Geometry] =
         gl::PerVertexMemberBitSet(stream->readInt<uint8_t>());
 
-    mVariableInfoMap.load(std::move(data), std::move(nameToTypeAndIndexMap),
+    mVariableInfoMap.load(std::move(data), std::move(idToTypeAndIndexMap),
                           std::move(indexedResourceMap), std::move(inputPerVertexActiveMembers),
                           std::move(outputPerVertexActiveMembers));
 
@@ -682,8 +682,8 @@ void ProgramExecutableVk::save(ContextVk *contextVk,
 {
     const gl::ShaderMap<ShaderInterfaceVariableInfoMap::VariableTypeToInfoMap> &data =
         mVariableInfoMap.getData();
-    const gl::ShaderMap<ShaderInterfaceVariableInfoMap::NameToTypeAndIndexMap>
-        &nameToTypeAndIndexMap = mVariableInfoMap.getNameToTypeAndIndexMap();
+    const gl::ShaderMap<ShaderInterfaceVariableInfoMap::IdToTypeAndIndexMap> &idToTypeAndIndexMap =
+        mVariableInfoMap.getIdToTypeAndIndexMap();
     const gl::ShaderMap<ShaderInterfaceVariableInfoMap::VariableTypeToIndexMap>
         &indexedResourceMap = mVariableInfoMap.getIndexedResourceMap();
     const gl::ShaderMap<gl::PerVertexMemberBitSet> &inputPerVertexActiveMembers =
@@ -693,12 +693,12 @@ void ProgramExecutableVk::save(ContextVk *contextVk,
 
     for (gl::ShaderType shaderType : gl::AllShaderTypes())
     {
-        stream->writeInt(nameToTypeAndIndexMap[shaderType].size());
-        for (const auto &iter : nameToTypeAndIndexMap[shaderType])
+        stream->writeInt(idToTypeAndIndexMap[shaderType].size());
+        for (const auto &iter : idToTypeAndIndexMap[shaderType])
         {
-            const std::string &name          = iter.first;
+            uint32_t id                      = iter.first;
             const TypeAndIndex &typeAndIndex = iter.second;
-            stream->writeString(name);
+            stream->writeInt(id);
             stream->writeEnum(typeAndIndex.variableType);
             stream->writeInt(typeAndIndex.index);
         }
@@ -1620,7 +1620,7 @@ void ProgramExecutableVk::resolvePrecisionMismatch(const gl::ProgramMergedVaryin
             // The output is higher precision than the input
             ShaderInterfaceVariableInfo &info = mVariableInfoMap.getMutable(
                 mergedVarying.frontShaderStage, ShaderVariableType::Varying,
-                mergedVarying.frontShader->mappedName);
+                mergedVarying.frontShader->id);
             info.varyingIsOutput     = true;
             info.useRelaxedPrecision = true;
         }
@@ -1630,7 +1630,7 @@ void ProgramExecutableVk::resolvePrecisionMismatch(const gl::ProgramMergedVaryin
             ASSERT(backPrecision > frontPrecision);
             ShaderInterfaceVariableInfo &info = mVariableInfoMap.getMutable(
                 mergedVarying.backShaderStage, ShaderVariableType::Varying,
-                mergedVarying.backShader->mappedName);
+                mergedVarying.backShader->id);
             info.varyingIsInput      = true;
             info.useRelaxedPrecision = true;
         }

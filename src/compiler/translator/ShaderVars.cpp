@@ -135,8 +135,8 @@ ShaderVariable &ShaderVariable::operator=(const ShaderVariable &other)
 
 bool ShaderVariable::operator==(const ShaderVariable &other) const
 {
-    if (id != other.id || type != other.type || precision != other.precision ||
-        name != other.name || mappedName != other.mappedName || arraySizes != other.arraySizes ||
+    if (type != other.type || precision != other.precision || name != other.name ||
+        mappedName != other.mappedName || arraySizes != other.arraySizes ||
         staticUse != other.staticUse || active != other.active ||
         fields.size() != other.fields.size() || structOrBlockName != other.structOrBlockName ||
         mappedStructOrBlockName != other.mappedStructOrBlockName ||
@@ -540,10 +540,10 @@ std::string InterfaceBlock::fieldMappedPrefix() const
 
 bool InterfaceBlock::isSameInterfaceBlockAtLinkTime(const InterfaceBlock &other) const
 {
-    if (id != other.id || name != other.name || mappedName != other.mappedName ||
-        arraySize != other.arraySize || layout != other.layout ||
-        isRowMajorLayout != other.isRowMajorLayout || binding != other.binding ||
-        blockType != other.blockType || fields.size() != other.fields.size())
+    if (name != other.name || mappedName != other.mappedName || arraySize != other.arraySize ||
+        layout != other.layout || isRowMajorLayout != other.isRowMajorLayout ||
+        binding != other.binding || blockType != other.blockType ||
+        fields.size() != other.fields.size())
     {
         return false;
     }

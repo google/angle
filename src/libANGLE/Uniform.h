@@ -33,18 +33,22 @@ struct ActiveVariable
     {
         return static_cast<ShaderType>(ScanForward(mActiveUseBits.bits()));
     }
-    void setActive(ShaderType shaderType, bool used);
+    void setActive(ShaderType shaderType, bool used, uint32_t id);
     void unionReferencesWith(const ActiveVariable &other);
     bool isActive(ShaderType shaderType) const
     {
         ASSERT(shaderType != ShaderType::InvalidEnum);
         return mActiveUseBits[shaderType];
     }
+    uint32_t getId(ShaderType shaderType) const { return mIds[shaderType]; }
     ShaderBitSet activeShaders() const { return mActiveUseBits; }
     GLuint activeShaderCount() const { return static_cast<GLuint>(mActiveUseBits.count()); }
 
   private:
     ShaderBitSet mActiveUseBits;
+    // The id of a linked variable in each shader stage.  This id originates from
+    // sh::ShaderVariable::id or sh::InterfaceBlock::id
+    ShaderMap<uint32_t> mIds;
 };
 
 // Helper struct representing a single shader uniform
@@ -138,8 +142,6 @@ struct InterfaceBlock : public ShaderVariableBuffer
     bool isReadOnly;
     unsigned int arrayElement;
     unsigned int firstFieldArraySize;
-    // The ID of the block, coming from sh::InterfaceBlock::id
-    uint32_t id;
 };
 
 }  // namespace gl

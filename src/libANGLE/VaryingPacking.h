@@ -49,7 +49,6 @@ struct VaryingInShaderRef : angle::NonCopyable
 
     // Struct name
     std::string parentStructName;
-    std::string parentStructMappedName;
 };
 
 struct PackedVarying : angle::NonCopyable
@@ -260,9 +259,9 @@ class VaryingPacking final : angle::NonCopyable
         return static_cast<unsigned int>(mRegisterList.size());
     }
 
-    const ShaderMap<std::vector<std::string>> &getInactiveVaryingMappedNames() const
+    const ShaderMap<std::vector<uint32_t>> &getInactiveVaryingIds() const
     {
-        return mInactiveVaryingMappedNames;
+        return mInactiveVaryingIds;
     }
 
     const ShaderMap<PerVertexMemberBitSet> &getOutputPerVertexActiveMembers() const
@@ -314,7 +313,7 @@ class VaryingPacking final : angle::NonCopyable
     std::vector<Register> mRegisterMap;
     std::vector<PackedVaryingRegister> mRegisterList;
     std::vector<PackedVarying> mPackedVaryings;
-    ShaderMap<std::vector<std::string>> mInactiveVaryingMappedNames;
+    ShaderMap<std::vector<uint32_t>> mInactiveVaryingIds;
     ShaderMap<PerVertexMemberBitSet> mOutputPerVertexActiveMembers;
 };
 

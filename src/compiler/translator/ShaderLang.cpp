@@ -991,28 +991,6 @@ uint32_t GetAdvancedBlendEquations(const ShHandle handle)
 // use by the underlying implementation). u is short for user-defined.
 const char kUserDefinedNamePrefix[] = "_u";
 
-namespace vk
-{
-// Interface block name containing the aggregate default uniforms
-const char kDefaultUniformsNameVS[]  = "defaultUniformsVS";
-const char kDefaultUniformsNameTCS[] = "defaultUniformsTCS";
-const char kDefaultUniformsNameTES[] = "defaultUniformsTES";
-const char kDefaultUniformsNameGS[]  = "defaultUniformsGS";
-const char kDefaultUniformsNameFS[]  = "defaultUniformsFS";
-const char kDefaultUniformsNameCS[]  = "defaultUniformsCS";
-
-// Interface block and variable names containing driver uniforms
-const char kDriverUniformsBlockName[] = "ANGLEUniformBlock";
-
-// Interface block array name used for atomic counter emulation
-const char kAtomicCountersBlockName[] = "ANGLEAtomicCounters";
-
-const char kXfbEmulationBufferBlockName[] = "ANGLEXfbBuffer";
-const char kXfbEmulationBufferName[]      = "ANGLEXfb";
-
-const char kXfbExtensionPositionOutName[] = "ANGLEXfbPosition";
-}  // namespace vk
-
 const char *BlockLayoutTypeToString(BlockLayoutType type)
 {
     switch (type)

@@ -930,7 +930,19 @@ SpirvTypeData SPIRVBuilder::declareType(const SpirvType &type, const TSymbol *bl
         else
         {
             const spirv::IdRef lengthId = getUintConstant(length);
-            typeId                      = getNewId({});
+            // Note that some type arrays use reserved ids.
+            switch (subTypeId)
+            {
+                case vk::spirv::kIdInputPerVertexBlock:
+                    typeId = spirv::IdRef(vk::spirv::kIdInputPerVertexBlockArray);
+                    break;
+                case vk::spirv::kIdOutputPerVertexBlock:
+                    typeId = spirv::IdRef(vk::spirv::kIdOutputPerVertexBlockArray);
+                    break;
+                default:
+                    typeId = getNewId({});
+                    break;
+            }
             spirv::WriteTypeArray(&mSpirvTypeAndConstantDecls, typeId, subTypeId, lengthId);
         }
     }

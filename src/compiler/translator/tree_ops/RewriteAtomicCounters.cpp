@@ -19,8 +19,9 @@ namespace sh
 {
 namespace
 {
-constexpr ImmutableString kAtomicCountersVarName  = ImmutableString("atomicCounters");
-constexpr ImmutableString kAtomicCounterFieldName = ImmutableString("counters");
+constexpr ImmutableString kAtomicCountersVarName   = ImmutableString("atomicCounters");
+constexpr ImmutableString kAtomicCountersBlockName = ImmutableString("ANGLEAtomicCounters");
+constexpr ImmutableString kAtomicCounterFieldName  = ImmutableString("counters");
 
 // DeclareAtomicCountersBuffer adds a storage buffer array that's used with atomic counters.
 const TVariable *DeclareAtomicCountersBuffers(TIntermBlock *root, TSymbolTable *symbolTable)
@@ -47,8 +48,7 @@ const TVariable *DeclareAtomicCountersBuffers(TIntermBlock *root, TSymbolTable *
     layoutQualifier.blockStorage     = EbsStd430;
 
     return DeclareInterfaceBlock(root, symbolTable, fieldList, EvqBuffer, layoutQualifier,
-                                 coherentMemory, kMaxAtomicCounterBuffers,
-                                 ImmutableString(vk::kAtomicCountersBlockName),
+                                 coherentMemory, kMaxAtomicCounterBuffers, kAtomicCountersBlockName,
                                  kAtomicCountersVarName);
 }
 

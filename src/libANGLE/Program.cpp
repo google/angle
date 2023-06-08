@@ -404,15 +404,31 @@ void UpdateInterfaceVariable(std::vector<sh::ShaderVariable> *block, const sh::S
     }
 }
 
-void WriteShaderVariableBuffer(BinaryOutputStream *stream, const ShaderVariableBuffer &var)
+void WriteActiveVariable(BinaryOutputStream *stream, const ActiveVariable &var)
 {
-    stream->writeInt(var.binding);
-    stream->writeInt(var.dataSize);
-
     for (ShaderType shaderType : AllShaderTypes())
     {
         stream->writeBool(var.isActive(shaderType));
+        stream->writeInt(var.isActive(shaderType) ? var.getId(shaderType) : 0);
     }
+}
+
+void LoadActiveVariable(BinaryInputStream *stream, ActiveVariable *var)
+{
+    for (ShaderType shaderType : AllShaderTypes())
+    {
+        const bool isActive = stream->readBool();
+        const uint32_t id   = stream->readInt<uint32_t>();
+        var->setActive(shaderType, isActive, id);
+    }
+}
+
+void WriteShaderVariableBuffer(BinaryOutputStream *stream, const ShaderVariableBuffer &var)
+{
+    WriteActiveVariable(stream, var);
+
+    stream->writeInt(var.binding);
+    stream->writeInt(var.dataSize);
 
     stream->writeInt(var.memberIndexes.size());
     for (unsigned int memberCounterIndex : var.memberIndexes)
@@ -423,13 +439,10 @@ void WriteShaderVariableBuffer(BinaryOutputStream *stream, const ShaderVariableB
 
 void LoadShaderVariableBuffer(BinaryInputStream *stream, ShaderVariableBuffer *var)
 {
+    LoadActiveVariable(stream, var);
+
     var->binding  = stream->readInt<int>();
     var->dataSize = stream->readInt<unsigned int>();
-
-    for (ShaderType shaderType : AllShaderTypes())
-    {
-        var->setActive(shaderType, stream->readBool());
-    }
 
     size_t numMembers = stream->readInt<size_t>();
     for (size_t blockMemberIndex = 0; blockMemberIndex < numMembers; blockMemberIndex++)
@@ -441,29 +454,21 @@ void LoadShaderVariableBuffer(BinaryInputStream *stream, ShaderVariableBuffer *v
 void WriteBufferVariable(BinaryOutputStream *stream, const BufferVariable &var)
 {
     WriteShaderVar(stream, var);
+    WriteActiveVariable(stream, var);
 
     stream->writeInt(var.bufferIndex);
     WriteBlockMemberInfo(stream, var.blockInfo);
     stream->writeInt(var.topLevelArraySize);
-
-    for (ShaderType shaderType : AllShaderTypes())
-    {
-        stream->writeBool(var.isActive(shaderType));
-    }
 }
 
 void LoadBufferVariable(BinaryInputStream *stream, BufferVariable *var)
 {
     LoadShaderVar(stream, var);
+    LoadActiveVariable(stream, var);
 
     var->bufferIndex = stream->readInt<int>();
     LoadBlockMemberInfo(stream, &var->blockInfo);
     var->topLevelArraySize = stream->readInt<int>();
-
-    for (ShaderType shaderType : AllShaderTypes())
-    {
-        var->setActive(shaderType, stream->readBool());
-    }
 }
 
 void WriteInterfaceBlock(BinaryOutputStream *stream, const InterfaceBlock &block)
