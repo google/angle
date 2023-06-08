@@ -493,20 +493,6 @@ if (build_angle_perftests) {
 }
 
 if (build_angle_trace_tests) {
-  _angle_trace_common_sources = [
-    "angle_trace_tests_main.cpp",
-    "perf_tests/TracePerfTest.cpp",
-  ]
-  _angle_trace_common_deps = [
-    ":angle_perftests_shared",
-    "$angle_root:angle_compression",
-    "$angle_root/util:angle_frame_capture_test_utils",
-    "$angle_root/util:angle_png_utils",
-  ]
-
-  # Allows us to edit traces and remove chunks of code without compile warnings.
-  _angle_trace_common_clang_flags = [ "-Wno-unused-const-variable" ]
-
   angle_test("angle_trace_tests") {
     # http://anglebug.com/6009: Traces with long shaders are hitting string literal
     # limit in MSVC, so only compile them when using clang
@@ -517,9 +503,17 @@ if (build_angle_trace_tests) {
       check_includes = false
     }
 
-    sources = _angle_trace_common_sources
+    sources = [
+      "angle_trace_tests_main.cpp",
+      "perf_tests/TracePerfTest.cpp",
+    ]
 
-    deps = _angle_trace_common_deps
+    deps = [
+      ":angle_perftests_shared",
+      "$angle_root:angle_compression",
+      "$angle_root/util:angle_frame_capture_test_utils",
+      "$angle_root/util:angle_png_utils",
+    ]
 
     # If this flag is set, we want to build the trace libraries independent of the APK, i.e. not packaged.
     # We're doing this for size reasons - the APK is too large if you include all the traces.
@@ -543,7 +537,8 @@ if (build_angle_trace_tests) {
     data_deps = [ "${angle_root}:angle" ]
 
     if (is_clang) {
-      cflags_cc = _angle_trace_common_clang_flags
+      # Allows us to edit traces and remove chunks of code without compile warnings.
+      cflags_cc = [ "-Wno-unused-const-variable" ]
     }
   }
 
