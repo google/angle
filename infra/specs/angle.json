@@ -916,7 +916,6 @@
           "--log=debug",
           "--samples-per-test=6",
           "--show-test-stdout",
-          "--split-shard-samples",
           "--trial-time=10"
         ],
         "isolate_name": "angle_perftests",
@@ -947,7 +946,7 @@
         "args": [
           "--log=debug",
           "--show-test-stdout",
-          "--split-shard-samples",
+          "--samples-per-test=6",
           "--use-gl=native",
           "--trace-tests",
           "--trial-time=10"
@@ -981,7 +980,7 @@
         "args": [
           "--log=debug",
           "--show-test-stdout",
-          "--split-shard-samples",
+          "--samples-per-test=6",
           "--use-angle=vulkan",
           "--trace-tests",
           "--trial-time=10"
@@ -1343,7 +1342,6 @@
           "--log=debug",
           "--samples-per-test=6",
           "--show-test-stdout",
-          "--split-shard-samples",
           "--trial-time=10"
         ],
         "isolate_name": "angle_perftests",
@@ -1374,7 +1372,7 @@
         "args": [
           "--log=debug",
           "--show-test-stdout",
-          "--split-shard-samples",
+          "--samples-per-test=6",
           "--use-gl=native",
           "--trace-tests",
           "--trial-time=10"
@@ -1408,7 +1406,7 @@
         "args": [
           "--log=debug",
           "--show-test-stdout",
-          "--split-shard-samples",
+          "--samples-per-test=6",
           "--use-angle=vulkan",
           "--trace-tests",
           "--trial-time=10"
@@ -1731,8 +1729,7 @@
         "args": [
           "--log=debug",
           "--samples-per-test=6",
-          "--show-test-stdout",
-          "--split-shard-samples"
+          "--show-test-stdout"
         ],
         "isolate_name": "angle_perftests",
         "merge": {
@@ -1760,7 +1757,7 @@
         "args": [
           "--log=debug",
           "--show-test-stdout",
-          "--split-shard-samples",
+          "--samples-per-test=6",
           "--use-gl=native",
           "--trace-tests"
         ],
@@ -1791,7 +1788,7 @@
         "args": [
           "--log=debug",
           "--show-test-stdout",
-          "--split-shard-samples",
+          "--samples-per-test=6",
           "--use-angle=vulkan",
           "--trace-tests"
         ],
@@ -2543,8 +2540,7 @@
         "args": [
           "--log=debug",
           "--samples-per-test=6",
-          "--show-test-stdout",
-          "--split-shard-samples"
+          "--show-test-stdout"
         ],
         "isolate_name": "angle_perftests",
         "merge": {
@@ -2572,7 +2568,7 @@
         "args": [
           "--log=debug",
           "--show-test-stdout",
-          "--split-shard-samples",
+          "--samples-per-test=6",
           "--use-gl=native",
           "--trace-tests"
         ],
@@ -2603,7 +2599,7 @@
         "args": [
           "--log=debug",
           "--show-test-stdout",
-          "--split-shard-samples",
+          "--samples-per-test=6",
           "--use-angle=vulkan",
           "--trace-tests"
         ],
@@ -4518,8 +4514,7 @@
         "args": [
           "--log=debug",
           "--samples-per-test=6",
-          "--show-test-stdout",
-          "--split-shard-samples"
+          "--show-test-stdout"
         ],
         "isolate_name": "angle_perftests",
         "merge": {
@@ -4548,7 +4543,7 @@
         "args": [
           "--log=debug",
           "--show-test-stdout",
-          "--split-shard-samples",
+          "--samples-per-test=6",
           "--use-gl=native",
           "--trace-tests"
         ],
@@ -4580,7 +4575,7 @@
         "args": [
           "--log=debug",
           "--show-test-stdout",
-          "--split-shard-samples",
+          "--samples-per-test=6",
           "--use-angle=vulkan",
           "--trace-tests"
         ],
@@ -5438,8 +5433,7 @@
         "args": [
           "--log=debug",
           "--samples-per-test=6",
-          "--show-test-stdout",
-          "--split-shard-samples"
+          "--show-test-stdout"
         ],
         "isolate_name": "angle_perftests",
         "merge": {
@@ -5468,7 +5462,7 @@
         "args": [
           "--log=debug",
           "--show-test-stdout",
-          "--split-shard-samples",
+          "--samples-per-test=6",
           "--use-gl=native",
           "--trace-tests"
         ],
@@ -5500,7 +5494,7 @@
         "args": [
           "--log=debug",
           "--show-test-stdout",
-          "--split-shard-samples",
+          "--samples-per-test=6",
           "--use-angle=vulkan",
           "--trace-tests"
         ],
