@@ -140,6 +140,20 @@ def header_path(class_name):
     return 'autogen/' + make_header_name(class_name)
 
 
+def write_or_verify_file(filename, content, verify_only):
+    if verify_only:
+        try:
+            with open(filename) as f:
+                # Note: .gitattributes "* text=auto" handles LF <-> CRLF on Windows
+                return f.read() == content
+        except FileNotFoundError:
+            return False
+    else:
+        with open(filename, 'w') as fout:
+            fout.write(content)
+            return True
+
+
 def main():
     if len(sys.argv) == 2 and sys.argv[1] == 'inputs':
         print(','.join(list(feature_files.keys())))
@@ -148,6 +162,10 @@ def main():
         print(','.join([header_path(class_name) for (_, class_name) in feature_files.values()]) +
               ',' + feature_list_header_file + ',' + feature_list_source_file)
         return
+
+    # --verify-only enables dirty checks without relying on checked in hashes.
+    # Compares the content of the existing file with the generated content.
+    verify_only = '--verify-only' in sys.argv
 
     name_map = {}
 
@@ -191,9 +209,8 @@ def main():
             NAME=class_name.upper(),
             features='\n'.join(features))
 
-        with open(header_path(class_name), 'w') as fout:
-            fout.write(header)
-            fout.close()
+        if not write_or_verify_file(header_path(class_name), header, verify_only):
+            return 1
 
     # Generate helpers for use by tests to override a feature or not.
     feature_enums = []
@@ -206,21 +223,21 @@ def main():
         feature_strings.append(
             template_feature_string.format(VarName=VarName, display_name=display_name))
 
-    with open(feature_list_header_file, 'w') as fout:
-        fout.write(
+    if not write_or_verify_file(
+            feature_list_header_file,
             template_feature_list_header.format(
                 script_name=os.path.basename(__file__),
                 input_file_name='*_features.json',
-                features='\n'.join('    ' + v for v in feature_enums)))
-        fout.close()
+                features='\n'.join('    ' + v for v in feature_enums)), verify_only):
+        return 1
 
-    with open(feature_list_source_file, 'w') as fout:
-        fout.write(
+    if not write_or_verify_file(
+            feature_list_source_file,
             template_feature_list_source.format(
                 script_name=os.path.basename(__file__),
                 input_file_name='*_features.json',
-                features='\n'.join(feature_strings)))
-        fout.close()
+                features='\n'.join(feature_strings)), verify_only):
+        return 1
 
 
 if __name__ == '__main__':
