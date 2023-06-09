@@ -7,8 +7,8 @@
 //
 // FeaturesMtl_autogen.h: Optional features for the Metal renderer.
 
-#ifndef ANGLE_PLATFORM_FEATURESMTL_H_
-#define ANGLE_PLATFORM_FEATURESMTL_H_
+#ifndef ANGLE_PLATFORM_AUTOGEN_FEATURESMTL_H_
+#define ANGLE_PLATFORM_AUTOGEN_FEATURESMTL_H_
 
 #include "platform/Feature.h"
 
@@ -207,133 +207,184 @@ struct FeaturesMtl : FeatureSetBase
     };
 
     FeatureInfo multisampleColorFormatShaderReadWorkaround = {
-        "multisampleColorFormatShaderReadWorkaround", FeatureCategory::MetalWorkarounds,
-        "Add shaderRead usage to some multisampled texture formats", &members,
-        "http://anglebug.com/7049"};
+        "multisampleColorFormatShaderReadWorkaround",
+        FeatureCategory::MetalWorkarounds,
+        "Add shaderRead usage to some multisampled texture formats",
+        &members, "http://anglebug.com/7049"
+    };
 
     FeatureInfo copyIOSurfaceToNonIOSurfaceForReadOptimization = {
-        "copyIOSurfaceToNonIOSurfaceForReadOptimization", FeatureCategory::MetalWorkarounds,
+        "copyIOSurfaceToNonIOSurfaceForReadOptimization",
+        FeatureCategory::MetalWorkarounds,
         "some GPUs are faster to read an IOSurface texture by first copying the texture to a "
         "non-IOSurface texture",
-        &members, "http://anglebug.com/7117 http://anglebug.com/7573"};
+        &members, "http://anglebug.com/7117 http://anglebug.com/7573"
+    };
 
     FeatureInfo copyTextureToBufferForReadOptimization = {
-        "copyTextureToBufferForReadOptimization", FeatureCategory::MetalWorkarounds,
-        "some GPUs are faster to read a texture by first copying the texture to a buffer", &members,
-        "http://anglebug.com/7117"};
+        "copyTextureToBufferForReadOptimization",
+        FeatureCategory::MetalWorkarounds,
+        "some GPUs are faster to read a texture by first copying the texture to a buffer",
+        &members, "http://anglebug.com/7117"
+    };
 
     FeatureInfo limitMaxDrawBuffersForTesting = {
-        "limitMaxDrawBuffersForTesting", FeatureCategory::MetalFeatures,
-        "Used to check the backend works when the device's advertized limit is less than the "
-        "code's limit",
-        &members, "http://anglebug.com/7280"};
+        "limitMaxDrawBuffersForTesting",
+        FeatureCategory::MetalFeatures,
+        "Used to check the backend works when the device's advertized limit is less than the code's limit",
+        &members, "http://anglebug.com/7280"
+    };
 
     FeatureInfo limitMaxColorTargetBitsForTesting = {
-        "limitMaxColorTargetBitsForTesting", FeatureCategory::MetalFeatures,
-        "Metal iOS has a limit on the number of color target bits per pixel.", &members,
-        "http://anglebug.com/7280"};
+        "limitMaxColorTargetBitsForTesting",
+        FeatureCategory::MetalFeatures,
+        "Metal iOS has a limit on the number of color target bits per pixel.",
+        &members, "http://anglebug.com/7280"
+    };
 
     FeatureInfo preemptivelyStartProvokingVertexCommandBuffer = {
-        "preemptivelyStartProvokingVertexCommandBuffer", FeatureCategory::MetalFeatures,
-        "AMD Metal Drivers appear to have a bug this works around", &members,
-        "http://anglebug.com/7635"};
+        "preemptivelyStartProvokingVertexCommandBuffer",
+        FeatureCategory::MetalFeatures,
+        "AMD Metal Drivers appear to have a bug this works around",
+        &members, "http://anglebug.com/7635"
+    };
 
     FeatureInfo uploadDataToIosurfacesWithStagingBuffers = {
-        "uploadDataToIosurfacesWithStagingBuffers", FeatureCategory::MetalWorkarounds,
-        "When uploading data to IOSurface-backed textures, use a staging buffer.", &members,
-        "http://anglebug.com/7573"};
+        "uploadDataToIosurfacesWithStagingBuffers",
+        FeatureCategory::MetalWorkarounds,
+        "When uploading data to IOSurface-backed textures, use a staging buffer.",
+        &members, "http://anglebug.com/7573"
+    };
 
     FeatureInfo alwaysUseStagedBufferUpdates = {
-        "alwaysUseStagedBufferUpdates", FeatureCategory::MetalFeatures,
-        "Always update buffers by copying the data to a staging buffer and then blitting it to the "
-        "actual buffer",
-        &members, "http://anglebug.com/7544"};
+        "alwaysUseStagedBufferUpdates",
+        FeatureCategory::MetalFeatures,
+        "Always update buffers by copying the data to a staging buffer and then blitting it to the actual buffer",
+        &members, "http://anglebug.com/7544"
+    };
 
     FeatureInfo useShadowBuffersWhenAppropriate = {
-        "useShadowBuffersWhenAppropriate", FeatureCategory::MetalFeatures,
+        "useShadowBuffersWhenAppropriate",
+        FeatureCategory::MetalFeatures,
         "On some architectures using a shadow buffer can be faster for certain size buffers",
-        &members, "http://anglebug.com/7544"};
+        &members, "http://anglebug.com/7544"
+    };
 
     FeatureInfo alwaysUseManagedStorageModeForBuffers = {
-        "alwaysUseManagedStorageModeForBuffers", FeatureCategory::MetalFeatures,
-        "Metal buffers can be managed, shared, or private. Sometimes managed is fastest", &members,
-        "http://anglebug.com/7544"};
+        "alwaysUseManagedStorageModeForBuffers",
+        FeatureCategory::MetalFeatures,
+        "Metal buffers can be managed, shared, or private. Sometimes managed is fastest",
+        &members, "http://anglebug.com/7544"
+    };
 
     FeatureInfo alwaysUseSharedStorageModeForBuffers = {
-        "alwaysUseSharedStorageModeForBuffers", FeatureCategory::MetalFeatures,
-        "Metal buffers can be managed, shared, or private. Sometimes shared is fastest", &members,
-        "http://anglebug.com/7544"};
+        "alwaysUseSharedStorageModeForBuffers",
+        FeatureCategory::MetalFeatures,
+        "Metal buffers can be managed, shared, or private. Sometimes shared is fastest",
+        &members, "http://anglebug.com/7544"
+    };
 
     FeatureInfo preferCpuForBuffersubdata = {
-        "preferCpuForBuffersubdata", FeatureCategory::MetalFeatures,
-        "Makes bufferSubData always update via CPU", &members, "http://anglebug.com/7544"};
+        "preferCpuForBuffersubdata",
+        FeatureCategory::MetalFeatures,
+        "Makes bufferSubData always update via CPU",
+        &members, "http://anglebug.com/7544"
+    };
 
     FeatureInfo disableProgrammableBlending = {
-        "disableProgrammableBlending", FeatureCategory::MetalFeatures,
+        "disableProgrammableBlending",
+        FeatureCategory::MetalFeatures,
         "Disable programmable blending in order to test read_write pixel local storage textures",
-        &members, "http://anglebug.com/7279"};
+        &members, "http://anglebug.com/7279"
+    };
 
     FeatureInfo disableRWTextureTier2Support = {
-        "disableRWTextureTier2Support", FeatureCategory::MetalFeatures,
-        "Disable tier2 read_write textures in order to test tier1 support", &members,
-        "http://anglebug.com/7279"};
+        "disableRWTextureTier2Support",
+        FeatureCategory::MetalFeatures,
+        "Disable tier2 read_write textures in order to test tier1 support",
+        &members, "http://anglebug.com/7279"
+    };
 
     FeatureInfo disableRasterOrderGroups = {
-        "disableRasterOrderGroups", FeatureCategory::MetalFeatures,
+        "disableRasterOrderGroups",
+        FeatureCategory::MetalFeatures,
         "Disable raster order groups in order to test pixel local storage memory barriers",
-        &members, "http://anglebug.com/7279"};
+        &members, "http://anglebug.com/7279"
+    };
 
     FeatureInfo enableInMemoryMtlLibraryCache = {
-        "enableInMemoryMtlLibraryCache", FeatureCategory::MetalFeatures,
-        "Cache MTLLibrary objects in memory.", &members, "http://crbug.com/1385510"};
+        "enableInMemoryMtlLibraryCache",
+        FeatureCategory::MetalFeatures,
+        "Cache MTLLibrary objects in memory.",
+        &members, "http://crbug.com/1385510"
+    };
 
     FeatureInfo enableParallelMtlLibraryCompilation = {
-        "enableParallelMtlLibraryCompilation", FeatureCategory::MetalFeatures,
-        "Compile MTLLibrary in multiple threads.", &members, "http://crbug.com/1385510"};
+        "enableParallelMtlLibraryCompilation",
+        FeatureCategory::MetalFeatures,
+        "Compile MTLLibrary in multiple threads.",
+        &members, "http://crbug.com/1385510"
+    };
 
     FeatureInfo alwaysPreferStagedTextureUploads = {
-        "alwaysPreferStagedTextureUploads", FeatureCategory::MetalFeatures,
-        "Always prefer to upload texture data via a staging buffer and avoid "
-        "MTLTexture::replaceRegion.",
-        &members, "http://crbug.com/1380790"};
+        "alwaysPreferStagedTextureUploads",
+        FeatureCategory::MetalFeatures,
+        "Always prefer to upload texture data via a staging buffer and avoid MTLTexture::replaceRegion.",
+        &members, "http://crbug.com/1380790"
+    };
 
     FeatureInfo disableStagedInitializationOfPackedTextureFormats = {
-        "disableStagedInitializationOfPackedTextureFormats", FeatureCategory::MetalFeatures,
+        "disableStagedInitializationOfPackedTextureFormats",
+        FeatureCategory::MetalFeatures,
         "Staged GPU upload of some packed texture formats such as RGB9_E5 fail on Intel GPUs.",
-        &members, "http://anglebug.com/8092"};
+        &members, "http://anglebug.com/8092"
+    };
 
     FeatureInfo compileMetalShaders = {
-        "compileMetalShaders", FeatureCategory::MetalFeatures,
+        "compileMetalShaders",
+        FeatureCategory::MetalFeatures,
         "Compiles metal shaders using command line tools and saves to BlobCache. "
         "Requires using --no-sandbox and disabling enableParallelMtlLibraryCompilation.",
-        &members, "http://crbug.com/1423136"};
+        &members, "http://crbug.com/1423136"
+    };
 
     FeatureInfo loadMetalShadersFromBlobCache = {
-        "loadMetalShadersFromBlobCache", FeatureCategory::MetalFeatures,
+        "loadMetalShadersFromBlobCache",
+        FeatureCategory::MetalFeatures,
         "Loads metal shaders from blob cache. Useful if compile_metal_shaders was used to "
         "generate shaders.",
-        &members, "http://crbug.com/1423136"};
+        &members, "http://crbug.com/1423136"
+    };
 
-    FeatureInfo printMetalShaders = {"printMetalShaders", FeatureCategory::MetalFeatures,
-                                     "Prints the source to a shader before it's compiled.",
-                                     &members, "http://crbug.com/1423136"};
+    FeatureInfo printMetalShaders = {
+        "printMetalShaders",
+        FeatureCategory::MetalFeatures,
+        "Prints the source to a shader before it's compiled.",
+        &members, "http://crbug.com/1423136"
+    };
 
     FeatureInfo generateShareableShaders = {
-        "generateShareableShaders", FeatureCategory::MetalFeatures,
+        "generateShareableShaders",
+        FeatureCategory::MetalFeatures,
         "Attempts to generate shaders that are shareable. More specifically, shaders"
         " end up with conditionals that are decided at run time via input parameters vs"
         " compile time. This results in bigger shaders.",
-        &members, "http://crbug.com/1423136"};
+        &members, "http://crbug.com/1423136"
+    };
 
     FeatureInfo disableMetalOnGpuFamily1 = {
-        "disableMetalOnGpuFamily1", FeatureCategory::MetalFeatures,
+        "disableMetalOnGpuFamily1",
+        FeatureCategory::MetalFeatures,
         "GPUs that don't support Mac GPU family 2 or greater are unsupported by the Metal backend.",
-        &members, "http://anglebug.com/7952"};
+        &members, "http://anglebug.com/7952"
+    };
 
     FeatureInfo disableMetalOnNvidia = {
-        "disableMetalOnNvidia", FeatureCategory::MetalFeatures,
-        "NVIDIA GPUs are unsupported due to scarcity of the hardware.", &members,
-        "http://anglebug.com/8170"};
+        "disableMetalOnNvidia",
+        FeatureCategory::MetalFeatures,
+        "NVIDIA GPUs are unsupported due to scarcity of the hardware.",
+        &members, "http://anglebug.com/8170"
+    };
 
     FeatureInfo flushAfterStreamVertexData = {
         "flushAfterStreamVertexData",
@@ -341,6 +392,7 @@ struct FeaturesMtl : FeatureSetBase
         "Flush after calls to StreamVertexData to work around driver bugs.",
         &members,
     };
+
 };
 
 inline FeaturesMtl::FeaturesMtl()  = default;
@@ -348,4 +400,4 @@ inline FeaturesMtl::~FeaturesMtl() = default;
 
 }  // namespace angle
 
-#endif  // ANGLE_PLATFORM_FEATURESMTL_H_
+#endif  // ANGLE_PLATFORM_AUTOGEN_FEATURESMTL_H_

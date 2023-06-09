@@ -7,8 +7,8 @@
 //
 // FeaturesD3D_autogen.h: Features and workarounds for D3D driver bugs and other issues.
 
-#ifndef ANGLE_PLATFORM_FEATURESD3D_H_
-#define ANGLE_PLATFORM_FEATURESD3D_H_
+#ifndef ANGLE_PLATFORM_AUTOGEN_FEATURESD3D_H_
+#define ANGLE_PLATFORM_AUTOGEN_FEATURESD3D_H_
 
 #include "platform/Feature.h"
 
@@ -56,10 +56,12 @@ struct FeaturesD3D : FeatureSetBase
     };
 
     FeatureInfo depthStencilBlitExtraCopy = {
-        "depthStencilBlitExtraCopy", FeatureCategory::D3DWorkarounds,
+        "depthStencilBlitExtraCopy",
+        FeatureCategory::D3DWorkarounds,
         "Bug in some drivers triggers a TDR when using CopySubresourceRegion from a staging "
         "texture to a depth/stencil",
-        &members, "http://anglebug.com/1452"};
+        &members, "http://anglebug.com/1452"
+    };
 
     FeatureInfo expandIntegerPowExpressions = {
         "expandIntegerPowExpressions",
@@ -114,19 +116,27 @@ struct FeaturesD3D : FeatureSetBase
         &members,
     };
 
-    FeatureInfo emulateIsnanFloat = {"emulateIsnanFloat", FeatureCategory::D3DWorkarounds,
-                                     "Using isnan() on highp float will get wrong answer", &members,
-                                     "https://crbug.com/650547"};
+    FeatureInfo emulateIsnanFloat = {
+        "emulateIsnanFloat",
+        FeatureCategory::D3DWorkarounds,
+        "Using isnan() on highp float will get wrong answer",
+        &members, "https://crbug.com/650547"
+    };
 
-    FeatureInfo callClearTwice = {"callClearTwice", FeatureCategory::D3DWorkarounds,
-                                  "Using clear() may not take effect", &members,
-                                  "https://crbug.com/655534"};
+    FeatureInfo callClearTwice = {
+        "callClearTwice",
+        FeatureCategory::D3DWorkarounds,
+        "Using clear() may not take effect",
+        &members, "https://crbug.com/655534"
+    };
 
     FeatureInfo useSystemMemoryForConstantBuffers = {
-        "useSystemMemoryForConstantBuffers", FeatureCategory::D3DWorkarounds,
+        "useSystemMemoryForConstantBuffers",
+        FeatureCategory::D3DWorkarounds,
         "Copying from staging storage to constant buffer "
         "storage does not work",
-        &members, "https://crbug.com/593024"};
+        &members, "https://crbug.com/593024"
+    };
 
     FeatureInfo selectViewInGeometryShader = {
         "selectViewInGeometryShader",
@@ -137,9 +147,11 @@ struct FeaturesD3D : FeatureSetBase
     };
 
     FeatureInfo addMockTextureNoRenderTarget = {
-        "addMockTextureNoRenderTarget", FeatureCategory::D3DWorkarounds,
+        "addMockTextureNoRenderTarget",
+        FeatureCategory::D3DWorkarounds,
         "On some drivers when rendering with no render target, two bugs lead to incorrect behavior",
-        &members, "http://anglebug.com/2152"};
+        &members, "http://anglebug.com/2152"
+    };
 
     FeatureInfo skipVSConstantRegisterZero = {
         "skipVSConstantRegisterZero",
@@ -149,21 +161,27 @@ struct FeaturesD3D : FeatureSetBase
     };
 
     FeatureInfo forceAtomicValueResolution = {
-        "forceAtomicValueResolution", FeatureCategory::D3DWorkarounds,
+        "forceAtomicValueResolution",
+        FeatureCategory::D3DWorkarounds,
         "On some drivers the return value from RWByteAddressBuffer.InterlockedAdd does not resolve "
         "when used in the .yzw components of a RWByteAddressBuffer.Store operation",
-        &members, "http://anglebug.com/3246"};
+        &members, "http://anglebug.com/3246"
+    };
 
     FeatureInfo allowClearForRobustResourceInit = {
-        "allowClearForRobustResourceInit", FeatureCategory::D3DWorkarounds,
+        "allowClearForRobustResourceInit",
+        FeatureCategory::D3DWorkarounds,
         "Some drivers corrupt texture data when clearing for robust resource initialization.",
-        &members, "http://crbug.com/941620"};
+        &members, "http://crbug.com/941620"
+    };
 
     FeatureInfo allowTranslateUniformBlockToStructuredBuffer = {
-        "allowTranslateUniformBlockToStructuredBuffer", FeatureCategory::D3DWorkarounds,
+        "allowTranslateUniformBlockToStructuredBuffer",
+        FeatureCategory::D3DWorkarounds,
         "There is a slow fxc compile performance issue with dynamic uniform indexing if "
         "translating a uniform block with a large array member to cbuffer.",
-        &members, "http://anglebug.com/3682"};
+        &members, "http://anglebug.com/3682"
+    };
 
     FeatureInfo allowES3OnFL100 = {
         "allowES3OnFL100",
@@ -173,8 +191,11 @@ struct FeaturesD3D : FeatureSetBase
     };
 
     FeatureInfo disableRasterizerOrderViews = {
-        "disableRasterizerOrderViews", FeatureCategory::D3DWorkarounds, "Disable ROVs for testing",
-        &members, "http://anglebug.com/7279"};
+        "disableRasterizerOrderViews",
+        FeatureCategory::D3DWorkarounds,
+        "Disable ROVs for testing",
+        &members, "http://anglebug.com/7279"
+    };
 
     FeatureInfo enableTimestampQueries = {
         "enableTimestampQueries",
@@ -182,6 +203,7 @@ struct FeaturesD3D : FeatureSetBase
         "Enable timestamp on GL_EXT_disjoint_timer_query extension",
         &members,
     };
+
 };
 
 inline FeaturesD3D::FeaturesD3D()  = default;
@@ -189,4 +211,4 @@ inline FeaturesD3D::~FeaturesD3D() = default;
 
 }  // namespace angle
 
-#endif  // ANGLE_PLATFORM_FEATURESD3D_H_
+#endif  // ANGLE_PLATFORM_AUTOGEN_FEATURESD3D_H_

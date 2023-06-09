@@ -26,8 +26,8 @@
 #include "libANGLE/renderer/gl/FunctionsGL.h"
 #include "libANGLE/renderer/gl/QueryGL.h"
 #include "libANGLE/renderer/gl/formatutilsgl.h"
-#include "platform/FeaturesGL_autogen.h"
-#include "platform/FrontendFeatures_autogen.h"
+#include "platform/autogen/FeaturesGL_autogen.h"
+#include "platform/autogen/FrontendFeatures_autogen.h"
 
 #include <EGL/eglext.h>
 #include <algorithm>

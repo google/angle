@@ -15,7 +15,7 @@
 #include "common/spirv/spirv_types.h"
 #include "libANGLE/renderer/ProgramImpl.h"
 #include "libANGLE/renderer/renderer_utils.h"
-#include "platform/FeaturesVk_autogen.h"
+#include "platform/autogen/FeaturesVk_autogen.h"
 
 namespace rx
 {

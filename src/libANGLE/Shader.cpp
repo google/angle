@@ -28,7 +28,7 @@
 #include "libANGLE/ResourceManager.h"
 #include "libANGLE/renderer/GLImplFactory.h"
 #include "libANGLE/renderer/ShaderImpl.h"
-#include "platform/FrontendFeatures_autogen.h"
+#include "platform/autogen/FrontendFeatures_autogen.h"
 
 namespace gl
 {
