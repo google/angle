@@ -471,7 +471,7 @@
                 <enum name="EGL_SYNC_METAL_SHARED_EVENT_OBJECT_ANGLE"/>
                 <enum name="EGL_SYNC_METAL_SHARED_EVENT_SIGNAL_VALUE_LO_ANGLE"/>
                 <enum name="EGL_SYNC_METAL_SHARED_EVENT_SIGNAL_VALUE_HI_ANGLE"/>
-                <enum name="EGL_SYNC_METAL_SHARED_EVENT_SIGNALED" />
+                <enum name="EGL_SYNC_METAL_SHARED_EVENT_SIGNALED_ANGLE" />
             </require>
         </extension>
     </extensions>
