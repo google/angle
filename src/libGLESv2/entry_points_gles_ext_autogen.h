@@ -69,7 +69,7 @@ ANGLE_EXPORT void GL_APIENTRY
 GL_DrawElementsInstancedBaseVertexBaseInstanceANGLE(GLenum mode,
                                                     GLsizei count,
                                                     GLenum type,
-                                                    const GLvoid *indices,
+                                                    const void *indices,
                                                     GLsizei instanceCount,
                                                     GLint baseVertex,
                                                     GLuint baseInstance);
@@ -84,7 +84,7 @@ ANGLE_EXPORT void GL_APIENTRY
 GL_MultiDrawElementsInstancedBaseVertexBaseInstanceANGLE(GLenum mode,
                                                          const GLsizei *counts,
                                                          GLenum type,
-                                                         const GLvoid *const *indices,
+                                                         const void *const *indices,
                                                          const GLsizei *instanceCounts,
                                                          const GLint *baseVertices,
                                                          const GLuint *baseInstances,
@@ -245,12 +245,12 @@ ANGLE_EXPORT void GL_APIENTRY GL_MultiDrawArraysInstancedANGLE(GLenum mode,
 ANGLE_EXPORT void GL_APIENTRY GL_MultiDrawElementsANGLE(GLenum mode,
                                                         const GLsizei *counts,
                                                         GLenum type,
-                                                        const GLvoid *const *indices,
+                                                        const void *const *indices,
                                                         GLsizei drawcount);
 ANGLE_EXPORT void GL_APIENTRY GL_MultiDrawElementsInstancedANGLE(GLenum mode,
                                                                  const GLsizei *counts,
                                                                  GLenum type,
-                                                                 const GLvoid *const *indices,
+                                                                 const void *const *indices,
                                                                  const GLsizei *instanceCounts,
                                                                  GLsizei drawcount);
 
@@ -414,7 +414,7 @@ ANGLE_EXPORT void GL_APIENTRY GL_CompressedTexImage2DRobustANGLE(GLenum target,
                                                                  GLint border,
                                                                  GLsizei imageSize,
                                                                  GLsizei dataSize,
-                                                                 const GLvoid *data);
+                                                                 const void *data);
 ANGLE_EXPORT void GL_APIENTRY GL_CompressedTexSubImage2DRobustANGLE(GLenum target,
                                                                     GLint level,
                                                                     GLsizei xoffset,
@@ -424,7 +424,7 @@ ANGLE_EXPORT void GL_APIENTRY GL_CompressedTexSubImage2DRobustANGLE(GLenum targe
                                                                     GLenum format,
                                                                     GLsizei imageSize,
                                                                     GLsizei dataSize,
-                                                                    const GLvoid *data);
+                                                                    const void *data);
 ANGLE_EXPORT void GL_APIENTRY GL_CompressedTexImage3DRobustANGLE(GLenum target,
                                                                  GLint level,
                                                                  GLenum internalformat,
@@ -434,7 +434,7 @@ ANGLE_EXPORT void GL_APIENTRY GL_CompressedTexImage3DRobustANGLE(GLenum target,
                                                                  GLint border,
                                                                  GLsizei imageSize,
                                                                  GLsizei dataSize,
-                                                                 const GLvoid *data);
+                                                                 const void *data);
 ANGLE_EXPORT void GL_APIENTRY GL_CompressedTexSubImage3DRobustANGLE(GLenum target,
                                                                     GLint level,
                                                                     GLint xoffset,
@@ -446,7 +446,7 @@ ANGLE_EXPORT void GL_APIENTRY GL_CompressedTexSubImage3DRobustANGLE(GLenum targe
                                                                     GLenum format,
                                                                     GLsizei imageSize,
                                                                     GLsizei dataSize,
-                                                                    const GLvoid *data);
+                                                                    const void *data);
 ANGLE_EXPORT void GL_APIENTRY GL_GetQueryivRobustANGLE(GLenum target,
                                                        GLenum pname,
                                                        GLsizei bufSize,

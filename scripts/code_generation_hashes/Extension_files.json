@@ -2,7 +2,7 @@
   "doc/ExtensionSupport.md":
     "26ed834d77af164e60e4304d029779f7",
   "scripts/egl_angle_ext.xml":
-    "2b6fe304b0425d0fa79f65b8bba30e23",
+    "7ae2be7840b4dbf9db875688847606d4",
   "scripts/extension_data/intel_630_linux.json":
     "3b86832de6a7095f4617e273cba6d45e",
   "scripts/extension_data/intel_630_win10.json":
@@ -20,7 +20,7 @@
   "scripts/extension_data/swiftshader_win10_gles1.json":
     "bea8e2106d62e1ea0e8938f150865a37",
   "scripts/gl_angle_ext.xml":
-    "758f78e8bf6447f118643421110728b7",
+    "49a0bf469d6f44c532098ef3a9fd087f",
   "scripts/registry_xml.py":
     "2175daaec34d2e6fe763d0c3efa93dea",
   "src/libANGLE/gen_extensions.py":

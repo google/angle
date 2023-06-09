@@ -2814,7 +2814,7 @@ void GL_APIENTRY glDrawArraysInstancedBaseInstanceANGLE(GLenum mode,
 void GL_APIENTRY glDrawElementsInstancedBaseVertexBaseInstanceANGLE(GLenum mode,
                                                                     GLsizei count,
                                                                     GLenum type,
-                                                                    const GLvoid *indices,
+                                                                    const void *indices,
                                                                     GLsizei instanceCount,
                                                                     GLint baseVertex,
                                                                     GLuint baseInstance)
@@ -2838,7 +2838,7 @@ void GL_APIENTRY
 glMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE(GLenum mode,
                                                         const GLsizei *counts,
                                                         GLenum type,
-                                                        const GLvoid *const *indices,
+                                                        const void *const *indices,
                                                         const GLsizei *instanceCounts,
                                                         const GLint *baseVertices,
                                                         const GLuint *baseInstances,
@@ -3082,7 +3082,7 @@ void GL_APIENTRY glMultiDrawArraysInstancedANGLE(GLenum mode,
 void GL_APIENTRY glMultiDrawElementsANGLE(GLenum mode,
                                           const GLsizei *counts,
                                           GLenum type,
-                                          const GLvoid *const *indices,
+                                          const void *const *indices,
                                           GLsizei drawcount)
 {
     return GL_MultiDrawElementsANGLE(mode, counts, type, indices, drawcount);
@@ -3091,7 +3091,7 @@ void GL_APIENTRY glMultiDrawElementsANGLE(GLenum mode,
 void GL_APIENTRY glMultiDrawElementsInstancedANGLE(GLenum mode,
                                                    const GLsizei *counts,
                                                    GLenum type,
-                                                   const GLvoid *const *indices,
+                                                   const void *const *indices,
                                                    const GLsizei *instanceCounts,
                                                    GLsizei drawcount)
 {
@@ -3366,7 +3366,7 @@ void GL_APIENTRY glCompressedTexImage2DRobustANGLE(GLenum target,
                                                    GLint border,
                                                    GLsizei imageSize,
                                                    GLsizei dataSize,
-                                                   const GLvoid *data)
+                                                   const void *data)
 {
     return GL_CompressedTexImage2DRobustANGLE(target, level, internalformat, width, height, border,
                                               imageSize, dataSize, data);
@@ -3381,7 +3381,7 @@ void GL_APIENTRY glCompressedTexSubImage2DRobustANGLE(GLenum target,
                                                       GLenum format,
                                                       GLsizei imageSize,
                                                       GLsizei dataSize,
-                                                      const GLvoid *data)
+                                                      const void *data)
 {
     return GL_CompressedTexSubImage2DRobustANGLE(target, level, xoffset, yoffset, width, height,
                                                  format, imageSize, dataSize, data);
@@ -3396,7 +3396,7 @@ void GL_APIENTRY glCompressedTexImage3DRobustANGLE(GLenum target,
                                                    GLint border,
                                                    GLsizei imageSize,
                                                    GLsizei dataSize,
-                                                   const GLvoid *data)
+                                                   const void *data)
 {
     return GL_CompressedTexImage3DRobustANGLE(target, level, internalformat, width, height, depth,
                                               border, imageSize, dataSize, data);
@@ -3413,7 +3413,7 @@ void GL_APIENTRY glCompressedTexSubImage3DRobustANGLE(GLenum target,
                                                       GLenum format,
                                                       GLsizei imageSize,
                                                       GLsizei dataSize,
-                                                      const GLvoid *data)
+                                                      const void *data)
 {
     return GL_CompressedTexSubImage3DRobustANGLE(target, level, xoffset, yoffset, zoffset, width,
                                                  height, depth, format, imageSize, dataSize, data);

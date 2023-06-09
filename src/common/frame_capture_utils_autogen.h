@@ -124,8 +124,6 @@ enum class ParamType
     TGLushort,
     TGLushortConstPointer,
     TGLushortPointer,
-    TGLvoidConstPointer,
-    TGLvoidConstPointerPointer,
     TGraphicsResetStatus,
     THandleType,
     TImageID,
@@ -193,7 +191,7 @@ enum class ParamType
     TvoidPointerPointer,
 };
 
-constexpr uint32_t kParamTypeCount = 174;
+constexpr uint32_t kParamTypeCount = 172;
 
 union ParamValue
 {
@@ -304,8 +302,6 @@ union ParamValue
     GLushort GLushortVal;
     const GLushort *GLushortConstPointerVal;
     GLushort *GLushortPointerVal;
-    const GLvoid *GLvoidConstPointerVal;
-    const GLvoid *const *GLvoidConstPointerPointerVal;
     gl::GraphicsResetStatus GraphicsResetStatusVal;
     gl::HandleType HandleTypeVal;
     egl::ImageID ImageIDVal;
@@ -1068,20 +1064,6 @@ inline GLushort *GetParamVal<ParamType::TGLushortPointer, GLushort *>(const Para
 }
 
 template <>
-inline const GLvoid *GetParamVal<ParamType::TGLvoidConstPointer, const GLvoid *>(
-    const ParamValue &value)
-{
-    return value.GLvoidConstPointerVal;
-}
-
-template <>
-inline const GLvoid *const *
-GetParamVal<ParamType::TGLvoidConstPointerPointer, const GLvoid *const *>(const ParamValue &value)
-{
-    return value.GLvoidConstPointerPointerVal;
-}
-
-template <>
 inline gl::GraphicsResetStatus
 GetParamVal<ParamType::TGraphicsResetStatus, gl::GraphicsResetStatus>(const ParamValue &value)
 {
@@ -1747,10 +1729,6 @@ T AccessParamValue(ParamType paramType, const ParamValue &value)
             return GetParamVal<ParamType::TGLushortConstPointer, T>(value);
         case ParamType::TGLushortPointer:
             return GetParamVal<ParamType::TGLushortPointer, T>(value);
-        case ParamType::TGLvoidConstPointer:
-            return GetParamVal<ParamType::TGLvoidConstPointer, T>(value);
-        case ParamType::TGLvoidConstPointerPointer:
-            return GetParamVal<ParamType::TGLvoidConstPointerPointer, T>(value);
         case ParamType::TGraphicsResetStatus:
             return GetParamVal<ParamType::TGraphicsResetStatus, T>(value);
         case ParamType::THandleType:
@@ -2563,19 +2541,6 @@ inline void SetParamVal<ParamType::TGLushortPointer>(GLushort *valueIn, ParamVal
 }
 
 template <>
-inline void SetParamVal<ParamType::TGLvoidConstPointer>(const GLvoid *valueIn, ParamValue *valueOut)
-{
-    valueOut->GLvoidConstPointerVal = valueIn;
-}
-
-template <>
-inline void SetParamVal<ParamType::TGLvoidConstPointerPointer>(const GLvoid *const *valueIn,
-                                                               ParamValue *valueOut)
-{
-    valueOut->GLvoidConstPointerPointerVal = valueIn;
-}
-
-template <>
 inline void SetParamVal<ParamType::TGraphicsResetStatus>(gl::GraphicsResetStatus valueIn,
                                                          ParamValue *valueOut)
 {
@@ -3333,12 +3298,6 @@ void InitParamValue(ParamType paramType, T valueIn, ParamValue *valueOut)
             break;
         case ParamType::TGLushortPointer:
             SetParamVal<ParamType::TGLushortPointer>(valueIn, valueOut);
-            break;
-        case ParamType::TGLvoidConstPointer:
-            SetParamVal<ParamType::TGLvoidConstPointer>(valueIn, valueOut);
-            break;
-        case ParamType::TGLvoidConstPointerPointer:
-            SetParamVal<ParamType::TGLvoidConstPointerPointer>(valueIn, valueOut);
             break;
         case ParamType::TGraphicsResetStatus:
             SetParamVal<ParamType::TGraphicsResetStatus>(valueIn, valueOut);

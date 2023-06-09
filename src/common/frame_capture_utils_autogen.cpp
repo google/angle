@@ -402,14 +402,6 @@ void WriteParamCaptureReplay(std::ostream &os, const CallCapture &call, const Pa
             WriteParamValueReplay<ParamType::TGLushortPointer>(os, call,
                                                                param.value.GLushortPointerVal);
             break;
-        case ParamType::TGLvoidConstPointer:
-            WriteParamValueReplay<ParamType::TGLvoidConstPointer>(
-                os, call, param.value.GLvoidConstPointerVal);
-            break;
-        case ParamType::TGLvoidConstPointerPointer:
-            WriteParamValueReplay<ParamType::TGLvoidConstPointerPointer>(
-                os, call, param.value.GLvoidConstPointerPointerVal);
-            break;
         case ParamType::TGraphicsResetStatus:
             WriteParamValueReplay<ParamType::TGraphicsResetStatus>(
                 os, call, param.value.GraphicsResetStatusVal);
@@ -876,10 +868,6 @@ const char *ParamTypeToString(ParamType paramType)
             return "const GLushort *";
         case ParamType::TGLushortPointer:
             return "GLushort *";
-        case ParamType::TGLvoidConstPointer:
-            return "const GLvoid *";
-        case ParamType::TGLvoidConstPointerPointer:
-            return "const GLvoid * const *";
         case ParamType::TGraphicsResetStatus:
             return "GLenum";
         case ParamType::THandleType:

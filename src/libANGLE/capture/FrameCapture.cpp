@@ -737,7 +737,7 @@ void WriteBinaryParamReplay(ReplayWriter &replayWriter,
 
     // Only inline strings (shaders) to simplify the C code.
     ParamType overrideType = param.type;
-    if (param.type == ParamType::TGLvoidConstPointer || param.type == ParamType::TvoidConstPointer)
+    if (param.type == ParamType::TvoidConstPointer)
     {
         overrideType = ParamType::TGLubyteConstPointer;
     }

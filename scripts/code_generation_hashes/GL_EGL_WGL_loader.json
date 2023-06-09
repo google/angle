@@ -1,10 +1,10 @@
 {
   "scripts/egl_angle_ext.xml":
-    "2b6fe304b0425d0fa79f65b8bba30e23",
+    "7ae2be7840b4dbf9db875688847606d4",
   "scripts/generate_loader.py":
     "93c78a8d11323fa311fed5118fbcf083",
   "scripts/gl_angle_ext.xml":
-    "758f78e8bf6447f118643421110728b7",
+    "49a0bf469d6f44c532098ef3a9fd087f",
   "scripts/registry_xml.py":
     "2175daaec34d2e6fe763d0c3efa93dea",
   "src/libEGL/egl_loader_autogen.cpp":
