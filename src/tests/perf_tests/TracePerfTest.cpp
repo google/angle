@@ -1620,6 +1620,14 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
         }
     }
 
+    if (traceNameIs("respawnables"))
+    {
+        if (isIntelLinuxNative || isNVIDIAWinNative || isIntelWinNative)
+        {
+            skipTest("TODO: https://anglebug.com/8191 Undefined behavior on native");
+        }
+    }
+
     // glDebugMessageControlKHR and glDebugMessageCallbackKHR crash on ARM GLES1.
     if (IsARM() && mParams->traceInfo.contextClientMajorVersion == 1)
     {
