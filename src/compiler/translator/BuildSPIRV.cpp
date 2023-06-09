@@ -506,8 +506,6 @@ void SpirvTypeSpec::onVectorComponentSelection()
 
 SPIRVBuilder::SPIRVBuilder(TCompiler *compiler,
                            const ShCompileOptions &compileOptions,
-                           ShHashFunction64 hashFunction,
-                           NameMap &nameMap,
                            const angle::HashMap<int, uint32_t> &uniqueToSpirvIdMap,
                            uint32_t firstUnusedSpirvId)
     : mCompiler(compiler),
@@ -515,8 +513,6 @@ SPIRVBuilder::SPIRVBuilder(TCompiler *compiler,
       mShaderType(gl::FromGLenum<gl::ShaderType>(compiler->getShaderType())),
       mUniqueToSpirvIdMap(uniqueToSpirvIdMap),
       mNextAvailableId(firstUnusedSpirvId),
-      mHashFunction(hashFunction),
-      mNameMap(nameMap),
       mNextUnusedBinding(0),
       mNextUnusedInputLocation(0),
       mNextUnusedOutputLocation(0),
@@ -1057,13 +1053,13 @@ SpirvTypeData SPIRVBuilder::declareType(const SpirvType &type, const TSymbol *bl
     // binary size that gets written to disk cache.  http://anglebug.com/4889
     if (block != nullptr && type.arraySizes.empty())
     {
-        spirv::WriteName(&mSpirvDebug, typeId, hashName(block).data());
+        spirv::WriteName(&mSpirvDebug, typeId, getName(block).data());
 
         uint32_t fieldIndex = 0;
         for (const TField *field : type.block->fields())
         {
             spirv::WriteMemberName(&mSpirvDebug, typeId, spirv::LiteralInteger(fieldIndex++),
-                                   hashFieldName(field).data());
+                                   getFieldName(field).data());
         }
     }
 
@@ -1630,7 +1626,7 @@ void SPIRVBuilder::startNewFunction(spirv::IdRef functionId, const TFunction *fu
     mSpirvCurrentFunctionBlocks.back().labelId = getNewId({});
 
     // Output debug information.
-    spirv::WriteName(&mSpirvDebug, functionId, hashFunctionName(func).data());
+    spirv::WriteName(&mSpirvDebug, functionId, getName(func).data());
 }
 
 void SPIRVBuilder::assembleSpirvFunctionBlocks()
@@ -2281,35 +2277,15 @@ void SPIRVBuilder::writeInterpolationDecoration(TQualifier qualifier,
     }
 }
 
-ImmutableString SPIRVBuilder::hashName(const TSymbol *symbol)
+ImmutableString SPIRVBuilder::getName(const TSymbol *symbol)
 {
-    return HashName(symbol, mHashFunction, &mNameMap);
+    return symbol->symbolType() == SymbolType::Empty ? ImmutableString("") : symbol->name();
 }
 
-ImmutableString SPIRVBuilder::hashTypeName(const TType &type)
-{
-    return GetTypeName(type, mHashFunction, &mNameMap);
-}
-
-ImmutableString SPIRVBuilder::hashFieldName(const TField *field)
+ImmutableString SPIRVBuilder::getFieldName(const TField *field)
 {
     ASSERT(field->symbolType() != SymbolType::Empty);
-    if (field->symbolType() == SymbolType::UserDefined)
-    {
-        return HashName(field->name(), mHashFunction, &mNameMap);
-    }
-
     return field->name();
-}
-
-ImmutableString SPIRVBuilder::hashFunctionName(const TFunction *func)
-{
-    if (func->isMain())
-    {
-        return func->name();
-    }
-
-    return hashName(func);
 }
 
 spirv::Blob SPIRVBuilder::getSpirv()

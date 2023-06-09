@@ -505,12 +505,7 @@ OutputSPIRVTraverser::OutputSPIRVTraverser(TCompiler *compiler,
     : TIntermTraverser(true, true, true, &compiler->getSymbolTable()),
       mCompiler(compiler),
       mCompileOptions(compileOptions),
-      mBuilder(compiler,
-               compileOptions,
-               compiler->getHashFunction(),
-               compiler->getNameMap(),
-               uniqueToSpirvIdMap,
-               firstUnusedSpirvId)
+      mBuilder(compiler, compileOptions, uniqueToSpirvIdMap, firstUnusedSpirvId)
 {}
 
 OutputSPIRVTraverser::~OutputSPIRVTraverser()
@@ -1219,9 +1214,8 @@ void OutputSPIRVTraverser::declareSpecConst(TIntermDeclaration *decl)
     // All spec consts in ANGLE are initialized to 0.
     ASSERT(initializer->isZero(0));
 
-    const spirv::IdRef specConstId =
-        mBuilder.declareSpecConst(type.getBasicType(), type.getLayoutQualifier().location,
-                                  mBuilder.hashName(variable).data());
+    const spirv::IdRef specConstId = mBuilder.declareSpecConst(
+        type.getBasicType(), type.getLayoutQualifier().location, mBuilder.getName(variable).data());
 
     // Remember the id of the variable for future look up.
     ASSERT(mSymbolIdMap.count(variable) == 0);
@@ -5604,7 +5598,7 @@ bool OutputSPIRVTraverser::visitFunctionDefinition(Visit visit, TIntermFunctionD
             mSymbolIdMap[paramVariable] = paramId;
 
             spirv::WriteName(mBuilder.getSpirvDebug(), paramId,
-                             mBuilder.hashName(paramVariable).data());
+                             mBuilder.getName(paramVariable).data());
         }
 
         mBuilder.startNewFunction(ids.functionId, function);
@@ -6050,7 +6044,7 @@ bool OutputSPIRVTraverser::visitDeclaration(Visit visit, TIntermDeclaration *nod
 
     const spirv::IdRef variableId = mBuilder.declareVariable(
         typeId, storageClass, decorations, initializeWithDeclaration ? &initializerId : nullptr,
-        mBuilder.hashName(variable).data(), &variable->uniqueId());
+        mBuilder.getName(variable).data(), &variable->uniqueId());
 
     if (!initializeWithDeclaration && initializerId.valid())
     {

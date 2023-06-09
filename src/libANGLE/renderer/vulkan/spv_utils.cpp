@@ -5112,7 +5112,7 @@ void SpvAssignTransformFeedbackLocations(gl::ShaderType shaderType,
         for (uint32_t varyingIndex = 0; varyingIndex < tfVaryings.size(); ++varyingIndex)
         {
             const gl::TransformFeedbackVarying &tfVarying = tfVaryings[varyingIndex];
-            const std::string &tfVaryingName              = tfVarying.mappedName;
+            const std::string &tfVaryingName              = tfVarying.name;
 
             if (tfVaryingName == "gl_Position")
             {

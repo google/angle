@@ -307,8 +307,6 @@ class SPIRVBuilder : angle::NonCopyable
   public:
     SPIRVBuilder(TCompiler *compiler,
                  const ShCompileOptions &compileOptions,
-                 ShHashFunction64 hashFunction,
-                 NameMap &nameMap,
                  const angle::HashMap<int, uint32_t> &uniqueToSpirvIdMap,
                  uint32_t firstUnusedSpirvId);
 
@@ -423,15 +421,8 @@ class SPIRVBuilder : angle::NonCopyable
     spirv::IdRef getBreakTargetId() const;
     spirv::IdRef getContinueTargetId() const;
 
-    // TODO: remove name hashing once translation through glslang is removed.  That is necessary to
-    // avoid name collision between ANGLE's internal symbols and user-defined ones when compiling
-    // the generated GLSL, but is irrelevant when generating SPIR-V directly.  Currently, the SPIR-V
-    // transformer relies on the "mapped" names, which should also be changed when this hashing is
-    // removed.
-    ImmutableString hashName(const TSymbol *symbol);
-    ImmutableString hashTypeName(const TType &type);
-    ImmutableString hashFieldName(const TField *field);
-    ImmutableString hashFunctionName(const TFunction *func);
+    ImmutableString getName(const TSymbol *symbol);
+    ImmutableString getFieldName(const TField *field);
 
     spirv::Blob getSpirv();
 
@@ -542,10 +533,6 @@ class SPIRVBuilder : angle::NonCopyable
     // break or continue is visited, the stack is traversed backwards until a loop or switch is
     // found.
     std::vector<SpirvConditional> mConditionalStack;
-
-    // name hashing.
-    ShHashFunction64 mHashFunction;
-    NameMap &mNameMap;
 
     // Every resource that requires set & binding layout qualifiers is assigned set 0 and an
     // arbitrary binding.  Every input/output that requires a location layout qualifier is assigned
