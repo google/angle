@@ -56,7 +56,7 @@ ANGLE_INLINE ScopedContextMutexLock TryLockCurrentContext(Thread *thread)
 {
     ASSERT(kIsSharedContextMutexEnabled);
     gl::Context *context = thread->getContext();
-    return context != nullptr ? ScopedContextMutexLock(context->getContextMutex())
+    return context != nullptr ? ScopedContextMutexLock(context->getContextMutex(), context)
                               : ScopedContextMutexLock();
 }
 
@@ -70,7 +70,7 @@ ANGLE_INLINE ScopedContextMutexLock TryLockContextForThread(Thread *thread,
     ASSERT(kIsSharedContextMutexEnabled);
     gl::Context *context = GetContextIfValid(display, contextID);
     return context != nullptr ? (context == thread->getContext()
-                                     ? ScopedContextMutexLock(context->getContextMutex())
+                                     ? ScopedContextMutexLock(context->getContextMutex(), context)
                                      : context->lockAndActivateSharedContextMutex())
                               : ScopedContextMutexLock();
 }
@@ -106,7 +106,7 @@ ANGLE_INLINE ScopedContextMutexLock LockAndTryMergeSharedContextMutexes(gl::Cont
         }
     }
     // Do not activate "SharedContextMutex" if Image is not valid or does not have the mutex.
-    return ScopedContextMutexLock(context->getContextMutex());
+    return ScopedContextMutexLock(context->getContextMutex(), context);
 }
 
 #if !defined(ANGLE_ENABLE_SHARED_CONTEXT_MUTEX)
@@ -184,7 +184,7 @@ static ANGLE_INLINE void DirtyContextIfNeeded(Context *context)
 #        define SCOPED_EGL_IMAGE_SHARE_CONTEXT_LOCK(context, imageID) ANGLE_SCOPED_GLOBAL_LOCK()
 #    else
 #        define SCOPED_SHARE_CONTEXT_LOCK(context) \
-            std::lock_guard<egl::ContextMutex> shareContextLock(*context->getContextMutex())
+            egl::ScopedContextMutexLock shareContextLock(context->getContextMutex(), context)
 #        define SCOPED_EGL_IMAGE_SHARE_CONTEXT_LOCK(context, imageID) \
             ANGLE_SCOPED_GLOBAL_LOCK();                               \
             egl::ScopedContextMutexLock shareContextLock =            \

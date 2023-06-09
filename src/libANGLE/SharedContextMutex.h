@@ -12,6 +12,11 @@
 
 #include "common/debug.h"
 
+namespace gl
+{
+class Context;
+}
+
 namespace egl
 {
 #if defined(ANGLE_ENABLE_SHARED_CONTEXT_MUTEX)
@@ -88,37 +93,51 @@ class [[nodiscard]] ScopedContextMutexLock final
 {
   public:
     ANGLE_INLINE ScopedContextMutexLock() = default;
-    ANGLE_INLINE explicit ScopedContextMutexLock(ContextMutex *mutex) { lock(mutex); }
-    ANGLE_INLINE ScopedContextMutexLock(ContextMutex *mutex, ContextMutexMayBeNullTag)
+    ANGLE_INLINE ScopedContextMutexLock(ContextMutex *mutex, gl::Context *context)
+        : mMutex(mutex), mContext(context)
     {
-        if (mutex != nullptr)
+        ASSERT(mutex != nullptr);
+        ASSERT(context != nullptr);
+        mutex->lock();
+    }
+    ANGLE_INLINE ScopedContextMutexLock(ContextMutex *mutex,
+                                        gl::Context *context,
+                                        ContextMutexMayBeNullTag)
+        : mMutex(mutex), mContext(context)
+    {
+        if (ANGLE_LIKELY(mutex != nullptr))
         {
-            lock(mutex);
+            ASSERT(context != nullptr);
+            mutex->lock();
         }
     }
     ANGLE_INLINE ~ScopedContextMutexLock()
     {
-        if (mMutex != nullptr)
+        if (ANGLE_LIKELY(mMutex != nullptr))
         {
+            ASSERT(IsContextMutexStateConsistent(mContext));
             mMutex->unlock();
         }
     }
 
-    ANGLE_INLINE ScopedContextMutexLock(ScopedContextMutexLock &&other) : mMutex(other.mMutex)
+    ANGLE_INLINE ScopedContextMutexLock(ScopedContextMutexLock &&other)
+        : mMutex(other.mMutex), mContext(other.mContext)
     {
         other.mMutex = nullptr;
     }
     ANGLE_INLINE ScopedContextMutexLock &operator=(ScopedContextMutexLock &&other)
     {
         std::swap(mMutex, other.mMutex);
+        mContext = other.mContext;
         return *this;
     }
 
   private:
-    void lock(ContextMutex *mutex);
+    static bool IsContextMutexStateConsistent(gl::Context *context);
 
   private:
-    ContextMutex *mMutex = nullptr;
+    ContextMutex *mMutex  = nullptr;
+    gl::Context *mContext = nullptr;
 };
 
 // Mutex may be locked only by a single thread. Other threads may only check the status.

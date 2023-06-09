@@ -8,6 +8,7 @@
 #include "libANGLE/SharedContextMutex.h"
 
 #include "common/system_utils.h"
+#include "libANGLE/Context.h"
 
 namespace egl
 {
@@ -76,12 +77,10 @@ void ScopedContextMutexAddRefLock::lock(ContextMutex *mutex)
 }
 
 // ScopedContextMutexLock
-void ScopedContextMutexLock::lock(ContextMutex *mutex)
+bool ScopedContextMutexLock::IsContextMutexStateConsistent(gl::Context *context)
 {
-    ASSERT(mutex != nullptr);
-    ASSERT(mMutex == nullptr);
-    mMutex = mutex;
-    mMutex->lock();
+    ASSERT(context != nullptr);
+    return context->isContextMutexStateConsistent();
 }
 
 // SingleContextMutex

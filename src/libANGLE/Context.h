@@ -672,6 +672,8 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
 
     // For debugging purposes. "ContextMutex" MUST be locked during this call.
     bool isSharedContextMutexActive() const;
+    // For debugging purposes. "ContextMutex" MUST be locked during this call.
+    bool isContextMutexStateConsistent() const;
 
     // Important note:
     //   It is possible that this Context will continue to use "SingleContextMutex" in its current

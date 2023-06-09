@@ -1731,7 +1731,7 @@ Error Display::makeCurrent(Thread *thread,
     {
         ASSERT(context == nullptr || context->getContextMutex() != nullptr);
         ScopedContextMutexLock lock(context != nullptr ? context->getContextMutex() : nullptr,
-                                    kContextMutexMayBeNull);
+                                    context, kContextMutexMayBeNull);
 
         thread->setCurrent(context);
 
