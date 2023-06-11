@@ -914,9 +914,9 @@ RenderTargetVk *FramebufferVk::getDepthStencilRenderTarget() const
     return mRenderTargetCache.getDepthStencil();
 }
 
-RenderTargetVk *FramebufferVk::getColorDrawRenderTarget(size_t colorIndex) const
+RenderTargetVk *FramebufferVk::getColorDrawRenderTarget(size_t colorIndexGL) const
 {
-    RenderTargetVk *renderTarget = mRenderTargetCache.getColorDraw(mState, colorIndex);
+    RenderTargetVk *renderTarget = mRenderTargetCache.getColorDraw(mState, colorIndexGL);
     ASSERT(renderTarget && renderTarget->getImageForRenderPass().valid());
     return renderTarget;
 }

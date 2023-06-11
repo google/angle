@@ -169,7 +169,12 @@ void SetupDefaultPipelineState(const ContextVk *contextVk,
                 format = angle::FormatID::R8G8B8A8_UINT;
             }
 
-            graphicsPipelineDescOut->setRenderPassColorAttachmentFormat(location, format);
+            const size_t arraySize = outputVar.isArray() ? outputVar.getOutermostArraySize() : 1;
+            for (size_t arrayIndex = 0; arrayIndex < arraySize; ++arrayIndex)
+            {
+                graphicsPipelineDescOut->setRenderPassColorAttachmentFormat(location + arrayIndex,
+                                                                            format);
+            }
         }
     }
 
@@ -177,7 +182,7 @@ void SetupDefaultPipelineState(const ContextVk *contextVk,
     {
         if (outputVar.name == "gl_FragColor" || outputVar.name == "gl_FragData")
         {
-            size_t arraySize = outputVar.isArray() ? outputVar.getOutermostArraySize() : 1;
+            const size_t arraySize = outputVar.isArray() ? outputVar.getOutermostArraySize() : 1;
             for (size_t arrayIndex = 0; arrayIndex < arraySize; ++arrayIndex)
             {
                 graphicsPipelineDescOut->setRenderPassColorAttachmentFormat(

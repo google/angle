@@ -33,9 +33,9 @@
 #include "compiler/translator/tree_ops/vulkan/EmulateAdvancedBlendEquations.h"
 #include "compiler/translator/tree_ops/vulkan/EmulateDithering.h"
 #include "compiler/translator/tree_ops/vulkan/EmulateFragColorData.h"
+#include "compiler/translator/tree_ops/vulkan/EmulateFramebufferFetch.h"
 #include "compiler/translator/tree_ops/vulkan/EmulateYUVBuiltIns.h"
 #include "compiler/translator/tree_ops/vulkan/FlagSamplersWithTexelFetch.h"
-#include "compiler/translator/tree_ops/vulkan/ReplaceForShaderFramebufferFetch.h"
 #include "compiler/translator/tree_ops/vulkan/RewriteInterpolateAtOffset.h"
 #include "compiler/translator/tree_ops/vulkan/RewriteR32fImages.h"
 #include "compiler/translator/tree_util/BuiltIn.h"
@@ -423,11 +423,8 @@ TIntermSequence *GetMainSequence(TIntermBlock *root)
     TIntermAggregate *captureXfbCall =
         TIntermAggregate::CreateFunctionCall(*xfbCaptureFunction, {});
 
-    TIntermBlock *captureXfbBlock = new TIntermBlock;
-    captureXfbBlock->appendStatement(captureXfbCall);
-
     // Run it at the end of the shader.
-    if (!RunAtTheEndOfShader(compiler, root, captureXfbBlock, symbolTable))
+    if (!RunAtTheEndOfShader(compiler, root, captureXfbCall, symbolTable))
     {
         return false;
     }
@@ -666,6 +663,7 @@ bool HasFramebufferFetch(const TExtensionBehavior &extBehavior,
 {
     return IsExtensionEnabled(extBehavior, TExtension::EXT_shader_framebuffer_fetch) ||
            IsExtensionEnabled(extBehavior, TExtension::EXT_shader_framebuffer_fetch_non_coherent) ||
+           IsExtensionEnabled(extBehavior, TExtension::ARM_shader_framebuffer_fetch) ||
            IsExtensionEnabled(extBehavior, TExtension::NV_shader_framebuffer_fetch) ||
            (compileOptions.pls.type == ShPixelLocalStorageType::FramebufferFetch &&
             IsExtensionEnabled(extBehavior, TExtension::ANGLE_shader_pixel_local_storage));
@@ -1089,42 +1087,19 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
                 }
             }
 
-            if (HasFramebufferFetch(getExtensionBehavior(), compileOptions))
-            {
-                if (getShaderVersion() == 100)
-                {
-                    if (!ReplaceLastFrag(this, root, &getSymbolTable(), &mUniforms,
-                                         FramebufferFetchReplaceTarget::LastFragData))
-                    {
-                        return false;
-                    }
-                }
-                else
-                {
-                    if (!ReplaceInOutVariables(this, root, &getSymbolTable(), &mUniforms))
-                    {
-                        return false;
-                    }
-                }
-            }
-
-            // Translating GL_ARM_shader_framebuffer_fetch deals with a separate variable
-            // than translating the GL_EXT_shader_framebuffer_fetch extension. So they need
-            // to be handled in separate passes despite their similarities.
-            if (IsExtensionEnabled(getExtensionBehavior(),
-                                   TExtension::ARM_shader_framebuffer_fetch))
-            {
-                if (!ReplaceLastFrag(this, root, &getSymbolTable(), &mUniforms,
-                                     FramebufferFetchReplaceTarget::LastFragColor))
-                {
-                    return false;
-                }
-            }
-
             // Emulate gl_FragColor and gl_FragData with normal output variables.
             if (!EmulateFragColorData(this, root, &getSymbolTable()))
             {
                 return false;
+            }
+
+            // Emulate framebuffer fetch if used.
+            if (HasFramebufferFetch(getExtensionBehavior(), compileOptions))
+            {
+                if (!EmulateFramebufferFetch(this, root, &mUniforms))
+                {
+                    return false;
+                }
             }
 
             // This should be operated after doing ReplaceLastFragData and ReplaceInOutVariables,

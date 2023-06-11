@@ -5263,10 +5263,16 @@ TIntermTyped *TParseContext::addIndexExpression(TIntermTyped *baseExpression,
                     break;
             }
         }
-        else if (baseExpression->getQualifier() == EvqFragmentOut)
+        else if (baseExpression->getQualifier() == EvqFragmentOut ||
+                 baseExpression->getQualifier() == EvqFragmentInOut)
         {
             error(location,
                   "array indexes for fragment outputs must be constant integral expressions", "[");
+        }
+        else if (baseExpression->getQualifier() == EvqLastFragData)
+        {
+            error(location,
+                  "array indexes for gl_LastFragData must be constant integral expressions", "[");
         }
         else if (mShaderSpec == SH_WEBGL2_SPEC && baseExpression->getQualifier() == EvqFragData)
         {

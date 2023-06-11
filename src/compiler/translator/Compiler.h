@@ -141,7 +141,7 @@ class TCompiler : public TShHandleBase
     TSymbolTable &getSymbolTable() { return mSymbolTable; }
     ShShaderSpec getShaderSpec() const { return mShaderSpec; }
     ShShaderOutput getOutputType() const { return mOutputType; }
-    ShBuiltInResources getBuiltInResources() const { return mResources; }
+    const ShBuiltInResources &getBuiltInResources() const { return mResources; }
     const std::string &getBuiltInResourcesString() const { return mBuiltInResourcesString; }
 
     bool isHighPrecisionSupported() const;
