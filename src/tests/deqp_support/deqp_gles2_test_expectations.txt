@@ -4,7 +4,9 @@
 
 // See README.md for format.
 
-// Skip these tests due to timeouts
+// Tests took ~40s to run. Disable them for bots to prevent bots getting stuck.
+// Flush and finish are very common, and we have plenty of other tests that cover
+// these functionalities
 1034 : dEQP-GLES2.functional.flush_finish.* = SKIP
 
 // Failures related to not supporting separate depth/stencil masks on D3D11.
