@@ -111,27 +111,29 @@
 8169 ANDROID GLES : dEQP-EGL.functional.fence_sync.valid.egl_fence_persistent_buffer = SKIP
 
 // Android failures
-6533 ANDROID : dEQP-EGL.functional.native_color_mapping.native_window.* = SKIP
-6533 ANDROID : dEQP-EGL.functional.native_coord_mapping.native_window.* = SKIP
+6533 ANDROID VULKAN : dEQP-EGL.functional.native_color_mapping.native_window.* = SKIP
+6533 ANDROID VULKAN : dEQP-EGL.functional.native_coord_mapping.native_window.* = SKIP
+6533 PIXEL4ORXL GLES : dEQP-EGL.functional.native_color_mapping.native_window.* = SKIP
+6533 PIXEL4ORXL GLES : dEQP-EGL.functional.native_coord_mapping.native_window.* = SKIP
 
 // Android Vulkan (still failing March 16, 2022)
-6277 ANDROID VULKAN : dEQP-EGL.functional.image.api.create_image_gles2_android_native_rgb8 = FAIL
-6277 ANDROID VULKAN : dEQP-EGL.functional.image.create.gles2_android_native_rgb8_read_pixels = FAIL
-6277 ANDROID VULKAN : dEQP-EGL.functional.image.create.gles2_android_native_rgb8_texture = FAIL
-6277 ANDROID VULKAN : dEQP-EGL.functional.image.create.gles3_android_native_array_rgb565_texture_array = FAIL
-6277 ANDROID VULKAN : dEQP-EGL.functional.image.create.gles3_android_native_array_rgb8_texture_array = FAIL
-6277 ANDROID VULKAN : dEQP-EGL.functional.image.create.gles3_android_native_array_rgba8_texture_array = FAIL
-6277 ANDROID VULKAN : dEQP-EGL.functional.image.modify.android_native_rgb8_renderbuffer_clear_color = FAIL
-6277 ANDROID VULKAN : dEQP-EGL.functional.image.modify.android_native_rgb8_tex_subimage_rgb8 = FAIL
-6277 ANDROID VULKAN : dEQP-EGL.functional.image.render_multiple_contexts.gles2_android_native_rgb8_read_pixels = FAIL
-6277 ANDROID VULKAN : dEQP-EGL.functional.image.render_multiple_contexts.gles2_android_native_rgb8_texture = FAIL
+6277 PIXEL4ORXL VULKAN : dEQP-EGL.functional.image.api.create_image_gles2_android_native_rgb8 = FAIL
+6277 PIXEL4ORXL VULKAN : dEQP-EGL.functional.image.create.gles2_android_native_rgb8_read_pixels = FAIL
+6277 PIXEL4ORXL VULKAN : dEQP-EGL.functional.image.create.gles2_android_native_rgb8_texture = FAIL
+6277 PIXEL4ORXL VULKAN : dEQP-EGL.functional.image.create.gles3_android_native_array_rgb565_texture_array = FAIL
+6277 PIXEL4ORXL VULKAN : dEQP-EGL.functional.image.create.gles3_android_native_array_rgb8_texture_array = FAIL
+6277 PIXEL4ORXL VULKAN : dEQP-EGL.functional.image.create.gles3_android_native_array_rgba8_texture_array = FAIL
+6277 PIXEL4ORXL VULKAN : dEQP-EGL.functional.image.modify.android_native_rgb8_renderbuffer_clear_color = FAIL
+6277 PIXEL4ORXL VULKAN : dEQP-EGL.functional.image.modify.android_native_rgb8_tex_subimage_rgb8 = FAIL
+6277 PIXEL4ORXL VULKAN : dEQP-EGL.functional.image.render_multiple_contexts.gles2_android_native_rgb8_read_pixels = FAIL
+6277 PIXEL4ORXL VULKAN : dEQP-EGL.functional.image.render_multiple_contexts.gles2_android_native_rgb8_texture = FAIL
 
 // Pixel 6 Vulkan
 // These fail on the Android S bots, but pass on pre-release Android T drivers:
 6899 PIXEL6 VULKAN : dEQP-EGL.functional.query_context.*.rgb888_window = FAIL
 
 // render_sample_texture_array tests failing on some configurations on bots
-7506 ANDROID VULKAN : dEQP-EGL.functional.image.create.gles3_android_native_array_*_render_sample_texture_array = FAIL
+7506 PIXEL4ORXL VULKAN : dEQP-EGL.functional.image.create.gles3_android_native_array_*_render_sample_texture_array = FAIL
 7506 ANDROID GLES : dEQP-EGL.functional.image.create.gles3_android_native_array_*_render_sample_texture_array = FAIL
 
 // ES 1 tests
@@ -155,8 +157,10 @@
 
 // Tests that fail when the GL desktop frontend is enabled
 // TODO(http://anglebug.com/7566): Get these tests to pass.
-7533 : dEQP-EGL.functional.create_context_ext.gl_30.* = SKIP
-7533 : dEQP-EGL.functional.create_context_ext.robust_gl_30.* = SKIP
+7533 SWIFTSHADER : dEQP-EGL.functional.create_context_ext.gl_30.* = SKIP
+7533 SWIFTSHADER : dEQP-EGL.functional.create_context_ext.robust_gl_30.* = SKIP
+7533 VULKAN NVIDIA : dEQP-EGL.functional.create_context_ext.gl_30.* = SKIP
+7533 VULKAN NVIDIA : dEQP-EGL.functional.create_context_ext.robust_gl_30.* = SKIP
 
 //// Metal
 
