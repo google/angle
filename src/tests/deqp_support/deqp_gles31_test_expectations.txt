@@ -37,12 +37,6 @@
 1442 D3D11 : dEQP-GLES31.functional.image_load_store.*.format_reinterpret.rgba8_snorm_r32i = SKIP
 7345 D3D11 : dEQP-GLES31.functional.image_load_store.*.qualifiers.* = SKIP
 
-// Times out shader compilation because it uses so many resources.
-3445 : dEQP-GLES31.functional.ssbo.layout.random.all_shared_buffer.48 = SKIP
-
-// Slow tests.
-6021 : dEQP-GLES31.functional.ssbo.layout.random.all_shared_buffer.36 = TIMEOUT
-
 // D3D11 Failing Tests
 // Below cases are failed due to binding multi-UAVs to a single buffer is not supported in D3D backend.
 // http://anglebug.com/3032
@@ -182,7 +176,7 @@ b/266710445 WIN OPENGL NVIDIA : dEQP-GLES31.functional.image_load_store.buffer.a
 ////
 
 // Cannot create 2D (array) view of 3D texture.  These fail with validation errors, and cause a crash in syncval.
-3886 VULKAN : dEQP-GLES31.functional.image_load_store.3d.*single_layer = SKIP
+3886 VULKAN NVIDIA : dEQP-GLES31.functional.image_load_store.3d.*single_layer = SKIP
 
 // Emulated advanced blend equations (only Nvidia and SwiftShader support the Vulkan extension):
 3586 AMD VULKAN : dEQP-GLES31.functional.blend_equation_advanced.msaa.* = FAIL
@@ -210,9 +204,6 @@ b/266710445 WIN OPENGL NVIDIA : dEQP-GLES31.functional.image_load_store.buffer.a
 // Frambuffer without attachments still fail on Pixel 4. Rendering is crossing over the default framebuffer size
 3579 PIXEL4ORXL VULKAN : dEQP-GLES31.functional.fbo.no_attachments.* = SKIP
 
-// Need to support non-color when staging image updates
-4080 ANDROID VULKAN : dEQP-GLES31.functional.stencil_texturing.misc.base_level = SKIP
-
 // Fail on tests that use an unsupported extension!
 4371 SWIFTSHADER : dEQP-GLES31.functional.shaders.implicit_conversions.* = FAIL
 
@@ -230,9 +221,9 @@ b/266710445 WIN OPENGL NVIDIA : dEQP-GLES31.functional.image_load_store.buffer.a
 7415 NVIDIA VULKAN : dEQP-GLES31.functional.copy_image.mixed.*astc* = FAIL
 7415 NVIDIA VULKAN : dEQP-GLES31.functional.copy_image.compressed.viewclass_astc* = FAIL
 
-// Vulkan Android failures with these formats
-5277 VULKAN ANDROID : dEQP-GLES31.functional.copy_image.non_compressed.viewclass_32_bits.rgba8_snorm_rgb10_a2* = FAIL
-5277 VULKAN ANDROID : dEQP-GLES31.functional.copy_image.non_compressed.viewclass_32_bits.rgba8_snorm_rgb9_e5* = FAIL
+// Vulkan Pixel4 failures with these formats
+5277 VULKAN PIXEL4ORXL : dEQP-GLES31.functional.copy_image.non_compressed.viewclass_32_bits.rgba8_snorm_rgb10_a2* = FAIL
+5277 VULKAN PIXEL4ORXL : dEQP-GLES31.functional.copy_image.non_compressed.viewclass_32_bits.rgba8_snorm_rgb9_e5* = FAIL
 
 // When ANGLE allows non-conformant features, imageAtomicExchange with r32f fails
 5503 SWIFTSHADER : dEQP-GLES31.functional.image_load_store.*.atomic.exchange_r32f* = SKIP
@@ -453,11 +444,6 @@ b/224537784 PIXEL4ORXL VULKAN : dEQP-GLES31.functional.debug.error_groups.case_9
 
 // Fails when the expression being interpolated as an indexed varying array.
 6194 PIXEL4ORXL VULKAN : dEQP-GLES31.functional.shaders.multisample_interpolation.interpolate_at_offset.array_element.* = FAIL
-
-// Pixel 6 expectations
-// We added back the spirv precision match fixer code because IMG needs it, but the code added back was causing the test to
-// crash on ARM. Skip this test for now until we add a feature to only enable the precision match ficer on IMG
-7488 PIXEL6 VULKAN : dEQP-GLES31.functional.shaders.linkage.es31.tessellation.varying.rules.internal_different_precision = SKIP
 
 // Geometry shader support:
 // This fails on pre-release Android T drivers as of 3/25/22:
