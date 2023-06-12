@@ -1622,7 +1622,7 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
 
     if (traceNameIs("respawnables"))
     {
-        if (isIntelLinuxNative || isNVIDIAWinNative || isIntelWinNative)
+        if (!mParams->isANGLE() && (IsWindows() || IsLinux()))
         {
             skipTest("TODO: https://anglebug.com/8191 Undefined behavior on native");
         }
