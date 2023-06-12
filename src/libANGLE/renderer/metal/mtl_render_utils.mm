@@ -901,15 +901,14 @@ StencilBlitViaBufferParams::StencilBlitViaBufferParams(const DepthStencilBlitPar
 // RenderUtils implementation
 RenderUtils::RenderUtils(DisplayMtl *display)
     : Context(display),
-      mClearUtils(
-          {ClearUtils("clearIntFS"), ClearUtils("clearUIntFS"), ClearUtils("clearFloatFS")}),
-      mColorBlitUtils({ColorBlitUtils("blitIntFS"), ColorBlitUtils("blitUIntFS"),
-                       ColorBlitUtils("blitFloatFS")}),
+      mClearUtils{ClearUtils("clearIntFS"), ClearUtils("clearUIntFS"), ClearUtils("clearFloatFS")},
+      mColorBlitUtils{ColorBlitUtils("blitIntFS"), ColorBlitUtils("blitUIntFS"),
+                      ColorBlitUtils("blitFloatFS")},
       mCopyTextureFloatToUIntUtils("copyTextureFloatToUIntFS"),
-      mCopyPixelsUtils(
-          {CopyPixelsUtils("readFromBufferToIntTexture", "writeFromIntTextureToBuffer"),
-           CopyPixelsUtils("readFromBufferToUIntTexture", "writeFromUIntTextureToBuffer"),
-           CopyPixelsUtils("readFromBufferToFloatTexture", "writeFromFloatTextureToBuffer")})
+      mCopyPixelsUtils{
+          CopyPixelsUtils("readFromBufferToIntTexture", "writeFromIntTextureToBuffer"),
+          CopyPixelsUtils("readFromBufferToUIntTexture", "writeFromUIntTextureToBuffer"),
+          CopyPixelsUtils("readFromBufferToFloatTexture", "writeFromFloatTextureToBuffer")}
 {}
 
 RenderUtils::~RenderUtils() {}
@@ -1187,8 +1186,6 @@ ClearUtils::ClearUtils(const std::string &fragmentShaderName)
     : mFragmentShaderName(fragmentShaderName)
 {}
 
-ClearUtils::ClearUtils(const ClearUtils &src) : ClearUtils(src.mFragmentShaderName) {}
-
 void ClearUtils::onDestroy()
 {
     ClearRenderPipelineCacheArray(&mClearRenderPipelineCache);
@@ -1389,9 +1386,6 @@ angle::Result ClearUtils::clearWithDraw(const gl::Context *context,
 // ColorBlitUtils implementation
 ColorBlitUtils::ColorBlitUtils(const std::string &fragmentShaderName)
     : mFragmentShaderName(fragmentShaderName)
-{}
-
-ColorBlitUtils::ColorBlitUtils(const ColorBlitUtils &src) : ColorBlitUtils(src.mFragmentShaderName)
 {}
 
 void ColorBlitUtils::onDestroy()
@@ -2675,9 +2669,6 @@ angle::Result MipmapUtils::generateMipmapCS(ContextMtl *contextMtl,
 CopyPixelsUtils::CopyPixelsUtils(const std::string &readShaderName,
                                  const std::string &writeShaderName)
     : mReadShaderName(readShaderName), mWriteShaderName(writeShaderName)
-{}
-CopyPixelsUtils::CopyPixelsUtils(const CopyPixelsUtils &src)
-    : CopyPixelsUtils(src.mReadShaderName, src.mWriteShaderName)
 {}
 
 void CopyPixelsUtils::onDestroy()
