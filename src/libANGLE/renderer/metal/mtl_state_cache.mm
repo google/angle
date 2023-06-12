@@ -133,41 +133,6 @@ inline AutoObjCPtr<MTLRenderPipelineColorAttachmentDescriptor *> ToObjC(
     return objCDesc;
 }
 
-AutoObjCPtr<MTLRenderPipelineDescriptor *> CreateMTLRenderPipelineDescriptor(
-    id<MTLFunction> vertexShader,
-    id<MTLFunction> fragmentShader,
-    const RenderPipelineDesc &desc)
-{
-    auto objCDesc = adoptObjCObj([[MTLRenderPipelineDescriptor alloc] init]);
-    [objCDesc reset];
-
-    ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), desc, vertexDescriptor);
-
-    for (uint8_t i = 0; i < desc.outputDescriptor.numColorAttachments; ++i)
-    {
-        [objCDesc.get().colorAttachments setObject:ToObjC(desc.outputDescriptor.colorAttachments[i])
-                                atIndexedSubscript:i];
-    }
-    ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), desc.outputDescriptor, depthAttachmentPixelFormat);
-    ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), desc.outputDescriptor, stencilAttachmentPixelFormat);
-    ANGLE_APPLE_ALLOW_DEPRECATED_BEGIN
-    ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), desc.outputDescriptor, sampleCount);
-    ANGLE_APPLE_ALLOW_DEPRECATED_END
-
-#if ANGLE_MTL_PRIMITIVE_TOPOLOGY_CLASS_AVAILABLE
-    ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), desc, inputPrimitiveTopology);
-#endif
-    ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), desc, alphaToCoverageEnabled);
-
-    // rasterizationEnabled will be true for both EmulatedDiscard & Enabled.
-    objCDesc.get().rasterizationEnabled = desc.rasterizationEnabled();
-
-    objCDesc.get().vertexFunction   = vertexShader;
-    objCDesc.get().fragmentFunction = objCDesc.get().rasterizationEnabled ? fragmentShader : nil;
-
-    return objCDesc;
-}
-
 id<MTLTexture> ToObjC(const TextureRef &texture)
 {
     auto textureRef = texture;
@@ -669,6 +634,40 @@ bool RenderPipelineDesc::rasterizationEnabled() const
     return rasterizationType != RenderPipelineRasterization::Disabled;
 }
 
+AutoObjCPtr<MTLRenderPipelineDescriptor *> RenderPipelineDesc::createMetalDesc(
+    id<MTLFunction> vertexShader,
+    id<MTLFunction> fragmentShader) const
+{
+    auto objCDesc = adoptObjCObj([[MTLRenderPipelineDescriptor alloc] init]);
+    [objCDesc reset];
+
+    ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), *this, vertexDescriptor);
+
+    for (uint8_t i = 0; i < outputDescriptor.numColorAttachments; ++i)
+    {
+        [objCDesc.get().colorAttachments setObject:ToObjC(outputDescriptor.colorAttachments[i])
+                                atIndexedSubscript:i];
+    }
+    ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), outputDescriptor, depthAttachmentPixelFormat);
+    ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), outputDescriptor, stencilAttachmentPixelFormat);
+    ANGLE_APPLE_ALLOW_DEPRECATED_BEGIN
+    ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), outputDescriptor, sampleCount);
+    ANGLE_APPLE_ALLOW_DEPRECATED_END
+
+#if ANGLE_MTL_PRIMITIVE_TOPOLOGY_CLASS_AVAILABLE
+    ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), *this, inputPrimitiveTopology);
+#endif
+    ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), *this, alphaToCoverageEnabled);
+
+    // rasterizationEnabled will be true for both EmulatedDiscard & Enabled.
+    objCDesc.get().rasterizationEnabled = rasterizationEnabled();
+
+    objCDesc.get().vertexFunction   = vertexShader;
+    objCDesc.get().fragmentFunction = objCDesc.get().rasterizationEnabled ? fragmentShader : nil;
+
+    return objCDesc;
+}
+
 // RenderPassDesc implementation
 RenderPassAttachmentDesc::RenderPassAttachmentDesc()
 {
@@ -1058,7 +1057,7 @@ AutoObjCPtr<id<MTLRenderPipelineState>> RenderPipelineCache::createRenderPipelin
 
         const mtl::ContextDevice &metalDevice = context->getMetalDevice();
 
-        auto objCDesc = CreateMTLRenderPipelineDescriptor(vertShader, fragShader, desc);
+        auto objCDesc = desc.createMetalDesc(vertShader, fragShader);
 
         // Validate Render Pipeline State:
         if (DeviceHasMaximumRenderTargetSize(metalDevice))

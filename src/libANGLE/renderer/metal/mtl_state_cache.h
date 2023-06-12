@@ -275,6 +275,10 @@ struct alignas(4) RenderPipelineDesc
     size_t hash() const;
     bool rasterizationEnabled() const;
 
+    AutoObjCPtr<MTLRenderPipelineDescriptor *> createMetalDesc(
+        id<MTLFunction> vertexShader,
+        id<MTLFunction> fragmentShader) const;
+
     VertexDesc vertexDescriptor;
 
     RenderPipelineOutputDesc outputDescriptor;
