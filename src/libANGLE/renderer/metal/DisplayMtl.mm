@@ -102,7 +102,7 @@ DisplayImpl *CreateMetalDisplay(const egl::DisplayState &state)
 }
 
 DisplayMtl::DisplayMtl(const egl::DisplayState &state)
-    : DisplayImpl(state), mDisplay(nullptr), mStateCache(mFeatures), mUtils(this)
+    : DisplayImpl(state), mDisplay(nullptr), mStateCache(mFeatures)
 {}
 
 DisplayMtl::~DisplayMtl() {}
@@ -158,13 +158,15 @@ angle::Result DisplayMtl::initializeImpl(egl::Display *display)
         ANGLE_TRY(mFormatTable.initialize(this));
         ANGLE_TRY(initializeShaderLibrary());
 
-        return mUtils.initialize();
+        mUtils = std::make_unique<mtl::RenderUtils>(this);
+
+        return angle::Result::Continue;
     }
 }
 
 void DisplayMtl::terminate()
 {
-    mUtils.onDestroy();
+    mUtils = nullptr;
     mCmdQueue.reset();
     mDefaultShaders = nil;
     mMetalDevice    = nil;

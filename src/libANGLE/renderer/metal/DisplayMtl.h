@@ -144,7 +144,7 @@ class DisplayMtl : public DisplayImpl
 
     mtl::CommandQueue &cmdQueue() { return mCmdQueue; }
     const mtl::FormatTable &getFormatTable() const { return mFormatTable; }
-    mtl::RenderUtils &getUtils() { return mUtils; }
+    mtl::RenderUtils &getUtils() { return *mUtils; }
     mtl::StateCache &getStateCache() { return mStateCache; }
     mtl::LibraryCache &getLibraryCache() { return mLibraryCache; }
     uint32_t getMaxColorTargetBits() { return mMaxColorTargetBits; }
@@ -202,7 +202,7 @@ class DisplayMtl : public DisplayImpl
     mutable mtl::FormatTable mFormatTable;
     mtl::StateCache mStateCache;
     mtl::LibraryCache mLibraryCache;
-    mtl::RenderUtils mUtils;
+    std::unique_ptr<mtl::RenderUtils> mUtils;
 
     // Built-in Shaders
     mtl::AutoObjCPtr<id<MTLLibrary>> mDefaultShaders;

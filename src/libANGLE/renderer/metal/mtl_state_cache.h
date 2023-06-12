@@ -471,50 +471,6 @@ class ProvokingVertexCacheSpecializeShaderFactory
         const ProvokingVertexComputePipelineDesc &renderPipelineDesc) = 0;
 };
 
-// Render pipeline state cache per shader program.
-class RenderPipelineCache final : angle::NonCopyable
-{
-  public:
-    RenderPipelineCache();
-    ~RenderPipelineCache();
-
-    void setVertexShader(ContextMtl *context, id<MTLFunction> shader);
-    void setFragmentShader(ContextMtl *context, id<MTLFunction> shader);
-
-    // Get non-specialized shaders supplied via set*Shader().
-    id<MTLFunction> getVertexShader() { return mVertexShader; }
-    id<MTLFunction> getFragmentShader() { return mFragmentShader; }
-
-    AutoObjCPtr<id<MTLRenderPipelineState>> getRenderPipelineState(ContextMtl *context,
-                                                                   const RenderPipelineDesc &desc);
-
-    void clear();
-
-  protected:
-    // Non-specialized vertex shader
-    AutoObjCPtr<id<MTLFunction>> mVertexShader;
-    // Non-specialized fragment shader
-    AutoObjCPtr<id<MTLFunction>> mFragmentShader;
-
-  private:
-    void clearPipelineStates();
-    void recreatePipelineStates(ContextMtl *context);
-    AutoObjCPtr<id<MTLRenderPipelineState>> insertRenderPipelineState(
-        ContextMtl *context,
-        const RenderPipelineDesc &desc,
-        bool insertDefaultAttribLayout);
-    AutoObjCPtr<id<MTLRenderPipelineState>> createRenderPipelineState(
-        ContextMtl *context,
-        const RenderPipelineDesc &desc,
-        bool insertDefaultAttribLayout);
-
-    bool hasDefaultAttribs(const RenderPipelineDesc &desc) const;
-
-    // One table with default attrib and one table without.
-    angle::HashMap<RenderPipelineDesc, AutoObjCPtr<id<MTLRenderPipelineState>>>
-        mRenderPipelineStates[2];
-};
-
 // render pipeline state cache per shader program
 class ProvokingVertexComputePipelineCache final : angle::NonCopyable
 {
