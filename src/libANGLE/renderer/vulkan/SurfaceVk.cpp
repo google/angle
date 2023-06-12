@@ -145,9 +145,9 @@ angle::Result InitImageHelper(DisplayVk *displayVk,
                               vk::ImageHelper *imageHelper)
 {
     const angle::Format &textureFormat = vkFormat.getActualRenderableImageFormat();
-    bool isDepthOrStencilFormat = textureFormat.depthBits > 0 || textureFormat.stencilBits > 0;
-    VkImageUsageFlags usage     = isDepthOrStencilFormat ? kSurfaceVkDepthStencilImageUsageFlags
-                                                         : kSurfaceVkColorImageUsageFlags;
+    bool isDepthOrStencilFormat        = textureFormat.hasDepthOrStencilBits();
+    VkImageUsageFlags usage = isDepthOrStencilFormat ? kSurfaceVkDepthStencilImageUsageFlags
+                                                     : kSurfaceVkColorImageUsageFlags;
 
     RendererVk *rendererVk = displayVk->getRenderer();
     // If shaders may be fetching from this, we need this image to be an input

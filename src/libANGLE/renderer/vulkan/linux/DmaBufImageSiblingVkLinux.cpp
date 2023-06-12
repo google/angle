@@ -158,7 +158,7 @@ VkImageUsageFlags GetUsageFlags(RendererVk *renderer,
                                 bool *texturableOut,
                                 bool *renderableOut)
 {
-    const bool isDepthStencilFormat = format.depthBits > 0 || format.stencilBits > 0;
+    const bool isDepthStencilFormat = format.hasDepthOrStencilBits();
 
     // Check what format features are exposed for this modifier.
     constexpr uint32_t kTextureableRequiredBits =

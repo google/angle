@@ -456,9 +456,8 @@ bool TextureVk::isFastUnpackPossible(const vk::Format &vkFormat, size_t offset) 
     //    to emulated depth/stencil.
     // 3. vkCmdCopyBufferToImage requires byte offset to be a multiple of 4.
     const angle::Format &bufferFormat = vkFormat.getActualBufferFormat(false);
-    const bool isCombinedDepthStencil = bufferFormat.depthBits > 0 && bufferFormat.stencilBits > 0;
-    const bool isDepthXorStencil = (bufferFormat.depthBits > 0 && bufferFormat.stencilBits == 0) ||
-                                   (bufferFormat.depthBits == 0 && bufferFormat.stencilBits > 0);
+    const bool isCombinedDepthStencil = bufferFormat.hasDepthAndStencilBits();
+    const bool isDepthXorStencil = bufferFormat.hasDepthOrStencilBits() && !isCombinedDepthStencil;
     const bool isCompatibleDepth = vkFormat.getIntendedFormat().depthBits == bufferFormat.depthBits;
     const VkDeviceSize imageCopyAlignment =
         vk::GetImageCopyBufferAlignment(mImage->getActualFormatID());
