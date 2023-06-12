@@ -67,6 +67,8 @@ metal_backend_sources = [
   "mtl_msl_utils.mm",
   "mtl_occlusion_query_pool.h",
   "mtl_occlusion_query_pool.mm",
+  "mtl_pipeline_cache.h",
+  "mtl_pipeline_cache.mm",
   "mtl_render_utils.h",
   "mtl_render_utils.mm",
   "mtl_resource_spi.h",

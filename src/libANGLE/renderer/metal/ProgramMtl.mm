@@ -492,7 +492,6 @@ ProgramMtl::ProgramMtl(const gl::ProgramState &state)
     : ProgramImpl(state),
       mProgramHasFlatAttributes(false),
       mShadowCompareModes(),
-      mMetalRenderPipelineCache(this),
       mAuxBufferPool(nullptr)
 {}
 
@@ -545,7 +544,6 @@ void ProgramMtl::reset(ContextMtl *context)
             mAuxBufferPool = nullptr;
         }
     }
-    mMetalRenderPipelineCache.clear();
 }
 
 void ProgramMtl::saveTranslatedShaders(gl::BinaryOutputStream *stream)
@@ -1007,12 +1005,6 @@ angle::Result ProgramMtl::getSpecializedShader(ContextMtl *context,
     *shaderOut = shaderVariant->metalShader;
 
     return angle::Result::Continue;
-}
-
-bool ProgramMtl::hasSpecializedShader(gl::ShaderType shaderType,
-                                      const mtl::RenderPipelineDesc &renderPipelineDesc)
-{
-    return true;
 }
 
 void ProgramMtl::saveInterfaceBlockInfo(gl::BinaryOutputStream *stream)
@@ -1546,14 +1538,18 @@ angle::Result ProgramMtl::setupDraw(const gl::Context *glContext,
     ContextMtl *context = mtl::GetImpl(glContext);
     if (pipelineDescChanged)
     {
-        // Render pipeline state needs to be changed
-        id<MTLRenderPipelineState> pipelineState =
-            mMetalRenderPipelineCache.getRenderPipelineState(context, pipelineDesc);
-        if (!pipelineState)
-        {
-            // Error already logged inside getRenderPipelineState()
-            return angle::Result::Stop;
-        }
+        id<MTLFunction> vertexShader = nil;
+        ANGLE_TRY(
+            getSpecializedShader(context, gl::ShaderType::Vertex, pipelineDesc, &vertexShader));
+
+        id<MTLFunction> fragmentShader = nil;
+        ANGLE_TRY(
+            getSpecializedShader(context, gl::ShaderType::Fragment, pipelineDesc, &fragmentShader));
+
+        mtl::AutoObjCPtr<id<MTLRenderPipelineState>> pipelineState;
+        ANGLE_TRY(context->getPipelineCache().getRenderPipeline(
+            context, vertexShader, fragmentShader, pipelineDesc, &pipelineState));
+
         cmdEncoder->setRenderPipelineState(pipelineState);
 
         // We need to rebind uniform buffers & textures also

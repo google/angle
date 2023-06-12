@@ -22,6 +22,7 @@
 #include "libANGLE/renderer/metal/mtl_command_buffer.h"
 #include "libANGLE/renderer/metal/mtl_context_device.h"
 #include "libANGLE/renderer/metal/mtl_occlusion_query_pool.h"
+#include "libANGLE/renderer/metal/mtl_pipeline_cache.h"
 #include "libANGLE/renderer/metal/mtl_resources.h"
 #include "libANGLE/renderer/metal/mtl_state_cache.h"
 #include "libANGLE/renderer/metal/mtl_utils.h"
@@ -398,6 +399,8 @@ class ContextMtl : public ContextImpl, public mtl::Context
     const mtl::BufferRef &getWorkBuffer() const { return mWorkBuffer; }
     mtl::BufferManager &getBufferManager() { return mBufferManager; }
 
+    mtl::PipelineCache &getPipelineCache() { return mPipelineCache; }
+
     angle::ImageLoadContext getImageLoadContext() const;
 
   private:
@@ -583,6 +586,8 @@ class ContextMtl : public ContextImpl, public mtl::Context
     mtl::BlitCommandEncoder mBlitEncoder;
     mtl::ComputeCommandEncoder mComputeEncoder;
     bool mHasMetalSharedEvents = false;
+
+    mtl::PipelineCache mPipelineCache;
 
     // Cached back-end objects
     FramebufferMtl *mDrawFramebuffer = nullptr;

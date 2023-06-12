@@ -863,14 +863,12 @@ void RenderPassDesc::convertToMetalDesc(MTLRenderPassDescriptor *objCDesc,
 }
 
 // RenderPipelineCache implementation
-RenderPipelineCache::RenderPipelineCache() : RenderPipelineCache(nullptr) {}
+RenderPipelineCache::RenderPipelineCache() {}
 
-RenderPipelineCache::RenderPipelineCache(
-    RenderPipelineCacheSpecializeShaderFactory *specializedShaderFactory)
-    : mSpecializedShaderFactory(specializedShaderFactory)
-{}
-
-RenderPipelineCache::~RenderPipelineCache() {}
+RenderPipelineCache::~RenderPipelineCache()
+{
+    clearPipelineStates();
+}
 
 void RenderPipelineCache::setVertexShader(ContextMtl *context, id<MTLFunction> shader)
 {
@@ -1014,50 +1012,9 @@ AutoObjCPtr<id<MTLRenderPipelineState>> RenderPipelineCache::createRenderPipelin
 {
     ANGLE_MTL_OBJC_SCOPE
     {
-        // Choose shader variant
-        id<MTLFunction> vertShader = nil;
-        id<MTLFunction> fragShader = nil;
-        if (mSpecializedShaderFactory &&
-            mSpecializedShaderFactory->hasSpecializedShader(gl::ShaderType::Vertex, desc))
-        {
-            if (IsError(mSpecializedShaderFactory->getSpecializedShader(
-                    context, gl::ShaderType::Vertex, desc, &vertShader)))
-            {
-                return nil;
-            }
-        }
-        else
-        {
-            // Non-specialized version
-            vertShader = mVertexShader;
-        }
-
-        if (mSpecializedShaderFactory &&
-            mSpecializedShaderFactory->hasSpecializedShader(gl::ShaderType::Fragment, desc))
-        {
-            if (IsError(mSpecializedShaderFactory->getSpecializedShader(
-                    context, gl::ShaderType::Fragment, desc, &fragShader)))
-            {
-                return nil;
-            }
-        }
-        else
-        {
-            // Non-specialized version
-            fragShader = mFragmentShader;
-        }
-
-        if (!vertShader)
-        {
-            // Render pipeline without vertex shader is invalid.
-            ANGLE_MTL_HANDLE_ERROR(context, "Render pipeline without vertex shader is invalid.",
-                                   GL_INVALID_OPERATION);
-            return nil;
-        }
-
         const mtl::ContextDevice &metalDevice = context->getMetalDevice();
 
-        auto objCDesc = desc.createMetalDesc(vertShader, fragShader);
+        auto objCDesc = desc.createMetalDesc(mVertexShader, mFragmentShader);
 
         // Validate Render Pipeline State:
         if (DeviceHasMaximumRenderTargetSize(metalDevice))

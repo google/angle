@@ -112,7 +112,7 @@ struct ProgramShaderObjVariantMtl
     const mtl::TranslatedShaderInfo *translatedSrcInfo;
 };
 
-class ProgramMtl : public ProgramImpl, public mtl::RenderPipelineCacheSpecializeShaderFactory
+class ProgramMtl : public ProgramImpl
 {
   public:
     ProgramMtl(const gl::ProgramState &state);
@@ -186,13 +186,10 @@ class ProgramMtl : public ProgramImpl, public mtl::RenderPipelineCacheSpecialize
     void getUniformiv(const gl::Context *context, GLint location, GLint *params) const override;
     void getUniformuiv(const gl::Context *context, GLint location, GLuint *params) const override;
 
-    // Override mtl::RenderPipelineCacheSpecializeShaderFactory
     angle::Result getSpecializedShader(ContextMtl *context,
                                        gl::ShaderType shaderType,
                                        const mtl::RenderPipelineDesc &renderPipelineDesc,
-                                       id<MTLFunction> *shaderOut) override;
-    bool hasSpecializedShader(gl::ShaderType shaderType,
-                              const mtl::RenderPipelineDesc &renderPipelineDesc) override;
+                                       id<MTLFunction> *shaderOut);
 
     // Calls this before drawing, changedPipelineDesc is passed when vertex attributes desc and/or
     // shader program changed.
@@ -333,7 +330,6 @@ class ProgramMtl : public ProgramImpl, public mtl::RenderPipelineCacheSpecialize
 
     uint32_t mShadowCompareModes[mtl::kMaxShaderSamplers];
 
-    mtl::RenderPipelineCache mMetalRenderPipelineCache;
     mtl::BufferPool *mAuxBufferPool;
 };
 
