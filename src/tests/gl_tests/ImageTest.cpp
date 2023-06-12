@@ -39,6 +39,7 @@ constexpr char kExternalExt[]                    = "GL_OES_EGL_image_external";
 constexpr char kExternalESSL3Ext[]               = "GL_OES_EGL_image_external_essl3";
 constexpr char kYUVInternalFormatExt[]           = "GL_ANGLE_yuv_internal_format";
 constexpr char kYUVTargetExt[]                   = "GL_EXT_YUV_target";
+constexpr char kRGBXInternalFormatExt[]          = "GL_ANGLE_rgbx_internal_format";
 constexpr char kBaseExt[]                        = "EGL_KHR_image_base";
 constexpr char k2DTextureExt[]                   = "EGL_KHR_gl_texture_2D_image";
 constexpr char k3DTextureExt[]                   = "EGL_KHR_gl_texture_3D_image";
@@ -1180,6 +1181,8 @@ void main()
     bool hasYUVInternalFormatExt() const { return IsGLExtensionEnabled(kYUVInternalFormatExt); }
 
     bool hasYUVTargetExt() const { return IsGLExtensionEnabled(kYUVTargetExt); }
+
+    bool hasRGBXInternalFormatExt() const { return IsGLExtensionEnabled(kRGBXInternalFormatExt); }
 
     bool hasBaseExt() const
     {
@@ -3900,6 +3903,89 @@ TEST_P(ImageTestES3, RGBXAHBImportPreservesData_Colorspace)
 
     verifyResults2D(ahbTexture, kRed50Linear);
     verifyResultAHB(ahb, {{kRed50SRGB, 4}});
+
+    // Clean up
+    eglDestroyImageKHR(window->getDisplay(), ahbImage);
+    destroyAndroidHardwareBuffer(ahb);
+}
+
+// Tests that RGBX can be successfully loaded with 3-channel data and read back as 4-channel data.
+TEST_P(ImageTestES3, RGBXAHBUploadDownload)
+{
+    EGLWindow *window = getEGLWindow();
+
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
+    ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasRGBXInternalFormatExt());
+
+    const size_t kWidth  = 32;
+    const size_t kHeight = 32;
+
+    const GLubyte kBlack[] = {0, 0, 0, 255};
+    const GLubyte kCyan[]  = {0, 255, 255};
+
+    std::vector<GLubyte> pixelsRGBABlack;
+    for (size_t h = 0; h < kHeight; h++)
+    {
+        for (size_t w = 0; w < kWidth; w++)
+        {
+            pixelsRGBABlack.push_back(kBlack[0]);
+            pixelsRGBABlack.push_back(kBlack[1]);
+            pixelsRGBABlack.push_back(kBlack[2]);
+            pixelsRGBABlack.push_back(kBlack[3]);
+        }
+    }
+
+    std::vector<GLubyte> pixelsRGBCyan;
+    for (size_t h = 0; h < kHeight; h++)
+    {
+        for (size_t w = 0; w < kWidth; w++)
+        {
+            pixelsRGBCyan.push_back(kCyan[0]);
+            pixelsRGBCyan.push_back(kCyan[1]);
+            pixelsRGBCyan.push_back(kCyan[2]);
+        }
+    }
+
+    // Create the Image
+    AHardwareBuffer *ahb;
+    EGLImageKHR ahbImage;
+    createEGLImageAndroidHardwareBufferSource(
+        kWidth, kHeight, 1, AHARDWAREBUFFER_FORMAT_R8G8B8X8_UNORM, kDefaultAHBUsage,
+        kDefaultAttribs, {{pixelsRGBABlack.data(), 4}}, &ahb, &ahbImage);
+
+    GLTexture ahbTexture;
+    createEGLImageTargetTexture2D(ahbImage, ahbTexture);
+
+    verifyResults2D(ahbTexture, kBlack);
+    verifyResultAHB(ahb, {{pixelsRGBABlack.data(), 4}});
+
+    glBindTexture(GL_TEXTURE_2D, ahbTexture);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kWidth, kHeight, GL_RGB, GL_UNSIGNED_BYTE,
+                    pixelsRGBCyan.data());
+    ASSERT_GL_NO_ERROR();
+
+    GLFramebuffer ahbFramebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, ahbFramebuffer);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, ahbTexture, 0);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    std::vector<GLubyte> readback;
+    readback.resize(kWidth * kHeight * 4);
+    glReadPixels(0, 0, kWidth, kHeight, GL_RGBX8_ANGLE, GL_UNSIGNED_BYTE, readback.data());
+
+    for (size_t y = 0; y < kHeight; y++)
+    {
+        const GLubyte *actualRowData = readback.data() + (y * kWidth * 4);
+        for (size_t x = 0; x < kWidth; x++)
+        {
+            const GLubyte *actualPixelData = actualRowData + (x * 4);
+            EXPECT_EQ(actualPixelData[0], kCyan[0]) << "at (" << x << ", " << y << ")";
+            EXPECT_EQ(actualPixelData[1], kCyan[1]) << "at (" << x << ", " << y << ")";
+            EXPECT_EQ(actualPixelData[2], kCyan[2]) << "at (" << x << ", " << y << ")";
+        }
+    }
 
     // Clean up
     eglDestroyImageKHR(window->getDisplay(), ahbImage);

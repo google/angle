@@ -6349,6 +6349,104 @@ TEST_P(Texture2DTestES3, TextureRGBXImplicitAlpha1)
     EXPECT_PIXEL_ALPHA_EQ(0, 0, 255);
 }
 
+// Test that data upload to RGBX works.
+TEST_P(Texture2DTestES3, TextureRGBXUpload)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_rgbx_internal_format"));
+
+    const size_t kWidth  = 32;
+    const size_t kHeight = 32;
+
+    GLTexture color;
+    glBindTexture(GL_TEXTURE_2D, color);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kWidth, kHeight);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color, 0);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Upload data to an RGBX texture
+    const GLColorRGB kColor(100, 200, 55);
+    std::vector<GLColorRGB> data(kWidth * kHeight, kColor);
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBX8_ANGLE, kWidth, kHeight);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kWidth, kHeight, GL_RGB, GL_UNSIGNED_BYTE, data.data());
+    ASSERT_GL_NO_ERROR();
+
+    // Sample from the texture
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Texture2D(), essl1_shaders::fs::Texture2D());
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5);
+
+    const GLColor kExpect(kColor.R, kColor.G, kColor.B, 255);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, kExpect, 1);
+    EXPECT_PIXEL_COLOR_NEAR(0, 1, kExpect, 1);
+    EXPECT_PIXEL_COLOR_NEAR(1, 0, kExpect, 1);
+    EXPECT_PIXEL_COLOR_NEAR(kWidth - 1, 0, kExpect, 1);
+    EXPECT_PIXEL_COLOR_NEAR(0, kHeight - 1, kExpect, 1);
+    EXPECT_PIXEL_COLOR_NEAR(kWidth - 1, kHeight - 1, kExpect, 1);
+    EXPECT_PIXEL_COLOR_NEAR(kWidth / 2, kHeight / 2, kExpect, 1);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that data download from RGBX works.
+TEST_P(Texture2DTestES3, TextureRGBXDownload)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_rgbx_internal_format"));
+
+    const size_t kWidth  = 32;
+    const size_t kHeight = 32;
+
+    GLTexture color;
+    glBindTexture(GL_TEXTURE_2D, color);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBX8_ANGLE, kWidth, kHeight);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color, 0);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Render to the RGBX texture
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+    glUseProgram(program);
+    GLint colorLoc = glGetUniformLocation(program, angle::essl1_shaders::ColorUniform());
+    ASSERT_NE(colorLoc, -1);
+
+    glUniform4f(colorLoc, 0.3f, 0.6f, 0.8f, 0.2f);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+
+    // Readback as RGBX.
+    std::vector<GLColor> readback(kWidth * kHeight);
+    glReadPixels(0, 0, kWidth, kHeight, GL_RGBX8_ANGLE, GL_UNSIGNED_BYTE, readback.data());
+    ASSERT_GL_NO_ERROR();
+
+    const GLColor kExpect(76,   // 0.3f * 255
+                          153,  // 0.6f * 255
+                          204,  // 0.8f * 255
+                          255);
+
+    for (size_t y = 0; y < kHeight; y++)
+    {
+        for (size_t x = 0; x < kWidth; x++)
+        {
+            const GLColor actualColor = readback[y * kWidth + x];
+
+            EXPECT_NEAR(actualColor.R, kExpect.R, 1) << x << "x" << y;
+            EXPECT_NEAR(actualColor.G, kExpect.G, 1) << x << "x" << y;
+            EXPECT_NEAR(actualColor.B, kExpect.B, 1) << x << "x" << y;
+            EXPECT_EQ(actualColor.A, kExpect.A) << x << "x" << y;
+        }
+    }
+    ASSERT_GL_NO_ERROR();
+}
+
 // When sampling a texture without an alpha channel, "1" is returned as the alpha value.
 // ES 3.0.4 table 3.24
 TEST_P(Texture2DTest, TextureLuminanceImplicitAlpha1)
