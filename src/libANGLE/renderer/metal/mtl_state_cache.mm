@@ -1010,18 +1010,11 @@ static bool ValidateRenderPipelineState(const MTLRenderPipelineDescriptor *descr
 
 AutoObjCPtr<id<MTLRenderPipelineState>> RenderPipelineCache::createRenderPipelineState(
     ContextMtl *context,
-    const RenderPipelineDesc &originalDesc,
+    const RenderPipelineDesc &desc,
     bool insertDefaultAttribLayout)
 {
     ANGLE_MTL_OBJC_SCOPE
     {
-        // Disable coverage if the render pipeline's sample count is only 1.
-        RenderPipelineDesc desc = originalDesc;
-        if (desc.outputDescriptor.sampleCount == 1)
-        {
-            desc.alphaToCoverageEnabled = false;
-        }
-
         // Choose shader variant
         id<MTLFunction> vertShader = nil;
         id<MTLFunction> fragShader = nil;
