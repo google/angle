@@ -449,6 +449,16 @@ inline bool IsGalaxyA23()
     return IsAndroidDevice("SM-A236U1");
 }
 
+inline bool IsGalaxyA34()
+{
+    return IsAndroidDevice("SM-A346M");
+}
+
+inline bool IsGalaxyA54()
+{
+    return IsAndroidDevice("SM-A546E");
+}
+
 inline bool IsGalaxyS23()
 {
     return IsAndroidDevice("SM-S911U1");
@@ -457,6 +467,11 @@ inline bool IsGalaxyS23()
 inline bool IsGalaxyQualcomm()
 {
     return IsGalaxyA23() || IsGalaxyS23();
+}
+
+inline bool IsFindX6()
+{
+    return IsAndroidDevice("PGFM10");
 }
 
 // Check whether the active GPU is a specific device based on the string device ID.
@@ -576,8 +591,11 @@ GPUTestConfig::GPUTestConfig(bool isSwiftShader)
     mConditions[kConditionPixel4OrXL]       = !isSwiftShader && (IsPixel4() || IsPixel4XL());
     mConditions[kConditionPixel6]           = !isSwiftShader && (IsPixel6());
     mConditions[kConditionGalaxyA23]        = !isSwiftShader && (IsGalaxyA23());
+    mConditions[kConditionGalaxyA34]        = !isSwiftShader && (IsGalaxyA34());
+    mConditions[kConditionGalaxyA54]        = !isSwiftShader && (IsGalaxyA54());
     mConditions[kConditionGalaxyS23]        = !isSwiftShader && (IsGalaxyS23());
     mConditions[kConditionGalaxyQualcomm]   = !isSwiftShader && (IsGalaxyQualcomm());
+    mConditions[kConditionFindX6]           = !isSwiftShader && (IsFindX6());
     mConditions[kConditionNVIDIAQuadroP400] = !isSwiftShader && IsNVIDIAQuadroP400();
     mConditions[kConditionNVIDIAGTX1660]    = !isSwiftShader && IsNVIDIAGTX1660();
 
