@@ -454,6 +454,11 @@ inline bool IsGalaxyS23()
     return IsAndroidDevice("SM-S911U1");
 }
 
+inline bool IsGalaxyQualcomm()
+{
+    return IsGalaxyA23() || IsGalaxyS23();
+}
+
 // Check whether the active GPU is a specific device based on the string device ID.
 inline bool IsDeviceIdGPU(const std::string &gpuDeviceId)
 {
@@ -572,6 +577,7 @@ GPUTestConfig::GPUTestConfig(bool isSwiftShader)
     mConditions[kConditionPixel6]           = !isSwiftShader && (IsPixel6());
     mConditions[kConditionGalaxyA23]        = !isSwiftShader && (IsGalaxyA23());
     mConditions[kConditionGalaxyS23]        = !isSwiftShader && (IsGalaxyS23());
+    mConditions[kConditionGalaxyQualcomm]   = !isSwiftShader && (IsGalaxyQualcomm());
     mConditions[kConditionNVIDIAQuadroP400] = !isSwiftShader && IsNVIDIAQuadroP400();
     mConditions[kConditionNVIDIAGTX1660]    = !isSwiftShader && IsNVIDIAGTX1660();
 

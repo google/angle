@@ -69,6 +69,7 @@ struct GPUTestConfig
         kConditionPixel6,
         kConditionGalaxyA23,
         kConditionGalaxyS23,
+        kConditionGalaxyQualcomm,
         kConditionNVIDIAQuadroP400,
         kConditionNVIDIAGTX1660,
         kConditionSwiftShader,

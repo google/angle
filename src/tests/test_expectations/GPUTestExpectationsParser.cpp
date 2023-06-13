@@ -79,6 +79,7 @@ enum Token
     kConfigPixel6,
     kConfigGalaxyA23,
     kConfigGalaxyS23,
+    kConfigGalaxyQualcomm,
     // GPU devices
     kConfigNVIDIAQuadroP400,
     kConfigNVIDIAGTX1660,
@@ -188,6 +189,7 @@ constexpr TokenInfo kTokenData[kNumberOfTokens] = {
     {"pixel6", GPUTestConfig::kConditionPixel6},
     {"galaxya23", GPUTestConfig::kConditionGalaxyA23},
     {"galaxys23", GPUTestConfig::kConditionGalaxyS23},
+    {"galaxyqualcomm", GPUTestConfig::kConditionGalaxyQualcomm},
     {"quadrop400", GPUTestConfig::kConditionNVIDIAQuadroP400},
     {"gtx1660", GPUTestConfig::kConditionNVIDIAGTX1660},
     {"prerotation", GPUTestConfig::kConditionPreRotation},
@@ -510,6 +512,7 @@ bool GPUTestExpectationsParser::parseLine(const GPUTestConfig *config,
             case kConfigPixel6:
             case kConfigGalaxyA23:
             case kConfigGalaxyS23:
+            case kConfigGalaxyQualcomm:
             case kConfigNVIDIAQuadroP400:
             case kConfigNVIDIAGTX1660:
             case kConfigPreRotation:
