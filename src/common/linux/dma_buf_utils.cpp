@@ -119,6 +119,8 @@ std::vector<VkFormat> DrmFourCCFormatToVkFormats(int fourccFormat)
             return {VK_FORMAT_A2B10G10R10_UNORM_PACK32};
         case DRM_FORMAT_RGB565:
             return {VK_FORMAT_B5G6R5_UNORM_PACK16};
+        case DRM_FORMAT_NV12:
+            return {VK_FORMAT_G8_B8R8_2PLANE_420_UNORM};
         default:
             WARN() << "Unknown dma_buf format " << fourccFormat
                    << " used to initialize an EGL image.";
