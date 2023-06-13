@@ -444,6 +444,21 @@ inline bool IsPixel6()
     return IsAndroidDevice("Pixel 6");
 }
 
+inline bool IsPixel7()
+{
+    return IsAndroidDevice("Pixel 7");
+}
+
+inline bool IsOppoFlipN2()
+{
+    return IsAndroidDevice("CPH2437");
+}
+
+inline bool IsMaliG710()
+{
+    return IsPixel7() || IsOppoFlipN2();
+}
+
 inline bool IsGalaxyA23()
 {
     return IsAndroidDevice("SM-A236U1");
@@ -590,6 +605,9 @@ GPUTestConfig::GPUTestConfig(bool isSwiftShader)
     mConditions[kConditionPixel2OrXL]       = !isSwiftShader && (IsPixel2() || IsPixel2XL());
     mConditions[kConditionPixel4OrXL]       = !isSwiftShader && (IsPixel4() || IsPixel4XL());
     mConditions[kConditionPixel6]           = !isSwiftShader && (IsPixel6());
+    mConditions[kConditionPixel7]           = !isSwiftShader && (IsPixel7());
+    mConditions[kConditionFlipN2]           = !isSwiftShader && (IsOppoFlipN2());
+    mConditions[kConditionMaliG710]         = !isSwiftShader && (IsMaliG710());
     mConditions[kConditionGalaxyA23]        = !isSwiftShader && (IsGalaxyA23());
     mConditions[kConditionGalaxyA34]        = !isSwiftShader && (IsGalaxyA34());
     mConditions[kConditionGalaxyA54]        = !isSwiftShader && (IsGalaxyA54());
