@@ -200,16 +200,6 @@ class ProgramMtl : public ProgramImpl
                             bool forceTexturesSetting,
                             bool uniformBuffersDirty);
 
-    std::string getTranslatedShaderSource(const gl::ShaderType shaderType) const
-    {
-        return mMslShaderTranslateInfo[shaderType].metalShaderSource;
-    }
-
-    mtl::TranslatedShaderInfo getTranslatedShaderInfo(const gl::ShaderType shaderType) const
-    {
-        return mMslShaderTranslateInfo[shaderType];
-    }
-
     bool hasFlatAttribute() const { return mProgramHasFlatAttributes; }
 
   private:
