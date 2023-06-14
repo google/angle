@@ -96,6 +96,46 @@
         'test_suites': {
         },
       },
+      'linux-exp-swiftshader': {
+        'os_type': 'linux',
+        'mixins': [
+          'gpu-swarming-pool',
+          'no_gpu',
+          'linux-jammy',
+          'timeout_15m',
+          'x86-64',
+        ],
+        'test_suites': {
+          'gtest_tests': 'swangle_gtests',
+          'isolated_scripts': 'swangle_restricted_trace_gold_isolated_scripts',
+        },
+      },
+      'linux-exp-swiftshader-asan': {
+        'os_type': 'linux',
+        'mixins': [
+          'gpu-swarming-pool',
+          'no_gpu',
+          'linux-jammy',
+          'timeout_15m',
+          'x86-64',
+        ],
+        'test_suites': {
+          'gtest_tests': 'swangle_slow_gtests',
+        },
+      },
+      'linux-exp-swiftshader-tsan': {
+        'os_type': 'linux',
+        'mixins': [
+          'gpu-swarming-pool',
+          'no_gpu',
+          'linux-jammy',
+          'timeout_15m',
+          'x86-64',
+        ],
+        'test_suites': {
+          'gtest_tests': 'swangle_slow_flaky_gtests',
+        },
+      },
       'linux-intel': {
         'os_type': 'linux',
         'mixins': [

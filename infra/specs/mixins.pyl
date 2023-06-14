@@ -26,6 +26,7 @@
   'gpu-swarming-pool': { 'swarming': { 'dimensions': { 'pool': 'chromium.tests.gpu'}}},
   'limited_capacity_bot': {'swarming': {'expiration': 21600}},
   'linux-bionic': {'swarming': {'dimensions': {'os': 'Ubuntu-18.04'}}},
+  'linux-jammy': {'swarming': {'dimensions': {'os': 'Ubuntu-22.04'}}},
   'linux_amd_rx_5500_xt': { 'swarming': { 'dimensions': { 'gpu': '1002:7340',
                                                           'os': 'Ubuntu-18.04.6',
                                                           'pool': 'chromium.tests.gpu'}}},
