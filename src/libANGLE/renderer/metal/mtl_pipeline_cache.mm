@@ -32,36 +32,39 @@ bool HasDefaultAttribs(const RenderPipelineDesc &rpdesc)
     return false;
 }
 
-angle::Result ValidateRenderPipelineState(ContextMtl *context,
-                                          const MTLRenderPipelineDescriptor *descriptor)
+bool HasValidRenderTarget(const mtl::ContextDevice &device,
+                          const MTLRenderPipelineDescriptor *descriptor)
 {
-    const mtl::ContextDevice &device = context->getMetalDevice();
-
-    // Ensure there is at least one valid render target.
-    bool hasValidRenderTarget              = false;
     const NSUInteger maxColorRenderTargets = GetMaxNumberOfRenderTargetsForDevice(device);
     for (NSUInteger i = 0; i < maxColorRenderTargets; ++i)
     {
         auto colorAttachment = descriptor.colorAttachments[i];
         if (colorAttachment && colorAttachment.pixelFormat != MTLPixelFormatInvalid)
         {
-            hasValidRenderTarget = true;
-            break;
+            return true;
         }
     }
 
-    if (!hasValidRenderTarget && descriptor.depthAttachmentPixelFormat != MTLPixelFormatInvalid)
+    if (descriptor.depthAttachmentPixelFormat != MTLPixelFormatInvalid)
     {
-        hasValidRenderTarget = true;
+        return true;
     }
 
-    if (!hasValidRenderTarget && descriptor.stencilAttachmentPixelFormat != MTLPixelFormatInvalid)
+    if (descriptor.stencilAttachmentPixelFormat != MTLPixelFormatInvalid)
     {
-        hasValidRenderTarget = true;
+        return true;
     }
 
-    if (!hasValidRenderTarget &&
-        !context->getDisplay()->getFeatures().allowRenderpassWithoutAttachment.enabled)
+    return false;
+}
+
+angle::Result ValidateRenderPipelineState(ContextMtl *context,
+                                          const MTLRenderPipelineDescriptor *descriptor)
+{
+    const mtl::ContextDevice &device = context->getMetalDevice();
+
+    if (!context->getDisplay()->getFeatures().allowRenderpassWithoutAttachment.enabled &&
+        !HasValidRenderTarget(device, descriptor))
     {
         ANGLE_MTL_HANDLE_ERROR(
             context, "Render pipeline requires at least one render target for this device.",
