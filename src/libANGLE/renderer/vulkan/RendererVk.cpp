@@ -4429,8 +4429,11 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
         &mFeatures, preferDeviceLocalMemoryHostVisible,
         canPreferDeviceLocalMemoryHostVisible(mPhysicalDeviceProperties.deviceType));
 
-    ANGLE_FEATURE_CONDITION(&mFeatures, supportsExtendedDynamicState,
-                            mExtendedDynamicStateFeatures.extendedDynamicState == VK_TRUE);
+    // http://issuetracker.google.com/287318431
+    // There are multiple issues with dynamic states, disabling on ARM driver temporarily
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, supportsExtendedDynamicState,
+        mExtendedDynamicStateFeatures.extendedDynamicState == VK_TRUE && !isARM);
 
     // By default, use all state from VK_EXT_extended_dynamic_state, unless they hit driver bugs.
     ANGLE_FEATURE_CONDITION(&mFeatures, useVertexInputBindingStrideDynamicState,
@@ -4454,8 +4457,11 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     ANGLE_FEATURE_CONDITION(&mFeatures, useStencilTestEnableDynamicState,
                             mFeatures.supportsExtendedDynamicState.enabled);
 
-    ANGLE_FEATURE_CONDITION(&mFeatures, supportsExtendedDynamicState2,
-                            mExtendedDynamicState2Features.extendedDynamicState2 == VK_TRUE);
+    // http://issuetracker.google.com/287318431
+    // There are multiple issues with dynamic states, disabling on ARM driver temporarily
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, supportsExtendedDynamicState2,
+        mExtendedDynamicState2Features.extendedDynamicState2 == VK_TRUE && !isARM);
 
     // By default, use all state from VK_EXT_extended_dynamic_state, unless they hit driver bugs.
     ANGLE_FEATURE_CONDITION(&mFeatures, usePrimitiveRestartEnableDynamicState,
