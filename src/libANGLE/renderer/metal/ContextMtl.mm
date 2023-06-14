@@ -258,34 +258,10 @@ void ContextMtl::onDestroy(const gl::Context *context)
     mOcclusionQueryPool.destroy(this);
 
     mIncompleteTextures.onDestroy(context);
-    mIncompleteTexturesInitialized = false;
     mProvokingVertexHelper.onDestroy(this);
     mDummyXFBRenderTexture = nullptr;
 
     mContextDevice.reset();
-}
-
-angle::Result ContextMtl::ensureIncompleteTexturesCreated(const gl::Context *context)
-{
-    if (ANGLE_LIKELY(mIncompleteTexturesInitialized))
-    {
-        return angle::Result::Continue;
-    }
-    constexpr gl::TextureType supportedTextureTypes[] = {gl::TextureType::_2D, gl::TextureType::_3D,
-                                                         gl::TextureType::_2DArray,
-                                                         gl::TextureType::CubeMap};
-    for (gl::TextureType texType : supportedTextureTypes)
-    {
-        gl::Texture *texture;
-        ANGLE_TRY(mIncompleteTextures.getIncompleteTexture(
-            context, texType, gl::SamplerFormat::Float, nullptr, &texture));
-
-        TextureMtl *textureMtl                      = mtl::GetImpl(texture);
-        textureMtl->getNativeTexture()->get().label = @"IncompleteTexture";
-    }
-    mIncompleteTexturesInitialized = true;
-
-    return angle::Result::Continue;
 }
 
 // Flush and finish.
@@ -1138,9 +1114,6 @@ angle::Result ContextMtl::syncState(const gl::Context *context,
                                     gl::Command command)
 {
     const gl::State &glState = context->getState();
-
-    // Initialize incomplete texture set.
-    ANGLE_TRY(ensureIncompleteTexturesCreated(context));
 
     // Metal's blend state is set at once, while ANGLE tracks separate dirty
     // bits: ENABLED, FUNCS, and EQUATIONS. Merge all three of them to the first one.
