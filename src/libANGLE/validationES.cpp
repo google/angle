@@ -958,8 +958,9 @@ bool ValidTexture3DDestinationTarget(const Context *context, TextureTarget targe
     switch (target)
     {
         case TextureTarget::_3D:
-        case TextureTarget::_2DArray:
             return true;
+        case TextureTarget::_2DArray:
+            return context->getClientVersion() >= Version(3, 0);
         case TextureTarget::CubeMapArray:
             return (context->getClientVersion() >= Version(3, 2) ||
                     context->getExtensions().textureCubeMapArrayAny());
