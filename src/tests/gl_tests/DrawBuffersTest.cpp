@@ -1670,6 +1670,7 @@ ANGLE_INSTANTIATE_TEST(DrawBuffersTest,
                        ES2_METAL().enable(Feature::LimitMaxDrawBuffersForTesting),
                        ES2_VULKAN()
                            .disable(Feature::SupportsTransformFeedbackExtension)
+                           .disable(Feature::SupportsPrimitivesGeneratedQuery)
                            .disable(Feature::SupportsGeometryStreamsCapability)
                            .disable(Feature::EmulateTransformFeedback));
 

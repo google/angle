@@ -284,3 +284,7 @@
 8157 GALAXYS23 VULKAN : KHR-GLES31.core.shader_bitfield_operation.* = SKIP
 8157 GALAXYS23 VULKAN : KHR-GLES31.core.texture_cube_map_array.color_depth_attachments = SKIP
 8157 GALAXYS23 VULKAN : KHR-GLES31.core.texture_storage_multisample.FunctionalTests.blitting_multisampled_depth_attachment = SKIP
+
+// Mali G710
+8212 MALIG710 VULKAN : KHR-GLES31.core.texture_border_clamp.Texture2DDC32FLinear = FAIL
+8212 MALIG710 VULKAN : KHR-GLES31.core.texture_border_clamp.Texture2DDC16Linear = FAIL

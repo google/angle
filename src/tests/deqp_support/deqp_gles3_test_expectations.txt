@@ -517,11 +517,6 @@
 3677 VULKAN NVIDIA NOSAN : dEQP-GLES3.functional.fragment_out.array.uint* = FAIL
 3677 VULKAN NVIDIA NOSAN : dEQP-GLES3.functional.fragment_out.random.* = FAIL
 
-// Transform Feedback
-4666 VULKAN NVIDIA : dEQP-GLES3.functional.transform_feedback.array_element.interleaved.* = SKIP
-4666 VULKAN NVIDIA : dEQP-GLES3.functional.transform_feedback.array_element.separate.* = SKIP
-4666 VULKAN NVIDIA : dEQP-GLES3.functional.transform_feedback.random.* = SKIP
-
 // Flat shading:
 3430 VULKAN NVIDIA : dEQP-GLES3.functional.rasterization.flatshading.* = FAIL
 
@@ -756,24 +751,6 @@
 6528 PIXEL4ORXL GLES : dEQP-GLES3.functional.transform_feedback.random_full_array_capture.* = FAIL
 7838 PIXEL4ORXL GLES : dEQP-GLES3.functional.shaders.function.global_variable_aliasing_* = FAIL
 
-// Pixel 6 expectations
-6917 PIXEL6 VULKAN : dEQP-GLES3.functional.transform_feedback.array_element*separate*float = FAIL
-6917 PIXEL6 VULKAN : dEQP-GLES3.functional.transform_feedback.array_element*separate*int = FAIL
-6917 PIXEL6 VULKAN : dEQP-GLES3.functional.transform_feedback.array_element*separate*mat2 = FAIL
-6917 PIXEL6 VULKAN : dEQP-GLES3.functional.transform_feedback.array_element*separate*vec2 = FAIL
-6917 PIXEL6 VULKAN : dEQP-GLES3.functional.transform_feedback.array_element*separate*vec3 = FAIL
-6917 PIXEL6 VULKAN : dEQP-GLES3.functional.transform_feedback.array_element*separate*vec4 = FAIL
-6917 PIXEL6 VULKAN : dEQP-GLES3.functional.transform_feedback.array_element*interleaved*float = FAIL
-6917 PIXEL6 VULKAN : dEQP-GLES3.functional.transform_feedback.array_element*interleaved*int = FAIL
-6917 PIXEL6 VULKAN : dEQP-GLES3.functional.transform_feedback.array_element*interleaved*vec2 = FAIL
-6917 PIXEL6 VULKAN : dEQP-GLES3.functional.transform_feedback.array_element*interleaved*vec3 = FAIL
-6917 PIXEL6 VULKAN : dEQP-GLES3.functional.transform_feedback.array_element*interleaved*vec4 = FAIL
-6917 PIXEL6 VULKAN : dEQP-GLES3.functional.transform_feedback.array_element*interleaved*mat2* = FAIL
-
-// A little over half of the following fail in a non-clear manner:
-6917 PIXEL6 VULKAN : dEQP-GLES3.functional.transform_feedback.random.interleaved.* = FAIL
-6917 PIXEL6 VULKAN : dEQP-GLES3.functional.transform_feedback.random.separate.* = FAIL
-
 6709 LINUX NVIDIA GTX1660 VULKAN : dEQP-GLES3.functional.shaders.random.all_features.fragment.26 = FAIL
 6709 LINUX NVIDIA GTX1660 VULKAN : dEQP-GLES3.functional.shaders.random.all_features.fragment.31 = FAIL
 
@@ -836,6 +813,8 @@
 8157 GALAXYS23 VULKAN : dEQP-GLES3.functional.shaders.random.swizzle.fragment.* = SKIP
 8157 GALAXYS23 VULKAN : dEQP-GLES3.functional.shaders.random.texture.* = SKIP
 8157 GALAXYS23 VULKAN : dEQP-GLES3.functional.shaders.random.trigonometric.fragment.* = SKIP
-8157 GALAXYS23 VULKAN : dEQP-GLES3.functional.transform_feedback.array_element.interleaved.* = SKIP
-8157 GALAXYS23 VULKAN : dEQP-GLES3.functional.transform_feedback.array_element.separate.* = SKIP
-8157 GALAXYS23 VULKAN : dEQP-GLES3.functional.transform_feedback.random.* = SKIP
+
+// VK_EXT_transform_feedback doesn't support capturing array elements and a waiver exists
+4140 VULKAN : dEQP-GLES3.functional.transform_feedback.array_element.interleaved.* = FAIL
+4140 VULKAN : dEQP-GLES3.functional.transform_feedback.array_element.separate.* = FAIL
+4140 VULKAN : dEQP-GLES3.functional.transform_feedback.random.* = FAIL

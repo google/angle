@@ -80,3 +80,6 @@
 
 // Samsung Galaxy S23
 8157 GALAXYS23 VULKAN : KHR-GLES3.shaders.function.global_variable_aliasing_fragment = SKIP
+
+// Mali G710
+8212 MALIG710 VULKAN : KHR-GLES3.number_parsing.* = FAIL
