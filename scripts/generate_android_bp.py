@@ -666,7 +666,7 @@ def main():
         ],
     }))
 
-    # Add APKs with all of the root libraries
+    # Add APKs with all of the root libraries and permissions xml
     blueprint_targets.append((
         'filegroup',
         {
@@ -683,6 +683,14 @@ def main():
                 'src/android_system_settings/src/com/android/angle/common/SearchProvider.java',
             ],
         }))
+
+    blueprint_targets.append(('prebuilt_etc', {
+        'name': 'android.software.angle.xml',
+        'src': 'android/android.software.angle.xml',
+        'product_specific': True,
+        'sub_dir': 'permissions',
+    }))
+
     blueprint_targets.append((
         'java_defaults',
         {
@@ -705,6 +713,7 @@ def main():
             'privileged': True,
             'product_specific': True,
             'owner': 'google',
+            'required': ['android.software.angle.xml'],
         }))
 
     blueprint_targets.append(('android_library', {
