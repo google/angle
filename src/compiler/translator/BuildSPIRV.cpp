@@ -2534,4 +2534,15 @@ void SPIRVBuilder::writeNonSemanticOverview(spirv::Blob *blob, spirv::IdRef id)
                         spirv::LiteralExtInstInteger(overview), {});
 }
 
+void SPIRVBuilder::writeNonSemanticInstruction(vk::spirv::NonSemanticInstruction instruction)
+{
+    using namespace vk::spirv;
+
+    const spirv::IdRef id = getNewId({});
+
+    spirv::WriteExtInst(getSpirvCurrentFunctionBlock(), spirv::IdResultType(kIdVoid), id,
+                        spirv::IdRef(kIdNonSemanticInstructionSet),
+                        spirv::LiteralExtInstInteger(instruction), {});
+}
+
 }  // namespace sh

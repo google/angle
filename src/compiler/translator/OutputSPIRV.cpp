@@ -5602,6 +5602,15 @@ bool OutputSPIRVTraverser::visitFunctionDefinition(Visit visit, TIntermFunctionD
 
         mBuilder.startNewFunction(ids.functionId, function);
 
+        // For main(), add a non-semantic instruction at the beginning for any initialization code
+        // the transformer may want to add.
+        if (ids.functionId == vk::spirv::kIdEntryPoint &&
+            mCompiler->getShaderType() != GL_COMPUTE_SHADER)
+        {
+            ASSERT(function->isMain());
+            mBuilder.writeNonSemanticInstruction(vk::spirv::kNonSemanticEnter);
+        }
+
         return true;
     }
 

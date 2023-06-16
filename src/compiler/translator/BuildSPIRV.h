@@ -387,6 +387,7 @@ class SPIRVBuilder : angle::NonCopyable
                      spirv::IdRef mergeBlock);
     void writeSwitchCaseBlockEnd();
     void writeDebugName(spirv::IdRef id, const char *name);
+    void writeNonSemanticInstruction(vk::spirv::NonSemanticInstruction instruction);
 
     spirv::IdRef getBoolConstant(bool value);
     spirv::IdRef getUintConstant(uint32_t value);

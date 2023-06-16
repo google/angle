@@ -3078,7 +3078,6 @@ class SpirvTransformer final : public SpirvTransformerBase
     SpvTransformOptions mOptions;
 
     // Traversal state:
-    bool mInsertFunctionVariables = false;
     spirv::IdRef mCurrentFunctionId;
 
     // Transformation state:
@@ -3211,13 +3210,6 @@ void SpirvTransformer::transformInstruction()
         // instructions such as Op*Access* or OpEmitVertex opcodes inside functions need to be
         // inspected.
         mIsInFunctionSection = true;
-
-        // Only write function variables for the EntryPoint function for non-compute shaders
-        if (mOptions.useSpirvVaryingPrecisionFixer)
-        {
-            mInsertFunctionVariables = mCurrentFunctionId == ID::EntryPoint &&
-                                       mOptions.shaderType != gl::ShaderType::Compute;
-        }
     }
 
     // Only look at interesting instructions.
@@ -3225,21 +3217,12 @@ void SpirvTransformer::transformInstruction()
 
     if (mIsInFunctionSection)
     {
-        // After we process an OpFunction instruction and any instructions that must come
-        // immediately after OpFunction we need to check if there are any precision mismatches that
-        // need to be handled. If so, output OpVariable for each variable that needed to change from
-        // a StorageClassOutput to a StorageClassFunction.
-        if (mOptions.useSpirvVaryingPrecisionFixer && mInsertFunctionVariables &&
-            opCode != spv::OpFunction && opCode != spv::OpFunctionParameter &&
-            opCode != spv::OpLabel && opCode != spv::OpVariable)
-        {
-            writeInputPreamble();
-            mInsertFunctionVariables = false;
-        }
-
         // Look at in-function opcodes.
         switch (opCode)
         {
+            case spv::OpExtInst:
+                transformationState = transformExtInst(instruction);
+                break;
             case spv::OpAccessChain:
             case spv::OpInBoundsAccessChain:
             case spv::OpPtrAccessChain:
@@ -3828,8 +3811,10 @@ TransformationState SpirvTransformer::transformExtInst(const uint32_t *instructi
             writePendingDeclarations();
             break;
         case sh::vk::spirv::kNonSemanticEnter:
-            // TODO: http://anglebug.com/7220
-            UNREACHABLE();
+            // If there are any precision mismatches that need to be handled, temporary global
+            // variables are created with the original precision.  Initialize those variables from
+            // the varyings at the beginning of the shader.
+            writeInputPreamble();
             break;
         case sh::vk::spirv::kNonSemanticVertexOutput:
             // TODO: http://anglebug.com/7220
@@ -4094,9 +4079,6 @@ class SpirvVertexAttributeAliasingTransformer final : public SpirvTransformerBas
     // ids of the split vectors are consecutive, so %veci == %vec0 + i.  %veciType is taken from
     // mInputTypePointers.
     std::vector<spirv::IdRef> mExpandedMatrixFirstVectorIdById;
-    // Whether initialization of the matrix attributes should be written at the beginning of the
-    // current function.
-    bool mWriteExpandedMatrixInitialization = false;
 
     // Id of attribute types; float and veci.
     spirv::IdRef floatType(uint32_t componentCount)
@@ -4240,18 +4222,6 @@ void SpirvVertexAttributeAliasingTransformer::transformInstruction()
     {
         // SPIR-V is structured in sections.  Function declarations come last.
         mIsInFunctionSection = true;
-
-        // The matrix attribute declarations have been changed to have Private storage class, and
-        // they are initialized from the expanded (and potentially aliased) Input vectors.  This is
-        // done at the beginning of the entry point.
-
-        spirv::IdResultType id;
-        spirv::IdResult functionId;
-        spv::FunctionControlMask functionControl;
-        spirv::IdRef functionType;
-        spirv::ParseFunction(instruction, &id, &functionId, &functionControl, &functionType);
-
-        mWriteExpandedMatrixInitialization = functionId == ID::EntryPoint;
     }
 
     // Only look at interesting instructions.
@@ -4259,19 +4229,12 @@ void SpirvVertexAttributeAliasingTransformer::transformInstruction()
 
     if (mIsInFunctionSection)
     {
-        // Write expanded matrix initialization right after the entry point's OpFunction and any
-        // instruction that must come immediately after it.
-        if (mWriteExpandedMatrixInitialization && opCode != spv::OpFunction &&
-            opCode != spv::OpFunctionParameter && opCode != spv::OpLabel &&
-            opCode != spv::OpVariable)
-        {
-            writeExpandedMatrixInitialization();
-            mWriteExpandedMatrixInitialization = false;
-        }
-
         // Look at in-function opcodes.
         switch (opCode)
         {
+            case spv::OpExtInst:
+                transformationState = transformExtInst(instruction);
+                break;
             case spv::OpAccessChain:
             case spv::OpInBoundsAccessChain:
                 transformationState = transformAccessChain(instruction);
@@ -4480,8 +4443,10 @@ TransformationState SpirvVertexAttributeAliasingTransformer::transformExtInst(
             declareExpandedMatrixVectors();
             break;
         case sh::vk::spirv::kNonSemanticEnter:
-            // TODO: http://anglebug.com/7220
-            UNREACHABLE();
+            // The matrix attribute declarations have been changed to have Private storage class,
+            // and they are initialized from the expanded (and potentially aliased) Input vectors.
+            // This is done at the beginning of the entry point.
+            writeExpandedMatrixInitialization();
             break;
         case sh::vk::spirv::kNonSemanticVertexOutput:
         case sh::vk::spirv::kNonSemanticTransformFeedbackEmulation:
