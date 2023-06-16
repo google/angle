@@ -52,21 +52,6 @@ struct SpvTransformOptions
     bool useSpirvVaryingPrecisionFixer  = false;
 };
 
-struct UniformBindingInfo final
-{
-    UniformBindingInfo();
-    UniformBindingInfo(uint32_t bindingIndex,
-                       uint32_t idInFrontShader,
-                       gl::ShaderBitSet shaderBitSet,
-                       gl::ShaderType frontShaderType);
-    uint32_t bindingIndex          = 0;
-    uint32_t idInFrontShader       = 0;
-    gl::ShaderBitSet shaderBitSet  = gl::ShaderBitSet();
-    gl::ShaderType frontShaderType = gl::ShaderType::InvalidEnum;
-};
-
-using UniformBindingIndexMap = angle::HashMap<std::string, UniformBindingInfo>;
-
 struct ShaderInterfaceVariableXfbInfo
 {
     static constexpr uint32_t kInvalid = std::numeric_limits<uint32_t>::max();
@@ -127,18 +112,13 @@ struct ShaderInterfaceVariableInfo
     bool isDuplicate = false;
 };
 
-bool GetImageNameWithoutIndices(std::string *name);
-
 uint32_t SpvGetXfbBufferBlockId(const uint32_t bufferIndex);
 
 void SpvAssignLocations(const SpvSourceOptions &options,
                         const gl::ProgramExecutable &programExecutable,
                         const gl::ProgramVaryingPacking &varyingPacking,
-                        const gl::ShaderType shaderType,
-                        const gl::ShaderType frontShaderType,
-                        bool isTransformFeedbackStage,
+                        const gl::ShaderType transformFeedbackStage,
                         SpvProgramInterfaceInfo *programInterfaceInfo,
-                        UniformBindingIndexMap *uniformBindingIndexMapOut,
                         ShaderInterfaceVariableInfoMap *variableInfoMapOut);
 
 void SpvAssignTransformFeedbackLocations(gl::ShaderType shaderType,

@@ -653,6 +653,21 @@ void AssignUniformBindings(const SpvSourceOptions &options,
     }
 }
 
+struct UniformBindingInfo final
+{
+    UniformBindingInfo();
+    UniformBindingInfo(uint32_t bindingIndex,
+                       uint32_t idInFrontShader,
+                       gl::ShaderBitSet shaderBitSet,
+                       gl::ShaderType frontShaderType);
+    uint32_t bindingIndex          = 0;
+    uint32_t idInFrontShader       = 0;
+    gl::ShaderBitSet shaderBitSet  = gl::ShaderBitSet();
+    gl::ShaderType frontShaderType = gl::ShaderType::InvalidEnum;
+};
+
+using UniformBindingIndexMap = angle::HashMap<std::string, UniformBindingInfo>;
+
 bool InsertIfAbsent(UniformBindingIndexMap *uniformBindingIndexMapOut,
                     const std::string &name,
                     const uint32_t varId,
@@ -4912,90 +4927,97 @@ uint32_t SpvGetXfbBufferBlockId(const uint32_t bufferIndex)
 void SpvAssignLocations(const SpvSourceOptions &options,
                         const gl::ProgramExecutable &programExecutable,
                         const gl::ProgramVaryingPacking &varyingPacking,
-                        const gl::ShaderType shaderType,
-                        const gl::ShaderType frontShaderType,
-                        bool isTransformFeedbackStage,
+                        const gl::ShaderType transformFeedbackStage,
                         SpvProgramInterfaceInfo *programInterfaceInfo,
-                        UniformBindingIndexMap *uniformBindingIndexMapOut,
                         ShaderInterfaceVariableInfoMap *variableInfoMapOut)
 {
+    const gl::ShaderBitSet shaderStages = programExecutable.getLinkedShaderStages();
+
     // Assign outputs to the fragment shader, if any.
-    if ((shaderType == gl::ShaderType::Fragment) &&
+    if (shaderStages[gl::ShaderType::Fragment] &&
         programExecutable.hasLinkedShaderStage(gl::ShaderType::Fragment))
     {
         AssignOutputLocations(programExecutable, gl::ShaderType::Fragment, variableInfoMapOut);
     }
 
     // Assign attributes to the vertex shader, if any.
-    if ((shaderType == gl::ShaderType::Vertex) &&
+    if (shaderStages[gl::ShaderType::Vertex] &&
         programExecutable.hasLinkedShaderStage(gl::ShaderType::Vertex))
     {
         AssignAttributeLocations(programExecutable, gl::ShaderType::Vertex, variableInfoMapOut);
+
+        if (options.supportsTransformFeedbackEmulation)
+        {
+            // If transform feedback emulation is not enabled, mark all transform feedback output
+            // buffers as inactive.
+            const bool isTransformFeedbackStage =
+                transformFeedbackStage == gl::ShaderType::Vertex &&
+                options.enableTransformFeedbackEmulation &&
+                !programExecutable.getLinkedTransformFeedbackVaryings().empty();
+
+            AssignTransformFeedbackEmulationBindings(gl::ShaderType::Vertex, programExecutable,
+                                                     isTransformFeedbackStage, programInterfaceInfo,
+                                                     variableInfoMapOut);
+        }
     }
 
-    if (programExecutable.hasLinkedGraphicsShader())
+    UniformBindingIndexMap uniformBindingIndexMap;
+    gl::ShaderType frontShaderType = gl::ShaderType::InvalidEnum;
+    for (const gl::ShaderType shaderType : shaderStages)
     {
-        const gl::VaryingPacking &inputPacking  = varyingPacking.getInputPacking(shaderType);
-        const gl::VaryingPacking &outputPacking = varyingPacking.getOutputPacking(shaderType);
-
-        // Assign varying locations.
-        if (shaderType != gl::ShaderType::Vertex)
+        if (programExecutable.hasLinkedGraphicsShader())
         {
-            AssignVaryingLocations(options, inputPacking, shaderType, frontShaderType,
-                                   programInterfaceInfo, variableInfoMapOut);
+            const gl::VaryingPacking &inputPacking  = varyingPacking.getInputPacking(shaderType);
+            const gl::VaryingPacking &outputPacking = varyingPacking.getOutputPacking(shaderType);
 
-            // Record active members of in gl_PerVertex.
-            if (shaderType != gl::ShaderType::Fragment &&
-                frontShaderType != gl::ShaderType::InvalidEnum)
+            // Assign varying locations.
+            if (shaderType != gl::ShaderType::Vertex)
             {
-                // If an output builtin is active in the previous stage, assume it's active in the
-                // input of the current stage as well.
+                AssignVaryingLocations(options, inputPacking, shaderType, frontShaderType,
+                                       programInterfaceInfo, variableInfoMapOut);
+
+                // Record active members of in gl_PerVertex.
+                if (shaderType != gl::ShaderType::Fragment &&
+                    frontShaderType != gl::ShaderType::InvalidEnum)
+                {
+                    // If an output builtin is active in the previous stage, assume it's active in
+                    // the input of the current stage as well.
+                    const gl::ShaderMap<gl::PerVertexMemberBitSet> &outputPerVertexActiveMembers =
+                        inputPacking.getOutputPerVertexActiveMembers();
+                    variableInfoMapOut->setInputPerVertexActiveMembers(
+                        shaderType, outputPerVertexActiveMembers[frontShaderType]);
+                }
+            }
+            if (shaderType != gl::ShaderType::Fragment)
+            {
+                AssignVaryingLocations(options, outputPacking, shaderType, frontShaderType,
+                                       programInterfaceInfo, variableInfoMapOut);
+
+                // Record active members of out gl_PerVertex.
                 const gl::ShaderMap<gl::PerVertexMemberBitSet> &outputPerVertexActiveMembers =
-                    inputPacking.getOutputPerVertexActiveMembers();
-                variableInfoMapOut->setInputPerVertexActiveMembers(
-                    shaderType, outputPerVertexActiveMembers[frontShaderType]);
+                    outputPacking.getOutputPerVertexActiveMembers();
+                variableInfoMapOut->setOutputPerVertexActiveMembers(
+                    shaderType, outputPerVertexActiveMembers[shaderType]);
+            }
+
+            // Assign qualifiers to all varyings captured by transform feedback
+            if (!programExecutable.getLinkedTransformFeedbackVaryings().empty() &&
+                shaderType == programExecutable.getLinkedTransformFeedbackStage())
+            {
+                AssignTransformFeedbackQualifiers(programExecutable, outputPacking, shaderType,
+                                                  options.supportsTransformFeedbackExtension,
+                                                  variableInfoMapOut);
             }
         }
-        if (shaderType != gl::ShaderType::Fragment)
-        {
-            AssignVaryingLocations(options, outputPacking, shaderType, frontShaderType,
-                                   programInterfaceInfo, variableInfoMapOut);
 
-            // Record active members of out gl_PerVertex.
-            const gl::ShaderMap<gl::PerVertexMemberBitSet> &outputPerVertexActiveMembers =
-                outputPacking.getOutputPerVertexActiveMembers();
-            variableInfoMapOut->setOutputPerVertexActiveMembers(
-                shaderType, outputPerVertexActiveMembers[shaderType]);
-        }
+        AssignUniformBindings(options, programExecutable, shaderType, programInterfaceInfo,
+                              variableInfoMapOut);
+        AssignTextureBindings(options, programExecutable, shaderType, programInterfaceInfo,
+                              &uniformBindingIndexMap, variableInfoMapOut);
+        AssignNonTextureBindings(options, programExecutable, shaderType, programInterfaceInfo,
+                                 &uniformBindingIndexMap, variableInfoMapOut);
 
-        // Assign qualifiers to all varyings captured by transform feedback
-        if (!programExecutable.getLinkedTransformFeedbackVaryings().empty() &&
-            shaderType == programExecutable.getLinkedTransformFeedbackStage())
-        {
-            AssignTransformFeedbackQualifiers(programExecutable, outputPacking, shaderType,
-                                              options.supportsTransformFeedbackExtension,
-                                              variableInfoMapOut);
-        }
-    }
-
-    AssignUniformBindings(options, programExecutable, shaderType, programInterfaceInfo,
-                          variableInfoMapOut);
-    AssignTextureBindings(options, programExecutable, shaderType, programInterfaceInfo,
-                          uniformBindingIndexMapOut, variableInfoMapOut);
-    AssignNonTextureBindings(options, programExecutable, shaderType, programInterfaceInfo,
-                             uniformBindingIndexMapOut, variableInfoMapOut);
-
-    if (options.supportsTransformFeedbackEmulation &&
-        gl::ShaderTypeSupportsTransformFeedback(shaderType))
-    {
-        // If transform feedback emulation is not enabled, mark all transform feedback output
-        // buffers as inactive.
-        isTransformFeedbackStage =
-            isTransformFeedbackStage && options.enableTransformFeedbackEmulation;
-
-        AssignTransformFeedbackEmulationBindings(shaderType, programExecutable,
-                                                 isTransformFeedbackStage, programInterfaceInfo,
-                                                 variableInfoMapOut);
+        frontShaderType = shaderType;
     }
 }
 
@@ -5060,8 +5082,7 @@ void SpvGetShaderSpirvCode(const gl::Context *context,
     }
 
     const gl::ProgramExecutable &programExecutable = programState.getExecutable();
-    gl::ShaderType xfbStage        = programState.getAttachedTransformFeedbackStage();
-    gl::ShaderType frontShaderType = gl::ShaderType::InvalidEnum;
+    gl::ShaderType xfbStage = programState.getAttachedTransformFeedbackStage();
 
     // This should be done before assigning varying location. Otherwise, We can encounter shader
     // interface mismatching problem in case the transformFeedback stage is not Vertex stage.
@@ -5077,17 +5098,9 @@ void SpvGetShaderSpirvCode(const gl::Context *context,
                                                 programInterfaceInfo, variableInfoMapOut);
         }
     }
-    UniformBindingIndexMap uniformBindingIndexMap;
-    for (const gl::ShaderType shaderType : programExecutable.getLinkedShaderStages())
-    {
-        const bool isXfbStage = shaderType == xfbStage &&
-                                !programExecutable.getLinkedTransformFeedbackVaryings().empty();
-        SpvAssignLocations(options, programExecutable, resources.varyingPacking, shaderType,
-                           frontShaderType, isXfbStage, programInterfaceInfo,
-                           &uniformBindingIndexMap, variableInfoMapOut);
 
-        frontShaderType = shaderType;
-    }
+    SpvAssignLocations(options, programExecutable, resources.varyingPacking, xfbStage,
+                       programInterfaceInfo, variableInfoMapOut);
 }
 
 angle::Result SpvTransformSpirvCode(const SpvTransformOptions &options,
