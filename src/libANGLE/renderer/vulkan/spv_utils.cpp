@@ -3048,7 +3048,6 @@ class SpirvTransformer final : public SpirvTransformerBase
     // transformed.  If false is returned, the instruction should be copied as-is.
     TransformationState transformAccessChain(const uint32_t *instruction);
     TransformationState transformCapability(const uint32_t *instruction);
-    TransformationState transformEmitVertex(const uint32_t *instruction);
     TransformationState transformEntryPoint(const uint32_t *instruction);
     TransformationState transformExtension(const uint32_t *instruction);
     TransformationState transformExtInstImport(const uint32_t *instruction);
@@ -3059,7 +3058,6 @@ class SpirvTransformer final : public SpirvTransformerBase
     TransformationState transformMemberName(const uint32_t *instruction);
     TransformationState transformTypePointer(const uint32_t *instruction);
     TransformationState transformTypeStruct(const uint32_t *instruction);
-    TransformationState transformReturn(const uint32_t *instruction);
     TransformationState transformVariable(const uint32_t *instruction);
     TransformationState transformTypeImage(const uint32_t *instruction);
     TransformationState transformImageRead(const uint32_t *instruction);
@@ -3227,12 +3225,6 @@ void SpirvTransformer::transformInstruction()
                 break;
             case spv::OpImageRead:
                 transformationState = transformImageRead(instruction);
-                break;
-            case spv::OpEmitVertex:
-                transformationState = transformEmitVertex(instruction);
-                break;
-            case spv::OpReturn:
-                transformationState = transformReturn(instruction);
                 break;
             default:
                 break;
@@ -3708,17 +3700,6 @@ TransformationState SpirvTransformer::transformMemberName(const uint32_t *instru
     return mPerVertexTrimmer.transformMemberName(id, member, name);
 }
 
-TransformationState SpirvTransformer::transformEmitVertex(const uint32_t *instruction)
-{
-    // This is only possible in geometry shaders.
-    ASSERT(mOptions.shaderType == gl::ShaderType::Geometry);
-
-    // Write the temporary variables that hold varyings data before EmitVertex().
-    writeOutputPrologue();
-
-    return TransformationState::Unchanged;
-}
-
 TransformationState SpirvTransformer::transformEntryPoint(const uint32_t *instruction)
 {
     spv::ExecutionModel executionModel;
@@ -3813,8 +3794,11 @@ TransformationState SpirvTransformer::transformExtInst(const uint32_t *instructi
             writeInputPreamble();
             break;
         case sh::vk::spirv::kNonSemanticVertexOutput:
-            // TODO: http://anglebug.com/7220
-            UNREACHABLE();
+            // Generate gl_Position transformations and transform feedback capture (through
+            // extension) before return or EmitVertex().  Additionally, if there are any precision
+            // mismatches that need to be ahendled, write the temporary variables that hold varyings
+            // data.
+            writeOutputPrologue();
             break;
         case sh::vk::spirv::kNonSemanticTransformFeedbackEmulation:
             // Transform feedback emulation is written to a designated function.  Allow its code to
@@ -3852,28 +3836,6 @@ TransformationState SpirvTransformer::transformTypeStruct(const uint32_t *instru
 
     return mXfbCodeGenerator.transformTypeStruct(info, mOptions.shaderType, id, memberList,
                                                  mSpirvBlobOut);
-}
-
-TransformationState SpirvTransformer::transformReturn(const uint32_t *instruction)
-{
-    if (mCurrentFunctionId != ID::EntryPoint)
-    {
-        // We only need to process the precision info when returning from the entry point function
-        return TransformationState::Unchanged;
-    }
-
-    // For geometry shaders, this operations is done before every EmitVertex() instead.
-    // Additionally, this transformation (which affects output varyings) doesn't apply to fragment
-    // shaders.
-    if (mOptions.shaderType == gl::ShaderType::Geometry ||
-        mOptions.shaderType == gl::ShaderType::Fragment)
-    {
-        return TransformationState::Unchanged;
-    }
-
-    writeOutputPrologue();
-
-    return TransformationState::Unchanged;
 }
 
 TransformationState SpirvTransformer::transformVariable(const uint32_t *instruction)

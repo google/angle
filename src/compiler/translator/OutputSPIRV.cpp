@@ -364,6 +364,9 @@ class OutputSPIRVTraverser : public TIntermTraverser
                                                spirv::IdRef structValue,
                                                uint32_t fieldIndex);
 
+    void markVertexOutputOnShaderEnd();
+    void markVertexOutputOnEmitVertex();
+
     TCompiler *mCompiler;
     ANGLE_MAYBE_UNUSED_PRIVATE_FIELD const ShCompileOptions &mCompileOptions;
 
@@ -390,6 +393,9 @@ class OutputSPIRVTraverser : public TIntermTraverser
 
     // Whether the current symbol being visited is being declared.
     bool mIsSymbolBeingDeclared = false;
+
+    // What is the id of the current function being generated.
+    spirv::IdRef mCurrentFunctionId;
 };
 
 spv::StorageClass GetStorageClass(const TType &type, GLenum shaderType)
@@ -5611,6 +5617,8 @@ bool OutputSPIRVTraverser::visitFunctionDefinition(Visit visit, TIntermFunctionD
             mBuilder.writeNonSemanticInstruction(vk::spirv::kNonSemanticEnter);
         }
 
+        mCurrentFunctionId = ids.functionId;
+
         return true;
     }
 
@@ -5619,12 +5627,18 @@ bool OutputSPIRVTraverser::visitFunctionDefinition(Visit visit, TIntermFunctionD
     {
         if (function->getReturnType().getBasicType() == EbtVoid)
         {
-            // For the transform feedback emulation capture function, add a non-semantic instruction
-            // before return for the transformer to fill in as necessary.
-            if (ids.functionId == vk::spirv::kIdXfbEmulationCaptureFunction)
+            switch (ids.functionId)
             {
-                mBuilder.writeNonSemanticInstruction(
-                    vk::spirv::kNonSemanticTransformFeedbackEmulation);
+                case vk::spirv::kIdEntryPoint:
+                    // For main(), add a non-semantic instruction at the end of the shader.
+                    markVertexOutputOnShaderEnd();
+                    break;
+                case vk::spirv::kIdXfbEmulationCaptureFunction:
+                    // For the transform feedback emulation capture function, add a non-semantic
+                    // instruction before return for the transformer to fill in as necessary.
+                    mBuilder.writeNonSemanticInstruction(
+                        vk::spirv::kNonSemanticTransformFeedbackEmulation);
+                    break;
             }
 
             spirv::WriteReturn(mBuilder.getSpirvCurrentFunctionBlock());
@@ -5665,6 +5679,8 @@ bool OutputSPIRVTraverser::visitFunctionDefinition(Visit visit, TIntermFunctionD
 
     // End the function
     spirv::WriteFunctionEnd(mBuilder.getSpirvFunctions());
+
+    mCurrentFunctionId = {};
 
     return true;
 }
@@ -5842,6 +5858,11 @@ bool OutputSPIRVTraverser::visitAggregate(Visit visit, TIntermAggregate *node)
             break;
 
         case EOpEmitVertex:
+            if (mCurrentFunctionId == vk::spirv::kIdEntryPoint)
+            {
+                // Add a non-semantic instruction before EmitVertex.
+                markVertexOutputOnEmitVertex();
+            }
             spirv::WriteEmitVertex(mBuilder.getSpirvCurrentFunctionBlock());
             break;
         case EOpEndPrimitive:
@@ -6435,6 +6456,11 @@ bool OutputSPIRVTraverser::visitBranch(Visit visit, TIntermBranch *node)
             }
             else
             {
+                if (mCurrentFunctionId == vk::spirv::kIdEntryPoint)
+                {
+                    // For main(), add a non-semantic instruction at the end of the shader.
+                    markVertexOutputOnShaderEnd();
+                }
                 spirv::WriteReturn(mBuilder.getSpirvCurrentFunctionBlock());
                 mBuilder.terminateCurrentFunctionBlock();
             }
@@ -6450,6 +6476,31 @@ void OutputSPIRVTraverser::visitPreprocessorDirective(TIntermPreprocessorDirecti
 {
     // No preprocessor directives expected at this point.
     UNREACHABLE();
+}
+
+void OutputSPIRVTraverser::markVertexOutputOnShaderEnd()
+{
+    // Vertex output happens in vertex stages at return from main, except for geometry shaders.  In
+    // that case, it's done at EmitVertex.
+    switch (mCompiler->getShaderType())
+    {
+        case GL_VERTEX_SHADER:
+        case GL_TESS_CONTROL_SHADER_EXT:
+        case GL_TESS_EVALUATION_SHADER_EXT:
+            mBuilder.writeNonSemanticInstruction(vk::spirv::kNonSemanticVertexOutput);
+            break;
+        default:
+            break;
+    }
+}
+
+void OutputSPIRVTraverser::markVertexOutputOnEmitVertex()
+{
+    // Vertex output happens in the geometry stage at EmitVertex.
+    if (mCompiler->getShaderType() == GL_GEOMETRY_SHADER)
+    {
+        mBuilder.writeNonSemanticInstruction(vk::spirv::kNonSemanticVertexOutput);
+    }
 }
 
 spirv::Blob OutputSPIRVTraverser::getSpirv()
