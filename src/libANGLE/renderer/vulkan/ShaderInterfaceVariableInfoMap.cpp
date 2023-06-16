@@ -49,16 +49,6 @@ void ShaderInterfaceVariableInfoMap::load(
     mOutputPerVertexActiveMembers.swap(outputPerVertexActiveMembers);
 }
 
-void ShaderInterfaceVariableInfoMap::setActiveStages(gl::ShaderType shaderType,
-                                                     ShaderVariableType variableType,
-                                                     uint32_t id,
-                                                     gl::ShaderBitSet activeStages)
-{
-    ASSERT(hasVariable(shaderType, id));
-    uint32_t index = mIdToTypeAndIndexMap[shaderType][id].index;
-    mData[shaderType][variableType][index].activeStages = activeStages;
-}
-
 void ShaderInterfaceVariableInfoMap::setInputPerVertexActiveMembers(
     gl::ShaderType shaderType,
     gl::PerVertexMemberBitSet activeMembers)
@@ -89,15 +79,6 @@ ShaderInterfaceVariableInfo &ShaderInterfaceVariableInfoMap::getMutable(
     ASSERT(hasVariable(shaderType, id));
     uint32_t index = mIdToTypeAndIndexMap[shaderType][id].index;
     return mData[shaderType][variableType][index];
-}
-
-void ShaderInterfaceVariableInfoMap::markAsDuplicate(gl::ShaderType shaderType,
-                                                     ShaderVariableType variableType,
-                                                     uint32_t id)
-{
-    ASSERT(hasVariable(shaderType, id));
-    uint32_t index                                     = mIdToTypeAndIndexMap[shaderType][id].index;
-    mData[shaderType][variableType][index].isDuplicate = true;
 }
 
 ShaderInterfaceVariableInfo &ShaderInterfaceVariableInfoMap::add(gl::ShaderType shaderType,

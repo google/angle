@@ -277,18 +277,17 @@ class ProgramExecutableVk
     friend class ProgramPipelineVk;
 
     void addInterfaceBlockDescriptorSetDesc(const std::vector<gl::InterfaceBlock> &blocks,
-                                            gl::ShaderType shaderType,
+                                            gl::ShaderBitSet shaderTypes,
                                             ShaderVariableType variableType,
                                             VkDescriptorType descType,
                                             vk::DescriptorSetLayoutDesc *descOut);
     void addAtomicCounterBufferDescriptorSetDesc(
         const std::vector<gl::AtomicCounterBuffer> &atomicCounterBuffers,
-        gl::ShaderType shaderType,
+        gl::ShaderBitSet shaderTypes,
         vk::DescriptorSetLayoutDesc *descOut);
     void addImageDescriptorSetDesc(const gl::ProgramExecutable &executable,
                                    vk::DescriptorSetLayoutDesc *descOut);
     void addInputAttachmentDescriptorSetDesc(const gl::ProgramExecutable &executable,
-                                             gl::ShaderType shaderType,
                                              vk::DescriptorSetLayoutDesc *descOut);
     angle::Result addTextureDescriptorSetDesc(
         ContextVk *contextVk,

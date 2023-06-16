@@ -616,7 +616,6 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 6931 PIXEL6 VULKAN : PointSpritesTest.PointWithoutAttributesCompliance/* = SKIP
 6931 PIXEL6 VULKAN : PointSpritesTest.UsingPointCoordInsideFunction/* = SKIP
 6931 PIXEL6 VULKAN : ProgramInterfaceTestES31.ReloadFromCacheShouldNotCrash/* = SKIP
-6931 PIXEL6 VULKAN : ProgramPipelineTest31.ImageUniforms/* = SKIP
 6931 PIXEL6 VULKAN : ShaderStorageBufferTest31.CompoundAssignmentOperator/* = SKIP
 6931 PIXEL6 VULKAN : Texture2DTest.TexStorageWithPBOMiddlePixelDifferent/* = SKIP
 6931 PIXEL6 VULKAN : TransformFeedbackTestES32.* = SKIP

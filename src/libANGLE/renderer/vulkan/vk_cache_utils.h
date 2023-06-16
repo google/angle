@@ -1555,31 +1555,30 @@ class WriteDescriptorDescBuilder
         return mDescs[bindingIndex].descriptorInfoIndex;
     }
 
-    void updateShaderBuffers(gl::ShaderType shaderType,
+    void updateShaderBuffers(gl::ShaderBitSet shaderTypes,
                              ShaderVariableType variableType,
                              const ShaderInterfaceVariableInfoMap &variableInfoMap,
                              const std::vector<gl::InterfaceBlock> &blocks,
                              VkDescriptorType descriptorType);
 
-    void updateAtomicCounters(gl::ShaderType shaderType,
+    void updateAtomicCounters(gl::ShaderBitSet shaderTypes,
                               const ShaderInterfaceVariableInfoMap &variableInfoMap,
                               const std::vector<gl::AtomicCounterBuffer> &atomicCounterBuffers);
 
-    void updateImages(gl::ShaderType shaderType,
+    void updateImages(gl::ShaderBitSet shaderTypes,
                       const gl::ProgramExecutable &executable,
                       const ShaderInterfaceVariableInfoMap &variableInfoMap);
 
-    void updateInputAttachments(gl::ShaderType shaderType,
-                                const gl::ProgramExecutable &executable,
+    void updateInputAttachments(const gl::ProgramExecutable &executable,
                                 const ShaderInterfaceVariableInfoMap &variableInfoMap,
                                 FramebufferVk *framebufferVk);
 
     void updateExecutableActiveTexturesForShader(
-        gl::ShaderType shaderType,
+        gl::ShaderBitSet shaderTypes,
         const ShaderInterfaceVariableInfoMap &variableInfoMap,
         const gl::ProgramExecutable &executable);
 
-    void updateDefaultUniform(gl::ShaderType shaderType,
+    void updateDefaultUniform(gl::ShaderBitSet shaderTypes,
                               const ShaderInterfaceVariableInfoMap &variableInfoMap,
                               const gl::ProgramExecutable &executable);
 
@@ -1786,17 +1785,6 @@ class DescriptorSetDescBuilder final
     void setEmptyBuffer(uint32_t infoDescIndex,
                         VkDescriptorType descriptorType,
                         const BufferHelper &emptyBuffer);
-    angle::Result updateExecutableActiveTexturesForShader(
-        Context *context,
-        gl::ShaderType shaderType,
-        const ShaderInterfaceVariableInfoMap &variableInfoMap,
-        const WriteDescriptorDescs &writeDescriptorDescs,
-        const gl::ProgramExecutable &executable,
-        const gl::ActiveTextureArray<TextureVk *> &textures,
-        const gl::SamplerBindingVector &samplers,
-        bool emulateSeamfulCubeMapSampling,
-        PipelineType pipelineType,
-        const SharedDescriptorSetCacheKey &sharedCacheKey);
 
     DescriptorSetDesc mDesc;
     angle::FastMap<DescriptorDescHandles, kFastDescriptorSetDescLimit> mHandles;

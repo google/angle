@@ -69,15 +69,10 @@ class ShaderInterfaceVariableInfoMap final : angle::NonCopyable
     ShaderInterfaceVariableInfo &add(gl::ShaderType shaderType,
                                      ShaderVariableType variableType,
                                      uint32_t id);
-    void markAsDuplicate(gl::ShaderType shaderType, ShaderVariableType variableType, uint32_t id);
     ShaderInterfaceVariableInfo &addOrGet(gl::ShaderType shaderType,
                                           ShaderVariableType variableType,
                                           uint32_t id);
 
-    void setActiveStages(gl::ShaderType shaderType,
-                         ShaderVariableType variableType,
-                         uint32_t id,
-                         gl::ShaderBitSet activeStages);
     void setInputPerVertexActiveMembers(gl::ShaderType shaderType,
                                         gl::PerVertexMemberBitSet activeMembers);
     void setOutputPerVertexActiveMembers(gl::ShaderType shaderType,

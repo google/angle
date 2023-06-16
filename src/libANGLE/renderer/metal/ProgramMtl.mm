@@ -1311,7 +1311,7 @@ void ProgramMtl::getUniformImpl(GLint location, T *v, GLenum entryPointType) con
 
     ASSERT(!linkedUniform.isSampler());
 
-    const gl::ShaderType shaderType = linkedUniform.getFirstShaderTypeWhereActive();
+    const gl::ShaderType shaderType = linkedUniform.getFirstActiveShaderType();
     ASSERT(shaderType != gl::ShaderType::InvalidEnum);
 
     const DefaultUniformBlock &uniformBlock = mDefaultUniformBlocks[shaderType];

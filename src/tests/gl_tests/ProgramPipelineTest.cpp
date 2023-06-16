@@ -1536,6 +1536,10 @@ TEST_P(ProgramPipelineTest31, ImageUniforms)
 {
     ANGLE_SKIP_TEST_IF(!IsVulkan());
 
+    GLint maxVertexImageUniforms;
+    glGetIntegerv(GL_MAX_VERTEX_IMAGE_UNIFORMS, &maxVertexImageUniforms);
+    ANGLE_SKIP_TEST_IF(maxVertexImageUniforms == 0);
+
     const GLchar *vertString = R"(#version 310 es
 precision highp float;
 precision highp image2D;
@@ -1554,20 +1558,69 @@ void main()
     GLfloat value = 1.0;
 
     glBindTexture(GL_TEXTURE_2D, texture);
-
-    glTexStorage2D(GL_TEXTURE_2D, 1 /*levels*/, GL_R32F, 1 /*width*/, 1 /*height*/);
-
-    glTexSubImage2D(GL_TEXTURE_2D, 0 /*level*/, 0 /*xoffset*/, 0 /*yoffset*/, 1 /*width*/,
-                    1 /*height*/, GL_RED, GL_FLOAT, &value);
-
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_R32F, 1, 1);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RED, GL_FLOAT, &value);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-    glBindImageTexture(0, texture, 0 /*level*/, GL_FALSE /*is layered?*/, 0 /*layer*/, GL_READ_ONLY,
-                       GL_R32F);
+    glBindImageTexture(0, texture, 0, GL_FALSE, 0, GL_READ_ONLY, GL_R32F);
 
     glDrawArrays(GL_POINTS, 0, 6);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Verify that image uniforms can link in separable programs
+TEST_P(ProgramPipelineTest31, LinkedImageUniforms)
+{
+    ANGLE_SKIP_TEST_IF(!IsVulkan());
+
+    GLint maxVertexImageUniforms;
+    glGetIntegerv(GL_MAX_VERTEX_IMAGE_UNIFORMS, &maxVertexImageUniforms);
+    ANGLE_SKIP_TEST_IF(maxVertexImageUniforms == 0);
+
+    const GLchar *vertString = R"(#version 310 es
+precision highp float;
+precision highp image2D;
+layout(binding = 0, r32f) uniform image2D img;
+
+void main()
+{
+    vec2 position = -imageLoad(img, ivec2(0, 0)).rr;
+    if (gl_VertexID == 1)
+        position = vec2(3, -1);
+    else if (gl_VertexID == 2)
+        position = vec2(-1, 3);
+
+    gl_Position = vec4(position, 0, 1);
+})";
+
+    const GLchar *fragString = R"(#version 310 es
+precision highp float;
+precision highp image2D;
+layout(binding = 0, r32f) uniform image2D img;
+layout(location = 0) out vec4 color;
+
+void main()
+{
+    color = imageLoad(img, ivec2(0, 0));
+})";
+
+    bindProgramPipeline(vertString, fragString);
+
+    GLTexture texture;
+    GLfloat value = 1.0;
+
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_R32F, 1, 1);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RED, GL_FLOAT, &value);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    glBindImageTexture(0, texture, 0, GL_FALSE, 0, GL_READ_ONLY, GL_R32F);
+
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
     ASSERT_GL_NO_ERROR();
 }
 
@@ -1864,18 +1917,12 @@ void main()
         GLint value = index + 1;
 
         glBindTexture(GL_TEXTURE_2D, textures[index]);
-
-        glTexStorage2D(GL_TEXTURE_2D, 1 /*levels*/, GL_R32I, 1 /*width*/, 1 /*height*/);
-
-        glTexSubImage2D(GL_TEXTURE_2D, 0 /*level*/, 0 /*xoffset*/, 0 /*yoffset*/, 1 /*width*/,
-                        1 /*height*/, GL_RED_INTEGER, GL_INT, &value);
-
+        glTexStorage2D(GL_TEXTURE_2D, 1, GL_R32I, 1, 1);
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RED_INTEGER, GL_INT, &value);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-        glBindImageTexture(index, textures[index], 0 /*level*/, GL_FALSE /*is layered?*/,
-                           0 /*layer*/, GL_READ_ONLY, GL_R32I);
+        glBindImageTexture(index, textures[index], 0, GL_FALSE, 0, GL_READ_ONLY, GL_R32I);
     }
 
     glDrawArrays(GL_POINTS, 0, 6);

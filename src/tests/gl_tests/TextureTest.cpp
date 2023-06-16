@@ -12201,6 +12201,68 @@ TEST_P(RGBTextureBufferTestES31, SSBOWrite)
     EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(44, 55, 66, 255), 1);
 }
 
+class TextureTestES31 : public ANGLETest<>
+{
+  protected:
+    TextureTestES31() {}
+};
+
+// Verify that image uniforms can link in separable programs
+TEST_P(TextureTestES31, LinkedImageUniforms)
+{
+    ANGLE_SKIP_TEST_IF(!IsVulkan());
+
+    GLint maxVertexImageUniforms;
+    glGetIntegerv(GL_MAX_VERTEX_IMAGE_UNIFORMS, &maxVertexImageUniforms);
+    ANGLE_SKIP_TEST_IF(maxVertexImageUniforms == 0);
+
+    constexpr char kVS[] = R"(#version 310 es
+precision highp float;
+precision highp image2D;
+layout(binding = 0, r32f) uniform image2D img;
+
+void main()
+{
+    vec2 position = -imageLoad(img, ivec2(0, 0)).rr;
+    if (gl_VertexID == 1)
+        position = vec2(3, -1);
+    else if (gl_VertexID == 2)
+        position = vec2(-1, 3);
+
+    gl_Position = vec4(position, 0, 1);
+})";
+
+    constexpr char kFS[] = R"(#version 310 es
+precision highp float;
+precision highp image2D;
+layout(binding = 0, r32f) uniform image2D img;
+layout(location = 0) out vec4 color;
+
+void main()
+{
+    color = imageLoad(img, ivec2(0, 0));
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+
+    GLTexture texture;
+    GLfloat value = 1.0;
+
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_R32F, 1, 1);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RED, GL_FLOAT, &value);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    glBindImageTexture(0, texture, 0, GL_FALSE, 0, GL_READ_ONLY, GL_R32F);
+
+    glUseProgram(program);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    ASSERT_GL_NO_ERROR();
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 #define ES2_EMULATE_COPY_TEX_IMAGE_VIA_SUB()             \
@@ -12334,6 +12396,9 @@ ANGLE_INSTANTIATE_TEST_ES3(PBOCompressedTexture3DTest);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TextureBufferTestES31);
 ANGLE_INSTANTIATE_TEST_ES31(TextureBufferTestES31);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TextureTestES31);
+ANGLE_INSTANTIATE_TEST_ES31(TextureTestES31);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(CopyImageTestES31);
 ANGLE_INSTANTIATE_TEST_ES31(CopyImageTestES31);

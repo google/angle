@@ -2732,8 +2732,7 @@ angle::Result ContextVk::handleDirtyShaderResourcesImpl(CommandBufferHelperT *co
         executableVk.getShaderResourceWriteDescriptorDescBuilder();
     // Update writeDescriptorDescs with inputAttachments
     mShaderBufferWriteDescriptorDescBuilder.updateInputAttachments(
-        gl::ShaderType::Fragment, *executable, variableInfoMap,
-        vk::GetImpl(mState.getDrawFramebuffer()));
+        *executable, variableInfoMap, vk::GetImpl(mState.getDrawFramebuffer()));
 
     mShaderBuffersDescriptorDesc.reset();
     if (hasUniformBuffers)

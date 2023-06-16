@@ -29,7 +29,7 @@ struct ActiveVariable
 
     ActiveVariable &operator=(const ActiveVariable &rhs);
 
-    ShaderType getFirstShaderTypeWhereActive() const
+    ShaderType getFirstActiveShaderType() const
     {
         return static_cast<ShaderType>(ScanForward(mActiveUseBits.bits()));
     }
@@ -39,6 +39,10 @@ struct ActiveVariable
     {
         ASSERT(shaderType != ShaderType::InvalidEnum);
         return mActiveUseBits[shaderType];
+    }
+    bool isActiveInAny(ShaderBitSet shaderTypes) const
+    {
+        return (mActiveUseBits & shaderTypes).any();
     }
     uint32_t getId(ShaderType shaderType) const { return mIds[shaderType]; }
     ShaderBitSet activeShaders() const { return mActiveUseBits; }
