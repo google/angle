@@ -90,13 +90,14 @@ ANGLE_INLINE bool Context::noopMultiDraw(GLsizei drawcount) const
     return drawcount == 0 || !mStateCache.getCanDraw();
 }
 
-ANGLE_INLINE angle::Result Context::syncDirtyBits(Command command)
+ANGLE_INLINE angle::Result Context::syncAllDirtyBits(Command command)
 {
     const State::DirtyBits &dirtyBits                 = mState.getDirtyBits();
     const State::ExtendedDirtyBits &extendedDirtyBits = mState.getExtendedDirtyBits();
     ANGLE_TRY(mImplementation->syncState(this, dirtyBits, mAllDirtyBits, extendedDirtyBits,
                                          mAllExtendedDirtyBits, command));
     mState.clearDirtyBits();
+    mState.clearExtendedDirtyBits();
     return angle::Result::Continue;
 }
 
@@ -130,7 +131,7 @@ ANGLE_INLINE angle::Result Context::prepareForDraw(PrimitiveMode mode)
     ANGLE_TRY(syncDirtyObjects(mDrawDirtyObjects, Command::Draw));
     ASSERT(!isRobustResourceInitEnabled() ||
            !mState.getDrawFramebuffer()->hasResourceThatNeedsInit());
-    return syncDirtyBits(Command::Draw);
+    return syncAllDirtyBits(Command::Draw);
 }
 
 ANGLE_INLINE void Context::drawArrays(PrimitiveMode mode, GLint first, GLsizei count)

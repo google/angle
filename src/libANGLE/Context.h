@@ -728,7 +728,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
                             const State::ExtendedDirtyBits &extendedBitMask,
                             const State::DirtyObjects &objectMask,
                             Command command);
-    angle::Result syncDirtyBits(Command command);
+    angle::Result syncAllDirtyBits(Command command);
     angle::Result syncDirtyBits(const State::DirtyBits &bitMask,
                                 const State::ExtendedDirtyBits &extendedBitMask,
                                 Command command);
