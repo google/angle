@@ -5572,14 +5572,14 @@ bool OutputSPIRVTraverser::visitFunctionDefinition(Visit visit, TIntermFunctionD
         return true;
     }
 
+    const TFunction *function = node->getFunction();
+
+    ASSERT(mFunctionIdMap.count(function) > 0);
+    const FunctionIds &ids = mFunctionIdMap[function];
+
     // After the prototype is visited, generate the initial code for the function.
     if (visit == InVisit)
     {
-        const TFunction *function = node->getFunction();
-
-        ASSERT(mFunctionIdMap.count(function) > 0);
-        const FunctionIds &ids = mFunctionIdMap[function];
-
         // Declare the function.
         spirv::WriteFunction(mBuilder.getSpirvFunctions(), ids.returnTypeId, ids.functionId,
                              spv::FunctionControlMaskNone, ids.functionTypeId);
@@ -5617,16 +5617,23 @@ bool OutputSPIRVTraverser::visitFunctionDefinition(Visit visit, TIntermFunctionD
     // If no explicit return was specified, add one automatically here.
     if (!mBuilder.isCurrentFunctionBlockTerminated())
     {
-        if (node->getFunction()->getReturnType().getBasicType() == EbtVoid)
+        if (function->getReturnType().getBasicType() == EbtVoid)
         {
+            // For the transform feedback emulation capture function, add a non-semantic instruction
+            // before return for the transformer to fill in as necessary.
+            if (ids.functionId == vk::spirv::kIdXfbEmulationCaptureFunction)
+            {
+                mBuilder.writeNonSemanticInstruction(
+                    vk::spirv::kNonSemanticTransformFeedbackEmulation);
+            }
+
             spirv::WriteReturn(mBuilder.getSpirvCurrentFunctionBlock());
         }
         else
         {
             // GLSL allows functions expecting a return value to miss a return.  In that case,
             // return a null constant.
-            const TFunction *function = node->getFunction();
-            const TType &returnType   = function->getReturnType();
+            const TType &returnType = function->getReturnType();
             spirv::IdRef nullConstant;
             if (returnType.isScalar() && !returnType.isArray())
             {
@@ -5647,7 +5654,7 @@ bool OutputSPIRVTraverser::visitFunctionDefinition(Visit visit, TIntermFunctionD
             }
             if (!nullConstant.valid())
             {
-                nullConstant = mBuilder.getNullConstant(mFunctionIdMap[function].returnTypeId);
+                nullConstant = mBuilder.getNullConstant(ids.returnTypeId);
             }
             spirv::WriteReturnValue(mBuilder.getSpirvCurrentFunctionBlock(), nullConstant);
         }

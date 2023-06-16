@@ -1128,8 +1128,6 @@ namespace
     sh::vk::spirv::kIdTransformPositionFunction);
 [[maybe_unused]] constexpr spirv::IdRef XfbEmulationGetOffsetsFunction(
     sh::vk::spirv::kIdXfbEmulationGetOffsetsFunction);
-[[maybe_unused]] constexpr spirv::IdRef XfbEmulationCaptureFunction(
-    sh::vk::spirv::kIdXfbEmulationCaptureFunction);
 [[maybe_unused]] constexpr spirv::IdRef SampleID(sh::vk::spirv::kIdSampleID);
 
 [[maybe_unused]] constexpr spirv::IdRef InputPerVertexBlock(sh::vk::spirv::kIdInputPerVertexBlock);
@@ -1720,7 +1718,6 @@ class SpirvTransformFeedbackCodeGenerator final : angle::NonCopyable
         const SpirvInactiveVaryingRemover &inactiveVaryingRemover,
         const SpirvVaryingPrecisionFixer &varyingPrecisionFixer,
         const bool usePrecisionFixer,
-        spirv::IdRef currentFunctionId,
         spirv::Blob *blobOut);
     void addExecutionMode(spirv::IdRef entryPointId, spirv::Blob *blobOut);
     void addMemberDecorate(const ShaderInterfaceVariableInfo &info,
@@ -2177,10 +2174,9 @@ void SpirvTransformFeedbackCodeGenerator::writeTransformFeedbackEmulationOutput(
     const SpirvInactiveVaryingRemover &inactiveVaryingRemover,
     const SpirvVaryingPrecisionFixer &varyingPrecisionFixer,
     const bool usePrecisionFixer,
-    spirv::IdRef currentFunctionId,
     spirv::Blob *blobOut)
 {
-    if (!mIsEmulated || currentFunctionId != ID::XfbEmulationCaptureFunction)
+    if (!mIsEmulated)
     {
         return;
     }
@@ -3821,8 +3817,14 @@ TransformationState SpirvTransformer::transformExtInst(const uint32_t *instructi
             UNREACHABLE();
             break;
         case sh::vk::spirv::kNonSemanticTransformFeedbackEmulation:
-            // TODO: http://anglebug.com/7220
-            UNREACHABLE();
+            // Transform feedback emulation is written to a designated function.  Allow its code to
+            // be generated if this is the right function.
+            if (mOptions.isTransformFeedbackStage)
+            {
+                mXfbCodeGenerator.writeTransformFeedbackEmulationOutput(
+                    mInactiveVaryingRemover, mVaryingPrecisionFixer,
+                    mOptions.useSpirvVaryingPrecisionFixer, mSpirvBlobOut);
+            }
             break;
         default:
             UNREACHABLE();
@@ -3856,15 +3858,6 @@ TransformationState SpirvTransformer::transformReturn(const uint32_t *instructio
 {
     if (mCurrentFunctionId != ID::EntryPoint)
     {
-        if (mOptions.isTransformFeedbackStage)
-        {
-            // Transform feedback emulation is written to a designated function.  Allow its code to
-            // be generated if this is the right function.
-            mXfbCodeGenerator.writeTransformFeedbackEmulationOutput(
-                mInactiveVaryingRemover, mVaryingPrecisionFixer,
-                mOptions.useSpirvVaryingPrecisionFixer, mCurrentFunctionId, mSpirvBlobOut);
-        }
-
         // We only need to process the precision info when returning from the entry point function
         return TransformationState::Unchanged;
     }
