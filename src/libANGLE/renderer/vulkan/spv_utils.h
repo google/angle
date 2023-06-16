@@ -43,7 +43,6 @@ struct SpvTransformOptions
 {
     gl::ShaderType shaderType           = gl::ShaderType::InvalidEnum;
     bool negativeViewportSupported      = false;
-    bool removeDebugInfo                = false;
     bool isLastPreFragmentStage         = false;
     bool isTransformFeedbackStage       = false;
     bool isTransformFeedbackEmulated    = false;

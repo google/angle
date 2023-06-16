@@ -386,6 +386,7 @@ class SPIRVBuilder : angle::NonCopyable
                      const spirv::PairLiteralIntegerIdRefList &targetPairList,
                      spirv::IdRef mergeBlock);
     void writeSwitchCaseBlockEnd();
+    void writeDebugName(spirv::IdRef id, const char *name);
 
     spirv::IdRef getBoolConstant(bool value);
     spirv::IdRef getUintConstant(uint32_t value);
@@ -461,6 +462,9 @@ class SPIRVBuilder : angle::NonCopyable
     void writeExtensions(spirv::Blob *blob);
     void writeSourceExtensions(spirv::Blob *blob);
     void writeNonSemanticOverview(spirv::Blob *blob, spirv::IdRef id);
+    void writeBlockDebugNames(const TFieldListCollection *block,
+                              spirv::IdRef typeId,
+                              const char *name);
 
     ANGLE_MAYBE_UNUSED_PRIVATE_FIELD TCompiler *mCompiler;
     const ShCompileOptions &mCompileOptions;

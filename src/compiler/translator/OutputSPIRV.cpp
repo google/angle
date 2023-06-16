@@ -5597,8 +5597,7 @@ bool OutputSPIRVTraverser::visitFunctionDefinition(Visit visit, TIntermFunctionD
             ASSERT(mSymbolIdMap.count(paramVariable) == 0);
             mSymbolIdMap[paramVariable] = paramId;
 
-            spirv::WriteName(mBuilder.getSpirvDebug(), paramId,
-                             mBuilder.getName(paramVariable).data());
+            mBuilder.writeDebugName(paramId, mBuilder.getName(paramVariable).data());
         }
 
         mBuilder.startNewFunction(ids.functionId, function);

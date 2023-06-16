@@ -3052,7 +3052,6 @@ class SpirvTransformer final : public SpirvTransformerBase
     // transformed.  If false is returned, the instruction should be copied as-is.
     TransformationState transformAccessChain(const uint32_t *instruction);
     TransformationState transformCapability(const uint32_t *instruction);
-    TransformationState transformDebugInfo(const uint32_t *instruction, spv::Op op);
     TransformationState transformEmitVertex(const uint32_t *instruction);
     TransformationState transformEntryPoint(const uint32_t *instruction);
     TransformationState transformExtension(const uint32_t *instruction);
@@ -3060,6 +3059,8 @@ class SpirvTransformer final : public SpirvTransformerBase
     TransformationState transformExtInst(const uint32_t *instruction);
     TransformationState transformDecorate(const uint32_t *instruction);
     TransformationState transformMemberDecorate(const uint32_t *instruction);
+    TransformationState transformName(const uint32_t *instruction);
+    TransformationState transformMemberName(const uint32_t *instruction);
     TransformationState transformTypePointer(const uint32_t *instruction);
     TransformationState transformTypeStruct(const uint32_t *instruction);
     TransformationState transformReturn(const uint32_t *instruction);
@@ -3273,12 +3274,10 @@ void SpirvTransformer::transformInstruction()
                 transformationState = transformExtInst(instruction);
                 break;
             case spv::OpName:
+                transformationState = transformName(instruction);
+                break;
             case spv::OpMemberName:
-            case spv::OpString:
-            case spv::OpLine:
-            case spv::OpNoLine:
-            case spv::OpModuleProcessed:
-                transformationState = transformDebugInfo(instruction, opCode);
+                transformationState = transformMemberName(instruction);
                 break;
             case spv::OpCapability:
                 transformationState = transformCapability(instruction);
@@ -3706,41 +3705,28 @@ TransformationState SpirvTransformer::transformCapability(const uint32_t *instru
     return TransformationState::Unchanged;
 }
 
-TransformationState SpirvTransformer::transformDebugInfo(const uint32_t *instruction, spv::Op op)
+TransformationState SpirvTransformer::transformName(const uint32_t *instruction)
 {
-    if (mOptions.removeDebugInfo)
+    spirv::IdRef id;
+    spirv::LiteralString name;
+    spirv::ParseName(instruction, &id, &name);
+
+    return mXfbCodeGenerator.transformName(id, name);
+}
+
+TransformationState SpirvTransformer::transformMemberName(const uint32_t *instruction)
+{
+    spirv::IdRef id;
+    spirv::LiteralInteger member;
+    spirv::LiteralString name;
+    spirv::ParseMemberName(instruction, &id, &member, &name);
+
+    if (mXfbCodeGenerator.transformMemberName(id, member, name) == TransformationState::Transformed)
     {
-        // Strip debug info to reduce binary size.
         return TransformationState::Transformed;
     }
 
-    // In the case of OpMemberName, unconditionally remove stripped gl_PerVertex members.
-    if (op == spv::OpMemberName)
-    {
-        spirv::IdRef id;
-        spirv::LiteralInteger member;
-        spirv::LiteralString name;
-        spirv::ParseMemberName(instruction, &id, &member, &name);
-
-        if (mXfbCodeGenerator.transformMemberName(id, member, name) ==
-            TransformationState::Transformed)
-        {
-            return TransformationState::Transformed;
-        }
-
-        return mPerVertexTrimmer.transformMemberName(id, member, name);
-    }
-
-    if (op == spv::OpName)
-    {
-        spirv::IdRef id;
-        spirv::LiteralString name;
-        spirv::ParseName(instruction, &id, &name);
-
-        return mXfbCodeGenerator.transformName(id, name);
-    }
-
-    return TransformationState::Unchanged;
+    return mPerVertexTrimmer.transformMemberName(id, member, name);
 }
 
 TransformationState SpirvTransformer::transformEmitVertex(const uint32_t *instruction)

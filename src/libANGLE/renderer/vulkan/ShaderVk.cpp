@@ -43,6 +43,11 @@ std::shared_ptr<WaitableCompileEvent> ShaderVk::compile(const gl::Context *conte
         }
     }
 
+    if (contextVk->getFeatures().retainSPIRVDebugInfo.enabled)
+    {
+        options->outputDebugInfo = true;
+    }
+
     // robustBufferAccess on Vulkan doesn't support bound check on shader local variables
     // but the GL_EXT_robustness does support.
     // Enable the flag clampIndirectArrayBounds to ensure out of bounds local variable writes in

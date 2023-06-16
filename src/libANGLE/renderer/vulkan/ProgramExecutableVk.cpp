@@ -76,7 +76,6 @@ bool ValidateTransformedSpirV(const ContextVk *contextVk,
         SpvTransformOptions options;
         options.shaderType                = shaderType;
         options.negativeViewportSupported = false;
-        options.removeDebugInfo           = true;
         options.isLastPreFragmentStage =
             shaderType == lastPreFragmentStage && shaderType != gl::ShaderType::TessControl;
         options.isTransformFeedbackStage = options.isLastPreFragmentStage;
@@ -362,7 +361,6 @@ angle::Result ProgramInfo::initProgram(ContextVk *contextVk,
 
     SpvTransformOptions options;
     options.shaderType               = shaderType;
-    options.removeDebugInfo          = !contextVk->getFeatures().retainSPIRVDebugInfo.enabled;
     options.isLastPreFragmentStage   = isLastPreFragmentStage;
     options.isTransformFeedbackStage = isLastPreFragmentStage && isTransformFeedbackProgram &&
                                        !optionBits.removeTransformFeedbackEmulation;
