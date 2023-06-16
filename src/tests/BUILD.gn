@@ -1490,6 +1490,8 @@ if (build_angle_deqp_tests && !is_fuchsia) {
   }
 
   _android_mustpass = "$deqp_path/android/cts/main"
+  _aosp_egl_mustpass =
+      "$deqp_path/external/openglcts/data/mustpass/egl/aosp_mustpass/main"
   _aosp_mustpass =
       "$deqp_path/external/openglcts/data/mustpass/gles/aosp_mustpass/main"
   _khronos_gl_mustpass =
@@ -1565,7 +1567,7 @@ if (build_angle_deqp_tests && !is_fuchsia) {
   angle_deqp_core_gtest("egl") {
     defines = [ "ANGLE_DEQP_EGL_TESTS" ]
     sources = deqp_egl_sources
-    mustpass_dir = _android_mustpass
+    mustpass_dir = _aosp_egl_mustpass
   }
 
   # The CTS also includes a set of "KHR" tests that are separate from the main body of dEQP tests.
