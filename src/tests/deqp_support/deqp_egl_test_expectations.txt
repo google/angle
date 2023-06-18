@@ -70,12 +70,24 @@
 1340 WIN : dEQP-EGL.functional.resize.back_buffer.* = SKIP
 1340 WIN : dEQP-EGL.functional.resize.pixel_density.* = SKIP
 
+// Windows D3D11 failures
+8214 WIN D3D11 : dEQP-EGL.functional.color_clears.multi_thread.gles2.other = SKIP
+8214 WIN D3D11 : dEQP-EGL.functional.color_clears.multi_thread.gles3.other = SKIP
+8214 WIN D3D11 : dEQP-EGL.functional.render.multi_thread.gles2.other = SKIP
+8214 WIN D3D11 : dEQP-EGL.functional.render.multi_thread.gles2_gles3.other = SKIP
+8214 WIN D3D11 : dEQP-EGL.functional.render.multi_thread.gles3.other = SKIP
+
 // Windows OpenGL failures
 2546 WIN : dEQP-EGL.functional.query_surface.simple.pbuffer.rgba8888_depth_stencil = FAIL
 2546 WIN : dEQP-EGL.functional.thread_cleanup.* = SKIP
 
 // Windows Vulkan failures
 2716 WIN VULKAN : dEQP-EGL.functional.preserve_swap.no_preserve.* = FAIL
+8214 WIN VULKAN : dEQP-EGL.functional.color_clears.multi_thread.gles2.other = SKIP
+8214 WIN VULKAN : dEQP-EGL.functional.color_clears.multi_thread.gles3.other = SKIP
+8214 WIN VULKAN : dEQP-EGL.functional.render.multi_thread.gles2.other = SKIP
+8214 WIN VULKAN : dEQP-EGL.functional.render.multi_thread.gles2_gles3.other = SKIP
+8214 WIN VULKAN : dEQP-EGL.functional.render.multi_thread.gles3.other = SKIP
 
 // Linux failures
 2546 LINUX : dEQP-EGL.functional.negative_api.copy_buffers = SKIP
@@ -129,8 +141,21 @@
 6277 PIXEL4ORXL VULKAN : dEQP-EGL.functional.image.render_multiple_contexts.gles2_android_native_rgb8_texture = FAIL
 
 // Pixel 6 Vulkan
-// These fail on the Android S bots, but pass on pre-release Android T drivers:
 6899 PIXEL6 VULKAN : dEQP-EGL.functional.query_context.*.rgb888_window = FAIL
+8214 PIXEL6 VULKAN : dEQP-EGL.functional.color_clears.multi_thread.gles2.other = SKIP
+8214 PIXEL6 VULKAN : dEQP-EGL.functional.color_clears.multi_thread.gles3.other = SKIP
+8214 PIXEL6 VULKAN : dEQP-EGL.functional.render.multi_thread.gles2.other = SKIP
+8214 PIXEL6 VULKAN : dEQP-EGL.functional.render.multi_thread.gles2_gles3.other = SKIP
+8214 PIXEL6 VULKAN : dEQP-EGL.functional.render.multi_thread.gles3.other = SKIP
+8214 PIXEL6 VULKAN : dEQP-EGL.functional.color_clears.multi_context.gles2.other = SKIP
+8214 PIXEL6 VULKAN : dEQP-EGL.functional.color_clears.multi_context.gles3.other = SKIP
+8214 PIXEL6 VULKAN : dEQP-EGL.functional.color_clears.single_context.gles2.other = SKIP
+8214 PIXEL6 VULKAN : dEQP-EGL.functional.color_clears.single_context.gles3.other = SKIP
+8214 PIXEL6 VULKAN : dEQP-EGL.functional.render.multi_context.gles2.other = SKIP
+8214 PIXEL6 VULKAN : dEQP-EGL.functional.render.multi_context.gles2_gles3.other = SKIP
+8214 PIXEL6 VULKAN : dEQP-EGL.functional.render.multi_context.gles3.other = SKIP
+8214 PIXEL6 VULKAN : dEQP-EGL.functional.render.single_context.gles2.other = SKIP
+8214 PIXEL6 VULKAN : dEQP-EGL.functional.render.single_context.gles3.other = SKIP
 
 // render_sample_texture_array tests failing on some configurations on bots
 7506 PIXEL4ORXL VULKAN : dEQP-EGL.functional.image.create.gles3_android_native_array_*_render_sample_texture_array = FAIL
