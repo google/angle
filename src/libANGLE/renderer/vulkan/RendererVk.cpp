@@ -3817,6 +3817,7 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     constexpr uint32_t kPixel4DriverWithWorkingSpecConstSupport = 0x80201000;
 
     const bool isAMD      = IsAMD(mPhysicalDeviceProperties.vendorID);
+    const bool isApple    = IsApple(mPhysicalDeviceProperties.vendorID);
     const bool isARM      = IsARM(mPhysicalDeviceProperties.vendorID);
     const bool isIntel    = IsIntel(mPhysicalDeviceProperties.vendorID);
     const bool isNvidia   = IsNvidia(mPhysicalDeviceProperties.vendorID);
@@ -3866,7 +3867,7 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     // deteriorating performance on the other.  ANGLE will accordingly make some decisions based on
     // the device architecture for optimal performance on both.
     const bool isImmediateModeRenderer = isNvidia || isAMD || isIntel || isSamsung || isSwiftShader;
-    const bool isTileBasedRenderer     = isARM || isPowerVR || isQualcomm || isBroadcom;
+    const bool isTileBasedRenderer     = isARM || isPowerVR || isQualcomm || isBroadcom || isApple;
 
     // Make sure all known architectures are accounted for.
     if (!isImmediateModeRenderer && !isTileBasedRenderer && !isMockICDEnabled())
