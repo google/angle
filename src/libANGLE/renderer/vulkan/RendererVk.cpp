@@ -4510,8 +4510,12 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
                             mPipelineProtectedAccessFeatures.pipelineProtectedAccess == VK_TRUE &&
                                 mProtectedMemoryFeatures.protectedMemory == VK_TRUE);
 
+    // VK_EXT_graphics_pipeline_library is available on NVIDIA drivers earlier
+    // than version 531, but there are transient visual glitches with rendering
+    // on those earlier versions.
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsGraphicsPipelineLibrary,
-                            mGraphicsPipelineLibraryFeatures.graphicsPipelineLibrary == VK_TRUE);
+                            mGraphicsPipelineLibraryFeatures.graphicsPipelineLibrary == VK_TRUE &&
+                                (!isNvidia || nvidiaVersion.major >= 531));
 
     // The following drivers are known to key the pipeline cache blobs with vertex input and
     // fragment output state, causing draw-time pipeline creation to miss the cache regardless of
