@@ -3252,6 +3252,8 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     mEnabledFeatures.features.independentBlend = mPhysicalDeviceFeatures.independentBlend;
     // Used to support multi_draw_indirect
     mEnabledFeatures.features.multiDrawIndirect = mPhysicalDeviceFeatures.multiDrawIndirect;
+    mEnabledFeatures.features.drawIndirectFirstInstance =
+        mPhysicalDeviceFeatures.drawIndirectFirstInstance;
     // Used to support robust buffer access, if VK_EXT_pipeline_robustness is not supported.
     if (!mFeatures.supportsPipelineRobustness.enabled)
     {
