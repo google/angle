@@ -1406,9 +1406,8 @@ angle::Result InitializeRenderPassFromDesc(ContextVk *contextVk,
         if (!removeDepthStencilResolve)
         {
             depthStencilResolve.pDepthStencilResolveAttachment = &depthStencilResolveAttachmentRef;
+            AddToPNextChain(&subpassDesc.back(), &depthStencilResolve);
         }
-
-        AddToPNextChain(&subpassDesc.back(), &depthStencilResolve);
     }
     else if (isRenderToTextureThroughExtension)
     {
