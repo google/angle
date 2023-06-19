@@ -1312,6 +1312,22 @@
               "Limit sample count to 2 to save memory on low end devices."
             ],
             "issue": "http://anglebug.com/8162"
+        },
+        {
+            "name": "supports_full_screen_exclusive",
+            "category": "Features",
+            "description": [
+                "VkDevice supports the VK_EXT_full_screen_exclusive extension"
+            ],
+            "issue": "http://anglebug.com/8215"
+        },
+        {
+            "name": "force_disable_full_screen_exclusive",
+            "category": "Workarounds",
+            "description": [
+                "Device needs VK_EXT_full_screen_exclusive explicitly disabled"
+            ],
+            "issue": "http://anglebug.com/8215"
         }
     ]
 }

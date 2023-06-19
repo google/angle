@@ -1215,6 +1215,20 @@ struct FeaturesVk : FeatureSetBase
         &members, "http://anglebug.com/8162"
     };
 
+    FeatureInfo supportsFullScreenExclusive = {
+        "supportsFullScreenExclusive",
+        FeatureCategory::VulkanFeatures,
+        "VkDevice supports the VK_EXT_full_screen_exclusive extension",
+        &members, "http://anglebug.com/8215"
+    };
+
+    FeatureInfo forceDisableFullScreenExclusive = {
+        "forceDisableFullScreenExclusive",
+        FeatureCategory::VulkanWorkarounds,
+        "Device needs VK_EXT_full_screen_exclusive explicitly disabled",
+        &members, "http://anglebug.com/8215"
+    };
+
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

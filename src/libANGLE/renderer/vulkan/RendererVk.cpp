@@ -2597,6 +2597,7 @@ void RendererVk::queryDeviceExtensionFeatures(const vk::ExtensionNameList &devic
 // - VK_EXT_external_memory_dma_buf
 // - VK_EXT_image_drm_format_modifier
 // - VK_EXT_blend_operation_advanced
+// - VK_EXT_full_screen_exclusive
 //
 void RendererVk::enableDeviceExtensionsNotPromoted(
     const vk::ExtensionNameList &deviceExtensionNames)
@@ -2847,6 +2848,17 @@ void RendererVk::enableDeviceExtensionsNotPromoted(
         mEnabledDeviceExtensions.push_back(VK_EXT_LEGACY_DITHERING_EXTENSION_NAME);
         vk::AddToPNextChain(&mEnabledFeatures, &mDitheringFeatures);
     }
+
+#if defined(ANGLE_PLATFORM_WINDOWS)
+    // We only need the VK_EXT_full_screen_exclusive extension if we are opting
+    // out of it via VK_FULL_SCREEN_EXCLUSIVE_DISALLOWED_EXT (i.e. working
+    // around driver bugs).
+    if (getFeatures().supportsFullScreenExclusive.enabled &&
+        getFeatures().forceDisableFullScreenExclusive.enabled)
+    {
+        mEnabledDeviceExtensions.push_back(VK_EXT_FULL_SCREEN_EXCLUSIVE_EXTENSION_NAME);
+    }
+#endif
 }
 
 // See comment above appendDeviceExtensionFeaturesPromotedTo11.  Additional extensions are enabled
@@ -3982,6 +3994,22 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsExternalMemoryFd,
         ExtensionFound(VK_KHR_EXTERNAL_MEMORY_FD_EXTENSION_NAME, deviceExtensionNames));
+
+#if defined(ANGLE_PLATFORM_WINDOWS)
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, supportsFullScreenExclusive,
+        ExtensionFound(VK_EXT_FULL_SCREEN_EXCLUSIVE_EXTENSION_NAME, deviceExtensionNames));
+
+    // On Windows+AMD, drivers before version 0x800106 (2.0.262) would
+    // implicitly enable VK_EXT_full_screen_exclusive and start returning
+    // extension-specific error codes in swapchain functions. Since the
+    // extension was not enabled by ANGLE, it was impossible to handle these
+    // error codes correctly. On these earlier drivers, we want to explicitly
+    // enable the extension and opt out of it to avoid seeing those error codes
+    // entirely.
+    ANGLE_FEATURE_CONDITION(&mFeatures, forceDisableFullScreenExclusive,
+                            isAMD && mPhysicalDeviceProperties.driverVersion < 0x800106);
+#endif
 
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsExternalMemoryFuchsia,
