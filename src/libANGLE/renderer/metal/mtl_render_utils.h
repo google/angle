@@ -296,9 +296,10 @@ class DepthStencilBlitUtils final : angle::NonCopyable
         const DepthStencilBlitParams &params,
         AutoObjCPtr<id<MTLRenderPipelineState>> *outRenderPipelineState);
 
-    id<MTLComputePipelineState> getStencilToBufferComputePipelineState(
+    angle::Result getStencilToBufferComputePipelineState(
         ContextMtl *ctx,
-        const StencilBlitViaBufferParams &params);
+        const StencilBlitViaBufferParams &params,
+        AutoObjCPtr<id<MTLComputePipelineState>> *outComputePipelineState);
 
     AutoObjCPtr<id<MTLFunction>> mVertexShader;
 
@@ -310,8 +311,8 @@ class DepthStencilBlitUtils final : angle::NonCopyable
                mtl_shader::kTextureTypeCount>
         mDepthStencilBlitFragmentShaders;
 
-    std::array<AutoObjCPtr<id<MTLComputePipelineState>>, mtl_shader::kTextureTypeCount>
-        mStencilBlitToBufferComPipelineCache;
+    std::array<AutoObjCPtr<id<MTLFunction>>, mtl_shader::kTextureTypeCount>
+        mStencilBlitToBufferComputeShaders;
 
     // Intermediate buffer for storing copied stencil data. Used when device doesn't support
     // writing stencil in shader.
@@ -362,28 +363,33 @@ class IndexGeneratorUtils final : angle::NonCopyable
                                                           size_t *indicesGenerated);
 
   private:
-    // Index generator compute pipelines:
+    // Index generator compute shaders:
     //  - First dimension: index type.
     //  - second dimension: source buffer's offset is aligned or not.
-    using IndexConversionPipelineArray =
-        std::array<std::array<AutoObjCPtr<id<MTLComputePipelineState>>, 2>,
-                   angle::EnumSize<gl::DrawElementsType>()>;
+    using IndexConversionShaderArray = std::array<std::array<AutoObjCPtr<id<MTLFunction>>, 2>,
+                                                  angle::EnumSize<gl::DrawElementsType>()>;
 
-    AutoObjCPtr<id<MTLComputePipelineState>> getIndexConversionPipeline(
+    angle::Result getIndexConversionPipeline(
         ContextMtl *contextMtl,
         gl::DrawElementsType srcType,
-        uint32_t srcOffset);
+        uint32_t srcOffset,
+        AutoObjCPtr<id<MTLComputePipelineState>> *outComputePipeline);
     // Get compute pipeline to generate tri fan/line loop index for glDrawElements().
-    AutoObjCPtr<id<MTLComputePipelineState>> getIndicesFromElemArrayGeneratorPipeline(
+    angle::Result getIndicesFromElemArrayGeneratorPipeline(
         ContextMtl *contextMtl,
         gl::DrawElementsType srcType,
         uint32_t srcOffset,
         NSString *shaderName,
-        IndexConversionPipelineArray *pipelineCacheArray);
+        IndexConversionShaderArray *pipelineCacheArray,
+        AutoObjCPtr<id<MTLComputePipelineState>> *outComputePipeline);
     // Defer loading of compute pipeline to generate tri fan index for glDrawArrays().
-    void ensureTriFanFromArrayGeneratorInitialized(ContextMtl *contextMtl);
+    angle::Result getTriFanFromArrayGeneratorPipeline(
+        ContextMtl *contextMtl,
+        AutoObjCPtr<id<MTLComputePipelineState>> *outComputePipeline);
     // Defer loading of compute pipeline to generate line loop index for glDrawArrays().
-    void ensureLineLoopFromArrayGeneratorInitialized(ContextMtl *contextMtl);
+    angle::Result getLineLoopFromArrayGeneratorPipeline(
+        ContextMtl *contextMtl,
+        AutoObjCPtr<id<MTLComputePipelineState>> *outComputePipeline);
 
     angle::Result generateTriFanBufferFromElementsArrayGPU(
         ContextMtl *contextMtl,
@@ -419,32 +425,35 @@ class IndexGeneratorUtils final : angle::NonCopyable
                                                  const IndexGenerationParams &params,
                                                  size_t *indicesGenerated);
 
-    IndexConversionPipelineArray mIndexConversionPipelineCaches;
+    IndexConversionShaderArray mIndexConversionShaders;
 
-    IndexConversionPipelineArray mTriFanFromElemArrayGeneratorPipelineCaches;
-    AutoObjCPtr<id<MTLComputePipelineState>> mTriFanFromArraysGeneratorPipeline;
+    IndexConversionShaderArray mTriFanFromElemArrayGeneratorShaders;
+    AutoObjCPtr<id<MTLFunction>> mTriFanFromArraysGeneratorShader;
 
-    IndexConversionPipelineArray mLineLoopFromElemArrayGeneratorPipelineCaches;
-    AutoObjCPtr<id<MTLComputePipelineState>> mLineLoopFromArraysGeneratorPipeline;
+    IndexConversionShaderArray mLineLoopFromElemArrayGeneratorShaders;
+    AutoObjCPtr<id<MTLFunction>> mLineLoopFromArraysGeneratorShader;
 };
 
 // Util class for handling visibility query result
 class VisibilityResultUtils final : angle::NonCopyable
 {
   public:
-    void combineVisibilityResult(ContextMtl *contextMtl,
-                                 bool keepOldValue,
-                                 const VisibilityBufferOffsetsMtl &renderPassResultBufOffsets,
-                                 const BufferRef &renderPassResultBuf,
-                                 const BufferRef &finalResultBuf);
+    angle::Result combineVisibilityResult(
+        ContextMtl *contextMtl,
+        bool keepOldValue,
+        const VisibilityBufferOffsetsMtl &renderPassResultBufOffsets,
+        const BufferRef &renderPassResultBuf,
+        const BufferRef &finalResultBuf);
 
   private:
-    AutoObjCPtr<id<MTLComputePipelineState>> getVisibilityResultCombPipeline(ContextMtl *contextMtl,
-                                                                             bool keepOldValue);
-    // Visibility combination compute pipeline:
-    // - 0: This compute pipeline only combine the new values and discard old value.
-    // - 1: This compute pipeline keep the old value and combine with new values.
-    std::array<AutoObjCPtr<id<MTLComputePipelineState>>, 2> mVisibilityResultCombPipelines;
+    angle::Result getVisibilityResultCombinePipeline(
+        ContextMtl *contextMtl,
+        bool keepOldValue,
+        AutoObjCPtr<id<MTLComputePipelineState>> *outComputePipeline);
+    // Visibility combination compute shaders:
+    // - 0: This compute shader only combines the new values and discard old value.
+    // - 1: This compute shader keep the old value and combines with new values.
+    std::array<AutoObjCPtr<id<MTLFunction>>, 2> mVisibilityResultCombineComputeShaders;
 };
 
 // Util class for handling mipmap generation
@@ -458,16 +467,24 @@ class MipmapUtils final : angle::NonCopyable
                                    NativeTexLevelArray *mipmapOutputViews);
 
   private:
-    void ensure3DMipGeneratorPipelineInitialized(ContextMtl *contextMtl);
-    void ensure2DMipGeneratorPipelineInitialized(ContextMtl *contextMtl);
-    void ensure2DArrayMipGeneratorPipelineInitialized(ContextMtl *contextMtl);
-    void ensureCubeMipGeneratorPipelineInitialized(ContextMtl *contextMtl);
+    angle::Result get3DMipGeneratorPipeline(
+        ContextMtl *contextMtl,
+        AutoObjCPtr<id<MTLComputePipelineState>> *outComputePipeline);
+    angle::Result get2DMipGeneratorPipeline(
+        ContextMtl *contextMtl,
+        AutoObjCPtr<id<MTLComputePipelineState>> *outComputePipeline);
+    angle::Result get2DArrayMipGeneratorPipeline(
+        ContextMtl *contextMtl,
+        AutoObjCPtr<id<MTLComputePipelineState>> *outComputePipeline);
+    angle::Result getCubeMipGeneratorPipeline(
+        ContextMtl *contextMtl,
+        AutoObjCPtr<id<MTLComputePipelineState>> *outComputePipeline);
 
     // Mipmaps generating compute pipeline:
-    AutoObjCPtr<id<MTLComputePipelineState>> m3DMipGeneratorPipeline;
-    AutoObjCPtr<id<MTLComputePipelineState>> m2DMipGeneratorPipeline;
-    AutoObjCPtr<id<MTLComputePipelineState>> m2DArrayMipGeneratorPipeline;
-    AutoObjCPtr<id<MTLComputePipelineState>> mCubeMipGeneratorPipeline;
+    AutoObjCPtr<id<MTLFunction>> m3DMipGeneratorShader;
+    AutoObjCPtr<id<MTLFunction>> m2DMipGeneratorShader;
+    AutoObjCPtr<id<MTLFunction>> m2DArrayMipGeneratorShader;
+    AutoObjCPtr<id<MTLFunction>> mCubeMipGeneratorShader;
 };
 
 // Util class for handling pixels copy between buffers and textures
@@ -485,17 +502,19 @@ class CopyPixelsUtils final : angle::NonCopyable
                                                 const CopyPixelsToBufferParams &params);
 
   private:
-    AutoObjCPtr<id<MTLComputePipelineState>> getPixelsCopyPipeline(ContextMtl *contextMtl,
-                                                                   const angle::Format &angleFormat,
-                                                                   const TextureRef &texture,
-                                                                   bool bufferWrite);
+    angle::Result getPixelsCopyPipeline(
+        ContextMtl *contextMtl,
+        const angle::Format &angleFormat,
+        const TextureRef &texture,
+        bool bufferWrite,
+        AutoObjCPtr<id<MTLComputePipelineState>> *outComputePipeline);
     // Copy pixels between buffer and texture compute pipelines:
     // - First dimension: pixel format.
     // - Second dimension: texture type * (buffer read/write flag)
-    using PixelsCopyPipelineArray = std::array<
-        std::array<AutoObjCPtr<id<MTLComputePipelineState>>, mtl_shader::kTextureTypeCount * 2>,
-        angle::kNumANGLEFormats>;
-    PixelsCopyPipelineArray mPixelsCopyPipelineCaches;
+    using PixelsCopyComputeShaderArray =
+        std::array<std::array<AutoObjCPtr<id<MTLFunction>>, mtl_shader::kTextureTypeCount * 2>,
+                   angle::kNumANGLEFormats>;
+    PixelsCopyComputeShaderArray mPixelsCopyComputeShaders;
 
     const std::string mReadShaderName;
     const std::string mWriteShaderName;
@@ -527,15 +546,18 @@ class VertexFormatConversionUtils final : angle::NonCopyable
                                                  const VertexFormatConvertParams &params);
 
   private:
-    void ensureComponentsExpandComputePipelineCreated(ContextMtl *contextMtl);
+    angle::Result getComponentsExpandComputePipeline(
+        ContextMtl *contextMtl,
+        AutoObjCPtr<id<MTLComputePipelineState>> *outPipelineState);
     angle::Result getComponentsExpandRenderPipeline(
         ContextMtl *contextMtl,
         RenderCommandEncoder *renderEncoder,
         AutoObjCPtr<id<MTLRenderPipelineState>> *outPipelineState);
 
-    AutoObjCPtr<id<MTLComputePipelineState>> getFloatConverstionComputePipeline(
+    angle::Result getFloatConverstionComputePipeline(
         ContextMtl *contextMtl,
-        const angle::Format &srcAngleFormat);
+        const angle::Format &srcAngleFormat,
+        AutoObjCPtr<id<MTLComputePipelineState>> *outPipelineState);
 
     angle::Result getFloatConverstionRenderPipeline(
         ContextMtl *contextMtl,
@@ -556,15 +578,15 @@ class VertexFormatConversionUtils final : angle::NonCopyable
                                                           const angle::Format &srcAngleFormat,
                                                           const VertexFormatConvertParams &params);
 
-    using ConvertToFloatCompPipelineArray =
-        std::array<AutoObjCPtr<id<MTLComputePipelineState>>, angle::kNumANGLEFormats>;
+    using ConvertToFloatComputeShaderArray =
+        std::array<AutoObjCPtr<id<MTLFunction>>, angle::kNumANGLEFormats>;
     using ConvertToFloatVertexShaderArray =
         std::array<AutoObjCPtr<id<MTLFunction>>, angle::kNumANGLEFormats>;
 
-    ConvertToFloatCompPipelineArray mConvertToFloatCompPipelineCaches;
+    ConvertToFloatComputeShaderArray mConvertToFloatCompPipelineCaches;
     ConvertToFloatVertexShaderArray mConvertToFloatVertexShaders;
 
-    AutoObjCPtr<id<MTLComputePipelineState>> mComponentsExpandCompPipeline;
+    AutoObjCPtr<id<MTLFunction>> mComponentsExpandComputeShader;
     AutoObjCPtr<id<MTLFunction>> mComponentsExpandVertexShader;
 };
 
