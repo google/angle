@@ -17,6 +17,11 @@ declare_args() {
 declare_args() {
   build_angle_trace_tests = is_clang && (build_angle_trace_perf_tests ||
                                          checkout_angle_restricted_traces)
+  if (!build_with_chromium && is_android) {
+    assert(
+        !is_official_build,
+        "is_official_build not supported by ANGLE for Android (https://anglebug.com/7381)")
+  }
 }
 
 if (is_android) {
