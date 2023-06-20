@@ -573,10 +573,19 @@ void FastVector<T, N, Storage>::ensure_capacity(size_t capacity)
     }
 }
 
-template <class Value, size_t N>
+template <class Value, size_t N, class Storage = FastVector<Value, N>>
 class FastMap final
 {
   public:
+    using value_type      = typename Storage::value_type;
+    using size_type       = typename Storage::size_type;
+    using reference       = typename Storage::reference;
+    using const_reference = typename Storage::const_reference;
+    using pointer         = typename Storage::pointer;
+    using const_pointer   = typename Storage::const_pointer;
+    using iterator        = typename Storage::iterator;
+    using const_iterator  = typename Storage::const_iterator;
+
     FastMap() {}
     ~FastMap() {}
 
@@ -586,10 +595,18 @@ class FastMap final
         {
             mData.resize(key + 1, {});
         }
+        return at(key);
+    }
+
+    const Value &operator[](uint32_t key) const { return at(key); }
+
+    Value &at(uint32_t key)
+    {
+        ASSERT(key < mData.size());
         return mData[key];
     }
 
-    const Value &operator[](uint32_t key) const
+    const Value &at(uint32_t key) const
     {
         ASSERT(key < mData.size());
         return mData[key];
@@ -607,6 +624,12 @@ class FastMap final
         return (size() == other.size()) &&
                (memcmp(data(), other.data(), size() * sizeof(Value)) == 0);
     }
+
+    iterator begin() { return mData.begin(); }
+    const_iterator begin() const { return mData.begin(); }
+
+    iterator end() { return mData.end(); }
+    const_iterator end() const { return mData.end(); }
 
   private:
     FastVector<Value, N> mData;

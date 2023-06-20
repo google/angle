@@ -3059,10 +3059,15 @@ void SpirvTransformer::resolveVariableIds()
         const ShaderInterfaceVariableInfoMap::IdToTypeAndIndexMap &idToTypeAndIndexMap =
             mVariableInfoMap.getIdToTypeAndIndexMap()[mOptions.shaderType];
 
-        for (const auto &iter : idToTypeAndIndexMap)
+        for (uint32_t hashedId = 0; hashedId < idToTypeAndIndexMap.size(); ++hashedId)
         {
-            uint32_t id                      = iter.first;
-            const TypeAndIndex &typeAndIndex = iter.second;
+            const uint32_t id                = hashedId + sh::vk::spirv::kIdShaderVariablesBegin;
+            const TypeAndIndex &typeAndIndex = idToTypeAndIndexMap.at(hashedId);
+            if (typeAndIndex.variableType == ShaderVariableType::InvalidEnum)
+            {
+                continue;
+            }
+
             const ShaderInterfaceVariableInfo &info =
                 data[typeAndIndex.variableType][typeAndIndex.index];
 

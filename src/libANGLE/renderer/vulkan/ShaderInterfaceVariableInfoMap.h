@@ -36,22 +36,40 @@ enum class ShaderVariableType
     TransformFeedback,
     UniformBuffer,
     Varying,
-    EnumCount,
+
+    InvalidEnum,
+    EnumCount = InvalidEnum,
 };
 
 struct TypeAndIndex
 {
-    ShaderVariableType variableType;
-    uint32_t index;
+    ShaderVariableType variableType = ShaderVariableType::InvalidEnum;
+    uint32_t index                  = 0xFFFF'FFFF;
 };
 
 class ShaderInterfaceVariableInfoMap final : angle::NonCopyable
 {
   public:
+    // For each interface variable, a ShaderInterfaceVariableInfo is created.  The info for each
+    // variable type is stored separately for ease of access to variables of specific type
+    // (AtomicCounter, FramebufferFetch, TransformFeedback).  The type->infoArray map can be
+    // flattened if the info for those specific types are stored separately.
     using VariableInfoArray     = std::vector<ShaderInterfaceVariableInfo>;
     using VariableTypeToInfoMap = angle::PackedEnumMap<ShaderVariableType, VariableInfoArray>;
-    using IdToTypeAndIndexMap   = angle::HashMap<uint32_t, TypeAndIndex>;
 
+    // Each interface variable has an associted SPIR-V id (which is different per shader type).
+    // The following map is from a SPIR-V id to its associated info in VariableTypeToInfoMap.
+    //
+    // Note that the SPIR-V ids are mostly contiguous and start at
+    // sh::vk::spirv::kIdShaderVariablesBegin.  As such, the map key is actually
+    // |id - sh::vk::spirv::kIdShaderVariablesBegin|.
+    static constexpr size_t kIdFastMapMax = 32;
+    using IdToTypeAndIndexMap             = angle::FastMap<TypeAndIndex, kIdFastMapMax>;
+
+    // To get from a linked resource using its index in the list of linked resources to its info,
+    // another map is maintained.
+    // TODO(anglebug.com/7220): remove this list and use ids directly.  This also obviates
+    // mapIndexedResourceToInfoOfElementZero.
     static constexpr size_t kResourceFastMapMax = 32;
     using ResourceIndexMap                      = angle::FastMap<uint32_t, kResourceFastMapMax>;
     using VariableTypeToIndexMap = angle::PackedEnumMap<ShaderVariableType, ResourceIndexMap>;
@@ -124,6 +142,10 @@ class ShaderInterfaceVariableInfoMap final : angle::NonCopyable
     }
 
   private:
+    bool hasTypeAndIndexById(gl::ShaderType shaderType, uint32_t id) const;
+    void addTypeAndIndexById(gl::ShaderType shaderType, uint32_t id, TypeAndIndex typeAndIndex);
+    const TypeAndIndex &getTypeAndIndexById(gl::ShaderType shaderType, uint32_t id) const;
+
     VariableTypeToInfoMap mData;
     gl::ShaderMap<IdToTypeAndIndexMap> mIdToTypeAndIndexMap;
     VariableTypeToIndexMap mIndexedResourceIndexMap;

@@ -553,10 +553,9 @@ std::unique_ptr<rx::LinkEvent> ProgramExecutableVk::load(ContextVk *contextVk,
 
     for (gl::ShaderType shaderType : gl::AllShaderTypes())
     {
-        size_t nameCount = stream->readInt<size_t>();
-        for (size_t nameIndex = 0; nameIndex < nameCount; ++nameIndex)
+        size_t idCount = stream->readInt<size_t>();
+        for (uint32_t id = 0; id < idCount; ++id)
         {
-            uint32_t id                         = stream->readInt<uint32_t>();
             ShaderVariableType variableType     = stream->readEnum<ShaderVariableType>();
             uint32_t index                      = stream->readInt<uint32_t>();
             idToTypeAndIndexMap[shaderType][id] = {variableType, index};
@@ -690,11 +689,8 @@ void ProgramExecutableVk::save(ContextVk *contextVk,
     for (gl::ShaderType shaderType : gl::AllShaderTypes())
     {
         stream->writeInt(idToTypeAndIndexMap[shaderType].size());
-        for (const auto &iter : idToTypeAndIndexMap[shaderType])
+        for (const TypeAndIndex &typeAndIndex : idToTypeAndIndexMap[shaderType])
         {
-            uint32_t id                      = iter.first;
-            const TypeAndIndex &typeAndIndex = iter.second;
-            stream->writeInt(id);
             stream->writeEnum(typeAndIndex.variableType);
             stream->writeInt(typeAndIndex.index);
         }
