@@ -60,15 +60,21 @@ class ShaderInterfaceVariableInfoMap final : angle::NonCopyable
     ~ShaderInterfaceVariableInfoMap();
 
     void clear();
-    void load(gl::ShaderMap<VariableTypeToInfoMap> &&data,
+    void load(VariableTypeToInfoMap &&data,
               gl::ShaderMap<IdToTypeAndIndexMap> &&idToTypeAndIndexMap,
-              gl::ShaderMap<VariableTypeToIndexMap> &&indexedResourceIndexMap,
+              VariableTypeToIndexMap &&indexedResourceIndexMap,
               gl::ShaderMap<gl::PerVertexMemberBitSet> &&inputPerVertexActiveMembers,
               gl::ShaderMap<gl::PerVertexMemberBitSet> &&outputPerVertexActiveMembers);
 
     ShaderInterfaceVariableInfo &add(gl::ShaderType shaderType,
                                      ShaderVariableType variableType,
                                      uint32_t id);
+    void addIndexedResource(gl::ShaderBitSet shaderTypes,
+                            ShaderVariableType variableType,
+                            const gl::ShaderMap<uint32_t> &idInShaderTypes,
+                            uint32_t descriptorSet,
+                            uint32_t binding,
+                            uint32_t resourceIndex);
     ShaderInterfaceVariableInfo &addOrGet(gl::ShaderType shaderType,
                                           ShaderVariableType variableType,
                                           uint32_t id);
@@ -82,43 +88,32 @@ class ShaderInterfaceVariableInfoMap final : angle::NonCopyable
                                             uint32_t id);
 
     const ShaderInterfaceVariableInfo &getDefaultUniformInfo(gl::ShaderType shaderType) const;
-    const ShaderInterfaceVariableInfo &getIndexedVariableInfo(gl::ShaderType shaderType,
-                                                              ShaderVariableType variableType,
+    const ShaderInterfaceVariableInfo &getIndexedVariableInfo(ShaderVariableType variableType,
                                                               uint32_t variableIndex) const;
-    bool hasAtomicCounterInfo(gl::ShaderType shaderType) const;
-    const ShaderInterfaceVariableInfo &getAtomicCounterInfo(gl::ShaderType shaderType) const;
-    const ShaderInterfaceVariableInfo &getFramebufferFetchInfo(gl::ShaderType shaderType) const;
+    bool hasAtomicCounterInfo() const;
+    const ShaderInterfaceVariableInfo &getAtomicCounterInfo() const;
+    const ShaderInterfaceVariableInfo &getFramebufferFetchInfo() const;
     bool hasTransformFeedbackInfo(gl::ShaderType shaderType, uint32_t bufferIndex) const;
-    const ShaderInterfaceVariableInfo &getTransformFeedbackInfo(gl::ShaderType shaderType,
-                                                                uint32_t bufferIndex) const;
+    const ShaderInterfaceVariableInfo &getTransformFeedbackInfo(uint32_t bufferIndex) const;
 
     uint32_t getDefaultUniformBinding(gl::ShaderType shaderType) const;
     uint32_t getXfbBufferBinding(uint32_t xfbBufferIndex) const;
-    uint32_t getAtomicCounterBufferBinding(gl::ShaderType shaderType,
-                                           uint32_t atomicCounterBufferIndex) const;
+    uint32_t getAtomicCounterBufferBinding(uint32_t atomicCounterBufferIndex) const;
 
     bool hasVariable(gl::ShaderType shaderType, uint32_t id) const;
     const ShaderInterfaceVariableInfo &getVariableById(gl::ShaderType shaderType,
                                                        uint32_t id) const;
-    void mapIndexedResourceById(gl::ShaderType shaderType,
-                                ShaderVariableType variableType,
-                                uint32_t resourceIndex,
-                                uint32_t id);
-    void mapIndexedResource(gl::ShaderType shaderType,
-                            ShaderVariableType variableType,
-                            uint32_t resourceIndex,
-                            uint32_t variableIndex);
-
+    void mapIndexedResourceToInfoOfElementZero(gl::ShaderBitSet shaderTypes,
+                                               ShaderVariableType variableType,
+                                               const gl::ShaderMap<uint32_t> &idInShaderTypes,
+                                               uint32_t resourceIndex);
     const VariableInfoArray &getAttributes() const;
-    const gl::ShaderMap<VariableTypeToInfoMap> &getData() const { return mData; }
+    const VariableTypeToInfoMap &getData() const { return mData; }
     const gl::ShaderMap<IdToTypeAndIndexMap> &getIdToTypeAndIndexMap() const
     {
         return mIdToTypeAndIndexMap;
     }
-    const gl::ShaderMap<VariableTypeToIndexMap> &getIndexedResourceMap() const
-    {
-        return mIndexedResourceIndexMap;
-    }
+    const VariableTypeToIndexMap &getIndexedResourceMap() const { return mIndexedResourceIndexMap; }
     const gl::ShaderMap<gl::PerVertexMemberBitSet> &getInputPerVertexActiveMembers() const
     {
         return mInputPerVertexActiveMembers;
@@ -129,9 +124,9 @@ class ShaderInterfaceVariableInfoMap final : angle::NonCopyable
     }
 
   private:
-    gl::ShaderMap<VariableTypeToInfoMap> mData;
+    VariableTypeToInfoMap mData;
     gl::ShaderMap<IdToTypeAndIndexMap> mIdToTypeAndIndexMap;
-    gl::ShaderMap<VariableTypeToIndexMap> mIndexedResourceIndexMap;
+    VariableTypeToIndexMap mIndexedResourceIndexMap;
 
     // Active members of `in gl_PerVertex` and `out gl_PerVertex`
     gl::ShaderMap<gl::PerVertexMemberBitSet> mInputPerVertexActiveMembers;
@@ -141,47 +136,43 @@ class ShaderInterfaceVariableInfoMap final : angle::NonCopyable
 ANGLE_INLINE const ShaderInterfaceVariableInfo &
 ShaderInterfaceVariableInfoMap::getDefaultUniformInfo(gl::ShaderType shaderType) const
 {
-    ASSERT(mData[shaderType][ShaderVariableType::DefaultUniform].size() == 1);
-    return mData[shaderType][ShaderVariableType::DefaultUniform][0];
+    return getVariableById(shaderType, sh::vk::spirv::kIdDefaultUniformsBlock);
 }
 
 ANGLE_INLINE const ShaderInterfaceVariableInfo &
-ShaderInterfaceVariableInfoMap::getIndexedVariableInfo(gl::ShaderType shaderType,
-                                                       ShaderVariableType variableType,
+ShaderInterfaceVariableInfoMap::getIndexedVariableInfo(ShaderVariableType variableType,
                                                        uint32_t resourceIndex) const
 {
-    ASSERT(resourceIndex < mIndexedResourceIndexMap[shaderType][variableType].size());
-    uint32_t variableIndex = mIndexedResourceIndexMap[shaderType][variableType][resourceIndex];
-    ASSERT(variableIndex < mData[shaderType][variableType].size());
-    return mData[shaderType][variableType][variableIndex];
+    ASSERT(resourceIndex < mIndexedResourceIndexMap[variableType].size());
+    uint32_t variableIndex = mIndexedResourceIndexMap[variableType][resourceIndex];
+    ASSERT(variableIndex < mData[variableType].size());
+    return mData[variableType][variableIndex];
 }
 
-ANGLE_INLINE bool ShaderInterfaceVariableInfoMap::hasAtomicCounterInfo(
-    gl::ShaderType shaderType) const
+ANGLE_INLINE bool ShaderInterfaceVariableInfoMap::hasAtomicCounterInfo() const
 {
-    return !mData[shaderType][ShaderVariableType::AtomicCounter].empty();
-}
-
-ANGLE_INLINE const ShaderInterfaceVariableInfo &
-ShaderInterfaceVariableInfoMap::getAtomicCounterInfo(gl::ShaderType shaderType) const
-{
-    ASSERT(mData[shaderType][ShaderVariableType::AtomicCounter].size() == 1);
-    return mData[shaderType][ShaderVariableType::AtomicCounter][0];
+    return !mData[ShaderVariableType::AtomicCounter].empty();
 }
 
 ANGLE_INLINE const ShaderInterfaceVariableInfo &
-ShaderInterfaceVariableInfoMap::getFramebufferFetchInfo(gl::ShaderType shaderType) const
+ShaderInterfaceVariableInfoMap::getAtomicCounterInfo() const
 {
-    ASSERT(!mData[shaderType][ShaderVariableType::FramebufferFetch].empty());
-    return mData[shaderType][ShaderVariableType::FramebufferFetch][0];
+    ASSERT(mData[ShaderVariableType::AtomicCounter].size() == 1);
+    return mData[ShaderVariableType::AtomicCounter][0];
 }
 
 ANGLE_INLINE const ShaderInterfaceVariableInfo &
-ShaderInterfaceVariableInfoMap::getTransformFeedbackInfo(gl::ShaderType shaderType,
-                                                         uint32_t bufferIndex) const
+ShaderInterfaceVariableInfoMap::getFramebufferFetchInfo() const
 {
-    ASSERT(bufferIndex < mData[shaderType][ShaderVariableType::TransformFeedback].size());
-    return mData[shaderType][ShaderVariableType::TransformFeedback][bufferIndex];
+    ASSERT(!mData[ShaderVariableType::FramebufferFetch].empty());
+    return mData[ShaderVariableType::FramebufferFetch][0];
+}
+
+ANGLE_INLINE const ShaderInterfaceVariableInfo &
+ShaderInterfaceVariableInfoMap::getTransformFeedbackInfo(uint32_t bufferIndex) const
+{
+    ASSERT(bufferIndex < mData[ShaderVariableType::TransformFeedback].size());
+    return mData[ShaderVariableType::TransformFeedback][bufferIndex];
 }
 
 ANGLE_INLINE uint32_t
@@ -193,17 +184,14 @@ ShaderInterfaceVariableInfoMap::getDefaultUniformBinding(gl::ShaderType shaderTy
 ANGLE_INLINE uint32_t
 ShaderInterfaceVariableInfoMap::getXfbBufferBinding(uint32_t xfbBufferIndex) const
 {
-    // Note: we only use this method for transform feedback emulation. And emulation only supports
-    // XFB in the vertex shader.
-    return getTransformFeedbackInfo(gl::ShaderType::Vertex, xfbBufferIndex).binding;
+    return getTransformFeedbackInfo(xfbBufferIndex).binding;
 }
 
 ANGLE_INLINE uint32_t ShaderInterfaceVariableInfoMap::getAtomicCounterBufferBinding(
-    gl::ShaderType shaderType,
     uint32_t atomicCounterBufferIndex) const
 {
-    ASSERT(hasAtomicCounterInfo(shaderType));
-    return getAtomicCounterInfo(shaderType).binding + atomicCounterBufferIndex;
+    ASSERT(hasAtomicCounterInfo());
+    return getAtomicCounterInfo().binding + atomicCounterBufferIndex;
 }
 }  // namespace rx
 #endif  // LIBANGLE_RENDERER_VULKAN_SHADERINTERFACEVARIABLEINFOMAP_H_

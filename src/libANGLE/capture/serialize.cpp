@@ -1007,8 +1007,9 @@ void SerializeActiveVariable(JsonSerializer *json, const gl::ActiveVariable &act
     GroupScope group(json, "Ids");
     for (const gl::ShaderType shaderType : gl::AllShaderTypes())
     {
-        json->addScalar(gl::ShaderTypeToString(shaderType),
-                        activeVariable.isActive(shaderType) ? activeVariable.getId(shaderType) : 0);
+        json->addScalar(
+            gl::ShaderTypeToString(shaderType),
+            activeVariable.isActive(shaderType) ? activeVariable.getIds()[shaderType] : 0);
     }
 }
 

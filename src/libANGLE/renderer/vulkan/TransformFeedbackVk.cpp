@@ -207,7 +207,7 @@ void TransformFeedbackVk::updateDescriptorSetLayout(
     for (uint32_t bufferIndex = 0; bufferIndex < xfbBufferCount; ++bufferIndex)
     {
         const ShaderInterfaceVariableInfo &info =
-            variableInfoMap.getTransformFeedbackInfo(gl::ShaderType::Vertex, bufferIndex);
+            variableInfoMap.getTransformFeedbackInfo(bufferIndex);
 
         ASSERT(info.binding != std::numeric_limits<uint32_t>::max());
 

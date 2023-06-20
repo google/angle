@@ -610,7 +610,7 @@ void ProgramExecutable::save(bool isSeparable, gl::BinaryOutputStream *stream) c
         for (ShaderType shaderType : gl::AllShaderTypes())
         {
             stream->writeBool(uniform.isActive(shaderType));
-            stream->writeInt(uniform.isActive(shaderType) ? uniform.getId(shaderType) : 0);
+            stream->writeInt(uniform.isActive(shaderType) ? uniform.getIds()[shaderType] : 0);
         }
     }
 

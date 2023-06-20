@@ -108,8 +108,6 @@ struct ShaderInterfaceVariableInfo
     // vertex attribute aliasing transformation only.
     uint8_t attributeComponentCount = 0;
     uint8_t attributeLocationCount  = 0;
-    // Indicate if this variable has been deduplicated.
-    bool isDuplicate = false;
 };
 
 uint32_t SpvGetXfbBufferBlockId(const uint32_t bufferIndex);

@@ -115,25 +115,6 @@ ShaderInterfaceVariableInfo *AddResourceInfo(ShaderInterfaceVariableInfoMap *inf
     return &info;
 }
 
-ShaderInterfaceVariableInfo *AddMultiStageResourceInfo(ShaderInterfaceVariableInfoMap *infoMap,
-                                                       gl::ShaderBitSet stages,
-                                                       gl::ShaderType shaderType,
-                                                       ShaderVariableType variableType,
-                                                       uint32_t varId,
-                                                       uint32_t descriptorSet,
-                                                       uint32_t binding)
-{
-    ShaderInterfaceVariableInfo *info =
-        AddResourceInfo(infoMap, stages, shaderType, variableType, varId, descriptorSet, binding);
-
-    if (shaderType != stages.first())
-    {
-        info->isDuplicate = true;
-    }
-
-    return info;
-}
-
 // Add location information for an in/out variable.
 ShaderInterfaceVariableInfo *AddLocationInfo(ShaderInterfaceVariableInfoMap *infoMap,
                                              gl::ShaderType shaderType,
@@ -697,7 +678,7 @@ void AssignInputAttachmentBindings(const SpvSourceOptions &options,
 
         AddResourceInfo(variableInfoMapOut, activeShaders, gl::ShaderType::Fragment,
                         ShaderVariableType::FramebufferFetch,
-                        inputAttachmentUniform.getId(gl::ShaderType::Fragment),
+                        inputAttachmentUniform.getIds()[gl::ShaderType::Fragment],
                         ToUnderlying(DescriptorSetIndex::ShaderResource),
                         inputAttachmentBindingIndex);
     }
@@ -727,23 +708,17 @@ void AssignInterfaceBlockBindings(const SpvSourceOptions &options,
         }
 
         const bool isIndexZero = !block.isArray || block.arrayElement == 0;
-        for (const gl::ShaderType shaderType : activeShaders)
+        if (!isIndexZero)
         {
-            const uint32_t id = block.getId(shaderType);
-            if (isIndexZero)
-            {
-                AddMultiStageResourceInfo(variableInfoMapOut, activeShaders, shaderType,
-                                          variableType, id,
-                                          ToUnderlying(DescriptorSetIndex::ShaderResource),
-                                          programInterfaceInfo->currentShaderResourceBindingIndex);
-            }
-            variableInfoMapOut->mapIndexedResourceById(shaderType, variableType, blockIndex, id);
+            variableInfoMapOut->mapIndexedResourceToInfoOfElementZero(activeShaders, variableType,
+                                                                      block.getIds(), blockIndex);
+            continue;
         }
 
-        if (isIndexZero)
-        {
-            ++programInterfaceInfo->currentShaderResourceBindingIndex;
-        }
+        variableInfoMapOut->addIndexedResource(
+            activeShaders, variableType, block.getIds(),
+            ToUnderlying(DescriptorSetIndex::ShaderResource),
+            programInterfaceInfo->currentShaderResourceBindingIndex++, blockIndex);
     }
 }
 
@@ -763,17 +738,16 @@ void AssignAtomicCounterBufferBindings(const SpvSourceOptions &options,
     const gl::ShaderBitSet activeShaders = programExecutable.getLinkedShaderStages();
     ASSERT(activeShaders.any());
 
+    gl::ShaderMap<uint32_t> ids = {};
     for (const gl::ShaderType shaderType : activeShaders)
     {
-        const uint32_t id = sh::vk::spirv::kIdAtomicCounterBlock;
-
-        AddMultiStageResourceInfo(variableInfoMapOut, activeShaders, shaderType,
-                                  ShaderVariableType::AtomicCounter, id,
-                                  ToUnderlying(DescriptorSetIndex::ShaderResource),
-                                  programInterfaceInfo->currentShaderResourceBindingIndex);
+        ids[shaderType] = sh::vk::spirv::kIdAtomicCounterBlock;
     }
 
-    ++programInterfaceInfo->currentShaderResourceBindingIndex;
+    variableInfoMapOut->addIndexedResource(
+        activeShaders, ShaderVariableType::AtomicCounter, ids,
+        ToUnderlying(DescriptorSetIndex::ShaderResource),
+        programInterfaceInfo->currentShaderResourceBindingIndex++, 0);
 }
 
 void AssignImageBindings(const SpvSourceOptions &options,
@@ -795,26 +769,19 @@ void AssignImageBindings(const SpvSourceOptions &options,
             continue;
         }
 
-        const bool isIndexZero = UniformNameIsIndexZero(imageUniform.name);
-        for (const gl::ShaderType shaderType : activeShaders)
+        const bool isIndexZero    = UniformNameIsIndexZero(imageUniform.name);
+        const uint32_t imageIndex = uniformIndex - imageUniformRange.low();
+        if (!isIndexZero)
         {
-            const uint32_t id = imageUniform.getId(shaderType);
-            if (isIndexZero)
-            {
-                AddMultiStageResourceInfo(variableInfoMapOut, activeShaders, shaderType,
-                                          ShaderVariableType::Image, id,
-                                          ToUnderlying(DescriptorSetIndex::ShaderResource),
-                                          programInterfaceInfo->currentShaderResourceBindingIndex);
-            }
-            uint32_t imageIndex = uniformIndex - imageUniformRange.low();
-            variableInfoMapOut->mapIndexedResourceById(shaderType, ShaderVariableType::Image,
-                                                       imageIndex, id);
+            variableInfoMapOut->mapIndexedResourceToInfoOfElementZero(
+                activeShaders, ShaderVariableType::Image, imageUniform.getIds(), imageIndex);
+            continue;
         }
 
-        if (isIndexZero)
-        {
-            ++programInterfaceInfo->currentShaderResourceBindingIndex;
-        }
+        variableInfoMapOut->addIndexedResource(
+            activeShaders, ShaderVariableType::Image, imageUniform.getIds(),
+            ToUnderlying(DescriptorSetIndex::ShaderResource),
+            programInterfaceInfo->currentShaderResourceBindingIndex++, imageIndex);
     }
 }
 
@@ -850,8 +817,9 @@ void AssignTextureBindings(const SpvSourceOptions &options,
 {
     // Assign textures to a descriptor set and binding.
     const std::vector<gl::LinkedUniform> &uniforms = programExecutable.getUniforms();
+    const gl::RangeUI &samplerUniformRange         = programExecutable.getSamplerUniformRange();
 
-    for (unsigned int uniformIndex : programExecutable.getSamplerUniformRange())
+    for (unsigned int uniformIndex : samplerUniformRange)
     {
         const gl::LinkedUniform &samplerUniform = uniforms[uniformIndex];
 
@@ -863,27 +831,19 @@ void AssignTextureBindings(const SpvSourceOptions &options,
             continue;
         }
 
-        const bool isIndexZero = UniformNameIsIndexZero(samplerUniform.name);
-        for (const gl::ShaderType shaderType : activeShaders)
+        const bool isIndexZero      = UniformNameIsIndexZero(samplerUniform.name);
+        const uint32_t textureIndex = uniformIndex - samplerUniformRange.low();
+        if (!isIndexZero)
         {
-            const uint32_t id = samplerUniform.getId(shaderType);
-            if (isIndexZero)
-            {
-                AddMultiStageResourceInfo(variableInfoMapOut, activeShaders, shaderType,
-                                          ShaderVariableType::Texture, id,
-                                          ToUnderlying(DescriptorSetIndex::Texture),
-                                          programInterfaceInfo->currentTextureBindingIndex);
-            }
-
-            uint32_t textureIndex = uniformIndex - programExecutable.getSamplerUniformRange().low();
-            variableInfoMapOut->mapIndexedResourceById(shaderType, ShaderVariableType::Texture,
-                                                       textureIndex, id);
+            variableInfoMapOut->mapIndexedResourceToInfoOfElementZero(
+                activeShaders, ShaderVariableType::Texture, samplerUniform.getIds(), textureIndex);
+            continue;
         }
 
-        if (isIndexZero)
-        {
-            ++programInterfaceInfo->currentTextureBindingIndex;
-        }
+        variableInfoMapOut->addIndexedResource(
+            activeShaders, ShaderVariableType::Texture, samplerUniform.getIds(),
+            ToUnderlying(DescriptorSetIndex::Texture),
+            programInterfaceInfo->currentTextureBindingIndex++, textureIndex);
     }
 }
 
@@ -3095,7 +3055,7 @@ void SpirvTransformer::resolveVariableIds()
     // Pre-populate from mVariableInfoMap.
     {
         const ShaderInterfaceVariableInfoMap::VariableTypeToInfoMap &data =
-            mVariableInfoMap.getData()[mOptions.shaderType];
+            mVariableInfoMap.getData();
         const ShaderInterfaceVariableInfoMap::IdToTypeAndIndexMap &idToTypeAndIndexMap =
             mVariableInfoMap.getIdToTypeAndIndexMap()[mOptions.shaderType];
 

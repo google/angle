@@ -1561,8 +1561,7 @@ class WriteDescriptorDescBuilder
                              const std::vector<gl::InterfaceBlock> &blocks,
                              VkDescriptorType descriptorType);
 
-    void updateAtomicCounters(gl::ShaderBitSet shaderTypes,
-                              const ShaderInterfaceVariableInfoMap &variableInfoMap,
+    void updateAtomicCounters(const ShaderInterfaceVariableInfoMap &variableInfoMap,
                               const std::vector<gl::AtomicCounterBuffer> &atomicCounterBuffers);
 
     void updateImages(gl::ShaderBitSet shaderTypes,
@@ -1573,10 +1572,9 @@ class WriteDescriptorDescBuilder
                                 const ShaderInterfaceVariableInfoMap &variableInfoMap,
                                 FramebufferVk *framebufferVk);
 
-    void updateExecutableActiveTexturesForShader(
-        gl::ShaderBitSet shaderTypes,
-        const ShaderInterfaceVariableInfoMap &variableInfoMap,
-        const gl::ProgramExecutable &executable);
+    void updateExecutableActiveTextures(gl::ShaderBitSet shaderTypes,
+                                        const ShaderInterfaceVariableInfoMap &variableInfoMap,
+                                        const gl::ProgramExecutable &executable);
 
     void updateDefaultUniform(gl::ShaderBitSet shaderTypes,
                               const ShaderInterfaceVariableInfoMap &variableInfoMap,

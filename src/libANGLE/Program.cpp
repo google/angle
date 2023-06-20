@@ -409,7 +409,7 @@ void WriteActiveVariable(BinaryOutputStream *stream, const ActiveVariable &var)
     for (ShaderType shaderType : AllShaderTypes())
     {
         stream->writeBool(var.isActive(shaderType));
-        stream->writeInt(var.isActive(shaderType) ? var.getId(shaderType) : 0);
+        stream->writeInt(var.isActive(shaderType) ? var.getIds()[shaderType] : 0);
     }
 }
 
