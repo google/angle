@@ -185,26 +185,50 @@ ShaderProgramID Shader::getHandle() const
     return mHandle;
 }
 
+std::string Shader::joinShaderSources(GLsizei count, const char *const *string, const GLint *length)
+{
+    // Fast path for the most common case.
+    if (count == 1)
+    {
+        if (length == nullptr || length[0] < 0)
+            return std::string(string[0]);
+        else
+            return std::string(string[0], static_cast<size_t>(length[0]));
+    }
+
+    // Start with totalLength of 1 to reserve space for the null terminator
+    size_t totalLength = 1;
+
+    // First pass, calculate the total length of the joined string
+    for (GLsizei i = 0; i < count; ++i)
+    {
+        if (length == nullptr || length[i] < 0)
+            totalLength += std::strlen(string[i]);
+        else
+            totalLength += static_cast<size_t>(length[i]);
+    }
+
+    // Second pass, allocate the string and concatenate each shader source
+    // fragment
+    std::string joinedString;
+    joinedString.reserve(totalLength);
+    for (GLsizei i = 0; i < count; ++i)
+    {
+        if (length == nullptr || length[i] < 0)
+            joinedString.append(string[i]);
+        else
+            joinedString.append(string[i], static_cast<size_t>(length[i]));
+    }
+
+    return joinedString;
+}
+
 void Shader::setSource(const Context *context,
                        GLsizei count,
                        const char *const *string,
                        const GLint *length)
 {
-    std::ostringstream stream;
-
-    for (int i = 0; i < count; i++)
-    {
-        if (length == nullptr || length[i] < 0)
-        {
-            stream.write(string[i], strlen(string[i]));
-        }
-        else
-        {
-            stream.write(string[i], length[i]);
-        }
-    }
-
-    std::string source = stream.str();
+    std::string source = joinShaderSources(count, string, length);
 
     // Compute the hash based on the original source before any substitutions
     size_t sourceHash = ComputeShaderHash(source);
