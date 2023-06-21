@@ -257,7 +257,8 @@
         ],
         'test_suites': {
           # Fewer tests enabled on this config because of limited capacity.
-          'gtest_tests': 'mac_nvidia_gtests',
+          # Temporarily disabled for upgrade crbug.com/1456549
+          # 'gtest_tests': 'mac_nvidia_gtests',
         },
       },
       'win10-x64-exp-intel': {
