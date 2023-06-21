@@ -66,33 +66,23 @@ class ShaderInterfaceVariableInfoMap final : angle::NonCopyable
     static constexpr size_t kIdFastMapMax = 32;
     using IdToTypeAndIndexMap             = angle::FastMap<TypeAndIndex, kIdFastMapMax>;
 
-    // To get from a linked resource using its index in the list of linked resources to its info,
-    // another map is maintained.
-    // TODO(anglebug.com/7220): remove this list and use ids directly.  This also obviates
-    // mapIndexedResourceToInfoOfElementZero.
-    static constexpr size_t kResourceFastMapMax = 32;
-    using ResourceIndexMap                      = angle::FastMap<uint32_t, kResourceFastMapMax>;
-    using VariableTypeToIndexMap = angle::PackedEnumMap<ShaderVariableType, ResourceIndexMap>;
-
     ShaderInterfaceVariableInfoMap();
     ~ShaderInterfaceVariableInfoMap();
 
     void clear();
     void load(VariableTypeToInfoMap &&data,
               gl::ShaderMap<IdToTypeAndIndexMap> &&idToTypeAndIndexMap,
-              VariableTypeToIndexMap &&indexedResourceIndexMap,
               gl::ShaderMap<gl::PerVertexMemberBitSet> &&inputPerVertexActiveMembers,
               gl::ShaderMap<gl::PerVertexMemberBitSet> &&outputPerVertexActiveMembers);
 
     ShaderInterfaceVariableInfo &add(gl::ShaderType shaderType,
                                      ShaderVariableType variableType,
                                      uint32_t id);
-    void addIndexedResource(gl::ShaderBitSet shaderTypes,
-                            ShaderVariableType variableType,
-                            const gl::ShaderMap<uint32_t> &idInShaderTypes,
-                            uint32_t descriptorSet,
-                            uint32_t binding,
-                            uint32_t resourceIndex);
+    void addResource(gl::ShaderBitSet shaderTypes,
+                     ShaderVariableType variableType,
+                     const gl::ShaderMap<uint32_t> &idInShaderTypes,
+                     uint32_t descriptorSet,
+                     uint32_t binding);
     ShaderInterfaceVariableInfo &addOrGet(gl::ShaderType shaderType,
                                           ShaderVariableType variableType,
                                           uint32_t id);
@@ -106,8 +96,6 @@ class ShaderInterfaceVariableInfoMap final : angle::NonCopyable
                                             uint32_t id);
 
     const ShaderInterfaceVariableInfo &getDefaultUniformInfo(gl::ShaderType shaderType) const;
-    const ShaderInterfaceVariableInfo &getIndexedVariableInfo(ShaderVariableType variableType,
-                                                              uint32_t variableIndex) const;
     bool hasAtomicCounterInfo() const;
     const ShaderInterfaceVariableInfo &getAtomicCounterInfo() const;
     const ShaderInterfaceVariableInfo &getFramebufferFetchInfo() const;
@@ -121,17 +109,12 @@ class ShaderInterfaceVariableInfoMap final : angle::NonCopyable
     bool hasVariable(gl::ShaderType shaderType, uint32_t id) const;
     const ShaderInterfaceVariableInfo &getVariableById(gl::ShaderType shaderType,
                                                        uint32_t id) const;
-    void mapIndexedResourceToInfoOfElementZero(gl::ShaderBitSet shaderTypes,
-                                               ShaderVariableType variableType,
-                                               const gl::ShaderMap<uint32_t> &idInShaderTypes,
-                                               uint32_t resourceIndex);
     const VariableInfoArray &getAttributes() const;
     const VariableTypeToInfoMap &getData() const { return mData; }
     const gl::ShaderMap<IdToTypeAndIndexMap> &getIdToTypeAndIndexMap() const
     {
         return mIdToTypeAndIndexMap;
     }
-    const VariableTypeToIndexMap &getIndexedResourceMap() const { return mIndexedResourceIndexMap; }
     const gl::ShaderMap<gl::PerVertexMemberBitSet> &getInputPerVertexActiveMembers() const
     {
         return mInputPerVertexActiveMembers;
@@ -148,7 +131,6 @@ class ShaderInterfaceVariableInfoMap final : angle::NonCopyable
 
     VariableTypeToInfoMap mData;
     gl::ShaderMap<IdToTypeAndIndexMap> mIdToTypeAndIndexMap;
-    VariableTypeToIndexMap mIndexedResourceIndexMap;
 
     // Active members of `in gl_PerVertex` and `out gl_PerVertex`
     gl::ShaderMap<gl::PerVertexMemberBitSet> mInputPerVertexActiveMembers;
@@ -159,16 +141,6 @@ ANGLE_INLINE const ShaderInterfaceVariableInfo &
 ShaderInterfaceVariableInfoMap::getDefaultUniformInfo(gl::ShaderType shaderType) const
 {
     return getVariableById(shaderType, sh::vk::spirv::kIdDefaultUniformsBlock);
-}
-
-ANGLE_INLINE const ShaderInterfaceVariableInfo &
-ShaderInterfaceVariableInfoMap::getIndexedVariableInfo(ShaderVariableType variableType,
-                                                       uint32_t resourceIndex) const
-{
-    ASSERT(resourceIndex < mIndexedResourceIndexMap[variableType].size());
-    uint32_t variableIndex = mIndexedResourceIndexMap[variableType][resourceIndex];
-    ASSERT(variableIndex < mData[variableType].size());
-    return mData[variableType][variableIndex];
 }
 
 ANGLE_INLINE bool ShaderInterfaceVariableInfoMap::hasAtomicCounterInfo() const

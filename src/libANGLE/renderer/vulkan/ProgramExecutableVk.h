@@ -278,7 +278,6 @@ class ProgramExecutableVk
 
     void addInterfaceBlockDescriptorSetDesc(const std::vector<gl::InterfaceBlock> &blocks,
                                             gl::ShaderBitSet shaderTypes,
-                                            ShaderVariableType variableType,
                                             VkDescriptorType descType,
                                             vk::DescriptorSetLayoutDesc *descOut);
     void addAtomicCounterBufferDescriptorSetDesc(

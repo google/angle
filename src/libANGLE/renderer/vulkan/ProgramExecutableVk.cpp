@@ -547,7 +547,6 @@ std::unique_ptr<rx::LinkEvent> ProgramExecutableVk::load(ContextVk *contextVk,
 {
     ShaderInterfaceVariableInfoMap::VariableTypeToInfoMap data;
     gl::ShaderMap<ShaderInterfaceVariableInfoMap::IdToTypeAndIndexMap> idToTypeAndIndexMap;
-    ShaderInterfaceVariableInfoMap::VariableTypeToIndexMap indexedResourceMap;
     gl::ShaderMap<gl::PerVertexMemberBitSet> inputPerVertexActiveMembers;
     gl::ShaderMap<gl::PerVertexMemberBitSet> outputPerVertexActiveMembers;
 
@@ -590,13 +589,6 @@ std::unique_ptr<rx::LinkEvent> ProgramExecutableVk::load(ContextVk *contextVk,
 
             data[variableType].push_back(info);
         }
-
-        uint32_t resourceMapSize = stream->readInt<uint32_t>();
-        for (uint32_t resourceIndex = 0; resourceIndex < resourceMapSize; ++resourceIndex)
-        {
-            uint32_t variableIndex                          = stream->readInt<uint32_t>();
-            indexedResourceMap[variableType][resourceIndex] = variableIndex;
-        }
     }
 
     outputPerVertexActiveMembers[gl::ShaderType::Vertex] =
@@ -615,7 +607,7 @@ std::unique_ptr<rx::LinkEvent> ProgramExecutableVk::load(ContextVk *contextVk,
         gl::PerVertexMemberBitSet(stream->readInt<uint8_t>());
 
     mVariableInfoMap.load(std::move(data), std::move(idToTypeAndIndexMap),
-                          std::move(indexedResourceMap), std::move(inputPerVertexActiveMembers),
+                          std::move(inputPerVertexActiveMembers),
                           std::move(outputPerVertexActiveMembers));
 
     mOriginalShaderInfo.load(stream);
@@ -679,8 +671,6 @@ void ProgramExecutableVk::save(ContextVk *contextVk,
     const ShaderInterfaceVariableInfoMap::VariableTypeToInfoMap &data = mVariableInfoMap.getData();
     const gl::ShaderMap<ShaderInterfaceVariableInfoMap::IdToTypeAndIndexMap> &idToTypeAndIndexMap =
         mVariableInfoMap.getIdToTypeAndIndexMap();
-    const ShaderInterfaceVariableInfoMap::VariableTypeToIndexMap &indexedResourceMap =
-        mVariableInfoMap.getIndexedResourceMap();
     const gl::ShaderMap<gl::PerVertexMemberBitSet> &inputPerVertexActiveMembers =
         mVariableInfoMap.getInputPerVertexActiveMembers();
     const gl::ShaderMap<gl::PerVertexMemberBitSet> &outputPerVertexActiveMembers =
@@ -721,14 +711,6 @@ void ProgramExecutableVk::save(ContextVk *contextVk,
             stream->writeBool(info.varyingIsOutput);
             stream->writeInt(info.attributeComponentCount);
             stream->writeInt(info.attributeLocationCount);
-        }
-
-        const ShaderInterfaceVariableInfoMap::ResourceIndexMap &resourceIndexMap =
-            indexedResourceMap[variableType];
-        stream->writeInt(static_cast<uint32_t>(resourceIndexMap.size()));
-        for (uint32_t resourceIndex = 0; resourceIndex < resourceIndexMap.size(); ++resourceIndex)
-        {
-            stream->writeInt(resourceIndexMap[resourceIndex]);
         }
     }
 
@@ -893,7 +875,6 @@ angle::Result ProgramExecutableVk::warmUpPipelineCache(ContextVk *contextVk,
 void ProgramExecutableVk::addInterfaceBlockDescriptorSetDesc(
     const std::vector<gl::InterfaceBlock> &blocks,
     gl::ShaderBitSet shaderTypes,
-    ShaderVariableType variableType,
     VkDescriptorType descType,
     vk::DescriptorSetLayoutDesc *descOut)
 {
@@ -908,8 +889,9 @@ void ProgramExecutableVk::addInterfaceBlockDescriptorSetDesc(
             continue;
         }
 
+        const gl::ShaderType firstShaderType = block.getFirstActiveShaderType();
         const ShaderInterfaceVariableInfo &info =
-            mVariableInfoMap.getIndexedVariableInfo(variableType, bufferIndex);
+            mVariableInfoMap.getVariableById(firstShaderType, block.getId(firstShaderType));
 
         const VkShaderStageFlags activeStages = gl_vk::GetShaderStageFlags(info.activeStages);
 
@@ -965,8 +947,9 @@ void ProgramExecutableVk::addImageDescriptorSetDesc(const gl::ProgramExecutable 
             arraySize *= outerArraySize;
         }
 
+        const gl::ShaderType firstShaderType = imageUniform.getFirstActiveShaderType();
         const ShaderInterfaceVariableInfo &info =
-            mVariableInfoMap.getIndexedVariableInfo(ShaderVariableType::Image, imageIndex);
+            mVariableInfoMap.getVariableById(firstShaderType, imageUniform.getId(firstShaderType));
 
         const VkShaderStageFlags activeStages = gl_vk::GetShaderStageFlags(info.activeStages);
 
@@ -1040,8 +1023,9 @@ angle::Result ProgramExecutableVk::addTextureDescriptorSetDesc(
             arraySize *= outerArraySize;
         }
 
-        const ShaderInterfaceVariableInfo &info =
-            mVariableInfoMap.getIndexedVariableInfo(ShaderVariableType::Texture, textureIndex);
+        const gl::ShaderType firstShaderType    = samplerUniform.getFirstActiveShaderType();
+        const ShaderInterfaceVariableInfo &info = mVariableInfoMap.getVariableById(
+            firstShaderType, samplerUniform.getId(firstShaderType));
 
         const VkShaderStageFlags activeStages = gl_vk::GetShaderStageFlags(info.activeStages);
 
@@ -1447,10 +1431,8 @@ angle::Result ProgramExecutableVk::createPipelineLayout(
     }
 
     addInterfaceBlockDescriptorSetDesc(glExecutable.getUniformBlocks(), linkedShaderStages,
-                                       ShaderVariableType::UniformBuffer,
                                        mUniformBufferDescriptorType, &resourcesSetDesc);
     addInterfaceBlockDescriptorSetDesc(glExecutable.getShaderStorageBlocks(), linkedShaderStages,
-                                       ShaderVariableType::ShaderStorageBuffer,
                                        vk::kStorageBufferDescriptorType, &resourcesSetDesc);
     addAtomicCounterBufferDescriptorSetDesc(glExecutable.getAtomicCounterBuffers(),
                                             &resourcesSetDesc);

@@ -32,7 +32,6 @@ void ShaderInterfaceVariableInfoMap::clear()
     for (ShaderVariableType variableType : angle::AllEnums<ShaderVariableType>())
     {
         mData[variableType].clear();
-        mIndexedResourceIndexMap[variableType].clear();
     }
     for (gl::ShaderType shaderType : gl::AllShaderTypes())
     {
@@ -47,13 +46,11 @@ void ShaderInterfaceVariableInfoMap::clear()
 void ShaderInterfaceVariableInfoMap::load(
     VariableTypeToInfoMap &&data,
     gl::ShaderMap<IdToTypeAndIndexMap> &&idToTypeAndIndexMap,
-    VariableTypeToIndexMap &&indexedResourceIndexMap,
     gl::ShaderMap<gl::PerVertexMemberBitSet> &&inputPerVertexActiveMembers,
     gl::ShaderMap<gl::PerVertexMemberBitSet> &&outputPerVertexActiveMembers)
 {
     mData.swap(data);
     mIdToTypeAndIndexMap.swap(idToTypeAndIndexMap);
-    mIndexedResourceIndexMap.swap(indexedResourceIndexMap);
     mInputPerVertexActiveMembers.swap(inputPerVertexActiveMembers);
     mOutputPerVertexActiveMembers.swap(outputPerVertexActiveMembers);
 }
@@ -123,13 +120,11 @@ ShaderInterfaceVariableInfo &ShaderInterfaceVariableInfoMap::add(gl::ShaderType 
     return mData[variableType][index];
 }
 
-void ShaderInterfaceVariableInfoMap::addIndexedResource(
-    gl::ShaderBitSet shaderTypes,
-    ShaderVariableType variableType,
-    const gl::ShaderMap<uint32_t> &idInShaderTypes,
-    uint32_t descriptorSet,
-    uint32_t binding,
-    uint32_t resourceIndex)
+void ShaderInterfaceVariableInfoMap::addResource(gl::ShaderBitSet shaderTypes,
+                                                 ShaderVariableType variableType,
+                                                 const gl::ShaderMap<uint32_t> &idInShaderTypes,
+                                                 uint32_t descriptorSet,
+                                                 uint32_t binding)
 {
     uint32_t index = static_cast<uint32_t>(mData[variableType].size());
     mData[variableType].resize(index + 1);
@@ -138,8 +133,6 @@ void ShaderInterfaceVariableInfoMap::addIndexedResource(
     info->descriptorSet = descriptorSet;
     info->binding       = binding;
     info->activeStages  = shaderTypes;
-
-    mIndexedResourceIndexMap[variableType][resourceIndex] = index;
 
     for (const gl::ShaderType shaderType : shaderTypes)
     {
@@ -176,29 +169,6 @@ const ShaderInterfaceVariableInfo &ShaderInterfaceVariableInfoMap::getVariableBy
 {
     TypeAndIndex typeAndIndex = getTypeAndIndexById(shaderType, id);
     return mData[typeAndIndex.variableType][typeAndIndex.index];
-}
-
-void ShaderInterfaceVariableInfoMap::mapIndexedResourceToInfoOfElementZero(
-    gl::ShaderBitSet shaderTypes,
-    ShaderVariableType variableType,
-    const gl::ShaderMap<uint32_t> &idInShaderTypes,
-    uint32_t resourceIndex)
-{
-    // Called only for non-index-zero array elements, associate resourceIndex with the info of
-    // element 0.  This is technically not needed if the rest of the code processes array elements
-    // in order and carries over the info from element 0, but is here for convenience.
-    for (const gl::ShaderType shaderType : shaderTypes)
-    {
-        const uint32_t id = idInShaderTypes[shaderType];
-
-        ASSERT(hasVariable(shaderType, id));
-
-        // Get the index of the info previously associated with element 0.
-        const TypeAndIndex &typeAndIndex = getTypeAndIndexById(shaderType, id);
-        ASSERT(typeAndIndex.variableType == variableType);
-        // Map this resource to the same index.
-        mIndexedResourceIndexMap[variableType][resourceIndex] = typeAndIndex.index;
-    }
 }
 
 bool ShaderInterfaceVariableInfoMap::hasTransformFeedbackInfo(gl::ShaderType shaderType,

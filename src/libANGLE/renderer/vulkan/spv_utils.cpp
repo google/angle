@@ -710,15 +710,12 @@ void AssignInterfaceBlockBindings(const SpvSourceOptions &options,
         const bool isIndexZero = !block.isArray || block.arrayElement == 0;
         if (!isIndexZero)
         {
-            variableInfoMapOut->mapIndexedResourceToInfoOfElementZero(activeShaders, variableType,
-                                                                      block.getIds(), blockIndex);
             continue;
         }
 
-        variableInfoMapOut->addIndexedResource(
-            activeShaders, variableType, block.getIds(),
-            ToUnderlying(DescriptorSetIndex::ShaderResource),
-            programInterfaceInfo->currentShaderResourceBindingIndex++, blockIndex);
+        variableInfoMapOut->addResource(activeShaders, variableType, block.getIds(),
+                                        ToUnderlying(DescriptorSetIndex::ShaderResource),
+                                        programInterfaceInfo->currentShaderResourceBindingIndex++);
     }
 }
 
@@ -744,10 +741,9 @@ void AssignAtomicCounterBufferBindings(const SpvSourceOptions &options,
         ids[shaderType] = sh::vk::spirv::kIdAtomicCounterBlock;
     }
 
-    variableInfoMapOut->addIndexedResource(
-        activeShaders, ShaderVariableType::AtomicCounter, ids,
-        ToUnderlying(DescriptorSetIndex::ShaderResource),
-        programInterfaceInfo->currentShaderResourceBindingIndex++, 0);
+    variableInfoMapOut->addResource(activeShaders, ShaderVariableType::AtomicCounter, ids,
+                                    ToUnderlying(DescriptorSetIndex::ShaderResource),
+                                    programInterfaceInfo->currentShaderResourceBindingIndex++);
 }
 
 void AssignImageBindings(const SpvSourceOptions &options,
@@ -769,19 +765,16 @@ void AssignImageBindings(const SpvSourceOptions &options,
             continue;
         }
 
-        const bool isIndexZero    = UniformNameIsIndexZero(imageUniform.name);
-        const uint32_t imageIndex = uniformIndex - imageUniformRange.low();
+        const bool isIndexZero = UniformNameIsIndexZero(imageUniform.name);
         if (!isIndexZero)
         {
-            variableInfoMapOut->mapIndexedResourceToInfoOfElementZero(
-                activeShaders, ShaderVariableType::Image, imageUniform.getIds(), imageIndex);
             continue;
         }
 
-        variableInfoMapOut->addIndexedResource(
-            activeShaders, ShaderVariableType::Image, imageUniform.getIds(),
-            ToUnderlying(DescriptorSetIndex::ShaderResource),
-            programInterfaceInfo->currentShaderResourceBindingIndex++, imageIndex);
+        variableInfoMapOut->addResource(activeShaders, ShaderVariableType::Image,
+                                        imageUniform.getIds(),
+                                        ToUnderlying(DescriptorSetIndex::ShaderResource),
+                                        programInterfaceInfo->currentShaderResourceBindingIndex++);
     }
 }
 
@@ -831,19 +824,16 @@ void AssignTextureBindings(const SpvSourceOptions &options,
             continue;
         }
 
-        const bool isIndexZero      = UniformNameIsIndexZero(samplerUniform.name);
-        const uint32_t textureIndex = uniformIndex - samplerUniformRange.low();
+        const bool isIndexZero = UniformNameIsIndexZero(samplerUniform.name);
         if (!isIndexZero)
         {
-            variableInfoMapOut->mapIndexedResourceToInfoOfElementZero(
-                activeShaders, ShaderVariableType::Texture, samplerUniform.getIds(), textureIndex);
             continue;
         }
 
-        variableInfoMapOut->addIndexedResource(
-            activeShaders, ShaderVariableType::Texture, samplerUniform.getIds(),
-            ToUnderlying(DescriptorSetIndex::Texture),
-            programInterfaceInfo->currentTextureBindingIndex++, textureIndex);
+        variableInfoMapOut->addResource(activeShaders, ShaderVariableType::Texture,
+                                        samplerUniform.getIds(),
+                                        ToUnderlying(DescriptorSetIndex::Texture),
+                                        programInterfaceInfo->currentTextureBindingIndex++);
     }
 }
 

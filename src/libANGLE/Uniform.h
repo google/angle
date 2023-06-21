@@ -45,6 +45,7 @@ struct ActiveVariable
         return (mActiveUseBits & shaderTypes).any();
     }
     const ShaderMap<uint32_t> &getIds() const { return mIds; }
+    uint32_t getId(ShaderType shaderType) const { return mIds[shaderType]; }
     ShaderBitSet activeShaders() const { return mActiveUseBits; }
     GLuint activeShaderCount() const { return static_cast<GLuint>(mActiveUseBits.count()); }
 
