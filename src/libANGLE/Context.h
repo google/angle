@@ -165,27 +165,23 @@ class StateCache final : angle::NonCopyable
     // 14. onColorMaskChange.
     // 15. onBufferBindingChange.
     // 16. onBlendFuncIndexedChange.
-    bool hasBasicDrawStatesError(Context *context) const
+    intptr_t getBasicDrawStatesErrorString(const Context *context) const
     {
-        if (mCachedBasicDrawStatesError == 0)
+        if (mCachedBasicDrawStatesErrorString != kInvalidPointer)
         {
-            return false;
-        }
-        if (mCachedBasicDrawStatesError != kInvalidPointer)
-        {
-            return true;
-        }
-        return getBasicDrawStatesErrorImpl(context) != 0;
-    }
-
-    intptr_t getBasicDrawStatesError(const Context *context) const
-    {
-        if (mCachedBasicDrawStatesError != kInvalidPointer)
-        {
-            return mCachedBasicDrawStatesError;
+            return mCachedBasicDrawStatesErrorString;
         }
 
         return getBasicDrawStatesErrorImpl(context);
+    }
+
+    // The GL error enum to use when generating errors due to failed draw states. Only valid if
+    // getBasicDrawStatesErrorString returns non-zero.
+    GLenum getBasicDrawElementsErrorCode() const
+    {
+        ASSERT(mCachedBasicDrawStatesErrorString != kInvalidPointer);
+        ASSERT(mCachedBasicDrawStatesErrorCode != GL_NO_ERROR);
+        return mCachedBasicDrawStatesErrorCode;
     }
 
     // Places that can trigger updateProgramPipelineError:
@@ -328,7 +324,8 @@ class StateCache final : angle::NonCopyable
     bool mCachedHasAnyEnabledClientAttrib;
     GLint64 mCachedNonInstancedVertexElementLimit;
     GLint64 mCachedInstancedVertexElementLimit;
-    mutable intptr_t mCachedBasicDrawStatesError;
+    mutable intptr_t mCachedBasicDrawStatesErrorString;
+    mutable GLenum mCachedBasicDrawStatesErrorCode;
     mutable intptr_t mCachedBasicDrawElementsError;
     // mCachedProgramPipelineError checks only the
     // current-program-exists subset of mCachedBasicDrawStatesError.
