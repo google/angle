@@ -29,13 +29,10 @@ ShaderInterfaceVariableInfoMap::~ShaderInterfaceVariableInfoMap() = default;
 
 void ShaderInterfaceVariableInfoMap::clear()
 {
-    for (ShaderVariableType variableType : angle::AllEnums<ShaderVariableType>())
-    {
-        mData[variableType].clear();
-    }
+    mData.clear();
     for (gl::ShaderType shaderType : gl::AllShaderTypes())
     {
-        mIdToTypeAndIndexMap[shaderType].clear();
+        mIdToIndexMap[shaderType].clear();
     }
     std::fill(mInputPerVertexActiveMembers.begin(), mInputPerVertexActiveMembers.end(),
               gl::PerVertexMemberBitSet{});
@@ -44,13 +41,13 @@ void ShaderInterfaceVariableInfoMap::clear()
 }
 
 void ShaderInterfaceVariableInfoMap::load(
-    VariableTypeToInfoMap &&data,
-    gl::ShaderMap<IdToTypeAndIndexMap> &&idToTypeAndIndexMap,
+    VariableInfoArray &&data,
+    gl::ShaderMap<IdToIndexMap> &&idToIndexMap,
     gl::ShaderMap<gl::PerVertexMemberBitSet> &&inputPerVertexActiveMembers,
     gl::ShaderMap<gl::PerVertexMemberBitSet> &&outputPerVertexActiveMembers)
 {
     mData.swap(data);
-    mIdToTypeAndIndexMap.swap(idToTypeAndIndexMap);
+    mIdToIndexMap.swap(idToIndexMap);
     mInputPerVertexActiveMembers.swap(inputPerVertexActiveMembers);
     mOutputPerVertexActiveMembers.swap(outputPerVertexActiveMembers);
 }
@@ -77,58 +74,45 @@ void ShaderInterfaceVariableInfoMap::setOutputPerVertexActiveMembers(
     mOutputPerVertexActiveMembers[shaderType] = activeMembers;
 }
 
-bool ShaderInterfaceVariableInfoMap::hasTypeAndIndexById(gl::ShaderType shaderType,
-                                                         uint32_t id) const
+void ShaderInterfaceVariableInfoMap::setVariableIndex(gl::ShaderType shaderType,
+                                                      uint32_t id,
+                                                      VariableIndex index)
 {
-    const uint32_t hashedId = HashSPIRVId(id);
-    return hashedId < mIdToTypeAndIndexMap[shaderType].size() &&
-           mIdToTypeAndIndexMap[shaderType].at(hashedId).variableType !=
-               ShaderVariableType::InvalidEnum;
+    mIdToIndexMap[shaderType][HashSPIRVId(id)] = index;
 }
 
-void ShaderInterfaceVariableInfoMap::addTypeAndIndexById(gl::ShaderType shaderType,
-                                                         uint32_t id,
-                                                         TypeAndIndex typeAndIndex)
+const VariableIndex &ShaderInterfaceVariableInfoMap::getVariableIndex(gl::ShaderType shaderType,
+                                                                      uint32_t id) const
 {
-    mIdToTypeAndIndexMap[shaderType][HashSPIRVId(id)] = typeAndIndex;
+    return mIdToIndexMap[shaderType].at(HashSPIRVId(id));
 }
 
-const TypeAndIndex &ShaderInterfaceVariableInfoMap::getTypeAndIndexById(gl::ShaderType shaderType,
-                                                                        uint32_t id) const
-{
-    return mIdToTypeAndIndexMap[shaderType].at(HashSPIRVId(id));
-}
-
-ShaderInterfaceVariableInfo &ShaderInterfaceVariableInfoMap::getMutable(
-    gl::ShaderType shaderType,
-    ShaderVariableType variableType,
-    uint32_t id)
+ShaderInterfaceVariableInfo &ShaderInterfaceVariableInfoMap::getMutable(gl::ShaderType shaderType,
+                                                                        uint32_t id)
 {
     ASSERT(hasVariable(shaderType, id));
-    uint32_t index = getTypeAndIndexById(shaderType, id).index;
-    return mData[variableType][index];
+    uint32_t index = getVariableIndex(shaderType, id).index;
+    return mData[index];
 }
 
 ShaderInterfaceVariableInfo &ShaderInterfaceVariableInfoMap::add(gl::ShaderType shaderType,
-                                                                 ShaderVariableType variableType,
                                                                  uint32_t id)
 {
     ASSERT(!hasVariable(shaderType, id));
-    uint32_t index = static_cast<uint32_t>(mData[variableType].size());
-    addTypeAndIndexById(shaderType, id, {variableType, index});
-    mData[variableType].resize(index + 1);
-    return mData[variableType][index];
+    uint32_t index = static_cast<uint32_t>(mData.size());
+    setVariableIndex(shaderType, id, {index});
+    mData.resize(index + 1);
+    return mData[index];
 }
 
 void ShaderInterfaceVariableInfoMap::addResource(gl::ShaderBitSet shaderTypes,
-                                                 ShaderVariableType variableType,
                                                  const gl::ShaderMap<uint32_t> &idInShaderTypes,
                                                  uint32_t descriptorSet,
                                                  uint32_t binding)
 {
-    uint32_t index = static_cast<uint32_t>(mData[variableType].size());
-    mData[variableType].resize(index + 1);
-    ShaderInterfaceVariableInfo *info = &mData[variableType][index];
+    uint32_t index = static_cast<uint32_t>(mData.size());
+    mData.resize(index + 1);
+    ShaderInterfaceVariableInfo *info = &mData[index];
 
     info->descriptorSet = descriptorSet;
     info->binding       = binding;
@@ -138,48 +122,34 @@ void ShaderInterfaceVariableInfoMap::addResource(gl::ShaderBitSet shaderTypes,
     {
         const uint32_t id = idInShaderTypes[shaderType];
         ASSERT(!hasVariable(shaderType, id));
-        addTypeAndIndexById(shaderType, id, {variableType, index});
+        setVariableIndex(shaderType, id, {index});
     }
 }
 
-ShaderInterfaceVariableInfo &ShaderInterfaceVariableInfoMap::addOrGet(
-    gl::ShaderType shaderType,
-    ShaderVariableType variableType,
-    uint32_t id)
+ShaderInterfaceVariableInfo &ShaderInterfaceVariableInfoMap::addOrGet(gl::ShaderType shaderType,
+                                                                      uint32_t id)
 {
     if (!hasVariable(shaderType, id))
     {
-        return add(shaderType, variableType, id);
+        return add(shaderType, id);
     }
     else
     {
-        uint32_t index = getTypeAndIndexById(shaderType, id).index;
-        return mData[variableType][index];
+        uint32_t index = getVariableIndex(shaderType, id).index;
+        return mData[index];
     }
 }
 
 bool ShaderInterfaceVariableInfoMap::hasVariable(gl::ShaderType shaderType, uint32_t id) const
 {
-    return hasTypeAndIndexById(shaderType, id);
-}
-
-const ShaderInterfaceVariableInfo &ShaderInterfaceVariableInfoMap::getVariableById(
-    gl::ShaderType shaderType,
-    uint32_t id) const
-{
-    TypeAndIndex typeAndIndex = getTypeAndIndexById(shaderType, id);
-    return mData[typeAndIndex.variableType][typeAndIndex.index];
+    const uint32_t hashedId = HashSPIRVId(id);
+    return hashedId < mIdToIndexMap[shaderType].size() &&
+           mIdToIndexMap[shaderType].at(hashedId).index != VariableIndex::kInvalid;
 }
 
 bool ShaderInterfaceVariableInfoMap::hasTransformFeedbackInfo(gl::ShaderType shaderType,
                                                               uint32_t bufferIndex) const
 {
     return hasVariable(shaderType, SpvGetXfbBufferBlockId(bufferIndex));
-}
-
-const ShaderInterfaceVariableInfoMap::VariableInfoArray &
-ShaderInterfaceVariableInfoMap::getAttributes() const
-{
-    return mData[ShaderVariableType::Attribute];
 }
 }  // namespace rx

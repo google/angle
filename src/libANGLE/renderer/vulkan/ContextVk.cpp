@@ -2738,7 +2738,7 @@ angle::Result ContextVk::handleDirtyShaderResourcesImpl(CommandBufferHelperT *co
     if (hasUniformBuffers)
     {
         mShaderBuffersDescriptorDesc.updateShaderBuffers(
-            this, commandBufferHelper, ShaderVariableType::UniformBuffer, variableInfoMap,
+            this, commandBufferHelper, variableInfoMap,
             mState.getOffsetBindingPointerUniformBuffers(), executable->getUniformBlocks(),
             executableVk.getUniformBufferDescriptorType(), limits.maxUniformBufferRange,
             mEmptyBuffer, mShaderBufferWriteDescriptorDescBuilder.getDescs());
@@ -2746,7 +2746,7 @@ angle::Result ContextVk::handleDirtyShaderResourcesImpl(CommandBufferHelperT *co
     if (hasStorageBuffers)
     {
         mShaderBuffersDescriptorDesc.updateShaderBuffers(
-            this, commandBufferHelper, ShaderVariableType::ShaderStorageBuffer, variableInfoMap,
+            this, commandBufferHelper, variableInfoMap,
             mState.getOffsetBindingPointerShaderStorageBuffers(),
             executable->getShaderStorageBlocks(), executableVk.getStorageBufferDescriptorType(),
             limits.maxStorageBufferRange, mEmptyBuffer,
@@ -2831,7 +2831,7 @@ angle::Result ContextVk::handleDirtyUniformBuffersImpl(CommandBufferT *commandBu
     for (size_t blockIndex : dirtyBits)
     {
         mShaderBuffersDescriptorDesc.updateOneShaderBuffer(
-            this, commandBufferHelper, ShaderVariableType::UniformBuffer, variableInfoMap,
+            this, commandBufferHelper, variableInfoMap,
             mState.getOffsetBindingPointerUniformBuffers(), executable->getUniformBlocks(),
             static_cast<uint32_t>(blockIndex), executableVk.getUniformBufferDescriptorType(),
             limits.maxUniformBufferRange, mEmptyBuffer,

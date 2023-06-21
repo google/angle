@@ -545,8 +545,8 @@ std::unique_ptr<rx::LinkEvent> ProgramExecutableVk::load(ContextVk *contextVk,
                                                          bool isSeparable,
                                                          gl::BinaryInputStream *stream)
 {
-    ShaderInterfaceVariableInfoMap::VariableTypeToInfoMap data;
-    gl::ShaderMap<ShaderInterfaceVariableInfoMap::IdToTypeAndIndexMap> idToTypeAndIndexMap;
+    ShaderInterfaceVariableInfoMap::VariableInfoArray data;
+    gl::ShaderMap<ShaderInterfaceVariableInfoMap::IdToIndexMap> idToIndexMap;
     gl::ShaderMap<gl::PerVertexMemberBitSet> inputPerVertexActiveMembers;
     gl::ShaderMap<gl::PerVertexMemberBitSet> outputPerVertexActiveMembers;
 
@@ -555,40 +555,36 @@ std::unique_ptr<rx::LinkEvent> ProgramExecutableVk::load(ContextVk *contextVk,
         size_t idCount = stream->readInt<size_t>();
         for (uint32_t id = 0; id < idCount; ++id)
         {
-            ShaderVariableType variableType     = stream->readEnum<ShaderVariableType>();
-            uint32_t index                      = stream->readInt<uint32_t>();
-            idToTypeAndIndexMap[shaderType][id] = {variableType, index};
+            uint32_t index               = stream->readInt<uint32_t>();
+            idToIndexMap[shaderType][id] = {index};
         }
     }
 
-    for (ShaderVariableType variableType : angle::AllEnums<ShaderVariableType>())
+    size_t dataSize = stream->readInt<size_t>();
+    for (size_t infoIndex = 0; infoIndex < dataSize; ++infoIndex)
     {
-        size_t infoArraySize = stream->readInt<size_t>();
-        for (size_t infoIndex = 0; infoIndex < infoArraySize; ++infoIndex)
+        ShaderInterfaceVariableInfo info;
+
+        info.descriptorSet = stream->readInt<uint32_t>();
+        info.binding       = stream->readInt<uint32_t>();
+        info.location      = stream->readInt<uint32_t>();
+        info.component     = stream->readInt<uint32_t>();
+        info.index         = stream->readInt<uint32_t>();
+        // PackedEnumBitSet uses uint8_t
+        info.activeStages = gl::ShaderBitSet(stream->readInt<uint8_t>());
+        LoadShaderInterfaceVariableXfbInfo(stream, &info.xfb);
+        info.fieldXfb.resize(stream->readInt<size_t>());
+        for (ShaderInterfaceVariableXfbInfo &xfb : info.fieldXfb)
         {
-            ShaderInterfaceVariableInfo info;
-
-            info.descriptorSet = stream->readInt<uint32_t>();
-            info.binding       = stream->readInt<uint32_t>();
-            info.location      = stream->readInt<uint32_t>();
-            info.component     = stream->readInt<uint32_t>();
-            info.index         = stream->readInt<uint32_t>();
-            // PackedEnumBitSet uses uint8_t
-            info.activeStages = gl::ShaderBitSet(stream->readInt<uint8_t>());
-            LoadShaderInterfaceVariableXfbInfo(stream, &info.xfb);
-            info.fieldXfb.resize(stream->readInt<size_t>());
-            for (ShaderInterfaceVariableXfbInfo &xfb : info.fieldXfb)
-            {
-                LoadShaderInterfaceVariableXfbInfo(stream, &xfb);
-            }
-            info.useRelaxedPrecision     = stream->readBool();
-            info.varyingIsInput          = stream->readBool();
-            info.varyingIsOutput         = stream->readBool();
-            info.attributeComponentCount = stream->readInt<uint8_t>();
-            info.attributeLocationCount  = stream->readInt<uint8_t>();
-
-            data[variableType].push_back(info);
+            LoadShaderInterfaceVariableXfbInfo(stream, &xfb);
         }
+        info.useRelaxedPrecision     = stream->readBool();
+        info.varyingIsInput          = stream->readBool();
+        info.varyingIsOutput         = stream->readBool();
+        info.attributeComponentCount = stream->readInt<uint8_t>();
+        info.attributeLocationCount  = stream->readInt<uint8_t>();
+
+        data.push_back(info);
     }
 
     outputPerVertexActiveMembers[gl::ShaderType::Vertex] =
@@ -606,7 +602,7 @@ std::unique_ptr<rx::LinkEvent> ProgramExecutableVk::load(ContextVk *contextVk,
     outputPerVertexActiveMembers[gl::ShaderType::Geometry] =
         gl::PerVertexMemberBitSet(stream->readInt<uint8_t>());
 
-    mVariableInfoMap.load(std::move(data), std::move(idToTypeAndIndexMap),
+    mVariableInfoMap.load(std::move(data), std::move(idToIndexMap),
                           std::move(inputPerVertexActiveMembers),
                           std::move(outputPerVertexActiveMembers));
 
@@ -668,9 +664,9 @@ void ProgramExecutableVk::save(ContextVk *contextVk,
                                bool isSeparable,
                                gl::BinaryOutputStream *stream)
 {
-    const ShaderInterfaceVariableInfoMap::VariableTypeToInfoMap &data = mVariableInfoMap.getData();
-    const gl::ShaderMap<ShaderInterfaceVariableInfoMap::IdToTypeAndIndexMap> &idToTypeAndIndexMap =
-        mVariableInfoMap.getIdToTypeAndIndexMap();
+    const ShaderInterfaceVariableInfoMap::VariableInfoArray &data = mVariableInfoMap.getData();
+    const gl::ShaderMap<ShaderInterfaceVariableInfoMap::IdToIndexMap> &idToIndexMap =
+        mVariableInfoMap.getIdToIndexMap();
     const gl::ShaderMap<gl::PerVertexMemberBitSet> &inputPerVertexActiveMembers =
         mVariableInfoMap.getInputPerVertexActiveMembers();
     const gl::ShaderMap<gl::PerVertexMemberBitSet> &outputPerVertexActiveMembers =
@@ -678,40 +674,34 @@ void ProgramExecutableVk::save(ContextVk *contextVk,
 
     for (gl::ShaderType shaderType : gl::AllShaderTypes())
     {
-        stream->writeInt(idToTypeAndIndexMap[shaderType].size());
-        for (const TypeAndIndex &typeAndIndex : idToTypeAndIndexMap[shaderType])
+        stream->writeInt(idToIndexMap[shaderType].size());
+        for (const VariableIndex &variableIndex : idToIndexMap[shaderType])
         {
-            stream->writeEnum(typeAndIndex.variableType);
-            stream->writeInt(typeAndIndex.index);
+            stream->writeInt(variableIndex.index);
         }
     }
 
-    for (ShaderVariableType variableType : angle::AllEnums<ShaderVariableType>())
+    stream->writeInt(data.size());
+    for (const ShaderInterfaceVariableInfo &info : data)
     {
-        const ShaderInterfaceVariableInfoMap::VariableInfoArray &infoArray = data[variableType];
-
-        stream->writeInt(infoArray.size());
-        for (const ShaderInterfaceVariableInfo &info : infoArray)
+        stream->writeInt(info.descriptorSet);
+        stream->writeInt(info.binding);
+        stream->writeInt(info.location);
+        stream->writeInt(info.component);
+        stream->writeInt(info.index);
+        // PackedEnumBitSet uses uint8_t
+        stream->writeInt(info.activeStages.bits());
+        SaveShaderInterfaceVariableXfbInfo(info.xfb, stream);
+        stream->writeInt(info.fieldXfb.size());
+        for (const ShaderInterfaceVariableXfbInfo &xfb : info.fieldXfb)
         {
-            stream->writeInt(info.descriptorSet);
-            stream->writeInt(info.binding);
-            stream->writeInt(info.location);
-            stream->writeInt(info.component);
-            stream->writeInt(info.index);
-            // PackedEnumBitSet uses uint8_t
-            stream->writeInt(info.activeStages.bits());
-            SaveShaderInterfaceVariableXfbInfo(info.xfb, stream);
-            stream->writeInt(info.fieldXfb.size());
-            for (const ShaderInterfaceVariableXfbInfo &xfb : info.fieldXfb)
-            {
-                SaveShaderInterfaceVariableXfbInfo(xfb, stream);
-            }
-            stream->writeBool(info.useRelaxedPrecision);
-            stream->writeBool(info.varyingIsInput);
-            stream->writeBool(info.varyingIsOutput);
-            stream->writeInt(info.attributeComponentCount);
-            stream->writeInt(info.attributeLocationCount);
+            SaveShaderInterfaceVariableXfbInfo(xfb, stream);
         }
+        stream->writeBool(info.useRelaxedPrecision);
+        stream->writeBool(info.varyingIsInput);
+        stream->writeBool(info.varyingIsOutput);
+        stream->writeInt(info.attributeComponentCount);
+        stream->writeInt(info.attributeLocationCount);
     }
 
     // Store gl_PerVertex members only for stages that have it.
@@ -903,13 +893,14 @@ void ProgramExecutableVk::addAtomicCounterBufferDescriptorSetDesc(
     const std::vector<gl::AtomicCounterBuffer> &atomicCounterBuffers,
     vk::DescriptorSetLayoutDesc *descOut)
 {
-    if (atomicCounterBuffers.empty() || !mVariableInfoMap.hasAtomicCounterInfo())
+    if (atomicCounterBuffers.empty())
     {
         return;
     }
 
-    const ShaderInterfaceVariableInfo &info = mVariableInfoMap.getAtomicCounterInfo();
-    VkShaderStageFlags activeStages         = gl_vk::GetShaderStageFlags(info.activeStages);
+    const ShaderInterfaceVariableInfo &info =
+        mVariableInfoMap.getAtomicCounterInfo(atomicCounterBuffers[0].getFirstActiveShaderType());
+    VkShaderStageFlags activeStages = gl_vk::GetShaderStageFlags(info.activeStages);
 
     // A single storage buffer array is used for all stages for simplicity.
     descOut->update(info.binding, vk::kStorageBufferDescriptorType,
@@ -974,11 +965,13 @@ void ProgramExecutableVk::addInputAttachmentDescriptorSetDesc(
         return;
     }
 
-    const ShaderInterfaceVariableInfo &baseInfo = mVariableInfoMap.getFramebufferFetchInfo();
-
     const std::vector<gl::LinkedUniform> &uniforms = executable.getUniforms();
     const uint32_t baseUniformIndex                = executable.getFragmentInoutRange().low();
     const gl::LinkedUniform &baseInputAttachment   = uniforms.at(baseUniformIndex);
+
+    const ShaderInterfaceVariableInfo &baseInfo = mVariableInfoMap.getVariableById(
+        gl::ShaderType::Fragment, baseInputAttachment.getId(gl::ShaderType::Fragment));
+
     uint32_t baseBinding = baseInfo.binding - baseInputAttachment.location;
 
     for (uint32_t colorIndex = 0; colorIndex < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS; ++colorIndex)
@@ -1099,11 +1092,11 @@ void ProgramExecutableVk::initializeWriteDescriptorDesc(ContextVk *contextVk,
     // Update mShaderResourceWriteDescriptorDescBuilder
     mShaderResourceWriteDescriptorDescBuilder.reset();
     mShaderResourceWriteDescriptorDescBuilder.updateShaderBuffers(
-        linkedShaderStages, ShaderVariableType::UniformBuffer, mVariableInfoMap,
-        glExecutable.getUniformBlocks(), getUniformBufferDescriptorType());
+        linkedShaderStages, mVariableInfoMap, glExecutable.getUniformBlocks(),
+        getUniformBufferDescriptorType());
     mShaderResourceWriteDescriptorDescBuilder.updateShaderBuffers(
-        linkedShaderStages, ShaderVariableType::ShaderStorageBuffer, mVariableInfoMap,
-        glExecutable.getShaderStorageBlocks(), getStorageBufferDescriptorType());
+        linkedShaderStages, mVariableInfoMap, glExecutable.getShaderStorageBlocks(),
+        getStorageBufferDescriptorType());
     mShaderResourceWriteDescriptorDescBuilder.updateAtomicCounters(
         mVariableInfoMap, glExecutable.getAtomicCounterBuffers());
     mShaderResourceWriteDescriptorDescBuilder.updateImages(linkedShaderStages, glExecutable,
@@ -1524,8 +1517,7 @@ void ProgramExecutableVk::resolvePrecisionMismatch(const gl::ProgramMergedVaryin
         {
             // The output is higher precision than the input
             ShaderInterfaceVariableInfo &info = mVariableInfoMap.getMutable(
-                mergedVarying.frontShaderStage, ShaderVariableType::Varying,
-                mergedVarying.frontShader->id);
+                mergedVarying.frontShaderStage, mergedVarying.frontShader->id);
             info.varyingIsOutput     = true;
             info.useRelaxedPrecision = true;
         }
@@ -1534,8 +1526,7 @@ void ProgramExecutableVk::resolvePrecisionMismatch(const gl::ProgramMergedVaryin
             // The output is lower precision than the input, adjust the input
             ASSERT(backPrecision > frontPrecision);
             ShaderInterfaceVariableInfo &info = mVariableInfoMap.getMutable(
-                mergedVarying.backShaderStage, ShaderVariableType::Varying,
-                mergedVarying.backShader->id);
+                mergedVarying.backShaderStage, mergedVarying.backShader->id);
             info.varyingIsInput      = true;
             info.useRelaxedPrecision = true;
         }

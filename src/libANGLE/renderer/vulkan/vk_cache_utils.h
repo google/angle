@@ -1556,7 +1556,6 @@ class WriteDescriptorDescBuilder
     }
 
     void updateShaderBuffers(gl::ShaderBitSet shaderTypes,
-                             ShaderVariableType variableType,
                              const ShaderInterfaceVariableInfoMap &variableInfoMap,
                              const std::vector<gl::InterfaceBlock> &blocks,
                              VkDescriptorType descriptorType);
@@ -1715,7 +1714,6 @@ class DescriptorSetDescBuilder final
     template <typename CommandBufferT>
     void updateOneShaderBuffer(ContextVk *contextVk,
                                CommandBufferT *commandBufferHelper,
-                               ShaderVariableType variableType,
                                const ShaderInterfaceVariableInfoMap &variableInfoMap,
                                const gl::BufferVector &buffers,
                                const std::vector<gl::InterfaceBlock> &blocks,
@@ -1727,7 +1725,6 @@ class DescriptorSetDescBuilder final
     template <typename CommandBufferT>
     void updateShaderBuffers(ContextVk *contextVk,
                              CommandBufferT *commandBufferHelper,
-                             ShaderVariableType variableType,
                              const ShaderInterfaceVariableInfoMap &variableInfoMap,
                              const gl::BufferVector &buffers,
                              const std::vector<gl::InterfaceBlock> &blocks,

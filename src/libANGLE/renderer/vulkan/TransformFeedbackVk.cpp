@@ -206,12 +206,11 @@ void TransformFeedbackVk::updateDescriptorSetLayout(
 
     for (uint32_t bufferIndex = 0; bufferIndex < xfbBufferCount; ++bufferIndex)
     {
-        const ShaderInterfaceVariableInfo &info =
-            variableInfoMap.getTransformFeedbackInfo(bufferIndex);
+        const uint32_t binding = variableInfoMap.getEmulatedXfbBufferBinding(bufferIndex);
 
-        ASSERT(info.binding != std::numeric_limits<uint32_t>::max());
+        ASSERT(binding != std::numeric_limits<uint32_t>::max());
 
-        descSetLayoutOut->update(info.binding, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1,
+        descSetLayoutOut->update(binding, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1,
                                  VK_SHADER_STAGE_VERTEX_BIT, nullptr);
     }
 }
