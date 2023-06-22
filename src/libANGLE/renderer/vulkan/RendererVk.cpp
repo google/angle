@@ -1412,17 +1412,7 @@ RendererVk::RendererVk()
     ASSERT(IsLittleEndian());
 }
 
-RendererVk::~RendererVk()
-{
-    mAllocator.release();
-    mPipelineCache.release();
-    ASSERT(!hasSharedGarbage());
-
-    if (mLibVulkanLibrary)
-    {
-        angle::CloseSystemLibrary(mLibVulkanLibrary);
-    }
-}
+RendererVk::~RendererVk() {}
 
 bool RendererVk::hasSharedGarbage()
 {
@@ -1496,6 +1486,14 @@ void RendererVk::onDestroy(vk::Context *context)
 
     mEnabledInstanceExtensions.clear();
     mEnabledDeviceExtensions.clear();
+
+    ASSERT(!hasSharedGarbage());
+
+    if (mLibVulkanLibrary)
+    {
+        angle::CloseSystemLibrary(mLibVulkanLibrary);
+        mLibVulkanLibrary = nullptr;
+    }
 }
 
 void RendererVk::notifyDeviceLost()
