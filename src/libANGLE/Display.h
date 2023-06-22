@@ -114,11 +114,6 @@ class Display final : public LabeledObject,
     // this function.
     Error releaseThread();
 
-    ContextMutexManager *getSharedContextMutexManager() const
-    {
-        return mSharedContextMutexManager.get();
-    }
-
     static Display *GetDisplayFromDevice(Device *device, const AttributeMap &attribMap);
     static Display *GetDisplayFromNativeDisplay(EGLenum platform,
                                                 EGLNativeDisplayType nativeDisplay,
@@ -387,8 +382,6 @@ class Display final : public LabeledObject,
     Surface *mSurface;
     EGLenum mPlatform;
     angle::LoggingAnnotator mAnnotator;
-
-    std::unique_ptr<ContextMutexManager> mSharedContextMutexManager;
 
     // mManagersMutex protects mTextureManager and mSemaphoreManager
     ContextMutex *mManagersMutex;

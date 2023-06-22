@@ -89,9 +89,6 @@ namespace egl
 
 namespace
 {
-// Use standard mutex for now.
-using ContextMutexType = std::mutex;
-
 struct TLSData
 {
     angle::UnlockedTailCall unlockedTailCall;
@@ -1128,11 +1125,8 @@ Error Display::initialize()
 
     if (kIsSharedContextMutexEnabled)
     {
-        ASSERT(!mSharedContextMutexManager);
-        mSharedContextMutexManager.reset(new SharedContextMutexManager<ContextMutexType>());
-
         ASSERT(mManagersMutex == nullptr);
-        mManagersMutex = mSharedContextMutexManager->create();
+        mManagersMutex = new ContextMutex();
         mManagersMutex->addRef();
     }
 
@@ -1257,8 +1251,6 @@ Error Display::terminate(Thread *thread, TerminateReason terminateReason)
     // it.
     ASSERT(mGlobalTextureShareGroupUsers == 0 && mTextureManager == nullptr);
     ASSERT(mGlobalSemaphoreShareGroupUsers == 0 && mSemaphoreManager == nullptr);
-
-    mSharedContextMutexManager.reset();
 
     if (mManagersMutex != nullptr)
     {
@@ -1569,22 +1561,23 @@ Error Display::createContext(const Config *configuration,
         shareSemaphores = mSemaphoreManager;
     }
 
+    ScopedContextMutexLock mutexLock;
     ContextMutex *sharedContextMutex = nullptr;
     if (kIsSharedContextMutexEnabled)
     {
+        ASSERT(mManagersMutex != nullptr);
         if (shareContext != nullptr)
         {
-            ASSERT(shareContext->isSharedContextMutexActive());
-            sharedContextMutex = shareContext->getContextMutex();
+            sharedContextMutex = shareContext->getContextMutex().getRoot();
         }
         else if (shareTextures != nullptr || shareSemaphores != nullptr)
         {
-            sharedContextMutex = mManagersMutex;
+            mutexLock          = ScopedContextMutexLock(mManagersMutex);
+            sharedContextMutex = mManagersMutex->getRoot();
         }
         // When using shareTextures/Semaphores all Contexts in the Group must use mManagersMutex.
-        ASSERT(mManagersMutex != nullptr);
         ASSERT((shareTextures == nullptr && shareSemaphores == nullptr) ||
-               sharedContextMutex == mManagersMutex);
+               sharedContextMutex == mManagersMutex->getRoot());
     }
 
     gl::MemoryProgramCache *programCachePointer = &mMemoryProgramCache;
@@ -1693,9 +1686,7 @@ Error Display::makeCurrent(Thread *thread,
     }
 
     {
-        ASSERT(context == nullptr || context->getContextMutex() != nullptr);
-        ScopedContextMutexLock lock(context != nullptr ? context->getContextMutex() : nullptr,
-                                    context, kContextMutexMayBeNull);
+        ScopedContextMutexLock lock(context != nullptr ? &context->getContextMutex() : nullptr);
 
         thread->setCurrent(context);
 
@@ -1790,7 +1781,7 @@ void Display::destroyImageImpl(Image *image, ImageMap *images)
     mImageHandleAllocator.release(image->id().value);
     {
         // Need AddRefLock because there may be ContextMutex destruction.
-        ScopedContextMutexAddRefLock lock(image->getSharedContextMutex(), kContextMutexMayBeNull);
+        ScopedContextMutexAddRefLock lock(image->getContextMutex());
         iter->second->release(this);
     }
     images->erase(iter);
