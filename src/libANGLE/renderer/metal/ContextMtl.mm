@@ -681,12 +681,13 @@ angle::Result ContextMtl::drawArraysProvokingVertexImpl(const gl::Context *conte
     gl::DrawElementsType convertedType = gl::DrawElementsType::UnsignedInt;
     gl::PrimitiveMode outIndexMode     = gl::PrimitiveMode::InvalidEnum;
 
-    mtl::BufferRef drawIdxBuffer = mProvokingVertexHelper.generateIndexBuffer(
+    mtl::BufferRef drawIdxBuffer;
+    ANGLE_TRY(mProvokingVertexHelper.generateIndexBuffer(
         mtl::GetImpl(context), first, count, mode, convertedType, outIndexCount, outIndexOffset,
-        outIndexMode);
+        outIndexMode, drawIdxBuffer));
     GLsizei outIndexCounti32     = static_cast<GLsizei>(outIndexCount);
     const uint8_t *mappedIndices = drawIdxBuffer->mapReadOnly(this);
-    if (!drawIdxBuffer || !mappedIndices)
+    if (!mappedIndices)
     {
         return angle::Result::Stop;
     }
@@ -804,14 +805,10 @@ angle::Result ContextMtl::drawElementsImpl(const gl::Context *context,
     {
         size_t outIndexCount      = 0;
         gl::PrimitiveMode newMode = gl::PrimitiveMode::InvalidEnum;
-        drawIdxBuffer             = mProvokingVertexHelper.preconditionIndexBuffer(
+        ANGLE_TRY(mProvokingVertexHelper.preconditionIndexBuffer(
             mtl::GetImpl(context), idxBuffer, count, convertedOffset,
             mState.isPrimitiveRestartEnabled(), mode, convertedType, outIndexCount,
-            provokingVertexAdditionalOffset, newMode);
-        if (!drawIdxBuffer)
-        {
-            return angle::Result::Stop;
-        }
+            provokingVertexAdditionalOffset, newMode, drawIdxBuffer));
         // Line strips and triangle strips are rewritten to flat line arrays and tri arrays.
         convertedCounti32 = (uint32_t)outIndexCount;
         mode              = newMode;
