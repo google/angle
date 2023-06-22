@@ -979,14 +979,16 @@ void DisplayMtl::initializeExtensions() const
     // TODO(anglebug.com/6395): figure out why WebGL drawing buffer
     // creation fails on macOS when the Metal backend advertises the
     // EXT_multisampled_render_to_texture extension.
-#if !defined(ANGLE_PLATFORM_MACOS)
-    // EXT_multisampled_render_to_texture
-    if (mFeatures.allowMultisampleStoreAndResolve.enabled &&
-        mFeatures.hasDepthAutoResolve.enabled && mFeatures.hasStencilAutoResolve.enabled)
-    {
-        mNativeExtensions.multisampledRenderToTextureEXT = true;
-    }
-#endif
+    // TODO(anglebug.com/3107): Metal doesn't implement render to texture
+    // correctly. A texture (if used as a color attachment for a framebuffer)
+    // is always created with sample count == 1, which results in creation of a
+    // render pipeline with the same value. Moreover, if there is a more
+    // sophisticated case and a framebuffer also has a stencil/depth attachment,
+    // it will result in creation of a render pipeline with those attachment's
+    // sample count, but the texture that was used as a color attachment, will
+    // still remain with sample count 1. That results in Metal validation error
+    // if enabled.
+    mNativeExtensions.multisampledRenderToTextureEXT = false;
 
     // Enable EXT_blend_minmax
     mNativeExtensions.blendMinmaxEXT = true;
