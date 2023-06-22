@@ -939,7 +939,8 @@ TEST_P(RobustResourceInitTestES3, ReadingOutOfBoundsCopiedTextureWithUnpackBuffe
     GLBuffer buffer;
     glBindBuffer(GL_PIXEL_UNPACK_BUFFER, buffer);
     std::vector<GLColor> bunchOfGreen(fboWidth * fboHeight, GLColor::green);
-    glBufferData(GL_PIXEL_UNPACK_BUFFER, sizeof(bunchOfGreen), bunchOfGreen.data(), GL_STATIC_DRAW);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, sizeof(bunchOfGreen[0]) * bunchOfGreen.size(),
+                 bunchOfGreen.data(), GL_STATIC_DRAW);
     EXPECT_GL_NO_ERROR();
 
     // Use non-multiple-of-4 dimensions to make sure unpack alignment is set in the backends
