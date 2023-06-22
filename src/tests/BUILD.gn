@@ -1744,13 +1744,13 @@ group("angle_tests") {
     ":angle_end2end_tests",
     ":angle_system_info_test",
     ":angle_unittests",
-    "capture_tests:angle_capture_tests_trace",
   ]
   if (build_angle_perftests) {
     deps += [ ":angle_perftests" ]
   }
   if (build_angle_trace_tests) {
     deps += [ ":angle_trace_perf_tests" ]
+    deps += [ "capture_tests:angle_capture_tests_trace" ]
   }
   if (is_clang) {
     deps += [ "capture_replay_tests" ]
