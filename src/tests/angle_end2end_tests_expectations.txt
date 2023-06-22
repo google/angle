@@ -1007,10 +1007,7 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 
 // Flaking due to threading usage of the queue
 7204 : VulkanImageTest.PreInitializedOnGLImport/*AsyncCommandQueue = SKIP
-8174 : VulkanImageTest.AllocateVMAImageWhenDeviceOOM/*AsyncCommandQueue = SKIP
-8174 : VulkanImageTest.AllocateVMAImageAfterFreeing2DGarbageWhenDeviceOOM/*AsyncCommandQueue = SKIP
-8174 : VulkanImageTest.AllocateVMAImageAfterFreeing2DArrayGarbageWhenDeviceOOM/*AsyncCommandQueue = SKIP
-8174 : VulkanImageTest.AllocateBufferAfterFreeing2DGarbageWhenDeviceOOM/*AsyncCommandQueue = SKIP
+8174 : VulkanMemoryTest.*/*AsyncCommandQueue = SKIP
 
 // Causes incompatible error in GL back-end.
 7218 OPENGL : TransformFeedbackTest.DrawAfterDeletingPausedBuffer/* = SKIP
@@ -1182,15 +1179,7 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 8125 MAC METAL : PixelLocalStorageTest.TextureLevelsAndLayers/* = SKIP
 
 // Skip device OOM tests for Linux/NVIDIA.
-8236 LINUX NVIDIA : VulkanImageTest.AllocateVMAImageWhenDeviceOOM/* = SKIP
-8236 LINUX NVIDIA : VulkanImageTest.AllocateVMAImageAfterFreeing2DGarbageWhenDeviceOOM/* = SKIP
-8236 LINUX NVIDIA : VulkanImageTest.AllocateVMAImageAfterFreeing2DArrayGarbageWhenDeviceOOM/* = SKIP
-8236 LINUX NVIDIA : VulkanImageTest.AllocateBufferAfterFreeing2DGarbageWhenDeviceOOM/* = SKIP
-
-// Slow tests, should appear last in this file
-5076 : GLSLTest.VerifyMaxVertexUniformVectors* = TIMEOUT
-5076 : GLSLTest.VerifyMaxFragmentUniformVectors* = TIMEOUT
-6261 : MultithreadingTest* = TIMEOUT
+8236 LINUX NVIDIA : VulkanMemoryTest.* = SKIP
 
 // SSBO Alias Overwrite
 5990 PIXEL4ORXL VULKAN : ComputeShaderTest.SSBOAliasOverWrite/* = SKIP
@@ -1377,6 +1366,11 @@ b/266235549 D3D11 : ComputeShaderTest.SSBOAliasOverWrite/* = SKIP
 // Pixel7 non-crash failures:
 8212 PIXEL7 VULKAN : MultithreadingTestES3.MultithreadFenceDraw/* = SKIP
 8212 PIXEL7 VULKAN : MultithreadingTestES3.MultithreadFenceTexImage/* = SKIP
+
+// Slow tests, should appear last in this file
+5076 : GLSLTest.VerifyMaxVertexUniformVectors* = TIMEOUT
+5076 : GLSLTest.VerifyMaxFragmentUniformVectors* = TIMEOUT
+6261 : MultithreadingTest* = TIMEOUT
 
 // Please do not add expectations below this line,
 // so that TIMEOUT expectations above don't override more precise SKIP expectations
