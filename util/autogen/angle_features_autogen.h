@@ -133,6 +133,7 @@ enum class Feature
     EnableProgramBinaryForCapture,
     EnableShaderSubstitution,
     EnableTimestampQueries,
+    EnsureNonEmptyBufferIsBoundForDraw,
     ExpandIntegerPowExpressions,
     ExplicitlyCastMediumpFloatTo16Bit,
     ExplicitlyEnablePerSampleShading,

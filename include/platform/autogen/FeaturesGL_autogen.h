@@ -675,6 +675,13 @@ struct FeaturesGL : FeatureSetBase
         &members, "http://crbug.com/1420130"
     };
 
+    FeatureInfo ensureNonEmptyBufferIsBoundForDraw = {
+        "ensureNonEmptyBufferIsBoundForDraw",
+        FeatureCategory::OpenGLFeatures,
+        "Apple OpenGL drivers crash when drawing with a zero-sized buffer bound using a non-zero divisor.",
+        &members, "http://crbug.com/1456243"
+    };
+
 };
 
 inline FeaturesGL::FeaturesGL()  = default;
