@@ -2368,6 +2368,8 @@ std::string Renderer11::getRendererDescription() const
 
     rendererString << mDescription;
     rendererString << " Direct3D11";
+    if (mD3d12Module)
+        rendererString << "on12";
 
     rendererString << " vs_" << getMajorShaderModel() << "_" << getMinorShaderModel()
                    << getShaderModelSuffix();
