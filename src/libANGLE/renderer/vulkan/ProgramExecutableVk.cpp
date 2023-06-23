@@ -874,7 +874,7 @@ void ProgramExecutableVk::addInterfaceBlockDescriptorSetDesc(
         gl::InterfaceBlock block = blocks[bufferIndex];
         arraySize                = GetInterfaceBlockArraySize(blocks, bufferIndex);
 
-        if (!block.isActiveInAny(shaderTypes))
+        if (block.activeShaders().none())
         {
             continue;
         }
@@ -921,8 +921,7 @@ void ProgramExecutableVk::addImageDescriptorSetDesc(const gl::ProgramExecutable 
         // 2D arrays are split into multiple 1D arrays when generating LinkedUniforms. Since they
         // are flattened into one array, ignore the nonzero elements and expand the array to the
         // total array size.
-        if (!imageUniform.isActiveInAny(executable.getLinkedShaderStages()) ||
-            imageUniform.outerArrayOffset > 0)
+        if (imageUniform.activeShaders().none() || imageUniform.outerArrayOffset > 0)
         {
             ASSERT(gl::SamplerNameContainsNonZeroArrayElement(imageUniform.name));
             continue;
@@ -999,8 +998,7 @@ angle::Result ProgramExecutableVk::addTextureDescriptorSetDesc(
         // 2D arrays are split into multiple 1D arrays when generating LinkedUniforms. Since they
         // are flattened into one array, ignore the nonzero elements and expand the array to the
         // total array size.
-        if (!samplerUniform.isActiveInAny(executable.getLinkedShaderStages()) ||
-            samplerUniform.outerArrayOffset > 0)
+        if (samplerUniform.activeShaders().none() || samplerUniform.outerArrayOffset > 0)
         {
             ASSERT(gl::SamplerNameContainsNonZeroArrayElement(samplerUniform.name));
             continue;
@@ -1092,20 +1090,17 @@ void ProgramExecutableVk::initializeWriteDescriptorDesc(ContextVk *contextVk,
     // Update mShaderResourceWriteDescriptorDescBuilder
     mShaderResourceWriteDescriptorDescBuilder.reset();
     mShaderResourceWriteDescriptorDescBuilder.updateShaderBuffers(
-        linkedShaderStages, mVariableInfoMap, glExecutable.getUniformBlocks(),
-        getUniformBufferDescriptorType());
+        mVariableInfoMap, glExecutable.getUniformBlocks(), getUniformBufferDescriptorType());
     mShaderResourceWriteDescriptorDescBuilder.updateShaderBuffers(
-        linkedShaderStages, mVariableInfoMap, glExecutable.getShaderStorageBlocks(),
-        getStorageBufferDescriptorType());
+        mVariableInfoMap, glExecutable.getShaderStorageBlocks(), getStorageBufferDescriptorType());
     mShaderResourceWriteDescriptorDescBuilder.updateAtomicCounters(
         mVariableInfoMap, glExecutable.getAtomicCounterBuffers());
-    mShaderResourceWriteDescriptorDescBuilder.updateImages(linkedShaderStages, glExecutable,
-                                                           mVariableInfoMap);
+    mShaderResourceWriteDescriptorDescBuilder.updateImages(glExecutable, mVariableInfoMap);
 
     // Update mTextureWriteDescriptors
     mTextureWriteDescriptorDescBuilder.reset();
-    mTextureWriteDescriptorDescBuilder.updateExecutableActiveTextures(
-        linkedShaderStages, mVariableInfoMap, glExecutable);
+    mTextureWriteDescriptorDescBuilder.updateExecutableActiveTextures(mVariableInfoMap,
+                                                                      glExecutable);
 
     // Update mDefaultUniformWriteDescriptors
     mDefaultUniformWriteDescriptorDescBuilder.reset();
@@ -1404,7 +1399,7 @@ angle::Result ProgramExecutableVk::createPipelineLayout(
         const uint32_t arraySize        = GetInterfaceBlockArraySize(blocks, bufferIndex);
         bufferIndex += arraySize;
 
-        if (block.isActiveInAny(linkedShaderStages))
+        if (block.activeShaders().any())
         {
             numActiveUniformBufferDescriptors += arraySize;
         }

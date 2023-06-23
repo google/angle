@@ -40,10 +40,6 @@ struct ActiveVariable
         ASSERT(shaderType != ShaderType::InvalidEnum);
         return mActiveUseBits[shaderType];
     }
-    bool isActiveInAny(ShaderBitSet shaderTypes) const
-    {
-        return (mActiveUseBits & shaderTypes).any();
-    }
     const ShaderMap<uint32_t> &getIds() const { return mIds; }
     uint32_t getId(ShaderType shaderType) const { return mIds[shaderType]; }
     ShaderBitSet activeShaders() const { return mActiveUseBits; }

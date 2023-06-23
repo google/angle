@@ -5433,7 +5433,6 @@ void WriteDescriptorDescBuilder::updateWriteDesc(uint32_t bindingIndex,
 }
 
 void WriteDescriptorDescBuilder::updateShaderBuffers(
-    gl::ShaderBitSet shaderTypes,
     const ShaderInterfaceVariableInfoMap &variableInfoMap,
     const std::vector<gl::InterfaceBlock> &blocks,
     VkDescriptorType descriptorType)
@@ -5444,7 +5443,7 @@ void WriteDescriptorDescBuilder::updateShaderBuffers(
     {
         const gl::InterfaceBlock &block = blocks[blockIndex];
 
-        if (!block.isActiveInAny(shaderTypes))
+        if (block.activeShaders().none())
         {
             continue;
         }
@@ -5484,8 +5483,7 @@ void WriteDescriptorDescBuilder::updateAtomicCounters(
                     gl::IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFER_BINDINGS);
 }
 
-void WriteDescriptorDescBuilder::updateImages(gl::ShaderBitSet shaderTypes,
-                                              const gl::ProgramExecutable &executable,
+void WriteDescriptorDescBuilder::updateImages(const gl::ProgramExecutable &executable,
                                               const ShaderInterfaceVariableInfoMap &variableInfoMap)
 {
     const std::vector<gl::ImageBinding> &imageBindings = executable.getImageBindings();
@@ -5502,7 +5500,7 @@ void WriteDescriptorDescBuilder::updateImages(gl::ShaderBitSet shaderTypes,
         uint32_t uniformIndex                = executable.getUniformIndexFromImageIndex(imageIndex);
         const gl::LinkedUniform &imageUniform = uniforms[uniformIndex];
 
-        if (!imageUniform.isActiveInAny(shaderTypes))
+        if (imageUniform.activeShaders().none())
         {
             continue;
         }
@@ -5549,7 +5547,6 @@ void WriteDescriptorDescBuilder::updateInputAttachments(
 }
 
 void WriteDescriptorDescBuilder::updateExecutableActiveTextures(
-    gl::ShaderBitSet shaderTypes,
     const ShaderInterfaceVariableInfoMap &variableInfoMap,
     const gl::ProgramExecutable &executable)
 {
@@ -5562,7 +5559,7 @@ void WriteDescriptorDescBuilder::updateExecutableActiveTextures(
         uint32_t uniformIndex = executable.getUniformIndexFromSamplerIndex(samplerIndex);
         const gl::LinkedUniform &samplerUniform = uniforms[uniformIndex];
 
-        if (!samplerUniform.isActiveInAny(shaderTypes))
+        if (samplerUniform.activeShaders().none())
         {
             continue;
         }
@@ -5850,7 +5847,7 @@ void UpdatePreCacheActiveTextures(const gl::ProgramExecutable &executable,
         uint32_t uniformIndex = executable.getUniformIndexFromSamplerIndex(samplerIndex);
         const gl::LinkedUniform &samplerUniform = uniforms[uniformIndex];
 
-        if (!samplerUniform.isActiveInAny(executable.getLinkedShaderStages()))
+        if (samplerUniform.activeShaders().none())
         {
             continue;
         }
@@ -5926,7 +5923,7 @@ angle::Result DescriptorSetDescBuilder::updateFullActiveTextures(
         uint32_t uniformIndex = executable.getUniformIndexFromSamplerIndex(samplerIndex);
         const gl::LinkedUniform &samplerUniform = uniforms[uniformIndex];
 
-        if (!samplerUniform.isActiveInAny(executable.getLinkedShaderStages()))
+        if (samplerUniform.activeShaders().none())
         {
             continue;
         }

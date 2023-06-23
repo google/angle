@@ -1555,24 +1555,21 @@ class WriteDescriptorDescBuilder
         return mDescs[bindingIndex].descriptorInfoIndex;
     }
 
-    void updateShaderBuffers(gl::ShaderBitSet shaderTypes,
-                             const ShaderInterfaceVariableInfoMap &variableInfoMap,
+    void updateShaderBuffers(const ShaderInterfaceVariableInfoMap &variableInfoMap,
                              const std::vector<gl::InterfaceBlock> &blocks,
                              VkDescriptorType descriptorType);
 
     void updateAtomicCounters(const ShaderInterfaceVariableInfoMap &variableInfoMap,
                               const std::vector<gl::AtomicCounterBuffer> &atomicCounterBuffers);
 
-    void updateImages(gl::ShaderBitSet shaderTypes,
-                      const gl::ProgramExecutable &executable,
+    void updateImages(const gl::ProgramExecutable &executable,
                       const ShaderInterfaceVariableInfoMap &variableInfoMap);
 
     void updateInputAttachments(const gl::ProgramExecutable &executable,
                                 const ShaderInterfaceVariableInfoMap &variableInfoMap,
                                 FramebufferVk *framebufferVk);
 
-    void updateExecutableActiveTextures(gl::ShaderBitSet shaderTypes,
-                                        const ShaderInterfaceVariableInfoMap &variableInfoMap,
+    void updateExecutableActiveTextures(const ShaderInterfaceVariableInfoMap &variableInfoMap,
                                         const gl::ProgramExecutable &executable);
 
     void updateDefaultUniform(gl::ShaderBitSet shaderTypes,
