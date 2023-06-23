@@ -1461,7 +1461,7 @@ angle::Result Renderer11::finish(Context11 *context11)
         if (result == S_FALSE)
         {
             // Keep polling, but allow other threads to do something useful first
-            ScheduleYield();
+            std::this_thread::yield();
         }
 
         // Attempt is incremented before checking if we should test for device loss so that device
