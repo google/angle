@@ -1229,6 +1229,20 @@ struct FeaturesVk : FeatureSetBase
         &members, "http://anglebug.com/8215"
     };
 
+    FeatureInfo supportsPortabilityEnumeration = {
+        "supportsPortabilityEnumeration",
+        FeatureCategory::VulkanFeatures,
+        "Vulkan supports VK_KHR_portability_enumeration extension",
+        &members, "http://anglebug.com/8229"
+    };
+
+    FeatureInfo enablePortabilityEnumeration = {
+        "enablePortabilityEnumeration",
+        FeatureCategory::VulkanWorkarounds,
+        "Enable use of VK_KHR_portability_enumeration extension",
+        &members, "http://anglebug.com/8229"
+    };
+
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

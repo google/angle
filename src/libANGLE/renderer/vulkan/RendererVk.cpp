@@ -1610,6 +1610,15 @@ angle::Result RendererVk::enableInstanceExtensions(
             ExtensionFound(VK_KHR_EXTERNAL_SEMAPHORE_CAPABILITIES_EXTENSION_NAME,
                            instanceExtensionNames));
 
+    // On macOS, there is no native Vulkan driver, so we need to enable the
+    // portability enumeration extension to allow use of MoltenVK.
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, supportsPortabilityEnumeration,
+        ExtensionFound(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME, instanceExtensionNames));
+
+    ANGLE_FEATURE_CONDITION(&mFeatures, enablePortabilityEnumeration,
+                            mFeatures.supportsPortabilityEnumeration.enabled && IsApple());
+
     // Enable extensions that could be used
     if (displayVk->isUsingSwapchain())
     {
@@ -1672,6 +1681,11 @@ angle::Result RendererVk::enableInstanceExtensions(
             mEnabledInstanceExtensions.push_back(
                 VK_KHR_EXTERNAL_SEMAPHORE_CAPABILITIES_EXTENSION_NAME);
         }
+    }
+
+    if (mFeatures.enablePortabilityEnumeration.enabled)
+    {
+        mEnabledInstanceExtensions.push_back(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME);
     }
 
     // Verify the required extensions are in the extension names set. Fail if not.
@@ -1795,6 +1809,13 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
 
     instanceInfo.enabledLayerCount   = static_cast<uint32_t>(enabledInstanceLayerNames.size());
     instanceInfo.ppEnabledLayerNames = enabledInstanceLayerNames.data();
+
+    // On macOS, there is no native Vulkan driver, so we need to enable the
+    // portability enumeration extension to allow use of MoltenVK.
+    if (mFeatures.enablePortabilityEnumeration.enabled)
+    {
+        instanceInfo.flags |= VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
+    }
 
     // http://anglebug.com/7050 - Shader validation caching is broken on Android
     VkValidationFeaturesEXT validationFeatures       = {};

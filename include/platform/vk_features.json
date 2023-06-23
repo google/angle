@@ -1328,6 +1328,22 @@
                 "Device needs VK_EXT_full_screen_exclusive explicitly disabled"
             ],
             "issue": "http://anglebug.com/8215"
+        },
+        {
+            "name": "supports_portability_enumeration",
+            "category": "Features",
+            "description": [
+                "Vulkan supports VK_KHR_portability_enumeration extension"
+            ],
+            "issue": "http://anglebug.com/8229"
+        },
+        {
+            "name": "enable_portability_enumeration",
+            "category": "Workarounds",
+            "description": [
+                "Enable use of VK_KHR_portability_enumeration extension"
+            ],
+            "issue": "http://anglebug.com/8229"
         }
     ]
 }
