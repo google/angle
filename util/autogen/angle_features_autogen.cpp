@@ -134,6 +134,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::EnableProgramBinaryForCapture, "enableProgramBinaryForCapture"},
     {Feature::EnableShaderSubstitution, "enableShaderSubstitution"},
     {Feature::EnableTimestampQueries, "enableTimestampQueries"},
+    {Feature::EnsureNonEmptyBufferIsBoundForDraw, "ensureNonEmptyBufferIsBoundForDraw"},
     {Feature::ExpandIntegerPowExpressions, "expandIntegerPowExpressions"},
     {Feature::ExplicitlyCastMediumpFloatTo16Bit, "explicitlyCastMediumpFloatTo16Bit"},
     {Feature::ExplicitlyEnablePerSampleShading, "explicitlyEnablePerSampleShading"},
