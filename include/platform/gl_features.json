@@ -715,6 +715,14 @@
                 "Rewrite vec/mat constructors to work around driver bugs"
             ],
             "issue": "http://crbug.com/1420130"
+        },
+        {
+            "name": "ensure_non_empty_buffer_is_bound_for_draw",
+            "category": "Features",
+            "description": [
+                "Apple OpenGL drivers crash when drawing with a zero-sized buffer bound using a non-zero divisor."
+            ],
+            "issue": "http://crbug.com/1456243"
         }
     ]
 }

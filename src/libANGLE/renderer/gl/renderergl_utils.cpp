@@ -2546,6 +2546,9 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
 
     // http://crbug.com/1420130
     ANGLE_FEATURE_CONDITION(features, scalarizeVecAndMatConstructorArgs, IsMali(functions));
+
+    // http://crbug.com/1456243
+    ANGLE_FEATURE_CONDITION(features, ensureNonEmptyBufferIsBoundForDraw, IsApple() || IsAndroid());
 }
 
 void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFeatures *features)

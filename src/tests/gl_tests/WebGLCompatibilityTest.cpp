@@ -6103,6 +6103,26 @@ TEST_P(WebGL2CompatibilityTest, TexImageSyncWithIncompleteFramebufferBug)
     glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, 8, 8, 0, GL_RED_EXT, GL_UNSIGNED_BYTE, nullptr);
 }
 
+// Test for a mishandling of instanced vertex attributes with zero-sized buffers bound on Apple
+// OpenGL drivers.
+TEST_P(WebGL2CompatibilityTest, DrawWithZeroSizedBuffer)
+{
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), essl3_shaders::fs::Red());
+    glUseProgram(program);
+
+    GLBuffer buffer;
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+
+    GLint posLocation = glGetAttribLocation(program, essl3_shaders::PositionAttrib());
+    glEnableVertexAttribArray(posLocation);
+
+    glVertexAttribDivisor(posLocation, 1);
+    glVertexAttribPointer(posLocation, 1, GL_UNSIGNED_BYTE, GL_FALSE, 9,
+                          reinterpret_cast<void *>(0x41424344));
+
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+}
+
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(WebGLCompatibilityTest);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(WebGL2CompatibilityTest);
