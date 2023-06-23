@@ -106,8 +106,6 @@
           'x86-64',
         ],
         'test_suites': {
-          'gtest_tests': 'swangle_gtests',
-          'isolated_scripts': 'swangle_restricted_trace_gold_isolated_scripts',
         },
       },
       'linux-exp-swiftshader-asan': {
@@ -120,7 +118,6 @@
           'x86-64',
         ],
         'test_suites': {
-          'gtest_tests': 'swangle_slow_gtests',
         },
       },
       'linux-exp-swiftshader-tsan': {
@@ -133,7 +130,6 @@
           'x86-64',
         ],
         'test_suites': {
-          'gtest_tests': 'swangle_slow_flaky_gtests',
         },
       },
       'linux-intel': {
@@ -181,7 +177,7 @@
         'mixins': [
           'gpu-swarming-pool',
           'no_gpu',
-          'linux-bionic',
+          'linux-jammy',
           'timeout_15m',
           'x86-64',
         ],
@@ -195,7 +191,7 @@
         'mixins': [
           'gpu-swarming-pool',
           'no_gpu',
-          'linux-bionic',
+          'linux-jammy',
           'timeout_15m',
           'x86-64',
         ],
@@ -208,7 +204,7 @@
         'mixins': [
           'gpu-swarming-pool',
           'no_gpu',
-          'linux-bionic',
+          'linux-jammy',
           'timeout_15m',
           'x86-64',
         ],
