@@ -962,7 +962,7 @@ void ComputePipelineCacheVkChunkKey(VkPhysicalDeviceProperties physicalDevicePro
     hashStream << std::hex << physicalDeviceProperties.deviceID;
 
     // Add chunkIndex to generate unique key for chunks.
-    hashStream << std::hex << chunkIndex;
+    hashStream << std::hex << static_cast<uint32_t>(chunkIndex);
 
     const std::string &hashString = hashStream.str();
     angle::base::SHA1HashBytes(reinterpret_cast<const unsigned char *>(hashString.c_str()),
