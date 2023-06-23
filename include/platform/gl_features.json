@@ -699,6 +699,14 @@
                 "Backend GL context supports EXT_shader_pixel_local_storage extension"
             ],
             "issue": "http://anglebug.com/7279"
+        },
+        {
+            "name": "ensure_non_empty_buffer_is_bound_for_draw",
+            "category": "Features",
+            "description": [
+                "Apple OpenGL drivers crash when drawing with a zero-sized buffer bound using a non-zero divisor."
+            ],
+            "issue": "http://crbug.com/1456243"
         }
     ]
 }

@@ -501,6 +501,12 @@ struct FeaturesGL : FeatureSetBase
         "supportsShaderPixelLocalStorageEXT", FeatureCategory::OpenGLFeatures,
         "Backend GL context supports EXT_shader_pixel_local_storage extension", &members,
         "http://anglebug.com/7279"};
+
+    FeatureInfo ensureNonEmptyBufferIsBoundForDraw = {
+        "ensureNonEmptyBufferIsBoundForDraw", FeatureCategory::OpenGLFeatures,
+        "Apple OpenGL drivers crash when drawing with a zero-sized buffer bound using a non-zero "
+        "divisor.",
+        &members, "http://crbug.com/1456243"};
 };
 
 inline FeaturesGL::FeaturesGL()  = default;
