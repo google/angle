@@ -1090,6 +1090,7 @@ Error Display::initialize()
 #endif
     }
 
+    mFrontendFeatures.reset();
     if (!mState.featuresAllDisabled)
     {
         initializeFrontendFeatures();
