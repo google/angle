@@ -76,6 +76,8 @@ class DisplayImpl : public EGLImplFactory, public angle::Subject
     DisplayImpl(const egl::DisplayState &state);
     ~DisplayImpl() override;
 
+    // Initializ the display implementation. If this fails, terminate will be called to release any
+    // partially-initialized resources.
     virtual egl::Error initialize(egl::Display *display) = 0;
     virtual void terminate()                             = 0;
     virtual egl::Error prepareForCall();
