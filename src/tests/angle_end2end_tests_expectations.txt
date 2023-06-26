@@ -1178,6 +1178,9 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 8124 D3D11 : PixelLocalStorageTest.TextureLevelsAndLayers/* = SKIP
 8125 MAC METAL : PixelLocalStorageTest.TextureLevelsAndLayers/* = SKIP
 
+// Skip device OOM tests for Linux/NVIDIA.
+8236 LINUX NVIDIA : VulkanImageTest.AllocateVMAImageWhenDeviceOOM/* = SKIP
+
 // Slow tests, should appear last in this file
 5076 : GLSLTest.VerifyMaxVertexUniformVectors* = TIMEOUT
 5076 : GLSLTest.VerifyMaxFragmentUniformVectors* = TIMEOUT
