@@ -100,7 +100,7 @@
   "third_party/VK-GL-CTS/src/external/vulkancts/modules/vulkan/protected_memory/CMakeLists.txt":
     "1738f389adb6a46eae4f560ccd3152a3",
   "third_party/VK-GL-CTS/src/external/vulkancts/modules/vulkan/query_pool/CMakeLists.txt":
-    "63c544581c8550678f8f30571fbf2619",
+    "c2dfb7fcd0ffc20f4c30eea92d985f97",
   "third_party/VK-GL-CTS/src/external/vulkancts/modules/vulkan/rasterization/CMakeLists.txt":
     "4816dc26f1286edf40c52e1daa03d06d",
   "third_party/VK-GL-CTS/src/external/vulkancts/modules/vulkan/ray_query/CMakeLists.txt":
