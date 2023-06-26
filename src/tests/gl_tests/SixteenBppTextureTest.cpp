@@ -677,13 +677,13 @@ void SixteenBppTextureDitheringTestES3::bandingTest(GLenum format,
 void SixteenBppTextureDitheringTestES3::bandingTestWithSwitch(GLenum format, Gradient gradient)
 {
     // GL_DITHER defaults to enabled
-    bandingTest(GL_RGB565, Gradient::GreenBlue, true);
+    bandingTest(format, gradient, true);
 
     glDisable(GL_DITHER);
-    bandingTest(GL_RGB565, Gradient::GreenBlue, false);
+    bandingTest(format, gradient, false);
 
     glEnable(GL_DITHER);
-    bandingTest(GL_RGB565, Gradient::GreenBlue, true);
+    bandingTest(format, gradient, true);
 }
 
 // Test dithering applied to RGBA4.
