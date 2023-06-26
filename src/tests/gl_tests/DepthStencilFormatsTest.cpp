@@ -448,7 +448,7 @@ TEST_P(DepthStencilFormatsTest, DepthStencilReadback_UShort)
 TEST_P(DepthStencilFormatsTest, DepthStencilReadback_UInt)
 {
     // http://anglebug.com/5269
-    ANGLE_SKIP_TEST_IF(IsOSX() && IsIntelUHD630Mobile() && IsDesktopOpenGL());
+    ANGLE_SKIP_TEST_IF(IsMac() && IsIntelUHD630Mobile() && IsDesktopOpenGL());
 
     GLuint fakeData[10]    = {0};
     ReadbackTestParam type = {
@@ -460,7 +460,7 @@ TEST_P(DepthStencilFormatsTest, DepthStencilReadback_UInt)
 TEST_P(DepthStencilFormatsTest, DepthStencilReadback_Float)
 {
     // http://anglebug.com/5269
-    ANGLE_SKIP_TEST_IF(IsOSX() && IsIntelUHD630Mobile() && IsDesktopOpenGL());
+    ANGLE_SKIP_TEST_IF(IsMac() && IsIntelUHD630Mobile() && IsDesktopOpenGL());
 
     GLuint fakeData[10]    = {0};
     ReadbackTestParam type = {GL_DEPTH_ATTACHMENT, GL_DEPTH_COMPONENT, GL_FLOAT, fakeData, 32, 0};
@@ -902,7 +902,7 @@ TEST_P(DepthStencilFormatsTestES3, DrawWithDepth16)
 // is a random value.
 TEST_P(DepthStencilFormatsTestES3, DrawWithLargeViewport)
 {
-    ANGLE_SKIP_TEST_IF(IsIntel() && (IsOSX() || IsWindows()));
+    ANGLE_SKIP_TEST_IF(IsIntel() && (IsMac() || IsWindows()));
 
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
 

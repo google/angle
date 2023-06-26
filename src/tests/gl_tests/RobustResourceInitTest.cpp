@@ -632,7 +632,7 @@ TEST_P(RobustResourceInitTest, ReuploadingClearsTexture)
     ANGLE_SKIP_TEST_IF(!hasGLExtension());
 
     // crbug.com/826576
-    ANGLE_SKIP_TEST_IF(IsOSX() && IsNVIDIA() && IsDesktopOpenGL());
+    ANGLE_SKIP_TEST_IF(IsMac() && IsNVIDIA() && IsDesktopOpenGL());
 
     // Put some data into the texture
     std::array<GLColor, kWidth * kHeight> data;
@@ -1401,7 +1401,7 @@ TEST_P(RobustResourceInitTestES3, BlitFramebufferOutOfBounds)
     ANGLE_SKIP_TEST_IF(!hasGLExtension());
 
     // http://anglebug.com/2408
-    ANGLE_SKIP_TEST_IF(IsOSX() && IsAMD());
+    ANGLE_SKIP_TEST_IF(IsMac() && IsAMD());
 
     // Initiate data to read framebuffer
     constexpr int size                = 8;
@@ -1645,7 +1645,7 @@ TEST_P(RobustResourceInitTestES3, MaskedStencilClearBuffer)
     ANGLE_SKIP_TEST_IF(!hasGLExtension());
 
     // http://anglebug.com/2408
-    ANGLE_SKIP_TEST_IF(IsOSX() && IsOpenGL() && (IsIntel() || IsNVIDIA()));
+    ANGLE_SKIP_TEST_IF(IsMac() && IsOpenGL() && (IsIntel() || IsNVIDIA()));
 
     ANGLE_SKIP_TEST_IF(IsLinux() && IsOpenGL());
 

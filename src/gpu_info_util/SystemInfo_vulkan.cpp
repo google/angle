@@ -20,25 +20,12 @@
 
 #include "common/angleutils.h"
 #include "common/debug.h"
+#include "common/platform_helpers.h"
 #include "common/system_utils.h"
 #include "common/vulkan/libvulkan_loader.h"
 
 namespace angle
 {
-namespace
-{
-// TODO: We have definitions of IsApple/IsIOS/IsMac/IsOSX/etc all over the
-// place. We need to centralize these and use them consistently.
-inline constexpr bool IsApple()
-{
-#if defined(ANGLE_PLATFORM_APPLE)
-    return true;
-#else
-    return false;
-#endif
-}
-}  // namespace
-
 class VulkanLibrary final : NonCopyable
 {
   public:

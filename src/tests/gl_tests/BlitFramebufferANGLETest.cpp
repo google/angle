@@ -1712,7 +1712,7 @@ class BlitFramebufferTestES31 : public BlitFramebufferTest
 TEST_P(BlitFramebufferTest, MultisampleDepth)
 {
     // TODO(oetuaho@nvidia.com): http://crbug.com/837717
-    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsOSX());
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsMac());
 
     GLRenderbuffer renderbuf;
     glBindRenderbuffer(GL_RENDERBUFFER, renderbuf.get());
@@ -1784,7 +1784,7 @@ TEST_P(BlitFramebufferTest, MultisampleDepth)
 TEST_P(BlitFramebufferTest, BlitMultisampleStencilToDefault)
 {
     // http://anglebug.com/3496
-    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsOSX());
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsMac());
 
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
@@ -2128,7 +2128,7 @@ TEST_P(BlitFramebufferTest, ScissoredMultisampleStencil)
 TEST_P(BlitFramebufferTest, NonZeroBaseSource)
 {
     // http://anglebug.com/5001
-    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsOSX());
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsMac());
 
     ANGLE_GL_PROGRAM(drawRed, essl3_shaders::vs::Simple(), essl3_shaders::fs::Red());
 
@@ -2220,7 +2220,7 @@ TEST_P(BlitFramebufferTest, NonZeroBaseDestination)
 TEST_P(BlitFramebufferTest, NonZeroBaseSourceStencil)
 {
     // http://anglebug.com/5001
-    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsOSX());
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsMac());
 
     ANGLE_GL_PROGRAM(drawRed, essl3_shaders::vs::Simple(), essl3_shaders::fs::Red());
 
@@ -2284,7 +2284,7 @@ TEST_P(BlitFramebufferTest, NonZeroBaseSourceStencil)
 TEST_P(BlitFramebufferTest, NonZeroBaseDestinationStencil)
 {
     // http://anglebug.com/5001
-    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsOSX());
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsMac());
 
     // http://anglebug.com/5003
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsWindows());
@@ -2355,7 +2355,7 @@ TEST_P(BlitFramebufferTest, NonZeroBaseDestinationStencilStretch)
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsWindows());
 
     // http://anglebug.com/5001
-    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsOSX());
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsMac());
 
     ANGLE_GL_PROGRAM(drawRed, essl3_shaders::vs::Simple(), essl3_shaders::fs::Red());
 

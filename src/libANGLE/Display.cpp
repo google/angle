@@ -22,7 +22,7 @@
 #include "common/android_util.h"
 #include "common/debug.h"
 #include "common/mathutil.h"
-#include "common/platform.h"
+#include "common/platform_helpers.h"
 #include "common/string_utils.h"
 #include "common/system_utils.h"
 #include "common/tls.h"
@@ -50,8 +50,6 @@
 #endif
 
 #if defined(ANGLE_ENABLE_D3D9) || defined(ANGLE_ENABLE_D3D11)
-#    include <versionhelpers.h>
-
 #    include "libANGLE/renderer/d3d/DisplayD3D.h"
 #endif
 
@@ -2119,12 +2117,8 @@ static ClientExtensions GenerateClientExtensions()
 #endif
 
 #if defined(ANGLE_ENABLE_D3D11)
-#    if defined(ANGLE_ENABLE_WINDOWS_UWP)
-    extensions.platformANGLED3D11ON12 = true;
-#    else
-    extensions.platformANGLED3D11ON12 = IsWindows10OrGreater();
-#    endif
-    extensions.platformANGLEDeviceId = true;
+    extensions.platformANGLED3D11ON12 = angle::IsWindows10OrLater();
+    extensions.platformANGLEDeviceId  = true;
 #endif
 
 #if defined(ANGLE_ENABLE_OPENGL)

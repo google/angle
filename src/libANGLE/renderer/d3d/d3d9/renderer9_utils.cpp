@@ -19,8 +19,6 @@
 #include "platform/PlatformMethods.h"
 #include "platform/autogen/FeaturesD3D_autogen.h"
 
-#include "third_party/systeminfo/SystemInfo.h"
-
 namespace rx
 {
 
@@ -691,7 +689,7 @@ void GenerateCaps(IDirect3D9 *d3d9,
             !(deviceCaps.TextureCaps & D3DPTEXTURECAPS_POW2) &&
             !(deviceCaps.TextureCaps & D3DPTEXTURECAPS_CUBEMAP_POW2) &&
             !(deviceCaps.TextureCaps & D3DPTEXTURECAPS_NONPOW2CONDITIONAL) &&
-            !(!isWindowsVistaOrGreater() && IsAMD(adapterId.VendorId));
+            !(!IsWindowsVistaOrLater() && IsAMD(adapterId.VendorId));
 
         // Disable depth texture support on AMD cards (See ANGLE issue 839)
         if (IsAMD(adapterId.VendorId))

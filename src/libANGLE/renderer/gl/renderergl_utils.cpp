@@ -2184,7 +2184,7 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
         GetSystemInfoVendorIDAndDeviceID(functions, &systemInfo, &vendor, &device);
 
     bool isAMD         = IsAMD(vendor);
-    bool isApple       = IsApple(vendor);
+    bool isApple       = IsAppleGPU(vendor);
     bool isIntel       = IsIntel(vendor);
     bool isNvidia      = IsNvidia(vendor);
     bool isQualcomm    = IsQualcomm(vendor);

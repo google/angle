@@ -12,7 +12,7 @@
 
 #include <gtest/gtest.h>
 
-#include "common/platform.h"
+#include "common/platform_helpers.h"
 
 namespace angle
 {
@@ -20,14 +20,7 @@ struct SystemInfo;
 struct PlatformParameters;
 
 // Operating systems
-bool IsAndroid();
-bool IsLinux();
-bool IsOSX();
-bool IsIOS();
 bool IsOzone();
-bool IsWindows();
-bool IsWindows7();
-bool IsFuchsia();
 
 // CPU architectures
 bool IsARM64();
@@ -46,7 +39,7 @@ bool IsNVIDIAShield();
 // GPU vendors.
 bool IsIntel();
 bool IsAMD();
-bool IsApple();
+bool IsAppleGPU();
 bool IsARM();
 bool IsNVIDIA();
 bool IsQualcomm();
