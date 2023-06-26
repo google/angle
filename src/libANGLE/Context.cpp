@@ -742,76 +742,76 @@ void Context::initializeDefaultResources()
     mAllDirtyBits.set();
     mAllExtendedDirtyBits.set();
 
-    mDrawDirtyObjects.set(State::DIRTY_OBJECT_ACTIVE_TEXTURES);
-    mDrawDirtyObjects.set(State::DIRTY_OBJECT_DRAW_FRAMEBUFFER);
-    mDrawDirtyObjects.set(State::DIRTY_OBJECT_VERTEX_ARRAY);
-    mDrawDirtyObjects.set(State::DIRTY_OBJECT_TEXTURES);
-    mDrawDirtyObjects.set(State::DIRTY_OBJECT_PROGRAM);
-    mDrawDirtyObjects.set(State::DIRTY_OBJECT_PROGRAM_PIPELINE_OBJECT);
-    mDrawDirtyObjects.set(State::DIRTY_OBJECT_SAMPLERS);
-    mDrawDirtyObjects.set(State::DIRTY_OBJECT_IMAGES);
+    mDrawDirtyObjects.set(state::DIRTY_OBJECT_ACTIVE_TEXTURES);
+    mDrawDirtyObjects.set(state::DIRTY_OBJECT_DRAW_FRAMEBUFFER);
+    mDrawDirtyObjects.set(state::DIRTY_OBJECT_VERTEX_ARRAY);
+    mDrawDirtyObjects.set(state::DIRTY_OBJECT_TEXTURES);
+    mDrawDirtyObjects.set(state::DIRTY_OBJECT_PROGRAM);
+    mDrawDirtyObjects.set(state::DIRTY_OBJECT_PROGRAM_PIPELINE_OBJECT);
+    mDrawDirtyObjects.set(state::DIRTY_OBJECT_SAMPLERS);
+    mDrawDirtyObjects.set(state::DIRTY_OBJECT_IMAGES);
 
-    mTexImageDirtyBits.set(State::DIRTY_BIT_UNPACK_STATE);
-    mTexImageDirtyBits.set(State::DIRTY_BIT_UNPACK_BUFFER_BINDING);
+    mTexImageDirtyBits.set(state::DIRTY_BIT_UNPACK_STATE);
+    mTexImageDirtyBits.set(state::DIRTY_BIT_UNPACK_BUFFER_BINDING);
     // No dirty objects.
 
     // Readpixels uses the pack state and read FBO
-    mReadPixelsDirtyBits.set(State::DIRTY_BIT_PACK_STATE);
-    mReadPixelsDirtyBits.set(State::DIRTY_BIT_PACK_BUFFER_BINDING);
-    mReadPixelsDirtyBits.set(State::DIRTY_BIT_READ_FRAMEBUFFER_BINDING);
-    mReadPixelsDirtyObjects.set(State::DIRTY_OBJECT_READ_FRAMEBUFFER);
+    mReadPixelsDirtyBits.set(state::DIRTY_BIT_PACK_STATE);
+    mReadPixelsDirtyBits.set(state::DIRTY_BIT_PACK_BUFFER_BINDING);
+    mReadPixelsDirtyBits.set(state::DIRTY_BIT_READ_FRAMEBUFFER_BINDING);
+    mReadPixelsDirtyObjects.set(state::DIRTY_OBJECT_READ_FRAMEBUFFER);
 
-    mClearDirtyBits.set(State::DIRTY_BIT_RASTERIZER_DISCARD_ENABLED);
-    mClearDirtyBits.set(State::DIRTY_BIT_SCISSOR_TEST_ENABLED);
-    mClearDirtyBits.set(State::DIRTY_BIT_SCISSOR);
-    mClearDirtyBits.set(State::DIRTY_BIT_VIEWPORT);
-    mClearDirtyBits.set(State::DIRTY_BIT_CLEAR_COLOR);
-    mClearDirtyBits.set(State::DIRTY_BIT_CLEAR_DEPTH);
-    mClearDirtyBits.set(State::DIRTY_BIT_CLEAR_STENCIL);
-    mClearDirtyBits.set(State::DIRTY_BIT_COLOR_MASK);
-    mClearDirtyBits.set(State::DIRTY_BIT_DEPTH_MASK);
-    mClearDirtyBits.set(State::DIRTY_BIT_STENCIL_WRITEMASK_FRONT);
-    mClearDirtyBits.set(State::DIRTY_BIT_STENCIL_WRITEMASK_BACK);
-    mClearDirtyBits.set(State::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING);
-    mClearDirtyObjects.set(State::DIRTY_OBJECT_DRAW_FRAMEBUFFER);
+    mClearDirtyBits.set(state::DIRTY_BIT_RASTERIZER_DISCARD_ENABLED);
+    mClearDirtyBits.set(state::DIRTY_BIT_SCISSOR_TEST_ENABLED);
+    mClearDirtyBits.set(state::DIRTY_BIT_SCISSOR);
+    mClearDirtyBits.set(state::DIRTY_BIT_VIEWPORT);
+    mClearDirtyBits.set(state::DIRTY_BIT_CLEAR_COLOR);
+    mClearDirtyBits.set(state::DIRTY_BIT_CLEAR_DEPTH);
+    mClearDirtyBits.set(state::DIRTY_BIT_CLEAR_STENCIL);
+    mClearDirtyBits.set(state::DIRTY_BIT_COLOR_MASK);
+    mClearDirtyBits.set(state::DIRTY_BIT_DEPTH_MASK);
+    mClearDirtyBits.set(state::DIRTY_BIT_STENCIL_WRITEMASK_FRONT);
+    mClearDirtyBits.set(state::DIRTY_BIT_STENCIL_WRITEMASK_BACK);
+    mClearDirtyBits.set(state::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING);
+    mClearDirtyObjects.set(state::DIRTY_OBJECT_DRAW_FRAMEBUFFER);
 
     // We sync the draw Framebuffer manually in prepareForClear to allow the clear calls to do
     // more custom handling for robust resource init.
 
-    mBlitDirtyBits.set(State::DIRTY_BIT_SCISSOR_TEST_ENABLED);
-    mBlitDirtyBits.set(State::DIRTY_BIT_SCISSOR);
-    mBlitDirtyBits.set(State::DIRTY_BIT_FRAMEBUFFER_SRGB_WRITE_CONTROL_MODE);
-    mBlitDirtyBits.set(State::DIRTY_BIT_READ_FRAMEBUFFER_BINDING);
-    mBlitDirtyBits.set(State::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING);
-    mBlitDirtyObjects.set(State::DIRTY_OBJECT_READ_FRAMEBUFFER);
-    mBlitDirtyObjects.set(State::DIRTY_OBJECT_DRAW_FRAMEBUFFER);
+    mBlitDirtyBits.set(state::DIRTY_BIT_SCISSOR_TEST_ENABLED);
+    mBlitDirtyBits.set(state::DIRTY_BIT_SCISSOR);
+    mBlitDirtyBits.set(state::DIRTY_BIT_FRAMEBUFFER_SRGB_WRITE_CONTROL_MODE);
+    mBlitDirtyBits.set(state::DIRTY_BIT_READ_FRAMEBUFFER_BINDING);
+    mBlitDirtyBits.set(state::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING);
+    mBlitDirtyObjects.set(state::DIRTY_OBJECT_READ_FRAMEBUFFER);
+    mBlitDirtyObjects.set(state::DIRTY_OBJECT_DRAW_FRAMEBUFFER);
 
-    mComputeDirtyBits.set(State::DIRTY_BIT_SHADER_STORAGE_BUFFER_BINDING);
-    mComputeDirtyBits.set(State::DIRTY_BIT_UNIFORM_BUFFER_BINDINGS);
-    mComputeDirtyBits.set(State::DIRTY_BIT_ATOMIC_COUNTER_BUFFER_BINDING);
-    mComputeDirtyBits.set(State::DIRTY_BIT_PROGRAM_BINDING);
-    mComputeDirtyBits.set(State::DIRTY_BIT_PROGRAM_EXECUTABLE);
-    mComputeDirtyBits.set(State::DIRTY_BIT_TEXTURE_BINDINGS);
-    mComputeDirtyBits.set(State::DIRTY_BIT_SAMPLER_BINDINGS);
-    mComputeDirtyBits.set(State::DIRTY_BIT_IMAGE_BINDINGS);
-    mComputeDirtyBits.set(State::DIRTY_BIT_DISPATCH_INDIRECT_BUFFER_BINDING);
-    mComputeDirtyObjects.set(State::DIRTY_OBJECT_ACTIVE_TEXTURES);
-    mComputeDirtyObjects.set(State::DIRTY_OBJECT_TEXTURES);
-    mComputeDirtyObjects.set(State::DIRTY_OBJECT_PROGRAM);
-    mComputeDirtyObjects.set(State::DIRTY_OBJECT_PROGRAM_PIPELINE_OBJECT);
-    mComputeDirtyObjects.set(State::DIRTY_OBJECT_IMAGES);
-    mComputeDirtyObjects.set(State::DIRTY_OBJECT_SAMPLERS);
+    mComputeDirtyBits.set(state::DIRTY_BIT_SHADER_STORAGE_BUFFER_BINDING);
+    mComputeDirtyBits.set(state::DIRTY_BIT_UNIFORM_BUFFER_BINDINGS);
+    mComputeDirtyBits.set(state::DIRTY_BIT_ATOMIC_COUNTER_BUFFER_BINDING);
+    mComputeDirtyBits.set(state::DIRTY_BIT_PROGRAM_BINDING);
+    mComputeDirtyBits.set(state::DIRTY_BIT_PROGRAM_EXECUTABLE);
+    mComputeDirtyBits.set(state::DIRTY_BIT_TEXTURE_BINDINGS);
+    mComputeDirtyBits.set(state::DIRTY_BIT_SAMPLER_BINDINGS);
+    mComputeDirtyBits.set(state::DIRTY_BIT_IMAGE_BINDINGS);
+    mComputeDirtyBits.set(state::DIRTY_BIT_DISPATCH_INDIRECT_BUFFER_BINDING);
+    mComputeDirtyObjects.set(state::DIRTY_OBJECT_ACTIVE_TEXTURES);
+    mComputeDirtyObjects.set(state::DIRTY_OBJECT_TEXTURES);
+    mComputeDirtyObjects.set(state::DIRTY_OBJECT_PROGRAM);
+    mComputeDirtyObjects.set(state::DIRTY_OBJECT_PROGRAM_PIPELINE_OBJECT);
+    mComputeDirtyObjects.set(state::DIRTY_OBJECT_IMAGES);
+    mComputeDirtyObjects.set(state::DIRTY_OBJECT_SAMPLERS);
 
-    mCopyImageDirtyBits.set(State::DIRTY_BIT_READ_FRAMEBUFFER_BINDING);
-    mCopyImageDirtyObjects.set(State::DIRTY_OBJECT_READ_FRAMEBUFFER);
+    mCopyImageDirtyBits.set(state::DIRTY_BIT_READ_FRAMEBUFFER_BINDING);
+    mCopyImageDirtyObjects.set(state::DIRTY_OBJECT_READ_FRAMEBUFFER);
 
-    mReadInvalidateDirtyBits.set(State::DIRTY_BIT_READ_FRAMEBUFFER_BINDING);
-    mDrawInvalidateDirtyBits.set(State::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING);
+    mReadInvalidateDirtyBits.set(state::DIRTY_BIT_READ_FRAMEBUFFER_BINDING);
+    mDrawInvalidateDirtyBits.set(state::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING);
 
     // The implementation's internal load/store programs for EXT_shader_pixel_pixel_local_storage
     // only need the draw framebuffer to be synced. The remaining state is managed internally.
-    mPixelLocalStorageEXTEnableDisableDirtyBits.set(State::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING);
-    mPixelLocalStorageEXTEnableDisableDirtyObjects.set(State::DIRTY_OBJECT_DRAW_FRAMEBUFFER);
+    mPixelLocalStorageEXTEnableDisableDirtyBits.set(state::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING);
+    mPixelLocalStorageEXTEnableDisableDirtyObjects.set(state::DIRTY_OBJECT_DRAW_FRAMEBUFFER);
 
     mOverlay.init();
 }
@@ -4569,16 +4569,16 @@ void Context::updateCaps()
     // Reinitialize some dirty bits that depend on extensions.
     if (mState.isRobustResourceInitEnabled())
     {
-        mDrawDirtyObjects.set(State::DIRTY_OBJECT_DRAW_ATTACHMENTS);
-        mDrawDirtyObjects.set(State::DIRTY_OBJECT_TEXTURES_INIT);
-        mDrawDirtyObjects.set(State::DIRTY_OBJECT_IMAGES_INIT);
-        mBlitDirtyObjects.set(State::DIRTY_OBJECT_DRAW_ATTACHMENTS);
-        mBlitDirtyObjects.set(State::DIRTY_OBJECT_READ_ATTACHMENTS);
-        mComputeDirtyObjects.set(State::DIRTY_OBJECT_TEXTURES_INIT);
-        mComputeDirtyObjects.set(State::DIRTY_OBJECT_IMAGES_INIT);
-        mReadPixelsDirtyObjects.set(State::DIRTY_OBJECT_READ_ATTACHMENTS);
-        mCopyImageDirtyBits.set(State::DIRTY_BIT_READ_FRAMEBUFFER_BINDING);
-        mCopyImageDirtyObjects.set(State::DIRTY_OBJECT_READ_ATTACHMENTS);
+        mDrawDirtyObjects.set(state::DIRTY_OBJECT_DRAW_ATTACHMENTS);
+        mDrawDirtyObjects.set(state::DIRTY_OBJECT_TEXTURES_INIT);
+        mDrawDirtyObjects.set(state::DIRTY_OBJECT_IMAGES_INIT);
+        mBlitDirtyObjects.set(state::DIRTY_OBJECT_DRAW_ATTACHMENTS);
+        mBlitDirtyObjects.set(state::DIRTY_OBJECT_READ_ATTACHMENTS);
+        mComputeDirtyObjects.set(state::DIRTY_OBJECT_TEXTURES_INIT);
+        mComputeDirtyObjects.set(state::DIRTY_OBJECT_IMAGES_INIT);
+        mReadPixelsDirtyObjects.set(state::DIRTY_OBJECT_READ_ATTACHMENTS);
+        mCopyImageDirtyBits.set(state::DIRTY_BIT_READ_FRAMEBUFFER_BINDING);
+        mCopyImageDirtyObjects.set(state::DIRTY_OBJECT_READ_ATTACHMENTS);
     }
 
     // We need to validate buffer bounds if we are in a WebGL or robust access context and the
@@ -4655,18 +4655,18 @@ angle::Result Context::prepareForInvalidate(GLenum target)
         effectiveTarget = GL_DRAW_FRAMEBUFFER;
     }
     ANGLE_TRY(mState.syncDirtyObject(this, effectiveTarget));
-    const State::DirtyBits &dirtyBits                 = effectiveTarget == GL_READ_FRAMEBUFFER
+    const state::DirtyBits &dirtyBits                 = effectiveTarget == GL_READ_FRAMEBUFFER
                                                             ? mReadInvalidateDirtyBits
                                                             : mDrawInvalidateDirtyBits;
-    const State::ExtendedDirtyBits &extendedDirtyBits = effectiveTarget == GL_READ_FRAMEBUFFER
+    const state::ExtendedDirtyBits &extendedDirtyBits = effectiveTarget == GL_READ_FRAMEBUFFER
                                                             ? mReadInvalidateExtendedDirtyBits
                                                             : mDrawInvalidateExtendedDirtyBits;
     return syncDirtyBits(dirtyBits, extendedDirtyBits, Command::Invalidate);
 }
 
-angle::Result Context::syncState(const State::DirtyBits &bitMask,
-                                 const State::ExtendedDirtyBits &extendedBitMask,
-                                 const State::DirtyObjects &objectMask,
+angle::Result Context::syncState(const state::DirtyBits &bitMask,
+                                 const state::ExtendedDirtyBits &extendedBitMask,
+                                 const state::DirtyObjects &objectMask,
                                  Command command)
 {
     ANGLE_TRY(syncDirtyObjects(objectMask, command));
@@ -9997,7 +9997,7 @@ void Context::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMess
                 mState.onImageStateChange(this, index - kImage0SubjectIndex);
                 if (message == angle::SubjectMessage::ContentsChanged)
                 {
-                    mState.mDirtyBits.set(State::DirtyBitType::DIRTY_BIT_IMAGE_BINDINGS);
+                    mState.mDirtyBits.set(state::DirtyBitType::DIRTY_BIT_IMAGE_BINDINGS);
                 }
             }
             else if (index < kUniformBufferMaxSubjectIndex)

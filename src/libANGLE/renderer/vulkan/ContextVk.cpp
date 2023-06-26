@@ -1155,83 +1155,83 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
     // Additionally, state that is set dynamically doesn't invalidate the program pipeline.
     //
     mPipelineDirtyBitsMask.set();
-    mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_READ_FRAMEBUFFER_BINDING);
-    mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_CLEAR_COLOR);
-    mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_CLEAR_DEPTH);
-    mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_CLEAR_STENCIL);
-    mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_UNPACK_STATE);
-    mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_UNPACK_BUFFER_BINDING);
-    mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_PACK_STATE);
-    mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_PACK_BUFFER_BINDING);
-    mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_RENDERBUFFER_BINDING);
-    mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_DRAW_INDIRECT_BUFFER_BINDING);
-    mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_DISPATCH_INDIRECT_BUFFER_BINDING);
-    mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_SAMPLER_BINDINGS);
-    mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_TEXTURE_BINDINGS);
-    mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_IMAGE_BINDINGS);
-    mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_TRANSFORM_FEEDBACK_BINDING);
-    mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_UNIFORM_BUFFER_BINDINGS);
-    mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_SHADER_STORAGE_BUFFER_BINDING);
-    mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_ATOMIC_COUNTER_BUFFER_BINDING);
+    mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_READ_FRAMEBUFFER_BINDING);
+    mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_CLEAR_COLOR);
+    mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_CLEAR_DEPTH);
+    mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_CLEAR_STENCIL);
+    mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_UNPACK_STATE);
+    mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_UNPACK_BUFFER_BINDING);
+    mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_PACK_STATE);
+    mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_PACK_BUFFER_BINDING);
+    mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_RENDERBUFFER_BINDING);
+    mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_DRAW_INDIRECT_BUFFER_BINDING);
+    mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_DISPATCH_INDIRECT_BUFFER_BINDING);
+    mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_SAMPLER_BINDINGS);
+    mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_TEXTURE_BINDINGS);
+    mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_IMAGE_BINDINGS);
+    mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_TRANSFORM_FEEDBACK_BINDING);
+    mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_UNIFORM_BUFFER_BINDINGS);
+    mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_SHADER_STORAGE_BUFFER_BINDING);
+    mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_ATOMIC_COUNTER_BUFFER_BINDING);
 
     // Dynamic state in core Vulkan 1.0:
-    mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_VIEWPORT);
-    mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_SCISSOR_TEST_ENABLED);
-    mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_SCISSOR);
-    mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_LINE_WIDTH);
-    mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_POLYGON_OFFSET);
-    mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_BLEND_COLOR);
+    mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_VIEWPORT);
+    mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_SCISSOR_TEST_ENABLED);
+    mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_SCISSOR);
+    mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_LINE_WIDTH);
+    mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_POLYGON_OFFSET);
+    mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_BLEND_COLOR);
     if (!getFeatures().useNonZeroStencilWriteMaskStaticState.enabled)
     {
-        mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_STENCIL_WRITEMASK_FRONT);
-        mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_STENCIL_WRITEMASK_BACK);
+        mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_STENCIL_WRITEMASK_FRONT);
+        mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_STENCIL_WRITEMASK_BACK);
     }
 
     // Dynamic state in VK_EXT_extended_dynamic_state:
     if (mRenderer->useCullModeDynamicState())
     {
-        mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_CULL_FACE_ENABLED);
-        mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_CULL_FACE);
+        mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_CULL_FACE_ENABLED);
+        mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_CULL_FACE);
     }
     if (mRenderer->useFrontFaceDynamicState())
     {
-        mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_FRONT_FACE);
+        mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_FRONT_FACE);
     }
     if (mRenderer->useDepthTestEnableDynamicState())
     {
-        mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_DEPTH_TEST_ENABLED);
+        mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_DEPTH_TEST_ENABLED);
     }
     if (mRenderer->useDepthWriteEnableDynamicState())
     {
-        mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_DEPTH_MASK);
+        mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_DEPTH_MASK);
     }
     if (mRenderer->useDepthCompareOpDynamicState())
     {
-        mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_DEPTH_FUNC);
+        mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_DEPTH_FUNC);
     }
     if (mRenderer->useStencilTestEnableDynamicState())
     {
-        mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_STENCIL_TEST_ENABLED);
+        mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_STENCIL_TEST_ENABLED);
     }
     if (mRenderer->useStencilOpDynamicState())
     {
-        mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_STENCIL_FUNCS_FRONT);
-        mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_STENCIL_FUNCS_BACK);
-        mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_STENCIL_OPS_FRONT);
-        mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_STENCIL_OPS_BACK);
+        mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_STENCIL_FUNCS_FRONT);
+        mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_STENCIL_FUNCS_BACK);
+        mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_STENCIL_OPS_FRONT);
+        mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_STENCIL_OPS_BACK);
     }
     // Dynamic state in VK_EXT_extended_dynamic_state2:
     if (mRenderer->usePrimitiveRestartEnableDynamicState())
     {
-        mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_PRIMITIVE_RESTART_ENABLED);
+        mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_PRIMITIVE_RESTART_ENABLED);
     }
     if (mRenderer->useRasterizerDiscardEnableDynamicState())
     {
-        mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_RASTERIZER_DISCARD_ENABLED);
+        mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_RASTERIZER_DISCARD_ENABLED);
     }
     if (mRenderer->useDepthBiasEnableDynamicState())
     {
-        mPipelineDirtyBitsMask.reset(gl::State::DIRTY_BIT_POLYGON_OFFSET_FILL_ENABLED);
+        mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_POLYGON_OFFSET_FILL_ENABLED);
     }
 
     angle::PerfMonitorCounterGroup vulkanGroup;
@@ -5304,10 +5304,10 @@ angle::Result ContextVk::invalidateProgramExecutableHelper(const gl::Context *co
 }
 
 angle::Result ContextVk::syncState(const gl::Context *context,
-                                   const gl::State::DirtyBits &dirtyBits,
-                                   const gl::State::DirtyBits &bitMask,
-                                   const gl::State::ExtendedDirtyBits &extendedDirtyBits,
-                                   const gl::State::ExtendedDirtyBits &extendedBitMask,
+                                   const gl::state::DirtyBits &dirtyBits,
+                                   const gl::state::DirtyBits &bitMask,
+                                   const gl::state::ExtendedDirtyBits &extendedDirtyBits,
+                                   const gl::state::ExtendedDirtyBits &extendedBitMask,
                                    gl::Command command)
 {
     const gl::State &glState                       = context->getState();
@@ -5327,11 +5327,11 @@ angle::Result ContextVk::syncState(const gl::Context *context,
         size_t dirtyBit = *iter;
         switch (dirtyBit)
         {
-            case gl::State::DIRTY_BIT_SCISSOR_TEST_ENABLED:
-            case gl::State::DIRTY_BIT_SCISSOR:
+            case gl::state::DIRTY_BIT_SCISSOR_TEST_ENABLED:
+            case gl::state::DIRTY_BIT_SCISSOR:
                 updateScissor(glState);
                 break;
-            case gl::State::DIRTY_BIT_VIEWPORT:
+            case gl::state::DIRTY_BIT_VIEWPORT:
             {
                 FramebufferVk *framebufferVk = vk::GetImpl(glState.getDrawFramebuffer());
                 updateViewport(framebufferVk, glState.getViewport(), glState.getNearPlane(),
@@ -5340,69 +5340,69 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 updateScissor(glState);
                 break;
             }
-            case gl::State::DIRTY_BIT_DEPTH_RANGE:
+            case gl::state::DIRTY_BIT_DEPTH_RANGE:
                 updateDepthRange(glState.getNearPlane(), glState.getFarPlane());
                 break;
-            case gl::State::DIRTY_BIT_BLEND_ENABLED:
+            case gl::state::DIRTY_BIT_BLEND_ENABLED:
                 mGraphicsPipelineDesc->updateBlendEnabled(
                     &mGraphicsPipelineTransition, glState.getBlendStateExt().getEnabledMask());
                 updateDither();
                 break;
-            case gl::State::DIRTY_BIT_BLEND_COLOR:
+            case gl::state::DIRTY_BIT_BLEND_COLOR:
                 mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_BLEND_CONSTANTS);
                 break;
-            case gl::State::DIRTY_BIT_BLEND_FUNCS:
+            case gl::state::DIRTY_BIT_BLEND_FUNCS:
                 mGraphicsPipelineDesc->updateBlendFuncs(
                     &mGraphicsPipelineTransition, glState.getBlendStateExt(),
                     drawFramebufferVk->getState().getColorAttachmentsMask());
                 break;
-            case gl::State::DIRTY_BIT_BLEND_EQUATIONS:
+            case gl::state::DIRTY_BIT_BLEND_EQUATIONS:
                 mGraphicsPipelineDesc->updateBlendEquations(
                     &mGraphicsPipelineTransition, glState.getBlendStateExt(),
                     drawFramebufferVk->getState().getColorAttachmentsMask());
                 updateAdvancedBlendEquations(programExecutable);
                 break;
-            case gl::State::DIRTY_BIT_COLOR_MASK:
+            case gl::state::DIRTY_BIT_COLOR_MASK:
                 updateColorMasks();
                 break;
-            case gl::State::DIRTY_BIT_SAMPLE_ALPHA_TO_COVERAGE_ENABLED:
+            case gl::state::DIRTY_BIT_SAMPLE_ALPHA_TO_COVERAGE_ENABLED:
                 updateAlphaToCoverageWithRasterizationSamples(drawFramebufferVk->getSamples());
                 updateStencilWriteWorkaround();
 
-                static_assert(gl::State::DIRTY_BIT_PROGRAM_EXECUTABLE >
-                                  gl::State::DIRTY_BIT_SAMPLE_ALPHA_TO_COVERAGE_ENABLED,
+                static_assert(gl::state::DIRTY_BIT_PROGRAM_EXECUTABLE >
+                                  gl::state::DIRTY_BIT_SAMPLE_ALPHA_TO_COVERAGE_ENABLED,
                               "Dirty bit order");
-                iter.setLaterBit(gl::State::DIRTY_BIT_PROGRAM_EXECUTABLE);
+                iter.setLaterBit(gl::state::DIRTY_BIT_PROGRAM_EXECUTABLE);
                 break;
-            case gl::State::DIRTY_BIT_SAMPLE_COVERAGE_ENABLED:
+            case gl::state::DIRTY_BIT_SAMPLE_COVERAGE_ENABLED:
                 updateSampleMaskWithRasterizationSamples(drawFramebufferVk->getSamples());
                 break;
-            case gl::State::DIRTY_BIT_SAMPLE_COVERAGE:
+            case gl::state::DIRTY_BIT_SAMPLE_COVERAGE:
                 updateSampleMaskWithRasterizationSamples(drawFramebufferVk->getSamples());
                 break;
-            case gl::State::DIRTY_BIT_SAMPLE_MASK_ENABLED:
+            case gl::state::DIRTY_BIT_SAMPLE_MASK_ENABLED:
                 updateSampleMaskWithRasterizationSamples(drawFramebufferVk->getSamples());
                 break;
-            case gl::State::DIRTY_BIT_SAMPLE_MASK:
+            case gl::state::DIRTY_BIT_SAMPLE_MASK:
                 updateSampleMaskWithRasterizationSamples(drawFramebufferVk->getSamples());
                 break;
-            case gl::State::DIRTY_BIT_DEPTH_TEST_ENABLED:
+            case gl::state::DIRTY_BIT_DEPTH_TEST_ENABLED:
                 updateDepthTestEnabled(glState);
-                iter.setLaterBit(gl::State::DIRTY_BIT_DEPTH_MASK);
+                iter.setLaterBit(gl::state::DIRTY_BIT_DEPTH_MASK);
                 break;
-            case gl::State::DIRTY_BIT_DEPTH_FUNC:
+            case gl::state::DIRTY_BIT_DEPTH_FUNC:
                 updateDepthFunc(glState);
                 onDepthStencilAccessChange();
                 break;
-            case gl::State::DIRTY_BIT_DEPTH_MASK:
+            case gl::state::DIRTY_BIT_DEPTH_MASK:
                 updateDepthWriteEnabled(glState);
                 onDepthStencilAccessChange();
                 break;
-            case gl::State::DIRTY_BIT_STENCIL_TEST_ENABLED:
+            case gl::state::DIRTY_BIT_STENCIL_TEST_ENABLED:
                 updateStencilTestEnabled(glState);
                 onDepthStencilAccessChange();
                 break;
-            case gl::State::DIRTY_BIT_STENCIL_FUNCS_FRONT:
+            case gl::state::DIRTY_BIT_STENCIL_FUNCS_FRONT:
                 if (mRenderer->useStencilOpDynamicState())
                 {
                     mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_STENCIL_OP);
@@ -5416,7 +5416,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_STENCIL_REFERENCE);
                 onDepthStencilAccessChange();
                 break;
-            case gl::State::DIRTY_BIT_STENCIL_FUNCS_BACK:
+            case gl::state::DIRTY_BIT_STENCIL_FUNCS_BACK:
                 if (mRenderer->useStencilOpDynamicState())
                 {
                     mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_STENCIL_OP);
@@ -5430,7 +5430,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_STENCIL_REFERENCE);
                 onDepthStencilAccessChange();
                 break;
-            case gl::State::DIRTY_BIT_STENCIL_OPS_FRONT:
+            case gl::state::DIRTY_BIT_STENCIL_OPS_FRONT:
                 if (mRenderer->useStencilOpDynamicState())
                 {
                     mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_STENCIL_OP);
@@ -5442,7 +5442,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 }
                 onDepthStencilAccessChange();
                 break;
-            case gl::State::DIRTY_BIT_STENCIL_OPS_BACK:
+            case gl::state::DIRTY_BIT_STENCIL_OPS_BACK:
                 if (mRenderer->useStencilOpDynamicState())
                 {
                     mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_STENCIL_OP);
@@ -5454,13 +5454,13 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 }
                 onDepthStencilAccessChange();
                 break;
-            case gl::State::DIRTY_BIT_STENCIL_WRITEMASK_FRONT:
-            case gl::State::DIRTY_BIT_STENCIL_WRITEMASK_BACK:
+            case gl::state::DIRTY_BIT_STENCIL_WRITEMASK_FRONT:
+            case gl::state::DIRTY_BIT_STENCIL_WRITEMASK_BACK:
                 mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_STENCIL_WRITE_MASK);
                 onDepthStencilAccessChange();
                 break;
-            case gl::State::DIRTY_BIT_CULL_FACE_ENABLED:
-            case gl::State::DIRTY_BIT_CULL_FACE:
+            case gl::state::DIRTY_BIT_CULL_FACE_ENABLED:
+            case gl::state::DIRTY_BIT_CULL_FACE:
                 if (mRenderer->useCullModeDynamicState())
                 {
                     mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_CULL_MODE);
@@ -5471,10 +5471,10 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                                                           glState.getRasterizerState());
                 }
                 break;
-            case gl::State::DIRTY_BIT_FRONT_FACE:
+            case gl::state::DIRTY_BIT_FRONT_FACE:
                 updateFrontFace();
                 break;
-            case gl::State::DIRTY_BIT_POLYGON_OFFSET_FILL_ENABLED:
+            case gl::state::DIRTY_BIT_POLYGON_OFFSET_FILL_ENABLED:
                 if (mRenderer->useDepthBiasEnableDynamicState())
                 {
                     mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_DEPTH_BIAS_ENABLE);
@@ -5485,18 +5485,18 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                         &mGraphicsPipelineTransition, glState.isPolygonOffsetEnabled());
                 }
                 break;
-            case gl::State::DIRTY_BIT_POLYGON_OFFSET:
+            case gl::state::DIRTY_BIT_POLYGON_OFFSET:
                 mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_DEPTH_BIAS);
                 break;
-            case gl::State::DIRTY_BIT_RASTERIZER_DISCARD_ENABLED:
+            case gl::state::DIRTY_BIT_RASTERIZER_DISCARD_ENABLED:
                 updateRasterizerDiscardEnabled(
                     mState.isQueryActive(gl::QueryType::PrimitivesGenerated));
                 onColorAccessChange();
                 break;
-            case gl::State::DIRTY_BIT_LINE_WIDTH:
+            case gl::state::DIRTY_BIT_LINE_WIDTH:
                 mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_LINE_WIDTH);
                 break;
-            case gl::State::DIRTY_BIT_PRIMITIVE_RESTART_ENABLED:
+            case gl::state::DIRTY_BIT_PRIMITIVE_RESTART_ENABLED:
                 if (mRenderer->usePrimitiveRestartEnableDynamicState())
                 {
                     mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_PRIMITIVE_RESTART_ENABLE);
@@ -5515,40 +5515,40 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                     mGraphicsDirtyBits.set(DIRTY_BIT_INDEX_BUFFER);
                 }
                 break;
-            case gl::State::DIRTY_BIT_CLEAR_COLOR:
+            case gl::state::DIRTY_BIT_CLEAR_COLOR:
                 mClearColorValue.color.float32[0] = glState.getColorClearValue().red;
                 mClearColorValue.color.float32[1] = glState.getColorClearValue().green;
                 mClearColorValue.color.float32[2] = glState.getColorClearValue().blue;
                 mClearColorValue.color.float32[3] = glState.getColorClearValue().alpha;
                 break;
-            case gl::State::DIRTY_BIT_CLEAR_DEPTH:
+            case gl::state::DIRTY_BIT_CLEAR_DEPTH:
                 mClearDepthStencilValue.depthStencil.depth = glState.getDepthClearValue();
                 break;
-            case gl::State::DIRTY_BIT_CLEAR_STENCIL:
+            case gl::state::DIRTY_BIT_CLEAR_STENCIL:
                 mClearDepthStencilValue.depthStencil.stencil =
                     static_cast<uint32_t>(glState.getStencilClearValue());
                 break;
-            case gl::State::DIRTY_BIT_UNPACK_STATE:
+            case gl::state::DIRTY_BIT_UNPACK_STATE:
                 // This is a no-op, it's only important to use the right unpack state when we do
                 // setImage or setSubImage in TextureVk, which is plumbed through the frontend
                 // call
                 break;
-            case gl::State::DIRTY_BIT_UNPACK_BUFFER_BINDING:
+            case gl::state::DIRTY_BIT_UNPACK_BUFFER_BINDING:
                 break;
-            case gl::State::DIRTY_BIT_PACK_STATE:
+            case gl::state::DIRTY_BIT_PACK_STATE:
                 // This is a no-op, its only important to use the right pack state when we do
                 // call readPixels later on.
                 break;
-            case gl::State::DIRTY_BIT_PACK_BUFFER_BINDING:
+            case gl::state::DIRTY_BIT_PACK_BUFFER_BINDING:
                 break;
-            case gl::State::DIRTY_BIT_DITHER_ENABLED:
+            case gl::state::DIRTY_BIT_DITHER_ENABLED:
                 updateDither();
                 break;
-            case gl::State::DIRTY_BIT_READ_FRAMEBUFFER_BINDING:
+            case gl::state::DIRTY_BIT_READ_FRAMEBUFFER_BINDING:
                 updateFlipViewportReadFramebuffer(context->getState());
                 updateSurfaceRotationReadFramebuffer(glState, context->getCurrentReadSurface());
                 break;
-            case gl::State::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING:
+            case gl::state::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING:
             {
                 // FramebufferVk::syncState signals that we should start a new command buffer.
                 // But changing the binding can skip FramebufferVk::syncState if the Framebuffer
@@ -5614,83 +5614,83 @@ angle::Result ContextVk::syncState(const gl::Context *context,
 
                 break;
             }
-            case gl::State::DIRTY_BIT_RENDERBUFFER_BINDING:
+            case gl::state::DIRTY_BIT_RENDERBUFFER_BINDING:
                 break;
-            case gl::State::DIRTY_BIT_VERTEX_ARRAY_BINDING:
+            case gl::state::DIRTY_BIT_VERTEX_ARRAY_BINDING:
             {
                 invalidateDefaultAttributes(context->getStateCache().getActiveDefaultAttribsMask());
                 ANGLE_TRY(vertexArrayVk->updateActiveAttribInfo(this));
                 ANGLE_TRY(onIndexBufferChange(vertexArrayVk->getCurrentElementArrayBuffer()));
                 break;
             }
-            case gl::State::DIRTY_BIT_DRAW_INDIRECT_BUFFER_BINDING:
+            case gl::state::DIRTY_BIT_DRAW_INDIRECT_BUFFER_BINDING:
                 break;
-            case gl::State::DIRTY_BIT_DISPATCH_INDIRECT_BUFFER_BINDING:
+            case gl::state::DIRTY_BIT_DISPATCH_INDIRECT_BUFFER_BINDING:
                 break;
-            case gl::State::DIRTY_BIT_PROGRAM_BINDING:
+            case gl::state::DIRTY_BIT_PROGRAM_BINDING:
                 static_assert(
-                    gl::State::DIRTY_BIT_PROGRAM_EXECUTABLE > gl::State::DIRTY_BIT_PROGRAM_BINDING,
+                    gl::state::DIRTY_BIT_PROGRAM_EXECUTABLE > gl::state::DIRTY_BIT_PROGRAM_BINDING,
                     "Dirty bit order");
-                iter.setLaterBit(gl::State::DIRTY_BIT_PROGRAM_EXECUTABLE);
+                iter.setLaterBit(gl::state::DIRTY_BIT_PROGRAM_EXECUTABLE);
                 break;
-            case gl::State::DIRTY_BIT_PROGRAM_EXECUTABLE:
+            case gl::state::DIRTY_BIT_PROGRAM_EXECUTABLE:
             {
                 ASSERT(programExecutable);
                 invalidateCurrentDefaultUniforms();
                 updateAdvancedBlendEquations(programExecutable);
                 getExecutable()->onProgramBind(*programExecutable);
                 static_assert(
-                    gl::State::DIRTY_BIT_TEXTURE_BINDINGS > gl::State::DIRTY_BIT_PROGRAM_EXECUTABLE,
+                    gl::state::DIRTY_BIT_TEXTURE_BINDINGS > gl::state::DIRTY_BIT_PROGRAM_EXECUTABLE,
                     "Dirty bit order");
-                iter.setLaterBit(gl::State::DIRTY_BIT_TEXTURE_BINDINGS);
+                iter.setLaterBit(gl::state::DIRTY_BIT_TEXTURE_BINDINGS);
                 ANGLE_TRY(invalidateCurrentShaderResources(command));
                 invalidateDriverUniforms();
                 ANGLE_TRY(invalidateProgramExecutableHelper(context));
 
                 static_assert(
-                    gl::State::DIRTY_BIT_SAMPLE_SHADING > gl::State::DIRTY_BIT_PROGRAM_EXECUTABLE,
+                    gl::state::DIRTY_BIT_SAMPLE_SHADING > gl::state::DIRTY_BIT_PROGRAM_EXECUTABLE,
                     "Dirty bit order");
                 if (getFeatures().explicitlyEnablePerSampleShading.enabled)
                 {
-                    iter.setLaterBit(gl::State::DIRTY_BIT_SAMPLE_SHADING);
+                    iter.setLaterBit(gl::state::DIRTY_BIT_SAMPLE_SHADING);
                 }
 
                 break;
             }
-            case gl::State::DIRTY_BIT_SAMPLER_BINDINGS:
+            case gl::state::DIRTY_BIT_SAMPLER_BINDINGS:
             {
                 static_assert(
-                    gl::State::DIRTY_BIT_TEXTURE_BINDINGS > gl::State::DIRTY_BIT_SAMPLER_BINDINGS,
+                    gl::state::DIRTY_BIT_TEXTURE_BINDINGS > gl::state::DIRTY_BIT_SAMPLER_BINDINGS,
                     "Dirty bit order");
-                iter.setLaterBit(gl::State::DIRTY_BIT_TEXTURE_BINDINGS);
+                iter.setLaterBit(gl::state::DIRTY_BIT_TEXTURE_BINDINGS);
                 break;
             }
-            case gl::State::DIRTY_BIT_TEXTURE_BINDINGS:
+            case gl::state::DIRTY_BIT_TEXTURE_BINDINGS:
                 ANGLE_TRY(invalidateCurrentTextures(context, command));
                 break;
-            case gl::State::DIRTY_BIT_TRANSFORM_FEEDBACK_BINDING:
+            case gl::state::DIRTY_BIT_TRANSFORM_FEEDBACK_BINDING:
                 // Nothing to do.
                 break;
-            case gl::State::DIRTY_BIT_IMAGE_BINDINGS:
-                static_assert(gl::State::DIRTY_BIT_ATOMIC_COUNTER_BUFFER_BINDING >
-                                  gl::State::DIRTY_BIT_IMAGE_BINDINGS,
+            case gl::state::DIRTY_BIT_IMAGE_BINDINGS:
+                static_assert(gl::state::DIRTY_BIT_ATOMIC_COUNTER_BUFFER_BINDING >
+                                  gl::state::DIRTY_BIT_IMAGE_BINDINGS,
                               "Dirty bit order");
-                iter.setLaterBit(gl::State::DIRTY_BIT_ATOMIC_COUNTER_BUFFER_BINDING);
+                iter.setLaterBit(gl::state::DIRTY_BIT_ATOMIC_COUNTER_BUFFER_BINDING);
                 break;
-            case gl::State::DIRTY_BIT_SHADER_STORAGE_BUFFER_BINDING:
-                static_assert(gl::State::DIRTY_BIT_ATOMIC_COUNTER_BUFFER_BINDING >
-                                  gl::State::DIRTY_BIT_SHADER_STORAGE_BUFFER_BINDING,
+            case gl::state::DIRTY_BIT_SHADER_STORAGE_BUFFER_BINDING:
+                static_assert(gl::state::DIRTY_BIT_ATOMIC_COUNTER_BUFFER_BINDING >
+                                  gl::state::DIRTY_BIT_SHADER_STORAGE_BUFFER_BINDING,
                               "Dirty bit order");
-                iter.setLaterBit(gl::State::DIRTY_BIT_ATOMIC_COUNTER_BUFFER_BINDING);
+                iter.setLaterBit(gl::state::DIRTY_BIT_ATOMIC_COUNTER_BUFFER_BINDING);
                 break;
-            case gl::State::DIRTY_BIT_UNIFORM_BUFFER_BINDINGS:
+            case gl::state::DIRTY_BIT_UNIFORM_BUFFER_BINDINGS:
                 ANGLE_TRY(invalidateCurrentShaderUniformBuffers(command));
                 break;
-            case gl::State::DIRTY_BIT_ATOMIC_COUNTER_BUFFER_BINDING:
+            case gl::state::DIRTY_BIT_ATOMIC_COUNTER_BUFFER_BINDING:
                 ANGLE_TRY(invalidateCurrentShaderResources(command));
                 invalidateDriverUniforms();
                 break;
-            case gl::State::DIRTY_BIT_MULTISAMPLING:
+            case gl::state::DIRTY_BIT_MULTISAMPLING:
                 // When disabled, this should configure the pipeline to render as if single-sampled,
                 // and write the results to all samples of a pixel regardless of coverage. See
                 // EXT_multisample_compatibility.  This is not possible in Vulkan without some
@@ -5699,9 +5699,9 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 // Potentially, the GLES1 renderer can switch rendering between two images and blit
                 // from one to the other when the mode changes.  Then this extension wouldn't need
                 // to be exposed.
-                iter.setLaterBit(gl::State::DIRTY_BIT_SAMPLE_ALPHA_TO_ONE);
+                iter.setLaterBit(gl::state::DIRTY_BIT_SAMPLE_ALPHA_TO_ONE);
                 break;
-            case gl::State::DIRTY_BIT_SAMPLE_ALPHA_TO_ONE:
+            case gl::state::DIRTY_BIT_SAMPLE_ALPHA_TO_ONE:
                 // This is part of EXT_multisample_compatibility, and requires the alphaToOne Vulkan
                 // feature.
                 // http://anglebug.com/7657
@@ -5709,21 +5709,21 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                     &mGraphicsPipelineTransition,
                     glState.isMultisamplingEnabled() && glState.isSampleAlphaToOneEnabled());
                 break;
-            case gl::State::DIRTY_BIT_SAMPLE_SHADING:
+            case gl::state::DIRTY_BIT_SAMPLE_SHADING:
                 updateSampleShadingWithRasterizationSamples(drawFramebufferVk->getSamples());
                 break;
-            case gl::State::DIRTY_BIT_COVERAGE_MODULATION:
+            case gl::state::DIRTY_BIT_COVERAGE_MODULATION:
                 break;
-            case gl::State::DIRTY_BIT_FRAMEBUFFER_SRGB_WRITE_CONTROL_MODE:
+            case gl::state::DIRTY_BIT_FRAMEBUFFER_SRGB_WRITE_CONTROL_MODE:
                 break;
-            case gl::State::DIRTY_BIT_CURRENT_VALUES:
+            case gl::state::DIRTY_BIT_CURRENT_VALUES:
             {
                 invalidateDefaultAttributes(glState.getAndResetDirtyCurrentValues());
                 break;
             }
-            case gl::State::DIRTY_BIT_PROVOKING_VERTEX:
+            case gl::state::DIRTY_BIT_PROVOKING_VERTEX:
                 break;
-            case gl::State::DIRTY_BIT_EXTENDED:
+            case gl::state::DIRTY_BIT_EXTENDED:
             {
                 for (auto extendedIter    = extendedDirtyBits.begin(),
                           extendedEndIter = extendedDirtyBits.end();
@@ -5732,7 +5732,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                     const size_t extendedDirtyBit = *extendedIter;
                     switch (extendedDirtyBit)
                     {
-                        case gl::State::EXTENDED_DIRTY_BIT_CLIP_CONTROL:
+                        case gl::state::EXTENDED_DIRTY_BIT_CLIP_CONTROL:
                             updateViewport(vk::GetImpl(glState.getDrawFramebuffer()),
                                            glState.getViewport(), glState.getNearPlane(),
                                            glState.getFarPlane());
@@ -5755,30 +5755,30 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                                 invalidateGraphicsDriverUniforms();
                             }
                             break;
-                        case gl::State::EXTENDED_DIRTY_BIT_CLIP_DISTANCES:
+                        case gl::state::EXTENDED_DIRTY_BIT_CLIP_DISTANCES:
                             invalidateGraphicsDriverUniforms();
                             break;
-                        case gl::State::EXTENDED_DIRTY_BIT_DEPTH_CLAMP_ENABLED:
+                        case gl::state::EXTENDED_DIRTY_BIT_DEPTH_CLAMP_ENABLED:
                             // TODO(https://anglebug.com/7713): Use EDS3
                             mGraphicsPipelineDesc->updateDepthClampEnabled(
                                 &mGraphicsPipelineTransition, glState.isDepthClampEnabled());
                             break;
-                        case gl::State::EXTENDED_DIRTY_BIT_MIPMAP_GENERATION_HINT:
+                        case gl::state::EXTENDED_DIRTY_BIT_MIPMAP_GENERATION_HINT:
                             break;
-                        case gl::State::EXTENDED_DIRTY_BIT_POLYGON_MODE:
+                        case gl::state::EXTENDED_DIRTY_BIT_POLYGON_MODE:
                             // TODO(https://anglebug.com/7713): Use EDS3
                             mGraphicsPipelineDesc->updatePolygonMode(&mGraphicsPipelineTransition,
                                                                      glState.getPolygonMode());
                             // When polygon mode is changed, depth bias might need to be toggled.
                             static_assert(
-                                gl::State::EXTENDED_DIRTY_BIT_POLYGON_OFFSET_LINE_ENABLED >
-                                    gl::State::EXTENDED_DIRTY_BIT_POLYGON_MODE,
+                                gl::state::EXTENDED_DIRTY_BIT_POLYGON_OFFSET_LINE_ENABLED >
+                                    gl::state::EXTENDED_DIRTY_BIT_POLYGON_MODE,
                                 "Dirty bit order");
                             extendedIter.setLaterBit(
-                                gl::State::EXTENDED_DIRTY_BIT_POLYGON_OFFSET_LINE_ENABLED);
+                                gl::state::EXTENDED_DIRTY_BIT_POLYGON_OFFSET_LINE_ENABLED);
                             break;
-                        case gl::State::EXTENDED_DIRTY_BIT_POLYGON_OFFSET_POINT_ENABLED:
-                        case gl::State::EXTENDED_DIRTY_BIT_POLYGON_OFFSET_LINE_ENABLED:
+                        case gl::state::EXTENDED_DIRTY_BIT_POLYGON_OFFSET_POINT_ENABLED:
+                        case gl::state::EXTENDED_DIRTY_BIT_POLYGON_OFFSET_LINE_ENABLED:
                             if (mRenderer->useDepthBiasEnableDynamicState())
                             {
                                 mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_DEPTH_BIAS_ENABLE);
@@ -5789,13 +5789,13 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                                     &mGraphicsPipelineTransition, glState.isPolygonOffsetEnabled());
                             }
                             break;
-                        case gl::State::EXTENDED_DIRTY_BIT_SHADER_DERIVATIVE_HINT:
+                        case gl::state::EXTENDED_DIRTY_BIT_SHADER_DERIVATIVE_HINT:
                             break;
-                        case gl::State::EXTENDED_DIRTY_BIT_LOGIC_OP_ENABLED:
+                        case gl::state::EXTENDED_DIRTY_BIT_LOGIC_OP_ENABLED:
                             mGraphicsPipelineDesc->updateLogicOpEnabled(
                                 &mGraphicsPipelineTransition, glState.isLogicOpEnabled());
                             break;
-                        case gl::State::EXTENDED_DIRTY_BIT_LOGIC_OP:
+                        case gl::state::EXTENDED_DIRTY_BIT_LOGIC_OP:
                             if (mRenderer->useLogicOpDynamicState())
                             {
                                 mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_LOGIC_OP);
@@ -5807,7 +5807,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                                     gl_vk::GetLogicOp(gl::ToGLenum(glState.getLogicOp())));
                             }
                             break;
-                        case gl::State::EXTENDED_DIRTY_BIT_SHADING_RATE:
+                        case gl::state::EXTENDED_DIRTY_BIT_SHADING_RATE:
                             if (getFeatures().supportsFragmentShadingRate.enabled)
                             {
                                 mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_FRAGMENT_SHADING_RATE);
@@ -5819,7 +5819,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 }
                 break;
             }
-            case gl::State::DIRTY_BIT_PATCH_VERTICES:
+            case gl::state::DIRTY_BIT_PATCH_VERTICES:
                 mGraphicsPipelineDesc->updatePatchVertices(&mGraphicsPipelineTransition,
                                                            glState.getPatchVertices());
                 break;

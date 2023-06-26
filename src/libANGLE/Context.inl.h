@@ -92,8 +92,8 @@ ANGLE_INLINE bool Context::noopMultiDraw(GLsizei drawcount) const
 
 ANGLE_INLINE angle::Result Context::syncAllDirtyBits(Command command)
 {
-    const State::DirtyBits &dirtyBits                 = mState.getDirtyBits();
-    const State::ExtendedDirtyBits &extendedDirtyBits = mState.getExtendedDirtyBits();
+    const state::DirtyBits &dirtyBits                 = mState.getDirtyBits();
+    const state::ExtendedDirtyBits &extendedDirtyBits = mState.getExtendedDirtyBits();
     ANGLE_TRY(mImplementation->syncState(this, dirtyBits, mAllDirtyBits, extendedDirtyBits,
                                          mAllExtendedDirtyBits, command));
     mState.clearDirtyBits();
@@ -101,12 +101,12 @@ ANGLE_INLINE angle::Result Context::syncAllDirtyBits(Command command)
     return angle::Result::Continue;
 }
 
-ANGLE_INLINE angle::Result Context::syncDirtyBits(const State::DirtyBits &bitMask,
-                                                  const State::ExtendedDirtyBits &extendedBitMask,
+ANGLE_INLINE angle::Result Context::syncDirtyBits(const state::DirtyBits &bitMask,
+                                                  const state::ExtendedDirtyBits &extendedBitMask,
                                                   Command command)
 {
-    const State::DirtyBits &dirtyBits = (mState.getDirtyBits() & bitMask);
-    const State::ExtendedDirtyBits &extendedDirtyBits =
+    const state::DirtyBits &dirtyBits = (mState.getDirtyBits() & bitMask);
+    const state::ExtendedDirtyBits &extendedDirtyBits =
         (mState.getExtendedDirtyBits() & extendedBitMask);
     ANGLE_TRY(mImplementation->syncState(this, dirtyBits, bitMask, extendedDirtyBits,
                                          extendedBitMask, command));
@@ -115,7 +115,7 @@ ANGLE_INLINE angle::Result Context::syncDirtyBits(const State::DirtyBits &bitMas
     return angle::Result::Continue;
 }
 
-ANGLE_INLINE angle::Result Context::syncDirtyObjects(const State::DirtyObjects &objectMask,
+ANGLE_INLINE angle::Result Context::syncDirtyObjects(const state::DirtyObjects &objectMask,
                                                      Command command)
 {
     return mState.syncDirtyObjects(this, objectMask, command);

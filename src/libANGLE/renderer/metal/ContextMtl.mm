@@ -1107,10 +1107,10 @@ angle::Result ContextMtl::popDebugGroup(const gl::Context *context)
 
 // State sync with dirty bits.
 angle::Result ContextMtl::syncState(const gl::Context *context,
-                                    const gl::State::DirtyBits &dirtyBits,
-                                    const gl::State::DirtyBits &bitMask,
-                                    const gl::State::ExtendedDirtyBits &extendedDirtyBits,
-                                    const gl::State::ExtendedDirtyBits &extendedBitMask,
+                                    const gl::state::DirtyBits &dirtyBits,
+                                    const gl::state::DirtyBits &bitMask,
+                                    const gl::state::ExtendedDirtyBits &extendedDirtyBits,
+                                    const gl::state::ExtendedDirtyBits &extendedBitMask,
                                     gl::Command command)
 {
     const gl::State &glState = context->getState();
@@ -1119,26 +1119,26 @@ angle::Result ContextMtl::syncState(const gl::Context *context,
     // bits: ENABLED, FUNCS, and EQUATIONS. Merge all three of them to the first one.
     // PS: these can not be statically initialized on some architectures as there is
     // no constuctor for DirtyBits that takes an int (which becomes BitSetArray<64>).
-    gl::State::DirtyBits checkBlendBitsMask;
-    checkBlendBitsMask.set(gl::State::DIRTY_BIT_BLEND_ENABLED);
-    checkBlendBitsMask.set(gl::State::DIRTY_BIT_BLEND_FUNCS);
-    checkBlendBitsMask.set(gl::State::DIRTY_BIT_BLEND_EQUATIONS);
-    gl::State::DirtyBits resetBlendBitsMask;
-    resetBlendBitsMask.set(gl::State::DIRTY_BIT_BLEND_FUNCS);
-    resetBlendBitsMask.set(gl::State::DIRTY_BIT_BLEND_EQUATIONS);
+    gl::state::DirtyBits checkBlendBitsMask;
+    checkBlendBitsMask.set(gl::state::DIRTY_BIT_BLEND_ENABLED);
+    checkBlendBitsMask.set(gl::state::DIRTY_BIT_BLEND_FUNCS);
+    checkBlendBitsMask.set(gl::state::DIRTY_BIT_BLEND_EQUATIONS);
+    gl::state::DirtyBits resetBlendBitsMask;
+    resetBlendBitsMask.set(gl::state::DIRTY_BIT_BLEND_FUNCS);
+    resetBlendBitsMask.set(gl::state::DIRTY_BIT_BLEND_EQUATIONS);
 
-    gl::State::DirtyBits mergedDirtyBits = gl::State::DirtyBits(dirtyBits) & ~resetBlendBitsMask;
-    mergedDirtyBits.set(gl::State::DIRTY_BIT_BLEND_ENABLED, (dirtyBits & checkBlendBitsMask).any());
+    gl::state::DirtyBits mergedDirtyBits = gl::state::DirtyBits(dirtyBits) & ~resetBlendBitsMask;
+    mergedDirtyBits.set(gl::state::DIRTY_BIT_BLEND_ENABLED, (dirtyBits & checkBlendBitsMask).any());
 
     for (size_t dirtyBit : mergedDirtyBits)
     {
         switch (dirtyBit)
         {
-            case gl::State::DIRTY_BIT_SCISSOR_TEST_ENABLED:
-            case gl::State::DIRTY_BIT_SCISSOR:
+            case gl::state::DIRTY_BIT_SCISSOR_TEST_ENABLED:
+            case gl::state::DIRTY_BIT_SCISSOR:
                 updateScissor(glState);
                 break;
-            case gl::State::DIRTY_BIT_VIEWPORT:
+            case gl::state::DIRTY_BIT_VIEWPORT:
             {
                 FramebufferMtl *framebufferMtl = mtl::GetImpl(glState.getDrawFramebuffer());
                 updateViewport(framebufferMtl, glState.getViewport(), glState.getNearPlane(),
@@ -1147,16 +1147,16 @@ angle::Result ContextMtl::syncState(const gl::Context *context,
                 updateScissor(glState);
                 break;
             }
-            case gl::State::DIRTY_BIT_DEPTH_RANGE:
+            case gl::state::DIRTY_BIT_DEPTH_RANGE:
                 updateDepthRange(glState.getNearPlane(), glState.getFarPlane());
                 break;
-            case gl::State::DIRTY_BIT_BLEND_COLOR:
+            case gl::state::DIRTY_BIT_BLEND_COLOR:
                 mDirtyBits.set(DIRTY_BIT_BLEND_COLOR);
                 break;
-            case gl::State::DIRTY_BIT_BLEND_ENABLED:
+            case gl::state::DIRTY_BIT_BLEND_ENABLED:
                 updateBlendDescArray(glState.getBlendStateExt());
                 break;
-            case gl::State::DIRTY_BIT_COLOR_MASK:
+            case gl::state::DIRTY_BIT_COLOR_MASK:
             {
                 const gl::BlendStateExt &blendStateExt = glState.getBlendStateExt();
                 size_t i                               = 0;
@@ -1173,7 +1173,7 @@ angle::Result ContextMtl::syncState(const gl::Context *context,
                 invalidateRenderPipeline();
                 break;
             }
-            case gl::State::DIRTY_BIT_SAMPLE_ALPHA_TO_COVERAGE_ENABLED:
+            case gl::state::DIRTY_BIT_SAMPLE_ALPHA_TO_COVERAGE_ENABLED:
                 if (getDisplay()->getFeatures().emulateAlphaToCoverage.enabled)
                 {
                     invalidateDriverUniforms();
@@ -1183,170 +1183,170 @@ angle::Result ContextMtl::syncState(const gl::Context *context,
                     invalidateRenderPipeline();
                 }
                 break;
-            case gl::State::DIRTY_BIT_SAMPLE_COVERAGE_ENABLED:
-            case gl::State::DIRTY_BIT_SAMPLE_COVERAGE:
+            case gl::state::DIRTY_BIT_SAMPLE_COVERAGE_ENABLED:
+            case gl::state::DIRTY_BIT_SAMPLE_COVERAGE:
                 invalidateDriverUniforms();
                 break;
-            case gl::State::DIRTY_BIT_SAMPLE_MASK_ENABLED:
+            case gl::state::DIRTY_BIT_SAMPLE_MASK_ENABLED:
                 // NOTE(hqle): 3.1 MSAA support
                 break;
-            case gl::State::DIRTY_BIT_SAMPLE_MASK:
+            case gl::state::DIRTY_BIT_SAMPLE_MASK:
                 // NOTE(hqle): 3.1 MSAA support
                 break;
-            case gl::State::DIRTY_BIT_DEPTH_TEST_ENABLED:
+            case gl::state::DIRTY_BIT_DEPTH_TEST_ENABLED:
                 mDepthStencilDesc.updateDepthTestEnabled(glState.getDepthStencilState());
                 mDirtyBits.set(DIRTY_BIT_DEPTH_STENCIL_DESC);
                 break;
-            case gl::State::DIRTY_BIT_DEPTH_FUNC:
+            case gl::state::DIRTY_BIT_DEPTH_FUNC:
                 mDepthStencilDesc.updateDepthCompareFunc(glState.getDepthStencilState());
                 mDirtyBits.set(DIRTY_BIT_DEPTH_STENCIL_DESC);
                 break;
-            case gl::State::DIRTY_BIT_DEPTH_MASK:
+            case gl::state::DIRTY_BIT_DEPTH_MASK:
                 mDepthStencilDesc.updateDepthWriteEnabled(glState.getDepthStencilState());
                 mDirtyBits.set(DIRTY_BIT_DEPTH_STENCIL_DESC);
                 break;
-            case gl::State::DIRTY_BIT_STENCIL_TEST_ENABLED:
+            case gl::state::DIRTY_BIT_STENCIL_TEST_ENABLED:
                 mDepthStencilDesc.updateStencilTestEnabled(glState.getDepthStencilState());
                 mDirtyBits.set(DIRTY_BIT_DEPTH_STENCIL_DESC);
                 break;
-            case gl::State::DIRTY_BIT_STENCIL_FUNCS_FRONT:
+            case gl::state::DIRTY_BIT_STENCIL_FUNCS_FRONT:
                 mDepthStencilDesc.updateStencilFrontFuncs(glState.getDepthStencilState());
                 mStencilRefFront = glState.getStencilRef();  // clamped on the frontend
                 mDirtyBits.set(DIRTY_BIT_DEPTH_STENCIL_DESC);
                 mDirtyBits.set(DIRTY_BIT_STENCIL_REF);
                 break;
-            case gl::State::DIRTY_BIT_STENCIL_FUNCS_BACK:
+            case gl::state::DIRTY_BIT_STENCIL_FUNCS_BACK:
                 mDepthStencilDesc.updateStencilBackFuncs(glState.getDepthStencilState());
                 mStencilRefBack = glState.getStencilBackRef();  // clamped on the frontend
                 mDirtyBits.set(DIRTY_BIT_DEPTH_STENCIL_DESC);
                 mDirtyBits.set(DIRTY_BIT_STENCIL_REF);
                 break;
-            case gl::State::DIRTY_BIT_STENCIL_OPS_FRONT:
+            case gl::state::DIRTY_BIT_STENCIL_OPS_FRONT:
                 mDepthStencilDesc.updateStencilFrontOps(glState.getDepthStencilState());
                 mDirtyBits.set(DIRTY_BIT_DEPTH_STENCIL_DESC);
                 break;
-            case gl::State::DIRTY_BIT_STENCIL_OPS_BACK:
+            case gl::state::DIRTY_BIT_STENCIL_OPS_BACK:
                 mDepthStencilDesc.updateStencilBackOps(glState.getDepthStencilState());
                 mDirtyBits.set(DIRTY_BIT_DEPTH_STENCIL_DESC);
                 break;
-            case gl::State::DIRTY_BIT_STENCIL_WRITEMASK_FRONT:
+            case gl::state::DIRTY_BIT_STENCIL_WRITEMASK_FRONT:
                 mDepthStencilDesc.updateStencilFrontWriteMask(glState.getDepthStencilState());
                 mDirtyBits.set(DIRTY_BIT_DEPTH_STENCIL_DESC);
                 break;
-            case gl::State::DIRTY_BIT_STENCIL_WRITEMASK_BACK:
+            case gl::state::DIRTY_BIT_STENCIL_WRITEMASK_BACK:
                 mDepthStencilDesc.updateStencilBackWriteMask(glState.getDepthStencilState());
                 mDirtyBits.set(DIRTY_BIT_DEPTH_STENCIL_DESC);
                 break;
-            case gl::State::DIRTY_BIT_CULL_FACE_ENABLED:
-            case gl::State::DIRTY_BIT_CULL_FACE:
+            case gl::state::DIRTY_BIT_CULL_FACE_ENABLED:
+            case gl::state::DIRTY_BIT_CULL_FACE:
                 updateCullMode(glState);
                 break;
-            case gl::State::DIRTY_BIT_FRONT_FACE:
+            case gl::state::DIRTY_BIT_FRONT_FACE:
                 updateFrontFace(glState);
                 break;
-            case gl::State::DIRTY_BIT_POLYGON_OFFSET_FILL_ENABLED:
-            case gl::State::DIRTY_BIT_POLYGON_OFFSET:
+            case gl::state::DIRTY_BIT_POLYGON_OFFSET_FILL_ENABLED:
+            case gl::state::DIRTY_BIT_POLYGON_OFFSET:
                 mDirtyBits.set(DIRTY_BIT_DEPTH_BIAS);
                 break;
-            case gl::State::DIRTY_BIT_RASTERIZER_DISCARD_ENABLED:
+            case gl::state::DIRTY_BIT_RASTERIZER_DISCARD_ENABLED:
                 mDirtyBits.set(DIRTY_BIT_RASTERIZER_DISCARD);
                 break;
-            case gl::State::DIRTY_BIT_LINE_WIDTH:
+            case gl::state::DIRTY_BIT_LINE_WIDTH:
                 // Do nothing
                 break;
-            case gl::State::DIRTY_BIT_PRIMITIVE_RESTART_ENABLED:
+            case gl::state::DIRTY_BIT_PRIMITIVE_RESTART_ENABLED:
                 // NOTE(hqle): ES 3.0 feature.
                 break;
-            case gl::State::DIRTY_BIT_CLEAR_COLOR:
+            case gl::state::DIRTY_BIT_CLEAR_COLOR:
                 mClearColor = mtl::ClearColorValue(
                     glState.getColorClearValue().red, glState.getColorClearValue().green,
                     glState.getColorClearValue().blue, glState.getColorClearValue().alpha);
                 break;
-            case gl::State::DIRTY_BIT_CLEAR_DEPTH:
+            case gl::state::DIRTY_BIT_CLEAR_DEPTH:
                 break;
-            case gl::State::DIRTY_BIT_CLEAR_STENCIL:
+            case gl::state::DIRTY_BIT_CLEAR_STENCIL:
                 mClearStencil = glState.getStencilClearValue() & mtl::kStencilMaskAll;
                 break;
-            case gl::State::DIRTY_BIT_UNPACK_STATE:
+            case gl::state::DIRTY_BIT_UNPACK_STATE:
                 // This is a no-op, its only important to use the right unpack state when we do
                 // setImage or setSubImage in TextureMtl, which is plumbed through the frontend call
                 break;
-            case gl::State::DIRTY_BIT_UNPACK_BUFFER_BINDING:
+            case gl::state::DIRTY_BIT_UNPACK_BUFFER_BINDING:
                 break;
-            case gl::State::DIRTY_BIT_PACK_STATE:
+            case gl::state::DIRTY_BIT_PACK_STATE:
                 // This is a no-op, its only important to use the right pack state when we do
                 // call readPixels later on.
                 break;
-            case gl::State::DIRTY_BIT_PACK_BUFFER_BINDING:
+            case gl::state::DIRTY_BIT_PACK_BUFFER_BINDING:
                 break;
-            case gl::State::DIRTY_BIT_DITHER_ENABLED:
+            case gl::state::DIRTY_BIT_DITHER_ENABLED:
                 break;
-            case gl::State::DIRTY_BIT_READ_FRAMEBUFFER_BINDING:
+            case gl::state::DIRTY_BIT_READ_FRAMEBUFFER_BINDING:
                 break;
-            case gl::State::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING:
+            case gl::state::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING:
                 updateDrawFrameBufferBinding(context);
                 break;
-            case gl::State::DIRTY_BIT_RENDERBUFFER_BINDING:
+            case gl::state::DIRTY_BIT_RENDERBUFFER_BINDING:
                 break;
-            case gl::State::DIRTY_BIT_VERTEX_ARRAY_BINDING:
+            case gl::state::DIRTY_BIT_VERTEX_ARRAY_BINDING:
                 updateVertexArray(context);
                 break;
-            case gl::State::DIRTY_BIT_DRAW_INDIRECT_BUFFER_BINDING:
+            case gl::state::DIRTY_BIT_DRAW_INDIRECT_BUFFER_BINDING:
                 break;
-            case gl::State::DIRTY_BIT_DISPATCH_INDIRECT_BUFFER_BINDING:
+            case gl::state::DIRTY_BIT_DISPATCH_INDIRECT_BUFFER_BINDING:
                 break;
-            case gl::State::DIRTY_BIT_PROGRAM_BINDING:
+            case gl::state::DIRTY_BIT_PROGRAM_BINDING:
                 mProgram = mtl::GetImpl(glState.getProgram());
                 break;
-            case gl::State::DIRTY_BIT_PROGRAM_EXECUTABLE:
+            case gl::state::DIRTY_BIT_PROGRAM_EXECUTABLE:
                 updateProgramExecutable(context);
                 break;
-            case gl::State::DIRTY_BIT_TEXTURE_BINDINGS:
+            case gl::state::DIRTY_BIT_TEXTURE_BINDINGS:
                 invalidateCurrentTextures();
                 break;
-            case gl::State::DIRTY_BIT_SAMPLER_BINDINGS:
+            case gl::state::DIRTY_BIT_SAMPLER_BINDINGS:
                 invalidateCurrentTextures();
                 break;
-            case gl::State::DIRTY_BIT_TRANSFORM_FEEDBACK_BINDING:
+            case gl::state::DIRTY_BIT_TRANSFORM_FEEDBACK_BINDING:
                 // Nothing to do.
                 break;
-            case gl::State::DIRTY_BIT_SHADER_STORAGE_BUFFER_BINDING:
+            case gl::state::DIRTY_BIT_SHADER_STORAGE_BUFFER_BINDING:
                 // NOTE(hqle): ES 3.0 feature.
                 break;
-            case gl::State::DIRTY_BIT_UNIFORM_BUFFER_BINDINGS:
+            case gl::state::DIRTY_BIT_UNIFORM_BUFFER_BINDINGS:
                 mDirtyBits.set(DIRTY_BIT_UNIFORM_BUFFERS_BINDING);
                 break;
-            case gl::State::DIRTY_BIT_ATOMIC_COUNTER_BUFFER_BINDING:
+            case gl::state::DIRTY_BIT_ATOMIC_COUNTER_BUFFER_BINDING:
                 break;
-            case gl::State::DIRTY_BIT_IMAGE_BINDINGS:
+            case gl::state::DIRTY_BIT_IMAGE_BINDINGS:
                 // NOTE(hqle): properly handle GLSL images.
                 invalidateCurrentTextures();
                 break;
-            case gl::State::DIRTY_BIT_MULTISAMPLING:
+            case gl::state::DIRTY_BIT_MULTISAMPLING:
                 // NOTE(hqle): MSAA on/off.
                 break;
-            case gl::State::DIRTY_BIT_SAMPLE_ALPHA_TO_ONE:
+            case gl::state::DIRTY_BIT_SAMPLE_ALPHA_TO_ONE:
                 // NOTE(hqle): this is part of EXT_multisample_compatibility.
                 // NOTE(hqle): MSAA feature.
                 break;
-            case gl::State::DIRTY_BIT_COVERAGE_MODULATION:
+            case gl::state::DIRTY_BIT_COVERAGE_MODULATION:
                 break;
-            case gl::State::DIRTY_BIT_FRAMEBUFFER_SRGB_WRITE_CONTROL_MODE:
+            case gl::state::DIRTY_BIT_FRAMEBUFFER_SRGB_WRITE_CONTROL_MODE:
                 break;
-            case gl::State::DIRTY_BIT_CURRENT_VALUES:
+            case gl::state::DIRTY_BIT_CURRENT_VALUES:
             {
                 invalidateDefaultAttributes(glState.getAndResetDirtyCurrentValues());
                 break;
             }
-            case gl::State::DIRTY_BIT_PROVOKING_VERTEX:
+            case gl::state::DIRTY_BIT_PROVOKING_VERTEX:
                 break;
-            case gl::State::DIRTY_BIT_EXTENDED:
+            case gl::state::DIRTY_BIT_EXTENDED:
                 updateExtendedState(glState, extendedDirtyBits);
                 break;
-            case gl::State::DIRTY_BIT_SAMPLE_SHADING:
+            case gl::state::DIRTY_BIT_SAMPLE_SHADING:
                 // Nothing to do until OES_sample_shading is implemented.
                 break;
-            case gl::State::DIRTY_BIT_PATCH_VERTICES:
+            case gl::state::DIRTY_BIT_PATCH_VERTICES:
                 // Nothing to do until EXT_tessellation_shader is implemented.
                 break;
             default:
@@ -1359,27 +1359,27 @@ angle::Result ContextMtl::syncState(const gl::Context *context,
 }
 
 void ContextMtl::updateExtendedState(const gl::State &glState,
-                                     const gl::State::ExtendedDirtyBits &extendedDirtyBits)
+                                     const gl::state::ExtendedDirtyBits &extendedDirtyBits)
 {
     for (size_t extendedDirtyBit : extendedDirtyBits)
     {
         switch (extendedDirtyBit)
         {
-            case gl::State::EXTENDED_DIRTY_BIT_CLIP_CONTROL:
+            case gl::state::EXTENDED_DIRTY_BIT_CLIP_CONTROL:
                 updateFrontFace(glState);
                 invalidateDriverUniforms();
                 break;
-            case gl::State::EXTENDED_DIRTY_BIT_CLIP_DISTANCES:
+            case gl::state::EXTENDED_DIRTY_BIT_CLIP_DISTANCES:
                 invalidateDriverUniforms();
                 break;
-            case gl::State::EXTENDED_DIRTY_BIT_DEPTH_CLAMP_ENABLED:
+            case gl::state::EXTENDED_DIRTY_BIT_DEPTH_CLAMP_ENABLED:
                 mDirtyBits.set(DIRTY_BIT_DEPTH_CLIP_MODE);
                 break;
-            case gl::State::EXTENDED_DIRTY_BIT_POLYGON_MODE:
+            case gl::state::EXTENDED_DIRTY_BIT_POLYGON_MODE:
                 mDirtyBits.set(DIRTY_BIT_FILL_MODE);
                 mDirtyBits.set(DIRTY_BIT_DEPTH_BIAS);
                 break;
-            case gl::State::EXTENDED_DIRTY_BIT_POLYGON_OFFSET_LINE_ENABLED:
+            case gl::state::EXTENDED_DIRTY_BIT_POLYGON_OFFSET_LINE_ENABLED:
                 mDirtyBits.set(DIRTY_BIT_DEPTH_BIAS);
                 break;
             default:
