@@ -880,8 +880,8 @@ angle::Result BlitGL::copyTexSubImage(const gl::Context *context,
 
     mStateManager->bindTexture(dest->getType(), dest->getTextureID());
 
-    ANGLE_GL_TRY(context,
-                 mFunctions->copyTexSubImage2D(ToGLenum(destTarget), static_cast<GLint>(destLevel),
+    ANGLE_GL_TRY_ALWAYS_CHECK(
+        context, mFunctions->copyTexSubImage2D(ToGLenum(destTarget), static_cast<GLint>(destLevel),
                                                destOffset.x, destOffset.y, sourceArea.x,
                                                sourceArea.y, sourceArea.width, sourceArea.height));
 
