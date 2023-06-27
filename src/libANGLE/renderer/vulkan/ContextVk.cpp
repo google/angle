@@ -5099,6 +5099,15 @@ void ContextVk::updateAdvancedBlendEquations(const gl::ProgramExecutable *execut
 
 void ContextVk::updateDither()
 {
+    if (getFeatures().supportsLegacyDithering.enabled)
+    {
+        FramebufferVk *framebufferVk = vk::GetImpl(mState.getDrawFramebuffer());
+        if (framebufferVk->updateLegacyDither(this))
+        {
+            onRenderPassFinished(RenderPassClosureReason::LegacyDithering);
+        }
+    }
+
     if (!getFeatures().emulateDithering.enabled)
     {
         return;

@@ -135,6 +135,8 @@ class FramebufferVk : public FramebufferImpl
 
     void switchToFramebufferFetchMode(ContextVk *contextVk, bool hasFramebufferFetch);
 
+    bool updateLegacyDither(ContextVk *contextVk);
+
     void removeColorResolveAttachment(uint32_t colorIndexGL);
 
     void setBackbuffer(WindowSurfaceVk *backbuffer) { mBackbuffer = backbuffer; }

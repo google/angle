@@ -1385,6 +1385,11 @@ angle::Result InitializeRenderPassFromDesc(ContextVk *contextVk,
         }
     }
 
+    if (contextVk->getFeatures().supportsLegacyDithering.enabled && desc.isLegacyDitherEnabled())
+    {
+        subpassDesc.back().flags |= VK_SUBPASS_DESCRIPTION_ENABLE_LEGACY_DITHERING_BIT_EXT;
+    }
+
     // If depth/stencil is to be resolved, add a VkSubpassDescriptionDepthStencilResolve to the
     // pNext chain of the subpass description.
     VkSubpassDescriptionDepthStencilResolve depthStencilResolve  = {};
@@ -2844,6 +2849,11 @@ size_t RenderPassDesc::attachmentCount() const
     size_t depthStencilResolveCount = hasDepthStencilResolveAttachment() ? 1 : 0;
     return colorAttachmentCount + mColorResolveAttachmentMask.count() + depthStencilCount +
            depthStencilResolveCount;
+}
+
+void RenderPassDesc::setLegacyDither(bool enabled)
+{
+    SetBitField(mLegacyDitherEnabled, enabled ? 1 : 0);
 }
 
 bool operator==(const RenderPassDesc &lhs, const RenderPassDesc &rhs)
