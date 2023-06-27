@@ -3022,7 +3022,7 @@ def get_egl_entry_point_labeled_object(ep_to_object, cmd_stripped, params, packe
 def get_context_lock(api, cmd_name):
     # EGLImage related commands need to access EGLImage and Display which should
     # be protected with global lock
-    # Also handles ContexMutex marging when SharedContextMutex is enabled.
+    # Also handles ContextMutex merging when "angle_enable_context_mutex" is true.
     if api == apis.GLES and cmd_name.startswith("glEGLImage"):
         return "SCOPED_EGL_IMAGE_SHARE_CONTEXT_LOCK(context, imagePacked);"
 

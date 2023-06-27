@@ -54,7 +54,7 @@ class [[nodiscard]] ScopedSyncCurrentContextFromThread
 // Tries to lock "ContextMutex" of the Context current to the "thread".
 ANGLE_INLINE ScopedContextMutexLock TryLockCurrentContext(Thread *thread)
 {
-    ASSERT(kIsSharedContextMutexEnabled);
+    ASSERT(kIsContextMutexEnabled);
     gl::Context *context = thread->getContext();
     return context != nullptr ? ScopedContextMutexLock(context->getContextMutex())
                               : ScopedContextMutexLock();
@@ -63,7 +63,7 @@ ANGLE_INLINE ScopedContextMutexLock TryLockCurrentContext(Thread *thread)
 // Tries to lock "ContextMutex" of the Context with "contextID" if it is valid.
 ANGLE_INLINE ScopedContextMutexLock TryLockContext(Display *display, gl::ContextID contextID)
 {
-    ASSERT(kIsSharedContextMutexEnabled);
+    ASSERT(kIsContextMutexEnabled);
     gl::Context *context = GetContextIfValid(display, contextID);
     return context != nullptr ? ScopedContextMutexLock(context->getContextMutex())
                               : ScopedContextMutexLock();
@@ -74,7 +74,7 @@ ANGLE_INLINE ScopedContextMutexLock TryLockContext(Display *display, gl::Context
 ANGLE_INLINE ScopedContextMutexLock LockAndTryMergeContextMutexes(gl::Context *context,
                                                                   ImageID imageID)
 {
-    ASSERT(kIsSharedContextMutexEnabled);
+    ASSERT(kIsContextMutexEnabled);
     ASSERT(context->getDisplay() != nullptr);
     ScopedContextMutexLock lock(context->getContextMutex());
     const Image *image = context->getDisplay()->getImage(imageID);
@@ -89,7 +89,7 @@ ANGLE_INLINE ScopedContextMutexLock LockAndTryMergeContextMutexes(gl::Context *c
     return lock;
 }
 
-#if !defined(ANGLE_ENABLE_SHARED_CONTEXT_MUTEX)
+#if !defined(ANGLE_ENABLE_CONTEXT_MUTEX)
 #    define ANGLE_EGL_SCOPED_CONTEXT_LOCK(EP, THREAD, ...)
 #else
 #    define ANGLE_EGL_SCOPED_CONTEXT_LOCK(EP, THREAD, ...) \
@@ -158,7 +158,7 @@ static ANGLE_INLINE void DirtyContextIfNeeded(Context *context)
             DirtyContextIfNeeded(context)
 #        define SCOPED_EGL_IMAGE_SHARE_CONTEXT_LOCK(context, imageID) \
             SCOPED_SHARE_CONTEXT_LOCK(context)
-#    elif !defined(ANGLE_ENABLE_SHARED_CONTEXT_MUTEX)
+#    elif !defined(ANGLE_ENABLE_CONTEXT_MUTEX)
 #        define SCOPED_SHARE_CONTEXT_LOCK(context) \
             egl::ScopedOptionalGlobalMutexLock shareContextLock(context->isShared())
 #        define SCOPED_EGL_IMAGE_SHARE_CONTEXT_LOCK(context, imageID) ANGLE_SCOPED_GLOBAL_LOCK()

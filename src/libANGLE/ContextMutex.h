@@ -3,10 +3,10 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// SharedContextMutex.h: Classes for protecting Shared Context access and EGLImage siblings.
+// ContextMutex.h: Classes for protecting Context access and EGLImage siblings.
 
-#ifndef LIBANGLE_SHARED_CONTEXT_MUTEX_H_
-#define LIBANGLE_SHARED_CONTEXT_MUTEX_H_
+#ifndef LIBANGLE_CONTEXT_MUTEX_H_
+#define LIBANGLE_CONTEXT_MUTEX_H_
 
 #include <atomic>
 
@@ -19,10 +19,10 @@ class Context;
 
 namespace egl
 {
-#if defined(ANGLE_ENABLE_SHARED_CONTEXT_MUTEX)
-constexpr bool kIsSharedContextMutexEnabled = true;
+#if defined(ANGLE_ENABLE_CONTEXT_MUTEX)
+constexpr bool kIsContextMutexEnabled = true;
 #else
-constexpr bool kIsSharedContextMutexEnabled = false;
+constexpr bool kIsContextMutexEnabled = false;
 #endif
 
 // Use standard mutex for now
@@ -211,4 +211,4 @@ class [[nodiscard]] ScopedContextMutexLock final
 
 }  // namespace egl
 
-#endif  // LIBANGLE_SHARED_CONTEXT_MUTEX_H_
+#endif  // LIBANGLE_CONTEXT_MUTEX_H_

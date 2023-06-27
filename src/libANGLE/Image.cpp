@@ -316,7 +316,7 @@ Image::Image(rx::EGLImplFactory *factory,
     ASSERT(mImplementation != nullptr);
     ASSERT(buffer != nullptr);
 
-    if (kIsSharedContextMutexEnabled)
+    if (kIsContextMutexEnabled)
     {
         if (context != nullptr)
         {

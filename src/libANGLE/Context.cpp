@@ -173,7 +173,7 @@ egl::ContextMutex *AllocateOrUseContextMutex(egl::ContextMutex *sharedContextMut
 {
     if (sharedContextMutex != nullptr)
     {
-        ASSERT(egl::kIsSharedContextMutexEnabled);
+        ASSERT(egl::kIsContextMutexEnabled);
         ASSERT(sharedContextMutex->isReferenced());
         return sharedContextMutex;
     }

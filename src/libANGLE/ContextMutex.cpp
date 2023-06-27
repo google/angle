@@ -3,9 +3,9 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// SharedContextMutex.cpp: Classes for protecting Shared Context access and EGLImage siblings.
+// ContextMutex.cpp: Classes for protecting Context access and EGLImage siblings.
 
-#include "libANGLE/SharedContextMutex.h"
+#include "libANGLE/ContextMutex.h"
 
 #include "common/system_utils.h"
 #include "libANGLE/Context.h"
