@@ -752,12 +752,12 @@ void Context::initializeDefaultResources()
             new Texture(mImplementation.get(), {0}, TextureType::_2DMultisampleArray);
         mZeroTextures[TextureType::_2DMultisampleArray].set(this, zeroTexture2DMultisampleArray);
 
-        for (int i = 0; i < mState.mCaps.maxAtomicCounterBufferBindings; i++)
+        for (int i = 0; i < mState.getCaps().maxAtomicCounterBufferBindings; i++)
         {
             bindBufferRange(BufferBinding::AtomicCounter, i, {0}, 0, 0);
         }
 
-        for (int i = 0; i < mState.mCaps.maxShaderStorageBufferBindings; i++)
+        for (int i = 0; i < mState.getCaps().maxShaderStorageBufferBindings; i++)
         {
             bindBufferRange(BufferBinding::ShaderStorage, i, {0}, 0, 0);
         }
@@ -828,7 +828,7 @@ void Context::initializeDefaultResources()
 
     bindRenderbuffer(GL_RENDERBUFFER, {0});
 
-    for (int i = 0; i < mState.mCaps.maxUniformBufferBindings; i++)
+    for (int i = 0; i < mState.getCaps().maxUniformBufferBindings; i++)
     {
         bindBufferRange(BufferBinding::Uniform, i, {0}, 0, -1);
     }
@@ -1059,7 +1059,7 @@ GLuint Context::createProgram()
 GLuint Context::createShader(ShaderType type)
 {
     return mState.mShaderProgramManager
-        ->createShader(mImplementation.get(), mState.mLimitations, type)
+        ->createShader(mImplementation.get(), mState.getLimitations(), type)
         .value;
 }
 
@@ -1190,7 +1190,7 @@ void Context::deleteTexture(TextureID textureID)
         // still return null if we are in the middle of deleting the active framebuffer.
         if (pls != nullptr)
         {
-            for (GLuint i = 0; i < mState.mCaps.maxPixelLocalStoragePlanes; ++i)
+            for (GLuint i = 0; i < mState.getCaps().maxPixelLocalStoragePlanes; ++i)
             {
                 if (pls->getPlane(i).getTextureID() == textureID)
                 {
@@ -1516,7 +1516,7 @@ void Context::bindVertexBuffer(GLuint bindingIndex,
 
 void Context::bindSampler(GLuint textureUnit, SamplerID samplerHandle)
 {
-    ASSERT(textureUnit < static_cast<GLuint>(mState.mCaps.maxCombinedTextureImageUnits));
+    ASSERT(textureUnit < static_cast<GLuint>(mState.getCaps().maxCombinedTextureImageUnits));
     Sampler *sampler =
         mState.mSamplerManager->checkSamplerAllocation(mImplementation.get(), samplerHandle);
 
@@ -1802,43 +1802,43 @@ void Context::getFloatvImpl(GLenum pname, GLfloat *params) const
     switch (pname)
     {
         case GL_ALIASED_LINE_WIDTH_RANGE:
-            params[0] = mState.mCaps.minAliasedLineWidth;
-            params[1] = mState.mCaps.maxAliasedLineWidth;
+            params[0] = mState.getCaps().minAliasedLineWidth;
+            params[1] = mState.getCaps().maxAliasedLineWidth;
             break;
         case GL_ALIASED_POINT_SIZE_RANGE:
-            params[0] = mState.mCaps.minAliasedPointSize;
-            params[1] = mState.mCaps.maxAliasedPointSize;
+            params[0] = mState.getCaps().minAliasedPointSize;
+            params[1] = mState.getCaps().maxAliasedPointSize;
             break;
         case GL_SMOOTH_POINT_SIZE_RANGE:
-            params[0] = mState.mCaps.minSmoothPointSize;
-            params[1] = mState.mCaps.maxSmoothPointSize;
+            params[0] = mState.getCaps().minSmoothPointSize;
+            params[1] = mState.getCaps().maxSmoothPointSize;
             break;
         case GL_SMOOTH_LINE_WIDTH_RANGE:
-            params[0] = mState.mCaps.minSmoothLineWidth;
-            params[1] = mState.mCaps.maxSmoothLineWidth;
+            params[0] = mState.getCaps().minSmoothLineWidth;
+            params[1] = mState.getCaps().maxSmoothLineWidth;
             break;
         case GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT:
-            ASSERT(mState.mExtensions.textureFilterAnisotropicEXT);
-            *params = mState.mCaps.maxTextureAnisotropy;
+            ASSERT(mState.getExtensions().textureFilterAnisotropicEXT);
+            *params = mState.getCaps().maxTextureAnisotropy;
             break;
         case GL_MAX_TEXTURE_LOD_BIAS:
-            *params = mState.mCaps.maxLODBias;
+            *params = mState.getCaps().maxLODBias;
             break;
         case GL_MIN_FRAGMENT_INTERPOLATION_OFFSET:
-            *params = mState.mCaps.minInterpolationOffset;
+            *params = mState.getCaps().minInterpolationOffset;
             break;
         case GL_MAX_FRAGMENT_INTERPOLATION_OFFSET:
-            *params = mState.mCaps.maxInterpolationOffset;
+            *params = mState.getCaps().maxInterpolationOffset;
             break;
         case GL_PRIMITIVE_BOUNDING_BOX:
-            params[0] = mState.mBoundingBoxMinX;
-            params[1] = mState.mBoundingBoxMinY;
-            params[2] = mState.mBoundingBoxMinZ;
-            params[3] = mState.mBoundingBoxMinW;
-            params[4] = mState.mBoundingBoxMaxX;
-            params[5] = mState.mBoundingBoxMaxY;
-            params[6] = mState.mBoundingBoxMaxZ;
-            params[7] = mState.mBoundingBoxMaxW;
+            params[0] = mState.getBoundingBoxMinX();
+            params[1] = mState.getBoundingBoxMinY();
+            params[2] = mState.getBoundingBoxMinZ();
+            params[3] = mState.getBoundingBoxMinW();
+            params[4] = mState.getBoundingBoxMaxX();
+            params[5] = mState.getBoundingBoxMaxY();
+            params[6] = mState.getBoundingBoxMaxZ();
+            params[7] = mState.getBoundingBoxMaxW();
             break;
         default:
             mState.getFloatv(pname, params);
@@ -1854,88 +1854,88 @@ void Context::getIntegervImpl(GLenum pname, GLint *params) const
     switch (pname)
     {
         case GL_MAX_VERTEX_ATTRIBS:
-            *params = mState.mCaps.maxVertexAttributes;
+            *params = mState.getCaps().maxVertexAttributes;
             break;
         case GL_MAX_VERTEX_UNIFORM_VECTORS:
-            *params = mState.mCaps.maxVertexUniformVectors;
+            *params = mState.getCaps().maxVertexUniformVectors;
             break;
         case GL_MAX_VERTEX_UNIFORM_COMPONENTS:
-            *params = mState.mCaps.maxShaderUniformComponents[ShaderType::Vertex];
+            *params = mState.getCaps().maxShaderUniformComponents[ShaderType::Vertex];
             break;
         case GL_MAX_VARYING_VECTORS:
-            *params = mState.mCaps.maxVaryingVectors;
+            *params = mState.getCaps().maxVaryingVectors;
             break;
         case GL_MAX_VARYING_COMPONENTS:
-            *params = mState.mCaps.maxVaryingVectors * 4;
+            *params = mState.getCaps().maxVaryingVectors * 4;
             break;
         case GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS:
-            *params = mState.mCaps.maxCombinedTextureImageUnits;
+            *params = mState.getCaps().maxCombinedTextureImageUnits;
             break;
         case GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS:
-            *params = mState.mCaps.maxShaderTextureImageUnits[ShaderType::Vertex];
+            *params = mState.getCaps().maxShaderTextureImageUnits[ShaderType::Vertex];
             break;
         case GL_MAX_TEXTURE_IMAGE_UNITS:
-            *params = mState.mCaps.maxShaderTextureImageUnits[ShaderType::Fragment];
+            *params = mState.getCaps().maxShaderTextureImageUnits[ShaderType::Fragment];
             break;
         case GL_MAX_FRAGMENT_UNIFORM_VECTORS:
-            *params = mState.mCaps.maxFragmentUniformVectors;
+            *params = mState.getCaps().maxFragmentUniformVectors;
             break;
         case GL_MAX_FRAGMENT_UNIFORM_COMPONENTS:
-            *params = mState.mCaps.maxShaderUniformComponents[ShaderType::Fragment];
+            *params = mState.getCaps().maxShaderUniformComponents[ShaderType::Fragment];
             break;
         case GL_MAX_RENDERBUFFER_SIZE:
-            *params = mState.mCaps.maxRenderbufferSize;
+            *params = mState.getCaps().maxRenderbufferSize;
             break;
         case GL_MAX_COLOR_ATTACHMENTS_EXT:
-            *params = mState.mCaps.maxColorAttachments;
+            *params = mState.getCaps().maxColorAttachments;
             break;
         case GL_MAX_DRAW_BUFFERS_EXT:
-            *params = mState.mCaps.maxDrawBuffers;
+            *params = mState.getCaps().maxDrawBuffers;
             break;
         case GL_SUBPIXEL_BITS:
-            *params = mState.mCaps.subPixelBits;
+            *params = mState.getCaps().subPixelBits;
             break;
         case GL_MAX_TEXTURE_SIZE:
-            *params = mState.mCaps.max2DTextureSize;
+            *params = mState.getCaps().max2DTextureSize;
             break;
         case GL_MAX_RECTANGLE_TEXTURE_SIZE_ANGLE:
-            *params = mState.mCaps.maxRectangleTextureSize;
+            *params = mState.getCaps().maxRectangleTextureSize;
             break;
         case GL_MAX_CUBE_MAP_TEXTURE_SIZE:
-            *params = mState.mCaps.maxCubeMapTextureSize;
+            *params = mState.getCaps().maxCubeMapTextureSize;
             break;
         case GL_MAX_3D_TEXTURE_SIZE:
-            *params = mState.mCaps.max3DTextureSize;
+            *params = mState.getCaps().max3DTextureSize;
             break;
         case GL_MAX_ARRAY_TEXTURE_LAYERS:
-            *params = mState.mCaps.maxArrayTextureLayers;
+            *params = mState.getCaps().maxArrayTextureLayers;
             break;
         case GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT:
-            *params = mState.mCaps.uniformBufferOffsetAlignment;
+            *params = mState.getCaps().uniformBufferOffsetAlignment;
             break;
         case GL_MAX_UNIFORM_BUFFER_BINDINGS:
-            *params = mState.mCaps.maxUniformBufferBindings;
+            *params = mState.getCaps().maxUniformBufferBindings;
             break;
         case GL_MAX_VERTEX_UNIFORM_BLOCKS:
-            *params = mState.mCaps.maxShaderUniformBlocks[ShaderType::Vertex];
+            *params = mState.getCaps().maxShaderUniformBlocks[ShaderType::Vertex];
             break;
         case GL_MAX_FRAGMENT_UNIFORM_BLOCKS:
-            *params = mState.mCaps.maxShaderUniformBlocks[ShaderType::Fragment];
+            *params = mState.getCaps().maxShaderUniformBlocks[ShaderType::Fragment];
             break;
         case GL_MAX_COMBINED_UNIFORM_BLOCKS:
-            *params = mState.mCaps.maxCombinedUniformBlocks;
+            *params = mState.getCaps().maxCombinedUniformBlocks;
             break;
         case GL_MAX_VERTEX_OUTPUT_COMPONENTS:
-            *params = mState.mCaps.maxVertexOutputComponents;
+            *params = mState.getCaps().maxVertexOutputComponents;
             break;
         case GL_MAX_FRAGMENT_INPUT_COMPONENTS:
-            *params = mState.mCaps.maxFragmentInputComponents;
+            *params = mState.getCaps().maxFragmentInputComponents;
             break;
         case GL_MIN_PROGRAM_TEXEL_OFFSET:
-            *params = mState.mCaps.minProgramTexelOffset;
+            *params = mState.getCaps().minProgramTexelOffset;
             break;
         case GL_MAX_PROGRAM_TEXEL_OFFSET:
-            *params = mState.mCaps.maxProgramTexelOffset;
+            *params = mState.getCaps().maxProgramTexelOffset;
             break;
         case GL_MAJOR_VERSION:
             *params = getClientVersion().major;
@@ -1944,52 +1944,52 @@ void Context::getIntegervImpl(GLenum pname, GLint *params) const
             *params = getClientVersion().minor;
             break;
         case GL_MAX_ELEMENTS_INDICES:
-            *params = mState.mCaps.maxElementsIndices;
+            *params = mState.getCaps().maxElementsIndices;
             break;
         case GL_MAX_ELEMENTS_VERTICES:
-            *params = mState.mCaps.maxElementsVertices;
+            *params = mState.getCaps().maxElementsVertices;
             break;
         case GL_MAX_TRANSFORM_FEEDBACK_INTERLEAVED_COMPONENTS:
-            *params = mState.mCaps.maxTransformFeedbackInterleavedComponents;
+            *params = mState.getCaps().maxTransformFeedbackInterleavedComponents;
             break;
         case GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS:
-            *params = mState.mCaps.maxTransformFeedbackSeparateAttributes;
+            *params = mState.getCaps().maxTransformFeedbackSeparateAttributes;
             break;
         case GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_COMPONENTS:
-            *params = mState.mCaps.maxTransformFeedbackSeparateComponents;
+            *params = mState.getCaps().maxTransformFeedbackSeparateComponents;
             break;
         case GL_NUM_COMPRESSED_TEXTURE_FORMATS:
-            *params = static_cast<GLint>(mState.mCaps.compressedTextureFormats.size());
+            *params = static_cast<GLint>(mState.getCaps().compressedTextureFormats.size());
             break;
         case GL_MAX_SAMPLES_ANGLE:
-            *params = mState.mCaps.maxSamples;
+            *params = mState.getCaps().maxSamples;
             break;
         case GL_MAX_VIEWPORT_DIMS:
         {
-            params[0] = mState.mCaps.maxViewportWidth;
-            params[1] = mState.mCaps.maxViewportHeight;
+            params[0] = mState.getCaps().maxViewportWidth;
+            params[1] = mState.getCaps().maxViewportHeight;
         }
         break;
         case GL_COMPRESSED_TEXTURE_FORMATS:
-            std::copy(mState.mCaps.compressedTextureFormats.begin(),
-                      mState.mCaps.compressedTextureFormats.end(), params);
+            std::copy(mState.getCaps().compressedTextureFormats.begin(),
+                      mState.getCaps().compressedTextureFormats.end(), params);
             break;
         case GL_RESET_NOTIFICATION_STRATEGY_EXT:
             *params = mResetStrategy;
             break;
         case GL_NUM_SHADER_BINARY_FORMATS:
-            *params = static_cast<GLint>(mState.mCaps.shaderBinaryFormats.size());
+            *params = static_cast<GLint>(mState.getCaps().shaderBinaryFormats.size());
             break;
         case GL_SHADER_BINARY_FORMATS:
-            std::copy(mState.mCaps.shaderBinaryFormats.begin(),
-                      mState.mCaps.shaderBinaryFormats.end(), params);
+            std::copy(mState.getCaps().shaderBinaryFormats.begin(),
+                      mState.getCaps().shaderBinaryFormats.end(), params);
             break;
         case GL_NUM_PROGRAM_BINARY_FORMATS:
-            *params = static_cast<GLint>(mState.mCaps.programBinaryFormats.size());
+            *params = static_cast<GLint>(mState.getCaps().programBinaryFormats.size());
             break;
         case GL_PROGRAM_BINARY_FORMATS:
-            std::copy(mState.mCaps.programBinaryFormats.begin(),
-                      mState.mCaps.programBinaryFormats.end(), params);
+            std::copy(mState.getCaps().programBinaryFormats.begin(),
+                      mState.getCaps().programBinaryFormats.end(), params);
             break;
         case GL_NUM_EXTENSIONS:
             *params = static_cast<GLint>(mExtensionStrings.size());
@@ -2028,21 +2028,21 @@ void Context::getIntegervImpl(GLenum pname, GLint *params) const
 
         // GL_KHR_debug
         case GL_MAX_DEBUG_MESSAGE_LENGTH:
-            *params = mState.mCaps.maxDebugMessageLength;
+            *params = mState.getCaps().maxDebugMessageLength;
             break;
         case GL_MAX_DEBUG_LOGGED_MESSAGES:
-            *params = mState.mCaps.maxDebugLoggedMessages;
+            *params = mState.getCaps().maxDebugLoggedMessages;
             break;
         case GL_MAX_DEBUG_GROUP_STACK_DEPTH:
-            *params = mState.mCaps.maxDebugGroupStackDepth;
+            *params = mState.getCaps().maxDebugGroupStackDepth;
             break;
         case GL_MAX_LABEL_LENGTH:
-            *params = mState.mCaps.maxLabelLength;
+            *params = mState.getCaps().maxLabelLength;
             break;
 
         // GL_OVR_multiview2
         case GL_MAX_VIEWS_OVR:
-            *params = mState.mCaps.maxViews;
+            *params = mState.getCaps().maxViews;
             break;
 
         // GL_EXT_disjoint_timer_query
@@ -2050,267 +2050,267 @@ void Context::getIntegervImpl(GLenum pname, GLint *params) const
             *params = mImplementation->getGPUDisjoint();
             break;
         case GL_MAX_FRAMEBUFFER_WIDTH:
-            *params = mState.mCaps.maxFramebufferWidth;
+            *params = mState.getCaps().maxFramebufferWidth;
             break;
         case GL_MAX_FRAMEBUFFER_HEIGHT:
-            *params = mState.mCaps.maxFramebufferHeight;
+            *params = mState.getCaps().maxFramebufferHeight;
             break;
         case GL_MAX_FRAMEBUFFER_SAMPLES:
-            *params = mState.mCaps.maxFramebufferSamples;
+            *params = mState.getCaps().maxFramebufferSamples;
             break;
         case GL_MAX_SAMPLE_MASK_WORDS:
-            *params = mState.mCaps.maxSampleMaskWords;
+            *params = mState.getCaps().maxSampleMaskWords;
             break;
         case GL_MAX_COLOR_TEXTURE_SAMPLES:
-            *params = mState.mCaps.maxColorTextureSamples;
+            *params = mState.getCaps().maxColorTextureSamples;
             break;
         case GL_MAX_DEPTH_TEXTURE_SAMPLES:
-            *params = mState.mCaps.maxDepthTextureSamples;
+            *params = mState.getCaps().maxDepthTextureSamples;
             break;
         case GL_MAX_INTEGER_SAMPLES:
-            *params = mState.mCaps.maxIntegerSamples;
+            *params = mState.getCaps().maxIntegerSamples;
             break;
         case GL_MAX_VERTEX_ATTRIB_RELATIVE_OFFSET:
-            *params = mState.mCaps.maxVertexAttribRelativeOffset;
+            *params = mState.getCaps().maxVertexAttribRelativeOffset;
             break;
         case GL_MAX_VERTEX_ATTRIB_BINDINGS:
-            *params = mState.mCaps.maxVertexAttribBindings;
+            *params = mState.getCaps().maxVertexAttribBindings;
             break;
         case GL_MAX_VERTEX_ATTRIB_STRIDE:
-            *params = mState.mCaps.maxVertexAttribStride;
+            *params = mState.getCaps().maxVertexAttribStride;
             break;
         case GL_MAX_VERTEX_ATOMIC_COUNTER_BUFFERS:
-            *params = mState.mCaps.maxShaderAtomicCounterBuffers[ShaderType::Vertex];
+            *params = mState.getCaps().maxShaderAtomicCounterBuffers[ShaderType::Vertex];
             break;
         case GL_MAX_VERTEX_ATOMIC_COUNTERS:
-            *params = mState.mCaps.maxShaderAtomicCounters[ShaderType::Vertex];
+            *params = mState.getCaps().maxShaderAtomicCounters[ShaderType::Vertex];
             break;
         case GL_MAX_VERTEX_IMAGE_UNIFORMS:
-            *params = mState.mCaps.maxShaderImageUniforms[ShaderType::Vertex];
+            *params = mState.getCaps().maxShaderImageUniforms[ShaderType::Vertex];
             break;
         case GL_MAX_VERTEX_SHADER_STORAGE_BLOCKS:
-            *params = mState.mCaps.maxShaderStorageBlocks[ShaderType::Vertex];
+            *params = mState.getCaps().maxShaderStorageBlocks[ShaderType::Vertex];
             break;
         case GL_MAX_FRAGMENT_ATOMIC_COUNTER_BUFFERS:
-            *params = mState.mCaps.maxShaderAtomicCounterBuffers[ShaderType::Fragment];
+            *params = mState.getCaps().maxShaderAtomicCounterBuffers[ShaderType::Fragment];
             break;
         case GL_MAX_FRAGMENT_ATOMIC_COUNTERS:
-            *params = mState.mCaps.maxShaderAtomicCounters[ShaderType::Fragment];
+            *params = mState.getCaps().maxShaderAtomicCounters[ShaderType::Fragment];
             break;
         case GL_MAX_FRAGMENT_IMAGE_UNIFORMS:
-            *params = mState.mCaps.maxShaderImageUniforms[ShaderType::Fragment];
+            *params = mState.getCaps().maxShaderImageUniforms[ShaderType::Fragment];
             break;
         case GL_MAX_FRAGMENT_SHADER_STORAGE_BLOCKS:
-            *params = mState.mCaps.maxShaderStorageBlocks[ShaderType::Fragment];
+            *params = mState.getCaps().maxShaderStorageBlocks[ShaderType::Fragment];
             break;
         case GL_MIN_PROGRAM_TEXTURE_GATHER_OFFSET:
-            *params = mState.mCaps.minProgramTextureGatherOffset;
+            *params = mState.getCaps().minProgramTextureGatherOffset;
             break;
         case GL_MAX_PROGRAM_TEXTURE_GATHER_OFFSET:
-            *params = mState.mCaps.maxProgramTextureGatherOffset;
+            *params = mState.getCaps().maxProgramTextureGatherOffset;
             break;
         case GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS:
-            *params = mState.mCaps.maxComputeWorkGroupInvocations;
+            *params = mState.getCaps().maxComputeWorkGroupInvocations;
             break;
         case GL_MAX_COMPUTE_UNIFORM_BLOCKS:
-            *params = mState.mCaps.maxShaderUniformBlocks[ShaderType::Compute];
+            *params = mState.getCaps().maxShaderUniformBlocks[ShaderType::Compute];
             break;
         case GL_MAX_COMPUTE_TEXTURE_IMAGE_UNITS:
-            *params = mState.mCaps.maxShaderTextureImageUnits[ShaderType::Compute];
+            *params = mState.getCaps().maxShaderTextureImageUnits[ShaderType::Compute];
             break;
         case GL_MAX_COMPUTE_SHARED_MEMORY_SIZE:
-            *params = mState.mCaps.maxComputeSharedMemorySize;
+            *params = mState.getCaps().maxComputeSharedMemorySize;
             break;
         case GL_MAX_COMPUTE_UNIFORM_COMPONENTS:
-            *params = mState.mCaps.maxShaderUniformComponents[ShaderType::Compute];
+            *params = mState.getCaps().maxShaderUniformComponents[ShaderType::Compute];
             break;
         case GL_MAX_COMPUTE_ATOMIC_COUNTER_BUFFERS:
-            *params = mState.mCaps.maxShaderAtomicCounterBuffers[ShaderType::Compute];
+            *params = mState.getCaps().maxShaderAtomicCounterBuffers[ShaderType::Compute];
             break;
         case GL_MAX_COMPUTE_ATOMIC_COUNTERS:
-            *params = mState.mCaps.maxShaderAtomicCounters[ShaderType::Compute];
+            *params = mState.getCaps().maxShaderAtomicCounters[ShaderType::Compute];
             break;
         case GL_MAX_COMPUTE_IMAGE_UNIFORMS:
-            *params = mState.mCaps.maxShaderImageUniforms[ShaderType::Compute];
+            *params = mState.getCaps().maxShaderImageUniforms[ShaderType::Compute];
             break;
         case GL_MAX_COMBINED_COMPUTE_UNIFORM_COMPONENTS:
             *params = static_cast<GLint>(
-                mState.mCaps.maxCombinedShaderUniformComponents[ShaderType::Compute]);
+                mState.getCaps().maxCombinedShaderUniformComponents[ShaderType::Compute]);
             break;
         case GL_MAX_COMPUTE_SHADER_STORAGE_BLOCKS:
-            *params = mState.mCaps.maxShaderStorageBlocks[ShaderType::Compute];
+            *params = mState.getCaps().maxShaderStorageBlocks[ShaderType::Compute];
             break;
         case GL_MAX_COMBINED_SHADER_OUTPUT_RESOURCES:
-            *params = mState.mCaps.maxCombinedShaderOutputResources;
+            *params = mState.getCaps().maxCombinedShaderOutputResources;
             break;
         case GL_MAX_UNIFORM_LOCATIONS:
-            *params = mState.mCaps.maxUniformLocations;
+            *params = mState.getCaps().maxUniformLocations;
             break;
         case GL_MAX_ATOMIC_COUNTER_BUFFER_BINDINGS:
-            *params = mState.mCaps.maxAtomicCounterBufferBindings;
+            *params = mState.getCaps().maxAtomicCounterBufferBindings;
             break;
         case GL_MAX_ATOMIC_COUNTER_BUFFER_SIZE:
-            *params = mState.mCaps.maxAtomicCounterBufferSize;
+            *params = mState.getCaps().maxAtomicCounterBufferSize;
             break;
         case GL_MAX_COMBINED_ATOMIC_COUNTER_BUFFERS:
-            *params = mState.mCaps.maxCombinedAtomicCounterBuffers;
+            *params = mState.getCaps().maxCombinedAtomicCounterBuffers;
             break;
         case GL_MAX_COMBINED_ATOMIC_COUNTERS:
-            *params = mState.mCaps.maxCombinedAtomicCounters;
+            *params = mState.getCaps().maxCombinedAtomicCounters;
             break;
         case GL_MAX_IMAGE_UNITS:
-            *params = mState.mCaps.maxImageUnits;
+            *params = mState.getCaps().maxImageUnits;
             break;
         case GL_MAX_COMBINED_IMAGE_UNIFORMS:
-            *params = mState.mCaps.maxCombinedImageUniforms;
+            *params = mState.getCaps().maxCombinedImageUniforms;
             break;
         case GL_MAX_SHADER_STORAGE_BUFFER_BINDINGS:
-            *params = mState.mCaps.maxShaderStorageBufferBindings;
+            *params = mState.getCaps().maxShaderStorageBufferBindings;
             break;
         case GL_MAX_COMBINED_SHADER_STORAGE_BLOCKS:
-            *params = mState.mCaps.maxCombinedShaderStorageBlocks;
+            *params = mState.getCaps().maxCombinedShaderStorageBlocks;
             break;
         case GL_SHADER_STORAGE_BUFFER_OFFSET_ALIGNMENT:
-            *params = mState.mCaps.shaderStorageBufferOffsetAlignment;
+            *params = mState.getCaps().shaderStorageBufferOffsetAlignment;
             break;
 
         // GL_EXT_geometry_shader
         case GL_MAX_FRAMEBUFFER_LAYERS_EXT:
-            *params = mState.mCaps.maxFramebufferLayers;
+            *params = mState.getCaps().maxFramebufferLayers;
             break;
         case GL_LAYER_PROVOKING_VERTEX_EXT:
-            *params = mState.mCaps.layerProvokingVertex;
+            *params = mState.getCaps().layerProvokingVertex;
             break;
         case GL_MAX_GEOMETRY_UNIFORM_COMPONENTS_EXT:
-            *params = mState.mCaps.maxShaderUniformComponents[ShaderType::Geometry];
+            *params = mState.getCaps().maxShaderUniformComponents[ShaderType::Geometry];
             break;
         case GL_MAX_GEOMETRY_UNIFORM_BLOCKS_EXT:
-            *params = mState.mCaps.maxShaderUniformBlocks[ShaderType::Geometry];
+            *params = mState.getCaps().maxShaderUniformBlocks[ShaderType::Geometry];
             break;
         case GL_MAX_COMBINED_GEOMETRY_UNIFORM_COMPONENTS_EXT:
             *params = static_cast<GLint>(
-                mState.mCaps.maxCombinedShaderUniformComponents[ShaderType::Geometry]);
+                mState.getCaps().maxCombinedShaderUniformComponents[ShaderType::Geometry]);
             break;
         case GL_MAX_GEOMETRY_INPUT_COMPONENTS_EXT:
-            *params = mState.mCaps.maxGeometryInputComponents;
+            *params = mState.getCaps().maxGeometryInputComponents;
             break;
         case GL_MAX_GEOMETRY_OUTPUT_COMPONENTS_EXT:
-            *params = mState.mCaps.maxGeometryOutputComponents;
+            *params = mState.getCaps().maxGeometryOutputComponents;
             break;
         case GL_MAX_GEOMETRY_OUTPUT_VERTICES_EXT:
-            *params = mState.mCaps.maxGeometryOutputVertices;
+            *params = mState.getCaps().maxGeometryOutputVertices;
             break;
         case GL_MAX_GEOMETRY_TOTAL_OUTPUT_COMPONENTS_EXT:
-            *params = mState.mCaps.maxGeometryTotalOutputComponents;
+            *params = mState.getCaps().maxGeometryTotalOutputComponents;
             break;
         case GL_MAX_GEOMETRY_SHADER_INVOCATIONS_EXT:
-            *params = mState.mCaps.maxGeometryShaderInvocations;
+            *params = mState.getCaps().maxGeometryShaderInvocations;
             break;
         case GL_MAX_GEOMETRY_TEXTURE_IMAGE_UNITS_EXT:
-            *params = mState.mCaps.maxShaderTextureImageUnits[ShaderType::Geometry];
+            *params = mState.getCaps().maxShaderTextureImageUnits[ShaderType::Geometry];
             break;
         case GL_MAX_GEOMETRY_ATOMIC_COUNTER_BUFFERS_EXT:
-            *params = mState.mCaps.maxShaderAtomicCounterBuffers[ShaderType::Geometry];
+            *params = mState.getCaps().maxShaderAtomicCounterBuffers[ShaderType::Geometry];
             break;
         case GL_MAX_GEOMETRY_ATOMIC_COUNTERS_EXT:
-            *params = mState.mCaps.maxShaderAtomicCounters[ShaderType::Geometry];
+            *params = mState.getCaps().maxShaderAtomicCounters[ShaderType::Geometry];
             break;
         case GL_MAX_GEOMETRY_IMAGE_UNIFORMS_EXT:
-            *params = mState.mCaps.maxShaderImageUniforms[ShaderType::Geometry];
+            *params = mState.getCaps().maxShaderImageUniforms[ShaderType::Geometry];
             break;
         case GL_MAX_GEOMETRY_SHADER_STORAGE_BLOCKS_EXT:
-            *params = mState.mCaps.maxShaderStorageBlocks[ShaderType::Geometry];
+            *params = mState.getCaps().maxShaderStorageBlocks[ShaderType::Geometry];
             break;
         // GL_EXT_tessellation_shader
         case GL_MAX_PATCH_VERTICES_EXT:
-            *params = mState.mCaps.maxPatchVertices;
+            *params = mState.getCaps().maxPatchVertices;
             break;
         case GL_MAX_TESS_GEN_LEVEL_EXT:
-            *params = mState.mCaps.maxTessGenLevel;
+            *params = mState.getCaps().maxTessGenLevel;
             break;
         case GL_MAX_TESS_CONTROL_UNIFORM_COMPONENTS_EXT:
-            *params = mState.mCaps.maxShaderUniformComponents[ShaderType::TessControl];
+            *params = mState.getCaps().maxShaderUniformComponents[ShaderType::TessControl];
             break;
         case GL_MAX_TESS_EVALUATION_UNIFORM_COMPONENTS_EXT:
-            *params = mState.mCaps.maxShaderUniformComponents[ShaderType::TessEvaluation];
+            *params = mState.getCaps().maxShaderUniformComponents[ShaderType::TessEvaluation];
             break;
         case GL_MAX_TESS_CONTROL_TEXTURE_IMAGE_UNITS_EXT:
-            *params = mState.mCaps.maxShaderTextureImageUnits[ShaderType::TessControl];
+            *params = mState.getCaps().maxShaderTextureImageUnits[ShaderType::TessControl];
             break;
         case GL_MAX_TESS_EVALUATION_TEXTURE_IMAGE_UNITS_EXT:
-            *params = mState.mCaps.maxShaderTextureImageUnits[ShaderType::TessEvaluation];
+            *params = mState.getCaps().maxShaderTextureImageUnits[ShaderType::TessEvaluation];
             break;
         case GL_MAX_TESS_CONTROL_OUTPUT_COMPONENTS_EXT:
-            *params = mState.mCaps.maxTessControlOutputComponents;
+            *params = mState.getCaps().maxTessControlOutputComponents;
             break;
         case GL_MAX_TESS_PATCH_COMPONENTS_EXT:
-            *params = mState.mCaps.maxTessPatchComponents;
+            *params = mState.getCaps().maxTessPatchComponents;
             break;
         case GL_MAX_TESS_CONTROL_TOTAL_OUTPUT_COMPONENTS_EXT:
-            *params = mState.mCaps.maxTessControlTotalOutputComponents;
+            *params = mState.getCaps().maxTessControlTotalOutputComponents;
             break;
         case GL_MAX_TESS_EVALUATION_OUTPUT_COMPONENTS_EXT:
-            *params = mState.mCaps.maxTessEvaluationOutputComponents;
+            *params = mState.getCaps().maxTessEvaluationOutputComponents;
             break;
         case GL_MAX_TESS_CONTROL_UNIFORM_BLOCKS_EXT:
-            *params = mState.mCaps.maxShaderUniformBlocks[ShaderType::TessControl];
+            *params = mState.getCaps().maxShaderUniformBlocks[ShaderType::TessControl];
             break;
         case GL_MAX_TESS_EVALUATION_UNIFORM_BLOCKS_EXT:
-            *params = mState.mCaps.maxShaderUniformBlocks[ShaderType::TessEvaluation];
+            *params = mState.getCaps().maxShaderUniformBlocks[ShaderType::TessEvaluation];
             break;
         case GL_MAX_TESS_CONTROL_INPUT_COMPONENTS_EXT:
-            *params = mState.mCaps.maxTessControlInputComponents;
+            *params = mState.getCaps().maxTessControlInputComponents;
             break;
         case GL_MAX_TESS_EVALUATION_INPUT_COMPONENTS_EXT:
-            *params = mState.mCaps.maxTessEvaluationInputComponents;
+            *params = mState.getCaps().maxTessEvaluationInputComponents;
             break;
         case GL_MAX_COMBINED_TESS_CONTROL_UNIFORM_COMPONENTS_EXT:
             *params = static_cast<GLint>(
-                mState.mCaps.maxCombinedShaderUniformComponents[ShaderType::TessControl]);
+                mState.getCaps().maxCombinedShaderUniformComponents[ShaderType::TessControl]);
             break;
         case GL_MAX_COMBINED_TESS_EVALUATION_UNIFORM_COMPONENTS_EXT:
             *params = static_cast<GLint>(
-                mState.mCaps.maxCombinedShaderUniformComponents[ShaderType::TessEvaluation]);
+                mState.getCaps().maxCombinedShaderUniformComponents[ShaderType::TessEvaluation]);
             break;
         case GL_MAX_TESS_CONTROL_ATOMIC_COUNTER_BUFFERS_EXT:
-            *params = mState.mCaps.maxShaderAtomicCounterBuffers[ShaderType::TessControl];
+            *params = mState.getCaps().maxShaderAtomicCounterBuffers[ShaderType::TessControl];
             break;
         case GL_MAX_TESS_EVALUATION_ATOMIC_COUNTER_BUFFERS_EXT:
-            *params = mState.mCaps.maxShaderAtomicCounterBuffers[ShaderType::TessEvaluation];
+            *params = mState.getCaps().maxShaderAtomicCounterBuffers[ShaderType::TessEvaluation];
             break;
         case GL_MAX_TESS_CONTROL_ATOMIC_COUNTERS_EXT:
-            *params = mState.mCaps.maxShaderAtomicCounters[ShaderType::TessControl];
+            *params = mState.getCaps().maxShaderAtomicCounters[ShaderType::TessControl];
             break;
         case GL_MAX_TESS_EVALUATION_ATOMIC_COUNTERS_EXT:
-            *params = mState.mCaps.maxShaderAtomicCounters[ShaderType::TessEvaluation];
+            *params = mState.getCaps().maxShaderAtomicCounters[ShaderType::TessEvaluation];
             break;
         case GL_MAX_TESS_CONTROL_IMAGE_UNIFORMS_EXT:
-            *params = mState.mCaps.maxShaderImageUniforms[ShaderType::TessControl];
+            *params = mState.getCaps().maxShaderImageUniforms[ShaderType::TessControl];
             break;
         case GL_MAX_TESS_EVALUATION_IMAGE_UNIFORMS_EXT:
-            *params = mState.mCaps.maxShaderImageUniforms[ShaderType::TessEvaluation];
+            *params = mState.getCaps().maxShaderImageUniforms[ShaderType::TessEvaluation];
             break;
         case GL_MAX_TESS_CONTROL_SHADER_STORAGE_BLOCKS_EXT:
-            *params = mState.mCaps.maxShaderStorageBlocks[ShaderType::TessControl];
+            *params = mState.getCaps().maxShaderStorageBlocks[ShaderType::TessControl];
             break;
         case GL_MAX_TESS_EVALUATION_SHADER_STORAGE_BLOCKS_EXT:
-            *params = mState.mCaps.maxShaderStorageBlocks[ShaderType::TessEvaluation];
+            *params = mState.getCaps().maxShaderStorageBlocks[ShaderType::TessEvaluation];
             break;
         // GLES1 emulation: Caps queries
         case GL_MAX_TEXTURE_UNITS:
-            *params = mState.mCaps.maxMultitextureUnits;
+            *params = mState.getCaps().maxMultitextureUnits;
             break;
         case GL_MAX_MODELVIEW_STACK_DEPTH:
-            *params = mState.mCaps.maxModelviewMatrixStackDepth;
+            *params = mState.getCaps().maxModelviewMatrixStackDepth;
             break;
         case GL_MAX_PROJECTION_STACK_DEPTH:
-            *params = mState.mCaps.maxProjectionMatrixStackDepth;
+            *params = mState.getCaps().maxProjectionMatrixStackDepth;
             break;
         case GL_MAX_TEXTURE_STACK_DEPTH:
-            *params = mState.mCaps.maxTextureMatrixStackDepth;
+            *params = mState.getCaps().maxTextureMatrixStackDepth;
             break;
         case GL_MAX_LIGHTS:
-            *params = mState.mCaps.maxLights;
+            *params = mState.getCaps().maxLights;
             break;
 
         // case GL_MAX_CLIP_DISTANCES_EXT:  Conflict enum value
@@ -2318,18 +2318,18 @@ void Context::getIntegervImpl(GLenum pname, GLint *params) const
             if (getClientVersion().major >= 2)
             {
                 // GL_APPLE_clip_distance / GL_EXT_clip_cull_distance / GL_ANGLE_clip_cull_distance
-                *params = mState.mCaps.maxClipDistances;
+                *params = mState.getCaps().maxClipDistances;
             }
             else
             {
-                *params = mState.mCaps.maxClipPlanes;
+                *params = mState.getCaps().maxClipPlanes;
             }
             break;
         case GL_MAX_CULL_DISTANCES_EXT:
-            *params = mState.mCaps.maxCullDistances;
+            *params = mState.getCaps().maxCullDistances;
             break;
         case GL_MAX_COMBINED_CLIP_AND_CULL_DISTANCES_EXT:
-            *params = mState.mCaps.maxCombinedClipAndCullDistances;
+            *params = mState.getCaps().maxCombinedClipAndCullDistances;
             break;
         // GLES1 emulation: Vertex attribute queries
         case GL_VERTEX_ARRAY_BUFFER_BINDING:
@@ -2366,35 +2366,35 @@ void Context::getIntegervImpl(GLenum pname, GLint *params) const
 
         // GL_EXT_blend_func_extended
         case GL_MAX_DUAL_SOURCE_DRAW_BUFFERS_EXT:
-            *params = mState.mCaps.maxDualSourceDrawBuffers;
+            *params = mState.getCaps().maxDualSourceDrawBuffers;
             break;
 
         // OES_shader_multisample_interpolation
         case GL_FRAGMENT_INTERPOLATION_OFFSET_BITS_OES:
-            *params = mState.mCaps.subPixelInterpolationOffsetBits;
+            *params = mState.getCaps().subPixelInterpolationOffsetBits;
             break;
 
         // GL_OES_texture_buffer
         case GL_MAX_TEXTURE_BUFFER_SIZE:
-            *params = mState.mCaps.maxTextureBufferSize;
+            *params = mState.getCaps().maxTextureBufferSize;
             break;
         case GL_TEXTURE_BUFFER_OFFSET_ALIGNMENT:
-            *params = mState.mCaps.textureBufferOffsetAlignment;
+            *params = mState.getCaps().textureBufferOffsetAlignment;
             break;
 
         // ANGLE_shader_pixel_local_storage
         case GL_MAX_PIXEL_LOCAL_STORAGE_PLANES_ANGLE:
-            *params = mState.mCaps.maxPixelLocalStoragePlanes;
+            *params = mState.getCaps().maxPixelLocalStoragePlanes;
             break;
         case GL_MAX_COLOR_ATTACHMENTS_WITH_ACTIVE_PIXEL_LOCAL_STORAGE_ANGLE:
-            *params = mState.mCaps.maxColorAttachmentsWithActivePixelLocalStorage;
+            *params = mState.getCaps().maxColorAttachmentsWithActivePixelLocalStorage;
             break;
         case GL_MAX_COMBINED_DRAW_BUFFERS_AND_PIXEL_LOCAL_STORAGE_PLANES_ANGLE:
-            *params = mState.mCaps.maxCombinedDrawBuffersAndPixelLocalStoragePlanes;
+            *params = mState.getCaps().maxCombinedDrawBuffersAndPixelLocalStoragePlanes;
             break;
 
         case GL_QUERY_COUNTER_BITS_EXT:
-            *params = mState.mCaps.queryCounterBitsTimestamp;
+            *params = mState.getCaps().queryCounterBitsTimestamp;
             break;
 
         default:
@@ -2416,19 +2416,19 @@ void Context::getInteger64vImpl(GLenum pname, GLint64 *params) const
     switch (pname)
     {
         case GL_MAX_ELEMENT_INDEX:
-            *params = mState.mCaps.maxElementIndex;
+            *params = mState.getCaps().maxElementIndex;
             break;
         case GL_MAX_UNIFORM_BLOCK_SIZE:
-            *params = mState.mCaps.maxUniformBlockSize;
+            *params = mState.getCaps().maxUniformBlockSize;
             break;
         case GL_MAX_COMBINED_VERTEX_UNIFORM_COMPONENTS:
-            *params = mState.mCaps.maxCombinedShaderUniformComponents[ShaderType::Vertex];
+            *params = mState.getCaps().maxCombinedShaderUniformComponents[ShaderType::Vertex];
             break;
         case GL_MAX_COMBINED_FRAGMENT_UNIFORM_COMPONENTS:
-            *params = mState.mCaps.maxCombinedShaderUniformComponents[ShaderType::Fragment];
+            *params = mState.getCaps().maxCombinedShaderUniformComponents[ShaderType::Fragment];
             break;
         case GL_MAX_SERVER_WAIT_TIMEOUT:
-            *params = mState.mCaps.maxServerWaitTimeout;
+            *params = mState.getCaps().maxServerWaitTimeout;
             break;
 
         // GL_EXT_disjoint_timer_query
@@ -2437,7 +2437,7 @@ void Context::getInteger64vImpl(GLenum pname, GLint64 *params) const
             break;
 
         case GL_MAX_SHADER_STORAGE_BLOCK_SIZE:
-            *params = mState.mCaps.maxShaderStorageBlockSize;
+            *params = mState.getCaps().maxShaderStorageBlockSize;
             break;
         default:
             UNREACHABLE();
@@ -2474,11 +2474,11 @@ void Context::getIntegeri_v(GLenum target, GLuint index, GLint *data)
         {
             case GL_MAX_COMPUTE_WORK_GROUP_COUNT:
                 ASSERT(index < 3u);
-                *data = mState.mCaps.maxComputeWorkGroupCount[index];
+                *data = mState.getCaps().maxComputeWorkGroupCount[index];
                 break;
             case GL_MAX_COMPUTE_WORK_GROUP_SIZE:
                 ASSERT(index < 3u);
-                *data = mState.mCaps.maxComputeWorkGroupSize[index];
+                *data = mState.getCaps().maxComputeWorkGroupSize[index];
                 break;
             default:
                 mState.getIntegeri_v(this, target, index, data);
@@ -3200,9 +3200,9 @@ VertexArray *Context::checkVertexArrayAllocation(VertexArrayID vertexArrayHandle
     VertexArray *vertexArray = getVertexArray(vertexArrayHandle);
     if (!vertexArray)
     {
-        vertexArray =
-            new VertexArray(mImplementation.get(), vertexArrayHandle,
-                            mState.mCaps.maxVertexAttributes, mState.mCaps.maxVertexAttribBindings);
+        vertexArray = new VertexArray(mImplementation.get(), vertexArrayHandle,
+                                      mState.getCaps().maxVertexAttributes,
+                                      mState.getCaps().maxVertexAttribBindings);
         vertexArray->setBufferAccessValidationEnabled(mBufferAccessValidationEnabled);
 
         mVertexArrayMap.assign(vertexArrayHandle, vertexArray);
@@ -3219,7 +3219,7 @@ TransformFeedback *Context::checkTransformFeedbackAllocation(
     if (!transformFeedback)
     {
         transformFeedback =
-            new TransformFeedback(mImplementation.get(), transformFeedbackHandle, mState.mCaps);
+            new TransformFeedback(mImplementation.get(), transformFeedbackHandle, mState.getCaps());
         transformFeedback->addRef();
         mTransformFeedbackMap.assign(transformFeedbackHandle, transformFeedback);
     }
@@ -3553,7 +3553,7 @@ void Context::initExtensionStrings()
     };
 
     mExtensionStrings.clear();
-    for (const auto &extensionString : mState.mExtensions.getStrings())
+    for (const auto &extensionString : mState.getExtensions().getStrings())
     {
         mExtensionStrings.push_back(MakeStaticString(extensionString));
     }
@@ -3563,7 +3563,7 @@ void Context::initExtensionStrings()
     for (const auto &extensionInfo : GetExtensionInfoMap())
     {
         if (extensionInfo.second.Requestable &&
-            !(mState.mExtensions.*(extensionInfo.second.ExtensionsMember)) &&
+            !(mState.getExtensions().*(extensionInfo.second.ExtensionsMember)) &&
             mSupportedExtensions.*(extensionInfo.second.ExtensionsMember))
         {
             mRequestableExtensionStrings.push_back(MakeStaticString(extensionInfo.first));
@@ -3677,13 +3677,13 @@ void Context::setExtensionEnabled(const char *name, bool enabled)
     ASSERT(extension.Requestable);
     ASSERT(isExtensionRequestable(name));
 
-    if (mState.mExtensions.*(extension.ExtensionsMember) == enabled)
+    if (mState.getExtensions().*(extension.ExtensionsMember) == enabled)
     {
         // No change
         return;
     }
 
-    mState.mExtensions.*(extension.ExtensionsMember) = enabled;
+    mState.getMutableExtensions()->*(extension.ExtensionsMember) = enabled;
 
     if (enabled)
     {
@@ -3962,8 +3962,8 @@ Extensions Context::generateSupportedExtensions() const
     // Determine robust resource init availability from EGL.
     supportedExtensions.robustResourceInitializationANGLE = mState.isRobustResourceInitEnabled();
 
-    // mState.mExtensions.robustBufferAccessBehaviorKHR is true only if robust access is true and
-    // the backend supports it.
+    // mState.getExtensions().robustBufferAccessBehaviorKHR is true only if robust access is true
+    // and the backend supports it.
     supportedExtensions.robustBufferAccessBehaviorKHR =
         mState.hasRobustAccess() && supportedExtensions.robustBufferAccessBehaviorKHR;
 
@@ -4030,7 +4030,8 @@ Extensions Context::generateSupportedExtensions() const
 
 void Context::initCaps()
 {
-    mState.mCaps = mImplementation->getNativeCaps();
+    Caps *caps = mState.getMutableCaps();
+    *caps      = mImplementation->getNativeCaps();
 
     // TODO (http://anglebug.com/6010): mSupportedExtensions should not be modified here
     mSupportedExtensions = generateSupportedExtensions();
@@ -4067,36 +4068,37 @@ void Context::initCaps()
         mSupportedExtensions.textureCompressionAstcSliced3dKHR               = false;
         mSupportedExtensions.textureFilteringHintCHROMIUM                    = false;
 
-        mState.mCaps.compressedTextureFormats.clear();
+        caps->compressedTextureFormats.clear();
     }
 
-    mState.mExtensions = mSupportedExtensions;
+    Extensions *extensions = mState.getMutableExtensions();
+    *extensions            = mSupportedExtensions;
 
-    mState.mLimitations = mImplementation->getNativeLimitations();
+    *mState.getMutableLimitations() = mImplementation->getNativeLimitations();
 
     // GLES1 emulation: Initialize caps (Table 6.20 / 6.22 in the ES 1.1 spec)
     if (getClientType() == EGL_OPENGL_API || getClientVersion() < Version(2, 0))
     {
-        mState.mCaps.maxMultitextureUnits          = 4;
-        mState.mCaps.maxClipPlanes                 = 6;
-        mState.mCaps.maxLights                     = 8;
-        mState.mCaps.maxModelviewMatrixStackDepth  = Caps::GlobalMatrixStackDepth;
-        mState.mCaps.maxProjectionMatrixStackDepth = Caps::GlobalMatrixStackDepth;
-        mState.mCaps.maxTextureMatrixStackDepth    = Caps::GlobalMatrixStackDepth;
-        mState.mCaps.minSmoothPointSize            = 1.0f;
-        mState.mCaps.maxSmoothPointSize            = 1.0f;
-        mState.mCaps.minSmoothLineWidth            = 1.0f;
-        mState.mCaps.maxSmoothLineWidth            = 1.0f;
+        caps->maxMultitextureUnits          = 4;
+        caps->maxClipPlanes                 = 6;
+        caps->maxLights                     = 8;
+        caps->maxModelviewMatrixStackDepth  = Caps::GlobalMatrixStackDepth;
+        caps->maxProjectionMatrixStackDepth = Caps::GlobalMatrixStackDepth;
+        caps->maxTextureMatrixStackDepth    = Caps::GlobalMatrixStackDepth;
+        caps->minSmoothPointSize            = 1.0f;
+        caps->maxSmoothPointSize            = 1.0f;
+        caps->minSmoothLineWidth            = 1.0f;
+        caps->maxSmoothLineWidth            = 1.0f;
     }
 
-    mState.mCaps.maxDebugMessageLength   = 1024;
-    mState.mCaps.maxDebugLoggedMessages  = 1024;
-    mState.mCaps.maxDebugGroupStackDepth = 1024;
-    mState.mCaps.maxLabelLength          = 1024;
+    caps->maxDebugMessageLength   = 1024;
+    caps->maxDebugLoggedMessages  = 1024;
+    caps->maxDebugGroupStackDepth = 1024;
+    caps->maxLabelLength          = 1024;
 
     if (getClientVersion() < Version(3, 0))
     {
-        mState.mCaps.maxViews = 1u;
+        caps->maxViews = 1u;
     }
 
 #if 0
@@ -4119,133 +4121,128 @@ void Context::initCaps()
     } while (0)
 
     // Apply/Verify implementation limits
-    ANGLE_LIMIT_CAP(mState.mCaps.maxDrawBuffers, IMPLEMENTATION_MAX_DRAW_BUFFERS);
-    ANGLE_LIMIT_CAP(mState.mCaps.maxColorAttachments, IMPLEMENTATION_MAX_DRAW_BUFFERS);
-    ANGLE_LIMIT_CAP(mState.mCaps.maxVertexAttributes, MAX_VERTEX_ATTRIBS);
-    ANGLE_LIMIT_CAP(mState.mCaps.maxVertexAttribStride,
+    ANGLE_LIMIT_CAP(caps->maxDrawBuffers, IMPLEMENTATION_MAX_DRAW_BUFFERS);
+    ANGLE_LIMIT_CAP(caps->maxColorAttachments, IMPLEMENTATION_MAX_DRAW_BUFFERS);
+    ANGLE_LIMIT_CAP(caps->maxVertexAttributes, MAX_VERTEX_ATTRIBS);
+    ANGLE_LIMIT_CAP(caps->maxVertexAttribStride,
                     static_cast<GLint>(limits::kMaxVertexAttribStride));
 
-    ASSERT(mState.mCaps.minAliasedPointSize >= 1.0f);
+    ASSERT(caps->minAliasedPointSize >= 1.0f);
 
     if (getClientVersion() < ES_3_1)
     {
-        mState.mCaps.maxVertexAttribBindings = mState.mCaps.maxVertexAttributes;
+        caps->maxVertexAttribBindings = caps->maxVertexAttributes;
     }
     else
     {
-        ANGLE_LIMIT_CAP(mState.mCaps.maxVertexAttribBindings, MAX_VERTEX_ATTRIB_BINDINGS);
+        ANGLE_LIMIT_CAP(caps->maxVertexAttribBindings, MAX_VERTEX_ATTRIB_BINDINGS);
     }
 
     if (mWebGLContext && getLimitations().limitWebglMaxTextureSizeTo4096)
     {
         constexpr GLint kMaxTextureSize = 4096;
-        ANGLE_LIMIT_CAP(mState.mCaps.max2DTextureSize, kMaxTextureSize);
-        ANGLE_LIMIT_CAP(mState.mCaps.max3DTextureSize, kMaxTextureSize);
-        ANGLE_LIMIT_CAP(mState.mCaps.maxCubeMapTextureSize, kMaxTextureSize);
-        ANGLE_LIMIT_CAP(mState.mCaps.maxArrayTextureLayers, kMaxTextureSize);
-        ANGLE_LIMIT_CAP(mState.mCaps.maxRectangleTextureSize, kMaxTextureSize);
+        ANGLE_LIMIT_CAP(caps->max2DTextureSize, kMaxTextureSize);
+        ANGLE_LIMIT_CAP(caps->max3DTextureSize, kMaxTextureSize);
+        ANGLE_LIMIT_CAP(caps->maxCubeMapTextureSize, kMaxTextureSize);
+        ANGLE_LIMIT_CAP(caps->maxArrayTextureLayers, kMaxTextureSize);
+        ANGLE_LIMIT_CAP(caps->maxRectangleTextureSize, kMaxTextureSize);
     }
 
-    ANGLE_LIMIT_CAP(mState.mCaps.max2DTextureSize, IMPLEMENTATION_MAX_2D_TEXTURE_SIZE);
-    ANGLE_LIMIT_CAP(mState.mCaps.maxCubeMapTextureSize, IMPLEMENTATION_MAX_CUBE_MAP_TEXTURE_SIZE);
-    ANGLE_LIMIT_CAP(mState.mCaps.max3DTextureSize, IMPLEMENTATION_MAX_3D_TEXTURE_SIZE);
-    ANGLE_LIMIT_CAP(mState.mCaps.maxArrayTextureLayers, IMPLEMENTATION_MAX_2D_ARRAY_TEXTURE_LAYERS);
-    ANGLE_LIMIT_CAP(mState.mCaps.maxRectangleTextureSize, IMPLEMENTATION_MAX_2D_TEXTURE_SIZE);
+    ANGLE_LIMIT_CAP(caps->max2DTextureSize, IMPLEMENTATION_MAX_2D_TEXTURE_SIZE);
+    ANGLE_LIMIT_CAP(caps->maxCubeMapTextureSize, IMPLEMENTATION_MAX_CUBE_MAP_TEXTURE_SIZE);
+    ANGLE_LIMIT_CAP(caps->max3DTextureSize, IMPLEMENTATION_MAX_3D_TEXTURE_SIZE);
+    ANGLE_LIMIT_CAP(caps->maxArrayTextureLayers, IMPLEMENTATION_MAX_2D_ARRAY_TEXTURE_LAYERS);
+    ANGLE_LIMIT_CAP(caps->maxRectangleTextureSize, IMPLEMENTATION_MAX_2D_TEXTURE_SIZE);
 
-    ANGLE_LIMIT_CAP(mState.mCaps.maxShaderUniformBlocks[ShaderType::Vertex],
+    ANGLE_LIMIT_CAP(caps->maxShaderUniformBlocks[ShaderType::Vertex],
                     IMPLEMENTATION_MAX_VERTEX_SHADER_UNIFORM_BUFFERS);
-    ANGLE_LIMIT_CAP(mState.mCaps.maxShaderUniformBlocks[ShaderType::Geometry],
+    ANGLE_LIMIT_CAP(caps->maxShaderUniformBlocks[ShaderType::Geometry],
                     IMPLEMENTATION_MAX_GEOMETRY_SHADER_UNIFORM_BUFFERS);
-    ANGLE_LIMIT_CAP(mState.mCaps.maxShaderUniformBlocks[ShaderType::Fragment],
+    ANGLE_LIMIT_CAP(caps->maxShaderUniformBlocks[ShaderType::Fragment],
                     IMPLEMENTATION_MAX_FRAGMENT_SHADER_UNIFORM_BUFFERS);
-    ANGLE_LIMIT_CAP(mState.mCaps.maxShaderUniformBlocks[ShaderType::Compute],
+    ANGLE_LIMIT_CAP(caps->maxShaderUniformBlocks[ShaderType::Compute],
                     IMPLEMENTATION_MAX_COMPUTE_SHADER_UNIFORM_BUFFERS);
-    ANGLE_LIMIT_CAP(mState.mCaps.maxCombinedUniformBlocks,
+    ANGLE_LIMIT_CAP(caps->maxCombinedUniformBlocks,
                     IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS);
-    ANGLE_LIMIT_CAP(mState.mCaps.maxUniformBufferBindings,
-                    IMPLEMENTATION_MAX_UNIFORM_BUFFER_BINDINGS);
+    ANGLE_LIMIT_CAP(caps->maxUniformBufferBindings, IMPLEMENTATION_MAX_UNIFORM_BUFFER_BINDINGS);
 
-    ANGLE_LIMIT_CAP(mState.mCaps.maxVertexOutputComponents, IMPLEMENTATION_MAX_VARYING_VECTORS * 4);
-    ANGLE_LIMIT_CAP(mState.mCaps.maxFragmentInputComponents,
-                    IMPLEMENTATION_MAX_VARYING_VECTORS * 4);
+    ANGLE_LIMIT_CAP(caps->maxVertexOutputComponents, IMPLEMENTATION_MAX_VARYING_VECTORS * 4);
+    ANGLE_LIMIT_CAP(caps->maxFragmentInputComponents, IMPLEMENTATION_MAX_VARYING_VECTORS * 4);
 
-    ANGLE_LIMIT_CAP(mState.mCaps.maxTransformFeedbackInterleavedComponents,
+    ANGLE_LIMIT_CAP(caps->maxTransformFeedbackInterleavedComponents,
                     IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_INTERLEAVED_COMPONENTS);
-    ANGLE_LIMIT_CAP(mState.mCaps.maxTransformFeedbackSeparateAttributes,
+    ANGLE_LIMIT_CAP(caps->maxTransformFeedbackSeparateAttributes,
                     IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS);
-    ANGLE_LIMIT_CAP(mState.mCaps.maxTransformFeedbackSeparateComponents,
+    ANGLE_LIMIT_CAP(caps->maxTransformFeedbackSeparateComponents,
                     IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_SEPARATE_COMPONENTS);
 
-    if (getClientVersion() < ES_3_2 && !mState.mExtensions.tessellationShaderEXT)
+    if (getClientVersion() < ES_3_2 && !extensions->tessellationShaderEXT)
     {
-        ANGLE_LIMIT_CAP(mState.mCaps.maxCombinedTextureImageUnits,
+        ANGLE_LIMIT_CAP(caps->maxCombinedTextureImageUnits,
                         IMPLEMENTATION_MAX_ES31_ACTIVE_TEXTURES);
     }
     else
     {
-        ANGLE_LIMIT_CAP(mState.mCaps.maxCombinedTextureImageUnits,
-                        IMPLEMENTATION_MAX_ACTIVE_TEXTURES);
+        ANGLE_LIMIT_CAP(caps->maxCombinedTextureImageUnits, IMPLEMENTATION_MAX_ACTIVE_TEXTURES);
     }
 
     for (ShaderType shaderType : AllShaderTypes())
     {
-        ANGLE_LIMIT_CAP(mState.mCaps.maxShaderTextureImageUnits[shaderType],
+        ANGLE_LIMIT_CAP(caps->maxShaderTextureImageUnits[shaderType],
                         IMPLEMENTATION_MAX_SHADER_TEXTURES);
     }
 
-    ANGLE_LIMIT_CAP(mState.mCaps.maxImageUnits, IMPLEMENTATION_MAX_IMAGE_UNITS);
-    ANGLE_LIMIT_CAP(mState.mCaps.maxCombinedImageUniforms, IMPLEMENTATION_MAX_IMAGE_UNITS);
+    ANGLE_LIMIT_CAP(caps->maxImageUnits, IMPLEMENTATION_MAX_IMAGE_UNITS);
+    ANGLE_LIMIT_CAP(caps->maxCombinedImageUniforms, IMPLEMENTATION_MAX_IMAGE_UNITS);
     for (ShaderType shaderType : AllShaderTypes())
     {
-        ANGLE_LIMIT_CAP(mState.mCaps.maxShaderImageUniforms[shaderType],
-                        IMPLEMENTATION_MAX_IMAGE_UNITS);
+        ANGLE_LIMIT_CAP(caps->maxShaderImageUniforms[shaderType], IMPLEMENTATION_MAX_IMAGE_UNITS);
     }
 
     for (ShaderType shaderType : AllShaderTypes())
     {
-        ANGLE_LIMIT_CAP(mState.mCaps.maxShaderAtomicCounterBuffers[shaderType],
+        ANGLE_LIMIT_CAP(caps->maxShaderAtomicCounterBuffers[shaderType],
                         IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFER_BINDINGS);
     }
-    ANGLE_LIMIT_CAP(mState.mCaps.maxAtomicCounterBufferBindings,
+    ANGLE_LIMIT_CAP(caps->maxAtomicCounterBufferBindings,
                     IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFER_BINDINGS);
-    ANGLE_LIMIT_CAP(mState.mCaps.maxCombinedAtomicCounterBuffers,
+    ANGLE_LIMIT_CAP(caps->maxCombinedAtomicCounterBuffers,
                     IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFER_BINDINGS);
 
     for (ShaderType shaderType : AllShaderTypes())
     {
-        ANGLE_LIMIT_CAP(mState.mCaps.maxShaderStorageBlocks[shaderType],
+        ANGLE_LIMIT_CAP(caps->maxShaderStorageBlocks[shaderType],
                         IMPLEMENTATION_MAX_SHADER_STORAGE_BUFFER_BINDINGS);
     }
-    ANGLE_LIMIT_CAP(mState.mCaps.maxShaderStorageBufferBindings,
+    ANGLE_LIMIT_CAP(caps->maxShaderStorageBufferBindings,
                     IMPLEMENTATION_MAX_SHADER_STORAGE_BUFFER_BINDINGS);
-    ANGLE_LIMIT_CAP(mState.mCaps.maxCombinedShaderStorageBlocks,
+    ANGLE_LIMIT_CAP(caps->maxCombinedShaderStorageBlocks,
                     IMPLEMENTATION_MAX_SHADER_STORAGE_BUFFER_BINDINGS);
 
-    ANGLE_LIMIT_CAP(mState.mCaps.maxClipDistances, IMPLEMENTATION_MAX_CLIP_DISTANCES);
+    ANGLE_LIMIT_CAP(caps->maxClipDistances, IMPLEMENTATION_MAX_CLIP_DISTANCES);
 
-    ANGLE_LIMIT_CAP(mState.mCaps.maxFramebufferLayers, IMPLEMENTATION_MAX_FRAMEBUFFER_LAYERS);
+    ANGLE_LIMIT_CAP(caps->maxFramebufferLayers, IMPLEMENTATION_MAX_FRAMEBUFFER_LAYERS);
 
-    ANGLE_LIMIT_CAP(mState.mCaps.maxSampleMaskWords, IMPLEMENTATION_MAX_SAMPLE_MASK_WORDS);
-    ANGLE_LIMIT_CAP(mState.mCaps.maxSamples, IMPLEMENTATION_MAX_SAMPLES);
-    ANGLE_LIMIT_CAP(mState.mCaps.maxFramebufferSamples, IMPLEMENTATION_MAX_SAMPLES);
-    ANGLE_LIMIT_CAP(mState.mCaps.maxColorTextureSamples, IMPLEMENTATION_MAX_SAMPLES);
-    ANGLE_LIMIT_CAP(mState.mCaps.maxDepthTextureSamples, IMPLEMENTATION_MAX_SAMPLES);
-    ANGLE_LIMIT_CAP(mState.mCaps.maxIntegerSamples, IMPLEMENTATION_MAX_SAMPLES);
+    ANGLE_LIMIT_CAP(caps->maxSampleMaskWords, IMPLEMENTATION_MAX_SAMPLE_MASK_WORDS);
+    ANGLE_LIMIT_CAP(caps->maxSamples, IMPLEMENTATION_MAX_SAMPLES);
+    ANGLE_LIMIT_CAP(caps->maxFramebufferSamples, IMPLEMENTATION_MAX_SAMPLES);
+    ANGLE_LIMIT_CAP(caps->maxColorTextureSamples, IMPLEMENTATION_MAX_SAMPLES);
+    ANGLE_LIMIT_CAP(caps->maxDepthTextureSamples, IMPLEMENTATION_MAX_SAMPLES);
+    ANGLE_LIMIT_CAP(caps->maxIntegerSamples, IMPLEMENTATION_MAX_SAMPLES);
 
-    ANGLE_LIMIT_CAP(mState.mCaps.maxViews, IMPLEMENTATION_ANGLE_MULTIVIEW_MAX_VIEWS);
+    ANGLE_LIMIT_CAP(caps->maxViews, IMPLEMENTATION_ANGLE_MULTIVIEW_MAX_VIEWS);
 
-    ANGLE_LIMIT_CAP(mState.mCaps.maxDualSourceDrawBuffers,
-                    IMPLEMENTATION_MAX_DUAL_SOURCE_DRAW_BUFFERS);
+    ANGLE_LIMIT_CAP(caps->maxDualSourceDrawBuffers, IMPLEMENTATION_MAX_DUAL_SOURCE_DRAW_BUFFERS);
 
     // WebGL compatibility
-    mState.mExtensions.webglCompatibilityANGLE = mWebGLContext;
+    extensions->webglCompatibilityANGLE = mWebGLContext;
     for (const auto &extensionInfo : GetExtensionInfoMap())
     {
         // If the user has requested that extensions start disabled and they are requestable,
         // disable them.
         if (!mExtensionsEnabled && extensionInfo.second.Requestable)
         {
-            mState.mExtensions.*(extensionInfo.second.ExtensionsMember) = false;
+            extensions->*(extensionInfo.second.ExtensionsMember) = false;
         }
     }
 
@@ -4262,12 +4259,12 @@ void Context::initCaps()
         if (mWebGLContext)
         {
             mSupportedExtensions.textureCompressionAstcLdrKHR = false;
-            mState.mExtensions.textureCompressionAstcLdrKHR   = false;
+            extensions->textureCompressionAstcLdrKHR          = false;
         }
 #if !defined(ANGLE_HAS_ASTCENC)
         // Don't expose emulated ASTC when it's not built.
         mSupportedExtensions.textureCompressionAstcLdrKHR = false;
-        mState.mExtensions.textureCompressionAstcLdrKHR   = false;
+        extensions->textureCompressionAstcLdrKHR          = false;
 #endif
     }
 
@@ -4293,55 +4290,55 @@ void Context::initCaps()
         // Set to the most common limit per gpuinfo.org. Required for several platforms we test.
         constexpr GLint maxImageUnits = 8;
         INFO() << "Limiting image unit count to " << maxImageUnits;
-        ANGLE_LIMIT_CAP(mState.mCaps.maxImageUnits, maxImageUnits);
+        ANGLE_LIMIT_CAP(caps->maxImageUnits, maxImageUnits);
         for (ShaderType shaderType : AllShaderTypes())
         {
-            ANGLE_LIMIT_CAP(mState.mCaps.maxShaderImageUniforms[shaderType], maxImageUnits);
+            ANGLE_LIMIT_CAP(caps->maxShaderImageUniforms[shaderType], maxImageUnits);
         }
 
         // Set a large uniform buffer offset alignment that works on multiple platforms.
         // The offset used by the trace needs to be divisible by the device's actual value.
         // Values seen during development: ARM (16), Intel (32), Qualcomm (128), Nvidia (256)
         constexpr GLint uniformBufferOffsetAlignment = 256;
-        ASSERT(uniformBufferOffsetAlignment % mState.mCaps.uniformBufferOffsetAlignment == 0);
+        ASSERT(uniformBufferOffsetAlignment % caps->uniformBufferOffsetAlignment == 0);
         INFO() << "Setting uniform buffer offset alignment to " << uniformBufferOffsetAlignment;
-        mState.mCaps.uniformBufferOffsetAlignment = uniformBufferOffsetAlignment;
+        caps->uniformBufferOffsetAlignment = uniformBufferOffsetAlignment;
 
         // Also limit texture buffer offset alignment, if enabled
-        if (mState.mExtensions.textureBufferAny())
+        if (extensions->textureBufferAny())
         {
             constexpr GLint textureBufferOffsetAlignment =
                 gl::limits::kMinTextureBufferOffsetAlignment;
-            ASSERT(textureBufferOffsetAlignment % mState.mCaps.textureBufferOffsetAlignment == 0);
+            ASSERT(textureBufferOffsetAlignment % caps->textureBufferOffsetAlignment == 0);
             INFO() << "Setting texture buffer offset alignment to " << textureBufferOffsetAlignment;
-            mState.mCaps.textureBufferOffsetAlignment = textureBufferOffsetAlignment;
+            caps->textureBufferOffsetAlignment = textureBufferOffsetAlignment;
         }
 
         INFO() << "Disabling GL_EXT_map_buffer_range and GL_OES_mapbuffer during capture, which "
                   "are not supported on some native drivers";
-        mState.mExtensions.mapBufferRangeEXT = false;
-        mState.mExtensions.mapbufferOES      = false;
+        extensions->mapBufferRangeEXT = false;
+        extensions->mapbufferOES      = false;
 
         INFO() << "Disabling GL_CHROMIUM_bind_uniform_location during capture, which is not "
                   "supported on native drivers";
-        mState.mExtensions.bindUniformLocationCHROMIUM = false;
+        extensions->bindUniformLocationCHROMIUM = false;
 
         INFO() << "Disabling GL_NV_shader_noperspective_interpolation during capture, which is not "
                   "supported on some native drivers";
-        mState.mExtensions.shaderNoperspectiveInterpolationNV = false;
+        extensions->shaderNoperspectiveInterpolationNV = false;
 
         INFO() << "Disabling GL_NV_framebuffer_blit during capture, which is not "
                   "supported on some native drivers";
-        mState.mExtensions.framebufferBlitNV = false;
+        extensions->framebufferBlitNV = false;
 
         INFO() << "Disabling GL_EXT_texture_mirror_clamp_to_edge during capture, which is not "
                   "supported on some native drivers";
-        mState.mExtensions.textureMirrorClampToEdgeEXT = false;
+        extensions->textureMirrorClampToEdgeEXT = false;
 
         // NVIDIA's Vulkan driver only supports 4 draw buffers
         constexpr GLint maxDrawBuffers = 4;
         INFO() << "Limiting draw buffer count to " << maxDrawBuffers;
-        ANGLE_LIMIT_CAP(mState.mCaps.maxDrawBuffers, maxDrawBuffers);
+        ANGLE_LIMIT_CAP(caps->maxDrawBuffers, maxDrawBuffers);
 
         // Unity based applications are sending down GL streams with undefined behavior.
         // Disabling EGL_KHR_create_context_no_error (which enables a new EGL attrib) prevents that,
@@ -4350,23 +4347,22 @@ void Context::initCaps()
         // prevents writing invalid calls to the capture.
         INFO() << "Enabling validation to prevent invalid calls from being captured. This "
                   "effectively disables GL_KHR_no_error and enables GL_ANGLE_robust_client_memory.";
-        mSkipValidation                            = false;
-        mState.mExtensions.noErrorKHR              = mSkipValidation;
-        mState.mExtensions.robustClientMemoryANGLE = !mSkipValidation;
+        mSkipValidation                     = false;
+        extensions->noErrorKHR              = mSkipValidation;
+        extensions->robustClientMemoryANGLE = !mSkipValidation;
 
         INFO() << "Disabling GL_OES_depth32 during capture, which is not widely supported on "
                   "mobile";
-        mState.mExtensions.depth32OES = false;
+        extensions->depth32OES = false;
 
         // Pixel 4 (Qualcomm) only supports 6 atomic counter buffer bindings.
         constexpr GLint maxAtomicCounterBufferBindings = 6;
         INFO() << "Limiting max atomic counter buffer bindings to "
                << maxAtomicCounterBufferBindings;
-        ANGLE_LIMIT_CAP(mState.mCaps.maxAtomicCounterBufferBindings,
-                        maxAtomicCounterBufferBindings);
+        ANGLE_LIMIT_CAP(caps->maxAtomicCounterBufferBindings, maxAtomicCounterBufferBindings);
         for (gl::ShaderType shaderType : gl::AllShaderTypes())
         {
-            ANGLE_LIMIT_CAP(mState.mCaps.maxShaderAtomicCounterBuffers[shaderType],
+            ANGLE_LIMIT_CAP(caps->maxShaderAtomicCounterBuffers[shaderType],
                             maxAtomicCounterBufferBindings);
         }
 
@@ -4374,18 +4370,17 @@ void Context::initCaps()
         constexpr GLint maxShaderStorageBufferBindings = 12;
         INFO() << "Limiting max shader storage buffer bindings to "
                << maxShaderStorageBufferBindings;
-        ANGLE_LIMIT_CAP(mState.mCaps.maxShaderStorageBufferBindings,
-                        maxShaderStorageBufferBindings);
+        ANGLE_LIMIT_CAP(caps->maxShaderStorageBufferBindings, maxShaderStorageBufferBindings);
         for (gl::ShaderType shaderType : gl::AllShaderTypes())
         {
-            ANGLE_LIMIT_CAP(mState.mCaps.maxShaderStorageBlocks[shaderType],
+            ANGLE_LIMIT_CAP(caps->maxShaderStorageBlocks[shaderType],
                             maxShaderStorageBufferBindings);
         }
 
         // Pixel 4 only supports GL_MAX_SAMPLES of 4
         constexpr GLint maxSamples = 4;
         INFO() << "Limiting GL_MAX_SAMPLES to " << maxSamples;
-        ANGLE_LIMIT_CAP(mState.mCaps.maxSamples, maxSamples);
+        ANGLE_LIMIT_CAP(caps->maxSamples, maxSamples);
 
         // Test if we require shadow memory for coherent buffer tracking
         getShareGroup()->getFrameCaptureShared()->determineMemoryProtectionSupport(this);
@@ -4394,9 +4389,9 @@ void Context::initCaps()
     // Disable support for OES_get_program_binary
     if (mDisplay->getFrontendFeatures().disableProgramBinary.enabled)
     {
-        mState.mExtensions.getProgramBinaryOES = false;
-        mState.mCaps.shaderBinaryFormats.clear();
-        mState.mCaps.programBinaryFormats.clear();
+        extensions->getProgramBinaryOES = false;
+        caps->shaderBinaryFormats.clear();
+        caps->programBinaryFormats.clear();
         mMemoryProgramCache = nullptr;
     }
 
@@ -4404,29 +4399,26 @@ void Context::initCaps()
     //
     // The backend may have already initialized these caps with its own custom values, in which case
     // maxPixelLocalStoragePlanes will already be nonzero and we can skip this step.
-    if (mSupportedExtensions.shaderPixelLocalStorageANGLE &&
-        mState.mCaps.maxPixelLocalStoragePlanes == 0)
+    if (mSupportedExtensions.shaderPixelLocalStorageANGLE && caps->maxPixelLocalStoragePlanes == 0)
     {
-        int maxDrawableAttachments =
-            std::min(mState.mCaps.maxDrawBuffers, mState.mCaps.maxColorAttachments);
+        int maxDrawableAttachments = std::min(caps->maxDrawBuffers, caps->maxColorAttachments);
         switch (mImplementation->getNativePixelLocalStorageOptions().type)
         {
             case ShPixelLocalStorageType::ImageLoadStore:
-                mState.mCaps.maxPixelLocalStoragePlanes =
-                    mState.mCaps.maxShaderImageUniforms[ShaderType::Fragment];
-                ANGLE_LIMIT_CAP(mState.mCaps.maxPixelLocalStoragePlanes,
+                caps->maxPixelLocalStoragePlanes =
+                    caps->maxShaderImageUniforms[ShaderType::Fragment];
+                ANGLE_LIMIT_CAP(caps->maxPixelLocalStoragePlanes,
                                 IMPLEMENTATION_MAX_PIXEL_LOCAL_STORAGE_PLANES);
-                mState.mCaps.maxColorAttachmentsWithActivePixelLocalStorage =
-                    mState.mCaps.maxColorAttachments;
-                mState.mCaps.maxCombinedDrawBuffersAndPixelLocalStoragePlanes = std::min<GLint>(
-                    mState.mCaps.maxPixelLocalStoragePlanes +
-                        std::min(mState.mCaps.maxDrawBuffers, mState.mCaps.maxColorAttachments),
-                    mState.mCaps.maxCombinedShaderOutputResources);
+                caps->maxColorAttachmentsWithActivePixelLocalStorage = caps->maxColorAttachments;
+                caps->maxCombinedDrawBuffersAndPixelLocalStoragePlanes =
+                    std::min<GLint>(caps->maxPixelLocalStoragePlanes +
+                                        std::min(caps->maxDrawBuffers, caps->maxColorAttachments),
+                                    caps->maxCombinedShaderOutputResources);
                 break;
 
             case ShPixelLocalStorageType::FramebufferFetch:
-                mState.mCaps.maxPixelLocalStoragePlanes = maxDrawableAttachments;
-                ANGLE_LIMIT_CAP(mState.mCaps.maxPixelLocalStoragePlanes,
+                caps->maxPixelLocalStoragePlanes = maxDrawableAttachments;
+                ANGLE_LIMIT_CAP(caps->maxPixelLocalStoragePlanes,
                                 IMPLEMENTATION_MAX_PIXEL_LOCAL_STORAGE_PLANES);
                 if (!mSupportedExtensions.drawBuffersIndexedAny())
                 {
@@ -4435,27 +4427,25 @@ void Context::initCaps()
                     // context doesn't have indexed blend and color mask support, then we will have
                     // have to disable them globally. This also means the application can't have its
                     // own draw buffers while PLS is active.
-                    mState.mCaps.maxColorAttachmentsWithActivePixelLocalStorage = 0;
+                    caps->maxColorAttachmentsWithActivePixelLocalStorage = 0;
                 }
                 else
                 {
-                    mState.mCaps.maxColorAttachmentsWithActivePixelLocalStorage =
+                    caps->maxColorAttachmentsWithActivePixelLocalStorage =
                         maxDrawableAttachments - 1;
                 }
-                mState.mCaps.maxCombinedDrawBuffersAndPixelLocalStoragePlanes =
-                    maxDrawableAttachments;
+                caps->maxCombinedDrawBuffersAndPixelLocalStoragePlanes = maxDrawableAttachments;
                 break;
 
             case ShPixelLocalStorageType::PixelLocalStorageEXT:
-                mState.mCaps.maxPixelLocalStoragePlanes =
-                    mState.mCaps.maxShaderPixelLocalStorageFastSizeEXT / 4;
-                ASSERT(mState.mCaps.maxPixelLocalStoragePlanes >= 4);
-                ANGLE_LIMIT_CAP(mState.mCaps.maxPixelLocalStoragePlanes,
+                caps->maxPixelLocalStoragePlanes = caps->maxShaderPixelLocalStorageFastSizeEXT / 4;
+                ASSERT(caps->maxPixelLocalStoragePlanes >= 4);
+                ANGLE_LIMIT_CAP(caps->maxPixelLocalStoragePlanes,
                                 IMPLEMENTATION_MAX_PIXEL_LOCAL_STORAGE_PLANES);
                 // EXT_shader_pixel_local_storage doesn't support rendering to color attachments.
-                mState.mCaps.maxColorAttachmentsWithActivePixelLocalStorage = 0;
-                mState.mCaps.maxCombinedDrawBuffersAndPixelLocalStoragePlanes =
-                    mState.mCaps.maxPixelLocalStoragePlanes;
+                caps->maxColorAttachmentsWithActivePixelLocalStorage = 0;
+                caps->maxCombinedDrawBuffersAndPixelLocalStoragePlanes =
+                    caps->maxPixelLocalStoragePlanes;
                 break;
 
             case ShPixelLocalStorageType::NotSupported:
@@ -4465,8 +4455,7 @@ void Context::initCaps()
     }
     // Validate that pixel local storage caps were initialized within implementation limits. We
     // can't just clamp this value here since it would potentially impact other caps.
-    ASSERT(mState.mCaps.maxPixelLocalStoragePlanes <=
-           IMPLEMENTATION_MAX_PIXEL_LOCAL_STORAGE_PLANES);
+    ASSERT(caps->maxPixelLocalStoragePlanes <= IMPLEMENTATION_MAX_PIXEL_LOCAL_STORAGE_PLANES);
 
 #undef ANGLE_LIMIT_CAP
 #undef ANGLE_LOG_CAP_LIMIT
@@ -4477,8 +4466,11 @@ void Context::initCaps()
 
 void Context::updateCaps()
 {
-    mState.mCaps.compressedTextureFormats.clear();
-    mState.mTextureCaps.clear();
+    Caps *caps                  = mState.getMutableCaps();
+    TextureCapsMap *textureCaps = mState.getMutableTextureCaps();
+
+    caps->compressedTextureFormats.clear();
+    textureCaps->clear();
 
     for (GLenum sizedInternalFormat : GetAllSizedInternalFormats())
     {
@@ -4488,23 +4480,25 @@ void Context::updateCaps()
         // Update the format caps based on the client version and extensions.
         // Caps are AND'd with the renderer caps because some core formats are still unsupported in
         // ES3.
-        formatCaps.texturable = formatCaps.texturable &&
-                                formatInfo.textureSupport(getClientVersion(), mState.mExtensions);
-        formatCaps.filterable = formatCaps.filterable &&
-                                formatInfo.filterSupport(getClientVersion(), mState.mExtensions);
+        formatCaps.texturable =
+            formatCaps.texturable &&
+            formatInfo.textureSupport(getClientVersion(), mState.getExtensions());
+        formatCaps.filterable =
+            formatCaps.filterable &&
+            formatInfo.filterSupport(getClientVersion(), mState.getExtensions());
         formatCaps.textureAttachment =
             formatCaps.textureAttachment &&
-            formatInfo.textureAttachmentSupport(getClientVersion(), mState.mExtensions);
+            formatInfo.textureAttachmentSupport(getClientVersion(), mState.getExtensions());
         formatCaps.renderbuffer =
             formatCaps.renderbuffer &&
-            formatInfo.renderbufferSupport(getClientVersion(), mState.mExtensions);
-        formatCaps.blendable =
-            formatCaps.blendable && formatInfo.blendSupport(getClientVersion(), mState.mExtensions);
+            formatInfo.renderbufferSupport(getClientVersion(), mState.getExtensions());
+        formatCaps.blendable = formatCaps.blendable &&
+                               formatInfo.blendSupport(getClientVersion(), mState.getExtensions());
 
         // OpenGL ES does not support multisampling with non-rendererable formats
         // OpenGL ES 3.0 or prior does not support multisampling with integer formats
         if (!formatCaps.renderbuffer ||
-            (getClientVersion() < ES_3_1 && !mState.mExtensions.textureMultisampleANGLE &&
+            (getClientVersion() < ES_3_1 && !mState.getExtensions().textureMultisampleANGLE &&
              formatInfo.isInt()))
         {
             formatCaps.sampleCounts.clear();
@@ -4521,12 +4515,12 @@ void Context::updateCaps()
             if (!formatInfo.isInt() && formatInfo.isRequiredRenderbufferFormat(getClientVersion()))
             {
                 ASSERT(getClientVersion() < ES_3_0 || formatMaxSamples >= 4);
-                mState.mCaps.maxSamples =
-                    std::min(static_cast<GLuint>(mState.mCaps.maxSamples), formatMaxSamples);
+                caps->maxSamples =
+                    std::min(static_cast<GLuint>(caps->maxSamples), formatMaxSamples);
             }
 
             // Handle GLES 3.1 MAX_*_SAMPLES values similarly to MAX_SAMPLES.
-            if (getClientVersion() >= ES_3_1 || mState.mExtensions.textureMultisampleANGLE)
+            if (getClientVersion() >= ES_3_1 || mState.getExtensions().textureMultisampleANGLE)
             {
                 // GLES 3.1 section 9.2.5: "Implementations must support creation of renderbuffers
                 // in these required formats with up to the value of MAX_SAMPLES multisamples, with
@@ -4535,8 +4529,8 @@ void Context::updateCaps()
                 // multisamples, which must be at least one."
                 if (formatInfo.isInt())
                 {
-                    mState.mCaps.maxIntegerSamples = std::min(
-                        static_cast<GLuint>(mState.mCaps.maxIntegerSamples), formatMaxSamples);
+                    caps->maxIntegerSamples =
+                        std::min(static_cast<GLuint>(caps->maxIntegerSamples), formatMaxSamples);
                 }
 
                 // GLES 3.1 section 19.3.1.
@@ -4544,15 +4538,13 @@ void Context::updateCaps()
                 {
                     if (formatInfo.depthBits > 0)
                     {
-                        mState.mCaps.maxDepthTextureSamples =
-                            std::min(static_cast<GLuint>(mState.mCaps.maxDepthTextureSamples),
-                                     formatMaxSamples);
+                        caps->maxDepthTextureSamples = std::min(
+                            static_cast<GLuint>(caps->maxDepthTextureSamples), formatMaxSamples);
                     }
                     else if (formatInfo.redBits > 0)
                     {
-                        mState.mCaps.maxColorTextureSamples =
-                            std::min(static_cast<GLuint>(mState.mCaps.maxColorTextureSamples),
-                                     formatMaxSamples);
+                        caps->maxColorTextureSamples = std::min(
+                            static_cast<GLuint>(caps->maxColorTextureSamples), formatMaxSamples);
                     }
                 }
             }
@@ -4560,10 +4552,10 @@ void Context::updateCaps()
 
         if (formatCaps.texturable && (formatInfo.compressed || formatInfo.paletted))
         {
-            mState.mCaps.compressedTextureFormats.push_back(sizedInternalFormat);
+            caps->compressedTextureFormats.push_back(sizedInternalFormat);
         }
 
-        mState.mTextureCaps.insert(sizedInternalFormat, formatCaps);
+        textureCaps->insert(sizedInternalFormat, formatCaps);
     }
 
     // If program binary is disabled, blank out the memory cache pointer.
@@ -4577,7 +4569,7 @@ void Context::updateCaps()
     mValidBufferBindings.set(BufferBinding::ElementArray);
     mValidBufferBindings.set(BufferBinding::Array);
 
-    if (mState.mExtensions.pixelBufferObjectNV || getClientVersion() >= ES_3_0)
+    if (mState.getExtensions().pixelBufferObjectNV || getClientVersion() >= ES_3_0)
     {
         mValidBufferBindings.set(BufferBinding::PixelPack);
         mValidBufferBindings.set(BufferBinding::PixelUnpack);
@@ -4599,7 +4591,7 @@ void Context::updateCaps()
         mValidBufferBindings.set(BufferBinding::DispatchIndirect);
     }
 
-    if (getClientVersion() >= ES_3_2 || mState.mExtensions.textureBufferAny())
+    if (getClientVersion() >= ES_3_2 || mState.getExtensions().textureBufferAny())
     {
         mValidBufferBindings.set(BufferBinding::Texture);
     }
@@ -6612,14 +6604,7 @@ void Context::primitiveBoundingBox(GLfloat minX,
                                    GLfloat maxZ,
                                    GLfloat maxW)
 {
-    mState.mBoundingBoxMinX = minX;
-    mState.mBoundingBoxMinY = minY;
-    mState.mBoundingBoxMinZ = minZ;
-    mState.mBoundingBoxMinW = minW;
-    mState.mBoundingBoxMaxX = maxX;
-    mState.mBoundingBoxMaxY = maxY;
-    mState.mBoundingBoxMaxZ = maxZ;
-    mState.mBoundingBoxMaxW = maxW;
+    mState.setBoundingBox(minX, minY, minZ, minW, maxX, maxY, maxZ, maxW);
 }
 
 void Context::bufferStorage(BufferBinding target,
@@ -7595,31 +7580,29 @@ void Context::getShaderPrecisionFormat(GLenum shadertype,
                                        GLint *range,
                                        GLint *precision)
 {
-    // TODO(jmadill): Compute shaders.
-
     switch (shadertype)
     {
         case GL_VERTEX_SHADER:
             switch (precisiontype)
             {
                 case GL_LOW_FLOAT:
-                    mState.mCaps.vertexLowpFloat.get(range, precision);
+                    mState.getCaps().vertexLowpFloat.get(range, precision);
                     break;
                 case GL_MEDIUM_FLOAT:
-                    mState.mCaps.vertexMediumpFloat.get(range, precision);
+                    mState.getCaps().vertexMediumpFloat.get(range, precision);
                     break;
                 case GL_HIGH_FLOAT:
-                    mState.mCaps.vertexHighpFloat.get(range, precision);
+                    mState.getCaps().vertexHighpFloat.get(range, precision);
                     break;
 
                 case GL_LOW_INT:
-                    mState.mCaps.vertexLowpInt.get(range, precision);
+                    mState.getCaps().vertexLowpInt.get(range, precision);
                     break;
                 case GL_MEDIUM_INT:
-                    mState.mCaps.vertexMediumpInt.get(range, precision);
+                    mState.getCaps().vertexMediumpInt.get(range, precision);
                     break;
                 case GL_HIGH_INT:
-                    mState.mCaps.vertexHighpInt.get(range, precision);
+                    mState.getCaps().vertexHighpInt.get(range, precision);
                     break;
 
                 default:
@@ -7632,23 +7615,23 @@ void Context::getShaderPrecisionFormat(GLenum shadertype,
             switch (precisiontype)
             {
                 case GL_LOW_FLOAT:
-                    mState.mCaps.fragmentLowpFloat.get(range, precision);
+                    mState.getCaps().fragmentLowpFloat.get(range, precision);
                     break;
                 case GL_MEDIUM_FLOAT:
-                    mState.mCaps.fragmentMediumpFloat.get(range, precision);
+                    mState.getCaps().fragmentMediumpFloat.get(range, precision);
                     break;
                 case GL_HIGH_FLOAT:
-                    mState.mCaps.fragmentHighpFloat.get(range, precision);
+                    mState.getCaps().fragmentHighpFloat.get(range, precision);
                     break;
 
                 case GL_LOW_INT:
-                    mState.mCaps.fragmentLowpInt.get(range, precision);
+                    mState.getCaps().fragmentLowpInt.get(range, precision);
                     break;
                 case GL_MEDIUM_INT:
-                    mState.mCaps.fragmentMediumpInt.get(range, precision);
+                    mState.getCaps().fragmentMediumpInt.get(range, precision);
                     break;
                 case GL_HIGH_INT:
-                    mState.mCaps.fragmentHighpInt.get(range, precision);
+                    mState.getCaps().fragmentHighpInt.get(range, precision);
                     break;
 
                 default:
@@ -8035,7 +8018,7 @@ void Context::validateProgram(ShaderProgramID program)
 {
     Program *programObject = getProgramResolveLink(program);
     ASSERT(programObject);
-    programObject->validate(mState.mCaps);
+    programObject->validate(mState.getCaps());
 }
 
 void Context::validateProgramPipeline(ProgramPipelineID pipeline)
@@ -8581,7 +8564,7 @@ void Context::getInternalformativ(GLenum target,
                                   GLsizei bufSize,
                                   GLint *params)
 {
-    const TextureCaps &formatCaps = mState.mTextureCaps.get(internalformat);
+    const TextureCaps &formatCaps = mState.getTextureCap(internalformat);
     QueryInternalFormativ(formatCaps, pname, bufSize, params);
 }
 
@@ -9903,7 +9886,7 @@ bool Context::usingDisplaySemaphoreShareGroup() const
 
 GLenum Context::getConvertedRenderbufferFormat(GLenum internalformat) const
 {
-    if (isWebGL() && mState.mClientVersion.major == 2 && internalformat == GL_DEPTH_STENCIL)
+    if (isWebGL() && mState.getClientMajorVersion() == 2 && internalformat == GL_DEPTH_STENCIL)
     {
         return GL_DEPTH24_STENCIL8;
     }
@@ -9940,7 +9923,7 @@ bool Context::isGLES1() const
 
 std::shared_ptr<angle::WorkerThreadPool> Context::getShaderCompileThreadPool() const
 {
-    if (mState.mExtensions.parallelShaderCompileKHR && mState.getMaxShaderCompilerThreads() > 0)
+    if (mState.getExtensions().parallelShaderCompileKHR && mState.getMaxShaderCompilerThreads() > 0)
     {
         return mDisplay->getMultiThreadPool();
     }
