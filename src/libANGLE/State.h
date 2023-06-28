@@ -783,9 +783,9 @@ class State : angle::NonCopyable
     // Sets the dirty bit for the program pipeline executable.
     angle::Result onProgramPipelineExecutableChange(const Context *context);
 
-    const state::DirtyBits &getDirtyBits() const { return mDirtyBits; }
+    const state::DirtyBits getDirtyBits() const { return mDirtyBits; }
     void clearDirtyBits() { mDirtyBits.reset(); }
-    void clearDirtyBits(const state::DirtyBits &bitset) { mDirtyBits &= ~bitset; }
+    void clearDirtyBits(const state::DirtyBits bitset) { mDirtyBits &= ~bitset; }
     void setAllDirtyBits()
     {
         mDirtyBits.set();
@@ -793,9 +793,9 @@ class State : angle::NonCopyable
         mDirtyCurrentValues.set();
     }
 
-    const state::ExtendedDirtyBits &getExtendedDirtyBits() const { return mExtendedDirtyBits; }
+    const state::ExtendedDirtyBits getExtendedDirtyBits() const { return mExtendedDirtyBits; }
     void clearExtendedDirtyBits() { mExtendedDirtyBits.reset(); }
-    void clearExtendedDirtyBits(const state::ExtendedDirtyBits &bitset)
+    void clearExtendedDirtyBits(const state::ExtendedDirtyBits bitset)
     {
         mExtendedDirtyBits &= ~bitset;
     }

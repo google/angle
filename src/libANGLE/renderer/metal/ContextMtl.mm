@@ -1107,10 +1107,10 @@ angle::Result ContextMtl::popDebugGroup(const gl::Context *context)
 
 // State sync with dirty bits.
 angle::Result ContextMtl::syncState(const gl::Context *context,
-                                    const gl::state::DirtyBits &dirtyBits,
-                                    const gl::state::DirtyBits &bitMask,
-                                    const gl::state::ExtendedDirtyBits &extendedDirtyBits,
-                                    const gl::state::ExtendedDirtyBits &extendedBitMask,
+                                    const gl::state::DirtyBits dirtyBits,
+                                    const gl::state::DirtyBits bitMask,
+                                    const gl::state::ExtendedDirtyBits extendedDirtyBits,
+                                    const gl::state::ExtendedDirtyBits extendedBitMask,
                                     gl::Command command)
 {
     const gl::State &glState = context->getState();
@@ -1359,7 +1359,7 @@ angle::Result ContextMtl::syncState(const gl::Context *context,
 }
 
 void ContextMtl::updateExtendedState(const gl::State &glState,
-                                     const gl::state::ExtendedDirtyBits &extendedDirtyBits)
+                                     const gl::state::ExtendedDirtyBits extendedDirtyBits)
 {
     for (size_t extendedDirtyBit : extendedDirtyBits)
     {

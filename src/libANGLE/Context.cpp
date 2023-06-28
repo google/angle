@@ -62,6 +62,97 @@ namespace gl
 {
 namespace
 {
+constexpr state::DirtyObjects kDrawDirtyObjectsBase{
+    state::DIRTY_OBJECT_ACTIVE_TEXTURES, state::DIRTY_OBJECT_DRAW_FRAMEBUFFER,
+    state::DIRTY_OBJECT_VERTEX_ARRAY,    state::DIRTY_OBJECT_TEXTURES,
+    state::DIRTY_OBJECT_PROGRAM,         state::DIRTY_OBJECT_PROGRAM_PIPELINE_OBJECT,
+    state::DIRTY_OBJECT_SAMPLERS,        state::DIRTY_OBJECT_IMAGES,
+};
+
+// TexImage uses the unpack state
+constexpr state::DirtyBits kTexImageDirtyBits{
+    state::DIRTY_BIT_UNPACK_STATE,
+    state::DIRTY_BIT_UNPACK_BUFFER_BINDING,
+};
+constexpr state::ExtendedDirtyBits kTexImageExtendedDirtyBits{};
+constexpr state::DirtyObjects kTexImageDirtyObjects{};
+
+// Readpixels uses the pack state and read FBO
+constexpr state::DirtyBits kReadPixelsDirtyBits{
+    state::DIRTY_BIT_PACK_STATE,
+    state::DIRTY_BIT_PACK_BUFFER_BINDING,
+    state::DIRTY_BIT_READ_FRAMEBUFFER_BINDING,
+};
+constexpr state::ExtendedDirtyBits kReadPixelsExtendedDirtyBits{};
+constexpr state::DirtyObjects kReadPixelsDirtyObjectsBase{state::DIRTY_OBJECT_READ_FRAMEBUFFER};
+
+// We sync the draw Framebuffer manually in prepareForClear to allow the clear calls to do
+// more custom handling for robust resource init.
+constexpr state::DirtyBits kClearDirtyBits{
+    state::DIRTY_BIT_RASTERIZER_DISCARD_ENABLED,
+    state::DIRTY_BIT_SCISSOR_TEST_ENABLED,
+    state::DIRTY_BIT_SCISSOR,
+    state::DIRTY_BIT_VIEWPORT,
+    state::DIRTY_BIT_CLEAR_COLOR,
+    state::DIRTY_BIT_CLEAR_DEPTH,
+    state::DIRTY_BIT_CLEAR_STENCIL,
+    state::DIRTY_BIT_COLOR_MASK,
+    state::DIRTY_BIT_DEPTH_MASK,
+    state::DIRTY_BIT_STENCIL_WRITEMASK_FRONT,
+    state::DIRTY_BIT_STENCIL_WRITEMASK_BACK,
+    state::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING,
+};
+constexpr state::ExtendedDirtyBits kClearExtendedDirtyBits{};
+constexpr state::DirtyObjects kClearDirtyObjects{state::DIRTY_OBJECT_DRAW_FRAMEBUFFER};
+
+constexpr state::DirtyBits kBlitDirtyBits{
+    state::DIRTY_BIT_SCISSOR_TEST_ENABLED,
+    state::DIRTY_BIT_SCISSOR,
+    state::DIRTY_BIT_FRAMEBUFFER_SRGB_WRITE_CONTROL_MODE,
+    state::DIRTY_BIT_READ_FRAMEBUFFER_BINDING,
+    state::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING,
+};
+constexpr state::ExtendedDirtyBits kBlitExtendedDirtyBits{};
+constexpr state::DirtyObjects kBlitDirtyObjectsBase{
+    state::DIRTY_OBJECT_READ_FRAMEBUFFER,
+    state::DIRTY_OBJECT_DRAW_FRAMEBUFFER,
+};
+
+constexpr state::DirtyBits kComputeDirtyBits{
+    state::DIRTY_BIT_SHADER_STORAGE_BUFFER_BINDING,
+    state::DIRTY_BIT_UNIFORM_BUFFER_BINDINGS,
+    state::DIRTY_BIT_ATOMIC_COUNTER_BUFFER_BINDING,
+    state::DIRTY_BIT_PROGRAM_BINDING,
+    state::DIRTY_BIT_PROGRAM_EXECUTABLE,
+    state::DIRTY_BIT_TEXTURE_BINDINGS,
+    state::DIRTY_BIT_SAMPLER_BINDINGS,
+    state::DIRTY_BIT_IMAGE_BINDINGS,
+    state::DIRTY_BIT_DISPATCH_INDIRECT_BUFFER_BINDING,
+};
+constexpr state::ExtendedDirtyBits kComputeExtendedDirtyBits{};
+constexpr state::DirtyObjects kComputeDirtyObjectsBase{
+    state::DIRTY_OBJECT_ACTIVE_TEXTURES, state::DIRTY_OBJECT_TEXTURES,
+    state::DIRTY_OBJECT_PROGRAM,         state::DIRTY_OBJECT_PROGRAM_PIPELINE_OBJECT,
+    state::DIRTY_OBJECT_IMAGES,          state::DIRTY_OBJECT_SAMPLERS,
+};
+
+constexpr state::DirtyBits kCopyImageDirtyBitsBase{state::DIRTY_BIT_READ_FRAMEBUFFER_BINDING};
+constexpr state::ExtendedDirtyBits kCopyImageExtendedDirtyBits{};
+constexpr state::DirtyObjects kCopyImageDirtyObjectsBase{state::DIRTY_OBJECT_READ_FRAMEBUFFER};
+
+constexpr state::DirtyBits kReadInvalidateDirtyBits{state::DIRTY_BIT_READ_FRAMEBUFFER_BINDING};
+constexpr state::ExtendedDirtyBits kReadInvalidateExtendedDirtyBits{};
+
+constexpr state::DirtyBits kDrawInvalidateDirtyBits{state::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING};
+constexpr state::ExtendedDirtyBits kDrawInvalidateExtendedDirtyBits{};
+
+// The implementation's internal load/store programs for EXT_shader_pixel_pixel_local_storage
+// only need the draw framebuffer to be synced. The remaining state is managed internally.
+constexpr state::DirtyBits kPixelLocalStorageEXTEnableDisableDirtyBits{
+    state::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING};
+constexpr state::ExtendedDirtyBits kPixelLocalStorageEXTEnableDisableExtendedDirtyBits{};
+constexpr state::DirtyObjects kPixelLocalStorageEXTEnableDisableDirtyObjects{
+    state::DIRTY_OBJECT_DRAW_FRAMEBUFFER};
 
 egl::ShareGroup *AllocateOrGetShareGroup(egl::Display *display, const gl::Context *shareContext)
 {
@@ -748,80 +839,17 @@ void Context::initializeDefaultResources()
         mGLES1Renderer.reset(new GLES1Renderer());
     }
 
-    // Initialize dirty bit masks
-    mAllDirtyBits.set();
-    mAllExtendedDirtyBits.set();
-
-    mDrawDirtyObjects.set(state::DIRTY_OBJECT_ACTIVE_TEXTURES);
-    mDrawDirtyObjects.set(state::DIRTY_OBJECT_DRAW_FRAMEBUFFER);
-    mDrawDirtyObjects.set(state::DIRTY_OBJECT_VERTEX_ARRAY);
-    mDrawDirtyObjects.set(state::DIRTY_OBJECT_TEXTURES);
-    mDrawDirtyObjects.set(state::DIRTY_OBJECT_PROGRAM);
-    mDrawDirtyObjects.set(state::DIRTY_OBJECT_PROGRAM_PIPELINE_OBJECT);
-    mDrawDirtyObjects.set(state::DIRTY_OBJECT_SAMPLERS);
-    mDrawDirtyObjects.set(state::DIRTY_OBJECT_IMAGES);
-
-    mTexImageDirtyBits.set(state::DIRTY_BIT_UNPACK_STATE);
-    mTexImageDirtyBits.set(state::DIRTY_BIT_UNPACK_BUFFER_BINDING);
-    // No dirty objects.
-
-    // Readpixels uses the pack state and read FBO
-    mReadPixelsDirtyBits.set(state::DIRTY_BIT_PACK_STATE);
-    mReadPixelsDirtyBits.set(state::DIRTY_BIT_PACK_BUFFER_BINDING);
-    mReadPixelsDirtyBits.set(state::DIRTY_BIT_READ_FRAMEBUFFER_BINDING);
-    mReadPixelsDirtyObjects.set(state::DIRTY_OBJECT_READ_FRAMEBUFFER);
-
-    mClearDirtyBits.set(state::DIRTY_BIT_RASTERIZER_DISCARD_ENABLED);
-    mClearDirtyBits.set(state::DIRTY_BIT_SCISSOR_TEST_ENABLED);
-    mClearDirtyBits.set(state::DIRTY_BIT_SCISSOR);
-    mClearDirtyBits.set(state::DIRTY_BIT_VIEWPORT);
-    mClearDirtyBits.set(state::DIRTY_BIT_CLEAR_COLOR);
-    mClearDirtyBits.set(state::DIRTY_BIT_CLEAR_DEPTH);
-    mClearDirtyBits.set(state::DIRTY_BIT_CLEAR_STENCIL);
-    mClearDirtyBits.set(state::DIRTY_BIT_COLOR_MASK);
-    mClearDirtyBits.set(state::DIRTY_BIT_DEPTH_MASK);
-    mClearDirtyBits.set(state::DIRTY_BIT_STENCIL_WRITEMASK_FRONT);
-    mClearDirtyBits.set(state::DIRTY_BIT_STENCIL_WRITEMASK_BACK);
-    mClearDirtyBits.set(state::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING);
-    mClearDirtyObjects.set(state::DIRTY_OBJECT_DRAW_FRAMEBUFFER);
-
-    // We sync the draw Framebuffer manually in prepareForClear to allow the clear calls to do
-    // more custom handling for robust resource init.
-
-    mBlitDirtyBits.set(state::DIRTY_BIT_SCISSOR_TEST_ENABLED);
-    mBlitDirtyBits.set(state::DIRTY_BIT_SCISSOR);
-    mBlitDirtyBits.set(state::DIRTY_BIT_FRAMEBUFFER_SRGB_WRITE_CONTROL_MODE);
-    mBlitDirtyBits.set(state::DIRTY_BIT_READ_FRAMEBUFFER_BINDING);
-    mBlitDirtyBits.set(state::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING);
-    mBlitDirtyObjects.set(state::DIRTY_OBJECT_READ_FRAMEBUFFER);
-    mBlitDirtyObjects.set(state::DIRTY_OBJECT_DRAW_FRAMEBUFFER);
-
-    mComputeDirtyBits.set(state::DIRTY_BIT_SHADER_STORAGE_BUFFER_BINDING);
-    mComputeDirtyBits.set(state::DIRTY_BIT_UNIFORM_BUFFER_BINDINGS);
-    mComputeDirtyBits.set(state::DIRTY_BIT_ATOMIC_COUNTER_BUFFER_BINDING);
-    mComputeDirtyBits.set(state::DIRTY_BIT_PROGRAM_BINDING);
-    mComputeDirtyBits.set(state::DIRTY_BIT_PROGRAM_EXECUTABLE);
-    mComputeDirtyBits.set(state::DIRTY_BIT_TEXTURE_BINDINGS);
-    mComputeDirtyBits.set(state::DIRTY_BIT_SAMPLER_BINDINGS);
-    mComputeDirtyBits.set(state::DIRTY_BIT_IMAGE_BINDINGS);
-    mComputeDirtyBits.set(state::DIRTY_BIT_DISPATCH_INDIRECT_BUFFER_BINDING);
-    mComputeDirtyObjects.set(state::DIRTY_OBJECT_ACTIVE_TEXTURES);
-    mComputeDirtyObjects.set(state::DIRTY_OBJECT_TEXTURES);
-    mComputeDirtyObjects.set(state::DIRTY_OBJECT_PROGRAM);
-    mComputeDirtyObjects.set(state::DIRTY_OBJECT_PROGRAM_PIPELINE_OBJECT);
-    mComputeDirtyObjects.set(state::DIRTY_OBJECT_IMAGES);
-    mComputeDirtyObjects.set(state::DIRTY_OBJECT_SAMPLERS);
-
-    mCopyImageDirtyBits.set(state::DIRTY_BIT_READ_FRAMEBUFFER_BINDING);
-    mCopyImageDirtyObjects.set(state::DIRTY_OBJECT_READ_FRAMEBUFFER);
-
-    mReadInvalidateDirtyBits.set(state::DIRTY_BIT_READ_FRAMEBUFFER_BINDING);
-    mDrawInvalidateDirtyBits.set(state::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING);
-
-    // The implementation's internal load/store programs for EXT_shader_pixel_pixel_local_storage
-    // only need the draw framebuffer to be synced. The remaining state is managed internally.
-    mPixelLocalStorageEXTEnableDisableDirtyBits.set(state::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING);
-    mPixelLocalStorageEXTEnableDisableDirtyObjects.set(state::DIRTY_OBJECT_DRAW_FRAMEBUFFER);
+    // Initialize dirty bit masks (in addition to what updateCaps() might have set up).
+    mDrawDirtyObjects |= kDrawDirtyObjectsBase;
+    mTexImageDirtyObjects |= kTexImageDirtyObjects;
+    mReadPixelsDirtyObjects |= kReadPixelsDirtyObjectsBase;
+    mClearDirtyObjects |= kClearDirtyObjects;
+    mBlitDirtyObjects |= kBlitDirtyObjectsBase;
+    mComputeDirtyObjects |= kComputeDirtyObjectsBase;
+    mCopyImageDirtyBits |= kCopyImageDirtyBitsBase;
+    mCopyImageDirtyObjects |= kCopyImageDirtyObjectsBase;
+    mPixelLocalStorageEXTEnableDisableDirtyObjects |=
+        kPixelLocalStorageEXTEnableDisableDirtyObjects;
 
     mOverlay.init();
 }
@@ -4630,7 +4658,7 @@ angle::Result Context::prepareForClearBuffer(GLenum buffer, GLint drawbuffer)
 ANGLE_INLINE angle::Result Context::prepareForCopyImage()
 {
     ANGLE_TRY(syncDirtyObjects(mCopyImageDirtyObjects, Command::CopyImage));
-    return syncDirtyBits(mCopyImageDirtyBits, mCopyImageExtendedDirtyBits, Command::CopyImage);
+    return syncDirtyBits(mCopyImageDirtyBits, kCopyImageExtendedDirtyBits, Command::CopyImage);
 }
 
 ANGLE_INLINE angle::Result Context::prepareForDispatch()
@@ -4652,7 +4680,7 @@ ANGLE_INLINE angle::Result Context::prepareForDispatch()
     }
 
     ANGLE_TRY(syncDirtyObjects(mComputeDirtyObjects, Command::Dispatch));
-    return syncDirtyBits(mComputeDirtyBits, mComputeExtendedDirtyBits, Command::Dispatch);
+    return syncDirtyBits(kComputeDirtyBits, kComputeExtendedDirtyBits, Command::Dispatch);
 }
 
 angle::Result Context::prepareForInvalidate(GLenum target)
@@ -4665,17 +4693,17 @@ angle::Result Context::prepareForInvalidate(GLenum target)
         effectiveTarget = GL_DRAW_FRAMEBUFFER;
     }
     ANGLE_TRY(mState.syncDirtyObject(this, effectiveTarget));
-    const state::DirtyBits &dirtyBits                 = effectiveTarget == GL_READ_FRAMEBUFFER
-                                                            ? mReadInvalidateDirtyBits
-                                                            : mDrawInvalidateDirtyBits;
-    const state::ExtendedDirtyBits &extendedDirtyBits = effectiveTarget == GL_READ_FRAMEBUFFER
-                                                            ? mReadInvalidateExtendedDirtyBits
-                                                            : mDrawInvalidateExtendedDirtyBits;
+    const state::DirtyBits dirtyBits                 = effectiveTarget == GL_READ_FRAMEBUFFER
+                                                           ? kReadInvalidateDirtyBits
+                                                           : kDrawInvalidateDirtyBits;
+    const state::ExtendedDirtyBits extendedDirtyBits = effectiveTarget == GL_READ_FRAMEBUFFER
+                                                           ? kReadInvalidateExtendedDirtyBits
+                                                           : kDrawInvalidateExtendedDirtyBits;
     return syncDirtyBits(dirtyBits, extendedDirtyBits, Command::Invalidate);
 }
 
-angle::Result Context::syncState(const state::DirtyBits &bitMask,
-                                 const state::ExtendedDirtyBits &extendedBitMask,
+angle::Result Context::syncState(const state::DirtyBits bitMask,
+                                 const state::ExtendedDirtyBits extendedBitMask,
                                  const state::DirtyObjects &objectMask,
                                  Command command)
 {
@@ -5876,13 +5904,13 @@ void Context::flushMappedBufferRange(BufferBinding /*target*/,
 
 angle::Result Context::syncStateForReadPixels()
 {
-    return syncState(mReadPixelsDirtyBits, mReadPixelsExtendedDirtyBits, mReadPixelsDirtyObjects,
+    return syncState(kReadPixelsDirtyBits, kReadPixelsExtendedDirtyBits, mReadPixelsDirtyObjects,
                      Command::ReadPixels);
 }
 
 angle::Result Context::syncStateForTexImage()
 {
-    return syncState(mTexImageDirtyBits, mTexImageExtendedDirtyBits, mTexImageDirtyObjects,
+    return syncState(kTexImageDirtyBits, kTexImageExtendedDirtyBits, mTexImageDirtyObjects,
                      Command::TexImage);
 }
 
@@ -5904,12 +5932,12 @@ angle::Result Context::syncStateForBlit(GLbitfield mask)
 
     Command command = static_cast<Command>(static_cast<uint32_t>(Command::Blit) + commandMask);
 
-    return syncState(mBlitDirtyBits, mBlitExtendedDirtyBits, mBlitDirtyObjects, command);
+    return syncState(kBlitDirtyBits, kBlitExtendedDirtyBits, mBlitDirtyObjects, command);
 }
 
 angle::Result Context::syncStateForClear()
 {
-    return syncState(mClearDirtyBits, mClearExtendedDirtyBits, mClearDirtyObjects, Command::Clear);
+    return syncState(kClearDirtyBits, kClearExtendedDirtyBits, mClearDirtyObjects, Command::Clear);
 }
 
 angle::Result Context::syncTextureForCopy(Texture *texture)
@@ -10408,8 +10436,8 @@ void Context::drawPixelLocalStorageEXTEnable(GLsizei n,
 {
     ASSERT(mImplementation->getNativePixelLocalStorageOptions().type ==
            ShPixelLocalStorageType::PixelLocalStorageEXT);
-    ANGLE_CONTEXT_TRY(syncState(mPixelLocalStorageEXTEnableDisableDirtyBits,
-                                mPixelLocalStorageEXTEnableDisableExtendedDirtyBits,
+    ANGLE_CONTEXT_TRY(syncState(kPixelLocalStorageEXTEnableDisableDirtyBits,
+                                kPixelLocalStorageEXTEnableDisableExtendedDirtyBits,
                                 mPixelLocalStorageEXTEnableDisableDirtyObjects, Command::Draw));
     ANGLE_CONTEXT_TRY(mImplementation->drawPixelLocalStorageEXTEnable(this, n, planes, loadops));
 }
@@ -10419,8 +10447,8 @@ void Context::drawPixelLocalStorageEXTDisable(const PixelLocalStoragePlane plane
 {
     ASSERT(mImplementation->getNativePixelLocalStorageOptions().type ==
            ShPixelLocalStorageType::PixelLocalStorageEXT);
-    ANGLE_CONTEXT_TRY(syncState(mPixelLocalStorageEXTEnableDisableDirtyBits,
-                                mPixelLocalStorageEXTEnableDisableExtendedDirtyBits,
+    ANGLE_CONTEXT_TRY(syncState(kPixelLocalStorageEXTEnableDisableDirtyBits,
+                                kPixelLocalStorageEXTEnableDisableExtendedDirtyBits,
                                 mPixelLocalStorageEXTEnableDisableDirtyObjects, Command::Draw));
     ANGLE_CONTEXT_TRY(mImplementation->drawPixelLocalStorageEXTDisable(this, planes, storeops));
 }
