@@ -134,8 +134,13 @@ angle::Result SyncHelper::clientWait(Context *context,
 
 angle::Result SyncHelper::serverWait(ContextVk *contextVk)
 {
-    // Submit commands if it was deferred on the context that issued the sync object
-    ANGLE_TRY(submitSyncIfDeferred(contextVk, RenderPassClosureReason::SyncObjectClientWait));
+    // If already signaled, no need to wait
+    bool alreadySignaled = false;
+    ANGLE_TRY(getStatus(contextVk, contextVk, &alreadySignaled));
+    if (alreadySignaled)
+    {
+        return angle::Result::Continue;
+    }
 
     // Every resource already tracks its usage and issues the appropriate barriers, so there's
     // really nothing to do here.  An execution barrier is issued to strictly satisfy what the
@@ -377,8 +382,16 @@ angle::Result SyncHelperNativeFence::clientWait(Context *context,
 angle::Result SyncHelperNativeFence::serverWait(ContextVk *contextVk)
 {
     RendererVk *renderer = contextVk->getRenderer();
-    VkDevice device      = renderer->getDevice();
 
+    // If already signaled, no need to wait
+    bool alreadySignaled = false;
+    ANGLE_TRY(getStatus(contextVk, contextVk, &alreadySignaled));
+    if (alreadySignaled)
+    {
+        return angle::Result::Continue;
+    }
+
+    VkDevice device = renderer->getDevice();
     DeviceScoped<Semaphore> waitSemaphore(device);
     // Wait semaphore for next vkQueueSubmit().
     // Create a Semaphore with imported fenceFd.
