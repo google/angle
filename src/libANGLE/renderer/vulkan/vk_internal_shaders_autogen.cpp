@@ -63,6 +63,8 @@ namespace
 #include "libANGLE/renderer/vulkan/shaders/gen/ConvertVertex.comp.00000005.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/ConvertVertex.comp.00000006.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/ConvertVertex.comp.00000007.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/CopyImageToBuffer.comp.00000000.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/CopyImageToBuffer.comp.00000001.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/EtcToBc.comp.00000000.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/EtcToBc.comp.00000001.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/ExportStencil.frag.00000000.inc"
@@ -220,6 +222,10 @@ constexpr CompressedShaderBlob kConvertVertex_comp_shaders[] = {
     {kConvertVertex_comp_00000005, sizeof(kConvertVertex_comp_00000005)},
     {kConvertVertex_comp_00000006, sizeof(kConvertVertex_comp_00000006)},
     {kConvertVertex_comp_00000007, sizeof(kConvertVertex_comp_00000007)},
+};
+constexpr CompressedShaderBlob kCopyImageToBuffer_comp_shaders[] = {
+    {kCopyImageToBuffer_comp_00000000, sizeof(kCopyImageToBuffer_comp_00000000)},
+    {kCopyImageToBuffer_comp_00000001, sizeof(kCopyImageToBuffer_comp_00000001)},
 };
 constexpr CompressedShaderBlob kEtcToBc_comp_shaders[] = {
     {kEtcToBc_comp_00000000, sizeof(kEtcToBc_comp_00000000)},
@@ -414,6 +420,10 @@ void ShaderLibrary::destroy(VkDevice device)
     {
         shader.get().destroy(device);
     }
+    for (RefCounted<ShaderModule> &shader : mCopyImageToBuffer_comp_shaders)
+    {
+        shader.get().destroy(device);
+    }
     for (RefCounted<ShaderModule> &shader : mEtcToBc_comp_shaders)
     {
         shader.get().destroy(device);
@@ -499,6 +509,14 @@ angle::Result ShaderLibrary::getConvertVertex_comp(Context *context,
 {
     return GetShader(context, mConvertVertex_comp_shaders, kConvertVertex_comp_shaders,
                      ArraySize(kConvertVertex_comp_shaders), shaderFlags, shaderOut);
+}
+
+angle::Result ShaderLibrary::getCopyImageToBuffer_comp(Context *context,
+                                                       uint32_t shaderFlags,
+                                                       RefCounted<ShaderModule> **shaderOut)
+{
+    return GetShader(context, mCopyImageToBuffer_comp_shaders, kCopyImageToBuffer_comp_shaders,
+                     ArraySize(kCopyImageToBuffer_comp_shaders), shaderFlags, shaderOut);
 }
 
 angle::Result ShaderLibrary::getEtcToBc_comp(Context *context,

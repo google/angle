@@ -24,6 +24,7 @@ namespace rx
 namespace ConvertVertex_comp                = vk::InternalShader::ConvertVertex_comp;
 namespace ImageClear_frag                   = vk::InternalShader::ImageClear_frag;
 namespace ImageCopy_frag                    = vk::InternalShader::ImageCopy_frag;
+namespace CopyImageToBuffer_comp            = vk::InternalShader::CopyImageToBuffer_comp;
 namespace BlitResolve_frag                  = vk::InternalShader::BlitResolve_frag;
 namespace BlitResolveStencilNoExport_comp   = vk::InternalShader::BlitResolveStencilNoExport_comp;
 namespace ExportStencil_frag                = vk::InternalShader::ExportStencil_frag;
@@ -41,6 +42,9 @@ constexpr uint32_t kConvertVertexDestinationBinding = 0;
 constexpr uint32_t kConvertVertexSourceBinding      = 1;
 
 constexpr uint32_t kImageCopySourceBinding = 0;
+
+constexpr uint32_t kCopyImageToBufferSourceBinding      = 0;
+constexpr uint32_t kCopyImageToBufferDestinationBinding = 1;
 
 constexpr uint32_t kBlitResolveColorOrDepthBinding = 0;
 constexpr uint32_t kBlitResolveStencilBinding      = 1;
@@ -220,6 +224,12 @@ uint32_t GetImageCopyFlags(const angle::Format &srcIntendedFormat,
                             ImageCopy_frag::kDestIsUint, ImageCopy_frag::kDestIsFloat);
 
     return flags;
+}
+
+uint32_t GetCopyImageToBufferFlags(const angle::Format &srcFormat)
+{
+    ASSERT(!srcFormat.isSint() && !srcFormat.isUint());
+    return CopyImageToBuffer_comp::kSrcIsFloat;
 }
 
 uint32_t GetBlitResolveFlags(bool blitColor,
@@ -1301,6 +1311,14 @@ void UtilsVk::destroy(ContextVk *contextVk)
         programAndPipelines.program.destroy(renderer);
         programAndPipelines.pipelines.destroy(contextVk);
     }
+    for (ComputeShaderProgramAndPipelines &programAndPipelines : mCopyImageToBuffer)
+    {
+        programAndPipelines.program.destroy(renderer);
+        for (vk::PipelineHelper &pipeline : programAndPipelines.pipelines)
+        {
+            pipeline.destroy(device);
+        }
+    }
     for (GraphicsShaderProgramAndPipelines &programAndPipelines : mBlitResolve)
     {
         programAndPipelines.program.destroy(renderer);
@@ -1533,6 +1551,22 @@ angle::Result UtilsVk::ensureImageCopyResourcesInitialized(ContextVk *contextVk)
 
     return ensureResourcesInitialized(contextVk, Function::ImageCopy, setSizes, ArraySize(setSizes),
                                       sizeof(ImageCopyShaderParams));
+}
+
+angle::Result UtilsVk::ensureCopyImageToBufferResourcesInitialized(ContextVk *contextVk)
+{
+    if (mPipelineLayouts[Function::CopyImageToBuffer].valid())
+    {
+        return angle::Result::Continue;
+    }
+
+    VkDescriptorPoolSize setSizes[2] = {
+        {VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 1},
+        {VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1},
+    };
+
+    return ensureResourcesInitialized(contextVk, Function::CopyImageToBuffer, setSizes,
+                                      ArraySize(setSizes), sizeof(CopyImageToBufferShaderParams));
 }
 
 angle::Result UtilsVk::ensureBlitResolveResourcesInitialized(ContextVk *contextVk)
@@ -3392,6 +3426,113 @@ angle::Result UtilsVk::copyImageBits(ContextVk *contextVk,
 
     commandBuffer->copyBufferToImage(dstBuffer.get().getBuffer().getHandle(), dst->getImage(),
                                      dst->getCurrentLayout(contextVk), 1, &dstRegion);
+
+    return angle::Result::Continue;
+}
+
+angle::Result UtilsVk::copyImageToBuffer(ContextVk *contextVk,
+                                         vk::BufferHelper *dst,
+                                         vk::ImageHelper *src,
+                                         const CopyImageToBufferParameters &params)
+{
+    ANGLE_TRY(ensureCopyImageToBufferResourcesInitialized(contextVk));
+
+    const angle::Format &srcFormat = src->getActualFormat();
+
+    ASSERT(params.outputOffset % sizeof(uint32_t) == 0);
+    ASSERT(params.outputPitch % sizeof(uint32_t) == 0);
+
+    CopyImageToBufferShaderParams shaderParams;
+    shaderParams.srcOffset[0]    = params.srcOffset[0];
+    shaderParams.srcOffset[1]    = params.srcOffset[1];
+    shaderParams.srcDepth        = params.srcLayer;
+    shaderParams.reverseRowOrder = params.reverseRowOrder;
+    shaderParams.size[0]         = params.size[0];
+    shaderParams.size[1]         = params.size[1];
+    shaderParams.outputOffset    = static_cast<uint32_t>(params.outputOffset / sizeof(uint32_t));
+    shaderParams.outputPitch     = params.outputPitch / sizeof(uint32_t);
+    shaderParams.isDstSnorm      = params.outputFormat->isSnorm();
+
+    gl::SwizzleState swizzle;
+    if (params.outputFormat->isBGRA())
+    {
+        swizzle.swizzleRed  = GL_BLUE;
+        swizzle.swizzleBlue = GL_RED;
+    }
+
+    uint32_t flags = GetCopyImageToBufferFlags(srcFormat);
+    gl::TextureType textureType;
+    if (src->getType() == VK_IMAGE_TYPE_3D)
+    {
+        flags |= CopyImageToBuffer_comp::kSrcIs3D;
+        textureType = gl::TextureType::_3D;
+    }
+    else
+    {
+        flags |= CopyImageToBuffer_comp::kSrcIs2D;
+        textureType = gl::TextureType::_2D;
+    }
+
+    vk::DeviceScoped<vk::ImageView> srcView(contextVk->getDevice());
+    ANGLE_TRY(src->initLayerImageView(contextVk, textureType, src->getAspectFlags(), swizzle,
+                                      &srcView.get(), params.srcMip, 1,
+                                      textureType == gl::TextureType::_2D ? params.srcLayer : 0, 1,
+                                      gl::SrgbWriteControlMode::Linear,
+                                      gl::YuvSamplingMode::Default, VK_IMAGE_USAGE_SAMPLED_BIT));
+
+    vk::CommandBufferAccess access;
+    access.onImageComputeShaderRead(src->getAspectFlags(), src);
+    access.onBufferComputeShaderWrite(dst);
+
+    vk::OutsideRenderPassCommandBufferHelper *commandBufferHelper;
+    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBufferHelper(access, &commandBufferHelper));
+
+    vk::OutsideRenderPassCommandBuffer *commandBuffer;
+    commandBuffer = &commandBufferHelper->getCommandBuffer();
+
+    VkDescriptorSet descriptorSet;
+    ANGLE_TRY(allocateDescriptorSet(contextVk, commandBufferHelper, Function::CopyImageToBuffer,
+                                    &descriptorSet));
+
+    VkDescriptorImageInfo imageInfo = {};
+    imageInfo.imageView             = srcView.get().getHandle();
+    imageInfo.imageLayout           = src->getCurrentLayout(contextVk);
+
+    VkDescriptorBufferInfo bufferInfo = {};
+    bufferInfo.buffer                 = dst->getBuffer().getHandle();
+    bufferInfo.offset                 = dst->getOffset();
+    bufferInfo.range                  = dst->getSize();
+
+    VkWriteDescriptorSet writeInfo[2] = {};
+
+    writeInfo[0].sType           = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+    writeInfo[0].dstSet          = descriptorSet;
+    writeInfo[0].dstBinding      = kCopyImageToBufferSourceBinding;
+    writeInfo[0].descriptorCount = 1;
+    writeInfo[0].descriptorType  = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
+    writeInfo[0].pImageInfo      = &imageInfo;
+
+    writeInfo[1].sType           = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+    writeInfo[1].dstSet          = descriptorSet;
+    writeInfo[1].dstBinding      = kCopyImageToBufferDestinationBinding;
+    writeInfo[1].descriptorCount = 1;
+    writeInfo[1].descriptorType  = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+    writeInfo[1].pBufferInfo     = &bufferInfo;
+
+    vkUpdateDescriptorSets(contextVk->getDevice(), 2, writeInfo, 0, nullptr);
+
+    vk::RefCounted<vk::ShaderModule> *shader = nullptr;
+    ANGLE_TRY(contextVk->getShaderLibrary().getCopyImageToBuffer_comp(contextVk, flags, &shader));
+
+    ANGLE_TRY(setupComputeProgram(contextVk, Function::CopyImageToBuffer, shader,
+                                  &mCopyImageToBuffer[flags], descriptorSet, &shaderParams,
+                                  sizeof(shaderParams), commandBufferHelper));
+
+    commandBuffer->dispatch(UnsignedCeilDivide(params.size[0], 8),
+                            UnsignedCeilDivide(params.size[1], 8), 1);
+
+    vk::ImageView srcViewObject = srcView.release();
+    contextVk->addGarbage(&srcViewObject);
 
     return angle::Result::Continue;
 }

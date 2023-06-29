@@ -53,6 +53,8 @@ angle_vulkan_internal_shaders = [
   "shaders/gen/ConvertVertex.comp.00000005.inc",
   "shaders/gen/ConvertVertex.comp.00000006.inc",
   "shaders/gen/ConvertVertex.comp.00000007.inc",
+  "shaders/gen/CopyImageToBuffer.comp.00000000.inc",
+  "shaders/gen/CopyImageToBuffer.comp.00000001.inc",
   "shaders/gen/EtcToBc.comp.00000000.inc",
   "shaders/gen/EtcToBc.comp.00000001.inc",
   "shaders/gen/ExportStencil.frag.00000000.inc",
