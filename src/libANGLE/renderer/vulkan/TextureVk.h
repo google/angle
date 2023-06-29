@@ -237,6 +237,7 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
 
     angle::Result getBufferViewAndRecordUse(vk::Context *context,
                                             const vk::Format *imageUniformFormat,
+                                            const gl::SamplerBinding *samplerBinding,
                                             bool isImage,
                                             const vk::BufferView **viewOut);
 

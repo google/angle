@@ -5649,7 +5649,8 @@ angle::Result DescriptorSetDescBuilder::updateFullActiveTextures(
                 textureVk->onNewDescriptorSet(sharedCacheKey);
 
                 const BufferView *view = nullptr;
-                ANGLE_TRY(textureVk->getBufferViewAndRecordUse(context, nullptr, false, &view));
+                ANGLE_TRY(textureVk->getBufferViewAndRecordUse(context, nullptr, &samplerBinding,
+                                                               false, &view));
                 mHandles[infoIndex].bufferView = view->getHandle();
             }
             else
@@ -6038,7 +6039,8 @@ angle::Result DescriptorSetDescBuilder::updateImages(
                                      arrayElement + imageUniform.getOuterArrayOffset();
 
                 const vk::BufferView *view = nullptr;
-                ANGLE_TRY(textureVk->getBufferViewAndRecordUse(context, format, true, &view));
+                ANGLE_TRY(
+                    textureVk->getBufferViewAndRecordUse(context, format, nullptr, true, &view));
 
                 DescriptorInfoDesc &infoDesc = mDesc.getInfoDesc(infoIndex);
                 infoDesc.imageViewSerialOrOffset =
