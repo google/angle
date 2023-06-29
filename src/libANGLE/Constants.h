@@ -57,7 +57,7 @@ enum
     IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_SEPARATE_COMPONENTS    = 4,
     IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS                = 4,
 
-    // Maximum number of views which are supported by the implementation of ANGLE_multiview.
+    // Maximum number of views which are supported by the multiview implementation.
     IMPLEMENTATION_ANGLE_MULTIVIEW_MAX_VIEWS = 4,
 
     // These are the maximums the implementation can support
