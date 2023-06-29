@@ -167,6 +167,18 @@ class UtilsVk : angle::NonCopyable
         uint32_t copyExtents[3];
     };
 
+    struct CopyImageToBufferParameters
+    {
+        int srcOffset[2];
+        vk::LevelIndex srcMip;
+        int srcLayer;
+        uint32_t size[2];
+        ptrdiff_t outputOffset;
+        uint32_t outputPitch;
+        bool reverseRowOrder;
+        const angle::Format *outputFormat;
+    };
+
     struct OverlayDrawParameters
     {
         uint32_t textWidgetCount;
@@ -259,6 +271,11 @@ class UtilsVk : angle::NonCopyable
                                 vk::ImageHelper *dst,
                                 vk::ImageHelper *src,
                                 const CopyImageBitsParameters &params);
+
+    angle::Result copyImageToBuffer(ContextVk *contextVk,
+                                    vk::BufferHelper *dst,
+                                    vk::ImageHelper *src,
+                                    const CopyImageToBufferParameters &params);
 
     angle::Result copyRgbToRgba(ContextVk *contextVk,
                                 const angle::Format &srcFormat,
@@ -383,6 +400,18 @@ class UtilsVk : angle::NonCopyable
         uint32_t rotateXY               = 0;
     };
 
+    struct CopyImageToBufferShaderParams
+    {
+        // Structure matching PushConstants in CopyImageToBuffer.comp
+        int32_t srcOffset[2]     = {};
+        int32_t srcDepth         = 0;
+        uint32_t reverseRowOrder = 0;
+        uint32_t size[2]         = {};
+        uint32_t outputOffset    = 0;
+        uint32_t outputPitch     = 0;
+        uint32_t isDstSnorm      = 0;
+    };
+
     union BlitResolveOffset
     {
         int32_t resolve[2];
@@ -485,6 +514,7 @@ class UtilsVk : angle::NonCopyable
         ConvertIndirectLineLoopBuffer,
         GenerateMipmap,
         TransCodeEtcToBc,
+        CopyImageToBuffer,
 
         InvalidEnum,
         EnumCount = InvalidEnum,
@@ -543,6 +573,7 @@ class UtilsVk : angle::NonCopyable
     angle::Result ensureConvertVertexResourcesInitialized(ContextVk *contextVk);
     angle::Result ensureImageClearResourcesInitialized(ContextVk *contextVk);
     angle::Result ensureImageCopyResourcesInitialized(ContextVk *contextVk);
+    angle::Result ensureCopyImageToBufferResourcesInitialized(ContextVk *contextVk);
     angle::Result ensureBlitResolveResourcesInitialized(ContextVk *contextVk);
     angle::Result ensureBlitResolveStencilNoExportResourcesInitialized(ContextVk *contextVk);
     angle::Result ensureExportStencilResourcesInitialized(ContextVk *contextVk);
@@ -601,6 +632,8 @@ class UtilsVk : angle::NonCopyable
     GraphicsShaderProgramAndPipelines mImageClearVSOnly;
     GraphicsShaderProgramAndPipelines mImageClear[vk::InternalShader::ImageClear_frag::kArrayLen];
     GraphicsShaderProgramAndPipelines mImageCopy[vk::InternalShader::ImageCopy_frag::kArrayLen];
+    ComputeShaderProgramAndPipelines
+        mCopyImageToBuffer[vk::InternalShader::CopyImageToBuffer_comp::kArrayLen];
     GraphicsShaderProgramAndPipelines mBlitResolve[vk::InternalShader::BlitResolve_frag::kArrayLen];
     ComputeShaderProgramAndPipelines
         mBlitResolveStencilNoExport[vk::InternalShader::BlitResolveStencilNoExport_comp::kArrayLen];

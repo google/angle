@@ -89,6 +89,10 @@
     "a7bd89162a60c326c26ad2e4de564334",
   "src/libANGLE/renderer/vulkan/shaders/gen/ConvertVertex.comp.00000007.inc":
     "105331ec6b8d657fc30ff93f73258baa",
+  "src/libANGLE/renderer/vulkan/shaders/gen/CopyImageToBuffer.comp.00000000.inc":
+    "e2cef2fa091bf445a58ded05ad3f83e6",
+  "src/libANGLE/renderer/vulkan/shaders/gen/CopyImageToBuffer.comp.00000001.inc":
+    "72d2b3a487d097af86e5a576f8a4d940",
   "src/libANGLE/renderer/vulkan/shaders/gen/EtcToBc.comp.00000000.inc":
     "435329724f5ff414203f06cc8512d232",
   "src/libANGLE/renderer/vulkan/shaders/gen/EtcToBc.comp.00000001.inc":
@@ -295,6 +299,10 @@
     "5ff76fedb3a1bf48c9290bacf47d7b97",
   "src/libANGLE/renderer/vulkan/shaders/src/ConvertVertex.comp.json":
     "5186e223d98092a54dc3ce23677039c1",
+  "src/libANGLE/renderer/vulkan/shaders/src/CopyImageToBuffer.comp":
+    "4e61e3bd573864e7c7678268d771fd1f",
+  "src/libANGLE/renderer/vulkan/shaders/src/CopyImageToBuffer.comp.json":
+    "714ec17d9849105717534ff69b8dc3ad",
   "src/libANGLE/renderer/vulkan/shaders/src/EtcToBc.comp":
     "03acbcc8abd31c280fd1b9781a765f47",
   "src/libANGLE/renderer/vulkan/shaders/src/EtcToBc.comp.json":
@@ -320,9 +328,9 @@
   "src/libANGLE/renderer/vulkan/shaders/src/OverlayDraw.vert":
     "5aa33152fce5b9261c4d427ad2babdd7",
   "src/libANGLE/renderer/vulkan/vk_internal_shaders_autogen.cpp":
-    "ecba61a9a48ebb3f33f98fe293e81d33",
+    "347aa65177b36dcd4be05f388de7d6b8",
   "src/libANGLE/renderer/vulkan/vk_internal_shaders_autogen.h":
-    "3bbb4951e95faa02c125ee4fdc9026df",
+    "9a1da1895327bf948819dd8f89be3fe7",
   "tools/glslang/glslang_validator.exe.sha1":
     "17e862cc6f462fecbf50b24ed6544a27",
   "tools/glslang/glslang_validator.sha1":

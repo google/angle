@@ -2371,6 +2371,14 @@ class ImageHelper final : public Resource, public angle::Subject
                                                   uint32_t layerCount,
                                                   void *pixels);
 
+    angle::Result readPixelsWithCompute(ContextVk *contextVk,
+                                        ImageHelper *src,
+                                        const PackPixelsParams &packPixelsParams,
+                                        const VkOffset3D &srcOffset,
+                                        const VkExtent3D &srcExtent,
+                                        ptrdiff_t pixelsOffset,
+                                        const VkImageSubresourceLayers &srcSubresource);
+
     angle::Result readPixels(ContextVk *contextVk,
                              const gl::Rectangle &area,
                              const PackPixelsParams &packPixelsParams,
@@ -2707,6 +2715,9 @@ class ImageHelper final : public Resource, public angle::Subject
 
     bool canCopyWithTransformForReadPixels(const PackPixelsParams &packPixelsParams,
                                            const angle::Format *readFormat);
+    bool canCopyWithComputeForReadPixels(const PackPixelsParams &packPixelsParams,
+                                         const angle::Format *readFormat,
+                                         ptrdiff_t pixelsOffset);
 
     // Returns true if source data and actual image format matches except color space differences.
     bool isDataFormatMatchForCopy(angle::FormatID srcDataFormatID) const
@@ -3303,7 +3314,8 @@ class CommandBufferAccess : angle::NonCopyable
     }
     void onBufferComputeShaderWrite(BufferHelper *buffer)
     {
-        onBufferWrite(VK_ACCESS_SHADER_WRITE_BIT, PipelineStage::ComputeShader, buffer);
+        onBufferWrite(VK_ACCESS_SHADER_WRITE_BIT | VK_ACCESS_SHADER_READ_BIT,
+                      PipelineStage::ComputeShader, buffer);
     }
 
     void onImageTransferRead(VkImageAspectFlags aspectFlags, ImageHelper *image)
