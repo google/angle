@@ -1280,7 +1280,8 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
             areChannelsBlitCompatible =
                 areChannelsBlitCompatible &&
                 AreSrcAndDstColorChannelsBlitCompatible(readRenderTarget, drawRenderTarget);
-            areFormatsIdentical = AreSrcAndDstFormatsIdentical(readRenderTarget, drawRenderTarget);
+            areFormatsIdentical = areFormatsIdentical &&
+                                  AreSrcAndDstFormatsIdentical(readRenderTarget, drawRenderTarget);
         }
 
         // Now that all flipping is done, adjust the offsets for resolve and prerotation

@@ -2280,6 +2280,17 @@ TEST_P(FramebufferTest_ES31, MultisampleResolveWithBlitDifferentFormats)
                  nullptr);
     glBindFramebuffer(GL_FRAMEBUFFER, resolveFBO);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, resolveTexture, 0);
+
+    // Another attachment of the same format as the blit source
+    // to ensure that it does not confuse the backend.
+    GLTexture resolveTexture2;
+    glBindTexture(GL_TEXTURE_2D, resolveTexture2);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, resolveTexture2, 0);
+
+    GLenum drawBuffers[] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1};
+    glDrawBuffers(2, drawBuffers);
+
     ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
 
     glBindFramebuffer(GL_READ_FRAMEBUFFER, msaaFBO);
@@ -2288,12 +2299,16 @@ TEST_P(FramebufferTest_ES31, MultisampleResolveWithBlitDifferentFormats)
     ASSERT_GL_NO_ERROR();
 
     glBindFramebuffer(GL_READ_FRAMEBUFFER, resolveFBO);
-    constexpr uint8_t kHalfPixelGradient = 256 / kSize / 2;
-    EXPECT_PIXEL_NEAR(0, 0, kHalfPixelGradient, kHalfPixelGradient, 0, 255, 1.0);
-    EXPECT_PIXEL_NEAR(kSize - 1, 0, 255 - kHalfPixelGradient, kHalfPixelGradient, 0, 255, 1.0);
-    EXPECT_PIXEL_NEAR(0, kSize - 1, kHalfPixelGradient, 255 - kHalfPixelGradient, 0, 255, 1.0);
-    EXPECT_PIXEL_NEAR(kSize - 1, kSize - 1, 255 - kHalfPixelGradient, 255 - kHalfPixelGradient, 0,
-                      255, 1.0);
+    for (const GLenum buffer : {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1})
+    {
+        glReadBuffer(buffer);
+        constexpr uint8_t kHalfPixelGradient = 256 / kSize / 2;
+        EXPECT_PIXEL_NEAR(0, 0, kHalfPixelGradient, kHalfPixelGradient, 0, 255, 1.0);
+        EXPECT_PIXEL_NEAR(kSize - 1, 0, 255 - kHalfPixelGradient, kHalfPixelGradient, 0, 255, 1.0);
+        EXPECT_PIXEL_NEAR(0, kSize - 1, kHalfPixelGradient, 255 - kHalfPixelGradient, 0, 255, 1.0);
+        EXPECT_PIXEL_NEAR(kSize - 1, kSize - 1, 255 - kHalfPixelGradient, 255 - kHalfPixelGradient,
+                          0, 255, 1.0);
+    }
 }
 
 // Test resolving a multisampled texture with blit after drawing to mulitiple FBOs.
