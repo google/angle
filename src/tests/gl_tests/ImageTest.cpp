@@ -1456,6 +1456,7 @@ TEST_P(ImageTest, ANGLEExtensionAvailability)
         EXPECT_TRUE(hasBaseExt());
         EXPECT_TRUE(has2DTextureExt());
         EXPECT_TRUE(hasRenderbufferExt());
+        EXPECT_FALSE(has3DTextureExt());
 
         if (IsD3D11())
         {
@@ -1518,7 +1519,6 @@ TEST_P(ImageTest, ANGLEExtensionAvailability)
 
     // These extensions are not yet available on any platform.
     EXPECT_FALSE(hasPixmapExt());
-    EXPECT_FALSE(has3DTextureExt());
 }
 
 // Check validation from the EGL_KHR_image_base extension
