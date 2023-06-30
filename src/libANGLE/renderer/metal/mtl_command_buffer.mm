@@ -20,6 +20,7 @@
 #include "common/debug.h"
 #include "libANGLE/renderer/metal/mtl_occlusion_query_pool.h"
 #include "libANGLE/renderer/metal/mtl_resources.h"
+#include "libANGLE/renderer/metal/mtl_utils.h"
 
 // Use to compare the new values with the values already set in the command encoder:
 static inline bool operator==(const MTLViewport &lhs, const MTLViewport &rhs)
@@ -460,6 +461,16 @@ NSString *cppLabelToObjC(const std::string &marker)
     }
     return label;
 }
+
+inline void CheckPrimitiveType(MTLPrimitiveType primitiveType)
+{
+    if (ANGLE_UNLIKELY(primitiveType == MTLPrimitiveTypeInvalid))
+    {
+        // Should have been caught by validation higher up.
+        FATAL() << "invalid primitive type was uncaught by validation";
+    }
+}
+
 }  // namespace
 
 // CommandQueue implementation
@@ -1928,6 +1939,7 @@ RenderCommandEncoder &RenderCommandEncoder::draw(MTLPrimitiveType primitiveType,
 {
     ASSERT(mPipelineStateSet &&
            "Render Pipeline State was never set and we've issued a draw command.");
+    CheckPrimitiveType(primitiveType);
     mHasDrawCalls = true;
     mCommands.push(CmdType::Draw).push(primitiveType).push(vertexStart).push(vertexCount);
 
@@ -1941,6 +1953,7 @@ RenderCommandEncoder &RenderCommandEncoder::drawInstanced(MTLPrimitiveType primi
 {
     ASSERT(mPipelineStateSet &&
            "Render Pipeline State was never set and we've issued a draw command.");
+    CheckPrimitiveType(primitiveType);
     mHasDrawCalls = true;
     mCommands.push(CmdType::DrawInstanced)
         .push(primitiveType)
@@ -1960,6 +1973,7 @@ RenderCommandEncoder &RenderCommandEncoder::drawInstancedBaseInstance(
 {
     ASSERT(mPipelineStateSet &&
            "Render Pipeline State was never set and we've issued a draw command.");
+    CheckPrimitiveType(primitiveType);
     mHasDrawCalls = true;
     mCommands.push(CmdType::DrawInstancedBaseInstance)
         .push(primitiveType)
@@ -1979,6 +1993,7 @@ RenderCommandEncoder &RenderCommandEncoder::drawIndexed(MTLPrimitiveType primiti
 {
     ASSERT(mPipelineStateSet &&
            "Render Pipeline State was never set and we've issued a draw command.");
+    CheckPrimitiveType(primitiveType);
     if (!indexBuffer)
     {
         return *this;
@@ -2006,6 +2021,7 @@ RenderCommandEncoder &RenderCommandEncoder::drawIndexedInstanced(MTLPrimitiveTyp
 {
     ASSERT(mPipelineStateSet &&
            "Render Pipeline State was never set and we've issued a draw command.");
+    CheckPrimitiveType(primitiveType);
     if (!indexBuffer)
     {
         return *this;
@@ -2037,6 +2053,7 @@ RenderCommandEncoder &RenderCommandEncoder::drawIndexedInstancedBaseVertexBaseIn
 {
     ASSERT(mPipelineStateSet &&
            "Render Pipeline State was never set and we've issued a draw command.");
+    CheckPrimitiveType(primitiveType);
     if (!indexBuffer)
     {
         return *this;
