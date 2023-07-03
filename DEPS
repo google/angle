@@ -1478,6 +1478,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_traces',
   },
+  'src/tests/restricted_traces/evony_the_kings_return': {
+      'packages': [
+        {
+            'package': 'angle/traces/evony_the_kings_return',
+            'version': 'version:2',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_traces',
+  },
   'src/tests/restricted_traces/extreme_car_driving_simulator': {
       'packages': [
         {
