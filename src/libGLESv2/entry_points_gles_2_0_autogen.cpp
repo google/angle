@@ -15,6 +15,7 @@
 #include "libANGLE/Context.h"
 #include "libANGLE/Context.inl.h"
 #include "libANGLE/capture/capture_gles_2_0_autogen.h"
+#include "libANGLE/context_local_call_autogen.h"
 #include "libANGLE/entry_points_utils.h"
 #include "libANGLE/validationES2.h"
 #include "libGLESv2/global_state.h"
@@ -485,7 +486,6 @@ void GL_APIENTRY GL_ClearColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat
 
     if (context)
     {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
              (ValidatePixelLocalStorageInactive(context, angle::EntryPoint::GLClearColor) &&
@@ -493,7 +493,7 @@ void GL_APIENTRY GL_ClearColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat
                                  alpha)));
         if (isCallValid)
         {
-            context->clearColor(red, green, blue, alpha);
+            ContextLocalClearColor(context, red, green, blue, alpha);
         }
         ANGLE_CAPTURE_GL(ClearColor, isCallValid, context, red, green, blue, alpha);
     }
@@ -511,14 +511,13 @@ void GL_APIENTRY GL_ClearDepthf(GLfloat d)
 
     if (context)
     {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
              (ValidatePixelLocalStorageInactive(context, angle::EntryPoint::GLClearDepthf) &&
               ValidateClearDepthf(context, angle::EntryPoint::GLClearDepthf, d)));
         if (isCallValid)
         {
-            context->clearDepthf(d);
+            ContextLocalClearDepthf(context, d);
         }
         ANGLE_CAPTURE_GL(ClearDepthf, isCallValid, context, d);
     }
@@ -536,14 +535,13 @@ void GL_APIENTRY GL_ClearStencil(GLint s)
 
     if (context)
     {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
              (ValidatePixelLocalStorageInactive(context, angle::EntryPoint::GLClearStencil) &&
               ValidateClearStencil(context, angle::EntryPoint::GLClearStencil, s)));
         if (isCallValid)
         {
-            context->clearStencil(s);
+            ContextLocalClearStencil(context, s);
         }
         ANGLE_CAPTURE_GL(ClearStencil, isCallValid, context, s);
     }

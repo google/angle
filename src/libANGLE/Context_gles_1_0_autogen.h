@@ -13,8 +13,6 @@
 #define ANGLE_GLES_1_0_CONTEXT_API                                                               \
     void alphaFunc(AlphaTestFunc funcPacked, GLfloat ref);                                       \
     void alphaFuncx(AlphaTestFunc funcPacked, GLfixed ref);                                      \
-    void clearColorx(GLfixed red, GLfixed green, GLfixed blue, GLfixed alpha);                   \
-    void clearDepthx(GLfixed depth);                                                             \
     void clientActiveTexture(GLenum texture);                                                    \
     void clipPlanef(GLenum p, const GLfloat *eqn);                                               \
     void clipPlanex(GLenum plane, const GLfixed *equation);                                      \

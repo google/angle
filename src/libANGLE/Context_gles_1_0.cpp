@@ -46,17 +46,6 @@ void Context::alphaFuncx(AlphaTestFunc func, GLfixed ref)
     mState.gles1().setAlphaTestParameters(func, ConvertFixedToFloat(ref));
 }
 
-void Context::clearColorx(GLfixed red, GLfixed green, GLfixed blue, GLfixed alpha)
-{
-    mState.setColorClearValue(ConvertFixedToFloat(red), ConvertFixedToFloat(green),
-                              ConvertFixedToFloat(blue), ConvertFixedToFloat(alpha));
-}
-
-void Context::clearDepthx(GLfixed depth)
-{
-    mState.setDepthClearValue(clamp01(ConvertFixedToFloat(depth)));
-}
-
 void Context::clientActiveTexture(GLenum texture)
 {
     mState.gles1().setClientTextureUnit(texture - GL_TEXTURE0);

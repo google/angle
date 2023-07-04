@@ -6,7 +6,7 @@
   "scripts/entry_point_packed_gl_enums.json":
     "1c6b036918aabb9822a638fbf33f87f4",
   "scripts/generate_entry_points.py":
-    "b85e2df1673ba499b02d520623ff2637",
+    "8f66bd6bc6ed14560e11bcb22637437d",
   "scripts/gl_angle_ext.xml":
     "49a0bf469d6f44c532098ef3a9fd087f",
   "scripts/registry_xml.py":
@@ -28,9 +28,9 @@
   "src/libANGLE/Context_gl_4_autogen.h":
     "8142ae403fde3bffe4feb18643297544",
   "src/libANGLE/Context_gles_1_0_autogen.h":
-    "51fce95acbf8de72d21255adbbe0e8cd",
+    "e20ac775a0d01180d35d0477198e093c",
   "src/libANGLE/Context_gles_2_0_autogen.h":
-    "b1321cf0207870029cb759bd603e9267",
+    "39f9da537ceb007d31d578eec314d26f",
   "src/libANGLE/Context_gles_3_0_autogen.h":
     "3a4b261be12c9eb28c38da34c008a3f7",
   "src/libANGLE/Context_gles_3_1_autogen.h":
@@ -83,6 +83,8 @@
     "158bce866c1a96f27602c6869401c299",
   "src/libANGLE/capture/capture_gles_ext_autogen.h":
     "acd990d31580a461eedcda4f60f7788b",
+  "src/libANGLE/context_local_call_autogen.h":
+    "75572ccc32f75c1ded6216c9050a0eac",
   "src/libANGLE/validationCL_autogen.h":
     "0022d0cdb6a9e2ef4a59b71164f62333",
   "src/libANGLE/validationEGL_autogen.h":
@@ -150,27 +152,27 @@
   "src/libGLESv2/entry_points_gl_4_autogen.h":
     "ec1171de9a494598d53bce149ba7b26d",
   "src/libGLESv2/entry_points_gles_1_0_autogen.cpp":
-    "2286a4658be7e361d3a3d0982405ce40",
+    "4909dddba2dc4b0ef389bbebd48b7199",
   "src/libGLESv2/entry_points_gles_1_0_autogen.h":
     "1d3aef77845a416497070985a8e9cb31",
   "src/libGLESv2/entry_points_gles_2_0_autogen.cpp":
-    "0a4061235c23281170a779ab89d5ea94",
+    "df1b86ddb899a18875ef741a49be6c93",
   "src/libGLESv2/entry_points_gles_2_0_autogen.h":
     "691c60c2dfed9beca68aa1f32aa2c71b",
   "src/libGLESv2/entry_points_gles_3_0_autogen.cpp":
-    "dba836d09dcfacfceb03acbed55117a7",
+    "22eb8b3b585c403668ea7614d0140740",
   "src/libGLESv2/entry_points_gles_3_0_autogen.h":
     "4ac2582759cdc6a30f78f83ab684d555",
   "src/libGLESv2/entry_points_gles_3_1_autogen.cpp":
-    "eab6c2e40e05a0f87f5fa7e73e95a31b",
+    "53627b645dea956c2981f0538e52d2aa",
   "src/libGLESv2/entry_points_gles_3_1_autogen.h":
     "a7327c330a91665fc31accbb78793b42",
   "src/libGLESv2/entry_points_gles_3_2_autogen.cpp":
-    "435d43ca254719c09bd429c8ba0f022a",
+    "fec93de271babbca642a2957b47ade64",
   "src/libGLESv2/entry_points_gles_3_2_autogen.h":
     "647f932a299cdb4726b60bbba059f0d2",
   "src/libGLESv2/entry_points_gles_ext_autogen.cpp":
-    "4fb06f0ab32147310686fedf1bc116bf",
+    "b47981a6fa085a976ae040674e06e07d",
   "src/libGLESv2/entry_points_gles_ext_autogen.h":
     "7bb44566362d1de21552faf427517085",
   "src/libGLESv2/libGLESv2_autogen.cpp":

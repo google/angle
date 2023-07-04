@@ -30,9 +30,6 @@
                        const void *data);                                                          \
     GLenum checkFramebufferStatus(GLenum target);                                                  \
     void clear(GLbitfield mask);                                                                   \
-    void clearColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha);                      \
-    void clearDepthf(GLfloat d);                                                                   \
-    void clearStencil(GLint s);                                                                    \
     void colorMask(GLboolean red, GLboolean green, GLboolean blue, GLboolean alpha);               \
     void compileShader(ShaderProgramID shaderPacked);                                              \
     void compressedTexImage2D(TextureTarget targetPacked, GLint level, GLenum internalformat,      \

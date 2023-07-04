@@ -558,6 +558,9 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     const Limitations &getLimitations() const { return mState.getLimitations(); }
     bool isGLES1() const;
 
+    // To be used **only** directly by the entry points.
+    LocalState *getMutableLocalState() { return mState.getMutableLocalState(); }
+
     bool skipValidation() const
     {
         // Ensure we don't skip validation when context becomes lost, since implementations

@@ -317,6 +317,8 @@ libangle_headers = [
   "src/libANGLE/VertexAttribute.inc",
   "src/libANGLE/angletypes.h",
   "src/libANGLE/angletypes.inc",
+  "src/libANGLE/context_local_call_autogen.h",
+  "src/libANGLE/context_local_call.cpp",
   "src/libANGLE/entry_points_utils.cpp",
   "src/libANGLE/entry_points_utils.h",
   "src/libANGLE/features.h",

@@ -15,6 +15,7 @@
 #include "libANGLE/Context.h"
 #include "libANGLE/Context.inl.h"
 #include "libANGLE/capture/capture_gles_1_0_autogen.h"
+#include "libANGLE/context_local_call_autogen.h"
 #include "libANGLE/entry_points_utils.h"
 #include "libANGLE/validationES1.h"
 #include "libGLESv2/global_state.h"
@@ -85,7 +86,6 @@ void GL_APIENTRY GL_ClearColorx(GLfixed red, GLfixed green, GLfixed blue, GLfixe
 
     if (context)
     {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
              (ValidatePixelLocalStorageInactive(context, angle::EntryPoint::GLClearColorx) &&
@@ -93,7 +93,7 @@ void GL_APIENTRY GL_ClearColorx(GLfixed red, GLfixed green, GLfixed blue, GLfixe
                                   alpha)));
         if (isCallValid)
         {
-            context->clearColorx(red, green, blue, alpha);
+            ContextLocalClearColorx(context, red, green, blue, alpha);
         }
         ANGLE_CAPTURE_GL(ClearColorx, isCallValid, context, red, green, blue, alpha);
     }
@@ -111,14 +111,13 @@ void GL_APIENTRY GL_ClearDepthx(GLfixed depth)
 
     if (context)
     {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
              (ValidatePixelLocalStorageInactive(context, angle::EntryPoint::GLClearDepthx) &&
               ValidateClearDepthx(context, angle::EntryPoint::GLClearDepthx, depth)));
         if (isCallValid)
         {
-            context->clearDepthx(depth);
+            ContextLocalClearDepthx(context, depth);
         }
         ANGLE_CAPTURE_GL(ClearDepthx, isCallValid, context, depth);
     }
