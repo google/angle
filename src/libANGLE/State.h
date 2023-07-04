@@ -598,9 +598,9 @@ class LocalState : angle::NonCopyable
     bool hasConstantColor(GLenum sourceRGB, GLenum destRGB) const;
     bool hasConstantAlpha(GLenum sourceRGB, GLenum destRGB) const;
 
-    EGLenum mClientType;
-    EGLint mProfileMask;
-    Version mClientVersion;
+    const EGLenum mClientType;
+    const EGLint mProfileMask;
+    const Version mClientVersion;
 
     // Caps to use for validation
     Caps mCaps;
@@ -1246,15 +1246,6 @@ class State : angle::NonCopyable
     const ColorF &getColorClearValue() const { return mLocalState.getColorClearValue(); }
     float getDepthClearValue() const { return mLocalState.getDepthClearValue(); }
     int getStencilClearValue() const { return mLocalState.getStencilClearValue(); }
-    void setColorMask(bool red, bool green, bool blue, bool alpha)
-    {
-        mLocalState.setColorMask(red, green, blue, alpha);
-    }
-    void setColorMaskIndexed(bool red, bool green, bool blue, bool alpha, GLuint index)
-    {
-        mLocalState.setColorMaskIndexed(red, green, blue, alpha, index);
-    }
-    void setDepthMask(bool mask) { mLocalState.setDepthMask(mask); }
     bool isRasterizerDiscardEnabled() const { return mLocalState.isRasterizerDiscardEnabled(); }
     void setRasterizerDiscard(bool enabled) { mLocalState.setRasterizerDiscard(enabled); }
     bool isPrimitiveRestartEnabled() const { return mLocalState.isPrimitiveRestartEnabled(); }

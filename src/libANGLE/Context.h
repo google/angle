@@ -162,12 +162,13 @@ class StateCache final : angle::NonCopyable
     // 11. onQueryChange.
     // 12. onActiveTransformFeedbackChange.
     // 13. onUniformBufferStateChange.
-    // 14. onColorMaskChange.
+    // 14. onContextLocalColorMaskChange.
     // 15. onBufferBindingChange.
     // 16. onBlendFuncIndexedChange.
     intptr_t getBasicDrawStatesErrorString(const Context *context) const
     {
-        if (mCachedBasicDrawStatesErrorString != kInvalidPointer)
+        if (mIsCachedBasicDrawStatesErrorValid &&
+            mCachedBasicDrawStatesErrorString != kInvalidPointer)
         {
             return mCachedBasicDrawStatesErrorString;
         }
@@ -283,7 +284,7 @@ class StateCache final : angle::NonCopyable
     void onUniformBufferStateChange(Context *context);
     void onAtomicCounterBufferStateChange(Context *context);
     void onShaderStorageBufferStateChange(Context *context);
-    void onColorMaskChange(Context *context);
+    void onContextLocalColorMaskChange(Context *context);
     void onBufferBindingChange(Context *context);
     void onBlendFuncIndexedChange(Context *context);
     void onBlendEquationChange(Context *context);
@@ -357,6 +358,14 @@ class StateCache final : angle::NonCopyable
         mCachedIntegerVertexAttribTypesValidation;
 
     bool mCachedCanDraw;
+
+    // mCachedBasicDrawStatesError* may be invalidated through numerous calls (see the comment on
+    // getBasicDrawStatesErrorString), some of which may originate from other contexts (through the
+    // observer interface).  However, ContextLocal* helpers may also need to invalidate the draw
+    // states, but they are called without holding the share group lock.  The following tracks
+    // whether mCachedBasicDrawStatesError* values are valid and is accessed only by the context
+    // itself.
+    mutable bool mIsCachedBasicDrawStatesErrorValid;
 };
 
 using VertexArrayMap       = ResourceMap<VertexArray, VertexArrayID>;
@@ -560,6 +569,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
 
     // To be used **only** directly by the entry points.
     LocalState *getMutableLocalState() { return mState.getMutableLocalState(); }
+    void onContextLocalColorMaskChange() { mStateCache.onContextLocalColorMaskChange(this); }
 
     bool skipValidation() const
     {

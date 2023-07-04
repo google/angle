@@ -17,7 +17,6 @@
     void blendFuncSeparatei(GLuint buf, GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha,             \
                             GLenum dstAlpha);                                                      \
     void blendFunci(GLuint buf, GLenum src, GLenum dst);                                           \
-    void colorMaski(GLuint index, GLboolean r, GLboolean g, GLboolean b, GLboolean a);             \
     void copyImageSubData(GLuint srcName, GLenum srcTarget, GLint srcLevel, GLint srcX,            \
                           GLint srcY, GLint srcZ, GLuint dstName, GLenum dstTarget,                \
                           GLint dstLevel, GLint dstX, GLint dstY, GLint dstZ, GLsizei srcWidth,    \

@@ -22,6 +22,18 @@ void ContextLocalClearColor(Context *context,
                             GLfloat alpha);
 void ContextLocalClearDepthf(Context *context, GLfloat d);
 void ContextLocalClearStencil(Context *context, GLint s);
+void ContextLocalColorMask(Context *context,
+                           GLboolean red,
+                           GLboolean green,
+                           GLboolean blue,
+                           GLboolean alpha);
+void ContextLocalDepthMask(Context *context, GLboolean flag);
+void ContextLocalColorMaski(Context *context,
+                            GLuint index,
+                            GLboolean r,
+                            GLboolean g,
+                            GLboolean b,
+                            GLboolean a);
 void ContextLocalClearColorx(Context *context,
                              GLfixed red,
                              GLfixed green,
@@ -150,6 +162,12 @@ void ContextLocalClearDepthx(Context *context, GLfixed depth);
 // GL_EXT_draw_buffers
 
 // GL_EXT_draw_buffers_indexed
+void ContextLocalColorMaski(Context *context,
+                            GLuint index,
+                            GLboolean r,
+                            GLboolean g,
+                            GLboolean b,
+                            GLboolean a);
 
 // GL_EXT_draw_elements_base_vertex
 
@@ -316,6 +334,12 @@ void ContextLocalClearDepthx(Context *context, GLfixed depth);
 // GL_OES_depth_texture
 
 // GL_OES_draw_buffers_indexed
+void ContextLocalColorMaski(Context *context,
+                            GLuint index,
+                            GLboolean r,
+                            GLboolean g,
+                            GLboolean b,
+                            GLboolean a);
 
 // GL_OES_draw_elements_base_vertex
 

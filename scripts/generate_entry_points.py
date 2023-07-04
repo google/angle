@@ -139,6 +139,9 @@ CONTEXT_LOCAL_LIST = [
     'glClearColor',
     'glClearDepthf',
     'glClearStencil',
+    'glColorMask',
+    'glColorMaski',
+    'glDepthMask',
     # GLES1 entry points
     'glClearColorx',
     'glClearDepthx',
@@ -1450,12 +1453,13 @@ def is_aliasing_excepted(api, cmd_name):
 
 def is_allowed_with_active_pixel_local_storage(name):
     return name in PLS_ALLOW_LIST or any(
-        [fnmatch.fnmatchcase(name, x) for x in PLS_ALLOW_WILDCARDS])
+        [fnmatch.fnmatchcase(name, entry) for entry in PLS_ALLOW_WILDCARDS])
 
 
 def is_context_local_state_command(api, name):
+    name = strip_suffix(api, name)
     return name in CONTEXT_LOCAL_LIST or any(
-        [fnmatch.fnmatchcase(name, x) for x in CONTEXT_LOCAL_WILDCARDS])
+        [fnmatch.fnmatchcase(name, entry) for entry in CONTEXT_LOCAL_WILDCARDS])
 
 
 def get_validation_expression(cmd_name, entry_point_name, internal_params):

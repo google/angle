@@ -30,7 +30,6 @@
                        const void *data);                                                          \
     GLenum checkFramebufferStatus(GLenum target);                                                  \
     void clear(GLbitfield mask);                                                                   \
-    void colorMask(GLboolean red, GLboolean green, GLboolean blue, GLboolean alpha);               \
     void compileShader(ShaderProgramID shaderPacked);                                              \
     void compressedTexImage2D(TextureTarget targetPacked, GLint level, GLenum internalformat,      \
                               GLsizei width, GLsizei height, GLint border, GLsizei imageSize,      \
@@ -52,7 +51,6 @@
     void deleteShader(ShaderProgramID shaderPacked);                                               \
     void deleteTextures(GLsizei n, const TextureID *texturesPacked);                               \
     void depthFunc(GLenum func);                                                                   \
-    void depthMask(GLboolean flag);                                                                \
     void depthRangef(GLfloat n, GLfloat f);                                                        \
     void detachShader(ShaderProgramID programPacked, ShaderProgramID shaderPacked);                \
     void disable(GLenum cap);                                                                      \

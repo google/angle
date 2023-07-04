@@ -9,6 +9,8 @@
 
 #include "libANGLE/context_local_call_autogen.h"
 
+#include "libANGLE/queryconversions.h"
+
 namespace gl
 {
 void ContextLocalClearColor(Context *context,
@@ -46,4 +48,31 @@ void ContextLocalClearDepthx(Context *context, GLfixed depth)
     context->getMutableLocalState()->setDepthClearValue(clamp01(ConvertFixedToFloat(depth)));
 }
 
+void ContextLocalColorMask(Context *context,
+                           GLboolean red,
+                           GLboolean green,
+                           GLboolean blue,
+                           GLboolean alpha)
+{
+    context->getMutableLocalState()->setColorMask(ConvertToBool(red), ConvertToBool(green),
+                                                  ConvertToBool(blue), ConvertToBool(alpha));
+    context->onContextLocalColorMaskChange();
+}
+
+void ContextLocalColorMaski(Context *context,
+                            GLuint index,
+                            GLboolean r,
+                            GLboolean g,
+                            GLboolean b,
+                            GLboolean a)
+{
+    context->getMutableLocalState()->setColorMaskIndexed(ConvertToBool(r), ConvertToBool(g),
+                                                         ConvertToBool(b), ConvertToBool(a), index);
+    context->onContextLocalColorMaskChange();
+}
+
+void ContextLocalDepthMask(Context *context, GLboolean flag)
+{
+    context->getMutableLocalState()->setDepthMask(ConvertToBool(flag));
+}
 }  // namespace gl
