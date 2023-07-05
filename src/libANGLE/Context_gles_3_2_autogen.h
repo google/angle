@@ -50,7 +50,6 @@
                        GLsizei bufSize, GLint *params);                                            \
     void getnUniformuiv(ShaderProgramID programPacked, UniformLocation locationPacked,             \
                         GLsizei bufSize, GLuint *params);                                          \
-    GLboolean isEnabledi(GLenum target, GLuint index) const;                                       \
     void objectLabel(GLenum identifier, GLuint name, GLsizei length, const GLchar *label);         \
     void objectPtrLabel(const void *ptr, GLsizei length, const GLchar *label);                     \
     void patchParameteri(GLenum pname, GLint value);                                               \

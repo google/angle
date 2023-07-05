@@ -96,7 +96,6 @@
     void getVertexAttribfv(GLuint index, GLenum pname, GLfloat *params);                           \
     void getVertexAttribiv(GLuint index, GLenum pname, GLint *params);                             \
     GLboolean isBuffer(BufferID bufferPacked) const;                                               \
-    GLboolean isEnabled(GLenum cap) const;                                                         \
     GLboolean isFramebuffer(FramebufferID framebufferPacked) const;                                \
     GLboolean isProgram(ShaderProgramID programPacked) const;                                      \
     GLboolean isRenderbuffer(RenderbufferID renderbufferPacked) const;                             \

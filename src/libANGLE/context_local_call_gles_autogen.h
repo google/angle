@@ -49,6 +49,7 @@ void ContextLocalDisable(Context *context, GLenum cap);
 void ContextLocalEnable(Context *context, GLenum cap);
 void ContextLocalFrontFace(Context *context, GLenum mode);
 void ContextLocalHint(Context *context, GLenum target, GLenum mode);
+GLboolean ContextLocalIsEnabled(Context *context, GLenum cap);
 void ContextLocalLineWidth(Context *context, GLfloat width);
 void ContextLocalPixelStorei(Context *context, GLenum pname, GLint param);
 void ContextLocalPolygonOffset(Context *context, GLfloat factor, GLfloat units);
@@ -117,6 +118,7 @@ void ContextLocalColorMaski(Context *context,
                             GLboolean a);
 void ContextLocalDisablei(Context *context, GLenum target, GLuint index);
 void ContextLocalEnablei(Context *context, GLenum target, GLuint index);
+GLboolean ContextLocalIsEnabledi(Context *context, GLenum target, GLuint index);
 void ContextLocalMinSampleShading(Context *context, GLfloat value);
 void ContextLocalPrimitiveBoundingBox(Context *context,
                                       GLfloat minX,

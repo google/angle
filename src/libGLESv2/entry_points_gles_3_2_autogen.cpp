@@ -902,13 +902,12 @@ GLboolean GL_APIENTRY GL_IsEnabledi(GLenum target, GLuint index)
     GLboolean returnValue;
     if (context)
     {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
              ValidateIsEnabledi(context, angle::EntryPoint::GLIsEnabledi, target, index));
         if (isCallValid)
         {
-            returnValue = context->isEnabledi(target, index);
+            returnValue = ContextLocalIsEnabledi(context, target, index);
         }
         else
         {

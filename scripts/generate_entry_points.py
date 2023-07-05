@@ -155,6 +155,8 @@ CONTEXT_LOCAL_LIST = [
     'glEnablei',
     'glFrontFace',
     'glHint',
+    'glIsEnabled',
+    'glIsEnabledi',
     'glLineWidth',
     'glLogicOpANGLE',
     'glMinSampleShading',
@@ -370,6 +372,36 @@ TEMPLATE_GLES_ENTRY_POINT_WITH_RETURN = """\
         if (isCallValid)
         {{
             returnValue = context->{name_lower_no_suffix}({internal_params});
+        }}
+        else
+        {{
+            returnValue = GetDefaultReturnValue<angle::EntryPoint::GL{name}, {return_type}>();
+        }}
+        ANGLE_CAPTURE_GL({name}, isCallValid, {gl_capture_params}, returnValue);
+    }}
+    else
+    {{
+        {constext_lost_error_generator}
+        returnValue = GetDefaultReturnValue<angle::EntryPoint::GL{name}, {return_type}>();
+    }}
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
+    return returnValue;
+}}
+"""
+
+TEMPLATE_GLES_LOCAL_STATE_ENTRY_POINT_WITH_RETURN = """\
+{return_type} GL_APIENTRY GL_{name}({params})
+{{
+    Context *context = {context_getter};
+    {event_comment}EVENT(context, GL{name}, "context = %d{comma_if_needed}{format_params}", CID(context){comma_if_needed}{pass_params});
+
+    {return_type} returnValue;
+    if ({valid_context_check})
+    {{{packed_gl_enum_conversions}
+        bool isCallValid = (context->skipValidation() || {validation_expression});
+        if (isCallValid)
+        {{
+            returnValue = ContextLocal{name_no_suffix}(context, {internal_params});
         }}
         else
         {{
@@ -1227,7 +1259,7 @@ TEMPLATE_CAPTURE_PROTO = "angle::CallCapture Capture%s(%s);"
 
 TEMPLATE_VALIDATION_PROTO = "%s Validate%s(%s);"
 
-TEMPLATE_CONTEXT_LOCAL_CALL_PROTO = "void ContextLocal%s(%s);"
+TEMPLATE_CONTEXT_LOCAL_CALL_PROTO = "%s ContextLocal%s(%s);"
 
 TEMPLATE_CONTEXT_LOCK_PROTO = "ScopedContextMutexLock GetContextLock_%s(%s);"
 
@@ -1769,6 +1801,8 @@ def get_def_template(api, cmd_name, return_type, has_errcode_ret):
                 return TEMPLATE_CL_ENTRY_POINT_WITH_ERRCODE_RET
             else:
                 return TEMPLATE_CL_ENTRY_POINT_WITH_RETURN_POINTER
+        elif is_context_local_state_command(api, cmd_name):
+            return TEMPLATE_GLES_LOCAL_STATE_ENTRY_POINT_WITH_RETURN
         else:
             return TEMPLATE_GLES_ENTRY_POINT_WITH_RETURN
 
@@ -2075,7 +2109,7 @@ def format_validation_proto(api, cmd_name, params, cmd_packed_gl_enums, packed_p
     return TEMPLATE_VALIDATION_PROTO % (return_type, strip_api_prefix(cmd_name), internal_params)
 
 
-def format_context_local_call_proto(api, cmd_name, params, cmd_packed_gl_enums,
+def format_context_local_call_proto(api, cmd_name, proto, params, cmd_packed_gl_enums,
                                     packed_param_types):
     with_extra_params = ["Context *context"] + params
     packed_enums = get_packed_enums(api, cmd_packed_gl_enums, cmd_name, packed_param_types,
@@ -2083,7 +2117,9 @@ def format_context_local_call_proto(api, cmd_name, params, cmd_packed_gl_enums,
     internal_params = get_context_local_call_params(api, cmd_name, with_extra_params,
                                                     cmd_packed_gl_enums, packed_param_types)
     stripped_name = strip_suffix(api, strip_api_prefix(cmd_name))
-    return TEMPLATE_CONTEXT_LOCAL_CALL_PROTO % (stripped_name, internal_params), stripped_name
+    return_type = proto[:-len(cmd_name)].strip()
+    return TEMPLATE_CONTEXT_LOCAL_CALL_PROTO % (return_type, stripped_name,
+                                                internal_params), stripped_name
 
 
 def format_context_lock_proto(api, cmd_name, params, cmd_packed_gl_enums, packed_param_types):
@@ -2146,8 +2182,8 @@ class ANGLEEntryPoints(registry_xml.EntryPoints):
                                         packed_param_types))
 
             if is_context_local_state_command(self.api, cmd_name):
-                proto, function = format_context_local_call_proto(self.api, cmd_name, param_text,
-                                                                  cmd_packed_enums,
+                proto, function = format_context_local_call_proto(self.api, cmd_name, proto_text,
+                                                                  param_text, cmd_packed_enums,
                                                                   packed_param_types)
                 self.context_local_call_protos.append(proto)
                 self.context_local_call_functions.append(function)

@@ -2380,12 +2380,11 @@ GLboolean GL_APIENTRY GL_IsEnabled(GLenum cap)
     GLboolean returnValue;
     if (context)
     {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid = (context->skipValidation() ||
                             ValidateIsEnabled(context, angle::EntryPoint::GLIsEnabled, cap));
         if (isCallValid)
         {
-            returnValue = context->isEnabled(cap);
+            returnValue = ContextLocalIsEnabled(context, cap);
         }
         else
         {

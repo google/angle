@@ -7268,16 +7268,6 @@ GLboolean Context::isBuffer(BufferID buffer) const
     return ConvertToGLBoolean(getBuffer(buffer));
 }
 
-GLboolean Context::isEnabled(GLenum cap) const
-{
-    return mState.getEnableFeature(cap);
-}
-
-GLboolean Context::isEnabledi(GLenum target, GLuint index) const
-{
-    return mState.getEnableFeatureIndexed(target, index);
-}
-
 GLboolean Context::isFramebuffer(FramebufferID framebuffer) const
 {
     if (framebuffer.value == 0)

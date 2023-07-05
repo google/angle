@@ -6066,13 +6066,12 @@ GLboolean GL_APIENTRY GL_IsEnablediEXT(GLenum target, GLuint index)
     GLboolean returnValue;
     if (context)
     {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
              ValidateIsEnablediEXT(context, angle::EntryPoint::GLIsEnablediEXT, target, index));
         if (isCallValid)
         {
-            returnValue = context->isEnabledi(target, index);
+            returnValue = ContextLocalIsEnabledi(context, target, index);
         }
         else
         {
@@ -10721,13 +10720,12 @@ GLboolean GL_APIENTRY GL_IsEnablediOES(GLenum target, GLuint index)
     GLboolean returnValue;
     if (context)
     {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
              ValidateIsEnablediOES(context, angle::EntryPoint::GLIsEnablediOES, target, index));
         if (isCallValid)
         {
-            returnValue = context->isEnabledi(target, index);
+            returnValue = ContextLocalIsEnabledi(context, target, index);
         }
         else
         {
