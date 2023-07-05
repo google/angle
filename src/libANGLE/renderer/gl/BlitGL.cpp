@@ -880,13 +880,17 @@ angle::Result BlitGL::copyTexSubImage(const gl::Context *context,
 
     mStateManager->bindTexture(dest->getType(), dest->getTextureID());
 
-    ANGLE_GL_TRY_ALWAYS_CHECK(
-        context, mFunctions->copyTexSubImage2D(ToGLenum(destTarget), static_cast<GLint>(destLevel),
-                                               destOffset.x, destOffset.y, sourceArea.x,
-                                               sourceArea.y, sourceArea.width, sourceArea.height));
+    // Handle GL errors during copyTexSubImage2D manually since this can fail for certain formats on
+    // Pixel 2 and 4 and we have fallback paths (blit via shader) in the caller.
+    ClearErrors(context, __FILE__, __FUNCTION__, __LINE__);
+    mFunctions->copyTexSubImage2D(ToGLenum(destTarget), static_cast<GLint>(destLevel), destOffset.x,
+                                  destOffset.y, sourceArea.x, sourceArea.y, sourceArea.width,
+                                  sourceArea.height);
+    const bool copySucceeded =
+        !IsError(CheckError(context, "copyTexSubImage2D", __FILE__, __FUNCTION__, __LINE__));
 
     ANGLE_TRY(UnbindAttachment(context, mFunctions, GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0));
-    *copySucceededOut = true;
+    *copySucceededOut = copySucceeded;
     return angle::Result::Continue;
 }
 
