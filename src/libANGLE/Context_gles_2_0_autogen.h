@@ -113,12 +113,6 @@
                       const void *binary, GLsizei length);                                         \
     void shaderSource(ShaderProgramID shaderPacked, GLsizei count, const GLchar *const *string,    \
                       const GLint *length);                                                        \
-    void stencilFunc(GLenum func, GLint ref, GLuint mask);                                         \
-    void stencilFuncSeparate(GLenum face, GLenum func, GLint ref, GLuint mask);                    \
-    void stencilMask(GLuint mask);                                                                 \
-    void stencilMaskSeparate(GLenum face, GLuint mask);                                            \
-    void stencilOp(GLenum fail, GLenum zfail, GLenum zpass);                                       \
-    void stencilOpSeparate(GLenum face, GLenum sfail, GLenum dpfail, GLenum dppass);               \
     void texImage2D(TextureTarget targetPacked, GLint level, GLint internalformat, GLsizei width,  \
                     GLsizei height, GLint border, GLenum format, GLenum type, const void *pixels); \
     void texParameterf(TextureType targetPacked, GLenum pname, GLfloat param);                     \

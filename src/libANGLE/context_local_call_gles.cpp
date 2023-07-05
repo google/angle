@@ -407,4 +407,71 @@ void ContextLocalBlendFuncSeparatei(Context *context,
         context->onContextLocalBlendFuncIndexedChange();
     }
 }
+
+void ContextLocalStencilFunc(Context *context, GLenum func, GLint ref, GLuint mask)
+{
+    ContextLocalStencilFuncSeparate(context, GL_FRONT_AND_BACK, func, ref, mask);
+}
+
+void ContextLocalStencilFuncSeparate(Context *context,
+                                     GLenum face,
+                                     GLenum func,
+                                     GLint ref,
+                                     GLuint mask)
+{
+    GLint clampedRef = gl::clamp(ref, 0, std::numeric_limits<uint8_t>::max());
+    if (face == GL_FRONT || face == GL_FRONT_AND_BACK)
+    {
+        context->getMutableLocalState()->setStencilParams(func, clampedRef, mask);
+    }
+
+    if (face == GL_BACK || face == GL_FRONT_AND_BACK)
+    {
+        context->getMutableLocalState()->setStencilBackParams(func, clampedRef, mask);
+    }
+
+    context->onContextLocalStencilStateChange();
+}
+
+void ContextLocalStencilMask(Context *context, GLuint mask)
+{
+    ContextLocalStencilMaskSeparate(context, GL_FRONT_AND_BACK, mask);
+}
+
+void ContextLocalStencilMaskSeparate(Context *context, GLenum face, GLuint mask)
+{
+    if (face == GL_FRONT || face == GL_FRONT_AND_BACK)
+    {
+        context->getMutableLocalState()->setStencilWritemask(mask);
+    }
+
+    if (face == GL_BACK || face == GL_FRONT_AND_BACK)
+    {
+        context->getMutableLocalState()->setStencilBackWritemask(mask);
+    }
+
+    context->onContextLocalStencilStateChange();
+}
+
+void ContextLocalStencilOp(Context *context, GLenum fail, GLenum zfail, GLenum zpass)
+{
+    ContextLocalStencilOpSeparate(context, GL_FRONT_AND_BACK, fail, zfail, zpass);
+}
+
+void ContextLocalStencilOpSeparate(Context *context,
+                                   GLenum face,
+                                   GLenum fail,
+                                   GLenum zfail,
+                                   GLenum zpass)
+{
+    if (face == GL_FRONT || face == GL_FRONT_AND_BACK)
+    {
+        context->getMutableLocalState()->setStencilOperations(fail, zfail, zpass);
+    }
+
+    if (face == GL_BACK || face == GL_FRONT_AND_BACK)
+    {
+        context->getMutableLocalState()->setStencilBackOperations(fail, zfail, zpass);
+    }
+}
 }  // namespace gl

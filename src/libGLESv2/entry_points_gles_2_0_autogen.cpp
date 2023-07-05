@@ -2885,13 +2885,12 @@ void GL_APIENTRY GL_StencilFunc(GLenum func, GLint ref, GLuint mask)
 
     if (context)
     {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
              ValidateStencilFunc(context, angle::EntryPoint::GLStencilFunc, func, ref, mask));
         if (isCallValid)
         {
-            context->stencilFunc(func, ref, mask);
+            ContextLocalStencilFunc(context, func, ref, mask);
         }
         ANGLE_CAPTURE_GL(StencilFunc, isCallValid, context, func, ref, mask);
     }
@@ -2911,14 +2910,13 @@ void GL_APIENTRY GL_StencilFuncSeparate(GLenum face, GLenum func, GLint ref, GLu
 
     if (context)
     {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
              ValidateStencilFuncSeparate(context, angle::EntryPoint::GLStencilFuncSeparate, face,
                                          func, ref, mask));
         if (isCallValid)
         {
-            context->stencilFuncSeparate(face, func, ref, mask);
+            ContextLocalStencilFuncSeparate(context, face, func, ref, mask);
         }
         ANGLE_CAPTURE_GL(StencilFuncSeparate, isCallValid, context, face, func, ref, mask);
     }
@@ -2936,12 +2934,11 @@ void GL_APIENTRY GL_StencilMask(GLuint mask)
 
     if (context)
     {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid = (context->skipValidation() ||
                             ValidateStencilMask(context, angle::EntryPoint::GLStencilMask, mask));
         if (isCallValid)
         {
-            context->stencilMask(mask);
+            ContextLocalStencilMask(context, mask);
         }
         ANGLE_CAPTURE_GL(StencilMask, isCallValid, context, mask);
     }
@@ -2960,13 +2957,12 @@ void GL_APIENTRY GL_StencilMaskSeparate(GLenum face, GLuint mask)
 
     if (context)
     {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid = (context->skipValidation() ||
                             ValidateStencilMaskSeparate(
                                 context, angle::EntryPoint::GLStencilMaskSeparate, face, mask));
         if (isCallValid)
         {
-            context->stencilMaskSeparate(face, mask);
+            ContextLocalStencilMaskSeparate(context, face, mask);
         }
         ANGLE_CAPTURE_GL(StencilMaskSeparate, isCallValid, context, face, mask);
     }
@@ -2986,13 +2982,12 @@ void GL_APIENTRY GL_StencilOp(GLenum fail, GLenum zfail, GLenum zpass)
 
     if (context)
     {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
              ValidateStencilOp(context, angle::EntryPoint::GLStencilOp, fail, zfail, zpass));
         if (isCallValid)
         {
-            context->stencilOp(fail, zfail, zpass);
+            ContextLocalStencilOp(context, fail, zfail, zpass);
         }
         ANGLE_CAPTURE_GL(StencilOp, isCallValid, context, fail, zfail, zpass);
     }
@@ -3013,14 +3008,13 @@ void GL_APIENTRY GL_StencilOpSeparate(GLenum face, GLenum sfail, GLenum dpfail, 
 
     if (context)
     {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
              ValidateStencilOpSeparate(context, angle::EntryPoint::GLStencilOpSeparate, face, sfail,
                                        dpfail, dppass));
         if (isCallValid)
         {
-            context->stencilOpSeparate(face, sfail, dpfail, dppass);
+            ContextLocalStencilOpSeparate(context, face, sfail, dpfail, dppass);
         }
         ANGLE_CAPTURE_GL(StencilOpSeparate, isCallValid, context, face, sfail, dpfail, dppass);
     }

@@ -167,6 +167,12 @@ CONTEXT_LOCAL_LIST = [
     'glSampleMaski',
     'glScissor',
     'glShadingRate',
+    'glStencilFunc',
+    'glStencilFuncSeparate',
+    'glStencilMask',
+    'glStencilMaskSeparate',
+    'glStencilOp',
+    'glStencilOpSeparate',
     'glViewport',
     # GLES1 entry points
     'glClearColorx',

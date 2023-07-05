@@ -52,6 +52,20 @@ void ContextLocalLineWidth(Context *context, GLfloat width);
 void ContextLocalPolygonOffset(Context *context, GLfloat factor, GLfloat units);
 void ContextLocalSampleCoverage(Context *context, GLfloat value, GLboolean invert);
 void ContextLocalScissor(Context *context, GLint x, GLint y, GLsizei width, GLsizei height);
+void ContextLocalStencilFunc(Context *context, GLenum func, GLint ref, GLuint mask);
+void ContextLocalStencilFuncSeparate(Context *context,
+                                     GLenum face,
+                                     GLenum func,
+                                     GLint ref,
+                                     GLuint mask);
+void ContextLocalStencilMask(Context *context, GLuint mask);
+void ContextLocalStencilMaskSeparate(Context *context, GLenum face, GLuint mask);
+void ContextLocalStencilOp(Context *context, GLenum fail, GLenum zfail, GLenum zpass);
+void ContextLocalStencilOpSeparate(Context *context,
+                                   GLenum face,
+                                   GLenum sfail,
+                                   GLenum dpfail,
+                                   GLenum dppass);
 void ContextLocalVertexAttrib1f(Context *context, GLuint index, GLfloat x);
 void ContextLocalVertexAttrib1fv(Context *context, GLuint index, const GLfloat *v);
 void ContextLocalVertexAttrib2f(Context *context, GLuint index, GLfloat x, GLfloat y);

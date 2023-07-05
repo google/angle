@@ -156,7 +156,7 @@ class StateCache final : angle::NonCopyable
     // 5. onVertexArrayBufferStateChange.
     // 6. onDrawFramebufferChange.
     // 7. onContextLocalCapChange.
-    // 8. onStencilStateChange.
+    // 8. onContextLocalStencilStateChange.
     // 9. onContextLocalDefaultVertexAttributeChange.
     // 10. onActiveTextureChange.
     // 11. onQueryChange.
@@ -276,7 +276,6 @@ class StateCache final : angle::NonCopyable
     void onVertexArrayBufferStateChange(Context *context);
     void onGLES1ClientStateChange(Context *context);
     void onDrawFramebufferChange(Context *context);
-    void onStencilStateChange(Context *context);
     void onActiveTextureChange(Context *context);
     void onQueryChange(Context *context);
     void onActiveTransformFeedbackChange(Context *context);
@@ -293,6 +292,7 @@ class StateCache final : angle::NonCopyable
     void onContextLocalDefaultVertexAttributeChange(Context *context);
     void onContextLocalBlendFuncIndexedChange(Context *context);
     void onContextLocalBlendEquationChange(Context *context);
+    void onContextLocalStencilStateChange(Context *context);
 
   private:
     // Cache update functions.
@@ -589,6 +589,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     {
         mStateCache.onContextLocalBlendEquationChange(this);
     }
+    void onContextLocalStencilStateChange() { mStateCache.onContextLocalStencilStateChange(this); }
 
     bool skipValidation() const
     {

@@ -6057,50 +6057,6 @@ void Context::pixelStorei(GLenum pname, GLint param)
     }
 }
 
-void Context::stencilFuncSeparate(GLenum face, GLenum func, GLint ref, GLuint mask)
-{
-    GLint clampedRef = gl::clamp(ref, 0, std::numeric_limits<uint8_t>::max());
-    if (face == GL_FRONT || face == GL_FRONT_AND_BACK)
-    {
-        mState.setStencilParams(func, clampedRef, mask);
-    }
-
-    if (face == GL_BACK || face == GL_FRONT_AND_BACK)
-    {
-        mState.setStencilBackParams(func, clampedRef, mask);
-    }
-
-    mStateCache.onStencilStateChange(this);
-}
-
-void Context::stencilMaskSeparate(GLenum face, GLuint mask)
-{
-    if (face == GL_FRONT || face == GL_FRONT_AND_BACK)
-    {
-        mState.setStencilWritemask(mask);
-    }
-
-    if (face == GL_BACK || face == GL_FRONT_AND_BACK)
-    {
-        mState.setStencilBackWritemask(mask);
-    }
-
-    mStateCache.onStencilStateChange(this);
-}
-
-void Context::stencilOpSeparate(GLenum face, GLenum fail, GLenum zfail, GLenum zpass)
-{
-    if (face == GL_FRONT || face == GL_FRONT_AND_BACK)
-    {
-        mState.setStencilOperations(fail, zfail, zpass);
-    }
-
-    if (face == GL_BACK || face == GL_FRONT_AND_BACK)
-    {
-        mState.setStencilBackOperations(fail, zfail, zpass);
-    }
-}
-
 void Context::vertexAttribPointer(GLuint index,
                                   GLint size,
                                   VertexAttribType type,
@@ -7523,21 +7479,6 @@ void Context::shaderSource(ShaderProgramID shader,
     Shader *shaderObject = getShader(shader);
     ASSERT(shaderObject);
     shaderObject->setSource(this, count, string, length);
-}
-
-void Context::stencilFunc(GLenum func, GLint ref, GLuint mask)
-{
-    stencilFuncSeparate(GL_FRONT_AND_BACK, func, ref, mask);
-}
-
-void Context::stencilMask(GLuint mask)
-{
-    stencilMaskSeparate(GL_FRONT_AND_BACK, mask);
-}
-
-void Context::stencilOp(GLenum fail, GLenum zfail, GLenum zpass)
-{
-    stencilOpSeparate(GL_FRONT_AND_BACK, fail, zfail, zpass);
 }
 
 void Context::patchParameteri(GLenum pname, GLint value)
@@ -10405,9 +10346,9 @@ void StateCache::onContextLocalCapChange(Context *context)
     mIsCachedBasicDrawStatesErrorValid = false;
 }
 
-void StateCache::onStencilStateChange(Context *context)
+void StateCache::onContextLocalStencilStateChange(Context *context)
 {
-    updateBasicDrawStatesError();
+    mIsCachedBasicDrawStatesErrorValid = false;
 }
 
 void StateCache::onContextLocalDefaultVertexAttributeChange(Context *context)

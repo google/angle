@@ -1269,35 +1269,6 @@ class State : angle::NonCopyable
     const ColorF &getBlendColor() const { return mLocalState.getBlendColor(); }
     bool isStencilTestEnabled() const { return mLocalState.isStencilTestEnabled(); }
     bool isStencilWriteEnabled() const { return mLocalState.isStencilWriteEnabled(); }
-    void setStencilParams(GLenum stencilFunc, GLint stencilRef, GLuint stencilMask)
-    {
-        mLocalState.setStencilParams(stencilFunc, stencilRef, stencilMask);
-    }
-    void setStencilBackParams(GLenum stencilBackFunc, GLint stencilBackRef, GLuint stencilBackMask)
-    {
-        mLocalState.setStencilBackParams(stencilBackFunc, stencilBackRef, stencilBackMask);
-    }
-    void setStencilWritemask(GLuint stencilWritemask)
-    {
-        mLocalState.setStencilWritemask(stencilWritemask);
-    }
-    void setStencilBackWritemask(GLuint stencilBackWritemask)
-    {
-        mLocalState.setStencilBackWritemask(stencilBackWritemask);
-    }
-    void setStencilOperations(GLenum stencilFail,
-                              GLenum stencilPassDepthFail,
-                              GLenum stencilPassDepthPass)
-    {
-        mLocalState.setStencilOperations(stencilFail, stencilPassDepthFail, stencilPassDepthPass);
-    }
-    void setStencilBackOperations(GLenum stencilBackFail,
-                                  GLenum stencilBackPassDepthFail,
-                                  GLenum stencilBackPassDepthPass)
-    {
-        mLocalState.setStencilBackOperations(stencilBackFail, stencilBackPassDepthFail,
-                                             stencilBackPassDepthPass);
-    }
     GLint getStencilRef() const { return mLocalState.getStencilRef(); }
     GLint getStencilBackRef() const { return mLocalState.getStencilBackRef(); }
     PolygonMode getPolygonMode() const { return mLocalState.getPolygonMode(); }
