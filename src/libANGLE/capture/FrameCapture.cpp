@@ -4700,7 +4700,8 @@ void CaptureMidExecutionSetup(const gl::Context *context,
                 {
                     cap(CaptureActiveTexture(replayState, true,
                                              GL_TEXTURE0 + static_cast<GLenum>(bindingIndex)));
-                    replayState.setActiveSampler(static_cast<unsigned int>(bindingIndex));
+                    replayState.getMutableLocalStateForCapture()->setActiveSampler(
+                        static_cast<unsigned int>(bindingIndex));
                 }
 
                 cap(CaptureBindTexture(replayState, true, textureType, apiTextureID));
@@ -4725,7 +4726,7 @@ void CaptureMidExecutionSetup(const gl::Context *context,
     {
         cap(CaptureActiveTexture(replayState, true,
                                  GL_TEXTURE0 + static_cast<GLenum>(apiState.getActiveSampler())));
-        replayState.setActiveSampler(apiState.getActiveSampler());
+        replayState.getMutableLocalStateForCapture()->setActiveSampler(apiState.getActiveSampler());
     }
 
     // Set Renderbuffer binding.

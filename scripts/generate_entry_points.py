@@ -136,21 +136,52 @@ PLS_ALLOW_WILDCARDS = [
 # no interaction with the other contexts, including through shared resources.
 # As a result, they don't require the share group lock.
 CONTEXT_LOCAL_LIST = [
+    'glActiveTexture',
     'glClearColor',
     'glClearDepthf',
     'glClearStencil',
+    'glClipControl',
     'glColorMask',
     'glColorMaski',
+    'glCoverageModulation',
+    'glCullFace',
+    'glDepthFunc',
     'glDepthMask',
+    'glDepthRangef',
     'glDisable',
     'glDisablei',
     'glEnable',
     'glEnablei',
+    'glFrontFace',
+    'glLineWidth',
+    'glLogicOpANGLE',
+    'glMinSampleShading',
+    'glPolygonMode',
+    'glPolygonModeNV',
+    'glPolygonOffset',
+    'glPolygonOffsetClamp',
+    'glPrimitiveBoundingBox',
+    'glProvokingVertex',
+    'glSampleCoverage',
+    'glSampleMaski',
+    'glScissor',
+    'glShadingRate',
+    'glViewport',
     # GLES1 entry points
     'glClearColorx',
     'glClearDepthx',
+    'glDepthRangex',
+    'glLineWidthx',
+    'glLogicOp',
+    'glPolygonOffsetx',
+    'glSampleCoveragex',
 ]
-CONTEXT_LOCAL_WILDCARDS = []
+CONTEXT_LOCAL_WILDCARDS = [
+    'glVertexAttrib[1-4]*',
+    'glVertexAttribI[1-4]*',
+    'glVertexAttribP[1-4]*',
+    'glVertexAttribL[1-4]*',
+]
 
 TEMPLATE_ENTRY_POINT_HEADER = """\
 // GENERATED FILE - DO NOT EDIT.
@@ -654,11 +685,11 @@ TEMPLATE_CONTEXT_LOCAL_CALL_HEADER = """\
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// context_local_call_autogen.h:
+// context_local_call_{annotation}_autogen.h:
 //   Helpers that set/get state that is entirely locally accessed by the context.
 
-#ifndef LIBANGLE_CONTEXT_LOCAL_CALL_AUTOGEN_H_
-#define LIBANGLE_CONTEXT_LOCAL_CALL_AUTOGEN_H_
+#ifndef LIBANGLE_CONTEXT_LOCAL_CALL_{annotation}_AUTOGEN_H_
+#define LIBANGLE_CONTEXT_LOCAL_CALL_{annotation}_AUTOGEN_H_
 
 #include "libANGLE/Context.h"
 
@@ -667,7 +698,7 @@ namespace gl
 {prototypes}
 }}  // namespace gl
 
-#endif  // LIBANGLE_CONTEXT_LOCAL_CALL_AUTOGEN_H_
+#endif  // LIBANGLE_CONTEXT_LOCAL_CALL_{annotation}_AUTOGEN_H_
 """
 
 TEMPLATE_EGL_CONTEXT_LOCK_HEADER = """\
@@ -990,7 +1021,7 @@ TEMPLATE_SOURCES_INCLUDES = """\
 #include "common/gl_enum_utils.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Context.inl.h"
-#include "libANGLE/context_local_call_autogen.h"
+#include "libANGLE/context_local_call_gles_autogen.h"
 #include "libANGLE/capture/capture_{header_version}_autogen.h"
 #include "libANGLE/validation{validation_header_version}.h"
 #include "libANGLE/entry_points_utils.h"
@@ -1034,6 +1065,8 @@ TEMPLATE_DESKTOP_GL_SOURCE_INCLUDES = """\
 #include "common/gl_enum_utils.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Context.inl.h"
+#include "libANGLE/context_local_call_gles_autogen.h"
+#include "libANGLE/context_local_call_gl_autogen.h"
 #include "libANGLE/capture/capture_gl_{1}_autogen.h"
 #include "libANGLE/validationEGL.h"
 #include "libANGLE/validationES.h"
@@ -2038,8 +2071,8 @@ def format_context_local_call_proto(api, cmd_name, params, cmd_packed_gl_enums,
                                     with_extra_params)
     internal_params = get_context_local_call_params(api, cmd_name, with_extra_params,
                                                     cmd_packed_gl_enums, packed_param_types)
-    return TEMPLATE_CONTEXT_LOCAL_CALL_PROTO % (strip_suffix(
-        api, strip_api_prefix(cmd_name)), internal_params)
+    stripped_name = strip_suffix(api, strip_api_prefix(cmd_name))
+    return TEMPLATE_CONTEXT_LOCAL_CALL_PROTO % (stripped_name, internal_params), stripped_name
 
 
 def format_context_lock_proto(api, cmd_name, params, cmd_packed_gl_enums, packed_param_types):
@@ -2082,6 +2115,7 @@ class ANGLEEntryPoints(registry_xml.EntryPoints):
         self.export_defs = []
         self.validation_protos = []
         self.context_local_call_protos = []
+        self.context_local_call_functions = []
         self.context_lock_protos = []
         self.capture_protos = []
         self.capture_methods = []
@@ -2101,9 +2135,11 @@ class ANGLEEntryPoints(registry_xml.EntryPoints):
                                         packed_param_types))
 
             if is_context_local_state_command(self.api, cmd_name):
-                self.context_local_call_protos.append(
-                    format_context_local_call_proto(self.api, cmd_name, param_text,
-                                                    cmd_packed_enums, packed_param_types))
+                proto, function = format_context_local_call_proto(self.api, cmd_name, param_text,
+                                                                  cmd_packed_enums,
+                                                                  packed_param_types)
+                self.context_local_call_protos.append(proto)
+                self.context_local_call_functions.append(function)
 
             if api == apis.EGL:
                 self.context_lock_protos.append(
@@ -2389,13 +2425,14 @@ def write_validation_header(annotation, comment, protos, source, template):
         out.close()
 
 
-def write_context_local_call_header(protos, source):
+def write_context_local_call_header(annotation, protos, source, template):
     content = TEMPLATE_CONTEXT_LOCAL_CALL_HEADER.format(
         script_name=os.path.basename(sys.argv[0]),
         data_source_name=source,
+        annotation=annotation,
         prototypes="\n".join(protos))
 
-    path = path_to("libANGLE", "context_local_call_autogen.h")
+    path = path_to("libANGLE", "context_local_call_%s_autogen.h" % annotation)
 
     with open(path, "w") as out:
         out.write(content)
@@ -3012,7 +3049,8 @@ def main():
             '../src/libANGLE/Context_gles_3_1_autogen.h',
             '../src/libANGLE/Context_gles_3_2_autogen.h',
             '../src/libANGLE/Context_gles_ext_autogen.h',
-            '../src/libANGLE/context_local_call_autogen.h',
+            '../src/libANGLE/context_local_call_gles_autogen.h',
+            '../src/libANGLE/context_local_call_gl_autogen.h',
             '../src/libANGLE/capture/capture_egl_autogen.cpp',
             '../src/libANGLE/capture/capture_egl_autogen.h',
             '../src/libANGLE/capture/capture_gl_1_autogen.cpp',
@@ -3110,7 +3148,9 @@ def main():
     all_commands_with_suffix = []
 
     # Collect all local-state accessing hepler declarations
-    context_local_call_protos = []
+    context_local_call_gles_protos = []
+    context_local_call_gl_protos = []
+    context_local_call_functions = set()
 
     # First run through the main GLES entry points.  Since ES2+ is the primary use
     # case, we go through those first and then add ES1-only APIs at the end.
@@ -3167,7 +3207,8 @@ def main():
         write_gl_validation_header(validation_annotation, "ES %s" % comment, eps.validation_protos,
                                    "gl.xml and gl_angle_ext.xml")
 
-        context_local_call_protos += eps.context_local_call_protos
+        context_local_call_gles_protos += eps.context_local_call_protos
+        context_local_call_functions.update(eps.context_local_call_functions)
 
         write_capture_header(apis.GLES, 'gles_' + version, comment, eps.capture_protos,
                              eps.capture_pointer_funcs)
@@ -3213,10 +3254,15 @@ def main():
             extension_defs.append(msg)
 
         ext_validation_protos += [comment] + eps.validation_protos
-        context_local_call_protos += [comment] + eps.context_local_call_protos
         ext_capture_protos += [comment] + eps.capture_protos
         ext_capture_methods += eps.capture_methods
         ext_capture_pointer_funcs += eps.capture_pointer_funcs
+
+        for proto, function in zip(eps.context_local_call_protos,
+                                   eps.context_local_call_functions):
+            if function not in context_local_call_functions:
+                context_local_call_gles_protos.append(proto)
+        context_local_call_functions.update(eps.context_local_call_functions)
 
         libgles_ep_defs += [comment] + eps.export_defs
         libgles_ep_exports += get_exports(ext_cmd_names)
@@ -3234,6 +3280,10 @@ def main():
             glesdecls['exts']['ANGLE Extensions'][extension_name] = get_decls(
                 apis.GLES, CONTEXT_DECL_FORMAT, xml.all_commands, ext_cmd_names,
                 all_commands_no_suffix, GLEntryPoints.get_packed_enums())
+
+    write_context_local_call_header("gles", context_local_call_gles_protos,
+                                    "gl.xml and gl_angle_ext.xml",
+                                    TEMPLATE_CONTEXT_LOCAL_CALL_HEADER)
 
     for name in extension_commands:
         all_commands_with_suffix.append(name)
@@ -3290,7 +3340,13 @@ def main():
             libgles_ep_defs += [cpp_comment] + eps.export_defs
             libgl_ep_exports += [def_comment] + get_exports(all_libgl_commands)
             validation_protos += [cpp_comment] + eps.validation_protos
-            context_local_call_protos += [cpp_comment] + eps.context_local_call_protos
+
+            for proto, function in zip(eps.context_local_call_protos,
+                                       eps.context_local_call_functions):
+                if function not in context_local_call_functions:
+                    context_local_call_gl_protos.append(proto)
+            context_local_call_functions.update(eps.context_local_call_functions)
+
             capture_protos += [cpp_comment] + eps.capture_protos
             capture_pointer_funcs += [cpp_comment] + eps.capture_pointer_funcs
             capture_defs += [cpp_comment] + eps.capture_methods
@@ -3321,6 +3377,10 @@ def main():
         write_gl_validation_header("GL%s" % major_version, name, validation_protos, "gl.xml")
 
     libgles_ep_defs.append('#endif // defined(ANGLE_ENABLE_GL_DESKTOP_FRONTEND)')
+
+    write_context_local_call_header("gl", context_local_call_gl_protos,
+                                    "gl.xml and gl_angle_ext.xml",
+                                    TEMPLATE_CONTEXT_LOCAL_CALL_HEADER)
 
     # GLX
     glxxml = registry_xml.RegistryXML('glx.xml')
@@ -3557,7 +3617,6 @@ def main():
 
     write_gl_validation_header("ESEXT", "ES extension", ext_validation_protos,
                                "gl.xml and gl_angle_ext.xml")
-    write_context_local_call_header(context_local_call_protos, "gl.xml and gl_angle_ext.xml")
     write_capture_header(apis.GLES, "gles_ext", "extension", ext_capture_protos,
                          ext_capture_pointer_funcs)
     write_capture_source(apis.GLES, "gles_ext", "ESEXT", "extension", ext_capture_methods)

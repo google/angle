@@ -21,7 +21,6 @@
     void color4x(GLfixed red, GLfixed green, GLfixed blue, GLfixed alpha);                       \
     void colorPointer(GLint size, VertexAttribType typePacked, GLsizei stride,                   \
                       const void *pointer);                                                      \
-    void depthRangex(GLfixed n, GLfixed f);                                                      \
     void disableClientState(ClientVertexArrayType arrayPacked);                                  \
     void enableClientState(ClientVertexArrayType arrayPacked);                                   \
     void fogf(GLenum pname, GLfloat param);                                                      \
@@ -52,11 +51,9 @@
     void lightfv(GLenum light, LightParameter pnamePacked, const GLfloat *params);               \
     void lightx(GLenum light, LightParameter pnamePacked, GLfixed param);                        \
     void lightxv(GLenum light, LightParameter pnamePacked, const GLfixed *params);               \
-    void lineWidthx(GLfixed width);                                                              \
     void loadIdentity();                                                                         \
     void loadMatrixf(const GLfloat *m);                                                          \
     void loadMatrixx(const GLfixed *m);                                                          \
-    void logicOp(LogicalOperation opcodePacked);                                                 \
     void materialf(GLenum face, MaterialParameter pnamePacked, GLfloat param);                   \
     void materialfv(GLenum face, MaterialParameter pnamePacked, const GLfloat *params);          \
     void materialx(GLenum face, MaterialParameter pnamePacked, GLfixed param);                   \
@@ -77,12 +74,10 @@
     void pointParameterxv(PointParameter pnamePacked, const GLfixed *params);                    \
     void pointSize(GLfloat size);                                                                \
     void pointSizex(GLfixed size);                                                               \
-    void polygonOffsetx(GLfixed factor, GLfixed units);                                          \
     void popMatrix();                                                                            \
     void pushMatrix();                                                                           \
     void rotatef(GLfloat angle, GLfloat x, GLfloat y, GLfloat z);                                \
     void rotatex(GLfixed angle, GLfixed x, GLfixed y, GLfixed z);                                \
-    void sampleCoveragex(GLclampx value, GLboolean invert);                                      \
     void scalef(GLfloat x, GLfloat y, GLfloat z);                                                \
     void scalex(GLfixed x, GLfixed y, GLfixed z);                                                \
     void shadeModel(ShadingModel modePacked);                                                    \

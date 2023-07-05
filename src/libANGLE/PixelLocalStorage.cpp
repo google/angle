@@ -14,7 +14,7 @@
 #include "common/FixedVector.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Framebuffer.h"
-#include "libANGLE/context_local_call_autogen.h"
+#include "libANGLE/context_local_call_gles_autogen.h"
 #include "libANGLE/renderer/ContextImpl.h"
 #include "libANGLE/renderer/TextureImpl.h"
 

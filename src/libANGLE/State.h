@@ -571,7 +571,7 @@ class LocalState : angle::NonCopyable
     void getIntegeri_v(GLenum target, GLuint index, GLint *data) const;
     void getBooleani_v(GLenum target, GLuint index, GLboolean *data) const;
 
-    GLES1State &gles1() { return mGLES1State; }
+    GLES1State *getMutableGLES1State() { return &mGLES1State; }
     const GLES1State &gles1() const { return mGLES1State; }
 
     const state::DirtyBits &getDirtyBits() const { return mDirtyBits; }
@@ -1249,19 +1249,11 @@ class State : angle::NonCopyable
     bool isRasterizerDiscardEnabled() const { return mLocalState.isRasterizerDiscardEnabled(); }
     bool isPrimitiveRestartEnabled() const { return mLocalState.isPrimitiveRestartEnabled(); }
     bool isCullFaceEnabled() const { return mLocalState.isCullFaceEnabled(); }
-    void setCullMode(CullFaceMode mode) { mLocalState.setCullMode(mode); }
-    void setFrontFace(GLenum front) { mLocalState.setFrontFace(front); }
     bool isDepthClampEnabled() const { return mLocalState.isDepthClampEnabled(); }
     bool isDepthTestEnabled() const { return mLocalState.isDepthTestEnabled(); }
     bool isDepthWriteEnabled() const { return mLocalState.isDepthWriteEnabled(); }
-    void setDepthFunc(GLenum depthFunc) { mLocalState.setDepthFunc(depthFunc); }
-    void setDepthRange(float zNear, float zFar) { mLocalState.setDepthRange(zNear, zFar); }
     float getNearPlane() const { return mLocalState.getNearPlane(); }
     float getFarPlane() const { return mLocalState.getFarPlane(); }
-    void setClipControl(ClipOrigin origin, ClipDepthMode depth)
-    {
-        mLocalState.setClipControl(origin, depth);
-    }
     ClipOrigin getClipOrigin() const { return mLocalState.getClipOrigin(); }
     ClipDepthMode getClipDepthMode() const { return mLocalState.getClipDepthMode(); }
     bool isClipDepthModeZeroToOne() const { return mLocalState.isClipDepthModeZeroToOne(); }
@@ -1333,31 +1325,18 @@ class State : angle::NonCopyable
     GLint getStencilRef() const { return mLocalState.getStencilRef(); }
     GLint getStencilBackRef() const { return mLocalState.getStencilBackRef(); }
     PolygonMode getPolygonMode() const { return mLocalState.getPolygonMode(); }
-    void setPolygonMode(PolygonMode mode) { mLocalState.setPolygonMode(mode); }
     bool isPolygonOffsetPointEnabled() const { return mLocalState.isPolygonOffsetPointEnabled(); }
     bool isPolygonOffsetLineEnabled() const { return mLocalState.isPolygonOffsetLineEnabled(); }
     bool isPolygonOffsetFillEnabled() const { return mLocalState.isPolygonOffsetFillEnabled(); }
     bool isPolygonOffsetEnabled() const { return mLocalState.isPolygonOffsetEnabled(); }
-    void setPolygonOffsetParams(GLfloat factor, GLfloat units, GLfloat clamp)
-    {
-        mLocalState.setPolygonOffsetParams(factor, units, clamp);
-    }
     bool isSampleAlphaToCoverageEnabled() const
     {
         return mLocalState.isSampleAlphaToCoverageEnabled();
     }
     bool isSampleCoverageEnabled() const { return mLocalState.isSampleCoverageEnabled(); }
-    void setSampleCoverageParams(GLclampf value, bool invert)
-    {
-        mLocalState.setSampleCoverageParams(value, invert);
-    }
     GLclampf getSampleCoverageValue() const { return mLocalState.getSampleCoverageValue(); }
     bool getSampleCoverageInvert() const { return mLocalState.getSampleCoverageInvert(); }
     bool isSampleMaskEnabled() const { return mLocalState.isSampleMaskEnabled(); }
-    void setSampleMaskParams(GLuint maskNumber, GLbitfield mask)
-    {
-        mLocalState.setSampleMaskParams(maskNumber, mask);
-    }
     GLbitfield getSampleMaskWord(GLuint maskNumber) const
     {
         return mLocalState.getSampleMaskWord(maskNumber);
@@ -1370,13 +1349,8 @@ class State : angle::NonCopyable
     bool isSampleAlphaToOneEnabled() const { return mLocalState.isSampleAlphaToOneEnabled(); }
     bool isMultisamplingEnabled() const { return mLocalState.isMultisamplingEnabled(); }
     bool isSampleShadingEnabled() const { return mLocalState.isSampleShadingEnabled(); }
-    void setMinSampleShading(float value) { mLocalState.setMinSampleShading(value); }
     float getMinSampleShading() const { return mLocalState.getMinSampleShading(); }
     bool isScissorTestEnabled() const { return mLocalState.isScissorTestEnabled(); }
-    void setScissorParams(GLint x, GLint y, GLsizei width, GLsizei height)
-    {
-        mLocalState.setScissorParams(x, y, width, height);
-    }
     const Rectangle &getScissor() const { return mLocalState.getScissor(); }
     bool isDitherEnabled() const { return mLocalState.isDitherEnabled(); }
     bool isBindGeneratesResourceEnabled() const
@@ -1386,12 +1360,7 @@ class State : angle::NonCopyable
     bool areClientArraysEnabled() const { return mLocalState.areClientArraysEnabled(); }
     bool isRobustResourceInitEnabled() const { return mLocalState.isRobustResourceInitEnabled(); }
     bool isProgramBinaryCacheEnabled() const { return mLocalState.isProgramBinaryCacheEnabled(); }
-    void setViewportParams(GLint x, GLint y, GLsizei width, GLsizei height)
-    {
-        mLocalState.setViewportParams(x, y, width, height);
-    }
     const Rectangle &getViewport() const { return mLocalState.getViewport(); }
-    void setShadingRate(GLenum rate) { mLocalState.setShadingRate(rate); }
     ShadingRate getShadingRate() const { return mLocalState.getShadingRate(); }
     void setPackAlignment(GLint alignment) { mLocalState.setPackAlignment(alignment); }
     GLint getPackAlignment() const { return mLocalState.getPackAlignment(); }
@@ -1422,7 +1391,6 @@ class State : angle::NonCopyable
     GLint getUnpackSkipPixels() const { return mLocalState.getUnpackSkipPixels(); }
     const PixelUnpackState &getUnpackState() const { return mLocalState.getUnpackState(); }
     PixelUnpackState &getUnpackState() { return mLocalState.getUnpackState(); }
-    void setCoverageModulation(GLenum components) { mLocalState.setCoverageModulation(components); }
     GLenum getCoverageModulation() const { return mLocalState.getCoverageModulation(); }
     bool getFramebufferSRGB() const { return mLocalState.getFramebufferSRGB(); }
     void setMaxShaderCompilerThreads(GLuint count)
@@ -1440,9 +1408,7 @@ class State : angle::NonCopyable
     {
         return mLocalState.getPixelLocalStorageActivePlanes();
     }
-    void setLineWidth(GLfloat width) { mLocalState.setLineWidth(width); }
     float getLineWidth() const { return mLocalState.getLineWidth(); }
-    void setActiveSampler(unsigned int active) { mLocalState.setActiveSampler(active); }
     unsigned int getActiveSampler() const { return mLocalState.getActiveSampler(); }
     void setGenerateMipmapHint(GLenum hint) { mLocalState.setGenerateMipmapHint(hint); }
     GLenum getGenerateMipmapHint() const { return mLocalState.getGenerateMipmapHint(); }
@@ -1460,7 +1426,6 @@ class State : angle::NonCopyable
     {
         return mLocalState.getProvokingVertex();
     }
-    void setProvokingVertex(ProvokingVertexConvention val) { mLocalState.setProvokingVertex(val); }
     const VertexAttribCurrentValueData &getVertexAttribCurrentValue(size_t attribNum) const
     {
         return mLocalState.getVertexAttribCurrentValue(attribNum);
@@ -1493,17 +1458,6 @@ class State : angle::NonCopyable
     GLfloat getBoundingBoxMaxY() const { return mLocalState.getBoundingBoxMaxY(); }
     GLfloat getBoundingBoxMaxZ() const { return mLocalState.getBoundingBoxMaxZ(); }
     GLfloat getBoundingBoxMaxW() const { return mLocalState.getBoundingBoxMaxW(); }
-    void setBoundingBox(GLfloat minX,
-                        GLfloat minY,
-                        GLfloat minZ,
-                        GLfloat minW,
-                        GLfloat maxX,
-                        GLfloat maxY,
-                        GLfloat maxZ,
-                        GLfloat maxW)
-    {
-        mLocalState.setBoundingBox(minX, minY, minZ, minW, maxX, maxY, maxZ, maxW);
-    }
     bool isTextureRectangleEnabled() const { return mLocalState.isTextureRectangleEnabled(); }
     DrawBufferMask getBlendFuncConstantAlphaDrawBuffers() const
     {
@@ -1514,20 +1468,7 @@ class State : angle::NonCopyable
         return mLocalState.getBlendFuncConstantColorDrawBuffers();
     }
     bool isLogicOpEnabled() const { return mLocalState.isLogicOpEnabled(); }
-    void setLogicOp(LogicalOperation opcode) { mLocalState.setLogicOp(opcode); }
     LogicalOperation getLogicOp() const { return mLocalState.getLogicOp(); }
-    void setVertexAttribf(GLuint index, const GLfloat values[4])
-    {
-        mLocalState.setVertexAttribf(index, values);
-    }
-    void setVertexAttribu(GLuint index, const GLuint values[4])
-    {
-        mLocalState.setVertexAttribu(index, values);
-    }
-    void setVertexAttribi(GLuint index, const GLint values[4])
-    {
-        mLocalState.setVertexAttribi(index, values);
-    }
     const Debug &getDebug() const { return mLocalState.getDebug(); }
     Debug &getDebug() { return mLocalState.getDebug(); }
     bool getEnableFeature(GLenum feature) const { return mLocalState.getEnableFeature(feature); }
@@ -1535,17 +1476,17 @@ class State : angle::NonCopyable
     {
         return mLocalState.getEnableFeatureIndexed(feature, index);
     }
-    GLES1State &gles1() { return mLocalState.gles1(); }
     const GLES1State &gles1() const { return mLocalState.gles1(); }
+
+    // Used by the capture/replay tool to create state.
+    LocalState *getMutableLocalStateForCapture() { return &mLocalState; }
 
   private:
     friend class Context;
 
     // Used only by the entry points to set local state without holding the share group lock.
-    //
-    // TODO: Add getMutableGLES1() and remove context lock from GLES1 setters similarly.
-    // http://anglebug.com/8224
     LocalState *getMutableLocalState() { return &mLocalState; }
+    GLES1State *getMutableGLES1State() { return mLocalState.getMutableGLES1State(); }
 
     void unsetActiveTextures(const ActiveTextureMask &textureMask);
     void setActiveTextureDirty(size_t textureIndex, Texture *texture);

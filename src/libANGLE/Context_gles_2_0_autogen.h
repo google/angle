@@ -11,7 +11,6 @@
 #define ANGLE_CONTEXT_GLES_2_0_AUTOGEN_H_
 
 #define ANGLE_GLES_2_0_CONTEXT_API                                                                 \
-    void activeTexture(GLenum texture);                                                            \
     void attachShader(ShaderProgramID programPacked, ShaderProgramID shaderPacked);                \
     void bindAttribLocation(ShaderProgramID programPacked, GLuint index, const GLchar *name);      \
     void bindBuffer(BufferBinding targetPacked, BufferID bufferPacked);                            \
@@ -43,15 +42,12 @@
                            GLint x, GLint y, GLsizei width, GLsizei height);                       \
     GLuint createProgram();                                                                        \
     GLuint createShader(ShaderType typePacked);                                                    \
-    void cullFace(CullFaceMode modePacked);                                                        \
     void deleteBuffers(GLsizei n, const BufferID *buffersPacked);                                  \
     void deleteFramebuffers(GLsizei n, const FramebufferID *framebuffersPacked);                   \
     void deleteProgram(ShaderProgramID programPacked);                                             \
     void deleteRenderbuffers(GLsizei n, const RenderbufferID *renderbuffersPacked);                \
     void deleteShader(ShaderProgramID shaderPacked);                                               \
     void deleteTextures(GLsizei n, const TextureID *texturesPacked);                               \
-    void depthFunc(GLenum func);                                                                   \
-    void depthRangef(GLfloat n, GLfloat f);                                                        \
     void detachShader(ShaderProgramID programPacked, ShaderProgramID shaderPacked);                \
     void disableVertexAttribArray(GLuint index);                                                   \
     void drawArrays(PrimitiveMode modePacked, GLint first, GLsizei count);                         \
@@ -64,7 +60,6 @@
                                  RenderbufferID renderbufferPacked);                               \
     void framebufferTexture2D(GLenum target, GLenum attachment, TextureTarget textargetPacked,     \
                               TextureID texturePacked, GLint level);                               \
-    void frontFace(GLenum mode);                                                                   \
     void genBuffers(GLsizei n, BufferID *buffersPacked);                                           \
     void genFramebuffers(GLsizei n, FramebufferID *framebuffersPacked);                            \
     void genRenderbuffers(GLsizei n, RenderbufferID *renderbuffersPacked);                         \
@@ -114,16 +109,12 @@
     GLboolean isRenderbuffer(RenderbufferID renderbufferPacked) const;                             \
     GLboolean isShader(ShaderProgramID shaderPacked) const;                                        \
     GLboolean isTexture(TextureID texturePacked) const;                                            \
-    void lineWidth(GLfloat width);                                                                 \
     void linkProgram(ShaderProgramID programPacked);                                               \
     void pixelStorei(GLenum pname, GLint param);                                                   \
-    void polygonOffset(GLfloat factor, GLfloat units);                                             \
     void readPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type,   \
                     void *pixels);                                                                 \
     void releaseShaderCompiler();                                                                  \
     void renderbufferStorage(GLenum target, GLenum internalformat, GLsizei width, GLsizei height); \
-    void sampleCoverage(GLfloat value, GLboolean invert);                                          \
-    void scissor(GLint x, GLint y, GLsizei width, GLsizei height);                                 \
     void shaderBinary(GLsizei count, const ShaderProgramID *shadersPacked, GLenum binaryFormat,    \
                       const void *binary, GLsizei length);                                         \
     void shaderSource(ShaderProgramID shaderPacked, GLsizei count, const GLchar *const *string,    \
@@ -168,16 +159,7 @@
                           const GLfloat *value);                                                   \
     void useProgram(ShaderProgramID programPacked);                                                \
     void validateProgram(ShaderProgramID programPacked);                                           \
-    void vertexAttrib1f(GLuint index, GLfloat x);                                                  \
-    void vertexAttrib1fv(GLuint index, const GLfloat *v);                                          \
-    void vertexAttrib2f(GLuint index, GLfloat x, GLfloat y);                                       \
-    void vertexAttrib2fv(GLuint index, const GLfloat *v);                                          \
-    void vertexAttrib3f(GLuint index, GLfloat x, GLfloat y, GLfloat z);                            \
-    void vertexAttrib3fv(GLuint index, const GLfloat *v);                                          \
-    void vertexAttrib4f(GLuint index, GLfloat x, GLfloat y, GLfloat z, GLfloat w);                 \
-    void vertexAttrib4fv(GLuint index, const GLfloat *v);                                          \
     void vertexAttribPointer(GLuint index, GLint size, VertexAttribType typePacked,                \
-                             GLboolean normalized, GLsizei stride, const void *pointer);           \
-    void viewport(GLint x, GLint y, GLsizei width, GLsizei height);
+                             GLboolean normalized, GLsizei stride, const void *pointer);
 
 #endif  // ANGLE_CONTEXT_API_2_0_AUTOGEN_H_

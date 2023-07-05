@@ -14,6 +14,8 @@
 #include "libANGLE/Context.h"
 #include "libANGLE/Context.inl.h"
 #include "libANGLE/capture/capture_gl_1_autogen.h"
+#include "libANGLE/context_local_call_gl_autogen.h"
+#include "libANGLE/context_local_call_gles_autogen.h"
 #include "libANGLE/entry_points_utils.h"
 #include "libANGLE/validationEGL.h"
 #include "libANGLE/validationES.h"
@@ -3462,14 +3464,13 @@ void GL_APIENTRY GL_PolygonMode(GLenum face, GLenum mode)
     if (context)
     {
         PolygonMode modePacked = PackParam<PolygonMode>(mode);
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
              (ValidatePixelLocalStorageInactive(context, angle::EntryPoint::GLPolygonMode) &&
               ValidatePolygonMode(context, angle::EntryPoint::GLPolygonMode, face, modePacked)));
         if (isCallValid)
         {
-            context->polygonMode(face, modePacked);
+            ContextLocalPolygonMode(context, face, modePacked);
         }
         ANGLE_CAPTURE_GL(PolygonMode, isCallValid, context, face, modePacked);
     }

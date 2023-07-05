@@ -56,13 +56,10 @@
     void getnUniformuiv(ShaderProgramID programPacked, UniformLocation locationPacked,             \
                         GLsizei bufSize, GLuint *params);                                          \
     GLboolean isEnabledi(GLenum target, GLuint index) const;                                       \
-    void minSampleShading(GLfloat value);                                                          \
     void objectLabel(GLenum identifier, GLuint name, GLsizei length, const GLchar *label);         \
     void objectPtrLabel(const void *ptr, GLsizei length, const GLchar *label);                     \
     void patchParameteri(GLenum pname, GLint value);                                               \
     void popDebugGroup();                                                                          \
-    void primitiveBoundingBox(GLfloat minX, GLfloat minY, GLfloat minZ, GLfloat minW,              \
-                              GLfloat maxX, GLfloat maxY, GLfloat maxZ, GLfloat maxW);             \
     void pushDebugGroup(GLenum source, GLuint id, GLsizei length, const GLchar *message);          \
     void readnPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type,  \
                      GLsizei bufSize, void *data);                                                 \

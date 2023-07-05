@@ -14,6 +14,8 @@
 #include "libANGLE/Context.h"
 #include "libANGLE/Context.inl.h"
 #include "libANGLE/capture/capture_gl_4_autogen.h"
+#include "libANGLE/context_local_call_gl_autogen.h"
+#include "libANGLE/context_local_call_gles_autogen.h"
 #include "libANGLE/entry_points_utils.h"
 #include "libANGLE/validationEGL.h"
 #include "libANGLE/validationES.h"
@@ -1824,13 +1826,12 @@ void GL_APIENTRY GL_VertexAttribL1d(GLuint index, GLdouble x)
 
     if (context)
     {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
              ValidateVertexAttribL1d(context, angle::EntryPoint::GLVertexAttribL1d, index, x));
         if (isCallValid)
         {
-            context->vertexAttribL1d(index, x);
+            ContextLocalVertexAttribL1d(context, index, x);
         }
         ANGLE_CAPTURE_GL(VertexAttribL1d, isCallValid, context, index, x);
     }
@@ -1849,13 +1850,12 @@ void GL_APIENTRY GL_VertexAttribL1dv(GLuint index, const GLdouble *v)
 
     if (context)
     {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
              ValidateVertexAttribL1dv(context, angle::EntryPoint::GLVertexAttribL1dv, index, v));
         if (isCallValid)
         {
-            context->vertexAttribL1dv(index, v);
+            ContextLocalVertexAttribL1dv(context, index, v);
         }
         ANGLE_CAPTURE_GL(VertexAttribL1dv, isCallValid, context, index, v);
     }
@@ -1874,13 +1874,12 @@ void GL_APIENTRY GL_VertexAttribL2d(GLuint index, GLdouble x, GLdouble y)
 
     if (context)
     {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
              ValidateVertexAttribL2d(context, angle::EntryPoint::GLVertexAttribL2d, index, x, y));
         if (isCallValid)
         {
-            context->vertexAttribL2d(index, x, y);
+            ContextLocalVertexAttribL2d(context, index, x, y);
         }
         ANGLE_CAPTURE_GL(VertexAttribL2d, isCallValid, context, index, x, y);
     }
@@ -1899,13 +1898,12 @@ void GL_APIENTRY GL_VertexAttribL2dv(GLuint index, const GLdouble *v)
 
     if (context)
     {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
              ValidateVertexAttribL2dv(context, angle::EntryPoint::GLVertexAttribL2dv, index, v));
         if (isCallValid)
         {
-            context->vertexAttribL2dv(index, v);
+            ContextLocalVertexAttribL2dv(context, index, v);
         }
         ANGLE_CAPTURE_GL(VertexAttribL2dv, isCallValid, context, index, v);
     }
@@ -1924,13 +1922,12 @@ void GL_APIENTRY GL_VertexAttribL3d(GLuint index, GLdouble x, GLdouble y, GLdoub
 
     if (context)
     {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid = (context->skipValidation() ||
                             ValidateVertexAttribL3d(context, angle::EntryPoint::GLVertexAttribL3d,
                                                     index, x, y, z));
         if (isCallValid)
         {
-            context->vertexAttribL3d(index, x, y, z);
+            ContextLocalVertexAttribL3d(context, index, x, y, z);
         }
         ANGLE_CAPTURE_GL(VertexAttribL3d, isCallValid, context, index, x, y, z);
     }
@@ -1949,13 +1946,12 @@ void GL_APIENTRY GL_VertexAttribL3dv(GLuint index, const GLdouble *v)
 
     if (context)
     {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
              ValidateVertexAttribL3dv(context, angle::EntryPoint::GLVertexAttribL3dv, index, v));
         if (isCallValid)
         {
-            context->vertexAttribL3dv(index, v);
+            ContextLocalVertexAttribL3dv(context, index, v);
         }
         ANGLE_CAPTURE_GL(VertexAttribL3dv, isCallValid, context, index, v);
     }
@@ -1974,13 +1970,12 @@ void GL_APIENTRY GL_VertexAttribL4d(GLuint index, GLdouble x, GLdouble y, GLdoub
 
     if (context)
     {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid = (context->skipValidation() ||
                             ValidateVertexAttribL4d(context, angle::EntryPoint::GLVertexAttribL4d,
                                                     index, x, y, z, w));
         if (isCallValid)
         {
-            context->vertexAttribL4d(index, x, y, z, w);
+            ContextLocalVertexAttribL4d(context, index, x, y, z, w);
         }
         ANGLE_CAPTURE_GL(VertexAttribL4d, isCallValid, context, index, x, y, z, w);
     }
@@ -1999,13 +1994,12 @@ void GL_APIENTRY GL_VertexAttribL4dv(GLuint index, const GLdouble *v)
 
     if (context)
     {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
              ValidateVertexAttribL4dv(context, angle::EntryPoint::GLVertexAttribL4dv, index, v));
         if (isCallValid)
         {
-            context->vertexAttribL4dv(index, v);
+            ContextLocalVertexAttribL4dv(context, index, v);
         }
         ANGLE_CAPTURE_GL(VertexAttribL4dv, isCallValid, context, index, v);
     }
@@ -3489,7 +3483,6 @@ void GL_APIENTRY GL_ClipControl(GLenum origin, GLenum depth)
     {
         ClipOrigin originPacked   = PackParam<ClipOrigin>(origin);
         ClipDepthMode depthPacked = PackParam<ClipDepthMode>(depth);
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
              (ValidatePixelLocalStorageInactive(context, angle::EntryPoint::GLClipControl) &&
@@ -3497,7 +3490,7 @@ void GL_APIENTRY GL_ClipControl(GLenum origin, GLenum depth)
                                   depthPacked)));
         if (isCallValid)
         {
-            context->clipControl(originPacked, depthPacked);
+            ContextLocalClipControl(context, originPacked, depthPacked);
         }
         ANGLE_CAPTURE_GL(ClipControl, isCallValid, context, originPacked, depthPacked);
     }
@@ -7058,14 +7051,13 @@ void GL_APIENTRY GL_PolygonOffsetClamp(GLfloat factor, GLfloat units, GLfloat cl
 
     if (context)
     {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
              ValidatePolygonOffsetClamp(context, angle::EntryPoint::GLPolygonOffsetClamp, factor,
                                         units, clamp));
         if (isCallValid)
         {
-            context->polygonOffsetClamp(factor, units, clamp);
+            ContextLocalPolygonOffsetClamp(context, factor, units, clamp);
         }
         ANGLE_CAPTURE_GL(PolygonOffsetClamp, isCallValid, context, factor, units, clamp);
     }

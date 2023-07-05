@@ -157,7 +157,7 @@ class StateCache final : angle::NonCopyable
     // 6. onDrawFramebufferChange.
     // 7. onContextLocalCapChange.
     // 8. onStencilStateChange.
-    // 9. onDefaultVertexAttributeChange.
+    // 9. onContextLocalDefaultVertexAttributeChange.
     // 10. onActiveTextureChange.
     // 11. onQueryChange.
     // 12. onActiveTransformFeedbackChange.
@@ -276,7 +276,6 @@ class StateCache final : angle::NonCopyable
     void onGLES1ClientStateChange(Context *context);
     void onDrawFramebufferChange(Context *context);
     void onStencilStateChange(Context *context);
-    void onDefaultVertexAttributeChange(Context *context);
     void onActiveTextureChange(Context *context);
     void onQueryChange(Context *context);
     void onActiveTransformFeedbackChange(Context *context);
@@ -292,6 +291,7 @@ class StateCache final : angle::NonCopyable
     // functions are called without holding the share group lock.
     void onContextLocalCapChange(Context *context);
     void onContextLocalColorMaskChange(Context *context);
+    void onContextLocalDefaultVertexAttributeChange(Context *context);
 
   private:
     // Cache update functions.
@@ -573,8 +573,13 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
 
     // To be used **only** directly by the entry points.
     LocalState *getMutableLocalState() { return mState.getMutableLocalState(); }
+    GLES1State *getMutableGLES1State() { return mState.getMutableGLES1State(); }
     void onContextLocalCapChange() { mStateCache.onContextLocalCapChange(this); }
     void onContextLocalColorMaskChange() { mStateCache.onContextLocalColorMaskChange(this); }
+    void onContextLocalDefaultVertexAttributeChange()
+    {
+        mStateCache.onContextLocalDefaultVertexAttributeChange(this);
+    }
 
     bool skipValidation() const
     {
@@ -714,7 +719,6 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     // are typically used by other frontend-emulated features) because it forwards this back to
     // GLES1.
     void setLogicOpEnabledForGLES1(bool enabled);
-    void setLogicOp(LogicalOperation opcode) { mState.setLogicOp(opcode); }
 
     // Needed by capture serialization logic that works with a "const" Context pointer.
     void finishImmutable() const;

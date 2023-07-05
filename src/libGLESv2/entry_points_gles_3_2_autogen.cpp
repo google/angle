@@ -15,7 +15,7 @@
 #include "libANGLE/Context.h"
 #include "libANGLE/Context.inl.h"
 #include "libANGLE/capture/capture_gles_3_2_autogen.h"
-#include "libANGLE/context_local_call_autogen.h"
+#include "libANGLE/context_local_call_gles_autogen.h"
 #include "libANGLE/entry_points_utils.h"
 #include "libANGLE/validationES32.h"
 #include "libGLESv2/global_state.h"
@@ -936,14 +936,13 @@ void GL_APIENTRY GL_MinSampleShading(GLfloat value)
 
     if (context)
     {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
              (ValidatePixelLocalStorageInactive(context, angle::EntryPoint::GLMinSampleShading) &&
               ValidateMinSampleShading(context, angle::EntryPoint::GLMinSampleShading, value)));
         if (isCallValid)
         {
-            context->minSampleShading(value);
+            ContextLocalMinSampleShading(context, value);
         }
         ANGLE_CAPTURE_GL(MinSampleShading, isCallValid, context, value);
     }
@@ -1074,7 +1073,6 @@ void GL_APIENTRY GL_PrimitiveBoundingBox(GLfloat minX,
 
     if (context)
     {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
              (ValidatePixelLocalStorageInactive(context,
@@ -1083,7 +1081,8 @@ void GL_APIENTRY GL_PrimitiveBoundingBox(GLfloat minX,
                                            minY, minZ, minW, maxX, maxY, maxZ, maxW)));
         if (isCallValid)
         {
-            context->primitiveBoundingBox(minX, minY, minZ, minW, maxX, maxY, maxZ, maxW);
+            ContextLocalPrimitiveBoundingBox(context, minX, minY, minZ, minW, maxX, maxY, maxZ,
+                                             maxW);
         }
         ANGLE_CAPTURE_GL(PrimitiveBoundingBox, isCallValid, context, minX, minY, minZ, minW, maxX,
                          maxY, maxZ, maxW);

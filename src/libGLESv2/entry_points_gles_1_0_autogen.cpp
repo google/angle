@@ -15,7 +15,7 @@
 #include "libANGLE/Context.h"
 #include "libANGLE/Context.inl.h"
 #include "libANGLE/capture/capture_gles_1_0_autogen.h"
-#include "libANGLE/context_local_call_autogen.h"
+#include "libANGLE/context_local_call_gles_autogen.h"
 #include "libANGLE/entry_points_utils.h"
 #include "libANGLE/validationES1.h"
 #include "libGLESv2/global_state.h"
@@ -322,14 +322,13 @@ void GL_APIENTRY GL_DepthRangex(GLfixed n, GLfixed f)
 
     if (context)
     {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
              (ValidatePixelLocalStorageInactive(context, angle::EntryPoint::GLDepthRangex) &&
               ValidateDepthRangex(context, angle::EntryPoint::GLDepthRangex, n, f)));
         if (isCallValid)
         {
-            context->depthRangex(n, f);
+            ContextLocalDepthRangex(context, n, f);
         }
         ANGLE_CAPTURE_GL(DepthRangex, isCallValid, context, n, f);
     }
@@ -1075,14 +1074,13 @@ void GL_APIENTRY GL_LineWidthx(GLfixed width)
 
     if (context)
     {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
              (ValidatePixelLocalStorageInactive(context, angle::EntryPoint::GLLineWidthx) &&
               ValidateLineWidthx(context, angle::EntryPoint::GLLineWidthx, width)));
         if (isCallValid)
         {
-            context->lineWidthx(width);
+            ContextLocalLineWidthx(context, width);
         }
         ANGLE_CAPTURE_GL(LineWidthx, isCallValid, context, width);
     }
@@ -1179,14 +1177,13 @@ void GL_APIENTRY GL_LogicOp(GLenum opcode)
     if (context)
     {
         LogicalOperation opcodePacked = PackParam<LogicalOperation>(opcode);
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
              (ValidatePixelLocalStorageInactive(context, angle::EntryPoint::GLLogicOp) &&
               ValidateLogicOp(context, angle::EntryPoint::GLLogicOp, opcodePacked)));
         if (isCallValid)
         {
-            context->logicOp(opcodePacked);
+            ContextLocalLogicOp(context, opcodePacked);
         }
         ANGLE_CAPTURE_GL(LogicOp, isCallValid, context, opcodePacked);
     }
@@ -1750,13 +1747,12 @@ void GL_APIENTRY GL_PolygonOffsetx(GLfixed factor, GLfixed units)
 
     if (context)
     {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
              ValidatePolygonOffsetx(context, angle::EntryPoint::GLPolygonOffsetx, factor, units));
         if (isCallValid)
         {
-            context->polygonOffsetx(factor, units);
+            ContextLocalPolygonOffsetx(context, factor, units);
         }
         ANGLE_CAPTURE_GL(PolygonOffsetx, isCallValid, context, factor, units);
     }
@@ -1877,7 +1873,6 @@ void GL_APIENTRY GL_SampleCoveragex(GLclampx value, GLboolean invert)
 
     if (context)
     {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
              (ValidatePixelLocalStorageInactive(context, angle::EntryPoint::GLSampleCoveragex) &&
@@ -1885,7 +1880,7 @@ void GL_APIENTRY GL_SampleCoveragex(GLclampx value, GLboolean invert)
                                       invert)));
         if (isCallValid)
         {
-            context->sampleCoveragex(value, invert);
+            ContextLocalSampleCoveragex(context, value, invert);
         }
         ANGLE_CAPTURE_GL(SampleCoveragex, isCallValid, context, value, invert);
     }

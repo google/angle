@@ -38,23 +38,23 @@ namespace gl
 
 void Context::alphaFunc(AlphaTestFunc func, GLfloat ref)
 {
-    mState.gles1().setAlphaTestParameters(func, ref);
+    getMutableGLES1State()->setAlphaTestParameters(func, ref);
 }
 
 void Context::alphaFuncx(AlphaTestFunc func, GLfixed ref)
 {
-    mState.gles1().setAlphaTestParameters(func, ConvertFixedToFloat(ref));
+    getMutableGLES1State()->setAlphaTestParameters(func, ConvertFixedToFloat(ref));
 }
 
 void Context::clientActiveTexture(GLenum texture)
 {
-    mState.gles1().setClientTextureUnit(texture - GL_TEXTURE0);
+    getMutableGLES1State()->setClientTextureUnit(texture - GL_TEXTURE0);
     mStateCache.onGLES1ClientStateChange(this);
 }
 
 void Context::clipPlanef(GLenum p, const GLfloat *eqn)
 {
-    mState.gles1().setClipPlane(p - GL_CLIP_PLANE0, eqn);
+    getMutableGLES1State()->setClipPlane(p - GL_CLIP_PLANE0, eqn);
 }
 
 void Context::clipPlanex(GLenum plane, const GLfixed *equation)
@@ -66,25 +66,26 @@ void Context::clipPlanex(GLenum plane, const GLfixed *equation)
         ConvertFixedToFloat(equation[3]),
     };
 
-    mState.gles1().setClipPlane(plane - GL_CLIP_PLANE0, equationf);
+    getMutableGLES1State()->setClipPlane(plane - GL_CLIP_PLANE0, equationf);
 }
 
 void Context::color4f(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha)
 {
-    mState.gles1().setCurrentColor({red, green, blue, alpha});
+    getMutableGLES1State()->setCurrentColor({red, green, blue, alpha});
 }
 
 void Context::color4ub(GLubyte red, GLubyte green, GLubyte blue, GLubyte alpha)
 {
-    mState.gles1().setCurrentColor(
+    getMutableGLES1State()->setCurrentColor(
         {normalizedToFloat<uint8_t>(red), normalizedToFloat<uint8_t>(green),
          normalizedToFloat<uint8_t>(blue), normalizedToFloat<uint8_t>(alpha)});
 }
 
 void Context::color4x(GLfixed red, GLfixed green, GLfixed blue, GLfixed alpha)
 {
-    mState.gles1().setCurrentColor({ConvertFixedToFloat(red), ConvertFixedToFloat(green),
-                                    ConvertFixedToFloat(blue), ConvertFixedToFloat(alpha)});
+    getMutableGLES1State()->setCurrentColor({ConvertFixedToFloat(red), ConvertFixedToFloat(green),
+                                             ConvertFixedToFloat(blue),
+                                             ConvertFixedToFloat(alpha)});
 }
 
 void Context::colorPointer(GLint size, VertexAttribType type, GLsizei stride, const void *ptr)
@@ -95,33 +96,28 @@ void Context::colorPointer(GLint size, VertexAttribType type, GLsizei stride, co
                         type == VertexAttribType::UnsignedByte, stride, ptr);
 }
 
-void Context::depthRangex(GLfixed n, GLfixed f)
-{
-    mState.setDepthRange(clamp01(ConvertFixedToFloat(n)), clamp01(ConvertFixedToFloat(f)));
-}
-
 void Context::disableClientState(ClientVertexArrayType clientState)
 {
-    mState.gles1().setClientStateEnabled(clientState, false);
+    getMutableGLES1State()->setClientStateEnabled(clientState, false);
     disableVertexAttribArray(vertexArrayIndex(clientState));
     mStateCache.onGLES1ClientStateChange(this);
 }
 
 void Context::enableClientState(ClientVertexArrayType clientState)
 {
-    mState.gles1().setClientStateEnabled(clientState, true);
+    getMutableGLES1State()->setClientStateEnabled(clientState, true);
     enableVertexAttribArray(vertexArrayIndex(clientState));
     mStateCache.onGLES1ClientStateChange(this);
 }
 
 void Context::fogf(GLenum pname, GLfloat param)
 {
-    SetFogParameters(&mState.gles1(), pname, &param);
+    SetFogParameters(getMutableGLES1State(), pname, &param);
 }
 
 void Context::fogfv(GLenum pname, const GLfloat *params)
 {
-    SetFogParameters(&mState.gles1(), pname, params);
+    SetFogParameters(getMutableGLES1State(), pname, params);
 }
 
 void Context::fogx(GLenum pname, GLfixed param)
@@ -159,14 +155,14 @@ void Context::fogxv(GLenum pname, const GLfixed *params)
 
 void Context::frustumf(GLfloat l, GLfloat r, GLfloat b, GLfloat t, GLfloat n, GLfloat f)
 {
-    mState.gles1().multMatrix(angle::Mat4::Frustum(l, r, b, t, n, f));
+    getMutableGLES1State()->multMatrix(angle::Mat4::Frustum(l, r, b, t, n, f));
 }
 
 void Context::frustumx(GLfixed l, GLfixed r, GLfixed b, GLfixed t, GLfixed n, GLfixed f)
 {
-    mState.gles1().multMatrix(angle::Mat4::Frustum(ConvertFixedToFloat(l), ConvertFixedToFloat(r),
-                                                   ConvertFixedToFloat(b), ConvertFixedToFloat(t),
-                                                   ConvertFixedToFloat(n), ConvertFixedToFloat(f)));
+    getMutableGLES1State()->multMatrix(angle::Mat4::Frustum(
+        ConvertFixedToFloat(l), ConvertFixedToFloat(r), ConvertFixedToFloat(b),
+        ConvertFixedToFloat(t), ConvertFixedToFloat(n), ConvertFixedToFloat(f)));
 }
 
 void Context::getClipPlanef(GLenum plane, GLfloat *equation)
@@ -204,7 +200,7 @@ void Context::getFixedv(GLenum pname, GLfixed *params)
 
 void Context::getLightfv(GLenum light, LightParameter pname, GLfloat *params)
 {
-    GetLightParameters(&mState.gles1(), light, pname, params);
+    GetLightParameters(getMutableGLES1State(), light, pname, params);
 }
 
 void Context::getLightxv(GLenum light, LightParameter pname, GLfixed *params)
@@ -220,7 +216,7 @@ void Context::getLightxv(GLenum light, LightParameter pname, GLfixed *params)
 
 void Context::getMaterialfv(GLenum face, MaterialParameter pname, GLfloat *params)
 {
-    GetMaterialParameters(&mState.gles1(), face, pname, params);
+    GetMaterialParameters(getMutableGLES1State(), face, pname, params);
 }
 
 void Context::getMaterialxv(GLenum face, MaterialParameter pname, GLfixed *params)
@@ -236,20 +232,20 @@ void Context::getMaterialxv(GLenum face, MaterialParameter pname, GLfixed *param
 
 void Context::getTexEnvfv(TextureEnvTarget target, TextureEnvParameter pname, GLfloat *params)
 {
-    GetTextureEnv(mState.getActiveSampler(), &mState.gles1(), target, pname, params);
+    GetTextureEnv(mState.getActiveSampler(), getMutableGLES1State(), target, pname, params);
 }
 
 void Context::getTexEnviv(TextureEnvTarget target, TextureEnvParameter pname, GLint *params)
 {
     GLfloat paramsf[4];
-    GetTextureEnv(mState.getActiveSampler(), &mState.gles1(), target, pname, paramsf);
+    GetTextureEnv(mState.getActiveSampler(), getMutableGLES1State(), target, pname, paramsf);
     ConvertTextureEnvToInt(pname, paramsf, params);
 }
 
 void Context::getTexEnvxv(TextureEnvTarget target, TextureEnvParameter pname, GLfixed *params)
 {
     GLfloat paramsf[4];
-    GetTextureEnv(mState.getActiveSampler(), &mState.gles1(), target, pname, paramsf);
+    GetTextureEnv(mState.getActiveSampler(), getMutableGLES1State(), target, pname, paramsf);
     ConvertTextureEnvToFixed(pname, paramsf, params);
 }
 
@@ -261,12 +257,12 @@ void Context::getTexParameterxv(TextureType target, GLenum pname, GLfixed *param
 
 void Context::lightModelf(GLenum pname, GLfloat param)
 {
-    SetLightModelParameters(&mState.gles1(), pname, &param);
+    SetLightModelParameters(getMutableGLES1State(), pname, &param);
 }
 
 void Context::lightModelfv(GLenum pname, const GLfloat *params)
 {
-    SetLightModelParameters(&mState.gles1(), pname, params);
+    SetLightModelParameters(getMutableGLES1State(), pname, params);
 }
 
 void Context::lightModelx(GLenum pname, GLfixed param)
@@ -288,12 +284,12 @@ void Context::lightModelxv(GLenum pname, const GLfixed *param)
 
 void Context::lightf(GLenum light, LightParameter pname, GLfloat param)
 {
-    SetLightParameters(&mState.gles1(), light, pname, &param);
+    SetLightParameters(getMutableGLES1State(), light, pname, &param);
 }
 
 void Context::lightfv(GLenum light, LightParameter pname, const GLfloat *params)
 {
-    SetLightParameters(&mState.gles1(), light, pname, params);
+    SetLightParameters(getMutableGLES1State(), light, pname, params);
 }
 
 void Context::lightx(GLenum light, LightParameter pname, GLfixed param)
@@ -313,39 +309,29 @@ void Context::lightxv(GLenum light, LightParameter pname, const GLfixed *params)
     lightfv(light, pname, paramsf);
 }
 
-void Context::lineWidthx(GLfixed width)
-{
-    mState.setLineWidth(ConvertFixedToFloat(width));
-}
-
 void Context::loadIdentity()
 {
-    mState.gles1().loadMatrix(angle::Mat4());
+    getMutableGLES1State()->loadMatrix(angle::Mat4());
 }
 
 void Context::loadMatrixf(const GLfloat *m)
 {
-    mState.gles1().loadMatrix(angle::Mat4(m));
+    getMutableGLES1State()->loadMatrix(angle::Mat4(m));
 }
 
 void Context::loadMatrixx(const GLfixed *m)
 {
-    mState.gles1().loadMatrix(FixedMatrixToMat4(m));
-}
-
-void Context::logicOp(LogicalOperation opcodePacked)
-{
-    mState.gles1().setLogicOp(opcodePacked);
+    getMutableGLES1State()->loadMatrix(FixedMatrixToMat4(m));
 }
 
 void Context::materialf(GLenum face, MaterialParameter pname, GLfloat param)
 {
-    SetMaterialParameters(&mState.gles1(), face, pname, &param);
+    SetMaterialParameters(getMutableGLES1State(), face, pname, &param);
 }
 
 void Context::materialfv(GLenum face, MaterialParameter pname, const GLfloat *params)
 {
-    SetMaterialParameters(&mState.gles1(), face, pname, params);
+    SetMaterialParameters(getMutableGLES1State(), face, pname, params);
 }
 
 void Context::materialx(GLenum face, MaterialParameter pname, GLfixed param)
@@ -367,42 +353,43 @@ void Context::materialxv(GLenum face, MaterialParameter pname, const GLfixed *pa
 
 void Context::matrixMode(MatrixType mode)
 {
-    mState.gles1().setMatrixMode(mode);
+    getMutableGLES1State()->setMatrixMode(mode);
 }
 
 void Context::multMatrixf(const GLfloat *m)
 {
-    mState.gles1().multMatrix(angle::Mat4(m));
+    getMutableGLES1State()->multMatrix(angle::Mat4(m));
 }
 
 void Context::multMatrixx(const GLfixed *m)
 {
-    mState.gles1().multMatrix(FixedMatrixToMat4(m));
+    getMutableGLES1State()->multMatrix(FixedMatrixToMat4(m));
 }
 
 void Context::multiTexCoord4f(GLenum target, GLfloat s, GLfloat t, GLfloat r, GLfloat q)
 {
     unsigned int unit = target - GL_TEXTURE0;
     ASSERT(target >= GL_TEXTURE0 && unit < getCaps().maxMultitextureUnits);
-    mState.gles1().setCurrentTextureCoords(unit, {s, t, r, q});
+    getMutableGLES1State()->setCurrentTextureCoords(unit, {s, t, r, q});
 }
 
 void Context::multiTexCoord4x(GLenum target, GLfixed s, GLfixed t, GLfixed r, GLfixed q)
 {
     unsigned int unit = target - GL_TEXTURE0;
     ASSERT(target >= GL_TEXTURE0 && unit < getCaps().maxMultitextureUnits);
-    mState.gles1().setCurrentTextureCoords(unit, {ConvertFixedToFloat(s), ConvertFixedToFloat(t),
-                                                  ConvertFixedToFloat(r), ConvertFixedToFloat(q)});
+    getMutableGLES1State()->setCurrentTextureCoords(
+        unit, {ConvertFixedToFloat(s), ConvertFixedToFloat(t), ConvertFixedToFloat(r),
+               ConvertFixedToFloat(q)});
 }
 
 void Context::normal3f(GLfloat nx, GLfloat ny, GLfloat nz)
 {
-    mState.gles1().setCurrentNormal({nx, ny, nz});
+    getMutableGLES1State()->setCurrentNormal({nx, ny, nz});
 }
 
 void Context::normal3x(GLfixed nx, GLfixed ny, GLfixed nz)
 {
-    mState.gles1().setCurrentNormal(
+    getMutableGLES1State()->setCurrentNormal(
         {ConvertFixedToFloat(nx), ConvertFixedToFloat(ny), ConvertFixedToFloat(nz)});
 }
 
@@ -419,30 +406,30 @@ void Context::orthof(GLfloat left,
                      GLfloat zNear,
                      GLfloat zFar)
 {
-    mState.gles1().multMatrix(angle::Mat4::Ortho(left, right, bottom, top, zNear, zFar));
+    getMutableGLES1State()->multMatrix(angle::Mat4::Ortho(left, right, bottom, top, zNear, zFar));
 }
 
 void Context::orthox(GLfixed l, GLfixed r, GLfixed b, GLfixed t, GLfixed n, GLfixed f)
 {
-    mState.gles1().multMatrix(angle::Mat4::Ortho(ConvertFixedToFloat(l), ConvertFixedToFloat(r),
-                                                 ConvertFixedToFloat(b), ConvertFixedToFloat(t),
-                                                 ConvertFixedToFloat(n), ConvertFixedToFloat(f)));
+    getMutableGLES1State()->multMatrix(
+        angle::Mat4::Ortho(ConvertFixedToFloat(l), ConvertFixedToFloat(r), ConvertFixedToFloat(b),
+                           ConvertFixedToFloat(t), ConvertFixedToFloat(n), ConvertFixedToFloat(f)));
 }
 
 void Context::pointParameterf(PointParameter pname, GLfloat param)
 {
-    SetPointParameter(&mState.gles1(), pname, &param);
+    SetPointParameter(getMutableGLES1State(), pname, &param);
 }
 
 void Context::pointParameterfv(PointParameter pname, const GLfloat *params)
 {
-    SetPointParameter(&mState.gles1(), pname, params);
+    SetPointParameter(getMutableGLES1State(), pname, params);
 }
 
 void Context::pointParameterx(PointParameter pname, GLfixed param)
 {
     GLfloat paramf = ConvertFixedToFloat(param);
-    SetPointParameter(&mState.gles1(), pname, &paramf);
+    SetPointParameter(getMutableGLES1State(), pname, &paramf);
 }
 
 void Context::pointParameterxv(PointParameter pname, const GLfixed *params)
@@ -452,66 +439,55 @@ void Context::pointParameterxv(PointParameter pname, const GLfixed *params)
     {
         paramsf[i] = ConvertFixedToFloat(params[i]);
     }
-    SetPointParameter(&mState.gles1(), pname, paramsf);
+    SetPointParameter(getMutableGLES1State(), pname, paramsf);
 }
 
 void Context::pointSize(GLfloat size)
 {
-    SetPointSize(&mState.gles1(), size);
+    SetPointSize(getMutableGLES1State(), size);
 }
 
 void Context::pointSizex(GLfixed size)
 {
-    SetPointSize(&mState.gles1(), ConvertFixedToFloat(size));
-}
-
-void Context::polygonOffsetx(GLfixed factor, GLfixed units)
-{
-    mState.setPolygonOffsetParams(ConvertFixedToFloat(factor), ConvertFixedToFloat(units), 0.0f);
+    SetPointSize(getMutableGLES1State(), ConvertFixedToFloat(size));
 }
 
 void Context::popMatrix()
 {
-    mState.gles1().popMatrix();
+    getMutableGLES1State()->popMatrix();
 }
 
 void Context::pushMatrix()
 {
-    mState.gles1().pushMatrix();
+    getMutableGLES1State()->pushMatrix();
 }
 
 void Context::rotatef(float angle, float x, float y, float z)
 {
-    mState.gles1().multMatrix(angle::Mat4::Rotate(angle, angle::Vector3(x, y, z)));
+    getMutableGLES1State()->multMatrix(angle::Mat4::Rotate(angle, angle::Vector3(x, y, z)));
 }
 
 void Context::rotatex(GLfixed angle, GLfixed x, GLfixed y, GLfixed z)
 {
-    mState.gles1().multMatrix(angle::Mat4::Rotate(
+    getMutableGLES1State()->multMatrix(angle::Mat4::Rotate(
         ConvertFixedToFloat(angle),
         angle::Vector3(ConvertFixedToFloat(x), ConvertFixedToFloat(y), ConvertFixedToFloat(z))));
 }
 
-void Context::sampleCoveragex(GLclampx value, GLboolean invert)
-{
-    GLclampf valuef = ConvertFixedToFloat(value);
-    mState.setSampleCoverageParams(clamp01(valuef), ConvertToBool(invert));
-}
-
 void Context::scalef(float x, float y, float z)
 {
-    mState.gles1().multMatrix(angle::Mat4::Scale(angle::Vector3(x, y, z)));
+    getMutableGLES1State()->multMatrix(angle::Mat4::Scale(angle::Vector3(x, y, z)));
 }
 
 void Context::scalex(GLfixed x, GLfixed y, GLfixed z)
 {
-    mState.gles1().multMatrix(angle::Mat4::Scale(
+    getMutableGLES1State()->multMatrix(angle::Mat4::Scale(
         angle::Vector3(ConvertFixedToFloat(x), ConvertFixedToFloat(y), ConvertFixedToFloat(z))));
 }
 
 void Context::shadeModel(ShadingModel model)
 {
-    mState.gles1().setShadeModel(model);
+    getMutableGLES1State()->setShadeModel(model);
 }
 
 void Context::texCoordPointer(GLint size, VertexAttribType type, GLsizei stride, const void *ptr)
@@ -522,40 +498,40 @@ void Context::texCoordPointer(GLint size, VertexAttribType type, GLsizei stride,
 
 void Context::texEnvf(TextureEnvTarget target, TextureEnvParameter pname, GLfloat param)
 {
-    SetTextureEnv(mState.getActiveSampler(), &mState.gles1(), target, pname, &param);
+    SetTextureEnv(mState.getActiveSampler(), getMutableGLES1State(), target, pname, &param);
 }
 
 void Context::texEnvfv(TextureEnvTarget target, TextureEnvParameter pname, const GLfloat *params)
 {
-    SetTextureEnv(mState.getActiveSampler(), &mState.gles1(), target, pname, params);
+    SetTextureEnv(mState.getActiveSampler(), getMutableGLES1State(), target, pname, params);
 }
 
 void Context::texEnvi(TextureEnvTarget target, TextureEnvParameter pname, GLint param)
 {
     GLfloat paramsf[4] = {};
     ConvertTextureEnvFromInt(pname, &param, paramsf);
-    SetTextureEnv(mState.getActiveSampler(), &mState.gles1(), target, pname, paramsf);
+    SetTextureEnv(mState.getActiveSampler(), getMutableGLES1State(), target, pname, paramsf);
 }
 
 void Context::texEnviv(TextureEnvTarget target, TextureEnvParameter pname, const GLint *params)
 {
     GLfloat paramsf[4] = {};
     ConvertTextureEnvFromInt(pname, params, paramsf);
-    SetTextureEnv(mState.getActiveSampler(), &mState.gles1(), target, pname, paramsf);
+    SetTextureEnv(mState.getActiveSampler(), getMutableGLES1State(), target, pname, paramsf);
 }
 
 void Context::texEnvx(TextureEnvTarget target, TextureEnvParameter pname, GLfixed param)
 {
     GLfloat paramsf[4] = {};
     ConvertTextureEnvFromFixed(pname, &param, paramsf);
-    SetTextureEnv(mState.getActiveSampler(), &mState.gles1(), target, pname, paramsf);
+    SetTextureEnv(mState.getActiveSampler(), getMutableGLES1State(), target, pname, paramsf);
 }
 
 void Context::texEnvxv(TextureEnvTarget target, TextureEnvParameter pname, const GLfixed *params)
 {
     GLfloat paramsf[4] = {};
     ConvertTextureEnvFromFixed(pname, params, paramsf);
-    SetTextureEnv(mState.getActiveSampler(), &mState.gles1(), target, pname, paramsf);
+    SetTextureEnv(mState.getActiveSampler(), getMutableGLES1State(), target, pname, paramsf);
 }
 
 void Context::texParameterx(TextureType target, GLenum pname, GLfixed param)
@@ -572,12 +548,12 @@ void Context::texParameterxv(TextureType target, GLenum pname, const GLfixed *pa
 
 void Context::translatef(float x, float y, float z)
 {
-    mState.gles1().multMatrix(angle::Mat4::Translate(angle::Vector3(x, y, z)));
+    getMutableGLES1State()->multMatrix(angle::Mat4::Translate(angle::Vector3(x, y, z)));
 }
 
 void Context::translatex(GLfixed x, GLfixed y, GLfixed z)
 {
-    mState.gles1().multMatrix(angle::Mat4::Translate(
+    getMutableGLES1State()->multMatrix(angle::Mat4::Translate(
         angle::Vector3(ConvertFixedToFloat(x), ConvertFixedToFloat(y), ConvertFixedToFloat(z))));
 }
 
@@ -590,55 +566,58 @@ void Context::vertexPointer(GLint size, VertexAttribType type, GLsizei stride, c
 // GL_OES_draw_texture
 void Context::drawTexf(float x, float y, float z, float width, float height)
 {
-    mGLES1Renderer->drawTexture(this, &mState, x, y, z, width, height);
+    mGLES1Renderer->drawTexture(this, &mState, getMutableGLES1State(), x, y, z, width, height);
 }
 
 void Context::drawTexfv(const GLfloat *coords)
 {
-    mGLES1Renderer->drawTexture(this, &mState, coords[0], coords[1], coords[2], coords[3],
-                                coords[4]);
+    mGLES1Renderer->drawTexture(this, &mState, getMutableGLES1State(), coords[0], coords[1],
+                                coords[2], coords[3], coords[4]);
 }
 
 void Context::drawTexi(GLint x, GLint y, GLint z, GLint width, GLint height)
 {
-    mGLES1Renderer->drawTexture(this, &mState, static_cast<GLfloat>(x), static_cast<GLfloat>(y),
-                                static_cast<GLfloat>(z), static_cast<GLfloat>(width),
-                                static_cast<GLfloat>(height));
+    mGLES1Renderer->drawTexture(this, &mState, getMutableGLES1State(), static_cast<GLfloat>(x),
+                                static_cast<GLfloat>(y), static_cast<GLfloat>(z),
+                                static_cast<GLfloat>(width), static_cast<GLfloat>(height));
 }
 
 void Context::drawTexiv(const GLint *coords)
 {
-    mGLES1Renderer->drawTexture(this, &mState, static_cast<GLfloat>(coords[0]),
-                                static_cast<GLfloat>(coords[1]), static_cast<GLfloat>(coords[2]),
-                                static_cast<GLfloat>(coords[3]), static_cast<GLfloat>(coords[4]));
+    mGLES1Renderer->drawTexture(this, &mState, getMutableGLES1State(),
+                                static_cast<GLfloat>(coords[0]), static_cast<GLfloat>(coords[1]),
+                                static_cast<GLfloat>(coords[2]), static_cast<GLfloat>(coords[3]),
+                                static_cast<GLfloat>(coords[4]));
 }
 
 void Context::drawTexs(GLshort x, GLshort y, GLshort z, GLshort width, GLshort height)
 {
-    mGLES1Renderer->drawTexture(this, &mState, static_cast<GLfloat>(x), static_cast<GLfloat>(y),
-                                static_cast<GLfloat>(z), static_cast<GLfloat>(width),
-                                static_cast<GLfloat>(height));
+    mGLES1Renderer->drawTexture(this, &mState, getMutableGLES1State(), static_cast<GLfloat>(x),
+                                static_cast<GLfloat>(y), static_cast<GLfloat>(z),
+                                static_cast<GLfloat>(width), static_cast<GLfloat>(height));
 }
 
 void Context::drawTexsv(const GLshort *coords)
 {
-    mGLES1Renderer->drawTexture(this, &mState, static_cast<GLfloat>(coords[0]),
-                                static_cast<GLfloat>(coords[1]), static_cast<GLfloat>(coords[2]),
-                                static_cast<GLfloat>(coords[3]), static_cast<GLfloat>(coords[4]));
+    mGLES1Renderer->drawTexture(this, &mState, getMutableGLES1State(),
+                                static_cast<GLfloat>(coords[0]), static_cast<GLfloat>(coords[1]),
+                                static_cast<GLfloat>(coords[2]), static_cast<GLfloat>(coords[3]),
+                                static_cast<GLfloat>(coords[4]));
 }
 
 void Context::drawTexx(GLfixed x, GLfixed y, GLfixed z, GLfixed width, GLfixed height)
 {
-    mGLES1Renderer->drawTexture(this, &mState, ConvertFixedToFloat(x), ConvertFixedToFloat(y),
-                                ConvertFixedToFloat(z), ConvertFixedToFloat(width),
-                                ConvertFixedToFloat(height));
+    mGLES1Renderer->drawTexture(this, &mState, getMutableGLES1State(), ConvertFixedToFloat(x),
+                                ConvertFixedToFloat(y), ConvertFixedToFloat(z),
+                                ConvertFixedToFloat(width), ConvertFixedToFloat(height));
 }
 
 void Context::drawTexxv(const GLfixed *coords)
 {
-    mGLES1Renderer->drawTexture(this, &mState, ConvertFixedToFloat(coords[0]),
-                                ConvertFixedToFloat(coords[1]), ConvertFixedToFloat(coords[2]),
-                                ConvertFixedToFloat(coords[3]), ConvertFixedToFloat(coords[4]));
+    mGLES1Renderer->drawTexture(this, &mState, getMutableGLES1State(),
+                                ConvertFixedToFloat(coords[0]), ConvertFixedToFloat(coords[1]),
+                                ConvertFixedToFloat(coords[2]), ConvertFixedToFloat(coords[3]),
+                                ConvertFixedToFloat(coords[4]));
 }
 
 // GL_OES_matrix_palette

@@ -393,7 +393,7 @@ supported_cl_extensions = [
 ]
 
 # Strip these suffixes from Context entry point names. NV is excluded (for now).
-strip_suffixes = ["AMD", "ANDROID", "ANGLE", "CHROMIUM", "EXT", "KHR", "OES", "OVR"]
+strip_suffixes = ["AMD", "ANDROID", "ANGLE", "CHROMIUM", "EXT", "KHR", "OES", "OVR", "QCOM"]
 check_sorted('strip_suffixes', strip_suffixes)
 
 # The EGL_ANGLE_explicit_context extension is generated differently from other extensions.
