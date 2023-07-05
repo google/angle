@@ -137,6 +137,7 @@ PLS_ALLOW_WILDCARDS = [
 # As a result, they don't require the share group lock.
 CONTEXT_LOCAL_LIST = [
     'glActiveTexture',
+    'glBlendColor',
     'glClearColor',
     'glClearDepthf',
     'glClearStencil',
@@ -177,6 +178,8 @@ CONTEXT_LOCAL_LIST = [
     'glSampleCoveragex',
 ]
 CONTEXT_LOCAL_WILDCARDS = [
+    'glBlendFunc*',
+    'glBlendEquation*',
     'glVertexAttrib[1-4]*',
     'glVertexAttribI[1-4]*',
     'glVertexAttribP[1-4]*',

@@ -57,14 +57,13 @@ void GL_APIENTRY GL_BlendEquationSeparatei(GLuint buf, GLenum modeRGB, GLenum mo
 
     if (context)
     {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
              ValidateBlendEquationSeparatei(context, angle::EntryPoint::GLBlendEquationSeparatei,
                                             buf, modeRGB, modeAlpha));
         if (isCallValid)
         {
-            context->blendEquationSeparatei(buf, modeRGB, modeAlpha);
+            ContextLocalBlendEquationSeparatei(context, buf, modeRGB, modeAlpha);
         }
         ANGLE_CAPTURE_GL(BlendEquationSeparatei, isCallValid, context, buf, modeRGB, modeAlpha);
     }
@@ -83,13 +82,12 @@ void GL_APIENTRY GL_BlendEquationi(GLuint buf, GLenum mode)
 
     if (context)
     {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
              ValidateBlendEquationi(context, angle::EntryPoint::GLBlendEquationi, buf, mode));
         if (isCallValid)
         {
-            context->blendEquationi(buf, mode);
+            ContextLocalBlendEquationi(context, buf, mode);
         }
         ANGLE_CAPTURE_GL(BlendEquationi, isCallValid, context, buf, mode);
     }
@@ -113,14 +111,13 @@ GL_BlendFuncSeparatei(GLuint buf, GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha,
 
     if (context)
     {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
              ValidateBlendFuncSeparatei(context, angle::EntryPoint::GLBlendFuncSeparatei, buf,
                                         srcRGB, dstRGB, srcAlpha, dstAlpha));
         if (isCallValid)
         {
-            context->blendFuncSeparatei(buf, srcRGB, dstRGB, srcAlpha, dstAlpha);
+            ContextLocalBlendFuncSeparatei(context, buf, srcRGB, dstRGB, srcAlpha, dstAlpha);
         }
         ANGLE_CAPTURE_GL(BlendFuncSeparatei, isCallValid, context, buf, srcRGB, dstRGB, srcAlpha,
                          dstAlpha);
@@ -141,13 +138,12 @@ void GL_APIENTRY GL_BlendFunci(GLuint buf, GLenum src, GLenum dst)
 
     if (context)
     {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
              ValidateBlendFunci(context, angle::EntryPoint::GLBlendFunci, buf, src, dst));
         if (isCallValid)
         {
-            context->blendFunci(buf, src, dst);
+            ContextLocalBlendFunci(context, buf, src, dst);
         }
         ANGLE_CAPTURE_GL(BlendFunci, isCallValid, context, buf, src, dst);
     }

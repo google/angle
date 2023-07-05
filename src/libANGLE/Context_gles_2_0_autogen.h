@@ -17,12 +17,6 @@
     void bindFramebuffer(GLenum target, FramebufferID framebufferPacked);                          \
     void bindRenderbuffer(GLenum target, RenderbufferID renderbufferPacked);                       \
     void bindTexture(TextureType targetPacked, TextureID texturePacked);                           \
-    void blendColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha);                      \
-    void blendEquation(GLenum mode);                                                               \
-    void blendEquationSeparate(GLenum modeRGB, GLenum modeAlpha);                                  \
-    void blendFunc(GLenum sfactor, GLenum dfactor);                                                \
-    void blendFuncSeparate(GLenum sfactorRGB, GLenum dfactorRGB, GLenum sfactorAlpha,              \
-                           GLenum dfactorAlpha);                                                   \
     void bufferData(BufferBinding targetPacked, GLsizeiptr size, const void *data,                 \
                     BufferUsage usagePacked);                                                      \
     void bufferSubData(BufferBinding targetPacked, GLintptr offset, GLsizeiptr size,               \

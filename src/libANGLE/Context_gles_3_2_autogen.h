@@ -12,11 +12,6 @@
 
 #define ANGLE_GLES_3_2_CONTEXT_API                                                                 \
     void blendBarrier();                                                                           \
-    void blendEquationSeparatei(GLuint buf, GLenum modeRGB, GLenum modeAlpha);                     \
-    void blendEquationi(GLuint buf, GLenum mode);                                                  \
-    void blendFuncSeparatei(GLuint buf, GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha,             \
-                            GLenum dstAlpha);                                                      \
-    void blendFunci(GLuint buf, GLenum src, GLenum dst);                                           \
     void copyImageSubData(GLuint srcName, GLenum srcTarget, GLint srcLevel, GLint srcX,            \
                           GLint srcY, GLint srcZ, GLuint dstName, GLenum dstTarget,                \
                           GLint dstLevel, GLint dstX, GLint dstY, GLint dstZ, GLsizei srcWidth,    \

@@ -164,7 +164,8 @@ class StateCache final : angle::NonCopyable
     // 13. onUniformBufferStateChange.
     // 14. onContextLocalColorMaskChange.
     // 15. onBufferBindingChange.
-    // 16. onBlendFuncIndexedChange.
+    // 16. onContextLocalBlendFuncIndexedChange.
+    // 17. onContextLocalBlendEquationChange.
     intptr_t getBasicDrawStatesErrorString(const Context *context) const
     {
         if (mIsCachedBasicDrawStatesErrorValid &&
@@ -283,8 +284,6 @@ class StateCache final : angle::NonCopyable
     void onAtomicCounterBufferStateChange(Context *context);
     void onShaderStorageBufferStateChange(Context *context);
     void onBufferBindingChange(Context *context);
-    void onBlendFuncIndexedChange(Context *context);
-    void onBlendEquationChange(Context *context);
     // The following state change notifications are only called from context-local state change
     // functions.  They only affect the draw validation cache which is also context-local (i.e. not
     // accessed by other contexts in the share group).  Note that context-local state change
@@ -292,6 +291,8 @@ class StateCache final : angle::NonCopyable
     void onContextLocalCapChange(Context *context);
     void onContextLocalColorMaskChange(Context *context);
     void onContextLocalDefaultVertexAttributeChange(Context *context);
+    void onContextLocalBlendFuncIndexedChange(Context *context);
+    void onContextLocalBlendEquationChange(Context *context);
 
   private:
     // Cache update functions.
@@ -579,6 +580,14 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     void onContextLocalDefaultVertexAttributeChange()
     {
         mStateCache.onContextLocalDefaultVertexAttributeChange(this);
+    }
+    void onContextLocalBlendFuncIndexedChange()
+    {
+        mStateCache.onContextLocalBlendFuncIndexedChange(this);
+    }
+    void onContextLocalBlendEquationChange()
+    {
+        mStateCache.onContextLocalBlendEquationChange(this);
     }
 
     bool skipValidation() const

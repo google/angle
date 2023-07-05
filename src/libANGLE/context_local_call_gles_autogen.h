@@ -16,6 +16,19 @@
 namespace gl
 {
 void ContextLocalActiveTexture(Context *context, GLenum texture);
+void ContextLocalBlendColor(Context *context,
+                            GLfloat red,
+                            GLfloat green,
+                            GLfloat blue,
+                            GLfloat alpha);
+void ContextLocalBlendEquation(Context *context, GLenum mode);
+void ContextLocalBlendEquationSeparate(Context *context, GLenum modeRGB, GLenum modeAlpha);
+void ContextLocalBlendFunc(Context *context, GLenum sfactor, GLenum dfactor);
+void ContextLocalBlendFuncSeparate(Context *context,
+                                   GLenum sfactorRGB,
+                                   GLenum dfactorRGB,
+                                   GLenum sfactorAlpha,
+                                   GLenum dfactorAlpha);
 void ContextLocalClearColor(Context *context,
                             GLfloat red,
                             GLfloat green,
@@ -68,6 +81,18 @@ void ContextLocalVertexAttribI4ui(Context *context,
                                   GLuint w);
 void ContextLocalVertexAttribI4uiv(Context *context, GLuint index, const GLuint *v);
 void ContextLocalSampleMaski(Context *context, GLuint maskNumber, GLbitfield mask);
+void ContextLocalBlendEquationSeparatei(Context *context,
+                                        GLuint buf,
+                                        GLenum modeRGB,
+                                        GLenum modeAlpha);
+void ContextLocalBlendEquationi(Context *context, GLuint buf, GLenum mode);
+void ContextLocalBlendFuncSeparatei(Context *context,
+                                    GLuint buf,
+                                    GLenum srcRGB,
+                                    GLenum dstRGB,
+                                    GLenum srcAlpha,
+                                    GLenum dstAlpha);
+void ContextLocalBlendFunci(Context *context, GLuint buf, GLenum src, GLenum dst);
 void ContextLocalColorMaski(Context *context,
                             GLuint index,
                             GLboolean r,

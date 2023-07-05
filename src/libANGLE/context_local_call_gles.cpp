@@ -333,4 +333,78 @@ void ContextLocalShadingRate(Context *context, GLenum rate)
 {
     context->getMutableLocalState()->setShadingRate(rate);
 }
+
+void ContextLocalBlendColor(Context *context,
+                            GLfloat red,
+                            GLfloat green,
+                            GLfloat blue,
+                            GLfloat alpha)
+{
+    context->getMutableLocalState()->setBlendColor(red, green, blue, alpha);
+}
+
+void ContextLocalBlendEquation(Context *context, GLenum mode)
+{
+    context->getMutableLocalState()->setBlendEquation(mode, mode);
+    context->onContextLocalBlendEquationChange();
+}
+
+void ContextLocalBlendEquationi(Context *context, GLuint buf, GLenum mode)
+{
+    context->getMutableLocalState()->setBlendEquationIndexed(mode, mode, buf);
+    context->onContextLocalBlendEquationChange();
+}
+
+void ContextLocalBlendEquationSeparate(Context *context, GLenum modeRGB, GLenum modeAlpha)
+{
+    context->getMutableLocalState()->setBlendEquation(modeRGB, modeAlpha);
+    context->onContextLocalBlendEquationChange();
+}
+
+void ContextLocalBlendEquationSeparatei(Context *context,
+                                        GLuint buf,
+                                        GLenum modeRGB,
+                                        GLenum modeAlpha)
+{
+    context->getMutableLocalState()->setBlendEquationIndexed(modeRGB, modeAlpha, buf);
+    context->onContextLocalBlendEquationChange();
+}
+
+void ContextLocalBlendFunc(Context *context, GLenum sfactor, GLenum dfactor)
+{
+    context->getMutableLocalState()->setBlendFactors(sfactor, dfactor, sfactor, dfactor);
+}
+
+void ContextLocalBlendFunci(Context *context, GLuint buf, GLenum src, GLenum dst)
+{
+    context->getMutableLocalState()->setBlendFactorsIndexed(src, dst, src, dst, buf);
+    if (context->getState().noSimultaneousConstantColorAndAlphaBlendFunc())
+    {
+        context->onContextLocalBlendFuncIndexedChange();
+    }
+}
+
+void ContextLocalBlendFuncSeparate(Context *context,
+                                   GLenum srcRGB,
+                                   GLenum dstRGB,
+                                   GLenum srcAlpha,
+                                   GLenum dstAlpha)
+{
+    context->getMutableLocalState()->setBlendFactors(srcRGB, dstRGB, srcAlpha, dstAlpha);
+}
+
+void ContextLocalBlendFuncSeparatei(Context *context,
+                                    GLuint buf,
+                                    GLenum srcRGB,
+                                    GLenum dstRGB,
+                                    GLenum srcAlpha,
+                                    GLenum dstAlpha)
+{
+    context->getMutableLocalState()->setBlendFactorsIndexed(srcRGB, dstRGB, srcAlpha, dstAlpha,
+                                                            buf);
+    if (context->getState().noSimultaneousConstantColorAndAlphaBlendFunc())
+    {
+        context->onContextLocalBlendFuncIndexedChange();
+    }
+}
 }  // namespace gl

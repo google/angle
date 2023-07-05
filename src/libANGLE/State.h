@@ -1266,30 +1266,6 @@ class State : angle::NonCopyable
     {
         return mLocalState.getBlendEnabledDrawBufferMask();
     }
-    void setBlendFactors(GLenum sourceRGB, GLenum destRGB, GLenum sourceAlpha, GLenum destAlpha)
-    {
-        mLocalState.setBlendFactors(sourceRGB, destRGB, sourceAlpha, destAlpha);
-    }
-    void setBlendFactorsIndexed(GLenum sourceRGB,
-                                GLenum destRGB,
-                                GLenum sourceAlpha,
-                                GLenum destAlpha,
-                                GLuint index)
-    {
-        mLocalState.setBlendFactorsIndexed(sourceRGB, destRGB, sourceAlpha, destAlpha, index);
-    }
-    void setBlendColor(float red, float green, float blue, float alpha)
-    {
-        mLocalState.setBlendColor(red, green, blue, alpha);
-    }
-    void setBlendEquation(GLenum rgbEquation, GLenum alphaEquation)
-    {
-        mLocalState.setBlendEquation(rgbEquation, alphaEquation);
-    }
-    void setBlendEquationIndexed(GLenum rgbEquation, GLenum alphaEquation, GLuint index)
-    {
-        mLocalState.setBlendEquationIndexed(rgbEquation, alphaEquation, index);
-    }
     const ColorF &getBlendColor() const { return mLocalState.getBlendColor(); }
     bool isStencilTestEnabled() const { return mLocalState.isStencilTestEnabled(); }
     bool isStencilWriteEnabled() const { return mLocalState.isStencilWriteEnabled(); }

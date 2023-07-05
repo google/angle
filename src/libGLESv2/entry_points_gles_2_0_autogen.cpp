@@ -223,7 +223,6 @@ void GL_APIENTRY GL_BlendColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat
 
     if (context)
     {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
              (ValidatePixelLocalStorageInactive(context, angle::EntryPoint::GLBlendColor) &&
@@ -231,7 +230,7 @@ void GL_APIENTRY GL_BlendColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat
                                  alpha)));
         if (isCallValid)
         {
-            context->blendColor(red, green, blue, alpha);
+            ContextLocalBlendColor(context, red, green, blue, alpha);
         }
         ANGLE_CAPTURE_GL(BlendColor, isCallValid, context, red, green, blue, alpha);
     }
@@ -250,14 +249,13 @@ void GL_APIENTRY GL_BlendEquation(GLenum mode)
 
     if (context)
     {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
              (ValidatePixelLocalStorageInactive(context, angle::EntryPoint::GLBlendEquation) &&
               ValidateBlendEquation(context, angle::EntryPoint::GLBlendEquation, mode)));
         if (isCallValid)
         {
-            context->blendEquation(mode);
+            ContextLocalBlendEquation(context, mode);
         }
         ANGLE_CAPTURE_GL(BlendEquation, isCallValid, context, mode);
     }
@@ -277,7 +275,6 @@ void GL_APIENTRY GL_BlendEquationSeparate(GLenum modeRGB, GLenum modeAlpha)
 
     if (context)
     {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
              (ValidatePixelLocalStorageInactive(context,
@@ -286,7 +283,7 @@ void GL_APIENTRY GL_BlendEquationSeparate(GLenum modeRGB, GLenum modeAlpha)
                                             modeRGB, modeAlpha)));
         if (isCallValid)
         {
-            context->blendEquationSeparate(modeRGB, modeAlpha);
+            ContextLocalBlendEquationSeparate(context, modeRGB, modeAlpha);
         }
         ANGLE_CAPTURE_GL(BlendEquationSeparate, isCallValid, context, modeRGB, modeAlpha);
     }
@@ -306,14 +303,13 @@ void GL_APIENTRY GL_BlendFunc(GLenum sfactor, GLenum dfactor)
 
     if (context)
     {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
              (ValidatePixelLocalStorageInactive(context, angle::EntryPoint::GLBlendFunc) &&
               ValidateBlendFunc(context, angle::EntryPoint::GLBlendFunc, sfactor, dfactor)));
         if (isCallValid)
         {
-            context->blendFunc(sfactor, dfactor);
+            ContextLocalBlendFunc(context, sfactor, dfactor);
         }
         ANGLE_CAPTURE_GL(BlendFunc, isCallValid, context, sfactor, dfactor);
     }
@@ -339,7 +335,6 @@ void GL_APIENTRY GL_BlendFuncSeparate(GLenum sfactorRGB,
 
     if (context)
     {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
              (ValidatePixelLocalStorageInactive(context, angle::EntryPoint::GLBlendFuncSeparate) &&
@@ -347,7 +342,8 @@ void GL_APIENTRY GL_BlendFuncSeparate(GLenum sfactorRGB,
                                         dfactorRGB, sfactorAlpha, dfactorAlpha)));
         if (isCallValid)
         {
-            context->blendFuncSeparate(sfactorRGB, dfactorRGB, sfactorAlpha, dfactorAlpha);
+            ContextLocalBlendFuncSeparate(context, sfactorRGB, dfactorRGB, sfactorAlpha,
+                                          dfactorAlpha);
         }
         ANGLE_CAPTURE_GL(BlendFuncSeparate, isCallValid, context, sfactorRGB, dfactorRGB,
                          sfactorAlpha, dfactorAlpha);

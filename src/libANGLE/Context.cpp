@@ -5956,69 +5956,6 @@ void Context::blendBarrier()
     mImplementation->blendBarrier();
 }
 
-void Context::blendColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha)
-{
-    mState.setBlendColor(red, green, blue, alpha);
-}
-
-void Context::blendEquation(GLenum mode)
-{
-    mState.setBlendEquation(mode, mode);
-
-    mStateCache.onBlendEquationChange(this);
-}
-
-void Context::blendEquationi(GLuint buf, GLenum mode)
-{
-    mState.setBlendEquationIndexed(mode, mode, buf);
-
-    mStateCache.onBlendEquationChange(this);
-}
-
-void Context::blendEquationSeparate(GLenum modeRGB, GLenum modeAlpha)
-{
-    mState.setBlendEquation(modeRGB, modeAlpha);
-}
-
-void Context::blendEquationSeparatei(GLuint buf, GLenum modeRGB, GLenum modeAlpha)
-{
-    mState.setBlendEquationIndexed(modeRGB, modeAlpha, buf);
-}
-
-void Context::blendFunc(GLenum sfactor, GLenum dfactor)
-{
-    mState.setBlendFactors(sfactor, dfactor, sfactor, dfactor);
-}
-
-void Context::blendFunci(GLuint buf, GLenum src, GLenum dst)
-{
-    mState.setBlendFactorsIndexed(src, dst, src, dst, buf);
-
-    if (mState.noSimultaneousConstantColorAndAlphaBlendFunc())
-    {
-        mStateCache.onBlendFuncIndexedChange(this);
-    }
-}
-
-void Context::blendFuncSeparate(GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha, GLenum dstAlpha)
-{
-    mState.setBlendFactors(srcRGB, dstRGB, srcAlpha, dstAlpha);
-}
-
-void Context::blendFuncSeparatei(GLuint buf,
-                                 GLenum srcRGB,
-                                 GLenum dstRGB,
-                                 GLenum srcAlpha,
-                                 GLenum dstAlpha)
-{
-    mState.setBlendFactorsIndexed(srcRGB, dstRGB, srcAlpha, dstAlpha, buf);
-
-    if (mState.noSimultaneousConstantColorAndAlphaBlendFunc())
-    {
-        mStateCache.onBlendFuncIndexedChange(this);
-    }
-}
-
 void Context::disableVertexAttribArray(GLuint index)
 {
     mState.setEnableVertexAttribArray(index, false);
@@ -10516,14 +10453,14 @@ void StateCache::onContextLocalColorMaskChange(Context *context)
     mIsCachedBasicDrawStatesErrorValid = false;
 }
 
-void StateCache::onBlendFuncIndexedChange(Context *context)
+void StateCache::onContextLocalBlendFuncIndexedChange(Context *context)
 {
-    updateBasicDrawStatesError();
+    mIsCachedBasicDrawStatesErrorValid = false;
 }
 
-void StateCache::onBlendEquationChange(Context *context)
+void StateCache::onContextLocalBlendEquationChange(Context *context)
 {
-    updateBasicDrawStatesError();
+    mIsCachedBasicDrawStatesErrorValid = false;
 }
 
 void StateCache::setValidDrawModes(bool pointsOK,
