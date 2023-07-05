@@ -9,6 +9,7 @@
 
 #include "libANGLE/context_local_call_gles_autogen.h"
 
+#include "common/debug.h"
 #include "libANGLE/queryconversions.h"
 
 namespace gl
@@ -474,4 +475,100 @@ void ContextLocalStencilOpSeparate(Context *context,
         context->getMutableLocalState()->setStencilBackOperations(fail, zfail, zpass);
     }
 }
+
+void ContextLocalPixelStorei(Context *context, GLenum pname, GLint param)
+{
+    switch (pname)
+    {
+        case GL_UNPACK_ALIGNMENT:
+            context->getMutableLocalState()->setUnpackAlignment(param);
+            break;
+
+        case GL_PACK_ALIGNMENT:
+            context->getMutableLocalState()->setPackAlignment(param);
+            break;
+
+        case GL_PACK_REVERSE_ROW_ORDER_ANGLE:
+            context->getMutableLocalState()->setPackReverseRowOrder(param != 0);
+            break;
+
+        case GL_UNPACK_ROW_LENGTH:
+            ASSERT((context->getClientMajorVersion() >= 3) ||
+                   context->getExtensions().unpackSubimageEXT);
+            context->getMutableLocalState()->setUnpackRowLength(param);
+            break;
+
+        case GL_UNPACK_IMAGE_HEIGHT:
+            ASSERT(context->getClientMajorVersion() >= 3);
+            context->getMutableLocalState()->setUnpackImageHeight(param);
+            break;
+
+        case GL_UNPACK_SKIP_IMAGES:
+            ASSERT(context->getClientMajorVersion() >= 3);
+            context->getMutableLocalState()->setUnpackSkipImages(param);
+            break;
+
+        case GL_UNPACK_SKIP_ROWS:
+            ASSERT((context->getClientMajorVersion() >= 3) ||
+                   context->getExtensions().unpackSubimageEXT);
+            context->getMutableLocalState()->setUnpackSkipRows(param);
+            break;
+
+        case GL_UNPACK_SKIP_PIXELS:
+            ASSERT((context->getClientMajorVersion() >= 3) ||
+                   context->getExtensions().unpackSubimageEXT);
+            context->getMutableLocalState()->setUnpackSkipPixels(param);
+            break;
+
+        case GL_PACK_ROW_LENGTH:
+            ASSERT((context->getClientMajorVersion() >= 3) ||
+                   context->getExtensions().packSubimageNV);
+            context->getMutableLocalState()->setPackRowLength(param);
+            break;
+
+        case GL_PACK_SKIP_ROWS:
+            ASSERT((context->getClientMajorVersion() >= 3) ||
+                   context->getExtensions().packSubimageNV);
+            context->getMutableLocalState()->setPackSkipRows(param);
+            break;
+
+        case GL_PACK_SKIP_PIXELS:
+            ASSERT((context->getClientMajorVersion() >= 3) ||
+                   context->getExtensions().packSubimageNV);
+            context->getMutableLocalState()->setPackSkipPixels(param);
+            break;
+
+        default:
+            UNREACHABLE();
+            return;
+    }
+}
+
+void ContextLocalHint(Context *context, GLenum target, GLenum mode)
+{
+    switch (target)
+    {
+        case GL_GENERATE_MIPMAP_HINT:
+            context->getMutableLocalState()->setGenerateMipmapHint(mode);
+            break;
+
+        case GL_FRAGMENT_SHADER_DERIVATIVE_HINT_OES:
+            context->getMutableLocalState()->setFragmentShaderDerivativeHint(mode);
+            break;
+
+        case GL_PERSPECTIVE_CORRECTION_HINT:
+        case GL_POINT_SMOOTH_HINT:
+        case GL_LINE_SMOOTH_HINT:
+        case GL_FOG_HINT:
+            context->getMutableGLES1State()->setHint(target, mode);
+            break;
+        case GL_TEXTURE_FILTERING_HINT_CHROMIUM:
+            context->getMutableLocalState()->setTextureFilteringHint(mode);
+            break;
+        default:
+            UNREACHABLE();
+            return;
+    }
+}
+
 }  // namespace gl

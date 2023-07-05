@@ -2323,14 +2323,13 @@ void GL_APIENTRY GL_Hint(GLenum target, GLenum mode)
 
     if (context)
     {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
              (ValidatePixelLocalStorageInactive(context, angle::EntryPoint::GLHint) &&
               ValidateHint(context, angle::EntryPoint::GLHint, target, mode)));
         if (isCallValid)
         {
-            context->hint(target, mode);
+            ContextLocalHint(context, target, mode);
         }
         ANGLE_CAPTURE_GL(Hint, isCallValid, context, target, mode);
     }
@@ -2620,14 +2619,13 @@ void GL_APIENTRY GL_PixelStorei(GLenum pname, GLint param)
 
     if (context)
     {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
              (ValidatePixelLocalStorageInactive(context, angle::EntryPoint::GLPixelStorei) &&
               ValidatePixelStorei(context, angle::EntryPoint::GLPixelStorei, pname, param)));
         if (isCallValid)
         {
-            context->pixelStorei(pname, param);
+            ContextLocalPixelStorei(context, pname, param);
         }
         ANGLE_CAPTURE_GL(PixelStorei, isCallValid, context, pname, param);
     }

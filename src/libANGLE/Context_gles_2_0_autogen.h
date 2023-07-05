@@ -95,7 +95,6 @@
     void getVertexAttribPointerv(GLuint index, GLenum pname, void **pointer);                      \
     void getVertexAttribfv(GLuint index, GLenum pname, GLfloat *params);                           \
     void getVertexAttribiv(GLuint index, GLenum pname, GLint *params);                             \
-    void hint(GLenum target, GLenum mode);                                                         \
     GLboolean isBuffer(BufferID bufferPacked) const;                                               \
     GLboolean isEnabled(GLenum cap) const;                                                         \
     GLboolean isFramebuffer(FramebufferID framebufferPacked) const;                                \
@@ -104,7 +103,6 @@
     GLboolean isShader(ShaderProgramID shaderPacked) const;                                        \
     GLboolean isTexture(TextureID texturePacked) const;                                            \
     void linkProgram(ShaderProgramID programPacked);                                               \
-    void pixelStorei(GLenum pname, GLint param);                                                   \
     void readPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type,   \
                     void *pixels);                                                                 \
     void releaseShaderCompiler();                                                                  \

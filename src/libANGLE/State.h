@@ -1309,32 +1309,18 @@ class State : angle::NonCopyable
     bool isProgramBinaryCacheEnabled() const { return mLocalState.isProgramBinaryCacheEnabled(); }
     const Rectangle &getViewport() const { return mLocalState.getViewport(); }
     ShadingRate getShadingRate() const { return mLocalState.getShadingRate(); }
-    void setPackAlignment(GLint alignment) { mLocalState.setPackAlignment(alignment); }
     GLint getPackAlignment() const { return mLocalState.getPackAlignment(); }
-    void setPackReverseRowOrder(bool reverseRowOrder)
-    {
-        mLocalState.setPackReverseRowOrder(reverseRowOrder);
-    }
     bool getPackReverseRowOrder() const { return mLocalState.getPackReverseRowOrder(); }
-    void setPackRowLength(GLint rowLength) { mLocalState.setPackRowLength(rowLength); }
     GLint getPackRowLength() const { return mLocalState.getPackRowLength(); }
-    void setPackSkipRows(GLint skipRows) { mLocalState.setPackSkipRows(skipRows); }
     GLint getPackSkipRows() const { return mLocalState.getPackSkipRows(); }
-    void setPackSkipPixels(GLint skipPixels) { mLocalState.setPackSkipPixels(skipPixels); }
     GLint getPackSkipPixels() const { return mLocalState.getPackSkipPixels(); }
     const PixelPackState &getPackState() const { return mLocalState.getPackState(); }
     PixelPackState &getPackState() { return mLocalState.getPackState(); }
-    void setUnpackAlignment(GLint alignment) { mLocalState.setUnpackAlignment(alignment); }
     GLint getUnpackAlignment() const { return mLocalState.getUnpackAlignment(); }
-    void setUnpackRowLength(GLint rowLength) { mLocalState.setUnpackRowLength(rowLength); }
     GLint getUnpackRowLength() const { return mLocalState.getUnpackRowLength(); }
-    void setUnpackImageHeight(GLint imageHeight) { mLocalState.setUnpackImageHeight(imageHeight); }
     GLint getUnpackImageHeight() const { return mLocalState.getUnpackImageHeight(); }
-    void setUnpackSkipImages(GLint skipImages) { mLocalState.setUnpackSkipImages(skipImages); }
     GLint getUnpackSkipImages() const { return mLocalState.getUnpackSkipImages(); }
-    void setUnpackSkipRows(GLint skipRows) { mLocalState.setUnpackSkipRows(skipRows); }
     GLint getUnpackSkipRows() const { return mLocalState.getUnpackSkipRows(); }
-    void setUnpackSkipPixels(GLint skipPixels) { mLocalState.setUnpackSkipPixels(skipPixels); }
     GLint getUnpackSkipPixels() const { return mLocalState.getUnpackSkipPixels(); }
     const PixelUnpackState &getUnpackState() const { return mLocalState.getUnpackState(); }
     PixelUnpackState &getUnpackState() { return mLocalState.getUnpackState(); }
@@ -1357,17 +1343,11 @@ class State : angle::NonCopyable
     }
     float getLineWidth() const { return mLocalState.getLineWidth(); }
     unsigned int getActiveSampler() const { return mLocalState.getActiveSampler(); }
-    void setGenerateMipmapHint(GLenum hint) { mLocalState.setGenerateMipmapHint(hint); }
     GLenum getGenerateMipmapHint() const { return mLocalState.getGenerateMipmapHint(); }
-    void setTextureFilteringHint(GLenum hint) { mLocalState.setTextureFilteringHint(hint); }
     GLenum getTextureFilteringHint() const { return mLocalState.getTextureFilteringHint(); }
     GLenum getFragmentShaderDerivativeHint() const
     {
         return mLocalState.getFragmentShaderDerivativeHint();
-    }
-    void setFragmentShaderDerivativeHint(GLenum hint)
-    {
-        mLocalState.setFragmentShaderDerivativeHint(hint);
     }
     ProvokingVertexConvention getProvokingVertex() const
     {
