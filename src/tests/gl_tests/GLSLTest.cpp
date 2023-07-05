@@ -17749,7 +17749,11 @@ TEST_P(GLSLTest_ES3, ESSL3ExtensionMacros)
         "GL_KHR_blend_equation_advanced",
         "GL_NV_EGL_stream_consumer_external",
         "GL_NV_shader_noperspective_interpolation",
+        // Enabled on ESSL 3+ to workaround app bug. http://issuetracker.google.com/285871779
+        "GL_OES_EGL_image_external",
         "GL_OES_EGL_image_external_essl3",
+        // Enabled on ESSL 3+ to workaround app bug. http://issuetracker.google.com/285871779
+        "GL_OES_texture_3D",
         "GL_OES_sample_variables",
         "GL_OES_shader_multisample_interpolation",
         "GL_OVR_multiview",
@@ -17770,13 +17774,11 @@ TEST_P(GLSLTest_ES3, ESSL3ExtensionMacros)
         "GL_EXT_texture_buffer",
         "GL_EXT_texture_cube_map_array",
         "GL_NV_shader_framebuffer_fetch",
-        "GL_OES_EGL_image_external",
         "GL_OES_geometry_shader",
         "GL_OES_primitive_bounding_box",
         "GL_OES_shader_image_atomic",
         "GL_OES_shader_io_blocks",
         "GL_OES_standard_derivatives",
-        "GL_OES_texture_3D",
         "GL_OES_texture_buffer",
         "GL_OES_texture_cube_map_array",
         "GL_OES_texture_storage_multisample_2d_array",
@@ -17816,7 +17818,11 @@ TEST_P(GLSLTest_ES31, ESSL31ExtensionMacros)
         "GL_KHR_blend_equation_advanced",
         "GL_NV_EGL_stream_consumer_external",
         "GL_NV_shader_noperspective_interpolation",
+        // Enabled on ESSL 3+ to workaround app bug. http://issuetracker.google.com/285871779
+        "GL_OES_EGL_image_external",
         "GL_OES_EGL_image_external_essl3",
+        // Enabled on ESSL 3+ to workaround app bug. http://issuetracker.google.com/285871779
+        "GL_OES_texture_3D",
         "GL_OES_geometry_shader",
         "GL_OES_primitive_bounding_box",
         "GL_OES_sample_variables",
@@ -17836,9 +17842,7 @@ TEST_P(GLSLTest_ES31, ESSL31ExtensionMacros)
         "GL_EXT_shader_texture_lod",
         "GL_EXT_shadow_samplers",
         "GL_NV_shader_framebuffer_fetch",
-        "GL_OES_EGL_image_external",
         "GL_OES_standard_derivatives",
-        "GL_OES_texture_3D",
     });
     ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), fs.c_str());
     ASSERT_GL_NO_ERROR();
