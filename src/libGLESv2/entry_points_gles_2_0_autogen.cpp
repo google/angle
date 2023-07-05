@@ -1124,12 +1124,11 @@ void GL_APIENTRY GL_Disable(GLenum cap)
 
     if (context)
     {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid = (context->skipValidation() ||
                             ValidateDisable(context, angle::EntryPoint::GLDisable, cap));
         if (isCallValid)
         {
-            context->disable(cap);
+            ContextLocalDisable(context, cap);
         }
         ANGLE_CAPTURE_GL(Disable, isCallValid, context, cap);
     }
@@ -1228,12 +1227,11 @@ void GL_APIENTRY GL_Enable(GLenum cap)
 
     if (context)
     {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid = (context->skipValidation() ||
                             ValidateEnable(context, angle::EntryPoint::GLEnable, cap));
         if (isCallValid)
         {
-            context->enable(cap);
+            ContextLocalEnable(context, cap);
         }
         ANGLE_CAPTURE_GL(Enable, isCallValid, context, cap);
     }

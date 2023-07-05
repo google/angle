@@ -142,6 +142,10 @@ CONTEXT_LOCAL_LIST = [
     'glColorMask',
     'glColorMaski',
     'glDepthMask',
+    'glDisable',
+    'glDisablei',
+    'glEnable',
+    'glEnablei',
     # GLES1 entry points
     'glClearColorx',
     'glClearDepthx',

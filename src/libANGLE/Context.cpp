@@ -6048,34 +6048,10 @@ void Context::clipControl(ClipOrigin originPacked, ClipDepthMode depthPacked)
     mState.setClipControl(originPacked, depthPacked);
 }
 
-void Context::disable(GLenum cap)
-{
-    mState.setEnableFeature(cap, false);
-    mStateCache.onContextCapChange(this);
-}
-
-void Context::disablei(GLenum target, GLuint index)
-{
-    mState.setEnableFeatureIndexed(target, false, index);
-    mStateCache.onContextCapChange(this);
-}
-
 void Context::disableVertexAttribArray(GLuint index)
 {
     mState.setEnableVertexAttribArray(index, false);
     mStateCache.onVertexArrayStateChange(this);
-}
-
-void Context::enable(GLenum cap)
-{
-    mState.setEnableFeature(cap, true);
-    mStateCache.onContextCapChange(this);
-}
-
-void Context::enablei(GLenum target, GLuint index)
-{
-    mState.setEnableFeatureIndexed(target, true, index);
-    mStateCache.onContextCapChange(this);
 }
 
 void Context::enableVertexAttribArray(GLuint index)
@@ -10145,6 +10121,13 @@ void Context::getRenderbufferImage(GLenum target, GLenum format, GLenum type, vo
                                                          format, type, pixels));
 }
 
+void Context::setLogicOpEnabledForGLES1(bool enabled)
+{
+    // Same implementation as ContextLocalEnable(GL_COLOR_LOGIC_OP), without the GLES1 forwarding.
+    getMutableLocalState()->setLogicOpEnabled(enabled);
+    onContextLocalCapChange();
+}
+
 void Context::logicOpANGLE(LogicalOperation opcodePacked)
 {
     mState.setLogicOp(opcodePacked);
@@ -10673,9 +10656,9 @@ void StateCache::onDrawFramebufferChange(Context *context)
     updateBasicDrawStatesError();
 }
 
-void StateCache::onContextCapChange(Context *context)
+void StateCache::onContextLocalCapChange(Context *context)
 {
-    updateBasicDrawStatesError();
+    mIsCachedBasicDrawStatesErrorValid = false;
 }
 
 void StateCache::onStencilStateChange(Context *context)

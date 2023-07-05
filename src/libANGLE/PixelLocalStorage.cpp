@@ -66,7 +66,7 @@ class ScopedDisableScissor : angle::NonCopyable
     {
         if (mScissorTestEnabled)
         {
-            mContext->disable(GL_SCISSOR_TEST);
+            ContextLocalDisable(mContext, GL_SCISSOR_TEST);
         }
     }
 
@@ -74,7 +74,7 @@ class ScopedDisableScissor : angle::NonCopyable
     {
         if (mScissorTestEnabled)
         {
-            mContext->enable(GL_SCISSOR_TEST);
+            ContextLocalEnable(mContext, GL_SCISSOR_TEST);
         }
     }
 
@@ -852,7 +852,7 @@ class PixelLocalStorageFramebufferFetch : public PixelLocalStorage
             ASSERT(caps.maxColorAttachmentsWithActivePixelLocalStorage == 0);
             if (state.isBlendEnabled())
             {
-                context->disable(GL_BLEND);
+                ContextLocalDisable(context, GL_BLEND);
                 mBlendsToReEnable.set(0);
             }
             std::array<bool, 4> &mask = mSavedColorMasks[0];
@@ -883,7 +883,7 @@ class PixelLocalStorageFramebufferFetch : public PixelLocalStorage
                 // Ensure blend and color mask are disabled for this draw buffer.
                 if (state.isBlendEnabledIndexed(drawBufferIdx))
                 {
-                    context->disablei(GL_BLEND, drawBufferIdx);
+                    ContextLocalDisablei(context, GL_BLEND, drawBufferIdx);
                     mBlendsToReEnable.set(drawBufferIdx);
                 }
                 std::array<bool, 4> &mask = mSavedColorMasks[drawBufferIdx];
@@ -961,7 +961,7 @@ class PixelLocalStorageFramebufferFetch : public PixelLocalStorage
             // change while pixel local storage was active.
             if (mBlendsToReEnable[0])
             {
-                context->enable(GL_BLEND);
+                ContextLocalEnable(context, GL_BLEND);
             }
             if (mColorMasksToRestore[0])
             {
@@ -986,7 +986,7 @@ class PixelLocalStorageFramebufferFetch : public PixelLocalStorage
                 // these did not change while pixel local storage was active.
                 if (mBlendsToReEnable[drawBufferIdx])
                 {
-                    context->enablei(GL_BLEND, drawBufferIdx);
+                    ContextLocalEnablei(context, GL_BLEND, drawBufferIdx);
                 }
                 if (mColorMasksToRestore[drawBufferIdx])
                 {

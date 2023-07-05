@@ -53,12 +53,10 @@
     void depthFunc(GLenum func);                                                                   \
     void depthRangef(GLfloat n, GLfloat f);                                                        \
     void detachShader(ShaderProgramID programPacked, ShaderProgramID shaderPacked);                \
-    void disable(GLenum cap);                                                                      \
     void disableVertexAttribArray(GLuint index);                                                   \
     void drawArrays(PrimitiveMode modePacked, GLint first, GLsizei count);                         \
     void drawElements(PrimitiveMode modePacked, GLsizei count, DrawElementsType typePacked,        \
                       const void *indices);                                                        \
-    void enable(GLenum cap);                                                                       \
     void enableVertexAttribArray(GLuint index);                                                    \
     void finish();                                                                                 \
     void flush();                                                                                  \

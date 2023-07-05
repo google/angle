@@ -6027,13 +6027,12 @@ void GL_APIENTRY GL_DisableiEXT(GLenum target, GLuint index)
 
     if (context)
     {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
              ValidateDisableiEXT(context, angle::EntryPoint::GLDisableiEXT, target, index));
         if (isCallValid)
         {
-            context->disablei(target, index);
+            ContextLocalDisablei(context, target, index);
         }
         ANGLE_CAPTURE_GL(DisableiEXT, isCallValid, context, target, index);
     }
@@ -6052,13 +6051,12 @@ void GL_APIENTRY GL_EnableiEXT(GLenum target, GLuint index)
 
     if (context)
     {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
              ValidateEnableiEXT(context, angle::EntryPoint::GLEnableiEXT, target, index));
         if (isCallValid)
         {
-            context->enablei(target, index);
+            ContextLocalEnablei(context, target, index);
         }
         ANGLE_CAPTURE_GL(EnableiEXT, isCallValid, context, target, index);
     }
@@ -10690,13 +10688,12 @@ void GL_APIENTRY GL_DisableiOES(GLenum target, GLuint index)
 
     if (context)
     {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
              ValidateDisableiOES(context, angle::EntryPoint::GLDisableiOES, target, index));
         if (isCallValid)
         {
-            context->disablei(target, index);
+            ContextLocalDisablei(context, target, index);
         }
         ANGLE_CAPTURE_GL(DisableiOES, isCallValid, context, target, index);
     }
@@ -10715,13 +10712,12 @@ void GL_APIENTRY GL_EnableiOES(GLenum target, GLuint index)
 
     if (context)
     {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
              ValidateEnableiOES(context, angle::EntryPoint::GLEnableiOES, target, index));
         if (isCallValid)
         {
-            context->enablei(target, index);
+            ContextLocalEnablei(context, target, index);
         }
         ANGLE_CAPTURE_GL(EnableiOES, isCallValid, context, target, index);
     }

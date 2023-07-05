@@ -26,7 +26,6 @@
                              const GLuint *ids, GLboolean enabled);                                \
     void debugMessageInsert(GLenum source, GLenum type, GLuint id, GLenum severity,                \
                             GLsizei length, const GLchar *buf);                                    \
-    void disablei(GLenum target, GLuint index);                                                    \
     void drawElementsBaseVertex(PrimitiveMode modePacked, GLsizei count,                           \
                                 DrawElementsType typePacked, const void *indices,                  \
                                 GLint basevertex);                                                 \
@@ -36,7 +35,6 @@
     void drawRangeElementsBaseVertex(PrimitiveMode modePacked, GLuint start, GLuint end,           \
                                      GLsizei count, DrawElementsType typePacked,                   \
                                      const void *indices, GLint basevertex);                       \
-    void enablei(GLenum target, GLuint index);                                                     \
     void framebufferTexture(GLenum target, GLenum attachment, TextureID texturePacked,             \
                             GLint level);                                                          \
     GLuint getDebugMessageLog(GLuint count, GLsizei bufSize, GLenum *sources, GLenum *types,       \

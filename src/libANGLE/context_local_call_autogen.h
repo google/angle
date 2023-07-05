@@ -28,12 +28,16 @@ void ContextLocalColorMask(Context *context,
                            GLboolean blue,
                            GLboolean alpha);
 void ContextLocalDepthMask(Context *context, GLboolean flag);
+void ContextLocalDisable(Context *context, GLenum cap);
+void ContextLocalEnable(Context *context, GLenum cap);
 void ContextLocalColorMaski(Context *context,
                             GLuint index,
                             GLboolean r,
                             GLboolean g,
                             GLboolean b,
                             GLboolean a);
+void ContextLocalDisablei(Context *context, GLenum target, GLuint index);
+void ContextLocalEnablei(Context *context, GLenum target, GLuint index);
 void ContextLocalClearColorx(Context *context,
                              GLfixed red,
                              GLfixed green,
@@ -168,6 +172,8 @@ void ContextLocalColorMaski(Context *context,
                             GLboolean g,
                             GLboolean b,
                             GLboolean a);
+void ContextLocalDisablei(Context *context, GLenum target, GLuint index);
+void ContextLocalEnablei(Context *context, GLenum target, GLuint index);
 
 // GL_EXT_draw_elements_base_vertex
 
@@ -340,6 +346,8 @@ void ContextLocalColorMaski(Context *context,
                             GLboolean g,
                             GLboolean b,
                             GLboolean a);
+void ContextLocalDisablei(Context *context, GLenum target, GLuint index);
+void ContextLocalEnablei(Context *context, GLenum target, GLuint index);
 
 // GL_OES_draw_elements_base_vertex
 

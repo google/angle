@@ -75,4 +75,28 @@ void ContextLocalDepthMask(Context *context, GLboolean flag)
 {
     context->getMutableLocalState()->setDepthMask(ConvertToBool(flag));
 }
+
+void ContextLocalDisable(Context *context, GLenum cap)
+{
+    context->getMutableLocalState()->setEnableFeature(cap, false);
+    context->onContextLocalCapChange();
+}
+
+void ContextLocalDisablei(Context *context, GLenum target, GLuint index)
+{
+    context->getMutableLocalState()->setEnableFeatureIndexed(target, false, index);
+    context->onContextLocalCapChange();
+}
+
+void ContextLocalEnable(Context *context, GLenum cap)
+{
+    context->getMutableLocalState()->setEnableFeature(cap, true);
+    context->onContextLocalCapChange();
+}
+
+void ContextLocalEnablei(Context *context, GLenum target, GLuint index)
+{
+    context->getMutableLocalState()->setEnableFeatureIndexed(target, true, index);
+    context->onContextLocalCapChange();
+}
 }  // namespace gl

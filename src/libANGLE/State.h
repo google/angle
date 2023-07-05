@@ -1247,18 +1247,13 @@ class State : angle::NonCopyable
     float getDepthClearValue() const { return mLocalState.getDepthClearValue(); }
     int getStencilClearValue() const { return mLocalState.getStencilClearValue(); }
     bool isRasterizerDiscardEnabled() const { return mLocalState.isRasterizerDiscardEnabled(); }
-    void setRasterizerDiscard(bool enabled) { mLocalState.setRasterizerDiscard(enabled); }
     bool isPrimitiveRestartEnabled() const { return mLocalState.isPrimitiveRestartEnabled(); }
-    void setPrimitiveRestart(bool enabled) { mLocalState.setPrimitiveRestart(enabled); }
     bool isCullFaceEnabled() const { return mLocalState.isCullFaceEnabled(); }
-    void setCullFace(bool enabled) { mLocalState.setCullFace(enabled); }
     void setCullMode(CullFaceMode mode) { mLocalState.setCullMode(mode); }
     void setFrontFace(GLenum front) { mLocalState.setFrontFace(front); }
     bool isDepthClampEnabled() const { return mLocalState.isDepthClampEnabled(); }
-    void setDepthClamp(bool enabled) { mLocalState.setDepthClamp(enabled); }
     bool isDepthTestEnabled() const { return mLocalState.isDepthTestEnabled(); }
     bool isDepthWriteEnabled() const { return mLocalState.isDepthWriteEnabled(); }
-    void setDepthTest(bool enabled) { mLocalState.setDepthTest(enabled); }
     void setDepthFunc(GLenum depthFunc) { mLocalState.setDepthFunc(depthFunc); }
     void setDepthRange(float zNear, float zFar) { mLocalState.setDepthRange(zNear, zFar); }
     float getNearPlane() const { return mLocalState.getNearPlane(); }
@@ -1278,11 +1273,6 @@ class State : angle::NonCopyable
     DrawBufferMask getBlendEnabledDrawBufferMask() const
     {
         return mLocalState.getBlendEnabledDrawBufferMask();
-    }
-    void setBlend(bool enabled) { mLocalState.setBlend(enabled); }
-    void setBlendIndexed(bool enabled, GLuint index)
-    {
-        mLocalState.setBlendIndexed(enabled, index);
     }
     void setBlendFactors(GLenum sourceRGB, GLenum destRGB, GLenum sourceAlpha, GLenum destAlpha)
     {
@@ -1311,7 +1301,6 @@ class State : angle::NonCopyable
     const ColorF &getBlendColor() const { return mLocalState.getBlendColor(); }
     bool isStencilTestEnabled() const { return mLocalState.isStencilTestEnabled(); }
     bool isStencilWriteEnabled() const { return mLocalState.isStencilWriteEnabled(); }
-    void setStencilTest(bool enabled) { mLocalState.setStencilTest(enabled); }
     void setStencilParams(GLenum stencilFunc, GLint stencilRef, GLuint stencilMask)
     {
         mLocalState.setStencilParams(stencilFunc, stencilRef, stencilMask);
@@ -1349,9 +1338,6 @@ class State : angle::NonCopyable
     bool isPolygonOffsetLineEnabled() const { return mLocalState.isPolygonOffsetLineEnabled(); }
     bool isPolygonOffsetFillEnabled() const { return mLocalState.isPolygonOffsetFillEnabled(); }
     bool isPolygonOffsetEnabled() const { return mLocalState.isPolygonOffsetEnabled(); }
-    void setPolygonOffsetPoint(bool enabled) { mLocalState.setPolygonOffsetPoint(enabled); }
-    void setPolygonOffsetLine(bool enabled) { mLocalState.setPolygonOffsetLine(enabled); }
-    void setPolygonOffsetFill(bool enabled) { mLocalState.setPolygonOffsetFill(enabled); }
     void setPolygonOffsetParams(GLfloat factor, GLfloat units, GLfloat clamp)
     {
         mLocalState.setPolygonOffsetParams(factor, units, clamp);
@@ -1360,9 +1346,7 @@ class State : angle::NonCopyable
     {
         return mLocalState.isSampleAlphaToCoverageEnabled();
     }
-    void setSampleAlphaToCoverage(bool enabled) { mLocalState.setSampleAlphaToCoverage(enabled); }
     bool isSampleCoverageEnabled() const { return mLocalState.isSampleCoverageEnabled(); }
-    void setSampleCoverage(bool enabled) { mLocalState.setSampleCoverage(enabled); }
     void setSampleCoverageParams(GLclampf value, bool invert)
     {
         mLocalState.setSampleCoverageParams(value, invert);
@@ -1370,7 +1354,6 @@ class State : angle::NonCopyable
     GLclampf getSampleCoverageValue() const { return mLocalState.getSampleCoverageValue(); }
     bool getSampleCoverageInvert() const { return mLocalState.getSampleCoverageInvert(); }
     bool isSampleMaskEnabled() const { return mLocalState.isSampleMaskEnabled(); }
-    void setSampleMaskEnabled(bool enabled) { mLocalState.setSampleMaskEnabled(enabled); }
     void setSampleMaskParams(GLuint maskNumber, GLbitfield mask)
     {
         mLocalState.setSampleMaskParams(maskNumber, mask);
@@ -1384,23 +1367,18 @@ class State : angle::NonCopyable
         return mLocalState.getSampleMaskValues();
     }
     GLuint getMaxSampleMaskWords() const { return mLocalState.getMaxSampleMaskWords(); }
-    void setSampleAlphaToOne(bool enabled) { mLocalState.setSampleAlphaToOne(enabled); }
     bool isSampleAlphaToOneEnabled() const { return mLocalState.isSampleAlphaToOneEnabled(); }
-    void setMultisampling(bool enabled) { mLocalState.setMultisampling(enabled); }
     bool isMultisamplingEnabled() const { return mLocalState.isMultisamplingEnabled(); }
-    void setSampleShading(bool enabled) { mLocalState.setSampleShading(enabled); }
     bool isSampleShadingEnabled() const { return mLocalState.isSampleShadingEnabled(); }
     void setMinSampleShading(float value) { mLocalState.setMinSampleShading(value); }
     float getMinSampleShading() const { return mLocalState.getMinSampleShading(); }
     bool isScissorTestEnabled() const { return mLocalState.isScissorTestEnabled(); }
-    void setScissorTest(bool enabled) { mLocalState.setScissorTest(enabled); }
     void setScissorParams(GLint x, GLint y, GLsizei width, GLsizei height)
     {
         mLocalState.setScissorParams(x, y, width, height);
     }
     const Rectangle &getScissor() const { return mLocalState.getScissor(); }
     bool isDitherEnabled() const { return mLocalState.isDitherEnabled(); }
-    void setDither(bool enabled) { mLocalState.setDither(enabled); }
     bool isBindGeneratesResourceEnabled() const
     {
         return mLocalState.isBindGeneratesResourceEnabled();
@@ -1446,7 +1424,6 @@ class State : angle::NonCopyable
     PixelUnpackState &getUnpackState() { return mLocalState.getUnpackState(); }
     void setCoverageModulation(GLenum components) { mLocalState.setCoverageModulation(components); }
     GLenum getCoverageModulation() const { return mLocalState.getCoverageModulation(); }
-    void setFramebufferSRGB(bool sRGB) { mLocalState.setFramebufferSRGB(sRGB); }
     bool getFramebufferSRGB() const { return mLocalState.getFramebufferSRGB(); }
     void setMaxShaderCompilerThreads(GLuint count)
     {
@@ -1504,10 +1481,6 @@ class State : angle::NonCopyable
     {
         return mLocalState.getEnabledClipDistances();
     }
-    void setClipDistanceEnable(int idx, bool enable)
-    {
-        mLocalState.setClipDistanceEnable(idx, enable);
-    }
     bool noSimultaneousConstantColorAndAlphaBlendFunc() const
     {
         return mLocalState.noSimultaneousConstantColorAndAlphaBlendFunc();
@@ -1540,7 +1513,6 @@ class State : angle::NonCopyable
     {
         return mLocalState.getBlendFuncConstantColorDrawBuffers();
     }
-    void setLogicOpEnabled(bool enabled) { mLocalState.setLogicOpEnabled(enabled); }
     bool isLogicOpEnabled() const { return mLocalState.isLogicOpEnabled(); }
     void setLogicOp(LogicalOperation opcode) { mLocalState.setLogicOp(opcode); }
     LogicalOperation getLogicOp() const { return mLocalState.getLogicOp(); }
@@ -1558,14 +1530,6 @@ class State : angle::NonCopyable
     }
     const Debug &getDebug() const { return mLocalState.getDebug(); }
     Debug &getDebug() { return mLocalState.getDebug(); }
-    void setEnableFeature(GLenum feature, bool enabled)
-    {
-        mLocalState.setEnableFeature(feature, enabled);
-    }
-    void setEnableFeatureIndexed(GLenum feature, bool enabled, GLuint index)
-    {
-        mLocalState.setEnableFeatureIndexed(feature, enabled, index);
-    }
     bool getEnableFeature(GLenum feature) const { return mLocalState.getEnableFeature(feature); }
     bool getEnableFeatureIndexed(GLenum feature, GLuint index) const
     {
