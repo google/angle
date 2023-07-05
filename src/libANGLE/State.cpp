@@ -368,7 +368,6 @@ LocalState::LocalState(const EGLenum clientType,
       mTextureRectangleEnabled(true),
       mLogicOpEnabled(false),
       mLogicOp(LogicalOperation::Copy),
-      mMaxShaderCompilerThreads(std::numeric_limits<GLuint>::max()),
       mPatchVertices(3),
       mPixelLocalStorageActivePlanes(0),
       mNoSimultaneousConstantColorAndAlphaBlendFunc(false),
@@ -1127,11 +1126,6 @@ void LocalState::setFramebufferSRGB(bool sRGB)
         mDirtyObjects.set(state::DIRTY_OBJECT_DRAW_FRAMEBUFFER);
         mDirtyObjects.set(state::DIRTY_OBJECT_DRAW_ATTACHMENTS);
     }
-}
-
-void LocalState::setMaxShaderCompilerThreads(GLuint count)
-{
-    mMaxShaderCompilerThreads = count;
 }
 
 void LocalState::setPatchVertices(GLuint value)
@@ -2218,6 +2212,7 @@ State::State(const State *shareContextState,
       mExecutable(nullptr),
       mVertexArray(nullptr),
       mDisplayTextureShareGroup(shareTextures != nullptr),
+      mMaxShaderCompilerThreads(std::numeric_limits<GLuint>::max()),
       mOverlay(overlay),
       mLocalState(clientType,
                   clientVersion,
@@ -3927,6 +3922,11 @@ void State::setImageUnit(const Context *context,
     mDirtyBits.set(state::DIRTY_BIT_IMAGE_BINDINGS);
 
     onImageStateChange(context, unit);
+}
+
+void State::setMaxShaderCompilerThreads(GLuint count)
+{
+    mMaxShaderCompilerThreads = count;
 }
 
 // Handle a dirty texture event.
