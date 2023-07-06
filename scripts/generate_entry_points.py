@@ -160,6 +160,7 @@ CONTEXT_LOCAL_LIST = [
     'glLineWidth',
     'glLogicOpANGLE',
     'glMinSampleShading',
+    'glPatchParameteri',
     'glPixelStorei',
     'glPolygonMode',
     'glPolygonModeNV',

@@ -52,7 +52,6 @@
                         GLsizei bufSize, GLuint *params);                                          \
     void objectLabel(GLenum identifier, GLuint name, GLsizei length, const GLchar *label);         \
     void objectPtrLabel(const void *ptr, GLsizei length, const GLchar *label);                     \
-    void patchParameteri(GLenum pname, GLint value);                                               \
     void popDebugGroup();                                                                          \
     void pushDebugGroup(GLenum source, GLuint id, GLsizei length, const GLchar *message);          \
     void readnPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type,  \

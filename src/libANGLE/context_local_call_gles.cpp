@@ -580,4 +580,16 @@ GLboolean ContextLocalIsEnabledi(Context *context, GLenum target, GLuint index)
 {
     return context->getState().localState().getEnableFeatureIndexed(target, index);
 }
+
+void ContextLocalPatchParameteri(Context *context, GLenum pname, GLint value)
+{
+    switch (pname)
+    {
+        case GL_PATCH_VERTICES:
+            context->getMutableLocalState()->setPatchVertices(value);
+            break;
+        default:
+            break;
+    }
+}
 }  // namespace gl

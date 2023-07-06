@@ -9174,7 +9174,6 @@ void GL_APIENTRY GL_PatchParameteriEXT(GLenum pname, GLint value)
 
     if (context)
     {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
              (ValidatePixelLocalStorageInactive(context, angle::EntryPoint::GLPatchParameteriEXT) &&
@@ -9182,7 +9181,7 @@ void GL_APIENTRY GL_PatchParameteriEXT(GLenum pname, GLint value)
                                          value)));
         if (isCallValid)
         {
-            context->patchParameteri(pname, value);
+            ContextLocalPatchParameteri(context, pname, value);
         }
         ANGLE_CAPTURE_GL(PatchParameteriEXT, isCallValid, context, pname, value);
     }

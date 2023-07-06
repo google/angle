@@ -7392,18 +7392,6 @@ void Context::shaderSource(ShaderProgramID shader,
     shaderObject->setSource(this, count, string, length);
 }
 
-void Context::patchParameteri(GLenum pname, GLint value)
-{
-    switch (pname)
-    {
-        case GL_PATCH_VERTICES:
-            mState.setPatchVertices(value);
-            break;
-        default:
-            break;
-    }
-}
-
 Program *Context::getActiveLinkedProgram() const
 {
     Program *program = mState.getLinkedProgram(this);

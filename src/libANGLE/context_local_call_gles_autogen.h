@@ -120,6 +120,7 @@ void ContextLocalDisablei(Context *context, GLenum target, GLuint index);
 void ContextLocalEnablei(Context *context, GLenum target, GLuint index);
 GLboolean ContextLocalIsEnabledi(Context *context, GLenum target, GLuint index);
 void ContextLocalMinSampleShading(Context *context, GLfloat value);
+void ContextLocalPatchParameteri(Context *context, GLenum pname, GLint value);
 void ContextLocalPrimitiveBoundingBox(Context *context,
                                       GLfloat minX,
                                       GLfloat minY,
