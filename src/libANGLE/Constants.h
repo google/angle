@@ -80,6 +80,10 @@ enum
     IMPLEMENTATION_MAX_ACTIVE_TEXTURES = 96,
     IMPLEMENTATION_MAX_IMAGE_UNITS     = IMPLEMENTATION_MAX_ACTIVE_TEXTURES,
 
+    // Maximum framebuffer and renderbuffer size supported.
+    IMPLEMENTATION_MAX_FRAMEBUFFER_SIZE  = 32768,
+    IMPLEMENTATION_MAX_RENDERBUFFER_SIZE = 32768,
+
     // Maximum number of slots allocated for atomic counter buffers.
     IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFER_BINDINGS = 8,
 
