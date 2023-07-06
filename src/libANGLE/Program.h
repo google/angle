@@ -386,7 +386,7 @@ class ProgramState final : angle::NonCopyable
     bool mSeparable;
     rx::SpecConstUsageBits mSpecConstUsageBits;
 
-    // GL_OVR_multiview / GL_OVR_multiview2
+    // ANGLE_multiview.
     int mNumViews;
 
     // GL_ANGLE_multi_draw

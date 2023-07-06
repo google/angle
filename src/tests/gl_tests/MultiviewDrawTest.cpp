@@ -1585,6 +1585,8 @@ TEST_P(MultiviewRenderPrimitiveTest, Points)
         return;
     }
 
+    // Test failing on P400 graphics card (anglebug.com/2228)
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsD3D11() && IsNVIDIA());
     ANGLE_SKIP_TEST_IF(IsARM64() && IsWindows() && IsD3D());
 
     const std::string VS =
@@ -1972,6 +1974,8 @@ TEST_P(MultiviewRenderTest, DivisorUpdatedOnProgramChange)
         return;
     }
 
+    // Test failing on P400 graphics card (anglebug.com/2228)
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsD3D11() && IsNVIDIA());
     ANGLE_SKIP_TEST_IF(IsARM64() && IsWindows() && IsD3D());
 
     // Looks like an incorrect D3D debug layer message is generated on Windows / AMD.

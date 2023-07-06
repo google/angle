@@ -158,7 +158,7 @@ class ProgramD3DMetadata final : angle::NonCopyable
     bool usesPointSize() const;
     bool usesInsertedPointCoordValue() const;
     bool usesViewScale() const;
-    bool hasMultiviewEnabled() const;
+    bool hasANGLEMultiviewEnabled() const;
     bool usesVertexID() const;
     bool usesViewID() const;
     bool canSelectViewInVertexShader() const;
@@ -556,7 +556,7 @@ class ProgramD3D : public ProgramImpl
 
     FragDepthUsage mFragDepthUsage;
     bool mUsesSampleMask;
-    bool mHasMultiviewEnabled;
+    bool mHasANGLEMultiviewEnabled;
     bool mUsesVertexID;
     bool mUsesViewID;
     std::vector<PixelShaderOutputVariable> mPixelShaderKey;

@@ -823,11 +823,6 @@ void OutputHLSL::header(TInfoSinkBase &out,
             }
         }
 
-        if (mUsesViewID)
-        {
-            out << "static uint ViewID_OVR = 0;\n";
-        }
-
         if (mUsesFragDepth)
         {
             out << "static float gl_Depth = 0.0;\n";
@@ -919,9 +914,16 @@ void OutputHLSL::header(TInfoSinkBase &out,
                 out << "    float2 dx_ViewScale : packoffset(c3.z);\n";
             }
 
+            if (mHasMultiviewExtensionEnabled)
+            {
+                // We have to add a value which we can use to keep track of which multi-view code
+                // path is to be selected in the GS.
+                out << "    float multiviewSelectViewportIndex : packoffset(c4.x);\n";
+            }
+
             if (mOutputType == SH_HLSL_4_1_OUTPUT)
             {
-                unsigned int registerIndex = 4;
+                unsigned int registerIndex = 5;
                 mResourcesHLSL->samplerMetadataUniforms(out, registerIndex);
                 // Sampler metadata struct must be two 4-vec, 32 bytes.
                 registerIndex += mResourcesHLSL->getSamplerCount() * 2;
@@ -1041,17 +1043,12 @@ void OutputHLSL::header(TInfoSinkBase &out,
 
         if (mUsesInstanceID)
         {
-            out << "static int gl_InstanceID;\n";
-        }
-
-        if (mUsesViewID)
-        {
-            out << "static uint ViewID_OVR;\n";
+            out << "static int gl_InstanceID;";
         }
 
         if (mUsesVertexID)
         {
-            out << "static int gl_VertexID;\n";
+            out << "static int gl_VertexID;";
         }
 
         out << "\n"
@@ -1088,8 +1085,15 @@ void OutputHLSL::header(TInfoSinkBase &out,
             out << "    float2 dx_ViewCoords : packoffset(c2);\n";
             out << "    float2 dx_ViewScale  : packoffset(c3);\n";
 
-            out << "    float clipControlOrigin : packoffset(c3.z);\n";
-            out << "    float clipControlZeroToOne : packoffset(c3.w);\n";
+            if (mHasMultiviewExtensionEnabled)
+            {
+                // We have to add a value which we can use to keep track of which multi-view code
+                // path is to be selected in the GS.
+                out << "    float multiviewSelectViewportIndex : packoffset(c3.z);\n";
+            }
+
+            out << "    float clipControlOrigin : packoffset(c3.w);\n";
+            out << "    float clipControlZeroToOne : packoffset(c4);\n";
 
             if (mOutputType == SH_HLSL_4_1_OUTPUT)
             {
@@ -1098,12 +1102,12 @@ void OutputHLSL::header(TInfoSinkBase &out,
 
             if (mUsesVertexID)
             {
-                out << "    uint dx_VertexID : packoffset(c4.x);\n";
+                out << "    uint dx_VertexID : packoffset(c4.y);\n";
             }
 
             if (mClipDistanceSize)
             {
-                out << "    uint clipDistancesEnabled : packoffset(c4.y);\n";
+                out << "    uint clipDistancesEnabled : packoffset(c4.z);\n";
             }
 
             out << "};\n"
@@ -1239,7 +1243,7 @@ void OutputHLSL::header(TInfoSinkBase &out,
 
     if (mHasMultiviewExtensionEnabled)
     {
-        out << "#define GL_MULTIVIEW_ENABLED\n";
+        out << "#define GL_ANGLE_MULTIVIEW_ENABLED\n";
     }
 
     if (mUsesVertexID)
@@ -1395,16 +1399,15 @@ void OutputHLSL::visitSymbol(TIntermSymbol *node)
         {
             mReferencedVaryings[uniqueId.get()] = &variable;
             out << DecorateVariableIfNeeded(variable);
+            if (variable.symbolType() == SymbolType::AngleInternal && name == "ViewID_OVR")
+            {
+                mUsesViewID = true;
+            }
         }
         else if (qualifier == EvqFragmentOut)
         {
             mReferencedOutputVariables[uniqueId.get()] = &variable;
             out << "out_" << name;
-        }
-        else if (qualifier == EvqViewIDOVR)
-        {
-            out << name;
-            mUsesViewID = true;
         }
         else if (qualifier == EvqClipDistance)
         {

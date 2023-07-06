@@ -73,7 +73,7 @@ struct CompiledShaderState
     gl::BlendEquationBitSet advancedBlendEquations;
     SpecConstUsageBits specConstUsageBits;
 
-    // GL_OVR_multiview / GL_OVR_multiview2
+    // ANGLE_multiview.
     int numViews;
 
     // Geometry Shader
