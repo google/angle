@@ -886,11 +886,23 @@ angle::Result BlitGL::copyTexSubImage(const gl::Context *context,
     mFunctions->copyTexSubImage2D(ToGLenum(destTarget), static_cast<GLint>(destLevel), destOffset.x,
                                   destOffset.y, sourceArea.x, sourceArea.y, sourceArea.width,
                                   sourceArea.height);
-    const bool copySucceeded =
-        !IsError(CheckError(context, "copyTexSubImage2D", __FILE__, __FUNCTION__, __LINE__));
+    // Use getError to retrieve the error directly instead of using CheckError so that we don't
+    // propagate the error to the client and also so that we can handle INVALID_OPERATION specially.
+    const GLenum copyError = mFunctions->getError();
+    // Any error other than NO_ERROR or INVALID_OPERATION is propagated to the client as a failure.
+    // INVALID_OPERATION is ignored and instead copySucceeded is set to false so that the caller can
+    // fallback to another copy/blit implementation.
+    if (ANGLE_UNLIKELY(copyError != GL_NO_ERROR && copyError != GL_INVALID_OPERATION))
+    {
+        // Propagate the error to the client and check for other unexpected errors.
+        ANGLE_TRY(
+            HandleError(context, copyError, "copyTexSubImage2D", __FILE__, __FUNCTION__, __LINE__));
+    }
+    // Even if copyTexSubImage2D fails with GL_INVALID_OPERATION, check for other unexpected errors.
+    ANGLE_TRY(CheckError(context, "copyTexSubImage2D", __FILE__, __FUNCTION__, __LINE__));
 
     ANGLE_TRY(UnbindAttachment(context, mFunctions, GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0));
-    *copySucceededOut = copySucceeded;
+    *copySucceededOut = copyError == GL_NO_ERROR;
     return angle::Result::Continue;
 }
 
