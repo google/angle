@@ -180,13 +180,25 @@ CONTEXT_LOCAL_LIST = [
     'glStencilOpSeparate',
     'glViewport',
     # GLES1 entry points
+    'glAlphaFunc',
+    'glAlphaFuncx',
     'glClearColorx',
     'glClearDepthx',
+    'glColor4f',
+    'glColor4ub',
+    'glColor4x',
     'glDepthRangex',
     'glLineWidthx',
+    'glLoadIdentity',
     'glLogicOp',
+    'glMatrixMode',
+    'glPointSize',
+    'glPointSizex',
+    'glPopMatrix',
     'glPolygonOffsetx',
+    'glPushMatrix',
     'glSampleCoveragex',
+    'glShadeModel',
 ]
 CONTEXT_LOCAL_WILDCARDS = [
     'glBlendFunc*',
@@ -195,6 +207,27 @@ CONTEXT_LOCAL_WILDCARDS = [
     'glVertexAttribI[1-4]*',
     'glVertexAttribP[1-4]*',
     'glVertexAttribL[1-4]*',
+    # GLES1 entry points
+    'glClipPlane[fx]',
+    'glGetClipPlane[fx]',
+    'glFog[fx]*',
+    'glFrustum[fx]',
+    'glGetLight[fx]v',
+    'glGetMaterial[fx]v',
+    'glGetTexEnv[fix]v',
+    'glLoadMatrix[fx]',
+    'glLight[fx]*',
+    'glLightModel[fx]*',
+    'glMaterial[fx]*',
+    'glMultMatrix[fx]',
+    'glMultiTexCoord4[fx]',
+    'glNormal3[fx]',
+    'glOrtho[fx]',
+    'glPointParameter[fx]*',
+    'glRotate[fx]',
+    'glScale[fx]',
+    'glTexEnv[fix]*',
+    'glTranslate[fx]',
 ]
 
 TEMPLATE_ENTRY_POINT_HEADER = """\
@@ -347,7 +380,7 @@ void GL_APIENTRY GL_{name}({params})
         bool isCallValid = (context->skipValidation() || {validation_expression});
         if (isCallValid)
         {{
-            ContextLocal{name_no_suffix}(context, {internal_params});
+            ContextLocal{name_no_suffix}({context_local_internal_params});
         }}
         ANGLE_CAPTURE_GL({name}, isCallValid, {gl_capture_params});
     }}
@@ -402,7 +435,7 @@ TEMPLATE_GLES_LOCAL_STATE_ENTRY_POINT_WITH_RETURN = """\
         bool isCallValid = (context->skipValidation() || {validation_expression});
         if (isCallValid)
         {{
-            returnValue = ContextLocal{name_no_suffix}(context, {internal_params});
+            returnValue = ContextLocal{name_no_suffix}({context_local_internal_params});
         }}
         else
         {{
@@ -1859,6 +1892,8 @@ def format_entry_point_def(api, command_node, cmd_name, proto, params, cmd_packe
             ", ".join(params),
         "internal_params":
             ", ".join(internal_params),
+        "context_local_internal_params":
+            ", ".join(["context"] + internal_params),
         "internal_context_lock_params":
             ", ".join(internal_context_lock_params),
         "initialization":

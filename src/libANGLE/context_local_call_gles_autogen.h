@@ -130,17 +130,183 @@ void ContextLocalPrimitiveBoundingBox(Context *context,
                                       GLfloat maxY,
                                       GLfloat maxZ,
                                       GLfloat maxW);
+void ContextLocalAlphaFunc(Context *context, AlphaTestFunc funcPacked, GLfloat ref);
+void ContextLocalAlphaFuncx(Context *context, AlphaTestFunc funcPacked, GLfixed ref);
 void ContextLocalClearColorx(Context *context,
                              GLfixed red,
                              GLfixed green,
                              GLfixed blue,
                              GLfixed alpha);
 void ContextLocalClearDepthx(Context *context, GLfixed depth);
+void ContextLocalClipPlanef(Context *context, GLenum p, const GLfloat *eqn);
+void ContextLocalClipPlanex(Context *context, GLenum plane, const GLfixed *equation);
+void ContextLocalColor4f(Context *context, GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha);
+void ContextLocalColor4ub(Context *context,
+                          GLubyte red,
+                          GLubyte green,
+                          GLubyte blue,
+                          GLubyte alpha);
+void ContextLocalColor4x(Context *context, GLfixed red, GLfixed green, GLfixed blue, GLfixed alpha);
 void ContextLocalDepthRangex(Context *context, GLfixed n, GLfixed f);
+void ContextLocalFogf(Context *context, GLenum pname, GLfloat param);
+void ContextLocalFogfv(Context *context, GLenum pname, const GLfloat *params);
+void ContextLocalFogx(Context *context, GLenum pname, GLfixed param);
+void ContextLocalFogxv(Context *context, GLenum pname, const GLfixed *param);
+void ContextLocalFrustumf(Context *context,
+                          GLfloat l,
+                          GLfloat r,
+                          GLfloat b,
+                          GLfloat t,
+                          GLfloat n,
+                          GLfloat f);
+void ContextLocalFrustumx(Context *context,
+                          GLfixed l,
+                          GLfixed r,
+                          GLfixed b,
+                          GLfixed t,
+                          GLfixed n,
+                          GLfixed f);
+void ContextLocalGetClipPlanef(Context *context, GLenum plane, GLfloat *equation);
+void ContextLocalGetClipPlanex(Context *context, GLenum plane, GLfixed *equation);
+void ContextLocalGetLightfv(Context *context,
+                            GLenum light,
+                            LightParameter pnamePacked,
+                            GLfloat *params);
+void ContextLocalGetLightxv(Context *context,
+                            GLenum light,
+                            LightParameter pnamePacked,
+                            GLfixed *params);
+void ContextLocalGetMaterialfv(Context *context,
+                               GLenum face,
+                               MaterialParameter pnamePacked,
+                               GLfloat *params);
+void ContextLocalGetMaterialxv(Context *context,
+                               GLenum face,
+                               MaterialParameter pnamePacked,
+                               GLfixed *params);
+void ContextLocalGetTexEnvfv(Context *context,
+                             TextureEnvTarget targetPacked,
+                             TextureEnvParameter pnamePacked,
+                             GLfloat *params);
+void ContextLocalGetTexEnviv(Context *context,
+                             TextureEnvTarget targetPacked,
+                             TextureEnvParameter pnamePacked,
+                             GLint *params);
+void ContextLocalGetTexEnvxv(Context *context,
+                             TextureEnvTarget targetPacked,
+                             TextureEnvParameter pnamePacked,
+                             GLfixed *params);
+void ContextLocalLightModelf(Context *context, GLenum pname, GLfloat param);
+void ContextLocalLightModelfv(Context *context, GLenum pname, const GLfloat *params);
+void ContextLocalLightModelx(Context *context, GLenum pname, GLfixed param);
+void ContextLocalLightModelxv(Context *context, GLenum pname, const GLfixed *param);
+void ContextLocalLightf(Context *context, GLenum light, LightParameter pnamePacked, GLfloat param);
+void ContextLocalLightfv(Context *context,
+                         GLenum light,
+                         LightParameter pnamePacked,
+                         const GLfloat *params);
+void ContextLocalLightx(Context *context, GLenum light, LightParameter pnamePacked, GLfixed param);
+void ContextLocalLightxv(Context *context,
+                         GLenum light,
+                         LightParameter pnamePacked,
+                         const GLfixed *params);
 void ContextLocalLineWidthx(Context *context, GLfixed width);
+void ContextLocalLoadIdentity(Context *context);
+void ContextLocalLoadMatrixf(Context *context, const GLfloat *m);
+void ContextLocalLoadMatrixx(Context *context, const GLfixed *m);
 void ContextLocalLogicOp(Context *context, LogicalOperation opcodePacked);
+void ContextLocalMaterialf(Context *context,
+                           GLenum face,
+                           MaterialParameter pnamePacked,
+                           GLfloat param);
+void ContextLocalMaterialfv(Context *context,
+                            GLenum face,
+                            MaterialParameter pnamePacked,
+                            const GLfloat *params);
+void ContextLocalMaterialx(Context *context,
+                           GLenum face,
+                           MaterialParameter pnamePacked,
+                           GLfixed param);
+void ContextLocalMaterialxv(Context *context,
+                            GLenum face,
+                            MaterialParameter pnamePacked,
+                            const GLfixed *param);
+void ContextLocalMatrixMode(Context *context, MatrixType modePacked);
+void ContextLocalMultMatrixf(Context *context, const GLfloat *m);
+void ContextLocalMultMatrixx(Context *context, const GLfixed *m);
+void ContextLocalMultiTexCoord4f(Context *context,
+                                 GLenum target,
+                                 GLfloat s,
+                                 GLfloat t,
+                                 GLfloat r,
+                                 GLfloat q);
+void ContextLocalMultiTexCoord4x(Context *context,
+                                 GLenum texture,
+                                 GLfixed s,
+                                 GLfixed t,
+                                 GLfixed r,
+                                 GLfixed q);
+void ContextLocalNormal3f(Context *context, GLfloat nx, GLfloat ny, GLfloat nz);
+void ContextLocalNormal3x(Context *context, GLfixed nx, GLfixed ny, GLfixed nz);
+void ContextLocalOrthof(Context *context,
+                        GLfloat l,
+                        GLfloat r,
+                        GLfloat b,
+                        GLfloat t,
+                        GLfloat n,
+                        GLfloat f);
+void ContextLocalOrthox(Context *context,
+                        GLfixed l,
+                        GLfixed r,
+                        GLfixed b,
+                        GLfixed t,
+                        GLfixed n,
+                        GLfixed f);
+void ContextLocalPointParameterf(Context *context, PointParameter pnamePacked, GLfloat param);
+void ContextLocalPointParameterfv(Context *context,
+                                  PointParameter pnamePacked,
+                                  const GLfloat *params);
+void ContextLocalPointParameterx(Context *context, PointParameter pnamePacked, GLfixed param);
+void ContextLocalPointParameterxv(Context *context,
+                                  PointParameter pnamePacked,
+                                  const GLfixed *params);
+void ContextLocalPointSize(Context *context, GLfloat size);
+void ContextLocalPointSizex(Context *context, GLfixed size);
 void ContextLocalPolygonOffsetx(Context *context, GLfixed factor, GLfixed units);
+void ContextLocalPopMatrix(Context *context);
+void ContextLocalPushMatrix(Context *context);
+void ContextLocalRotatef(Context *context, GLfloat angle, GLfloat x, GLfloat y, GLfloat z);
+void ContextLocalRotatex(Context *context, GLfixed angle, GLfixed x, GLfixed y, GLfixed z);
 void ContextLocalSampleCoveragex(Context *context, GLclampx value, GLboolean invert);
+void ContextLocalScalef(Context *context, GLfloat x, GLfloat y, GLfloat z);
+void ContextLocalScalex(Context *context, GLfixed x, GLfixed y, GLfixed z);
+void ContextLocalShadeModel(Context *context, ShadingModel modePacked);
+void ContextLocalTexEnvf(Context *context,
+                         TextureEnvTarget targetPacked,
+                         TextureEnvParameter pnamePacked,
+                         GLfloat param);
+void ContextLocalTexEnvfv(Context *context,
+                          TextureEnvTarget targetPacked,
+                          TextureEnvParameter pnamePacked,
+                          const GLfloat *params);
+void ContextLocalTexEnvi(Context *context,
+                         TextureEnvTarget targetPacked,
+                         TextureEnvParameter pnamePacked,
+                         GLint param);
+void ContextLocalTexEnviv(Context *context,
+                          TextureEnvTarget targetPacked,
+                          TextureEnvParameter pnamePacked,
+                          const GLint *params);
+void ContextLocalTexEnvx(Context *context,
+                         TextureEnvTarget targetPacked,
+                         TextureEnvParameter pnamePacked,
+                         GLfixed param);
+void ContextLocalTexEnvxv(Context *context,
+                          TextureEnvTarget targetPacked,
+                          TextureEnvParameter pnamePacked,
+                          const GLfixed *params);
+void ContextLocalTranslatef(Context *context, GLfloat x, GLfloat y, GLfloat z);
+void ContextLocalTranslatex(Context *context, GLfixed x, GLfixed y, GLfixed z);
 void ContextLocalLogicOpANGLE(Context *context, LogicalOperation opcodePacked);
 void ContextLocalPolygonMode(Context *context, GLenum face, PolygonMode modePacked);
 void ContextLocalProvokingVertex(Context *context, ProvokingVertexConvention provokeModePacked);
