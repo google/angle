@@ -44,8 +44,9 @@ def _ApkPath(suite_name):
 def _FindAapt():
     build_tools = (
         pathlib.Path(angle_path_util.ANGLE_ROOT_DIR) / 'third_party' / 'android_sdk' / 'public' /
-        'build-tools' / '34.0.0')
-    aapt = str(build_tools / 'aapt') if build_tools.exists() else 'aapt'
+        'build-tools')
+    latest_build_tools = sorted(build_tools.iterdir())[-1]
+    aapt = str(latest_build_tools / 'aapt')
     aapt_info = subprocess.check_output([aapt, 'version']).decode()
     logging.info('aapt version: %s', aapt_info.strip())
     return aapt
