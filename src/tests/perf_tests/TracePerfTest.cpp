@@ -1628,6 +1628,14 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
         }
     }
 
+    if (traceNameIs("street_fighter_iv_ce"))
+    {
+        if (mParams->isSwiftshader())
+        {
+            skipTest("https://anglebug.com/8243 Too slow on Swiftshader (large keyframe)");
+        }
+    }
+
     // glDebugMessageControlKHR and glDebugMessageCallbackKHR crash on ARM GLES1.
     if (IsARM() && mParams->traceInfo.contextClientMajorVersion == 1)
     {
