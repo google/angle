@@ -494,7 +494,7 @@ class GPUPowerStats():
             logging.debug('Checking line: %s' % line)
             if not line:
                 break
-            if "S2M_VDD_CPUCL0" in line:
+            if "S4M_VDD_CPUCL0" in line:
                 self.little_cpu_power = line.split()[1]
                 break
         logging.debug("self.little_cpu_power %s" % self.little_cpu_power)
