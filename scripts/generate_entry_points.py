@@ -32,20 +32,18 @@ NO_EVENT_MARKER_EXCEPTIONS_LIST = sorted([
     "glInsertEventMarkerEXT",
 ])
 
-# glRenderbufferStorageMultisampleEXT aliases glRenderbufferStorageMultisample on desktop GL, and is
-# marked as such in the registry.  However, that is not correct for GLES where this entry point
-# comes from GL_EXT_multisampled_render_to_texture which is never promoted to core GLES.
 ALIASING_EXCEPTIONS = [
-    'glRenderbufferStorageMultisampleEXT',
+    # glRenderbufferStorageMultisampleEXT aliases
+    # glRenderbufferStorageMultisample on desktop GL, and is marked as such in
+    # the registry.  However, that is not correct for GLES where this entry
+    # point comes from GL_EXT_multisampled_render_to_texture which is never
+    # promoted to core GLES.
     'renderbufferStorageMultisampleEXT',
-    'RenderbufferStorageMultisampleEXT',
+    # Other entry points where the extension behavior is not identical to core
+    # behavior.
     'drawArraysInstancedBaseInstanceANGLE',
-    'DrawArraysInstancedBaseInstanceANGLE',
     'drawElementsInstancedBaseVertexBaseInstanceANGLE',
-    'DrawElementsInstancedBaseVertexBaseInstanceANGLE',
-    'glLogicOpANGLE',
     'logicOpANGLE',
-    'LogicOpANGLE',
 ]
 
 # These are the entry points which potentially are used first by an application
@@ -1562,6 +1560,11 @@ CAPTURE_BLOCKLIST = ['eglGetProcAddress']
 
 
 def is_aliasing_excepted(api, cmd_name):
+    # For simplicity, strip the prefix gl and lower the case of the first
+    # letter.  This makes sure that all variants of the cmd_name that reach
+    # here end up looking similar for the sake of looking up in ALIASING_EXCEPTIONS
+    cmd_name = cmd_name[2:] if cmd_name.startswith('gl') else cmd_name
+    cmd_name = cmd_name[0].lower() + cmd_name[1:]
     return api == apis.GLES and cmd_name in ALIASING_EXCEPTIONS
 
 
@@ -1781,15 +1784,19 @@ def get_constext_lost_error_generator(cmd_name):
     return "GenerateContextLostErrorOnCurrentGlobalContext();"
 
 
+def strip_suffix_always(api, name):
+    for suffix in registry_xml.strip_suffixes:
+        if name.endswith(suffix):
+            name = name[0:-len(suffix)]
+    return name
+
+
 def strip_suffix(api, name):
     # For commands where aliasing is excepted, keep the suffix
     if is_aliasing_excepted(api, name):
         return name
 
-    for suffix in registry_xml.strip_suffixes:
-        if name.endswith(suffix):
-            name = name[0:-len(suffix)]
-    return name
+    return strip_suffix_always(api, name)
 
 
 def find_gl_enum_group_in_command(command_node, param_name):
@@ -1807,7 +1814,7 @@ def find_gl_enum_group_in_command(command_node, param_name):
 
 def get_packed_enums(api, cmd_packed_gl_enums, cmd_name, packed_param_types, params):
     # Always strip the suffix when querying packed enums.
-    result = cmd_packed_gl_enums.get(strip_suffix(api, cmd_name), {})
+    result = cmd_packed_gl_enums.get(strip_suffix_always(api, cmd_name), {})
     for param in params:
         param_type = just_the_type(param)
         if param_type in packed_param_types:
