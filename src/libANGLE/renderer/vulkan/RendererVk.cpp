@@ -3883,6 +3883,11 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
                              mPhysicalDeviceProperties.deviceName);
     const bool isQualcommProprietary = isQualcomm && !isQualcommOpenSource;
 
+    // Lacking other explicit ways to tell if mali GPU is job manager based or command stream front
+    // end based, we use maxDrawIndirectCount as equivalent since all JM based has
+    // maxDrawIndirectCount==1 and all CSF based has maxDrawIndirectCount>1.
+    bool isMaliJobManagerBasedGPU =
+        isARM && getPhysicalDeviceProperties().limits.maxDrawIndirectCount <= 1;
     // Parse the ARM driver version to be readable/comparable
     const ARMDriverVersion armDriverVersion =
         ParseARMDriverVersion(mPhysicalDeviceProperties.driverVersion);
@@ -4200,9 +4205,9 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     ANGLE_FEATURE_CONDITION(&mFeatures, allocateNonZeroMemory, false);
 
     // ARM does buffer copy on geometry pipeline, which may create a GPU pipeline bubble that
-    // prevents vertex shader to overlap with fragment shader. For now we always choose CPU to do
-    // copy on ARM. This may need to test with future ARM GPU architecture as well.
-    ANGLE_FEATURE_CONDITION(&mFeatures, preferCPUForBufferSubData, isARM);
+    // prevents vertex shader to overlap with fragment shader on job manager based architecture. For
+    // now we always choose CPU to do copy on ARM job manager based GPU.
+    ANGLE_FEATURE_CONDITION(&mFeatures, preferCPUForBufferSubData, isMaliJobManagerBasedGPU);
 
     // On android, we usually are GPU limited, we try to use CPU to do data copy when other
     // conditions are the same. Set to zero will use GPU to do copy. This is subject to further
