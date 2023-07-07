@@ -1029,6 +1029,7 @@ angle_source_set("libANGLE_no_vulkan") {
   defines = []
   if (angle_enable_gl_desktop_frontend) {
     defines += [ "ANGLE_ENABLE_GL_DESKTOP_FRONTEND" ]
+    sources += libangle_gl_sources
   }
 
   include_dirs = []

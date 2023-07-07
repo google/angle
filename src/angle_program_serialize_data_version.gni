@@ -21,6 +21,7 @@ import("libGLESv2.gni")
 angle_code_affecting_program_serialize = libangle_common_sources
 angle_code_affecting_program_serialize += libangle_headers
 angle_code_affecting_program_serialize += libangle_sources
+angle_code_affecting_program_serialize += libangle_gl_sources
 angle_code_affecting_program_serialize += libangle_includes
 
 vulkan_backend_dir = "libANGLE/renderer/vulkan/"

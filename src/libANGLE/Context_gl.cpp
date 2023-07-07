@@ -1739,16 +1739,6 @@ void Context::texSubImage1D(GLenum target,
     UNIMPLEMENTED();
 }
 
-void Context::multiDrawElementsBaseVertex(PrimitiveMode mode,
-                                          const GLsizei *count,
-                                          DrawElementsType type,
-                                          const void *const *indices,
-                                          GLsizei drawcount,
-                                          const GLint *basevertex)
-{
-    UNIMPLEMENTED();
-}
-
 void Context::texImage2DMultisample(GLenum target,
                                     GLsizei samples,
                                     GLenum internalformat,

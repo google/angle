@@ -6816,6 +6816,16 @@ void Context::multiDrawArraysInstancedBaseInstance(PrimitiveMode mode,
         this, mode, firsts, counts, instanceCounts, baseInstances, drawcount));
 }
 
+void Context::multiDrawElementsBaseVertex(PrimitiveMode mode,
+                                          const GLsizei *count,
+                                          DrawElementsType type,
+                                          const void *const *indices,
+                                          GLsizei drawcount,
+                                          const GLint *basevertex)
+{
+    UNIMPLEMENTED();
+}
+
 void Context::multiDrawElementsInstancedBaseVertexBaseInstance(PrimitiveMode mode,
                                                                const GLsizei *counts,
                                                                DrawElementsType type,

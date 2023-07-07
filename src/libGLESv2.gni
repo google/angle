@@ -397,7 +397,6 @@ libangle_sources = [
   "src/libANGLE/Compiler.cpp",
   "src/libANGLE/Config.cpp",
   "src/libANGLE/Context.cpp",
-  "src/libANGLE/Context_gl.cpp",
   "src/libANGLE/Context_gles_1_0.cpp",
   "src/libANGLE/Debug.cpp",
   "src/libANGLE/Device.cpp",
@@ -447,7 +446,6 @@ libangle_sources = [
   "src/libANGLE/VertexArray.cpp",
   "src/libANGLE/VertexAttribute.cpp",
   "src/libANGLE/angletypes.cpp",
-  "src/libANGLE/context_local_call_gl.cpp",
   "src/libANGLE/context_local_call_gles.cpp",
   "src/libANGLE/es3_copy_conversion_table_autogen.cpp",
   "src/libANGLE/format_map_autogen.cpp",
@@ -485,10 +483,6 @@ libangle_sources = [
   "src/libANGLE/validationES31.cpp",
   "src/libANGLE/validationES32.cpp",
   "src/libANGLE/validationESEXT.cpp",
-  "src/libANGLE/validationGL1.cpp",
-  "src/libANGLE/validationGL2.cpp",
-  "src/libANGLE/validationGL3.cpp",
-  "src/libANGLE/validationGL4.cpp",
 ]
 
 cl_includes = [
@@ -511,6 +505,15 @@ cl_includes = [
   "include/CL/cl_va_api_media_sharing_intel.h",
   "include/CL/cl_version.h",
   "include/CL/opencl.h",
+]
+
+libangle_gl_sources = [
+  "src/libANGLE/Context_gl.cpp",
+  "src/libANGLE/context_local_call_gl.cpp",
+  "src/libANGLE/validationGL1.cpp",
+  "src/libANGLE/validationGL2.cpp",
+  "src/libANGLE/validationGL3.cpp",
+  "src/libANGLE/validationGL4.cpp",
 ]
 
 libangle_cl_headers = [
