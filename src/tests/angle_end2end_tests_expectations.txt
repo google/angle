@@ -705,6 +705,7 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 7653 IOS : Texture3DTestES2.CopySubImageAlpha/ES2_OpenGL = SKIP
 7653 IOS : Texture3DTestES2.CopySubImageLuminance/ES2_OpenGL = SKIP
 7653 IOS : Texture3DTestES2.CopySubImageRGBA/ES2_OpenGL = SKIP
+7653 IOS : Texture3DTestES2.DefineTexture2DArrayShouldFail/ES2_OpenGL = SKIP
 7653 IOS : Texture3DTestES2.Luminance/ES2_OpenGL = SKIP
 7653 IOS : Texture3DTestES2.RGBA/ES2_OpenGL = SKIP
 7653 IOS : TransformFeedbackTest.RenderOnceChangeXfbBufferRenderAgain/ES3_OpenGL = SKIP
@@ -783,7 +784,6 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 7778 IOS : FramebufferTest_ES3.DrawWithDifferentPreRotations/ES3_OpenGL = SKIP
 7833 IOS : ShaderBinaryTest.* = SKIP
 7853 IOS : FramebufferExtensionsTest.ColorBufferHalfFloat/ES2_OpenGL = SKIP
-8213 IOS : Texture3DTestES2.DefineTexture2DArrayShouldFail/ES2_OpenGL = SKIP
 
 // Some Metal tests fail on iOS Intel simulator
 7994 IOS METAL : CubeMapTextureTest.SampleCoordinateTransformGrad/ES2_Metal = SKIP
