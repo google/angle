@@ -212,6 +212,16 @@ void ToObjC(const RenderPassStencilAttachmentDesc &desc,
     ANGLE_OBJC_CP_PROPERTY(objCDesc, desc, clearStencil);
 }
 
+MTLColorWriteMask AdjustColorWriteMaskForSharedExponent(MTLColorWriteMask mask)
+{
+    // For RGB9_E5 color buffers, ANGLE frontend validation ignores alpha writemask value.
+    // Metal validation is more strict and allows only all-enabled or all-disabled.
+    ASSERT((mask == MTLColorWriteMaskAll) ||
+           (mask == (MTLColorWriteMaskAll ^ MTLColorWriteMaskAlpha)) ||
+           (mask == MTLColorWriteMaskAlpha) || (mask == MTLColorWriteMaskNone));
+    return (mask & MTLColorWriteMaskBlue) ? MTLColorWriteMaskAll : MTLColorWriteMaskNone;
+}
+
 }  // namespace
 
 // StencilDesc implementation
@@ -546,6 +556,11 @@ void RenderPipelineColorAttachmentDesc::reset(MTLPixelFormat format, MTLColorWri
 {
     this->pixelFormat = format;
 
+    if (format == MTLPixelFormatRGB9E5Float)
+    {
+        _writeMask = AdjustColorWriteMaskForSharedExponent(_writeMask);
+    }
+
     BlendDesc::reset(_writeMask);
 }
 
@@ -554,11 +569,11 @@ void RenderPipelineColorAttachmentDesc::reset(MTLPixelFormat format, const Blend
     this->pixelFormat = format;
 
     BlendDesc::operator=(blendDesc);
-}
 
-void RenderPipelineColorAttachmentDesc::update(const BlendDesc &blendDesc)
-{
-    BlendDesc::operator=(blendDesc);
+    if (format == MTLPixelFormatRGB9E5Float)
+    {
+        writeMask = AdjustColorWriteMaskForSharedExponent(writeMask);
+    }
 }
 
 // RenderPipelineOutputDesc implementation

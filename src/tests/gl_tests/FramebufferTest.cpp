@@ -1218,6 +1218,74 @@ TEST_P(FramebufferTest_ES3, RenderSharedExponent)
     EXPECT_PIXEL_COLOR32F_EQ(0, 0, kFloatRed);
 }
 
+// Test color write masks with GL_RGB9_E5 color buffers.
+TEST_P(FramebufferTest_ES3, RenderSharedExponentWithMask)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_QCOM_render_shared_exponent"));
+
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+layout(location = 0) out vec4 color0;
+layout(location = 1) out vec4 color1;
+void main()
+{
+    color0 = vec4(1.0, 0.0, 0.0, 1.0);
+    color1 = vec4(0.0, 1.0, 0.0, 1.0);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    GLRenderbuffer rb0;
+    glBindRenderbuffer(GL_RENDERBUFFER, rb0);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGB9_E5, 4, 4);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rb0);
+
+    GLRenderbuffer rb1;
+    glBindRenderbuffer(GL_RENDERBUFFER, rb1);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, 4, 4);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_RENDERBUFFER, rb1);
+
+    ASSERT_GL_NO_ERROR();
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    for (int mask = 0; mask < 16; mask++)
+    {
+        glColorMask(mask & 1, mask & 2, mask & 4, mask & 8);
+        for (const bool enableSharedExponentAttachment : {false, true})
+        {
+            GLenum bufs[2] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1};
+            bufs[0]        = enableSharedExponentAttachment ? GL_COLOR_ATTACHMENT0 : GL_NONE;
+            glDrawBuffers(2, bufs);
+
+            auto expectError = [](bool enabled, int mask) {
+                if (!enabled || mask == 0 || mask == 8 || mask == 7 || mask == 15)
+                {
+                    EXPECT_GL_NO_ERROR();
+                }
+                else
+                {
+                    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+                }
+            };
+
+            drawQuad(program, essl3_shaders::PositionAttrib(), 0.0f);
+            expectError(enableSharedExponentAttachment, mask);
+
+            glClear(GL_COLOR_BUFFER_BIT);
+            expectError(enableSharedExponentAttachment, mask);
+
+            GLfloat clearValuef[4] = {};
+            glClearBufferfv(GL_COLOR, 0, clearValuef);
+            expectError(enableSharedExponentAttachment, mask);
+            glClearBufferfv(GL_COLOR, 1, clearValuef);
+            EXPECT_GL_NO_ERROR();
+        }
+    }
+}
+
 // Test that R8_SNORM, RG8_SNORM, and RGBA8_SNORM are renderable with the extension.
 TEST_P(FramebufferTest_ES3, RenderSnorm8)
 {

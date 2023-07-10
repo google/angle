@@ -267,6 +267,27 @@ bool ValidateCopyTexture3DCommon(const Context *context,
 
     return true;
 }
+
+bool ValidateColorMaskForSharedExponentColorBuffer(const Context *context,
+                                                   angle::EntryPoint entryPoint,
+                                                   GLint drawbuffer)
+{
+    const State &state                      = context->getState();
+    const FramebufferAttachment *attachment = state.getDrawFramebuffer()->getDrawBuffer(drawbuffer);
+    if (attachment && attachment->getFormat().info->internalFormat == GL_RGB9_E5)
+    {
+        bool r, g, b, a;
+        state.getBlendStateExt().getColorMaskIndexed(drawbuffer, &r, &g, &b, &a);
+        if (r != g || g != b)
+        {
+            ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION,
+                                   kUnsupportedColorMaskForSharedExponentColorBuffer);
+            return false;
+        }
+    }
+
+    return true;
+}
 }  // anonymous namespace
 
 static bool ValidateTexImageFormatCombination(const Context *context,
@@ -2405,6 +2426,13 @@ bool ValidateClearBufferiv(const Context *context,
                     return false;
                 }
             }
+            if (context->getExtensions().renderSharedExponentQCOM)
+            {
+                if (!ValidateColorMaskForSharedExponentColorBuffer(context, entryPoint, drawbuffer))
+                {
+                    return false;
+                }
+            }
             break;
 
         case GL_STENCIL:
@@ -2459,6 +2487,13 @@ bool ValidateClearBufferuiv(const Context *context,
                     return false;
                 }
             }
+            if (context->getExtensions().renderSharedExponentQCOM)
+            {
+                if (!ValidateColorMaskForSharedExponentColorBuffer(context, entryPoint, drawbuffer))
+                {
+                    return false;
+                }
+            }
             break;
 
         default:
@@ -2502,6 +2537,13 @@ bool ValidateClearBufferfv(const Context *context,
                 if (!ValidateWebGLFramebufferAttachmentClearType(context, entryPoint, drawbuffer,
                                                                  validComponentTypes,
                                                                  ArraySize(validComponentTypes)))
+                {
+                    return false;
+                }
+            }
+            if (context->getExtensions().renderSharedExponentQCOM)
+            {
+                if (!ValidateColorMaskForSharedExponentColorBuffer(context, entryPoint, drawbuffer))
                 {
                     return false;
                 }

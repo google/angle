@@ -1162,15 +1162,21 @@ angle::Result ClearUtils::getClearRenderPipelineState(
     {
         clearWriteMaskArray.fill(MTLColorWriteMaskNone);
     }
+    else
+    {
+        // Adjust masks for disabled outputs before creating a pipeline.
+        gl::DrawBufferMask disabledBuffers(params.enabledBuffers);
+        for (size_t index : disabledBuffers.flip())
+        {
+            clearWriteMaskArray[index] = MTLColorWriteMaskNone;
+        }
+    }
 
     RenderPipelineDesc pipelineDesc;
     const RenderPassDesc &renderPassDesc = cmdEncoder->renderPassDesc();
 
     renderPassDesc.populateRenderPipelineOutputDesc(clearWriteMaskArray,
                                                     &pipelineDesc.outputDescriptor);
-
-    // Disable clear for some outputs that are not enabled
-    pipelineDesc.outputDescriptor.updateEnabledDrawBuffers(params.enabledBuffers);
 
     pipelineDesc.inputPrimitiveTopology = kPrimitiveTopologyClassTriangle;
 

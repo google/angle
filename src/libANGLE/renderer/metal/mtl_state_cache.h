@@ -204,8 +204,6 @@ struct alignas(2) RenderPipelineColorAttachmentDesc : public BlendDesc
     void reset(MTLPixelFormat format, MTLColorWriteMask writeMask);
     void reset(MTLPixelFormat format, const BlendDesc &blendDesc);
 
-    void update(const BlendDesc &blendDesc);
-
     // Use uint16_t instead of MTLPixelFormat to compact space
     uint16_t pixelFormat : 16;
 };

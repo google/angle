@@ -2614,6 +2614,18 @@ bool ValidateClear(const Context *context, angle::EntryPoint entryPoint, GLbitfi
         }
     }
 
+    if (extensions.renderSharedExponentQCOM && (mask & GL_COLOR_BUFFER_BIT) != 0)
+    {
+        const State &state = context->getState();
+        if (!ValidateColorMasksForSharedExponentColorBuffers(state.getBlendStateExt(),
+                                                             state.getDrawFramebuffer()))
+        {
+            ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION,
+                                   kUnsupportedColorMaskForSharedExponentColorBuffer);
+            return false;
+        }
+    }
+
     if ((extensions.multiviewOVR || extensions.multiview2OVR) && extensions.disjointTimerQueryEXT)
     {
         const State &state       = context->getState();

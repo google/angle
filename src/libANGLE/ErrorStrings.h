@@ -615,6 +615,7 @@ MSG kUnknownParameter = "Unknown parameter value.";
 MSG kUnsizedInternalFormatUnsupported = "Internalformat is one of the unsupported unsized base internalformats.";
 MSG kUnsupportedDrawModeForTransformFeedback = "The draw command is unsupported when transform feedback is active and not paused.";
 MSG kUnsupportedFloatBlending = "GL_BLEND with floating-point color attachments requires the EXT_float_blend extension.";
+MSG kUnsupportedColorMaskForSharedExponentColorBuffer = "Color writemask for a GL_RGB9_E5 draw buffer must have the same values for red, green, and blue channels.";
 MSG kVertexArrayNoBuffer = "An enabled vertex array has no buffer.";
 MSG kVertexArrayNoBufferPointer = "An enabled vertex array has no buffer and no pointer.";
 MSG kVertexBufferBoundForTransformFeedback = "It is undefined behavior to use a vertex buffer that is bound for transform feedback.";

@@ -4155,6 +4155,14 @@ const char *ValidateDrawStates(const Context *context, GLenum *outErrorCode)
         }
     }
 
+    if (extensions.renderSharedExponentQCOM)
+    {
+        if (!ValidateColorMasksForSharedExponentColorBuffers(state.getBlendStateExt(), framebuffer))
+        {
+            return kUnsupportedColorMaskForSharedExponentColorBuffer;
+        }
+    }
+
     if (context->getLimitations().noSimultaneousConstantColorAndAlphaBlendFunc ||
         extensions.webglCompatibilityANGLE)
     {
