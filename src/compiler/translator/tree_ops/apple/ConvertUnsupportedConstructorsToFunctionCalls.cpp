@@ -4,7 +4,8 @@
 // found in the LICENSE file.
 //
 
-#include "compiler/translator/tree_ops/ConvertUnsupportedConstructorsToFunctionCalls.h"
+#include "compiler/translator/tree_ops/apple/ConvertUnsupportedConstructorsToFunctionCalls.h"
+
 #include "compiler/translator/ImmutableString.h"
 #include "compiler/translator/Symbol.h"
 #include "compiler/translator/tree_util/FindFunction.h"
@@ -252,7 +253,7 @@ class Rebuild : public TIntermRebuild
         {
             TIntermTyped &arg = *arguments[i]->getAsTyped();
             TType *argType    = new TType(arg.getBasicType(), arg.getPrecision(), EvqParamIn,
-                                       arg.getNominalSize(), arg.getSecondarySize());
+                                          arg.getNominalSize(), arg.getSecondarySize());
             TVariable *var    = CreateTempVariable(&mSymbolTable, argType);
             function->addParameter(var);
         }
