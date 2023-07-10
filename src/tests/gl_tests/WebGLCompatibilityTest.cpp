@@ -4443,6 +4443,24 @@ TEST_P(WebGL2CompatibilityTest, ClearBufferDefaultFramebuffer)
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
+// Test that clearing a non-existent drawbuffer of the default
+// framebuffer does not cause an assertion in WebGL validation
+TEST_P(WebGL2CompatibilityTest, ClearBuffer1OnDefaultFramebufferNoAssert)
+{
+    constexpr float clearFloat[]   = {0.0f, 0.0f, 0.0f, 0.0f};
+    constexpr int32_t clearInt[]   = {0, 0, 0, 0};
+    constexpr uint32_t clearUint[] = {0, 0, 0, 0};
+
+    glClearBufferfv(GL_COLOR, 1, clearFloat);
+    EXPECT_GL_NO_ERROR();
+
+    glClearBufferiv(GL_COLOR, 1, clearInt);
+    EXPECT_GL_NO_ERROR();
+
+    glClearBufferuiv(GL_COLOR, 1, clearUint);
+    EXPECT_GL_NO_ERROR();
+}
+
 // Verify that errors are generate when trying to blit from an image to itself
 TEST_P(WebGL2CompatibilityTest, BlitFramebufferSameImage)
 {
