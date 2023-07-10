@@ -43,7 +43,7 @@ vars = {
   'checkout_angle_mesa': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '8a1e616372489feacddce031d5cca32d7e763218',
+  'chromium_revision': '749d653d9a368312279451b1ca86f094a63eab8b',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -203,7 +203,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@11876f21fd807e0249dc60074827b9b68b54611a',
+    'url': '{chromium_git}/chromium/src/testing@24349b4e60198b8ec32095ce71c20b03bc75fbcd',
     'condition': 'not build_with_chromium',
   },
 
@@ -621,7 +621,7 @@ deps = {
       'packages': [
           {
               'package': 'chromium/third_party/turbine',
-              'version': '9rSngS4o9OIlNubLcU1zXF_w0dPYif6AS-_k1pPAV1kC',
+              'version': '2I2Nz480QsuCxpQ1lMfbigX8l5HAhX3_ykWU4TKRGo4C',
           },
       ],
       'condition': 'checkout_android and not build_with_chromium',
