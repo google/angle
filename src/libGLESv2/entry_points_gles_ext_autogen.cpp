@@ -9493,6 +9493,8 @@ void GL_APIENTRY GL_TexBufferRangeEXT(GLenum target,
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
 
+// GL_EXT_texture_compression_astc_decode_mode
+
 // GL_EXT_texture_compression_bptc
 
 // GL_EXT_texture_compression_dxt1

@@ -140,6 +140,8 @@ gles_requestable_extensions = [
     "GL_EXT_tessellation_shader",
     "GL_EXT_texture_border_clamp",
     "GL_EXT_texture_buffer",
+    "GL_EXT_texture_compression_astc_decode_mode",
+    "GL_EXT_texture_compression_astc_decode_mode_rgb9e5",
     "GL_EXT_texture_compression_bptc",
     "GL_EXT_texture_compression_dxt1",
     "GL_EXT_texture_compression_rgtc",

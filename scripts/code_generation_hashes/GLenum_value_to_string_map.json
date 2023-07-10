@@ -4,9 +4,9 @@
   "scripts/gl_angle_ext.xml":
     "49a0bf469d6f44c532098ef3a9fd087f",
   "scripts/registry_xml.py":
-    "7575aacd04461e47255e80d8b0478a68",
+    "2586b7f7a5d4dcb38d5d365f159dc373",
   "src/common/gl_enum_utils_autogen.cpp":
-    "97b7e1c7d6e1a3c5f73b6fc0eb5e532c",
+    "5fe6ac779cf8b7056890321598114b74",
   "src/common/gl_enum_utils_autogen.h":
     "e7205a4b257e250bcf843374ee2a90d4",
   "third_party/OpenGL-Registry/src/xml/gl.xml":

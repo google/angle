@@ -2110,6 +2110,8 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                     return "GL_FETCH_PER_SAMPLE_ARM";
                 case 0x8F66:
                     return "GL_FRAGMENT_SHADER_FRAMEBUFFER_FETCH_MRT_ARM";
+                case 0x8F69:
+                    return "GL_TEXTURE_ASTC_DECODE_PRECISION_EXT";
                 case 0x8F94:
                     return "GL_R8_SNORM";
                 case 0x8F95:
