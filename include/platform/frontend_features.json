@@ -23,14 +23,6 @@
             ]
         },
         {
-            "name": "scalarize_vec_and_mat_constructor_args",
-            "category": "Workarounds",
-            "description": [
-                "Always rewrite vec/mat constructors to be consistent"
-            ],
-            "issue": "http://crbug.com/1165751"
-        },
-        {
             "name": "disable_program_binary",
             "category": "Features",
             "description": [

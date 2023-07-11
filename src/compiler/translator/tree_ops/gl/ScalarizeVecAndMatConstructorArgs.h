@@ -8,11 +8,12 @@
 // driver bugs around vector and matrix constructors.
 //
 
-#ifndef COMPILER_TRANSLATOR_TREEOPS_SCALARIZEVECANDMATCONSTRUCTORARGS_H_
-#define COMPILER_TRANSLATOR_TREEOPS_SCALARIZEVECANDMATCONSTRUCTORARGS_H_
+#ifndef COMPILER_TRANSLATOR_TREEOPS_GL_SCALARIZEVECANDMATCONSTRUCTORARGS_H_
+#define COMPILER_TRANSLATOR_TREEOPS_GL_SCALARIZEVECANDMATCONSTRUCTORARGS_H_
 
 #include "GLSLANG/ShaderLang.h"
 #include "common/angleutils.h"
+#include "common/debug.h"
 
 namespace sh
 {
@@ -20,9 +21,20 @@ class TCompiler;
 class TIntermBlock;
 class TSymbolTable;
 
+#ifdef ANGLE_ENABLE_GLSL
 [[nodiscard]] bool ScalarizeVecAndMatConstructorArgs(TCompiler *compiler,
                                                      TIntermBlock *root,
                                                      TSymbolTable *symbolTable);
+#else
+[[nodiscard]] ANGLE_INLINE bool ScalarizeVecAndMatConstructorArgs(TCompiler *compiler,
+                                                                  TIntermBlock *root,
+                                                                  TSymbolTable *symbolTable)
+{
+    UNREACHABLE();
+    return false;
+}
+#endif
+
 }  // namespace sh
 
-#endif  // COMPILER_TRANSLATOR_TREEOPS_SCALARIZEVECANDMATCONSTRUCTORARGS_H_
+#endif  // COMPILER_TRANSLATOR_TREEOPS_GL_SCALARIZEVECANDMATCONSTRUCTORARGS_H_
