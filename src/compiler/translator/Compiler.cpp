@@ -46,7 +46,6 @@
 #include "compiler/translator/tree_ops/RemoveInvariantDeclaration.h"
 #include "compiler/translator/tree_ops/RemoveUnreferencedVariables.h"
 #include "compiler/translator/tree_ops/RewritePixelLocalStorage.h"
-#include "compiler/translator/tree_ops/ScalarizeVecAndMatConstructorArgs.h"
 #include "compiler/translator/tree_ops/SeparateDeclarations.h"
 #include "compiler/translator/tree_ops/SimplifyLoopConditions.h"
 #include "compiler/translator/tree_ops/SplitSequenceOperator.h"
@@ -56,6 +55,7 @@
 #include "compiler/translator/tree_ops/gl/ClampFragDepth.h"
 #include "compiler/translator/tree_ops/gl/RegenerateStructNames.h"
 #include "compiler/translator/tree_ops/gl/RewriteRepeatedAssignToSwizzled.h"
+#include "compiler/translator/tree_ops/gl/ScalarizeVecAndMatConstructorArgs.h"
 #include "compiler/translator/tree_ops/gl/UseInterfaceBlockFields.h"
 #include "compiler/translator/tree_util/BuiltIn.h"
 #include "compiler/translator/tree_util/IntermNodePatternMatcher.h"
@@ -1001,17 +1001,12 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         }
     }
 
-    int simplifyScalarized = compileOptions.scalarizeVecAndMatConstructorArgs
-                                 ? IntermNodePatternMatcher::kScalarizedVecOrMatConstructor
-                                 : 0;
-
     // Split multi declarations and remove calls to array length().
     // Note that SimplifyLoopConditions needs to be run before any other AST transformations
     // that may need to generate new statements from loop conditions or loop expressions.
     if (!SimplifyLoopConditions(this, root,
                                 IntermNodePatternMatcher::kMultiDeclaration |
-                                    IntermNodePatternMatcher::kArrayLengthMethod |
-                                    simplifyScalarized,
+                                    IntermNodePatternMatcher::kArrayLengthMethod,
                                 &getSymbolTable()))
     {
         return false;
@@ -1025,8 +1020,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     }
     mValidateASTOptions.validateMultiDeclarations = true;
 
-    if (!SplitSequenceOperator(this, root,
-                               IntermNodePatternMatcher::kArrayLengthMethod | simplifyScalarized,
+    if (!SplitSequenceOperator(this, root, IntermNodePatternMatcher::kArrayLengthMethod,
                                &getSymbolTable()))
     {
         return false;

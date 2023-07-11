@@ -2571,6 +2571,9 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
 
     // http://anglebug.com/8172
     ANGLE_FEATURE_CONDITION(features, disableBaseInstanceVertex, IsMaliValhall(functions));
+
+    // http://crbug.com/1420130
+    ANGLE_FEATURE_CONDITION(features, scalarizeVecAndMatConstructorArgs, IsMali(functions));
 }
 
 void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFeatures *features)
