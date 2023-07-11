@@ -188,7 +188,6 @@ angle_translator_sources = [
   "src/compiler/translator/tree_ops/SplitSequenceOperator.cpp",
   "src/compiler/translator/tree_ops/SplitSequenceOperator.h",
   "src/compiler/translator/tree_ops/apple/AddAndTrueToLoopCondition.h",
-  "src/compiler/translator/tree_ops/apple/ConvertUnsupportedConstructorsToFunctionCalls.h",
   "src/compiler/translator/tree_ops/apple/RewriteDoWhile.h",
   "src/compiler/translator/tree_ops/apple/RewriteRowMajorMatrices.h",
   "src/compiler/translator/tree_ops/apple/RewriteUnaryMinusOperatorFloat.h",
@@ -270,7 +269,6 @@ angle_translator_glsl_sources = [
 ]
 angle_translator_glsl_apple_sources = [
   "src/compiler/translator/tree_ops/apple/AddAndTrueToLoopCondition.cpp",
-  "src/compiler/translator/tree_ops/apple/ConvertUnsupportedConstructorsToFunctionCalls.cpp",
   "src/compiler/translator/tree_ops/apple/RewriteDoWhile.cpp",
   "src/compiler/translator/tree_ops/apple/RewriteRowMajorMatrices.cpp",
   "src/compiler/translator/tree_ops/apple/RewriteUnaryMinusOperatorFloat.cpp",
@@ -378,6 +376,8 @@ angle_translator_lib_metal_sources = [
   "src/compiler/translator/TranslatorMetalDirect/AstHelpers.cpp",
   "src/compiler/translator/TranslatorMetalDirect/AstHelpers.h",
   "src/compiler/translator/TranslatorMetalDirect/ConstantNames.cpp",
+  "src/compiler/translator/TranslatorMetalDirect/ConvertUnsupportedConstructorsToFunctionCalls.cpp",
+  "src/compiler/translator/TranslatorMetalDirect/ConvertUnsupportedConstructorsToFunctionCalls.h",
   "src/compiler/translator/TranslatorMetalDirect/DebugSink.h",
   "src/compiler/translator/TranslatorMetalDirect/DiscoverDependentFunctions.cpp",
   "src/compiler/translator/TranslatorMetalDirect/DiscoverDependentFunctions.h",

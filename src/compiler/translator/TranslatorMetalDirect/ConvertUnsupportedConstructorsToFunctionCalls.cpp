@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 //
 
-#include "compiler/translator/tree_ops/apple/ConvertUnsupportedConstructorsToFunctionCalls.h"
+#include "compiler/translator/TranslatorMetalDirect/ConvertUnsupportedConstructorsToFunctionCalls.h"
 
 #include "compiler/translator/ImmutableString.h"
 #include "compiler/translator/Symbol.h"
