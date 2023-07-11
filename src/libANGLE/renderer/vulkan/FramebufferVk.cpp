@@ -334,7 +334,9 @@ FramebufferVk::FramebufferVk(RendererVk *renderer, const gl::FramebufferState &s
       mBackbuffer(nullptr),
       mActiveColorComponentMasksForClear(0),
       mReadOnlyDepthFeedbackLoopMode(false),
-      mReadOnlyStencilFeedbackLoopMode(false)
+      mReadOnlyStencilFeedbackLoopMode(false),
+      mDepthFeedbackLoopMode(false),
+      mStencilFeedbackLoopMode(false)
 {
     if (mState.isDefault())
     {

@@ -140,8 +140,18 @@ class FramebufferVk : public FramebufferImpl
     {
         mReadOnlyStencilFeedbackLoopMode = readOnlyStencilFeedbackModeEnabled;
     }
+    void setDepthFeedbackLoopMode(bool depthFeedbackModeEnabled)
+    {
+        mDepthFeedbackLoopMode = depthFeedbackModeEnabled;
+    }
+    void setStencilFeedbackLoopMode(bool stencilFeedbackModeEnabled)
+    {
+        mStencilFeedbackLoopMode = stencilFeedbackModeEnabled;
+    }
     bool isReadOnlyDepthFeedbackLoopMode() const { return mReadOnlyDepthFeedbackLoopMode; }
     bool isReadOnlyStencilFeedbackLoopMode() const { return mReadOnlyStencilFeedbackLoopMode; }
+    bool isDepthFeedbackLoopMode() const { return mDepthFeedbackLoopMode; }
+    bool isStencilFeedbackLoopMode() const { return mStencilFeedbackLoopMode; }
     void updateRenderPassDepthReadOnlyMode(ContextVk *contextVk,
                                            vk::RenderPassCommandBufferHelper *renderPass);
     void updateRenderPassStencilReadOnlyMode(ContextVk *contextVk,
@@ -309,6 +319,8 @@ class FramebufferVk : public FramebufferImpl
     // feedback loop, the render pass is broken is to accommodate the new writable layout.
     bool mReadOnlyDepthFeedbackLoopMode;
     bool mReadOnlyStencilFeedbackLoopMode;
+    bool mDepthFeedbackLoopMode;
+    bool mStencilFeedbackLoopMode;
 
     // Whether any of the color attachments are an external image such as dmabuf, AHB etc.  In such
     // cases, some optimizations are disabled such as deferred clears because the results need to be

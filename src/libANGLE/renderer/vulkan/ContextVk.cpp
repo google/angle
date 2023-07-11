@@ -2347,6 +2347,8 @@ angle::Result ContextVk::updateRenderPassDepthFeedbackLoopModeImpl(
         // Clear read-only depth/stencil feedback mode.
         drawFramebufferVk->setReadOnlyDepthFeedbackLoopMode(false);
         drawFramebufferVk->setReadOnlyStencilFeedbackLoopMode(false);
+        drawFramebufferVk->setDepthFeedbackLoopMode(false);
+        drawFramebufferVk->setStencilFeedbackLoopMode(false);
     }
 
     return angle::Result::Continue;
@@ -5579,6 +5581,8 @@ angle::Result ContextVk::syncState(const gl::Context *context,
 
                 drawFramebufferVk->setReadOnlyDepthFeedbackLoopMode(false);
                 drawFramebufferVk->setReadOnlyStencilFeedbackLoopMode(false);
+                drawFramebufferVk->setDepthFeedbackLoopMode(false);
+                drawFramebufferVk->setStencilFeedbackLoopMode(false);
                 updateFlipViewportDrawFramebuffer(glState);
                 updateSurfaceRotationDrawFramebuffer(glState, context->getCurrentDrawSurface());
                 updateViewport(drawFramebufferVk, glState.getViewport(), glState.getNearPlane(),
@@ -8065,12 +8069,29 @@ bool ContextVk::shouldSwitchToReadOnlyDepthStencilFeedbackLoopMode(gl::Texture *
 
     if (isStencilTexture)
     {
-        // Switch to read-only stencil feedback loop if not already
-        return !mState.isStencilWriteEnabled() &&
+        if (mState.isStencilWriteEnabled())
+        {
+            WARN() << "Stencil render feedback loop mode detected, content will be undefined per "
+                      "specification";
+            drawFramebufferVk->setStencilFeedbackLoopMode(true);
+        }
+        // If we are not in the actual feedback loop mode, switch to read-only stencil mode if not
+        // already,
+        return !mState.isStencilWriteEnabled() && !drawFramebufferVk->isStencilFeedbackLoopMode() &&
                !drawFramebufferVk->isReadOnlyStencilFeedbackLoopMode();
     }
     // Switch to read-only depth feedback loop if not already
-    return !mState.isDepthWriteEnabled() && !drawFramebufferVk->isReadOnlyDepthFeedbackLoopMode();
+    if (mState.isDepthWriteEnabled())
+    {
+        WARN() << "Depth render feedback loop mode detected, content will be undefined per "
+                  "specification";
+        drawFramebufferVk->setDepthFeedbackLoopMode(true);
+    }
+
+    // If we are not in the actual feedback loop mode, switch to read-only depth mode if not
+    // already,
+    return !mState.isDepthWriteEnabled() && !drawFramebufferVk->isDepthFeedbackLoopMode() &&
+           !drawFramebufferVk->isReadOnlyDepthFeedbackLoopMode();
 }
 
 angle::Result ContextVk::onResourceAccess(const vk::CommandBufferAccess &access)
