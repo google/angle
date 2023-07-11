@@ -1743,7 +1743,7 @@ spirv::IdRef OutputSPIRVTraverser::createConstructorMatrixFromMatrix(
     //     ...
     //     %m  = OpCompositeConstruct %matNxM %c0 %c1 %c2 ...
     //
-    // - Otherwise, an identity matrix is created and super imposed by m:
+    // - Otherwise, an identity matrix is created and superimposed by m:
     //
     //     %c0 = OpCompositeConstruct %vecM %m[0][0] %m[0][1] %0 %0
     //     %c1 = OpCompositeConstruct %vecM %m[1][0] %m[1][1] %0 %0

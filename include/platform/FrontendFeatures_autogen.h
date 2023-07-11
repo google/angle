@@ -35,11 +35,6 @@ struct FrontendFeatures : FeatureSetBase
         &members,
     };
 
-    FeatureInfo scalarizeVecAndMatConstructorArgs = {
-        "scalarizeVecAndMatConstructorArgs", FeatureCategory::FrontendWorkarounds,
-        "Always rewrite vec/mat constructors to be consistent", &members,
-        "http://crbug.com/1165751"};
-
     FeatureInfo disableProgramBinary = {"disableProgramBinary", FeatureCategory::FrontendFeatures,
                                         "Disable support for GL_OES_get_program_binary", &members,
                                         "http://anglebug.com/5007"};

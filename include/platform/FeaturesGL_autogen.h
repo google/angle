@@ -509,6 +509,11 @@ struct FeaturesGL : FeatureSetBase
         "supportsShaderPixelLocalStorageEXT", FeatureCategory::OpenGLFeatures,
         "Backend GL context supports EXT_shader_pixel_local_storage extension", &members,
         "http://anglebug.com/7279"};
+
+    FeatureInfo scalarizeVecAndMatConstructorArgs = {
+        "scalarizeVecAndMatConstructorArgs", FeatureCategory::OpenGLWorkarounds,
+        "Rewrite vec/mat constructors to work around driver bugs", &members,
+        "http://crbug.com/1420130"};
 };
 
 inline FeaturesGL::FeaturesGL()  = default;

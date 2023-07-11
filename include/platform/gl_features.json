@@ -707,6 +707,14 @@
                 "Backend GL context supports EXT_shader_pixel_local_storage extension"
             ],
             "issue": "http://anglebug.com/7279"
+        },
+        {
+            "name": "scalarize_vec_and_mat_constructor_args",
+            "category": "Workarounds",
+            "description": [
+                "Rewrite vec/mat constructors to work around driver bugs"
+            ],
+            "issue": "http://crbug.com/1420130"
         }
     ]
 }

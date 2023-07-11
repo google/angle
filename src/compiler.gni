@@ -179,8 +179,6 @@ angle_translator_sources = [
   "src/compiler/translator/tree_ops/RewriteStructSamplers.h",
   "src/compiler/translator/tree_ops/RewriteTexelFetchOffset.cpp",
   "src/compiler/translator/tree_ops/RewriteTexelFetchOffset.h",
-  "src/compiler/translator/tree_ops/ScalarizeVecAndMatConstructorArgs.cpp",
-  "src/compiler/translator/tree_ops/ScalarizeVecAndMatConstructorArgs.h",
   "src/compiler/translator/tree_ops/SeparateDeclarations.cpp",
   "src/compiler/translator/tree_ops/SeparateDeclarations.h",
   "src/compiler/translator/tree_ops/SeparateStructFromUniformDeclarations.cpp",
@@ -197,6 +195,7 @@ angle_translator_sources = [
   "src/compiler/translator/tree_ops/gl/ClampFragDepth.h",
   "src/compiler/translator/tree_ops/gl/RegenerateStructNames.h",
   "src/compiler/translator/tree_ops/gl/RewriteRepeatedAssignToSwizzled.h",
+  "src/compiler/translator/tree_ops/gl/ScalarizeVecAndMatConstructorArgs.h",
   "src/compiler/translator/tree_ops/gl/UseInterfaceBlockFields.h",
   "src/compiler/translator/tree_util/AsNode.h",
   "src/compiler/translator/tree_util/BuiltIn.h",
@@ -267,6 +266,7 @@ angle_translator_glsl_sources = [
   "src/compiler/translator/tree_ops/gl/ClampFragDepth.cpp",
   "src/compiler/translator/tree_ops/gl/RegenerateStructNames.cpp",
   "src/compiler/translator/tree_ops/gl/RewriteRepeatedAssignToSwizzled.cpp",
+  "src/compiler/translator/tree_ops/gl/ScalarizeVecAndMatConstructorArgs.cpp",
   "src/compiler/translator/tree_ops/gl/UseInterfaceBlockFields.cpp",
 ]
 angle_translator_glsl_apple_sources = [
