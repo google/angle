@@ -497,7 +497,9 @@ angle::Result SwitchToReadOnlyDepthStencilFeedbackLoopMode(ContextVk *contextVk,
             isStencilTexture ? vk::RenderPassUsage::StencilReadOnlyAttachment
                              : vk::RenderPassUsage::DepthReadOnlyAttachment;
 
-        if (!texture->getImage().hasRenderPassUsageFlag(readOnlyAttachmentUsage))
+        // If render pass not yet writing to depthStencil attachment, no need to flush.
+        if (!texture->getImage().hasRenderPassUsageFlag(readOnlyAttachmentUsage) &&
+            contextVk->getStartedRenderPassCommands().hasDepthStencilWriteOrClear())
         {
             // Break the render pass to enter read-only depth/stencil feedback loop; the previous
             // usage was not read-only and will use a non-read-only layout.
@@ -5928,7 +5930,7 @@ angle::Result ContextVk::onSurfaceUnMakeCurrent(WindowSurfaceVk *surface)
 
     // Everything must be flushed and submitted.
     ASSERT(mOutsideRenderPassCommands->empty());
-    ASSERT(mRenderPassCommands->empty());
+    ASSERT(!mRenderPassCommands->started());
     ASSERT(mWaitSemaphores.empty());
     ASSERT(!mHasWaitSemaphoresPendingSubmission);
     ASSERT(mLastSubmittedQueueSerial == mLastFlushedQueueSerial);
@@ -5956,7 +5958,7 @@ angle::Result ContextVk::onSurfaceUnMakeCurrent(OffscreenSurfaceVk *surface)
 
     // Everything must be flushed but may be pending submission.
     ASSERT(mOutsideRenderPassCommands->empty());
-    ASSERT(mRenderPassCommands->empty());
+    ASSERT(!mRenderPassCommands->started());
     ASSERT(mWaitSemaphores.empty());
     return angle::Result::Continue;
 }
@@ -7147,8 +7149,10 @@ angle::Result ContextVk::flushImpl(const vk::Semaphore *signalSemaphore,
                                    const vk::SharedExternalFence *externalFence,
                                    RenderPassClosureReason renderPassClosureReason)
 {
+    // Even if render pass does not have any command, we may still need to submit it in case it has
+    // CLEAR loadOp.
     bool someCommandsNeedFlush =
-        !mOutsideRenderPassCommands->empty() || !mRenderPassCommands->empty();
+        !mOutsideRenderPassCommands->empty() || mRenderPassCommands->started();
     bool someCommandAlreadyFlushedNeedsSubmit =
         mLastFlushedQueueSerial != mLastSubmittedQueueSerial;
     bool someOtherReasonNeedsSubmit = signalSemaphore != nullptr || externalFence != nullptr ||

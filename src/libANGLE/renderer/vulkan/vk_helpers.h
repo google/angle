@@ -1405,7 +1405,7 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
         return mCommandBuffers[mCurrentSubpassCommandBufferIndex];
     }
 
-    bool empty() const { return !started(); }
+    bool empty() const { return mCommandBuffers[0].empty(); }
 
     angle::Result attachCommandPool(Context *context, SecondaryCommandPool *commandPool);
     void detachCommandPool(SecondaryCommandPool **commandPoolOut);
@@ -1566,6 +1566,11 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
         return mStencilAttachment.hasWriteAccess() ||
                mAttachmentOps[mDepthStencilAttachmentIndex].stencilLoadOp ==
                    VK_ATTACHMENT_LOAD_OP_CLEAR;
+    }
+
+    bool hasDepthStencilWriteOrClear() const
+    {
+        return hasDepthWriteOrClear() || hasStencilWriteOrClear();
     }
 
     const RenderPassDesc &getRenderPassDesc() const { return mRenderPassDesc; }
