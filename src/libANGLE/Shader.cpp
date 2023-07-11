@@ -426,11 +426,6 @@ void Shader::compile(const Context *context)
         options.validateLoopIndexing = true;
     }
 
-    if (context->getFrontendFeatures().scalarizeVecAndMatConstructorArgs.enabled)
-    {
-        options.scalarizeVecAndMatConstructorArgs = true;
-    }
-
     if (context->getFrontendFeatures().forceInitShaderVariables.enabled)
     {
         options.initOutputVariables           = true;
