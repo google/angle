@@ -15,7 +15,7 @@
 #include "libANGLE/Context.h"
 #include "libANGLE/Context.inl.h"
 #include "libANGLE/capture/capture_gles_2_0_autogen.h"
-#include "libANGLE/context_local_call_gles_autogen.h"
+#include "libANGLE/context_private_call_gles_autogen.h"
 #include "libANGLE/entry_points_utils.h"
 #include "libANGLE/validationES2.h"
 #include "libGLESv2/global_state.h"
@@ -36,7 +36,7 @@ void GL_APIENTRY GL_ActiveTexture(GLenum texture)
              ValidateActiveTexture(context, angle::EntryPoint::GLActiveTexture, texture));
         if (isCallValid)
         {
-            ContextLocalActiveTexture(context, texture);
+            ContextPrivateActiveTexture(context, texture);
         }
         ANGLE_CAPTURE_GL(ActiveTexture, isCallValid, context, texture);
     }
@@ -230,7 +230,7 @@ void GL_APIENTRY GL_BlendColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat
                                  alpha)));
         if (isCallValid)
         {
-            ContextLocalBlendColor(context, red, green, blue, alpha);
+            ContextPrivateBlendColor(context, red, green, blue, alpha);
         }
         ANGLE_CAPTURE_GL(BlendColor, isCallValid, context, red, green, blue, alpha);
     }
@@ -255,7 +255,7 @@ void GL_APIENTRY GL_BlendEquation(GLenum mode)
               ValidateBlendEquation(context, angle::EntryPoint::GLBlendEquation, mode)));
         if (isCallValid)
         {
-            ContextLocalBlendEquation(context, mode);
+            ContextPrivateBlendEquation(context, mode);
         }
         ANGLE_CAPTURE_GL(BlendEquation, isCallValid, context, mode);
     }
@@ -283,7 +283,7 @@ void GL_APIENTRY GL_BlendEquationSeparate(GLenum modeRGB, GLenum modeAlpha)
                                             modeRGB, modeAlpha)));
         if (isCallValid)
         {
-            ContextLocalBlendEquationSeparate(context, modeRGB, modeAlpha);
+            ContextPrivateBlendEquationSeparate(context, modeRGB, modeAlpha);
         }
         ANGLE_CAPTURE_GL(BlendEquationSeparate, isCallValid, context, modeRGB, modeAlpha);
     }
@@ -309,7 +309,7 @@ void GL_APIENTRY GL_BlendFunc(GLenum sfactor, GLenum dfactor)
               ValidateBlendFunc(context, angle::EntryPoint::GLBlendFunc, sfactor, dfactor)));
         if (isCallValid)
         {
-            ContextLocalBlendFunc(context, sfactor, dfactor);
+            ContextPrivateBlendFunc(context, sfactor, dfactor);
         }
         ANGLE_CAPTURE_GL(BlendFunc, isCallValid, context, sfactor, dfactor);
     }
@@ -342,8 +342,8 @@ void GL_APIENTRY GL_BlendFuncSeparate(GLenum sfactorRGB,
                                         dfactorRGB, sfactorAlpha, dfactorAlpha)));
         if (isCallValid)
         {
-            ContextLocalBlendFuncSeparate(context, sfactorRGB, dfactorRGB, sfactorAlpha,
-                                          dfactorAlpha);
+            ContextPrivateBlendFuncSeparate(context, sfactorRGB, dfactorRGB, sfactorAlpha,
+                                            dfactorAlpha);
         }
         ANGLE_CAPTURE_GL(BlendFuncSeparate, isCallValid, context, sfactorRGB, dfactorRGB,
                          sfactorAlpha, dfactorAlpha);
@@ -488,7 +488,7 @@ void GL_APIENTRY GL_ClearColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat
                                  alpha)));
         if (isCallValid)
         {
-            ContextLocalClearColor(context, red, green, blue, alpha);
+            ContextPrivateClearColor(context, red, green, blue, alpha);
         }
         ANGLE_CAPTURE_GL(ClearColor, isCallValid, context, red, green, blue, alpha);
     }
@@ -512,7 +512,7 @@ void GL_APIENTRY GL_ClearDepthf(GLfloat d)
               ValidateClearDepthf(context, angle::EntryPoint::GLClearDepthf, d)));
         if (isCallValid)
         {
-            ContextLocalClearDepthf(context, d);
+            ContextPrivateClearDepthf(context, d);
         }
         ANGLE_CAPTURE_GL(ClearDepthf, isCallValid, context, d);
     }
@@ -536,7 +536,7 @@ void GL_APIENTRY GL_ClearStencil(GLint s)
               ValidateClearStencil(context, angle::EntryPoint::GLClearStencil, s)));
         if (isCallValid)
         {
-            ContextLocalClearStencil(context, s);
+            ContextPrivateClearStencil(context, s);
         }
         ANGLE_CAPTURE_GL(ClearStencil, isCallValid, context, s);
     }
@@ -562,7 +562,7 @@ void GL_APIENTRY GL_ColorMask(GLboolean red, GLboolean green, GLboolean blue, GL
               ValidateColorMask(context, angle::EntryPoint::GLColorMask, red, green, blue, alpha)));
         if (isCallValid)
         {
-            ContextLocalColorMask(context, red, green, blue, alpha);
+            ContextPrivateColorMask(context, red, green, blue, alpha);
         }
         ANGLE_CAPTURE_GL(ColorMask, isCallValid, context, red, green, blue, alpha);
     }
@@ -844,7 +844,7 @@ void GL_APIENTRY GL_CullFace(GLenum mode)
                             ValidateCullFace(context, angle::EntryPoint::GLCullFace, modePacked));
         if (isCallValid)
         {
-            ContextLocalCullFace(context, modePacked);
+            ContextPrivateCullFace(context, modePacked);
         }
         ANGLE_CAPTURE_GL(CullFace, isCallValid, context, modePacked);
     }
@@ -1024,7 +1024,7 @@ void GL_APIENTRY GL_DepthFunc(GLenum func)
                             ValidateDepthFunc(context, angle::EntryPoint::GLDepthFunc, func));
         if (isCallValid)
         {
-            ContextLocalDepthFunc(context, func);
+            ContextPrivateDepthFunc(context, func);
         }
         ANGLE_CAPTURE_GL(DepthFunc, isCallValid, context, func);
     }
@@ -1046,7 +1046,7 @@ void GL_APIENTRY GL_DepthMask(GLboolean flag)
                             ValidateDepthMask(context, angle::EntryPoint::GLDepthMask, flag));
         if (isCallValid)
         {
-            ContextLocalDepthMask(context, flag);
+            ContextPrivateDepthMask(context, flag);
         }
         ANGLE_CAPTURE_GL(DepthMask, isCallValid, context, flag);
     }
@@ -1068,7 +1068,7 @@ void GL_APIENTRY GL_DepthRangef(GLfloat n, GLfloat f)
                             ValidateDepthRangef(context, angle::EntryPoint::GLDepthRangef, n, f));
         if (isCallValid)
         {
-            ContextLocalDepthRangef(context, n, f);
+            ContextPrivateDepthRangef(context, n, f);
         }
         ANGLE_CAPTURE_GL(DepthRangef, isCallValid, context, n, f);
     }
@@ -1120,7 +1120,7 @@ void GL_APIENTRY GL_Disable(GLenum cap)
                             ValidateDisable(context, angle::EntryPoint::GLDisable, cap));
         if (isCallValid)
         {
-            ContextLocalDisable(context, cap);
+            ContextPrivateDisable(context, cap);
         }
         ANGLE_CAPTURE_GL(Disable, isCallValid, context, cap);
     }
@@ -1223,7 +1223,7 @@ void GL_APIENTRY GL_Enable(GLenum cap)
                             ValidateEnable(context, angle::EntryPoint::GLEnable, cap));
         if (isCallValid)
         {
-            ContextLocalEnable(context, cap);
+            ContextPrivateEnable(context, cap);
         }
         ANGLE_CAPTURE_GL(Enable, isCallValid, context, cap);
     }
@@ -1396,7 +1396,7 @@ void GL_APIENTRY GL_FrontFace(GLenum mode)
                             ValidateFrontFace(context, angle::EntryPoint::GLFrontFace, mode));
         if (isCallValid)
         {
-            ContextLocalFrontFace(context, mode);
+            ContextPrivateFrontFace(context, mode);
         }
         ANGLE_CAPTURE_GL(FrontFace, isCallValid, context, mode);
     }
@@ -2329,7 +2329,7 @@ void GL_APIENTRY GL_Hint(GLenum target, GLenum mode)
               ValidateHint(context, angle::EntryPoint::GLHint, target, mode)));
         if (isCallValid)
         {
-            ContextLocalHint(context, target, mode);
+            ContextPrivateHint(context, target, mode);
         }
         ANGLE_CAPTURE_GL(Hint, isCallValid, context, target, mode);
     }
@@ -2384,7 +2384,7 @@ GLboolean GL_APIENTRY GL_IsEnabled(GLenum cap)
                             ValidateIsEnabled(context, angle::EntryPoint::GLIsEnabled, cap));
         if (isCallValid)
         {
-            returnValue = ContextLocalIsEnabled(context, cap);
+            returnValue = ContextPrivateIsEnabled(context, cap);
         }
         else
         {
@@ -2573,7 +2573,7 @@ void GL_APIENTRY GL_LineWidth(GLfloat width)
               ValidateLineWidth(context, angle::EntryPoint::GLLineWidth, width)));
         if (isCallValid)
         {
-            ContextLocalLineWidth(context, width);
+            ContextPrivateLineWidth(context, width);
         }
         ANGLE_CAPTURE_GL(LineWidth, isCallValid, context, width);
     }
@@ -2624,7 +2624,7 @@ void GL_APIENTRY GL_PixelStorei(GLenum pname, GLint param)
               ValidatePixelStorei(context, angle::EntryPoint::GLPixelStorei, pname, param)));
         if (isCallValid)
         {
-            ContextLocalPixelStorei(context, pname, param);
+            ContextPrivatePixelStorei(context, pname, param);
         }
         ANGLE_CAPTURE_GL(PixelStorei, isCallValid, context, pname, param);
     }
@@ -2648,7 +2648,7 @@ void GL_APIENTRY GL_PolygonOffset(GLfloat factor, GLfloat units)
              ValidatePolygonOffset(context, angle::EntryPoint::GLPolygonOffset, factor, units));
         if (isCallValid)
         {
-            ContextLocalPolygonOffset(context, factor, units);
+            ContextPrivatePolygonOffset(context, factor, units);
         }
         ANGLE_CAPTURE_GL(PolygonOffset, isCallValid, context, factor, units);
     }
@@ -2770,7 +2770,7 @@ void GL_APIENTRY GL_SampleCoverage(GLfloat value, GLboolean invert)
               ValidateSampleCoverage(context, angle::EntryPoint::GLSampleCoverage, value, invert)));
         if (isCallValid)
         {
-            ContextLocalSampleCoverage(context, value, invert);
+            ContextPrivateSampleCoverage(context, value, invert);
         }
         ANGLE_CAPTURE_GL(SampleCoverage, isCallValid, context, value, invert);
     }
@@ -2794,7 +2794,7 @@ void GL_APIENTRY GL_Scissor(GLint x, GLint y, GLsizei width, GLsizei height)
              ValidateScissor(context, angle::EntryPoint::GLScissor, x, y, width, height));
         if (isCallValid)
         {
-            ContextLocalScissor(context, x, y, width, height);
+            ContextPrivateScissor(context, x, y, width, height);
         }
         ANGLE_CAPTURE_GL(Scissor, isCallValid, context, x, y, width, height);
     }
@@ -2887,7 +2887,7 @@ void GL_APIENTRY GL_StencilFunc(GLenum func, GLint ref, GLuint mask)
              ValidateStencilFunc(context, angle::EntryPoint::GLStencilFunc, func, ref, mask));
         if (isCallValid)
         {
-            ContextLocalStencilFunc(context, func, ref, mask);
+            ContextPrivateStencilFunc(context, func, ref, mask);
         }
         ANGLE_CAPTURE_GL(StencilFunc, isCallValid, context, func, ref, mask);
     }
@@ -2913,7 +2913,7 @@ void GL_APIENTRY GL_StencilFuncSeparate(GLenum face, GLenum func, GLint ref, GLu
                                          func, ref, mask));
         if (isCallValid)
         {
-            ContextLocalStencilFuncSeparate(context, face, func, ref, mask);
+            ContextPrivateStencilFuncSeparate(context, face, func, ref, mask);
         }
         ANGLE_CAPTURE_GL(StencilFuncSeparate, isCallValid, context, face, func, ref, mask);
     }
@@ -2935,7 +2935,7 @@ void GL_APIENTRY GL_StencilMask(GLuint mask)
                             ValidateStencilMask(context, angle::EntryPoint::GLStencilMask, mask));
         if (isCallValid)
         {
-            ContextLocalStencilMask(context, mask);
+            ContextPrivateStencilMask(context, mask);
         }
         ANGLE_CAPTURE_GL(StencilMask, isCallValid, context, mask);
     }
@@ -2959,7 +2959,7 @@ void GL_APIENTRY GL_StencilMaskSeparate(GLenum face, GLuint mask)
                                 context, angle::EntryPoint::GLStencilMaskSeparate, face, mask));
         if (isCallValid)
         {
-            ContextLocalStencilMaskSeparate(context, face, mask);
+            ContextPrivateStencilMaskSeparate(context, face, mask);
         }
         ANGLE_CAPTURE_GL(StencilMaskSeparate, isCallValid, context, face, mask);
     }
@@ -2984,7 +2984,7 @@ void GL_APIENTRY GL_StencilOp(GLenum fail, GLenum zfail, GLenum zpass)
              ValidateStencilOp(context, angle::EntryPoint::GLStencilOp, fail, zfail, zpass));
         if (isCallValid)
         {
-            ContextLocalStencilOp(context, fail, zfail, zpass);
+            ContextPrivateStencilOp(context, fail, zfail, zpass);
         }
         ANGLE_CAPTURE_GL(StencilOp, isCallValid, context, fail, zfail, zpass);
     }
@@ -3011,7 +3011,7 @@ void GL_APIENTRY GL_StencilOpSeparate(GLenum face, GLenum sfail, GLenum dpfail, 
                                        dpfail, dppass));
         if (isCallValid)
         {
-            ContextLocalStencilOpSeparate(context, face, sfail, dpfail, dppass);
+            ContextPrivateStencilOpSeparate(context, face, sfail, dpfail, dppass);
         }
         ANGLE_CAPTURE_GL(StencilOpSeparate, isCallValid, context, face, sfail, dpfail, dppass);
     }
@@ -3793,7 +3793,7 @@ void GL_APIENTRY GL_VertexAttrib1f(GLuint index, GLfloat x)
              ValidateVertexAttrib1f(context, angle::EntryPoint::GLVertexAttrib1f, index, x));
         if (isCallValid)
         {
-            ContextLocalVertexAttrib1f(context, index, x);
+            ContextPrivateVertexAttrib1f(context, index, x);
         }
         ANGLE_CAPTURE_GL(VertexAttrib1f, isCallValid, context, index, x);
     }
@@ -3817,7 +3817,7 @@ void GL_APIENTRY GL_VertexAttrib1fv(GLuint index, const GLfloat *v)
              ValidateVertexAttrib1fv(context, angle::EntryPoint::GLVertexAttrib1fv, index, v));
         if (isCallValid)
         {
-            ContextLocalVertexAttrib1fv(context, index, v);
+            ContextPrivateVertexAttrib1fv(context, index, v);
         }
         ANGLE_CAPTURE_GL(VertexAttrib1fv, isCallValid, context, index, v);
     }
@@ -3841,7 +3841,7 @@ void GL_APIENTRY GL_VertexAttrib2f(GLuint index, GLfloat x, GLfloat y)
              ValidateVertexAttrib2f(context, angle::EntryPoint::GLVertexAttrib2f, index, x, y));
         if (isCallValid)
         {
-            ContextLocalVertexAttrib2f(context, index, x, y);
+            ContextPrivateVertexAttrib2f(context, index, x, y);
         }
         ANGLE_CAPTURE_GL(VertexAttrib2f, isCallValid, context, index, x, y);
     }
@@ -3865,7 +3865,7 @@ void GL_APIENTRY GL_VertexAttrib2fv(GLuint index, const GLfloat *v)
              ValidateVertexAttrib2fv(context, angle::EntryPoint::GLVertexAttrib2fv, index, v));
         if (isCallValid)
         {
-            ContextLocalVertexAttrib2fv(context, index, v);
+            ContextPrivateVertexAttrib2fv(context, index, v);
         }
         ANGLE_CAPTURE_GL(VertexAttrib2fv, isCallValid, context, index, v);
     }
@@ -3889,7 +3889,7 @@ void GL_APIENTRY GL_VertexAttrib3f(GLuint index, GLfloat x, GLfloat y, GLfloat z
              ValidateVertexAttrib3f(context, angle::EntryPoint::GLVertexAttrib3f, index, x, y, z));
         if (isCallValid)
         {
-            ContextLocalVertexAttrib3f(context, index, x, y, z);
+            ContextPrivateVertexAttrib3f(context, index, x, y, z);
         }
         ANGLE_CAPTURE_GL(VertexAttrib3f, isCallValid, context, index, x, y, z);
     }
@@ -3913,7 +3913,7 @@ void GL_APIENTRY GL_VertexAttrib3fv(GLuint index, const GLfloat *v)
              ValidateVertexAttrib3fv(context, angle::EntryPoint::GLVertexAttrib3fv, index, v));
         if (isCallValid)
         {
-            ContextLocalVertexAttrib3fv(context, index, v);
+            ContextPrivateVertexAttrib3fv(context, index, v);
         }
         ANGLE_CAPTURE_GL(VertexAttrib3fv, isCallValid, context, index, v);
     }
@@ -3937,7 +3937,7 @@ void GL_APIENTRY GL_VertexAttrib4f(GLuint index, GLfloat x, GLfloat y, GLfloat z
                                                    index, x, y, z, w));
         if (isCallValid)
         {
-            ContextLocalVertexAttrib4f(context, index, x, y, z, w);
+            ContextPrivateVertexAttrib4f(context, index, x, y, z, w);
         }
         ANGLE_CAPTURE_GL(VertexAttrib4f, isCallValid, context, index, x, y, z, w);
     }
@@ -3961,7 +3961,7 @@ void GL_APIENTRY GL_VertexAttrib4fv(GLuint index, const GLfloat *v)
              ValidateVertexAttrib4fv(context, angle::EntryPoint::GLVertexAttrib4fv, index, v));
         if (isCallValid)
         {
-            ContextLocalVertexAttrib4fv(context, index, v);
+            ContextPrivateVertexAttrib4fv(context, index, v);
         }
         ANGLE_CAPTURE_GL(VertexAttrib4fv, isCallValid, context, index, v);
     }
@@ -4021,7 +4021,7 @@ void GL_APIENTRY GL_Viewport(GLint x, GLint y, GLsizei width, GLsizei height)
              ValidateViewport(context, angle::EntryPoint::GLViewport, x, y, width, height));
         if (isCallValid)
         {
-            ContextLocalViewport(context, x, y, width, height);
+            ContextPrivateViewport(context, x, y, width, height);
         }
         ANGLE_CAPTURE_GL(Viewport, isCallValid, context, x, y, width, height);
     }

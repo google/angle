@@ -15,7 +15,7 @@
 #include "libANGLE/Context.h"
 #include "libANGLE/Context.inl.h"
 #include "libANGLE/capture/capture_gles_3_1_autogen.h"
-#include "libANGLE/context_local_call_gles_autogen.h"
+#include "libANGLE/context_private_call_gles_autogen.h"
 #include "libANGLE/entry_points_utils.h"
 #include "libANGLE/validationES31.h"
 #include "libGLESv2/global_state.h"
@@ -2005,7 +2005,7 @@ void GL_APIENTRY GL_SampleMaski(GLuint maskNumber, GLbitfield mask)
               ValidateSampleMaski(context, angle::EntryPoint::GLSampleMaski, maskNumber, mask)));
         if (isCallValid)
         {
-            ContextLocalSampleMaski(context, maskNumber, mask);
+            ContextPrivateSampleMaski(context, maskNumber, mask);
         }
         ANGLE_CAPTURE_GL(SampleMaski, isCallValid, context, maskNumber, mask);
     }

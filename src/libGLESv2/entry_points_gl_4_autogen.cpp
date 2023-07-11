@@ -14,8 +14,8 @@
 #include "libANGLE/Context.h"
 #include "libANGLE/Context.inl.h"
 #include "libANGLE/capture/capture_gl_4_autogen.h"
-#include "libANGLE/context_local_call_gl_autogen.h"
-#include "libANGLE/context_local_call_gles_autogen.h"
+#include "libANGLE/context_private_call_gl_autogen.h"
+#include "libANGLE/context_private_call_gles_autogen.h"
 #include "libANGLE/entry_points_utils.h"
 #include "libANGLE/validationEGL.h"
 #include "libANGLE/validationES.h"
@@ -1831,7 +1831,7 @@ void GL_APIENTRY GL_VertexAttribL1d(GLuint index, GLdouble x)
              ValidateVertexAttribL1d(context, angle::EntryPoint::GLVertexAttribL1d, index, x));
         if (isCallValid)
         {
-            ContextLocalVertexAttribL1d(context, index, x);
+            ContextPrivateVertexAttribL1d(context, index, x);
         }
         ANGLE_CAPTURE_GL(VertexAttribL1d, isCallValid, context, index, x);
     }
@@ -1855,7 +1855,7 @@ void GL_APIENTRY GL_VertexAttribL1dv(GLuint index, const GLdouble *v)
              ValidateVertexAttribL1dv(context, angle::EntryPoint::GLVertexAttribL1dv, index, v));
         if (isCallValid)
         {
-            ContextLocalVertexAttribL1dv(context, index, v);
+            ContextPrivateVertexAttribL1dv(context, index, v);
         }
         ANGLE_CAPTURE_GL(VertexAttribL1dv, isCallValid, context, index, v);
     }
@@ -1879,7 +1879,7 @@ void GL_APIENTRY GL_VertexAttribL2d(GLuint index, GLdouble x, GLdouble y)
              ValidateVertexAttribL2d(context, angle::EntryPoint::GLVertexAttribL2d, index, x, y));
         if (isCallValid)
         {
-            ContextLocalVertexAttribL2d(context, index, x, y);
+            ContextPrivateVertexAttribL2d(context, index, x, y);
         }
         ANGLE_CAPTURE_GL(VertexAttribL2d, isCallValid, context, index, x, y);
     }
@@ -1903,7 +1903,7 @@ void GL_APIENTRY GL_VertexAttribL2dv(GLuint index, const GLdouble *v)
              ValidateVertexAttribL2dv(context, angle::EntryPoint::GLVertexAttribL2dv, index, v));
         if (isCallValid)
         {
-            ContextLocalVertexAttribL2dv(context, index, v);
+            ContextPrivateVertexAttribL2dv(context, index, v);
         }
         ANGLE_CAPTURE_GL(VertexAttribL2dv, isCallValid, context, index, v);
     }
@@ -1927,7 +1927,7 @@ void GL_APIENTRY GL_VertexAttribL3d(GLuint index, GLdouble x, GLdouble y, GLdoub
                                                     index, x, y, z));
         if (isCallValid)
         {
-            ContextLocalVertexAttribL3d(context, index, x, y, z);
+            ContextPrivateVertexAttribL3d(context, index, x, y, z);
         }
         ANGLE_CAPTURE_GL(VertexAttribL3d, isCallValid, context, index, x, y, z);
     }
@@ -1951,7 +1951,7 @@ void GL_APIENTRY GL_VertexAttribL3dv(GLuint index, const GLdouble *v)
              ValidateVertexAttribL3dv(context, angle::EntryPoint::GLVertexAttribL3dv, index, v));
         if (isCallValid)
         {
-            ContextLocalVertexAttribL3dv(context, index, v);
+            ContextPrivateVertexAttribL3dv(context, index, v);
         }
         ANGLE_CAPTURE_GL(VertexAttribL3dv, isCallValid, context, index, v);
     }
@@ -1975,7 +1975,7 @@ void GL_APIENTRY GL_VertexAttribL4d(GLuint index, GLdouble x, GLdouble y, GLdoub
                                                     index, x, y, z, w));
         if (isCallValid)
         {
-            ContextLocalVertexAttribL4d(context, index, x, y, z, w);
+            ContextPrivateVertexAttribL4d(context, index, x, y, z, w);
         }
         ANGLE_CAPTURE_GL(VertexAttribL4d, isCallValid, context, index, x, y, z, w);
     }
@@ -1999,7 +1999,7 @@ void GL_APIENTRY GL_VertexAttribL4dv(GLuint index, const GLdouble *v)
              ValidateVertexAttribL4dv(context, angle::EntryPoint::GLVertexAttribL4dv, index, v));
         if (isCallValid)
         {
-            ContextLocalVertexAttribL4dv(context, index, v);
+            ContextPrivateVertexAttribL4dv(context, index, v);
         }
         ANGLE_CAPTURE_GL(VertexAttribL4dv, isCallValid, context, index, v);
     }
@@ -3490,7 +3490,7 @@ void GL_APIENTRY GL_ClipControl(GLenum origin, GLenum depth)
                                   depthPacked)));
         if (isCallValid)
         {
-            ContextLocalClipControl(context, originPacked, depthPacked);
+            ContextPrivateClipControl(context, originPacked, depthPacked);
         }
         ANGLE_CAPTURE_GL(ClipControl, isCallValid, context, originPacked, depthPacked);
     }
@@ -7057,7 +7057,7 @@ void GL_APIENTRY GL_PolygonOffsetClamp(GLfloat factor, GLfloat units, GLfloat cl
                                         units, clamp));
         if (isCallValid)
         {
-            ContextLocalPolygonOffsetClamp(context, factor, units, clamp);
+            ContextPrivatePolygonOffsetClamp(context, factor, units, clamp);
         }
         ANGLE_CAPTURE_GL(PolygonOffsetClamp, isCallValid, context, factor, units, clamp);
     }

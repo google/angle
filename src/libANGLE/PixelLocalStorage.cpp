@@ -14,7 +14,7 @@
 #include "common/FixedVector.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Framebuffer.h"
-#include "libANGLE/context_local_call_gles_autogen.h"
+#include "libANGLE/context_private_call_gles_autogen.h"
 #include "libANGLE/renderer/ContextImpl.h"
 #include "libANGLE/renderer/TextureImpl.h"
 
@@ -66,7 +66,7 @@ class ScopedDisableScissor : angle::NonCopyable
     {
         if (mScissorTestEnabled)
         {
-            ContextLocalDisable(mContext, GL_SCISSOR_TEST);
+            ContextPrivateDisable(mContext, GL_SCISSOR_TEST);
         }
     }
 
@@ -74,7 +74,7 @@ class ScopedDisableScissor : angle::NonCopyable
     {
         if (mScissorTestEnabled)
         {
-            ContextLocalEnable(mContext, GL_SCISSOR_TEST);
+            ContextPrivateEnable(mContext, GL_SCISSOR_TEST);
         }
     }
 
@@ -94,7 +94,7 @@ class ScopedEnableColorMask : angle::NonCopyable
         {
             std::array<bool, 4> &mask = mSavedColorMasks[0];
             state.getBlendStateExt().getColorMaskIndexed(0, &mask[0], &mask[1], &mask[2], &mask[3]);
-            ContextLocalColorMask(mContext, GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+            ContextPrivateColorMask(mContext, GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
         }
         else
         {
@@ -103,7 +103,7 @@ class ScopedEnableColorMask : angle::NonCopyable
                 std::array<bool, 4> &mask = mSavedColorMasks[i];
                 state.getBlendStateExt().getColorMaskIndexed(i, &mask[0], &mask[1], &mask[2],
                                                              &mask[3]);
-                ContextLocalColorMaski(mContext, i, GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+                ContextPrivateColorMaski(mContext, i, GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
             }
         }
     }
@@ -113,14 +113,14 @@ class ScopedEnableColorMask : angle::NonCopyable
         if (!mContext->getExtensions().drawBuffersIndexedAny())
         {
             const std::array<bool, 4> &mask = mSavedColorMasks[0];
-            ContextLocalColorMask(mContext, mask[0], mask[1], mask[2], mask[3]);
+            ContextPrivateColorMask(mContext, mask[0], mask[1], mask[2], mask[3]);
         }
         else
         {
             for (int i = 0; i < mNumDrawBuffers; ++i)
             {
                 const std::array<bool, 4> &mask = mSavedColorMasks[i];
-                ContextLocalColorMaski(mContext, i, mask[0], mask[1], mask[2], mask[3]);
+                ContextPrivateColorMaski(mContext, i, mask[0], mask[1], mask[2], mask[3]);
             }
         }
     }
@@ -852,14 +852,14 @@ class PixelLocalStorageFramebufferFetch : public PixelLocalStorage
             ASSERT(caps.maxColorAttachmentsWithActivePixelLocalStorage == 0);
             if (state.isBlendEnabled())
             {
-                ContextLocalDisable(context, GL_BLEND);
+                ContextPrivateDisable(context, GL_BLEND);
                 mBlendsToReEnable.set(0);
             }
             std::array<bool, 4> &mask = mSavedColorMasks[0];
             state.getBlendStateExt().getColorMaskIndexed(0, &mask[0], &mask[1], &mask[2], &mask[3]);
             if (!(mask[0] && mask[1] && mask[2] && mask[3]))
             {
-                ContextLocalColorMask(context, GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+                ContextPrivateColorMask(context, GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
                 mColorMasksToRestore.set(0);
             }
         }
@@ -883,7 +883,7 @@ class PixelLocalStorageFramebufferFetch : public PixelLocalStorage
                 // Ensure blend and color mask are disabled for this draw buffer.
                 if (state.isBlendEnabledIndexed(drawBufferIdx))
                 {
-                    ContextLocalDisablei(context, GL_BLEND, drawBufferIdx);
+                    ContextPrivateDisablei(context, GL_BLEND, drawBufferIdx);
                     mBlendsToReEnable.set(drawBufferIdx);
                 }
                 std::array<bool, 4> &mask = mSavedColorMasks[drawBufferIdx];
@@ -891,8 +891,8 @@ class PixelLocalStorageFramebufferFetch : public PixelLocalStorage
                                                              &mask[2], &mask[3]);
                 if (!(mask[0] && mask[1] && mask[2] && mask[3]))
                 {
-                    ContextLocalColorMaski(context, drawBufferIdx, GL_TRUE, GL_TRUE, GL_TRUE,
-                                           GL_TRUE);
+                    ContextPrivateColorMaski(context, drawBufferIdx, GL_TRUE, GL_TRUE, GL_TRUE,
+                                             GL_TRUE);
                     mColorMasksToRestore.set(drawBufferIdx);
                 }
             }
@@ -961,12 +961,12 @@ class PixelLocalStorageFramebufferFetch : public PixelLocalStorage
             // change while pixel local storage was active.
             if (mBlendsToReEnable[0])
             {
-                ContextLocalEnable(context, GL_BLEND);
+                ContextPrivateEnable(context, GL_BLEND);
             }
             if (mColorMasksToRestore[0])
             {
                 const std::array<bool, 4> &mask = mSavedColorMasks[0];
-                ContextLocalColorMask(context, mask[0], mask[1], mask[2], mask[3]);
+                ContextPrivateColorMask(context, mask[0], mask[1], mask[2], mask[3]);
             }
         }
 
@@ -986,13 +986,13 @@ class PixelLocalStorageFramebufferFetch : public PixelLocalStorage
                 // these did not change while pixel local storage was active.
                 if (mBlendsToReEnable[drawBufferIdx])
                 {
-                    ContextLocalEnablei(context, GL_BLEND, drawBufferIdx);
+                    ContextPrivateEnablei(context, GL_BLEND, drawBufferIdx);
                 }
                 if (mColorMasksToRestore[drawBufferIdx])
                 {
                     const std::array<bool, 4> &mask = mSavedColorMasks[drawBufferIdx];
-                    ContextLocalColorMaski(context, drawBufferIdx, mask[0], mask[1], mask[2],
-                                           mask[3]);
+                    ContextPrivateColorMaski(context, drawBufferIdx, mask[0], mask[1], mask[2],
+                                             mask[3]);
                 }
             }
         }

@@ -317,8 +317,8 @@ libangle_headers = [
   "src/libANGLE/VertexAttribute.inc",
   "src/libANGLE/angletypes.h",
   "src/libANGLE/angletypes.inc",
-  "src/libANGLE/context_local_call_gles_autogen.h",
-  "src/libANGLE/context_local_call_gl_autogen.h",
+  "src/libANGLE/context_private_call_gles_autogen.h",
+  "src/libANGLE/context_private_call_gl_autogen.h",
   "src/libANGLE/entry_points_utils.cpp",
   "src/libANGLE/entry_points_utils.h",
   "src/libANGLE/features.h",
@@ -446,7 +446,7 @@ libangle_sources = [
   "src/libANGLE/VertexArray.cpp",
   "src/libANGLE/VertexAttribute.cpp",
   "src/libANGLE/angletypes.cpp",
-  "src/libANGLE/context_local_call_gles.cpp",
+  "src/libANGLE/context_private_call_gles.cpp",
   "src/libANGLE/es3_copy_conversion_table_autogen.cpp",
   "src/libANGLE/format_map_autogen.cpp",
   "src/libANGLE/format_map_desktop.cpp",
@@ -509,7 +509,7 @@ cl_includes = [
 
 libangle_gl_sources = [
   "src/libANGLE/Context_gl.cpp",
-  "src/libANGLE/context_local_call_gl.cpp",
+  "src/libANGLE/context_private_call_gl.cpp",
   "src/libANGLE/validationGL1.cpp",
   "src/libANGLE/validationGL2.cpp",
   "src/libANGLE/validationGL3.cpp",

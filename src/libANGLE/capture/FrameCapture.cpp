@@ -3877,7 +3877,7 @@ void CaptureShareGroupMidExecutionSetup(
     if (currentUnpackState.alignment != 1)
     {
         cap(CapturePixelStorei(replayState, true, GL_UNPACK_ALIGNMENT, 1));
-        replayState.getMutableLocalStateForCapture()->setUnpackAlignment(1);
+        replayState.getMutablePrivateStateForCapture()->setUnpackAlignment(1);
     }
 
     // Capture Texture setup and data.
@@ -4538,7 +4538,7 @@ void CaptureShareGroupMidExecutionSetup(
     if (currentUnpackState.alignment != contextUnpackAlignment)
     {
         cap(CapturePixelStorei(replayState, true, GL_UNPACK_ALIGNMENT, contextUnpackAlignment));
-        replayState.getMutableLocalStateForCapture()->setUnpackAlignment(contextUnpackAlignment);
+        replayState.getMutablePrivateStateForCapture()->setUnpackAlignment(contextUnpackAlignment);
     }
 }
 
@@ -4676,7 +4676,7 @@ void CaptureMidExecutionSetup(const gl::Context *context,
     if (currentUnpackState.alignment != 1)
     {
         cap(CapturePixelStorei(replayState, true, GL_UNPACK_ALIGNMENT, 1));
-        replayState.getMutableLocalStateForCapture()->setUnpackAlignment(1);
+        replayState.getMutablePrivateStateForCapture()->setUnpackAlignment(1);
     }
 
     // Capture Texture setup and data.
@@ -4700,7 +4700,7 @@ void CaptureMidExecutionSetup(const gl::Context *context,
                 {
                     cap(CaptureActiveTexture(replayState, true,
                                              GL_TEXTURE0 + static_cast<GLenum>(bindingIndex)));
-                    replayState.getMutableLocalStateForCapture()->setActiveSampler(
+                    replayState.getMutablePrivateStateForCapture()->setActiveSampler(
                         static_cast<unsigned int>(bindingIndex));
                 }
 
@@ -4726,7 +4726,8 @@ void CaptureMidExecutionSetup(const gl::Context *context,
     {
         cap(CaptureActiveTexture(replayState, true,
                                  GL_TEXTURE0 + static_cast<GLenum>(apiState.getActiveSampler())));
-        replayState.getMutableLocalStateForCapture()->setActiveSampler(apiState.getActiveSampler());
+        replayState.getMutablePrivateStateForCapture()->setActiveSampler(
+            apiState.getActiveSampler());
     }
 
     // Set Renderbuffer binding.
@@ -5539,7 +5540,7 @@ void CaptureMidExecutionSetup(const gl::Context *context,
     if (currentUnpackState.alignment != contextUnpackAlignment)
     {
         cap(CapturePixelStorei(replayState, true, GL_UNPACK_ALIGNMENT, contextUnpackAlignment));
-        replayState.getMutableLocalStateForCapture()->setUnpackAlignment(contextUnpackAlignment);
+        replayState.getMutablePrivateStateForCapture()->setUnpackAlignment(contextUnpackAlignment);
     }
 
     if (validationEnabled)

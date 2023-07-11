@@ -15,7 +15,7 @@
 #include "libANGLE/Context.h"
 #include "libANGLE/Context.inl.h"
 #include "libANGLE/capture/capture_gles_1_0_autogen.h"
-#include "libANGLE/context_local_call_gles_autogen.h"
+#include "libANGLE/context_private_call_gles_autogen.h"
 #include "libANGLE/entry_points_utils.h"
 #include "libANGLE/validationES1.h"
 #include "libGLESv2/global_state.h"
@@ -38,7 +38,7 @@ void GL_APIENTRY GL_AlphaFunc(GLenum func, GLfloat ref)
               ValidateAlphaFunc(context, angle::EntryPoint::GLAlphaFunc, funcPacked, ref)));
         if (isCallValid)
         {
-            ContextLocalAlphaFunc(context, funcPacked, ref);
+            ContextPrivateAlphaFunc(context, funcPacked, ref);
         }
         ANGLE_CAPTURE_GL(AlphaFunc, isCallValid, context, funcPacked, ref);
     }
@@ -64,7 +64,7 @@ void GL_APIENTRY GL_AlphaFuncx(GLenum func, GLfixed ref)
               ValidateAlphaFuncx(context, angle::EntryPoint::GLAlphaFuncx, funcPacked, ref)));
         if (isCallValid)
         {
-            ContextLocalAlphaFuncx(context, funcPacked, ref);
+            ContextPrivateAlphaFuncx(context, funcPacked, ref);
         }
         ANGLE_CAPTURE_GL(AlphaFuncx, isCallValid, context, funcPacked, ref);
     }
@@ -91,7 +91,7 @@ void GL_APIENTRY GL_ClearColorx(GLfixed red, GLfixed green, GLfixed blue, GLfixe
                                   alpha)));
         if (isCallValid)
         {
-            ContextLocalClearColorx(context, red, green, blue, alpha);
+            ContextPrivateClearColorx(context, red, green, blue, alpha);
         }
         ANGLE_CAPTURE_GL(ClearColorx, isCallValid, context, red, green, blue, alpha);
     }
@@ -115,7 +115,7 @@ void GL_APIENTRY GL_ClearDepthx(GLfixed depth)
               ValidateClearDepthx(context, angle::EntryPoint::GLClearDepthx, depth)));
         if (isCallValid)
         {
-            ContextLocalClearDepthx(context, depth);
+            ContextPrivateClearDepthx(context, depth);
         }
         ANGLE_CAPTURE_GL(ClearDepthx, isCallValid, context, depth);
     }
@@ -167,7 +167,7 @@ void GL_APIENTRY GL_ClipPlanef(GLenum p, const GLfloat *eqn)
               ValidateClipPlanef(context, angle::EntryPoint::GLClipPlanef, p, eqn)));
         if (isCallValid)
         {
-            ContextLocalClipPlanef(context, p, eqn);
+            ContextPrivateClipPlanef(context, p, eqn);
         }
         ANGLE_CAPTURE_GL(ClipPlanef, isCallValid, context, p, eqn);
     }
@@ -192,7 +192,7 @@ void GL_APIENTRY GL_ClipPlanex(GLenum plane, const GLfixed *equation)
               ValidateClipPlanex(context, angle::EntryPoint::GLClipPlanex, plane, equation)));
         if (isCallValid)
         {
-            ContextLocalClipPlanex(context, plane, equation);
+            ContextPrivateClipPlanex(context, plane, equation);
         }
         ANGLE_CAPTURE_GL(ClipPlanex, isCallValid, context, plane, equation);
     }
@@ -217,7 +217,7 @@ void GL_APIENTRY GL_Color4f(GLfloat red, GLfloat green, GLfloat blue, GLfloat al
               ValidateColor4f(context, angle::EntryPoint::GLColor4f, red, green, blue, alpha)));
         if (isCallValid)
         {
-            ContextLocalColor4f(context, red, green, blue, alpha);
+            ContextPrivateColor4f(context, red, green, blue, alpha);
         }
         ANGLE_CAPTURE_GL(Color4f, isCallValid, context, red, green, blue, alpha);
     }
@@ -242,7 +242,7 @@ void GL_APIENTRY GL_Color4ub(GLubyte red, GLubyte green, GLubyte blue, GLubyte a
               ValidateColor4ub(context, angle::EntryPoint::GLColor4ub, red, green, blue, alpha)));
         if (isCallValid)
         {
-            ContextLocalColor4ub(context, red, green, blue, alpha);
+            ContextPrivateColor4ub(context, red, green, blue, alpha);
         }
         ANGLE_CAPTURE_GL(Color4ub, isCallValid, context, red, green, blue, alpha);
     }
@@ -267,7 +267,7 @@ void GL_APIENTRY GL_Color4x(GLfixed red, GLfixed green, GLfixed blue, GLfixed al
               ValidateColor4x(context, angle::EntryPoint::GLColor4x, red, green, blue, alpha)));
         if (isCallValid)
         {
-            ContextLocalColor4x(context, red, green, blue, alpha);
+            ContextPrivateColor4x(context, red, green, blue, alpha);
         }
         ANGLE_CAPTURE_GL(Color4x, isCallValid, context, red, green, blue, alpha);
     }
@@ -321,7 +321,7 @@ void GL_APIENTRY GL_DepthRangex(GLfixed n, GLfixed f)
               ValidateDepthRangex(context, angle::EntryPoint::GLDepthRangex, n, f)));
         if (isCallValid)
         {
-            ContextLocalDepthRangex(context, n, f);
+            ContextPrivateDepthRangex(context, n, f);
         }
         ANGLE_CAPTURE_GL(DepthRangex, isCallValid, context, n, f);
     }
@@ -400,7 +400,7 @@ void GL_APIENTRY GL_Fogf(GLenum pname, GLfloat param)
               ValidateFogf(context, angle::EntryPoint::GLFogf, pname, param)));
         if (isCallValid)
         {
-            ContextLocalFogf(context, pname, param);
+            ContextPrivateFogf(context, pname, param);
         }
         ANGLE_CAPTURE_GL(Fogf, isCallValid, context, pname, param);
     }
@@ -425,7 +425,7 @@ void GL_APIENTRY GL_Fogfv(GLenum pname, const GLfloat *params)
               ValidateFogfv(context, angle::EntryPoint::GLFogfv, pname, params)));
         if (isCallValid)
         {
-            ContextLocalFogfv(context, pname, params);
+            ContextPrivateFogfv(context, pname, params);
         }
         ANGLE_CAPTURE_GL(Fogfv, isCallValid, context, pname, params);
     }
@@ -450,7 +450,7 @@ void GL_APIENTRY GL_Fogx(GLenum pname, GLfixed param)
               ValidateFogx(context, angle::EntryPoint::GLFogx, pname, param)));
         if (isCallValid)
         {
-            ContextLocalFogx(context, pname, param);
+            ContextPrivateFogx(context, pname, param);
         }
         ANGLE_CAPTURE_GL(Fogx, isCallValid, context, pname, param);
     }
@@ -475,7 +475,7 @@ void GL_APIENTRY GL_Fogxv(GLenum pname, const GLfixed *param)
               ValidateFogxv(context, angle::EntryPoint::GLFogxv, pname, param)));
         if (isCallValid)
         {
-            ContextLocalFogxv(context, pname, param);
+            ContextPrivateFogxv(context, pname, param);
         }
         ANGLE_CAPTURE_GL(Fogxv, isCallValid, context, pname, param);
     }
@@ -500,7 +500,7 @@ void GL_APIENTRY GL_Frustumf(GLfloat l, GLfloat r, GLfloat b, GLfloat t, GLfloat
               ValidateFrustumf(context, angle::EntryPoint::GLFrustumf, l, r, b, t, n, f)));
         if (isCallValid)
         {
-            ContextLocalFrustumf(context, l, r, b, t, n, f);
+            ContextPrivateFrustumf(context, l, r, b, t, n, f);
         }
         ANGLE_CAPTURE_GL(Frustumf, isCallValid, context, l, r, b, t, n, f);
     }
@@ -526,7 +526,7 @@ void GL_APIENTRY GL_Frustumx(GLfixed l, GLfixed r, GLfixed b, GLfixed t, GLfixed
               ValidateFrustumx(context, angle::EntryPoint::GLFrustumx, l, r, b, t, n, f)));
         if (isCallValid)
         {
-            ContextLocalFrustumx(context, l, r, b, t, n, f);
+            ContextPrivateFrustumx(context, l, r, b, t, n, f);
         }
         ANGLE_CAPTURE_GL(Frustumx, isCallValid, context, l, r, b, t, n, f);
     }
@@ -550,7 +550,7 @@ void GL_APIENTRY GL_GetClipPlanef(GLenum plane, GLfloat *equation)
              ValidateGetClipPlanef(context, angle::EntryPoint::GLGetClipPlanef, plane, equation));
         if (isCallValid)
         {
-            ContextLocalGetClipPlanef(context, plane, equation);
+            ContextPrivateGetClipPlanef(context, plane, equation);
         }
         ANGLE_CAPTURE_GL(GetClipPlanef, isCallValid, context, plane, equation);
     }
@@ -574,7 +574,7 @@ void GL_APIENTRY GL_GetClipPlanex(GLenum plane, GLfixed *equation)
              ValidateGetClipPlanex(context, angle::EntryPoint::GLGetClipPlanex, plane, equation));
         if (isCallValid)
         {
-            ContextLocalGetClipPlanex(context, plane, equation);
+            ContextPrivateGetClipPlanex(context, plane, equation);
         }
         ANGLE_CAPTURE_GL(GetClipPlanex, isCallValid, context, plane, equation);
     }
@@ -625,7 +625,7 @@ void GL_APIENTRY GL_GetLightfv(GLenum light, GLenum pname, GLfloat *params)
                                                          pnamePacked, params));
         if (isCallValid)
         {
-            ContextLocalGetLightfv(context, light, pnamePacked, params);
+            ContextPrivateGetLightfv(context, light, pnamePacked, params);
         }
         ANGLE_CAPTURE_GL(GetLightfv, isCallValid, context, light, pnamePacked, params);
     }
@@ -651,7 +651,7 @@ void GL_APIENTRY GL_GetLightxv(GLenum light, GLenum pname, GLfixed *params)
                                                          pnamePacked, params));
         if (isCallValid)
         {
-            ContextLocalGetLightxv(context, light, pnamePacked, params);
+            ContextPrivateGetLightxv(context, light, pnamePacked, params);
         }
         ANGLE_CAPTURE_GL(GetLightxv, isCallValid, context, light, pnamePacked, params);
     }
@@ -678,7 +678,7 @@ void GL_APIENTRY GL_GetMaterialfv(GLenum face, GLenum pname, GLfloat *params)
                                                                pnamePacked, params));
         if (isCallValid)
         {
-            ContextLocalGetMaterialfv(context, face, pnamePacked, params);
+            ContextPrivateGetMaterialfv(context, face, pnamePacked, params);
         }
         ANGLE_CAPTURE_GL(GetMaterialfv, isCallValid, context, face, pnamePacked, params);
     }
@@ -705,7 +705,7 @@ void GL_APIENTRY GL_GetMaterialxv(GLenum face, GLenum pname, GLfixed *params)
                                                                pnamePacked, params));
         if (isCallValid)
         {
-            ContextLocalGetMaterialxv(context, face, pnamePacked, params);
+            ContextPrivateGetMaterialxv(context, face, pnamePacked, params);
         }
         ANGLE_CAPTURE_GL(GetMaterialxv, isCallValid, context, face, pnamePacked, params);
     }
@@ -733,7 +733,7 @@ void GL_APIENTRY GL_GetTexEnvfv(GLenum target, GLenum pname, GLfloat *params)
                                                                targetPacked, pnamePacked, params));
         if (isCallValid)
         {
-            ContextLocalGetTexEnvfv(context, targetPacked, pnamePacked, params);
+            ContextPrivateGetTexEnvfv(context, targetPacked, pnamePacked, params);
         }
         ANGLE_CAPTURE_GL(GetTexEnvfv, isCallValid, context, targetPacked, pnamePacked, params);
     }
@@ -761,7 +761,7 @@ void GL_APIENTRY GL_GetTexEnviv(GLenum target, GLenum pname, GLint *params)
                                                                targetPacked, pnamePacked, params));
         if (isCallValid)
         {
-            ContextLocalGetTexEnviv(context, targetPacked, pnamePacked, params);
+            ContextPrivateGetTexEnviv(context, targetPacked, pnamePacked, params);
         }
         ANGLE_CAPTURE_GL(GetTexEnviv, isCallValid, context, targetPacked, pnamePacked, params);
     }
@@ -789,7 +789,7 @@ void GL_APIENTRY GL_GetTexEnvxv(GLenum target, GLenum pname, GLfixed *params)
                                                                targetPacked, pnamePacked, params));
         if (isCallValid)
         {
-            ContextLocalGetTexEnvxv(context, targetPacked, pnamePacked, params);
+            ContextPrivateGetTexEnvxv(context, targetPacked, pnamePacked, params);
         }
         ANGLE_CAPTURE_GL(GetTexEnvxv, isCallValid, context, targetPacked, pnamePacked, params);
     }
@@ -843,7 +843,7 @@ void GL_APIENTRY GL_LightModelf(GLenum pname, GLfloat param)
               ValidateLightModelf(context, angle::EntryPoint::GLLightModelf, pname, param)));
         if (isCallValid)
         {
-            ContextLocalLightModelf(context, pname, param);
+            ContextPrivateLightModelf(context, pname, param);
         }
         ANGLE_CAPTURE_GL(LightModelf, isCallValid, context, pname, param);
     }
@@ -868,7 +868,7 @@ void GL_APIENTRY GL_LightModelfv(GLenum pname, const GLfloat *params)
               ValidateLightModelfv(context, angle::EntryPoint::GLLightModelfv, pname, params)));
         if (isCallValid)
         {
-            ContextLocalLightModelfv(context, pname, params);
+            ContextPrivateLightModelfv(context, pname, params);
         }
         ANGLE_CAPTURE_GL(LightModelfv, isCallValid, context, pname, params);
     }
@@ -893,7 +893,7 @@ void GL_APIENTRY GL_LightModelx(GLenum pname, GLfixed param)
               ValidateLightModelx(context, angle::EntryPoint::GLLightModelx, pname, param)));
         if (isCallValid)
         {
-            ContextLocalLightModelx(context, pname, param);
+            ContextPrivateLightModelx(context, pname, param);
         }
         ANGLE_CAPTURE_GL(LightModelx, isCallValid, context, pname, param);
     }
@@ -918,7 +918,7 @@ void GL_APIENTRY GL_LightModelxv(GLenum pname, const GLfixed *param)
               ValidateLightModelxv(context, angle::EntryPoint::GLLightModelxv, pname, param)));
         if (isCallValid)
         {
-            ContextLocalLightModelxv(context, pname, param);
+            ContextPrivateLightModelxv(context, pname, param);
         }
         ANGLE_CAPTURE_GL(LightModelxv, isCallValid, context, pname, param);
     }
@@ -945,7 +945,7 @@ void GL_APIENTRY GL_Lightf(GLenum light, GLenum pname, GLfloat param)
               ValidateLightf(context, angle::EntryPoint::GLLightf, light, pnamePacked, param)));
         if (isCallValid)
         {
-            ContextLocalLightf(context, light, pnamePacked, param);
+            ContextPrivateLightf(context, light, pnamePacked, param);
         }
         ANGLE_CAPTURE_GL(Lightf, isCallValid, context, light, pnamePacked, param);
     }
@@ -972,7 +972,7 @@ void GL_APIENTRY GL_Lightfv(GLenum light, GLenum pname, const GLfloat *params)
               ValidateLightfv(context, angle::EntryPoint::GLLightfv, light, pnamePacked, params)));
         if (isCallValid)
         {
-            ContextLocalLightfv(context, light, pnamePacked, params);
+            ContextPrivateLightfv(context, light, pnamePacked, params);
         }
         ANGLE_CAPTURE_GL(Lightfv, isCallValid, context, light, pnamePacked, params);
     }
@@ -999,7 +999,7 @@ void GL_APIENTRY GL_Lightx(GLenum light, GLenum pname, GLfixed param)
               ValidateLightx(context, angle::EntryPoint::GLLightx, light, pnamePacked, param)));
         if (isCallValid)
         {
-            ContextLocalLightx(context, light, pnamePacked, param);
+            ContextPrivateLightx(context, light, pnamePacked, param);
         }
         ANGLE_CAPTURE_GL(Lightx, isCallValid, context, light, pnamePacked, param);
     }
@@ -1026,7 +1026,7 @@ void GL_APIENTRY GL_Lightxv(GLenum light, GLenum pname, const GLfixed *params)
               ValidateLightxv(context, angle::EntryPoint::GLLightxv, light, pnamePacked, params)));
         if (isCallValid)
         {
-            ContextLocalLightxv(context, light, pnamePacked, params);
+            ContextPrivateLightxv(context, light, pnamePacked, params);
         }
         ANGLE_CAPTURE_GL(Lightxv, isCallValid, context, light, pnamePacked, params);
     }
@@ -1050,7 +1050,7 @@ void GL_APIENTRY GL_LineWidthx(GLfixed width)
               ValidateLineWidthx(context, angle::EntryPoint::GLLineWidthx, width)));
         if (isCallValid)
         {
-            ContextLocalLineWidthx(context, width);
+            ContextPrivateLineWidthx(context, width);
         }
         ANGLE_CAPTURE_GL(LineWidthx, isCallValid, context, width);
     }
@@ -1074,7 +1074,7 @@ void GL_APIENTRY GL_LoadIdentity()
               ValidateLoadIdentity(context, angle::EntryPoint::GLLoadIdentity)));
         if (isCallValid)
         {
-            ContextLocalLoadIdentity(context);
+            ContextPrivateLoadIdentity(context);
         }
         ANGLE_CAPTURE_GL(LoadIdentity, isCallValid, context);
     }
@@ -1099,7 +1099,7 @@ void GL_APIENTRY GL_LoadMatrixf(const GLfloat *m)
               ValidateLoadMatrixf(context, angle::EntryPoint::GLLoadMatrixf, m)));
         if (isCallValid)
         {
-            ContextLocalLoadMatrixf(context, m);
+            ContextPrivateLoadMatrixf(context, m);
         }
         ANGLE_CAPTURE_GL(LoadMatrixf, isCallValid, context, m);
     }
@@ -1124,7 +1124,7 @@ void GL_APIENTRY GL_LoadMatrixx(const GLfixed *m)
               ValidateLoadMatrixx(context, angle::EntryPoint::GLLoadMatrixx, m)));
         if (isCallValid)
         {
-            ContextLocalLoadMatrixx(context, m);
+            ContextPrivateLoadMatrixx(context, m);
         }
         ANGLE_CAPTURE_GL(LoadMatrixx, isCallValid, context, m);
     }
@@ -1150,7 +1150,7 @@ void GL_APIENTRY GL_LogicOp(GLenum opcode)
               ValidateLogicOp(context, angle::EntryPoint::GLLogicOp, opcodePacked)));
         if (isCallValid)
         {
-            ContextLocalLogicOp(context, opcodePacked);
+            ContextPrivateLogicOp(context, opcodePacked);
         }
         ANGLE_CAPTURE_GL(LogicOp, isCallValid, context, opcodePacked);
     }
@@ -1178,7 +1178,7 @@ void GL_APIENTRY GL_Materialf(GLenum face, GLenum pname, GLfloat param)
                                 param)));
         if (isCallValid)
         {
-            ContextLocalMaterialf(context, face, pnamePacked, param);
+            ContextPrivateMaterialf(context, face, pnamePacked, param);
         }
         ANGLE_CAPTURE_GL(Materialf, isCallValid, context, face, pnamePacked, param);
     }
@@ -1206,7 +1206,7 @@ void GL_APIENTRY GL_Materialfv(GLenum face, GLenum pname, const GLfloat *params)
                                  params)));
         if (isCallValid)
         {
-            ContextLocalMaterialfv(context, face, pnamePacked, params);
+            ContextPrivateMaterialfv(context, face, pnamePacked, params);
         }
         ANGLE_CAPTURE_GL(Materialfv, isCallValid, context, face, pnamePacked, params);
     }
@@ -1234,7 +1234,7 @@ void GL_APIENTRY GL_Materialx(GLenum face, GLenum pname, GLfixed param)
                                 param)));
         if (isCallValid)
         {
-            ContextLocalMaterialx(context, face, pnamePacked, param);
+            ContextPrivateMaterialx(context, face, pnamePacked, param);
         }
         ANGLE_CAPTURE_GL(Materialx, isCallValid, context, face, pnamePacked, param);
     }
@@ -1262,7 +1262,7 @@ void GL_APIENTRY GL_Materialxv(GLenum face, GLenum pname, const GLfixed *param)
                                  param)));
         if (isCallValid)
         {
-            ContextLocalMaterialxv(context, face, pnamePacked, param);
+            ContextPrivateMaterialxv(context, face, pnamePacked, param);
         }
         ANGLE_CAPTURE_GL(Materialxv, isCallValid, context, face, pnamePacked, param);
     }
@@ -1288,7 +1288,7 @@ void GL_APIENTRY GL_MatrixMode(GLenum mode)
               ValidateMatrixMode(context, angle::EntryPoint::GLMatrixMode, modePacked)));
         if (isCallValid)
         {
-            ContextLocalMatrixMode(context, modePacked);
+            ContextPrivateMatrixMode(context, modePacked);
         }
         ANGLE_CAPTURE_GL(MatrixMode, isCallValid, context, modePacked);
     }
@@ -1313,7 +1313,7 @@ void GL_APIENTRY GL_MultMatrixf(const GLfloat *m)
               ValidateMultMatrixf(context, angle::EntryPoint::GLMultMatrixf, m)));
         if (isCallValid)
         {
-            ContextLocalMultMatrixf(context, m);
+            ContextPrivateMultMatrixf(context, m);
         }
         ANGLE_CAPTURE_GL(MultMatrixf, isCallValid, context, m);
     }
@@ -1338,7 +1338,7 @@ void GL_APIENTRY GL_MultMatrixx(const GLfixed *m)
               ValidateMultMatrixx(context, angle::EntryPoint::GLMultMatrixx, m)));
         if (isCallValid)
         {
-            ContextLocalMultMatrixx(context, m);
+            ContextPrivateMultMatrixx(context, m);
         }
         ANGLE_CAPTURE_GL(MultMatrixx, isCallValid, context, m);
     }
@@ -1364,7 +1364,7 @@ void GL_APIENTRY GL_MultiTexCoord4f(GLenum target, GLfloat s, GLfloat t, GLfloat
                                       r, q)));
         if (isCallValid)
         {
-            ContextLocalMultiTexCoord4f(context, target, s, t, r, q);
+            ContextPrivateMultiTexCoord4f(context, target, s, t, r, q);
         }
         ANGLE_CAPTURE_GL(MultiTexCoord4f, isCallValid, context, target, s, t, r, q);
     }
@@ -1391,7 +1391,7 @@ void GL_APIENTRY GL_MultiTexCoord4x(GLenum texture, GLfixed s, GLfixed t, GLfixe
                                       r, q)));
         if (isCallValid)
         {
-            ContextLocalMultiTexCoord4x(context, texture, s, t, r, q);
+            ContextPrivateMultiTexCoord4x(context, texture, s, t, r, q);
         }
         ANGLE_CAPTURE_GL(MultiTexCoord4x, isCallValid, context, texture, s, t, r, q);
     }
@@ -1415,7 +1415,7 @@ void GL_APIENTRY GL_Normal3f(GLfloat nx, GLfloat ny, GLfloat nz)
               ValidateNormal3f(context, angle::EntryPoint::GLNormal3f, nx, ny, nz)));
         if (isCallValid)
         {
-            ContextLocalNormal3f(context, nx, ny, nz);
+            ContextPrivateNormal3f(context, nx, ny, nz);
         }
         ANGLE_CAPTURE_GL(Normal3f, isCallValid, context, nx, ny, nz);
     }
@@ -1440,7 +1440,7 @@ void GL_APIENTRY GL_Normal3x(GLfixed nx, GLfixed ny, GLfixed nz)
               ValidateNormal3x(context, angle::EntryPoint::GLNormal3x, nx, ny, nz)));
         if (isCallValid)
         {
-            ContextLocalNormal3x(context, nx, ny, nz);
+            ContextPrivateNormal3x(context, nx, ny, nz);
         }
         ANGLE_CAPTURE_GL(Normal3x, isCallValid, context, nx, ny, nz);
     }
@@ -1494,7 +1494,7 @@ void GL_APIENTRY GL_Orthof(GLfloat l, GLfloat r, GLfloat b, GLfloat t, GLfloat n
               ValidateOrthof(context, angle::EntryPoint::GLOrthof, l, r, b, t, n, f)));
         if (isCallValid)
         {
-            ContextLocalOrthof(context, l, r, b, t, n, f);
+            ContextPrivateOrthof(context, l, r, b, t, n, f);
         }
         ANGLE_CAPTURE_GL(Orthof, isCallValid, context, l, r, b, t, n, f);
     }
@@ -1520,7 +1520,7 @@ void GL_APIENTRY GL_Orthox(GLfixed l, GLfixed r, GLfixed b, GLfixed t, GLfixed n
               ValidateOrthox(context, angle::EntryPoint::GLOrthox, l, r, b, t, n, f)));
         if (isCallValid)
         {
-            ContextLocalOrthox(context, l, r, b, t, n, f);
+            ContextPrivateOrthox(context, l, r, b, t, n, f);
         }
         ANGLE_CAPTURE_GL(Orthox, isCallValid, context, l, r, b, t, n, f);
     }
@@ -1547,7 +1547,7 @@ void GL_APIENTRY GL_PointParameterf(GLenum pname, GLfloat param)
                                       param)));
         if (isCallValid)
         {
-            ContextLocalPointParameterf(context, pnamePacked, param);
+            ContextPrivatePointParameterf(context, pnamePacked, param);
         }
         ANGLE_CAPTURE_GL(PointParameterf, isCallValid, context, pnamePacked, param);
     }
@@ -1574,7 +1574,7 @@ void GL_APIENTRY GL_PointParameterfv(GLenum pname, const GLfloat *params)
                                        params)));
         if (isCallValid)
         {
-            ContextLocalPointParameterfv(context, pnamePacked, params);
+            ContextPrivatePointParameterfv(context, pnamePacked, params);
         }
         ANGLE_CAPTURE_GL(PointParameterfv, isCallValid, context, pnamePacked, params);
     }
@@ -1601,7 +1601,7 @@ void GL_APIENTRY GL_PointParameterx(GLenum pname, GLfixed param)
                                       param)));
         if (isCallValid)
         {
-            ContextLocalPointParameterx(context, pnamePacked, param);
+            ContextPrivatePointParameterx(context, pnamePacked, param);
         }
         ANGLE_CAPTURE_GL(PointParameterx, isCallValid, context, pnamePacked, param);
     }
@@ -1628,7 +1628,7 @@ void GL_APIENTRY GL_PointParameterxv(GLenum pname, const GLfixed *params)
                                        params)));
         if (isCallValid)
         {
-            ContextLocalPointParameterxv(context, pnamePacked, params);
+            ContextPrivatePointParameterxv(context, pnamePacked, params);
         }
         ANGLE_CAPTURE_GL(PointParameterxv, isCallValid, context, pnamePacked, params);
     }
@@ -1652,7 +1652,7 @@ void GL_APIENTRY GL_PointSize(GLfloat size)
               ValidatePointSize(context, angle::EntryPoint::GLPointSize, size)));
         if (isCallValid)
         {
-            ContextLocalPointSize(context, size);
+            ContextPrivatePointSize(context, size);
         }
         ANGLE_CAPTURE_GL(PointSize, isCallValid, context, size);
     }
@@ -1676,7 +1676,7 @@ void GL_APIENTRY GL_PointSizex(GLfixed size)
               ValidatePointSizex(context, angle::EntryPoint::GLPointSizex, size)));
         if (isCallValid)
         {
-            ContextLocalPointSizex(context, size);
+            ContextPrivatePointSizex(context, size);
         }
         ANGLE_CAPTURE_GL(PointSizex, isCallValid, context, size);
     }
@@ -1700,7 +1700,7 @@ void GL_APIENTRY GL_PolygonOffsetx(GLfixed factor, GLfixed units)
              ValidatePolygonOffsetx(context, angle::EntryPoint::GLPolygonOffsetx, factor, units));
         if (isCallValid)
         {
-            ContextLocalPolygonOffsetx(context, factor, units);
+            ContextPrivatePolygonOffsetx(context, factor, units);
         }
         ANGLE_CAPTURE_GL(PolygonOffsetx, isCallValid, context, factor, units);
     }
@@ -1724,7 +1724,7 @@ void GL_APIENTRY GL_PopMatrix()
               ValidatePopMatrix(context, angle::EntryPoint::GLPopMatrix)));
         if (isCallValid)
         {
-            ContextLocalPopMatrix(context);
+            ContextPrivatePopMatrix(context);
         }
         ANGLE_CAPTURE_GL(PopMatrix, isCallValid, context);
     }
@@ -1748,7 +1748,7 @@ void GL_APIENTRY GL_PushMatrix()
               ValidatePushMatrix(context, angle::EntryPoint::GLPushMatrix)));
         if (isCallValid)
         {
-            ContextLocalPushMatrix(context);
+            ContextPrivatePushMatrix(context);
         }
         ANGLE_CAPTURE_GL(PushMatrix, isCallValid, context);
     }
@@ -1773,7 +1773,7 @@ void GL_APIENTRY GL_Rotatef(GLfloat angle, GLfloat x, GLfloat y, GLfloat z)
               ValidateRotatef(context, angle::EntryPoint::GLRotatef, angle, x, y, z)));
         if (isCallValid)
         {
-            ContextLocalRotatef(context, angle, x, y, z);
+            ContextPrivateRotatef(context, angle, x, y, z);
         }
         ANGLE_CAPTURE_GL(Rotatef, isCallValid, context, angle, x, y, z);
     }
@@ -1798,7 +1798,7 @@ void GL_APIENTRY GL_Rotatex(GLfixed angle, GLfixed x, GLfixed y, GLfixed z)
               ValidateRotatex(context, angle::EntryPoint::GLRotatex, angle, x, y, z)));
         if (isCallValid)
         {
-            ContextLocalRotatex(context, angle, x, y, z);
+            ContextPrivateRotatex(context, angle, x, y, z);
         }
         ANGLE_CAPTURE_GL(Rotatex, isCallValid, context, angle, x, y, z);
     }
@@ -1824,7 +1824,7 @@ void GL_APIENTRY GL_SampleCoveragex(GLclampx value, GLboolean invert)
                                       invert)));
         if (isCallValid)
         {
-            ContextLocalSampleCoveragex(context, value, invert);
+            ContextPrivateSampleCoveragex(context, value, invert);
         }
         ANGLE_CAPTURE_GL(SampleCoveragex, isCallValid, context, value, invert);
     }
@@ -1848,7 +1848,7 @@ void GL_APIENTRY GL_Scalef(GLfloat x, GLfloat y, GLfloat z)
               ValidateScalef(context, angle::EntryPoint::GLScalef, x, y, z)));
         if (isCallValid)
         {
-            ContextLocalScalef(context, x, y, z);
+            ContextPrivateScalef(context, x, y, z);
         }
         ANGLE_CAPTURE_GL(Scalef, isCallValid, context, x, y, z);
     }
@@ -1872,7 +1872,7 @@ void GL_APIENTRY GL_Scalex(GLfixed x, GLfixed y, GLfixed z)
               ValidateScalex(context, angle::EntryPoint::GLScalex, x, y, z)));
         if (isCallValid)
         {
-            ContextLocalScalex(context, x, y, z);
+            ContextPrivateScalex(context, x, y, z);
         }
         ANGLE_CAPTURE_GL(Scalex, isCallValid, context, x, y, z);
     }
@@ -1898,7 +1898,7 @@ void GL_APIENTRY GL_ShadeModel(GLenum mode)
               ValidateShadeModel(context, angle::EntryPoint::GLShadeModel, modePacked)));
         if (isCallValid)
         {
-            ContextLocalShadeModel(context, modePacked);
+            ContextPrivateShadeModel(context, modePacked);
         }
         ANGLE_CAPTURE_GL(ShadeModel, isCallValid, context, modePacked);
     }
@@ -1957,7 +1957,7 @@ void GL_APIENTRY GL_TexEnvf(GLenum target, GLenum pname, GLfloat param)
                               param)));
         if (isCallValid)
         {
-            ContextLocalTexEnvf(context, targetPacked, pnamePacked, param);
+            ContextPrivateTexEnvf(context, targetPacked, pnamePacked, param);
         }
         ANGLE_CAPTURE_GL(TexEnvf, isCallValid, context, targetPacked, pnamePacked, param);
     }
@@ -1986,7 +1986,7 @@ void GL_APIENTRY GL_TexEnvfv(GLenum target, GLenum pname, const GLfloat *params)
                                params)));
         if (isCallValid)
         {
-            ContextLocalTexEnvfv(context, targetPacked, pnamePacked, params);
+            ContextPrivateTexEnvfv(context, targetPacked, pnamePacked, params);
         }
         ANGLE_CAPTURE_GL(TexEnvfv, isCallValid, context, targetPacked, pnamePacked, params);
     }
@@ -2015,7 +2015,7 @@ void GL_APIENTRY GL_TexEnvi(GLenum target, GLenum pname, GLint param)
                               param)));
         if (isCallValid)
         {
-            ContextLocalTexEnvi(context, targetPacked, pnamePacked, param);
+            ContextPrivateTexEnvi(context, targetPacked, pnamePacked, param);
         }
         ANGLE_CAPTURE_GL(TexEnvi, isCallValid, context, targetPacked, pnamePacked, param);
     }
@@ -2044,7 +2044,7 @@ void GL_APIENTRY GL_TexEnviv(GLenum target, GLenum pname, const GLint *params)
                                params)));
         if (isCallValid)
         {
-            ContextLocalTexEnviv(context, targetPacked, pnamePacked, params);
+            ContextPrivateTexEnviv(context, targetPacked, pnamePacked, params);
         }
         ANGLE_CAPTURE_GL(TexEnviv, isCallValid, context, targetPacked, pnamePacked, params);
     }
@@ -2073,7 +2073,7 @@ void GL_APIENTRY GL_TexEnvx(GLenum target, GLenum pname, GLfixed param)
                               param)));
         if (isCallValid)
         {
-            ContextLocalTexEnvx(context, targetPacked, pnamePacked, param);
+            ContextPrivateTexEnvx(context, targetPacked, pnamePacked, param);
         }
         ANGLE_CAPTURE_GL(TexEnvx, isCallValid, context, targetPacked, pnamePacked, param);
     }
@@ -2102,7 +2102,7 @@ void GL_APIENTRY GL_TexEnvxv(GLenum target, GLenum pname, const GLfixed *params)
                                params)));
         if (isCallValid)
         {
-            ContextLocalTexEnvxv(context, targetPacked, pnamePacked, params);
+            ContextPrivateTexEnvxv(context, targetPacked, pnamePacked, params);
         }
         ANGLE_CAPTURE_GL(TexEnvxv, isCallValid, context, targetPacked, pnamePacked, params);
     }
@@ -2181,7 +2181,7 @@ void GL_APIENTRY GL_Translatef(GLfloat x, GLfloat y, GLfloat z)
               ValidateTranslatef(context, angle::EntryPoint::GLTranslatef, x, y, z)));
         if (isCallValid)
         {
-            ContextLocalTranslatef(context, x, y, z);
+            ContextPrivateTranslatef(context, x, y, z);
         }
         ANGLE_CAPTURE_GL(Translatef, isCallValid, context, x, y, z);
     }
@@ -2206,7 +2206,7 @@ void GL_APIENTRY GL_Translatex(GLfixed x, GLfixed y, GLfixed z)
               ValidateTranslatex(context, angle::EntryPoint::GLTranslatex, x, y, z)));
         if (isCallValid)
         {
-            ContextLocalTranslatex(context, x, y, z);
+            ContextPrivateTranslatex(context, x, y, z);
         }
         ANGLE_CAPTURE_GL(Translatex, isCallValid, context, x, y, z);
     }

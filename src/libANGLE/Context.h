@@ -155,17 +155,17 @@ class StateCache final : angle::NonCopyable
     // 4. onVertexArrayStateChange.
     // 5. onVertexArrayBufferStateChange.
     // 6. onDrawFramebufferChange.
-    // 7. onContextLocalCapChange.
-    // 8. onContextLocalStencilStateChange.
-    // 9. onContextLocalDefaultVertexAttributeChange.
+    // 7. onContextPrivateCapChange.
+    // 8. onContextPrivateStencilStateChange.
+    // 9. onContextPrivateDefaultVertexAttributeChange.
     // 10. onActiveTextureChange.
     // 11. onQueryChange.
     // 12. onActiveTransformFeedbackChange.
     // 13. onUniformBufferStateChange.
-    // 14. onContextLocalColorMaskChange.
+    // 14. onContextPrivateColorMaskChange.
     // 15. onBufferBindingChange.
-    // 16. onContextLocalBlendFuncIndexedChange.
-    // 17. onContextLocalBlendEquationChange.
+    // 16. onContextPrivateBlendFuncIndexedChange.
+    // 17. onContextPrivateBlendEquationChange.
     intptr_t getBasicDrawStatesErrorString(const Context *context) const
     {
         if (mIsCachedBasicDrawStatesErrorValid &&
@@ -283,16 +283,16 @@ class StateCache final : angle::NonCopyable
     void onAtomicCounterBufferStateChange(Context *context);
     void onShaderStorageBufferStateChange(Context *context);
     void onBufferBindingChange(Context *context);
-    // The following state change notifications are only called from context-local state change
-    // functions.  They only affect the draw validation cache which is also context-local (i.e. not
-    // accessed by other contexts in the share group).  Note that context-local state change
+    // The following state change notifications are only called from context-private state change
+    // functions.  They only affect the draw validation cache which is also context-private (i.e.
+    // not accessed by other contexts in the share group).  Note that context-private state change
     // functions are called without holding the share group lock.
-    void onContextLocalCapChange(Context *context);
-    void onContextLocalColorMaskChange(Context *context);
-    void onContextLocalDefaultVertexAttributeChange(Context *context);
-    void onContextLocalBlendFuncIndexedChange(Context *context);
-    void onContextLocalBlendEquationChange(Context *context);
-    void onContextLocalStencilStateChange(Context *context);
+    void onContextPrivateCapChange(Context *context);
+    void onContextPrivateColorMaskChange(Context *context);
+    void onContextPrivateDefaultVertexAttributeChange(Context *context);
+    void onContextPrivateBlendFuncIndexedChange(Context *context);
+    void onContextPrivateBlendEquationChange(Context *context);
+    void onContextPrivateStencilStateChange(Context *context);
 
   private:
     // Cache update functions.
@@ -366,7 +366,7 @@ class StateCache final : angle::NonCopyable
 
     // mCachedBasicDrawStatesError* may be invalidated through numerous calls (see the comment on
     // getBasicDrawStatesErrorString), some of which may originate from other contexts (through the
-    // observer interface).  However, ContextLocal* helpers may also need to invalidate the draw
+    // observer interface).  However, ContextPrivate* helpers may also need to invalidate the draw
     // states, but they are called without holding the share group lock.  The following tracks
     // whether mCachedBasicDrawStatesError* values are valid and is accessed only by the context
     // itself.
@@ -573,23 +573,26 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     bool isGLES1() const;
 
     // To be used **only** directly by the entry points.
-    LocalState *getMutableLocalState() { return mState.getMutableLocalState(); }
+    PrivateState *getMutablePrivateState() { return mState.getMutablePrivateState(); }
     GLES1State *getMutableGLES1State() { return mState.getMutableGLES1State(); }
-    void onContextLocalCapChange() { mStateCache.onContextLocalCapChange(this); }
-    void onContextLocalColorMaskChange() { mStateCache.onContextLocalColorMaskChange(this); }
-    void onContextLocalDefaultVertexAttributeChange()
+    void onContextPrivateCapChange() { mStateCache.onContextPrivateCapChange(this); }
+    void onContextPrivateColorMaskChange() { mStateCache.onContextPrivateColorMaskChange(this); }
+    void onContextPrivateDefaultVertexAttributeChange()
     {
-        mStateCache.onContextLocalDefaultVertexAttributeChange(this);
+        mStateCache.onContextPrivateDefaultVertexAttributeChange(this);
     }
-    void onContextLocalBlendFuncIndexedChange()
+    void onContextPrivateBlendFuncIndexedChange()
     {
-        mStateCache.onContextLocalBlendFuncIndexedChange(this);
+        mStateCache.onContextPrivateBlendFuncIndexedChange(this);
     }
-    void onContextLocalBlendEquationChange()
+    void onContextPrivateBlendEquationChange()
     {
-        mStateCache.onContextLocalBlendEquationChange(this);
+        mStateCache.onContextPrivateBlendEquationChange(this);
     }
-    void onContextLocalStencilStateChange() { mStateCache.onContextLocalStencilStateChange(this); }
+    void onContextPrivateStencilStateChange()
+    {
+        mStateCache.onContextPrivateStencilStateChange(this);
+    }
 
     bool skipValidation() const
     {
@@ -725,9 +728,9 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
 
     // This function acts as glEnable(GL_COLOR_LOGIC_OP), but it's called from the GLES1 emulation
     // code to implement logicOp using the non-GLES1 functionality (i.e. GL_ANGLE_logic_op).  The
-    // ContextLocalEnable() entry point implementation cannot be used (as ContextLocal* functions
-    // are typically used by other frontend-emulated features) because it forwards this back to
-    // GLES1.
+    // ContextPrivateEnable() entry point implementation cannot be used (as ContextPrivate*
+    // functions are typically used by other frontend-emulated features) because it forwards this
+    // back to GLES1.
     void setLogicOpEnabledForGLES1(bool enabled);
 
     // Needed by capture serialization logic that works with a "const" Context pointer.

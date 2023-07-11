@@ -15,7 +15,7 @@
 #include "libANGLE/Context.h"
 #include "libANGLE/Context.inl.h"
 #include "libANGLE/capture/capture_gles_3_0_autogen.h"
-#include "libANGLE/context_local_call_gles_autogen.h"
+#include "libANGLE/context_private_call_gles_autogen.h"
 #include "libANGLE/entry_points_utils.h"
 #include "libANGLE/validationES3.h"
 #include "libGLESv2/global_state.h"
@@ -3067,7 +3067,7 @@ void GL_APIENTRY GL_VertexAttribI4i(GLuint index, GLint x, GLint y, GLint z, GLi
                                                     index, x, y, z, w));
         if (isCallValid)
         {
-            ContextLocalVertexAttribI4i(context, index, x, y, z, w);
+            ContextPrivateVertexAttribI4i(context, index, x, y, z, w);
         }
         ANGLE_CAPTURE_GL(VertexAttribI4i, isCallValid, context, index, x, y, z, w);
     }
@@ -3091,7 +3091,7 @@ void GL_APIENTRY GL_VertexAttribI4iv(GLuint index, const GLint *v)
              ValidateVertexAttribI4iv(context, angle::EntryPoint::GLVertexAttribI4iv, index, v));
         if (isCallValid)
         {
-            ContextLocalVertexAttribI4iv(context, index, v);
+            ContextPrivateVertexAttribI4iv(context, index, v);
         }
         ANGLE_CAPTURE_GL(VertexAttribI4iv, isCallValid, context, index, v);
     }
@@ -3115,7 +3115,7 @@ void GL_APIENTRY GL_VertexAttribI4ui(GLuint index, GLuint x, GLuint y, GLuint z,
                                                      index, x, y, z, w));
         if (isCallValid)
         {
-            ContextLocalVertexAttribI4ui(context, index, x, y, z, w);
+            ContextPrivateVertexAttribI4ui(context, index, x, y, z, w);
         }
         ANGLE_CAPTURE_GL(VertexAttribI4ui, isCallValid, context, index, x, y, z, w);
     }
@@ -3139,7 +3139,7 @@ void GL_APIENTRY GL_VertexAttribI4uiv(GLuint index, const GLuint *v)
              ValidateVertexAttribI4uiv(context, angle::EntryPoint::GLVertexAttribI4uiv, index, v));
         if (isCallValid)
         {
-            ContextLocalVertexAttribI4uiv(context, index, v);
+            ContextPrivateVertexAttribI4uiv(context, index, v);
         }
         ANGLE_CAPTURE_GL(VertexAttribI4uiv, isCallValid, context, index, v);
     }

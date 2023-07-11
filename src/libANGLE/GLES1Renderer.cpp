@@ -20,7 +20,7 @@
 #include "libANGLE/ResourceManager.h"
 #include "libANGLE/Shader.h"
 #include "libANGLE/State.h"
-#include "libANGLE/context_local_call_gles_autogen.h"
+#include "libANGLE/context_private_call_gles_autogen.h"
 #include "libANGLE/renderer/ContextImpl.h"
 
 namespace
@@ -288,10 +288,10 @@ angle::Result GLES1Renderer::prepareForDraw(PrimitiveMode mode,
 
     if (gles1State->isDirty(GLES1State::DIRTY_GLES1_LOGIC_OP) && hasLogicOpANGLE)
     {
-        // Note: ContextLocalEnable(GL_COLOR_LOGIC_OP) is not used because that entry point
+        // Note: ContextPrivateEnable(GL_COLOR_LOGIC_OP) is not used because that entry point
         // implementation forwards logicOp back to GLES1State.
         context->setLogicOpEnabledForGLES1(gles1State->mLogicOpEnabled);
-        ContextLocalLogicOpANGLE(context, gles1State->mLogicOp);
+        ContextPrivateLogicOpANGLE(context, gles1State->mLogicOp);
     }
     else if (hasFramebufferFetch)
     {
@@ -322,21 +322,21 @@ angle::Result GLES1Renderer::prepareForDraw(PrimitiveMode mode,
         if (!gles1State->isClientStateEnabled(ClientVertexArrayType::Normal))
         {
             const angle::Vector3 normal = gles1State->getCurrentNormal();
-            ContextLocalVertexAttrib3f(context, kNormalAttribIndex, normal.x(), normal.y(),
-                                       normal.z());
+            ContextPrivateVertexAttrib3f(context, kNormalAttribIndex, normal.x(), normal.y(),
+                                         normal.z());
         }
 
         if (!gles1State->isClientStateEnabled(ClientVertexArrayType::Color))
         {
             const ColorF color = gles1State->getCurrentColor();
-            ContextLocalVertexAttrib4f(context, kColorAttribIndex, color.red, color.green,
-                                       color.blue, color.alpha);
+            ContextPrivateVertexAttrib4f(context, kColorAttribIndex, color.red, color.green,
+                                         color.blue, color.alpha);
         }
 
         if (!gles1State->isClientStateEnabled(ClientVertexArrayType::PointSize))
         {
             GLfloat pointSize = gles1State->mPointParameters.pointSize;
-            ContextLocalVertexAttrib1f(context, kPointSizeAttribIndex, pointSize);
+            ContextPrivateVertexAttrib1f(context, kPointSizeAttribIndex, pointSize);
         }
 
         for (int i = 0; i < kTexUnitCount; i++)
@@ -344,8 +344,8 @@ angle::Result GLES1Renderer::prepareForDraw(PrimitiveMode mode,
             if (!gles1State->mTexCoordArrayEnabled[i])
             {
                 const TextureCoordF texcoord = gles1State->getCurrentTextureCoords(i);
-                ContextLocalVertexAttrib4f(context, kTextureCoordAttribIndexBase + i, texcoord.s,
-                                           texcoord.t, texcoord.r, texcoord.q);
+                ContextPrivateVertexAttrib4f(context, kTextureCoordAttribIndexBase + i, texcoord.s,
+                                             texcoord.t, texcoord.r, texcoord.q);
             }
         }
     }

@@ -329,14 +329,14 @@ ANGLE_INLINE void ActiveTexturesCache::set(size_t textureIndex, Texture *texture
     mTextures[textureIndex] = texture;
 }
 
-LocalState::LocalState(const EGLenum clientType,
-                       const Version &clientVersion,
-                       EGLint profileMask,
-                       bool debug,
-                       bool bindGeneratesResourceCHROMIUM,
-                       bool clientArraysEnabled,
-                       bool robustResourceInit,
-                       bool programBinaryCacheEnabled)
+PrivateState::PrivateState(const EGLenum clientType,
+                           const Version &clientVersion,
+                           EGLint profileMask,
+                           bool debug,
+                           bool bindGeneratesResourceCHROMIUM,
+                           bool clientArraysEnabled,
+                           bool robustResourceInit,
+                           bool programBinaryCacheEnabled)
     : mClientType(clientType),
       mProfileMask(profileMask),
       mClientVersion(clientVersion),
@@ -392,9 +392,9 @@ LocalState::LocalState(const EGLenum clientType,
       mDebug(debug)
 {}
 
-LocalState::~LocalState() = default;
+PrivateState::~PrivateState() = default;
 
-void LocalState::initialize(Context *context)
+void PrivateState::initialize(Context *context)
 {
     mBlendStateExt = BlendStateExt(mCaps.maxDrawBuffers);
 
@@ -472,18 +472,18 @@ void LocalState::initialize(Context *context)
     }
 }
 
-void LocalState::initializeForCapture(const Context *context)
+void PrivateState::initializeForCapture(const Context *context)
 {
     mCaps       = context->getCaps();
     mExtensions = context->getExtensions();
 }
 
-void LocalState::reset()
+void PrivateState::reset()
 {
     mClipDistancesEnabled.reset();
 }
 
-void LocalState::setColorClearValue(float red, float green, float blue, float alpha)
+void PrivateState::setColorClearValue(float red, float green, float blue, float alpha)
 {
     mColorClearValue.red   = red;
     mColorClearValue.green = green;
@@ -492,19 +492,19 @@ void LocalState::setColorClearValue(float red, float green, float blue, float al
     mDirtyBits.set(state::DIRTY_BIT_CLEAR_COLOR);
 }
 
-void LocalState::setDepthClearValue(float depth)
+void PrivateState::setDepthClearValue(float depth)
 {
     mDepthClearValue = depth;
     mDirtyBits.set(state::DIRTY_BIT_CLEAR_DEPTH);
 }
 
-void LocalState::setStencilClearValue(int stencil)
+void PrivateState::setStencilClearValue(int stencil)
 {
     mStencilClearValue = stencil;
     mDirtyBits.set(state::DIRTY_BIT_CLEAR_STENCIL);
 }
 
-void LocalState::setColorMask(bool red, bool green, bool blue, bool alpha)
+void PrivateState::setColorMask(bool red, bool green, bool blue, bool alpha)
 {
     mBlendState.colorMaskRed   = red;
     mBlendState.colorMaskGreen = green;
@@ -515,13 +515,13 @@ void LocalState::setColorMask(bool red, bool green, bool blue, bool alpha)
     mDirtyBits.set(state::DIRTY_BIT_COLOR_MASK);
 }
 
-void LocalState::setColorMaskIndexed(bool red, bool green, bool blue, bool alpha, GLuint index)
+void PrivateState::setColorMaskIndexed(bool red, bool green, bool blue, bool alpha, GLuint index)
 {
     mBlendStateExt.setColorMaskIndexed(index, red, green, blue, alpha);
     mDirtyBits.set(state::DIRTY_BIT_COLOR_MASK);
 }
 
-void LocalState::setDepthMask(bool mask)
+void PrivateState::setDepthMask(bool mask)
 {
     if (mDepthStencil.depthMask != mask)
     {
@@ -530,7 +530,7 @@ void LocalState::setDepthMask(bool mask)
     }
 }
 
-void LocalState::setRasterizerDiscard(bool enabled)
+void PrivateState::setRasterizerDiscard(bool enabled)
 {
     if (mRasterizer.rasterizerDiscard != enabled)
     {
@@ -539,7 +539,7 @@ void LocalState::setRasterizerDiscard(bool enabled)
     }
 }
 
-void LocalState::setPrimitiveRestart(bool enabled)
+void PrivateState::setPrimitiveRestart(bool enabled)
 {
     if (mPrimitiveRestart != enabled)
     {
@@ -548,7 +548,7 @@ void LocalState::setPrimitiveRestart(bool enabled)
     }
 }
 
-void LocalState::setCullFace(bool enabled)
+void PrivateState::setCullFace(bool enabled)
 {
     if (mRasterizer.cullFace != enabled)
     {
@@ -557,7 +557,7 @@ void LocalState::setCullFace(bool enabled)
     }
 }
 
-void LocalState::setCullMode(CullFaceMode mode)
+void PrivateState::setCullMode(CullFaceMode mode)
 {
     if (mRasterizer.cullMode != mode)
     {
@@ -566,7 +566,7 @@ void LocalState::setCullMode(CullFaceMode mode)
     }
 }
 
-void LocalState::setFrontFace(GLenum front)
+void PrivateState::setFrontFace(GLenum front)
 {
     if (mRasterizer.frontFace != front)
     {
@@ -575,7 +575,7 @@ void LocalState::setFrontFace(GLenum front)
     }
 }
 
-void LocalState::setDepthClamp(bool enabled)
+void PrivateState::setDepthClamp(bool enabled)
 {
     if (mRasterizer.depthClamp != enabled)
     {
@@ -585,7 +585,7 @@ void LocalState::setDepthClamp(bool enabled)
     }
 }
 
-void LocalState::setDepthTest(bool enabled)
+void PrivateState::setDepthTest(bool enabled)
 {
     if (mDepthStencil.depthTest != enabled)
     {
@@ -594,7 +594,7 @@ void LocalState::setDepthTest(bool enabled)
     }
 }
 
-void LocalState::setDepthFunc(GLenum depthFunc)
+void PrivateState::setDepthFunc(GLenum depthFunc)
 {
     if (mDepthStencil.depthFunc != depthFunc)
     {
@@ -603,7 +603,7 @@ void LocalState::setDepthFunc(GLenum depthFunc)
     }
 }
 
-void LocalState::setDepthRange(float zNear, float zFar)
+void PrivateState::setDepthRange(float zNear, float zFar)
 {
     if (mNearZ != zNear || mFarZ != zFar)
     {
@@ -613,7 +613,7 @@ void LocalState::setDepthRange(float zNear, float zFar)
     }
 }
 
-void LocalState::setClipControl(ClipOrigin origin, ClipDepthMode depth)
+void PrivateState::setClipControl(ClipOrigin origin, ClipDepthMode depth)
 {
     bool updated = false;
     if (mClipOrigin != origin)
@@ -635,7 +635,7 @@ void LocalState::setClipControl(ClipOrigin origin, ClipDepthMode depth)
     }
 }
 
-void LocalState::setBlend(bool enabled)
+void PrivateState::setBlend(bool enabled)
 {
     if (mSetBlendIndexedInvoked || mBlendState.blend != enabled)
     {
@@ -647,29 +647,29 @@ void LocalState::setBlend(bool enabled)
     }
 }
 
-void LocalState::setBlendIndexed(bool enabled, GLuint index)
+void PrivateState::setBlendIndexed(bool enabled, GLuint index)
 {
     mSetBlendIndexedInvoked = true;
     mBlendStateExt.setEnabledIndexed(index, enabled);
     mDirtyBits.set(state::DIRTY_BIT_BLEND_ENABLED);
 }
 
-ANGLE_INLINE bool LocalState::hasConstantColor(GLenum sourceRGB, GLenum destRGB) const
+ANGLE_INLINE bool PrivateState::hasConstantColor(GLenum sourceRGB, GLenum destRGB) const
 {
     return sourceRGB == GL_CONSTANT_COLOR || sourceRGB == GL_ONE_MINUS_CONSTANT_COLOR ||
            destRGB == GL_CONSTANT_COLOR || destRGB == GL_ONE_MINUS_CONSTANT_COLOR;
 }
 
-ANGLE_INLINE bool LocalState::hasConstantAlpha(GLenum sourceRGB, GLenum destRGB) const
+ANGLE_INLINE bool PrivateState::hasConstantAlpha(GLenum sourceRGB, GLenum destRGB) const
 {
     return sourceRGB == GL_CONSTANT_ALPHA || sourceRGB == GL_ONE_MINUS_CONSTANT_ALPHA ||
            destRGB == GL_CONSTANT_ALPHA || destRGB == GL_ONE_MINUS_CONSTANT_ALPHA;
 }
 
-void LocalState::setBlendFactors(GLenum sourceRGB,
-                                 GLenum destRGB,
-                                 GLenum sourceAlpha,
-                                 GLenum destAlpha)
+void PrivateState::setBlendFactors(GLenum sourceRGB,
+                                   GLenum destRGB,
+                                   GLenum sourceAlpha,
+                                   GLenum destAlpha)
 {
     if (!mSetBlendFactorsIndexedInvoked && mBlendState.sourceBlendRGB == sourceRGB &&
         mBlendState.destBlendRGB == destRGB && mBlendState.sourceBlendAlpha == sourceAlpha &&
@@ -709,11 +709,11 @@ void LocalState::setBlendFactors(GLenum sourceRGB,
     mDirtyBits.set(state::DIRTY_BIT_BLEND_FUNCS);
 }
 
-void LocalState::setBlendFactorsIndexed(GLenum sourceRGB,
-                                        GLenum destRGB,
-                                        GLenum sourceAlpha,
-                                        GLenum destAlpha,
-                                        GLuint index)
+void PrivateState::setBlendFactorsIndexed(GLenum sourceRGB,
+                                          GLenum destRGB,
+                                          GLenum sourceAlpha,
+                                          GLenum destAlpha,
+                                          GLuint index)
 {
     if (mNoSimultaneousConstantColorAndAlphaBlendFunc)
     {
@@ -726,7 +726,7 @@ void LocalState::setBlendFactorsIndexed(GLenum sourceRGB,
     mDirtyBits.set(state::DIRTY_BIT_BLEND_FUNCS);
 }
 
-void LocalState::setBlendColor(float red, float green, float blue, float alpha)
+void PrivateState::setBlendColor(float red, float green, float blue, float alpha)
 {
     // In ES2 without render-to-float extensions, BlendColor clamps to [0,1] on store.
     // On ES3+, or with render-to-float exts enabled, it does not clamp on store.
@@ -753,7 +753,7 @@ void LocalState::setBlendColor(float red, float green, float blue, float alpha)
     }
 }
 
-void LocalState::setBlendEquation(GLenum rgbEquation, GLenum alphaEquation)
+void PrivateState::setBlendEquation(GLenum rgbEquation, GLenum alphaEquation)
 {
     if (mSetBlendEquationsIndexedInvoked || mBlendState.blendEquationRGB != rgbEquation ||
         mBlendState.blendEquationAlpha != alphaEquation)
@@ -767,14 +767,14 @@ void LocalState::setBlendEquation(GLenum rgbEquation, GLenum alphaEquation)
     }
 }
 
-void LocalState::setBlendEquationIndexed(GLenum rgbEquation, GLenum alphaEquation, GLuint index)
+void PrivateState::setBlendEquationIndexed(GLenum rgbEquation, GLenum alphaEquation, GLuint index)
 {
     mSetBlendEquationsIndexedInvoked = true;
     mBlendStateExt.setEquationsIndexed(index, rgbEquation, alphaEquation);
     mDirtyBits.set(state::DIRTY_BIT_BLEND_EQUATIONS);
 }
 
-void LocalState::setStencilTest(bool enabled)
+void PrivateState::setStencilTest(bool enabled)
 {
     if (mDepthStencil.stencilTest != enabled)
     {
@@ -783,7 +783,7 @@ void LocalState::setStencilTest(bool enabled)
     }
 }
 
-void LocalState::setStencilParams(GLenum stencilFunc, GLint stencilRef, GLuint stencilMask)
+void PrivateState::setStencilParams(GLenum stencilFunc, GLint stencilRef, GLuint stencilMask)
 {
     if (mDepthStencil.stencilFunc != stencilFunc || mStencilRef != stencilRef ||
         mDepthStencil.stencilMask != stencilMask)
@@ -795,9 +795,9 @@ void LocalState::setStencilParams(GLenum stencilFunc, GLint stencilRef, GLuint s
     }
 }
 
-void LocalState::setStencilBackParams(GLenum stencilBackFunc,
-                                      GLint stencilBackRef,
-                                      GLuint stencilBackMask)
+void PrivateState::setStencilBackParams(GLenum stencilBackFunc,
+                                        GLint stencilBackRef,
+                                        GLuint stencilBackMask)
 {
     if (mDepthStencil.stencilBackFunc != stencilBackFunc || mStencilBackRef != stencilBackRef ||
         mDepthStencil.stencilBackMask != stencilBackMask)
@@ -809,7 +809,7 @@ void LocalState::setStencilBackParams(GLenum stencilBackFunc,
     }
 }
 
-void LocalState::setStencilWritemask(GLuint stencilWritemask)
+void PrivateState::setStencilWritemask(GLuint stencilWritemask)
 {
     if (mDepthStencil.stencilWritemask != stencilWritemask)
     {
@@ -818,7 +818,7 @@ void LocalState::setStencilWritemask(GLuint stencilWritemask)
     }
 }
 
-void LocalState::setStencilBackWritemask(GLuint stencilBackWritemask)
+void PrivateState::setStencilBackWritemask(GLuint stencilBackWritemask)
 {
     if (mDepthStencil.stencilBackWritemask != stencilBackWritemask)
     {
@@ -827,9 +827,9 @@ void LocalState::setStencilBackWritemask(GLuint stencilBackWritemask)
     }
 }
 
-void LocalState::setStencilOperations(GLenum stencilFail,
-                                      GLenum stencilPassDepthFail,
-                                      GLenum stencilPassDepthPass)
+void PrivateState::setStencilOperations(GLenum stencilFail,
+                                        GLenum stencilPassDepthFail,
+                                        GLenum stencilPassDepthPass)
 {
     if (mDepthStencil.stencilFail != stencilFail ||
         mDepthStencil.stencilPassDepthFail != stencilPassDepthFail ||
@@ -842,9 +842,9 @@ void LocalState::setStencilOperations(GLenum stencilFail,
     }
 }
 
-void LocalState::setStencilBackOperations(GLenum stencilBackFail,
-                                          GLenum stencilBackPassDepthFail,
-                                          GLenum stencilBackPassDepthPass)
+void PrivateState::setStencilBackOperations(GLenum stencilBackFail,
+                                            GLenum stencilBackPassDepthFail,
+                                            GLenum stencilBackPassDepthPass)
 {
     if (mDepthStencil.stencilBackFail != stencilBackFail ||
         mDepthStencil.stencilBackPassDepthFail != stencilBackPassDepthFail ||
@@ -857,7 +857,7 @@ void LocalState::setStencilBackOperations(GLenum stencilBackFail,
     }
 }
 
-void LocalState::setPolygonMode(PolygonMode mode)
+void PrivateState::setPolygonMode(PolygonMode mode)
 {
     if (mRasterizer.polygonMode != mode)
     {
@@ -867,7 +867,7 @@ void LocalState::setPolygonMode(PolygonMode mode)
     }
 }
 
-void LocalState::setPolygonOffsetPoint(bool enabled)
+void PrivateState::setPolygonOffsetPoint(bool enabled)
 {
     if (mRasterizer.polygonOffsetPoint != enabled)
     {
@@ -877,7 +877,7 @@ void LocalState::setPolygonOffsetPoint(bool enabled)
     }
 }
 
-void LocalState::setPolygonOffsetLine(bool enabled)
+void PrivateState::setPolygonOffsetLine(bool enabled)
 {
     if (mRasterizer.polygonOffsetLine != enabled)
     {
@@ -887,7 +887,7 @@ void LocalState::setPolygonOffsetLine(bool enabled)
     }
 }
 
-void LocalState::setPolygonOffsetFill(bool enabled)
+void PrivateState::setPolygonOffsetFill(bool enabled)
 {
     if (mRasterizer.polygonOffsetFill != enabled)
     {
@@ -896,7 +896,7 @@ void LocalState::setPolygonOffsetFill(bool enabled)
     }
 }
 
-void LocalState::setPolygonOffsetParams(GLfloat factor, GLfloat units, GLfloat clamp)
+void PrivateState::setPolygonOffsetParams(GLfloat factor, GLfloat units, GLfloat clamp)
 {
     // An application can pass NaN values here, so handle this gracefully
     mRasterizer.polygonOffsetFactor = factor != factor ? 0.0f : factor;
@@ -905,7 +905,7 @@ void LocalState::setPolygonOffsetParams(GLfloat factor, GLfloat units, GLfloat c
     mDirtyBits.set(state::DIRTY_BIT_POLYGON_OFFSET);
 }
 
-void LocalState::setSampleAlphaToCoverage(bool enabled)
+void PrivateState::setSampleAlphaToCoverage(bool enabled)
 {
     if (mSampleAlphaToCoverage != enabled)
     {
@@ -914,7 +914,7 @@ void LocalState::setSampleAlphaToCoverage(bool enabled)
     }
 }
 
-void LocalState::setSampleCoverage(bool enabled)
+void PrivateState::setSampleCoverage(bool enabled)
 {
     if (mSampleCoverage != enabled)
     {
@@ -923,14 +923,14 @@ void LocalState::setSampleCoverage(bool enabled)
     }
 }
 
-void LocalState::setSampleCoverageParams(GLclampf value, bool invert)
+void PrivateState::setSampleCoverageParams(GLclampf value, bool invert)
 {
     mSampleCoverageValue  = value;
     mSampleCoverageInvert = invert;
     mDirtyBits.set(state::DIRTY_BIT_SAMPLE_COVERAGE);
 }
 
-void LocalState::setSampleMaskEnabled(bool enabled)
+void PrivateState::setSampleMaskEnabled(bool enabled)
 {
     if (mSampleMask != enabled)
     {
@@ -939,14 +939,14 @@ void LocalState::setSampleMaskEnabled(bool enabled)
     }
 }
 
-void LocalState::setSampleMaskParams(GLuint maskNumber, GLbitfield mask)
+void PrivateState::setSampleMaskParams(GLuint maskNumber, GLbitfield mask)
 {
     ASSERT(maskNumber < mMaxSampleMaskWords);
     mSampleMaskValues[maskNumber] = mask;
     mDirtyBits.set(state::DIRTY_BIT_SAMPLE_MASK);
 }
 
-void LocalState::setSampleAlphaToOne(bool enabled)
+void PrivateState::setSampleAlphaToOne(bool enabled)
 {
     if (mSampleAlphaToOne != enabled)
     {
@@ -955,7 +955,7 @@ void LocalState::setSampleAlphaToOne(bool enabled)
     }
 }
 
-void LocalState::setMultisampling(bool enabled)
+void PrivateState::setMultisampling(bool enabled)
 {
     if (mMultiSampling != enabled)
     {
@@ -964,7 +964,7 @@ void LocalState::setMultisampling(bool enabled)
     }
 }
 
-void LocalState::setSampleShading(bool enabled)
+void PrivateState::setSampleShading(bool enabled)
 {
     if (mIsSampleShadingEnabled != enabled)
     {
@@ -974,7 +974,7 @@ void LocalState::setSampleShading(bool enabled)
     }
 }
 
-void LocalState::setMinSampleShading(float value)
+void PrivateState::setMinSampleShading(float value)
 {
     value = gl::clamp01(value);
 
@@ -985,7 +985,7 @@ void LocalState::setMinSampleShading(float value)
     }
 }
 
-void LocalState::setScissorTest(bool enabled)
+void PrivateState::setScissorTest(bool enabled)
 {
     if (mScissorTest != enabled)
     {
@@ -994,7 +994,7 @@ void LocalState::setScissorTest(bool enabled)
     }
 }
 
-void LocalState::setScissorParams(GLint x, GLint y, GLsizei width, GLsizei height)
+void PrivateState::setScissorParams(GLint x, GLint y, GLsizei width, GLsizei height)
 {
     // Skip if same scissor info
     if (mScissor.x != x || mScissor.y != y || mScissor.width != width || mScissor.height != height)
@@ -1007,7 +1007,7 @@ void LocalState::setScissorParams(GLint x, GLint y, GLsizei width, GLsizei heigh
     }
 }
 
-void LocalState::setDither(bool enabled)
+void PrivateState::setDither(bool enabled)
 {
     if (mRasterizer.dither != enabled)
     {
@@ -1016,7 +1016,7 @@ void LocalState::setDither(bool enabled)
     }
 }
 
-void LocalState::setViewportParams(GLint x, GLint y, GLsizei width, GLsizei height)
+void PrivateState::setViewportParams(GLint x, GLint y, GLsizei width, GLsizei height)
 {
     // [OpenGL ES 2.0.25] section 2.12.1 page 45:
     // Viewport width and height are clamped to implementation-dependent maximums when specified.
@@ -1035,80 +1035,80 @@ void LocalState::setViewportParams(GLint x, GLint y, GLsizei width, GLsizei heig
     }
 }
 
-void LocalState::setShadingRate(GLenum rate)
+void PrivateState::setShadingRate(GLenum rate)
 {
     mShadingRate = FromGLenum<ShadingRate>(rate);
     mDirtyBits.set(state::DIRTY_BIT_EXTENDED);
     mExtendedDirtyBits.set(state::EXTENDED_DIRTY_BIT_SHADING_RATE);
 }
 
-void LocalState::setPackAlignment(GLint alignment)
+void PrivateState::setPackAlignment(GLint alignment)
 {
     mPack.alignment = alignment;
     mDirtyBits.set(state::DIRTY_BIT_PACK_STATE);
 }
 
-void LocalState::setPackReverseRowOrder(bool reverseRowOrder)
+void PrivateState::setPackReverseRowOrder(bool reverseRowOrder)
 {
     mPack.reverseRowOrder = reverseRowOrder;
     mDirtyBits.set(state::DIRTY_BIT_PACK_STATE);
 }
 
-void LocalState::setPackRowLength(GLint rowLength)
+void PrivateState::setPackRowLength(GLint rowLength)
 {
     mPack.rowLength = rowLength;
     mDirtyBits.set(state::DIRTY_BIT_PACK_STATE);
 }
 
-void LocalState::setPackSkipRows(GLint skipRows)
+void PrivateState::setPackSkipRows(GLint skipRows)
 {
     mPack.skipRows = skipRows;
     mDirtyBits.set(state::DIRTY_BIT_PACK_STATE);
 }
 
-void LocalState::setPackSkipPixels(GLint skipPixels)
+void PrivateState::setPackSkipPixels(GLint skipPixels)
 {
     mPack.skipPixels = skipPixels;
     mDirtyBits.set(state::DIRTY_BIT_PACK_STATE);
 }
 
-void LocalState::setUnpackAlignment(GLint alignment)
+void PrivateState::setUnpackAlignment(GLint alignment)
 {
     mUnpack.alignment = alignment;
     mDirtyBits.set(state::DIRTY_BIT_UNPACK_STATE);
 }
 
-void LocalState::setUnpackRowLength(GLint rowLength)
+void PrivateState::setUnpackRowLength(GLint rowLength)
 {
     mUnpack.rowLength = rowLength;
     mDirtyBits.set(state::DIRTY_BIT_UNPACK_STATE);
 }
 
-void LocalState::setUnpackImageHeight(GLint imageHeight)
+void PrivateState::setUnpackImageHeight(GLint imageHeight)
 {
     mUnpack.imageHeight = imageHeight;
     mDirtyBits.set(state::DIRTY_BIT_UNPACK_STATE);
 }
 
-void LocalState::setUnpackSkipImages(GLint skipImages)
+void PrivateState::setUnpackSkipImages(GLint skipImages)
 {
     mUnpack.skipImages = skipImages;
     mDirtyBits.set(state::DIRTY_BIT_UNPACK_STATE);
 }
 
-void LocalState::setUnpackSkipRows(GLint skipRows)
+void PrivateState::setUnpackSkipRows(GLint skipRows)
 {
     mUnpack.skipRows = skipRows;
     mDirtyBits.set(state::DIRTY_BIT_UNPACK_STATE);
 }
 
-void LocalState::setUnpackSkipPixels(GLint skipPixels)
+void PrivateState::setUnpackSkipPixels(GLint skipPixels)
 {
     mUnpack.skipPixels = skipPixels;
     mDirtyBits.set(state::DIRTY_BIT_UNPACK_STATE);
 }
 
-void LocalState::setCoverageModulation(GLenum components)
+void PrivateState::setCoverageModulation(GLenum components)
 {
     if (mCoverageModulation != components)
     {
@@ -1117,7 +1117,7 @@ void LocalState::setCoverageModulation(GLenum components)
     }
 }
 
-void LocalState::setFramebufferSRGB(bool sRGB)
+void PrivateState::setFramebufferSRGB(bool sRGB)
 {
     if (mFramebufferSRGB != sRGB)
     {
@@ -1128,7 +1128,7 @@ void LocalState::setFramebufferSRGB(bool sRGB)
     }
 }
 
-void LocalState::setPatchVertices(GLuint value)
+void PrivateState::setPatchVertices(GLuint value)
 {
     if (mPatchVertices != value)
     {
@@ -1137,32 +1137,32 @@ void LocalState::setPatchVertices(GLuint value)
     }
 }
 
-void LocalState::setPixelLocalStorageActivePlanes(GLsizei n)
+void PrivateState::setPixelLocalStorageActivePlanes(GLsizei n)
 {
     mPixelLocalStorageActivePlanes = n;
 }
 
-void LocalState::setLineWidth(GLfloat width)
+void PrivateState::setLineWidth(GLfloat width)
 {
     mLineWidth = width;
     mDirtyBits.set(state::DIRTY_BIT_LINE_WIDTH);
 }
 
-void LocalState::setGenerateMipmapHint(GLenum hint)
+void PrivateState::setGenerateMipmapHint(GLenum hint)
 {
     mGenerateMipmapHint = hint;
     mDirtyBits.set(state::DIRTY_BIT_EXTENDED);
     mExtendedDirtyBits.set(state::EXTENDED_DIRTY_BIT_MIPMAP_GENERATION_HINT);
 }
 
-void LocalState::setTextureFilteringHint(GLenum hint)
+void PrivateState::setTextureFilteringHint(GLenum hint)
 {
     mTextureFilteringHint = hint;
     // Note: we don't add a dirty bit for this flag as it's not expected to be toggled at
     // runtime.
 }
 
-void LocalState::setFragmentShaderDerivativeHint(GLenum hint)
+void PrivateState::setFragmentShaderDerivativeHint(GLenum hint)
 {
     mFragmentShaderDerivativeHint = hint;
     mDirtyBits.set(state::DIRTY_BIT_EXTENDED);
@@ -1172,19 +1172,19 @@ void LocalState::setFragmentShaderDerivativeHint(GLenum hint)
     // the hint.
 }
 
-void LocalState::setActiveSampler(unsigned int active)
+void PrivateState::setActiveSampler(unsigned int active)
 {
     mActiveSampler = active;
 }
 
-AttributesMask LocalState::getAndResetDirtyCurrentValues() const
+AttributesMask PrivateState::getAndResetDirtyCurrentValues() const
 {
     AttributesMask retVal = mDirtyCurrentValues;
     mDirtyCurrentValues.reset();
     return retVal;
 }
 
-void LocalState::setClipDistanceEnable(int idx, bool enable)
+void PrivateState::setClipDistanceEnable(int idx, bool enable)
 {
     if (enable)
     {
@@ -1199,14 +1199,14 @@ void LocalState::setClipDistanceEnable(int idx, bool enable)
     mExtendedDirtyBits.set(state::EXTENDED_DIRTY_BIT_CLIP_DISTANCES);
 }
 
-void LocalState::setBoundingBox(GLfloat minX,
-                                GLfloat minY,
-                                GLfloat minZ,
-                                GLfloat minW,
-                                GLfloat maxX,
-                                GLfloat maxY,
-                                GLfloat maxZ,
-                                GLfloat maxW)
+void PrivateState::setBoundingBox(GLfloat minX,
+                                  GLfloat minY,
+                                  GLfloat minZ,
+                                  GLfloat minW,
+                                  GLfloat maxX,
+                                  GLfloat maxY,
+                                  GLfloat maxZ,
+                                  GLfloat maxW)
 {
     mBoundingBoxMinX = minX;
     mBoundingBoxMinY = minY;
@@ -1218,7 +1218,7 @@ void LocalState::setBoundingBox(GLfloat minX,
     mBoundingBoxMaxW = maxW;
 }
 
-void LocalState::setLogicOpEnabled(bool enabled)
+void PrivateState::setLogicOpEnabled(bool enabled)
 {
     if (mLogicOpEnabled != enabled)
     {
@@ -1228,7 +1228,7 @@ void LocalState::setLogicOpEnabled(bool enabled)
     }
 }
 
-void LocalState::setLogicOp(LogicalOperation opcode)
+void PrivateState::setLogicOp(LogicalOperation opcode)
 {
     if (mLogicOp != opcode)
     {
@@ -1238,7 +1238,7 @@ void LocalState::setLogicOp(LogicalOperation opcode)
     }
 }
 
-void LocalState::setVertexAttribf(GLuint index, const GLfloat values[4])
+void PrivateState::setVertexAttribf(GLuint index, const GLfloat values[4])
 {
     ASSERT(static_cast<size_t>(index) < mVertexAttribCurrentValues.size());
     mVertexAttribCurrentValues[index].setFloatValues(values);
@@ -1247,7 +1247,7 @@ void LocalState::setVertexAttribf(GLuint index, const GLfloat values[4])
     SetComponentTypeMask(ComponentType::Float, index, &mCurrentValuesTypeMask);
 }
 
-void LocalState::setVertexAttribu(GLuint index, const GLuint values[4])
+void PrivateState::setVertexAttribu(GLuint index, const GLuint values[4])
 {
     ASSERT(static_cast<size_t>(index) < mVertexAttribCurrentValues.size());
     mVertexAttribCurrentValues[index].setUnsignedIntValues(values);
@@ -1256,7 +1256,7 @@ void LocalState::setVertexAttribu(GLuint index, const GLuint values[4])
     SetComponentTypeMask(ComponentType::UnsignedInt, index, &mCurrentValuesTypeMask);
 }
 
-void LocalState::setVertexAttribi(GLuint index, const GLint values[4])
+void PrivateState::setVertexAttribi(GLuint index, const GLint values[4])
 {
     ASSERT(static_cast<size_t>(index) < mVertexAttribCurrentValues.size());
     mVertexAttribCurrentValues[index].setIntValues(values);
@@ -1265,7 +1265,7 @@ void LocalState::setVertexAttribi(GLuint index, const GLint values[4])
     SetComponentTypeMask(ComponentType::Int, index, &mCurrentValuesTypeMask);
 }
 
-void LocalState::setEnableFeature(GLenum feature, bool enabled)
+void PrivateState::setEnableFeature(GLenum feature, bool enabled)
 {
     switch (feature)
     {
@@ -1436,7 +1436,7 @@ void LocalState::setEnableFeature(GLenum feature, bool enabled)
     }
 }
 
-void LocalState::setEnableFeatureIndexed(GLenum feature, bool enabled, GLuint index)
+void PrivateState::setEnableFeatureIndexed(GLenum feature, bool enabled, GLuint index)
 {
     switch (feature)
     {
@@ -1448,7 +1448,7 @@ void LocalState::setEnableFeatureIndexed(GLenum feature, bool enabled, GLuint in
     }
 }
 
-bool LocalState::getEnableFeature(GLenum feature) const
+bool PrivateState::getEnableFeature(GLenum feature) const
 {
     switch (feature)
     {
@@ -1594,7 +1594,7 @@ bool LocalState::getEnableFeature(GLenum feature) const
     }
 }
 
-bool LocalState::getEnableFeatureIndexed(GLenum feature, GLuint index) const
+bool PrivateState::getEnableFeatureIndexed(GLenum feature, GLuint index) const
 {
     switch (feature)
     {
@@ -1606,7 +1606,7 @@ bool LocalState::getEnableFeatureIndexed(GLenum feature, GLuint index) const
     }
 }
 
-void LocalState::getBooleanv(GLenum pname, GLboolean *params) const
+void PrivateState::getBooleanv(GLenum pname, GLboolean *params) const
 {
     switch (pname)
     {
@@ -1749,7 +1749,7 @@ void LocalState::getBooleanv(GLenum pname, GLboolean *params) const
     }
 }
 
-void LocalState::getFloatv(GLenum pname, GLfloat *params) const
+void PrivateState::getFloatv(GLenum pname, GLfloat *params) const
 {
     switch (pname)
     {
@@ -1872,7 +1872,7 @@ void LocalState::getFloatv(GLenum pname, GLfloat *params) const
     }
 }
 
-void LocalState::getIntegerv(GLenum pname, GLint *params) const
+void PrivateState::getIntegerv(GLenum pname, GLint *params) const
 {
     // Please note: DEPTH_CLEAR_VALUE is not included in our internal getIntegerv implementation
     // because it is stored as a float, despite the fact that the GL ES 2.0 spec names
@@ -2101,7 +2101,7 @@ void LocalState::getIntegerv(GLenum pname, GLint *params) const
     }
 }
 
-void LocalState::getIntegeri_v(GLenum target, GLuint index, GLint *data) const
+void PrivateState::getIntegeri_v(GLenum target, GLuint index, GLint *data) const
 {
     switch (target)
     {
@@ -2139,7 +2139,7 @@ void LocalState::getIntegeri_v(GLenum target, GLuint index, GLint *data) const
     }
 }
 
-void LocalState::getBooleani_v(GLenum target, GLuint index, GLboolean *data) const
+void PrivateState::getBooleani_v(GLenum target, GLuint index, GLboolean *data) const
 {
     switch (target)
     {
@@ -2214,14 +2214,14 @@ State::State(const State *shareContextState,
       mDisplayTextureShareGroup(shareTextures != nullptr),
       mMaxShaderCompilerThreads(std::numeric_limits<GLuint>::max()),
       mOverlay(overlay),
-      mLocalState(clientType,
-                  clientVersion,
-                  profileMask,
-                  debug,
-                  bindGeneratesResourceCHROMIUM,
-                  clientArraysEnabled,
-                  robustResourceInit,
-                  programBinaryCacheEnabled)
+      mPrivateState(clientType,
+                    clientVersion,
+                    profileMask,
+                    debug,
+                    bindGeneratesResourceCHROMIUM,
+                    clientArraysEnabled,
+                    robustResourceInit,
+                    programBinaryCacheEnabled)
 {}
 
 State::~State() {}
@@ -2231,7 +2231,7 @@ void State::initialize(Context *context)
     const Extensions &nativeExtensions = context->getImplementation()->getNativeExtensions();
     const Version &clientVersion       = context->getClientVersion();
 
-    mLocalState.initialize(context);
+    mPrivateState.initialize(context);
 
     mUniformBuffers.resize(getCaps().maxUniformBufferBindings);
 
@@ -2379,7 +2379,7 @@ void State::reset(const Context *context)
     }
     mBoundShaderStorageBuffersMask.reset();
 
-    mLocalState.reset();
+    mPrivateState.reset();
 
     setAllDirtyBits();
 }
@@ -3119,7 +3119,7 @@ void State::getBooleanv(GLenum pname, GLboolean *params) const
             *params = getCurrentTransformFeedback()->isPaused() ? GL_TRUE : GL_FALSE;
             break;
         default:
-            mLocalState.getBooleanv(pname, params);
+            mPrivateState.getBooleanv(pname, params);
     }
 }
 
@@ -3380,7 +3380,7 @@ angle::Result State::getIntegerv(const Context *context, GLenum pname, GLint *pa
         }
 
         default:
-            mLocalState.getIntegerv(pname, params);
+            mPrivateState.getIntegerv(pname, params);
             break;
     }
 
@@ -3469,7 +3469,7 @@ void State::getIntegeri_v(const Context *context, GLenum target, GLuint index, G
             *data = mImageUnits[index].format;
             break;
         default:
-            mLocalState.getIntegeri_v(target, index, data);
+            mPrivateState.getIntegeri_v(target, index, data);
             break;
     }
 }
@@ -3525,7 +3525,7 @@ void State::getBooleani_v(GLenum target, GLuint index, GLboolean *data) const
             *data = mImageUnits[index].layered;
             break;
         default:
-            mLocalState.getBooleani_v(target, index, data);
+            mPrivateState.getBooleani_v(target, index, data);
             break;
     }
 }
@@ -4009,7 +4009,7 @@ void State::onShaderStorageBufferStateChange(size_t shaderStorageBufferIndex)
 
 void State::initializeForCapture(const Context *context)
 {
-    mLocalState.initializeForCapture(context);
+    mPrivateState.initializeForCapture(context);
 
     // This little kludge gets around the frame capture "constness". It should be safe because
     // nothing in the context is modified in a non-compatible way during capture.

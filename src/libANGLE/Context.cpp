@@ -46,7 +46,7 @@
 #include "libANGLE/VertexArray.h"
 #include "libANGLE/capture/FrameCapture.h"
 #include "libANGLE/capture/serialize.h"
-#include "libANGLE/context_local_call_gles_autogen.h"
+#include "libANGLE/context_private_call_gles_autogen.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/queryconversions.h"
 #include "libANGLE/queryutils.h"
@@ -998,8 +998,8 @@ egl::Error Context::makeCurrent(egl::Display *display,
             height = drawSurface->getHeight();
         }
 
-        ContextLocalViewport(this, 0, 0, width, height);
-        ContextLocalScissor(this, 0, 0, width, height);
+        ContextPrivateViewport(this, 0, 0, width, height);
+        ContextPrivateScissor(this, 0, 0, width, height);
 
         mHasBeenCurrent = true;
     }
@@ -9715,9 +9715,9 @@ void Context::getRenderbufferImage(GLenum target, GLenum format, GLenum type, vo
 
 void Context::setLogicOpEnabledForGLES1(bool enabled)
 {
-    // Same implementation as ContextLocalEnable(GL_COLOR_LOGIC_OP), without the GLES1 forwarding.
-    getMutableLocalState()->setLogicOpEnabled(enabled);
-    onContextLocalCapChange();
+    // Same implementation as ContextPrivateEnable(GL_COLOR_LOGIC_OP), without the GLES1 forwarding.
+    getMutablePrivateState()->setLogicOpEnabled(enabled);
+    onContextPrivateCapChange();
 }
 
 egl::Error Context::releaseHighPowerGPU()
@@ -10243,17 +10243,17 @@ void StateCache::onDrawFramebufferChange(Context *context)
     updateBasicDrawStatesError();
 }
 
-void StateCache::onContextLocalCapChange(Context *context)
+void StateCache::onContextPrivateCapChange(Context *context)
 {
     mIsCachedBasicDrawStatesErrorValid = false;
 }
 
-void StateCache::onContextLocalStencilStateChange(Context *context)
+void StateCache::onContextPrivateStencilStateChange(Context *context)
 {
     mIsCachedBasicDrawStatesErrorValid = false;
 }
 
-void StateCache::onContextLocalDefaultVertexAttributeChange(Context *context)
+void StateCache::onContextPrivateDefaultVertexAttributeChange(Context *context)
 {
     mIsCachedBasicDrawStatesErrorValid = false;
 }
@@ -10291,17 +10291,17 @@ void StateCache::onShaderStorageBufferStateChange(Context *context)
     updateBasicDrawStatesError();
 }
 
-void StateCache::onContextLocalColorMaskChange(Context *context)
+void StateCache::onContextPrivateColorMaskChange(Context *context)
 {
     mIsCachedBasicDrawStatesErrorValid = false;
 }
 
-void StateCache::onContextLocalBlendFuncIndexedChange(Context *context)
+void StateCache::onContextPrivateBlendFuncIndexedChange(Context *context)
 {
     mIsCachedBasicDrawStatesErrorValid = false;
 }
 
-void StateCache::onContextLocalBlendEquationChange(Context *context)
+void StateCache::onContextPrivateBlendEquationChange(Context *context)
 {
     mIsCachedBasicDrawStatesErrorValid = false;
 }
