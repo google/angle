@@ -73,7 +73,7 @@ void ContextPrivateColorMask(Context *context,
 {
     context->getMutablePrivateState()->setColorMask(ConvertToBool(red), ConvertToBool(green),
                                                     ConvertToBool(blue), ConvertToBool(alpha));
-    context->onContextPrivateColorMaskChange();
+    context->getPrivateStateCache().onColorMaskChange();
 }
 
 void ContextPrivateColorMaski(Context *context,
@@ -85,7 +85,7 @@ void ContextPrivateColorMaski(Context *context,
 {
     context->getMutablePrivateState()->setColorMaskIndexed(
         ConvertToBool(r), ConvertToBool(g), ConvertToBool(b), ConvertToBool(a), index);
-    context->onContextPrivateColorMaskChange();
+    context->getPrivateStateCache().onColorMaskChange();
 }
 
 void ContextPrivateDepthMask(Context *context, GLboolean flag)
@@ -96,25 +96,25 @@ void ContextPrivateDepthMask(Context *context, GLboolean flag)
 void ContextPrivateDisable(Context *context, GLenum cap)
 {
     context->getMutablePrivateState()->setEnableFeature(cap, false);
-    context->onContextPrivateCapChange();
+    context->getPrivateStateCache().onCapChange();
 }
 
 void ContextPrivateDisablei(Context *context, GLenum target, GLuint index)
 {
     context->getMutablePrivateState()->setEnableFeatureIndexed(target, false, index);
-    context->onContextPrivateCapChange();
+    context->getPrivateStateCache().onCapChange();
 }
 
 void ContextPrivateEnable(Context *context, GLenum cap)
 {
     context->getMutablePrivateState()->setEnableFeature(cap, true);
-    context->onContextPrivateCapChange();
+    context->getPrivateStateCache().onCapChange();
 }
 
 void ContextPrivateEnablei(Context *context, GLenum target, GLuint index)
 {
     context->getMutablePrivateState()->setEnableFeatureIndexed(target, true, index);
-    context->onContextPrivateCapChange();
+    context->getPrivateStateCache().onCapChange();
 }
 
 void ContextPrivateActiveTexture(Context *context, GLenum texture)
@@ -196,42 +196,42 @@ void ContextPrivateVertexAttrib1f(Context *context, GLuint index, GLfloat x)
 {
     GLfloat vals[4] = {x, 0, 0, 1};
     context->getMutablePrivateState()->setVertexAttribf(index, vals);
-    context->onContextPrivateDefaultVertexAttributeChange();
+    context->getPrivateStateCache().onDefaultVertexAttributeChange();
 }
 
 void ContextPrivateVertexAttrib1fv(Context *context, GLuint index, const GLfloat *values)
 {
     GLfloat vals[4] = {values[0], 0, 0, 1};
     context->getMutablePrivateState()->setVertexAttribf(index, vals);
-    context->onContextPrivateDefaultVertexAttributeChange();
+    context->getPrivateStateCache().onDefaultVertexAttributeChange();
 }
 
 void ContextPrivateVertexAttrib2f(Context *context, GLuint index, GLfloat x, GLfloat y)
 {
     GLfloat vals[4] = {x, y, 0, 1};
     context->getMutablePrivateState()->setVertexAttribf(index, vals);
-    context->onContextPrivateDefaultVertexAttributeChange();
+    context->getPrivateStateCache().onDefaultVertexAttributeChange();
 }
 
 void ContextPrivateVertexAttrib2fv(Context *context, GLuint index, const GLfloat *values)
 {
     GLfloat vals[4] = {values[0], values[1], 0, 1};
     context->getMutablePrivateState()->setVertexAttribf(index, vals);
-    context->onContextPrivateDefaultVertexAttributeChange();
+    context->getPrivateStateCache().onDefaultVertexAttributeChange();
 }
 
 void ContextPrivateVertexAttrib3f(Context *context, GLuint index, GLfloat x, GLfloat y, GLfloat z)
 {
     GLfloat vals[4] = {x, y, z, 1};
     context->getMutablePrivateState()->setVertexAttribf(index, vals);
-    context->onContextPrivateDefaultVertexAttributeChange();
+    context->getPrivateStateCache().onDefaultVertexAttributeChange();
 }
 
 void ContextPrivateVertexAttrib3fv(Context *context, GLuint index, const GLfloat *values)
 {
     GLfloat vals[4] = {values[0], values[1], values[2], 1};
     context->getMutablePrivateState()->setVertexAttribf(index, vals);
-    context->onContextPrivateDefaultVertexAttributeChange();
+    context->getPrivateStateCache().onDefaultVertexAttributeChange();
 }
 
 void ContextPrivateVertexAttrib4f(Context *context,
@@ -243,13 +243,13 @@ void ContextPrivateVertexAttrib4f(Context *context,
 {
     GLfloat vals[4] = {x, y, z, w};
     context->getMutablePrivateState()->setVertexAttribf(index, vals);
-    context->onContextPrivateDefaultVertexAttributeChange();
+    context->getPrivateStateCache().onDefaultVertexAttributeChange();
 }
 
 void ContextPrivateVertexAttrib4fv(Context *context, GLuint index, const GLfloat *values)
 {
     context->getMutablePrivateState()->setVertexAttribf(index, values);
-    context->onContextPrivateDefaultVertexAttributeChange();
+    context->getPrivateStateCache().onDefaultVertexAttributeChange();
 }
 
 void ContextPrivateVertexAttribI4i(Context *context,
@@ -261,13 +261,13 @@ void ContextPrivateVertexAttribI4i(Context *context,
 {
     GLint vals[4] = {x, y, z, w};
     context->getMutablePrivateState()->setVertexAttribi(index, vals);
-    context->onContextPrivateDefaultVertexAttributeChange();
+    context->getPrivateStateCache().onDefaultVertexAttributeChange();
 }
 
 void ContextPrivateVertexAttribI4iv(Context *context, GLuint index, const GLint *values)
 {
     context->getMutablePrivateState()->setVertexAttribi(index, values);
-    context->onContextPrivateDefaultVertexAttributeChange();
+    context->getPrivateStateCache().onDefaultVertexAttributeChange();
 }
 
 void ContextPrivateVertexAttribI4ui(Context *context,
@@ -279,13 +279,13 @@ void ContextPrivateVertexAttribI4ui(Context *context,
 {
     GLuint vals[4] = {x, y, z, w};
     context->getMutablePrivateState()->setVertexAttribu(index, vals);
-    context->onContextPrivateDefaultVertexAttributeChange();
+    context->getPrivateStateCache().onDefaultVertexAttributeChange();
 }
 
 void ContextPrivateVertexAttribI4uiv(Context *context, GLuint index, const GLuint *values)
 {
     context->getMutablePrivateState()->setVertexAttribu(index, values);
-    context->onContextPrivateDefaultVertexAttributeChange();
+    context->getPrivateStateCache().onDefaultVertexAttributeChange();
 }
 
 void ContextPrivateViewport(Context *context, GLint x, GLint y, GLsizei width, GLsizei height)
@@ -370,19 +370,19 @@ void ContextPrivateBlendColor(Context *context,
 void ContextPrivateBlendEquation(Context *context, GLenum mode)
 {
     context->getMutablePrivateState()->setBlendEquation(mode, mode);
-    context->onContextPrivateBlendEquationChange();
+    context->getPrivateStateCache().onBlendEquationChange();
 }
 
 void ContextPrivateBlendEquationi(Context *context, GLuint buf, GLenum mode)
 {
     context->getMutablePrivateState()->setBlendEquationIndexed(mode, mode, buf);
-    context->onContextPrivateBlendEquationChange();
+    context->getPrivateStateCache().onBlendEquationChange();
 }
 
 void ContextPrivateBlendEquationSeparate(Context *context, GLenum modeRGB, GLenum modeAlpha)
 {
     context->getMutablePrivateState()->setBlendEquation(modeRGB, modeAlpha);
-    context->onContextPrivateBlendEquationChange();
+    context->getPrivateStateCache().onBlendEquationChange();
 }
 
 void ContextPrivateBlendEquationSeparatei(Context *context,
@@ -391,7 +391,7 @@ void ContextPrivateBlendEquationSeparatei(Context *context,
                                           GLenum modeAlpha)
 {
     context->getMutablePrivateState()->setBlendEquationIndexed(modeRGB, modeAlpha, buf);
-    context->onContextPrivateBlendEquationChange();
+    context->getPrivateStateCache().onBlendEquationChange();
 }
 
 void ContextPrivateBlendFunc(Context *context, GLenum sfactor, GLenum dfactor)
@@ -404,7 +404,7 @@ void ContextPrivateBlendFunci(Context *context, GLuint buf, GLenum src, GLenum d
     context->getMutablePrivateState()->setBlendFactorsIndexed(src, dst, src, dst, buf);
     if (context->getState().noSimultaneousConstantColorAndAlphaBlendFunc())
     {
-        context->onContextPrivateBlendFuncIndexedChange();
+        context->getPrivateStateCache().onBlendFuncIndexedChange();
     }
 }
 
@@ -428,7 +428,7 @@ void ContextPrivateBlendFuncSeparatei(Context *context,
                                                               buf);
     if (context->getState().noSimultaneousConstantColorAndAlphaBlendFunc())
     {
-        context->onContextPrivateBlendFuncIndexedChange();
+        context->getPrivateStateCache().onBlendFuncIndexedChange();
     }
 }
 
@@ -454,7 +454,7 @@ void ContextPrivateStencilFuncSeparate(Context *context,
         context->getMutablePrivateState()->setStencilBackParams(func, clampedRef, mask);
     }
 
-    context->onContextPrivateStencilStateChange();
+    context->getPrivateStateCache().onStencilStateChange();
 }
 
 void ContextPrivateStencilMask(Context *context, GLuint mask)
@@ -474,7 +474,7 @@ void ContextPrivateStencilMaskSeparate(Context *context, GLenum face, GLuint mas
         context->getMutablePrivateState()->setStencilBackWritemask(mask);
     }
 
-    context->onContextPrivateStencilStateChange();
+    context->getPrivateStateCache().onStencilStateChange();
 }
 
 void ContextPrivateStencilOp(Context *context, GLenum fail, GLenum zfail, GLenum zpass)

@@ -9717,7 +9717,7 @@ void Context::setLogicOpEnabledForGLES1(bool enabled)
 {
     // Same implementation as ContextPrivateEnable(GL_COLOR_LOGIC_OP), without the GLES1 forwarding.
     getMutablePrivateState()->setLogicOpEnabled(enabled);
-    onContextPrivateCapChange();
+    getPrivateStateCache().onCapChange();
 }
 
 egl::Error Context::releaseHighPowerGPU()
@@ -10038,8 +10038,7 @@ StateCache::StateCache()
       mCachedBasicDrawElementsError(kInvalidPointer),
       mCachedProgramPipelineError(kInvalidPointer),
       mCachedTransformFeedbackActiveUnpaused(false),
-      mCachedCanDraw(false),
-      mIsCachedBasicDrawStatesErrorValid(true)
+      mCachedCanDraw(false)
 {
     mCachedValidDrawModes.fill(false);
 }
@@ -10152,11 +10151,13 @@ void StateCache::updateBasicDrawElementsError()
     mCachedBasicDrawElementsError = kInvalidPointer;
 }
 
-intptr_t StateCache::getBasicDrawStatesErrorImpl(const Context *context) const
+intptr_t StateCache::getBasicDrawStatesErrorImpl(const Context *context,
+                                                 const PrivateStateCache *privateStateCache) const
 {
     ASSERT(mCachedBasicDrawStatesErrorString == kInvalidPointer ||
-           !mIsCachedBasicDrawStatesErrorValid);
-    ASSERT(mCachedBasicDrawStatesErrorCode == GL_NO_ERROR || !mIsCachedBasicDrawStatesErrorValid);
+           !privateStateCache->isCachedBasicDrawStatesErrorValid());
+    ASSERT(mCachedBasicDrawStatesErrorCode == GL_NO_ERROR ||
+           !privateStateCache->isCachedBasicDrawStatesErrorValid());
 
     // Only assign the error code after ValidateDrawStates has completed. ValidateDrawStates calls
     // updateBasicDrawStatesError in some cases and resets the value mid-call.
@@ -10170,7 +10171,7 @@ intptr_t StateCache::getBasicDrawStatesErrorImpl(const Context *context) const
     ASSERT((mCachedBasicDrawStatesErrorString == 0) ==
            (mCachedBasicDrawStatesErrorCode == GL_NO_ERROR));
 
-    mIsCachedBasicDrawStatesErrorValid = true;
+    privateStateCache->setCachedBasicDrawStatesErrorValid();
     return mCachedBasicDrawStatesErrorString;
 }
 
@@ -10243,21 +10244,6 @@ void StateCache::onDrawFramebufferChange(Context *context)
     updateBasicDrawStatesError();
 }
 
-void StateCache::onContextPrivateCapChange(Context *context)
-{
-    mIsCachedBasicDrawStatesErrorValid = false;
-}
-
-void StateCache::onContextPrivateStencilStateChange(Context *context)
-{
-    mIsCachedBasicDrawStatesErrorValid = false;
-}
-
-void StateCache::onContextPrivateDefaultVertexAttributeChange(Context *context)
-{
-    mIsCachedBasicDrawStatesErrorValid = false;
-}
-
 void StateCache::onActiveTextureChange(Context *context)
 {
     updateBasicDrawStatesError();
@@ -10289,21 +10275,6 @@ void StateCache::onAtomicCounterBufferStateChange(Context *context)
 void StateCache::onShaderStorageBufferStateChange(Context *context)
 {
     updateBasicDrawStatesError();
-}
-
-void StateCache::onContextPrivateColorMaskChange(Context *context)
-{
-    mIsCachedBasicDrawStatesErrorValid = false;
-}
-
-void StateCache::onContextPrivateBlendFuncIndexedChange(Context *context)
-{
-    mIsCachedBasicDrawStatesErrorValid = false;
-}
-
-void StateCache::onContextPrivateBlendEquationChange(Context *context)
-{
-    mIsCachedBasicDrawStatesErrorValid = false;
 }
 
 void StateCache::setValidDrawModes(bool pointsOK,
@@ -10509,4 +10480,16 @@ void StateCache::updateCanDraw(Context *context)
         (context->isGLES1() || (context->getState().getProgramExecutable() &&
                                 context->getState().getProgramExecutable()->hasVertexShader()));
 }
+
+bool StateCache::isCurrentContext(const Context *context,
+                                  const PrivateStateCache *privateStateCache) const
+{
+    // Ensure that the state cache is not queried by any context other than the one that owns it.
+    return &context->getStateCache() == this &&
+           &context->getPrivateStateCache() == privateStateCache;
+}
+
+PrivateStateCache::PrivateStateCache() : mIsCachedBasicDrawStatesErrorValid(true) {}
+
+PrivateStateCache::~PrivateStateCache() = default;
 }  // namespace gl

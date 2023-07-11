@@ -432,7 +432,8 @@ ANGLE_INLINE bool ValidateDrawBase(const Context *context,
                                    angle::EntryPoint entryPoint,
                                    PrimitiveMode mode)
 {
-    intptr_t drawStatesError = context->getStateCache().getBasicDrawStatesErrorString(context);
+    intptr_t drawStatesError = context->getStateCache().getBasicDrawStatesErrorString(
+        context, &context->getPrivateStateCache());
     if (drawStatesError)
     {
         const char *errorMessage = reinterpret_cast<const char *>(drawStatesError);
