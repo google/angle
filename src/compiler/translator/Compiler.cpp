@@ -50,13 +50,13 @@
 #include "compiler/translator/tree_ops/SeparateDeclarations.h"
 #include "compiler/translator/tree_ops/SimplifyLoopConditions.h"
 #include "compiler/translator/tree_ops/SplitSequenceOperator.h"
-#include "compiler/translator/tree_ops/apple/AddAndTrueToLoopCondition.h"
-#include "compiler/translator/tree_ops/apple/RewriteDoWhile.h"
-#include "compiler/translator/tree_ops/apple/UnfoldShortCircuitAST.h"
-#include "compiler/translator/tree_ops/gl/RegenerateStructNames.h"
-#include "compiler/translator/tree_ops/gl/RewriteRepeatedAssignToSwizzled.h"
-#include "compiler/translator/tree_ops/gl/ScalarizeVecAndMatConstructorArgs.h"
-#include "compiler/translator/tree_ops/gl/UseInterfaceBlockFields.h"
+#include "compiler/translator/tree_ops/glsl/RegenerateStructNames.h"
+#include "compiler/translator/tree_ops/glsl/RewriteRepeatedAssignToSwizzled.h"
+#include "compiler/translator/tree_ops/glsl/ScalarizeVecAndMatConstructorArgs.h"
+#include "compiler/translator/tree_ops/glsl/UseInterfaceBlockFields.h"
+#include "compiler/translator/tree_ops/glsl/apple/AddAndTrueToLoopCondition.h"
+#include "compiler/translator/tree_ops/glsl/apple/RewriteDoWhile.h"
+#include "compiler/translator/tree_ops/glsl/apple/UnfoldShortCircuitAST.h"
 #include "compiler/translator/tree_util/BuiltIn.h"
 #include "compiler/translator/tree_util/IntermNodePatternMatcher.h"
 #include "compiler/translator/tree_util/ReplaceShadowingVariables.h"
@@ -187,7 +187,7 @@ bool RemoveInvariant(sh::GLenum shaderType,
                      const ShCompileOptions &compileOptions)
 {
     if (shaderType == GL_FRAGMENT_SHADER &&
-        (IsGLSL420OrNewer(outputType) || IsOutputVulkan(outputType)))
+        (IsGLSL420OrNewer(outputType) || IsOutputSPIRV(outputType)))
         return true;
 
     if (compileOptions.removeInvariantAndCentroidForESSL3 && shaderVersion >= 300 &&
@@ -645,7 +645,7 @@ bool TCompiler::getShaderBinary(const ShHandle compilerHandle,
     gl::BinaryOutputStream stream;
     gl::ShaderType shaderType = gl::FromGLenum<gl::ShaderType>(mShaderType);
     gl::CompiledShaderState state(shaderType);
-    state.buildCompiledShaderState(compilerHandle, IsOutputVulkan(mOutputType));
+    state.buildCompiledShaderState(compilerHandle, IsOutputSPIRV(mOutputType));
 
     stream.writeBytes(
         reinterpret_cast<const unsigned char *>(angle::GetANGLEShaderProgramVersion()),

@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 #include "common/utilities.h"
-#include "compiler/translator/TranslatorMetalDirect.h"
+#include "compiler/translator/msl/TranslatorMSL.h"
 #include "libANGLE/renderer/metal/ContextMtl.h"
 #include "libANGLE/renderer/metal/ShaderMtl.h"
 #include "libANGLE/renderer/metal/mtl_msl_utils.h"

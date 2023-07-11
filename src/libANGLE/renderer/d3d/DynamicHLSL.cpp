@@ -10,7 +10,7 @@
 
 #include "common/string_utils.h"
 #include "common/utilities.h"
-#include "compiler/translator/blocklayoutHLSL.h"
+#include "compiler/translator/hlsl/blocklayoutHLSL.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/Shader.h"

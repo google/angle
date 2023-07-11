@@ -33,12 +33,12 @@ angle_code_affecting_program_serialize += angle_translator_essl_sources
 angle_code_affecting_program_serialize += angle_translator_glsl_sources
 angle_code_affecting_program_serialize += angle_translator_glsl_apple_sources
 angle_code_affecting_program_serialize += angle_translator_hlsl_sources
-angle_code_affecting_program_serialize += angle_translator_lib_vulkan_sources
+angle_code_affecting_program_serialize += angle_translator_lib_spirv_sources
 angle_code_affecting_program_serialize +=
     angle_translator_essl_symbol_table_sources
 angle_code_affecting_program_serialize +=
     angle_translator_glsl_symbol_table_sources
-angle_code_affecting_program_serialize += angle_translator_lib_metal_sources
+angle_code_affecting_program_serialize += angle_translator_lib_msl_sources
 angle_code_affecting_program_serialize += angle_preprocessor_sources
 
 vulkan_backend_dir = "libANGLE/renderer/vulkan/"

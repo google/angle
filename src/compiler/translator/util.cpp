@@ -808,11 +808,11 @@ bool IsOutputHLSL(ShShaderOutput output)
     }
     return false;
 }
-bool IsOutputVulkan(ShShaderOutput output)
+bool IsOutputSPIRV(ShShaderOutput output)
 {
     return output == SH_SPIRV_VULKAN_OUTPUT;
 }
-bool IsOutputMetalDirect(ShShaderOutput output)
+bool IsOutputMSL(ShShaderOutput output)
 {
     return output == SH_MSL_METAL_OUTPUT;
 }

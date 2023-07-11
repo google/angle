@@ -12,7 +12,7 @@
 #include <string>
 #include <vector>
 
-#include "compiler/translator/blocklayoutHLSL.h"
+#include "compiler/translator/hlsl/blocklayoutHLSL.h"
 #include "libANGLE/Constants.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/ProgramImpl.h"
