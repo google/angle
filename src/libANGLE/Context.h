@@ -521,7 +521,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
 
     void markContextLost(GraphicsResetStatus status);
 
-    bool isContextLost() const { return mContextLost; }
+    bool isContextLost() const { return mContextLost.load(std::memory_order_relaxed) != 0; }
     void setContextLost();
 
     GLenum getGraphicsResetStrategy() const { return mResetStrategy; }
@@ -599,7 +599,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
         // Ensure we don't skip validation when context becomes lost, since implementations
         // generally assume a non-lost context, non-null objects, etc.
         ASSERT(!isContextLost() || !mSkipValidation);
-        return mSkipValidation;
+        return mSkipValidation.load(std::memory_order_relaxed) != 0;
     }
 
     // Specific methods needed for validation.
@@ -820,7 +820,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
 
     State mState;
     bool mShared;
-    bool mSkipValidation;
+    std::atomic_int mSkipValidation;
     bool mDisplayTextureShareGroup;
     bool mDisplaySemaphoreShareGroup;
 
@@ -870,7 +870,8 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
 
     // Current/lost context flags
     bool mHasBeenCurrent;
-    bool mContextLost;  // Set with setContextLost so that we also set mSkipValidation=false.
+    // Set with setContextLost so that we also set mSkipValidation=false:
+    std::atomic_int mContextLost;
     GraphicsResetStatus mResetStatus;
     bool mContextLostForced;
     GLenum mResetStrategy;

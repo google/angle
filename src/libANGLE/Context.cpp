@@ -639,7 +639,7 @@ Context::Context(egl::Display *display,
       mCompiler(),
       mConfig(config),
       mHasBeenCurrent(false),
-      mContextLost(false),
+      mContextLost(0),
       mResetStatus(GraphicsResetStatus::NoError),
       mContextLostForced(false),
       mResetStrategy(GetResetStrategy(attribs)),
@@ -3107,11 +3107,11 @@ void Context::markContextLost(GraphicsResetStatus status)
 
 void Context::setContextLost()
 {
-    mContextLost = true;
+    mContextLost = 1;
 
     // Stop skipping validation, since many implementation entrypoint assume they can't
     // be called when lost, or with null object arguments, etc.
-    mSkipValidation = false;
+    mSkipValidation = 0;
 
     // Make sure we update TLS.
     SetCurrentValidContext(nullptr);
@@ -3943,7 +3943,7 @@ Extensions Context::generateSupportedExtensions() const
     supportedExtensions.multiDrawANGLE                = true;
 
     // Enable the no error extension if the context was created with the flag.
-    supportedExtensions.noErrorKHR = mSkipValidation;
+    supportedExtensions.noErrorKHR = mSkipValidation != 0;
 
     // Enable surfaceless to advertise we'll have the correct behavior when there is no default FBO
     supportedExtensions.surfacelessContextOES = mSurfacelessSupported;
@@ -3955,7 +3955,7 @@ Extensions Context::generateSupportedExtensions() const
     supportedExtensions.debugLabelEXT = true;
 
     // Explicitly enable GL_ANGLE_robust_client_memory if the context supports validation.
-    supportedExtensions.robustClientMemoryANGLE = !mSkipValidation;
+    supportedExtensions.robustClientMemoryANGLE = mSkipValidation == 0;
 
     // Determine robust resource init availability from EGL.
     supportedExtensions.robustResourceInitializationANGLE = mState.isRobustResourceInitEnabled();
@@ -4348,9 +4348,9 @@ void Context::initCaps()
         // prevents writing invalid calls to the capture.
         INFO() << "Enabling validation to prevent invalid calls from being captured. This "
                   "effectively disables GL_KHR_no_error and enables GL_ANGLE_robust_client_memory.";
-        mSkipValidation                     = false;
-        extensions->noErrorKHR              = mSkipValidation;
-        extensions->robustClientMemoryANGLE = !mSkipValidation;
+        mSkipValidation                     = 0;
+        extensions->noErrorKHR              = mSkipValidation != 0;
+        extensions->robustClientMemoryANGLE = mSkipValidation == 0;
 
         INFO() << "Disabling GL_OES_depth32 during capture, which is not widely supported on "
                   "mobile";
@@ -7079,7 +7079,7 @@ void Context::getProgramivRobust(ShaderProgramID program,
 void Context::getProgramPipelineiv(ProgramPipelineID pipeline, GLenum pname, GLint *params)
 {
     ProgramPipeline *programPipeline = nullptr;
-    if (!mContextLost)
+    if (!isContextLost())
     {
         programPipeline = getProgramPipeline(pipeline);
     }
