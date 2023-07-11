@@ -14,47 +14,74 @@
 
 namespace gl
 {
-void ContextPrivateVertexAttrib1d(Context *context, GLuint index, GLdouble x)
+void ContextPrivateVertexAttrib1d(PrivateState *privateState,
+                                  PrivateStateCache *privateStateCache,
+                                  GLuint index,
+                                  GLdouble x)
 {
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttrib1dv(Context *context, GLuint index, const GLdouble *v)
+void ContextPrivateVertexAttrib1dv(PrivateState *privateState,
+                                   PrivateStateCache *privateStateCache,
+                                   GLuint index,
+                                   const GLdouble *v)
 {
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttrib1s(Context *context, GLuint index, GLshort x)
+void ContextPrivateVertexAttrib1s(PrivateState *privateState,
+                                  PrivateStateCache *privateStateCache,
+                                  GLuint index,
+                                  GLshort x)
 {
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttrib1sv(Context *context, GLuint index, const GLshort *v)
+void ContextPrivateVertexAttrib1sv(PrivateState *privateState,
+                                   PrivateStateCache *privateStateCache,
+                                   GLuint index,
+                                   const GLshort *v)
 {
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttrib2d(Context *context, GLuint index, GLdouble x, GLdouble y)
+void ContextPrivateVertexAttrib2d(PrivateState *privateState,
+                                  PrivateStateCache *privateStateCache,
+                                  GLuint index,
+                                  GLdouble x,
+                                  GLdouble y)
 {
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttrib2dv(Context *context, GLuint index, const GLdouble *v)
+void ContextPrivateVertexAttrib2dv(PrivateState *privateState,
+                                   PrivateStateCache *privateStateCache,
+                                   GLuint index,
+                                   const GLdouble *v)
 {
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttrib2s(Context *context, GLuint index, GLshort x, GLshort y)
+void ContextPrivateVertexAttrib2s(PrivateState *privateState,
+                                  PrivateStateCache *privateStateCache,
+                                  GLuint index,
+                                  GLshort x,
+                                  GLshort y)
 {
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttrib2sv(Context *context, GLuint index, const GLshort *v)
+void ContextPrivateVertexAttrib2sv(PrivateState *privateState,
+                                   PrivateStateCache *privateStateCache,
+                                   GLuint index,
+                                   const GLshort *v)
 {
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttrib3d(Context *context,
+void ContextPrivateVertexAttrib3d(PrivateState *privateState,
+                                  PrivateStateCache *privateStateCache,
                                   GLuint index,
                                   GLdouble x,
                                   GLdouble y,
@@ -63,37 +90,58 @@ void ContextPrivateVertexAttrib3d(Context *context,
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttrib3dv(Context *context, GLuint index, const GLdouble *v)
+void ContextPrivateVertexAttrib3dv(PrivateState *privateState,
+                                   PrivateStateCache *privateStateCache,
+                                   GLuint index,
+                                   const GLdouble *v)
 {
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttrib3s(Context *context, GLuint index, GLshort x, GLshort y, GLshort z)
+void ContextPrivateVertexAttrib3s(PrivateState *privateState,
+                                  PrivateStateCache *privateStateCache,
+                                  GLuint index,
+                                  GLshort x,
+                                  GLshort y,
+                                  GLshort z)
 {
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttrib3sv(Context *context, GLuint index, const GLshort *v)
+void ContextPrivateVertexAttrib3sv(PrivateState *privateState,
+                                   PrivateStateCache *privateStateCache,
+                                   GLuint index,
+                                   const GLshort *v)
 {
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttrib4Nbv(Context *context, GLuint index, const GLbyte *v)
+void ContextPrivateVertexAttrib4Nbv(PrivateState *privateState,
+                                    PrivateStateCache *privateStateCache,
+                                    GLuint index,
+                                    const GLbyte *v)
 {
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttrib4Niv(Context *context, GLuint index, const GLint *v)
+void ContextPrivateVertexAttrib4Niv(PrivateState *privateState,
+                                    PrivateStateCache *privateStateCache,
+                                    GLuint index,
+                                    const GLint *v)
 {
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttrib4Nsv(Context *context, GLuint index, const GLshort *v)
+void ContextPrivateVertexAttrib4Nsv(PrivateState *privateState,
+                                    PrivateStateCache *privateStateCache,
+                                    GLuint index,
+                                    const GLshort *v)
 {
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttrib4Nub(Context *context,
+void ContextPrivateVertexAttrib4Nub(PrivateState *privateState,
+                                    PrivateStateCache *privateStateCache,
                                     GLuint index,
                                     GLubyte x,
                                     GLubyte y,
@@ -103,27 +151,40 @@ void ContextPrivateVertexAttrib4Nub(Context *context,
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttrib4Nubv(Context *context, GLuint index, const GLubyte *v)
+void ContextPrivateVertexAttrib4Nubv(PrivateState *privateState,
+                                     PrivateStateCache *privateStateCache,
+                                     GLuint index,
+                                     const GLubyte *v)
 {
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttrib4Nuiv(Context *context, GLuint index, const GLuint *v)
+void ContextPrivateVertexAttrib4Nuiv(PrivateState *privateState,
+                                     PrivateStateCache *privateStateCache,
+                                     GLuint index,
+                                     const GLuint *v)
 {
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttrib4Nusv(Context *context, GLuint index, const GLushort *v)
+void ContextPrivateVertexAttrib4Nusv(PrivateState *privateState,
+                                     PrivateStateCache *privateStateCache,
+                                     GLuint index,
+                                     const GLushort *v)
 {
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttrib4bv(Context *context, GLuint index, const GLbyte *v)
+void ContextPrivateVertexAttrib4bv(PrivateState *privateState,
+                                   PrivateStateCache *privateStateCache,
+                                   GLuint index,
+                                   const GLbyte *v)
 {
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttrib4d(Context *context,
+void ContextPrivateVertexAttrib4d(PrivateState *privateState,
+                                  PrivateStateCache *privateStateCache,
                                   GLuint index,
                                   GLdouble x,
                                   GLdouble y,
@@ -133,17 +194,24 @@ void ContextPrivateVertexAttrib4d(Context *context,
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttrib4dv(Context *context, GLuint index, const GLdouble *v)
+void ContextPrivateVertexAttrib4dv(PrivateState *privateState,
+                                   PrivateStateCache *privateStateCache,
+                                   GLuint index,
+                                   const GLdouble *v)
 {
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttrib4iv(Context *context, GLuint index, const GLint *v)
+void ContextPrivateVertexAttrib4iv(PrivateState *privateState,
+                                   PrivateStateCache *privateStateCache,
+                                   GLuint index,
+                                   const GLint *v)
 {
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttrib4s(Context *context,
+void ContextPrivateVertexAttrib4s(PrivateState *privateState,
+                                  PrivateStateCache *privateStateCache,
                                   GLuint index,
                                   GLshort x,
                                   GLshort y,
@@ -153,107 +221,174 @@ void ContextPrivateVertexAttrib4s(Context *context,
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttrib4sv(Context *context, GLuint index, const GLshort *v)
+void ContextPrivateVertexAttrib4sv(PrivateState *privateState,
+                                   PrivateStateCache *privateStateCache,
+                                   GLuint index,
+                                   const GLshort *v)
 {
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttrib4ubv(Context *context, GLuint index, const GLubyte *v)
+void ContextPrivateVertexAttrib4ubv(PrivateState *privateState,
+                                    PrivateStateCache *privateStateCache,
+                                    GLuint index,
+                                    const GLubyte *v)
 {
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttrib4uiv(Context *context, GLuint index, const GLuint *v)
+void ContextPrivateVertexAttrib4uiv(PrivateState *privateState,
+                                    PrivateStateCache *privateStateCache,
+                                    GLuint index,
+                                    const GLuint *v)
 {
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttrib4usv(Context *context, GLuint index, const GLushort *v)
+void ContextPrivateVertexAttrib4usv(PrivateState *privateState,
+                                    PrivateStateCache *privateStateCache,
+                                    GLuint index,
+                                    const GLushort *v)
 {
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttribI1i(Context *context, GLuint index, GLint x)
+void ContextPrivateVertexAttribI1i(PrivateState *privateState,
+                                   PrivateStateCache *privateStateCache,
+                                   GLuint index,
+                                   GLint x)
 {
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttribI1iv(Context *context, GLuint index, const GLint *v)
+void ContextPrivateVertexAttribI1iv(PrivateState *privateState,
+                                    PrivateStateCache *privateStateCache,
+                                    GLuint index,
+                                    const GLint *v)
 {
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttribI1ui(Context *context, GLuint index, GLuint x)
+void ContextPrivateVertexAttribI1ui(PrivateState *privateState,
+                                    PrivateStateCache *privateStateCache,
+                                    GLuint index,
+                                    GLuint x)
 {
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttribI1uiv(Context *context, GLuint index, const GLuint *v)
+void ContextPrivateVertexAttribI1uiv(PrivateState *privateState,
+                                     PrivateStateCache *privateStateCache,
+                                     GLuint index,
+                                     const GLuint *v)
 {
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttribI2i(Context *context, GLuint index, GLint x, GLint y)
+void ContextPrivateVertexAttribI2i(PrivateState *privateState,
+                                   PrivateStateCache *privateStateCache,
+                                   GLuint index,
+                                   GLint x,
+                                   GLint y)
 {
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttribI2iv(Context *context, GLuint index, const GLint *v)
+void ContextPrivateVertexAttribI2iv(PrivateState *privateState,
+                                    PrivateStateCache *privateStateCache,
+                                    GLuint index,
+                                    const GLint *v)
 {
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttribI2ui(Context *context, GLuint index, GLuint x, GLuint y)
+void ContextPrivateVertexAttribI2ui(PrivateState *privateState,
+                                    PrivateStateCache *privateStateCache,
+                                    GLuint index,
+                                    GLuint x,
+                                    GLuint y)
 {
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttribI2uiv(Context *context, GLuint index, const GLuint *v)
+void ContextPrivateVertexAttribI2uiv(PrivateState *privateState,
+                                     PrivateStateCache *privateStateCache,
+                                     GLuint index,
+                                     const GLuint *v)
 {
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttribI3i(Context *context, GLuint index, GLint x, GLint y, GLint z)
+void ContextPrivateVertexAttribI3i(PrivateState *privateState,
+                                   PrivateStateCache *privateStateCache,
+                                   GLuint index,
+                                   GLint x,
+                                   GLint y,
+                                   GLint z)
 {
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttribI3iv(Context *context, GLuint index, const GLint *v)
+void ContextPrivateVertexAttribI3iv(PrivateState *privateState,
+                                    PrivateStateCache *privateStateCache,
+                                    GLuint index,
+                                    const GLint *v)
 {
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttribI3ui(Context *context, GLuint index, GLuint x, GLuint y, GLuint z)
+void ContextPrivateVertexAttribI3ui(PrivateState *privateState,
+                                    PrivateStateCache *privateStateCache,
+                                    GLuint index,
+                                    GLuint x,
+                                    GLuint y,
+                                    GLuint z)
 {
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttribI3uiv(Context *context, GLuint index, const GLuint *v)
+void ContextPrivateVertexAttribI3uiv(PrivateState *privateState,
+                                     PrivateStateCache *privateStateCache,
+                                     GLuint index,
+                                     const GLuint *v)
 {
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttribI4bv(Context *context, GLuint index, const GLbyte *v)
+void ContextPrivateVertexAttribI4bv(PrivateState *privateState,
+                                    PrivateStateCache *privateStateCache,
+                                    GLuint index,
+                                    const GLbyte *v)
 {
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttribI4sv(Context *context, GLuint index, const GLshort *v)
+void ContextPrivateVertexAttribI4sv(PrivateState *privateState,
+                                    PrivateStateCache *privateStateCache,
+                                    GLuint index,
+                                    const GLshort *v)
 {
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttribI4ubv(Context *context, GLuint index, const GLubyte *v)
+void ContextPrivateVertexAttribI4ubv(PrivateState *privateState,
+                                     PrivateStateCache *privateStateCache,
+                                     GLuint index,
+                                     const GLubyte *v)
 {
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttribI4usv(Context *context, GLuint index, const GLushort *v)
+void ContextPrivateVertexAttribI4usv(PrivateState *privateState,
+                                     PrivateStateCache *privateStateCache,
+                                     GLuint index,
+                                     const GLushort *v)
 {
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttribP1ui(Context *context,
+void ContextPrivateVertexAttribP1ui(PrivateState *privateState,
+                                    PrivateStateCache *privateStateCache,
                                     GLuint index,
                                     GLenum type,
                                     GLboolean normalized,
@@ -262,7 +397,8 @@ void ContextPrivateVertexAttribP1ui(Context *context,
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttribP1uiv(Context *context,
+void ContextPrivateVertexAttribP1uiv(PrivateState *privateState,
+                                     PrivateStateCache *privateStateCache,
                                      GLuint index,
                                      GLenum type,
                                      GLboolean normalized,
@@ -271,7 +407,8 @@ void ContextPrivateVertexAttribP1uiv(Context *context,
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttribP2ui(Context *context,
+void ContextPrivateVertexAttribP2ui(PrivateState *privateState,
+                                    PrivateStateCache *privateStateCache,
                                     GLuint index,
                                     GLenum type,
                                     GLboolean normalized,
@@ -280,7 +417,8 @@ void ContextPrivateVertexAttribP2ui(Context *context,
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttribP2uiv(Context *context,
+void ContextPrivateVertexAttribP2uiv(PrivateState *privateState,
+                                     PrivateStateCache *privateStateCache,
                                      GLuint index,
                                      GLenum type,
                                      GLboolean normalized,
@@ -289,7 +427,8 @@ void ContextPrivateVertexAttribP2uiv(Context *context,
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttribP3ui(Context *context,
+void ContextPrivateVertexAttribP3ui(PrivateState *privateState,
+                                    PrivateStateCache *privateStateCache,
                                     GLuint index,
                                     GLenum type,
                                     GLboolean normalized,
@@ -298,7 +437,8 @@ void ContextPrivateVertexAttribP3ui(Context *context,
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttribP3uiv(Context *context,
+void ContextPrivateVertexAttribP3uiv(PrivateState *privateState,
+                                     PrivateStateCache *privateStateCache,
                                      GLuint index,
                                      GLenum type,
                                      GLboolean normalized,
@@ -307,7 +447,8 @@ void ContextPrivateVertexAttribP3uiv(Context *context,
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttribP4ui(Context *context,
+void ContextPrivateVertexAttribP4ui(PrivateState *privateState,
+                                    PrivateStateCache *privateStateCache,
                                     GLuint index,
                                     GLenum type,
                                     GLboolean normalized,
@@ -316,7 +457,8 @@ void ContextPrivateVertexAttribP4ui(Context *context,
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttribP4uiv(Context *context,
+void ContextPrivateVertexAttribP4uiv(PrivateState *privateState,
+                                     PrivateStateCache *privateStateCache,
                                      GLuint index,
                                      GLenum type,
                                      GLboolean normalized,
@@ -325,27 +467,41 @@ void ContextPrivateVertexAttribP4uiv(Context *context,
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttribL1d(Context *context, GLuint index, GLdouble x)
+void ContextPrivateVertexAttribL1d(PrivateState *privateState,
+                                   PrivateStateCache *privateStateCache,
+                                   GLuint index,
+                                   GLdouble x)
 {
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttribL1dv(Context *context, GLuint index, const GLdouble *v)
+void ContextPrivateVertexAttribL1dv(PrivateState *privateState,
+                                    PrivateStateCache *privateStateCache,
+                                    GLuint index,
+                                    const GLdouble *v)
 {
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttribL2d(Context *context, GLuint index, GLdouble x, GLdouble y)
+void ContextPrivateVertexAttribL2d(PrivateState *privateState,
+                                   PrivateStateCache *privateStateCache,
+                                   GLuint index,
+                                   GLdouble x,
+                                   GLdouble y)
 {
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttribL2dv(Context *context, GLuint index, const GLdouble *v)
+void ContextPrivateVertexAttribL2dv(PrivateState *privateState,
+                                    PrivateStateCache *privateStateCache,
+                                    GLuint index,
+                                    const GLdouble *v)
 {
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttribL3d(Context *context,
+void ContextPrivateVertexAttribL3d(PrivateState *privateState,
+                                   PrivateStateCache *privateStateCache,
                                    GLuint index,
                                    GLdouble x,
                                    GLdouble y,
@@ -354,12 +510,16 @@ void ContextPrivateVertexAttribL3d(Context *context,
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttribL3dv(Context *context, GLuint index, const GLdouble *v)
+void ContextPrivateVertexAttribL3dv(PrivateState *privateState,
+                                    PrivateStateCache *privateStateCache,
+                                    GLuint index,
+                                    const GLdouble *v)
 {
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttribL4d(Context *context,
+void ContextPrivateVertexAttribL4d(PrivateState *privateState,
+                                   PrivateStateCache *privateStateCache,
                                    GLuint index,
                                    GLdouble x,
                                    GLdouble y,
@@ -369,7 +529,10 @@ void ContextPrivateVertexAttribL4d(Context *context,
     UNIMPLEMENTED();
 }
 
-void ContextPrivateVertexAttribL4dv(Context *context, GLuint index, const GLdouble *v)
+void ContextPrivateVertexAttribL4dv(PrivateState *privateState,
+                                    PrivateStateCache *privateStateCache,
+                                    GLuint index,
+                                    const GLdouble *v)
 {
     UNIMPLEMENTED();
 }

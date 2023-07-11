@@ -234,7 +234,8 @@ void GL_APIENTRY GL_VertexAttribI1i(GLuint index, GLint x)
              ValidateVertexAttribI1i(context, angle::EntryPoint::GLVertexAttribI1i, index, x));
         if (isCallValid)
         {
-            ContextPrivateVertexAttribI1i(context, index, x);
+            ContextPrivateVertexAttribI1i(context->getMutablePrivateState(),
+                                          context->getMutablePrivateStateCache(), index, x);
         }
         ANGLE_CAPTURE_GL(VertexAttribI1i, isCallValid, context, index, x);
     }
@@ -258,7 +259,8 @@ void GL_APIENTRY GL_VertexAttribI1iv(GLuint index, const GLint *v)
              ValidateVertexAttribI1iv(context, angle::EntryPoint::GLVertexAttribI1iv, index, v));
         if (isCallValid)
         {
-            ContextPrivateVertexAttribI1iv(context, index, v);
+            ContextPrivateVertexAttribI1iv(context->getMutablePrivateState(),
+                                           context->getMutablePrivateStateCache(), index, v);
         }
         ANGLE_CAPTURE_GL(VertexAttribI1iv, isCallValid, context, index, v);
     }
@@ -281,7 +283,8 @@ void GL_APIENTRY GL_VertexAttribI1ui(GLuint index, GLuint x)
              ValidateVertexAttribI1ui(context, angle::EntryPoint::GLVertexAttribI1ui, index, x));
         if (isCallValid)
         {
-            ContextPrivateVertexAttribI1ui(context, index, x);
+            ContextPrivateVertexAttribI1ui(context->getMutablePrivateState(),
+                                           context->getMutablePrivateStateCache(), index, x);
         }
         ANGLE_CAPTURE_GL(VertexAttribI1ui, isCallValid, context, index, x);
     }
@@ -305,7 +308,8 @@ void GL_APIENTRY GL_VertexAttribI1uiv(GLuint index, const GLuint *v)
              ValidateVertexAttribI1uiv(context, angle::EntryPoint::GLVertexAttribI1uiv, index, v));
         if (isCallValid)
         {
-            ContextPrivateVertexAttribI1uiv(context, index, v);
+            ContextPrivateVertexAttribI1uiv(context->getMutablePrivateState(),
+                                            context->getMutablePrivateStateCache(), index, v);
         }
         ANGLE_CAPTURE_GL(VertexAttribI1uiv, isCallValid, context, index, v);
     }
@@ -329,7 +333,8 @@ void GL_APIENTRY GL_VertexAttribI2i(GLuint index, GLint x, GLint y)
              ValidateVertexAttribI2i(context, angle::EntryPoint::GLVertexAttribI2i, index, x, y));
         if (isCallValid)
         {
-            ContextPrivateVertexAttribI2i(context, index, x, y);
+            ContextPrivateVertexAttribI2i(context->getMutablePrivateState(),
+                                          context->getMutablePrivateStateCache(), index, x, y);
         }
         ANGLE_CAPTURE_GL(VertexAttribI2i, isCallValid, context, index, x, y);
     }
@@ -353,7 +358,8 @@ void GL_APIENTRY GL_VertexAttribI2iv(GLuint index, const GLint *v)
              ValidateVertexAttribI2iv(context, angle::EntryPoint::GLVertexAttribI2iv, index, v));
         if (isCallValid)
         {
-            ContextPrivateVertexAttribI2iv(context, index, v);
+            ContextPrivateVertexAttribI2iv(context->getMutablePrivateState(),
+                                           context->getMutablePrivateStateCache(), index, v);
         }
         ANGLE_CAPTURE_GL(VertexAttribI2iv, isCallValid, context, index, v);
     }
@@ -377,7 +383,8 @@ void GL_APIENTRY GL_VertexAttribI2ui(GLuint index, GLuint x, GLuint y)
              ValidateVertexAttribI2ui(context, angle::EntryPoint::GLVertexAttribI2ui, index, x, y));
         if (isCallValid)
         {
-            ContextPrivateVertexAttribI2ui(context, index, x, y);
+            ContextPrivateVertexAttribI2ui(context->getMutablePrivateState(),
+                                           context->getMutablePrivateStateCache(), index, x, y);
         }
         ANGLE_CAPTURE_GL(VertexAttribI2ui, isCallValid, context, index, x, y);
     }
@@ -401,7 +408,8 @@ void GL_APIENTRY GL_VertexAttribI2uiv(GLuint index, const GLuint *v)
              ValidateVertexAttribI2uiv(context, angle::EntryPoint::GLVertexAttribI2uiv, index, v));
         if (isCallValid)
         {
-            ContextPrivateVertexAttribI2uiv(context, index, v);
+            ContextPrivateVertexAttribI2uiv(context->getMutablePrivateState(),
+                                            context->getMutablePrivateStateCache(), index, v);
         }
         ANGLE_CAPTURE_GL(VertexAttribI2uiv, isCallValid, context, index, v);
     }
@@ -425,7 +433,8 @@ void GL_APIENTRY GL_VertexAttribI3i(GLuint index, GLint x, GLint y, GLint z)
                                                     index, x, y, z));
         if (isCallValid)
         {
-            ContextPrivateVertexAttribI3i(context, index, x, y, z);
+            ContextPrivateVertexAttribI3i(context->getMutablePrivateState(),
+                                          context->getMutablePrivateStateCache(), index, x, y, z);
         }
         ANGLE_CAPTURE_GL(VertexAttribI3i, isCallValid, context, index, x, y, z);
     }
@@ -449,7 +458,8 @@ void GL_APIENTRY GL_VertexAttribI3iv(GLuint index, const GLint *v)
              ValidateVertexAttribI3iv(context, angle::EntryPoint::GLVertexAttribI3iv, index, v));
         if (isCallValid)
         {
-            ContextPrivateVertexAttribI3iv(context, index, v);
+            ContextPrivateVertexAttribI3iv(context->getMutablePrivateState(),
+                                           context->getMutablePrivateStateCache(), index, v);
         }
         ANGLE_CAPTURE_GL(VertexAttribI3iv, isCallValid, context, index, v);
     }
@@ -473,7 +483,8 @@ void GL_APIENTRY GL_VertexAttribI3ui(GLuint index, GLuint x, GLuint y, GLuint z)
                                                      index, x, y, z));
         if (isCallValid)
         {
-            ContextPrivateVertexAttribI3ui(context, index, x, y, z);
+            ContextPrivateVertexAttribI3ui(context->getMutablePrivateState(),
+                                           context->getMutablePrivateStateCache(), index, x, y, z);
         }
         ANGLE_CAPTURE_GL(VertexAttribI3ui, isCallValid, context, index, x, y, z);
     }
@@ -497,7 +508,8 @@ void GL_APIENTRY GL_VertexAttribI3uiv(GLuint index, const GLuint *v)
              ValidateVertexAttribI3uiv(context, angle::EntryPoint::GLVertexAttribI3uiv, index, v));
         if (isCallValid)
         {
-            ContextPrivateVertexAttribI3uiv(context, index, v);
+            ContextPrivateVertexAttribI3uiv(context->getMutablePrivateState(),
+                                            context->getMutablePrivateStateCache(), index, v);
         }
         ANGLE_CAPTURE_GL(VertexAttribI3uiv, isCallValid, context, index, v);
     }
@@ -521,7 +533,8 @@ void GL_APIENTRY GL_VertexAttribI4bv(GLuint index, const GLbyte *v)
              ValidateVertexAttribI4bv(context, angle::EntryPoint::GLVertexAttribI4bv, index, v));
         if (isCallValid)
         {
-            ContextPrivateVertexAttribI4bv(context, index, v);
+            ContextPrivateVertexAttribI4bv(context->getMutablePrivateState(),
+                                           context->getMutablePrivateStateCache(), index, v);
         }
         ANGLE_CAPTURE_GL(VertexAttribI4bv, isCallValid, context, index, v);
     }
@@ -545,7 +558,8 @@ void GL_APIENTRY GL_VertexAttribI4sv(GLuint index, const GLshort *v)
              ValidateVertexAttribI4sv(context, angle::EntryPoint::GLVertexAttribI4sv, index, v));
         if (isCallValid)
         {
-            ContextPrivateVertexAttribI4sv(context, index, v);
+            ContextPrivateVertexAttribI4sv(context->getMutablePrivateState(),
+                                           context->getMutablePrivateStateCache(), index, v);
         }
         ANGLE_CAPTURE_GL(VertexAttribI4sv, isCallValid, context, index, v);
     }
@@ -569,7 +583,8 @@ void GL_APIENTRY GL_VertexAttribI4ubv(GLuint index, const GLubyte *v)
              ValidateVertexAttribI4ubv(context, angle::EntryPoint::GLVertexAttribI4ubv, index, v));
         if (isCallValid)
         {
-            ContextPrivateVertexAttribI4ubv(context, index, v);
+            ContextPrivateVertexAttribI4ubv(context->getMutablePrivateState(),
+                                            context->getMutablePrivateStateCache(), index, v);
         }
         ANGLE_CAPTURE_GL(VertexAttribI4ubv, isCallValid, context, index, v);
     }
@@ -593,7 +608,8 @@ void GL_APIENTRY GL_VertexAttribI4usv(GLuint index, const GLushort *v)
              ValidateVertexAttribI4usv(context, angle::EntryPoint::GLVertexAttribI4usv, index, v));
         if (isCallValid)
         {
-            ContextPrivateVertexAttribI4usv(context, index, v);
+            ContextPrivateVertexAttribI4usv(context->getMutablePrivateState(),
+                                            context->getMutablePrivateStateCache(), index, v);
         }
         ANGLE_CAPTURE_GL(VertexAttribI4usv, isCallValid, context, index, v);
     }
@@ -723,7 +739,8 @@ void GL_APIENTRY GL_ProvokingVertex(GLenum mode)
               ValidateProvokingVertex(context, angle::EntryPoint::GLProvokingVertex, modePacked)));
         if (isCallValid)
         {
-            ContextPrivateProvokingVertex(context, modePacked);
+            ContextPrivateProvokingVertex(context->getMutablePrivateState(),
+                                          context->getMutablePrivateStateCache(), modePacked);
         }
         ANGLE_CAPTURE_GL(ProvokingVertex, isCallValid, context, modePacked);
     }
@@ -1627,7 +1644,9 @@ void GL_APIENTRY GL_VertexAttribP1ui(GLuint index, GLenum type, GLboolean normal
                                                      index, type, normalized, value));
         if (isCallValid)
         {
-            ContextPrivateVertexAttribP1ui(context, index, type, normalized, value);
+            ContextPrivateVertexAttribP1ui(context->getMutablePrivateState(),
+                                           context->getMutablePrivateStateCache(), index, type,
+                                           normalized, value);
         }
         ANGLE_CAPTURE_GL(VertexAttribP1ui, isCallValid, context, index, type, normalized, value);
     }
@@ -1657,7 +1676,9 @@ void GL_APIENTRY GL_VertexAttribP1uiv(GLuint index,
                                        normalized, value));
         if (isCallValid)
         {
-            ContextPrivateVertexAttribP1uiv(context, index, type, normalized, value);
+            ContextPrivateVertexAttribP1uiv(context->getMutablePrivateState(),
+                                            context->getMutablePrivateStateCache(), index, type,
+                                            normalized, value);
         }
         ANGLE_CAPTURE_GL(VertexAttribP1uiv, isCallValid, context, index, type, normalized, value);
     }
@@ -1683,7 +1704,9 @@ void GL_APIENTRY GL_VertexAttribP2ui(GLuint index, GLenum type, GLboolean normal
                                                      index, type, normalized, value));
         if (isCallValid)
         {
-            ContextPrivateVertexAttribP2ui(context, index, type, normalized, value);
+            ContextPrivateVertexAttribP2ui(context->getMutablePrivateState(),
+                                           context->getMutablePrivateStateCache(), index, type,
+                                           normalized, value);
         }
         ANGLE_CAPTURE_GL(VertexAttribP2ui, isCallValid, context, index, type, normalized, value);
     }
@@ -1713,7 +1736,9 @@ void GL_APIENTRY GL_VertexAttribP2uiv(GLuint index,
                                        normalized, value));
         if (isCallValid)
         {
-            ContextPrivateVertexAttribP2uiv(context, index, type, normalized, value);
+            ContextPrivateVertexAttribP2uiv(context->getMutablePrivateState(),
+                                            context->getMutablePrivateStateCache(), index, type,
+                                            normalized, value);
         }
         ANGLE_CAPTURE_GL(VertexAttribP2uiv, isCallValid, context, index, type, normalized, value);
     }
@@ -1739,7 +1764,9 @@ void GL_APIENTRY GL_VertexAttribP3ui(GLuint index, GLenum type, GLboolean normal
                                                      index, type, normalized, value));
         if (isCallValid)
         {
-            ContextPrivateVertexAttribP3ui(context, index, type, normalized, value);
+            ContextPrivateVertexAttribP3ui(context->getMutablePrivateState(),
+                                           context->getMutablePrivateStateCache(), index, type,
+                                           normalized, value);
         }
         ANGLE_CAPTURE_GL(VertexAttribP3ui, isCallValid, context, index, type, normalized, value);
     }
@@ -1769,7 +1796,9 @@ void GL_APIENTRY GL_VertexAttribP3uiv(GLuint index,
                                        normalized, value));
         if (isCallValid)
         {
-            ContextPrivateVertexAttribP3uiv(context, index, type, normalized, value);
+            ContextPrivateVertexAttribP3uiv(context->getMutablePrivateState(),
+                                            context->getMutablePrivateStateCache(), index, type,
+                                            normalized, value);
         }
         ANGLE_CAPTURE_GL(VertexAttribP3uiv, isCallValid, context, index, type, normalized, value);
     }
@@ -1795,7 +1824,9 @@ void GL_APIENTRY GL_VertexAttribP4ui(GLuint index, GLenum type, GLboolean normal
                                                      index, type, normalized, value));
         if (isCallValid)
         {
-            ContextPrivateVertexAttribP4ui(context, index, type, normalized, value);
+            ContextPrivateVertexAttribP4ui(context->getMutablePrivateState(),
+                                           context->getMutablePrivateStateCache(), index, type,
+                                           normalized, value);
         }
         ANGLE_CAPTURE_GL(VertexAttribP4ui, isCallValid, context, index, type, normalized, value);
     }
@@ -1825,7 +1856,9 @@ void GL_APIENTRY GL_VertexAttribP4uiv(GLuint index,
                                        normalized, value));
         if (isCallValid)
         {
-            ContextPrivateVertexAttribP4uiv(context, index, type, normalized, value);
+            ContextPrivateVertexAttribP4uiv(context->getMutablePrivateState(),
+                                            context->getMutablePrivateStateCache(), index, type,
+                                            normalized, value);
         }
         ANGLE_CAPTURE_GL(VertexAttribP4uiv, isCallValid, context, index, type, normalized, value);
     }

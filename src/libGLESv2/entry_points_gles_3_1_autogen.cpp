@@ -2005,7 +2005,8 @@ void GL_APIENTRY GL_SampleMaski(GLuint maskNumber, GLbitfield mask)
               ValidateSampleMaski(context, angle::EntryPoint::GLSampleMaski, maskNumber, mask)));
         if (isCallValid)
         {
-            ContextPrivateSampleMaski(context, maskNumber, mask);
+            ContextPrivateSampleMaski(context->getMutablePrivateState(),
+                                      context->getMutablePrivateStateCache(), maskNumber, mask);
         }
         ANGLE_CAPTURE_GL(SampleMaski, isCallValid, context, maskNumber, mask);
     }

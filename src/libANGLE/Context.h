@@ -659,7 +659,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     StateCache &getStateCache() { return mStateCache; }
 
     const PrivateStateCache &getPrivateStateCache() const { return mPrivateStateCache; }
-    PrivateStateCache &getPrivateStateCache() { return mPrivateStateCache; }
+    PrivateStateCache *getMutablePrivateStateCache() { return &mPrivateStateCache; }
 
     void onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message) override;
 

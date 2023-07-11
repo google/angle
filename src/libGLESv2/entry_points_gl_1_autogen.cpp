@@ -3470,7 +3470,8 @@ void GL_APIENTRY GL_PolygonMode(GLenum face, GLenum mode)
               ValidatePolygonMode(context, angle::EntryPoint::GLPolygonMode, face, modePacked)));
         if (isCallValid)
         {
-            ContextPrivatePolygonMode(context, face, modePacked);
+            ContextPrivatePolygonMode(context->getMutablePrivateState(),
+                                      context->getMutablePrivateStateCache(), face, modePacked);
         }
         ANGLE_CAPTURE_GL(PolygonMode, isCallValid, context, face, modePacked);
     }

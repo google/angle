@@ -31,210 +31,292 @@ angle::Mat4 FixedMatrixToMat4(const GLfixed *m)
 
 namespace gl
 {
-void ContextPrivateClearColor(Context *context,
+void ContextPrivateClearColor(PrivateState *privateState,
+                              PrivateStateCache *privateStateCache,
                               GLfloat red,
                               GLfloat green,
                               GLfloat blue,
                               GLfloat alpha)
 {
-    context->getMutablePrivateState()->setColorClearValue(red, green, blue, alpha);
+    privateState->setColorClearValue(red, green, blue, alpha);
 }
 
-void ContextPrivateClearDepthf(Context *context, GLfloat depth)
+void ContextPrivateClearDepthf(PrivateState *privateState,
+                               PrivateStateCache *privateStateCache,
+                               GLfloat depth)
 {
-    context->getMutablePrivateState()->setDepthClearValue(clamp01(depth));
+    privateState->setDepthClearValue(clamp01(depth));
 }
 
-void ContextPrivateClearStencil(Context *context, GLint stencil)
+void ContextPrivateClearStencil(PrivateState *privateState,
+                                PrivateStateCache *privateStateCache,
+                                GLint stencil)
 {
-    context->getMutablePrivateState()->setStencilClearValue(stencil);
+    privateState->setStencilClearValue(stencil);
 }
 
-void ContextPrivateClearColorx(Context *context,
+void ContextPrivateClearColorx(PrivateState *privateState,
+                               PrivateStateCache *privateStateCache,
                                GLfixed red,
                                GLfixed green,
                                GLfixed blue,
                                GLfixed alpha)
 {
-    ContextPrivateClearColor(context, ConvertFixedToFloat(red), ConvertFixedToFloat(green),
-                             ConvertFixedToFloat(blue), ConvertFixedToFloat(alpha));
+    ContextPrivateClearColor(privateState, privateStateCache, ConvertFixedToFloat(red),
+                             ConvertFixedToFloat(green), ConvertFixedToFloat(blue),
+                             ConvertFixedToFloat(alpha));
 }
 
-void ContextPrivateClearDepthx(Context *context, GLfixed depth)
+void ContextPrivateClearDepthx(PrivateState *privateState,
+                               PrivateStateCache *privateStateCache,
+                               GLfixed depth)
 {
-    ContextPrivateClearDepthf(context, ConvertFixedToFloat(depth));
+    ContextPrivateClearDepthf(privateState, privateStateCache, ConvertFixedToFloat(depth));
 }
 
-void ContextPrivateColorMask(Context *context,
+void ContextPrivateColorMask(PrivateState *privateState,
+                             PrivateStateCache *privateStateCache,
                              GLboolean red,
                              GLboolean green,
                              GLboolean blue,
                              GLboolean alpha)
 {
-    context->getMutablePrivateState()->setColorMask(ConvertToBool(red), ConvertToBool(green),
-                                                    ConvertToBool(blue), ConvertToBool(alpha));
-    context->getPrivateStateCache().onColorMaskChange();
+    privateState->setColorMask(ConvertToBool(red), ConvertToBool(green), ConvertToBool(blue),
+                               ConvertToBool(alpha));
+    privateStateCache->onColorMaskChange();
 }
 
-void ContextPrivateColorMaski(Context *context,
+void ContextPrivateColorMaski(PrivateState *privateState,
+                              PrivateStateCache *privateStateCache,
                               GLuint index,
                               GLboolean r,
                               GLboolean g,
                               GLboolean b,
                               GLboolean a)
 {
-    context->getMutablePrivateState()->setColorMaskIndexed(
-        ConvertToBool(r), ConvertToBool(g), ConvertToBool(b), ConvertToBool(a), index);
-    context->getPrivateStateCache().onColorMaskChange();
+    privateState->setColorMaskIndexed(ConvertToBool(r), ConvertToBool(g), ConvertToBool(b),
+                                      ConvertToBool(a), index);
+    privateStateCache->onColorMaskChange();
 }
 
-void ContextPrivateDepthMask(Context *context, GLboolean flag)
+void ContextPrivateDepthMask(PrivateState *privateState,
+                             PrivateStateCache *privateStateCache,
+                             GLboolean flag)
 {
-    context->getMutablePrivateState()->setDepthMask(ConvertToBool(flag));
+    privateState->setDepthMask(ConvertToBool(flag));
 }
 
-void ContextPrivateDisable(Context *context, GLenum cap)
+void ContextPrivateDisable(PrivateState *privateState,
+                           PrivateStateCache *privateStateCache,
+                           GLenum cap)
 {
-    context->getMutablePrivateState()->setEnableFeature(cap, false);
-    context->getPrivateStateCache().onCapChange();
+    privateState->setEnableFeature(cap, false);
+    privateStateCache->onCapChange();
 }
 
-void ContextPrivateDisablei(Context *context, GLenum target, GLuint index)
+void ContextPrivateDisablei(PrivateState *privateState,
+                            PrivateStateCache *privateStateCache,
+                            GLenum target,
+                            GLuint index)
 {
-    context->getMutablePrivateState()->setEnableFeatureIndexed(target, false, index);
-    context->getPrivateStateCache().onCapChange();
+    privateState->setEnableFeatureIndexed(target, false, index);
+    privateStateCache->onCapChange();
 }
 
-void ContextPrivateEnable(Context *context, GLenum cap)
+void ContextPrivateEnable(PrivateState *privateState,
+                          PrivateStateCache *privateStateCache,
+                          GLenum cap)
 {
-    context->getMutablePrivateState()->setEnableFeature(cap, true);
-    context->getPrivateStateCache().onCapChange();
+    privateState->setEnableFeature(cap, true);
+    privateStateCache->onCapChange();
 }
 
-void ContextPrivateEnablei(Context *context, GLenum target, GLuint index)
+void ContextPrivateEnablei(PrivateState *privateState,
+                           PrivateStateCache *privateStateCache,
+                           GLenum target,
+                           GLuint index)
 {
-    context->getMutablePrivateState()->setEnableFeatureIndexed(target, true, index);
-    context->getPrivateStateCache().onCapChange();
+    privateState->setEnableFeatureIndexed(target, true, index);
+    privateStateCache->onCapChange();
 }
 
-void ContextPrivateActiveTexture(Context *context, GLenum texture)
+void ContextPrivateActiveTexture(PrivateState *privateState,
+                                 PrivateStateCache *privateStateCache,
+                                 GLenum texture)
 {
-    context->getMutablePrivateState()->setActiveSampler(texture - GL_TEXTURE0);
+    privateState->setActiveSampler(texture - GL_TEXTURE0);
 }
 
-void ContextPrivateCullFace(Context *context, CullFaceMode mode)
+void ContextPrivateCullFace(PrivateState *privateState,
+                            PrivateStateCache *privateStateCache,
+                            CullFaceMode mode)
 {
-    context->getMutablePrivateState()->setCullMode(mode);
+    privateState->setCullMode(mode);
 }
 
-void ContextPrivateDepthFunc(Context *context, GLenum func)
+void ContextPrivateDepthFunc(PrivateState *privateState,
+                             PrivateStateCache *privateStateCache,
+                             GLenum func)
 {
-    context->getMutablePrivateState()->setDepthFunc(func);
+    privateState->setDepthFunc(func);
 }
 
-void ContextPrivateDepthRangef(Context *context, GLfloat zNear, GLfloat zFar)
+void ContextPrivateDepthRangef(PrivateState *privateState,
+                               PrivateStateCache *privateStateCache,
+                               GLfloat zNear,
+                               GLfloat zFar)
 {
-    context->getMutablePrivateState()->setDepthRange(clamp01(zNear), clamp01(zFar));
+    privateState->setDepthRange(clamp01(zNear), clamp01(zFar));
 }
 
-void ContextPrivateDepthRangex(Context *context, GLfixed zNear, GLfixed zFar)
+void ContextPrivateDepthRangex(PrivateState *privateState,
+                               PrivateStateCache *privateStateCache,
+                               GLfixed zNear,
+                               GLfixed zFar)
 {
-    ContextPrivateDepthRangef(context, ConvertFixedToFloat(zNear), ConvertFixedToFloat(zFar));
+    ContextPrivateDepthRangef(privateState, privateStateCache, ConvertFixedToFloat(zNear),
+                              ConvertFixedToFloat(zFar));
 }
 
-void ContextPrivateFrontFace(Context *context, GLenum mode)
+void ContextPrivateFrontFace(PrivateState *privateState,
+                             PrivateStateCache *privateStateCache,
+                             GLenum mode)
 {
-    context->getMutablePrivateState()->setFrontFace(mode);
+    privateState->setFrontFace(mode);
 }
 
-void ContextPrivateLineWidth(Context *context, GLfloat width)
+void ContextPrivateLineWidth(PrivateState *privateState,
+                             PrivateStateCache *privateStateCache,
+                             GLfloat width)
 {
-    context->getMutablePrivateState()->setLineWidth(width);
+    privateState->setLineWidth(width);
 }
 
-void ContextPrivateLineWidthx(Context *context, GLfixed width)
+void ContextPrivateLineWidthx(PrivateState *privateState,
+                              PrivateStateCache *privateStateCache,
+                              GLfixed width)
 {
-    ContextPrivateLineWidth(context, ConvertFixedToFloat(width));
+    ContextPrivateLineWidth(privateState, privateStateCache, ConvertFixedToFloat(width));
 }
 
-void ContextPrivatePolygonOffset(Context *context, GLfloat factor, GLfloat units)
+void ContextPrivatePolygonOffset(PrivateState *privateState,
+                                 PrivateStateCache *privateStateCache,
+                                 GLfloat factor,
+                                 GLfloat units)
 {
-    context->getMutablePrivateState()->setPolygonOffsetParams(factor, units, 0.0f);
+    privateState->setPolygonOffsetParams(factor, units, 0.0f);
 }
 
-void ContextPrivatePolygonOffsetClamp(Context *context,
+void ContextPrivatePolygonOffsetClamp(PrivateState *privateState,
+                                      PrivateStateCache *privateStateCache,
                                       GLfloat factor,
                                       GLfloat units,
                                       GLfloat clamp)
 {
-    context->getMutablePrivateState()->setPolygonOffsetParams(factor, units, clamp);
+    privateState->setPolygonOffsetParams(factor, units, clamp);
 }
 
-void ContextPrivatePolygonOffsetx(Context *context, GLfixed factor, GLfixed units)
+void ContextPrivatePolygonOffsetx(PrivateState *privateState,
+                                  PrivateStateCache *privateStateCache,
+                                  GLfixed factor,
+                                  GLfixed units)
 {
-    ContextPrivatePolygonOffsetClamp(context, ConvertFixedToFloat(factor),
+    ContextPrivatePolygonOffsetClamp(privateState, privateStateCache, ConvertFixedToFloat(factor),
                                      ConvertFixedToFloat(units), 0.0f);
 }
 
-void ContextPrivateSampleCoverage(Context *context, GLfloat value, GLboolean invert)
+void ContextPrivateSampleCoverage(PrivateState *privateState,
+                                  PrivateStateCache *privateStateCache,
+                                  GLfloat value,
+                                  GLboolean invert)
 {
-    context->getMutablePrivateState()->setSampleCoverageParams(clamp01(value),
-                                                               ConvertToBool(invert));
+    privateState->setSampleCoverageParams(clamp01(value), ConvertToBool(invert));
 }
 
-void ContextPrivateSampleCoveragex(Context *context, GLclampx value, GLboolean invert)
+void ContextPrivateSampleCoveragex(PrivateState *privateState,
+                                   PrivateStateCache *privateStateCache,
+                                   GLclampx value,
+                                   GLboolean invert)
 {
-    ContextPrivateSampleCoverage(context, ConvertFixedToFloat(value), invert);
+    ContextPrivateSampleCoverage(privateState, privateStateCache, ConvertFixedToFloat(value),
+                                 invert);
 }
 
-void ContextPrivateScissor(Context *context, GLint x, GLint y, GLsizei width, GLsizei height)
+void ContextPrivateScissor(PrivateState *privateState,
+                           PrivateStateCache *privateStateCache,
+                           GLint x,
+                           GLint y,
+                           GLsizei width,
+                           GLsizei height)
 {
-    context->getMutablePrivateState()->setScissorParams(x, y, width, height);
+    privateState->setScissorParams(x, y, width, height);
 }
 
-void ContextPrivateVertexAttrib1f(Context *context, GLuint index, GLfloat x)
+void ContextPrivateVertexAttrib1f(PrivateState *privateState,
+                                  PrivateStateCache *privateStateCache,
+                                  GLuint index,
+                                  GLfloat x)
 {
     GLfloat vals[4] = {x, 0, 0, 1};
-    context->getMutablePrivateState()->setVertexAttribf(index, vals);
-    context->getPrivateStateCache().onDefaultVertexAttributeChange();
+    privateState->setVertexAttribf(index, vals);
+    privateStateCache->onDefaultVertexAttributeChange();
 }
 
-void ContextPrivateVertexAttrib1fv(Context *context, GLuint index, const GLfloat *values)
+void ContextPrivateVertexAttrib1fv(PrivateState *privateState,
+                                   PrivateStateCache *privateStateCache,
+                                   GLuint index,
+                                   const GLfloat *values)
 {
     GLfloat vals[4] = {values[0], 0, 0, 1};
-    context->getMutablePrivateState()->setVertexAttribf(index, vals);
-    context->getPrivateStateCache().onDefaultVertexAttributeChange();
+    privateState->setVertexAttribf(index, vals);
+    privateStateCache->onDefaultVertexAttributeChange();
 }
 
-void ContextPrivateVertexAttrib2f(Context *context, GLuint index, GLfloat x, GLfloat y)
+void ContextPrivateVertexAttrib2f(PrivateState *privateState,
+                                  PrivateStateCache *privateStateCache,
+                                  GLuint index,
+                                  GLfloat x,
+                                  GLfloat y)
 {
     GLfloat vals[4] = {x, y, 0, 1};
-    context->getMutablePrivateState()->setVertexAttribf(index, vals);
-    context->getPrivateStateCache().onDefaultVertexAttributeChange();
+    privateState->setVertexAttribf(index, vals);
+    privateStateCache->onDefaultVertexAttributeChange();
 }
 
-void ContextPrivateVertexAttrib2fv(Context *context, GLuint index, const GLfloat *values)
+void ContextPrivateVertexAttrib2fv(PrivateState *privateState,
+                                   PrivateStateCache *privateStateCache,
+                                   GLuint index,
+                                   const GLfloat *values)
 {
     GLfloat vals[4] = {values[0], values[1], 0, 1};
-    context->getMutablePrivateState()->setVertexAttribf(index, vals);
-    context->getPrivateStateCache().onDefaultVertexAttributeChange();
+    privateState->setVertexAttribf(index, vals);
+    privateStateCache->onDefaultVertexAttributeChange();
 }
 
-void ContextPrivateVertexAttrib3f(Context *context, GLuint index, GLfloat x, GLfloat y, GLfloat z)
+void ContextPrivateVertexAttrib3f(PrivateState *privateState,
+                                  PrivateStateCache *privateStateCache,
+                                  GLuint index,
+                                  GLfloat x,
+                                  GLfloat y,
+                                  GLfloat z)
 {
     GLfloat vals[4] = {x, y, z, 1};
-    context->getMutablePrivateState()->setVertexAttribf(index, vals);
-    context->getPrivateStateCache().onDefaultVertexAttributeChange();
+    privateState->setVertexAttribf(index, vals);
+    privateStateCache->onDefaultVertexAttributeChange();
 }
 
-void ContextPrivateVertexAttrib3fv(Context *context, GLuint index, const GLfloat *values)
+void ContextPrivateVertexAttrib3fv(PrivateState *privateState,
+                                   PrivateStateCache *privateStateCache,
+                                   GLuint index,
+                                   const GLfloat *values)
 {
     GLfloat vals[4] = {values[0], values[1], values[2], 1};
-    context->getMutablePrivateState()->setVertexAttribf(index, vals);
-    context->getPrivateStateCache().onDefaultVertexAttributeChange();
+    privateState->setVertexAttribf(index, vals);
+    privateStateCache->onDefaultVertexAttributeChange();
 }
 
-void ContextPrivateVertexAttrib4f(Context *context,
+void ContextPrivateVertexAttrib4f(PrivateState *privateState,
+                                  PrivateStateCache *privateStateCache,
                                   GLuint index,
                                   GLfloat x,
                                   GLfloat y,
@@ -242,17 +324,21 @@ void ContextPrivateVertexAttrib4f(Context *context,
                                   GLfloat w)
 {
     GLfloat vals[4] = {x, y, z, w};
-    context->getMutablePrivateState()->setVertexAttribf(index, vals);
-    context->getPrivateStateCache().onDefaultVertexAttributeChange();
+    privateState->setVertexAttribf(index, vals);
+    privateStateCache->onDefaultVertexAttributeChange();
 }
 
-void ContextPrivateVertexAttrib4fv(Context *context, GLuint index, const GLfloat *values)
+void ContextPrivateVertexAttrib4fv(PrivateState *privateState,
+                                   PrivateStateCache *privateStateCache,
+                                   GLuint index,
+                                   const GLfloat *values)
 {
-    context->getMutablePrivateState()->setVertexAttribf(index, values);
-    context->getPrivateStateCache().onDefaultVertexAttributeChange();
+    privateState->setVertexAttribf(index, values);
+    privateStateCache->onDefaultVertexAttributeChange();
 }
 
-void ContextPrivateVertexAttribI4i(Context *context,
+void ContextPrivateVertexAttribI4i(PrivateState *privateState,
+                                   PrivateStateCache *privateStateCache,
                                    GLuint index,
                                    GLint x,
                                    GLint y,
@@ -260,17 +346,21 @@ void ContextPrivateVertexAttribI4i(Context *context,
                                    GLint w)
 {
     GLint vals[4] = {x, y, z, w};
-    context->getMutablePrivateState()->setVertexAttribi(index, vals);
-    context->getPrivateStateCache().onDefaultVertexAttributeChange();
+    privateState->setVertexAttribi(index, vals);
+    privateStateCache->onDefaultVertexAttributeChange();
 }
 
-void ContextPrivateVertexAttribI4iv(Context *context, GLuint index, const GLint *values)
+void ContextPrivateVertexAttribI4iv(PrivateState *privateState,
+                                    PrivateStateCache *privateStateCache,
+                                    GLuint index,
+                                    const GLint *values)
 {
-    context->getMutablePrivateState()->setVertexAttribi(index, values);
-    context->getPrivateStateCache().onDefaultVertexAttributeChange();
+    privateState->setVertexAttribi(index, values);
+    privateStateCache->onDefaultVertexAttributeChange();
 }
 
-void ContextPrivateVertexAttribI4ui(Context *context,
+void ContextPrivateVertexAttribI4ui(PrivateState *privateState,
+                                    PrivateStateCache *privateStateCache,
                                     GLuint index,
                                     GLuint x,
                                     GLuint y,
@@ -278,32 +368,46 @@ void ContextPrivateVertexAttribI4ui(Context *context,
                                     GLuint w)
 {
     GLuint vals[4] = {x, y, z, w};
-    context->getMutablePrivateState()->setVertexAttribu(index, vals);
-    context->getPrivateStateCache().onDefaultVertexAttributeChange();
+    privateState->setVertexAttribu(index, vals);
+    privateStateCache->onDefaultVertexAttributeChange();
 }
 
-void ContextPrivateVertexAttribI4uiv(Context *context, GLuint index, const GLuint *values)
+void ContextPrivateVertexAttribI4uiv(PrivateState *privateState,
+                                     PrivateStateCache *privateStateCache,
+                                     GLuint index,
+                                     const GLuint *values)
 {
-    context->getMutablePrivateState()->setVertexAttribu(index, values);
-    context->getPrivateStateCache().onDefaultVertexAttributeChange();
+    privateState->setVertexAttribu(index, values);
+    privateStateCache->onDefaultVertexAttributeChange();
 }
 
-void ContextPrivateViewport(Context *context, GLint x, GLint y, GLsizei width, GLsizei height)
+void ContextPrivateViewport(PrivateState *privateState,
+                            PrivateStateCache *privateStateCache,
+                            GLint x,
+                            GLint y,
+                            GLsizei width,
+                            GLsizei height)
 {
-    context->getMutablePrivateState()->setViewportParams(x, y, width, height);
+    privateState->setViewportParams(x, y, width, height);
 }
 
-void ContextPrivateSampleMaski(Context *context, GLuint maskNumber, GLbitfield mask)
+void ContextPrivateSampleMaski(PrivateState *privateState,
+                               PrivateStateCache *privateStateCache,
+                               GLuint maskNumber,
+                               GLbitfield mask)
 {
-    context->getMutablePrivateState()->setSampleMaskParams(maskNumber, mask);
+    privateState->setSampleMaskParams(maskNumber, mask);
 }
 
-void ContextPrivateMinSampleShading(Context *context, GLfloat value)
+void ContextPrivateMinSampleShading(PrivateState *privateState,
+                                    PrivateStateCache *privateStateCache,
+                                    GLfloat value)
 {
-    context->getMutablePrivateState()->setMinSampleShading(value);
+    privateState->setMinSampleShading(value);
 }
 
-void ContextPrivatePrimitiveBoundingBox(Context *context,
+void ContextPrivatePrimitiveBoundingBox(PrivateState *privateState,
+                                        PrivateStateCache *privateStateCache,
                                         GLfloat minX,
                                         GLfloat minY,
                                         GLfloat minZ,
@@ -313,131 +417,173 @@ void ContextPrivatePrimitiveBoundingBox(Context *context,
                                         GLfloat maxZ,
                                         GLfloat maxW)
 {
-    context->getMutablePrivateState()->setBoundingBox(minX, minY, minZ, minW, maxX, maxY, maxZ,
-                                                      maxW);
+    privateState->setBoundingBox(minX, minY, minZ, minW, maxX, maxY, maxZ, maxW);
 }
 
-void ContextPrivateLogicOp(Context *context, LogicalOperation opcode)
+void ContextPrivateLogicOp(PrivateState *privateState,
+                           PrivateStateCache *privateStateCache,
+                           LogicalOperation opcode)
 {
-    context->getMutableGLES1State()->setLogicOp(opcode);
+    privateState->getMutableGLES1State()->setLogicOp(opcode);
 }
 
-void ContextPrivateLogicOpANGLE(Context *context, LogicalOperation opcode)
+void ContextPrivateLogicOpANGLE(PrivateState *privateState,
+                                PrivateStateCache *privateStateCache,
+                                LogicalOperation opcode)
 {
-    context->getMutablePrivateState()->setLogicOp(opcode);
+    privateState->setLogicOp(opcode);
 }
 
-void ContextPrivatePolygonMode(Context *context, GLenum face, PolygonMode mode)
+void ContextPrivatePolygonMode(PrivateState *privateState,
+                               PrivateStateCache *privateStateCache,
+                               GLenum face,
+                               PolygonMode mode)
 {
     ASSERT(face == GL_FRONT_AND_BACK);
-    context->getMutablePrivateState()->setPolygonMode(mode);
+    privateState->setPolygonMode(mode);
 }
 
-void ContextPrivatePolygonModeNV(Context *context, GLenum face, PolygonMode mode)
+void ContextPrivatePolygonModeNV(PrivateState *privateState,
+                                 PrivateStateCache *privateStateCache,
+                                 GLenum face,
+                                 PolygonMode mode)
 {
-    ContextPrivatePolygonMode(context, face, mode);
+    ContextPrivatePolygonMode(privateState, privateStateCache, face, mode);
 }
 
-void ContextPrivateProvokingVertex(Context *context, ProvokingVertexConvention provokeMode)
+void ContextPrivateProvokingVertex(PrivateState *privateState,
+                                   PrivateStateCache *privateStateCache,
+                                   ProvokingVertexConvention provokeMode)
 {
-    context->getMutablePrivateState()->setProvokingVertex(provokeMode);
+    privateState->setProvokingVertex(provokeMode);
 }
 
-void ContextPrivateCoverageModulation(Context *context, GLenum components)
+void ContextPrivateCoverageModulation(PrivateState *privateState,
+                                      PrivateStateCache *privateStateCache,
+                                      GLenum components)
 {
-    context->getMutablePrivateState()->setCoverageModulation(components);
+    privateState->setCoverageModulation(components);
 }
 
-void ContextPrivateClipControl(Context *context, ClipOrigin origin, ClipDepthMode depth)
+void ContextPrivateClipControl(PrivateState *privateState,
+                               PrivateStateCache *privateStateCache,
+                               ClipOrigin origin,
+                               ClipDepthMode depth)
 {
-    context->getMutablePrivateState()->setClipControl(origin, depth);
+    privateState->setClipControl(origin, depth);
 }
 
-void ContextPrivateShadingRate(Context *context, GLenum rate)
+void ContextPrivateShadingRate(PrivateState *privateState,
+                               PrivateStateCache *privateStateCache,
+                               GLenum rate)
 {
-    context->getMutablePrivateState()->setShadingRate(rate);
+    privateState->setShadingRate(rate);
 }
 
-void ContextPrivateBlendColor(Context *context,
+void ContextPrivateBlendColor(PrivateState *privateState,
+                              PrivateStateCache *privateStateCache,
                               GLfloat red,
                               GLfloat green,
                               GLfloat blue,
                               GLfloat alpha)
 {
-    context->getMutablePrivateState()->setBlendColor(red, green, blue, alpha);
+    privateState->setBlendColor(red, green, blue, alpha);
 }
 
-void ContextPrivateBlendEquation(Context *context, GLenum mode)
+void ContextPrivateBlendEquation(PrivateState *privateState,
+                                 PrivateStateCache *privateStateCache,
+                                 GLenum mode)
 {
-    context->getMutablePrivateState()->setBlendEquation(mode, mode);
-    context->getPrivateStateCache().onBlendEquationChange();
+    privateState->setBlendEquation(mode, mode);
+    privateStateCache->onBlendEquationChange();
 }
 
-void ContextPrivateBlendEquationi(Context *context, GLuint buf, GLenum mode)
+void ContextPrivateBlendEquationi(PrivateState *privateState,
+                                  PrivateStateCache *privateStateCache,
+                                  GLuint buf,
+                                  GLenum mode)
 {
-    context->getMutablePrivateState()->setBlendEquationIndexed(mode, mode, buf);
-    context->getPrivateStateCache().onBlendEquationChange();
+    privateState->setBlendEquationIndexed(mode, mode, buf);
+    privateStateCache->onBlendEquationChange();
 }
 
-void ContextPrivateBlendEquationSeparate(Context *context, GLenum modeRGB, GLenum modeAlpha)
+void ContextPrivateBlendEquationSeparate(PrivateState *privateState,
+                                         PrivateStateCache *privateStateCache,
+                                         GLenum modeRGB,
+                                         GLenum modeAlpha)
 {
-    context->getMutablePrivateState()->setBlendEquation(modeRGB, modeAlpha);
-    context->getPrivateStateCache().onBlendEquationChange();
+    privateState->setBlendEquation(modeRGB, modeAlpha);
+    privateStateCache->onBlendEquationChange();
 }
 
-void ContextPrivateBlendEquationSeparatei(Context *context,
+void ContextPrivateBlendEquationSeparatei(PrivateState *privateState,
+                                          PrivateStateCache *privateStateCache,
                                           GLuint buf,
                                           GLenum modeRGB,
                                           GLenum modeAlpha)
 {
-    context->getMutablePrivateState()->setBlendEquationIndexed(modeRGB, modeAlpha, buf);
-    context->getPrivateStateCache().onBlendEquationChange();
+    privateState->setBlendEquationIndexed(modeRGB, modeAlpha, buf);
+    privateStateCache->onBlendEquationChange();
 }
 
-void ContextPrivateBlendFunc(Context *context, GLenum sfactor, GLenum dfactor)
+void ContextPrivateBlendFunc(PrivateState *privateState,
+                             PrivateStateCache *privateStateCache,
+                             GLenum sfactor,
+                             GLenum dfactor)
 {
-    context->getMutablePrivateState()->setBlendFactors(sfactor, dfactor, sfactor, dfactor);
+    privateState->setBlendFactors(sfactor, dfactor, sfactor, dfactor);
 }
 
-void ContextPrivateBlendFunci(Context *context, GLuint buf, GLenum src, GLenum dst)
+void ContextPrivateBlendFunci(PrivateState *privateState,
+                              PrivateStateCache *privateStateCache,
+                              GLuint buf,
+                              GLenum src,
+                              GLenum dst)
 {
-    context->getMutablePrivateState()->setBlendFactorsIndexed(src, dst, src, dst, buf);
-    if (context->getState().noSimultaneousConstantColorAndAlphaBlendFunc())
+    privateState->setBlendFactorsIndexed(src, dst, src, dst, buf);
+    if (privateState->noSimultaneousConstantColorAndAlphaBlendFunc())
     {
-        context->getPrivateStateCache().onBlendFuncIndexedChange();
+        privateStateCache->onBlendFuncIndexedChange();
     }
 }
 
-void ContextPrivateBlendFuncSeparate(Context *context,
+void ContextPrivateBlendFuncSeparate(PrivateState *privateState,
+                                     PrivateStateCache *privateStateCache,
                                      GLenum srcRGB,
                                      GLenum dstRGB,
                                      GLenum srcAlpha,
                                      GLenum dstAlpha)
 {
-    context->getMutablePrivateState()->setBlendFactors(srcRGB, dstRGB, srcAlpha, dstAlpha);
+    privateState->setBlendFactors(srcRGB, dstRGB, srcAlpha, dstAlpha);
 }
 
-void ContextPrivateBlendFuncSeparatei(Context *context,
+void ContextPrivateBlendFuncSeparatei(PrivateState *privateState,
+                                      PrivateStateCache *privateStateCache,
                                       GLuint buf,
                                       GLenum srcRGB,
                                       GLenum dstRGB,
                                       GLenum srcAlpha,
                                       GLenum dstAlpha)
 {
-    context->getMutablePrivateState()->setBlendFactorsIndexed(srcRGB, dstRGB, srcAlpha, dstAlpha,
-                                                              buf);
-    if (context->getState().noSimultaneousConstantColorAndAlphaBlendFunc())
+    privateState->setBlendFactorsIndexed(srcRGB, dstRGB, srcAlpha, dstAlpha, buf);
+    if (privateState->noSimultaneousConstantColorAndAlphaBlendFunc())
     {
-        context->getPrivateStateCache().onBlendFuncIndexedChange();
+        privateStateCache->onBlendFuncIndexedChange();
     }
 }
 
-void ContextPrivateStencilFunc(Context *context, GLenum func, GLint ref, GLuint mask)
+void ContextPrivateStencilFunc(PrivateState *privateState,
+                               PrivateStateCache *privateStateCache,
+                               GLenum func,
+                               GLint ref,
+                               GLuint mask)
 {
-    ContextPrivateStencilFuncSeparate(context, GL_FRONT_AND_BACK, func, ref, mask);
+    ContextPrivateStencilFuncSeparate(privateState, privateStateCache, GL_FRONT_AND_BACK, func, ref,
+                                      mask);
 }
 
-void ContextPrivateStencilFuncSeparate(Context *context,
+void ContextPrivateStencilFuncSeparate(PrivateState *privateState,
+                                       PrivateStateCache *privateStateCache,
                                        GLenum face,
                                        GLenum func,
                                        GLint ref,
@@ -446,43 +592,54 @@ void ContextPrivateStencilFuncSeparate(Context *context,
     GLint clampedRef = gl::clamp(ref, 0, std::numeric_limits<uint8_t>::max());
     if (face == GL_FRONT || face == GL_FRONT_AND_BACK)
     {
-        context->getMutablePrivateState()->setStencilParams(func, clampedRef, mask);
+        privateState->setStencilParams(func, clampedRef, mask);
     }
 
     if (face == GL_BACK || face == GL_FRONT_AND_BACK)
     {
-        context->getMutablePrivateState()->setStencilBackParams(func, clampedRef, mask);
+        privateState->setStencilBackParams(func, clampedRef, mask);
     }
 
-    context->getPrivateStateCache().onStencilStateChange();
+    privateStateCache->onStencilStateChange();
 }
 
-void ContextPrivateStencilMask(Context *context, GLuint mask)
+void ContextPrivateStencilMask(PrivateState *privateState,
+                               PrivateStateCache *privateStateCache,
+                               GLuint mask)
 {
-    ContextPrivateStencilMaskSeparate(context, GL_FRONT_AND_BACK, mask);
+    ContextPrivateStencilMaskSeparate(privateState, privateStateCache, GL_FRONT_AND_BACK, mask);
 }
 
-void ContextPrivateStencilMaskSeparate(Context *context, GLenum face, GLuint mask)
+void ContextPrivateStencilMaskSeparate(PrivateState *privateState,
+                                       PrivateStateCache *privateStateCache,
+                                       GLenum face,
+                                       GLuint mask)
 {
     if (face == GL_FRONT || face == GL_FRONT_AND_BACK)
     {
-        context->getMutablePrivateState()->setStencilWritemask(mask);
+        privateState->setStencilWritemask(mask);
     }
 
     if (face == GL_BACK || face == GL_FRONT_AND_BACK)
     {
-        context->getMutablePrivateState()->setStencilBackWritemask(mask);
+        privateState->setStencilBackWritemask(mask);
     }
 
-    context->getPrivateStateCache().onStencilStateChange();
+    privateStateCache->onStencilStateChange();
 }
 
-void ContextPrivateStencilOp(Context *context, GLenum fail, GLenum zfail, GLenum zpass)
+void ContextPrivateStencilOp(PrivateState *privateState,
+                             PrivateStateCache *privateStateCache,
+                             GLenum fail,
+                             GLenum zfail,
+                             GLenum zpass)
 {
-    ContextPrivateStencilOpSeparate(context, GL_FRONT_AND_BACK, fail, zfail, zpass);
+    ContextPrivateStencilOpSeparate(privateState, privateStateCache, GL_FRONT_AND_BACK, fail, zfail,
+                                    zpass);
 }
 
-void ContextPrivateStencilOpSeparate(Context *context,
+void ContextPrivateStencilOpSeparate(PrivateState *privateState,
+                                     PrivateStateCache *privateStateCache,
                                      GLenum face,
                                      GLenum fail,
                                      GLenum zfail,
@@ -490,75 +647,78 @@ void ContextPrivateStencilOpSeparate(Context *context,
 {
     if (face == GL_FRONT || face == GL_FRONT_AND_BACK)
     {
-        context->getMutablePrivateState()->setStencilOperations(fail, zfail, zpass);
+        privateState->setStencilOperations(fail, zfail, zpass);
     }
 
     if (face == GL_BACK || face == GL_FRONT_AND_BACK)
     {
-        context->getMutablePrivateState()->setStencilBackOperations(fail, zfail, zpass);
+        privateState->setStencilBackOperations(fail, zfail, zpass);
     }
 }
 
-void ContextPrivatePixelStorei(Context *context, GLenum pname, GLint param)
+void ContextPrivatePixelStorei(PrivateState *privateState,
+                               PrivateStateCache *privateStateCache,
+                               GLenum pname,
+                               GLint param)
 {
     switch (pname)
     {
         case GL_UNPACK_ALIGNMENT:
-            context->getMutablePrivateState()->setUnpackAlignment(param);
+            privateState->setUnpackAlignment(param);
             break;
 
         case GL_PACK_ALIGNMENT:
-            context->getMutablePrivateState()->setPackAlignment(param);
+            privateState->setPackAlignment(param);
             break;
 
         case GL_PACK_REVERSE_ROW_ORDER_ANGLE:
-            context->getMutablePrivateState()->setPackReverseRowOrder(param != 0);
+            privateState->setPackReverseRowOrder(param != 0);
             break;
 
         case GL_UNPACK_ROW_LENGTH:
-            ASSERT((context->getClientMajorVersion() >= 3) ||
-                   context->getExtensions().unpackSubimageEXT);
-            context->getMutablePrivateState()->setUnpackRowLength(param);
+            ASSERT(privateState->getClientMajorVersion() >= 3 ||
+                   privateState->getExtensions().unpackSubimageEXT);
+            privateState->setUnpackRowLength(param);
             break;
 
         case GL_UNPACK_IMAGE_HEIGHT:
-            ASSERT(context->getClientMajorVersion() >= 3);
-            context->getMutablePrivateState()->setUnpackImageHeight(param);
+            ASSERT(privateState->getClientMajorVersion() >= 3);
+            privateState->setUnpackImageHeight(param);
             break;
 
         case GL_UNPACK_SKIP_IMAGES:
-            ASSERT(context->getClientMajorVersion() >= 3);
-            context->getMutablePrivateState()->setUnpackSkipImages(param);
+            ASSERT(privateState->getClientMajorVersion() >= 3);
+            privateState->setUnpackSkipImages(param);
             break;
 
         case GL_UNPACK_SKIP_ROWS:
-            ASSERT((context->getClientMajorVersion() >= 3) ||
-                   context->getExtensions().unpackSubimageEXT);
-            context->getMutablePrivateState()->setUnpackSkipRows(param);
+            ASSERT((privateState->getClientMajorVersion() >= 3) ||
+                   privateState->getExtensions().unpackSubimageEXT);
+            privateState->setUnpackSkipRows(param);
             break;
 
         case GL_UNPACK_SKIP_PIXELS:
-            ASSERT((context->getClientMajorVersion() >= 3) ||
-                   context->getExtensions().unpackSubimageEXT);
-            context->getMutablePrivateState()->setUnpackSkipPixels(param);
+            ASSERT((privateState->getClientMajorVersion() >= 3) ||
+                   privateState->getExtensions().unpackSubimageEXT);
+            privateState->setUnpackSkipPixels(param);
             break;
 
         case GL_PACK_ROW_LENGTH:
-            ASSERT((context->getClientMajorVersion() >= 3) ||
-                   context->getExtensions().packSubimageNV);
-            context->getMutablePrivateState()->setPackRowLength(param);
+            ASSERT((privateState->getClientMajorVersion() >= 3) ||
+                   privateState->getExtensions().packSubimageNV);
+            privateState->setPackRowLength(param);
             break;
 
         case GL_PACK_SKIP_ROWS:
-            ASSERT((context->getClientMajorVersion() >= 3) ||
-                   context->getExtensions().packSubimageNV);
-            context->getMutablePrivateState()->setPackSkipRows(param);
+            ASSERT((privateState->getClientMajorVersion() >= 3) ||
+                   privateState->getExtensions().packSubimageNV);
+            privateState->setPackSkipRows(param);
             break;
 
         case GL_PACK_SKIP_PIXELS:
-            ASSERT((context->getClientMajorVersion() >= 3) ||
-                   context->getExtensions().packSubimageNV);
-            context->getMutablePrivateState()->setPackSkipPixels(param);
+            ASSERT((privateState->getClientMajorVersion() >= 3) ||
+                   privateState->getExtensions().packSubimageNV);
+            privateState->setPackSkipPixels(param);
             break;
 
         default:
@@ -567,26 +727,29 @@ void ContextPrivatePixelStorei(Context *context, GLenum pname, GLint param)
     }
 }
 
-void ContextPrivateHint(Context *context, GLenum target, GLenum mode)
+void ContextPrivateHint(PrivateState *privateState,
+                        PrivateStateCache *privateStateCache,
+                        GLenum target,
+                        GLenum mode)
 {
     switch (target)
     {
         case GL_GENERATE_MIPMAP_HINT:
-            context->getMutablePrivateState()->setGenerateMipmapHint(mode);
+            privateState->setGenerateMipmapHint(mode);
             break;
 
         case GL_FRAGMENT_SHADER_DERIVATIVE_HINT_OES:
-            context->getMutablePrivateState()->setFragmentShaderDerivativeHint(mode);
+            privateState->setFragmentShaderDerivativeHint(mode);
             break;
 
         case GL_PERSPECTIVE_CORRECTION_HINT:
         case GL_POINT_SMOOTH_HINT:
         case GL_LINE_SMOOTH_HINT:
         case GL_FOG_HINT:
-            context->getMutableGLES1State()->setHint(target, mode);
+            privateState->getMutableGLES1State()->setHint(target, mode);
             break;
         case GL_TEXTURE_FILTERING_HINT_CHROMIUM:
-            context->getMutablePrivateState()->setTextureFilteringHint(mode);
+            privateState->setTextureFilteringHint(mode);
             break;
         default:
             UNREACHABLE();
@@ -594,44 +757,64 @@ void ContextPrivateHint(Context *context, GLenum target, GLenum mode)
     }
 }
 
-GLboolean ContextPrivateIsEnabled(Context *context, GLenum cap)
+GLboolean ContextPrivateIsEnabled(PrivateState *privateState,
+                                  PrivateStateCache *privateStateCache,
+                                  GLenum cap)
 {
-    return context->getState().privateState().getEnableFeature(cap);
+    return privateState->getEnableFeature(cap);
 }
 
-GLboolean ContextPrivateIsEnabledi(Context *context, GLenum target, GLuint index)
+GLboolean ContextPrivateIsEnabledi(PrivateState *privateState,
+                                   PrivateStateCache *privateStateCache,
+                                   GLenum target,
+                                   GLuint index)
 {
-    return context->getState().privateState().getEnableFeatureIndexed(target, index);
+    return privateState->getEnableFeatureIndexed(target, index);
 }
 
-void ContextPrivatePatchParameteri(Context *context, GLenum pname, GLint value)
+void ContextPrivatePatchParameteri(PrivateState *privateState,
+                                   PrivateStateCache *privateStateCache,
+                                   GLenum pname,
+                                   GLint value)
 {
     switch (pname)
     {
         case GL_PATCH_VERTICES:
-            context->getMutablePrivateState()->setPatchVertices(value);
+            privateState->setPatchVertices(value);
             break;
         default:
             break;
     }
 }
 
-void ContextPrivateAlphaFunc(Context *context, AlphaTestFunc func, GLfloat ref)
+void ContextPrivateAlphaFunc(PrivateState *privateState,
+                             PrivateStateCache *privateStateCache,
+                             AlphaTestFunc func,
+                             GLfloat ref)
 {
-    context->getMutableGLES1State()->setAlphaTestParameters(func, ref);
+    privateState->getMutableGLES1State()->setAlphaTestParameters(func, ref);
 }
 
-void ContextPrivateAlphaFuncx(Context *context, AlphaTestFunc func, GLfixed ref)
+void ContextPrivateAlphaFuncx(PrivateState *privateState,
+                              PrivateStateCache *privateStateCache,
+                              AlphaTestFunc func,
+                              GLfixed ref)
 {
-    ContextPrivateAlphaFunc(context, func, ConvertFixedToFloat(ref));
+    ContextPrivateAlphaFunc(privateState, privateStateCache, func, ConvertFixedToFloat(ref));
 }
 
-void ContextPrivateClipPlanef(Context *context, GLenum p, const GLfloat *eqn)
+void ContextPrivateClipPlanef(PrivateState *privateState,
+                              PrivateStateCache *privateStateCache,
+                              GLenum p,
+                              const GLfloat *eqn)
 {
-    context->getMutableGLES1State()->setClipPlane(p - GL_CLIP_PLANE0, eqn);
+    privateState->getMutableGLES1State()->setClipPlane(p - GL_CLIP_PLANE0, eqn);
 }
 
-void ContextPrivateClipPlanex(Context *context, GLenum plane, const GLfixed *equation)
+void ContextPrivateClipPlanex(PrivateState *privateState,
+                              PrivateStateCache *privateStateCache,
+                              GLenum plane,
+                              const GLfixed *equation)
 {
     const GLfloat equationf[4] = {
         ConvertFixedToFloat(equation[0]),
@@ -640,55 +823,68 @@ void ContextPrivateClipPlanex(Context *context, GLenum plane, const GLfixed *equ
         ConvertFixedToFloat(equation[3]),
     };
 
-    ContextPrivateClipPlanef(context, plane, equationf);
+    ContextPrivateClipPlanef(privateState, privateStateCache, plane, equationf);
 }
 
-void ContextPrivateColor4f(Context *context,
+void ContextPrivateColor4f(PrivateState *privateState,
+                           PrivateStateCache *privateStateCache,
                            GLfloat red,
                            GLfloat green,
                            GLfloat blue,
                            GLfloat alpha)
 {
-    context->getMutableGLES1State()->setCurrentColor({red, green, blue, alpha});
+    privateState->getMutableGLES1State()->setCurrentColor({red, green, blue, alpha});
 }
 
-void ContextPrivateColor4ub(Context *context,
+void ContextPrivateColor4ub(PrivateState *privateState,
+                            PrivateStateCache *privateStateCache,
                             GLubyte red,
                             GLubyte green,
                             GLubyte blue,
                             GLubyte alpha)
 {
-    ContextPrivateColor4f(context, normalizedToFloat<uint8_t>(red),
+    ContextPrivateColor4f(privateState, privateStateCache, normalizedToFloat<uint8_t>(red),
                           normalizedToFloat<uint8_t>(green), normalizedToFloat<uint8_t>(blue),
                           normalizedToFloat<uint8_t>(alpha));
 }
 
-void ContextPrivateColor4x(Context *context,
+void ContextPrivateColor4x(PrivateState *privateState,
+                           PrivateStateCache *privateStateCache,
                            GLfixed red,
                            GLfixed green,
                            GLfixed blue,
                            GLfixed alpha)
 {
-    ContextPrivateColor4f(context, ConvertFixedToFloat(red), ConvertFixedToFloat(green),
-                          ConvertFixedToFloat(blue), ConvertFixedToFloat(alpha));
+    ContextPrivateColor4f(privateState, privateStateCache, ConvertFixedToFloat(red),
+                          ConvertFixedToFloat(green), ConvertFixedToFloat(blue),
+                          ConvertFixedToFloat(alpha));
 }
 
-void ContextPrivateFogf(Context *context, GLenum pname, GLfloat param)
+void ContextPrivateFogf(PrivateState *privateState,
+                        PrivateStateCache *privateStateCache,
+                        GLenum pname,
+                        GLfloat param)
 {
-    ContextPrivateFogfv(context, pname, &param);
+    ContextPrivateFogfv(privateState, privateStateCache, pname, &param);
 }
 
-void ContextPrivateFogfv(Context *context, GLenum pname, const GLfloat *params)
+void ContextPrivateFogfv(PrivateState *privateState,
+                         PrivateStateCache *privateStateCache,
+                         GLenum pname,
+                         const GLfloat *params)
 {
-    SetFogParameters(context->getMutableGLES1State(), pname, params);
+    SetFogParameters(privateState->getMutableGLES1State(), pname, params);
 }
 
-void ContextPrivateFogx(Context *context, GLenum pname, GLfixed param)
+void ContextPrivateFogx(PrivateState *privateState,
+                        PrivateStateCache *privateStateCache,
+                        GLenum pname,
+                        GLfixed param)
 {
     if (GetFogParameterCount(pname) == 1)
     {
         GLfloat paramf = pname == GL_FOG_MODE ? ConvertToGLenum(param) : ConvertFixedToFloat(param);
-        ContextPrivateFogfv(context, pname, &paramf);
+        ContextPrivateFogfv(privateState, privateStateCache, pname, &paramf);
     }
     else
     {
@@ -696,7 +892,10 @@ void ContextPrivateFogx(Context *context, GLenum pname, GLfixed param)
     }
 }
 
-void ContextPrivateFogxv(Context *context, GLenum pname, const GLfixed *params)
+void ContextPrivateFogxv(PrivateState *privateState,
+                         PrivateStateCache *privateStateCache,
+                         GLenum pname,
+                         const GLfixed *params)
 {
     int paramCount = GetFogParameterCount(pname);
 
@@ -708,7 +907,7 @@ void ContextPrivateFogxv(Context *context, GLenum pname, const GLfixed *params)
             paramsf[i] =
                 pname == GL_FOG_MODE ? ConvertToGLenum(params[i]) : ConvertFixedToFloat(params[i]);
         }
-        ContextPrivateFogfv(context, pname, paramsf);
+        ContextPrivateFogfv(privateState, privateStateCache, pname, paramsf);
     }
     else
     {
@@ -716,7 +915,8 @@ void ContextPrivateFogxv(Context *context, GLenum pname, const GLfixed *params)
     }
 }
 
-void ContextPrivateFrustumf(Context *context,
+void ContextPrivateFrustumf(PrivateState *privateState,
+                            PrivateStateCache *privateStateCache,
                             GLfloat l,
                             GLfloat r,
                             GLfloat b,
@@ -724,10 +924,11 @@ void ContextPrivateFrustumf(Context *context,
                             GLfloat n,
                             GLfloat f)
 {
-    context->getMutableGLES1State()->multMatrix(angle::Mat4::Frustum(l, r, b, t, n, f));
+    privateState->getMutableGLES1State()->multMatrix(angle::Mat4::Frustum(l, r, b, t, n, f));
 }
 
-void ContextPrivateFrustumx(Context *context,
+void ContextPrivateFrustumx(PrivateState *privateState,
+                            PrivateStateCache *privateStateCache,
                             GLfixed l,
                             GLfixed r,
                             GLfixed b,
@@ -735,21 +936,27 @@ void ContextPrivateFrustumx(Context *context,
                             GLfixed n,
                             GLfixed f)
 {
-    ContextPrivateFrustumf(context, ConvertFixedToFloat(l), ConvertFixedToFloat(r),
-                           ConvertFixedToFloat(b), ConvertFixedToFloat(t), ConvertFixedToFloat(n),
-                           ConvertFixedToFloat(f));
+    ContextPrivateFrustumf(privateState, privateStateCache, ConvertFixedToFloat(l),
+                           ConvertFixedToFloat(r), ConvertFixedToFloat(b), ConvertFixedToFloat(t),
+                           ConvertFixedToFloat(n), ConvertFixedToFloat(f));
 }
 
-void ContextPrivateGetClipPlanef(Context *context, GLenum plane, GLfloat *equation)
+void ContextPrivateGetClipPlanef(PrivateState *privateState,
+                                 PrivateStateCache *privateStateCache,
+                                 GLenum plane,
+                                 GLfloat *equation)
 {
-    context->getState().gles1().getClipPlane(plane - GL_CLIP_PLANE0, equation);
+    privateState->gles1().getClipPlane(plane - GL_CLIP_PLANE0, equation);
 }
 
-void ContextPrivateGetClipPlanex(Context *context, GLenum plane, GLfixed *equation)
+void ContextPrivateGetClipPlanex(PrivateState *privateState,
+                                 PrivateStateCache *privateStateCache,
+                                 GLenum plane,
+                                 GLfixed *equation)
 {
     GLfloat equationf[4] = {};
 
-    ContextPrivateGetClipPlanef(context, plane, equationf);
+    ContextPrivateGetClipPlanef(privateState, privateStateCache, plane, equationf);
 
     for (int i = 0; i < 4; i++)
     {
@@ -757,15 +964,23 @@ void ContextPrivateGetClipPlanex(Context *context, GLenum plane, GLfixed *equati
     }
 }
 
-void ContextPrivateGetLightfv(Context *context, GLenum light, LightParameter pname, GLfloat *params)
+void ContextPrivateGetLightfv(PrivateState *privateState,
+                              PrivateStateCache *privateStateCache,
+                              GLenum light,
+                              LightParameter pname,
+                              GLfloat *params)
 {
-    GetLightParameters(context->getMutableGLES1State(), light, pname, params);
+    GetLightParameters(privateState->getMutableGLES1State(), light, pname, params);
 }
 
-void ContextPrivateGetLightxv(Context *context, GLenum light, LightParameter pname, GLfixed *params)
+void ContextPrivateGetLightxv(PrivateState *privateState,
+                              PrivateStateCache *privateStateCache,
+                              GLenum light,
+                              LightParameter pname,
+                              GLfixed *params)
 {
     GLfloat paramsf[4];
-    ContextPrivateGetLightfv(context, light, pname, paramsf);
+    ContextPrivateGetLightfv(privateState, privateStateCache, light, pname, paramsf);
 
     for (unsigned int i = 0; i < GetLightParameterCount(pname); i++)
     {
@@ -773,21 +988,23 @@ void ContextPrivateGetLightxv(Context *context, GLenum light, LightParameter pna
     }
 }
 
-void ContextPrivateGetMaterialfv(Context *context,
+void ContextPrivateGetMaterialfv(PrivateState *privateState,
+                                 PrivateStateCache *privateStateCache,
                                  GLenum face,
                                  MaterialParameter pname,
                                  GLfloat *params)
 {
-    GetMaterialParameters(context->getMutableGLES1State(), face, pname, params);
+    GetMaterialParameters(privateState->getMutableGLES1State(), face, pname, params);
 }
 
-void ContextPrivateGetMaterialxv(Context *context,
+void ContextPrivateGetMaterialxv(PrivateState *privateState,
+                                 PrivateStateCache *privateStateCache,
                                  GLenum face,
                                  MaterialParameter pname,
                                  GLfixed *params)
 {
     GLfloat paramsf[4];
-    ContextPrivateGetMaterialfv(context, face, pname, paramsf);
+    ContextPrivateGetMaterialfv(privateState, privateStateCache, face, pname, paramsf);
 
     for (unsigned int i = 0; i < GetMaterialParameterCount(pname); i++)
     {
@@ -795,51 +1012,66 @@ void ContextPrivateGetMaterialxv(Context *context,
     }
 }
 
-void ContextPrivateGetTexEnvfv(Context *context,
+void ContextPrivateGetTexEnvfv(PrivateState *privateState,
+                               PrivateStateCache *privateStateCache,
                                TextureEnvTarget target,
                                TextureEnvParameter pname,
                                GLfloat *params)
 {
-    GetTextureEnv(context->getState().privateState().getActiveSampler(),
-                  context->getMutableGLES1State(), target, pname, params);
+    GetTextureEnv(privateState->getActiveSampler(), privateState->getMutableGLES1State(), target,
+                  pname, params);
 }
 
-void ContextPrivateGetTexEnviv(Context *context,
+void ContextPrivateGetTexEnviv(PrivateState *privateState,
+                               PrivateStateCache *privateStateCache,
                                TextureEnvTarget target,
                                TextureEnvParameter pname,
                                GLint *params)
 {
     GLfloat paramsf[4];
-    ContextPrivateGetTexEnvfv(context, target, pname, paramsf);
+    ContextPrivateGetTexEnvfv(privateState, privateStateCache, target, pname, paramsf);
     ConvertTextureEnvToInt(pname, paramsf, params);
 }
 
-void ContextPrivateGetTexEnvxv(Context *context,
+void ContextPrivateGetTexEnvxv(PrivateState *privateState,
+                               PrivateStateCache *privateStateCache,
                                TextureEnvTarget target,
                                TextureEnvParameter pname,
                                GLfixed *params)
 {
     GLfloat paramsf[4];
-    ContextPrivateGetTexEnvfv(context, target, pname, paramsf);
+    ContextPrivateGetTexEnvfv(privateState, privateStateCache, target, pname, paramsf);
     ConvertTextureEnvToFixed(pname, paramsf, params);
 }
 
-void ContextPrivateLightModelf(Context *context, GLenum pname, GLfloat param)
+void ContextPrivateLightModelf(PrivateState *privateState,
+                               PrivateStateCache *privateStateCache,
+                               GLenum pname,
+                               GLfloat param)
 {
-    ContextPrivateLightModelfv(context, pname, &param);
+    ContextPrivateLightModelfv(privateState, privateStateCache, pname, &param);
 }
 
-void ContextPrivateLightModelfv(Context *context, GLenum pname, const GLfloat *params)
+void ContextPrivateLightModelfv(PrivateState *privateState,
+                                PrivateStateCache *privateStateCache,
+                                GLenum pname,
+                                const GLfloat *params)
 {
-    SetLightModelParameters(context->getMutableGLES1State(), pname, params);
+    SetLightModelParameters(privateState->getMutableGLES1State(), pname, params);
 }
 
-void ContextPrivateLightModelx(Context *context, GLenum pname, GLfixed param)
+void ContextPrivateLightModelx(PrivateState *privateState,
+                               PrivateStateCache *privateStateCache,
+                               GLenum pname,
+                               GLfixed param)
 {
-    ContextPrivateLightModelf(context, pname, ConvertFixedToFloat(param));
+    ContextPrivateLightModelf(privateState, privateStateCache, pname, ConvertFixedToFloat(param));
 }
 
-void ContextPrivateLightModelxv(Context *context, GLenum pname, const GLfixed *param)
+void ContextPrivateLightModelxv(PrivateState *privateState,
+                                PrivateStateCache *privateStateCache,
+                                GLenum pname,
+                                const GLfixed *param)
 {
     GLfloat paramsf[4];
 
@@ -848,28 +1080,38 @@ void ContextPrivateLightModelxv(Context *context, GLenum pname, const GLfixed *p
         paramsf[i] = ConvertFixedToFloat(param[i]);
     }
 
-    ContextPrivateLightModelfv(context, pname, paramsf);
+    ContextPrivateLightModelfv(privateState, privateStateCache, pname, paramsf);
 }
 
-void ContextPrivateLightf(Context *context, GLenum light, LightParameter pname, GLfloat param)
+void ContextPrivateLightf(PrivateState *privateState,
+                          PrivateStateCache *privateStateCache,
+                          GLenum light,
+                          LightParameter pname,
+                          GLfloat param)
 {
-    ContextPrivateLightfv(context, light, pname, &param);
+    ContextPrivateLightfv(privateState, privateStateCache, light, pname, &param);
 }
 
-void ContextPrivateLightfv(Context *context,
+void ContextPrivateLightfv(PrivateState *privateState,
+                           PrivateStateCache *privateStateCache,
                            GLenum light,
                            LightParameter pname,
                            const GLfloat *params)
 {
-    SetLightParameters(context->getMutableGLES1State(), light, pname, params);
+    SetLightParameters(privateState->getMutableGLES1State(), light, pname, params);
 }
 
-void ContextPrivateLightx(Context *context, GLenum light, LightParameter pname, GLfixed param)
+void ContextPrivateLightx(PrivateState *privateState,
+                          PrivateStateCache *privateStateCache,
+                          GLenum light,
+                          LightParameter pname,
+                          GLfixed param)
 {
-    ContextPrivateLightf(context, light, pname, ConvertFixedToFloat(param));
+    ContextPrivateLightf(privateState, privateStateCache, light, pname, ConvertFixedToFloat(param));
 }
 
-void ContextPrivateLightxv(Context *context,
+void ContextPrivateLightxv(PrivateState *privateState,
+                           PrivateStateCache *privateStateCache,
                            GLenum light,
                            LightParameter pname,
                            const GLfixed *params)
@@ -881,43 +1123,58 @@ void ContextPrivateLightxv(Context *context,
         paramsf[i] = ConvertFixedToFloat(params[i]);
     }
 
-    ContextPrivateLightfv(context, light, pname, paramsf);
+    ContextPrivateLightfv(privateState, privateStateCache, light, pname, paramsf);
 }
 
-void ContextPrivateLoadIdentity(Context *context)
+void ContextPrivateLoadIdentity(PrivateState *privateState, PrivateStateCache *privateStateCache)
 {
-    context->getMutableGLES1State()->loadMatrix(angle::Mat4());
+    privateState->getMutableGLES1State()->loadMatrix(angle::Mat4());
 }
 
-void ContextPrivateLoadMatrixf(Context *context, const GLfloat *m)
+void ContextPrivateLoadMatrixf(PrivateState *privateState,
+                               PrivateStateCache *privateStateCache,
+                               const GLfloat *m)
 {
-    context->getMutableGLES1State()->loadMatrix(angle::Mat4(m));
+    privateState->getMutableGLES1State()->loadMatrix(angle::Mat4(m));
 }
 
-void ContextPrivateLoadMatrixx(Context *context, const GLfixed *m)
+void ContextPrivateLoadMatrixx(PrivateState *privateState,
+                               PrivateStateCache *privateStateCache,
+                               const GLfixed *m)
 {
-    context->getMutableGLES1State()->loadMatrix(FixedMatrixToMat4(m));
+    privateState->getMutableGLES1State()->loadMatrix(FixedMatrixToMat4(m));
 }
 
-void ContextPrivateMaterialf(Context *context, GLenum face, MaterialParameter pname, GLfloat param)
+void ContextPrivateMaterialf(PrivateState *privateState,
+                             PrivateStateCache *privateStateCache,
+                             GLenum face,
+                             MaterialParameter pname,
+                             GLfloat param)
 {
-    ContextPrivateMaterialfv(context, face, pname, &param);
+    ContextPrivateMaterialfv(privateState, privateStateCache, face, pname, &param);
 }
 
-void ContextPrivateMaterialfv(Context *context,
+void ContextPrivateMaterialfv(PrivateState *privateState,
+                              PrivateStateCache *privateStateCache,
                               GLenum face,
                               MaterialParameter pname,
                               const GLfloat *params)
 {
-    SetMaterialParameters(context->getMutableGLES1State(), face, pname, params);
+    SetMaterialParameters(privateState->getMutableGLES1State(), face, pname, params);
 }
 
-void ContextPrivateMaterialx(Context *context, GLenum face, MaterialParameter pname, GLfixed param)
+void ContextPrivateMaterialx(PrivateState *privateState,
+                             PrivateStateCache *privateStateCache,
+                             GLenum face,
+                             MaterialParameter pname,
+                             GLfixed param)
 {
-    ContextPrivateMaterialf(context, face, pname, ConvertFixedToFloat(param));
+    ContextPrivateMaterialf(privateState, privateStateCache, face, pname,
+                            ConvertFixedToFloat(param));
 }
 
-void ContextPrivateMaterialxv(Context *context,
+void ContextPrivateMaterialxv(PrivateState *privateState,
+                              PrivateStateCache *privateStateCache,
                               GLenum face,
                               MaterialParameter pname,
                               const GLfixed *param)
@@ -929,25 +1186,32 @@ void ContextPrivateMaterialxv(Context *context,
         paramsf[i] = ConvertFixedToFloat(param[i]);
     }
 
-    ContextPrivateMaterialfv(context, face, pname, paramsf);
+    ContextPrivateMaterialfv(privateState, privateStateCache, face, pname, paramsf);
 }
 
-void ContextPrivateMatrixMode(Context *context, MatrixType mode)
+void ContextPrivateMatrixMode(PrivateState *privateState,
+                              PrivateStateCache *privateStateCache,
+                              MatrixType mode)
 {
-    context->getMutableGLES1State()->setMatrixMode(mode);
+    privateState->getMutableGLES1State()->setMatrixMode(mode);
 }
 
-void ContextPrivateMultMatrixf(Context *context, const GLfloat *m)
+void ContextPrivateMultMatrixf(PrivateState *privateState,
+                               PrivateStateCache *privateStateCache,
+                               const GLfloat *m)
 {
-    context->getMutableGLES1State()->multMatrix(angle::Mat4(m));
+    privateState->getMutableGLES1State()->multMatrix(angle::Mat4(m));
 }
 
-void ContextPrivateMultMatrixx(Context *context, const GLfixed *m)
+void ContextPrivateMultMatrixx(PrivateState *privateState,
+                               PrivateStateCache *privateStateCache,
+                               const GLfixed *m)
 {
-    context->getMutableGLES1State()->multMatrix(FixedMatrixToMat4(m));
+    privateState->getMutableGLES1State()->multMatrix(FixedMatrixToMat4(m));
 }
 
-void ContextPrivateMultiTexCoord4f(Context *context,
+void ContextPrivateMultiTexCoord4f(PrivateState *privateState,
+                                   PrivateStateCache *privateStateCache,
                                    GLenum target,
                                    GLfloat s,
                                    GLfloat t,
@@ -955,34 +1219,44 @@ void ContextPrivateMultiTexCoord4f(Context *context,
                                    GLfloat q)
 {
     unsigned int unit = target - GL_TEXTURE0;
-    ASSERT(target >= GL_TEXTURE0 &&
-           unit < context->getState().privateState().getCaps().maxMultitextureUnits);
-    context->getMutableGLES1State()->setCurrentTextureCoords(unit, {s, t, r, q});
+    ASSERT(target >= GL_TEXTURE0 && unit < privateState->getCaps().maxMultitextureUnits);
+    privateState->getMutableGLES1State()->setCurrentTextureCoords(unit, {s, t, r, q});
 }
 
-void ContextPrivateMultiTexCoord4x(Context *context,
+void ContextPrivateMultiTexCoord4x(PrivateState *privateState,
+                                   PrivateStateCache *privateStateCache,
                                    GLenum texture,
                                    GLfixed s,
                                    GLfixed t,
                                    GLfixed r,
                                    GLfixed q)
 {
-    ContextPrivateMultiTexCoord4f(context, texture, ConvertFixedToFloat(s), ConvertFixedToFloat(t),
-                                  ConvertFixedToFloat(r), ConvertFixedToFloat(q));
+    ContextPrivateMultiTexCoord4f(privateState, privateStateCache, texture, ConvertFixedToFloat(s),
+                                  ConvertFixedToFloat(t), ConvertFixedToFloat(r),
+                                  ConvertFixedToFloat(q));
 }
 
-void ContextPrivateNormal3f(Context *context, GLfloat nx, GLfloat ny, GLfloat nz)
+void ContextPrivateNormal3f(PrivateState *privateState,
+                            PrivateStateCache *privateStateCache,
+                            GLfloat nx,
+                            GLfloat ny,
+                            GLfloat nz)
 {
-    context->getMutableGLES1State()->setCurrentNormal({nx, ny, nz});
+    privateState->getMutableGLES1State()->setCurrentNormal({nx, ny, nz});
 }
 
-void ContextPrivateNormal3x(Context *context, GLfixed nx, GLfixed ny, GLfixed nz)
+void ContextPrivateNormal3x(PrivateState *privateState,
+                            PrivateStateCache *privateStateCache,
+                            GLfixed nx,
+                            GLfixed ny,
+                            GLfixed nz)
 {
-    ContextPrivateNormal3f(context, ConvertFixedToFloat(nx), ConvertFixedToFloat(ny),
-                           ConvertFixedToFloat(nz));
+    ContextPrivateNormal3f(privateState, privateStateCache, ConvertFixedToFloat(nx),
+                           ConvertFixedToFloat(ny), ConvertFixedToFloat(nz));
 }
 
-void ContextPrivateOrthof(Context *context,
+void ContextPrivateOrthof(PrivateState *privateState,
+                          PrivateStateCache *privateStateCache,
                           GLfloat left,
                           GLfloat right,
                           GLfloat bottom,
@@ -990,11 +1264,12 @@ void ContextPrivateOrthof(Context *context,
                           GLfloat zNear,
                           GLfloat zFar)
 {
-    context->getMutableGLES1State()->multMatrix(
+    privateState->getMutableGLES1State()->multMatrix(
         angle::Mat4::Ortho(left, right, bottom, top, zNear, zFar));
 }
 
-void ContextPrivateOrthox(Context *context,
+void ContextPrivateOrthox(PrivateState *privateState,
+                          PrivateStateCache *privateStateCache,
                           GLfixed left,
                           GLfixed right,
                           GLfixed bottom,
@@ -1002,145 +1277,198 @@ void ContextPrivateOrthox(Context *context,
                           GLfixed zNear,
                           GLfixed zFar)
 {
-    ContextPrivateOrthof(context, ConvertFixedToFloat(left), ConvertFixedToFloat(right),
-                         ConvertFixedToFloat(bottom), ConvertFixedToFloat(top),
-                         ConvertFixedToFloat(zNear), ConvertFixedToFloat(zFar));
+    ContextPrivateOrthof(privateState, privateStateCache, ConvertFixedToFloat(left),
+                         ConvertFixedToFloat(right), ConvertFixedToFloat(bottom),
+                         ConvertFixedToFloat(top), ConvertFixedToFloat(zNear),
+                         ConvertFixedToFloat(zFar));
 }
 
-void ContextPrivatePointParameterf(Context *context, PointParameter pname, GLfloat param)
+void ContextPrivatePointParameterf(PrivateState *privateState,
+                                   PrivateStateCache *privateStateCache,
+                                   PointParameter pname,
+                                   GLfloat param)
 {
-    ContextPrivatePointParameterfv(context, pname, &param);
+    ContextPrivatePointParameterfv(privateState, privateStateCache, pname, &param);
 }
 
-void ContextPrivatePointParameterfv(Context *context, PointParameter pname, const GLfloat *params)
+void ContextPrivatePointParameterfv(PrivateState *privateState,
+                                    PrivateStateCache *privateStateCache,
+                                    PointParameter pname,
+                                    const GLfloat *params)
 {
-    SetPointParameter(context->getMutableGLES1State(), pname, params);
+    SetPointParameter(privateState->getMutableGLES1State(), pname, params);
 }
 
-void ContextPrivatePointParameterx(Context *context, PointParameter pname, GLfixed param)
+void ContextPrivatePointParameterx(PrivateState *privateState,
+                                   PrivateStateCache *privateStateCache,
+                                   PointParameter pname,
+                                   GLfixed param)
 {
-    ContextPrivatePointParameterf(context, pname, ConvertFixedToFloat(param));
+    ContextPrivatePointParameterf(privateState, privateStateCache, pname,
+                                  ConvertFixedToFloat(param));
 }
 
-void ContextPrivatePointParameterxv(Context *context, PointParameter pname, const GLfixed *params)
+void ContextPrivatePointParameterxv(PrivateState *privateState,
+                                    PrivateStateCache *privateStateCache,
+                                    PointParameter pname,
+                                    const GLfixed *params)
 {
     GLfloat paramsf[4] = {};
     for (unsigned int i = 0; i < GetPointParameterCount(pname); i++)
     {
         paramsf[i] = ConvertFixedToFloat(params[i]);
     }
-    ContextPrivatePointParameterfv(context, pname, paramsf);
+    ContextPrivatePointParameterfv(privateState, privateStateCache, pname, paramsf);
 }
 
-void ContextPrivatePointSize(Context *context, GLfloat size)
+void ContextPrivatePointSize(PrivateState *privateState,
+                             PrivateStateCache *privateStateCache,
+                             GLfloat size)
 {
-    SetPointSize(context->getMutableGLES1State(), size);
+    SetPointSize(privateState->getMutableGLES1State(), size);
 }
 
-void ContextPrivatePointSizex(Context *context, GLfixed size)
+void ContextPrivatePointSizex(PrivateState *privateState,
+                              PrivateStateCache *privateStateCache,
+                              GLfixed size)
 {
-    ContextPrivatePointSize(context, ConvertFixedToFloat(size));
+    ContextPrivatePointSize(privateState, privateStateCache, ConvertFixedToFloat(size));
 }
 
-void ContextPrivatePopMatrix(Context *context)
+void ContextPrivatePopMatrix(PrivateState *privateState, PrivateStateCache *privateStateCache)
 {
-    context->getMutableGLES1State()->popMatrix();
+    privateState->getMutableGLES1State()->popMatrix();
 }
 
-void ContextPrivatePushMatrix(Context *context)
+void ContextPrivatePushMatrix(PrivateState *privateState, PrivateStateCache *privateStateCache)
 {
-    context->getMutableGLES1State()->pushMatrix();
+    privateState->getMutableGLES1State()->pushMatrix();
 }
 
-void ContextPrivateRotatef(Context *context, GLfloat angle, GLfloat x, GLfloat y, GLfloat z)
+void ContextPrivateRotatef(PrivateState *privateState,
+                           PrivateStateCache *privateStateCache,
+                           GLfloat angle,
+                           GLfloat x,
+                           GLfloat y,
+                           GLfloat z)
 {
-    context->getMutableGLES1State()->multMatrix(
+    privateState->getMutableGLES1State()->multMatrix(
         angle::Mat4::Rotate(angle, angle::Vector3(x, y, z)));
 }
 
-void ContextPrivateRotatex(Context *context, GLfixed angle, GLfixed x, GLfixed y, GLfixed z)
+void ContextPrivateRotatex(PrivateState *privateState,
+                           PrivateStateCache *privateStateCache,
+                           GLfixed angle,
+                           GLfixed x,
+                           GLfixed y,
+                           GLfixed z)
 {
-    ContextPrivateRotatef(context, ConvertFixedToFloat(angle), ConvertFixedToFloat(x),
-                          ConvertFixedToFloat(y), ConvertFixedToFloat(z));
+    ContextPrivateRotatef(privateState, privateStateCache, ConvertFixedToFloat(angle),
+                          ConvertFixedToFloat(x), ConvertFixedToFloat(y), ConvertFixedToFloat(z));
 }
 
-void ContextPrivateScalef(Context *context, GLfloat x, GLfloat y, GLfloat z)
+void ContextPrivateScalef(PrivateState *privateState,
+                          PrivateStateCache *privateStateCache,
+                          GLfloat x,
+                          GLfloat y,
+                          GLfloat z)
 {
-    context->getMutableGLES1State()->multMatrix(angle::Mat4::Scale(angle::Vector3(x, y, z)));
+    privateState->getMutableGLES1State()->multMatrix(angle::Mat4::Scale(angle::Vector3(x, y, z)));
 }
 
-void ContextPrivateScalex(Context *context, GLfixed x, GLfixed y, GLfixed z)
+void ContextPrivateScalex(PrivateState *privateState,
+                          PrivateStateCache *privateStateCache,
+                          GLfixed x,
+                          GLfixed y,
+                          GLfixed z)
 {
-    ContextPrivateScalef(context, ConvertFixedToFloat(x), ConvertFixedToFloat(y),
-                         ConvertFixedToFloat(z));
+    ContextPrivateScalef(privateState, privateStateCache, ConvertFixedToFloat(x),
+                         ConvertFixedToFloat(y), ConvertFixedToFloat(z));
 }
 
-void ContextPrivateShadeModel(Context *context, ShadingModel model)
+void ContextPrivateShadeModel(PrivateState *privateState,
+                              PrivateStateCache *privateStateCache,
+                              ShadingModel model)
 {
-    context->getMutableGLES1State()->setShadeModel(model);
+    privateState->getMutableGLES1State()->setShadeModel(model);
 }
 
-void ContextPrivateTexEnvf(Context *context,
+void ContextPrivateTexEnvf(PrivateState *privateState,
+                           PrivateStateCache *privateStateCache,
                            TextureEnvTarget target,
                            TextureEnvParameter pname,
                            GLfloat param)
 {
-    ContextPrivateTexEnvfv(context, target, pname, &param);
+    ContextPrivateTexEnvfv(privateState, privateStateCache, target, pname, &param);
 }
 
-void ContextPrivateTexEnvfv(Context *context,
+void ContextPrivateTexEnvfv(PrivateState *privateState,
+                            PrivateStateCache *privateStateCache,
                             TextureEnvTarget target,
                             TextureEnvParameter pname,
                             const GLfloat *params)
 {
-    SetTextureEnv(context->getState().privateState().getActiveSampler(),
-                  context->getMutableGLES1State(), target, pname, params);
+    SetTextureEnv(privateState->getActiveSampler(), privateState->getMutableGLES1State(), target,
+                  pname, params);
 }
 
-void ContextPrivateTexEnvi(Context *context,
+void ContextPrivateTexEnvi(PrivateState *privateState,
+                           PrivateStateCache *privateStateCache,
                            TextureEnvTarget target,
                            TextureEnvParameter pname,
                            GLint param)
 {
-    ContextPrivateTexEnviv(context, target, pname, &param);
+    ContextPrivateTexEnviv(privateState, privateStateCache, target, pname, &param);
 }
 
-void ContextPrivateTexEnviv(Context *context,
+void ContextPrivateTexEnviv(PrivateState *privateState,
+                            PrivateStateCache *privateStateCache,
                             TextureEnvTarget target,
                             TextureEnvParameter pname,
                             const GLint *params)
 {
     GLfloat paramsf[4] = {};
     ConvertTextureEnvFromInt(pname, params, paramsf);
-    ContextPrivateTexEnvfv(context, target, pname, paramsf);
+    ContextPrivateTexEnvfv(privateState, privateStateCache, target, pname, paramsf);
 }
 
-void ContextPrivateTexEnvx(Context *context,
+void ContextPrivateTexEnvx(PrivateState *privateState,
+                           PrivateStateCache *privateStateCache,
                            TextureEnvTarget target,
                            TextureEnvParameter pname,
                            GLfixed param)
 {
-    ContextPrivateTexEnvxv(context, target, pname, &param);
+    ContextPrivateTexEnvxv(privateState, privateStateCache, target, pname, &param);
 }
 
-void ContextPrivateTexEnvxv(Context *context,
+void ContextPrivateTexEnvxv(PrivateState *privateState,
+                            PrivateStateCache *privateStateCache,
                             TextureEnvTarget target,
                             TextureEnvParameter pname,
                             const GLfixed *params)
 {
     GLfloat paramsf[4] = {};
     ConvertTextureEnvFromFixed(pname, params, paramsf);
-    ContextPrivateTexEnvfv(context, target, pname, paramsf);
+    ContextPrivateTexEnvfv(privateState, privateStateCache, target, pname, paramsf);
 }
 
-void ContextPrivateTranslatef(Context *context, GLfloat x, GLfloat y, GLfloat z)
+void ContextPrivateTranslatef(PrivateState *privateState,
+                              PrivateStateCache *privateStateCache,
+                              GLfloat x,
+                              GLfloat y,
+                              GLfloat z)
 {
-    context->getMutableGLES1State()->multMatrix(angle::Mat4::Translate(angle::Vector3(x, y, z)));
+    privateState->getMutableGLES1State()->multMatrix(
+        angle::Mat4::Translate(angle::Vector3(x, y, z)));
 }
 
-void ContextPrivateTranslatex(Context *context, GLfixed x, GLfixed y, GLfixed z)
+void ContextPrivateTranslatex(PrivateState *privateState,
+                              PrivateStateCache *privateStateCache,
+                              GLfixed x,
+                              GLfixed y,
+                              GLfixed z)
 {
-    ContextPrivateTranslatef(context, ConvertFixedToFloat(x), ConvertFixedToFloat(y),
-                             ConvertFixedToFloat(z));
+    ContextPrivateTranslatef(privateState, privateStateCache, ConvertFixedToFloat(x),
+                             ConvertFixedToFloat(y), ConvertFixedToFloat(z));
 }
 }  // namespace gl

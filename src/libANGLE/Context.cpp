@@ -998,8 +998,10 @@ egl::Error Context::makeCurrent(egl::Display *display,
             height = drawSurface->getHeight();
         }
 
-        ContextPrivateViewport(this, 0, 0, width, height);
-        ContextPrivateScissor(this, 0, 0, width, height);
+        ContextPrivateViewport(getMutablePrivateState(), getMutablePrivateStateCache(), 0, 0, width,
+                               height);
+        ContextPrivateScissor(getMutablePrivateState(), getMutablePrivateStateCache(), 0, 0, width,
+                              height);
 
         mHasBeenCurrent = true;
     }
@@ -9717,7 +9719,7 @@ void Context::setLogicOpEnabledForGLES1(bool enabled)
 {
     // Same implementation as ContextPrivateEnable(GL_COLOR_LOGIC_OP), without the GLES1 forwarding.
     getMutablePrivateState()->setLogicOpEnabled(enabled);
-    getPrivateStateCache().onCapChange();
+    getMutablePrivateStateCache()->onCapChange();
 }
 
 egl::Error Context::releaseHighPowerGPU()

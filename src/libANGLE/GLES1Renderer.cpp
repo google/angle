@@ -291,7 +291,8 @@ angle::Result GLES1Renderer::prepareForDraw(PrimitiveMode mode,
         // Note: ContextPrivateEnable(GL_COLOR_LOGIC_OP) is not used because that entry point
         // implementation forwards logicOp back to GLES1State.
         context->setLogicOpEnabledForGLES1(gles1State->mLogicOpEnabled);
-        ContextPrivateLogicOpANGLE(context, gles1State->mLogicOp);
+        ContextPrivateLogicOpANGLE(context->getMutablePrivateState(),
+                                   context->getMutablePrivateStateCache(), gles1State->mLogicOp);
     }
     else if (hasFramebufferFetch)
     {
@@ -322,21 +323,25 @@ angle::Result GLES1Renderer::prepareForDraw(PrimitiveMode mode,
         if (!gles1State->isClientStateEnabled(ClientVertexArrayType::Normal))
         {
             const angle::Vector3 normal = gles1State->getCurrentNormal();
-            ContextPrivateVertexAttrib3f(context, kNormalAttribIndex, normal.x(), normal.y(),
-                                         normal.z());
+            ContextPrivateVertexAttrib3f(context->getMutablePrivateState(),
+                                         context->getMutablePrivateStateCache(), kNormalAttribIndex,
+                                         normal.x(), normal.y(), normal.z());
         }
 
         if (!gles1State->isClientStateEnabled(ClientVertexArrayType::Color))
         {
             const ColorF color = gles1State->getCurrentColor();
-            ContextPrivateVertexAttrib4f(context, kColorAttribIndex, color.red, color.green,
-                                         color.blue, color.alpha);
+            ContextPrivateVertexAttrib4f(context->getMutablePrivateState(),
+                                         context->getMutablePrivateStateCache(), kColorAttribIndex,
+                                         color.red, color.green, color.blue, color.alpha);
         }
 
         if (!gles1State->isClientStateEnabled(ClientVertexArrayType::PointSize))
         {
             GLfloat pointSize = gles1State->mPointParameters.pointSize;
-            ContextPrivateVertexAttrib1f(context, kPointSizeAttribIndex, pointSize);
+            ContextPrivateVertexAttrib1f(context->getMutablePrivateState(),
+                                         context->getMutablePrivateStateCache(),
+                                         kPointSizeAttribIndex, pointSize);
         }
 
         for (int i = 0; i < kTexUnitCount; i++)
@@ -344,7 +349,9 @@ angle::Result GLES1Renderer::prepareForDraw(PrimitiveMode mode,
             if (!gles1State->mTexCoordArrayEnabled[i])
             {
                 const TextureCoordF texcoord = gles1State->getCurrentTextureCoords(i);
-                ContextPrivateVertexAttrib4f(context, kTextureCoordAttribIndexBase + i, texcoord.s,
+                ContextPrivateVertexAttrib4f(context->getMutablePrivateState(),
+                                             context->getMutablePrivateStateCache(),
+                                             kTextureCoordAttribIndexBase + i, texcoord.s,
                                              texcoord.t, texcoord.r, texcoord.q);
             }
         }

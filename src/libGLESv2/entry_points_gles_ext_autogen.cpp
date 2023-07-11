@@ -1013,7 +1013,8 @@ void GL_APIENTRY GL_LogicOpANGLE(GLenum opcode)
               ValidateLogicOpANGLE(context, angle::EntryPoint::GLLogicOpANGLE, opcodePacked)));
         if (isCallValid)
         {
-            ContextPrivateLogicOpANGLE(context, opcodePacked);
+            ContextPrivateLogicOpANGLE(context->getMutablePrivateState(),
+                                       context->getMutablePrivateStateCache(), opcodePacked);
         }
         ANGLE_CAPTURE_GL(LogicOpANGLE, isCallValid, context, opcodePacked);
     }
@@ -1452,7 +1453,8 @@ void GL_APIENTRY GL_PolygonModeANGLE(GLenum face, GLenum mode)
                                        modePacked)));
         if (isCallValid)
         {
-            ContextPrivatePolygonMode(context, face, modePacked);
+            ContextPrivatePolygonMode(context->getMutablePrivateState(),
+                                      context->getMutablePrivateStateCache(), face, modePacked);
         }
         ANGLE_CAPTURE_GL(PolygonModeANGLE, isCallValid, context, face, modePacked);
     }
@@ -1482,7 +1484,9 @@ void GL_APIENTRY GL_ProvokingVertexANGLE(GLenum provokeMode)
                                           provokeModePacked));
         if (isCallValid)
         {
-            ContextPrivateProvokingVertex(context, provokeModePacked);
+            ContextPrivateProvokingVertex(context->getMutablePrivateState(),
+                                          context->getMutablePrivateStateCache(),
+                                          provokeModePacked);
         }
         ANGLE_CAPTURE_GL(ProvokingVertexANGLE, isCallValid, context, provokeModePacked);
     }
@@ -4503,7 +4507,8 @@ void GL_APIENTRY GL_SampleMaskiANGLE(GLuint maskNumber, GLbitfield mask)
                                        mask)));
         if (isCallValid)
         {
-            ContextPrivateSampleMaski(context, maskNumber, mask);
+            ContextPrivateSampleMaski(context->getMutablePrivateState(),
+                                      context->getMutablePrivateStateCache(), maskNumber, mask);
         }
         ANGLE_CAPTURE_GL(SampleMaskiANGLE, isCallValid, context, maskNumber, mask);
     }
@@ -4832,7 +4837,8 @@ void GL_APIENTRY GL_CoverageModulationCHROMIUM(GLenum components)
                   context, angle::EntryPoint::GLCoverageModulationCHROMIUM, components)));
         if (isCallValid)
         {
-            ContextPrivateCoverageModulation(context, components);
+            ContextPrivateCoverageModulation(context->getMutablePrivateState(),
+                                             context->getMutablePrivateStateCache(), components);
         }
         ANGLE_CAPTURE_GL(CoverageModulationCHROMIUM, isCallValid, context, components);
     }
@@ -5261,7 +5267,9 @@ void GL_APIENTRY GL_ClipControlEXT(GLenum origin, GLenum depth)
                                                             originPacked, depthPacked));
         if (isCallValid)
         {
-            ContextPrivateClipControl(context, originPacked, depthPacked);
+            ContextPrivateClipControl(context->getMutablePrivateState(),
+                                      context->getMutablePrivateStateCache(), originPacked,
+                                      depthPacked);
         }
         ANGLE_CAPTURE_GL(ClipControlEXT, isCallValid, context, originPacked, depthPacked);
     }
@@ -5893,7 +5901,9 @@ void GL_APIENTRY GL_BlendEquationSeparateiEXT(GLuint buf, GLenum modeRGB, GLenum
                  context, angle::EntryPoint::GLBlendEquationSeparateiEXT, buf, modeRGB, modeAlpha));
         if (isCallValid)
         {
-            ContextPrivateBlendEquationSeparatei(context, buf, modeRGB, modeAlpha);
+            ContextPrivateBlendEquationSeparatei(context->getMutablePrivateState(),
+                                                 context->getMutablePrivateStateCache(), buf,
+                                                 modeRGB, modeAlpha);
         }
         ANGLE_CAPTURE_GL(BlendEquationSeparateiEXT, isCallValid, context, buf, modeRGB, modeAlpha);
     }
@@ -5917,7 +5927,8 @@ void GL_APIENTRY GL_BlendEquationiEXT(GLuint buf, GLenum mode)
              ValidateBlendEquationiEXT(context, angle::EntryPoint::GLBlendEquationiEXT, buf, mode));
         if (isCallValid)
         {
-            ContextPrivateBlendEquationi(context, buf, mode);
+            ContextPrivateBlendEquationi(context->getMutablePrivateState(),
+                                         context->getMutablePrivateStateCache(), buf, mode);
         }
         ANGLE_CAPTURE_GL(BlendEquationiEXT, isCallValid, context, buf, mode);
     }
@@ -5947,7 +5958,9 @@ GL_BlendFuncSeparateiEXT(GLuint buf, GLenum srcRGB, GLenum dstRGB, GLenum srcAlp
                                            srcRGB, dstRGB, srcAlpha, dstAlpha));
         if (isCallValid)
         {
-            ContextPrivateBlendFuncSeparatei(context, buf, srcRGB, dstRGB, srcAlpha, dstAlpha);
+            ContextPrivateBlendFuncSeparatei(context->getMutablePrivateState(),
+                                             context->getMutablePrivateStateCache(), buf, srcRGB,
+                                             dstRGB, srcAlpha, dstAlpha);
         }
         ANGLE_CAPTURE_GL(BlendFuncSeparateiEXT, isCallValid, context, buf, srcRGB, dstRGB, srcAlpha,
                          dstAlpha);
@@ -5973,7 +5986,8 @@ void GL_APIENTRY GL_BlendFunciEXT(GLuint buf, GLenum src, GLenum dst)
              ValidateBlendFunciEXT(context, angle::EntryPoint::GLBlendFunciEXT, buf, src, dst));
         if (isCallValid)
         {
-            ContextPrivateBlendFunci(context, buf, src, dst);
+            ContextPrivateBlendFunci(context->getMutablePrivateState(),
+                                     context->getMutablePrivateStateCache(), buf, src, dst);
         }
         ANGLE_CAPTURE_GL(BlendFunciEXT, isCallValid, context, buf, src, dst);
     }
@@ -5998,7 +6012,8 @@ void GL_APIENTRY GL_ColorMaskiEXT(GLuint index, GLboolean r, GLboolean g, GLbool
              ValidateColorMaskiEXT(context, angle::EntryPoint::GLColorMaskiEXT, index, r, g, b, a));
         if (isCallValid)
         {
-            ContextPrivateColorMaski(context, index, r, g, b, a);
+            ContextPrivateColorMaski(context->getMutablePrivateState(),
+                                     context->getMutablePrivateStateCache(), index, r, g, b, a);
         }
         ANGLE_CAPTURE_GL(ColorMaskiEXT, isCallValid, context, index, r, g, b, a);
     }
@@ -6022,7 +6037,8 @@ void GL_APIENTRY GL_DisableiEXT(GLenum target, GLuint index)
              ValidateDisableiEXT(context, angle::EntryPoint::GLDisableiEXT, target, index));
         if (isCallValid)
         {
-            ContextPrivateDisablei(context, target, index);
+            ContextPrivateDisablei(context->getMutablePrivateState(),
+                                   context->getMutablePrivateStateCache(), target, index);
         }
         ANGLE_CAPTURE_GL(DisableiEXT, isCallValid, context, target, index);
     }
@@ -6046,7 +6062,8 @@ void GL_APIENTRY GL_EnableiEXT(GLenum target, GLuint index)
              ValidateEnableiEXT(context, angle::EntryPoint::GLEnableiEXT, target, index));
         if (isCallValid)
         {
-            ContextPrivateEnablei(context, target, index);
+            ContextPrivateEnablei(context->getMutablePrivateState(),
+                                  context->getMutablePrivateStateCache(), target, index);
         }
         ANGLE_CAPTURE_GL(EnableiEXT, isCallValid, context, target, index);
     }
@@ -6071,7 +6088,9 @@ GLboolean GL_APIENTRY GL_IsEnablediEXT(GLenum target, GLuint index)
              ValidateIsEnablediEXT(context, angle::EntryPoint::GLIsEnablediEXT, target, index));
         if (isCallValid)
         {
-            returnValue = ContextPrivateIsEnabledi(context, target, index);
+            returnValue =
+                ContextPrivateIsEnabledi(context->getMutablePrivateState(),
+                                         context->getMutablePrivateStateCache(), target, index);
         }
         else
         {
@@ -7171,7 +7190,9 @@ void GL_APIENTRY GL_PolygonOffsetClampEXT(GLfloat factor, GLfloat units, GLfloat
                                            factor, units, clamp));
         if (isCallValid)
         {
-            ContextPrivatePolygonOffsetClamp(context, factor, units, clamp);
+            ContextPrivatePolygonOffsetClamp(context->getMutablePrivateState(),
+                                             context->getMutablePrivateStateCache(), factor, units,
+                                             clamp);
         }
         ANGLE_CAPTURE_GL(PolygonOffsetClampEXT, isCallValid, context, factor, units, clamp);
     }
@@ -7208,8 +7229,9 @@ void GL_APIENTRY GL_PrimitiveBoundingBoxEXT(GLfloat minX,
                                               minX, minY, minZ, minW, maxX, maxY, maxZ, maxW)));
         if (isCallValid)
         {
-            ContextPrivatePrimitiveBoundingBox(context, minX, minY, minZ, minW, maxX, maxY, maxZ,
-                                               maxW);
+            ContextPrivatePrimitiveBoundingBox(context->getMutablePrivateState(),
+                                               context->getMutablePrivateStateCache(), minX, minY,
+                                               minZ, minW, maxX, maxY, maxZ, maxW);
         }
         ANGLE_CAPTURE_GL(PrimitiveBoundingBoxEXT, isCallValid, context, minX, minY, minZ, minW,
                          maxX, maxY, maxZ, maxW);
@@ -9181,7 +9203,8 @@ void GL_APIENTRY GL_PatchParameteriEXT(GLenum pname, GLint value)
                                          value)));
         if (isCallValid)
         {
-            ContextPrivatePatchParameteri(context, pname, value);
+            ContextPrivatePatchParameteri(context->getMutablePrivateState(),
+                                          context->getMutablePrivateStateCache(), pname, value);
         }
         ANGLE_CAPTURE_GL(PatchParameteriEXT, isCallValid, context, pname, value);
     }
@@ -10377,7 +10400,8 @@ void GL_APIENTRY GL_PolygonModeNV(GLenum face, GLenum mode)
                                     modePacked)));
         if (isCallValid)
         {
-            ContextPrivatePolygonModeNV(context, face, modePacked);
+            ContextPrivatePolygonModeNV(context->getMutablePrivateState(),
+                                        context->getMutablePrivateStateCache(), face, modePacked);
         }
         ANGLE_CAPTURE_GL(PolygonModeNV, isCallValid, context, face, modePacked);
     }
@@ -10548,7 +10572,9 @@ void GL_APIENTRY GL_BlendEquationSeparateiOES(GLuint buf, GLenum modeRGB, GLenum
                  context, angle::EntryPoint::GLBlendEquationSeparateiOES, buf, modeRGB, modeAlpha));
         if (isCallValid)
         {
-            ContextPrivateBlendEquationSeparatei(context, buf, modeRGB, modeAlpha);
+            ContextPrivateBlendEquationSeparatei(context->getMutablePrivateState(),
+                                                 context->getMutablePrivateStateCache(), buf,
+                                                 modeRGB, modeAlpha);
         }
         ANGLE_CAPTURE_GL(BlendEquationSeparateiOES, isCallValid, context, buf, modeRGB, modeAlpha);
     }
@@ -10572,7 +10598,8 @@ void GL_APIENTRY GL_BlendEquationiOES(GLuint buf, GLenum mode)
              ValidateBlendEquationiOES(context, angle::EntryPoint::GLBlendEquationiOES, buf, mode));
         if (isCallValid)
         {
-            ContextPrivateBlendEquationi(context, buf, mode);
+            ContextPrivateBlendEquationi(context->getMutablePrivateState(),
+                                         context->getMutablePrivateStateCache(), buf, mode);
         }
         ANGLE_CAPTURE_GL(BlendEquationiOES, isCallValid, context, buf, mode);
     }
@@ -10602,7 +10629,9 @@ GL_BlendFuncSeparateiOES(GLuint buf, GLenum srcRGB, GLenum dstRGB, GLenum srcAlp
                                            srcRGB, dstRGB, srcAlpha, dstAlpha));
         if (isCallValid)
         {
-            ContextPrivateBlendFuncSeparatei(context, buf, srcRGB, dstRGB, srcAlpha, dstAlpha);
+            ContextPrivateBlendFuncSeparatei(context->getMutablePrivateState(),
+                                             context->getMutablePrivateStateCache(), buf, srcRGB,
+                                             dstRGB, srcAlpha, dstAlpha);
         }
         ANGLE_CAPTURE_GL(BlendFuncSeparateiOES, isCallValid, context, buf, srcRGB, dstRGB, srcAlpha,
                          dstAlpha);
@@ -10628,7 +10657,8 @@ void GL_APIENTRY GL_BlendFunciOES(GLuint buf, GLenum src, GLenum dst)
              ValidateBlendFunciOES(context, angle::EntryPoint::GLBlendFunciOES, buf, src, dst));
         if (isCallValid)
         {
-            ContextPrivateBlendFunci(context, buf, src, dst);
+            ContextPrivateBlendFunci(context->getMutablePrivateState(),
+                                     context->getMutablePrivateStateCache(), buf, src, dst);
         }
         ANGLE_CAPTURE_GL(BlendFunciOES, isCallValid, context, buf, src, dst);
     }
@@ -10653,7 +10683,8 @@ void GL_APIENTRY GL_ColorMaskiOES(GLuint index, GLboolean r, GLboolean g, GLbool
              ValidateColorMaskiOES(context, angle::EntryPoint::GLColorMaskiOES, index, r, g, b, a));
         if (isCallValid)
         {
-            ContextPrivateColorMaski(context, index, r, g, b, a);
+            ContextPrivateColorMaski(context->getMutablePrivateState(),
+                                     context->getMutablePrivateStateCache(), index, r, g, b, a);
         }
         ANGLE_CAPTURE_GL(ColorMaskiOES, isCallValid, context, index, r, g, b, a);
     }
@@ -10677,7 +10708,8 @@ void GL_APIENTRY GL_DisableiOES(GLenum target, GLuint index)
              ValidateDisableiOES(context, angle::EntryPoint::GLDisableiOES, target, index));
         if (isCallValid)
         {
-            ContextPrivateDisablei(context, target, index);
+            ContextPrivateDisablei(context->getMutablePrivateState(),
+                                   context->getMutablePrivateStateCache(), target, index);
         }
         ANGLE_CAPTURE_GL(DisableiOES, isCallValid, context, target, index);
     }
@@ -10701,7 +10733,8 @@ void GL_APIENTRY GL_EnableiOES(GLenum target, GLuint index)
              ValidateEnableiOES(context, angle::EntryPoint::GLEnableiOES, target, index));
         if (isCallValid)
         {
-            ContextPrivateEnablei(context, target, index);
+            ContextPrivateEnablei(context->getMutablePrivateState(),
+                                  context->getMutablePrivateStateCache(), target, index);
         }
         ANGLE_CAPTURE_GL(EnableiOES, isCallValid, context, target, index);
     }
@@ -10726,7 +10759,9 @@ GLboolean GL_APIENTRY GL_IsEnablediOES(GLenum target, GLuint index)
              ValidateIsEnablediOES(context, angle::EntryPoint::GLIsEnablediOES, target, index));
         if (isCallValid)
         {
-            returnValue = ContextPrivateIsEnabledi(context, target, index);
+            returnValue =
+                ContextPrivateIsEnabledi(context->getMutablePrivateState(),
+                                         context->getMutablePrivateStateCache(), target, index);
         }
         else
         {
@@ -11931,8 +11966,9 @@ void GL_APIENTRY GL_PrimitiveBoundingBoxOES(GLfloat minX,
                                               minX, minY, minZ, minW, maxX, maxY, maxZ, maxW)));
         if (isCallValid)
         {
-            ContextPrivatePrimitiveBoundingBox(context, minX, minY, minZ, minW, maxX, maxY, maxZ,
-                                               maxW);
+            ContextPrivatePrimitiveBoundingBox(context->getMutablePrivateState(),
+                                               context->getMutablePrivateStateCache(), minX, minY,
+                                               minZ, minW, maxX, maxY, maxZ, maxW);
         }
         ANGLE_CAPTURE_GL(PrimitiveBoundingBoxOES, isCallValid, context, minX, minY, minZ, minW,
                          maxX, maxY, maxZ, maxW);
@@ -11997,7 +12033,8 @@ void GL_APIENTRY GL_MinSampleShadingOES(GLfloat value)
                                  context, angle::EntryPoint::GLMinSampleShadingOES, value)));
         if (isCallValid)
         {
-            ContextPrivateMinSampleShading(context, value);
+            ContextPrivateMinSampleShading(context->getMutablePrivateState(),
+                                           context->getMutablePrivateStateCache(), value);
         }
         ANGLE_CAPTURE_GL(MinSampleShadingOES, isCallValid, context, value);
     }
@@ -13072,7 +13109,8 @@ void GL_APIENTRY GL_ShadingRateQCOM(GLenum rate)
               ValidateShadingRateQCOM(context, angle::EntryPoint::GLShadingRateQCOM, rate)));
         if (isCallValid)
         {
-            ContextPrivateShadingRate(context, rate);
+            ContextPrivateShadingRate(context->getMutablePrivateState(),
+                                      context->getMutablePrivateStateCache(), rate);
         }
         ANGLE_CAPTURE_GL(ShadingRateQCOM, isCallValid, context, rate);
     }

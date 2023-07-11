@@ -15,126 +15,289 @@
 
 namespace gl
 {
-void ContextPrivateVertexAttrib1d(Context *context, GLuint index, GLdouble x);
-void ContextPrivateVertexAttrib1dv(Context *context, GLuint index, const GLdouble *v);
-void ContextPrivateVertexAttrib1s(Context *context, GLuint index, GLshort x);
-void ContextPrivateVertexAttrib1sv(Context *context, GLuint index, const GLshort *v);
-void ContextPrivateVertexAttrib2d(Context *context, GLuint index, GLdouble x, GLdouble y);
-void ContextPrivateVertexAttrib2dv(Context *context, GLuint index, const GLdouble *v);
-void ContextPrivateVertexAttrib2s(Context *context, GLuint index, GLshort x, GLshort y);
-void ContextPrivateVertexAttrib2sv(Context *context, GLuint index, const GLshort *v);
-void ContextPrivateVertexAttrib3d(Context *context,
+void ContextPrivateVertexAttrib1d(PrivateState *privateState,
+                                  PrivateStateCache *privateStateCache,
+                                  GLuint index,
+                                  GLdouble x);
+void ContextPrivateVertexAttrib1dv(PrivateState *privateState,
+                                   PrivateStateCache *privateStateCache,
+                                   GLuint index,
+                                   const GLdouble *v);
+void ContextPrivateVertexAttrib1s(PrivateState *privateState,
+                                  PrivateStateCache *privateStateCache,
+                                  GLuint index,
+                                  GLshort x);
+void ContextPrivateVertexAttrib1sv(PrivateState *privateState,
+                                   PrivateStateCache *privateStateCache,
+                                   GLuint index,
+                                   const GLshort *v);
+void ContextPrivateVertexAttrib2d(PrivateState *privateState,
+                                  PrivateStateCache *privateStateCache,
+                                  GLuint index,
+                                  GLdouble x,
+                                  GLdouble y);
+void ContextPrivateVertexAttrib2dv(PrivateState *privateState,
+                                   PrivateStateCache *privateStateCache,
+                                   GLuint index,
+                                   const GLdouble *v);
+void ContextPrivateVertexAttrib2s(PrivateState *privateState,
+                                  PrivateStateCache *privateStateCache,
+                                  GLuint index,
+                                  GLshort x,
+                                  GLshort y);
+void ContextPrivateVertexAttrib2sv(PrivateState *privateState,
+                                   PrivateStateCache *privateStateCache,
+                                   GLuint index,
+                                   const GLshort *v);
+void ContextPrivateVertexAttrib3d(PrivateState *privateState,
+                                  PrivateStateCache *privateStateCache,
                                   GLuint index,
                                   GLdouble x,
                                   GLdouble y,
                                   GLdouble z);
-void ContextPrivateVertexAttrib3dv(Context *context, GLuint index, const GLdouble *v);
-void ContextPrivateVertexAttrib3s(Context *context, GLuint index, GLshort x, GLshort y, GLshort z);
-void ContextPrivateVertexAttrib3sv(Context *context, GLuint index, const GLshort *v);
-void ContextPrivateVertexAttrib4Nbv(Context *context, GLuint index, const GLbyte *v);
-void ContextPrivateVertexAttrib4Niv(Context *context, GLuint index, const GLint *v);
-void ContextPrivateVertexAttrib4Nsv(Context *context, GLuint index, const GLshort *v);
-void ContextPrivateVertexAttrib4Nub(Context *context,
+void ContextPrivateVertexAttrib3dv(PrivateState *privateState,
+                                   PrivateStateCache *privateStateCache,
+                                   GLuint index,
+                                   const GLdouble *v);
+void ContextPrivateVertexAttrib3s(PrivateState *privateState,
+                                  PrivateStateCache *privateStateCache,
+                                  GLuint index,
+                                  GLshort x,
+                                  GLshort y,
+                                  GLshort z);
+void ContextPrivateVertexAttrib3sv(PrivateState *privateState,
+                                   PrivateStateCache *privateStateCache,
+                                   GLuint index,
+                                   const GLshort *v);
+void ContextPrivateVertexAttrib4Nbv(PrivateState *privateState,
+                                    PrivateStateCache *privateStateCache,
+                                    GLuint index,
+                                    const GLbyte *v);
+void ContextPrivateVertexAttrib4Niv(PrivateState *privateState,
+                                    PrivateStateCache *privateStateCache,
+                                    GLuint index,
+                                    const GLint *v);
+void ContextPrivateVertexAttrib4Nsv(PrivateState *privateState,
+                                    PrivateStateCache *privateStateCache,
+                                    GLuint index,
+                                    const GLshort *v);
+void ContextPrivateVertexAttrib4Nub(PrivateState *privateState,
+                                    PrivateStateCache *privateStateCache,
                                     GLuint index,
                                     GLubyte x,
                                     GLubyte y,
                                     GLubyte z,
                                     GLubyte w);
-void ContextPrivateVertexAttrib4Nubv(Context *context, GLuint index, const GLubyte *v);
-void ContextPrivateVertexAttrib4Nuiv(Context *context, GLuint index, const GLuint *v);
-void ContextPrivateVertexAttrib4Nusv(Context *context, GLuint index, const GLushort *v);
-void ContextPrivateVertexAttrib4bv(Context *context, GLuint index, const GLbyte *v);
-void ContextPrivateVertexAttrib4d(Context *context,
+void ContextPrivateVertexAttrib4Nubv(PrivateState *privateState,
+                                     PrivateStateCache *privateStateCache,
+                                     GLuint index,
+                                     const GLubyte *v);
+void ContextPrivateVertexAttrib4Nuiv(PrivateState *privateState,
+                                     PrivateStateCache *privateStateCache,
+                                     GLuint index,
+                                     const GLuint *v);
+void ContextPrivateVertexAttrib4Nusv(PrivateState *privateState,
+                                     PrivateStateCache *privateStateCache,
+                                     GLuint index,
+                                     const GLushort *v);
+void ContextPrivateVertexAttrib4bv(PrivateState *privateState,
+                                   PrivateStateCache *privateStateCache,
+                                   GLuint index,
+                                   const GLbyte *v);
+void ContextPrivateVertexAttrib4d(PrivateState *privateState,
+                                  PrivateStateCache *privateStateCache,
                                   GLuint index,
                                   GLdouble x,
                                   GLdouble y,
                                   GLdouble z,
                                   GLdouble w);
-void ContextPrivateVertexAttrib4dv(Context *context, GLuint index, const GLdouble *v);
-void ContextPrivateVertexAttrib4iv(Context *context, GLuint index, const GLint *v);
-void ContextPrivateVertexAttrib4s(Context *context,
+void ContextPrivateVertexAttrib4dv(PrivateState *privateState,
+                                   PrivateStateCache *privateStateCache,
+                                   GLuint index,
+                                   const GLdouble *v);
+void ContextPrivateVertexAttrib4iv(PrivateState *privateState,
+                                   PrivateStateCache *privateStateCache,
+                                   GLuint index,
+                                   const GLint *v);
+void ContextPrivateVertexAttrib4s(PrivateState *privateState,
+                                  PrivateStateCache *privateStateCache,
                                   GLuint index,
                                   GLshort x,
                                   GLshort y,
                                   GLshort z,
                                   GLshort w);
-void ContextPrivateVertexAttrib4sv(Context *context, GLuint index, const GLshort *v);
-void ContextPrivateVertexAttrib4ubv(Context *context, GLuint index, const GLubyte *v);
-void ContextPrivateVertexAttrib4uiv(Context *context, GLuint index, const GLuint *v);
-void ContextPrivateVertexAttrib4usv(Context *context, GLuint index, const GLushort *v);
-void ContextPrivateVertexAttribI1i(Context *context, GLuint index, GLint x);
-void ContextPrivateVertexAttribI1iv(Context *context, GLuint index, const GLint *v);
-void ContextPrivateVertexAttribI1ui(Context *context, GLuint index, GLuint x);
-void ContextPrivateVertexAttribI1uiv(Context *context, GLuint index, const GLuint *v);
-void ContextPrivateVertexAttribI2i(Context *context, GLuint index, GLint x, GLint y);
-void ContextPrivateVertexAttribI2iv(Context *context, GLuint index, const GLint *v);
-void ContextPrivateVertexAttribI2ui(Context *context, GLuint index, GLuint x, GLuint y);
-void ContextPrivateVertexAttribI2uiv(Context *context, GLuint index, const GLuint *v);
-void ContextPrivateVertexAttribI3i(Context *context, GLuint index, GLint x, GLint y, GLint z);
-void ContextPrivateVertexAttribI3iv(Context *context, GLuint index, const GLint *v);
-void ContextPrivateVertexAttribI3ui(Context *context, GLuint index, GLuint x, GLuint y, GLuint z);
-void ContextPrivateVertexAttribI3uiv(Context *context, GLuint index, const GLuint *v);
-void ContextPrivateVertexAttribI4bv(Context *context, GLuint index, const GLbyte *v);
-void ContextPrivateVertexAttribI4sv(Context *context, GLuint index, const GLshort *v);
-void ContextPrivateVertexAttribI4ubv(Context *context, GLuint index, const GLubyte *v);
-void ContextPrivateVertexAttribI4usv(Context *context, GLuint index, const GLushort *v);
-void ContextPrivateVertexAttribP1ui(Context *context,
+void ContextPrivateVertexAttrib4sv(PrivateState *privateState,
+                                   PrivateStateCache *privateStateCache,
+                                   GLuint index,
+                                   const GLshort *v);
+void ContextPrivateVertexAttrib4ubv(PrivateState *privateState,
+                                    PrivateStateCache *privateStateCache,
+                                    GLuint index,
+                                    const GLubyte *v);
+void ContextPrivateVertexAttrib4uiv(PrivateState *privateState,
+                                    PrivateStateCache *privateStateCache,
+                                    GLuint index,
+                                    const GLuint *v);
+void ContextPrivateVertexAttrib4usv(PrivateState *privateState,
+                                    PrivateStateCache *privateStateCache,
+                                    GLuint index,
+                                    const GLushort *v);
+void ContextPrivateVertexAttribI1i(PrivateState *privateState,
+                                   PrivateStateCache *privateStateCache,
+                                   GLuint index,
+                                   GLint x);
+void ContextPrivateVertexAttribI1iv(PrivateState *privateState,
+                                    PrivateStateCache *privateStateCache,
+                                    GLuint index,
+                                    const GLint *v);
+void ContextPrivateVertexAttribI1ui(PrivateState *privateState,
+                                    PrivateStateCache *privateStateCache,
+                                    GLuint index,
+                                    GLuint x);
+void ContextPrivateVertexAttribI1uiv(PrivateState *privateState,
+                                     PrivateStateCache *privateStateCache,
+                                     GLuint index,
+                                     const GLuint *v);
+void ContextPrivateVertexAttribI2i(PrivateState *privateState,
+                                   PrivateStateCache *privateStateCache,
+                                   GLuint index,
+                                   GLint x,
+                                   GLint y);
+void ContextPrivateVertexAttribI2iv(PrivateState *privateState,
+                                    PrivateStateCache *privateStateCache,
+                                    GLuint index,
+                                    const GLint *v);
+void ContextPrivateVertexAttribI2ui(PrivateState *privateState,
+                                    PrivateStateCache *privateStateCache,
+                                    GLuint index,
+                                    GLuint x,
+                                    GLuint y);
+void ContextPrivateVertexAttribI2uiv(PrivateState *privateState,
+                                     PrivateStateCache *privateStateCache,
+                                     GLuint index,
+                                     const GLuint *v);
+void ContextPrivateVertexAttribI3i(PrivateState *privateState,
+                                   PrivateStateCache *privateStateCache,
+                                   GLuint index,
+                                   GLint x,
+                                   GLint y,
+                                   GLint z);
+void ContextPrivateVertexAttribI3iv(PrivateState *privateState,
+                                    PrivateStateCache *privateStateCache,
+                                    GLuint index,
+                                    const GLint *v);
+void ContextPrivateVertexAttribI3ui(PrivateState *privateState,
+                                    PrivateStateCache *privateStateCache,
+                                    GLuint index,
+                                    GLuint x,
+                                    GLuint y,
+                                    GLuint z);
+void ContextPrivateVertexAttribI3uiv(PrivateState *privateState,
+                                     PrivateStateCache *privateStateCache,
+                                     GLuint index,
+                                     const GLuint *v);
+void ContextPrivateVertexAttribI4bv(PrivateState *privateState,
+                                    PrivateStateCache *privateStateCache,
+                                    GLuint index,
+                                    const GLbyte *v);
+void ContextPrivateVertexAttribI4sv(PrivateState *privateState,
+                                    PrivateStateCache *privateStateCache,
+                                    GLuint index,
+                                    const GLshort *v);
+void ContextPrivateVertexAttribI4ubv(PrivateState *privateState,
+                                     PrivateStateCache *privateStateCache,
+                                     GLuint index,
+                                     const GLubyte *v);
+void ContextPrivateVertexAttribI4usv(PrivateState *privateState,
+                                     PrivateStateCache *privateStateCache,
+                                     GLuint index,
+                                     const GLushort *v);
+void ContextPrivateVertexAttribP1ui(PrivateState *privateState,
+                                    PrivateStateCache *privateStateCache,
                                     GLuint index,
                                     GLenum type,
                                     GLboolean normalized,
                                     GLuint value);
-void ContextPrivateVertexAttribP1uiv(Context *context,
+void ContextPrivateVertexAttribP1uiv(PrivateState *privateState,
+                                     PrivateStateCache *privateStateCache,
                                      GLuint index,
                                      GLenum type,
                                      GLboolean normalized,
                                      const GLuint *value);
-void ContextPrivateVertexAttribP2ui(Context *context,
+void ContextPrivateVertexAttribP2ui(PrivateState *privateState,
+                                    PrivateStateCache *privateStateCache,
                                     GLuint index,
                                     GLenum type,
                                     GLboolean normalized,
                                     GLuint value);
-void ContextPrivateVertexAttribP2uiv(Context *context,
+void ContextPrivateVertexAttribP2uiv(PrivateState *privateState,
+                                     PrivateStateCache *privateStateCache,
                                      GLuint index,
                                      GLenum type,
                                      GLboolean normalized,
                                      const GLuint *value);
-void ContextPrivateVertexAttribP3ui(Context *context,
+void ContextPrivateVertexAttribP3ui(PrivateState *privateState,
+                                    PrivateStateCache *privateStateCache,
                                     GLuint index,
                                     GLenum type,
                                     GLboolean normalized,
                                     GLuint value);
-void ContextPrivateVertexAttribP3uiv(Context *context,
+void ContextPrivateVertexAttribP3uiv(PrivateState *privateState,
+                                     PrivateStateCache *privateStateCache,
                                      GLuint index,
                                      GLenum type,
                                      GLboolean normalized,
                                      const GLuint *value);
-void ContextPrivateVertexAttribP4ui(Context *context,
+void ContextPrivateVertexAttribP4ui(PrivateState *privateState,
+                                    PrivateStateCache *privateStateCache,
                                     GLuint index,
                                     GLenum type,
                                     GLboolean normalized,
                                     GLuint value);
-void ContextPrivateVertexAttribP4uiv(Context *context,
+void ContextPrivateVertexAttribP4uiv(PrivateState *privateState,
+                                     PrivateStateCache *privateStateCache,
                                      GLuint index,
                                      GLenum type,
                                      GLboolean normalized,
                                      const GLuint *value);
-void ContextPrivateVertexAttribL1d(Context *context, GLuint index, GLdouble x);
-void ContextPrivateVertexAttribL1dv(Context *context, GLuint index, const GLdouble *v);
-void ContextPrivateVertexAttribL2d(Context *context, GLuint index, GLdouble x, GLdouble y);
-void ContextPrivateVertexAttribL2dv(Context *context, GLuint index, const GLdouble *v);
-void ContextPrivateVertexAttribL3d(Context *context,
+void ContextPrivateVertexAttribL1d(PrivateState *privateState,
+                                   PrivateStateCache *privateStateCache,
+                                   GLuint index,
+                                   GLdouble x);
+void ContextPrivateVertexAttribL1dv(PrivateState *privateState,
+                                    PrivateStateCache *privateStateCache,
+                                    GLuint index,
+                                    const GLdouble *v);
+void ContextPrivateVertexAttribL2d(PrivateState *privateState,
+                                   PrivateStateCache *privateStateCache,
+                                   GLuint index,
+                                   GLdouble x,
+                                   GLdouble y);
+void ContextPrivateVertexAttribL2dv(PrivateState *privateState,
+                                    PrivateStateCache *privateStateCache,
+                                    GLuint index,
+                                    const GLdouble *v);
+void ContextPrivateVertexAttribL3d(PrivateState *privateState,
+                                   PrivateStateCache *privateStateCache,
                                    GLuint index,
                                    GLdouble x,
                                    GLdouble y,
                                    GLdouble z);
-void ContextPrivateVertexAttribL3dv(Context *context, GLuint index, const GLdouble *v);
-void ContextPrivateVertexAttribL4d(Context *context,
+void ContextPrivateVertexAttribL3dv(PrivateState *privateState,
+                                    PrivateStateCache *privateStateCache,
+                                    GLuint index,
+                                    const GLdouble *v);
+void ContextPrivateVertexAttribL4d(PrivateState *privateState,
+                                   PrivateStateCache *privateStateCache,
                                    GLuint index,
                                    GLdouble x,
                                    GLdouble y,
                                    GLdouble z,
                                    GLdouble w);
-void ContextPrivateVertexAttribL4dv(Context *context, GLuint index, const GLdouble *v);
+void ContextPrivateVertexAttribL4dv(PrivateState *privateState,
+                                    PrivateStateCache *privateStateCache,
+                                    GLuint index,
+                                    const GLdouble *v);
 }  // namespace gl
 
 #endif  // LIBANGLE_CONTEXT_PRIVATE_CALL_gl_AUTOGEN_H_

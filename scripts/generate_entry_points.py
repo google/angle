@@ -1900,7 +1900,9 @@ def format_entry_point_def(api, command_node, cmd_name, proto, params, cmd_packe
         "internal_params":
             ", ".join(internal_params),
         "context_private_internal_params":
-            ", ".join(["context"] + internal_params),
+            ", ".join(
+                ["context->getMutablePrivateState()", "context->getMutablePrivateStateCache()"] +
+                internal_params),
         "internal_context_lock_params":
             ", ".join(internal_context_lock_params),
         "initialization":
@@ -2155,7 +2157,8 @@ def format_validation_proto(api, cmd_name, params, cmd_packed_gl_enums, packed_p
 
 def format_context_private_call_proto(api, cmd_name, proto, params, cmd_packed_gl_enums,
                                       packed_param_types):
-    with_extra_params = ["Context *context"] + params
+    with_extra_params = ["PrivateState *privateState", "PrivateStateCache *privateStateCache"
+                        ] + params
     packed_enums = get_packed_enums(api, cmd_packed_gl_enums, cmd_name, packed_param_types,
                                     with_extra_params)
     internal_params = get_context_private_call_params(api, cmd_name, with_extra_params,

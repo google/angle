@@ -239,6 +239,8 @@ class PrivateState : angle::NonCopyable
     EGLenum getClientType() const { return mClientType; }
     EGLint getProfileMask() const { return mProfileMask; }
     const Version &getClientVersion() const { return mClientVersion; }
+    GLint getClientMajorVersion() const { return mClientVersion.major; }
+    GLint getClientMinorVersion() const { return mClientVersion.minor; }
 
     const Caps &getCaps() const { return mCaps; }
     const TextureCapsMap &getTextureCaps() const { return mTextureCaps; }
@@ -761,8 +763,8 @@ class State : angle::NonCopyable
     bool hasRobustAccess() const { return mHasRobustAccess; }
     bool hasProtectedContent() const { return mHasProtectedContent; }
     bool isDebugContext() const { return mIsDebugContext; }
-    GLint getClientMajorVersion() const { return getClientVersion().major; }
-    GLint getClientMinorVersion() const { return getClientVersion().minor; }
+    GLint getClientMajorVersion() const { return mPrivateState.getClientMajorVersion(); }
+    GLint getClientMinorVersion() const { return mPrivateState.getClientMinorVersion(); }
     const Version &getClientVersion() const { return mPrivateState.getClientVersion(); }
     egl::ShareGroup *getShareGroup() const { return mShareGroup; }
 
