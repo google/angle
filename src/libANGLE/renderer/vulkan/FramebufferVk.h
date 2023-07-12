@@ -152,10 +152,6 @@ class FramebufferVk : public FramebufferImpl
     bool isReadOnlyStencilFeedbackLoopMode() const { return mReadOnlyStencilFeedbackLoopMode; }
     bool isDepthFeedbackLoopMode() const { return mDepthFeedbackLoopMode; }
     bool isStencilFeedbackLoopMode() const { return mStencilFeedbackLoopMode; }
-    void updateRenderPassDepthReadOnlyMode(ContextVk *contextVk,
-                                           vk::RenderPassCommandBufferHelper *renderPass);
-    void updateRenderPassStencilReadOnlyMode(ContextVk *contextVk,
-                                             vk::RenderPassCommandBufferHelper *renderPass);
 
     void switchToFramebufferFetchMode(ContextVk *contextVk, bool hasFramebufferFetch);
 
@@ -275,10 +271,6 @@ class FramebufferVk : public FramebufferImpl
 
     RenderTargetVk *getReadPixelsRenderTarget(GLenum format) const;
     VkImageAspectFlagBits getReadPixelsAspectFlags(GLenum format) const;
-
-    void updateRenderPassDepthStencilReadOnlyMode(ContextVk *contextVk,
-                                                  VkImageAspectFlags dsAspectFlags,
-                                                  vk::RenderPassCommandBufferHelper *renderPass);
 
     VkClearValue getCorrectedColorClearValue(size_t colorIndexGL,
                                              const VkClearColorValue &clearColor) const;

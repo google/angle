@@ -1493,9 +1493,6 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
 
     angle::Result nextSubpass(ContextVk *contextVk, RenderPassCommandBuffer **commandBufferOut);
 
-    void updateStartedRenderPassWithDepthMode(bool readOnlyDepthMode);
-    void updateStartedRenderPassWithStencilMode(bool readOnlyStencilMode);
-
     void beginTransformFeedback(size_t validBufferCount,
                                 const VkBuffer *counterBuffers,
                                 const VkDeviceSize *counterBufferOffsets,
@@ -1586,6 +1583,12 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
         }
     }
     void addCommandDiagnostics(ContextVk *contextVk);
+
+    void updateDepthReadOnlyMode(ContextVk *contextVk, const FramebufferVk &framebufferVk);
+    void updateStencilReadOnlyMode(ContextVk *contextVk, const FramebufferVk &framebufferVk);
+    void updateDepthStencilReadOnlyMode(ContextVk *contextVk,
+                                        VkImageAspectFlags dsAspectFlags,
+                                        const FramebufferVk &framebufferVk);
 
   private:
     uint32_t getSubpassCommandBufferCount() const { return mCurrentSubpassCommandBufferIndex + 1; }
