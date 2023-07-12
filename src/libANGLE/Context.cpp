@@ -3045,35 +3045,6 @@ void Context::handleError(GLenum errorCode,
     mErrors.handleError(errorCode, message, file, function, line);
 }
 
-void Context::validationError(angle::EntryPoint entryPoint,
-                              GLenum errorCode,
-                              const char *message) const
-{
-    const_cast<Context *>(this)->mErrors.validationError(entryPoint, errorCode, message);
-}
-
-void Context::validationErrorF(angle::EntryPoint entryPoint,
-                               GLenum errorCode,
-                               const char *format,
-                               ...) const
-{
-    va_list vargs;
-    va_start(vargs, format);
-    constexpr size_t kMessageSize = 256;
-    char message[kMessageSize];
-    int r = vsnprintf(message, kMessageSize, format, vargs);
-    va_end(vargs);
-
-    if (r > 0)
-    {
-        validationError(entryPoint, errorCode, message);
-    }
-    else
-    {
-        validationError(entryPoint, errorCode, format);
-    }
-}
-
 // Get one of the recorded errors and clear its flag, if any.
 // [OpenGL ES 2.0.24] section 2.5 page 13.
 GLenum Context::getError()
@@ -9957,6 +9928,28 @@ void ErrorSet::validationError(angle::EntryPoint entryPoint, GLenum errorCode, c
                           GL_DEBUG_SEVERITY_HIGH, message, gl::LOG_INFO, entryPoint);
 
     pushError(errorCode);
+}
+
+void ErrorSet::validationErrorF(angle::EntryPoint entryPoint,
+                                GLenum errorCode,
+                                const char *format,
+                                ...)
+{
+    va_list vargs;
+    va_start(vargs, format);
+    constexpr size_t kMessageSize = 256;
+    char message[kMessageSize];
+    int r = vsnprintf(message, kMessageSize, format, vargs);
+    va_end(vargs);
+
+    if (r > 0)
+    {
+        validationError(entryPoint, errorCode, message);
+    }
+    else
+    {
+        validationError(entryPoint, errorCode, format);
+    }
 }
 
 void ErrorSet::pushError(GLenum errorCode)

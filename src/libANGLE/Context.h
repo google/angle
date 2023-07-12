@@ -104,6 +104,8 @@ class ErrorSet : angle::NonCopyable
                      unsigned int line);
 
     void validationError(angle::EntryPoint entryPoint, GLenum errorCode, const char *message);
+    ANGLE_FORMAT_PRINTF(4, 5)
+    void validationErrorF(angle::EntryPoint entryPoint, GLenum errorCode, const char *format, ...);
 
     bool skipValidation() const
     {
@@ -552,13 +554,6 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
                      const char *function,
                      unsigned int line);
 
-    void validationError(angle::EntryPoint entryPoint, GLenum errorCode, const char *message) const;
-    ANGLE_FORMAT_PRINTF(4, 5)
-    void validationErrorF(angle::EntryPoint entryPoint,
-                          GLenum errorCode,
-                          const char *format,
-                          ...) const;
-
     bool isResetNotificationEnabled() const;
 
     bool isRobustnessEnabled() const;
@@ -631,6 +626,8 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     bool skipValidation() const { return mErrors.skipValidation(); }
     void markContextLost(GraphicsResetStatus status) { mErrors.markContextLost(status); }
     bool isContextLost() const { return mErrors.isContextLost(); }
+
+    ErrorSet *getMutableErrorSetForValidation() const { return &mErrors; }
 
     // Specific methods needed for validation.
     bool getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *numParams) const;
@@ -854,7 +851,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     bool mDisplaySemaphoreShareGroup;
 
     // Recorded errors
-    ErrorSet mErrors;
+    mutable ErrorSet mErrors;
 
     // Stores for each buffer binding type whether is it allowed to be used in this context.
     angle::PackedEnumBitSet<BufferBinding> mValidBufferBindings;
