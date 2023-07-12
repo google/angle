@@ -542,6 +542,17 @@ class UtilsVk : angle::NonCopyable
         const void *pushConstants,
         size_t pushConstantsSize,
         vk::OutsideRenderPassCommandBufferHelper *commandBufferHelper);
+    angle::Result setupGraphicsProgramWithLayout(
+        ContextVk *contextVk,
+        const vk::PipelineLayout &pipelineLayout,
+        vk::RefCounted<vk::ShaderModule> *vsShader,
+        vk::RefCounted<vk::ShaderModule> *fsShader,
+        GraphicsShaderProgramAndPipelines *programAndPipelines,
+        const vk::GraphicsPipelineDesc *pipelineDesc,
+        const VkDescriptorSet descriptorSet,
+        const void *pushConstants,
+        size_t pushConstantsSize,
+        vk::RenderPassCommandBuffer *commandBuffer);
     angle::Result setupGraphicsProgram(ContextVk *contextVk,
                                        Function function,
                                        vk::RefCounted<vk::ShaderModule> *vsShader,
@@ -584,6 +595,10 @@ class UtilsVk : angle::NonCopyable
                                                       Function function,
                                                       uint32_t attachmentIndex);
 
+    angle::Result ensureImageCopyResourcesInitializedWithSampler(
+        ContextVk *contextVk,
+        const vk::SamplerDesc &samplerDesc);
+
     angle::Result ensureSamplersInitialized(ContextVk *context);
 
     angle::Result startRenderPass(ContextVk *contextVk,
@@ -612,14 +627,34 @@ class UtilsVk : angle::NonCopyable
                                   const BlitResolveParameters &params);
 
     // Allocates a single descriptor set.
+    angle::Result allocateDescriptorSetWithLayout(
+        ContextVk *contextVk,
+        vk::CommandBufferHelperCommon *commandBufferHelper,
+        vk::DynamicDescriptorPool &descriptorPool,
+        const vk::DescriptorSetLayout &descriptorSetLayout,
+        VkDescriptorSet *descriptorSetOut);
+
     angle::Result allocateDescriptorSet(ContextVk *contextVk,
                                         vk::CommandBufferHelperCommon *commandBufferHelper,
                                         Function function,
                                         VkDescriptorSet *descriptorSetOut);
 
+    angle::Result allocateDescriptorSetForImageCopyWithSampler(
+        ContextVk *contextVk,
+        vk::CommandBufferHelperCommon *commandBufferHelper,
+        const vk::SamplerDesc &samplerDesc,
+        VkDescriptorSet *descriptorSetOut);
+
     angle::PackedEnumMap<Function, vk::DescriptorSetLayoutPointerArray> mDescriptorSetLayouts;
     angle::PackedEnumMap<Function, vk::BindingPointer<vk::PipelineLayout>> mPipelineLayouts;
     angle::PackedEnumMap<Function, vk::DynamicDescriptorPool> mDescriptorPools;
+
+    std::unordered_map<vk::SamplerDesc, vk::DescriptorSetLayoutPointerArray>
+        mImageCopyWithSamplerDescriptorSetLayouts;
+    std::unordered_map<vk::SamplerDesc, vk::BindingPointer<vk::PipelineLayout>>
+        mImageCopyWithSamplerPipelineLayouts;
+    std::unordered_map<vk::SamplerDesc, vk::DynamicDescriptorPool>
+        mImageCopyWithSamplerDescriptorPools;
 
     ComputeShaderProgramAndPipelines
         mConvertIndex[vk::InternalShader::ConvertIndex_comp::kArrayLen];
@@ -632,6 +667,8 @@ class UtilsVk : angle::NonCopyable
     GraphicsShaderProgramAndPipelines mImageClearVSOnly;
     GraphicsShaderProgramAndPipelines mImageClear[vk::InternalShader::ImageClear_frag::kArrayLen];
     GraphicsShaderProgramAndPipelines mImageCopy[vk::InternalShader::ImageCopy_frag::kArrayLen];
+    std::unordered_map<vk::SamplerDesc, GraphicsShaderProgramAndPipelines>
+        mImageCopyWithSampler[vk::InternalShader::ImageCopy_frag::kArrayLen];
     ComputeShaderProgramAndPipelines
         mCopyImageToBuffer[vk::InternalShader::CopyImageToBuffer_comp::kArrayLen];
     GraphicsShaderProgramAndPipelines mBlitResolve[vk::InternalShader::BlitResolve_frag::kArrayLen];

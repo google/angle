@@ -170,25 +170,26 @@ constexpr size_t kArrayLen = 0x00000030;
 
 namespace ImageCopy_frag
 {
+enum SrcType
+{
+    kSrcIs2D      = 0x00000000,
+    kSrcIs2DArray = 0x00000001,
+    kSrcIs3D      = 0x00000002,
+    kSrcIsYUV     = 0x00000003,
+};
 enum DestFormat
 {
     kDestIsFloat = 0x00000000,
-    kDestIsSint  = 0x00000001,
-    kDestIsUint  = 0x00000002,
+    kDestIsSint  = 0x00000004,
+    kDestIsUint  = 0x00000008,
 };
 enum SrcFormat
 {
     kSrcIsFloat = 0x00000000,
-    kSrcIsSint  = 0x00000004,
-    kSrcIsUint  = 0x00000008,
+    kSrcIsSint  = 0x00000010,
+    kSrcIsUint  = 0x00000020,
 };
-enum SrcType
-{
-    kSrcIs2D      = 0x00000000,
-    kSrcIs2DArray = 0x00000010,
-    kSrcIs3D      = 0x00000020,
-};
-constexpr size_t kArrayLen = 0x0000002B;
+constexpr size_t kArrayLen = 0x0000002C;
 }  // namespace ImageCopy_frag
 
 namespace OverlayDraw_frag
