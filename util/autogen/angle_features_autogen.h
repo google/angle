@@ -327,6 +327,7 @@ enum class Feature
     SupportsSurfaceProtectedCapabilitiesExtension,
     SupportsSurfaceProtectedSwapchains,
     SupportsSwapchainMaintenance1,
+    SupportsTimelineSemaphore,
     SupportsTimestampSurfaceAttribute,
     SupportsTransformFeedbackExtension,
     SupportsVertexInputDynamicState,

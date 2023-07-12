@@ -2300,6 +2300,7 @@ void RendererVk::appendDeviceExtensionFeaturesPromotedTo11(
 // - VK_KHR_shader_subgroup_extended_types: shaderSubgroupExtendedTypes (feature)
 // - VK_EXT_host_query_reset:               hostQueryReset (feature)
 // - VK_KHR_imageless_framebuffer:          imagelessFramebuffer (feature)
+// - VK_KHR_timeline_semaphore:             timelineSemaphore (feature)
 //
 // Note that supportedDepthResolveModes is used just to check if the property struct is populated.
 // ANGLE always uses VK_RESOLVE_MODE_SAMPLE_ZERO_BIT for both depth and stencil, and support for
@@ -2338,6 +2339,11 @@ void RendererVk::appendDeviceExtensionFeaturesPromotedTo12(
     if (ExtensionFound(VK_KHR_IMAGELESS_FRAMEBUFFER_EXTENSION_NAME, deviceExtensionNames))
     {
         vk::AddToPNextChain(deviceFeatures, &mImagelessFramebufferFeatures);
+    }
+
+    if (ExtensionFound(VK_KHR_TIMELINE_SEMAPHORE_EXTENSION_NAME, deviceExtensionNames))
+    {
+        vk::AddToPNextChain(deviceFeatures, &mTimelineSemaphoreFeatures);
     }
 }
 
@@ -2533,6 +2539,10 @@ void RendererVk::queryDeviceExtensionFeatures(const vk::ExtensionNameList &devic
     mDrmProperties       = {};
     mDrmProperties.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DRM_PROPERTIES_EXT;
 
+    mTimelineSemaphoreFeatures = {};
+    mTimelineSemaphoreFeatures.sType =
+        VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TIMELINE_SEMAPHORE_FEATURES_KHR;
+
     if (!vkGetPhysicalDeviceProperties2KHR || !vkGetPhysicalDeviceFeatures2KHR)
     {
         return;
@@ -2600,6 +2610,7 @@ void RendererVk::queryDeviceExtensionFeatures(const vk::ExtensionNameList &devic
     mSwapchainMaintenance1Features.pNext                    = nullptr;
     mDitheringFeatures.pNext                                = nullptr;
     mDrmProperties.pNext                                    = nullptr;
+    mTimelineSemaphoreFeatures.pNext                        = nullptr;
 }
 
 // See comment above appendDeviceExtensionFeaturesNotPromoted.  Additional extensions are enabled
@@ -3041,6 +3052,12 @@ void RendererVk::enableDeviceExtensionsPromotedTo12(
     {
         mEnabledDeviceExtensions.push_back(VK_KHR_IMAGELESS_FRAMEBUFFER_EXTENSION_NAME);
         vk::AddToPNextChain(&mEnabledFeatures, &mImagelessFramebufferFeatures);
+    }
+
+    if (mFeatures.supportsTimelineSemaphore.enabled)
+    {
+        mEnabledDeviceExtensions.push_back(VK_KHR_TIMELINE_SEMAPHORE_EXTENSION_NAME);
+        vk::AddToPNextChain(&mEnabledFeatures, &mTimelineSemaphoreFeatures);
     }
 }
 
@@ -4745,6 +4762,9 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     ANGLE_FEATURE_CONDITION(&mFeatures, mapUnspecifiedColorSpaceToPassThrough, isVenus);
 
     ANGLE_FEATURE_CONDITION(&mFeatures, enablePipelineCacheDataCompression, true);
+
+    ANGLE_FEATURE_CONDITION(&mFeatures, supportsTimelineSemaphore,
+                            mTimelineSemaphoreFeatures.timelineSemaphore == VK_TRUE);
 
     ApplyFeatureOverrides(&mFeatures, displayVk->getState());
 
