@@ -13,16 +13,16 @@
 // Controls if our threading code uses std::async or falls back to single-threaded operations.
 // Note that we can't easily use std::async in UWPs due to UWP threading restrictions.
 #if !defined(ANGLE_STD_ASYNC_WORKERS) && !defined(ANGLE_ENABLE_WINDOWS_UWP)
-#    define ANGLE_STD_ASYNC_WORKERS ANGLE_ENABLED
+#    define ANGLE_STD_ASYNC_WORKERS 1
 #endif  // !defined(ANGLE_STD_ASYNC_WORKERS) && & !defined(ANGLE_ENABLE_WINDOWS_UWP)
 
-#if (ANGLE_DELEGATE_WORKERS == ANGLE_ENABLED) || (ANGLE_STD_ASYNC_WORKERS == ANGLE_ENABLED)
+#if ANGLE_DELEGATE_WORKERS || ANGLE_STD_ASYNC_WORKERS
 #    include <condition_variable>
 #    include <future>
 #    include <mutex>
 #    include <queue>
 #    include <thread>
-#endif  // (ANGLE_DELEGATE_WORKERS == ANGLE_ENABLED) || (ANGLE_STD_ASYNC_WORKERS == ANGLE_ENABLED)
+#endif  // ANGLE_DELEGATE_WORKERS || ANGLE_STD_ASYNC_WORKERS
 
 namespace angle
 {
@@ -102,7 +102,7 @@ bool SingleThreadedWorkerPool::isAsync()
     return false;
 }
 
-#if (ANGLE_STD_ASYNC_WORKERS == ANGLE_ENABLED)
+#if ANGLE_STD_ASYNC_WORKERS
 
 class AsyncWorkerPool final : public WorkerThreadPool
 {
@@ -214,9 +214,9 @@ bool AsyncWorkerPool::isAsync()
     return true;
 }
 
-#endif  // (ANGLE_STD_ASYNC_WORKERS == ANGLE_ENABLED)
+#endif  // ANGLE_STD_ASYNC_WORKERS
 
-#if (ANGLE_DELEGATE_WORKERS == ANGLE_ENABLED)
+#if ANGLE_DELEGATE_WORKERS
 
 class DelegateWorkerPool final : public WorkerThreadPool
 {
@@ -287,14 +287,14 @@ std::shared_ptr<WorkerThreadPool> WorkerThreadPool::Create(size_t numThreads,
     const bool multithreaded = numThreads != 1;
     std::shared_ptr<WorkerThreadPool> pool(nullptr);
 
-#if (ANGLE_DELEGATE_WORKERS == ANGLE_ENABLED)
+#if ANGLE_DELEGATE_WORKERS
     const bool hasPostWorkerTaskImpl = platform->postWorkerTask != nullptr;
     if (hasPostWorkerTaskImpl && multithreaded)
     {
         pool = std::shared_ptr<WorkerThreadPool>(new DelegateWorkerPool(platform));
     }
 #endif
-#if (ANGLE_STD_ASYNC_WORKERS == ANGLE_ENABLED)
+#if ANGLE_STD_ASYNC_WORKERS
     if (!pool && multithreaded)
     {
         pool = std::shared_ptr<WorkerThreadPool>(new AsyncWorkerPool(

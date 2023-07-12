@@ -426,7 +426,7 @@ config("angle_common_config") {
 
   defines = []
   if (angle_delegate_workers) {
-    defines += [ "ANGLE_DELEGATE_WORKERS" ]
+    defines += [ "ANGLE_DELEGATE_WORKERS=1" ]
   }
 }
 
