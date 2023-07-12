@@ -8286,11 +8286,14 @@ bool ValidateFramebufferNotMultisampled(const Context *context,
     return true;
 }
 
-bool ValidateMultitextureUnit(const Context *context, angle::EntryPoint entryPoint, GLenum texture)
+bool ValidateMultitextureUnit(const PrivateState &state,
+                              ErrorSet *errors,
+                              angle::EntryPoint entryPoint,
+                              GLenum texture)
 {
-    if (texture < GL_TEXTURE0 || texture >= GL_TEXTURE0 + context->getCaps().maxMultitextureUnits)
+    if (texture < GL_TEXTURE0 || texture >= GL_TEXTURE0 + state.getCaps().maxMultitextureUnits)
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidMultitextureUnit);
+        errors->validationError(entryPoint, GL_INVALID_ENUM, kInvalidMultitextureUnit);
         return false;
     }
     return true;
@@ -8490,14 +8493,15 @@ bool ValidateGetMultisamplefvBase(const Context *context,
     return true;
 }
 
-bool ValidateSampleMaskiBase(const Context *context,
+bool ValidateSampleMaskiBase(const PrivateState &state,
+                             ErrorSet *errors,
                              angle::EntryPoint entryPoint,
                              GLuint maskNumber,
                              GLbitfield mask)
 {
-    if (maskNumber >= static_cast<GLuint>(context->getCaps().maxSampleMaskWords))
+    if (maskNumber >= static_cast<GLuint>(state.getCaps().maxSampleMaskWords))
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kInvalidSampleMaskNumber);
+        errors->validationError(entryPoint, GL_INVALID_VALUE, kInvalidSampleMaskNumber);
         return false;
     }
 
@@ -8642,7 +8646,8 @@ bool ValidateProgramExecutableXFBBuffersPresent(const Context *context,
     return true;
 }
 
-bool ValidateLogicOpCommon(const Context *context,
+bool ValidateLogicOpCommon(const PrivateState &state,
+                           ErrorSet *errors,
                            angle::EntryPoint entryPoint,
                            LogicalOperation opcodePacked)
 {
@@ -8666,7 +8671,7 @@ bool ValidateLogicOpCommon(const Context *context,
         case LogicalOperation::Xor:
             return true;
         default:
-            ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidLogicOp);
+            errors->validationError(entryPoint, GL_INVALID_ENUM, kInvalidLogicOp);
             return false;
     }
 }

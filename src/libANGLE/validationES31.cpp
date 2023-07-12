@@ -2757,27 +2757,29 @@ bool ValidateMemoryBarrierByRegion(const Context *context,
     return true;
 }
 
-bool ValidateSampleMaski(const Context *context,
+bool ValidateSampleMaski(const PrivateState &state,
+                         ErrorSet *errors,
                          angle::EntryPoint entryPoint,
                          GLuint maskNumber,
                          GLbitfield mask)
 {
-    if (context->getClientVersion() < ES_3_1)
+    if (state.getClientVersion() < ES_3_1)
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES31Required);
+        errors->validationError(entryPoint, GL_INVALID_OPERATION, kES31Required);
         return false;
     }
 
-    return ValidateSampleMaskiBase(context, entryPoint, maskNumber, mask);
+    return ValidateSampleMaskiBase(state, errors, entryPoint, maskNumber, mask);
 }
 
-bool ValidateMinSampleShadingOES(const Context *context,
+bool ValidateMinSampleShadingOES(const PrivateState &state,
+                                 ErrorSet *errors,
                                  angle::EntryPoint entryPoint,
                                  GLfloat value)
 {
-    if (!context->getExtensions().sampleShadingOES)
+    if (!state.getExtensions().sampleShadingOES)
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        errors->validationError(entryPoint, GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
     }
 

@@ -67,9 +67,10 @@ void GL_APIENTRY GL_VertexAttrib1d(GLuint index, GLdouble x)
 
     if (context)
     {
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateVertexAttrib1d(context, angle::EntryPoint::GLVertexAttrib1d, index, x));
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateVertexAttrib1d(context->getPrivateState(),
+                                                   context->getMutableErrorSetForValidation(),
+                                                   angle::EntryPoint::GLVertexAttrib1d, index, x));
         if (isCallValid)
         {
             ContextPrivateVertexAttrib1d(context->getMutablePrivateState(),
@@ -94,7 +95,9 @@ void GL_APIENTRY GL_VertexAttrib1dv(GLuint index, const GLdouble *v)
     {
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateVertexAttrib1dv(context, angle::EntryPoint::GLVertexAttrib1dv, index, v));
+             ValidateVertexAttrib1dv(context->getPrivateState(),
+                                     context->getMutableErrorSetForValidation(),
+                                     angle::EntryPoint::GLVertexAttrib1dv, index, v));
         if (isCallValid)
         {
             ContextPrivateVertexAttrib1dv(context->getMutablePrivateState(),
@@ -116,9 +119,10 @@ void GL_APIENTRY GL_VertexAttrib1s(GLuint index, GLshort x)
 
     if (context)
     {
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateVertexAttrib1s(context, angle::EntryPoint::GLVertexAttrib1s, index, x));
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateVertexAttrib1s(context->getPrivateState(),
+                                                   context->getMutableErrorSetForValidation(),
+                                                   angle::EntryPoint::GLVertexAttrib1s, index, x));
         if (isCallValid)
         {
             ContextPrivateVertexAttrib1s(context->getMutablePrivateState(),
@@ -143,7 +147,9 @@ void GL_APIENTRY GL_VertexAttrib1sv(GLuint index, const GLshort *v)
     {
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateVertexAttrib1sv(context, angle::EntryPoint::GLVertexAttrib1sv, index, v));
+             ValidateVertexAttrib1sv(context->getPrivateState(),
+                                     context->getMutableErrorSetForValidation(),
+                                     angle::EntryPoint::GLVertexAttrib1sv, index, v));
         if (isCallValid)
         {
             ContextPrivateVertexAttrib1sv(context->getMutablePrivateState(),
@@ -168,7 +174,9 @@ void GL_APIENTRY GL_VertexAttrib2d(GLuint index, GLdouble x, GLdouble y)
     {
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateVertexAttrib2d(context, angle::EntryPoint::GLVertexAttrib2d, index, x, y));
+             ValidateVertexAttrib2d(context->getPrivateState(),
+                                    context->getMutableErrorSetForValidation(),
+                                    angle::EntryPoint::GLVertexAttrib2d, index, x, y));
         if (isCallValid)
         {
             ContextPrivateVertexAttrib2d(context->getMutablePrivateState(),
@@ -193,7 +201,9 @@ void GL_APIENTRY GL_VertexAttrib2dv(GLuint index, const GLdouble *v)
     {
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateVertexAttrib2dv(context, angle::EntryPoint::GLVertexAttrib2dv, index, v));
+             ValidateVertexAttrib2dv(context->getPrivateState(),
+                                     context->getMutableErrorSetForValidation(),
+                                     angle::EntryPoint::GLVertexAttrib2dv, index, v));
         if (isCallValid)
         {
             ContextPrivateVertexAttrib2dv(context->getMutablePrivateState(),
@@ -218,7 +228,9 @@ void GL_APIENTRY GL_VertexAttrib2s(GLuint index, GLshort x, GLshort y)
     {
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateVertexAttrib2s(context, angle::EntryPoint::GLVertexAttrib2s, index, x, y));
+             ValidateVertexAttrib2s(context->getPrivateState(),
+                                    context->getMutableErrorSetForValidation(),
+                                    angle::EntryPoint::GLVertexAttrib2s, index, x, y));
         if (isCallValid)
         {
             ContextPrivateVertexAttrib2s(context->getMutablePrivateState(),
@@ -243,7 +255,9 @@ void GL_APIENTRY GL_VertexAttrib2sv(GLuint index, const GLshort *v)
     {
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateVertexAttrib2sv(context, angle::EntryPoint::GLVertexAttrib2sv, index, v));
+             ValidateVertexAttrib2sv(context->getPrivateState(),
+                                     context->getMutableErrorSetForValidation(),
+                                     angle::EntryPoint::GLVertexAttrib2sv, index, v));
         if (isCallValid)
         {
             ContextPrivateVertexAttrib2sv(context->getMutablePrivateState(),
@@ -268,7 +282,9 @@ void GL_APIENTRY GL_VertexAttrib3d(GLuint index, GLdouble x, GLdouble y, GLdoubl
     {
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateVertexAttrib3d(context, angle::EntryPoint::GLVertexAttrib3d, index, x, y, z));
+             ValidateVertexAttrib3d(context->getPrivateState(),
+                                    context->getMutableErrorSetForValidation(),
+                                    angle::EntryPoint::GLVertexAttrib3d, index, x, y, z));
         if (isCallValid)
         {
             ContextPrivateVertexAttrib3d(context->getMutablePrivateState(),
@@ -293,7 +309,9 @@ void GL_APIENTRY GL_VertexAttrib3dv(GLuint index, const GLdouble *v)
     {
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateVertexAttrib3dv(context, angle::EntryPoint::GLVertexAttrib3dv, index, v));
+             ValidateVertexAttrib3dv(context->getPrivateState(),
+                                     context->getMutableErrorSetForValidation(),
+                                     angle::EntryPoint::GLVertexAttrib3dv, index, v));
         if (isCallValid)
         {
             ContextPrivateVertexAttrib3dv(context->getMutablePrivateState(),
@@ -318,7 +336,9 @@ void GL_APIENTRY GL_VertexAttrib3s(GLuint index, GLshort x, GLshort y, GLshort z
     {
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateVertexAttrib3s(context, angle::EntryPoint::GLVertexAttrib3s, index, x, y, z));
+             ValidateVertexAttrib3s(context->getPrivateState(),
+                                    context->getMutableErrorSetForValidation(),
+                                    angle::EntryPoint::GLVertexAttrib3s, index, x, y, z));
         if (isCallValid)
         {
             ContextPrivateVertexAttrib3s(context->getMutablePrivateState(),
@@ -343,7 +363,9 @@ void GL_APIENTRY GL_VertexAttrib3sv(GLuint index, const GLshort *v)
     {
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateVertexAttrib3sv(context, angle::EntryPoint::GLVertexAttrib3sv, index, v));
+             ValidateVertexAttrib3sv(context->getPrivateState(),
+                                     context->getMutableErrorSetForValidation(),
+                                     angle::EntryPoint::GLVertexAttrib3sv, index, v));
         if (isCallValid)
         {
             ContextPrivateVertexAttrib3sv(context->getMutablePrivateState(),
@@ -368,7 +390,9 @@ void GL_APIENTRY GL_VertexAttrib4Nbv(GLuint index, const GLbyte *v)
     {
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateVertexAttrib4Nbv(context, angle::EntryPoint::GLVertexAttrib4Nbv, index, v));
+             ValidateVertexAttrib4Nbv(context->getPrivateState(),
+                                      context->getMutableErrorSetForValidation(),
+                                      angle::EntryPoint::GLVertexAttrib4Nbv, index, v));
         if (isCallValid)
         {
             ContextPrivateVertexAttrib4Nbv(context->getMutablePrivateState(),
@@ -393,7 +417,9 @@ void GL_APIENTRY GL_VertexAttrib4Niv(GLuint index, const GLint *v)
     {
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateVertexAttrib4Niv(context, angle::EntryPoint::GLVertexAttrib4Niv, index, v));
+             ValidateVertexAttrib4Niv(context->getPrivateState(),
+                                      context->getMutableErrorSetForValidation(),
+                                      angle::EntryPoint::GLVertexAttrib4Niv, index, v));
         if (isCallValid)
         {
             ContextPrivateVertexAttrib4Niv(context->getMutablePrivateState(),
@@ -418,7 +444,9 @@ void GL_APIENTRY GL_VertexAttrib4Nsv(GLuint index, const GLshort *v)
     {
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateVertexAttrib4Nsv(context, angle::EntryPoint::GLVertexAttrib4Nsv, index, v));
+             ValidateVertexAttrib4Nsv(context->getPrivateState(),
+                                      context->getMutableErrorSetForValidation(),
+                                      angle::EntryPoint::GLVertexAttrib4Nsv, index, v));
         if (isCallValid)
         {
             ContextPrivateVertexAttrib4Nsv(context->getMutablePrivateState(),
@@ -441,9 +469,11 @@ void GL_APIENTRY GL_VertexAttrib4Nub(GLuint index, GLubyte x, GLubyte y, GLubyte
 
     if (context)
     {
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateVertexAttrib4Nub(context, angle::EntryPoint::GLVertexAttrib4Nub,
-                                                     index, x, y, z, w));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateVertexAttrib4Nub(context->getPrivateState(),
+                                      context->getMutableErrorSetForValidation(),
+                                      angle::EntryPoint::GLVertexAttrib4Nub, index, x, y, z, w));
         if (isCallValid)
         {
             ContextPrivateVertexAttrib4Nub(context->getMutablePrivateState(),
@@ -469,7 +499,9 @@ void GL_APIENTRY GL_VertexAttrib4Nubv(GLuint index, const GLubyte *v)
     {
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateVertexAttrib4Nubv(context, angle::EntryPoint::GLVertexAttrib4Nubv, index, v));
+             ValidateVertexAttrib4Nubv(context->getPrivateState(),
+                                       context->getMutableErrorSetForValidation(),
+                                       angle::EntryPoint::GLVertexAttrib4Nubv, index, v));
         if (isCallValid)
         {
             ContextPrivateVertexAttrib4Nubv(context->getMutablePrivateState(),
@@ -494,7 +526,9 @@ void GL_APIENTRY GL_VertexAttrib4Nuiv(GLuint index, const GLuint *v)
     {
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateVertexAttrib4Nuiv(context, angle::EntryPoint::GLVertexAttrib4Nuiv, index, v));
+             ValidateVertexAttrib4Nuiv(context->getPrivateState(),
+                                       context->getMutableErrorSetForValidation(),
+                                       angle::EntryPoint::GLVertexAttrib4Nuiv, index, v));
         if (isCallValid)
         {
             ContextPrivateVertexAttrib4Nuiv(context->getMutablePrivateState(),
@@ -519,7 +553,9 @@ void GL_APIENTRY GL_VertexAttrib4Nusv(GLuint index, const GLushort *v)
     {
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateVertexAttrib4Nusv(context, angle::EntryPoint::GLVertexAttrib4Nusv, index, v));
+             ValidateVertexAttrib4Nusv(context->getPrivateState(),
+                                       context->getMutableErrorSetForValidation(),
+                                       angle::EntryPoint::GLVertexAttrib4Nusv, index, v));
         if (isCallValid)
         {
             ContextPrivateVertexAttrib4Nusv(context->getMutablePrivateState(),
@@ -544,7 +580,9 @@ void GL_APIENTRY GL_VertexAttrib4bv(GLuint index, const GLbyte *v)
     {
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateVertexAttrib4bv(context, angle::EntryPoint::GLVertexAttrib4bv, index, v));
+             ValidateVertexAttrib4bv(context->getPrivateState(),
+                                     context->getMutableErrorSetForValidation(),
+                                     angle::EntryPoint::GLVertexAttrib4bv, index, v));
         if (isCallValid)
         {
             ContextPrivateVertexAttrib4bv(context->getMutablePrivateState(),
@@ -567,9 +605,11 @@ void GL_APIENTRY GL_VertexAttrib4d(GLuint index, GLdouble x, GLdouble y, GLdoubl
 
     if (context)
     {
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateVertexAttrib4d(context, angle::EntryPoint::GLVertexAttrib4d,
-                                                   index, x, y, z, w));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateVertexAttrib4d(context->getPrivateState(),
+                                    context->getMutableErrorSetForValidation(),
+                                    angle::EntryPoint::GLVertexAttrib4d, index, x, y, z, w));
         if (isCallValid)
         {
             ContextPrivateVertexAttrib4d(context->getMutablePrivateState(),
@@ -594,7 +634,9 @@ void GL_APIENTRY GL_VertexAttrib4dv(GLuint index, const GLdouble *v)
     {
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateVertexAttrib4dv(context, angle::EntryPoint::GLVertexAttrib4dv, index, v));
+             ValidateVertexAttrib4dv(context->getPrivateState(),
+                                     context->getMutableErrorSetForValidation(),
+                                     angle::EntryPoint::GLVertexAttrib4dv, index, v));
         if (isCallValid)
         {
             ContextPrivateVertexAttrib4dv(context->getMutablePrivateState(),
@@ -619,7 +661,9 @@ void GL_APIENTRY GL_VertexAttrib4iv(GLuint index, const GLint *v)
     {
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateVertexAttrib4iv(context, angle::EntryPoint::GLVertexAttrib4iv, index, v));
+             ValidateVertexAttrib4iv(context->getPrivateState(),
+                                     context->getMutableErrorSetForValidation(),
+                                     angle::EntryPoint::GLVertexAttrib4iv, index, v));
         if (isCallValid)
         {
             ContextPrivateVertexAttrib4iv(context->getMutablePrivateState(),
@@ -642,9 +686,11 @@ void GL_APIENTRY GL_VertexAttrib4s(GLuint index, GLshort x, GLshort y, GLshort z
 
     if (context)
     {
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateVertexAttrib4s(context, angle::EntryPoint::GLVertexAttrib4s,
-                                                   index, x, y, z, w));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateVertexAttrib4s(context->getPrivateState(),
+                                    context->getMutableErrorSetForValidation(),
+                                    angle::EntryPoint::GLVertexAttrib4s, index, x, y, z, w));
         if (isCallValid)
         {
             ContextPrivateVertexAttrib4s(context->getMutablePrivateState(),
@@ -669,7 +715,9 @@ void GL_APIENTRY GL_VertexAttrib4sv(GLuint index, const GLshort *v)
     {
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateVertexAttrib4sv(context, angle::EntryPoint::GLVertexAttrib4sv, index, v));
+             ValidateVertexAttrib4sv(context->getPrivateState(),
+                                     context->getMutableErrorSetForValidation(),
+                                     angle::EntryPoint::GLVertexAttrib4sv, index, v));
         if (isCallValid)
         {
             ContextPrivateVertexAttrib4sv(context->getMutablePrivateState(),
@@ -694,7 +742,9 @@ void GL_APIENTRY GL_VertexAttrib4ubv(GLuint index, const GLubyte *v)
     {
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateVertexAttrib4ubv(context, angle::EntryPoint::GLVertexAttrib4ubv, index, v));
+             ValidateVertexAttrib4ubv(context->getPrivateState(),
+                                      context->getMutableErrorSetForValidation(),
+                                      angle::EntryPoint::GLVertexAttrib4ubv, index, v));
         if (isCallValid)
         {
             ContextPrivateVertexAttrib4ubv(context->getMutablePrivateState(),
@@ -719,7 +769,9 @@ void GL_APIENTRY GL_VertexAttrib4uiv(GLuint index, const GLuint *v)
     {
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateVertexAttrib4uiv(context, angle::EntryPoint::GLVertexAttrib4uiv, index, v));
+             ValidateVertexAttrib4uiv(context->getPrivateState(),
+                                      context->getMutableErrorSetForValidation(),
+                                      angle::EntryPoint::GLVertexAttrib4uiv, index, v));
         if (isCallValid)
         {
             ContextPrivateVertexAttrib4uiv(context->getMutablePrivateState(),
@@ -744,7 +796,9 @@ void GL_APIENTRY GL_VertexAttrib4usv(GLuint index, const GLushort *v)
     {
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateVertexAttrib4usv(context, angle::EntryPoint::GLVertexAttrib4usv, index, v));
+             ValidateVertexAttrib4usv(context->getPrivateState(),
+                                      context->getMutableErrorSetForValidation(),
+                                      angle::EntryPoint::GLVertexAttrib4usv, index, v));
         if (isCallValid)
         {
             ContextPrivateVertexAttrib4usv(context->getMutablePrivateState(),

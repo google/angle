@@ -598,14 +598,14 @@ static bool IsCapBannedWithActivePLS(GLenum cap)
     }
 }
 
-bool ValidCap(const Context *context, GLenum cap, bool queryOnly)
+bool ValidCap(const PrivateState &state, ErrorSet *errors, GLenum cap, bool queryOnly)
 {
     switch (cap)
     {
         // EXT_multisample_compatibility
         case GL_MULTISAMPLE_EXT:
         case GL_SAMPLE_ALPHA_TO_ONE_EXT:
-            return context->getExtensions().multisampleCompatibilityEXT;
+            return state.getExtensions().multisampleCompatibilityEXT;
 
         case GL_CULL_FACE:
         case GL_POLYGON_OFFSET_FILL:
@@ -619,38 +619,38 @@ bool ValidCap(const Context *context, GLenum cap, bool queryOnly)
             return true;
 
         case GL_POLYGON_OFFSET_POINT_NV:
-            return context->getExtensions().polygonModeNV;
+            return state.getExtensions().polygonModeNV;
         case GL_POLYGON_OFFSET_LINE_NV:  // = GL_POLYGON_OFFSET_LINE_ANGLE
-            return context->getExtensions().polygonModeAny();
+            return state.getExtensions().polygonModeAny();
 
         case GL_DEPTH_CLAMP_EXT:
-            return context->getExtensions().depthClampEXT;
+            return state.getExtensions().depthClampEXT;
 
         case GL_PRIMITIVE_RESTART_FIXED_INDEX:
         case GL_RASTERIZER_DISCARD:
-            return (context->getClientMajorVersion() >= 3);
+            return (state.getClientMajorVersion() >= 3);
 
         case GL_DEBUG_OUTPUT_SYNCHRONOUS:
         case GL_DEBUG_OUTPUT:
-            return context->getExtensions().debugKHR;
+            return state.getExtensions().debugKHR;
 
         case GL_BIND_GENERATES_RESOURCE_CHROMIUM:
-            return queryOnly && context->getExtensions().bindGeneratesResourceCHROMIUM;
+            return queryOnly && state.getExtensions().bindGeneratesResourceCHROMIUM;
 
         case GL_CLIENT_ARRAYS_ANGLE:
-            return queryOnly && context->getExtensions().clientArraysANGLE;
+            return queryOnly && state.getExtensions().clientArraysANGLE;
 
         case GL_FRAMEBUFFER_SRGB_EXT:
-            return context->getExtensions().sRGBWriteControlEXT;
+            return state.getExtensions().sRGBWriteControlEXT;
 
         case GL_SAMPLE_MASK:
-            return context->getClientVersion() >= Version(3, 1);
+            return state.getClientVersion() >= Version(3, 1);
 
         case GL_ROBUST_RESOURCE_INITIALIZATION_ANGLE:
-            return queryOnly && context->getExtensions().robustResourceInitializationANGLE;
+            return queryOnly && state.getExtensions().robustResourceInitializationANGLE;
 
         case GL_TEXTURE_RECTANGLE_ANGLE:
-            return context->isWebGL();
+            return state.isWebGL();
 
         // GL_APPLE_clip_distance / GL_EXT_clip_cull_distance / GL_ANGLE_clip_cull_distance
         case GL_CLIP_DISTANCE0_EXT:
@@ -661,34 +661,33 @@ bool ValidCap(const Context *context, GLenum cap, bool queryOnly)
         case GL_CLIP_DISTANCE5_EXT:
         case GL_CLIP_DISTANCE6_EXT:
         case GL_CLIP_DISTANCE7_EXT:
-            if (context->getExtensions().clipDistanceAPPLE ||
-                context->getExtensions().clipCullDistanceAny())
+            if (state.getExtensions().clipDistanceAPPLE ||
+                state.getExtensions().clipCullDistanceAny())
             {
                 return true;
             }
             break;
         case GL_SAMPLE_SHADING:
-            return context->getExtensions().sampleShadingOES;
+            return state.getExtensions().sampleShadingOES;
         case GL_SHADING_RATE_PRESERVE_ASPECT_RATIO_QCOM:
-            return context->getExtensions().shadingRateQCOM;
+            return state.getExtensions().shadingRateQCOM;
 
         // COLOR_LOGIC_OP is in GLES1, but exposed through an ANGLE extension.
         case GL_COLOR_LOGIC_OP:
-            return context->getClientVersion() < Version(2, 0) ||
-                   context->getExtensions().logicOpANGLE;
+            return state.getClientVersion() < Version(2, 0) || state.getExtensions().logicOpANGLE;
 
         case GL_FETCH_PER_SAMPLE_ARM:
-            return context->getExtensions().shaderFramebufferFetchARM;
+            return state.getExtensions().shaderFramebufferFetchARM;
 
         case GL_FRAGMENT_SHADER_FRAMEBUFFER_FETCH_MRT_ARM:
-            return queryOnly && context->getExtensions().shaderFramebufferFetchARM;
+            return queryOnly && state.getExtensions().shaderFramebufferFetchARM;
 
         default:
             break;
     }
 
     // GLES1 emulation: GLES1-specific caps after this point
-    if (context->getClientVersion().major != 1)
+    if (state.getClientVersion().major != 1)
     {
         return false;
     }
@@ -722,16 +721,15 @@ bool ValidCap(const Context *context, GLenum cap, bool queryOnly)
         case GL_FOG:
         case GL_POINT_SMOOTH:
         case GL_LINE_SMOOTH:
-            return context->getClientVersion() < Version(2, 0);
+            return state.getClientVersion() < Version(2, 0);
         case GL_POINT_SIZE_ARRAY_OES:
-            return context->getClientVersion() < Version(2, 0) &&
-                   context->getExtensions().pointSizeArrayOES;
+            return state.getClientVersion() < Version(2, 0) &&
+                   state.getExtensions().pointSizeArrayOES;
         case GL_TEXTURE_CUBE_MAP:
-            return context->getClientVersion() < Version(2, 0) &&
-                   context->getExtensions().textureCubeMapOES;
+            return state.getClientVersion() < Version(2, 0) &&
+                   state.getExtensions().textureCubeMapOES;
         case GL_POINT_SPRITE_OES:
-            return context->getClientVersion() < Version(2, 0) &&
-                   context->getExtensions().pointSpriteOES;
+            return state.getClientVersion() < Version(2, 0) && state.getExtensions().pointSpriteOES;
         default:
             return false;
     }
@@ -811,7 +809,10 @@ bool ValidateWebGLNameLength(const Context *context, angle::EntryPoint entryPoin
     return true;
 }
 
-bool ValidateSrcBlendFunc(const Context *context, angle::EntryPoint entryPoint, GLenum val)
+bool ValidateSrcBlendFunc(const PrivateState &state,
+                          ErrorSet *errors,
+                          angle::EntryPoint entryPoint,
+                          GLenum val)
 {
     switch (val)
     {
@@ -838,39 +839,43 @@ bool ValidateSrcBlendFunc(const Context *context, angle::EntryPoint entryPoint, 
         case GL_SRC1_ALPHA_EXT:
         case GL_ONE_MINUS_SRC1_COLOR_EXT:
         case GL_ONE_MINUS_SRC1_ALPHA_EXT:
-            if (!context->getExtensions().blendFuncExtendedEXT)
+            if (!state.getExtensions().blendFuncExtendedEXT)
             {
                 break;
             }
-            if (context->getState().getPixelLocalStorageActivePlanes() != 0)
+            if (state.getPixelLocalStorageActivePlanes() != 0)
             {
                 // INVALID_OPERATION is generated by BlendFunci*() and BlendFuncSeparatei*() if
                 // <srcRGB>, <dstRGB>, <srcAlpha>, or <dstAlpha> is a blend function requiring the
                 // secondary color input, as specified in EXT_blend_func_extended (SRC1_COLOR_EXT,
                 // ONE_MINUS_SRC1_COLOR_EXT, SRC1_ALPHA_EXT, ONE_MINUS_SRC1_ALPHA_EXT).
-                ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kPLSSecondaryBlendNotSupported);
+                errors->validationError(entryPoint, GL_INVALID_OPERATION,
+                                        kPLSSecondaryBlendNotSupported);
                 return false;
             }
             return true;
     }
 
-    ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidBlendFunction);
+    errors->validationError(entryPoint, GL_INVALID_ENUM, kInvalidBlendFunction);
     return false;
 }
 
-bool ValidateDstBlendFunc(const Context *context, angle::EntryPoint entryPoint, GLenum val)
+bool ValidateDstBlendFunc(const PrivateState &state,
+                          ErrorSet *errors,
+                          angle::EntryPoint entryPoint,
+                          GLenum val)
 {
     if (val == GL_SRC_ALPHA_SATURATE)
     {
         // Unextended ES2 does not allow GL_SRC_ALPHA_SATURATE as a dst blend func.
-        if (context->getClientMajorVersion() < 3 && !context->getExtensions().blendFuncExtendedEXT)
+        if (state.getClientMajorVersion() < 3 && !state.getExtensions().blendFuncExtendedEXT)
         {
-            ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidBlendFunction);
+            errors->validationError(entryPoint, GL_INVALID_ENUM, kInvalidBlendFunction);
             return false;
         }
     }
 
-    return ValidateSrcBlendFunc(context, entryPoint, val);
+    return ValidateSrcBlendFunc(state, errors, entryPoint, val);
 }
 
 bool ValidateES2TexImageParameters(const Context *context,
@@ -3137,13 +3142,14 @@ bool ValidateBindUniformLocationCHROMIUM(const Context *context,
     return true;
 }
 
-bool ValidateCoverageModulationCHROMIUM(const Context *context,
+bool ValidateCoverageModulationCHROMIUM(const PrivateState &state,
+                                        ErrorSet *errors,
                                         angle::EntryPoint entryPoint,
                                         GLenum components)
 {
-    if (!context->getExtensions().framebufferMixedSamplesCHROMIUM)
+    if (!state.getExtensions().framebufferMixedSamplesCHROMIUM)
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        errors->validationError(entryPoint, GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
     }
     switch (components)
@@ -3154,7 +3160,7 @@ bool ValidateCoverageModulationCHROMIUM(const Context *context,
         case GL_NONE:
             break;
         default:
-            ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidCoverageComponents);
+            errors->validationError(entryPoint, GL_INVALID_ENUM, kInvalidCoverageComponents);
             return false;
     }
 
@@ -3704,18 +3710,21 @@ bool ValidateDisableExtensionANGLE(const Context *context,
     return true;
 }
 
-bool ValidateActiveTexture(const Context *context, angle::EntryPoint entryPoint, GLenum texture)
+bool ValidateActiveTexture(const PrivateState &state,
+                           ErrorSet *errors,
+                           angle::EntryPoint entryPoint,
+                           GLenum texture)
 {
-    if (context->getClientMajorVersion() < 2)
+    if (state.getClientMajorVersion() < 2)
     {
-        return ValidateMultitextureUnit(context, entryPoint, texture);
+        return ValidateMultitextureUnit(state, errors, entryPoint, texture);
     }
 
     if (texture < GL_TEXTURE0 ||
         texture >
-            GL_TEXTURE0 + static_cast<GLuint>(context->getCaps().maxCombinedTextureImageUnits) - 1)
+            GL_TEXTURE0 + static_cast<GLuint>(state.getCaps().maxCombinedTextureImageUnits) - 1)
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidCombinedImageUnit);
+        errors->validationError(entryPoint, GL_INVALID_ENUM, kInvalidCombinedImageUnit);
         return false;
     }
 
@@ -3804,7 +3813,7 @@ bool ValidateBindRenderbuffer(const Context *context,
     return ValidateBindRenderbufferBase(context, entryPoint, target, renderbuffer);
 }
 
-static bool ValidBlendEquationMode(const Context *context, GLenum mode)
+static bool ValidBlendEquationMode(const PrivateState &state, ErrorSet *errors, GLenum mode)
 {
     switch (mode)
     {
@@ -3815,14 +3824,14 @@ static bool ValidBlendEquationMode(const Context *context, GLenum mode)
 
         case GL_MIN:
         case GL_MAX:
-            return context->getClientVersion() >= ES_3_0 || context->getExtensions().blendMinmaxEXT;
+            return state.getClientVersion() >= ES_3_0 || state.getExtensions().blendMinmaxEXT;
 
         default:
             return false;
     }
 }
 
-static bool ValidAdvancedBlendEquationMode(const Context *context, GLenum mode)
+static bool ValidAdvancedBlendEquationMode(const PrivateState &state, GLenum mode)
 {
     switch (mode)
     {
@@ -3841,15 +3850,16 @@ static bool ValidAdvancedBlendEquationMode(const Context *context, GLenum mode)
         case GL_HSL_SATURATION_KHR:
         case GL_HSL_COLOR_KHR:
         case GL_HSL_LUMINOSITY_KHR:
-            return context->getClientVersion() >= ES_3_2 ||
-                   context->getExtensions().blendEquationAdvancedKHR;
+            return state.getClientVersion() >= ES_3_2 ||
+                   state.getExtensions().blendEquationAdvancedKHR;
 
         default:
             return false;
     }
 }
 
-bool ValidateBlendColor(const Context *context,
+bool ValidateBlendColor(const PrivateState &state,
+                        ErrorSet *errors,
                         angle::EntryPoint entryPoint,
                         GLfloat red,
                         GLfloat green,
@@ -3859,74 +3869,80 @@ bool ValidateBlendColor(const Context *context,
     return true;
 }
 
-bool ValidateBlendEquation(const Context *context, angle::EntryPoint entryPoint, GLenum mode)
+bool ValidateBlendEquation(const PrivateState &state,
+                           ErrorSet *errors,
+                           angle::EntryPoint entryPoint,
+                           GLenum mode)
 {
-    if (ValidBlendEquationMode(context, mode))
+    if (ValidBlendEquationMode(state, errors, mode))
     {
         return true;
     }
 
-    if (ValidAdvancedBlendEquationMode(context, mode))
+    if (ValidAdvancedBlendEquationMode(state, mode))
     {
-        if (context->getState().getPixelLocalStorageActivePlanes() != 0)
+        if (state.getPixelLocalStorageActivePlanes() != 0)
         {
             // INVALID_OPERATION is generated by BlendEquationi*() if <mode> is one of the advanced
             // blend equations defined in KHR_blend_equation_advanced.
-            ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kPLSAdvancedBlendNotSupported);
+            errors->validationError(entryPoint, GL_INVALID_OPERATION,
+                                    kPLSAdvancedBlendNotSupported);
             return false;
         }
         return true;
     }
 
-    ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidBlendEquation);
+    errors->validationError(entryPoint, GL_INVALID_ENUM, kInvalidBlendEquation);
     return false;
 }
 
-bool ValidateBlendEquationSeparate(const Context *context,
+bool ValidateBlendEquationSeparate(const PrivateState &state,
+                                   ErrorSet *errors,
                                    angle::EntryPoint entryPoint,
                                    GLenum modeRGB,
                                    GLenum modeAlpha)
 {
-    if (!ValidBlendEquationMode(context, modeRGB))
+    if (!ValidBlendEquationMode(state, errors, modeRGB))
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidBlendEquation);
+        errors->validationError(entryPoint, GL_INVALID_ENUM, kInvalidBlendEquation);
         return false;
     }
 
-    if (!ValidBlendEquationMode(context, modeAlpha))
+    if (!ValidBlendEquationMode(state, errors, modeAlpha))
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidBlendEquation);
+        errors->validationError(entryPoint, GL_INVALID_ENUM, kInvalidBlendEquation);
         return false;
     }
 
     return true;
 }
 
-bool ValidateBlendFunc(const Context *context,
+bool ValidateBlendFunc(const PrivateState &state,
+                       ErrorSet *errors,
                        angle::EntryPoint entryPoint,
                        GLenum sfactor,
                        GLenum dfactor)
 {
-    return ValidateBlendFuncSeparate(context, entryPoint, sfactor, dfactor, sfactor, dfactor);
+    return ValidateBlendFuncSeparate(state, errors, entryPoint, sfactor, dfactor, sfactor, dfactor);
 }
 
-bool ValidateBlendFuncSeparate(const Context *context,
+bool ValidateBlendFuncSeparate(const PrivateState &state,
+                               ErrorSet *errors,
                                angle::EntryPoint entryPoint,
                                GLenum srcRGB,
                                GLenum dstRGB,
                                GLenum srcAlpha,
                                GLenum dstAlpha)
 {
-    if (!ValidateSrcBlendFunc(context, entryPoint, srcRGB) ||
-        !ValidateDstBlendFunc(context, entryPoint, dstRGB) ||
-        !ValidateSrcBlendFunc(context, entryPoint, srcAlpha) ||
-        !ValidateDstBlendFunc(context, entryPoint, dstAlpha))
+    if (!ValidateSrcBlendFunc(state, errors, entryPoint, srcRGB) ||
+        !ValidateDstBlendFunc(state, errors, entryPoint, dstRGB) ||
+        !ValidateSrcBlendFunc(state, errors, entryPoint, srcAlpha) ||
+        !ValidateDstBlendFunc(state, errors, entryPoint, dstAlpha))
     {
         return false;
     }
 
-    if (context->getLimitations().noSimultaneousConstantColorAndAlphaBlendFunc ||
-        context->isWebGL())
+    if (state.getLimitations().noSimultaneousConstantColorAndAlphaBlendFunc || state.isWebGL())
     {
         bool constantColorUsed =
             (srcRGB == GL_CONSTANT_COLOR || srcRGB == GL_ONE_MINUS_CONSTANT_COLOR ||
@@ -3938,14 +3954,15 @@ bool ValidateBlendFuncSeparate(const Context *context,
 
         if (constantColorUsed && constantAlphaUsed)
         {
-            if (context->isWebGL())
+            if (state.isWebGL())
             {
-                ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInvalidConstantColor);
+                errors->validationError(entryPoint, GL_INVALID_OPERATION, kInvalidConstantColor);
                 return false;
             }
 
             WARN() << kConstantColorAlphaLimitation;
-            ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kConstantColorAlphaLimitation);
+            errors->validationError(entryPoint, GL_INVALID_OPERATION,
+                                    kConstantColorAlphaLimitation);
             return false;
         }
     }
@@ -3988,25 +4005,29 @@ bool ValidateGetString(const Context *context, angle::EntryPoint entryPoint, GLe
     return true;
 }
 
-bool ValidateLineWidth(const Context *context, angle::EntryPoint entryPoint, GLfloat width)
+bool ValidateLineWidth(const PrivateState &state,
+                       ErrorSet *errors,
+                       angle::EntryPoint entryPoint,
+                       GLfloat width)
 {
     if (width <= 0.0f || isNaN(width))
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kInvalidWidth);
+        errors->validationError(entryPoint, GL_INVALID_VALUE, kInvalidWidth);
         return false;
     }
 
     return true;
 }
 
-bool ValidateDepthRangef(const Context *context,
+bool ValidateDepthRangef(const PrivateState &state,
+                         ErrorSet *errors,
                          angle::EntryPoint entryPoint,
                          GLfloat zNear,
                          GLfloat zFar)
 {
-    if (context->isWebGL() && zNear > zFar)
+    if (state.isWebGL() && zNear > zFar)
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInvalidDepthRange);
+        errors->validationError(entryPoint, GL_INVALID_OPERATION, kInvalidDepthRange);
         return false;
     }
 
@@ -4078,7 +4099,8 @@ bool ValidateCheckFramebufferStatus(const Context *context,
     return true;
 }
 
-bool ValidateClearColor(const Context *context,
+bool ValidateClearColor(const PrivateState &state,
+                        ErrorSet *errors,
                         angle::EntryPoint entryPoint,
                         GLfloat red,
                         GLfloat green,
@@ -4088,17 +4110,24 @@ bool ValidateClearColor(const Context *context,
     return true;
 }
 
-bool ValidateClearDepthf(const Context *context, angle::EntryPoint entryPoint, GLfloat depth)
+bool ValidateClearDepthf(const PrivateState &state,
+                         ErrorSet *errors,
+                         angle::EntryPoint entryPoint,
+                         GLfloat depth)
 {
     return true;
 }
 
-bool ValidateClearStencil(const Context *context, angle::EntryPoint entryPoint, GLint s)
+bool ValidateClearStencil(const PrivateState &state,
+                          ErrorSet *errors,
+                          angle::EntryPoint entryPoint,
+                          GLint s)
 {
     return true;
 }
 
-bool ValidateColorMask(const Context *context,
+bool ValidateColorMask(const PrivateState &state,
+                       ErrorSet *errors,
                        angle::EntryPoint entryPoint,
                        GLboolean red,
                        GLboolean green,
@@ -4120,7 +4149,10 @@ bool ValidateCreateProgram(const Context *context, angle::EntryPoint entryPoint)
     return true;
 }
 
-bool ValidateCullFace(const Context *context, angle::EntryPoint entryPoint, CullFaceMode mode)
+bool ValidateCullFace(const PrivateState &state,
+                      ErrorSet *errors,
+                      angle::EntryPoint entryPoint,
+                      CullFaceMode mode)
 {
     switch (mode)
     {
@@ -4130,7 +4162,7 @@ bool ValidateCullFace(const Context *context, angle::EntryPoint entryPoint, Cull
             break;
 
         default:
-            ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidCullMode);
+            errors->validationError(entryPoint, GL_INVALID_ENUM, kInvalidCullMode);
             return false;
     }
 
@@ -4189,7 +4221,10 @@ bool ValidateDeleteShader(const Context *context,
     return true;
 }
 
-bool ValidateDepthFunc(const Context *context, angle::EntryPoint entryPoint, GLenum func)
+bool ValidateDepthFunc(const PrivateState &state,
+                       ErrorSet *errors,
+                       angle::EntryPoint entryPoint,
+                       GLenum func)
 {
     switch (func)
     {
@@ -4204,14 +4239,17 @@ bool ValidateDepthFunc(const Context *context, angle::EntryPoint entryPoint, GLe
             break;
 
         default:
-            ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, func);
+            errors->validationErrorF(entryPoint, GL_INVALID_ENUM, kEnumNotSupported, func);
             return false;
     }
 
     return true;
 }
 
-bool ValidateDepthMask(const Context *context, angle::EntryPoint entryPoint, GLboolean flag)
+bool ValidateDepthMask(const PrivateState &state,
+                       ErrorSet *errors,
+                       angle::EntryPoint entryPoint,
+                       GLboolean flag)
 {
     return true;
 }
@@ -4279,7 +4317,10 @@ bool ValidateFlush(const Context *context, angle::EntryPoint entryPoint)
     return true;
 }
 
-bool ValidateFrontFace(const Context *context, angle::EntryPoint entryPoint, GLenum mode)
+bool ValidateFrontFace(const PrivateState &state,
+                       ErrorSet *errors,
+                       angle::EntryPoint entryPoint,
+                       GLenum mode)
 {
     switch (mode)
     {
@@ -4287,7 +4328,7 @@ bool ValidateFrontFace(const Context *context, angle::EntryPoint entryPoint, GLe
         case GL_CCW:
             break;
         default:
-            ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, mode);
+            errors->validationErrorF(entryPoint, GL_INVALID_ENUM, kEnumNotSupported, mode);
             return false;
     }
 
@@ -4600,7 +4641,11 @@ bool ValidateGetUniformLocation(const Context *context,
     return true;
 }
 
-bool ValidateHint(const Context *context, angle::EntryPoint entryPoint, GLenum target, GLenum mode)
+bool ValidateHint(const PrivateState &state,
+                  ErrorSet *errors,
+                  angle::EntryPoint entryPoint,
+                  GLenum target,
+                  GLenum mode)
 {
     switch (mode)
     {
@@ -4610,7 +4655,7 @@ bool ValidateHint(const Context *context, angle::EntryPoint entryPoint, GLenum t
             break;
 
         default:
-            ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, mode);
+            errors->validationErrorF(entryPoint, GL_INVALID_ENUM, kEnumNotSupported, mode);
             return false;
     }
 
@@ -4620,18 +4665,17 @@ bool ValidateHint(const Context *context, angle::EntryPoint entryPoint, GLenum t
             break;
 
         case GL_TEXTURE_FILTERING_HINT_CHROMIUM:
-            if (!context->getExtensions().textureFilteringHintCHROMIUM)
+            if (!state.getExtensions().textureFilteringHintCHROMIUM)
             {
-                ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, target);
+                errors->validationErrorF(entryPoint, GL_INVALID_ENUM, kEnumNotSupported, target);
                 return false;
             }
             break;
 
         case GL_FRAGMENT_SHADER_DERIVATIVE_HINT:
-            if (context->getClientVersion() < ES_3_0 &&
-                !context->getExtensions().standardDerivativesOES)
+            if (state.getClientVersion() < ES_3_0 && !state.getExtensions().standardDerivativesOES)
             {
-                ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, target);
+                errors->validationErrorF(entryPoint, GL_INVALID_ENUM, kEnumNotSupported, target);
                 return false;
             }
             break;
@@ -4640,15 +4684,15 @@ bool ValidateHint(const Context *context, angle::EntryPoint entryPoint, GLenum t
         case GL_POINT_SMOOTH_HINT:
         case GL_LINE_SMOOTH_HINT:
         case GL_FOG_HINT:
-            if (context->getClientMajorVersion() >= 2)
+            if (state.getClientMajorVersion() >= 2)
             {
-                ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, target);
+                errors->validationErrorF(entryPoint, GL_INVALID_ENUM, kEnumNotSupported, target);
                 return false;
             }
             break;
 
         default:
-            ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, target);
+            errors->validationErrorF(entryPoint, GL_INVALID_ENUM, kEnumNotSupported, target);
             return false;
     }
 
@@ -4691,26 +4735,27 @@ bool ValidateIsTexture(const Context *context, angle::EntryPoint entryPoint, Tex
     return true;
 }
 
-bool ValidatePixelStorei(const Context *context,
+bool ValidatePixelStorei(const PrivateState &state,
+                         ErrorSet *errors,
                          angle::EntryPoint entryPoint,
                          GLenum pname,
                          GLint param)
 {
-    if (context->getClientMajorVersion() < 3)
+    if (state.getClientMajorVersion() < 3)
     {
         switch (pname)
         {
             case GL_UNPACK_IMAGE_HEIGHT:
             case GL_UNPACK_SKIP_IMAGES:
-                ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidPname);
+                errors->validationError(entryPoint, GL_INVALID_ENUM, kInvalidPname);
                 return false;
 
             case GL_UNPACK_ROW_LENGTH:
             case GL_UNPACK_SKIP_ROWS:
             case GL_UNPACK_SKIP_PIXELS:
-                if (!context->getExtensions().unpackSubimageEXT)
+                if (!state.getExtensions().unpackSubimageEXT)
                 {
-                    ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidPname);
+                    errors->validationError(entryPoint, GL_INVALID_ENUM, kInvalidPname);
                     return false;
                 }
                 break;
@@ -4718,9 +4763,9 @@ bool ValidatePixelStorei(const Context *context,
             case GL_PACK_ROW_LENGTH:
             case GL_PACK_SKIP_ROWS:
             case GL_PACK_SKIP_PIXELS:
-                if (!context->getExtensions().packSubimageNV)
+                if (!state.getExtensions().packSubimageNV)
                 {
-                    ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidPname);
+                    errors->validationError(entryPoint, GL_INVALID_ENUM, kInvalidPname);
                     return false;
                 }
                 break;
@@ -4729,7 +4774,7 @@ bool ValidatePixelStorei(const Context *context,
 
     if (param < 0)
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kNegativeParam);
+        errors->validationError(entryPoint, GL_INVALID_VALUE, kNegativeParam);
         return false;
     }
 
@@ -4738,7 +4783,7 @@ bool ValidatePixelStorei(const Context *context,
         case GL_UNPACK_ALIGNMENT:
             if (param != 1 && param != 2 && param != 4 && param != 8)
             {
-                ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kInvalidUnpackAlignment);
+                errors->validationError(entryPoint, GL_INVALID_VALUE, kInvalidUnpackAlignment);
                 return false;
             }
             break;
@@ -4746,15 +4791,15 @@ bool ValidatePixelStorei(const Context *context,
         case GL_PACK_ALIGNMENT:
             if (param != 1 && param != 2 && param != 4 && param != 8)
             {
-                ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kInvalidUnpackAlignment);
+                errors->validationError(entryPoint, GL_INVALID_VALUE, kInvalidUnpackAlignment);
                 return false;
             }
             break;
 
         case GL_PACK_REVERSE_ROW_ORDER_ANGLE:
-            if (!context->getExtensions().packReverseRowOrderANGLE)
+            if (!state.getExtensions().packReverseRowOrderANGLE)
             {
-                ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, pname);
+                errors->validationErrorF(entryPoint, GL_INVALID_ENUM, kEnumNotSupported, pname);
             }
             break;
 
@@ -4769,14 +4814,15 @@ bool ValidatePixelStorei(const Context *context,
             break;
 
         default:
-            ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, pname);
+            errors->validationErrorF(entryPoint, GL_INVALID_ENUM, kEnumNotSupported, pname);
             return false;
     }
 
     return true;
 }
 
-bool ValidatePolygonOffset(const Context *context,
+bool ValidatePolygonOffset(const PrivateState &state,
+                           ErrorSet *errors,
                            angle::EntryPoint entryPoint,
                            GLfloat factor,
                            GLfloat units)
@@ -4789,7 +4835,8 @@ bool ValidateReleaseShaderCompiler(const Context *context, angle::EntryPoint ent
     return true;
 }
 
-bool ValidateSampleCoverage(const Context *context,
+bool ValidateSampleCoverage(const PrivateState &state,
+                            ErrorSet *errors,
                             angle::EntryPoint entryPoint,
                             GLfloat value,
                             GLboolean invert)
@@ -4797,7 +4844,8 @@ bool ValidateSampleCoverage(const Context *context,
     return true;
 }
 
-bool ValidateScissor(const Context *context,
+bool ValidateScissor(const PrivateState &state,
+                     ErrorSet *errors,
                      angle::EntryPoint entryPoint,
                      GLint x,
                      GLint y,
@@ -4806,7 +4854,7 @@ bool ValidateScissor(const Context *context,
 {
     if (width < 0 || height < 0)
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kNegativeSize);
+        errors->validationError(entryPoint, GL_INVALID_VALUE, kNegativeSize);
         return false;
     }
 
@@ -4901,7 +4949,8 @@ bool ValidateShaderSource(const Context *context,
     return true;
 }
 
-bool ValidateStencilFunc(const Context *context,
+bool ValidateStencilFunc(const PrivateState &state,
+                         ErrorSet *errors,
                          angle::EntryPoint entryPoint,
                          GLenum func,
                          GLint ref,
@@ -4909,14 +4958,15 @@ bool ValidateStencilFunc(const Context *context,
 {
     if (!IsValidStencilFunc(func))
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidStencil);
+        errors->validationError(entryPoint, GL_INVALID_ENUM, kInvalidStencil);
         return false;
     }
 
     return true;
 }
 
-bool ValidateStencilFuncSeparate(const Context *context,
+bool ValidateStencilFuncSeparate(const PrivateState &state,
+                                 ErrorSet *errors,
                                  angle::EntryPoint entryPoint,
                                  GLenum face,
                                  GLenum func,
@@ -4925,39 +4975,44 @@ bool ValidateStencilFuncSeparate(const Context *context,
 {
     if (!IsValidStencilFace(face))
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidStencil);
+        errors->validationError(entryPoint, GL_INVALID_ENUM, kInvalidStencil);
         return false;
     }
 
     if (!IsValidStencilFunc(func))
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidStencil);
+        errors->validationError(entryPoint, GL_INVALID_ENUM, kInvalidStencil);
         return false;
     }
 
     return true;
 }
 
-bool ValidateStencilMask(const Context *context, angle::EntryPoint entryPoint, GLuint mask)
+bool ValidateStencilMask(const PrivateState &state,
+                         ErrorSet *errors,
+                         angle::EntryPoint entryPoint,
+                         GLuint mask)
 {
     return true;
 }
 
-bool ValidateStencilMaskSeparate(const Context *context,
+bool ValidateStencilMaskSeparate(const PrivateState &state,
+                                 ErrorSet *errors,
                                  angle::EntryPoint entryPoint,
                                  GLenum face,
                                  GLuint mask)
 {
     if (!IsValidStencilFace(face))
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidStencil);
+        errors->validationError(entryPoint, GL_INVALID_ENUM, kInvalidStencil);
         return false;
     }
 
     return true;
 }
 
-bool ValidateStencilOp(const Context *context,
+bool ValidateStencilOp(const PrivateState &state,
+                       ErrorSet *errors,
                        angle::EntryPoint entryPoint,
                        GLenum fail,
                        GLenum zfail,
@@ -4965,26 +5020,27 @@ bool ValidateStencilOp(const Context *context,
 {
     if (!IsValidStencilOp(fail))
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidStencil);
+        errors->validationError(entryPoint, GL_INVALID_ENUM, kInvalidStencil);
         return false;
     }
 
     if (!IsValidStencilOp(zfail))
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidStencil);
+        errors->validationError(entryPoint, GL_INVALID_ENUM, kInvalidStencil);
         return false;
     }
 
     if (!IsValidStencilOp(zpass))
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidStencil);
+        errors->validationError(entryPoint, GL_INVALID_ENUM, kInvalidStencil);
         return false;
     }
 
     return true;
 }
 
-bool ValidateStencilOpSeparate(const Context *context,
+bool ValidateStencilOpSeparate(const PrivateState &state,
+                               ErrorSet *errors,
                                angle::EntryPoint entryPoint,
                                GLenum face,
                                GLenum fail,
@@ -4993,11 +5049,11 @@ bool ValidateStencilOpSeparate(const Context *context,
 {
     if (!IsValidStencilFace(face))
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidStencil);
+        errors->validationError(entryPoint, GL_INVALID_ENUM, kInvalidStencil);
         return false;
     }
 
-    return ValidateStencilOp(context, entryPoint, fail, zfail, zpass);
+    return ValidateStencilOp(state, errors, entryPoint, fail, zfail, zpass);
 }
 
 bool ValidateUniform1f(const Context *context,
@@ -5174,58 +5230,65 @@ bool ValidateValidateProgram(const Context *context,
     return true;
 }
 
-bool ValidateVertexAttrib1f(const Context *context,
+bool ValidateVertexAttrib1f(const PrivateState &state,
+                            ErrorSet *errors,
                             angle::EntryPoint entryPoint,
                             GLuint index,
                             GLfloat x)
 {
-    return ValidateVertexAttribIndex(context, entryPoint, index);
+    return ValidateVertexAttribIndex(state, errors, entryPoint, index);
 }
 
-bool ValidateVertexAttrib1fv(const Context *context,
+bool ValidateVertexAttrib1fv(const PrivateState &state,
+                             ErrorSet *errors,
                              angle::EntryPoint entryPoint,
                              GLuint index,
                              const GLfloat *values)
 {
-    return ValidateVertexAttribIndex(context, entryPoint, index);
+    return ValidateVertexAttribIndex(state, errors, entryPoint, index);
 }
 
-bool ValidateVertexAttrib2f(const Context *context,
+bool ValidateVertexAttrib2f(const PrivateState &state,
+                            ErrorSet *errors,
                             angle::EntryPoint entryPoint,
                             GLuint index,
                             GLfloat x,
                             GLfloat y)
 {
-    return ValidateVertexAttribIndex(context, entryPoint, index);
+    return ValidateVertexAttribIndex(state, errors, entryPoint, index);
 }
 
-bool ValidateVertexAttrib2fv(const Context *context,
+bool ValidateVertexAttrib2fv(const PrivateState &state,
+                             ErrorSet *errors,
                              angle::EntryPoint entryPoint,
                              GLuint index,
                              const GLfloat *values)
 {
-    return ValidateVertexAttribIndex(context, entryPoint, index);
+    return ValidateVertexAttribIndex(state, errors, entryPoint, index);
 }
 
-bool ValidateVertexAttrib3f(const Context *context,
+bool ValidateVertexAttrib3f(const PrivateState &state,
+                            ErrorSet *errors,
                             angle::EntryPoint entryPoint,
                             GLuint index,
                             GLfloat x,
                             GLfloat y,
                             GLfloat z)
 {
-    return ValidateVertexAttribIndex(context, entryPoint, index);
+    return ValidateVertexAttribIndex(state, errors, entryPoint, index);
 }
 
-bool ValidateVertexAttrib3fv(const Context *context,
+bool ValidateVertexAttrib3fv(const PrivateState &state,
+                             ErrorSet *errors,
                              angle::EntryPoint entryPoint,
                              GLuint index,
                              const GLfloat *values)
 {
-    return ValidateVertexAttribIndex(context, entryPoint, index);
+    return ValidateVertexAttribIndex(state, errors, entryPoint, index);
 }
 
-bool ValidateVertexAttrib4f(const Context *context,
+bool ValidateVertexAttrib4f(const PrivateState &state,
+                            ErrorSet *errors,
                             angle::EntryPoint entryPoint,
                             GLuint index,
                             GLfloat x,
@@ -5233,18 +5296,20 @@ bool ValidateVertexAttrib4f(const Context *context,
                             GLfloat z,
                             GLfloat w)
 {
-    return ValidateVertexAttribIndex(context, entryPoint, index);
+    return ValidateVertexAttribIndex(state, errors, entryPoint, index);
 }
 
-bool ValidateVertexAttrib4fv(const Context *context,
+bool ValidateVertexAttrib4fv(const PrivateState &state,
+                             ErrorSet *errors,
                              angle::EntryPoint entryPoint,
                              GLuint index,
                              const GLfloat *values)
 {
-    return ValidateVertexAttribIndex(context, entryPoint, index);
+    return ValidateVertexAttribIndex(state, errors, entryPoint, index);
 }
 
-bool ValidateViewport(const Context *context,
+bool ValidateViewport(const PrivateState &state,
+                      ErrorSet *errors,
                       angle::EntryPoint entryPoint,
                       GLint x,
                       GLint y,
@@ -5253,7 +5318,7 @@ bool ValidateViewport(const Context *context,
 {
     if (width < 0 || height < 0)
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kViewportNegativeSize);
+        errors->validationError(entryPoint, GL_INVALID_VALUE, kViewportNegativeSize);
         return false;
     }
 
@@ -5371,19 +5436,22 @@ bool ValidateDeleteTextures(const Context *context,
     return ValidateGenOrDelete(context, entryPoint, n);
 }
 
-bool ValidateDisable(const Context *context, angle::EntryPoint entryPoint, GLenum cap)
+bool ValidateDisable(const PrivateState &state,
+                     ErrorSet *errors,
+                     angle::EntryPoint entryPoint,
+                     GLenum cap)
 {
-    if (!ValidCap(context, cap, false))
+    if (!ValidCap(state, errors, cap, false))
     {
-        ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, cap);
+        errors->validationErrorF(entryPoint, GL_INVALID_ENUM, kEnumNotSupported, cap);
         return false;
     }
 
-    if (context->getState().getPixelLocalStorageActivePlanes() != 0)
+    if (state.getPixelLocalStorageActivePlanes() != 0)
     {
         if (IsCapBannedWithActivePLS(cap))
         {
-            ANGLE_VALIDATION_ERRORF(GL_INVALID_OPERATION, kPLSCapNotAllowed, cap);
+            errors->validationErrorF(entryPoint, GL_INVALID_OPERATION, kPLSCapNotAllowed, cap);
             return false;
         }
     }
@@ -5391,18 +5459,21 @@ bool ValidateDisable(const Context *context, angle::EntryPoint entryPoint, GLenu
     return true;
 }
 
-bool ValidateEnable(const Context *context, angle::EntryPoint entryPoint, GLenum cap)
+bool ValidateEnable(const PrivateState &state,
+                    ErrorSet *errors,
+                    angle::EntryPoint entryPoint,
+                    GLenum cap)
 {
-    if (!ValidCap(context, cap, false))
+    if (!ValidCap(state, errors, cap, false))
     {
-        ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, cap);
+        errors->validationErrorF(entryPoint, GL_INVALID_ENUM, kEnumNotSupported, cap);
         return false;
     }
 
-    if (context->getLimitations().noSampleAlphaToCoverageSupport &&
-        cap == GL_SAMPLE_ALPHA_TO_COVERAGE)
+    if (state.getLimitations().noSampleAlphaToCoverageSupport && cap == GL_SAMPLE_ALPHA_TO_COVERAGE)
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kNoSampleAlphaToCoveragesLimitation);
+        errors->validationError(entryPoint, GL_INVALID_OPERATION,
+                                kNoSampleAlphaToCoveragesLimitation);
 
         // We also output an error message to the debugger window if tracing is active, so that
         // developers can see the error message.
@@ -5410,11 +5481,11 @@ bool ValidateEnable(const Context *context, angle::EntryPoint entryPoint, GLenum
         return false;
     }
 
-    if (context->getState().getPixelLocalStorageActivePlanes() != 0)
+    if (state.getPixelLocalStorageActivePlanes() != 0)
     {
         if (IsCapBannedWithActivePLS(cap))
         {
-            ANGLE_VALIDATION_ERRORF(GL_INVALID_OPERATION, kPLSCapNotAllowed, cap);
+            errors->validationErrorF(entryPoint, GL_INVALID_OPERATION, kPLSCapNotAllowed, cap);
             return false;
         }
     }
@@ -5795,11 +5866,14 @@ bool ValidateGetVertexAttribPointerv(const Context *context,
     return ValidateGetVertexAttribBase(context, entryPoint, index, pname, nullptr, true, false);
 }
 
-bool ValidateIsEnabled(const Context *context, angle::EntryPoint entryPoint, GLenum cap)
+bool ValidateIsEnabled(const PrivateState &state,
+                       ErrorSet *errors,
+                       angle::EntryPoint entryPoint,
+                       GLenum cap)
 {
-    if (!ValidCap(context, cap, true))
+    if (!ValidCap(state, errors, cap, true))
     {
-        ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, cap);
+        errors->validationErrorF(entryPoint, GL_INVALID_ENUM, kEnumNotSupported, cap);
         return false;
     }
 

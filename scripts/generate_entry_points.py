@@ -367,7 +367,7 @@ void GL_APIENTRY GL_{name}({params})
 }}
 """
 
-TEMPLATE_GLES_PRIVATE_STATE_ENTRY_POINT_NO_RETURN = """\
+TEMPLATE_GLES_CONTEXT_PRIVATE_ENTRY_POINT_NO_RETURN = """\
 void GL_APIENTRY GL_{name}({params})
 {{
     Context *context = {context_getter};
@@ -421,7 +421,7 @@ TEMPLATE_GLES_ENTRY_POINT_WITH_RETURN = """\
 }}
 """
 
-TEMPLATE_GLES_PRIVATE_STATE_ENTRY_POINT_WITH_RETURN = """\
+TEMPLATE_GLES_CONTEXT_PRIVATE_ENTRY_POINT_WITH_RETURN = """\
 {return_type} GL_APIENTRY GL_{name}({params})
 {{
     Context *context = {context_getter};
@@ -697,6 +697,8 @@ TEMPLATE_GL_VALIDATION_HEADER = """\
 namespace gl
 {{
 class Context;
+class PrivateState;
+class ErrorSet;
 
 {prototypes}
 }}  // namespace gl
@@ -1579,13 +1581,16 @@ def is_context_private_state_command(api, name):
         [fnmatch.fnmatchcase(name, entry) for entry in CONTEXT_PRIVATE_WILDCARDS])
 
 
-def get_validation_expression(cmd_name, entry_point_name, internal_params):
+def get_validation_expression(api, cmd_name, entry_point_name, internal_params):
     name = strip_api_prefix(cmd_name)
+    private_params = ["context->getPrivateState()", "context->getMutableErrorSetForValidation()"]
+    extra_params = private_params if is_context_private_state_command(api,
+                                                                      cmd_name) else ["context"]
     expr = "Validate{name}({params})".format(
-        name=name, params=", ".join(["context", entry_point_name] + internal_params))
+        name=name, params=", ".join(extra_params + [entry_point_name] + internal_params))
     if not is_allowed_with_active_pixel_local_storage(name):
-        expr = "(ValidatePixelLocalStorageInactive(context, {entry_point_name}) && {expr})".format(
-            entry_point_name=entry_point_name, expr=expr)
+        expr = "(ValidatePixelLocalStorageInactive({extra_params}, {entry_point_name}) && {expr})".format(
+            extra_params=", ".join(private_params), entry_point_name=entry_point_name, expr=expr)
     return expr
 
 
@@ -1829,7 +1834,7 @@ def get_def_template(api, cmd_name, return_type, has_errcode_ret):
         elif api == apis.CL:
             return TEMPLATE_CL_ENTRY_POINT_NO_RETURN
         elif is_context_private_state_command(api, cmd_name):
-            return TEMPLATE_GLES_PRIVATE_STATE_ENTRY_POINT_NO_RETURN
+            return TEMPLATE_GLES_CONTEXT_PRIVATE_ENTRY_POINT_NO_RETURN
         else:
             return TEMPLATE_GLES_ENTRY_POINT_NO_RETURN
     elif return_type == "cl_int":
@@ -1843,7 +1848,7 @@ def get_def_template(api, cmd_name, return_type, has_errcode_ret):
             else:
                 return TEMPLATE_CL_ENTRY_POINT_WITH_RETURN_POINTER
         elif is_context_private_state_command(api, cmd_name):
-            return TEMPLATE_GLES_PRIVATE_STATE_ENTRY_POINT_WITH_RETURN
+            return TEMPLATE_GLES_CONTEXT_PRIVATE_ENTRY_POINT_WITH_RETURN
         else:
             return TEMPLATE_GLES_ENTRY_POINT_WITH_RETURN
 
@@ -1920,7 +1925,7 @@ def format_entry_point_def(api, command_node, cmd_name, proto, params, cmd_packe
         "egl_capture_params":
             ", ".join(["thread"] + internal_params),
         "validation_expression":
-            get_validation_expression(cmd_name, entry_point_name, internal_params),
+            get_validation_expression(api, cmd_name, entry_point_name, internal_params),
         "format_params":
             ", ".join(format_params),
         "context_getter":
@@ -2054,7 +2059,7 @@ def format_capture_method(api, command, cmd_name, proto, params, all_param_types
 
 def const_pointer_type(param, packed_gl_enums):
     type = just_the_type_packed(param, packed_gl_enums)
-    if just_the_name(param) == "errcode_ret" or "(" in type:
+    if just_the_name(param) == "errcode_ret" or type == "ErrorSet *" or "(" in type:
         return type
     elif "**" in type and "const" not in type:
         return type.replace("**", "* const *")
@@ -2145,7 +2150,10 @@ def format_validation_proto(api, cmd_name, params, cmd_packed_gl_enums, packed_p
     else:
         return_type = "bool"
     if api in [apis.GL, apis.GLES]:
-        with_extra_params = ["Context *context"] + ["angle::EntryPoint entryPoint"] + params
+        with_extra_params = ["const PrivateState &state",
+                             "ErrorSet *errors"] if is_context_private_state_command(
+                                 api, cmd_name) else ["Context *context"]
+        with_extra_params += ["angle::EntryPoint entryPoint"] + params
     elif api == apis.EGL:
         with_extra_params = ["ValidationContext *val"] + params
     else:

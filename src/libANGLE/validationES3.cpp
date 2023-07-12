@@ -2378,7 +2378,9 @@ bool ValidateClearBufferiv(const Context *context,
     switch (buffer)
     {
         case GL_COLOR:
-            if (!ValidateDrawBufferIndexIfActivePLS(context, entryPoint, drawbuffer, "drawbuffer"))
+            if (!ValidateDrawBufferIndexIfActivePLS(context->getPrivateState(),
+                                                    context->getMutableErrorSetForValidation(),
+                                                    entryPoint, drawbuffer, "drawbuffer"))
             {
                 return false;
             }
@@ -2430,7 +2432,9 @@ bool ValidateClearBufferuiv(const Context *context,
     switch (buffer)
     {
         case GL_COLOR:
-            if (!ValidateDrawBufferIndexIfActivePLS(context, entryPoint, drawbuffer, "drawbuffer"))
+            if (!ValidateDrawBufferIndexIfActivePLS(context->getPrivateState(),
+                                                    context->getMutableErrorSetForValidation(),
+                                                    entryPoint, drawbuffer, "drawbuffer"))
             {
                 return false;
             }
@@ -2474,7 +2478,9 @@ bool ValidateClearBufferfv(const Context *context,
     switch (buffer)
     {
         case GL_COLOR:
-            if (!ValidateDrawBufferIndexIfActivePLS(context, entryPoint, drawbuffer, "drawbuffer"))
+            if (!ValidateDrawBufferIndexIfActivePLS(context->getPrivateState(),
+                                                    context->getMutableErrorSetForValidation(),
+                                                    entryPoint, drawbuffer, "drawbuffer"))
             {
                 return false;
             }
@@ -4380,7 +4386,8 @@ bool ValidateResumeTransformFeedback(const Context *context, angle::EntryPoint e
     return true;
 }
 
-bool ValidateVertexAttribI4i(const Context *context,
+bool ValidateVertexAttribI4i(const PrivateState &state,
+                             ErrorSet *errors,
                              angle::EntryPoint entryPoint,
                              GLuint index,
                              GLint x,
@@ -4388,16 +4395,17 @@ bool ValidateVertexAttribI4i(const Context *context,
                              GLint z,
                              GLint w)
 {
-    if (context->getClientMajorVersion() < 3)
+    if (state.getClientMajorVersion() < 3)
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
+        errors->validationError(entryPoint, GL_INVALID_OPERATION, kES3Required);
         return false;
     }
 
-    return ValidateVertexAttribIndex(context, entryPoint, index);
+    return ValidateVertexAttribIndex(state, errors, entryPoint, index);
 }
 
-bool ValidateVertexAttribI4ui(const Context *context,
+bool ValidateVertexAttribI4ui(const PrivateState &state,
+                              ErrorSet *errors,
                               angle::EntryPoint entryPoint,
                               GLuint index,
                               GLuint x,
@@ -4405,41 +4413,43 @@ bool ValidateVertexAttribI4ui(const Context *context,
                               GLuint z,
                               GLuint w)
 {
-    if (context->getClientMajorVersion() < 3)
+    if (state.getClientMajorVersion() < 3)
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
+        errors->validationError(entryPoint, GL_INVALID_OPERATION, kES3Required);
         return false;
     }
 
-    return ValidateVertexAttribIndex(context, entryPoint, index);
+    return ValidateVertexAttribIndex(state, errors, entryPoint, index);
 }
 
-bool ValidateVertexAttribI4iv(const Context *context,
+bool ValidateVertexAttribI4iv(const PrivateState &state,
+                              ErrorSet *errors,
                               angle::EntryPoint entryPoint,
                               GLuint index,
                               const GLint *v)
 {
-    if (context->getClientMajorVersion() < 3)
+    if (state.getClientMajorVersion() < 3)
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
+        errors->validationError(entryPoint, GL_INVALID_OPERATION, kES3Required);
         return false;
     }
 
-    return ValidateVertexAttribIndex(context, entryPoint, index);
+    return ValidateVertexAttribIndex(state, errors, entryPoint, index);
 }
 
-bool ValidateVertexAttribI4uiv(const Context *context,
+bool ValidateVertexAttribI4uiv(const PrivateState &state,
+                               ErrorSet *errors,
                                angle::EntryPoint entryPoint,
                                GLuint index,
                                const GLuint *v)
 {
-    if (context->getClientMajorVersion() < 3)
+    if (state.getClientMajorVersion() < 3)
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
+        errors->validationError(entryPoint, GL_INVALID_OPERATION, kES3Required);
         return false;
     }
 
-    return ValidateVertexAttribIndex(context, entryPoint, index);
+    return ValidateVertexAttribIndex(state, errors, entryPoint, index);
 }
 
 bool ValidateGetFragDataLocation(const Context *context,
@@ -4861,7 +4871,8 @@ bool ValidateVertexAttribDivisor(const Context *context,
         return false;
     }
 
-    return ValidateVertexAttribIndex(context, entryPoint, index);
+    return ValidateVertexAttribIndex(context->getPrivateState(),
+                                     context->getMutableErrorSetForValidation(), entryPoint, index);
 }
 
 bool ValidateTexStorage2D(const Context *context,
@@ -5220,26 +5231,29 @@ bool ValidateGetMultisamplefvANGLE(const Context *context,
     return ValidateGetMultisamplefvBase(context, entryPoint, pname, index, val);
 }
 
-bool ValidateSampleMaskiANGLE(const Context *context,
+bool ValidateSampleMaskiANGLE(const PrivateState &state,
+                              ErrorSet *errors,
                               angle::EntryPoint entryPoint,
                               GLuint maskNumber,
                               GLbitfield mask)
 {
-    if (!context->getExtensions().textureMultisampleANGLE)
+    if (!state.getExtensions().textureMultisampleANGLE)
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kMultisampleTextureExtensionOrES31Required);
+        errors->validationError(entryPoint, GL_INVALID_OPERATION,
+                                kMultisampleTextureExtensionOrES31Required);
         return false;
     }
 
-    return ValidateSampleMaskiBase(context, entryPoint, maskNumber, mask);
+    return ValidateSampleMaskiBase(state, errors, entryPoint, maskNumber, mask);
 }
 
-bool ValidateDrawBufferIndexIfActivePLS(const Context *context,
+bool ValidateDrawBufferIndexIfActivePLS(const PrivateState &state,
+                                        ErrorSet *errors,
                                         angle::EntryPoint entryPoint,
                                         GLuint drawBufferIdx,
                                         const char *argumentName)
 {
-    int numPLSPlanes = context->getState().getPixelLocalStorageActivePlanes();
+    int numPLSPlanes = state.getPixelLocalStorageActivePlanes();
     if (numPLSPlanes != 0)
     {
         // INVALID_OPERATION is generated ... if any of the following are true:
@@ -5248,17 +5262,17 @@ bool ValidateDrawBufferIndexIfActivePLS(const Context *context,
         //   <drawBufferIdx> >= (MAX_COMBINED_DRAW_BUFFERS_AND_PIXEL_LOCAL_STORAGE_PLANES_ANGLE -
         //                       ACTIVE_PIXEL_LOCAL_STORAGE_PLANES_ANGLE)
         //
-        if (drawBufferIdx >= context->getCaps().maxColorAttachmentsWithActivePixelLocalStorage)
+        if (drawBufferIdx >= state.getCaps().maxColorAttachmentsWithActivePixelLocalStorage)
         {
-            ANGLE_VALIDATION_ERRORF(GL_INVALID_OPERATION, kPLSDrawBufferExceedsAttachmentLimit,
-                                    argumentName);
+            errors->validationErrorF(entryPoint, GL_INVALID_OPERATION,
+                                     kPLSDrawBufferExceedsAttachmentLimit, argumentName);
             return false;
         }
         if (drawBufferIdx >=
-            context->getCaps().maxCombinedDrawBuffersAndPixelLocalStoragePlanes - numPLSPlanes)
+            state.getCaps().maxCombinedDrawBuffersAndPixelLocalStoragePlanes - numPLSPlanes)
         {
-            ANGLE_VALIDATION_ERRORF(GL_INVALID_OPERATION,
-                                    kPLSDrawBufferExceedsCombinedAttachmentLimit, argumentName);
+            errors->validationErrorF(entryPoint, GL_INVALID_OPERATION,
+                                     kPLSDrawBufferExceedsCombinedAttachmentLimit, argumentName);
             return false;
         }
     }

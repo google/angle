@@ -242,6 +242,10 @@ class PrivateState : angle::NonCopyable
     GLint getClientMajorVersion() const { return mClientVersion.major; }
     GLint getClientMinorVersion() const { return mClientVersion.minor; }
 
+    bool isWebGL() const { return getExtensions().webglCompatibilityANGLE; }
+    bool isWebGL1() const { return isWebGL() && getClientVersion().major == 2; }
+    bool isGLES1() const { return getClientVersion() < ES_2_0; }
+
     const Caps &getCaps() const { return mCaps; }
     const TextureCapsMap &getTextureCaps() const { return mTextureCaps; }
     const Extensions &getExtensions() const { return mExtensions; }
@@ -768,11 +772,9 @@ class State : angle::NonCopyable
     const Version &getClientVersion() const { return mPrivateState.getClientVersion(); }
     egl::ShareGroup *getShareGroup() const { return mShareGroup; }
 
-    bool isWebGL() const { return getExtensions().webglCompatibilityANGLE; }
-
-    bool isWebGL1() const { return (isWebGL() && getClientVersion().major == 2); }
-
-    bool isGLES1() const { return getClientVersion() < ES_2_0; }
+    bool isWebGL() const { return mPrivateState.isWebGL(); }
+    bool isWebGL1() const { return mPrivateState.isWebGL1(); }
+    bool isGLES1() const { return mPrivateState.isGLES1(); }
 
     const Caps &getCaps() const { return mPrivateState.getCaps(); }
     const TextureCapsMap &getTextureCaps() const { return mPrivateState.getTextureCaps(); }
