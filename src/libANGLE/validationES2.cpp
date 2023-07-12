@@ -244,11 +244,6 @@ bool IsValidCopyTextureDestinationLevel(const Context *context,
                                         GLsizei height,
                                         bool isSubImage)
 {
-    if (!ValidMipLevel(context, type, level))
-    {
-        return false;
-    }
-
     if (!ValidImageSizeParameters(context, entryPoint, type, level, width, height, 1, isSubImage))
     {
         return false;
@@ -936,12 +931,6 @@ bool ValidateES2TexImageParametersBase(const Context *context,
                                   isSubImage))
     {
         // Error already handled.
-        return false;
-    }
-
-    if (!ValidMipLevel(context, texType, level))
-    {
-        context->validationError(entryPoint, GL_INVALID_VALUE, kInvalidMipLevel);
         return false;
     }
 
