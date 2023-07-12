@@ -512,6 +512,11 @@ class Framebuffer final : public angle::ObserverInterface,
         mFloat32ColorAttachmentBits.set(index, format->type == GL_FLOAT);
     }
 
+    angle::Result syncAllDrawAttachmentState(const Context *context, Command command) const;
+    angle::Result syncAttachmentState(const Context *context,
+                                      Command command,
+                                      const FramebufferAttachment *attachment) const;
+
     FramebufferState mState;
     rx::FramebufferImpl *mImpl;
 
