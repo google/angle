@@ -312,13 +312,7 @@ bool IsAnyAttachment3DWithoutAllLayers(const RenderTargetCache<RenderTargetVk> &
 }  // anonymous namespace
 
 FramebufferVk::FramebufferVk(RendererVk *renderer, const gl::FramebufferState &state)
-    : FramebufferImpl(state),
-      mBackbuffer(nullptr),
-      mActiveColorComponentMasksForClear(0),
-      mReadOnlyDepthFeedbackLoopMode(false),
-      mReadOnlyStencilFeedbackLoopMode(false),
-      mDepthFeedbackLoopMode(false),
-      mStencilFeedbackLoopMode(false)
+    : FramebufferImpl(state), mBackbuffer(nullptr), mActiveColorComponentMasksForClear(0)
 {
     if (mState.isDefault())
     {
@@ -2741,7 +2735,8 @@ void FramebufferVk::clearWithCommand(ContextVk *contextVk,
 
         // Because we may have changed the depth/stencil access mode, update read only depth/stencil
         // mode.
-        renderPassCommands->updateDepthStencilReadOnlyMode(contextVk, dsAspectFlags, *this);
+        renderPassCommands->updateDepthStencilReadOnlyMode(
+            contextVk->getDepthStencilAttachmentFlags(), dsAspectFlags);
     }
 
     if (attachments.empty())
@@ -2815,7 +2810,8 @@ void FramebufferVk::clearWithLoadOp(ContextVk *contextVk)
         renderPassCommands->updateRenderPassDepthStencilClear(dsAspects, dsClearValue);
 
         // The render pass can no longer be in read-only depth/stencil mode.
-        renderPassCommands->updateDepthStencilReadOnlyMode(contextVk, dsAspects, *this);
+        renderPassCommands->updateDepthStencilReadOnlyMode(
+            contextVk->getDepthStencilAttachmentFlags(), dsAspects);
     }
 }
 

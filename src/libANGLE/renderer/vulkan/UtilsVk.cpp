@@ -1130,10 +1130,7 @@ void UpdateColorAccess(ContextVk *contextVk,
     }
 }
 
-void UpdateDepthStencilAccess(ContextVk *contextVk,
-                              FramebufferVk *framebuffer,
-                              bool depthWrite,
-                              bool stencilWrite)
+void UpdateDepthStencilAccess(ContextVk *contextVk, bool depthWrite, bool stencilWrite)
 {
     vk::RenderPassCommandBufferHelper *renderPassCommands =
         &contextVk->getStartedRenderPassCommands();
@@ -1143,14 +1140,14 @@ void UpdateDepthStencilAccess(ContextVk *contextVk,
         // Explicitly mark a depth write because we are modifying the depth buffer.
         renderPassCommands->onDepthAccess(vk::ResourceAccess::ReadWrite);
         // Because we may have changed the depth access mode, update read only depth mode.
-        renderPassCommands->updateDepthReadOnlyMode(contextVk, *framebuffer);
+        renderPassCommands->updateDepthReadOnlyMode(contextVk->getDepthStencilAttachmentFlags());
     }
     if (stencilWrite)
     {
         // Explicitly mark a stencil write because we are modifying the stencil buffer.
         renderPassCommands->onStencilAccess(vk::ResourceAccess::ReadWrite);
         // Because we may have changed the stencil access mode, update read only stencil mode.
-        renderPassCommands->updateStencilReadOnlyMode(contextVk, *framebuffer);
+        renderPassCommands->updateStencilReadOnlyMode(contextVk->getDepthStencilAttachmentFlags());
     }
 }
 
@@ -2332,7 +2329,7 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
 
     UpdateColorAccess(contextVk, framebuffer->getState().getColorAttachmentsMask(),
                       MakeColorBufferMask(params.colorAttachmentIndexGL));
-    UpdateDepthStencilAccess(contextVk, framebuffer, params.clearDepth, params.clearStencil);
+    UpdateDepthStencilAccess(contextVk, params.clearDepth, params.clearStencil);
 
     ImageClearShaderParams shaderParams;
     shaderParams.clearValue = params.colorClearValue;
@@ -2731,7 +2728,7 @@ angle::Result UtilsVk::blitResolveImpl(ContextVk *contextVk,
 
     UpdateColorAccess(contextVk, framebuffer->getState().getColorAttachmentsMask(),
                       framebuffer->getState().getEnabledDrawBuffers());
-    UpdateDepthStencilAccess(contextVk, framebuffer, blitDepth, blitStencil);
+    UpdateDepthStencilAccess(contextVk, blitDepth, blitStencil);
 
     VkDescriptorImageInfo imageInfos[2] = {};
 

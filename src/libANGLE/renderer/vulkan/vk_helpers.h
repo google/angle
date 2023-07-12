@@ -1101,6 +1101,10 @@ enum class RenderPassUsage
     // Right now it is only tracked for depth stencil attachment
     DepthReadOnlyAttachment,
     StencilReadOnlyAttachment,
+    // This is special case of RenderTargetAttachment where the render target access is formed
+    // feedback loop. Right now it is only tracked for depth stencil attachment
+    DepthFeedbackLoop,
+    StencilFeedbackLoop,
     // Attached to the texture sampler of the current renderpass commands
     ColorTextureSampler,
     DepthTextureSampler,
@@ -1110,6 +1114,10 @@ enum class RenderPassUsage
     EnumCount = InvalidEnum,
 };
 using RenderPassUsageFlags = angle::PackedEnumBitSet<RenderPassUsage, uint16_t>;
+constexpr RenderPassUsageFlags kDepthStencilReadOnlyBits = RenderPassUsageFlags(
+    {RenderPassUsage::DepthReadOnlyAttachment, RenderPassUsage::StencilReadOnlyAttachment});
+constexpr RenderPassUsageFlags kDepthStencilFeedbackModeBits = RenderPassUsageFlags(
+    {RenderPassUsage::DepthFeedbackLoop, RenderPassUsage::StencilFeedbackLoop});
 
 // The following are used to help track the state of an invalidated attachment.
 // This value indicates an "infinite" CmdCount that is not valid for comparing
@@ -1584,11 +1592,11 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
     }
     void addCommandDiagnostics(ContextVk *contextVk);
 
-    void updateDepthReadOnlyMode(ContextVk *contextVk, const FramebufferVk &framebufferVk);
-    void updateStencilReadOnlyMode(ContextVk *contextVk, const FramebufferVk &framebufferVk);
-    void updateDepthStencilReadOnlyMode(ContextVk *contextVk,
-                                        VkImageAspectFlags dsAspectFlags,
-                                        const FramebufferVk &framebufferVk);
+    // Readonly depth stencil mode and feedback loop mode
+    void updateDepthReadOnlyMode(RenderPassUsageFlags dsUsageFlags);
+    void updateStencilReadOnlyMode(RenderPassUsageFlags dsUsageFlags);
+    void updateDepthStencilReadOnlyMode(RenderPassUsageFlags dsUsageFlags,
+                                        VkImageAspectFlags dsAspectFlags);
 
   private:
     uint32_t getSubpassCommandBufferCount() const { return mCurrentSubpassCommandBufferIndex + 1; }
@@ -1604,7 +1612,9 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
         return mPreviousSubpassesCmdCount + getCommandBuffer().getRenderPassWriteCommandCount();
     }
 
-    void updateStartedRenderPassWithDepthStencilMode(bool readOnlyDepthStencilMode,
+    void updateStartedRenderPassWithDepthStencilMode(RenderPassAttachment *resolveAttachment,
+                                                     bool renderPassHasWriteOrClear,
+                                                     RenderPassUsageFlags dsUsageFlags,
                                                      RenderPassUsage readOnlyAttachmentUsage);
 
     // We can't determine the image layout at the renderpass start time since their full usage
