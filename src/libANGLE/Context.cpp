@@ -629,20 +629,15 @@ Context::Context(egl::Display *display,
              GetRobustAccess(attribs),
              GetProtectedContent(attribs)),
       mShared(shareContext != nullptr || shareTextures != nullptr || shareSemaphores != nullptr),
-      mSkipValidation(GetNoError(attribs)),
       mDisplayTextureShareGroup(shareTextures != nullptr),
       mDisplaySemaphoreShareGroup(shareSemaphores != nullptr),
-      mErrors(this),
+      mErrors(&mState.getDebug(), display->getFrontendFeatures(), attribs),
       mImplementation(display->getImplementation()
                           ->createContext(mState, &mErrors, config, shareContext, attribs)),
       mLabel(nullptr),
       mCompiler(),
       mConfig(config),
       mHasBeenCurrent(false),
-      mContextLost(0),
-      mResetStatus(GraphicsResetStatus::NoError),
-      mContextLostForced(false),
-      mResetStrategy(GetResetStrategy(attribs)),
       mSurfacelessSupported(displayExtensions.surfacelessContext),
       mCurrentDrawSurface(static_cast<egl::Surface *>(EGL_NO_SURFACE)),
       mCurrentReadSurface(static_cast<egl::Surface *>(EGL_NO_SURFACE)),
@@ -1978,7 +1973,7 @@ void Context::getIntegervImpl(GLenum pname, GLint *params) const
                       mState.getCaps().compressedTextureFormats.end(), params);
             break;
         case GL_RESET_NOTIFICATION_STRATEGY_EXT:
-            *params = mResetStrategy;
+            *params = mErrors.getResetStrategy();
             break;
         case GL_NUM_SHADER_BINARY_FORMATS:
             *params = static_cast<GLint>(mState.getCaps().shaderBinaryFormats.size());
@@ -3093,74 +3088,14 @@ GLenum Context::getError()
     }
 }
 
-// NOTE: this function should not assume that this context is current!
-void Context::markContextLost(GraphicsResetStatus status)
-{
-    ASSERT(status != GraphicsResetStatus::NoError);
-    if (mResetStrategy == GL_LOSE_CONTEXT_ON_RESET_EXT)
-    {
-        mResetStatus       = status;
-        mContextLostForced = true;
-    }
-    setContextLost();
-}
-
-void Context::setContextLost()
-{
-    mContextLost = 1;
-
-    // Stop skipping validation, since many implementation entrypoint assume they can't
-    // be called when lost, or with null object arguments, etc.
-    mSkipValidation = 0;
-
-    // Make sure we update TLS.
-    SetCurrentValidContext(nullptr);
-}
-
 GLenum Context::getGraphicsResetStatus()
 {
-    // Even if the application doesn't want to know about resets, we want to know
-    // as it will allow us to skip all the calls.
-    if (mResetStrategy == GL_NO_RESET_NOTIFICATION_EXT)
-    {
-        if (!isContextLost() && mImplementation->getResetStatus() != GraphicsResetStatus::NoError)
-        {
-            setContextLost();
-        }
-
-        // EXT_robustness, section 2.6: If the reset notification behavior is
-        // NO_RESET_NOTIFICATION_EXT, then the implementation will never deliver notification of
-        // reset events, and GetGraphicsResetStatusEXT will always return NO_ERROR.
-        return GL_NO_ERROR;
-    }
-
-    // The GL_EXT_robustness spec says that if a reset is encountered, a reset
-    // status should be returned at least once, and GL_NO_ERROR should be returned
-    // once the device has finished resetting.
-    if (!isContextLost())
-    {
-        ASSERT(mResetStatus == GraphicsResetStatus::NoError);
-        mResetStatus = mImplementation->getResetStatus();
-
-        if (mResetStatus != GraphicsResetStatus::NoError)
-        {
-            setContextLost();
-        }
-    }
-    else if (!mContextLostForced && mResetStatus != GraphicsResetStatus::NoError)
-    {
-        // If markContextLost was used to mark the context lost then
-        // assume that is not recoverable, and continue to report the
-        // lost reset status for the lifetime of this context.
-        mResetStatus = mImplementation->getResetStatus();
-    }
-
-    return ToGLenum(mResetStatus);
+    return mErrors.getGraphicsResetStatus(mImplementation.get());
 }
 
 bool Context::isResetNotificationEnabled() const
 {
-    return (mResetStrategy == GL_LOSE_CONTEXT_ON_RESET_EXT);
+    return mErrors.getResetStrategy() == GL_LOSE_CONTEXT_ON_RESET_EXT;
 }
 
 bool Context::isRobustnessEnabled() const
@@ -3943,7 +3878,7 @@ Extensions Context::generateSupportedExtensions() const
     supportedExtensions.multiDrawANGLE                = true;
 
     // Enable the no error extension if the context was created with the flag.
-    supportedExtensions.noErrorKHR = mSkipValidation != 0;
+    supportedExtensions.noErrorKHR = skipValidation();
 
     // Enable surfaceless to advertise we'll have the correct behavior when there is no default FBO
     supportedExtensions.surfacelessContextOES = mSurfacelessSupported;
@@ -3955,7 +3890,7 @@ Extensions Context::generateSupportedExtensions() const
     supportedExtensions.debugLabelEXT = true;
 
     // Explicitly enable GL_ANGLE_robust_client_memory if the context supports validation.
-    supportedExtensions.robustClientMemoryANGLE = mSkipValidation == 0;
+    supportedExtensions.robustClientMemoryANGLE = !skipValidation();
 
     // Determine robust resource init availability from EGL.
     supportedExtensions.robustResourceInitializationANGLE = mState.isRobustResourceInitEnabled();
@@ -4348,9 +4283,9 @@ void Context::initCaps()
         // prevents writing invalid calls to the capture.
         INFO() << "Enabling validation to prevent invalid calls from being captured. This "
                   "effectively disables GL_KHR_no_error and enables GL_ANGLE_robust_client_memory.";
-        mSkipValidation                     = 0;
-        extensions->noErrorKHR              = mSkipValidation != 0;
-        extensions->robustClientMemoryANGLE = mSkipValidation == 0;
+        mErrors.forceValidation();
+        extensions->noErrorKHR              = skipValidation();
+        extensions->robustClientMemoryANGLE = !skipValidation();
 
         INFO() << "Disabling GL_OES_depth32 during capture, which is not widely supported on "
                   "mobile";
@@ -9975,7 +9910,18 @@ void Context::drawPixelLocalStorageEXTDisable(const PixelLocalStoragePlane plane
 }
 
 // ErrorSet implementation.
-ErrorSet::ErrorSet(Context *context) : mContext(context) {}
+ErrorSet::ErrorSet(Debug *debug,
+                   const angle::FrontendFeatures &frontendFeatures,
+                   const egl::AttributeMap &attribs)
+    : mDebug(debug),
+      mResetStrategy(GetResetStrategy(attribs)),
+      mLoseContextOnOutOfMemory(frontendFeatures.loseContextOnOutOfMemory.enabled),
+      mContextLostForced(false),
+      mResetStatus(GraphicsResetStatus::NoError),
+      mSkipValidation(GetNoError(attribs)),
+      mContextLost(0),
+      mHasAnyErrors(0)
+{}
 
 ErrorSet::~ErrorSet() = default;
 
@@ -9985,11 +9931,10 @@ void ErrorSet::handleError(GLenum errorCode,
                            const char *function,
                            unsigned int line)
 {
-    if (errorCode == GL_OUT_OF_MEMORY &&
-        mContext->getGraphicsResetStrategy() == GL_LOSE_CONTEXT_ON_RESET_EXT &&
-        mContext->getDisplay()->getFrontendFeatures().loseContextOnOutOfMemory.enabled)
+    if (errorCode == GL_OUT_OF_MEMORY && mResetStrategy == GL_LOSE_CONTEXT_ON_RESET_EXT &&
+        mLoseContextOnOutOfMemory)
     {
-        mContext->markContextLost(GraphicsResetStatus::UnknownContextReset);
+        markContextLost(GraphicsResetStatus::UnknownContextReset);
     }
 
     std::stringstream errorStream;
@@ -9999,35 +9944,115 @@ void ErrorSet::handleError(GLenum errorCode,
     std::string formattedMessage = errorStream.str();
 
     // Process the error, but log it with WARN severity so it shows up in logs.
-    ASSERT(errorCode != GL_NO_ERROR);
-    mErrors.insert(errorCode);
+    mDebug->insertMessage(GL_DEBUG_SOURCE_API, GL_DEBUG_TYPE_ERROR, errorCode,
+                          GL_DEBUG_SEVERITY_HIGH, std::move(formattedMessage), gl::LOG_WARN,
+                          angle::EntryPoint::Invalid);
 
-    mContext->getState().getDebug().insertMessage(
-        GL_DEBUG_SOURCE_API, GL_DEBUG_TYPE_ERROR, errorCode, GL_DEBUG_SEVERITY_HIGH,
-        std::move(formattedMessage), gl::LOG_WARN, angle::EntryPoint::Invalid);
+    pushError(errorCode);
 }
 
 void ErrorSet::validationError(angle::EntryPoint entryPoint, GLenum errorCode, const char *message)
 {
-    ASSERT(errorCode != GL_NO_ERROR);
-    mErrors.insert(errorCode);
+    mDebug->insertMessage(GL_DEBUG_SOURCE_API, GL_DEBUG_TYPE_ERROR, errorCode,
+                          GL_DEBUG_SEVERITY_HIGH, message, gl::LOG_INFO, entryPoint);
 
-    mContext->getState().getDebug().insertMessage(GL_DEBUG_SOURCE_API, GL_DEBUG_TYPE_ERROR,
-                                                  errorCode, GL_DEBUG_SEVERITY_HIGH, message,
-                                                  gl::LOG_INFO, entryPoint);
+    pushError(errorCode);
 }
 
-bool ErrorSet::empty() const
+void ErrorSet::pushError(GLenum errorCode)
 {
-    return mErrors.empty();
+    ASSERT(errorCode != GL_NO_ERROR);
+    {
+        std::lock_guard<std::mutex> lock(mMutex);
+        mErrors.insert(errorCode);
+        mHasAnyErrors = 1;
+    }
 }
 
 GLenum ErrorSet::popError()
 {
+    std::lock_guard<std::mutex> lock(mMutex);
+
     ASSERT(!empty());
     GLenum error = *mErrors.begin();
     mErrors.erase(mErrors.begin());
+    if (mErrors.empty())
+    {
+        mHasAnyErrors = 0;
+    }
     return error;
+}
+
+// NOTE: this function should not assume that this context is current!
+void ErrorSet::markContextLost(GraphicsResetStatus status)
+{
+    std::lock_guard<std::mutex> lock(mMutex);
+
+    ASSERT(status != GraphicsResetStatus::NoError);
+    if (mResetStrategy == GL_LOSE_CONTEXT_ON_RESET_EXT)
+    {
+        mResetStatus       = status;
+        mContextLostForced = true;
+    }
+    setContextLost();
+}
+
+void ErrorSet::setContextLost()
+{
+    // Always called with the mutex held.
+    ASSERT(mMutex.try_lock() == false);
+
+    mContextLost = 1;
+
+    // Stop skipping validation, since many implementation entrypoint assume they can't
+    // be called when lost, or with null object arguments, etc.
+    mSkipValidation = 0;
+
+    // Make sure we update TLS.
+    SetCurrentValidContext(nullptr);
+}
+
+GLenum ErrorSet::getGraphicsResetStatus(rx::ContextImpl *contextImpl)
+{
+    std::lock_guard<std::mutex> lock(mMutex);
+
+    // Even if the application doesn't want to know about resets, we want to know
+    // as it will allow us to skip all the calls.
+    if (mResetStrategy == GL_NO_RESET_NOTIFICATION_EXT)
+    {
+        if (!isContextLost() && contextImpl->getResetStatus() != GraphicsResetStatus::NoError)
+        {
+            setContextLost();
+        }
+
+        // EXT_robustness, section 2.6: If the reset notification behavior is
+        // NO_RESET_NOTIFICATION_EXT, then the implementation will never deliver notification of
+        // reset events, and GetGraphicsResetStatusEXT will always return NO_ERROR.
+        return GL_NO_ERROR;
+    }
+
+    // The GL_EXT_robustness spec says that if a reset is encountered, a reset
+    // status should be returned at least once, and GL_NO_ERROR should be returned
+    // once the device has finished resetting.
+    if (!isContextLost())
+    {
+        ASSERT(mResetStatus == GraphicsResetStatus::NoError);
+        mResetStatus = contextImpl->getResetStatus();
+
+        if (mResetStatus != GraphicsResetStatus::NoError)
+        {
+            setContextLost();
+        }
+    }
+    else if (!mContextLostForced && mResetStatus != GraphicsResetStatus::NoError)
+    {
+        // If markContextLost was used to mark the context lost then
+        // assume that is not recoverable, and continue to report the
+        // lost reset status for the lifetime of this context.
+        mResetStatus = contextImpl->getResetStatus();
+    }
+
+    return ToGLenum(mResetStatus);
 }
 
 // StateCache implementation.

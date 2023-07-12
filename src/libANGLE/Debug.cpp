@@ -367,7 +367,6 @@ void Debug::insertPerfWarning(GLenum severity, const char *message, uint32_t *re
         msg += " (this message will no longer repeat)";
     }
 
-    // Release the lock before we call insertMessage. It will re-acquire the lock.
     insertMessage(GL_DEBUG_SOURCE_API, GL_DEBUG_TYPE_PERFORMANCE, 0, severity, std::move(msg),
                   gl::LOG_INFO, angle::EntryPoint::Invalid);
 }
