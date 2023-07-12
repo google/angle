@@ -130,7 +130,6 @@ root_add_deps=(
 delete_only_deps=(
     "third_party/vulkan-deps"
     "third_party/zlib"  # Replaced by Android's zlib; delete for gclient to work https://crbug.com/skia/14155#c3
-    "third_party/cpu_features"  # Replaced by Android's cpufeatures; same as zlib above
 )
 
 # Delete dep directories so that gclient can check them out
@@ -159,7 +158,6 @@ unsupported_third_party_deps=(
    "third_party/android_sdk"
    "third_party/android_toolchain"
    "third_party/zlib"  # Replaced by Android's zlib
-   "third_party/cpu_features"  # Replaced by Android's cpufeatures
 )
 for unsupported_third_party_dep in "${unsupported_third_party_deps[@]}"; do
    rm -rf "$unsupported_third_party_dep"
