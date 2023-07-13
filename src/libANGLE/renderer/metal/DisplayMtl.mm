@@ -114,6 +114,7 @@ egl::Error DisplayMtl::initialize(egl::Display *display)
     angle::Result result = initializeImpl(display);
     if (result != angle::Result::Continue)
     {
+        terminate();
         return egl::EglNotInitialized();
     }
     return egl::NoError();
