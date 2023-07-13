@@ -54,7 +54,7 @@ LinkMismatchError LinkValidateUniforms(const sh::ShaderVariable &uniform1,
                                        const sh::ShaderVariable &uniform2,
                                        std::string *mismatchedStructFieldName)
 {
-#if ANGLE_PROGRAM_LINK_VALIDATE_UNIFORM_PRECISION == ANGLE_ENABLED
+#if ANGLE_PROGRAM_LINK_VALIDATE_UNIFORM_PRECISION
     const bool validatePrecisionFeature = true;
 #else
     const bool validatePrecisionFeature = false;
