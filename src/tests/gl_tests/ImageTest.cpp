@@ -3222,17 +3222,17 @@ TEST_P(ImageTestES3, SourceYUVAHBTargetExternalYUVSampleLinearFiltering)
 
     // clang-format off
     GLubyte dataY[]  = {
-        76, 76,
-        76, 76,
+        81, 81,
+        81, 81,
         16, 16,
         16, 16,
     };
     GLubyte dataCb[] = {
-        84,
+        90,
         128,
     };
     GLubyte dataCr[] = {
-        255,
+        240,
         128,
     };
     // clang-format on
