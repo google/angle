@@ -8,7 +8,7 @@
 
 // C++ string version of default shaders mtllib.
 
-static constexpr uint8_t gDefaultMetallib_2_1[] = {
+static constexpr uint8_t gDefaultMetallib[] = {
     77,  84,  76,  66,  1,   128, 2,   0,   3,   0,   0,   0,   0,   0,   0,   0,   199, 89,  5,
     0,   0,   0,   0,   0,   88,  0,   0,   0,   0,   0,   0,   0,   231, 19,  0,   0,   0,   0,
     0,   0,   71,  20,  0,   0,   0,   0,   0,   0,   88,  6,   0,   0,   0,   0,   0,   0,   159,

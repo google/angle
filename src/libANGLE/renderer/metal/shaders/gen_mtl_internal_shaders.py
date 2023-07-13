@@ -19,23 +19,13 @@ import gen_angle_format_table
 configs = [{
     "sdk": "macosx",
     "compile_flags": ["--std=macos-metal2.1", "-mmacosx-version-min=10.14"],
-    "variable_name": "gDefaultMetallib_2_1",
-    "header": "mtl_internal_shaders_2_1_macos_autogen.h"
-}, {
-    "sdk": "macosx",
-    "compile_flags": ["--std=macos-metal2.0", "-mmacosx-version-min=10.13"],
-    "variable_name": "gDefaultMetallib_2_0",
-    "header": "mtl_internal_shaders_2_0_macos_autogen.h"
+    "variable_name": "gDefaultMetallib",
+    "header": "mtl_internal_shaders_macos_autogen.h"
 }, {
     "sdk": "iphoneos",
     "compile_flags": ["--std=ios-metal2.1", "-mios-version-min=12"],
-    "variable_name": "gDefaultMetallib_2_1",
-    "header": "mtl_internal_shaders_2_1_ios_autogen.h"
-}, {
-    "sdk": "iphoneos",
-    "compile_flags": ["--std=ios-metal2.0", "-mios-version-min=11"],
-    "variable_name": "gDefaultMetallib_2_0",
-    "header": "mtl_internal_shaders_2_0_ios_autogen.h"
+    "variable_name": "gDefaultMetallib",
+    "header": "mtl_internal_shaders_ios_autogen.h"
 }]
 
 metal_source_output_header = "mtl_internal_shaders_src_autogen.h"
