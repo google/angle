@@ -5302,8 +5302,8 @@ void main()
 
     constexpr char kVSArrayTooLarge[] =
         R"(varying vec4 color;
-// 1 MB / 32 aligned bytes per mat2 = 32768
-const int array_size = 32769;
+// 16 MB / 32 aligned bytes per mat2 = 524288
+const int array_size = 524289;
 void main()
 {
     mat2 array[array_size];
@@ -5315,7 +5315,7 @@ void main()
 
     constexpr char kVSArrayMuchTooLarge[] =
         R"(varying vec4 color;
-const int array_size = 55600;
+const int array_size = 757000;
 void main()
 {
     mat2 array[array_size];
@@ -5379,9 +5379,9 @@ TEST_P(WebGLCompatibilityTest, ValidateTotalPrivateSize)
     constexpr char kTooLargeGlobalMemory1[] =
         R"(precision mediump float;
 
-// 1 MB / 16 bytes per vec4 = 65536
-vec4 array[32768];
-vec4 array2[32769];
+// 16 MB / 16 bytes per vec4 = 1048576
+vec4 array[524288];
+vec4 array2[524289];
 
 void main()
 {
@@ -5394,9 +5394,9 @@ void main()
     constexpr char kTooLargeGlobalMemory2[] =
         R"(precision mediump float;
 
-// 1 MB / 16 bytes per vec4 = 65536
-vec4 array[32767];
-vec4 array2[32767];
+// 16 MB / 16 bytes per vec4 = 1048576
+vec4 array[524287];
+vec4 array2[524287];
 vec4 x, y, z;
 
 void main()
@@ -5410,12 +5410,12 @@ void main()
     constexpr char kTooLargeGlobalAndLocalMemory1[] =
         R"(precision mediump float;
 
-// 1 MB / 16 bytes per vec4 = 65536
-vec4 array[32768];
+// 16 MB / 16 bytes per vec4 = 1048576
+vec4 array[524288];
 
 void main()
 {
-    vec4 array2[32769];
+    vec4 array2[524289];
     if (array[0].x + array[1].x == 2.0)
         gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
     else
@@ -5426,18 +5426,18 @@ void main()
     constexpr char kTooLargeGlobalAndLocalMemory2[] =
         R"(precision mediump float;
 
-// 1 MB / 16 bytes per vec4 = 65536
-vec4 array[32768];
+// 16 MB / 16 bytes per vec4 = 1048576
+vec4 array[524288];
 
 float f()
 {
-    vec4 array2[16384];
+    vec4 array2[524288];
     return array2[0].x;
 }
 
 float g()
 {
-    vec4 array3[16383];
+    vec4 array3[524287];
     return array3[0].x;
 }
 

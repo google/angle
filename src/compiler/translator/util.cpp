@@ -282,6 +282,9 @@ GLenum GLVariableType(const TType &type)
 
             return kBoolGLType[type.getNominalSize() - 1];
 
+        case EbtYuvCscStandardEXT:
+            return GL_UNSIGNED_INT;
+
         case EbtSampler2D:
             return GL_SAMPLER_2D;
         case EbtSampler3D:

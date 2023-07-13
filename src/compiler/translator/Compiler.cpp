@@ -397,9 +397,10 @@ bool TCompiler::shouldRunLoopAndIndexingValidation(const ShCompileOptions &compi
 
 bool TCompiler::shouldLimitTypeSizes() const
 {
-    // WebGL shaders limit the size of variables' types in shaders,
-    // including arrays, structs and interface blocks.
-    return IsWebGLBasedSpec(mShaderSpec);
+    // Prevent unrealistically large variable sizes in shaders.  This works around driver bugs
+    // around int-size limits (such as 2GB).  The limits are generously large enough that no real
+    // shader should ever hit it.
+    return true;
 }
 
 bool TCompiler::Init(const ShBuiltInResources &resources)
