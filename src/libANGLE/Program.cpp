@@ -3522,6 +3522,8 @@ angle::Result Program::serialize(const Context *context, angle::MemoryBuffer *bi
 
     stream.writeInt(angle::GetANGLESHVersion());
 
+    stream.writeString(context->getRendererString());
+
     // nullptr context is supported when computing binary length.
     if (context)
     {
@@ -3629,6 +3631,13 @@ angle::Result Program::deserialize(const Context *context,
     if (angleSHVersion != angle::GetANGLESHVersion())
     {
         infoLog << "cannot load program binaries across different angle sh version.";
+        return angle::Result::Stop;
+    }
+
+    std::string rendererString = stream.readString();
+    if (rendererString != context->getRendererString())
+    {
+        infoLog << "Cannot load program binary due to changed renderer string.";
         return angle::Result::Stop;
     }
 

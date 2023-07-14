@@ -670,6 +670,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
 
     bool isWebGL() const { return mState.isWebGL(); }
     bool isWebGL1() const { return mState.isWebGL1(); }
+    const char *getRendererString() const { return mRendererString; }
 
     bool isValidBufferBinding(BufferBinding binding) const { return mValidBufferBindings[binding]; }
 

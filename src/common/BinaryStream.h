@@ -249,6 +249,13 @@ class BinaryOutputStream : angle::NonCopyable
         write(v.c_str(), v.length());
     }
 
+    void writeString(const char *v)
+    {
+        size_t len = strlen(v);
+        writeInt(len);
+        write(v, len);
+    }
+
     void writeBytes(const unsigned char *bytes, size_t count) { write(bytes, count); }
 
     void writeBool(bool value)
