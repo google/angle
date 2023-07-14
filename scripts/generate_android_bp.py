@@ -20,10 +20,6 @@ ROOT_TARGETS = [
     "//:libEGL",
 ]
 
-CODEGEN_TARGETS = [
-    "//:libEGL",
-]
-
 MIN_SDK_VERSION = '28'
 TARGET_SDK_VERSION = '33'
 STL = 'libc++_static'
@@ -225,10 +221,6 @@ def gn_deps_to_blueprint_deps(abi, target, build_info):
     header_libs = []
     if 'deps' not in target_info:
         return static_libs, defaults
-
-    if target in CODEGEN_TARGETS:
-        target_name = gn_target_to_blueprint_target(target, target_info)
-        defaults.append(target_name + '_android_codegen')
 
     for dep in target_info['deps']:
         if dep not in target_blockist and (not dep.startswith('//third_party') or any(
@@ -582,17 +574,6 @@ def main():
 
     blueprint_targets = []
 
-    blueprint_targets.append(('bootstrap_go_package', {
-        'name': 'soong-angle-codegen',
-        'pkgPath': 'android/soong/external/angle',
-        'deps': [
-            'blueprint', 'blueprint-pathtools', 'soong', 'soong-android', 'soong-cc',
-            'soong-genrule'
-        ],
-        'srcs': ['scripts/angle_android_codegen.go'],
-        'pluginFor': ['soong_build'],
-    }))
-
     blueprint_targets.append((
         'cc_defaults',
         {
@@ -609,12 +590,7 @@ def main():
         }))
 
     for target in reversed(targets_to_write.keys()):
-        blueprint_type, bp = gn_target_to_blueprint(target, build_info)
-        if target in CODEGEN_TARGETS:
-            blueprint_targets.append(('angle_android_codegen', {
-                'name': bp['name'] + '_android_codegen',
-            }))
-        blueprint_targets.append((blueprint_type, bp))
+        blueprint_targets.append(gn_target_to_blueprint(target, build_info))
 
     # Add license build rules
     blueprint_targets.append(('package', {
