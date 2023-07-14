@@ -932,7 +932,6 @@ class RendererVk : angle::NonCopyable
     VkDeviceSize mMaxVertexAttribStride;
     uint32_t mDefaultUniformBufferSize;
     VkDevice mDevice;
-    AtomicSerialFactory mShaderSerialFactory;
     VkDeviceSize mMaxCopyBytesUsingCPUWhenPreservingBufferData;
 
     bool mDeviceLost;
