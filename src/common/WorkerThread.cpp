@@ -10,6 +10,8 @@
 
 #include "common/WorkerThread.h"
 
+#include "common/angleutils.h"
+
 // Controls if our threading code uses std::async or falls back to single-threaded operations.
 // Note that we can't easily use std::async in UWPs due to UWP threading restrictions.
 #if !defined(ANGLE_STD_ASYNC_WORKERS) && !defined(ANGLE_ENABLE_WINDOWS_UWP)
@@ -260,6 +262,7 @@ class DelegateWorkerTask
     std::shared_ptr<AsyncWaitableEvent> mWaitable;
 };
 
+ANGLE_NO_SANITIZE_CFI_ICALL
 std::shared_ptr<WaitableEvent> DelegateWorkerPool::postWorkerTask(std::shared_ptr<Closure> task)
 {
     // Thread safety: This function is thread-safe because the |postWorkerTask| platform method is
