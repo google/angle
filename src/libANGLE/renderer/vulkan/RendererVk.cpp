@@ -208,9 +208,6 @@ constexpr const char *kSkippedMessages[] = {
     // framebuffer that's accessed by the command buffer is identically laid out.
     // http://anglebug.com/6811
     "VUID-vkCmdExecuteCommands-pCommandBuffers-00099",
-    // http://anglebug.com/7105
-    "VUID-vkCmdDraw-None-06538",
-    "VUID-vkCmdDrawIndexed-None-06538",
     // http://anglebug.com/7325
     "VUID-vkCmdBindVertexBuffers2-pStrides-06209",
     // http://anglebug.com/7729
@@ -232,11 +229,7 @@ constexpr const char *kSkippedMessages[] = {
     // http://anglebug.com/8119
     "VUID-VkGraphicsPipelineCreateInfo-Input-07904",
     "VUID-VkGraphicsPipelineCreateInfo-Input-07905",
-    "VUID-vkCmdDraw-None-02859",
-    "VUID-vkCmdDrawIndexed-None-02859",
     "VUID-vkCmdDrawIndexed-None-07835",
-    "VUID-vkCmdDrawIndexedIndirect-None-02859",
-    "VUID-vkCmdDrawIndirect-None-02859",
     "VUID-VkGraphicsPipelineCreateInfo-Input-08733",
     // http://anglebug.com/8151
     "VUID-vkCmdDraw-None-07844",
