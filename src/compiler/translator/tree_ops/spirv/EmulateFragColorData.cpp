@@ -27,8 +27,12 @@ namespace
 class EmulateFragColorDataTraverser : public TIntermTraverser
 {
   public:
-    EmulateFragColorDataTraverser(TCompiler *compiler, TSymbolTable *symbolTable)
-        : TIntermTraverser(true, false, false, symbolTable), mResources(compiler->getResources())
+    EmulateFragColorDataTraverser(TCompiler *compiler,
+                                  TSymbolTable *symbolTable,
+                                  bool hasGLSecondaryFragData)
+        : TIntermTraverser(true, false, false, symbolTable),
+          mResources(compiler->getResources()),
+          mHasGLSecondaryFragData(hasGLSecondaryFragData)
     {}
 
     void visitSymbol(TIntermSymbol *symbol) override
@@ -70,6 +74,14 @@ class EmulateFragColorDataTraverser : public TIntermTraverser
         }
 
         TType *outputType = new TType(type);
+        // The total number of color attachments is limited to MaxDualSourceDrawBuffers when
+        // dual-source blending is used in the shader. As such resize gl_FragData appropriately when
+        // it is redeclared in a shader that uses gl_SecondaryFragData.
+        if (type.getQualifier() == EvqFragData && mHasGLSecondaryFragData)
+        {
+            outputType->setArraySize(0, mResources.MaxDualSourceDrawBuffers);
+        }
+
         outputType->setQualifier(EvqFragmentOut);
         if (index > 0)
         {
@@ -106,14 +118,18 @@ class EmulateFragColorDataTraverser : public TIntermTraverser
 
   private:
     const ShBuiltInResources &mResources;
+    bool mHasGLSecondaryFragData;
 
     // A map of already replaced built-in variables.
     VariableReplacementMap mVariableMap;
 };
 
-bool EmulateFragColorDataImpl(TCompiler *compiler, TIntermBlock *root, TSymbolTable *symbolTable)
+bool EmulateFragColorDataImpl(TCompiler *compiler,
+                              TIntermBlock *root,
+                              TSymbolTable *symbolTable,
+                              bool hasGLSecondaryFragData)
 {
-    EmulateFragColorDataTraverser traverser(compiler, symbolTable);
+    EmulateFragColorDataTraverser traverser(compiler, symbolTable, hasGLSecondaryFragData);
     root->traverse(&traverser);
     if (!traverser.updateTree(compiler, root))
     {
@@ -125,7 +141,10 @@ bool EmulateFragColorDataImpl(TCompiler *compiler, TIntermBlock *root, TSymbolTa
 }
 }  // anonymous namespace
 
-bool EmulateFragColorData(TCompiler *compiler, TIntermBlock *root, TSymbolTable *symbolTable)
+bool EmulateFragColorData(TCompiler *compiler,
+                          TIntermBlock *root,
+                          TSymbolTable *symbolTable,
+                          bool hasGLSecondaryFragData)
 {
     if (compiler->getShaderType() != GL_FRAGMENT_SHADER)
     {
@@ -136,7 +155,7 @@ bool EmulateFragColorData(TCompiler *compiler, TIntermBlock *root, TSymbolTable 
     // momentarily disabled.
     bool enableValidateVariableReferences = compiler->disableValidateVariableReferences();
 
-    bool result = EmulateFragColorDataImpl(compiler, root, symbolTable);
+    bool result = EmulateFragColorDataImpl(compiler, root, symbolTable, hasGLSecondaryFragData);
 
     compiler->restoreValidateVariableReferences(enableValidateVariableReferences);
     return result && compiler->validateAST(root);

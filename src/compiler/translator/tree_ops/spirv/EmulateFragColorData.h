@@ -20,7 +20,8 @@ class TSymbolTable;
 
 [[nodiscard]] bool EmulateFragColorData(TCompiler *compiler,
                                         TIntermBlock *root,
-                                        TSymbolTable *symbolTable);
+                                        TSymbolTable *symbolTable,
+                                        bool hasGLSecondaryFragData);
 }  // namespace sh
 
 #endif  // COMPILER_TRANSLATOR_TREEOPS_SPIRV_EMULATEFRAGCOLORDATA_H_
