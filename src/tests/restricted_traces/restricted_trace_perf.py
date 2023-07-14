@@ -620,6 +620,20 @@ def main():
 
     logging.basicConfig(level=args.log.upper())
 
+    run_adb_command('root')
+
+    try:
+        run_traces(args)
+    finally:
+        # Clean up settings, including in case of exceptions (including Ctrl-C)
+        run_adb_command('shell settings delete global angle_debug_package')
+        run_adb_command('shell settings delete global angle_gl_driver_selection_pkgs')
+        run_adb_command('shell settings delete global angle_gl_driver_selection_values')
+
+    return 0
+
+
+def run_traces(args):
     # Load trace names
     with open(os.path.join(DEFAULT_TEST_DIR, DEFAULT_TEST_JSON)) as f:
         traces = json.loads(f.read())
@@ -681,8 +695,6 @@ def main():
                column_width['gpu_mem_sustained'], 'gpu_mem_sustained',
                column_width['gpu_mem_peak'], 'gpu_mem_peak', column_width['proc_mem_median'],
                'proc_mem_median', column_width['proc_mem_peak'], 'proc_mem_peak'))
-
-    run_adb_command('root')
 
     if args.power:
         starting_power = GPUPowerStats()
@@ -1000,13 +1012,6 @@ def main():
             percent(data["vulkan"][17]),
             percent(safe_divide(data["native"][16], data["vulkan"][16]))
         ])
-
-    # Clean up settings
-    run_adb_command('shell settings delete global angle_debug_package')
-    run_adb_command('shell settings delete global angle_gl_driver_selection_pkgs')
-    run_adb_command('shell settings delete global angle_gl_driver_selection_values')
-
-    return 0
 
 
 if __name__ == '__main__':
