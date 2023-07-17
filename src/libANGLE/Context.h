@@ -124,6 +124,7 @@ class ErrorSet : angle::NonCopyable
   private:
     void setContextLost();
     void pushError(GLenum errorCode);
+    std::unique_lock<std::mutex> getLockIfNotAlready();
 
     // Non-atomic members of this class are protected by a mutex.  This is to allow errors to be
     // safely set by entry points that don't hold a lock.  Note that other contexts may end up
