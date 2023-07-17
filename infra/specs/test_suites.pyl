@@ -184,6 +184,8 @@
       'angle_deqp_gles2_metal_tests': {
         'args': [
           '--use-angle=metal',
+          # Flaky crashes. http://anglebug.com/6570
+          '--flaky-retries=2',
         ],
         'merge': {
           'script': '//scripts/angle_deqp_test_merge.py',
@@ -414,7 +416,7 @@
       'angle_deqp_gles3_metal_tests': {
         'args': [
           '--use-angle=metal',
-          # Flakiness on multiple configs. http://anglebug.com/6019
+          # Flaky crashes. http://anglebug.com/6570
           '--flaky-retries=2',
         ],
         'merge': {

@@ -4227,7 +4227,8 @@
       },
       {
         "args": [
-          "--use-angle=metal"
+          "--use-angle=metal",
+          "--flaky-retries=2"
         ],
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
@@ -4442,7 +4443,8 @@
       },
       {
         "args": [
-          "--use-angle=metal"
+          "--use-angle=metal",
+          "--flaky-retries=2"
         ],
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
@@ -4652,7 +4654,8 @@
       },
       {
         "args": [
-          "--use-angle=metal"
+          "--use-angle=metal",
+          "--flaky-retries=2"
         ],
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
