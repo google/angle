@@ -210,27 +210,41 @@ def _GetDeviceApkPath():
     return device_apk_path
 
 
+def _LocalFileHash(local_path, gz_tail_size):
+    h = hashlib.sha256()
+    with open(local_path, 'rb') as f:
+        if local_path.endswith('.gz'):
+            # equivalent of tail -c {gz_tail_size}
+            offset = os.path.getsize(local_path) - gz_tail_size
+            if offset > 0:
+                f.seek(offset)
+        for data in iter(lambda: f.read(65536), b''):
+            h.update(data)
+    return h.hexdigest()
+
+
 def _CompareHashes(local_path, device_path):
+    # The last 8 bytes of gzip contain CRC-32 and the initial file size and the preceding
+    # bytes should be affected by changes in the middle if we happen to run into a collision
+    gz_tail_size = 4096
+
+    if local_path.endswith('.gz'):
+        cmd = 'test -f {path} && tail -c {gz_tail_size} {path} | sha256sum -b || true'.format(
+            path=device_path, gz_tail_size=gz_tail_size)
+    else:
+        cmd = 'test -f {path} && sha256sum -b {path} || true'.format(path=device_path)
+
     if device_path.startswith('/data'):
         # Use run-as for files that reside on /data, which aren't accessible without root
-        device_hash = _AdbShell('run-as ' + TEST_PACKAGE_NAME + ' sha256sum -b ' + device_path +
-                                ' 2> /dev/null || true').decode().strip()
-    else:
-        device_hash = _AdbShell('sha256sum -b ' + device_path +
-                                ' 2> /dev/null || true').decode().strip()
+        cmd = "run-as {TEST_PACKAGE_NAME} sh -c '{cmd}'".format(
+            TEST_PACKAGE_NAME=TEST_PACKAGE_NAME, cmd=cmd)
+
+    device_hash = _AdbShell(cmd).decode().strip()
     if not device_hash:
         logging.debug('_CompareHashes: File not found on device')
         return False  # file not on device
 
-    h = hashlib.sha256()
-    try:
-        with open(local_path, 'rb') as f:
-            for data in iter(lambda: f.read(65536), b''):
-                h.update(data)
-    except Exception as e:
-        logging.error('An error occurred in _CompareHashes: %s' % e)
-
-    return h.hexdigest() == device_hash
+    return _LocalFileHash(local_path, gz_tail_size) == device_hash
 
 
 def _PrepareTestSuite(suite_name):
