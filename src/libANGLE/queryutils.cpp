@@ -372,6 +372,9 @@ void QueryTexParameterBase(const Context *context,
         case GL_TEXTURE_PROTECTED_EXT:
             *params = CastFromGLintStateValue<ParamType>(pname, texture->hasProtectedContent());
             break;
+        case GL_TEXTURE_TILING_EXT:
+            *params = CastFromGLintStateValue<ParamType>(pname, texture->getTilingMode());
+            break;
         default:
             UNREACHABLE();
             break;
@@ -487,6 +490,9 @@ void SetTexParameterBase(Context *context, Texture *texture, GLenum pname, const
             break;
         case GL_RENDERABILITY_VALIDATION_ANGLE:
             texture->setRenderabilityValidation(context, (params[0] == GL_TRUE));
+            break;
+        case GL_TEXTURE_TILING_EXT:
+            texture->setTilingMode(context, ConvertToGLenum(pname, params[0]));
             break;
         default:
             UNREACHABLE();

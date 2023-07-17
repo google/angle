@@ -296,12 +296,12 @@ class RenderPassDesc;
 #if ANGLE_USE_CUSTOM_VULKAN_OUTSIDE_RENDER_PASS_CMD_BUFFERS
 using OutsideRenderPassCommandBuffer = priv::SecondaryCommandBuffer;
 #else
-using OutsideRenderPassCommandBuffer         = VulkanSecondaryCommandBuffer;
+using OutsideRenderPassCommandBuffer = VulkanSecondaryCommandBuffer;
 #endif
 #if ANGLE_USE_CUSTOM_VULKAN_RENDER_PASS_CMD_BUFFERS
 using RenderPassCommandBuffer = priv::SecondaryCommandBuffer;
 #else
-using RenderPassCommandBuffer                = VulkanSecondaryCommandBuffer;
+using RenderPassCommandBuffer = VulkanSecondaryCommandBuffer;
 #endif
 
 struct SecondaryCommandPools
@@ -1178,6 +1178,8 @@ void GetExtentsAndLayerCount(gl::TextureType textureType,
 
 vk::LevelIndex GetLevelIndex(gl::LevelIndex levelGL, gl::LevelIndex baseLevel);
 
+VkImageTiling GetTilingMode(gl::TilingMode tilingMode);
+
 }  // namespace gl_vk
 
 namespace vk_gl
@@ -1322,12 +1324,12 @@ enum class RenderPassClosureReason
 #define ANGLE_VK_VERSION_MAJOR_NVIDIA(version) (((uint32_t)(version) >> 22) & 0x3ff)
 #define ANGLE_VK_VERSION_MINOR_NVIDIA(version) (((uint32_t)(version) >> 14) & 0xff)
 #define ANGLE_VK_VERSION_SUB_MINOR_NVIDIA(version) (((uint32_t)(version) >> 6) & 0xff)
-#define ANGLE_VK_VERSION_PATCH_NVIDIA(version) ((uint32_t)(version)&0x3f)
+#define ANGLE_VK_VERSION_PATCH_NVIDIA(version) ((uint32_t)(version) & 0x3f)
 
 // Similarly for Intel on Windows:
 // Major: 18
 // Minor: 14
 #define ANGLE_VK_VERSION_MAJOR_WIN_INTEL(version) (((uint32_t)(version) >> 14) & 0x3ffff)
-#define ANGLE_VK_VERSION_MINOR_WIN_INTEL(version) ((uint32_t)(version)&0x3fff)
+#define ANGLE_VK_VERSION_MINOR_WIN_INTEL(version) ((uint32_t)(version) & 0x3fff)
 
 #endif  // LIBANGLE_RENDERER_VULKAN_VK_UTILS_H_
