@@ -30,6 +30,37 @@ namespace egl
 {
 using ContextMap = angle::HashMap<GLuint, gl::Context *>;
 
+class ShareGroupState final : angle::NonCopyable
+{
+  public:
+    ShareGroupState();
+    ~ShareGroupState();
+
+    const ContextMap &getContexts() const { return mContexts; }
+    void addSharedContext(gl::Context *context);
+    void removeSharedContext(gl::Context *context);
+
+    bool hasAnyContextWithRobustness() const { return mAnyContextWithRobustness; }
+    bool hasAnyContextWithDisplayTextureShareGroup() const
+    {
+        return mAnyContextWithDisplayTextureShareGroup;
+    }
+
+  private:
+    // The list of contexts within the share group
+    ContextMap mContexts;
+
+    // Whether any context in the share group has robustness enabled.  If any context in the share
+    // group is robust, any program created in any context of the share group must have robustness
+    // enabled.  This is because programs are shared between the share group contexts.
+    bool mAnyContextWithRobustness;
+
+    // Whether any context in the share group uses display shared textures.  This functionality is
+    // provided by ANGLE_display_texture_share_group and allows textures to be shared between
+    // contexts that are not in the same share group.
+    bool mAnyContextWithDisplayTextureShareGroup;
+};
+
 class ShareGroup final : angle::NonCopyable
 {
   public:
@@ -47,11 +78,9 @@ class ShareGroup final : angle::NonCopyable
 
     void finishAllContexts();
 
-    const ContextMap &getContexts() const { return mContexts; }
+    const ContextMap &getContexts() const { return mState.getContexts(); }
     void addSharedContext(gl::Context *context);
     void removeSharedContext(gl::Context *context);
-
-    size_t getShareGroupContextCount() const { return mContexts.size(); }
 
   protected:
     ~ShareGroup();
@@ -64,8 +93,7 @@ class ShareGroup final : angle::NonCopyable
     // Note: we use a raw pointer here so we can exclude frame capture sources from the build.
     std::unique_ptr<angle::FrameCaptureShared> mFrameCaptureShared;
 
-    // The list of contexts within the share group
-    ContextMap mContexts;
+    ShareGroupState mState;
 };
 
 }  // namespace egl

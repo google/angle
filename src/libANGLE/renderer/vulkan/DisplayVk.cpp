@@ -236,9 +236,9 @@ ImageImpl *DisplayVk::createImage(const egl::ImageState &state,
     return new ImageVk(state, context);
 }
 
-ShareGroupImpl *DisplayVk::createShareGroup()
+ShareGroupImpl *DisplayVk::createShareGroup(const egl::ShareGroupState &state)
 {
-    return new ShareGroupVk();
+    return new ShareGroupVk(state);
 }
 
 bool DisplayVk::isConfigFormatSupported(VkFormat format) const

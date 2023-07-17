@@ -7832,7 +7832,7 @@ void FrameCaptureShared::captureCall(gl::Context *context, CallCapture &&inCall,
         // If the context ID has changed, then we need to inject an eglMakeCurrent() call. Only do
         // this if there is more than 1 context in the share group to avoid unnecessary
         // eglMakeCurrent() calls.
-        size_t contextCount = context->getShareGroup()->getShareGroupContextCount();
+        size_t contextCount = context->getShareGroup()->getContexts().size();
         if (contextCount > 1 && mLastContextId != context->id())
         {
             // Inject the eglMakeCurrent() call. Ignore the display and surface.

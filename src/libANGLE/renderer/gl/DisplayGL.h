@@ -22,7 +22,10 @@ namespace rx
 {
 
 class ShareGroupGL : public ShareGroupImpl
-{};
+{
+  public:
+    ShareGroupGL(const egl::ShareGroupState &state) : ShareGroupImpl(state) {}
+};
 
 class RendererGL;
 
@@ -48,7 +51,7 @@ class DisplayGL : public DisplayImpl
     StreamProducerImpl *createStreamProducerD3DTexture(egl::Stream::ConsumerType consumerType,
                                                        const egl::AttributeMap &attribs) override;
 
-    ShareGroupImpl *createShareGroup() override;
+    ShareGroupImpl *createShareGroup(const egl::ShareGroupState &state) override;
 
     egl::Error makeCurrent(egl::Display *display,
                            egl::Surface *drawSurface,

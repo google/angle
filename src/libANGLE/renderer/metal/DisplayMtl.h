@@ -31,7 +31,10 @@ class Surface;
 namespace rx
 {
 class ShareGroupMtl : public ShareGroupImpl
-{};
+{
+  public:
+    ShareGroupMtl(const egl::ShareGroupState &state) : ShareGroupImpl(state) {}
+};
 
 class ContextMtl;
 
@@ -89,7 +92,7 @@ class DisplayMtl : public DisplayImpl
     StreamProducerImpl *createStreamProducerD3DTexture(egl::Stream::ConsumerType consumerType,
                                                        const egl::AttributeMap &attribs) override;
 
-    ShareGroupImpl *createShareGroup() override;
+    ShareGroupImpl *createShareGroup(const egl::ShareGroupState &state) override;
 
     ExternalImageSiblingImpl *createExternalImageSibling(const gl::Context *context,
                                                          EGLenum target,

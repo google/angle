@@ -194,12 +194,12 @@ angle::Result SyncHelper::submitSyncIfDeferred(ContextVk *contextVk, RenderPassC
     //
     // Deferring the submission is restricted to non-EGL sync objects, so it's sufficient to ensure
     // that the contexts in the share group issue their deferred flushes.
-    const ContextVkSet &shareContextSet = contextVk->getShareGroup()->getContexts();
-    for (ContextVk *ctx : shareContextSet)
+    for (auto context : contextVk->getShareGroup()->getContexts())
     {
-        if (ctx->hasUnsubmittedUse(mUse))
+        ContextVk *sharedContextVk = vk::GetImpl(context.second);
+        if (sharedContextVk->hasUnsubmittedUse(mUse))
         {
-            ANGLE_TRY(ctx->flushCommandsAndEndRenderPassIfDeferredSyncInit(reason));
+            ANGLE_TRY(sharedContextVk->flushCommandsAndEndRenderPassIfDeferredSyncInit(reason));
             break;
         }
     }

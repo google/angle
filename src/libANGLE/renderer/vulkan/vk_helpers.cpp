@@ -5775,10 +5775,9 @@ void ImageHelper::finalizeImageLayoutInShareContexts(RendererVk *renderer,
 {
     if (contextVk && mImageSerial.valid())
     {
-        const ContextVkSet &shareContextSet = contextVk->getShareGroup()->getContexts();
-        for (ContextVk *ctx : shareContextSet)
+        for (auto context : contextVk->getShareGroup()->getContexts())
         {
-            ctx->finalizeImageLayout(this, imageSiblingSerial);
+            vk::GetImpl(context.second)->finalizeImageLayout(this, imageSiblingSerial);
         }
     }
 }

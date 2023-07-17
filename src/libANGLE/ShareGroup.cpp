@@ -24,38 +24,37 @@
 
 namespace egl
 {
-// ShareGroup
-ShareGroup::ShareGroup(rx::EGLImplFactory *factory)
-    : mRefCount(1),
-      mImplementation(factory->createShareGroup()),
-      mFrameCaptureShared(new angle::FrameCaptureShared)
+// ShareGroupState
+ShareGroupState::ShareGroupState()
+    : mAnyContextWithRobustness(false), mAnyContextWithDisplayTextureShareGroup(false)
 {}
+ShareGroupState::~ShareGroupState() = default;
 
-void ShareGroup::finishAllContexts()
-{
-    for (auto shareContext : mContexts)
-    {
-        if (shareContext.second->hasBeenCurrent() && !shareContext.second->isDestroyed())
-        {
-            shareContext.second->finish();
-        }
-    }
-}
-
-void ShareGroup::addSharedContext(gl::Context *context)
+void ShareGroupState::addSharedContext(gl::Context *context)
 {
     mContexts.insert(std::pair(context->id().value, context));
 
     if (context->isRobustnessEnabled())
     {
-        mImplementation->onRobustContextAdd();
+        mAnyContextWithRobustness = true;
+    }
+    if (context->getState().hasDisplayTextureShareGroup())
+    {
+        mAnyContextWithDisplayTextureShareGroup = true;
     }
 }
 
-void ShareGroup::removeSharedContext(gl::Context *context)
+void ShareGroupState::removeSharedContext(gl::Context *context)
 {
     mContexts.erase(context->id().value);
 }
+
+// ShareGroup
+ShareGroup::ShareGroup(rx::EGLImplFactory *factory)
+    : mRefCount(1),
+      mImplementation(factory->createShareGroup(mState)),
+      mFrameCaptureShared(new angle::FrameCaptureShared)
+{}
 
 ShareGroup::~ShareGroup()
 {
@@ -78,5 +77,27 @@ void ShareGroup::release(const Display *display)
         }
         delete this;
     }
+}
+
+void ShareGroup::finishAllContexts()
+{
+    for (auto shareContext : mState.getContexts())
+    {
+        if (shareContext.second->hasBeenCurrent() && !shareContext.second->isDestroyed())
+        {
+            shareContext.second->finish();
+        }
+    }
+}
+
+void ShareGroup::addSharedContext(gl::Context *context)
+{
+    mState.addSharedContext(context);
+    mImplementation->onContextAdd();
+}
+
+void ShareGroup::removeSharedContext(gl::Context *context)
+{
+    mState.removeSharedContext(context);
 }
 }  // namespace egl

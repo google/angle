@@ -412,9 +412,9 @@ StreamProducerImpl *DisplayMtl::createStreamProducerD3DTexture(
     return nullptr;
 }
 
-ShareGroupImpl *DisplayMtl::createShareGroup()
+ShareGroupImpl *DisplayMtl::createShareGroup(const egl::ShareGroupState &state)
 {
-    return new ShareGroupMtl();
+    return new ShareGroupMtl(state);
 }
 
 ExternalImageSiblingImpl *DisplayMtl::createExternalImageSibling(const gl::Context *context,

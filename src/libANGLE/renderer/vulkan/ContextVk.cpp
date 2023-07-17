@@ -1215,9 +1215,6 @@ ContextVk::~ContextVk()
 
 void ContextVk::onDestroy(const gl::Context *context)
 {
-    // Remove context from the share group
-    mShareGroupVk->removeContext(this);
-
     // This will not destroy any resources. It will release them to be collected after finish.
     mIncompleteTextures.onDestroy(context);
 
@@ -1434,15 +1431,12 @@ angle::Result ContextVk::initialize()
     // mutable textures should be flushed.
     if (isEligibleForMutableTextureFlush())
     {
-        ASSERT(mShareGroupVk->getContextCount() == 1);
+        ASSERT(mShareGroupVk->getContexts().size() == 1);
         for (auto context : mShareGroupVk->getContexts())
         {
-            ANGLE_TRY(context->flushOutsideRenderPassCommands());
+            ANGLE_TRY(vk::GetImpl(context.second)->flushOutsideRenderPassCommands());
         }
     }
-
-    // Add context into the share group
-    mShareGroupVk->addContext(this);
 
     // Allocate queueSerial index and generate queue serial for commands.
     ANGLE_TRY(allocateQueueSerialIndex());

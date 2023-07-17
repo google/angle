@@ -26,6 +26,7 @@
 #include "libANGLE/MemoryProgramCache.h"
 #include "libANGLE/MemoryShaderCache.h"
 #include "libANGLE/Observer.h"
+#include "libANGLE/ShareGroup.h"
 #include "libANGLE/Version.h"
 #include "platform/Feature.h"
 #include "platform/autogen/FrontendFeatures_autogen.h"
@@ -57,7 +58,6 @@ class Surface;
 class Sync;
 class Thread;
 
-using ContextMap = angle::HashMap<GLuint, gl::Context *>;
 using SurfaceMap = angle::HashMap<GLuint, Surface *>;
 using ThreadSet  = angle::HashSet<Thread *>;
 
