@@ -17,6 +17,7 @@
 #include "libANGLE/Display.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/Semaphore.h"
+#include "libANGLE/ShareGroup.h"
 #include "libANGLE/Surface.h"
 #include "libANGLE/angletypes.h"
 #include "libANGLE/renderer/renderer_utils.h"

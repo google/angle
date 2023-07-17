@@ -11,6 +11,7 @@
 
 #include "libANGLE/Device.h"
 #include "libANGLE/renderer/DisplayImpl.h"
+#include "libANGLE/renderer/ShareGroupImpl.h"
 
 #include "libANGLE/renderer/d3d/RendererD3D.h"
 

@@ -11,6 +11,7 @@
 #define LIBANGLE_RENDERER_NULL_DISPLAYNULL_H_
 
 #include "libANGLE/renderer/DisplayImpl.h"
+#include "libANGLE/renderer/ShareGroupImpl.h"
 
 namespace rx
 {

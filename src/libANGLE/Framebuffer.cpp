@@ -19,6 +19,7 @@
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/PixelLocalStorage.h"
 #include "libANGLE/Renderbuffer.h"
+#include "libANGLE/ShareGroup.h"
 #include "libANGLE/Surface.h"
 #include "libANGLE/Texture.h"
 #include "libANGLE/angletypes.h"

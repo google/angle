@@ -10,6 +10,7 @@
 #define LIBANGLE_RENDERER_GL_DISPLAYGL_H_
 
 #include "libANGLE/renderer/DisplayImpl.h"
+#include "libANGLE/renderer/ShareGroupImpl.h"
 #include "libANGLE/renderer/gl/FunctionsGL.h"
 
 namespace egl
