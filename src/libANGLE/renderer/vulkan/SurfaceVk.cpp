@@ -2040,8 +2040,16 @@ angle::Result WindowSurfaceVk::prePresentSubmit(ContextVk *contextVk,
     vk::Framebuffer &currentFramebuffer = chooseFramebuffer(SwapchainResolveMode::Disabled);
 
     // Make sure deferred clears are applied, if any.
-    ANGLE_TRY(
-        image.image->flushStagedUpdates(contextVk, gl::LevelIndex(0), gl::LevelIndex(1), 0, 1, {}));
+    if (mColorImageMS.valid())
+    {
+        ANGLE_TRY(mColorImageMS.flushStagedUpdates(contextVk, gl::LevelIndex(0), gl::LevelIndex(1),
+                                                   0, 1, {}));
+    }
+    else
+    {
+        ANGLE_TRY(image.image->flushStagedUpdates(contextVk, gl::LevelIndex(0), gl::LevelIndex(1),
+                                                  0, 1, {}));
+    }
 
     // If user calls eglSwapBuffer without use it, image may already in Present layout (if swap
     // without any draw) or Undefined (first time present). In this case, if
