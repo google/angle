@@ -148,10 +148,10 @@ bool IsMaliG31OrOlder(const FunctionsGL *functions)
     return number != 0 && number <= 31;
 }
 
-bool IsMaliG72OrG76(const FunctionsGL *functions)
+bool IsMaliG72OrG76OrG51(const FunctionsGL *functions)
 {
     int number = getMaliGNumber(functions);
-    return number == 72 || number == 76;
+    return number == 72 || number == 76 || number == 51;
 }
 
 bool IsMaliValhall(const FunctionsGL *functions)
@@ -2567,7 +2567,7 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     ANGLE_FEATURE_CONDITION(features, bindCompleteFramebufferForTimerQueries, isMali);
 
     // https://crbug.com/1434317
-    ANGLE_FEATURE_CONDITION(features, disableClipControl, IsMaliG72OrG76(functions));
+    ANGLE_FEATURE_CONDITION(features, disableClipControl, IsMaliG72OrG76OrG51(functions));
 
     // http://anglebug.com/8172
     ANGLE_FEATURE_CONDITION(features, disableBaseInstanceVertex, IsMaliValhall(functions));
