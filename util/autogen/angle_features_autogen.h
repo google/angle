@@ -18,6 +18,7 @@ enum class Feature
 {
     AddAndTrueToLoopCondition,
     AddMockTextureNoRenderTarget,
+    AdjustClearColorPrecision,
     AdjustSrcDstRegionForBlitFramebuffer,
     AllocateNonZeroMemory,
     AllowAstcFormats,

@@ -18,6 +18,7 @@ namespace
 constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::AddAndTrueToLoopCondition, "addAndTrueToLoopCondition"},
     {Feature::AddMockTextureNoRenderTarget, "addMockTextureNoRenderTarget"},
+    {Feature::AdjustClearColorPrecision, "adjustClearColorPrecision"},
     {Feature::AdjustSrcDstRegionForBlitFramebuffer, "adjustSrcDstRegionForBlitFramebuffer"},
     {Feature::AllocateNonZeroMemory, "allocateNonZeroMemory"},
     {Feature::AllowAstcFormats, "allowAstcFormats"},

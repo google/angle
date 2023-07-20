@@ -4462,6 +4462,9 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     ANGLE_FEATURE_CONDITION(&mFeatures, emulateDithering,
                             IsAndroid() && !mFeatures.supportsLegacyDithering.enabled);
 
+    ANGLE_FEATURE_CONDITION(&mFeatures, adjustClearColorPrecision,
+                            IsAndroid() && mFeatures.supportsLegacyDithering.enabled && isARM);
+
     // http://anglebug.com/6872
     // On ARM hardware, framebuffer-fetch-like behavior on Vulkan is already coherent, so we can
     // expose the coherent version of the GL extension despite unofficial Vulkan support.

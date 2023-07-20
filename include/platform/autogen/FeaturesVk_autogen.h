@@ -782,6 +782,13 @@ struct FeaturesVk : FeatureSetBase
         &members, "http://anglebug.com/6953"
     };
 
+    FeatureInfo adjustClearColorPrecision = {
+        "adjustClearColorPrecision",
+        FeatureCategory::VulkanWorkarounds,
+        "Adjust normalized clear color precision based on framebuffer color channel bits count",
+        &members, "https://issuetracker.google.com/292282210"
+    };
+
     FeatureInfo emulateAdvancedBlendEquations = {
         "emulateAdvancedBlendEquations",
         FeatureCategory::VulkanFeatures,
