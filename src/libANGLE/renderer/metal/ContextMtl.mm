@@ -1907,22 +1907,16 @@ mtl::RenderCommandEncoder *ContextMtl::getRenderPassCommandEncoder(const mtl::Re
     const mtl::ContextDevice &metalDevice = getMetalDevice();
     if (mtl::DeviceHasMaximumRenderTargetSize(metalDevice))
     {
-        ANGLE_MTL_OBJC_SCOPE
+        NSUInteger maxSize = mtl::GetMaxRenderTargetSizeForDeviceInBytes(metalDevice);
+        NSUInteger renderTargetSize =
+            ComputeTotalSizeUsedForMTLRenderPassDescriptor(desc, this, metalDevice);
+        if (renderTargetSize > maxSize)
         {
-            MTLRenderPassDescriptor *objCDesc = [MTLRenderPassDescriptor renderPassDescriptor];
-            desc.convertToMetalDesc(objCDesc, getNativeCaps().maxColorAttachments);
-            NSUInteger maxSize = mtl::GetMaxRenderTargetSizeForDeviceInBytes(metalDevice);
-            NSUInteger renderTargetSize =
-                ComputeTotalSizeUsedForMTLRenderPassDescriptor(objCDesc, this, metalDevice);
-            if (renderTargetSize > maxSize)
-            {
-                std::stringstream errorStream;
-                errorStream << "This set of render targets requires " << renderTargetSize
-                            << " bytes of pixel storage. This device supports " << maxSize
-                            << " bytes.";
-                ANGLE_MTL_HANDLE_ERROR(this, errorStream.str().c_str(), GL_INVALID_OPERATION);
-                return nil;
-            }
+            std::stringstream errorStream;
+            errorStream << "This set of render targets requires " << renderTargetSize
+                        << " bytes of pixel storage. This device supports " << maxSize << " bytes.";
+            ANGLE_MTL_HANDLE_ERROR(this, errorStream.str().c_str(), GL_INVALID_OPERATION);
+            return nullptr;
         }
     }
     return &mRenderEncoder.restart(desc, getNativeCaps().maxColorAttachments);

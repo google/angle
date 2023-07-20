@@ -1577,7 +1577,24 @@ static NSUInteger getNextLocationForFormat(const FormatCaps &caps,
     return currentRenderTargetSize;
 }
 
-NSUInteger ComputeTotalSizeUsedForMTLRenderPassDescriptor(const MTLRenderPassDescriptor *descriptor,
+static NSUInteger getNextLocationForAttachment(const mtl::RenderPassAttachmentDesc &attachment,
+                                               const Context *context,
+                                               NSUInteger currentRenderTargetSize)
+{
+    mtl::TextureRef texture =
+        attachment.implicitMSTexture ? attachment.implicitMSTexture : attachment.texture;
+
+    if (texture)
+    {
+        MTLPixelFormat pixelFormat = texture->pixelFormat();
+        bool isMsaa                = texture->samples();
+        const FormatCaps &caps     = context->getDisplay()->getNativeFormatCaps(pixelFormat);
+        currentRenderTargetSize = getNextLocationForFormat(caps, isMsaa, currentRenderTargetSize);
+    }
+    return currentRenderTargetSize;
+}
+
+NSUInteger ComputeTotalSizeUsedForMTLRenderPassDescriptor(const mtl::RenderPassDesc &descriptor,
                                                           const Context *context,
                                                           const mtl::ContextDevice &device)
 {
@@ -1585,48 +1602,25 @@ NSUInteger ComputeTotalSizeUsedForMTLRenderPassDescriptor(const MTLRenderPassDes
 
     for (NSUInteger i = 0; i < GetMaxNumberOfRenderTargetsForDevice(device); i++)
     {
-        MTLPixelFormat pixelFormat = descriptor.colorAttachments[i].texture.pixelFormat;
-        bool isMsaa                = descriptor.colorAttachments[i].texture.sampleCount > 1;
-        if (pixelFormat != MTLPixelFormatInvalid)
-        {
-            const FormatCaps &caps = context->getDisplay()->getNativeFormatCaps(pixelFormat);
-            currentRenderTargetSize =
-                getNextLocationForFormat(caps, isMsaa, currentRenderTargetSize);
-        }
+        currentRenderTargetSize = getNextLocationForAttachment(descriptor.colorAttachments[i],
+                                                               context, currentRenderTargetSize);
     }
-    if (descriptor.depthAttachment.texture.pixelFormat ==
-        descriptor.stencilAttachment.texture.pixelFormat)
+    if (descriptor.depthAttachment.texture == descriptor.stencilAttachment.texture)
     {
-        bool isMsaa = descriptor.depthAttachment.texture.sampleCount > 1;
-        if (descriptor.depthAttachment.texture.pixelFormat != MTLPixelFormatInvalid)
-        {
-            const FormatCaps &caps = context->getDisplay()->getNativeFormatCaps(
-                descriptor.depthAttachment.texture.pixelFormat);
-            currentRenderTargetSize =
-                getNextLocationForFormat(caps, isMsaa, currentRenderTargetSize);
-        }
+        currentRenderTargetSize = getNextLocationForAttachment(descriptor.depthAttachment, context,
+                                                               currentRenderTargetSize);
     }
     else
     {
-        if (descriptor.depthAttachment.texture.pixelFormat != MTLPixelFormatInvalid)
-        {
-            bool isMsaa            = descriptor.depthAttachment.texture.sampleCount > 1;
-            const FormatCaps &caps = context->getDisplay()->getNativeFormatCaps(
-                descriptor.depthAttachment.texture.pixelFormat);
-            currentRenderTargetSize =
-                getNextLocationForFormat(caps, isMsaa, currentRenderTargetSize);
-        }
-        if (descriptor.stencilAttachment.texture.pixelFormat != MTLPixelFormatInvalid)
-        {
-            bool isMsaa            = descriptor.stencilAttachment.texture.sampleCount > 1;
-            const FormatCaps &caps = context->getDisplay()->getNativeFormatCaps(
-                descriptor.stencilAttachment.texture.pixelFormat);
-            currentRenderTargetSize =
-                getNextLocationForFormat(caps, isMsaa, currentRenderTargetSize);
-        }
+        currentRenderTargetSize = getNextLocationForAttachment(descriptor.depthAttachment, context,
+                                                               currentRenderTargetSize);
+        currentRenderTargetSize = getNextLocationForAttachment(descriptor.stencilAttachment,
+                                                               context, currentRenderTargetSize);
     }
+
     return currentRenderTargetSize;
 }
+
 NSUInteger ComputeTotalSizeUsedForMTLRenderPipelineDescriptor(
     const MTLRenderPipelineDescriptor *descriptor,
     const Context *context,
