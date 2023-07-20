@@ -2020,6 +2020,10 @@ void GenerateCaps(const FunctionsGL *functions,
                                      functions->hasGLESExtension("GL_EXT_clip_control");
     }
 
+    constexpr uint32_t kRequiredClipDistances                = 8;
+    constexpr uint32_t kRequiredCullDistances                = 8;
+    constexpr uint32_t kRequiredCombinedClipAndCullDistances = 8;
+
     // GL_APPLE_clip_distance cannot be implemented on top of GL_EXT_clip_cull_distance,
     // so require either native support or desktop GL.
     extensions->clipDistanceAPPLE = functions->isAtLeastGL(gl::Version(3, 0)) ||
@@ -2027,6 +2031,13 @@ void GenerateCaps(const FunctionsGL *functions,
     if (extensions->clipDistanceAPPLE)
     {
         caps->maxClipDistances = QuerySingleGLInt(functions, GL_MAX_CLIP_DISTANCES_APPLE);
+
+        if (caps->maxClipDistances < kRequiredClipDistances)
+        {
+            WARN() << "Disabling GL_APPLE_clip_distance because only " << caps->maxClipDistances
+                   << " clip distances are supported by the driver.";
+            extensions->clipDistanceAPPLE = false;
+        }
     }
 
     // GL_EXT_clip_cull_distance spec requires shader interface blocks to support
@@ -2042,11 +2053,23 @@ void GenerateCaps(const FunctionsGL *functions,
         caps->maxCullDistances = QuerySingleGLInt(functions, GL_MAX_CULL_DISTANCES_EXT);
         caps->maxCombinedClipAndCullDistances =
             QuerySingleGLInt(functions, GL_MAX_COMBINED_CLIP_AND_CULL_DISTANCES_EXT);
+
+        if (caps->maxClipDistances < kRequiredClipDistances ||
+            caps->maxCullDistances < kRequiredCullDistances ||
+            caps->maxCombinedClipAndCullDistances < kRequiredCombinedClipAndCullDistances)
+        {
+            WARN() << "Disabling GL_EXT_clip_cull_distance because only " << caps->maxClipDistances
+                   << " clip distances, " << caps->maxCullDistances << " cull distances and "
+                   << caps->maxCombinedClipAndCullDistances
+                   << " combined clip/cull distances are supported by the driver.";
+            extensions->clipCullDistanceEXT = false;
+        }
     }
 
     // Same as GL_EXT_clip_cull_distance but with cull distance support being optional.
     extensions->clipCullDistanceANGLE =
-        functions->isAtLeastGL(gl::Version(3, 0)) || extensions->clipCullDistanceEXT;
+        (functions->isAtLeastGL(gl::Version(3, 0)) || extensions->clipCullDistanceEXT) &&
+        caps->maxClipDistances >= kRequiredClipDistances;
     ASSERT(!extensions->clipCullDistanceANGLE || caps->maxClipDistances > 0);
 
     // GL_OES_shader_image_atomic
