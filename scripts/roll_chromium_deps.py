@@ -29,15 +29,12 @@ def FindSrcDirPath():
     # Special cased for ANGLE.
     return os.path.dirname(os.path.abspath(os.path.join(__file__, '..')))
 
-
+# TODO(chromium:1458042): Add buildtools, build,
+# and third_party/libcxx/lib*/trunk paths back once chromium/src
+# is using the new third_party/libcxx/ source repo paths.
 ANGLE_CHROMIUM_DEPS = [
-    'build',
-    'buildtools',
     'buildtools/linux64',
     'buildtools/mac',
-    'buildtools/third_party/libc++/trunk',
-    'buildtools/third_party/libc++abi/trunk',
-    'buildtools/third_party/libunwind/trunk',
     'buildtools/win',
     'testing',
     'third_party/abseil-cpp',
