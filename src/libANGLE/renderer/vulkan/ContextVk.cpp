@@ -5099,6 +5099,9 @@ void ContextVk::updateDither()
         FramebufferVk *framebufferVk = vk::GetImpl(mState.getDrawFramebuffer());
         if (framebufferVk->updateLegacyDither(this))
         {
+            // Can't reactivate: same framebuffer but the render pass desc has changed.
+            mAllowRenderPassToReactivate = false;
+
             onRenderPassFinished(RenderPassClosureReason::LegacyDithering);
         }
     }
