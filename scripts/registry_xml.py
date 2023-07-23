@@ -322,6 +322,7 @@ supported_egl_extensions = [
     "EGL_ANGLE_device_d3d",
     "EGL_ANGLE_display_semaphore_share_group",
     "EGL_ANGLE_display_texture_share_group",
+    "EGL_ANGLE_external_context_and_surface",
     "EGL_ANGLE_feature_control",
     "EGL_ANGLE_ggp_stream_descriptor",
     "EGL_ANGLE_metal_create_context_ownership_identity",

@@ -232,6 +232,12 @@ bool ValidateCreateDeviceANGLE(const ValidationContext *val,
                                const EGLAttrib *attrib_list);
 bool ValidateReleaseDeviceANGLE(const ValidationContext *val, const egl::Device *devicePacked);
 
+// EGL_ANGLE_external_context_and_surface
+bool ValidateAcquireExternalContextANGLE(const ValidationContext *val,
+                                         const egl::Display *dpyPacked);
+bool ValidateReleaseExternalContextANGLE(const ValidationContext *val,
+                                         const egl::Display *dpyPacked);
+
 // EGL_ANGLE_feature_control
 bool ValidateQueryStringiANGLE(const ValidationContext *val,
                                const egl::Display *dpyPacked,

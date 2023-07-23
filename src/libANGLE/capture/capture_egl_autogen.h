@@ -323,6 +323,12 @@ angle::CallCapture CaptureReleaseDeviceANGLE(egl::Thread *thread,
                                              bool isCallValid,
                                              egl::Device *devicePacked,
                                              EGLBoolean returnValue);
+angle::CallCapture CaptureAcquireExternalContextANGLE(egl::Thread *thread,
+                                                      bool isCallValid,
+                                                      egl::Display *dpyPacked);
+angle::CallCapture CaptureReleaseExternalContextANGLE(egl::Thread *thread,
+                                                      bool isCallValid,
+                                                      egl::Display *dpyPacked);
 angle::CallCapture CaptureQueryStringiANGLE(egl::Thread *thread,
                                             bool isCallValid,
                                             egl::Display *dpyPacked,

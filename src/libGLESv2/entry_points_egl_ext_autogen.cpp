@@ -392,6 +392,53 @@ EGLBoolean EGLAPIENTRY EGL_ReleaseDeviceANGLE(EGLDeviceEXT device)
     return returnValue;
 }
 
+// EGL_ANGLE_external_context_and_surface
+void EGLAPIENTRY EGL_AcquireExternalContextANGLE(EGLDisplay dpy)
+{
+
+    Thread *thread = egl::GetCurrentThread();
+    {
+        ANGLE_SCOPED_GLOBAL_LOCK();
+        EGL_EVENT(AcquireExternalContextANGLE, "dpy = 0x%016" PRIxPTR "", (uintptr_t)dpy);
+
+        egl::Display *dpyPacked = PackParam<egl::Display *>(dpy);
+
+        {
+            ANGLE_EGL_SCOPED_CONTEXT_LOCK(AcquireExternalContextANGLE, thread, dpyPacked);
+            ANGLE_EGL_VALIDATE_VOID(thread, AcquireExternalContextANGLE,
+                                    GetDisplayIfValid(dpyPacked), dpyPacked);
+
+            AcquireExternalContextANGLE(thread, dpyPacked);
+        }
+
+        ANGLE_CAPTURE_EGL(AcquireExternalContextANGLE, true, thread, dpyPacked);
+    }
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
+}
+
+void EGLAPIENTRY EGL_ReleaseExternalContextANGLE(EGLDisplay dpy)
+{
+
+    Thread *thread = egl::GetCurrentThread();
+    {
+        ANGLE_SCOPED_GLOBAL_LOCK();
+        EGL_EVENT(ReleaseExternalContextANGLE, "dpy = 0x%016" PRIxPTR "", (uintptr_t)dpy);
+
+        egl::Display *dpyPacked = PackParam<egl::Display *>(dpy);
+
+        {
+            ANGLE_EGL_SCOPED_CONTEXT_LOCK(ReleaseExternalContextANGLE, thread, dpyPacked);
+            ANGLE_EGL_VALIDATE_VOID(thread, ReleaseExternalContextANGLE,
+                                    GetDisplayIfValid(dpyPacked), dpyPacked);
+
+            ReleaseExternalContextANGLE(thread, dpyPacked);
+        }
+
+        ANGLE_CAPTURE_EGL(ReleaseExternalContextANGLE, true, thread, dpyPacked);
+    }
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
+}
+
 // EGL_ANGLE_feature_control
 const char *EGLAPIENTRY EGL_QueryStringiANGLE(EGLDisplay dpy, EGLint name, EGLint index)
 {

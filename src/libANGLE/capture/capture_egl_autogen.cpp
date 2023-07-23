@@ -1064,6 +1064,28 @@ CallCapture CaptureReleaseDeviceANGLE(egl::Thread *thread,
     return CallCapture(angle::EntryPoint::EGLReleaseDeviceANGLE, std::move(paramBuffer));
 }
 
+CallCapture CaptureAcquireExternalContextANGLE(egl::Thread *thread,
+                                               bool isCallValid,
+                                               egl::Display *dpyPacked)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addValueParam("dpyPacked", ParamType::Tegl_DisplayPointer, dpyPacked);
+
+    return CallCapture(angle::EntryPoint::EGLAcquireExternalContextANGLE, std::move(paramBuffer));
+}
+
+CallCapture CaptureReleaseExternalContextANGLE(egl::Thread *thread,
+                                               bool isCallValid,
+                                               egl::Display *dpyPacked)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addValueParam("dpyPacked", ParamType::Tegl_DisplayPointer, dpyPacked);
+
+    return CallCapture(angle::EntryPoint::EGLReleaseExternalContextANGLE, std::move(paramBuffer));
+}
+
 CallCapture CaptureQueryStringiANGLE(egl::Thread *thread,
                                      bool isCallValid,
                                      egl::Display *dpyPacked,

@@ -1296,6 +1296,10 @@ EXPORTS
     EGL_CreateDeviceANGLE
     EGL_ReleaseDeviceANGLE
 
+    ; EGL_ANGLE_external_context_and_surface
+    EGL_AcquireExternalContextANGLE
+    EGL_ReleaseExternalContextANGLE
+
     ; EGL_ANGLE_feature_control
     EGL_QueryDisplayAttribANGLE
     EGL_QueryStringiANGLE

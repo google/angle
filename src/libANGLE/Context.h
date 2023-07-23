@@ -717,6 +717,10 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     egl::Error reacquireHighPowerGPU();
     void onGPUSwitch();
 
+    // EGL_ANGLE_external_context_and_surface implementation.
+    egl::Error acquireExternalContext();
+    egl::Error releaseExternalContext();
+
     bool noopDraw(PrimitiveMode mode, GLsizei count) const;
     bool noopDrawInstanced(PrimitiveMode mode, GLsizei count, GLsizei instanceCount) const;
     bool noopMultiDraw(GLsizei drawcount) const;

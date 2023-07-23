@@ -6862,4 +6862,45 @@ bool ValidateQueryDmaBufModifiersEXT(ValidationContext const *val,
     return true;
 }
 
+bool ValidateAcquireExternalContextANGLE(const ValidationContext *val, const egl::Display *display)
+{
+    ANGLE_VALIDATION_TRY(ValidateDisplay(val, display));
+
+    const DisplayExtensions &displayExtensions = display->getExtensions();
+    if (!displayExtensions.externalContextAndSurface)
+    {
+        val->setError(EGL_BAD_ACCESS, "EGL_ANGLE_external_context_and_surface is not available");
+        return false;
+    }
+
+    gl::Context *currentContext = val->eglThread->getContext();
+    if (currentContext == nullptr || !currentContext->isExternal())
+    {
+        val->setError(EGL_BAD_CONTEXT, "Current context is not an external context");
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateReleaseExternalContextANGLE(const ValidationContext *val, const egl::Display *display)
+{
+    ANGLE_VALIDATION_TRY(ValidateDisplay(val, display));
+
+    const DisplayExtensions &displayExtensions = display->getExtensions();
+    if (!displayExtensions.externalContextAndSurface)
+    {
+        val->setError(EGL_BAD_ACCESS, "EGL_ANGLE_external_context_and_surface is not available");
+        return false;
+    }
+
+    gl::Context *currentContext = val->eglThread->getContext();
+    if (currentContext == nullptr || !currentContext->isExternal())
+    {
+        val->setError(EGL_BAD_CONTEXT, "Current context is not an external context");
+        return false;
+    }
+
+    return true;
+}
 }  // namespace egl
