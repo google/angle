@@ -1314,6 +1314,11 @@ Error Display::prepareForCall()
 
 Error Display::releaseThread()
 {
+    // Need to check if initialized, because makeCurrent() may terminate the Display.
+    if (!mInitialized)
+    {
+        return NoError();
+    }
     ANGLE_TRY(mImplementation->releaseThread());
     return destroyInvalidEglObjects();
 }
@@ -1742,6 +1747,14 @@ Error Display::makeCurrent(Thread *thread,
         }
     }
 
+    // If eglTerminate() has previously been called and Context was changed, perform InternalCleanup
+    // to invalidate any non-current Contexts, and possibly fully terminate the Display and release
+    // all of its resources.
+    if (mTerminatedByApi && contextChanged)
+    {
+        return terminate(thread, TerminateReason::InternalCleanup);
+    }
+
     return NoError();
 }
 
@@ -1902,21 +1915,6 @@ Error Display::destroyContext(Thread *thread, gl::Context *context)
         ANGLE_TRY(makeCurrent(thread, currentContext, nullptr, nullptr, context));
         ANGLE_TRY(
             makeCurrent(thread, context, currentDrawSurface, currentReadSurface, currentContext));
-    }
-
-    // If eglTerminate() has previously been called and this is the last Context the Display owns,
-    // we can now fully terminate the display and release all of its resources.
-    if (mTerminatedByApi)
-    {
-        for (auto ctx : mState.contextMap)
-        {
-            if (ctx.second->isReferenced())
-            {
-                return NoError();
-            }
-        }
-
-        return terminate(thread, TerminateReason::InternalCleanup);
     }
 
     return NoError();
