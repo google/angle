@@ -634,7 +634,7 @@ def main():
             'third_party/vulkan-deps/spirv-tools/src/LICENSE',
             'third_party/vulkan-deps/spirv-tools/src/utils/vscode/src/lsp/LICENSE',
             'third_party/vulkan-deps/vulkan-headers/LICENSE.txt',
-            'third_party/vulkan-deps/vulkan-headers/src/LICENSE.txt',
+            'third_party/vulkan-deps/vulkan-headers/src/LICENSE.md',
             'third_party/vulkan_memory_allocator/LICENSE.txt',
             'tools/flex-bison/third_party/m4sugar/LICENSE',
             'tools/flex-bison/third_party/skeletons/LICENSE',
