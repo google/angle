@@ -9647,13 +9647,13 @@ void Context::onGPUSwitch()
 
 egl::Error Context::acquireExternalContext()
 {
-    UNIMPLEMENTED();
+    mImplementation->acquireExternalContext(this);
     return egl::NoError();
 }
 
 egl::Error Context::releaseExternalContext()
 {
-    UNIMPLEMENTED();
+    mImplementation->releaseExternalContext(this);
     return egl::NoError();
 }
 
