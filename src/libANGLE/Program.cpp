@@ -646,6 +646,8 @@ VariableLocation::VariableLocation(unsigned int arrayIndex, unsigned int index)
 }
 
 // SamplerBindings implementation.
+SamplerBinding::SamplerBinding() = default;
+
 SamplerBinding::SamplerBinding(TextureType textureTypeIn,
                                GLenum samplerTypeIn,
                                SamplerFormat formatIn,
@@ -806,6 +808,8 @@ ImageBinding::ImageBinding(GLuint imageUnit, size_t count, TextureType textureTy
         boundImageUnits.push_back(imageUnit + static_cast<GLuint>(index));
     }
 }
+
+ImageBinding::ImageBinding() = default;
 
 ImageBinding::ImageBinding(const ImageBinding &other) = default;
 

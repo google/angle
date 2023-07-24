@@ -61,6 +61,7 @@ class BinaryInputStream : angle::NonCopyable
     void readIntVector(std::vector<VectorElementT> *param)
     {
         size_t size = readInt<size_t>();
+        param->reserve(size);
         for (size_t index = 0; index < size; ++index)
         {
             param->push_back(readInt<IntT>());
