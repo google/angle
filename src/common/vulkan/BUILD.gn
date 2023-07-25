@@ -10,7 +10,8 @@ if (angle_use_wayland) {
 }
 
 declare_args() {
-  angle_use_custom_libvulkan = !is_android && !is_fuchsia && !is_ggp
+  angle_use_custom_libvulkan =
+      !is_android && !is_fuchsia && !is_ggp && !is_chromeos
 }
 
 config("angle_libvulkan_config") {
