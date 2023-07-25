@@ -4433,8 +4433,10 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
                             mSwapchainMaintenance1Features.swapchainMaintenance1 == VK_TRUE);
 
     // The VK_EXT_legacy_dithering extension enables dithering support without emulation
+    // Disable the usage of VK_EXT_legacy_dithering on ARM until the driver bug
+    // http://issuetracker.google.com/293136916, http://issuetracker.google.com/292282210 are fixed.
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsLegacyDithering,
-                            mDitheringFeatures.legacyDithering == VK_TRUE);
+                            mDitheringFeatures.legacyDithering == VK_TRUE && !isARM);
 
     // Applications on Android have come to rely on hardware dithering, and visually regress without
     // it.  On desktop GPUs, OpenGL's dithering is a no-op.  The following setting mimics that
