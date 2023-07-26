@@ -154,6 +154,19 @@ static WindowSurfaceMap *GetWindowSurfaces()
     return windowSurfaces.get();
 }
 
+size_t EGLStringArrayHash(const char **ary)
+{
+    size_t hash = 0;
+    if (ary != nullptr)
+    {
+        for (; *ary != nullptr; ary++)
+        {
+            hash ^= std::hash<std::string>{}(std::string(*ary));
+        }
+    }
+    return hash;
+}
+
 struct ANGLEPlatformDisplay
 {
     ANGLEPlatformDisplay() = default;
@@ -167,19 +180,29 @@ struct ANGLEPlatformDisplay
                          EGLAttrib platformANGLEType,
                          EGLAttrib deviceIdHigh,
                          EGLAttrib deviceIdLow,
-                         EGLAttrib displayKey)
+                         EGLAttrib displayKey,
+                         EGLAttrib enabledFeatureOverrides,
+                         EGLAttrib disabledFeatureOverrides,
+                         EGLAttrib disableAllNonOverriddenFeatures)
         : nativeDisplayType(nativeDisplayType),
           powerPreference(powerPreference),
           platformANGLEType(platformANGLEType),
           deviceIdHigh(deviceIdHigh),
           deviceIdLow(deviceIdLow),
-          displayKey(displayKey)
-    {}
+          displayKey(displayKey),
+          disableAllNonOverriddenFeatures(static_cast<bool>(disableAllNonOverriddenFeatures))
+    {
+        enabledFeatureOverridesHash =
+            EGLStringArrayHash(reinterpret_cast<const char **>(enabledFeatureOverrides));
+        disabledFeatureOverridesHash =
+            EGLStringArrayHash(reinterpret_cast<const char **>(disabledFeatureOverrides));
+    }
 
     auto tie() const
     {
         return std::tie(nativeDisplayType, powerPreference, platformANGLEType, deviceIdHigh,
-                        deviceIdLow, displayKey);
+                        deviceIdLow, displayKey, enabledFeatureOverridesHash,
+                        disabledFeatureOverridesHash, disableAllNonOverriddenFeatures);
     }
 
     EGLNativeDisplayType nativeDisplayType{EGL_DEFAULT_DISPLAY};
@@ -188,6 +211,9 @@ struct ANGLEPlatformDisplay
     EGLAttrib deviceIdHigh{0};
     EGLAttrib deviceIdLow{0};
     EGLAttrib displayKey{0};
+    size_t enabledFeatureOverridesHash;
+    size_t disabledFeatureOverridesHash;
+    bool disableAllNonOverriddenFeatures;
 };
 
 inline bool operator==(const ANGLEPlatformDisplay &a, const ANGLEPlatformDisplay &b)
@@ -709,10 +735,18 @@ Display *Display::GetDisplayFromNativeDisplay(EGLenum platform,
     EGLAttrib deviceIdHigh = updatedAttribMap.get(EGL_PLATFORM_ANGLE_DEVICE_ID_HIGH_ANGLE, 0);
     EGLAttrib deviceIdLow  = updatedAttribMap.get(EGL_PLATFORM_ANGLE_DEVICE_ID_LOW_ANGLE, 0);
     EGLAttrib displayKey   = updatedAttribMap.get(EGL_PLATFORM_ANGLE_DISPLAY_KEY_ANGLE, 0);
+    EGLAttrib enabledFeatureOverrides =
+        updatedAttribMap.get(EGL_FEATURE_OVERRIDES_ENABLED_ANGLE, 0);
+    EGLAttrib disabledFeatureOverrides =
+        updatedAttribMap.get(EGL_FEATURE_OVERRIDES_DISABLED_ANGLE, 0);
+    EGLAttrib disableAllNonOverriddenFeatures =
+        updatedAttribMap.get(EGL_FEATURE_ALL_DISABLED_ANGLE, 0);
     ANGLEPlatformDisplayMap *displays = GetANGLEPlatformDisplayMap();
-    ANGLEPlatformDisplay combinedDisplayKey(nativeDisplay, powerPreference, platformANGLEType,
-                                            deviceIdHigh, deviceIdLow, displayKey);
+    ANGLEPlatformDisplay combinedDisplayKey(
+        nativeDisplay, powerPreference, platformANGLEType, deviceIdHigh, deviceIdLow, displayKey,
+        enabledFeatureOverrides, disabledFeatureOverrides, disableAllNonOverriddenFeatures);
     const auto &iter = displays->find(combinedDisplayKey);
+
     if (iter != displays->end())
     {
         display = iter->second;
@@ -896,7 +930,10 @@ Display::~Display()
                                   EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE),
                 mAttributeMap.get(EGL_PLATFORM_ANGLE_DEVICE_ID_HIGH_ANGLE, 0),
                 mAttributeMap.get(EGL_PLATFORM_ANGLE_DEVICE_ID_LOW_ANGLE, 0),
-                mAttributeMap.get(EGL_PLATFORM_ANGLE_DISPLAY_KEY_ANGLE, 0)));
+                mAttributeMap.get(EGL_PLATFORM_ANGLE_DISPLAY_KEY_ANGLE, 0),
+                mAttributeMap.get(EGL_FEATURE_OVERRIDES_ENABLED_ANGLE, 0),
+                mAttributeMap.get(EGL_FEATURE_OVERRIDES_DISABLED_ANGLE, 0),
+                mAttributeMap.get(EGL_FEATURE_ALL_DISABLED_ANGLE, 0)));
             if (iter != displays->end())
             {
                 displays->erase(iter);
