@@ -335,8 +335,8 @@ void SharedContextMutex<Mutex>::Merge(SharedContextMutex *lockedMutex,
 
     // Decide the new "root". See mRank comment for more details...
 
-    SharedContextMutex *oldRoot = lockedRoot;
-    SharedContextMutex *newRoot = otherLockedRoot;
+    SharedContextMutex *oldRoot = otherLockedRoot;
+    SharedContextMutex *newRoot = lockedRoot;
 
     if (oldRoot->mRank > newRoot->mRank)
     {
