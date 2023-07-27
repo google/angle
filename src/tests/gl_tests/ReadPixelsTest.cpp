@@ -1188,6 +1188,40 @@ class ReadPixelsErrorTest : public ReadPixelsTest
         glDeleteFramebuffers(1, &mFBO);
     }
 
+    void testUnsupportedTypeConversions(std::vector<GLenum> internalFormats,
+                                        std::vector<GLenum> unsupportedTypes)
+    {
+        glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
+        for (GLenum internalFormat : internalFormats)
+        {
+            GLRenderbuffer rbo;
+            glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+            glRenderbufferStorage(GL_RENDERBUFFER, internalFormat, 1, 1);
+            ASSERT_GL_NO_ERROR();
+
+            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rbo);
+            ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+            GLenum implementationFormat, implementationType;
+            glGetIntegerv(GL_IMPLEMENTATION_COLOR_READ_FORMAT,
+                          reinterpret_cast<GLint *>(&implementationFormat));
+            ASSERT_GL_NO_ERROR();
+            glGetIntegerv(GL_IMPLEMENTATION_COLOR_READ_TYPE,
+                          reinterpret_cast<GLint *>(&implementationType));
+            ASSERT_GL_NO_ERROR();
+
+            for (GLenum type : unsupportedTypes)
+            {
+                uint8_t pixel[8] = {};
+                if (implementationFormat != GL_RGBA || implementationType != type)
+                {
+                    glReadPixels(0, 0, 1, 1, GL_RGBA, type, pixel);
+                    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+                }
+            }
+        }
+    }
+
     GLuint mTexture;
     GLuint mFBO;
 };
@@ -1203,6 +1237,27 @@ TEST_P(ReadPixelsErrorTest, ReadBufferIsNone)
     EXPECT_GL_NO_ERROR();
     glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+}
+
+// The test verifies that glReadPixels generates a GL_INVALID_OPERATION
+// error when reading signed 8-bit color buffers using incompatible types.
+TEST_P(ReadPixelsErrorTest, ColorBufferSnorm8)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_render_snorm"));
+
+    testUnsupportedTypeConversions({GL_R8_SNORM, GL_RG8_SNORM, GL_RGBA8_SNORM},
+                                   {GL_UNSIGNED_BYTE, GL_SHORT, GL_UNSIGNED_SHORT});
+}
+
+// The test verifies that glReadPixels generates a GL_INVALID_OPERATION
+// error when reading signed 16-bit color buffers using incompatible types.
+TEST_P(ReadPixelsErrorTest, ColorBufferSnorm16)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_render_snorm"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_norm16"));
+
+    testUnsupportedTypeConversions({GL_R16_SNORM_EXT, GL_RG16_SNORM_EXT, GL_RGBA16_SNORM_EXT},
+                                   {GL_BYTE, GL_UNSIGNED_BYTE, GL_UNSIGNED_SHORT});
 }
 
 // a test class to be used for error checking of glReadPixels with WebGLCompatibility

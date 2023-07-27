@@ -213,9 +213,10 @@ bool ValidReadPixelsFormatType(const Context *context,
             }
         case GL_SIGNED_NORMALIZED:
             ASSERT(context->getExtensions().renderSnormEXT);
-            return format == GL_RGBA &&
-                   (type == GL_BYTE || (context->getExtensions().textureNorm16EXT &&
-                                        type == GL_SHORT && info->type == GL_SHORT));
+            ASSERT(info->type == GL_BYTE ||
+                   (context->getExtensions().textureNorm16EXT && info->type == GL_SHORT));
+            // Type conversions are not allowed for signed normalized color buffers
+            return format == GL_RGBA && type == info->type;
 
         case GL_INT:
             return (format == GL_RGBA_INTEGER && type == GL_INT);
