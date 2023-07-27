@@ -470,11 +470,6 @@ bool GetIsExternal(const egl::AttributeMap &attribs)
     return (attribs.get(EGL_EXTERNAL_CONTEXT_ANGLE, EGL_FALSE) == EGL_TRUE);
 }
 
-bool GetSaveAndRestoreState(const egl::AttributeMap &attribs)
-{
-    return (attribs.get(EGL_EXTERNAL_CONTEXT_SAVE_STATE_ANGLE, EGL_FALSE) == EGL_TRUE);
-}
-
 void GetPerfMonitorString(const std::string &name,
                           GLsizei bufSize,
                           GLsizei *length,
@@ -655,7 +650,6 @@ Context::Context(egl::Display *display,
       mRefCount(0),
       mOverlay(mImplementation.get()),
       mIsExternal(GetIsExternal(attribs)),
-      mSaveAndRestoreState(GetSaveAndRestoreState(attribs)),
       mIsDestroyed(false)
 {
     ASSERT(mState.mSharedContextMutex != nullptr || mState.mSingleContextMutex != nullptr);
