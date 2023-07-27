@@ -854,6 +854,9 @@ egl::Error Context::onDestroy(const egl::Display *display)
 {
     if (!mHasBeenCurrent)
     {
+        // Shared objects and ShareGroup must be released regardless.
+        releaseSharedObjects();
+        mState.mShareGroup->release(display);
         // The context is never current, so default resources are not allocated.
         return egl::NoError();
     }
@@ -927,6 +930,20 @@ egl::Error Context::onDestroy(const egl::Display *display)
 
     mState.reset(this);
 
+    releaseSharedObjects();
+
+    mImplementation->onDestroy(this);
+
+    // Backend requires implementation to be destroyed first to close down all the objects
+    mState.mShareGroup->release(display);
+
+    mOverlay.destroy(this);
+
+    return egl::NoError();
+}
+
+void Context::releaseSharedObjects()
+{
     mState.mBufferManager->release(this);
     // mProgramPipelineManager must be before mShaderProgramManager to give each
     // PPO the chance to release any references they have to the Programs that
@@ -941,11 +958,6 @@ egl::Error Context::onDestroy(const egl::Display *display)
     mState.mMemoryObjectManager->release(this);
     mState.mSemaphoreManager->release(this);
 
-    mImplementation->onDestroy(this);
-
-    // Backend requires implementation to be destroyed first to close down all the objects
-    mState.mShareGroup->release(display);
-
     if (mState.mSharedContextMutex != nullptr)
     {
         mState.mSharedContextMutex->release();
@@ -954,10 +966,6 @@ egl::Error Context::onDestroy(const egl::Display *display)
     {
         mState.mSingleContextMutex->release();
     }
-
-    mOverlay.destroy(this);
-
-    return egl::NoError();
 }
 
 Context::~Context() {}
