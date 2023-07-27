@@ -219,7 +219,7 @@ class SharedContextMutex final : public ContextMutex
     // - the mutex_1 has no other references (only in the mutex_2);
     // - have other mutex_3 "root";
     // - mutex_1 pointer is cached on the stack during locking of mutex_2 (thread A);
-    // - merge mutex_3 and mutex_2 (thread B):
+    // - marge mutex_2 and mutex_3 (thread B):
     //     * now "leaf" mutex_2 stores reference to mutex_3 "root";
     //     * old "root" mutex_1 becomes a "leaf" of mutex_3;
     //     * old "root" mutex_1 has no references and gets destroyed.
@@ -228,27 +228,27 @@ class SharedContextMutex final : public ContextMutex
     std::vector<SharedContextMutex *> mOldRoots;
 
     // mRank is used to fix a problem of indefinite grows of mOldRoots:
-    // - merge mutex_2 and mutex_1 -> mutex_2 is "root" of mutex_1 (mOldRoots == 0);
+    // - merge mutex_1 and mutex_2 -> mutex_2 is "root" of mutex_1 (mOldRoots == 0);
     // - destroy mutex_2;
-    // - merge mutex_3 and mutex_1 -> mutex_3 is "root" of mutex_1 (mOldRoots == 1);
+    // - merge mutex_1 and mutex_3 -> mutex_3 is "root" of mutex_1 (mOldRoots == 1);
     // - destroy mutex_3;
-    // - merge mutex_4 and mutex_1 -> mutex_4 is "root" of mutex_1 (mOldRoots == 2);
+    // - merge mutex_1 and mutex_4 -> mutex_4 is "root" of mutex_1 (mOldRoots == 2);
     // - destroy mutex_4;
     // - continuing this pattern can lead to indefinite grows of mOldRoots, while pick number of
     //   mutexes is only 2.
     // Fix details using mRank:
     // - initially "mRank == 0" and only relevant for "root" mutexes;
-    // - merging mutexes with equal mRank of their "root"s, will use first (lockedMutex) "root"
+    // - merging mutexes with equal mRank of their "root"s, will use second (otherMutex) "root"
     //   mutex as a new "root" and increase its mRank by 1;
     // - otherwise, "root" mutex with a highest rank will be used without changing the mRank;
     // - this way, "stronger" (with a higher mRank) "root" mutex will "protect" its "leaves" from
     //   "mRoot" replacement and therefore - mOldRoots grows.
     // Lets look at the problematic pattern with the mRank:
-    // - merge mutex_2 and mutex_1 -> mutex_2 is "root" (mRank == 1) of mutex_1 (mOldRoots == 0);
+    // - merge mutex_1 and mutex_2 -> mutex_2 is "root" (mRank == 1) of mutex_1 (mOldRoots == 0);
     // - destroy mutex_2;
-    // - merge mutex_3 and mutex_1 -> mutex_2 is "root" (mRank == 1) of mutex_3 (mOldRoots == 0);
+    // - merge mutex_1 and mutex_3 -> mutex_2 is "root" (mRank == 1) of mutex_3 (mOldRoots == 0);
     // - destroy mutex_3;
-    // - merge mutex_4 and mutex_1 -> mutex_2 is "root" (mRank == 1) of mutex_4 (mOldRoots == 0);
+    // - merge mutex_1 and mutex_4 -> mutex_2 is "root" (mRank == 1) of mutex_4 (mOldRoots == 0);
     // - destroy mutex_4;
     // - no mOldRoots grows at all;
     // - minumum number of mutexes to reach mOldRoots size of N => 2^(N+1).

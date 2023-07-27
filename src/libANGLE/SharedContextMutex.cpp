@@ -241,29 +241,28 @@ void SharedContextMutex<Mutex>::Merge(SharedContextMutex *lockedMutex,
 
     // Decide the new "root". See mRank comment for more details...
 
-    SharedContextMutex *oldRoot = otherLockedRoot;
-    SharedContextMutex *newRoot = lockedRoot;
-
-    if (oldRoot->mRank > newRoot->mRank)
+    // Make "otherLockedRoot" the root of the "merged" mutex
+    if (lockedRoot->mRank > otherLockedRoot->mRank)
     {
-        std::swap(oldRoot, newRoot);
+        // So the "lockedRoot" is lower rank.
+        std::swap(lockedRoot, otherLockedRoot);
     }
-    else if (oldRoot->mRank == newRoot->mRank)
+    else if (lockedRoot->mRank == otherLockedRoot->mRank)
     {
-        ++newRoot->mRank;
+        ++otherLockedRoot->mRank;
     }
 
     // Update the structure
-    for (SharedContextMutex *const leaf : oldRoot->mLeaves)
+    for (SharedContextMutex *const leaf : lockedRoot->mLeaves)
     {
-        ASSERT(leaf->getRoot() == oldRoot);
-        leaf->setNewRoot(newRoot);
+        ASSERT(leaf->getRoot() == lockedRoot);
+        leaf->setNewRoot(otherLockedRoot);
     }
-    oldRoot->mLeaves.clear();
-    oldRoot->setNewRoot(newRoot);
+    lockedRoot->mLeaves.clear();
+    lockedRoot->setNewRoot(otherLockedRoot);
 
-    // Leave only the "merged" mutex locked. "oldRoot" already merged, need to use "doUnlock()"
-    oldRoot->doUnlock();
+    // Leave only the "merged" mutex locked. "lockedRoot" already merged, need to use "doUnlock()"
+    lockedRoot->doUnlock();
 }
 
 template <class Mutex>
