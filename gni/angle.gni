@@ -57,7 +57,8 @@ if (angle_has_build) {
     import("//build/config/win/visual_studio_version.gni")
   }
 
-  if (is_castos || ozone_platform_headless) {
+  # Not all ChromeOS devices support VK_EXT_headless_surface.
+  if (is_castos || (ozone_platform_headless && !is_chromeos)) {
     angle_vulkan_display_mode = "headless"
   }
 
