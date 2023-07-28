@@ -5520,7 +5520,7 @@ void WriteDescriptorDescs::updateImages(const gl::ProgramExecutable &executable,
             variableInfoMap.getVariableById(firstShaderType, imageUniform.getId(firstShaderType));
 
         uint32_t arraySize       = static_cast<uint32_t>(imageBinding.boundImageUnits.size());
-        uint32_t descriptorCount = arraySize * gl::ArraySizeProduct(imageUniform.outerArraySizes);
+        uint32_t descriptorCount = arraySize * imageUniform.outerArraySizeProduct;
         VkDescriptorType descriptorType = (imageBinding.textureType == gl::TextureType::Buffer)
                                               ? VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER
                                               : VK_DESCRIPTOR_TYPE_STORAGE_IMAGE;
@@ -5579,7 +5579,7 @@ void WriteDescriptorDescs::updateExecutableActiveTextures(
             variableInfoMap.getVariableById(firstShaderType, samplerUniform.getId(firstShaderType));
 
         uint32_t arraySize       = static_cast<uint32_t>(samplerBinding.boundTextureUnits.size());
-        uint32_t descriptorCount = arraySize * gl::ArraySizeProduct(samplerUniform.outerArraySizes);
+        uint32_t descriptorCount = arraySize * samplerUniform.outerArraySizeProduct;
         VkDescriptorType descriptorType = (samplerBinding.textureType == gl::TextureType::Buffer)
                                               ? VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER
                                               : VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;

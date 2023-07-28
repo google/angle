@@ -20,6 +20,7 @@
 namespace gl
 {
 struct UniformTypeInfo;
+struct UsedUniform;
 
 struct ActiveVariable
 {
@@ -67,6 +68,7 @@ struct LinkedUniform
                   const int bufferIndexIn,
                   const sh::BlockMemberInfo &blockInfoIn);
     LinkedUniform(const LinkedUniform &other);
+    LinkedUniform(const UsedUniform &usedUniform);
     LinkedUniform &operator=(const LinkedUniform &other);
     ~LinkedUniform();
 
@@ -84,7 +86,7 @@ struct LinkedUniform
     unsigned int getBasicTypeElementCount() const
     {
         ASSERT(!isArrayOfArrays());
-        ASSERT(!isStruct() || !isArray());
+        ASSERT(!isStruct || !isArray());
 
         if (isArray())
         {
@@ -95,13 +97,11 @@ struct LinkedUniform
 
     unsigned int getExternalSize() const;
 
-    bool isStruct() const { return !fields.empty(); }
     bool findInfoByMappedName(const std::string &mappedFullName,
                               const sh::ShaderVariable **leafVar,
                               std::string *originalFullName) const;
     bool isBuiltIn() const { return gl::IsBuiltInName(name); }
 
-    bool isEmulatedBuiltIn() const { return isBuiltIn() && name != mappedName; }
     int parentArrayIndex() const
     {
         return hasParentArrayIndex() ? flattenedOffsetInParentArrays : 0;
@@ -133,13 +133,15 @@ struct LinkedUniform
     GLenum type;
     GLenum precision;
     std::string name;
+    // Only used by GL backend
     std::string mappedName;
 
     std::vector<unsigned int> arraySizes;
 
     bool staticUse;
     bool active;
-    std::vector<sh::ShaderVariable> fields;
+
+    bool isStruct;
 
     int location;
 
@@ -165,7 +167,7 @@ struct LinkedUniform
     // Identifies the containing buffer backed resource -- interface block or atomic counter buffer.
     int bufferIndex;
     sh::BlockMemberInfo blockInfo;
-    std::vector<unsigned int> outerArraySizes;
+    unsigned int outerArraySizeProduct;
     unsigned int outerArrayOffset;
 };
 

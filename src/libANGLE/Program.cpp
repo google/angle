@@ -782,8 +782,8 @@ int ProgramAliasedBindings::getBinding(const T &variable) const
 
     return getBindingByName(name);
 }
-template int ProgramAliasedBindings::getBinding<gl::LinkedUniform>(
-    const gl::LinkedUniform &variable) const;
+template int ProgramAliasedBindings::getBinding<gl::UsedUniform>(
+    const gl::UsedUniform &variable) const;
 template int ProgramAliasedBindings::getBinding<sh::ShaderVariable>(
     const sh::ShaderVariable &variable) const;
 
