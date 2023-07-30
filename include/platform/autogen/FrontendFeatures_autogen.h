@@ -147,6 +147,20 @@ struct FrontendFeatures : FeatureSetBase
         &members, "http://anglebug.com/1423136"
     };
 
+    FeatureInfo dumpTranslatedShaders = {
+        "dumpTranslatedShaders",
+        FeatureCategory::FrontendFeatures,
+        "Write translated shaders to temp directory",
+        &members, "http://anglebug.com/8280"
+    };
+
+    FeatureInfo enableTranslatedShaderSubstitution = {
+        "enableTranslatedShaderSubstitution",
+        FeatureCategory::FrontendWorkarounds,
+        "Check the filesystem for translated shaders to use instead of the shader translator's",
+        &members, "http://anglebug.com/8280"
+    };
+
 };
 
 inline FrontendFeatures::FrontendFeatures()  = default;
