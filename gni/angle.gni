@@ -418,15 +418,9 @@ template("angle_shared_library") {
 
     if (is_apple) {
       # If a "build with ARC" config is present, remove it.
-      # TODO(https://crbug.com/1280317): Remove the "enable_arc2" variant
-      # when ARC migration in the Chromium repo is complete.
       if (filter_include(configs, [ "//build/config/compiler:enable_arc" ]) !=
           []) {
         configs -= [ "//build/config/compiler:enable_arc" ]
-      }
-      if (filter_include(configs, [ "//build/config/compiler:enable_arc2" ]) !=
-          []) {
-        configs -= [ "//build/config/compiler:enable_arc2" ]
       }
     }
 
@@ -477,15 +471,9 @@ template("angle_source_set") {
 
     if (is_apple) {
       # If a "build with ARC" config is present, remove it.
-      # TODO(https://crbug.com/1280317): Remove the "enable_arc2" variant
-      # when ARC migration in the Chromium repo is complete.
       if (filter_include(configs, [ "//build/config/compiler:enable_arc" ]) !=
           []) {
         configs -= [ "//build/config/compiler:enable_arc" ]
-      }
-      if (filter_include(configs, [ "//build/config/compiler:enable_arc2" ]) !=
-          []) {
-        configs -= [ "//build/config/compiler:enable_arc2" ]
       }
     }
   }
@@ -509,15 +497,9 @@ template("angle_static_library") {
 
     if (is_apple) {
       # If a "build with ARC" config is present, remove it.
-      # TODO(https://crbug.com/1280317): Remove the "enable_arc2" variant
-      # when ARC migration in the Chromium repo is complete.
       if (filter_include(configs, [ "//build/config/compiler:enable_arc" ]) !=
           []) {
         configs -= [ "//build/config/compiler:enable_arc" ]
-      }
-      if (filter_include(configs, [ "//build/config/compiler:enable_arc2" ]) !=
-          []) {
-        configs -= [ "//build/config/compiler:enable_arc2" ]
       }
     }
   }
@@ -539,15 +521,9 @@ if (angle_standalone || build_with_chromium) {
 
       if (is_apple) {
         # If a "build with ARC" config is present, remove it.
-        # TODO(https://crbug.com/1280317): Remove the "enable_arc2" variant
-        # when ARC migration in the Chromium repo is complete.
         if (filter_include(configs, [ "//build/config/compiler:enable_arc" ]) !=
             []) {
           configs -= [ "//build/config/compiler:enable_arc" ]
-        }
-        if (filter_include(configs,
-                           [ "//build/config/compiler:enable_arc2" ]) != []) {
-          configs -= [ "//build/config/compiler:enable_arc2" ]
         }
       }
 
