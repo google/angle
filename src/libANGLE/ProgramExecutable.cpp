@@ -368,7 +368,31 @@ void ProgramExecutable::load(bool isSeparable, gl::BinaryInputStream *stream)
     for (size_t uniformIndex = 0; uniformIndex < uniformCount; ++uniformIndex)
     {
         LinkedUniform &uniform = mUniforms[uniformIndex];
-        LoadShaderVar(stream, &uniform);
+
+        uniform.type      = stream->readInt<GLenum>();
+        uniform.precision = stream->readInt<GLenum>();
+        stream->readString(&uniform.name);
+        stream->readString(&uniform.mappedName);
+        stream->readIntVector<unsigned int>(&uniform.arraySizes);
+        uniform.staticUse   = stream->readBool();
+        uniform.active      = stream->readBool();
+        size_t elementCount = stream->readInt<size_t>();
+        uniform.fields.resize(elementCount);
+        for (sh::ShaderVariable &variable : uniform.fields)
+        {
+            LoadShaderVar(stream, &variable);
+        }
+        uniform.location            = stream->readInt<int>();
+        uniform.binding             = stream->readInt<int>();
+        uniform.imageUnitFormat     = stream->readInt<GLenum>();
+        uniform.offset              = stream->readInt<int>();
+        uniform.rasterOrdered       = stream->readBool();
+        uniform.readonly            = stream->readBool();
+        uniform.writeonly           = stream->readBool();
+        uniform.isFragmentInOut     = stream->readBool();
+        uniform.texelFetchStaticUse = stream->readBool();
+        uniform.setParentArrayIndex(stream->readInt<int>());
+        uniform.id = stream->readInt<uint32_t>();
 
         uniform.bufferIndex = stream->readInt<int>();
         LoadBlockMemberInfo(stream, &uniform.blockInfo);
@@ -601,7 +625,29 @@ void ProgramExecutable::save(bool isSeparable, gl::BinaryOutputStream *stream) c
     stream->writeInt(getUniforms().size());
     for (const LinkedUniform &uniform : getUniforms())
     {
-        WriteShaderVar(stream, uniform);
+        stream->writeInt(uniform.type);
+        stream->writeInt(uniform.precision);
+        stream->writeString(uniform.name);
+        stream->writeString(uniform.mappedName);
+        stream->writeIntVector(uniform.arraySizes);
+        stream->writeBool(uniform.staticUse);
+        stream->writeBool(uniform.active);
+        stream->writeInt<size_t>(uniform.fields.size());
+        for (const sh::ShaderVariable &shaderVariable : uniform.fields)
+        {
+            WriteShaderVar(stream, shaderVariable);
+        }
+        stream->writeInt(uniform.location);
+        stream->writeInt(uniform.binding);
+        stream->writeInt(uniform.imageUnitFormat);
+        stream->writeInt(uniform.offset);
+        stream->writeBool(uniform.rasterOrdered);
+        stream->writeBool(uniform.readonly);
+        stream->writeBool(uniform.writeonly);
+        stream->writeBool(uniform.isFragmentInOut);
+        stream->writeBool(uniform.texelFetchStaticUse);
+        stream->writeInt(uniform.getFlattenedOffsetInParentArrays());
+        stream->writeInt(uniform.id);
 
         stream->writeInt(uniform.bufferIndex);
         WriteBlockMemberInfo(stream, uniform.blockInfo);
@@ -1685,7 +1731,7 @@ bool ProgramExecutable::linkAtomicCounterBuffers(const Context *context, InfoLog
                 buffer.memberIndexes.push_back(index);
                 uniform.bufferIndex = bufferIndex;
                 found               = true;
-                buffer.unionReferencesWith(uniform);
+                buffer.unionReferencesWith(uniform.activeVariable);
                 break;
             }
         }
@@ -1694,7 +1740,7 @@ bool ProgramExecutable::linkAtomicCounterBuffers(const Context *context, InfoLog
             AtomicCounterBuffer atomicCounterBuffer;
             atomicCounterBuffer.binding = uniform.binding;
             atomicCounterBuffer.memberIndexes.push_back(index);
-            atomicCounterBuffer.unionReferencesWith(uniform);
+            atomicCounterBuffer.unionReferencesWith(uniform.activeVariable);
             mAtomicCounterBuffers.push_back(atomicCounterBuffer);
             uniform.bufferIndex = static_cast<int>(getActiveAtomicCounterBufferCount() - 1);
         }

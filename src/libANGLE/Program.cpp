@@ -678,7 +678,8 @@ int ProgramBindings::getBindingByName(const std::string &name) const
     return (iter != mBindings.end()) ? iter->second : -1;
 }
 
-int ProgramBindings::getBinding(const sh::ShaderVariable &variable) const
+template <typename T>
+int ProgramBindings::getBinding(const T &variable) const
 {
     return getBindingByName(variable.name);
 }
@@ -744,7 +745,8 @@ int ProgramAliasedBindings::getBindingByLocation(GLuint location) const
     return -1;
 }
 
-int ProgramAliasedBindings::getBinding(const sh::ShaderVariable &variable) const
+template <typename T>
+int ProgramAliasedBindings::getBinding(const T &variable) const
 {
     const std::string &name = variable.name;
 
@@ -780,6 +782,10 @@ int ProgramAliasedBindings::getBinding(const sh::ShaderVariable &variable) const
 
     return getBindingByName(name);
 }
+template int ProgramAliasedBindings::getBinding<gl::LinkedUniform>(
+    const gl::LinkedUniform &variable) const;
+template int ProgramAliasedBindings::getBinding<sh::ShaderVariable>(
+    const sh::ShaderVariable &variable) const;
 
 ProgramAliasedBindings::const_iterator ProgramAliasedBindings::begin() const
 {
