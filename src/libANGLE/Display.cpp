@@ -461,9 +461,10 @@ rx::DisplayImpl *CreateDisplayFromAttribs(EGLAttrib displayType,
             impl = new rx::DisplayWGL(state);
 #    elif defined(ANGLE_PLATFORM_LINUX)
 #        if defined(ANGLE_USE_GBM)
-            if (platformType == 0 || platformType == EGL_PLATFORM_VULKAN_DISPLAY_MODE_SIMPLE_ANGLE)
+            if (platformType == 0 ||
+                platformType == EGL_PLATFORM_VULKAN_DISPLAY_MODE_HEADLESS_ANGLE)
             {
-                // platformType == EGL_PLATFORM_VULKAN_DISPLAY_MODE_SIMPLE_ANGLE is a hack,
+                // platformType == EGL_PLATFORM_VULKAN_DISPLAY_MODE_HEADLESS_ANGLE is a hack,
                 // to allow ChromeOS GLES backend to continue functioning when Vulkan is enabled.
                 impl = new rx::DisplayEGL(state);
                 break;
