@@ -79,6 +79,10 @@ struct LinkedUniform
     size_t getElementSize() const { return typeInfo->externalSize; }
     size_t getElementComponents() const { return typeInfo->componentCount; }
 
+    bool isStruct() const { return flagBits.isStruct; }
+    bool isTexelFetchStaticUse() const { return flagBits.texelFetchStaticUse; }
+    bool isFragmentInOut() const { return flagBits.isFragmentInOut; }
+
     bool isArrayOfArrays() const { return arraySizes.size() >= 2u; }
     bool isArray() const { return !arraySizes.empty(); }
     unsigned int getArraySizeProduct() const { return gl::ArraySizeProduct(arraySizes); }
@@ -86,7 +90,7 @@ struct LinkedUniform
     unsigned int getBasicTypeElementCount() const
     {
         ASSERT(!isArrayOfArrays());
-        ASSERT(!isStruct || !isArray());
+        ASSERT(!isStruct() || !isArray());
 
         if (isArray())
         {
@@ -138,23 +142,29 @@ struct LinkedUniform
 
     std::vector<unsigned int> arraySizes;
 
-    bool staticUse;
-    bool active;
+    union
+    {
+        struct
+        {
+            uint32_t staticUse : 1;
+            uint32_t active : 1;
+            uint32_t isStruct : 1;
+            uint32_t rasterOrdered : 1;
+            uint32_t readonly : 1;
+            uint32_t writeonly : 1;
+            uint32_t isFragmentInOut : 1;
+            uint32_t texelFetchStaticUse : 1;
+            uint32_t padding : 24;
+        } flagBits;
 
-    bool isStruct;
+        uint32_t flagBitsAsUInt;
+    };
 
     int location;
 
     int binding;
     GLenum imageUnitFormat;
     int offset;
-    bool rasterOrdered;
-    bool readonly;
-    bool writeonly;
-
-    bool isFragmentInOut;
-
-    bool texelFetchStaticUse;
 
     uint32_t id;
 

@@ -46,18 +46,11 @@ void ActiveVariable::unionReferencesWith(const ActiveVariable &other)
 LinkedUniform::LinkedUniform()
     : type(GL_NONE),
       precision(0),
-      staticUse(false),
-      active(false),
-      isStruct(false),
+      flagBitsAsUInt(0),
       location(-1),
       binding(-1),
       imageUnitFormat(GL_NONE),
       offset(-1),
-      rasterOrdered(false),
-      readonly(false),
-      writeonly(false),
-      isFragmentInOut(false),
-      texelFetchStaticUse(false),
       id(0),
       flattenedOffsetInParentArrays(-1),
       typeInfo(nullptr),
@@ -87,21 +80,14 @@ LinkedUniform::LinkedUniform(GLenum typeIn,
       bufferIndex(bufferIndexIn),
       blockInfo(blockInfoIn)
 {
-    staticUse                     = false;
-    active                        = false;
-    isStruct                      = false;
-    rasterOrdered                 = false;
-    readonly                      = false;
-    writeonly                     = false;
-    isFragmentInOut               = false;
-    texelFetchStaticUse           = false;
+    flagBitsAsUInt                = 0;
     id                            = 0;
     flattenedOffsetInParentArrays = -1;
     outerArraySizeProduct         = 1;
     outerArrayOffset              = 0;
     imageUnitFormat               = GL_NONE;
     ASSERT(!isArrayOfArrays());
-    ASSERT(!isArray() || !isStruct);
+    ASSERT(!isArray() || !isStruct());
 }
 
 LinkedUniform::LinkedUniform(const LinkedUniform &other)
@@ -111,24 +97,26 @@ LinkedUniform::LinkedUniform(const LinkedUniform &other)
 
 LinkedUniform::LinkedUniform(const UsedUniform &usedUniform)
 {
-    type                          = usedUniform.type;
-    precision                     = usedUniform.precision;
-    name                          = usedUniform.name;
-    mappedName                    = usedUniform.mappedName;
-    arraySizes                    = usedUniform.arraySizes;
-    staticUse                     = usedUniform.staticUse;
-    active                        = usedUniform.active;
-    isStruct                      = usedUniform.isStruct();
+    type       = usedUniform.type;
+    precision  = usedUniform.precision;
+    name       = usedUniform.name;
+    mappedName = usedUniform.mappedName;
+    arraySizes = usedUniform.arraySizes;
+
+    flagBits.staticUse           = usedUniform.staticUse;
+    flagBits.active              = usedUniform.active;
+    flagBits.isStruct            = usedUniform.isStruct();
+    flagBits.rasterOrdered       = usedUniform.rasterOrdered;
+    flagBits.readonly            = usedUniform.readonly;
+    flagBits.writeonly           = usedUniform.writeonly;
+    flagBits.isFragmentInOut     = usedUniform.isFragmentInOut;
+    flagBits.texelFetchStaticUse = usedUniform.texelFetchStaticUse;
+
     flattenedOffsetInParentArrays = usedUniform.getFlattenedOffsetInParentArrays();
     location                      = usedUniform.location;
     binding                       = usedUniform.binding;
     imageUnitFormat               = usedUniform.imageUnitFormat;
     offset                        = usedUniform.offset;
-    rasterOrdered                 = usedUniform.rasterOrdered;
-    readonly                      = usedUniform.readonly;
-    writeonly                     = usedUniform.writeonly;
-    isFragmentInOut               = usedUniform.isFragmentInOut;
-    texelFetchStaticUse           = usedUniform.texelFetchStaticUse;
     id                            = usedUniform.id;
     activeVariable                = usedUniform.activeVariable;
     typeInfo                      = usedUniform.typeInfo;
@@ -145,20 +133,13 @@ LinkedUniform &LinkedUniform::operator=(const LinkedUniform &other)
     name                          = other.name;
     mappedName                    = other.mappedName;
     arraySizes                    = other.arraySizes;
-    staticUse                     = other.staticUse;
-    active                        = other.active;
-    isStruct                      = other.isStruct;
-    flattenedOffsetInParentArrays = other.flattenedOffsetInParentArrays;
+    flagBitsAsUInt                = other.flagBitsAsUInt;
     location                      = other.location;
     binding                       = other.binding;
     imageUnitFormat               = other.imageUnitFormat;
     offset                        = other.offset;
-    rasterOrdered                 = other.rasterOrdered;
-    readonly                      = other.readonly;
-    writeonly                     = other.writeonly;
-    isFragmentInOut               = other.isFragmentInOut;
-    texelFetchStaticUse           = other.texelFetchStaticUse;
     id                            = other.id;
+    flattenedOffsetInParentArrays = other.flattenedOffsetInParentArrays;
     activeVariable                = other.activeVariable;
     typeInfo                      = other.typeInfo;
     bufferIndex                   = other.bufferIndex;

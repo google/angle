@@ -6017,15 +6017,16 @@ angle::Result DescriptorSetDescBuilder::updateFullActiveTextures(
                     // If emulating seamful cube mapping, use the fetch image view.  This is
                     // basically the same image view as read, except it's a 2DArray view for
                     // cube maps.
-                    const ImageView &imageView = textureVk->getFetchImageView(
-                        context, samplerState.getSRGBDecode(), samplerUniform.texelFetchStaticUse);
+                    const ImageView &imageView =
+                        textureVk->getFetchImageView(context, samplerState.getSRGBDecode(),
+                                                     samplerUniform.isTexelFetchStaticUse());
                     mHandles[infoIndex].imageView = imageView.getHandle();
                 }
                 else
                 {
                     const ImageView &imageView = textureVk->getReadImageView(
-                        context, samplerState.getSRGBDecode(), samplerUniform.texelFetchStaticUse,
-                        isSamplerExternalY2Y);
+                        context, samplerState.getSRGBDecode(),
+                        samplerUniform.isTexelFetchStaticUse(), isSamplerExternalY2Y);
                     mHandles[infoIndex].imageView = imageView.getHandle();
                 }
             }
