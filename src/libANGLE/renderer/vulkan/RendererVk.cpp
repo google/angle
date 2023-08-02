@@ -874,6 +874,38 @@ gl::Version LimitVersionTo(const gl::Version &current, const gl::Version &lower)
     return true;
 }
 
+// Exclude memory type indices that include the host-visible bit from VMA image suballocation.
+uint32_t GetMemoryTypeBitsExcludingHostVisible(RendererVk *renderer,
+                                               VkMemoryPropertyFlags requiredFlags,
+                                               uint32_t availableMemoryTypeBits)
+{
+    const vk::MemoryProperties &memoryProperties = renderer->getMemoryProperties();
+    ASSERT(memoryProperties.getMemoryTypeCount() <= 32);
+    uint32_t memoryTypeBitsOut = availableMemoryTypeBits;
+
+    // For best allocation results, the memory type indices that include the host-visible flag bit
+    // are removed.
+    for (size_t memoryIndex : angle::BitSet<32>(availableMemoryTypeBits))
+    {
+        VkMemoryPropertyFlags propertyFlags =
+            memoryProperties.getMemoryType(static_cast<uint32_t>(memoryIndex)).propertyFlags;
+        if ((propertyFlags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT) != 0)
+        {
+            memoryTypeBitsOut &= ~(angle::Bit<uint32_t>(memoryIndex));
+            continue;
+        }
+
+        // If the protected bit is not required, all memory type indices with this bit should be
+        // ignored.
+        if ((propertyFlags & ~requiredFlags & VK_MEMORY_PROPERTY_PROTECTED_BIT) != 0)
+        {
+            memoryTypeBitsOut &= ~(angle::Bit<uint32_t>(memoryIndex));
+        }
+    }
+
+    return memoryTypeBitsOut;
+}
+
 // CRC16-CCITT is used for header before the pipeline cache key data.
 uint16_t ComputeCRC16(const uint8_t *data, const size_t size)
 {
@@ -5868,6 +5900,14 @@ VkResult ImageMemorySuballocator::allocateAndBindMemory(Context *context,
     bool allocateDedicatedMemory =
         memoryRequirements.size >= kImageSizeThresholdForDedicatedMemoryAllocation;
 
+    // Avoid device-local and host-visible combinations if possible.
+    uint32_t memoryTypeBits = memoryRequirements.memoryTypeBits;
+    if ((requiredFlags & VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT) != 0)
+    {
+        memoryTypeBits = GetMemoryTypeBitsExcludingHostVisible(renderer, requiredFlags,
+                                                               memoryRequirements.memoryTypeBits);
+    }
+
     // Allocate and bind memory for the image. Try allocating on the device first. If unsuccessful,
     // it is possible to retry allocation after cleaning the garbage.
     VkResult result;
@@ -5877,7 +5917,7 @@ VkResult ImageMemorySuballocator::allocateAndBindMemory(Context *context,
     do
     {
         result = vma::AllocateAndBindMemoryForImage(
-            allocator.getHandle(), &image->mHandle, requiredFlags, preferredFlags,
+            allocator.getHandle(), &image->mHandle, requiredFlags, preferredFlags, memoryTypeBits,
             allocateDedicatedMemory, &allocationOut->mHandle, memoryTypeIndexOut, sizeOut);
 
         if (result != VK_SUCCESS)
@@ -5904,12 +5944,13 @@ VkResult ImageMemorySuballocator::allocateAndBindMemory(Context *context,
     }
 
     // If there is still no space for the new allocation, the allocation may still be made outside
-    // the device, although it will result in performance penalty.
+    // the device from all other memory types, although it will result in performance penalty.
     if (result != VK_SUCCESS)
     {
         requiredFlags &= (~VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
-        result = vma::AllocateAndBindMemoryForImage(
-            allocator.getHandle(), &image->mHandle, requiredFlags, preferredFlags,
+        memoryTypeBits = memoryRequirements.memoryTypeBits;
+        result         = vma::AllocateAndBindMemoryForImage(
+            allocator.getHandle(), &image->mHandle, requiredFlags, preferredFlags, memoryTypeBits,
             allocateDedicatedMemory, &allocationOut->mHandle, memoryTypeIndexOut, sizeOut);
 
         INFO()
