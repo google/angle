@@ -97,20 +97,13 @@ struct LinkedUniform
     bool isTexelFetchStaticUse() const { return mFixedSizeData.flagBits.texelFetchStaticUse; }
     bool isFragmentInOut() const { return mFixedSizeData.flagBits.isFragmentInOut; }
 
-    bool isArrayOfArrays() const { return arraySizes.size() >= 2u; }
-    bool isArray() const { return !arraySizes.empty(); }
-    unsigned int getArraySizeProduct() const { return gl::ArraySizeProduct(arraySizes); }
-    unsigned int getOutermostArraySize() const { return isArray() ? arraySizes.back() : 0; }
+    bool isArray() const { return mFixedSizeData.flagBits.isArray; }
     unsigned int getBasicTypeElementCount() const
     {
-        ASSERT(!isArrayOfArrays());
-        ASSERT(!isStruct() || !isArray());
-
-        if (isArray())
-        {
-            return getOutermostArraySize();
-        }
-        return 1u;
+        ASSERT(!mFixedSizeData.flagBits.isArrayOfArrays);
+        ASSERT(!mFixedSizeData.flagBits.isStruct);
+        ASSERT(mFixedSizeData.flagBits.isArray || mFixedSizeData.arraySize == 1u);
+        return mFixedSizeData.arraySize;
     }
 
     GLenum getType() const { return mFixedSizeData.type; }
@@ -169,8 +162,6 @@ struct LinkedUniform
     // Only used by GL backend
     std::string mappedName;
 
-    std::vector<unsigned int> arraySizes;
-
     const UniformTypeInfo *typeInfo;
 
   private:
@@ -190,6 +181,7 @@ struct LinkedUniform
         sh::BlockMemberInfo blockInfo;
         unsigned int outerArraySizeProduct;
         unsigned int outerArrayOffset;
+        unsigned int arraySize;
         ActiveVariable activeVariable;
 
         union
@@ -198,13 +190,18 @@ struct LinkedUniform
             {
                 uint32_t staticUse : 1;
                 uint32_t active : 1;
-                uint32_t isStruct : 1;
                 uint32_t rasterOrdered : 1;
                 uint32_t readonly : 1;
                 uint32_t writeonly : 1;
                 uint32_t isFragmentInOut : 1;
                 uint32_t texelFetchStaticUse : 1;
-                uint32_t padding : 24;
+                uint32_t isArray : 1;
+                // Since we always flatten the uniform structure and arrays into one dimensional
+                // array, these should always false. They can be removed, but I keep it here for now
+                // just in case we need it in future.
+                uint32_t isArrayOfArrays : 1;
+                uint32_t isStruct : 1;
+                uint32_t padding : 22;
             } flagBits;
 
             uint32_t flagBitsAsUInt;

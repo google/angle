@@ -1901,13 +1901,8 @@ void CaptureUpdateUniformLocations(const gl::Program *program, std::vector<CallC
                     continue;
                 }
 
-                if (uniform.isArrayOfArrays())
-                {
-                    UNIMPLEMENTED();
-                }
-
                 name  = gl::StripLastArrayIndex(name);
-                count = uniform.arraySizes[0];
+                count = uniform.getBasicTypeElementCount();
             }
         }
 
@@ -2516,13 +2511,7 @@ void CaptureUpdateUniformValues(const gl::State &replayState,
         int uniformCount = 1;
         if (uniform.isArray())
         {
-            if (uniform.isArrayOfArrays())
-            {
-                UNIMPLEMENTED();
-                continue;
-            }
-
-            uniformCount = uniform.arraySizes[0];
+            uniformCount = uniform.getBasicTypeElementCount();
             uniformName  = gl::StripLastArrayIndex(uniformName);
         }
 

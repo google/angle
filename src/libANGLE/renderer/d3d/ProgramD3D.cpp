@@ -1097,10 +1097,16 @@ std::unique_ptr<rx::LinkEvent> ProgramD3D::load(const gl::Context *context,
     for (size_t uniformIndex = 0; uniformIndex < uniformCount; uniformIndex++)
     {
         const gl::LinkedUniform &linkedUniform = linkedUniforms[uniformIndex];
-
+        // Could D3DUniform just change to use unsigned int instead of std::vector for arraySizes?
+        // Frontend always flatten the array to at most 1D array.
+        std::vector<unsigned int> arraySizes;
+        if (linkedUniform.isArray())
+        {
+            arraySizes.push_back(linkedUniform.getBasicTypeElementCount());
+        }
         D3DUniform *d3dUniform =
             new D3DUniform(linkedUniform.getType(), HLSLRegisterType::None, linkedUniform.name,
-                           linkedUniform.arraySizes, linkedUniform.isInDefaultBlock());
+                           arraySizes, linkedUniform.isInDefaultBlock());
         stream->readEnum(&d3dUniform->regType);
         for (gl::ShaderType shaderType : gl::AllShaderTypes())
         {

@@ -1458,8 +1458,8 @@ void ProgramMtl::setUniformMatrixfv(GLint location,
         }
 
         mtl::SetFloatUniformMatrixMetal<cols, rows>::Run(
-            locationInfo.arrayIndex, linkedUniform.getArraySizeProduct(), count, transpose, value,
-            uniformBlock.uniformData.data() + layoutInfo.offset);
+            locationInfo.arrayIndex, linkedUniform.getBasicTypeElementCount(), count, transpose,
+            value, uniformBlock.uniformData.data() + layoutInfo.offset);
 
         mDefaultUniformBlocksDirty.set(shaderType);
     }

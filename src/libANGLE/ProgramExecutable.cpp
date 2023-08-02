@@ -1591,7 +1591,7 @@ void ProgramExecutable::linkSamplerAndImageBindings(GLuint *combinedImageUniform
         // unbound image array) should be bound to unit zero.
         auto &imageUniform      = mUniforms[imageIndex];
         TextureType textureType = ImageTypeToTextureType(imageUniform.getType());
-        const GLuint arraySize  = imageUniform.isArray() ? imageUniform.arraySizes[0] : 1u;
+        const GLuint arraySize  = imageUniform.getBasicTypeElementCount();
 
         if (imageUniform.getBinding() == -1)
         {
