@@ -164,7 +164,7 @@ ANGLE_INLINE ScopedContextMutexLock GetContextLock_SwapBuffers(Thread *thread,
 ANGLE_INLINE ScopedContextMutexLock GetContextLock_Terminate(Thread *thread,
                                                              egl::Display *dpyPacked)
 {
-    // Accesses only not curent Contexts or when TerminateReason::NoActiveThreads
+    // Accesses only not curent Contexts
     return {};
 }
 

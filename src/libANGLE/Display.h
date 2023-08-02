@@ -101,7 +101,6 @@ class Display final : public LabeledObject,
     {
         Api,
         InternalCleanup,
-        NoActiveThreads,
 
         InvalidEnum,
         EnumCount = InvalidEnum,
@@ -114,10 +113,6 @@ class Display final : public LabeledObject,
     // Called on eglReleaseThread. Backends can tear down thread-specific backend state through
     // this function.
     Error releaseThread();
-
-    // Helpers to maintain active thread set to assist with freeing invalid EGL objects.
-    void addActiveThread(Thread *thread);
-    void threadCleanup(Thread *thread);
 
     ContextMutexManager *getSharedContextMutexManager() const
     {
@@ -422,7 +417,6 @@ class Display final : public LabeledObject,
     std::mutex mProgramCacheMutex;
 
     bool mTerminatedByApi;
-    ThreadSet mActiveThreads;
 
     // Single-threaded and multithread pools for use by various parts of ANGLE, such as shader
     // compilation.  These pools are internally synchronized.
