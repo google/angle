@@ -1895,8 +1895,9 @@ void CaptureUpdateUniformLocations(const gl::Program *program, std::vector<CallC
                 {
                     // Non-sequential array uniform locations are not currently handled.
                     // In practice array locations shouldn't ever be non-sequential.
-                    ASSERT(uniform.location == -1 ||
-                           location == uniform.location + static_cast<int>(locationVar.arrayIndex));
+                    ASSERT(uniform.getLocation() == -1 ||
+                           location ==
+                               uniform.getLocation() + static_cast<int>(locationVar.arrayIndex));
                     continue;
                 }
 

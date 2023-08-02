@@ -1341,16 +1341,16 @@ void ProgramMtl::getUniformImpl(GLint location, T *v, GLenum entryPointType) con
     const GLint baseComponentSize =
         (GLint)mtl::GetMetalSizeForGLType(gl::VariableComponentType(linkedUniform.typeInfo->type));
 
-    if (gl::IsMatrixType(linkedUniform.type))
+    if (gl::IsMatrixType(linkedUniform.getType()))
     {
         const uint8_t *ptrToElement = uniformBlock.uniformData.data() + layoutInfo.offset +
                                       (locationInfo.arrayIndex * layoutInfo.arrayStride);
-        mtl::GetMatrixUniformMetal(linkedUniform.type, v, reinterpret_cast<const T *>(ptrToElement),
-                                   false);
+        mtl::GetMatrixUniformMetal(linkedUniform.getType(), v,
+                                   reinterpret_cast<const T *>(ptrToElement), false);
     }
     // Decompress bool from one byte to four bytes because bool values in GLSL
     // are uint-sized: ES 3.0 Section 2.12.6.3 "Uniform Buffer Object Storage".
-    else if (gl::VariableComponentType(linkedUniform.type) == GL_BOOL)
+    else if (gl::VariableComponentType(linkedUniform.getType()) == GL_BOOL)
     {
         bool bVals[4] = {0};
         ReadFromDefaultUniformBlockWithElementSize(

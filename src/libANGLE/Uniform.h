@@ -19,6 +19,8 @@
 
 namespace gl
 {
+class BinaryInputStream;
+class BinaryOutputStream;
 struct UniformTypeInfo;
 struct UsedUniform;
 
@@ -72,16 +74,25 @@ struct LinkedUniform
     LinkedUniform &operator=(const LinkedUniform &other);
     ~LinkedUniform();
 
+    void setBlockInfo(int offset, int arrayStride, int matrixStride, bool isRowMajorMatrix)
+    {
+        mFixedSizeData.blockInfo.offset           = offset;
+        mFixedSizeData.blockInfo.arrayStride      = arrayStride;
+        mFixedSizeData.blockInfo.matrixStride     = matrixStride;
+        mFixedSizeData.blockInfo.isRowMajorMatrix = isRowMajorMatrix;
+    }
+    void setBufferIndex(int bufferIndex) { mFixedSizeData.bufferIndex = bufferIndex; }
+
     bool isSampler() const { return typeInfo->isSampler; }
     bool isImage() const { return typeInfo->isImageType; }
-    bool isAtomicCounter() const { return IsAtomicCounterType(type); }
-    bool isInDefaultBlock() const { return bufferIndex == -1; }
+    bool isAtomicCounter() const { return IsAtomicCounterType(mFixedSizeData.type); }
+    bool isInDefaultBlock() const { return mFixedSizeData.bufferIndex == -1; }
     size_t getElementSize() const { return typeInfo->externalSize; }
     size_t getElementComponents() const { return typeInfo->componentCount; }
 
-    bool isStruct() const { return flagBits.isStruct; }
-    bool isTexelFetchStaticUse() const { return flagBits.texelFetchStaticUse; }
-    bool isFragmentInOut() const { return flagBits.isFragmentInOut; }
+    bool isStruct() const { return mFixedSizeData.flagBits.isStruct; }
+    bool isTexelFetchStaticUse() const { return mFixedSizeData.flagBits.texelFetchStaticUse; }
+    bool isFragmentInOut() const { return mFixedSizeData.flagBits.isFragmentInOut; }
 
     bool isArrayOfArrays() const { return arraySizes.size() >= 2u; }
     bool isArray() const { return !arraySizes.empty(); }
@@ -99,7 +110,16 @@ struct LinkedUniform
         return 1u;
     }
 
+    GLenum getType() const { return mFixedSizeData.type; }
     unsigned int getExternalSize() const;
+    unsigned int getOuterArrayOffset() const { return mFixedSizeData.outerArrayOffset; }
+    unsigned int getOuterArraySizeProduct() const { return mFixedSizeData.outerArraySizeProduct; }
+    int getBinding() const { return mFixedSizeData.binding; }
+    int getOffset() const { return mFixedSizeData.offset; }
+    const sh::BlockMemberInfo &getBlockInfo() const { return mFixedSizeData.blockInfo; }
+    int getBufferIndex() const { return mFixedSizeData.bufferIndex; }
+    int getLocation() const { return mFixedSizeData.location; }
+    GLenum getImageUnitFormat() const { return mFixedSizeData.imageUnitFormat; }
 
     bool findInfoByMappedName(const std::string &mappedFullName,
                               const sh::ShaderVariable **leafVar,
@@ -108,12 +128,10 @@ struct LinkedUniform
 
     int parentArrayIndex() const
     {
-        return hasParentArrayIndex() ? flattenedOffsetInParentArrays : 0;
+        return hasParentArrayIndex() ? mFixedSizeData.flattenedOffsetInParentArrays : 0;
     }
-    int getFlattenedOffsetInParentArrays() const { return flattenedOffsetInParentArrays; }
-    void setParentArrayIndex(int indexIn) { flattenedOffsetInParentArrays = indexIn; }
 
-    bool hasParentArrayIndex() const { return flattenedOffsetInParentArrays != -1; }
+    bool hasParentArrayIndex() const { return mFixedSizeData.flattenedOffsetInParentArrays != -1; }
     bool isSameInterfaceBlockFieldAtLinkTime(const sh::ShaderVariable &other) const;
 
     bool isSameVariableAtLinkTime(const sh::ShaderVariable &other,
@@ -134,51 +152,55 @@ struct LinkedUniform
     ShaderBitSet activeShaders() const { return activeVariable.activeShaders(); }
     GLuint activeShaderCount() const { return activeVariable.activeShaderCount(); }
 
-    GLenum type;
-    GLenum precision;
+    void save(BinaryOutputStream *stream) const;
+    void load(BinaryInputStream *stream);
+
     std::string name;
     // Only used by GL backend
     std::string mappedName;
 
     std::vector<unsigned int> arraySizes;
 
-    union
-    {
-        struct
-        {
-            uint32_t staticUse : 1;
-            uint32_t active : 1;
-            uint32_t isStruct : 1;
-            uint32_t rasterOrdered : 1;
-            uint32_t readonly : 1;
-            uint32_t writeonly : 1;
-            uint32_t isFragmentInOut : 1;
-            uint32_t texelFetchStaticUse : 1;
-            uint32_t padding : 24;
-        } flagBits;
-
-        uint32_t flagBitsAsUInt;
-    };
-
-    int location;
-
-    int binding;
-    GLenum imageUnitFormat;
-    int offset;
-
-    uint32_t id;
-
-    int flattenedOffsetInParentArrays;
-
     ActiveVariable activeVariable;
 
     const UniformTypeInfo *typeInfo;
 
-    // Identifies the containing buffer backed resource -- interface block or atomic counter buffer.
-    int bufferIndex;
-    sh::BlockMemberInfo blockInfo;
-    unsigned int outerArraySizeProduct;
-    unsigned int outerArrayOffset;
+  private:
+    // Important: The fixed size data structure with fundamental data types only, so that we can
+    // initialize with memcpy. Do not put any std::vector or objects with virtual functions in it.
+    struct
+    {
+        GLenum type;
+        GLenum precision;
+        int location;
+        int binding;
+        GLenum imageUnitFormat;
+        int offset;
+        uint32_t id;
+        int flattenedOffsetInParentArrays;
+        int bufferIndex;
+        sh::BlockMemberInfo blockInfo;
+        unsigned int outerArraySizeProduct;
+        unsigned int outerArrayOffset;
+
+        union
+        {
+            struct
+            {
+                uint32_t staticUse : 1;
+                uint32_t active : 1;
+                uint32_t isStruct : 1;
+                uint32_t rasterOrdered : 1;
+                uint32_t readonly : 1;
+                uint32_t writeonly : 1;
+                uint32_t isFragmentInOut : 1;
+                uint32_t texelFetchStaticUse : 1;
+                uint32_t padding : 24;
+            } flagBits;
+
+            uint32_t flagBitsAsUInt;
+        };
+    } mFixedSizeData;
 };
 
 struct BufferVariable : public sh::ShaderVariable, public ActiveVariable

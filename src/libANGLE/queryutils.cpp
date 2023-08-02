@@ -1900,27 +1900,31 @@ GLint GetUniformResourceProperty(const Program *program, GLuint index, const GLe
     switch (resourceProp)
     {
         case GL_TYPE:
+            return clampCast<GLint>(uniform.getType());
+
         case GL_ARRAY_SIZE:
+            return clampCast<GLint>(uniform.getBasicTypeElementCount());
+
         case GL_NAME_LENGTH:
-            return GetCommonVariableProperty(uniform, resourceProp);
+            return clampCast<GLint>(uniform.name.size() + 1u);
 
         case GL_LOCATION:
             return program->getUniformLocation(uniform.name).value;
 
         case GL_BLOCK_INDEX:
-            return (uniform.isAtomicCounter() ? -1 : uniform.bufferIndex);
+            return (uniform.isAtomicCounter() ? -1 : uniform.getBufferIndex());
 
         case GL_OFFSET:
-            return uniform.blockInfo.offset;
+            return uniform.getBlockInfo().offset;
 
         case GL_ARRAY_STRIDE:
-            return uniform.blockInfo.arrayStride;
+            return uniform.getBlockInfo().arrayStride;
 
         case GL_MATRIX_STRIDE:
-            return uniform.blockInfo.matrixStride;
+            return uniform.getBlockInfo().matrixStride;
 
         case GL_IS_ROW_MAJOR:
-            return static_cast<GLint>(uniform.blockInfo.isRowMajorMatrix);
+            return static_cast<GLint>(uniform.getBlockInfo().isRowMajorMatrix);
 
         case GL_REFERENCED_BY_VERTEX_SHADER:
             return uniform.isActive(ShaderType::Vertex);
@@ -1941,7 +1945,7 @@ GLint GetUniformResourceProperty(const Program *program, GLuint index, const GLe
             return uniform.isActive(ShaderType::TessEvaluation);
 
         case GL_ATOMIC_COUNTER_BUFFER_INDEX:
-            return (uniform.isAtomicCounter() ? uniform.bufferIndex : -1);
+            return (uniform.isAtomicCounter() ? uniform.getBufferIndex() : -1);
 
         default:
             UNREACHABLE();

@@ -690,7 +690,7 @@ void AssignInputAttachmentBindings(const SpvSourceOptions &options,
         ASSERT(inputAttachmentUniform.isActive(gl::ShaderType::Fragment));
 
         const uint32_t inputAttachmentBindingIndex =
-            baseInputAttachmentBindingIndex + inputAttachmentUniform.location;
+            baseInputAttachmentBindingIndex + inputAttachmentUniform.getLocation();
 
         AddResourceInfo(variableInfoMapOut, activeShaders, gl::ShaderType::Fragment,
 

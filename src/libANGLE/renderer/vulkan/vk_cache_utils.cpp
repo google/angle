@@ -5520,7 +5520,7 @@ void WriteDescriptorDescs::updateImages(const gl::ProgramExecutable &executable,
             variableInfoMap.getVariableById(firstShaderType, imageUniform.getId(firstShaderType));
 
         uint32_t arraySize       = static_cast<uint32_t>(imageBinding.boundImageUnits.size());
-        uint32_t descriptorCount = arraySize * imageUniform.outerArraySizeProduct;
+        uint32_t descriptorCount = arraySize * imageUniform.getOuterArraySizeProduct();
         VkDescriptorType descriptorType = (imageBinding.textureType == gl::TextureType::Buffer)
                                               ? VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER
                                               : VK_DESCRIPTOR_TYPE_STORAGE_IMAGE;
@@ -5547,7 +5547,7 @@ void WriteDescriptorDescs::updateInputAttachments(
     const ShaderInterfaceVariableInfo &baseInfo = variableInfoMap.getVariableById(
         gl::ShaderType::Fragment, baseInputAttachment.getId(gl::ShaderType::Fragment));
 
-    uint32_t baseBinding = baseInfo.binding - baseInputAttachment.location;
+    uint32_t baseBinding = baseInfo.binding - baseInputAttachment.getLocation();
 
     for (size_t colorIndex : framebufferVk->getState().getColorAttachmentsMask())
     {
@@ -5579,7 +5579,7 @@ void WriteDescriptorDescs::updateExecutableActiveTextures(
             variableInfoMap.getVariableById(firstShaderType, samplerUniform.getId(firstShaderType));
 
         uint32_t arraySize       = static_cast<uint32_t>(samplerBinding.boundTextureUnits.size());
-        uint32_t descriptorCount = arraySize * samplerUniform.outerArraySizeProduct;
+        uint32_t descriptorCount = arraySize * samplerUniform.getOuterArraySizeProduct();
         VkDescriptorType descriptorType = (samplerBinding.textureType == gl::TextureType::Buffer)
                                               ? VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER
                                               : VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
@@ -5888,7 +5888,7 @@ void UpdatePreCacheActiveTextures(const gl::ProgramExecutable &executable,
             TextureVk *textureVk = textures[textureUnit];
 
             uint32_t infoIndex = writeDescriptorDescs[info.binding].descriptorInfoIndex +
-                                 arrayElement + samplerUniform.outerArrayOffset;
+                                 arrayElement + samplerUniform.getOuterArrayOffset();
             DescriptorInfoDesc &infoDesc = desc->getInfoDesc(infoIndex);
             infoDesc.binding             = info.binding;
 
@@ -5965,7 +5965,7 @@ angle::Result DescriptorSetDescBuilder::updateFullActiveTextures(
             TextureVk *textureVk = textures[textureUnit];
 
             uint32_t infoIndex = writeDescriptorDescs[info.binding].descriptorInfoIndex +
-                                 arrayElement + samplerUniform.outerArrayOffset;
+                                 arrayElement + samplerUniform.getOuterArrayOffset();
             DescriptorInfoDesc &infoDesc = mDesc.getInfoDesc(infoIndex);
             infoDesc.binding             = info.binding;
 
@@ -6356,9 +6356,9 @@ angle::Result DescriptorSetDescBuilder::updateImages(
             // Handle format reinterpretation by looking for a view with the format specified in
             // the shader (if any, instead of the format specified to glTexBuffer).
             const vk::Format *format = nullptr;
-            if (imageUniform.imageUnitFormat != GL_NONE)
+            if (imageUniform.getImageUnitFormat() != GL_NONE)
             {
-                format = &renderer->getFormat(imageUniform.imageUnitFormat);
+                format = &renderer->getFormat(imageUniform.getImageUnitFormat());
             }
 
             for (uint32_t arrayElement = 0; arrayElement < arraySize; ++arrayElement)
@@ -6367,7 +6367,7 @@ angle::Result DescriptorSetDescBuilder::updateImages(
                 TextureVk *textureVk = activeImages[imageUnit];
 
                 uint32_t infoIndex = writeDescriptorDescs[info.binding].descriptorInfoIndex +
-                                     arrayElement + imageUniform.outerArrayOffset;
+                                     arrayElement + imageUniform.getOuterArrayOffset();
 
                 const vk::BufferView *view = nullptr;
                 ANGLE_TRY(textureVk->getBufferViewAndRecordUse(context, format, true, &view));
@@ -6400,7 +6400,7 @@ angle::Result DescriptorSetDescBuilder::updateImages(
                 ANGLE_TRY(textureVk->getStorageImageView(context, binding, &imageView));
 
                 uint32_t infoIndex = writeDescriptorDescs[info.binding].descriptorInfoIndex +
-                                     arrayElement + imageUniform.outerArrayOffset;
+                                     arrayElement + imageUniform.getOuterArrayOffset();
 
                 // Note: binding.access is unused because it is implied by the shader.
 
@@ -6439,7 +6439,7 @@ angle::Result DescriptorSetDescBuilder::updateInputAttachments(
     const ShaderInterfaceVariableInfo &baseInfo = variableInfoMap.getVariableById(
         gl::ShaderType::Fragment, baseInputAttachment.getId(gl::ShaderType::Fragment));
 
-    uint32_t baseBinding = baseInfo.binding - baseInputAttachment.location;
+    uint32_t baseBinding = baseInfo.binding - baseInputAttachment.getLocation();
 
     for (size_t colorIndex : framebufferVk->getState().getColorAttachmentsMask())
     {

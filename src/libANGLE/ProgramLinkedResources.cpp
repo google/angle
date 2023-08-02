@@ -1687,15 +1687,15 @@ void ProgramLinkedResourcesLinker::getAtomicCounterBufferSizeMap(
     {
         const LinkedUniform &glUniform = programState.getUniforms()[index];
 
-        auto &bufferDataSize = sizeMapOut[glUniform.binding];
+        auto &bufferDataSize = sizeMapOut[glUniform.getBinding()];
 
         // Calculate the size of the buffer by finding the end of the last uniform with the same
         // binding. The end of the uniform is calculated by finding the initial offset of the
         // uniform and adding size of the uniform. For arrays, the size is the number of elements
         // times the element size (should always by 4 for atomic_units).
         unsigned dataOffset =
-            glUniform.offset + static_cast<unsigned int>(glUniform.getBasicTypeElementCount() *
-                                                         glUniform.getElementSize());
+            glUniform.getOffset() + static_cast<unsigned int>(glUniform.getBasicTypeElementCount() *
+                                                              glUniform.getElementSize());
         if (dataOffset > bufferDataSize)
         {
             bufferDataSize = dataOffset;

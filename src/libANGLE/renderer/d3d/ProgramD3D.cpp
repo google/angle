@@ -1099,7 +1099,7 @@ std::unique_ptr<rx::LinkEvent> ProgramD3D::load(const gl::Context *context,
         const gl::LinkedUniform &linkedUniform = linkedUniforms[uniformIndex];
 
         D3DUniform *d3dUniform =
-            new D3DUniform(linkedUniform.type, HLSLRegisterType::None, linkedUniform.name,
+            new D3DUniform(linkedUniform.getType(), HLSLRegisterType::None, linkedUniform.name,
                            linkedUniform.arraySizes, linkedUniform.isInDefaultBlock());
         stream->readEnum(&d3dUniform->regType);
         for (gl::ShaderType shaderType : gl::AllShaderTypes())
@@ -3340,9 +3340,10 @@ void ProgramD3D::getUniformInternal(GLint location, DestT *dataOut) const
     const D3DUniform *targetUniform = getD3DUniformFromLocation(location);
     const uint8_t *srcPointer       = targetUniform->getDataPtrToElement(locationInfo.arrayIndex);
 
-    if (gl::IsMatrixType(uniform.type))
+    if (gl::IsMatrixType(uniform.getType()))
     {
-        GetMatrixUniform(uniform.type, dataOut, reinterpret_cast<const DestT *>(srcPointer), true);
+        GetMatrixUniform(uniform.getType(), dataOut, reinterpret_cast<const DestT *>(srcPointer),
+                         true);
     }
     else
     {

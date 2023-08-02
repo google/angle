@@ -430,11 +430,12 @@ void ProgramVk::getUniformImpl(GLint location, T *v, GLenum entryPointType) cons
     ASSERT(linkedUniform.typeInfo->componentType == entryPointType ||
            linkedUniform.typeInfo->componentType == gl::VariableBoolVectorType(entryPointType));
 
-    if (gl::IsMatrixType(linkedUniform.type))
+    if (gl::IsMatrixType(linkedUniform.getType()))
     {
         const uint8_t *ptrToElement = uniformBlock.uniformData.data() + layoutInfo.offset +
                                       (locationInfo.arrayIndex * layoutInfo.arrayStride);
-        GetMatrixUniform(linkedUniform.type, v, reinterpret_cast<const T *>(ptrToElement), false);
+        GetMatrixUniform(linkedUniform.getType(), v, reinterpret_cast<const T *>(ptrToElement),
+                         false);
     }
     else
     {
