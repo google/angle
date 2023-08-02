@@ -656,7 +656,7 @@ void ANGLETestBase::ANGLETestSetUp()
         return;
     }
 
-    if (mLastLoadedDriver.valid() && mCurrentParams->driver != mLastLoadedDriver.value())
+    if (!mLastLoadedDriver.valid() || mCurrentParams->driver != mLastLoadedDriver.value())
     {
         LoadEntryPointsWithUtilLoader(mCurrentParams->driver);
         mLastLoadedDriver = mCurrentParams->driver;
