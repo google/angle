@@ -1652,7 +1652,7 @@ bool ProgramExecutable::linkAtomicCounterBuffers(const Context *context, InfoLog
                 buffer.memberIndexes.push_back(index);
                 uniform.setBufferIndex(bufferIndex);
                 found = true;
-                buffer.unionReferencesWith(uniform.activeVariable);
+                buffer.unionReferencesWith(uniform.getActiveVariable());
                 break;
             }
         }
@@ -1661,7 +1661,7 @@ bool ProgramExecutable::linkAtomicCounterBuffers(const Context *context, InfoLog
             AtomicCounterBuffer atomicCounterBuffer;
             atomicCounterBuffer.binding = uniform.getBinding();
             atomicCounterBuffer.memberIndexes.push_back(index);
-            atomicCounterBuffer.unionReferencesWith(uniform.activeVariable);
+            atomicCounterBuffer.unionReferencesWith(uniform.getActiveVariable());
             mAtomicCounterBuffers.push_back(atomicCounterBuffer);
             uniform.setBufferIndex(static_cast<int>(getActiveAtomicCounterBufferCount() - 1));
         }

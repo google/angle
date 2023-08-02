@@ -123,23 +123,22 @@ LinkedUniform::LinkedUniform(const UsedUniform &usedUniform)
     mFixedSizeData.blockInfo                     = usedUniform.blockInfo;
     mFixedSizeData.outerArraySizeProduct         = ArraySizeProduct(usedUniform.outerArraySizes);
     mFixedSizeData.outerArrayOffset              = usedUniform.outerArrayOffset;
+    mFixedSizeData.activeVariable                = usedUniform.activeVariable;
 
-    name           = usedUniform.name;
-    mappedName     = usedUniform.mappedName;
-    arraySizes     = usedUniform.arraySizes;
-    activeVariable = usedUniform.activeVariable;
-    typeInfo       = usedUniform.typeInfo;
+    name       = usedUniform.name;
+    mappedName = usedUniform.mappedName;
+    arraySizes = usedUniform.arraySizes;
+    typeInfo   = usedUniform.typeInfo;
 }
 
 LinkedUniform &LinkedUniform::operator=(const LinkedUniform &other)
 {
     mFixedSizeData = other.mFixedSizeData;
 
-    name           = other.name;
-    mappedName     = other.mappedName;
-    arraySizes     = other.arraySizes;
-    activeVariable = other.activeVariable;
-    typeInfo       = other.typeInfo;
+    name       = other.name;
+    mappedName = other.mappedName;
+    arraySizes = other.arraySizes;
+    typeInfo   = other.typeInfo;
 
     return *this;
 }
@@ -156,13 +155,6 @@ void LinkedUniform::save(BinaryOutputStream *stream) const
     stream->writeString(name);
     stream->writeString(mappedName);
     stream->writeIntVector(arraySizes);
-
-    // Active shader info
-    for (ShaderType shaderType : gl::AllShaderTypes())
-    {
-        stream->writeBool(isActive(shaderType));
-        stream->writeInt(isActive(shaderType) ? getIds()[shaderType] : 0);
-    }
 }
 
 void LinkedUniform::load(BinaryInputStream *stream)
@@ -176,13 +168,6 @@ void LinkedUniform::load(BinaryInputStream *stream)
     stream->readIntVector<unsigned int>(&arraySizes);
 
     typeInfo = &GetUniformTypeInfo(getType());
-    // Active shader info
-    for (ShaderType shaderType : gl::AllShaderTypes())
-    {
-        const bool isActive = stream->readBool();
-        const uint32_t id   = stream->readInt<uint32_t>();
-        setActive(shaderType, isActive, id);
-    }
 }
 
 BufferVariable::BufferVariable()

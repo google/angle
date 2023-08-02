@@ -1022,7 +1022,7 @@ void SerializeBufferVariablesVector(JsonSerializer *json,
         json->addScalar("BufferIndex", bufferVariable.bufferIndex);
         SerializeBlockMemberInfo(json, bufferVariable.blockInfo);
         json->addScalar("TopLevelArraySize", bufferVariable.topLevelArraySize);
-        SerializeActiveVariable(json, bufferVariable);
+        SerializeActiveVariable(json, bufferVariable.activeVariable);
         SerializeShaderVariable(json, bufferVariable);
     }
 }

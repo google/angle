@@ -425,7 +425,7 @@ void LoadActiveVariable(BinaryInputStream *stream, ActiveVariable *var)
 
 void WriteShaderVariableBuffer(BinaryOutputStream *stream, const ShaderVariableBuffer &var)
 {
-    WriteActiveVariable(stream, var);
+    WriteActiveVariable(stream, var.activeVariable);
 
     stream->writeInt(var.binding);
     stream->writeInt(var.dataSize);
@@ -439,7 +439,7 @@ void WriteShaderVariableBuffer(BinaryOutputStream *stream, const ShaderVariableB
 
 void LoadShaderVariableBuffer(BinaryInputStream *stream, ShaderVariableBuffer *var)
 {
-    LoadActiveVariable(stream, var);
+    LoadActiveVariable(stream, &var->activeVariable);
 
     var->binding  = stream->readInt<int>();
     var->dataSize = stream->readInt<unsigned int>();
@@ -454,7 +454,7 @@ void LoadShaderVariableBuffer(BinaryInputStream *stream, ShaderVariableBuffer *v
 void WriteBufferVariable(BinaryOutputStream *stream, const BufferVariable &var)
 {
     WriteShaderVar(stream, var);
-    WriteActiveVariable(stream, var);
+    WriteActiveVariable(stream, var.activeVariable);
 
     stream->writeInt(var.bufferIndex);
     WriteBlockMemberInfo(stream, var.blockInfo);
@@ -464,7 +464,7 @@ void WriteBufferVariable(BinaryOutputStream *stream, const BufferVariable &var)
 void LoadBufferVariable(BinaryInputStream *stream, BufferVariable *var)
 {
     LoadShaderVar(stream, var);
-    LoadActiveVariable(stream, var);
+    LoadActiveVariable(stream, &(var->activeVariable));
 
     var->bufferIndex = stream->readInt<int>();
     LoadBlockMemberInfo(stream, &var->blockInfo);
