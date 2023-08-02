@@ -393,25 +393,28 @@ EGLBoolean EGLAPIENTRY EGL_ReleaseDeviceANGLE(EGLDeviceEXT device)
 }
 
 // EGL_ANGLE_external_context_and_surface
-void EGLAPIENTRY EGL_AcquireExternalContextANGLE(EGLDisplay dpy)
+void EGLAPIENTRY EGL_AcquireExternalContextANGLE(EGLDisplay dpy, EGLSurface drawAndRead)
 {
 
     Thread *thread = egl::GetCurrentThread();
     {
         ANGLE_SCOPED_GLOBAL_LOCK();
-        EGL_EVENT(AcquireExternalContextANGLE, "dpy = 0x%016" PRIxPTR "", (uintptr_t)dpy);
+        EGL_EVENT(AcquireExternalContextANGLE,
+                  "dpy = 0x%016" PRIxPTR ", drawAndRead = 0x%016" PRIxPTR "", (uintptr_t)dpy,
+                  (uintptr_t)drawAndRead);
 
-        egl::Display *dpyPacked = PackParam<egl::Display *>(dpy);
+        egl::Display *dpyPacked     = PackParam<egl::Display *>(dpy);
+        SurfaceID drawAndReadPacked = PackParam<SurfaceID>(drawAndRead);
 
         {
             ANGLE_EGL_SCOPED_CONTEXT_LOCK(AcquireExternalContextANGLE, thread, dpyPacked);
             ANGLE_EGL_VALIDATE_VOID(thread, AcquireExternalContextANGLE,
-                                    GetDisplayIfValid(dpyPacked), dpyPacked);
+                                    GetDisplayIfValid(dpyPacked), dpyPacked, drawAndReadPacked);
 
-            AcquireExternalContextANGLE(thread, dpyPacked);
+            AcquireExternalContextANGLE(thread, dpyPacked, drawAndReadPacked);
         }
 
-        ANGLE_CAPTURE_EGL(AcquireExternalContextANGLE, true, thread, dpyPacked);
+        ANGLE_CAPTURE_EGL(AcquireExternalContextANGLE, true, thread, dpyPacked, drawAndReadPacked);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }

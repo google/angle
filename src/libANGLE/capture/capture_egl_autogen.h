@@ -325,7 +325,8 @@ angle::CallCapture CaptureReleaseDeviceANGLE(egl::Thread *thread,
                                              EGLBoolean returnValue);
 angle::CallCapture CaptureAcquireExternalContextANGLE(egl::Thread *thread,
                                                       bool isCallValid,
-                                                      egl::Display *dpyPacked);
+                                                      egl::Display *dpyPacked,
+                                                      SurfaceID drawAndReadPacked);
 angle::CallCapture CaptureReleaseExternalContextANGLE(egl::Thread *thread,
                                                       bool isCallValid,
                                                       egl::Display *dpyPacked);

@@ -718,7 +718,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     void onGPUSwitch();
 
     // EGL_ANGLE_external_context_and_surface implementation.
-    egl::Error acquireExternalContext();
+    egl::Error acquireExternalContext(egl::Surface *drawAndReadSurface);
     egl::Error releaseExternalContext();
 
     bool noopDraw(PrimitiveMode mode, GLsizei count) const;

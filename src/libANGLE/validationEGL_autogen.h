@@ -234,7 +234,8 @@ bool ValidateReleaseDeviceANGLE(const ValidationContext *val, const egl::Device 
 
 // EGL_ANGLE_external_context_and_surface
 bool ValidateAcquireExternalContextANGLE(const ValidationContext *val,
-                                         const egl::Display *dpyPacked);
+                                         const egl::Display *dpyPacked,
+                                         SurfaceID drawAndReadPacked);
 bool ValidateReleaseExternalContextANGLE(const ValidationContext *val,
                                          const egl::Display *dpyPacked);
 

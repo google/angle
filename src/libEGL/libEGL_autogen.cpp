@@ -481,10 +481,10 @@ EGLBoolean EGLAPIENTRY eglReleaseDeviceANGLE(EGLDeviceEXT device)
 }
 
 // EGL_ANGLE_external_context_and_surface
-void EGLAPIENTRY eglAcquireExternalContextANGLE(EGLDisplay dpy)
+void EGLAPIENTRY eglAcquireExternalContextANGLE(EGLDisplay dpy, EGLSurface drawAndRead)
 {
     EnsureEGLLoaded();
-    return EGL_AcquireExternalContextANGLE(dpy);
+    return EGL_AcquireExternalContextANGLE(dpy, drawAndRead);
 }
 
 void EGLAPIENTRY eglReleaseExternalContextANGLE(EGLDisplay dpy)

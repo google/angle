@@ -90,6 +90,7 @@
         <command>
             <proto>void <name>eglAcquireExternalContextANGLE</name></proto>
             <param><ptype>EGLDisplay</ptype> <name>dpy</name></param>
+            <param><ptype>EGLSurface</ptype> <name>drawAndRead</name></param>
         </command>
         <command>
             <proto>void <name>eglReleaseExternalContextANGLE</name></proto>

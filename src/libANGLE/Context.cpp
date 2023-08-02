@@ -9653,9 +9653,16 @@ void Context::onGPUSwitch()
     initRendererString();
 }
 
-egl::Error Context::acquireExternalContext()
+egl::Error Context::acquireExternalContext(egl::Surface *drawAndReadSurface)
 {
     mImplementation->acquireExternalContext(this);
+
+    if (drawAndReadSurface != mCurrentDrawSurface || drawAndReadSurface != mCurrentReadSurface)
+    {
+        ANGLE_TRY(unsetDefaultFramebuffer());
+        ANGLE_TRY(setDefaultFramebuffer(drawAndReadSurface, drawAndReadSurface));
+    }
+
     return egl::NoError();
 }
 

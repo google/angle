@@ -1066,11 +1066,13 @@ CallCapture CaptureReleaseDeviceANGLE(egl::Thread *thread,
 
 CallCapture CaptureAcquireExternalContextANGLE(egl::Thread *thread,
                                                bool isCallValid,
-                                               egl::Display *dpyPacked)
+                                               egl::Display *dpyPacked,
+                                               SurfaceID drawAndReadPacked)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("dpyPacked", ParamType::Tegl_DisplayPointer, dpyPacked);
+    paramBuffer.addValueParam("drawAndReadPacked", ParamType::TSurfaceID, drawAndReadPacked);
 
     return CallCapture(angle::EntryPoint::EGLAcquireExternalContextANGLE, std::move(paramBuffer));
 }

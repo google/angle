@@ -6862,9 +6862,12 @@ bool ValidateQueryDmaBufModifiersEXT(ValidationContext const *val,
     return true;
 }
 
-bool ValidateAcquireExternalContextANGLE(const ValidationContext *val, const egl::Display *display)
+bool ValidateAcquireExternalContextANGLE(const ValidationContext *val,
+                                         const egl::Display *display,
+                                         SurfaceID drawAndReadPacked)
 {
     ANGLE_VALIDATION_TRY(ValidateDisplay(val, display));
+    ANGLE_VALIDATION_TRY(ValidateSurface(val, display, drawAndReadPacked));
 
     const DisplayExtensions &displayExtensions = display->getExtensions();
     if (!displayExtensions.externalContextAndSurface)
