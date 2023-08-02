@@ -1285,6 +1285,20 @@ bool ValidateCompatibleSurface(const ValidationContext *val,
     return true;
 }
 
+bool ValidateSurfaceBadAccess(const ValidationContext *val,
+                              const gl::Context *previousContext,
+                              const Surface *surface)
+{
+    if (surface->isReferenced() &&
+        (previousContext == nullptr || (surface != previousContext->getCurrentDrawSurface() &&
+                                        surface != previousContext->getCurrentReadSurface())))
+    {
+        val->setError(EGL_BAD_ACCESS, "Surface can only be current on one thread");
+        return false;
+    }
+    return true;
+}
+
 bool ValidateCreateSyncBase(const ValidationContext *val,
                             const Display *display,
                             EGLenum type,
@@ -3318,31 +3332,29 @@ bool ValidateMakeCurrent(const ValidationContext *val,
         return false;
     }
 
-    if (!noDraw)
-    {
-        ANGLE_VALIDATION_TRY(ValidateSurface(val, display, drawSurfaceID));
-    }
-
     const Surface *drawSurface = GetSurfaceIfValid(display, drawSurfaceID);
     const Surface *readSurface = GetSurfaceIfValid(display, readSurfaceID);
     const gl::Context *context = GetContextIfValid(display, contextID);
+
+    const gl::Context *previousContext = val->eglThread->getContext();
+    if (!noContext && context->isReferenced() && context != previousContext)
+    {
+        val->setError(EGL_BAD_ACCESS, "Context can only be current on one thread");
+        return false;
+    }
 
     if (!noRead)
     {
         ANGLE_VALIDATION_TRY(ValidateSurface(val, display, readSurfaceID));
         ANGLE_VALIDATION_TRY(ValidateCompatibleSurface(val, display, context, readSurface));
+        ANGLE_VALIDATION_TRY(ValidateSurfaceBadAccess(val, previousContext, readSurface));
     }
 
-    if (drawSurface != readSurface)
+    if (drawSurface != readSurface && !noDraw)
     {
-        if (drawSurface)
-        {
-            ANGLE_VALIDATION_TRY(ValidateCompatibleSurface(val, display, context, drawSurface));
-        }
-        if (readSurface)
-        {
-            ANGLE_VALIDATION_TRY(ValidateCompatibleSurface(val, display, context, readSurface));
-        }
+        ANGLE_VALIDATION_TRY(ValidateSurface(val, display, drawSurfaceID));
+        ANGLE_VALIDATION_TRY(ValidateCompatibleSurface(val, display, context, drawSurface));
+        ANGLE_VALIDATION_TRY(ValidateSurfaceBadAccess(val, previousContext, drawSurface));
     }
     return true;
 }

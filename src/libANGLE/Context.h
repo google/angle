@@ -730,7 +730,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
 
     void addRef() const { mRefCount++; }
     void release() const { mRefCount--; }
-    size_t getRefCount() const { return mRefCount; }
+    bool isReferenced() const { return mRefCount > 0; }
 
     egl::ShareGroup *getShareGroup() const { return mState.getShareGroup(); }
 

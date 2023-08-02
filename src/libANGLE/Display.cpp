@@ -1219,7 +1219,7 @@ Error Display::terminate(Thread *thread, TerminateReason terminateReason)
     ContextMap contextsStillCurrent = {};
     for (auto context : mState.contextMap)
     {
-        if (context.second->getRefCount() > 0)
+        if (context.second->isReferenced())
         {
             if (terminateReason == TerminateReason::NoActiveThreads)
             {
@@ -1699,7 +1699,7 @@ Error Display::makeCurrent(Thread *thread,
         thread->setCurrent(nullptr);
 
         auto error = previousContext->unMakeCurrent(this);
-        if (previousContext->getRefCount() == 0 && previousContext->isDestroyed())
+        if (!previousContext->isReferenced() && previousContext->isDestroyed())
         {
             // The previous Context may have been created with a different Display.
             Display *previousDisplay = previousContext->getDisplay();
@@ -1821,7 +1821,7 @@ Error Display::releaseContext(gl::Context *context, Thread *thread)
 
 Error Display::releaseContextImpl(gl::Context *context, ContextMap *contexts)
 {
-    ASSERT(context->getRefCount() == 0);
+    ASSERT(!context->isReferenced());
 
     // Use scoped_ptr to make sure the context is always freed.
     std::unique_ptr<gl::Context> unique_context(context);
@@ -1871,7 +1871,7 @@ Error Display::destroyContext(Thread *thread, gl::Context *context)
 
     // If the context is still current on at least 1 thread, just return since it'll be released
     // once no threads have it current anymore.
-    if (context->getRefCount() > 0)
+    if (context->isReferenced())
     {
         return NoError();
     }
@@ -1910,7 +1910,7 @@ Error Display::destroyContext(Thread *thread, gl::Context *context)
     {
         for (auto ctx : mState.contextMap)
         {
-            if (ctx.second->getRefCount() > 0)
+            if (ctx.second->isReferenced())
             {
                 return NoError();
             }
