@@ -721,14 +721,6 @@ void OutputHLSL::header(TInfoSinkBase &out,
             out << flatEvaluateFunction.functionDefinition << "\n";
         }
     }
-    if (!mSampleEvaluateFunctions.empty())
-    {
-        out << "\n// EvaluateAttributeAtSample functions\n\n";
-        for (const auto &sampleEvaluateFunction : mSampleEvaluateFunctions)
-        {
-            out << sampleEvaluateFunction.functionDefinition << "\n";
-        }
-    }
 
     if (mUsesDiscardRewriting)
     {
@@ -921,6 +913,7 @@ void OutputHLSL::header(TInfoSinkBase &out,
 
             if (mOutputType == SH_HLSL_4_1_OUTPUT)
             {
+                out << "    uint dx_Misc : packoffset(c2.w);\n";
                 unsigned int registerIndex = 4;
                 mResourcesHLSL->samplerMetadataUniforms(out, registerIndex);
                 // Sampler metadata struct must be two 4-vec, 32 bytes.
@@ -2824,12 +2817,18 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
         case EOpInterpolateAtSample:
         {
             TIntermTyped *interpolantNode = (*(node->getSequence()))[0]->getAsTyped();
-            const TString &functionName =
-                IsFlatInterpolant(interpolantNode)
-                    ? addFlatEvaluateFunction(interpolantNode->getType(),
-                                              *StaticType::GetBasic<EbtInt, EbpUndefined, 1>())
-                    : addSampleEvaluateFunction(interpolantNode->getType());
-            outputTriplet(out, visit, (functionName + "(").c_str(), ", ", ")");
+            if (!IsFlatInterpolant(interpolantNode))
+            {
+                mUsesNumSamples = true;
+                outputTriplet(out, visit, "EvaluateAttributeAtSample(", ", clamp(",
+                              ", 0, gl_NumSamples - 1))");
+            }
+            else
+            {
+                const TString &functionName = addFlatEvaluateFunction(
+                    interpolantNode->getType(), *StaticType::GetBasic<EbtInt, EbpUndefined, 1>());
+                outputTriplet(out, visit, (functionName + "(").c_str(), ", ", ")");
+            }
             break;
         }
         case EOpInterpolateAtOffset:
@@ -3910,43 +3909,6 @@ TString OutputHLSL::addFlatEvaluateFunction(const TType &type, const TType &para
     function.functionDefinition = fnOut.c_str();
 
     mFlatEvaluateFunctions.push_back(function);
-
-    return function.functionName;
-}
-
-TString OutputHLSL::addSampleEvaluateFunction(const TType &type)
-{
-    for (const auto &sampleEvaluateFunction : mSampleEvaluateFunctions)
-    {
-        if (sampleEvaluateFunction.type == type)
-        {
-            return sampleEvaluateFunction.functionName;
-        }
-    }
-
-    SampleEvaluateFunction function;
-    function.type = type;
-
-    const TString &typeName = TypeString(type);
-
-    function.functionName = "angle_eval_sample_" + typeName;
-
-    // If multisample buffers are not available, the input varying
-    // must be evaluated at the center of the pixel. Direct3D does
-    // not support single-sampled rendering, thus specializing the
-    // function is needed.
-    TInfoSinkBase fnOut;
-    fnOut << typeName << " " << function.functionName << "(" << typeName << " i, uint s)\n";
-    fnOut << "{\n"
-          << "#ifdef ANGLE_MULTISAMPLING\n"
-          << "    return EvaluateAttributeAtSample(i, s);\n"
-          << "#else\n"
-          << "    return i;\n"
-          << "#endif\n"
-          << "}\n";
-    function.functionDefinition = fnOut.c_str();
-
-    mSampleEvaluateFunctions.push_back(function);
 
     return function.functionName;
 }

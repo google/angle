@@ -90,19 +90,17 @@ size_t GetMaxOutputIndex(const std::vector<PixelShaderOutputVariable> &shaderOut
 }
 
 void GetDefaultOutputLayoutFromShader(
-    bool multisampling,
     const std::vector<PixelShaderOutputVariable> &shaderOutputVars,
-    std::pair<bool, std::vector<GLenum>> *outputLayoutOut)
+    std::vector<GLenum> *outputLayoutOut)
 {
-    outputLayoutOut->first = multisampling;
-    outputLayoutOut->second.clear();
+    outputLayoutOut->clear();
 
     if (!shaderOutputVars.empty())
     {
         size_t location = shaderOutputVars[0].outputLocation;
         size_t maxIndex = GetMaxOutputIndex(shaderOutputVars, location);
-        outputLayoutOut->second.assign(maxIndex + 1,
-                                       GL_COLOR_ATTACHMENT0 + static_cast<unsigned int>(location));
+        outputLayoutOut->assign(maxIndex + 1,
+                                GL_COLOR_ATTACHMENT0 + static_cast<unsigned int>(location));
     }
 }
 
@@ -682,9 +680,8 @@ bool ProgramD3D::VertexExecutable::matchesSignature(const Signature &signature) 
     return true;
 }
 
-ProgramD3D::PixelExecutable::PixelExecutable(
-    const std::pair<bool, const std::vector<GLenum>> &outputSignature,
-    ShaderExecutableD3D *shaderExecutable)
+ProgramD3D::PixelExecutable::PixelExecutable(const std::vector<GLenum> &outputSignature,
+                                             ShaderExecutableD3D *shaderExecutable)
     : mOutputSignature(outputSignature), mShaderExecutable(shaderExecutable)
 {}
 
@@ -1229,7 +1226,6 @@ angle::Result ProgramD3D::loadBinaryShaderExecutables(d3d::Context *contextD3D,
     size_t pixelShaderCount = stream->readInt<size_t>();
     for (size_t pixelShaderIndex = 0; pixelShaderIndex < pixelShaderCount; pixelShaderIndex++)
     {
-        bool multisampling = stream->readBool();
         size_t outputCount = stream->readInt<size_t>();
         std::vector<GLenum> outputs(outputCount);
         for (size_t outputIndex = 0; outputIndex < outputCount; outputIndex++)
@@ -1252,8 +1248,8 @@ angle::Result ProgramD3D::loadBinaryShaderExecutables(d3d::Context *contextD3D,
         }
 
         // add new binary
-        mPixelExecutables.push_back(std::unique_ptr<PixelExecutable>(
-            new PixelExecutable({multisampling, outputs}, shaderExecutable)));
+        mPixelExecutables.push_back(
+            std::unique_ptr<PixelExecutable>(new PixelExecutable(outputs, shaderExecutable)));
 
         stream->skip(pixelShaderSize);
     }
@@ -1503,8 +1499,7 @@ void ProgramD3D::save(const gl::Context *context, gl::BinaryOutputStream *stream
     {
         PixelExecutable *pixelExecutable = mPixelExecutables[pixelExecutableIndex].get();
 
-        stream->writeBool(pixelExecutable->outputSignature().first);
-        const std::vector<GLenum> &outputs = pixelExecutable->outputSignature().second;
+        const std::vector<GLenum> &outputs = pixelExecutable->outputSignature();
         stream->writeInt(outputs.size());
         for (size_t outputIndex = 0; outputIndex < outputs.size(); outputIndex++)
         {
@@ -1767,9 +1762,7 @@ class ProgramD3D::GetPixelExecutableTask : public ProgramD3D::GetExecutableTask
 
 void ProgramD3D::updateCachedOutputLayoutFromShader()
 {
-    // Assume multisampled rendering if a shader writes to gl_SampleMask.
-    GetDefaultOutputLayoutFromShader(mUsesSampleMask, mPixelShaderKey,
-                                     &mPixelShaderOutputLayoutCache);
+    GetDefaultOutputLayoutFromShader(mPixelShaderKey, &mPixelShaderOutputLayoutCache);
     updateCachedPixelExecutableIndex();
 }
 
@@ -3193,8 +3186,7 @@ void ProgramD3D::updateCachedInputLayout(UniqueSerial associatedSerial, const gl
 void ProgramD3D::updateCachedOutputLayout(const gl::Context *context,
                                           const gl::Framebuffer *framebuffer)
 {
-    mPixelShaderOutputLayoutCache.first = framebuffer->getSamples(context) != 0;
-    mPixelShaderOutputLayoutCache.second.clear();
+    mPixelShaderOutputLayoutCache.clear();
 
     FramebufferD3D *fboD3D   = GetImplAs<FramebufferD3D>(framebuffer);
     const auto &colorbuffers = fboD3D->getColorAttachmentsForRender(context);
@@ -3210,12 +3202,12 @@ void ProgramD3D::updateCachedOutputLayout(const gl::Context *context,
             size_t maxIndex = binding != GL_NONE ? GetMaxOutputIndex(mPixelShaderKey,
                                                                      binding - GL_COLOR_ATTACHMENT0)
                                                  : 0;
-            mPixelShaderOutputLayoutCache.second.insert(mPixelShaderOutputLayoutCache.second.end(),
-                                                        maxIndex + 1, binding);
+            mPixelShaderOutputLayoutCache.insert(mPixelShaderOutputLayoutCache.end(), maxIndex + 1,
+                                                 binding);
         }
         else
         {
-            mPixelShaderOutputLayoutCache.second.push_back(GL_NONE);
+            mPixelShaderOutputLayoutCache.push_back(GL_NONE);
         }
     }
 
