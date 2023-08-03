@@ -4197,20 +4197,20 @@ void Renderer11::generateCaps(gl::Caps *outCaps,
 
 void Renderer11::initializeFeatures(angle::FeaturesD3D *features) const
 {
+    ApplyFeatureOverrides(features, mDisplay->getState());
     if (!mDisplay->getState().featuresAllDisabled)
     {
         d3d11::InitializeFeatures(mRenderer11DeviceCaps, mAdapterDescription, features);
     }
-    ApplyFeatureOverrides(features, mDisplay->getState());
 }
 
 void Renderer11::initializeFrontendFeatures(angle::FrontendFeatures *features) const
 {
+    ApplyFeatureOverrides(features, mDisplay->getState());
     if (!mDisplay->getState().featuresAllDisabled)
     {
         d3d11::InitializeFrontendFeatures(mAdapterDescription, features);
     }
-    ApplyFeatureOverrides(features, mDisplay->getState());
 }
 
 DeviceImpl *Renderer11::createEGLDevice()

@@ -3099,11 +3099,11 @@ void Renderer9::generateCaps(gl::Caps *outCaps,
 
 void Renderer9::initializeFeatures(angle::FeaturesD3D *features) const
 {
+    ApplyFeatureOverrides(features, mDisplay->getState());
     if (!mDisplay->getState().featuresAllDisabled)
     {
         d3d9::InitializeFeatures(features, mAdapterIdentifier.VendorId);
     }
-    ApplyFeatureOverrides(features, mDisplay->getState());
 }
 
 void Renderer9::initializeFrontendFeatures(angle::FrontendFeatures *features) const {}
