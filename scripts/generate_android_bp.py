@@ -375,9 +375,6 @@ def library_target_to_blueprint(target, build_info):
 
         bp['sdk_version'] = MIN_SDK_VERSION
         bp['stl'] = STL
-        if target in ROOT_TARGETS:
-            bp['vendor'] = True
-            bp['target'] = {'android': {'relative_install_path': 'egl'}}
         bps_for_abis[abi] = bp
 
     common_bp = merge_bps(bps_for_abis)
