@@ -3326,7 +3326,10 @@ bool ValidateMakeCurrent(const ValidationContext *val,
         ANGLE_VALIDATION_TRY(ValidateContext(val, display, contextID));
     }
 
-    if (display->isInitialized() && display->isDeviceLost())
+    // Allow "un-make" the lost context:
+    // If the context is lost, but EGLContext passed to eglMakeCurrent is EGL_NO_CONTEXT, we should
+    // not return EGL_CONTEXT_LOST error code.
+    if (display->isInitialized() && display->isDeviceLost() && !noContext)
     {
         val->setError(EGL_CONTEXT_LOST);
         return false;

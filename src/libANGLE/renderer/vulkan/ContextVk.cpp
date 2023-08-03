@@ -133,6 +133,8 @@ GLenum DefaultGLErrorCode(VkResult result)
         case VK_ERROR_OUT_OF_DEVICE_MEMORY:
         case VK_ERROR_TOO_MANY_OBJECTS:
             return GL_OUT_OF_MEMORY;
+        case VK_ERROR_DEVICE_LOST:
+            return GL_CONTEXT_LOST;
         default:
             return GL_INVALID_OPERATION;
     }
@@ -1215,6 +1217,13 @@ ContextVk::~ContextVk()
 
 void ContextVk::onDestroy(const gl::Context *context)
 {
+    // If there is a context lost, destroy all the command buffers and resources regardless of
+    // whether they finished execution on GPU.
+    if (mRenderer->isDeviceLost())
+    {
+        mRenderer->handleDeviceLost();
+    }
+
     // This will not destroy any resources. It will release them to be collected after finish.
     mIncompleteTextures.onDestroy(context);
 
