@@ -530,6 +530,14 @@
             "issue": "http://anglebug.com/5281"
         },
         {
+            "name": "allow_multisampled_render_to_texture_emulation",
+            "category": "Workarounds",
+            "description": [
+                "Allow emulation of EXT_multisampled_render_to_texture"
+            ],
+            "issue": "http://anglebug.com/8291"
+        },
+        {
             "name": "enable_multisampled_render_to_texture",
             "category": "Workarounds",
             "description": [

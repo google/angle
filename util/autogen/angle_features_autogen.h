@@ -29,6 +29,7 @@ enum class Feature
     AllowGenerateMipmapWithCompute,
     AllowGenMultipleMipsPerPass,
     AllowInlineConstVertexData,
+    AllowMultisampledRenderToTextureEmulation,
     AllowMultisampleStoreAndResolve,
     AllowRenderpassWithoutAttachment,
     AllowRuntimeSamplerCompareMode,

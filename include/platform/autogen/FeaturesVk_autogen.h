@@ -497,6 +497,13 @@ struct FeaturesVk : FeatureSetBase
         &members, "http://anglebug.com/5281"
     };
 
+    FeatureInfo allowMultisampledRenderToTextureEmulation = {
+        "allowMultisampledRenderToTextureEmulation",
+        FeatureCategory::VulkanWorkarounds,
+        "Allow emulation of EXT_multisampled_render_to_texture",
+        &members, "http://anglebug.com/8291"
+    };
+
     FeatureInfo enableMultisampledRenderToTexture = {
         "enableMultisampledRenderToTexture",
         FeatureCategory::VulkanWorkarounds,
