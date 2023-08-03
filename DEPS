@@ -140,12 +140,12 @@ vars = {
 deps = {
 
   'build': {
-    'url': '{chromium_git}/chromium/src/build.git@860dae780c100c2d001dc6ee16625b17bc84c10f',
+    'url': '{chromium_git}/chromium/src/build.git@5885d3c24833ad72845a52a1b913a2b8bc651b56',
     'condition': 'not build_with_chromium',
   },
 
   'buildtools': {
-    'url': '{chromium_git}/chromium/src/buildtools.git@ca163845c76db63454f99436f6cd2bf03739dc24',
+    'url': '{chromium_git}/chromium/src/buildtools.git@79ab87fa54614258c4c95891e873223371194525',
     'condition': 'not build_with_chromium',
   },
 
@@ -174,21 +174,6 @@ deps = {
     ],
     'dep_type': 'cipd',
     'condition': 'not build_with_chromium and host_os == "mac"',
-  },
-
-  'buildtools/third_party/libc++/trunk': {
-    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libcxx.git@84fb809dd6dae36d556dc0bb702c6cc2ce9d4b80',
-    'condition': 'not build_with_chromium',
-  },
-
-  'buildtools/third_party/libc++abi/trunk': {
-    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libcxxabi.git@d4760c0af99ccc9bce077960d5ddde4d66146c05',
-    'condition': 'not build_with_chromium',
-  },
-
-  'buildtools/third_party/libunwind/trunk': {
-    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libunwind.git@6c0013015be8a2be9de4b1e54cdc9d576b1d0729',
-    'condition': 'not build_with_chromium',
   },
 
   'buildtools/win': {
@@ -476,7 +461,7 @@ deps = {
       'packages': [
           {
               'package': 'chromium/third_party/jdk',
-              'version': 'IivIDwNBf73mf7UwCOBceRUuDdtizMCgSOQDfUGHArsC',
+              'version': 'GCFtf5t6M4HlrHj6NXedHbpHp2xjgognF8ptNci4478C',
           },
       ],
       'condition': 'checkout_android and not build_with_chromium',
@@ -503,6 +488,21 @@ deps = {
     'url': '{chromium_git}/chromium/src/third_party/jsoncpp@{chromium_jsoncpp_revision}',
     'condition': 'not build_with_chromium',
    },
+
+  'third_party/libc++/src': {
+    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libcxx.git@84fb809dd6dae36d556dc0bb702c6cc2ce9d4b80',
+    'condition': 'not build_with_chromium',
+  },
+
+  'third_party/libc++abi/src': {
+    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libcxxabi.git@d4760c0af99ccc9bce077960d5ddde4d66146c05',
+    'condition': 'not build_with_chromium',
+  },
+
+  'third_party/libunwind/src': {
+    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libunwind.git@6c0013015be8a2be9de4b1e54cdc9d576b1d0729',
+    'condition': 'not build_with_chromium',
+  },
 
   'third_party/markupsafe': {
     'url': '{chromium_git}/chromium/src/third_party/markupsafe@006709ba3ed87660a17bd4548c45663628f5ed85',
