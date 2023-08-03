@@ -113,7 +113,7 @@ Trace tests take command line arguments that pick the run configuration:
 * `--minimize-gpu-work`: Modify API calls so that GPU work is reduced to minimum.
 * `--screenshot-dir dir`: Directory to store test screenshots. Implies `--save-screenshots`. On Android this directory is on device, not local (see also `--render-test-output-dir`). Only implemented in `TracePerfTest`.
 * `--save-screenshots`: Save screenshots. Only implemented in `TracePerfTest`.
-* `--screenshot-frame <frame>`: Which frame to capture a screenshot of. Defaults to first frame (1). Only implemented in `TracePerfTest`.
+* `--screenshot-frame <frame>`: Which frame to capture a screenshot of. Defaults to first frame (1). Using `-1` will capture every frame rendered, including those after Reset for multiple loops. Only implemented in `TracePerfTest`.
 
 For example, for an endless run with no warmup on swiftshader, run:
 

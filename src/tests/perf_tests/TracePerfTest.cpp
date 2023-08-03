@@ -232,7 +232,7 @@ class TracePerfTest : public ANGLERenderTest
     uint32_t mOffscreenFrameCount                                       = 0;
     uint32_t mTotalFrameCount                                           = 0;
     bool mScreenshotSaved                                               = false;
-    uint32_t mScreenshotFrame                                           = gScreenshotFrame;
+    int32_t mScreenshotFrame                                            = gScreenshotFrame;
     std::unique_ptr<TraceLibrary> mTraceReplay;
 };
 
@@ -902,6 +902,11 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
         {
             WARN() << "Ignoring keyframe, user requested frame " << mScreenshotFrame
                    << " for screenshot";
+            if (mScreenshotFrame == kAllFrames)
+            {
+                WARN() << "Capturing screenshots of all frames since requested frame was "
+                       << kAllFrames;
+            }
         }
     }
 
@@ -2440,23 +2445,26 @@ void TracePerfTest::swap()
 {
     // Capture a screenshot if enabled.
     if (gScreenshotDir != nullptr && gSaveScreenshots && !mScreenshotSaved &&
-        mScreenshotFrame == mCurrentIteration)
+        (static_cast<uint32_t>(mScreenshotFrame) == mCurrentIteration ||
+         mScreenshotFrame == kAllFrames))
     {
         std::stringstream screenshotNameStr;
         screenshotNameStr << gScreenshotDir << GetPathSeparator() << "angle" << mBackend << "_"
                           << mStory;
 
         // Add a marker to the name for any screenshot that isn't start frame
-        if (mStartFrame != mScreenshotFrame)
+        if (mStartFrame != static_cast<uint32_t>(mScreenshotFrame))
         {
-            screenshotNameStr << "_frame" << mScreenshotFrame;
+            screenshotNameStr << "_frame" << mCurrentIteration;
         }
 
         screenshotNameStr << ".png";
 
         std::string screenshotName = screenshotNameStr.str();
         saveScreenshot(screenshotName);
-        mScreenshotSaved = true;
+
+        // Only set this value if we're capturing a single frame
+        mScreenshotSaved = mScreenshotFrame != kAllFrames;
     }
 
     getGLWindow()->swap();
