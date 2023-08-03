@@ -124,6 +124,8 @@ class UniformLinker final : angle::NonCopyable
               const ProgramAliasedBindings &uniformLocationBindings);
 
     void getResults(std::vector<LinkedUniform> *uniforms,
+                    std::vector<std::string> *uniformNames,
+                    std::vector<std::string> *uniformMappedNames,
                     std::vector<UnusedUniform> *unusedUniformsOutOrNull,
                     std::vector<VariableLocation> *uniformLocationsOutOrNull);
 
@@ -218,6 +220,8 @@ class UniformBlockLinker final : public InterfaceBlockLinker
 
     void init(std::vector<InterfaceBlock> *blocksOut,
               std::vector<LinkedUniform> *uniformsOut,
+              std::vector<std::string> *uniformNamesOut,
+              std::vector<std::string> *uniformMappedNamesOut,
               std::vector<std::string> *unusedInterfaceBlocksOut);
 
   private:
@@ -229,7 +233,9 @@ class UniformBlockLinker final : public InterfaceBlockLinker
                                           ShaderType shaderType,
                                           int blockIndex) const override;
 
-    std::vector<LinkedUniform> *mUniformsOut = nullptr;
+    std::vector<LinkedUniform> *mUniformsOut         = nullptr;
+    std::vector<std::string> *mUniformNamesOut       = nullptr;
+    std::vector<std::string> *mUniformMappedNamesOut = nullptr;
 };
 
 class ShaderStorageBlockLinker final : public InterfaceBlockLinker
@@ -274,6 +280,8 @@ struct ProgramLinkedResources
 
     void init(std::vector<InterfaceBlock> *uniformBlocksOut,
               std::vector<LinkedUniform> *uniformsOut,
+              std::vector<std::string> *uniformNamesOut,
+              std::vector<std::string> *uniformMappedNamesOut,
               std::vector<InterfaceBlock> *shaderStorageBlocksOut,
               std::vector<BufferVariable> *bufferVariablesOut,
               std::vector<AtomicCounterBuffer> *atomicCounterBuffersOut);

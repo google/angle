@@ -781,7 +781,8 @@ void AssignImageBindings(const SpvSourceOptions &options,
             continue;
         }
 
-        const bool isIndexZero = UniformNameIsIndexZero(imageUniform.name);
+        const bool isIndexZero =
+            UniformNameIsIndexZero(programExecutable.getUniformNameByIndex(uniformIndex));
         if (!isIndexZero)
         {
             continue;
@@ -837,7 +838,8 @@ void AssignTextureBindings(const SpvSourceOptions &options,
             continue;
         }
 
-        const bool isIndexZero = UniformNameIsIndexZero(samplerUniform.name);
+        const bool isIndexZero =
+            UniformNameIsIndexZero(programExecutable.getUniformNameByIndex(uniformIndex));
         if (!isIndexZero)
         {
             continue;

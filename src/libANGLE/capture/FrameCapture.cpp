@@ -1887,7 +1887,7 @@ void CaptureUpdateUniformLocations(const gl::Program *program, std::vector<CallC
         {
             const gl::LinkedUniform &uniform = uniforms[locationVar.index];
 
-            name = uniform.name;
+            name = program->getUniformNameByIndex(locationVar.index);
 
             if (uniform.isArray())
             {
@@ -2502,11 +2502,11 @@ void CaptureUpdateUniformValues(const gl::State &replayState,
         CaptureUpdateCurrentProgram(callsOut->back(), 0, callsOut);
     }
 
-    const std::vector<gl::LinkedUniform> &uniforms = program->getState().getUniforms();
-
-    for (const gl::LinkedUniform &uniform : uniforms)
+    for (GLuint uniformIndex = 0; uniformIndex < static_cast<GLuint>(program->getUniforms().size());
+         uniformIndex++)
     {
-        std::string uniformName = uniform.name;
+        std::string uniformName          = program->getUniformNameByIndex(uniformIndex);
+        const gl::LinkedUniform &uniform = program->getUniformByIndex(uniformIndex);
 
         int uniformCount = 1;
         if (uniform.isArray())

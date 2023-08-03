@@ -876,6 +876,16 @@ GLint FindMaxSize(const std::vector<T> &resources, M member)
     return max;
 }
 
+GLint FindMaxNameLength(const std::vector<std::string> &names)
+{
+    GLint max = 0;
+    for (const std::string &name : names)
+    {
+        max = std::max(max, clampCast<GLint>(name.size()));
+    }
+    return max;
+}
+
 GLint QueryProgramInterfaceMaxNameLength(const Program *program, GLenum programInterface)
 {
     GLint maxNameLength = 0;
@@ -890,7 +900,7 @@ GLint QueryProgramInterfaceMaxNameLength(const Program *program, GLenum programI
             break;
 
         case GL_UNIFORM:
-            maxNameLength = FindMaxSize(program->getState().getUniforms(), &LinkedUniform::name);
+            maxNameLength = FindMaxNameLength(program->getState().getUniformNames());
             break;
 
         case GL_UNIFORM_BLOCK:
@@ -1906,10 +1916,10 @@ GLint GetUniformResourceProperty(const Program *program, GLuint index, const GLe
             return clampCast<GLint>(uniform.getBasicTypeElementCount());
 
         case GL_NAME_LENGTH:
-            return clampCast<GLint>(uniform.name.size() + 1u);
+            return clampCast<GLint>(program->getUniformNameByIndex(index).size() + 1u);
 
         case GL_LOCATION:
-            return program->getUniformLocation(uniform.name).value;
+            return program->getUniformLocation(program->getUniformNameByIndex(index)).value;
 
         case GL_BLOCK_INDEX:
             return (uniform.isAtomicCounter() ? -1 : uniform.getBufferIndex());

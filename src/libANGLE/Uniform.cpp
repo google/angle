@@ -65,7 +65,6 @@ LinkedUniform::LinkedUniform()
 
 LinkedUniform::LinkedUniform(GLenum typeIn,
                              GLenum precisionIn,
-                             const std::string &nameIn,
                              const std::vector<unsigned int> &arraySizesIn,
                              const int bindingIn,
                              const int offsetIn,
@@ -90,7 +89,6 @@ LinkedUniform::LinkedUniform(GLenum typeIn,
     ASSERT(arraySizesIn.size() <= 1);
     mFixedSizeData.arraySize = arraySizesIn.empty() ? 1 : arraySizesIn[0];
 
-    name     = nameIn;
     typeInfo = &GetUniformTypeInfo(typeIn);
 }
 
@@ -131,18 +129,14 @@ LinkedUniform::LinkedUniform(const UsedUniform &usedUniform)
     mFixedSizeData.arraySize      = usedUniform.isArray() ? usedUniform.getArraySizeProduct() : 1u;
     mFixedSizeData.activeVariable = usedUniform.activeVariable;
 
-    name       = usedUniform.name;
-    mappedName = usedUniform.mappedName;
-    typeInfo   = usedUniform.typeInfo;
+    typeInfo = usedUniform.typeInfo;
 }
 
 LinkedUniform &LinkedUniform::operator=(const LinkedUniform &other)
 {
     mFixedSizeData = other.mFixedSizeData;
 
-    name       = other.name;
-    mappedName = other.mappedName;
-    typeInfo   = other.typeInfo;
+    typeInfo = other.typeInfo;
 
     return *this;
 }
@@ -155,9 +149,6 @@ void LinkedUniform::save(BinaryOutputStream *stream) const
     // for performance.
     stream->writeBytes(reinterpret_cast<const unsigned char *>(&mFixedSizeData),
                        sizeof(mFixedSizeData));
-
-    stream->writeString(name);
-    stream->writeString(mappedName);
 }
 
 void LinkedUniform::load(BinaryInputStream *stream)
@@ -165,9 +156,6 @@ void LinkedUniform::load(BinaryInputStream *stream)
     // mFixedSizeData is a simple structure with fundamental data types, we can just do bulk load
     // for performance.
     stream->readBytes(reinterpret_cast<unsigned char *>(&mFixedSizeData), sizeof(mFixedSizeData));
-
-    stream->readString(&name);
-    stream->readString(&mappedName);
 
     typeInfo = &GetUniformTypeInfo(getType());
 }

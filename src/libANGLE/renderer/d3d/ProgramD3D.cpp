@@ -1104,9 +1104,9 @@ std::unique_ptr<rx::LinkEvent> ProgramD3D::load(const gl::Context *context,
         {
             arraySizes.push_back(linkedUniform.getBasicTypeElementCount());
         }
-        D3DUniform *d3dUniform =
-            new D3DUniform(linkedUniform.getType(), HLSLRegisterType::None, linkedUniform.name,
-                           arraySizes, linkedUniform.isInDefaultBlock());
+        D3DUniform *d3dUniform = new D3DUniform(linkedUniform.getType(), HLSLRegisterType::None,
+                                                mState.getUniformNames()[uniformIndex], arraySizes,
+                                                linkedUniform.isInDefaultBlock());
         stream->readEnum(&d3dUniform->regType);
         for (gl::ShaderType shaderType : gl::AllShaderTypes())
         {
@@ -2638,12 +2638,13 @@ void ProgramD3D::defineUniformsAndAssignRegisters(const gl::Context *context)
     }
 
     // Initialize the D3DUniform list to mirror the indexing of the GL layer.
-    for (const gl::LinkedUniform &glUniform : mState.getUniforms())
+    for (GLuint index = 0; index < static_cast<GLuint>(mState.getUniforms().size()); index++)
     {
+        const gl::LinkedUniform &glUniform = mState.getUniforms()[index];
         if (!glUniform.isInDefaultBlock())
             continue;
 
-        std::string name = glUniform.name;
+        std::string name = mState.getUniformNames()[index];
         if (glUniform.isArray())
         {
             // In the program state, array uniform names include [0] as in the program resource

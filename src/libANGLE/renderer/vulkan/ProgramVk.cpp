@@ -301,12 +301,13 @@ void ProgramVk::initDefaultUniformLayoutMapping(gl::ShaderMap<sh::BlockLayoutMap
             if (uniform.isInDefaultBlock() && !uniform.isSampler() && !uniform.isImage() &&
                 !uniform.isFragmentInOut())
             {
-                std::string uniformName = uniform.name;
+                std::string uniformName = glExecutable.getUniformNameByIndex(location.index);
                 if (uniform.isArray())
                 {
                     // Gets the uniform name without the [0] at the end.
                     uniformName = gl::StripLastArrayIndex(uniformName);
-                    ASSERT(uniformName.size() != uniform.name.size());
+                    ASSERT(uniformName.size() !=
+                           glExecutable.getUniformNameByIndex(location.index).size());
                 }
 
                 bool found = false;

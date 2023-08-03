@@ -1015,17 +1015,18 @@ void ProgramGL::postLink()
 
         // From the GLES 3.0.5 spec:
         // "Locations for sequential array indices are not required to be sequential."
-        const gl::LinkedUniform &uniform = uniforms[entry.index];
+        const gl::LinkedUniform &uniform     = uniforms[entry.index];
+        const std::string &uniformMappedName = mState.getUniformMappedNames()[entry.index];
         std::stringstream fullNameStr;
         if (uniform.isArray())
         {
-            ASSERT(angle::EndsWith(uniform.mappedName, "[0]"));
-            fullNameStr << uniform.mappedName.substr(0, uniform.mappedName.length() - 3);
+            ASSERT(angle::EndsWith(uniformMappedName, "[0]"));
+            fullNameStr << uniformMappedName.substr(0, uniformMappedName.length() - 3);
             fullNameStr << "[" << entry.arrayIndex << "]";
         }
         else
         {
-            fullNameStr << uniform.mappedName;
+            fullNameStr << uniformMappedName;
         }
         const std::string &fullName = fullNameStr.str();
 

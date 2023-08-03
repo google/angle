@@ -129,6 +129,23 @@ GLuint GetResourceIndexFromName(const std::vector<VarT> &list, const std::string
     return GL_INVALID_INDEX;
 }
 
+GLuint GetUniformIndexFromName(const std::vector<LinkedUniform> &uniformList,
+                               const std::vector<std::string> &nameList,
+                               const std::string &name)
+{
+    std::string nameAsArrayName = name + "[0]";
+    for (size_t index = 0; index < nameList.size(); index++)
+    {
+        const std::string &uniformName = nameList[index];
+        if (uniformName == name || (uniformList[index].isArray() && uniformName == nameAsArrayName))
+        {
+            return static_cast<GLuint>(index);
+        }
+    }
+
+    return GL_INVALID_INDEX;
+}
+
 GLint GetVariableLocation(const std::vector<sh::ShaderVariable> &list,
                           const std::vector<VariableLocation> &locationList,
                           const std::string &name)
@@ -162,9 +179,10 @@ GLint GetVariableLocation(const std::vector<sh::ShaderVariable> &list,
     return -1;
 }
 
-GLint GetVariableLocation(const std::vector<LinkedUniform> &list,
-                          const std::vector<VariableLocation> &locationList,
-                          const std::string &name)
+GLint GetUniformLocation(const std::vector<LinkedUniform> &uniformList,
+                         const std::vector<std::string> &nameList,
+                         const std::vector<VariableLocation> &locationList,
+                         const std::string &name)
 {
     size_t nameLengthWithoutArrayIndex;
     unsigned int arrayIndex = ParseArrayIndex(name, &nameLengthWithoutArrayIndex);
@@ -177,23 +195,24 @@ GLint GetVariableLocation(const std::vector<LinkedUniform> &list,
             continue;
         }
 
-        const LinkedUniform &variable = list[variableLocation.index];
+        const LinkedUniform &variable  = uniformList[variableLocation.index];
+        const std::string &uniformName = nameList[variableLocation.index];
 
         // Array output variables may be bound out of order, so we need to ensure we only pick the
         // first element if given the base name. Uniforms don't allow this behavior and some code
         // seemingly depends on the opposite behavior, so only enable it for output variables.
-        if (angle::BeginsWith(variable.name, name) && (variableLocation.arrayIndex == 0))
+        if (angle::BeginsWith(uniformName, name) && (variableLocation.arrayIndex == 0))
         {
-            if (name.length() == variable.name.length())
+            if (name.length() == uniformName.length())
             {
-                ASSERT(name == variable.name);
+                ASSERT(name == uniformName);
                 // GLES 3.1 November 2016 page 87.
                 // The string exactly matches the name of the active variable.
                 return static_cast<GLint>(location);
             }
-            if (name.length() + 3u == variable.name.length() && variable.isArray())
+            if (name.length() + 3u == uniformName.length() && variable.isArray())
             {
-                ASSERT(name + "[0]" == variable.name);
+                ASSERT(name + "[0]" == uniformName);
                 // The string identifies the base name of an active array, where the string would
                 // exactly match the name of the variable if the suffix "[0]" were appended to the
                 // string.
@@ -201,10 +220,10 @@ GLint GetVariableLocation(const std::vector<LinkedUniform> &list,
             }
         }
         if (variable.isArray() && variableLocation.arrayIndex == arrayIndex &&
-            nameLengthWithoutArrayIndex + 3u == variable.name.length() &&
-            angle::BeginsWith(variable.name, name, nameLengthWithoutArrayIndex))
+            nameLengthWithoutArrayIndex + 3u == uniformName.length() &&
+            angle::BeginsWith(uniformName, name, nameLengthWithoutArrayIndex))
         {
-            ASSERT(name.substr(0u, nameLengthWithoutArrayIndex) + "[0]" == variable.name);
+            ASSERT(name.substr(0u, nameLengthWithoutArrayIndex) + "[0]" == uniformName);
             // The string identifies an active element of the array, where the string ends with the
             // concatenation of the "[" character, an integer (with no "+" sign, extra leading
             // zeroes, or whitespace) identifying an array element, and the "]" character, the
@@ -858,7 +877,7 @@ Shader *ProgramState::getAttachedShader(ShaderType shaderType) const
 
 GLuint ProgramState::getUniformIndexFromName(const std::string &name) const
 {
-    return GetResourceIndexFromName(mExecutable->mUniforms, name);
+    return GetUniformIndexFromName(mExecutable->mUniforms, mExecutable->mUniformNames, name);
 }
 
 GLuint ProgramState::getBufferVariableIndexFromName(const std::string &name) const
@@ -1176,6 +1195,7 @@ angle::Result Program::linkImpl(const Context *context)
     ProgramLinkedResources &resources = linkingState->resources;
 
     resources.init(&mState.mExecutable->mUniformBlocks, &mState.mExecutable->mUniforms,
+                   &mState.mExecutable->mUniformNames, &mState.mExecutable->mUniformMappedNames,
                    &mState.mExecutable->mShaderStorageBlocks, &mState.mBufferVariables,
                    &mState.mExecutable->mAtomicCounterBuffers);
 
@@ -1979,7 +1999,7 @@ void Program::getUniformResourceName(GLuint index,
 {
     ASSERT(!mLinkingState);
     ASSERT(index < mState.mExecutable->getUniforms().size());
-    getResourceName(mState.mExecutable->getUniforms()[index].name, bufSize, length, name);
+    getResourceName(mState.mExecutable->getUniformNameByIndex(index), bufSize, length, name);
 }
 
 void Program::getBufferVariableResourceName(GLuint index,
@@ -2101,7 +2121,7 @@ void Program::getActiveUniform(GLuint index,
 
         if (bufsize > 0)
         {
-            std::string string = uniform.name;
+            std::string string = mState.mExecutable->getUniformNameByIndex(index);
             CopyStringToBuffer(name, string, bufsize, length);
         }
 
@@ -2151,12 +2171,14 @@ GLint Program::getActiveUniformMaxLength() const
 
     if (mLinked)
     {
-        for (const LinkedUniform &uniform : mState.mExecutable->getUniforms())
+        for (GLuint index = 0;
+             index < static_cast<size_t>(mState.mExecutable->getUniformNames().size()); index++)
         {
-            if (!uniform.name.empty())
+            const std::string &uniformName = mState.mExecutable->getUniformNameByIndex(index);
+            if (!uniformName.empty())
             {
-                size_t length = uniform.name.length() + 1u;
-                if (uniform.isArray())
+                size_t length = uniformName.length() + 1u;
+                if (mState.mExecutable->getUniformByIndex(index).isArray())
                 {
                     length += 3;  // Counting in "[0]".
                 }
@@ -2203,7 +2225,9 @@ const BufferVariable &Program::getBufferVariableByIndex(GLuint index) const
 UniformLocation Program::getUniformLocation(const std::string &name) const
 {
     ASSERT(!mLinkingState);
-    return {GetVariableLocation(mState.mExecutable->getUniforms(), mState.mUniformLocations, name)};
+    return {GetUniformLocation(mState.mExecutable->getUniforms(),
+                               mState.mExecutable->getUniformNames(), mState.mUniformLocations,
+                               name)};
 }
 
 GLuint Program::getUniformIndex(const std::string &name) const
@@ -3281,7 +3305,9 @@ void Program::setUniformValuesFromBindingQualifiers()
         const auto &samplerUniform = mState.mExecutable->getUniforms()[samplerIndex];
         if (samplerUniform.getBinding() != -1)
         {
-            UniformLocation location = getUniformLocation(samplerUniform.name);
+            const std::string &uniformName =
+                mState.mExecutable->getUniformNameByIndex(samplerIndex);
+            UniformLocation location = getUniformLocation(uniformName);
             ASSERT(location.value != -1);
             std::vector<GLint> boundTextureUnits;
             for (unsigned int elementIndex = 0;

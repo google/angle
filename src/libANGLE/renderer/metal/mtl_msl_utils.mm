@@ -483,19 +483,18 @@ angle::Result MTLGetMSL(const gl::Context *glContext,
     // Retrieve original sampler bindings produced by front end.
     OriginalSamplerBindingMap originalSamplerBindings;
     const std::vector<gl::SamplerBinding> &samplerBindings = programState.getSamplerBindings();
-    const std::vector<gl::LinkedUniform> &uniforms         = programState.getUniforms();
-
-    std::unordered_set<std::string> structSamplers = {};
+    std::unordered_set<std::string> structSamplers         = {};
 
     for (uint32_t textureIndex = 0; textureIndex < samplerBindings.size(); ++textureIndex)
     {
         const gl::SamplerBinding &samplerBinding = samplerBindings[textureIndex];
-        uint32_t uniformIndex = programState.getUniformIndexFromSamplerIndex(textureIndex);
-        const gl::LinkedUniform &samplerUniform = uniforms[uniformIndex];
-        bool isSamplerInStruct        = samplerUniform.name.find('.') != std::string::npos;
-        std::string mappedSamplerName = isSamplerInStruct
-                                            ? MSLGetMappedSamplerName(samplerUniform.name)
-                                            : MSLGetMappedSamplerName(samplerUniform.mappedName);
+        uint32_t uniformIndex          = programState.getUniformIndexFromSamplerIndex(textureIndex);
+        const std::string &uniformName = programState.getUniformNames()[uniformIndex];
+        const std::string &uniformMappedName = programState.getUniformMappedNames()[uniformIndex];
+        bool isSamplerInStruct               = uniformName.find('.') != std::string::npos;
+        std::string mappedSamplerName        = isSamplerInStruct
+                                                   ? MSLGetMappedSamplerName(uniformName)
+                                                   : MSLGetMappedSamplerName(uniformMappedName);
         // These need to be prefixed later seperately
         if (isSamplerInStruct)
             structSamplers.insert(mappedSamplerName);

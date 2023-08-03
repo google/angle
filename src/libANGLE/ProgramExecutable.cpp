@@ -152,20 +152,32 @@ bool IsOutputSecondaryForLink(const ProgramAliasedBindings &fragmentOutputIndexe
 
 RangeUI AddUniforms(const ShaderMap<Program *> &programs,
                     ShaderBitSet activeShaders,
-                    std::vector<LinkedUniform> &outputUniforms,
+                    std::vector<LinkedUniform> *outputUniforms,
+                    std::vector<std::string> *outputUniformNames,
+                    std::vector<std::string> *outputUniformMappedNames,
                     const std::function<RangeUI(const ProgramState &)> &getRange)
 {
-    unsigned int startRange = static_cast<unsigned int>(outputUniforms.size());
+    unsigned int startRange = static_cast<unsigned int>(outputUniforms->size());
     for (ShaderType shaderType : activeShaders)
     {
-        const ProgramState &programState                  = programs[shaderType]->getState();
-        const std::vector<LinkedUniform> &programUniforms = programState.getUniforms();
-        const RangeUI uniformRange                        = getRange(programState);
+        const ProgramState &programState = programs[shaderType]->getState();
+        const RangeUI uniformRange       = getRange(programState);
 
-        outputUniforms.insert(outputUniforms.end(), programUniforms.begin() + uniformRange.low(),
-                              programUniforms.begin() + uniformRange.high());
+        const std::vector<LinkedUniform> &programUniforms = programState.getUniforms();
+        outputUniforms->insert(outputUniforms->end(), programUniforms.begin() + uniformRange.low(),
+                               programUniforms.begin() + uniformRange.high());
+
+        const std::vector<std::string> &uniformNames = programState.getUniformNames();
+        outputUniformNames->insert(outputUniformNames->end(),
+                                   uniformNames.begin() + uniformRange.low(),
+                                   uniformNames.begin() + uniformRange.high());
+
+        const std::vector<std::string> &uniformMappedNames = programState.getUniformMappedNames();
+        outputUniformMappedNames->insert(outputUniformMappedNames->end(),
+                                         uniformMappedNames.begin() + uniformRange.low(),
+                                         uniformMappedNames.begin() + uniformRange.high());
     }
-    return RangeUI(startRange, static_cast<unsigned int>(outputUniforms.size()));
+    return RangeUI(startRange, static_cast<unsigned int>(outputUniforms->size()));
 }
 
 template <typename BlockT>
@@ -179,6 +191,49 @@ void AppendActiveBlocks(ShaderType shaderType,
         {
             blocksOut.push_back(block);
         }
+    }
+}
+
+void SaveUniforms(BinaryOutputStream *stream,
+                  const std::vector<LinkedUniform> &uniforms,
+                  const std::vector<std::string> &uniformNames,
+                  const std::vector<std::string> &uniformMappedNames)
+{
+    stream->writeInt(uniforms.size());
+    for (const LinkedUniform &uniform : uniforms)
+    {
+        uniform.save(stream);
+    }
+    for (const std::string &name : uniformNames)
+    {
+        stream->writeString(name);
+    }
+    for (const std::string &name : uniformMappedNames)
+    {
+        stream->writeString(name);
+    }
+}
+void LoadUniforms(BinaryInputStream *stream,
+                  std::vector<LinkedUniform> *uniforms,
+                  std::vector<std::string> *uniformNames,
+                  std::vector<std::string> *uniformMappedNames)
+{
+    size_t uniformCount = stream->readInt<size_t>();
+    ASSERT(uniforms->empty());
+    uniforms->resize(uniformCount);
+    for (size_t uniformIndex = 0; uniformIndex < uniformCount; ++uniformIndex)
+    {
+        (*uniforms)[uniformIndex].load(stream);
+    }
+    uniformNames->resize(uniformCount);
+    for (size_t uniformIndex = 0; uniformIndex < uniformCount; ++uniformIndex)
+    {
+        stream->readString(&(*uniformNames)[uniformIndex]);
+    }
+    uniformMappedNames->resize(uniformCount);
+    for (size_t uniformIndex = 0; uniformIndex < uniformCount; ++uniformIndex)
+    {
+        stream->readString(&(*uniformMappedNames)[uniformIndex]);
     }
 }
 }  // anonymous namespace
@@ -237,6 +292,8 @@ ProgramExecutable::ProgramExecutable(const ProgramExecutable &other)
       mTransformFeedbackStrides(other.mTransformFeedbackStrides),
       mTransformFeedbackBufferMode(other.mTransformFeedbackBufferMode),
       mUniforms(other.mUniforms),
+      mUniformNames(other.mUniformNames),
+      mUniformMappedNames(other.mUniformMappedNames),
       mDefaultUniformRange(other.mDefaultUniformRange),
       mSamplerUniformRange(other.mSamplerUniformRange),
       mImageUniformRange(other.mImageUniformRange),
@@ -279,6 +336,8 @@ void ProgramExecutable::reset(bool clearInfoLog)
     mLinkedTransformFeedbackVaryings.clear();
     mTransformFeedbackStrides.clear();
     mUniforms.clear();
+    mUniformNames.clear();
+    mUniformMappedNames.clear();
     mUniformBlocks.clear();
     mActiveUniformBlockBindings.reset();
     mShaderStorageBlocks.clear();
@@ -362,13 +421,7 @@ void ProgramExecutable::load(bool isSeparable, gl::BinaryInputStream *stream)
         attrib.location = stream->readInt<int>();
     }
 
-    size_t uniformCount = stream->readInt<size_t>();
-    ASSERT(getUniforms().empty());
-    mUniforms.resize(uniformCount);
-    for (size_t uniformIndex = 0; uniformIndex < uniformCount; ++uniformIndex)
-    {
-        mUniforms[uniformIndex].load(stream);
-    }
+    LoadUniforms(stream, &mUniforms, &mUniformNames, &mUniformMappedNames);
 
     size_t uniformBlockCount = stream->readInt<size_t>();
     ASSERT(getUniformBlocks().empty());
@@ -581,11 +634,7 @@ void ProgramExecutable::save(bool isSeparable, gl::BinaryOutputStream *stream) c
         stream->writeInt(attrib.location);
     }
 
-    stream->writeInt(getUniforms().size());
-    for (const LinkedUniform &uniform : getUniforms())
-    {
-        uniform.save(stream);
-    }
+    SaveUniforms(stream, mUniforms, mUniformNames, mUniformMappedNames);
 
     stream->writeInt(getUniformBlocks().size());
     for (const InterfaceBlock &uniformBlock : getUniformBlocks())
@@ -1527,7 +1576,8 @@ bool ProgramExecutable::linkUniforms(
         return false;
     }
 
-    linker.getResults(&mUniforms, unusedUniformsOutOrNull, uniformLocationsOutOrNull);
+    linker.getResults(&mUniforms, &mUniformNames, &mUniformMappedNames, unusedUniformsOutOrNull,
+                      uniformLocationsOutOrNull);
 
     linkSamplerAndImageBindings(combinedImageUniformsCountOut);
 
@@ -1741,25 +1791,29 @@ void ProgramExecutable::copyUniformsFromProgramMap(const ShaderMap<Program *> &p
 {
     // Merge default uniforms.
     auto getDefaultRange = [](const ProgramState &state) { return state.getDefaultUniformRange(); };
-    mDefaultUniformRange = AddUniforms(programs, mLinkedShaderStages, mUniforms, getDefaultRange);
+    mDefaultUniformRange = AddUniforms(programs, mLinkedShaderStages, &mUniforms, &mUniformNames,
+                                       &mUniformMappedNames, getDefaultRange);
 
     // Merge sampler uniforms.
     auto getSamplerRange = [](const ProgramState &state) { return state.getSamplerUniformRange(); };
-    mSamplerUniformRange = AddUniforms(programs, mLinkedShaderStages, mUniforms, getSamplerRange);
+    mSamplerUniformRange = AddUniforms(programs, mLinkedShaderStages, &mUniforms, &mUniformNames,
+                                       &mUniformMappedNames, getSamplerRange);
 
     // Merge image uniforms.
     auto getImageRange = [](const ProgramState &state) { return state.getImageUniformRange(); };
-    mImageUniformRange = AddUniforms(programs, mLinkedShaderStages, mUniforms, getImageRange);
+    mImageUniformRange = AddUniforms(programs, mLinkedShaderStages, &mUniforms, &mUniformNames,
+                                     &mUniformMappedNames, getImageRange);
 
     // Merge atomic counter uniforms.
     auto getAtomicRange = [](const ProgramState &state) {
         return state.getAtomicCounterUniformRange();
     };
-    mAtomicCounterUniformRange =
-        AddUniforms(programs, mLinkedShaderStages, mUniforms, getAtomicRange);
+    mAtomicCounterUniformRange = AddUniforms(programs, mLinkedShaderStages, &mUniforms,
+                                             &mUniformNames, &mUniformMappedNames, getAtomicRange);
 
     // Merge fragment in/out uniforms.
     auto getInoutRange  = [](const ProgramState &state) { return state.getFragmentInoutRange(); };
-    mFragmentInoutRange = AddUniforms(programs, mLinkedShaderStages, mUniforms, getInoutRange);
+    mFragmentInoutRange = AddUniforms(programs, mLinkedShaderStages, &mUniforms, &mUniformNames,
+                                      &mUniformMappedNames, getInoutRange);
 }
 }  // namespace gl

@@ -923,11 +923,13 @@ void ProgramExecutableVk::addImageDescriptorSetDesc(const gl::ProgramExecutable 
         // total array size.
         if (imageUniform.activeShaders().none() || imageUniform.getOuterArrayOffset() > 0)
         {
-            ASSERT(gl::SamplerNameContainsNonZeroArrayElement(imageUniform.name));
+            ASSERT(gl::SamplerNameContainsNonZeroArrayElement(
+                executable.getUniformNameByIndex(uniformIndex)));
             continue;
         }
 
-        ASSERT(!gl::SamplerNameContainsNonZeroArrayElement(imageUniform.name));
+        ASSERT(!gl::SamplerNameContainsNonZeroArrayElement(
+            executable.getUniformNameByIndex(uniformIndex)));
 
         // The front-end always binds array image units sequentially.
         const gl::ImageBinding &imageBinding = imageBindings[imageIndex];
@@ -997,11 +999,13 @@ angle::Result ProgramExecutableVk::addTextureDescriptorSetDesc(
         // total array size.
         if (samplerUniform.activeShaders().none() || samplerUniform.getOuterArrayOffset() > 0)
         {
-            ASSERT(gl::SamplerNameContainsNonZeroArrayElement(samplerUniform.name));
+            ASSERT(gl::SamplerNameContainsNonZeroArrayElement(
+                executable.getUniformNameByIndex(uniformIndex)));
             continue;
         }
 
-        ASSERT(!gl::SamplerNameContainsNonZeroArrayElement(samplerUniform.name));
+        ASSERT(!gl::SamplerNameContainsNonZeroArrayElement(
+            executable.getUniformNameByIndex(uniformIndex)));
 
         // The front-end always binds array sampler units sequentially.
         const gl::SamplerBinding &samplerBinding = samplerBindings[textureIndex];

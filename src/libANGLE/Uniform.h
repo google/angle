@@ -65,7 +65,6 @@ struct LinkedUniform
     LinkedUniform();
     LinkedUniform(GLenum typeIn,
                   GLenum precisionIn,
-                  const std::string &nameIn,
                   const std::vector<unsigned int> &arraySizesIn,
                   const int bindingIn,
                   const int offsetIn,
@@ -120,7 +119,6 @@ struct LinkedUniform
     bool findInfoByMappedName(const std::string &mappedFullName,
                               const sh::ShaderVariable **leafVar,
                               std::string *originalFullName) const;
-    bool isBuiltIn() const { return gl::IsBuiltInName(name); }
 
     int parentArrayIndex() const
     {
@@ -157,10 +155,6 @@ struct LinkedUniform
 
     void save(BinaryOutputStream *stream) const;
     void load(BinaryInputStream *stream);
-
-    std::string name;
-    // Only used by GL backend
-    std::string mappedName;
 
     const UniformTypeInfo *typeInfo;
 

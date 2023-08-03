@@ -835,6 +835,7 @@ angle::Result ProgramMtl::initDefaultUniformBlocks(const gl::Context *glContext)
 
     // Init the default block layout info.
     const auto &uniforms         = mState.getUniforms();
+    const auto &uniformNames     = mState.getUniformNames();
     const auto &uniformLocations = mState.getUniformLocations();
     for (size_t locSlot = 0; locSlot < uniformLocations.size(); ++locSlot)
     {
@@ -846,7 +847,7 @@ angle::Result ProgramMtl::initDefaultUniformBlocks(const gl::Context *glContext)
             const gl::LinkedUniform &uniform = uniforms[location.index];
             if (uniform.isInDefaultBlock() && !uniform.isSampler() && !uniform.isImage())
             {
-                std::string uniformName = uniform.name;
+                std::string uniformName = uniformNames[location.index];
                 if (uniform.isArray())
                 {
                     // Gets the uniform name without the [0] at the end.
