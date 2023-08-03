@@ -856,16 +856,19 @@ AutoObjCPtr<id<MTLLibrary>> CreateShaderLibrary(
                                                      encoding:NSUTF8StringEncoding
                                                  freeWhenDone:NO];
         auto options     = [[[MTLCompileOptions alloc] init] ANGLE_MTL_AUTORELEASE];
+
         // Mark all positions in VS with attribute invariant as non-optimizable
-#if (defined(__MAC_11_0) && __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_11_0) ||        \
-    (defined(__IPHONE_14_0) && __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_14_0) || \
-    (defined(__TVOS_14_0) && __TV_OS_VERSION_MIN_REQUIRED >= __TVOS_14_0)
-        options.preserveInvariance = true;
-#else
-        // No preserveInvariance available compiling from source, so just disable fastmath.
-        options.fastMathEnabled = false;
+        bool canPerserveInvariance = false;
+#if defined(__MAC_11_0) || defined(__IPHONE_14_0) || defined(__TVOS_14_0)
+        if (ANGLE_APPLE_AVAILABLE_XCI(11.0, 14.0, 14.0))
+        {
+            canPerserveInvariance      = true;
+            options.preserveInvariance = true;
+        }
 #endif
-        options.fastMathEnabled &= enableFastMath;
+
+        // If preserveInvariance is not available when compiling from source, disable fastmath.
+        options.fastMathEnabled = enableFastMath && canPerserveInvariance;
         options.languageVersion = GetUserSetOrHighestMSLVersion(options.languageVersion);
 
         if (!substitutionMacros.empty())
