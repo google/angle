@@ -1701,7 +1701,11 @@ bool ProgramExecutable::linkAtomicCounterBuffers(const Context *context, InfoLog
     for (unsigned int index : mAtomicCounterUniformRange)
     {
         auto &uniform = mUniforms[index];
-        uniform.setBlockInfo(uniform.getOffset(), uniform.isArray() ? 4 : 0, 0, false);
+
+        uniform.blockInfo.offset           = uniform.getOffset();
+        uniform.blockInfo.arrayStride      = uniform.isArray() ? 4 : 0;
+        uniform.blockInfo.matrixStride     = 0;
+        uniform.blockInfo.isRowMajorMatrix = false;
 
         bool found = false;
         for (unsigned int bufferIndex = 0; bufferIndex < getActiveAtomicCounterBufferCount();
@@ -1711,9 +1715,9 @@ bool ProgramExecutable::linkAtomicCounterBuffers(const Context *context, InfoLog
             if (buffer.binding == uniform.getBinding())
             {
                 buffer.memberIndexes.push_back(index);
-                uniform.setBufferIndex(bufferIndex);
-                found = true;
-                buffer.unionReferencesWith(uniform.getActiveVariable());
+                uniform.bufferIndex = bufferIndex;
+                found               = true;
+                buffer.unionReferencesWith(uniform.activeVariable);
                 break;
             }
         }
@@ -1722,9 +1726,9 @@ bool ProgramExecutable::linkAtomicCounterBuffers(const Context *context, InfoLog
             AtomicCounterBuffer atomicCounterBuffer;
             atomicCounterBuffer.binding = uniform.getBinding();
             atomicCounterBuffer.memberIndexes.push_back(index);
-            atomicCounterBuffer.unionReferencesWith(uniform.getActiveVariable());
+            atomicCounterBuffer.unionReferencesWith(uniform.activeVariable);
             mAtomicCounterBuffers.push_back(atomicCounterBuffer);
-            uniform.setBufferIndex(static_cast<int>(getActiveAtomicCounterBufferCount() - 1));
+            uniform.bufferIndex = static_cast<int>(getActiveAtomicCounterBufferCount() - 1);
         }
     }
 

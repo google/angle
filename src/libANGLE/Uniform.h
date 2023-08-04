@@ -75,129 +75,83 @@ struct LinkedUniform
                   const sh::BlockMemberInfo &blockInfoIn);
     LinkedUniform(const LinkedUniform &other);
     LinkedUniform(const UsedUniform &usedUniform);
-    LinkedUniform &operator=(const LinkedUniform &other);
     ~LinkedUniform();
-
-    void setBlockInfo(int offset, int arrayStride, int matrixStride, bool isRowMajorMatrix)
-    {
-        mFixedSizeData.blockInfo.offset           = offset;
-        mFixedSizeData.blockInfo.arrayStride      = arrayStride;
-        mFixedSizeData.blockInfo.matrixStride     = matrixStride;
-        mFixedSizeData.blockInfo.isRowMajorMatrix = isRowMajorMatrix;
-    }
-    void setBufferIndex(int bufferIndex) { mFixedSizeData.bufferIndex = bufferIndex; }
 
     bool isSampler() const { return typeInfo->isSampler; }
     bool isImage() const { return typeInfo->isImageType; }
-    bool isAtomicCounter() const { return IsAtomicCounterType(mFixedSizeData.type); }
-    bool isInDefaultBlock() const { return mFixedSizeData.bufferIndex == -1; }
+    bool isAtomicCounter() const { return IsAtomicCounterType(type); }
+    bool isInDefaultBlock() const { return bufferIndex == -1; }
     size_t getElementSize() const { return typeInfo->externalSize; }
     size_t getElementComponents() const { return typeInfo->componentCount; }
 
-    bool isStruct() const { return mFixedSizeData.flagBits.isStruct; }
-    bool isTexelFetchStaticUse() const { return mFixedSizeData.flagBits.texelFetchStaticUse; }
-    bool isFragmentInOut() const { return mFixedSizeData.flagBits.isFragmentInOut; }
+    bool isTexelFetchStaticUse() const { return flagBits.texelFetchStaticUse; }
+    bool isFragmentInOut() const { return flagBits.isFragmentInOut; }
 
-    bool isArray() const { return mFixedSizeData.flagBits.isArray; }
+    bool isArray() const { return flagBits.isArray; }
     unsigned int getBasicTypeElementCount() const
     {
-        ASSERT(!mFixedSizeData.flagBits.isArrayOfArrays);
-        ASSERT(!mFixedSizeData.flagBits.isStruct);
-        ASSERT(mFixedSizeData.flagBits.isArray || mFixedSizeData.arraySize == 1u);
-        return mFixedSizeData.arraySize;
+        ASSERT(flagBits.isArray || arraySize == 1u);
+        return arraySize;
     }
 
-    GLenum getType() const { return mFixedSizeData.type; }
-    unsigned int getExternalSize() const;
-    unsigned int getOuterArrayOffset() const { return mFixedSizeData.outerArrayOffset; }
-    unsigned int getOuterArraySizeProduct() const { return mFixedSizeData.outerArraySizeProduct; }
-    int getBinding() const { return mFixedSizeData.binding; }
-    int getOffset() const { return mFixedSizeData.offset; }
-    const sh::BlockMemberInfo &getBlockInfo() const { return mFixedSizeData.blockInfo; }
-    int getBufferIndex() const { return mFixedSizeData.bufferIndex; }
-    int getLocation() const { return mFixedSizeData.location; }
-    GLenum getImageUnitFormat() const { return mFixedSizeData.imageUnitFormat; }
-
-    bool findInfoByMappedName(const std::string &mappedFullName,
-                              const sh::ShaderVariable **leafVar,
-                              std::string *originalFullName) const;
+    GLenum getType() const { return type; }
+    unsigned int getOuterArrayOffset() const { return outerArrayOffset; }
+    unsigned int getOuterArraySizeProduct() const { return outerArraySizeProduct; }
+    int getBinding() const { return binding; }
+    int getOffset() const { return offset; }
+    const sh::BlockMemberInfo &getBlockInfo() const { return blockInfo; }
+    int getBufferIndex() const { return bufferIndex; }
+    int getLocation() const { return location; }
+    GLenum getImageUnitFormat() const { return imageUnitFormat; }
 
     int parentArrayIndex() const
     {
-        return hasParentArrayIndex() ? mFixedSizeData.flattenedOffsetInParentArrays : 0;
+        return flattenedOffsetInParentArrays != -1 ? flattenedOffsetInParentArrays : 0;
     }
-
-    bool hasParentArrayIndex() const { return mFixedSizeData.flattenedOffsetInParentArrays != -1; }
-    bool isSameInterfaceBlockFieldAtLinkTime(const sh::ShaderVariable &other) const;
-
-    bool isSameVariableAtLinkTime(const sh::ShaderVariable &other,
-                                  bool matchPrecision,
-                                  bool matchName) const;
 
     ShaderType getFirstActiveShaderType() const
     {
-        return mFixedSizeData.activeVariable.getFirstActiveShaderType();
+        return activeVariable.getFirstActiveShaderType();
     }
     void setActive(ShaderType shaderType, bool used, uint32_t _id)
     {
-        mFixedSizeData.activeVariable.setActive(shaderType, used, _id);
+        activeVariable.setActive(shaderType, used, _id);
     }
-    bool isActive(ShaderType shaderType) const
-    {
-        return mFixedSizeData.activeVariable.isActive(shaderType);
-    }
-    const ShaderMap<uint32_t> &getIds() const { return mFixedSizeData.activeVariable.getIds(); }
-    uint32_t getId(ShaderType shaderType) const
-    {
-        return mFixedSizeData.activeVariable.getId(shaderType);
-    }
-    ShaderBitSet activeShaders() const { return mFixedSizeData.activeVariable.activeShaders(); }
-    GLuint activeShaderCount() const { return mFixedSizeData.activeVariable.activeShaderCount(); }
-    const ActiveVariable &getActiveVariable() const { return mFixedSizeData.activeVariable; }
+    bool isActive(ShaderType shaderType) const { return activeVariable.isActive(shaderType); }
+    const ShaderMap<uint32_t> &getIds() const { return activeVariable.getIds(); }
+    uint32_t getId(ShaderType shaderType) const { return activeVariable.getId(shaderType); }
+    ShaderBitSet activeShaders() const { return activeVariable.activeShaders(); }
+    GLuint activeShaderCount() const { return activeVariable.activeShaderCount(); }
 
     const UniformTypeInfo *typeInfo;
+    sh::BlockMemberInfo blockInfo;
+    ActiveVariable activeVariable;
 
-  private:
-    struct
+    GLenum type;
+    GLenum precision;
+    GLenum imageUnitFormat;
+    int location;
+    int binding;
+    int offset;
+    uint32_t id;
+    int flattenedOffsetInParentArrays;
+    int bufferIndex;
+    unsigned int outerArraySizeProduct;
+    unsigned int outerArrayOffset;
+    unsigned int arraySize;
+
+    union
     {
-        GLenum type;
-        GLenum precision;
-        int location;
-        int binding;
-        GLenum imageUnitFormat;
-        int offset;
-        uint32_t id;
-        int flattenedOffsetInParentArrays;
-        int bufferIndex;
-        sh::BlockMemberInfo blockInfo;
-        unsigned int outerArraySizeProduct;
-        unsigned int outerArrayOffset;
-        unsigned int arraySize;
-        ActiveVariable activeVariable;
-
-        union
+        struct
         {
-            struct
-            {
-                uint32_t staticUse : 1;
-                uint32_t active : 1;
-                uint32_t rasterOrdered : 1;
-                uint32_t readonly : 1;
-                uint32_t writeonly : 1;
-                uint32_t isFragmentInOut : 1;
-                uint32_t texelFetchStaticUse : 1;
-                uint32_t isArray : 1;
-                // Since we always flatten the uniform structure and arrays into one dimensional
-                // array, these should always false. They can be removed, but I keep it here for now
-                // just in case we need it in future.
-                uint32_t isArrayOfArrays : 1;
-                uint32_t isStruct : 1;
-                uint32_t padding : 22;
-            } flagBits;
+            uint32_t isFragmentInOut : 1;
+            uint32_t texelFetchStaticUse : 1;
+            uint32_t isArray : 1;
+            uint32_t padding : 29;
+        } flagBits;
 
-            uint32_t flagBitsAsUInt;
-        };
-    } mFixedSizeData;
+        uint32_t flagBitsAsUInt;
+    };
 };
 
 struct BufferVariable : public sh::ShaderVariable
