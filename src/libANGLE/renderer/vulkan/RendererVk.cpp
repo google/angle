@@ -876,7 +876,7 @@ gl::Version LimitVersionTo(const gl::Version &current, const gl::Version &lower)
 
 // Exclude memory type indices that include the host-visible bit from VMA image suballocation.
 uint32_t GetMemoryTypeBitsExcludingHostVisible(RendererVk *renderer,
-                                               VkMemoryPropertyFlags requiredFlags,
+                                               VkMemoryPropertyFlags propertyFlags,
                                                uint32_t availableMemoryTypeBits)
 {
     const vk::MemoryProperties &memoryProperties = renderer->getMemoryProperties();
@@ -887,9 +887,9 @@ uint32_t GetMemoryTypeBitsExcludingHostVisible(RendererVk *renderer,
     // are removed.
     for (size_t memoryIndex : angle::BitSet<32>(availableMemoryTypeBits))
     {
-        VkMemoryPropertyFlags propertyFlags =
+        VkMemoryPropertyFlags memoryFlags =
             memoryProperties.getMemoryType(static_cast<uint32_t>(memoryIndex)).propertyFlags;
-        if ((propertyFlags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT) != 0)
+        if ((memoryFlags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT) != 0)
         {
             memoryTypeBitsOut &= ~(angle::Bit<uint32_t>(memoryIndex));
             continue;
@@ -897,7 +897,7 @@ uint32_t GetMemoryTypeBitsExcludingHostVisible(RendererVk *renderer,
 
         // If the protected bit is not required, all memory type indices with this bit should be
         // ignored.
-        if ((propertyFlags & ~requiredFlags & VK_MEMORY_PROPERTY_PROTECTED_BIT) != 0)
+        if ((memoryFlags & ~propertyFlags & VK_MEMORY_PROPERTY_PROTECTED_BIT) != 0)
         {
             memoryTypeBitsOut &= ~(angle::Bit<uint32_t>(memoryIndex));
         }
@@ -5911,11 +5911,14 @@ VkResult ImageMemorySuballocator::allocateAndBindMemory(Context *context,
     bool allocateDedicatedMemory =
         memoryRequirements.size >= kImageSizeThresholdForDedicatedMemoryAllocation;
 
-    // Avoid device-local and host-visible combinations if possible.
+    // Avoid device-local and host-visible combinations if possible. Here, the device-local bit is
+    // included in "preferredFlags", which is also expected to contain the required flags.
+    ASSERT((preferredFlags & ~VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT) == requiredFlags);
+
     uint32_t memoryTypeBits = memoryRequirements.memoryTypeBits;
-    if ((requiredFlags & VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT) != 0)
+    if ((preferredFlags & VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT) != 0)
     {
-        memoryTypeBits = GetMemoryTypeBitsExcludingHostVisible(renderer, requiredFlags,
+        memoryTypeBits = GetMemoryTypeBitsExcludingHostVisible(renderer, preferredFlags,
                                                                memoryRequirements.memoryTypeBits);
     }
 
@@ -5928,7 +5931,7 @@ VkResult ImageMemorySuballocator::allocateAndBindMemory(Context *context,
     do
     {
         result = vma::AllocateAndBindMemoryForImage(
-            allocator.getHandle(), &image->mHandle, requiredFlags, preferredFlags, memoryTypeBits,
+            allocator.getHandle(), &image->mHandle, preferredFlags, preferredFlags, memoryTypeBits,
             allocateDedicatedMemory, &allocationOut->mHandle, memoryTypeIndexOut, sizeOut);
 
         if (result != VK_SUCCESS)
@@ -5958,7 +5961,6 @@ VkResult ImageMemorySuballocator::allocateAndBindMemory(Context *context,
     // the device from all other memory types, although it will result in performance penalty.
     if (result != VK_SUCCESS)
     {
-        requiredFlags &= (~VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
         memoryTypeBits = memoryRequirements.memoryTypeBits;
         result         = vma::AllocateAndBindMemoryForImage(
             allocator.getHandle(), &image->mHandle, requiredFlags, preferredFlags, memoryTypeBits,
