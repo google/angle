@@ -283,11 +283,6 @@ deps = {
     'condition': 'checkout_android and not build_with_chromium',
   },
 
-  'third_party/android_sdk/androidx_browser/src': {
-      'url': '{chromium_git}/external/gob/android/platform/frameworks/support/browser.git@65086eb5e52c16778fa7b4f157156d17b176fcb3',
-      'condition': 'checkout_android and not build_with_chromium',
-  },
-
   'third_party/android_sdk/public': {
       'packages': [
           {
@@ -643,7 +638,7 @@ deps = {
   },
 
   'third_party/wayland': {
-    'url': '{chromium_git}/external/anongit.freedesktop.org/git/wayland/wayland@upstream/1.20.0',
+    'url': '{chromium_git}/external/anongit.freedesktop.org/git/wayland/wayland@75c1a93e2067220fa06208f20f8f096bb463ec08',
     'condition': 'not build_with_chromium and host_os == "linux"'
   },
 
