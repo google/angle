@@ -143,23 +143,6 @@ LinkedUniform &LinkedUniform::operator=(const LinkedUniform &other)
 
 LinkedUniform::~LinkedUniform() {}
 
-void LinkedUniform::save(BinaryOutputStream *stream) const
-{
-    // mFixedSizeData is a simple structure with fundamental data types, we can just do bulk save
-    // for performance.
-    stream->writeBytes(reinterpret_cast<const unsigned char *>(&mFixedSizeData),
-                       sizeof(mFixedSizeData));
-}
-
-void LinkedUniform::load(BinaryInputStream *stream)
-{
-    // mFixedSizeData is a simple structure with fundamental data types, we can just do bulk load
-    // for performance.
-    stream->readBytes(reinterpret_cast<unsigned char *>(&mFixedSizeData), sizeof(mFixedSizeData));
-
-    typeInfo = &GetUniformTypeInfo(getType());
-}
-
 BufferVariable::BufferVariable()
     : bufferIndex(-1), blockInfo(sh::kDefaultBlockMemberInfo), topLevelArraySize(-1)
 {}

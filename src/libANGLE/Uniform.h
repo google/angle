@@ -58,6 +58,8 @@ struct ActiveVariable
     ShaderMap<uint32_t> mIds;
 };
 
+// Important: This struct must have basic data types only, so that we can initialize with memcpy. Do
+// not put any std::vector or objects with virtual functions in it.
 // Helper struct representing a single shader uniform. Most of this structure's data member and
 // access functions mirrors ShaderVariable; See ShaderVars.h for more info.
 struct LinkedUniform
@@ -153,14 +155,9 @@ struct LinkedUniform
     GLuint activeShaderCount() const { return mFixedSizeData.activeVariable.activeShaderCount(); }
     const ActiveVariable &getActiveVariable() const { return mFixedSizeData.activeVariable; }
 
-    void save(BinaryOutputStream *stream) const;
-    void load(BinaryInputStream *stream);
-
     const UniformTypeInfo *typeInfo;
 
   private:
-    // Important: The fixed size data structure with fundamental data types only, so that we can
-    // initialize with memcpy. Do not put any std::vector or objects with virtual functions in it.
     struct
     {
         GLenum type;

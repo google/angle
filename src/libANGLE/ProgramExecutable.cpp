@@ -200,17 +200,20 @@ void SaveUniforms(BinaryOutputStream *stream,
                   const std::vector<std::string> &uniformMappedNames)
 {
     stream->writeInt(uniforms.size());
-    for (const LinkedUniform &uniform : uniforms)
+    if (uniforms.size() > 0)
     {
-        uniform.save(stream);
-    }
-    for (const std::string &name : uniformNames)
-    {
-        stream->writeString(name);
-    }
-    for (const std::string &name : uniformMappedNames)
-    {
-        stream->writeString(name);
+        // LinkedUniform is a simple structure with fundamental data types, we can just do bulk save
+        // for performance.
+        stream->writeBytes(reinterpret_cast<const unsigned char *>(uniforms.data()),
+                           sizeof(LinkedUniform) * uniforms.size());
+        for (const std::string &name : uniformNames)
+        {
+            stream->writeString(name);
+        }
+        for (const std::string &name : uniformMappedNames)
+        {
+            stream->writeString(name);
+        }
     }
 }
 void LoadUniforms(BinaryInputStream *stream,
@@ -218,22 +221,30 @@ void LoadUniforms(BinaryInputStream *stream,
                   std::vector<std::string> *uniformNames,
                   std::vector<std::string> *uniformMappedNames)
 {
-    size_t uniformCount = stream->readInt<size_t>();
     ASSERT(uniforms->empty());
-    uniforms->resize(uniformCount);
-    for (size_t uniformIndex = 0; uniformIndex < uniformCount; ++uniformIndex)
+    size_t uniformCount = stream->readInt<size_t>();
+    if (uniformCount > 0)
     {
-        (*uniforms)[uniformIndex].load(stream);
-    }
-    uniformNames->resize(uniformCount);
-    for (size_t uniformIndex = 0; uniformIndex < uniformCount; ++uniformIndex)
-    {
-        stream->readString(&(*uniformNames)[uniformIndex]);
-    }
-    uniformMappedNames->resize(uniformCount);
-    for (size_t uniformIndex = 0; uniformIndex < uniformCount; ++uniformIndex)
-    {
-        stream->readString(&(*uniformMappedNames)[uniformIndex]);
+        uniforms->resize(uniformCount);
+        // LinkedUniform is a simple structure with fundamental data types, we can just do bulk load
+        // for performance.
+        stream->readBytes(reinterpret_cast<unsigned char *>(uniforms->data()),
+                          sizeof(LinkedUniform) * uniforms->size());
+        for (size_t uniformIndex = 0; uniformIndex < uniformCount; ++uniformIndex)
+        {
+            (*uniforms)[uniformIndex].typeInfo =
+                &GetUniformTypeInfo((*uniforms)[uniformIndex].getType());
+        }
+        uniformNames->resize(uniformCount);
+        for (size_t uniformIndex = 0; uniformIndex < uniformCount; ++uniformIndex)
+        {
+            stream->readString(&(*uniformNames)[uniformIndex]);
+        }
+        uniformMappedNames->resize(uniformCount);
+        for (size_t uniformIndex = 0; uniformIndex < uniformCount; ++uniformIndex)
+        {
+            stream->readString(&(*uniformMappedNames)[uniformIndex]);
+        }
     }
 }
 }  // anonymous namespace
