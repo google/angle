@@ -73,8 +73,6 @@ LinkedUniform::LinkedUniform(GLenum typeIn,
     flagBitsAsUInt   = 0;
     flagBits.isArray = !arraySizesIn.empty();
     ASSERT(arraySizesIn.size() <= 1);
-
-    typeInfo = &GetUniformTypeInfo(typeIn);
 }
 
 LinkedUniform::LinkedUniform(const LinkedUniform &other)
@@ -109,8 +107,6 @@ LinkedUniform::LinkedUniform(const UsedUniform &usedUniform)
     flagBits.isFragmentInOut     = usedUniform.isFragmentInOut;
     flagBits.texelFetchStaticUse = usedUniform.texelFetchStaticUse;
     flagBits.isArray             = usedUniform.isArray();
-
-    typeInfo = usedUniform.typeInfo;
 }
 
 LinkedUniform::~LinkedUniform() {}

@@ -358,7 +358,7 @@ void ProgramVk::setUniformImpl(GLint location, GLsizei count, const T *v, GLenum
 
     ASSERT(!linkedUniform.isSampler());
 
-    if (linkedUniform.typeInfo->type == entryPointType)
+    if (linkedUniform.type == entryPointType)
     {
         for (const gl::ShaderType shaderType : glExecutable.getLinkedShaderStages())
         {
@@ -371,7 +371,7 @@ void ProgramVk::setUniformImpl(GLint location, GLsizei count, const T *v, GLenum
                 continue;
             }
 
-            const GLint componentCount = linkedUniform.typeInfo->componentCount;
+            const GLint componentCount = linkedUniform.getElementComponents();
             UpdateDefaultUniformBlock(count, locationInfo.arrayIndex, componentCount, v, layoutInfo,
                                       &uniformBlock.uniformData);
             mExecutable.mDefaultUniformBlocksDirty.set(shaderType);
@@ -390,9 +390,9 @@ void ProgramVk::setUniformImpl(GLint location, GLsizei count, const T *v, GLenum
                 continue;
             }
 
-            const GLint componentCount = linkedUniform.typeInfo->componentCount;
+            const GLint componentCount = linkedUniform.getElementComponents();
 
-            ASSERT(linkedUniform.typeInfo->type == gl::VariableBoolVectorType(entryPointType));
+            ASSERT(linkedUniform.type == gl::VariableBoolVectorType(entryPointType));
 
             GLint initialArrayOffset =
                 locationInfo.arrayIndex * layoutInfo.arrayStride + layoutInfo.offset;
@@ -428,8 +428,9 @@ void ProgramVk::getUniformImpl(GLint location, T *v, GLenum entryPointType) cons
     const DefaultUniformBlock &uniformBlock = *mExecutable.mDefaultUniformBlocks[shaderType];
     const sh::BlockMemberInfo &layoutInfo   = uniformBlock.uniformLayout[location];
 
-    ASSERT(linkedUniform.typeInfo->componentType == entryPointType ||
-           linkedUniform.typeInfo->componentType == gl::VariableBoolVectorType(entryPointType));
+    ASSERT(gl::GetUniformTypeInfo(linkedUniform.type).componentType == entryPointType ||
+           gl::GetUniformTypeInfo(linkedUniform.type).componentType ==
+               gl::VariableBoolVectorType(entryPointType));
 
     if (gl::IsMatrixType(linkedUniform.getType()))
     {
@@ -440,7 +441,7 @@ void ProgramVk::getUniformImpl(GLint location, T *v, GLenum entryPointType) cons
     }
     else
     {
-        ReadFromDefaultUniformBlock(linkedUniform.typeInfo->componentCount, locationInfo.arrayIndex,
+        ReadFromDefaultUniformBlock(linkedUniform.getElementComponents(), locationInfo.arrayIndex,
                                     v, layoutInfo, &uniformBlock.uniformData);
     }
 }

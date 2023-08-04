@@ -2516,8 +2516,8 @@ void CaptureUpdateUniformValues(const gl::State &replayState,
         }
 
         gl::UniformLocation uniformLoc      = program->getUniformLocation(uniformName);
-        const gl::UniformTypeInfo *typeInfo = uniform.typeInfo;
-        int componentCount                  = typeInfo->componentCount;
+        const gl::UniformTypeInfo &typeInfo = gl::GetUniformTypeInfo(uniform.getType());
+        int componentCount                  = typeInfo.componentCount;
         int uniformSize                     = uniformCount * componentCount;
 
         // For arrayed uniforms, we'll need to increment a read location
@@ -2530,7 +2530,7 @@ void CaptureUpdateUniformValues(const gl::State &replayState,
         }
 
         // Image uniforms are special and cannot be set this way
-        if (typeInfo->isImageType)
+        if (typeInfo.isImageType)
         {
             continue;
         }
@@ -2542,7 +2542,7 @@ void CaptureUpdateUniformValues(const gl::State &replayState,
         CallVector defaultUniformCalls({callsOut, &resetCalls[uniformLoc]});
 
         // Samplers should be populated with GL_INT, regardless of return type
-        if (typeInfo->isSampler)
+        if (typeInfo.isSampler)
         {
             std::vector<GLint> uniformBuffer(uniformSize);
             for (int index = 0; index < uniformCount; index++, readLoc.value++)
@@ -2561,7 +2561,7 @@ void CaptureUpdateUniformValues(const gl::State &replayState,
             continue;
         }
 
-        switch (typeInfo->componentType)
+        switch (typeInfo.componentType)
         {
             case GL_FLOAT:
             {
@@ -2573,7 +2573,7 @@ void CaptureUpdateUniformValues(const gl::State &replayState,
                     resourceTracker->setDefaultUniformBaseLocation(program->id(), readLoc,
                                                                    uniformLoc);
                 }
-                switch (typeInfo->type)
+                switch (typeInfo.type)
                 {
                     // Note: All matrix uniforms are populated without transpose
                     case GL_FLOAT_MAT4x3:

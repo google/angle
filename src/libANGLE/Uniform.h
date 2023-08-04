@@ -77,12 +77,12 @@ struct LinkedUniform
     LinkedUniform(const UsedUniform &usedUniform);
     ~LinkedUniform();
 
-    bool isSampler() const { return typeInfo->isSampler; }
-    bool isImage() const { return typeInfo->isImageType; }
+    bool isSampler() const { return GetUniformTypeInfo(type).isSampler; }
+    bool isImage() const { return GetUniformTypeInfo(type).isImageType; }
     bool isAtomicCounter() const { return IsAtomicCounterType(type); }
     bool isInDefaultBlock() const { return bufferIndex == -1; }
-    size_t getElementSize() const { return typeInfo->externalSize; }
-    size_t getElementComponents() const { return typeInfo->componentCount; }
+    size_t getElementSize() const { return GetUniformTypeInfo(type).externalSize; }
+    GLint getElementComponents() const { return GetUniformTypeInfo(type).componentCount; }
 
     bool isTexelFetchStaticUse() const { return flagBits.texelFetchStaticUse; }
     bool isFragmentInOut() const { return flagBits.isFragmentInOut; }
@@ -123,7 +123,6 @@ struct LinkedUniform
     ShaderBitSet activeShaders() const { return activeVariable.activeShaders(); }
     GLuint activeShaderCount() const { return activeVariable.activeShaderCount(); }
 
-    const UniformTypeInfo *typeInfo;
     sh::BlockMemberInfo blockInfo;
     ActiveVariable activeVariable;
 

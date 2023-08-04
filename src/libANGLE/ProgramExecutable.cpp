@@ -230,11 +230,6 @@ void LoadUniforms(BinaryInputStream *stream,
         // for performance.
         stream->readBytes(reinterpret_cast<unsigned char *>(uniforms->data()),
                           sizeof(LinkedUniform) * uniforms->size());
-        for (size_t uniformIndex = 0; uniformIndex < uniformCount; ++uniformIndex)
-        {
-            (*uniforms)[uniformIndex].typeInfo =
-                &GetUniformTypeInfo((*uniforms)[uniformIndex].getType());
-        }
         uniformNames->resize(uniformCount);
         for (size_t uniformIndex = 0; uniformIndex < uniformCount; ++uniformIndex)
         {
@@ -1686,9 +1681,9 @@ void ProgramExecutable::linkSamplerAndImageBindings(GLuint *combinedImageUniform
     {
         const auto &samplerUniform = mUniforms[samplerIndex];
         TextureType textureType    = SamplerTypeToTextureType(samplerUniform.getType());
-        GLenum samplerType         = samplerUniform.typeInfo->type;
+        GLenum samplerType         = samplerUniform.getType();
         unsigned int elementCount  = samplerUniform.getBasicTypeElementCount();
-        SamplerFormat format       = samplerUniform.typeInfo->samplerFormat;
+        SamplerFormat format       = GetUniformTypeInfo(samplerType).samplerFormat;
         mSamplerBindings.emplace_back(textureType, samplerType, format, elementCount);
     }
 
