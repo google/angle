@@ -534,7 +534,6 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 5981 PIXEL4ORXL VULKAN : EXTBlendFuncExtendedDrawTestES31.UseTwoProgramStages/* = SKIP
 5981 PIXEL4ORXL VULKAN : GLSLTest_ES31.ParameterArrayArrayArraySampler/* = SKIP
 6794 PIXEL4ORXL VULKAN : MatrixTest31.Mat3x4StructVarying/* = SKIP
-5981 PIXEL4ORXL VULKAN : MultisampledRenderToTextureES3Test.ClearThenMaskedClearFramebufferTest/* = SKIP
 5981 PIXEL4ORXL VULKAN : PointSpriteTest.TrianglesNotTreatedAsPointSprites/* = SKIP
 5981 PIXEL4ORXL VULKAN : ProgramBinaryTransformFeedbackTest.GetTransformFeedbackVarying/* = SKIP
 5981 PIXEL4ORXL VULKAN : Texture2DArrayCopy.UnsignedByteFormats/* = SKIP

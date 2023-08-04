@@ -2788,6 +2788,46 @@ TEST_P(ImageTest, SourceAHBTarget2DRetainInitialData)
     destroyAndroidHardwareBuffer(source);
 }
 
+// Test interaction between AHBs and GL_EXT_multisampled_render_to_texture
+TEST_P(ImageTest, SourceAHBTarget2DMSRTTInteraction)
+{
+    EGLWindow *window = getEGLWindow();
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
+    ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
+
+    // Create the Image
+    AHardwareBuffer *source;
+    EGLImageKHR image;
+    createEGLImageAndroidHardwareBufferSource(1, 1, 1, AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM,
+                                              kDefaultAHBUsage, kDefaultAttribs, {}, &source,
+                                              &image);
+
+    // Create the target
+    GLTexture target;
+    createEGLImageTargetTexture2D(image, target);
+
+    // Bind target texture to mulisampled framebuffer
+    GLFramebuffer fboMS;
+    glBindFramebuffer(GL_FRAMEBUFFER, fboMS);
+    glFramebufferTexture2DMultisampleEXT(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                                         target, 0, 4);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Clear framebuffer
+    glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    ASSERT_GL_NO_ERROR();
+
+    // Check clear result
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+
+    // Check the AHB is updated
+    verifyResultAHB(source, {{GLColor::blue.data(), 4}});
+
+    // Clean up
+    eglDestroyImageKHR(window->getDisplay(), image);
+}
 // Testing source AHB EGL image, target 2D array texture
 TEST_P(ImageTest, SourceAHBTarget2DArray)
 {

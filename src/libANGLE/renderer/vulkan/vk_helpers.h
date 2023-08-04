@@ -999,6 +999,7 @@ class RenderPassAttachment final
     void finalizeLoadStore(Context *context,
                            uint32_t currentCmdCount,
                            bool hasUnresolveAttachment,
+                           bool hasResolveAttachment,
                            RenderPassLoadOp *loadOp,
                            RenderPassStoreOp *storeOp,
                            bool *isInvalidatedOut);
