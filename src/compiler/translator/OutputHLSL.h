@@ -151,7 +151,6 @@ class OutputHLSL : public TIntermTraverser
     TString addArrayAssignmentFunction(const TType &type);
     TString addArrayConstructIntoFunction(const TType &type);
     TString addFlatEvaluateFunction(const TType &type, const TType &parameterType);
-    TString addSampleEvaluateFunction(const TType &type);
 
     // Ensures if the type is a struct, the struct is defined
     void ensureStructDefined(const TType &type);
@@ -285,12 +284,6 @@ class OutputHLSL : public TIntermTraverser
         TType parameterType;
     };
     std::vector<FlatEvaluateFunction> mFlatEvaluateFunctions;
-
-    struct SampleEvaluateFunction : public HelperFunction
-    {
-        TType type;
-    };
-    std::vector<SampleEvaluateFunction> mSampleEvaluateFunctions;
 
     sh::WorkGroupSize mWorkGroupSize;
 

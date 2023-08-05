@@ -412,24 +412,21 @@ class ProgramD3D : public ProgramImpl
     class PixelExecutable
     {
       public:
-        PixelExecutable(const std::pair<bool, const std::vector<GLenum>> &outputSignature,
+        PixelExecutable(const std::vector<GLenum> &outputSignature,
                         ShaderExecutableD3D *shaderExecutable);
         ~PixelExecutable();
 
-        bool matchesSignature(const std::pair<bool, const std::vector<GLenum>> &signature) const
+        bool matchesSignature(const std::vector<GLenum> &signature) const
         {
             return mOutputSignature == signature;
         }
 
-        const std::pair<bool, const std::vector<GLenum>> &outputSignature() const
-        {
-            return mOutputSignature;
-        }
+        const std::vector<GLenum> &outputSignature() const { return mOutputSignature; }
 
         ShaderExecutableD3D *shaderExecutable() const { return mShaderExecutable; }
 
       private:
-        const std::pair<bool, const std::vector<GLenum>> mOutputSignature;
+        const std::vector<GLenum> mOutputSignature;
         ShaderExecutableD3D *mShaderExecutable;
     };
 
@@ -582,7 +579,7 @@ class ProgramD3D : public ProgramImpl
     gl::ShaderMap<gl::RangeUI> mUsedAtomicCounterRange;
 
     // Cache for pixel shader output layout to save reallocations.
-    std::pair<bool, std::vector<GLenum>> mPixelShaderOutputLayoutCache;
+    std::vector<GLenum> mPixelShaderOutputLayoutCache;
     Optional<size_t> mCachedPixelExecutableIndex;
 
     AttribIndexArray mAttribLocationToD3DSemantic;

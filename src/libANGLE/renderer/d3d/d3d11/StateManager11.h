@@ -56,6 +56,7 @@ class ShaderConstants11 : angle::NonCopyable
                        const gl::ImageUnit &imageUnit);
     void onClipControlChange(bool lowerLeft, bool zeroToOne);
     bool onClipDistancesEnabledChange(const uint32_t value);
+    bool onMultisamplingChange(bool multisampling);
 
     angle::Result updateBuffer(const gl::Context *context,
                                Renderer11 *renderer,
@@ -110,6 +111,7 @@ class ShaderConstants11 : angle::NonCopyable
             : depthRange{.0f},
               viewCoords{.0f},
               depthFront{.0f},
+              misc{0},
               fragCoordOffset{.0f},
               viewScale{.0f},
               multiviewWriteToViewportIndex{.0f},
@@ -118,7 +120,8 @@ class ShaderConstants11 : angle::NonCopyable
 
         float depthRange[4];
         float viewCoords[4];
-        float depthFront[4];
+        float depthFront[3];
+        uint32_t misc;
         float fragCoordOffset[2];
         float viewScale[2];
         // multiviewWriteToViewportIndex is used to select either the side-by-side or layered
@@ -129,6 +132,10 @@ class ShaderConstants11 : angle::NonCopyable
         // Added here to manually pad the struct.
         float padding[3];
     };
+    // Packing information for pixel driver uniform's misc field:
+    // - 1 bit for whether multisampled rendering is used
+    // - 31 bits unused
+    static constexpr uint32_t kPixelMiscMultisamplingMask = 0x1;
     static_assert(sizeof(Pixel) % 16u == 0, "D3D11 constant buffers must be multiples of 16 bytes");
 
     struct Compute

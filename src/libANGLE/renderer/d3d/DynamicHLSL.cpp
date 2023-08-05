@@ -320,7 +320,7 @@ std::string DynamicHLSL::generatePixelShaderForOutputSignature(
     const std::vector<PixelShaderOutputVariable> &outputVariables,
     FragDepthUsage fragDepthUsage,
     bool usesSampleMask,
-    const std::pair<bool, const std::vector<GLenum>> &outputLayoutKey,
+    const std::vector<GLenum> &outputLayout,
     const std::vector<ShaderStorageBlock> &shaderStorageBlocks,
     size_t baseUAVRegister) const
 {
@@ -341,9 +341,6 @@ std::string DynamicHLSL::generatePixelShaderForOutputSignature(
                 return "SV_Depth";
         }
     }();
-
-    const bool multisampling                = outputLayoutKey.first;
-    const std::vector<GLenum> &outputLayout = outputLayoutKey.second;
 
     std::ostringstream declarationStream;
     std::ostringstream copyStream;
@@ -398,11 +395,11 @@ std::string DynamicHLSL::generatePixelShaderForOutputSignature(
         copyStream << "    output.gl_Depth = gl_Depth; \n";
     }
 
-    // Do not write to SV_Coverage when rendering to single-sampled targets
-    if (multisampling && usesSampleMask)
+    if (usesSampleMask)
     {
         declarationStream << "    uint sampleMask : SV_Coverage;\n";
-        copyStream << "    output.sampleMask = gl_SampleMask[0];\n";
+        // Ignore gl_SampleMask[0] value when rendering to a single-sampled framebuffer
+        copyStream << "    output.sampleMask = (dx_Misc & 1) ? gl_SampleMask[0] : 0xFFFFFFFFu;\n";
     }
 
     declarationStream << "};\n"
@@ -415,11 +412,6 @@ std::string DynamicHLSL::generatePixelShaderForOutputSignature(
                          "}\n";
 
     std::string pixelHLSL(sourceShader);
-
-    if (multisampling)
-    {
-        pixelHLSL.insert(0, "#define ANGLE_MULTISAMPLING\n");
-    }
 
     bool success =
         angle::ReplaceSubstring(&pixelHLSL, PIXEL_OUTPUT_STUB_STRING, declarationStream.str());
