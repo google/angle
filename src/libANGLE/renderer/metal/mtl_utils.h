@@ -94,7 +94,8 @@ AutoObjCPtr<id<MTLLibrary>> CreateShaderLibrary(
     const mtl::ContextDevice &metalDevice,
     const std::string &source,
     const std::map<std::string, std::string> &substitutionDictionary,
-    bool enableFastMath,
+    bool disableFastMath,
+    bool usesInvariance,
     AutoObjCPtr<NSError *> *error);
 
 AutoObjCPtr<id<MTLLibrary>> CreateShaderLibrary(const mtl::ContextDevice &metalDevice,
@@ -106,7 +107,8 @@ AutoObjCPtr<id<MTLLibrary>> CreateShaderLibrary(
     const char *source,
     size_t sourceLen,
     const std::map<std::string, std::string> &substitutionDictionary,
-    bool enableFastMath,
+    bool disableFastMath,
+    bool usesInvariance,
     AutoObjCPtr<NSError *> *error);
 
 AutoObjCPtr<id<MTLLibrary>> CreateShaderLibrary(id<MTLDevice> metalDevice,
@@ -122,7 +124,8 @@ AutoObjCPtr<id<MTLLibrary>> CreateShaderLibraryFromBinary(id<MTLDevice> metalDev
 // Compiles a shader library into a metallib file, returning the path to it.
 std::string CompileShaderLibraryToFile(const std::string &source,
                                        const std::map<std::string, std::string> &macros,
-                                       bool enableFastMath);
+                                       bool disableFastMath,
+                                       bool usesInvariance);
 
 bool SupportsAppleGPUFamily(id<MTLDevice> device, uint8_t appleFamily);
 

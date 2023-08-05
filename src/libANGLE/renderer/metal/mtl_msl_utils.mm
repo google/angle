@@ -46,7 +46,7 @@ void TranslatedShaderInfo::reset()
     metalShaderSource    = nullptr;
     metalLibrary         = nil;
     hasUBOArgumentBuffer = false;
-    hasInvariantOrAtan   = false;
+    hasInvariant         = false;
     for (mtl::SamplerBinding &binding : actualSamplerBindings)
     {
         binding.textureBinding = mtl::kMaxShaderSamplers;
@@ -565,8 +565,7 @@ angle::Result MTLGetMSL(const gl::Context *glContext,
         {
             mslShaderInfoOut->at(type).actualImageBindings[i] = reflection->getRWTextureBinding(i);
         }
-        (*mslShaderInfoOut)[type].hasInvariantOrAtan =
-            reflection->hasAtan || reflection->hasInvariance;
+        (*mslShaderInfoOut)[type].hasInvariant = reflection->hasInvariance;
     }
     return angle::Result::Continue;
 }

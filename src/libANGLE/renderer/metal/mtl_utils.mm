@@ -826,18 +826,20 @@ AutoObjCPtr<id<MTLLibrary>> CreateShaderLibrary(
     const mtl::ContextDevice &metalDevice,
     const std::string &source,
     const std::map<std::string, std::string> &substitutionMacros,
-    bool enableFastMath,
+    bool disableFastMath,
+    bool usesInvariance,
     AutoObjCPtr<NSError *> *error)
 {
     return CreateShaderLibrary(metalDevice, source.c_str(), source.size(), substitutionMacros,
-                               enableFastMath, error);
+                               disableFastMath, usesInvariance, error);
 }
 
 AutoObjCPtr<id<MTLLibrary>> CreateShaderLibrary(const mtl::ContextDevice &metalDevice,
                                                 const std::string &source,
                                                 AutoObjCPtr<NSError *> *error)
 {
-    return CreateShaderLibrary(metalDevice, source.c_str(), source.size(), {}, true, error);
+    // Use fast math, but conservatively assume the shader uses invariance.
+    return CreateShaderLibrary(metalDevice, source.c_str(), source.size(), {}, false, true, error);
 }
 
 AutoObjCPtr<id<MTLLibrary>> CreateShaderLibrary(
@@ -845,7 +847,8 @@ AutoObjCPtr<id<MTLLibrary>> CreateShaderLibrary(
     const char *source,
     size_t sourceLen,
     const std::map<std::string, std::string> &substitutionMacros,
-    bool enableFastMath,
+    bool disableFastMath,
+    bool usesInvariance,
     AutoObjCPtr<NSError *> *errorOut)
 {
     ANGLE_MTL_OBJC_SCOPE
@@ -863,12 +866,28 @@ AutoObjCPtr<id<MTLLibrary>> CreateShaderLibrary(
         if (ANGLE_APPLE_AVAILABLE_XCI(11.0, 14.0, 14.0))
         {
             canPerserveInvariance      = true;
-            options.preserveInvariance = true;
+            options.preserveInvariance = usesInvariance;
         }
 #endif
 
-        // If preserveInvariance is not available when compiling from source, disable fastmath.
-        options.fastMathEnabled = enableFastMath && canPerserveInvariance;
+        // If either:
+        //   - fastmath is force-disabled
+        // or:
+        //   - preserveInvariance is not available when compiling from
+        //     source, and the sources use invariance
+        // Disable fastmath.
+        //
+        // Write this logic out as if-tests rather than a nested
+        // logical expression to make it clearer.
+        if (disableFastMath)
+        {
+            options.fastMathEnabled = false;
+        }
+        else if (usesInvariance && !canPerserveInvariance)
+        {
+            options.fastMathEnabled = false;
+        }
+
         options.languageVersion = GetUserSetOrHighestMSLVersion(options.languageVersion);
 
         if (!substitutionMacros.empty())
@@ -895,7 +914,8 @@ AutoObjCPtr<id<MTLLibrary>> CreateShaderLibrary(
 
 std::string CompileShaderLibraryToFile(const std::string &source,
                                        const std::map<std::string, std::string> &macros,
-                                       bool enableFastMath)
+                                       bool disableFastMath,
+                                       bool usesInvariance)
 {
     auto tmpDir = angle::GetTempDirectory();
     if (!tmpDir.valid())
@@ -939,10 +959,14 @@ std::string CompileShaderLibraryToFile(const std::string &source,
         // a space cause problems)?
         metalToAirArgv.push_back(macro.first + "=" + macro.second);
     }
-    // TODO: is this right, not sure if enableFastMath is same as -ffast-math.
-    if (enableFastMath)
+    // TODO: is this right, not sure if MTLCompileOptions.fastMathEnabled is same as -ffast-math.
+    if (!disableFastMath)
     {
         metalToAirArgv.push_back("-ffast-math");
+    }
+    if (usesInvariance)
+    {
+        metalToAirArgv.push_back("-fpreserve-invariance");
     }
     Process metalToAirProcess(metalToAirArgv);
     int exitCode = -1;

@@ -362,11 +362,14 @@ constexpr size_t PipelineParametersToFragmentShaderVariantIndex(bool multisample
     return index;
 }
 
-bool UseFastMathForShaderCompilation(ContextMtl *context,
-                                     const mtl::TranslatedShaderInfo *translatedMslInfo)
+bool DisableFastMathForShaderCompilation(ContextMtl *context)
 {
-    return !context->getDisplay()->getFeatures().intelDisableFastMath.enabled &&
-           !translatedMslInfo->hasInvariantOrAtan;
+    return context->getDisplay()->getFeatures().intelDisableFastMath.enabled;
+}
+
+bool UsesInvariance(const mtl::TranslatedShaderInfo *translatedMslInfo)
+{
+    return translatedMslInfo->hasInvariant;
 }
 
 angle::Result CreateMslShaderLib(ContextMtl *context,
@@ -380,10 +383,11 @@ angle::Result CreateMslShaderLib(ContextMtl *context,
 
         // Convert to actual binary shader
         mtl::AutoObjCPtr<NSError *> err = nil;
-        bool enableFastMath = UseFastMathForShaderCompilation(context, translatedMslInfo);
-        translatedMslInfo->metalLibrary =
-            libraryCache.getOrCompileShaderLibrary(context, translatedMslInfo->metalShaderSource,
-                                                   substitutionMacros, enableFastMath, &err);
+        bool disableFastMath            = DisableFastMathForShaderCompilation(context);
+        bool usesInvariance             = UsesInvariance(translatedMslInfo);
+        translatedMslInfo->metalLibrary = libraryCache.getOrCompileShaderLibrary(
+            context, translatedMslInfo->metalShaderSource, substitutionMacros, disableFastMath,
+            usesInvariance, &err);
         if (err && !translatedMslInfo->metalLibrary)
         {
             std::ostringstream ss;
@@ -757,11 +761,12 @@ std::unique_ptr<LinkEvent> ProgramMtl::compileMslShaderLibs(const gl::Context *c
     {
         mtl::TranslatedShaderInfo *translateInfo  = &mMslShaderTranslateInfo[shaderType];
         std::map<std::string, std::string> macros = getDefaultSubstitutionDictionary();
-        bool enableFastMath = UseFastMathForShaderCompilation(contextMtl, translateInfo);
+        bool disableFastMath                      = DisableFastMathForShaderCompilation(contextMtl);
+        bool usesInvariance                       = UsesInvariance(translateInfo);
 
         // Check if the shader is already in the cache and use it instead of spawning a new thread
-        translateInfo->metalLibrary =
-            libraryCache.get(translateInfo->metalShaderSource, macros, enableFastMath);
+        translateInfo->metalLibrary = libraryCache.get(translateInfo->metalShaderSource, macros,
+                                                       disableFastMath, usesInvariance);
 
         if (!translateInfo->metalLibrary)
         {
@@ -1155,7 +1160,7 @@ void ProgramMtl::saveShaderInternalInfo(gl::BinaryOutputStream *stream)
         {
             stream->writeInt<uint32_t>(uboBinding);
         }
-        stream->writeBool(mMslShaderTranslateInfo[shaderType].hasInvariantOrAtan);
+        stream->writeBool(mMslShaderTranslateInfo[shaderType].hasInvariant);
     }
     for (size_t xfbBindIndex = 0; xfbBindIndex < mtl::kMaxShaderXFBs; xfbBindIndex++)
     {
@@ -1209,7 +1214,7 @@ void ProgramMtl::loadShaderInternalInfo(gl::BinaryInputStream *stream)
         {
             uboBinding = stream->readInt<uint32_t>();
         }
-        mMslShaderTranslateInfo[shaderType].hasInvariantOrAtan = stream->readBool();
+        mMslShaderTranslateInfo[shaderType].hasInvariant = stream->readBool();
     }
 
     for (size_t xfbBindIndex = 0; xfbBindIndex < mtl::kMaxShaderXFBs; xfbBindIndex++)
