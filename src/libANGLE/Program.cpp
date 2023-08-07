@@ -16,6 +16,7 @@
 #include "common/bitset_utils.h"
 #include "common/debug.h"
 #include "common/platform.h"
+#include "common/platform_helpers.h"
 #include "common/string_utils.h"
 #include "common/utilities.h"
 #include "compiler/translator/blocklayout.h"
@@ -3533,6 +3534,8 @@ angle::Result Program::serialize(const Context *context, angle::MemoryBuffer *bi
         reinterpret_cast<const unsigned char *>(angle::GetANGLEShaderProgramVersion()),
         angle::GetANGLEShaderProgramVersionHashSize());
 
+    stream.writeBool(angle::Is64Bit());
+
     stream.writeInt(angle::GetANGLESHVersion());
 
     stream.writeString(context->getRendererString());
@@ -3637,6 +3640,13 @@ angle::Result Program::deserialize(const Context *context,
                angleShaderProgramVersionString.size()) != 0)
     {
         infoLog << "Invalid program binary version.";
+        return angle::Result::Stop;
+    }
+
+    bool binaryIs64Bit = stream.readBool();
+    if (binaryIs64Bit != angle::Is64Bit())
+    {
+        infoLog << "cannot load program binaries across CPU architectures.";
         return angle::Result::Stop;
     }
 

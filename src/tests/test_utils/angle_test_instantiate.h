@@ -48,7 +48,6 @@ bool IsQualcomm();
 bool IsSwiftshaderDevice();
 bool IsIntelUHD630Mobile();
 
-bool Is64Bit();
 bool HasMesa();
 
 bool IsPlatformAvailable(const PlatformParameters &param);
