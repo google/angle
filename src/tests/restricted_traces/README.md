@@ -451,6 +451,24 @@ The restore command will copy the new traces from the `retrace-wip` directory
 into the trace folder before we call the sync script.
 
 After these commands complete succesfully, create and upload a CL as normal.
+
+Before running tests, you need to grant the bots access to your experimental
+CIPD files (substituting your account name):
+```
+cipd acl-edit experimental/google.com/$USERNAME -reader user:angle-try-builder@chops-service-accounts.iam.gserviceaccount.com
+cipd acl-edit experimental/google.com/$USERNAME -reader user:chromium-try-gpu-builder@chops-service-accounts.iam.gserviceaccount.com
+```
+
+You can verify it worked by running this command and seeing the bot added to readers:
+```
+cipd acl-list experimental/google.com/$USERNAME/angle/traces
+...
+Readers:
+  via "experimental/google.com/$USERNAME":
+    user:angle-try-builder@chops-service-accounts.iam.gserviceaccount.com
+    user:chromium-try-gpu-builder@chops-service-accounts.iam.gserviceaccount.com
+```
+
 Run CQ +1 Dry-Run. If you find a test regression, see the section below on
 diagnosing tracer errors. Otherwise proceed with the steps below.
 
