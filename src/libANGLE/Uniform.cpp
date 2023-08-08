@@ -44,7 +44,12 @@ void ActiveVariable::unionReferencesWith(const ActiveVariable &other)
     }
 }
 
-LinkedUniform::LinkedUniform() {}
+LinkedUniform::LinkedUniform()
+{
+    memset(this, 0, sizeof(*this));
+    blockInfo      = sh::BlockMemberInfo();
+    activeVariable = ActiveVariable();
+}
 
 LinkedUniform::LinkedUniform(GLenum typeIn,
                              GLenum precisionIn,
@@ -55,6 +60,7 @@ LinkedUniform::LinkedUniform(GLenum typeIn,
                              const int bufferIndexIn,
                              const sh::BlockMemberInfo &blockInfoIn)
 {
+    memset(this, 0, sizeof(*this));
     // Note: Ensure every data member is initialized.
     type                          = typeIn;
     precision                     = precisionIn;
@@ -64,6 +70,7 @@ LinkedUniform::LinkedUniform(GLenum typeIn,
     offset                        = offsetIn;
     bufferIndex                   = bufferIndexIn;
     blockInfo                     = blockInfoIn;
+    activeVariable                = ActiveVariable();
     id                            = 0;
     flattenedOffsetInParentArrays = -1;
     outerArraySizeProduct         = 1;
@@ -82,6 +89,8 @@ LinkedUniform::LinkedUniform(const LinkedUniform &other)
 
 LinkedUniform::LinkedUniform(const UsedUniform &usedUniform)
 {
+    memset(this, 0, sizeof(*this));
+
     ASSERT(!usedUniform.isArrayOfArrays());
     ASSERT(!usedUniform.isStruct());
     ASSERT(usedUniform.active);
@@ -95,13 +104,12 @@ LinkedUniform::LinkedUniform(const UsedUniform &usedUniform)
     offset                        = usedUniform.offset;
     bufferIndex                   = usedUniform.bufferIndex;
     blockInfo                     = usedUniform.blockInfo;
+    activeVariable                = usedUniform.activeVariable;
     id                            = usedUniform.id;
     flattenedOffsetInParentArrays = usedUniform.getFlattenedOffsetInParentArrays();
     outerArraySizeProduct         = ArraySizeProduct(usedUniform.outerArraySizes);
     outerArrayOffset              = usedUniform.outerArrayOffset;
     arraySize                     = usedUniform.isArray() ? usedUniform.getArraySizeProduct() : 1u;
-
-    activeVariable = usedUniform.activeVariable;
 
     flagBitsAsUInt               = 0;
     flagBits.isFragmentInOut     = usedUniform.isFragmentInOut;
