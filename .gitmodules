@@ -58,10 +58,6 @@
 	path = third_party/depot_tools
 	url = https://chromium.googlesource.com/chromium/tools/depot_tools.git
 	gclient-condition = not build_with_chromium
-[submodule "third_party/dummy_chromium"]
-	path = third_party/dummy_chromium
-	url = https://chromium.googlesource.com/chromium/src.git
-	gclient-condition = dummy_checkout_chromium
 [submodule "third_party/EGL-Registry/src"]
 	path = third_party/EGL-Registry/src
 	url = https://chromium.googlesource.com/external/github.com/KhronosGroup/EGL-Registry
