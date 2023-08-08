@@ -3798,7 +3798,7 @@ angle::Result DynamicDescriptorPool::allocateNewPool(Context *context)
     return mDescriptorPools[mCurrentPoolIndex]->get().init(context, mPoolSizes, mMaxSetsPerPool);
 }
 
-void DynamicDescriptorPool::releaseCachedDescriptorSet(ContextVk *contextVk,
+void DynamicDescriptorPool::releaseCachedDescriptorSet(RendererVk *renderer,
                                                        const DescriptorSetDesc &desc)
 {
     VkDescriptorSet descriptorSet;
@@ -3812,7 +3812,7 @@ void DynamicDescriptorPool::releaseCachedDescriptorSet(ContextVk *contextVk,
         // Wrap it with helper object so that it can be GPU tracked and add it to resource list.
         DescriptorSetHelper descriptorSetHelper(poolOut->get().getResourceUse(), descriptorSet);
         poolOut->get().addGarbage(std::move(descriptorSetHelper));
-        checkAndReleaseUnusedPool(contextVk->getRenderer(), poolOut);
+        checkAndReleaseUnusedPool(renderer, poolOut);
     }
 }
 
@@ -5016,6 +5016,12 @@ void BufferHelper::release(RendererVk *renderer)
 
     if (mSuballocation.valid())
     {
+        if (!mSuballocation.isSuballocated())
+        {
+            // Destroy cacheKeys now to avoid getting into situation that having to destroy
+            // descriptorSet from garbage collection thread.
+            mSuballocation.getBufferBlock()->releaseAllCachedDescriptorSetCacheKeys(renderer);
+        }
         renderer->collectSuballocationGarbage(mUse, std::move(mSuballocation),
                                               std::move(mBufferForVertexArray));
     }
@@ -5024,17 +5030,15 @@ void BufferHelper::release(RendererVk *renderer)
     ASSERT(!mBufferForVertexArray.valid());
 }
 
-void BufferHelper::releaseBufferAndDescriptorSetCache(ContextVk *contextVk)
+void BufferHelper::releaseBufferAndDescriptorSetCache(RendererVk *renderer)
 {
-    RendererVk *renderer = contextVk->getRenderer();
-
     if (renderer->hasResourceUseFinished(getResourceUse()))
     {
         mDescriptorSetCacheManager.destroyKeys(renderer);
     }
     else
     {
-        mDescriptorSetCacheManager.releaseKeys(contextVk);
+        mDescriptorSetCacheManager.releaseKeys(renderer);
     }
 
     release(renderer);

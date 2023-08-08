@@ -1932,6 +1932,7 @@ class SharedCacheKeyManager
     void addKey(const SharedCacheKeyT &key);
     // Iterate over the descriptor array and release the descriptor and cache.
     void releaseKeys(ContextVk *contextVk);
+    void releaseKeys(RendererVk *rendererVk);
     // Iterate over the descriptor array and destroy the descriptor and cache.
     void destroyKeys(RendererVk *renderer);
     void clear();

@@ -2589,11 +2589,19 @@ void ReleaseCachedObject(ContextVk *contextVk, const FramebufferDesc &desc)
 {
     contextVk->getShareGroup()->getFramebufferCache().erase(contextVk, desc);
 }
+void ReleaseCachedObject(RendererVk *renderer, const FramebufferDesc &desc)
+{
+    UNREACHABLE();
+}
 
 void ReleaseCachedObject(ContextVk *contextVk, const DescriptorSetDescAndPool &descAndPool)
 {
+    UNREACHABLE();
+}
+void ReleaseCachedObject(RendererVk *renderer, const DescriptorSetDescAndPool &descAndPool)
+{
     ASSERT(descAndPool.mPool != nullptr);
-    descAndPool.mPool->releaseCachedDescriptorSet(contextVk, descAndPool.mDesc);
+    descAndPool.mPool->releaseCachedDescriptorSet(renderer, descAndPool.mDesc);
 }
 
 void DestroyCachedObject(RendererVk *renderer, const FramebufferDesc &desc)
@@ -6254,6 +6262,22 @@ void SharedCacheKeyManager<SharedCacheKeyT>::releaseKeys(ContextVk *contextVk)
             // Immediate destroy the cached object and the key itself when first releaseRef call is
             // made
             ReleaseCachedObject(contextVk, *(*sharedCacheKey.get()));
+            *sharedCacheKey.get() = nullptr;
+        }
+    }
+    mSharedCacheKeys.clear();
+}
+
+template <class SharedCacheKeyT>
+void SharedCacheKeyManager<SharedCacheKeyT>::releaseKeys(RendererVk *renderer)
+{
+    for (SharedCacheKeyT &sharedCacheKey : mSharedCacheKeys)
+    {
+        if (*sharedCacheKey.get() != nullptr)
+        {
+            // Immediate destroy the cached object and the key itself when first releaseKeys call is
+            // made
+            ReleaseCachedObject(renderer, *(*sharedCacheKey.get()));
             *sharedCacheKey.get() = nullptr;
         }
     }
