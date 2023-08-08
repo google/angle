@@ -1180,8 +1180,8 @@ std::unique_ptr<rx::LinkEvent> ProgramD3D::load(const gl::Context *context,
 
     stream->readString(&mGeometryShaderPreamble);
 
-    return std::make_unique<LoadBinaryLinkEvent>(context, context->getWorkerThreadPool(), this,
-                                                 stream, infoLog);
+    return std::make_unique<LoadBinaryLinkEvent>(context, context->getShaderCompileThreadPool(),
+                                                 this, stream, infoLog);
 }
 
 angle::Result ProgramD3D::loadBinaryShaderExecutables(d3d::Context *contextD3D,
@@ -1995,9 +1995,9 @@ std::unique_ptr<LinkEvent> ProgramD3D::compileProgramExecutables(const gl::Conte
     const ShaderD3D *fragmentShaderD3D =
         fragmentShader ? GetImplAs<ShaderD3D>(fragmentShader) : nullptr;
 
-    return std::make_unique<GraphicsProgramLinkEvent>(infoLog, context->getWorkerThreadPool(),
-                                                      vertexTask, pixelTask, geometryTask, useGS,
-                                                      vertexShaderD3D, fragmentShaderD3D);
+    return std::make_unique<GraphicsProgramLinkEvent>(
+        infoLog, context->getShaderCompileThreadPool(), vertexTask, pixelTask, geometryTask, useGS,
+        vertexShaderD3D, fragmentShaderD3D);
 }
 
 std::unique_ptr<LinkEvent> ProgramD3D::compileComputeExecutable(const gl::Context *context,
@@ -2024,7 +2024,7 @@ std::unique_ptr<LinkEvent> ProgramD3D::compileComputeExecutable(const gl::Contex
     }
     else
     {
-        waitableEvent = context->getWorkerThreadPool()->postWorkerTask(computeTask);
+        waitableEvent = context->getShaderCompileThreadPool()->postWorkerTask(computeTask);
     }
 
     return std::make_unique<ComputeProgramLinkEvent>(infoLog, computeTask, waitableEvent);

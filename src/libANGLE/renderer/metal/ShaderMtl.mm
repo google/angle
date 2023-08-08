@@ -91,7 +91,7 @@ std::shared_ptr<WaitableCompileEvent> ShaderMtl::compileImplMtl(
     compileOptions->validateAst = true;
 #endif
 
-    auto workerThreadPool = context->getWorkerThreadPool();
+    auto workerThreadPool = context->getShaderCompileThreadPool();
     auto translateTask =
         std::make_shared<TranslateTask>(compilerInstance->getHandle(), *compileOptions, source);
 

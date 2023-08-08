@@ -391,7 +391,7 @@ std::shared_ptr<WaitableCompileEvent> ShaderD3D::compile(const gl::Context *cont
         return true;
     };
 
-    auto workerThreadPool = context->getWorkerThreadPool();
+    auto workerThreadPool = context->getShaderCompileThreadPool();
     auto translateTask = std::make_shared<TranslateTaskD3D>(compilerInstance->getHandle(), *options,
                                                             source, sourcePath);
 

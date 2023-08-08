@@ -810,8 +810,8 @@ std::unique_ptr<LinkEvent> ProgramMtl::compileMslShaderLibs(const gl::Context *c
         return std::make_unique<LinkEventDone>(angle::Result::Continue);
     }
 
-    return std::make_unique<ProgramMtl::ProgramLinkEvent>(infoLog, context->getWorkerThreadPool(),
-                                                          std::move(asyncTasks));
+    return std::make_unique<ProgramMtl::ProgramLinkEvent>(
+        infoLog, context->getShaderCompileThreadPool(), std::move(asyncTasks));
 }
 
 mtl::BufferPool *ProgramMtl::getBufferPool(ContextMtl *context)
