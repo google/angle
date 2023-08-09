@@ -4439,44 +4439,24 @@ color = var;
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TransformFeedbackTest);
 ANGLE_INSTANTIATE_TEST_ES3_AND(TransformFeedbackTest,
-                               ES3_VULKAN()
-                                   .disable(Feature::SupportsTransformFeedbackExtension)
-                                   .disable(Feature::SupportsPrimitivesGeneratedQuery)
-                                   .disable(Feature::SupportsGeometryStreamsCapability)
-                                   .enable(Feature::EmulateTransformFeedback));
+                               ES3_VULKAN().disable(Feature::SupportsTransformFeedbackExtension));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TransformFeedbackLifetimeTest);
 ANGLE_INSTANTIATE_TEST_ES3_AND(TransformFeedbackLifetimeTest,
-                               ES3_VULKAN()
-                                   .disable(Feature::SupportsTransformFeedbackExtension)
-                                   .disable(Feature::SupportsPrimitivesGeneratedQuery)
-                                   .disable(Feature::SupportsGeometryStreamsCapability)
-                                   .enable(Feature::EmulateTransformFeedback));
+                               ES3_VULKAN().disable(Feature::SupportsTransformFeedbackExtension));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TransformFeedbackTestES31);
 ANGLE_INSTANTIATE_TEST_ES31_AND(TransformFeedbackTestES31,
-                                ES31_VULKAN()
-                                    .disable(Feature::SupportsTransformFeedbackExtension)
-                                    .disable(Feature::SupportsPrimitivesGeneratedQuery)
-                                    .disable(Feature::SupportsGeometryStreamsCapability)
-                                    .enable(Feature::EmulateTransformFeedback));
+                                ES31_VULKAN().disable(Feature::SupportsTransformFeedbackExtension));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TransformFeedbackTestIOBlocks);
 ANGLE_INSTANTIATE_TEST_ES31_AND(TransformFeedbackTestIOBlocks,
-                                ES31_VULKAN()
-                                    .disable(Feature::SupportsTransformFeedbackExtension)
-                                    .disable(Feature::SupportsPrimitivesGeneratedQuery)
-                                    .disable(Feature::SupportsGeometryStreamsCapability)
-                                    .enable(Feature::EmulateTransformFeedback));
+                                ES31_VULKAN().disable(Feature::SupportsTransformFeedbackExtension));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TransformFeedbackTestES32);
 ANGLE_INSTANTIATE_TEST_ES32(TransformFeedbackTestES32);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TransformFeedbackWithDepthBufferTest);
 ANGLE_INSTANTIATE_TEST_ES3_AND(TransformFeedbackWithDepthBufferTest,
-                               ES3_VULKAN()
-                                   .disable(Feature::SupportsTransformFeedbackExtension)
-                                   .disable(Feature::SupportsPrimitivesGeneratedQuery)
-                                   .disable(Feature::SupportsGeometryStreamsCapability)
-                                   .enable(Feature::EmulateTransformFeedback));
+                               ES3_VULKAN().disable(Feature::SupportsTransformFeedbackExtension));
 }  // anonymous namespace

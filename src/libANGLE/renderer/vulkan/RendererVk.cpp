@@ -4194,9 +4194,6 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsDepthClipControl,
                             mDepthClipControlFeatures.depthClipControl == VK_TRUE);
 
-    ANGLE_FEATURE_CONDITION(&mFeatures, supportsPrimitivesGeneratedQuery,
-                            mPrimitivesGeneratedQueryFeatures.primitivesGeneratedQuery == VK_TRUE);
-
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsPrimitiveTopologyListRestart,
         mPrimitiveTopologyListRestartFeatures.primitiveTopologyListRestart == VK_TRUE);
@@ -4209,7 +4206,17 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
                             mTransformFeedbackFeatures.transformFeedback == VK_TRUE);
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsGeometryStreamsCapability,
-                            mTransformFeedbackFeatures.geometryStreams == VK_TRUE);
+                            mFeatures.supportsTransformFeedbackExtension.enabled &&
+                                mTransformFeedbackFeatures.geometryStreams == VK_TRUE);
+
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, supportsPrimitivesGeneratedQuery,
+        mFeatures.supportsTransformFeedbackExtension.enabled &&
+            mPrimitivesGeneratedQueryFeatures.primitivesGeneratedQuery == VK_TRUE);
+
+    ANGLE_FEATURE_CONDITION(&mFeatures, emulateTransformFeedback,
+                            (!mFeatures.supportsTransformFeedbackExtension.enabled &&
+                             mPhysicalDeviceFeatures.vertexPipelineStoresAndAtomics == VK_TRUE));
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsIndexTypeUint8,
                             mIndexTypeUint8Features.indexTypeUint8 == VK_TRUE);
@@ -4244,10 +4251,6 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
                                 mImage2dViewOf3dFeatures.sampler2DViewOf3D == VK_TRUE);
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsMultiview, mMultiviewFeatures.multiview == VK_TRUE);
-
-    ANGLE_FEATURE_CONDITION(&mFeatures, emulateTransformFeedback,
-                            (!mFeatures.supportsTransformFeedbackExtension.enabled &&
-                             mPhysicalDeviceFeatures.vertexPipelineStoresAndAtomics == VK_TRUE));
 
     // TODO: http://anglebug.com/5927 - drop dependency on customBorderColorWithoutFormat.
     ANGLE_FEATURE_CONDITION(
