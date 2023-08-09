@@ -3824,6 +3824,12 @@ uint32_t RendererVk::getDeviceVersion()
 
 bool RendererVk::canSupportFragmentShadingRate(const vk::ExtensionNameList &deviceExtensionNames)
 {
+    // VK_KHR_create_renderpass2 is required for VK_KHR_fragment_shading_rate
+    if (!mFeatures.supportsRenderpass2.enabled)
+    {
+        return false;
+    }
+
     // Device needs to support VK_KHR_fragment_shading_rate and specifically
     // pipeline fragment shading rate.
     if (mFragmentShadingRateFeatures.pipelineFragmentShadingRate != VK_TRUE)
