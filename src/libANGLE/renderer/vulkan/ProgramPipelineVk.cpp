@@ -94,7 +94,13 @@ angle::Result ProgramPipelineVk::link(const gl::Context *glContext,
 
     ANGLE_TRY(mExecutable.createPipelineLayout(contextVk, mState.getExecutable(), nullptr));
 
-    return mExecutable.warmUpPipelineCache(contextVk, mState.getExecutable());
+    vk::RenderPass temporaryCompatibleRenderPass;
+    angle::Result result = mExecutable.warmUpPipelineCache(
+        contextVk, mState.getExecutable(), contextVk->pipelineRobustness(),
+        contextVk->pipelineProtectedAccess(), &temporaryCompatibleRenderPass);
+
+    temporaryCompatibleRenderPass.destroy(contextVk->getDevice());
+    return result;
 }  // namespace rx
 
 angle::Result ProgramPipelineVk::syncState(const gl::Context *context,

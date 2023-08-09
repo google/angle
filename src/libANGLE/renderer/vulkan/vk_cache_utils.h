@@ -678,6 +678,18 @@ ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
 
 using GraphicsPipelineDynamicStateList = angle::FixedVector<VkDynamicState, 22>;
 
+enum class PipelineRobustness
+{
+    NonRobust,
+    Robust,
+};
+
+enum class PipelineProtectedAccess
+{
+    Unprotected,
+    Protected,
+};
+
 // State changes are applied through the update methods. Each update method can also have a
 // sibling method that applies the update without marking a state transition. The non-transition
 // update methods are used for internal shader pipelines. Not every non-transition update method
@@ -697,7 +709,10 @@ class GraphicsPipelineDesc final
     size_t hash(GraphicsPipelineSubset subset) const;
     bool keyEqual(const GraphicsPipelineDesc &other, GraphicsPipelineSubset subset) const;
 
-    void initDefaults(const ContextVk *contextVk, GraphicsPipelineSubset subset);
+    void initDefaults(const Context *context,
+                      GraphicsPipelineSubset subset,
+                      PipelineRobustness contextRobustness,
+                      PipelineProtectedAccess contextProtectedAccess);
 
     // For custom comparisons.
     template <typename T>
@@ -2251,6 +2266,14 @@ class RenderPassCache final : angle::NonCopyable
                                        const vk::AttachmentOpsArray &attachmentOps,
                                        const vk::RenderPass **renderPassOut);
 
+    static void InitializeOpsForCompatibleRenderPass(const vk::RenderPassDesc &desc,
+                                                     vk::AttachmentOpsArray *opsOut);
+    static angle::Result MakeRenderPass(vk::Context *context,
+                                        const vk::RenderPassDesc &desc,
+                                        const vk::AttachmentOpsArray &ops,
+                                        vk::RenderPass *renderPass,
+                                        vk::RenderPassPerfCounters *renderPassCounters);
+
   private:
     angle::Result getRenderPassWithOpsImpl(ContextVk *contextVk,
                                            const vk::RenderPassDesc &desc,
@@ -2407,7 +2430,7 @@ class GraphicsPipelineCache final : public HasCacheStats<VulkanCacheType::Graphi
         return true;
     }
 
-    angle::Result createPipeline(ContextVk *contextVk,
+    angle::Result createPipeline(vk::Context *context,
                                  vk::PipelineCacheAccess *pipelineCache,
                                  const vk::RenderPass &compatibleRenderPass,
                                  const vk::PipelineLayout &pipelineLayout,
@@ -2418,7 +2441,7 @@ class GraphicsPipelineCache final : public HasCacheStats<VulkanCacheType::Graphi
                                  const vk::GraphicsPipelineDesc **descPtrOut,
                                  vk::PipelineHelper **pipelineOut);
 
-    angle::Result linkLibraries(ContextVk *contextVk,
+    angle::Result linkLibraries(vk::Context *context,
                                 vk::PipelineCacheAccess *pipelineCache,
                                 const vk::GraphicsPipelineDesc &desc,
                                 const vk::PipelineLayout &pipelineLayout,

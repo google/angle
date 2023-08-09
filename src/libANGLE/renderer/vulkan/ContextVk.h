@@ -765,17 +765,20 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     // Whether VK_EXT_pipeline_robustness should be used to enable robust buffer access in the
     // pipeline.
-    bool shouldUsePipelineRobustness() const
+    vk::PipelineRobustness pipelineRobustness() const
     {
-        return getFeatures().supportsPipelineRobustness.enabled && mState.hasRobustAccess();
+        return getFeatures().supportsPipelineRobustness.enabled && mState.hasRobustAccess()
+                   ? vk::PipelineRobustness::Robust
+                   : vk::PipelineRobustness::NonRobust;
     }
     // Whether VK_EXT_pipeline_protected_access should be used to restrict the pipeline to protected
     // command buffers.  Note that when false, if the extension is supported, the pipeline can be
     // restricted to unprotected command buffers.
-    bool shouldRestrictPipelineToProtectedAccess() const
+    vk::PipelineProtectedAccess pipelineProtectedAccess() const
     {
-        return getFeatures().supportsPipelineProtectedAccess.enabled &&
-               mState.hasProtectedContent();
+        return getFeatures().supportsPipelineProtectedAccess.enabled && mState.hasProtectedContent()
+                   ? vk::PipelineProtectedAccess::Protected
+                   : vk::PipelineProtectedAccess::Unprotected;
     }
 
     vk::ComputePipelineFlags getComputePipelineFlags() const;

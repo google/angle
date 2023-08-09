@@ -22,6 +22,132 @@ namespace rx
 
 namespace
 {
+class LinkTask final : public vk::Context, public angle::Closure
+{
+  public:
+    LinkTask(RendererVk *renderer,
+             const gl::ProgramState &state,
+             const gl::ProgramExecutable &glExecutable,
+             ProgramExecutableVk *executable,
+             bool isGLES1,
+             vk::PipelineRobustness pipelineRobustness,
+             vk::PipelineProtectedAccess pipelineProtectedAccess)
+        : vk::Context(renderer),
+          mState(state),
+          mGlExecutable(glExecutable),
+          mExecutable(executable),
+          mIsGLES1(isGLES1),
+          mPipelineRobustness(pipelineRobustness),
+          mPipelineProtectedAccess(pipelineProtectedAccess)
+    {}
+
+    void operator()() override;
+
+    void handleError(VkResult result,
+                     const char *file,
+                     const char *function,
+                     unsigned int line) override
+    {
+        mErrorCode     = result;
+        mErrorFile     = file;
+        mErrorFunction = function;
+        mErrorLine     = line;
+    }
+
+    angle::Result getResult(ContextVk *contextVk)
+    {
+        // Update the relevant perf counters
+        angle::VulkanPerfCounters &from = contextVk->getPerfCounters();
+        angle::VulkanPerfCounters &to   = getPerfCounters();
+
+        to.pipelineCreationCacheHits += from.pipelineCreationCacheHits;
+        to.pipelineCreationCacheMisses += from.pipelineCreationCacheMisses;
+        to.pipelineCreationTotalCacheHitsDurationNs +=
+            from.pipelineCreationTotalCacheHitsDurationNs;
+        to.pipelineCreationTotalCacheMissesDurationNs +=
+            from.pipelineCreationTotalCacheMissesDurationNs;
+
+        // Clean up garbage and forward any errors
+        mCompatibleRenderPass.destroy(contextVk->getDevice());
+        if (mErrorCode != VK_SUCCESS)
+        {
+            contextVk->handleError(mErrorCode, mErrorFile, mErrorFunction, mErrorLine);
+            return angle::Result::Stop;
+        }
+        return angle::Result::Continue;
+    }
+
+  private:
+    // The front-end ensures that the program is not accessed while linking, so it is safe to
+    // direclty access the state from a potentially parallel job.
+    const gl::ProgramState &mState;
+    const gl::ProgramExecutable &mGlExecutable;
+    ProgramExecutableVk *mExecutable;
+    bool mIsGLES1;
+    vk::PipelineRobustness mPipelineRobustness;
+    vk::PipelineProtectedAccess mPipelineProtectedAccess;
+
+    // Temporary objects to clean up at the end
+    vk::RenderPass mCompatibleRenderPass;
+
+    // Error handling
+    VkResult mErrorCode        = VK_SUCCESS;
+    const char *mErrorFile     = nullptr;
+    const char *mErrorFunction = nullptr;
+    unsigned int mErrorLine    = 0;
+};
+
+void LinkTask::operator()()
+{
+    ANGLE_TRACE_EVENT0("gpu.angle", "ProgramVk::LinkTask::run");
+
+    // Warm up the pipeline cache by creating a few placeholder pipelines.  This is not done for
+    // separable programs, and is deferred to when the program pipeline is finalized.
+    //
+    // The cache warm up is skipped for GLES1 for two reasons:
+    //
+    // - Since GLES1 shaders are limited, the individual programs don't necessarily add new
+    //   pipelines, but rather it's draw time state that controls that.  Since the programs are
+    //   generated at draw time, it's just as well to let the pipelines be created using the
+    //   renderer's shared cache.
+    // - Individual GLES1 tests are long, and this adds a considerable overhead to those tests
+    if (!mState.isSeparable() && !mIsGLES1)
+    {
+        angle::Result result =
+            mExecutable->warmUpPipelineCache(this, mGlExecutable, mPipelineRobustness,
+                                             mPipelineProtectedAccess, &mCompatibleRenderPass);
+
+        ASSERT((result == angle::Result::Continue) == (mErrorCode == VK_SUCCESS));
+    }
+}
+
+// The event for parallelized/lockless link.
+class LinkEventVulkan final : public LinkEvent
+{
+  public:
+    LinkEventVulkan(std::shared_ptr<angle::WorkerThreadPool> workerPool,
+                    std::shared_ptr<LinkTask> linkTask)
+        : mLinkTask(linkTask),
+          mWaitableEvent(
+              std::shared_ptr<angle::WaitableEvent>(workerPool->postWorkerTask(mLinkTask)))
+    {}
+
+    angle::Result wait(const gl::Context *context) override
+    {
+        ANGLE_TRACE_EVENT0("gpu.angle", "ProgramVK::LinkEvent::wait");
+
+        mWaitableEvent->wait();
+
+        return mLinkTask->getResult(vk::GetImpl(context));
+    }
+
+    bool isLinking() override { return !mWaitableEvent->isReady(); }
+
+  private:
+    std::shared_ptr<LinkTask> mLinkTask;
+    std::shared_ptr<angle::WaitableEvent> mWaitableEvent;
+};
+
 // Identical to Std140 encoder in all aspects, except it ignores opaque uniform types.
 class VulkanDefaultBlockEncoder : public sh::Std140BlockEncoder
 {
@@ -231,13 +357,11 @@ std::unique_ptr<LinkEvent> ProgramVk::link(const gl::Context *context,
         return std::make_unique<LinkEventDone>(status);
     }
 
-    // Warm up the pipeline cache by creating a few placeholder pipelines.  This is not done for
-    // separable programs, and is deferred to when the program pipeline is finalized.
-    if (!mState.isSeparable())
-    {
-        status = mExecutable.warmUpPipelineCache(contextVk, programExecutable);
-    }
-    return std::make_unique<LinkEventDone>(status);
+    std::shared_ptr<LinkTask> linkTask = std::make_shared<LinkTask>(
+        contextVk->getRenderer(), mState, programExecutable, &mExecutable,
+        context->getState().isGLES1(), contextVk->pipelineRobustness(),
+        contextVk->pipelineProtectedAccess());
+    return std::make_unique<LinkEventVulkan>(context->getShaderCompileThreadPool(), linkTask);
 }
 
 void ProgramVk::linkResources(const gl::Context *context,

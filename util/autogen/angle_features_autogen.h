@@ -127,6 +127,7 @@ enum class Feature
     EnableCaptureLimits,
     EnableInMemoryMtlLibraryCache,
     EnableMultisampledRenderToTexture,
+    EnableParallelCompileAndLink,
     EnableParallelMtlLibraryCompilation,
     EnablePipelineCacheDataCompression,
     EnablePortabilityEnumeration,
