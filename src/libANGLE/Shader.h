@@ -263,6 +263,47 @@ class Shader final : angle::NonCopyable, public LabeledObject
     const std::vector<sh::ShaderVariable> &getAllAttributes(const Context *context);
     const std::vector<sh::ShaderVariable> &getActiveOutputVariables(const Context *context);
 
+    const std::vector<sh::ShaderVariable> &getInputVaryingsCompiled()
+    {
+        ASSERT(!mState.compilePending());
+        return mState.getInputVaryings();
+    }
+    const std::vector<sh::ShaderVariable> &getOutputVaryingsCompiled()
+    {
+        ASSERT(!mState.compilePending());
+        return mState.getOutputVaryings();
+    }
+    const std::vector<sh::ShaderVariable> &getUniformsCompiled()
+    {
+        ASSERT(!mState.compilePending());
+        return mState.getUniforms();
+    }
+    const std::vector<sh::InterfaceBlock> &getUniformBlocksCompiled()
+    {
+        ASSERT(!mState.compilePending());
+        return mState.getUniformBlocks();
+    }
+    const std::vector<sh::InterfaceBlock> &getShaderStorageBlocksCompiled()
+    {
+        ASSERT(!mState.compilePending());
+        return mState.getShaderStorageBlocks();
+    }
+    const std::vector<sh::ShaderVariable> &getActiveAttributesCompiled()
+    {
+        ASSERT(!mState.compilePending());
+        return mState.getActiveAttributes();
+    }
+    const std::vector<sh::ShaderVariable> &getAllAttributesCompiled()
+    {
+        ASSERT(!mState.compilePending());
+        return mState.getAllAttributes();
+    }
+    const std::vector<sh::ShaderVariable> &getActiveOutputVariablesCompiled()
+    {
+        ASSERT(!mState.compilePending());
+        return mState.getActiveOutputVariables();
+    }
+
     // Returns mapped name of a transform feedback varying. The original name may contain array
     // brackets with an index inside, which will get copied to the mapped name. The varying must be
     // known to be declared in the shader.

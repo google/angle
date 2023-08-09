@@ -1863,7 +1863,7 @@ void ProgramExecutableVk::onProgramBind(const gl::ProgramExecutable &glExecutabl
 }
 
 angle::Result ProgramExecutableVk::resizeUniformBlockMemory(
-    ContextVk *contextVk,
+    vk::Context *context,
     const gl::ProgramExecutable &glExecutable,
     const gl::ShaderMap<size_t> &requiredBufferSize)
 {
@@ -1874,7 +1874,7 @@ angle::Result ProgramExecutableVk::resizeUniformBlockMemory(
             if (!mDefaultUniformBlocks[shaderType]->uniformData.resize(
                     requiredBufferSize[shaderType]))
             {
-                ANGLE_VK_CHECK(contextVk, false, VK_ERROR_OUT_OF_HOST_MEMORY);
+                ANGLE_VK_CHECK(context, false, VK_ERROR_OUT_OF_HOST_MEMORY);
             }
 
             // Initialize uniform buffer memory to zero by default.

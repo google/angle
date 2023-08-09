@@ -277,6 +277,11 @@ class ProgramExecutableVk
     const gl::Program::DirtyBits &getDirtyBits() const { return mDirtyBits; }
     void resetUniformBufferDirtyBits() { mDirtyBits.reset(); }
 
+    // The following functions are for internal use of programs, including from a threaded link job:
+    angle::Result resizeUniformBlockMemory(vk::Context *context,
+                                           const gl::ProgramExecutable &glExecutable,
+                                           const gl::ShaderMap<size_t> &requiredBufferSize);
+
   private:
     friend class ProgramVk;
     friend class ProgramPipelineVk;
@@ -367,10 +372,6 @@ class ProgramExecutableVk
                                              const gl::ProgramExecutable &glExecutable,
                                              const vk::GraphicsPipelineDesc **descPtrOut,
                                              vk::PipelineHelper **pipelineOut);
-
-    angle::Result resizeUniformBlockMemory(ContextVk *contextVk,
-                                           const gl::ProgramExecutable &glExecutable,
-                                           const gl::ShaderMap<size_t> &requiredBufferSize);
 
     angle::Result getOrAllocateDescriptorSet(vk::Context *context,
                                              UpdateDescriptorSetsBuilder *updateBuilder,

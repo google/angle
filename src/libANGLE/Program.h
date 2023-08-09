@@ -452,7 +452,7 @@ class Program final : public LabeledObject, public angle::Subject
         return mProgram;
     }
 
-    void attachShader(Shader *shader);
+    void attachShader(const Context *context, Shader *shader);
     void detachShader(const Context *context, Shader *shader);
     int getAttachedShadersCount() const;
 

@@ -1056,8 +1056,9 @@ const std::string &Program::getLabel() const
     return mState.mLabel;
 }
 
-void Program::attachShader(Shader *shader)
+void Program::attachShader(const Context *context, Shader *shader)
 {
+    resolveLink(context);
     ShaderType shaderType = shader->getType();
     ASSERT(shaderType != ShaderType::InvalidEnum);
 
