@@ -251,7 +251,7 @@ class ProgramD3D : public ProgramImpl
     std::unique_ptr<LinkEvent> link(const gl::Context *context,
                                     const gl::ProgramLinkedResources &resources,
                                     gl::InfoLog &infoLog,
-                                    const gl::ProgramMergedVaryings &mergedVaryings) override;
+                                    gl::ProgramMergedVaryings &&mergedVaryings) override;
     GLboolean validate(const gl::Caps &caps, gl::InfoLog *infoLog) override;
 
     void updateUniformBufferCache(const gl::Caps &caps);

@@ -659,7 +659,7 @@ void ProgramMtl::prepareForLink(const gl::ShaderMap<ShaderImpl *> &shaders)
 std::unique_ptr<LinkEvent> ProgramMtl::link(const gl::Context *context,
                                             const gl::ProgramLinkedResources &resources,
                                             gl::InfoLog &infoLog,
-                                            const gl::ProgramMergedVaryings &mergedVaryings)
+                                            gl::ProgramMergedVaryings &&mergedVaryings)
 {
     ContextMtl *contextMtl = mtl::GetImpl(context);
 

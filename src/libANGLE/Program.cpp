@@ -1428,7 +1428,8 @@ angle::Result Program::linkImpl(const Context *context)
     mLinkingState                    = std::move(linkingState);
     mLinkingState->linkingFromBinary = false;
     mLinkingState->programHash       = programHash;
-    mLinkingState->linkEvent         = mProgram->link(context, resources, infoLog, mergedVaryings);
+    mLinkingState->linkEvent =
+        mProgram->link(context, resources, infoLog, std::move(mergedVaryings));
 
     // Must be after mProgram->link() to avoid misleading the linker about output variables.
     mState.updateProgramInterfaceInputs();

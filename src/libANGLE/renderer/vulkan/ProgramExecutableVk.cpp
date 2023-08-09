@@ -64,7 +64,7 @@ void SaveShaderInterfaceVariableXfbInfo(const ShaderInterfaceVariableXfbInfo &xf
     }
 }
 
-bool ValidateTransformedSpirV(const ContextVk *contextVk,
+bool ValidateTransformedSpirV(vk::Context *context,
                               const gl::ShaderBitSet &linkedShaderStages,
                               const ShaderInterfaceVariableInfoMap &variableInfoMap,
                               const gl::ShaderMap<angle::spirv::Blob> &spirvBlobs)
@@ -80,7 +80,7 @@ bool ValidateTransformedSpirV(const ContextVk *contextVk,
             shaderType == lastPreFragmentStage && shaderType != gl::ShaderType::TessControl;
         options.isTransformFeedbackStage = options.isLastPreFragmentStage;
         options.useSpirvVaryingPrecisionFixer =
-            contextVk->getFeatures().varyingsRequireMatchingPrecisionInSpirv.enabled;
+            context->getFeatures().varyingsRequireMatchingPrecisionInSpirv.enabled;
 
         angle::spirv::Blob transformed;
         if (SpvTransformSpirvCode(options, variableInfoMap, spirvBlobs[shaderType], &transformed) !=
@@ -270,10 +270,11 @@ ShaderInfo::ShaderInfo() {}
 
 ShaderInfo::~ShaderInfo() = default;
 
-angle::Result ShaderInfo::initShaders(ContextVk *contextVk,
+angle::Result ShaderInfo::initShaders(vk::Context *context,
                                       const gl::ShaderBitSet &linkedShaderStages,
                                       const gl::ShaderMap<const angle::spirv::Blob *> &spirvBlobs,
-                                      const ShaderInterfaceVariableInfoMap &variableInfoMap)
+                                      const ShaderInterfaceVariableInfoMap &variableInfoMap,
+                                      bool isGLES1)
 {
     clear();
 
@@ -288,10 +289,9 @@ angle::Result ShaderInfo::initShaders(ContextVk *contextVk,
     // Assert that SPIR-V transformation is correct, even if the test never issues a draw call.
     // Don't validate GLES1 programs because they are always created right before a draw, so they
     // will naturally be validated.  This improves GLES1 test run times.
-    if (!contextVk->getState().isGLES1())
+    if (!isGLES1)
     {
-        ASSERT(
-            ValidateTransformedSpirV(contextVk, linkedShaderStages, variableInfoMap, mSpirvBlobs));
+        ASSERT(ValidateTransformedSpirV(context, linkedShaderStages, variableInfoMap, mSpirvBlobs));
     }
 
     mIsInitialized = true;
