@@ -732,6 +732,9 @@ struct ClientExtensions
     // EGL_EXT_platform_wayland
     bool platformWaylandEXT = false;
 
+    // EGL_MESA_platform_surfaceless
+    bool platformSurfacelessMESA = false;
+
     // EGL_ANGLE_platform_angle
     bool platformANGLE = false;
 

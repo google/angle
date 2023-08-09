@@ -570,6 +570,13 @@ bool ValidateGetPlatformDisplayCommon(const ValidationContext *val,
                 return false;
             }
             break;
+        case EGL_PLATFORM_SURFACELESS_MESA:
+            if (!clientExtensions.platformSurfacelessMESA)
+            {
+                val->setError(EGL_BAD_PARAMETER, "Platform Surfaceless extension is not active");
+                return false;
+            }
+            break;
         default:
             val->setError(EGL_BAD_CONFIG, "Bad platform type.");
             return false;

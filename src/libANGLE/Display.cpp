@@ -431,6 +431,11 @@ rx::DisplayImpl *CreateDisplayFromAttribs(EGLAttrib displayType,
                 break;
             }
 #        endif
+            if (platformType == EGL_PLATFORM_SURFACELESS_MESA)
+            {
+                impl = new rx::DisplayEGL(state);
+                break;
+            }
             break;
 
 #    elif defined(ANGLE_PLATFORM_ANDROID)
@@ -474,6 +479,11 @@ rx::DisplayImpl *CreateDisplayFromAttribs(EGLAttrib displayType,
                     break;
                 }
 #        endif
+                if (platformType == EGL_PLATFORM_SURFACELESS_MESA)
+                {
+                    impl = new rx::DisplayEGL(state);
+                    break;
+                }
             }
 #    elif defined(ANGLE_PLATFORM_ANDROID)
             impl = new rx::DisplayAndroid(state);
@@ -520,6 +530,12 @@ rx::DisplayImpl *CreateDisplayFromAttribs(EGLAttrib displayType,
                 break;
             }
 #        endif
+            if (platformType == EGL_PLATFORM_SURFACELESS_MESA &&
+                rx::IsVulkanOffscreenDisplayAvailable())
+            {
+                impl = rx::CreateVulkanOffscreenDisplay(state);
+                break;
+            }
 #        if defined(ANGLE_USE_VULKAN_DISPLAY)
             if (platformType == EGL_PLATFORM_VULKAN_DISPLAY_MODE_SIMPLE_ANGLE &&
                 rx::IsVulkanSimpleDisplayAvailable())
@@ -915,6 +931,7 @@ Display::~Display()
         case EGL_PLATFORM_ANGLE_ANGLE:
         case EGL_PLATFORM_GBM_KHR:
         case EGL_PLATFORM_WAYLAND_EXT:
+        case EGL_PLATFORM_SURFACELESS_MESA:
         {
             ANGLEPlatformDisplayMap *displays      = GetANGLEPlatformDisplayMap();
             ANGLEPlatformDisplayMap::iterator iter = displays->find(ANGLEPlatformDisplay(
@@ -2088,6 +2105,10 @@ static ClientExtensions GenerateClientExtensions()
 
 #if defined(ANGLE_USE_WAYLAND)
     extensions.platformWaylandEXT = true;
+#endif
+
+#if defined(ANGLE_PLATFORM_LINUX) && (defined(ANGLE_ENABLE_OPENGL) || defined(ANGLE_ENABLE_VULKAN))
+    extensions.platformSurfacelessMESA = true;
 #endif
 
 #if defined(ANGLE_ENABLE_D3D11)
