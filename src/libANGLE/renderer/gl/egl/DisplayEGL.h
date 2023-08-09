@@ -146,6 +146,11 @@ class DisplayEGL : public DisplayGL
                                     const char *extension,
                                     const U &defaultValue) const;
 
+    egl::Error findConfig(egl::Display *display,
+                          bool forMockPbuffer,
+                          EGLConfig *outConfig,
+                          std::vector<EGLint> *outConfigAttribs);
+
     std::shared_ptr<RendererEGL> mRenderer;
     std::map<EGLAttrib, std::weak_ptr<RendererEGL>> mVirtualizationGroups;
 
