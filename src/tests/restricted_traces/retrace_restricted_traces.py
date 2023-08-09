@@ -225,10 +225,6 @@ def upgrade_single_trace(args, trace_binary, trace, out_path, no_overwrite, c_so
             'ANGLE_FEATURE_OVERRIDES_ENABLED'] = 'allocateNonZeroMemory:forceInitShaderVariables'
     if args.validation_expr:
         additional_env['ANGLE_CAPTURE_VALIDATION_EXPR'] = args.validation_expr
-    if args.trim:
-        additional_env['ANGLE_CAPTURE_TRIM_ENABLED'] = '1'
-    if args.no_trim:
-        additional_env['ANGLE_CAPTURE_TRIM_ENABLED'] = '0'
     # TODO: Remove when default. http://anglebug.com/7753
     if c_sources:
         additional_env['ANGLE_CAPTURE_SOURCE_EXT'] = 'c'
@@ -384,11 +380,6 @@ def add_upgrade_args(parser):
         '--frame-limit',
         type=int,
         help='Limits the number of captured frames to produce a shorter trace than the original.')
-    parser.add_argument(
-        '--trim', action='store_true', help='Enables trace trimming. Breaks replay validation.')
-    parser.add_argument(
-        '--no-trim', action='store_true', help='Disables trace trimming. Useful for validation.')
-    parser.set_defaults(trim=True)
 
 
 def get_min_reqs(args, traces):

@@ -77,7 +77,6 @@ constexpr char kCompressionVarName[]    = "ANGLE_CAPTURE_COMPRESSION";
 constexpr char kSerializeStateVarName[] = "ANGLE_CAPTURE_SERIALIZE_STATE";
 constexpr char kValidationVarName[]     = "ANGLE_CAPTURE_VALIDATION";
 constexpr char kValidationExprVarName[] = "ANGLE_CAPTURE_VALIDATION_EXPR";
-constexpr char kTrimEnabledVarName[]    = "ANGLE_CAPTURE_TRIM_ENABLED";
 constexpr char kSourceExtVarName[]      = "ANGLE_CAPTURE_SOURCE_EXT";
 constexpr char kSourceSizeVarName[]     = "ANGLE_CAPTURE_SOURCE_SIZE";
 constexpr char kForceShadowVarName[]    = "ANGLE_CAPTURE_FORCE_SHADOW";
@@ -102,7 +101,6 @@ constexpr char kAndroidCaptureLabel[]   = "debug.angle.capture.label";
 constexpr char kAndroidCompression[]    = "debug.angle.capture.compression";
 constexpr char kAndroidValidation[]     = "debug.angle.capture.validation";
 constexpr char kAndroidValidationExpr[] = "debug.angle.capture.validation_expr";
-constexpr char kAndroidTrimEnabled[]    = "debug.angle.capture.trim_enabled";
 constexpr char kAndroidSourceExt[]      = "debug.angle.capture.source_ext";
 constexpr char kAndroidSourceSize[]     = "debug.angle.capture.source_size";
 constexpr char kAndroidForceShadow[]    = "debug.angle.capture.force_shadow";
@@ -261,6 +259,7 @@ enum class ReplayFunc
 {
     Replay,
     Setup,
+    SetupInactive,
     Reset,
 };
 
@@ -352,6 +351,50 @@ std::ostream &operator<<(std::ostream &os, const FmtSetupFunction &fmt)
     return os;
 }
 
+struct FmtSetupInactiveFunction
+{
+    FmtSetupInactiveFunction(uint32_t partIdIn, gl::ContextID contextIdIn, FuncUsage usageIn)
+        : partId(partIdIn), contextId(contextIdIn), usage(usageIn)
+    {}
+
+    uint32_t partId;
+    gl::ContextID contextId;
+    FuncUsage usage;
+};
+
+std::ostream &operator<<(std::ostream &os, const FmtSetupInactiveFunction &fmt)
+{
+    if ((fmt.usage == FuncUsage::Call) && (fmt.partId == kNoPartId))
+    {
+        os << "if (gReplayResourceMode == angle::ReplayResourceMode::All)\n    {\n        ";
+    }
+    os << "SetupReplayContext";
+
+    if (fmt.contextId == kSharedContextId)
+    {
+        os << "Shared";
+    }
+    else
+    {
+        os << fmt.contextId;
+    }
+
+    os << "Inactive";
+
+    if (fmt.partId != kNoPartId)
+    {
+        os << "Part" << fmt.partId;
+    }
+
+    os << fmt.usage;
+
+    if ((fmt.usage == FuncUsage::Call) && (fmt.partId == kNoPartId))
+    {
+        os << ";\n    }";
+    }
+    return os;
+}
+
 struct FmtResetFunction
 {
     FmtResetFunction(uint32_t partIdIn, gl::ContextID contextIdIn, FuncUsage usageIn)
@@ -415,6 +458,10 @@ std::ostream &operator<<(std::ostream &os, const FmtFunction &fmt)
 
         case ReplayFunc::Setup:
             os << FmtSetupFunction(fmt.partId, fmt.contextId, fmt.usage);
+            break;
+
+        case ReplayFunc::SetupInactive:
+            os << FmtSetupInactiveFunction(fmt.partId, fmt.contextId, fmt.usage);
             break;
 
         case ReplayFunc::Reset:
@@ -1657,25 +1704,25 @@ void WriteCppReplayFunctionWithParts(const gl::ContextID contextID,
 
     for (const CallCapture &call : calls)
     {
-        if (!call.isActive)
+        // Process active calls for Setup and inactive calls for SetupInactive
+        if ((call.isActive && replayFunc != ReplayFunc::SetupInactive) ||
+            (!call.isActive && replayFunc == ReplayFunc::SetupInactive))
         {
-            // Don't write setup calls for inactive resources
-            continue;
-        }
+            out << "    ";
+            WriteCppReplayForCall(call, replayWriter, out, header, binaryData,
+                                  maxResourceIDBufferSize);
+            out << ";\n";
 
-        out << "    ";
-        WriteCppReplayForCall(call, replayWriter, out, header, binaryData, maxResourceIDBufferSize);
-        out << ";\n";
-
-        if (partCount > 0 && ++callCount % kFunctionSizeLimit == 0)
-        {
-            out << "}\n";
-            out << "\n";
-            out << "void "
-                << FmtFunction(replayFunc, contextID, FuncUsage::Definition, frameIndex,
-                               ++partCount)
-                << "\n";
-            out << "{\n";
+            if (partCount > 0 && ++callCount % kFunctionSizeLimit == 0)
+            {
+                out << "}\n";
+                out << "\n";
+                out << "void "
+                    << FmtFunction(replayFunc, contextID, FuncUsage::Definition, frameIndex,
+                                   ++partCount)
+                    << "\n";
+                out << "{\n";
+            }
         }
     }
     out << "}\n";
@@ -1766,6 +1813,7 @@ void WriteShareGroupCppSetupReplay(ReplayWriter &replayWriter,
                                    size_t *maxResourceIDBufferSize)
 {
     {
+
         std::stringstream include;
 
         include << "#include \"angle_trace_gl.h\"\n";
@@ -1790,6 +1838,18 @@ void WriteShareGroupCppSetupReplay(ReplayWriter &replayWriter,
                                         frameIndex, binaryData, setupCalls, headerStream,
                                         bodyStream, maxResourceIDBufferSize);
 
+        replayWriter.addPrivateFunction(proto, headerStream, bodyStream);
+
+        protoStream.str("");
+        headerStream.str("");
+        bodyStream.str("");
+        protoStream << "void "
+                    << FmtSetupInactiveFunction(kNoPartId, kSharedContextId, FuncUsage::Prototype);
+        proto = protoStream.str();
+
+        WriteCppReplayFunctionWithParts(kSharedContextId, ReplayFunc::SetupInactive, replayWriter,
+                                        frameIndex, binaryData, setupCalls, headerStream,
+                                        bodyStream, maxResourceIDBufferSize);
         replayWriter.addPrivateFunction(proto, headerStream, bodyStream);
     }
 
@@ -5784,13 +5844,6 @@ FrameCaptureShared::FrameCaptureShared()
         INFO() << "Validation expression is " << kValidationExprVarName;
     }
 
-    std::string trimEnabledFromEnv =
-        GetEnvironmentVarOrUnCachedAndroidProperty(kTrimEnabledVarName, kAndroidTrimEnabled);
-    if (trimEnabledFromEnv == "0")
-    {
-        mTrimEnabled = false;
-    }
-
     // TODO: Remove. http://anglebug.com/7753
     std::string sourceExtFromEnv =
         GetEnvironmentVarOrUnCachedAndroidProperty(kSourceExtVarName, kAndroidSourceExt);
@@ -8820,7 +8873,6 @@ void FrameCaptureShared::writeJSON(const gl::Context *context)
     json.addBool("IsBindGeneratesResourcesEnabled", glState.isBindGeneratesResourceEnabled());
     json.addBool("IsWebGLCompatibilityEnabled", glState.isWebGL());
     json.addBool("IsRobustResourceInitEnabled", glState.isRobustResourceInitEnabled());
-    json.addBool("IsTrimmingEnabled", mTrimEnabled);
     json.endGroup();
 
     {
@@ -8998,6 +9050,9 @@ void FrameCaptureShared::writeMainContextCppReplay(const gl::Context *context,
             {
                 out << "    " << FmtSetupFunction(kNoPartId, kSharedContextId, FuncUsage::Call)
                     << ";\n";
+                out << "    "
+                    << FmtSetupInactiveFunction(kNoPartId, kSharedContextId, FuncUsage::Call)
+                    << "\n";
                 // Make sure that the current context is mapped correctly
                 out << "    SetCurrentContextID(" << context->id() << ");\n";
             }
@@ -9285,11 +9340,6 @@ void FrameCaptureShared::markResourceSetupCallsInactive(std::vector<CallCapture>
                                                         GLuint id,
                                                         gl::Range<size_t> range)
 {
-    if (!mTrimEnabled)
-    {
-        return;
-    }
-
     ASSERT(mResourceIDToSetupCalls[type].find(id) == mResourceIDToSetupCalls[type].end());
 
     // Mark all of the calls that were used to initialize this resource as INACTIVE
@@ -9679,7 +9729,6 @@ void ReplayWriter::writeReplaySource(const std::string &filename)
     SaveFileHelper saveCpp(filename);
 
     saveCpp << mSourcePrologue << "\n";
-
     for (const std::string &header : mReplayHeaders)
     {
         saveCpp << header << "\n";

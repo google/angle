@@ -18,6 +18,12 @@ namespace angle
 
 static constexpr size_t kTraceInfoMaxNameLen = 128;
 
+enum class ReplayResourceMode
+{
+    Active,
+    All,
+};
+
 struct TraceInfo
 {
     char name[kTraceInfoMaxNameLen];
@@ -57,8 +63,9 @@ struct TraceFunctions
     virtual void FinishReplay()                   = 0;
 
     virtual void SetBinaryDataDir(const char *dataDir) = 0;
-    virtual void SetTraceInfo(const TraceInfo &traceInfo);
+    virtual void SetReplayResourceMode(const ReplayResourceMode resourceMode);
     virtual void SetTraceGzPath(const std::string &traceGzPath);
+    virtual void SetTraceInfo(const TraceInfo &traceInfo);
 
     virtual ~TraceFunctions() {}
 };

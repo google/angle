@@ -18,6 +18,7 @@
 
 namespace angle
 {
+
 namespace
 {
 bool LoadJSONFromFile(const std::string &fileName, rapidjson::Document *doc)

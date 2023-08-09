@@ -517,7 +517,7 @@ to find the exact command line and environment variables the script uses to
 produce the failure. For example:
 
 ```
-INFO:root:ANGLE_CAPTURE_LABEL=trex_200 ANGLE_CAPTURE_OUT_DIR=C:\src\angle\retrace-wip\trex_200 ANGLE_CAPTURE_FRAME_START=2 ANGLE_CAPTURE_FRAME_END=4 ANGLE_CAPTURE_VALIDATION=1 ANGLE_FEATURE_OVERRIDES_ENABLED=allocateNonZeroMemory:forceInitShaderVariables ANGLE_CAPTURE_TRIM_ENABLED=1 out\Debug\angle_trace_tests.exe --gtest_filter=TraceTest.trex_200 --use-angle=swiftshader --max-steps-performed 3 --retrace-mode
+INFO:root:ANGLE_CAPTURE_LABEL=trex_200 ANGLE_CAPTURE_OUT_DIR=C:\src\angle\retrace-wip\trex_200 ANGLE_CAPTURE_FRAME_START=2 ANGLE_CAPTURE_FRAME_END=4 ANGLE_CAPTURE_VALIDATION=1 ANGLE_FEATURE_OVERRIDES_ENABLED=allocateNonZeroMemory:forceInitShaderVariables out\Debug\angle_trace_tests.exe --gtest_filter=TraceTest.trex_200 --use-angle=swiftshader --max-steps-performed 3 --retrace-mode
 ```
 
 Once you can reproduce the issue you can use a debugger or other standard

@@ -50,6 +50,7 @@ int gFixedTestTimeWithWarmup       = 0;
 const char *gTraceInterpreter      = nullptr;
 const char *gPrintExtensionsToFile = nullptr;
 const char *gRequestedExtensions   = nullptr;
+bool gIncludeInactiveResources     = false;
 
 // Default to three warmup trials. There's no science to this. More than two was experimentally
 // helpful on a Windows NVIDIA setup when testing with Vulkan and native trace tests.
@@ -103,7 +104,9 @@ bool TraceTestArg(int *argc, char **argv, int argIndex)
            ParseCStringArg("--use-gl", argc, argv, argIndex, &gUseGL) ||
            ParseCStringArg("--print-extensions-to-file", argc, argv, argIndex,
                            &gPrintExtensionsToFile) ||
-           ParseCStringArg("--request-extensions", argc, argv, argIndex, &gRequestedExtensions);
+           ParseCStringArg("--request-extensions", argc, argv, argIndex, &gRequestedExtensions) ||
+           ParseFlag("--include-inactive-resources", argc, argv, argIndex,
+                     &gIncludeInactiveResources);
 }
 }  // namespace
 }  // namespace angle
