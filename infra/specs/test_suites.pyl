@@ -1332,11 +1332,10 @@
       'angle_unit_gtests',
     ],
 
-    # Temporarily disabled for upgrade crbug.com/1456549
-    # 'mac_nvidia_gtests': [
-    #   'angle_end2end_with_retry_gtests',
-    #   'angle_unit_gtests',
-    # ],
+    'mac_nvidia_gtests': [
+      'angle_end2end_with_retry_gtests',
+      'angle_unit_gtests',
+    ],
 
     'swangle_gtests': [
       'swangle_deqp_egl_tests',
