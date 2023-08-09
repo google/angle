@@ -219,7 +219,7 @@ class ClearUtils final : angle::NonCopyable
     const std::string mFragmentShaderName;
 
     AutoObjCPtr<id<MTLFunction>> mVertexShader;
-    std::array<AutoObjCPtr<id<MTLFunction>>, kMaxRenderTargets + 1> mFragmentShaders{};
+    std::array<AutoObjCPtr<id<MTLFunction>>, kMaxRenderTargets + 1> mFragmentShaders;
 };
 
 class ColorBlitUtils final : angle::NonCopyable
@@ -260,9 +260,9 @@ class ColorBlitUtils final : angle::NonCopyable
     using ColorBlitFragmentShaderArray =
         std::array<std::array<AutoObjCPtr<id<MTLFunction>>, mtl_shader::kTextureTypeCount>,
                    kMaxRenderTargets>;
-    ColorBlitFragmentShaderArray mBlitFragmentShaders{{}};
-    ColorBlitFragmentShaderArray mBlitPremultiplyAlphaFragmentShaders{{}};
-    ColorBlitFragmentShaderArray mBlitUnmultiplyAlphaFragmentShaders{{}};
+    ColorBlitFragmentShaderArray mBlitFragmentShaders;
+    ColorBlitFragmentShaderArray mBlitPremultiplyAlphaFragmentShaders;
+    ColorBlitFragmentShaderArray mBlitUnmultiplyAlphaFragmentShaders;
 };
 
 class DepthStencilBlitUtils final : angle::NonCopyable
@@ -304,15 +304,15 @@ class DepthStencilBlitUtils final : angle::NonCopyable
     AutoObjCPtr<id<MTLFunction>> mVertexShader;
 
     std::array<AutoObjCPtr<id<MTLFunction>>, mtl_shader::kTextureTypeCount>
-        mDepthBlitFragmentShaders{};
+        mDepthBlitFragmentShaders;
     std::array<AutoObjCPtr<id<MTLFunction>>, mtl_shader::kTextureTypeCount>
-        mStencilBlitFragmentShaders{};
+        mStencilBlitFragmentShaders;
     std::array<std::array<AutoObjCPtr<id<MTLFunction>>, mtl_shader::kTextureTypeCount>,
                mtl_shader::kTextureTypeCount>
-        mDepthStencilBlitFragmentShaders{{}};
+        mDepthStencilBlitFragmentShaders;
 
     std::array<AutoObjCPtr<id<MTLFunction>>, mtl_shader::kTextureTypeCount>
-        mStencilBlitToBufferComputeShaders{};
+        mStencilBlitToBufferComputeShaders;
 
     // Intermediate buffer for storing copied stencil data. Used when device doesn't support
     // writing stencil in shader.
@@ -425,12 +425,12 @@ class IndexGeneratorUtils final : angle::NonCopyable
                                                  const IndexGenerationParams &params,
                                                  size_t *indicesGenerated);
 
-    IndexConversionShaderArray mIndexConversionShaders{{}};
+    IndexConversionShaderArray mIndexConversionShaders;
 
-    IndexConversionShaderArray mTriFanFromElemArrayGeneratorShaders{{}};
+    IndexConversionShaderArray mTriFanFromElemArrayGeneratorShaders;
     AutoObjCPtr<id<MTLFunction>> mTriFanFromArraysGeneratorShader;
 
-    IndexConversionShaderArray mLineLoopFromElemArrayGeneratorShaders{{}};
+    IndexConversionShaderArray mLineLoopFromElemArrayGeneratorShaders;
     AutoObjCPtr<id<MTLFunction>> mLineLoopFromArraysGeneratorShader;
 };
 
@@ -453,7 +453,7 @@ class VisibilityResultUtils final : angle::NonCopyable
     // Visibility combination compute shaders:
     // - 0: This compute shader only combines the new values and discard old value.
     // - 1: This compute shader keep the old value and combines with new values.
-    std::array<AutoObjCPtr<id<MTLFunction>>, 2> mVisibilityResultCombineComputeShaders{};
+    std::array<AutoObjCPtr<id<MTLFunction>>, 2> mVisibilityResultCombineComputeShaders;
 };
 
 // Util class for handling mipmap generation
@@ -491,7 +491,7 @@ class MipmapUtils final : angle::NonCopyable
 class CopyPixelsUtils final : angle::NonCopyable
 {
   public:
-    CopyPixelsUtils() = delete;
+    CopyPixelsUtils() = default;
     CopyPixelsUtils(const std::string &readShaderName, const std::string &writeShaderName);
 
     angle::Result unpackPixelsFromBufferToTexture(ContextMtl *contextMtl,
@@ -583,8 +583,8 @@ class VertexFormatConversionUtils final : angle::NonCopyable
     using ConvertToFloatVertexShaderArray =
         std::array<AutoObjCPtr<id<MTLFunction>>, angle::kNumANGLEFormats>;
 
-    ConvertToFloatComputeShaderArray mConvertToFloatCompPipelineCaches{};
-    ConvertToFloatVertexShaderArray mConvertToFloatVertexShaders{};
+    ConvertToFloatComputeShaderArray mConvertToFloatCompPipelineCaches;
+    ConvertToFloatVertexShaderArray mConvertToFloatVertexShaders;
 
     AutoObjCPtr<id<MTLFunction>> mComponentsExpandComputeShader;
     AutoObjCPtr<id<MTLFunction>> mComponentsExpandVertexShader;
