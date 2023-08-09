@@ -648,7 +648,7 @@ void ProgramMtl::setSeparable(bool separable)
 std::unique_ptr<LinkEvent> ProgramMtl::link(const gl::Context *context,
                                             const gl::ProgramLinkedResources &resources,
                                             gl::InfoLog &infoLog,
-                                            const gl::ProgramMergedVaryings &mergedVaryings,
+                                            gl::ProgramMergedVaryings &&mergedVaryings,
                                             gl::ScopedShaderLinkLocks *shaderLocks)
 {
     ContextMtl *contextMtl = mtl::GetImpl(context);

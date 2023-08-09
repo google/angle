@@ -34,7 +34,7 @@ void ProgramNULL::setSeparable(bool separable) {}
 std::unique_ptr<LinkEvent> ProgramNULL::link(const gl::Context *contextImpl,
                                              const gl::ProgramLinkedResources &resources,
                                              gl::InfoLog &infoLog,
-                                             const gl::ProgramMergedVaryings & /*mergedVaryings*/,
+                                             gl::ProgramMergedVaryings && /*mergedVaryings*/,
                                              gl::ScopedShaderLinkLocks *shaderLocks)
 {
     return std::make_unique<LinkEventDone>(angle::Result::Continue);

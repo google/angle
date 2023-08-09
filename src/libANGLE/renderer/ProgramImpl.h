@@ -85,7 +85,7 @@ class ProgramImpl : angle::NonCopyable
     virtual std::unique_ptr<LinkEvent> link(const gl::Context *context,
                                             const gl::ProgramLinkedResources &resources,
                                             gl::InfoLog &infoLog,
-                                            const gl::ProgramMergedVaryings &mergedVaryings,
+                                            gl::ProgramMergedVaryings &&mergedVaryings,
                                             gl::ScopedShaderLinkLocks *shaderLocks) = 0;
     virtual GLboolean validate(const gl::Caps &caps, gl::InfoLog *infoLog)          = 0;
 

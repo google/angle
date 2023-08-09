@@ -50,6 +50,7 @@ class LinkTaskVk final : public vk::Context, public angle::Closure
                const gl::ProgramExecutable &glExecutable,
                ProgramExecutableVk *executable,
                gl::ScopedShaderLinkLocks *shaderLocks,
+               gl::ProgramMergedVaryings &&mergedVaryings,
                bool isGLES1,
                vk::PipelineRobustness pipelineRobustness,
                vk::PipelineProtectedAccess pipelineProtectedAccess)
@@ -57,6 +58,7 @@ class LinkTaskVk final : public vk::Context, public angle::Closure
           mState(state),
           mGlExecutable(glExecutable),
           mExecutable(executable),
+          mMergedVaryings(std::move(mergedVaryings)),
           mIsGLES1(isGLES1),
           mPipelineRobustness(pipelineRobustness),
           mPipelineProtectedAccess(pipelineProtectedAccess)
@@ -118,9 +120,10 @@ class LinkTaskVk final : public vk::Context, public angle::Closure
     const gl::ProgramExecutable &mGlExecutable;
     ProgramExecutableVk *mExecutable;
     gl::ScopedShaderLinkLocks mShaderLocks;
-    bool mIsGLES1;
-    vk::PipelineRobustness mPipelineRobustness;
-    vk::PipelineProtectedAccess mPipelineProtectedAccess;
+    const gl::ProgramMergedVaryings mMergedVaryings;
+    const bool mIsGLES1;
+    const vk::PipelineRobustness mPipelineRobustness;
+    const vk::PipelineProtectedAccess mPipelineProtectedAccess;
 
     // Temporary objects to clean up at the end
     vk::RenderPass mCompatibleRenderPass;
@@ -139,6 +142,19 @@ angle::Result LinkTaskVk::linkImpl()
     // Unlock the shaders at the end of the task.
     gl::ScopedShaderLinkLocks unlockAtEnd;
     unlockAtEnd.swap(mShaderLocks);
+
+    gl::ShaderMap<const angle::spirv::Blob *> spirvBlobs;
+    SpvGetShaderSpirvCode(mState, &spirvBlobs);
+
+    if (getFeatures().varyingsRequireMatchingPrecisionInSpirv.enabled &&
+        getFeatures().enablePrecisionQualifiers.enabled)
+    {
+        mExecutable->resolvePrecisionMismatch(mMergedVaryings);
+    }
+
+    // Compile the shaders.
+    ANGLE_TRY(mExecutable->initShaders(this, mGlExecutable.getLinkedShaderStages(), spirvBlobs,
+                                       mIsGLES1));
 
     ANGLE_TRY(initDefaultUniformBlocks());
 
@@ -408,7 +424,7 @@ void ProgramVk::setSeparable(bool separable)
 std::unique_ptr<LinkEvent> ProgramVk::link(const gl::Context *context,
                                            const gl::ProgramLinkedResources &resources,
                                            gl::InfoLog &infoLog,
-                                           const gl::ProgramMergedVaryings &mergedVaryings,
+                                           gl::ProgramMergedVaryings &&mergedVaryings,
                                            gl::ScopedShaderLinkLocks *shaderLocks)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "ProgramVk::link");
@@ -434,27 +450,11 @@ std::unique_ptr<LinkEvent> ProgramVk::link(const gl::Context *context,
     mExecutable.clearVariableInfoMap();
 
     // Gather variable info and compiled SPIR-V binaries.
-    gl::ShaderMap<const angle::spirv::Blob *> spirvBlobs;
     SpvSourceOptions options = SpvCreateSourceOptions(contextVk->getFeatures());
-    SpvGetShaderSpirvCode(context, options, mState, resources, &mSpvProgramInterfaceInfo,
-                          &spirvBlobs, &mExecutable.mVariableInfoMap);
+    SpvAssignAllLocations(options, mState, resources, &mSpvProgramInterfaceInfo,
+                          &mExecutable.mVariableInfoMap);
 
-    if (contextVk->getFeatures().varyingsRequireMatchingPrecisionInSpirv.enabled &&
-        contextVk->getFeatures().enablePrecisionQualifiers.enabled)
-    {
-        mExecutable.resolvePrecisionMismatch(mergedVaryings);
-    }
-
-    // Compile the shaders.
-    angle::Result status = mExecutable.mOriginalShaderInfo.initShaders(
-        contextVk, programExecutable.getLinkedShaderStages(), spirvBlobs,
-        mExecutable.mVariableInfoMap);
-    if (status != angle::Result::Continue)
-    {
-        return std::make_unique<LinkEventDone>(status);
-    }
-
-    status = mExecutable.createPipelineLayout(contextVk, programExecutable, nullptr);
+    angle::Result status = mExecutable.createPipelineLayout(contextVk, programExecutable, nullptr);
     if (status != angle::Result::Continue)
     {
         return std::make_unique<LinkEventDone>(status);
@@ -462,7 +462,7 @@ std::unique_ptr<LinkEvent> ProgramVk::link(const gl::Context *context,
 
     std::shared_ptr<LinkTaskVk> linkTask = std::make_shared<LinkTaskVk>(
         contextVk->getRenderer(), mState, programExecutable, &mExecutable, shaderLocks,
-        context->getState().isGLES1(), contextVk->pipelineRobustness(),
+        std::move(mergedVaryings), context->getState().isGLES1(), contextVk->pipelineRobustness(),
         contextVk->pipelineProtectedAccess());
     return std::make_unique<LinkEventVulkan>(context->getShaderCompileThreadPool(), linkTask);
 }

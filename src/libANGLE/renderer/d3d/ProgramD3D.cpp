@@ -2110,7 +2110,7 @@ angle::Result ProgramD3D::getComputeExecutableForImage2DBindLayout(
 std::unique_ptr<LinkEvent> ProgramD3D::link(const gl::Context *context,
                                             const gl::ProgramLinkedResources &resources,
                                             gl::InfoLog &infoLog,
-                                            const gl::ProgramMergedVaryings & /*mergedVaryings*/,
+                                            gl::ProgramMergedVaryings && /*mergedVaryings*/,
                                             gl::ScopedShaderLinkLocks *shaderLocks)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "ProgramD3D::link");

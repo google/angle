@@ -225,6 +225,11 @@ class Shader final : angle::NonCopyable, public LabeledObject
                                           GLsizei *length,
                                           char *buffer);
     const sh::BinaryBlob &getCompiledBinary(const Context *context);
+    const sh::BinaryBlob &getCompiledBinaryCompiled()
+    {
+        ASSERT(!mState.compilePending());
+        return mState.getCompiledBinary();
+    }
 
     size_t getSourceHash() const;
 

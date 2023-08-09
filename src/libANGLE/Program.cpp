@@ -1329,7 +1329,7 @@ angle::Result Program::linkImpl(const Context *context, ScopedShaderLinkLocks *s
     mLinkingState->linkingFromBinary = false;
     mLinkingState->programHash       = programHash;
     mLinkingState->linkEvent =
-        mProgram->link(context, resources, infoLog, mergedVaryings, shaderLocks);
+        mProgram->link(context, resources, infoLog, std::move(mergedVaryings), shaderLocks);
 
     // Must be after mProgram->link() to avoid misleading the linker about output variables.
     mState.updateProgramInterfaceInputs(context);
