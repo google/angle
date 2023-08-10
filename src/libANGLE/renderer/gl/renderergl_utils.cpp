@@ -2532,11 +2532,14 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     // http://crbug.com/594016
     bool isLinuxVivante = IsLinux() && IsVivante(device);
 
+    // http://anglebug.com/8304
+    bool isWindowsNVIDIA = IsWindows() && IsNvidia(vendor);
+
     // Temporarily disable on all of Android. http://crbug.com/1417485
     ANGLE_FEATURE_CONDITION(features, disableMultisampledRenderToTexture,
                             isAdreno4xxOnAndroidLessThan51 || isAdreno4xxOnAndroid70 ||
                                 isAdreno5xxOnAndroidLessThan70 || isAdreno5xxOnAndroid71 ||
-                                isLinuxVivante || IsAndroid());
+                                isLinuxVivante || IsAndroid() || isWindowsNVIDIA);
 
     // http://crbug.com/1181068
     ANGLE_FEATURE_CONDITION(features, uploadTextureDataInChunks, IsApple());
