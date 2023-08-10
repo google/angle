@@ -143,6 +143,8 @@ std::shared_ptr<WaitableCompileEvent> ShaderMtl::compile(const gl::Context *cont
         options->pls = displayMtl->getNativePixelLocalStorageOptions();
     }
 
+    options->rescopeGlobalVariables = true;
+
     return compileImplMtl(context, compilerInstance, getState().getSource(), options);
 }
 
