@@ -739,6 +739,14 @@
                 "Apple OpenGL drivers crash when drawing with a zero-sized buffer bound using a non-zero divisor."
             ],
             "issue": "http://crbug.com/1456243"
+        },
+        {
+            "name": "explicit_fragment_locations",
+            "category": "Workarounds",
+            "description": [
+                "Always write explicit location layout qualifiers for fragment outputs."
+            ],
+            "issue": "https://anglebug.com/8308"
         }
     ]
 }

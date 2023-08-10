@@ -682,6 +682,13 @@ struct FeaturesGL : FeatureSetBase
         &members, "http://crbug.com/1456243"
     };
 
+    FeatureInfo explicitFragmentLocations = {
+        "explicitFragmentLocations",
+        FeatureCategory::OpenGLWorkarounds,
+        "Always write explicit location layout qualifiers for fragment outputs.",
+        &members, "https://anglebug.com/8308"
+    };
+
 };
 
 inline FeaturesGL::FeaturesGL()  = default;

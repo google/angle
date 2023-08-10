@@ -2560,6 +2560,9 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     // https://anglebug.com/7880
     ANGLE_FEATURE_CONDITION(features, emulateClipDistanceState, isQualcomm);
 
+    // https://anglebug.com/8308
+    ANGLE_FEATURE_CONDITION(features, explicitFragmentLocations, isQualcomm);
+
     // Desktop GLSL-only fragment synchronization extensions. These are injected internally by the
     // compiler to make pixel local storage coherent.
     // https://anglebug.com/7279

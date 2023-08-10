@@ -386,6 +386,11 @@ std::shared_ptr<WaitableCompileEvent> ShaderGL::compile(const gl::Context *conte
         options->scalarizeVecAndMatConstructorArgs = true;
     }
 
+    if (features.explicitFragmentLocations.enabled)
+    {
+        options->explicitFragmentLocations = true;
+    }
+
     if (mRenderer->getNativeExtensions().shaderPixelLocalStorageANGLE)
     {
         options->pls = mRenderer->getNativePixelLocalStorageOptions();

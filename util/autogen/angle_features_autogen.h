@@ -139,6 +139,7 @@ enum class Feature
     EnableTranslatedShaderSubstitution,
     EnsureNonEmptyBufferIsBoundForDraw,
     ExpandIntegerPowExpressions,
+    ExplicitFragmentLocations,
     ExplicitlyCastMediumpFloatTo16Bit,
     ExplicitlyEnablePerSampleShading,
     ExposeNonConformantExtensionsAndVersions,
