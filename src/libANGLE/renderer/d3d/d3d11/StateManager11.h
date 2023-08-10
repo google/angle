@@ -53,7 +53,8 @@ class ShaderConstants11 : angle::NonCopyable
     bool onImageChange(gl::ShaderType shaderType,
                        unsigned int imageIndex,
                        const gl::ImageUnit &imageUnit);
-    void onClipControlChange(bool lowerLeft, bool zeroToOne);
+    void onClipOriginChange(bool lowerLeft);
+    bool onClipDepthModeChange(bool zeroToOne);
     bool onClipDistancesEnabledChange(const uint32_t value);
     bool onMultisamplingChange(bool multisampling);
 

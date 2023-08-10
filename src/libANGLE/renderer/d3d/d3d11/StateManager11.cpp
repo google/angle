@@ -546,11 +546,22 @@ bool ShaderConstants11::onImageChange(gl::ShaderType shaderType,
     return dirty;
 }
 
-void ShaderConstants11::onClipControlChange(bool lowerLeft, bool zeroToOne)
+void ShaderConstants11::onClipOriginChange(bool lowerLeft)
 {
-    mVertex.clipControlOrigin    = lowerLeft ? -1.0f : 1.0f;
-    mVertex.clipControlZeroToOne = zeroToOne ? 1.0f : 0.0f;
+    mVertex.clipControlOrigin = lowerLeft ? -1.0f : 1.0f;
     mShaderConstantsDirty.set(gl::ShaderType::Vertex);
+}
+
+bool ShaderConstants11::onClipDepthModeChange(bool zeroToOne)
+{
+    const float value             = static_cast<float>(zeroToOne);
+    const bool clipDepthModeDirty = mVertex.clipControlZeroToOne != value;
+    if (clipDepthModeDirty)
+    {
+        mVertex.clipControlZeroToOne = value;
+        mShaderConstantsDirty.set(gl::ShaderType::Vertex);
+    }
+    return clipDepthModeDirty;
 }
 
 bool ShaderConstants11::onClipDistancesEnabledChange(const uint32_t value)
@@ -1207,6 +1218,11 @@ void StateManager11::syncState(const gl::Context *context,
                     {
                         case gl::state::EXTENDED_DIRTY_BIT_CLIP_CONTROL:
                             checkPresentPath(context);
+                            if (mShaderConstants.onClipDepthModeChange(
+                                    state.isClipDepthModeZeroToOne()))
+                            {
+                                invalidateDriverUniforms();
+                            }
                             break;
                         case gl::state::EXTENDED_DIRTY_BIT_CLIP_DISTANCES:
                             if (mShaderConstants.onClipDistancesEnabledChange(
@@ -1449,8 +1465,7 @@ void StateManager11::syncViewport(const gl::Context *context)
     }
 
     bool clipSpaceOriginLowerLeft = glState.getClipOrigin() == gl::ClipOrigin::LowerLeft;
-    mShaderConstants.onClipControlChange(clipSpaceOriginLowerLeft,
-                                         glState.isClipDepthModeZeroToOne());
+    mShaderConstants.onClipOriginChange(clipSpaceOriginLowerLeft);
 
     const auto &viewport = glState.getViewport();
 
