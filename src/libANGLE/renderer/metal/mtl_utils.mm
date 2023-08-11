@@ -350,7 +350,8 @@ static angle::Result InitializeCompressedTextureContents(const gl::Context *cont
 
 bool PreferStagedTextureUploads(const gl::Context *context,
                                 const TextureRef &texture,
-                                const Format &textureObjFormat)
+                                const Format &textureObjFormat,
+                                StagingPurpose purpose)
 {
     // The simulator MUST upload all textures as staged.
     if (TARGET_OS_SIMULATOR)
@@ -367,9 +368,16 @@ bool PreferStagedTextureUploads(const gl::Context *context,
         return false;
     }
 
+    // If the intended internal format is luminance, we can still
+    // initialize the texture using the GPU. However, if we're
+    // uploading data to it, we avoid using a staging buffer, due to
+    // the (current) need to re-pack the data from L8 -> RGBA8 and LA8
+    // -> RGBA8. This could be better optimized by emulating L8
+    // textures with R8 and LA8 with RG8, and using swizzlig for the
+    // resulting textures.
     if (intendedInternalFormat.isLUMA())
     {
-        return false;
+        return (purpose == StagingPurpose::Initialization);
     }
 
     if (features.disableStagedInitializationOfPackedTextureFormats.enabled)
@@ -401,13 +409,22 @@ angle::Result InitializeTextureContents(const gl::Context *context,
 
     const gl::InternalFormat &intendedInternalFormat = textureObjFormat.intendedInternalFormat();
 
-    bool preferGPUInitialization = PreferStagedTextureUploads(context, texture, textureObjFormat);
+    bool preferGPUInitialization = PreferStagedTextureUploads(context, texture, textureObjFormat,
+                                                              StagingPurpose::Initialization);
 
     // This function is called in many places to initialize the content of a texture.
     // So it's better we do the initial check here instead of let the callers do it themselves:
     if (!textureObjFormat.valid())
     {
         return angle::Result::Continue;
+    }
+
+    if ((textureObjFormat.hasDepthOrStencilBits() && !textureObjFormat.getCaps().depthRenderable) ||
+        !textureObjFormat.getCaps().colorRenderable)
+    {
+        // Texture is not appropriately color- or depth-renderable, so do not attempt
+        // to use GPU initialization (clears for initialization).
+        preferGPUInitialization = false;
     }
 
     gl::Extents size = texture->size(index);
