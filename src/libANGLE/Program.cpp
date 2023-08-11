@@ -451,9 +451,10 @@ void WriteShaderVariableBuffer(BinaryOutputStream *stream, const ShaderVariableB
     stream->writeInt(var.dataSize);
 
     stream->writeInt(var.memberIndexes.size());
-    for (unsigned int memberCounterIndex : var.memberIndexes)
+    if (!var.memberIndexes.empty())
     {
-        stream->writeInt(memberCounterIndex);
+        stream->writeBytes(reinterpret_cast<const unsigned char *>(var.memberIndexes.data()),
+                           sizeof(*var.memberIndexes.data()) * var.memberIndexes.size());
     }
 }
 
@@ -464,10 +465,13 @@ void LoadShaderVariableBuffer(BinaryInputStream *stream, ShaderVariableBuffer *v
     var->binding  = stream->readInt<int>();
     var->dataSize = stream->readInt<unsigned int>();
 
+    ASSERT(var->memberIndexes.empty());
     size_t numMembers = stream->readInt<size_t>();
-    for (size_t blockMemberIndex = 0; blockMemberIndex < numMembers; blockMemberIndex++)
+    if (numMembers > 0)
     {
-        var->memberIndexes.push_back(stream->readInt<unsigned int>());
+        var->memberIndexes.resize(numMembers);
+        stream->readBytes(reinterpret_cast<unsigned char *>(var->memberIndexes.data()),
+                          sizeof(unsigned int) * var->memberIndexes.size());
     }
 }
 
