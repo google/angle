@@ -244,7 +244,7 @@ class ProgramState final : angle::NonCopyable
     {
         return mExecutable->getActiveUniformBlockBindings();
     }
-    const std::vector<sh::ShaderVariable> &getProgramInputs() const
+    const std::vector<ProgramInput> &getProgramInputs() const
     {
         return mExecutable->getProgramInputs();
     }
@@ -508,7 +508,7 @@ class Program final : public LabeledObject, public angle::Subject
                             GLchar *name) const;
     GLint getActiveAttributeCount() const;
     GLint getActiveAttributeMaxLength() const;
-    const std::vector<sh::ShaderVariable> &getAttributes() const;
+    const std::vector<ProgramInput> &getAttributes() const;
 
     GLint getFragDataLocation(const std::string &name) const;
     size_t getOutputResourceCount() const;
@@ -734,14 +734,11 @@ class Program final : public LabeledObject, public angle::Subject
                                        GLsizei bufSize,
                                        GLsizei *length,
                                        GLchar *name) const;
-    const sh::ShaderVariable &getInputResource(size_t index) const;
-    GLuint getResourceMaxNameSize(const sh::ShaderVariable &resource, GLint max) const;
+    const ProgramInput &getInputResource(size_t index) const;
     GLuint getInputResourceMaxNameSize() const;
     GLuint getOutputResourceMaxNameSize() const;
-    GLuint getResourceLocation(const GLchar *name, const sh::ShaderVariable &variable) const;
     GLuint getInputResourceLocation(const GLchar *name) const;
     GLuint getOutputResourceLocation(const GLchar *name) const;
-    const std::string getResourceName(const sh::ShaderVariable &resource) const;
     const std::string getInputResourceName(GLuint index) const;
     const std::string getOutputResourceName(GLuint index) const;
     const sh::ShaderVariable &getOutputResource(size_t index) const;

@@ -181,7 +181,7 @@ DynamicHLSL::DynamicHLSL(RendererD3D *const renderer) : mRenderer(renderer) {}
 std::string DynamicHLSL::generateVertexShaderForInputLayout(
     const std::string &sourceShader,
     const InputLayout &inputLayout,
-    const std::vector<sh::ShaderVariable> &shaderAttributes,
+    const std::vector<gl::ProgramInput> &shaderAttributes,
     const std::vector<rx::ShaderStorageBlock> &shaderStorageBlocks,
     size_t baseUAVRegister) const
 {
@@ -217,7 +217,7 @@ std::string DynamicHLSL::generateVertexShaderForInputLayout(
 
     for (size_t attributeIndex = 0; attributeIndex < shaderAttributes.size(); ++attributeIndex)
     {
-        const sh::ShaderVariable &shaderAttribute = shaderAttributes[attributeIndex];
+        const gl::ProgramInput &shaderAttribute = shaderAttributes[attributeIndex];
         if (!shaderAttribute.name.empty())
         {
             ASSERT(inputIndex < MAX_VERTEX_ATTRIBS);
@@ -225,11 +225,12 @@ std::string DynamicHLSL::generateVertexShaderForInputLayout(
                 inputIndex < inputLayout.size() ? inputLayout[inputIndex] : angle::FormatID::NONE;
 
             // HLSL code for input structure
-            if (IsMatrixType(shaderAttribute.type))
+            if (IsMatrixType(shaderAttribute.getType()))
             {
                 // Matrix types are always transposed
                 structStream << "    "
-                             << HLSLMatrixTypeString(TransposeMatrixType(shaderAttribute.type));
+                             << HLSLMatrixTypeString(
+                                    TransposeMatrixType(shaderAttribute.getType()));
             }
             else
             {
@@ -246,7 +247,7 @@ std::string DynamicHLSL::generateVertexShaderForInputLayout(
 
                     structStream << "    ";
                     HLSLComponentTypeString(structStream, componentType,
-                                            VariableComponentCount(shaderAttribute.type));
+                                            VariableComponentCount(shaderAttribute.getType()));
                 }
             }
 
@@ -263,7 +264,7 @@ std::string DynamicHLSL::generateVertexShaderForInputLayout(
             else
             {
                 structStream << "TEXCOORD" << semanticIndex;
-                semanticIndex += VariableRegisterCount(shaderAttribute.type);
+                semanticIndex += VariableRegisterCount(shaderAttribute.getType());
             }
 
             structStream << ";\n";
@@ -274,7 +275,7 @@ std::string DynamicHLSL::generateVertexShaderForInputLayout(
             // Mismatched vertex attribute to vertex input may result in an undefined
             // data reinterpretation (eg for pure integer->float, float->pure integer)
             // TODO: issue warning with gl debug info extension, when supported
-            if (IsMatrixType(shaderAttribute.type) ||
+            if (IsMatrixType(shaderAttribute.getType()) ||
                 (mRenderer->getVertexConversionType(vertexFormatID) & VERTEX_CONVERT_GPU) != 0)
             {
                 GenerateAttributeConversionHLSL(vertexFormatID, shaderAttribute, initStream);
@@ -292,7 +293,7 @@ std::string DynamicHLSL::generateVertexShaderForInputLayout(
 
             initStream << ";\n";
 
-            inputIndex += VariableRowCount(TransposeMatrixType(shaderAttribute.type));
+            inputIndex += VariableRowCount(TransposeMatrixType(shaderAttribute.getType()));
         }
     }
 
@@ -1464,18 +1465,18 @@ std::string DynamicHLSL::generateGeometryShaderHLSL(const gl::Caps &caps,
 
 // static
 void DynamicHLSL::GenerateAttributeConversionHLSL(angle::FormatID vertexFormatID,
-                                                  const sh::ShaderVariable &shaderAttrib,
+                                                  const gl::ProgramInput &shaderAttrib,
                                                   std::ostringstream &outStream)
 {
     // Matrix
-    if (IsMatrixType(shaderAttrib.type))
+    if (IsMatrixType(shaderAttrib.getType()))
     {
         outStream << "transpose(input." << DecorateVariable(shaderAttrib.name) << ")";
         return;
     }
 
-    GLenum shaderComponentType           = VariableComponentType(shaderAttrib.type);
-    int shaderComponentCount             = VariableComponentCount(shaderAttrib.type);
+    GLenum shaderComponentType           = VariableComponentType(shaderAttrib.getType());
+    int shaderComponentCount             = VariableComponentCount(shaderAttrib.getType());
     const gl::VertexFormat &vertexFormat = gl::GetVertexFormatFromID(vertexFormatID);
 
     // Perform integer to float conversion (if necessary)

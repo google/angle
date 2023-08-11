@@ -173,7 +173,7 @@ std::string updateShaderAttributes(std::string shaderSourceIn, const gl::Program
     std::unordered_map<std::string, uint32_t> attributeBindings;
     for (auto &attribute : programAttributes)
     {
-        const int regs = gl::VariableRegisterCount(attribute.type);
+        const int regs = gl::VariableRegisterCount(attribute.getType());
         if (regs > 1)
         {
             for (int i = 0; i < regs; i++)
@@ -181,7 +181,7 @@ std::string updateShaderAttributes(std::string shaderSourceIn, const gl::Program
                 stream.str("");
                 stream << " " << kUserDefinedNamePrefix << attribute.name << "_"
                        << std::to_string(i) << sh::kUnassignedAttributeString;
-                attributeBindings.insert({std::string(stream.str()), i + attribute.location});
+                attributeBindings.insert({std::string(stream.str()), i + attribute.getLocation()});
             }
         }
         else
@@ -189,7 +189,7 @@ std::string updateShaderAttributes(std::string shaderSourceIn, const gl::Program
             stream.str("");
             stream << " " << kUserDefinedNamePrefix << attribute.name
                    << sh::kUnassignedAttributeString;
-            attributeBindings.insert({std::string(stream.str()), attribute.location});
+            attributeBindings.insert({std::string(stream.str()), attribute.getLocation()});
             stream.str("");
         }
     }

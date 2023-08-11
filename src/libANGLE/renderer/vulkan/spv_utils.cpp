@@ -283,9 +283,9 @@ void AssignAttributeLocations(const gl::ProgramExecutable &programExecutable,
     bool hasAliasingAttributes = false;
 
     // Assign attribute locations for the vertex shader.
-    for (const sh::ShaderVariable &attribute : programExecutable.getProgramInputs())
+    for (const gl::ProgramInput &attribute : programExecutable.getProgramInputs())
     {
-        ASSERT(attribute.active);
+        ASSERT(attribute.isActive());
 
         if (std::find(implicitInputs.begin(), implicitInputs.end(), attribute.name) !=
             implicitInputs.end())
@@ -293,14 +293,14 @@ void AssignAttributeLocations(const gl::ProgramExecutable &programExecutable,
             continue;
         }
 
-        const uint8_t colCount = static_cast<uint8_t>(gl::VariableColumnCount(attribute.type));
-        const uint8_t rowCount = static_cast<uint8_t>(gl::VariableRowCount(attribute.type));
+        const uint8_t colCount = static_cast<uint8_t>(gl::VariableColumnCount(attribute.getType()));
+        const uint8_t rowCount = static_cast<uint8_t>(gl::VariableRowCount(attribute.getType()));
         const bool isMatrix    = colCount > 1 && rowCount > 1;
 
         const uint8_t componentCount = isMatrix ? rowCount : colCount;
         const uint8_t locationCount  = isMatrix ? colCount : rowCount;
 
-        AddLocationInfo(variableInfoMapOut, shaderType, attribute.id, attribute.location,
+        AddLocationInfo(variableInfoMapOut, shaderType, attribute.getId(), attribute.getLocation(),
                         ShaderInterfaceVariableInfo::kInvalid, componentCount, locationCount);
 
         // Detect if there are aliasing attributes.
@@ -309,7 +309,7 @@ void AssignAttributeLocations(const gl::ProgramExecutable &programExecutable,
         {
             for (uint8_t offset = 0; offset < locationCount; ++offset)
             {
-                uint32_t location = attribute.location + offset;
+                uint32_t location = attribute.getLocation() + offset;
 
                 // If there's aliasing, no need for futher processing.
                 if (isLocationAssigned.test(location))

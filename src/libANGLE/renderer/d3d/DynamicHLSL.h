@@ -152,7 +152,7 @@ class DynamicHLSL : angle::NonCopyable
     std::string generateVertexShaderForInputLayout(
         const std::string &sourceShader,
         const gl::InputLayout &inputLayout,
-        const std::vector<sh::ShaderVariable> &shaderAttributes,
+        const std::vector<gl::ProgramInput> &shaderAttributes,
         const std::vector<rx::ShaderStorageBlock> &shaderStorageBlocks,
         size_t baseUAVRegister) const;
     std::string generatePixelShaderForOutputSignature(
@@ -207,7 +207,7 @@ class DynamicHLSL : angle::NonCopyable
                                  std::ostringstream &hlslStream) const;
 
     static void GenerateAttributeConversionHLSL(angle::FormatID vertexFormatID,
-                                                const sh::ShaderVariable &shaderAttrib,
+                                                const gl::ProgramInput &shaderAttrib,
                                                 std::ostringstream &outStream);
 };
 

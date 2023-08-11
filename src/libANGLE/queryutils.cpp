@@ -719,19 +719,20 @@ GLint GetCommonVariableProperty(const T &var, GLenum prop)
 
 GLint GetInputResourceProperty(const Program *program, GLuint index, GLenum prop)
 {
-    const sh::ShaderVariable &variable = program->getInputResource(index);
+    const ProgramInput &variable = program->getInputResource(index);
 
     switch (prop)
     {
         case GL_TYPE:
+            return clampCast<GLint>(variable.getType());
         case GL_ARRAY_SIZE:
-            return GetCommonVariableProperty(variable, prop);
+            return clampCast<GLint>(variable.getBasicTypeElementCount());
 
         case GL_NAME_LENGTH:
             return clampCast<GLint>(program->getInputResourceName(index).size() + 1u);
 
         case GL_LOCATION:
-            return variable.isBuiltIn() ? GL_INVALID_INDEX : variable.location;
+            return variable.isBuiltIn() ? GL_INVALID_INDEX : variable.getLocation();
 
         // The query is targeted at the set of active input variables used by the first shader stage
         // of program. If program contains multiple shader stages then input variables from any
@@ -751,7 +752,7 @@ GLint GetInputResourceProperty(const Program *program, GLuint index, GLenum prop
             return program->getState().getFirstAttachedShaderStageType() ==
                    ShaderType::TessEvaluation;
         case GL_IS_PER_PATCH_EXT:
-            return variable.isPatch;
+            return variable.isPatch();
 
         default:
             UNREACHABLE();

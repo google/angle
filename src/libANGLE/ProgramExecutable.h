@@ -60,6 +60,72 @@ struct ImageBinding
     std::vector<GLuint> boundImageUnits;
 };
 
+ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
+struct ProgramInput
+{
+    ProgramInput();
+    ProgramInput(const sh::ShaderVariable &var);
+    ProgramInput(const ProgramInput &other);
+    ProgramInput &operator=(const ProgramInput &rhs);
+
+    GLenum getType() const { return basicDataTypeStruct.type; }
+    bool isBuiltIn() const { return basicDataTypeStruct.flagBits.isBuiltIn; }
+    bool isArray() const { return basicDataTypeStruct.flagBits.isArray; }
+    bool isActive() const { return basicDataTypeStruct.flagBits.active; }
+    bool isPatch() const { return basicDataTypeStruct.flagBits.isPatch; }
+    int getLocation() const { return basicDataTypeStruct.location; }
+    unsigned int getBasicTypeElementCount() const
+    {
+        return basicDataTypeStruct.basicTypeElementCount;
+    }
+    unsigned int getArraySizeProduct() const { return basicDataTypeStruct.arraySizeProduct; }
+    uint32_t getId() const { return basicDataTypeStruct.id; }
+    sh::InterpolationType getInterpolation() const
+    {
+        return static_cast<sh::InterpolationType>(basicDataTypeStruct.interpolation);
+    }
+
+    void setLocation(int location) { basicDataTypeStruct.location = location; }
+    void resetEffectiveLocation()
+    {
+        if (basicDataTypeStruct.flagBits.hasImplicitLocation)
+        {
+            basicDataTypeStruct.location = -1;
+        }
+    }
+
+    std::string name;
+    std::string mappedName;
+
+    // The struct bellow must only contain data of basic type so that entire struct can memcpy-able.
+    struct
+    {
+        uint16_t type;  // GLenum
+        uint16_t arraySizeProduct;
+
+        int location;
+
+        uint8_t interpolation;  // sh::InterpolationType
+        union
+        {
+            struct
+            {
+                uint8_t active : 1;
+                uint8_t isPatch : 1;
+                uint8_t hasImplicitLocation : 1;
+                uint8_t isArray : 1;
+                uint8_t isBuiltIn : 1;
+                uint8_t padding : 3;
+            } flagBits;
+            uint8_t flagBitsAsUByte;
+        };
+        int16_t basicTypeElementCount;
+
+        uint32_t id;
+    } basicDataTypeStruct;
+};
+ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
+
 // A varying with transform feedback enabled. If it's an array, either the whole array or one of its
 // elements specified by 'arrayIndex' can set to be enabled.
 struct TransformFeedbackVarying : public sh::ShaderVariable
@@ -214,7 +280,7 @@ class ProgramExecutable final : public angle::Subject
     void updateCanDrawWith();
     bool hasVertexShader() const { return mCanDrawWith; }
 
-    const std::vector<sh::ShaderVariable> &getProgramInputs() const { return mProgramInputs; }
+    const std::vector<ProgramInput> &getProgramInputs() const { return mProgramInputs; }
     const std::vector<sh::ShaderVariable> &getOutputVariables() const { return mOutputVariables; }
     const std::vector<VariableLocation> &getOutputLocations() const { return mOutputLocations; }
     const std::vector<VariableLocation> &getSecondaryOutputLocations() const
@@ -454,7 +520,7 @@ class ProgramExecutable final : public angle::Subject
     std::vector<VariableLocation> mSecondaryOutputLocations;
     bool mYUVOutput;
     // Vertex attributes, Fragment input varyings, etc.
-    std::vector<sh::ShaderVariable> mProgramInputs;
+    std::vector<ProgramInput> mProgramInputs;
     std::vector<TransformFeedbackVarying> mLinkedTransformFeedbackVaryings;
     // The size of the data written to each transform feedback buffer per vertex.
     std::vector<GLsizei> mTransformFeedbackStrides;

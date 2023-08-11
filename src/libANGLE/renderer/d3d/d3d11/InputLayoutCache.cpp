@@ -30,21 +30,21 @@ namespace rx
 namespace
 {
 
-GLenum GetGLSLAttributeType(const std::vector<sh::ShaderVariable> &shaderAttributes, size_t index)
+GLenum GetGLSLAttributeType(const std::vector<gl::ProgramInput> &shaderAttributes, size_t index)
 {
     // Count matrices differently
-    for (const sh::ShaderVariable &attrib : shaderAttributes)
+    for (const gl::ProgramInput &attrib : shaderAttributes)
     {
-        if (attrib.location == -1)
+        if (attrib.getLocation() == -1)
         {
             continue;
         }
 
-        GLenum transposedType = gl::TransposeMatrixType(attrib.type);
+        GLenum transposedType = gl::TransposeMatrixType(attrib.getType());
         int rows              = gl::VariableRowCount(transposedType);
         int intIndex          = static_cast<int>(index);
 
-        if (intIndex >= attrib.location && intIndex < attrib.location + rows)
+        if (intIndex >= attrib.getLocation() && intIndex < attrib.getLocation() + rows)
         {
             return transposedType;
         }
