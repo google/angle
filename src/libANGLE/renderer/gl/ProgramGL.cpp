@@ -139,9 +139,22 @@ class ProgramGL::LinkTask final : public angle::Closure
     LinkTask(LinkImplFunctor &&functor) : mLinkImplFunctor(functor), mFallbackToMainContext(false)
     {}
 
+    void setShaderLocks(gl::ScopedShaderLinkLocks *shaderLocks) { mShaderLocks.swap(*shaderLocks); }
+
     void operator()() override
     {
         ANGLE_TRACE_EVENT0("gpu.angle", "ProgramGL::LinkTask::run");
+
+        // Unlock the shaders at the end of the task.
+        //
+        // Note that there is a race condition if fallback to main is needed: by the time
+        // resolveLink() is done, which calls LinkEventGL::wait() and subsequently link on the main
+        // thread, the shader may get recompiled and the program would end up linking the new
+        // shaders.  This is not easily fixable with the current architecture, as there is no
+        // guarantee resolveLink() is called before the following shader recompilation.
+        gl::ScopedShaderLinkLocks unlockAtEnd;
+        unlockAtEnd.swap(mShaderLocks);
+
         mFallbackToMainContext = mLinkImplFunctor(mInfoLog);
     }
 
@@ -152,6 +165,8 @@ class ProgramGL::LinkTask final : public angle::Closure
     LinkImplFunctor mLinkImplFunctor;
     bool mFallbackToMainContext;
     std::string mInfoLog;
+
+    gl::ScopedShaderLinkLocks mShaderLocks;
 };
 
 using PostLinkImplFunctor = std::function<angle::Result(bool, const std::string &)>;
@@ -224,7 +239,8 @@ class ProgramGL::LinkEventGL final : public LinkEvent
 std::unique_ptr<LinkEvent> ProgramGL::link(const gl::Context *context,
                                            const gl::ProgramLinkedResources &resources,
                                            gl::InfoLog &infoLog,
-                                           const gl::ProgramMergedVaryings & /*mergedVaryings*/)
+                                           const gl::ProgramMergedVaryings & /*mergedVaryings*/,
+                                           gl::ScopedShaderLinkLocks *shaderLocks)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "ProgramGL::link");
 
@@ -472,15 +488,22 @@ std::unique_ptr<LinkEvent> ProgramGL::link(const gl::Context *context,
         return angle::Result::Continue;
     };
 
+    // |shaderLocks| is ignored except when the actual link is done in a job.  They will be unlocked
+    // by the caller.  The post-link task does not use the shader's compile state in those cases
+    // either.
+
     if (mRenderer->hasNativeParallelCompile())
     {
         mFunctions->linkProgram(mProgramID);
 
         return std::make_unique<LinkEventNativeParallel>(postLinkImplTask, mFunctions, mProgramID);
     }
-    else if (workerPool->isAsync() &&
+    else if (workerPool->isAsync() && !mFeatures.disableWorkerContexts.enabled &&
              (!mFeatures.dontRelinkProgramsInParallel.enabled || !mLinkedInParallel))
     {
+        // Make sure the shaders are locked until the task is complete.
+        linkTask->setShaderLocks(shaderLocks);
+
         mLinkedInParallel = true;
         return std::make_unique<LinkEventGL>(workerPool, linkTask, postLinkImplTask);
     }

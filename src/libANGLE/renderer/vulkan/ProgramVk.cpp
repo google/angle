@@ -29,6 +29,7 @@ class LinkTask final : public vk::Context, public angle::Closure
              const gl::ProgramState &state,
              const gl::ProgramExecutable &glExecutable,
              ProgramExecutableVk *executable,
+             gl::ScopedShaderLinkLocks *shaderLocks,
              bool isGLES1,
              vk::PipelineRobustness pipelineRobustness,
              vk::PipelineProtectedAccess pipelineProtectedAccess)
@@ -39,7 +40,9 @@ class LinkTask final : public vk::Context, public angle::Closure
           mIsGLES1(isGLES1),
           mPipelineRobustness(pipelineRobustness),
           mPipelineProtectedAccess(pipelineProtectedAccess)
-    {}
+    {
+        mShaderLocks.swap(*shaderLocks);
+    }
 
     void operator()() override;
 
@@ -83,6 +86,7 @@ class LinkTask final : public vk::Context, public angle::Closure
     const gl::ProgramState &mState;
     const gl::ProgramExecutable &mGlExecutable;
     ProgramExecutableVk *mExecutable;
+    gl::ScopedShaderLinkLocks mShaderLocks;
     bool mIsGLES1;
     vk::PipelineRobustness mPipelineRobustness;
     vk::PipelineProtectedAccess mPipelineProtectedAccess;
@@ -100,6 +104,10 @@ class LinkTask final : public vk::Context, public angle::Closure
 void LinkTask::operator()()
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "ProgramVk::LinkTask::run");
+
+    // Unlock the shaders at the end of the task.
+    gl::ScopedShaderLinkLocks unlockAtEnd;
+    unlockAtEnd.swap(mShaderLocks);
 
     // Warm up the pipeline cache by creating a few placeholder pipelines.  This is not done for
     // separable programs, and is deferred to when the program pipeline is finalized.
@@ -309,7 +317,8 @@ void ProgramVk::setSeparable(bool separable)
 std::unique_ptr<LinkEvent> ProgramVk::link(const gl::Context *context,
                                            const gl::ProgramLinkedResources &resources,
                                            gl::InfoLog &infoLog,
-                                           const gl::ProgramMergedVaryings &mergedVaryings)
+                                           const gl::ProgramMergedVaryings &mergedVaryings,
+                                           gl::ScopedShaderLinkLocks *shaderLocks)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "ProgramVk::link");
 
@@ -358,7 +367,7 @@ std::unique_ptr<LinkEvent> ProgramVk::link(const gl::Context *context,
     }
 
     std::shared_ptr<LinkTask> linkTask = std::make_shared<LinkTask>(
-        contextVk->getRenderer(), mState, programExecutable, &mExecutable,
+        contextVk->getRenderer(), mState, programExecutable, &mExecutable, shaderLocks,
         context->getState().isGLES1(), contextVk->pipelineRobustness(),
         contextVk->pipelineProtectedAccess());
     return std::make_unique<LinkEventVulkan>(context->getShaderCompileThreadPool(), linkTask);

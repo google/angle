@@ -62,6 +62,30 @@ enum class CompileStatus
     COMPILED,
 };
 
+class [[nodiscard]] ScopedShaderLinkLock : angle::NonCopyable
+{
+  public:
+    ScopedShaderLinkLock() : mShader(nullptr) {}
+    ScopedShaderLinkLock(Shader *shader);
+    ~ScopedShaderLinkLock();
+
+    void swap(ScopedShaderLinkLock &other) { std::swap(mShader, other.mShader); }
+    ScopedShaderLinkLock(ScopedShaderLinkLock &&other)
+    {
+        mShader       = other.mShader;
+        other.mShader = nullptr;
+    }
+    ScopedShaderLinkLock &operator=(ScopedShaderLinkLock &&other)
+    {
+        std::swap(mShader, other.mShader);
+        return *this;
+    }
+
+  private:
+    Shader *mShader;
+};
+using ScopedShaderLinkLocks = gl::ShaderMap<ScopedShaderLinkLock>;
+
 class ShaderState final : angle::NonCopyable
 {
   public:
@@ -288,6 +312,15 @@ class Shader final : angle::NonCopyable, public LabeledObject
         return;
     }
 
+    void onProgramLinkBegin() { ++mLinkJobsInProgress; }
+    void onProgramLinkEnd()
+    {
+        ASSERT(mLinkJobsInProgress > 0);
+        --mLinkJobsInProgress;
+        ASSERT(mLinkJobsInProgress >= 0);
+    }
+    ScopedShaderLinkLock lockAndGetScopedShaderLinkLock() { return ScopedShaderLinkLock(this); }
+
   private:
     struct CompilingState;
 
@@ -310,6 +343,8 @@ class Shader final : angle::NonCopyable, public LabeledObject
                       const ShShaderOutput &outputType,
                       const ShBuiltInResources &resources);
 
+    void waitForLinkJobs();
+
     ShaderState mState;
     std::unique_ptr<rx::ShaderImpl> mImplementation;
     const gl::Limitations mRendererLimitations;
@@ -328,7 +363,24 @@ class Shader final : angle::NonCopyable, public LabeledObject
 
     GLuint mCurrentMaxComputeWorkGroupInvocations;
     unsigned int mMaxComputeSharedMemory;
+
+    // Number of programs that are currently linking using this shader.  If the shader is
+    // recompiled, it will block until all existing link jobs are finished.
+    std::atomic_int mLinkJobsInProgress;
 };
+
+inline ScopedShaderLinkLock::ScopedShaderLinkLock(Shader *shader) : mShader(shader)
+{
+    ASSERT(shader != nullptr);
+    mShader->onProgramLinkBegin();
+}
+inline ScopedShaderLinkLock::~ScopedShaderLinkLock()
+{
+    if (mShader != nullptr)
+    {
+        mShader->onProgramLinkEnd();
+    }
+}
 
 const char *GetShaderTypeString(ShaderType type);
 std::string GetShaderDumpFileDirectory();

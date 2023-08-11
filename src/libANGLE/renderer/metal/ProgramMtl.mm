@@ -625,7 +625,9 @@ std::unique_ptr<rx::LinkEvent> ProgramMtl::load(const gl::Context *context,
     ANGLE_PARALLEL_LINK_TRY(loadDefaultUniformBlocksInfo(context, stream));
     ANGLE_PARALLEL_LINK_TRY(loadInterfaceBlockInfo(context, stream));
 
-    return compileMslShaderLibs(context, infoLog);
+    // Shaders are unused
+    gl::ScopedShaderLinkLocks noOpShaderLocks;
+    return compileMslShaderLibs(context, infoLog, &noOpShaderLocks);
 }
 
 void ProgramMtl::save(const gl::Context *context, gl::BinaryOutputStream *stream)
@@ -646,7 +648,8 @@ void ProgramMtl::setSeparable(bool separable)
 std::unique_ptr<LinkEvent> ProgramMtl::link(const gl::Context *context,
                                             const gl::ProgramLinkedResources &resources,
                                             gl::InfoLog &infoLog,
-                                            const gl::ProgramMergedVaryings &mergedVaryings)
+                                            const gl::ProgramMergedVaryings &mergedVaryings,
+                                            gl::ScopedShaderLinkLocks *shaderLocks)
 {
     ContextMtl *contextMtl = mtl::GetImpl(context);
 
@@ -666,7 +669,7 @@ std::unique_ptr<LinkEvent> ProgramMtl::link(const gl::Context *context,
         mState.getExecutable().getTransformFeedbackBufferCount()));
     mMslXfbOnlyVertexShaderInfo = mMslShaderTranslateInfo[gl::ShaderType::Vertex];
 
-    return compileMslShaderLibs(context, infoLog);
+    return compileMslShaderLibs(context, infoLog, shaderLocks);
 }
 
 void ProgramMtl::linkUpdateHasFlatAttributes(const gl::Context *context)
@@ -700,14 +703,18 @@ class ProgramMtl::CompileMslTask final : public angle::Closure
   public:
     CompileMslTask(ContextMtl *context,
                    mtl::TranslatedShaderInfo *translatedMslInfo,
-                   const std::map<std::string, std::string> &substitutionMacros)
+                   const std::map<std::string, std::string> &substitutionMacros,
+                   gl::ScopedShaderLinkLock &&shaderLock)
         : mContext(context),
           mTranslatedMslInfo(translatedMslInfo),
-          mSubstitutionMacros(substitutionMacros)
+          mSubstitutionMacros(substitutionMacros),
+          mShaderLock(std::move(shaderLock))
     {}
 
     void operator()() override
     {
+        gl::ScopedShaderLinkLock unlockAtEnd(std::move(mShaderLock));
+
         mResult = CreateMslShaderLib(mContext, mInfoLog, mTranslatedMslInfo, mSubstitutionMacros);
     }
 
@@ -726,6 +733,7 @@ class ProgramMtl::CompileMslTask final : public angle::Closure
     gl::InfoLog mInfoLog;
     mtl::TranslatedShaderInfo *mTranslatedMslInfo;
     std::map<std::string, std::string> mSubstitutionMacros;
+    gl::ScopedShaderLinkLock mShaderLock;
     angle::Result mResult = angle::Result::Continue;
 };
 
@@ -767,7 +775,8 @@ class ProgramMtl::ProgramLinkEvent final : public LinkEvent
 };
 
 std::unique_ptr<LinkEvent> ProgramMtl::compileMslShaderLibs(const gl::Context *context,
-                                                            gl::InfoLog &infoLog)
+                                                            gl::InfoLog &infoLog,
+                                                            gl::ScopedShaderLinkLocks *shaderLocks)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "ProgramMtl::compileMslShaderLibs");
 
@@ -792,12 +801,13 @@ std::unique_ptr<LinkEvent> ProgramMtl::compileMslShaderLibs(const gl::Context *c
         {
             if (asyncCompile)
             {
-                auto task =
-                    std::make_shared<ProgramMtl::CompileMslTask>(contextMtl, translateInfo, macros);
+                auto task = std::make_shared<ProgramMtl::CompileMslTask>(
+                    contextMtl, translateInfo, macros, std::move((*shaderLocks)[shaderType]));
                 asyncTasks.push_back(task);
             }
             else
             {
+                // Ignore |shaderLocks|, the caller will unlock them.
                 ANGLE_PARALLEL_LINK_TRY(
                     CreateMslShaderLib(contextMtl, infoLog, translateInfo, macros));
             }

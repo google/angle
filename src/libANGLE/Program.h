@@ -818,7 +818,7 @@ class Program final : public LabeledObject, public angle::Subject
     void unlink();
     void deleteSelf(const Context *context);
 
-    angle::Result linkImpl(const Context *context);
+    angle::Result linkImpl(const Context *context, ScopedShaderLinkLocks *shaderLocks);
 
     bool linkValidateShaders(const Context *context, InfoLog &infoLog);
     bool linkAttributes(const Context *context, InfoLog &infoLog);

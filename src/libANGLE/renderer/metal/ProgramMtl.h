@@ -130,7 +130,8 @@ class ProgramMtl : public ProgramImpl
     std::unique_ptr<LinkEvent> link(const gl::Context *context,
                                     const gl::ProgramLinkedResources &resources,
                                     gl::InfoLog &infoLog,
-                                    const gl::ProgramMergedVaryings &mergedVaryings) override;
+                                    const gl::ProgramMergedVaryings &mergedVaryings,
+                                    gl::ScopedShaderLinkLocks *shaderLocks) override;
     GLboolean validate(const gl::Caps &caps, gl::InfoLog *infoLog) override;
 
     void setUniform1fv(GLint location, GLsizei count, const GLfloat *v) override;
@@ -267,7 +268,8 @@ class ProgramMtl : public ProgramImpl
 
     void linkResources(const gl::Context *context, const gl::ProgramLinkedResources &resources);
     std::unique_ptr<LinkEvent> compileMslShaderLibs(const gl::Context *context,
-                                                    gl::InfoLog &infoLog);
+                                                    gl::InfoLog &infoLog,
+                                                    gl::ScopedShaderLinkLocks *shaderLocks);
 
     mtl::BufferPool *getBufferPool(ContextMtl *context);
 
