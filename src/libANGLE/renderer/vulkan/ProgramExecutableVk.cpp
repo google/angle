@@ -1361,7 +1361,6 @@ angle::Result ProgramExecutableVk::createPipelineLayout(
     const gl::ProgramExecutable &glExecutable,
     gl::ActiveTextureArray<TextureVk *> *activeTextures)
 {
-    gl::TransformFeedback *transformFeedback = contextVk->getState().getCurrentTransformFeedback();
     const gl::ShaderBitSet &linkedShaderStages = glExecutable.getLinkedShaderStages();
 
     resetLayout(contextVk);
@@ -1387,12 +1386,17 @@ angle::Result ProgramExecutableVk::createPipelineLayout(
     gl::ShaderType linkedTransformFeedbackStage = glExecutable.getLinkedTransformFeedbackStage();
     bool hasXfbVaryings = linkedTransformFeedbackStage != gl::ShaderType::InvalidEnum &&
                           !glExecutable.getLinkedTransformFeedbackVaryings().empty();
-    if (transformFeedback && hasXfbVaryings)
+    if (contextVk->getFeatures().emulateTransformFeedback.enabled && hasXfbVaryings)
     {
-        size_t xfbBufferCount                    = glExecutable.getTransformFeedbackBufferCount();
-        TransformFeedbackVk *transformFeedbackVk = vk::GetImpl(transformFeedback);
-        transformFeedbackVk->updateDescriptorSetLayout(contextVk, mVariableInfoMap, xfbBufferCount,
-                                                       &uniformsAndXfbSetDesc);
+        size_t xfbBufferCount = glExecutable.getTransformFeedbackBufferCount();
+        for (uint32_t bufferIndex = 0; bufferIndex < xfbBufferCount; ++bufferIndex)
+        {
+            const uint32_t binding = mVariableInfoMap.getEmulatedXfbBufferBinding(bufferIndex);
+            ASSERT(binding != std::numeric_limits<uint32_t>::max());
+
+            uniformsAndXfbSetDesc.update(binding, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1,
+                                         VK_SHADER_STAGE_VERTEX_BIT, nullptr);
+        }
     }
 
     ANGLE_TRY(contextVk->getDescriptorSetLayoutCache().getDescriptorSetLayout(
