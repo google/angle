@@ -239,20 +239,6 @@ struct FeaturesGL : FeatureSetBase
         &members, "http://anglebug.com/3027"
     };
 
-    FeatureInfo dontRelinkProgramsInParallel = {
-        "dontRelinkProgramsInParallel",
-        FeatureCategory::OpenGLWorkarounds,
-        "Relinking a program in parallel is buggy",
-        &members, "http://anglebug.com/3045"
-    };
-
-    FeatureInfo disableWorkerContexts = {
-        "disableWorkerContexts",
-        FeatureCategory::OpenGLWorkarounds,
-        "Some tests have been seen to fail using worker contexts",
-        &members, "http://crbug.com/849576"
-    };
-
     FeatureInfo limitWebglMaxTextureSizeTo4096 = {
         "limitWebglMaxTextureSizeTo4096",
         FeatureCategory::OpenGLWorkarounds,

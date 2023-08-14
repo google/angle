@@ -22,7 +22,6 @@ namespace rx
 class FunctionsEGL;
 class FunctionsEGLDL;
 class RendererEGL;
-class WorkerContext;
 
 class DisplayEGL : public DisplayGL
 {
@@ -40,10 +39,6 @@ class DisplayEGL : public DisplayGL
     void setBlobCacheFuncs(EGLSetBlobFuncANDROID set, EGLGetBlobFuncANDROID get) override;
 
     virtual void destroyNativeContext(EGLContext context);
-
-    virtual WorkerContext *createWorkerContext(std::string *infoLog,
-                                               EGLContext sharedContext,
-                                               const native_egl::AttributeVector workerAttribs);
 
     egl::Error initialize(egl::Display *display) override;
     void terminate() override;
@@ -124,8 +119,7 @@ class DisplayEGL : public DisplayGL
 
     egl::Error initializeContext(EGLContext shareContext,
                                  const egl::AttributeMap &eglAttributes,
-                                 EGLContext *outContext,
-                                 native_egl::AttributeVector *outAttribs) const;
+                                 EGLContext *outContext) const;
 
     void generateExtensions(egl::DisplayExtensions *outExtensions) const override;
 

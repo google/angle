@@ -82,48 +82,6 @@ egl::AttributeMap MergeAttributeMaps(const egl::AttributeMap &a, Rest... rest)
     }
     return result;
 }
-
-class WorkerContextEGL final : public rx::WorkerContext
-{
-  public:
-    WorkerContextEGL(EGLContext context, rx::FunctionsEGL *functions, EGLSurface pbuffer);
-    ~WorkerContextEGL() override;
-
-    bool makeCurrent() override;
-    void unmakeCurrent() override;
-
-  private:
-    EGLContext mContext;
-    rx::FunctionsEGL *mFunctions;
-    EGLSurface mPbuffer;
-};
-
-WorkerContextEGL::WorkerContextEGL(EGLContext context,
-                                   rx::FunctionsEGL *functions,
-                                   EGLSurface pbuffer)
-    : mContext(context), mFunctions(functions), mPbuffer(pbuffer)
-{}
-
-WorkerContextEGL::~WorkerContextEGL()
-{
-    mFunctions->destroyContext(mContext);
-}
-
-bool WorkerContextEGL::makeCurrent()
-{
-    if (mFunctions->makeCurrent(mPbuffer, mContext) == EGL_FALSE)
-    {
-        ERR() << "Unable to make the EGL context current.";
-        return false;
-    }
-    return true;
-}
-
-void WorkerContextEGL::unmakeCurrent()
-{
-    mFunctions->makeCurrent(EGL_NO_SURFACE, EGL_NO_CONTEXT);
-}
-
 }  // namespace
 
 namespace rx
@@ -161,8 +119,7 @@ const char *DisplayEGL::getEGLPath() const
 
 egl::Error DisplayEGL::initializeContext(EGLContext shareContext,
                                          const egl::AttributeMap &eglAttributes,
-                                         EGLContext *outContext,
-                                         native_egl::AttributeVector *outAttribs) const
+                                         EGLContext *outContext) const
 {
     gl::Version eglVersion(mEGL->majorVersion, mEGL->minorVersion);
 
@@ -245,7 +202,6 @@ egl::Error DisplayEGL::initializeContext(EGLContext shareContext,
             if (context != EGL_NO_CONTEXT)
             {
                 *outContext = context;
-                *outAttribs = std::move(attribVector);
                 return egl::NoError();
             }
 
@@ -258,7 +214,6 @@ egl::Error DisplayEGL::initializeContext(EGLContext shareContext,
         if (context != EGL_NO_CONTEXT)
         {
             *outContext = context;
-            *outAttribs = std::move(attribVector);
             return egl::NoError();
         }
     }
@@ -978,7 +933,6 @@ egl::Error DisplayEGL::createRenderer(EGLContext shareContext,
                                       std::shared_ptr<RendererEGL> *outRenderer)
 {
     EGLContext context = EGL_NO_CONTEXT;
-    native_egl::AttributeVector attribs;
 
     // If isExternalContext is true, the external context is current, so we don't need to make the
     // mMockPbuffer current.
@@ -990,12 +944,10 @@ egl::Error DisplayEGL::createRenderer(EGLContext shareContext,
         // restoring GL context state? http://anglebug.com/5509
         context = mEGL->getCurrentContext();
         ASSERT(context != EGL_NO_CONTEXT);
-        // TODO(penghuang): get the version from the current context. http://anglebug.com/5509
-        attribs = {EGL_CONTEXT_MAJOR_VERSION, 2, EGL_CONTEXT_MINOR_VERSION, 0, EGL_NONE};
     }
     else
     {
-        ANGLE_TRY(initializeContext(shareContext, mDisplayAttributes, &context, &attribs));
+        ANGLE_TRY(initializeContext(shareContext, mDisplayAttributes, &context));
         if (mEGL->makeCurrent(mMockPbuffer, context) == EGL_FALSE)
         {
             return egl::EglNotInitialized()
@@ -1007,7 +959,7 @@ egl::Error DisplayEGL::createRenderer(EGLContext shareContext,
     functionsGL->initialize(mDisplayAttributes);
 
     outRenderer->reset(new RendererEGL(std::move(functionsGL), mDisplayAttributes, this, context,
-                                       attribs, isExternalContext));
+                                       isExternalContext));
 
     CurrentNativeContext &currentContext =
         mCurrentNativeContexts[angle::GetCurrentThreadUniqueId()];
@@ -1027,19 +979,6 @@ egl::Error DisplayEGL::createRenderer(EGLContext shareContext,
     }
 
     return egl::NoError();
-}
-
-WorkerContext *DisplayEGL::createWorkerContext(std::string *infoLog,
-                                               EGLContext sharedContext,
-                                               const native_egl::AttributeVector workerAttribs)
-{
-    EGLContext context = mEGL->createContext(mConfig, sharedContext, workerAttribs.data());
-    if (context == EGL_NO_CONTEXT)
-    {
-        *infoLog += "Unable to create the EGL context.";
-        return nullptr;
-    }
-    return new WorkerContextEGL(context, mEGL, EGL_NO_SURFACE);
 }
 
 void DisplayEGL::initializeFrontendFeatures(angle::FrontendFeatures *features) const

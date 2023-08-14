@@ -165,8 +165,6 @@ class ProgramGL : public ProgramImpl
     GLuint mProgramID;
 
     std::shared_ptr<RendererGL> mRenderer;
-
-    bool mLinkedInParallel;
 };
 
 }  // namespace rx

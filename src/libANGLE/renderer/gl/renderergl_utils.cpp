@@ -176,7 +176,7 @@ int GetAndroidSdkLevel()
     return info.androidSdkLevel;
 }
 
-bool IsAndroidEmulator(const FunctionsGL *functions)
+[[maybe_unused]] bool IsAndroidEmulator(const FunctionsGL *functions)
 {
     constexpr char androidEmulator[] = "Android Emulator";
     const char *nativeGLRenderer     = GetString(functions, GL_RENDERER);
@@ -2109,7 +2109,9 @@ void GenerateCaps(const FunctionsGL *functions,
                                        functions->hasGLExtension("GL_MESA_framebuffer_flip_y");
 
     // GL_KHR_parallel_shader_compile
-    extensions->parallelShaderCompileKHR = true;
+    extensions->parallelShaderCompileKHR = !features.disableNativeParallelCompile.enabled &&
+                                           (functions->maxShaderCompilerThreadsKHR != nullptr ||
+                                            functions->maxShaderCompilerThreadsARB != nullptr);
 
     // GL_ANGLE_logic_op
     extensions->logicOpANGLE = functions->isAtLeastGL(gl::Version(2, 0));
@@ -2325,18 +2327,6 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     ANGLE_FEATURE_CONDITION(features, unsizedSRGBReadPixelsDoesntTransform, !isMesa && isQualcomm);
 
     ANGLE_FEATURE_CONDITION(features, queryCounterBitsGeneratesErrors, IsNexus5X(vendor, device));
-
-    ANGLE_FEATURE_CONDITION(features, dontRelinkProgramsInParallel,
-                            IsAndroid() || (IsWindows() && isIntel));
-
-    // TODO(jie.a.chen@intel.com): Clean up the bugs.
-    // anglebug.com/3031
-    // crbug.com/922936
-    // crbug.com/1184692
-    // crbug.com/1202928
-    ANGLE_FEATURE_CONDITION(features, disableWorkerContexts,
-                            (IsWindows() && (isIntel || isAMD)) || (IsLinux() && isNvidia) ||
-                                IsIOS() || IsAndroid() || IsAndroidEmulator(functions));
 
     bool limitMaxTextureSize = isIntel && IsLinux() && GetLinuxOSVersion() < OSVersion(5, 0, 0);
     ANGLE_FEATURE_CONDITION(features, limitWebglMaxTextureSizeTo4096,
