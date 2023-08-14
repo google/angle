@@ -185,19 +185,41 @@ def _RemoveDeviceFile(device_path):
     _AdbShell('rm -f ' + device_path + ' || true')  # ignore errors
 
 
-def _AddRestrictedTracesJson():
-    def add(tar, fn):
-        assert (fn.startswith('../../'))
-        tar.add(fn, arcname=fn.replace('../../', ''))
-
+def _MakeTar(path, patterns):
     with _TempLocalFile() as tempfile_path:
         with tarfile.open(tempfile_path, 'w', format=tarfile.GNU_FORMAT) as tar:
-            for f in glob.glob('../../src/tests/restricted_traces/*/*.json', recursive=True):
-                add(tar, f)
-            add(tar, '../../src/tests/restricted_traces/restricted_traces.json')
-        _AdbRun(['push', tempfile_path, '/sdcard/chromium_tests_root/t.tar'])
+            for p in patterns:
+                for f in glob.glob(p, recursive=True):
+                    tar.add(f, arcname=f.replace('../../', ''))
+        _AdbRun(['push', tempfile_path, path])
 
+
+def _AddRestrictedTracesJson():
+    _MakeTar('/sdcard/chromium_tests_root/t.tar', [
+        '../../src/tests/restricted_traces/*/*.json',
+        '../../src/tests/restricted_traces/restricted_traces.json'
+    ])
     _AdbShell('r=/sdcard/chromium_tests_root; tar -xf $r/t.tar -C $r/ && rm $r/t.tar')
+
+
+def _AddDeqpFiles(suite_name):
+    patterns = [
+        '../../third_party/VK-GL-CTS/src/external/openglcts/data/mustpass/*/*/main/*.txt',
+        '../../src/tests/deqp_support/*.txt'
+    ]
+    if '_gles2_' in suite_name:
+        patterns.append('gen/vk_gl_cts_data/data/gles2/**')
+    if '_gles3_' in suite_name:
+        patterns.append('gen/vk_gl_cts_data/data/gles3/**')
+        patterns.append('gen/vk_gl_cts_data/data/gl_cts/data/gles3/**')
+    if '_gles31_' in suite_name:
+        patterns.append('gen/vk_gl_cts_data/data/gles31/**')
+        patterns.append('gen/vk_gl_cts_data/data/gl_cts/data/gles31/**')
+    if '_gles32_' in suite_name:
+        patterns.append('gen/vk_gl_cts_data/data/gl_cts/data/gles32/**')
+
+    _MakeTar('/sdcard/chromium_tests_root/deqp.tar', patterns)
+    _AdbShell('r=/sdcard/chromium_tests_root; tar -xf $r/deqp.tar -C $r/ && rm $r/deqp.tar')
 
 
 def _GetDeviceApkPath():
@@ -273,6 +295,9 @@ def _PrepareTestSuite(suite_name):
 
     if suite_name == ANGLE_TRACE_TEST_SUITE:
         _AddRestrictedTracesJson()
+
+    if '_deqp_' in suite_name:
+        _AddDeqpFiles(suite_name)
 
     if suite_name == 'angle_end2end_tests':
         _AdbRun([
