@@ -141,6 +141,7 @@ struct CombinedPrintToStringParamName
     ES2_D3D9(), ES2_D3D11(), ES2_OPENGL(), ES2_OPENGLES(), ES2_VULKAN(), ES2_VULKAN_SWIFTSHADER(), \
         ES2_METAL(), ES2_VULKAN().enable(Feature::AsyncCommandQueue),                              \
         ES2_VULKAN_SWIFTSHADER().enable(Feature::AsyncCommandQueue),                               \
+        ES2_VULKAN_SWIFTSHADER().enable(Feature::EnableParallelCompileAndLink),                    \
         ES2_VULKAN_SWIFTSHADER()                                                                   \
             .enable(Feature::EnableParallelCompileAndLink)                                         \
             .enable(Feature::AsyncCommandQueue)
@@ -150,7 +151,8 @@ struct CombinedPrintToStringParamName
     ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES(), ES3_VULKAN(), ES3_VULKAN_SWIFTSHADER(), \
         ES3_METAL(), ES3_VULKAN().enable(Feature::AsyncCommandQueue),                  \
         ES3_VULKAN_SWIFTSHADER().enable(Feature::AsyncCommandQueue),                   \
-        ES3_VULKAN().enable(Feature::EnableParallelCompileAndLink)
+        ES3_VULKAN().enable(Feature::EnableParallelCompileAndLink),                    \
+        ES3_VULKAN_SWIFTSHADER().enable(Feature::EnableParallelCompileAndLink)
 
 #define ANGLE_ALL_TEST_PLATFORMS_ES31                                                       \
     ANGLE_TEST_PLATFORMS_ES31_SYSTEM_EGL                                                    \

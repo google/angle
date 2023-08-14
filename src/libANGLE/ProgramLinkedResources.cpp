@@ -1607,11 +1607,10 @@ void AtomicCounterBufferLinker::link(const std::map<int, unsigned int> &sizeMap)
     }
 }
 
-ProgramLinkedResources::ProgramLinkedResources() = default;
+LinkingVariables::LinkingVariables()  = default;
+LinkingVariables::~LinkingVariables() = default;
 
-ProgramLinkedResources::~ProgramLinkedResources() = default;
-
-LinkingVariables::LinkingVariables(const ProgramState &state)
+void LinkingVariables::initForProgram(const ProgramState &state)
 {
     for (ShaderType shaderType : kAllGraphicsShaderTypes)
     {
@@ -1627,7 +1626,7 @@ LinkingVariables::LinkingVariables(const ProgramState &state)
     }
 }
 
-LinkingVariables::LinkingVariables(const ProgramPipelineState &state)
+void LinkingVariables::initForProgramPipeline(const ProgramPipelineState &state)
 {
     for (ShaderType shaderType : state.getExecutable().getLinkedShaderStages())
     {
@@ -1642,7 +1641,8 @@ LinkingVariables::LinkingVariables(const ProgramPipelineState &state)
     }
 }
 
-LinkingVariables::~LinkingVariables() = default;
+ProgramLinkedResources::ProgramLinkedResources()  = default;
+ProgramLinkedResources::~ProgramLinkedResources() = default;
 
 void ProgramLinkedResources::init(std::vector<InterfaceBlock> *uniformBlocksOut,
                                   std::vector<LinkedUniform> *uniformsOut,

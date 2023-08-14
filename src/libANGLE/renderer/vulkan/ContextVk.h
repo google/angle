@@ -227,6 +227,10 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     {
         return mShareGroupVk->getDescriptorSetLayoutCache();
     }
+    vk::DescriptorSetArray<vk::MetaDescriptorPool> &getMetaDescriptorPools()
+    {
+        return mShareGroupVk->getMetaDescriptorPools();
+    }
 
     // Device loss
     gl::GraphicsResetStatus getResetStatus() override;
@@ -672,8 +676,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     bool isRobustResourceInitEnabled() const;
 
-    uint32_t getDriverUniformSize(PipelineType pipelineType) const;
-
     // Queries that begin and end automatically with render pass start and end
     angle::Result beginRenderPassQuery(QueryVk *queryVk);
     angle::Result endRenderPassQuery(QueryVk *queryVk);
@@ -738,12 +740,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         }
         return angle::Result::Continue;
     }
-
-    angle::Result bindCachedDescriptorPool(
-        DescriptorSetIndex descriptorSetIndex,
-        const vk::DescriptorSetLayoutDesc &descriptorSetLayoutDesc,
-        uint32_t descriptorCountMultiplier,
-        vk::DescriptorPoolPointer *poolPointerOut);
 
     // Put the context in framebuffer fetch mode.  If the permanentlySwitchToFramebufferFetchMode
     // feature is enabled, this is done on first encounter of framebuffer fetch, and makes the
@@ -1692,6 +1688,8 @@ ANGLE_INLINE bool UseLineRaster(const ContextVk *contextVk, gl::PrimitiveMode mo
 {
     return gl::IsLineMode(mode);
 }
+
+uint32_t GetDriverUniformSize(vk::Context *context, PipelineType pipelineType);
 }  // namespace rx
 
 // Generate a perf warning, and insert an event marker in the command buffer.

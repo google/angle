@@ -693,9 +693,9 @@ bool BlendModeSupportsDither(const gl::State &state, size_t colorIndex)
            state.getBlendStateExt().getDstColorIndexed(colorIndex) == GL_ONE_MINUS_SRC_ALPHA;
 }
 
-bool shouldUseGraphicsDriverUniformsExtended(const ContextVk *contextVk)
+bool ShouldUseGraphicsDriverUniformsExtended(const vk::Context *context)
 {
-    return contextVk->getFeatures().emulateTransformFeedback.enabled;
+    return context->getFeatures().emulateTransformFeedback.enabled;
 }
 
 bool IsAnySamplesQuery(gl::QueryType type)
@@ -3343,11 +3343,11 @@ void ContextVk::syncObjectPerfCounters(const angle::VulkanPerfCounters &commandQ
     // Share group descriptor set allocations and caching stats.
     memset(mVulkanCacheStats.data(), 0, sizeof(CacheStats) * mVulkanCacheStats.size());
 
-    mShareGroupVk->getMetaDescriptorPool(DescriptorSetIndex::UniformsAndXfb)
+    mShareGroupVk->getMetaDescriptorPools()[DescriptorSetIndex::UniformsAndXfb]
         .accumulateDescriptorCacheStats(VulkanCacheType::UniformsAndXfbDescriptors, this);
-    mShareGroupVk->getMetaDescriptorPool(DescriptorSetIndex::Texture)
+    mShareGroupVk->getMetaDescriptorPools()[DescriptorSetIndex::Texture]
         .accumulateDescriptorCacheStats(VulkanCacheType::TextureDescriptors, this);
-    mShareGroupVk->getMetaDescriptorPool(DescriptorSetIndex::ShaderResource)
+    mShareGroupVk->getMetaDescriptorPools()[DescriptorSetIndex::ShaderResource]
         .accumulateDescriptorCacheStats(VulkanCacheType::ShaderResourcesDescriptors, this);
 
     const CacheStats &uniCacheStats = mVulkanCacheStats[VulkanCacheType::UniformsAndXfbDescriptors];
@@ -3375,7 +3375,7 @@ void ContextVk::syncObjectPerfCounters(const angle::VulkanPerfCounters &commandQ
     for (DescriptorSetIndex descriptorSetIndex : angle::AllEnums<DescriptorSetIndex>())
     {
         vk::MetaDescriptorPool &descriptorPool =
-            mShareGroupVk->getMetaDescriptorPool(descriptorSetIndex);
+            mShareGroupVk->getMetaDescriptorPools()[descriptorSetIndex];
         mPerfCounters.descriptorSetCacheKeySizeBytes += descriptorPool.getTotalCacheKeySizeBytes();
     }
 
@@ -6808,7 +6808,7 @@ angle::Result ContextVk::handleDirtyGraphicsDriverUniforms(DirtyBits::Iterator *
 
     // Create the extended driver uniform, and populate the extended data fields if necessary.
     GraphicsDriverUniformsExtended driverUniformsExt = {};
-    if (shouldUseGraphicsDriverUniformsExtended(this))
+    if (ShouldUseGraphicsDriverUniformsExtended(this))
     {
         if (mState.isTransformFeedbackActiveUnpaused())
         {
@@ -6823,7 +6823,7 @@ angle::Result ContextVk::handleDirtyGraphicsDriverUniforms(DirtyBits::Iterator *
 
     // Create the driver uniform object that will be used as push constant argument.
     GraphicsDriverUniforms *driverUniforms = &driverUniformsExt.common;
-    uint32_t driverUniformSize             = getDriverUniformSize(PipelineType::Graphics);
+    uint32_t driverUniformSize             = GetDriverUniformSize(this, PipelineType::Graphics);
 
     const float depthRangeNear = mState.getNearPlane();
     const float depthRangeFar  = mState.getFarPlane();
@@ -6892,7 +6892,7 @@ angle::Result ContextVk::handleDirtyComputeDriverUniforms()
 {
     // Create the driver uniform object that will be used as push constant argument.
     ComputeDriverUniforms driverUniforms = {};
-    uint32_t driverUniformSize           = getDriverUniformSize(PipelineType::Compute);
+    uint32_t driverUniformSize           = GetDriverUniformSize(this, PipelineType::Compute);
 
     if (mState.hasValidAtomicCounterBuffer())
     {
@@ -7026,7 +7026,12 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context, gl::Co
     // Recreate the pipeline layout, if necessary.
     if (recreatePipelineLayout)
     {
-        ANGLE_TRY(executableVk->createPipelineLayout(this, *executable, &mActiveTextures));
+        executableVk->resetLayout(this);
+        ANGLE_TRY(executableVk->createPipelineLayout(this, *executable, &getPipelineLayoutCache(),
+                                                     &getDescriptorSetLayoutCache(),
+                                                     &mActiveTextures));
+        ANGLE_TRY(executableVk->initializeDescriptorPools(this, &getDescriptorSetLayoutCache(),
+                                                          &getMetaDescriptorPools()));
 
         // The default uniforms descriptor set was reset during createPipelineLayout(), so mark them
         // dirty to get everything reallocated/rebound before the next draw.
@@ -7732,7 +7737,7 @@ bool ContextVk::shouldConvertUint8VkIndexType(gl::DrawElementsType glIndexType) 
             !mRenderer->getFeatures().supportsIndexTypeUint8.enabled);
 }
 
-uint32_t ContextVk::getDriverUniformSize(PipelineType pipelineType) const
+uint32_t GetDriverUniformSize(vk::Context *context, PipelineType pipelineType)
 {
     if (pipelineType == PipelineType::Compute)
     {
@@ -7740,7 +7745,7 @@ uint32_t ContextVk::getDriverUniformSize(PipelineType pipelineType) const
     }
 
     ASSERT(pipelineType == PipelineType::Graphics);
-    if (shouldUseGraphicsDriverUniformsExtended(this))
+    if (ShouldUseGraphicsDriverUniformsExtended(context))
     {
         return sizeof(GraphicsDriverUniformsExtended);
     }
@@ -7993,7 +7998,7 @@ angle::Result ContextVk::initializeMultisampleTextureToBlack(const gl::Context *
 void ContextVk::onProgramExecutableReset(ProgramExecutableVk *executableVk)
 {
     // We can not check if executableVk deleted is what we was bound to, since by the time we get
-    // here, the program executable in the context's  state has already been updated.
+    // here, the program executable in the context's state has already been updated.
     // Reset ContextVk::mCurrentGraphicsPipeline, since programInfo.release() freed the
     // PipelineHelper that it's currently pointing to.
     // TODO(http://anglebug.com/5624): rework updateActiveTextures(), createPipelineLayout(),
@@ -8372,19 +8377,6 @@ const angle::PerfMonitorCounterGroups &ContextVk::getPerfMonitorCounters()
     return mPerfMonitorCounters;
 }
 
-angle::Result ContextVk::bindCachedDescriptorPool(
-    DescriptorSetIndex descriptorSetIndex,
-    const vk::DescriptorSetLayoutDesc &descriptorSetLayoutDesc,
-    uint32_t descriptorCountMultiplier,
-    vk::DescriptorPoolPointer *poolPointerOut)
-{
-    vk::MetaDescriptorPool &descriptorPool =
-        mShareGroupVk->getMetaDescriptorPool(descriptorSetIndex);
-    return descriptorPool.bindCachedDescriptorPool(
-        this, descriptorSetLayoutDesc, descriptorCountMultiplier,
-        &mShareGroupVk->getDescriptorSetLayoutCache(), poolPointerOut);
-}
-
 angle::Result ContextVk::switchToFramebufferFetchMode(bool hasFramebufferFetch)
 {
     // If framebuffer fetch is permanent, make sure we never switch out of it.
@@ -8483,10 +8475,11 @@ void ContextVk::resetPerFramePerfCounters()
 
     mRenderer->resetCommandQueuePerFrameCounters();
 
-    mShareGroupVk->getMetaDescriptorPool(DescriptorSetIndex::UniformsAndXfb)
+    mShareGroupVk->getMetaDescriptorPools()[DescriptorSetIndex::UniformsAndXfb]
         .resetDescriptorCacheStats();
-    mShareGroupVk->getMetaDescriptorPool(DescriptorSetIndex::Texture).resetDescriptorCacheStats();
-    mShareGroupVk->getMetaDescriptorPool(DescriptorSetIndex::ShaderResource)
+    mShareGroupVk->getMetaDescriptorPools()[DescriptorSetIndex::Texture]
+        .resetDescriptorCacheStats();
+    mShareGroupVk->getMetaDescriptorPools()[DescriptorSetIndex::ShaderResource]
         .resetDescriptorCacheStats();
 }
 

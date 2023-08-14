@@ -577,7 +577,16 @@ std::unique_ptr<rx::LinkEvent> ProgramExecutableVk::load(ContextVk *contextVk,
         return std::make_unique<LinkEventDone>(status);
     }
 
-    status = createPipelineLayout(contextVk, glExecutable, nullptr);
+    resetLayout(contextVk);
+    status = createPipelineLayout(contextVk, glExecutable, &contextVk->getPipelineLayoutCache(),
+                                  &contextVk->getDescriptorSetLayoutCache(), nullptr);
+    if (status != angle::Result::Continue)
+    {
+        return std::make_unique<LinkEventDone>(status);
+    }
+
+    status = initializeDescriptorPools(contextVk, &contextVk->getDescriptorSetLayoutCache(),
+                                       &contextVk->getMetaDescriptorPools());
     return std::make_unique<LinkEventDone>(status);
 }
 
@@ -857,7 +866,7 @@ void ProgramExecutableVk::addInputAttachmentDescriptorSetDesc(
 }
 
 angle::Result ProgramExecutableVk::addTextureDescriptorSetDesc(
-    ContextVk *contextVk,
+    vk::Context *context,
     const gl::ProgramExecutable &executable,
     const gl::ActiveTextureArray<TextureVk *> *activeTextures,
     vk::DescriptorSetLayoutDesc *descOut)
@@ -926,18 +935,18 @@ angle::Result ProgramExecutableVk::addTextureDescriptorSetDesc(
             uint64_t externalFormat        = image.getExternalFormat();
             uint32_t formatDescriptorCount = 0;
 
-            RendererVk *renderer = contextVk->getRenderer();
+            RendererVk *renderer = context->getRenderer();
 
             if (externalFormat != 0)
             {
                 ANGLE_TRY(renderer->getFormatDescriptorCountForExternalFormat(
-                    contextVk, externalFormat, &formatDescriptorCount));
+                    context, externalFormat, &formatDescriptorCount));
             }
             else
             {
                 VkFormat vkFormat = image.getActualVkFormat();
                 ASSERT(vkFormat != 0);
-                ANGLE_TRY(renderer->getFormatDescriptorCountForVkFormat(contextVk, vkFormat,
+                ANGLE_TRY(renderer->getFormatDescriptorCountForVkFormat(context, vkFormat,
                                                                         &formatDescriptorCount));
             }
 
@@ -957,7 +966,7 @@ angle::Result ProgramExecutableVk::addTextureDescriptorSetDesc(
     return angle::Result::Continue;
 }
 
-void ProgramExecutableVk::initializeWriteDescriptorDesc(ContextVk *contextVk,
+void ProgramExecutableVk::initializeWriteDescriptorDesc(vk::Context *context,
                                                         const gl::ProgramExecutable &glExecutable)
 {
     const gl::ShaderBitSet &linkedShaderStages = glExecutable.getLinkedShaderStages();
@@ -986,7 +995,7 @@ void ProgramExecutableVk::initializeWriteDescriptorDesc(ContextVk *contextVk,
 
     mDefaultUniformAndXfbWriteDescriptorDescs.reset();
     if (glExecutable.hasTransformFeedbackOutput() &&
-        contextVk->getRenderer()->getFeatures().emulateTransformFeedback.enabled)
+        context->getRenderer()->getFeatures().emulateTransformFeedback.enabled)
     {
         // Update mDefaultUniformAndXfbWriteDescriptorDescs for the emulation code path.
         mDefaultUniformAndXfbWriteDescriptorDescs.updateDefaultUniform(
@@ -1236,19 +1245,19 @@ angle::Result ProgramExecutableVk::getOrCreateComputePipeline(
 }
 
 angle::Result ProgramExecutableVk::createPipelineLayout(
-    ContextVk *contextVk,
+    vk::Context *context,
     const gl::ProgramExecutable &glExecutable,
+    PipelineLayoutCache *pipelineLayoutCache,
+    DescriptorSetLayoutCache *descriptorSetLayoutCache,
     gl::ActiveTextureArray<TextureVk *> *activeTextures)
 {
     const gl::ShaderBitSet &linkedShaderStages = glExecutable.getLinkedShaderStages();
-
-    resetLayout(contextVk);
 
     // Store a reference to the pipeline and descriptor set layouts. This will create them if they
     // don't already exist in the cache.
 
     // Default uniforms and transform feedback:
-    vk::DescriptorSetLayoutDesc uniformsAndXfbSetDesc;
+    mDefaultUniformAndXfbSetDesc  = {};
     mNumDefaultUniformDescriptors = 0;
     for (gl::ShaderType shaderType : linkedShaderStages)
     {
@@ -1257,15 +1266,15 @@ angle::Result ProgramExecutableVk::createPipelineLayout(
         // Note that currently the default uniform block is added unconditionally.
         ASSERT(info.activeStages[shaderType]);
 
-        uniformsAndXfbSetDesc.update(info.binding, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, 1,
-                                     gl_vk::kShaderStageMap[shaderType], nullptr);
+        mDefaultUniformAndXfbSetDesc.update(info.binding, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC,
+                                            1, gl_vk::kShaderStageMap[shaderType], nullptr);
         mNumDefaultUniformDescriptors++;
     }
 
     gl::ShaderType linkedTransformFeedbackStage = glExecutable.getLinkedTransformFeedbackStage();
     bool hasXfbVaryings = linkedTransformFeedbackStage != gl::ShaderType::InvalidEnum &&
                           !glExecutable.getLinkedTransformFeedbackVaryings().empty();
-    if (contextVk->getFeatures().emulateTransformFeedback.enabled && hasXfbVaryings)
+    if (context->getFeatures().emulateTransformFeedback.enabled && hasXfbVaryings)
     {
         size_t xfbBufferCount = glExecutable.getTransformFeedbackBufferCount();
         for (uint32_t bufferIndex = 0; bufferIndex < xfbBufferCount; ++bufferIndex)
@@ -1273,17 +1282,17 @@ angle::Result ProgramExecutableVk::createPipelineLayout(
             const uint32_t binding = mVariableInfoMap.getEmulatedXfbBufferBinding(bufferIndex);
             ASSERT(binding != std::numeric_limits<uint32_t>::max());
 
-            uniformsAndXfbSetDesc.update(binding, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1,
-                                         VK_SHADER_STAGE_VERTEX_BIT, nullptr);
+            mDefaultUniformAndXfbSetDesc.update(binding, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1,
+                                                VK_SHADER_STAGE_VERTEX_BIT, nullptr);
         }
     }
 
-    ANGLE_TRY(contextVk->getDescriptorSetLayoutCache().getDescriptorSetLayout(
-        contextVk, uniformsAndXfbSetDesc,
+    ANGLE_TRY(descriptorSetLayoutCache->getDescriptorSetLayout(
+        context, mDefaultUniformAndXfbSetDesc,
         &mDescriptorSetLayouts[DescriptorSetIndex::UniformsAndXfb]));
 
     // Uniform and storage buffers, atomic counter buffers and images:
-    vk::DescriptorSetLayoutDesc resourcesSetDesc;
+    mShaderResourceSetDesc = {};
 
     // Count the number of active uniform buffer descriptors.
     uint32_t numActiveUniformBufferDescriptors    = 0;
@@ -1301,7 +1310,7 @@ angle::Result ProgramExecutableVk::createPipelineLayout(
     }
 
     // Decide if we should use dynamic or fixed descriptor types.
-    VkPhysicalDeviceLimits limits = contextVk->getRenderer()->getPhysicalDeviceProperties().limits;
+    VkPhysicalDeviceLimits limits = context->getRenderer()->getPhysicalDeviceProperties().limits;
     uint32_t totalDynamicUniformBufferCount =
         numActiveUniformBufferDescriptors + mNumDefaultUniformDescriptors;
     if (totalDynamicUniformBufferCount <= limits.maxDescriptorSetUniformBuffersDynamic)
@@ -1314,74 +1323,67 @@ angle::Result ProgramExecutableVk::createPipelineLayout(
     }
 
     addInterfaceBlockDescriptorSetDesc(glExecutable.getUniformBlocks(), linkedShaderStages,
-                                       mUniformBufferDescriptorType, &resourcesSetDesc);
+                                       mUniformBufferDescriptorType, &mShaderResourceSetDesc);
     addInterfaceBlockDescriptorSetDesc(glExecutable.getShaderStorageBlocks(), linkedShaderStages,
-                                       vk::kStorageBufferDescriptorType, &resourcesSetDesc);
+                                       vk::kStorageBufferDescriptorType, &mShaderResourceSetDesc);
     addAtomicCounterBufferDescriptorSetDesc(glExecutable.getAtomicCounterBuffers(),
-                                            &resourcesSetDesc);
-    addImageDescriptorSetDesc(glExecutable, &resourcesSetDesc);
-    addInputAttachmentDescriptorSetDesc(glExecutable, &resourcesSetDesc);
+                                            &mShaderResourceSetDesc);
+    addImageDescriptorSetDesc(glExecutable, &mShaderResourceSetDesc);
+    addInputAttachmentDescriptorSetDesc(glExecutable, &mShaderResourceSetDesc);
 
-    ANGLE_TRY(contextVk->getDescriptorSetLayoutCache().getDescriptorSetLayout(
-        contextVk, resourcesSetDesc, &mDescriptorSetLayouts[DescriptorSetIndex::ShaderResource]));
+    ANGLE_TRY(descriptorSetLayoutCache->getDescriptorSetLayout(
+        context, mShaderResourceSetDesc,
+        &mDescriptorSetLayouts[DescriptorSetIndex::ShaderResource]));
 
     // Textures:
-    vk::DescriptorSetLayoutDesc texturesSetDesc;
-    ANGLE_TRY(
-        addTextureDescriptorSetDesc(contextVk, glExecutable, activeTextures, &texturesSetDesc));
+    mTextureSetDesc = {};
+    ANGLE_TRY(addTextureDescriptorSetDesc(context, glExecutable, activeTextures, &mTextureSetDesc));
 
-    ANGLE_TRY(contextVk->getDescriptorSetLayoutCache().getDescriptorSetLayout(
-        contextVk, texturesSetDesc, &mDescriptorSetLayouts[DescriptorSetIndex::Texture]));
+    ANGLE_TRY(descriptorSetLayoutCache->getDescriptorSetLayout(
+        context, mTextureSetDesc, &mDescriptorSetLayouts[DescriptorSetIndex::Texture]));
 
     // Create pipeline layout with these 3 descriptor sets.
     vk::PipelineLayoutDesc pipelineLayoutDesc;
     pipelineLayoutDesc.updateDescriptorSetLayout(DescriptorSetIndex::UniformsAndXfb,
-                                                 uniformsAndXfbSetDesc);
+                                                 mDefaultUniformAndXfbSetDesc);
     pipelineLayoutDesc.updateDescriptorSetLayout(DescriptorSetIndex::ShaderResource,
-                                                 resourcesSetDesc);
-    pipelineLayoutDesc.updateDescriptorSetLayout(DescriptorSetIndex::Texture, texturesSetDesc);
+                                                 mShaderResourceSetDesc);
+    pipelineLayoutDesc.updateDescriptorSetLayout(DescriptorSetIndex::Texture, mTextureSetDesc);
 
     // Set up driver uniforms as push constants. The size is set for a graphics pipeline, as there
     // are more driver uniforms for a graphics pipeline than there are for a compute pipeline. As
     // for the shader stages, both graphics and compute stages are used.
     VkShaderStageFlags pushConstantShaderStageFlags =
-        contextVk->getRenderer()->getSupportedVulkanShaderStageMask();
+        context->getRenderer()->getSupportedVulkanShaderStageMask();
 
-    uint32_t pushConstantSize = contextVk->getDriverUniformSize(PipelineType::Graphics);
+    uint32_t pushConstantSize = GetDriverUniformSize(context, PipelineType::Graphics);
     pipelineLayoutDesc.updatePushConstantRange(pushConstantShaderStageFlags, 0, pushConstantSize);
 
-    ANGLE_TRY(contextVk->getPipelineLayoutCache().getPipelineLayout(
-        contextVk, pipelineLayoutDesc, mDescriptorSetLayouts, &mPipelineLayout));
-
-    // Initialize descriptor pools.
-    ANGLE_TRY(contextVk->bindCachedDescriptorPool(
-        DescriptorSetIndex::UniformsAndXfb, uniformsAndXfbSetDesc, 1,
-        &mDescriptorPools[DescriptorSetIndex::UniformsAndXfb]));
-    ANGLE_TRY(contextVk->bindCachedDescriptorPool(DescriptorSetIndex::Texture, texturesSetDesc,
-                                                  mImmutableSamplersMaxDescriptorCount,
-                                                  &mDescriptorPools[DescriptorSetIndex::Texture]));
-    ANGLE_TRY(
-        contextVk->bindCachedDescriptorPool(DescriptorSetIndex::ShaderResource, resourcesSetDesc, 1,
-                                            &mDescriptorPools[DescriptorSetIndex::ShaderResource]));
+    ANGLE_TRY(pipelineLayoutCache->getPipelineLayout(context, pipelineLayoutDesc,
+                                                     mDescriptorSetLayouts, &mPipelineLayout));
 
     mDynamicUniformDescriptorOffsets.clear();
     mDynamicUniformDescriptorOffsets.resize(glExecutable.getLinkedShaderStageCount(), 0);
 
-    // If the program uses framebuffer fetch and this is the first time this happens, switch the
-    // context to "framebuffer fetch mode".  In this mode, all render passes assume framebuffer
-    // fetch may be used, so they are prepared to accept a program that uses input attachments.
-    // This is done only when a program with framebuffer fetch is created to avoid potential
-    // performance impact on applications that don't use this extension.  If other contexts in the
-    // share group use this program, they will lazily switch to this mode.
-    if (contextVk->getFeatures().permanentlySwitchToFramebufferFetchMode.enabled &&
-        glExecutable.usesFramebufferFetch())
-    {
-        ANGLE_TRY(contextVk->switchToFramebufferFetchMode(true));
-    }
-
-    initializeWriteDescriptorDesc(contextVk, glExecutable);
+    initializeWriteDescriptorDesc(context, glExecutable);
 
     return angle::Result::Continue;
+}
+
+angle::Result ProgramExecutableVk::initializeDescriptorPools(
+    vk::Context *context,
+    DescriptorSetLayoutCache *descriptorSetLayoutCache,
+    vk::DescriptorSetArray<vk::MetaDescriptorPool> *metaDescriptorPools)
+{
+    ANGLE_TRY((*metaDescriptorPools)[DescriptorSetIndex::UniformsAndXfb].bindCachedDescriptorPool(
+        context, mDefaultUniformAndXfbSetDesc, 1, descriptorSetLayoutCache,
+        &mDescriptorPools[DescriptorSetIndex::UniformsAndXfb]));
+    ANGLE_TRY((*metaDescriptorPools)[DescriptorSetIndex::Texture].bindCachedDescriptorPool(
+        context, mTextureSetDesc, mImmutableSamplersMaxDescriptorCount, descriptorSetLayoutCache,
+        &mDescriptorPools[DescriptorSetIndex::Texture]));
+    return (*metaDescriptorPools)[DescriptorSetIndex::ShaderResource].bindCachedDescriptorPool(
+        context, mShaderResourceSetDesc, 1, descriptorSetLayoutCache,
+        &mDescriptorPools[DescriptorSetIndex::ShaderResource]);
 }
 
 void ProgramExecutableVk::resolvePrecisionMismatch(const gl::ProgramMergedVaryings &mergedVaryings)

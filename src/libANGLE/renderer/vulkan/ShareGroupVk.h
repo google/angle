@@ -85,9 +85,9 @@ class ShareGroupVk : public ShareGroupImpl
     PipelineLayoutCache &getPipelineLayoutCache() { return mPipelineLayoutCache; }
     DescriptorSetLayoutCache &getDescriptorSetLayoutCache() { return mDescriptorSetLayoutCache; }
     const egl::ContextMap &getContexts() const { return mState.getContexts(); }
-    vk::MetaDescriptorPool &getMetaDescriptorPool(DescriptorSetIndex descriptorSetIndex)
+    vk::DescriptorSetArray<vk::MetaDescriptorPool> &getMetaDescriptorPools()
     {
-        return mMetaDescriptorPools[descriptorSetIndex];
+        return mMetaDescriptorPools;
     }
 
     // Used to flush the mutable textures more often.

@@ -563,6 +563,7 @@ void LoadInterfaceBlock(BinaryInputStream *stream, InterfaceBlock *block)
 // Saves the linking context for later use in resolveLink().
 struct Program::LinkingState
 {
+    LinkingVariables linkingVariables;
     ProgramLinkedResources resources;
     egl::BlobCache::Key programHash;
     std::unique_ptr<rx::LinkEvent> linkEvent;
@@ -1283,9 +1284,10 @@ angle::Result Program::linkImpl(const Context *context)
 
     std::unique_ptr<LinkingState> linkingState(new LinkingState());
     ProgramMergedVaryings mergedVaryings;
-    LinkingVariables linkingVariables(mState);
-    ProgramLinkedResources &resources = linkingState->resources;
+    LinkingVariables &linkingVariables = linkingState->linkingVariables;
+    ProgramLinkedResources &resources  = linkingState->resources;
 
+    linkingVariables.initForProgram(mState);
     resources.init(&mState.mExecutable->mUniformBlocks, &mState.mExecutable->mUniforms,
                    &mState.mExecutable->mUniformNames, &mState.mExecutable->mUniformMappedNames,
                    &mState.mExecutable->mShaderStorageBlocks, &mState.mBufferVariables,

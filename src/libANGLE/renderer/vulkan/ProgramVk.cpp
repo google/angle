@@ -42,14 +42,24 @@ class VulkanDefaultBlockEncoder : public sh::Std140BlockEncoder
     }
 };
 
+class Std140BlockLayoutEncoderFactory : public gl::CustomBlockLayoutEncoderFactory
+{
+  public:
+    sh::BlockLayoutEncoder *makeEncoder() override { return new sh::Std140BlockEncoder(); }
+};
+
 class LinkTaskVk final : public vk::Context, public angle::Closure
 {
   public:
     LinkTaskVk(RendererVk *renderer,
+               PipelineLayoutCache &pipelineLayoutCache,
+               DescriptorSetLayoutCache &descriptorSetLayoutCache,
                const gl::ProgramState &state,
                const gl::ProgramExecutable &glExecutable,
                ProgramExecutableVk *executable,
                gl::ProgramMergedVaryings &&mergedVaryings,
+               const gl::ProgramLinkedResources &resources,
+               SpvProgramInterfaceInfo *programInterfaceInfo,
                bool isGLES1,
                vk::PipelineRobustness pipelineRobustness,
                vk::PipelineProtectedAccess pipelineProtectedAccess)
@@ -58,9 +68,13 @@ class LinkTaskVk final : public vk::Context, public angle::Closure
           mGlExecutable(glExecutable),
           mExecutable(executable),
           mMergedVaryings(std::move(mergedVaryings)),
+          mResources(resources),
+          mProgramInterfaceInfo(programInterfaceInfo),
           mIsGLES1(isGLES1),
           mPipelineRobustness(pipelineRobustness),
-          mPipelineProtectedAccess(pipelineProtectedAccess)
+          mPipelineProtectedAccess(pipelineProtectedAccess),
+          mPipelineLayoutCache(pipelineLayoutCache),
+          mDescriptorSetLayoutCache(descriptorSetLayoutCache)
     {}
 
     void operator()() override
@@ -82,6 +96,28 @@ class LinkTaskVk final : public vk::Context, public angle::Closure
 
     angle::Result getResult(ContextVk *contextVk)
     {
+        // Clean up garbage first, it's not no matter what may fail below.
+        mCompatibleRenderPass.destroy(contextVk->getDevice());
+
+        ANGLE_TRY(mExecutable->initializeDescriptorPools(contextVk,
+                                                         &contextVk->getDescriptorSetLayoutCache(),
+                                                         &contextVk->getMetaDescriptorPools()));
+
+        // If the program uses framebuffer fetch and this is the first time this happens, switch the
+        // context to "framebuffer fetch mode".  In this mode, all render passes assume framebuffer
+        // fetch may be used, so they are prepared to accept a program that uses input attachments.
+        // This is done only when a program with framebuffer fetch is created to avoid potential
+        // performance impact on applications that don't use this extension.  If other contexts in
+        // the share group use this program, they will lazily switch to this mode.
+        //
+        // This is purely an optimization (to avoid creating and later releasing) non-framebuffer
+        // fetch render passes.
+        if (contextVk->getFeatures().permanentlySwitchToFramebufferFetchMode.enabled &&
+            mGlExecutable.usesFramebufferFetch())
+        {
+            ANGLE_TRY(contextVk->switchToFramebufferFetchMode(true));
+        }
+
         // Update the relevant perf counters
         angle::VulkanPerfCounters &from = contextVk->getPerfCounters();
         angle::VulkanPerfCounters &to   = getPerfCounters();
@@ -93,8 +129,7 @@ class LinkTaskVk final : public vk::Context, public angle::Closure
         to.pipelineCreationTotalCacheMissesDurationNs +=
             from.pipelineCreationTotalCacheMissesDurationNs;
 
-        // Clean up garbage and forward any errors
-        mCompatibleRenderPass.destroy(contextVk->getDevice());
+        // Forward any errors
         if (mErrorCode != VK_SUCCESS)
         {
             contextVk->handleError(mErrorCode, mErrorFile, mErrorFunction, mErrorLine);
@@ -106,6 +141,7 @@ class LinkTaskVk final : public vk::Context, public angle::Closure
   private:
     angle::Result linkImpl();
 
+    void linkResources();
     angle::Result initDefaultUniformBlocks();
     void generateUniformLayoutMapping(gl::ShaderMap<sh::BlockLayoutMap> *layoutMapOut,
                                       gl::ShaderMap<size_t> *requiredBufferSizeOut);
@@ -117,9 +153,15 @@ class LinkTaskVk final : public vk::Context, public angle::Closure
     const gl::ProgramExecutable &mGlExecutable;
     ProgramExecutableVk *mExecutable;
     const gl::ProgramMergedVaryings mMergedVaryings;
+    const gl::ProgramLinkedResources &mResources;
+    SpvProgramInterfaceInfo *mProgramInterfaceInfo;
     const bool mIsGLES1;
     const vk::PipelineRobustness mPipelineRobustness;
     const vk::PipelineProtectedAccess mPipelineProtectedAccess;
+
+    // Helpers that are interally thread-safe
+    PipelineLayoutCache &mPipelineLayoutCache;
+    DescriptorSetLayoutCache &mDescriptorSetLayoutCache;
 
     // Temporary objects to clean up at the end
     vk::RenderPass mCompatibleRenderPass;
@@ -135,6 +177,15 @@ angle::Result LinkTaskVk::linkImpl()
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "ProgramVk::LinkTaskVk::run");
 
+    // Link resources before calling GetShaderSource to make sure they are ready for the set/binding
+    // assignment done in that function.
+    linkResources();
+
+    mExecutable->clearVariableInfoMap();
+
+    // Gather variable info and compiled SPIR-V binaries.
+    mExecutable->assignAllSpvLocations(this, mState, mResources, mProgramInterfaceInfo);
+
     gl::ShaderMap<const angle::spirv::Blob *> spirvBlobs;
     SpvGetShaderSpirvCode(mState, &spirvBlobs);
 
@@ -149,6 +200,9 @@ angle::Result LinkTaskVk::linkImpl()
                                        mIsGLES1));
 
     ANGLE_TRY(initDefaultUniformBlocks());
+
+    ANGLE_TRY(mExecutable->createPipelineLayout(this, mGlExecutable, &mPipelineLayoutCache,
+                                                &mDescriptorSetLayoutCache, nullptr));
 
     // Warm up the pipeline cache by creating a few placeholder pipelines.  This is not done for
     // separable programs, and is deferred to when the program pipeline is finalized.
@@ -168,6 +222,14 @@ angle::Result LinkTaskVk::linkImpl()
     }
 
     return angle::Result::Continue;
+}
+
+void LinkTaskVk::linkResources()
+{
+    Std140BlockLayoutEncoderFactory std140EncoderFactory;
+    gl::ProgramLinkedResourcesLinker linker(&std140EncoderFactory);
+
+    linker.linkResources(mState, mResources);
 }
 
 angle::Result LinkTaskVk::initDefaultUniformBlocks()
@@ -360,12 +422,6 @@ void ReadFromDefaultUniformBlock(int componentCount,
         memcpy(dst, readPtr, elementSize);
     }
 }
-
-class Std140BlockLayoutEncoderFactory : public gl::CustomBlockLayoutEncoderFactory
-{
-  public:
-    sh::BlockLayoutEncoder *makeEncoder() override { return new sh::Std140BlockEncoder(); }
-};
 }  // anonymous namespace
 
 // ProgramVk implementation.
@@ -421,38 +477,18 @@ std::unique_ptr<LinkEvent> ProgramVk::link(const gl::Context *context,
     ANGLE_TRACE_EVENT0("gpu.angle", "ProgramVk::link");
 
     ContextVk *contextVk = vk::GetImpl(context);
-    // Link resources before calling GetShaderSource to make sure they are ready for the set/binding
-    // assignment done in that function.
-    linkResources(resources);
-
     reset(contextVk);
-    mExecutable.clearVariableInfoMap();
-
-    // Gather variable info and compiled SPIR-V binaries.
-    SpvSourceOptions options = SpvCreateSourceOptions(contextVk->getFeatures());
-    SpvAssignAllLocations(options, mState, resources, &mSpvProgramInterfaceInfo,
-                          &mExecutable.mVariableInfoMap);
+    mExecutable.resetLayout(contextVk);
 
     const gl::ProgramExecutable &programExecutable = mState.getExecutable();
-    angle::Result status = mExecutable.createPipelineLayout(contextVk, programExecutable, nullptr);
-    if (status != angle::Result::Continue)
-    {
-        return std::make_unique<LinkEventDone>(status);
-    }
 
     std::shared_ptr<LinkTaskVk> linkTask = std::make_shared<LinkTaskVk>(
-        contextVk->getRenderer(), mState, programExecutable, &mExecutable,
-        std::move(mergedVaryings), context->getState().isGLES1(), contextVk->pipelineRobustness(),
+        contextVk->getRenderer(), contextVk->getPipelineLayoutCache(),
+        contextVk->getDescriptorSetLayoutCache(), mState, programExecutable, &mExecutable,
+        std::move(mergedVaryings), resources, &mSpvProgramInterfaceInfo,
+        context->getState().isGLES1(), contextVk->pipelineRobustness(),
         contextVk->pipelineProtectedAccess());
     return std::make_unique<LinkEventVulkan>(context->getShaderCompileThreadPool(), linkTask);
-}
-
-void ProgramVk::linkResources(const gl::ProgramLinkedResources &resources)
-{
-    Std140BlockLayoutEncoderFactory std140EncoderFactory;
-    gl::ProgramLinkedResourcesLinker linker(&std140EncoderFactory);
-
-    linker.linkResources(mState, resources);
 }
 
 GLboolean ProgramVk::validate(const gl::Caps &caps, gl::InfoLog *infoLog)
