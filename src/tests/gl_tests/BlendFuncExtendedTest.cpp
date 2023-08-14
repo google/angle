@@ -425,6 +425,37 @@ TEST_P(EXTBlendFuncExtendedDrawTest, FragData)
     drawTest();
 }
 
+// Test that min/max blending works correctly with SRC1 factors.
+TEST_P(EXTBlendFuncExtendedDrawTest, MinMax)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_blend_func_extended"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_blend_minmax"));
+
+    const char *kFragColorShader = R"(#extension GL_EXT_blend_func_extended : require
+precision mediump float;
+void main() {
+    gl_FragColor             = vec4(0.125, 0.25, 0.75, 0.875);
+    gl_SecondaryFragColorEXT = vec4(0.0, 0.0, 0.0, 0.0);
+})";
+    makeProgram(essl1_shaders::vs::Simple(), kFragColorShader);
+
+    glEnable(GL_BLEND);
+    glBlendFuncSeparate(GL_SRC1_COLOR_EXT, GL_ONE_MINUS_SRC1_COLOR_EXT, GL_SRC1_ALPHA_EXT,
+                        GL_ONE_MINUS_SRC1_ALPHA_EXT);
+    glClearColor(0.5, 0.5, 0.5, 0.5);
+
+    auto test = [&](GLenum colorOp, GLenum alphaOp, GLColor color) {
+        glBlendEquationSeparate(colorOp, alphaOp);
+        glClear(GL_COLOR_BUFFER_BIT);
+        drawQuad(mProgram, essl1_shaders::PositionAttrib(), 0.0);
+        EXPECT_PIXEL_COLOR_NEAR(0, 0, color, 2);
+    };
+    test(GL_MIN_EXT, GL_MIN_EXT, GLColor(32, 64, 128, 128));
+    test(GL_MIN_EXT, GL_MAX_EXT, GLColor(32, 64, 128, 224));
+    test(GL_MAX_EXT, GL_MIN_EXT, GLColor(128, 128, 192, 128));
+    test(GL_MAX_EXT, GL_MAX_EXT, GLColor(128, 128, 192, 224));
+}
+
 // Test an ESSL 3.00 shader that uses two fragment outputs with locations specified in the shader.
 TEST_P(EXTBlendFuncExtendedDrawTestES3, FragmentOutputLocationsInShader)
 {
