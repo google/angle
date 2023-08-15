@@ -14,6 +14,7 @@ import posixpath
 import random
 import re
 import subprocess
+import sys
 import tarfile
 import tempfile
 import threading
@@ -333,6 +334,11 @@ def PrepareRestrictedTraces(traces):
 
     def _PushLibToAppDir(lib_name):
         local_path = lib_name
+        if not os.path.exists(local_path):
+            print('Error: missing library: ' + local_path)
+            print('Is angle_restricted_traces set in gn args?')  # b/294861737
+            sys.exit(1)
+
         device_path = '/data/user/0/com.android.angle.test/angle_traces/' + lib_name
         if _HashesMatch(local_path, device_path):
             return
@@ -343,8 +349,6 @@ def PrepareRestrictedTraces(traces):
             _AdbRun(['push', local_path, tmp_path])
             _AdbShell('run-as ' + TEST_PACKAGE_NAME + ' cp ' + tmp_path + ' ./angle_traces/')
             _AdbShell('rm ' + tmp_path)
-        except Exception as e:
-            logging.error('An error occurred in _PushToAppDir: %s' % e)
         finally:
             _RemoveDeviceFile(tmp_path)
 
@@ -359,12 +363,12 @@ def PrepareRestrictedTraces(traces):
         path_from_root = 'src/tests/restricted_traces/' + trace + '/' + trace + '.angledata.gz'
         _Push('../../' + path_from_root, path_from_root)
 
-        tracegz = 'gen/tracegz_' + trace + '.gz'
-        _Push(tracegz, tracegz)
-
         if _Global.traces_outside_of_apk:
             lib_name = 'libangle_restricted_traces_' + trace + _Global.lib_extension
             _PushLibToAppDir(lib_name)
+
+        tracegz = 'gen/tracegz_' + trace + '.gz'
+        _Push(tracegz, tracegz)
 
     # Push one additional file when running outside the APK
     if _Global.traces_outside_of_apk:
