@@ -30,26 +30,21 @@ void ActiveVariable::setActive(ShaderType shaderType, bool used, uint32_t id)
     mIds[shaderType] = id;
 }
 
-void ActiveVariable::unionReferencesWith(const ActiveVariable &other)
+void ActiveVariable::unionReferencesWith(const LinkedUniform &other)
 {
     mActiveUseBits |= other.mActiveUseBits;
     for (const ShaderType shaderType : AllShaderTypes())
     {
-        ASSERT(mIds[shaderType] == 0 || other.mIds[shaderType] == 0 ||
-               mIds[shaderType] == other.mIds[shaderType]);
+        ASSERT(mIds[shaderType] == 0 || other.getId(shaderType) == 0 ||
+               mIds[shaderType] == other.getId(shaderType));
         if (mIds[shaderType] == 0)
         {
-            mIds[shaderType] = other.mIds[shaderType];
+            mIds[shaderType] = other.getId(shaderType);
         }
     }
 }
 
-LinkedUniform::LinkedUniform()
-{
-    memset(this, 0, sizeof(*this));
-    blockInfo      = sh::BlockMemberInfo();
-    activeVariable = ActiveVariable();
-}
+LinkedUniform::LinkedUniform() {}
 
 LinkedUniform::LinkedUniform(GLenum typeIn,
                              GLenum precisionIn,
@@ -60,26 +55,27 @@ LinkedUniform::LinkedUniform(GLenum typeIn,
                              const int bufferIndexIn,
                              const sh::BlockMemberInfo &blockInfoIn)
 {
-    memset(this, 0, sizeof(*this));
-    // Note: Ensure every data member is initialized.
-    type                          = typeIn;
-    precision                     = precisionIn;
-    imageUnitFormat               = GL_NONE;
-    location                      = locationIn;
-    binding                       = bindingIn;
-    offset                        = offsetIn;
-    bufferIndex                   = bufferIndexIn;
-    blockInfo                     = blockInfoIn;
-    activeVariable                = ActiveVariable();
-    id                            = 0;
-    flattenedOffsetInParentArrays = -1;
-    outerArraySizeProduct         = 1;
-    outerArrayOffset              = 0;
-    arraySize                     = arraySizesIn.empty() ? 1 : arraySizesIn[0];
-
-    flagBitsAsUInt   = 0;
-    flagBits.isArray = !arraySizesIn.empty();
+    // arrays are always flattened, which means at most 1D array
     ASSERT(arraySizesIn.size() <= 1);
+
+    memset(this, 0, sizeof(*this));
+    SetBitField(type, typeIn);
+    SetBitField(precision, precisionIn);
+    location = locationIn;
+    SetBitField(binding, bindingIn);
+    SetBitField(offset, offsetIn);
+    SetBitField(bufferIndex, bufferIndexIn);
+    outerArraySizeProduct = 1;
+    SetBitField(arraySize, arraySizesIn.empty() ? 1u : arraySizesIn[0]);
+    SetBitField(flagBits.isArray, !arraySizesIn.empty());
+    if (!(blockInfoIn == sh::kDefaultBlockMemberInfo))
+    {
+        flagBits.isBlock               = 1;
+        flagBits.blockIsRowMajorMatrix = blockInfoIn.isRowMajorMatrix;
+        SetBitField(blockOffset, blockInfoIn.offset);
+        SetBitField(blockArrayStride, blockInfoIn.arrayStride);
+        SetBitField(blockMatrixStride, blockInfoIn.matrixStride);
+    }
 }
 
 LinkedUniform::LinkedUniform(const LinkedUniform &other)
@@ -89,32 +85,37 @@ LinkedUniform::LinkedUniform(const LinkedUniform &other)
 
 LinkedUniform::LinkedUniform(const UsedUniform &usedUniform)
 {
-    memset(this, 0, sizeof(*this));
-
     ASSERT(!usedUniform.isArrayOfArrays());
     ASSERT(!usedUniform.isStruct());
     ASSERT(usedUniform.active);
+    ASSERT(usedUniform.blockInfo == sh::kDefaultBlockMemberInfo);
 
     // Note: Ensure every data member is initialized.
-    type                          = usedUniform.type;
-    precision                     = usedUniform.precision;
-    imageUnitFormat               = usedUniform.imageUnitFormat;
-    location                      = usedUniform.location;
-    binding                       = usedUniform.binding;
-    offset                        = usedUniform.offset;
-    bufferIndex                   = usedUniform.bufferIndex;
-    blockInfo                     = usedUniform.blockInfo;
-    activeVariable                = usedUniform.activeVariable;
-    id                            = usedUniform.id;
-    flattenedOffsetInParentArrays = usedUniform.getFlattenedOffsetInParentArrays();
-    outerArraySizeProduct         = ArraySizeProduct(usedUniform.outerArraySizes);
-    outerArrayOffset              = usedUniform.outerArrayOffset;
-    arraySize                     = usedUniform.isArray() ? usedUniform.getArraySizeProduct() : 1u;
+    flagBitsAsUByte = 0;
+    SetBitField(type, usedUniform.type);
+    SetBitField(precision, usedUniform.precision);
+    SetBitField(imageUnitFormat, usedUniform.imageUnitFormat);
+    location          = usedUniform.location;
+    blockOffset       = 0;
+    blockArrayStride  = 0;
+    blockMatrixStride = 0;
+    SetBitField(binding, usedUniform.binding);
+    SetBitField(offset, usedUniform.offset);
 
-    flagBitsAsUInt               = 0;
-    flagBits.isFragmentInOut     = usedUniform.isFragmentInOut;
-    flagBits.texelFetchStaticUse = usedUniform.texelFetchStaticUse;
-    flagBits.isArray             = usedUniform.isArray();
+    SetBitField(bufferIndex, usedUniform.bufferIndex);
+    SetBitField(parentArrayIndex, usedUniform.parentArrayIndex());
+    SetBitField(outerArraySizeProduct, ArraySizeProduct(usedUniform.outerArraySizes));
+    SetBitField(outerArrayOffset, usedUniform.outerArrayOffset);
+    SetBitField(arraySize, usedUniform.isArray() ? usedUniform.getArraySizeProduct() : 1u);
+    SetBitField(flagBits.isArray, usedUniform.isArray());
+
+    id             = usedUniform.id;
+    mActiveUseBits = usedUniform.activeVariable.activeShaders();
+    mIds           = usedUniform.activeVariable.getIds();
+
+    SetBitField(flagBits.isFragmentInOut, usedUniform.isFragmentInOut);
+    SetBitField(flagBits.texelFetchStaticUse, usedUniform.texelFetchStaticUse);
+    ASSERT(!usedUniform.isArray() || arraySize == usedUniform.getArraySizeProduct());
 }
 
 LinkedUniform::~LinkedUniform() {}
