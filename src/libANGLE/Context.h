@@ -557,10 +557,10 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
 
     bool isResetNotificationEnabled() const;
 
-    bool isRobustnessEnabled() const;
+    bool isRobustnessEnabled() const { return mState.hasRobustAccess(); }
 
-    const egl::Config *getConfig() const;
-    EGLenum getClientType() const;
+    const egl::Config *getConfig() const { return mConfig; }
+    EGLenum getClientType() const { return mState.getClientType(); }
     EGLenum getRenderBuffer() const;
     EGLenum getContextPriority() const;
 

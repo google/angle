@@ -3021,8 +3021,9 @@ angle::Result StateManager11::syncProgram(const gl::Context *context, gl::Primit
     ANGLE_TRY(mProgramD3D->getPixelExecutableForCachedOutputLayout(context11, &pixelExe, nullptr));
 
     ShaderExecutableD3D *geometryExe = nullptr;
-    ANGLE_TRY(mProgramD3D->getGeometryExecutableForPrimitiveType(context11, glState, drawMode,
-                                                                 &geometryExe, nullptr));
+    ANGLE_TRY(mProgramD3D->getGeometryExecutableForPrimitiveType(context11, glState.getCaps(),
+                                                                 glState.getProvokingVertex(),
+                                                                 drawMode, &geometryExe, nullptr));
 
     const d3d11::VertexShader *vertexShader =
         (vertexExe ? &GetAs<ShaderExecutable11>(vertexExe)->getVertexShader() : nullptr);
@@ -3065,8 +3066,8 @@ angle::Result StateManager11::syncProgramForCompute(const gl::Context *context)
     ASSERT(mProgramD3D->hasComputeExecutableForCachedImage2DBindLayout());
 
     ShaderExecutableD3D *computeExe = nullptr;
-    ANGLE_TRY(mProgramD3D->getComputeExecutableForImage2DBindLayout(context, context11, &computeExe,
-                                                                    nullptr));
+    ANGLE_TRY(
+        mProgramD3D->getComputeExecutableForImage2DBindLayout(context11, &computeExe, nullptr));
 
     const d3d11::ComputeShader *computeShader =
         (computeExe ? &GetAs<ShaderExecutable11>(computeExe)->getComputeShader() : nullptr);

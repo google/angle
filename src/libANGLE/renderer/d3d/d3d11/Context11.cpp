@@ -992,8 +992,9 @@ angle::Result Context11::triggerDrawCallProgramRecompilation(const gl::Context *
     if (recompileGS)
     {
         ShaderExecutableD3D *geometryExe = nullptr;
-        ANGLE_TRY(programD3D->getGeometryExecutableForPrimitiveType(this, glState, drawMode,
-                                                                    &geometryExe, &infoLog));
+        ANGLE_TRY(programD3D->getGeometryExecutableForPrimitiveType(
+            this, glState.getCaps(), glState.getProvokingVertex(), drawMode, &geometryExe,
+            &infoLog));
         if (!programD3D->hasGeometryExecutableForPrimitiveType(glState, drawMode))
         {
             ASSERT(infoLog.getLength() > 0);
@@ -1044,8 +1045,7 @@ angle::Result Context11::triggerDispatchCallProgramRecompilation(const gl::Conte
     gl::InfoLog infoLog;
 
     ShaderExecutableD3D *computeExe = nullptr;
-    ANGLE_TRY(
-        programD3D->getComputeExecutableForImage2DBindLayout(context, this, &computeExe, &infoLog));
+    ANGLE_TRY(programD3D->getComputeExecutableForImage2DBindLayout(this, &computeExe, &infoLog));
     if (!programD3D->hasComputeExecutableForCachedImage2DBindLayout())
     {
         ASSERT(infoLog.getLength() > 0);

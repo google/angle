@@ -3080,21 +3080,6 @@ bool Context::isResetNotificationEnabled() const
     return mErrors.getResetStrategy() == GL_LOSE_CONTEXT_ON_RESET_EXT;
 }
 
-bool Context::isRobustnessEnabled() const
-{
-    return mState.hasRobustAccess();
-}
-
-const egl::Config *Context::getConfig() const
-{
-    return mConfig;
-}
-
-EGLenum Context::getClientType() const
-{
-    return mState.getClientType();
-}
-
 EGLenum Context::getRenderBuffer() const
 {
     const Framebuffer *framebuffer =

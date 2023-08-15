@@ -154,7 +154,7 @@ class ProgramD3DMetadata final : angle::NonCopyable
     ~ProgramD3DMetadata();
 
     int getRendererMajorShaderModel() const;
-    bool usesBroadcast(const gl::State &data) const;
+    bool usesBroadcast(const gl::Version &clientVersion) const;
     bool usesSecondaryColor() const;
     bool usesPointCoord() const;
     bool usesFragCoord() const;
@@ -220,7 +220,8 @@ class ProgramD3D : public ProgramImpl
 
     bool usesPointSize() const { return mUsesPointSize; }
     bool usesPointSpriteEmulation() const;
-    bool usesGeometryShader(const gl::State &state, gl::PrimitiveMode drawMode) const;
+    bool usesGeometryShader(const gl::ProvokingVertexConvention provokingVertex,
+                            gl::PrimitiveMode drawMode) const;
     bool usesGeometryShaderForPointSpriteEmulation() const;
     bool usesGetDimensionsIgnoresBaseLevel() const;
     bool usesInstancedPointSpriteEmulation() const;
@@ -235,16 +236,17 @@ class ProgramD3D : public ProgramImpl
     angle::Result getVertexExecutableForCachedInputLayout(d3d::Context *context,
                                                           ShaderExecutableD3D **outExectuable,
                                                           gl::InfoLog *infoLog);
-    angle::Result getGeometryExecutableForPrimitiveType(d3d::Context *errContext,
-                                                        const gl::State &state,
-                                                        gl::PrimitiveMode drawMode,
-                                                        ShaderExecutableD3D **outExecutable,
-                                                        gl::InfoLog *infoLog);
+    angle::Result getGeometryExecutableForPrimitiveType(
+        d3d::Context *errContext,
+        const gl::Caps &caps,
+        gl::ProvokingVertexConvention provokingVertex,
+        gl::PrimitiveMode drawMode,
+        ShaderExecutableD3D **outExecutable,
+        gl::InfoLog *infoLog);
     angle::Result getPixelExecutableForCachedOutputLayout(d3d::Context *context,
                                                           ShaderExecutableD3D **outExectuable,
                                                           gl::InfoLog *infoLog);
-    angle::Result getComputeExecutableForImage2DBindLayout(const gl::Context *glContext,
-                                                           d3d::Context *context,
+    angle::Result getComputeExecutableForImage2DBindLayout(d3d::Context *context,
                                                            ShaderExecutableD3D **outExecutable,
                                                            gl::InfoLog *infoLog);
     void prepareForLink(const gl::ShaderMap<ShaderImpl *> &shaders) override;
