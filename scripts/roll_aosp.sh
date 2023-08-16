@@ -171,6 +171,9 @@ for dep in "${third_party_deps[@]}"; do
    rm -rf "$dep"/.git
 done
 
+# Delete all the .gitmodules files, since they are not allowed in AOSP external projects.
+find . -name \.gitmodules -exec rm {} \;
+
 extra_removal_files=(
    # build/linux is hundreds of megs that aren't needed.
    "build/linux"
