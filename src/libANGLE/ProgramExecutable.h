@@ -285,8 +285,8 @@ class ProgramExecutable final : public angle::Subject
     // Count the number of uniform and storage buffer declarations, counting arrays as one.
     size_t getTransformFeedbackBufferCount() const { return mTransformFeedbackStrides.size(); }
 
-    void updateCanDrawWith();
-    bool hasVertexShader() const { return mCanDrawWith; }
+    void updateCanDrawWith() { mPODStruct.canDrawWith = hasLinkedShaderStage(ShaderType::Vertex); }
+    bool hasVertexShader() const { return mPODStruct.canDrawWith; }
 
     const std::vector<ProgramInput> &getProgramInputs() const { return mProgramInputs; }
     const std::vector<sh::ShaderVariable> &getOutputVariables() const { return mOutputVariables; }
@@ -301,7 +301,7 @@ class ProgramExecutable final : public angle::Subject
     const std::vector<InterfaceBlock> &getUniformBlocks() const { return mUniformBlocks; }
     const UniformBlockBindingMask &getActiveUniformBlockBindings() const
     {
-        return mActiveUniformBlockBindings;
+        return mPODStruct.activeUniformBlockBindings;
     }
     const std::vector<SamplerBinding> &getSamplerBindings() const { return mSamplerBindings; }
     const std::vector<ImageBinding> &getImageBindings() const { return mImageBindings; }
@@ -409,7 +409,7 @@ class ProgramExecutable final : public angle::Subject
 
     int getLinkedShaderVersion(ShaderType shaderType) const
     {
-        return mLinkedShaderVersions[shaderType];
+        return mPODStruct.linkedShaderVersions[shaderType];
     }
 
     bool isYUVOutput() const { return mPODStruct.hasYUVOutput; }
@@ -540,6 +540,7 @@ class ProgramExecutable final : public angle::Subject
         bool hasDiscard;
         bool hasYUVOutput;
         bool enablesPerSampleShading;
+        bool canDrawWith;
 
         // KHR_blend_equation_advanced supported equation list
         BlendEquationBitSet advancedBlendEquations;
@@ -558,6 +559,13 @@ class ProgramExecutable final : public angle::Subject
         GLenum tessGenPointMode;
 
         GLenum transformFeedbackBufferMode;
+
+        // For faster iteration on the blocks currently being bound.
+        UniformBlockBindingMask activeUniformBlockBindings;
+
+        ShaderMap<int> linkedShaderVersions;
+        static_assert(std::is_trivially_copyable<ShaderMap<int>>(),
+                      "ShaderMap<int> should be trivial copyable so that we can memcpy");
     } mPODStruct;
     static_assert(std::is_standard_layout<PODStruct>(),
                   "PODStruct must be a standard layout struct so that we can memcpy");
@@ -573,8 +581,6 @@ class ProgramExecutable final : public angle::Subject
     // Cached mask of active images.
     ActiveTextureMask mActiveImagesMask;
     ActiveTextureArray<ShaderBitSet> mActiveImageShaderBits;
-
-    bool mCanDrawWith;
 
     // Names and mapped names of output variables that are arrays include [0] in the end, similarly
     // to uniforms.
@@ -605,9 +611,6 @@ class ProgramExecutable final : public angle::Subject
     std::vector<std::string> mUniformMappedNames;
     std::vector<InterfaceBlock> mUniformBlocks;
 
-    // For faster iteration on the blocks currently being bound.
-    UniformBlockBindingMask mActiveUniformBlockBindings;
-
     std::vector<AtomicCounterBuffer> mAtomicCounterBuffers;
     std::vector<InterfaceBlock> mShaderStorageBlocks;
 
@@ -621,8 +624,6 @@ class ProgramExecutable final : public angle::Subject
     ShaderMap<std::vector<sh::ShaderVariable>> mLinkedInputVaryings;
     ShaderMap<std::vector<sh::ShaderVariable>> mLinkedUniforms;
     ShaderMap<std::vector<sh::InterfaceBlock>> mLinkedUniformBlocks;
-
-    ShaderMap<int> mLinkedShaderVersions;
 
     // Fragment output variable base types: FLOAT, INT, or UINT.  Ordered by location.
     std::vector<GLenum> mOutputVariableTypes;
