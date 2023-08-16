@@ -1925,16 +1925,16 @@ GLint GetUniformResourceProperty(const Program *program, GLuint index, const GLe
             return (uniform.isAtomicCounter() ? -1 : uniform.getBufferIndex());
 
         case GL_OFFSET:
-            return uniform.flagBits.isBlock ? uniform.blockOffset : -1;
+            return uniform.getBlockInfo().offset;
 
         case GL_ARRAY_STRIDE:
-            return uniform.flagBits.isBlock ? uniform.blockArrayStride : -1;
+            return uniform.getBlockInfo().arrayStride;
 
         case GL_MATRIX_STRIDE:
-            return uniform.flagBits.isBlock ? uniform.blockMatrixStride : -1;
+            return uniform.getBlockInfo().matrixStride;
 
         case GL_IS_ROW_MAJOR:
-            return uniform.flagBits.blockIsRowMajorMatrix ? 1 : 0;
+            return static_cast<GLint>(uniform.getBlockInfo().isRowMajorMatrix);
 
         case GL_REFERENCED_BY_VERTEX_SHADER:
             return uniform.isActive(ShaderType::Vertex);

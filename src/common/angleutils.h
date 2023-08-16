@@ -60,7 +60,7 @@ template <typename Key,
           class KeyEqual = std::equal_to<Key>>
 using HashMap = std::unordered_map<Key, T, Hash, KeyEqual>;
 template <typename Key, class Hash = std::hash<Key>, class KeyEqual = std::equal_to<Key>>
-using HashSet = std::unordered_set<Key, Hash, KeyEqual>;
+using HashSet  = std::unordered_set<Key, Hash, KeyEqual>;
 #    if __cpp_lib_generic_unordered_lookup >= 201811L
 #        define ANGLE_HAS_HASH_MAP_GENERIC_LOOKUP 1
 #    else
@@ -400,15 +400,6 @@ class ConditionalMutex final : angle::NonCopyable
     std::mutex mMutex;
     bool mUseMutex;
 };
-
-// Helper macro that casts to a bitfield type then verifies no bits were dropped.
-#define SetBitField(lhs, rhs)                                                         \
-    do                                                                                \
-    {                                                                                 \
-        auto ANGLE_LOCAL_VAR = rhs;                                                   \
-        lhs = static_cast<typename std::decay<decltype(lhs)>::type>(ANGLE_LOCAL_VAR); \
-        ASSERT(static_cast<decltype(ANGLE_LOCAL_VAR)>(lhs) == ANGLE_LOCAL_VAR);       \
-    } while (0)
 
 // snprintf is not defined with MSVC prior to to msvc14
 #if defined(_MSC_VER) && _MSC_VER < 1900

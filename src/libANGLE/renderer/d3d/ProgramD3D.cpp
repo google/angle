@@ -2903,7 +2903,7 @@ void ProgramD3D::assignSamplerRegisters(size_t uniformIndex)
     std::vector<unsigned int> subscripts;
     const std::string baseName = gl::ParseResourceName(d3dUniform->name, &subscripts);
     unsigned int registerOffset =
-        mState.getUniforms()[uniformIndex].parentArrayIndex * d3dUniform->getArraySizeProduct();
+        mState.getUniforms()[uniformIndex].parentArrayIndex() * d3dUniform->getArraySizeProduct();
 
     bool hasUniform = false;
     for (gl::ShaderType shaderType : gl::AllShaderTypes())
@@ -3005,7 +3005,7 @@ void ProgramD3D::assignImageRegisters(size_t uniformIndex)
     std::vector<unsigned int> subscripts;
     const std::string baseName = gl::ParseResourceName(d3dUniform->name, &subscripts);
     unsigned int registerOffset =
-        mState.getUniforms()[uniformIndex].parentArrayIndex * d3dUniform->getArraySizeProduct();
+        mState.getUniforms()[uniformIndex].parentArrayIndex() * d3dUniform->getArraySizeProduct();
 
     const gl::Shader *computeShader = mState.getAttachedShader(gl::ShaderType::Compute);
     if (computeShader)

@@ -23,7 +23,6 @@ class BinaryInputStream;
 class BinaryOutputStream;
 struct UniformTypeInfo;
 struct UsedUniform;
-struct LinkedUniform;
 
 // Note: keep this struct memcpy-able: i.e, a simple struct with basic types only and no virtual
 // functions. LinkedUniform relies on this so that it can use memcpy to initialize uniform for
@@ -41,7 +40,7 @@ struct ActiveVariable
         return static_cast<ShaderType>(ScanForward(mActiveUseBits.bits()));
     }
     void setActive(ShaderType shaderType, bool used, uint32_t id);
-    void unionReferencesWith(const LinkedUniform &otherUniform);
+    void unionReferencesWith(const ActiveVariable &other);
     bool isActive(ShaderType shaderType) const
     {
         ASSERT(shaderType != ShaderType::InvalidEnum);
@@ -50,6 +49,7 @@ struct ActiveVariable
     const ShaderMap<uint32_t> &getIds() const { return mIds; }
     uint32_t getId(ShaderType shaderType) const { return mIds[shaderType]; }
     ShaderBitSet activeShaders() const { return mActiveUseBits; }
+    GLuint activeShaderCount() const { return static_cast<GLuint>(mActiveUseBits.count()); }
 
   private:
     ShaderBitSet mActiveUseBits;
@@ -62,7 +62,6 @@ struct ActiveVariable
 // not put any std::vector or objects with virtual functions in it.
 // Helper struct representing a single shader uniform. Most of this structure's data member and
 // access functions mirrors ShaderVariable; See ShaderVars.h for more info.
-ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
 struct LinkedUniform
 {
     LinkedUniform();
@@ -89,82 +88,70 @@ struct LinkedUniform
     bool isFragmentInOut() const { return flagBits.isFragmentInOut; }
 
     bool isArray() const { return flagBits.isArray; }
-    uint16_t getBasicTypeElementCount() const
+    unsigned int getBasicTypeElementCount() const
     {
         ASSERT(flagBits.isArray || arraySize == 1u);
         return arraySize;
     }
 
     GLenum getType() const { return type; }
-    uint16_t getOuterArrayOffset() const { return outerArrayOffset; }
-    uint16_t getOuterArraySizeProduct() const { return outerArraySizeProduct; }
-    int16_t getBinding() const { return binding; }
-    int16_t getOffset() const { return offset; }
+    unsigned int getOuterArrayOffset() const { return outerArrayOffset; }
+    unsigned int getOuterArraySizeProduct() const { return outerArraySizeProduct; }
+    int getBinding() const { return binding; }
+    int getOffset() const { return offset; }
+    const sh::BlockMemberInfo &getBlockInfo() const { return blockInfo; }
     int getBufferIndex() const { return bufferIndex; }
     int getLocation() const { return location; }
     GLenum getImageUnitFormat() const { return imageUnitFormat; }
 
+    int parentArrayIndex() const
+    {
+        return flattenedOffsetInParentArrays != -1 ? flattenedOffsetInParentArrays : 0;
+    }
+
     ShaderType getFirstActiveShaderType() const
     {
-        return static_cast<ShaderType>(ScanForward(mActiveUseBits.bits()));
+        return activeVariable.getFirstActiveShaderType();
     }
     void setActive(ShaderType shaderType, bool used, uint32_t _id)
     {
-        mActiveUseBits.set(shaderType, used);
-        mIds[shaderType] = id;
+        activeVariable.setActive(shaderType, used, _id);
     }
-    bool isActive(ShaderType shaderType) const { return mActiveUseBits[shaderType]; }
-    const ShaderMap<uint32_t> &getIds() const { return mIds; }
-    uint32_t getId(ShaderType shaderType) const { return mIds[shaderType]; }
-    ShaderBitSet activeShaders() const { return mActiveUseBits; }
-    GLuint activeShaderCount() const { return static_cast<GLuint>(mActiveUseBits.count()); }
+    bool isActive(ShaderType shaderType) const { return activeVariable.isActive(shaderType); }
+    const ShaderMap<uint32_t> &getIds() const { return activeVariable.getIds(); }
+    uint32_t getId(ShaderType shaderType) const { return activeVariable.getId(shaderType); }
+    ShaderBitSet activeShaders() const { return activeVariable.activeShaders(); }
+    GLuint activeShaderCount() const { return activeVariable.activeShaderCount(); }
 
-    uint16_t type;
-    uint16_t precision;
+    sh::BlockMemberInfo blockInfo;
+    ActiveVariable activeVariable;
 
+    GLenum type;
+    GLenum precision;
+    GLenum imageUnitFormat;
     int location;
+    int binding;
+    int offset;
+    uint32_t id;
+    int flattenedOffsetInParentArrays;
+    int bufferIndex;
+    unsigned int outerArraySizeProduct;
+    unsigned int outerArrayOffset;
+    unsigned int arraySize;
 
-    // These are from sh::struct BlockMemberInfo struct. See locklayout.h for detail.
-    uint16_t blockOffset;
-    uint16_t blockArrayStride;
-
-    uint16_t blockMatrixStride;
-    uint16_t imageUnitFormat;
-
-    // maxUniformVectorsCount is 4K due to we clamp maxUniformBlockSize to 64KB. All of these
-    // variable should be enough to pack into 16 bits to reduce the size of mUniforms.
-    int16_t binding;
-    int16_t bufferIndex;
-
-    int16_t offset;
-    uint16_t arraySize;
-
-    uint16_t outerArraySizeProduct;
-    uint16_t outerArrayOffset;
-
-    uint16_t parentArrayIndex;
     union
     {
         struct
         {
-            uint8_t isFragmentInOut : 1;
-            uint8_t texelFetchStaticUse : 1;
-            uint8_t isArray : 1;
-            uint8_t blockIsRowMajorMatrix : 1;
-            uint8_t isBlock : 1;
-            uint8_t padding : 3;
+            uint32_t isFragmentInOut : 1;
+            uint32_t texelFetchStaticUse : 1;
+            uint32_t isArray : 1;
+            uint32_t padding : 29;
         } flagBits;
-        uint8_t flagBitsAsUByte;
+
+        uint32_t flagBitsAsUInt;
     };
-    ShaderBitSet mActiveUseBits;
-
-    uint32_t id;
-
-    // The id of a linked variable in each shader stage.  This id originates from
-    // sh::ShaderVariable::id or sh::InterfaceBlock::id
-    ShaderMap<uint32_t> mIds;
 };
-ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
 
 struct BufferVariable : public sh::ShaderVariable
 {
@@ -208,9 +195,9 @@ struct ShaderVariableBuffer
     {
         activeVariable.setActive(shaderType, used, _id);
     }
-    void unionReferencesWith(const LinkedUniform &otherUniform)
+    void unionReferencesWith(const ActiveVariable &other)
     {
-        activeVariable.unionReferencesWith(otherUniform);
+        activeVariable.unionReferencesWith(other);
     }
     bool isActive(ShaderType shaderType) const { return activeVariable.isActive(shaderType); }
     const ShaderMap<uint32_t> &getIds() const { return activeVariable.getIds(); }

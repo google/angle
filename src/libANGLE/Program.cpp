@@ -471,7 +471,7 @@ void LoadShaderVariableBuffer(BinaryInputStream *stream, ShaderVariableBuffer *v
     {
         var->memberIndexes.resize(numMembers);
         stream->readBytes(reinterpret_cast<unsigned char *>(var->memberIndexes.data()),
-                          sizeof(*var->memberIndexes.data()) * var->memberIndexes.size());
+                          sizeof(unsigned int) * var->memberIndexes.size());
     }
 }
 
