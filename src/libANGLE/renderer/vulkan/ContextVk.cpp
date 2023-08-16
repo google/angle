@@ -3564,6 +3564,11 @@ angle::Result ContextVk::onCopyUpdate(VkDeviceSize size, bool *commandBufferWasF
     return angle::Result::Continue;
 }
 
+bool ContextVk::hasExcessPendingGarbage() const
+{
+    return mRenderer->hasExcessiveSuballocationGarbage();
+}
+
 angle::Result ContextVk::synchronizeCpuGpuTime()
 {
     ASSERT(mGpuEventsEnabled);
@@ -7761,10 +7766,14 @@ angle::Result ContextVk::flushCommandsAndEndRenderPass(RenderPassClosureReason r
 
     ANGLE_TRY(flushCommandsAndEndRenderPassWithoutSubmit(reason));
 
-    if (mHasDeferredFlush)
+    if (mHasDeferredFlush || hasExcessPendingGarbage())
     {
-        // If we have deferred glFlush call in the middle of render pass, flush them now.
-        ANGLE_TRY(flushImpl(nullptr, nullptr, RenderPassClosureReason::AlreadySpecifiedElsewhere));
+        // If we have deferred glFlush call in the middle of render pass, or if there is too much
+        // pending garbage, perform a flush now.
+        RenderPassClosureReason flushImplReason =
+            (hasExcessPendingGarbage()) ? RenderPassClosureReason::ExcessivePendingGarbage
+                                        : RenderPassClosureReason::AlreadySpecifiedElsewhere;
+        ANGLE_TRY(flushImpl(nullptr, nullptr, flushImplReason));
     }
     return angle::Result::Continue;
 }

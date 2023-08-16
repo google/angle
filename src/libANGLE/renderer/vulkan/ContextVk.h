@@ -822,6 +822,9 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
                                       VkMemoryPropertyFlags flags,
                                       vk::MemoryAllocationType allocationType);
 
+    // In the event of collecting too much garbage, we should flush the garbage so it can be freed.
+    bool hasExcessPendingGarbage() const;
+
   private:
     // Dirty bits.
     enum DirtyBitType : size_t

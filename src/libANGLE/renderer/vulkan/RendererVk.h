@@ -396,6 +396,7 @@ class RendererVk : angle::NonCopyable
             }
             else
             {
+                mPendingSuballocationGarbageSizeInBytes += suballocation.getSize();
                 mPendingSubmissionSuballocationGarbage.emplace(use, std::move(suballocation),
                                                                std::move(buffer));
             }
@@ -652,6 +653,11 @@ class RendererVk : angle::NonCopyable
         return mPendingSubmissionGarbage.size();
     }
 
+    bool hasExcessiveSuballocationGarbage()
+    {
+        return mPendingSuballocationGarbageSizeInBytes >= mPendingSuballocationGarbageSizeLimit;
+    }
+
     ANGLE_INLINE VkFilter getPreferredFilterForYUV(VkFilter defaultFilter)
     {
         return getFeatures().preferLinearFilterForYUV.enabled ? VK_FILTER_LINEAR : defaultFilter;
@@ -835,6 +841,9 @@ class RendererVk : angle::NonCopyable
     // Prefer host visible device local via device local based on device type and heap size.
     bool canPreferDeviceLocalMemoryHostVisible(VkPhysicalDeviceType deviceType);
 
+    // Find the threshold for pending suballocation garbage size before it should be flushed.
+    void calculatePendingSuballocationGarbageSizeLimit();
+
     template <typename CommandBufferHelperT, typename RecyclerT>
     angle::Result getCommandBufferImpl(vk::Context *context,
                                        vk::SecondaryCommandPool *commandPool,
@@ -959,6 +968,9 @@ class RendererVk : angle::NonCopyable
     vk::SharedBufferSuballocationGarbageList mPendingSubmissionSuballocationGarbage;
     // Total suballocation garbage size in bytes.
     VkDeviceSize mSuballocationGarbageSizeInBytes;
+    // Total pending suballocation garbage size in bytes.
+    std::atomic<VkDeviceSize> mPendingSuballocationGarbageSizeInBytes;
+    VkDeviceSize mPendingSuballocationGarbageSizeLimit;
 
     // Total bytes of suballocation that been destroyed since last prune call. This can be
     // accessed without mGarbageMutex, thus needs to be atomic to avoid tsan complain.
