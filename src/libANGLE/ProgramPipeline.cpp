@@ -270,12 +270,15 @@ void ProgramPipeline::updateExecutableAttributes()
         return;
     }
 
-    const ProgramExecutable &vertexExecutable      = vertexProgram->getExecutable();
-    mState.mExecutable->mActiveAttribLocationsMask = vertexExecutable.mActiveAttribLocationsMask;
-    mState.mExecutable->mMaxActiveAttribLocation   = vertexExecutable.mMaxActiveAttribLocation;
-    mState.mExecutable->mAttributesTypeMask        = vertexExecutable.mAttributesTypeMask;
-    mState.mExecutable->mAttributesMask            = vertexExecutable.mAttributesMask;
-    mState.mExecutable->mProgramInputs             = vertexExecutable.mProgramInputs;
+    const ProgramExecutable &vertexExecutable = vertexProgram->getExecutable();
+    mState.mExecutable->mPODStruct.activeAttribLocationsMask =
+        vertexExecutable.mPODStruct.activeAttribLocationsMask;
+    mState.mExecutable->mPODStruct.maxActiveAttribLocation =
+        vertexExecutable.mPODStruct.maxActiveAttribLocation;
+    mState.mExecutable->mPODStruct.attributesTypeMask =
+        vertexExecutable.mPODStruct.attributesTypeMask;
+    mState.mExecutable->mPODStruct.attributesMask = vertexExecutable.mPODStruct.attributesMask;
+    mState.mExecutable->mProgramInputs            = vertexExecutable.mProgramInputs;
 }
 
 void ProgramPipeline::updateTransformFeedbackMembers()
@@ -359,12 +362,14 @@ void ProgramPipeline::updateExecutableGeometryProperties()
     }
 
     const ProgramExecutable &geometryExecutable = geometryProgram->getExecutable();
-    mState.mExecutable->mGeometryShaderInputPrimitiveType =
-        geometryExecutable.mGeometryShaderInputPrimitiveType;
-    mState.mExecutable->mGeometryShaderOutputPrimitiveType =
-        geometryExecutable.mGeometryShaderOutputPrimitiveType;
-    mState.mExecutable->mGeometryShaderInvocations = geometryExecutable.mGeometryShaderInvocations;
-    mState.mExecutable->mGeometryShaderMaxVertices = geometryExecutable.mGeometryShaderMaxVertices;
+    mState.mExecutable->mPODStruct.geometryShaderInputPrimitiveType =
+        geometryExecutable.mPODStruct.geometryShaderInputPrimitiveType;
+    mState.mExecutable->mPODStruct.geometryShaderOutputPrimitiveType =
+        geometryExecutable.mPODStruct.geometryShaderOutputPrimitiveType;
+    mState.mExecutable->mPODStruct.geometryShaderInvocations =
+        geometryExecutable.mPODStruct.geometryShaderInvocations;
+    mState.mExecutable->mPODStruct.geometryShaderMaxVertices =
+        geometryExecutable.mPODStruct.geometryShaderMaxVertices;
 }
 
 void ProgramPipeline::updateExecutableTessellationProperties()
@@ -375,17 +380,20 @@ void ProgramPipeline::updateExecutableTessellationProperties()
     if (tessControlProgram)
     {
         const ProgramExecutable &tessControlExecutable = tessControlProgram->getExecutable();
-        mState.mExecutable->mTessControlShaderVertices =
-            tessControlExecutable.mTessControlShaderVertices;
+        mState.mExecutable->mPODStruct.tessControlShaderVertices =
+            tessControlExecutable.mPODStruct.tessControlShaderVertices;
     }
 
     if (tessEvalProgram)
     {
         const ProgramExecutable &tessEvalExecutable = tessEvalProgram->getExecutable();
-        mState.mExecutable->mTessGenMode            = tessEvalExecutable.mTessGenMode;
-        mState.mExecutable->mTessGenSpacing         = tessEvalExecutable.mTessGenSpacing;
-        mState.mExecutable->mTessGenVertexOrder     = tessEvalExecutable.mTessGenVertexOrder;
-        mState.mExecutable->mTessGenPointMode       = tessEvalExecutable.mTessGenPointMode;
+        mState.mExecutable->mPODStruct.tessGenMode  = tessEvalExecutable.mPODStruct.tessGenMode;
+        mState.mExecutable->mPODStruct.tessGenSpacing =
+            tessEvalExecutable.mPODStruct.tessGenSpacing;
+        mState.mExecutable->mPODStruct.tessGenVertexOrder =
+            tessEvalExecutable.mPODStruct.tessGenVertexOrder;
+        mState.mExecutable->mPODStruct.tessGenPointMode =
+            tessEvalExecutable.mPODStruct.tessGenPointMode;
     }
 }
 
@@ -398,10 +406,12 @@ void ProgramPipeline::updateFragmentInoutRangeAndEnablesPerSampleShading()
         return;
     }
 
-    const ProgramExecutable &fragmentExecutable  = fragmentProgram->getExecutable();
-    mState.mExecutable->mFragmentInoutRange      = fragmentExecutable.mFragmentInoutRange;
-    mState.mExecutable->mHasDiscard              = fragmentExecutable.mHasDiscard;
-    mState.mExecutable->mEnablesPerSampleShading = fragmentExecutable.mEnablesPerSampleShading;
+    const ProgramExecutable &fragmentExecutable = fragmentProgram->getExecutable();
+    mState.mExecutable->mPODStruct.fragmentInoutRange =
+        fragmentExecutable.mPODStruct.fragmentInoutRange;
+    mState.mExecutable->mPODStruct.hasDiscard = fragmentExecutable.mPODStruct.hasDiscard;
+    mState.mExecutable->mPODStruct.enablesPerSampleShading =
+        fragmentExecutable.mPODStruct.enablesPerSampleShading;
 }
 
 void ProgramPipeline::updateLinkedVaryings()

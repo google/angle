@@ -273,42 +273,22 @@ void LoadUniforms(BinaryInputStream *stream,
 }
 }  // anonymous namespace
 
-ProgramExecutable::ProgramExecutable()
-    : mMaxActiveAttribLocation(0),
-      mAttributesTypeMask(0),
-      mAttributesMask(0),
-      mActiveSamplerRefCounts{},
-      mCanDrawWith(false),
-      mYUVOutput(false),
-      mTransformFeedbackBufferMode(GL_INTERLEAVED_ATTRIBS),
-      mDefaultUniformRange(0, 0),
-      mSamplerUniformRange(0, 0),
-      mImageUniformRange(0, 0),
-      mAtomicCounterUniformRange(0, 0),
-      mFragmentInoutRange(0, 0),
-      mHasClipDistance(false),
-      mHasDiscard(false),
-      mEnablesPerSampleShading(false),
-      // [GL_EXT_geometry_shader] Table 20.22
-      mGeometryShaderInputPrimitiveType(PrimitiveMode::Triangles),
-      mGeometryShaderOutputPrimitiveType(PrimitiveMode::TriangleStrip),
-      mGeometryShaderInvocations(1),
-      mGeometryShaderMaxVertices(0),
-      mTessControlShaderVertices(0),
-      mTessGenMode(GL_NONE),
-      mTessGenSpacing(GL_NONE),
-      mTessGenVertexOrder(GL_NONE),
-      mTessGenPointMode(GL_NONE)
+ProgramExecutable::PODStruct::PODStruct()                       = default;
+ProgramExecutable::PODStruct::PODStruct(const PODStruct &other) = default;
+
+ProgramExecutable::ProgramExecutable() : mActiveSamplerRefCounts{}, mCanDrawWith(false)
 {
+    memset(&mPODStruct, 0, sizeof(mPODStruct));
+    mPODStruct.geometryShaderInputPrimitiveType  = PrimitiveMode::Triangles;
+    mPODStruct.geometryShaderOutputPrimitiveType = PrimitiveMode::TriangleStrip;
+    mPODStruct.geometryShaderInvocations         = 1;
+    mPODStruct.transformFeedbackBufferMode       = GL_INTERLEAVED_ATTRIBS;
+
     reset(true);
 }
 
 ProgramExecutable::ProgramExecutable(const ProgramExecutable &other)
-    : mLinkedShaderStages(other.mLinkedShaderStages),
-      mActiveAttribLocationsMask(other.mActiveAttribLocationsMask),
-      mMaxActiveAttribLocation(other.mMaxActiveAttribLocation),
-      mAttributesTypeMask(other.mAttributesTypeMask),
-      mAttributesMask(other.mAttributesMask),
+    : mPODStruct(other.mPODStruct),
       mActiveSamplersMask(other.mActiveSamplersMask),
       mActiveSamplerRefCounts(other.mActiveSamplerRefCounts),
       mActiveSamplerTypes(other.mActiveSamplerTypes),
@@ -321,27 +301,16 @@ ProgramExecutable::ProgramExecutable(const ProgramExecutable &other)
       mOutputVariables(other.mOutputVariables),
       mOutputLocations(other.mOutputLocations),
       mSecondaryOutputLocations(other.mSecondaryOutputLocations),
-      mYUVOutput(other.mYUVOutput),
       mProgramInputs(other.mProgramInputs),
       mLinkedTransformFeedbackVaryings(other.mLinkedTransformFeedbackVaryings),
       mTransformFeedbackStrides(other.mTransformFeedbackStrides),
-      mTransformFeedbackBufferMode(other.mTransformFeedbackBufferMode),
       mUniforms(other.mUniforms),
       mUniformNames(other.mUniformNames),
       mUniformMappedNames(other.mUniformMappedNames),
-      mDefaultUniformRange(other.mDefaultUniformRange),
-      mSamplerUniformRange(other.mSamplerUniformRange),
-      mImageUniformRange(other.mImageUniformRange),
-      mAtomicCounterUniformRange(other.mAtomicCounterUniformRange),
       mUniformBlocks(other.mUniformBlocks),
       mActiveUniformBlockBindings(other.mActiveUniformBlockBindings),
       mAtomicCounterBuffers(other.mAtomicCounterBuffers),
-      mShaderStorageBlocks(other.mShaderStorageBlocks),
-      mFragmentInoutRange(other.mFragmentInoutRange),
-      mHasClipDistance(other.mHasClipDistance),
-      mHasDiscard(other.mHasDiscard),
-      mEnablesPerSampleShading(other.mEnablesPerSampleShading),
-      mAdvancedBlendEquations(other.mAdvancedBlendEquations)
+      mShaderStorageBlocks(other.mShaderStorageBlocks)
 {
     reset(true);
 }
@@ -354,10 +323,37 @@ void ProgramExecutable::reset(bool clearInfoLog)
     {
         resetInfoLog();
     }
-    mActiveAttribLocationsMask.reset();
-    mAttributesTypeMask.reset();
-    mAttributesMask.reset();
-    mMaxActiveAttribLocation = 0;
+
+    mPODStruct.activeAttribLocationsMask.reset();
+    mPODStruct.attributesTypeMask.reset();
+    mPODStruct.attributesMask.reset();
+    mPODStruct.maxActiveAttribLocation = 0;
+    mPODStruct.activeOutputVariablesMask.reset();
+
+    mPODStruct.defaultUniformRange       = RangeUI(0, 0);
+    mPODStruct.samplerUniformRange       = RangeUI(0, 0);
+    mPODStruct.imageUniformRange         = RangeUI(0, 0);
+    mPODStruct.atomicCounterUniformRange = RangeUI(0, 0);
+    mPODStruct.fragmentInoutRange        = RangeUI(0, 0);
+
+    mPODStruct.hasClipDistance         = false;
+    mPODStruct.hasDiscard              = false;
+    mPODStruct.enablesPerSampleShading = false;
+    mPODStruct.hasYUVOutput            = false;
+
+    mPODStruct.advancedBlendEquations.reset();
+
+    mPODStruct.geometryShaderInputPrimitiveType  = PrimitiveMode::Triangles;
+    mPODStruct.geometryShaderOutputPrimitiveType = PrimitiveMode::TriangleStrip;
+    mPODStruct.geometryShaderInvocations         = 1;
+    mPODStruct.geometryShaderMaxVertices         = 0;
+
+    mPODStruct.tessControlShaderVertices = 0;
+    mPODStruct.tessGenMode               = GL_NONE;
+    mPODStruct.tessGenSpacing            = GL_NONE;
+    mPODStruct.tessGenVertexOrder        = GL_NONE;
+    mPODStruct.tessGenPointMode          = GL_NONE;
+    mPODStruct.drawBufferTypeMask.reset();
 
     mActiveSamplersMask.reset();
     mActiveSamplerRefCounts = {};
@@ -379,36 +375,11 @@ void ProgramExecutable::reset(bool clearInfoLog)
     mAtomicCounterBuffers.clear();
     mOutputVariables.clear();
     mOutputLocations.clear();
-    mActiveOutputVariablesMask.reset();
     mSecondaryOutputLocations.clear();
-    mYUVOutput = false;
     mSamplerBindings.clear();
     mImageBindings.clear();
 
-    mDefaultUniformRange       = RangeUI(0, 0);
-    mSamplerUniformRange       = RangeUI(0, 0);
-    mImageUniformRange         = RangeUI(0, 0);
-    mAtomicCounterUniformRange = RangeUI(0, 0);
-
-    mFragmentInoutRange      = RangeUI(0, 0);
-    mHasClipDistance         = false;
-    mHasDiscard              = false;
-    mEnablesPerSampleShading = false;
-    mAdvancedBlendEquations.reset();
-
-    mGeometryShaderInputPrimitiveType  = PrimitiveMode::Triangles;
-    mGeometryShaderOutputPrimitiveType = PrimitiveMode::TriangleStrip;
-    mGeometryShaderInvocations         = 1;
-    mGeometryShaderMaxVertices         = 0;
-
-    mTessControlShaderVertices = 0;
-    mTessGenMode               = GL_NONE;
-    mTessGenSpacing            = GL_NONE;
-    mTessGenVertexOrder        = GL_NONE;
-    mTessGenPointMode          = GL_NONE;
-
     mOutputVariableTypes.clear();
-    mDrawBufferTypeMask.reset();
 }
 
 void ProgramExecutable::load(bool isSeparable, gl::BinaryInputStream *stream)
@@ -416,35 +387,11 @@ void ProgramExecutable::load(bool isSeparable, gl::BinaryInputStream *stream)
     static_assert(MAX_VERTEX_ATTRIBS * 2 <= sizeof(uint32_t) * 8,
                   "Too many vertex attribs for mask: All bits of mAttributesTypeMask types and "
                   "mask fit into 32 bits each");
-    mAttributesTypeMask        = gl::ComponentTypeMask(stream->readInt<uint32_t>());
-    mAttributesMask            = gl::AttributesMask(stream->readInt<uint32_t>());
-    mActiveAttribLocationsMask = gl::AttributesMask(stream->readInt<uint32_t>());
-    mMaxActiveAttribLocation   = stream->readInt<unsigned int>();
+    static_assert(IMPLEMENTATION_MAX_DRAW_BUFFERS * 2 <= 8 * sizeof(uint32_t),
+                  "All bits of mDrawBufferTypeMask and mActiveOutputVariables types and mask fit "
+                  "into 32 bits each");
 
-    unsigned int fragmentInoutRangeLow  = stream->readInt<uint32_t>();
-    unsigned int fragmentInoutRangeHigh = stream->readInt<uint32_t>();
-    mFragmentInoutRange                 = RangeUI(fragmentInoutRangeLow, fragmentInoutRangeHigh);
-
-    mHasClipDistance = stream->readBool();
-
-    mHasDiscard              = stream->readBool();
-    mEnablesPerSampleShading = stream->readBool();
-
-    static_assert(sizeof(mAdvancedBlendEquations.bits()) == sizeof(uint32_t));
-    mAdvancedBlendEquations = BlendEquationBitSet(stream->readInt<uint32_t>());
-
-    mLinkedShaderStages = ShaderBitSet(stream->readInt<uint8_t>());
-
-    mGeometryShaderInputPrimitiveType  = stream->readEnum<PrimitiveMode>();
-    mGeometryShaderOutputPrimitiveType = stream->readEnum<PrimitiveMode>();
-    mGeometryShaderInvocations         = stream->readInt<int>();
-    mGeometryShaderMaxVertices         = stream->readInt<int>();
-
-    mTessControlShaderVertices = stream->readInt<int>();
-    mTessGenMode               = stream->readInt<GLenum>();
-    mTessGenSpacing            = stream->readInt<GLenum>();
-    mTessGenVertexOrder        = stream->readInt<GLenum>();
-    mTessGenPointMode          = stream->readInt<GLenum>();
+    stream->readBytes(reinterpret_cast<unsigned char *>(&mPODStruct), sizeof(mPODStruct));
 
     LoadProgramInputs(stream, &mProgramInputs);
     LoadUniforms(stream, &mUniforms, &mUniformNames, &mUniformMappedNames);
@@ -494,8 +441,6 @@ void ProgramExecutable::load(bool isSeparable, gl::BinaryInputStream *stream)
         varying.arrayIndex = stream->readInt<GLuint>();
     }
 
-    mTransformFeedbackBufferMode = stream->readInt<GLint>();
-
     size_t outputCount = stream->readInt<size_t>();
     ASSERT(getOutputVariables().empty());
     mOutputVariables.resize(outputCount);
@@ -518,22 +463,12 @@ void ProgramExecutable::load(bool isSeparable, gl::BinaryInputStream *stream)
         stream->readBool(&locationData.ignored);
     }
 
-    mActiveOutputVariablesMask =
-        gl::DrawBufferMask(stream->readInt<gl::DrawBufferMask::value_type>());
-
     size_t outputTypeCount = stream->readInt<size_t>();
     mOutputVariableTypes.resize(outputTypeCount);
     for (size_t outputIndex = 0; outputIndex < outputTypeCount; ++outputIndex)
     {
         mOutputVariableTypes[outputIndex] = stream->readInt<GLenum>();
     }
-
-    static_assert(IMPLEMENTATION_MAX_DRAW_BUFFERS * 2 <= 8 * sizeof(uint32_t),
-                  "All bits of mDrawBufferTypeMask and mActiveOutputVariables types and mask fit "
-                  "into 32 bits each");
-    mDrawBufferTypeMask = gl::ComponentTypeMask(stream->readInt<uint32_t>());
-
-    stream->readBool(&mYUVOutput);
 
     size_t secondaryOutputVarCount = stream->readInt<size_t>();
     ASSERT(mSecondaryOutputLocations.empty());
@@ -545,14 +480,6 @@ void ProgramExecutable::load(bool isSeparable, gl::BinaryInputStream *stream)
         stream->readInt(&locationData.index);
         stream->readBool(&locationData.ignored);
     }
-
-    unsigned int defaultUniformRangeLow  = stream->readInt<unsigned int>();
-    unsigned int defaultUniformRangeHigh = stream->readInt<unsigned int>();
-    mDefaultUniformRange                 = RangeUI(defaultUniformRangeLow, defaultUniformRangeHigh);
-
-    unsigned int samplerRangeLow  = stream->readInt<unsigned int>();
-    unsigned int samplerRangeHigh = stream->readInt<unsigned int>();
-    mSamplerUniformRange          = RangeUI(samplerRangeLow, samplerRangeHigh);
 
     size_t samplerCount = stream->readInt<size_t>();
     ASSERT(mSamplerBindings.empty());
@@ -566,10 +493,6 @@ void ProgramExecutable::load(bool isSeparable, gl::BinaryInputStream *stream)
         size_t bindingCount            = stream->readInt<size_t>();
         samplerBinding.boundTextureUnits.resize(bindingCount, 0);
     }
-
-    unsigned int imageRangeLow  = stream->readInt<unsigned int>();
-    unsigned int imageRangeHigh = stream->readInt<unsigned int>();
-    mImageUniformRange          = RangeUI(imageRangeLow, imageRangeHigh);
 
     size_t imageBindingCount = stream->readInt<size_t>();
     ASSERT(mImageBindings.empty());
@@ -586,15 +509,11 @@ void ProgramExecutable::load(bool isSeparable, gl::BinaryInputStream *stream)
         }
     }
 
-    unsigned int atomicCounterRangeLow  = stream->readInt<unsigned int>();
-    unsigned int atomicCounterRangeHigh = stream->readInt<unsigned int>();
-    mAtomicCounterUniformRange          = RangeUI(atomicCounterRangeLow, atomicCounterRangeHigh);
-
     // These values are currently only used by PPOs, so only load them when the program is marked
     // separable to save memory.
     if (isSeparable)
     {
-        for (ShaderType shaderType : mLinkedShaderStages)
+        for (ShaderType shaderType : getLinkedShaderStages())
         {
             mLinkedOutputVaryings[shaderType].resize(stream->readInt<size_t>());
             for (sh::ShaderVariable &variable : mLinkedOutputVaryings[shaderType])
@@ -625,33 +544,12 @@ void ProgramExecutable::save(bool isSeparable, gl::BinaryOutputStream *stream) c
 {
     static_assert(MAX_VERTEX_ATTRIBS * 2 <= sizeof(uint32_t) * 8,
                   "All bits of mAttributesTypeMask types and mask fit into 32 bits each");
-    stream->writeInt(static_cast<uint32_t>(mAttributesTypeMask.to_ulong()));
-    stream->writeInt(static_cast<uint32_t>(mAttributesMask.to_ulong()));
-    stream->writeInt(static_cast<uint32_t>(mActiveAttribLocationsMask.to_ulong()));
-    stream->writeInt(mMaxActiveAttribLocation);
+    static_assert(
+        IMPLEMENTATION_MAX_DRAW_BUFFERS * 2 <= 8 * sizeof(uint32_t),
+        "All bits of mDrawBufferTypeMask and mActiveOutputVariables can be contained in 32 bits");
 
-    stream->writeInt(mFragmentInoutRange.low());
-    stream->writeInt(mFragmentInoutRange.high());
-
-    stream->writeBool(mHasClipDistance);
-
-    stream->writeBool(mHasDiscard);
-    stream->writeBool(mEnablesPerSampleShading);
-    stream->writeInt(mAdvancedBlendEquations.bits());
-
-    stream->writeInt(mLinkedShaderStages.bits());
-
-    ASSERT(mGeometryShaderInvocations >= 1 && mGeometryShaderMaxVertices >= 0);
-    stream->writeEnum(mGeometryShaderInputPrimitiveType);
-    stream->writeEnum(mGeometryShaderOutputPrimitiveType);
-    stream->writeInt(mGeometryShaderInvocations);
-    stream->writeInt(mGeometryShaderMaxVertices);
-
-    stream->writeInt(mTessControlShaderVertices);
-    stream->writeInt(mTessGenMode);
-    stream->writeInt(mTessGenSpacing);
-    stream->writeInt(mTessGenVertexOrder);
-    stream->writeInt(mTessGenPointMode);
+    ASSERT(mPODStruct.geometryShaderInvocations >= 1 && mPODStruct.geometryShaderMaxVertices >= 0);
+    stream->writeBytes(reinterpret_cast<const unsigned char *>(&mPODStruct), sizeof(mPODStruct));
 
     SaveProgramInputs(stream, mProgramInputs);
     SaveUniforms(stream, mUniforms, mUniformNames, mUniformMappedNames);
@@ -684,8 +582,6 @@ void ProgramExecutable::save(bool isSeparable, gl::BinaryOutputStream *stream) c
         stream->writeIntOrNegOne(var.arrayIndex);
     }
 
-    stream->writeInt(getTransformFeedbackBufferMode());
-
     stream->writeInt(getOutputVariables().size());
     for (const sh::ShaderVariable &output : getOutputVariables())
     {
@@ -702,20 +598,11 @@ void ProgramExecutable::save(bool isSeparable, gl::BinaryOutputStream *stream) c
         stream->writeBool(outputVar.ignored);
     }
 
-    stream->writeInt(static_cast<int>(mActiveOutputVariablesMask.to_ulong()));
-
     stream->writeInt(mOutputVariableTypes.size());
     for (const auto &outputVariableType : mOutputVariableTypes)
     {
         stream->writeInt(outputVariableType);
     }
-
-    static_assert(
-        IMPLEMENTATION_MAX_DRAW_BUFFERS * 2 <= 8 * sizeof(uint32_t),
-        "All bits of mDrawBufferTypeMask and mActiveOutputVariables can be contained in 32 bits");
-    stream->writeInt(static_cast<int>(mDrawBufferTypeMask.to_ulong()));
-
-    stream->writeBool(mYUVOutput);
 
     stream->writeInt(getSecondaryOutputLocations().size());
     for (const auto &outputVar : getSecondaryOutputLocations())
@@ -725,12 +612,6 @@ void ProgramExecutable::save(bool isSeparable, gl::BinaryOutputStream *stream) c
         stream->writeBool(outputVar.ignored);
     }
 
-    stream->writeInt(getDefaultUniformRange().low());
-    stream->writeInt(getDefaultUniformRange().high());
-
-    stream->writeInt(getSamplerUniformRange().low());
-    stream->writeInt(getSamplerUniformRange().high());
-
     stream->writeInt(getSamplerBindings().size());
     for (const auto &samplerBinding : getSamplerBindings())
     {
@@ -739,9 +620,6 @@ void ProgramExecutable::save(bool isSeparable, gl::BinaryOutputStream *stream) c
         stream->writeEnum(samplerBinding.format);
         stream->writeInt(samplerBinding.boundTextureUnits.size());
     }
-
-    stream->writeInt(getImageUniformRange().low());
-    stream->writeInt(getImageUniformRange().high());
 
     stream->writeInt(getImageBindings().size());
     for (const auto &imageBinding : getImageBindings())
@@ -754,14 +632,11 @@ void ProgramExecutable::save(bool isSeparable, gl::BinaryOutputStream *stream) c
         }
     }
 
-    stream->writeInt(getAtomicCounterUniformRange().low());
-    stream->writeInt(getAtomicCounterUniformRange().high());
-
     // These values are currently only used by PPOs, so only save them when the program is marked
     // separable to save memory.
     if (isSeparable)
     {
-        for (ShaderType shaderType : mLinkedShaderStages)
+        for (ShaderType shaderType : getLinkedShaderStages())
         {
             stream->writeInt(mLinkedOutputVaryings[shaderType].size());
             for (const sh::ShaderVariable &shaderVariable : mLinkedOutputVaryings[shaderType])
@@ -801,64 +676,6 @@ void ProgramExecutable::getInfoLog(GLsizei bufSize, GLsizei *length, char *infoL
 std::string ProgramExecutable::getInfoLogString() const
 {
     return mInfoLog.str();
-}
-
-bool ProgramExecutable::isAttribLocationActive(size_t attribLocation) const
-{
-    ASSERT(attribLocation < mActiveAttribLocationsMask.size());
-    return mActiveAttribLocationsMask[attribLocation];
-}
-
-AttributesMask ProgramExecutable::getAttributesMask() const
-{
-    return mAttributesMask;
-}
-
-bool ProgramExecutable::hasDefaultUniforms() const
-{
-    return !getDefaultUniformRange().empty();
-}
-
-bool ProgramExecutable::hasTextures() const
-{
-    return !getSamplerBindings().empty();
-}
-
-bool ProgramExecutable::hasUniformBuffers() const
-{
-    return !mUniformBlocks.empty();
-}
-
-bool ProgramExecutable::hasStorageBuffers() const
-{
-    return !mShaderStorageBlocks.empty();
-}
-
-bool ProgramExecutable::hasAtomicCounterBuffers() const
-{
-    return !mAtomicCounterBuffers.empty();
-}
-
-bool ProgramExecutable::hasImages() const
-{
-    return !mImageBindings.empty();
-}
-
-bool ProgramExecutable::usesFramebufferFetch() const
-{
-    return (mFragmentInoutRange.length() > 0);
-}
-
-GLuint ProgramExecutable::getUniformIndexFromImageIndex(GLuint imageIndex) const
-{
-    ASSERT(imageIndex < mImageUniformRange.length());
-    return imageIndex + mImageUniformRange.low();
-}
-
-GLuint ProgramExecutable::getUniformIndexFromSamplerIndex(GLuint samplerIndex) const
-{
-    ASSERT(samplerIndex < mSamplerUniformRange.length());
-    return samplerIndex + mSamplerUniformRange.low();
 }
 
 void ProgramExecutable::setActive(size_t textureUnit,
@@ -1014,16 +831,6 @@ void ProgramExecutable::saveLinkedStateInfo(const Context *context, const Progra
         mLinkedUniforms[shaderType]       = shader->getUniforms(context);
         mLinkedUniformBlocks[shaderType]  = shader->getUniformBlocks(context);
     }
-}
-
-bool ProgramExecutable::isYUVOutput() const
-{
-    return mYUVOutput;
-}
-
-ShaderType ProgramExecutable::getLinkedTransformFeedbackStage() const
-{
-    return GetLastPreFragmentStage(mLinkedShaderStages);
 }
 
 bool ProgramExecutable::linkMergedVaryings(
@@ -1190,7 +997,7 @@ bool ProgramExecutable::linkValidateTransformFeedback(
 
         // TODO(jmadill): Investigate implementation limits on D3D11
         componentCount = VariableComponentCount(var->type) * elementCount;
-        if (mTransformFeedbackBufferMode == GL_SEPARATE_ATTRIBS &&
+        if (mPODStruct.transformFeedbackBufferMode == GL_SEPARATE_ATTRIBS &&
             componentCount > static_cast<GLuint>(caps.maxTransformFeedbackSeparateComponents))
         {
             mInfoLog << "Transform feedback varying " << tfVaryingName << " components ("
@@ -1200,7 +1007,7 @@ bool ProgramExecutable::linkValidateTransformFeedback(
         }
 
         totalComponents += componentCount;
-        if (mTransformFeedbackBufferMode == GL_INTERLEAVED_ATTRIBS &&
+        if (mPODStruct.transformFeedbackBufferMode == GL_INTERLEAVED_ATTRIBS &&
             totalComponents > static_cast<GLuint>(caps.maxTransformFeedbackInterleavedComponents))
         {
             mInfoLog << "Transform feedback varying total components (" << totalComponents
@@ -1263,7 +1070,7 @@ void ProgramExecutable::updateTransformFeedbackStrides()
         return;
     }
 
-    if (mTransformFeedbackBufferMode == GL_INTERLEAVED_ATTRIBS)
+    if (mPODStruct.transformFeedbackBufferMode == GL_INTERLEAVED_ATTRIBS)
     {
         mTransformFeedbackStrides.resize(1);
         size_t totalSize = 0;
@@ -1335,9 +1142,9 @@ bool ProgramExecutable::linkValidateOutputVariables(
     const ProgramAliasedBindings &fragmentOutputIndices)
 {
     ASSERT(mOutputVariableTypes.empty());
-    ASSERT(mActiveOutputVariablesMask.none());
-    ASSERT(mDrawBufferTypeMask.none());
-    ASSERT(!mYUVOutput);
+    ASSERT(mPODStruct.activeOutputVariablesMask.none());
+    ASSERT(mPODStruct.drawBufferTypeMask.none());
+    ASSERT(!mPODStruct.hasYUVOutput);
 
     // Gather output variable types
     for (const sh::ShaderVariable &outputVariable : outputVariables)
@@ -1362,17 +1169,17 @@ bool ProgramExecutable::linkValidateOutputVariables(
             {
                 mOutputVariableTypes.resize(location + 1, GL_NONE);
             }
-            ASSERT(location < mActiveOutputVariablesMask.size());
-            mActiveOutputVariablesMask.set(location);
+            ASSERT(location < mPODStruct.activeOutputVariablesMask.size());
+            mPODStruct.activeOutputVariablesMask.set(location);
             mOutputVariableTypes[location] = VariableComponentType(outputVariable.type);
             ComponentType componentType    = GLenumToComponentType(mOutputVariableTypes[location]);
-            SetComponentTypeMask(componentType, location, &mDrawBufferTypeMask);
+            SetComponentTypeMask(componentType, location, &mPODStruct.drawBufferTypeMask);
         }
 
         if (outputVariable.yuv)
         {
             ASSERT(outputVariables.size() == 1);
-            mYUVOutput = true;
+            mPODStruct.hasYUVOutput = true;
         }
     }
 
@@ -1384,7 +1191,7 @@ bool ProgramExecutable::linkValidateOutputVariables(
         // fragment shader outputs exceeds the implementation-dependent value of
         // MAX_COMBINED_SHADER_OUTPUT_RESOURCES.
         if (combinedImageUniformsCount + combinedShaderStorageBlocksCount +
-                mActiveOutputVariablesMask.count() >
+                mPODStruct.activeOutputVariablesMask.count() >
             static_cast<GLuint>(caps.maxCombinedShaderOutputResources))
         {
             mInfoLog
@@ -1590,7 +1397,7 @@ bool ProgramExecutable::linkUniforms(
     std::vector<UnusedUniform> *unusedUniformsOutOrNull,
     std::vector<VariableLocation> *uniformLocationsOutOrNull)
 {
-    UniformLinker linker(mLinkedShaderStages, shaderUniforms);
+    UniformLinker linker(mPODStruct.linkedShaderStages, shaderUniforms);
     if (!linker.link(context->getCaps(), infoLog, uniformLocationBindings))
     {
         return false;
@@ -1630,7 +1437,7 @@ void ProgramExecutable::linkSamplerAndImageBindings(GLuint *combinedImageUniform
         --low;
     }
 
-    mFragmentInoutRange = RangeUI(low, high);
+    mPODStruct.fragmentInoutRange = RangeUI(low, high);
 
     highIter = lowIter;
     high     = low;
@@ -1640,7 +1447,7 @@ void ProgramExecutable::linkSamplerAndImageBindings(GLuint *combinedImageUniform
         --low;
     }
 
-    mAtomicCounterUniformRange = RangeUI(low, high);
+    mPODStruct.atomicCounterUniformRange = RangeUI(low, high);
 
     highIter = lowIter;
     high     = low;
@@ -1650,10 +1457,10 @@ void ProgramExecutable::linkSamplerAndImageBindings(GLuint *combinedImageUniform
         --low;
     }
 
-    mImageUniformRange     = RangeUI(low, high);
-    *combinedImageUniforms = 0u;
+    mPODStruct.imageUniformRange = RangeUI(low, high);
+    *combinedImageUniforms       = 0u;
     // If uniform is a image type, insert it into the mImageBindings array.
-    for (unsigned int imageIndex : mImageUniformRange)
+    for (unsigned int imageIndex : mPODStruct.imageUniformRange)
     {
         // ES3.1 (section 7.6.1) and GLSL ES3.1 (section 4.4.5), Uniform*i{v} commands
         // cannot load values into a uniform defined as an image. if declare without a
@@ -1688,10 +1495,10 @@ void ProgramExecutable::linkSamplerAndImageBindings(GLuint *combinedImageUniform
         --low;
     }
 
-    mSamplerUniformRange = RangeUI(low, high);
+    mPODStruct.samplerUniformRange = RangeUI(low, high);
 
     // If uniform is a sampler type, insert it into the mSamplerBindings array.
-    for (unsigned int samplerIndex : mSamplerUniformRange)
+    for (unsigned int samplerIndex : mPODStruct.samplerUniformRange)
     {
         const auto &samplerUniform = mUniforms[samplerIndex];
         TextureType textureType    = SamplerTypeToTextureType(samplerUniform.getType());
@@ -1702,12 +1509,12 @@ void ProgramExecutable::linkSamplerAndImageBindings(GLuint *combinedImageUniform
     }
 
     // Whatever is left constitutes the default uniforms.
-    mDefaultUniformRange = RangeUI(0, low);
+    mPODStruct.defaultUniformRange = RangeUI(0, low);
 }
 
 bool ProgramExecutable::linkAtomicCounterBuffers(const Context *context, InfoLog &infoLog)
 {
-    for (unsigned int index : mAtomicCounterUniformRange)
+    for (unsigned int index : mPODStruct.atomicCounterUniformRange)
     {
         auto &uniform = mUniforms[index];
 
@@ -1816,29 +1623,33 @@ void ProgramExecutable::copyUniformsFromProgramMap(const ShaderMap<Program *> &p
 {
     // Merge default uniforms.
     auto getDefaultRange = [](const ProgramState &state) { return state.getDefaultUniformRange(); };
-    mDefaultUniformRange = AddUniforms(programs, mLinkedShaderStages, &mUniforms, &mUniformNames,
-                                       &mUniformMappedNames, getDefaultRange);
+    mPODStruct.defaultUniformRange =
+        AddUniforms(programs, mPODStruct.linkedShaderStages, &mUniforms, &mUniformNames,
+                    &mUniformMappedNames, getDefaultRange);
 
     // Merge sampler uniforms.
     auto getSamplerRange = [](const ProgramState &state) { return state.getSamplerUniformRange(); };
-    mSamplerUniformRange = AddUniforms(programs, mLinkedShaderStages, &mUniforms, &mUniformNames,
-                                       &mUniformMappedNames, getSamplerRange);
+    mPODStruct.samplerUniformRange =
+        AddUniforms(programs, mPODStruct.linkedShaderStages, &mUniforms, &mUniformNames,
+                    &mUniformMappedNames, getSamplerRange);
 
     // Merge image uniforms.
     auto getImageRange = [](const ProgramState &state) { return state.getImageUniformRange(); };
-    mImageUniformRange = AddUniforms(programs, mLinkedShaderStages, &mUniforms, &mUniformNames,
-                                     &mUniformMappedNames, getImageRange);
+    mPODStruct.imageUniformRange = AddUniforms(programs, mPODStruct.linkedShaderStages, &mUniforms,
+                                               &mUniformNames, &mUniformMappedNames, getImageRange);
 
     // Merge atomic counter uniforms.
     auto getAtomicRange = [](const ProgramState &state) {
         return state.getAtomicCounterUniformRange();
     };
-    mAtomicCounterUniformRange = AddUniforms(programs, mLinkedShaderStages, &mUniforms,
-                                             &mUniformNames, &mUniformMappedNames, getAtomicRange);
+    mPODStruct.atomicCounterUniformRange =
+        AddUniforms(programs, mPODStruct.linkedShaderStages, &mUniforms, &mUniformNames,
+                    &mUniformMappedNames, getAtomicRange);
 
     // Merge fragment in/out uniforms.
-    auto getInoutRange  = [](const ProgramState &state) { return state.getFragmentInoutRange(); };
-    mFragmentInoutRange = AddUniforms(programs, mLinkedShaderStages, &mUniforms, &mUniformNames,
-                                      &mUniformMappedNames, getInoutRange);
+    auto getInoutRange = [](const ProgramState &state) { return state.getFragmentInoutRange(); };
+    mPODStruct.fragmentInoutRange =
+        AddUniforms(programs, mPODStruct.linkedShaderStages, &mUniforms, &mUniformNames,
+                    &mUniformMappedNames, getInoutRange);
 }
 }  // namespace gl
