@@ -455,7 +455,7 @@ void GenerateTransformFeedbackEmulationOutputs(
     *vertexShader = SubstituteTransformFeedbackMarkers(*vertexShader, xfbBindings, xfbOut);
 }
 
-angle::Result MTLGetMSL(const gl::Context *glContext,
+angle::Result MTLGetMSL(Context *context,
                         const gl::ProgramState &programState,
                         const gl::Caps &glCaps,
                         const gl::ShaderMap<std::string> &shaderSources,
@@ -518,10 +518,9 @@ angle::Result MTLGetMSL(const gl::Context *glContext,
         else
         {
             ASSERT(type == gl::ShaderType::Fragment);
-            ContextMtl *contextMtl = mtl::GetImpl(glContext);
             bool defineAlpha0 =
-                contextMtl->getDisplay()->getFeatures().emulateAlphaToCoverage.enabled ||
-                contextMtl->getDisplay()->getFeatures().generateShareableShaders.enabled;
+                context->getDisplay()->getFeatures().emulateAlphaToCoverage.enabled ||
+                context->getDisplay()->getFeatures().generateShareableShaders.enabled;
             source = UpdateFragmentShaderOutputs(shaderSources[type], programState, defineAlpha0);
         }
         (*mslShaderInfoOut)[type].metalShaderSource =

@@ -219,16 +219,15 @@ class ProgramMtl : public ProgramImpl
     template <typename T>
     void setUniformImpl(GLint location, GLsizei count, const T *v, GLenum entryPointType);
 
-    angle::Result initDefaultUniformBlocks(const gl::Context *glContext);
-    angle::Result resizeDefaultUniformBlocksMemory(const gl::Context *glContext,
+    angle::Result initDefaultUniformBlocks(mtl::Context *context);
+    angle::Result resizeDefaultUniformBlocksMemory(mtl::Context *context,
                                                    const gl::ShaderMap<size_t> &requiredBufferSize);
 
     void saveInterfaceBlockInfo(gl::BinaryOutputStream *stream);
-    angle::Result loadInterfaceBlockInfo(const gl::Context *glContext,
-                                         gl::BinaryInputStream *stream);
+    angle::Result loadInterfaceBlockInfo(gl::BinaryInputStream *stream);
 
     void saveDefaultUniformBlocksInfo(gl::BinaryOutputStream *stream);
-    angle::Result loadDefaultUniformBlocksInfo(const gl::Context *glContext,
+    angle::Result loadDefaultUniformBlocksInfo(mtl::Context *context,
                                                gl::BinaryInputStream *stream);
 
     angle::Result commitUniforms(ContextMtl *context, mtl::RenderCommandEncoder *cmdEncoder);
