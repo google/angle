@@ -563,7 +563,6 @@ void LoadInterfaceBlock(BinaryInputStream *stream, InterfaceBlock *block)
 // Saves the linking context for later use in resolveLink().
 struct Program::LinkingState
 {
-    std::shared_ptr<ProgramExecutable> linkedExecutable;
     ProgramLinkedResources resources;
     egl::BlobCache::Key programHash;
     std::unique_ptr<rx::LinkEvent> linkEvent;
@@ -1242,13 +1241,6 @@ angle::Result Program::link(const Context *context)
 
     angle::Result result = linkImpl(context);
 
-    // Avoid having two ProgramExecutables if the link failed and the Program had successfully
-    // linked previously.
-    if (mLinkingState && mLinkingState->linkedExecutable)
-    {
-        mState.mExecutable = mLinkingState->linkedExecutable;
-    }
-
     return result;
 }
 
@@ -1435,11 +1427,6 @@ angle::Result Program::linkImpl(const Context *context)
     mState.updateProgramInterfaceInputs();
     mState.updateProgramInterfaceOutputs();
 
-    if (mState.mSeparable)
-    {
-        mLinkingState->linkedExecutable = mState.mExecutable;
-    }
-
     return angle::Result::Continue;
 }
 
@@ -1584,12 +1571,6 @@ void ProgramState::updateProgramInterfaceOutputs()
 // Returns the program object to an unlinked state, before re-linking, or at destruction
 void Program::unlink()
 {
-    if (mLinkingState && mLinkingState->linkedExecutable)
-    {
-        // The new ProgramExecutable that we'll attempt to link with needs to start from a copy of
-        // the last successfully linked ProgramExecutable, so we don't lose any state information.
-        mState.mExecutable.reset(new ProgramExecutable(*mLinkingState->linkedExecutable));
-    }
     mState.mExecutable->reset(true);
 
     mState.mUniformLocations.clear();

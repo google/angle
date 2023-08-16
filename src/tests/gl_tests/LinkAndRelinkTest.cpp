@@ -21,16 +21,16 @@ class LinkAndRelinkTest : public ANGLETest<>
     LinkAndRelinkTest() {}
 };
 
+class LinkAndRelinkTestES3 : public ANGLETest<>
+{
+  protected:
+    LinkAndRelinkTestES3() {}
+};
+
 class LinkAndRelinkTestES31 : public ANGLETest<>
 {
   protected:
     LinkAndRelinkTestES31() {}
-};
-
-class LinkAndRelinkTestES32 : public ANGLETest<>
-{
-  protected:
-    LinkAndRelinkTestES32() {}
 };
 
 // When a program link or relink fails, if you try to install the unsuccessfully
@@ -611,7 +611,194 @@ TEST_P(LinkAndRelinkTest, AttachShaderThenCompile)
     ASSERT_GL_NO_ERROR();
 }
 
+// If a program is linked successfully once, it should retain its executable if a relink fails.
+TEST_P(LinkAndRelinkTestES3, SucessfullLinkThenFailingRelink)
+{
+    // Install a render program in current GL state via UseProgram, then render.
+    // It should succeed.
+    constexpr char kVS[]    = R"(#version 300 es
+out vec4 color;
+void main()
+{
+    vec2 position = vec2(-1, -1);
+    if (gl_VertexID == 1)
+        position = vec2(3, -1);
+    else if (gl_VertexID == 2)
+        position = vec2(-1, 3);
+
+    gl_Position = vec4(position, 0, 1);
+    color = vec4(0, 1, 0, 1);
+})";
+    constexpr char kBadFS[] = R"(#version 300 es
+flat in uvec2 color;
+out mediump vec4 colorOut;
+void main()
+{
+    colorOut = vec4(1, color, 1);
+})";
+
+    GLuint program = glCreateProgram();
+    GLuint vs      = CompileShader(GL_VERTEX_SHADER, kVS);
+    GLuint fs      = CompileShader(GL_FRAGMENT_SHADER, essl3_shaders::fs::Green());
+    GLuint badfs   = CompileShader(GL_FRAGMENT_SHADER, kBadFS);
+
+    EXPECT_NE(0u, vs);
+    EXPECT_NE(0u, fs);
+    EXPECT_NE(0u, badfs);
+
+    glAttachShader(program, vs);
+    glAttachShader(program, fs);
+
+    glLinkProgram(program);
+
+    GLint linkStatus;
+    glGetProgramiv(program, GL_LINK_STATUS, &linkStatus);
+    EXPECT_GL_TRUE(linkStatus);
+
+    EXPECT_GL_NO_ERROR();
+
+    const int w = getWindowWidth();
+    const int h = getWindowHeight();
+
+    glViewport(0, 0, w, h);
+
+    glClearColor(0, 0, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    glEnable(GL_SCISSOR_TEST);
+    glScissor(0, 0, w / 2, h / 2);
+
+    glUseProgram(program);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    EXPECT_GL_NO_ERROR();
+
+    // Cause the program to fail linking
+    glDetachShader(program, fs);
+    glAttachShader(program, badfs);
+
+    glLinkProgram(program);
+
+    glGetProgramiv(program, GL_LINK_STATUS, &linkStatus);
+    EXPECT_GL_FALSE(linkStatus);
+
+    // Link failed, but the program should still be usable.
+    glScissor(w / 2, h / 2, w / 2, h / 2);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    EXPECT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, w / 2, h / 2, GLColor::green);
+    EXPECT_PIXEL_RECT_EQ(w / 2, 0, w / 2, h / 2, GLColor::black);
+    EXPECT_PIXEL_RECT_EQ(0, h / 2, w / 2, h / 2, GLColor::black);
+    EXPECT_PIXEL_RECT_EQ(w / 2, h / 2, w / 2, h / 2, GLColor::green);
+
+    glDeleteShader(vs);
+    glDeleteShader(fs);
+    glDeleteShader(badfs);
+    glDeleteProgram(program);
+}
+
+// Same as SucessfullLinkThenFailingRelink, but with PPOs.
+TEST_P(LinkAndRelinkTestES31, SucessfullLinkThenFailingRelinkWithPPO)
+{
+    // Only the Vulkan backend supports PPOs.
+    ANGLE_SKIP_TEST_IF(!IsVulkan());
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_geometry_shader"));
+
+    // Install a render program in current GL state via UseProgram, then render.
+    // It should succeed.
+    constexpr char kVS[]    = R"(#version 300 es
+void main()
+{
+    vec2 position = vec2(-1, -1);
+    if (gl_VertexID == 1)
+        position = vec2(3, -1);
+    else if (gl_VertexID == 2)
+        position = vec2(-1, 3);
+
+    gl_Position = vec4(position, 0, 1);
+})";
+    constexpr char kBadGS[] = R"(#version 310 es
+#extension GL_EXT_geometry_shader : require
+layout (invocations = 3, triangles) in;
+layout (triangle_strip, max_vertices = 3) out;
+void main()
+{
+})";
+
+    GLuint vs    = CompileShader(GL_VERTEX_SHADER, kVS);
+    GLuint fs    = CompileShader(GL_FRAGMENT_SHADER, essl3_shaders::fs::Green());
+    GLuint badgs = CompileShader(GL_GEOMETRY_SHADER, kBadGS);
+
+    EXPECT_NE(0u, vs);
+    EXPECT_NE(0u, fs);
+    EXPECT_NE(0u, badgs);
+
+    GLuint vsProg = glCreateProgram();
+    GLuint fsProg = glCreateProgram();
+
+    glProgramParameteri(vsProg, GL_PROGRAM_SEPARABLE, GL_TRUE);
+    glAttachShader(vsProg, vs);
+    glLinkProgram(vsProg);
+    EXPECT_GL_NO_ERROR();
+
+    glProgramParameteri(fsProg, GL_PROGRAM_SEPARABLE, GL_TRUE);
+    glAttachShader(fsProg, fs);
+    glLinkProgram(fsProg);
+    EXPECT_GL_NO_ERROR();
+
+    GLuint pipeline;
+    glGenProgramPipelines(1, &pipeline);
+    glUseProgramStages(pipeline, GL_VERTEX_SHADER_BIT, vsProg);
+    glUseProgramStages(pipeline, GL_FRAGMENT_SHADER_BIT, fsProg);
+    EXPECT_GL_NO_ERROR();
+
+    const int w = getWindowWidth();
+    const int h = getWindowHeight();
+
+    glViewport(0, 0, w, h);
+
+    glClearColor(0, 0, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    glEnable(GL_SCISSOR_TEST);
+    glScissor(0, 0, w / 2, h / 2);
+
+    glUseProgram(0);
+    glBindProgramPipeline(pipeline);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    EXPECT_GL_NO_ERROR();
+
+    // Cause the fs program to fail linking
+    glAttachShader(fsProg, badgs);
+    glLinkProgram(fsProg);
+    glUseProgramStages(pipeline, GL_GEOMETRY_SHADER_BIT, fsProg);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    GLint linkStatus;
+    glGetProgramiv(fsProg, GL_LINK_STATUS, &linkStatus);
+    EXPECT_GL_FALSE(linkStatus);
+
+    // Program link failed, but the program pipeline should still be usable.
+    glScissor(w / 2, h / 2, w / 2, h / 2);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    EXPECT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, w / 2, h / 2, GLColor::green);
+    EXPECT_PIXEL_RECT_EQ(w / 2, 0, w / 2, h / 2, GLColor::black);
+    EXPECT_PIXEL_RECT_EQ(0, h / 2, w / 2, h / 2, GLColor::black);
+    EXPECT_PIXEL_RECT_EQ(w / 2, h / 2, w / 2, h / 2, GLColor::green);
+
+    glDeleteShader(vs);
+    glDeleteShader(fs);
+    glDeleteShader(badgs);
+    glDeleteProgram(vsProg);
+    glDeleteProgram(fsProg);
+    glDeleteProgramPipelines(1, &pipeline);
+}
+
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(LinkAndRelinkTest);
+
+ANGLE_INSTANTIATE_TEST_ES3(LinkAndRelinkTestES3);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(LinkAndRelinkTestES31);
 ANGLE_INSTANTIATE_TEST_ES31(LinkAndRelinkTestES31);
