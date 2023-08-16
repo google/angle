@@ -808,6 +808,19 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     bool isDitherEnabled() { return mState.isDitherEnabled(); }
 
+    // The following functions try to allocate memory for buffers and images. If they fail due to
+    // OOM errors, they will try other options for memory allocation.
+    angle::Result initBufferAllocation(vk::BufferHelper *bufferHelper,
+                                       uint32_t memoryTypeIndex,
+                                       size_t allocationSize,
+                                       size_t alignment,
+                                       BufferUsageType bufferUsageType);
+    angle::Result initImageAllocation(vk::ImageHelper *imageHelper,
+                                      bool hasProtectedContent,
+                                      const vk::MemoryProperties &memoryProperties,
+                                      VkMemoryPropertyFlags flags,
+                                      vk::MemoryAllocationType allocationType);
+
   private:
     // Dirty bits.
     enum DirtyBitType : size_t

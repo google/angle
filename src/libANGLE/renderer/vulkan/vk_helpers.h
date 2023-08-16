@@ -753,11 +753,11 @@ class BufferHelper : public ReadWriteResource
                                VkMemoryPropertyFlags memoryProperties,
                                const VkBufferCreateInfo &requestedCreateInfo,
                                GLeglClientBufferEXT clientBuffer);
-    angle::Result initSuballocation(ContextVk *contextVk,
-                                    uint32_t memoryTypeIndex,
-                                    size_t size,
-                                    size_t alignment,
-                                    BufferUsageType usageType);
+    VkResult initSuballocation(ContextVk *contextVk,
+                               uint32_t memoryTypeIndex,
+                               size_t size,
+                               size_t alignment,
+                               BufferUsageType usageType);
 
     // Helper functions to initialize a buffer for a specific usage
     // Suballocate a buffer with alignment good for shader storage or copyBuffer .
@@ -863,11 +863,12 @@ class BufferHelper : public ReadWriteResource
         mDescriptorSetCacheManager.addKey(sharedCacheKey);
     }
 
-  private:
-    void initializeBarrierTracker(Context *context);
     angle::Result initializeNonZeroMemory(Context *context,
                                           VkBufferUsageFlags usage,
                                           VkDeviceSize size);
+
+  private:
+    void initializeBarrierTracker(Context *context);
 
     // Only called by DynamicBuffer.
     friend class DynamicBuffer;
@@ -911,10 +912,10 @@ class BufferPool : angle::NonCopyable
                        uint32_t memoryTypeIndex,
                        VkMemoryPropertyFlags memoryProperty);
 
-    angle::Result allocateBuffer(Context *context,
-                                 VkDeviceSize sizeInBytes,
-                                 VkDeviceSize alignment,
-                                 BufferSuballocation *suballocation);
+    VkResult allocateBuffer(Context *context,
+                            VkDeviceSize sizeInBytes,
+                            VkDeviceSize alignment,
+                            BufferSuballocation *suballocation);
 
     // Frees resources immediately, or orphan the non-empty BufferBlocks if allowed. If orphan is
     // not allowed, it will assert if BufferBlock is still not empty.
@@ -929,7 +930,7 @@ class BufferPool : angle::NonCopyable
     VkDeviceSize getMemorySize() const { return mTotalMemorySize; }
 
   private:
-    angle::Result allocateNewBuffer(Context *context, VkDeviceSize sizeInBytes);
+    VkResult allocateNewBuffer(Context *context, VkDeviceSize sizeInBytes);
     VkDeviceSize getTotalEmptyMemorySize() const;
 
     vma::VirtualBlockCreateFlags mVirtualBlockCreateFlags;
@@ -1889,11 +1890,20 @@ class ImageHelper final : public Resource, public angle::Subject
                                uint32_t layerCount,
                                bool isRobustResourceInitEnabled,
                                bool hasProtectedContent);
-    angle::Result initMemory(Context *context,
-                             bool hasProtectedContent,
-                             const MemoryProperties &memoryProperties,
-                             VkMemoryPropertyFlags flags,
-                             vk::MemoryAllocationType);
+    VkResult initMemory(Context *context,
+                        const MemoryProperties &memoryProperties,
+                        VkMemoryPropertyFlags flags,
+                        VkMemoryPropertyFlags excludedFlags,
+                        const VkMemoryRequirements *memoryRequirements,
+                        const bool allocateDedicatedMemory,
+                        MemoryAllocationType allocationType,
+                        VkMemoryPropertyFlags *flagsOut,
+                        VkDeviceSize *sizeOut);
+    angle::Result initMemoryAndNonZeroFillIfNeeded(Context *context,
+                                                   bool hasProtectedContent,
+                                                   const MemoryProperties &memoryProperties,
+                                                   VkMemoryPropertyFlags flags,
+                                                   MemoryAllocationType allocationType);
     angle::Result initExternalMemory(Context *context,
                                      const MemoryProperties &memoryProperties,
                                      const VkMemoryRequirements &memoryRequirements,
@@ -2037,6 +2047,7 @@ class ImageHelper final : public Resource, public angle::Subject
 
     const Image &getImage() const { return mImage; }
     const DeviceMemory &getDeviceMemory() const { return mDeviceMemory; }
+    const Allocation &getAllocation() const { return mVmaAllocation; }
 
     const VkImageCreateInfo &getVkImageCreateInfo() const { return mVkImageCreateInfo; }
     void setTilingMode(VkImageTiling tilingMode) { mTilingMode = tilingMode; }
@@ -2503,6 +2514,11 @@ class ImageHelper final : public Resource, public angle::Subject
         return mMemoryAllocationType == MemoryAllocationType::ImageExternal;
     }
 
+    angle::Result initializeNonZeroMemory(Context *context,
+                                          bool hasProtectedContent,
+                                          VkMemoryPropertyFlags flags,
+                                          VkDeviceSize size);
+
   private:
     ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
     struct ClearUpdate
@@ -2657,11 +2673,6 @@ class ImageHelper final : public Resource, public angle::Subject
                                         LevelIndex mipLevel,
                                         uint32_t baseArrayLayer,
                                         uint32_t layerCount);
-
-    angle::Result initializeNonZeroMemory(Context *context,
-                                          bool hasProtectedContent,
-                                          VkMemoryPropertyFlags flags,
-                                          VkDeviceSize size);
 
     std::vector<SubresourceUpdate> *getLevelUpdates(gl::LevelIndex level);
     const std::vector<SubresourceUpdate> *getLevelUpdates(gl::LevelIndex level) const;

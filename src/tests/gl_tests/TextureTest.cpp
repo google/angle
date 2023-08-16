@@ -466,6 +466,22 @@ class Texture2DTestES3 : public Texture2DTest
     }
 };
 
+class Texture2DMemoryTestES3 : public Texture2DTestES3
+{
+  protected:
+    angle::VulkanPerfCounters getPerfCounters()
+    {
+        if (mIndexMap.empty())
+        {
+            mIndexMap = BuildCounterNameToIndexMap();
+        }
+
+        return GetPerfCounters(mIndexMap);
+    }
+
+    CounterNameToIndexMap mIndexMap;
+};
+
 class Texture2DTestES3YUV : public Texture2DTestES3
 {};
 
@@ -3424,6 +3440,152 @@ TEST_P(Texture2DTestES3, TexImageWithDepthStencilPBO)
     ASSERT_GL_NO_ERROR();
 
     EXPECT_PIXEL_RECT_EQ(0, 0, kSize, kSize, GLColor::red);
+}
+
+// Test that the driver performs a flush when there is a large amount of image updates.
+TEST_P(Texture2DMemoryTestES3, TextureDataInLoopUntilFlush)
+{
+    // Run this test for Vulkan only.
+    ANGLE_SKIP_TEST_IF(!IsVulkan());
+    uint64_t expectedSubmitCalls = getPerfCounters().commandQueueSubmitCallsTotal + 1;
+
+    // Set up program
+    const char *kFS = R"(#version 300 es
+precision highp float;
+uniform uni { vec4 color; };
+out vec4 fragColor;
+void main()
+{
+    fragColor = color;
+})";
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    ASSERT_NE(program, 0u);
+
+    // Set up the uniform buffer and framebuffer
+    GLint uniformBufferIndex;
+    uniformBufferIndex = glGetUniformBlockIndex(program, "uni");
+    ASSERT_NE(uniformBufferIndex, -1);
+
+    glClear(GL_COLOR_BUFFER_BIT);
+    constexpr size_t kBufferSize = 4 * 1024 * 1024;
+    std::vector<float> floatData;
+    floatData.resize(kBufferSize / (sizeof(float)), 0.0f);
+    floatData[0] = 0.5f;
+    floatData[1] = 0.75f;
+    floatData[2] = 0.25f;
+    floatData[3] = 1.0f;
+
+    GLBuffer uniformBuffer;
+    glBindBuffer(GL_UNIFORM_BUFFER, uniformBuffer);
+    glBufferData(GL_UNIFORM_BUFFER, kBufferSize, floatData.data(), GL_STATIC_DRAW);
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, uniformBuffer);
+    glUniformBlockBinding(program, uniformBufferIndex, 0);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    // Create textures and draw
+    constexpr uint32_t kTextureWidth  = 512;
+    constexpr uint32_t kTextureHeight = 512;
+    std::vector<GLColor> textureColor(kTextureWidth * kTextureHeight, GLColor::red);
+    constexpr uint32_t kIterationCount = 4096;
+    GLTexture textures[kIterationCount];
+
+    for (auto &texture : textures)
+    {
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kTextureWidth, kTextureHeight);
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kTextureWidth, kTextureHeight, GL_RGBA,
+                        GL_UNSIGNED_BYTE, textureColor.data());
+
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+        EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+        drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+
+        if (getPerfCounters().commandQueueSubmitCallsTotal == expectedSubmitCalls)
+        {
+            break;
+        }
+    }
+    EXPECT_EQ(getPerfCounters().commandQueueSubmitCallsTotal, expectedSubmitCalls);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_NEAR(0, 0, 128, 191, 64, 255, 1);
+}
+
+// Creating a texture and drawing with it in a loop without glFlush() should still work. Driver is
+// supposedly to issue flush if needed. There should be no fallbacks to allocate outside the device
+// memory.
+TEST_P(Texture2DMemoryTestES3, TextureDataInLoopManyTimes)
+{
+    // Run this test for Vulkan only.
+    ANGLE_SKIP_TEST_IF(!IsVulkan());
+    uint64_t expectedSubmitCalls           = getPerfCounters().commandQueueSubmitCallsTotal + 1;
+    uint64_t expectedDeviceMemoryFallbacks = getPerfCounters().deviceMemoryImageAllocationFallbacks;
+
+    // Set up program
+    const char *kFS = R"(#version 300 es
+precision highp float;
+uniform uni { vec4 color; };
+out vec4 fragColor;
+void main()
+{
+    fragColor = color;
+})";
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    ASSERT_NE(program, 0u);
+
+    // Set up the uniform buffer and framebuffer
+    GLint uniformBufferIndex;
+    uniformBufferIndex = glGetUniformBlockIndex(program, "uni");
+    ASSERT_NE(uniformBufferIndex, -1);
+
+    glClear(GL_COLOR_BUFFER_BIT);
+    constexpr size_t kBufferSize = 4 * 1024 * 1024;
+    std::vector<float> floatData;
+    floatData.resize(kBufferSize / (sizeof(float)), 0.0f);
+    floatData[0] = 0.5f;
+    floatData[1] = 0.75f;
+    floatData[2] = 0.25f;
+    floatData[3] = 1.0f;
+
+    GLBuffer uniformBuffer;
+    glBindBuffer(GL_UNIFORM_BUFFER, uniformBuffer);
+    glBufferData(GL_UNIFORM_BUFFER, kBufferSize, floatData.data(), GL_STATIC_DRAW);
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, uniformBuffer);
+    glUniformBlockBinding(program, uniformBufferIndex, 0);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    // Create textures and draw. We will use very small image updates to prevent flush before the
+    // device runs out of memory.
+    constexpr uint32_t kTextureWidth  = 4096;
+    constexpr uint32_t kTextureHeight = 4096;
+    std::vector<GLColor> textureColor(kTextureWidth * kTextureHeight, GLColor::red);
+    constexpr uint32_t kIterationCount = 4096;
+
+    for (uint32_t i = 0; i < kIterationCount; i++)
+    {
+        GLTexture texture;
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kTextureWidth, kTextureHeight, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, nullptr);
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE,
+                        textureColor.data());
+
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+        EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+        drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+
+        if (getPerfCounters().commandQueueSubmitCallsTotal == expectedSubmitCalls)
+        {
+            break;
+        }
+    }
+    EXPECT_EQ(getPerfCounters().commandQueueSubmitCallsTotal, expectedSubmitCalls);
+    EXPECT_EQ(getPerfCounters().deviceMemoryImageAllocationFallbacks,
+              expectedDeviceMemoryFallbacks);
+    ASSERT_GL_NO_ERROR();
 }
 
 // Test functionality of GL_ANGLE_yuv_internal_format with min/mag filters
@@ -12390,6 +12552,9 @@ GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(Texture2DTestES3);
 ANGLE_INSTANTIATE_TEST_ES3_AND(Texture2DTestES3,
                                ES3_VULKAN().enable(Feature::AllocateNonZeroMemory),
                                ES3_VULKAN().enable(Feature::ForceFallbackFormat));
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(Texture2DMemoryTestES3);
+ANGLE_INSTANTIATE_TEST_ES3(Texture2DMemoryTestES3);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(Texture2DTestES3YUV);
 ANGLE_INSTANTIATE_TEST_ES3_AND(Texture2DTestES3YUV,

@@ -355,8 +355,8 @@ angle::Result VertexArrayVk::convertIndexBufferCPU(ContextVk *contextVk,
         if (mCachedStreamIndexBuffers.size() < kMaxCachedStreamIndexBuffers)
         {
             std::unique_ptr<vk::BufferHelper> buffer = std::make_unique<vk::BufferHelper>();
-            ANGLE_TRY(buffer->initSuballocation(
-                contextVk,
+            ANGLE_TRY(contextVk->initBufferAllocation(
+                buffer.get(),
                 renderer->getVertexConversionBufferMemoryTypeIndex(
                     vk::MemoryHostVisibility::Visible),
                 amount, renderer->getVertexConversionBufferAlignment(), BufferUsageType::Static));

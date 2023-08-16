@@ -3334,7 +3334,7 @@ void BufferPool::pruneEmptyBuffers(RendererVk *renderer)
     mNumberOfNewBuffersNeededSinceLastPrune = 0;
 }
 
-angle::Result BufferPool::allocateNewBuffer(Context *context, VkDeviceSize sizeInBytes)
+VkResult BufferPool::allocateNewBuffer(Context *context, VkDeviceSize sizeInBytes)
 {
     RendererVk *renderer       = context->getRenderer();
     const Allocator &allocator = renderer->getAllocator();
@@ -3343,7 +3343,7 @@ angle::Result BufferPool::allocateNewBuffer(Context *context, VkDeviceSize sizeI
         renderer->getMemoryProperties().getHeapSizeForMemoryType(mMemoryTypeIndex);
 
     // First ensure we are not exceeding the heapSize to avoid the validation error.
-    ANGLE_VK_CHECK(context, sizeInBytes <= heapSize, VK_ERROR_OUT_OF_DEVICE_MEMORY);
+    VK_RESULT_CHECK(sizeInBytes <= heapSize, VK_ERROR_OUT_OF_DEVICE_MEMORY);
 
     // Double the size until meet the requirement. This also helps reducing the fragmentation. Since
     // this is global pool, we have less worry about memory waste.
@@ -3368,25 +3368,25 @@ angle::Result BufferPool::allocateNewBuffer(Context *context, VkDeviceSize sizeI
     allocator.getMemoryTypeProperties(mMemoryTypeIndex, &memoryPropertyFlags);
 
     DeviceScoped<Buffer> buffer(renderer->getDevice());
-    ANGLE_VK_TRY(context, buffer.get().init(context->getDevice(), createInfo));
+    VK_RESULT_TRY(buffer.get().init(context->getDevice(), createInfo));
 
     DeviceScoped<DeviceMemory> deviceMemory(renderer->getDevice());
     VkMemoryPropertyFlags memoryPropertyFlagsOut;
     VkDeviceSize sizeOut;
     uint32_t memoryTypeIndex;
-    ANGLE_TRY(AllocateBufferMemory(context, MemoryAllocationType::Buffer, memoryPropertyFlags,
-                                   &memoryPropertyFlagsOut, nullptr, &buffer.get(),
-                                   &memoryTypeIndex, &deviceMemory.get(), &sizeOut));
+    VK_RESULT_TRY(AllocateBufferMemory(context, MemoryAllocationType::Buffer, memoryPropertyFlags,
+                                       &memoryPropertyFlagsOut, nullptr, &buffer.get(),
+                                       &memoryTypeIndex, &deviceMemory.get(), &sizeOut));
     ASSERT(sizeOut >= mSize);
 
     // Allocate bufferBlock
     std::unique_ptr<BufferBlock> block = std::make_unique<BufferBlock>();
-    ANGLE_TRY(block->init(context, buffer.get(), memoryTypeIndex, mVirtualBlockCreateFlags,
-                          deviceMemory.get(), memoryPropertyFlagsOut, mSize));
+    VK_RESULT_TRY(block->init(context, buffer.get(), memoryTypeIndex, mVirtualBlockCreateFlags,
+                              deviceMemory.get(), memoryPropertyFlagsOut, mSize));
 
     if (mHostVisible)
     {
-        ANGLE_VK_TRY(context, block->map(context->getDevice()));
+        VK_RESULT_TRY(block->map(context->getDevice()));
     }
 
     mTotalMemorySize += block->getMemorySize();
@@ -3394,13 +3394,13 @@ angle::Result BufferPool::allocateNewBuffer(Context *context, VkDeviceSize sizeI
     mBufferBlocks.push_back(std::move(block));
     context->getPerfCounters().allocateNewBufferBlockCalls++;
 
-    return angle::Result::Continue;
+    return VK_SUCCESS;
 }
 
-angle::Result BufferPool::allocateBuffer(Context *context,
-                                         VkDeviceSize sizeInBytes,
-                                         VkDeviceSize alignment,
-                                         BufferSuballocation *suballocation)
+VkResult BufferPool::allocateBuffer(Context *context,
+                                    VkDeviceSize sizeInBytes,
+                                    VkDeviceSize alignment,
+                                    BufferSuballocation *suballocation)
 {
     ASSERT(alignment);
     VmaVirtualAllocation allocation;
@@ -3413,7 +3413,7 @@ angle::Result BufferPool::allocateBuffer(Context *context,
             context->getRenderer()->getMemoryProperties().getHeapSizeForMemoryType(
                 mMemoryTypeIndex);
         // First ensure we are not exceeding the heapSize to avoid the validation error.
-        ANGLE_VK_CHECK(context, sizeInBytes <= heapSize, VK_ERROR_OUT_OF_DEVICE_MEMORY);
+        VK_RESULT_CHECK(sizeInBytes <= heapSize, VK_ERROR_OUT_OF_DEVICE_MEMORY);
 
         // Allocate buffer
         VkBufferCreateInfo createInfo    = {};
@@ -3430,15 +3430,15 @@ angle::Result BufferPool::allocateBuffer(Context *context,
         allocator.getMemoryTypeProperties(mMemoryTypeIndex, &memoryPropertyFlags);
 
         DeviceScoped<Buffer> buffer(context->getDevice());
-        ANGLE_VK_TRY(context, buffer.get().init(context->getDevice(), createInfo));
+        VK_RESULT_TRY(buffer.get().init(context->getDevice(), createInfo));
 
         DeviceScoped<DeviceMemory> deviceMemory(context->getDevice());
         VkMemoryPropertyFlags memoryPropertyFlagsOut;
         VkDeviceSize sizeOut;
         uint32_t memoryTypeIndex;
-        ANGLE_TRY(AllocateBufferMemory(context, MemoryAllocationType::Buffer, memoryPropertyFlags,
-                                       &memoryPropertyFlagsOut, nullptr, &buffer.get(),
-                                       &memoryTypeIndex, &deviceMemory.get(), &sizeOut));
+        VK_RESULT_TRY(AllocateBufferMemory(
+            context, MemoryAllocationType::Buffer, memoryPropertyFlags, &memoryPropertyFlagsOut,
+            nullptr, &buffer.get(), &memoryTypeIndex, &deviceMemory.get(), &sizeOut));
         ASSERT(sizeOut >= alignedSize);
 
         suballocation->initWithEntireBuffer(context, buffer.get(), MemoryAllocationType::Buffer,
@@ -3446,9 +3446,9 @@ angle::Result BufferPool::allocateBuffer(Context *context,
                                             memoryPropertyFlagsOut, alignedSize, sizeOut);
         if (mHostVisible)
         {
-            ANGLE_VK_TRY(context, suballocation->map(context));
+            VK_RESULT_TRY(suballocation->map(context));
         }
-        return angle::Result::Continue;
+        return VK_SUCCESS;
     }
 
     // We always allocate from reverse order so that older buffers have a chance to be empty. The
@@ -3468,7 +3468,7 @@ angle::Result BufferPool::allocateBuffer(Context *context,
         if (block->allocate(alignedSize, alignment, &allocation, &offset) == VK_SUCCESS)
         {
             suballocation->init(block.get(), allocation, offset, alignedSize);
-            return angle::Result::Continue;
+            return VK_SUCCESS;
         }
         ++iter;
     }
@@ -3485,27 +3485,26 @@ angle::Result BufferPool::allocateBuffer(Context *context,
         }
         else
         {
-            ANGLE_VK_TRY(context, block->allocate(alignedSize, alignment, &allocation, &offset));
+            VK_RESULT_TRY(block->allocate(alignedSize, alignment, &allocation, &offset));
             suballocation->init(block.get(), allocation, offset, alignedSize);
             mBufferBlocks.push_back(std::move(block));
             mEmptyBufferBlocks.pop_back();
             mNumberOfNewBuffersNeededSinceLastPrune++;
-            return angle::Result::Continue;
+            return VK_SUCCESS;
         }
     }
 
     // Failed to allocate from empty buffer. Now try to allocate a new buffer.
-    ANGLE_TRY(allocateNewBuffer(context, alignedSize));
+    VK_RESULT_TRY(allocateNewBuffer(context, alignedSize));
 
     // Sub-allocate from the bufferBlock.
     std::unique_ptr<BufferBlock> &block = mBufferBlocks.back();
-    ANGLE_VK_CHECK(context,
-                   block->allocate(alignedSize, alignment, &allocation, &offset) == VK_SUCCESS,
-                   VK_ERROR_OUT_OF_DEVICE_MEMORY);
+    VK_RESULT_CHECK(block->allocate(alignedSize, alignment, &allocation, &offset) == VK_SUCCESS,
+                    VK_ERROR_OUT_OF_DEVICE_MEMORY);
     suballocation->init(block.get(), allocation, offset, alignedSize);
     mNumberOfNewBuffersNeededSinceLastPrune++;
 
-    return angle::Result::Continue;
+    return VK_SUCCESS;
 }
 
 void BufferPool::destroy(RendererVk *renderer, bool orphanNonEmptyBufferBlock)
@@ -4772,9 +4771,10 @@ angle::Result BufferHelper::init(Context *context,
     VkMemoryPropertyFlags memoryPropertyFlagsOut;
     VkDeviceSize sizeOut;
     uint32_t bufferMemoryTypeIndex;
-    ANGLE_TRY(AllocateBufferMemory(context, MemoryAllocationType::Buffer, requiredFlags,
-                                   &memoryPropertyFlagsOut, nullptr, &buffer.get(),
-                                   &bufferMemoryTypeIndex, &deviceMemory.get(), &sizeOut));
+    ANGLE_VK_TRY(context,
+                 AllocateBufferMemory(context, MemoryAllocationType::Buffer, requiredFlags,
+                                      &memoryPropertyFlagsOut, nullptr, &buffer.get(),
+                                      &bufferMemoryTypeIndex, &deviceMemory.get(), &sizeOut));
     ASSERT(sizeOut >= createInfo->size);
 
     mSuballocation.initWithEntireBuffer(context, buffer.get(), MemoryAllocationType::Buffer,
@@ -4836,11 +4836,11 @@ angle::Result BufferHelper::initExternal(ContextVk *contextVk,
     return angle::Result::Continue;
 }
 
-angle::Result BufferHelper::initSuballocation(ContextVk *contextVk,
-                                              uint32_t memoryTypeIndex,
-                                              size_t size,
-                                              size_t alignment,
-                                              BufferUsageType usageType)
+VkResult BufferHelper::initSuballocation(ContextVk *contextVk,
+                                         uint32_t memoryTypeIndex,
+                                         size_t size,
+                                         size_t alignment,
+                                         BufferUsageType usageType)
 {
     RendererVk *renderer = contextVk->getRenderer();
 
@@ -4856,16 +4856,11 @@ angle::Result BufferHelper::initSuballocation(ContextVk *contextVk,
     }
 
     vk::BufferPool *pool = contextVk->getDefaultBufferPool(size, memoryTypeIndex, usageType);
-    ANGLE_TRY(pool->allocateBuffer(contextVk, size, alignment, &mSuballocation));
-
-    if (renderer->getFeatures().allocateNonZeroMemory.enabled)
-    {
-        ANGLE_TRY(initializeNonZeroMemory(contextVk, GetDefaultBufferUsageFlags(renderer), size));
-    }
+    VK_RESULT_TRY(pool->allocateBuffer(contextVk, size, alignment, &mSuballocation));
 
     contextVk->getPerfCounters().bufferSuballocationCalls++;
 
-    return angle::Result::Continue;
+    return VK_SUCCESS;
 }
 
 angle::Result BufferHelper::allocateForCopyBuffer(ContextVk *contextVk,
@@ -4875,7 +4870,8 @@ angle::Result BufferHelper::allocateForCopyBuffer(ContextVk *contextVk,
     RendererVk *renderer     = contextVk->getRenderer();
     uint32_t memoryTypeIndex = renderer->getStagingBufferMemoryTypeIndex(coherency);
     size_t alignment         = renderer->getStagingBufferAlignment();
-    return initSuballocation(contextVk, memoryTypeIndex, size, alignment, BufferUsageType::Dynamic);
+    return contextVk->initBufferAllocation(this, memoryTypeIndex, size, alignment,
+                                           BufferUsageType::Dynamic);
 }
 
 angle::Result BufferHelper::allocateForVertexConversion(ContextVk *contextVk,
@@ -4914,8 +4910,8 @@ angle::Result BufferHelper::allocateForVertexConversion(ContextVk *contextVk,
     // size anyway.
     size_t sizeToAllocate = roundUp(size, alignment);
 
-    return initSuballocation(contextVk, memoryTypeIndex, sizeToAllocate, alignment,
-                             BufferUsageType::Static);
+    return contextVk->initBufferAllocation(this, memoryTypeIndex, sizeToAllocate, alignment,
+                                           BufferUsageType::Static);
 }
 
 angle::Result BufferHelper::allocateForCopyImage(ContextVk *contextVk,
@@ -4938,8 +4934,8 @@ angle::Result BufferHelper::allocateForCopyImage(ContextVk *contextVk,
     allocationSize          = roundUp(allocationSize, imageCopyAlignment);
     size_t stagingAlignment = static_cast<size_t>(renderer->getStagingBufferAlignment());
 
-    ANGLE_TRY(initSuballocation(contextVk, memoryTypeIndex, allocationSize, stagingAlignment,
-                                BufferUsageType::Static));
+    ANGLE_TRY(contextVk->initBufferAllocation(this, memoryTypeIndex, allocationSize,
+                                              stagingAlignment, BufferUsageType::Static));
 
     *offset  = roundUp(getOffset(), static_cast<VkDeviceSize>(imageCopyAlignment));
     *dataPtr = getMappedMemory() + (*offset) - getOffset();
@@ -5991,45 +5987,76 @@ angle::Result ImageHelper::initializeNonZeroMemory(Context *context,
     return angle::Result::Continue;
 }
 
-angle::Result ImageHelper::initMemory(Context *context,
-                                      bool hasProtectedContent,
-                                      const MemoryProperties &memoryProperties,
-                                      VkMemoryPropertyFlags flags,
-                                      MemoryAllocationType allocationType)
+VkResult ImageHelper::initMemory(Context *context,
+                                 const MemoryProperties &memoryProperties,
+                                 VkMemoryPropertyFlags flags,
+                                 VkMemoryPropertyFlags excludedFlags,
+                                 const VkMemoryRequirements *memoryRequirements,
+                                 const bool allocateDedicatedMemory,
+                                 MemoryAllocationType allocationType,
+                                 VkMemoryPropertyFlags *flagsOut,
+                                 VkDeviceSize *sizeOut)
 {
     // TODO(jmadill): Memory sub-allocation. http://anglebug.com/2162
-    if (hasProtectedContent)
-    {
-        flags |= VK_MEMORY_PROPERTY_PROTECTED_BIT;
-    }
     mMemoryAllocationType = allocationType;
 
     // To allocate memory here, if possible, we use the image memory suballocator which uses VMA.
+    ASSERT(excludedFlags < VK_MEMORY_PROPERTY_FLAG_BITS_MAX_ENUM);
     RendererVk *renderer = context->getRenderer();
     if (renderer->getFeatures().useVmaForImageSuballocation.enabled)
     {
         // While it may be preferable to allocate the image on the device, it should also be
         // possible to allocate on other memory types if the device is out of memory.
-        VkMemoryPropertyFlags requiredFlags  = flags & (~VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+        VkMemoryPropertyFlags requiredFlags  = flags & (~excludedFlags);
         VkMemoryPropertyFlags preferredFlags = flags;
-        ANGLE_VK_TRY(context, renderer->getImageMemorySuballocator().allocateAndBindMemory(
-                                  context, &mImage, &mVkImageCreateInfo, requiredFlags,
-                                  preferredFlags, mMemoryAllocationType, &mVmaAllocation, &flags,
-                                  &mMemoryTypeIndex, &mAllocationSize));
+        VK_RESULT_TRY(renderer->getImageMemorySuballocator().allocateAndBindMemory(
+            context, &mImage, &mVkImageCreateInfo, requiredFlags, preferredFlags,
+            memoryRequirements, allocateDedicatedMemory, mMemoryAllocationType, &mVmaAllocation,
+            flagsOut, &mMemoryTypeIndex, &mAllocationSize));
     }
     else
     {
-        ANGLE_TRY(AllocateImageMemory(context, mMemoryAllocationType, flags, &flags, nullptr,
-                                      &mImage, &mMemoryTypeIndex, &mDeviceMemory,
-                                      &mAllocationSize));
+        VK_RESULT_TRY(AllocateImageMemory(context, mMemoryAllocationType, flags, flagsOut, nullptr,
+                                          &mImage, &mMemoryTypeIndex, &mDeviceMemory,
+                                          &mAllocationSize));
     }
+
     mCurrentQueueFamilyIndex = renderer->getQueueFamilyIndex();
+    *sizeOut                 = mAllocationSize;
+
+    return VK_SUCCESS;
+}
+
+angle::Result ImageHelper::initMemoryAndNonZeroFillIfNeeded(
+    Context *context,
+    bool hasProtectedContent,
+    const MemoryProperties &memoryProperties,
+    VkMemoryPropertyFlags flags,
+    MemoryAllocationType allocationType)
+{
+    RendererVk *renderer = context->getRenderer();
+    VkMemoryPropertyFlags outputFlags;
+    VkDeviceSize outputSize;
+
+    if (hasProtectedContent)
+    {
+        flags |= VK_MEMORY_PROPERTY_PROTECTED_BIT;
+    }
+
+    // Get memory requirements for the allocation.
+    VkMemoryRequirements memoryRequirements;
+    mImage.getMemoryRequirements(renderer->getDevice(), &memoryRequirements);
+    bool allocateDedicatedMemory =
+        renderer->getImageMemorySuballocator().needsDedicatedMemory(memoryRequirements.size);
+
+    ANGLE_VK_TRY(context,
+                 initMemory(context, memoryProperties, flags, 0, &memoryRequirements,
+                            allocateDedicatedMemory, allocationType, &outputFlags, &outputSize));
 
     if (renderer->getFeatures().allocateNonZeroMemory.enabled)
     {
-        ANGLE_TRY(initializeNonZeroMemory(context, hasProtectedContent, flags, mAllocationSize));
+        ANGLE_TRY(initializeNonZeroMemory(context, hasProtectedContent, outputFlags, outputSize));
     }
-
     return angle::Result::Continue;
 }
 
@@ -6064,10 +6091,10 @@ angle::Result ImageHelper::initExternalMemory(Context *context,
     {
         bindImagePlaneMemoryInfo.planeAspect = kMemoryPlaneAspects[memoryPlane];
 
-        ANGLE_TRY(AllocateImageMemoryWithRequirements(
-            context, mMemoryAllocationType, flags, memoryRequirements,
-            extraAllocationInfo[memoryPlane], bindImagePlaneMemoryInfoPtr, &mImage,
-            &mMemoryTypeIndex, &mDeviceMemory));
+        ANGLE_VK_TRY(context, AllocateImageMemoryWithRequirements(
+                                  context, mMemoryAllocationType, flags, memoryRequirements,
+                                  extraAllocationInfo[memoryPlane], bindImagePlaneMemoryInfoPtr,
+                                  &mImage, &mMemoryTypeIndex, &mDeviceMemory));
     }
     mCurrentQueueFamilyIndex = currentQueueFamilyIndex;
 
@@ -6358,9 +6385,10 @@ angle::Result ImageHelper::initStaging(Context *context,
     {
         memoryPropertyFlags |= VK_MEMORY_PROPERTY_PROTECTED_BIT;
     }
-    ANGLE_TRY(initMemory(context, hasProtectedContent, memoryProperties, memoryPropertyFlags,
-                         vk::MemoryAllocationType::StagingImage));
 
+    ANGLE_TRY(initMemoryAndNonZeroFillIfNeeded(context, hasProtectedContent, memoryProperties,
+                                               memoryPropertyFlags,
+                                               vk::MemoryAllocationType::StagingImage));
     return angle::Result::Continue;
 }
 
@@ -6422,8 +6450,10 @@ angle::Result ImageHelper::initImplicitMultisampledRenderToTexture(
     // If this ever fails, it can be retried without the LAZILY_ALLOCATED flag (which will probably
     // still fail), but ideally that means GL_EXT_multisampled_render_to_texture should not be
     // advertized on this platform in the first place.
-    return initMemory(context, hasProtectedContent, memoryProperties, kMultisampledMemoryFlags,
-                      vk::MemoryAllocationType::ImplicitMultisampledRenderToTextureImage);
+    ANGLE_TRY(initMemoryAndNonZeroFillIfNeeded(
+        context, hasProtectedContent, memoryProperties, kMultisampledMemoryFlags,
+        vk::MemoryAllocationType::ImplicitMultisampledRenderToTextureImage));
+    return angle::Result::Continue;
 }
 
 VkImageAspectFlags ImageHelper::getAspectFlags() const

@@ -415,6 +415,14 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 7059 ANDROID : EGLReadinessCheckTest.HasGetPlatformDisplayEXT/* = SKIP
 7059 ANDROID : EGLContextSharingTestNoSyncTextureUploads.NoSync/* = SKIP
 
+// Triggers lowmemorykiller on some Android devices.
+280304441 ANDROID : UniformBufferMemoryTest.BufferDataInLoopManyTimes/* = SKIP
+280304441 ANDROID : Texture2DMemoryTestES3.TextureDataInLoopManyTimes/* = SKIP
+
+// Timeout on Swiftshader and failure due to too many allocations
+280304441 SWIFTSHADER : UniformBufferMemoryTest.BufferDataInLoopManyTimes/* = SKIP
+280304441 SWIFTSHADER : Texture2DMemoryTestES3.TextureDataInLoopManyTimes/* = SKIP
+
 // Reading back the contents of an RGBX image initialized with non-255 alpha returns the original alpha (instead of 255)
 6472 ANDROID GLES : ImageTestES3.RGBXAHBImportThenUpload/* = SKIP
 6472 ANDROID GLES : ImageTestES3.RGBXAHBImportMultipleLayers/* = SKIP
@@ -1196,6 +1204,8 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 
 // Skip device OOM tests for Linux/NVIDIA.
 8236 LINUX NVIDIA : VulkanMemoryTest.* = SKIP
+8236 LINUX NVIDIA : UniformBufferMemoryTest.* = SKIP
+8236 LINUX NVIDIA : Texture2DMemoryTestES3.* = SKIP
 
 // SSBO Alias Overwrite
 5990 PIXEL4ORXL VULKAN : ComputeShaderTest.SSBOAliasOverWrite/* = SKIP

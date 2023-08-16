@@ -82,6 +82,8 @@ class ImageMemorySuballocator : angle::NonCopyable
                                    const VkImageCreateInfo *imageCreateInfo,
                                    VkMemoryPropertyFlags requiredFlags,
                                    VkMemoryPropertyFlags preferredFlags,
+                                   const VkMemoryRequirements *memoryRequirements,
+                                   const bool allocateDedicatedMemory,
                                    MemoryAllocationType memoryAllocationType,
                                    Allocation *allocationOut,
                                    VkMemoryPropertyFlags *memoryFlagsOut,
@@ -94,6 +96,9 @@ class ImageMemorySuballocator : angle::NonCopyable
                                               VkDeviceSize size,
                                               int value,
                                               VkMemoryPropertyFlags flags);
+
+    // Determines if dedicated memory is required for the allocation.
+    bool needsDedicatedMemory(VkDeviceSize size) const;
 };
 }  // namespace vk
 
