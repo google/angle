@@ -1013,10 +1013,13 @@ void Shader::waitForLinkJobs()
     // purely for conformance, and performance is irrelevant.
     //
     // Wait until there are no pending link jobs.
-    while (mLinkJobsInProgress > 0)
+    if (mLinkJobsInProgress > 0)
     {
         WARN() << "Detected shader recompilation while a link job is in progress.  This is "
                   "inefficient, do not reuse shaders.";
+    }
+    while (mLinkJobsInProgress > 0)
+    {
         std::this_thread::sleep_for(std::chrono::microseconds(1));
     }
 
