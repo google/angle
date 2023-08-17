@@ -142,7 +142,6 @@ _DEFAULT_BUILDERLESS_OS_CATEGORIES = [os_category.LINUX, os_category.WINDOWS]
 _GOMA_RBE_PROD = {
     "server_host": "goma.chromium.org",
     "rpc_extra_params": "?prod",
-    "use_luci_auth": True,
 }
 
 def _recipe_for_package(cipd_package):
