@@ -429,7 +429,7 @@ std::shared_ptr<WaitableCompileEvent> ShaderGL::compile(const gl::Context *conte
                                                               result);
         }
     }
-    else if (workerThreadPool->isAsync() && !features.disableWorkerContexts.enabled)
+    else if (workerThreadPool->isAsync())
     {
         auto compileAndCheckShaderInWorkerFunctor = [this](const char *source) {
             return compileAndCheckShaderInWorker(source);

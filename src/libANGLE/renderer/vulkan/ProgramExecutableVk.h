@@ -30,11 +30,10 @@ class ShaderInfo final : angle::NonCopyable
     ShaderInfo();
     ~ShaderInfo();
 
-    angle::Result initShaders(vk::Context *context,
+    angle::Result initShaders(ContextVk *contextVk,
                               const gl::ShaderBitSet &linkedShaderStages,
                               const gl::ShaderMap<const angle::spirv::Blob *> &spirvBlobs,
-                              const ShaderInterfaceVariableInfoMap &variableInfoMap,
-                              bool isGLES1);
+                              const ShaderInterfaceVariableInfoMap &variableInfoMap);
     void initShaderFromProgram(gl::ShaderType shaderType, const ShaderInfo &programShaderInfo);
     void clear();
 
@@ -278,20 +277,6 @@ class ProgramExecutableVk
     const gl::Program::DirtyBits &getDirtyBits() const { return mDirtyBits; }
     void resetUniformBufferDirtyBits() { mDirtyBits.reset(); }
 
-    // The following functions are for internal use of programs, including from a threaded link job:
-    angle::Result resizeUniformBlockMemory(vk::Context *context,
-                                           const gl::ProgramExecutable &glExecutable,
-                                           const gl::ShaderMap<size_t> &requiredBufferSize);
-    void resolvePrecisionMismatch(const gl::ProgramMergedVaryings &mergedVaryings);
-    angle::Result initShaders(vk::Context *context,
-                              const gl::ShaderBitSet &linkedShaderStages,
-                              const gl::ShaderMap<const angle::spirv::Blob *> &spirvBlobs,
-                              bool isGLES1)
-    {
-        return mOriginalShaderInfo.initShaders(context, linkedShaderStages, spirvBlobs,
-                                               mVariableInfoMap, isGLES1);
-    }
-
   private:
     friend class ProgramVk;
     friend class ProgramPipelineVk;
@@ -312,6 +297,8 @@ class ProgramExecutableVk
         const gl::ProgramExecutable &executable,
         const gl::ActiveTextureArray<TextureVk *> *activeTextures,
         vk::DescriptorSetLayoutDesc *descOut);
+
+    void resolvePrecisionMismatch(const gl::ProgramMergedVaryings &mergedVaryings);
 
     size_t calcUniformUpdateRequiredSpace(vk::Context *context,
                                           const gl::ProgramExecutable &glExecutable,
@@ -380,6 +367,10 @@ class ProgramExecutableVk
                                              const gl::ProgramExecutable &glExecutable,
                                              const vk::GraphicsPipelineDesc **descPtrOut,
                                              vk::PipelineHelper **pipelineOut);
+
+    angle::Result resizeUniformBlockMemory(ContextVk *contextVk,
+                                           const gl::ProgramExecutable &glExecutable,
+                                           const gl::ShaderMap<size_t> &requiredBufferSize);
 
     angle::Result getOrAllocateDescriptorSet(vk::Context *context,
                                              UpdateDescriptorSetsBuilder *updateBuilder,

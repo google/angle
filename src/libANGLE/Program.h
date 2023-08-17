@@ -452,7 +452,7 @@ class Program final : public LabeledObject, public angle::Subject
         return mProgram;
     }
 
-    void attachShader(const Context *context, Shader *shader);
+    void attachShader(Shader *shader);
     void detachShader(const Context *context, Shader *shader);
     int getAttachedShadersCount() const;
 
@@ -818,7 +818,7 @@ class Program final : public LabeledObject, public angle::Subject
     void unlink();
     void deleteSelf(const Context *context);
 
-    angle::Result linkImpl(const Context *context, ScopedShaderLinkLocks *shaderLocks);
+    angle::Result linkImpl(const Context *context);
 
     bool linkValidateShaders(const Context *context, InfoLog &infoLog);
     bool linkAttributes(const Context *context, InfoLog &infoLog);

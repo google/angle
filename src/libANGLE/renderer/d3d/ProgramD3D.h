@@ -245,8 +245,7 @@ class ProgramD3D : public ProgramImpl
     std::unique_ptr<LinkEvent> link(const gl::Context *context,
                                     const gl::ProgramLinkedResources &resources,
                                     gl::InfoLog &infoLog,
-                                    gl::ProgramMergedVaryings &&mergedVaryings,
-                                    gl::ScopedShaderLinkLocks *shaderLocks) override;
+                                    const gl::ProgramMergedVaryings &mergedVaryings) override;
     GLboolean validate(const gl::Caps &caps, gl::InfoLog *infoLog) override;
 
     void updateUniformBufferCache(const gl::Caps &caps);
@@ -512,11 +511,9 @@ class ProgramD3D : public ProgramImpl
                                     const GLfloat *value);
 
     std::unique_ptr<LinkEvent> compileProgramExecutables(const gl::Context *context,
-                                                         gl::InfoLog &infoLog,
-                                                         gl::ScopedShaderLinkLocks *shaderLocks);
+                                                         gl::InfoLog &infoLog);
     std::unique_ptr<LinkEvent> compileComputeExecutable(const gl::Context *context,
-                                                        gl::InfoLog &infoLog,
-                                                        gl::ScopedShaderLinkLocks *shaderLocks);
+                                                        gl::InfoLog &infoLog);
 
     angle::Result loadBinaryShaderExecutables(d3d::Context *contextD3D,
                                               gl::BinaryInputStream *stream,

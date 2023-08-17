@@ -64,7 +64,7 @@ void SaveShaderInterfaceVariableXfbInfo(const ShaderInterfaceVariableXfbInfo &xf
     }
 }
 
-bool ValidateTransformedSpirV(vk::Context *context,
+bool ValidateTransformedSpirV(const ContextVk *contextVk,
                               const gl::ShaderBitSet &linkedShaderStages,
                               const ShaderInterfaceVariableInfoMap &variableInfoMap,
                               const gl::ShaderMap<angle::spirv::Blob> &spirvBlobs)
@@ -80,7 +80,7 @@ bool ValidateTransformedSpirV(vk::Context *context,
             shaderType == lastPreFragmentStage && shaderType != gl::ShaderType::TessControl;
         options.isTransformFeedbackStage = options.isLastPreFragmentStage;
         options.useSpirvVaryingPrecisionFixer =
-            context->getFeatures().varyingsRequireMatchingPrecisionInSpirv.enabled;
+            contextVk->getFeatures().varyingsRequireMatchingPrecisionInSpirv.enabled;
 
         angle::spirv::Blob transformed;
         if (SpvTransformSpirvCode(options, variableInfoMap, spirvBlobs[shaderType], &transformed) !=
@@ -270,11 +270,10 @@ ShaderInfo::ShaderInfo() {}
 
 ShaderInfo::~ShaderInfo() = default;
 
-angle::Result ShaderInfo::initShaders(vk::Context *context,
+angle::Result ShaderInfo::initShaders(ContextVk *contextVk,
                                       const gl::ShaderBitSet &linkedShaderStages,
                                       const gl::ShaderMap<const angle::spirv::Blob *> &spirvBlobs,
-                                      const ShaderInterfaceVariableInfoMap &variableInfoMap,
-                                      bool isGLES1)
+                                      const ShaderInterfaceVariableInfoMap &variableInfoMap)
 {
     clear();
 
@@ -289,9 +288,10 @@ angle::Result ShaderInfo::initShaders(vk::Context *context,
     // Assert that SPIR-V transformation is correct, even if the test never issues a draw call.
     // Don't validate GLES1 programs because they are always created right before a draw, so they
     // will naturally be validated.  This improves GLES1 test run times.
-    if (!isGLES1)
+    if (!contextVk->getState().isGLES1())
     {
-        ASSERT(ValidateTransformedSpirV(context, linkedShaderStages, variableInfoMap, mSpirvBlobs));
+        ASSERT(
+            ValidateTransformedSpirV(contextVk, linkedShaderStages, variableInfoMap, mSpirvBlobs));
     }
 
     mIsInitialized = true;
@@ -1867,7 +1867,7 @@ void ProgramExecutableVk::onProgramBind(const gl::ProgramExecutable &glExecutabl
 }
 
 angle::Result ProgramExecutableVk::resizeUniformBlockMemory(
-    vk::Context *context,
+    ContextVk *contextVk,
     const gl::ProgramExecutable &glExecutable,
     const gl::ShaderMap<size_t> &requiredBufferSize)
 {
@@ -1878,7 +1878,7 @@ angle::Result ProgramExecutableVk::resizeUniformBlockMemory(
             if (!mDefaultUniformBlocks[shaderType]->uniformData.resize(
                     requiredBufferSize[shaderType]))
             {
-                ANGLE_VK_CHECK(context, false, VK_ERROR_OUT_OF_HOST_MEMORY);
+                ANGLE_VK_CHECK(contextVk, false, VK_ERROR_OUT_OF_HOST_MEMORY);
             }
 
             // Initialize uniform buffer memory to zero by default.

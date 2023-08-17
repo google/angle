@@ -564,10 +564,8 @@ uint8_t ProgramD3DMetadata::getCullDistanceArraySize() const
 class ProgramD3D::GetExecutableTask : public Closure, public d3d::Context
 {
   public:
-    GetExecutableTask(const gl::Context *context,
-                      ProgramD3D *program,
-                      gl::ScopedShaderLinkLock &&shaderLock)
-        : mProgram(program), mContext(context), mShaderLock(std::move(shaderLock))
+    GetExecutableTask(const gl::Context *context, ProgramD3D *program)
+        : mProgram(program), mContext(context)
     {}
 
     virtual angle::Result run() = 0;
@@ -610,7 +608,6 @@ class ProgramD3D::GetExecutableTask : public Closure, public d3d::Context
     const char *mStoredFunction = nullptr;
     unsigned int mStoredLine    = 0;
     const gl::Context *mContext = nullptr;
-    gl::ScopedShaderLinkLock mShaderLock;
 };
 
 // ProgramD3D Implementation
@@ -892,7 +889,7 @@ class ProgramD3D::LoadBinaryTask : public ProgramD3D::GetExecutableTask
                    ProgramD3D *program,
                    gl::BinaryInputStream *stream,
                    gl::InfoLog &infoLog)
-        : ProgramD3D::GetExecutableTask(context, program, gl::ScopedShaderLinkLock())
+        : ProgramD3D::GetExecutableTask(context, program)
     {
         ASSERT(mProgram);
         ASSERT(stream);
@@ -1726,16 +1723,12 @@ angle::Result ProgramD3D::getGeometryExecutableForPrimitiveType(d3d::Context *co
 class ProgramD3D::GetVertexExecutableTask : public ProgramD3D::GetExecutableTask
 {
   public:
-    GetVertexExecutableTask(const gl::Context *context,
-                            ProgramD3D *program,
-                            gl::ScopedShaderLinkLock &&shaderLock)
-        : GetExecutableTask(context, program, std::move(shaderLock))
+    GetVertexExecutableTask(const gl::Context *context, ProgramD3D *program)
+        : GetExecutableTask(context, program)
     {}
     angle::Result run() override
     {
         ANGLE_TRACE_EVENT0("gpu.angle", "ProgramD3D::GetVertexExecutableTask::run");
-
-        gl::ScopedShaderLinkLock unlockAtEnd(std::move(mShaderLock));
 
         ANGLE_TRY(mProgram->getVertexExecutableForCachedInputLayout(this, &mExecutable, &mInfoLog));
 
@@ -1754,17 +1747,12 @@ void ProgramD3D::updateCachedInputLayoutFromShader(const gl::Context *context)
 class ProgramD3D::GetPixelExecutableTask : public ProgramD3D::GetExecutableTask
 {
   public:
-    GetPixelExecutableTask(const gl::Context *context,
-                           ProgramD3D *program,
-                           gl::ScopedShaderLinkLock &&shaderLock)
-        : GetExecutableTask(context, program, std::move(shaderLock))
+    GetPixelExecutableTask(const gl::Context *context, ProgramD3D *program)
+        : GetExecutableTask(context, program)
     {}
     angle::Result run() override
     {
         ANGLE_TRACE_EVENT0("gpu.angle", "ProgramD3D::GetPixelExecutableTask::run");
-
-        gl::ScopedShaderLinkLock unlockAtEnd(std::move(mShaderLock));
-
         if (!mProgram->mState.getAttachedShader(gl::ShaderType::Fragment))
         {
             return angle::Result::Continue;
@@ -1810,17 +1798,13 @@ class ProgramD3D::GetGeometryExecutableTask : public ProgramD3D::GetExecutableTa
   public:
     GetGeometryExecutableTask(const gl::Context *context,
                               ProgramD3D *program,
-                              const gl::State &state,
-                              gl::ScopedShaderLinkLock &&shaderLock)
-        : GetExecutableTask(context, program, std::move(shaderLock)), mState(state)
+                              const gl::State &state)
+        : GetExecutableTask(context, program), mState(state)
     {}
 
     angle::Result run() override
     {
         ANGLE_TRACE_EVENT0("gpu.angle", "ProgramD3D::GetGeometryExecutableTask::run");
-
-        gl::ScopedShaderLinkLock unlockAtEnd(std::move(mShaderLock));
-
         // Auto-generate the geometry shader here, if we expect to be using point rendering in
         // D3D11.
         if (mProgram->usesGeometryShader(mState, gl::PrimitiveMode::Points))
@@ -1839,17 +1823,12 @@ class ProgramD3D::GetGeometryExecutableTask : public ProgramD3D::GetExecutableTa
 class ProgramD3D::GetComputeExecutableTask : public ProgramD3D::GetExecutableTask
 {
   public:
-    GetComputeExecutableTask(const gl::Context *context,
-                             ProgramD3D *program,
-                             gl::ScopedShaderLinkLock &&shaderLock)
-        : GetExecutableTask(context, program, std::move(shaderLock))
+    GetComputeExecutableTask(const gl::Context *context, ProgramD3D *program)
+        : GetExecutableTask(context, program)
     {}
     angle::Result run() override
     {
         ANGLE_TRACE_EVENT0("gpu.angle", "ProgramD3D::GetComputeExecutableTask::run");
-
-        gl::ScopedShaderLinkLock unlockAtEnd(std::move(mShaderLock));
-
         mProgram->updateCachedImage2DBindLayoutFromShader(gl::ShaderType::Compute);
         ShaderExecutableD3D *computeExecutable = nullptr;
         ANGLE_TRY(mProgram->getComputeExecutableForImage2DBindLayout(
@@ -1994,10 +1973,8 @@ class ProgramD3D::ComputeProgramLinkEvent final : public LinkEvent
     std::shared_ptr<WaitableEvent> mWaitEvent;
 };
 
-std::unique_ptr<LinkEvent> ProgramD3D::compileProgramExecutables(
-    const gl::Context *context,
-    gl::InfoLog &infoLog,
-    gl::ScopedShaderLinkLocks *shaderLocks)
+std::unique_ptr<LinkEvent> ProgramD3D::compileProgramExecutables(const gl::Context *context,
+                                                                 gl::InfoLog &infoLog)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "ProgramD3D::compileProgramExecutables");
     // Ensure the compiler is initialized to avoid race conditions.
@@ -2007,12 +1984,10 @@ std::unique_ptr<LinkEvent> ProgramD3D::compileProgramExecutables(
         return std::make_unique<LinkEventDone>(result);
     }
 
-    auto vertexTask = std::make_shared<GetVertexExecutableTask>(
-        context, this, std::move((*shaderLocks)[gl::ShaderType::Vertex]));
-    auto pixelTask = std::make_shared<GetPixelExecutableTask>(
-        context, this, std::move((*shaderLocks)[gl::ShaderType::Fragment]));
-    auto geometryTask = std::make_shared<GetGeometryExecutableTask>(
-        context, this, context->getState(), std::move((*shaderLocks)[gl::ShaderType::Geometry]));
+    auto vertexTask = std::make_shared<GetVertexExecutableTask>(context, this);
+    auto pixelTask  = std::make_shared<GetPixelExecutableTask>(context, this);
+    auto geometryTask =
+        std::make_shared<GetGeometryExecutableTask>(context, this, context->getState());
     bool useGS                 = usesGeometryShader(context->getState(), gl::PrimitiveMode::Points);
     gl::Shader *vertexShader   = mState.getAttachedShader(gl::ShaderType::Vertex);
     gl::Shader *fragmentShader = mState.getAttachedShader(gl::ShaderType::Fragment);
@@ -2025,10 +2000,8 @@ std::unique_ptr<LinkEvent> ProgramD3D::compileProgramExecutables(
         vertexShaderD3D, fragmentShaderD3D);
 }
 
-std::unique_ptr<LinkEvent> ProgramD3D::compileComputeExecutable(
-    const gl::Context *context,
-    gl::InfoLog &infoLog,
-    gl::ScopedShaderLinkLocks *shaderLocks)
+std::unique_ptr<LinkEvent> ProgramD3D::compileComputeExecutable(const gl::Context *context,
+                                                                gl::InfoLog &infoLog)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "ProgramD3D::compileComputeExecutable");
     // Ensure the compiler is initialized to avoid race conditions.
@@ -2037,8 +2010,7 @@ std::unique_ptr<LinkEvent> ProgramD3D::compileComputeExecutable(
     {
         return std::make_unique<LinkEventDone>(result);
     }
-    auto computeTask = std::make_shared<GetComputeExecutableTask>(
-        context, this, std::move((*shaderLocks)[gl::ShaderType::Compute]));
+    auto computeTask = std::make_shared<GetComputeExecutableTask>(context, this);
 
     std::shared_ptr<WaitableEvent> waitableEvent;
 
@@ -2110,8 +2082,7 @@ angle::Result ProgramD3D::getComputeExecutableForImage2DBindLayout(
 std::unique_ptr<LinkEvent> ProgramD3D::link(const gl::Context *context,
                                             const gl::ProgramLinkedResources &resources,
                                             gl::InfoLog &infoLog,
-                                            gl::ProgramMergedVaryings && /*mergedVaryings*/,
-                                            gl::ScopedShaderLinkLocks *shaderLocks)
+                                            const gl::ProgramMergedVaryings & /*mergedVaryings*/)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "ProgramD3D::link");
     const auto &data = context->getState();
@@ -2140,7 +2111,7 @@ std::unique_ptr<LinkEvent> ProgramD3D::link(const gl::Context *context,
 
         defineUniformsAndAssignRegisters(context);
 
-        return compileComputeExecutable(context, infoLog, shaderLocks);
+        return compileComputeExecutable(context, infoLog);
     }
     else
     {
@@ -2242,7 +2213,7 @@ std::unique_ptr<LinkEvent> ProgramD3D::link(const gl::Context *context,
             updateCachedInputLayoutFromShader(context);
         }
 
-        return compileProgramExecutables(context, infoLog, shaderLocks);
+        return compileProgramExecutables(context, infoLog);
     }
 }
 

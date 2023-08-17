@@ -397,7 +397,10 @@ void RendererGL::framebufferFetchBarrier()
 
 bool RendererGL::bindWorkerContext(std::string *infoLog)
 {
-    ASSERT(!mFeatures.disableWorkerContexts.enabled);
+    if (mFeatures.disableWorkerContexts.enabled)
+    {
+        return false;
+    }
 
     std::lock_guard<std::mutex> lock(mWorkerMutex);
     std::unique_ptr<WorkerContext> workerContext;

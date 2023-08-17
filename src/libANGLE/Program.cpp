@@ -1056,9 +1056,8 @@ const std::string &Program::getLabel() const
     return mState.mLabel;
 }
 
-void Program::attachShader(const Context *context, Shader *shader)
+void Program::attachShader(Shader *shader)
 {
-    resolveLink(context);
     ShaderType shaderType = shader->getType();
     ASSERT(shaderType != ShaderType::InvalidEnum);
 
@@ -1122,25 +1121,13 @@ void Program::bindFragmentOutputIndex(GLuint index, const char *name)
 
 angle::Result Program::link(const Context *context)
 {
-    // Lock the shaders before linking, to prevent them from being modified during a following
-    // recompile
-    ScopedShaderLinkLocks shaderLocks;
-    for (ShaderType shaderType : angle::AllEnums<ShaderType>())
-    {
-        gl::Shader *shader = mState.mAttachedShaders[shaderType];
-        if (shader)
-        {
-            shaderLocks[shaderType] = shader->lockAndGetScopedShaderLinkLock();
-        }
-    }
-
     const angle::FrontendFeatures &frontendFeatures = context->getFrontendFeatures();
     if (frontendFeatures.dumpShaderSource.enabled)
     {
         dumpProgramInfo();
     }
 
-    angle::Result result = linkImpl(context, &shaderLocks);
+    angle::Result result = linkImpl(context);
 
     // Avoid having two ProgramExecutables if the link failed and the Program had successfully
     // linked previously.
@@ -1155,7 +1142,7 @@ angle::Result Program::link(const Context *context)
 // The attached shaders are checked for linking errors by matching up their variables.
 // Uniform, input and output variables get collected.
 // The code gets compiled into binaries.
-angle::Result Program::linkImpl(const Context *context, ScopedShaderLinkLocks *shaderLocks)
+angle::Result Program::linkImpl(const Context *context)
 {
     ASSERT(!mLinkingState);
     // Don't make any local variables pointing to anything within the ProgramExecutable, since
@@ -1328,8 +1315,7 @@ angle::Result Program::linkImpl(const Context *context, ScopedShaderLinkLocks *s
     mLinkingState                    = std::move(linkingState);
     mLinkingState->linkingFromBinary = false;
     mLinkingState->programHash       = programHash;
-    mLinkingState->linkEvent =
-        mProgram->link(context, resources, infoLog, std::move(mergedVaryings), shaderLocks);
+    mLinkingState->linkEvent         = mProgram->link(context, resources, infoLog, mergedVaryings);
 
     // Must be after mProgram->link() to avoid misleading the linker about output variables.
     mState.updateProgramInterfaceInputs(context);

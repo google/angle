@@ -152,10 +152,6 @@ Shader::Shader(ShaderProgramManager *manager,
 
 void Shader::onDestroy(const gl::Context *context)
 {
-    // There cannot be any link jobs using this shader.  Because that means the shader must be
-    // attached to a program, and ref counting prevents it from being destroyed.
-    ASSERT(mLinkJobsInProgress == 0);
-
     resolveCompile(context);
     mImplementation->destroy();
     mBoundCompiler.set(context, nullptr);
@@ -394,9 +390,6 @@ void Shader::getTranslatedSourceWithDebugInfo(const Context *context,
 void Shader::compile(const Context *context)
 {
     resolveCompile(context);
-
-    // Do not modify the compiled state while there are link jobs in progress.
-    waitForLinkJobs();
 
     mState.mCompiledShaderState.translatedSource.clear();
     mState.mCompiledShaderState.compiledBinary.clear();
@@ -1007,23 +1000,4 @@ void Shader::setShaderKey(const Context *context,
     angle::base::SHA1HashBytes(shaderKey.data(), shaderKey.size(), mShaderHash.data());
 }
 
-void Shader::waitForLinkJobs()
-{
-    // No known application recompiles shaders right after linking programs.  This case is thus
-    // purely for conformance, and performance is irrelevant.
-    //
-    // Wait until there are no pending link jobs.
-    if (mLinkJobsInProgress > 0)
-    {
-        WARN() << "Detected shader recompilation while a link job is in progress.  This is "
-                  "inefficient, do not reuse shaders.";
-    }
-    while (mLinkJobsInProgress > 0)
-    {
-        std::this_thread::sleep_for(std::chrono::microseconds(1));
-    }
-
-    // There cannot be more link jobs added in the meantime, because of the share group lock.
-    ASSERT(mLinkJobsInProgress == 0);
-}
 }  // namespace gl
