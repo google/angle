@@ -246,6 +246,13 @@ def upgrade_single_trace(args, trace_binary, trace, out_path, no_overwrite, c_so
             logging.error(
                 f'There was a problem tracing "{trace}", could not find json file: {json_file}')
             return False
+
+        # Copy over the list obtained by get_min_reqs if present
+        if 'RequiredExtensions' in json_data:
+            new_data = read_json(json_file)
+            new_data['RequiredExtensions'] = json_data['RequiredExtensions']
+            write_json(json_file, new_data)
+
     except subprocess.CalledProcessError as e:
         logging.exception('There was an exception running "%s":\n%s' % (trace, e.output.decode()))
         return False
