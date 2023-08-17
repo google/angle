@@ -139,10 +139,6 @@ os = struct(
 
 _RECIPE_NAME_PREFIX = "recipe:"
 _DEFAULT_BUILDERLESS_OS_CATEGORIES = [os_category.LINUX, os_category.WINDOWS]
-_GOMA_RBE_PROD = {
-    "server_host": "goma.chromium.org",
-    "rpc_extra_params": "?prod",
-}
 
 def _recipe_for_package(cipd_package):
     def recipe(*, name, cipd_version = None, recipe = None, use_python3 = False):
@@ -198,12 +194,8 @@ def angle_builder(name, cpu):
     dimensions = {}
     dimensions["os"] = config_os.dimension
 
-    goma_props = {}
-    goma_props.update(_GOMA_RBE_PROD)
-
     if config_os.category in _DEFAULT_BUILDERLESS_OS_CATEGORIES:
         dimensions["builderless"] = "1"
-        goma_props["enable_ats"] = True
 
     is_asan = "-asan" in name
     is_tsan = "-tsan" in name
@@ -274,7 +266,6 @@ def angle_builder(name, cpu):
 
     properties = {
         "builder_group": "angle",
-        "$build/goma": goma_props,
         "$build/reclient": {
             "instance": "rbe-chromium-untrusted",
             "metrics_project": "chromium-reclient-metrics",
@@ -287,7 +278,6 @@ def angle_builder(name, cpu):
 
     ci_properties = {
         "builder_group": "angle",
-        "$build/goma": goma_props,
         "$build/reclient": {
             "instance": "rbe-chromium-trusted",
             "metrics_project": "chromium-reclient-metrics",
