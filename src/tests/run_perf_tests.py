@@ -642,9 +642,6 @@ def main():
         logging.error('No tests to run.')
         return EXIT_FAILURE
 
-    if angle_test_util.IsAndroid() and args.test_suite == android_helper.ANGLE_TRACE_TEST_SUITE:
-        android_helper.RunSmokeTest()
-
     logging.info('Running %d test%s' % (len(tests), 's' if len(tests) > 1 else ' '))
 
     try:
