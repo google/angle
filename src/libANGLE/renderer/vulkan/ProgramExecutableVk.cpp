@@ -318,13 +318,22 @@ void ShaderInfo::load(gl::BinaryInputStream *stream)
 {
     clear();
 
+    // Read in shader code sizes for all shader types
+    gl::ShaderMap<uint32_t> blobSizes;
+    stream->readBytes(reinterpret_cast<uint8_t *>(blobSizes.data()),
+                      blobSizes.size() * sizeof(*blobSizes.data()));
     // Read in shader codes for all shader types
     for (gl::ShaderType shaderType : gl::AllShaderTypes())
     {
-        angle::spirv::Blob *spirvBlob = &mSpirvBlobs[shaderType];
-
-        // Read the SPIR-V
-        stream->readIntVector<uint32_t>(spirvBlob);
+        angle::spirv::Blob *blob = &mSpirvBlobs[shaderType];
+        ASSERT(blob->empty());
+        if (blobSizes[shaderType] > 0)
+        {
+            blob->resize(blobSizes[shaderType]);
+            // Read the SPIR-V
+            stream->readBytes(reinterpret_cast<uint8_t *>(blob->data()),
+                              blobSizes[shaderType] * sizeof(*blob->data()));
+        }
     }
 
     mIsInitialized = true;
@@ -334,13 +343,25 @@ void ShaderInfo::save(gl::BinaryOutputStream *stream)
 {
     ASSERT(valid());
 
+    // Write out shader codes size for all shader types
+    gl::ShaderMap<uint32_t> blobSizes;
+    for (gl::ShaderType shaderType : gl::AllShaderTypes())
+    {
+        blobSizes[shaderType] = static_cast<uint32_t>(mSpirvBlobs[shaderType].size());
+    }
+    stream->writeBytes(reinterpret_cast<const uint8_t *>(blobSizes.data()),
+                       blobSizes.size() * sizeof(*blobSizes.data()));
+
     // Write out shader codes for all shader types
     for (gl::ShaderType shaderType : gl::AllShaderTypes())
     {
-        const angle::spirv::Blob &spirvBlob = mSpirvBlobs[shaderType];
-
-        // Write the SPIR-V
-        stream->writeIntVector(spirvBlob);
+        if (blobSizes[shaderType] > 0)
+        {
+            // Write the SPIR-V
+            const angle::spirv::Blob &blob = mSpirvBlobs[shaderType];
+            stream->writeBytes(reinterpret_cast<const uint8_t *>(blob.data()),
+                               blobSizes[shaderType] * sizeof(*blob.data()));
+        }
     }
 }
 
