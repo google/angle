@@ -12,6 +12,7 @@
 #include <sstream>
 
 #include "anglebase/no_destructor.h"
+#include "common/debug.h"
 #include "common/tls.h"
 #include "common/utilities.h"
 #include "libANGLE/Buffer.h"
@@ -2379,6 +2380,7 @@ std::string Renderer11::getRendererDescription() const
     std::ostringstream rendererString;
 
     rendererString << mDescription;
+    rendererString << " (" << gl::FmtHex(mAdapterDescription.DeviceId) << ")";
     rendererString << " Direct3D11";
     if (mD3d12Module)
         rendererString << "on12";
