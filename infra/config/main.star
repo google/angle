@@ -273,6 +273,11 @@ def angle_builder(name, cpu):
     properties = {
         "builder_group": "angle",
         "$build/goma": goma_props,
+        "$build/reclient": {
+            "instance": "rbe-chromium-untrusted",
+            "metrics_project": "chromium-reclient-metrics",
+            "scandeps_server": True,
+        },
         "platform": config_os.console_name,
         "toolchain": toolchain,
         "test_mode": test_mode,
@@ -281,6 +286,11 @@ def angle_builder(name, cpu):
     ci_properties = {
         "builder_group": "angle",
         "$build/goma": goma_props,
+        "$build/reclient": {
+            "instance": "rbe-chromium-trusted",
+            "metrics_project": "chromium-reclient-metrics",
+            "scandeps_server": True,
+        },
         "platform": config_os.console_name,
         "toolchain": toolchain,
         "test_mode": test_mode,
