@@ -4943,8 +4943,7 @@ void SpvAssignTransformFeedbackLocations(gl::ShaderType shaderType,
     }
 }
 
-void SpvGetShaderSpirvCode(const gl::Context *context,
-                           const SpvSourceOptions &options,
+void SpvGetShaderSpirvCode(const SpvSourceOptions &options,
                            const gl::ProgramState &programState,
                            const gl::ProgramLinkedResources &resources,
                            SpvProgramInterfaceInfo *programInterfaceInfo,
@@ -4953,8 +4952,8 @@ void SpvGetShaderSpirvCode(const gl::Context *context,
 {
     for (const gl::ShaderType shaderType : gl::AllShaderTypes())
     {
-        gl::Shader *glShader         = programState.getAttachedShader(shaderType);
-        (*spirvBlobsOut)[shaderType] = glShader ? &glShader->getCompiledBinary(context) : nullptr;
+        const gl::SharedCompiledShaderState &glShader = programState.getAttachedShader(shaderType);
+        (*spirvBlobsOut)[shaderType] = glShader ? &glShader->compiledBinary : nullptr;
     }
 
     const gl::ProgramExecutable &programExecutable = programState.getExecutable();

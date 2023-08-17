@@ -813,13 +813,13 @@ void ProgramExecutable::saveLinkedStateInfo(const Context *context, const Progra
 {
     for (ShaderType shaderType : getLinkedShaderStages())
     {
-        Shader *shader = state.getAttachedShader(shaderType);
+        const SharedCompiledShaderState &shader = state.getAttachedShader(shaderType);
         ASSERT(shader);
-        mPODStruct.linkedShaderVersions[shaderType] = shader->getShaderVersion(context);
-        mLinkedOutputVaryings[shaderType]           = shader->getOutputVaryings(context);
-        mLinkedInputVaryings[shaderType]            = shader->getInputVaryings(context);
-        mLinkedUniforms[shaderType]                 = shader->getUniforms(context);
-        mLinkedUniformBlocks[shaderType]            = shader->getUniformBlocks(context);
+        mPODStruct.linkedShaderVersions[shaderType] = shader->shaderVersion;
+        mLinkedOutputVaryings[shaderType]           = shader->outputVaryings;
+        mLinkedInputVaryings[shaderType]            = shader->inputVaryings;
+        mLinkedUniforms[shaderType]                 = shader->uniforms;
+        mLinkedUniformBlocks[shaderType]            = shader->uniformBlocks;
     }
 }
 

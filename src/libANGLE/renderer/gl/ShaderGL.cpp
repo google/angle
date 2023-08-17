@@ -461,7 +461,7 @@ std::shared_ptr<WaitableCompileEvent> ShaderGL::compile(const gl::Context *conte
 
 std::string ShaderGL::getDebugInfo() const
 {
-    return mState.getTranslatedSource();
+    return mState.getCompiledState()->translatedSource;
 }
 
 GLuint ShaderGL::getShaderID() const

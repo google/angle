@@ -427,8 +427,8 @@ std::string DynamicHLSL::generatePixelShaderForOutputSignature(
 
 std::string DynamicHLSL::generateShaderForImage2DBindSignature(
     ProgramD3D &programD3D,
-    const gl::ProgramState &programData,
     gl::ShaderType shaderType,
+    const SharedCompiledShaderStateD3D &shaderData,
     const std::string &shaderHLSL,
     std::vector<sh::ShaderVariable> &image2DUniforms,
     const gl::ImageUnitTextureTypeMap &image2DBindLayout,
@@ -439,7 +439,7 @@ std::string DynamicHLSL::generateShaderForImage2DBindSignature(
         return shaderHLSL;
     }
 
-    return GenerateShaderForImage2DBindSignature(programD3D, programData, shaderType, shaderHLSL,
+    return GenerateShaderForImage2DBindSignature(programD3D, shaderType, shaderData, shaderHLSL,
                                                  image2DUniforms, image2DBindLayout,
                                                  baseUAVRegister);
 }
@@ -564,27 +564,24 @@ void DynamicHLSL::generateVaryingLinkHLSL(const VaryingPacking &varyingPacking,
     hlslStream << "};\n";
 }
 
-void DynamicHLSL::generateShaderLinkHLSL(const gl::Context *context,
-                                         const gl::Caps &caps,
-                                         const gl::ProgramState &programData,
-                                         const ProgramD3DMetadata &programMetadata,
-                                         const VaryingPacking &varyingPacking,
-                                         const BuiltinVaryingsD3D &builtinsD3D,
-                                         gl::ShaderMap<std::string> *shaderHLSL) const
+void DynamicHLSL::generateShaderLinkHLSL(
+    const gl::Caps &caps,
+    const gl::ShaderMap<gl::SharedCompiledShaderState> &shaderData,
+    const gl::ShaderMap<SharedCompiledShaderStateD3D> &shaderDataD3D,
+    const ProgramD3DMetadata &programMetadata,
+    const VaryingPacking &varyingPacking,
+    const BuiltinVaryingsD3D &builtinsD3D,
+    gl::ShaderMap<std::string> *shaderHLSL) const
 {
     ASSERT(shaderHLSL);
     ASSERT((*shaderHLSL)[gl::ShaderType::Vertex].empty() &&
            (*shaderHLSL)[gl::ShaderType::Fragment].empty());
 
-    gl::Shader *vertexShaderGL   = programData.getAttachedShader(ShaderType::Vertex);
-    gl::Shader *fragmentShaderGL = programData.getAttachedShader(ShaderType::Fragment);
-    const int shaderModel        = mRenderer->getMajorShaderModel();
+    const gl::SharedCompiledShaderState &vertexShader   = shaderData[ShaderType::Vertex];
+    const gl::SharedCompiledShaderState &fragmentShader = shaderData[ShaderType::Fragment];
+    const int shaderModel                               = mRenderer->getMajorShaderModel();
 
-    const ShaderD3D *fragmentShader = nullptr;
-    if (fragmentShaderGL)
-    {
-        fragmentShader = GetImplAs<ShaderD3D>(fragmentShaderGL);
-    }
+    const SharedCompiledShaderStateD3D &fragmentShaderD3D = shaderDataD3D[ShaderType::Fragment];
 
     // usesViewScale() isn't supported in the D3D9 renderer
     ASSERT(shaderModel >= 4 || !programMetadata.usesViewScale());
@@ -594,7 +591,8 @@ void DynamicHLSL::generateShaderLinkHLSL(const gl::Context *context,
         mRenderer->getFeatures().useInstancedPointSpriteEmulation.enabled;
 
     // Validation done in the compiler
-    ASSERT(!fragmentShader || !fragmentShader->usesFragColor() || !fragmentShader->usesFragData());
+    ASSERT(!fragmentShaderD3D || !fragmentShaderD3D->usesFragColor ||
+           !fragmentShaderD3D->usesFragData);
 
     std::ostringstream vertexStream;
     vertexStream << "struct VS_OUTPUT\n";
@@ -870,9 +868,9 @@ void DynamicHLSL::generateShaderLinkHLSL(const gl::Context *context,
                          << "    return output;\n"
                          << "}";
 
-    if (vertexShaderGL)
+    if (vertexShader)
     {
-        std::string vertexSource = vertexShaderGL->getTranslatedSource(context);
+        std::string vertexSource = vertexShader->translatedSource;
         angle::ReplaceSubstring(&vertexSource, std::string(MAIN_PROLOGUE_STUB_STRING),
                                 "    initAttributes(input);\n");
         angle::ReplaceSubstring(&vertexSource, std::string(VERTEX_OUTPUT_STUB_STRING),
@@ -889,7 +887,7 @@ void DynamicHLSL::generateShaderLinkHLSL(const gl::Context *context,
     pixelStream << "\n";
 
     std::ostringstream pixelPrologue;
-    if (fragmentShader && fragmentShader->usesViewID())
+    if (fragmentShaderD3D && fragmentShaderD3D->usesViewID)
     {
         ASSERT(pixelBuiltins.glViewIDOVR.enabled);
         pixelPrologue << "    ViewID_OVR = input.gl_ViewID_OVR;\n";
@@ -982,7 +980,7 @@ void DynamicHLSL::generateShaderLinkHLSL(const gl::Context *context,
                       << "    gl_PointCoord.y = 1.0 - input.gl_PointCoord.y;\n";
     }
 
-    if (fragmentShader && fragmentShader->usesFrontFacing())
+    if (fragmentShaderD3D && fragmentShaderD3D->usesFrontFacing)
     {
         if (shaderModel <= 3)
         {
@@ -995,19 +993,19 @@ void DynamicHLSL::generateShaderLinkHLSL(const gl::Context *context,
     }
 
     bool declareSampleID = false;
-    if (fragmentShader && fragmentShader->usesSampleID())
+    if (fragmentShaderD3D && fragmentShaderD3D->usesSampleID)
     {
         declareSampleID = true;
         pixelPrologue << "    gl_SampleID = sampleID;\n";
     }
 
-    if (fragmentShader && fragmentShader->usesSamplePosition())
+    if (fragmentShaderD3D && fragmentShaderD3D->usesSamplePosition)
     {
         declareSampleID = true;
         pixelPrologue << "    gl_SamplePosition = GetRenderTargetSamplePosition(sampleID) + 0.5;\n";
     }
 
-    if (fragmentShader && fragmentShader->getClipDistanceArraySize())
+    if (fragmentShaderD3D && fragmentShaderD3D->clipDistanceSize)
     {
         ASSERT(vertexBuiltins.glClipDistance.indexOrSize > 0 &&
                vertexBuiltins.glClipDistance.indexOrSize < 9);
@@ -1045,7 +1043,7 @@ void DynamicHLSL::generateShaderLinkHLSL(const gl::Context *context,
         }
     }
 
-    if (fragmentShader && fragmentShader->getCullDistanceArraySize())
+    if (fragmentShaderD3D && fragmentShaderD3D->cullDistanceSize)
     {
         ASSERT(vertexBuiltins.glCullDistance.indexOrSize > 0 &&
                vertexBuiltins.glCullDistance.indexOrSize < 9);
@@ -1153,7 +1151,7 @@ void DynamicHLSL::generateShaderLinkHLSL(const gl::Context *context,
         pixelPrologue << ";\n";
     }
 
-    if (fragmentShader && fragmentShader->usesSampleMaskIn())
+    if (fragmentShaderD3D && fragmentShaderD3D->usesSampleMaskIn)
     {
         // When per-sample shading is active due to the use of a fragment input qualified
         // by sample or due to the use of the gl_SampleID or gl_SamplePosition variables,
@@ -1163,14 +1161,14 @@ void DynamicHLSL::generateShaderLinkHLSL(const gl::Context *context,
                       << (declareSampleID ? "1 << sampleID" : "sampleMaskIn") << ";\n";
     }
 
-    if (fragmentShaderGL)
+    if (fragmentShader)
     {
-        std::string pixelSource = fragmentShaderGL->getTranslatedSource(context);
+        std::string pixelSource = fragmentShader->translatedSource;
 
         std::ostringstream pixelMainParametersStream;
         pixelMainParametersStream << "PS_INPUT input";
 
-        if (fragmentShader->usesFrontFacing())
+        if (fragmentShaderD3D->usesFrontFacing)
         {
             pixelMainParametersStream << (shaderModel >= 4 ? ", bool isFrontFace : SV_IsFrontFace"
                                                            : ", float vFace : VFACE");
@@ -1180,7 +1178,7 @@ void DynamicHLSL::generateShaderLinkHLSL(const gl::Context *context,
         {
             pixelMainParametersStream << ", uint sampleID : SV_SampleIndex";
         }
-        else if (fragmentShader->usesSampleMaskIn())
+        else if (fragmentShaderD3D->usesSampleMaskIn)
         {
             pixelMainParametersStream << ", uint sampleMaskIn : SV_Coverage";
         }
@@ -1277,7 +1275,6 @@ std::string DynamicHLSL::generateGeometryShaderPreamble(const VaryingPacking &va
 
 std::string DynamicHLSL::generateGeometryShaderHLSL(const gl::Caps &caps,
                                                     gl::PrimitiveMode primitiveType,
-                                                    const gl::ProgramState &programData,
                                                     const bool useViewScale,
                                                     const bool hasMultiviewEnabled,
                                                     const bool selectViewInVS,
@@ -1540,14 +1537,14 @@ void DynamicHLSL::getPixelShaderOutputKey(const gl::State &data,
     }
     else
     {
-        const ShaderD3D *fragmentShader = metadata.getFragmentShader();
+        const gl::SharedCompiledShaderState &fragmentShader = metadata.getFragmentShader();
 
         if (!fragmentShader)
         {
             return;
         }
 
-        const auto &shaderOutputVars = fragmentShader->getState().getActiveOutputVariables();
+        const auto &shaderOutputVars = fragmentShader->activeOutputVariables;
 
         for (size_t outputLocationIndex = 0u;
              outputLocationIndex < programData.getOutputLocations().size(); ++outputLocationIndex)

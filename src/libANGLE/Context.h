@@ -646,7 +646,8 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     }
 
     Program *getProgramNoResolveLink(ShaderProgramID handle) const;
-    Shader *getShader(ShaderProgramID handle) const;
+    Shader *getShaderResolveCompile(ShaderProgramID handle) const;
+    Shader *getShaderNoResolveCompile(ShaderProgramID handle) const;
 
     ANGLE_INLINE bool isTextureGenerated(TextureID texture) const
     {

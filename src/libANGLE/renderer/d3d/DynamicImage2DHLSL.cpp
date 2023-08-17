@@ -688,8 +688,8 @@ unsigned int *GetImage2DRegisterIndex(Image2DHLSLGroup textureGroup,
 }
 
 void OutputHLSLImage2DUniformGroup(ProgramD3D &programD3D,
-                                   const gl::ProgramState &programData,
                                    gl::ShaderType shaderType,
+                                   const SharedCompiledShaderStateD3D &shaderData,
                                    std::ostringstream &out,
                                    const Image2DHLSLGroup textureGroup,
                                    const std::vector<sh::ShaderVariable> &group,
@@ -827,20 +827,17 @@ void OutputHLSLImage2DUniformGroup(ProgramD3D &programD3D,
         out << "};\n";
     }
 
-    gl::Shader *shaderGL       = programData.getAttachedShader(shaderType);
-    const ShaderD3D *shaderD3D = GetImplAs<ShaderD3D>(shaderGL);
-
-    if (shaderD3D->useImage2DFunction(Image2DHLSLGroupFunctionName(textureGroup, IMAGE2DSIZE)))
+    if (shaderData->useImage2DFunction(Image2DHLSLGroupFunctionName(textureGroup, IMAGE2DSIZE)))
     {
         OutputImage2DSizeFunction(out, textureGroup, totalCount, texture2DCount, texture3DCount,
                                   texture2DArrayCount, offsetStr, declarationStr);
     }
-    if (shaderD3D->useImage2DFunction(Image2DHLSLGroupFunctionName(textureGroup, IMAGE2DLOAD)))
+    if (shaderData->useImage2DFunction(Image2DHLSLGroupFunctionName(textureGroup, IMAGE2DLOAD)))
     {
         OutputImage2DLoadFunction(out, textureGroup, totalCount, texture2DCount, texture3DCount,
                                   texture2DArrayCount, offsetStr, declarationStr);
     }
-    if (shaderD3D->useImage2DFunction(Image2DHLSLGroupFunctionName(textureGroup, IMAGE2DSTORE)))
+    if (shaderData->useImage2DFunction(Image2DHLSLGroupFunctionName(textureGroup, IMAGE2DSTORE)))
     {
         OutputImage2DStoreFunction(out, textureGroup, totalCount, texture2DCount, texture3DCount,
                                    texture2DArrayCount, offsetStr, declarationStr);
@@ -853,8 +850,8 @@ constexpr const char kImage2DFunctionString[] = "// @@ IMAGE2D DECLARATION FUNCT
 
 std::string GenerateShaderForImage2DBindSignature(
     ProgramD3D &programD3D,
-    const gl::ProgramState &programData,
     gl::ShaderType shaderType,
+    const SharedCompiledShaderStateD3D &shaderData,
     const std::string &shaderHLSL,
     std::vector<sh::ShaderVariable> &image2DUniforms,
     const gl::ImageUnitTextureTypeMap &image2DBindLayout,
@@ -891,10 +888,8 @@ std::string GenerateShaderForImage2DBindSignature(
         groupedImage2DUniforms[group].push_back(image2D);
     }
 
-    gl::Shader *shaderGL                     = programData.getAttachedShader(shaderType);
-    const ShaderD3D *shaderD3D               = GetImplAs<ShaderD3D>(shaderGL);
-    unsigned int groupTextureRegisterIndex   = shaderD3D->getReadonlyImage2DRegisterIndex();
-    unsigned int groupRWTextureRegisterIndex = shaderD3D->getImage2DRegisterIndex();
+    unsigned int groupTextureRegisterIndex   = shaderData->readonlyImage2DRegisterIndex;
+    unsigned int groupRWTextureRegisterIndex = shaderData->image2DRegisterIndex;
     unsigned int image2DTexture3DIndex       = 0;
     unsigned int image2DTexture2DArrayIndex  = image2DTexture3DCount;
     unsigned int image2DTexture2DIndex       = image2DTexture3DCount + image2DTexture2DArrayCount;
@@ -903,7 +898,7 @@ std::string GenerateShaderForImage2DBindSignature(
     for (int groupId = IMAGE2D_MIN; groupId < IMAGE2D_MAX; ++groupId)
     {
         OutputHLSLImage2DUniformGroup(
-            programD3D, programData, shaderType, out, Image2DHLSLGroup(groupId),
+            programD3D, shaderType, shaderData, out, Image2DHLSLGroup(groupId),
             groupedImage2DUniforms[groupId], image2DBindLayout, baseUAVRegister,
             &groupTextureRegisterIndex, &groupRWTextureRegisterIndex, &image2DTexture3DIndex,
             &image2DTexture2DArrayIndex, &image2DTexture2DIndex);

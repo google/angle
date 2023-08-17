@@ -296,7 +296,7 @@ struct ProgramLinkedResources
 
 struct LinkingVariables final : private angle::NonCopyable
 {
-    LinkingVariables(const Context *context, const ProgramState &state);
+    LinkingVariables(const ProgramState &state);
     LinkingVariables(const ProgramPipelineState &state);
     ~LinkingVariables();
 
@@ -324,8 +324,7 @@ class ProgramLinkedResourcesLinker final : angle::NonCopyable
         : mCustomEncoderFactory(customEncoderFactory)
     {}
 
-    void linkResources(const Context *context,
-                       const ProgramState &programState,
+    void linkResources(const ProgramState &programState,
                        const ProgramLinkedResources &resources) const;
 
   private:

@@ -18,6 +18,7 @@
 #include "common/Optional.h"
 #include "common/utilities.h"
 #include "libANGLE/renderer/ProgramImpl.h"
+#include "libANGLE/renderer/metal/ShaderMtl.h"
 #include "libANGLE/renderer/metal/mtl_buffer_pool.h"
 #include "libANGLE/renderer/metal/mtl_command_buffer.h"
 #include "libANGLE/renderer/metal/mtl_common.h"
@@ -127,6 +128,7 @@ class ProgramMtl : public ProgramImpl
     void setBinaryRetrievableHint(bool retrievable) override;
     void setSeparable(bool separable) override;
 
+    void prepareForLink(const gl::ShaderMap<ShaderImpl *> &shaders) override;
     std::unique_ptr<LinkEvent> link(const gl::Context *context,
                                     const gl::ProgramLinkedResources &resources,
                                     gl::InfoLog &infoLog,
@@ -247,7 +249,7 @@ class ProgramMtl : public ProgramImpl
                                                     const std::vector<gl::InterfaceBlock> &blocks,
                                                     gl::ShaderType shaderType);
 
-    void initUniformBlocksRemapper(gl::Shader *shader, const gl::Context *glContext);
+    void initUniformBlocksRemapper(const gl::SharedCompiledShaderState &shader);
 
     angle::Result encodeUniformBuffersInfoArgumentBuffer(
         ContextMtl *context,
@@ -263,9 +265,9 @@ class ProgramMtl : public ProgramImpl
     void saveShaderInternalInfo(gl::BinaryOutputStream *stream);
     void loadShaderInternalInfo(gl::BinaryInputStream *stream);
 
-    void linkUpdateHasFlatAttributes(const gl::Context *context);
+    void linkUpdateHasFlatAttributes();
 
-    void linkResources(const gl::Context *context, const gl::ProgramLinkedResources &resources);
+    void linkResources(const gl::ProgramLinkedResources &resources);
     std::unique_ptr<LinkEvent> compileMslShaderLibs(const gl::Context *context,
                                                     gl::InfoLog &infoLog);
 
@@ -288,6 +290,8 @@ class ProgramMtl : public ProgramImpl
     bool mProgramHasFlatAttributes;
     gl::ShaderBitSet mDefaultUniformBlocksDirty;
     gl::ShaderBitSet mSamplerBindingsDirty;
+
+    gl::ShaderMap<SharedCompiledShaderStateMtl> mAttachedShaders;
 
     gl::ShaderMap<DefaultUniformBlock> mDefaultUniformBlocks;
     std::unordered_map<std::string, UBOConversionInfo> mUniformBlockConversions;

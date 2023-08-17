@@ -29,6 +29,67 @@
 
 namespace rx
 {
+namespace
+{
+
+// Returns mapped name of a transform feedback varying. The original name may contain array
+// brackets with an index inside, which will get copied to the mapped name. The varying must be
+// known to be declared in the shader.
+std::string GetTransformFeedbackVaryingMappedName(const gl::SharedCompiledShaderState &shaderState,
+                                                  const std::string &tfVaryingName)
+{
+    ASSERT(shaderState->shaderType != gl::ShaderType::Fragment &&
+           shaderState->shaderType != gl::ShaderType::Compute);
+    const auto &varyings = shaderState->outputVaryings;
+    auto bracketPos      = tfVaryingName.find("[");
+    if (bracketPos != std::string::npos)
+    {
+        auto tfVaryingBaseName = tfVaryingName.substr(0, bracketPos);
+        for (const auto &varying : varyings)
+        {
+            if (varying.name == tfVaryingBaseName)
+            {
+                std::string mappedNameWithArrayIndex =
+                    varying.mappedName + tfVaryingName.substr(bracketPos);
+                return mappedNameWithArrayIndex;
+            }
+        }
+    }
+    else
+    {
+        for (const auto &varying : varyings)
+        {
+            if (varying.name == tfVaryingName)
+            {
+                return varying.mappedName;
+            }
+            else if (varying.isStruct())
+            {
+                GLuint fieldIndex = 0;
+                const auto *field = varying.findField(tfVaryingName, &fieldIndex);
+                if (field == nullptr)
+                {
+                    continue;
+                }
+                ASSERT(field != nullptr && !field->isStruct() &&
+                       (!field->isArray() || varying.isShaderIOBlock));
+                std::string mappedName;
+                // If it's an I/O block without an instance name, don't include the block name.
+                if (!varying.isShaderIOBlock || !varying.name.empty())
+                {
+                    mappedName = varying.isShaderIOBlock ? varying.mappedStructOrBlockName
+                                                         : varying.mappedName;
+                    mappedName += '.';
+                }
+                return mappedName + field->mappedName;
+            }
+        }
+    }
+    UNREACHABLE();
+    return std::string();
+}
+
+}  // anonymous namespace
 
 ProgramGL::ProgramGL(const gl::ProgramState &data,
                      const FunctionsGL *functions,
@@ -221,6 +282,20 @@ class ProgramGL::LinkEventGL final : public LinkEvent
     PostLinkImplFunctor mPostLinkImplFunctor;
 };
 
+void ProgramGL::prepareForLink(const gl::ShaderMap<ShaderImpl *> &shaders)
+{
+    for (gl::ShaderType shaderType : gl::AllShaderTypes())
+    {
+        mAttachedShaders[shaderType] = 0;
+
+        if (shaders[shaderType] != nullptr)
+        {
+            const ShaderGL *shaderGL     = GetAs<ShaderGL>(shaders[shaderType]);
+            mAttachedShaders[shaderType] = shaderGL->getShaderID();
+        }
+    }
+}
+
 std::unique_ptr<LinkEvent> ProgramGL::link(const gl::Context *context,
                                            const gl::ProgramLinkedResources &resources,
                                            gl::InfoLog &infoLog,
@@ -230,12 +305,9 @@ std::unique_ptr<LinkEvent> ProgramGL::link(const gl::Context *context,
 
     preLink();
 
-    if (mState.getAttachedShader(gl::ShaderType::Compute))
+    if (mAttachedShaders[gl::ShaderType::Compute] != 0)
     {
-        const ShaderGL *computeShaderGL =
-            GetImplAs<ShaderGL>(mState.getAttachedShader(gl::ShaderType::Compute));
-
-        mFunctions->attachShader(mProgramID, computeShaderGL->getShaderID());
+        mFunctions->attachShader(mProgramID, mAttachedShaders[gl::ShaderType::Compute]);
     }
     else
     {
@@ -247,9 +319,8 @@ std::unique_ptr<LinkEvent> ProgramGL::link(const gl::Context *context,
                 mState.getExecutable().hasLinkedShaderStage(gl::ShaderType::Geometry)
                     ? gl::ShaderType::Geometry
                     : gl::ShaderType::Vertex;
-            std::string tfVaryingMappedName =
-                mState.getAttachedShader(tfShaderType)
-                    ->getTransformFeedbackVaryingMappedName(context, tfVarying);
+            std::string tfVaryingMappedName = GetTransformFeedbackVaryingMappedName(
+                mState.getAttachedShader(tfShaderType), tfVarying);
             transformFeedbackVaryingMappedNames.push_back(tfVaryingMappedName);
         }
 
@@ -281,11 +352,9 @@ std::unique_ptr<LinkEvent> ProgramGL::link(const gl::Context *context,
 
         for (const gl::ShaderType shaderType : gl::kAllGraphicsShaderTypes)
         {
-            const ShaderGL *shaderGL =
-                rx::SafeGetImplAs<ShaderGL, gl::Shader>(mState.getAttachedShader(shaderType));
-            if (shaderGL)
+            if (mAttachedShaders[shaderType] != 0)
             {
-                mFunctions->attachShader(mProgramID, shaderGL->getShaderID());
+                mFunctions->attachShader(mProgramID, mAttachedShaders[shaderType]);
             }
         }
 
@@ -306,12 +375,12 @@ std::unique_ptr<LinkEvent> ProgramGL::link(const gl::Context *context,
         // Otherwise shader-assigned locations will work.
         if (context->getExtensions().blendFuncExtendedEXT)
         {
-            gl::Shader *fragmentShader = mState.getAttachedShader(gl::ShaderType::Fragment);
-            if (fragmentShader && fragmentShader->getShaderVersion(context) == 100 &&
+            const gl::SharedCompiledShaderState &fragmentShader =
+                mState.getAttachedShader(gl::ShaderType::Fragment);
+            if (fragmentShader && fragmentShader->shaderVersion == 100 &&
                 mFunctions->standard == STANDARD_GL_DESKTOP)
             {
-                const auto &shaderOutputs = mState.getAttachedShader(gl::ShaderType::Fragment)
-                                                ->getActiveOutputVariables(context);
+                const auto &shaderOutputs = fragmentShader->activeOutputVariables;
                 for (const auto &output : shaderOutputs)
                 {
                     // TODO(http://anglebug.com/1085) This could be cleaner if the transformed names
@@ -352,7 +421,7 @@ std::unique_ptr<LinkEvent> ProgramGL::link(const gl::Context *context,
                     }
                 }
             }
-            else if (fragmentShader && fragmentShader->getShaderVersion(context) >= 300)
+            else if (fragmentShader && fragmentShader->shaderVersion >= 300)
             {
                 // ESSL 3.00 and up.
                 const auto &outputLocations          = mState.getOutputLocations();
@@ -436,22 +505,17 @@ std::unique_ptr<LinkEvent> ProgramGL::link(const gl::Context *context,
             mFunctions->linkProgram(mProgramID);
         }
 
-        if (mState.getAttachedShader(gl::ShaderType::Compute))
+        if (mAttachedShaders[gl::ShaderType::Compute] != 0)
         {
-            const ShaderGL *computeShaderGL =
-                GetImplAs<ShaderGL>(mState.getAttachedShader(gl::ShaderType::Compute));
-
-            mFunctions->detachShader(mProgramID, computeShaderGL->getShaderID());
+            mFunctions->detachShader(mProgramID, mAttachedShaders[gl::ShaderType::Compute]);
         }
         else
         {
             for (const gl::ShaderType shaderType : gl::kAllGraphicsShaderTypes)
             {
-                const ShaderGL *shaderGL =
-                    rx::SafeGetImplAs<ShaderGL>(mState.getAttachedShader(shaderType));
-                if (shaderGL)
+                if (mAttachedShaders[shaderType] != 0)
                 {
-                    mFunctions->detachShader(mProgramID, shaderGL->getShaderID());
+                    mFunctions->detachShader(mProgramID, mAttachedShaders[shaderType]);
                 }
             }
         }

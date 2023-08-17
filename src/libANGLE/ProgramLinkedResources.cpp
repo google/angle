@@ -1611,17 +1611,17 @@ ProgramLinkedResources::ProgramLinkedResources() = default;
 
 ProgramLinkedResources::~ProgramLinkedResources() = default;
 
-LinkingVariables::LinkingVariables(const Context *context, const ProgramState &state)
+LinkingVariables::LinkingVariables(const ProgramState &state)
 {
     for (ShaderType shaderType : kAllGraphicsShaderTypes)
     {
-        Shader *shader = state.getAttachedShader(shaderType);
+        const SharedCompiledShaderState &shader = state.getAttachedShader(shaderType);
         if (shader)
         {
-            outputVaryings[shaderType] = shader->getOutputVaryings(context);
-            inputVaryings[shaderType]  = shader->getInputVaryings(context);
-            uniforms[shaderType]       = shader->getUniforms(context);
-            uniformBlocks[shaderType]  = shader->getUniformBlocks(context);
+            outputVaryings[shaderType] = shader->outputVaryings;
+            inputVaryings[shaderType]  = shader->inputVaryings;
+            uniforms[shaderType]       = shader->uniforms;
+            uniformBlocks[shaderType]  = shader->uniformBlocks;
             isShaderStageUsedBitset.set(shaderType);
         }
     }
@@ -1659,18 +1659,17 @@ void ProgramLinkedResources::init(std::vector<InterfaceBlock> *uniformBlocksOut,
     atomicCounterBufferLinker.init(atomicCounterBuffersOut);
 }
 
-void ProgramLinkedResourcesLinker::linkResources(const Context *context,
-                                                 const ProgramState &programState,
+void ProgramLinkedResourcesLinker::linkResources(const ProgramState &programState,
                                                  const ProgramLinkedResources &resources) const
 {
     // Gather uniform interface block info.
     InterfaceBlockInfo uniformBlockInfo(mCustomEncoderFactory);
     for (const ShaderType shaderType : AllShaderTypes())
     {
-        Shader *shader = programState.getAttachedShader(shaderType);
+        const SharedCompiledShaderState &shader = programState.getAttachedShader(shaderType);
         if (shader)
         {
-            uniformBlockInfo.getShaderBlockInfo(shader->getUniformBlocks(context));
+            uniformBlockInfo.getShaderBlockInfo(shader->uniformBlocks);
         }
     }
 
@@ -1692,10 +1691,10 @@ void ProgramLinkedResourcesLinker::linkResources(const Context *context,
     InterfaceBlockInfo shaderStorageBlockInfo(mCustomEncoderFactory);
     for (const ShaderType shaderType : AllShaderTypes())
     {
-        Shader *shader = programState.getAttachedShader(shaderType);
+        const SharedCompiledShaderState &shader = programState.getAttachedShader(shaderType);
         if (shader)
         {
-            shaderStorageBlockInfo.getShaderBlockInfo(shader->getShaderStorageBlocks(context));
+            shaderStorageBlockInfo.getShaderBlockInfo(shader->shaderStorageBlocks);
         }
     }
     auto getShaderStorageBlockSize = [&shaderStorageBlockInfo](const std::string &name,

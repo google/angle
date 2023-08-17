@@ -18,6 +18,7 @@
 #include "libANGLE/renderer/ProgramImpl.h"
 #include "libANGLE/renderer/d3d/DynamicHLSL.h"
 #include "libANGLE/renderer/d3d/RendererD3D.h"
+#include "libANGLE/renderer/d3d/ShaderD3D.h"
 #include "platform/autogen/FeaturesD3D_autogen.h"
 
 namespace rx
@@ -146,8 +147,10 @@ class ProgramD3DMetadata final : angle::NonCopyable
 {
   public:
     ProgramD3DMetadata(RendererD3D *renderer,
-                       const gl::ShaderMap<const ShaderD3D *> &attachedShaders,
-                       EGLenum clientType);
+                       const gl::SharedCompiledShaderState &fragmentShader,
+                       const gl::ShaderMap<SharedCompiledShaderStateD3D> &attachedShaders,
+                       EGLenum clientType,
+                       int shaderVersion);
     ~ProgramD3DMetadata();
 
     int getRendererMajorShaderModel() const;
@@ -168,7 +171,7 @@ class ProgramD3DMetadata final : angle::NonCopyable
     bool usesMultipleFragmentOuts() const;
     bool usesCustomOutVars() const;
     bool usesSampleMask() const;
-    const ShaderD3D *getFragmentShader() const;
+    const gl::SharedCompiledShaderState &getFragmentShader() const;
     FragDepthUsage getFragDepthUsage() const;
     uint8_t getClipDistanceArraySize() const;
     uint8_t getCullDistanceArraySize() const;
@@ -179,8 +182,10 @@ class ProgramD3DMetadata final : angle::NonCopyable
     const bool mUsesInstancedPointSpriteEmulation;
     const bool mUsesViewScale;
     const bool mCanSelectViewInVertexShader;
-    const gl::ShaderMap<const ShaderD3D *> mAttachedShaders;
+    gl::SharedCompiledShaderState mFragmentShader;
+    const gl::ShaderMap<SharedCompiledShaderStateD3D> &mAttachedShaders;
     const EGLenum mClientType;
+    int mShaderVersion;
 };
 
 using D3DUniformMap = std::map<std::string, D3DUniform *>;
@@ -242,6 +247,7 @@ class ProgramD3D : public ProgramImpl
                                                            d3d::Context *context,
                                                            ShaderExecutableD3D **outExecutable,
                                                            gl::InfoLog *infoLog);
+    void prepareForLink(const gl::ShaderMap<ShaderImpl *> &shaders) override;
     std::unique_ptr<LinkEvent> link(const gl::Context *context,
                                     const gl::ProgramLinkedResources &resources,
                                     gl::InfoLog &infoLog,
@@ -468,8 +474,8 @@ class ProgramD3D : public ProgramImpl
 
     void initializeUniformStorage(const gl::ShaderBitSet &availableShaderStages);
 
-    void defineUniformsAndAssignRegisters(const gl::Context *context);
-    void defineUniformBase(const gl::Shader *shader,
+    void defineUniformsAndAssignRegisters();
+    void defineUniformBase(gl::ShaderType shaderType,
                            const sh::ShaderVariable &uniform,
                            D3DUniformMap *uniformMap);
     void assignAllSamplerRegisters();
@@ -524,20 +530,20 @@ class ProgramD3D : public ProgramImpl
     D3DUniform *getD3DUniformFromLocation(GLint location);
     const D3DUniform *getD3DUniformFromLocation(GLint location) const;
 
-    void initAttribLocationsToD3DSemantic(const gl::Context *context);
+    void initAttribLocationsToD3DSemantic();
 
     void reset();
     void initializeUniformBlocks();
-    void initializeShaderStorageBlocks(const gl::Context *context);
+    void initializeShaderStorageBlocks();
 
-    void updateCachedInputLayoutFromShader(const gl::Context *context);
+    void updateCachedInputLayoutFromShader();
     void updateCachedOutputLayoutFromShader();
     void updateCachedImage2DBindLayoutFromShader(gl::ShaderType shaderType);
     void updateCachedVertexExecutableIndex();
     void updateCachedPixelExecutableIndex();
     void updateCachedComputeExecutableIndex();
 
-    void linkResources(const gl::Context *context, const gl::ProgramLinkedResources &resources);
+    void linkResources(const gl::ProgramLinkedResources &resources);
 
     RendererD3D *mRenderer;
     DynamicHLSL *mDynamicHLSL;
@@ -547,6 +553,8 @@ class ProgramD3D : public ProgramImpl
     angle::PackedEnumMap<gl::PrimitiveMode, std::unique_ptr<ShaderExecutableD3D>>
         mGeometryExecutables;
     std::vector<std::unique_ptr<ComputeExecutable>> mComputeExecutables;
+
+    gl::ShaderMap<SharedCompiledShaderStateD3D> mAttachedShaders;
 
     gl::ShaderMap<std::string> mShaderHLSL;
     gl::ShaderMap<CompilerWorkaroundsD3D> mShaderWorkarounds;

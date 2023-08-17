@@ -82,6 +82,7 @@ class ProgramImpl : angle::NonCopyable
     virtual void setBinaryRetrievableHint(bool retrievable)                       = 0;
     virtual void setSeparable(bool separable)                                     = 0;
 
+    virtual void prepareForLink(const gl::ShaderMap<ShaderImpl *> &shaders) {}
     virtual std::unique_ptr<LinkEvent> link(const gl::Context *context,
                                             const gl::ProgramLinkedResources &resources,
                                             gl::InfoLog &infoLog,

@@ -126,8 +126,7 @@ void SpvAssignTransformFeedbackLocations(gl::ShaderType shaderType,
                                          ShaderInterfaceVariableInfoMap *variableInfoMapOut);
 
 // Retrieves the compiled SPIR-V code for each shader stage, and calls |SpvAssignLocations|.
-void SpvGetShaderSpirvCode(const gl::Context *context,
-                           const SpvSourceOptions &options,
+void SpvGetShaderSpirvCode(const SpvSourceOptions &options,
                            const gl::ProgramState &programState,
                            const gl::ProgramLinkedResources &resources,
                            SpvProgramInterfaceInfo *programInterfaceInfo,

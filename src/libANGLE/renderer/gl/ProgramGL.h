@@ -43,6 +43,7 @@ class ProgramGL : public ProgramImpl
     void setBinaryRetrievableHint(bool retrievable) override;
     void setSeparable(bool separable) override;
 
+    void prepareForLink(const gl::ShaderMap<ShaderImpl *> &shaders) override;
     std::unique_ptr<LinkEvent> link(const gl::Context *contextImpl,
                                     const gl::ProgramLinkedResources &resources,
                                     gl::InfoLog &infoLog,
@@ -149,6 +150,8 @@ class ProgramGL : public ProgramImpl
     const FunctionsGL *mFunctions;
     const angle::FeaturesGL &mFeatures;
     StateManagerGL *mStateManager;
+
+    gl::ShaderMap<GLuint> mAttachedShaders;
 
     std::vector<GLint> mUniformRealLocationMap;
     std::vector<GLuint> mUniformBlockRealLocationMap;

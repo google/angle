@@ -1865,7 +1865,7 @@ void WriteShareGroupCppSetupReplay(ReplayWriter &replayWriter,
     replayWriter.saveSetupFile();
 }
 
-ProgramSources GetAttachedProgramSources(const gl::Program *program)
+ProgramSources GetAttachedProgramSources(const gl::Context *context, const gl::Program *program)
 {
     ProgramSources sources;
     for (gl::ShaderType shaderType : gl::AllShaderTypes())
@@ -7410,7 +7410,7 @@ void FrameCaptureShared::maybeCapturePreCallUpdates(
             gl::ShaderProgramID shaderID =
                 call.params.getParam("shaderPacked", ParamType::TShaderProgramID, 0)
                     .value.ShaderProgramIDVal;
-            const gl::Shader *shader = context->getShader(shaderID);
+            const gl::Shader *shader = context->getShaderNoResolveCompile(shaderID);
             // Shaders compiled for ProgramBinary will not have a shader created
             if (shader)
             {
@@ -7427,9 +7427,9 @@ void FrameCaptureShared::maybeCapturePreCallUpdates(
                     .value.ShaderProgramIDVal;
             const gl::Program *program = context->getProgramResolveLink(programID);
             // Programs linked in support of ProgramBinary will not have attached shaders
-            if (program->getState().hasAttachedShader())
+            if (program->getState().hasAnyAttachedShader())
             {
-                setProgramSources(programID, GetAttachedProgramSources(program));
+                setProgramSources(programID, GetAttachedProgramSources(context, program));
             }
             break;
         }
