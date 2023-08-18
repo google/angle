@@ -413,17 +413,19 @@ def _TempLocalFile():
 
 
 def _RunInstrumentation(flags):
+    assert TEST_PACKAGE_NAME == 'com.android.angle.test'  # inlined below for readability
+
     with _TempDeviceFile() as temp_device_file:
-        cmd = ' '.join([
-            'p=%s;' % TEST_PACKAGE_NAME,
-            'ntr=org.chromium.native_test.NativeTestInstrumentationTestRunner;',
-            'am instrument -w',
-            '-e $ntr.NativeTestActivity "$p".AngleUnitTestActivity',
-            '-e $ntr.ShardNanoTimeout 2400000000000',
-            '-e org.chromium.native_test.NativeTest.CommandLineFlags "%s"' % ' '.join(flags),
-            '-e $ntr.StdoutFile ' + temp_device_file,
-            '"$p"/org.chromium.build.gtest_apk.NativeTestInstrumentationTestRunner',
-        ])
+        cmd = r'''
+am instrument -w \
+    -e org.chromium.native_test.NativeTestInstrumentationTestRunner.StdoutFile {out} \
+    -e org.chromium.native_test.NativeTest.CommandLineFlags "{flags}" \
+    -e org.chromium.native_test.NativeTestInstrumentationTestRunner.ShardNanoTimeout "1000000000000000000" \
+    -e org.chromium.native_test.NativeTestInstrumentationTestRunner.NativeTestActivity \
+    com.android.angle.test.AngleUnitTestActivity \
+    com.android.angle.test/org.chromium.build.gtest_apk.NativeTestInstrumentationTestRunner
+        '''.format(
+            out=temp_device_file, flags=r' '.join(flags)).strip()
 
         _AdbShell(cmd)
         return _ReadDeviceFile(temp_device_file)

@@ -195,23 +195,37 @@ def run_trace(trace, args):
     memory_command = 'shell sh /data/local/tmp/gpumem.sh 0.25'
     memory_process = run_async_adb_command(memory_command)
 
-    adb_command = 'shell am instrument -w '
-    adb_command += '-e org.chromium.native_test.NativeTestInstrumentationTestRunner.StdoutFile /sdcard/Download/out.txt '
-    adb_command += '-e org.chromium.native_test.NativeTest.CommandLineFlags "--gtest_filter=TraceTest.' + trace + '\ '
-    adb_command += '--use-gl=native\ '
+    flags = [
+        '--gtest_filter=TraceTest.' + trace, '--use-gl=native', '--verbose', '--verbose-logging'
+    ]
     if mode != '':
-        adb_command += '--{}\ '.format(mode)
+        flags.append('--' + mode)
     if args.maxsteps != '':
-        adb_command += '--max-steps-performed\ ' + args.maxsteps + '\ '
+        flags += ['--max-steps-performed', args.maxsteps]
     if args.fixedtime != '':
-        adb_command += '--fixed-test-time-with-warmup\ ' + args.fixedtime + '\ '
+        flags += ['--fixed-test-time-with-warmup', args.fixedtime]
     if args.minimizegpuwork:
-        adb_command += '--minimize-gpu-work\ '
-    adb_command += '--verbose\ '
-    adb_command += '--verbose-logging\"\ '
-    adb_command += '-e org.chromium.native_test.NativeTestInstrumentationTestRunner.ShardNanoTimeout "1000000000000000000" '
-    adb_command += '-e org.chromium.native_test.NativeTestInstrumentationTestRunner.NativeTestActivity com.android.angle.test.AngleUnitTestActivity '
-    adb_command += 'com.android.angle.test/org.chromium.build.gtest_apk.NativeTestInstrumentationTestRunner'
+        flags.append('--minimize-gpu-work')
+
+    # Build a command that can be run directly over ADB, for example:
+    r'''
+adb shell am instrument -w \
+    -e org.chromium.native_test.NativeTestInstrumentationTestRunner.StdoutFile /sdcard/Download/out.txt \
+    -e org.chromium.native_test.NativeTest.CommandLineFlags \
+    "--gtest_filter=TraceTest.empires_and_puzzles\ --use-angle=vulkan\ --screenshot-dir\ /sdcard\ --screenshot-frame\ 2\ --max-steps-performed\ 2\ --no-warmup" \
+    -e org.chromium.native_test.NativeTestInstrumentationTestRunner.ShardNanoTimeout "1000000000000000000" \
+    -e org.chromium.native_test.NativeTestInstrumentationTestRunner.NativeTestActivity com.android.angle.test.AngleUnitTestActivity \
+    com.android.angle.test/org.chromium.build.gtest_apk.NativeTestInstrumentationTestRunner
+    '''
+    adb_command = r'''
+shell am instrument -w \
+    -e org.chromium.native_test.NativeTestInstrumentationTestRunner.StdoutFile /sdcard/Download/out.txt \
+    -e org.chromium.native_test.NativeTest.CommandLineFlags "{flags}" \
+    -e org.chromium.native_test.NativeTestInstrumentationTestRunner.ShardNanoTimeout "1000000000000000000" \
+    -e org.chromium.native_test.NativeTestInstrumentationTestRunner.NativeTestActivity \
+    com.android.angle.test.AngleUnitTestActivity \
+    com.android.angle.test/org.chromium.build.gtest_apk.NativeTestInstrumentationTestRunner
+    '''.format(flags=r'\ '.join(flags)).strip()  # Note: space escaped due to subprocess shell=True
 
     result = run_adb_command(adb_command)
 
