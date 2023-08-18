@@ -227,7 +227,12 @@ uint8_t *TraceLibrary::LoadBinaryData(const char *fileName)
         }
 
         std::vector<uint8_t> compressedData(size);
-        (void)fread(compressedData.data(), 1, size, fp);
+        size_t bytesRead = fread(compressedData.data(), 1, size, fp);
+        if (bytesRead != static_cast<size_t>(size))
+        {
+            std::cerr << "Failed to read binary data: " << bytesRead << " != " << size << "\n";
+            exit(1);
+        }
 
         // https://anglebug.com/8307: temporary checks
         std::cout << "Compressed binary data size=" << size
