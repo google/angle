@@ -56,7 +56,8 @@ DEFAULT_TEST_JSON = 'restricted_traces.json'
 DEFAULT_LOG_LEVEL = 'info'
 SELECTED_DEVICE = ''
 
-Result = namedtuple('Result', ['process', 'time'])
+Result = namedtuple('Result', ['stdout', 'stderr', 'time'])
+
 
 def run_command(args):
     logging.debug('Running %s' % args)
@@ -74,11 +75,11 @@ def run_command(args):
         raise RuntimeError("command '{}' return with error (code {}): {}".format(
             e.cmd, e.returncode, e.output))
 
-    process.wait()
+    stdout, stderr = process.communicate()
 
     time_elapsed = time.time() - start_time
 
-    return Result(process, time_elapsed)
+    return Result(stdout, stderr, time_elapsed)
 
 
 def run_async_command(args):
@@ -120,7 +121,7 @@ def select_device(device_arg):
     # The output from 'adb devices' always includes a header and a new line at the end.
     global SELECTED_DEVICE
     result_dev = run_command('adb devices')
-    result_dev_out = result_dev.process.stdout.read().strip()
+    result_dev_out = result_dev.stdout.strip()
 
     result_header_end = result_dev_out.find('\n')
     result_dev_out = '' if result_header_end == -1 else result_dev_out[result_header_end:]
@@ -226,11 +227,8 @@ def get_test_time():
 
     measured_time = ''
 
-    while True:
-        line = result.process.stdout.readline()
+    for line in result.stdout.splitlines():
         logging.debug('Checking line: %s' % line)
-        if not line:
-            break
 
         # Look for this line and grab the second to last entry:
         #   Mean result time: 1.2793 ms
@@ -271,11 +269,8 @@ def get_gpu_memory(trace_duration):
     test_process = ''
     gpu_mem = []
     gpu_mem_sustained = []
-    while True:
-        line = result.process.stdout.readline()
+    for line in result.stdout.splitlines():
         logging.debug('Checking line: %s' % line)
-        if not line:
-            break
 
         if "time_elapsed" in line:
             time_elapsed = line.split()[-1]
@@ -325,12 +320,9 @@ def get_proc_memory():
     memory_median = ''
     memory_max = ''
 
-    while True:
+    for line in result.stdout.splitlines():
         # Look for "memory_max" in the line and grab the second to last entry:
-        line = result.process.stdout.readline()
         logging.debug('Checking line: %s' % line)
-        if not line:
-            break
 
         if "memory_median" in line:
             memory_median = line.split()[-2]
@@ -348,12 +340,9 @@ def get_gpu_time():
     result = run_adb_command('shell cat /sdcard/Download/out.txt')
     gpu_time = ''
 
-    while True:
+    for line in result.stdout.splitlines():
         # Look for "gpu_time" in the line and grab the second to last entry:
-        line = result.process.stdout.readline()
         logging.debug('Checking line: %s' % line)
-        if not line:
-            break
 
         if "gpu_time" in line:
             gpu_time = line.split()[-2]
@@ -367,12 +356,9 @@ def get_cpu_time():
     result = run_adb_command('shell cat /sdcard/Download/out.txt')
     cpu_time = ''
 
-    while True:
+    for line in result.stdout.splitlines():
         # Look for "cpu_time" in the line and grab the second to last entry:
-        line = result.process.stdout.readline()
         logging.debug('Checking line: %s' % line)
-        if not line:
-            break
 
         if "cpu_time" in line:
             cpu_time = line.split()[-2]
@@ -387,11 +373,8 @@ def get_frame_count():
 
     frame_count = 0
 
-    while True:
-        line = result.process.stdout.readline()
+    for line in result.stdout.splitlines():
         logging.debug('Checking line: %s' % line)
-        if not line:
-            break
         if "trial_steps" in line:
             frame_count = line.split()[-2]
             break
@@ -450,7 +433,7 @@ class GPUPowerStats():
         for m in id_map.values():
             self.power[m] = 0  # Set to 0 to check for missing values and dupes below
 
-        for line in energy_value_result.process.stdout:
+        for line in energy_value_result.stdout.splitlines():
             for mid, m in id_map.items():
                 if mid in line:
                     value = int(line.split()[1])
@@ -789,11 +772,8 @@ def run_traces(args):
     summary_file = open("summary." + args.output_tag + ".csv", 'w', newline='')
     summary_writer = csv.writer(summary_file)
 
-    android_result = run_adb_command('shell getprop ro.build.fingerprint')
-    android_version = android_result.process.stdout.read().strip()
-
-    angle_result = run_command('git rev-parse HEAD')
-    angle_version = angle_result.process.stdout.read().strip()
+    android_version = run_adb_command('shell getprop ro.build.fingerprint').stdout.strip()
+    angle_version = run_command('git rev-parse HEAD').stdout.strip()
     # test_time = run_command('date \"+%Y%m%d\"').stdout.read().strip()
 
     summary_writer.writerow([
