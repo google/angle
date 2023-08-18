@@ -549,6 +549,13 @@ def main():
     return 0
 
 
+def logged_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--output-tag')
+    _, extra_args = parser.parse_known_args()
+    return ' '.join(extra_args)
+
+
 def run_traces(args):
     # Load trace names
     with open(os.path.join(DEFAULT_TEST_DIR, DEFAULT_TEST_JSON)) as f:
@@ -789,7 +796,7 @@ def run_traces(args):
     summary_writer.writerow([
         "\"Android: " + android_version + "\n" + "ANGLE: " + angle_version + "\n" +
         #  "Date: " + test_time + "\n" +
-        "Source: " + raw_data_filename + "\n" + "\""
+        "Source: " + raw_data_filename + "\n" + "Args: " + logged_args() + "\""
     ])
     summary_writer.writerow([
         "#", "\"Trace\"", "\"Native\nwall\ntime\nper\nframe\n(ms)\"",
