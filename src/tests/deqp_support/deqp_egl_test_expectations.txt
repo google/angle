@@ -39,10 +39,9 @@
 //  Temprory entries: they should be removed once the bugs are fixed.
 //
 ////////////////////////////////////////////////////////////////////////////////
-
-// Fails/crashes everywhere
-8261 : dEQP-EGL.functional.native_color_mapping.native_window.* = SKIP
-8261 : dEQP-EGL.functional.native_coord_mapping.native_window.* = SKIP
+// Fails/crashes on win x86
+8261 WIN : dEQP-EGL.functional.native_color_mapping.native_window.* = SKIP
+8261 WIN : dEQP-EGL.functional.native_coord_mapping.native_window.* = SKIP
 
 // Flaky since we enabled depth/stencil backbuffer in all tests.
 2429 WIN NVIDIA : dEQP-EGL.functional.query_context.query_context.rgba8888_window = FAIL
