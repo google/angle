@@ -2836,6 +2836,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_traces',
   },
+  'src/tests/restricted_traces/stumble_guys': {
+      'packages': [
+        {
+            'package': 'angle/traces/stumble_guys',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_traces',
+  },
   'src/tests/restricted_traces/subway_princess_runner': {
       'packages': [
         {
