@@ -470,6 +470,28 @@ TEST_P(EXTBlendFuncExtendedDrawTest, FragColor)
     drawTest();
 }
 
+// Test a shader with EXT_blend_func_extended and EXT_draw_buffers enabled at the same time.
+TEST_P(EXTBlendFuncExtendedDrawTest, FragColorBroadcast)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_blend_func_extended"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_draw_buffers"));
+
+    const char *kFragColorShader =
+        "#extension GL_EXT_blend_func_extended : require\n"
+        "#extension GL_EXT_draw_buffers : require\n"
+        "precision mediump float;\n"
+        "uniform vec4 src0;\n"
+        "uniform vec4 src1;\n"
+        "void main() {\n"
+        "  gl_FragColor = src0;\n"
+        "  gl_SecondaryFragColorEXT = src1;\n"
+        "}\n";
+
+    makeProgram(essl1_shaders::vs::Simple(), kFragColorShader);
+
+    drawTest();
+}
+
 // Test a shader with EXT_blend_func_extended and gl_FragData.
 // Outputs to a color buffer using primary and secondary frag data.
 TEST_P(EXTBlendFuncExtendedDrawTest, FragData)
