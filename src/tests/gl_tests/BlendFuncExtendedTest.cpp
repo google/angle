@@ -476,9 +476,6 @@ TEST_P(EXTBlendFuncExtendedDrawTest, FragData)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_blend_func_extended"));
 
-    // Suspected VK driver bug http://anglebug.com/5523
-    ANGLE_SKIP_TEST_IF(IsVulkan() && (IsNVIDIA() || IsPixel2()));
-
     const char *kFragColorShader =
         "#extension GL_EXT_blend_func_extended : require\n"
         "precision mediump float;\n"
@@ -551,7 +548,7 @@ void main() {
 }
 
 // Test an ESSL 3.00 shader that uses two fragment outputs with locations specified through the API.
-TEST_P(EXTBlendFuncExtendedDrawTestES3, FragmentOutputLocationAPI)
+TEST_P(EXTBlendFuncExtendedDrawTestES3, FragmentOutputLocationsAPI)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_blend_func_extended"));
 
@@ -610,14 +607,43 @@ void main() {
     drawTest();
 }
 
+// Test an ESSL 3.00 shader that uses two array fragment outputs with locations
+// specified in the shader.
+TEST_P(EXTBlendFuncExtendedDrawTestES3, FragmentArrayOutputLocationsInShader)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_blend_func_extended"));
+
+    const char *kFragColorShader = R"(#version 300 es
+#extension GL_EXT_blend_func_extended : require
+precision mediump float;
+uniform vec4 src0;
+uniform vec4 src1;
+layout(location = 0, index = 1) out vec4 outSrc1[1];
+layout(location = 0, index = 0) out vec4 outSrc0[1];
+void main() {
+    outSrc0[0] = src0;
+    outSrc1[0] = src1;
+})";
+
+    makeProgram(essl3_shaders::vs::Simple(), kFragColorShader);
+
+    checkOutputIndexQuery("outSrc0[0]", 0);
+    checkOutputIndexQuery("outSrc1[0]", 1);
+    checkOutputIndexQuery("outSrc0", 0);
+    checkOutputIndexQuery("outSrc1", 1);
+
+    // These queries use an out of range array index so they should return -1.
+    checkOutputIndexQuery("outSrc0[1]", -1);
+    checkOutputIndexQuery("outSrc1[1]", -1);
+
+    drawTest();
+}
+
 // Test an ESSL 3.00 shader that uses two array fragment outputs with locations specified through
 // the API.
 TEST_P(EXTBlendFuncExtendedDrawTestES3, FragmentArrayOutputLocationsAPI)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_blend_func_extended"));
-
-    // Suspected VK driver bug http://anglebug.com/5523
-    ANGLE_SKIP_TEST_IF(IsVulkan() && (IsNVIDIA() || IsPixel2()));
 
     constexpr char kFS[] = R"(#version 300 es
 #extension GL_EXT_blend_func_extended : require

@@ -352,13 +352,12 @@ void AssignSecondaryOutputLocations(const gl::ProgramExecutable &programExecutab
                 variableInfoMapOut, gl::ShaderType::Fragment, outputVar.podStruct.id, location,
                 ShaderInterfaceVariableInfo::kInvalid, 0, 0);
 
-            // If the shader source has not specified the index, specify it here.
-            if (outputVar.podStruct.index == -1)
-            {
-                // Index 1 is used to specify that the color be used as the second color input to
-                // the blend equation
-                info->index = 1;
-            }
+            // Index 1 is used to specify that the color be used as the second color input to
+            // the blend equation
+            info->index = 1;
+
+            ASSERT(!outputVar.isArray() || outputVar.getOutermostArraySize() == 1);
+            info->isArray = outputVar.isArray();
         }
     }
     // Handle secondary outputs for ESSL version less than 3.00
@@ -373,9 +372,17 @@ void AssignSecondaryOutputLocations(const gl::ProgramExecutable &programExecutab
             if (std::find(secondaryFrag.begin(), secondaryFrag.end(), outputVar.name) !=
                 secondaryFrag.end())
             {
-                AddLocationInfo(variableInfoMapOut, gl::ShaderType::Fragment,
-                                outputVar.podStruct.id, 0, ShaderInterfaceVariableInfo::kInvalid, 0,
-                                0);
+                ShaderInterfaceVariableInfo *info = AddLocationInfo(
+                    variableInfoMapOut, gl::ShaderType::Fragment, outputVar.podStruct.id, 0,
+                    ShaderInterfaceVariableInfo::kInvalid, 0, 0);
+
+                info->index = 1;
+
+                ASSERT(!outputVar.isArray() || outputVar.getOutermostArraySize() == 1);
+                info->isArray = outputVar.isArray();
+
+                // SecondaryFragColor and SecondaryFragData cannot be present simultaneously.
+                break;
             }
         }
     }
@@ -1283,6 +1290,12 @@ class SpirvInactiveVaryingRemover final : angle::NonCopyable
         spirv::IdRefList *interfaceList);
 
     bool isInactive(spirv::IdRef id) const { return mIsInactiveById[id]; }
+
+    spirv::IdRef getTransformedPrivateType(spirv::IdRef id) const
+    {
+        ASSERT(id < mTypePointerTransformedId.size());
+        return mTypePointerTransformedId[id];
+    }
 
   private:
     // Each OpTypePointer instruction that defines a type with the Output storage class is
@@ -2946,6 +2959,196 @@ void SpirvMultisampleTransformer::visitVariable(gl::ShaderType shaderType,
     visitVarying(shaderType, id, storageClass);
 }
 
+// Helper class that flattens secondary fragment output arrays.
+class SpirvSecondaryOutputTransformer final : angle::NonCopyable
+{
+  public:
+    SpirvSecondaryOutputTransformer() {}
+
+    void init(size_t indexBound);
+
+    void visitTypeArray(spirv::IdResult id, spirv::IdRef typeId);
+
+    void visitTypePointer(spirv::IdResult id, spirv::IdRef typeId);
+
+    TransformationState transformAccessChain(spirv::IdResultType typeId,
+                                             spirv::IdResult id,
+                                             spirv::IdRef baseId,
+                                             const spirv::IdRefList &indexList,
+                                             spirv::Blob *blobOut);
+
+    TransformationState transformDecorate(spirv::IdRef id,
+                                          spv::Decoration decoration,
+                                          const spirv::LiteralIntegerList &decorationValues,
+                                          spirv::Blob *blobOut);
+
+    TransformationState transformVariable(spirv::IdResultType typeId,
+                                          spirv::IdResultType privateTypeId,
+                                          spirv::IdResult id,
+                                          spirv::Blob *blobOut);
+
+    void modifyEntryPointInterfaceList(
+        const std::vector<const ShaderInterfaceVariableInfo *> &variableInfoById,
+        spirv::IdRefList *interfaceList,
+        spirv::Blob *blobOut);
+
+    void writeOutputPrologue(
+        const std::vector<const ShaderInterfaceVariableInfo *> &variableInfoById,
+        spirv::Blob *blobOut);
+
+    static_assert(gl::IMPLEMENTATION_MAX_DUAL_SOURCE_DRAW_BUFFERS == 1,
+                  "This transformer is incompatible with two or more dual-source draw buffers");
+
+  private:
+    void visitTypeHelper(spirv::IdResult id, spirv::IdRef typeId) { mTypeCache[id] = typeId; }
+
+    // This list is filled during visitTypePointer and visitTypeArray steps,
+    // to resolve the element type ID of the original output array variable.
+    std::vector<spirv::IdRef> mTypeCache;
+    spirv::IdRef mElementTypeId;
+    spirv::IdRef mArrayVariableId;
+    spirv::IdRef mReplacementVariableId;
+    spirv::IdRef mElementPointerTypeId;
+};
+
+void SpirvSecondaryOutputTransformer::init(size_t indexBound)
+{
+    mTypeCache.resize(indexBound);
+}
+
+void SpirvSecondaryOutputTransformer::visitTypeArray(spirv::IdResult id, spirv::IdRef typeId)
+{
+    visitTypeHelper(id, typeId);
+}
+
+void SpirvSecondaryOutputTransformer::visitTypePointer(spirv::IdResult id, spirv::IdRef typeId)
+{
+    visitTypeHelper(id, typeId);
+}
+
+void SpirvSecondaryOutputTransformer::modifyEntryPointInterfaceList(
+    const std::vector<const ShaderInterfaceVariableInfo *> &variableInfoById,
+    spirv::IdRefList *interfaceList,
+    spirv::Blob *blobOut)
+{
+    // Flatten a secondary output array (if any).
+    for (size_t index = 0; index < interfaceList->size(); ++index)
+    {
+        const spirv::IdRef id((*interfaceList)[index]);
+        const ShaderInterfaceVariableInfo *info = variableInfoById[id];
+
+        ASSERT(info);
+        if (info->index != 1 || !info->isArray)
+        {
+            continue;
+        }
+
+        mArrayVariableId        = id;
+        mReplacementVariableId  = SpirvTransformerBase::GetNewId(blobOut);
+        (*interfaceList)[index] = mReplacementVariableId;
+        break;
+    }
+}
+
+TransformationState SpirvSecondaryOutputTransformer::transformAccessChain(
+    spirv::IdResultType typeId,
+    spirv::IdResult id,
+    spirv::IdRef baseId,
+    const spirv::IdRefList &indexList,
+    spirv::Blob *blobOut)
+{
+    if (baseId != mArrayVariableId)
+    {
+        return TransformationState::Unchanged;
+    }
+    ASSERT(typeId.valid());
+    spirv::WriteAccessChain(blobOut, typeId, id, baseId, indexList);
+    return TransformationState::Transformed;
+}
+
+TransformationState SpirvSecondaryOutputTransformer::transformDecorate(
+    spirv::IdRef id,
+    spv::Decoration decoration,
+    const spirv::LiteralIntegerList &decorationValues,
+    spirv::Blob *blobOut)
+{
+    if (id != mArrayVariableId)
+    {
+        return TransformationState::Unchanged;
+    }
+    ASSERT(mReplacementVariableId.valid());
+    if (decoration == spv::DecorationLocation)
+    {
+        // Drop the Location decoration from the original variable and add
+        // it together with an Index decoration to the replacement variable.
+        spirv::WriteDecorate(blobOut, mReplacementVariableId, spv::DecorationLocation,
+                             {spirv::LiteralInteger(0)});
+        spirv::WriteDecorate(blobOut, mReplacementVariableId, spv::DecorationIndex,
+                             {spirv::LiteralInteger(1)});
+    }
+    else
+    {
+        // Apply other decorations, such as RelaxedPrecision, to both variables.
+        spirv::WriteDecorate(blobOut, id, decoration, decorationValues);
+        spirv::WriteDecorate(blobOut, mReplacementVariableId, decoration, decorationValues);
+    }
+    return TransformationState::Transformed;
+}
+
+TransformationState SpirvSecondaryOutputTransformer::transformVariable(
+    spirv::IdResultType typeId,
+    spirv::IdResultType privateTypeId,
+    spirv::IdResult id,
+    spirv::Blob *blobOut)
+{
+    if (id != mArrayVariableId)
+    {
+        return TransformationState::Unchanged;
+    }
+
+    // Change the original variable to use private storage.
+    ASSERT(privateTypeId.valid());
+    spirv::WriteVariable(blobOut, privateTypeId, id, spv::StorageClassPrivate, nullptr);
+
+    ASSERT(!mElementTypeId.valid());
+    mElementTypeId = mTypeCache[mTypeCache[typeId]];
+    ASSERT(mElementTypeId.valid());
+
+    // Pointer type for accessing the array element value.
+    mElementPointerTypeId = SpirvTransformerBase::GetNewId(blobOut);
+    spirv::WriteTypePointer(blobOut, mElementPointerTypeId, spv::StorageClassPrivate,
+                            mElementTypeId);
+
+    // Pointer type for the replacement output variable.
+    const spirv::IdRef outputPointerTypeId(SpirvTransformerBase::GetNewId(blobOut));
+    spirv::WriteTypePointer(blobOut, outputPointerTypeId, spv::StorageClassOutput, mElementTypeId);
+
+    ASSERT(mReplacementVariableId.valid());
+    spirv::WriteVariable(blobOut, outputPointerTypeId, mReplacementVariableId,
+                         spv::StorageClassOutput, nullptr);
+
+    return TransformationState::Transformed;
+}
+
+void SpirvSecondaryOutputTransformer::writeOutputPrologue(
+    const std::vector<const ShaderInterfaceVariableInfo *> &variableInfoById,
+    spirv::Blob *blobOut)
+{
+    if (mArrayVariableId.valid())
+    {
+        const spirv::IdRef accessChainId(SpirvTransformerBase::GetNewId(blobOut));
+        spirv::WriteAccessChain(blobOut, mElementPointerTypeId, accessChainId, mArrayVariableId,
+                                {ID::IntZero});
+
+        ASSERT(mElementTypeId.valid());
+        const spirv::IdRef loadId(SpirvTransformerBase::GetNewId(blobOut));
+        spirv::WriteLoad(blobOut, mElementTypeId, loadId, accessChainId, nullptr);
+
+        ASSERT(mReplacementVariableId.valid());
+        spirv::WriteStore(blobOut, mReplacementVariableId, loadId, nullptr);
+    }
+}
+
 // A SPIR-V transformer.  It walks the instructions and modifies them as necessary, for example to
 // assign bindings or locations.
 class SpirvTransformer final : public SpirvTransformerBase
@@ -3025,6 +3228,7 @@ class SpirvTransformer final : public SpirvTransformerBase
     SpirvTransformFeedbackCodeGenerator mXfbCodeGenerator;
     SpirvPositionTransformer mPositionTransformer;
     SpirvMultisampleTransformer mMultisampleTransformer;
+    SpirvSecondaryOutputTransformer mSecondaryOutputTransformer;
 };
 
 void SpirvTransformer::transform()
@@ -3056,6 +3260,10 @@ void SpirvTransformer::resolveVariableIds()
     if (mOptions.isMultisampledFramebufferFetch || mOptions.enableSampleShading)
     {
         mMultisampleTransformer.init(indexBound);
+    }
+    if (mOptions.shaderType == gl::ShaderType::Fragment)
+    {
+        mSecondaryOutputTransformer.init(indexBound);
     }
 
     // Allocate storage for id-to-info map.  If %i is an id in mVariableInfoMap, index i in this
@@ -3273,6 +3481,10 @@ void SpirvTransformer::writeOutputPrologue()
         mVaryingPrecisionFixer.writeOutputPrologue(mVariableInfoById, mOptions.shaderType,
                                                    mSpirvBlobOut);
     }
+    if (mOptions.shaderType == gl::ShaderType::Fragment)
+    {
+        mSecondaryOutputTransformer.writeOutputPrologue(mVariableInfoById, mSpirvBlobOut);
+    }
     if (!mNonSemanticInstructions.hasOutputPerVertex())
     {
         return;
@@ -3353,6 +3565,10 @@ void SpirvTransformer::visitTypeArray(const uint32_t *instruction)
     spirv::ParseTypeArray(instruction, &id, &elementType, &length);
 
     visitTypeHelper(id, elementType);
+    if (mOptions.shaderType == gl::ShaderType::Fragment)
+    {
+        mSecondaryOutputTransformer.visitTypeArray(id, elementType);
+    }
 }
 
 void SpirvTransformer::visitTypePointer(const uint32_t *instruction)
@@ -3368,6 +3584,10 @@ void SpirvTransformer::visitTypePointer(const uint32_t *instruction)
         mVaryingPrecisionFixer.visitTypePointer(id, storageClass, typeId);
     }
     mMultisampleTransformer.visitTypePointer(mOptions.shaderType, id, storageClass, typeId);
+    if (mOptions.shaderType == gl::ShaderType::Fragment)
+    {
+        mSecondaryOutputTransformer.visitTypePointer(id, typeId);
+    }
 }
 
 void SpirvTransformer::visitTypeStruct(const uint32_t *instruction)
@@ -3475,6 +3695,17 @@ TransformationState SpirvTransformer::transformDecorate(const uint32_t *instruct
     if (info == nullptr)
     {
         return TransformationState::Unchanged;
+    }
+
+    if (mOptions.shaderType == gl::ShaderType::Fragment)
+    {
+        // Handle decorations for the secondary fragment output array.
+        if (mSecondaryOutputTransformer.transformDecorate(id, decoration, decorationValues,
+                                                          mSpirvBlobOut) ==
+            TransformationState::Transformed)
+        {
+            return TransformationState::Transformed;
+        }
     }
 
     mMultisampleTransformer.transformDecorate(mNonSemanticInstructions, *info, mOptions.shaderType,
@@ -3669,6 +3900,12 @@ TransformationState SpirvTransformer::transformEntryPoint(const uint32_t *instru
         mVaryingPrecisionFixer.modifyEntryPointInterfaceList(&interfaceList);
     }
 
+    if (mOptions.shaderType == gl::ShaderType::Fragment)
+    {
+        mSecondaryOutputTransformer.modifyEntryPointInterfaceList(mVariableInfoById, &interfaceList,
+                                                                  mSpirvBlobOut);
+    }
+
     mMultisampleTransformer.modifyEntryPointInterfaceList(mNonSemanticInstructions, &interfaceList,
                                                           mSpirvBlobOut);
 
@@ -3744,11 +3981,11 @@ TransformationState SpirvTransformer::transformExtInst(const uint32_t *instructi
             // the varyings at the beginning of the shader.
             writeInputPreamble();
             break;
-        case sh::vk::spirv::kNonSemanticVertexOutput:
+        case sh::vk::spirv::kNonSemanticOutput:
             // Generate gl_Position transformations and transform feedback capture (through
             // extension) before return or EmitVertex().  Additionally, if there are any precision
             // mismatches that need to be ahendled, write the temporary variables that hold varyings
-            // data.
+            // data. Copy a secondary fragment output value if it was declared as an array.
             writeOutputPrologue();
             break;
         case sh::vk::spirv::kNonSemanticTransformFeedbackEmulation:
@@ -3805,6 +4042,18 @@ TransformationState SpirvTransformer::transformVariable(const uint32_t *instruct
         return TransformationState::Unchanged;
     }
 
+    if (mOptions.shaderType == gl::ShaderType::Fragment && storageClass == spv::StorageClassOutput)
+    {
+        // If present, make the secondary fragment output array
+        // private and declare a non-array output instead.
+        if (mSecondaryOutputTransformer.transformVariable(
+                typeId, mInactiveVaryingRemover.getTransformedPrivateType(typeId), id,
+                mSpirvBlobOut) == TransformationState::Transformed)
+        {
+            return TransformationState::Transformed;
+        }
+    }
+
     // Furthermore, if it's not an inactive varying output, there's nothing to do.  Note that
     // inactive varying inputs are already pruned by the translator.
     // However, input or output storage class for interface block will not be pruned when a shader
@@ -3856,6 +4105,17 @@ TransformationState SpirvTransformer::transformAccessChain(const uint32_t *instr
     if (info == nullptr)
     {
         return TransformationState::Unchanged;
+    }
+
+    if (mOptions.shaderType == gl::ShaderType::Fragment)
+    {
+        // Update the type used for accessing the secondary fragment output array.
+        if (mSecondaryOutputTransformer.transformAccessChain(
+                mInactiveVaryingRemover.getTransformedPrivateType(typeId), id, baseId, indexList,
+                mSpirvBlobOut) == TransformationState::Transformed)
+        {
+            return TransformationState::Transformed;
+        }
     }
 
     if (mOptions.useSpirvVaryingPrecisionFixer)
@@ -4354,7 +4614,7 @@ TransformationState SpirvVertexAttributeAliasingTransformer::transformExtInst(
             // This is done at the beginning of the entry point.
             writeExpandedMatrixInitialization();
             break;
-        case sh::vk::spirv::kNonSemanticVertexOutput:
+        case sh::vk::spirv::kNonSemanticOutput:
         case sh::vk::spirv::kNonSemanticTransformFeedbackEmulation:
             // Unused by this transformation
             break;
