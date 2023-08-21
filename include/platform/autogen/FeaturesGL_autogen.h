@@ -675,6 +675,13 @@ struct FeaturesGL : FeatureSetBase
         &members, "https://anglebug.com/8308"
     };
 
+    FeatureInfo disableRenderSnorm = {
+        "disableRenderSnorm",
+        FeatureCategory::OpenGLWorkarounds,
+        "Disable EXT_render_snorm extension.",
+        &members, "https://anglebug.com/8315"
+    };
+
 };
 
 inline FeaturesGL::FeaturesGL()  = default;

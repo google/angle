@@ -731,6 +731,14 @@
                 "Always write explicit location layout qualifiers for fragment outputs."
             ],
             "issue": "https://anglebug.com/8308"
+        },
+        {
+            "name": "disable_render_snorm",
+            "category": "Workarounds",
+            "description": [
+                "Disable EXT_render_snorm extension."
+            ],
+            "issue": "https://anglebug.com/8315"
         }
     ]
 }

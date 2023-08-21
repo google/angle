@@ -85,6 +85,7 @@ enum class Feature
     DisableProgrammableBlending,
     DisableRasterizerOrderViews,
     DisableRasterOrderGroups,
+    DisableRenderSnorm,
     DisableRWTextureTier2Support,
     DisableSemaphoreFd,
     DisableStagedInitializationOfPackedTextureFormats,

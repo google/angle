@@ -2020,6 +2020,11 @@ void GenerateCaps(const FunctionsGL *functions,
                                      functions->hasGLESExtension("GL_EXT_clip_control");
     }
 
+    if (features.disableRenderSnorm.enabled)
+    {
+        extensions->renderSnormEXT = false;
+    }
+
     constexpr uint32_t kRequiredClipDistances                = 8;
     constexpr uint32_t kRequiredCullDistances                = 8;
     constexpr uint32_t kRequiredCombinedClipAndCullDistances = 8;
@@ -2587,6 +2592,10 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
 
     // https://crbug.com/1434317
     ANGLE_FEATURE_CONDITION(features, disableClipControl, IsMaliG72OrG76OrG51(functions));
+
+    // https://anglebug.com/8315
+    ANGLE_FEATURE_CONDITION(features, disableRenderSnorm,
+                            isMesa && mesaVersion < (std::array<int, 3>{21, 3, 0}));
 
     // http://anglebug.com/8172
     ANGLE_FEATURE_CONDITION(features, disableBaseInstanceVertex, IsMaliValhall(functions));
