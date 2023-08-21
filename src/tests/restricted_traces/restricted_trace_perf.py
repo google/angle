@@ -42,10 +42,11 @@ import json
 import logging
 import os
 import re
+import statistics
 import subprocess
 import sys
+import threading
 import time
-import statistics
 
 from collections import defaultdict, namedtuple
 from datetime import datetime
@@ -54,7 +55,6 @@ from psutil import process_iter
 DEFAULT_TEST_DIR = '.'
 DEFAULT_TEST_JSON = 'restricted_traces.json'
 DEFAULT_LOG_LEVEL = 'info'
-SELECTED_DEVICE = ''
 
 Result = namedtuple('Result', ['stdout', 'stderr', 'time'])
 
@@ -101,16 +101,12 @@ def run_async_command(args):
     return async_process
 
 
-def get_adb_dev():
-    return 'adb {} '.format(SELECTED_DEVICE)
-
-
 def run_adb_command(args):
-    return run_command(get_adb_dev() + args)
+    return run_command('adb ' + args)
 
 
 def run_async_adb_command(args):
-    return run_async_command(get_adb_dev() + args)
+    return run_async_command('adb ' + args)
 
 
 def cleanup():
@@ -119,7 +115,6 @@ def cleanup():
 
 def select_device(device_arg):
     # The output from 'adb devices' always includes a header and a new line at the end.
-    global SELECTED_DEVICE
     result_dev = run_command('adb devices')
     result_dev_out = result_dev.stdout.strip()
 
@@ -160,7 +155,7 @@ def select_device(device_arg):
     # Select device
     if device_serial is not None:
         logging.info('Device with serial {} selected.'.format(device_serial))
-        SELECTED_DEVICE = '-s {}'.format(device_serial)
+        os.environ['ANDROID_SERIAL'] = device_serial
 
     else:
         logging.info('Default device ({}) selected.'.format(result_dev_out[0]))
@@ -465,6 +460,59 @@ class GPUPowerStats():
             assert self.power[m] != 0, 'Power metric not found: %s (%s)' % (mid, m)
 
 
+def wait_for_test_warmup(done_event):
+    p = subprocess.Popen(['adb', 'logcat', '*:S', 'ANGLE:I'], stdout=subprocess.PIPE)
+    os.set_blocking(p.stdout.fileno(), False)
+
+    start_time = time.time()
+    while True:
+        line = p.stdout.readline().decode()  # non-blocking as per set_blocking above
+
+        # Look for text logged by the harness when warmup is complete and a test is starting
+        if 'running test name' in line:
+            p.kill()
+            break
+        if done_event.is_set():
+            logging.warning('Test finished without logging to logcat')
+            p.kill()
+            break
+
+        time.sleep(0.05)
+
+        p.poll()
+        if p.returncode != None:
+            logging.warning('Logcat terminated unexpectedly')
+            return
+
+
+def collect_power(done_event, test_fixedtime, results):
+    # Starting point is post test warmup as there are spikes during warmup
+    wait_for_test_warmup(done_event)
+
+    starting_power = GPUPowerStats()
+    starting_power.get_power_data()
+    logging.debug('Starting power: %s' % starting_power.power)
+
+    duration = test_fixedtime - 1.0  # Avoid measuring through test termination
+    start_time = time.time()
+    while time.time() - start_time < duration:
+        if done_event.is_set():
+            logging.warning('Test finished earlier than expected by collect_power')
+            break
+        time.sleep(0.05)
+
+    ending_power = GPUPowerStats()
+    ending_power.get_power_data()
+    dt = time.time() - start_time
+    logging.debug('Ending power: %s' % ending_power.power)
+
+    results.update({
+        # 1e6 for uW -> W
+        'cpu': ending_power.cpu_delta(starting_power) / dt / 1e6,
+        'gpu': ending_power.gpu_delta(starting_power) / dt / 1e6,
+    })
+
+
 def drop_high_low_and_average(values):
     if len(values) >= 3:
         values.remove(min(values))
@@ -621,9 +669,8 @@ def run_traces(args):
                column_width['gpu_mem_peak'], 'gpu_mem_peak', column_width['proc_mem_median'],
                'proc_mem_median', column_width['proc_mem_peak'], 'proc_mem_peak'))
         output_writer.writerow([
-            'trace', 'wall_time(ms)', 'gpu_time(ms)', 'cpu_time(ms)', 'gpu_power(uWs)',
-            'cpu_power(uWs)', 'gpu_mem_sustained', 'gpu_mem_peak', 'proc_mem_median',
-            'proc_mem_peak'
+            'trace', 'wall_time(ms)', 'gpu_time(ms)', 'cpu_time(ms)', 'gpu_power(W)',
+            'cpu_power(W)', 'gpu_mem_sustained', 'gpu_mem_peak', 'proc_mem_median', 'proc_mem_peak'
         ])
     else:
         print('%-*s %-*s %-*s %-*s %-*s %-*s %-*s %-*s' %
@@ -646,8 +693,8 @@ def run_traces(args):
     wall_times = defaultdict(dict)
     gpu_times = defaultdict(dict)
     cpu_times = defaultdict(dict)
-    gpu_power_per_frames = defaultdict(dict)
-    cpu_power_per_frames = defaultdict(dict)
+    gpu_powers = defaultdict(dict)
+    cpu_powers = defaultdict(dict)
     gpu_mem_sustaineds = defaultdict(dict)
     gpu_mem_peaks = defaultdict(dict)
     proc_mem_medians = defaultdict(dict)
@@ -687,33 +734,34 @@ def run_traces(args):
                 test = trace.split(' ')[0]
 
                 if args.power:
-                    starting_power.get_power_data()
-                    logging.debug('Starting power: %s' % starting_power.power)
+                    assert args.fixedtime, '--power requires --fixedtime'
+                    done_event = threading.Event()
+                    run_adb_command('logcat -c')  # needed for wait_for_test_warmup
+                    power_results = {}  # output arg
+                    power_thread = threading.Thread(
+                        target=collect_power,
+                        args=(done_event, float(args.fixedtime), power_results))
+                    power_thread.daemon = True
+                    power_thread.start()
 
                 logging.debug('Running %s' % test)
                 test_time = run_trace(test, args)
 
                 if args.power:
-                    ending_power.get_power_data()
-                    logging.debug('Ending power: %s' % ending_power.power)
+                    done_event.set()
+                    power_thread.join(timeout=2)
+                    if power_thread.is_alive():
+                        logging.warning('collect_power thread did not terminate')
+                        gpu_power, cpu_power = 0, 0
+                    else:
+                        gpu_power = power_results['gpu']
+                        cpu_power = power_results['cpu']
 
                 wall_time = get_test_time()
 
                 gpu_time = get_gpu_time() if args.vsync else '0'
 
                 cpu_time = get_cpu_time()
-
-                gpu_power_per_frame = 0
-                cpu_power_per_frame = 0
-
-                if args.power:
-                    # Report the difference between the start and end power
-                    frame_count = int(get_frame_count())
-                    if frame_count > 0:
-                        consumed_gpu_power = ending_power.gpu_delta(starting_power)
-                        gpu_power_per_frame = consumed_gpu_power / int(frame_count)
-                        consumed_cpu_power = ending_power.cpu_delta(starting_power)
-                        cpu_power_per_frame = consumed_cpu_power / int(frame_count)
 
                 gpu_mem_sustained, gpu_mem_peak = get_gpu_memory(test_time)
                 logging.debug(
@@ -740,13 +788,13 @@ def run_traces(args):
                     cpu_times[test] = defaultdict(list)
                 cpu_times[test][renderer].append(safe_cast_float(cpu_time))
 
-                if len(gpu_power_per_frames[test]) == 0:
-                    gpu_power_per_frames[test] = defaultdict(list)
-                gpu_power_per_frames[test][renderer].append(safe_cast_int(gpu_power_per_frame))
+                if len(gpu_powers[test]) == 0:
+                    gpu_powers[test] = defaultdict(list)
+                gpu_powers[test][renderer].append(safe_cast_float(gpu_power))
 
-                if len(cpu_power_per_frames[test]) == 0:
-                    cpu_power_per_frames[test] = defaultdict(list)
-                cpu_power_per_frames[test][renderer].append(safe_cast_int(cpu_power_per_frame))
+                if len(cpu_powers[test]) == 0:
+                    cpu_powers[test] = defaultdict(list)
+                cpu_powers[test][renderer].append(safe_cast_float(cpu_power))
 
                 if len(gpu_mem_sustaineds[test]) == 0:
                     gpu_mem_sustaineds[test] = defaultdict(list)
@@ -768,18 +816,17 @@ def run_traces(args):
                     print('%-*s' % (trace_width, wall_time))
                 elif args.power:
                     print(
-                        '%-*s %-*s %-*s %-*s %-*i %-*i %-*i %-*i %-*i %-*i' %
+                        '%-*s %-*s %-*s %-*s %-*s %-*s %-*i %-*i %-*i %-*i' %
                         (column_width['trace'], trace_name, column_width['wall_time'], wall_time,
                          column_width['gpu_time'], gpu_time, column_width['cpu_time'], cpu_time,
-                         column_width['gpu_power'], gpu_power_per_frame, column_width['cpu_power'],
-                         cpu_power_per_frame, column_width['gpu_mem_sustained'], gpu_mem_sustained,
+                         column_width['gpu_power'], '%.3f' % gpu_power, column_width['cpu_power'],
+                         '%.3f' % cpu_power, column_width['gpu_mem_sustained'], gpu_mem_sustained,
                          column_width['gpu_mem_peak'], gpu_mem_peak,
                          column_width['proc_mem_median'], proc_mem_median,
                          column_width['proc_mem_peak'], proc_mem_peak))
                     output_writer.writerow([
-                        mode + renderer + '_' + test, wall_time, gpu_time, cpu_time,
-                        gpu_power_per_frame, cpu_power_per_frame, gpu_mem_sustained, gpu_mem_peak,
-                        proc_mem_median, proc_mem_peak
+                        mode + renderer + '_' + test, wall_time, gpu_time, cpu_time, gpu_power,
+                        cpu_power, gpu_mem_sustained, gpu_mem_peak, proc_mem_median, proc_mem_peak
                     ])
                 else:
                     print('%-*s %-*s %-*s %-*s %-*i %-*i %-*i %-*i' %
@@ -820,13 +867,12 @@ def run_traces(args):
         "\"ANGLE\nGPU\ntime\nper\nframe\n(ms)\"", "\"ANGLE\nGPU\ntime\nvariance\"",
         "\"GPU\ntime\ncompare\"", "\"Native\nCPU\ntime\nper\nframe\n(ms)\"",
         "\"Native\nCPU\ntime\nvariance\"", "\"ANGLE\nCPU\ntime\nper\nframe\n(ms)\"",
-        "\"ANGLE\nCPU\ntime\nvariance\"", "\"CPU\ntime\ncompare\"",
-        "\"Native\nGPU\npower\nper\nframe\n(uWs)\"", "\"Native\nGPU\npower\nvariance\"",
-        "\"ANGLE\nGPU\npower\nper\nframe\n(uWs)\"", "\"ANGLE\nGPU\npower\nvariance\"",
-        "\"GPU\npower\ncompare\"", "\"Native\nCPU\npower\nper\nframe\n(uWs)\"",
-        "\"Native\nCPU\npower\nvariance\"", "\"ANGLE\nCPU\npower\nper\nframe\n(uWs)\"",
-        "\"ANGLE\nCPU\npower\nvariance\"", "\"CPU\npower\ncompare\"", "\"Native\nGPU\nmem\n(B)\"",
-        "\"Native\nGPU\nmem\nvariance\"", "\"ANGLE\nGPU\nmem\n(B)\"",
+        "\"ANGLE\nCPU\ntime\nvariance\"", "\"CPU\ntime\ncompare\"", "\"Native\nGPU\npower\n(W)\"",
+        "\"Native\nGPU\npower\nvariance\"", "\"ANGLE\nGPU\npower\n(W)\"",
+        "\"ANGLE\nGPU\npower\nvariance\"", "\"GPU\npower\ncompare\"",
+        "\"Native\nCPU\npower\n(W)\"", "\"Native\nCPU\npower\nvariance\"",
+        "\"ANGLE\nCPU\npower\n(W)\"", "\"ANGLE\nCPU\npower\nvariance\"", "\"CPU\npower\ncompare\"",
+        "\"Native\nGPU\nmem\n(B)\"", "\"Native\nGPU\nmem\nvariance\"", "\"ANGLE\nGPU\nmem\n(B)\"",
         "\"ANGLE\nGPU\nmem\nvariance\"", "\"GPU\nmem\ncompare\"",
         "\"Native\npeak\nGPU\nmem\n(B)\"", "\"Native\npeak\nGPU\nmem\nvariance\"",
         "\"ANGLE\npeak\nGPU\nmem\n(B)\"", "\"ANGLE\npeak\nGPU\nmem\nvariance\"",
@@ -857,10 +903,10 @@ def run_traces(args):
     for name, results in cpu_times.items():
         populate_row(rows, name, results)
 
-    for name, results in gpu_power_per_frames.items():
+    for name, results in gpu_powers.items():
         populate_row(rows, name, results)
 
-    for name, results in cpu_power_per_frames.items():
+    for name, results in cpu_powers.items():
         populate_row(rows, name, results)
 
     for name, results in gpu_mem_sustaineds.items():
@@ -888,47 +934,57 @@ def run_traces(args):
     for name, data in rows.items():
         trace_number += 1
         summary_writer.writerow([
-            trace_number, name,
+            trace_number,
+            name,
+            # wall_time
             "%.3f" % data["native"][0],
             percent(data["native"][1]),
             "%.3f" % data["vulkan"][0],
             percent(data["vulkan"][1]),
             percent(safe_divide(data["native"][0], data["vulkan"][0])),
+            # GPU time
             "%.3f" % data["native"][2],
             percent(data["native"][3]),
             "%.3f" % data["vulkan"][2],
             percent(data["vulkan"][3]),
             percent(safe_divide(data["native"][2], data["vulkan"][2])),
+            # CPU time
             "%.3f" % data["native"][4],
             percent(data["native"][5]),
             "%.3f" % data["vulkan"][4],
             percent(data["vulkan"][5]),
             percent(safe_divide(data["native"][4], data["vulkan"][4])),
-            int(data["native"][6]),
+            # GPU power
+            "%.3f" % data["native"][6],
             percent(data["native"][7]),
-            int(data["vulkan"][6]),
+            "%.3f" % data["vulkan"][6],
             percent(data["vulkan"][7]),
             percent(safe_divide(data["native"][6], data["vulkan"][6])),
-            int(data["native"][8]),
+            # CPU power
+            "%.3f" % data["native"][8],
             percent(data["native"][9]),
-            int(data["vulkan"][8]),
+            "%.3f" % data["vulkan"][8],
             percent(data["vulkan"][9]),
             percent(safe_divide(data["native"][8], data["vulkan"][8])),
+            # GPU mem
             int(data["native"][10]),
             percent(data["native"][11]),
             int(data["vulkan"][10]),
             percent(data["vulkan"][11]),
             percent(safe_divide(data["native"][10], data["vulkan"][10])),
+            # GPU peak mem
             int(data["native"][12]),
             percent(data["native"][13]),
             int(data["vulkan"][12]),
             percent(data["vulkan"][13]),
             percent(safe_divide(data["native"][12], data["vulkan"][12])),
+            # process mem
             int(data["native"][14]),
             percent(data["native"][15]),
             int(data["vulkan"][14]),
             percent(data["vulkan"][15]),
             percent(safe_divide(data["native"][14], data["vulkan"][14])),
+            # process peak mem
             int(data["native"][16]),
             percent(data["native"][17]),
             int(data["vulkan"][16]),
