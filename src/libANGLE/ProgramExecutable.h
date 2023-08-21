@@ -110,7 +110,7 @@ struct ProgramInput
     std::string mappedName;
 
     // The struct bellow must only contain data of basic type so that entire struct can memcpy-able.
-    struct
+    struct PODStruct
     {
         uint16_t type;  // GLenum
         uint16_t arraySizeProduct;
@@ -135,6 +135,7 @@ struct ProgramInput
 
         uint32_t id;
     } basicDataTypeStruct;
+    static_assert(std::is_trivially_copyable<PODStruct>(), "must be memcpy-able");
 };
 ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
 
@@ -534,9 +535,6 @@ class ProgramExecutable final : public angle::Subject
     // This struct must only contains basic data types so that entire struct can be memcpy.
     struct PODStruct
     {
-        PODStruct();
-        PODStruct(const PODStruct &other);
-
         ShaderBitSet linkedShaderStages;
         angle::BitSet<MAX_VERTEX_ATTRIBS> activeAttribLocationsMask;
         unsigned int maxActiveAttribLocation;
@@ -581,11 +579,8 @@ class ProgramExecutable final : public angle::Subject
         UniformBlockBindingMask activeUniformBlockBindings;
 
         ShaderMap<int> linkedShaderVersions;
-        static_assert(std::is_trivially_copyable<ShaderMap<int>>(),
-                      "ShaderMap<int> should be trivial copyable so that we can memcpy");
     } mPODStruct;
-    static_assert(std::is_standard_layout<PODStruct>(),
-                  "PODStruct must be a standard layout struct so that we can memcpy");
+    static_assert(std::is_trivially_copyable<PODStruct>(), "must be memcpy-able");
 
     // Cached mask of active samplers and sampler types.
     ActiveTextureMask mActiveSamplersMask;

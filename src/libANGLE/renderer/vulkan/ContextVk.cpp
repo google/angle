@@ -8029,7 +8029,6 @@ angle::Result ContextVk::switchToReadOnlyDepthStencilMode(gl::Texture *texture,
         return angle::Result::Continue;
     }
 
-    vk::RenderPassUsageFlags oldUsageFlags = mDepthStencilAttachmentFlags;
     if (isStencilTexture)
     {
         if (mState.isStencilWriteEnabled())

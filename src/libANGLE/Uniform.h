@@ -74,9 +74,7 @@ struct LinkedUniform
                   const int locationIn,
                   const int bufferIndexIn,
                   const sh::BlockMemberInfo &blockInfoIn);
-    LinkedUniform(const LinkedUniform &other);
     LinkedUniform(const UsedUniform &usedUniform);
-    ~LinkedUniform();
 
     bool isSampler() const { return GetUniformTypeInfo(type).isSampler; }
     bool isImage() const { return GetUniformTypeInfo(type).isImageType; }
@@ -164,6 +162,7 @@ struct LinkedUniform
     // sh::ShaderVariable::id or sh::InterfaceBlock::id
     ShaderMap<uint32_t> mIds;
 };
+static_assert(std::is_trivially_copyable<LinkedUniform>(), "must be memcpy-able");
 ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
 
 struct BufferVariable : public sh::ShaderVariable

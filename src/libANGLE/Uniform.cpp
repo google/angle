@@ -44,7 +44,7 @@ void ActiveVariable::unionReferencesWith(const LinkedUniform &other)
     }
 }
 
-LinkedUniform::LinkedUniform() {}
+LinkedUniform::LinkedUniform() = default;
 
 LinkedUniform::LinkedUniform(GLenum typeIn,
                              GLenum precisionIn,
@@ -76,11 +76,6 @@ LinkedUniform::LinkedUniform(GLenum typeIn,
         SetBitField(blockArrayStride, blockInfoIn.arrayStride);
         SetBitField(blockMatrixStride, blockInfoIn.matrixStride);
     }
-}
-
-LinkedUniform::LinkedUniform(const LinkedUniform &other)
-{
-    memcpy(this, &other, sizeof(LinkedUniform));
 }
 
 LinkedUniform::LinkedUniform(const UsedUniform &usedUniform)
@@ -117,8 +112,6 @@ LinkedUniform::LinkedUniform(const UsedUniform &usedUniform)
     SetBitField(flagBits.texelFetchStaticUse, usedUniform.texelFetchStaticUse);
     ASSERT(!usedUniform.isArray() || arraySize == usedUniform.getArraySizeProduct());
 }
-
-LinkedUniform::~LinkedUniform() {}
 
 BufferVariable::BufferVariable()
     : bufferIndex(-1), blockInfo(sh::kDefaultBlockMemberInfo), topLevelArraySize(-1)
