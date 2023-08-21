@@ -668,12 +668,6 @@ TEST_P(EXTBlendFuncExtendedDrawTestES3, ES3GettersArray)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_blend_func_extended"));
 
-    // TODO(zmo): Figure out why this fails on AMD. crbug.com/585132.
-    // Also fails on the Intel Mesa driver, see
-    // https://bugs.freedesktop.org/show_bug.cgi?id=96765
-    ANGLE_SKIP_TEST_IF(IsLinux() && IsAMD());
-    ANGLE_SKIP_TEST_IF(IsLinux() && IsIntel());
-
     const GLint kTestArraySize     = 2;
     const GLint kFragData0Location = 2;
     const GLint kFragData1Location = 1;
