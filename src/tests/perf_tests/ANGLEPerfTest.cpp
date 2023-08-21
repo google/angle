@@ -313,13 +313,7 @@ void ANGLEPerfTest::run()
         // GTEST_SKIP returns.
     }
 
-    if (mStepsToRun <= 0)
-    {
-        // We don't call finish between calibration steps when calibrating non-Render tests. The
-        // Render tests will have already calibrated when this code is run.
-        calibrateStepsToRun();
-        ASSERT(mStepsToRun > 0);
-    }
+    ASSERT(mStepsToRun > 0);
 
     uint32_t numTrials = OneFrame() ? 1 : gTestTrials;
     if (gVerboseLogging)
@@ -438,7 +432,17 @@ void ANGLEPerfTest::runTrial(double maxRunTime, int maxStepsToRun, RunTrialPolic
     computeGPUTime();
 }
 
-void ANGLEPerfTest::SetUp() {}
+void ANGLEPerfTest::SetUp()
+{
+    if (!isRenderTest())  // ANGLERenderTest has its own calibration
+    {
+        if (mStepsToRun <= 0)
+        {
+            calibrateStepsToRun();
+            ASSERT(mStepsToRun > 0);
+        }
+    }
+}
 
 void ANGLEPerfTest::TearDown() {}
 
