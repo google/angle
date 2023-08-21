@@ -62,10 +62,10 @@ struct TraceFunctions
     virtual void ResetReplay()                    = 0;
     virtual void FinishReplay()                   = 0;
 
-    virtual void SetBinaryDataDir(const char *dataDir) = 0;
-    virtual void SetReplayResourceMode(const ReplayResourceMode resourceMode);
-    virtual void SetTraceGzPath(const std::string &traceGzPath);
-    virtual void SetTraceInfo(const TraceInfo &traceInfo);
+    virtual void SetBinaryDataDir(const char *dataDir)                        = 0;
+    virtual void SetReplayResourceMode(const ReplayResourceMode resourceMode) = 0;
+    virtual void SetTraceGzPath(const std::string &traceGzPath)               = 0;
+    virtual void SetTraceInfo(const TraceInfo &traceInfo)                     = 0;
 
     virtual ~TraceFunctions() {}
 };
