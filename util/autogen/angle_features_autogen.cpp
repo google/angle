@@ -91,6 +91,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::DisableStagedInitializationOfPackedTextureFormats, "disableStagedInitializationOfPackedTextureFormats"},
     {Feature::DisableSyncControlSupport, "disableSyncControlSupport"},
     {Feature::DisableTextureClampToBorder, "disableTextureClampToBorder"},
+    {Feature::DisableTextureMirrorClampToEdge, "disableTextureMirrorClampToEdge"},
     {Feature::DisableTimestampQueries, "disableTimestampQueries"},
     {Feature::DisallowMixedDepthStencilLoadOpNoneAndLoad, "disallowMixedDepthStencilLoadOpNoneAndLoad"},
     {Feature::DoesSRGBClearsOnLinearFramebufferAttachments, "doesSRGBClearsOnLinearFramebufferAttachments"},

@@ -739,6 +739,14 @@
                 "Disable EXT_render_snorm extension."
             ],
             "issue": "https://anglebug.com/8315"
+        },
+        {
+            "name": "disable_texture_mirror_clamp_to_edge",
+            "category": "Workarounds",
+            "description": [
+                "Disable EXT_texture_mirror_clamp_to_edge extension."
+            ],
+            "issue": "https://anglebug.com/8319"
         }
     ]
 }

@@ -91,6 +91,7 @@ enum class Feature
     DisableStagedInitializationOfPackedTextureFormats,
     DisableSyncControlSupport,
     DisableTextureClampToBorder,
+    DisableTextureMirrorClampToEdge,
     DisableTimestampQueries,
     DisallowMixedDepthStencilLoadOpNoneAndLoad,
     DoesSRGBClearsOnLinearFramebufferAttachments,

@@ -682,6 +682,13 @@ struct FeaturesGL : FeatureSetBase
         &members, "https://anglebug.com/8315"
     };
 
+    FeatureInfo disableTextureMirrorClampToEdge = {
+        "disableTextureMirrorClampToEdge",
+        FeatureCategory::OpenGLWorkarounds,
+        "Disable EXT_texture_mirror_clamp_to_edge extension.",
+        &members, "https://anglebug.com/8319"
+    };
+
 };
 
 inline FeaturesGL::FeaturesGL()  = default;

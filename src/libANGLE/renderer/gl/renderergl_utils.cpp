@@ -50,11 +50,6 @@ bool IsMesa(const FunctionsGL *functions, std::array<int, 3> *version)
 {
     ASSERT(version);
 
-    if (functions->standard != STANDARD_GL_DESKTOP)
-    {
-        return false;
-    }
-
     std::string nativeVersionString(GetString(functions, GL_VERSION));
     size_t pos = nativeVersionString.find("Mesa");
     if (pos == std::string::npos)
@@ -1566,11 +1561,12 @@ void GenerateCaps(const FunctionsGL *functions,
     // This functionality is supported on macOS but the extension
     // strings are not listed there for historical reasons.
     extensions->textureMirrorClampToEdgeEXT =
-        IsMac() || functions->isAtLeastGL(gl::Version(4, 4)) ||
-        functions->hasGLExtension("GL_ARB_texture_mirror_clamp_to_edge") ||
-        functions->hasGLExtension("GL_EXT_texture_mirror_clamp") ||
-        functions->hasGLExtension("GL_ATI_texture_mirror_once") ||
-        functions->hasGLESExtension("GL_EXT_texture_mirror_clamp_to_edge");
+        !features.disableTextureMirrorClampToEdge.enabled &&
+        (IsMac() || functions->isAtLeastGL(gl::Version(4, 4)) ||
+         functions->hasGLExtension("GL_ARB_texture_mirror_clamp_to_edge") ||
+         functions->hasGLExtension("GL_EXT_texture_mirror_clamp") ||
+         functions->hasGLExtension("GL_ATI_texture_mirror_once") ||
+         functions->hasGLESExtension("GL_EXT_texture_mirror_clamp_to_edge"));
 
     extensions->multiDrawIndirectEXT = true;
     extensions->instancedArraysANGLE = functions->isAtLeastGL(gl::Version(3, 1)) ||
@@ -2596,6 +2592,10 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     // https://anglebug.com/8315
     ANGLE_FEATURE_CONDITION(features, disableRenderSnorm,
                             isMesa && mesaVersion < (std::array<int, 3>{21, 3, 0}));
+
+    // https://anglebug.com/8319
+    ANGLE_FEATURE_CONDITION(features, disableTextureMirrorClampToEdge,
+                            functions->standard == STANDARD_GL_ES && isMesa);
 
     // http://anglebug.com/8172
     ANGLE_FEATURE_CONDITION(features, disableBaseInstanceVertex, IsMaliValhall(functions));
