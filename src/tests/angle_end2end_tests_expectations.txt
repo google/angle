@@ -1177,6 +1177,10 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 8131 LINUX INTEL : SampleMultisampleInterpolationTest.SampleMaskInPerSample/* = SKIP
 8131 LINUX INTEL : SampleMultisampleInterpolationTest.SampleMaskInPerSampleNoPerspective/* = SKIP
 
+// Driver bugs related to handling secondary fragment output arrays
+8336 ANDROID VULKAN : WebGLCompatibilityTest.EXTBlendFuncExtendedMissingOutputsArrays/* = SKIP
+8336 ANDROID VULKAN : WebGL2CompatibilityTest.EXTBlendFuncExtendedMissingOutputsArrays/* = SKIP
+
 // bits 24..31 from glClearValueuiv value don't work on Intel Metal.
 7794 MAC INTEL METAL : PixelLocalStorageTest.ClearValues_r32/* = SKIP
 

@@ -887,7 +887,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
 
     if (mShaderVersion >= 300 && mShaderType == GL_FRAGMENT_SHADER &&
         !ValidateOutputs(root, getExtensionBehavior(), mResources, hasPixelLocalStorageUniforms(),
-                         &mDiagnostics))
+                         IsWebGLBasedSpec(mShaderSpec), &mDiagnostics))
     {
         return false;
     }

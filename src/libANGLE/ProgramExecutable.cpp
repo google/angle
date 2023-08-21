@@ -429,6 +429,7 @@ void ProgramExecutable::reset()
     mPODStruct.attributesMask.reset();
     mPODStruct.maxActiveAttribLocation = 0;
     mPODStruct.activeOutputVariablesMask.reset();
+    mPODStruct.activeSecondaryOutputVariablesMask.reset();
 
     mPODStruct.defaultUniformRange       = RangeUI(0, 0);
     mPODStruct.samplerUniformRange       = RangeUI(0, 0);
@@ -1207,6 +1208,7 @@ bool ProgramExecutable::linkValidateOutputVariables(
     const ProgramAliasedBindings &fragmentOutputIndices)
 {
     ASSERT(mPODStruct.activeOutputVariablesMask.none());
+    ASSERT(mPODStruct.activeSecondaryOutputVariablesMask.none());
     ASSERT(mPODStruct.drawBufferTypeMask.none());
     ASSERT(!mPODStruct.hasYUVOutput);
 
@@ -1425,7 +1427,9 @@ bool ProgramExecutable::gatherOutputTypes()
     for (const sh::ShaderVariable &outputVariable : mOutputVariables)
     {
         if (outputVariable.isBuiltIn() && outputVariable.name != "gl_FragColor" &&
-            outputVariable.name != "gl_FragData")
+            outputVariable.name != "gl_FragData" &&
+            outputVariable.name != "gl_SecondaryFragColorEXT" &&
+            outputVariable.name != "gl_SecondaryFragDataEXT")
         {
             continue;
         }
@@ -1433,6 +1437,10 @@ bool ProgramExecutable::gatherOutputTypes()
         unsigned int baseLocation =
             (outputVariable.location == -1 ? 0u
                                            : static_cast<unsigned int>(outputVariable.location));
+
+        const bool secondary =
+            outputVariable.index == 1 || (outputVariable.name == "gl_SecondaryFragColorEXT" ||
+                                          outputVariable.name == "gl_SecondaryFragDataEXT");
 
         const ComponentType componentType =
             GLenumToComponentType(VariableComponentType(outputVariable.type));
@@ -1444,7 +1452,15 @@ bool ProgramExecutable::gatherOutputTypes()
         {
             const unsigned int location = baseLocation + elementIndex;
             ASSERT(location < mPODStruct.activeOutputVariablesMask.size());
-            mPODStruct.activeOutputVariablesMask.set(location);
+            ASSERT(location < mPODStruct.activeSecondaryOutputVariablesMask.size());
+            if (secondary)
+            {
+                mPODStruct.activeSecondaryOutputVariablesMask.set(location);
+            }
+            else
+            {
+                mPODStruct.activeOutputVariablesMask.set(location);
+            }
             const ComponentType storedComponentType =
                 gl::GetComponentTypeMask(mPODStruct.drawBufferTypeMask, location);
             if (storedComponentType == ComponentType::InvalidEnum)

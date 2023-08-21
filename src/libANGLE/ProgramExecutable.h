@@ -490,6 +490,10 @@ class ProgramExecutable final : public angle::Subject
     {
         return mPODStruct.activeOutputVariablesMask;
     }
+    DrawBufferMask getActiveSecondaryOutputVariablesMask() const
+    {
+        return mPODStruct.activeSecondaryOutputVariablesMask;
+    }
 
     bool linkUniforms(const Caps &caps,
                       const ShaderMap<std::vector<sh::ShaderVariable>> &shaderUniforms,
@@ -579,6 +583,7 @@ class ProgramExecutable final : public angle::Subject
         // removed.
         AttributesMask attributesMask;
         DrawBufferMask activeOutputVariablesMask;
+        DrawBufferMask activeSecondaryOutputVariablesMask;
         ComponentTypeMask drawBufferTypeMask;
 
         RangeUI defaultUniformRange;

@@ -31,7 +31,8 @@ class ValidateOutputsTraverser : public TIntermTraverser
   public:
     ValidateOutputsTraverser(const TExtensionBehavior &extBehavior,
                              const ShBuiltInResources &resources,
-                             bool usesPixelLocalStorage);
+                             bool usesPixelLocalStorage,
+                             bool isWebGL);
 
     void validate(TDiagnostics *diagnostics) const;
 
@@ -43,6 +44,7 @@ class ValidateOutputsTraverser : public TIntermTraverser
     bool mEnablesBlendFuncExtended;
     bool mUsesIndex1;
     bool mUsesPixelLocalStorage;
+    bool mIsWebGL;
     bool mUsesFragDepth;
 
     typedef std::vector<TIntermSymbol *> OutputVector;
@@ -54,7 +56,8 @@ class ValidateOutputsTraverser : public TIntermTraverser
 
 ValidateOutputsTraverser::ValidateOutputsTraverser(const TExtensionBehavior &extBehavior,
                                                    const ShBuiltInResources &resources,
-                                                   bool usesPixelLocalStorage)
+                                                   bool usesPixelLocalStorage,
+                                                   bool isWebGL)
     : TIntermTraverser(true, false, false),
       mMaxDrawBuffers(resources.MaxDrawBuffers),
       mMaxDualSourceDrawBuffers(resources.MaxDualSourceDrawBuffers),
@@ -62,6 +65,7 @@ ValidateOutputsTraverser::ValidateOutputsTraverser(const TExtensionBehavior &ext
           IsExtensionEnabled(extBehavior, TExtension::EXT_blend_func_extended)),
       mUsesIndex1(false),
       mUsesPixelLocalStorage(usesPixelLocalStorage),
+      mIsWebGL(isWebGL),
       mUsesFragDepth(false)
 {}
 
@@ -187,6 +191,12 @@ void ValidateOutputsTraverser::validate(TDiagnostics *diagnostics) const
                 "must explicitly specify all locations when using multiple fragment outputs and "
                 "pixel local storage, even if EXT_blend_func_extended is enabled";
         }
+        else if (mIsWebGL)
+        {
+            unspecifiedLocationErrorMessage =
+                "must explicitly specify all locations when using multiple fragment outputs "
+                "in WebGL contexts, even if EXT_blend_func_extended is enabled";
+        }
         if (unspecifiedLocationErrorMessage != nullptr)
         {
             for (const auto &symbol : mUnspecifiedLocationOutputs)
@@ -215,9 +225,11 @@ bool ValidateOutputs(TIntermBlock *root,
                      const TExtensionBehavior &extBehavior,
                      const ShBuiltInResources &resources,
                      bool usesPixelLocalStorage,
+                     bool isWebGL,
                      TDiagnostics *diagnostics)
 {
-    ValidateOutputsTraverser validateOutputs(extBehavior, resources, usesPixelLocalStorage);
+    ValidateOutputsTraverser validateOutputs(extBehavior, resources, usesPixelLocalStorage,
+                                             isWebGL);
     root->traverse(&validateOutputs);
     int numErrorsBefore = diagnostics->numErrors();
     validateOutputs.validate(diagnostics);

@@ -27,6 +27,7 @@ bool ValidateOutputs(TIntermBlock *root,
                      const TExtensionBehavior &extBehavior,
                      const ShBuiltInResources &resources,
                      bool usesPixelLocalStorage,
+                     bool isWebGL,
                      TDiagnostics *diagnostics);
 
 }  // namespace sh
