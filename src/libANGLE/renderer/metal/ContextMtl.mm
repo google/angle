@@ -1754,10 +1754,10 @@ const mtl::FormatCaps &ContextMtl::getNativeFormatCaps(MTLPixelFormat mtlFormat)
 
 angle::Result ContextMtl::getIncompleteTexture(const gl::Context *context,
                                                gl::TextureType type,
+                                               gl::SamplerFormat format,
                                                gl::Texture **textureOut)
 {
-    return mIncompleteTextures.getIncompleteTexture(context, type, gl::SamplerFormat::Float,
-                                                    nullptr, textureOut);
+    return mIncompleteTextures.getIncompleteTexture(context, type, format, nullptr, textureOut);
 }
 
 void ContextMtl::endRenderEncoding(mtl::RenderCommandEncoder *encoder)

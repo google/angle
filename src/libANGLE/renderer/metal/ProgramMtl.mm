@@ -1727,7 +1727,8 @@ angle::Result ProgramMtl::updateTextures(const gl::Context *glContext,
                 uint32_t samplerSlot = mslBinding.samplerBinding + arrayElement;
                 if (!texture)
                 {
-                    ANGLE_TRY(contextMtl->getIncompleteTexture(glContext, textureType, &texture));
+                    ANGLE_TRY(contextMtl->getIncompleteTexture(glContext, textureType,
+                                                               samplerBinding.format, &texture));
                 }
                 const gl::SamplerState *samplerState =
                     sampler ? &sampler->getSamplerState() : &texture->getSamplerState();

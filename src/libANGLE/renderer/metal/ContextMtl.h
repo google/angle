@@ -334,6 +334,7 @@ class ContextMtl : public ContextImpl, public mtl::Context
 
     angle::Result getIncompleteTexture(const gl::Context *context,
                                        gl::TextureType type,
+                                       gl::SamplerFormat format,
                                        gl::Texture **textureOut);
 
     // Recommended to call these methods to end encoding instead of invoking the encoder's
