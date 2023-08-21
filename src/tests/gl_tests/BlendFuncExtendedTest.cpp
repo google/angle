@@ -380,6 +380,75 @@ TEST_P(EXTBlendFuncExtendedTest, TestMaxDualSourceDrawBuffers)
     ASSERT_GL_NO_ERROR();
 }
 
+// Test that SRC1 factors limit the number of allowed draw buffers.
+TEST_P(EXTBlendFuncExtendedTest, MaxDualSourceDrawBuffersError)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_blend_func_extended"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_draw_buffers"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_rgb8_rgba8"));
+
+    GLint maxDualSourceDrawBuffers = 0;
+    glGetIntegerv(GL_MAX_DUAL_SOURCE_DRAW_BUFFERS_EXT, &maxDualSourceDrawBuffers);
+    ANGLE_SKIP_TEST_IF(maxDualSourceDrawBuffers != 1);
+
+    ANGLE_GL_PROGRAM(redProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    GLRenderbuffer rb0;
+    glBindRenderbuffer(GL_RENDERBUFFER, rb0);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8_OES, 1, 1);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0_EXT, GL_RENDERBUFFER, rb0);
+
+    GLRenderbuffer rb1;
+    glBindRenderbuffer(GL_RENDERBUFFER, rb1);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8_OES, 1, 1);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1_EXT, GL_RENDERBUFFER, rb1);
+
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    const GLenum bufs[] = {GL_COLOR_ATTACHMENT0_EXT, GL_COLOR_ATTACHMENT1_EXT};
+    glDrawBuffersEXT(2, bufs);
+    ASSERT_GL_NO_ERROR();
+
+    for (const GLenum func : {GL_SRC1_COLOR_EXT, GL_ONE_MINUS_SRC1_COLOR_EXT, GL_SRC1_ALPHA_EXT,
+                              GL_ONE_MINUS_SRC1_ALPHA_EXT})
+    {
+        for (size_t slot = 0; slot < 4; slot++)
+        {
+            switch (slot)
+            {
+                case 0:
+                    glBlendFuncSeparate(func, GL_ONE, GL_ONE, GL_ONE);
+                    break;
+                case 1:
+                    glBlendFuncSeparate(GL_ONE, func, GL_ONE, GL_ONE);
+                    break;
+                case 2:
+                    glBlendFuncSeparate(GL_ONE, GL_ONE, func, GL_ONE);
+                    break;
+                case 3:
+                    glBlendFuncSeparate(GL_ONE, GL_ONE, GL_ONE, func);
+                    break;
+            }
+            // Limit must be applied even with blending disabled
+            glDisable(GL_BLEND);
+            drawQuad(redProgram, essl1_shaders::PositionAttrib(), 0.0);
+            EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+            glEnable(GL_BLEND);
+            drawQuad(redProgram, essl1_shaders::PositionAttrib(), 0.0);
+            EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+            // Limit is not applied when non-SRC1 funcs are used
+            glBlendFunc(GL_ONE, GL_ONE);
+            drawQuad(redProgram, essl1_shaders::PositionAttrib(), 0.0);
+            EXPECT_GL_NO_ERROR();
+        }
+    }
+}
+
 // Test a shader with EXT_blend_func_extended and gl_SecondaryFragColorEXT.
 // Outputs to primary color buffer using primary and secondary colors.
 TEST_P(EXTBlendFuncExtendedDrawTest, FragColor)

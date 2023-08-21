@@ -4237,6 +4237,19 @@ const char *ValidateDrawStates(const Context *context, GLenum *outErrorCode)
         }
     }
 
+    // Dual-source blending functions limit the number of supported draw buffers.
+    if (blendStateExt.getUsesExtendedBlendFactorMask().any())
+    {
+        // Imply the strictest spec interpretation to pass on all OpenGL drivers:
+        // dual-source blending is considered active if the blend state contains
+        // any SRC1 factor no matter what.
+        const DrawBufferMask bufferMask = framebuffer->getDrawBufferMask();
+        if (bufferMask.any() && bufferMask.last() >= context->getCaps().maxDualSourceDrawBuffers)
+        {
+            return kDualSourceBlendingDrawBuffersLimit;
+        }
+    }
+
     if (context->getStateCache().hasAnyEnabledClientAttrib())
     {
         if (extensions.webglCompatibilityANGLE || !state.areClientArraysEnabled())
