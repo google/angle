@@ -1077,10 +1077,11 @@ void ProgramGL::markUnusedUniformLocations(std::vector<gl::VariableLocation> *un
             {
                 GLuint samplerIndex = mState.getSamplerIndexFromUniformIndex(locationRef.index);
                 gl::SamplerBinding &samplerBinding = (*samplerBindings)[samplerIndex];
-                if (locationRef.arrayIndex < samplerBinding.boundTextureUnits.size())
+                if (locationRef.arrayIndex <
+                    static_cast<unsigned int>(samplerBinding.textureUnitsCount))
                 {
                     // Crop unused sampler bindings in the sampler array.
-                    samplerBinding.boundTextureUnits.resize(locationRef.arrayIndex);
+                    SetBitField(samplerBinding.textureUnitsCount, locationRef.arrayIndex);
                 }
             }
             else if (mState.isImageUniformIndex(locationRef.index))

@@ -287,6 +287,10 @@ class ProgramState final : angle::NonCopyable
     {
         return mExecutable->getSamplerBindings();
     }
+    const std::vector<GLuint> &getSamplerBoundTextureUnits() const
+    {
+        return mExecutable->getSamplerBoundTextureUnits();
+    }
     const std::vector<ImageBinding> &getImageBindings() const
     {
         return getExecutable().getImageBindings();

@@ -753,23 +753,6 @@ VariableLocation::VariableLocation(unsigned int arrayIndex, unsigned int index)
     ASSERT(arrayIndex != GL_INVALID_INDEX);
 }
 
-// SamplerBindings implementation.
-SamplerBinding::SamplerBinding() = default;
-
-SamplerBinding::SamplerBinding(TextureType textureTypeIn,
-                               GLenum samplerTypeIn,
-                               SamplerFormat formatIn,
-                               size_t elementCount)
-    : textureType(textureTypeIn),
-      samplerType(samplerTypeIn),
-      format(formatIn),
-      boundTextureUnits(elementCount, 0)
-{}
-
-SamplerBinding::SamplerBinding(const SamplerBinding &other) = default;
-
-SamplerBinding::~SamplerBinding() = default;
-
 // ProgramBindings implementation.
 ProgramBindings::ProgramBindings() {}
 
@@ -2508,11 +2491,14 @@ GLuint Program::getSamplerUniformBinding(const VariableLocation &uniformLocation
 {
     ASSERT(!mLinkingState);
     GLuint samplerIndex = mState.getSamplerIndexFromUniformIndex(uniformLocation.index);
-    const std::vector<GLuint> &boundTextureUnits =
-        mState.mExecutable->mSamplerBindings[samplerIndex].boundTextureUnits;
-    return (uniformLocation.arrayIndex < boundTextureUnits.size())
-               ? boundTextureUnits[uniformLocation.arrayIndex]
-               : 0;
+    const SamplerBinding &samplerBinding = mState.mExecutable->mSamplerBindings[samplerIndex];
+    if (uniformLocation.arrayIndex >= samplerBinding.textureUnitsCount)
+    {
+        return 0;
+    }
+
+    const std::vector<GLuint> &boundTextureUnits = mState.mExecutable->mSamplerBoundTextureUnits;
+    return samplerBinding.getTextureUnit(boundTextureUnits, uniformLocation.arrayIndex);
 }
 
 GLuint Program::getImageUniformBinding(const VariableLocation &uniformLocation) const
@@ -3403,19 +3389,21 @@ void Program::updateSamplerUniform(Context *context,
     ASSERT(mState.isSamplerUniformIndex(locationInfo.index));
     GLuint samplerIndex            = mState.getSamplerIndexFromUniformIndex(locationInfo.index);
     SamplerBinding &samplerBinding = mState.mExecutable->mSamplerBindings[samplerIndex];
-    std::vector<GLuint> &boundTextureUnits = samplerBinding.boundTextureUnits;
+    std::vector<GLuint> &boundTextureUnits = mState.mExecutable->mSamplerBoundTextureUnits;
 
-    if (locationInfo.arrayIndex >= boundTextureUnits.size())
+    if (locationInfo.arrayIndex >= samplerBinding.textureUnitsCount)
     {
         return;
     }
-    GLsizei safeUniformCount = std::min(
-        clampedCount, static_cast<GLsizei>(boundTextureUnits.size() - locationInfo.arrayIndex));
+    GLsizei safeUniformCount =
+        std::min(clampedCount,
+                 static_cast<GLsizei>(samplerBinding.textureUnitsCount - locationInfo.arrayIndex));
 
     // Update the sampler uniforms.
-    for (GLsizei arrayIndex = 0; arrayIndex < safeUniformCount; ++arrayIndex)
+    for (uint16_t arrayIndex = 0; arrayIndex < safeUniformCount; ++arrayIndex)
     {
-        GLint oldTextureUnit = boundTextureUnits[arrayIndex + locationInfo.arrayIndex];
+        GLint oldTextureUnit =
+            samplerBinding.getTextureUnit(boundTextureUnits, arrayIndex + locationInfo.arrayIndex);
         GLint newTextureUnit = v[arrayIndex];
 
         if (oldTextureUnit == newTextureUnit)
@@ -3424,7 +3412,8 @@ void Program::updateSamplerUniform(Context *context,
         }
 
         // Update sampler's bound textureUnit
-        boundTextureUnits[arrayIndex + locationInfo.arrayIndex] = newTextureUnit;
+        boundTextureUnits[samplerBinding.textureUnitsStartIndex + arrayIndex +
+                          locationInfo.arrayIndex] = newTextureUnit;
 
         // Update the reference counts.
         uint32_t &oldRefCount = mState.mExecutable->mActiveSamplerRefCounts[oldTextureUnit];
@@ -3499,8 +3488,8 @@ void Program::updateSamplerUniform(Context *context,
 
 void ProgramState::setSamplerUniformTextureTypeAndFormat(size_t textureUnitIndex)
 {
-    mExecutable->setSamplerUniformTextureTypeAndFormat(textureUnitIndex,
-                                                       mExecutable->mSamplerBindings);
+    mExecutable->setSamplerUniformTextureTypeAndFormat(
+        textureUnitIndex, mExecutable->mSamplerBindings, mExecutable->mSamplerBoundTextureUnits);
 }
 
 template <typename T>

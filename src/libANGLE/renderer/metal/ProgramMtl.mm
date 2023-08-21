@@ -1728,10 +1728,11 @@ angle::Result ProgramMtl::updateTextures(const gl::Context *glContext,
 
             gl::TextureType textureType = samplerBinding.textureType;
 
-            for (uint32_t arrayElement = 0; arrayElement < samplerBinding.boundTextureUnits.size();
+            for (uint32_t arrayElement = 0; arrayElement < samplerBinding.textureUnitsCount;
                  ++arrayElement)
             {
-                GLuint textureUnit   = samplerBinding.boundTextureUnits[arrayElement];
+                GLuint textureUnit = samplerBinding.getTextureUnit(
+                    mState.getSamplerBoundTextureUnits(), arrayElement);
                 gl::Texture *texture = completeTextures[textureUnit];
                 gl::Sampler *sampler = contextMtl->getState().getSampler(textureUnit);
                 uint32_t textureSlot = mslBinding.textureBinding + arrayElement;

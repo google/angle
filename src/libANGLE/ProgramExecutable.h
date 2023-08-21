@@ -24,25 +24,37 @@ namespace gl
 // This small structure encapsulates binding sampler uniforms to active GL textures.
 struct SamplerBinding
 {
-    SamplerBinding();
+    SamplerBinding() = default;
     SamplerBinding(TextureType textureTypeIn,
                    GLenum samplerTypeIn,
                    SamplerFormat formatIn,
-                   size_t elementCount);
-    SamplerBinding(const SamplerBinding &other);
-    ~SamplerBinding();
+                   uint16_t startIndex,
+                   uint16_t elementCount)
+        : textureType(textureTypeIn),
+          samplerType(samplerTypeIn),
+          format(formatIn),
+          textureUnitsStartIndex(startIndex),
+          textureUnitsCount(elementCount)
+    {}
+    ~SamplerBinding() = default;
+
+    GLuint getTextureUnit(const std::vector<GLuint> &boundTextureUnits,
+                          unsigned int arrayIndex) const
+    {
+        return boundTextureUnits[textureUnitsStartIndex + arrayIndex];
+    }
 
     // Necessary for retrieving active textures from the GL state.
     TextureType textureType;
-
     GLenum samplerType;
-
     SamplerFormat format;
-
-    // List of all textures bound to this sampler, of type textureType.
-    // Cropped by the amount of unused elements reported by the driver.
-    std::vector<GLuint> boundTextureUnits;
+    // [textureUnitsStartIndex, textureUnitsStartIndex+textureUnitsCount) Points to the subset in
+    // mSamplerBoundTextureUnits that stores the texture unit bound to this sampler. Cropped by the
+    // amount of unused elements reported by the driver.
+    uint16_t textureUnitsStartIndex;
+    uint16_t textureUnitsCount;
 };
+static_assert(std::is_trivially_copyable<SamplerBinding>(), "must be memcpy-able");
 
 struct ImageBinding
 {
@@ -304,6 +316,10 @@ class ProgramExecutable final : public angle::Subject
         return mPODStruct.activeUniformBlockBindings;
     }
     const std::vector<SamplerBinding> &getSamplerBindings() const { return mSamplerBindings; }
+    const std::vector<GLuint> &getSamplerBoundTextureUnits() const
+    {
+        return mSamplerBoundTextureUnits;
+    }
     const std::vector<ImageBinding> &getImageBindings() const { return mImageBindings; }
     std::vector<ImageBinding> *getImageBindings() { return &mImageBindings; }
     const RangeUI &getDefaultUniformRange() const { return mPODStruct.defaultUniformRange; }
@@ -475,7 +491,8 @@ class ProgramExecutable final : public angle::Subject
 
     // Scans the sampler bindings for type conflicts with sampler 'textureUnitIndex'.
     void setSamplerUniformTextureTypeAndFormat(size_t textureUnitIndex,
-                                               std::vector<SamplerBinding> &samplerBindings);
+                                               const std::vector<SamplerBinding> &samplerBindings,
+                                               const std::vector<GLuint> &boundTextureUnits);
 
     bool linkMergedVaryings(const Context *context,
                             const ProgramMergedVaryings &mergedVaryings,
@@ -616,6 +633,9 @@ class ProgramExecutable final : public angle::Subject
 
     // An array of the samplers that are used by the program
     std::vector<SamplerBinding> mSamplerBindings;
+    // List of all textures bound to all samplers. Each SamplerBinding will point to a subset in
+    // this vector.
+    std::vector<GLuint> mSamplerBoundTextureUnits;
 
     // An array of the images that are used by the program
     std::vector<ImageBinding> mImageBindings;

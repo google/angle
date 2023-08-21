@@ -864,6 +864,7 @@ angle::Result ProgramExecutableVk::addTextureDescriptorSetDesc(
 {
     const std::vector<gl::SamplerBinding> &samplerBindings = executable.getSamplerBindings();
     const std::vector<gl::LinkedUniform> &uniforms         = executable.getUniforms();
+    const std::vector<GLuint> &samplerBoundTextureUnits = executable.getSamplerBoundTextureUnits();
 
     for (uint32_t textureIndex = 0; textureIndex < samplerBindings.size(); ++textureIndex)
     {
@@ -885,7 +886,7 @@ angle::Result ProgramExecutableVk::addTextureDescriptorSetDesc(
 
         // The front-end always binds array sampler units sequentially.
         const gl::SamplerBinding &samplerBinding = samplerBindings[textureIndex];
-        uint32_t arraySize = static_cast<uint32_t>(samplerBinding.boundTextureUnits.size());
+        uint32_t arraySize = static_cast<uint32_t>(samplerBinding.textureUnitsCount);
         arraySize *= samplerUniform.getOuterArraySizeProduct();
 
         const gl::ShaderType firstShaderType    = samplerUniform.getFirstActiveShaderType();
@@ -896,11 +897,11 @@ angle::Result ProgramExecutableVk::addTextureDescriptorSetDesc(
 
         // TODO: https://issuetracker.google.com/issues/158215272: how do we handle array of
         // immutable samplers?
-        GLuint textureUnit = samplerBinding.boundTextureUnits[0];
+        GLuint textureUnit = samplerBinding.getTextureUnit(samplerBoundTextureUnits, 0);
         if (activeTextures != nullptr &&
             (*activeTextures)[textureUnit]->getImage().hasImmutableSampler())
         {
-            ASSERT(samplerBinding.boundTextureUnits.size() == 1);
+            ASSERT(samplerBinding.textureUnitsCount == 1);
 
             // In the case of samplerExternal2DY2YEXT, we need
             // samplerYcbcrConversion object with IDENTITY conversion model

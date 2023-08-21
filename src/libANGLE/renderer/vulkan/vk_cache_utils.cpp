@@ -5246,8 +5246,8 @@ void WriteDescriptorDescs::updateExecutableActiveTextures(
         const ShaderInterfaceVariableInfo &info =
             variableInfoMap.getVariableById(firstShaderType, samplerUniform.getId(firstShaderType));
 
-        uint32_t arraySize       = static_cast<uint32_t>(samplerBinding.boundTextureUnits.size());
-        uint32_t descriptorCount = arraySize * samplerUniform.getOuterArraySizeProduct();
+        uint32_t arraySize              = static_cast<uint32_t>(samplerBinding.textureUnitsCount);
+        uint32_t descriptorCount        = arraySize * samplerUniform.getOuterArraySizeProduct();
         VkDescriptorType descriptorType = (samplerBinding.textureType == gl::TextureType::Buffer)
                                               ? VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER
                                               : VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
@@ -5533,7 +5533,7 @@ void UpdatePreCacheActiveTextures(const gl::ProgramExecutable &executable,
     for (uint32_t samplerIndex = 0; samplerIndex < samplerBindings.size(); ++samplerIndex)
     {
         const gl::SamplerBinding &samplerBinding = samplerBindings[samplerIndex];
-        uint32_t arraySize        = static_cast<uint32_t>(samplerBinding.boundTextureUnits.size());
+        uint16_t arraySize                       = samplerBinding.textureUnitsCount;
         bool isSamplerExternalY2Y = samplerBinding.samplerType == GL_SAMPLER_EXTERNAL_2D_Y2Y_EXT;
 
         uint32_t uniformIndex = executable.getUniformIndexFromSamplerIndex(samplerIndex);
@@ -5548,9 +5548,10 @@ void UpdatePreCacheActiveTextures(const gl::ProgramExecutable &executable,
         const ShaderInterfaceVariableInfo &info =
             variableInfoMap.getVariableById(firstShaderType, samplerUniform.getId(firstShaderType));
 
-        for (uint32_t arrayElement = 0; arrayElement < arraySize; ++arrayElement)
+        for (uint16_t arrayElement = 0; arrayElement < arraySize; ++arrayElement)
         {
-            GLuint textureUnit = samplerBinding.boundTextureUnits[arrayElement];
+            GLuint textureUnit = samplerBinding.getTextureUnit(
+                executable.getSamplerBoundTextureUnits(), arrayElement);
             if (!activeTextures.test(textureUnit))
                 continue;
             TextureVk *textureVk = textures[textureUnit];
@@ -5606,8 +5607,9 @@ angle::Result DescriptorSetDescBuilder::updateFullActiveTextures(
     const SharedDescriptorSetCacheKey &sharedCacheKey)
 {
     const std::vector<gl::SamplerBinding> &samplerBindings = executable.getSamplerBindings();
-    const std::vector<gl::LinkedUniform> &uniforms         = executable.getUniforms();
-    const gl::ActiveTextureTypeArray &textureTypes         = executable.getActiveSamplerTypes();
+    const std::vector<GLuint> &samplerBoundTextureUnits = executable.getSamplerBoundTextureUnits();
+    const std::vector<gl::LinkedUniform> &uniforms      = executable.getUniforms();
+    const gl::ActiveTextureTypeArray &textureTypes      = executable.getActiveSamplerTypes();
 
     for (uint32_t samplerIndex = 0; samplerIndex < samplerBindings.size(); ++samplerIndex)
     {
@@ -5624,12 +5626,13 @@ angle::Result DescriptorSetDescBuilder::updateFullActiveTextures(
         const ShaderInterfaceVariableInfo &info =
             variableInfoMap.getVariableById(firstShaderType, samplerUniform.getId(firstShaderType));
 
-        uint32_t arraySize        = static_cast<uint32_t>(samplerBinding.boundTextureUnits.size());
+        uint32_t arraySize        = static_cast<uint32_t>(samplerBinding.textureUnitsCount);
         bool isSamplerExternalY2Y = samplerBinding.samplerType == GL_SAMPLER_EXTERNAL_2D_Y2Y_EXT;
 
         for (uint32_t arrayElement = 0; arrayElement < arraySize; ++arrayElement)
         {
-            GLuint textureUnit   = samplerBinding.boundTextureUnits[arrayElement];
+            GLuint textureUnit =
+                samplerBinding.getTextureUnit(samplerBoundTextureUnits, arrayElement);
             TextureVk *textureVk = textures[textureUnit];
 
             uint32_t infoIndex = writeDescriptorDescs[info.binding].descriptorInfoIndex +

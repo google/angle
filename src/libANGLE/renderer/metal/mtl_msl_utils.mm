@@ -493,7 +493,7 @@ angle::Result MTLGetMSL(const gl::Context *glContext,
         if (isSamplerInStruct)
             structSamplers.insert(mappedSamplerName);
         originalSamplerBindings[mappedSamplerName].push_back(
-            {textureIndex, static_cast<uint32_t>(samplerBinding.boundTextureUnits.size())});
+            {textureIndex, static_cast<uint32_t>(samplerBinding.textureUnitsCount)});
     }
     for (gl::ShaderType type : {gl::ShaderType::Vertex, gl::ShaderType::Fragment})
     {
