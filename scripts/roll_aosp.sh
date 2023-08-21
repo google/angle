@@ -186,6 +186,7 @@ extra_removal_files=(
    "third_party/vulkan-deps/glslang/src/ndk_test/Android.mk"
    "third_party/vulkan-deps/spirv-tools/src/Android.mk"
    "third_party/vulkan-deps/spirv-tools/src/android_test/Android.mk"
+   "third_party/siso" # Not needed
 )
 
 for removal_file in "${extra_removal_files[@]}"; do
