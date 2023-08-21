@@ -74,6 +74,7 @@ struct ShaderInterfaceVariableXfbInfo
 // Information for each shader interface variable.  Not all fields are relevant to each shader
 // interface variable.  For example opaque uniforms require a set and binding index, while vertex
 // attributes require a location.
+ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
 struct ShaderInterfaceVariableInfo
 {
     ShaderInterfaceVariableInfo();
@@ -90,25 +91,36 @@ struct ShaderInterfaceVariableInfo
     uint32_t location  = kInvalid;
     uint32_t component = kInvalid;
     uint32_t index     = kInvalid;
+
     // The stages this shader interface variable is active.
     gl::ShaderBitSet activeStages;
-    // Used for transform feedback extension to decorate vertex shader output.
-    ShaderInterfaceVariableXfbInfo xfb;
-    std::vector<ShaderInterfaceVariableXfbInfo> fieldXfb;
+
     // Indicates that the precision needs to be modified in the generated SPIR-V
     // to support only transferring medium precision data when there's a precision
     // mismatch between the shaders. For example, either the VS casts highp->mediump
     // or the FS casts mediump->highp.
-    bool useRelaxedPrecision = false;
+    uint8_t useRelaxedPrecision : 1 = false;
     // Indicate if varying is input or output, or both (in case of for example gl_Position in a
     // geometry shader)
-    bool varyingIsInput  = false;
-    bool varyingIsOutput = false;
+    uint8_t varyingIsInput : 1       = false;
+    uint8_t varyingIsOutput : 1      = false;
+    uint8_t hasTransformFeedback : 1 = false;
+    uint8_t padding : 4              = 0;
+
     // For vertex attributes, this is the number of components / locations.  These are used by the
     // vertex attribute aliasing transformation only.
     uint8_t attributeComponentCount = 0;
     uint8_t attributeLocationCount  = 0;
 };
+ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
+
+struct XFBInterfaceVariableInfo
+{
+    // Used for transform feedback extension to decorate vertex shader output.
+    ShaderInterfaceVariableXfbInfo xfb;
+    std::vector<ShaderInterfaceVariableXfbInfo> fieldXfb;
+};
+using XFBVariableInfoPtr = std::unique_ptr<XFBInterfaceVariableInfo>;
 
 uint32_t SpvGetXfbBufferBlockId(const uint32_t bufferIndex);
 

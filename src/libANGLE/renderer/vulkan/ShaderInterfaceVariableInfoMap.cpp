@@ -66,6 +66,7 @@ ShaderInterfaceVariableInfoMap::~ShaderInterfaceVariableInfoMap() = default;
 void ShaderInterfaceVariableInfoMap::clear()
 {
     mData.clear();
+    mXFBData.clear();
     for (gl::ShaderType shaderType : gl::AllShaderTypes())
     {
         mIdToIndexMap[shaderType].clear();
@@ -78,36 +79,43 @@ void ShaderInterfaceVariableInfoMap::clear()
 
 void ShaderInterfaceVariableInfoMap::save(gl::BinaryOutputStream *stream)
 {
-    for (gl::ShaderType shaderType : gl::AllShaderTypes())
+    for (const IdToIndexMap &idToIndexMap : mIdToIndexMap)
     {
-        stream->writeInt(mIdToIndexMap[shaderType].size());
-        for (const VariableIndex &variableIndex : mIdToIndexMap[shaderType])
+        stream->writeInt(idToIndexMap.size());
+        if (idToIndexMap.size() > 0)
         {
-            stream->writeInt(variableIndex.index);
+            stream->writeBytes(reinterpret_cast<const uint8_t *>(idToIndexMap.data()),
+                               idToIndexMap.size() * sizeof(*idToIndexMap.data()));
         }
     }
 
-    stream->writeInt(mData.size());
-    for (const ShaderInterfaceVariableInfo &info : mData)
+    stream->writeVector(mData);
+
+    ASSERT(mXFBData.size() <= mData.size());
+    size_t xfbInfoCount = 0;
+    for (const XFBVariableInfoPtr &info : mXFBData)
     {
-        stream->writeInt(info.descriptorSet);
-        stream->writeInt(info.binding);
-        stream->writeInt(info.location);
-        stream->writeInt(info.component);
-        stream->writeInt(info.index);
-        // PackedEnumBitSet uses uint8_t
-        stream->writeInt(info.activeStages.bits());
+        if (!info)
+        {
+            continue;
+        }
+        xfbInfoCount++;
+    }
+    stream->writeInt(xfbInfoCount);
+    for (size_t xfbIndex = 0; xfbIndex < mXFBData.size(); xfbIndex++)
+    {
+        if (!mXFBData[xfbIndex])
+        {
+            continue;
+        }
+        stream->writeInt(xfbIndex);
+        XFBInterfaceVariableInfo &info = *mXFBData[xfbIndex];
         SaveShaderInterfaceVariableXfbInfo(info.xfb, stream);
         stream->writeInt(info.fieldXfb.size());
         for (const ShaderInterfaceVariableXfbInfo &xfb : info.fieldXfb)
         {
             SaveShaderInterfaceVariableXfbInfo(xfb, stream);
         }
-        stream->writeBool(info.useRelaxedPrecision);
-        stream->writeBool(info.varyingIsInput);
-        stream->writeBool(info.varyingIsOutput);
-        stream->writeInt(info.attributeComponentCount);
-        stream->writeInt(info.attributeLocationCount);
     }
 
     // Store gl_PerVertex members only for stages that have it.
@@ -121,46 +129,41 @@ void ShaderInterfaceVariableInfoMap::save(gl::BinaryOutputStream *stream)
 }
 void ShaderInterfaceVariableInfoMap::load(gl::BinaryInputStream *stream)
 {
-    ShaderInterfaceVariableInfoMap::VariableInfoArray data;
-    gl::ShaderMap<ShaderInterfaceVariableInfoMap::IdToIndexMap> idToIndexMap;
     gl::ShaderMap<gl::PerVertexMemberBitSet> inputPerVertexActiveMembers;
     gl::ShaderMap<gl::PerVertexMemberBitSet> outputPerVertexActiveMembers;
 
-    for (gl::ShaderType shaderType : gl::AllShaderTypes())
+    for (IdToIndexMap &idToIndexMap : mIdToIndexMap)
     {
-        size_t idCount = stream->readInt<size_t>();
-        for (uint32_t id = 0; id < idCount; ++id)
+        // ASSERT(idToIndexMap.empty());
+        size_t count = stream->readInt<size_t>();
+        if (count > 0)
         {
-            uint32_t index               = stream->readInt<uint32_t>();
-            idToIndexMap[shaderType][id] = {index};
+            idToIndexMap.resetWithRawData(count,
+                                          stream->getBytes(count * sizeof(*idToIndexMap.data())));
         }
     }
 
-    size_t dataSize = stream->readInt<size_t>();
-    for (size_t infoIndex = 0; infoIndex < dataSize; ++infoIndex)
+    stream->readVector(&mData);
+
+    ASSERT(mXFBData.empty());
+    size_t xfbInfoCount = stream->readInt<size_t>();
+    ASSERT(xfbInfoCount <= mData.size());
+    if (xfbInfoCount > 0)
     {
-        ShaderInterfaceVariableInfo info;
-
-        info.descriptorSet = stream->readInt<uint32_t>();
-        info.binding       = stream->readInt<uint32_t>();
-        info.location      = stream->readInt<uint32_t>();
-        info.component     = stream->readInt<uint32_t>();
-        info.index         = stream->readInt<uint32_t>();
-        // PackedEnumBitSet uses uint8_t
-        info.activeStages = gl::ShaderBitSet(stream->readInt<uint8_t>());
-        LoadShaderInterfaceVariableXfbInfo(stream, &info.xfb);
-        info.fieldXfb.resize(stream->readInt<size_t>());
-        for (ShaderInterfaceVariableXfbInfo &xfb : info.fieldXfb)
+        mXFBData.resize(mData.size());
+        for (size_t i = 0; i < xfbInfoCount; ++i)
         {
-            LoadShaderInterfaceVariableXfbInfo(stream, &xfb);
-        }
-        info.useRelaxedPrecision     = stream->readBool();
-        info.varyingIsInput          = stream->readBool();
-        info.varyingIsOutput         = stream->readBool();
-        info.attributeComponentCount = stream->readInt<uint8_t>();
-        info.attributeLocationCount  = stream->readInt<uint8_t>();
+            size_t xfbIndex    = stream->readInt<size_t>();
+            mXFBData[xfbIndex] = std::make_unique<XFBInterfaceVariableInfo>();
 
-        data.push_back(info);
+            XFBInterfaceVariableInfo &info = *mXFBData[xfbIndex];
+            LoadShaderInterfaceVariableXfbInfo(stream, &info.xfb);
+            info.fieldXfb.resize(stream->readInt<size_t>());
+            for (ShaderInterfaceVariableXfbInfo &xfb : info.fieldXfb)
+            {
+                LoadShaderInterfaceVariableXfbInfo(stream, &xfb);
+            }
+        }
     }
 
     outputPerVertexActiveMembers[gl::ShaderType::Vertex] =
@@ -178,8 +181,6 @@ void ShaderInterfaceVariableInfoMap::load(gl::BinaryInputStream *stream)
     outputPerVertexActiveMembers[gl::ShaderType::Geometry] =
         gl::PerVertexMemberBitSet(stream->readInt<uint8_t>());
 
-    mData.swap(data);
-    mIdToIndexMap.swap(idToIndexMap);
     mInputPerVertexActiveMembers.swap(inputPerVertexActiveMembers);
     mOutputPerVertexActiveMembers.swap(outputPerVertexActiveMembers);
 }
@@ -225,6 +226,23 @@ ShaderInterfaceVariableInfo &ShaderInterfaceVariableInfoMap::getMutable(gl::Shad
     ASSERT(hasVariable(shaderType, id));
     uint32_t index = getVariableIndex(shaderType, id).index;
     return mData[index];
+}
+
+XFBInterfaceVariableInfo *ShaderInterfaceVariableInfoMap::getXFBMutable(gl::ShaderType shaderType,
+                                                                        uint32_t id)
+{
+    ASSERT(hasVariable(shaderType, id));
+    uint32_t index = getVariableIndex(shaderType, id).index;
+    if (index >= mXFBData.size())
+    {
+        mXFBData.resize(index + 1);
+    }
+    if (!mXFBData[index])
+    {
+        mXFBData[index] = std::make_unique<XFBInterfaceVariableInfo>();
+    }
+    mData[index].hasTransformFeedback = true;
+    return mXFBData[index].get();
 }
 
 ShaderInterfaceVariableInfo &ShaderInterfaceVariableInfoMap::add(gl::ShaderType shaderType,
