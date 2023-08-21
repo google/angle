@@ -400,8 +400,6 @@ void ProgramExecutable::reset(bool clearInfoLog)
     mSamplerBindings.clear();
     mSamplerBoundTextureUnits.clear();
     mImageBindings.clear();
-
-    mOutputVariableTypes.clear();
 }
 
 void ProgramExecutable::load(bool isSeparable, gl::BinaryInputStream *stream)
@@ -483,13 +481,6 @@ void ProgramExecutable::load(bool isSeparable, gl::BinaryInputStream *stream)
         stream->readInt(&locationData.arrayIndex);
         stream->readInt(&locationData.index);
         stream->readBool(&locationData.ignored);
-    }
-
-    size_t outputTypeCount = stream->readInt<size_t>();
-    mOutputVariableTypes.resize(outputTypeCount);
-    for (size_t outputIndex = 0; outputIndex < outputTypeCount; ++outputIndex)
-    {
-        mOutputVariableTypes[outputIndex] = stream->readInt<GLenum>();
     }
 
     size_t secondaryOutputVarCount = stream->readInt<size_t>();
@@ -606,12 +597,6 @@ void ProgramExecutable::save(bool isSeparable, gl::BinaryOutputStream *stream) c
         stream->writeInt(outputVar.arrayIndex);
         stream->writeIntOrNegOne(outputVar.index);
         stream->writeBool(outputVar.ignored);
-    }
-
-    stream->writeInt(mOutputVariableTypes.size());
-    for (const auto &outputVariableType : mOutputVariableTypes)
-    {
-        stream->writeInt(outputVariableType);
     }
 
     stream->writeInt(getSecondaryOutputLocations().size());
@@ -1141,73 +1126,15 @@ bool ProgramExecutable::linkValidateOutputVariables(
     const ProgramAliasedBindings &fragmentOutputLocations,
     const ProgramAliasedBindings &fragmentOutputIndices)
 {
-    ASSERT(mOutputVariableTypes.empty());
     ASSERT(mPODStruct.activeOutputVariablesMask.none());
     ASSERT(mPODStruct.drawBufferTypeMask.none());
     ASSERT(!mPODStruct.hasYUVOutput);
-
-    // Gather output variable types
-    for (const sh::ShaderVariable &outputVariable : outputVariables)
-    {
-        if (outputVariable.isBuiltIn() && outputVariable.name != "gl_FragColor" &&
-            outputVariable.name != "gl_FragData")
-        {
-            continue;
-        }
-
-        unsigned int baseLocation =
-            (outputVariable.location == -1 ? 0u
-                                           : static_cast<unsigned int>(outputVariable.location));
-
-        // GLSL ES 3.10 section 4.3.6: Output variables cannot be arrays of arrays or arrays of
-        // structures, so we may use getBasicTypeElementCount().
-        unsigned int elementCount = outputVariable.getBasicTypeElementCount();
-        for (unsigned int elementIndex = 0; elementIndex < elementCount; elementIndex++)
-        {
-            const unsigned int location = baseLocation + elementIndex;
-            if (location >= mOutputVariableTypes.size())
-            {
-                mOutputVariableTypes.resize(location + 1, GL_NONE);
-            }
-            ASSERT(location < mPODStruct.activeOutputVariablesMask.size());
-            mPODStruct.activeOutputVariablesMask.set(location);
-            mOutputVariableTypes[location] = VariableComponentType(outputVariable.type);
-            ComponentType componentType    = GLenumToComponentType(mOutputVariableTypes[location]);
-            SetComponentTypeMask(componentType, location, &mPODStruct.drawBufferTypeMask);
-        }
-
-        if (outputVariable.yuv)
-        {
-            ASSERT(outputVariables.size() == 1);
-            mPODStruct.hasYUVOutput = true;
-        }
-    }
-
-    if (version >= ES_3_1)
-    {
-        // [OpenGL ES 3.1] Chapter 8.22 Page 203:
-        // A link error will be generated if the sum of the number of active image uniforms used in
-        // all shaders, the number of active shader storage blocks, and the number of active
-        // fragment shader outputs exceeds the implementation-dependent value of
-        // MAX_COMBINED_SHADER_OUTPUT_RESOURCES.
-        if (combinedImageUniformsCount + combinedShaderStorageBlocksCount +
-                mPODStruct.activeOutputVariablesMask.count() >
-            static_cast<GLuint>(caps.maxCombinedShaderOutputResources))
-        {
-            mInfoLog
-                << "The sum of the number of active image uniforms, active shader storage blocks "
-                   "and active fragment shader outputs exceeds "
-                   "MAX_COMBINED_SHADER_OUTPUT_RESOURCES ("
-                << caps.maxCombinedShaderOutputResources << ")";
-            return false;
-        }
-    }
 
     mOutputVariables = outputVariables;
 
     if (fragmentShaderVersion == 100)
     {
-        return true;
+        return gatherOutputTypes();
     }
 
     // EXT_blend_func_extended doesn't specify anything related to binding specific elements of an
@@ -1382,6 +1309,80 @@ bool ProgramExecutable::linkValidateOutputVariables(
             mInfoLog << "Could not fit output variable into available locations: "
                      << outputVariable.name;
             return false;
+        }
+    }
+
+    if (!gatherOutputTypes())
+    {
+        return false;
+    }
+
+    if (version >= ES_3_1)
+    {
+        // [OpenGL ES 3.1] Chapter 8.22 Page 203:
+        // A link error will be generated if the sum of the number of active image uniforms used in
+        // all shaders, the number of active shader storage blocks, and the number of active
+        // fragment shader outputs exceeds the implementation-dependent value of
+        // MAX_COMBINED_SHADER_OUTPUT_RESOURCES.
+        if (combinedImageUniformsCount + combinedShaderStorageBlocksCount +
+                mPODStruct.activeOutputVariablesMask.count() >
+            static_cast<GLuint>(caps.maxCombinedShaderOutputResources))
+        {
+            mInfoLog
+                << "The sum of the number of active image uniforms, active shader storage blocks "
+                   "and active fragment shader outputs exceeds "
+                   "MAX_COMBINED_SHADER_OUTPUT_RESOURCES ("
+                << caps.maxCombinedShaderOutputResources << ")";
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool ProgramExecutable::gatherOutputTypes()
+{
+    for (const sh::ShaderVariable &outputVariable : mOutputVariables)
+    {
+        if (outputVariable.isBuiltIn() && outputVariable.name != "gl_FragColor" &&
+            outputVariable.name != "gl_FragData")
+        {
+            continue;
+        }
+
+        unsigned int baseLocation =
+            (outputVariable.location == -1 ? 0u
+                                           : static_cast<unsigned int>(outputVariable.location));
+
+        const ComponentType componentType =
+            GLenumToComponentType(VariableComponentType(outputVariable.type));
+
+        // GLSL ES 3.10 section 4.3.6: Output variables cannot be arrays of arrays or arrays of
+        // structures, so we may use getBasicTypeElementCount().
+        unsigned int elementCount = outputVariable.getBasicTypeElementCount();
+        for (unsigned int elementIndex = 0; elementIndex < elementCount; elementIndex++)
+        {
+            const unsigned int location = baseLocation + elementIndex;
+            ASSERT(location < mPODStruct.activeOutputVariablesMask.size());
+            mPODStruct.activeOutputVariablesMask.set(location);
+            const ComponentType storedComponentType =
+                gl::GetComponentTypeMask(mPODStruct.drawBufferTypeMask, location);
+            if (storedComponentType == ComponentType::InvalidEnum)
+            {
+                SetComponentTypeMask(componentType, location, &mPODStruct.drawBufferTypeMask);
+            }
+            else if (storedComponentType != componentType)
+            {
+                mInfoLog << "Inconsistent component types for fragment outputs at location "
+                         << location;
+                return false;
+            }
+        }
+
+        if (outputVariable.yuv)
+        {
+            ASSERT(mOutputVariables.size() == 1);
+            mPODStruct.hasYUVOutput = true;
         }
     }
 

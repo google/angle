@@ -862,6 +862,179 @@ void main() {
     glDeleteProgram(program);
 }
 
+// Test that a secondary blending source limits the number of primary outputs.
+TEST_P(EXTBlendFuncExtendedTestES3, TooManyFragmentOutputsForDualSourceBlending)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_blend_func_extended"));
+
+    GLint maxDualSourceDrawBuffers;
+    glGetIntegerv(GL_MAX_DUAL_SOURCE_DRAW_BUFFERS_EXT, &maxDualSourceDrawBuffers);
+    ASSERT_GE(maxDualSourceDrawBuffers, 1);
+
+    constexpr char kFS[] = R"(#version 300 es
+#extension GL_EXT_blend_func_extended : require
+precision mediump float;
+out vec4 outSrc0;
+out vec4 outSrc1;
+void main() {
+    outSrc0 = vec4(0.5);
+    outSrc1 = vec4(1.0);
+})";
+
+    GLuint vs = CompileShader(GL_VERTEX_SHADER, essl3_shaders::vs::Simple());
+    GLuint fs = CompileShader(GL_FRAGMENT_SHADER, kFS);
+    ASSERT_NE(0u, vs);
+    ASSERT_NE(0u, fs);
+
+    GLuint program = glCreateProgram();
+    glAttachShader(program, vs);
+    glDeleteShader(vs);
+    glAttachShader(program, fs);
+    glDeleteShader(fs);
+
+    glBindFragDataLocationIndexedEXT(program, maxDualSourceDrawBuffers, 0, "outSrc0");
+    glBindFragDataLocationIndexedEXT(program, 0, 1, "outSrc1");
+    ASSERT_GL_NO_ERROR();
+
+    GLint linkStatus;
+    glLinkProgram(program);
+    glGetProgramiv(program, GL_LINK_STATUS, &linkStatus);
+    EXPECT_EQ(0, linkStatus);
+
+    glDeleteProgram(program);
+}
+
+// Test that fragment outputs bound to the same location must have the same type.
+TEST_P(EXTBlendFuncExtendedTestES3, InconsistentTypesForLocationAPI)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_blend_func_extended"));
+
+    constexpr char kFS[] = R"(#version 300 es
+#extension GL_EXT_blend_func_extended : require
+precision mediump float;
+out vec4 outSrc0;
+out ivec4 outSrc1;
+void main() {
+    outSrc0 = vec4(0.5);
+    outSrc1 = ivec4(1.0);
+})";
+
+    GLuint vs = CompileShader(GL_VERTEX_SHADER, essl3_shaders::vs::Simple());
+    GLuint fs = CompileShader(GL_FRAGMENT_SHADER, kFS);
+    ASSERT_NE(0u, vs);
+    ASSERT_NE(0u, fs);
+
+    GLuint program = glCreateProgram();
+    glAttachShader(program, vs);
+    glDeleteShader(vs);
+    glAttachShader(program, fs);
+    glDeleteShader(fs);
+
+    glBindFragDataLocationIndexedEXT(program, 0, 0, "outSrc0");
+    glBindFragDataLocationIndexedEXT(program, 0, 1, "outSrc1");
+    ASSERT_GL_NO_ERROR();
+
+    GLint linkStatus;
+    glLinkProgram(program);
+    glGetProgramiv(program, GL_LINK_STATUS, &linkStatus);
+    EXPECT_EQ(0, linkStatus);
+
+    glDeleteProgram(program);
+}
+
+// Test that rendering to multiple fragment outputs bound via API works.
+TEST_P(EXTBlendFuncExtendedDrawTestES3, MultipleDrawBuffersAPI)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_blend_func_extended"));
+
+    constexpr char kFS[] = R"(#version 300 es
+#extension GL_EXT_blend_func_extended : require
+precision mediump float;
+out vec4 outSrc0;
+out ivec4 outSrc1;
+void main() {
+    outSrc0 = vec4(0.0, 1.0, 0.0, 1.0);
+    outSrc1 = ivec4(1, 2, 3, 4);
+})";
+
+    mProgram = CompileProgram(essl3_shaders::vs::Simple(), kFS, [](GLuint program) {
+        glBindFragDataLocationEXT(program, 0, "outSrc0");
+        glBindFragDataLocationEXT(program, 1, "outSrc1");
+    });
+
+    ASSERT_NE(0u, mProgram);
+
+    GLRenderbuffer rb0;
+    glBindRenderbuffer(GL_RENDERBUFFER, rb0);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, 1, 1);
+
+    GLRenderbuffer rb1;
+    glBindRenderbuffer(GL_RENDERBUFFER, rb1);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8I, 1, 1);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    const GLenum bufs[] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1};
+    glDrawBuffers(2, bufs);
+
+    GLfloat clearF[] = {0.0, 0.0, 0.0, 0.0};
+    GLint clearI[]   = {0, 0, 0, 0};
+
+    // FBO: rb0 (rgba8), rb1 (rgba8i)
+    glBindRenderbuffer(GL_RENDERBUFFER, rb0);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rb0);
+    glBindRenderbuffer(GL_RENDERBUFFER, rb1);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_RENDERBUFFER, rb1);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    glClearBufferfv(GL_COLOR, 0, clearF);
+    glClearBufferiv(GL_COLOR, 1, clearI);
+    ASSERT_GL_NO_ERROR();
+
+    glReadBuffer(GL_COLOR_ATTACHMENT0);
+    EXPECT_PIXEL_EQ(0, 0, 0, 0, 0, 0);
+    glReadBuffer(GL_COLOR_ATTACHMENT1);
+    EXPECT_PIXEL_8I(0, 0, 0, 0, 0, 0);
+
+    drawQuad(mProgram, essl3_shaders::PositionAttrib(), 0.0);
+    ASSERT_GL_NO_ERROR();
+
+    glReadBuffer(GL_COLOR_ATTACHMENT0);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    glReadBuffer(GL_COLOR_ATTACHMENT1);
+    EXPECT_PIXEL_8I(0, 0, 1, 2, 3, 4);
+
+    // FBO: rb1 (rgba8i), rb0 (rgba8)
+    glBindRenderbuffer(GL_RENDERBUFFER, rb0);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_RENDERBUFFER, rb0);
+    glBindRenderbuffer(GL_RENDERBUFFER, rb1);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rb1);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Rebind fragment outputs
+    glBindFragDataLocationEXT(mProgram, 0, "outSrc1");
+    glBindFragDataLocationEXT(mProgram, 1, "outSrc0");
+    glLinkProgram(mProgram);
+
+    glClearBufferfv(GL_COLOR, 1, clearF);
+    glClearBufferiv(GL_COLOR, 0, clearI);
+    ASSERT_GL_NO_ERROR();
+
+    glReadBuffer(GL_COLOR_ATTACHMENT1);
+    EXPECT_PIXEL_EQ(0, 0, 0, 0, 0, 0);
+    glReadBuffer(GL_COLOR_ATTACHMENT0);
+    EXPECT_PIXEL_8I(0, 0, 0, 0, 0, 0);
+
+    drawQuad(mProgram, essl3_shaders::PositionAttrib(), 0.0);
+    ASSERT_GL_NO_ERROR();
+
+    glReadBuffer(GL_COLOR_ATTACHMENT1);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    glReadBuffer(GL_COLOR_ATTACHMENT0);
+    EXPECT_PIXEL_8I(0, 0, 1, 2, 3, 4);
+}
+
 // Use a program pipeline with EXT_blend_func_extended
 TEST_P(EXTBlendFuncExtendedDrawTestES31, UseProgramPipeline)
 {

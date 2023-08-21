@@ -11,6 +11,8 @@
 #ifndef COMPILER_TRANSLATOR_VALIDATEOUTPUTS_H_
 #define COMPILER_TRANSLATOR_VALIDATEOUTPUTS_H_
 
+#include <GLSLANG/ShaderLang.h>
+
 #include "compiler/translator/ExtensionBehavior.h"
 
 namespace sh
@@ -23,7 +25,7 @@ class TDiagnostics;
 // Returns true if the shader has no conflicting or otherwise erroneous fragment outputs.
 bool ValidateOutputs(TIntermBlock *root,
                      const TExtensionBehavior &extBehavior,
-                     int maxDrawBuffers,
+                     const ShBuiltInResources &resources,
                      bool usesPixelLocalStorage,
                      TDiagnostics *diagnostics);
 

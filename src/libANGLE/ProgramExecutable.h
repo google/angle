@@ -533,6 +533,8 @@ class ProgramExecutable final : public angle::Subject
                                      const ProgramAliasedBindings &fragmentOutputLocations,
                                      const ProgramAliasedBindings &fragmentOutputIndices);
 
+    bool gatherOutputTypes();
+
     void linkSamplerAndImageBindings(GLuint *combinedImageUniformsCount);
     bool linkAtomicCounterBuffers(const Caps &caps, InfoLog &infoLog);
 
@@ -645,9 +647,6 @@ class ProgramExecutable final : public angle::Subject
     ShaderMap<std::vector<sh::ShaderVariable>> mLinkedInputVaryings;
     ShaderMap<std::vector<sh::ShaderVariable>> mLinkedUniforms;
     ShaderMap<std::vector<sh::InterfaceBlock>> mLinkedUniformBlocks;
-
-    // Fragment output variable base types: FLOAT, INT, or UINT.  Ordered by location.
-    std::vector<GLenum> mOutputVariableTypes;
 
     // Cache for sampler validation
     mutable Optional<bool> mCachedValidateSamplersResult;

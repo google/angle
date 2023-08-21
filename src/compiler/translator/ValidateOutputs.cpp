@@ -30,7 +30,7 @@ class ValidateOutputsTraverser : public TIntermTraverser
 {
   public:
     ValidateOutputsTraverser(const TExtensionBehavior &extBehavior,
-                             int maxDrawBuffers,
+                             const ShBuiltInResources &resources,
                              bool usesPixelLocalStorage);
 
     void validate(TDiagnostics *diagnostics) const;
@@ -39,7 +39,9 @@ class ValidateOutputsTraverser : public TIntermTraverser
 
   private:
     int mMaxDrawBuffers;
+    int mMaxDualSourceDrawBuffers;
     bool mEnablesBlendFuncExtended;
+    bool mUsesIndex1;
     bool mUsesPixelLocalStorage;
     bool mUsesFragDepth;
 
@@ -51,12 +53,14 @@ class ValidateOutputsTraverser : public TIntermTraverser
 };
 
 ValidateOutputsTraverser::ValidateOutputsTraverser(const TExtensionBehavior &extBehavior,
-                                                   int maxDrawBuffers,
+                                                   const ShBuiltInResources &resources,
                                                    bool usesPixelLocalStorage)
     : TIntermTraverser(true, false, false),
-      mMaxDrawBuffers(maxDrawBuffers),
+      mMaxDrawBuffers(resources.MaxDrawBuffers),
+      mMaxDualSourceDrawBuffers(resources.MaxDualSourceDrawBuffers),
       mEnablesBlendFuncExtended(
           IsExtensionEnabled(extBehavior, TExtension::EXT_blend_func_extended)),
+      mUsesIndex1(false),
       mUsesPixelLocalStorage(usesPixelLocalStorage),
       mUsesFragDepth(false)
 {}
@@ -74,11 +78,16 @@ void ValidateOutputsTraverser::visitSymbol(TIntermSymbol *symbol)
     TQualifier qualifier = symbol->getQualifier();
     if (qualifier == EvqFragmentOut)
     {
-        if (symbol->getType().getLayoutQualifier().location != -1)
+        const TLayoutQualifier &layoutQualifier = symbol->getType().getLayoutQualifier();
+        if (layoutQualifier.location != -1)
         {
             mOutputs.push_back(symbol);
+            if (layoutQualifier.index == 1)
+            {
+                mUsesIndex1 = true;
+            }
         }
-        else if (symbol->getType().getLayoutQualifier().yuv == true)
+        else if (layoutQualifier.yuv == true)
         {
             mYuvOutputs.push_back(symbol);
         }
@@ -96,8 +105,8 @@ void ValidateOutputsTraverser::visitSymbol(TIntermSymbol *symbol)
 void ValidateOutputsTraverser::validate(TDiagnostics *diagnostics) const
 {
     ASSERT(diagnostics);
-    OutputVector validOutputs(mMaxDrawBuffers, nullptr);
-    OutputVector validSecondaryOutputs(mMaxDrawBuffers, nullptr);
+    OutputVector validOutputs(mUsesIndex1 ? mMaxDualSourceDrawBuffers : mMaxDrawBuffers, nullptr);
+    OutputVector validSecondaryOutputs(mMaxDualSourceDrawBuffers, nullptr);
 
     for (const auto &symbol : mOutputs)
     {
@@ -110,11 +119,13 @@ void ValidateOutputsTraverser::validate(TDiagnostics *diagnostics) const
         ASSERT(type.getLayoutQualifier().location != -1);
 
         OutputVector *validOutputsToUse = &validOutputs;
+        OutputVector *otherOutputsToUse = &validSecondaryOutputs;
         // The default index is 0, so we only assign the output to secondary outputs in case the
         // index is explicitly set to 1.
         if (type.getLayoutQualifier().index == 1)
         {
             validOutputsToUse = &validSecondaryOutputs;
+            otherOutputsToUse = &validOutputs;
         }
 
         if (location + elementCount <= validOutputsToUse->size())
@@ -132,6 +143,19 @@ void ValidateOutputsTraverser::validate(TDiagnostics *diagnostics) const
                 else
                 {
                     (*validOutputsToUse)[offsetLocation] = symbol;
+                    if (offsetLocation < otherOutputsToUse->size())
+                    {
+                        TIntermSymbol *otherSymbol = (*otherOutputsToUse)[offsetLocation];
+                        if (otherSymbol && otherSymbol->getType().getBasicType() !=
+                                               symbol->getType().getBasicType())
+                        {
+                            std::stringstream strstr = sh::InitializeStream<std::stringstream>();
+                            strstr << "conflicting output types with previously defined output "
+                                   << "'" << (*otherOutputsToUse)[offsetLocation]->getName() << "'"
+                                   << " for location " << offsetLocation;
+                            error(*symbol, strstr.str().c_str(), diagnostics);
+                        }
+                    }
                 }
             }
         }
@@ -139,10 +163,11 @@ void ValidateOutputsTraverser::validate(TDiagnostics *diagnostics) const
         {
             if (elementCount > 0)
             {
-                error(*symbol,
-                      elementCount > 1 ? "output array locations would exceed MAX_DRAW_BUFFERS"
-                                       : "output location must be < MAX_DRAW_BUFFERS",
-                      diagnostics);
+                std::stringstream strstr = sh::InitializeStream<std::stringstream>();
+                strstr << (elementCount > 1 ? "output array locations would exceed "
+                                            : "output location must be < ")
+                       << "MAX_" << (mUsesIndex1 ? "DUAL_SOURCE_" : "") << "DRAW_BUFFERS";
+                error(*symbol, strstr.str().c_str(), diagnostics);
             }
         }
     }
@@ -188,11 +213,11 @@ void ValidateOutputsTraverser::validate(TDiagnostics *diagnostics) const
 
 bool ValidateOutputs(TIntermBlock *root,
                      const TExtensionBehavior &extBehavior,
-                     int maxDrawBuffers,
+                     const ShBuiltInResources &resources,
                      bool usesPixelLocalStorage,
                      TDiagnostics *diagnostics)
 {
-    ValidateOutputsTraverser validateOutputs(extBehavior, maxDrawBuffers, usesPixelLocalStorage);
+    ValidateOutputsTraverser validateOutputs(extBehavior, resources, usesPixelLocalStorage);
     root->traverse(&validateOutputs);
     int numErrorsBefore = diagnostics->numErrors();
     validateOutputs.validate(diagnostics);
