@@ -820,7 +820,7 @@ void ProgramExecutable::setSamplerUniformTextureTypeAndFormat(
     }
 }
 
-void ProgramExecutable::saveLinkedStateInfo(const Context *context, const ProgramState &state)
+void ProgramExecutable::saveLinkedStateInfo(const ProgramState &state)
 {
     for (ShaderType shaderType : getLinkedShaderStages())
     {
@@ -835,7 +835,10 @@ void ProgramExecutable::saveLinkedStateInfo(const Context *context, const Progra
 }
 
 bool ProgramExecutable::linkMergedVaryings(
-    const Context *context,
+    const Caps &caps,
+    const Limitations &limitations,
+    const Version &clientVersion,
+    bool webglCompatibility,
     const ProgramMergedVaryings &mergedVaryings,
     const std::vector<std::string> &transformFeedbackVaryingNames,
     const LinkingVariables &linkingVariables,
@@ -844,7 +847,7 @@ bool ProgramExecutable::linkMergedVaryings(
 {
     ShaderType tfStage = GetLastPreFragmentStage(linkingVariables.isShaderStageUsedBitset);
 
-    if (!linkValidateTransformFeedback(context, mergedVaryings, tfStage,
+    if (!linkValidateTransformFeedback(caps, clientVersion, mergedVaryings, tfStage,
                                        transformFeedbackVaryingNames))
     {
         return false;
@@ -853,12 +856,12 @@ bool ProgramExecutable::linkMergedVaryings(
     // Map the varyings to the register file
     // In WebGL, we use a slightly different handling for packing variables.
     gl::PackMode packMode = PackMode::ANGLE_RELAXED;
-    if (context->getLimitations().noFlexibleVaryingPacking)
+    if (limitations.noFlexibleVaryingPacking)
     {
         // D3D9 pack mode is strictly more strict than WebGL, so takes priority.
         packMode = PackMode::ANGLE_NON_CONFORMANT_D3D9;
     }
-    else if (context->isWebGL())
+    else if (webglCompatibility)
     {
         packMode = PackMode::WEBGL_STRICT;
     }
@@ -878,9 +881,9 @@ bool ProgramExecutable::linkMergedVaryings(
         }
     }
 
-    if (!varyingPacking->collectAndPackUserVaryings(mInfoLog, context->getCaps(), packMode,
-                                                    activeShadersMask, mergedVaryings,
-                                                    transformFeedbackVaryingNames, isSeparable))
+    if (!varyingPacking->collectAndPackUserVaryings(mInfoLog, caps, packMode, activeShadersMask,
+                                                    mergedVaryings, transformFeedbackVaryingNames,
+                                                    isSeparable))
     {
         return false;
     }
@@ -892,23 +895,22 @@ bool ProgramExecutable::linkMergedVaryings(
 }
 
 bool ProgramExecutable::linkValidateTransformFeedback(
-    const Context *context,
+    const Caps &caps,
+    const Version &clientVersion,
     const ProgramMergedVaryings &varyings,
     ShaderType stage,
     const std::vector<std::string> &transformFeedbackVaryingNames)
 {
-    const Version &version = context->getClientVersion();
-
     // Validate the tf names regardless of the actual program varyings.
     std::set<std::string> uniqueNames;
     for (const std::string &tfVaryingName : transformFeedbackVaryingNames)
     {
-        if (version < Version(3, 1) && tfVaryingName.find('[') != std::string::npos)
+        if (clientVersion < Version(3, 1) && tfVaryingName.find('[') != std::string::npos)
         {
             mInfoLog << "Capture of array elements is undefined and not supported.";
             return false;
         }
-        if (version >= Version(3, 1))
+        if (clientVersion >= Version(3, 1))
         {
             if (IncludeSameArrayElement(uniqueNames, tfVaryingName))
             {
@@ -967,7 +969,7 @@ bool ProgramExecutable::linkValidateTransformFeedback(
 
         if (var->isArray())
         {
-            if (version < Version(3, 1))
+            if (clientVersion < Version(3, 1))
             {
                 mInfoLog << "Capture of arrays is undefined and not supported.";
                 return false;
@@ -993,8 +995,6 @@ bool ProgramExecutable::linkValidateTransformFeedback(
             }
             elementCount = 1;
         }
-
-        const Caps &caps = context->getCaps();
 
         // TODO(jmadill): Investigate implementation limits on D3D11
         componentCount = VariableComponentCount(var->type) * elementCount;
@@ -1133,7 +1133,6 @@ bool ProgramExecutable::validateSamplersImpl(InfoLog *infoLog, const Caps &caps)
 
 bool ProgramExecutable::linkValidateOutputVariables(
     const Caps &caps,
-    const Extensions &extensions,
     const Version &version,
     GLuint combinedImageUniformsCount,
     GLuint combinedShaderStorageBlocksCount,
@@ -1390,7 +1389,7 @@ bool ProgramExecutable::linkValidateOutputVariables(
 }
 
 bool ProgramExecutable::linkUniforms(
-    const Context *context,
+    const Caps &caps,
     const ShaderMap<std::vector<sh::ShaderVariable>> &shaderUniforms,
     InfoLog &infoLog,
     const ProgramAliasedBindings &uniformLocationBindings,
@@ -1399,7 +1398,7 @@ bool ProgramExecutable::linkUniforms(
     std::vector<VariableLocation> *uniformLocationsOutOrNull)
 {
     UniformLinker linker(mPODStruct.linkedShaderStages, shaderUniforms);
-    if (!linker.link(context->getCaps(), infoLog, uniformLocationBindings))
+    if (!linker.link(caps, infoLog, uniformLocationBindings))
     {
         return false;
     }
@@ -1409,7 +1408,7 @@ bool ProgramExecutable::linkUniforms(
 
     linkSamplerAndImageBindings(combinedImageUniformsCountOut);
 
-    if (!linkAtomicCounterBuffers(context, infoLog))
+    if (!linkAtomicCounterBuffers(caps, infoLog))
     {
         return false;
     }
@@ -1516,7 +1515,7 @@ void ProgramExecutable::linkSamplerAndImageBindings(GLuint *combinedImageUniform
     mPODStruct.defaultUniformRange = RangeUI(0, low);
 }
 
-bool ProgramExecutable::linkAtomicCounterBuffers(const Context *context, InfoLog &infoLog)
+bool ProgramExecutable::linkAtomicCounterBuffers(const Caps &caps, InfoLog &infoLog)
 {
     for (unsigned int index : mPODStruct.atomicCounterUniformRange)
     {
@@ -1568,7 +1567,6 @@ bool ProgramExecutable::linkAtomicCounterBuffers(const Context *context, InfoLog
         }
         ++combinedShaderACBCount;
     }
-    const Caps &caps = context->getCaps();
     if (combinedShaderACBCount > caps.maxCombinedAtomicCounterBuffers)
     {
         infoLog << " combined AtomicCounterBuffers count exceeds limit";

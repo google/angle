@@ -481,6 +481,11 @@ angle::Result ProgramPipeline::link(const Context *context)
     InfoLog &infoLog = mState.mExecutable->getInfoLog();
     infoLog.reset();
 
+    const Caps &caps               = context->getCaps();
+    const Limitations &limitations = context->getLimitations();
+    const Version &clientVersion   = context->getClientVersion();
+    const bool isWebGL             = context->isWebGL();
+
     if (mState.mExecutable->hasLinkedShaderStage(gl::ShaderType::Vertex))
     {
         if (!linkVaryings(infoLog))
@@ -501,8 +506,7 @@ angle::Result ProgramPipeline::link(const Context *context)
             const GLuint combinedShaderStorageBlocks    = 0;
             const ProgramExecutable &fragmentExecutable = fragmentShaderProgram->getExecutable();
             if (!mState.mExecutable->linkValidateOutputVariables(
-                    context->getCaps(), context->getExtensions(), context->getClientVersion(),
-                    combinedImageUniforms, combinedShaderStorageBlocks,
+                    caps, clientVersion, combinedImageUniforms, combinedShaderStorageBlocks,
                     fragmentExecutable.getOutputVariables(),
                     fragmentExecutable.getLinkedShaderVersion(ShaderType::Fragment),
                     ProgramAliasedBindings(), ProgramAliasedBindings()))
@@ -534,9 +538,9 @@ angle::Result ProgramPipeline::link(const Context *context)
         const std::vector<std::string> &transformFeedbackVaryingNames =
             tfProgram->getState().getTransformFeedbackVaryingNames();
 
-        if (!mState.mExecutable->linkMergedVaryings(context, mergedVaryings,
-                                                    transformFeedbackVaryingNames, linkingVariables,
-                                                    false, &varyingPacking))
+        if (!mState.mExecutable->linkMergedVaryings(caps, limitations, clientVersion, isWebGL,
+                                                    mergedVaryings, transformFeedbackVaryingNames,
+                                                    linkingVariables, false, &varyingPacking))
         {
             return angle::Result::Stop;
         }

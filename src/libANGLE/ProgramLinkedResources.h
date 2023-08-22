@@ -47,6 +47,7 @@ class ProgramAliasedBindings;
 class Shader;
 struct ShaderVariableBuffer;
 struct VariableLocation;
+struct Version;
 
 using AtomicCounterBuffer = ShaderVariableBuffer;
 using ShaderUniform       = std::pair<ShaderType, const sh::ShaderVariable *>;
@@ -369,7 +370,9 @@ LinkMismatchError LinkValidateProgramVariables(const sh::ShaderVariable &variabl
                                                std::string *mismatchedStructOrBlockMemberName);
 void AddProgramVariableParentPrefix(const std::string &parentName,
                                     std::string *mismatchedFieldName);
-bool LinkValidateProgramInterfaceBlocks(const Context *context,
+bool LinkValidateProgramInterfaceBlocks(const Caps &caps,
+                                        const Version &clientVersion,
+                                        bool webglCompatibility,
                                         ShaderBitSet activeProgramStages,
                                         const ProgramLinkedResources &resources,
                                         InfoLog &infoLog,

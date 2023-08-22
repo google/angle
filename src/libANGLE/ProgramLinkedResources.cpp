@@ -2387,17 +2387,15 @@ bool ValidateInterfaceBlocksMatch(
     return true;
 }
 
-bool LinkValidateProgramInterfaceBlocks(const Context *context,
+bool LinkValidateProgramInterfaceBlocks(const Caps &caps,
+                                        const Version &clientVersion,
+                                        bool webglCompatibility,
                                         ShaderBitSet activeProgramStages,
                                         const ProgramLinkedResources &resources,
                                         InfoLog &infoLog,
                                         GLuint *combinedShaderStorageBlocksCountOut)
 {
     ASSERT(combinedShaderStorageBlocksCountOut);
-
-    const Caps &caps              = context->getCaps();
-    const bool webglCompatibility = context->isWebGL();
-    const Version &version        = context->getClientVersion();
 
     GLuint combinedUniformBlocksCount                                         = 0u;
     GLuint numShadersHasUniformBlocks                                         = 0u;
@@ -2436,7 +2434,7 @@ bool LinkValidateProgramInterfaceBlocks(const Context *context,
         return false;
     }
 
-    if (version >= Version(3, 1))
+    if (clientVersion >= Version(3, 1))
     {
         *combinedShaderStorageBlocksCountOut                                      = 0u;
         GLuint numShadersHasShaderStorageBlocks                                   = 0u;

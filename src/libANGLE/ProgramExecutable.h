@@ -404,7 +404,7 @@ class ProgramExecutable final : public angle::Subject
         return samplerIndex + mPODStruct.samplerUniformRange.low();
     }
 
-    void saveLinkedStateInfo(const Context *context, const ProgramState &state);
+    void saveLinkedStateInfo(const ProgramState &state);
     const std::vector<sh::ShaderVariable> &getLinkedOutputVaryings(ShaderType shaderType) const
     {
         return mLinkedOutputVaryings[shaderType];
@@ -467,7 +467,7 @@ class ProgramExecutable final : public angle::Subject
         return mPODStruct.activeOutputVariablesMask;
     }
 
-    bool linkUniforms(const Context *context,
+    bool linkUniforms(const Caps &caps,
                       const ShaderMap<std::vector<sh::ShaderVariable>> &shaderUniforms,
                       InfoLog &infoLog,
                       const ProgramAliasedBindings &uniformLocationBindings,
@@ -495,7 +495,10 @@ class ProgramExecutable final : public angle::Subject
                                                const std::vector<SamplerBinding> &samplerBindings,
                                                const std::vector<GLuint> &boundTextureUnits);
 
-    bool linkMergedVaryings(const Context *context,
+    bool linkMergedVaryings(const Caps &caps,
+                            const Limitations &limitations,
+                            const Version &clientVersion,
+                            bool webglCompatibility,
                             const ProgramMergedVaryings &mergedVaryings,
                             const std::vector<std::string> &transformFeedbackVaryingNames,
                             const LinkingVariables &linkingVariables,
@@ -503,7 +506,8 @@ class ProgramExecutable final : public angle::Subject
                             ProgramVaryingPacking *varyingPacking);
 
     bool linkValidateTransformFeedback(
-        const Context *context,
+        const Caps &caps,
+        const Version &clientVersion,
         const ProgramMergedVaryings &varyings,
         ShaderType stage,
         const std::vector<std::string> &transformFeedbackVaryingNames);
@@ -518,7 +522,6 @@ class ProgramExecutable final : public angle::Subject
     bool validateSamplersImpl(InfoLog *infoLog, const Caps &caps) const;
 
     bool linkValidateOutputVariables(const Caps &caps,
-                                     const Extensions &extensions,
                                      const Version &version,
                                      GLuint combinedImageUniformsCount,
                                      GLuint combinedShaderStorageBlocksCount,
@@ -528,7 +531,7 @@ class ProgramExecutable final : public angle::Subject
                                      const ProgramAliasedBindings &fragmentOutputIndices);
 
     void linkSamplerAndImageBindings(GLuint *combinedImageUniformsCount);
-    bool linkAtomicCounterBuffers(const Context *context, InfoLog &infoLog);
+    bool linkAtomicCounterBuffers(const Caps &caps, InfoLog &infoLog);
 
     InfoLog mInfoLog;
 

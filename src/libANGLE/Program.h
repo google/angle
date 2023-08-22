@@ -826,10 +826,15 @@ class Program final : public LabeledObject, public angle::Subject
     angle::Result linkImpl(const Context *context);
 
     bool linkValidateShaders(const Context *context, InfoLog &infoLog);
-    bool linkAttributes(const Context *context, InfoLog &infoLog);
+    void linkShaders();
+    bool linkAttributes(const Caps &caps,
+                        const Limitations &limitations,
+                        bool webglCompatibility,
+                        InfoLog &infoLog);
     bool linkVaryings(InfoLog &infoLog) const;
 
-    bool linkUniforms(const Context *context,
+    bool linkUniforms(const Caps &caps,
+                      const Version &clientVersion,
                       std::vector<UnusedUniform> *unusedUniformsOutOrNull,
                       GLuint *combinedImageUniformsOut,
                       InfoLog &infoLog);

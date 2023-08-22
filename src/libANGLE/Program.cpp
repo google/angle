@@ -1250,6 +1250,7 @@ angle::Result Program::linkImpl(const Context *context)
     {
         return angle::Result::Continue;
     }
+    linkShaders();
 
     egl::BlobCache::Key programHash = {0};
     MemoryProgramCache *cache       = context->getMemoryProgramCache();
@@ -1274,13 +1275,17 @@ angle::Result Program::linkImpl(const Context *context)
         }
     }
 
+    const Caps &caps               = context->getCaps();
+    const Limitations &limitations = context->getLimitations();
+    const Version &clientVersion   = context->getClientVersion();
+    const bool isWebGL             = context->isWebGL();
+
     // Cache load failed, fall through to normal linking.
     unlink();
     InfoLog &infoLog = mState.mExecutable->getInfoLog();
 
     // Re-link shaders after the unlink call.
-    bool result = linkValidateShaders(context, infoLog);
-    ASSERT(result);
+    linkShaders();
 
     std::unique_ptr<LinkingState> linkingState(new LinkingState());
     ProgramMergedVaryings mergedVaryings;
@@ -1302,13 +1307,14 @@ angle::Result Program::linkImpl(const Context *context)
     if (mState.mAttachedShaders[ShaderType::Compute])
     {
         GLuint combinedImageUniforms = 0;
-        if (!linkUniforms(context, &resources.unusedUniforms, &combinedImageUniforms, infoLog))
+        if (!linkUniforms(caps, clientVersion, &resources.unusedUniforms, &combinedImageUniforms,
+                          infoLog))
         {
             return angle::Result::Continue;
         }
 
         GLuint combinedShaderStorageBlocks = 0u;
-        if (!LinkValidateProgramInterfaceBlocks(context,
+        if (!LinkValidateProgramInterfaceBlocks(caps, clientVersion, isWebGL,
                                                 mState.mExecutable->getLinkedShaderStages(),
                                                 resources, infoLog, &combinedShaderStorageBlocks))
         {
@@ -1321,19 +1327,19 @@ angle::Result Program::linkImpl(const Context *context)
         // fragment shader outputs exceeds the implementation-dependent value of
         // MAX_COMBINED_SHADER_OUTPUT_RESOURCES.
         if (combinedImageUniforms + combinedShaderStorageBlocks >
-            static_cast<GLuint>(context->getCaps().maxCombinedShaderOutputResources))
+            static_cast<GLuint>(caps.maxCombinedShaderOutputResources))
         {
             infoLog
                 << "The sum of the number of active image uniforms, active shader storage blocks "
                    "and active fragment shader outputs exceeds "
                    "MAX_COMBINED_SHADER_OUTPUT_RESOURCES ("
-                << context->getCaps().maxCombinedShaderOutputResources << ")";
+                << caps.maxCombinedShaderOutputResources << ")";
             return angle::Result::Continue;
         }
     }
     else
     {
-        if (!linkAttributes(context, infoLog))
+        if (!linkAttributes(caps, limitations, isWebGL, infoLog))
         {
             return angle::Result::Continue;
         }
@@ -1344,13 +1350,14 @@ angle::Result Program::linkImpl(const Context *context)
         }
 
         GLuint combinedImageUniforms = 0;
-        if (!linkUniforms(context, &resources.unusedUniforms, &combinedImageUniforms, infoLog))
+        if (!linkUniforms(caps, clientVersion, &resources.unusedUniforms, &combinedImageUniforms,
+                          infoLog))
         {
             return angle::Result::Continue;
         }
 
         GLuint combinedShaderStorageBlocks = 0u;
-        if (!LinkValidateProgramInterfaceBlocks(context,
+        if (!LinkValidateProgramInterfaceBlocks(caps, clientVersion, isWebGL,
                                                 mState.mExecutable->getLinkedShaderStages(),
                                                 resources, infoLog, &combinedShaderStorageBlocks))
         {
@@ -1375,8 +1382,7 @@ angle::Result Program::linkImpl(const Context *context)
         if (fragmentShader)
         {
             if (!mState.mExecutable->linkValidateOutputVariables(
-                    context->getCaps(), context->getExtensions(), context->getClientVersion(),
-                    combinedImageUniforms, combinedShaderStorageBlocks,
+                    caps, clientVersion, combinedImageUniforms, combinedShaderStorageBlocks,
                     fragmentShader->activeOutputVariables, fragmentShader->shaderVersion,
                     mFragmentOutputLocations, mFragmentOutputIndexes))
             {
@@ -1393,14 +1399,15 @@ angle::Result Program::linkImpl(const Context *context)
 
         mergedVaryings = GetMergedVaryingsFromLinkingVariables(linkingVariables);
         if (!mState.mExecutable->linkMergedVaryings(
-                context, mergedVaryings, mState.mTransformFeedbackVaryingNames, linkingVariables,
-                isSeparable(), &resources.varyingPacking))
+                caps, limitations, clientVersion, isWebGL, mergedVaryings,
+                mState.mTransformFeedbackVaryingNames, linkingVariables, isSeparable(),
+                &resources.varyingPacking))
         {
             return angle::Result::Continue;
         }
     }
 
-    mState.mExecutable->saveLinkedStateInfo(context, mState);
+    mState.mExecutable->saveLinkedStateInfo(mState);
 
     mLinkingState                    = std::move(linkingState);
     mLinkingState->linkingFromBinary = false;
@@ -2895,11 +2902,9 @@ bool Program::linkValidateShaders(const Context *context, InfoLog &infoLog)
     {
         ASSERT(shaders[ShaderType::Compute]->shaderType == ShaderType::Compute);
 
-        mState.mComputeShaderLocalSize = shaders[ShaderType::Compute]->localSize;
-
         // GLSL ES 3.10, 4.4.1.1 Compute Shader Inputs
         // If the work group size is not specified, a link time error should occur.
-        if (!mState.mComputeShaderLocalSize.isDeclared())
+        if (!shaders[ShaderType::Compute]->localSize.isDeclared())
         {
             infoLog << "Work group size is not specified.";
             return false;
@@ -2965,14 +2970,6 @@ bool Program::linkValidateShaders(const Context *context, InfoLog &infoLog)
                 infoLog << "'max_vertices' is not specified in the geometry shader.";
                 return false;
             }
-
-            mState.mExecutable->mPODStruct.geometryShaderInputPrimitiveType =
-                inputPrimitive.value();
-            mState.mExecutable->mPODStruct.geometryShaderOutputPrimitiveType =
-                outputPrimitive.value();
-            mState.mExecutable->mPODStruct.geometryShaderMaxVertices = maxVertices.value();
-            mState.mExecutable->mPODStruct.geometryShaderInvocations =
-                geometryShader->geometryShaderInvocations;
         }
 
         const SharedCompiledShaderState &tessControlShader = shaders[ShaderType::TessControl];
@@ -2993,8 +2990,6 @@ bool Program::linkValidateShaders(const Context *context, InfoLog &infoLog)
                            "specifying an output patch vertex count must exist.";
                 return false;
             }
-
-            mState.mExecutable->mPODStruct.tessControlShaderVertices = tcsShaderVertices;
         }
 
         const SharedCompiledShaderState &tessEvaluationShader = shaders[ShaderType::TessEvaluation];
@@ -3016,6 +3011,54 @@ bool Program::linkValidateShaders(const Context *context, InfoLog &infoLog)
                            "primitive mode in its input layout.";
                 return false;
             }
+        }
+    }
+
+    return true;
+}
+
+// Assumes linkValidateShaders() has validated the shaders and caches some values from the shaders.
+void Program::linkShaders()
+{
+    const ShaderMap<SharedCompiledShaderState> &shaders = mState.mAttachedShaders;
+
+    const bool isComputeShaderAttached = shaders[ShaderType::Compute].get() != nullptr;
+
+    if (isComputeShaderAttached)
+    {
+        mState.mComputeShaderLocalSize = shaders[ShaderType::Compute]->localSize;
+    }
+    else
+    {
+        const SharedCompiledShaderState &geometryShader = shaders[ShaderType::Geometry];
+        if (geometryShader)
+        {
+            Optional<PrimitiveMode> inputPrimitive =
+                geometryShader->geometryShaderInputPrimitiveType;
+            Optional<PrimitiveMode> outputPrimitive =
+                geometryShader->geometryShaderOutputPrimitiveType;
+            Optional<GLint> maxVertices = geometryShader->geometryShaderMaxVertices;
+
+            mState.mExecutable->mPODStruct.geometryShaderInputPrimitiveType =
+                inputPrimitive.value();
+            mState.mExecutable->mPODStruct.geometryShaderOutputPrimitiveType =
+                outputPrimitive.value();
+            mState.mExecutable->mPODStruct.geometryShaderMaxVertices = maxVertices.value();
+            mState.mExecutable->mPODStruct.geometryShaderInvocations =
+                geometryShader->geometryShaderInvocations;
+        }
+
+        const SharedCompiledShaderState &tessControlShader = shaders[ShaderType::TessControl];
+        if (tessControlShader)
+        {
+            int tcsShaderVertices = tessControlShader->tessControlShaderVertices;
+            mState.mExecutable->mPODStruct.tessControlShaderVertices = tcsShaderVertices;
+        }
+
+        const SharedCompiledShaderState &tessEvaluationShader = shaders[ShaderType::TessEvaluation];
+        if (tessEvaluationShader)
+        {
+            GLenum tesPrimitiveMode = tessEvaluationShader->tessGenMode;
 
             mState.mExecutable->mPODStruct.tessGenMode    = tesPrimitiveMode;
             mState.mExecutable->mPODStruct.tessGenSpacing = tessEvaluationShader->tessGenSpacing;
@@ -3025,8 +3068,6 @@ bool Program::linkValidateShaders(const Context *context, InfoLog &infoLog)
                 tessEvaluationShader->tessGenPointMode;
         }
     }
-
-    return true;
 }
 
 GLuint Program::getTransformFeedbackVaryingResourceIndex(const GLchar *name) const
@@ -3147,7 +3188,8 @@ bool Program::linkVaryings(InfoLog &infoLog) const
     return true;
 }
 
-bool Program::linkUniforms(const Context *context,
+bool Program::linkUniforms(const Caps &caps,
+                           const Version &clientVersion,
                            std::vector<UnusedUniform> *unusedUniformsOutOrNull,
                            GLuint *combinedImageUniformsOut,
                            InfoLog &infoLog)
@@ -3162,18 +3204,18 @@ bool Program::linkUniforms(const Context *context,
         }
     }
 
-    if (!mState.mExecutable->linkUniforms(context, shaderUniforms, infoLog,
+    if (!mState.mExecutable->linkUniforms(caps, shaderUniforms, infoLog,
                                           mState.mUniformLocationBindings, combinedImageUniformsOut,
                                           unusedUniformsOutOrNull, &mState.mUniformLocations))
     {
         return false;
     }
 
-    if (context->getClientVersion() >= Version(3, 1))
+    if (clientVersion >= Version(3, 1))
     {
         GLint locationSize = static_cast<GLint>(mState.getUniformLocations().size());
 
-        if (locationSize > context->getCaps().maxUniformLocations)
+        if (locationSize > caps.maxUniformLocations)
         {
             infoLog << "Exceeded maximum uniform location size";
             return false;
@@ -3184,13 +3226,13 @@ bool Program::linkUniforms(const Context *context,
 }
 
 // Assigns locations to all attributes (except built-ins) from the bindings and program locations.
-bool Program::linkAttributes(const Context *context, InfoLog &infoLog)
+bool Program::linkAttributes(const Caps &caps,
+                             const Limitations &limitations,
+                             bool webglCompatibility,
+                             InfoLog &infoLog)
 {
-    const Caps &caps               = context->getCaps();
-    const Limitations &limitations = context->getLimitations();
-    bool webglCompatibility        = context->isWebGL();
-    int shaderVersion              = -1;
-    unsigned int usedLocations     = 0;
+    int shaderVersion          = -1;
+    unsigned int usedLocations = 0;
 
     const SharedCompiledShaderState &vertexShader =
         mState.getAttachedShader(gl::ShaderType::Vertex);
