@@ -155,7 +155,7 @@ inline bool IsSwiftshader(uint32_t vendorId, uint32_t deviceId)
     return IsGoogle(vendorId) && deviceId == ANDROID_DEVICE_ID_SWIFTSHADER;
 }
 
-const char *GetVendorString(uint32_t vendorId);
+std::string GetVendorString(uint32_t vendorId);
 
 // For Linux, Intel graphics driver version is the Mesa version. The version number has three
 // fields: major revision, minor revision and release number.
