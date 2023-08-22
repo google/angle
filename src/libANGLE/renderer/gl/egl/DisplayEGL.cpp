@@ -594,7 +594,7 @@ ContextImpl *DisplayEGL::createContext(const gl::State &state,
 template <typename T>
 void DisplayEGL::getConfigAttrib(EGLConfig config, EGLint attribute, T *value) const
 {
-    EGLint tmp;
+    EGLint tmp         = *value;
     EGLBoolean success = mEGL->getConfigAttrib(config, attribute, &tmp);
     ASSERT(success == EGL_TRUE);
     *value = tmp;
@@ -701,10 +701,20 @@ egl::ConfigSet DisplayEGL::generateConfigs()
                 continue;
             }
         }
-        else
+        else if (config.colorBufferType == EGL_LUMINANCE_BUFFER ||
+                 config.colorBufferType == EGL_YUV_BUFFER_EXT)
         {
+            // YUV and luminance EGL configs are not exposed, the frontened has not implemented
+            // them.
             continue;
         }
+        else
+        {
+            WARN() << "Unknown EGL color buffer type " << gl::FmtHex(config.colorBufferType)
+                   << ", skipping.";
+            continue;
+        }
+
         config.depthStencilFormat = gl::GetConfigDepthStencilBufferFormat(&config);
 
         config.matchNativePixmap  = EGL_NONE;
