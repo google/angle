@@ -51,7 +51,7 @@ constexpr bool kExposeNonConformantExtensionsAndVersions = false;
 #if defined(ANGLE_ENABLE_CRC_FOR_PIPELINE_CACHE)
 constexpr bool kEnableCRCForPipelineCache = true;
 #else
-constexpr bool kEnableCRCForPipelineCache                = false;
+constexpr bool kEnableCRCForPipelineCache = false;
 #endif
 }  // anonymous namespace
 
@@ -332,45 +332,29 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
     // being accessed. http://anglebug.com/6725
     {
         "SYNC-HAZARD-READ-AFTER-WRITE",
-        "vkCmdDrawIndexed: Hazard READ_AFTER_WRITE for vertex",
+        "Hazard READ_AFTER_WRITE for vertex",
         "usage: SYNC_VERTEX_ATTRIBUTE_INPUT_VERTEX_ATTRIBUTE_READ",
     },
     {
         "SYNC-HAZARD-READ-AFTER-WRITE",
-        "vkCmdDrawIndexedIndirect: Hazard READ_AFTER_WRITE for vertex",
-        "usage: SYNC_VERTEX_ATTRIBUTE_INPUT_VERTEX_ATTRIBUTE_READ",
-    },
-    {
-        "SYNC-HAZARD-READ-AFTER-WRITE",
-        "vkCmdDrawIndirect: Hazard READ_AFTER_WRITE for vertex",
-        "usage: SYNC_VERTEX_ATTRIBUTE_INPUT_VERTEX_ATTRIBUTE_READ",
-    },
-    {
-        "SYNC-HAZARD-READ-AFTER-WRITE",
-        "vkCmdDrawIndexedIndirect: Hazard READ_AFTER_WRITE for index",
+        "Hazard READ_AFTER_WRITE for index",
         "usage: SYNC_INDEX_INPUT_INDEX_READ",
     },
     {
         "SYNC-HAZARD-WRITE-AFTER-READ",
-        "vkCmdDraw: Hazard WRITE_AFTER_READ for",
+        "Hazard WRITE_AFTER_READ for",
         "Access info (usage: SYNC_VERTEX_SHADER_SHADER_STORAGE_WRITE, prior_usage: "
         "SYNC_VERTEX_ATTRIBUTE_INPUT_VERTEX_ATTRIBUTE_READ",
     },
     {
         "SYNC-HAZARD-WRITE-AFTER-READ",
-        "vkCmdCopyImageToBuffer: Hazard WRITE_AFTER_READ for dstBuffer VkBuffer",
+        "Hazard WRITE_AFTER_READ for dstBuffer VkBuffer",
         "Access info (usage: SYNC_COPY_TRANSFER_WRITE, prior_usage: "
         "SYNC_VERTEX_ATTRIBUTE_INPUT_VERTEX_ATTRIBUTE_READ",
     },
     {
         "SYNC-HAZARD-WRITE-AFTER-READ",
-        "vkCmdCopyBuffer: Hazard WRITE_AFTER_READ for dstBuffer VkBuffer",
-        "Access info (usage: SYNC_COPY_TRANSFER_WRITE, prior_usage: "
-        "SYNC_VERTEX_ATTRIBUTE_INPUT_VERTEX_ATTRIBUTE_READ",
-    },
-    {
-        "SYNC-HAZARD-WRITE-AFTER-READ",
-        "vkCmdDispatch: Hazard WRITE_AFTER_READ for VkBuffer",
+        "Hazard WRITE_AFTER_READ for VkBuffer",
         "Access info (usage: SYNC_COMPUTE_SHADER_SHADER_STORAGE_WRITE, prior_usage: "
         "SYNC_VERTEX_ATTRIBUTE_INPUT_VERTEX_ATTRIBUTE_READ",
     },
@@ -386,12 +370,12 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
     // http://anglebug.com/8054 (VkNonDispatchableHandle on x86 bots)
     {
         "SYNC-HAZARD-READ-AFTER-WRITE",
-        "vkCmdDraw: Hazard READ_AFTER_WRITE for VkBuffer",
+        "Hazard READ_AFTER_WRITE for VkBuffer",
         "usage: SYNC_VERTEX_SHADER_SHADER_STORAGE_READ",
     },
     {
         "SYNC-HAZARD-READ-AFTER-WRITE",
-        "vkCmdDraw: Hazard READ_AFTER_WRITE for VkNonDispatchableHandle",
+        "Hazard READ_AFTER_WRITE for VkNonDispatchableHandle",
         "usage: SYNC_VERTEX_SHADER_SHADER_STORAGE_READ",
     },
     // From: TraceTest.manhattan_31 with SwiftShader. These failures appears related to
@@ -463,7 +447,7 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
      "imageLayout: VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL",
      "usage: SYNC_FRAGMENT_SHADER_SHADER_"},
     // From: TraceTest.diablo_immortal http://anglebug.com/7837
-    {"SYNC-HAZARD-WRITE-AFTER-WRITE", "vkCmdDrawIndexed: Hazard WRITE_AFTER_WRITE for VkImageView ",
+    {"SYNC-HAZARD-WRITE-AFTER-WRITE", "Hazard WRITE_AFTER_WRITE for VkImageView ",
      "Subpass #0, and pColorAttachments #0. Access info (usage: "
      "SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_WRITE, prior_usage: "
      "SYNC_IMAGE_LAYOUT_TRANSITION, write_barriers: 0, command: vkCmdEndRenderPass"},
