@@ -121,9 +121,7 @@ class ProgramExecutableVk : public ProgramExecutableImpl
     void destroy(const gl::Context *context) override;
 
     void save(ContextVk *contextVk, bool isSeparable, gl::BinaryOutputStream *stream);
-    std::unique_ptr<rx::LinkEvent> load(ContextVk *contextVk,
-                                        bool isSeparable,
-                                        gl::BinaryInputStream *stream);
+    angle::Result load(ContextVk *contextVk, bool isSeparable, gl::BinaryInputStream *stream);
 
     void clearVariableInfoMap();
 

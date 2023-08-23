@@ -362,6 +362,7 @@ ProgramExecutableVk::ProgramExecutableVk(const gl::ProgramExecutable *executable
       mUniformBufferDescriptorType(VK_DESCRIPTOR_TYPE_MAX_ENUM),
       mDynamicUniformDescriptorOffsets{}
 {
+    mDescriptorSets.fill(VK_NULL_HANDLE);
     for (std::shared_ptr<DefaultUniformBlockVk> &defaultBlock : mDefaultUniformBlocks)
     {
         defaultBlock = std::make_shared<DefaultUniformBlockVk>();
@@ -499,9 +500,9 @@ angle::Result ProgramExecutableVk::ensurePipelineCacheInitialized(vk::Context *c
     return angle::Result::Continue;
 }
 
-std::unique_ptr<rx::LinkEvent> ProgramExecutableVk::load(ContextVk *contextVk,
-                                                         bool isSeparable,
-                                                         gl::BinaryInputStream *stream)
+angle::Result ProgramExecutableVk::load(ContextVk *contextVk,
+                                        bool isSeparable,
+                                        gl::BinaryInputStream *stream)
 {
     mVariableInfoMap.load(stream);
     mOriginalShaderInfo.load(stream);
@@ -528,33 +529,19 @@ std::unique_ptr<rx::LinkEvent> ProgramExecutableVk::load(ContextVk *contextVk,
             stream->readBool(&compressedData);
             stream->readBytes(compressedPipelineData.data(), compressedPipelineDataSize);
             // Initialize the pipeline cache based on cached data.
-            angle::Result status =
-                initializePipelineCache(contextVk, compressedData, compressedPipelineData);
-            if (status != angle::Result::Continue)
-            {
-                return std::make_unique<LinkEventDone>(status);
-            }
+            ANGLE_TRY(initializePipelineCache(contextVk, compressedData, compressedPipelineData));
         }
     }
 
     // Initialize and resize the mDefaultUniformBlocks' memory
-    angle::Result status = resizeUniformBlockMemory(contextVk, requiredBufferSize);
-    if (status != angle::Result::Continue)
-    {
-        return std::make_unique<LinkEventDone>(status);
-    }
+    ANGLE_TRY(resizeUniformBlockMemory(contextVk, requiredBufferSize));
 
     resetLayout(contextVk);
-    status = createPipelineLayout(contextVk, &contextVk->getPipelineLayoutCache(),
-                                  &contextVk->getDescriptorSetLayoutCache(), nullptr);
-    if (status != angle::Result::Continue)
-    {
-        return std::make_unique<LinkEventDone>(status);
-    }
+    ANGLE_TRY(createPipelineLayout(contextVk, &contextVk->getPipelineLayoutCache(),
+                                   &contextVk->getDescriptorSetLayoutCache(), nullptr));
 
-    status = initializeDescriptorPools(contextVk, &contextVk->getDescriptorSetLayoutCache(),
-                                       &contextVk->getMetaDescriptorPools());
-    return std::make_unique<LinkEventDone>(status);
+    return initializeDescriptorPools(contextVk, &contextVk->getDescriptorSetLayoutCache(),
+                                     &contextVk->getMetaDescriptorPools());
 }
 
 void ProgramExecutableVk::save(ContextVk *contextVk,

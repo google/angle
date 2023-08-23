@@ -318,7 +318,15 @@ DefaultUniformBlockMtl::~DefaultUniformBlockMtl() = default;
 
 ProgramExecutableMtl::ProgramExecutableMtl(const gl::ProgramExecutable *executable)
     : ProgramExecutableImpl(executable), mProgramHasFlatAttributes(false), mShadowCompareModes{}
-{}
+{
+    mCurrentShaderVariants.fill(nullptr);
+
+    for (gl::ShaderType shaderType : gl::AllShaderTypes())
+    {
+        mMslShaderTranslateInfo[shaderType].reset();
+    }
+    mMslXfbOnlyVertexShaderInfo.reset();
+}
 
 ProgramExecutableMtl::~ProgramExecutableMtl() {}
 

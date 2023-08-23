@@ -416,7 +416,9 @@ ProgramExecutableD3D::ProgramExecutableD3D(const gl::ProgramExecutable *executab
       mUsedReadonlyImageRange({}),
       mUsedAtomicCounterRange({}),
       mSerial(issueSerial())
-{}
+{
+    reset();
+}
 
 ProgramExecutableD3D::~ProgramExecutableD3D() {}
 
@@ -706,9 +708,9 @@ bool ProgramExecutableD3D::load(const gl::Context *context,
 
 angle::Result ProgramExecutableD3D::loadBinaryShaderExecutables(d3d::Context *contextD3D,
                                                                 RendererD3D *renderer,
-                                                                gl::BinaryInputStream *stream,
-                                                                gl::InfoLog &infoLog)
+                                                                gl::BinaryInputStream *stream)
 {
+    gl::InfoLog &infoLog        = mExecutable->getInfoLog();
     const unsigned char *binary = reinterpret_cast<const unsigned char *>(stream->data());
 
     bool separateAttribs = mExecutable->getTransformFeedbackBufferMode() == GL_SEPARATE_ATTRIBS;

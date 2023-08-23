@@ -700,6 +700,9 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     // GL_KHR_parallel_shader_compile
     std::shared_ptr<angle::WorkerThreadPool> getShaderCompileThreadPool() const;
 
+    // Single-threaded pool; runs everything instantly
+    std::shared_ptr<angle::WorkerThreadPool> getSingleThreadPool() const;
+
     // Generic multithread pool.
     std::shared_ptr<angle::WorkerThreadPool> getWorkerThreadPool() const;
 

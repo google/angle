@@ -9374,6 +9374,11 @@ std::shared_ptr<angle::WorkerThreadPool> Context::getShaderCompileThreadPool() c
     return mDisplay->getSingleThreadPool();
 }
 
+std::shared_ptr<angle::WorkerThreadPool> Context::getSingleThreadPool() const
+{
+    return mDisplay->getSingleThreadPool();
+}
+
 std::shared_ptr<angle::WorkerThreadPool> Context::getWorkerThreadPool() const
 {
     return mDisplay->getMultiThreadPool();

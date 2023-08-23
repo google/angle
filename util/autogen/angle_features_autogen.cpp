@@ -195,6 +195,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::LimitMaxMSAASamplesTo4, "limitMaxMSAASamplesTo4"},
     {Feature::LimitSampleCountTo2, "limitSampleCountTo2"},
     {Feature::LimitWebglMaxTextureSizeTo4096, "limitWebglMaxTextureSizeTo4096"},
+    {Feature::LinkJobIsNotThreadSafe, "linkJobIsNotThreadSafe"},
     {Feature::LoadMetalShadersFromBlobCache, "loadMetalShadersFromBlobCache"},
     {Feature::LogMemoryReportCallbacks, "logMemoryReportCallbacks"},
     {Feature::LogMemoryReportStats, "logMemoryReportStats"},

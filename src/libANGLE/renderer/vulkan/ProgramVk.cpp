@@ -48,34 +48,35 @@ class Std140BlockLayoutEncoderFactory : public gl::CustomBlockLayoutEncoderFacto
     sh::BlockLayoutEncoder *makeEncoder() override { return new sh::Std140BlockEncoder(); }
 };
 
-class LinkTaskVk final : public vk::Context, public angle::Closure
+class LinkTaskVk final : public vk::Context, public LinkTask
 {
   public:
     LinkTaskVk(RendererVk *renderer,
                PipelineLayoutCache &pipelineLayoutCache,
                DescriptorSetLayoutCache &descriptorSetLayoutCache,
                const gl::ProgramState &state,
-               gl::ProgramMergedVaryings &&mergedVaryings,
-               const gl::ProgramLinkedResources &resources,
                bool isGLES1,
                vk::PipelineRobustness pipelineRobustness,
                vk::PipelineProtectedAccess pipelineProtectedAccess)
         : vk::Context(renderer),
           mState(state),
           mExecutable(&mState.getExecutable()),
-          mMergedVaryings(std::move(mergedVaryings)),
-          mResources(resources),
           mIsGLES1(isGLES1),
           mPipelineRobustness(pipelineRobustness),
           mPipelineProtectedAccess(pipelineProtectedAccess),
           mPipelineLayoutCache(pipelineLayoutCache),
           mDescriptorSetLayoutCache(descriptorSetLayoutCache)
     {}
+    ~LinkTaskVk() override = default;
 
-    void operator()() override
+    std::vector<std::shared_ptr<LinkSubTask>> link(
+        const gl::ProgramLinkedResources &resources,
+        const gl::ProgramMergedVaryings &mergedVaryings) override
     {
-        angle::Result result = linkImpl();
+        angle::Result result = linkImpl(resources, mergedVaryings);
         ASSERT((result == angle::Result::Continue) == (mErrorCode == VK_SUCCESS));
+
+        return {};
     }
 
     void handleError(VkResult result,
@@ -89,11 +90,12 @@ class LinkTaskVk final : public vk::Context, public angle::Closure
         mErrorLine     = line;
     }
 
-    angle::Result getResult(ContextVk *contextVk)
+    angle::Result getResult(const gl::Context *context, gl::InfoLog &infoLog) override
     {
+        ContextVk *contextVk              = vk::GetImpl(context);
         ProgramExecutableVk *executableVk = vk::GetImpl(mExecutable);
 
-        // Clean up garbage first, it's not no matter what may fail below.
+        // Clean up garbage first, it's done no matter what may fail below.
         mCompatibleRenderPass.destroy(contextVk->getDevice());
 
         ANGLE_TRY(executableVk->initializeDescriptorPools(contextVk,
@@ -136,9 +138,10 @@ class LinkTaskVk final : public vk::Context, public angle::Closure
     }
 
   private:
-    angle::Result linkImpl();
+    angle::Result linkImpl(const gl::ProgramLinkedResources &resources,
+                           const gl::ProgramMergedVaryings &mergedVaryings);
 
-    void linkResources();
+    void linkResources(const gl::ProgramLinkedResources &resources);
     angle::Result initDefaultUniformBlocks();
     void generateUniformLayoutMapping(gl::ShaderMap<sh::BlockLayoutMap> *layoutMapOut,
                                       gl::ShaderMap<size_t> *requiredBufferSizeOut);
@@ -148,8 +151,6 @@ class LinkTaskVk final : public vk::Context, public angle::Closure
     // direclty access the state from a potentially parallel job.
     const gl::ProgramState &mState;
     const gl::ProgramExecutable *mExecutable;
-    const gl::ProgramMergedVaryings mMergedVaryings;
-    const gl::ProgramLinkedResources &mResources;
     const bool mIsGLES1;
     const vk::PipelineRobustness mPipelineRobustness;
     const vk::PipelineProtectedAccess mPipelineProtectedAccess;
@@ -168,19 +169,20 @@ class LinkTaskVk final : public vk::Context, public angle::Closure
     unsigned int mErrorLine    = 0;
 };
 
-angle::Result LinkTaskVk::linkImpl()
+angle::Result LinkTaskVk::linkImpl(const gl::ProgramLinkedResources &resources,
+                                   const gl::ProgramMergedVaryings &mergedVaryings)
 {
-    ANGLE_TRACE_EVENT0("gpu.angle", "ProgramVk::LinkTaskVk::run");
+    ANGLE_TRACE_EVENT0("gpu.angle", "LinkTaskVk::linkImpl");
     ProgramExecutableVk *executableVk = vk::GetImpl(mExecutable);
 
     // Link resources before calling GetShaderSource to make sure they are ready for the set/binding
     // assignment done in that function.
-    linkResources();
+    linkResources(resources);
 
     executableVk->clearVariableInfoMap();
 
     // Gather variable info and compiled SPIR-V binaries.
-    executableVk->assignAllSpvLocations(this, mState, mResources);
+    executableVk->assignAllSpvLocations(this, mState, resources);
 
     gl::ShaderMap<const angle::spirv::Blob *> spirvBlobs;
     SpvGetShaderSpirvCode(mState, &spirvBlobs);
@@ -188,7 +190,7 @@ angle::Result LinkTaskVk::linkImpl()
     if (getFeatures().varyingsRequireMatchingPrecisionInSpirv.enabled &&
         getFeatures().enablePrecisionQualifiers.enabled)
     {
-        executableVk->resolvePrecisionMismatch(mMergedVaryings);
+        executableVk->resolvePrecisionMismatch(mergedVaryings);
     }
 
     // Compile the shaders.
@@ -219,12 +221,12 @@ angle::Result LinkTaskVk::linkImpl()
     return angle::Result::Continue;
 }
 
-void LinkTaskVk::linkResources()
+void LinkTaskVk::linkResources(const gl::ProgramLinkedResources &resources)
 {
     Std140BlockLayoutEncoderFactory std140EncoderFactory;
     gl::ProgramLinkedResourcesLinker linker(&std140EncoderFactory);
 
-    linker.linkResources(mState, mResources);
+    linker.linkResources(mState, resources);
 }
 
 angle::Result LinkTaskVk::initDefaultUniformBlocks()
@@ -334,33 +336,6 @@ void LinkTaskVk::initDefaultUniformLayoutMapping(gl::ShaderMap<sh::BlockLayoutMa
     }
 }
 
-// The event for parallelized/lockless link.
-class LinkEventVulkan final : public LinkEvent
-{
-  public:
-    LinkEventVulkan(std::shared_ptr<angle::WorkerThreadPool> workerPool,
-                    std::shared_ptr<LinkTaskVk> linkTask)
-        : mLinkTask(linkTask),
-          mWaitableEvent(
-              std::shared_ptr<angle::WaitableEvent>(workerPool->postWorkerTask(mLinkTask)))
-    {}
-
-    angle::Result wait(const gl::Context *context) override
-    {
-        ANGLE_TRACE_EVENT0("gpu.angle", "ProgramVK::LinkEvent::wait");
-
-        mWaitableEvent->wait();
-
-        return mLinkTask->getResult(vk::GetImpl(context));
-    }
-
-    bool isLinking() override { return !mWaitableEvent->isReady(); }
-
-  private:
-    std::shared_ptr<LinkTaskVk> mLinkTask;
-    std::shared_ptr<angle::WaitableEvent> mWaitableEvent;
-};
-
 template <typename T>
 void UpdateDefaultUniformBlock(GLsizei count,
                                uint32_t arrayIndex,
@@ -430,20 +405,17 @@ ProgramVk::~ProgramVk() = default;
 void ProgramVk::destroy(const gl::Context *context)
 {
     ContextVk *contextVk = vk::GetImpl(context);
-    reset(contextVk);
-}
-
-void ProgramVk::reset(ContextVk *contextVk)
-{
     getExecutable()->reset(contextVk);
 }
 
-std::unique_ptr<rx::LinkEvent> ProgramVk::load(const gl::Context *context,
-                                               gl::BinaryInputStream *stream)
+angle::Result ProgramVk::load(const gl::Context *context,
+                              gl::BinaryInputStream *stream,
+                              std::shared_ptr<LinkTask> *loadTaskOut)
 {
     ContextVk *contextVk = vk::GetImpl(context);
 
-    reset(contextVk);
+    // TODO: parallelize program load.  http://anglebug.com/8297
+    *loadTaskOut = {};
 
     return getExecutable()->load(contextVk, mState.isSeparable(), stream);
 }
@@ -464,21 +436,16 @@ void ProgramVk::setSeparable(bool separable)
     // Nothing to do here yet.
 }
 
-std::unique_ptr<LinkEvent> ProgramVk::link(const gl::Context *context,
-                                           const gl::ProgramLinkedResources &resources,
-                                           gl::ProgramMergedVaryings &&mergedVaryings)
+angle::Result ProgramVk::link(const gl::Context *context, std::shared_ptr<LinkTask> *linkTaskOut)
 {
-    ANGLE_TRACE_EVENT0("gpu.angle", "ProgramVk::link");
-
     ContextVk *contextVk = vk::GetImpl(context);
-    reset(contextVk);
 
-    std::shared_ptr<LinkTaskVk> linkTask = std::make_shared<LinkTaskVk>(
+    *linkTaskOut = std::shared_ptr<LinkTask>(new LinkTaskVk(
         contextVk->getRenderer(), contextVk->getPipelineLayoutCache(),
-        contextVk->getDescriptorSetLayoutCache(), mState, std::move(mergedVaryings), resources,
-        context->getState().isGLES1(), contextVk->pipelineRobustness(),
-        contextVk->pipelineProtectedAccess());
-    return std::make_unique<LinkEventVulkan>(context->getShaderCompileThreadPool(), linkTask);
+        contextVk->getDescriptorSetLayoutCache(), mState, context->getState().isGLES1(),
+        contextVk->pipelineRobustness(), contextVk->pipelineProtectedAccess()));
+
+    return angle::Result::Continue;
 }
 
 GLboolean ProgramVk::validate(const gl::Caps &caps)

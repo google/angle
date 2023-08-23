@@ -35,6 +35,7 @@
 #include "libANGLE/renderer/ContextImpl.h"
 #include "libANGLE/renderer/GLImplFactory.h"
 #include "libANGLE/renderer/ProgramImpl.h"
+#include "libANGLE/trace.h"
 #include "platform/PlatformMethods.h"
 #include "platform/autogen/FrontendFeatures_autogen.h"
 
@@ -372,6 +373,34 @@ const std::string GetResourceName(const T &resource)
 
     return resourceName;
 }
+
+// Provides a mechanism to access the result of asynchronous linking.
+class LinkEvent : angle::NonCopyable
+{
+  public:
+    virtual ~LinkEvent() {}
+
+    // Please be aware that these methods may be called under a gl::Context other
+    // than the one where the LinkEvent was created.
+    //
+    // Waits until the linking is actually done. Returns true if the linking
+    // succeeded, false otherwise.
+    virtual angle::Result wait(const gl::Context *context) = 0;
+    // Peeks whether the linking is still ongoing.
+    virtual bool isLinking() = 0;
+};
+
+// Wraps an already done linking.
+class LinkEventDone final : public LinkEvent
+{
+  public:
+    LinkEventDone(angle::Result result) : mResult(result) {}
+    angle::Result wait(const gl::Context *context) override { return mResult; }
+    bool isLinking() override { return false; }
+
+  private:
+    angle::Result mResult;
+};
 }  // anonymous namespace
 
 const char *GetLinkMismatchErrorString(LinkMismatchError linkError)
@@ -515,7 +544,7 @@ struct Program::LinkingState
     LinkingVariables linkingVariables;
     ProgramLinkedResources resources;
     egl::BlobCache::Key programHash;
-    std::unique_ptr<rx::LinkEvent> linkEvent;
+    std::unique_ptr<LinkEvent> linkEvent;
     bool linkingFromBinary;
 };
 
@@ -976,6 +1005,182 @@ ShaderType ProgramState::getAttachedTransformFeedbackStage() const
     return ShaderType::Vertex;
 }
 
+// The common portion of parallel link and load jobs
+class Program::MainLinkLoadTask : public angle::Closure
+{
+  public:
+    MainLinkLoadTask(const std::shared_ptr<angle::WorkerThreadPool> &subTaskWorkerPool,
+                     ProgramState *state,
+                     std::shared_ptr<rx::LinkTask> &&linkTask)
+        : mSubTaskWorkerPool(subTaskWorkerPool), mState(*state), mLinkTask(std::move(linkTask))
+    {
+        ASSERT(subTaskWorkerPool.get());
+    }
+    ~MainLinkLoadTask() override = default;
+
+    angle::Result getResult(const Context *context)
+    {
+        InfoLog &infoLog = mState.getExecutable().getInfoLog();
+
+        ANGLE_TRY(mResult);
+        ANGLE_TRY(mLinkTask->getResult(context, infoLog));
+
+        for (const std::shared_ptr<rx::LinkSubTask> &task : mSubTasks)
+        {
+            ANGLE_TRY(task->getResult(context, infoLog));
+        }
+
+        return angle::Result::Continue;
+    }
+
+    void waitSubTasks() { angle::WaitableEvent::WaitMany(&mSubTaskWaitableEvents); }
+
+    bool areSubTasksLinking()
+    {
+        return !mLinkTask->isLinkingInternally() &&
+               !angle::WaitableEvent::AllReady(&mSubTaskWaitableEvents);
+    }
+
+  protected:
+    void scheduleSubTasks(const std::vector<std::shared_ptr<rx::LinkSubTask>> &subTasks)
+    {
+        mSubTaskWaitableEvents.reserve(subTasks.size());
+        for (const std::shared_ptr<rx::LinkSubTask> &subTask : subTasks)
+        {
+            mSubTaskWaitableEvents.push_back(mSubTaskWorkerPool->postWorkerTask(subTask));
+        }
+    }
+
+    std::shared_ptr<angle::WorkerThreadPool> mSubTaskWorkerPool;
+    ProgramState &mState;
+    std::shared_ptr<rx::LinkTask> mLinkTask;
+
+    // Subtask wait events
+    std::vector<std::shared_ptr<rx::LinkSubTask>> mSubTasks;
+    std::vector<std::shared_ptr<angle::WaitableEvent>> mSubTaskWaitableEvents;
+
+    // The result of the front-end portion of the link.  The backend's result is retrieved via
+    // mLinkTask->getResult().  The subtask results are retrieved via mSubTasks similarly.
+    angle::Result mResult;
+};
+
+class Program::MainLinkTask final : public Program::MainLinkLoadTask
+{
+  public:
+    MainLinkTask(const std::shared_ptr<angle::WorkerThreadPool> &subTaskWorkerPool,
+                 const Caps &caps,
+                 const Limitations &limitations,
+                 const Version &clientVersion,
+                 bool isWebGL,
+                 Program *program,
+                 ProgramState *state,
+                 LinkingVariables *linkingVariables,
+                 ProgramLinkedResources *resources,
+                 std::shared_ptr<rx::LinkTask> &&linkTask)
+        : MainLinkLoadTask(subTaskWorkerPool, state, std::move(linkTask)),
+          mCaps(caps),
+          mLimitations(limitations),
+          mClientVersion(clientVersion),
+          mIsWebGL(isWebGL),
+          mProgram(program),
+          mLinkingVariables(linkingVariables),
+          mResources(resources)
+    {}
+    ~MainLinkTask() override = default;
+
+    void operator()() override { mResult = linkImpl(); }
+
+  private:
+    angle::Result linkImpl();
+
+    // State needed for link
+    const Caps &mCaps;
+    const Limitations &mLimitations;
+    const Version mClientVersion;
+    const bool mIsWebGL;
+    Program *mProgram;
+    LinkingVariables *mLinkingVariables;
+    ProgramLinkedResources *mResources;
+};
+
+class Program::MainLoadTask final : public Program::MainLinkLoadTask
+{
+  public:
+    MainLoadTask(const std::shared_ptr<angle::WorkerThreadPool> &subTaskWorkerPool,
+                 Program *program,
+                 ProgramState *state,
+                 std::shared_ptr<rx::LinkTask> &&loadTask)
+        : MainLinkLoadTask(subTaskWorkerPool, state, std::move(loadTask))
+    {}
+    ~MainLoadTask() override = default;
+
+    void operator()() override { mResult = loadImpl(); }
+
+  private:
+    angle::Result loadImpl();
+};
+
+class Program::MainLinkLoadEvent final : public LinkEvent
+{
+  public:
+    MainLinkLoadEvent(const std::shared_ptr<MainLinkLoadTask> &linkTask,
+                      const std::shared_ptr<angle::WaitableEvent> &waitEvent)
+        : mLinkTask(linkTask), mWaitableEvent(waitEvent)
+    {}
+    ~MainLinkLoadEvent() override {}
+
+    angle::Result wait(const gl::Context *context) override
+    {
+        ANGLE_TRACE_EVENT0("gpu.angle", "Program::MainLinkLoadEvent::wait");
+
+        mWaitableEvent->wait();
+        mLinkTask->waitSubTasks();
+
+        return mLinkTask->getResult(context);
+    }
+    bool isLinking() override
+    {
+        return !mWaitableEvent->isReady() || mLinkTask->areSubTasksLinking();
+    }
+
+  private:
+    std::shared_ptr<MainLinkLoadTask> mLinkTask;
+    std::shared_ptr<angle::WaitableEvent> mWaitableEvent;
+};
+
+angle::Result Program::MainLinkTask::linkImpl()
+{
+    ProgramMergedVaryings mergedVaryings;
+
+    // Do the front-end portion of the link.
+    ANGLE_TRY(mProgram->linkJobImpl(mCaps, mLimitations, mClientVersion, mIsWebGL,
+                                    mLinkingVariables, mResources, &mergedVaryings));
+
+    // Next, do the backend portion of the link.  If there are any subtasks to be scheduled, they
+    // are collected now.
+    std::vector<std::shared_ptr<rx::LinkSubTask>> subTasks =
+        mLinkTask->link(*mResources, mergedVaryings);
+
+    // Must be after backend's link to avoid misleading the linker about input/output variables.
+    mState.updateProgramInterfaceInputs();
+    mState.updateProgramInterfaceOutputs();
+
+    // Schedule the subtasks
+    scheduleSubTasks(subTasks);
+
+    return angle::Result::Continue;
+}
+
+angle::Result Program::MainLoadTask::loadImpl()
+{
+    std::vector<std::shared_ptr<rx::LinkSubTask>> subTasks = mLinkTask->load();
+
+    // Schedule the subtasks
+    scheduleSubTasks(subTasks);
+
+    return angle::Result::Continue;
+}
+
 Program::Program(rx::GLImplFactory *factory, ShaderProgramManager *manager, ShaderProgramID handle)
     : mSerial(factory->generateSerial()),
       mState(factory),
@@ -1111,6 +1316,8 @@ void Program::bindFragmentOutputIndex(GLuint index, const char *name)
 
 void Program::makeNewExecutable(const Context *context)
 {
+    ASSERT(!mLinkingState);
+
     // Unlink the program, but do not clear the validation-related caching yet, since we can still
     // use the previously linked program if linking the shaders fails.
     mLinked = false;
@@ -1119,7 +1326,7 @@ void Program::makeNewExecutable(const Context *context)
 
     // By default, set the link event as failing.  If link succeeds, it will be replaced by the
     // appropriate event.
-    mLinkingState->linkEvent = std::make_unique<rx::LinkEventDone>(angle::Result::Stop);
+    mLinkingState->linkEvent = std::make_unique<LinkEventDone>(angle::Result::Stop);
 
     InstallExecutable(
         context,
@@ -1191,7 +1398,7 @@ angle::Result Program::linkImpl(const Context *context)
     mState.mInfoLog.reset();
 
     // Validate we have properly attached shaders before checking the cache.
-    if (!linkValidateShaders(context))
+    if (!linkValidateShaders())
     {
         return angle::Result::Continue;
     }
@@ -1224,41 +1431,76 @@ angle::Result Program::linkImpl(const Context *context)
     const Version &clientVersion   = context->getClientVersion();
     const bool isWebGL             = context->isWebGL();
 
+    // Ask the backend to prepare the link task.
+    std::shared_ptr<rx::LinkTask> linkTask;
+    ANGLE_TRY(mProgram->link(context, &linkTask));
+
+    std::unique_ptr<LinkingState> linkingState = std::make_unique<LinkingState>();
+
+    // Prepare the main link job
+    std::shared_ptr<MainLinkLoadTask> mainLinkTask(new MainLinkTask(
+        context->getShaderCompileThreadPool(), caps, limitations, clientVersion, isWebGL, this,
+        &mState, &linkingState->linkingVariables, &linkingState->resources, std::move(linkTask)));
+
+    // While the subtasks are currently always thread-safe, the main task is not safe on all
+    // backends.  A front-end feature selects whether the single-threaded pool must be used.
+    std::shared_ptr<angle::WorkerThreadPool> mainLinkWorkerPool =
+        context->getFrontendFeatures().linkJobIsNotThreadSafe.enabled
+            ? context->getSingleThreadPool()
+            : context->getShaderCompileThreadPool();
+
+    // TODO: add the possibility to perform this in an unlocked tail call.  http://anglebug.com/8297
+    std::shared_ptr<angle::WaitableEvent> mainLinkEvent =
+        mainLinkWorkerPool->postWorkerTask(mainLinkTask);
+
+    mLinkingState                    = std::move(linkingState);
+    mLinkingState->linkingFromBinary = false;
+    mLinkingState->programHash       = programHash;
+    mLinkingState->linkEvent = std::make_unique<MainLinkLoadEvent>(mainLinkTask, mainLinkEvent);
+
+    return angle::Result::Continue;
+}
+
+angle::Result Program::linkJobImpl(const Caps &caps,
+                                   const Limitations &limitations,
+                                   const Version &clientVersion,
+                                   bool isWebGL,
+                                   LinkingVariables *linkingVariables,
+                                   ProgramLinkedResources *resources,
+                                   ProgramMergedVaryings *mergedVaryingsOut)
+{
     // Cache load failed, fall through to normal linking.
     unlink();
 
     // Re-link shaders after the unlink call.
     linkShaders();
 
-    ProgramMergedVaryings mergedVaryings;
-    LinkingVariables &linkingVariables = mLinkingState->linkingVariables;
-    ProgramLinkedResources &resources  = mLinkingState->resources;
-
-    linkingVariables.initForProgram(mState);
-    resources.init(&mState.mExecutable->mUniformBlocks, &mState.mExecutable->mUniforms,
-                   &mState.mExecutable->mUniformNames, &mState.mExecutable->mUniformMappedNames,
-                   &mState.mExecutable->mShaderStorageBlocks, &mState.mExecutable->mBufferVariables,
-                   &mState.mExecutable->mAtomicCounterBuffers);
+    linkingVariables->initForProgram(mState);
+    resources->init(&mState.mExecutable->mUniformBlocks, &mState.mExecutable->mUniforms,
+                    &mState.mExecutable->mUniformNames, &mState.mExecutable->mUniformMappedNames,
+                    &mState.mExecutable->mShaderStorageBlocks,
+                    &mState.mExecutable->mBufferVariables,
+                    &mState.mExecutable->mAtomicCounterBuffers);
 
     updateLinkedShaderStages();
 
-    InitUniformBlockLinker(mState, &resources.uniformBlockLinker);
-    InitShaderStorageBlockLinker(mState, &resources.shaderStorageBlockLinker);
+    InitUniformBlockLinker(mState, &resources->uniformBlockLinker);
+    InitShaderStorageBlockLinker(mState, &resources->shaderStorageBlockLinker);
 
     if (mState.mAttachedShaders[ShaderType::Compute])
     {
         GLuint combinedImageUniforms = 0;
-        if (!linkUniforms(caps, clientVersion, &resources.unusedUniforms, &combinedImageUniforms))
+        if (!linkUniforms(caps, clientVersion, &resources->unusedUniforms, &combinedImageUniforms))
         {
-            return angle::Result::Continue;
+            return angle::Result::Stop;
         }
 
         GLuint combinedShaderStorageBlocks = 0u;
         if (!LinkValidateProgramInterfaceBlocks(
                 caps, clientVersion, isWebGL, mState.mExecutable->getLinkedShaderStages(),
-                resources, mState.mInfoLog, &combinedShaderStorageBlocks))
+                *resources, mState.mInfoLog, &combinedShaderStorageBlocks))
         {
-            return angle::Result::Continue;
+            return angle::Result::Stop;
         }
 
         // [OpenGL ES 3.1] Chapter 8.22 Page 203:
@@ -1274,38 +1516,38 @@ angle::Result Program::linkImpl(const Context *context)
                    "and active fragment shader outputs exceeds "
                    "MAX_COMBINED_SHADER_OUTPUT_RESOURCES ("
                 << caps.maxCombinedShaderOutputResources << ")";
-            return angle::Result::Continue;
+            return angle::Result::Stop;
         }
     }
     else
     {
         if (!linkAttributes(caps, limitations, isWebGL))
         {
-            return angle::Result::Continue;
+            return angle::Result::Stop;
         }
 
         if (!linkVaryings())
         {
-            return angle::Result::Continue;
+            return angle::Result::Stop;
         }
 
         GLuint combinedImageUniforms = 0;
-        if (!linkUniforms(caps, clientVersion, &resources.unusedUniforms, &combinedImageUniforms))
+        if (!linkUniforms(caps, clientVersion, &resources->unusedUniforms, &combinedImageUniforms))
         {
-            return angle::Result::Continue;
+            return angle::Result::Stop;
         }
 
         GLuint combinedShaderStorageBlocks = 0u;
         if (!LinkValidateProgramInterfaceBlocks(
                 caps, clientVersion, isWebGL, mState.mExecutable->getLinkedShaderStages(),
-                resources, mState.mInfoLog, &combinedShaderStorageBlocks))
+                *resources, mState.mInfoLog, &combinedShaderStorageBlocks))
         {
-            return angle::Result::Continue;
+            return angle::Result::Stop;
         }
 
-        if (!LinkValidateProgramGlobalNames(mState.mInfoLog, getExecutable(), linkingVariables))
+        if (!LinkValidateProgramGlobalNames(mState.mInfoLog, getExecutable(), *linkingVariables))
         {
-            return angle::Result::Continue;
+            return angle::Result::Stop;
         }
 
         const SharedCompiledShaderState &vertexShader = mState.mAttachedShaders[ShaderType::Vertex];
@@ -1325,7 +1567,7 @@ angle::Result Program::linkImpl(const Context *context)
                     fragmentShader->activeOutputVariables, fragmentShader->shaderVersion,
                     mState.mFragmentOutputLocations, mState.mFragmentOutputIndexes))
             {
-                return angle::Result::Continue;
+                return angle::Result::Stop;
             }
 
             mState.mExecutable->mPODStruct.hasDiscard = fragmentShader->hasDiscard;
@@ -1336,24 +1578,16 @@ angle::Result Program::linkImpl(const Context *context)
             mState.mExecutable->mPODStruct.specConstUsageBits |= fragmentShader->specConstUsageBits;
         }
 
-        mergedVaryings = GetMergedVaryingsFromLinkingVariables(linkingVariables);
+        *mergedVaryingsOut = GetMergedVaryingsFromLinkingVariables(*linkingVariables);
         if (!mState.mExecutable->linkMergedVaryings(caps, limitations, clientVersion, isWebGL,
-                                                    mergedVaryings, linkingVariables, isSeparable(),
-                                                    &resources.varyingPacking))
+                                                    *mergedVaryingsOut, *linkingVariables,
+                                                    isSeparable(), &resources->varyingPacking))
         {
-            return angle::Result::Continue;
+            return angle::Result::Stop;
         }
     }
 
     mState.mExecutable->saveLinkedStateInfo(mState);
-
-    mLinkingState->linkingFromBinary = false;
-    mLinkingState->programHash       = programHash;
-    mLinkingState->linkEvent = mProgram->link(context, resources, std::move(mergedVaryings));
-
-    // Must be after mProgram->link() to avoid misleading the linker about output variables.
-    mState.updateProgramInterfaceInputs();
-    mState.updateProgramInterfaceOutputs();
 
     return angle::Result::Continue;
 }
@@ -1556,8 +1790,36 @@ angle::Result Program::loadBinary(const Context *context,
         mDirtyBits.set(uniformBlockIndex);
     }
 
+    // If load returns incomplete, we know for sure that the binary is not compatible with the
+    // backend.  The loaded binary could have been read from the on-disk shader cache and be
+    // corrupted or serialized with different revision and subsystem id than the currently loaded
+    // backend.  Returning 'Incomplete' to the caller results in link happening using the original
+    // shader sources.
+    std::shared_ptr<rx::LinkTask> loadTask;
+    angle::Result result = mProgram->load(context, &stream, &loadTask);
+    if (result == angle::Result::Incomplete)
+    {
+        return angle::Result::Incomplete;
+    }
+    ANGLE_TRY(result);
+
+    std::unique_ptr<LinkEvent> loadEvent;
+    if (loadTask)
+    {
+        std::shared_ptr<MainLinkLoadTask> mainLoadTask(new MainLoadTask(
+            context->getShaderCompileThreadPool(), this, &mState, std::move(loadTask)));
+
+        std::shared_ptr<angle::WaitableEvent> mainLoadEvent =
+            context->getShaderCompileThreadPool()->postWorkerTask(mainLoadTask);
+        loadEvent = std::make_unique<MainLinkLoadEvent>(mainLoadTask, mainLoadEvent);
+    }
+    else
+    {
+        loadEvent = std::make_unique<LinkEventDone>(angle::Result::Continue);
+    }
+
     mLinkingState->linkingFromBinary = true;
-    mLinkingState->linkEvent         = mProgram->load(context, &stream);
+    mLinkingState->linkEvent         = std::move(loadEvent);
 
     *successOut = true;
 
@@ -2732,7 +2994,7 @@ GLsizei Program::getTransformFeedbackVaryingMaxLength() const
     }
 }
 
-bool Program::linkValidateShaders(const Context *context)
+bool Program::linkValidateShaders()
 {
     const ShaderMap<SharedCompiledShaderState> &shaders = mState.mAttachedShaders;
 
@@ -2754,19 +3016,15 @@ bool Program::linkValidateShaders(const Context *context)
     Optional<int> version;
     for (ShaderType shaderType : kAllGraphicsShaderTypes)
     {
-        Shader *shaderObj = getAttachedShader(shaderType);
-        ASSERT(!shaderObj || shaderObj->getType() == shaderType);
-
         const SharedCompiledShaderState &shader = shaders[shaderType];
         ASSERT(!shader || shader->shaderType == shaderType);
 
-        if (!shaderObj)
+        if (!shader)
         {
-            ASSERT(!shader);
             continue;
         }
 
-        if (!shaderObj->isCompiled(context))
+        if (!shader->successfullyCompiled)
         {
             mState.mInfoLog << ShaderTypeToString(shaderType) << " shader is not compiled.";
             return false;

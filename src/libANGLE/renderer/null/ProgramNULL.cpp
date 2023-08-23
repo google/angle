@@ -13,15 +13,35 @@
 
 namespace rx
 {
+namespace
+{
+class LinkTaskNULL : public LinkTask
+{
+  public:
+    ~LinkTaskNULL() override = default;
+    std::vector<std::shared_ptr<LinkSubTask>> link(
+        const gl::ProgramLinkedResources &resources,
+        const gl::ProgramMergedVaryings &mergedVaryings) override
+    {
+        return {};
+    }
+    angle::Result getResult(const gl::Context *context, gl::InfoLog &infoLog) override
+    {
+        return angle::Result::Continue;
+    }
+};
+}  // anonymous namespace
 
 ProgramNULL::ProgramNULL(const gl::ProgramState &state) : ProgramImpl(state) {}
 
 ProgramNULL::~ProgramNULL() {}
 
-std::unique_ptr<LinkEvent> ProgramNULL::load(const gl::Context *context,
-                                             gl::BinaryInputStream *stream)
+angle::Result ProgramNULL::load(const gl::Context *context,
+                                gl::BinaryInputStream *stream,
+                                std::shared_ptr<LinkTask> *loadTaskOut)
 {
-    return std::make_unique<LinkEventDone>(angle::Result::Continue);
+    *loadTaskOut = {};
+    return angle::Result::Continue;
 }
 
 void ProgramNULL::save(const gl::Context *context, gl::BinaryOutputStream *stream) {}
@@ -30,11 +50,11 @@ void ProgramNULL::setBinaryRetrievableHint(bool retrievable) {}
 
 void ProgramNULL::setSeparable(bool separable) {}
 
-std::unique_ptr<LinkEvent> ProgramNULL::link(const gl::Context *contextImpl,
-                                             const gl::ProgramLinkedResources &resources,
-                                             gl::ProgramMergedVaryings && /*mergedVaryings*/)
+angle::Result ProgramNULL::link(const gl::Context *contextImpl,
+                                std::shared_ptr<LinkTask> *linkTaskOut)
 {
-    return std::make_unique<LinkEventDone>(angle::Result::Continue);
+    *linkTaskOut = std::shared_ptr<LinkTask>(new LinkTaskNULL);
+    return angle::Result::Continue;
 }
 
 GLboolean ProgramNULL::validate(const gl::Caps &caps)

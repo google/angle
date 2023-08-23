@@ -615,6 +615,8 @@ void Shader::resolveCompile(const Context *context)
     bool success          = mCompilingState->compileEvent->postTranslate(&mInfoLog);
     mState.mCompileStatus = success ? CompileStatus::COMPILED : CompileStatus::NOT_COMPILED;
 
+    mState.mCompiledState->successfullyCompiled = success;
+
     MemoryShaderCache *shaderCache = context->getMemoryShaderCache();
     if (success && shaderCache)
     {
@@ -772,7 +774,8 @@ angle::Result Shader::loadBinaryImpl(const Context *context,
 
     // Only successfully-compiled shaders are serialized. If deserialization is successful, we can
     // assume the CompileStatus.
-    mState.mCompileStatus = CompileStatus::COMPILED;
+    mState.mCompileStatus                       = CompileStatus::COMPILED;
+    mState.mCompiledState->successfullyCompiled = true;
 
     return angle::Result::Continue;
 }

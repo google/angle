@@ -39,16 +39,16 @@ class ProgramGL : public ProgramImpl
 
     void destroy(const gl::Context *context) override;
 
-    std::unique_ptr<LinkEvent> load(const gl::Context *context,
-                                    gl::BinaryInputStream *stream) override;
+    angle::Result load(const gl::Context *context,
+                       gl::BinaryInputStream *stream,
+                       std::shared_ptr<LinkTask> *loadTaskOut) override;
     void save(const gl::Context *context, gl::BinaryOutputStream *stream) override;
     void setBinaryRetrievableHint(bool retrievable) override;
     void setSeparable(bool separable) override;
 
     void prepareForLink(const gl::ShaderMap<ShaderImpl *> &shaders) override;
-    std::unique_ptr<LinkEvent> link(const gl::Context *contextImpl,
-                                    const gl::ProgramLinkedResources &resources,
-                                    gl::ProgramMergedVaryings &&mergedVaryings) override;
+    angle::Result link(const gl::Context *contextImpl,
+                       std::shared_ptr<LinkTask> *linkTaskOut) override;
     GLboolean validate(const gl::Caps &caps) override;
 
     void setUniform1fv(GLint location, GLsizei count, const GLfloat *v) override;
@@ -123,9 +123,14 @@ class ProgramGL : public ProgramImpl
     }
 
   private:
-    class LinkTask;
-    class LinkEventNativeParallel;
-    class LinkEventGL;
+    class LinkTaskGL;
+    class PostLinkGL;
+
+    friend class LinkTaskGL;
+    friend class PostLinkGL;
+
+    void linkJobImpl(const gl::Extensions &extensions);
+    angle::Result postLinkJobImpl(const gl::ProgramLinkedResources &resources);
 
     bool checkLinkStatus();
 

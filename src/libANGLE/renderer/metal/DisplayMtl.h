@@ -109,6 +109,8 @@ class DisplayMtl : public DisplayImpl
                            egl::Surface *readSurface,
                            gl::Context *context) override;
 
+    void initializeFrontendFeatures(angle::FrontendFeatures *features) const override;
+
     void populateFeatureList(angle::FeatureList *features) override;
 
     bool isValidNativeWindow(EGLNativeWindowType window) const override;
