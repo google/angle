@@ -87,7 +87,7 @@ egl::Error DisplayEAGL::initialize(egl::Display *display)
     std::unique_ptr<FunctionsGL> functionsGL(new FunctionsGLEAGL(handle));
     functionsGL->initialize(display->getAttributeMap());
 
-    mRenderer.reset(new RendererGL(std::move(functionsGL), display->getAttributeMap()));
+    mRenderer.reset(new RendererGL(std::move(functionsGL), display->getAttributeMap(), this));
 
     const gl::Version &maxVersion = mRenderer->getMaxSupportedESVersion();
     if (maxVersion < gl::Version(2, 0))
