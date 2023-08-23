@@ -78,10 +78,10 @@ class Rescoper : public TIntermTraverser
     void visitSymbol(TIntermSymbol *node) override
     {
         const TVariable &var = node->variable();
-        if (mCurrentFunction && mGlobalVarsNeedRescope.contains(&var))
+        if (mCurrentFunction && mGlobalVarsNeedRescope.find(&var) != mGlobalVarsNeedRescope.end())
         {
             std::set<TIntermFunctionDefinition *> &set = mGlobalVarsNeedRescope.at(&var).functions;
-            if (!set.contains(mCurrentFunction))
+            if (set.find(mCurrentFunction) == set.end())
             {
                 set.emplace(mCurrentFunction);
             }
