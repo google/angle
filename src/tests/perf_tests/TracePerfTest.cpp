@@ -1649,6 +1649,14 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
         }
     }
 
+    if (traceNameIs("injustice_2"))
+    {
+        if (isNVIDIAWinANGLE)
+        {
+            skipTest("https://anglebug.com/8316 NVIDIA Windows flaky diffs");
+        }
+    }
+
     // glDebugMessageControlKHR and glDebugMessageCallbackKHR crash on ARM GLES1.
     if (IsARM() && mParams->traceInfo.contextClientMajorVersion == 1)
     {
