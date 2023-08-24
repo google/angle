@@ -313,7 +313,10 @@ void ANGLEPerfTest::run()
         // GTEST_SKIP returns.
     }
 
-    ASSERT(mStepsToRun > 0);
+    if (mStepsToRun <= 0)
+    {
+        FATAL() << "mStepsToRun <= 0. Base class SetUp() not called?";
+    }
 
     uint32_t numTrials = OneFrame() ? 1 : gTestTrials;
     if (gVerboseLogging)
