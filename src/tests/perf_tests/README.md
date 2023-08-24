@@ -20,14 +20,12 @@ your build. Running with `angle_assert_always_on` or debug validation enabled
 is not recommended.
 
 Variance can be a problem when benchmarking. We have a test harness to run a
-tests repeatedly to find a lower variance measurement. See [`src/tests/run_perf_tests.py`][RunPerfTests].
+tests repeatedly to find a lower variance measurement. See `src/tests/run_perf_tests.py`.
 
 To use the script first build `angle_perftests` or `angle_trace_tests`, set
 your working directory your build directory, and invoke the
 `run_perf_tests.py` script. Use `--test-suite` to specify your test suite,
 and `--filter` to specify a test filter.
-
-[RunPerfTests]: https://chromium.googlesource.com/angle/angle/+/main/scripts/perf_test_runner.py
 
 ### Choosing the Test to Run
 
@@ -53,7 +51,7 @@ Several command-line arguments control how the tests run:
 * `--run-to-key-frame`: If the trace specifies a key frame, run to that frame and stop. Traces without a `KeyFrames` entry in their JSON will default to frame 1. This is primarily to save cycles on our bots that do screenshot quality comparison.
 * `--enable-trace`: Write a JSON event log that can be loaded in Chrome.
 * `--trace-file file`: Name of the JSON event log for `--enable-trace`.
-* `--calibration`: Prints the number of steps a test runs in a fixed time. Used by `perf_test_runner.py`.
+* `--calibration`: Prints the number of steps a test runs in a fixed time.
 * `--steps-per-trial x`: Fixed number of steps to run for each test trial.
 * `--max-steps-performed x`: Upper maximum on total number of steps for the entire test run.  For a quick smoke test, you can specify 1.
 * `--render-test-output-dir=dir`: Directory to store test artifacts (including screenshots but unlike `--screenshot-dir`, `dir` here is always a local directory regardless of platform and `--save-screenshots` isn't implied).
