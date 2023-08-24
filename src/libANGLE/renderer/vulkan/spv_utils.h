@@ -133,7 +133,6 @@ void SpvGetShaderSpirvCode(const gl::ProgramState &programState,
 void SpvAssignAllLocations(const SpvSourceOptions &options,
                            const gl::ProgramState &programState,
                            const gl::ProgramLinkedResources &resources,
-                           SpvProgramInterfaceInfo *programInterfaceInfo,
                            ShaderInterfaceVariableInfoMap *variableInfoMapOut);
 
 angle::Result SpvTransformSpirvCode(const SpvTransformOptions &options,

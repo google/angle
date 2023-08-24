@@ -59,7 +59,6 @@ class LinkTaskVk final : public vk::Context, public angle::Closure
                ProgramExecutableVk *executable,
                gl::ProgramMergedVaryings &&mergedVaryings,
                const gl::ProgramLinkedResources &resources,
-               SpvProgramInterfaceInfo *programInterfaceInfo,
                bool isGLES1,
                vk::PipelineRobustness pipelineRobustness,
                vk::PipelineProtectedAccess pipelineProtectedAccess)
@@ -69,7 +68,6 @@ class LinkTaskVk final : public vk::Context, public angle::Closure
           mExecutable(executable),
           mMergedVaryings(std::move(mergedVaryings)),
           mResources(resources),
-          mProgramInterfaceInfo(programInterfaceInfo),
           mIsGLES1(isGLES1),
           mPipelineRobustness(pipelineRobustness),
           mPipelineProtectedAccess(pipelineProtectedAccess),
@@ -154,7 +152,6 @@ class LinkTaskVk final : public vk::Context, public angle::Closure
     ProgramExecutableVk *mExecutable;
     const gl::ProgramMergedVaryings mMergedVaryings;
     const gl::ProgramLinkedResources &mResources;
-    SpvProgramInterfaceInfo *mProgramInterfaceInfo;
     const bool mIsGLES1;
     const vk::PipelineRobustness mPipelineRobustness;
     const vk::PipelineProtectedAccess mPipelineProtectedAccess;
@@ -184,7 +181,7 @@ angle::Result LinkTaskVk::linkImpl()
     mExecutable->clearVariableInfoMap();
 
     // Gather variable info and compiled SPIR-V binaries.
-    mExecutable->assignAllSpvLocations(this, mState, mResources, mProgramInterfaceInfo);
+    mExecutable->assignAllSpvLocations(this, mState, mResources);
 
     gl::ShaderMap<const angle::spirv::Blob *> spirvBlobs;
     SpvGetShaderSpirvCode(mState, &spirvBlobs);
@@ -437,8 +434,6 @@ void ProgramVk::destroy(const gl::Context *context)
 
 void ProgramVk::reset(ContextVk *contextVk)
 {
-    mSpvProgramInterfaceInfo = {};
-
     mExecutable.reset(contextVk);
 }
 
@@ -478,16 +473,14 @@ std::unique_ptr<LinkEvent> ProgramVk::link(const gl::Context *context,
 
     ContextVk *contextVk = vk::GetImpl(context);
     reset(contextVk);
-    mExecutable.resetLayout(contextVk);
 
     const gl::ProgramExecutable &programExecutable = mState.getExecutable();
 
     std::shared_ptr<LinkTaskVk> linkTask = std::make_shared<LinkTaskVk>(
         contextVk->getRenderer(), contextVk->getPipelineLayoutCache(),
         contextVk->getDescriptorSetLayoutCache(), mState, programExecutable, &mExecutable,
-        std::move(mergedVaryings), resources, &mSpvProgramInterfaceInfo,
-        context->getState().isGLES1(), contextVk->pipelineRobustness(),
-        contextVk->pipelineProtectedAccess());
+        std::move(mergedVaryings), resources, context->getState().isGLES1(),
+        contextVk->pipelineRobustness(), contextVk->pipelineProtectedAccess());
     return std::make_unique<LinkEventVulkan>(context->getShaderCompileThreadPool(), linkTask);
 }
 

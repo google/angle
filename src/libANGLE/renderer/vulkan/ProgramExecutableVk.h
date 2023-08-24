@@ -300,12 +300,10 @@ class ProgramExecutableVk
     }
     void assignAllSpvLocations(vk::Context *context,
                                const gl::ProgramState &programState,
-                               const gl::ProgramLinkedResources &resources,
-                               SpvProgramInterfaceInfo *programInterfaceInfo)
+                               const gl::ProgramLinkedResources &resources)
     {
         SpvSourceOptions options = SpvCreateSourceOptions(context->getFeatures());
-        SpvAssignAllLocations(options, programState, resources, programInterfaceInfo,
-                              &mVariableInfoMap);
+        SpvAssignAllLocations(options, programState, resources, &mVariableInfoMap);
     }
 
   private:

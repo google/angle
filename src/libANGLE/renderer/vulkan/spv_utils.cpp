@@ -4956,10 +4956,10 @@ void SpvGetShaderSpirvCode(const gl::ProgramState &programState,
 void SpvAssignAllLocations(const SpvSourceOptions &options,
                            const gl::ProgramState &programState,
                            const gl::ProgramLinkedResources &resources,
-                           SpvProgramInterfaceInfo *programInterfaceInfo,
                            ShaderInterfaceVariableInfoMap *variableInfoMapOut)
 {
-    const gl::ProgramExecutable &programExecutable = programState.getExecutable();
+    SpvProgramInterfaceInfo spvProgramInterfaceInfo = {};
+    const gl::ProgramExecutable &programExecutable  = programState.getExecutable();
     gl::ShaderType xfbStage = programState.getAttachedTransformFeedbackStage();
 
     // This should be done before assigning varying location. Otherwise, We can encounter shader
@@ -4973,12 +4973,12 @@ void SpvAssignAllLocations(const SpvSourceOptions &options,
             gl::ShaderTypeSupportsTransformFeedback(shaderType))
         {
             SpvAssignTransformFeedbackLocations(shaderType, programExecutable, isXfbStage,
-                                                programInterfaceInfo, variableInfoMapOut);
+                                                &spvProgramInterfaceInfo, variableInfoMapOut);
         }
     }
 
     SpvAssignLocations(options, programExecutable, resources.varyingPacking, xfbStage,
-                       programInterfaceInfo, variableInfoMapOut);
+                       &spvProgramInterfaceInfo, variableInfoMapOut);
 }
 
 angle::Result SpvTransformSpirvCode(const SpvTransformOptions &options,

@@ -117,8 +117,6 @@ class ProgramVk : public ProgramImpl
     const ProgramExecutableVk &getExecutable() const { return mExecutable; }
     ProgramExecutableVk &getExecutable() { return mExecutable; }
 
-    const SpvProgramInterfaceInfo &getSpvProgramInterfaceInfo() { return mSpvProgramInterfaceInfo; }
-
   private:
     template <int cols, int rows>
     void setUniformMatrixfv(GLint location,
@@ -136,9 +134,6 @@ class ProgramVk : public ProgramImpl
 
     angle::Result createGraphicsPipelineWithDefaultState(const gl::Context *context,
                                                          vk::PipelineCacheAccess *pipelineCache);
-
-    // We keep the SPIR-V code to use for draw call pipeline creation.
-    SpvProgramInterfaceInfo mSpvProgramInterfaceInfo;
 
     ProgramExecutableVk mExecutable;
 };

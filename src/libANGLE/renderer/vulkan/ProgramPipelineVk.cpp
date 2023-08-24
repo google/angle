@@ -36,8 +36,7 @@ angle::Result ProgramPipelineVk::link(const gl::Context *glContext,
     ContextVk *contextVk                      = vk::GetImpl(glContext);
     const gl::ProgramExecutable &glExecutable = mState.getExecutable();
     SpvSourceOptions options                  = SpvCreateSourceOptions(contextVk->getFeatures());
-    SpvProgramInterfaceInfo spvProgramInterfaceInfo;
-    spvProgramInterfaceInfo = {};
+    SpvProgramInterfaceInfo spvProgramInterfaceInfo = {};
 
     reset(contextVk);
     mExecutable.clearVariableInfoMap();
