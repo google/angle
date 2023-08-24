@@ -15,6 +15,8 @@
 #include "common/utilities.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/InfoLog.h"
+#include "libANGLE/ProgramExecutable.h"
+#include "libANGLE/renderer/ProgramExecutableImpl.h"
 #include "libANGLE/renderer/vulkan/ContextVk.h"
 #include "libANGLE/renderer/vulkan/ShaderInterfaceVariableInfoMap.h"
 #include "libANGLE/renderer/vulkan/spv_utils.h"
@@ -110,13 +112,13 @@ using ImmutableSamplerIndexMap = angle::HashMap<vk::YcbcrConversionDesc, uint32_
 
 using DefaultUniformBlockMap = gl::ShaderMap<std::shared_ptr<DefaultUniformBlock>>;
 
-class ProgramExecutableVk
+class ProgramExecutableVk : public ProgramExecutableImpl
 {
   public:
-    ProgramExecutableVk();
-    virtual ~ProgramExecutableVk();
+    ProgramExecutableVk(const gl::ProgramExecutable *executable);
+    ~ProgramExecutableVk() override;
 
-    void reset(ContextVk *contextVk);
+    void destroy(const gl::Context *context) override;
 
     void save(ContextVk *contextVk, bool isSeparable, gl::BinaryOutputStream *stream);
     std::unique_ptr<rx::LinkEvent> load(ContextVk *contextVk,
@@ -309,6 +311,8 @@ class ProgramExecutableVk
   private:
     friend class ProgramVk;
     friend class ProgramPipelineVk;
+
+    void reset(ContextVk *contextVk);
 
     void addInterfaceBlockDescriptorSetDesc(const std::vector<gl::InterfaceBlock> &blocks,
                                             gl::ShaderBitSet shaderTypes,

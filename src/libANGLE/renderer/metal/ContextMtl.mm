@@ -23,6 +23,7 @@
 #include "libANGLE/renderer/metal/CompilerMtl.h"
 #include "libANGLE/renderer/metal/DisplayMtl.h"
 #include "libANGLE/renderer/metal/FrameBufferMtl.h"
+#include "libANGLE/renderer/metal/ProgramExecutableMtl.h"
 #include "libANGLE/renderer/metal/ProgramMtl.h"
 #include "libANGLE/renderer/metal/QueryMtl.h"
 #include "libANGLE/renderer/metal/RenderBufferMtl.h"
@@ -1462,6 +1463,11 @@ ShaderImpl *ContextMtl::createShader(const gl::ShaderState &state)
 ProgramImpl *ContextMtl::createProgram(const gl::ProgramState &state)
 {
     return new ProgramMtl(state);
+}
+
+ProgramExecutableImpl *ContextMtl::createProgramExecutable(const gl::ProgramExecutable *executable)
+{
+    return new ProgramExecutableMtl(executable);
 }
 
 // Framebuffer creation

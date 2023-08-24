@@ -382,8 +382,9 @@ void ProgramInfo::release(ContextVk *contextVk)
     }
 }
 
-ProgramExecutableVk::ProgramExecutableVk()
-    : mNumDefaultUniformDescriptors(0),
+ProgramExecutableVk::ProgramExecutableVk(const gl::ProgramExecutable *executable)
+    : ProgramExecutableImpl(executable),
+      mNumDefaultUniformDescriptors(0),
       mImmutableSamplersMaxDescriptorCount(1),
       mUniformBufferDescriptorType(VK_DESCRIPTOR_TYPE_MAX_ENUM),
       mDynamicUniformDescriptorOffsets{}
@@ -397,6 +398,11 @@ ProgramExecutableVk::ProgramExecutableVk()
 ProgramExecutableVk::~ProgramExecutableVk()
 {
     ASSERT(!mPipelineCache.valid());
+}
+
+void ProgramExecutableVk::destroy(const gl::Context *context)
+{
+    reset(vk::GetImpl(context));
 }
 
 void ProgramExecutableVk::resetLayout(ContextVk *contextVk)

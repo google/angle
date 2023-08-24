@@ -38,6 +38,7 @@
     PROC(MemoryObject)           \
     PROC(Overlay)                \
     PROC(Program)                \
+    PROC(ProgramExecutable)      \
     PROC(ProgramPipeline)        \
     PROC(Query)                  \
     PROC(Renderbuffer)           \

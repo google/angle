@@ -219,6 +219,8 @@ class ContextMtl : public ContextImpl, public mtl::Context
     CompilerImpl *createCompiler() override;
     ShaderImpl *createShader(const gl::ShaderState &state) override;
     ProgramImpl *createProgram(const gl::ProgramState &state) override;
+    ProgramExecutableImpl *createProgramExecutable(
+        const gl::ProgramExecutable *executable) override;
 
     // Framebuffer creation
     FramebufferImpl *createFramebuffer(const gl::FramebufferState &state) override;

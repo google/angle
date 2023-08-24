@@ -218,7 +218,7 @@ class ProgramAliasedBindings final : angle::NonCopyable
 class ProgramState final : angle::NonCopyable
 {
   public:
-    ProgramState();
+    ProgramState(rx::GLImplFactory *factory);
     ~ProgramState();
 
     const std::string &getLabel();
@@ -422,7 +422,7 @@ class ProgramState final : angle::NonCopyable
     // uniforms in GLES3.1+. It is used to pre-set the location of uniforms.
     ProgramAliasedBindings mUniformLocationBindings;
 
-    std::shared_ptr<ProgramExecutable> mExecutable;
+    std::unique_ptr<ProgramExecutable> mExecutable;
 };
 
 struct ProgramVaryingRef

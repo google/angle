@@ -914,7 +914,7 @@ ImageBinding::ImageBinding(const ImageBinding &other) = default;
 ImageBinding::~ImageBinding() = default;
 
 // ProgramState implementation.
-ProgramState::ProgramState()
+ProgramState::ProgramState(rx::GLImplFactory *factory)
     : mLabel(),
       mAttachedShaders{},
       mLocationsUsedForXfbExtension(0),
@@ -926,7 +926,7 @@ ProgramState::ProgramState()
       mBaseInstanceLocation(-1),
       mCachedBaseVertex(0),
       mCachedBaseInstance(0),
-      mExecutable(new ProgramExecutable())
+      mExecutable(new ProgramExecutable(factory))
 {
     mComputeShaderLocalSize.fill(1);
 }
@@ -1063,6 +1063,7 @@ ShaderType ProgramState::getAttachedTransformFeedbackStage() const
 
 Program::Program(rx::GLImplFactory *factory, ShaderProgramManager *manager, ShaderProgramID handle)
     : mSerial(factory->generateSerial()),
+      mState(factory),
       mProgram(factory->createProgram(mState)),
       mValidated(false),
       mLinked(false),
@@ -1097,6 +1098,7 @@ void Program::onDestroy(const Context *context)
     }
 
     mProgram->destroy(context);
+    mState.mExecutable->destroy(context);
 
     ASSERT(!mState.hasAnyAttachedShader());
     SafeDelete(mProgram);

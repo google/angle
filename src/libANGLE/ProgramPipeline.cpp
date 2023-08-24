@@ -26,11 +26,11 @@ enum SubjectIndexes : angle::SubjectIndex
     kExecutableSubjectIndex = 0
 };
 
-ProgramPipelineState::ProgramPipelineState()
+ProgramPipelineState::ProgramPipelineState(rx::GLImplFactory *factory)
     : mLabel(),
       mActiveShaderProgram(nullptr),
       mValid(false),
-      mExecutable(new ProgramExecutable()),
+      mExecutable(new ProgramExecutable(factory)),
       mIsLinked(false)
 {
     for (const ShaderType shaderType : gl::AllShaderTypes())
@@ -39,10 +39,7 @@ ProgramPipelineState::ProgramPipelineState()
     }
 }
 
-ProgramPipelineState::~ProgramPipelineState()
-{
-    SafeDelete(mExecutable);
-}
+ProgramPipelineState::~ProgramPipelineState() {}
 
 const std::string &ProgramPipelineState::getLabel() const
 {
@@ -142,6 +139,7 @@ rx::SpecConstUsageBits ProgramPipelineState::getSpecConstUsageBits() const
 ProgramPipeline::ProgramPipeline(rx::GLImplFactory *factory, ProgramPipelineID handle)
     : RefCountObject(factory->generateSerial(), handle),
       mProgramPipelineImpl(factory->createProgramPipeline(mState)),
+      mState(factory),
       mExecutableObserverBinding(this, kExecutableSubjectIndex)
 {
     ASSERT(mProgramPipelineImpl);
@@ -150,7 +148,7 @@ ProgramPipeline::ProgramPipeline(rx::GLImplFactory *factory, ProgramPipelineID h
     {
         mProgramObserverBindings.emplace_back(this, static_cast<angle::SubjectIndex>(shaderType));
     }
-    mExecutableObserverBinding.bind(mState.mExecutable);
+    mExecutableObserverBinding.bind(mState.mExecutable.get());
 }
 
 ProgramPipeline::~ProgramPipeline()
@@ -170,6 +168,7 @@ void ProgramPipeline::onDestroy(const Context *context)
     }
 
     getImplementation()->destroy(context);
+    mState.mExecutable->destroy(context);
 }
 
 angle::Result ProgramPipeline::setLabel(const Context *context, const std::string &label)

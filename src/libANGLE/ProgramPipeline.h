@@ -33,7 +33,7 @@ class ProgramPipeline;
 class ProgramPipelineState final : angle::NonCopyable
 {
   public:
-    ProgramPipelineState();
+    ProgramPipelineState(rx::GLImplFactory *factory);
     ~ProgramPipelineState();
 
     const std::string &getLabel() const;
@@ -79,7 +79,7 @@ class ProgramPipelineState final : angle::NonCopyable
 
     GLboolean mValid;
 
-    ProgramExecutable *mExecutable;
+    std::unique_ptr<ProgramExecutable> mExecutable;
 
     bool mIsLinked;
 };
