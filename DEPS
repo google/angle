@@ -45,7 +45,7 @@ vars = {
   'checkout_angle_mesa': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': 'cbda6c2d63187d0682a2195304bf32709cef7359',
+  'chromium_revision': '3b473fe59c6bdc35b5a1727e8b0e8dea0fce6301',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -90,7 +90,7 @@ vars = {
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling catapult
   # and whatever else without interference from each other.
-  'catapult_revision': 'b9f2ef143e89f1b6b942da3f0d5ed7914cd0fbcb',
+  'catapult_revision': '95899ca94864dd5d811a9935e30d0174095eb7aa',
 
   # the commit queue can handle CLs rolling Fuchsia sdk
   # and whatever else without interference from each other.
@@ -161,12 +161,12 @@ vars = {
 deps = {
 
   'build': {
-    'url': '{chromium_git}/chromium/src/build.git@e04720d46f2ac09068afb8bf7d7f921bc29193c0',
+    'url': '{chromium_git}/chromium/src/build.git@4cee92ef223b321d4e368556ad0234662e945dc5',
     'condition': 'not build_with_chromium',
   },
 
   'buildtools': {
-    'url': '{chromium_git}/chromium/src/buildtools.git@a93fb7650a2fd03003c93716b307616a22ede2ce',
+    'url': '{chromium_git}/chromium/src/buildtools.git@f6e67ef3b231bb1af3ca9e9c31bf245fec84f63f',
     'condition': 'not build_with_chromium',
   },
 
@@ -220,7 +220,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@57ae489e9b1e6c225c39eb2041dce25e3976fc71',
+    'url': '{chromium_git}/chromium/src/testing@7ece0f72601d0bae614137f9f057d4b6f1e8ba83',
     'condition': 'not build_with_chromium',
   },
 
@@ -271,7 +271,7 @@ deps = {
       'packages': [
           {
                'package': 'chromium/third_party/android_build_tools/lint',
-               'version': 'qaZOeTY-k9wAZ1vkdqCZIbppqQFgc4IM5T5dKj3_2xIC',
+               'version': 'Bd9m0RpzuCbbURLUADcdPsU2Yrrfg453Djw_jY7kVEYC',
           },
       ],
       'condition': 'checkout_android and not build_with_chromium',
@@ -282,7 +282,7 @@ deps = {
       'packages': [
           {
                'package': 'chromium/third_party/android_build_tools/manifest_merger',
-               'version': 'Nc9kYyTsw69N7yKSw_Sc2fJtUJ2zXUhSGjXbIkDVXuIC',
+               'version': 'kkbYOGsVRXhtxBiXuTufY0puTnG5QAfyxvFTBHFWL08C',
           },
       ],
       'condition': 'checkout_android and not build_with_chromium',
@@ -311,7 +311,7 @@ deps = {
   },
 
   'third_party/android_sdk': {
-    'url': '{chromium_git}/chromium/src/third_party/android_sdk@996d3d5271b92f3a2d6cc5e4cfba6122de465059',
+    'url': '{chromium_git}/chromium/src/third_party/android_sdk@528931048cd5daa24cb759a0d7a386c29c8c2041',
     'condition': 'checkout_android and not build_with_chromium',
   },
 
@@ -403,7 +403,7 @@ deps = {
   },
 
   'third_party/depot_tools': {
-    'url': '{chromium_git}/chromium/tools/depot_tools.git@caeef7ba32da0a782b5b719d038a9dcab7104d6d',
+    'url': '{chromium_git}/chromium/tools/depot_tools.git@c7aca34c8e5fff27dd8424b55ef520de960d0bff',
     'condition': 'not build_with_chromium',
   },
 
@@ -604,7 +604,7 @@ deps = {
       'packages': [
           {
               'package': 'chromium/third_party/r8',
-              'version': '5fmK4ltjLHNRPbUQ34VE7o4hXrmeRbwpUTtUPadhj0wC',
+              'version': 'yG6aCoW-nKG7aqWMZkE1TsvMCxvP7KxJ9PsaRbytuyEC',
           },
       ],
       'condition': 'checkout_android and not build_with_chromium',
@@ -727,7 +727,7 @@ deps = {
   },
 
   'tools/mb': {
-    'url': '{chromium_git}/chromium/src/tools/mb@3748929a3d74a62be1aa0635a5fd8178fd44ee92',
+    'url': '{chromium_git}/chromium/src/tools/mb@3e89e7b60b6716f51274ff32bb59b1104a84a9f7',
     'condition': 'not build_with_chromium',
   },
 
@@ -742,7 +742,7 @@ deps = {
   },
 
   'tools/perf': {
-    'url': '{chromium_git}/chromium/src/tools/perf@145add6eab674081b8846bc845dba4b7cbfd2d0e',
+    'url': '{chromium_git}/chromium/src/tools/perf@8b952cacedb8562c06912a9fa41f8b8c6499363a',
     'condition': 'not build_with_chromium',
   },
 
