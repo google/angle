@@ -100,9 +100,6 @@ ProgramGL::ProgramGL(const gl::ProgramState &data,
       mFunctions(functions),
       mFeatures(features),
       mStateManager(stateManager),
-      mHasAppliedTransformFeedbackVaryings(false),
-      mClipDistanceEnabledUniformLocation(-1),
-      mMultiviewBaseViewLayerIndexUniformLocation(-1),
       mProgramID(0),
       mRenderer(renderer)
 {
@@ -112,7 +109,9 @@ ProgramGL::ProgramGL(const gl::ProgramState &data,
     mProgramID = mFunctions->createProgram();
 }
 
-ProgramGL::~ProgramGL()
+ProgramGL::~ProgramGL() = default;
+
+void ProgramGL::destroy(const gl::Context *context)
 {
     mFunctions->deleteProgram(mProgramID);
     mProgramID = 0;
@@ -123,7 +122,9 @@ std::unique_ptr<LinkEvent> ProgramGL::load(const gl::Context *context,
                                            gl::InfoLog &infoLog)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "ProgramGL::load");
-    preLink();
+    ProgramExecutableGL *executableGL = getExecutable();
+
+    executableGL->reset();
 
     // Read the binary format, size and blob
     GLenum binaryFormat   = stream->readInt<GLenum>();
@@ -140,7 +141,7 @@ std::unique_ptr<LinkEvent> ProgramGL::load(const gl::Context *context,
         return std::make_unique<LinkEventDone>(angle::Result::Incomplete);
     }
 
-    postLink();
+    executableGL->postLink(mFunctions, mFeatures, mProgramID);
     reapplyUBOBindingsIfNeeded(context);
 
     return std::make_unique<LinkEventDone>(angle::Result::Continue);
@@ -250,8 +251,9 @@ std::unique_ptr<LinkEvent> ProgramGL::link(const gl::Context *context,
                                            gl::ProgramMergedVaryings && /*mergedVaryings*/)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "ProgramGL::link");
+    ProgramExecutableGL *executableGL = getExecutable();
 
-    preLink();
+    executableGL->reset();
 
     if (mAttachedShaders[gl::ShaderType::Compute] != 0)
     {
@@ -276,12 +278,12 @@ std::unique_ptr<LinkEvent> ProgramGL::link(const gl::Context *context,
         {
             // Only clear the transform feedback state if transform feedback varyings have already
             // been set.
-            if (mHasAppliedTransformFeedbackVaryings)
+            if (executableGL->mHasAppliedTransformFeedbackVaryings)
             {
                 ASSERT(mFunctions->transformFeedbackVaryings);
                 mFunctions->transformFeedbackVaryings(mProgramID, 0, nullptr,
                                                       mState.getTransformFeedbackBufferMode());
-                mHasAppliedTransformFeedbackVaryings = false;
+                executableGL->mHasAppliedTransformFeedbackVaryings = false;
             }
         }
         else
@@ -295,7 +297,7 @@ std::unique_ptr<LinkEvent> ProgramGL::link(const gl::Context *context,
             mFunctions->transformFeedbackVaryings(
                 mProgramID, static_cast<GLsizei>(transformFeedbackVaryingMappedNames.size()),
                 &transformFeedbackVaryings[0], mState.getTransformFeedbackBufferMode());
-            mHasAppliedTransformFeedbackVaryings = true;
+            executableGL->mHasAppliedTransformFeedbackVaryings = true;
         }
 
         for (const gl::ShaderType shaderType : gl::kAllGraphicsShaderTypes)
@@ -452,7 +454,7 @@ std::unique_ptr<LinkEvent> ProgramGL::link(const gl::Context *context,
         }
 
         linkResources(resources);
-        postLink();
+        getExecutable()->postLink(mFunctions, mFeatures, mProgramID);
 
         return angle::Result::Continue;
     };
@@ -782,20 +784,22 @@ void ProgramGL::setUniformMatrix4x3fv(GLint location,
 
 void ProgramGL::setUniformBlockBinding(GLuint uniformBlockIndex, GLuint uniformBlockBinding)
 {
+    ProgramExecutableGL *executableGL = getExecutable();
+
     // Lazy init
-    if (mUniformBlockRealLocationMap.empty())
+    if (executableGL->mUniformBlockRealLocationMap.empty())
     {
-        mUniformBlockRealLocationMap.reserve(mState.getUniformBlocks().size());
+        executableGL->mUniformBlockRealLocationMap.reserve(mState.getUniformBlocks().size());
         for (const gl::InterfaceBlock &uniformBlock : mState.getUniformBlocks())
         {
             const std::string &mappedNameWithIndex = uniformBlock.mappedNameWithArrayIndex();
             GLuint blockIndex =
                 mFunctions->getUniformBlockIndex(mProgramID, mappedNameWithIndex.c_str());
-            mUniformBlockRealLocationMap.push_back(blockIndex);
+            executableGL->mUniformBlockRealLocationMap.push_back(blockIndex);
         }
     }
 
-    GLuint realBlockIndex = mUniformBlockRealLocationMap[uniformBlockIndex];
+    GLuint realBlockIndex = executableGL->mUniformBlockRealLocationMap[uniformBlockIndex];
     if (realBlockIndex != GL_INVALID_INDEX)
     {
         mFunctions->uniformBlockBinding(mProgramID, realBlockIndex, uniformBlockBinding);
@@ -931,16 +935,6 @@ void ProgramGL::getAtomicCounterBufferSizeMap(std::map<int, unsigned int> *sizeM
     }
 }
 
-void ProgramGL::preLink()
-{
-    // Reset the program state
-    mUniformRealLocationMap.clear();
-    mUniformBlockRealLocationMap.clear();
-
-    mClipDistanceEnabledUniformLocation         = -1;
-    mMultiviewBaseViewLayerIndexUniformLocation = -1;
-}
-
 bool ProgramGL::checkLinkStatus(gl::InfoLog &infoLog)
 {
     GLint linkStatus = GL_FALSE;
@@ -976,76 +970,24 @@ bool ProgramGL::checkLinkStatus(gl::InfoLog &infoLog)
     return true;
 }
 
-void ProgramGL::postLink()
-{
-    // Query the uniform information
-    ASSERT(mUniformRealLocationMap.empty());
-    const auto &uniformLocations = mState.getUniformLocations();
-    const auto &uniforms         = mState.getUniforms();
-    mUniformRealLocationMap.resize(uniformLocations.size(), GL_INVALID_INDEX);
-    for (size_t uniformLocation = 0; uniformLocation < uniformLocations.size(); uniformLocation++)
-    {
-        const auto &entry = uniformLocations[uniformLocation];
-        if (!entry.used())
-        {
-            continue;
-        }
-
-        // From the GLES 3.0.5 spec:
-        // "Locations for sequential array indices are not required to be sequential."
-        const gl::LinkedUniform &uniform     = uniforms[entry.index];
-        const std::string &uniformMappedName = mState.getUniformMappedNames()[entry.index];
-        std::stringstream fullNameStr;
-        if (uniform.isArray())
-        {
-            ASSERT(angle::EndsWith(uniformMappedName, "[0]"));
-            fullNameStr << uniformMappedName.substr(0, uniformMappedName.length() - 3);
-            fullNameStr << "[" << entry.arrayIndex << "]";
-        }
-        else
-        {
-            fullNameStr << uniformMappedName;
-        }
-        const std::string &fullName = fullNameStr.str();
-
-        GLint realLocation = mFunctions->getUniformLocation(mProgramID, fullName.c_str());
-        mUniformRealLocationMap[uniformLocation] = realLocation;
-    }
-
-    if (mFeatures.emulateClipDistanceState.enabled && mState.getExecutable().hasClipDistance())
-    {
-        ASSERT(mFunctions->standard == STANDARD_GL_ES);
-        mClipDistanceEnabledUniformLocation =
-            mFunctions->getUniformLocation(mProgramID, "angle_ClipDistanceEnabled");
-        ASSERT(mClipDistanceEnabledUniformLocation != -1);
-    }
-
-    if (mState.usesMultiview())
-    {
-        mMultiviewBaseViewLayerIndexUniformLocation =
-            mFunctions->getUniformLocation(mProgramID, "multiviewBaseViewLayerIndex");
-        ASSERT(mMultiviewBaseViewLayerIndexUniformLocation != -1);
-    }
-}
-
 void ProgramGL::updateEnabledClipDistances(uint8_t enabledClipDistancesPacked) const
 {
     ASSERT(mState.getExecutable().hasClipDistance());
-    ASSERT(mClipDistanceEnabledUniformLocation != -1);
+    ASSERT(getExecutable()->mClipDistanceEnabledUniformLocation != -1);
 
     ASSERT(mFunctions->programUniform1ui != nullptr);
-    mFunctions->programUniform1ui(mProgramID, mClipDistanceEnabledUniformLocation,
+    mFunctions->programUniform1ui(mProgramID, getExecutable()->mClipDistanceEnabledUniformLocation,
                                   enabledClipDistancesPacked);
 }
 
 void ProgramGL::enableLayeredRenderingPath(int baseViewIndex) const
 {
-    ASSERT(mState.usesMultiview());
-    ASSERT(mMultiviewBaseViewLayerIndexUniformLocation != -1);
+    ASSERT(mState.getExecutable().usesMultiview());
+    ASSERT(getExecutable()->mMultiviewBaseViewLayerIndexUniformLocation != -1);
 
     ASSERT(mFunctions->programUniform1i != nullptr);
-    mFunctions->programUniform1i(mProgramID, mMultiviewBaseViewLayerIndexUniformLocation,
-                                 baseViewIndex);
+    mFunctions->programUniform1i(
+        mProgramID, getExecutable()->mMultiviewBaseViewLayerIndexUniformLocation, baseViewIndex);
 }
 
 void ProgramGL::getUniformfv(const gl::Context *context, GLint location, GLfloat *params) const

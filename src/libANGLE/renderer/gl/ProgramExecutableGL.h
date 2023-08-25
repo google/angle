@@ -12,8 +12,15 @@
 #include "libANGLE/ProgramExecutable.h"
 #include "libANGLE/renderer/ProgramExecutableImpl.h"
 
+namespace angle
+{
+struct FeaturesGL;
+}  // namespace angle
+
 namespace rx
 {
+class FunctionsGL;
+
 class ProgramExecutableGL : public ProgramExecutableImpl
 {
   public:
@@ -22,7 +29,22 @@ class ProgramExecutableGL : public ProgramExecutableImpl
 
     void destroy(const gl::Context *context) override;
 
-    // TODO: move relevant state from ProgramGL here.  http://anglebug.com/8297
+  private:
+    friend class ProgramGL;
+
+    void reset();
+    void postLink(const FunctionsGL *functions,
+                  const angle::FeaturesGL &features,
+                  GLuint programID);
+
+    std::vector<GLint> mUniformRealLocationMap;
+    std::vector<GLuint> mUniformBlockRealLocationMap;
+
+    bool mHasAppliedTransformFeedbackVaryings;
+
+    GLint mClipDistanceEnabledUniformLocation;
+
+    GLint mMultiviewBaseViewLayerIndexUniformLocation;
 };
 
 }  // namespace rx
