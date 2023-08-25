@@ -32,6 +32,7 @@ class DisplayMtl;
 class FramebufferMtl;
 class VertexArrayMtl;
 class ProgramMtl;
+class ProgramExecutableMtl;
 class RenderTargetMtl;
 class WindowSurfaceMtl;
 class TransformFeedbackMtl;
@@ -213,7 +214,7 @@ class ContextMtl : public ContextImpl, public mtl::Context
     const gl::Limitations &getNativeLimitations() const override;
     const ShPixelLocalStorageOptions &getNativePixelLocalStorageOptions() const override;
 
-    const ProgramMtl *getProgram() const { return mProgram; }
+    const ProgramExecutableMtl *getProgramExecutable() const { return mExecutable; }
 
     // Shader creation
     CompilerImpl *createCompiler() override;
@@ -592,10 +593,11 @@ class ContextMtl : public ContextImpl, public mtl::Context
     mtl::PipelineCache mPipelineCache;
 
     // Cached back-end objects
-    FramebufferMtl *mDrawFramebuffer = nullptr;
-    VertexArrayMtl *mVertexArray     = nullptr;
-    ProgramMtl *mProgram             = nullptr;
-    QueryMtl *mOcclusionQuery        = nullptr;
+    FramebufferMtl *mDrawFramebuffer  = nullptr;
+    VertexArrayMtl *mVertexArray      = nullptr;
+    ProgramMtl *mProgram              = nullptr;
+    ProgramExecutableMtl *mExecutable = nullptr;
+    QueryMtl *mOcclusionQuery         = nullptr;
     mtl::TextureRef mWorkTexture;
     mtl::BufferRef mWorkBuffer;
 

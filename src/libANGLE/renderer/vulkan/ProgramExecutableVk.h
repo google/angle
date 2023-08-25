@@ -93,10 +93,10 @@ class ProgramInfo final : angle::NonCopyable
 };
 
 // State for the default uniform blocks.
-struct DefaultUniformBlock final : private angle::NonCopyable
+struct DefaultUniformBlockVk final : private angle::NonCopyable
 {
-    DefaultUniformBlock();
-    ~DefaultUniformBlock();
+    DefaultUniformBlockVk();
+    ~DefaultUniformBlockVk();
 
     // Shadow copies of the shader uniform data.
     angle::MemoryBuffer uniformData;
@@ -110,7 +110,7 @@ struct DefaultUniformBlock final : private angle::NonCopyable
 using DescriptorSetCountList   = angle::PackedEnumMap<DescriptorSetIndex, uint32_t>;
 using ImmutableSamplerIndexMap = angle::HashMap<vk::YcbcrConversionDesc, uint32_t>;
 
-using DefaultUniformBlockMap = gl::ShaderMap<std::shared_ptr<DefaultUniformBlock>>;
+using DefaultUniformBlockMap = gl::ShaderMap<std::shared_ptr<DefaultUniformBlockVk>>;
 
 class ProgramExecutableVk : public ProgramExecutableImpl
 {
@@ -243,7 +243,7 @@ class ProgramExecutableVk : public ProgramExecutableImpl
         return roundUp(mDefaultUniformBlocks[shaderType]->uniformData.size(), alignment);
     }
 
-    std::shared_ptr<DefaultUniformBlock> &getSharedDefaultUniformBlock(gl::ShaderType shaderType)
+    std::shared_ptr<DefaultUniformBlockVk> &getSharedDefaultUniformBlock(gl::ShaderType shaderType)
     {
         return mDefaultUniformBlocks[shaderType];
     }

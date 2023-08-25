@@ -516,7 +516,7 @@ void ProgramVk::setUniformImpl(GLint location, GLsizei count, const T *v, GLenum
     {
         for (const gl::ShaderType shaderType : glExecutable.getLinkedShaderStages())
         {
-            DefaultUniformBlock &uniformBlock = *executableVk->mDefaultUniformBlocks[shaderType];
+            DefaultUniformBlockVk &uniformBlock = *executableVk->mDefaultUniformBlocks[shaderType];
             const sh::BlockMemberInfo &layoutInfo = uniformBlock.uniformLayout[location];
 
             // Assume an offset of -1 means the block is unused.
@@ -535,7 +535,7 @@ void ProgramVk::setUniformImpl(GLint location, GLsizei count, const T *v, GLenum
     {
         for (const gl::ShaderType shaderType : glExecutable.getLinkedShaderStages())
         {
-            DefaultUniformBlock &uniformBlock = *executableVk->mDefaultUniformBlocks[shaderType];
+            DefaultUniformBlockVk &uniformBlock = *executableVk->mDefaultUniformBlocks[shaderType];
             const sh::BlockMemberInfo &layoutInfo = uniformBlock.uniformLayout[location];
 
             // Assume an offset of -1 means the block is unused.
@@ -580,8 +580,8 @@ void ProgramVk::getUniformImpl(GLint location, T *v, GLenum entryPointType) cons
     const gl::ShaderType shaderType = linkedUniform.getFirstActiveShaderType();
     ASSERT(shaderType != gl::ShaderType::InvalidEnum);
 
-    const DefaultUniformBlock &uniformBlock = *executableVk->mDefaultUniformBlocks[shaderType];
-    const sh::BlockMemberInfo &layoutInfo   = uniformBlock.uniformLayout[location];
+    const DefaultUniformBlockVk &uniformBlock = *executableVk->mDefaultUniformBlocks[shaderType];
+    const sh::BlockMemberInfo &layoutInfo     = uniformBlock.uniformLayout[location];
 
     ASSERT(gl::GetUniformTypeInfo(linkedUniform.type).componentType == entryPointType ||
            gl::GetUniformTypeInfo(linkedUniform.type).componentType ==
@@ -683,7 +683,7 @@ void ProgramVk::setUniformMatrixfv(GLint location,
 
     for (const gl::ShaderType shaderType : glExecutable.getLinkedShaderStages())
     {
-        DefaultUniformBlock &uniformBlock     = *executableVk->mDefaultUniformBlocks[shaderType];
+        DefaultUniformBlockVk &uniformBlock   = *executableVk->mDefaultUniformBlocks[shaderType];
         const sh::BlockMemberInfo &layoutInfo = uniformBlock.uniformLayout[location];
 
         // Assume an offset of -1 means the block is unused.

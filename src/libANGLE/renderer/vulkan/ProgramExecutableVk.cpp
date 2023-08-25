@@ -225,9 +225,9 @@ vk::SpecializationConstants MakeSpecConsts(ProgramTransformOptions transformOpti
 }
 }  // namespace
 
-DefaultUniformBlock::DefaultUniformBlock() = default;
+DefaultUniformBlockVk::DefaultUniformBlockVk() = default;
 
-DefaultUniformBlock::~DefaultUniformBlock() = default;
+DefaultUniformBlockVk::~DefaultUniformBlockVk() = default;
 
 // ShaderInfo implementation.
 ShaderInfo::ShaderInfo() {}
@@ -389,9 +389,9 @@ ProgramExecutableVk::ProgramExecutableVk(const gl::ProgramExecutable *executable
       mUniformBufferDescriptorType(VK_DESCRIPTOR_TYPE_MAX_ENUM),
       mDynamicUniformDescriptorOffsets{}
 {
-    for (std::shared_ptr<DefaultUniformBlock> &defaultBlock : mDefaultUniformBlocks)
+    for (std::shared_ptr<DefaultUniformBlockVk> &defaultBlock : mDefaultUniformBlocks)
     {
-        defaultBlock = std::make_shared<DefaultUniformBlock>();
+        defaultBlock = std::make_shared<DefaultUniformBlockVk>();
     }
 }
 

@@ -396,7 +396,6 @@ angle::Result VertexArrayMtl::setupDraw(const gl::Context *glContext,
         const gl::ProgramExecutable *executable = glContext->getState().getProgramExecutable();
         const gl::AttributesMask &programActiveAttribsMask =
             executable->getActiveAttribLocationsMask();
-        const gl::ProgramState &programState = glContext->getState().getProgram()->getState();
 
         const std::vector<gl::VertexAttribute> &attribs = mState.getVertexAttributes();
         const std::vector<gl::VertexBinding> &bindings  = mState.getVertexBindings();
@@ -437,8 +436,7 @@ angle::Result VertexArrayMtl::setupDraw(const gl::Context *glContext,
                 // Use default attribute
                 // Need to find the attribute having the exact binding location = v in the program
                 // inputs list to retrieve its coresponding data type:
-                const std::vector<gl::ProgramInput> &programInputs =
-                    programState.getProgramInputs();
+                const std::vector<gl::ProgramInput> &programInputs = executable->getProgramInputs();
                 std::vector<gl::ProgramInput>::const_iterator attribInfoIte = std::find_if(
                     begin(programInputs), end(programInputs), [v](const gl::ProgramInput &sv) {
                         return static_cast<uint32_t>(sv.getLocation()) == v;
