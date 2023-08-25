@@ -1044,8 +1044,6 @@ void SerializeProgramState(JsonSerializer *json, const gl::ProgramState &program
     json->addString("Label", programState.getLabel());
     SerializeWorkGroupSize(json, programState.getComputeShaderLocalSize());
 
-    json->addScalar("LocationsUsedForXfbExtension", programState.getLocationsUsedForXfbExtension());
-
     json->addVectorOfStrings("TransformFeedbackVaryingNames",
                              programState.getTransformFeedbackVaryingNames());
     json->addScalar("ActiveUniformBlockBindingsMask",

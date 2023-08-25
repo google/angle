@@ -60,7 +60,7 @@ class ProgramPipelineState final : angle::NonCopyable
 
     void updateExecutableTextures();
 
-    rx::SpecConstUsageBits getSpecConstUsageBits() const;
+    void updateExecutableSpecConstUsageBits();
 
   private:
     void useProgramStage(const Context *context,

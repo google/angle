@@ -124,7 +124,7 @@ void ProgramPipelineState::updateExecutableTextures()
     }
 }
 
-rx::SpecConstUsageBits ProgramPipelineState::getSpecConstUsageBits() const
+void ProgramPipelineState::updateExecutableSpecConstUsageBits()
 {
     rx::SpecConstUsageBits specConstUsageBits;
     for (const ShaderType shaderType : mExecutable->getLinkedShaderStages())
@@ -133,7 +133,7 @@ rx::SpecConstUsageBits ProgramPipelineState::getSpecConstUsageBits() const
         ASSERT(program);
         specConstUsageBits |= program->getState().getSpecConstUsageBits();
     }
-    return specConstUsageBits;
+    mExecutable->mPODStruct.specConstUsageBits = specConstUsageBits;
 }
 
 ProgramPipeline::ProgramPipeline(rx::GLImplFactory *factory, ProgramPipelineID handle)
@@ -278,6 +278,13 @@ void ProgramPipeline::updateExecutableAttributes()
         vertexExecutable.mPODStruct.attributesTypeMask;
     mState.mExecutable->mPODStruct.attributesMask = vertexExecutable.mPODStruct.attributesMask;
     mState.mExecutable->mProgramInputs            = vertexExecutable.mProgramInputs;
+
+    mState.mExecutable->mPODStruct.numViews       = vertexExecutable.mPODStruct.numViews;
+    mState.mExecutable->mPODStruct.drawIDLocation = vertexExecutable.mPODStruct.drawIDLocation;
+    mState.mExecutable->mPODStruct.baseVertexLocation =
+        vertexExecutable.mPODStruct.baseVertexLocation;
+    mState.mExecutable->mPODStruct.baseInstanceLocation =
+        vertexExecutable.mPODStruct.baseInstanceLocation;
 }
 
 void ProgramPipeline::updateTransformFeedbackMembers()
@@ -459,6 +466,7 @@ void ProgramPipeline::updateExecutable()
 
     // All Shader ProgramExecutable properties
     mState.updateExecutableTextures();
+    mState.updateExecutableSpecConstUsageBits();
     updateLinkedVaryings();
 }
 

@@ -103,14 +103,11 @@ void LogLinkMismatch(InfoLog &infoLog,
 
 bool IsActiveInterfaceBlock(const sh::InterfaceBlock &interfaceBlock);
 
+void WriteActiveVariable(BinaryOutputStream *stream, const ActiveVariable &var);
+void LoadActiveVariable(BinaryInputStream *stream, ActiveVariable *var);
+
 void WriteBlockMemberInfo(BinaryOutputStream *stream, const sh::BlockMemberInfo &var);
 void LoadBlockMemberInfo(BinaryInputStream *stream, sh::BlockMemberInfo *var);
-
-void WriteInterfaceBlock(BinaryOutputStream *stream, const InterfaceBlock &block);
-void LoadInterfaceBlock(BinaryInputStream *stream, InterfaceBlock *block);
-
-void WriteShaderVariableBuffer(BinaryOutputStream *stream, const ShaderVariableBuffer &var);
-void LoadShaderVariableBuffer(BinaryInputStream *stream, ShaderVariableBuffer *var);
 
 // Struct used for correlating uniforms/elements of uniform arrays to handles
 struct VariableLocation
@@ -273,7 +270,10 @@ class ProgramState final : angle::NonCopyable
     {
         return mExecutable->getUniformMappedNames();
     }
-    const std::vector<VariableLocation> &getUniformLocations() const { return mUniformLocations; }
+    const std::vector<VariableLocation> &getUniformLocations() const
+    {
+        return mExecutable->getUniformLocations();
+    }
     const std::vector<InterfaceBlock> &getUniformBlocks() const
     {
         return mExecutable->getUniformBlocks();
@@ -282,7 +282,10 @@ class ProgramState final : angle::NonCopyable
     {
         return mExecutable->getShaderStorageBlocks();
     }
-    const std::vector<BufferVariable> &getBufferVariables() const { return mBufferVariables; }
+    const std::vector<BufferVariable> &getBufferVariables() const
+    {
+        return mExecutable->getBufferVariables();
+    }
     const std::vector<SamplerBinding> &getSamplerBindings() const
     {
         return mExecutable->getSamplerBindings();
@@ -295,7 +298,10 @@ class ProgramState final : angle::NonCopyable
     {
         return getExecutable().getImageBindings();
     }
-    const sh::WorkGroupSize &getComputeShaderLocalSize() const { return mComputeShaderLocalSize; }
+    const sh::WorkGroupSize &getComputeShaderLocalSize() const
+    {
+        return mExecutable->getComputeShaderLocalSize();
+    }
     const RangeUI &getDefaultUniformRange() const { return mExecutable->getDefaultUniformRange(); }
     const RangeUI &getSamplerUniformRange() const { return mExecutable->getSamplerUniformRange(); }
     const RangeUI &getImageUniformRange() const { return mExecutable->getImageUniformRange(); }
@@ -358,7 +364,10 @@ class ProgramState final : angle::NonCopyable
     }
 
     bool hasImages() const { return !getImageBindings().empty(); }
-    rx::SpecConstUsageBits getSpecConstUsageBits() const { return mSpecConstUsageBits; }
+    rx::SpecConstUsageBits getSpecConstUsageBits() const
+    {
+        return mExecutable->getSpecConstUsageBits();
+    }
 
     // A Program can only either be graphics or compute, but never both, so it
     // can answer isCompute() based on which shaders it has.
@@ -366,17 +375,14 @@ class ProgramState final : angle::NonCopyable
 
     const std::string &getLabel() const { return mLabel; }
 
-    uint32_t getLocationsUsedForXfbExtension() const { return mLocationsUsedForXfbExtension; }
-
     bool hasBinaryRetrieveableHint() const { return mBinaryRetrieveableHint; }
 
     bool isSeparable() const { return mSeparable; }
 
-    int getDrawIDLocation() const { return mDrawIDLocation; }
+    int getDrawIDLocation() const { return mExecutable->getDrawIDLocation(); }
 
-    int getBaseVertexLocation() const { return mBaseVertexLocation; }
-
-    int getBaseInstanceLocation() const { return mBaseInstanceLocation; }
+    int getBaseVertexLocation() const { return mExecutable->getBaseVertexLocation(); }
+    int getBaseInstanceLocation() const { return mExecutable->getBaseInstanceLocation(); }
 
     ShaderType getAttachedTransformFeedbackStage() const;
 
@@ -393,26 +399,13 @@ class ProgramState final : angle::NonCopyable
 
     std::string mLabel;
 
-    sh::WorkGroupSize mComputeShaderLocalSize;
-
     ShaderMap<SharedCompiledShaderState> mAttachedShaders;
 
-    uint32_t mLocationsUsedForXfbExtension;
     std::vector<std::string> mTransformFeedbackVaryingNames;
-
-    std::vector<VariableLocation> mUniformLocations;
-    std::vector<BufferVariable> mBufferVariables;
 
     bool mBinaryRetrieveableHint;
     bool mSeparable;
-    rx::SpecConstUsageBits mSpecConstUsageBits;
 
-    // GL_ANGLE_multi_draw
-    int mDrawIDLocation;
-
-    // GL_ANGLE_base_vertex_base_instance_shader_builtin
-    int mBaseVertexLocation;
-    int mBaseInstanceLocation;
     // Cached value of base vertex and base instance
     // need to reset them to zero if using non base vertex or base instance draw calls.
     GLint mCachedBaseVertex;
@@ -502,7 +495,7 @@ class Program final : public LabeledObject, public angle::Subject
     bool getBinaryRetrievableHint() const;
 
     void setSeparable(bool separable);
-    bool isSeparable() const;
+    bool isSeparable() const { return mState.mSeparable; }
 
     void getAttachedShaders(GLsizei maxCount, GLsizei *count, ShaderProgramID *shaders) const;
 
@@ -539,7 +532,7 @@ class Program final : public LabeledObject, public angle::Subject
     const std::vector<VariableLocation> &getUniformLocations() const
     {
         ASSERT(!mLinkingState);
-        return mState.mUniformLocations;
+        return mState.getUniformLocations();
     }
 
     const LinkedUniform &getUniformByIndex(GLuint index) const

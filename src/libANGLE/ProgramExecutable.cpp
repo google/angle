@@ -228,7 +228,8 @@ void LoadProgramInputs(BinaryInputStream *stream, std::vector<ProgramInput> *pro
 void SaveUniforms(BinaryOutputStream *stream,
                   const std::vector<LinkedUniform> &uniforms,
                   const std::vector<std::string> &uniformNames,
-                  const std::vector<std::string> &uniformMappedNames)
+                  const std::vector<std::string> &uniformMappedNames,
+                  const std::vector<VariableLocation> &uniformLocations)
 {
     stream->writeInt(uniforms.size());
     if (uniforms.size() > 0)
@@ -246,11 +247,20 @@ void SaveUniforms(BinaryOutputStream *stream,
             stream->writeString(name);
         }
     }
+
+    stream->writeInt(uniformLocations.size());
+    for (const auto &variable : uniformLocations)
+    {
+        stream->writeInt(variable.arrayIndex);
+        stream->writeIntOrNegOne(variable.index);
+        stream->writeBool(variable.ignored);
+    }
 }
 void LoadUniforms(BinaryInputStream *stream,
                   std::vector<LinkedUniform> *uniforms,
                   std::vector<std::string> *uniformNames,
-                  std::vector<std::string> *uniformMappedNames)
+                  std::vector<std::string> *uniformMappedNames,
+                  std::vector<VariableLocation> *uniformLocations)
 {
     ASSERT(uniforms->empty());
     size_t uniformCount = stream->readInt<size_t>();
@@ -271,6 +281,18 @@ void LoadUniforms(BinaryInputStream *stream,
         {
             stream->readString(&(*uniformMappedNames)[uniformIndex]);
         }
+    }
+
+    const size_t uniformIndexCount = stream->readInt<size_t>();
+    ASSERT(uniformLocations->empty());
+    for (size_t uniformIndexIndex = 0; uniformIndexIndex < uniformIndexCount; ++uniformIndexIndex)
+    {
+        VariableLocation variable;
+        stream->readInt(&variable.arrayIndex);
+        stream->readInt(&variable.index);
+        stream->readBool(&variable.ignored);
+
+        uniformLocations->push_back(variable);
     }
 }
 
@@ -300,6 +322,78 @@ void LoadSamplerBindings(BinaryInputStream *stream,
     size_t boundTextureUnitsCount = stream->readInt<size_t>();
     samplerBoundTextureUnits->resize(boundTextureUnitsCount, 0);
 }
+
+void WriteBufferVariable(BinaryOutputStream *stream, const BufferVariable &var)
+{
+    WriteShaderVar(stream, var);
+    WriteActiveVariable(stream, var.activeVariable);
+
+    stream->writeInt(var.bufferIndex);
+    WriteBlockMemberInfo(stream, var.blockInfo);
+    stream->writeInt(var.topLevelArraySize);
+}
+
+void LoadBufferVariable(BinaryInputStream *stream, BufferVariable *var)
+{
+    LoadShaderVar(stream, var);
+    LoadActiveVariable(stream, &(var->activeVariable));
+
+    var->bufferIndex = stream->readInt<int>();
+    LoadBlockMemberInfo(stream, &var->blockInfo);
+    var->topLevelArraySize = stream->readInt<int>();
+}
+
+void WriteShaderVariableBuffer(BinaryOutputStream *stream, const ShaderVariableBuffer &var)
+{
+    WriteActiveVariable(stream, var.activeVariable);
+
+    stream->writeInt(var.binding);
+    stream->writeInt(var.dataSize);
+
+    stream->writeInt(var.memberIndexes.size());
+    if (!var.memberIndexes.empty())
+    {
+        stream->writeBytes(reinterpret_cast<const unsigned char *>(var.memberIndexes.data()),
+                           sizeof(*var.memberIndexes.data()) * var.memberIndexes.size());
+    }
+}
+
+void LoadShaderVariableBuffer(BinaryInputStream *stream, ShaderVariableBuffer *var)
+{
+    LoadActiveVariable(stream, &var->activeVariable);
+
+    var->binding  = stream->readInt<int>();
+    var->dataSize = stream->readInt<unsigned int>();
+
+    ASSERT(var->memberIndexes.empty());
+    size_t numMembers = stream->readInt<size_t>();
+    if (numMembers > 0)
+    {
+        var->memberIndexes.resize(numMembers);
+        stream->readBytes(reinterpret_cast<unsigned char *>(var->memberIndexes.data()),
+                          sizeof(*var->memberIndexes.data()) * var->memberIndexes.size());
+    }
+}
+
+void WriteInterfaceBlock(BinaryOutputStream *stream, const InterfaceBlock &block)
+{
+    stream->writeString(block.name);
+    stream->writeString(block.mappedName);
+    stream->writeBool(block.isArray);
+    stream->writeInt(block.arrayElement);
+
+    WriteShaderVariableBuffer(stream, block);
+}
+
+void LoadInterfaceBlock(BinaryInputStream *stream, InterfaceBlock *block)
+{
+    block->name         = stream->readString();
+    block->mappedName   = stream->readString();
+    block->isArray      = stream->readBool();
+    block->arrayElement = stream->readInt<unsigned int>();
+
+    LoadShaderVariableBuffer(stream, block);
+}
 }  // anonymous namespace
 
 ProgramExecutable::ProgramExecutable(rx::GLImplFactory *factory)
@@ -310,6 +404,7 @@ ProgramExecutable::ProgramExecutable(rx::GLImplFactory *factory)
     mPODStruct.geometryShaderOutputPrimitiveType = PrimitiveMode::TriangleStrip;
     mPODStruct.geometryShaderInvocations         = 1;
     mPODStruct.transformFeedbackBufferMode       = GL_INTERLEAVED_ATTRIBS;
+    mPODStruct.computeShaderLocalSize.fill(1);
 
     reset(true);
 }
@@ -334,8 +429,10 @@ ProgramExecutable::ProgramExecutable(const ProgramExecutable &other)
       mUniformNames(other.mUniformNames),
       mUniformMappedNames(other.mUniformMappedNames),
       mUniformBlocks(other.mUniformBlocks),
+      mUniformLocations(other.mUniformLocations),
       mAtomicCounterBuffers(other.mAtomicCounterBuffers),
-      mShaderStorageBlocks(other.mShaderStorageBlocks)
+      mShaderStorageBlocks(other.mShaderStorageBlocks),
+      mBufferVariables(other.mBufferVariables)
 {
     reset(true);
 }
@@ -384,12 +481,20 @@ void ProgramExecutable::reset(bool clearInfoLog)
 
     mPODStruct.numViews = -1;
 
+    mPODStruct.drawIDLocation = -1;
+
+    mPODStruct.baseVertexLocation   = -1;
+    mPODStruct.baseInstanceLocation = -1;
+
     mPODStruct.tessControlShaderVertices = 0;
     mPODStruct.tessGenMode               = GL_NONE;
     mPODStruct.tessGenSpacing            = GL_NONE;
     mPODStruct.tessGenVertexOrder        = GL_NONE;
     mPODStruct.tessGenPointMode          = GL_NONE;
     mPODStruct.drawBufferTypeMask.reset();
+    mPODStruct.computeShaderLocalSize.fill(1);
+
+    mPODStruct.specConstUsageBits.reset();
 
     mActiveSamplersMask.reset();
     mActiveSamplerRefCounts = {};
@@ -406,8 +511,10 @@ void ProgramExecutable::reset(bool clearInfoLog)
     mUniformNames.clear();
     mUniformMappedNames.clear();
     mUniformBlocks.clear();
+    mUniformLocations.clear();
     mShaderStorageBlocks.clear();
     mAtomicCounterBuffers.clear();
+    mBufferVariables.clear();
     mOutputVariables.clear();
     mOutputLocations.clear();
     mSecondaryOutputLocations.clear();
@@ -428,7 +535,7 @@ void ProgramExecutable::load(bool isSeparable, gl::BinaryInputStream *stream)
     stream->readBytes(reinterpret_cast<unsigned char *>(&mPODStruct), sizeof(mPODStruct));
 
     LoadProgramInputs(stream, &mProgramInputs);
-    LoadUniforms(stream, &mUniforms, &mUniformNames, &mUniformMappedNames);
+    LoadUniforms(stream, &mUniforms, &mUniformNames, &mUniformMappedNames, &mUniformLocations);
 
     size_t uniformBlockCount = stream->readInt<size_t>();
     ASSERT(getUniformBlocks().empty());
@@ -458,6 +565,14 @@ void ProgramExecutable::load(bool isSeparable, gl::BinaryInputStream *stream)
     {
         AtomicCounterBuffer &atomicCounterBuffer = mAtomicCounterBuffers[bufferIndex];
         LoadShaderVariableBuffer(stream, &atomicCounterBuffer);
+    }
+
+    size_t bufferVariableCount = stream->readInt<size_t>();
+    ASSERT(getBufferVariables().empty());
+    mBufferVariables.resize(bufferVariableCount);
+    for (size_t bufferVarIndex = 0; bufferVarIndex < bufferVariableCount; ++bufferVarIndex)
+    {
+        LoadBufferVariable(stream, &mBufferVariables[bufferVarIndex]);
     }
 
     size_t transformFeedbackVaryingCount = stream->readInt<size_t>();
@@ -567,7 +682,7 @@ void ProgramExecutable::save(bool isSeparable, gl::BinaryOutputStream *stream) c
     stream->writeBytes(reinterpret_cast<const unsigned char *>(&mPODStruct), sizeof(mPODStruct));
 
     SaveProgramInputs(stream, mProgramInputs);
-    SaveUniforms(stream, mUniforms, mUniformNames, mUniformMappedNames);
+    SaveUniforms(stream, mUniforms, mUniformNames, mUniformMappedNames, mUniformLocations);
 
     stream->writeInt(getUniformBlocks().size());
     for (const InterfaceBlock &uniformBlock : getUniformBlocks())
@@ -585,6 +700,12 @@ void ProgramExecutable::save(bool isSeparable, gl::BinaryOutputStream *stream) c
     for (const AtomicCounterBuffer &atomicCounterBuffer : getAtomicCounterBuffers())
     {
         WriteShaderVariableBuffer(stream, atomicCounterBuffer);
+    }
+
+    stream->writeInt(getBufferVariables().size());
+    for (const BufferVariable &bufferVariable : getBufferVariables())
+    {
+        WriteBufferVariable(stream, bufferVariable);
     }
 
     stream->writeInt(getLinkedTransformFeedbackVaryings().size());
@@ -1409,8 +1530,7 @@ bool ProgramExecutable::linkUniforms(
     InfoLog &infoLog,
     const ProgramAliasedBindings &uniformLocationBindings,
     GLuint *combinedImageUniformsCountOut,
-    std::vector<UnusedUniform> *unusedUniformsOutOrNull,
-    std::vector<VariableLocation> *uniformLocationsOutOrNull)
+    std::vector<UnusedUniform> *unusedUniformsOutOrNull)
 {
     UniformLinker linker(mPODStruct.linkedShaderStages, shaderUniforms);
     if (!linker.link(caps, infoLog, uniformLocationBindings))
@@ -1419,7 +1539,7 @@ bool ProgramExecutable::linkUniforms(
     }
 
     linker.getResults(&mUniforms, &mUniformNames, &mUniformMappedNames, unusedUniformsOutOrNull,
-                      uniformLocationsOutOrNull);
+                      &mUniformLocations);
 
     linkSamplerAndImageBindings(combinedImageUniformsCountOut);
 
@@ -1610,6 +1730,9 @@ void ProgramExecutable::copyShaderBuffersFromProgram(const ProgramState &program
     AppendActiveBlocks(shaderType, programState.getUniformBlocks(), mUniformBlocks);
     AppendActiveBlocks(shaderType, programState.getShaderStorageBlocks(), mShaderStorageBlocks);
     AppendActiveBlocks(shaderType, programState.getAtomicCounterBuffers(), mAtomicCounterBuffers);
+
+    // Buffer variable info is queried through the program, and program pipelines don't access it.
+    ASSERT(mBufferVariables.empty());
 }
 
 void ProgramExecutable::clearSamplerBindings()
@@ -1677,6 +1800,9 @@ void ProgramExecutable::copyUniformsFromProgramMap(const ShaderMap<Program *> &p
     mPODStruct.fragmentInoutRange =
         AddUniforms(programs, mPODStruct.linkedShaderStages, &mUniforms, &mUniformNames,
                     &mUniformMappedNames, getInoutRange);
+
+    // Note: uniforms are set through the program, and the program pipeline never needs it.
+    ASSERT(mUniformLocations.empty());
 }
 
 GLuint ProgramExecutable::getAttributeLocation(const std::string &name) const
