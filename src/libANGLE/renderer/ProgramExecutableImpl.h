@@ -31,7 +31,7 @@ class ProgramExecutableImpl : angle::NonCopyable
 
     virtual void destroy(const gl::Context *context) {}
 
-    const gl::ProgramExecutable *getExecutable() { return mExecutable; }
+    const gl::ProgramExecutable *getExecutable() const { return mExecutable; }
 
   protected:
     const gl::ProgramExecutable *mExecutable;

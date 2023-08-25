@@ -382,6 +382,8 @@ void ProgramExecutable::reset(bool clearInfoLog)
     mPODStruct.geometryShaderInvocations         = 1;
     mPODStruct.geometryShaderMaxVertices         = 0;
 
+    mPODStruct.numViews = -1;
+
     mPODStruct.tessControlShaderVertices = 0;
     mPODStruct.tessGenMode               = GL_NONE;
     mPODStruct.tessGenSpacing            = GL_NONE;
@@ -1675,5 +1677,18 @@ void ProgramExecutable::copyUniformsFromProgramMap(const ShaderMap<Program *> &p
     mPODStruct.fragmentInoutRange =
         AddUniforms(programs, mPODStruct.linkedShaderStages, &mUniforms, &mUniformNames,
                     &mUniformMappedNames, getInoutRange);
+}
+
+GLuint ProgramExecutable::getAttributeLocation(const std::string &name) const
+{
+    for (const ProgramInput &attribute : mProgramInputs)
+    {
+        if (attribute.name == name)
+        {
+            return attribute.getLocation();
+        }
+    }
+
+    return static_cast<GLuint>(-1);
 }
 }  // namespace gl

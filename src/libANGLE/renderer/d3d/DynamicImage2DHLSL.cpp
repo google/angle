@@ -10,6 +10,7 @@
 
 #include "common/string_utils.h"
 #include "libANGLE/renderer/d3d/ProgramD3D.h"
+#include "libANGLE/renderer/d3d/ProgramExecutableD3D.h"
 #include "libANGLE/renderer/d3d/ShaderD3D.h"
 
 using namespace gl;
@@ -687,7 +688,7 @@ unsigned int *GetImage2DRegisterIndex(Image2DHLSLGroup textureGroup,
     }
 }
 
-void OutputHLSLImage2DUniformGroup(ProgramD3D &programD3D,
+void OutputHLSLImage2DUniformGroup(ProgramExecutableD3D &executableD3D,
                                    gl::ShaderType shaderType,
                                    const SharedCompiledShaderStateD3D &shaderData,
                                    std::ostringstream &out,
@@ -711,7 +712,7 @@ void OutputHLSLImage2DUniformGroup(ProgramD3D &programD3D,
          texture2DArrayRasterOrdered = false;
     for (const sh::ShaderVariable &uniform : group)
     {
-        if (!programD3D.hasNamedUniform(uniform.name))
+        if (!executableD3D.hasNamedUniform(uniform.name))
         {
             continue;
         }
@@ -780,7 +781,7 @@ void OutputHLSLImage2DUniformGroup(ProgramD3D &programD3D,
     }
     for (const sh::ShaderVariable &uniform : group)
     {
-        if (!programD3D.hasNamedUniform(uniform.name))
+        if (!executableD3D.hasNamedUniform(uniform.name))
         {
             continue;
         }
@@ -798,16 +799,16 @@ void OutputHLSLImage2DUniformGroup(ProgramD3D &programD3D,
                 case gl::TextureType::_2D:
                 {
                     out << texture2DRegisterIndex;
-                    programD3D.assignImage2DRegisters(shaderType, texture2DRegisterIndex,
-                                                      uniform.binding + index, uniform.readonly);
+                    executableD3D.assignImage2DRegisters(shaderType, texture2DRegisterIndex,
+                                                         uniform.binding + index, uniform.readonly);
                     texture2DRegisterIndex++;
                     break;
                 }
                 case gl::TextureType::_3D:
                 {
                     out << texture3DRegisterIndex;
-                    programD3D.assignImage2DRegisters(shaderType, texture3DRegisterIndex,
-                                                      uniform.binding + index, uniform.readonly);
+                    executableD3D.assignImage2DRegisters(shaderType, texture3DRegisterIndex,
+                                                         uniform.binding + index, uniform.readonly);
                     texture3DRegisterIndex++;
                     break;
                 }
@@ -815,8 +816,8 @@ void OutputHLSLImage2DUniformGroup(ProgramD3D &programD3D,
                 case gl::TextureType::CubeMap:
                 {
                     out << texture2DArrayRegisterIndex;
-                    programD3D.assignImage2DRegisters(shaderType, texture2DArrayRegisterIndex,
-                                                      uniform.binding + index, uniform.readonly);
+                    executableD3D.assignImage2DRegisters(shaderType, texture2DArrayRegisterIndex,
+                                                         uniform.binding + index, uniform.readonly);
                     texture2DArrayRegisterIndex++;
                     break;
                 }
@@ -848,8 +849,8 @@ void OutputHLSLImage2DUniformGroup(ProgramD3D &programD3D,
 constexpr const char kImage2DFunctionString[] = "// @@ IMAGE2D DECLARATION FUNCTION STRING @@";
 }  // anonymous namespace
 
-std::string GenerateShaderForImage2DBindSignature(
-    ProgramD3D &programD3D,
+std::string GenerateShaderForImage2DBindSignatureImpl(
+    ProgramExecutableD3D &executableD3D,
     gl::ShaderType shaderType,
     const SharedCompiledShaderStateD3D &shaderData,
     const std::string &shaderHLSL,
@@ -898,7 +899,7 @@ std::string GenerateShaderForImage2DBindSignature(
     for (int groupId = IMAGE2D_MIN; groupId < IMAGE2D_MAX; ++groupId)
     {
         OutputHLSLImage2DUniformGroup(
-            programD3D, shaderType, shaderData, out, Image2DHLSLGroup(groupId),
+            executableD3D, shaderType, shaderData, out, Image2DHLSLGroup(groupId),
             groupedImage2DUniforms[groupId], image2DBindLayout, baseUAVRegister,
             &groupTextureRegisterIndex, &groupRWTextureRegisterIndex, &image2DTexture3DIndex,
             &image2DTexture2DArrayIndex, &image2DTexture2DIndex);

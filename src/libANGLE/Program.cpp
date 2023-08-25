@@ -920,7 +920,6 @@ ProgramState::ProgramState(rx::GLImplFactory *factory)
       mLocationsUsedForXfbExtension(0),
       mBinaryRetrieveableHint(false),
       mSeparable(false),
-      mNumViews(-1),
       mDrawIDLocation(-1),
       mBaseVertexLocation(-1),
       mBaseInstanceLocation(-1),
@@ -999,19 +998,6 @@ GLuint ProgramState::getImageIndexFromUniformIndex(GLuint uniformIndex) const
 {
     ASSERT(isImageUniformIndex(uniformIndex));
     return uniformIndex - mExecutable->mPODStruct.imageUniformRange.low();
-}
-
-GLuint ProgramState::getAttributeLocation(const std::string &name) const
-{
-    for (const ProgramInput &attribute : mExecutable->mProgramInputs)
-    {
-        if (attribute.name == name)
-        {
-            return attribute.getLocation();
-        }
-    }
-
-    return static_cast<GLuint>(-1);
 }
 
 bool ProgramState::hasAnyAttachedShader() const
@@ -1374,7 +1360,7 @@ angle::Result Program::linkImpl(const Context *context)
         const SharedCompiledShaderState &vertexShader = mState.mAttachedShaders[ShaderType::Vertex];
         if (vertexShader)
         {
-            mState.mNumViews                               = vertexShader->numViews;
+            mState.mExecutable->mPODStruct.numViews        = vertexShader->numViews;
             mState.mExecutable->mPODStruct.hasClipDistance = vertexShader->hasClipDistance;
             mState.mSpecConstUsageBits |= vertexShader->specConstUsageBits;
         }
@@ -1570,7 +1556,6 @@ void Program::unlink()
     mState.mUniformLocations.clear();
     mState.mBufferVariables.clear();
     mState.mComputeShaderLocalSize.fill(1);
-    mState.mNumViews             = -1;
     mState.mDrawIDLocation       = -1;
     mState.mBaseVertexLocation   = -1;
     mState.mBaseInstanceLocation = -1;
@@ -1846,12 +1831,6 @@ GLint Program::getActiveAttributeMaxLength() const
     }
 
     return static_cast<GLint>(maxLength);
-}
-
-const std::vector<ProgramInput> &Program::getAttributes() const
-{
-    ASSERT(!mLinkingState);
-    return mState.mExecutable->getProgramInputs();
 }
 
 const sh::WorkGroupSize &Program::getComputeShaderLocalSize() const
@@ -3684,7 +3663,6 @@ angle::Result Program::serialize(const Context *context, angle::MemoryBuffer *bi
     stream.writeInt(computeLocalSize[1]);
     stream.writeInt(computeLocalSize[2]);
 
-    stream.writeInt(mState.mNumViews);
     stream.writeInt(mState.mSpecConstUsageBits.bits());
 
     stream.writeInt(mState.getUniformLocations().size());
@@ -3802,8 +3780,6 @@ angle::Result Program::deserialize(const Context *context,
     mState.mComputeShaderLocalSize[0] = stream.readInt<int>();
     mState.mComputeShaderLocalSize[1] = stream.readInt<int>();
     mState.mComputeShaderLocalSize[2] = stream.readInt<int>();
-
-    mState.mNumViews = stream.readInt<int>();
 
     static_assert(sizeof(mState.mSpecConstUsageBits.bits()) == sizeof(uint32_t));
     mState.mSpecConstUsageBits = rx::SpecConstUsageBits(stream.readInt<uint32_t>());

@@ -326,12 +326,15 @@ class ProgramState final : angle::NonCopyable
     GLuint getUniformIndexFromSamplerIndex(GLuint samplerIndex) const;
     bool isImageUniformIndex(GLuint index) const;
     GLuint getImageIndexFromUniformIndex(GLuint uniformIndex) const;
-    GLuint getAttributeLocation(const std::string &name) const;
+    GLuint getAttributeLocation(const std::string &name) const
+    {
+        return mExecutable->getAttributeLocation(name);
+    }
 
     GLuint getBufferVariableIndexFromName(const std::string &name) const;
 
-    int getNumViews() const { return mNumViews; }
-    bool usesMultiview() const { return mNumViews != -1; }
+    int getNumViews() const { return mExecutable->getNumViews(); }
+    bool usesMultiview() const { return mExecutable->usesMultiview(); }
 
     bool hasAnyAttachedShader() const;
 
@@ -403,9 +406,6 @@ class ProgramState final : angle::NonCopyable
     bool mBinaryRetrieveableHint;
     bool mSeparable;
     rx::SpecConstUsageBits mSpecConstUsageBits;
-
-    // GL_OVR_multiview / GL_OVR_multiview2
-    int mNumViews;
 
     // GL_ANGLE_multi_draw
     int mDrawIDLocation;
@@ -516,7 +516,6 @@ class Program final : public LabeledObject, public angle::Subject
                             GLchar *name) const;
     GLint getActiveAttributeCount() const;
     GLint getActiveAttributeMaxLength() const;
-    const std::vector<ProgramInput> &getAttributes() const;
 
     GLint getFragDataLocation(const std::string &name) const;
     size_t getOutputResourceCount() const;
