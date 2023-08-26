@@ -5480,21 +5480,21 @@ void DescriptorSetDescBuilder::updateTransformFeedbackBuffer(
 void DescriptorSetDescBuilder::updateUniformsAndXfb(
     Context *context,
     const gl::ProgramExecutable &executable,
-    const ProgramExecutableVk &executableVk,
     const WriteDescriptorDescs &writeDescriptorDescs,
     const BufferHelper *currentUniformBuffer,
     const BufferHelper &emptyBuffer,
     bool activeUnpaused,
     TransformFeedbackVk *transformFeedbackVk)
 {
-    gl::ShaderBitSet linkedStages = executable.getLinkedShaderStages();
+    const ProgramExecutableVk *executableVk = vk::GetImpl(&executable);
+    gl::ShaderBitSet linkedStages           = executable.getLinkedShaderStages();
 
-    const ShaderInterfaceVariableInfoMap &variableInfoMap = executableVk.getVariableInfoMap();
+    const ShaderInterfaceVariableInfoMap &variableInfoMap = executableVk->getVariableInfoMap();
 
     for (const gl::ShaderType shaderType : linkedStages)
     {
         uint32_t binding         = variableInfoMap.getDefaultUniformBinding(shaderType);
-        VkDeviceSize bufferRange = executableVk.getDefaultUniformAlignedSize(context, shaderType);
+        VkDeviceSize bufferRange = executableVk->getDefaultUniformAlignedSize(context, shaderType);
         if (bufferRange == 0)
         {
             updateUniformBuffer(binding, writeDescriptorDescs, emptyBuffer, emptyBuffer.getSize());
@@ -5516,18 +5516,19 @@ void DescriptorSetDescBuilder::updateUniformsAndXfb(
 }
 
 void UpdatePreCacheActiveTextures(const gl::ProgramExecutable &executable,
-                                  const ProgramExecutableVk &executableVk,
                                   const std::vector<gl::SamplerBinding> &samplerBindings,
                                   const gl::ActiveTextureMask &activeTextures,
                                   const gl::ActiveTextureArray<TextureVk *> &textures,
                                   const gl::SamplerBindingVector &samplers,
                                   DescriptorSetDesc *desc)
 {
-    desc->resize(executableVk.getTextureWriteDescriptorDescs().getTotalDescriptorCount());
-    const WriteDescriptorDescs &writeDescriptorDescs =
-        executableVk.getTextureWriteDescriptorDescs();
+    const ProgramExecutableVk *executableVk = vk::GetImpl(&executable);
 
-    const ShaderInterfaceVariableInfoMap &variableInfoMap = executableVk.getVariableInfoMap();
+    desc->resize(executableVk->getTextureWriteDescriptorDescs().getTotalDescriptorCount());
+    const WriteDescriptorDescs &writeDescriptorDescs =
+        executableVk->getTextureWriteDescriptorDescs();
+
+    const ShaderInterfaceVariableInfoMap &variableInfoMap = executableVk->getVariableInfoMap();
     const std::vector<gl::LinkedUniform> &uniforms        = executable.getUniforms();
 
     for (uint32_t samplerIndex = 0; samplerIndex < samplerBindings.size(); ++samplerIndex)

@@ -35,7 +35,7 @@ angle::Result ProgramPipelineVk::link(const gl::Context *glContext,
 {
     ContextVk *contextVk                      = vk::GetImpl(glContext);
     const gl::ProgramExecutable &glExecutable = mState.getExecutable();
-    ProgramExecutableVk *executableVk         = getExecutable();
+    ProgramExecutableVk *executableVk         = vk::GetImpl(&glExecutable);
     SpvSourceOptions options                  = SpvCreateSourceOptions(contextVk->getFeatures());
     SpvProgramInterfaceInfo spvProgramInterfaceInfo = {};
 
@@ -84,7 +84,7 @@ angle::Result ProgramPipelineVk::link(const gl::Context *glContext,
             shaderType, programExecutableVk->mOriginalShaderInfo);
     }
 
-    executableVk->setAllDefaultUniformsDirty(glExecutable);
+    executableVk->setAllDefaultUniformsDirty();
 
     if (contextVk->getFeatures().varyingsRequireMatchingPrecisionInSpirv.enabled &&
         contextVk->getFeatures().enablePrecisionQualifiers.enabled)
@@ -93,17 +93,17 @@ angle::Result ProgramPipelineVk::link(const gl::Context *glContext,
     }
 
     executableVk->resetLayout(contextVk);
-    ANGLE_TRY(executableVk->createPipelineLayout(
-        contextVk, mState.getExecutable(), &contextVk->getPipelineLayoutCache(),
-        &contextVk->getDescriptorSetLayoutCache(), nullptr));
+    ANGLE_TRY(executableVk->createPipelineLayout(contextVk, &contextVk->getPipelineLayoutCache(),
+                                                 &contextVk->getDescriptorSetLayoutCache(),
+                                                 nullptr));
     ANGLE_TRY(executableVk->initializeDescriptorPools(contextVk,
                                                       &contextVk->getDescriptorSetLayoutCache(),
                                                       &contextVk->getMetaDescriptorPools()));
 
     vk::RenderPass temporaryCompatibleRenderPass;
     angle::Result result = executableVk->warmUpPipelineCache(
-        contextVk, mState.getExecutable(), contextVk->pipelineRobustness(),
-        contextVk->pipelineProtectedAccess(), &temporaryCompatibleRenderPass);
+        contextVk, contextVk->pipelineRobustness(), contextVk->pipelineProtectedAccess(),
+        &temporaryCompatibleRenderPass);
 
     temporaryCompatibleRenderPass.destroy(contextVk->getDevice());
     return result;

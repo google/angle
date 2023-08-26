@@ -1733,7 +1733,6 @@ class DescriptorSetDescBuilder final
 
     void updateUniformsAndXfb(Context *context,
                               const gl::ProgramExecutable &executable,
-                              const ProgramExecutableVk &executableVk,
                               const WriteDescriptorDescs &writeDescriptorDescs,
                               const BufferHelper *currentUniformBuffer,
                               const BufferHelper &emptyBuffer,
@@ -1818,7 +1817,6 @@ class DescriptorSetDescBuilder final
 
 // Specialized update for textures.
 void UpdatePreCacheActiveTextures(const gl::ProgramExecutable &executable,
-                                  const ProgramExecutableVk &executableVk,
                                   const std::vector<gl::SamplerBinding> &samplerBindings,
                                   const gl::ActiveTextureMask &activeTextures,
                                   const gl::ActiveTextureArray<TextureVk *> &textures,

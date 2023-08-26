@@ -122,7 +122,6 @@ class ProgramExecutableVk : public ProgramExecutableImpl
 
     void save(ContextVk *contextVk, bool isSeparable, gl::BinaryOutputStream *stream);
     std::unique_ptr<rx::LinkEvent> load(ContextVk *contextVk,
-                                        const gl::ProgramExecutable &glExecutable,
                                         bool isSeparable,
                                         gl::BinaryInputStream *stream);
 
@@ -137,7 +136,6 @@ class ProgramExecutableVk : public ProgramExecutableImpl
     angle::Result getGraphicsPipeline(ContextVk *contextVk,
                                       vk::GraphicsPipelineSubset pipelineSubset,
                                       const vk::GraphicsPipelineDesc &desc,
-                                      const gl::ProgramExecutable &glExecutable,
                                       const vk::GraphicsPipelineDesc **descPtrOut,
                                       vk::PipelineHelper **pipelineOut);
 
@@ -146,14 +144,12 @@ class ProgramExecutableVk : public ProgramExecutableImpl
                                          vk::PipelineCacheAccess *pipelineCache,
                                          PipelineSource source,
                                          const vk::GraphicsPipelineDesc &desc,
-                                         const gl::ProgramExecutable &glExecutable,
                                          const vk::GraphicsPipelineDesc **descPtrOut,
                                          vk::PipelineHelper **pipelineOut);
 
     angle::Result linkGraphicsPipelineLibraries(ContextVk *contextVk,
                                                 vk::PipelineCacheAccess *pipelineCache,
                                                 const vk::GraphicsPipelineDesc &desc,
-                                                const gl::ProgramExecutable &glExecutable,
                                                 vk::PipelineHelper *vertexInputPipeline,
                                                 vk::PipelineHelper *shadersPipeline,
                                                 vk::PipelineHelper *fragmentOutputPipeline,
@@ -163,7 +159,6 @@ class ProgramExecutableVk : public ProgramExecutableImpl
     angle::Result getOrCreateComputePipeline(vk::Context *context,
                                              vk::PipelineCacheAccess *pipelineCache,
                                              PipelineSource source,
-                                             const gl::ProgramExecutable &glExecutable,
                                              vk::PipelineRobustness pipelineRobustness,
                                              vk::PipelineProtectedAccess pipelineProtectedAccess,
                                              vk::PipelineHelper **pipelineOut);
@@ -171,7 +166,6 @@ class ProgramExecutableVk : public ProgramExecutableImpl
     const vk::PipelineLayout &getPipelineLayout() const { return mPipelineLayout.get(); }
     void resetLayout(ContextVk *contextVk);
     angle::Result createPipelineLayout(vk::Context *context,
-                                       const gl::ProgramExecutable &glExecutable,
                                        PipelineLayoutCache *pipelineLayoutCache,
                                        DescriptorSetLayoutCache *descriptorSetLayoutCache,
                                        gl::ActiveTextureArray<TextureVk *> *activeTextures);
@@ -181,7 +175,6 @@ class ProgramExecutableVk : public ProgramExecutableImpl
         vk::DescriptorSetArray<vk::MetaDescriptorPool> *metaDescriptorPools);
 
     angle::Result updateTexturesDescriptorSet(vk::Context *context,
-                                              const gl::ProgramExecutable &executable,
                                               const gl::ActiveTextureArray<TextureVk *> &textures,
                                               const gl::SamplerBindingVector &samplers,
                                               bool emulateSeamfulCubeMapSampling,
@@ -250,21 +243,19 @@ class ProgramExecutableVk : public ProgramExecutableImpl
 
     bool hasDirtyUniforms() const { return mDefaultUniformBlocksDirty.any(); }
 
-    void setAllDefaultUniformsDirty(const gl::ProgramExecutable &executable);
+    void setAllDefaultUniformsDirty();
     angle::Result updateUniforms(vk::Context *context,
                                  UpdateDescriptorSetsBuilder *updateBuilder,
                                  vk::CommandBufferHelperCommon *commandBufferHelper,
                                  vk::BufferHelper *emptyBuffer,
-                                 const gl::ProgramExecutable &glExecutable,
                                  vk::DynamicBuffer *defaultUniformStorage,
                                  bool isTransformFeedbackActiveUnpaused,
                                  TransformFeedbackVk *transformFeedbackVk);
-    void onProgramBind(const gl::ProgramExecutable &glExecutable);
+    void onProgramBind();
 
     const ShaderInterfaceVariableInfoMap &getVariableInfoMap() const { return mVariableInfoMap; }
 
     angle::Result warmUpPipelineCache(vk::Context *context,
-                                      const gl::ProgramExecutable &glExecutable,
                                       vk::PipelineRobustness pipelineRobustness,
                                       vk::PipelineProtectedAccess pipelineProtectedAccess,
                                       vk::RenderPass *temporaryCompatibleRenderPassOut);
@@ -289,7 +280,6 @@ class ProgramExecutableVk : public ProgramExecutableImpl
 
     // The following functions are for internal use of programs, including from a threaded link job:
     angle::Result resizeUniformBlockMemory(vk::Context *context,
-                                           const gl::ProgramExecutable &glExecutable,
                                            const gl::ShaderMap<size_t> &requiredBufferSize);
     void resolvePrecisionMismatch(const gl::ProgramMergedVaryings &mergedVaryings);
     angle::Result initShaders(vk::Context *context,
@@ -321,18 +311,14 @@ class ProgramExecutableVk : public ProgramExecutableImpl
     void addAtomicCounterBufferDescriptorSetDesc(
         const std::vector<gl::AtomicCounterBuffer> &atomicCounterBuffers,
         vk::DescriptorSetLayoutDesc *descOut);
-    void addImageDescriptorSetDesc(const gl::ProgramExecutable &executable,
-                                   vk::DescriptorSetLayoutDesc *descOut);
-    void addInputAttachmentDescriptorSetDesc(const gl::ProgramExecutable &executable,
-                                             vk::DescriptorSetLayoutDesc *descOut);
+    void addImageDescriptorSetDesc(vk::DescriptorSetLayoutDesc *descOut);
+    void addInputAttachmentDescriptorSetDesc(vk::DescriptorSetLayoutDesc *descOut);
     angle::Result addTextureDescriptorSetDesc(
         vk::Context *context,
-        const gl::ProgramExecutable &executable,
         const gl::ActiveTextureArray<TextureVk *> *activeTextures,
         vk::DescriptorSetLayoutDesc *descOut);
 
     size_t calcUniformUpdateRequiredSpace(vk::Context *context,
-                                          const gl::ProgramExecutable &glExecutable,
                                           gl::ShaderMap<VkDeviceSize> *uniformOffsets) const;
 
     ANGLE_INLINE angle::Result initProgram(vk::Context *context,
@@ -382,11 +368,9 @@ class ProgramExecutableVk : public ProgramExecutableImpl
     }
 
     ProgramTransformOptions getTransformOptions(ContextVk *contextVk,
-                                                const vk::GraphicsPipelineDesc &desc,
-                                                const gl::ProgramExecutable &glExecutable);
+                                                const vk::GraphicsPipelineDesc &desc);
     angle::Result initGraphicsShaderPrograms(vk::Context *context,
                                              ProgramTransformOptions transformOptions,
-                                             const gl::ProgramExecutable &glExecutable,
                                              vk::ShaderProgramHelper **shaderProgramOut);
     angle::Result createGraphicsPipelineImpl(vk::Context *context,
                                              ProgramTransformOptions transformOptions,
@@ -395,7 +379,6 @@ class ProgramExecutableVk : public ProgramExecutableImpl
                                              PipelineSource source,
                                              const vk::GraphicsPipelineDesc &desc,
                                              const vk::RenderPass &compatibleRenderPass,
-                                             const gl::ProgramExecutable &glExecutable,
                                              const vk::GraphicsPipelineDesc **descPtrOut,
                                              vk::PipelineHelper **pipelineOut);
 
@@ -414,8 +397,7 @@ class ProgramExecutableVk : public ProgramExecutableImpl
                                           const std::vector<uint8_t> &pipelineData);
     angle::Result ensurePipelineCacheInitialized(vk::Context *context);
 
-    void initializeWriteDescriptorDesc(vk::Context *context,
-                                       const gl::ProgramExecutable &glExecutable);
+    void initializeWriteDescriptorDesc(vk::Context *context);
 
     // Descriptor sets and pools for shader resources for this program.
     vk::DescriptorSetArray<VkDescriptorSet> mDescriptorSets;

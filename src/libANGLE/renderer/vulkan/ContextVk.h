@@ -674,8 +674,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     size_t getVkIndexTypeSize(gl::DrawElementsType glIndexType) const;
     bool shouldConvertUint8VkIndexType(gl::DrawElementsType glIndexType) const;
 
-    ProgramExecutableVk *getExecutable() const;
-
     bool isRobustResourceInitEnabled() const;
 
     // Queries that begin and end automatically with render pass start and end
