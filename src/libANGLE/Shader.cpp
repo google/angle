@@ -361,6 +361,8 @@ Shader::Shader(ShaderProgramManager *manager,
       mResourceManager(manager)
 {
     ASSERT(mImplementation);
+
+    mShaderHash = {0};
 }
 
 void Shader::onDestroy(const gl::Context *context)
