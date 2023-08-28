@@ -227,14 +227,16 @@ def angle_builder(name, cpu):
         category = "trace"
 
         # Trace tests are only run on CQ if files in the capture folders change.
-        location_filters = [
-            cq.location_filter(path_regexp = "DEPS"),
-            cq.location_filter(path_regexp = "src/libANGLE/capture/.+"),
-            cq.location_filter(path_regexp = "src/tests/angle_end2end_tests_expectations.txt"),
-            cq.location_filter(path_regexp = "src/tests/capture.+"),
-            cq.location_filter(path_regexp = "src/tests/egl_tests/.+"),
-            cq.location_filter(path_regexp = "src/tests/gl_tests/.+"),
-        ]
+        # Temporarily disabled until goma->reclient switch anglebug.com/8309
+        # location_filters = [
+        #     cq.location_filter(path_regexp = "DEPS"),
+        #     cq.location_filter(path_regexp = "src/libANGLE/capture/.+"),
+        #     cq.location_filter(path_regexp = "src/tests/angle_end2end_tests_expectations.txt"),
+        #     cq.location_filter(path_regexp = "src/tests/capture.+"),
+        #     cq.location_filter(path_regexp = "src/tests/egl_tests/.+"),
+        #     cq.location_filter(path_regexp = "src/tests/gl_tests/.+"),
+        # ]
+
     elif is_perf:
         test_mode = "compile_and_test"
         category = "perf"
@@ -367,7 +369,9 @@ def angle_builder(name, cpu):
         )
 
         # Don't add experimental bots to CQ.
-        if not is_exp:
+        # Temporarily don't add trace bots to CQ,
+        # until goma->reclient switch anglebug.com/8309
+        if not (is_exp or is_trace):
             luci.cq_tryjob_verifier(
                 cq_group = "main",
                 builder = "angle:try/" + name,
