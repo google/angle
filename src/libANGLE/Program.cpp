@@ -1104,7 +1104,7 @@ Shader *Program::getAttachedShader(ShaderType shaderType) const
 void Program::bindAttributeLocation(GLuint index, const char *name)
 {
     ASSERT(!mLinkingState);
-    mAttributeBindings.bindLocation(index, name);
+    mState.mAttributeBindings.bindLocation(index, name);
 }
 
 void Program::bindUniformLocation(UniformLocation location, const char *name)
@@ -1115,12 +1115,14 @@ void Program::bindUniformLocation(UniformLocation location, const char *name)
 
 void Program::bindFragmentOutputLocation(GLuint index, const char *name)
 {
-    mFragmentOutputLocations.bindLocation(index, name);
+    ASSERT(!mLinkingState);
+    mState.mFragmentOutputLocations.bindLocation(index, name);
 }
 
 void Program::bindFragmentOutputIndex(GLuint index, const char *name)
 {
-    mFragmentOutputIndexes.bindLocation(index, name);
+    ASSERT(!mLinkingState);
+    mState.mFragmentOutputIndexes.bindLocation(index, name);
 }
 
 angle::Result Program::link(const Context *context)
@@ -1315,7 +1317,7 @@ angle::Result Program::linkImpl(const Context *context)
             if (!mState.mExecutable->linkValidateOutputVariables(
                     caps, clientVersion, combinedImageUniforms, combinedShaderStorageBlocks,
                     fragmentShader->activeOutputVariables, fragmentShader->shaderVersion,
-                    mFragmentOutputLocations, mFragmentOutputIndexes))
+                    mState.mFragmentOutputLocations, mState.mFragmentOutputIndexes))
             {
                 return angle::Result::Continue;
             }
@@ -2000,29 +2002,6 @@ const sh::ShaderVariable &Program::getOutputResource(size_t index) const
     ASSERT(!mLinkingState);
     ASSERT(index < mState.mExecutable->getOutputVariables().size());
     return mState.mExecutable->getOutputVariables()[index];
-}
-
-const ProgramBindings &Program::getAttributeBindings() const
-{
-    ASSERT(!mLinkingState);
-    return mAttributeBindings;
-}
-const ProgramAliasedBindings &Program::getUniformLocationBindings() const
-{
-    ASSERT(!mLinkingState);
-    return mState.mUniformLocationBindings;
-}
-
-const gl::ProgramAliasedBindings &Program::getFragmentOutputLocations() const
-{
-    ASSERT(!mLinkingState);
-    return mFragmentOutputLocations;
-}
-
-const gl::ProgramAliasedBindings &Program::getFragmentOutputIndexes() const
-{
-    ASSERT(!mLinkingState);
-    return mFragmentOutputIndexes;
 }
 
 const std::vector<GLsizei> &Program::getTransformFeedbackStrides() const
@@ -3181,7 +3160,7 @@ bool Program::linkAttributes(const Caps &caps,
         // Assign locations to attributes that have a binding location and check for attribute
         // aliasing.
         ProgramInput &attribute = mState.mExecutable->mProgramInputs.back();
-        int bindingLocation     = mAttributeBindings.getBinding(attribute);
+        int bindingLocation     = mState.mAttributeBindings.getBinding(attribute);
         if (attribute.getLocation() == -1 && bindingLocation != -1)
         {
             attribute.setLocation(bindingLocation);

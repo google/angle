@@ -347,9 +347,18 @@ class ProgramState final : angle::NonCopyable
     ShaderType getFirstAttachedShaderStageType() const;
     ShaderType getLastAttachedShaderStageType() const;
 
+    const ProgramBindings &getAttributeBindings() const { return mAttributeBindings; }
     const ProgramAliasedBindings &getUniformLocationBindings() const
     {
         return mUniformLocationBindings;
+    }
+    const ProgramAliasedBindings &getFragmentOutputLocations() const
+    {
+        return mFragmentOutputLocations;
+    }
+    const ProgramAliasedBindings &getFragmentOutputIndexes() const
+    {
+        return mFragmentOutputIndexes;
     }
 
     const ProgramExecutable &getExecutable() const
@@ -411,10 +420,18 @@ class ProgramState final : angle::NonCopyable
     GLint mCachedBaseVertex;
     GLuint mCachedBaseInstance;
 
+    ProgramBindings mAttributeBindings;
+
     // Note that this has nothing to do with binding layout qualifiers that can be set for some
     // uniforms in GLES3.1+. It is used to pre-set the location of uniforms.
     ProgramAliasedBindings mUniformLocationBindings;
 
+    // EXT_blend_func_extended
+    ProgramAliasedBindings mFragmentOutputLocations;
+    ProgramAliasedBindings mFragmentOutputIndexes;
+
+    // The result of the link.  State that is not the link output should remain in ProgramState,
+    // while the link output should be placed in ProgramExecutable.
     std::unique_ptr<ProgramExecutable> mExecutable;
 };
 
@@ -743,10 +760,19 @@ class Program final : public LabeledObject, public angle::Subject
     const std::string getOutputResourceName(GLuint index) const;
     const sh::ShaderVariable &getOutputResource(size_t index) const;
 
-    const ProgramBindings &getAttributeBindings() const;
-    const ProgramAliasedBindings &getUniformLocationBindings() const;
-    const ProgramAliasedBindings &getFragmentOutputLocations() const;
-    const ProgramAliasedBindings &getFragmentOutputIndexes() const;
+    const ProgramBindings &getAttributeBindings() const { return mState.getAttributeBindings(); }
+    const ProgramAliasedBindings &getUniformLocationBindings() const
+    {
+        return mState.getUniformLocationBindings();
+    }
+    const ProgramAliasedBindings &getFragmentOutputLocations() const
+    {
+        return mState.getFragmentOutputLocations();
+    }
+    const ProgramAliasedBindings &getFragmentOutputIndexes() const
+    {
+        return mState.getFragmentOutputIndexes();
+    }
 
     int getNumViews() const
     {
@@ -901,12 +927,6 @@ class Program final : public LabeledObject, public angle::Subject
     rx::ProgramImpl *mProgram;
 
     bool mValidated;
-
-    ProgramBindings mAttributeBindings;
-
-    // EXT_blend_func_extended
-    ProgramAliasedBindings mFragmentOutputLocations;
-    ProgramAliasedBindings mFragmentOutputIndexes;
 
     bool mLinked;
     std::unique_ptr<LinkingState> mLinkingState;
