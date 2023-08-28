@@ -10,6 +10,7 @@
 #define LIBANGLE_RENDERER_VULKAN_VK_HELPERS_H_
 
 #include "common/MemoryBuffer.h"
+#include "libANGLE/renderer/vulkan/MemoryTracking.h"
 #include "libANGLE/renderer/vulkan/Suballocation.h"
 #include "libANGLE/renderer/vulkan/vk_cache_utils.h"
 #include "libANGLE/renderer/vulkan/vk_format_utils.h"
@@ -2488,6 +2489,10 @@ class ImageHelper final : public Resource, public angle::Subject
     }
     const Semaphore &getAcquireNextImageSemaphore() const { return mAcquireNextImageSemaphore; }
     void resetAcquireNextImageSemaphore() { mAcquireNextImageSemaphore.release(); }
+    bool isBackedByExternalMemory() const
+    {
+        return mMemoryAllocationType == MemoryAllocationType::ImageExternal;
+    }
 
   private:
     ANGLE_ENABLE_STRUCT_PADDING_WARNINGS

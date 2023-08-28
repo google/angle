@@ -424,6 +424,9 @@ class ConditionalMutex final : angle::NonCopyable
 #define GL_UINT_64_ANGLEX 0x6ABF
 #define GL_BGRA8_SRGB_ANGLEX 0x6AC0
 #define GL_BGR10_A2_ANGLEX 0x6AF9
+#define GL_BGRX8_SRGB_ANGLEX 0x6AFC
+// fake format for GL_ANGLE_rgbx_internal_format
+#define GL_RGBX8_SRGB_ANGLEX 0x6AFA
 
 // These are fake formats used to fit typeless D3D textures that can be bound to EGL pbuffers into
 // the format system (for extension EGL_ANGLE_d3d_texture_client_buffer):

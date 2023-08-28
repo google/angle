@@ -1157,9 +1157,11 @@ static InternalFormatInfoMap BuildInternalFormatInfoMap()
 
     // Special format to emulate RGB8 with RGBA8 within ANGLE.
     AddRGBAXFormat(&map, GL_RGBX8_ANGLE,      true,   FB< 8,  8,  8,  0, 8, 0>(), GL_RGB,          GL_UNSIGNED_BYTE,                  GL_UNSIGNED_NORMALIZED, false, AlwaysSupported,                                   AlwaysSupported, AlwaysSupported,                                   AlwaysSupported,                               NeverSupported);
+    AddRGBAXFormat(&map, GL_RGBX8_SRGB_ANGLEX,      true,   FB< 8,  8,  8,  0, 8, 0>(), GL_RGB,          GL_UNSIGNED_BYTE,                  GL_UNSIGNED_NORMALIZED, true, AlwaysSupported,                                   AlwaysSupported, AlwaysSupported,                                   AlwaysSupported,                               NeverSupported);
 
     // Special format to emulate BGR8 with BGRA8 within ANGLE.
     AddRGBAXFormat(&map, GL_BGRX8_ANGLEX,      true,  FB< 8,  8,  8,  0, 8, 0>(), GL_BGRA_EXT,     GL_UNSIGNED_BYTE,                  GL_UNSIGNED_NORMALIZED, false, NeverSupported,                                    AlwaysSupported,  NeverSupported,                                    NeverSupported,                                NeverSupported);
+    AddRGBAXFormat(&map, GL_BGRX8_SRGB_ANGLEX,      true,  FB< 8,  8,  8,  0, 8, 0>(), GL_BGRA_EXT,     GL_UNSIGNED_BYTE,                  GL_UNSIGNED_NORMALIZED, true, NeverSupported,                                    AlwaysSupported,  NeverSupported,                                    NeverSupported,                                NeverSupported);
 
     // This format is supported on ES 2.0 with two extensions, so keep it out-of-line to not widen the table above even more.
     //                 | Internal format     |sized| R | G | B | A |S | Format         | Type                             | Component type        | SRGB | Texture supported                                                                            | Filterable     | Texture attachment                               | Renderbuffer                                   | Blend
