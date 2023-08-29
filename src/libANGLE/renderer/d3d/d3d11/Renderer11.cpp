@@ -1035,10 +1035,10 @@ egl::Error Renderer11::initializeD3DDevice()
 
 void Renderer11::setGlobalDebugAnnotator()
 {
-    static std::mutex gMutex;
+    static angle::base::NoDestructor<std::mutex> gMutex;
     static angle::base::NoDestructor<DebugAnnotator11> gGlobalAnnotator;
 
-    std::lock_guard<std::mutex> lg(gMutex);
+    std::lock_guard<std::mutex> lg(*gMutex);
     gl::InitializeDebugAnnotations(gGlobalAnnotator.get());
 }
 
