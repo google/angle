@@ -4152,8 +4152,8 @@ TEST_P(ImageTestES3, RGBXAHBUploadDataColorspace)
     AHardwareBuffer *ahb;
     EGLImageKHR ahbImage;
     createEGLImageAndroidHardwareBufferSource(1, 1, 1, AHARDWAREBUFFER_FORMAT_R8G8B8X8_UNORM,
-                                              kDefaultAHBUsage, kColorspaceAttribs, {{kGarbage, 4}},
-                                              &ahb, &ahbImage);
+                                              kDefaultAHBUsage, kColorspaceAttribs,
+                                              {{kGarbage, sizeof(kGarbage)}}, &ahb, &ahbImage);
 
     GLTexture ahbTexture;
     createEGLImageTargetTexture2D(ahbImage, ahbTexture);
@@ -4163,7 +4163,42 @@ TEST_P(ImageTestES3, RGBXAHBUploadDataColorspace)
     glFinish();
 
     verifyResults2D(ahbTexture, kRed50Linear);
-    verifyResultAHB(ahb, {{kRed50SRGB, 4}});
+    verifyResultAHB(ahb, {{kRed50SRGB, sizeof(kRed50SRGB)}});
+
+    // Clean up
+    eglDestroyImageKHR(window->getDisplay(), ahbImage);
+    destroyAndroidHardwareBuffer(ahb);
+}
+
+// Test that RGB data are preserved when importing from AHB created with sRGB color space and
+// glTexSubImage is able to update data.
+TEST_P(ImageTestES3, RGBAHBUploadDataColorspace)
+{
+    EGLWindow *window = getEGLWindow();
+
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
+    ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+
+    const GLubyte kGarbage[]     = {123, 123, 123};
+    const GLubyte kRed50SRGB[]   = {188, 0, 0};
+    const GLubyte kRed50Linear[] = {128, 0, 0, 255};
+
+    // Create the Image
+    AHardwareBuffer *ahb;
+    EGLImageKHR ahbImage;
+    createEGLImageAndroidHardwareBufferSource(1, 1, 1, AHARDWAREBUFFER_FORMAT_R8G8B8_UNORM,
+                                              kDefaultAHBUsage, kColorspaceAttribs,
+                                              {{kGarbage, sizeof(kGarbage)}}, &ahb, &ahbImage);
+
+    GLTexture ahbTexture;
+    createEGLImageTargetTexture2D(ahbImage, ahbTexture);
+
+    glBindTexture(GL_TEXTURE_2D, ahbTexture);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, kRed50SRGB);
+    glFinish();
+
+    verifyResults2D(ahbTexture, kRed50Linear);
+    verifyResultAHB(ahb, {{kRed50SRGB, sizeof(kRed50SRGB)}});
 
     // Clean up
     eglDestroyImageKHR(window->getDisplay(), ahbImage);

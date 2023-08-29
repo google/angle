@@ -1614,15 +1614,11 @@ angle::Result TextureVk::setStorageExternalMemory(const gl::Context *context,
                                                   const void *imageCreateInfoPNext)
 {
     ContextVk *contextVk           = vk::GetImpl(context);
-    RendererVk *renderer           = contextVk->getRenderer();
     MemoryObjectVk *memoryObjectVk = vk::GetImpl(memoryObject);
 
     releaseAndDeleteImageAndViews(contextVk);
 
-    const vk::Format &format = renderer->getFormat(internalFormat);
-
-    setImageHelper(contextVk, new vk::ImageHelper(), gl::TextureType::InvalidEnum, format, 0, 0,
-                   true, {});
+    setImageHelper(contextVk, new vk::ImageHelper(), gl::TextureType::InvalidEnum, 0, 0, true, {});
 
     mImage->setTilingMode(gl_vk::GetTilingMode(mState.getTilingMode()));
 
@@ -1677,7 +1673,6 @@ angle::Result TextureVk::setEGLImageTarget(const gl::Context *context,
                                            egl::Image *image)
 {
     ContextVk *contextVk = vk::GetImpl(context);
-    RendererVk *renderer = contextVk->getRenderer();
     ImageVk *imageVk     = vk::GetImpl(image);
 
     // Early out if we are creating TextureVk with the exact same eglImage and target/face/level to
@@ -1697,9 +1692,8 @@ angle::Result TextureVk::setEGLImageTarget(const gl::Context *context,
 
     releaseAndDeleteImageAndViews(contextVk);
 
-    const vk::Format &format   = renderer->getFormat(image->getFormat().info->sizedInternalFormat);
     UniqueSerial siblingSerial = imageVk->generateSiblingSerial();
-    setImageHelper(contextVk, imageVk->getImage(), imageVk->getImageTextureType(), format,
+    setImageHelper(contextVk, imageVk->getImage(), imageVk->getImageTextureType(),
                    imageVk->getImageLevel().get(), imageVk->getImageLayer(), false, siblingSerial);
 
     ANGLE_TRY(initImageViews(contextVk, getImageViewLevelCount()));
@@ -1818,8 +1812,8 @@ angle::Result TextureVk::ensureImageAllocated(ContextVk *contextVk, const vk::Fo
 {
     if (mImage == nullptr)
     {
-        setImageHelper(contextVk, new vk::ImageHelper(), gl::TextureType::InvalidEnum, format, 0, 0,
-                       true, {});
+        setImageHelper(contextVk, new vk::ImageHelper(), gl::TextureType::InvalidEnum, 0, 0, true,
+                       {});
     }
 
     initImageUsageFlags(contextVk, format.getActualImageFormatID(getRequiredImageAccess()));
@@ -1830,7 +1824,6 @@ angle::Result TextureVk::ensureImageAllocated(ContextVk *contextVk, const vk::Fo
 void TextureVk::setImageHelper(ContextVk *contextVk,
                                vk::ImageHelper *imageHelper,
                                gl::TextureType eglImageNativeType,
-                               const vk::Format &unused,
                                uint32_t imageLevelOffset,
                                uint32_t imageLayerOffset,
                                bool selfOwned,
@@ -2561,19 +2554,15 @@ angle::Result TextureVk::respecifyImageStorage(ContextVk *contextVk)
 angle::Result TextureVk::bindTexImage(const gl::Context *context, egl::Surface *surface)
 {
     ContextVk *contextVk = vk::GetImpl(context);
-    RendererVk *renderer = contextVk->getRenderer();
 
     releaseAndDeleteImageAndViews(contextVk);
-
-    const gl::InternalFormat &glInternalFormat = *surface->getBindTexImageFormat().info;
-    const vk::Format &format = renderer->getFormat(glInternalFormat.sizedInternalFormat);
 
     // eglBindTexImage can only be called with pbuffer (offscreen) surfaces
     OffscreenSurfaceVk *offscreenSurface = GetImplAs<OffscreenSurfaceVk>(surface);
     // Surface can only have single target. Just generate valid serial with throw-away generator.
     UniqueSerial siblingSerial = UniqueSerialFactory().generate();
     setImageHelper(contextVk, offscreenSurface->getColorAttachmentImage(),
-                   gl::TextureType::InvalidEnum, format, 0, 0, false, siblingSerial);
+                   gl::TextureType::InvalidEnum, 0, 0, false, siblingSerial);
 
     ASSERT(mImage->getLayerCount() == 1);
     return initImageViews(contextVk, getImageViewLevelCount());

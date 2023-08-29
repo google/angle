@@ -357,7 +357,6 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
     void setImageHelper(ContextVk *contextVk,
                         vk::ImageHelper *imageHelper,
                         gl::TextureType imageType,
-                        const vk::Format &format,
                         uint32_t imageLevelOffset,
                         uint32_t imageLayerOffset,
                         bool selfOwned,

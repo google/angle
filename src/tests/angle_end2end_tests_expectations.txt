@@ -464,6 +464,8 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 5981 PIXEL4ORXL GLES : ImageTestES3.SourceAHBTargetExternalESSL3_Colorspace/* = SKIP
 5981 PIXEL4ORXL GLES : ImageTestES3.SourceCubeTargetExternalESSL3_Colorspace/* = SKIP
 5981 PIXEL4ORXL GLES : ImageTestES3.SourceRenderbufferTargetTextureExternalESSL3_Colorspace/* = SKIP
+// eglCreateImageKHR: AHardwareBuffer format 23 does not support enough features to use as a texture.
+298037344 PIXEL4ORXL GLES : ImageTestES3.RGBAHBUploadDataColorspace/* = SKIP
 5981 PIXEL4ORXL GLES : MipmapTest.DefineValidExtraLevelAndUseItLater/* = SKIP
 5981 PIXEL4ORXL GLES : MipmapTest.GenerateMipmapAfterModifyingBaseLevel/* = SKIP
 5981 PIXEL4ORXL GLES : MipmapTest.GenerateMipmapAfterSingleLevelDraw/* = SKIP
@@ -545,6 +547,8 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 6843 PIXEL4ORXL VULKAN : ImageTest.SourceYUVAHBTargetExternalRGBSampleInitData/* = SKIP
 6843 PIXEL4ORXL VULKAN : ImageTestES3.SourceYUVAHBTargetExternalYUVSampleLinearFiltering/* = SKIP
 7108 PIXEL4ORXL VULKAN : ImageTestES3.SourceAHBMipTarget2DMip/* = SKIP
+// eglCreateImageKHR: AHardwareBuffer format 23 does not support enough features to use as a texture.
+298037344 PIXEL4ORXL VULKAN : ImageTestES3.RGBAHBUploadDataColorspace/* = SKIP
 
 7140 PIXEL4ORXL VULKAN : ColorMaskForDrawBuffersTest.Clear/* = SKIP
 7140 PIXEL4ORXL VULKAN : ColorMaskForDrawBuffersTest.ScissoredClear/* = SKIP
