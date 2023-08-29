@@ -466,6 +466,31 @@ bool ValidateColorspaceAttribute(const ValidationContext *val,
                 return false;
             }
             break;
+        case EGL_GL_COLORSPACE_BT2020_LINEAR_EXT:
+            if (!displayExtensions.glColorspaceBt2020Linear &&
+                !displayExtensions.eglColorspaceAttributePassthroughANGLE)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE,
+                              "EXT_gl_colorspace_bt2020_linear is not available");
+                return false;
+            }
+            break;
+        case EGL_GL_COLORSPACE_BT2020_PQ_EXT:
+            if (!displayExtensions.glColorspaceBt2020Pq &&
+                !displayExtensions.eglColorspaceAttributePassthroughANGLE)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE, "EXT_gl_colorspace_bt2020_pq is not available");
+                return false;
+            }
+            break;
+        case EGL_GL_COLORSPACE_BT2020_HLG_EXT:
+            if (!displayExtensions.glColorspaceBt2020Hlg &&
+                !displayExtensions.eglColorspaceAttributePassthroughANGLE)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE, "EXT_gl_colorspace_bt2020_hlg is not available");
+                return false;
+            }
+            break;
         default:
             val->setError(EGL_BAD_ATTRIBUTE);
             return false;
