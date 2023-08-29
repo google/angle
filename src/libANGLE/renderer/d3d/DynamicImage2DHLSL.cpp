@@ -249,6 +249,28 @@ std::string Image2DHLSLGroupDeclarationPrefix(Image2DHLSLGroup group)
     return "<unknown group type>";
 }
 
+bool IsReadOnlyImage2DHLSLGroup(Image2DHLSLGroup group)
+{
+    switch (group)
+    {
+        case IMAGE2D_R_FLOAT4:
+        case IMAGE2D_R_UNORM:
+        case IMAGE2D_R_SNORM:
+        case IMAGE2D_R_UINT4:
+        case IMAGE2D_R_INT4:
+            return true;
+        case IMAGE2D_W_FLOAT4:
+        case IMAGE2D_W_UNORM:
+        case IMAGE2D_W_SNORM:
+        case IMAGE2D_W_UINT4:
+        case IMAGE2D_W_INT4:
+            return false;
+        default:
+            UNREACHABLE();
+    }
+    return false;
+}
+
 std::string Image2DHLSLGroupRegisterSuffix(Image2DHLSLGroup group)
 {
     switch (group)
@@ -747,6 +769,8 @@ void OutputHLSLImage2DUniformGroup(ProgramExecutableD3D &executableD3D,
     unsigned int texture2DArrayRegisterIndex = texture3DRegisterIndex + texture3DCount;
     *image2DRegisterIndex += totalCount;
 
+    unsigned int baseRegister = IsReadOnlyImage2DHLSLGroup(textureGroup) ? 0 : baseUAVRegister;
+
     std::string offsetStr =
         Image2DHLSLGroupOffsetPrefix(textureGroup) + Image2DHLSLGroupSuffix(textureGroup);
     std::string declarationStr =
@@ -758,7 +782,7 @@ void OutputHLSLImage2DUniformGroup(ProgramExecutableD3D &executableD3D,
         out << "uniform "
             << Image2DHLSLTextureString(textureGroup, gl::TextureType::_2D, texture2DRasterOrdered)
             << " " << declarationStr << "2D[" << texture2DCount << "]"
-            << " : register(" << registerStr << baseUAVRegister + texture2DRegisterIndex << ");\n";
+            << " : register(" << registerStr << baseRegister + texture2DRegisterIndex << ");\n";
     }
     if (texture3DCount > 0)
     {
@@ -766,7 +790,7 @@ void OutputHLSLImage2DUniformGroup(ProgramExecutableD3D &executableD3D,
         out << "uniform "
             << Image2DHLSLTextureString(textureGroup, gl::TextureType::_3D, texture3DRasterOrdered)
             << " " << declarationStr << "3D[" << texture3DCount << "]"
-            << " : register(" << registerStr << baseUAVRegister + texture3DRegisterIndex << ");\n";
+            << " : register(" << registerStr << baseRegister + texture3DRegisterIndex << ");\n";
     }
     if (texture2DArrayCount > 0)
     {
@@ -776,7 +800,7 @@ void OutputHLSLImage2DUniformGroup(ProgramExecutableD3D &executableD3D,
             << Image2DHLSLTextureString(textureGroup, gl::TextureType::_2DArray,
                                         texture2DArrayRasterOrdered)
             << " " << declarationStr << "2DArray[" << texture2DArrayCount << "]"
-            << " : register(" << registerStr << baseUAVRegister + texture2DArrayRegisterIndex
+            << " : register(" << registerStr << baseRegister + texture2DArrayRegisterIndex
             << ");\n";
     }
     for (const sh::ShaderVariable &uniform : group)

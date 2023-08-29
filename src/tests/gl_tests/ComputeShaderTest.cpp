@@ -5124,6 +5124,12 @@ void main()
 // Test fragment shader read a image, followed by compute shader sample it.
 TEST_P(ComputeShaderTest, FSReadImageThenCSSample)
 {
+    GLint maxFragmentImageUniforms = 0;
+    glGetIntegerv(GL_MAX_FRAGMENT_IMAGE_UNIFORMS, &maxFragmentImageUniforms);
+
+    // MAX_FRAGMENT_IMAGE_UNIFORMS can be 0 according to OpenGL ES 3.1 SPEC.
+    ANGLE_SKIP_TEST_IF(maxFragmentImageUniforms == 0);
+
     constexpr char kVSSource[] = R"(#version 310 es
 in vec4 a_position;
 out vec2 v_texCoord;

@@ -64,7 +64,6 @@
 4092 WIN OPENGL : BufferDataOverflowTest.VertexBufferIntegerOverflow/* = SKIP
 4092 WIN GLES : BufferDataOverflowTest.VertexBufferIntegerOverflow/* = SKIP
 6064 WIN D3D11 : SimpleStateChangeTestES31.DrawThenChangeFBOThenDrawThenFlushInAnotherThreadThenDrawIndexed/* = SKIP
-4404 WIN D3D11 : ComputeShaderTest.FSReadImageThenCSSample/* = SKIP
 6101 WIN OPENGL INTEL : BlitFramebufferTest.OOBWrite/* = SKIP
 1229184 WIN NVIDIA VULKAN : SimpleStateChangeTest.RedefineFramebufferTexture/* = SKIP
 6173 WIN INTEL OPENGL : GLSLTest_ES31.BoolInInterfaceBlocks/* = SKIP
