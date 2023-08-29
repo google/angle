@@ -16200,6 +16200,34 @@ void main() {
     ASSERT_GL_NO_ERROR();
 }
 
+// Test that aliasing function out parameters work even when multiple params are aliased.
+TEST_P(GLSLTest, AliasingFunctionOutParamsMultiple)
+{
+    constexpr char kFS[] = R"(precision highp float;
+
+const vec4 colorGreen = vec4(0.,1.,0.,1.);
+const vec4 colorRed   = vec4(1.,0.,0.,1.);
+
+bool outParametersAreDistinct(out float x, out float y, out float z, out float a) {
+    x = 1.0;
+    y = 2.0;
+    z = 3.0;
+    a = 4.0;
+    return x == 1.0 && y == 2.0 && z == 3.0 && a == 4.0;
+}
+void main() {
+    float x = 0.0;
+    float y = 0.0;
+    gl_FragColor = outParametersAreDistinct(x, x, y, y) ? colorGreen : colorRed;
+}
+)";
+
+    ANGLE_GL_PROGRAM(testProgram, essl1_shaders::vs::Simple(), kFS);
+    drawQuad(testProgram, essl3_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    ASSERT_GL_NO_ERROR();
+}
+
 // Test that aliasing function inout parameters work.
 TEST_P(GLSLTest, AliasingFunctionInOutParams)
 {
@@ -16216,6 +16244,34 @@ bool inoutParametersAreDistinct(inout float x, inout float y) {
 void main() {
     float x = 0.0;
     gl_FragColor = inoutParametersAreDistinct(x, x) ? colorGreen : colorRed;
+}
+)";
+
+    ANGLE_GL_PROGRAM(testProgram, essl1_shaders::vs::Simple(), kFS);
+    drawQuad(testProgram, essl3_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that aliasing function inout parameters work when more than one param is aliased.
+TEST_P(GLSLTest, AliasingFunctionInOutParamsMultiple)
+{
+    constexpr char kFS[] = R"(precision highp float;
+
+const vec4 colorGreen = vec4(0.,1.,0.,1.);
+const vec4 colorRed   = vec4(1.,0.,0.,1.);
+
+bool inoutParametersAreDistinct(inout float x, inout float y, inout float z, inout float a) {
+    x = 1.0;
+    y = 2.0;
+    z = 3.0;
+    a = 4.0;
+    return x == 1.0 && y == 2.0 && z == 3.0 && a == 4.0;
+}
+void main() {
+    float x = 0.0;
+    float y = 0.0;
+    gl_FragColor = inoutParametersAreDistinct(x, x, y, y) ? colorGreen : colorRed;
 }
 )";
 

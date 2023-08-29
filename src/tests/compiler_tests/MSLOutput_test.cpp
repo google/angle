@@ -814,3 +814,37 @@ TEST_F(MSLOutputTest, GlobalRescopingDeclarationAfterFunction)
         )";
     compile(shaderString);
 }
+
+TEST_F(MSLOutputTest, ReusedOutVarName)
+{
+    const std::string &shaderString =
+        R"(#version 300 es
+        precision mediump float;
+
+        out vec4 my_FragColor;
+
+        void funcWith1Out(
+        out float outC) {
+            outC = 1.0;
+        }
+
+        void funcWith4Outs(
+        out float outA,
+        out float outB,
+        out float outC,
+        out float outD) {
+            outA = 1.0;
+            outB = 1.0;
+            outD = 1.0;
+        }
+
+
+        void main()
+        {
+            funcWith1Out(my_FragColor.g);
+            funcWith4Outs(my_FragColor.r, my_FragColor.g, my_FragColor.b, my_FragColor.a);
+        }
+
+        )";
+    compile(shaderString);
+}
