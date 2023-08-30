@@ -430,6 +430,8 @@ class ProgramState final : angle::NonCopyable
     ProgramAliasedBindings mFragmentOutputLocations;
     ProgramAliasedBindings mFragmentOutputIndexes;
 
+    InfoLog mInfoLog;
+
     // The result of the link.  State that is not the link output should remain in ProgramState,
     // while the link output should be placed in ProgramExecutable.
     std::unique_ptr<ProgramExecutable> mExecutable;
@@ -510,6 +512,10 @@ class Program final : public LabeledObject, public angle::Subject
     GLint getBinaryLength(Context *context) const;
     void setBinaryRetrievableHint(bool retrievable);
     bool getBinaryRetrievableHint() const;
+
+    InfoLog &getInfoLog() { return mState.mInfoLog; }
+    int getInfoLogLength() const;
+    void getInfoLog(GLsizei bufSize, GLsizei *length, char *infoLog) const;
 
     void setSeparable(bool separable);
     bool isSeparable() const { return mState.mSeparable; }
@@ -836,26 +842,22 @@ class Program final : public LabeledObject, public angle::Subject
     ~Program() override;
 
     // Loads program state according to the specified binary blob.
-    angle::Result deserialize(const Context *context, BinaryInputStream &stream, InfoLog &infoLog);
+    angle::Result deserialize(const Context *context, BinaryInputStream &stream);
 
     void unlink();
     void deleteSelf(const Context *context);
 
     angle::Result linkImpl(const Context *context);
 
-    bool linkValidateShaders(const Context *context, InfoLog &infoLog);
+    bool linkValidateShaders(const Context *context);
     void linkShaders();
-    bool linkAttributes(const Caps &caps,
-                        const Limitations &limitations,
-                        bool webglCompatibility,
-                        InfoLog &infoLog);
-    bool linkVaryings(InfoLog &infoLog) const;
+    bool linkAttributes(const Caps &caps, const Limitations &limitations, bool webglCompatibility);
+    bool linkVaryings();
 
     bool linkUniforms(const Caps &caps,
                       const Version &clientVersion,
                       std::vector<UnusedUniform> *unusedUniformsOutOrNull,
-                      GLuint *combinedImageUniformsOut,
-                      InfoLog &infoLog);
+                      GLuint *combinedImageUniformsOut);
 
     void updateLinkedShaderStages();
 

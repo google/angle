@@ -118,8 +118,7 @@ void ProgramGL::destroy(const gl::Context *context)
 }
 
 std::unique_ptr<LinkEvent> ProgramGL::load(const gl::Context *context,
-                                           gl::BinaryInputStream *stream,
-                                           gl::InfoLog &infoLog)
+                                           gl::BinaryInputStream *stream)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "ProgramGL::load");
     ProgramExecutableGL *executableGL = getExecutable();
@@ -136,7 +135,7 @@ std::unique_ptr<LinkEvent> ProgramGL::load(const gl::Context *context,
     mFunctions->programBinary(mProgramID, binaryFormat, binary, binaryLength);
 
     // Verify that the program linked
-    if (!checkLinkStatus(infoLog))
+    if (!checkLinkStatus())
     {
         return std::make_unique<LinkEventDone>(angle::Result::Incomplete);
     }
@@ -247,7 +246,6 @@ void ProgramGL::prepareForLink(const gl::ShaderMap<ShaderImpl *> &shaders)
 
 std::unique_ptr<LinkEvent> ProgramGL::link(const gl::Context *context,
                                            const gl::ProgramLinkedResources &resources,
-                                           gl::InfoLog &infoLog,
                                            gl::ProgramMergedVaryings && /*mergedVaryings*/)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "ProgramGL::link");
@@ -427,7 +425,7 @@ std::unique_ptr<LinkEvent> ProgramGL::link(const gl::Context *context,
     }
     auto workerPool = context->getShaderCompileThreadPool();
 
-    auto postLinkImplTask = [this, &infoLog, &resources]() {
+    auto postLinkImplTask = [this, &resources]() {
         if (mAttachedShaders[gl::ShaderType::Compute] != 0)
         {
             mFunctions->detachShader(mProgramID, mAttachedShaders[gl::ShaderType::Compute]);
@@ -443,7 +441,7 @@ std::unique_ptr<LinkEvent> ProgramGL::link(const gl::Context *context,
             }
         }
         // Verify the link
-        if (!checkLinkStatus(infoLog))
+        if (!checkLinkStatus())
         {
             return angle::Result::Incomplete;
         }
@@ -470,7 +468,7 @@ std::unique_ptr<LinkEvent> ProgramGL::link(const gl::Context *context,
     }
 }
 
-GLboolean ProgramGL::validate(const gl::Caps & /*caps*/, gl::InfoLog * /*infoLog*/)
+GLboolean ProgramGL::validate(const gl::Caps & /*caps*/)
 {
     // TODO(jmadill): implement validate
     return true;
@@ -935,7 +933,7 @@ void ProgramGL::getAtomicCounterBufferSizeMap(std::map<int, unsigned int> *sizeM
     }
 }
 
-bool ProgramGL::checkLinkStatus(gl::InfoLog &infoLog)
+bool ProgramGL::checkLinkStatus()
 {
     GLint linkStatus = GL_FALSE;
     mFunctions->getProgramiv(mProgramID, GL_LINK_STATUS, &linkStatus);
@@ -952,7 +950,7 @@ bool ProgramGL::checkLinkStatus(gl::InfoLog &infoLog)
             std::vector<char> buf(infoLogLength);
             mFunctions->getProgramInfoLog(mProgramID, infoLogLength, nullptr, &buf[0]);
 
-            infoLog << buf.data();
+            mState.getExecutable().getInfoLog() << buf.data();
 
             WARN() << "Program link or binary loading failed: " << buf.data();
         }

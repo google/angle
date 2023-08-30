@@ -201,8 +201,7 @@ class ProgramPipelineState;
 class ProgramExecutable final : public angle::Subject
 {
   public:
-    ProgramExecutable(rx::GLImplFactory *factory);
-    ProgramExecutable(const ProgramExecutable &other);
+    ProgramExecutable(rx::GLImplFactory *factory, InfoLog *infoLog);
     ~ProgramExecutable() override;
 
     void destroy(const Context *context);
@@ -212,11 +211,9 @@ class ProgramExecutable final : public angle::Subject
     void save(bool isSeparable, gl::BinaryOutputStream *stream) const;
     void load(bool isSeparable, gl::BinaryInputStream *stream);
 
-    int getInfoLogLength() const;
-    InfoLog &getInfoLog() { return mInfoLog; }
-    void getInfoLog(GLsizei bufSize, GLsizei *length, char *infoLog) const;
+    InfoLog &getInfoLog() const { return *mInfoLog; }
     std::string getInfoLogString() const;
-    void resetInfoLog() { mInfoLog.reset(); }
+    void resetInfoLog() const { mInfoLog->reset(); }
 
     void resetLinkedShaderStages() { mPODStruct.linkedShaderStages.reset(); }
     const ShaderBitSet getLinkedShaderStages() const { return mPODStruct.linkedShaderStages; }
@@ -475,17 +472,17 @@ class ProgramExecutable final : public angle::Subject
     int getBaseInstanceLocation() const { return mPODStruct.baseInstanceLocation; }
 
     void resetCachedValidateSamplersResult() { mCachedValidateSamplersResult.reset(); }
-    bool validateSamplers(InfoLog *infoLog, const Caps &caps) const
+    bool validateSamplers(const Caps &caps) const
     {
         // Use the cache if:
         // - we aren't using an info log (which gives the full error).
         // - The sample mapping hasn't changed and we've already validated.
-        if (infoLog == nullptr && mCachedValidateSamplersResult.valid())
+        if (mCachedValidateSamplersResult.valid())
         {
             return mCachedValidateSamplersResult.value();
         }
 
-        return validateSamplersImpl(infoLog, caps);
+        return validateSamplersImpl(caps);
     }
 
     ComponentTypeMask getFragmentOutputsTypeMask() const { return mPODStruct.drawBufferTypeMask; }
@@ -496,7 +493,6 @@ class ProgramExecutable final : public angle::Subject
 
     bool linkUniforms(const Caps &caps,
                       const ShaderMap<std::vector<sh::ShaderVariable>> &shaderUniforms,
-                      InfoLog &infoLog,
                       const ProgramAliasedBindings &uniformLocationBindings,
                       GLuint *combinedImageUniformsCount,
                       std::vector<UnusedUniform> *unusedUniforms);
@@ -517,7 +513,7 @@ class ProgramExecutable final : public angle::Subject
     friend class ProgramState;
     friend class ProgramPipelineState;
 
-    void reset(bool clearInfoLog);
+    void reset();
 
     void updateActiveImages(const ProgramExecutable &executable);
 
@@ -550,7 +546,7 @@ class ProgramExecutable final : public angle::Subject
 
     void updateTransformFeedbackStrides();
 
-    bool validateSamplersImpl(InfoLog *infoLog, const Caps &caps) const;
+    bool validateSamplersImpl(const Caps &caps) const;
 
     bool linkValidateOutputVariables(const Caps &caps,
                                      const Version &version,
@@ -564,10 +560,13 @@ class ProgramExecutable final : public angle::Subject
     bool gatherOutputTypes();
 
     void linkSamplerAndImageBindings(GLuint *combinedImageUniformsCount);
-    bool linkAtomicCounterBuffers(const Caps &caps, InfoLog &infoLog);
+    bool linkAtomicCounterBuffers(const Caps &caps);
 
-    InfoLog mInfoLog;
     rx::ProgramExecutableImpl *mImplementation;
+
+    // A reference to the owning object's (Program or ProgramPipeline) info log.  It's kept here for
+    // convenience as numerous functions reference it.
+    InfoLog *mInfoLog;
 
     // This struct must only contains basic data types so that entire struct can be memcpy.
     struct PODStruct

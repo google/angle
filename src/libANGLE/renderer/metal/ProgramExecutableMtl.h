@@ -124,7 +124,7 @@ class ProgramExecutableMtl : public ProgramExecutableImpl
 
     void destroy(const gl::Context *context) override;
 
-    angle::Result load(ContextMtl *contextMtl, gl::BinaryInputStream *stream, gl::InfoLog &infoLog);
+    angle::Result load(ContextMtl *contextMtl, gl::BinaryInputStream *stream);
     void save(gl::BinaryOutputStream *stream);
 
     bool hasFlatAttribute() const { return mProgramHasFlatAttributes; }

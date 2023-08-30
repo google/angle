@@ -869,7 +869,7 @@ ProgramState::ProgramState(rx::GLImplFactory *factory)
       mSeparable(false),
       mCachedBaseVertex(0),
       mCachedBaseInstance(0),
-      mExecutable(new ProgramExecutable(factory))
+      mExecutable(new ProgramExecutable(factory, &mInfoLog))
 {}
 
 ProgramState::~ProgramState()
@@ -1176,10 +1176,10 @@ angle::Result Program::linkImpl(const Context *context)
     // use the previously linked program if linking the shaders fails.
     mLinked = false;
 
-    mState.mExecutable->resetInfoLog();
+    mState.mInfoLog.reset();
 
     // Validate we have properly attached shaders before checking the cache.
-    if (!linkValidateShaders(context, mState.mExecutable->getInfoLog()))
+    if (!linkValidateShaders(context))
     {
         return angle::Result::Continue;
     }
@@ -1215,7 +1215,6 @@ angle::Result Program::linkImpl(const Context *context)
 
     // Cache load failed, fall through to normal linking.
     unlink();
-    InfoLog &infoLog = mState.mExecutable->getInfoLog();
 
     // Re-link shaders after the unlink call.
     linkShaders();
@@ -1240,16 +1239,15 @@ angle::Result Program::linkImpl(const Context *context)
     if (mState.mAttachedShaders[ShaderType::Compute])
     {
         GLuint combinedImageUniforms = 0;
-        if (!linkUniforms(caps, clientVersion, &resources.unusedUniforms, &combinedImageUniforms,
-                          infoLog))
+        if (!linkUniforms(caps, clientVersion, &resources.unusedUniforms, &combinedImageUniforms))
         {
             return angle::Result::Continue;
         }
 
         GLuint combinedShaderStorageBlocks = 0u;
-        if (!LinkValidateProgramInterfaceBlocks(caps, clientVersion, isWebGL,
-                                                mState.mExecutable->getLinkedShaderStages(),
-                                                resources, infoLog, &combinedShaderStorageBlocks))
+        if (!LinkValidateProgramInterfaceBlocks(
+                caps, clientVersion, isWebGL, mState.mExecutable->getLinkedShaderStages(),
+                resources, mState.mInfoLog, &combinedShaderStorageBlocks))
         {
             return angle::Result::Continue;
         }
@@ -1262,7 +1260,7 @@ angle::Result Program::linkImpl(const Context *context)
         if (combinedImageUniforms + combinedShaderStorageBlocks >
             static_cast<GLuint>(caps.maxCombinedShaderOutputResources))
         {
-            infoLog
+            mState.mInfoLog
                 << "The sum of the number of active image uniforms, active shader storage blocks "
                    "and active fragment shader outputs exceeds "
                    "MAX_COMBINED_SHADER_OUTPUT_RESOURCES ("
@@ -1272,32 +1270,31 @@ angle::Result Program::linkImpl(const Context *context)
     }
     else
     {
-        if (!linkAttributes(caps, limitations, isWebGL, infoLog))
+        if (!linkAttributes(caps, limitations, isWebGL))
         {
             return angle::Result::Continue;
         }
 
-        if (!linkVaryings(infoLog))
+        if (!linkVaryings())
         {
             return angle::Result::Continue;
         }
 
         GLuint combinedImageUniforms = 0;
-        if (!linkUniforms(caps, clientVersion, &resources.unusedUniforms, &combinedImageUniforms,
-                          infoLog))
+        if (!linkUniforms(caps, clientVersion, &resources.unusedUniforms, &combinedImageUniforms))
         {
             return angle::Result::Continue;
         }
 
         GLuint combinedShaderStorageBlocks = 0u;
-        if (!LinkValidateProgramInterfaceBlocks(caps, clientVersion, isWebGL,
-                                                mState.mExecutable->getLinkedShaderStages(),
-                                                resources, infoLog, &combinedShaderStorageBlocks))
+        if (!LinkValidateProgramInterfaceBlocks(
+                caps, clientVersion, isWebGL, mState.mExecutable->getLinkedShaderStages(),
+                resources, mState.mInfoLog, &combinedShaderStorageBlocks))
         {
             return angle::Result::Continue;
         }
 
-        if (!LinkValidateProgramGlobalNames(infoLog, getExecutable(), linkingVariables))
+        if (!LinkValidateProgramGlobalNames(mState.mInfoLog, getExecutable(), linkingVariables))
         {
             return angle::Result::Continue;
         }
@@ -1345,8 +1342,7 @@ angle::Result Program::linkImpl(const Context *context)
     mLinkingState                    = std::move(linkingState);
     mLinkingState->linkingFromBinary = false;
     mLinkingState->programHash       = programHash;
-    mLinkingState->linkEvent =
-        mProgram->link(context, resources, infoLog, std::move(mergedVaryings));
+    mLinkingState->linkEvent = mProgram->link(context, resources, std::move(mergedVaryings));
 
     // Must be after mProgram->link() to avoid misleading the linker about output variables.
     mState.updateProgramInterfaceInputs();
@@ -1371,7 +1367,7 @@ void Program::resolveLinkImpl(const Context *context)
     std::unique_ptr<LinkingState> linkingState = std::move(mLinkingState);
     if (!mLinked)
     {
-        mState.mExecutable->reset(false);
+        mState.mExecutable->reset();
         return;
     }
 
@@ -1496,7 +1492,7 @@ void ProgramState::updateProgramInterfaceOutputs()
 // Returns the program object to an unlinked state, before re-linking, or at destruction
 void Program::unlink()
 {
-    mState.mExecutable->reset(true);
+    mState.mExecutable->reset();
 
     mState.mCachedBaseVertex   = 0;
     mState.mCachedBaseInstance = 0;
@@ -1511,19 +1507,20 @@ angle::Result Program::loadBinary(const Context *context,
                                   const void *binary,
                                   GLsizei length)
 {
+    mState.mInfoLog.reset();
+
     ASSERT(!mLinkingState);
     unlink();
-    InfoLog &infoLog = mState.mExecutable->getInfoLog();
 
     ASSERT(binaryFormat == GL_PROGRAM_BINARY_ANGLE);
     if (binaryFormat != GL_PROGRAM_BINARY_ANGLE)
     {
-        infoLog << "Invalid program binary format.";
+        mState.mInfoLog << "Invalid program binary format.";
         return angle::Result::Incomplete;
     }
 
     BinaryInputStream stream(binary, length);
-    ANGLE_TRY(deserialize(context, stream, infoLog));
+    ANGLE_TRY(deserialize(context, stream));
     // Currently we require the full shader text to compute the program hash.
     // We could also store the binary in the internal program cache.
 
@@ -1551,7 +1548,7 @@ angle::Result Program::loadBinary(const Context *context,
     // sources.
     angle::Result result;
     std::unique_ptr<LinkingState> linkingState;
-    std::unique_ptr<rx::LinkEvent> linkEvent = mProgram->load(context, &stream, infoLog);
+    std::unique_ptr<rx::LinkEvent> linkEvent = mProgram->load(context, &stream);
     if (linkEvent)
     {
         linkingState                    = std::make_unique<LinkingState>();
@@ -1648,6 +1645,16 @@ bool Program::getBinaryRetrievableHint() const
 {
     ASSERT(!mLinkingState);
     return mState.mBinaryRetrieveableHint;
+}
+
+int Program::getInfoLogLength() const
+{
+    return static_cast<int>(mState.mInfoLog.getLength());
+}
+
+void Program::getInfoLog(GLsizei bufSize, GLsizei *length, char *infoLog) const
+{
+    return mState.mInfoLog.getLog(bufSize, length, infoLog);
 }
 
 void Program::setSeparable(bool separable)
@@ -2512,16 +2519,15 @@ bool Program::isFlaggedForDeletion() const
 void Program::validate(const Caps &caps)
 {
     ASSERT(!mLinkingState);
-    mState.mExecutable->resetInfoLog();
-    InfoLog &infoLog = mState.mExecutable->getInfoLog();
+    mState.mInfoLog.reset();
 
     if (mLinked)
     {
-        mValidated = ConvertToBool(mProgram->validate(caps, &infoLog));
+        mValidated = ConvertToBool(mProgram->validate(caps));
     }
     else
     {
-        infoLog << "Program has not been successfully linked.";
+        mState.mInfoLog << "Program has not been successfully linked.";
     }
 }
 
@@ -2736,7 +2742,7 @@ GLenum Program::getTransformFeedbackBufferMode() const
     return mState.mExecutable->getTransformFeedbackBufferMode();
 }
 
-bool Program::linkValidateShaders(const Context *context, InfoLog &infoLog)
+bool Program::linkValidateShaders(const Context *context)
 {
     const ShaderMap<SharedCompiledShaderState> &shaders = mState.mAttachedShaders;
 
@@ -2751,7 +2757,7 @@ bool Program::linkValidateShaders(const Context *context, InfoLog &infoLog)
     // OpenGL ES 3.10, 7.3 Program Objects, under LinkProgram
     if (isComputeShaderAttached && isGraphicsShaderAttached)
     {
-        infoLog << "Both compute and graphics shaders are attached to the same program.";
+        mState.mInfoLog << "Both compute and graphics shaders are attached to the same program.";
         return false;
     }
 
@@ -2772,7 +2778,7 @@ bool Program::linkValidateShaders(const Context *context, InfoLog &infoLog)
 
         if (!shaderObj->isCompiled(context))
         {
-            infoLog << ShaderTypeToString(shaderType) << " shader is not compiled.";
+            mState.mInfoLog << ShaderTypeToString(shaderType) << " shader is not compiled.";
             return false;
         }
 
@@ -2782,8 +2788,8 @@ bool Program::linkValidateShaders(const Context *context, InfoLog &infoLog)
         }
         else if (version != shader->shaderVersion)
         {
-            infoLog << ShaderTypeToString(shaderType)
-                    << " shader version does not match other shader versions.";
+            mState.mInfoLog << ShaderTypeToString(shaderType)
+                            << " shader version does not match other shader versions.";
             return false;
         }
     }
@@ -2796,7 +2802,7 @@ bool Program::linkValidateShaders(const Context *context, InfoLog &infoLog)
         // If the work group size is not specified, a link time error should occur.
         if (!shaders[ShaderType::Compute]->localSize.isDeclared())
         {
-            infoLog << "Work group size is not specified.";
+            mState.mInfoLog << "Work group size is not specified.";
             return false;
         }
     }
@@ -2804,7 +2810,7 @@ bool Program::linkValidateShaders(const Context *context, InfoLog &infoLog)
     {
         if (!isGraphicsShaderAttached)
         {
-            infoLog << "No compiled shaders.";
+            mState.mInfoLog << "No compiled shaders.";
             return false;
         }
 
@@ -2812,7 +2818,7 @@ bool Program::linkValidateShaders(const Context *context, InfoLog &infoLog)
         bool hasFragment = shaders[ShaderType::Fragment].get() != nullptr;
         if (!isSeparable() && (!hasVertex || !hasFragment))
         {
-            infoLog
+            mState.mInfoLog
                 << "The program must contain objects to form both a vertex and fragment shader.";
             return false;
         }
@@ -2821,7 +2827,8 @@ bool Program::linkValidateShaders(const Context *context, InfoLog &infoLog)
         bool hasTessEvaluation = shaders[ShaderType::TessEvaluation].get() != nullptr;
         if (!isSeparable() && (hasTessControl != hasTessEvaluation))
         {
-            infoLog << "Tessellation control and evaluation shaders must be specified together.";
+            mState.mInfoLog
+                << "Tessellation control and evaluation shaders must be specified together.";
             return false;
         }
 
@@ -2842,7 +2849,7 @@ bool Program::linkValidateShaders(const Context *context, InfoLog &infoLog)
                 geometryShader->geometryShaderInputPrimitiveType;
             if (!inputPrimitive.valid())
             {
-                infoLog << "Input primitive type is not specified in the geometry shader.";
+                mState.mInfoLog << "Input primitive type is not specified in the geometry shader.";
                 return false;
             }
 
@@ -2850,14 +2857,14 @@ bool Program::linkValidateShaders(const Context *context, InfoLog &infoLog)
                 geometryShader->geometryShaderOutputPrimitiveType;
             if (!outputPrimitive.valid())
             {
-                infoLog << "Output primitive type is not specified in the geometry shader.";
+                mState.mInfoLog << "Output primitive type is not specified in the geometry shader.";
                 return false;
             }
 
             Optional<GLint> maxVertices = geometryShader->geometryShaderMaxVertices;
             if (!maxVertices.valid())
             {
-                infoLog << "'max_vertices' is not specified in the geometry shader.";
+                mState.mInfoLog << "'max_vertices' is not specified in the geometry shader.";
                 return false;
             }
         }
@@ -2876,8 +2883,8 @@ bool Program::linkValidateShaders(const Context *context, InfoLog &infoLog)
                 // > ...
                 // > There must be at least one layout qualifier specifying an output patch vertex
                 // > count in any program containing a tessellation control shader.
-                infoLog << "In Tessellation Control Shader, at least one layout qualifier "
-                           "specifying an output patch vertex count must exist.";
+                mState.mInfoLog << "In Tessellation Control Shader, at least one layout qualifier "
+                                   "specifying an output patch vertex count must exist.";
                 return false;
             }
         }
@@ -2897,8 +2904,9 @@ bool Program::linkValidateShaders(const Context *context, InfoLog &infoLog)
                 // > The tessellation evaluation shader object in a program must declare a primitive
                 // > mode in its input layout. Declaring vertex spacing, ordering, or point mode
                 // > identifiers is optional.
-                infoLog << "The Tessellation Evaluation Shader object in a program must declare a "
-                           "primitive mode in its input layout.";
+                mState.mInfoLog
+                    << "The Tessellation Evaluation Shader object in a program must declare a "
+                       "primitive mode in its input layout.";
                 return false;
             }
         }
@@ -3033,7 +3041,7 @@ void Program::setBaseInstanceUniform(GLuint baseInstance)
     mProgram->setUniform1iv(mState.getBaseInstanceLocation(), 1, &baseInstanceInt);
 }
 
-bool Program::linkVaryings(InfoLog &infoLog) const
+bool Program::linkVaryings()
 {
     ShaderType previousShaderType = ShaderType::InvalidEnum;
     for (ShaderType shaderType : kAllGraphicsShaderTypes)
@@ -3053,7 +3061,7 @@ bool Program::linkVaryings(InfoLog &infoLog) const
             if (!LinkValidateShaderInterfaceMatching(
                     outputVaryings, currentShader->inputVaryings, previousShaderType,
                     currentShader->shaderType, previousShader->shaderVersion,
-                    currentShader->shaderVersion, isSeparable(), infoLog))
+                    currentShader->shaderVersion, isSeparable(), mState.mInfoLog))
             {
                 return false;
             }
@@ -3071,7 +3079,7 @@ bool Program::linkVaryings(InfoLog &infoLog) const
         !LinkValidateBuiltInVaryings(vertexShader->outputVaryings, fragmentShader->inputVaryings,
                                      vertexShader->shaderType, fragmentShader->shaderType,
                                      vertexShader->shaderVersion, fragmentShader->shaderVersion,
-                                     infoLog))
+                                     mState.mInfoLog))
     {
         return false;
     }
@@ -3082,8 +3090,7 @@ bool Program::linkVaryings(InfoLog &infoLog) const
 bool Program::linkUniforms(const Caps &caps,
                            const Version &clientVersion,
                            std::vector<UnusedUniform> *unusedUniformsOutOrNull,
-                           GLuint *combinedImageUniformsOut,
-                           InfoLog &infoLog)
+                           GLuint *combinedImageUniformsOut)
 {
     // Initialize executable shader map.
     ShaderMap<std::vector<sh::ShaderVariable>> shaderUniforms;
@@ -3095,9 +3102,8 @@ bool Program::linkUniforms(const Caps &caps,
         }
     }
 
-    if (!mState.mExecutable->linkUniforms(caps, shaderUniforms, infoLog,
-                                          mState.mUniformLocationBindings, combinedImageUniformsOut,
-                                          unusedUniformsOutOrNull))
+    if (!mState.mExecutable->linkUniforms(caps, shaderUniforms, mState.mUniformLocationBindings,
+                                          combinedImageUniformsOut, unusedUniformsOutOrNull))
     {
         return false;
     }
@@ -3108,7 +3114,7 @@ bool Program::linkUniforms(const Caps &caps,
 
         if (locationSize > caps.maxUniformLocations)
         {
-            infoLog << "Exceeded maximum uniform location size";
+            mState.mInfoLog << "Exceeded maximum uniform location size";
             return false;
         }
     }
@@ -3119,8 +3125,7 @@ bool Program::linkUniforms(const Caps &caps,
 // Assigns locations to all attributes (except built-ins) from the bindings and program locations.
 bool Program::linkAttributes(const Caps &caps,
                              const Limitations &limitations,
-                             bool webglCompatibility,
-                             InfoLog &infoLog)
+                             bool webglCompatibility)
 {
     int shaderVersion          = -1;
     unsigned int usedLocations = 0;
@@ -3173,8 +3178,8 @@ bool Program::linkAttributes(const Caps &caps,
 
             if (static_cast<GLuint>(regs + attribute.getLocation()) > maxAttribs)
             {
-                infoLog << "Attribute (" << attribute.name << ") at location "
-                        << attribute.getLocation() << " is too big to fit";
+                mState.mInfoLog << "Attribute (" << attribute.name << ") at location "
+                                << attribute.getLocation() << " is too big to fit";
 
                 return false;
             }
@@ -3193,8 +3198,9 @@ bool Program::linkAttributes(const Caps &caps,
                     if (shaderVersion >= 300 || webglCompatibility ||
                         limitations.noVertexAttributeAliasing)
                     {
-                        infoLog << "Attribute '" << attribute.name << "' aliases attribute '"
-                                << linkedAttribute->name << "' at location " << regLocation;
+                        mState.mInfoLog << "Attribute '" << attribute.name
+                                        << "' aliases attribute '" << linkedAttribute->name
+                                        << "' at location " << regLocation;
                         return false;
                     }
                 }
@@ -3219,7 +3225,7 @@ bool Program::linkAttributes(const Caps &caps,
 
             if (availableIndex == -1 || static_cast<GLuint>(availableIndex + regs) > maxAttribs)
             {
-                infoLog << "Too many attributes (" << attribute.name << ")";
+                mState.mInfoLog << "Too many attributes (" << attribute.name << ")";
                 return false;
             }
 
@@ -3615,9 +3621,7 @@ angle::Result Program::serialize(const Context *context, angle::MemoryBuffer *bi
     return angle::Result::Continue;
 }
 
-angle::Result Program::deserialize(const Context *context,
-                                   BinaryInputStream &stream,
-                                   InfoLog &infoLog)
+angle::Result Program::deserialize(const Context *context, BinaryInputStream &stream)
 {
     std::vector<uint8_t> angleShaderProgramVersionString(
         angle::GetANGLEShaderProgramVersionHashSize(), 0);
@@ -3626,28 +3630,28 @@ angle::Result Program::deserialize(const Context *context,
     if (memcmp(angleShaderProgramVersionString.data(), angle::GetANGLEShaderProgramVersion(),
                angleShaderProgramVersionString.size()) != 0)
     {
-        infoLog << "Invalid program binary version.";
+        mState.mInfoLog << "Invalid program binary version.";
         return angle::Result::Stop;
     }
 
     bool binaryIs64Bit = stream.readBool();
     if (binaryIs64Bit != angle::Is64Bit())
     {
-        infoLog << "cannot load program binaries across CPU architectures.";
+        mState.mInfoLog << "cannot load program binaries across CPU architectures.";
         return angle::Result::Stop;
     }
 
     int angleSHVersion = stream.readInt<int>();
     if (angleSHVersion != angle::GetANGLESHVersion())
     {
-        infoLog << "cannot load program binaries across different angle sh version.";
+        mState.mInfoLog << "cannot load program binaries across different angle sh version.";
         return angle::Result::Stop;
     }
 
     std::string rendererString = stream.readString();
     if (rendererString != context->getRendererString())
     {
-        infoLog << "Cannot load program binary due to changed renderer string.";
+        mState.mInfoLog << "Cannot load program binary due to changed renderer string.";
         return angle::Result::Stop;
     }
 
@@ -3656,7 +3660,7 @@ angle::Result Program::deserialize(const Context *context,
     if (majorVersion != context->getClientMajorVersion() ||
         minorVersion != context->getClientMinorVersion())
     {
-        infoLog << "Cannot load program binaries across different ES context versions.";
+        mState.mInfoLog << "Cannot load program binaries across different ES context versions.";
         return angle::Result::Stop;
     }
 
@@ -3672,7 +3676,7 @@ angle::Result Program::deserialize(const Context *context,
     if (mState.mExecutable->getLinkedTransformFeedbackVaryings().size() > 0 &&
         context->getFrontendFeatures().disableProgramCachingForTransformFeedback.enabled)
     {
-        infoLog << "Current driver does not support transform feedback in binary programs.";
+        mState.mInfoLog << "Current driver does not support transform feedback in binary programs.";
         return angle::Result::Stop;
     }
 

@@ -396,8 +396,10 @@ void LoadInterfaceBlock(BinaryInputStream *stream, InterfaceBlock *block)
 }
 }  // anonymous namespace
 
-ProgramExecutable::ProgramExecutable(rx::GLImplFactory *factory)
-    : mImplementation(factory->createProgramExecutable(this)), mActiveSamplerRefCounts{}
+ProgramExecutable::ProgramExecutable(rx::GLImplFactory *factory, InfoLog *infoLog)
+    : mImplementation(factory->createProgramExecutable(this)),
+      mInfoLog(infoLog),
+      mActiveSamplerRefCounts{}
 {
     memset(&mPODStruct, 0, sizeof(mPODStruct));
     mPODStruct.geometryShaderInputPrimitiveType  = PrimitiveMode::Triangles;
@@ -406,35 +408,7 @@ ProgramExecutable::ProgramExecutable(rx::GLImplFactory *factory)
     mPODStruct.transformFeedbackBufferMode       = GL_INTERLEAVED_ATTRIBS;
     mPODStruct.computeShaderLocalSize.fill(1);
 
-    reset(true);
-}
-
-ProgramExecutable::ProgramExecutable(const ProgramExecutable &other)
-    : mPODStruct(other.mPODStruct),
-      mActiveSamplersMask(other.mActiveSamplersMask),
-      mActiveSamplerRefCounts(other.mActiveSamplerRefCounts),
-      mActiveSamplerTypes(other.mActiveSamplerTypes),
-      mActiveSamplerYUV(other.mActiveSamplerYUV),
-      mActiveSamplerFormats(other.mActiveSamplerFormats),
-      mActiveSamplerShaderBits(other.mActiveSamplerShaderBits),
-      mActiveImagesMask(other.mActiveImagesMask),
-      mActiveImageShaderBits(other.mActiveImageShaderBits),
-      mOutputVariables(other.mOutputVariables),
-      mOutputLocations(other.mOutputLocations),
-      mSecondaryOutputLocations(other.mSecondaryOutputLocations),
-      mProgramInputs(other.mProgramInputs),
-      mLinkedTransformFeedbackVaryings(other.mLinkedTransformFeedbackVaryings),
-      mTransformFeedbackStrides(other.mTransformFeedbackStrides),
-      mUniforms(other.mUniforms),
-      mUniformNames(other.mUniformNames),
-      mUniformMappedNames(other.mUniformMappedNames),
-      mUniformBlocks(other.mUniformBlocks),
-      mUniformLocations(other.mUniformLocations),
-      mAtomicCounterBuffers(other.mAtomicCounterBuffers),
-      mShaderStorageBlocks(other.mShaderStorageBlocks),
-      mBufferVariables(other.mBufferVariables)
-{
-    reset(true);
+    reset();
 }
 
 ProgramExecutable::~ProgramExecutable()
@@ -448,13 +422,8 @@ void ProgramExecutable::destroy(const Context *context)
     SafeDelete(mImplementation);
 }
 
-void ProgramExecutable::reset(bool clearInfoLog)
+void ProgramExecutable::reset()
 {
-    if (clearInfoLog)
-    {
-        resetInfoLog();
-    }
-
     mPODStruct.activeAttribLocationsMask.reset();
     mPODStruct.attributesTypeMask.reset();
     mPODStruct.attributesMask.reset();
@@ -785,19 +754,9 @@ void ProgramExecutable::save(bool isSeparable, gl::BinaryOutputStream *stream) c
     }
 }
 
-int ProgramExecutable::getInfoLogLength() const
-{
-    return static_cast<int>(mInfoLog.getLength());
-}
-
-void ProgramExecutable::getInfoLog(GLsizei bufSize, GLsizei *length, char *infoLog) const
-{
-    return mInfoLog.getLog(bufSize, length, infoLog);
-}
-
 std::string ProgramExecutable::getInfoLogString() const
 {
-    return mInfoLog.str();
+    return mInfoLog->str();
 }
 
 void ProgramExecutable::setActive(size_t textureUnit,
@@ -1001,7 +960,7 @@ bool ProgramExecutable::linkMergedVaryings(
         }
     }
 
-    if (!varyingPacking->collectAndPackUserVaryings(mInfoLog, caps, packMode, activeShadersMask,
+    if (!varyingPacking->collectAndPackUserVaryings(*mInfoLog, caps, packMode, activeShadersMask,
                                                     mergedVaryings, transformFeedbackVaryingNames,
                                                     isSeparable))
     {
@@ -1027,15 +986,15 @@ bool ProgramExecutable::linkValidateTransformFeedback(
     {
         if (clientVersion < Version(3, 1) && tfVaryingName.find('[') != std::string::npos)
         {
-            mInfoLog << "Capture of array elements is undefined and not supported.";
+            *mInfoLog << "Capture of array elements is undefined and not supported.";
             return false;
         }
         if (clientVersion >= Version(3, 1))
         {
             if (IncludeSameArrayElement(uniqueNames, tfVaryingName))
             {
-                mInfoLog << "Two transform feedback varyings include the same array element ("
-                         << tfVaryingName << ").";
+                *mInfoLog << "Two transform feedback varyings include the same array element ("
+                          << tfVaryingName << ").";
                 return false;
             }
         }
@@ -1043,8 +1002,8 @@ bool ProgramExecutable::linkValidateTransformFeedback(
         {
             if (uniqueNames.count(tfVaryingName) > 0)
             {
-                mInfoLog << "Two transform feedback varyings specify the same output variable ("
-                         << tfVaryingName << ").";
+                *mInfoLog << "Two transform feedback varyings specify the same output variable ("
+                          << tfVaryingName << ").";
                 return false;
             }
         }
@@ -1057,8 +1016,8 @@ bool ProgramExecutable::linkValidateTransformFeedback(
     if (transformFeedbackVaryingNames.size() > 0 &&
         !gl::ShaderTypeSupportsTransformFeedback(getLinkedTransformFeedbackStage()))
     {
-        mInfoLog << "Linked transform feedback stage " << getLinkedTransformFeedbackStage()
-                 << " does not support transform feedback varying.";
+        *mInfoLog << "Linked transform feedback stage " << getLinkedTransformFeedbackStage()
+                  << " does not support transform feedback varying.";
         return false;
     }
 
@@ -1072,15 +1031,15 @@ bool ProgramExecutable::linkValidateTransformFeedback(
         const sh::ShaderVariable *var = FindOutputVaryingOrField(varyings, stage, baseName);
         if (var == nullptr)
         {
-            mInfoLog << "Transform feedback varying " << tfVaryingName
-                     << " does not exist in the vertex shader.";
+            *mInfoLog << "Transform feedback varying " << tfVaryingName
+                      << " does not exist in the vertex shader.";
             return false;
         }
 
         // Validate the matching variable.
         if (var->isStruct())
         {
-            mInfoLog << "Struct cannot be captured directly (" << baseName << ").";
+            *mInfoLog << "Struct cannot be captured directly (" << baseName << ").";
             return false;
         }
 
@@ -1091,7 +1050,7 @@ bool ProgramExecutable::linkValidateTransformFeedback(
         {
             if (clientVersion < Version(3, 1))
             {
-                mInfoLog << "Capture of arrays is undefined and not supported.";
+                *mInfoLog << "Capture of arrays is undefined and not supported.";
                 return false;
             }
 
@@ -1100,7 +1059,7 @@ bool ProgramExecutable::linkValidateTransformFeedback(
 
             if (!subscripts.empty() && subscripts[0] >= var->getOutermostArraySize())
             {
-                mInfoLog << "Cannot capture outbound array element '" << tfVaryingName << "'.";
+                *mInfoLog << "Cannot capture outbound array element '" << tfVaryingName << "'.";
                 return false;
             }
             elementCount = (subscripts.empty() ? var->getOutermostArraySize() : 1);
@@ -1109,8 +1068,8 @@ bool ProgramExecutable::linkValidateTransformFeedback(
         {
             if (!subscripts.empty())
             {
-                mInfoLog << "Varying '" << baseName
-                         << "' is not an array to be captured by element.";
+                *mInfoLog << "Varying '" << baseName
+                          << "' is not an array to be captured by element.";
                 return false;
             }
             elementCount = 1;
@@ -1121,9 +1080,9 @@ bool ProgramExecutable::linkValidateTransformFeedback(
         if (mPODStruct.transformFeedbackBufferMode == GL_SEPARATE_ATTRIBS &&
             componentCount > static_cast<GLuint>(caps.maxTransformFeedbackSeparateComponents))
         {
-            mInfoLog << "Transform feedback varying " << tfVaryingName << " components ("
-                     << componentCount << ") exceed the maximum separate components ("
-                     << caps.maxTransformFeedbackSeparateComponents << ").";
+            *mInfoLog << "Transform feedback varying " << tfVaryingName << " components ("
+                      << componentCount << ") exceed the maximum separate components ("
+                      << caps.maxTransformFeedbackSeparateComponents << ").";
             return false;
         }
 
@@ -1131,9 +1090,9 @@ bool ProgramExecutable::linkValidateTransformFeedback(
         if (mPODStruct.transformFeedbackBufferMode == GL_INTERLEAVED_ATTRIBS &&
             totalComponents > static_cast<GLuint>(caps.maxTransformFeedbackInterleavedComponents))
         {
-            mInfoLog << "Transform feedback varying total components (" << totalComponents
-                     << ") exceed the maximum interleaved components ("
-                     << caps.maxTransformFeedbackInterleavedComponents << ").";
+            *mInfoLog << "Transform feedback varying total components (" << totalComponents
+                      << ") exceed the maximum interleaved components ("
+                      << caps.maxTransformFeedbackInterleavedComponents << ").";
             return false;
         }
     }
@@ -1213,7 +1172,7 @@ void ProgramExecutable::updateTransformFeedbackStrides()
     }
 }
 
-bool ProgramExecutable::validateSamplersImpl(InfoLog *infoLog, const Caps &caps) const
+bool ProgramExecutable::validateSamplersImpl(const Caps &caps) const
 {
     // if any two active samplers in a program are of different types, but refer to the same
     // texture image unit, and this is the current program, then ValidateProgram will fail, and
@@ -1222,26 +1181,12 @@ bool ProgramExecutable::validateSamplersImpl(InfoLog *infoLog, const Caps &caps)
     {
         if (mActiveSamplerTypes[textureUnit] == TextureType::InvalidEnum)
         {
-            if (infoLog)
-            {
-                (*infoLog) << "Samplers of conflicting types refer to the same texture "
-                              "image unit ("
-                           << textureUnit << ").";
-            }
-
             mCachedValidateSamplersResult = false;
             return false;
         }
 
         if (mActiveSamplerFormats[textureUnit] == SamplerFormat::InvalidEnum)
         {
-            if (infoLog)
-            {
-                (*infoLog) << "Samplers of conflicting formats refer to the same texture "
-                              "image unit ("
-                           << textureUnit << ").";
-            }
-
             mCachedValidateSamplersResult = false;
             return false;
         }
@@ -1332,8 +1277,8 @@ bool ProgramExecutable::linkValidateOutputVariables(
             }
             if (outputLocations[location].used())
             {
-                mInfoLog << "Location of variable " << outputVariable.name
-                         << " conflicts with another variable.";
+                *mInfoLog << "Location of variable " << outputVariable.name
+                          << " conflicts with another variable.";
                 return false;
             }
             outputLocations[location] = locationInfo;
@@ -1373,8 +1318,8 @@ bool ProgramExecutable::linkValidateOutputVariables(
         if (FindUsedOutputLocation(outputLocations, baseLocation, elementCount, reservedLocations,
                                    outputVariableIndex))
         {
-            mInfoLog << "Location of variable " << outputVariable.name
-                     << " conflicts with another variable.";
+            *mInfoLog << "Location of variable " << outputVariable.name
+                      << " conflicts with another variable.";
             return false;
         }
         AssignOutputLocations(outputLocations, baseLocation, elementCount, reservedLocations,
@@ -1441,8 +1386,8 @@ bool ProgramExecutable::linkValidateOutputVariables(
             // "if the explicit binding assignments do not leave enough space for the linker to
             // automatically assign a location for a varying out array, which requires multiple
             // contiguous locations."
-            mInfoLog << "Could not fit output variable into available locations: "
-                     << outputVariable.name;
+            *mInfoLog << "Could not fit output variable into available locations: "
+                      << outputVariable.name;
             return false;
         }
     }
@@ -1463,7 +1408,7 @@ bool ProgramExecutable::linkValidateOutputVariables(
                 mPODStruct.activeOutputVariablesMask.count() >
             static_cast<GLuint>(caps.maxCombinedShaderOutputResources))
         {
-            mInfoLog
+            *mInfoLog
                 << "The sum of the number of active image uniforms, active shader storage blocks "
                    "and active fragment shader outputs exceeds "
                    "MAX_COMBINED_SHADER_OUTPUT_RESOURCES ("
@@ -1508,8 +1453,8 @@ bool ProgramExecutable::gatherOutputTypes()
             }
             else if (storedComponentType != componentType)
             {
-                mInfoLog << "Inconsistent component types for fragment outputs at location "
-                         << location;
+                *mInfoLog << "Inconsistent component types for fragment outputs at location "
+                          << location;
                 return false;
             }
         }
@@ -1527,13 +1472,12 @@ bool ProgramExecutable::gatherOutputTypes()
 bool ProgramExecutable::linkUniforms(
     const Caps &caps,
     const ShaderMap<std::vector<sh::ShaderVariable>> &shaderUniforms,
-    InfoLog &infoLog,
     const ProgramAliasedBindings &uniformLocationBindings,
     GLuint *combinedImageUniformsCountOut,
     std::vector<UnusedUniform> *unusedUniformsOutOrNull)
 {
     UniformLinker linker(mPODStruct.linkedShaderStages, shaderUniforms);
-    if (!linker.link(caps, infoLog, uniformLocationBindings))
+    if (!linker.link(caps, *mInfoLog, uniformLocationBindings))
     {
         return false;
     }
@@ -1543,7 +1487,7 @@ bool ProgramExecutable::linkUniforms(
 
     linkSamplerAndImageBindings(combinedImageUniformsCountOut);
 
-    if (!linkAtomicCounterBuffers(caps, infoLog))
+    if (!linkAtomicCounterBuffers(caps))
     {
         return false;
     }
@@ -1650,7 +1594,7 @@ void ProgramExecutable::linkSamplerAndImageBindings(GLuint *combinedImageUniform
     mPODStruct.defaultUniformRange = RangeUI(0, low);
 }
 
-bool ProgramExecutable::linkAtomicCounterBuffers(const Caps &caps, InfoLog &infoLog)
+bool ProgramExecutable::linkAtomicCounterBuffers(const Caps &caps)
 {
     for (unsigned int index : mPODStruct.atomicCounterUniformRange)
     {
@@ -1704,15 +1648,15 @@ bool ProgramExecutable::linkAtomicCounterBuffers(const Caps &caps, InfoLog &info
     }
     if (combinedShaderACBCount > caps.maxCombinedAtomicCounterBuffers)
     {
-        infoLog << " combined AtomicCounterBuffers count exceeds limit";
+        *mInfoLog << " combined AtomicCounterBuffers count exceeds limit";
         return false;
     }
     for (gl::ShaderType stage : gl::AllShaderTypes())
     {
         if (perShaderACBCount[stage] > caps.maxShaderAtomicCounterBuffers[stage])
         {
-            infoLog << GetShaderTypeString(stage)
-                    << " shader AtomicCounterBuffers count exceeds limit";
+            *mInfoLog << GetShaderTypeString(stage)
+                      << " shader AtomicCounterBuffers count exceeds limit";
             return false;
         }
     }

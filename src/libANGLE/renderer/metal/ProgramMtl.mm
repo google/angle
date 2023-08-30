@@ -416,8 +416,7 @@ void ProgramMtl::reset(ContextMtl *context)
 }
 
 std::unique_ptr<rx::LinkEvent> ProgramMtl::load(const gl::Context *context,
-                                                gl::BinaryInputStream *stream,
-                                                gl::InfoLog &infoLog)
+                                                gl::BinaryInputStream *stream)
 {
 
     ContextMtl *contextMtl = mtl::GetImpl(context);
@@ -425,9 +424,9 @@ std::unique_ptr<rx::LinkEvent> ProgramMtl::load(const gl::Context *context,
 
     reset(contextMtl);
 
-    ANGLE_PARALLEL_LINK_TRY(getExecutable()->load(contextMtl, stream, infoLog));
+    ANGLE_PARALLEL_LINK_TRY(getExecutable()->load(contextMtl, stream));
 
-    return compileMslShaderLibs(context, infoLog);
+    return compileMslShaderLibs(context);
 }
 
 void ProgramMtl::save(const gl::Context *context, gl::BinaryOutputStream *stream)
@@ -458,7 +457,6 @@ void ProgramMtl::prepareForLink(const gl::ShaderMap<ShaderImpl *> &shaders)
 
 std::unique_ptr<LinkEvent> ProgramMtl::link(const gl::Context *context,
                                             const gl::ProgramLinkedResources &resources,
-                                            gl::InfoLog &infoLog,
                                             gl::ProgramMergedVaryings &&mergedVaryings)
 {
     ContextMtl *contextMtl              = mtl::GetImpl(context);
@@ -483,7 +481,7 @@ std::unique_ptr<LinkEvent> ProgramMtl::link(const gl::Context *context,
     executableMtl->mMslXfbOnlyVertexShaderInfo =
         executableMtl->mMslShaderTranslateInfo[gl::ShaderType::Vertex];
 
-    return compileMslShaderLibs(context, infoLog);
+    return compileMslShaderLibs(context);
 }
 
 class ProgramMtl::CompileMslTask final : public angle::Closure
@@ -557,10 +555,10 @@ class ProgramMtl::ProgramLinkEvent final : public LinkEvent
     std::vector<std::shared_ptr<angle::WaitableEvent>> mWaitableEvents;
 };
 
-std::unique_ptr<LinkEvent> ProgramMtl::compileMslShaderLibs(const gl::Context *context,
-                                                            gl::InfoLog &infoLog)
+std::unique_ptr<LinkEvent> ProgramMtl::compileMslShaderLibs(const gl::Context *context)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "ProgramMtl::compileMslShaderLibs");
+    gl::InfoLog &infoLog = mState.getExecutable().getInfoLog();
 
     ContextMtl *contextMtl              = mtl::GetImpl(context);
     ProgramExecutableMtl *executableMtl = getExecutable();
@@ -756,7 +754,7 @@ angle::Result ProgramMtl::getSpecializedShader(ContextMtl *context,
     return angle::Result::Continue;
 }
 
-GLboolean ProgramMtl::validate(const gl::Caps &caps, gl::InfoLog *infoLog)
+GLboolean ProgramMtl::validate(const gl::Caps &caps)
 {
     // No-op. The spec is very vague about the behavior of validation.
     return GL_TRUE;

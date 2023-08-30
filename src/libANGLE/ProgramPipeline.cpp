@@ -30,7 +30,7 @@ ProgramPipelineState::ProgramPipelineState(rx::GLImplFactory *factory)
     : mLabel(),
       mActiveShaderProgram(nullptr),
       mValid(false),
-      mExecutable(new ProgramExecutable(factory)),
+      mExecutable(new ProgramExecutable(factory, &mInfoLog)),
       mIsLinked(false)
 {
     for (const ShaderType shaderType : gl::AllShaderTypes())
@@ -481,12 +481,10 @@ angle::Result ProgramPipeline::link(const Context *context)
     ProgramVaryingPacking varyingPacking;
     LinkingVariables linkingVariables;
 
-    mState.mExecutable->reset(true);
+    mState.mExecutable->reset();
+    mState.mInfoLog.reset();
 
     linkingVariables.initForProgramPipeline(mState);
-
-    InfoLog &infoLog = mState.mExecutable->getInfoLog();
-    infoLog.reset();
 
     const Caps &caps               = context->getCaps();
     const Limitations &limitations = context->getLimitations();
@@ -495,12 +493,12 @@ angle::Result ProgramPipeline::link(const Context *context)
 
     if (mState.mExecutable->hasLinkedShaderStage(gl::ShaderType::Vertex))
     {
-        if (!linkVaryings(infoLog))
+        if (!linkVaryings())
         {
             return angle::Result::Stop;
         }
 
-        if (!LinkValidateProgramGlobalNames(infoLog, getExecutable(), linkingVariables))
+        if (!LinkValidateProgramGlobalNames(mState.mInfoLog, getExecutable(), linkingVariables))
         {
             return angle::Result::Stop;
         }
@@ -593,7 +591,17 @@ angle::Result ProgramPipeline::link(const Context *context)
     return angle::Result::Continue;
 }
 
-bool ProgramPipeline::linkVaryings(InfoLog &infoLog) const
+int ProgramPipeline::getInfoLogLength() const
+{
+    return static_cast<int>(mState.mInfoLog.getLength());
+}
+
+void ProgramPipeline::getInfoLog(GLsizei bufSize, GLsizei *length, char *infoLog) const
+{
+    return mState.mInfoLog.getLog(bufSize, length, infoLog);
+}
+
+bool ProgramPipeline::linkVaryings()
 {
     ShaderType previousShaderType = ShaderType::InvalidEnum;
     for (ShaderType shaderType : kAllGraphicsShaderTypes)
@@ -615,7 +623,7 @@ bool ProgramPipeline::linkVaryings(InfoLog &infoLog) const
                     previousExecutable.getLinkedOutputVaryings(previousShaderType),
                     executable.getLinkedInputVaryings(shaderType), previousShaderType, shaderType,
                     previousExecutable.getLinkedShaderVersion(previousShaderType),
-                    executable.getLinkedShaderVersion(shaderType), true, infoLog))
+                    executable.getLinkedShaderVersion(shaderType), true, mState.mInfoLog))
             {
                 return false;
             }
@@ -639,15 +647,14 @@ bool ProgramPipeline::linkVaryings(InfoLog &infoLog) const
         vertexExecutable.getLinkedOutputVaryings(ShaderType::Vertex),
         fragmentExecutable.getLinkedInputVaryings(ShaderType::Fragment), ShaderType::Vertex,
         ShaderType::Fragment, vertexExecutable.getLinkedShaderVersion(ShaderType::Vertex),
-        fragmentExecutable.getLinkedShaderVersion(ShaderType::Fragment), infoLog);
+        fragmentExecutable.getLinkedShaderVersion(ShaderType::Fragment), mState.mInfoLog);
 }
 
 void ProgramPipeline::validate(const gl::Context *context)
 {
     const Caps &caps = context->getCaps();
     mState.mValid    = true;
-    InfoLog &infoLog = mState.mExecutable->getInfoLog();
-    infoLog.reset();
+    mState.mInfoLog.reset();
 
     for (const ShaderType shaderType : mState.mExecutable->getLinkedShaderStages())
     {
@@ -660,14 +667,14 @@ void ProgramPipeline::validate(const gl::Context *context)
             if (shaderInfoString.length())
             {
                 mState.mValid = false;
-                infoLog << shaderInfoString << "\n";
+                mState.mInfoLog << shaderInfoString << "\n";
                 return;
             }
             if (!shaderProgram->isSeparable())
             {
                 mState.mValid = false;
-                infoLog << GetShaderTypeString(shaderType) << " is not marked separable."
-                        << "\n";
+                mState.mInfoLog << GetShaderTypeString(shaderType) << " is not marked separable."
+                                << "\n";
                 return;
             }
         }
@@ -678,11 +685,11 @@ void ProgramPipeline::validate(const gl::Context *context)
     {
         mState.mValid            = false;
         const char *errorMessage = reinterpret_cast<const char *>(programPipelineError);
-        infoLog << errorMessage << "\n";
+        mState.mInfoLog << errorMessage << "\n";
         return;
     }
 
-    if (!linkVaryings(infoLog))
+    if (!linkVaryings())
     {
         mState.mValid = false;
 
@@ -694,7 +701,7 @@ void ProgramPipeline::validate(const gl::Context *context)
             std::string shaderInfoString = shaderProgram->getExecutable().getInfoLogString();
             if (shaderInfoString.length())
             {
-                infoLog << shaderInfoString << "\n";
+                mState.mInfoLog << shaderInfoString << "\n";
             }
         }
     }

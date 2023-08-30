@@ -4312,7 +4312,7 @@ const char *ValidateDrawStates(const Context *context, GLenum *outErrorCode)
 
         if (executable)
         {
-            if (!executable->validateSamplers(nullptr, context->getCaps()))
+            if (!executable->validateSamplers(context->getCaps()))
             {
                 return kTextureTypeConflict;
             }

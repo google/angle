@@ -40,8 +40,7 @@ class ProgramGL : public ProgramImpl
     void destroy(const gl::Context *context) override;
 
     std::unique_ptr<LinkEvent> load(const gl::Context *context,
-                                    gl::BinaryInputStream *stream,
-                                    gl::InfoLog &infoLog) override;
+                                    gl::BinaryInputStream *stream) override;
     void save(const gl::Context *context, gl::BinaryOutputStream *stream) override;
     void setBinaryRetrievableHint(bool retrievable) override;
     void setSeparable(bool separable) override;
@@ -49,9 +48,8 @@ class ProgramGL : public ProgramImpl
     void prepareForLink(const gl::ShaderMap<ShaderImpl *> &shaders) override;
     std::unique_ptr<LinkEvent> link(const gl::Context *contextImpl,
                                     const gl::ProgramLinkedResources &resources,
-                                    gl::InfoLog &infoLog,
                                     gl::ProgramMergedVaryings &&mergedVaryings) override;
-    GLboolean validate(const gl::Caps &caps, gl::InfoLog *infoLog) override;
+    GLboolean validate(const gl::Caps &caps) override;
 
     void setUniform1fv(GLint location, GLsizei count, const GLfloat *v) override;
     void setUniform2fv(GLint location, GLsizei count, const GLfloat *v) override;
@@ -133,7 +131,7 @@ class ProgramGL : public ProgramImpl
     class LinkEventNativeParallel;
     class LinkEventGL;
 
-    bool checkLinkStatus(gl::InfoLog &infoLog);
+    bool checkLinkStatus();
 
     void reapplyUBOBindingsIfNeeded(const gl::Context *context);
 

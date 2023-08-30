@@ -439,8 +439,7 @@ void ProgramVk::reset(ContextVk *contextVk)
 }
 
 std::unique_ptr<rx::LinkEvent> ProgramVk::load(const gl::Context *context,
-                                               gl::BinaryInputStream *stream,
-                                               gl::InfoLog &infoLog)
+                                               gl::BinaryInputStream *stream)
 {
     ContextVk *contextVk = vk::GetImpl(context);
 
@@ -467,7 +466,6 @@ void ProgramVk::setSeparable(bool separable)
 
 std::unique_ptr<LinkEvent> ProgramVk::link(const gl::Context *context,
                                            const gl::ProgramLinkedResources &resources,
-                                           gl::InfoLog &infoLog,
                                            gl::ProgramMergedVaryings &&mergedVaryings)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "ProgramVk::link");
@@ -483,7 +481,7 @@ std::unique_ptr<LinkEvent> ProgramVk::link(const gl::Context *context,
     return std::make_unique<LinkEventVulkan>(context->getShaderCompileThreadPool(), linkTask);
 }
 
-GLboolean ProgramVk::validate(const gl::Caps &caps, gl::InfoLog *infoLog)
+GLboolean ProgramVk::validate(const gl::Caps &caps)
 {
     // No-op. The spec is very vague about the behavior of validation.
     return GL_TRUE;

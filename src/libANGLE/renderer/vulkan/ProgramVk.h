@@ -30,17 +30,15 @@ class ProgramVk : public ProgramImpl
     void destroy(const gl::Context *context) override;
 
     std::unique_ptr<LinkEvent> load(const gl::Context *context,
-                                    gl::BinaryInputStream *stream,
-                                    gl::InfoLog &infoLog) override;
+                                    gl::BinaryInputStream *stream) override;
     void save(const gl::Context *context, gl::BinaryOutputStream *stream) override;
     void setBinaryRetrievableHint(bool retrievable) override;
     void setSeparable(bool separable) override;
 
     std::unique_ptr<LinkEvent> link(const gl::Context *context,
                                     const gl::ProgramLinkedResources &resources,
-                                    gl::InfoLog &infoLog,
                                     gl::ProgramMergedVaryings &&mergedVaryings) override;
-    GLboolean validate(const gl::Caps &caps, gl::InfoLog *infoLog) override;
+    GLboolean validate(const gl::Caps &caps) override;
 
     angle::Result syncState(const gl::Context *context,
                             const gl::Program::DirtyBits &dirtyBits) override;

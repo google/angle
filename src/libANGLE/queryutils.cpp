@@ -1338,7 +1338,7 @@ void QueryProgramiv(Context *context, const Program *program, GLenum pname, GLin
             *params = program->isValidated();
             return;
         case GL_INFO_LOG_LENGTH:
-            *params = program->getExecutable().getInfoLogLength();
+            *params = program->getInfoLogLength();
             return;
         case GL_ATTACHED_SHADERS:
             *params = program->getAttachedShadersCount();
@@ -4202,7 +4202,7 @@ void QueryProgramPipelineiv(const Context *context,
             *params = 0;
             if (programPipeline)
             {
-                *params = programPipeline->getExecutable().getInfoLogLength();
+                *params = programPipeline->getInfoLogLength();
             }
             break;
         }

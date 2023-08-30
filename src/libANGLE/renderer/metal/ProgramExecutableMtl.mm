@@ -115,9 +115,7 @@ void ProgramExecutableMtl::reset(ContextMtl *context)
     }
 }
 
-angle::Result ProgramExecutableMtl::load(ContextMtl *contextMtl,
-                                         gl::BinaryInputStream *stream,
-                                         gl::InfoLog &infoLog)
+angle::Result ProgramExecutableMtl::load(ContextMtl *contextMtl, gl::BinaryInputStream *stream)
 {
     loadTranslatedShaders(stream);
     loadShaderInternalInfo(stream);

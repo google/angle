@@ -352,10 +352,7 @@ class ProgramExecutableD3D : public ProgramExecutableImpl
   private:
     friend class ProgramD3D;
 
-    bool load(const gl::Context *context,
-              RendererD3D *renderer,
-              gl::BinaryInputStream *stream,
-              gl::InfoLog &infoLog);
+    bool load(const gl::Context *context, RendererD3D *renderer, gl::BinaryInputStream *stream);
     void save(const gl::Context *context, RendererD3D *renderer, gl::BinaryOutputStream *stream);
 
     void initAttribLocationsToD3DSemantic(const gl::SharedCompiledShaderState &vertexShader);

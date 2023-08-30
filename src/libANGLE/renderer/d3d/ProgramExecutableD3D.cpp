@@ -477,9 +477,10 @@ void ProgramExecutableD3D::reset()
 
 bool ProgramExecutableD3D::load(const gl::Context *context,
                                 RendererD3D *renderer,
-                                gl::BinaryInputStream *stream,
-                                gl::InfoLog &infoLog)
+                                gl::BinaryInputStream *stream)
 {
+    gl::InfoLog &infoLog = mExecutable->getInfoLog();
+
     reset();
 
     DeviceIdentifier binaryDeviceIdentifier = {};
