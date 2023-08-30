@@ -1314,10 +1314,14 @@ angle::Result ProgramExecutableD3D::getVertexExecutableForCachedInputLayout(
     }
 
     // Generate new dynamic layout with attribute conversions
-    std::string finalVertexHLSL = DynamicHLSL::GenerateVertexShaderForInputLayout(
+    std::string vertexHLSL = DynamicHLSL::GenerateVertexShaderForInputLayout(
         renderer, mShaderHLSL[gl::ShaderType::Vertex], mCachedInputLayout,
         mExecutable->getProgramInputs(), mShaderStorageBlocks[gl::ShaderType::Vertex],
         mPixelShaderKey.size());
+    std::string finalVertexHLSL = DynamicHLSL::GenerateShaderForImage2DBindSignature(
+        *this, gl::ShaderType::Vertex, mAttachedShaders[gl::ShaderType::Vertex], vertexHLSL,
+        mImage2DUniforms[gl::ShaderType::Vertex], mImage2DBindLayoutCache[gl::ShaderType::Vertex],
+        static_cast<unsigned int>(mPixelShaderKey.size()));
 
     // Generate new vertex executable
     ShaderExecutableD3D *vertexExecutable = nullptr;

@@ -429,6 +429,7 @@ class ProgramD3D::GetVertexExecutableTask : public ProgramD3D::GetExecutableTask
     {
         ANGLE_TRACE_EVENT0("gpu.angle", "ProgramD3D::GetVertexExecutableTask::run");
 
+        mExecutable->updateCachedImage2DBindLayoutFromShader(gl::ShaderType::Vertex);
         ANGLE_TRY(mExecutable->getVertexExecutableForCachedInputLayout(
             this, mProgram->mRenderer, &mShaderExecutable, &mInfoLog));
 
