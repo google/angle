@@ -529,22 +529,16 @@ class ProgramExecutable final : public angle::Subject
                             const Version &clientVersion,
                             bool webglCompatibility,
                             const ProgramMergedVaryings &mergedVaryings,
-                            const std::vector<std::string> &transformFeedbackVaryingNames,
                             const LinkingVariables &linkingVariables,
                             bool isSeparable,
                             ProgramVaryingPacking *varyingPacking);
 
-    bool linkValidateTransformFeedback(
-        const Caps &caps,
-        const Version &clientVersion,
-        const ProgramMergedVaryings &varyings,
-        ShaderType stage,
-        const std::vector<std::string> &transformFeedbackVaryingNames);
+    bool linkValidateTransformFeedback(const Caps &caps,
+                                       const Version &clientVersion,
+                                       const ProgramMergedVaryings &varyings,
+                                       ShaderType stage);
 
-    void gatherTransformFeedbackVaryings(
-        const ProgramMergedVaryings &varyings,
-        ShaderType stage,
-        const std::vector<std::string> &transformFeedbackVaryingNames);
+    void gatherTransformFeedbackVaryings(const ProgramMergedVaryings &varyings, ShaderType stage);
 
     void updateTransformFeedbackStrides();
 
@@ -661,6 +655,15 @@ class ProgramExecutable final : public angle::Subject
     // Vertex attributes, Fragment input varyings, etc.
     std::vector<ProgramInput> mProgramInputs;
     std::vector<TransformFeedbackVarying> mLinkedTransformFeedbackVaryings;
+    // Duplicate of ProgramState::mTransformFeedbackVaryingNames.  This is cached here because the
+    // xfb names may change, relink may fail, yet program pipeline link should be able to function
+    // with the last installed executable.  In truth, program pipeline link should have been able to
+    // hoist transform feedback varyings directly from the executable, among most other things, but
+    // that is currently not done.
+    //
+    // This array is not serialized, it's already done by the program, and will be duplicated during
+    // deserialization.
+    std::vector<std::string> mTransformFeedbackVaryingNames;
     // The size of the data written to each transform feedback buffer per vertex.
     std::vector<GLsizei> mTransformFeedbackStrides;
     // Uniforms are sorted in order:

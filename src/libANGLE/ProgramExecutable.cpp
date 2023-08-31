@@ -882,21 +882,18 @@ void ProgramExecutable::saveLinkedStateInfo(const ProgramState &state)
     }
 }
 
-bool ProgramExecutable::linkMergedVaryings(
-    const Caps &caps,
-    const Limitations &limitations,
-    const Version &clientVersion,
-    bool webglCompatibility,
-    const ProgramMergedVaryings &mergedVaryings,
-    const std::vector<std::string> &transformFeedbackVaryingNames,
-    const LinkingVariables &linkingVariables,
-    bool isSeparable,
-    ProgramVaryingPacking *varyingPacking)
+bool ProgramExecutable::linkMergedVaryings(const Caps &caps,
+                                           const Limitations &limitations,
+                                           const Version &clientVersion,
+                                           bool webglCompatibility,
+                                           const ProgramMergedVaryings &mergedVaryings,
+                                           const LinkingVariables &linkingVariables,
+                                           bool isSeparable,
+                                           ProgramVaryingPacking *varyingPacking)
 {
     ShaderType tfStage = GetLastPreFragmentStage(linkingVariables.isShaderStageUsedBitset);
 
-    if (!linkValidateTransformFeedback(caps, clientVersion, mergedVaryings, tfStage,
-                                       transformFeedbackVaryingNames))
+    if (!linkValidateTransformFeedback(caps, clientVersion, mergedVaryings, tfStage))
     {
         return false;
     }
@@ -930,28 +927,26 @@ bool ProgramExecutable::linkMergedVaryings(
     }
 
     if (!varyingPacking->collectAndPackUserVaryings(*mInfoLog, caps, packMode, activeShadersMask,
-                                                    mergedVaryings, transformFeedbackVaryingNames,
+                                                    mergedVaryings, mTransformFeedbackVaryingNames,
                                                     isSeparable))
     {
         return false;
     }
 
-    gatherTransformFeedbackVaryings(mergedVaryings, tfStage, transformFeedbackVaryingNames);
+    gatherTransformFeedbackVaryings(mergedVaryings, tfStage);
     updateTransformFeedbackStrides();
 
     return true;
 }
 
-bool ProgramExecutable::linkValidateTransformFeedback(
-    const Caps &caps,
-    const Version &clientVersion,
-    const ProgramMergedVaryings &varyings,
-    ShaderType stage,
-    const std::vector<std::string> &transformFeedbackVaryingNames)
+bool ProgramExecutable::linkValidateTransformFeedback(const Caps &caps,
+                                                      const Version &clientVersion,
+                                                      const ProgramMergedVaryings &varyings,
+                                                      ShaderType stage)
 {
     // Validate the tf names regardless of the actual program varyings.
     std::set<std::string> uniqueNames;
-    for (const std::string &tfVaryingName : transformFeedbackVaryingNames)
+    for (const std::string &tfVaryingName : mTransformFeedbackVaryingNames)
     {
         if (clientVersion < Version(3, 1) && tfVaryingName.find('[') != std::string::npos)
         {
@@ -982,7 +977,7 @@ bool ProgramExecutable::linkValidateTransformFeedback(
     // From OpneGLES spec. 11.1.2.1: A program will fail to link if:
     // the count specified by TransformFeedbackVaryings is non-zero, but the
     // program object has no vertex, tessellation evaluation, or geometry shader
-    if (transformFeedbackVaryingNames.size() > 0 &&
+    if (mTransformFeedbackVaryingNames.size() > 0 &&
         !gl::ShaderTypeSupportsTransformFeedback(getLinkedTransformFeedbackStage()))
     {
         *mInfoLog << "Linked transform feedback stage " << getLinkedTransformFeedbackStage()
@@ -992,7 +987,7 @@ bool ProgramExecutable::linkValidateTransformFeedback(
 
     // Validate against program varyings.
     size_t totalComponents = 0;
-    for (const std::string &tfVaryingName : transformFeedbackVaryingNames)
+    for (const std::string &tfVaryingName : mTransformFeedbackVaryingNames)
     {
         std::vector<unsigned int> subscripts;
         std::string baseName = ParseResourceName(tfVaryingName, &subscripts);
@@ -1068,14 +1063,12 @@ bool ProgramExecutable::linkValidateTransformFeedback(
     return true;
 }
 
-void ProgramExecutable::gatherTransformFeedbackVaryings(
-    const ProgramMergedVaryings &varyings,
-    ShaderType stage,
-    const std::vector<std::string> &transformFeedbackVaryingNames)
+void ProgramExecutable::gatherTransformFeedbackVaryings(const ProgramMergedVaryings &varyings,
+                                                        ShaderType stage)
 {
     // Gather the linked varyings that are used for transform feedback, they should all exist.
     mLinkedTransformFeedbackVaryings.clear();
-    for (const std::string &tfVaryingName : transformFeedbackVaryingNames)
+    for (const std::string &tfVaryingName : mTransformFeedbackVaryingNames)
     {
         std::vector<unsigned int> subscripts;
         std::string baseName = ParseResourceName(tfVaryingName, &subscripts);

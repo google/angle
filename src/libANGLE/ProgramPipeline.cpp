@@ -540,12 +540,12 @@ angle::Result ProgramPipeline::link(const Context *context)
             tfProgram = mState.mPrograms[ShaderType::Vertex];
         }
 
-        const std::vector<std::string> &transformFeedbackVaryingNames =
-            tfProgram->getState().getTransformFeedbackVaryingNames();
+        mState.mExecutable->mTransformFeedbackVaryingNames =
+            tfProgram->getExecutable().mTransformFeedbackVaryingNames;
 
         if (!mState.mExecutable->linkMergedVaryings(caps, limitations, clientVersion, isWebGL,
-                                                    mergedVaryings, transformFeedbackVaryingNames,
-                                                    linkingVariables, false, &varyingPacking))
+                                                    mergedVaryings, linkingVariables, false,
+                                                    &varyingPacking))
         {
             return angle::Result::Stop;
         }

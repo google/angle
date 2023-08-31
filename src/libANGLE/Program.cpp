@@ -1173,11 +1173,17 @@ angle::Result Program::linkImpl(const Context *context)
     auto *platform   = ANGLEPlatformCurrent();
     double startTime = platform->currentTime(platform);
 
-    // Make sure the executable state is in sync with the program.  Only the transform feedback
-    // buffer mode is duplicated in the executable as is the only link-input that is also needed at
-    // draw time.
+    // Make sure the executable state is in sync with the program.
+    //
+    // The transform feedback buffer mode is duplicated in the executable as is the only link-input
+    // that is also needed at draw time.
+    //
+    // The transform feedback varying names are duplicated because the program pipeline link is not
+    // currently able to use the link result of the program directly (and redoes the link, using
+    // these names).
     mState.mExecutable->mPODStruct.transformFeedbackBufferMode =
         mState.mTransformFeedbackBufferMode;
+    mState.mExecutable->mTransformFeedbackVaryingNames = mState.mTransformFeedbackVaryingNames;
 
     // Unlink the program, but do not clear the validation-related caching yet, since we can still
     // use the previously linked program if linking the shaders fails.
@@ -1335,10 +1341,9 @@ angle::Result Program::linkImpl(const Context *context)
         }
 
         mergedVaryings = GetMergedVaryingsFromLinkingVariables(linkingVariables);
-        if (!mState.mExecutable->linkMergedVaryings(
-                caps, limitations, clientVersion, isWebGL, mergedVaryings,
-                mState.mTransformFeedbackVaryingNames, linkingVariables, isSeparable(),
-                &resources.varyingPacking))
+        if (!mState.mExecutable->linkMergedVaryings(caps, limitations, clientVersion, isWebGL,
+                                                    mergedVaryings, linkingVariables, isSeparable(),
+                                                    &resources.varyingPacking))
         {
             return angle::Result::Continue;
         }
@@ -3573,6 +3578,12 @@ angle::Result Program::serialize(const Context *context, angle::MemoryBuffer *bi
     stream.writeBool(mState.mSeparable);
     stream.writeInt(mState.mTransformFeedbackBufferMode);
 
+    stream.writeInt(mState.mTransformFeedbackVaryingNames.size());
+    for (const std::string &name : mState.mTransformFeedbackVaryingNames)
+    {
+        stream.writeString(name);
+    }
+
     mState.mExecutable->save(mState.mSeparable, &stream);
 
     // Warn the app layer if saving a binary with unsupported transform feedback.
@@ -3670,6 +3681,12 @@ angle::Result Program::deserialize(const Context *context, BinaryInputStream &st
     mState.mSeparable                   = stream.readBool();
     mState.mTransformFeedbackBufferMode = stream.readInt<GLenum>();
 
+    mState.mTransformFeedbackVaryingNames.resize(stream.readInt<size_t>());
+    for (std::string &name : mState.mTransformFeedbackVaryingNames)
+    {
+        name = stream.readString();
+    }
+
     mState.mExecutable->load(mState.mSeparable, &stream);
 
     static_assert(static_cast<unsigned long>(ShaderType::EnumCount) <= sizeof(unsigned long) * 8,
@@ -3686,6 +3703,7 @@ angle::Result Program::deserialize(const Context *context, BinaryInputStream &st
     if (!mState.mAttachedShaders[ShaderType::Compute])
     {
         mState.mExecutable->updateTransformFeedbackStrides();
+        mState.mExecutable->mTransformFeedbackVaryingNames = mState.mTransformFeedbackVaryingNames;
     }
 
     if (context->getShareGroup()->getFrameCaptureShared()->enabled())
