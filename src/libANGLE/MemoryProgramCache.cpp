@@ -89,7 +89,7 @@ void MemoryProgramCache::ComputeHash(const Context *context,
     {
         hashStream.writeString(transformFeedbackVaryingName);
     }
-    hashStream.writeInt(program->getState().getTransformFeedbackBufferMode());
+    hashStream.writeInt(program->getTransformFeedbackBufferMode());
 
     // Include the status of FrameCapture, which adds source strings to the binary
     hashStream.writeBool(context->getShareGroup()->getFrameCaptureShared()->enabled());

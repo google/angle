@@ -229,10 +229,7 @@ class ProgramState final : angle::NonCopyable
     {
         return mTransformFeedbackVaryingNames;
     }
-    GLint getTransformFeedbackBufferMode() const
-    {
-        return mExecutable->getTransformFeedbackBufferMode();
-    }
+    GLint getTransformFeedbackBufferMode() const { return mTransformFeedbackBufferMode; }
     GLuint getUniformBlockBinding(GLuint uniformBlockIndex) const
     {
         return mExecutable->getUniformBlockBinding(uniformBlockIndex);
@@ -411,6 +408,7 @@ class ProgramState final : angle::NonCopyable
     ShaderMap<SharedCompiledShaderState> mAttachedShaders;
 
     std::vector<std::string> mTransformFeedbackVaryingNames;
+    GLenum mTransformFeedbackBufferMode;
 
     bool mBinaryRetrieveableHint;
     bool mSeparable;
@@ -688,7 +686,7 @@ class Program final : public LabeledObject, public angle::Subject
                                      GLchar *name) const;
     GLsizei getTransformFeedbackVaryingCount() const;
     GLsizei getTransformFeedbackVaryingMaxLength() const;
-    GLenum getTransformFeedbackBufferMode() const;
+    GLenum getTransformFeedbackBufferMode() const { return mState.mTransformFeedbackBufferMode; }
     GLuint getTransformFeedbackVaryingResourceIndex(const GLchar *name) const;
     const TransformFeedbackVarying &getTransformFeedbackVaryingResource(GLuint index) const;
 

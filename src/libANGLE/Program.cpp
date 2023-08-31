@@ -865,6 +865,7 @@ ImageBinding::~ImageBinding() = default;
 ProgramState::ProgramState(rx::GLImplFactory *factory)
     : mLabel(),
       mAttachedShaders{},
+      mTransformFeedbackBufferMode(GL_INTERLEAVED_ATTRIBS),
       mBinaryRetrieveableHint(false),
       mSeparable(false),
       mCachedBaseVertex(0),
@@ -1168,9 +1169,15 @@ angle::Result Program::linkImpl(const Context *context)
 {
     ASSERT(!mLinkingState);
     // Don't make any local variables pointing to anything within the ProgramExecutable, since
-    // unlink() could make a new ProgramExecutable making any references/pointers invalid.
+    // unlink() resets the ProgramExecutable making any references/pointers invalid.
     auto *platform   = ANGLEPlatformCurrent();
     double startTime = platform->currentTime(platform);
+
+    // Make sure the executable state is in sync with the program.  Only the transform feedback
+    // buffer mode is duplicated in the executable as is the only link-input that is also needed at
+    // draw time.
+    mState.mExecutable->mPODStruct.transformFeedbackBufferMode =
+        mState.mTransformFeedbackBufferMode;
 
     // Unlink the program, but do not clear the validation-related caching yet, since we can still
     // use the previously linked program if linking the shaders fails.
@@ -2666,7 +2673,7 @@ void Program::setTransformFeedbackVaryings(GLsizei count,
         mState.mTransformFeedbackVaryingNames[i] = varyings[i];
     }
 
-    mState.mExecutable->mPODStruct.transformFeedbackBufferMode = bufferMode;
+    mState.mTransformFeedbackBufferMode = bufferMode;
 }
 
 void Program::getTransformFeedbackVarying(GLuint index,
@@ -2734,12 +2741,6 @@ GLsizei Program::getTransformFeedbackVaryingMaxLength() const
     {
         return 0;
     }
-}
-
-GLenum Program::getTransformFeedbackBufferMode() const
-{
-    ASSERT(!mLinkingState);
-    return mState.mExecutable->getTransformFeedbackBufferMode();
 }
 
 bool Program::linkValidateShaders(const Context *context)
@@ -3568,8 +3569,9 @@ angle::Result Program::serialize(const Context *context, angle::MemoryBuffer *bi
         stream.writeInt(0);
     }
 
-    // Must be before mExecutable->save(), since it uses the value.
+    // mSeparable must be before mExecutable->save(), since it uses the value.
     stream.writeBool(mState.mSeparable);
+    stream.writeInt(mState.mTransformFeedbackBufferMode);
 
     mState.mExecutable->save(mState.mSeparable, &stream);
 
@@ -3664,8 +3666,9 @@ angle::Result Program::deserialize(const Context *context, BinaryInputStream &st
         return angle::Result::Stop;
     }
 
-    // Must be before mExecutable->load(), since it uses the value.
-    mState.mSeparable = stream.readBool();
+    // mSeparable must be before mExecutable->load(), since it uses the value.
+    mState.mSeparable                   = stream.readBool();
+    mState.mTransformFeedbackBufferMode = stream.readInt<GLenum>();
 
     mState.mExecutable->load(mState.mSeparable, &stream);
 
