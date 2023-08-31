@@ -205,7 +205,7 @@ deps = {
       }
     ],
     'dep_type': 'cipd',
-    'condition': 'not build_with_chromium',
+    'condition': 'not build_with_chromium and not (host_os == "linux" and host_cpu == "arm64")',
   },
 
   'buildtools/win': {
@@ -5277,7 +5277,7 @@ hooks = [
   {
     'name': 'configure_reclient_cfgs',
     'pattern': '.',
-    'condition': 'download_remoteexec_cfg and not build_with_chromium',
+    'condition': 'download_remoteexec_cfg and not build_with_chromium and not (host_os == "linux" and host_cpu == "arm64")',
     'action': ['python3',
                'buildtools/reclient_cfgs/configure_reclient_cfgs.py',
                '--rbe_instance',
