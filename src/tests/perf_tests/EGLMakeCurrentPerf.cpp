@@ -75,6 +75,8 @@ EGLMakeCurrentPerfTest::EGLMakeCurrentPerfTest()
     else
     {
         LoadUtilEGL(getProc);
+        // Test harness warmup calls glFinish so we need GLES too.
+        LoadUtilGLES(getProc);
 
         if (!eglGetPlatformDisplayEXT)
         {
