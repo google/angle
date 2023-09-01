@@ -400,7 +400,7 @@ std::unique_ptr<rx::LinkEvent> ProgramD3D::load(const gl::Context *context,
 {
     if (!getExecutable()->load(context, mRenderer, stream))
     {
-        return nullptr;
+        return std::make_unique<LinkEventDone>(angle::Result::Stop);
     }
 
     return std::make_unique<LoadBinaryLinkEvent>(context->getShaderCompileThreadPool(), this,
