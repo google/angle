@@ -56,17 +56,22 @@ struct ShaderInterfaceVariableXfbInfo
 {
     static constexpr uint32_t kInvalid = std::numeric_limits<uint32_t>::max();
 
-    // Used by both extension and emulation
-    uint32_t buffer = kInvalid;
-    uint32_t offset = kInvalid;
-    uint32_t stride = kInvalid;
+    ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
+    struct PODStruct
+    {
+        // Used by both extension and emulation
+        uint32_t buffer = kInvalid;
+        uint32_t offset = kInvalid;
+        uint32_t stride = kInvalid;
 
-    // Used only by emulation (array index support is missing from VK_EXT_transform_feedback)
-    uint32_t arraySize   = kInvalid;
-    uint32_t columnCount = kInvalid;
-    uint32_t rowCount    = kInvalid;
-    uint32_t arrayIndex  = kInvalid;
-    GLenum componentType = GL_FLOAT;
+        // Used only by emulation (array index support is missing from VK_EXT_transform_feedback)
+        uint32_t arraySize   = kInvalid;
+        uint32_t columnCount = kInvalid;
+        uint32_t rowCount    = kInvalid;
+        uint32_t arrayIndex  = kInvalid;
+        GLenum componentType = GL_FLOAT;
+    } podStruct;
+    ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
     // If empty, the whole array is captured.  Otherwise only the specified members are captured.
     std::vector<ShaderInterfaceVariableXfbInfo> arrayElements;
 };

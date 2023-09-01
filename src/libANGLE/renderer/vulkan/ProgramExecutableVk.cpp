@@ -282,22 +282,10 @@ void ShaderInfo::load(gl::BinaryInputStream *stream)
 {
     clear();
 
-    // Read in shader code sizes for all shader types
-    gl::ShaderMap<uint32_t> blobSizes;
-    stream->readBytes(reinterpret_cast<uint8_t *>(blobSizes.data()),
-                      blobSizes.size() * sizeof(*blobSizes.data()));
     // Read in shader codes for all shader types
     for (gl::ShaderType shaderType : gl::AllShaderTypes())
     {
-        angle::spirv::Blob *blob = &mSpirvBlobs[shaderType];
-        ASSERT(blob->empty());
-        if (blobSizes[shaderType] > 0)
-        {
-            blob->resize(blobSizes[shaderType]);
-            // Read the SPIR-V
-            stream->readBytes(reinterpret_cast<uint8_t *>(blob->data()),
-                              blobSizes[shaderType] * sizeof(*blob->data()));
-        }
+        stream->readVector(&mSpirvBlobs[shaderType]);
     }
 
     mIsInitialized = true;
@@ -307,25 +295,10 @@ void ShaderInfo::save(gl::BinaryOutputStream *stream)
 {
     ASSERT(valid());
 
-    // Write out shader codes size for all shader types
-    gl::ShaderMap<uint32_t> blobSizes;
-    for (gl::ShaderType shaderType : gl::AllShaderTypes())
-    {
-        blobSizes[shaderType] = static_cast<uint32_t>(mSpirvBlobs[shaderType].size());
-    }
-    stream->writeBytes(reinterpret_cast<const uint8_t *>(blobSizes.data()),
-                       blobSizes.size() * sizeof(*blobSizes.data()));
-
     // Write out shader codes for all shader types
     for (gl::ShaderType shaderType : gl::AllShaderTypes())
     {
-        if (blobSizes[shaderType] > 0)
-        {
-            // Write the SPIR-V
-            const angle::spirv::Blob &blob = mSpirvBlobs[shaderType];
-            stream->writeBytes(reinterpret_cast<const uint8_t *>(blob.data()),
-                               blobSizes[shaderType] * sizeof(*blob.data()));
-        }
+        stream->writeVector(mSpirvBlobs[shaderType]);
     }
 }
 
@@ -531,28 +504,17 @@ std::unique_ptr<rx::LinkEvent> ProgramExecutableVk::load(ContextVk *contextVk,
                                                          gl::BinaryInputStream *stream)
 {
     mVariableInfoMap.load(stream);
-
     mOriginalShaderInfo.load(stream);
 
     // Deserializes the uniformLayout data of mDefaultUniformBlocks
     for (gl::ShaderType shaderType : gl::AllShaderTypes())
     {
-        const size_t uniformCount = stream->readInt<size_t>();
-        for (unsigned int uniformIndex = 0; uniformIndex < uniformCount; ++uniformIndex)
-        {
-            sh::BlockMemberInfo blockInfo;
-            gl::LoadBlockMemberInfo(stream, &blockInfo);
-            mDefaultUniformBlocks[shaderType]->uniformLayout.push_back(blockInfo);
-        }
+        stream->readVector(&mDefaultUniformBlocks[shaderType]->uniformLayout);
     }
 
-    gl::ShaderMap<size_t> requiredBufferSize;
-    requiredBufferSize.fill(0);
     // Deserializes required uniform block memory sizes
-    for (gl::ShaderType shaderType : gl::AllShaderTypes())
-    {
-        requiredBufferSize[shaderType] = stream->readInt<size_t>();
-    }
+    gl::ShaderMap<size_t> requiredBufferSize;
+    stream->readPackedEnumMap(&requiredBufferSize);
 
     if (!isSeparable)
     {
@@ -605,21 +567,16 @@ void ProgramExecutableVk::save(ContextVk *contextVk,
     // Serializes the uniformLayout data of mDefaultUniformBlocks
     for (gl::ShaderType shaderType : gl::AllShaderTypes())
     {
-        const size_t uniformCount = mDefaultUniformBlocks[shaderType]->uniformLayout.size();
-        stream->writeInt(uniformCount);
-        for (unsigned int uniformIndex = 0; uniformIndex < uniformCount; ++uniformIndex)
-        {
-            sh::BlockMemberInfo &blockInfo =
-                mDefaultUniformBlocks[shaderType]->uniformLayout[uniformIndex];
-            gl::WriteBlockMemberInfo(stream, blockInfo);
-        }
+        stream->writeVector(mDefaultUniformBlocks[shaderType]->uniformLayout);
     }
 
     // Serializes required uniform block memory sizes
+    gl::ShaderMap<size_t> uniformDataSize;
     for (gl::ShaderType shaderType : gl::AllShaderTypes())
     {
-        stream->writeInt(mDefaultUniformBlocks[shaderType]->uniformData.size());
+        uniformDataSize[shaderType] = mDefaultUniformBlocks[shaderType]->uniformData.size();
     }
+    stream->writePackedEnumMap(uniformDataSize);
 
     // Compress and save mPipelineCache.  Separable programs don't warm up the cache, while program
     // pipelines do.  However, currently ANGLE doesn't sync program pipelines to cache.  ANGLE could

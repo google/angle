@@ -14,6 +14,7 @@
 #include <string>
 #include <vector>
 
+#include "common/PackedEnums.h"
 #include "common/angleutils.h"
 #include "common/mathutil.h"
 
@@ -67,6 +68,13 @@ class BinaryInputStream : angle::NonCopyable
             param->resize(size);
             readBytes(reinterpret_cast<uint8_t *>(param->data()), param->size() * sizeof(T));
         }
+    }
+
+    template <typename E, typename T>
+    void readPackedEnumMap(angle::PackedEnumMap<E, T> *param)
+    {
+        static_assert(std::is_trivially_copyable<T>(), "must be memcpy-able");
+        readBytes(reinterpret_cast<uint8_t *>(param->data()), param->size() * sizeof(T));
     }
 
     template <class T>
@@ -251,6 +259,13 @@ class BinaryOutputStream : angle::NonCopyable
         {
             writeBytes(reinterpret_cast<const uint8_t *>(param.data()), param.size() * sizeof(T));
         }
+    }
+
+    template <typename E, typename T>
+    void writePackedEnumMap(const angle::PackedEnumMap<E, T> &param)
+    {
+        static_assert(std::is_trivially_copyable<T>(), "must be memcpy-able");
+        writeBytes(reinterpret_cast<const uint8_t *>(param.data()), param.size() * sizeof(T));
     }
 
     template <class T>
