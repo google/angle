@@ -203,8 +203,7 @@ void SaveProgramInputs(BinaryOutputStream *stream, const std::vector<ProgramInpu
     {
         stream->writeString(attrib.name);
         stream->writeString(attrib.mappedName);
-        stream->writeBytes(reinterpret_cast<const unsigned char *>(&attrib.basicDataTypeStruct),
-                           sizeof(attrib.basicDataTypeStruct));
+        stream->writeStruct(attrib.basicDataTypeStruct);
     }
 }
 void LoadProgramInputs(BinaryInputStream *stream, std::vector<ProgramInput> *programInputs)
@@ -219,8 +218,7 @@ void LoadProgramInputs(BinaryInputStream *stream, std::vector<ProgramInput> *pro
             ProgramInput &attrib = (*programInputs)[attribIndex];
             stream->readString(&attrib.name);
             stream->readString(&attrib.mappedName);
-            stream->readBytes(reinterpret_cast<unsigned char *>(&attrib.basicDataTypeStruct),
-                              sizeof(attrib.basicDataTypeStruct));
+            stream->readStruct(&attrib.basicDataTypeStruct);
         }
     }
 }
@@ -231,21 +229,16 @@ void SaveUniforms(BinaryOutputStream *stream,
                   const std::vector<std::string> &uniformMappedNames,
                   const std::vector<VariableLocation> &uniformLocations)
 {
-    stream->writeInt(uniforms.size());
-    if (uniforms.size() > 0)
+    stream->writeVector(uniforms);
+    ASSERT(uniforms.size() == uniformNames.size());
+    ASSERT(uniforms.size() == uniformMappedNames.size());
+    for (const std::string &name : uniformNames)
     {
-        // LinkedUniform is a simple structure with fundamental data types, we can just do bulk save
-        // for performance.
-        stream->writeBytes(reinterpret_cast<const uint8_t *>(uniforms.data()),
-                           sizeof(LinkedUniform) * uniforms.size());
-        for (const std::string &name : uniformNames)
-        {
-            stream->writeString(name);
-        }
-        for (const std::string &name : uniformMappedNames)
-        {
-            stream->writeString(name);
-        }
+        stream->writeString(name);
+    }
+    for (const std::string &name : uniformMappedNames)
+    {
+        stream->writeString(name);
     }
 
     stream->writeInt(uniformLocations.size());
@@ -263,21 +256,16 @@ void LoadUniforms(BinaryInputStream *stream,
                   std::vector<VariableLocation> *uniformLocations)
 {
     ASSERT(uniforms->empty());
-    size_t uniformCount = stream->readInt<size_t>();
-    if (uniformCount > 0)
+    stream->readVector(uniforms);
+    if (!uniforms->empty())
     {
-        uniforms->resize(uniformCount);
-        // LinkedUniform is a simple structure with fundamental data types, we can just do bulk load
-        // for performance.
-        stream->readBytes(reinterpret_cast<uint8_t *>(uniforms->data()),
-                          sizeof(LinkedUniform) * uniforms->size());
-        uniformNames->resize(uniformCount);
-        for (size_t uniformIndex = 0; uniformIndex < uniformCount; ++uniformIndex)
+        uniformNames->resize(uniforms->size());
+        for (size_t uniformIndex = 0; uniformIndex < uniforms->size(); ++uniformIndex)
         {
             stream->readString(&(*uniformNames)[uniformIndex]);
         }
-        uniformMappedNames->resize(uniformCount);
-        for (size_t uniformIndex = 0; uniformIndex < uniformCount; ++uniformIndex)
+        uniformMappedNames->resize(uniforms->size());
+        for (size_t uniformIndex = 0; uniformIndex < uniforms->size(); ++uniformIndex)
         {
             stream->readString(&(*uniformMappedNames)[uniformIndex]);
         }
@@ -300,9 +288,7 @@ void SaveSamplerBindings(BinaryOutputStream *stream,
                          const std::vector<SamplerBinding> &samplerBindings,
                          const std::vector<GLuint> &samplerBoundTextureUnits)
 {
-    stream->writeInt(samplerBindings.size());
-    stream->writeBytes(reinterpret_cast<const uint8_t *>(samplerBindings.data()),
-                       sizeof(*samplerBindings.data()) * samplerBindings.size());
+    stream->writeVector(samplerBindings);
     stream->writeInt(samplerBoundTextureUnits.size());
 }
 void LoadSamplerBindings(BinaryInputStream *stream,
@@ -310,13 +296,7 @@ void LoadSamplerBindings(BinaryInputStream *stream,
                          std::vector<GLuint> *samplerBoundTextureUnits)
 {
     ASSERT(samplerBindings->empty());
-    size_t samplerBindingCount = stream->readInt<size_t>();
-    if (samplerBindingCount > 0)
-    {
-        samplerBindings->resize(samplerBindingCount);
-        stream->readBytes(reinterpret_cast<uint8_t *>(samplerBindings->data()),
-                          sizeof(*samplerBindings->data()) * samplerBindingCount);
-    }
+    stream->readVector(samplerBindings);
 
     ASSERT(samplerBoundTextureUnits->empty());
     size_t boundTextureUnitsCount = stream->readInt<size_t>();
@@ -349,13 +329,7 @@ void WriteShaderVariableBuffer(BinaryOutputStream *stream, const ShaderVariableB
 
     stream->writeInt(var.binding);
     stream->writeInt(var.dataSize);
-
-    stream->writeInt(var.memberIndexes.size());
-    if (!var.memberIndexes.empty())
-    {
-        stream->writeBytes(reinterpret_cast<const unsigned char *>(var.memberIndexes.data()),
-                           sizeof(*var.memberIndexes.data()) * var.memberIndexes.size());
-    }
+    stream->writeVector(var.memberIndexes);
 }
 
 void LoadShaderVariableBuffer(BinaryInputStream *stream, ShaderVariableBuffer *var)
@@ -366,13 +340,7 @@ void LoadShaderVariableBuffer(BinaryInputStream *stream, ShaderVariableBuffer *v
     var->dataSize = stream->readInt<unsigned int>();
 
     ASSERT(var->memberIndexes.empty());
-    size_t numMembers = stream->readInt<size_t>();
-    if (numMembers > 0)
-    {
-        var->memberIndexes.resize(numMembers);
-        stream->readBytes(reinterpret_cast<unsigned char *>(var->memberIndexes.data()),
-                          sizeof(*var->memberIndexes.data()) * var->memberIndexes.size());
-    }
+    stream->readVector(&var->memberIndexes);
 }
 
 void WriteInterfaceBlock(BinaryOutputStream *stream, const InterfaceBlock &block)
@@ -502,7 +470,7 @@ void ProgramExecutable::load(bool isSeparable, gl::BinaryInputStream *stream)
                   "All bits of mDrawBufferTypeMask and mActiveOutputVariables types and mask fit "
                   "into 32 bits each");
 
-    stream->readBytes(reinterpret_cast<unsigned char *>(&mPODStruct), sizeof(mPODStruct));
+    stream->readStruct(&mPODStruct);
 
     LoadProgramInputs(stream, &mProgramInputs);
     LoadUniforms(stream, &mUniforms, &mUniformNames, &mUniformMappedNames, &mUniformLocations);
@@ -554,7 +522,7 @@ void ProgramExecutable::load(bool isSeparable, gl::BinaryInputStream *stream)
     {
         TransformFeedbackVarying &varying =
             mLinkedTransformFeedbackVaryings[transformFeedbackVaryingIndex];
-        stream->readIntVector<unsigned int>(&varying.arraySizes);
+        stream->readVector(&varying.arraySizes);
         stream->readInt(&varying.type);
         stream->readString(&varying.name);
         varying.arrayIndex = stream->readInt<GLuint>();
@@ -649,7 +617,7 @@ void ProgramExecutable::save(bool isSeparable, gl::BinaryOutputStream *stream) c
         "All bits of mDrawBufferTypeMask and mActiveOutputVariables can be contained in 32 bits");
 
     ASSERT(mPODStruct.geometryShaderInvocations >= 1 && mPODStruct.geometryShaderMaxVertices >= 0);
-    stream->writeBytes(reinterpret_cast<const unsigned char *>(&mPODStruct), sizeof(mPODStruct));
+    stream->writeStruct(mPODStruct);
 
     SaveProgramInputs(stream, mProgramInputs);
     SaveUniforms(stream, mUniforms, mUniformNames, mUniformMappedNames, mUniformLocations);
@@ -681,7 +649,7 @@ void ProgramExecutable::save(bool isSeparable, gl::BinaryOutputStream *stream) c
     stream->writeInt(getLinkedTransformFeedbackVaryings().size());
     for (const auto &var : getLinkedTransformFeedbackVaryings())
     {
-        stream->writeIntVector(var.arraySizes);
+        stream->writeVector(var.arraySizes);
         stream->writeInt(var.type);
         stream->writeString(var.name);
 
