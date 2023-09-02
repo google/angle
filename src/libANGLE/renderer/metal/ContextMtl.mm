@@ -1294,8 +1294,7 @@ angle::Result ContextMtl::syncState(const gl::Context *context,
             case gl::state::DIRTY_BIT_DISPATCH_INDIRECT_BUFFER_BINDING:
                 break;
             case gl::state::DIRTY_BIT_PROGRAM_BINDING:
-                mProgram    = mtl::GetImpl(glState.getProgram());
-                mExecutable = mProgram->getExecutable();
+                mExecutable = mtl::GetImpl(mState.getProgramExecutable());
                 break;
             case gl::state::DIRTY_BIT_PROGRAM_EXECUTABLE:
                 updateProgramExecutable(context);
@@ -2628,8 +2627,9 @@ angle::Result ContextMtl::setupDrawImpl(const gl::Context *context,
     }
     else
     {
-        ANGLE_TRY(mProgram->setupDraw(context, &mRenderEncoder, mRenderPipelineDesc,
-                                      isPipelineDescChanged, textureChanged, uniformBuffersDirty));
+        ANGLE_TRY(mExecutable->setupDraw(context, &mRenderEncoder, mRenderPipelineDesc,
+                                         isPipelineDescChanged, textureChanged,
+                                         uniformBuffersDirty));
     }
 
     return angle::Result::Continue;
