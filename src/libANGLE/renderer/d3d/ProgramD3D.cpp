@@ -308,10 +308,8 @@ class ProgramD3D::GetExecutableTask : public Closure, public d3d::Context
 
 // ProgramD3D Implementation
 
-unsigned int ProgramD3D::mCurrentSerial = 1;
-
 ProgramD3D::ProgramD3D(const gl::ProgramState &state, RendererD3D *renderer)
-    : ProgramImpl(state), mRenderer(renderer), mSerial(issueSerial())
+    : ProgramImpl(state), mRenderer(renderer)
 {}
 
 ProgramD3D::~ProgramD3D() = default;
@@ -1126,16 +1124,6 @@ void ProgramD3D::setUniformMatrixfvInternal(GLint location,
 void ProgramD3D::reset()
 {
     getExecutable()->reset();
-}
-
-unsigned int ProgramD3D::getSerial() const
-{
-    return mSerial;
-}
-
-unsigned int ProgramD3D::issueSerial()
-{
-    return mCurrentSerial++;
 }
 
 template <typename DestT>
