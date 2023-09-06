@@ -968,26 +968,6 @@ bool ProgramGL::checkLinkStatus()
     return true;
 }
 
-void ProgramGL::updateEnabledClipDistances(uint8_t enabledClipDistancesPacked) const
-{
-    ASSERT(mState.getExecutable().hasClipDistance());
-    ASSERT(getExecutable()->mClipDistanceEnabledUniformLocation != -1);
-
-    ASSERT(mFunctions->programUniform1ui != nullptr);
-    mFunctions->programUniform1ui(mProgramID, getExecutable()->mClipDistanceEnabledUniformLocation,
-                                  enabledClipDistancesPacked);
-}
-
-void ProgramGL::enableLayeredRenderingPath(int baseViewIndex) const
-{
-    ASSERT(mState.getExecutable().usesMultiview());
-    ASSERT(getExecutable()->mMultiviewBaseViewLayerIndexUniformLocation != -1);
-
-    ASSERT(mFunctions->programUniform1i != nullptr);
-    mFunctions->programUniform1i(
-        mProgramID, getExecutable()->mMultiviewBaseViewLayerIndexUniformLocation, baseViewIndex);
-}
-
 void ProgramGL::getUniformfv(const gl::Context *context, GLint location, GLfloat *params) const
 {
     mFunctions->getUniformfv(mProgramID, uniLoc(location), params);

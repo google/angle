@@ -1006,13 +1006,13 @@ void StateManagerGL::updateProgramTextureBindings(const gl::Context *context)
 
 void StateManagerGL::updateProgramStorageBufferBindings(const gl::Context *context)
 {
-    const gl::State &glState   = context->getState();
-    const gl::Program *program = glState.getProgram();
+    const gl::State &glState                = context->getState();
+    const gl::ProgramExecutable *executable = glState.getProgramExecutable();
 
-    for (size_t blockIndex = 0; blockIndex < program->getActiveShaderStorageBlockCount();
+    for (size_t blockIndex = 0; blockIndex < executable->getActiveShaderStorageBlockCount();
          blockIndex++)
     {
-        GLuint binding = program->getShaderStorageBlockBinding(static_cast<GLuint>(blockIndex));
+        GLuint binding = executable->getShaderStorageBlockBinding(static_cast<GLuint>(blockIndex));
         const auto &shaderStorageBuffer = glState.getIndexedShaderStorageBuffer(binding);
 
         if (shaderStorageBuffer.get() != nullptr)
@@ -1034,14 +1034,14 @@ void StateManagerGL::updateProgramStorageBufferBindings(const gl::Context *conte
 
 void StateManagerGL::updateProgramUniformBufferBindings(const gl::Context *context)
 {
-    // Sync the current program state
-    const gl::State &glState   = context->getState();
-    const gl::Program *program = glState.getProgram();
+    // Sync the current program executable state
+    const gl::State &glState                = context->getState();
+    const gl::ProgramExecutable *executable = glState.getProgramExecutable();
 
-    for (size_t uniformBlockIndex = 0; uniformBlockIndex < program->getActiveUniformBlockCount();
+    for (size_t uniformBlockIndex = 0; uniformBlockIndex < executable->getActiveUniformBlockCount();
          uniformBlockIndex++)
     {
-        GLuint binding = program->getUniformBlockBinding(static_cast<GLuint>(uniformBlockIndex));
+        GLuint binding = executable->getUniformBlockBinding(static_cast<GLuint>(uniformBlockIndex));
         const auto &uniformBuffer = glState.getIndexedUniformBuffer(binding);
 
         if (uniformBuffer.get() != nullptr)
@@ -1063,10 +1063,10 @@ void StateManagerGL::updateProgramUniformBufferBindings(const gl::Context *conte
 
 void StateManagerGL::updateProgramAtomicCounterBufferBindings(const gl::Context *context)
 {
-    const gl::State &glState   = context->getState();
-    const gl::Program *program = glState.getProgram();
+    const gl::State &glState                = context->getState();
+    const gl::ProgramExecutable *executable = glState.getProgramExecutable();
 
-    for (const auto &atomicCounterBuffer : program->getState().getAtomicCounterBuffers())
+    for (const auto &atomicCounterBuffer : executable->getAtomicCounterBuffers())
     {
         GLuint binding     = atomicCounterBuffer.binding;
         const auto &buffer = glState.getIndexedAtomicCounterBuffer(binding);
@@ -1100,7 +1100,7 @@ void StateManagerGL::updateProgramImageBindings(const gl::Context *context)
 
     ASSERT(context->getClientVersion() >= gl::ES_3_1 ||
            context->getExtensions().shaderPixelLocalStorageANGLE ||
-           program->getImageBindings().empty());
+           executable->getImageBindings().empty());
     for (size_t imageUnitIndex : executable->getActiveImagesMask())
     {
         const gl::ImageUnit &imageUnit = glState.getImageUnit(imageUnitIndex);
@@ -2171,10 +2171,10 @@ angle::Result StateManagerGL::syncState(const gl::Context *context,
                     mHasSeparateFramebufferBindings ? GL_DRAW_FRAMEBUFFER : GL_FRAMEBUFFER,
                     framebufferGL->getFramebufferID());
 
-                const gl::Program *program = state.getProgram();
-                if (program)
+                const gl::ProgramExecutable *executable = state.getProgramExecutable();
+                if (executable)
                 {
-                    updateMultiviewBaseViewLayerIndexUniform(program, framebufferGL->getState());
+                    updateMultiviewBaseViewLayerIndexUniform(executable, framebufferGL->getState());
                 }
 
                 // Changing the draw framebuffer binding sometimes requires resetting srgb blending.
@@ -2193,7 +2193,7 @@ angle::Result StateManagerGL::syncState(const gl::Context *context,
                 VertexArrayGL *vaoGL = GetImplAs<VertexArrayGL>(state.getVertexArray());
                 bindVertexArray(vaoGL->getVertexArrayID(), vaoGL->getNativeState());
 
-                ANGLE_TRY(propagateProgramToVAO(context, state.getProgram(),
+                ANGLE_TRY(propagateProgramToVAO(context, state.getProgramExecutable(),
                                                 GetImplAs<VertexArrayGL>(state.getVertexArray())));
 
                 if (mFeatures.syncVertexArraysToDefault.enabled)
@@ -2240,10 +2240,9 @@ angle::Result StateManagerGL::syncState(const gl::Context *context,
             }
             case gl::state::DIRTY_BIT_PROGRAM_EXECUTABLE:
             {
-                const gl::Program *program              = state.getProgram();
                 const gl::ProgramExecutable *executable = state.getProgramExecutable();
 
-                if (program && executable)
+                if (executable)
                 {
                     iter.setLaterBit(gl::state::DIRTY_BIT_TEXTURE_BINDINGS);
 
@@ -2252,39 +2251,39 @@ angle::Result StateManagerGL::syncState(const gl::Context *context,
                         iter.setLaterBit(gl::state::DIRTY_BIT_IMAGE_BINDINGS);
                     }
 
-                    if (program->getActiveShaderStorageBlockCount() > 0)
+                    if (executable->getActiveShaderStorageBlockCount() > 0)
                     {
                         iter.setLaterBit(gl::state::DIRTY_BIT_SHADER_STORAGE_BUFFER_BINDING);
                     }
 
-                    if (program->getActiveUniformBlockCount() > 0)
+                    if (executable->getActiveUniformBlockCount() > 0)
                     {
                         iter.setLaterBit(gl::state::DIRTY_BIT_UNIFORM_BUFFER_BINDINGS);
                     }
 
-                    if (program->getActiveAtomicCounterBufferCount() > 0)
+                    if (executable->getActiveAtomicCounterBufferCount() > 0)
                     {
                         iter.setLaterBit(gl::state::DIRTY_BIT_ATOMIC_COUNTER_BUFFER_BINDING);
                     }
 
-                    if (mIsMultiviewEnabled && program->usesMultiview())
+                    if (mIsMultiviewEnabled && executable->usesMultiview())
                     {
                         updateMultiviewBaseViewLayerIndexUniform(
-                            program, state.getDrawFramebuffer()->getImplementation()->getState());
+                            executable,
+                            state.getDrawFramebuffer()->getImplementation()->getState());
                     }
 
                     if (mFeatures.emulateClipDistanceState.enabled)
                     {
-                        updateEmulatedClipDistanceState(executable, program,
+                        updateEmulatedClipDistanceState(executable,
                                                         state.getEnabledClipDistances());
                     }
                 }
 
-                if (!program ||
-                    !program->getExecutable().hasLinkedShaderStage(gl::ShaderType::Compute))
+                if (!executable || !executable->hasLinkedShaderStage(gl::ShaderType::Compute))
                 {
                     ANGLE_TRY(propagateProgramToVAO(
-                        context, program, GetImplAs<VertexArrayGL>(state.getVertexArray())));
+                        context, executable, GetImplAs<VertexArrayGL>(state.getVertexArray())));
                 }
                 break;
             }
@@ -2367,7 +2366,6 @@ angle::Result StateManagerGL::syncState(const gl::Context *context,
                             if (mFeatures.emulateClipDistanceState.enabled)
                             {
                                 updateEmulatedClipDistanceState(state.getProgramExecutable(),
-                                                                state.getProgram(),
                                                                 state.getEnabledClipDistances());
                             }
                             break;
@@ -2690,7 +2688,7 @@ void StateManagerGL::setTextureCubemapSeamlessEnabled(bool enabled)
 }
 
 angle::Result StateManagerGL::propagateProgramToVAO(const gl::Context *context,
-                                                    const gl::Program *program,
+                                                    const gl::ProgramExecutable *executable,
                                                     VertexArrayGL *vao)
 {
     if (vao == nullptr)
@@ -2701,45 +2699,44 @@ angle::Result StateManagerGL::propagateProgramToVAO(const gl::Context *context,
     // Number of views:
     if (mIsMultiviewEnabled)
     {
-        int programNumViews = 1;
-        if (program && program->usesMultiview())
+        int numViews = 1;
+        if (executable && executable->usesMultiview())
         {
-            programNumViews = program->getNumViews();
+            numViews = executable->getNumViews();
         }
-        ANGLE_TRY(vao->applyNumViewsToDivisor(context, programNumViews));
+        ANGLE_TRY(vao->applyNumViewsToDivisor(context, numViews));
     }
 
     // Attribute enabled mask:
-    if (program)
+    if (executable)
     {
-        ANGLE_TRY(vao->applyActiveAttribLocationsMask(
-            context, program->getExecutable().getActiveAttribLocationsMask()));
+        ANGLE_TRY(vao->applyActiveAttribLocationsMask(context,
+                                                      executable->getActiveAttribLocationsMask()));
     }
 
     return angle::Result::Continue;
 }
 
 void StateManagerGL::updateMultiviewBaseViewLayerIndexUniformImpl(
-    const gl::Program *program,
+    const gl::ProgramExecutable *executable,
     const gl::FramebufferState &drawFramebufferState) const
 {
-    ASSERT(mIsMultiviewEnabled && program && program->usesMultiview());
-    const ProgramGL *programGL = GetImplAs<ProgramGL>(program);
+    ASSERT(mIsMultiviewEnabled && executable && executable->usesMultiview());
+    const ProgramExecutableGL *executableGL = GetImplAs<ProgramExecutableGL>(executable);
     if (drawFramebufferState.isMultiview())
     {
-        programGL->enableLayeredRenderingPath(drawFramebufferState.getBaseViewIndex());
+        executableGL->enableLayeredRenderingPath(drawFramebufferState.getBaseViewIndex());
     }
 }
 
 void StateManagerGL::updateEmulatedClipDistanceState(const gl::ProgramExecutable *executable,
-                                                     const gl::Program *program,
                                                      const gl::ClipDistanceEnableBits enables) const
 {
     ASSERT(mFeatures.emulateClipDistanceState.enabled);
     if (executable && executable->hasClipDistance())
     {
-        const ProgramGL *programGL = GetImplAs<ProgramGL>(program);
-        programGL->updateEnabledClipDistances(static_cast<uint8_t>(enables.bits()));
+        const ProgramExecutableGL *executableGL = GetImplAs<ProgramExecutableGL>(executable);
+        executableGL->updateEnabledClipDistances(static_cast<uint8_t>(enables.bits()));
     }
 }
 
