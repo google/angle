@@ -34,6 +34,7 @@ namespace
 #define SOURCE_IDX_IS_U32_CONSTANT_NAME @"kSourceIndexIsU32"
 #define PREMULTIPLY_ALPHA_CONSTANT_NAME @"kPremultiplyAlpha"
 #define UNMULTIPLY_ALPHA_CONSTANT_NAME @"kUnmultiplyAlpha"
+#define TRANSFORM_LINEAR_TO_SRGB_CONSTANT_NAME @"kTransformLinearToSrgb"
 #define SOURCE_TEXTURE_TYPE_CONSTANT_NAME @"kSourceTextureType"
 #define SOURCE_TEXTURE2_TYPE_CONSTANT_NAME @"kSourceTexture2Type"
 #define COPY_FORMAT_TYPE_CONSTANT_NAME @"kCopyFormatType"
@@ -1302,6 +1303,9 @@ angle::Result ColorBlitUtils::ensureShadersInitialized(
             [funcConstants setConstantValue:&key.premultiplyAlpha
                                        type:MTLDataTypeBool
                                    withName:PREMULTIPLY_ALPHA_CONSTANT_NAME];
+            [funcConstants setConstantValue:&key.transformLinearToSrgb
+                                       type:MTLDataTypeBool
+                                   withName:TRANSFORM_LINEAR_TO_SRGB_CONSTANT_NAME];
 
             // We create blit shader pipeline cache for each number of color outputs.
             // So blit k color outputs will use mBlitRenderPipelineCache[k-1] for example:
@@ -1352,10 +1356,12 @@ angle::Result ColorBlitUtils::getColorBlitRenderPipelineState(
     ShaderKey key;
     key.numColorAttachments = renderPassDesc.numColorAttachments;
     key.sourceTextureType   = GetShaderTextureType(params.src);
-    if (params.unpackPremultiplyAlpha != params.unpackUnmultiplyAlpha)
+    if (params.unpackPremultiplyAlpha != params.unpackUnmultiplyAlpha ||
+        params.transformLinearToSrgb)
     {
-        key.unmultiplyAlpha  = params.unpackUnmultiplyAlpha;
-        key.premultiplyAlpha = params.unpackPremultiplyAlpha;
+        key.unmultiplyAlpha       = params.unpackUnmultiplyAlpha;
+        key.premultiplyAlpha      = params.unpackPremultiplyAlpha;
+        key.transformLinearToSrgb = params.transformLinearToSrgb;
     }
 
     AutoObjCPtr<id<MTLFunction>> *fragmentShader = &mBlitFragmentShaders[key];
