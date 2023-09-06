@@ -12,6 +12,7 @@
 #define LIBANGLE_RENDERER_METAL_MTL_RENDER_UTILS_H_
 
 #import <Metal/Metal.h>
+#include <unordered_map>
 
 #include "libANGLE/angletypes.h"
 #include "libANGLE/renderer/metal/RenderTargetMtl.h"
@@ -234,10 +235,30 @@ class ColorBlitUtils final : angle::NonCopyable
                                     const ColorBlitParams &params);
 
   private:
+    struct ShaderKey
+    {
+        uint32_t numColorAttachments = 0;
+        int sourceTextureType        = 0;
+        bool unmultiplyAlpha         = false;
+        bool premultiplyAlpha        = false;
+        bool operator==(const ShaderKey &other) const
+        {
+            return numColorAttachments == other.numColorAttachments &&
+                   unmultiplyAlpha == other.unmultiplyAlpha &&
+                   premultiplyAlpha == other.premultiplyAlpha &&
+                   sourceTextureType == other.sourceTextureType;
+        }
+        struct Hash
+        {
+            size_t operator()(const ShaderKey &k) const noexcept
+            {
+                return angle::HashMultiple(k.numColorAttachments, k.unmultiplyAlpha,
+                                           k.premultiplyAlpha, k.sourceTextureType);
+            }
+        };
+    };
     angle::Result ensureShadersInitialized(ContextMtl *ctx,
-                                           uint32_t numColorAttachments,
-                                           int alphaPremultiplyType,
-                                           int sourceTextureType,
+                                           const ShaderKey &key,
                                            AutoObjCPtr<id<MTLFunction>> *fragmentShaderOut);
 
     angle::Result setupColorBlitWithDraw(const gl::Context *context,
@@ -254,15 +275,9 @@ class ColorBlitUtils final : angle::NonCopyable
 
     AutoObjCPtr<id<MTLFunction>> mVertexShader;
 
-    // Blit fragment shaders:
-    // First array dimension: number of outputs.
-    // Second array dimension: source texture type (2d, ms, array, 3d, etc)
-    using ColorBlitFragmentShaderArray =
-        std::array<std::array<AutoObjCPtr<id<MTLFunction>>, mtl_shader::kTextureTypeCount>,
-                   kMaxRenderTargets>;
-    ColorBlitFragmentShaderArray mBlitFragmentShaders;
-    ColorBlitFragmentShaderArray mBlitPremultiplyAlphaFragmentShaders;
-    ColorBlitFragmentShaderArray mBlitUnmultiplyAlphaFragmentShaders;
+    // Blit fragment shaders.
+    std::unordered_map<ShaderKey, AutoObjCPtr<id<MTLFunction>>, ShaderKey::Hash>
+        mBlitFragmentShaders;
 };
 
 class DepthStencilBlitUtils final : angle::NonCopyable
