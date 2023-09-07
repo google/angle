@@ -1303,16 +1303,6 @@ FramebufferVk *ContextVk::getDrawFramebuffer() const
     return vk::GetImpl(mState.getDrawFramebuffer());
 }
 
-ProgramVk *ContextVk::getProgram() const
-{
-    return vk::SafeGetImpl(mState.getProgram());
-}
-
-ProgramPipelineVk *ContextVk::getProgramPipeline() const
-{
-    return vk::SafeGetImpl(mState.getProgramPipeline());
-}
-
 angle::Result ContextVk::getIncompleteTexture(const gl::Context *context,
                                               gl::TextureType type,
                                               gl::SamplerFormat format,

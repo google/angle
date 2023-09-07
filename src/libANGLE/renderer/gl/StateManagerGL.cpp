@@ -1092,10 +1092,9 @@ void StateManagerGL::updateProgramImageBindings(const gl::Context *context)
 {
     const gl::State &glState                = context->getState();
     const gl::ProgramExecutable *executable = glState.getProgramExecutable();
-    const gl::Program *program              = glState.getProgram();
 
     // It is possible there is no active program during a path operation.
-    if (!executable || !program)
+    if (!executable)
         return;
 
     ASSERT(context->getClientVersion() >= gl::ES_3_1 ||

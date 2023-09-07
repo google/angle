@@ -1272,8 +1272,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     VertexArrayVk *getVertexArray() const;
     FramebufferVk *getDrawFramebuffer() const;
-    ProgramVk *getProgram() const;
-    ProgramPipelineVk *getProgramPipeline() const;
 
     // Read-after-write hazards are generally handled with |glMemoryBarrier| when the source of
     // write is storage output.  When the write is outside render pass, the natural placement of the

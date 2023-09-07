@@ -33,6 +33,8 @@ class ProgramExecutableGL : public ProgramExecutableImpl
 
     void enableLayeredRenderingPath(int baseViewIndex) const;
 
+    GLuint getProgramID() const { return mProgramID; }
+
   private:
     friend class ProgramGL;
 
