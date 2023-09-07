@@ -2792,6 +2792,50 @@ TEST_P(EGLSurfaceTest, DISABLED_RandomClearTearing)
     mOSWindow->resize(kInitialSize, kInitialSize);
 }
 
+// Make sure a surface (from the same window) can be recreated after being destroyed, even if it's
+// still current.
+TEST_P(EGLSurfaceTest, DestroyAndRecreateWhileCurrent)
+{
+    setWindowVisible(mOSWindow, true);
+
+    initializeDisplay();
+
+    mConfig = chooseDefaultConfig(true);
+    ASSERT_NE(mConfig, nullptr);
+
+    EGLint surfaceType = EGL_NONE;
+    eglGetConfigAttrib(mDisplay, mConfig, EGL_SURFACE_TYPE, &surfaceType);
+    ASSERT_NE((surfaceType & EGL_WINDOW_BIT), 0);
+
+    initializeWindowSurfaceWithAttribs(mConfig, {}, EGL_SUCCESS);
+    initializeMainContext();
+
+    eglMakeCurrent(mDisplay, mWindowSurface, mWindowSurface, mContext);
+    ASSERT_EGL_SUCCESS();
+
+    // Draw with this surface to make sure it's used.
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    glViewport(0, 0, 64, 64);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    // Destroy the surface while it's current; it won't actually be destroyed.
+    eglDestroySurface(mDisplay, mWindowSurface);
+    mWindowSurface = EGL_NO_SURFACE;
+
+    // Create another surface from the same window right away.
+    initializeWindowSurfaceWithAttribs(mConfig, {}, EGL_SUCCESS);
+
+    // Make the new surface current; this leads to the actual destruction of the previous surface.
+    EXPECT_EGL_TRUE(eglMakeCurrent(mDisplay, mWindowSurface, mWindowSurface, mContext));
+    ASSERT_EGL_SUCCESS();
+
+    // Verify everything still works
+    ANGLE_GL_PROGRAM(program2, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+    drawQuad(program2, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    ASSERT_GL_NO_ERROR();
+}
 }  // anonymous namespace
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(EGLSingleBufferTest);

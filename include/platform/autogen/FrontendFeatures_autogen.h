@@ -161,6 +161,13 @@ struct FrontendFeatures : FeatureSetBase
         &members, "http://anglebug.com/8280"
     };
 
+    FeatureInfo uncurrentEglSurfaceUponSurfaceDestroy = {
+        "uncurrentEglSurfaceUponSurfaceDestroy",
+        FeatureCategory::FrontendWorkarounds,
+        "Make egl surface uncurrent when calling eglDestroySurface(), if the surface is still bound by the context of current render thread",
+        &members, "https://issuetracker.google.com/292285899"
+    };
+
 };
 
 inline FrontendFeatures::FrontendFeatures()  = default;

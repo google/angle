@@ -331,6 +331,33 @@ EGLBoolean DestroySurface(Thread *thread, Display *display, egl::SurfaceID surfa
 {
     Surface *eglSurface = display->getSurface(surfaceID);
 
+    // Workaround https://issuetracker.google.com/292285899
+    // When destroying surface, if the surface
+    // is still bound by the context of the current rendering
+    // thread, release the surface by passing EGL_NO_SURFACE to eglMakeCurrent().
+    if (display->getFrontendFeatures().uncurrentEglSurfaceUponSurfaceDestroy.enabled &&
+        eglSurface->isCurrentOnAnyContext() &&
+        (thread->getCurrentDrawSurface() == eglSurface ||
+         thread->getCurrentReadSurface() == eglSurface))
+    {
+        SurfaceID drawSurface             = PackParam<SurfaceID>(EGL_NO_SURFACE);
+        SurfaceID readSurface             = PackParam<SurfaceID>(EGL_NO_SURFACE);
+        const gl::Context *currentContext = thread->getContext();
+        const gl::ContextID contextID     = currentContext->id();
+
+        // if surfaceless context is supported, only release the surface.
+        if (display->getExtensions().surfacelessContext)
+        {
+            MakeCurrent(thread, display, drawSurface, readSurface, contextID);
+        }
+        else
+        {
+            // if surfaceless context is not supported, release the context, too.
+            MakeCurrent(thread, display, drawSurface, readSurface,
+                        PackParam<gl::ContextID>(EGL_NO_CONTEXT));
+        }
+    }
+
     ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglDestroySurface",
                          GetDisplayIfValid(display), EGL_FALSE);
 

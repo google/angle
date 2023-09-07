@@ -2608,6 +2608,9 @@ void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFea
     // https://crbug.com/480992
     // Disable shader program cache to workaround PowerVR Rogue issues.
     ANGLE_FEATURE_CONDITION(features, disableProgramBinary, IsPowerVrRogue(functions));
+
+    // https://issuetracker.google.com/292285899
+    ANGLE_FEATURE_CONDITION(features, uncurrentEglSurfaceUponSurfaceDestroy, true);
 }
 
 void ReInitializeFeaturesAtGPUSwitch(const FunctionsGL *functions, angle::FeaturesGL *features)

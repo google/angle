@@ -5014,6 +5014,9 @@ void RendererVk::initializeFrontendFeatures(angle::FrontendFeatures *features) c
     ANGLE_FEATURE_CONDITION(features, forceGlErrorChecking, (IsAndroid() && isSwiftShader));
 
     ANGLE_FEATURE_CONDITION(features, cacheCompiledShader, true);
+
+    // https://issuetracker.google.com/292285899
+    ANGLE_FEATURE_CONDITION(features, uncurrentEglSurfaceUponSurfaceDestroy, true);
 }
 
 angle::Result RendererVk::getPipelineCacheSize(DisplayVk *displayVk, size_t *pipelineCacheSizeOut)
