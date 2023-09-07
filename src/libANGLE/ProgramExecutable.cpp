@@ -249,14 +249,7 @@ void SaveUniforms(BinaryOutputStream *stream,
     {
         stream->writeString(name);
     }
-
-    stream->writeInt(uniformLocations.size());
-    for (const auto &variable : uniformLocations)
-    {
-        stream->writeInt(variable.arrayIndex);
-        stream->writeIntOrNegOne(variable.index);
-        stream->writeBool(variable.ignored);
-    }
+    stream->writeVector(uniformLocations);
 }
 void LoadUniforms(BinaryInputStream *stream,
                   std::vector<LinkedUniform> *uniforms,
@@ -264,7 +257,6 @@ void LoadUniforms(BinaryInputStream *stream,
                   std::vector<std::string> *uniformMappedNames,
                   std::vector<VariableLocation> *uniformLocations)
 {
-    ASSERT(uniforms->empty());
     stream->readVector(uniforms);
     if (!uniforms->empty())
     {
@@ -279,18 +271,7 @@ void LoadUniforms(BinaryInputStream *stream,
             stream->readString(&(*uniformMappedNames)[uniformIndex]);
         }
     }
-
-    const size_t uniformIndexCount = stream->readInt<size_t>();
-    ASSERT(uniformLocations->empty());
-    for (size_t uniformIndexIndex = 0; uniformIndexIndex < uniformIndexCount; ++uniformIndexIndex)
-    {
-        VariableLocation variable;
-        stream->readInt(&variable.arrayIndex);
-        stream->readInt(&variable.index);
-        stream->readBool(&variable.ignored);
-
-        uniformLocations->push_back(variable);
-    }
+    stream->readVector(uniformLocations);
 }
 
 void SaveSamplerBindings(BinaryOutputStream *stream,
@@ -304,9 +285,7 @@ void LoadSamplerBindings(BinaryInputStream *stream,
                          std::vector<SamplerBinding> *samplerBindings,
                          std::vector<GLuint> *samplerBoundTextureUnits)
 {
-    ASSERT(samplerBindings->empty());
     stream->readVector(samplerBindings);
-
     ASSERT(samplerBoundTextureUnits->empty());
     size_t boundTextureUnitsCount = stream->readInt<size_t>();
     samplerBoundTextureUnits->resize(boundTextureUnitsCount, 0);
@@ -550,28 +529,8 @@ void ProgramExecutable::load(bool isSeparable, gl::BinaryInputStream *stream)
         output.index    = stream->readInt<int>();
     }
 
-    size_t outputVarCount = stream->readInt<size_t>();
-    ASSERT(getOutputLocations().empty());
-    mOutputLocations.resize(outputVarCount);
-    for (size_t outputIndex = 0; outputIndex < outputVarCount; ++outputIndex)
-    {
-        VariableLocation &locationData = mOutputLocations[outputIndex];
-        stream->readInt(&locationData.arrayIndex);
-        stream->readInt(&locationData.index);
-        stream->readBool(&locationData.ignored);
-    }
-
-    size_t secondaryOutputVarCount = stream->readInt<size_t>();
-    ASSERT(mSecondaryOutputLocations.empty());
-    mSecondaryOutputLocations.resize(secondaryOutputVarCount);
-    for (size_t outputIndex = 0; outputIndex < secondaryOutputVarCount; ++outputIndex)
-    {
-        VariableLocation &locationData = mSecondaryOutputLocations[outputIndex];
-        stream->readInt(&locationData.arrayIndex);
-        stream->readInt(&locationData.index);
-        stream->readBool(&locationData.ignored);
-    }
-
+    stream->readVector(&mOutputLocations);
+    stream->readVector(&mSecondaryOutputLocations);
     LoadSamplerBindings(stream, &mSamplerBindings, &mSamplerBoundTextureUnits);
 
     size_t imageBindingCount = stream->readInt<size_t>();
@@ -675,22 +634,8 @@ void ProgramExecutable::save(bool isSeparable, gl::BinaryOutputStream *stream) c
         stream->writeInt(output.index);
     }
 
-    stream->writeInt(getOutputLocations().size());
-    for (const auto &outputVar : getOutputLocations())
-    {
-        stream->writeInt(outputVar.arrayIndex);
-        stream->writeIntOrNegOne(outputVar.index);
-        stream->writeBool(outputVar.ignored);
-    }
-
-    stream->writeInt(getSecondaryOutputLocations().size());
-    for (const auto &outputVar : getSecondaryOutputLocations())
-    {
-        stream->writeInt(outputVar.arrayIndex);
-        stream->writeIntOrNegOne(outputVar.index);
-        stream->writeBool(outputVar.ignored);
-    }
-
+    stream->writeVector(mOutputLocations);
+    stream->writeVector(mSecondaryOutputLocations);
     SaveSamplerBindings(stream, mSamplerBindings, mSamplerBoundTextureUnits);
 
     stream->writeInt(getImageBindings().size());

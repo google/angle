@@ -683,12 +683,13 @@ ProgramInput &ProgramInput::operator=(const ProgramInput &rhs)
 }
 
 // VariableLocation implementation.
-VariableLocation::VariableLocation() : arrayIndex(0), index(kUnused), ignored(false) {}
+VariableLocation::VariableLocation() : index(kUnused), arrayIndex(0), ignored(false) {}
 
-VariableLocation::VariableLocation(unsigned int arrayIndex, unsigned int index)
-    : arrayIndex(arrayIndex), index(index), ignored(false)
+VariableLocation::VariableLocation(unsigned int arrayIndexIn, unsigned int index)
+    : index(index), ignored(false)
 {
     ASSERT(arrayIndex != GL_INVALID_INDEX);
+    SetBitField(arrayIndex, arrayIndexIn);
 }
 
 // ProgramBindings implementation.

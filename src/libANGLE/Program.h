@@ -110,6 +110,7 @@ void WriteBlockMemberInfo(BinaryOutputStream *stream, const sh::BlockMemberInfo 
 void LoadBlockMemberInfo(BinaryInputStream *stream, sh::BlockMemberInfo *var);
 
 // Struct used for correlating uniforms/elements of uniform arrays to handles
+ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
 struct VariableLocation
 {
     static constexpr unsigned int kUnused = GL_INVALID_INDEX;
@@ -129,16 +130,17 @@ struct VariableLocation
         return arrayIndex == other.arrayIndex && index == other.index;
     }
 
-    // "arrayIndex" stores the index of the innermost GLSL array. It's zero for non-arrays.
-    unsigned int arrayIndex;
     // "index" is an index of the variable. The variable contains the indices for other than the
     // innermost GLSL arrays.
-    unsigned int index;
+    uint32_t index;
 
+    // "arrayIndex" stores the index of the innermost GLSL array. It's zero for non-arrays.
+    uint32_t arrayIndex : 31;
     // If this location was bound to an unreferenced uniform.  Setting data on this uniform is a
     // no-op.
-    bool ignored;
+    uint32_t ignored : 1;
 };
+ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
 
 // Information about a variable binding.
 // Currently used by CHROMIUM_path_rendering
