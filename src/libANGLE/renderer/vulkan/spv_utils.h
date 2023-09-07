@@ -82,20 +82,33 @@ struct ShaderInterfaceVariableXfbInfo
 ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
 struct ShaderInterfaceVariableInfo
 {
-    ShaderInterfaceVariableInfo();
+    ShaderInterfaceVariableInfo()
+        : descriptorSet(kInvalid),
+          binding(kInvalid),
+          location(kInvalid),
+          component(kInvalid),
+          index(kInvalid),
+          useRelaxedPrecision(false),
+          varyingIsInput(false),
+          varyingIsOutput(false),
+          hasTransformFeedback(false),
+          padding(0),
+          attributeComponentCount(0),
+          attributeLocationCount(0)
+    {}
 
     static constexpr uint32_t kInvalid = std::numeric_limits<uint32_t>::max();
 
     // Used for interface blocks and opaque uniforms.
-    uint32_t descriptorSet = kInvalid;
-    uint32_t binding       = kInvalid;
+    uint32_t descriptorSet;
+    uint32_t binding;
     // Used for vertex attributes, fragment shader outputs and varyings.  There could be different
     // variables that share the same name, such as a vertex attribute and a fragment output.  They
     // will share this object since they have the same name, but will find possibly different
     // locations in their respective slots.
-    uint32_t location  = kInvalid;
-    uint32_t component = kInvalid;
-    uint32_t index     = kInvalid;
+    uint32_t location;
+    uint32_t component;
+    uint32_t index;
 
     // The stages this shader interface variable is active.
     gl::ShaderBitSet activeStages;
@@ -104,18 +117,18 @@ struct ShaderInterfaceVariableInfo
     // to support only transferring medium precision data when there's a precision
     // mismatch between the shaders. For example, either the VS casts highp->mediump
     // or the FS casts mediump->highp.
-    uint8_t useRelaxedPrecision : 1 = false;
+    uint8_t useRelaxedPrecision : 1;
     // Indicate if varying is input or output, or both (in case of for example gl_Position in a
     // geometry shader)
-    uint8_t varyingIsInput : 1       = false;
-    uint8_t varyingIsOutput : 1      = false;
-    uint8_t hasTransformFeedback : 1 = false;
-    uint8_t padding : 4              = 0;
+    uint8_t varyingIsInput : 1;
+    uint8_t varyingIsOutput : 1;
+    uint8_t hasTransformFeedback : 1;
+    uint8_t padding : 4;
 
     // For vertex attributes, this is the number of components / locations.  These are used by the
     // vertex attribute aliasing transformation only.
-    uint8_t attributeComponentCount = 0;
-    uint8_t attributeLocationCount  = 0;
+    uint8_t attributeComponentCount;
+    uint8_t attributeLocationCount;
 };
 ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
 
