@@ -169,6 +169,14 @@
                 "If true, parts of the link job cannot be parallelized"
             ],
             "issue": "http://anglebug.com/8297"
+        },
+        {
+            "name": "uncurrent_egl_surface_upon_surface_destroy",
+            "category": "Workarounds",
+            "description": [
+                "Make egl surface uncurrent when calling eglDestroySurface(), if the surface is still bound by the context of current render thread"
+            ],
+            "issue": "https://issuetracker.google.com/292285899"
         }
     ]
 }
