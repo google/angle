@@ -1470,7 +1470,6 @@ angle::Result ProgramExecutableD3D::getPixelExecutableForCachedOutputLayout(
 angle::Result ProgramExecutableD3D::getComputeExecutableForImage2DBindLayout(
     d3d::Context *context,
     RendererD3D *renderer,
-    const gl::SharedCompiledShaderState &computeShader,
     ShaderExecutableD3D **outExecutable,
     gl::InfoLog *infoLog)
 {
@@ -1483,12 +1482,10 @@ angle::Result ProgramExecutableD3D::getComputeExecutableForImage2DBindLayout(
         return angle::Result::Continue;
     }
 
-    std::string computeHLSL = computeShader->translatedSource;
-
     std::string finalComputeHLSL = DynamicHLSL::GenerateShaderForImage2DBindSignature(
-        *this, gl::ShaderType::Compute, mAttachedShaders[gl::ShaderType::Compute], computeHLSL,
-        mImage2DUniforms[gl::ShaderType::Compute], mImage2DBindLayoutCache[gl::ShaderType::Compute],
-        0u);
+        *this, gl::ShaderType::Compute, mAttachedShaders[gl::ShaderType::Compute],
+        mShaderHLSL[gl::ShaderType::Compute], mImage2DUniforms[gl::ShaderType::Compute],
+        mImage2DBindLayoutCache[gl::ShaderType::Compute], 0u);
 
     // Generate new compute executable
     ShaderExecutableD3D *computeExecutable = nullptr;

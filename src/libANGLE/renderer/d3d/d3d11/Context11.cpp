@@ -126,6 +126,12 @@ angle::Result ReadbackIndirectBuffer(const gl::Context *context,
     *bufferPtrOut = reinterpret_cast<const IndirectBufferT *>(bufferData + offset);
     return angle::Result::Continue;
 }
+
+bool IsSameExecutable(const gl::ProgramExecutable *a, const gl::ProgramExecutable *b)
+{
+    return GetImplAs<ProgramExecutableD3D>(a)->getSerial() ==
+           GetImplAs<ProgramExecutableD3D>(b)->getSerial();
+}
 }  // anonymous namespace
 
 Context11::Context11(const gl::State &state, gl::ErrorSet *errorSet, Renderer11 *renderer)
@@ -975,9 +981,8 @@ angle::Result Context11::triggerDrawCallProgramRecompilation(const gl::Context *
     const auto &glState                 = context->getState();
     const auto *va11                    = GetImplAs<VertexArray11>(glState.getVertexArray());
     const auto *drawFBO                 = glState.getDrawFramebuffer();
-    gl::Program *program                = glState.getProgram();
-    ProgramD3D *programD3D              = GetImplAs<ProgramD3D>(program);
-    ProgramExecutableD3D *executableD3D = programD3D->getExecutable();
+    gl::ProgramExecutable *executable   = glState.getProgramExecutable();
+    ProgramExecutableD3D *executableD3D = GetImplAs<ProgramExecutableD3D>(executable);
 
     executableD3D->updateCachedInputLayout(mRenderer, va11->getCurrentStateSerial(), glState);
     executableD3D->updateCachedOutputLayout(context, drawFBO);
@@ -1038,7 +1043,8 @@ angle::Result Context11::triggerDrawCallProgramRecompilation(const gl::Context *
     }
 
     // Refresh the program cache entry.
-    if (mMemoryProgramCache)
+    gl::Program *program = glState.getProgram();
+    if (mMemoryProgramCache && IsSameExecutable(&program->getExecutable(), executable))
     {
         ANGLE_TRY(mMemoryProgramCache->updateProgram(context, program));
     }
@@ -1049,9 +1055,8 @@ angle::Result Context11::triggerDrawCallProgramRecompilation(const gl::Context *
 angle::Result Context11::triggerDispatchCallProgramRecompilation(const gl::Context *context)
 {
     const auto &glState                 = context->getState();
-    gl::Program *program                = glState.getProgram();
-    ProgramD3D *programD3D              = GetImplAs<ProgramD3D>(program);
-    ProgramExecutableD3D *executableD3D = programD3D->getExecutable();
+    gl::ProgramExecutable *executable   = glState.getProgramExecutable();
+    ProgramExecutableD3D *executableD3D = GetImplAs<ProgramExecutableD3D>(executable);
 
     executableD3D->updateCachedComputeImage2DBindLayout(context);
 
@@ -1068,9 +1073,8 @@ angle::Result Context11::triggerDispatchCallProgramRecompilation(const gl::Conte
     gl::InfoLog infoLog;
 
     ShaderExecutableD3D *computeExe = nullptr;
-    ANGLE_TRY(executableD3D->getComputeExecutableForImage2DBindLayout(
-        this, mRenderer, program->getState().getAttachedShader(gl::ShaderType::Compute),
-        &computeExe, &infoLog));
+    ANGLE_TRY(executableD3D->getComputeExecutableForImage2DBindLayout(this, mRenderer, &computeExe,
+                                                                      &infoLog));
     if (!executableD3D->hasComputeExecutableForCachedImage2DBindLayout())
     {
         ASSERT(infoLog.getLength() > 0);
@@ -1079,7 +1083,8 @@ angle::Result Context11::triggerDispatchCallProgramRecompilation(const gl::Conte
     }
 
     // Refresh the program cache entry.
-    if (mMemoryProgramCache)
+    gl::Program *program = glState.getProgram();
+    if (mMemoryProgramCache && IsSameExecutable(&program->getExecutable(), executable))
     {
         ANGLE_TRY(mMemoryProgramCache->updateProgram(context, program));
     }

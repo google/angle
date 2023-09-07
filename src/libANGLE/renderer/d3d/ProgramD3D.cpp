@@ -501,8 +501,7 @@ class ProgramD3D::GetComputeExecutableTask : public ProgramD3D::GetExecutableTas
         mExecutable->updateCachedImage2DBindLayoutFromShader(gl::ShaderType::Compute);
         ShaderExecutableD3D *computeExecutable = nullptr;
         ANGLE_TRY(mExecutable->getComputeExecutableForImage2DBindLayout(
-            this, mProgram->mRenderer, mProgram->mState.getAttachedShader(gl::ShaderType::Compute),
-            &computeExecutable, &mInfoLog));
+            this, mProgram->mRenderer, &computeExecutable, &mInfoLog));
 
         return computeExecutable ? angle::Result::Continue : angle::Result::Incomplete;
     }
@@ -761,6 +760,10 @@ std::unique_ptr<LinkEvent> ProgramD3D::link(const gl::Context *context,
 
     if (computeShader)
     {
+        const gl::SharedCompiledShaderState &shader =
+            mState.getAttachedShader(gl::ShaderType::Compute);
+        executableD3D->mShaderHLSL[gl::ShaderType::Compute] = shader->translatedSource;
+
         executableD3D->mShaderSamplers[gl::ShaderType::Compute].resize(
             caps.maxShaderTextureImageUnits[gl::ShaderType::Compute]);
         executableD3D->mImages[gl::ShaderType::Compute].resize(caps.maxImageUnits);

@@ -328,12 +328,10 @@ class ProgramExecutableD3D : public ProgramExecutableImpl
                                                           RendererD3D *renderer,
                                                           ShaderExecutableD3D **outExectuable,
                                                           gl::InfoLog *infoLog);
-    angle::Result getComputeExecutableForImage2DBindLayout(
-        d3d::Context *context,
-        RendererD3D *renderer,
-        const gl::SharedCompiledShaderState &computeShader,
-        ShaderExecutableD3D **outExecutable,
-        gl::InfoLog *infoLog);
+    angle::Result getComputeExecutableForImage2DBindLayout(d3d::Context *context,
+                                                           RendererD3D *renderer,
+                                                           ShaderExecutableD3D **outExecutable,
+                                                           gl::InfoLog *infoLog);
 
     bool hasShaderStage(gl::ShaderType shaderType) const
     {
