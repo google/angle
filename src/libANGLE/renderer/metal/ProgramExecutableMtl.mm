@@ -317,10 +317,7 @@ DefaultUniformBlockMtl::DefaultUniformBlockMtl() {}
 DefaultUniformBlockMtl::~DefaultUniformBlockMtl() = default;
 
 ProgramExecutableMtl::ProgramExecutableMtl(const gl::ProgramExecutable *executable)
-    : ProgramExecutableImpl(executable),
-      mProgramHasFlatAttributes(false),
-      mShadowCompareModes{},
-      mAuxBufferPool(nullptr)
+    : ProgramExecutableImpl(executable), mProgramHasFlatAttributes(false), mShadowCompareModes{}
 {}
 
 ProgramExecutableMtl::~ProgramExecutableMtl() {}
@@ -328,12 +325,6 @@ ProgramExecutableMtl::~ProgramExecutableMtl() {}
 void ProgramExecutableMtl::destroy(const gl::Context *context)
 {
     auto contextMtl = mtl::GetImpl(context);
-    if (mAuxBufferPool)
-    {
-        mAuxBufferPool->destroy(contextMtl);
-        delete mAuxBufferPool;
-        mAuxBufferPool = nullptr;
-    }
     reset(contextMtl);
 }
 
@@ -362,14 +353,12 @@ void ProgramExecutableMtl::reset(ContextMtl *context)
         var.reset(context);
     }
 
-    if (mAuxBufferPool)
+    for (gl::ShaderType shaderType : gl::kAllGLES2ShaderTypes)
     {
-        if (mAuxBufferPool->reset(context, mtl::kDefaultUniformsMaxSize * 2,
-                                  mtl::kUniformBufferSettingOffsetMinAlignment,
-                                  3) != angle::Result::Continue)
+        if (mDefaultUniformBufferPools[shaderType])
         {
-            mAuxBufferPool->destroy(context);
-            SafeDelete(mAuxBufferPool);
+            mDefaultUniformBufferPools[shaderType]->destroy(context);
+            mDefaultUniformBufferPools[shaderType].reset();
         }
     }
 }
@@ -827,15 +816,27 @@ void ProgramExecutableMtl::initUniformBlocksRemapper(const gl::SharedCompiledSha
     mUniformBlockConversions.insert(conversionMap.begin(), conversionMap.end());
 }
 
-mtl::BufferPool *ProgramExecutableMtl::getBufferPool(ContextMtl *context)
+mtl::BufferPool *ProgramExecutableMtl::getBufferPool(ContextMtl *context, gl::ShaderType shaderType)
 {
-    if (mAuxBufferPool == nullptr)
+    auto &pool = mDefaultUniformBufferPools[shaderType];
+    if (pool == nullptr)
     {
-        mAuxBufferPool = new mtl::BufferPool(true);
-        mAuxBufferPool->initialize(context, mtl::kDefaultUniformsMaxSize * 2,
-                                   mtl::kUniformBufferSettingOffsetMinAlignment, 3);
+        DefaultUniformBlockMtl &uniformBlock = mDefaultUniformBlocks[shaderType];
+
+        // Size each buffer to hold 10 draw calls worth of uniform updates before creating extra
+        // buffers. This number was chosen loosely to balance the size of buffers versus the total
+        // number allocated. Without any sub-allocation, the total buffer count can reach the
+        // thousands when many draw calls are issued with the same program.
+        size_t bufferSize =
+            std::max(uniformBlock.uniformData.size() * 10, mtl::kDefaultUniformsMaxSize * 2);
+
+        pool.reset(new mtl::BufferPool(false));
+
+        // Allow unbounded growth of the buffer count. Doing a full CPU/GPU sync waiting for new
+        // uniform uploads has catastrophic performance cost.
+        pool->initialize(context, bufferSize, mtl::kUniformBufferSettingOffsetMinAlignment, 0);
     }
-    return mAuxBufferPool;
+    return pool.get();
 }
 
 angle::Result ProgramExecutableMtl::setupDraw(const gl::Context *glContext,
@@ -1039,10 +1040,7 @@ angle::Result ProgramExecutableMtl::commitUniforms(ContextMtl *context,
         {
             continue;
         }
-        if (mAuxBufferPool)
-        {
-            mAuxBufferPool->releaseInFlightBuffers(context);
-        }
+
         // If we exceed the default inline max size, try to allocate a buffer
         bool needsCommitUniform = true;
         if (needsCommitUniform && uniformBlock.uniformData.size() <= mtl::kInlineConstDataMaxSize)
@@ -1054,17 +1052,20 @@ angle::Result ProgramExecutableMtl::commitUniforms(ContextMtl *context,
         }
         else if (needsCommitUniform)
         {
+            mtl::BufferPool *bufferPool = getBufferPool(context, shaderType);
+            bufferPool->releaseInFlightBuffers(context);
+
             ASSERT(uniformBlock.uniformData.size() <= mtl::kDefaultUniformsMaxSize);
             mtl::BufferRef mtlBufferOut;
             size_t offsetOut;
             uint8_t *ptrOut;
             // Allocate a new Uniform buffer
-            ANGLE_TRY(getBufferPool(context)->allocate(context, uniformBlock.uniformData.size(),
-                                                       &ptrOut, &mtlBufferOut, &offsetOut));
+            ANGLE_TRY(bufferPool->allocate(context, uniformBlock.uniformData.size(), &ptrOut,
+                                           &mtlBufferOut, &offsetOut));
             // Copy the uniform result
             memcpy(ptrOut, uniformBlock.uniformData.data(), uniformBlock.uniformData.size());
             // Commit
-            ANGLE_TRY(getBufferPool(context)->commit(context));
+            ANGLE_TRY(bufferPool->commit(context));
             // Set buffer
             cmdEncoder->setBuffer(shaderType, mtlBufferOut, (uint32_t)offsetOut,
                                   mtl::kDefaultUniformsBindingIndex);

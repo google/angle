@@ -166,7 +166,7 @@ class ProgramExecutableMtl : public ProgramExecutableImpl
                                                    const gl::ShaderMap<size_t> &requiredBufferSize);
     void initUniformBlocksRemapper(const gl::SharedCompiledShaderState &shader);
 
-    mtl::BufferPool *getBufferPool(ContextMtl *context);
+    mtl::BufferPool *getBufferPool(ContextMtl *context, gl::ShaderType shaderType);
 
     angle::Result getSpecializedShader(ContextMtl *context,
                                        gl::ShaderType shaderType,
@@ -234,7 +234,7 @@ class ProgramExecutableMtl : public ProgramExecutableImpl
 
     uint32_t mShadowCompareModes[mtl::kMaxShaderSamplers];
 
-    mtl::BufferPool *mAuxBufferPool;
+    gl::ShaderMap<std::unique_ptr<mtl::BufferPool>> mDefaultUniformBufferPools;
 };
 
 angle::Result CreateMslShaderLib(ContextMtl *context,
