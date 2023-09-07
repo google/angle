@@ -2583,7 +2583,8 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
 
     // https://anglebug.com/8319
     ANGLE_FEATURE_CONDITION(features, disableTextureMirrorClampToEdge,
-                            functions->standard == STANDARD_GL_ES && isMesa);
+                            functions->standard == STANDARD_GL_ES && isMesa &&
+                                mesaVersion < (std::array<int, 3>{23, 1, 7}));
 
     // http://anglebug.com/8172
     ANGLE_FEATURE_CONDITION(features, disableBaseInstanceVertex, IsMaliValhall(functions));
