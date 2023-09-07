@@ -778,8 +778,8 @@ angle::Result ProgramD3D::linkJobImpl(d3d::Context *context,
     executableD3D->mUsesPointSize =
         executableD3D->mAttachedShaders[gl::ShaderType::Vertex] &&
         executableD3D->mAttachedShaders[gl::ShaderType::Vertex]->usesPointSize;
-    DynamicHLSL::GetPixelShaderOutputKey(mRenderer, caps, clientVersion, mState, metadata,
-                                         &executableD3D->mPixelShaderKey);
+    DynamicHLSL::GetPixelShaderOutputKey(mRenderer, caps, clientVersion, mState.getExecutable(),
+                                         metadata, &executableD3D->mPixelShaderKey);
     executableD3D->mFragDepthUsage      = metadata.getFragDepthUsage();
     executableD3D->mUsesSampleMask      = metadata.usesSampleMask();
     executableD3D->mUsesVertexID        = metadata.usesVertexID();
@@ -1010,8 +1010,9 @@ void ProgramD3D::setUniformInternal(GLint location, GLsizei count, const T *v, G
 {
     ProgramExecutableD3D *executableD3D = getExecutable();
 
-    const gl::VariableLocation &locationInfo = mState.getUniformLocations()[location];
-    D3DUniform *targetUniform                = executableD3D->mD3DUniforms[locationInfo.index];
+    const gl::VariableLocation &locationInfo =
+        mState.getExecutable().getUniformLocations()[location];
+    D3DUniform *targetUniform = executableD3D->mD3DUniforms[locationInfo.index];
 
     if (targetUniform->typeInfo.isSampler)
     {
@@ -1045,7 +1046,8 @@ void ProgramD3D::setUniformMatrixfvInternal(GLint location,
 {
     ProgramExecutableD3D *executableD3D = getExecutable();
 
-    const gl::VariableLocation &uniformLocation = mState.getUniformLocations()[location];
+    const gl::VariableLocation &uniformLocation =
+        mState.getExecutable().getUniformLocations()[location];
     D3DUniform *targetUniform       = executableD3D->getD3DUniformFromLocation(uniformLocation);
     unsigned int arrayElementOffset = uniformLocation.arrayIndex;
     unsigned int elementCount       = targetUniform->getArraySizeProduct();
@@ -1067,8 +1069,9 @@ void ProgramD3D::getUniformInternal(GLint location, DestT *dataOut) const
 {
     const ProgramExecutableD3D *executableD3D = getExecutable();
 
-    const gl::VariableLocation &locationInfo = mState.getUniformLocations()[location];
-    const gl::LinkedUniform &uniform         = mState.getUniforms()[locationInfo.index];
+    const gl::VariableLocation &locationInfo =
+        mState.getExecutable().getUniformLocations()[location];
+    const gl::LinkedUniform &uniform = mState.getExecutable().getUniforms()[locationInfo.index];
 
     const D3DUniform *targetUniform = executableD3D->getD3DUniformFromLocation(locationInfo);
     const uint8_t *srcPointer       = targetUniform->getDataPtrToElement(locationInfo.arrayIndex);

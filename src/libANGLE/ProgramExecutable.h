@@ -238,6 +238,8 @@ class ProgramExecutable final : public angle::Subject
     {
         return mPODStruct.linkedShaderStages[ShaderType::TessEvaluation];
     }
+    ShaderType getFirstLinkedShaderStageType() const;
+    ShaderType getLastLinkedShaderStageType() const;
 
     ShaderType getLinkedTransformFeedbackStage() const
     {
@@ -357,25 +359,30 @@ class ProgramExecutable final : public angle::Subject
     {
         return mPODStruct.computeShaderLocalSize;
     }
-    GLuint getUniformBlockBinding(GLuint uniformBlockIndex) const
+    GLuint getUniformBlockBinding(size_t uniformBlockIndex) const
     {
         ASSERT(uniformBlockIndex < mUniformBlocks.size());
         return mUniformBlocks[uniformBlockIndex].binding;
     }
-    GLuint getShaderStorageBlockBinding(GLuint blockIndex) const
+    GLuint getShaderStorageBlockBinding(size_t blockIndex) const
     {
         ASSERT(blockIndex < mShaderStorageBlocks.size());
         return mShaderStorageBlocks[blockIndex].binding;
     }
-    const InterfaceBlock &getUniformBlockByIndex(GLuint index) const
+    const InterfaceBlock &getUniformBlockByIndex(size_t index) const
     {
-        ASSERT(index < static_cast<GLuint>(mUniformBlocks.size()));
+        ASSERT(index < mUniformBlocks.size());
         return mUniformBlocks[index];
     }
-    const InterfaceBlock &getShaderStorageBlockByIndex(GLuint index) const
+    const InterfaceBlock &getShaderStorageBlockByIndex(size_t index) const
     {
-        ASSERT(index < static_cast<GLuint>(mShaderStorageBlocks.size()));
+        ASSERT(index < mShaderStorageBlocks.size());
         return mShaderStorageBlocks[index];
+    }
+    const BufferVariable &getBufferVariableByIndex(size_t index) const
+    {
+        ASSERT(index < mBufferVariables.size());
+        return mBufferVariables[index];
     }
     const std::vector<GLsizei> &getTransformFeedbackStrides() const
     {
@@ -390,43 +397,27 @@ class ProgramExecutable final : public angle::Subject
         return mShaderStorageBlocks;
     }
     const std::vector<BufferVariable> &getBufferVariables() const { return mBufferVariables; }
-    const LinkedUniform &getUniformByIndex(GLuint index) const
+    const LinkedUniform &getUniformByIndex(size_t index) const
     {
         ASSERT(index < static_cast<size_t>(mUniforms.size()));
         return mUniforms[index];
     }
-    const std::string &getUniformNameByIndex(GLuint index) const
+    const std::string &getUniformNameByIndex(size_t index) const
     {
         ASSERT(index < static_cast<size_t>(mUniforms.size()));
         return mUniformNames[index];
     }
 
-    ANGLE_INLINE GLuint getActiveUniformBlockCount() const
-    {
-        return static_cast<GLuint>(mUniformBlocks.size());
-    }
-
-    ANGLE_INLINE GLuint getActiveAtomicCounterBufferCount() const
-    {
-        return static_cast<GLuint>(mAtomicCounterBuffers.size());
-    }
-
-    ANGLE_INLINE GLuint getActiveShaderStorageBlockCount() const
-    {
-        size_t shaderStorageBlocksSize = mShaderStorageBlocks.size();
-        return static_cast<GLuint>(shaderStorageBlocksSize);
-    }
-
-    GLuint getUniformIndexFromImageIndex(GLuint imageIndex) const
+    GLuint getUniformIndexFromImageIndex(size_t imageIndex) const
     {
         ASSERT(imageIndex < mPODStruct.imageUniformRange.length());
-        return imageIndex + mPODStruct.imageUniformRange.low();
+        return static_cast<GLuint>(imageIndex) + mPODStruct.imageUniformRange.low();
     }
 
-    GLuint getUniformIndexFromSamplerIndex(GLuint samplerIndex) const
+    GLuint getUniformIndexFromSamplerIndex(size_t samplerIndex) const
     {
         ASSERT(samplerIndex < mPODStruct.samplerUniformRange.length());
-        return samplerIndex + mPODStruct.samplerUniformRange.low();
+        return static_cast<GLuint>(samplerIndex) + mPODStruct.samplerUniformRange.low();
     }
 
     void saveLinkedStateInfo(const ProgramState &state);
@@ -470,7 +461,11 @@ class ProgramExecutable final : public angle::Subject
 
     int getGeometryShaderMaxVertices() const { return mPODStruct.geometryShaderMaxVertices; }
 
+    GLint getTessControlShaderVertices() const { return mPODStruct.tessControlShaderVertices; }
     GLenum getTessGenMode() const { return mPODStruct.tessGenMode; }
+    GLenum getTessGenPointMode() const { return mPODStruct.tessGenPointMode; }
+    GLenum getTessGenSpacing() const { return mPODStruct.tessGenSpacing; }
+    GLenum getTessGenVertexOrder() const { return mPODStruct.tessGenVertexOrder; }
 
     int getNumViews() const { return mPODStruct.numViews; }
     bool usesMultiview() const { return mPODStruct.numViews != -1; }
@@ -478,9 +473,12 @@ class ProgramExecutable final : public angle::Subject
     rx::SpecConstUsageBits getSpecConstUsageBits() const { return mPODStruct.specConstUsageBits; }
 
     int getDrawIDLocation() const { return mPODStruct.drawIDLocation; }
-
     int getBaseVertexLocation() const { return mPODStruct.baseVertexLocation; }
     int getBaseInstanceLocation() const { return mPODStruct.baseInstanceLocation; }
+
+    bool hasDrawIDUniform() const { return getDrawIDLocation() >= 0; }
+    bool hasBaseVertexUniform() const { return getBaseVertexLocation() >= 0; }
+    bool hasBaseInstanceUniform() const { return getBaseInstanceLocation() >= 0; }
 
     void resetCachedValidateSamplersResult() { mCachedValidateSamplersResult.reset(); }
     bool validateSamplers(const Caps &caps) const
@@ -506,6 +504,94 @@ class ProgramExecutable final : public angle::Subject
         return mPODStruct.activeSecondaryOutputVariablesMask;
     }
 
+    GLuint getInputResourceIndex(const GLchar *name) const;
+    GLuint getOutputResourceIndex(const GLchar *name) const;
+    void getInputResourceName(GLuint index, GLsizei bufSize, GLsizei *length, GLchar *name) const;
+    void getOutputResourceName(GLuint index, GLsizei bufSize, GLsizei *length, GLchar *name) const;
+    void getUniformResourceName(GLuint index, GLsizei bufSize, GLsizei *length, GLchar *name) const;
+    void getBufferVariableResourceName(GLuint index,
+                                       GLsizei bufSize,
+                                       GLsizei *length,
+                                       GLchar *name) const;
+    const ProgramInput &getInputResource(size_t index) const
+    {
+        ASSERT(index < mProgramInputs.size());
+        return mProgramInputs[index];
+    }
+    GLuint getInputResourceMaxNameSize() const;
+    GLuint getOutputResourceMaxNameSize() const;
+    GLuint getInputResourceLocation(const GLchar *name) const;
+    GLuint getOutputResourceLocation(const GLchar *name) const;
+    const std::string getInputResourceName(GLuint index) const;
+    const std::string getOutputResourceName(GLuint index) const;
+    const sh::ShaderVariable &getOutputResource(size_t index) const
+    {
+        ASSERT(index < mOutputVariables.size());
+        return mOutputVariables[index];
+    }
+
+    GLint getFragDataLocation(const std::string &name) const;
+
+    // EXT_blend_func_extended
+    GLint getFragDataIndex(const std::string &name) const;
+
+    GLsizei getTransformFeedbackVaryingMaxLength() const;
+    GLuint getTransformFeedbackVaryingResourceIndex(const GLchar *name) const;
+    const TransformFeedbackVarying &getTransformFeedbackVaryingResource(GLuint index) const;
+    void getTransformFeedbackVarying(GLuint index,
+                                     GLsizei bufSize,
+                                     GLsizei *length,
+                                     GLsizei *size,
+                                     GLenum *type,
+                                     GLchar *name) const;
+
+    void getActiveAttribute(GLuint index,
+                            GLsizei bufsize,
+                            GLsizei *length,
+                            GLint *size,
+                            GLenum *type,
+                            GLchar *name) const;
+    GLint getActiveAttributeMaxLength() const;
+    GLuint getAttributeLocation(const std::string &name) const;
+
+    void getActiveUniform(GLuint index,
+                          GLsizei bufsize,
+                          GLsizei *length,
+                          GLint *size,
+                          GLenum *type,
+                          GLchar *name) const;
+    GLint getActiveUniformMaxLength() const;
+    bool isValidUniformLocation(UniformLocation location) const;
+    const LinkedUniform &getUniformByLocation(UniformLocation location) const;
+    const VariableLocation &getUniformLocation(UniformLocation location) const;
+    UniformLocation getUniformLocation(const std::string &name) const;
+    GLuint getUniformIndex(const std::string &name) const;
+
+    void getActiveUniformBlockName(const Context *context,
+                                   const UniformBlockIndex blockIndex,
+                                   GLsizei bufSize,
+                                   GLsizei *length,
+                                   GLchar *blockName) const;
+    void getActiveShaderStorageBlockName(const GLuint blockIndex,
+                                         GLsizei bufSize,
+                                         GLsizei *length,
+                                         GLchar *blockName) const;
+
+    GLint getActiveUniformBlockMaxNameLength() const;
+    GLint getActiveShaderStorageBlockMaxNameLength() const;
+
+    GLuint getUniformBlockIndex(const std::string &name) const;
+    GLuint getShaderStorageBlockIndex(const std::string &name) const;
+
+    GLuint getUniformIndexFromName(const std::string &name) const;
+    GLuint getUniformIndexFromLocation(UniformLocation location) const;
+    Optional<GLuint> getSamplerIndex(UniformLocation location) const;
+    bool isSamplerUniformIndex(GLuint index) const;
+    GLuint getSamplerIndexFromUniformIndex(GLuint uniformIndex) const;
+    bool isImageUniformIndex(GLuint index) const;
+    GLuint getImageIndexFromUniformIndex(GLuint uniformIndex) const;
+    GLuint getBufferVariableIndexFromName(const std::string &name) const;
+
     bool linkUniforms(const Caps &caps,
                       const ShaderMap<std::vector<sh::ShaderVariable>> &shaderUniforms,
                       const ProgramAliasedBindings &uniformLocationBindings,
@@ -519,8 +605,6 @@ class ProgramExecutable final : public angle::Subject
     void copyImageBindingsFromProgram(const ProgramExecutable &executable);
     void copyOutputsFromProgram(const ProgramExecutable &executable);
     void copyUniformsFromProgramMap(const ShaderMap<SharedProgramExecutable> &executables);
-
-    GLuint getAttributeLocation(const std::string &name) const;
 
   private:
     friend class Program;
@@ -570,6 +654,14 @@ class ProgramExecutable final : public angle::Subject
 
     void linkSamplerAndImageBindings(GLuint *combinedImageUniformsCount);
     bool linkAtomicCounterBuffers(const Caps &caps);
+
+    void getResourceName(const std::string name,
+                         GLsizei bufSize,
+                         GLsizei *length,
+                         GLchar *dest) const;
+    bool shouldIgnoreUniform(UniformLocation location) const;
+    GLuint getSamplerUniformBinding(const VariableLocation &uniformLocation) const;
+    GLuint getImageUniformBinding(const VariableLocation &uniformLocation) const;
 
     rx::ProgramExecutableImpl *mImplementation;
 

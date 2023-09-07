@@ -293,7 +293,7 @@ void LinkTaskVk::initDefaultUniformLayoutMapping(gl::ShaderMap<sh::BlockLayoutMa
     ProgramExecutableVk *executableVk = vk::GetImpl(mExecutable);
     const auto &uniforms              = mExecutable->getUniforms();
 
-    for (const gl::VariableLocation &location : mState.getUniformLocations())
+    for (const gl::VariableLocation &location : mExecutable->getUniformLocations())
     {
         gl::ShaderMap<sh::BlockMemberInfo> layoutInfo;
 
@@ -466,10 +466,10 @@ angle::Result ProgramVk::syncState(const gl::Context *context,
 template <typename T>
 void ProgramVk::setUniformImpl(GLint location, GLsizei count, const T *v, GLenum entryPointType)
 {
-    const gl::VariableLocation &locationInfo  = mState.getUniformLocations()[location];
-    const gl::LinkedUniform &linkedUniform    = mState.getUniforms()[locationInfo.index];
     const gl::ProgramExecutable &glExecutable = mState.getExecutable();
     ProgramExecutableVk *executableVk         = vk::GetImpl(&glExecutable);
+    const gl::VariableLocation &locationInfo  = glExecutable.getUniformLocations()[location];
+    const gl::LinkedUniform &linkedUniform    = glExecutable.getUniforms()[locationInfo.index];
 
     ASSERT(!linkedUniform.isSampler());
 
@@ -532,9 +532,10 @@ void ProgramVk::setUniformImpl(GLint location, GLsizei count, const T *v, GLenum
 template <typename T>
 void ProgramVk::getUniformImpl(GLint location, T *v, GLenum entryPointType) const
 {
-    const gl::VariableLocation &locationInfo = mState.getUniformLocations()[location];
-    const gl::LinkedUniform &linkedUniform   = mState.getUniforms()[locationInfo.index];
-    const ProgramExecutableVk *executableVk  = getExecutable();
+    const gl::ProgramExecutable &glExecutable = mState.getExecutable();
+    const ProgramExecutableVk *executableVk   = vk::GetImpl(&glExecutable);
+    const gl::VariableLocation &locationInfo  = glExecutable.getUniformLocations()[location];
+    const gl::LinkedUniform &linkedUniform    = glExecutable.getUniforms()[locationInfo.index];
 
     ASSERT(!linkedUniform.isSampler() && !linkedUniform.isImage());
 
@@ -584,8 +585,9 @@ void ProgramVk::setUniform4fv(GLint location, GLsizei count, const GLfloat *v)
 
 void ProgramVk::setUniform1iv(GLint location, GLsizei count, const GLint *v)
 {
-    const gl::VariableLocation &locationInfo = mState.getUniformLocations()[location];
-    const gl::LinkedUniform &linkedUniform   = mState.getUniforms()[locationInfo.index];
+    const gl::ProgramExecutable &glExecutable = mState.getExecutable();
+    const gl::VariableLocation &locationInfo  = glExecutable.getUniformLocations()[location];
+    const gl::LinkedUniform &linkedUniform    = glExecutable.getUniforms()[locationInfo.index];
     if (linkedUniform.isSampler())
     {
         // We could potentially cache some indexing here. For now this is a no-op since the mapping
@@ -637,10 +639,10 @@ void ProgramVk::setUniformMatrixfv(GLint location,
                                    GLboolean transpose,
                                    const GLfloat *value)
 {
-    const gl::VariableLocation &locationInfo  = mState.getUniformLocations()[location];
-    const gl::LinkedUniform &linkedUniform    = mState.getUniforms()[locationInfo.index];
     const gl::ProgramExecutable &glExecutable = mState.getExecutable();
     ProgramExecutableVk *executableVk         = vk::GetImpl(&glExecutable);
+    const gl::VariableLocation &locationInfo  = glExecutable.getUniformLocations()[location];
+    const gl::LinkedUniform &linkedUniform    = glExecutable.getUniforms()[locationInfo.index];
 
     for (const gl::ShaderType shaderType : glExecutable.getLinkedShaderStages())
     {

@@ -6620,7 +6620,8 @@ void Context::drawArraysInstancedBaseInstance(PrimitiveMode mode,
     ANGLE_CONTEXT_TRY(prepareForDraw(mode));
     Program *programObject = mState.getLinkedProgram(this);
 
-    const bool hasBaseInstance = programObject && programObject->hasBaseInstanceUniform();
+    const bool hasBaseInstance =
+        programObject && programObject->getExecutable().hasBaseInstanceUniform();
     if (hasBaseInstance)
     {
         programObject->setBaseInstanceUniform(baseInstance);
@@ -6673,13 +6674,15 @@ void Context::drawElementsInstancedBaseVertexBaseInstance(PrimitiveMode mode,
     ANGLE_CONTEXT_TRY(prepareForDraw(mode));
     Program *programObject = mState.getLinkedProgram(this);
 
-    const bool hasBaseVertex = programObject && programObject->hasBaseVertexUniform();
+    const bool hasBaseVertex =
+        programObject && programObject->getExecutable().hasBaseVertexUniform();
     if (hasBaseVertex)
     {
         programObject->setBaseVertexUniform(baseVertex);
     }
 
-    const bool hasBaseInstance = programObject && programObject->hasBaseInstanceUniform();
+    const bool hasBaseInstance =
+        programObject && programObject->getExecutable().hasBaseInstanceUniform();
     if (hasBaseInstance)
     {
         programObject->setBaseInstanceUniform(baseInstance);
@@ -6859,7 +6862,7 @@ void Context::getActiveAttrib(ShaderProgramID program,
 {
     Program *programObject = getProgramResolveLink(program);
     ASSERT(programObject);
-    programObject->getActiveAttribute(index, bufsize, length, size, type, name);
+    programObject->getExecutable().getActiveAttribute(index, bufsize, length, size, type, name);
 }
 
 void Context::getActiveUniform(ShaderProgramID program,
@@ -6872,7 +6875,7 @@ void Context::getActiveUniform(ShaderProgramID program,
 {
     Program *programObject = getProgramResolveLink(program);
     ASSERT(programObject);
-    programObject->getActiveUniform(index, bufsize, length, size, type, name);
+    programObject->getExecutable().getActiveUniform(index, bufsize, length, size, type, name);
 }
 
 void Context::getAttachedShaders(ShaderProgramID program,
@@ -6889,7 +6892,7 @@ GLint Context::getAttribLocation(ShaderProgramID program, const GLchar *name)
 {
     Program *programObject = getProgramResolveLink(program);
     ASSERT(programObject);
-    return programObject->getAttributeLocation(name);
+    return programObject->getExecutable().getAttributeLocation(name);
 }
 
 void Context::getBooleanv(GLenum pname, GLboolean *params)
@@ -7170,7 +7173,7 @@ GLint Context::getUniformLocation(ShaderProgramID program, const GLchar *name)
 {
     Program *programObject = getProgramResolveLink(program);
     ASSERT(programObject);
-    return programObject->getUniformLocation(name).value;
+    return programObject->getExecutable().getUniformLocation(name).value;
 }
 
 GLboolean Context::isBuffer(BufferID buffer) const
@@ -7274,7 +7277,7 @@ void Context::bindFragDataLocation(ShaderProgramID program, GLuint colorNumber, 
 int Context::getFragDataIndex(ShaderProgramID program, const char *name)
 {
     Program *programObject = getProgramResolveLink(program);
-    return programObject->getFragDataIndex(name);
+    return programObject->getExecutable().getFragDataIndex(name);
 }
 
 int Context::getProgramResourceLocationIndex(ShaderProgramID program,
@@ -7283,7 +7286,7 @@ int Context::getProgramResourceLocationIndex(ShaderProgramID program,
 {
     Program *programObject = getProgramResolveLink(program);
     ASSERT(programInterface == GL_PROGRAM_OUTPUT);
-    return programObject->getFragDataIndex(name);
+    return programObject->getExecutable().getFragDataIndex(name);
 }
 
 void Context::shaderSource(ShaderProgramID shader,
@@ -7725,7 +7728,8 @@ void Context::getTransformFeedbackVarying(ShaderProgramID program,
 {
     Program *programObject = getProgramResolveLink(program);
     ASSERT(programObject);
-    programObject->getTransformFeedbackVarying(index, bufSize, length, size, type, name);
+    programObject->getExecutable().getTransformFeedbackVarying(index, bufSize, length, size, type,
+                                                               name);
 }
 
 void Context::deleteTransformFeedbacks(GLsizei n, const TransformFeedbackID *ids)
@@ -7807,7 +7811,7 @@ void Context::getUniformuivRobust(ShaderProgramID program,
 GLint Context::getFragDataLocation(ShaderProgramID program, const GLchar *name)
 {
     const Program *programObject = getProgramResolveLink(program);
-    return programObject->getFragDataLocation(name);
+    return programObject->getExecutable().getFragDataLocation(name);
 }
 
 void Context::getUniformIndices(ShaderProgramID program,
@@ -7827,7 +7831,8 @@ void Context::getUniformIndices(ShaderProgramID program,
     {
         for (int uniformId = 0; uniformId < uniformCount; uniformId++)
         {
-            uniformIndices[uniformId] = programObject->getUniformIndex(uniformNames[uniformId]);
+            uniformIndices[uniformId] =
+                programObject->getExecutable().getUniformIndex(uniformNames[uniformId]);
         }
     }
 }
@@ -7849,7 +7854,7 @@ void Context::getActiveUniformsiv(ShaderProgramID program,
 GLuint Context::getUniformBlockIndex(ShaderProgramID program, const GLchar *uniformBlockName)
 {
     const Program *programObject = getProgramResolveLink(program);
-    return programObject->getUniformBlockIndex(uniformBlockName);
+    return programObject->getExecutable().getUniformBlockIndex(uniformBlockName);
 }
 
 void Context::getActiveUniformBlockiv(ShaderProgramID program,
@@ -7878,8 +7883,8 @@ void Context::getActiveUniformBlockName(ShaderProgramID program,
                                         GLchar *uniformBlockName)
 {
     const Program *programObject = getProgramResolveLink(program);
-    programObject->getActiveUniformBlockName(this, uniformBlockIndex, bufSize, length,
-                                             uniformBlockName);
+    programObject->getExecutable().getActiveUniformBlockName(this, uniformBlockIndex, bufSize,
+                                                             length, uniformBlockName);
 }
 
 void Context::uniformBlockBinding(ShaderProgramID program,

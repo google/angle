@@ -1714,17 +1714,17 @@ void ProgramLinkedResourcesLinker::linkResources(const ProgramState &programStat
 
     // Gather and link atomic counter buffer interface blocks.
     std::map<int, unsigned int> sizeMap;
-    getAtomicCounterBufferSizeMap(programState, sizeMap);
+    getAtomicCounterBufferSizeMap(programState.getExecutable(), sizeMap);
     resources.atomicCounterBufferLinker.link(sizeMap);
 }
 
 void ProgramLinkedResourcesLinker::getAtomicCounterBufferSizeMap(
-    const ProgramState &programState,
+    const ProgramExecutable &executable,
     std::map<int, unsigned int> &sizeMapOut) const
 {
-    for (unsigned int index : programState.getAtomicCounterUniformRange())
+    for (unsigned int index : executable.getAtomicCounterUniformRange())
     {
-        const LinkedUniform &glUniform = programState.getUniforms()[index];
+        const LinkedUniform &glUniform = executable.getUniforms()[index];
 
         auto &bufferDataSize = sizeMapOut[glUniform.getBinding()];
 

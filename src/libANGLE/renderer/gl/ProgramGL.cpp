@@ -239,8 +239,8 @@ void ProgramGL::reapplyUBOBindingsIfNeeded(const gl::Context *context)
     const angle::FeaturesGL &features = GetImplAs<ContextGL>(context)->getFeaturesGL();
     if (features.reapplyUBOBindingsAfterUsingBinaryProgram.enabled)
     {
-        const auto &blocks = mState.getUniformBlocks();
-        for (size_t blockIndex : mState.getActiveUniformBlockBindingsMask())
+        const auto &blocks = mState.getExecutable().getUniformBlocks();
+        for (size_t blockIndex : mState.getExecutable().getActiveUniformBlockBindings())
         {
             setUniformBlockBinding(static_cast<GLuint>(blockIndex), blocks[blockIndex].binding);
         }
@@ -289,7 +289,8 @@ angle::Result ProgramGL::link(const gl::Context *context, std::shared_ptr<LinkTa
 void ProgramGL::linkJobImpl(const gl::Extensions &extensions)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "ProgramGL::linkJobImpl");
-    ProgramExecutableGL *executableGL = getExecutable();
+    const gl::ProgramExecutable &executable = mState.getExecutable();
+    ProgramExecutableGL *executableGL       = getExecutable();
 
     if (mAttachedShaders[gl::ShaderType::Compute] != 0)
     {
@@ -300,9 +301,8 @@ void ProgramGL::linkJobImpl(const gl::Extensions &extensions)
         // Set the transform feedback state
         std::vector<std::string> transformFeedbackVaryingMappedNames;
         const gl::ShaderType tfShaderType =
-            mState.getExecutable().hasLinkedShaderStage(gl::ShaderType::Geometry)
-                ? gl::ShaderType::Geometry
-                : gl::ShaderType::Vertex;
+            executable.hasLinkedShaderStage(gl::ShaderType::Geometry) ? gl::ShaderType::Geometry
+                                                                      : gl::ShaderType::Vertex;
         const gl::SharedCompiledShaderState &tfShaderState = mState.getAttachedShader(tfShaderType);
         for (const auto &tfVarying : mState.getTransformFeedbackVaryingNames())
         {
@@ -346,7 +346,7 @@ void ProgramGL::linkJobImpl(const gl::Extensions &extensions)
         }
 
         // Bind attribute locations to match the GL layer.
-        for (const gl::ProgramInput &attribute : mState.getProgramInputs())
+        for (const gl::ProgramInput &attribute : executable.getProgramInputs())
         {
             if (!attribute.isActive() || attribute.isBuiltIn())
             {
@@ -411,8 +411,8 @@ void ProgramGL::linkJobImpl(const gl::Extensions &extensions)
             else if (fragmentShader && fragmentShader->shaderVersion >= 300)
             {
                 // ESSL 3.00 and up.
-                const auto &outputLocations          = mState.getOutputLocations();
-                const auto &secondaryOutputLocations = mState.getSecondaryOutputLocations();
+                const auto &outputLocations          = executable.getOutputLocations();
+                const auto &secondaryOutputLocations = executable.getSecondaryOutputLocations();
                 for (size_t outputLocationIndex = 0u; outputLocationIndex < outputLocations.size();
                      ++outputLocationIndex)
                 {
@@ -422,7 +422,7 @@ void ProgramGL::linkJobImpl(const gl::Extensions &extensions)
                         !outputLocation.ignored)
                     {
                         const sh::ShaderVariable &outputVar =
-                            mState.getOutputVariables()[outputLocation.index];
+                            executable.getOutputVariables()[outputLocation.index];
                         if (outputVar.location == -1 || outputVar.index == -1)
                         {
                             // We only need to assign the location and index via the API in case the
@@ -445,7 +445,7 @@ void ProgramGL::linkJobImpl(const gl::Extensions &extensions)
                         !outputLocation.ignored)
                     {
                         const sh::ShaderVariable &outputVar =
-                            mState.getOutputVariables()[outputLocation.index];
+                            executable.getOutputVariables()[outputLocation.index];
                         if (outputVar.location == -1 || outputVar.index == -1)
                         {
                             // We only need to assign the location and index via the API in case the
@@ -816,13 +816,14 @@ void ProgramGL::setUniformMatrix4x3fv(GLint location,
 
 void ProgramGL::setUniformBlockBinding(GLuint uniformBlockIndex, GLuint uniformBlockBinding)
 {
-    ProgramExecutableGL *executableGL = getExecutable();
+    const gl::ProgramExecutable &executable = mState.getExecutable();
+    ProgramExecutableGL *executableGL       = getExecutable();
 
     // Lazy init
     if (executableGL->mUniformBlockRealLocationMap.empty())
     {
-        executableGL->mUniformBlockRealLocationMap.reserve(mState.getUniformBlocks().size());
-        for (const gl::InterfaceBlock &uniformBlock : mState.getUniformBlocks())
+        executableGL->mUniformBlockRealLocationMap.reserve(executable.getUniformBlocks().size());
+        for (const gl::InterfaceBlock &uniformBlock : executable.getUniformBlocks())
         {
             const std::string &mappedNameWithIndex = uniformBlock.mappedNameWithArrayIndex();
             GLuint blockIndex =
@@ -1021,15 +1022,17 @@ void ProgramGL::markUnusedUniformLocations(std::vector<gl::VariableLocation> *un
                                            std::vector<gl::SamplerBinding> *samplerBindings,
                                            std::vector<gl::ImageBinding> *imageBindings)
 {
+    const gl::ProgramExecutable &executable = mState.getExecutable();
+
     GLint maxLocation = static_cast<GLint>(uniformLocations->size());
     for (GLint location = 0; location < maxLocation; ++location)
     {
         if (uniLoc(location) == -1)
         {
             auto &locationRef = (*uniformLocations)[location];
-            if (mState.isSamplerUniformIndex(locationRef.index))
+            if (executable.isSamplerUniformIndex(locationRef.index))
             {
-                GLuint samplerIndex = mState.getSamplerIndexFromUniformIndex(locationRef.index);
+                GLuint samplerIndex = executable.getSamplerIndexFromUniformIndex(locationRef.index);
                 gl::SamplerBinding &samplerBinding = (*samplerBindings)[samplerIndex];
                 if (locationRef.arrayIndex <
                     static_cast<unsigned int>(samplerBinding.textureUnitsCount))
@@ -1038,9 +1041,9 @@ void ProgramGL::markUnusedUniformLocations(std::vector<gl::VariableLocation> *un
                     SetBitField(samplerBinding.textureUnitsCount, locationRef.arrayIndex);
                 }
             }
-            else if (mState.isImageUniformIndex(locationRef.index))
+            else if (executable.isImageUniformIndex(locationRef.index))
             {
-                GLuint imageIndex = mState.getImageIndexFromUniformIndex(locationRef.index);
+                GLuint imageIndex = executable.getImageIndexFromUniformIndex(locationRef.index);
                 gl::ImageBinding &imageBinding = (*imageBindings)[imageIndex];
                 if (locationRef.arrayIndex < imageBinding.boundImageUnits.size())
                 {
@@ -1099,11 +1102,13 @@ void ProgramGL::linkResources(const gl::ProgramLinkedResources &resources)
 angle::Result ProgramGL::syncState(const gl::Context *context,
                                    const gl::Program::DirtyBits &dirtyBits)
 {
+    const gl::ProgramExecutable &executable = mState.getExecutable();
+
     for (size_t dirtyBit : dirtyBits)
     {
         ASSERT(dirtyBit <= gl::Program::DIRTY_BIT_UNIFORM_BLOCK_BINDING_MAX);
         GLuint binding = static_cast<GLuint>(dirtyBit);
-        setUniformBlockBinding(binding, mState.getUniformBlockBinding(binding));
+        setUniformBlockBinding(binding, executable.getUniformBlockBinding(binding));
     }
     return angle::Result::Continue;
 }

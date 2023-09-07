@@ -574,7 +574,7 @@ angle::Result Context11::multiDrawArrays(const gl::Context *context,
                                          GLsizei drawcount)
 {
     gl::Program *programObject = context->getState().getLinkedProgram(context);
-    const bool hasDrawID       = programObject && programObject->hasDrawIDUniform();
+    const bool hasDrawID       = programObject && programObject->getExecutable().hasDrawIDUniform();
     if (hasDrawID)
     {
         MULTI_DRAW_BLOCK(ARRAYS, _, _, 1, 0, 0);
@@ -595,7 +595,7 @@ angle::Result Context11::multiDrawArraysInstanced(const gl::Context *context,
                                                   GLsizei drawcount)
 {
     gl::Program *programObject = context->getState().getLinkedProgram(context);
-    const bool hasDrawID       = programObject && programObject->hasDrawIDUniform();
+    const bool hasDrawID       = programObject && programObject->getExecutable().hasDrawIDUniform();
     if (hasDrawID)
     {
         MULTI_DRAW_BLOCK(ARRAYS, _INSTANCED, _, 1, 0, 0);
@@ -625,7 +625,7 @@ angle::Result Context11::multiDrawElements(const gl::Context *context,
                                            GLsizei drawcount)
 {
     gl::Program *programObject = context->getState().getLinkedProgram(context);
-    const bool hasDrawID       = programObject && programObject->hasDrawIDUniform();
+    const bool hasDrawID       = programObject && programObject->getExecutable().hasDrawIDUniform();
     if (hasDrawID)
     {
         MULTI_DRAW_BLOCK(ELEMENTS, _, _, 1, 0, 0);
@@ -647,7 +647,7 @@ angle::Result Context11::multiDrawElementsInstanced(const gl::Context *context,
                                                     GLsizei drawcount)
 {
     gl::Program *programObject = context->getState().getLinkedProgram(context);
-    const bool hasDrawID       = programObject && programObject->hasDrawIDUniform();
+    const bool hasDrawID       = programObject && programObject->getExecutable().hasDrawIDUniform();
     if (hasDrawID)
     {
         MULTI_DRAW_BLOCK(ELEMENTS, _INSTANCED, _, 1, 0, 0);
@@ -680,8 +680,9 @@ angle::Result Context11::multiDrawArraysInstancedBaseInstance(const gl::Context 
                                                               GLsizei drawcount)
 {
     gl::Program *programObject = context->getState().getLinkedProgram(context);
-    const bool hasDrawID       = programObject && programObject->hasDrawIDUniform();
-    const bool hasBaseInstance = programObject && programObject->hasBaseInstanceUniform();
+    const bool hasDrawID       = programObject && programObject->getExecutable().hasDrawIDUniform();
+    const bool hasBaseInstance =
+        programObject && programObject->getExecutable().hasBaseInstanceUniform();
     ResetBaseVertexBaseInstance resetUniforms(programObject, false, hasBaseInstance);
 
     if (hasDrawID && hasBaseInstance)
@@ -716,9 +717,11 @@ angle::Result Context11::multiDrawElementsInstancedBaseVertexBaseInstance(
     GLsizei drawcount)
 {
     gl::Program *programObject = context->getState().getLinkedProgram(context);
-    const bool hasDrawID       = programObject && programObject->hasDrawIDUniform();
-    const bool hasBaseVertex   = programObject && programObject->hasBaseVertexUniform();
-    const bool hasBaseInstance = programObject && programObject->hasBaseInstanceUniform();
+    const bool hasDrawID       = programObject && programObject->getExecutable().hasDrawIDUniform();
+    const bool hasBaseVertex =
+        programObject && programObject->getExecutable().hasBaseVertexUniform();
+    const bool hasBaseInstance =
+        programObject && programObject->getExecutable().hasBaseInstanceUniform();
     ResetBaseVertexBaseInstance resetUniforms(programObject, hasBaseVertex, hasBaseInstance);
 
     if (hasDrawID)

@@ -4269,8 +4269,8 @@ angle::Result Renderer11::dispatchCompute(const gl::Context *context,
 {
     const gl::State &glState                = context->getState();
     const gl::ProgramExecutable *executable = glState.getProgramExecutable();
-    if (executable->getActiveShaderStorageBlockCount() > 0 ||
-        executable->getActiveAtomicCounterBufferCount() > 0)
+    if (executable->getShaderStorageBlocks().size() > 0 ||
+        executable->getAtomicCounterBuffers().size() > 0)
     {
         ANGLE_TRY(markRawBufferUsage(context));
     }
@@ -4284,8 +4284,8 @@ angle::Result Renderer11::dispatchComputeIndirect(const gl::Context *context, GL
 {
     const auto &glState                     = context->getState();
     const gl::ProgramExecutable *executable = glState.getProgramExecutable();
-    if (executable->getActiveShaderStorageBlockCount() > 0 ||
-        executable->getActiveAtomicCounterBufferCount() > 0)
+    if (executable->getShaderStorageBlocks().size() > 0 ||
+        executable->getAtomicCounterBuffers().size() > 0)
     {
         ANGLE_TRY(markRawBufferUsage(context));
     }
@@ -4511,7 +4511,7 @@ angle::Result Renderer11::markRawBufferUsage(const gl::Context *context)
 {
     const gl::State &glState                = context->getState();
     const gl::ProgramExecutable *executable = glState.getProgramExecutable();
-    for (size_t blockIndex = 0; blockIndex < executable->getActiveShaderStorageBlockCount();
+    for (size_t blockIndex = 0; blockIndex < executable->getShaderStorageBlocks().size();
          blockIndex++)
     {
         GLuint binding = executable->getShaderStorageBlockBinding(static_cast<GLuint>(blockIndex));

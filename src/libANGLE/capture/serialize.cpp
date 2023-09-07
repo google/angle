@@ -1042,24 +1042,26 @@ void SerializeProgramAliasedBindings(JsonSerializer *json,
 void SerializeProgramState(JsonSerializer *json, const gl::ProgramState &programState)
 {
     json->addString("Label", programState.getLabel());
-    SerializeWorkGroupSize(json, programState.getComputeShaderLocalSize());
-
     json->addVectorOfStrings("TransformFeedbackVaryingNames",
                              programState.getTransformFeedbackVaryingNames());
-    json->addScalar("ActiveUniformBlockBindingsMask",
-                    programState.getActiveUniformBlockBindingsMask().to_ulong());
-    SerializeVariableLocationsVector(json, "UniformLocations", programState.getUniformLocations());
-    SerializeBufferVariablesVector(json, programState.getBufferVariables());
-    SerializeRange(json, programState.getAtomicCounterUniformRange());
-    SerializeVariableLocationsVector(json, "SecondaryOutputLocations",
-                                     programState.getSecondaryOutputLocations());
     json->addScalar("BinaryRetrieveableHint", programState.hasBinaryRetrieveableHint());
     json->addScalar("Separable", programState.isSeparable());
-    json->addScalar("NumViews", programState.getNumViews());
-    json->addScalar("DrawIDLocation", programState.getDrawIDLocation());
-    json->addScalar("BaseVertexLocation", programState.getBaseVertexLocation());
-    json->addScalar("BaseInstanceLocation", programState.getBaseInstanceLocation());
     SerializeProgramAliasedBindings(json, programState.getUniformLocationBindings());
+
+    const gl::ProgramExecutable &executable = programState.getExecutable();
+
+    SerializeWorkGroupSize(json, executable.getComputeShaderLocalSize());
+    json->addScalar("ActiveUniformBlockBindingsMask",
+                    executable.getActiveUniformBlockBindings().to_ulong());
+    SerializeVariableLocationsVector(json, "UniformLocations", executable.getUniformLocations());
+    SerializeBufferVariablesVector(json, executable.getBufferVariables());
+    SerializeRange(json, executable.getAtomicCounterUniformRange());
+    SerializeVariableLocationsVector(json, "SecondaryOutputLocations",
+                                     executable.getSecondaryOutputLocations());
+    json->addScalar("NumViews", executable.getNumViews());
+    json->addScalar("DrawIDLocation", executable.getDrawIDLocation());
+    json->addScalar("BaseVertexLocation", executable.getBaseVertexLocation());
+    json->addScalar("BaseInstanceLocation", executable.getBaseInstanceLocation());
 }
 
 void SerializeProgramBindings(JsonSerializer *json, const gl::ProgramBindings &programBindings)
@@ -1116,10 +1118,12 @@ void SerializeProgram(JsonSerializer *json,
     // json->addScalar("RefCount", program->getRefCount());
     json->addScalar("ID", program->id().value);
 
+    const gl::ProgramExecutable &executable = program->getExecutable();
+
     // Serialize uniforms.
     {
         GroupScope uniformsGroup(json, "Uniforms");
-        GLint uniformCount = program->getActiveUniformCount();
+        GLint uniformCount = static_cast<GLint>(executable.getUniforms().size());
         for (int uniformIndex = 0; uniformIndex < uniformCount; ++uniformIndex)
         {
             GroupScope uniformGroup(json, "Uniform", uniformIndex);
@@ -1128,14 +1132,14 @@ void SerializeProgram(JsonSerializer *json,
             char uniformName[kMaxUniformNameLen] = {};
             GLint size                           = 0;
             GLenum type                          = GL_NONE;
-            program->getActiveUniform(uniformIndex, kMaxUniformNameLen, nullptr, &size, &type,
-                                      uniformName);
+            executable.getActiveUniform(uniformIndex, kMaxUniformNameLen, nullptr, &size, &type,
+                                        uniformName);
 
             json->addCString("Name", uniformName);
             json->addScalar("Size", size);
             json->addCString("Type", gl::GLenumToString(gl::GLESEnum::AttributeType, type));
 
-            const gl::UniformLocation loc = program->getUniformLocation(uniformName);
+            const gl::UniformLocation loc = executable.getUniformLocation(uniformName);
 
             if (loc.value == -1)
             {

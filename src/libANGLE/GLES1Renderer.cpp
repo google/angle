@@ -1012,12 +1012,13 @@ angle::Result GLES1Renderer::initializeRendererProgram(Context *context,
     mShaderPrograms->deleteShader(context, vertexShader);
     mShaderPrograms->deleteShader(context, fragmentShader);
 
-    Program *programObject = getProgram(programState.program);
+    Program *programObject              = getProgram(programState.program);
+    const ProgramExecutable &executable = programObject->getExecutable();
 
-    programState.projMatrixLoc      = programObject->getUniformLocation("projection");
-    programState.modelviewMatrixLoc = programObject->getUniformLocation("modelview");
-    programState.textureMatrixLoc   = programObject->getUniformLocation("texture_matrix");
-    programState.modelviewInvTrLoc  = programObject->getUniformLocation("modelview_invtr");
+    programState.projMatrixLoc      = executable.getUniformLocation("projection");
+    programState.modelviewMatrixLoc = executable.getUniformLocation("modelview");
+    programState.textureMatrixLoc   = executable.getUniformLocation("texture_matrix");
+    programState.modelviewInvTrLoc  = executable.getUniformLocation("modelview_invtr");
 
     for (int i = 0; i < kTexUnitCount; i++)
     {
@@ -1027,61 +1028,60 @@ angle::Result GLES1Renderer::initializeRendererProgram(Context *context,
         ss2d << "tex_sampler" << i;
         sscube << "tex_cube_sampler" << i;
 
-        programState.tex2DSamplerLocs[i] = programObject->getUniformLocation(ss2d.str().c_str());
-        programState.texCubeSamplerLocs[i] =
-            programObject->getUniformLocation(sscube.str().c_str());
+        programState.tex2DSamplerLocs[i]   = executable.getUniformLocation(ss2d.str().c_str());
+        programState.texCubeSamplerLocs[i] = executable.getUniformLocation(sscube.str().c_str());
     }
 
-    programState.textureEnvColorLoc = programObject->getUniformLocation("texture_env_color");
-    programState.rgbScaleLoc        = programObject->getUniformLocation("texture_env_rgb_scale");
-    programState.alphaScaleLoc      = programObject->getUniformLocation("texture_env_alpha_scale");
+    programState.textureEnvColorLoc = executable.getUniformLocation("texture_env_color");
+    programState.rgbScaleLoc        = executable.getUniformLocation("texture_env_rgb_scale");
+    programState.alphaScaleLoc      = executable.getUniformLocation("texture_env_alpha_scale");
 
-    programState.alphaTestRefLoc = programObject->getUniformLocation("alpha_test_ref");
+    programState.alphaTestRefLoc = executable.getUniformLocation("alpha_test_ref");
 
-    programState.materialAmbientLoc  = programObject->getUniformLocation("material_ambient");
-    programState.materialDiffuseLoc  = programObject->getUniformLocation("material_diffuse");
-    programState.materialSpecularLoc = programObject->getUniformLocation("material_specular");
-    programState.materialEmissiveLoc = programObject->getUniformLocation("material_emissive");
+    programState.materialAmbientLoc  = executable.getUniformLocation("material_ambient");
+    programState.materialDiffuseLoc  = executable.getUniformLocation("material_diffuse");
+    programState.materialSpecularLoc = executable.getUniformLocation("material_specular");
+    programState.materialEmissiveLoc = executable.getUniformLocation("material_emissive");
     programState.materialSpecularExponentLoc =
-        programObject->getUniformLocation("material_specular_exponent");
+        executable.getUniformLocation("material_specular_exponent");
 
     programState.lightModelSceneAmbientLoc =
-        programObject->getUniformLocation("light_model_scene_ambient");
+        executable.getUniformLocation("light_model_scene_ambient");
 
-    programState.lightAmbientsLoc   = programObject->getUniformLocation("light_ambients");
-    programState.lightDiffusesLoc   = programObject->getUniformLocation("light_diffuses");
-    programState.lightSpecularsLoc  = programObject->getUniformLocation("light_speculars");
-    programState.lightPositionsLoc  = programObject->getUniformLocation("light_positions");
-    programState.lightDirectionsLoc = programObject->getUniformLocation("light_directions");
+    programState.lightAmbientsLoc   = executable.getUniformLocation("light_ambients");
+    programState.lightDiffusesLoc   = executable.getUniformLocation("light_diffuses");
+    programState.lightSpecularsLoc  = executable.getUniformLocation("light_speculars");
+    programState.lightPositionsLoc  = executable.getUniformLocation("light_positions");
+    programState.lightDirectionsLoc = executable.getUniformLocation("light_directions");
     programState.lightSpotlightExponentsLoc =
-        programObject->getUniformLocation("light_spotlight_exponents");
+        executable.getUniformLocation("light_spotlight_exponents");
     programState.lightSpotlightCutoffAnglesLoc =
-        programObject->getUniformLocation("light_spotlight_cutoff_angles");
+        executable.getUniformLocation("light_spotlight_cutoff_angles");
     programState.lightAttenuationConstsLoc =
-        programObject->getUniformLocation("light_attenuation_consts");
+        executable.getUniformLocation("light_attenuation_consts");
     programState.lightAttenuationLinearsLoc =
-        programObject->getUniformLocation("light_attenuation_linears");
+        executable.getUniformLocation("light_attenuation_linears");
     programState.lightAttenuationQuadraticsLoc =
-        programObject->getUniformLocation("light_attenuation_quadratics");
+        executable.getUniformLocation("light_attenuation_quadratics");
 
-    programState.fogDensityLoc = programObject->getUniformLocation("fog_density");
-    programState.fogStartLoc   = programObject->getUniformLocation("fog_start");
-    programState.fogEndLoc     = programObject->getUniformLocation("fog_end");
-    programState.fogColorLoc   = programObject->getUniformLocation("fog_color");
+    programState.fogDensityLoc = executable.getUniformLocation("fog_density");
+    programState.fogStartLoc   = executable.getUniformLocation("fog_start");
+    programState.fogEndLoc     = executable.getUniformLocation("fog_end");
+    programState.fogColorLoc   = executable.getUniformLocation("fog_color");
 
-    programState.clipPlanesLoc = programObject->getUniformLocation("clip_planes");
+    programState.clipPlanesLoc = executable.getUniformLocation("clip_planes");
 
-    programState.logicOpLoc = programObject->getUniformLocation("logic_op");
+    programState.logicOpLoc = executable.getUniformLocation("logic_op");
 
-    programState.pointSizeMinLoc = programObject->getUniformLocation("point_size_min");
-    programState.pointSizeMaxLoc = programObject->getUniformLocation("point_size_max");
+    programState.pointSizeMinLoc = executable.getUniformLocation("point_size_min");
+    programState.pointSizeMaxLoc = executable.getUniformLocation("point_size_max");
     programState.pointDistanceAttenuationLoc =
-        programObject->getUniformLocation("point_distance_attenuation");
+        executable.getUniformLocation("point_distance_attenuation");
 
-    programState.drawTextureCoordsLoc = programObject->getUniformLocation("draw_texture_coords");
-    programState.drawTextureDimsLoc   = programObject->getUniformLocation("draw_texture_dims");
+    programState.drawTextureCoordsLoc = executable.getUniformLocation("draw_texture_coords");
+    programState.drawTextureDimsLoc   = executable.getUniformLocation("draw_texture_dims");
     programState.drawTextureNormalizedCropRectLoc =
-        programObject->getUniformLocation("draw_texture_normalized_crop_rect");
+        executable.getUniformLocation("draw_texture_normalized_crop_rect");
 
     ANGLE_TRY(glState->setProgram(context, programObject));
 

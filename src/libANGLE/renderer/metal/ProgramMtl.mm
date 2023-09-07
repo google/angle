@@ -378,8 +378,10 @@ void ProgramMtl::setUniformImpl(GLint location, GLsizei count, const T *v, GLenu
 {
     ProgramExecutableMtl *executableMtl = getExecutable();
 
-    const gl::VariableLocation &locationInfo = mState.getUniformLocations()[location];
-    const gl::LinkedUniform &linkedUniform   = mState.getUniforms()[locationInfo.index];
+    const gl::VariableLocation &locationInfo =
+        mState.getExecutable().getUniformLocations()[location];
+    const gl::LinkedUniform &linkedUniform =
+        mState.getExecutable().getUniforms()[locationInfo.index];
 
     if (linkedUniform.isSampler())
     {
@@ -452,8 +454,10 @@ void ProgramMtl::getUniformImpl(GLint location, T *v, GLenum entryPointType) con
 {
     const ProgramExecutableMtl *executableMtl = getExecutable();
 
-    const gl::VariableLocation &locationInfo = mState.getUniformLocations()[location];
-    const gl::LinkedUniform &linkedUniform   = mState.getUniforms()[locationInfo.index];
+    const gl::VariableLocation &locationInfo =
+        mState.getExecutable().getUniformLocations()[location];
+    const gl::LinkedUniform &linkedUniform =
+        mState.getExecutable().getUniforms()[locationInfo.index];
 
     ASSERT(!linkedUniform.isSampler());
 
@@ -568,8 +572,10 @@ void ProgramMtl::setUniformMatrixfv(GLint location,
 {
     ProgramExecutableMtl *executableMtl = getExecutable();
 
-    const gl::VariableLocation &locationInfo = mState.getUniformLocations()[location];
-    const gl::LinkedUniform &linkedUniform   = mState.getUniforms()[locationInfo.index];
+    const gl::VariableLocation &locationInfo =
+        mState.getExecutable().getUniformLocations()[location];
+    const gl::LinkedUniform &linkedUniform =
+        mState.getExecutable().getUniforms()[locationInfo.index];
 
     for (gl::ShaderType shaderType : gl::kAllGLES2ShaderTypes)
     {

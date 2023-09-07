@@ -115,193 +115,6 @@ void UniformStateQueryCastLoop(DestT *dataOut, const uint8_t *srcPointer, int co
     }
 }
 
-template <typename VarT>
-GLuint GetResourceIndexFromName(const std::vector<VarT> &list, const std::string &name)
-{
-    std::string nameAsArrayName = name + "[0]";
-    for (size_t index = 0; index < list.size(); index++)
-    {
-        const VarT &resource = list[index];
-        if (resource.name == name || (resource.isArray() && resource.name == nameAsArrayName))
-        {
-            return static_cast<GLuint>(index);
-        }
-    }
-
-    return GL_INVALID_INDEX;
-}
-
-GLuint GetUniformIndexFromName(const std::vector<LinkedUniform> &uniformList,
-                               const std::vector<std::string> &nameList,
-                               const std::string &name)
-{
-    std::string nameAsArrayName = name + "[0]";
-    for (size_t index = 0; index < nameList.size(); index++)
-    {
-        const std::string &uniformName = nameList[index];
-        if (uniformName == name || (uniformList[index].isArray() && uniformName == nameAsArrayName))
-        {
-            return static_cast<GLuint>(index);
-        }
-    }
-
-    return GL_INVALID_INDEX;
-}
-
-GLint GetVariableLocation(const std::vector<sh::ShaderVariable> &list,
-                          const std::vector<VariableLocation> &locationList,
-                          const std::string &name)
-{
-    size_t nameLengthWithoutArrayIndex;
-    unsigned int arrayIndex = ParseArrayIndex(name, &nameLengthWithoutArrayIndex);
-
-    for (size_t location = 0u; location < locationList.size(); ++location)
-    {
-        const VariableLocation &variableLocation = locationList[location];
-        if (!variableLocation.used())
-        {
-            continue;
-        }
-
-        const sh::ShaderVariable &variable = list[variableLocation.index];
-
-        // Array output variables may be bound out of order, so we need to ensure we only pick the
-        // first element if given the base name.
-        if ((variable.name == name) && (variableLocation.arrayIndex == 0))
-        {
-            return static_cast<GLint>(location);
-        }
-        if (variable.isArray() && variableLocation.arrayIndex == arrayIndex &&
-            angle::BeginsWith(variable.name, name, nameLengthWithoutArrayIndex))
-        {
-            return static_cast<GLint>(location);
-        }
-    }
-
-    return -1;
-}
-
-GLint GetUniformLocation(const std::vector<LinkedUniform> &uniformList,
-                         const std::vector<std::string> &nameList,
-                         const std::vector<VariableLocation> &locationList,
-                         const std::string &name)
-{
-    size_t nameLengthWithoutArrayIndex;
-    unsigned int arrayIndex = ParseArrayIndex(name, &nameLengthWithoutArrayIndex);
-
-    for (size_t location = 0u; location < locationList.size(); ++location)
-    {
-        const VariableLocation &variableLocation = locationList[location];
-        if (!variableLocation.used())
-        {
-            continue;
-        }
-
-        const LinkedUniform &variable  = uniformList[variableLocation.index];
-        const std::string &uniformName = nameList[variableLocation.index];
-
-        // Array output variables may be bound out of order, so we need to ensure we only pick the
-        // first element if given the base name. Uniforms don't allow this behavior and some code
-        // seemingly depends on the opposite behavior, so only enable it for output variables.
-        if (angle::BeginsWith(uniformName, name) && (variableLocation.arrayIndex == 0))
-        {
-            if (name.length() == uniformName.length())
-            {
-                ASSERT(name == uniformName);
-                // GLES 3.1 November 2016 page 87.
-                // The string exactly matches the name of the active variable.
-                return static_cast<GLint>(location);
-            }
-            if (name.length() + 3u == uniformName.length() && variable.isArray())
-            {
-                ASSERT(name + "[0]" == uniformName);
-                // The string identifies the base name of an active array, where the string would
-                // exactly match the name of the variable if the suffix "[0]" were appended to the
-                // string.
-                return static_cast<GLint>(location);
-            }
-        }
-        if (variable.isArray() && variableLocation.arrayIndex == arrayIndex &&
-            nameLengthWithoutArrayIndex + 3u == uniformName.length() &&
-            angle::BeginsWith(uniformName, name, nameLengthWithoutArrayIndex))
-        {
-            ASSERT(name.substr(0u, nameLengthWithoutArrayIndex) + "[0]" == uniformName);
-            // The string identifies an active element of the array, where the string ends with the
-            // concatenation of the "[" character, an integer (with no "+" sign, extra leading
-            // zeroes, or whitespace) identifying an array element, and the "]" character, the
-            // integer is less than the number of active elements of the array variable, and where
-            // the string would exactly match the enumerated name of the array if the decimal
-            // integer were replaced with zero.
-            return static_cast<GLint>(location);
-        }
-    }
-
-    return -1;
-}
-
-void CopyStringToBuffer(GLchar *buffer,
-                        const std::string &string,
-                        GLsizei bufSize,
-                        GLsizei *lengthOut)
-{
-    ASSERT(bufSize > 0);
-    size_t length = std::min<size_t>(bufSize - 1, string.length());
-    memcpy(buffer, string.c_str(), length);
-    buffer[length] = '\0';
-
-    if (lengthOut)
-    {
-        *lengthOut = static_cast<GLsizei>(length);
-    }
-}
-
-GLuint GetInterfaceBlockIndex(const std::vector<InterfaceBlock> &list, const std::string &name)
-{
-    std::vector<unsigned int> subscripts;
-    std::string baseName = ParseResourceName(name, &subscripts);
-
-    unsigned int numBlocks = static_cast<unsigned int>(list.size());
-    for (unsigned int blockIndex = 0; blockIndex < numBlocks; blockIndex++)
-    {
-        const auto &block = list[blockIndex];
-        if (block.name == baseName)
-        {
-            const bool arrayElementZero =
-                (subscripts.empty() && (!block.isArray || block.arrayElement == 0));
-            const bool arrayElementMatches =
-                (subscripts.size() == 1 && subscripts[0] == block.arrayElement);
-            if (arrayElementMatches || arrayElementZero)
-            {
-                return blockIndex;
-            }
-        }
-    }
-
-    return GL_INVALID_INDEX;
-}
-
-void GetInterfaceBlockName(const UniformBlockIndex index,
-                           const std::vector<InterfaceBlock> &list,
-                           GLsizei bufSize,
-                           GLsizei *length,
-                           GLchar *name)
-{
-    ASSERT(index.value < list.size());
-
-    const auto &block = list[index.value];
-
-    if (bufSize > 0)
-    {
-        std::string blockName = block.name;
-
-        if (block.isArray)
-        {
-            blockName += ArrayString(block.arrayElement);
-        }
-        CopyStringToBuffer(name, blockName, bufSize, length);
-    }
-}
-
 void InitUniformBlockLinker(const ProgramState &state, UniformBlockLinker *blockLinker)
 {
     for (ShaderType shaderType : AllShaderTypes())
@@ -324,54 +137,6 @@ void InitShaderStorageBlockLinker(const ProgramState &state, ShaderStorageBlockL
             blockLinker->addShaderBlocks(shaderType, &shader->shaderStorageBlocks);
         }
     }
-}
-
-template <typename T>
-GLuint GetResourceMaxNameSize(const T &resource, GLint max)
-{
-    if (resource.isArray())
-    {
-        return std::max(max, clampCast<GLint>((resource.name + "[0]").size()));
-    }
-    else
-    {
-        return std::max(max, clampCast<GLint>((resource.name).size()));
-    }
-}
-
-template <typename T>
-GLuint GetResourceLocation(const GLchar *name, const T &variable, GLint location)
-{
-    if (variable.isBuiltIn())
-    {
-        return GL_INVALID_INDEX;
-    }
-
-    if (variable.isArray())
-    {
-        size_t nameLengthWithoutArrayIndexOut;
-        size_t arrayIndex = ParseArrayIndex(name, &nameLengthWithoutArrayIndexOut);
-        // The 'name' string may not contain the array notation "[0]"
-        if (arrayIndex != GL_INVALID_INDEX)
-        {
-            location += arrayIndex;
-        }
-    }
-
-    return location;
-}
-
-template <typename T>
-const std::string GetResourceName(const T &resource)
-{
-    std::string resourceName = resource.name;
-
-    if (resource.isArray())
-    {
-        resourceName += "[0]";
-    }
-
-    return resourceName;
 }
 
 // Provides a mechanism to access the result of asynchronous linking.
@@ -908,56 +673,6 @@ SharedCompiledShaderState ProgramState::getAttachedShader(ShaderType shaderType)
     return mAttachedShaders[shaderType];
 }
 
-GLuint ProgramState::getUniformIndexFromName(const std::string &name) const
-{
-    return GetUniformIndexFromName(mExecutable->mUniforms, mExecutable->mUniformNames, name);
-}
-
-GLuint ProgramState::getBufferVariableIndexFromName(const std::string &name) const
-{
-    return GetResourceIndexFromName(mExecutable->mBufferVariables, name);
-}
-
-GLuint ProgramState::getUniformIndexFromLocation(UniformLocation location) const
-{
-    ASSERT(location.value >= 0 &&
-           static_cast<size_t>(location.value) < mExecutable->mUniformLocations.size());
-    return mExecutable->mUniformLocations[location.value].index;
-}
-
-Optional<GLuint> ProgramState::getSamplerIndex(UniformLocation location) const
-{
-    GLuint index = getUniformIndexFromLocation(location);
-    if (!isSamplerUniformIndex(index))
-    {
-        return Optional<GLuint>::Invalid();
-    }
-
-    return getSamplerIndexFromUniformIndex(index);
-}
-
-bool ProgramState::isSamplerUniformIndex(GLuint index) const
-{
-    return mExecutable->mPODStruct.samplerUniformRange.contains(index);
-}
-
-GLuint ProgramState::getSamplerIndexFromUniformIndex(GLuint uniformIndex) const
-{
-    ASSERT(isSamplerUniformIndex(uniformIndex));
-    return uniformIndex - mExecutable->mPODStruct.samplerUniformRange.low();
-}
-
-bool ProgramState::isImageUniformIndex(GLuint index) const
-{
-    return mExecutable->mPODStruct.imageUniformRange.contains(index);
-}
-
-GLuint ProgramState::getImageIndexFromUniformIndex(GLuint uniformIndex) const
-{
-    ASSERT(isImageUniformIndex(uniformIndex));
-    return uniformIndex - mExecutable->mPODStruct.imageUniformRange.low();
-}
-
 bool ProgramState::hasAnyAttachedShader() const
 {
     for (const SharedCompiledShaderState &shader : mAttachedShaders)
@@ -968,28 +683,6 @@ bool ProgramState::hasAnyAttachedShader() const
         }
     }
     return false;
-}
-
-ShaderType ProgramState::getFirstAttachedShaderStageType() const
-{
-    const ShaderBitSet linkedStages = mExecutable->getLinkedShaderStages();
-    if (linkedStages.none())
-    {
-        return ShaderType::InvalidEnum;
-    }
-
-    return linkedStages.first();
-}
-
-ShaderType ProgramState::getLastAttachedShaderStageType() const
-{
-    const ShaderBitSet linkedStages = mExecutable->getLinkedShaderStages();
-    if (linkedStages.none())
-    {
-        return ShaderType::InvalidEnum;
-    }
-
-    return linkedStages.last();
 }
 
 ShaderType ProgramState::getAttachedTransformFeedbackStage() const
@@ -1685,7 +1378,7 @@ void ProgramState::updateActiveSamplers()
 
 void ProgramState::updateProgramInterfaceInputs()
 {
-    const ShaderType firstAttachedShaderType = getFirstAttachedShaderStageType();
+    const ShaderType firstAttachedShaderType = mExecutable->getFirstLinkedShaderStageType();
 
     if (firstAttachedShaderType == ShaderType::Vertex)
     {
@@ -1723,7 +1416,7 @@ void ProgramState::updateProgramInterfaceInputs()
 
 void ProgramState::updateProgramInterfaceOutputs()
 {
-    const ShaderType lastAttachedShaderType = getLastAttachedShaderStageType();
+    const ShaderType lastAttachedShaderType = mExecutable->getLastLinkedShaderStageType();
 
     if (lastAttachedShaderType == ShaderType::Fragment)
     {
@@ -1785,7 +1478,7 @@ angle::Result Program::loadBinary(const Context *context,
     // We could also store the binary in the internal program cache.
 
     for (size_t uniformBlockIndex = 0;
-         uniformBlockIndex < mState.mExecutable->getActiveUniformBlockCount(); ++uniformBlockIndex)
+         uniformBlockIndex < mState.mExecutable->getUniformBlocks().size(); ++uniformBlockIndex)
     {
         mDirtyBits.set(uniformBlockIndex);
     }
@@ -1958,508 +1651,13 @@ void Program::getAttachedShaders(GLsizei maxCount, GLsizei *count, ShaderProgram
     }
 }
 
-GLuint Program::getAttributeLocation(const std::string &name) const
-{
-    ASSERT(!mLinkingState);
-    return mState.getAttributeLocation(name);
-}
-
-void Program::getActiveAttribute(GLuint index,
-                                 GLsizei bufsize,
-                                 GLsizei *length,
-                                 GLint *size,
-                                 GLenum *type,
-                                 GLchar *name) const
-{
-    ASSERT(!mLinkingState);
-    if (!mLinked)
-    {
-        if (bufsize > 0)
-        {
-            name[0] = '\0';
-        }
-
-        if (length)
-        {
-            *length = 0;
-        }
-
-        *type = GL_NONE;
-        *size = 1;
-        return;
-    }
-
-    ASSERT(index < mState.mExecutable->getProgramInputs().size());
-    const ProgramInput &attrib = mState.mExecutable->getProgramInputs()[index];
-
-    if (bufsize > 0)
-    {
-        CopyStringToBuffer(name, attrib.name, bufsize, length);
-    }
-
-    // Always a single 'type' instance
-    *size = 1;
-    *type = attrib.getType();
-}
-
-GLint Program::getActiveAttributeCount() const
-{
-    ASSERT(!mLinkingState);
-    if (!mLinked)
-    {
-        return 0;
-    }
-
-    return static_cast<GLint>(mState.mExecutable->getProgramInputs().size());
-}
-
-GLint Program::getActiveAttributeMaxLength() const
-{
-    ASSERT(!mLinkingState);
-    if (!mLinked)
-    {
-        return 0;
-    }
-
-    size_t maxLength = 0;
-
-    for (const ProgramInput &attrib : mState.mExecutable->getProgramInputs())
-    {
-        maxLength = std::max(attrib.name.length() + 1, maxLength);
-    }
-
-    return static_cast<GLint>(maxLength);
-}
-
-const sh::WorkGroupSize &Program::getComputeShaderLocalSize() const
-{
-    ASSERT(!mLinkingState);
-    return mState.getComputeShaderLocalSize();
-}
-
-PrimitiveMode Program::getGeometryShaderInputPrimitiveType() const
-{
-    ASSERT(!mLinkingState && mState.mExecutable);
-    return mState.mExecutable->getGeometryShaderInputPrimitiveType();
-}
-PrimitiveMode Program::getGeometryShaderOutputPrimitiveType() const
-{
-    ASSERT(!mLinkingState && mState.mExecutable);
-    return mState.mExecutable->getGeometryShaderOutputPrimitiveType();
-}
-GLint Program::getGeometryShaderInvocations() const
-{
-    ASSERT(!mLinkingState && mState.mExecutable);
-    return mState.mExecutable->getGeometryShaderInvocations();
-}
-GLint Program::getGeometryShaderMaxVertices() const
-{
-    ASSERT(!mLinkingState && mState.mExecutable);
-    return mState.mExecutable->getGeometryShaderMaxVertices();
-}
-
-GLint Program::getTessControlShaderVertices() const
-{
-    ASSERT(!mLinkingState && mState.mExecutable);
-    return mState.mExecutable->mPODStruct.tessControlShaderVertices;
-}
-
-GLenum Program::getTessGenMode() const
-{
-    ASSERT(!mLinkingState && mState.mExecutable);
-    return mState.mExecutable->mPODStruct.tessGenMode;
-}
-
-GLenum Program::getTessGenPointMode() const
-{
-    ASSERT(!mLinkingState && mState.mExecutable);
-    return mState.mExecutable->mPODStruct.tessGenPointMode;
-}
-
-GLenum Program::getTessGenSpacing() const
-{
-    ASSERT(!mLinkingState && mState.mExecutable);
-    return mState.mExecutable->mPODStruct.tessGenSpacing;
-}
-
-GLenum Program::getTessGenVertexOrder() const
-{
-    ASSERT(!mLinkingState && mState.mExecutable);
-    return mState.mExecutable->mPODStruct.tessGenVertexOrder;
-}
-
-const ProgramInput &Program::getInputResource(size_t index) const
-{
-    ASSERT(!mLinkingState);
-    ASSERT(index < mState.mExecutable->getProgramInputs().size());
-    return mState.mExecutable->getProgramInputs()[index];
-}
-
-GLuint Program::getInputResourceIndex(const GLchar *name) const
-{
-    ASSERT(!mLinkingState);
-    const std::string nameString = StripLastArrayIndex(name);
-
-    for (size_t index = 0; index < mState.mExecutable->getProgramInputs().size(); index++)
-    {
-        ProgramInput resource = getInputResource(index);
-        if (resource.name == nameString)
-        {
-            return static_cast<GLuint>(index);
-        }
-    }
-
-    return GL_INVALID_INDEX;
-}
-
-GLuint Program::getInputResourceMaxNameSize() const
-{
-    GLint max = 0;
-
-    for (const ProgramInput &resource : mState.mExecutable->getProgramInputs())
-    {
-        max = GetResourceMaxNameSize(resource, max);
-    }
-
-    return max;
-}
-
-GLuint Program::getOutputResourceMaxNameSize() const
-{
-    GLint max = 0;
-
-    for (const sh::ShaderVariable &resource : mState.mExecutable->getOutputVariables())
-    {
-        max = GetResourceMaxNameSize(resource, max);
-    }
-
-    return max;
-}
-
-GLuint Program::getInputResourceLocation(const GLchar *name) const
-{
-    const GLuint index = getInputResourceIndex(name);
-    if (index == GL_INVALID_INDEX)
-    {
-        return index;
-    }
-
-    const ProgramInput &variable = getInputResource(index);
-
-    return GetResourceLocation(name, variable, variable.getLocation());
-}
-
-GLuint Program::getOutputResourceLocation(const GLchar *name) const
-{
-    const GLuint index = getOutputResourceIndex(name);
-    if (index == GL_INVALID_INDEX)
-    {
-        return index;
-    }
-
-    const sh::ShaderVariable &variable = getOutputResource(index);
-
-    return GetResourceLocation(name, variable, variable.location);
-}
-
-GLuint Program::getOutputResourceIndex(const GLchar *name) const
-{
-    ASSERT(!mLinkingState);
-    const std::string nameString = StripLastArrayIndex(name);
-
-    for (size_t index = 0; index < mState.mExecutable->getOutputVariables().size(); index++)
-    {
-        sh::ShaderVariable resource = getOutputResource(index);
-        if (resource.name == nameString)
-        {
-            return static_cast<GLuint>(index);
-        }
-    }
-
-    return GL_INVALID_INDEX;
-}
-
-size_t Program::getOutputResourceCount() const
-{
-    ASSERT(!mLinkingState);
-    return (mLinked ? mState.mExecutable->getOutputVariables().size() : 0);
-}
-
-void Program::getResourceName(const std::string name,
-                              GLsizei bufSize,
-                              GLsizei *length,
-                              GLchar *dest) const
-{
-    if (length)
-    {
-        *length = 0;
-    }
-
-    if (!mLinked)
-    {
-        if (bufSize > 0)
-        {
-            dest[0] = '\0';
-        }
-        return;
-    }
-
-    if (bufSize > 0)
-    {
-        CopyStringToBuffer(dest, name, bufSize, length);
-    }
-}
-
-void Program::getInputResourceName(GLuint index,
-                                   GLsizei bufSize,
-                                   GLsizei *length,
-                                   GLchar *name) const
-{
-    ASSERT(!mLinkingState);
-    getResourceName(getInputResourceName(index), bufSize, length, name);
-}
-
-void Program::getOutputResourceName(GLuint index,
-                                    GLsizei bufSize,
-                                    GLsizei *length,
-                                    GLchar *name) const
-{
-    ASSERT(!mLinkingState);
-    getResourceName(getOutputResourceName(index), bufSize, length, name);
-}
-
-void Program::getUniformResourceName(GLuint index,
-                                     GLsizei bufSize,
-                                     GLsizei *length,
-                                     GLchar *name) const
-{
-    ASSERT(!mLinkingState);
-    ASSERT(index < mState.mExecutable->getUniforms().size());
-    getResourceName(mState.mExecutable->getUniformNameByIndex(index), bufSize, length, name);
-}
-
-void Program::getBufferVariableResourceName(GLuint index,
-                                            GLsizei bufSize,
-                                            GLsizei *length,
-                                            GLchar *name) const
-{
-    ASSERT(!mLinkingState);
-    ASSERT(index < mState.mExecutable->mBufferVariables.size());
-    getResourceName(mState.mExecutable->mBufferVariables[index].name, bufSize, length, name);
-}
-
-const std::string Program::getInputResourceName(GLuint index) const
-{
-    ASSERT(!mLinkingState);
-    const ProgramInput &resource = getInputResource(index);
-
-    return GetResourceName(resource);
-}
-
-const std::string Program::getOutputResourceName(GLuint index) const
-{
-    ASSERT(!mLinkingState);
-    const sh::ShaderVariable &resource = getOutputResource(index);
-
-    return GetResourceName(resource);
-}
-
-const sh::ShaderVariable &Program::getOutputResource(size_t index) const
-{
-    ASSERT(!mLinkingState);
-    ASSERT(index < mState.mExecutable->getOutputVariables().size());
-    return mState.mExecutable->getOutputVariables()[index];
-}
-
-const std::vector<GLsizei> &Program::getTransformFeedbackStrides() const
-{
-    ASSERT(!mLinkingState);
-    return mState.mExecutable->getTransformFeedbackStrides();
-}
-
-GLint Program::getFragDataLocation(const std::string &name) const
-{
-    ASSERT(!mLinkingState);
-    GLint primaryLocation = GetVariableLocation(mState.mExecutable->getOutputVariables(),
-                                                mState.mExecutable->getOutputLocations(), name);
-    if (primaryLocation != -1)
-    {
-        return primaryLocation;
-    }
-    return GetVariableLocation(mState.mExecutable->getOutputVariables(),
-                               mState.mExecutable->getSecondaryOutputLocations(), name);
-}
-
-GLint Program::getFragDataIndex(const std::string &name) const
-{
-    ASSERT(!mLinkingState);
-    if (GetVariableLocation(mState.mExecutable->getOutputVariables(),
-                            mState.mExecutable->getOutputLocations(), name) != -1)
-    {
-        return 0;
-    }
-    if (GetVariableLocation(mState.mExecutable->getOutputVariables(),
-                            mState.mExecutable->getSecondaryOutputLocations(), name) != -1)
-    {
-        return 1;
-    }
-    return -1;
-}
-
-void Program::getActiveUniform(GLuint index,
-                               GLsizei bufsize,
-                               GLsizei *length,
-                               GLint *size,
-                               GLenum *type,
-                               GLchar *name) const
-{
-    ASSERT(!mLinkingState);
-    if (mLinked)
-    {
-        // index must be smaller than getActiveUniformCount()
-        ASSERT(index < mState.mExecutable->getUniforms().size());
-        const LinkedUniform &uniform = mState.mExecutable->getUniforms()[index];
-
-        if (bufsize > 0)
-        {
-            std::string string = mState.mExecutable->getUniformNameByIndex(index);
-            CopyStringToBuffer(name, string, bufsize, length);
-        }
-
-        *size = clampCast<GLint>(uniform.getBasicTypeElementCount());
-        *type = uniform.getType();
-    }
-    else
-    {
-        if (bufsize > 0)
-        {
-            name[0] = '\0';
-        }
-
-        if (length)
-        {
-            *length = 0;
-        }
-
-        *size = 0;
-        *type = GL_NONE;
-    }
-}
-
-GLint Program::getActiveUniformCount() const
-{
-    ASSERT(!mLinkingState);
-    if (mLinked)
-    {
-        return static_cast<GLint>(mState.mExecutable->getUniforms().size());
-    }
-    else
-    {
-        return 0;
-    }
-}
-
-size_t Program::getActiveBufferVariableCount() const
-{
-    ASSERT(!mLinkingState);
-    return mLinked ? mState.mExecutable->mBufferVariables.size() : 0;
-}
-
-GLint Program::getActiveUniformMaxLength() const
-{
-    ASSERT(!mLinkingState);
-    size_t maxLength = 0;
-
-    if (mLinked)
-    {
-        for (GLuint index = 0;
-             index < static_cast<size_t>(mState.mExecutable->getUniformNames().size()); index++)
-        {
-            const std::string &uniformName = mState.mExecutable->getUniformNameByIndex(index);
-            if (!uniformName.empty())
-            {
-                size_t length = uniformName.length() + 1u;
-                if (mState.mExecutable->getUniformByIndex(index).isArray())
-                {
-                    length += 3;  // Counting in "[0]".
-                }
-                maxLength = std::max(length, maxLength);
-            }
-        }
-    }
-
-    return static_cast<GLint>(maxLength);
-}
-
-bool Program::isValidUniformLocation(UniformLocation location) const
-{
-    ASSERT(!mLinkingState);
-    ASSERT(
-        angle::IsValueInRangeForNumericType<GLint>(mState.mExecutable->mUniformLocations.size()));
-    return (location.value >= 0 &&
-            static_cast<size_t>(location.value) < mState.mExecutable->mUniformLocations.size() &&
-            mState.mExecutable->mUniformLocations[static_cast<size_t>(location.value)].used());
-}
-
-const LinkedUniform &Program::getUniformByLocation(UniformLocation location) const
-{
-    ASSERT(!mLinkingState);
-    ASSERT(location.value >= 0 &&
-           static_cast<size_t>(location.value) < mState.mExecutable->mUniformLocations.size());
-    return mState.mExecutable->getUniforms()[mState.getUniformIndexFromLocation(location)];
-}
-
-const VariableLocation &Program::getUniformLocation(UniformLocation location) const
-{
-    ASSERT(!mLinkingState);
-    ASSERT(location.value >= 0 &&
-           static_cast<size_t>(location.value) < mState.mExecutable->mUniformLocations.size());
-    return mState.mExecutable->mUniformLocations[location.value];
-}
-
-const BufferVariable &Program::getBufferVariableByIndex(GLuint index) const
-{
-    ASSERT(!mLinkingState);
-    ASSERT(index < static_cast<size_t>(mState.mExecutable->mBufferVariables.size()));
-    return mState.mExecutable->mBufferVariables[index];
-}
-
-UniformLocation Program::getUniformLocation(const std::string &name) const
-{
-    ASSERT(!mLinkingState);
-    return {GetUniformLocation(mState.mExecutable->getUniforms(),
-                               mState.mExecutable->getUniformNames(),
-                               mState.mExecutable->mUniformLocations, name)};
-}
-
-GLuint Program::getUniformIndex(const std::string &name) const
-{
-    ASSERT(!mLinkingState);
-    return mState.getUniformIndexFromName(name);
-}
-
-bool Program::shouldIgnoreUniform(UniformLocation location) const
-{
-    if (location.value == -1)
-    {
-        return true;
-    }
-
-    if (mState.mExecutable->mUniformLocations[static_cast<size_t>(location.value)].ignored)
-    {
-        return true;
-    }
-
-    return false;
-}
-
 template <typename UniformT,
           GLint UniformSize,
           void (rx::ProgramImpl::*SetUniformFunc)(GLint, GLsizei, const UniformT *)>
 void Program::setUniformGeneric(UniformLocation location, GLsizei count, const UniformT *v)
 {
     ASSERT(!mLinkingState);
-    if (shouldIgnoreUniform(location))
+    if (mState.mExecutable->shouldIgnoreUniform(location))
     {
         return;
     }
@@ -2496,7 +1694,7 @@ void Program::setUniform1iv(Context *context,
                             const GLint *v)
 {
     ASSERT(!mLinkingState);
-    if (shouldIgnoreUniform(location))
+    if (mState.mExecutable->shouldIgnoreUniform(location))
     {
         return;
     }
@@ -2506,7 +1704,7 @@ void Program::setUniform1iv(Context *context,
 
     mProgram->setUniform1iv(location.value, clampedCount, v);
 
-    if (mState.isSamplerUniformIndex(locationInfo.index))
+    if (mState.mExecutable->isSamplerUniformIndex(locationInfo.index))
     {
         updateSamplerUniform(context, locationInfo, clampedCount, v);
     }
@@ -2562,7 +1760,7 @@ void Program::setUniformMatrixGeneric(UniformLocation location,
                                       const UniformT *v)
 {
     ASSERT(!mLinkingState);
-    if (shouldIgnoreUniform(location))
+    if (mState.mExecutable->shouldIgnoreUniform(location))
     {
         return;
     }
@@ -2653,44 +1851,21 @@ void Program::setUniformMatrix4x3fv(UniformLocation location,
                                                                                     transpose, v);
 }
 
-GLuint Program::getSamplerUniformBinding(const VariableLocation &uniformLocation) const
-{
-    ASSERT(!mLinkingState);
-    GLuint samplerIndex = mState.getSamplerIndexFromUniformIndex(uniformLocation.index);
-    const SamplerBinding &samplerBinding = mState.mExecutable->mSamplerBindings[samplerIndex];
-    if (uniformLocation.arrayIndex >= samplerBinding.textureUnitsCount)
-    {
-        return 0;
-    }
-
-    const std::vector<GLuint> &boundTextureUnits = mState.mExecutable->mSamplerBoundTextureUnits;
-    return samplerBinding.getTextureUnit(boundTextureUnits, uniformLocation.arrayIndex);
-}
-
-GLuint Program::getImageUniformBinding(const VariableLocation &uniformLocation) const
-{
-    ASSERT(!mLinkingState);
-    GLuint imageIndex = mState.getImageIndexFromUniformIndex(uniformLocation.index);
-
-    const std::vector<ImageBinding> &imageBindings = getExecutable().getImageBindings();
-    const std::vector<GLuint> &boundImageUnits     = imageBindings[imageIndex].boundImageUnits;
-    return boundImageUnits[uniformLocation.arrayIndex];
-}
-
 void Program::getUniformfv(const Context *context, UniformLocation location, GLfloat *v) const
 {
     ASSERT(!mLinkingState);
-    const VariableLocation &uniformLocation = mState.getUniformLocations()[location.value];
-    const LinkedUniform &uniform            = mState.getUniforms()[uniformLocation.index];
+    const VariableLocation &uniformLocation =
+        mState.mExecutable->getUniformLocations()[location.value];
+    const LinkedUniform &uniform = mState.mExecutable->getUniforms()[uniformLocation.index];
 
     if (uniform.isSampler())
     {
-        *v = static_cast<GLfloat>(getSamplerUniformBinding(uniformLocation));
+        *v = static_cast<GLfloat>(mState.mExecutable->getSamplerUniformBinding(uniformLocation));
         return;
     }
     else if (uniform.isImage())
     {
-        *v = static_cast<GLfloat>(getImageUniformBinding(uniformLocation));
+        *v = static_cast<GLfloat>(mState.mExecutable->getImageUniformBinding(uniformLocation));
         return;
     }
 
@@ -2709,17 +1884,18 @@ void Program::getUniformfv(const Context *context, UniformLocation location, GLf
 void Program::getUniformiv(const Context *context, UniformLocation location, GLint *v) const
 {
     ASSERT(!mLinkingState);
-    const VariableLocation &uniformLocation = mState.getUniformLocations()[location.value];
-    const LinkedUniform &uniform            = mState.getUniforms()[uniformLocation.index];
+    const VariableLocation &uniformLocation =
+        mState.mExecutable->getUniformLocations()[location.value];
+    const LinkedUniform &uniform = mState.mExecutable->getUniforms()[uniformLocation.index];
 
     if (uniform.isSampler())
     {
-        *v = static_cast<GLint>(getSamplerUniformBinding(uniformLocation));
+        *v = static_cast<GLint>(mState.mExecutable->getSamplerUniformBinding(uniformLocation));
         return;
     }
     else if (uniform.isImage())
     {
-        *v = static_cast<GLint>(getImageUniformBinding(uniformLocation));
+        *v = static_cast<GLint>(mState.mExecutable->getImageUniformBinding(uniformLocation));
         return;
     }
 
@@ -2738,17 +1914,18 @@ void Program::getUniformiv(const Context *context, UniformLocation location, GLi
 void Program::getUniformuiv(const Context *context, UniformLocation location, GLuint *v) const
 {
     ASSERT(!mLinkingState);
-    const VariableLocation &uniformLocation = mState.getUniformLocations()[location.value];
-    const LinkedUniform &uniform            = mState.getUniforms()[uniformLocation.index];
+    const VariableLocation &uniformLocation =
+        mState.mExecutable->getUniformLocations()[location.value];
+    const LinkedUniform &uniform = mState.mExecutable->getUniforms()[uniformLocation.index];
 
     if (uniform.isSampler())
     {
-        *v = getSamplerUniformBinding(uniformLocation);
+        *v = mState.mExecutable->getSamplerUniformBinding(uniformLocation);
         return;
     }
     else if (uniform.isImage())
     {
-        *v = getImageUniformBinding(uniformLocation);
+        *v = mState.mExecutable->getImageUniformBinding(uniformLocation);
         return;
     }
 
@@ -2797,83 +1974,6 @@ bool Program::isValidated() const
     return mValidated;
 }
 
-void Program::getActiveUniformBlockName(const Context *context,
-                                        const UniformBlockIndex blockIndex,
-                                        GLsizei bufSize,
-                                        GLsizei *length,
-                                        GLchar *blockName) const
-{
-    ASSERT(!mLinkingState);
-    GetInterfaceBlockName(blockIndex, mState.mExecutable->getUniformBlocks(), bufSize, length,
-                          blockName);
-}
-
-void Program::getActiveShaderStorageBlockName(const GLuint blockIndex,
-                                              GLsizei bufSize,
-                                              GLsizei *length,
-                                              GLchar *blockName) const
-{
-    ASSERT(!mLinkingState);
-    GetInterfaceBlockName({blockIndex}, mState.mExecutable->getShaderStorageBlocks(), bufSize,
-                          length, blockName);
-}
-
-template <typename T>
-GLint Program::getActiveInterfaceBlockMaxNameLength(const std::vector<T> &resources) const
-{
-    int maxLength = 0;
-
-    if (mLinked)
-    {
-        for (const T &resource : resources)
-        {
-            if (!resource.name.empty())
-            {
-                int length = static_cast<int>(resource.nameWithArrayIndex().length());
-                maxLength  = std::max(length + 1, maxLength);
-            }
-        }
-    }
-
-    return maxLength;
-}
-
-GLint Program::getActiveUniformBlockMaxNameLength() const
-{
-    ASSERT(!mLinkingState);
-    return getActiveInterfaceBlockMaxNameLength(mState.mExecutable->getUniformBlocks());
-}
-
-GLint Program::getActiveShaderStorageBlockMaxNameLength() const
-{
-    ASSERT(!mLinkingState);
-    return getActiveInterfaceBlockMaxNameLength(mState.mExecutable->getShaderStorageBlocks());
-}
-
-GLuint Program::getUniformBlockIndex(const std::string &name) const
-{
-    ASSERT(!mLinkingState);
-    return GetInterfaceBlockIndex(mState.mExecutable->getUniformBlocks(), name);
-}
-
-GLuint Program::getShaderStorageBlockIndex(const std::string &name) const
-{
-    ASSERT(!mLinkingState);
-    return GetInterfaceBlockIndex(mState.mExecutable->getShaderStorageBlocks(), name);
-}
-
-const InterfaceBlock &Program::getUniformBlockByIndex(GLuint index) const
-{
-    ASSERT(!mLinkingState);
-    return mState.mExecutable->getUniformBlockByIndex(index);
-}
-
-const InterfaceBlock &Program::getShaderStorageBlockByIndex(GLuint index) const
-{
-    ASSERT(!mLinkingState);
-    return mState.mExecutable->getShaderStorageBlockByIndex(index);
-}
-
 void Program::bindUniformBlock(UniformBlockIndex uniformBlockIndex, GLuint uniformBlockBinding)
 {
     ASSERT(!mLinkingState);
@@ -2901,18 +2001,6 @@ void Program::bindUniformBlock(UniformBlockIndex uniformBlockIndex, GLuint unifo
     mDirtyBits.set(DIRTY_BIT_UNIFORM_BLOCK_BINDING_0 + uniformBlockIndex.value);
 }
 
-GLuint Program::getUniformBlockBinding(GLuint uniformBlockIndex) const
-{
-    ASSERT(!mLinkingState);
-    return mState.getUniformBlockBinding(uniformBlockIndex);
-}
-
-GLuint Program::getShaderStorageBlockBinding(GLuint shaderStorageBlockIndex) const
-{
-    ASSERT(!mLinkingState);
-    return mState.getShaderStorageBlockBinding(shaderStorageBlockIndex);
-}
-
 void Program::setTransformFeedbackVaryings(GLsizei count,
                                            const GLchar *const *varyings,
                                            GLenum bufferMode)
@@ -2925,73 +2013,6 @@ void Program::setTransformFeedbackVaryings(GLsizei count,
     }
 
     mState.mTransformFeedbackBufferMode = bufferMode;
-}
-
-void Program::getTransformFeedbackVarying(GLuint index,
-                                          GLsizei bufSize,
-                                          GLsizei *length,
-                                          GLsizei *size,
-                                          GLenum *type,
-                                          GLchar *name) const
-{
-    ASSERT(!mLinkingState);
-    if (mLinked)
-    {
-        ASSERT(index < mState.mExecutable->mLinkedTransformFeedbackVaryings.size());
-        const auto &var     = mState.mExecutable->mLinkedTransformFeedbackVaryings[index];
-        std::string varName = var.nameWithArrayIndex();
-        GLsizei lastNameIdx = std::min(bufSize - 1, static_cast<GLsizei>(varName.length()));
-        if (length)
-        {
-            *length = lastNameIdx;
-        }
-        if (size)
-        {
-            *size = var.size();
-        }
-        if (type)
-        {
-            *type = var.type;
-        }
-        if (name)
-        {
-            memcpy(name, varName.c_str(), lastNameIdx);
-            name[lastNameIdx] = '\0';
-        }
-    }
-}
-
-GLsizei Program::getTransformFeedbackVaryingCount() const
-{
-    ASSERT(!mLinkingState);
-    if (mLinked)
-    {
-        return static_cast<GLsizei>(mState.mExecutable->mLinkedTransformFeedbackVaryings.size());
-    }
-    else
-    {
-        return 0;
-    }
-}
-
-GLsizei Program::getTransformFeedbackVaryingMaxLength() const
-{
-    ASSERT(!mLinkingState);
-    if (mLinked)
-    {
-        GLsizei maxSize = 0;
-        for (const auto &var : mState.mExecutable->mLinkedTransformFeedbackVaryings)
-        {
-            maxSize =
-                std::max(maxSize, static_cast<GLsizei>(var.nameWithArrayIndex().length() + 1));
-        }
-
-        return maxSize;
-    }
-    else
-    {
-        return 0;
-    }
 }
 
 bool Program::linkValidateShaders()
@@ -3217,76 +2238,36 @@ void Program::linkShaders()
     }
 }
 
-GLuint Program::getTransformFeedbackVaryingResourceIndex(const GLchar *name) const
-{
-    ASSERT(!mLinkingState);
-    for (GLuint tfIndex = 0; tfIndex < mState.mExecutable->mLinkedTransformFeedbackVaryings.size();
-         ++tfIndex)
-    {
-        const auto &tf = mState.mExecutable->mLinkedTransformFeedbackVaryings[tfIndex];
-        if (tf.nameWithArrayIndex() == name)
-        {
-            return tfIndex;
-        }
-    }
-    return GL_INVALID_INDEX;
-}
-
-const TransformFeedbackVarying &Program::getTransformFeedbackVaryingResource(GLuint index) const
-{
-    ASSERT(!mLinkingState);
-    ASSERT(index < mState.mExecutable->mLinkedTransformFeedbackVaryings.size());
-    return mState.mExecutable->mLinkedTransformFeedbackVaryings[index];
-}
-
-bool Program::hasDrawIDUniform() const
-{
-    ASSERT(!mLinkingState);
-    return mState.getDrawIDLocation() >= 0;
-}
-
 void Program::setDrawIDUniform(GLint drawid)
 {
     ASSERT(!mLinkingState);
-    ASSERT(mState.getDrawIDLocation() >= 0);
-    mProgram->setUniform1iv(mState.getDrawIDLocation(), 1, &drawid);
-}
-
-bool Program::hasBaseVertexUniform() const
-{
-    ASSERT(!mLinkingState);
-    return mState.getBaseVertexLocation() >= 0;
+    ASSERT(mState.mExecutable->getDrawIDLocation() >= 0);
+    mProgram->setUniform1iv(mState.mExecutable->getDrawIDLocation(), 1, &drawid);
 }
 
 void Program::setBaseVertexUniform(GLint baseVertex)
 {
     ASSERT(!mLinkingState);
-    ASSERT(mState.getBaseVertexLocation() >= 0);
+    ASSERT(mState.mExecutable->getBaseVertexLocation() >= 0);
     if (baseVertex == mState.mCachedBaseVertex)
     {
         return;
     }
     mState.mCachedBaseVertex = baseVertex;
-    mProgram->setUniform1iv(mState.getBaseVertexLocation(), 1, &baseVertex);
-}
-
-bool Program::hasBaseInstanceUniform() const
-{
-    ASSERT(!mLinkingState);
-    return mState.getBaseInstanceLocation() >= 0;
+    mProgram->setUniform1iv(mState.mExecutable->getBaseVertexLocation(), 1, &baseVertex);
 }
 
 void Program::setBaseInstanceUniform(GLuint baseInstance)
 {
     ASSERT(!mLinkingState);
-    ASSERT(mState.getBaseInstanceLocation() >= 0);
+    ASSERT(mState.mExecutable->getBaseInstanceLocation() >= 0);
     if (baseInstance == mState.mCachedBaseInstance)
     {
         return;
     }
     mState.mCachedBaseInstance = baseInstance;
     GLint baseInstanceInt      = baseInstance;
-    mProgram->setUniform1iv(mState.getBaseInstanceLocation(), 1, &baseInstanceInt);
+    mProgram->setUniform1iv(mState.mExecutable->getBaseInstanceLocation(), 1, &baseInstanceInt);
 }
 
 bool Program::linkVaryings()
@@ -3358,7 +2339,7 @@ bool Program::linkUniforms(const Caps &caps,
 
     if (clientVersion >= Version(3, 1))
     {
-        GLint locationSize = static_cast<GLint>(mState.getUniformLocations().size());
+        GLint locationSize = static_cast<GLint>(mState.mExecutable->getUniformLocations().size());
 
         if (locationSize > caps.maxUniformLocations)
         {
@@ -3542,7 +2523,7 @@ void Program::setUniformValuesFromBindingQualifiers()
         {
             const std::string &uniformName =
                 mState.mExecutable->getUniformNameByIndex(samplerIndex);
-            UniformLocation location = getUniformLocation(uniformName);
+            UniformLocation location = mState.mExecutable->getUniformLocation(uniformName);
             ASSERT(location.value != -1);
             std::vector<GLint> boundTextureUnits;
             for (unsigned int elementIndex = 0;
@@ -3562,11 +2543,11 @@ void Program::setUniformValuesFromBindingQualifiers()
 void Program::initInterfaceBlockBindings()
 {
     // Set initial bindings from shader.
-    for (unsigned int blockIndex = 0; blockIndex < mState.mExecutable->getActiveUniformBlockCount();
+    for (size_t blockIndex = 0; blockIndex < mState.mExecutable->getUniformBlocks().size();
          blockIndex++)
     {
         InterfaceBlock &uniformBlock = mState.mExecutable->mUniformBlocks[blockIndex];
-        bindUniformBlock({blockIndex}, uniformBlock.binding);
+        bindUniformBlock({static_cast<uint32_t>(blockIndex)}, uniformBlock.binding);
     }
 }
 
@@ -3575,9 +2556,9 @@ void Program::updateSamplerUniform(Context *context,
                                    GLsizei clampedCount,
                                    const GLint *v)
 {
-    ASSERT(mState.isSamplerUniformIndex(locationInfo.index));
-    GLuint samplerIndex            = mState.getSamplerIndexFromUniformIndex(locationInfo.index);
-    SamplerBinding &samplerBinding = mState.mExecutable->mSamplerBindings[samplerIndex];
+    ASSERT(mState.mExecutable->isSamplerUniformIndex(locationInfo.index));
+    GLuint samplerIndex = mState.mExecutable->getSamplerIndexFromUniformIndex(locationInfo.index);
+    SamplerBinding &samplerBinding         = mState.mExecutable->mSamplerBindings[samplerIndex];
     std::vector<GLuint> &boundTextureUnits = mState.mExecutable->mSamplerBoundTextureUnits;
 
     if (locationInfo.arrayIndex >= samplerBinding.textureUnitsCount)
@@ -3829,7 +2810,7 @@ angle::Result Program::serialize(const Context *context, angle::MemoryBuffer *bi
     mState.mExecutable->save(mState.mSeparable, &stream);
 
     // Warn the app layer if saving a binary with unsupported transform feedback.
-    if (!mState.getLinkedTransformFeedbackVaryings().empty() &&
+    if (!mState.mExecutable->getLinkedTransformFeedbackVaryings().empty() &&
         context->getFrontendFeatures().disableProgramCachingForTransformFeedback.enabled)
     {
         ANGLE_PERF_WARNING(context->getState().getDebug(), GL_DEBUG_SEVERITY_LOW,
@@ -3980,15 +2961,16 @@ void Program::postResolveLink(const gl::Context *context)
 
     if (context->getExtensions().multiDrawANGLE)
     {
-        mState.mExecutable->mPODStruct.drawIDLocation = getUniformLocation("gl_DrawID").value;
+        mState.mExecutable->mPODStruct.drawIDLocation =
+            mState.mExecutable->getUniformLocation("gl_DrawID").value;
     }
 
     if (context->getExtensions().baseVertexBaseInstanceShaderBuiltinANGLE)
     {
         mState.mExecutable->mPODStruct.baseVertexLocation =
-            getUniformLocation("gl_BaseVertex").value;
+            mState.mExecutable->getUniformLocation("gl_BaseVertex").value;
         mState.mExecutable->mPODStruct.baseInstanceLocation =
-            getUniformLocation("gl_BaseInstance").value;
+            mState.mExecutable->getUniformLocation("gl_BaseInstance").value;
     }
 }
 

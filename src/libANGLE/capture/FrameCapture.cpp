@@ -1923,8 +1923,9 @@ void CaptureUpdateResourceIDs(const gl::Context *context,
 
 void CaptureUpdateUniformLocations(const gl::Program *program, std::vector<CallCapture> *callsOut)
 {
-    const std::vector<gl::LinkedUniform> &uniforms     = program->getState().getUniforms();
-    const std::vector<gl::VariableLocation> &locations = program->getUniformLocations();
+    const gl::ProgramExecutable &executable            = program->getExecutable();
+    const std::vector<gl::LinkedUniform> &uniforms     = executable.getUniforms();
+    const std::vector<gl::VariableLocation> &locations = executable.getUniformLocations();
 
     for (GLint location = 0; location < static_cast<GLint>(locations.size()); ++location)
     {
@@ -1947,7 +1948,7 @@ void CaptureUpdateUniformLocations(const gl::Program *program, std::vector<CallC
         {
             const gl::LinkedUniform &uniform = uniforms[locationVar.index];
 
-            name = program->getUniformNameByIndex(locationVar.index);
+            name = executable.getUniformNameByIndex(locationVar.index);
 
             if (uniform.isArray())
             {
@@ -2000,7 +2001,8 @@ void CaptureValidateSerializedState(const gl::Context *context, std::vector<Call
 void CaptureUpdateUniformBlockIndexes(const gl::Program *program,
                                       std::vector<CallCapture> *callsOut)
 {
-    const std::vector<gl::InterfaceBlock> &uniformBlocks = program->getState().getUniformBlocks();
+    const std::vector<gl::InterfaceBlock> &uniformBlocks =
+        program->getExecutable().getUniformBlocks();
 
     for (GLuint index = 0; index < uniformBlocks.size(); ++index)
     {
@@ -2562,11 +2564,13 @@ void CaptureUpdateUniformValues(const gl::State &replayState,
         CaptureUpdateCurrentProgram(callsOut->back(), 0, callsOut);
     }
 
-    for (GLuint uniformIndex = 0; uniformIndex < static_cast<GLuint>(program->getUniforms().size());
-         uniformIndex++)
+    const gl::ProgramExecutable &executable = program->getExecutable();
+
+    for (GLuint uniformIndex = 0;
+         uniformIndex < static_cast<GLuint>(executable.getUniforms().size()); uniformIndex++)
     {
-        std::string uniformName          = program->getUniformNameByIndex(uniformIndex);
-        const gl::LinkedUniform &uniform = program->getUniformByIndex(uniformIndex);
+        std::string uniformName          = executable.getUniformNameByIndex(uniformIndex);
+        const gl::LinkedUniform &uniform = executable.getUniformByIndex(uniformIndex);
 
         int uniformCount = 1;
         if (uniform.isArray())
@@ -2575,7 +2579,7 @@ void CaptureUpdateUniformValues(const gl::State &replayState,
             uniformName  = gl::StripLastArrayIndex(uniformName);
         }
 
-        gl::UniformLocation uniformLoc      = program->getUniformLocation(uniformName);
+        gl::UniformLocation uniformLoc      = executable.getUniformLocation(uniformName);
         const gl::UniformTypeInfo &typeInfo = gl::GetUniformTypeInfo(uniform.getType());
         int componentCount                  = typeInfo.componentCount;
         int uniformSize                     = uniformCount * componentCount;
@@ -3405,8 +3409,10 @@ void GenerateLinkedProgram(const gl::Context *context,
     // GenerateLinkedProgram.
     PackedEnumMap<gl::ShaderType, gl::ShaderProgramID> tempShaderIDTracker;
 
+    const gl::ProgramExecutable &executable = program->getExecutable();
+
     // Compile with last linked sources.
-    for (gl::ShaderType shaderType : program->getExecutable().getLinkedShaderStages())
+    for (gl::ShaderType shaderType : executable.getLinkedShaderStages())
     {
         // Bump the max shader program id for each new tempIDStart we use to create, compile, and
         // attach the temp shader object.
@@ -3446,7 +3452,7 @@ void GenerateLinkedProgram(const gl::Context *context,
     // Gather XFB varyings
     std::vector<std::string> xfbVaryings;
     for (const gl::TransformFeedbackVarying &xfbVarying :
-         program->getState().getLinkedTransformFeedbackVaryings())
+         executable.getLinkedTransformFeedbackVaryings())
     {
         xfbVaryings.push_back(xfbVarying.nameWithArrayIndex());
     }
@@ -3459,7 +3465,7 @@ void GenerateLinkedProgram(const gl::Context *context,
             varyingsStrings.push_back(varyingString.data());
         }
 
-        GLenum xfbMode = program->getTransformFeedbackBufferMode();
+        GLenum xfbMode = executable.getTransformFeedbackBufferMode();
         Capture(setupCalls, CaptureTransformFeedbackVaryings(replayState, true, id,
                                                              static_cast<GLint>(xfbVaryings.size()),
                                                              varyingsStrings.data(), xfbMode));
@@ -3467,7 +3473,7 @@ void GenerateLinkedProgram(const gl::Context *context,
 
     // Force the attributes to be bound the same way as in the existing program.
     // This can affect attributes that are optimized out in some implementations.
-    for (const gl::ProgramInput &attrib : program->getState().getProgramInputs())
+    for (const gl::ProgramInput &attrib : executable.getProgramInputs())
     {
         if (gl::IsBuiltInName(attrib.name))
         {
@@ -3476,7 +3482,7 @@ void GenerateLinkedProgram(const gl::Context *context,
         }
 
         // Separable programs may not have a VS, meaning it may not have attributes.
-        if (program->getExecutable().hasLinkedShaderStage(gl::ShaderType::Vertex))
+        if (executable.hasLinkedShaderStage(gl::ShaderType::Vertex))
         {
             ASSERT(attrib.getLocation() != -1);
             Capture(setupCalls, CaptureBindAttribLocation(replayState, true, id,
@@ -3499,10 +3505,11 @@ void GenerateLinkedProgram(const gl::Context *context,
     CaptureUpdateUniformBlockIndexes(program, setupCalls);
 
     // Capture uniform block bindings for each program
-    for (unsigned int uniformBlockIndex = 0;
-         uniformBlockIndex < program->getActiveUniformBlockCount(); uniformBlockIndex++)
+    for (uint32_t uniformBlockIndex = 0;
+         uniformBlockIndex < static_cast<uint32_t>(executable.getUniformBlocks().size());
+         uniformBlockIndex++)
     {
-        GLuint blockBinding = program->getUniformBlockBinding(uniformBlockIndex);
+        GLuint blockBinding = executable.getUniformBlockBinding(uniformBlockIndex);
         CallCapture updateCallCapture =
             CaptureUniformBlockBinding(replayState, true, id, {uniformBlockIndex}, blockBinding);
         CaptureCustomUniformBlockBinding(updateCallCapture, *setupCalls);
@@ -3512,7 +3519,7 @@ void GenerateLinkedProgram(const gl::Context *context,
     // ResourceManagerBase::mHandleAllocator can release the ShaderProgramID handle assigned to the
     // shader object when glDeleteShader is called. This ensures the ShaderProgramID handles used in
     // SetupReplayContextShared() are consistent with the ShaderProgramID handles used by the app.
-    for (gl::ShaderType shaderType : program->getExecutable().getLinkedShaderStages())
+    for (gl::ShaderType shaderType : executable.getLinkedShaderStages())
     {
         gl::Shader *attachedShader = program->getAttachedShader(shaderType);
         if (attachedShader == nullptr)

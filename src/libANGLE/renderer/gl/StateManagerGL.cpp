@@ -1009,7 +1009,7 @@ void StateManagerGL::updateProgramStorageBufferBindings(const gl::Context *conte
     const gl::State &glState                = context->getState();
     const gl::ProgramExecutable *executable = glState.getProgramExecutable();
 
-    for (size_t blockIndex = 0; blockIndex < executable->getActiveShaderStorageBlockCount();
+    for (size_t blockIndex = 0; blockIndex < executable->getShaderStorageBlocks().size();
          blockIndex++)
     {
         GLuint binding = executable->getShaderStorageBlockBinding(static_cast<GLuint>(blockIndex));
@@ -1038,7 +1038,7 @@ void StateManagerGL::updateProgramUniformBufferBindings(const gl::Context *conte
     const gl::State &glState                = context->getState();
     const gl::ProgramExecutable *executable = glState.getProgramExecutable();
 
-    for (size_t uniformBlockIndex = 0; uniformBlockIndex < executable->getActiveUniformBlockCount();
+    for (size_t uniformBlockIndex = 0; uniformBlockIndex < executable->getUniformBlocks().size();
          uniformBlockIndex++)
     {
         GLuint binding = executable->getUniformBlockBinding(static_cast<GLuint>(uniformBlockIndex));
@@ -2250,17 +2250,17 @@ angle::Result StateManagerGL::syncState(const gl::Context *context,
                         iter.setLaterBit(gl::state::DIRTY_BIT_IMAGE_BINDINGS);
                     }
 
-                    if (executable->getActiveShaderStorageBlockCount() > 0)
+                    if (executable->getShaderStorageBlocks().size() > 0)
                     {
                         iter.setLaterBit(gl::state::DIRTY_BIT_SHADER_STORAGE_BUFFER_BINDING);
                     }
 
-                    if (executable->getActiveUniformBlockCount() > 0)
+                    if (executable->getUniformBlocks().size() > 0)
                     {
                         iter.setLaterBit(gl::state::DIRTY_BIT_UNIFORM_BUFFER_BINDINGS);
                     }
 
-                    if (executable->getActiveAtomicCounterBufferCount() > 0)
+                    if (executable->getAtomicCounterBuffers().size() > 0)
                     {
                         iter.setLaterBit(gl::state::DIRTY_BIT_ATOMIC_COUNTER_BUFFER_BINDING);
                     }

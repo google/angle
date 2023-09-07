@@ -639,8 +639,8 @@ ANGLE_INLINE const char *ValidateProgramDrawStates(const Context *context,
     }
 
     // Uniform buffer validation
-    for (unsigned int uniformBlockIndex = 0;
-         uniformBlockIndex < executable.getActiveUniformBlockCount(); uniformBlockIndex++)
+    for (size_t uniformBlockIndex = 0; uniformBlockIndex < executable.getUniformBlocks().size();
+         uniformBlockIndex++)
     {
         const InterfaceBlock &uniformBlock = executable.getUniformBlockByIndex(uniformBlockIndex);
         GLuint blockBinding                = executable.getUniformBlockBinding(uniformBlockIndex);
@@ -2839,8 +2839,9 @@ bool ValidateUniformCommonBase(const Context *context,
         return false;
     }
 
-    const auto &uniformLocations = program->getUniformLocations();
-    size_t castedLocation        = static_cast<size_t>(location.value);
+    const ProgramExecutable &executable = program->getExecutable();
+    const auto &uniformLocations        = executable.getUniformLocations();
+    size_t castedLocation               = static_cast<size_t>(location.value);
     if (castedLocation >= uniformLocations.size())
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInvalidUniformLocation);
@@ -2860,7 +2861,7 @@ bool ValidateUniformCommonBase(const Context *context,
         return false;
     }
 
-    const auto &uniform = program->getUniformByIndex(uniformLocation.index);
+    const LinkedUniform &uniform = executable.getUniformByIndex(uniformLocation.index);
 
     // attempting to write an array to a non-array uniform is an INVALID_OPERATION
     if (count > 1 && !uniform.isArray())
@@ -4676,7 +4677,7 @@ bool ValidateGetUniformBase(const Context *context,
         return false;
     }
 
-    if (!programObject->isValidUniformLocation(location))
+    if (!programObject->getExecutable().isValidUniformLocation(location))
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInvalidUniformLocation);
         return false;
@@ -4712,7 +4713,7 @@ bool ValidateSizedGetUniform(const Context *context,
     ASSERT(programObject);
 
     // sized queries -- ensure the provided buffer is large enough
-    const LinkedUniform &uniform = programObject->getUniformByLocation(location);
+    const LinkedUniform &uniform = programObject->getExecutable().getUniformByLocation(location);
     size_t requiredBytes         = VariableExternalSize(uniform.getType());
     if (static_cast<size_t>(bufSize) < requiredBytes)
     {
@@ -7990,7 +7991,8 @@ bool ValidateGetActiveUniformBlockivBase(const Context *context,
         return false;
     }
 
-    if (uniformBlockIndex.value >= programObject->getActiveUniformBlockCount())
+    const ProgramExecutable &executable = programObject->getExecutable();
+    if (uniformBlockIndex.value >= executable.getUniformBlocks().size())
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kIndexExceedsActiveUniformBlockCount);
         return false;
@@ -8017,7 +8019,7 @@ bool ValidateGetActiveUniformBlockivBase(const Context *context,
         if (pname == GL_UNIFORM_BLOCK_ACTIVE_UNIFORM_INDICES)
         {
             const InterfaceBlock &uniformBlock =
-                programObject->getUniformBlockByIndex(uniformBlockIndex.value);
+                executable.getUniformBlockByIndex(uniformBlockIndex.value);
             *length = static_cast<GLsizei>(uniformBlock.memberIndexes.size());
         }
         else
