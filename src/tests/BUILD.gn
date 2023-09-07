@@ -586,6 +586,9 @@ if (build_angle_trace_tests) {
       "capture_tests/capture_tests.py",
       "capture_tests/expected",
     ]
+    if (is_android) {
+      data += [ "$angle_root/src/tests/angle_android_test_runner.py" ]
+    }
     data_deps = [ ":angle_end2end_tests" ]
   }
 }

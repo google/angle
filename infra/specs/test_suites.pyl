@@ -1289,6 +1289,7 @@
     ],
 
     'isolated_scripts_group_pixel6': [
+      'angle_capture_isolated_scripts',
       'angle_restricted_trace_gold_isolated_scripts',
     ],
 
