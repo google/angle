@@ -823,6 +823,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
                                       vk::MemoryAllocationType allocationType);
 
     // In the event of collecting too much garbage, we should flush the garbage so it can be freed.
+    void addToPendingImageGarbage(vk::ResourceUse use, VkDeviceSize size);
+
     bool hasExcessPendingGarbage() const;
 
   private:
@@ -1593,6 +1595,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     // The size of copy commands issued between buffers and images. Used to submit the command
     // buffer for the outside render pass.
     VkDeviceSize mTotalBufferToImageCopySize;
+    VkDeviceSize mEstimatedPendingImageGarbageSize;
 
     // Semaphores that must be flushed before the current commands. Flushed semaphores will be
     // waited on in the next submission.

@@ -883,6 +883,7 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
       mIsInFramebufferFetchMode(false),
       mAllowRenderPassToReactivate(true),
       mTotalBufferToImageCopySize(0),
+      mEstimatedPendingImageGarbageSize(0),
       mHasWaitSemaphoresPendingSubmission(false),
       mGpuClockSync{std::numeric_limits<double>::max(), std::numeric_limits<double>::max()},
       mGpuEventTimestampOrigin(0),
@@ -3544,7 +3545,8 @@ angle::Result ContextVk::submitCommands(const vk::Semaphore *signalSemaphore,
         ANGLE_TRY(checkCompletedGpuEvents());
     }
 
-    mTotalBufferToImageCopySize = 0;
+    mTotalBufferToImageCopySize       = 0;
+    mEstimatedPendingImageGarbageSize = 0;
 
     return angle::Result::Continue;
 }
@@ -3564,9 +3566,19 @@ angle::Result ContextVk::onCopyUpdate(VkDeviceSize size, bool *commandBufferWasF
     return angle::Result::Continue;
 }
 
+void ContextVk::addToPendingImageGarbage(vk::ResourceUse use, VkDeviceSize size)
+{
+    if (!mRenderer->hasResourceUseFinished(use))
+    {
+        mEstimatedPendingImageGarbageSize += size;
+    }
+}
+
 bool ContextVk::hasExcessPendingGarbage() const
 {
-    return mRenderer->hasExcessiveSuballocationGarbage();
+    VkDeviceSize trackedPendingGarbage =
+        mRenderer->getPendingSuballocationGarbageSize() + mEstimatedPendingImageGarbageSize;
+    return trackedPendingGarbage >= mRenderer->getPendingGarbageSizeLimit();
 }
 
 angle::Result ContextVk::synchronizeCpuGpuTime()

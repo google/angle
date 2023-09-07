@@ -415,11 +415,9 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 
 // Triggers lowmemorykiller on some Android devices.
 280304441 ANDROID : UniformBufferMemoryTest.BufferDataInLoopManyTimes/* = SKIP
-280304441 ANDROID : Texture2DMemoryTestES3.TextureDataInLoopManyTimes/* = SKIP
 
 // Timeout on Swiftshader and failure due to too many allocations
 280304441 SWIFTSHADER : UniformBufferMemoryTest.BufferDataInLoopManyTimes/* = SKIP
-280304441 SWIFTSHADER : Texture2DMemoryTestES3.TextureDataInLoopManyTimes/* = SKIP
 
 // Reading back the contents of an RGBX image initialized with non-255 alpha returns the original alpha (instead of 255)
 6472 ANDROID GLES : ImageTestES3.RGBXAHBImportThenUpload/* = SKIP
