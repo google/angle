@@ -2272,10 +2272,14 @@ angle::Result StateManagerGL::syncState(const gl::Context *context,
                             state.getDrawFramebuffer()->getImplementation()->getState());
                     }
 
-                    if (mFeatures.emulateClipDistanceState.enabled)
+                    // If the current executable does not use clip distances, the related API
+                    // state has to be disabled to avoid runtime failures on certain drivers.
+                    // On other drivers, that state is always emulated via a special uniform,
+                    // which needs to be updated when switching programs.
+                    if (mMaxClipDistances > 0)
                     {
-                        updateEmulatedClipDistanceState(executable,
-                                                        state.getEnabledClipDistances());
+                        iter.setLaterBit(gl::state::DIRTY_BIT_EXTENDED);
+                        mLocalExtendedDirtyBits.set(gl::state::EXTENDED_DIRTY_BIT_CLIP_DISTANCES);
                     }
                 }
 
@@ -2361,13 +2365,23 @@ angle::Result StateManagerGL::syncState(const gl::Context *context,
                             setClipControl(state.getClipOrigin(), state.getClipDepthMode());
                             break;
                         case gl::state::EXTENDED_DIRTY_BIT_CLIP_DISTANCES:
-                            setClipDistancesEnable(state.getEnabledClipDistances());
-                            if (mFeatures.emulateClipDistanceState.enabled)
+                        {
+                            const gl::ProgramExecutable *executable = state.getProgramExecutable();
+                            if (executable && executable->hasClipDistance())
                             {
-                                updateEmulatedClipDistanceState(state.getProgramExecutable(),
-                                                                state.getEnabledClipDistances());
+                                setClipDistancesEnable(state.getEnabledClipDistances());
+                                if (mFeatures.emulateClipDistanceState.enabled)
+                                {
+                                    updateEmulatedClipDistanceState(
+                                        executable, state.getEnabledClipDistances());
+                                }
+                            }
+                            else
+                            {
+                                setClipDistancesEnable(gl::ClipDistanceEnableBits());
                             }
                             break;
+                        }
                         case gl::state::EXTENDED_DIRTY_BIT_DEPTH_CLAMP_ENABLED:
                             setDepthClampEnabled(state.isDepthClampEnabled());
                             break;
@@ -2732,11 +2746,9 @@ void StateManagerGL::updateEmulatedClipDistanceState(const gl::ProgramExecutable
                                                      const gl::ClipDistanceEnableBits enables) const
 {
     ASSERT(mFeatures.emulateClipDistanceState.enabled);
-    if (executable && executable->hasClipDistance())
-    {
-        const ProgramExecutableGL *executableGL = GetImplAs<ProgramExecutableGL>(executable);
-        executableGL->updateEnabledClipDistances(static_cast<uint8_t>(enables.bits()));
-    }
+    ASSERT(executable && executable->hasClipDistance());
+    const ProgramExecutableGL *executableGL = GetImplAs<ProgramExecutableGL>(executable);
+    executableGL->updateEnabledClipDistances(static_cast<uint8_t>(enables.bits()));
 }
 
 void StateManagerGL::syncSamplersState(const gl::Context *context)
