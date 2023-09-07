@@ -81,7 +81,6 @@ def run_test(test_name, overwrite_expected):
         exe = angle_test_util.ExecutablePathInCurrentDir('angle_end2end_tests')
         test_args = ['--gtest_filter=%s' % test_name, '--angle-per-test-capture-label']
         extra_env = {
-            'ANGLE_FEATURE_OVERRIDES_ENABLED': 'forceRobustResourceInit:forceInitShaderVariables',
             'ANGLE_CAPTURE_ENABLED': '1',
             'ANGLE_CAPTURE_FRAME_START': '2',
             'ANGLE_CAPTURE_FRAME_END': '5',
