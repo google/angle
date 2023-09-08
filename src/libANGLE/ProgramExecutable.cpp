@@ -19,6 +19,15 @@ namespace gl
 {
 namespace
 {
+ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
+// A placeholder struct just to ensure sh::BlockMemberInfo is tightly packed since vulkan backend
+// uses it and memcpy the entire vector which requires it tightly packed to make msan happy.
+struct BlockMemberInfoPaddingTest
+{
+    sh::BlockMemberInfo blockMemberInfo;
+};
+ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
+
 bool IncludeSameArrayElement(const std::set<std::string> &nameSet, const std::string &name)
 {
     std::vector<unsigned int> subscripts;
