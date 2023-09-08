@@ -5741,23 +5741,6 @@ FrameCaptureShared::FrameCaptureShared()
         mEnabled = false;
     }
 
-    std::string pathFromEnv =
-        GetEnvironmentVarOrUnCachedAndroidProperty(kOutDirectoryVarName, kAndroidOutDir);
-    if (pathFromEnv.empty())
-    {
-        mOutDirectory = GetDefaultOutDirectory();
-    }
-    else
-    {
-        mOutDirectory = pathFromEnv;
-    }
-
-    // Ensure the capture path ends with a slash.
-    if (mOutDirectory.back() != '\\' && mOutDirectory.back() != '/')
-    {
-        mOutDirectory += '/';
-    }
-
     std::string startFromEnv =
         GetEnvironmentVarOrUnCachedAndroidProperty(kFrameStartVarName, kAndroidFrameStart);
     if (!startFromEnv.empty())
@@ -5872,10 +5855,37 @@ FrameCaptureShared::FrameCaptureShared()
 
     if (mCaptureEndFrame < mCaptureStartFrame)
     {
+        // If we're still in a situation where start frame is after end frame,
+        // capture cannot happen. Consider this a disabled state.
+        // Note: We won't get here if trigger is in use, as it sets them equal but huge.
         mEnabled = false;
     }
 
     mReplayWriter.setCaptureLabel(mCaptureLabel);
+
+    // Special case the output directory
+    if (mEnabled)
+    {
+        // Only perform output directory checks if enabled
+        // - This can avoid some expensive process name and filesystem checks
+        // - We want to emit errors if the directory doesn't exist
+        std::string pathFromEnv =
+            GetEnvironmentVarOrUnCachedAndroidProperty(kOutDirectoryVarName, kAndroidOutDir);
+        if (pathFromEnv.empty())
+        {
+            mOutDirectory = GetDefaultOutDirectory();
+        }
+        else
+        {
+            mOutDirectory = pathFromEnv;
+        }
+
+        // Ensure the capture path ends with a slash.
+        if (mOutDirectory.back() != '\\' && mOutDirectory.back() != '/')
+        {
+            mOutDirectory += '/';
+        }
+    }
 }
 
 FrameCaptureShared::~FrameCaptureShared() = default;
