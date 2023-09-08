@@ -48,7 +48,11 @@ constexpr int kAllFrames = -1;
 
 constexpr int kDefaultScreenshotFrame   = 1;
 constexpr int kDefaultMaxStepsPerformed = 0;
-
+#ifdef ANGLE_STANDALONE_BENCHMARK
+constexpr bool kStandaloneBenchmark = true;
+#else
+constexpr bool kStandaloneBenchmark = false;
+#endif
 inline bool OneFrame()
 {
     return gStepsPerTrial == 1 || gMaxStepsPerformed == 1;

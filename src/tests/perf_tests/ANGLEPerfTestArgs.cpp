@@ -14,6 +14,10 @@
 #include "common/debug.h"
 #include "util/test_utils.h"
 
+#if defined(ANGLE_PLATFORM_ANDROID)
+#    include "util/android/AndroidWindow.h"
+#endif
+
 namespace angle
 {
 
@@ -179,5 +183,17 @@ void ANGLEProcessTraceTestArgs(int *argc, char **argv)
     {
         gTestTrials       = 1;
         gTrialTimeSeconds = 600;
+    }
+
+    if (kStandaloneBenchmark)
+    {
+        gVerboseLogging = true;
+#if defined(ANGLE_PLATFORM_ANDROID)
+        gScreenshotDir = strdup((AndroidWindow::GetApplicationDirectory() + "/files").c_str());
+#else
+        gScreenshotDir = ".";
+#endif
+        gSaveScreenshots = true;
+        gUseANGLE        = "vulkan";
     }
 }
