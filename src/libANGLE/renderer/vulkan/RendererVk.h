@@ -924,6 +924,8 @@ class RendererVk : angle::NonCopyable
     VkPhysicalDeviceLegacyDitheringFeaturesEXT mDitheringFeatures;
     VkPhysicalDeviceDrmPropertiesEXT mDrmProperties;
     VkPhysicalDeviceTimelineSemaphoreFeaturesKHR mTimelineSemaphoreFeatures;
+    VkPhysicalDeviceHostImageCopyFeaturesEXT mHostImageCopyFeatures;
+    VkPhysicalDeviceHostImageCopyPropertiesEXT mHostImageCopyProperties;
 
     angle::PackedEnumBitSet<gl::ShadingRate, uint8_t> mSupportedFragmentShadingRates;
     std::vector<VkQueueFamilyProperties> mQueueFamilyProperties;

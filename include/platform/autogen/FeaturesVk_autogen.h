@@ -1257,6 +1257,20 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo supportsFormatFeatureFlags2 = {
+        "supportsFormatFeatureFlags2",
+        FeatureCategory::VulkanFeatures,
+        "VkDevice supports the VK_KHR_format_feature_flags2 extension",
+        &members,
+    };
+
+    FeatureInfo supportsHostImageCopy = {
+        "supportsHostImageCopy",
+        FeatureCategory::VulkanFeatures,
+        "VkDevice supports the VK_EXT_host_image_copy extension",
+        &members,
+    };
+
     FeatureInfo enableParallelCompileAndLink = {
         "enableParallelCompileAndLink",
         FeatureCategory::VulkanFeatures,

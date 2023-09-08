@@ -2147,6 +2147,10 @@ angle::Result RendererVk::initializeMemoryAllocator(DisplayVk *displayVk)
 // - VK_EXT_legacy_dithering:                          supportsLegacyDithering (feature)
 // - VK_EXT_physical_device_drm:                       hasPrimary (property),
 //                                                     hasRender (property)
+// - VK_EXT_host_image_copy:                           hostImageCopy (feature),
+//                                                     pCopySrcLayouts (property),
+//                                                     pCopyDstLayouts (property),
+//                                                     identicalMemoryTypeRequirements (property)
 //
 void RendererVk::appendDeviceExtensionFeaturesNotPromoted(
     const vk::ExtensionNameList &deviceExtensionNames,
@@ -2281,6 +2285,12 @@ void RendererVk::appendDeviceExtensionFeaturesNotPromoted(
     if (ExtensionFound(VK_EXT_PHYSICAL_DEVICE_DRM_EXTENSION_NAME, deviceExtensionNames))
     {
         vk::AddToPNextChain(deviceProperties, &mDrmProperties);
+    }
+
+    if (ExtensionFound(VK_EXT_HOST_IMAGE_COPY_EXTENSION_NAME, deviceExtensionNames))
+    {
+        vk::AddToPNextChain(deviceFeatures, &mHostImageCopyFeatures);
+        vk::AddToPNextChain(deviceProperties, &mHostImageCopyProperties);
     }
 }
 
@@ -2573,6 +2583,13 @@ void RendererVk::queryDeviceExtensionFeatures(const vk::ExtensionNameList &devic
     mTimelineSemaphoreFeatures.sType =
         VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TIMELINE_SEMAPHORE_FEATURES_KHR;
 
+    mHostImageCopyFeatures       = {};
+    mHostImageCopyFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_IMAGE_COPY_FEATURES_EXT;
+
+    mHostImageCopyProperties = {};
+    mHostImageCopyProperties.sType =
+        VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_IMAGE_COPY_PROPERTIES_EXT;
+
     if (!vkGetPhysicalDeviceProperties2KHR || !vkGetPhysicalDeviceFeatures2KHR)
     {
         return;
@@ -2641,6 +2658,8 @@ void RendererVk::queryDeviceExtensionFeatures(const vk::ExtensionNameList &devic
     mDitheringFeatures.pNext                                = nullptr;
     mDrmProperties.pNext                                    = nullptr;
     mTimelineSemaphoreFeatures.pNext                        = nullptr;
+    mHostImageCopyFeatures.pNext                            = nullptr;
+    mHostImageCopyProperties.pNext                          = nullptr;
 }
 
 // See comment above appendDeviceExtensionFeaturesNotPromoted.  Additional extensions are enabled
@@ -2914,6 +2933,23 @@ void RendererVk::enableDeviceExtensionsNotPromoted(
     {
         mEnabledDeviceExtensions.push_back(VK_EXT_LEGACY_DITHERING_EXTENSION_NAME);
         vk::AddToPNextChain(&mEnabledFeatures, &mDitheringFeatures);
+    }
+
+    if (mFeatures.supportsFormatFeatureFlags2.enabled)
+    {
+        mEnabledDeviceExtensions.push_back(VK_KHR_FORMAT_FEATURE_FLAGS_2_EXTENSION_NAME);
+    }
+
+    if (mFeatures.supportsHostImageCopy.enabled)
+    {
+        // VK_EXT_host_image_copy requires VK_KHR_copy_commands2 and VK_KHR_format_feature_flags2.
+        // VK_KHR_format_feature_flags2 is enabled separately.
+        ASSERT(ExtensionFound(VK_KHR_COPY_COMMANDS_2_EXTENSION_NAME, deviceExtensionNames));
+        ASSERT(ExtensionFound(VK_KHR_FORMAT_FEATURE_FLAGS_2_EXTENSION_NAME, deviceExtensionNames));
+        mEnabledDeviceExtensions.push_back(VK_KHR_COPY_COMMANDS_2_EXTENSION_NAME);
+
+        mEnabledDeviceExtensions.push_back(VK_EXT_HOST_IMAGE_COPY_EXTENSION_NAME);
+        vk::AddToPNextChain(&mEnabledFeatures, &mHostImageCopyFeatures);
     }
 
 #if defined(ANGLE_PLATFORM_WINDOWS)
@@ -4188,6 +4224,10 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
         &mFeatures, supportsBlendOperationAdvanced,
         ExtensionFound(VK_EXT_BLEND_OPERATION_ADVANCED_EXTENSION_NAME, deviceExtensionNames));
 
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, supportsFormatFeatureFlags2,
+        ExtensionFound(VK_KHR_FORMAT_FEATURE_FLAGS_2_EXTENSION_NAME, deviceExtensionNames));
+
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsTransformFeedbackExtension,
                             mTransformFeedbackFeatures.transformFeedback == VK_TRUE);
 
@@ -4756,6 +4796,13 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsTimestampSurfaceAttribute,
                             IsAndroid() && ExtensionFound(VK_GOOGLE_DISPLAY_TIMING_EXTENSION_NAME,
                                                           deviceExtensionNames));
+
+    // Only enable VK_EXT_host_image_copy on hardware where identicalMemoryTypeRequirements is set.
+    // That lets ANGLE avoid having to fallback to non-host-copyable image allocations if the
+    // host-copyable one fails due to out-of-that-specific-kind-of-memory.
+    ANGLE_FEATURE_CONDITION(&mFeatures, supportsHostImageCopy,
+                            mHostImageCopyFeatures.hostImageCopy == VK_TRUE &&
+                                mHostImageCopyProperties.identicalMemoryTypeRequirements);
 
     // 1) host vk driver does not natively support ETC format.
     // 2) host vk driver supports BC format.

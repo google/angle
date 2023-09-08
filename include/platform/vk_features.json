@@ -1361,6 +1361,20 @@
             ]
         },
         {
+            "name": "supports_format_feature_flags2",
+            "category": "Features",
+            "description": [
+                "VkDevice supports the VK_KHR_format_feature_flags2 extension"
+            ]
+        },
+        {
+            "name": "supports_host_image_copy",
+            "category": "Features",
+            "description": [
+                "VkDevice supports the VK_EXT_host_image_copy extension"
+            ]
+        },
+        {
             "name": "enable_parallel_compile_and_link",
             "category": "Features",
             "description": [
