@@ -16,6 +16,7 @@
 
 #include <algorithm>
 #include <array>
+#include <cstring>
 #include <initializer_list>
 #include <iterator>
 
