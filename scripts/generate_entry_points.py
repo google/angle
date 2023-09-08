@@ -3074,7 +3074,7 @@ def get_unlocked_tail_call(api, cmd_name):
             'eglPrepareSwapBuffersANGLE', 'eglSwapBuffers', 'eglSwapBuffersWithDamageKHR',
             'eglSwapBuffersWithFrameTokenANGLE'
     ]:
-        return 'egl::Display::GetCurrentThreadUnlockedTailCall()->run();'
+        return 'egl::Display::GetCurrentThreadUnlockedTailCall()->run(nullptr);'
 
     # Otherwise assert that no tail calls where generated
     return 'ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());'

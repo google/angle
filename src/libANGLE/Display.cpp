@@ -1296,7 +1296,7 @@ Error Display::terminate(Thread *thread, TerminateReason terminateReason)
 
     // Before tearing down the backend device, ensure all deferred operations are run.  It is not
     // possible to defer them beyond this point.
-    GetCurrentThreadUnlockedTailCall()->run();
+    GetCurrentThreadUnlockedTailCall()->run(nullptr);
 
     mImplementation->terminate();
 

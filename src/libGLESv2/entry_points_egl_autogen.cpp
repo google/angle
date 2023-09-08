@@ -227,7 +227,7 @@ EGLSurface EGLAPIENTRY EGL_CreateWindowSurface(EGLDisplay dpy,
         ANGLE_CAPTURE_EGL(CreateWindowSurface, true, thread, dpyPacked, configPacked, win,
                           attrib_listPacked, returnValue);
     }
-    egl::Display::GetCurrentThreadUnlockedTailCall()->run();
+    egl::Display::GetCurrentThreadUnlockedTailCall()->run(nullptr);
     return returnValue;
 }
 
@@ -281,7 +281,7 @@ EGLBoolean EGLAPIENTRY EGL_DestroySurface(EGLDisplay dpy, EGLSurface surface)
 
         ANGLE_CAPTURE_EGL(DestroySurface, true, thread, dpyPacked, surfacePacked, returnValue);
     }
-    egl::Display::GetCurrentThreadUnlockedTailCall()->run();
+    egl::Display::GetCurrentThreadUnlockedTailCall()->run(nullptr);
     return returnValue;
 }
 
@@ -519,7 +519,7 @@ EGLBoolean EGLAPIENTRY EGL_MakeCurrent(EGLDisplay dpy,
         ANGLE_CAPTURE_EGL(MakeCurrent, true, thread, dpyPacked, drawPacked, readPacked, ctxPacked,
                           returnValue);
     }
-    egl::Display::GetCurrentThreadUnlockedTailCall()->run();
+    egl::Display::GetCurrentThreadUnlockedTailCall()->run(nullptr);
     return returnValue;
 }
 
@@ -637,7 +637,7 @@ EGLBoolean EGLAPIENTRY EGL_SwapBuffers(EGLDisplay dpy, EGLSurface surface)
 
         ANGLE_CAPTURE_EGL(SwapBuffers, true, thread, dpyPacked, surfacePacked, returnValue);
     }
-    egl::Display::GetCurrentThreadUnlockedTailCall()->run();
+    egl::Display::GetCurrentThreadUnlockedTailCall()->run(nullptr);
     return returnValue;
 }
 
@@ -927,7 +927,7 @@ EGLBoolean EGLAPIENTRY EGL_ReleaseThread()
 
         ANGLE_CAPTURE_EGL(ReleaseThread, true, thread, returnValue);
     }
-    egl::Display::GetCurrentThreadUnlockedTailCall()->run();
+    egl::Display::GetCurrentThreadUnlockedTailCall()->run(nullptr);
     return returnValue;
 }
 
@@ -1113,7 +1113,7 @@ EGLSurface EGLAPIENTRY EGL_CreatePlatformWindowSurface(EGLDisplay dpy,
         ANGLE_CAPTURE_EGL(CreatePlatformWindowSurface, true, thread, dpyPacked, configPacked,
                           native_window, attrib_listPacked, returnValue);
     }
-    egl::Display::GetCurrentThreadUnlockedTailCall()->run();
+    egl::Display::GetCurrentThreadUnlockedTailCall()->run(nullptr);
     return returnValue;
 }
 

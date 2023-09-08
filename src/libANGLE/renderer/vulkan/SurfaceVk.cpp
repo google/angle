@@ -1088,10 +1088,12 @@ void WindowSurfaceVk::destroy(const egl::Display *display)
     // has returned.
     if (mSurface)
     {
-        egl::Display::GetCurrentThreadUnlockedTailCall()->add([surface = mSurface, instance]() {
-            ANGLE_TRACE_EVENT0("gpu.angle", "WindowSurfaceVk::destroy:vkDestroySurfaceKHR");
-            vkDestroySurfaceKHR(instance, surface, nullptr);
-        });
+        egl::Display::GetCurrentThreadUnlockedTailCall()->add(
+            [surface = mSurface, instance](void *resultOut) {
+                ANGLE_TRACE_EVENT0("gpu.angle", "WindowSurfaceVk::destroy:vkDestroySurfaceKHR");
+                ANGLE_UNUSED_VARIABLE(resultOut);
+                vkDestroySurfaceKHR(instance, surface, nullptr);
+            });
         mSurface = VK_NULL_HANDLE;
     }
 }
@@ -2000,8 +2002,10 @@ egl::Error WindowSurfaceVk::prepareSwap(const gl::Context *context)
     // calling it (likely the eglSwapBuffers call that follows)
 
     egl::Display::GetCurrentThreadUnlockedTailCall()->add(
-        [device = renderer->getDevice(), swapchain = mSwapchain, acquire = &mAcquireOperation]() {
+        [device = renderer->getDevice(), swapchain = mSwapchain,
+         acquire = &mAcquireOperation](void *resultOut) {
             ANGLE_TRACE_EVENT0("gpu.angle", "Acquire Swap Image Before Swap");
+            ANGLE_UNUSED_VARIABLE(resultOut);
             TryAcquireNextImageUnlocked(device, swapchain, acquire);
         });
 
@@ -2326,10 +2330,12 @@ angle::Result WindowSurfaceVk::throttleCPU(DisplayVk *displayVk,
         // As this is an unlocked tail call, it must not access anything else in RendererVk.  The
         // display passed to |finishQueueSerial| is a |vk::Context|, and the only possible
         // modification to it is through |handleError()|.
-        egl::Display::GetCurrentThreadUnlockedTailCall()->add([displayVk, swapSerial]() {
-            ANGLE_TRACE_EVENT0("gpu.angle", "WindowSurfaceVk::throttleCPU");
-            (void)displayVk->getRenderer()->finishQueueSerial(displayVk, swapSerial);
-        });
+        egl::Display::GetCurrentThreadUnlockedTailCall()->add(
+            [displayVk, swapSerial](void *resultOut) {
+                ANGLE_TRACE_EVENT0("gpu.angle", "WindowSurfaceVk::throttleCPU");
+                ANGLE_UNUSED_VARIABLE(resultOut);
+                (void)displayVk->getRenderer()->finishQueueSerial(displayVk, swapSerial);
+            });
     }
 
     return angle::Result::Continue;
