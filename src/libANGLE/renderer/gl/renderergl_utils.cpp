@@ -12,6 +12,7 @@
 #include <array>
 #include <limits>
 
+#include "common/android_util.h"
 #include "common/mathutil.h"
 #include "common/platform.h"
 #include "common/string_utils.h"
@@ -158,17 +159,14 @@ bool IsMaliValhall(const FunctionsGL *functions)
 
 int GetAndroidSdkLevel()
 {
-    if (!IsAndroid())
+    std::string androidSdkLevel;
+    if (!angle::android::GetSystemProperty(angle::android::kSDKSystemPropertyName,
+                                           &androidSdkLevel))
     {
         return 0;
     }
 
-    angle::SystemInfo info;
-    if (!angle::GetSystemInfo(&info))
-    {
-        return 0;
-    }
-    return info.androidSdkLevel;
+    return std::atoi(androidSdkLevel.c_str());
 }
 
 [[maybe_unused]] bool IsAndroidEmulator(const FunctionsGL *functions)
