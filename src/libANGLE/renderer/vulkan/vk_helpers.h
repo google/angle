@@ -759,23 +759,6 @@ class BufferHelper : public ReadWriteResource
                                size_t alignment,
                                BufferUsageType usageType);
 
-    // Helper functions to initialize a buffer for a specific usage
-    // Suballocate a buffer with alignment good for shader storage or copyBuffer .
-    angle::Result allocateForVertexConversion(ContextVk *contextVk,
-                                              size_t size,
-                                              MemoryHostVisibility hostVisibility);
-    // Suballocate a host visible buffer with alignment good for copyBuffer .
-    angle::Result allocateForCopyBuffer(ContextVk *contextVk,
-                                        size_t size,
-                                        MemoryCoherency coherency);
-    // Suballocate a host visible buffer with alignment good for copyImage .
-    angle::Result allocateForCopyImage(ContextVk *contextVk,
-                                       size_t size,
-                                       MemoryCoherency coherency,
-                                       angle::FormatID formatId,
-                                       VkDeviceSize *offset,
-                                       uint8_t **dataPtr);
-
     void destroy(RendererVk *renderer);
     void release(RendererVk *renderer);
     void releaseBufferAndDescriptorSetCache(RendererVk *renderer);
@@ -873,9 +856,9 @@ class BufferHelper : public ReadWriteResource
     // size. Thus when user size changes, we must clear and recreate this mBufferWithUserSize.
     void onBufferUserSizeChange(RendererVk *renderer);
 
-  private:
     void initializeBarrierTracker(Context *context);
 
+  private:
     // Only called by DynamicBuffer.
     friend class DynamicBuffer;
     void setSuballocationOffsetAndSize(VkDeviceSize offset, VkDeviceSize size)

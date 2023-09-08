@@ -7136,6 +7136,81 @@ angle::Result ContextVk::initImageAllocation(vk::ImageHelper *imageHelper,
     return angle::Result::Continue;
 }
 
+angle::Result ContextVk::initBufferForBufferCopy(vk::BufferHelper *bufferHelper,
+                                                 size_t size,
+                                                 vk::MemoryCoherency coherency)
+{
+    uint32_t memoryTypeIndex = mRenderer->getStagingBufferMemoryTypeIndex(coherency);
+    size_t alignment         = mRenderer->getStagingBufferAlignment();
+    return initBufferAllocation(bufferHelper, memoryTypeIndex, size, alignment,
+                                BufferUsageType::Dynamic);
+}
+
+angle::Result ContextVk::initBufferForImageCopy(vk::BufferHelper *bufferHelper,
+                                                size_t size,
+                                                vk::MemoryCoherency coherency,
+                                                angle::FormatID formatId,
+                                                VkDeviceSize *offset,
+                                                uint8_t **dataPtr)
+{
+    // When a buffer is used in copyImage, the offset must be multiple of pixel bytes. This may
+    // result in non-power of two alignment. VMA's virtual allocator can not handle non-power of two
+    // alignment. We have to adjust offset manually.
+    uint32_t memoryTypeIndex  = mRenderer->getStagingBufferMemoryTypeIndex(coherency);
+    size_t imageCopyAlignment = vk::GetImageCopyBufferAlignment(formatId);
+
+    // Add extra padding for potential offset alignment
+    size_t allocationSize   = size + imageCopyAlignment;
+    allocationSize          = roundUp(allocationSize, imageCopyAlignment);
+    size_t stagingAlignment = static_cast<size_t>(mRenderer->getStagingBufferAlignment());
+
+    ANGLE_TRY(initBufferAllocation(bufferHelper, memoryTypeIndex, allocationSize, stagingAlignment,
+                                   BufferUsageType::Static));
+
+    *offset  = roundUp(bufferHelper->getOffset(), static_cast<VkDeviceSize>(imageCopyAlignment));
+    *dataPtr = bufferHelper->getMappedMemory() + (*offset) - bufferHelper->getOffset();
+
+    return angle::Result::Continue;
+}
+
+angle::Result ContextVk::initBufferForVertexConversion(vk::BufferHelper *bufferHelper,
+                                                       size_t size,
+                                                       vk::MemoryHostVisibility hostVisibility)
+{
+    if (bufferHelper->valid())
+    {
+        // If size is big enough and it is idle, then just reuse the existing buffer.
+        if (size <= bufferHelper->getSize() &&
+            (hostVisibility == vk::MemoryHostVisibility::Visible) == bufferHelper->isHostVisible())
+        {
+            if (mRenderer->hasResourceUseFinished(bufferHelper->getResourceUse()))
+            {
+                bufferHelper->initializeBarrierTracker(this);
+                return angle::Result::Continue;
+            }
+            else if (hostVisibility == vk::MemoryHostVisibility::NonVisible)
+            {
+                // For device local buffer, we can reuse the buffer even if it is still GPU busy.
+                // The memory barrier should take care of this.
+                return angle::Result::Continue;
+            }
+        }
+
+        bufferHelper->release(mRenderer);
+    }
+
+    uint32_t memoryTypeIndex = mRenderer->getVertexConversionBufferMemoryTypeIndex(hostVisibility);
+    size_t alignment         = static_cast<size_t>(mRenderer->getVertexConversionBufferAlignment());
+
+    // The size is retrieved and used in descriptor set. The descriptor set wants aligned size,
+    // otherwise there are test failures. Note that underline VMA allocation always allocate aligned
+    // size anyway.
+    size_t sizeToAllocate = roundUp(size, alignment);
+
+    return initBufferAllocation(bufferHelper, memoryTypeIndex, sizeToAllocate, alignment,
+                                BufferUsageType::Static);
+}
+
 angle::Result ContextVk::updateActiveTextures(const gl::Context *context, gl::Command command)
 {
     const gl::ProgramExecutable *executable = mState.getProgramExecutable();

@@ -822,6 +822,23 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
                                       VkMemoryPropertyFlags flags,
                                       vk::MemoryAllocationType allocationType);
 
+    // Helper functions to initialize a buffer for a specific usage
+    // Suballocate a host visible buffer with alignment good for copyBuffer.
+    angle::Result initBufferForBufferCopy(vk::BufferHelper *bufferHelper,
+                                          size_t size,
+                                          vk::MemoryCoherency coherency);
+    // Suballocate a host visible buffer with alignment good for copyImage.
+    angle::Result initBufferForImageCopy(vk::BufferHelper *bufferHelper,
+                                         size_t size,
+                                         vk::MemoryCoherency coherency,
+                                         angle::FormatID formatId,
+                                         VkDeviceSize *offset,
+                                         uint8_t **dataPtr);
+    // Suballocate a buffer with alignment good for shader storage or copyBuffer.
+    angle::Result initBufferForVertexConversion(vk::BufferHelper *bufferHelper,
+                                                size_t size,
+                                                vk::MemoryHostVisibility hostVisibility);
+
     // In the event of collecting too much garbage, we should flush the garbage so it can be freed.
     void addToPendingImageGarbage(vk::ResourceUse use, VkDeviceSize size);
 

@@ -511,7 +511,7 @@ angle::Result BufferVk::allocStagingBuffer(ContextVk *contextVk,
     }
 
     ANGLE_TRY(
-        mStagingBuffer.allocateForCopyBuffer(contextVk, static_cast<size_t>(size), coherency));
+        contextVk->initBufferForBufferCopy(&mStagingBuffer, static_cast<size_t>(size), coherency));
     *mapPtr                = mStagingBuffer.getMappedMemory();
     mIsStagingBufferMapped = true;
 
