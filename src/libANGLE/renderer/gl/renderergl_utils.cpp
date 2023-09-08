@@ -22,6 +22,7 @@
 #include "libANGLE/Context.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/queryconversions.h"
+#include "libANGLE/renderer/driver_utils.h"
 #include "libANGLE/renderer/gl/ContextGL.h"
 #include "libANGLE/renderer/gl/FenceNVGL.h"
 #include "libANGLE/renderer/gl/FunctionsGL.h"
@@ -155,18 +156,6 @@ bool IsMaliValhall(const FunctionsGL *functions)
     int number = getMaliGNumber(functions);
     return number == 57 || number == 77 || number == 68 || number == 78 || number == 310 ||
            number == 510 || number == 610 || number == 710 || number == 615 || number == 715;
-}
-
-int GetAndroidSdkLevel()
-{
-    std::string androidSdkLevel;
-    if (!angle::android::GetSystemProperty(angle::android::kSDKSystemPropertyName,
-                                           &androidSdkLevel))
-    {
-        return 0;
-    }
-
-    return std::atoi(androidSdkLevel.c_str());
 }
 
 [[maybe_unused]] bool IsAndroidEmulator(const FunctionsGL *functions)
@@ -2405,7 +2394,7 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     ANGLE_FEATURE_CONDITION(
         features, disableTimestampQueries,
         (IsLinux() && isVMWare) || (IsAndroid() && isNvidia) ||
-            (IsAndroid() && GetAndroidSdkLevel() < 27 && IsAdreno5xxOrOlder(functions)) ||
+            (IsAndroid() && GetAndroidSDKVersion() < 27 && IsAdreno5xxOrOlder(functions)) ||
             (!isMesa && IsMaliT8xxOrOlder(functions)) || (!isMesa && IsMaliG31OrOlder(functions)));
 
     ANGLE_FEATURE_CONDITION(features, decodeEncodeSRGBForGenerateMipmap, IsApple());
@@ -2506,17 +2495,17 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     // http://crbug.com/490379
     // http://crbug.com/767913
     bool isAdreno4xxOnAndroidLessThan51 =
-        IsAndroid() && IsAdreno4xx(functions) && GetAndroidSdkLevel() < 22;
+        IsAndroid() && IsAdreno4xx(functions) && GetAndroidSDKVersion() < 22;
 
     // http://crbug.com/612474
     bool isAdreno4xxOnAndroid70 =
-        IsAndroid() && IsAdreno4xx(functions) && GetAndroidSdkLevel() == 24;
+        IsAndroid() && IsAdreno4xx(functions) && GetAndroidSDKVersion() == 24;
     bool isAdreno5xxOnAndroidLessThan70 =
-        IsAndroid() && IsAdreno5xx(functions) && GetAndroidSdkLevel() < 24;
+        IsAndroid() && IsAdreno5xx(functions) && GetAndroidSDKVersion() < 24;
 
     // http://crbug.com/663811
     bool isAdreno5xxOnAndroid71 =
-        IsAndroid() && IsAdreno5xx(functions) && GetAndroidSdkLevel() == 25;
+        IsAndroid() && IsAdreno5xx(functions) && GetAndroidSDKVersion() == 25;
 
     // http://crbug.com/594016
     bool isLinuxVivante = IsLinux() && IsVivante(device);
