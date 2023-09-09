@@ -62,7 +62,6 @@ class BinaryInputStream : angle::NonCopyable
     void readVector(std::vector<T> *param)
     {
         static_assert(std::is_trivially_copyable<T>(), "must be memcpy-able");
-        ASSERT(param->empty());
         size_t size = readInt<size_t>();
         if (size > 0)
         {
