@@ -3447,6 +3447,11 @@ TEST_P(Texture2DMemoryTestES3, TextureDataInLoopUntilFlush)
 {
     // Run this test for Vulkan only.
     ANGLE_SKIP_TEST_IF(!IsVulkan());
+
+    // If VK_EXT_host_image_copy is used, uploads will all be done on the CPU and there would be no
+    // submissions.
+    ANGLE_SKIP_TEST_IF(getEGLWindow()->isFeatureEnabled(Feature::SupportsHostImageCopy));
+
     uint64_t expectedSubmitCalls = getPerfCounters().commandQueueSubmitCallsTotal + 1;
 
     // Set up program

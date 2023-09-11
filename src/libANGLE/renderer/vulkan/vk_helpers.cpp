@@ -494,6 +494,23 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
         },
     },
     {
+        ImageLayout::HostCopy,
+        ImageMemoryBarrierData{
+            "HostCopy",
+            VK_IMAGE_LAYOUT_GENERAL,
+            VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
+            VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+            // Transition to: we don't expect to transition into HostCopy on the GPU.
+            0,
+            // Transition from: the data was initialized in the image by the host.  Note that we
+            // only transition to this layout if the image was previously in UNDEFINED, in which
+            // case it didn't contain any data prior to the host copy either.
+            0,
+            ResourceAccess::ReadOnly,
+            PipelineStage::InvalidEnum,
+        },
+    },
+    {
         ImageLayout::VertexShaderReadOnly,
         ImageMemoryBarrierData{
             "VertexShaderReadOnly",
@@ -977,6 +994,12 @@ bool CheckSubpassCommandBufferCount(uint32_t count)
     // Custom command buffer (priv::SecondaryCommandBuffer) may contain commands for multiple
     // subpasses, therefore we do not need multiple buffers.
     return (count == 1 || !RenderPassCommandBuffer::ExecutesInline());
+}
+
+bool IsAnyLayout(VkImageLayout needle, const VkImageLayout *haystack, uint32_t haystackCount)
+{
+    const VkImageLayout *haystackEnd = haystack + haystackCount;
+    return std::find(haystack, haystackEnd, needle) != haystackEnd;
 }
 }  // anonymous namespace
 
@@ -7326,8 +7349,12 @@ angle::Result ImageHelper::stageSubresourceUpdateImpl(ContextVk *contextVk,
                                                       ImageAccess access,
                                                       const GLuint inputRowPitch,
                                                       const GLuint inputDepthPitch,
-                                                      const GLuint inputSkipBytes)
+                                                      const GLuint inputSkipBytes,
+                                                      ApplyImageUpdate applyUpdate,
+                                                      bool *updateAppliedImmediatelyOut)
 {
+    *updateAppliedImmediatelyOut = false;
+
     const angle::Format &storageFormat = vkFormat.getActualImageFormat(access);
 
     size_t outputRowPitch;
@@ -7439,6 +7466,24 @@ angle::Result ImageHelper::stageSubresourceUpdateImpl(ContextVk *contextVk,
         }
     }
 
+    const uint8_t *source = pixels + static_cast<ptrdiff_t>(inputSkipBytes);
+
+    // If possible, copy the buffer to the image directly on the host, to avoid having to use a temp
+    // image (and do a double copy).
+    if (applyUpdate == ApplyImageUpdate::ImmediatelyIfPossible &&
+        !loadFunctionInfo.requiresConversion && inputRowPitch == outputRowPitch &&
+        inputDepthPitch == outputDepthPitch)
+    {
+        bool copied = false;
+        ANGLE_TRY(updateSubresourceOnHost(contextVk, index, glExtents, offset, source,
+                                          bufferRowLength, bufferImageHeight, &copied));
+        if (copied)
+        {
+            *updateAppliedImmediatelyOut = true;
+            return angle::Result::Continue;
+        }
+    }
+
     std::unique_ptr<RefCounted<BufferHelper>> stagingBuffer =
         std::make_unique<RefCounted<BufferHelper>>();
     BufferHelper *currentBuffer = &stagingBuffer->get();
@@ -7448,8 +7493,6 @@ angle::Result ImageHelper::stageSubresourceUpdateImpl(ContextVk *contextVk,
     ANGLE_TRY(currentBuffer->allocateForCopyImage(contextVk, allocationSize,
                                                   MemoryCoherency::NonCoherent, storageFormat.id,
                                                   &stagingOffset, &stagingPointer));
-
-    const uint8_t *source = pixels + static_cast<ptrdiff_t>(inputSkipBytes);
 
     loadFunctionInfo.loadFunction(
         contextVk->getImageLoadContext(), glExtents.width, glExtents.height, glExtents.depth,
@@ -7572,6 +7615,110 @@ angle::Result ImageHelper::stageSubresourceUpdateImpl(ContextVk *contextVk,
     }
 
     stagingBuffer.release();
+    return angle::Result::Continue;
+}
+
+angle::Result ImageHelper::updateSubresourceOnHost(ContextVk *contextVk,
+                                                   const gl::ImageIndex &index,
+                                                   const gl::Extents &glExtents,
+                                                   const gl::Offset &offset,
+                                                   const uint8_t *source,
+                                                   const GLuint memoryRowLength,
+                                                   const GLuint memoryImageHeight,
+                                                   bool *copiedOut)
+{
+    // If the image is not set up for host copy, it can't be done.
+    if (!valid() || (mUsage & VK_IMAGE_USAGE_HOST_TRANSFER_BIT_EXT) == 0)
+    {
+        return angle::Result::Continue;
+    }
+
+    RendererVk *renderer = contextVk->getRenderer();
+    const VkPhysicalDeviceHostImageCopyPropertiesEXT &hostImageCopyProperties =
+        renderer->getPhysicalDeviceHostImageCopyProperties();
+
+    // The image should be unused by the GPU.
+    if (!renderer->hasResourceUseFinished(getResourceUse()))
+    {
+        return angle::Result::Continue;
+    }
+
+    // The image should not have any pending updates to this subresource.
+    //
+    // TODO: if there are any pending updates, see if they can be pruned given the incoming update.
+    // This would most likely be the case where a clear is automatically staged for robustness or
+    // other reasons, which would now be superseded by the data upload.  http://anglebug.com/8341
+    const gl::LevelIndex updateLevelGL(index.getLevelIndex());
+    const uint32_t layerIndex = index.hasLayer() ? index.getLayerIndex() : 0;
+    const uint32_t layerCount = index.getLayerCount();
+    if (hasStagedUpdatesForSubresource(updateLevelGL, layerIndex, layerCount))
+    {
+        return angle::Result::Continue;
+    }
+
+    // The image should be in a layout this is copiable.  If UNDEFINED, it can be transitioned to a
+    // layout that is copyable.
+    const VkImageAspectFlags aspectMask = getAspectFlags();
+    if (mCurrentLayout == ImageLayout::Undefined)
+    {
+        VkHostImageLayoutTransitionInfoEXT transition = {};
+        transition.sType     = VK_STRUCTURE_TYPE_HOST_IMAGE_LAYOUT_TRANSITION_INFO_EXT;
+        transition.image     = mImage.getHandle();
+        transition.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+        // The GENERAL layout is always guaranteed to be in
+        // VkPhysicalDeviceHostImageCopyPropertiesEXT::pCopyDstLayouts
+        transition.newLayout                       = VK_IMAGE_LAYOUT_GENERAL;
+        transition.subresourceRange.aspectMask     = aspectMask;
+        transition.subresourceRange.baseMipLevel   = 0;
+        transition.subresourceRange.levelCount     = mLevelCount;
+        transition.subresourceRange.baseArrayLayer = 0;
+        transition.subresourceRange.layerCount     = mLayerCount;
+
+        ANGLE_VK_TRY(contextVk, vkTransitionImageLayoutEXT(renderer->getDevice(), 1, &transition));
+        mCurrentLayout = ImageLayout::HostCopy;
+    }
+    else if (mCurrentLayout != ImageLayout::HostCopy &&
+             !IsAnyLayout(getCurrentLayout(contextVk), hostImageCopyProperties.pCopyDstLayouts,
+                          hostImageCopyProperties.copyDstLayoutCount))
+    {
+        return angle::Result::Continue;
+    }
+
+    VkMemoryToImageCopyEXT copyRegion      = {};
+    copyRegion.sType                       = VK_STRUCTURE_TYPE_MEMORY_TO_IMAGE_COPY_EXT;
+    copyRegion.pHostPointer                = source;
+    copyRegion.memoryRowLength             = memoryRowLength;
+    copyRegion.memoryImageHeight           = memoryImageHeight;
+    copyRegion.imageSubresource.aspectMask = aspectMask;
+    copyRegion.imageSubresource.mipLevel   = toVkLevel(updateLevelGL).get();
+    copyRegion.imageSubresource.layerCount = layerCount;
+    gl_vk::GetOffset(offset, &copyRegion.imageOffset);
+    gl_vk::GetExtent(glExtents, &copyRegion.imageExtent);
+
+    if (gl::IsArrayTextureType(index.getType()))
+    {
+        copyRegion.imageSubresource.baseArrayLayer = offset.z;
+        copyRegion.imageOffset.z                   = 0;
+        copyRegion.imageExtent.depth               = 1;
+    }
+    else
+    {
+        copyRegion.imageSubresource.baseArrayLayer = layerIndex;
+    }
+
+    VkCopyMemoryToImageInfoEXT copyInfo = {};
+    copyInfo.sType                      = VK_STRUCTURE_TYPE_COPY_MEMORY_TO_IMAGE_INFO_EXT;
+    copyInfo.dstImage                   = mImage.getHandle();
+    copyInfo.dstImageLayout             = getCurrentLayout(contextVk);
+    copyInfo.regionCount                = 1;
+    copyInfo.pRegions                   = &copyRegion;
+
+    ANGLE_VK_TRY(contextVk, vkCopyMemoryToImageEXT(renderer->getDevice(), &copyInfo));
+
+    onWrite(updateLevelGL, 1, copyRegion.imageSubresource.baseArrayLayer,
+            copyRegion.imageSubresource.layerCount, copyRegion.imageSubresource.aspectMask);
+
+    *copiedOut = true;
     return angle::Result::Continue;
 }
 
@@ -7932,7 +8079,9 @@ angle::Result ImageHelper::stageSubresourceUpdate(ContextVk *contextVk,
                                                   GLenum type,
                                                   const uint8_t *pixels,
                                                   const Format &vkFormat,
-                                                  ImageAccess access)
+                                                  ImageAccess access,
+                                                  ApplyImageUpdate applyUpdate,
+                                                  bool *updateAppliedImmediatelyOut)
 {
     GLuint inputRowPitch   = 0;
     GLuint inputDepthPitch = 0;
@@ -7940,9 +8089,9 @@ angle::Result ImageHelper::stageSubresourceUpdate(ContextVk *contextVk,
     ANGLE_TRY(CalculateBufferInfo(contextVk, glExtents, formatInfo, unpack, type, index.usesTex3D(),
                                   &inputRowPitch, &inputDepthPitch, &inputSkipBytes));
 
-    ANGLE_TRY(stageSubresourceUpdateImpl(contextVk, index, glExtents, offset, formatInfo, unpack,
-                                         type, pixels, vkFormat, access, inputRowPitch,
-                                         inputDepthPitch, inputSkipBytes));
+    ANGLE_TRY(stageSubresourceUpdateImpl(
+        contextVk, index, glExtents, offset, formatInfo, unpack, type, pixels, vkFormat, access,
+        inputRowPitch, inputDepthPitch, inputSkipBytes, applyUpdate, updateAppliedImmediatelyOut));
 
     return angle::Result::Continue;
 }

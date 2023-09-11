@@ -2252,6 +2252,19 @@ void RendererVk::appendDeviceExtensionFeaturesNotPromoted(
 
     if (ExtensionFound(VK_EXT_HOST_IMAGE_COPY_EXTENSION_NAME, deviceExtensionNames))
     {
+        // VkPhysicalDeviceHostImageCopyPropertiesEXT has a count + array query.  Typically, that
+        // requires getting the properties once with a nullptr array, to get the count, and then
+        // again with an array of that size.  For simplicity, ANGLE just uses an array that's big
+        // enough.  If that array goes terribly large in the future, ANGLE may lose knowledge of
+        // some likely esoteric layouts, which doesn't really matter.
+        constexpr uint32_t kMaxLayoutCount = 50;
+        mHostImageCopySrcLayoutsStorage.resize(kMaxLayoutCount, VK_IMAGE_LAYOUT_UNDEFINED);
+        mHostImageCopyDstLayoutsStorage.resize(kMaxLayoutCount, VK_IMAGE_LAYOUT_UNDEFINED);
+        mHostImageCopyProperties.copySrcLayoutCount = kMaxLayoutCount;
+        mHostImageCopyProperties.copyDstLayoutCount = kMaxLayoutCount;
+        mHostImageCopyProperties.pCopySrcLayouts    = mHostImageCopySrcLayoutsStorage.data();
+        mHostImageCopyProperties.pCopyDstLayouts    = mHostImageCopyDstLayoutsStorage.data();
+
         vk::AddToPNextChain(deviceFeatures, &mHostImageCopyFeatures);
         vk::AddToPNextChain(deviceProperties, &mHostImageCopyProperties);
     }
@@ -3178,6 +3191,10 @@ void RendererVk::initDeviceExtensionEntryPoints()
     if (mFeatures.supportsTimestampSurfaceAttribute.enabled)
     {
         InitGetPastPresentationTimingGoogleFunction(mDevice);
+    }
+    if (mFeatures.supportsHostImageCopy.enabled)
+    {
+        InitHostImageCopyFunctions(mDevice);
     }
     // Extensions promoted to Vulkan 1.2
     {

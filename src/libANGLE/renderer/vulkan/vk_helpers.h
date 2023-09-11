@@ -1785,6 +1785,8 @@ enum class ImageLayout
     ExternalShadersWrite,
     TransferSrc,
     TransferDst,
+    // Used when the image is transitioned on the host for use by host image copy
+    HostCopy,
     VertexShaderReadOnly,
     VertexShaderWrite,
     // PreFragment == Vertex, Tessellation and Geometry stages
@@ -1829,6 +1831,12 @@ enum class UpdateSource
     Buffer,
     // The source of the copy is an image.
     Image,
+};
+
+enum class ApplyImageUpdate
+{
+    ImmediatelyIfPossible,
+    Defer,
 };
 
 constexpr VkImageAspectFlagBits IMAGE_ASPECT_DEPTH_STENCIL =
@@ -2191,7 +2199,9 @@ class ImageHelper final : public Resource, public angle::Subject
                                              ImageAccess access,
                                              const GLuint inputRowPitch,
                                              const GLuint inputDepthPitch,
-                                             const GLuint inputSkipBytes);
+                                             const GLuint inputSkipBytes,
+                                             ApplyImageUpdate applyUpdate,
+                                             bool *updateAppliedImmediatelyOut);
 
     angle::Result stageSubresourceUpdate(ContextVk *contextVk,
                                          const gl::ImageIndex &index,
@@ -2202,7 +2212,9 @@ class ImageHelper final : public Resource, public angle::Subject
                                          GLenum type,
                                          const uint8_t *pixels,
                                          const Format &vkFormat,
-                                         ImageAccess access);
+                                         ImageAccess access,
+                                         ApplyImageUpdate applyUpdate,
+                                         bool *updateAppliedImmediatelyOut);
 
     angle::Result stageSubresourceUpdateAndGetData(ContextVk *contextVk,
                                                    size_t allocationSize,
@@ -2673,6 +2685,15 @@ class ImageHelper final : public Resource, public angle::Subject
                                         LevelIndex mipLevel,
                                         uint32_t baseArrayLayer,
                                         uint32_t layerCount);
+
+    angle::Result updateSubresourceOnHost(ContextVk *contextVk,
+                                          const gl::ImageIndex &index,
+                                          const gl::Extents &glExtents,
+                                          const gl::Offset &offset,
+                                          const uint8_t *source,
+                                          const GLuint rowPitch,
+                                          const GLuint depthPitch,
+                                          bool *copiedOut);
 
     std::vector<SubresourceUpdate> *getLevelUpdates(gl::LevelIndex level);
     const std::vector<SubresourceUpdate> *getLevelUpdates(gl::LevelIndex level) const;
