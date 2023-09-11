@@ -1271,6 +1271,14 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo allowHostImageCopyDespiteNonIdenticalLayout = {
+        "allowHostImageCopyDespiteNonIdenticalLayout",
+        FeatureCategory::VulkanFeatures,
+        "When using VK_EXT_host_image_copy, allow VK_IMAGE_USAGE_HOST_TRANSFER_BIT_EXT even if"
+        "perf query indicates only optimalDeviceAccess, but not identicalMemoryLayout",
+        &members,
+    };
+
     FeatureInfo enableParallelCompileAndLink = {
         "enableParallelCompileAndLink",
         FeatureCategory::VulkanFeatures,

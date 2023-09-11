@@ -28,6 +28,7 @@ enum class Feature
     AllowETCFormats,
     AllowGenerateMipmapWithCompute,
     AllowGenMultipleMipsPerPass,
+    AllowHostImageCopyDespiteNonIdenticalLayout,
     AllowInlineConstVertexData,
     AllowMultisampledRenderToTextureEmulation,
     AllowMultisampleStoreAndResolve,

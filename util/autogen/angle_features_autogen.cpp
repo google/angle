@@ -28,6 +28,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::AllowETCFormats, "allowETCFormats"},
     {Feature::AllowGenerateMipmapWithCompute, "allowGenerateMipmapWithCompute"},
     {Feature::AllowGenMultipleMipsPerPass, "allowGenMultipleMipsPerPass"},
+    {Feature::AllowHostImageCopyDespiteNonIdenticalLayout, "allowHostImageCopyDespiteNonIdenticalLayout"},
     {Feature::AllowInlineConstVertexData, "allowInlineConstVertexData"},
     {Feature::AllowMultisampledRenderToTextureEmulation, "allowMultisampledRenderToTextureEmulation"},
     {Feature::AllowMultisampleStoreAndResolve, "allowMultisampleStoreAndResolve"},

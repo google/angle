@@ -3486,6 +3486,36 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
         }
     }
 
+    // Any format with VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT support is required to also support
+    // VK_FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT_EXT.  So no format feature query is needed.
+    // However, it's still necessary to use vkGetPhysicalDeviceImageFormatProperties2 to ensure host
+    // image copy is supported for the specific usage and flags.
+    //
+    // All TextureVk images are expected to have VK_IMAGE_USAGE_SAMPLED_BIT, so that is not checked
+    // either.
+    ASSERT((mImageUsageFlags & VK_IMAGE_USAGE_SAMPLED_BIT) != 0);
+    if (mOwnsImage && samples == 1 && renderer->getFeatures().supportsHostImageCopy.enabled)
+    {
+        VkHostImageCopyDevicePerformanceQueryEXT perfQuery = {};
+        perfQuery.sType = VK_STRUCTURE_TYPE_HOST_IMAGE_COPY_DEVICE_PERFORMANCE_QUERY_EXT;
+
+        // If host image copy is supported at all ...
+        if (vk::ImageHelper::FormatSupportsUsage(
+                renderer, actualImageFormat, imageType, imageTiling,
+                mImageUsageFlags | VK_IMAGE_USAGE_HOST_TRANSFER_BIT_EXT, mImageCreateFlags,
+                &perfQuery))
+        {
+            // Only enable it if it has no performance impact whatsoever (or impact is tiny, given
+            // feature).
+            if (perfQuery.identicalMemoryLayout ||
+                (perfQuery.optimalDeviceAccess &&
+                 renderer->getFeatures().allowHostImageCopyDespiteNonIdenticalLayout.enabled))
+            {
+                mImageUsageFlags |= VK_IMAGE_USAGE_HOST_TRANSFER_BIT_EXT;
+            }
+        }
+    }
+
     ANGLE_TRY(mImage->initExternal(
         contextVk, mState.getType(), vkExtent, intendedImageFormatID, actualImageFormatID, samples,
         mImageUsageFlags, mImageCreateFlags, vk::ImageLayout::Undefined, nullptr,

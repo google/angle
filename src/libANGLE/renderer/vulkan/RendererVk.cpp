@@ -4054,6 +4054,11 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsHostQueryReset,
                             mHostQueryResetFeatures.hostQueryReset == VK_TRUE);
+    // Avoid any inefficiency that may be caused by host image copy by default.  To be experimented
+    // with to see on which hardware VkHostImageCopyDevicePerformanceQueryEXT::optimalDeviceAccess
+    // is really performing as well as
+    // VkHostImageCopyDevicePerformanceQueryEXT::identicalMemoryLayout.
+    ANGLE_FEATURE_CONDITION(&mFeatures, allowHostImageCopyDespiteNonIdenticalLayout, false);
 
     // VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL and
     // VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL are introduced by
