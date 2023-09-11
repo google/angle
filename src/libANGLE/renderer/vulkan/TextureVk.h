@@ -564,13 +564,6 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
 
     void updateCachedImageViewSerials();
 
-    bool formatSupportsMultisampledRenderToSingleSampled(RendererVk *renderer,
-                                                         VkFormat format,
-                                                         VkImageType imageType,
-                                                         VkImageTiling tilingMode,
-                                                         VkImageUsageFlags usageFlags,
-                                                         VkImageCreateFlags createFlags);
-
     angle::Result updateTextureLabel(ContextVk *contextVk);
 
     vk::BufferHelper *getRGBAConversionBufferHelper(RendererVk *renderer,

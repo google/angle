@@ -5662,6 +5662,7 @@ angle::Result ImageHelper::initExternal(Context *context,
     return angle::Result::Continue;
 }
 
+// static
 const void *ImageHelper::DeriveCreateInfoPNext(
     Context *context,
     angle::FormatID actualFormatID,
@@ -5697,6 +5698,33 @@ const void *ImageHelper::DeriveCreateInfoPNext(
     }
 
     return pNext;
+}
+
+// static
+bool ImageHelper::FormatSupportsUsage(RendererVk *renderer,
+                                      VkFormat format,
+                                      VkImageType imageType,
+                                      VkImageTiling tilingMode,
+                                      VkImageUsageFlags usageFlags,
+                                      VkImageCreateFlags createFlags,
+                                      void *propertiesPNext)
+{
+    VkPhysicalDeviceImageFormatInfo2 imageFormatInfo = {};
+    imageFormatInfo.sType  = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_FORMAT_INFO_2;
+    imageFormatInfo.format = format;
+    imageFormatInfo.type   = imageType;
+    imageFormatInfo.tiling = tilingMode;
+    imageFormatInfo.usage  = usageFlags;
+    imageFormatInfo.flags  = createFlags;
+
+    VkImageFormatProperties2 imageFormatProperties2 = {};
+    imageFormatProperties2.sType                    = VK_STRUCTURE_TYPE_IMAGE_FORMAT_PROPERTIES_2;
+    imageFormatProperties2.pNext                    = propertiesPNext;
+
+    VkResult result = vkGetPhysicalDeviceImageFormatProperties2(
+        renderer->getPhysicalDevice(), &imageFormatInfo, &imageFormatProperties2);
+
+    return result == VK_SUCCESS;
 }
 
 void ImageHelper::setImageFormatsFromActualFormat(VkFormat actualFormat,

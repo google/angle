@@ -1986,6 +1986,15 @@ class ImageHelper final : public Resource, public angle::Subject
         ImageListFormats *imageListFormatsStorage,
         VkImageCreateFlags *createFlagsOut);
 
+    // Check whether the given format supports the provided flags.
+    static bool FormatSupportsUsage(RendererVk *renderer,
+                                    VkFormat format,
+                                    VkImageType imageType,
+                                    VkImageTiling tilingMode,
+                                    VkImageUsageFlags usageFlags,
+                                    VkImageCreateFlags createFlags,
+                                    void *propertiesPNext);
+
     // Image formats used for the creation of imageless framebuffers.
     using ImageFormats = angle::FixedVector<VkFormat, kImageListFormatCount>;
     ImageFormats &getViewFormats() { return mViewFormats; }

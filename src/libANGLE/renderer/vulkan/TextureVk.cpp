@@ -3463,6 +3463,10 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
         mImageUsageFlags |= VK_IMAGE_USAGE_STORAGE_BIT;
     }
 
+    const VkFormat actualImageFormat = rx::vk::GetVkFormatFromFormatID(actualImageFormatID);
+    const VkImageType imageType      = gl_vk::GetImageType(mState.getType());
+    const VkImageTiling imageTiling  = mImage->getTilingMode();
+
     if ((mImageUsageFlags & (VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT |
                              VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT)) != 0 &&
         mOwnsImage && samples == 1 &&
@@ -3471,10 +3475,10 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
 
         // Note: If we ever fail the following check, we should use the emulation path for this
         // texture instead of ignoring MSRTT.
-        if (formatSupportsMultisampledRenderToSingleSampled(
-                renderer, rx::vk::GetVkFormatFromFormatID(actualImageFormatID),
-                gl_vk::GetImageType(mState.getType()), mImage->getTilingMode(), mImageUsageFlags,
-                mImageCreateFlags))
+        if (vk::ImageHelper::FormatSupportsUsage(
+                renderer, actualImageFormat, imageType, imageTiling, mImageUsageFlags,
+                mImageCreateFlags | VK_IMAGE_CREATE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_BIT_EXT,
+                nullptr))
         {
             // If supported by format add the MSRTSS flag because any texture might end up as an
             // MSRTT attachment.
@@ -4049,38 +4053,4 @@ void TextureVk::updateCachedImageViewSerials()
     mCachedImageViewSubresourceSerialSkipDecode =
         getImageViewSubresourceSerialImpl(GL_SKIP_DECODE_EXT);
 }
-
-bool TextureVk::formatSupportsMultisampledRenderToSingleSampled(RendererVk *renderer,
-                                                                VkFormat format,
-                                                                VkImageType imageType,
-                                                                VkImageTiling tilingMode,
-                                                                VkImageUsageFlags usageFlags,
-                                                                VkImageCreateFlags createFlags)
-{
-    // Verify support for this image format after adding MSRTSS flag
-    VkPhysicalDeviceImageFormatInfo2 imageFormatInfo = {};
-    imageFormatInfo.sType  = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_FORMAT_INFO_2;
-    imageFormatInfo.format = format;
-    imageFormatInfo.type   = imageType;
-    imageFormatInfo.tiling = tilingMode;
-    imageFormatInfo.usage  = usageFlags;
-    imageFormatInfo.flags =
-        createFlags | VK_IMAGE_CREATE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_BIT_EXT;
-
-    VkImageFormatProperties imageFormatProperties                            = {};
-    VkSamplerYcbcrConversionImageFormatProperties ycbcrImageFormatProperties = {};
-    ycbcrImageFormatProperties.sType =
-        VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_IMAGE_FORMAT_PROPERTIES;
-
-    VkImageFormatProperties2 imageFormatProperties2 = {};
-    imageFormatProperties2.sType                    = VK_STRUCTURE_TYPE_IMAGE_FORMAT_PROPERTIES_2;
-    imageFormatProperties2.pNext                    = &ycbcrImageFormatProperties;
-    imageFormatProperties2.imageFormatProperties    = imageFormatProperties;
-
-    VkResult result = vkGetPhysicalDeviceImageFormatProperties2(
-        renderer->getPhysicalDevice(), &imageFormatInfo, &imageFormatProperties2);
-
-    return (result == VK_SUCCESS);
-}
-
 }  // namespace rx
