@@ -818,9 +818,9 @@ const char *GetInterfaceBlockTypeString(sh::BlockType blockType)
 {
     switch (blockType)
     {
-        case sh::BlockType::BLOCK_UNIFORM:
+        case sh::BlockType::kBlockUniform:
             return "uniform block";
-        case sh::BlockType::BLOCK_BUFFER:
+        case sh::BlockType::kBlockBuffer:
             return "shader storage block";
         default:
             UNREACHABLE();
@@ -835,10 +835,10 @@ std::string GetInterfaceBlockLimitName(ShaderType shaderType, sh::BlockType bloc
 
     switch (blockType)
     {
-        case sh::BlockType::BLOCK_UNIFORM:
+        case sh::BlockType::kBlockUniform:
             stream << "UNIFORM_BUFFERS";
             break;
-        case sh::BlockType::BLOCK_BUFFER:
+        case sh::BlockType::kBlockBuffer:
             stream << "SHADER_STORAGE_BLOCKS";
             break;
         default:
@@ -2409,7 +2409,7 @@ bool LinkValidateProgramInterfaceBlocks(const Caps &caps,
         {
             if (!ValidateInterfaceBlocksCount(
                     static_cast<GLuint>(caps.maxShaderUniformBlocks[shaderType]), uniformBlocks,
-                    shaderType, sh::BlockType::BLOCK_UNIFORM, &combinedUniformBlocksCount, infoLog))
+                    shaderType, sh::BlockType::kBlockUniform, &combinedUniformBlocksCount, infoLog))
             {
                 return false;
             }
@@ -2446,7 +2446,7 @@ bool LinkValidateProgramInterfaceBlocks(const Caps &caps,
             {
                 if (!ValidateInterfaceBlocksCount(
                         static_cast<GLuint>(caps.maxShaderStorageBlocks[shaderType]),
-                        shaderStorageBlocks, shaderType, sh::BlockType::BLOCK_BUFFER,
+                        shaderStorageBlocks, shaderType, sh::BlockType::kBlockBuffer,
                         combinedShaderStorageBlocksCountOut, infoLog))
                 {
                     return false;
