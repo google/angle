@@ -416,7 +416,7 @@ TEMPLATE_GLES_ENTRY_POINT_WITH_RETURN = """\
         {constext_lost_error_generator}
         returnValue = GetDefaultReturnValue<angle::EntryPoint::GL{name}, {return_type}>();
     }}
-    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
+    {epilog}
     return returnValue;
 }}
 """
@@ -3068,6 +3068,9 @@ def get_unlocked_tail_call(api, cmd_name):
     # - eglSwapBuffers, eglSwapBuffersWithDamageKHR and
     #   eglSwapBuffersWithFrameTokenANGLE -> May throttle the CPU in tail call
     #
+    # - eglClientWaitSyncKHR, eglClientWaitSync, glClientWaitSync -> May wait on
+    #   fence in tail call
+    #
     if cmd_name in [
             'eglDestroySurface', 'eglMakeCurrent', 'eglReleaseThread', 'eglCreateWindowSurface',
             'eglCreatePlatformWindowSurface', 'eglCreatePlatformWindowSurfaceEXT',
@@ -3075,6 +3078,9 @@ def get_unlocked_tail_call(api, cmd_name):
             'eglSwapBuffersWithFrameTokenANGLE'
     ]:
         return 'egl::Display::GetCurrentThreadUnlockedTailCall()->run(nullptr);'
+
+    if cmd_name in ['eglClientWaitSyncKHR', 'eglClientWaitSync', 'glClientWaitSync']:
+        return 'egl::Display::GetCurrentThreadUnlockedTailCall()->run(&returnValue);'
 
     # Otherwise assert that no tail calls where generated
     return 'ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());'

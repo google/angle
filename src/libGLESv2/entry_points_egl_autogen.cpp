@@ -1002,7 +1002,7 @@ EGLint EGLAPIENTRY EGL_ClientWaitSync(EGLDisplay dpy, EGLSync sync, EGLint flags
         ANGLE_CAPTURE_EGL(ClientWaitSync, true, thread, dpyPacked, syncPacked, flags, timeout,
                           returnValue);
     }
-    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
+    egl::Display::GetCurrentThreadUnlockedTailCall()->run(&returnValue);
     return returnValue;
 }
 
