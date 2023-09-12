@@ -227,7 +227,6 @@
           'mac_retina_amd_gpu_experimental',
         ],
         'test_suites': {
-          'gtest_tests': 'mac_amd_and_intel_gtests',
         },
       },
       'mac-exp-intel': {
@@ -236,7 +235,6 @@
           'mac_mini_intel_gpu_experimental',
         ],
         'test_suites': {
-          'gtest_tests': 'mac_amd_and_intel_gtests',
         },
       },
       'mac-exp-nvidia': {
@@ -245,7 +243,6 @@
           'mac_retina_nvidia_gpu_experimental',
         ],
         'test_suites': {
-          'gtest_tests': 'mac_nvidia_gtests',
         },
       },
       'mac-intel': {
@@ -264,8 +261,7 @@
         ],
         'test_suites': {
           # Fewer tests enabled on this config because of limited capacity.
-          # Temporarily disabled for upgrade crbug.com/1456549
-          # 'gtest_tests': 'mac_nvidia_gtests',
+          'gtest_tests': 'mac_nvidia_gtests',
         },
       },
       'win10-x64-exp-intel': {
