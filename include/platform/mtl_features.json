@@ -412,6 +412,14 @@
                 "MSL 2.1 is required to support all the features of OpenGL ES 2.0"
             ],
             "issue": "http://anglebug.com/8258"
+        },
+        {
+            "name": "disable_metal_on_amd_fire_pro",
+            "category": "Features",
+            "description": [
+                "AMD GPUs are unsupported on Metal on older AMD FirePro devices due to driver crashes."
+            ],
+            "issue": "http://anglebug.com/8317"
         }
     ]
 }

@@ -400,6 +400,13 @@ struct FeaturesMtl : FeatureSetBase
         &members, "http://anglebug.com/8258"
     };
 
+    FeatureInfo disableMetalOnAmdFirePro = {
+        "disableMetalOnAmdFirePro",
+        FeatureCategory::MetalFeatures,
+        "AMD GPUs are unsupported on Metal on older AMD FirePro devices due to driver crashes.",
+        &members, "http://anglebug.com/8317"
+    };
+
 };
 
 inline FeaturesMtl::FeaturesMtl()  = default;

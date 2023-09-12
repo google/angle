@@ -142,6 +142,7 @@ class DisplayMtl : public DisplayImpl
     bool supports32BitFloatFiltering() const;
     bool isAMD() const;
     bool isAMDBronzeDriver() const;
+    bool isAMDFireProDevice() const;
     bool isIntel() const;
     bool isNVIDIA() const;
     bool isSimulator() const;
