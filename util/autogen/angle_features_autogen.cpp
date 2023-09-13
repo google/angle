@@ -346,7 +346,6 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::SyncMonolithicPipelinesToBlobCache, "syncMonolithicPipelinesToBlobCache"},
     {Feature::SyncVertexArraysToDefault, "syncVertexArraysToDefault"},
     {Feature::UnbindFBOBeforeSwitchingContext, "unbindFBOBeforeSwitchingContext"},
-    {Feature::UncurrentEglSurfaceUponSurfaceDestroy, "uncurrentEglSurfaceUponSurfaceDestroy"},
     {Feature::UnfoldShortCircuits, "unfoldShortCircuits"},
     {Feature::UnpackLastRowSeparatelyForPaddingInclusion, "unpackLastRowSeparatelyForPaddingInclusion"},
     {Feature::UnpackOverlappingRowsSeparatelyUnpackBuffer, "unpackOverlappingRowsSeparatelyUnpackBuffer"},
