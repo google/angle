@@ -81,7 +81,36 @@ const char *gCaseListFiles[] = {
     GLES_CTS_DIR("aosp_mustpass/main/gles31-rotate-landscape.txt"),
     GLES_CTS_DIR("aosp_mustpass/main/gles31-rotate-reverse-portrait.txt"),
     GLES_CTS_DIR("aosp_mustpass/main/gles31-rotate-reverse-landscape.txt"),
+    GLES_CTS_DIR("aosp_mustpass/main/gles3-multisample.txt"),
+    GLES_CTS_DIR("aosp_mustpass/main/gles3-565-no-depth-no-stencil.txt"),
+    GLES_CTS_DIR("aosp_mustpass/main/gles31-multisample.txt"),
+    GLES_CTS_DIR("aosp_mustpass/main/gles31-565-no-depth-no-stencil.txt"),
     GL_CTS_DIR("khronos_mustpass/main/gl46-master.txt"),
+};
+
+const std::vector<const char *> gTestSuiteConfigParameters[] = {
+    {"--deqp-gl-config-name=rgba8888d24s8ms0"},  // egl
+    {"--deqp-gl-config-name=rgba8888d24s8ms0"},  // gles2
+    {"--deqp-gl-config-name=rgba8888d24s8ms0"},  // gles3
+    {"--deqp-gl-config-name=rgba8888d24s8ms0"},  // gles31
+    {"--deqp-gl-config-name=rgba8888d24s8ms0"},  // gles2-khr
+    {"--deqp-gl-config-name=rgba8888d24s8ms0"},  // gles3-khr
+    {"--deqp-gl-config-name=rgba8888d24s8ms0"},  // gles31-khr
+    {"--deqp-gl-config-name=rgba8888d24s8ms0"},  // gles32-khr
+    {"--deqp-gl-config-name=rgba8888d24s8ms0"},  // gles2-khr-noctx
+    {"--deqp-gl-config-name=rgba8888d24s8ms0"},  // gles32-khr-noctx
+    {"--deqp-gl-config-name=rgba8888d24s8ms0"},  // gles32-khr-single
+    {"--deqp-gl-config-name=rgba8888d24s8ms0"},  // gles3-rotate90
+    {"--deqp-gl-config-name=rgba8888d24s8ms0"},  // gles3-rotate180
+    {"--deqp-gl-config-name=rgba8888d24s8ms0"},  // gles3-rotate270
+    {"--deqp-gl-config-name=rgba8888d24s8ms0"},  // gles31-rotate90
+    {"--deqp-gl-config-name=rgba8888d24s8ms0"},  // gles31-rotate180
+    {"--deqp-gl-config-name=rgba8888d24s8ms0"},  // gles31-rotate270
+    {"--deqp-gl-config-name=rgba8888d24s8ms4"},  // gles3-multisample
+    {"--deqp-gl-config-name=rgb565d0s0ms0"},     // gles3-rgb565-no-depth-no-stencil
+    {"--deqp-gl-config-name=rgba8888d24s8ms4"},  // gles31-multisample
+    {"--deqp-gl-config-name=rgb565d0s0ms0"},     // gles31-rgb565-no-depth-no-stencil
+    {"--deqp-gl-config-name=rgba8888d24s8ms4"},  // gl46
 };
 
 #undef GLES_CTS_DIR
@@ -105,6 +134,10 @@ const char *gTestExpectationsFiles[] = {
     "deqp_gles31_rotate_test_expectations.txt",
     "deqp_gles31_rotate_test_expectations.txt",
     "deqp_gles31_rotate_test_expectations.txt",
+    "deqp_gles3_multisample_test_expectations.txt",
+    "deqp_gles3_565_no_depth_no_stencil_test_expectations.txt",
+    "deqp_gles31_multisample_test_expectations.txt",
+    "deqp_gles31_565_no_depth_no_stencil_test_expectations.txt",
     "deqp_gl46_test_expectations.txt",
 };
 
@@ -162,8 +195,15 @@ dEQPOptions gOptions    = {
 constexpr const char gdEQPEGLConfigNameString[] = "--deqp-gl-config-name=";
 constexpr const char gdEQPLogImagesString[]     = "--deqp-log-images=";
 
-// Default the config to RGBA8
-const char *gEGLConfigName = "rgba8888d24s8";
+// Use the config name defined in gTestSuiteConfigParameters by default
+// If gEGLConfigNameFromCmdLine is overwritten by --deqp-gl-config-name passed from command
+// line arguments, for example:
+// out/Debug/angle_deqp_egl_tests --verbose --deqp-gl-config-name=rgba8888d24s8
+// use gEGLConfigNameFromCmdLine (rgba8888d24s8) instead.
+// Invalid --deqp-gl-config-name value passed from command line arguments will be caught by
+// glu::parseConfigBitsFromName() defined in gluRenderConfig.cpp, and it will cause tests
+// to fail
+const char *gEGLConfigNameFromCmdLine = "";
 
 std::vector<const char *> gdEQPForwardFlags;
 
@@ -235,6 +275,97 @@ Optional<std::string> FindCaseListPath(size_t testModuleIndex)
 Optional<std::string> FindTestExpectationsPath(size_t testModuleIndex)
 {
     return FindFileFromPath(kSupportPath, gTestExpectationsFiles[testModuleIndex]);
+}
+
+size_t GetTestModuleIndex()
+{
+#ifdef ANGLE_DEQP_EGL_TESTS
+    return 0;
+#endif
+
+#ifdef ANGLE_DEQP_GLES2_TESTS
+    return 1;
+#endif
+
+#ifdef ANGLE_DEQP_GLES3_TESTS
+    return 2;
+#endif
+
+#ifdef ANGLE_DEQP_GLES31_TESTS
+    return 3;
+#endif
+
+#ifdef ANGLE_DEQP_KHR_GLES2_TESTS
+    return 4;
+#endif
+
+#ifdef ANGLE_DEQP_KHR_GLES3_TESTS
+    return 5;
+#endif
+
+#ifdef ANGLE_DEQP_KHR_GLES31_TESTS
+    return 6;
+#endif
+
+#ifdef ANGLE_DEQP_KHR_GLES32_TESTS
+    return 7;
+#endif
+
+#ifdef ANGLE_DEQP_KHR_NOCTX_GLES2_TESTS
+    return 8;
+#endif
+
+#ifdef ANGLE_DEQP_KHR_NOCTX_GLES32_TESTS
+    return 9;
+#endif
+
+#ifdef ANGLE_DEQP_KHR_SINGLE_GLES32_TESTS
+    return 10;
+#endif
+
+#ifdef ANGLE_DEQP_GLES3_ROTATE90_TESTS
+    return 11;
+#endif
+
+#ifdef ANGLE_DEQP_GLES3_ROTATE180_TESTS
+    return 12;
+#endif
+
+#ifdef ANGLE_DEQP_GLES3_ROTATE270_TESTS
+    return 13;
+#endif
+
+#ifdef ANGLE_DEQP_GLES31_ROTATE90_TESTS
+    return 14;
+#endif
+
+#ifdef ANGLE_DEQP_GLES31_ROTATE180_TESTS
+    return 15;
+#endif
+
+#ifdef ANGLE_DEQP_GLES31_ROTATE270_TESTS
+    return 16;
+#endif
+
+#ifdef ANGLE_DEQP_GLES3_MULTISAMPLE_TESTS
+    return 17;
+#endif
+
+#ifdef ANGLE_DEQP_GLES3_565_NO_DEPTH_NO_STENCIL_TESTS
+    return 18;
+#endif
+
+#ifdef ANGLE_DEQP_GLES31_MULTISAMPLE_TESTS
+    return 19;
+#endif
+
+#ifdef ANGLE_DEQP_GLES31_565_NO_DEPTH_NO_STENCIL_TESTS
+    return 20;
+#endif
+
+#ifdef ANGLE_DEQP_GL_TESTS
+    return 21;
+#endif
 }
 
 class dEQPCaseList
@@ -515,10 +646,22 @@ void dEQPTest::SetUpTestSuite()
     std::string apiArgString = std::string(kdEQPEGLString) + targetApi;
     argv.push_back(apiArgString.c_str());
 
-    // Add config name
-    const char *targetConfigName = gEGLConfigName;
-    std::string configArgString  = std::string(gdEQPEGLConfigNameString) + targetConfigName;
-    argv.push_back(configArgString.c_str());
+    std::string configNameFromCmdLineString =
+        std::string(gdEQPEGLConfigNameString) + gEGLConfigNameFromCmdLine;
+
+    // Add test config parameters
+    for (const char *configParam : gTestSuiteConfigParameters[GetTestModuleIndex()])
+    {
+        // Check if we pass --deqp-gl-config-name from the command line, if yes, use the one from
+        // command line
+        if (std::strlen(gEGLConfigNameFromCmdLine) > 0 &&
+            std::strncmp(configParam, gdEQPEGLConfigNameString, strlen(gdEQPEGLConfigNameString)) ==
+                0)
+        {
+            configParam = configNameFromCmdLineString.c_str();
+        }
+        argv.push_back(configParam);
+    }
 
     // Hide SwiftShader window to prevent a race with Xvfb causing hangs on test bots
     if (gInitAPI && gInitAPI->second == GPUTestConfig::kAPISwiftShader)
@@ -677,7 +820,7 @@ void HandlePreRotation(const char *preRotationString)
 
 void HandleEGLConfigName(const char *configNameString)
 {
-    gEGLConfigName = configNameString;
+    gEGLConfigNameFromCmdLine = configNameString;
 }
 
 // The --deqp-case flag takes a case expression that is parsed into a --gtest_filter. It
@@ -717,81 +860,6 @@ void HandleLogImages(const char *logImagesString)
         std::cout << "Error parsing log images setting. Use enable/disable.";
         exit(1);
     }
-}
-
-size_t GetTestModuleIndex()
-{
-#ifdef ANGLE_DEQP_EGL_TESTS
-    return 0;
-#endif
-
-#ifdef ANGLE_DEQP_GLES2_TESTS
-    return 1;
-#endif
-
-#ifdef ANGLE_DEQP_GLES3_TESTS
-    return 2;
-#endif
-
-#ifdef ANGLE_DEQP_GLES31_TESTS
-    return 3;
-#endif
-
-#ifdef ANGLE_DEQP_KHR_GLES2_TESTS
-    return 4;
-#endif
-
-#ifdef ANGLE_DEQP_KHR_GLES3_TESTS
-    return 5;
-#endif
-
-#ifdef ANGLE_DEQP_KHR_GLES31_TESTS
-    return 6;
-#endif
-
-#ifdef ANGLE_DEQP_KHR_GLES32_TESTS
-    return 7;
-#endif
-
-#ifdef ANGLE_DEQP_KHR_NOCTX_GLES2_TESTS
-    return 8;
-#endif
-
-#ifdef ANGLE_DEQP_KHR_NOCTX_GLES32_TESTS
-    return 9;
-#endif
-
-#ifdef ANGLE_DEQP_KHR_SINGLE_GLES32_TESTS
-    return 10;
-#endif
-
-#ifdef ANGLE_DEQP_GLES3_ROTATE90_TESTS
-    return 11;
-#endif
-
-#ifdef ANGLE_DEQP_GLES3_ROTATE180_TESTS
-    return 12;
-#endif
-
-#ifdef ANGLE_DEQP_GLES3_ROTATE270_TESTS
-    return 13;
-#endif
-
-#ifdef ANGLE_DEQP_GLES31_ROTATE90_TESTS
-    return 14;
-#endif
-
-#ifdef ANGLE_DEQP_GLES31_ROTATE180_TESTS
-    return 15;
-#endif
-
-#ifdef ANGLE_DEQP_GLES31_ROTATE270_TESTS
-    return 16;
-#endif
-
-#ifdef ANGLE_DEQP_GL_TESTS
-    return 17;
-#endif
 }
 
 void RegisterGLCTSTests()
