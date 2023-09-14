@@ -520,6 +520,8 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 7703 PIXEL4ORXL GLES : FramebufferFetchES31.DrawNonFetchDrawFetchInStorageBuffer* = SKIP
 2046 PIXEL4ORXL GLES : WebGL2GLSLTest.InitOutputParams/* = SKIP
 8250 PIXEL4ORXL GLES : GLSLTest_ES3.ComplexConstructor/* = SKIP
+8346 PIXEL4ORXL GLES : MultithreadingTestES3.SimultaneousUploadAndDraw/* = SKIP
+8346 PIXEL4ORXL VULKAN : MultithreadingTestES3.SimultaneousUploadAndDraw/* = SKIP
 
 3423 PIXEL4ORXL VULKAN : ClearTestES3.MaskedClearBufferBug/* = SKIP
 3423 PIXEL4ORXL VULKAN : DrawBuffersWebGL2Test.TwoProgramsWithDifferentOutputsAndClear/* = SKIP
