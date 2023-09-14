@@ -1824,7 +1824,8 @@ enum class UpdateSource
 
 enum class ApplyImageUpdate
 {
-    ImmediatelyIfPossible,
+    ImmediatelyInUnlockedTailCall,
+    Immediately,
     Defer,
 };
 
@@ -2675,7 +2676,8 @@ class ImageHelper final : public Resource, public angle::Subject
                                         uint32_t baseArrayLayer,
                                         uint32_t layerCount);
 
-    angle::Result updateSubresourceOnHost(ContextVk *contextVk,
+    angle::Result updateSubresourceOnHost(Context *context,
+                                          ApplyImageUpdate applyUpdate,
                                           const gl::ImageIndex &index,
                                           const gl::Extents &glExtents,
                                           const gl::Offset &offset,
