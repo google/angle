@@ -1106,9 +1106,13 @@ angle::Result Program::linkImpl(const Context *context)
     // The transform feedback varying names are duplicated because the program pipeline link is not
     // currently able to use the link result of the program directly (and redoes the link, using
     // these names).
+    //
+    // The isSeparable state is duplicated for convenience; it is used when setting sampler/image
+    // uniforms.
     mState.mExecutable->mPODStruct.transformFeedbackBufferMode =
         mState.mTransformFeedbackBufferMode;
     mState.mExecutable->mTransformFeedbackVaryingNames = mState.mTransformFeedbackVaryingNames;
+    mState.mExecutable->mPODStruct.isSeparable         = mState.mSeparable;
 
     mState.mInfoLog.reset();
 
@@ -1303,7 +1307,7 @@ angle::Result Program::linkJobImpl(const Caps &caps,
         *mergedVaryingsOut = GetMergedVaryingsFromLinkingVariables(*linkingVariables);
         if (!mState.mExecutable->linkMergedVaryings(caps, limitations, clientVersion, isWebGL,
                                                     *mergedVaryingsOut, *linkingVariables,
-                                                    isSeparable(), &resources->varyingPacking))
+                                                    &resources->varyingPacking))
         {
             return angle::Result::Stop;
         }
@@ -2835,7 +2839,7 @@ angle::Result Program::serialize(const Context *context, angle::MemoryBuffer *bi
         stream.writeString(name);
     }
 
-    mState.mExecutable->save(mState.mSeparable, &stream);
+    mState.mExecutable->save(&stream);
 
     // Warn the app layer if saving a binary with unsupported transform feedback.
     if (!mState.mExecutable->getLinkedTransformFeedbackVaryings().empty() &&
@@ -2928,7 +2932,6 @@ angle::Result Program::deserialize(const Context *context, BinaryInputStream &st
         return angle::Result::Stop;
     }
 
-    // mSeparable must be before mExecutable->load(), since it uses the value.
     mState.mSeparable                   = stream.readBool();
     mState.mTransformFeedbackBufferMode = stream.readInt<GLenum>();
 
@@ -2938,7 +2941,10 @@ angle::Result Program::deserialize(const Context *context, BinaryInputStream &st
         name = stream.readString();
     }
 
-    mState.mExecutable->load(mState.mSeparable, &stream);
+    // mSeparable must be before mExecutable->load(), since it uses the value.  This state is
+    // duplicated in the executable for convenience.
+    mState.mExecutable->mPODStruct.isSeparable = mState.mSeparable;
+    mState.mExecutable->load(&stream);
 
     static_assert(static_cast<unsigned long>(ShaderType::EnumCount) <= sizeof(unsigned long) * 8,
                   "Too many shader types");

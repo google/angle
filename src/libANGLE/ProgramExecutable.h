@@ -248,8 +248,8 @@ class ProgramExecutable final : public angle::Subject
 
     ANGLE_INLINE rx::ProgramExecutableImpl *getImplementation() const { return mImplementation; }
 
-    void save(bool isSeparable, gl::BinaryOutputStream *stream) const;
-    void load(bool isSeparable, gl::BinaryInputStream *stream);
+    void save(gl::BinaryOutputStream *stream) const;
+    void load(gl::BinaryInputStream *stream);
 
     InfoLog &getInfoLog() const { return *mInfoLog; }
     std::string getInfoLogString() const;
@@ -666,7 +666,6 @@ class ProgramExecutable final : public angle::Subject
                             bool webglCompatibility,
                             const ProgramMergedVaryings &mergedVaryings,
                             const LinkingVariables &linkingVariables,
-                            bool isSeparable,
                             ProgramVaryingPacking *varyingPacking);
 
     bool linkValidateTransformFeedback(const Caps &caps,
@@ -727,11 +726,16 @@ class ProgramExecutable final : public angle::Subject
         ShaderBitSet linkedShaderStages;
         DrawBufferMask activeOutputVariablesMask;
         DrawBufferMask activeSecondaryOutputVariablesMask;
-        bool hasClipDistance;
-        bool hasDiscard;
-        bool hasYUVOutput;
-        bool enablesPerSampleShading;
-        bool canDrawWith;
+        uint8_t hasClipDistance : 1;
+        uint8_t hasDiscard : 1;
+        uint8_t hasYUVOutput : 1;
+        uint8_t enablesPerSampleShading : 1;
+        uint8_t canDrawWith : 1;
+        uint8_t isSeparable : 1;
+        uint8_t pad : 2;
+
+        // 12 bytes
+        sh::WorkGroupSize computeShaderLocalSize;
 
         // 8 bytes each
         RangeUI defaultUniformRange;
@@ -771,9 +775,6 @@ class ProgramExecutable final : public angle::Subject
         UniformBlockBindingMask activeUniformBlockBindings;
         // 24 bytes
         ShaderMap<int> linkedShaderVersions;
-        // 12 bytes
-        sh::WorkGroupSize computeShaderLocalSize;
-        uint8_t pads[4];
     } mPODStruct;
     ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
 

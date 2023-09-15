@@ -592,7 +592,7 @@ angle::Result ProgramPipeline::link(const Context *context)
             (*tfExecutable)->mTransformFeedbackVaryingNames;
 
         if (!mState.mExecutable->linkMergedVaryings(caps, limitations, clientVersion, isWebGL,
-                                                    mergedVaryings, linkingVariables, false,
+                                                    mergedVaryings, linkingVariables,
                                                     &varyingPacking))
         {
             return angle::Result::Stop;

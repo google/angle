@@ -703,7 +703,7 @@ void ProgramExecutable::reset()
     mImageBindings.clear();
 }
 
-void ProgramExecutable::load(bool isSeparable, gl::BinaryInputStream *stream)
+void ProgramExecutable::load(gl::BinaryInputStream *stream)
 {
     static_assert(MAX_VERTEX_ATTRIBS * 2 <= sizeof(uint32_t) * 8,
                   "Too many vertex attribs for mask: All bits of mAttributesTypeMask types and "
@@ -802,7 +802,7 @@ void ProgramExecutable::load(bool isSeparable, gl::BinaryInputStream *stream)
 
     // These values are currently only used by PPOs, so only load them when the program is marked
     // separable to save memory.
-    if (isSeparable)
+    if (mPODStruct.isSeparable)
     {
         for (ShaderType shaderType : getLinkedShaderStages())
         {
@@ -830,7 +830,7 @@ void ProgramExecutable::load(bool isSeparable, gl::BinaryInputStream *stream)
     }
 }
 
-void ProgramExecutable::save(bool isSeparable, gl::BinaryOutputStream *stream) const
+void ProgramExecutable::save(gl::BinaryOutputStream *stream) const
 {
     static_assert(MAX_VERTEX_ATTRIBS * 2 <= sizeof(uint32_t) * 8,
                   "All bits of mAttributesTypeMask types and mask fit into 32 bits each");
@@ -903,7 +903,7 @@ void ProgramExecutable::save(bool isSeparable, gl::BinaryOutputStream *stream) c
 
     // These values are currently only used by PPOs, so only save them when the program is marked
     // separable to save memory.
-    if (isSeparable)
+    if (mPODStruct.isSeparable)
     {
         for (ShaderType shaderType : getLinkedShaderStages())
         {
@@ -1118,7 +1118,6 @@ bool ProgramExecutable::linkMergedVaryings(const Caps &caps,
                                            bool webglCompatibility,
                                            const ProgramMergedVaryings &mergedVaryings,
                                            const LinkingVariables &linkingVariables,
-                                           bool isSeparable,
                                            ProgramVaryingPacking *varyingPacking)
 {
     ShaderType tfStage = GetLastPreFragmentStage(linkingVariables.isShaderStageUsedBitset);
@@ -1158,7 +1157,7 @@ bool ProgramExecutable::linkMergedVaryings(const Caps &caps,
 
     if (!varyingPacking->collectAndPackUserVaryings(*mInfoLog, caps, packMode, activeShadersMask,
                                                     mergedVaryings, mTransformFeedbackVaryingNames,
-                                                    isSeparable))
+                                                    mPODStruct.isSeparable))
     {
         return false;
     }
@@ -1269,7 +1268,6 @@ bool ProgramExecutable::linkValidateTransformFeedback(const Caps &caps,
             elementCount = 1;
         }
 
-        // TODO(jmadill): Investigate implementation limits on D3D11
         componentCount = VariableComponentCount(var->type) * elementCount;
         if (mPODStruct.transformFeedbackBufferMode == GL_SEPARATE_ATTRIBS &&
             componentCount > static_cast<GLuint>(caps.maxTransformFeedbackSeparateComponents))
