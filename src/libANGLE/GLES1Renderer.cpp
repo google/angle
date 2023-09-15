@@ -252,7 +252,8 @@ angle::Result GLES1Renderer::prepareForDraw(PrimitiveMode mode,
     const GLES1ProgramState &programState = UberShaderState.programState;
     GLES1UniformBuffers &uniformBuffers   = UberShaderState.uniformBuffers;
 
-    Program *programObject = getProgram(programState.program);
+    Program *programObject        = getProgram(programState.program);
+    ProgramExecutable &executable = programObject->getExecutable();
 
     // If anything is dirty in gles1 or the common parts of gles1/2, just redo these parts
     // completely for now.
@@ -283,7 +284,7 @@ angle::Result GLES1Renderer::prepareForDraw(PrimitiveMode mode,
             }
         }
     }
-    setUniform4fv(programObject, programState.drawTextureNormalizedCropRectLoc, kTexUnitCount,
+    setUniform4fv(&executable, programState.drawTextureNormalizedCropRectLoc, kTexUnitCount,
                   reinterpret_cast<GLfloat *>(cropRectBuffer));
 
     if (gles1State->isDirty(GLES1State::DIRTY_GLES1_LOGIC_OP) && hasLogicOpANGLE)
@@ -304,7 +305,7 @@ angle::Result GLES1Renderer::prepareForDraw(PrimitiveMode mode,
             if (gles1State->isDirty(GLES1State::DIRTY_GLES1_LOGIC_OP))
             {
                 // Set up uniform value for logic op
-                setUniform1ui(programObject, programState.logicOpLoc,
+                setUniform1ui(&executable, programState.logicOpLoc,
                               GetLogicOpUniform(colorAttachment, gles1State->mLogicOp));
             }
 
@@ -361,14 +362,14 @@ angle::Result GLES1Renderer::prepareForDraw(PrimitiveMode mode,
     if (gles1State->isDirty(GLES1State::DIRTY_GLES1_MATRICES))
     {
         angle::Mat4 proj = gles1State->mProjectionMatrices.back();
-        setUniformMatrix4fv(programObject, programState.projMatrixLoc, 1, GL_FALSE, proj.data());
+        setUniformMatrix4fv(&executable, programState.projMatrixLoc, 1, GL_FALSE, proj.data());
 
         angle::Mat4 modelview = gles1State->mModelviewMatrices.back();
-        setUniformMatrix4fv(programObject, programState.modelviewMatrixLoc, 1, GL_FALSE,
+        setUniformMatrix4fv(&executable, programState.modelviewMatrixLoc, 1, GL_FALSE,
                             modelview.data());
 
         angle::Mat4 modelviewInvTr = modelview.transpose().inverse();
-        setUniformMatrix4fv(programObject, programState.modelviewInvTrLoc, 1, GL_FALSE,
+        setUniformMatrix4fv(&executable, programState.modelviewInvTrLoc, 1, GL_FALSE,
                             modelviewInvTr.data());
 
         Mat4Uniform *textureMatrixBuffer = uniformBuffers.textureMatrices.data();
@@ -379,7 +380,7 @@ angle::Result GLES1Renderer::prepareForDraw(PrimitiveMode mode,
             memcpy(textureMatrixBuffer + i, textureMatrix.data(), sizeof(Mat4Uniform));
         }
 
-        setUniformMatrix4fv(programObject, programState.textureMatrixLoc, kTexUnitCount, GL_FALSE,
+        setUniformMatrix4fv(&executable, programState.textureMatrixLoc, kTexUnitCount, GL_FALSE,
                             reinterpret_cast<float *>(uniformBuffers.textureMatrices.data()));
     }
 
@@ -398,18 +399,18 @@ angle::Result GLES1Renderer::prepareForDraw(PrimitiveMode mode,
             uniformBuffers.texEnvAlphaScales[i] = env.alphaScale;
         }
 
-        setUniform4fv(programObject, programState.textureEnvColorLoc, kTexUnitCount,
+        setUniform4fv(&executable, programState.textureEnvColorLoc, kTexUnitCount,
                       reinterpret_cast<float *>(uniformBuffers.texEnvColors.data()));
-        setUniform1fv(programObject, programState.rgbScaleLoc, kTexUnitCount,
+        setUniform1fv(&executable, programState.rgbScaleLoc, kTexUnitCount,
                       uniformBuffers.texEnvRgbScales.data());
-        setUniform1fv(programObject, programState.alphaScaleLoc, kTexUnitCount,
+        setUniform1fv(&executable, programState.alphaScaleLoc, kTexUnitCount,
                       uniformBuffers.texEnvAlphaScales.data());
     }
 
     // Alpha test
     if (gles1State->isDirty(GLES1State::DIRTY_GLES1_ALPHA_TEST))
     {
-        setUniform1f(programObject, programState.alphaTestRefLoc,
+        setUniform1f(&executable, programState.alphaTestRefLoc,
                      gles1State->mAlphaTestParameters.ref);
     }
 
@@ -418,11 +419,11 @@ angle::Result GLES1Renderer::prepareForDraw(PrimitiveMode mode,
     {
         const auto &material = gles1State->mMaterial;
 
-        setUniform4fv(programObject, programState.materialAmbientLoc, 1, material.ambient.data());
-        setUniform4fv(programObject, programState.materialDiffuseLoc, 1, material.diffuse.data());
-        setUniform4fv(programObject, programState.materialSpecularLoc, 1, material.specular.data());
-        setUniform4fv(programObject, programState.materialEmissiveLoc, 1, material.emissive.data());
-        setUniform1f(programObject, programState.materialSpecularExponentLoc,
+        setUniform4fv(&executable, programState.materialAmbientLoc, 1, material.ambient.data());
+        setUniform4fv(&executable, programState.materialDiffuseLoc, 1, material.diffuse.data());
+        setUniform4fv(&executable, programState.materialSpecularLoc, 1, material.specular.data());
+        setUniform4fv(&executable, programState.materialEmissiveLoc, 1, material.emissive.data());
+        setUniform1f(&executable, programState.materialSpecularExponentLoc,
                      material.specularExponent);
     }
 
@@ -430,7 +431,7 @@ angle::Result GLES1Renderer::prepareForDraw(PrimitiveMode mode,
     {
         const auto &lightModel = gles1State->mLightModel;
 
-        setUniform4fv(programObject, programState.lightModelSceneAmbientLoc, 1,
+        setUniform4fv(&executable, programState.lightModelSceneAmbientLoc, 1,
                       lightModel.color.data());
 
         for (int i = 0; i < kLightCount; i++)
@@ -453,35 +454,35 @@ angle::Result GLES1Renderer::prepareForDraw(PrimitiveMode mode,
             uniformBuffers.attenuationQuadratics[i] = light.attenuationQuadratic;
         }
 
-        setUniform4fv(programObject, programState.lightAmbientsLoc, kLightCount,
+        setUniform4fv(&executable, programState.lightAmbientsLoc, kLightCount,
                       reinterpret_cast<float *>(uniformBuffers.lightAmbients.data()));
-        setUniform4fv(programObject, programState.lightDiffusesLoc, kLightCount,
+        setUniform4fv(&executable, programState.lightDiffusesLoc, kLightCount,
                       reinterpret_cast<float *>(uniformBuffers.lightDiffuses.data()));
-        setUniform4fv(programObject, programState.lightSpecularsLoc, kLightCount,
+        setUniform4fv(&executable, programState.lightSpecularsLoc, kLightCount,
                       reinterpret_cast<float *>(uniformBuffers.lightSpeculars.data()));
-        setUniform4fv(programObject, programState.lightPositionsLoc, kLightCount,
+        setUniform4fv(&executable, programState.lightPositionsLoc, kLightCount,
                       reinterpret_cast<float *>(uniformBuffers.lightPositions.data()));
-        setUniform3fv(programObject, programState.lightDirectionsLoc, kLightCount,
+        setUniform3fv(&executable, programState.lightDirectionsLoc, kLightCount,
                       reinterpret_cast<float *>(uniformBuffers.lightDirections.data()));
-        setUniform1fv(programObject, programState.lightSpotlightExponentsLoc, kLightCount,
+        setUniform1fv(&executable, programState.lightSpotlightExponentsLoc, kLightCount,
                       reinterpret_cast<float *>(uniformBuffers.spotlightExponents.data()));
-        setUniform1fv(programObject, programState.lightSpotlightCutoffAnglesLoc, kLightCount,
+        setUniform1fv(&executable, programState.lightSpotlightCutoffAnglesLoc, kLightCount,
                       reinterpret_cast<float *>(uniformBuffers.spotlightCutoffAngles.data()));
-        setUniform1fv(programObject, programState.lightAttenuationConstsLoc, kLightCount,
+        setUniform1fv(&executable, programState.lightAttenuationConstsLoc, kLightCount,
                       reinterpret_cast<float *>(uniformBuffers.attenuationConsts.data()));
-        setUniform1fv(programObject, programState.lightAttenuationLinearsLoc, kLightCount,
+        setUniform1fv(&executable, programState.lightAttenuationLinearsLoc, kLightCount,
                       reinterpret_cast<float *>(uniformBuffers.attenuationLinears.data()));
-        setUniform1fv(programObject, programState.lightAttenuationQuadraticsLoc, kLightCount,
+        setUniform1fv(&executable, programState.lightAttenuationQuadraticsLoc, kLightCount,
                       reinterpret_cast<float *>(uniformBuffers.attenuationQuadratics.data()));
     }
 
     if (gles1State->isDirty(GLES1State::DIRTY_GLES1_FOG))
     {
         const FogParameters &fog = gles1State->fogParameters();
-        setUniform1f(programObject, programState.fogDensityLoc, fog.density);
-        setUniform1f(programObject, programState.fogStartLoc, fog.start);
-        setUniform1f(programObject, programState.fogEndLoc, fog.end);
-        setUniform4fv(programObject, programState.fogColorLoc, 1, fog.color.data());
+        setUniform1f(&executable, programState.fogDensityLoc, fog.density);
+        setUniform1f(&executable, programState.fogStartLoc, fog.start);
+        setUniform1f(&executable, programState.fogEndLoc, fog.end);
+        setUniform4fv(&executable, programState.fogColorLoc, 1, fog.color.data());
     }
 
     // Clip planes
@@ -493,7 +494,7 @@ angle::Result GLES1Renderer::prepareForDraw(PrimitiveMode mode,
                 i, reinterpret_cast<float *>(uniformBuffers.clipPlanes.data() + i));
         }
 
-        setUniform4fv(programObject, programState.clipPlanesLoc, kClipPlaneCount,
+        setUniform4fv(&executable, programState.clipPlanesLoc, kClipPlaneCount,
                       reinterpret_cast<float *>(uniformBuffers.clipPlanes.data()));
     }
 
@@ -501,16 +502,16 @@ angle::Result GLES1Renderer::prepareForDraw(PrimitiveMode mode,
     {
         const PointParameters &pointParams = gles1State->mPointParameters;
 
-        setUniform1f(programObject, programState.pointSizeMinLoc, pointParams.pointSizeMin);
-        setUniform1f(programObject, programState.pointSizeMaxLoc, pointParams.pointSizeMax);
-        setUniform3fv(programObject, programState.pointDistanceAttenuationLoc, 1,
+        setUniform1f(&executable, programState.pointSizeMinLoc, pointParams.pointSizeMin);
+        setUniform1f(&executable, programState.pointSizeMaxLoc, pointParams.pointSizeMax);
+        setUniform3fv(&executable, programState.pointDistanceAttenuationLoc, 1,
                       pointParams.pointDistanceAttenuation.data());
     }
 
     // Draw texture
     {
-        setUniform4fv(programObject, programState.drawTextureCoordsLoc, 1, mDrawTextureCoords);
-        setUniform2fv(programObject, programState.drawTextureDimsLoc, 1, mDrawTextureDims);
+        setUniform4fv(&executable, programState.drawTextureCoordsLoc, 1, mDrawTextureCoords);
+        setUniform2fv(&executable, programState.drawTextureDimsLoc, 1, mDrawTextureDims);
     }
 
     gles1State->clearDirty();
@@ -1012,8 +1013,8 @@ angle::Result GLES1Renderer::initializeRendererProgram(Context *context,
     mShaderPrograms->deleteShader(context, vertexShader);
     mShaderPrograms->deleteShader(context, fragmentShader);
 
-    Program *programObject              = getProgram(programState.program);
-    const ProgramExecutable &executable = programObject->getExecutable();
+    Program *programObject        = getProgram(programState.program);
+    ProgramExecutable &executable = programObject->getExecutable();
 
     programState.projMatrixLoc      = executable.getUniformLocation("projection");
     programState.modelviewMatrixLoc = executable.getUniformLocation("modelview");
@@ -1087,8 +1088,8 @@ angle::Result GLES1Renderer::initializeRendererProgram(Context *context,
 
     for (int i = 0; i < kTexUnitCount; i++)
     {
-        setUniform1i(context, programObject, programState.tex2DSamplerLocs[i], i);
-        setUniform1i(context, programObject, programState.texCubeSamplerLocs[i], i + kTexUnitCount);
+        setUniform1i(context, &executable, programState.tex2DSamplerLocs[i], i);
+        setUniform1i(context, &executable, programState.texCubeSamplerLocs[i], i + kTexUnitCount);
     }
     glState->setObjectDirty(GL_PROGRAM);
 
@@ -1100,34 +1101,36 @@ angle::Result GLES1Renderer::initializeRendererProgram(Context *context,
 }
 
 void GLES1Renderer::setUniform1i(Context *context,
-                                 Program *programObject,
+                                 ProgramExecutable *executable,
                                  UniformLocation location,
                                  GLint value)
 {
     if (location.value == -1)
         return;
-    programObject->setUniform1iv(context, location, 1, &value);
+    executable->setUniform1iv(context, location, 1, &value);
 }
 
-void GLES1Renderer::setUniform1ui(Program *programObject, UniformLocation location, GLuint value)
+void GLES1Renderer::setUniform1ui(ProgramExecutable *executable,
+                                  UniformLocation location,
+                                  GLuint value)
 {
     if (location.value == -1)
         return;
-    programObject->setUniform1uiv(location, 1, &value);
+    executable->setUniform1uiv(location, 1, &value);
 }
 
 void GLES1Renderer::setUniform1iv(Context *context,
-                                  Program *programObject,
+                                  ProgramExecutable *executable,
                                   UniformLocation location,
                                   GLint count,
                                   const GLint *value)
 {
     if (location.value == -1)
         return;
-    programObject->setUniform1iv(context, location, count, value);
+    executable->setUniform1iv(context, location, count, value);
 }
 
-void GLES1Renderer::setUniformMatrix4fv(Program *programObject,
+void GLES1Renderer::setUniformMatrix4fv(ProgramExecutable *executable,
                                         UniformLocation location,
                                         GLint count,
                                         GLboolean transpose,
@@ -1135,54 +1138,56 @@ void GLES1Renderer::setUniformMatrix4fv(Program *programObject,
 {
     if (location.value == -1)
         return;
-    programObject->setUniformMatrix4fv(location, count, transpose, value);
+    executable->setUniformMatrix4fv(location, count, transpose, value);
 }
 
-void GLES1Renderer::setUniform4fv(Program *programObject,
+void GLES1Renderer::setUniform4fv(ProgramExecutable *executable,
                                   UniformLocation location,
                                   GLint count,
                                   const GLfloat *value)
 {
     if (location.value == -1)
         return;
-    programObject->setUniform4fv(location, count, value);
+    executable->setUniform4fv(location, count, value);
 }
 
-void GLES1Renderer::setUniform3fv(Program *programObject,
+void GLES1Renderer::setUniform3fv(ProgramExecutable *executable,
                                   UniformLocation location,
                                   GLint count,
                                   const GLfloat *value)
 {
     if (location.value == -1)
         return;
-    programObject->setUniform3fv(location, count, value);
+    executable->setUniform3fv(location, count, value);
 }
 
-void GLES1Renderer::setUniform2fv(Program *programObject,
+void GLES1Renderer::setUniform2fv(ProgramExecutable *executable,
                                   UniformLocation location,
                                   GLint count,
                                   const GLfloat *value)
 {
     if (location.value == -1)
         return;
-    programObject->setUniform2fv(location, count, value);
+    executable->setUniform2fv(location, count, value);
 }
 
-void GLES1Renderer::setUniform1f(Program *programObject, UniformLocation location, GLfloat value)
+void GLES1Renderer::setUniform1f(ProgramExecutable *executable,
+                                 UniformLocation location,
+                                 GLfloat value)
 {
     if (location.value == -1)
         return;
-    programObject->setUniform1fv(location, 1, &value);
+    executable->setUniform1fv(location, 1, &value);
 }
 
-void GLES1Renderer::setUniform1fv(Program *programObject,
+void GLES1Renderer::setUniform1fv(ProgramExecutable *executable,
                                   UniformLocation location,
                                   GLint count,
                                   const GLfloat *value)
 {
     if (location.value == -1)
         return;
-    programObject->setUniform1fv(location, count, value);
+    executable->setUniform1fv(location, count, value);
 }
 
 void GLES1Renderer::setAttributesEnabled(Context *context,

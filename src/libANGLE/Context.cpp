@@ -6618,16 +6618,15 @@ void Context::drawArraysInstancedBaseInstance(PrimitiveMode mode,
     }
 
     ANGLE_CONTEXT_TRY(prepareForDraw(mode));
-    Program *programObject = mState.getLinkedProgram(this);
+    ProgramExecutable *executable = mState.getLinkedProgramExecutable(this);
 
-    const bool hasBaseInstance =
-        programObject && programObject->getExecutable().hasBaseInstanceUniform();
+    const bool hasBaseInstance = executable->hasBaseInstanceUniform();
     if (hasBaseInstance)
     {
-        programObject->setBaseInstanceUniform(baseInstance);
+        executable->setBaseInstanceUniform(baseInstance);
     }
 
-    rx::ResetBaseVertexBaseInstance resetUniforms(programObject, false, hasBaseInstance);
+    rx::ResetBaseVertexBaseInstance resetUniforms(executable, false, hasBaseInstance);
 
     // The input gl_InstanceID does not follow the baseinstance. gl_InstanceID always falls on
     // the half-open range [0, instancecount). No need to set other stuff. Except for Vulkan.
@@ -6672,23 +6671,22 @@ void Context::drawElementsInstancedBaseVertexBaseInstance(PrimitiveMode mode,
     }
 
     ANGLE_CONTEXT_TRY(prepareForDraw(mode));
-    Program *programObject = mState.getLinkedProgram(this);
+    ProgramExecutable *executable = mState.getLinkedProgramExecutable(this);
 
-    const bool hasBaseVertex =
-        programObject && programObject->getExecutable().hasBaseVertexUniform();
+    const bool hasBaseVertex   = executable->hasBaseVertexUniform();
+    const bool hasBaseInstance = executable->hasBaseInstanceUniform();
+
     if (hasBaseVertex)
     {
-        programObject->setBaseVertexUniform(baseVertex);
+        executable->setBaseVertexUniform(baseVertex);
     }
 
-    const bool hasBaseInstance =
-        programObject && programObject->getExecutable().hasBaseInstanceUniform();
     if (hasBaseInstance)
     {
-        programObject->setBaseInstanceUniform(baseInstance);
+        executable->setBaseInstanceUniform(baseInstance);
     }
 
-    rx::ResetBaseVertexBaseInstance resetUniforms(programObject, hasBaseVertex, hasBaseInstance);
+    rx::ResetBaseVertexBaseInstance resetUniforms(executable, hasBaseVertex, hasBaseInstance);
 
     ANGLE_CONTEXT_TRY(mImplementation->drawElementsInstancedBaseVertexBaseInstance(
         this, mode, count, type, indices, instanceCount, baseVertex, baseInstance));
@@ -7141,7 +7139,7 @@ void Context::getUniformfv(ShaderProgramID program, UniformLocation location, GL
 {
     Program *programObject = getProgramResolveLink(program);
     ASSERT(programObject);
-    programObject->getUniformfv(this, location, params);
+    programObject->getExecutable().getUniformfv(this, location, params);
 }
 
 void Context::getUniformfvRobust(ShaderProgramID program,
@@ -7157,7 +7155,7 @@ void Context::getUniformiv(ShaderProgramID program, UniformLocation location, GL
 {
     Program *programObject = getProgramResolveLink(program);
     ASSERT(programObject);
-    programObject->getUniformiv(this, location, params);
+    programObject->getExecutable().getUniformiv(this, location, params);
 }
 
 void Context::getUniformivRobust(ShaderProgramID program,
@@ -7317,13 +7315,13 @@ Program *Context::getActiveLinkedProgram() const
 void Context::uniform1f(UniformLocation location, GLfloat x)
 {
     Program *program = getActiveLinkedProgram();
-    program->setUniform1fv(location, 1, &x);
+    program->getExecutable().setUniform1fv(location, 1, &x);
 }
 
 void Context::uniform1fv(UniformLocation location, GLsizei count, const GLfloat *v)
 {
     Program *program = getActiveLinkedProgram();
-    program->setUniform1fv(location, count, v);
+    program->getExecutable().setUniform1fv(location, count, v);
 }
 
 void Context::setUniform1iImpl(Program *program,
@@ -7331,7 +7329,7 @@ void Context::setUniform1iImpl(Program *program,
                                GLsizei count,
                                const GLint *v)
 {
-    program->setUniform1iv(this, location, count, v);
+    program->getExecutable().setUniform1iv(this, location, count, v);
 }
 
 void Context::onSamplerUniformChange(size_t textureUnitIndex)
@@ -7356,78 +7354,78 @@ void Context::uniform2f(UniformLocation location, GLfloat x, GLfloat y)
 {
     GLfloat xy[2]    = {x, y};
     Program *program = getActiveLinkedProgram();
-    program->setUniform2fv(location, 1, xy);
+    program->getExecutable().setUniform2fv(location, 1, xy);
 }
 
 void Context::uniform2fv(UniformLocation location, GLsizei count, const GLfloat *v)
 {
     Program *program = getActiveLinkedProgram();
-    program->setUniform2fv(location, count, v);
+    program->getExecutable().setUniform2fv(location, count, v);
 }
 
 void Context::uniform2i(UniformLocation location, GLint x, GLint y)
 {
     GLint xy[2]      = {x, y};
     Program *program = getActiveLinkedProgram();
-    program->setUniform2iv(location, 1, xy);
+    program->getExecutable().setUniform2iv(location, 1, xy);
 }
 
 void Context::uniform2iv(UniformLocation location, GLsizei count, const GLint *v)
 {
     Program *program = getActiveLinkedProgram();
-    program->setUniform2iv(location, count, v);
+    program->getExecutable().setUniform2iv(location, count, v);
 }
 
 void Context::uniform3f(UniformLocation location, GLfloat x, GLfloat y, GLfloat z)
 {
     GLfloat xyz[3]   = {x, y, z};
     Program *program = getActiveLinkedProgram();
-    program->setUniform3fv(location, 1, xyz);
+    program->getExecutable().setUniform3fv(location, 1, xyz);
 }
 
 void Context::uniform3fv(UniformLocation location, GLsizei count, const GLfloat *v)
 {
     Program *program = getActiveLinkedProgram();
-    program->setUniform3fv(location, count, v);
+    program->getExecutable().setUniform3fv(location, count, v);
 }
 
 void Context::uniform3i(UniformLocation location, GLint x, GLint y, GLint z)
 {
     GLint xyz[3]     = {x, y, z};
     Program *program = getActiveLinkedProgram();
-    program->setUniform3iv(location, 1, xyz);
+    program->getExecutable().setUniform3iv(location, 1, xyz);
 }
 
 void Context::uniform3iv(UniformLocation location, GLsizei count, const GLint *v)
 {
     Program *program = getActiveLinkedProgram();
-    program->setUniform3iv(location, count, v);
+    program->getExecutable().setUniform3iv(location, count, v);
 }
 
 void Context::uniform4f(UniformLocation location, GLfloat x, GLfloat y, GLfloat z, GLfloat w)
 {
     GLfloat xyzw[4]  = {x, y, z, w};
     Program *program = getActiveLinkedProgram();
-    program->setUniform4fv(location, 1, xyzw);
+    program->getExecutable().setUniform4fv(location, 1, xyzw);
 }
 
 void Context::uniform4fv(UniformLocation location, GLsizei count, const GLfloat *v)
 {
     Program *program = getActiveLinkedProgram();
-    program->setUniform4fv(location, count, v);
+    program->getExecutable().setUniform4fv(location, count, v);
 }
 
 void Context::uniform4i(UniformLocation location, GLint x, GLint y, GLint z, GLint w)
 {
     GLint xyzw[4]    = {x, y, z, w};
     Program *program = getActiveLinkedProgram();
-    program->setUniform4iv(location, 1, xyzw);
+    program->getExecutable().setUniform4iv(location, 1, xyzw);
 }
 
 void Context::uniform4iv(UniformLocation location, GLsizei count, const GLint *v)
 {
     Program *program = getActiveLinkedProgram();
-    program->setUniform4iv(location, count, v);
+    program->getExecutable().setUniform4iv(location, count, v);
 }
 
 void Context::uniformMatrix2fv(UniformLocation location,
@@ -7436,7 +7434,7 @@ void Context::uniformMatrix2fv(UniformLocation location,
                                const GLfloat *value)
 {
     Program *program = getActiveLinkedProgram();
-    program->setUniformMatrix2fv(location, count, transpose, value);
+    program->getExecutable().setUniformMatrix2fv(location, count, transpose, value);
 }
 
 void Context::uniformMatrix3fv(UniformLocation location,
@@ -7445,7 +7443,7 @@ void Context::uniformMatrix3fv(UniformLocation location,
                                const GLfloat *value)
 {
     Program *program = getActiveLinkedProgram();
-    program->setUniformMatrix3fv(location, count, transpose, value);
+    program->getExecutable().setUniformMatrix3fv(location, count, transpose, value);
 }
 
 void Context::uniformMatrix4fv(UniformLocation location,
@@ -7454,7 +7452,7 @@ void Context::uniformMatrix4fv(UniformLocation location,
                                const GLfloat *value)
 {
     Program *program = getActiveLinkedProgram();
-    program->setUniformMatrix4fv(location, count, transpose, value);
+    program->getExecutable().setUniformMatrix4fv(location, count, transpose, value);
 }
 
 void Context::validateProgram(ShaderProgramID program)
@@ -7518,51 +7516,51 @@ void Context::programBinary(ShaderProgramID program,
 void Context::uniform1ui(UniformLocation location, GLuint v0)
 {
     Program *program = getActiveLinkedProgram();
-    program->setUniform1uiv(location, 1, &v0);
+    program->getExecutable().setUniform1uiv(location, 1, &v0);
 }
 
 void Context::uniform2ui(UniformLocation location, GLuint v0, GLuint v1)
 {
     Program *program  = getActiveLinkedProgram();
     const GLuint xy[] = {v0, v1};
-    program->setUniform2uiv(location, 1, xy);
+    program->getExecutable().setUniform2uiv(location, 1, xy);
 }
 
 void Context::uniform3ui(UniformLocation location, GLuint v0, GLuint v1, GLuint v2)
 {
     Program *program   = getActiveLinkedProgram();
     const GLuint xyz[] = {v0, v1, v2};
-    program->setUniform3uiv(location, 1, xyz);
+    program->getExecutable().setUniform3uiv(location, 1, xyz);
 }
 
 void Context::uniform4ui(UniformLocation location, GLuint v0, GLuint v1, GLuint v2, GLuint v3)
 {
     Program *program    = getActiveLinkedProgram();
     const GLuint xyzw[] = {v0, v1, v2, v3};
-    program->setUniform4uiv(location, 1, xyzw);
+    program->getExecutable().setUniform4uiv(location, 1, xyzw);
 }
 
 void Context::uniform1uiv(UniformLocation location, GLsizei count, const GLuint *value)
 {
     Program *program = getActiveLinkedProgram();
-    program->setUniform1uiv(location, count, value);
+    program->getExecutable().setUniform1uiv(location, count, value);
 }
 void Context::uniform2uiv(UniformLocation location, GLsizei count, const GLuint *value)
 {
     Program *program = getActiveLinkedProgram();
-    program->setUniform2uiv(location, count, value);
+    program->getExecutable().setUniform2uiv(location, count, value);
 }
 
 void Context::uniform3uiv(UniformLocation location, GLsizei count, const GLuint *value)
 {
     Program *program = getActiveLinkedProgram();
-    program->setUniform3uiv(location, count, value);
+    program->getExecutable().setUniform3uiv(location, count, value);
 }
 
 void Context::uniform4uiv(UniformLocation location, GLsizei count, const GLuint *value)
 {
     Program *program = getActiveLinkedProgram();
-    program->setUniform4uiv(location, count, value);
+    program->getExecutable().setUniform4uiv(location, count, value);
 }
 
 void Context::genQueries(GLsizei n, QueryID *ids)
@@ -7609,7 +7607,7 @@ void Context::uniformMatrix2x3fv(UniformLocation location,
                                  const GLfloat *value)
 {
     Program *program = getActiveLinkedProgram();
-    program->setUniformMatrix2x3fv(location, count, transpose, value);
+    program->getExecutable().setUniformMatrix2x3fv(location, count, transpose, value);
 }
 
 void Context::uniformMatrix3x2fv(UniformLocation location,
@@ -7618,7 +7616,7 @@ void Context::uniformMatrix3x2fv(UniformLocation location,
                                  const GLfloat *value)
 {
     Program *program = getActiveLinkedProgram();
-    program->setUniformMatrix3x2fv(location, count, transpose, value);
+    program->getExecutable().setUniformMatrix3x2fv(location, count, transpose, value);
 }
 
 void Context::uniformMatrix2x4fv(UniformLocation location,
@@ -7627,7 +7625,7 @@ void Context::uniformMatrix2x4fv(UniformLocation location,
                                  const GLfloat *value)
 {
     Program *program = getActiveLinkedProgram();
-    program->setUniformMatrix2x4fv(location, count, transpose, value);
+    program->getExecutable().setUniformMatrix2x4fv(location, count, transpose, value);
 }
 
 void Context::uniformMatrix4x2fv(UniformLocation location,
@@ -7636,7 +7634,7 @@ void Context::uniformMatrix4x2fv(UniformLocation location,
                                  const GLfloat *value)
 {
     Program *program = getActiveLinkedProgram();
-    program->setUniformMatrix4x2fv(location, count, transpose, value);
+    program->getExecutable().setUniformMatrix4x2fv(location, count, transpose, value);
 }
 
 void Context::uniformMatrix3x4fv(UniformLocation location,
@@ -7645,7 +7643,7 @@ void Context::uniformMatrix3x4fv(UniformLocation location,
                                  const GLfloat *value)
 {
     Program *program = getActiveLinkedProgram();
-    program->setUniformMatrix3x4fv(location, count, transpose, value);
+    program->getExecutable().setUniformMatrix3x4fv(location, count, transpose, value);
 }
 
 void Context::uniformMatrix4x3fv(UniformLocation location,
@@ -7654,7 +7652,7 @@ void Context::uniformMatrix4x3fv(UniformLocation location,
                                  const GLfloat *value)
 {
     Program *program = getActiveLinkedProgram();
-    program->setUniformMatrix4x3fv(location, count, transpose, value);
+    program->getExecutable().setUniformMatrix4x3fv(location, count, transpose, value);
 }
 
 void Context::deleteVertexArrays(GLsizei n, const VertexArrayID *arrays)
@@ -7796,7 +7794,7 @@ void Context::resumeTransformFeedback()
 void Context::getUniformuiv(ShaderProgramID program, UniformLocation location, GLuint *params)
 {
     const Program *programObject = getProgramResolveLink(program);
-    programObject->getUniformuiv(this, location, params);
+    programObject->getExecutable().getUniformuiv(this, location, params);
 }
 
 void Context::getUniformuivRobust(ShaderProgramID program,
@@ -8139,7 +8137,7 @@ void Context::programUniform2iv(ShaderProgramID program,
 {
     Program *programObject = getProgramResolveLink(program);
     ASSERT(programObject);
-    programObject->setUniform2iv(location, count, value);
+    programObject->getExecutable().setUniform2iv(location, count, value);
 }
 
 void Context::programUniform3iv(ShaderProgramID program,
@@ -8149,7 +8147,7 @@ void Context::programUniform3iv(ShaderProgramID program,
 {
     Program *programObject = getProgramResolveLink(program);
     ASSERT(programObject);
-    programObject->setUniform3iv(location, count, value);
+    programObject->getExecutable().setUniform3iv(location, count, value);
 }
 
 void Context::programUniform4iv(ShaderProgramID program,
@@ -8159,7 +8157,7 @@ void Context::programUniform4iv(ShaderProgramID program,
 {
     Program *programObject = getProgramResolveLink(program);
     ASSERT(programObject);
-    programObject->setUniform4iv(location, count, value);
+    programObject->getExecutable().setUniform4iv(location, count, value);
 }
 
 void Context::programUniform1uiv(ShaderProgramID program,
@@ -8169,7 +8167,7 @@ void Context::programUniform1uiv(ShaderProgramID program,
 {
     Program *programObject = getProgramResolveLink(program);
     ASSERT(programObject);
-    programObject->setUniform1uiv(location, count, value);
+    programObject->getExecutable().setUniform1uiv(location, count, value);
 }
 
 void Context::programUniform2uiv(ShaderProgramID program,
@@ -8179,7 +8177,7 @@ void Context::programUniform2uiv(ShaderProgramID program,
 {
     Program *programObject = getProgramResolveLink(program);
     ASSERT(programObject);
-    programObject->setUniform2uiv(location, count, value);
+    programObject->getExecutable().setUniform2uiv(location, count, value);
 }
 
 void Context::programUniform3uiv(ShaderProgramID program,
@@ -8189,7 +8187,7 @@ void Context::programUniform3uiv(ShaderProgramID program,
 {
     Program *programObject = getProgramResolveLink(program);
     ASSERT(programObject);
-    programObject->setUniform3uiv(location, count, value);
+    programObject->getExecutable().setUniform3uiv(location, count, value);
 }
 
 void Context::programUniform4uiv(ShaderProgramID program,
@@ -8199,7 +8197,7 @@ void Context::programUniform4uiv(ShaderProgramID program,
 {
     Program *programObject = getProgramResolveLink(program);
     ASSERT(programObject);
-    programObject->setUniform4uiv(location, count, value);
+    programObject->getExecutable().setUniform4uiv(location, count, value);
 }
 
 void Context::programUniform1fv(ShaderProgramID program,
@@ -8209,7 +8207,7 @@ void Context::programUniform1fv(ShaderProgramID program,
 {
     Program *programObject = getProgramResolveLink(program);
     ASSERT(programObject);
-    programObject->setUniform1fv(location, count, value);
+    programObject->getExecutable().setUniform1fv(location, count, value);
 }
 
 void Context::programUniform2fv(ShaderProgramID program,
@@ -8219,7 +8217,7 @@ void Context::programUniform2fv(ShaderProgramID program,
 {
     Program *programObject = getProgramResolveLink(program);
     ASSERT(programObject);
-    programObject->setUniform2fv(location, count, value);
+    programObject->getExecutable().setUniform2fv(location, count, value);
 }
 
 void Context::programUniform3fv(ShaderProgramID program,
@@ -8229,7 +8227,7 @@ void Context::programUniform3fv(ShaderProgramID program,
 {
     Program *programObject = getProgramResolveLink(program);
     ASSERT(programObject);
-    programObject->setUniform3fv(location, count, value);
+    programObject->getExecutable().setUniform3fv(location, count, value);
 }
 
 void Context::programUniform4fv(ShaderProgramID program,
@@ -8239,7 +8237,7 @@ void Context::programUniform4fv(ShaderProgramID program,
 {
     Program *programObject = getProgramResolveLink(program);
     ASSERT(programObject);
-    programObject->setUniform4fv(location, count, value);
+    programObject->getExecutable().setUniform4fv(location, count, value);
 }
 
 void Context::programUniformMatrix2fv(ShaderProgramID program,
@@ -8250,7 +8248,7 @@ void Context::programUniformMatrix2fv(ShaderProgramID program,
 {
     Program *programObject = getProgramResolveLink(program);
     ASSERT(programObject);
-    programObject->setUniformMatrix2fv(location, count, transpose, value);
+    programObject->getExecutable().setUniformMatrix2fv(location, count, transpose, value);
 }
 
 void Context::programUniformMatrix3fv(ShaderProgramID program,
@@ -8261,7 +8259,7 @@ void Context::programUniformMatrix3fv(ShaderProgramID program,
 {
     Program *programObject = getProgramResolveLink(program);
     ASSERT(programObject);
-    programObject->setUniformMatrix3fv(location, count, transpose, value);
+    programObject->getExecutable().setUniformMatrix3fv(location, count, transpose, value);
 }
 
 void Context::programUniformMatrix4fv(ShaderProgramID program,
@@ -8272,7 +8270,7 @@ void Context::programUniformMatrix4fv(ShaderProgramID program,
 {
     Program *programObject = getProgramResolveLink(program);
     ASSERT(programObject);
-    programObject->setUniformMatrix4fv(location, count, transpose, value);
+    programObject->getExecutable().setUniformMatrix4fv(location, count, transpose, value);
 }
 
 void Context::programUniformMatrix2x3fv(ShaderProgramID program,
@@ -8283,7 +8281,7 @@ void Context::programUniformMatrix2x3fv(ShaderProgramID program,
 {
     Program *programObject = getProgramResolveLink(program);
     ASSERT(programObject);
-    programObject->setUniformMatrix2x3fv(location, count, transpose, value);
+    programObject->getExecutable().setUniformMatrix2x3fv(location, count, transpose, value);
 }
 
 void Context::programUniformMatrix3x2fv(ShaderProgramID program,
@@ -8294,7 +8292,7 @@ void Context::programUniformMatrix3x2fv(ShaderProgramID program,
 {
     Program *programObject = getProgramResolveLink(program);
     ASSERT(programObject);
-    programObject->setUniformMatrix3x2fv(location, count, transpose, value);
+    programObject->getExecutable().setUniformMatrix3x2fv(location, count, transpose, value);
 }
 
 void Context::programUniformMatrix2x4fv(ShaderProgramID program,
@@ -8305,7 +8303,7 @@ void Context::programUniformMatrix2x4fv(ShaderProgramID program,
 {
     Program *programObject = getProgramResolveLink(program);
     ASSERT(programObject);
-    programObject->setUniformMatrix2x4fv(location, count, transpose, value);
+    programObject->getExecutable().setUniformMatrix2x4fv(location, count, transpose, value);
 }
 
 void Context::programUniformMatrix4x2fv(ShaderProgramID program,
@@ -8316,7 +8314,7 @@ void Context::programUniformMatrix4x2fv(ShaderProgramID program,
 {
     Program *programObject = getProgramResolveLink(program);
     ASSERT(programObject);
-    programObject->setUniformMatrix4x2fv(location, count, transpose, value);
+    programObject->getExecutable().setUniformMatrix4x2fv(location, count, transpose, value);
 }
 
 void Context::programUniformMatrix3x4fv(ShaderProgramID program,
@@ -8327,7 +8325,7 @@ void Context::programUniformMatrix3x4fv(ShaderProgramID program,
 {
     Program *programObject = getProgramResolveLink(program);
     ASSERT(programObject);
-    programObject->setUniformMatrix3x4fv(location, count, transpose, value);
+    programObject->getExecutable().setUniformMatrix3x4fv(location, count, transpose, value);
 }
 
 void Context::programUniformMatrix4x3fv(ShaderProgramID program,
@@ -8338,7 +8336,7 @@ void Context::programUniformMatrix4x3fv(ShaderProgramID program,
 {
     Program *programObject = getProgramResolveLink(program);
     ASSERT(programObject);
-    programObject->setUniformMatrix4x3fv(location, count, transpose, value);
+    programObject->getExecutable().setUniformMatrix4x3fv(location, count, transpose, value);
 }
 
 bool Context::isCurrentTransformFeedback(const TransformFeedback *tf) const
@@ -8440,7 +8438,7 @@ void Context::getnUniformfv(ShaderProgramID program,
     Program *programObject = getProgramResolveLink(program);
     ASSERT(programObject);
 
-    programObject->getUniformfv(this, location, params);
+    programObject->getExecutable().getUniformfv(this, location, params);
 }
 
 void Context::getnUniformfvRobust(ShaderProgramID program,
@@ -8460,7 +8458,7 @@ void Context::getnUniformiv(ShaderProgramID program,
     Program *programObject = getProgramResolveLink(program);
     ASSERT(programObject);
 
-    programObject->getUniformiv(this, location, params);
+    programObject->getExecutable().getUniformiv(this, location, params);
 }
 
 void Context::getnUniformuiv(ShaderProgramID program,
@@ -8471,7 +8469,7 @@ void Context::getnUniformuiv(ShaderProgramID program,
     Program *programObject = getProgramResolveLink(program);
     ASSERT(programObject);
 
-    programObject->getUniformuiv(this, location, params);
+    programObject->getExecutable().getUniformuiv(this, location, params);
 }
 
 void Context::getnUniformivRobust(ShaderProgramID program,

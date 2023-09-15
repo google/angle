@@ -54,7 +54,8 @@ void ProgramPipelineState::activeShaderProgram(Program *shaderProgram)
 void ProgramPipelineState::useProgramStage(const Context *context,
                                            const ShaderType shaderType,
                                            Program *shaderProgram,
-                                           angle::ObserverBinding *programObserverBindings)
+                                           angle::ObserverBinding *programObserverBinding,
+                                           angle::ObserverBinding *programExecutableObserverBinding)
 {
     Program *oldProgram = mPrograms[shaderType];
     if (oldProgram)
@@ -86,20 +87,22 @@ void ProgramPipelineState::useProgramStage(const Context *context,
         UninstallExecutable(context, &mProgramExecutables[shaderType]);
     }
 
-    Program *program = mPrograms[shaderType];
-    programObserverBindings->bind(program);
+    programObserverBinding->bind(mPrograms[shaderType]);
+    programExecutableObserverBinding->bind(mProgramExecutables[shaderType].get());
 }
 
 void ProgramPipelineState::useProgramStages(
     const Context *context,
     const ShaderBitSet &shaderTypes,
     Program *shaderProgram,
-    std::vector<angle::ObserverBinding> *programObserverBindings)
+    std::vector<angle::ObserverBinding> *programObserverBindings,
+    std::vector<angle::ObserverBinding> *programExecutableObserverBindings)
 {
     for (ShaderType shaderType : shaderTypes)
     {
         useProgramStage(context, shaderType, shaderProgram,
-                        &programObserverBindings->at(static_cast<size_t>(shaderType)));
+                        &programObserverBindings->at(static_cast<size_t>(shaderType)),
+                        &programExecutableObserverBindings->at(static_cast<size_t>(shaderType)));
     }
 }
 
@@ -154,6 +157,8 @@ ProgramPipeline::ProgramPipeline(rx::GLImplFactory *factory, ProgramPipelineID h
     for (const ShaderType shaderType : AllShaderTypes())
     {
         mProgramObserverBindings.emplace_back(this, static_cast<angle::SubjectIndex>(shaderType));
+        mProgramExecutableObserverBindings.emplace_back(
+            this, static_cast<angle::SubjectIndex>(shaderType));
     }
     mExecutableObserverBinding.bind(mState.mExecutable.get());
 }
@@ -263,7 +268,8 @@ angle::Result ProgramPipeline::useProgramStages(const Context *context,
         return angle::Result::Continue;
     }
 
-    mState.useProgramStages(context, shaderTypes, shaderProgram, &mProgramObserverBindings);
+    mState.useProgramStages(context, shaderTypes, shaderProgram, &mProgramObserverBindings,
+                            &mProgramExecutableObserverBindings);
 
     mState.mIsLinked = false;
     onStateChange(angle::SubjectMessage::ProgramUnlinked);

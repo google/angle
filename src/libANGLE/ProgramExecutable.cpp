@@ -12,6 +12,7 @@
 #include "libANGLE/Context.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/Shader.h"
+#include "libANGLE/queryconversions.h"
 #include "libANGLE/renderer/GLImplFactory.h"
 #include "libANGLE/renderer/ProgramExecutableImpl.h"
 
@@ -602,12 +603,84 @@ GLint GetActiveInterfaceBlockMaxNameLength(const std::vector<T> &resources)
 
     return maxLength;
 }
+
+// This simplified cast function doesn't need to worry about advanced concepts like
+// depth range values, or casting to bool.
+template <typename DestT, typename SrcT>
+DestT UniformStateQueryCast(SrcT value);
+
+// From-Float-To-Integer Casts
+template <>
+GLint UniformStateQueryCast(GLfloat value)
+{
+    return clampCast<GLint>(roundf(value));
+}
+
+template <>
+GLuint UniformStateQueryCast(GLfloat value)
+{
+    return clampCast<GLuint>(roundf(value));
+}
+
+// From-Integer-to-Integer Casts
+template <>
+GLint UniformStateQueryCast(GLuint value)
+{
+    return clampCast<GLint>(value);
+}
+
+template <>
+GLuint UniformStateQueryCast(GLint value)
+{
+    return clampCast<GLuint>(value);
+}
+
+// From-Boolean-to-Anything Casts
+template <>
+GLfloat UniformStateQueryCast(GLboolean value)
+{
+    return (ConvertToBool(value) ? 1.0f : 0.0f);
+}
+
+template <>
+GLint UniformStateQueryCast(GLboolean value)
+{
+    return (ConvertToBool(value) ? 1 : 0);
+}
+
+template <>
+GLuint UniformStateQueryCast(GLboolean value)
+{
+    return (ConvertToBool(value) ? 1u : 0u);
+}
+
+// Default to static_cast
+template <typename DestT, typename SrcT>
+DestT UniformStateQueryCast(SrcT value)
+{
+    return static_cast<DestT>(value);
+}
+
+template <typename SrcT, typename DestT>
+void UniformStateQueryCastLoop(DestT *dataOut, const uint8_t *srcPointer, int components)
+{
+    for (int comp = 0; comp < components; ++comp)
+    {
+        // We only work with strides of 4 bytes for uniform components. (GLfloat/GLint)
+        // Don't use SrcT stride directly since GLboolean has a stride of 1 byte.
+        size_t offset               = comp * 4;
+        const SrcT *typedSrcPointer = reinterpret_cast<const SrcT *>(&srcPointer[offset]);
+        dataOut[comp]               = UniformStateQueryCast<DestT>(*typedSrcPointer);
+    }
+}
 }  // anonymous namespace
 
 ProgramExecutable::ProgramExecutable(rx::GLImplFactory *factory, InfoLog *infoLog)
     : mImplementation(factory->createProgramExecutable(this)),
       mInfoLog(infoLog),
-      mActiveSamplerRefCounts{}
+      mActiveSamplerRefCounts{},
+      mCachedBaseVertex(0),
+      mCachedBaseInstance(0)
 {
     memset(&mPODStruct, 0, sizeof(mPODStruct));
     mPODStruct.geometryShaderInputPrimitiveType  = PrimitiveMode::Triangles;
@@ -1048,25 +1121,22 @@ void ProgramExecutable::updateActiveImages(const ProgramExecutable &executable)
     }
 }
 
-void ProgramExecutable::setSamplerUniformTextureTypeAndFormat(
-    size_t textureUnitIndex,
-    const std::vector<SamplerBinding> &samplerBindings,
-    const std::vector<GLuint> &boundTextureUnits)
+void ProgramExecutable::setSamplerUniformTextureTypeAndFormat(size_t textureUnitIndex)
 {
     bool foundBinding         = false;
     TextureType foundType     = TextureType::InvalidEnum;
     bool foundYUV             = false;
     SamplerFormat foundFormat = SamplerFormat::InvalidEnum;
 
-    for (uint32_t samplerIndex = 0; samplerIndex < samplerBindings.size(); ++samplerIndex)
+    for (uint32_t samplerIndex = 0; samplerIndex < mSamplerBindings.size(); ++samplerIndex)
     {
-        const SamplerBinding &binding = samplerBindings[samplerIndex];
+        const SamplerBinding &binding = mSamplerBindings[samplerIndex];
 
         // A conflict exists if samplers of different types are sourced by the same texture unit.
         // We need to check all bound textures to detect this error case.
         for (uint16_t index = 0; index < binding.textureUnitsCount; index++)
         {
-            GLuint textureUnit = binding.getTextureUnit(boundTextureUnits, index);
+            GLuint textureUnit = binding.getTextureUnit(mSamplerBoundTextureUnits, index);
             if (textureUnit != textureUnitIndex)
             {
                 continue;
@@ -2453,6 +2523,550 @@ GLuint ProgramExecutable::getImageUniformBinding(const VariableLocation &uniform
 
     const std::vector<GLuint> &boundImageUnits = mImageBindings[imageIndex].boundImageUnits;
     return boundImageUnits[uniformLocation.arrayIndex];
+}
+
+template <typename UniformT,
+          GLint UniformSize,
+          void (rx::ProgramExecutableImpl::*SetUniformFunc)(GLint, GLsizei, const UniformT *)>
+void ProgramExecutable::setUniformGeneric(UniformLocation location,
+                                          GLsizei count,
+                                          const UniformT *v)
+{
+    if (shouldIgnoreUniform(location))
+    {
+        return;
+    }
+
+    const VariableLocation &locationInfo = mUniformLocations[location.value];
+    GLsizei clampedCount                 = clampUniformCount(locationInfo, count, UniformSize, v);
+    (mImplementation->*SetUniformFunc)(location.value, clampedCount, v);
+    onStateChange(angle::SubjectMessage::ProgramUniformUpdated);
+}
+
+void ProgramExecutable::setUniform1fv(UniformLocation location, GLsizei count, const GLfloat *v)
+{
+    setUniformGeneric<GLfloat, 1, &rx::ProgramExecutableImpl::setUniform1fv>(location, count, v);
+}
+
+void ProgramExecutable::setUniform2fv(UniformLocation location, GLsizei count, const GLfloat *v)
+{
+    setUniformGeneric<GLfloat, 2, &rx::ProgramExecutableImpl::setUniform2fv>(location, count, v);
+}
+
+void ProgramExecutable::setUniform3fv(UniformLocation location, GLsizei count, const GLfloat *v)
+{
+    setUniformGeneric<GLfloat, 3, &rx::ProgramExecutableImpl::setUniform3fv>(location, count, v);
+}
+
+void ProgramExecutable::setUniform4fv(UniformLocation location, GLsizei count, const GLfloat *v)
+{
+    setUniformGeneric<GLfloat, 4, &rx::ProgramExecutableImpl::setUniform4fv>(location, count, v);
+}
+
+void ProgramExecutable::setUniform1iv(Context *context,
+                                      UniformLocation location,
+                                      GLsizei count,
+                                      const GLint *v)
+{
+    if (shouldIgnoreUniform(location))
+    {
+        return;
+    }
+
+    const VariableLocation &locationInfo = mUniformLocations[location.value];
+    GLsizei clampedCount                 = clampUniformCount(locationInfo, count, 1, v);
+
+    mImplementation->setUniform1iv(location.value, clampedCount, v);
+
+    if (isSamplerUniformIndex(locationInfo.index))
+    {
+        updateSamplerUniform(context, locationInfo, clampedCount, v);
+    }
+    else
+    {
+        onStateChange(angle::SubjectMessage::ProgramUniformUpdated);
+    }
+}
+
+void ProgramExecutable::setUniform2iv(UniformLocation location, GLsizei count, const GLint *v)
+{
+    setUniformGeneric<GLint, 2, &rx::ProgramExecutableImpl::setUniform2iv>(location, count, v);
+}
+
+void ProgramExecutable::setUniform3iv(UniformLocation location, GLsizei count, const GLint *v)
+{
+    setUniformGeneric<GLint, 3, &rx::ProgramExecutableImpl::setUniform3iv>(location, count, v);
+}
+
+void ProgramExecutable::setUniform4iv(UniformLocation location, GLsizei count, const GLint *v)
+{
+    setUniformGeneric<GLint, 4, &rx::ProgramExecutableImpl::setUniform4iv>(location, count, v);
+}
+
+void ProgramExecutable::setUniform1uiv(UniformLocation location, GLsizei count, const GLuint *v)
+{
+    setUniformGeneric<GLuint, 1, &rx::ProgramExecutableImpl::setUniform1uiv>(location, count, v);
+}
+
+void ProgramExecutable::setUniform2uiv(UniformLocation location, GLsizei count, const GLuint *v)
+{
+    setUniformGeneric<GLuint, 2, &rx::ProgramExecutableImpl::setUniform2uiv>(location, count, v);
+}
+
+void ProgramExecutable::setUniform3uiv(UniformLocation location, GLsizei count, const GLuint *v)
+{
+    setUniformGeneric<GLuint, 3, &rx::ProgramExecutableImpl::setUniform3uiv>(location, count, v);
+}
+
+void ProgramExecutable::setUniform4uiv(UniformLocation location, GLsizei count, const GLuint *v)
+{
+    setUniformGeneric<GLuint, 4, &rx::ProgramExecutableImpl::setUniform4uiv>(location, count, v);
+}
+
+template <typename UniformT,
+          GLint MatrixC,
+          GLint MatrixR,
+          void (rx::ProgramExecutableImpl::*
+                    SetUniformMatrixFunc)(GLint, GLsizei, GLboolean, const UniformT *)>
+void ProgramExecutable::setUniformMatrixGeneric(UniformLocation location,
+                                                GLsizei count,
+                                                GLboolean transpose,
+                                                const UniformT *v)
+{
+    if (shouldIgnoreUniform(location))
+    {
+        return;
+    }
+
+    GLsizei clampedCount = clampMatrixUniformCount<MatrixC, MatrixR>(location, count, transpose, v);
+    (mImplementation->*SetUniformMatrixFunc)(location.value, clampedCount, transpose, v);
+    onStateChange(angle::SubjectMessage::ProgramUniformUpdated);
+}
+
+void ProgramExecutable::setUniformMatrix2fv(UniformLocation location,
+                                            GLsizei count,
+                                            GLboolean transpose,
+                                            const GLfloat *v)
+{
+    setUniformMatrixGeneric<GLfloat, 2, 2, &rx::ProgramExecutableImpl::setUniformMatrix2fv>(
+        location, count, transpose, v);
+}
+
+void ProgramExecutable::setUniformMatrix3fv(UniformLocation location,
+                                            GLsizei count,
+                                            GLboolean transpose,
+                                            const GLfloat *v)
+{
+    setUniformMatrixGeneric<GLfloat, 3, 3, &rx::ProgramExecutableImpl::setUniformMatrix3fv>(
+        location, count, transpose, v);
+}
+
+void ProgramExecutable::setUniformMatrix4fv(UniformLocation location,
+                                            GLsizei count,
+                                            GLboolean transpose,
+                                            const GLfloat *v)
+{
+    setUniformMatrixGeneric<GLfloat, 4, 4, &rx::ProgramExecutableImpl::setUniformMatrix4fv>(
+        location, count, transpose, v);
+}
+
+void ProgramExecutable::setUniformMatrix2x3fv(UniformLocation location,
+                                              GLsizei count,
+                                              GLboolean transpose,
+                                              const GLfloat *v)
+{
+    setUniformMatrixGeneric<GLfloat, 2, 3, &rx::ProgramExecutableImpl::setUniformMatrix2x3fv>(
+        location, count, transpose, v);
+}
+
+void ProgramExecutable::setUniformMatrix2x4fv(UniformLocation location,
+                                              GLsizei count,
+                                              GLboolean transpose,
+                                              const GLfloat *v)
+{
+    setUniformMatrixGeneric<GLfloat, 2, 4, &rx::ProgramExecutableImpl::setUniformMatrix2x4fv>(
+        location, count, transpose, v);
+}
+
+void ProgramExecutable::setUniformMatrix3x2fv(UniformLocation location,
+                                              GLsizei count,
+                                              GLboolean transpose,
+                                              const GLfloat *v)
+{
+    setUniformMatrixGeneric<GLfloat, 3, 2, &rx::ProgramExecutableImpl::setUniformMatrix3x2fv>(
+        location, count, transpose, v);
+}
+
+void ProgramExecutable::setUniformMatrix3x4fv(UniformLocation location,
+                                              GLsizei count,
+                                              GLboolean transpose,
+                                              const GLfloat *v)
+{
+    setUniformMatrixGeneric<GLfloat, 3, 4, &rx::ProgramExecutableImpl::setUniformMatrix3x4fv>(
+        location, count, transpose, v);
+}
+
+void ProgramExecutable::setUniformMatrix4x2fv(UniformLocation location,
+                                              GLsizei count,
+                                              GLboolean transpose,
+                                              const GLfloat *v)
+{
+    setUniformMatrixGeneric<GLfloat, 4, 2, &rx::ProgramExecutableImpl::setUniformMatrix4x2fv>(
+        location, count, transpose, v);
+}
+
+void ProgramExecutable::setUniformMatrix4x3fv(UniformLocation location,
+                                              GLsizei count,
+                                              GLboolean transpose,
+                                              const GLfloat *v)
+{
+    setUniformMatrixGeneric<GLfloat, 4, 3, &rx::ProgramExecutableImpl::setUniformMatrix4x3fv>(
+        location, count, transpose, v);
+}
+
+void ProgramExecutable::getUniformfv(const Context *context,
+                                     UniformLocation location,
+                                     GLfloat *v) const
+{
+    const VariableLocation &uniformLocation = mUniformLocations[location.value];
+    const LinkedUniform &uniform            = mUniforms[uniformLocation.index];
+
+    if (uniform.isSampler())
+    {
+        *v = static_cast<GLfloat>(getSamplerUniformBinding(uniformLocation));
+        return;
+    }
+    else if (uniform.isImage())
+    {
+        *v = static_cast<GLfloat>(getImageUniformBinding(uniformLocation));
+        return;
+    }
+
+    const GLenum nativeType = VariableComponentType(uniform.getType());
+    if (nativeType == GL_FLOAT)
+    {
+        mImplementation->getUniformfv(context, location.value, v);
+    }
+    else
+    {
+        getUniformInternal(context, v, location, nativeType,
+                           VariableComponentCount(uniform.getType()));
+    }
+}
+
+void ProgramExecutable::getUniformiv(const Context *context,
+                                     UniformLocation location,
+                                     GLint *v) const
+{
+    const VariableLocation &uniformLocation = mUniformLocations[location.value];
+    const LinkedUniform &uniform            = mUniforms[uniformLocation.index];
+
+    if (uniform.isSampler())
+    {
+        *v = static_cast<GLint>(getSamplerUniformBinding(uniformLocation));
+        return;
+    }
+    else if (uniform.isImage())
+    {
+        *v = static_cast<GLint>(getImageUniformBinding(uniformLocation));
+        return;
+    }
+
+    const GLenum nativeType = VariableComponentType(uniform.getType());
+    if (nativeType == GL_INT || nativeType == GL_BOOL)
+    {
+        mImplementation->getUniformiv(context, location.value, v);
+    }
+    else
+    {
+        getUniformInternal(context, v, location, nativeType,
+                           VariableComponentCount(uniform.getType()));
+    }
+}
+
+void ProgramExecutable::getUniformuiv(const Context *context,
+                                      UniformLocation location,
+                                      GLuint *v) const
+{
+    const VariableLocation &uniformLocation = mUniformLocations[location.value];
+    const LinkedUniform &uniform            = mUniforms[uniformLocation.index];
+
+    if (uniform.isSampler())
+    {
+        *v = getSamplerUniformBinding(uniformLocation);
+        return;
+    }
+    else if (uniform.isImage())
+    {
+        *v = getImageUniformBinding(uniformLocation);
+        return;
+    }
+
+    const GLenum nativeType = VariableComponentType(uniform.getType());
+    if (nativeType == GL_UNSIGNED_INT)
+    {
+        mImplementation->getUniformuiv(context, location.value, v);
+    }
+    else
+    {
+        getUniformInternal(context, v, location, nativeType,
+                           VariableComponentCount(uniform.getType()));
+    }
+}
+
+void ProgramExecutable::setUniformValuesFromBindingQualifiers()
+{
+    for (unsigned int samplerIndex : mPODStruct.samplerUniformRange)
+    {
+        const auto &samplerUniform = mUniforms[samplerIndex];
+        if (samplerUniform.getBinding() != -1)
+        {
+            const std::string &uniformName = getUniformNameByIndex(samplerIndex);
+            UniformLocation location       = getUniformLocation(uniformName);
+            ASSERT(location.value != -1);
+            std::vector<GLint> boundTextureUnits;
+            for (unsigned int elementIndex = 0;
+                 elementIndex < samplerUniform.getBasicTypeElementCount(); ++elementIndex)
+            {
+                boundTextureUnits.push_back(samplerUniform.getBinding() + elementIndex);
+            }
+
+            // Here we pass nullptr to avoid a large chain of calls that need a non-const Context.
+            // We know it's safe not to notify the Context because this is only called after link.
+            setUniform1iv(nullptr, location, static_cast<GLsizei>(boundTextureUnits.size()),
+                          boundTextureUnits.data());
+        }
+    }
+}
+
+template <typename T>
+GLsizei ProgramExecutable::clampUniformCount(const VariableLocation &locationInfo,
+                                             GLsizei count,
+                                             int vectorSize,
+                                             const T *v)
+{
+    if (count == 1)
+        return 1;
+
+    const LinkedUniform &linkedUniform = mUniforms[locationInfo.index];
+
+    // OpenGL ES 3.0.4 spec pg 67: "Values for any array element that exceeds the highest array
+    // element index used, as reported by GetActiveUniform, will be ignored by the GL."
+    unsigned int remainingElements =
+        linkedUniform.getBasicTypeElementCount() - locationInfo.arrayIndex;
+    GLsizei maxElementCount =
+        static_cast<GLsizei>(remainingElements * linkedUniform.getElementComponents());
+
+    if (count * vectorSize > maxElementCount)
+    {
+        return maxElementCount / vectorSize;
+    }
+
+    return count;
+}
+
+template <size_t cols, size_t rows, typename T>
+GLsizei ProgramExecutable::clampMatrixUniformCount(UniformLocation location,
+                                                   GLsizei count,
+                                                   GLboolean transpose,
+                                                   const T *v)
+{
+    const VariableLocation &locationInfo = mUniformLocations[location.value];
+
+    if (!transpose)
+    {
+        return clampUniformCount(locationInfo, count, cols * rows, v);
+    }
+
+    const LinkedUniform &linkedUniform = mUniforms[locationInfo.index];
+
+    // OpenGL ES 3.0.4 spec pg 67: "Values for any array element that exceeds the highest array
+    // element index used, as reported by GetActiveUniform, will be ignored by the GL."
+    unsigned int remainingElements =
+        linkedUniform.getBasicTypeElementCount() - locationInfo.arrayIndex;
+    return std::min(count, static_cast<GLsizei>(remainingElements));
+}
+
+void ProgramExecutable::updateSamplerUniform(Context *context,
+                                             const VariableLocation &locationInfo,
+                                             GLsizei clampedCount,
+                                             const GLint *v)
+{
+    ASSERT(isSamplerUniformIndex(locationInfo.index));
+    GLuint samplerIndex                    = getSamplerIndexFromUniformIndex(locationInfo.index);
+    SamplerBinding &samplerBinding         = mSamplerBindings[samplerIndex];
+    std::vector<GLuint> &boundTextureUnits = mSamplerBoundTextureUnits;
+
+    if (locationInfo.arrayIndex >= samplerBinding.textureUnitsCount)
+    {
+        return;
+    }
+    GLsizei safeUniformCount =
+        std::min(clampedCount,
+                 static_cast<GLsizei>(samplerBinding.textureUnitsCount - locationInfo.arrayIndex));
+
+    // Update the sampler uniforms.
+    for (uint16_t arrayIndex = 0; arrayIndex < safeUniformCount; ++arrayIndex)
+    {
+        GLint oldTextureUnit =
+            samplerBinding.getTextureUnit(boundTextureUnits, arrayIndex + locationInfo.arrayIndex);
+        GLint newTextureUnit = v[arrayIndex];
+
+        if (oldTextureUnit == newTextureUnit)
+        {
+            continue;
+        }
+
+        // Update sampler's bound textureUnit
+        boundTextureUnits[samplerBinding.textureUnitsStartIndex + arrayIndex +
+                          locationInfo.arrayIndex] = newTextureUnit;
+
+        // Update the reference counts.
+        uint32_t &oldRefCount = mActiveSamplerRefCounts[oldTextureUnit];
+        uint32_t &newRefCount = mActiveSamplerRefCounts[newTextureUnit];
+        ASSERT(oldRefCount > 0);
+        ASSERT(newRefCount < std::numeric_limits<uint32_t>::max());
+        oldRefCount--;
+        newRefCount++;
+
+        // Check for binding type change.
+        TextureType newSamplerType     = mActiveSamplerTypes[newTextureUnit];
+        TextureType oldSamplerType     = mActiveSamplerTypes[oldTextureUnit];
+        SamplerFormat newSamplerFormat = mActiveSamplerFormats[newTextureUnit];
+        SamplerFormat oldSamplerFormat = mActiveSamplerFormats[oldTextureUnit];
+        bool newSamplerYUV             = mActiveSamplerYUV.test(newTextureUnit);
+
+        if (newRefCount == 1)
+        {
+            setActive(newTextureUnit, samplerBinding, mUniforms[locationInfo.index]);
+        }
+        else
+        {
+            if (newSamplerType != samplerBinding.textureType ||
+                newSamplerYUV != IsSamplerYUVType(samplerBinding.samplerType))
+            {
+                hasSamplerTypeConflict(newTextureUnit);
+            }
+
+            if (newSamplerFormat != samplerBinding.format)
+            {
+                hasSamplerFormatConflict(newTextureUnit);
+            }
+        }
+
+        // Unset previously active sampler.
+        if (oldRefCount == 0)
+        {
+            setInactive(oldTextureUnit);
+        }
+        else
+        {
+            if (oldSamplerType == TextureType::InvalidEnum ||
+                oldSamplerFormat == SamplerFormat::InvalidEnum)
+            {
+                // Previous conflict. Check if this new change fixed the conflict.
+                setSamplerUniformTextureTypeAndFormat(oldTextureUnit);
+            }
+        }
+
+        // Update the observing PPO's executable, if any.
+        // Do this before any of the Context work, since that uses the current ProgramExecutable,
+        // which will be the PPO's if this Program is bound to it, rather than this Program's.
+        if (mPODStruct.isSeparable)
+        {
+            onStateChange(angle::SubjectMessage::ProgramTextureOrImageBindingChanged);
+        }
+
+        // Notify context.
+        if (context)
+        {
+            context->onSamplerUniformChange(newTextureUnit);
+            context->onSamplerUniformChange(oldTextureUnit);
+        }
+    }
+
+    // Invalidate the validation cache.
+    resetCachedValidateSamplersResult();
+    // Inform any PPOs this Program may be bound to.
+    onStateChange(angle::SubjectMessage::SamplerUniformsUpdated);
+}
+
+// Driver differences mean that doing the uniform value cast ourselves gives consistent results.
+// EG: on NVIDIA drivers, it was observed that getUniformi for MAX_INT+1 returned MIN_INT.
+template <typename DestT>
+void ProgramExecutable::getUniformInternal(const Context *context,
+                                           DestT *dataOut,
+                                           UniformLocation location,
+                                           GLenum nativeType,
+                                           int components) const
+{
+    switch (nativeType)
+    {
+        case GL_BOOL:
+        {
+            GLint tempValue[16] = {0};
+            mImplementation->getUniformiv(context, location.value, tempValue);
+            UniformStateQueryCastLoop<GLboolean>(
+                dataOut, reinterpret_cast<const uint8_t *>(tempValue), components);
+            break;
+        }
+        case GL_INT:
+        {
+            GLint tempValue[16] = {0};
+            mImplementation->getUniformiv(context, location.value, tempValue);
+            UniformStateQueryCastLoop<GLint>(dataOut, reinterpret_cast<const uint8_t *>(tempValue),
+                                             components);
+            break;
+        }
+        case GL_UNSIGNED_INT:
+        {
+            GLuint tempValue[16] = {0};
+            mImplementation->getUniformuiv(context, location.value, tempValue);
+            UniformStateQueryCastLoop<GLuint>(dataOut, reinterpret_cast<const uint8_t *>(tempValue),
+                                              components);
+            break;
+        }
+        case GL_FLOAT:
+        {
+            GLfloat tempValue[16] = {0};
+            mImplementation->getUniformfv(context, location.value, tempValue);
+            UniformStateQueryCastLoop<GLfloat>(
+                dataOut, reinterpret_cast<const uint8_t *>(tempValue), components);
+            break;
+        }
+        default:
+            UNREACHABLE();
+            break;
+    }
+}
+
+void ProgramExecutable::setDrawIDUniform(GLint drawid)
+{
+    ASSERT(hasDrawIDUniform());
+    mImplementation->setUniform1iv(mPODStruct.drawIDLocation, 1, &drawid);
+}
+
+void ProgramExecutable::setBaseVertexUniform(GLint baseVertex)
+{
+    ASSERT(hasBaseVertexUniform());
+    if (baseVertex == mCachedBaseVertex)
+    {
+        return;
+    }
+    mCachedBaseVertex = baseVertex;
+    mImplementation->setUniform1iv(mPODStruct.baseVertexLocation, 1, &baseVertex);
+}
+
+void ProgramExecutable::setBaseInstanceUniform(GLuint baseInstance)
+{
+    ASSERT(hasBaseInstanceUniform());
+    if (baseInstance == mCachedBaseInstance)
+    {
+        return;
+    }
+    mCachedBaseInstance   = baseInstance;
+    GLint baseInstanceInt = baseInstance;
+    mImplementation->setUniform1iv(mPODStruct.baseInstanceLocation, 1, &baseInstanceInt);
 }
 
 void InstallExecutable(const Context *context,

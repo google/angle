@@ -208,7 +208,7 @@ angle::Result ProgramGL::load(const gl::Context *context,
         return angle::Result::Incomplete;
     }
 
-    executableGL->postLink(mFunctions, mFeatures, mProgramID);
+    executableGL->postLink(mFunctions, mStateManager, mFeatures, mProgramID);
     reapplyUBOBindingsIfNeeded(context);
 
     *loadTaskOut = {};
@@ -497,7 +497,7 @@ angle::Result ProgramGL::postLinkJobImpl(const gl::ProgramLinkedResources &resou
     }
 
     linkResources(resources);
-    getExecutable()->postLink(mFunctions, mFeatures, mProgramID);
+    getExecutable()->postLink(mFunctions, mStateManager, mFeatures, mProgramID);
 
     return angle::Result::Continue;
 }
@@ -506,312 +506,6 @@ GLboolean ProgramGL::validate(const gl::Caps & /*caps*/)
 {
     // TODO(jmadill): implement validate
     return true;
-}
-
-void ProgramGL::setUniform1fv(GLint location, GLsizei count, const GLfloat *v)
-{
-    if (mFunctions->programUniform1fv != nullptr)
-    {
-        mFunctions->programUniform1fv(mProgramID, uniLoc(location), count, v);
-    }
-    else
-    {
-        mStateManager->useProgram(mProgramID);
-        mFunctions->uniform1fv(uniLoc(location), count, v);
-    }
-}
-
-void ProgramGL::setUniform2fv(GLint location, GLsizei count, const GLfloat *v)
-{
-    if (mFunctions->programUniform2fv != nullptr)
-    {
-        mFunctions->programUniform2fv(mProgramID, uniLoc(location), count, v);
-    }
-    else
-    {
-        mStateManager->useProgram(mProgramID);
-        mFunctions->uniform2fv(uniLoc(location), count, v);
-    }
-}
-
-void ProgramGL::setUniform3fv(GLint location, GLsizei count, const GLfloat *v)
-{
-    if (mFunctions->programUniform3fv != nullptr)
-    {
-        mFunctions->programUniform3fv(mProgramID, uniLoc(location), count, v);
-    }
-    else
-    {
-        mStateManager->useProgram(mProgramID);
-        mFunctions->uniform3fv(uniLoc(location), count, v);
-    }
-}
-
-void ProgramGL::setUniform4fv(GLint location, GLsizei count, const GLfloat *v)
-{
-    if (mFunctions->programUniform4fv != nullptr)
-    {
-        mFunctions->programUniform4fv(mProgramID, uniLoc(location), count, v);
-    }
-    else
-    {
-        mStateManager->useProgram(mProgramID);
-        mFunctions->uniform4fv(uniLoc(location), count, v);
-    }
-}
-
-void ProgramGL::setUniform1iv(GLint location, GLsizei count, const GLint *v)
-{
-    if (mFunctions->programUniform1iv != nullptr)
-    {
-        mFunctions->programUniform1iv(mProgramID, uniLoc(location), count, v);
-    }
-    else
-    {
-        mStateManager->useProgram(mProgramID);
-        mFunctions->uniform1iv(uniLoc(location), count, v);
-    }
-}
-
-void ProgramGL::setUniform2iv(GLint location, GLsizei count, const GLint *v)
-{
-    if (mFunctions->programUniform2iv != nullptr)
-    {
-        mFunctions->programUniform2iv(mProgramID, uniLoc(location), count, v);
-    }
-    else
-    {
-        mStateManager->useProgram(mProgramID);
-        mFunctions->uniform2iv(uniLoc(location), count, v);
-    }
-}
-
-void ProgramGL::setUniform3iv(GLint location, GLsizei count, const GLint *v)
-{
-    if (mFunctions->programUniform3iv != nullptr)
-    {
-        mFunctions->programUniform3iv(mProgramID, uniLoc(location), count, v);
-    }
-    else
-    {
-        mStateManager->useProgram(mProgramID);
-        mFunctions->uniform3iv(uniLoc(location), count, v);
-    }
-}
-
-void ProgramGL::setUniform4iv(GLint location, GLsizei count, const GLint *v)
-{
-    if (mFunctions->programUniform4iv != nullptr)
-    {
-        mFunctions->programUniform4iv(mProgramID, uniLoc(location), count, v);
-    }
-    else
-    {
-        mStateManager->useProgram(mProgramID);
-        mFunctions->uniform4iv(uniLoc(location), count, v);
-    }
-}
-
-void ProgramGL::setUniform1uiv(GLint location, GLsizei count, const GLuint *v)
-{
-    if (mFunctions->programUniform1uiv != nullptr)
-    {
-        mFunctions->programUniform1uiv(mProgramID, uniLoc(location), count, v);
-    }
-    else
-    {
-        mStateManager->useProgram(mProgramID);
-        mFunctions->uniform1uiv(uniLoc(location), count, v);
-    }
-}
-
-void ProgramGL::setUniform2uiv(GLint location, GLsizei count, const GLuint *v)
-{
-    if (mFunctions->programUniform2uiv != nullptr)
-    {
-        mFunctions->programUniform2uiv(mProgramID, uniLoc(location), count, v);
-    }
-    else
-    {
-        mStateManager->useProgram(mProgramID);
-        mFunctions->uniform2uiv(uniLoc(location), count, v);
-    }
-}
-
-void ProgramGL::setUniform3uiv(GLint location, GLsizei count, const GLuint *v)
-{
-    if (mFunctions->programUniform3uiv != nullptr)
-    {
-        mFunctions->programUniform3uiv(mProgramID, uniLoc(location), count, v);
-    }
-    else
-    {
-        mStateManager->useProgram(mProgramID);
-        mFunctions->uniform3uiv(uniLoc(location), count, v);
-    }
-}
-
-void ProgramGL::setUniform4uiv(GLint location, GLsizei count, const GLuint *v)
-{
-    if (mFunctions->programUniform4uiv != nullptr)
-    {
-        mFunctions->programUniform4uiv(mProgramID, uniLoc(location), count, v);
-    }
-    else
-    {
-        mStateManager->useProgram(mProgramID);
-        mFunctions->uniform4uiv(uniLoc(location), count, v);
-    }
-}
-
-void ProgramGL::setUniformMatrix2fv(GLint location,
-                                    GLsizei count,
-                                    GLboolean transpose,
-                                    const GLfloat *value)
-{
-    if (mFunctions->programUniformMatrix2fv != nullptr)
-    {
-        mFunctions->programUniformMatrix2fv(mProgramID, uniLoc(location), count, transpose, value);
-    }
-    else
-    {
-        mStateManager->useProgram(mProgramID);
-        mFunctions->uniformMatrix2fv(uniLoc(location), count, transpose, value);
-    }
-}
-
-void ProgramGL::setUniformMatrix3fv(GLint location,
-                                    GLsizei count,
-                                    GLboolean transpose,
-                                    const GLfloat *value)
-{
-    if (mFunctions->programUniformMatrix3fv != nullptr)
-    {
-        mFunctions->programUniformMatrix3fv(mProgramID, uniLoc(location), count, transpose, value);
-    }
-    else
-    {
-        mStateManager->useProgram(mProgramID);
-        mFunctions->uniformMatrix3fv(uniLoc(location), count, transpose, value);
-    }
-}
-
-void ProgramGL::setUniformMatrix4fv(GLint location,
-                                    GLsizei count,
-                                    GLboolean transpose,
-                                    const GLfloat *value)
-{
-    if (mFunctions->programUniformMatrix4fv != nullptr)
-    {
-        mFunctions->programUniformMatrix4fv(mProgramID, uniLoc(location), count, transpose, value);
-    }
-    else
-    {
-        mStateManager->useProgram(mProgramID);
-        mFunctions->uniformMatrix4fv(uniLoc(location), count, transpose, value);
-    }
-}
-
-void ProgramGL::setUniformMatrix2x3fv(GLint location,
-                                      GLsizei count,
-                                      GLboolean transpose,
-                                      const GLfloat *value)
-{
-    if (mFunctions->programUniformMatrix2x3fv != nullptr)
-    {
-        mFunctions->programUniformMatrix2x3fv(mProgramID, uniLoc(location), count, transpose,
-                                              value);
-    }
-    else
-    {
-        mStateManager->useProgram(mProgramID);
-        mFunctions->uniformMatrix2x3fv(uniLoc(location), count, transpose, value);
-    }
-}
-
-void ProgramGL::setUniformMatrix3x2fv(GLint location,
-                                      GLsizei count,
-                                      GLboolean transpose,
-                                      const GLfloat *value)
-{
-    if (mFunctions->programUniformMatrix3x2fv != nullptr)
-    {
-        mFunctions->programUniformMatrix3x2fv(mProgramID, uniLoc(location), count, transpose,
-                                              value);
-    }
-    else
-    {
-        mStateManager->useProgram(mProgramID);
-        mFunctions->uniformMatrix3x2fv(uniLoc(location), count, transpose, value);
-    }
-}
-
-void ProgramGL::setUniformMatrix2x4fv(GLint location,
-                                      GLsizei count,
-                                      GLboolean transpose,
-                                      const GLfloat *value)
-{
-    if (mFunctions->programUniformMatrix2x4fv != nullptr)
-    {
-        mFunctions->programUniformMatrix2x4fv(mProgramID, uniLoc(location), count, transpose,
-                                              value);
-    }
-    else
-    {
-        mStateManager->useProgram(mProgramID);
-        mFunctions->uniformMatrix2x4fv(uniLoc(location), count, transpose, value);
-    }
-}
-
-void ProgramGL::setUniformMatrix4x2fv(GLint location,
-                                      GLsizei count,
-                                      GLboolean transpose,
-                                      const GLfloat *value)
-{
-    if (mFunctions->programUniformMatrix4x2fv != nullptr)
-    {
-        mFunctions->programUniformMatrix4x2fv(mProgramID, uniLoc(location), count, transpose,
-                                              value);
-    }
-    else
-    {
-        mStateManager->useProgram(mProgramID);
-        mFunctions->uniformMatrix4x2fv(uniLoc(location), count, transpose, value);
-    }
-}
-
-void ProgramGL::setUniformMatrix3x4fv(GLint location,
-                                      GLsizei count,
-                                      GLboolean transpose,
-                                      const GLfloat *value)
-{
-    if (mFunctions->programUniformMatrix3x4fv != nullptr)
-    {
-        mFunctions->programUniformMatrix3x4fv(mProgramID, uniLoc(location), count, transpose,
-                                              value);
-    }
-    else
-    {
-        mStateManager->useProgram(mProgramID);
-        mFunctions->uniformMatrix3x4fv(uniLoc(location), count, transpose, value);
-    }
-}
-
-void ProgramGL::setUniformMatrix4x3fv(GLint location,
-                                      GLsizei count,
-                                      GLboolean transpose,
-                                      const GLfloat *value)
-{
-    if (mFunctions->programUniformMatrix4x3fv != nullptr)
-    {
-        mFunctions->programUniformMatrix4x3fv(mProgramID, uniLoc(location), count, transpose,
-                                              value);
-    }
-    else
-    {
-        mStateManager->useProgram(mProgramID);
-        mFunctions->uniformMatrix4x3fv(uniLoc(location), count, transpose, value);
-    }
 }
 
 void ProgramGL::setUniformBlockBinding(GLuint uniformBlockIndex, GLuint uniformBlockBinding)
@@ -1003,31 +697,17 @@ bool ProgramGL::checkLinkStatus()
     return true;
 }
 
-void ProgramGL::getUniformfv(const gl::Context *context, GLint location, GLfloat *params) const
-{
-    mFunctions->getUniformfv(mProgramID, uniLoc(location), params);
-}
-
-void ProgramGL::getUniformiv(const gl::Context *context, GLint location, GLint *params) const
-{
-    mFunctions->getUniformiv(mProgramID, uniLoc(location), params);
-}
-
-void ProgramGL::getUniformuiv(const gl::Context *context, GLint location, GLuint *params) const
-{
-    mFunctions->getUniformuiv(mProgramID, uniLoc(location), params);
-}
-
 void ProgramGL::markUnusedUniformLocations(std::vector<gl::VariableLocation> *uniformLocations,
                                            std::vector<gl::SamplerBinding> *samplerBindings,
                                            std::vector<gl::ImageBinding> *imageBindings)
 {
     const gl::ProgramExecutable &executable = mState.getExecutable();
+    const ProgramExecutableGL *executableGL = getExecutable();
 
     GLint maxLocation = static_cast<GLint>(uniformLocations->size());
     for (GLint location = 0; location < maxLocation; ++location)
     {
-        if (uniLoc(location) == -1)
+        if (executableGL->mUniformRealLocationMap[location] == -1)
         {
             auto &locationRef = (*uniformLocations)[location];
             if (executable.isSamplerUniformIndex(locationRef.index))

@@ -92,64 +92,6 @@ class ProgramImpl : angle::NonCopyable
                                std::shared_ptr<LinkTask> *linkTaskOut) = 0;
     virtual GLboolean validate(const gl::Caps &caps)                   = 0;
 
-    virtual void setUniform1fv(GLint location, GLsizei count, const GLfloat *v) = 0;
-    virtual void setUniform2fv(GLint location, GLsizei count, const GLfloat *v) = 0;
-    virtual void setUniform3fv(GLint location, GLsizei count, const GLfloat *v) = 0;
-    virtual void setUniform4fv(GLint location, GLsizei count, const GLfloat *v) = 0;
-    virtual void setUniform1iv(GLint location, GLsizei count, const GLint *v)   = 0;
-    virtual void setUniform2iv(GLint location, GLsizei count, const GLint *v)   = 0;
-    virtual void setUniform3iv(GLint location, GLsizei count, const GLint *v)   = 0;
-    virtual void setUniform4iv(GLint location, GLsizei count, const GLint *v)   = 0;
-    virtual void setUniform1uiv(GLint location, GLsizei count, const GLuint *v) = 0;
-    virtual void setUniform2uiv(GLint location, GLsizei count, const GLuint *v) = 0;
-    virtual void setUniform3uiv(GLint location, GLsizei count, const GLuint *v) = 0;
-    virtual void setUniform4uiv(GLint location, GLsizei count, const GLuint *v) = 0;
-    virtual void setUniformMatrix2fv(GLint location,
-                                     GLsizei count,
-                                     GLboolean transpose,
-                                     const GLfloat *value)                      = 0;
-    virtual void setUniformMatrix3fv(GLint location,
-                                     GLsizei count,
-                                     GLboolean transpose,
-                                     const GLfloat *value)                      = 0;
-    virtual void setUniformMatrix4fv(GLint location,
-                                     GLsizei count,
-                                     GLboolean transpose,
-                                     const GLfloat *value)                      = 0;
-    virtual void setUniformMatrix2x3fv(GLint location,
-                                       GLsizei count,
-                                       GLboolean transpose,
-                                       const GLfloat *value)                    = 0;
-    virtual void setUniformMatrix3x2fv(GLint location,
-                                       GLsizei count,
-                                       GLboolean transpose,
-                                       const GLfloat *value)                    = 0;
-    virtual void setUniformMatrix2x4fv(GLint location,
-                                       GLsizei count,
-                                       GLboolean transpose,
-                                       const GLfloat *value)                    = 0;
-    virtual void setUniformMatrix4x2fv(GLint location,
-                                       GLsizei count,
-                                       GLboolean transpose,
-                                       const GLfloat *value)                    = 0;
-    virtual void setUniformMatrix3x4fv(GLint location,
-                                       GLsizei count,
-                                       GLboolean transpose,
-                                       const GLfloat *value)                    = 0;
-    virtual void setUniformMatrix4x3fv(GLint location,
-                                       GLsizei count,
-                                       GLboolean transpose,
-                                       const GLfloat *value)                    = 0;
-
-    // Done in the back-end to avoid having to keep a system copy of uniform data.
-    virtual void getUniformfv(const gl::Context *context,
-                              GLint location,
-                              GLfloat *params) const                                           = 0;
-    virtual void getUniformiv(const gl::Context *context, GLint location, GLint *params) const = 0;
-    virtual void getUniformuiv(const gl::Context *context,
-                               GLint location,
-                               GLuint *params) const                                           = 0;
-
     // Implementation-specific method for ignoring unreferenced uniforms. Some implementations may
     // perform more extensive analysis and ignore some locations that ANGLE doesn't detect as
     // unreferenced. This method is not required to be overriden by a back-end.

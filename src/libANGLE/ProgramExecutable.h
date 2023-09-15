@@ -645,6 +645,63 @@ class ProgramExecutable final : public angle::Subject
     void copyOutputsFromProgram(const ProgramExecutable &executable);
     void copyUniformsFromProgramMap(const ShaderMap<SharedProgramExecutable> &executables);
 
+    void setUniform1fv(UniformLocation location, GLsizei count, const GLfloat *v);
+    void setUniform2fv(UniformLocation location, GLsizei count, const GLfloat *v);
+    void setUniform3fv(UniformLocation location, GLsizei count, const GLfloat *v);
+    void setUniform4fv(UniformLocation location, GLsizei count, const GLfloat *v);
+    void setUniform1iv(Context *context, UniformLocation location, GLsizei count, const GLint *v);
+    void setUniform2iv(UniformLocation location, GLsizei count, const GLint *v);
+    void setUniform3iv(UniformLocation location, GLsizei count, const GLint *v);
+    void setUniform4iv(UniformLocation location, GLsizei count, const GLint *v);
+    void setUniform1uiv(UniformLocation location, GLsizei count, const GLuint *v);
+    void setUniform2uiv(UniformLocation location, GLsizei count, const GLuint *v);
+    void setUniform3uiv(UniformLocation location, GLsizei count, const GLuint *v);
+    void setUniform4uiv(UniformLocation location, GLsizei count, const GLuint *v);
+    void setUniformMatrix2fv(UniformLocation location,
+                             GLsizei count,
+                             GLboolean transpose,
+                             const GLfloat *value);
+    void setUniformMatrix3fv(UniformLocation location,
+                             GLsizei count,
+                             GLboolean transpose,
+                             const GLfloat *value);
+    void setUniformMatrix4fv(UniformLocation location,
+                             GLsizei count,
+                             GLboolean transpose,
+                             const GLfloat *value);
+    void setUniformMatrix2x3fv(UniformLocation location,
+                               GLsizei count,
+                               GLboolean transpose,
+                               const GLfloat *value);
+    void setUniformMatrix3x2fv(UniformLocation location,
+                               GLsizei count,
+                               GLboolean transpose,
+                               const GLfloat *value);
+    void setUniformMatrix2x4fv(UniformLocation location,
+                               GLsizei count,
+                               GLboolean transpose,
+                               const GLfloat *value);
+    void setUniformMatrix4x2fv(UniformLocation location,
+                               GLsizei count,
+                               GLboolean transpose,
+                               const GLfloat *value);
+    void setUniformMatrix3x4fv(UniformLocation location,
+                               GLsizei count,
+                               GLboolean transpose,
+                               const GLfloat *value);
+    void setUniformMatrix4x3fv(UniformLocation location,
+                               GLsizei count,
+                               GLboolean transpose,
+                               const GLfloat *value);
+
+    void getUniformfv(const Context *context, UniformLocation location, GLfloat *params) const;
+    void getUniformiv(const Context *context, UniformLocation location, GLint *params) const;
+    void getUniformuiv(const Context *context, UniformLocation location, GLuint *params) const;
+
+    void setDrawIDUniform(GLint drawid);
+    void setBaseVertexUniform(GLint baseVertex);
+    void setBaseInstanceUniform(GLuint baseInstance);
+
   private:
     friend class Program;
     friend class ProgramPipeline;
@@ -654,11 +711,6 @@ class ProgramExecutable final : public angle::Subject
     void reset();
 
     void updateActiveImages(const ProgramExecutable &executable);
-
-    // Scans the sampler bindings for type conflicts with sampler 'textureUnitIndex'.
-    void setSamplerUniformTextureTypeAndFormat(size_t textureUnitIndex,
-                                               const std::vector<SamplerBinding> &samplerBindings,
-                                               const std::vector<GLuint> &boundTextureUnits);
 
     bool linkMergedVaryings(const Caps &caps,
                             const Limitations &limitations,
@@ -699,6 +751,51 @@ class ProgramExecutable final : public angle::Subject
     bool shouldIgnoreUniform(UniformLocation location) const;
     GLuint getSamplerUniformBinding(const VariableLocation &uniformLocation) const;
     GLuint getImageUniformBinding(const VariableLocation &uniformLocation) const;
+
+    void setUniformValuesFromBindingQualifiers();
+
+    // Both these function update the cached uniform values and return a modified "count"
+    // so that the uniform update doesn't overflow the uniform.
+    template <typename T>
+    GLsizei clampUniformCount(const VariableLocation &locationInfo,
+                              GLsizei count,
+                              int vectorSize,
+                              const T *v);
+    template <size_t cols, size_t rows, typename T>
+    GLsizei clampMatrixUniformCount(UniformLocation location,
+                                    GLsizei count,
+                                    GLboolean transpose,
+                                    const T *v);
+
+    void updateSamplerUniform(Context *context,
+                              const VariableLocation &locationInfo,
+                              GLsizei clampedCount,
+                              const GLint *v);
+
+    // Scans the sampler bindings for type conflicts with sampler 'textureUnitIndex'.
+    void setSamplerUniformTextureTypeAndFormat(size_t textureUnitIndex);
+
+    template <typename DestT>
+    void getUniformInternal(const Context *context,
+                            DestT *dataOut,
+                            UniformLocation location,
+                            GLenum nativeType,
+                            int components) const;
+
+    template <typename UniformT,
+              GLint UniformSize,
+              void (rx::ProgramExecutableImpl::*SetUniformFunc)(GLint, GLsizei, const UniformT *)>
+    void setUniformGeneric(UniformLocation location, GLsizei count, const UniformT *v);
+
+    template <typename UniformT,
+              GLint MatrixC,
+              GLint MatrixR,
+              void (rx::ProgramExecutableImpl::*
+                        SetUniformMatrixFunc)(GLint, GLsizei, GLboolean, const UniformT *)>
+    void setUniformMatrixGeneric(UniformLocation location,
+                                 GLsizei count,
+                                 GLboolean transpose,
+                                 const UniformT *v);
 
     rx::ProgramExecutableImpl *mImplementation;
 
@@ -846,6 +943,11 @@ class ProgramExecutable final : public angle::Subject
     ShaderMap<std::vector<sh::ShaderVariable>> mLinkedInputVaryings;
     ShaderMap<std::vector<sh::ShaderVariable>> mLinkedUniforms;
     ShaderMap<std::vector<sh::InterfaceBlock>> mLinkedUniformBlocks;
+
+    // Cached value of base vertex and base instance
+    // need to reset them to zero if using non base vertex or base instance draw calls.
+    GLint mCachedBaseVertex;
+    GLuint mCachedBaseInstance;
 
     // Cache for sampler validation
     mutable Optional<bool> mCachedValidateSamplersResult;

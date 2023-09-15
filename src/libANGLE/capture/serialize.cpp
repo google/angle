@@ -1075,16 +1075,16 @@ void SerializeProgramBindings(JsonSerializer *json, const gl::ProgramBindings &p
 template <typename T>
 void SerializeUniformData(JsonSerializer *json,
                           const gl::Context *context,
-                          gl::Program *program,
+                          const gl::ProgramExecutable &executable,
                           gl::UniformLocation loc,
                           GLenum type,
                           GLint size,
-                          void (gl::Program::*getFunc)(const gl::Context *,
-                                                       gl::UniformLocation,
-                                                       T *) const)
+                          void (gl::ProgramExecutable::*getFunc)(const gl::Context *,
+                                                                 gl::UniformLocation,
+                                                                 T *) const)
 {
     std::vector<T> uniformData(gl::VariableComponentCount(type) * size, 0);
-    (program->*getFunc)(context, loc, uniformData.data());
+    (executable.*getFunc)(context, loc, uniformData.data());
     json->addVector("Data", uniformData);
 }
 
@@ -1150,21 +1150,21 @@ void SerializeProgram(JsonSerializer *json,
             {
                 case GL_FLOAT:
                 {
-                    SerializeUniformData<GLfloat>(json, context, program, loc, type, size,
-                                                  &gl::Program::getUniformfv);
+                    SerializeUniformData<GLfloat>(json, context, executable, loc, type, size,
+                                                  &gl::ProgramExecutable::getUniformfv);
                     break;
                 }
                 case GL_BOOL:
                 case GL_INT:
                 {
-                    SerializeUniformData<GLint>(json, context, program, loc, type, size,
-                                                &gl::Program::getUniformiv);
+                    SerializeUniformData<GLint>(json, context, executable, loc, type, size,
+                                                &gl::ProgramExecutable::getUniformiv);
                     break;
                 }
                 case GL_UNSIGNED_INT:
                 {
-                    SerializeUniformData<GLuint>(json, context, program, loc, type, size,
-                                                 &gl::Program::getUniformuiv);
+                    SerializeUniformData<GLuint>(json, context, executable, loc, type, size,
+                                                 &gl::ProgramExecutable::getUniformuiv);
                     break;
                 }
                 default:

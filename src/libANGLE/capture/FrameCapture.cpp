@@ -2611,8 +2611,8 @@ void CaptureUpdateUniformValues(const gl::State &replayState,
             std::vector<GLint> uniformBuffer(uniformSize);
             for (int index = 0; index < uniformCount; index++, readLoc.value++)
             {
-                program->getUniformiv(context, readLoc,
-                                      uniformBuffer.data() + index * componentCount);
+                executable.getUniformiv(context, readLoc,
+                                        uniformBuffer.data() + index * componentCount);
                 resourceTracker->setDefaultUniformBaseLocation(program->id(), readLoc, uniformLoc);
             }
 
@@ -2632,8 +2632,8 @@ void CaptureUpdateUniformValues(const gl::State &replayState,
                 std::vector<GLfloat> uniformBuffer(uniformSize);
                 for (int index = 0; index < uniformCount; index++, readLoc.value++)
                 {
-                    program->getUniformfv(context, readLoc,
-                                          uniformBuffer.data() + index * componentCount);
+                    executable.getUniformfv(context, readLoc,
+                                            uniformBuffer.data() + index * componentCount);
                     resourceTracker->setDefaultUniformBaseLocation(program->id(), readLoc,
                                                                    uniformLoc);
                 }
@@ -2751,8 +2751,8 @@ void CaptureUpdateUniformValues(const gl::State &replayState,
                 std::vector<GLint> uniformBuffer(uniformSize);
                 for (int index = 0; index < uniformCount; index++, readLoc.value++)
                 {
-                    program->getUniformiv(context, readLoc,
-                                          uniformBuffer.data() + index * componentCount);
+                    executable.getUniformiv(context, readLoc,
+                                            uniformBuffer.data() + index * componentCount);
                     resourceTracker->setDefaultUniformBaseLocation(program->id(), readLoc,
                                                                    uniformLoc);
                 }
@@ -2798,8 +2798,8 @@ void CaptureUpdateUniformValues(const gl::State &replayState,
                 std::vector<GLuint> uniformBuffer(uniformSize);
                 for (int index = 0; index < uniformCount; index++, readLoc.value++)
                 {
-                    program->getUniformuiv(context, readLoc,
-                                           uniformBuffer.data() + index * componentCount);
+                    executable.getUniformuiv(context, readLoc,
+                                             uniformBuffer.data() + index * componentCount);
                     resourceTracker->setDefaultUniformBaseLocation(program->id(), readLoc,
                                                                    uniformLoc);
                 }
