@@ -435,6 +435,10 @@ angle::Result BufferVk::setDataWithMemoryType(const gl::Context *context,
         ANGLE_TRY(GetMemoryTypeIndex(contextVk, size, memoryPropertyFlags, &mMemoryTypeIndex));
         ANGLE_TRY(acquireBufferHelper(contextVk, size, mUsageType));
     }
+    else if (size != static_cast<size_t>(mState.getSize()))
+    {
+        mBuffer.onBufferUserSizeChange(renderer);
+    }
 
     if (data != nullptr)
     {

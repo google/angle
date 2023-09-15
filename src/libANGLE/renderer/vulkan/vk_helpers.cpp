@@ -4734,8 +4734,8 @@ BufferHelper &BufferHelper::operator=(BufferHelper &&other)
 {
     ReadWriteResource::operator=(std::move(other));
 
-    mSuballocation        = std::move(other.mSuballocation);
-    mBufferForVertexArray = std::move(other.mBufferForVertexArray);
+    mSuballocation      = std::move(other.mSuballocation);
+    mBufferWithUserSize = std::move(other.mBufferWithUserSize);
 
     mCurrentQueueFamilyIndex = other.mCurrentQueueFamilyIndex;
     mCurrentWriteAccess      = other.mCurrentWriteAccess;
@@ -5041,13 +5041,14 @@ const Buffer &BufferHelper::getBufferForVertexArray(ContextVk *contextVk,
     ASSERT(mSuballocation.valid());
     ASSERT(actualDataSize <= mSuballocation.getSize());
 
-    if (!contextVk->isRobustResourceInitEnabled() || !mSuballocation.isSuballocated())
+    if (!contextVk->hasRobustAccess() || !mSuballocation.isSuballocated() ||
+        actualDataSize == mSuballocation.getSize())
     {
         *offsetOut = mSuballocation.getOffset();
         return mSuballocation.getBuffer();
     }
 
-    if (!mBufferForVertexArray.valid())
+    if (!mBufferWithUserSize.valid())
     {
         // Allocate buffer that is backed by sub-range of the memory for vertex array usage. This is
         // only needed when robust resource init is enabled so that vulkan driver will know the
@@ -5060,27 +5061,41 @@ const Buffer &BufferHelper::getBufferForVertexArray(ContextVk *contextVk,
         createInfo.sharingMode           = VK_SHARING_MODE_EXCLUSIVE;
         createInfo.queueFamilyIndexCount = 0;
         createInfo.pQueueFamilyIndices   = nullptr;
-        mBufferForVertexArray.init(contextVk->getDevice(), createInfo);
+        mBufferWithUserSize.init(contextVk->getDevice(), createInfo);
 
         VkMemoryRequirements memoryRequirements;
-        mBufferForVertexArray.getMemoryRequirements(contextVk->getDevice(), &memoryRequirements);
+        mBufferWithUserSize.getMemoryRequirements(contextVk->getDevice(), &memoryRequirements);
         ASSERT(contextVk->getRenderer()->isMockICDEnabled() ||
                mSuballocation.getSize() >= memoryRequirements.size);
         ASSERT(!contextVk->getRenderer()->isMockICDEnabled() ||
                mSuballocation.getOffset() % memoryRequirements.alignment == 0);
 
-        mBufferForVertexArray.bindMemory(contextVk->getDevice(), mSuballocation.getDeviceMemory(),
-                                         mSuballocation.getOffset());
+        mBufferWithUserSize.bindMemory(contextVk->getDevice(), mSuballocation.getDeviceMemory(),
+                                       mSuballocation.getOffset());
     }
     *offsetOut = 0;
-    return mBufferForVertexArray;
+    return mBufferWithUserSize;
+}
+
+void BufferHelper::onBufferUserSizeChange(RendererVk *renderer)
+{
+    // Buffer's user size and allocation size may be different due to alignment requirement. In
+    // normal usage we just use the actual allocation size and it is good enough. But when
+    // robustResourceInit is enabled, mBufferWithUserSize is created to mjatch the exact user
+    // size. Thus when user size changes, we must clear and recreate this mBufferWithUserSize.
+    if (mBufferWithUserSize.valid())
+    {
+        BufferSuballocation unusedSuballocation;
+        renderer->collectSuballocationGarbage(mUse, std::move(unusedSuballocation),
+                                              std::move(mBufferWithUserSize));
+    }
 }
 
 void BufferHelper::destroy(RendererVk *renderer)
 {
     mDescriptorSetCacheManager.destroyKeys(renderer);
     unmap(renderer);
-    mBufferForVertexArray.destroy(renderer->getDevice());
+    mBufferWithUserSize.destroy(renderer->getDevice());
     mSuballocation.destroy(renderer);
 }
 
@@ -5098,11 +5113,11 @@ void BufferHelper::release(RendererVk *renderer)
             mSuballocation.getBufferBlock()->releaseAllCachedDescriptorSetCacheKeys(renderer);
         }
         renderer->collectSuballocationGarbage(mUse, std::move(mSuballocation),
-                                              std::move(mBufferForVertexArray));
+                                              std::move(mBufferWithUserSize));
     }
     mUse.reset();
     mWriteUse.reset();
-    ASSERT(!mBufferForVertexArray.valid());
+    ASSERT(!mBufferWithUserSize.valid());
 }
 
 void BufferHelper::releaseBufferAndDescriptorSetCache(RendererVk *renderer)

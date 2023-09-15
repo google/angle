@@ -867,6 +867,12 @@ class BufferHelper : public ReadWriteResource
                                           VkBufferUsageFlags usage,
                                           VkDeviceSize size);
 
+    // Buffer's user size and allocation size may be different due to alignment requirement. In
+    // normal usage we just use the actual allocation size and it is good enough. But when
+    // robustResourceInit is enabled, mBufferWithUserSize is created to match the exact user
+    // size. Thus when user size changes, we must clear and recreate this mBufferWithUserSize.
+    void onBufferUserSizeChange(RendererVk *renderer);
+
   private:
     void initializeBarrierTracker(Context *context);
 
@@ -883,7 +889,7 @@ class BufferHelper : public ReadWriteResource
     // when robust resource init is enabled, we may want to create a dedicated VkBuffer for the
     // suballocation so that vulkan driver will ensure no access beyond this sub-range. In that
     // case, this VkBuffer will be created lazily as needed.
-    Buffer mBufferForVertexArray;
+    Buffer mBufferWithUserSize;
 
     // For memory barriers.
     uint32_t mCurrentQueueFamilyIndex;

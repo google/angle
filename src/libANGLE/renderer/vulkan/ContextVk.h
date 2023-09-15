@@ -675,6 +675,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     bool shouldConvertUint8VkIndexType(gl::DrawElementsType glIndexType) const;
 
     bool isRobustResourceInitEnabled() const;
+    bool hasRobustAccess() const { return mState.hasRobustAccess(); }
 
     // Queries that begin and end automatically with render pass start and end
     angle::Result beginRenderPassQuery(QueryVk *queryVk);
