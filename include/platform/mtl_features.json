@@ -414,12 +414,12 @@
             "issue": "http://anglebug.com/8258"
         },
         {
-            "name": "disable_metal_on_amd_fire_pro",
+            "name": "rescope_global_variables",
             "category": "Features",
             "description": [
-                "AMD GPUs are unsupported on Metal on older AMD FirePro devices due to driver crashes."
+                "Rescope global variables that are only used in one function to be function-local."
             ],
-            "issue": "http://anglebug.com/8317"
+            "issue": "http://anglebug.com/8311"
         }
     ]
 }

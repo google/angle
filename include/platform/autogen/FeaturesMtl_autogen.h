@@ -400,11 +400,11 @@ struct FeaturesMtl : FeatureSetBase
         &members, "http://anglebug.com/8258"
     };
 
-    FeatureInfo disableMetalOnAmdFirePro = {
-        "disableMetalOnAmdFirePro",
+    FeatureInfo rescopeGlobalVariables = {
+        "rescopeGlobalVariables",
         FeatureCategory::MetalFeatures,
-        "AMD GPUs are unsupported on Metal on older AMD FirePro devices due to driver crashes.",
-        &members, "http://anglebug.com/8317"
+        "Rescope global variables that are only used in one function to be function-local.",
+        &members, "http://anglebug.com/8311"
     };
 
 };

@@ -153,12 +153,6 @@ angle::Result DisplayMtl::initializeImpl(egl::Display *display)
             return angle::Result::Stop;
         }
 
-        if (mFeatures.disableMetalOnAmdFirePro.enabled && isAMDFireProDevice())
-        {
-            ANGLE_MTL_LOG("Could not initialize: Metal is not supported on AMD FirePro devices.");
-            return angle::Result::Stop;
-        }
-
         mCmdQueue.set([[mMetalDevice newCommandQueue] ANGLE_MTL_AUTORELEASE]);
 
         ANGLE_TRY(mFormatTable.initialize(this));
@@ -1356,9 +1350,9 @@ void DisplayMtl::initializeFeatures()
     // anglebug.com/8258 Builtin shaders currently require MSL 2.1
     ANGLE_FEATURE_CONDITION((&mFeatures), requireMsl21, true);
 
-    // http://anglebug.com/8317: AMD GPUs are unsupported by the Metal backend on older FirePro
-    // devices due to crashes.
-    ANGLE_FEATURE_CONDITION((&mFeatures), disableMetalOnAmdFirePro, true);
+    // http://anglebug.com/8311: Rescope global variables which are only used in one function to be
+    // function local. Disabled on AMD FirePro devices: http://anglebug.com/8317
+    ANGLE_FEATURE_CONDITION((&mFeatures), rescopeGlobalVariables, !isAMDFireProDevice());
 }
 
 angle::Result DisplayMtl::initializeShaderLibrary()
