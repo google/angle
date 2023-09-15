@@ -360,7 +360,6 @@
         "args": [
           "--log=debug"
         ],
-        "isolate_name": "angle_capture_tests",
         "merge": {
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
@@ -377,6 +376,7 @@
           "expiration": 21600,
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
         },
+        "test": "angle_capture_tests",
         "test_id_prefix": "ninja://src/tests:angle_capture_tests/"
       },
       {
@@ -386,7 +386,6 @@
           "-v",
           "--git-revision=${got_angle_revision}"
         ],
-        "isolate_name": "angle_restricted_trace_gold_tests",
         "merge": {
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
@@ -410,6 +409,7 @@
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
           "shards": 6
         },
+        "test": "angle_restricted_trace_gold_tests",
         "test_id_prefix": "ninja://src/tests/restricted_traces:angle_restricted_trace_gold_tests/"
       }
     ]
@@ -864,7 +864,6 @@
         "args": [
           "--log=debug"
         ],
-        "isolate_name": "angle_capture_tests",
         "merge": {
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
@@ -880,6 +879,7 @@
           },
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
         },
+        "test": "angle_capture_tests",
         "test_id_prefix": "ninja://src/tests:angle_capture_tests/"
       },
       {
@@ -888,7 +888,6 @@
           "--smoke-test-mode",
           "--show-test-stdout"
         ],
-        "isolate_name": "angle_perftests",
         "merge": {
           "args": [
             "--smoke-test-mode"
@@ -908,6 +907,7 @@
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
           "shards": 6
         },
+        "test": "angle_perftests",
         "test_id_prefix": "ninja://src/tests:angle_perftests/"
       },
       {
@@ -919,7 +919,6 @@
           "-v",
           "--git-revision=${got_angle_revision}"
         ],
-        "isolate_name": "angle_restricted_trace_gold_interpreted_tests",
         "merge": {
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
@@ -951,7 +950,6 @@
           "-v",
           "--git-revision=${got_angle_revision}"
         ],
-        "isolate_name": "angle_restricted_trace_gold_tests",
         "merge": {
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
@@ -974,6 +972,7 @@
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
           "shards": 6
         },
+        "test": "angle_restricted_trace_gold_tests",
         "test_id_prefix": "ninja://src/tests/restricted_traces:angle_restricted_trace_gold_tests/"
       },
       {
@@ -984,7 +983,6 @@
           "--use-gl=native",
           "--trace-tests"
         ],
-        "isolate_name": "angle_trace_perf_native_tests",
         "merge": {
           "args": [
             "--smoke-test-mode"
@@ -1015,7 +1013,6 @@
           "--use-angle=vulkan",
           "--trace-tests"
         ],
-        "isolate_name": "angle_trace_perf_vulkan_tests",
         "merge": {
           "args": [
             "--smoke-test-mode"
@@ -1049,7 +1046,6 @@
           "--show-test-stdout",
           "--trial-time=10"
         ],
-        "isolate_name": "angle_perftests",
         "merge": {
           "script": "//scripts/process_angle_perf_results.py"
         },
@@ -1068,6 +1064,7 @@
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
           "shards": 30
         },
+        "test": "angle_perftests",
         "test_id_prefix": "ninja://src/tests:angle_perftests/"
       },
       {
@@ -1079,7 +1076,6 @@
           "--trace-tests",
           "--trial-time=10"
         ],
-        "isolate_name": "angle_trace_perf_native_tests",
         "merge": {
           "script": "//scripts/process_angle_perf_results.py"
         },
@@ -1110,7 +1106,6 @@
           "--trace-tests",
           "--trial-time=10"
         ],
-        "isolate_name": "angle_trace_perf_vulkan_tests",
         "merge": {
           "script": "//scripts/process_angle_perf_results.py"
         },
@@ -1480,7 +1475,6 @@
         "args": [
           "--log=debug"
         ],
-        "isolate_name": "angle_capture_tests",
         "merge": {
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
@@ -1496,6 +1490,7 @@
           },
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
         },
+        "test": "angle_capture_tests",
         "test_id_prefix": "ninja://src/tests:angle_capture_tests/"
       },
       {
@@ -1505,7 +1500,6 @@
           "-v",
           "--git-revision=${got_angle_revision}"
         ],
-        "isolate_name": "angle_restricted_trace_gold_tests",
         "merge": {
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
@@ -1528,6 +1522,7 @@
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
           "shards": 6
         },
+        "test": "angle_restricted_trace_gold_tests",
         "test_id_prefix": "ninja://src/tests/restricted_traces:angle_restricted_trace_gold_tests/"
       }
     ]
@@ -1541,7 +1536,6 @@
           "--show-test-stdout",
           "--trial-time=10"
         ],
-        "isolate_name": "angle_perftests",
         "merge": {
           "script": "//scripts/process_angle_perf_results.py"
         },
@@ -1560,6 +1554,7 @@
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
           "shards": 30
         },
+        "test": "angle_perftests",
         "test_id_prefix": "ninja://src/tests:angle_perftests/"
       },
       {
@@ -1571,7 +1566,6 @@
           "--trace-tests",
           "--trial-time=10"
         ],
-        "isolate_name": "angle_trace_perf_native_tests",
         "merge": {
           "script": "//scripts/process_angle_perf_results.py"
         },
@@ -1602,7 +1596,6 @@
           "--trace-tests",
           "--trial-time=10"
         ],
-        "isolate_name": "angle_trace_perf_vulkan_tests",
         "merge": {
           "script": "//scripts/process_angle_perf_results.py"
         },
@@ -1747,7 +1740,6 @@
         "args": [
           "--log=debug"
         ],
-        "isolate_name": "angle_capture_tests",
         "merge": {
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
@@ -1761,6 +1753,7 @@
           },
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
         },
+        "test": "angle_capture_tests",
         "test_id_prefix": "ninja://src/tests:angle_capture_tests/"
       },
       {
@@ -1769,7 +1762,6 @@
           "--smoke-test-mode",
           "--show-test-stdout"
         ],
-        "isolate_name": "angle_perftests",
         "merge": {
           "args": [
             "--smoke-test-mode"
@@ -1787,6 +1779,7 @@
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
           "shards": 2
         },
+        "test": "angle_perftests",
         "test_id_prefix": "ninja://src/tests:angle_perftests/"
       },
       {
@@ -1797,7 +1790,6 @@
           "--filter=fishdom:geometry_dash:merge_dragons:minecraft_bedrock:new_legend_of_the_condor_heroes:street_fighter_duel:teslagrad:vainglory",
           "--git-revision=${got_angle_revision}"
         ],
-        "isolate_name": "angle_restricted_trace_gold_interpreted_tests",
         "merge": {
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
@@ -1826,7 +1818,6 @@
           "${buildername}",
           "--git-revision=${got_angle_revision}"
         ],
-        "isolate_name": "angle_restricted_trace_gold_tests",
         "merge": {
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
@@ -1846,6 +1837,7 @@
           },
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
         },
+        "test": "angle_restricted_trace_gold_tests",
         "test_id_prefix": "ninja://src/tests/restricted_traces:angle_restricted_trace_gold_tests/"
       },
       {
@@ -1856,7 +1848,6 @@
           "--use-gl=native",
           "--trace-tests"
         ],
-        "isolate_name": "angle_trace_perf_native_tests",
         "merge": {
           "args": [
             "--smoke-test-mode"
@@ -1885,7 +1876,6 @@
           "--use-angle=vulkan",
           "--trace-tests"
         ],
-        "isolate_name": "angle_trace_perf_vulkan_tests",
         "merge": {
           "args": [
             "--smoke-test-mode"
@@ -1916,7 +1906,6 @@
           "--samples-per-test=6",
           "--show-test-stdout"
         ],
-        "isolate_name": "angle_perftests",
         "merge": {
           "script": "//scripts/process_angle_perf_results.py"
         },
@@ -1933,6 +1922,7 @@
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
           "shards": 10
         },
+        "test": "angle_perftests",
         "test_id_prefix": "ninja://src/tests:angle_perftests/"
       },
       {
@@ -1943,7 +1933,6 @@
           "--use-gl=native",
           "--trace-tests"
         ],
-        "isolate_name": "angle_trace_perf_native_tests",
         "merge": {
           "script": "//scripts/process_angle_perf_results.py"
         },
@@ -1971,7 +1960,6 @@
           "--use-angle=vulkan",
           "--trace-tests"
         ],
-        "isolate_name": "angle_trace_perf_vulkan_tests",
         "merge": {
           "script": "//scripts/process_angle_perf_results.py"
         },
@@ -2492,7 +2480,6 @@
         "args": [
           "--log=debug"
         ],
-        "isolate_name": "angle_capture_tests",
         "merge": {
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
@@ -2506,6 +2493,7 @@
           },
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
         },
+        "test": "angle_capture_tests",
         "test_id_prefix": "ninja://src/tests:angle_capture_tests/"
       },
       {
@@ -2514,7 +2502,6 @@
           "--smoke-test-mode",
           "--show-test-stdout"
         ],
-        "isolate_name": "angle_perftests",
         "merge": {
           "args": [
             "--smoke-test-mode"
@@ -2532,6 +2519,7 @@
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
           "shards": 2
         },
+        "test": "angle_perftests",
         "test_id_prefix": "ninja://src/tests:angle_perftests/"
       },
       {
@@ -2542,7 +2530,6 @@
           "--filter=fishdom:geometry_dash:merge_dragons:minecraft_bedrock:new_legend_of_the_condor_heroes:street_fighter_duel:teslagrad:vainglory",
           "--git-revision=${got_angle_revision}"
         ],
-        "isolate_name": "angle_restricted_trace_gold_interpreted_tests",
         "merge": {
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
@@ -2571,7 +2558,6 @@
           "${buildername}",
           "--git-revision=${got_angle_revision}"
         ],
-        "isolate_name": "angle_restricted_trace_gold_tests",
         "merge": {
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
@@ -2591,6 +2577,7 @@
           },
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
         },
+        "test": "angle_restricted_trace_gold_tests",
         "test_id_prefix": "ninja://src/tests/restricted_traces:angle_restricted_trace_gold_tests/"
       },
       {
@@ -2601,7 +2588,6 @@
           "--use-gl=native",
           "--trace-tests"
         ],
-        "isolate_name": "angle_trace_perf_native_tests",
         "merge": {
           "args": [
             "--smoke-test-mode"
@@ -2630,7 +2616,6 @@
           "--use-angle=vulkan",
           "--trace-tests"
         ],
-        "isolate_name": "angle_trace_perf_vulkan_tests",
         "merge": {
           "args": [
             "--smoke-test-mode"
@@ -2661,7 +2646,6 @@
           "--samples-per-test=6",
           "--show-test-stdout"
         ],
-        "isolate_name": "angle_perftests",
         "merge": {
           "script": "//scripts/process_angle_perf_results.py"
         },
@@ -2678,6 +2662,7 @@
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
           "shards": 10
         },
+        "test": "angle_perftests",
         "test_id_prefix": "ninja://src/tests:angle_perftests/"
       },
       {
@@ -2688,7 +2673,6 @@
           "--use-gl=native",
           "--trace-tests"
         ],
-        "isolate_name": "angle_trace_perf_native_tests",
         "merge": {
           "script": "//scripts/process_angle_perf_results.py"
         },
@@ -2716,7 +2700,6 @@
           "--use-angle=vulkan",
           "--trace-tests"
         ],
-        "isolate_name": "angle_trace_perf_vulkan_tests",
         "merge": {
           "script": "//scripts/process_angle_perf_results.py"
         },
@@ -3209,7 +3192,6 @@
           "--flaky-retries=2",
           "--git-revision=${got_angle_revision}"
         ],
-        "isolate_name": "angle_restricted_trace_gold_tests",
         "merge": {
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
@@ -3233,6 +3215,7 @@
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
           "shards": 6
         },
+        "test": "angle_restricted_trace_gold_tests",
         "test_id_prefix": "ninja://src/tests/restricted_traces:angle_restricted_trace_gold_tests/"
       }
     ]
@@ -4534,7 +4517,6 @@
         "args": [
           "--log=debug"
         ],
-        "isolate_name": "angle_capture_tests",
         "merge": {
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
@@ -4549,6 +4531,7 @@
           },
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
         },
+        "test": "angle_capture_tests",
         "test_id_prefix": "ninja://src/tests:angle_capture_tests/"
       },
       {
@@ -4557,7 +4540,6 @@
           "--smoke-test-mode",
           "--show-test-stdout"
         ],
-        "isolate_name": "angle_perftests",
         "merge": {
           "args": [
             "--smoke-test-mode"
@@ -4576,6 +4558,7 @@
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
           "shards": 2
         },
+        "test": "angle_perftests",
         "test_id_prefix": "ninja://src/tests:angle_perftests/"
       },
       {
@@ -4586,7 +4569,6 @@
           "--filter=fishdom:geometry_dash:merge_dragons:minecraft_bedrock:new_legend_of_the_condor_heroes:street_fighter_duel:teslagrad:vainglory",
           "--git-revision=${got_angle_revision}"
         ],
-        "isolate_name": "angle_restricted_trace_gold_interpreted_tests",
         "merge": {
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
@@ -4617,7 +4599,6 @@
           "--git-revision=${got_angle_revision}",
           "--flaky-retries=1"
         ],
-        "isolate_name": "angle_restricted_trace_gold_tests",
         "merge": {
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
@@ -4638,6 +4619,7 @@
           },
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
         },
+        "test": "angle_restricted_trace_gold_tests",
         "test_id_prefix": "ninja://src/tests/restricted_traces:angle_restricted_trace_gold_tests/"
       },
       {
@@ -4648,7 +4630,6 @@
           "--use-gl=native",
           "--trace-tests"
         ],
-        "isolate_name": "angle_trace_perf_native_tests",
         "merge": {
           "args": [
             "--smoke-test-mode"
@@ -4678,7 +4659,6 @@
           "--use-angle=vulkan",
           "--trace-tests"
         ],
-        "isolate_name": "angle_trace_perf_vulkan_tests",
         "merge": {
           "args": [
             "--smoke-test-mode"
@@ -4710,7 +4690,6 @@
           "--samples-per-test=6",
           "--show-test-stdout"
         ],
-        "isolate_name": "angle_perftests",
         "merge": {
           "script": "//scripts/process_angle_perf_results.py"
         },
@@ -4728,6 +4707,7 @@
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
           "shards": 10
         },
+        "test": "angle_perftests",
         "test_id_prefix": "ninja://src/tests:angle_perftests/"
       },
       {
@@ -4738,7 +4718,6 @@
           "--use-gl=native",
           "--trace-tests"
         ],
-        "isolate_name": "angle_trace_perf_native_tests",
         "merge": {
           "script": "//scripts/process_angle_perf_results.py"
         },
@@ -4767,7 +4746,6 @@
           "--use-angle=vulkan",
           "--trace-tests"
         ],
-        "isolate_name": "angle_trace_perf_vulkan_tests",
         "merge": {
           "script": "//scripts/process_angle_perf_results.py"
         },
@@ -5452,7 +5430,6 @@
         "args": [
           "--log=debug"
         ],
-        "isolate_name": "angle_capture_tests",
         "merge": {
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
@@ -5467,6 +5444,7 @@
           },
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
         },
+        "test": "angle_capture_tests",
         "test_id_prefix": "ninja://src/tests:angle_capture_tests/"
       },
       {
@@ -5475,7 +5453,6 @@
           "--smoke-test-mode",
           "--show-test-stdout"
         ],
-        "isolate_name": "angle_perftests",
         "merge": {
           "args": [
             "--smoke-test-mode"
@@ -5494,6 +5471,7 @@
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
           "shards": 2
         },
+        "test": "angle_perftests",
         "test_id_prefix": "ninja://src/tests:angle_perftests/"
       },
       {
@@ -5504,7 +5482,6 @@
           "--filter=fishdom:geometry_dash:merge_dragons:minecraft_bedrock:new_legend_of_the_condor_heroes:street_fighter_duel:teslagrad:vainglory",
           "--git-revision=${got_angle_revision}"
         ],
-        "isolate_name": "angle_restricted_trace_gold_interpreted_tests",
         "merge": {
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
@@ -5534,7 +5511,6 @@
           "${buildername}",
           "--git-revision=${got_angle_revision}"
         ],
-        "isolate_name": "angle_restricted_trace_gold_tests",
         "merge": {
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
@@ -5555,6 +5531,7 @@
           },
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
         },
+        "test": "angle_restricted_trace_gold_tests",
         "test_id_prefix": "ninja://src/tests/restricted_traces:angle_restricted_trace_gold_tests/"
       },
       {
@@ -5565,7 +5542,6 @@
           "--use-gl=native",
           "--trace-tests"
         ],
-        "isolate_name": "angle_trace_perf_native_tests",
         "merge": {
           "args": [
             "--smoke-test-mode"
@@ -5595,7 +5571,6 @@
           "--use-angle=vulkan",
           "--trace-tests"
         ],
-        "isolate_name": "angle_trace_perf_vulkan_tests",
         "merge": {
           "args": [
             "--smoke-test-mode"
@@ -5627,7 +5602,6 @@
           "--samples-per-test=6",
           "--show-test-stdout"
         ],
-        "isolate_name": "angle_perftests",
         "merge": {
           "script": "//scripts/process_angle_perf_results.py"
         },
@@ -5645,6 +5619,7 @@
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
           "shards": 10
         },
+        "test": "angle_perftests",
         "test_id_prefix": "ninja://src/tests:angle_perftests/"
       },
       {
@@ -5655,7 +5630,6 @@
           "--use-gl=native",
           "--trace-tests"
         ],
-        "isolate_name": "angle_trace_perf_native_tests",
         "merge": {
           "script": "//scripts/process_angle_perf_results.py"
         },
@@ -5684,7 +5658,6 @@
           "--use-angle=vulkan",
           "--trace-tests"
         ],
-        "isolate_name": "angle_trace_perf_vulkan_tests",
         "merge": {
           "script": "//scripts/process_angle_perf_results.py"
         },
@@ -6176,7 +6149,6 @@
           "--swiftshader",
           "--git-revision=${got_angle_revision}"
         ],
-        "isolate_name": "angle_restricted_trace_gold_tests",
         "merge": {
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
@@ -6200,6 +6172,7 @@
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
           "shards": 6
         },
+        "test": "angle_restricted_trace_gold_tests",
         "test_id_prefix": "ninja://src/tests/restricted_traces:angle_restricted_trace_gold_tests/"
       }
     ]
