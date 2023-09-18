@@ -3883,7 +3883,7 @@ angle::Result StateManager11::getUAVsForAtomicCounterBuffers(const gl::Context *
     const gl::ProgramExecutable *executable = glState.getProgramExecutable();
     for (const auto &atomicCounterBuffer : executable->getAtomicCounterBuffers())
     {
-        GLuint binding     = atomicCounterBuffer.binding;
+        GLuint binding     = atomicCounterBuffer.pod.binding;
         const auto &buffer = glState.getIndexedAtomicCounterBuffer(binding);
         const unsigned int registerIndex =
             mExecutableD3D->getAtomicCounterBufferRegisterIndex(binding, shaderType);

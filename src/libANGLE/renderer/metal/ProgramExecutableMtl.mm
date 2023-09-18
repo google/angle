@@ -472,16 +472,8 @@ void ProgramExecutableMtl::saveInterfaceBlockInfo(gl::BinaryOutputStream *stream
         stream->writeString(conversion.first);
         // Write the number of entries in the conversion
         const UBOConversionInfo &conversionInfo = conversion.second;
-        unsigned int numEntries                 = (unsigned int)(conversionInfo.stdInfo().size());
-        stream->writeInt<unsigned int>(numEntries);
-        for (unsigned int i = 0; i < numEntries; ++i)
-        {
-            gl::WriteBlockMemberInfo(stream, conversionInfo.stdInfo()[i]);
-        }
-        for (unsigned int i = 0; i < numEntries; ++i)
-        {
-            gl::WriteBlockMemberInfo(stream, conversionInfo.metalInfo()[i]);
-        }
+        stream->writeVector(conversionInfo.stdInfo());
+        stream->writeVector(conversionInfo.metalInfo());
         stream->writeInt<size_t>(conversionInfo.stdSize());
         stream->writeInt<size_t>(conversionInfo.metalSize());
     }
@@ -499,19 +491,8 @@ angle::Result ProgramExecutableMtl::loadInterfaceBlockInfo(gl::BinaryInputStream
         std::string blockName = stream->readString();
         // Read the number of entries in the conversion
         std::vector<sh::BlockMemberInfo> stdInfo, metalInfo;
-        uint32_t numEntries = stream->readInt<uint32_t>();
-        stdInfo.reserve(numEntries);
-        metalInfo.reserve(numEntries);
-        for (uint32_t i = 0; i < numEntries; ++i)
-        {
-            stdInfo.push_back(sh::BlockMemberInfo());
-            gl::LoadBlockMemberInfo(stream, &(stdInfo[i]));
-        }
-        for (uint32_t i = 0; i < numEntries; ++i)
-        {
-            metalInfo.push_back(sh::BlockMemberInfo());
-            gl::LoadBlockMemberInfo(stream, &(metalInfo[i]));
-        }
+        stream->readVector(&stdInfo);
+        stream->readVector(&metalInfo);
         size_t stdSize   = stream->readInt<size_t>();
         size_t metalSize = stream->readInt<size_t>();
         mUniformBlockConversions.insert(
@@ -525,14 +506,7 @@ void ProgramExecutableMtl::saveDefaultUniformBlocksInfo(gl::BinaryOutputStream *
     // Serializes the uniformLayout data of mDefaultUniformBlocks
     for (gl::ShaderType shaderType : gl::AllShaderTypes())
     {
-        const size_t uniformCount = mDefaultUniformBlocks[shaderType].uniformLayout.size();
-        stream->writeInt<size_t>(uniformCount);
-        for (unsigned int uniformIndex = 0; uniformIndex < uniformCount; ++uniformIndex)
-        {
-            sh::BlockMemberInfo &blockInfo =
-                mDefaultUniformBlocks[shaderType].uniformLayout[uniformIndex];
-            gl::WriteBlockMemberInfo(stream, blockInfo);
-        }
+        stream->writeVector(mDefaultUniformBlocks[shaderType].uniformLayout);
     }
 
     // Serializes required uniform block memory sizes
@@ -550,13 +524,7 @@ angle::Result ProgramExecutableMtl::loadDefaultUniformBlocksInfo(mtl::Context *c
     // Deserializes the uniformLayout data of mDefaultUniformBlocks
     for (gl::ShaderType shaderType : gl::AllShaderTypes())
     {
-        const size_t uniformCount = stream->readInt<size_t>();
-        for (unsigned int uniformIndex = 0; uniformIndex < uniformCount; ++uniformIndex)
-        {
-            sh::BlockMemberInfo blockInfo;
-            gl::LoadBlockMemberInfo(stream, &blockInfo);
-            mDefaultUniformBlocks[shaderType].uniformLayout.push_back(blockInfo);
-        }
+        stream->readVector(&mDefaultUniformBlocks[shaderType].uniformLayout);
     }
 
     // Deserializes required uniform block memory sizes
@@ -1300,7 +1268,7 @@ angle::Result ProgramExecutableMtl::updateUniformBuffers(
     {
         const gl::InterfaceBlock &block = blocks[bufferIndex];
         const gl::OffsetBindingPointer<gl::Buffer> &bufferBinding =
-            glState.getIndexedUniformBuffer(block.binding);
+            glState.getIndexedUniformBuffer(block.pod.binding);
         if (bufferBinding.get() == nullptr)
         {
             continue;
@@ -1332,7 +1300,7 @@ angle::Result ProgramExecutableMtl::legalizeUniformBufferOffsets(
     {
         const gl::InterfaceBlock &block = blocks[bufferIndex];
         const gl::OffsetBindingPointer<gl::Buffer> &bufferBinding =
-            glState.getIndexedUniformBuffer(block.binding);
+            glState.getIndexedUniformBuffer(block.pod.binding);
 
         if (bufferBinding.get() == nullptr)
         {
@@ -1398,7 +1366,7 @@ angle::Result ProgramExecutableMtl::bindUniformBuffersToDiscreteSlots(
     {
         const gl::InterfaceBlock &block = blocks[bufferIndex];
         const gl::OffsetBindingPointer<gl::Buffer> &bufferBinding =
-            glState.getIndexedUniformBuffer(block.binding);
+            glState.getIndexedUniformBuffer(block.pod.binding);
 
         if (bufferBinding.get() == nullptr || !block.activeShaders().test(shaderType))
         {
@@ -1460,7 +1428,7 @@ angle::Result ProgramExecutableMtl::encodeUniformBuffersInfoArgumentBuffer(
     {
         const gl::InterfaceBlock &block = blocks[bufferIndex];
         const gl::OffsetBindingPointer<gl::Buffer> &bufferBinding =
-            glState.getIndexedUniformBuffer(block.binding);
+            glState.getIndexedUniformBuffer(block.pod.binding);
 
         if (bufferBinding.get() == nullptr || !block.activeShaders().test(shaderType))
         {

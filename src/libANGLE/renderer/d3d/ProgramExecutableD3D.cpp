@@ -1564,7 +1564,8 @@ void ProgramExecutableD3D::initializeUniformBlocks()
     // Assign registers and update sizes.
     for (const gl::InterfaceBlock &uniformBlock : mExecutable->getUniformBlocks())
     {
-        unsigned int uniformBlockElement = uniformBlock.isArray ? uniformBlock.arrayElement : 0;
+        unsigned int uniformBlockElement =
+            uniformBlock.pod.isArray ? uniformBlock.pod.arrayElement : 0;
 
         D3DUniformBlock d3dUniformBlock;
 
@@ -1583,11 +1584,11 @@ void ProgramExecutableD3D::initializeUniformBlocks()
                 if (useStructuredBuffer)
                 {
                     d3dUniformBlock.mUseStructuredBuffers[shaderType] = true;
-                    d3dUniformBlock.mByteWidths[shaderType]           = uniformBlock.dataSize;
+                    d3dUniformBlock.mByteWidths[shaderType]           = uniformBlock.pod.dataSize;
                     d3dUniformBlock.mStructureByteStrides[shaderType] =
-                        uniformBlock.firstFieldArraySize == 0u
-                            ? uniformBlock.dataSize
-                            : uniformBlock.dataSize / uniformBlock.firstFieldArraySize;
+                        uniformBlock.pod.firstFieldArraySize == 0u
+                            ? uniformBlock.pod.dataSize
+                            : uniformBlock.pod.dataSize / uniformBlock.pod.firstFieldArraySize;
                 }
             }
         }
@@ -1610,7 +1611,7 @@ void ProgramExecutableD3D::initializeShaderStorageBlocks(
     for (const gl::InterfaceBlock &shaderStorageBlock : mExecutable->getShaderStorageBlocks())
     {
         unsigned int shaderStorageBlockElement =
-            shaderStorageBlock.isArray ? shaderStorageBlock.arrayElement : 0;
+            shaderStorageBlock.pod.isArray ? shaderStorageBlock.pod.arrayElement : 0;
         D3DInterfaceBlock d3dShaderStorageBlock;
 
         for (gl::ShaderType shaderType : gl::AllShaderTypes())

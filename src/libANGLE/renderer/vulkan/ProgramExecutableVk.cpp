@@ -60,12 +60,12 @@ uint32_t GetInterfaceBlockArraySize(const std::vector<gl::InterfaceBlock> &block
 {
     const gl::InterfaceBlock &block = blocks[bufferIndex];
 
-    if (!block.isArray)
+    if (!block.pod.isArray)
     {
         return 1;
     }
 
-    ASSERT(block.arrayElement == 0);
+    ASSERT(block.pod.arrayElement == 0);
 
     // Search consecutively until all array indices of this block are visited.
     uint32_t arraySize;
@@ -73,7 +73,7 @@ uint32_t GetInterfaceBlockArraySize(const std::vector<gl::InterfaceBlock> &block
     {
         const gl::InterfaceBlock &nextBlock = blocks[bufferIndex + arraySize];
 
-        if (nextBlock.arrayElement != arraySize)
+        if (nextBlock.pod.arrayElement != arraySize)
         {
             break;
         }
@@ -81,7 +81,7 @@ uint32_t GetInterfaceBlockArraySize(const std::vector<gl::InterfaceBlock> &block
         // It's unexpected for an array to start at a non-zero array size, so we can always rely on
         // the sequential `arrayElement`s to belong to the same block.
         ASSERT(nextBlock.name == block.name);
-        ASSERT(nextBlock.isArray);
+        ASSERT(nextBlock.pod.isArray);
     }
 
     return arraySize;

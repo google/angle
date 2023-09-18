@@ -242,7 +242,7 @@ void ProgramGL::reapplyUBOBindingsIfNeeded(const gl::Context *context)
         const auto &blocks = mState.getExecutable().getUniformBlocks();
         for (size_t blockIndex : mState.getExecutable().getActiveUniformBlockBindings())
         {
-            setUniformBlockBinding(static_cast<GLuint>(blockIndex), blocks[blockIndex].binding);
+            setUniformBlockBinding(static_cast<GLuint>(blockIndex), blocks[blockIndex].pod.binding);
         }
     }
 }

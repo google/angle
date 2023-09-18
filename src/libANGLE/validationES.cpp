@@ -654,7 +654,7 @@ ANGLE_INLINE const char *ValidateProgramDrawStates(const Context *context,
         }
 
         size_t uniformBufferSize = GetBoundBufferAvailableSize(uniformBuffer);
-        if (uniformBufferSize < uniformBlock.dataSize &&
+        if (uniformBufferSize < uniformBlock.pod.dataSize &&
             (context->isWebGL() || context->isBufferAccessValidationEnabled()))
         {
             // undefined behaviour

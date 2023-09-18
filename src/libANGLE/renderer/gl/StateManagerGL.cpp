@@ -1068,7 +1068,7 @@ void StateManagerGL::updateProgramAtomicCounterBufferBindings(const gl::Context 
 
     for (const auto &atomicCounterBuffer : executable->getAtomicCounterBuffers())
     {
-        GLuint binding     = atomicCounterBuffer.binding;
+        GLuint binding     = atomicCounterBuffer.pod.binding;
         const auto &buffer = glState.getIndexedAtomicCounterBuffer(binding);
 
         if (buffer.get() != nullptr)

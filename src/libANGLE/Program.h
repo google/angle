@@ -103,12 +103,6 @@ void LogLinkMismatch(InfoLog &infoLog,
 
 bool IsActiveInterfaceBlock(const sh::InterfaceBlock &interfaceBlock);
 
-void WriteActiveVariable(BinaryOutputStream *stream, const ActiveVariable &var);
-void LoadActiveVariable(BinaryInputStream *stream, ActiveVariable *var);
-
-void WriteBlockMemberInfo(BinaryOutputStream *stream, const sh::BlockMemberInfo &var);
-void LoadBlockMemberInfo(BinaryInputStream *stream, sh::BlockMemberInfo *var);
-
 // Struct used for correlating uniforms/elements of uniform arrays to handles
 ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
 struct VariableLocation

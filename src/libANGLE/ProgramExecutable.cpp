@@ -294,62 +294,44 @@ void LoadSamplerBindings(BinaryInputStream *stream,
 
 void WriteBufferVariable(BinaryOutputStream *stream, const BufferVariable &var)
 {
-    WriteShaderVar(stream, var);
-    WriteActiveVariable(stream, var.activeVariable);
-
-    stream->writeInt(var.bufferIndex);
-    WriteBlockMemberInfo(stream, var.blockInfo);
-    stream->writeInt(var.topLevelArraySize);
+    stream->writeString(var.name);
+    stream->writeString(var.mappedName);
+    stream->writeStruct(var.pod);
 }
 
 void LoadBufferVariable(BinaryInputStream *stream, BufferVariable *var)
 {
-    LoadShaderVar(stream, var);
-    LoadActiveVariable(stream, &(var->activeVariable));
-
-    var->bufferIndex = stream->readInt<int>();
-    LoadBlockMemberInfo(stream, &var->blockInfo);
-    var->topLevelArraySize = stream->readInt<int>();
+    var->name       = stream->readString();
+    var->mappedName = stream->readString();
+    stream->readStruct(&var->pod);
 }
 
 void WriteShaderVariableBuffer(BinaryOutputStream *stream, const ShaderVariableBuffer &var)
 {
-    WriteActiveVariable(stream, var.activeVariable);
-
-    stream->writeInt(var.binding);
-    stream->writeInt(var.dataSize);
     stream->writeVector(var.memberIndexes);
+    stream->writeStruct(var.pod);
 }
 
 void LoadShaderVariableBuffer(BinaryInputStream *stream, ShaderVariableBuffer *var)
 {
-    LoadActiveVariable(stream, &var->activeVariable);
-
-    var->binding  = stream->readInt<int>();
-    var->dataSize = stream->readInt<unsigned int>();
-
-    ASSERT(var->memberIndexes.empty());
     stream->readVector(&var->memberIndexes);
+    stream->readStruct(&var->pod);
 }
 
 void WriteInterfaceBlock(BinaryOutputStream *stream, const InterfaceBlock &block)
 {
     stream->writeString(block.name);
     stream->writeString(block.mappedName);
-    stream->writeBool(block.isArray);
-    stream->writeInt(block.arrayElement);
-
-    WriteShaderVariableBuffer(stream, block);
+    stream->writeVector(block.memberIndexes);
+    stream->writeStruct(block.pod);
 }
 
 void LoadInterfaceBlock(BinaryInputStream *stream, InterfaceBlock *block)
 {
-    block->name         = stream->readString();
-    block->mappedName   = stream->readString();
-    block->isArray      = stream->readBool();
-    block->arrayElement = stream->readInt<unsigned int>();
-
-    LoadShaderVariableBuffer(stream, block);
+    block->name       = stream->readString();
+    block->mappedName = stream->readString();
+    stream->readVector(&block->memberIndexes);
+    stream->readStruct(&block->pod);
 }
 
 void CopyStringToBuffer(GLchar *buffer,
@@ -552,9 +534,9 @@ GLuint GetInterfaceBlockIndex(const std::vector<InterfaceBlock> &list, const std
         if (block.name == baseName)
         {
             const bool arrayElementZero =
-                (subscripts.empty() && (!block.isArray || block.arrayElement == 0));
+                (subscripts.empty() && (!block.pod.isArray || block.pod.arrayElement == 0));
             const bool arrayElementMatches =
-                (subscripts.size() == 1 && subscripts[0] == block.arrayElement);
+                (subscripts.size() == 1 && subscripts[0] == block.pod.arrayElement);
             if (arrayElementMatches || arrayElementZero)
             {
                 return blockIndex;
@@ -579,9 +561,9 @@ void GetInterfaceBlockName(const UniformBlockIndex index,
     {
         std::string blockName = block.name;
 
-        if (block.isArray)
+        if (block.pod.isArray)
         {
-            blockName += ArrayString(block.arrayElement);
+            blockName += ArrayString(block.pod.arrayElement);
         }
         CopyStringToBuffer(name, blockName, bufSize, length);
     }
@@ -798,7 +780,7 @@ void ProgramExecutable::load(gl::BinaryInputStream *stream)
         InterfaceBlock &uniformBlock = mUniformBlocks[uniformBlockIndex];
         LoadInterfaceBlock(stream, &uniformBlock);
         ASSERT(mPODStruct.activeUniformBlockBindings.test(uniformBlockIndex) ==
-               (uniformBlock.binding != 0));
+               (uniformBlock.pod.binding != 0));
     }
 
     size_t shaderStorageBlockCount = stream->readInt<size_t>();
@@ -1883,7 +1865,7 @@ bool ProgramExecutable::linkAtomicCounterBuffers(const Caps &caps)
         for (size_t bufferIndex = 0; bufferIndex < mAtomicCounterBuffers.size(); ++bufferIndex)
         {
             AtomicCounterBuffer &buffer = mAtomicCounterBuffers[bufferIndex];
-            if (buffer.binding == uniform.getBinding())
+            if (buffer.pod.binding == uniform.getBinding())
             {
                 buffer.memberIndexes.push_back(index);
                 SetBitField(uniform.bufferIndex, bufferIndex);
@@ -1895,7 +1877,7 @@ bool ProgramExecutable::linkAtomicCounterBuffers(const Caps &caps)
         if (!found)
         {
             AtomicCounterBuffer atomicCounterBuffer;
-            atomicCounterBuffer.binding = uniform.getBinding();
+            atomicCounterBuffer.pod.binding = uniform.getBinding();
             atomicCounterBuffer.memberIndexes.push_back(index);
             atomicCounterBuffer.unionReferencesWith(uniform);
             mAtomicCounterBuffers.push_back(atomicCounterBuffer);

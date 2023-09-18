@@ -1002,29 +1002,31 @@ void SerializeBlockMemberInfo(JsonSerializer *json, const sh::BlockMemberInfo &b
     json->addScalar("TopLevelArrayStride", blockMemberInfo.topLevelArrayStride);
 }
 
-void SerializeActiveVariable(JsonSerializer *json, const gl::ActiveVariable &activeVariable)
-{
-    json->addScalar("ActiveShaders", activeVariable.activeShaders().to_ulong());
-    GroupScope group(json, "Ids");
-    for (const gl::ShaderType shaderType : gl::AllShaderTypes())
-    {
-        json->addScalar(
-            gl::ShaderTypeToString(shaderType),
-            activeVariable.isActive(shaderType) ? activeVariable.getIds()[shaderType] : 0);
-    }
-}
-
 void SerializeBufferVariablesVector(JsonSerializer *json,
                                     const std::vector<gl::BufferVariable> &bufferVariables)
 {
     for (const gl::BufferVariable &bufferVariable : bufferVariables)
     {
         GroupScope group(json, "BufferVariable");
-        json->addScalar("BufferIndex", bufferVariable.bufferIndex);
-        SerializeBlockMemberInfo(json, bufferVariable.blockInfo);
-        json->addScalar("TopLevelArraySize", bufferVariable.topLevelArraySize);
-        SerializeActiveVariable(json, bufferVariable.activeVariable);
-        SerializeShaderVariable(json, bufferVariable);
+        json->addString("Name", bufferVariable.name);
+        json->addString("MappedName", bufferVariable.mappedName);
+
+        json->addScalar("Type", bufferVariable.pod.type);
+        json->addScalar("Precision", bufferVariable.pod.precision);
+        json->addScalar("activeUseBits", bufferVariable.activeShaders().to_ulong());
+        for (const gl::ShaderType shaderType : gl::AllShaderTypes())
+        {
+            json->addScalar(
+                gl::ShaderTypeToString(shaderType),
+                bufferVariable.isActive(shaderType) ? bufferVariable.getId(shaderType) : 0);
+        }
+
+        json->addScalar("BufferIndex", bufferVariable.pod.bufferIndex);
+        SerializeBlockMemberInfo(json, bufferVariable.pod.blockInfo);
+
+        json->addScalar("TopLevelArraySize", bufferVariable.pod.topLevelArraySize);
+        json->addScalar("basicTypeElementCount", bufferVariable.pod.basicTypeElementCount);
+        json->addScalar("isArray", bufferVariable.pod.isArray);
     }
 }
 

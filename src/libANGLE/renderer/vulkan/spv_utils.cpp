@@ -732,7 +732,7 @@ void AssignInterfaceBlockBindings(const SpvSourceOptions &options,
             continue;
         }
 
-        const bool isIndexZero = !block.isArray || block.arrayElement == 0;
+        const bool isIndexZero = !block.pod.isArray || block.pod.arrayElement == 0;
         if (!isIndexZero)
         {
             continue;

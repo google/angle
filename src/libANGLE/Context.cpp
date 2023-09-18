@@ -10397,7 +10397,7 @@ void StateCache::updateActiveShaderStorageBufferIndices(Context *context)
     {
         for (const InterfaceBlock &block : executable->getShaderStorageBlocks())
         {
-            mCachedActiveShaderStorageBufferIndices.set(block.binding);
+            mCachedActiveShaderStorageBufferIndices.set(block.pod.binding);
         }
     }
 }

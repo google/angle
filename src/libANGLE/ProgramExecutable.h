@@ -401,12 +401,12 @@ class ProgramExecutable final : public angle::Subject
     GLuint getUniformBlockBinding(size_t uniformBlockIndex) const
     {
         ASSERT(uniformBlockIndex < mUniformBlocks.size());
-        return mUniformBlocks[uniformBlockIndex].binding;
+        return mUniformBlocks[uniformBlockIndex].pod.binding;
     }
     GLuint getShaderStorageBlockBinding(size_t blockIndex) const
     {
         ASSERT(blockIndex < mShaderStorageBlocks.size());
-        return mShaderStorageBlocks[blockIndex].binding;
+        return mShaderStorageBlocks[blockIndex].pod.binding;
     }
     const InterfaceBlock &getUniformBlockByIndex(size_t index) const
     {

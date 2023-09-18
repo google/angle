@@ -164,7 +164,7 @@ struct LinkedUniform
 };
 ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
 
-struct BufferVariable : public sh::ShaderVariable
+struct BufferVariable
 {
     BufferVariable();
     BufferVariable(GLenum type,
@@ -172,22 +172,47 @@ struct BufferVariable : public sh::ShaderVariable
                    const std::string &name,
                    const std::vector<unsigned int> &arraySizes,
                    const int bufferIndex,
+                   int topLevelArraySize,
                    const sh::BlockMemberInfo &blockInfo);
-    ~BufferVariable();
+    ~BufferVariable() {}
 
-    void setActive(ShaderType shaderType, bool used, uint32_t _id)
+    bool isArray() const { return pod.isArray; }
+    uint32_t getBasicTypeElementCount() const { return pod.basicTypeElementCount; }
+
+    void setActive(ShaderType shaderType, bool used, uint32_t id)
     {
-        activeVariable.setActive(shaderType, used, _id);
+        pod.activeUseBits.set(shaderType, used);
+        pod.ids[shaderType] = id;
     }
-    bool isActive(ShaderType shaderType) const { return activeVariable.isActive(shaderType); }
-    uint32_t getId(ShaderType shaderType) const { return activeVariable.getId(shaderType); }
-    ShaderBitSet activeShaders() const { return activeVariable.activeShaders(); }
+    bool isActive(ShaderType shaderType) const { return pod.activeUseBits[shaderType]; }
+    uint32_t getId(ShaderType shaderType) const { return pod.ids[shaderType]; }
+    ShaderBitSet activeShaders() const { return pod.activeUseBits; }
 
-    ActiveVariable activeVariable;
-    int bufferIndex;
-    sh::BlockMemberInfo blockInfo;
+    std::string name;
+    std::string mappedName;
 
-    int topLevelArraySize;
+    ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
+    struct PODStruct
+    {
+        uint16_t type;
+        uint16_t precision;
+
+        // 1 byte each
+        ShaderBitSet activeUseBits;
+        bool isArray;
+
+        int16_t bufferIndex;
+
+        // The id of a linked variable in each shader stage.  This id originates from
+        // sh::ShaderVariable::id or sh::InterfaceBlock::id
+        ShaderMap<uint32_t> ids;
+
+        sh::BlockMemberInfo blockInfo;
+
+        int32_t topLevelArraySize;
+        uint32_t basicTypeElementCount;
+    } pod;
+    ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
 };
 
 // Parent struct for atomic counter, uniform block, and shader storage block buffer, which all
@@ -195,37 +220,39 @@ struct BufferVariable : public sh::ShaderVariable
 struct ShaderVariableBuffer
 {
     ShaderVariableBuffer();
-    ShaderVariableBuffer(const ShaderVariableBuffer &other);
-    ~ShaderVariableBuffer();
+    ~ShaderVariableBuffer() {}
 
     ShaderType getFirstActiveShaderType() const
     {
-        return activeVariable.getFirstActiveShaderType();
+        return static_cast<ShaderType>(ScanForward(pod.activeUseBits.bits()));
     }
-    void setActive(ShaderType shaderType, bool used, uint32_t _id)
-    {
-        activeVariable.setActive(shaderType, used, _id);
-    }
-    void unionReferencesWith(const LinkedUniform &otherUniform)
-    {
-        activeVariable.unionReferencesWith(otherUniform);
-    }
-    bool isActive(ShaderType shaderType) const { return activeVariable.isActive(shaderType); }
-    const ShaderMap<uint32_t> &getIds() const { return activeVariable.getIds(); }
-    uint32_t getId(ShaderType shaderType) const { return activeVariable.getId(shaderType); }
-    ShaderBitSet activeShaders() const { return activeVariable.activeShaders(); }
-    int numActiveVariables() const;
+    bool isActive(ShaderType shaderType) const { return pod.activeUseBits[shaderType]; }
+    const ShaderMap<uint32_t> &getIds() const { return pod.ids; }
+    uint32_t getId(ShaderType shaderType) const { return pod.ids[shaderType]; }
+    ShaderBitSet activeShaders() const { return pod.activeUseBits; }
+    int numActiveVariables() const { return static_cast<int>(memberIndexes.size()); }
+    void unionReferencesWith(const LinkedUniform &otherUniform);
 
-    ActiveVariable activeVariable;
-    int binding;
-    unsigned int dataSize;
     std::vector<unsigned int> memberIndexes;
+
+    ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
+    struct PODStruct
+    {
+        // The id of a linked variable in each shader stage.  This id originates from
+        // sh::ShaderVariable::id or sh::InterfaceBlock::id
+        ShaderMap<uint32_t> ids;
+        int binding;
+        unsigned int dataSize;
+        ShaderBitSet activeUseBits;
+        uint8_t pads[3];
+    } pod;
+    ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
 };
 
 using AtomicCounterBuffer = ShaderVariableBuffer;
 
 // Helper struct representing a single shader interface block
-struct InterfaceBlock : public ShaderVariableBuffer
+struct InterfaceBlock
 {
     InterfaceBlock();
     InterfaceBlock(const std::string &nameIn,
@@ -235,18 +262,50 @@ struct InterfaceBlock : public ShaderVariableBuffer
                    unsigned int arrayElementIn,
                    unsigned int firstFieldArraySizeIn,
                    int bindingIn);
-    InterfaceBlock(const InterfaceBlock &other);
 
     std::string nameWithArrayIndex() const;
     std::string mappedNameWithArrayIndex() const;
 
+    ShaderType getFirstActiveShaderType() const
+    {
+        return static_cast<ShaderType>(ScanForward(pod.activeUseBits.bits()));
+    }
+    void setActive(ShaderType shaderType, bool used, uint32_t id)
+    {
+        pod.activeUseBits.set(shaderType, used);
+        pod.ids[shaderType] = id;
+    }
+    bool isActive(ShaderType shaderType) const { return pod.activeUseBits[shaderType]; }
+    const ShaderMap<uint32_t> &getIds() const { return pod.ids; }
+    uint32_t getId(ShaderType shaderType) const { return pod.ids[shaderType]; }
+    ShaderBitSet activeShaders() const { return pod.activeUseBits; }
+
+    int numActiveVariables() const { return static_cast<int>(memberIndexes.size()); }
+    void setBinding(GLuint binding) { SetBitField(pod.binding, binding); }
+
     std::string name;
     std::string mappedName;
-    bool isArray;
-    // Only valid for SSBOs, specifies whether it has the readonly qualifier.
-    bool isReadOnly;
-    unsigned int arrayElement;
-    unsigned int firstFieldArraySize;
+    std::vector<unsigned int> memberIndexes;
+
+    ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
+    struct PODStruct
+    {
+        uint32_t arrayElement;
+        uint32_t firstFieldArraySize;
+
+        ShaderBitSet activeUseBits;
+        uint8_t isArray : 1;
+        // Only valid for SSBOs, specifies whether it has the readonly qualifier.
+        uint8_t isReadOnly : 1;
+        uint8_t padings : 6;
+        int16_t binding;
+
+        unsigned int dataSize;
+        // The id of a linked variable in each shader stage.  This id originates from
+        // sh::ShaderVariable::id or sh::InterfaceBlock::id
+        ShaderMap<uint32_t> ids;
+    } pod;
+    ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
 };
 
 }  // namespace gl

@@ -193,45 +193,6 @@ void UpdateInterfaceVariable(std::vector<T> *block, const sh::ShaderVariable &va
     }
 }
 
-void WriteActiveVariable(BinaryOutputStream *stream, const ActiveVariable &var)
-{
-    for (ShaderType shaderType : AllShaderTypes())
-    {
-        stream->writeBool(var.isActive(shaderType));
-        stream->writeInt(var.isActive(shaderType) ? var.getIds()[shaderType] : 0);
-    }
-}
-
-void LoadActiveVariable(BinaryInputStream *stream, ActiveVariable *var)
-{
-    for (ShaderType shaderType : AllShaderTypes())
-    {
-        const bool isActive = stream->readBool();
-        const uint32_t id   = stream->readInt<uint32_t>();
-        var->setActive(shaderType, isActive, id);
-    }
-}
-
-void WriteBufferVariable(BinaryOutputStream *stream, const BufferVariable &var)
-{
-    WriteShaderVar(stream, var);
-    WriteActiveVariable(stream, var.activeVariable);
-
-    stream->writeInt(var.bufferIndex);
-    WriteBlockMemberInfo(stream, var.blockInfo);
-    stream->writeInt(var.topLevelArraySize);
-}
-
-void LoadBufferVariable(BinaryInputStream *stream, BufferVariable *var)
-{
-    LoadShaderVar(stream, var);
-    LoadActiveVariable(stream, &(var->activeVariable));
-
-    var->bufferIndex = stream->readInt<int>();
-    LoadBlockMemberInfo(stream, &var->blockInfo);
-    var->topLevelArraySize = stream->readInt<int>();
-}
-
 // Saves the linking context for later use in resolveLink().
 struct Program::LinkingState
 {
@@ -353,16 +314,6 @@ bool IsActiveInterfaceBlock(const sh::InterfaceBlock &interfaceBlock)
 {
     // Only 'packed' blocks are allowed to be considered inactive.
     return interfaceBlock.active || interfaceBlock.layout != sh::BLOCKLAYOUT_PACKED;
-}
-
-void WriteBlockMemberInfo(BinaryOutputStream *stream, const sh::BlockMemberInfo &var)
-{
-    stream->writeStruct(var);
-}
-
-void LoadBlockMemberInfo(BinaryInputStream *stream, sh::BlockMemberInfo *var)
-{
-    stream->readStruct(var);
 }
 
 // ProgramInput implementation.
@@ -1648,7 +1599,7 @@ void Program::bindUniformBlock(UniformBlockIndex uniformBlockIndex, GLuint unifo
     if (mState.mExecutable->mPODStruct.activeUniformBlockBindings[uniformBlockIndex.value])
     {
         GLuint previousBinding =
-            mState.mExecutable->mUniformBlocks[uniformBlockIndex.value].binding;
+            mState.mExecutable->mUniformBlocks[uniformBlockIndex.value].pod.binding;
         if (previousBinding >= mUniformBlockBindingMasks.size())
         {
             mUniformBlockBindingMasks.resize(previousBinding + 1, UniformBlockBindingMask());
@@ -1656,7 +1607,7 @@ void Program::bindUniformBlock(UniformBlockIndex uniformBlockIndex, GLuint unifo
         mUniformBlockBindingMasks[previousBinding].reset(uniformBlockIndex.value);
     }
 
-    mState.mExecutable->mUniformBlocks[uniformBlockIndex.value].binding = uniformBlockBinding;
+    mState.mExecutable->mUniformBlocks[uniformBlockIndex.value].setBinding(uniformBlockBinding);
     if (uniformBlockBinding >= mUniformBlockBindingMasks.size())
     {
         mUniformBlockBindingMasks.resize(uniformBlockBinding + 1, UniformBlockBindingMask());
@@ -2155,7 +2106,7 @@ void Program::initInterfaceBlockBindings()
          blockIndex++)
     {
         InterfaceBlock &uniformBlock = mState.mExecutable->mUniformBlocks[blockIndex];
-        bindUniformBlock({static_cast<uint32_t>(blockIndex)}, uniformBlock.binding);
+        bindUniformBlock({static_cast<uint32_t>(blockIndex)}, uniformBlock.pod.binding);
     }
 }
 

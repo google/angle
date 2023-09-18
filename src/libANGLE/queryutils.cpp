@@ -706,7 +706,7 @@ GLint GetCommonVariableProperty(const T &var, GLenum prop)
     switch (prop)
     {
         case GL_TYPE:
-            return clampCast<GLint>(var.type);
+            return clampCast<GLint>(var.pod.type);
 
         case GL_ARRAY_SIZE:
             // Queryable variables are guaranteed not to be arrays of arrays or arrays of structs,
@@ -1014,7 +1014,8 @@ GLenum GetUniformBlockPropertyEnum(GLenum prop)
     }
 }
 
-void GetShaderVariableBufferResourceProperty(const ShaderVariableBuffer &buffer,
+template <typename ShaderVariableT>
+void GetShaderVariableBufferResourceProperty(const ShaderVariableT &buffer,
                                              GLenum pname,
                                              GLint *params,
                                              GLsizei bufSize,
@@ -1024,10 +1025,10 @@ void GetShaderVariableBufferResourceProperty(const ShaderVariableBuffer &buffer,
     switch (pname)
     {
         case GL_BUFFER_BINDING:
-            params[(*outputPosition)++] = buffer.binding;
+            params[(*outputPosition)++] = buffer.pod.binding;
             break;
         case GL_BUFFER_DATA_SIZE:
-            params[(*outputPosition)++] = clampCast<GLint>(buffer.dataSize);
+            params[(*outputPosition)++] = clampCast<GLint>(buffer.pod.dataSize);
             break;
         case GL_NUM_ACTIVE_VARIABLES:
             params[(*outputPosition)++] = buffer.numActiveVariables();
@@ -1996,19 +1997,19 @@ GLint GetBufferVariableResourceProperty(const Program *program, GLuint index, co
             return GetCommonVariableProperty(bufferVariable, prop);
 
         case GL_BLOCK_INDEX:
-            return bufferVariable.bufferIndex;
+            return bufferVariable.pod.bufferIndex;
 
         case GL_OFFSET:
-            return bufferVariable.blockInfo.offset;
+            return bufferVariable.pod.blockInfo.offset;
 
         case GL_ARRAY_STRIDE:
-            return bufferVariable.blockInfo.arrayStride;
+            return bufferVariable.pod.blockInfo.arrayStride;
 
         case GL_MATRIX_STRIDE:
-            return bufferVariable.blockInfo.matrixStride;
+            return bufferVariable.pod.blockInfo.matrixStride;
 
         case GL_IS_ROW_MAJOR:
-            return static_cast<GLint>(bufferVariable.blockInfo.isRowMajorMatrix);
+            return static_cast<GLint>(bufferVariable.pod.blockInfo.isRowMajorMatrix);
 
         case GL_REFERENCED_BY_VERTEX_SHADER:
             return bufferVariable.isActive(ShaderType::Vertex);
@@ -2029,10 +2030,10 @@ GLint GetBufferVariableResourceProperty(const Program *program, GLuint index, co
             return bufferVariable.isActive(ShaderType::TessEvaluation);
 
         case GL_TOP_LEVEL_ARRAY_SIZE:
-            return bufferVariable.topLevelArraySize;
+            return bufferVariable.pod.topLevelArraySize;
 
         case GL_TOP_LEVEL_ARRAY_STRIDE:
-            return bufferVariable.blockInfo.topLevelArrayStride;
+            return bufferVariable.pod.blockInfo.topLevelArrayStride;
 
         default:
             UNREACHABLE();
