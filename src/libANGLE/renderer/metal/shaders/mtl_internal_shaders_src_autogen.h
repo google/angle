@@ -12,7 +12,7 @@ static char gDefaultMetallibSrc[] = R"(
 # 1 "temp_master_source.metal"
 # 1 "<built-in>" 1
 # 1 "<built-in>" 3
-# 482 "<built-in>" 3
+# 483 "<built-in>" 3
 # 1 "<command line>" 1
 # 1 "<built-in>" 2
 # 1 "temp_master_source.metal" 2
@@ -416,17 +416,17 @@ static inline vec<T, 4> blitReadTexture(BlitVSOut input [[stage_in]], texture2d<
             break;
     }
 
+    if (kTransformLinearToSrgb) {
+        output.x = linearToSRGB(output.x);
+        output.y = linearToSRGB(output.y);
+        output.z = linearToSRGB(output.z);
+    }
     if (kUnmultiplyAlpha)
     {
         if (output.a != 0.0)
         {
             output.xyz /= output.a;
         }
-    }
-    if (kTransformLinearToSrgb) {
-        output.x = linearToSRGB(output.x);
-        output.y = linearToSRGB(output.y);
-        output.z = linearToSRGB(output.z);
     }
     if (kPremultiplyAlpha)
     {

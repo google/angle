@@ -1354,14 +1354,13 @@ angle::Result ColorBlitUtils::getColorBlitRenderPipelineState(
     pipelineDesc.inputPrimitiveTopology = kPrimitiveTopologyClassTriangle;
 
     ShaderKey key;
-    key.numColorAttachments = renderPassDesc.numColorAttachments;
-    key.sourceTextureType   = GetShaderTextureType(params.src);
-    if (params.unpackPremultiplyAlpha != params.unpackUnmultiplyAlpha ||
-        params.transformLinearToSrgb)
+    key.numColorAttachments   = renderPassDesc.numColorAttachments;
+    key.sourceTextureType     = GetShaderTextureType(params.src);
+    key.transformLinearToSrgb = params.transformLinearToSrgb;
+    if (params.unpackPremultiplyAlpha != params.unpackUnmultiplyAlpha)
     {
-        key.unmultiplyAlpha       = params.unpackUnmultiplyAlpha;
-        key.premultiplyAlpha      = params.unpackPremultiplyAlpha;
-        key.transformLinearToSrgb = params.transformLinearToSrgb;
+        key.unmultiplyAlpha  = params.unpackUnmultiplyAlpha;
+        key.premultiplyAlpha = params.unpackPremultiplyAlpha;
     }
 
     AutoObjCPtr<id<MTLFunction>> *fragmentShader = &mBlitFragmentShaders[key];

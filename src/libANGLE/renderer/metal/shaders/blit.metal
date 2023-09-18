@@ -137,17 +137,17 @@ static inline vec<T, 4> blitReadTexture(BLIT_COLOR_FS_PARAMS(T))
             break;
     }
 
+    if (kTransformLinearToSrgb) {
+        output.x = linearToSRGB(output.x);
+        output.y = linearToSRGB(output.y);
+        output.z = linearToSRGB(output.z);
+    }
     if (kUnmultiplyAlpha)
     {
         if (output.a != 0.0)
         {
             output.xyz /= output.a;
         }
-    }
-    if (kTransformLinearToSrgb) {
-        output.x = linearToSRGB(output.x);
-        output.y = linearToSRGB(output.y);
-        output.z = linearToSRGB(output.z);
     }
     if (kPremultiplyAlpha)
     {
