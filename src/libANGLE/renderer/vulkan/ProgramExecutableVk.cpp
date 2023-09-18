@@ -103,14 +103,14 @@ void SetupDefaultPipelineState(const vk::Context *context,
     graphicsPipelineDescOut->setVertexShaderComponentTypes(
         glExecutable.getNonBuiltinAttribLocationsMask(), glExecutable.getAttributesTypeMask());
 
-    const std::vector<sh::ShaderVariable> &outputVariables   = glExecutable.getOutputVariables();
+    const std::vector<gl::ProgramOutput> &outputVariables    = glExecutable.getOutputVariables();
     const std::vector<gl::VariableLocation> &outputLocations = glExecutable.getOutputLocations();
 
     for (const gl::VariableLocation &outputLocation : outputLocations)
     {
         if (outputLocation.arrayIndex == 0 && outputLocation.used() && !outputLocation.ignored)
         {
-            const sh::ShaderVariable &outputVar = outputVariables[outputLocation.index];
+            const gl::ProgramOutput &outputVar = outputVariables[outputLocation.index];
 
             if (angle::BeginsWith(outputVar.name, "gl_") && outputVar.name != "gl_FragColor")
             {
@@ -118,12 +118,12 @@ void SetupDefaultPipelineState(const vk::Context *context,
             }
 
             uint32_t location = 0;
-            if (outputVar.location != -1)
+            if (outputVar.podStruct.location != -1)
             {
-                location = outputVar.location;
+                location = outputVar.podStruct.location;
             }
 
-            GLenum type            = gl::VariableComponentType(outputVar.type);
+            GLenum type            = gl::VariableComponentType(outputVar.podStruct.type);
             angle::FormatID format = angle::FormatID::R8G8B8A8_UNORM;
             if (type == GL_INT)
             {
@@ -143,7 +143,7 @@ void SetupDefaultPipelineState(const vk::Context *context,
         }
     }
 
-    for (const sh::ShaderVariable &outputVar : outputVariables)
+    for (const gl::ProgramOutput &outputVar : outputVariables)
     {
         if (outputVar.name == "gl_FragColor" || outputVar.name == "gl_FragData")
         {

@@ -421,15 +421,15 @@ void ProgramGL::linkJobImpl(const gl::Extensions &extensions)
                     if (outputLocation.arrayIndex == 0 && outputLocation.used() &&
                         !outputLocation.ignored)
                     {
-                        const sh::ShaderVariable &outputVar =
+                        const gl::ProgramOutput &outputVar =
                             executable.getOutputVariables()[outputLocation.index];
-                        if (outputVar.location == -1 || outputVar.index == -1)
+                        if (outputVar.podStruct.location == -1 || outputVar.podStruct.index == -1)
                         {
                             // We only need to assign the location and index via the API in case the
                             // variable doesn't have a shader-assigned location and index. If a
                             // variable doesn't have its location set in the shader it doesn't have
                             // the index set either.
-                            ASSERT(outputVar.index == -1);
+                            ASSERT(outputVar.podStruct.index == -1);
                             mFunctions->bindFragDataLocationIndexed(
                                 mProgramID, static_cast<int>(outputLocationIndex), 0,
                                 outputVar.mappedName.c_str());
@@ -444,15 +444,15 @@ void ProgramGL::linkJobImpl(const gl::Extensions &extensions)
                     if (outputLocation.arrayIndex == 0 && outputLocation.used() &&
                         !outputLocation.ignored)
                     {
-                        const sh::ShaderVariable &outputVar =
+                        const gl::ProgramOutput &outputVar =
                             executable.getOutputVariables()[outputLocation.index];
-                        if (outputVar.location == -1 || outputVar.index == -1)
+                        if (outputVar.podStruct.location == -1 || outputVar.podStruct.index == -1)
                         {
                             // We only need to assign the location and index via the API in case the
                             // variable doesn't have a shader-assigned location and index.  If a
                             // variable doesn't have its location set in the shader it doesn't have
                             // the index set either.
-                            ASSERT(outputVar.index == -1);
+                            ASSERT(outputVar.podStruct.index == -1);
                             mFunctions->bindFragDataLocationIndexed(
                                 mProgramID, static_cast<int>(outputLocationIndex), 1,
                                 outputVar.mappedName.c_str());

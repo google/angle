@@ -75,7 +75,7 @@ uint32_t CountExplicitOutputs(OutputIter outputsBegin,
                               ImplicitIter implicitsBegin,
                               ImplicitIter implicitsEnd)
 {
-    auto reduce = [implicitsBegin, implicitsEnd](uint32_t count, const sh::ShaderVariable &var) {
+    auto reduce = [implicitsBegin, implicitsEnd](uint32_t count, const gl::ProgramOutput &var) {
         bool isExplicit = std::find(implicitsBegin, implicitsEnd, var.name) == implicitsEnd;
         return count + isExplicit;
     };
@@ -340,20 +340,20 @@ void AssignSecondaryOutputLocations(const gl::ProgramExecutable &programExecutab
     {
         if (outputLocation.arrayIndex == 0 && outputLocation.used() && !outputLocation.ignored)
         {
-            const sh::ShaderVariable &outputVar = outputVariables[outputLocation.index];
+            const gl::ProgramOutput &outputVar = outputVariables[outputLocation.index];
 
             uint32_t location = 0;
-            if (outputVar.location != -1)
+            if (outputVar.podStruct.location != -1)
             {
-                location = outputVar.location;
+                location = outputVar.podStruct.location;
             }
 
-            ShaderInterfaceVariableInfo *info =
-                AddLocationInfo(variableInfoMapOut, gl::ShaderType::Fragment, outputVar.id,
-                                location, ShaderInterfaceVariableInfo::kInvalid, 0, 0);
+            ShaderInterfaceVariableInfo *info = AddLocationInfo(
+                variableInfoMapOut, gl::ShaderType::Fragment, outputVar.podStruct.id, location,
+                ShaderInterfaceVariableInfo::kInvalid, 0, 0);
 
             // If the shader source has not specified the index, specify it here.
-            if (outputVar.index == -1)
+            if (outputVar.podStruct.index == -1)
             {
                 // Index 1 is used to specify that the color be used as the second color input to
                 // the blend equation
@@ -368,13 +368,14 @@ void AssignSecondaryOutputLocations(const gl::ProgramExecutable &programExecutab
         const std::array<std::string, 2> secondaryFrag = {"gl_SecondaryFragColorEXT",
                                                           "gl_SecondaryFragDataEXT"};
 
-        for (const sh::ShaderVariable &outputVar : outputVariables)
+        for (const gl::ProgramOutput &outputVar : outputVariables)
         {
             if (std::find(secondaryFrag.begin(), secondaryFrag.end(), outputVar.name) !=
                 secondaryFrag.end())
             {
-                AddLocationInfo(variableInfoMapOut, gl::ShaderType::Fragment, outputVar.id, 0,
-                                ShaderInterfaceVariableInfo::kInvalid, 0, 0);
+                AddLocationInfo(variableInfoMapOut, gl::ShaderType::Fragment,
+                                outputVar.podStruct.id, 0, ShaderInterfaceVariableInfo::kInvalid, 0,
+                                0);
             }
         }
     }
@@ -396,12 +397,12 @@ void AssignOutputLocations(const gl::ProgramExecutable &programExecutable,
     {
         if (outputLocation.arrayIndex == 0 && outputLocation.used() && !outputLocation.ignored)
         {
-            const sh::ShaderVariable &outputVar = outputVariables[outputLocation.index];
+            const gl::ProgramOutput &outputVar = outputVariables[outputLocation.index];
 
             uint32_t location = 0;
-            if (outputVar.location != -1)
+            if (outputVar.podStruct.location != -1)
             {
-                location = outputVar.location;
+                location = outputVar.podStruct.location;
             }
             else if (std::find(implicitOutputs.begin(), implicitOutputs.end(), outputVar.name) ==
                      implicitOutputs.end())
@@ -412,7 +413,7 @@ void AssignOutputLocations(const gl::ProgramExecutable &programExecutable,
                                             implicitOutputs.begin(), implicitOutputs.end()) == 1);
             }
 
-            AddLocationInfo(variableInfoMapOut, shaderType, outputVar.id, location,
+            AddLocationInfo(variableInfoMapOut, shaderType, outputVar.podStruct.id, location,
                             ShaderInterfaceVariableInfo::kInvalid, 0, 0);
         }
     }
@@ -420,12 +421,13 @@ void AssignOutputLocations(const gl::ProgramExecutable &programExecutable,
     if (programExecutable.hasLinkedShaderStage(gl::ShaderType::Fragment) &&
         programExecutable.getLinkedShaderVersion(gl::ShaderType::Fragment) == 100)
     {
-        for (const sh::ShaderVariable &outputVar : outputVariables)
+        for (const gl::ProgramOutput &outputVar : outputVariables)
         {
             if (outputVar.name == "gl_FragColor" || outputVar.name == "gl_FragData")
             {
-                AddLocationInfo(variableInfoMapOut, gl::ShaderType::Fragment, outputVar.id, 0,
-                                ShaderInterfaceVariableInfo::kInvalid, 0, 0);
+                AddLocationInfo(variableInfoMapOut, gl::ShaderType::Fragment,
+                                outputVar.podStruct.id, 0, ShaderInterfaceVariableInfo::kInvalid, 0,
+                                0);
             }
         }
     }

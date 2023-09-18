@@ -768,20 +768,21 @@ GLint GetInputResourceProperty(const Program *program, GLuint index, GLenum prop
 
 GLint GetOutputResourceProperty(const Program *program, GLuint index, const GLenum prop)
 {
-    const ProgramExecutable &executable      = program->getExecutable();
-    const sh::ShaderVariable &outputVariable = executable.getOutputResource(index);
+    const ProgramExecutable &executable = program->getExecutable();
+    const ProgramOutput &outputVariable = executable.getOutputResource(index);
 
     switch (prop)
     {
         case GL_TYPE:
+            return clampCast<GLint>(outputVariable.podStruct.type);
         case GL_ARRAY_SIZE:
-            return GetCommonVariableProperty(outputVariable, prop);
+            return clampCast<GLint>(outputVariable.podStruct.basicTypeElementCount);
 
         case GL_NAME_LENGTH:
             return clampCast<GLint>(executable.getOutputResourceName(index).size() + 1u);
 
         case GL_LOCATION:
-            return outputVariable.location;
+            return outputVariable.podStruct.location;
 
         case GL_LOCATION_INDEX_EXT:
             // EXT_blend_func_extended
@@ -808,7 +809,7 @@ GLint GetOutputResourceProperty(const Program *program, GLuint index, const GLen
         case GL_REFERENCED_BY_TESS_EVALUATION_SHADER_EXT:
             return executable.getLastLinkedShaderStageType() == ShaderType::TessEvaluation;
         case GL_IS_PER_PATCH_EXT:
-            return outputVariable.isPatch;
+            return outputVariable.podStruct.isPatch;
 
         default:
             UNREACHABLE();

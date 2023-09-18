@@ -476,6 +476,28 @@ ProgramInput &ProgramInput::operator=(const ProgramInput &rhs)
     return *this;
 }
 
+// ProgramOutput implementation.
+ProgramOutput::ProgramOutput(const sh::ShaderVariable &var)
+{
+    name       = var.name;
+    mappedName = var.mappedName;
+
+    podStruct.type     = var.type;
+    podStruct.location = var.location;
+    podStruct.index    = var.index;
+    podStruct.id       = var.id;
+
+    SetBitField(podStruct.outermostArraySize, var.getOutermostArraySize());
+    SetBitField(podStruct.basicTypeElementCount, var.getBasicTypeElementCount());
+
+    SetBitField(podStruct.isPatch, var.isPatch);
+    SetBitField(podStruct.yuv, var.yuv);
+    SetBitField(podStruct.isBuiltIn, IsBuiltInName(var.name));
+    SetBitField(podStruct.isArray, var.isArray());
+    SetBitField(podStruct.hasImplicitLocation, var.hasImplicitLocation);
+    SetBitField(podStruct.pad, 0);
+}
+
 // VariableLocation implementation.
 VariableLocation::VariableLocation() : index(kUnused), arrayIndex(0), ignored(false) {}
 
@@ -606,8 +628,8 @@ int ProgramAliasedBindings::getBinding(const T &variable) const
 
     return getBindingByName(name);
 }
-template int ProgramAliasedBindings::getBinding<gl::UsedUniform>(
-    const gl::UsedUniform &variable) const;
+template int ProgramAliasedBindings::getBinding<UsedUniform>(const UsedUniform &variable) const;
+template int ProgramAliasedBindings::getBinding<ProgramOutput>(const ProgramOutput &variable) const;
 template int ProgramAliasedBindings::getBinding<sh::ShaderVariable>(
     const sh::ShaderVariable &variable) const;
 
@@ -1255,10 +1277,17 @@ angle::Result Program::linkJobImpl(const Caps &caps,
             mState.mAttachedShaders[ShaderType::Fragment];
         if (fragmentShader)
         {
+            ASSERT(mState.mExecutable->mOutputVariables.empty());
+            mState.mExecutable->mOutputVariables.reserve(
+                fragmentShader->activeOutputVariables.size());
+            for (const sh::ShaderVariable &shaderVariable : fragmentShader->activeOutputVariables)
+            {
+                mState.mExecutable->mOutputVariables.emplace_back(shaderVariable);
+            }
             if (!mState.mExecutable->linkValidateOutputVariables(
                     caps, clientVersion, combinedImageUniforms, combinedShaderStorageBlocks,
-                    fragmentShader->activeOutputVariables, fragmentShader->shaderVersion,
-                    mState.mFragmentOutputLocations, mState.mFragmentOutputIndexes))
+                    fragmentShader->shaderVersion, mState.mFragmentOutputLocations,
+                    mState.mFragmentOutputIndexes))
             {
                 return angle::Result::Stop;
             }
@@ -1869,7 +1898,7 @@ void Program::getUniformfv(const Context *context, UniformLocation location, GLf
         return;
     }
 
-    const GLenum nativeType = gl::VariableComponentType(uniform.getType());
+    const GLenum nativeType = VariableComponentType(uniform.getType());
     if (nativeType == GL_FLOAT)
     {
         mProgram->getUniformfv(context, location.value, v);
@@ -1899,7 +1928,7 @@ void Program::getUniformiv(const Context *context, UniformLocation location, GLi
         return;
     }
 
-    const GLenum nativeType = gl::VariableComponentType(uniform.getType());
+    const GLenum nativeType = VariableComponentType(uniform.getType());
     if (nativeType == GL_INT || nativeType == GL_BOOL)
     {
         mProgram->getUniformiv(context, location.value, v);
@@ -2359,8 +2388,7 @@ bool Program::linkAttributes(const Caps &caps,
     int shaderVersion          = -1;
     unsigned int usedLocations = 0;
 
-    const SharedCompiledShaderState &vertexShader =
-        mState.getAttachedShader(gl::ShaderType::Vertex);
+    const SharedCompiledShaderState &vertexShader = mState.getAttachedShader(ShaderType::Vertex);
 
     if (!vertexShader)
     {
@@ -2823,7 +2851,7 @@ angle::Result Program::serialize(const Context *context, angle::MemoryBuffer *bi
         // Serialize the source for each stage for re-use during capture
         for (ShaderType shaderType : mState.mExecutable->getLinkedShaderStages())
         {
-            gl::Shader *shader = getAttachedShader(shaderType);
+            Shader *shader = getAttachedShader(shaderType);
             if (shader)
             {
                 stream.writeString(shader->getSourceString());
@@ -2949,7 +2977,7 @@ angle::Result Program::deserialize(const Context *context, BinaryInputStream &st
     return angle::Result::Continue;
 }
 
-void Program::postResolveLink(const gl::Context *context)
+void Program::postResolveLink(const Context *context)
 {
     initInterfaceBlockBindings();
 
@@ -2979,7 +3007,7 @@ void Program::dumpProgramInfo(const Context *context) const
     std::stringstream dumpStream;
     for (ShaderType shaderType : angle::AllEnums<ShaderType>())
     {
-        gl::Shader *shader = getAttachedShader(shaderType);
+        Shader *shader = getAttachedShader(shaderType);
         if (shader)
         {
             dumpStream << shader->getType() << ": "

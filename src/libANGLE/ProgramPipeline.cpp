@@ -556,9 +556,10 @@ angle::Result ProgramPipeline::link(const Context *context)
             // We should also be validating SSBO and image uniform counts.
             const GLuint combinedImageUniforms       = 0;
             const GLuint combinedShaderStorageBlocks = 0;
+            ASSERT(mState.mExecutable->mOutputVariables.empty());
+            mState.mExecutable->mOutputVariables = fragmentExecutable->getOutputVariables();
             if (!mState.mExecutable->linkValidateOutputVariables(
                     caps, clientVersion, combinedImageUniforms, combinedShaderStorageBlocks,
-                    fragmentExecutable->getOutputVariables(),
                     fragmentExecutable->getLinkedShaderVersion(ShaderType::Fragment),
                     ProgramAliasedBindings(), ProgramAliasedBindings()))
             {
