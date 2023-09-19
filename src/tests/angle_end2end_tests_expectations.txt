@@ -419,6 +419,9 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 // Timeout on Swiftshader and failure due to too many allocations
 280304441 SWIFTSHADER : UniformBufferMemoryTest.BufferDataInLoopManyTimes/* = SKIP
 
+// Skipped due to long execution time
+8351 LINUX INTEL : UniformBufferMemoryTest.BufferDataInLoopManyTimes/* = SKIP
+
 // Reading back the contents of an RGBX image initialized with non-255 alpha returns the original alpha (instead of 255)
 6472 ANDROID GLES : ImageTestES3.RGBXAHBImportThenUpload/* = SKIP
 6472 ANDROID GLES : ImageTestES3.RGBXAHBImportMultipleLayers/* = SKIP
