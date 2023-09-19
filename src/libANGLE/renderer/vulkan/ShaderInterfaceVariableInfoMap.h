@@ -90,15 +90,15 @@ class ShaderInterfaceVariableInfoMap final : angle::NonCopyable
     }
     const gl::ShaderMap<gl::PerVertexMemberBitSet> &getInputPerVertexActiveMembers() const
     {
-        return mPodStruct.inputPerVertexActiveMembers;
+        return mPod.inputPerVertexActiveMembers;
     }
     const gl::ShaderMap<gl::PerVertexMemberBitSet> &getOutputPerVertexActiveMembers() const
     {
-        return mPodStruct.outputPerVertexActiveMembers;
+        return mPod.outputPerVertexActiveMembers;
     }
 
-    void setHasAliasingAttributes() { mPodStruct.hasAliasingAttributes = true; }
-    bool hasAliasingAttributes() const { return mPodStruct.hasAliasingAttributes; }
+    void setHasAliasingAttributes() { mPod.hasAliasingAttributes = true; }
+    bool hasAliasingAttributes() const { return mPod.hasAliasingAttributes; }
 
   private:
     void setVariableIndex(gl::ShaderType shaderType, uint32_t id, VariableIndex index);
@@ -121,7 +121,7 @@ class ShaderInterfaceVariableInfoMap final : angle::NonCopyable
         // Whether the vertex shader has aliasing attributes.  Used by the SPIR-V transformer to
         // tell if emulation is needed.
         uint32_t hasAliasingAttributes : 1;
-    } mPodStruct;
+    } mPod;
     ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
 };
 

@@ -13,39 +13,6 @@
 namespace gl
 {
 
-ActiveVariable::ActiveVariable()
-{
-    std::fill(mIds.begin(), mIds.end(), 0);
-}
-
-ActiveVariable::~ActiveVariable() {}
-
-ActiveVariable::ActiveVariable(const ActiveVariable &rhs)            = default;
-ActiveVariable &ActiveVariable::operator=(const ActiveVariable &rhs) = default;
-
-void ActiveVariable::setActive(ShaderType shaderType, bool used, uint32_t id)
-{
-    ASSERT(shaderType != ShaderType::InvalidEnum);
-    mActiveUseBits.set(shaderType, used);
-    mIds[shaderType] = id;
-}
-
-void ActiveVariable::unionReferencesWith(const LinkedUniform &other)
-{
-    mActiveUseBits |= other.mActiveUseBits;
-    for (const ShaderType shaderType : AllShaderTypes())
-    {
-        ASSERT(mIds[shaderType] == 0 || other.getId(shaderType) == 0 ||
-               mIds[shaderType] == other.getId(shaderType));
-        if (mIds[shaderType] == 0)
-        {
-            mIds[shaderType] = other.getId(shaderType);
-        }
-    }
-}
-
-LinkedUniform::LinkedUniform() = default;
-
 LinkedUniform::LinkedUniform(GLenum typeIn,
                              GLenum precisionIn,
                              const std::vector<unsigned int> &arraySizesIn,
@@ -59,22 +26,22 @@ LinkedUniform::LinkedUniform(GLenum typeIn,
     ASSERT(arraySizesIn.size() <= 1);
 
     memset(this, 0, sizeof(*this));
-    SetBitField(type, typeIn);
-    SetBitField(precision, precisionIn);
-    location = locationIn;
-    SetBitField(binding, bindingIn);
-    SetBitField(offset, offsetIn);
-    SetBitField(bufferIndex, bufferIndexIn);
-    outerArraySizeProduct = 1;
-    SetBitField(arraySize, arraySizesIn.empty() ? 1u : arraySizesIn[0]);
-    SetBitField(flagBits.isArray, !arraySizesIn.empty());
+    SetBitField(pod.type, typeIn);
+    SetBitField(pod.precision, precisionIn);
+    pod.location = locationIn;
+    SetBitField(pod.binding, bindingIn);
+    SetBitField(pod.offset, offsetIn);
+    SetBitField(pod.bufferIndex, bufferIndexIn);
+    pod.outerArraySizeProduct = 1;
+    SetBitField(pod.arraySize, arraySizesIn.empty() ? 1u : arraySizesIn[0]);
+    SetBitField(pod.flagBits.isArray, !arraySizesIn.empty());
     if (!(blockInfoIn == sh::kDefaultBlockMemberInfo))
     {
-        flagBits.isBlock               = 1;
-        flagBits.blockIsRowMajorMatrix = blockInfoIn.isRowMajorMatrix;
-        SetBitField(blockOffset, blockInfoIn.offset);
-        SetBitField(blockArrayStride, blockInfoIn.arrayStride);
-        SetBitField(blockMatrixStride, blockInfoIn.matrixStride);
+        pod.flagBits.isBlock               = 1;
+        pod.flagBits.blockIsRowMajorMatrix = blockInfoIn.isRowMajorMatrix;
+        SetBitField(pod.blockOffset, blockInfoIn.offset);
+        SetBitField(pod.blockArrayStride, blockInfoIn.arrayStride);
+        SetBitField(pod.blockMatrixStride, blockInfoIn.matrixStride);
     }
 }
 
@@ -86,31 +53,31 @@ LinkedUniform::LinkedUniform(const UsedUniform &usedUniform)
     ASSERT(usedUniform.blockInfo == sh::kDefaultBlockMemberInfo);
 
     // Note: Ensure every data member is initialized.
-    flagBitsAsUByte = 0;
-    SetBitField(type, usedUniform.type);
-    SetBitField(precision, usedUniform.precision);
-    SetBitField(imageUnitFormat, usedUniform.imageUnitFormat);
-    location          = usedUniform.location;
-    blockOffset       = 0;
-    blockArrayStride  = 0;
-    blockMatrixStride = 0;
-    SetBitField(binding, usedUniform.binding);
-    SetBitField(offset, usedUniform.offset);
+    pod.flagBitsAsUByte = 0;
+    SetBitField(pod.type, usedUniform.type);
+    SetBitField(pod.precision, usedUniform.precision);
+    SetBitField(pod.imageUnitFormat, usedUniform.imageUnitFormat);
+    pod.location          = usedUniform.location;
+    pod.blockOffset       = 0;
+    pod.blockArrayStride  = 0;
+    pod.blockMatrixStride = 0;
+    SetBitField(pod.binding, usedUniform.binding);
+    SetBitField(pod.offset, usedUniform.offset);
 
-    SetBitField(bufferIndex, usedUniform.bufferIndex);
-    SetBitField(parentArrayIndex, usedUniform.parentArrayIndex());
-    SetBitField(outerArraySizeProduct, ArraySizeProduct(usedUniform.outerArraySizes));
-    SetBitField(outerArrayOffset, usedUniform.outerArrayOffset);
-    SetBitField(arraySize, usedUniform.isArray() ? usedUniform.getArraySizeProduct() : 1u);
-    SetBitField(flagBits.isArray, usedUniform.isArray());
+    SetBitField(pod.bufferIndex, usedUniform.bufferIndex);
+    SetBitField(pod.parentArrayIndex, usedUniform.parentArrayIndex());
+    SetBitField(pod.outerArraySizeProduct, ArraySizeProduct(usedUniform.outerArraySizes));
+    SetBitField(pod.outerArrayOffset, usedUniform.outerArrayOffset);
+    SetBitField(pod.arraySize, usedUniform.isArray() ? usedUniform.getArraySizeProduct() : 1u);
+    SetBitField(pod.flagBits.isArray, usedUniform.isArray());
 
-    id             = usedUniform.id;
-    mActiveUseBits = usedUniform.activeVariable.activeShaders();
-    mIds           = usedUniform.activeVariable.getIds();
+    pod.id            = usedUniform.id;
+    pod.activeUseBits = usedUniform.activeVariable.activeShaders();
+    pod.ids           = usedUniform.activeVariable.getIds();
 
-    SetBitField(flagBits.isFragmentInOut, usedUniform.isFragmentInOut);
-    SetBitField(flagBits.texelFetchStaticUse, usedUniform.texelFetchStaticUse);
-    ASSERT(!usedUniform.isArray() || arraySize == usedUniform.getArraySizeProduct());
+    SetBitField(pod.flagBits.isFragmentInOut, usedUniform.isFragmentInOut);
+    SetBitField(pod.flagBits.texelFetchStaticUse, usedUniform.texelFetchStaticUse);
+    ASSERT(!usedUniform.isArray() || pod.arraySize == usedUniform.getArraySizeProduct());
 }
 
 BufferVariable::BufferVariable()
@@ -147,7 +114,7 @@ ShaderVariableBuffer::ShaderVariableBuffer()
 
 void ShaderVariableBuffer::unionReferencesWith(const LinkedUniform &other)
 {
-    pod.activeUseBits |= other.mActiveUseBits;
+    pod.activeUseBits |= other.pod.activeUseBits;
     for (const ShaderType shaderType : AllShaderTypes())
     {
         ASSERT(pod.ids[shaderType] == 0 || other.getId(shaderType) == 0 ||

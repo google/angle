@@ -185,9 +185,9 @@ void SetXfbInfo(ShaderInterfaceVariableInfoMap *infoMap,
         xfb = &info->fieldXfb[fieldIndex];
     }
 
-    ASSERT(xfb->podStruct.buffer == ShaderInterfaceVariableXfbInfo::kInvalid);
-    ASSERT(xfb->podStruct.offset == ShaderInterfaceVariableXfbInfo::kInvalid);
-    ASSERT(xfb->podStruct.stride == ShaderInterfaceVariableXfbInfo::kInvalid);
+    ASSERT(xfb->pod.buffer == ShaderInterfaceVariableXfbInfo::kInvalid);
+    ASSERT(xfb->pod.offset == ShaderInterfaceVariableXfbInfo::kInvalid);
+    ASSERT(xfb->pod.stride == ShaderInterfaceVariableXfbInfo::kInvalid);
 
     if (arrayIndex != ShaderInterfaceVariableXfbInfo::kInvalid)
     {
@@ -195,14 +195,14 @@ void SetXfbInfo(ShaderInterfaceVariableInfoMap *infoMap,
         xfb = &xfb->arrayElements.back();
     }
 
-    xfb->podStruct.buffer        = xfbBuffer;
-    xfb->podStruct.offset        = xfbOffset;
-    xfb->podStruct.stride        = xfbStride;
-    xfb->podStruct.arraySize     = arraySize;
-    xfb->podStruct.columnCount   = columnCount;
-    xfb->podStruct.rowCount      = rowCount;
-    xfb->podStruct.arrayIndex    = arrayIndex;
-    xfb->podStruct.componentType = componentType;
+    xfb->pod.buffer        = xfbBuffer;
+    xfb->pod.offset        = xfbOffset;
+    xfb->pod.stride        = xfbStride;
+    xfb->pod.arraySize     = arraySize;
+    xfb->pod.columnCount   = columnCount;
+    xfb->pod.rowCount      = rowCount;
+    xfb->pod.arrayIndex    = arrayIndex;
+    xfb->pod.componentType = componentType;
 }
 
 void AssignTransformFeedbackEmulationBindings(gl::ShaderType shaderType,
@@ -343,14 +343,14 @@ void AssignSecondaryOutputLocations(const gl::ProgramExecutable &programExecutab
             const gl::ProgramOutput &outputVar = outputVariables[outputLocation.index];
 
             uint32_t location = 0;
-            if (outputVar.podStruct.location != -1)
+            if (outputVar.pod.location != -1)
             {
-                location = outputVar.podStruct.location;
+                location = outputVar.pod.location;
             }
 
-            ShaderInterfaceVariableInfo *info = AddLocationInfo(
-                variableInfoMapOut, gl::ShaderType::Fragment, outputVar.podStruct.id, location,
-                ShaderInterfaceVariableInfo::kInvalid, 0, 0);
+            ShaderInterfaceVariableInfo *info =
+                AddLocationInfo(variableInfoMapOut, gl::ShaderType::Fragment, outputVar.pod.id,
+                                location, ShaderInterfaceVariableInfo::kInvalid, 0, 0);
 
             // Index 1 is used to specify that the color be used as the second color input to
             // the blend equation
@@ -372,9 +372,9 @@ void AssignSecondaryOutputLocations(const gl::ProgramExecutable &programExecutab
             if (std::find(secondaryFrag.begin(), secondaryFrag.end(), outputVar.name) !=
                 secondaryFrag.end())
             {
-                ShaderInterfaceVariableInfo *info = AddLocationInfo(
-                    variableInfoMapOut, gl::ShaderType::Fragment, outputVar.podStruct.id, 0,
-                    ShaderInterfaceVariableInfo::kInvalid, 0, 0);
+                ShaderInterfaceVariableInfo *info =
+                    AddLocationInfo(variableInfoMapOut, gl::ShaderType::Fragment, outputVar.pod.id,
+                                    0, ShaderInterfaceVariableInfo::kInvalid, 0, 0);
 
                 info->index = 1;
 
@@ -407,9 +407,9 @@ void AssignOutputLocations(const gl::ProgramExecutable &programExecutable,
             const gl::ProgramOutput &outputVar = outputVariables[outputLocation.index];
 
             uint32_t location = 0;
-            if (outputVar.podStruct.location != -1)
+            if (outputVar.pod.location != -1)
             {
-                location = outputVar.podStruct.location;
+                location = outputVar.pod.location;
             }
             else if (std::find(implicitOutputs.begin(), implicitOutputs.end(), outputVar.name) ==
                      implicitOutputs.end())
@@ -420,7 +420,7 @@ void AssignOutputLocations(const gl::ProgramExecutable &programExecutable,
                                             implicitOutputs.begin(), implicitOutputs.end()) == 1);
             }
 
-            AddLocationInfo(variableInfoMapOut, shaderType, outputVar.podStruct.id, location,
+            AddLocationInfo(variableInfoMapOut, shaderType, outputVar.pod.id, location,
                             ShaderInterfaceVariableInfo::kInvalid, 0, 0);
         }
     }
@@ -432,9 +432,8 @@ void AssignOutputLocations(const gl::ProgramExecutable &programExecutable,
         {
             if (outputVar.name == "gl_FragColor" || outputVar.name == "gl_FragData")
             {
-                AddLocationInfo(variableInfoMapOut, gl::ShaderType::Fragment,
-                                outputVar.podStruct.id, 0, ShaderInterfaceVariableInfo::kInvalid, 0,
-                                0);
+                AddLocationInfo(variableInfoMapOut, gl::ShaderType::Fragment, outputVar.pod.id, 0,
+                                ShaderInterfaceVariableInfo::kInvalid, 0, 0);
             }
         }
     }
@@ -1771,7 +1770,7 @@ void SpirvTransformFeedbackCodeGenerator::visitVariable(const ShaderInterfaceVar
 
     // Note if the variable is captured by transform feedback.  In that case, the TransformFeedback
     // capability needs to be added.
-    if ((xfbInfo.xfb.podStruct.buffer != ShaderInterfaceVariableInfo::kInvalid ||
+    if ((xfbInfo.xfb.pod.buffer != ShaderInterfaceVariableInfo::kInvalid ||
          !xfbInfo.fieldXfb.empty()) &&
         info.activeStages[shaderType])
     {
@@ -1960,16 +1959,16 @@ void SpirvTransformFeedbackCodeGenerator::visitXfbVarying(const ShaderInterfaceV
         visitXfbVarying(arrayElement, baseId, fieldIndex);
     }
 
-    if (xfb.podStruct.buffer == ShaderInterfaceVariableXfbInfo::kInvalid)
+    if (xfb.pod.buffer == ShaderInterfaceVariableXfbInfo::kInvalid)
     {
         return;
     }
 
     // Varyings captured to the same buffer have the same stride.
-    ASSERT(mXfbVaryings[xfb.podStruct.buffer].empty() ||
-           mXfbVaryings[xfb.podStruct.buffer][0].info->podStruct.stride == xfb.podStruct.stride);
+    ASSERT(mXfbVaryings[xfb.pod.buffer].empty() ||
+           mXfbVaryings[xfb.pod.buffer][0].info->pod.stride == xfb.pod.stride);
 
-    mXfbVaryings[xfb.podStruct.buffer].push_back({&xfb, baseId, fieldIndex});
+    mXfbVaryings[xfb.pod.buffer].push_back({&xfb, baseId, fieldIndex});
 }
 
 void SpirvTransformFeedbackCodeGenerator::writeIntConstant(uint32_t value,
@@ -2044,30 +2043,30 @@ void SpirvTransformFeedbackCodeGenerator::writePendingDeclarations(
         const ShaderInterfaceVariableXfbInfo *info0 = varyings[0].info;
 
         // Define the buffer stride constant
-        ASSERT(info0->podStruct.stride % sizeof(float) == 0);
-        uint32_t stride = info0->podStruct.stride / sizeof(float);
+        ASSERT(info0->pod.stride % sizeof(float) == 0);
+        uint32_t stride = info0->pod.stride / sizeof(float);
 
-        mBufferStrides[info0->podStruct.buffer] = SpirvTransformerBase::GetNewId(blobOut);
-        spirv::WriteConstant(blobOut, ID::Int, mBufferStrides[info0->podStruct.buffer],
+        mBufferStrides[info0->pod.buffer] = SpirvTransformerBase::GetNewId(blobOut);
+        spirv::WriteConstant(blobOut, ID::Int, mBufferStrides[info0->pod.buffer],
                              spirv::LiteralContextDependentNumber(stride));
 
-        compositeIds.push_back(mBufferStrides[info0->podStruct.buffer]);
+        compositeIds.push_back(mBufferStrides[info0->pod.buffer]);
 
         // Define all the constants that would be necessary to load the components of the varying.
         for (const XfbVarying &varying : varyings)
         {
             writeIntConstant(varying.fieldIndex, ID::Int, blobOut);
             const ShaderInterfaceVariableXfbInfo *info = varying.info;
-            if (info->podStruct.arraySize == ShaderInterfaceVariableXfbInfo::kInvalid)
+            if (info->pod.arraySize == ShaderInterfaceVariableXfbInfo::kInvalid)
             {
                 continue;
             }
 
             uint32_t arrayIndexStart =
-                varying.info->podStruct.arrayIndex != ShaderInterfaceVariableXfbInfo::kInvalid
-                    ? varying.info->podStruct.arrayIndex
+                varying.info->pod.arrayIndex != ShaderInterfaceVariableXfbInfo::kInvalid
+                    ? varying.info->pod.arrayIndex
                     : 0;
-            uint32_t arrayIndexEnd = arrayIndexStart + info->podStruct.arraySize;
+            uint32_t arrayIndexEnd = arrayIndexStart + info->pod.arraySize;
 
             for (uint32_t arrayIndex = arrayIndexStart; arrayIndex < arrayIndexEnd; ++arrayIndex)
             {
@@ -2138,7 +2137,7 @@ void SpirvTransformFeedbackCodeGenerator::writeTransformFeedbackEmulationOutput(
     {
         std::sort(varyings.begin(), varyings.end(),
                   [](const XfbVarying &first, const XfbVarying &second) {
-                      return first.info->podStruct.offset < second.info->podStruct.offset;
+                      return first.info->pod.offset < second.info->pod.offset;
                   });
     }
 
@@ -2214,7 +2213,7 @@ void SpirvTransformFeedbackCodeGenerator::writeTransformFeedbackEmulationOutput(
         {
             const XfbVarying &varying                  = varyings[varyingIndex];
             const ShaderInterfaceVariableXfbInfo *info = varying.info;
-            ASSERT(info->podStruct.buffer == bufferIndex);
+            ASSERT(info->pod.buffer == bufferIndex);
 
             // Each component of the varying being captured is loaded one by one.  This uses the
             // OpAccessChain instruction that takes a chain of "indices" to end up with the
@@ -2246,13 +2245,12 @@ void SpirvTransformFeedbackCodeGenerator::writeTransformFeedbackEmulationOutput(
             // - The whole array
             //
             uint32_t arrayIndexStart = 0;
-            uint32_t arrayIndexEnd   = info->podStruct.arraySize;
-            const bool isArray =
-                info->podStruct.arraySize != ShaderInterfaceVariableXfbInfo::kInvalid;
-            if (varying.info->podStruct.arrayIndex != ShaderInterfaceVariableXfbInfo::kInvalid)
+            uint32_t arrayIndexEnd   = info->pod.arraySize;
+            const bool isArray = info->pod.arraySize != ShaderInterfaceVariableXfbInfo::kInvalid;
+            if (varying.info->pod.arrayIndex != ShaderInterfaceVariableXfbInfo::kInvalid)
             {
                 // Capturing a single element.
-                arrayIndexStart = varying.info->podStruct.arrayIndex;
+                arrayIndexStart = varying.info->pod.arrayIndex;
                 arrayIndexEnd   = arrayIndexStart + 1;
             }
             else if (!isArray)
@@ -2263,9 +2261,9 @@ void SpirvTransformFeedbackCodeGenerator::writeTransformFeedbackEmulationOutput(
 
             // Sorting the varyings should have ensured that offsets are in order and that writing
             // to the output buffer sequentially ends up using the correct offsets.
-            ASSERT(info->podStruct.offset == offsetForVerification);
-            offsetForVerification += (arrayIndexEnd - arrayIndexStart) * info->podStruct.rowCount *
-                                     info->podStruct.columnCount * sizeof(float);
+            ASSERT(info->pod.offset == offsetForVerification);
+            offsetForVerification += (arrayIndexEnd - arrayIndexStart) * info->pod.rowCount *
+                                     info->pod.columnCount * sizeof(float);
 
             // Determine the type of the component being captured.  OpBitcast is used (the
             // implementation of intBitsToFloat() and uintBitsToFloat() for non-float types).
@@ -2274,28 +2272,27 @@ void SpirvTransformFeedbackCodeGenerator::writeTransformFeedbackEmulationOutput(
             const bool isPrivate =
                 inactiveVaryingRemover.isInactive(varying.baseId) ||
                 (usePrecisionFixer && varyingPrecisionFixer.isReplaced(varying.baseId));
-            getVaryingTypeIds(info->podStruct.componentType, isPrivate, &varyingTypeId,
-                              &varyingTypePtr);
+            getVaryingTypeIds(info->pod.componentType, isPrivate, &varyingTypeId, &varyingTypePtr);
 
             for (uint32_t arrayIndex = arrayIndexStart; arrayIndex < arrayIndexEnd; ++arrayIndex)
             {
                 AccessChainIndexListAppend appendArrayIndex(isArray, mIntNIds, arrayIndex,
                                                             &indexList);
-                for (uint32_t col = 0; col < info->podStruct.columnCount; ++col)
+                for (uint32_t col = 0; col < info->pod.columnCount; ++col)
                 {
-                    AccessChainIndexListAppend appendColumn(info->podStruct.columnCount > 1,
-                                                            mIntNIds, col, &indexList);
-                    for (uint32_t row = 0; row < info->podStruct.rowCount; ++row)
+                    AccessChainIndexListAppend appendColumn(info->pod.columnCount > 1, mIntNIds,
+                                                            col, &indexList);
+                    for (uint32_t row = 0; row < info->pod.rowCount; ++row)
                     {
-                        AccessChainIndexListAppend appendRow(info->podStruct.rowCount > 1, mIntNIds,
-                                                             row, &indexList);
+                        AccessChainIndexListAppend appendRow(info->pod.rowCount > 1, mIntNIds, row,
+                                                             &indexList);
 
                         // Generate the code to capture a single component of the varying:
                         //
                         //     ANGLEXfbN.xfbOut[xfbOffset] = tfVarying0.field[index][row][col]
                         writeComponentCapture(bufferIndex, xfbOffset, varyingTypeId, varyingTypePtr,
-                                              varying.baseId, indexList,
-                                              info->podStruct.componentType, blobOut);
+                                              varying.baseId, indexList, info->pod.componentType,
+                                              blobOut);
 
                         // Increment the offset:
                         //
@@ -2444,18 +2441,18 @@ void SpirvTransformFeedbackCodeGenerator::addMemberDecorate(const XFBInterfaceVa
     {
         const ShaderInterfaceVariableXfbInfo &xfb = info.fieldXfb[fieldIndex];
 
-        if (xfb.podStruct.buffer == ShaderInterfaceVariableXfbInfo::kInvalid)
+        if (xfb.pod.buffer == ShaderInterfaceVariableXfbInfo::kInvalid)
         {
             continue;
         }
 
-        ASSERT(xfb.podStruct.stride != ShaderInterfaceVariableXfbInfo::kInvalid);
-        ASSERT(xfb.podStruct.offset != ShaderInterfaceVariableXfbInfo::kInvalid);
+        ASSERT(xfb.pod.stride != ShaderInterfaceVariableXfbInfo::kInvalid);
+        ASSERT(xfb.pod.offset != ShaderInterfaceVariableXfbInfo::kInvalid);
 
         const uint32_t xfbDecorationValues[kXfbDecorationCount] = {
-            xfb.podStruct.buffer,
-            xfb.podStruct.stride,
-            xfb.podStruct.offset,
+            xfb.pod.buffer,
+            xfb.pod.stride,
+            xfb.pod.offset,
         };
 
         // Generate the following three instructions:
@@ -2476,18 +2473,18 @@ void SpirvTransformFeedbackCodeGenerator::addDecorate(const XFBInterfaceVariable
                                                       spirv::IdRef id,
                                                       spirv::Blob *blobOut)
 {
-    if (mIsEmulated || info.xfb.podStruct.buffer == ShaderInterfaceVariableXfbInfo::kInvalid)
+    if (mIsEmulated || info.xfb.pod.buffer == ShaderInterfaceVariableXfbInfo::kInvalid)
     {
         return;
     }
 
-    ASSERT(info.xfb.podStruct.stride != ShaderInterfaceVariableXfbInfo::kInvalid);
-    ASSERT(info.xfb.podStruct.offset != ShaderInterfaceVariableXfbInfo::kInvalid);
+    ASSERT(info.xfb.pod.stride != ShaderInterfaceVariableXfbInfo::kInvalid);
+    ASSERT(info.xfb.pod.offset != ShaderInterfaceVariableXfbInfo::kInvalid);
 
     const uint32_t xfbDecorationValues[kXfbDecorationCount] = {
-        info.xfb.podStruct.buffer,
-        info.xfb.podStruct.stride,
-        info.xfb.podStruct.offset,
+        info.xfb.pod.buffer,
+        info.xfb.pod.stride,
+        info.xfb.pod.offset,
     };
 
     // Generate the following three instructions:

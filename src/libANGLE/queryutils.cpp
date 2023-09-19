@@ -774,15 +774,15 @@ GLint GetOutputResourceProperty(const Program *program, GLuint index, const GLen
     switch (prop)
     {
         case GL_TYPE:
-            return clampCast<GLint>(outputVariable.podStruct.type);
+            return clampCast<GLint>(outputVariable.pod.type);
         case GL_ARRAY_SIZE:
-            return clampCast<GLint>(outputVariable.podStruct.basicTypeElementCount);
+            return clampCast<GLint>(outputVariable.pod.basicTypeElementCount);
 
         case GL_NAME_LENGTH:
             return clampCast<GLint>(executable.getOutputResourceName(index).size() + 1u);
 
         case GL_LOCATION:
-            return outputVariable.podStruct.location;
+            return outputVariable.pod.location;
 
         case GL_LOCATION_INDEX_EXT:
             // EXT_blend_func_extended
@@ -809,7 +809,7 @@ GLint GetOutputResourceProperty(const Program *program, GLuint index, const GLen
         case GL_REFERENCED_BY_TESS_EVALUATION_SHADER_EXT:
             return executable.getLastLinkedShaderStageType() == ShaderType::TessEvaluation;
         case GL_IS_PER_PATCH_EXT:
-            return outputVariable.podStruct.isPatch;
+            return outputVariable.pod.isPatch;
 
         default:
             UNREACHABLE();
@@ -1946,16 +1946,16 @@ GLint GetUniformResourceProperty(const Program *program, GLuint index, const GLe
             return (uniform.isAtomicCounter() ? -1 : uniform.getBufferIndex());
 
         case GL_OFFSET:
-            return uniform.flagBits.isBlock ? uniform.blockOffset : -1;
+            return uniform.pod.flagBits.isBlock ? uniform.pod.blockOffset : -1;
 
         case GL_ARRAY_STRIDE:
-            return uniform.flagBits.isBlock ? uniform.blockArrayStride : -1;
+            return uniform.pod.flagBits.isBlock ? uniform.pod.blockArrayStride : -1;
 
         case GL_MATRIX_STRIDE:
-            return uniform.flagBits.isBlock ? uniform.blockMatrixStride : -1;
+            return uniform.pod.flagBits.isBlock ? uniform.pod.blockMatrixStride : -1;
 
         case GL_IS_ROW_MAJOR:
-            return uniform.flagBits.blockIsRowMajorMatrix ? 1 : 0;
+            return uniform.pod.flagBits.blockIsRowMajorMatrix ? 1 : 0;
 
         case GL_REFERENCED_BY_VERTEX_SHADER:
             return uniform.isActive(ShaderType::Vertex);

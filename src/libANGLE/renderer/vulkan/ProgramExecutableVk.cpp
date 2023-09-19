@@ -118,12 +118,12 @@ void SetupDefaultPipelineState(const vk::Context *context,
             }
 
             uint32_t location = 0;
-            if (outputVar.podStruct.location != -1)
+            if (outputVar.pod.location != -1)
             {
-                location = outputVar.podStruct.location;
+                location = outputVar.pod.location;
             }
 
-            GLenum type            = gl::VariableComponentType(outputVar.podStruct.type);
+            GLenum type            = gl::VariableComponentType(outputVar.pod.type);
             angle::FormatID format = angle::FormatID::R8G8B8A8_UNORM;
             if (type == GL_INT)
             {
@@ -1770,7 +1770,7 @@ void ProgramExecutableVk::setUniformImpl(GLint location,
 
     ASSERT(!linkedUniform.isSampler());
 
-    if (linkedUniform.type == entryPointType)
+    if (linkedUniform.pod.type == entryPointType)
     {
         for (const gl::ShaderType shaderType : mExecutable->getLinkedShaderStages())
         {
@@ -1804,7 +1804,7 @@ void ProgramExecutableVk::setUniformImpl(GLint location,
 
             const GLint componentCount = linkedUniform.getElementComponents();
 
-            ASSERT(linkedUniform.type == gl::VariableBoolVectorType(entryPointType));
+            ASSERT(linkedUniform.pod.type == gl::VariableBoolVectorType(entryPointType));
 
             GLint initialArrayOffset =
                 locationInfo.arrayIndex * layoutInfo.arrayStride + layoutInfo.offset;
@@ -1840,8 +1840,8 @@ void ProgramExecutableVk::getUniformImpl(GLint location, T *v, GLenum entryPoint
     const DefaultUniformBlockVk &uniformBlock = *mDefaultUniformBlocks[shaderType];
     const sh::BlockMemberInfo &layoutInfo     = uniformBlock.uniformLayout[location];
 
-    ASSERT(gl::GetUniformTypeInfo(linkedUniform.type).componentType == entryPointType ||
-           gl::GetUniformTypeInfo(linkedUniform.type).componentType ==
+    ASSERT(gl::GetUniformTypeInfo(linkedUniform.pod.type).componentType == entryPointType ||
+           gl::GetUniformTypeInfo(linkedUniform.pod.type).componentType ==
                gl::VariableBoolVectorType(entryPointType));
 
     if (gl::IsMatrixType(linkedUniform.getType()))

@@ -44,7 +44,6 @@ struct SamplerBinding
     {
         SetBitField(samplerType, samplerTypeIn);
     }
-    ~SamplerBinding() = default;
 
     GLuint getTextureUnit(const std::vector<GLuint> &boundTextureUnits,
                           unsigned int arrayIndex) const
@@ -66,11 +65,11 @@ ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
 
 struct ImageBinding
 {
-    ImageBinding();
-    ImageBinding(size_t count, TextureType textureTypeIn);
+    ImageBinding() = default;
+    ImageBinding(size_t count, TextureType textureTypeIn)
+        : textureType(textureTypeIn), boundImageUnits(count, 0)
+    {}
     ImageBinding(GLuint imageUnit, size_t count, TextureType textureTypeIn);
-    ImageBinding(const ImageBinding &other);
-    ~ImageBinding();
 
     // Necessary for distinguishing between textures with images and texture buffers.
     TextureType textureType;
@@ -83,34 +82,29 @@ struct ImageBinding
 ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
 struct ProgramInput
 {
-    ProgramInput();
+    ProgramInput() = default;
     ProgramInput(const sh::ShaderVariable &var);
-    ProgramInput(const ProgramInput &other);
-    ProgramInput &operator=(const ProgramInput &rhs);
 
-    GLenum getType() const { return basicDataTypeStruct.type; }
-    bool isBuiltIn() const { return basicDataTypeStruct.flagBits.isBuiltIn; }
-    bool isArray() const { return basicDataTypeStruct.flagBits.isArray; }
-    bool isActive() const { return basicDataTypeStruct.flagBits.active; }
-    bool isPatch() const { return basicDataTypeStruct.flagBits.isPatch; }
-    int getLocation() const { return basicDataTypeStruct.location; }
-    unsigned int getBasicTypeElementCount() const
-    {
-        return basicDataTypeStruct.basicTypeElementCount;
-    }
-    unsigned int getArraySizeProduct() const { return basicDataTypeStruct.arraySizeProduct; }
-    uint32_t getId() const { return basicDataTypeStruct.id; }
+    GLenum getType() const { return pod.type; }
+    bool isBuiltIn() const { return pod.flagBits.isBuiltIn; }
+    bool isArray() const { return pod.flagBits.isArray; }
+    bool isActive() const { return pod.flagBits.active; }
+    bool isPatch() const { return pod.flagBits.isPatch; }
+    int getLocation() const { return pod.location; }
+    unsigned int getBasicTypeElementCount() const { return pod.basicTypeElementCount; }
+    unsigned int getArraySizeProduct() const { return pod.arraySizeProduct; }
+    uint32_t getId() const { return pod.id; }
     sh::InterpolationType getInterpolation() const
     {
-        return static_cast<sh::InterpolationType>(basicDataTypeStruct.interpolation);
+        return static_cast<sh::InterpolationType>(pod.interpolation);
     }
 
-    void setLocation(int location) { basicDataTypeStruct.location = location; }
+    void setLocation(int location) { pod.location = location; }
     void resetEffectiveLocation()
     {
-        if (basicDataTypeStruct.flagBits.hasImplicitLocation)
+        if (pod.flagBits.hasImplicitLocation)
         {
-            basicDataTypeStruct.location = -1;
+            pod.location = -1;
         }
     }
 
@@ -142,23 +136,23 @@ struct ProgramInput
         int16_t basicTypeElementCount;
 
         uint32_t id;
-    } basicDataTypeStruct;
+    } pod;
 };
 ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
 
 ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
 struct ProgramOutput
 {
-    ProgramOutput() {}
+    ProgramOutput() = default;
     ProgramOutput(const sh::ShaderVariable &var);
-    bool isBuiltIn() const { return podStruct.isBuiltIn; }
-    bool isArray() const { return podStruct.isArray; }
-    unsigned int getOutermostArraySize() const { return podStruct.outermostArraySize; }
+    bool isBuiltIn() const { return pod.isBuiltIn; }
+    bool isArray() const { return pod.isArray; }
+    unsigned int getOutermostArraySize() const { return pod.outermostArraySize; }
     void resetEffectiveLocation()
     {
-        if (podStruct.hasImplicitLocation)
+        if (pod.hasImplicitLocation)
         {
-            podStruct.location = -1;
+            pod.location = -1;
         }
     }
 
@@ -181,7 +175,7 @@ struct ProgramOutput
         uint32_t isArray : 1;
         uint32_t hasImplicitLocation : 1;
         uint32_t pad : 27;
-    } podStruct;
+    } pod;
 };
 ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
 
@@ -255,50 +249,50 @@ class ProgramExecutable final : public angle::Subject
     std::string getInfoLogString() const;
     void resetInfoLog() const { mInfoLog->reset(); }
 
-    void resetLinkedShaderStages() { mPODStruct.linkedShaderStages.reset(); }
-    const ShaderBitSet getLinkedShaderStages() const { return mPODStruct.linkedShaderStages; }
+    void resetLinkedShaderStages() { mPod.linkedShaderStages.reset(); }
+    const ShaderBitSet getLinkedShaderStages() const { return mPod.linkedShaderStages; }
     void setLinkedShaderStages(ShaderType shaderType)
     {
-        mPODStruct.linkedShaderStages.set(shaderType);
+        mPod.linkedShaderStages.set(shaderType);
         updateCanDrawWith();
     }
     bool hasLinkedShaderStage(ShaderType shaderType) const
     {
         ASSERT(shaderType != ShaderType::InvalidEnum);
-        return mPODStruct.linkedShaderStages[shaderType];
+        return mPod.linkedShaderStages[shaderType];
     }
-    size_t getLinkedShaderStageCount() const { return mPODStruct.linkedShaderStages.count(); }
+    size_t getLinkedShaderStageCount() const { return mPod.linkedShaderStages.count(); }
     bool hasLinkedGraphicsShader() const
     {
-        return mPODStruct.linkedShaderStages.any() &&
-               mPODStruct.linkedShaderStages != gl::ShaderBitSet{gl::ShaderType::Compute};
+        return mPod.linkedShaderStages.any() &&
+               mPod.linkedShaderStages != gl::ShaderBitSet{gl::ShaderType::Compute};
     }
     bool hasLinkedTessellationShader() const
     {
-        return mPODStruct.linkedShaderStages[ShaderType::TessEvaluation];
+        return mPod.linkedShaderStages[ShaderType::TessEvaluation];
     }
     ShaderType getFirstLinkedShaderStageType() const;
     ShaderType getLastLinkedShaderStageType() const;
 
     ShaderType getLinkedTransformFeedbackStage() const
     {
-        return GetLastPreFragmentStage(mPODStruct.linkedShaderStages);
+        return GetLastPreFragmentStage(mPod.linkedShaderStages);
     }
 
     const AttributesMask &getActiveAttribLocationsMask() const
     {
-        return mPODStruct.activeAttribLocationsMask;
+        return mPod.activeAttribLocationsMask;
     }
     bool isAttribLocationActive(size_t attribLocation) const
     {
-        ASSERT(attribLocation < mPODStruct.activeAttribLocationsMask.size());
-        return mPODStruct.activeAttribLocationsMask[attribLocation];
+        ASSERT(attribLocation < mPod.activeAttribLocationsMask.size());
+        return mPod.activeAttribLocationsMask[attribLocation];
     }
 
-    AttributesMask getNonBuiltinAttribLocationsMask() const { return mPODStruct.attributesMask; }
-    unsigned int getMaxActiveAttribLocation() const { return mPODStruct.maxActiveAttribLocation; }
-    ComponentTypeMask getAttributesTypeMask() const { return mPODStruct.attributesTypeMask; }
-    AttributesMask getAttributesMask() const { return mPODStruct.attributesMask; }
+    AttributesMask getNonBuiltinAttribLocationsMask() const { return mPod.attributesMask; }
+    unsigned int getMaxActiveAttribLocation() const { return mPod.maxActiveAttribLocation; }
+    ComponentTypeMask getAttributesTypeMask() const { return mPod.attributesTypeMask; }
+    AttributesMask getAttributesMask() const { return mPod.attributesMask; }
 
     const ActiveTextureMask &getActiveSamplersMask() const { return mActiveSamplersMask; }
     void setActiveTextureMask(ActiveTextureMask mask) { mActiveSamplersMask = mask; }
@@ -343,13 +337,13 @@ class ProgramExecutable final : public angle::Subject
     {
         return !getLinkedTransformFeedbackVaryings().empty();
     }
-    bool usesFramebufferFetch() const { return (mPODStruct.fragmentInoutRange.length() > 0); }
+    bool usesFramebufferFetch() const { return (mPod.fragmentInoutRange.length() > 0); }
 
     // Count the number of uniform and storage buffer declarations, counting arrays as one.
     size_t getTransformFeedbackBufferCount() const { return mTransformFeedbackStrides.size(); }
 
-    void updateCanDrawWith() { mPODStruct.canDrawWith = hasLinkedShaderStage(ShaderType::Vertex); }
-    bool hasVertexShader() const { return mPODStruct.canDrawWith; }
+    void updateCanDrawWith() { mPod.canDrawWith = hasLinkedShaderStage(ShaderType::Vertex); }
+    bool hasVertexShader() const { return mPod.canDrawWith; }
 
     const std::vector<ProgramInput> &getProgramInputs() const { return mProgramInputs; }
     const std::vector<ProgramOutput> &getOutputVariables() const { return mOutputVariables; }
@@ -365,7 +359,7 @@ class ProgramExecutable final : public angle::Subject
     const std::vector<VariableLocation> &getUniformLocations() const { return mUniformLocations; }
     const UniformBlockBindingMask &getActiveUniformBlockBindings() const
     {
-        return mPODStruct.activeUniformBlockBindings;
+        return mPod.activeUniformBlockBindings;
     }
     const std::vector<SamplerBinding> &getSamplerBindings() const { return mSamplerBindings; }
     const std::vector<GLuint> &getSamplerBoundTextureUnits() const
@@ -374,29 +368,23 @@ class ProgramExecutable final : public angle::Subject
     }
     const std::vector<ImageBinding> &getImageBindings() const { return mImageBindings; }
     std::vector<ImageBinding> *getImageBindings() { return &mImageBindings; }
-    const RangeUI &getDefaultUniformRange() const { return mPODStruct.defaultUniformRange; }
-    const RangeUI &getSamplerUniformRange() const { return mPODStruct.samplerUniformRange; }
-    const RangeUI &getImageUniformRange() const { return mPODStruct.imageUniformRange; }
-    const RangeUI &getAtomicCounterUniformRange() const
-    {
-        return mPODStruct.atomicCounterUniformRange;
-    }
-    const RangeUI &getFragmentInoutRange() const { return mPODStruct.fragmentInoutRange; }
-    bool hasClipDistance() const { return mPODStruct.hasClipDistance; }
-    bool hasDiscard() const { return mPODStruct.hasDiscard; }
-    bool enablesPerSampleShading() const { return mPODStruct.enablesPerSampleShading; }
-    BlendEquationBitSet getAdvancedBlendEquations() const
-    {
-        return mPODStruct.advancedBlendEquations;
-    }
+    const RangeUI &getDefaultUniformRange() const { return mPod.defaultUniformRange; }
+    const RangeUI &getSamplerUniformRange() const { return mPod.samplerUniformRange; }
+    const RangeUI &getImageUniformRange() const { return mPod.imageUniformRange; }
+    const RangeUI &getAtomicCounterUniformRange() const { return mPod.atomicCounterUniformRange; }
+    const RangeUI &getFragmentInoutRange() const { return mPod.fragmentInoutRange; }
+    bool hasClipDistance() const { return mPod.hasClipDistance; }
+    bool hasDiscard() const { return mPod.hasDiscard; }
+    bool enablesPerSampleShading() const { return mPod.enablesPerSampleShading; }
+    BlendEquationBitSet getAdvancedBlendEquations() const { return mPod.advancedBlendEquations; }
     const std::vector<TransformFeedbackVarying> &getLinkedTransformFeedbackVaryings() const
     {
         return mLinkedTransformFeedbackVaryings;
     }
-    GLint getTransformFeedbackBufferMode() const { return mPODStruct.transformFeedbackBufferMode; }
+    GLint getTransformFeedbackBufferMode() const { return mPod.transformFeedbackBufferMode; }
     const sh::WorkGroupSize &getComputeShaderLocalSize() const
     {
-        return mPODStruct.computeShaderLocalSize;
+        return mPod.computeShaderLocalSize;
     }
     GLuint getUniformBlockBinding(size_t uniformBlockIndex) const
     {
@@ -449,14 +437,14 @@ class ProgramExecutable final : public angle::Subject
 
     GLuint getUniformIndexFromImageIndex(size_t imageIndex) const
     {
-        ASSERT(imageIndex < mPODStruct.imageUniformRange.length());
-        return static_cast<GLuint>(imageIndex) + mPODStruct.imageUniformRange.low();
+        ASSERT(imageIndex < mPod.imageUniformRange.length());
+        return static_cast<GLuint>(imageIndex) + mPod.imageUniformRange.low();
     }
 
     GLuint getUniformIndexFromSamplerIndex(size_t samplerIndex) const
     {
-        ASSERT(samplerIndex < mPODStruct.samplerUniformRange.length());
-        return static_cast<GLuint>(samplerIndex) + mPODStruct.samplerUniformRange.low();
+        ASSERT(samplerIndex < mPod.samplerUniformRange.length());
+        return static_cast<GLuint>(samplerIndex) + mPod.samplerUniformRange.low();
     }
 
     void saveLinkedStateInfo(const ProgramState &state);
@@ -481,39 +469,39 @@ class ProgramExecutable final : public angle::Subject
 
     int getLinkedShaderVersion(ShaderType shaderType) const
     {
-        return mPODStruct.linkedShaderVersions[shaderType];
+        return mPod.linkedShaderVersions[shaderType];
     }
 
-    bool isYUVOutput() const { return mPODStruct.hasYUVOutput; }
+    bool isYUVOutput() const { return mPod.hasYUVOutput; }
 
     PrimitiveMode getGeometryShaderInputPrimitiveType() const
     {
-        return mPODStruct.geometryShaderInputPrimitiveType;
+        return mPod.geometryShaderInputPrimitiveType;
     }
 
     PrimitiveMode getGeometryShaderOutputPrimitiveType() const
     {
-        return mPODStruct.geometryShaderOutputPrimitiveType;
+        return mPod.geometryShaderOutputPrimitiveType;
     }
 
-    int getGeometryShaderInvocations() const { return mPODStruct.geometryShaderInvocations; }
+    int getGeometryShaderInvocations() const { return mPod.geometryShaderInvocations; }
 
-    int getGeometryShaderMaxVertices() const { return mPODStruct.geometryShaderMaxVertices; }
+    int getGeometryShaderMaxVertices() const { return mPod.geometryShaderMaxVertices; }
 
-    GLint getTessControlShaderVertices() const { return mPODStruct.tessControlShaderVertices; }
-    GLenum getTessGenMode() const { return mPODStruct.tessGenMode; }
-    GLenum getTessGenPointMode() const { return mPODStruct.tessGenPointMode; }
-    GLenum getTessGenSpacing() const { return mPODStruct.tessGenSpacing; }
-    GLenum getTessGenVertexOrder() const { return mPODStruct.tessGenVertexOrder; }
+    GLint getTessControlShaderVertices() const { return mPod.tessControlShaderVertices; }
+    GLenum getTessGenMode() const { return mPod.tessGenMode; }
+    GLenum getTessGenPointMode() const { return mPod.tessGenPointMode; }
+    GLenum getTessGenSpacing() const { return mPod.tessGenSpacing; }
+    GLenum getTessGenVertexOrder() const { return mPod.tessGenVertexOrder; }
 
-    int getNumViews() const { return mPODStruct.numViews; }
-    bool usesMultiview() const { return mPODStruct.numViews != -1; }
+    int getNumViews() const { return mPod.numViews; }
+    bool usesMultiview() const { return mPod.numViews != -1; }
 
-    rx::SpecConstUsageBits getSpecConstUsageBits() const { return mPODStruct.specConstUsageBits; }
+    rx::SpecConstUsageBits getSpecConstUsageBits() const { return mPod.specConstUsageBits; }
 
-    int getDrawIDLocation() const { return mPODStruct.drawIDLocation; }
-    int getBaseVertexLocation() const { return mPODStruct.baseVertexLocation; }
-    int getBaseInstanceLocation() const { return mPODStruct.baseInstanceLocation; }
+    int getDrawIDLocation() const { return mPod.drawIDLocation; }
+    int getBaseVertexLocation() const { return mPod.baseVertexLocation; }
+    int getBaseInstanceLocation() const { return mPod.baseInstanceLocation; }
 
     bool hasDrawIDUniform() const { return getDrawIDLocation() >= 0; }
     bool hasBaseVertexUniform() const { return getBaseVertexLocation() >= 0; }
@@ -533,14 +521,11 @@ class ProgramExecutable final : public angle::Subject
         return validateSamplersImpl(caps);
     }
 
-    ComponentTypeMask getFragmentOutputsTypeMask() const { return mPODStruct.drawBufferTypeMask; }
-    DrawBufferMask getActiveOutputVariablesMask() const
-    {
-        return mPODStruct.activeOutputVariablesMask;
-    }
+    ComponentTypeMask getFragmentOutputsTypeMask() const { return mPod.drawBufferTypeMask; }
+    DrawBufferMask getActiveOutputVariablesMask() const { return mPod.activeOutputVariablesMask; }
     DrawBufferMask getActiveSecondaryOutputVariablesMask() const
     {
-        return mPODStruct.activeSecondaryOutputVariablesMask;
+        return mPod.activeSecondaryOutputVariablesMask;
     }
 
     GLuint getInputResourceIndex(const GLchar *name) const;
@@ -872,7 +857,7 @@ class ProgramExecutable final : public angle::Subject
         UniformBlockBindingMask activeUniformBlockBindings;
         // 24 bytes
         ShaderMap<int> linkedShaderVersions;
-    } mPODStruct;
+    } mPod;
     ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
 
     // Cached mask of active samplers and sampler types.

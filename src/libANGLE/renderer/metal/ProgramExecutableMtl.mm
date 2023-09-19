@@ -1520,7 +1520,7 @@ void ProgramExecutableMtl::setUniformImpl(GLint location,
         return;
     }
 
-    if (linkedUniform.type == entryPointType)
+    if (linkedUniform.pod.type == entryPointType)
     {
         for (gl::ShaderType shaderType : gl::kAllGLES2ShaderTypes)
         {
@@ -1533,9 +1533,9 @@ void ProgramExecutableMtl::setUniformImpl(GLint location,
                 continue;
             }
 
-            const GLint componentCount = (GLint)linkedUniform.getElementComponents();
-            const GLint baseComponentSize =
-                (GLint)mtl::GetMetalSizeForGLType(gl::VariableComponentType(linkedUniform.type));
+            const GLint componentCount    = (GLint)linkedUniform.getElementComponents();
+            const GLint baseComponentSize = (GLint)mtl::GetMetalSizeForGLType(
+                gl::VariableComponentType(linkedUniform.pod.type));
             UpdateDefaultUniformBlockWithElementSize(count, locationInfo.arrayIndex, componentCount,
                                                      v, baseComponentSize, layoutInfo,
                                                      &uniformBlock.uniformData);
@@ -1557,7 +1557,7 @@ void ProgramExecutableMtl::setUniformImpl(GLint location,
 
             const GLint componentCount = linkedUniform.getElementComponents();
 
-            ASSERT(linkedUniform.type == gl::VariableBoolVectorType(entryPointType));
+            ASSERT(linkedUniform.pod.type == gl::VariableBoolVectorType(entryPointType));
 
             GLint initialArrayOffset =
                 locationInfo.arrayIndex * layoutInfo.arrayStride + layoutInfo.offset;
@@ -1593,11 +1593,11 @@ void ProgramExecutableMtl::getUniformImpl(GLint location, T *v, GLenum entryPoin
     const DefaultUniformBlockMtl &uniformBlock = mDefaultUniformBlocks[shaderType];
     const sh::BlockMemberInfo &layoutInfo      = uniformBlock.uniformLayout[location];
 
-    ASSERT(gl::GetUniformTypeInfo(linkedUniform.type).componentType == entryPointType ||
-           gl::GetUniformTypeInfo(linkedUniform.type).componentType ==
+    ASSERT(gl::GetUniformTypeInfo(linkedUniform.pod.type).componentType == entryPointType ||
+           gl::GetUniformTypeInfo(linkedUniform.pod.type).componentType ==
                gl::VariableBoolVectorType(entryPointType));
     const GLint baseComponentSize =
-        (GLint)mtl::GetMetalSizeForGLType(gl::VariableComponentType(linkedUniform.type));
+        (GLint)mtl::GetMetalSizeForGLType(gl::VariableComponentType(linkedUniform.pod.type));
 
     if (gl::IsMatrixType(linkedUniform.getType()))
     {

@@ -25,37 +25,51 @@ struct UniformTypeInfo;
 struct UsedUniform;
 struct LinkedUniform;
 
-// Note: keep this struct memcpy-able: i.e, a simple struct with basic types only and no virtual
-// functions. LinkedUniform relies on this so that it can use memcpy to initialize uniform for
-// performance.
+#define ACTIVE_VARIABLE_COMMON_INTERFACES                         \
+    void setActive(ShaderType shaderType, bool used, uint32_t id) \
+    {                                                             \
+        ASSERT(shaderType != ShaderType::InvalidEnum);            \
+        pod.activeUseBits.set(shaderType, used);                  \
+        pod.ids[shaderType] = id;                                 \
+    }                                                             \
+    ShaderType getFirstActiveShaderType() const                   \
+    {                                                             \
+        return pod.activeUseBits.first();                         \
+    }                                                             \
+    bool isActive(ShaderType shaderType) const                    \
+    {                                                             \
+        return pod.activeUseBits[shaderType];                     \
+    }                                                             \
+    const ShaderMap<uint32_t> &getIds() const                     \
+    {                                                             \
+        return pod.ids;                                           \
+    }                                                             \
+    uint32_t getId(ShaderType shaderType) const                   \
+    {                                                             \
+        return pod.ids[shaderType];                               \
+    }                                                             \
+    ShaderBitSet activeShaders() const                            \
+    {                                                             \
+        return pod.activeUseBits;                                 \
+    }                                                             \
+    uint32_t activeShaderCount() const                            \
+    {                                                             \
+        return static_cast<uint32_t>(pod.activeUseBits.count());  \
+    }
+
 struct ActiveVariable
 {
-    ActiveVariable();
-    ActiveVariable(const ActiveVariable &rhs);
-    ~ActiveVariable();
+    ActiveVariable() { memset(&pod, 0, sizeof(pod)); }
 
-    ActiveVariable &operator=(const ActiveVariable &rhs);
+    ACTIVE_VARIABLE_COMMON_INTERFACES
 
-    ShaderType getFirstActiveShaderType() const
+    struct PODStruct
     {
-        return static_cast<ShaderType>(ScanForward(mActiveUseBits.bits()));
-    }
-    void setActive(ShaderType shaderType, bool used, uint32_t id);
-    void unionReferencesWith(const LinkedUniform &otherUniform);
-    bool isActive(ShaderType shaderType) const
-    {
-        ASSERT(shaderType != ShaderType::InvalidEnum);
-        return mActiveUseBits[shaderType];
-    }
-    const ShaderMap<uint32_t> &getIds() const { return mIds; }
-    uint32_t getId(ShaderType shaderType) const { return mIds[shaderType]; }
-    ShaderBitSet activeShaders() const { return mActiveUseBits; }
-
-  private:
-    ShaderBitSet mActiveUseBits;
-    // The id of a linked variable in each shader stage.  This id originates from
-    // sh::ShaderVariable::id or sh::InterfaceBlock::id
-    ShaderMap<uint32_t> mIds;
+        ShaderBitSet activeUseBits;
+        // The id of a linked variable in each shader stage.  This id originates from
+        // sh::ShaderVariable::id or sh::InterfaceBlock::id
+        ShaderMap<uint32_t> ids;
+    } pod;
 };
 
 // Important: This struct must have basic data types only, so that we can initialize with memcpy. Do
@@ -65,7 +79,7 @@ struct ActiveVariable
 ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
 struct LinkedUniform
 {
-    LinkedUniform();
+    LinkedUniform() = default;
     LinkedUniform(GLenum typeIn,
                   GLenum precisionIn,
                   const std::vector<unsigned int> &arraySizesIn,
@@ -76,91 +90,80 @@ struct LinkedUniform
                   const sh::BlockMemberInfo &blockInfoIn);
     LinkedUniform(const UsedUniform &usedUniform);
 
-    bool isSampler() const { return GetUniformTypeInfo(type).isSampler; }
-    bool isImage() const { return GetUniformTypeInfo(type).isImageType; }
-    bool isAtomicCounter() const { return IsAtomicCounterType(type); }
-    bool isInDefaultBlock() const { return bufferIndex == -1; }
-    size_t getElementSize() const { return GetUniformTypeInfo(type).externalSize; }
-    GLint getElementComponents() const { return GetUniformTypeInfo(type).componentCount; }
+    bool isSampler() const { return GetUniformTypeInfo(pod.type).isSampler; }
+    bool isImage() const { return GetUniformTypeInfo(pod.type).isImageType; }
+    bool isAtomicCounter() const { return IsAtomicCounterType(pod.type); }
+    bool isInDefaultBlock() const { return pod.bufferIndex == -1; }
+    size_t getElementSize() const { return GetUniformTypeInfo(pod.type).externalSize; }
+    GLint getElementComponents() const { return GetUniformTypeInfo(pod.type).componentCount; }
 
-    bool isTexelFetchStaticUse() const { return flagBits.texelFetchStaticUse; }
-    bool isFragmentInOut() const { return flagBits.isFragmentInOut; }
+    bool isTexelFetchStaticUse() const { return pod.flagBits.texelFetchStaticUse; }
+    bool isFragmentInOut() const { return pod.flagBits.isFragmentInOut; }
 
-    bool isArray() const { return flagBits.isArray; }
+    bool isArray() const { return pod.flagBits.isArray; }
     uint16_t getBasicTypeElementCount() const
     {
-        ASSERT(flagBits.isArray || arraySize == 1u);
-        return arraySize;
+        ASSERT(pod.flagBits.isArray || pod.arraySize == 1u);
+        return pod.arraySize;
     }
 
-    GLenum getType() const { return type; }
-    uint16_t getOuterArrayOffset() const { return outerArrayOffset; }
-    uint16_t getOuterArraySizeProduct() const { return outerArraySizeProduct; }
-    int16_t getBinding() const { return binding; }
-    int16_t getOffset() const { return offset; }
-    int getBufferIndex() const { return bufferIndex; }
-    int getLocation() const { return location; }
-    GLenum getImageUnitFormat() const { return imageUnitFormat; }
+    GLenum getType() const { return pod.type; }
+    uint16_t getOuterArrayOffset() const { return pod.outerArrayOffset; }
+    uint16_t getOuterArraySizeProduct() const { return pod.outerArraySizeProduct; }
+    int16_t getBinding() const { return pod.binding; }
+    int16_t getOffset() const { return pod.offset; }
+    int getBufferIndex() const { return pod.bufferIndex; }
+    int getLocation() const { return pod.location; }
+    GLenum getImageUnitFormat() const { return pod.imageUnitFormat; }
 
-    ShaderType getFirstActiveShaderType() const
+    ACTIVE_VARIABLE_COMMON_INTERFACES
+
+    struct PODStruct
     {
-        return static_cast<ShaderType>(ScanForward(mActiveUseBits.bits()));
-    }
-    void setActive(ShaderType shaderType, bool used, uint32_t _id)
-    {
-        mActiveUseBits.set(shaderType, used);
-        mIds[shaderType] = id;
-    }
-    bool isActive(ShaderType shaderType) const { return mActiveUseBits[shaderType]; }
-    const ShaderMap<uint32_t> &getIds() const { return mIds; }
-    uint32_t getId(ShaderType shaderType) const { return mIds[shaderType]; }
-    ShaderBitSet activeShaders() const { return mActiveUseBits; }
-    GLuint activeShaderCount() const { return static_cast<GLuint>(mActiveUseBits.count()); }
+        uint16_t type;
+        uint16_t precision;
 
-    uint16_t type;
-    uint16_t precision;
+        int32_t location;
 
-    int location;
+        // These are from sh::struct BlockMemberInfo struct. See locklayout.h for detail.
+        uint16_t blockOffset;
+        uint16_t blockArrayStride;
 
-    // These are from sh::struct BlockMemberInfo struct. See locklayout.h for detail.
-    uint16_t blockOffset;
-    uint16_t blockArrayStride;
+        uint16_t blockMatrixStride;
+        uint16_t imageUnitFormat;
 
-    uint16_t blockMatrixStride;
-    uint16_t imageUnitFormat;
+        // maxUniformVectorsCount is 4K due to we clamp maxUniformBlockSize to 64KB. All of these
+        // variable should be enough to pack into 16 bits to reduce the size of mUniforms.
+        int16_t binding;
+        int16_t bufferIndex;
 
-    // maxUniformVectorsCount is 4K due to we clamp maxUniformBlockSize to 64KB. All of these
-    // variable should be enough to pack into 16 bits to reduce the size of mUniforms.
-    int16_t binding;
-    int16_t bufferIndex;
+        int16_t offset;
+        uint16_t arraySize;
 
-    int16_t offset;
-    uint16_t arraySize;
+        uint16_t outerArraySizeProduct;
+        uint16_t outerArrayOffset;
 
-    uint16_t outerArraySizeProduct;
-    uint16_t outerArrayOffset;
-
-    uint16_t parentArrayIndex;
-    union
-    {
-        struct
+        uint16_t parentArrayIndex;
+        union
         {
-            uint8_t isFragmentInOut : 1;
-            uint8_t texelFetchStaticUse : 1;
-            uint8_t isArray : 1;
-            uint8_t blockIsRowMajorMatrix : 1;
-            uint8_t isBlock : 1;
-            uint8_t padding : 3;
-        } flagBits;
-        uint8_t flagBitsAsUByte;
-    };
-    ShaderBitSet mActiveUseBits;
+            struct
+            {
+                uint8_t isFragmentInOut : 1;
+                uint8_t texelFetchStaticUse : 1;
+                uint8_t isArray : 1;
+                uint8_t blockIsRowMajorMatrix : 1;
+                uint8_t isBlock : 1;
+                uint8_t padding : 3;
+            } flagBits;
+            uint8_t flagBitsAsUByte;
+        };
+        ShaderBitSet activeUseBits;
 
-    uint32_t id;
-
-    // The id of a linked variable in each shader stage.  This id originates from
-    // sh::ShaderVariable::id or sh::InterfaceBlock::id
-    ShaderMap<uint32_t> mIds;
+        uint32_t id;
+        // The id of a linked variable in each shader stage.  This id originates from
+        // sh::ShaderVariable::id or sh::InterfaceBlock::id
+        ShaderMap<uint32_t> ids;
+    } pod;
 };
 ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
 
@@ -179,14 +182,7 @@ struct BufferVariable
     bool isArray() const { return pod.isArray; }
     uint32_t getBasicTypeElementCount() const { return pod.basicTypeElementCount; }
 
-    void setActive(ShaderType shaderType, bool used, uint32_t id)
-    {
-        pod.activeUseBits.set(shaderType, used);
-        pod.ids[shaderType] = id;
-    }
-    bool isActive(ShaderType shaderType) const { return pod.activeUseBits[shaderType]; }
-    uint32_t getId(ShaderType shaderType) const { return pod.ids[shaderType]; }
-    ShaderBitSet activeShaders() const { return pod.activeUseBits; }
+    ACTIVE_VARIABLE_COMMON_INTERFACES
 
     std::string name;
     std::string mappedName;
@@ -222,14 +218,7 @@ struct ShaderVariableBuffer
     ShaderVariableBuffer();
     ~ShaderVariableBuffer() {}
 
-    ShaderType getFirstActiveShaderType() const
-    {
-        return static_cast<ShaderType>(ScanForward(pod.activeUseBits.bits()));
-    }
-    bool isActive(ShaderType shaderType) const { return pod.activeUseBits[shaderType]; }
-    const ShaderMap<uint32_t> &getIds() const { return pod.ids; }
-    uint32_t getId(ShaderType shaderType) const { return pod.ids[shaderType]; }
-    ShaderBitSet activeShaders() const { return pod.activeUseBits; }
+    ACTIVE_VARIABLE_COMMON_INTERFACES
     int numActiveVariables() const { return static_cast<int>(memberIndexes.size()); }
     void unionReferencesWith(const LinkedUniform &otherUniform);
 
@@ -266,19 +255,7 @@ struct InterfaceBlock
     std::string nameWithArrayIndex() const;
     std::string mappedNameWithArrayIndex() const;
 
-    ShaderType getFirstActiveShaderType() const
-    {
-        return static_cast<ShaderType>(ScanForward(pod.activeUseBits.bits()));
-    }
-    void setActive(ShaderType shaderType, bool used, uint32_t id)
-    {
-        pod.activeUseBits.set(shaderType, used);
-        pod.ids[shaderType] = id;
-    }
-    bool isActive(ShaderType shaderType) const { return pod.activeUseBits[shaderType]; }
-    const ShaderMap<uint32_t> &getIds() const { return pod.ids; }
-    uint32_t getId(ShaderType shaderType) const { return pod.ids[shaderType]; }
-    ShaderBitSet activeShaders() const { return pod.activeUseBits; }
+    ACTIVE_VARIABLE_COMMON_INTERFACES
 
     int numActiveVariables() const { return static_cast<int>(memberIndexes.size()); }
     void setBinding(GLuint binding) { SetBitField(pod.binding, binding); }
@@ -308,6 +285,7 @@ struct InterfaceBlock
     ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
 };
 
+#undef ACTIVE_VARIABLE_COMMON_INTERFACES
 }  // namespace gl
 
 #endif  // LIBANGLE_UNIFORM_H_

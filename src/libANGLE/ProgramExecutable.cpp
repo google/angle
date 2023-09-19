@@ -120,9 +120,9 @@ void AssignOutputLocations(std::vector<VariableLocation> &outputLocations,
         if (std::find(reservedLocations.begin(), reservedLocations.end(), locationInfo) ==
             reservedLocations.end())
         {
-            outputVariable.podStruct.location = baseLocation;
-            const unsigned int location       = baseLocation + elementIndex;
-            outputLocations[location]         = locationInfo;
+            outputVariable.pod.location = baseLocation;
+            const unsigned int location = baseLocation + elementIndex;
+            outputLocations[location]   = locationInfo;
         }
     }
 }
@@ -130,9 +130,9 @@ void AssignOutputLocations(std::vector<VariableLocation> &outputLocations,
 int GetOutputLocationForLink(const ProgramAliasedBindings &fragmentOutputLocations,
                              const ProgramOutput &outputVariable)
 {
-    if (outputVariable.podStruct.location != -1)
+    if (outputVariable.pod.location != -1)
     {
-        return outputVariable.podStruct.location;
+        return outputVariable.pod.location;
     }
     int apiLocation = fragmentOutputLocations.getBinding(outputVariable);
     if (apiLocation != -1)
@@ -145,10 +145,10 @@ int GetOutputLocationForLink(const ProgramAliasedBindings &fragmentOutputLocatio
 bool IsOutputSecondaryForLink(const ProgramAliasedBindings &fragmentOutputIndexes,
                               const ProgramOutput &outputVariable)
 {
-    if (outputVariable.podStruct.index != -1)
+    if (outputVariable.pod.index != -1)
     {
-        ASSERT(outputVariable.podStruct.index == 0 || outputVariable.podStruct.index == 1);
-        return (outputVariable.podStruct.index == 1);
+        ASSERT(outputVariable.pod.index == 0 || outputVariable.pod.index == 1);
+        return (outputVariable.pod.index == 1);
     }
     int apiIndex = fragmentOutputIndexes.getBinding(outputVariable);
     if (apiIndex != -1)
@@ -213,7 +213,7 @@ void SaveProgramInputs(BinaryOutputStream *stream, const std::vector<ProgramInpu
     {
         stream->writeString(attrib.name);
         stream->writeString(attrib.mappedName);
-        stream->writeStruct(attrib.basicDataTypeStruct);
+        stream->writeStruct(attrib.pod);
     }
 }
 void LoadProgramInputs(BinaryInputStream *stream, std::vector<ProgramInput> *programInputs)
@@ -228,7 +228,7 @@ void LoadProgramInputs(BinaryInputStream *stream, std::vector<ProgramInput> *pro
             ProgramInput &attrib = (*programInputs)[attribIndex];
             stream->readString(&attrib.name);
             stream->readString(&attrib.mappedName);
-            stream->readStruct(&attrib.basicDataTypeStruct);
+            stream->readStruct(&attrib.pod);
         }
     }
 }
@@ -657,6 +657,61 @@ void UniformStateQueryCastLoop(DestT *dataOut, const uint8_t *srcPointer, int co
 }
 }  // anonymous namespace
 
+// ImageBinding implementation.
+ImageBinding::ImageBinding(GLuint imageUnit, size_t count, TextureType textureTypeIn)
+    : textureType(textureTypeIn)
+{
+    for (size_t index = 0; index < count; ++index)
+    {
+        boundImageUnits.push_back(imageUnit + static_cast<GLuint>(index));
+    }
+}
+
+// ProgramInput implementation.
+ProgramInput::ProgramInput(const sh::ShaderVariable &var)
+{
+    ASSERT(!var.isStruct());
+
+    name       = var.name;
+    mappedName = var.mappedName;
+
+    SetBitField(pod.type, var.type);
+    pod.location = var.hasImplicitLocation ? -1 : var.location;
+    SetBitField(pod.interpolation, var.interpolation);
+    pod.flagBitsAsUByte              = 0;
+    pod.flagBits.active              = var.active;
+    pod.flagBits.isPatch             = var.isPatch;
+    pod.flagBits.hasImplicitLocation = var.hasImplicitLocation;
+    pod.flagBits.isArray             = var.isArray();
+    pod.flagBits.isBuiltIn           = IsBuiltInName(var.name);
+    SetBitField(pod.basicTypeElementCount, var.getBasicTypeElementCount());
+    pod.id = var.id;
+    SetBitField(pod.arraySizeProduct, var.getArraySizeProduct());
+}
+
+// ProgramOutput implementation.
+ProgramOutput::ProgramOutput(const sh::ShaderVariable &var)
+{
+    name       = var.name;
+    mappedName = var.mappedName;
+
+    pod.type     = var.type;
+    pod.location = var.location;
+    pod.index    = var.index;
+    pod.id       = var.id;
+
+    SetBitField(pod.outermostArraySize, var.getOutermostArraySize());
+    SetBitField(pod.basicTypeElementCount, var.getBasicTypeElementCount());
+
+    SetBitField(pod.isPatch, var.isPatch);
+    SetBitField(pod.yuv, var.yuv);
+    SetBitField(pod.isBuiltIn, IsBuiltInName(var.name));
+    SetBitField(pod.isArray, var.isArray());
+    SetBitField(pod.hasImplicitLocation, var.hasImplicitLocation);
+    SetBitField(pod.pad, 0);
+}
+
+// ProgramExecutable implementation.
 ProgramExecutable::ProgramExecutable(rx::GLImplFactory *factory, InfoLog *infoLog)
     : mImplementation(factory->createProgramExecutable(this)),
       mInfoLog(infoLog),
@@ -664,12 +719,12 @@ ProgramExecutable::ProgramExecutable(rx::GLImplFactory *factory, InfoLog *infoLo
       mCachedBaseVertex(0),
       mCachedBaseInstance(0)
 {
-    memset(&mPODStruct, 0, sizeof(mPODStruct));
-    mPODStruct.geometryShaderInputPrimitiveType  = PrimitiveMode::Triangles;
-    mPODStruct.geometryShaderOutputPrimitiveType = PrimitiveMode::TriangleStrip;
-    mPODStruct.geometryShaderInvocations         = 1;
-    mPODStruct.transformFeedbackBufferMode       = GL_INTERLEAVED_ATTRIBS;
-    mPODStruct.computeShaderLocalSize.fill(1);
+    memset(&mPod, 0, sizeof(mPod));
+    mPod.geometryShaderInputPrimitiveType  = PrimitiveMode::Triangles;
+    mPod.geometryShaderOutputPrimitiveType = PrimitiveMode::TriangleStrip;
+    mPod.geometryShaderInvocations         = 1;
+    mPod.transformFeedbackBufferMode       = GL_INTERLEAVED_ATTRIBS;
+    mPod.computeShaderLocalSize.fill(1);
 
     reset();
 }
@@ -689,47 +744,47 @@ void ProgramExecutable::destroy(const Context *context)
 
 void ProgramExecutable::reset()
 {
-    mPODStruct.activeAttribLocationsMask.reset();
-    mPODStruct.attributesTypeMask.reset();
-    mPODStruct.attributesMask.reset();
-    mPODStruct.maxActiveAttribLocation = 0;
-    mPODStruct.activeOutputVariablesMask.reset();
-    mPODStruct.activeSecondaryOutputVariablesMask.reset();
+    mPod.activeAttribLocationsMask.reset();
+    mPod.attributesTypeMask.reset();
+    mPod.attributesMask.reset();
+    mPod.maxActiveAttribLocation = 0;
+    mPod.activeOutputVariablesMask.reset();
+    mPod.activeSecondaryOutputVariablesMask.reset();
 
-    mPODStruct.defaultUniformRange       = RangeUI(0, 0);
-    mPODStruct.samplerUniformRange       = RangeUI(0, 0);
-    mPODStruct.imageUniformRange         = RangeUI(0, 0);
-    mPODStruct.atomicCounterUniformRange = RangeUI(0, 0);
-    mPODStruct.fragmentInoutRange        = RangeUI(0, 0);
+    mPod.defaultUniformRange       = RangeUI(0, 0);
+    mPod.samplerUniformRange       = RangeUI(0, 0);
+    mPod.imageUniformRange         = RangeUI(0, 0);
+    mPod.atomicCounterUniformRange = RangeUI(0, 0);
+    mPod.fragmentInoutRange        = RangeUI(0, 0);
 
-    mPODStruct.hasClipDistance         = false;
-    mPODStruct.hasDiscard              = false;
-    mPODStruct.enablesPerSampleShading = false;
-    mPODStruct.hasYUVOutput            = false;
+    mPod.hasClipDistance         = false;
+    mPod.hasDiscard              = false;
+    mPod.enablesPerSampleShading = false;
+    mPod.hasYUVOutput            = false;
 
-    mPODStruct.advancedBlendEquations.reset();
+    mPod.advancedBlendEquations.reset();
 
-    mPODStruct.geometryShaderInputPrimitiveType  = PrimitiveMode::Triangles;
-    mPODStruct.geometryShaderOutputPrimitiveType = PrimitiveMode::TriangleStrip;
-    mPODStruct.geometryShaderInvocations         = 1;
-    mPODStruct.geometryShaderMaxVertices         = 0;
+    mPod.geometryShaderInputPrimitiveType  = PrimitiveMode::Triangles;
+    mPod.geometryShaderOutputPrimitiveType = PrimitiveMode::TriangleStrip;
+    mPod.geometryShaderInvocations         = 1;
+    mPod.geometryShaderMaxVertices         = 0;
 
-    mPODStruct.numViews = -1;
+    mPod.numViews = -1;
 
-    mPODStruct.drawIDLocation = -1;
+    mPod.drawIDLocation = -1;
 
-    mPODStruct.baseVertexLocation   = -1;
-    mPODStruct.baseInstanceLocation = -1;
+    mPod.baseVertexLocation   = -1;
+    mPod.baseInstanceLocation = -1;
 
-    mPODStruct.tessControlShaderVertices = 0;
-    mPODStruct.tessGenMode               = GL_NONE;
-    mPODStruct.tessGenSpacing            = GL_NONE;
-    mPODStruct.tessGenVertexOrder        = GL_NONE;
-    mPODStruct.tessGenPointMode          = GL_NONE;
-    mPODStruct.drawBufferTypeMask.reset();
-    mPODStruct.computeShaderLocalSize.fill(1);
+    mPod.tessControlShaderVertices = 0;
+    mPod.tessGenMode               = GL_NONE;
+    mPod.tessGenSpacing            = GL_NONE;
+    mPod.tessGenVertexOrder        = GL_NONE;
+    mPod.tessGenPointMode          = GL_NONE;
+    mPod.drawBufferTypeMask.reset();
+    mPod.computeShaderLocalSize.fill(1);
 
-    mPODStruct.specConstUsageBits.reset();
+    mPod.specConstUsageBits.reset();
 
     mActiveSamplersMask.reset();
     mActiveSamplerRefCounts = {};
@@ -767,7 +822,7 @@ void ProgramExecutable::load(gl::BinaryInputStream *stream)
                   "All bits of mDrawBufferTypeMask and mActiveOutputVariables types and mask fit "
                   "into 32 bits each");
 
-    stream->readStruct(&mPODStruct);
+    stream->readStruct(&mPod);
 
     LoadProgramInputs(stream, &mProgramInputs);
     LoadUniforms(stream, &mUniforms, &mUniformNames, &mUniformMappedNames, &mUniformLocations);
@@ -779,7 +834,7 @@ void ProgramExecutable::load(gl::BinaryInputStream *stream)
     {
         InterfaceBlock &uniformBlock = mUniformBlocks[uniformBlockIndex];
         LoadInterfaceBlock(stream, &uniformBlock);
-        ASSERT(mPODStruct.activeUniformBlockBindings.test(uniformBlockIndex) ==
+        ASSERT(mPod.activeUniformBlockBindings.test(uniformBlockIndex) ==
                (uniformBlock.pod.binding != 0));
     }
 
@@ -833,7 +888,7 @@ void ProgramExecutable::load(gl::BinaryInputStream *stream)
         ProgramOutput &output = mOutputVariables[outputIndex];
         stream->readString(&output.name);
         stream->readString(&output.mappedName);
-        stream->readStruct(&output.podStruct);
+        stream->readStruct(&output.pod);
     }
 
     stream->readVector(&mOutputLocations);
@@ -857,7 +912,7 @@ void ProgramExecutable::load(gl::BinaryInputStream *stream)
 
     // These values are currently only used by PPOs, so only load them when the program is marked
     // separable to save memory.
-    if (mPODStruct.isSeparable)
+    if (mPod.isSeparable)
     {
         for (ShaderType shaderType : getLinkedShaderStages())
         {
@@ -893,8 +948,8 @@ void ProgramExecutable::save(gl::BinaryOutputStream *stream) const
         IMPLEMENTATION_MAX_DRAW_BUFFERS * 2 <= 8 * sizeof(uint32_t),
         "All bits of mDrawBufferTypeMask and mActiveOutputVariables can be contained in 32 bits");
 
-    ASSERT(mPODStruct.geometryShaderInvocations >= 1 && mPODStruct.geometryShaderMaxVertices >= 0);
-    stream->writeStruct(mPODStruct);
+    ASSERT(mPod.geometryShaderInvocations >= 1 && mPod.geometryShaderMaxVertices >= 0);
+    stream->writeStruct(mPod);
 
     SaveProgramInputs(stream, mProgramInputs);
     SaveUniforms(stream, mUniforms, mUniformNames, mUniformMappedNames, mUniformLocations);
@@ -938,7 +993,7 @@ void ProgramExecutable::save(gl::BinaryOutputStream *stream) const
     {
         stream->writeString(output.name);
         stream->writeString(output.mappedName);
-        stream->writeStruct(output.podStruct);
+        stream->writeStruct(output.pod);
     }
 
     stream->writeVector(mOutputLocations);
@@ -958,7 +1013,7 @@ void ProgramExecutable::save(gl::BinaryOutputStream *stream) const
 
     // These values are currently only used by PPOs, so only save them when the program is marked
     // separable to save memory.
-    if (mPODStruct.isSeparable)
+    if (mPod.isSeparable)
     {
         for (ShaderType shaderType : getLinkedShaderStages())
         {
@@ -993,7 +1048,7 @@ std::string ProgramExecutable::getInfoLogString() const
 
 ShaderType ProgramExecutable::getFirstLinkedShaderStageType() const
 {
-    const ShaderBitSet linkedStages = mPODStruct.linkedShaderStages;
+    const ShaderBitSet linkedStages = mPod.linkedShaderStages;
     if (linkedStages.none())
     {
         return ShaderType::InvalidEnum;
@@ -1004,7 +1059,7 @@ ShaderType ProgramExecutable::getFirstLinkedShaderStageType() const
 
 ShaderType ProgramExecutable::getLastLinkedShaderStageType() const
 {
-    const ShaderBitSet linkedStages = mPODStruct.linkedShaderStages;
+    const ShaderBitSet linkedStages = mPod.linkedShaderStages;
     if (linkedStages.none())
     {
         return ShaderType::InvalidEnum;
@@ -1156,11 +1211,11 @@ void ProgramExecutable::saveLinkedStateInfo(const ProgramState &state)
     {
         const SharedCompiledShaderState &shader = state.getAttachedShader(shaderType);
         ASSERT(shader);
-        mPODStruct.linkedShaderVersions[shaderType] = shader->shaderVersion;
-        mLinkedOutputVaryings[shaderType]           = shader->outputVaryings;
-        mLinkedInputVaryings[shaderType]            = shader->inputVaryings;
-        mLinkedUniforms[shaderType]                 = shader->uniforms;
-        mLinkedUniformBlocks[shaderType]            = shader->uniformBlocks;
+        mPod.linkedShaderVersions[shaderType] = shader->shaderVersion;
+        mLinkedOutputVaryings[shaderType]     = shader->outputVaryings;
+        mLinkedInputVaryings[shaderType]      = shader->inputVaryings;
+        mLinkedUniforms[shaderType]           = shader->uniforms;
+        mLinkedUniformBlocks[shaderType]      = shader->uniformBlocks;
     }
 }
 
@@ -1209,7 +1264,7 @@ bool ProgramExecutable::linkMergedVaryings(const Caps &caps,
 
     if (!varyingPacking->collectAndPackUserVaryings(*mInfoLog, caps, packMode, activeShadersMask,
                                                     mergedVaryings, mTransformFeedbackVaryingNames,
-                                                    mPODStruct.isSeparable))
+                                                    mPod.isSeparable))
     {
         return false;
     }
@@ -1321,7 +1376,7 @@ bool ProgramExecutable::linkValidateTransformFeedback(const Caps &caps,
         }
 
         componentCount = VariableComponentCount(var->type) * elementCount;
-        if (mPODStruct.transformFeedbackBufferMode == GL_SEPARATE_ATTRIBS &&
+        if (mPod.transformFeedbackBufferMode == GL_SEPARATE_ATTRIBS &&
             componentCount > static_cast<GLuint>(caps.maxTransformFeedbackSeparateComponents))
         {
             *mInfoLog << "Transform feedback varying " << tfVaryingName << " components ("
@@ -1331,7 +1386,7 @@ bool ProgramExecutable::linkValidateTransformFeedback(const Caps &caps,
         }
 
         totalComponents += componentCount;
-        if (mPODStruct.transformFeedbackBufferMode == GL_INTERLEAVED_ATTRIBS &&
+        if (mPod.transformFeedbackBufferMode == GL_INTERLEAVED_ATTRIBS &&
             totalComponents > static_cast<GLuint>(caps.maxTransformFeedbackInterleavedComponents))
         {
             *mInfoLog << "Transform feedback varying total components (" << totalComponents
@@ -1392,7 +1447,7 @@ void ProgramExecutable::updateTransformFeedbackStrides()
         return;
     }
 
-    if (mPODStruct.transformFeedbackBufferMode == GL_INTERLEAVED_ATTRIBS)
+    if (mPod.transformFeedbackBufferMode == GL_INTERLEAVED_ATTRIBS)
     {
         mTransformFeedbackStrides.resize(1);
         size_t totalSize = 0;
@@ -1447,10 +1502,10 @@ bool ProgramExecutable::linkValidateOutputVariables(
     const ProgramAliasedBindings &fragmentOutputLocations,
     const ProgramAliasedBindings &fragmentOutputIndices)
 {
-    ASSERT(mPODStruct.activeOutputVariablesMask.none());
-    ASSERT(mPODStruct.activeSecondaryOutputVariablesMask.none());
-    ASSERT(mPODStruct.drawBufferTypeMask.none());
-    ASSERT(!mPODStruct.hasYUVOutput);
+    ASSERT(mPod.activeOutputVariablesMask.none());
+    ASSERT(mPod.activeSecondaryOutputVariablesMask.none());
+    ASSERT(mPod.drawBufferTypeMask.none());
+    ASSERT(!mPod.hasYUVOutput);
 
     if (fragmentShaderVersion == 100)
     {
@@ -1554,7 +1609,7 @@ bool ProgramExecutable::linkValidateOutputVariables(
 
         // GLSL ES 3.10 section 4.3.6: Output variables cannot be arrays of arrays or arrays of
         // structures, so we may use getBasicTypeElementCount().
-        unsigned int elementCount = outputVariable.podStruct.basicTypeElementCount;
+        unsigned int elementCount = outputVariable.pod.basicTypeElementCount;
         if (FindUsedOutputLocation(outputLocations, baseLocation, elementCount, reservedLocations,
                                    outputVariableIndex))
         {
@@ -1594,7 +1649,7 @@ bool ProgramExecutable::linkValidateOutputVariables(
                 ? mSecondaryOutputLocations
                 : mOutputLocations;
         unsigned int baseLocation = 0;
-        unsigned int elementCount = outputVariable.podStruct.basicTypeElementCount;
+        unsigned int elementCount = outputVariable.pod.basicTypeElementCount;
         if (fixedLocation != -1)
         {
             // Secondary inputs might have caused the max location to drop below what has already
@@ -1645,7 +1700,7 @@ bool ProgramExecutable::linkValidateOutputVariables(
         // fragment shader outputs exceeds the implementation-dependent value of
         // MAX_COMBINED_SHADER_OUTPUT_RESOURCES.
         if (combinedImageUniformsCount + combinedShaderStorageBlocksCount +
-                mPODStruct.activeOutputVariablesMask.count() >
+                mPod.activeOutputVariablesMask.count() >
             static_cast<GLuint>(caps.maxCombinedShaderOutputResources))
         {
             *mInfoLog
@@ -1672,39 +1727,38 @@ bool ProgramExecutable::gatherOutputTypes()
             continue;
         }
 
-        unsigned int baseLocation =
-            (outputVariable.podStruct.location == -1
-                 ? 0u
-                 : static_cast<unsigned int>(outputVariable.podStruct.location));
+        unsigned int baseLocation = (outputVariable.pod.location == -1
+                                         ? 0u
+                                         : static_cast<unsigned int>(outputVariable.pod.location));
 
-        const bool secondary = outputVariable.podStruct.index == 1 ||
-                               (outputVariable.name == "gl_SecondaryFragColorEXT" ||
-                                outputVariable.name == "gl_SecondaryFragDataEXT");
+        const bool secondary =
+            outputVariable.pod.index == 1 || (outputVariable.name == "gl_SecondaryFragColorEXT" ||
+                                              outputVariable.name == "gl_SecondaryFragDataEXT");
 
         const ComponentType componentType =
-            GLenumToComponentType(VariableComponentType(outputVariable.podStruct.type));
+            GLenumToComponentType(VariableComponentType(outputVariable.pod.type));
 
         // GLSL ES 3.10 section 4.3.6: Output variables cannot be arrays of arrays or arrays of
         // structures, so we may use getBasicTypeElementCount().
-        unsigned int elementCount = outputVariable.podStruct.basicTypeElementCount;
+        unsigned int elementCount = outputVariable.pod.basicTypeElementCount;
         for (unsigned int elementIndex = 0; elementIndex < elementCount; elementIndex++)
         {
             const unsigned int location = baseLocation + elementIndex;
-            ASSERT(location < mPODStruct.activeOutputVariablesMask.size());
-            ASSERT(location < mPODStruct.activeSecondaryOutputVariablesMask.size());
+            ASSERT(location < mPod.activeOutputVariablesMask.size());
+            ASSERT(location < mPod.activeSecondaryOutputVariablesMask.size());
             if (secondary)
             {
-                mPODStruct.activeSecondaryOutputVariablesMask.set(location);
+                mPod.activeSecondaryOutputVariablesMask.set(location);
             }
             else
             {
-                mPODStruct.activeOutputVariablesMask.set(location);
+                mPod.activeOutputVariablesMask.set(location);
             }
             const ComponentType storedComponentType =
-                gl::GetComponentTypeMask(mPODStruct.drawBufferTypeMask, location);
+                gl::GetComponentTypeMask(mPod.drawBufferTypeMask, location);
             if (storedComponentType == ComponentType::InvalidEnum)
             {
-                SetComponentTypeMask(componentType, location, &mPODStruct.drawBufferTypeMask);
+                SetComponentTypeMask(componentType, location, &mPod.drawBufferTypeMask);
             }
             else if (storedComponentType != componentType)
             {
@@ -1714,10 +1768,10 @@ bool ProgramExecutable::gatherOutputTypes()
             }
         }
 
-        if (outputVariable.podStruct.yuv)
+        if (outputVariable.pod.yuv)
         {
             ASSERT(mOutputVariables.size() == 1);
-            mPODStruct.hasYUVOutput = true;
+            mPod.hasYUVOutput = true;
         }
     }
 
@@ -1731,7 +1785,7 @@ bool ProgramExecutable::linkUniforms(
     GLuint *combinedImageUniformsCountOut,
     std::vector<UnusedUniform> *unusedUniformsOutOrNull)
 {
-    UniformLinker linker(mPODStruct.linkedShaderStages, shaderUniforms);
+    UniformLinker linker(mPod.linkedShaderStages, shaderUniforms);
     if (!linker.link(caps, *mInfoLog, uniformLocationBindings))
     {
         return false;
@@ -1771,7 +1825,7 @@ void ProgramExecutable::linkSamplerAndImageBindings(GLuint *combinedImageUniform
         --low;
     }
 
-    mPODStruct.fragmentInoutRange = RangeUI(low, high);
+    mPod.fragmentInoutRange = RangeUI(low, high);
 
     highIter = lowIter;
     high     = low;
@@ -1781,7 +1835,7 @@ void ProgramExecutable::linkSamplerAndImageBindings(GLuint *combinedImageUniform
         --low;
     }
 
-    mPODStruct.atomicCounterUniformRange = RangeUI(low, high);
+    mPod.atomicCounterUniformRange = RangeUI(low, high);
 
     highIter = lowIter;
     high     = low;
@@ -1791,10 +1845,10 @@ void ProgramExecutable::linkSamplerAndImageBindings(GLuint *combinedImageUniform
         --low;
     }
 
-    mPODStruct.imageUniformRange = RangeUI(low, high);
-    *combinedImageUniforms       = 0u;
+    mPod.imageUniformRange = RangeUI(low, high);
+    *combinedImageUniforms = 0u;
     // If uniform is a image type, insert it into the mImageBindings array.
-    for (unsigned int imageIndex : mPODStruct.imageUniformRange)
+    for (unsigned int imageIndex : mPod.imageUniformRange)
     {
         // ES3.1 (section 7.6.1) and GLSL ES3.1 (section 4.4.5), Uniform*i{v} commands
         // cannot load values into a uniform defined as an image. if declare without a
@@ -1813,9 +1867,9 @@ void ProgramExecutable::linkSamplerAndImageBindings(GLuint *combinedImageUniform
         {
             // The arrays of arrays are flattened to arrays, it needs to record the array offset for
             // the correct binding image unit.
-            mImageBindings.emplace_back(
-                ImageBinding(imageUniform.getBinding() + imageUniform.parentArrayIndex * arraySize,
-                             imageUniform.getBasicTypeElementCount(), textureType));
+            mImageBindings.emplace_back(ImageBinding(
+                imageUniform.getBinding() + imageUniform.pod.parentArrayIndex * arraySize,
+                imageUniform.getBasicTypeElementCount(), textureType));
         }
 
         *combinedImageUniforms += imageUniform.activeShaderCount() * arraySize;
@@ -1829,11 +1883,11 @@ void ProgramExecutable::linkSamplerAndImageBindings(GLuint *combinedImageUniform
         --low;
     }
 
-    mPODStruct.samplerUniformRange = RangeUI(low, high);
+    mPod.samplerUniformRange = RangeUI(low, high);
 
     // If uniform is a sampler type, insert it into the mSamplerBindings array.
     uint16_t totalCount = 0;
-    for (unsigned int samplerIndex : mPODStruct.samplerUniformRange)
+    for (unsigned int samplerIndex : mPod.samplerUniformRange)
     {
         const auto &samplerUniform = mUniforms[samplerIndex];
         TextureType textureType    = SamplerTypeToTextureType(samplerUniform.getType());
@@ -1846,20 +1900,20 @@ void ProgramExecutable::linkSamplerAndImageBindings(GLuint *combinedImageUniform
     mSamplerBoundTextureUnits.resize(totalCount, 0);
 
     // Whatever is left constitutes the default uniforms.
-    mPODStruct.defaultUniformRange = RangeUI(0, low);
+    mPod.defaultUniformRange = RangeUI(0, low);
 }
 
 bool ProgramExecutable::linkAtomicCounterBuffers(const Caps &caps)
 {
-    for (unsigned int index : mPODStruct.atomicCounterUniformRange)
+    for (unsigned int index : mPod.atomicCounterUniformRange)
     {
         auto &uniform = mUniforms[index];
 
-        uniform.blockOffset                    = uniform.getOffset();
-        uniform.blockArrayStride               = uniform.isArray() ? 4 : 0;
-        uniform.blockMatrixStride              = 0;
-        uniform.flagBits.blockIsRowMajorMatrix = false;
-        uniform.flagBits.isBlock               = true;
+        uniform.pod.blockOffset                    = uniform.getOffset();
+        uniform.pod.blockArrayStride               = uniform.isArray() ? 4 : 0;
+        uniform.pod.blockMatrixStride              = 0;
+        uniform.pod.flagBits.blockIsRowMajorMatrix = false;
+        uniform.pod.flagBits.isBlock               = true;
 
         bool found = false;
         for (size_t bufferIndex = 0; bufferIndex < mAtomicCounterBuffers.size(); ++bufferIndex)
@@ -1868,7 +1922,7 @@ bool ProgramExecutable::linkAtomicCounterBuffers(const Caps &caps)
             if (buffer.pod.binding == uniform.getBinding())
             {
                 buffer.memberIndexes.push_back(index);
-                SetBitField(uniform.bufferIndex, bufferIndex);
+                SetBitField(uniform.pod.bufferIndex, bufferIndex);
                 found = true;
                 buffer.unionReferencesWith(uniform);
                 break;
@@ -1881,7 +1935,7 @@ bool ProgramExecutable::linkAtomicCounterBuffers(const Caps &caps)
             atomicCounterBuffer.memberIndexes.push_back(index);
             atomicCounterBuffer.unionReferencesWith(uniform);
             mAtomicCounterBuffers.push_back(atomicCounterBuffer);
-            SetBitField(uniform.bufferIndex, mAtomicCounterBuffers.size() - 1);
+            SetBitField(uniform.pod.bufferIndex, mAtomicCounterBuffers.size() - 1);
         }
     }
 
@@ -1972,41 +2026,37 @@ void ProgramExecutable::copyUniformsFromProgramMap(
     auto getDefaultRange = [](const ProgramExecutable &state) {
         return state.getDefaultUniformRange();
     };
-    mPODStruct.defaultUniformRange =
-        AddUniforms(executables, mPODStruct.linkedShaderStages, &mUniforms, &mUniformNames,
-                    &mUniformMappedNames, getDefaultRange);
+    mPod.defaultUniformRange = AddUniforms(executables, mPod.linkedShaderStages, &mUniforms,
+                                           &mUniformNames, &mUniformMappedNames, getDefaultRange);
 
     // Merge sampler uniforms.
     auto getSamplerRange = [](const ProgramExecutable &state) {
         return state.getSamplerUniformRange();
     };
-    mPODStruct.samplerUniformRange =
-        AddUniforms(executables, mPODStruct.linkedShaderStages, &mUniforms, &mUniformNames,
-                    &mUniformMappedNames, getSamplerRange);
+    mPod.samplerUniformRange = AddUniforms(executables, mPod.linkedShaderStages, &mUniforms,
+                                           &mUniformNames, &mUniformMappedNames, getSamplerRange);
 
     // Merge image uniforms.
     auto getImageRange = [](const ProgramExecutable &state) {
         return state.getImageUniformRange();
     };
-    mPODStruct.imageUniformRange =
-        AddUniforms(executables, mPODStruct.linkedShaderStages, &mUniforms, &mUniformNames,
-                    &mUniformMappedNames, getImageRange);
+    mPod.imageUniformRange = AddUniforms(executables, mPod.linkedShaderStages, &mUniforms,
+                                         &mUniformNames, &mUniformMappedNames, getImageRange);
 
     // Merge atomic counter uniforms.
     auto getAtomicRange = [](const ProgramExecutable &state) {
         return state.getAtomicCounterUniformRange();
     };
-    mPODStruct.atomicCounterUniformRange =
-        AddUniforms(executables, mPODStruct.linkedShaderStages, &mUniforms, &mUniformNames,
+    mPod.atomicCounterUniformRange =
+        AddUniforms(executables, mPod.linkedShaderStages, &mUniforms, &mUniformNames,
                     &mUniformMappedNames, getAtomicRange);
 
     // Merge fragment in/out uniforms.
     auto getInoutRange = [](const ProgramExecutable &state) {
         return state.getFragmentInoutRange();
     };
-    mPODStruct.fragmentInoutRange =
-        AddUniforms(executables, mPODStruct.linkedShaderStages, &mUniforms, &mUniformNames,
-                    &mUniformMappedNames, getInoutRange);
+    mPod.fragmentInoutRange = AddUniforms(executables, mPod.linkedShaderStages, &mUniforms,
+                                          &mUniformNames, &mUniformMappedNames, getInoutRange);
 
     // Note: uniforms are set through the program, and the program pipeline never needs it.
     ASSERT(mUniformLocations.empty());
@@ -2090,7 +2140,7 @@ GLuint ProgramExecutable::getOutputResourceLocation(const GLchar *name) const
 
     const gl::ProgramOutput &variable = getOutputResource(index);
 
-    return GetResourceLocation(name, variable, variable.podStruct.location);
+    return GetResourceLocation(name, variable, variable.pod.location);
 }
 
 GLuint ProgramExecutable::getOutputResourceIndex(const GLchar *name) const
@@ -2429,24 +2479,24 @@ Optional<GLuint> ProgramExecutable::getSamplerIndex(UniformLocation location) co
 
 bool ProgramExecutable::isSamplerUniformIndex(GLuint index) const
 {
-    return mPODStruct.samplerUniformRange.contains(index);
+    return mPod.samplerUniformRange.contains(index);
 }
 
 GLuint ProgramExecutable::getSamplerIndexFromUniformIndex(GLuint uniformIndex) const
 {
     ASSERT(isSamplerUniformIndex(uniformIndex));
-    return uniformIndex - mPODStruct.samplerUniformRange.low();
+    return uniformIndex - mPod.samplerUniformRange.low();
 }
 
 bool ProgramExecutable::isImageUniformIndex(GLuint index) const
 {
-    return mPODStruct.imageUniformRange.contains(index);
+    return mPod.imageUniformRange.contains(index);
 }
 
 GLuint ProgramExecutable::getImageIndexFromUniformIndex(GLuint uniformIndex) const
 {
     ASSERT(isImageUniformIndex(uniformIndex));
-    return uniformIndex - mPODStruct.imageUniformRange.low();
+    return uniformIndex - mPod.imageUniformRange.low();
 }
 
 void ProgramExecutable::getActiveUniformBlockName(const Context *context,
@@ -2798,7 +2848,7 @@ void ProgramExecutable::getUniformuiv(const Context *context,
 
 void ProgramExecutable::setUniformValuesFromBindingQualifiers()
 {
-    for (unsigned int samplerIndex : mPODStruct.samplerUniformRange)
+    for (unsigned int samplerIndex : mPod.samplerUniformRange)
     {
         const auto &samplerUniform = mUniforms[samplerIndex];
         if (samplerUniform.getBinding() != -1)
@@ -2954,7 +3004,7 @@ void ProgramExecutable::updateSamplerUniform(Context *context,
         // Update the observing PPO's executable, if any.
         // Do this before any of the Context work, since that uses the current ProgramExecutable,
         // which will be the PPO's if this Program is bound to it, rather than this Program's.
-        if (mPODStruct.isSeparable)
+        if (mPod.isSeparable)
         {
             onStateChange(angle::SubjectMessage::ProgramTextureOrImageBindingChanged);
         }
@@ -3025,7 +3075,7 @@ void ProgramExecutable::getUniformInternal(const Context *context,
 void ProgramExecutable::setDrawIDUniform(GLint drawid)
 {
     ASSERT(hasDrawIDUniform());
-    mImplementation->setUniform1iv(mPODStruct.drawIDLocation, 1, &drawid);
+    mImplementation->setUniform1iv(mPod.drawIDLocation, 1, &drawid);
 }
 
 void ProgramExecutable::setBaseVertexUniform(GLint baseVertex)
@@ -3036,7 +3086,7 @@ void ProgramExecutable::setBaseVertexUniform(GLint baseVertex)
         return;
     }
     mCachedBaseVertex = baseVertex;
-    mImplementation->setUniform1iv(mPODStruct.baseVertexLocation, 1, &baseVertex);
+    mImplementation->setUniform1iv(mPod.baseVertexLocation, 1, &baseVertex);
 }
 
 void ProgramExecutable::setBaseInstanceUniform(GLuint baseInstance)
@@ -3048,7 +3098,7 @@ void ProgramExecutable::setBaseInstanceUniform(GLuint baseInstance)
     }
     mCachedBaseInstance   = baseInstance;
     GLint baseInstanceInt = baseInstance;
-    mImplementation->setUniform1iv(mPODStruct.baseInstanceLocation, 1, &baseInstanceInt);
+    mImplementation->setUniform1iv(mPod.baseInstanceLocation, 1, &baseInstanceInt);
 }
 
 void InstallExecutable(const Context *context,

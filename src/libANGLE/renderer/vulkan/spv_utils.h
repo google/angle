@@ -69,7 +69,7 @@ struct ShaderInterfaceVariableXfbInfo
         uint32_t rowCount    = kInvalid;
         uint32_t arrayIndex  = kInvalid;
         GLenum componentType = GL_FLOAT;
-    } podStruct;
+    } pod;
     ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
     // If empty, the whole array is captured.  Otherwise only the specified members are captured.
     std::vector<ShaderInterfaceVariableXfbInfo> arrayElements;
