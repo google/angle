@@ -43,15 +43,17 @@ struct IOSurfaceFormatInfo
 
 // clang-format off
 // NOTE(hqle): Support R16_UINT once GLES3 is complete.
-constexpr std::array<IOSurfaceFormatInfo, 8> kIOSurfaceFormats = {{
-    {GL_RED,      GL_UNSIGNED_BYTE,               1, angle::FormatID::R8_UNORM},
-    {GL_RED,      GL_UNSIGNED_SHORT,              2, angle::FormatID::R16_UNORM},
-    {GL_RG,       GL_UNSIGNED_BYTE,               2, angle::FormatID::R8G8_UNORM},
-    {GL_RG,       GL_UNSIGNED_SHORT,              4, angle::FormatID::R16G16_UNORM},
-    {GL_RGB,      GL_UNSIGNED_BYTE,               4, angle::FormatID::B8G8R8A8_UNORM},
-    {GL_BGRA_EXT, GL_UNSIGNED_BYTE,               4, angle::FormatID::B8G8R8A8_UNORM},
-    {GL_RGBA,     GL_HALF_FLOAT,                  8, angle::FormatID::R16G16B16A16_FLOAT},
-    {GL_RGB10_A2, GL_UNSIGNED_INT_2_10_10_10_REV, 4, angle::FormatID::B10G10R10A2_UNORM},
+constexpr std::array<IOSurfaceFormatInfo, 11> kIOSurfaceFormats = {{
+    {GL_RED,         GL_UNSIGNED_BYTE,                  1, angle::FormatID::R8_UNORM},
+    {GL_RED,         GL_UNSIGNED_SHORT,                 2, angle::FormatID::R16_UNORM},
+    {GL_RG,          GL_UNSIGNED_BYTE,                  2, angle::FormatID::R8G8_UNORM},
+    {GL_RG,          GL_UNSIGNED_SHORT,                 4, angle::FormatID::R16G16_UNORM},
+    {GL_RGB,         GL_UNSIGNED_BYTE,                  4, angle::FormatID::B8G8R8A8_UNORM},
+    {GL_RGBX8_ANGLE, GL_UNSIGNED_BYTE,                  4, angle::FormatID::R8G8B8A8_UNORM},
+    {GL_RGBA,        GL_UNSIGNED_BYTE,                  4, angle::FormatID::R8G8B8A8_UNORM},
+    {GL_BGRA_EXT,    GL_UNSIGNED_BYTE,                  4, angle::FormatID::B8G8R8A8_UNORM},
+    {GL_RGBA,        GL_HALF_FLOAT,                     8, angle::FormatID::R16G16B16A16_FLOAT},
+    {GL_RGB10_A2,    GL_UNSIGNED_INT_2_10_10_10_REV,    4, angle::FormatID::B10G10R10A2_UNORM},
 }};
 // clang-format on
 
@@ -166,7 +168,8 @@ angle::Result IOSurfaceSurfaceMtl::ensureColorTextureCreated(const gl::Context *
 
     mColorRenderTarget.set(mColorTexture, mtl::kZeroNativeMipLevel, 0, mColorFormat);
 
-    if (kIOSurfaceFormats[mIOSurfaceFormatIdx].internalFormat == GL_RGB)
+    if (kIOSurfaceFormats[mIOSurfaceFormatIdx].internalFormat == GL_RGB ||
+        kIOSurfaceFormats[mIOSurfaceFormatIdx].internalFormat == GL_RGBX8_ANGLE)
     {
         // This format has emulated alpha channel. Initialize texture's alpha channel to 1.0.
         const mtl::Format &rgbClearFormat =
