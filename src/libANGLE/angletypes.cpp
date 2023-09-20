@@ -1108,10 +1108,17 @@ void UnlockedTailCall::add(CallType &&call)
 
 void UnlockedTailCall::runImpl(void *resultOut)
 {
-    for (CallType &call : mCalls)
+    if (mCalls.empty())
+    {
+        return;
+    }
+    // Clear `mCalls` before calling, because Android sometimes calls back into ANGLE through EGL
+    // calls which don't expect there to be any pre-existing tail calls.
+    auto calls(std::move(mCalls));
+    ASSERT(mCalls.empty());
+    for (CallType &call : calls)
     {
         call(resultOut);
     }
-    mCalls.clear();
 }
 }  // namespace angle
