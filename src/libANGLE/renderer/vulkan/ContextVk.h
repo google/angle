@@ -822,6 +822,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
                                       VkMemoryPropertyFlags flags,
                                       vk::MemoryAllocationType allocationType);
 
+    angle::Result releaseBufferAllocation(vk::BufferHelper *bufferHelper);
+
     // Helper functions to initialize a buffer for a specific usage
     // Suballocate a host visible buffer with alignment good for copyBuffer.
     angle::Result initBufferForBufferCopy(vk::BufferHelper *bufferHelper,

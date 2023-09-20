@@ -7142,6 +7142,17 @@ angle::Result ContextVk::initImageAllocation(vk::ImageHelper *imageHelper,
     return angle::Result::Continue;
 }
 
+angle::Result ContextVk::releaseBufferAllocation(vk::BufferHelper *bufferHelper)
+{
+    bufferHelper->releaseBufferAndDescriptorSetCache(mRenderer);
+
+    if (ANGLE_UNLIKELY(hasExcessPendingGarbage()))
+    {
+        ANGLE_TRY(flushImpl(nullptr, nullptr, RenderPassClosureReason::ExcessivePendingGarbage));
+    }
+    return angle::Result::Continue;
+}
+
 angle::Result ContextVk::initBufferForBufferCopy(vk::BufferHelper *bufferHelper,
                                                  size_t size,
                                                  vk::MemoryCoherency coherency)
