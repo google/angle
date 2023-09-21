@@ -1107,9 +1107,6 @@ void DisplayMtl::initializeExtensions() const
     // behaviour. Allow users to change the provoking vertex for improved performance.
     mNativeExtensions.provokingVertexANGLE = true;
 
-    // ANGLE_rgbx_internal_format
-    mNativeExtensions.rgbxInternalFormatANGLE = true;
-
     // GL_EXT_blend_func_extended
     if (ANGLE_APPLE_AVAILABLE_XCI(10.12, 13.1, 11.0))
     {

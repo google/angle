@@ -536,7 +536,7 @@ TEST_P(IOSurfaceClientBufferTest, RenderToRGBX8888IOSurface)
     ScopedIOSurfaceRef ioSurface = CreateSinglePlaneIOSurface(1, 1, 'RGBA', 4);
 
     GLColor color(1, 2, 3, 255);
-    doClearTest(ioSurface, 1, 1, 0, GL_RGBX8_ANGLE, GL_UNSIGNED_BYTE, color);
+    doClearTest(ioSurface, 1, 1, 0, GL_RGB, GL_UNSIGNED_BYTE, color);
 }
 
 // Test reading from RGBX8888 IOSurfaces
@@ -550,8 +550,7 @@ TEST_P(IOSurfaceClientBufferTest, ReadFromRGBX8888IOSurface)
     ScopedIOSurfaceRef ioSurface = CreateSinglePlaneIOSurface(1, 1, 'RGBA', 4);
 
     GLColor color(1, 2, 3, 255);
-    doSampleTest(ioSurface, 1, 1, 0, GL_RGBX8_ANGLE, GL_UNSIGNED_BYTE, &color, sizeof(color),
-                 R | G | B);
+    doSampleTest(ioSurface, 1, 1, 0, GL_RGB, GL_UNSIGNED_BYTE, &color, sizeof(color), R | G | B);
 }
 
 // Test using BGRX8888 IOSurfaces for rendering
