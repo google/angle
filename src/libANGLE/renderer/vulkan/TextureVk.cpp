@@ -1580,6 +1580,10 @@ angle::Result TextureVk::setStorageMultisample(const gl::Context *context,
     }
     else if (mImage)
     {
+        if (!contextVk->hasDisplayTextureShareGroup())
+        {
+            contextVk->getShareGroup()->onTextureRelease(this);
+        }
         mImage->releaseStagedUpdates(contextVk->getRenderer());
     }
 

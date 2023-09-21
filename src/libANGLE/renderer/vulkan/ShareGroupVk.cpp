@@ -263,11 +263,13 @@ angle::Result TextureUpload::onMutableTextureUpload(ContextVk *contextVk, Textur
 {
     // This feature is currently disabled in the case of display-level texture sharing.
     ASSERT(!contextVk->hasDisplayTextureShareGroup());
+    ASSERT(!newTexture->isImmutable());
+    ASSERT(mPrevUploadedMutableTexture == nullptr || !mPrevUploadedMutableTexture->isImmutable());
 
     // If the previous texture is null, it should be set to the current texture. We also have to
     // make sure that the previous texture pointer is still a mutable texture. Otherwise, we skip
     // the optimization.
-    if (mPrevUploadedMutableTexture == nullptr || mPrevUploadedMutableTexture->isImmutable())
+    if (mPrevUploadedMutableTexture == nullptr)
     {
         mPrevUploadedMutableTexture = newTexture;
         return angle::Result::Continue;
