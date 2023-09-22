@@ -1279,6 +1279,13 @@ struct FeaturesVk : FeatureSetBase
         &members, "http://anglebug.com/8297"
     };
 
+    FeatureInfo preferHostCachedForNonStaticBufferUsage = {
+        "preferHostCachedForNonStaticBufferUsage",
+        FeatureCategory::VulkanFeatures,
+        "prefer host cached memory for non static buffer usage",
+        &members, "https://issuetracker.google.com/288119108"
+    };
+
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

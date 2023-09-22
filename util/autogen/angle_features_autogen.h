@@ -220,6 +220,7 @@ enum class Feature
     PreferDeviceLocalMemoryHostVisible,
     PreferDrawClearOverVkCmdClearAttachments,
     PreferDriverUniformOverSpecConst,
+    PreferHostCachedForNonStaticBufferUsage,
     PreferLinearFilterForYUV,
     PreferMonolithicPipelinesOverLibraries,
     PreferSkippingInvalidateForEmulatedFormats,

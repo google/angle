@@ -85,7 +85,9 @@ VkMemoryPropertyFlags GetPreferredMemoryType(RendererVk *renderer,
         case gl::BufferUsage::StreamDraw:
             // For non-static usage where the CPU performs a write-only access, request
             // a host uncached memory
-            return kHostUncachedFlags;
+            return renderer->getFeatures().preferHostCachedForNonStaticBufferUsage.enabled
+                       ? kHostCachedFlags
+                       : kHostUncachedFlags;
         case gl::BufferUsage::DynamicCopy:
         case gl::BufferUsage::DynamicRead:
         case gl::BufferUsage::StreamCopy:
