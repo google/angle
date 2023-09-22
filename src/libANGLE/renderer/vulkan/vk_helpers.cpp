@@ -3568,18 +3568,34 @@ void BufferPool::addStats(std::ostringstream *out) const
 {
     VkDeviceSize totalUnusedBytes = 0;
     VkDeviceSize totalMemorySize  = 0;
-    *out << "[ ";
-    for (const std::unique_ptr<BufferBlock> &block : mBufferBlocks)
+    for (size_t i = 0; i < mBufferBlocks.size(); i++)
     {
+        const std::unique_ptr<BufferBlock> &block = mBufferBlocks[i];
         vma::StatInfo statInfo;
         block->calculateStats(&statInfo);
-        *out << statInfo.unusedBytes / 1024 << "/" << block->getMemorySize() / 1024 << " ";
-        totalUnusedBytes += statInfo.unusedBytes;
+#if ANGLE_VMA_VERSION < 3000000
+        VkDeviceSize unusedBytes = statInfo.unusedBytes;
+#else
+        ASSERT(statInfo.basicInfo.blockCount == 1);
+        INFO() << "[" << i << "]={"
+               << " allocationCount:" << statInfo.basicInfo.allocationCount
+               << " blockBytes:" << statInfo.basicInfo.blockBytes
+               << " allocationBytes:" << statInfo.basicInfo.allocationBytes
+               << " unusedRangeCount:" << statInfo.unusedRangeCount
+               << " allocationSizeMin:" << statInfo.allocationSizeMin
+               << " allocationSizeMax:" << statInfo.allocationSizeMax
+               << " unusedRangeSizeMin:" << statInfo.unusedRangeSizeMin
+               << " unusedRangeSizeMax:" << statInfo.unusedRangeSizeMax << " }";
+        VkDeviceSize unusedBytes =
+            statInfo.basicInfo.blockBytes - statInfo.basicInfo.allocationBytes;
+#endif
+        totalUnusedBytes += unusedBytes;
         totalMemorySize += block->getMemorySize();
     }
-    *out << "]"
-         << " total: " << totalUnusedBytes << "/" << totalMemorySize;
-    *out << " emptyBuffers [memorySize:" << getTotalEmptyMemorySize()
+    *out << "mBufferBlocks.size():" << mBufferBlocks.size()
+         << " totalUnusedBytes:" << totalUnusedBytes / 1024
+         << "KB / totalMemorySize:" << totalMemorySize / 1024 << "KB";
+    *out << " emptyBuffers [memorySize:" << getTotalEmptyMemorySize() / 1024 << "KB "
          << " count:" << mEmptyBufferBlocks.size()
          << " needed: " << mNumberOfNewBuffersNeededSinceLastPrune << "]";
 }
