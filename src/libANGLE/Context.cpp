@@ -428,18 +428,6 @@ bool IsClearBufferEnabled(const FramebufferState &fbState, GLenum buffer, GLint 
     return buffer != GL_COLOR || fbState.getEnabledDrawBuffers()[drawbuffer];
 }
 
-bool IsEmptyScissor(const State &glState)
-{
-    if (!glState.isScissorTestEnabled())
-    {
-        return false;
-    }
-
-    const Extents &dimensions = glState.getDrawFramebuffer()->getExtents();
-    Rectangle framebufferArea(0, 0, dimensions.width, dimensions.height);
-    return !ClipRectangle(framebufferArea, glState.getScissor(), nullptr);
-}
-
 bool IsColorMaskedOut(const BlendStateExt &blendStateExt, const GLint drawbuffer)
 {
     ASSERT(static_cast<size_t>(drawbuffer) < blendStateExt.getDrawBufferCount());
@@ -4653,12 +4641,6 @@ void Context::clear(GLbitfield mask)
         return;
     }
 
-    // Noop empty scissors.
-    if (IsEmptyScissor(mState))
-    {
-        return;
-    }
-
     // Remove clear bits that are ineffective. An effective clear changes at least one fragment. If
     // color/depth/stencil masks make the clear ineffective we skip it altogether.
 
@@ -4719,8 +4701,7 @@ bool Context::noopClearBuffer(GLenum buffer, GLint drawbuffer) const
     Framebuffer *framebufferObject = mState.getDrawFramebuffer();
 
     return !IsClearBufferEnabled(framebufferObject->getState(), buffer, drawbuffer) ||
-           mState.isRasterizerDiscardEnabled() || isClearBufferMaskedOut(buffer, drawbuffer) ||
-           IsEmptyScissor(mState);
+           mState.isRasterizerDiscardEnabled() || isClearBufferMaskedOut(buffer, drawbuffer);
 }
 
 void Context::clearBufferfv(GLenum buffer, GLint drawbuffer, const GLfloat *values)

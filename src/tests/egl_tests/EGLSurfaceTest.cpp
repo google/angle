@@ -571,6 +571,116 @@ TEST_P(EGLSurfaceTest, MakeCurrentTwice)
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
+// Test that we dont crash during a clear when specified scissor is outside render area
+// due to reducing window size.
+TEST_P(EGLSurfaceTest, ShrinkWindowThenScissoredClear)
+{
+    initializeDisplay();
+    initializeSurfaceWithDefaultConfig(false);
+    initializeMainContext();
+
+    // Create 64x64 window and make it current
+    eglMakeCurrent(mDisplay, mWindowSurface, mWindowSurface, mContext);
+    ASSERT_EGL_SUCCESS();
+
+    // Resize window to 32x32
+    mOSWindow->resize(32, 32);
+
+    // Perform empty swap
+    eglSwapBuffers(mDisplay, mWindowSurface);
+
+    // Enable scissor test
+    glEnable(GL_SCISSOR_TEST);
+    ASSERT_GL_NO_ERROR();
+
+    // Set scissor to (50, 50, 10, 10)
+    glScissor(50, 50, 10, 10);
+    ASSERT_GL_NO_ERROR();
+
+    // Clear to specific color
+    glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Disable scissor test
+    glDisable(GL_SCISSOR_TEST);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that we dont early return from a clear when specified scissor is outside render area
+// before increasing window size.
+TEST_P(EGLSurfaceTest, GrowWindowThenScissoredClear)
+{
+    initializeDisplay();
+    initializeSurfaceWithDefaultConfig(false);
+    initializeMainContext();
+
+    // Create 64x64 window and make it current
+    eglMakeCurrent(mDisplay, mWindowSurface, mWindowSurface, mContext);
+    ASSERT_EGL_SUCCESS();
+
+    // Resize window to 128x128
+    mOSWindow->resize(128, 128);
+
+    // Perform empty swap
+    eglSwapBuffers(mDisplay, mWindowSurface);
+
+    // Enable scissor test
+    glEnable(GL_SCISSOR_TEST);
+    ASSERT_GL_NO_ERROR();
+
+    // Set scissor to (64, 64, 10, 10)
+    glScissor(64, 64, 10, 10);
+    ASSERT_GL_NO_ERROR();
+
+    // Clear to specific color
+    glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Disable scissor test
+    glDisable(GL_SCISSOR_TEST);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_RECT_EQ(64, 64, 10, 10, GLColor::blue);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that just a ClearBuffer* with an invalid scissor doesn't cause an assert.
+TEST_P(EGLSurfaceTest3, ShrinkWindowThenScissoredClearBuffer)
+{
+    initializeDisplay();
+    initializeSurfaceWithDefaultConfig(false);
+    initializeMainContext();
+
+    // Create 64x64 window and make it current
+    eglMakeCurrent(mDisplay, mWindowSurface, mWindowSurface, mContext);
+    ASSERT_EGL_SUCCESS();
+
+    // Resize window to 32x32
+    mOSWindow->resize(32, 32);
+
+    // Perform empty swap
+    eglSwapBuffers(mDisplay, mWindowSurface);
+
+    // Enable scissor test
+    glEnable(GL_SCISSOR_TEST);
+    ASSERT_GL_NO_ERROR();
+
+    // Set scissor to (50, 50, 10, 10)
+    glScissor(50, 50, 10, 10);
+    ASSERT_GL_NO_ERROR();
+
+    std::vector<GLint> testInt(4);
+    glClearBufferiv(GL_COLOR, 0, testInt.data());
+    std::vector<GLuint> testUint(4);
+    glClearBufferuiv(GL_COLOR, 0, testUint.data());
+    std::vector<GLfloat> testFloat(4);
+    glClearBufferfv(GL_COLOR, 0, testFloat.data());
+
+    // Disable scissor test
+    glDisable(GL_SCISSOR_TEST);
+    ASSERT_GL_NO_ERROR();
+}
+
 // This is a regression test to verify that surfaces are not prematurely destroyed.
 TEST_P(EGLSurfaceTest, SurfaceUseAfterFreeBug)
 {
