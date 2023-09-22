@@ -84,6 +84,7 @@ bool IsValidCopyTextureSourceInternalFormatEnum(GLenum internalFormat)
         case GL_RGBA8:
         case GL_BGRA_EXT:
         case GL_BGRA8_EXT:
+        case GL_SRGB_ALPHA_EXT:
             return true;
 
         default:

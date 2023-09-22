@@ -1385,6 +1385,7 @@ b/266235549 D3D11 : ComputeShaderTest.SSBOAliasOverWrite/* = SKIP
 b/292285899 PIXEL4ORXL GLES : EGLSurfaceTest.DestroyAndRecreateWhileCurrent/* = SKIP
 
 // Work in progress.
+7907 D3D11 : CopyTextureTest.NoConvertSRGBToRGB/ES2_D3D11 = SKIP
 7907 D3D11 : CopyTextureTestES3.NoConvertSRGBToRGB/ES3_D3D11 = SKIP
 
 // Please do not add expectations below this line,
