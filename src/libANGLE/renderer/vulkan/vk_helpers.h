@@ -63,7 +63,7 @@ using StagingBufferOffsetArray = std::array<VkDeviceSize, 2>;
 // currently active VkBuffer we keep it until it is no longer in use. We then mark it available
 // for future allocations in a free list.
 class BufferHelper;
-using BufferHelperPointerVector = std::vector<std::unique_ptr<BufferHelper>>;
+using BufferHelperQueue = std::deque<std::unique_ptr<BufferHelper>>;
 
 class DynamicBuffer : angle::NonCopyable
 {
@@ -135,8 +135,8 @@ class DynamicBuffer : angle::NonCopyable
     size_t mAlignment;
     VkMemoryPropertyFlags mMemoryPropertyFlags;
 
-    BufferHelperPointerVector mInFlightBuffers;
-    BufferHelperPointerVector mBufferFreeList;
+    BufferHelperQueue mInFlightBuffers;
+    BufferHelperQueue mBufferFreeList;
 };
 
 // Class DescriptorSetHelper. This is a wrapper of VkDescriptorSet with GPU resource use tracking.

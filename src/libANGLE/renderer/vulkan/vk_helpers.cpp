@@ -895,7 +895,7 @@ bool CanCopyWithTransferForCopyImage(RendererVk *renderer,
                                dstImage->getActualFormatID(), dstTilingMode);
 }
 
-void ReleaseBufferListToRenderer(RendererVk *renderer, BufferHelperPointerVector *buffers)
+void ReleaseBufferListToRenderer(RendererVk *renderer, BufferHelperQueue *buffers)
 {
     for (std::unique_ptr<BufferHelper> &toFree : *buffers)
     {
@@ -904,7 +904,7 @@ void ReleaseBufferListToRenderer(RendererVk *renderer, BufferHelperPointerVector
     buffers->clear();
 }
 
-void DestroyBufferList(RendererVk *renderer, BufferHelperPointerVector *buffers)
+void DestroyBufferList(RendererVk *renderer, BufferHelperQueue *buffers)
 {
     for (std::unique_ptr<BufferHelper> &toDestroy : *buffers)
     {
@@ -3121,7 +3121,7 @@ angle::Result DynamicBuffer::allocate(Context *context,
     else
     {
         mBuffer = std::move(mBufferFreeList.front());
-        mBufferFreeList.erase(mBufferFreeList.begin());
+        mBufferFreeList.pop_front();
     }
 
     ASSERT(mBuffer->getBlockMemorySize() == mSize);
