@@ -516,7 +516,7 @@ void DisplayMtl::initializeFrontendFeatures(angle::FrontendFeatures *features) c
     // guaranteed.  The link subtasks are safe however, they are still parallelized.
     //
     // Once the link jobs are made thread-safe and using mtl::Context, this feature can be removed.
-    ANGLE_FEATURE_CONDITION(features, linkJobIsNotThreadSafe, true);
+    ANGLE_FEATURE_CONDITION(features, linkJobIsThreadSafe, false);
 }
 
 void DisplayMtl::populateFeatureList(angle::FeatureList *features)

@@ -161,10 +161,10 @@ struct FrontendFeatures : FeatureSetBase
         &members, "http://anglebug.com/8280"
     };
 
-    FeatureInfo linkJobIsNotThreadSafe = {
-        "linkJobIsNotThreadSafe",
-        FeatureCategory::FrontendWorkarounds,
-        "If true, parts of the link job cannot be parallelized",
+    FeatureInfo linkJobIsThreadSafe = {
+        "linkJobIsThreadSafe",
+        FeatureCategory::FrontendFeatures,
+        "If false, parts of the link job cannot be parallelized",
         &members, "http://anglebug.com/8297"
     };
 

@@ -2616,7 +2616,7 @@ void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFea
     // As a result, the link job is done in the same thread as the link call.  If the native driver
     // supports parallel link, it's still done internally by the driver, and ANGLE supports delaying
     // post-link operations until that is done.
-    ANGLE_FEATURE_CONDITION(features, linkJobIsNotThreadSafe, true);
+    ANGLE_FEATURE_CONDITION(features, linkJobIsThreadSafe, false);
 }
 
 void ReInitializeFeaturesAtGPUSwitch(const FunctionsGL *functions, angle::FeaturesGL *features)
