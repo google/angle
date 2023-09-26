@@ -23,6 +23,10 @@ namespace rx
 {
 namespace
 {
+
+// Limit decompressed vulkan pipelines to 10MB per program.
+static constexpr size_t kMaxLocalPipelineCacheSize = 10 * 1024 * 1024;
+
 uint8_t GetGraphicsProgramIndex(ProgramTransformOptions transformOptions)
 {
     return gl::bitCast<uint8_t, ProgramTransformOptions>(transformOptions);
@@ -510,7 +514,8 @@ angle::Result ProgramExecutableVk::initializePipelineCache(vk::Context *context,
     angle::MemoryBuffer uncompressedData;
     if (compressed)
     {
-        if (!egl::DecompressBlobCacheData(dataPointer, dataSize, &uncompressedData))
+        if (!egl::DecompressBlobCacheData(dataPointer, dataSize, kMaxLocalPipelineCacheSize,
+                                          &uncompressedData))
         {
             return angle::Result::Stop;
         }
