@@ -235,6 +235,11 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     // Device loss
     gl::GraphicsResetStatus getResetStatus() override;
 
+    bool isDebugEnabled()
+    {
+        return mRenderer->enableDebugUtils() || mRenderer->angleDebuggerMode();
+    }
+
     // EXT_debug_marker
     angle::Result insertEventMarker(GLsizei length, const char *marker) override;
     angle::Result pushGroupMarker(GLsizei length, const char *marker) override;
@@ -1730,14 +1735,16 @@ uint32_t GetDriverUniformSize(vk::Context *context, PipelineType pipelineType);
 }  // namespace rx
 
 // Generate a perf warning, and insert an event marker in the command buffer.
-#define ANGLE_VK_PERF_WARNING(contextVk, severity, ...)                         \
-    do                                                                          \
-    {                                                                           \
-        char ANGLE_MESSAGE[200];                                                \
-        snprintf(ANGLE_MESSAGE, sizeof(ANGLE_MESSAGE), __VA_ARGS__);            \
-        ANGLE_PERF_WARNING(contextVk->getDebug(), severity, ANGLE_MESSAGE);     \
-                                                                                \
-        contextVk->insertEventMarkerImpl(GL_DEBUG_SOURCE_OTHER, ANGLE_MESSAGE); \
+#define ANGLE_VK_PERF_WARNING(contextVk, severity, ...)                             \
+    do                                                                              \
+    {                                                                               \
+        ANGLE_PERF_WARNING(contextVk->getDebug(), severity, __VA_ARGS__);           \
+        if (contextVk->isDebugEnabled())                                            \
+        {                                                                           \
+            char ANGLE_MESSAGE[200];                                                \
+            snprintf(ANGLE_MESSAGE, sizeof(ANGLE_MESSAGE), __VA_ARGS__);            \
+            contextVk->insertEventMarkerImpl(GL_DEBUG_SOURCE_OTHER, ANGLE_MESSAGE); \
+        }                                                                           \
     } while (0)
 
 // Generate a trace event for graphics profiler, and insert an event marker in the command buffer.

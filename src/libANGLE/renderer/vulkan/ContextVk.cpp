@@ -4513,7 +4513,7 @@ angle::Result ContextVk::insertEventMarker(GLsizei length, const char *marker)
 
 void ContextVk::insertEventMarkerImpl(GLenum source, const char *marker)
 {
-    if (!mRenderer->enableDebugUtils() && !mRenderer->angleDebuggerMode())
+    if (!isDebugEnabled())
     {
         return;
     }
@@ -4556,7 +4556,7 @@ angle::Result ContextVk::popDebugGroup(const gl::Context *context)
 
 angle::Result ContextVk::pushDebugGroupImpl(GLenum source, GLuint id, const char *message)
 {
-    if (!mRenderer->enableDebugUtils() && !mRenderer->angleDebuggerMode())
+    if (!isDebugEnabled())
     {
         return angle::Result::Continue;
     }
@@ -4578,7 +4578,7 @@ angle::Result ContextVk::pushDebugGroupImpl(GLenum source, GLuint id, const char
 
 angle::Result ContextVk::popDebugGroupImpl()
 {
-    if (!mRenderer->enableDebugUtils() && !mRenderer->angleDebuggerMode())
+    if (!isDebugEnabled())
     {
         return angle::Result::Continue;
     }

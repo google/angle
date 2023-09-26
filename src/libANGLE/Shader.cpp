@@ -680,11 +680,9 @@ angle::Result Shader::serialize(const Context *context, angle::MemoryBuffer *bin
     ASSERT(binaryOut);
     if (!binaryOut->resize(stream.length()))
     {
-        std::stringstream sstream;
-        sstream << "Failed to allocate enough memory to serialize a shader. (" << stream.length()
-                << " bytes )";
         ANGLE_PERF_WARNING(context->getState().getDebug(), GL_DEBUG_SEVERITY_LOW,
-                           sstream.str().c_str());
+                           "Failed to allocate enough memory to serialize a shader. (%zu bytes)",
+                           stream.length());
         return angle::Result::Incomplete;
     }
 

@@ -659,12 +659,11 @@ angle::Result ProgramD3D::link(const gl::Context *context, std::shared_ptr<LinkT
             {
                 for (const std::string &slowBlock : shader->slowCompilingUniformBlockSet)
                 {
-                    std::ostringstream stream;
-                    stream << "Uniform block '" << slowBlock << "' will be slow to compile. "
-                           << "See UniformBlockToStructuredBufferTranslation.md "
-                           << "(https://shorturl.at/drFY7) for details.";
                     ANGLE_PERF_WARNING(context->getState().getDebug(), GL_DEBUG_SEVERITY_MEDIUM,
-                                       stream.str().c_str());
+                                       "Uniform block '%s' will be slow to compile. "
+                                       "See UniformBlockToStructuredBufferTranslation.md "
+                                       "(https://shorturl.at/drFY7) for details.",
+                                       slowBlock.c_str());
                 }
             }
         }
