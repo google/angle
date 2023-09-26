@@ -1281,10 +1281,10 @@ angle::Result GetAndDecompressPipelineCacheVk(VkPhysicalDeviceProperties physica
         }
     }
 
-    ANGLE_VK_CHECK(
-        displayVk,
-        egl::DecompressBlobCacheData(compressedData.data(), compressedSize, uncompressedData),
-        VK_ERROR_INITIALIZATION_FAILED);
+    ANGLE_VK_CHECK(displayVk,
+                   egl::DecompressBlobCacheData(compressedData.data(), compressedSize,
+                                                uncompressedCacheDataSize, uncompressedData),
+                   VK_ERROR_INITIALIZATION_FAILED);
 
     if (uncompressedData->size() != uncompressedCacheDataSize)
     {
