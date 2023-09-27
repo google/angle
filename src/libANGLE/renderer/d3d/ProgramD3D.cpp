@@ -657,23 +657,12 @@ angle::Result ProgramD3D::link(const gl::Context *context, std::shared_ptr<LinkT
                 executableD3D->mAttachedShaders[shaderType];
             if (shader)
             {
-                const std::set<std::string> &slowCompilingUniformBlockSet =
-                    shader->slowCompilingUniformBlockSet;
-                if (slowCompilingUniformBlockSet.size() > 0)
+                for (const std::string &slowBlock : shader->slowCompilingUniformBlockSet)
                 {
                     std::ostringstream stream;
-                    stream << "You could get a better shader compiling performance if you re-write"
-                           << " the uniform block(s)\n[ ";
-                    for (const std::string &str : slowCompilingUniformBlockSet)
-                    {
-                        stream << str << " ";
-                    }
-                    stream << "]\nin the " << gl::GetShaderTypeString(shaderType) << " shader.\n";
-
-                    stream << "You could get more details from "
-                              "https://chromium.googlesource.com/angle/angle/+/refs/heads/main/"
-                              "src/libANGLE/renderer/d3d/d3d11/"
-                              "UniformBlockToStructuredBufferTranslation.md\n";
+                    stream << "Uniform block '" << slowBlock << "' will be slow to compile. "
+                           << "See UniformBlockToStructuredBufferTranslation.md "
+                           << "(https://shorturl.at/drFY7) for details.";
                     ANGLE_PERF_WARNING(context->getState().getDebug(), GL_DEBUG_SEVERITY_MEDIUM,
                                        stream.str().c_str());
                 }
