@@ -1322,8 +1322,8 @@ angle::Result ProgramExecutableMtl::legalizeUniformBufferOffsets(
             if (conversion->dirty)
             {
                 const uint8_t *srcBytes = bufferMtl->getBufferDataReadOnly(context);
-                srcBytes += srcOffset;
-                size_t sizeToCopy = bufferMtl->size() - srcOffset;
+                srcBytes += conversion->initialSrcOffset();
+                size_t sizeToCopy = bufferMtl->size() - conversion->initialSrcOffset();
 
                 ANGLE_TRY(ConvertUniformBufferData(
                     context, conversionInfo, &conversion->data, srcBytes, sizeToCopy,
@@ -1341,6 +1341,9 @@ angle::Result ProgramExecutableMtl::legalizeUniformBufferOffsets(
             mLegalizedOffsetedUniformBuffers[bufferIndex].first = conversion->convertedBuffer;
             mLegalizedOffsetedUniformBuffers[bufferIndex].second =
                 static_cast<uint32_t>(conversion->convertedOffset + bytesToOffset);
+            // Ensure that the converted info can fit in the buffer.
+            ASSERT(conversion->convertedOffset + bytesToOffset + conversionInfo.metalSize() <=
+                   conversion->convertedBuffer->size());
         }
         else
         {
