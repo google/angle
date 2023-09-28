@@ -765,8 +765,23 @@ void ProgramMtl::setUniformImpl(GLint location, GLsizei count, const T *v, GLenu
 {
     ProgramExecutableMtl *executableMtl = getExecutable();
 
-    const gl::VariableLocation &locationInfo = mState.getUniformLocations()[location];
-    const gl::LinkedUniform &linkedUniform   = mState.getUniforms()[locationInfo.index];
+    const std::vector<gl::VariableLocation> &uniformLocations = mState.getUniformLocations();
+    if (location < 0 || static_cast<size_t>(location) >= uniformLocations.size())
+    {
+        ERR() << "Invalid uniform location " << location << ", expected [0, "
+              << uniformLocations.size() << ")";
+        return;
+    }
+    const gl::VariableLocation &locationInfo = uniformLocations[location];
+
+    const std::vector<gl::LinkedUniform> &linkedUniforms = mState.getUniforms();
+    if (locationInfo.index >= linkedUniforms.size())
+    {
+        ERR() << "Invalid uniform location index " << locationInfo.index << ", expected [0, "
+              << linkedUniforms.size() << ")";
+        return;
+    }
+    const gl::LinkedUniform &linkedUniform = linkedUniforms[locationInfo.index];
 
     if (linkedUniform.isSampler())
     {
