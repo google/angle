@@ -6039,6 +6039,72 @@ TEST_P(Texture2DArrayTestES3, TextureArrayUseThenRedefineThenUse)
     EXPECT_PIXEL_COLOR_EQ(px, py, GLColor::green);
 }
 
+// Create a 2D array texture, use it, then redefine one level without changing dimensions.
+TEST_P(Texture2DArrayTestES3, RedefineLevelData)
+{
+    glBindTexture(GL_TEXTURE_2D_ARRAY, m2DArrayTexture);
+
+    // Fill both levels with red
+    std::vector<GLColor> pixelsRed(2 * 2 * 1, GLColor::red);
+    glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, 2, 2, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 pixelsRed.data());
+    glTexImage3D(GL_TEXTURE_2D_ARRAY, 1, GL_RGBA8, 1, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 pixelsRed.data());
+    ASSERT_GL_NO_ERROR();
+
+    // Check that both levels are red
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m2DArrayTexture, 0, 0);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m2DArrayTexture, 1, 0);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // Redefine level 1 with green
+    glTexImage3D(GL_TEXTURE_2D_ARRAY, 1, GL_RGBA8, 1, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 &GLColor::green);
+    ASSERT_GL_NO_ERROR();
+
+    // Check that level 0 is red and level 1 is green
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m2DArrayTexture, 0, 0);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m2DArrayTexture, 1, 0);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Create a 3D texture, use it, then redefine one level without changing dimensions.
+TEST_P(Texture3DTestES3, RedefineLevelData)
+{
+    glBindTexture(GL_TEXTURE_3D, mTexture3D);
+
+    // Fill both levels with red
+    std::vector<GLColor> pixelsRed(2 * 2 * 1, GLColor::red);
+    glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA8, 2, 2, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 pixelsRed.data());
+    glTexImage3D(GL_TEXTURE_3D, 1, GL_RGBA8, 1, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 pixelsRed.data());
+    ASSERT_GL_NO_ERROR();
+
+    // Check that both levels are red
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, mTexture3D, 0, 0);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, mTexture3D, 1, 0);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // Redefine level 1 with green
+    glTexImage3D(GL_TEXTURE_3D, 1, GL_RGBA8, 1, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 &GLColor::green);
+    ASSERT_GL_NO_ERROR();
+
+    // Check that level 0 is red and level 1 is green
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, mTexture3D, 0, 0);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, mTexture3D, 1, 0);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Test that texture completeness is updated if texture max level changes.
 // GLES 3.0.4 section 3.8.13 Texture completeness
 TEST_P(Texture2DTestES3, TextureCompletenessChangesWithMaxLevel)

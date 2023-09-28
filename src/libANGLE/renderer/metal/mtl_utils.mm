@@ -1074,6 +1074,10 @@ MTLTextureType GetTextureType(gl::TextureType glType)
     {
         case gl::TextureType::_2D:
             return MTLTextureType2D;
+        case gl::TextureType::_2DArray:
+            return MTLTextureType2DArray;
+        case gl::TextureType::_3D:
+            return MTLTextureType3D;
         case gl::TextureType::CubeMap:
             return MTLTextureTypeCube;
         default:

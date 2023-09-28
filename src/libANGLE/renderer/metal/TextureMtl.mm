@@ -763,6 +763,7 @@ angle::Result TextureMtl::createNativeTexture(const gl::Context *context,
             // format.
             gl::Extents actualMipSize = mNativeTexture->size(actualMip);
             if (imageToTransfer && imageToTransfer->sizeAt0() == actualMipSize &&
+                imageToTransfer->arrayLength() == mNativeTexture->arrayLength() &&
                 imageToTransfer->pixelFormat() == mNativeTexture->pixelFormat())
             {
                 if (!encoder)
