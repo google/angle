@@ -1472,7 +1472,7 @@ NSUInteger GetMaxNumberOfRenderTargetsForDevice(const mtl::ContextDevice &device
 
 bool DeviceHasMaximumRenderTargetSize(id<MTLDevice> device)
 {
-    return SupportsAppleGPUFamily(device, 1);
+    return !SupportsMacGPUFamily(device, 1);
 }
 
 bool SupportsAppleGPUFamily(id<MTLDevice> device, uint8_t appleFamily)
