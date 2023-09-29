@@ -1099,7 +1099,7 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
     mGraphicsDirtyBits = mNewGraphicsCommandBufferDirtyBits;
     mComputeDirtyBits  = mNewComputeCommandBufferDirtyBits;
 
-    mActiveImages.fill(nullptr);
+    FillWithNullptr(&mActiveImages);
 
     // The following dirty bits don't affect the program pipeline:
     //
@@ -7245,7 +7245,7 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context, gl::Co
     const gl::ActiveTextureMask &activeTextures    = executable->getActiveSamplersMask();
     const gl::ActiveTextureTypeArray &textureTypes = executable->getActiveSamplerTypes();
 
-    mActiveTextures.fill(nullptr);
+    FillWithNullptr(&mActiveTextures);
 
     bool recreatePipelineLayout                       = false;
     ImmutableSamplerIndexMap immutableSamplerIndexMap = {};
@@ -7352,7 +7352,7 @@ angle::Result ContextVk::updateActiveImages(CommandBufferHelperT *commandBufferH
     const gl::ProgramExecutable *executable = glState.getProgramExecutable();
     ASSERT(executable);
 
-    mActiveImages.fill(nullptr);
+    FillWithNullptr(&mActiveImages);
 
     const gl::ActiveTextureMask &activeImages = executable->getActiveImagesMask();
     const gl::ActiveTextureArray<gl::ShaderBitSet> &activeImageShaderBits =
