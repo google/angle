@@ -256,7 +256,6 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-vkCmdDraw-None-07845",
     "VUID-vkCmdDraw-None-07848",
     // https://anglebug.com/8128#c3
-    "VUID-VkBufferViewCreateInfo-buffer-00934",
     "VUID-VkBufferViewCreateInfo-buffer-08779",
     // https://anglebug.com/8203
     "VUID-VkVertexInputBindingDivisorDescriptionEXT-divisor-01870",
@@ -279,7 +278,6 @@ constexpr const char *kSkippedMessages[] = {
 // not present.
 constexpr const char *kNoListRestartSkippedMessages[] = {
     // http://anglebug.com/3832
-    "VUID-VkPipelineInputAssemblyStateCreateInfo-topology-00428",
     "VUID-VkPipelineInputAssemblyStateCreateInfo-topology-06252",
 };
 
