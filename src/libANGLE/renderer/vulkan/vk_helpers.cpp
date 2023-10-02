@@ -5015,7 +5015,7 @@ const Buffer &BufferHelper::getBufferForVertexArray(ContextVk *contextVk,
     return mBufferWithUserSize;
 }
 
-void BufferHelper::onBufferUserSizeChange(RendererVk *renderer)
+bool BufferHelper::onBufferUserSizeChange(RendererVk *renderer)
 {
     // Buffer's user size and allocation size may be different due to alignment requirement. In
     // normal usage we just use the actual allocation size and it is good enough. But when
@@ -5026,7 +5026,10 @@ void BufferHelper::onBufferUserSizeChange(RendererVk *renderer)
         BufferSuballocation unusedSuballocation;
         renderer->collectSuballocationGarbage(mUse, std::move(unusedSuballocation),
                                               std::move(mBufferWithUserSize));
+        mSerial = renderer->getResourceSerialFactory().generateBufferSerial();
+        return true;
     }
+    return false;
 }
 
 void BufferHelper::destroy(RendererVk *renderer)
