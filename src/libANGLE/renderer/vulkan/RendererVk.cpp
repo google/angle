@@ -1950,14 +1950,14 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     // Determine the threshold for pending garbage sizes.
     calculatePendingGarbageSizeLimit();
 
+    ANGLE_TRY(setupDevice(displayVk));
+
     // If only one queue family, go ahead and initialize the device. If there is more than one
     // queue, we'll have to wait until we see a WindowSurface to know which supports present.
-    if (queueFamilyMatchCount == 1)
+    if (queueFamilyMatchCount == 1 && !mFeatures.forceDelayedDeviceCreationForTesting.enabled)
     {
-        ANGLE_TRY(initializeDevice(displayVk, firstGraphicsQueueFamily));
+        ANGLE_TRY(createDeviceAndQueue(displayVk, firstGraphicsQueueFamily));
     }
-
-    ANGLE_TRY(initializeMemoryAllocator(displayVk));
 
     // Initialize the format table.
     mFormatTable.initialize(this, &mNativeTextureCaps);
@@ -3067,8 +3067,7 @@ void RendererVk::enableDeviceExtensionsPromotedTo13(
     }
 }
 
-angle::Result RendererVk::enableDeviceExtensions(DisplayVk *displayVk,
-                                                 const VulkanLayerVector &enabledDeviceLayerNames)
+angle::Result RendererVk::enableDeviceExtensions(DisplayVk *displayVk)
 {
     // Enumerate device extensions that are provided by the vulkan
     // implementation and implicit layers.
@@ -3091,7 +3090,7 @@ angle::Result RendererVk::enableDeviceExtensions(DisplayVk *displayVk,
     deviceExtensionProps.resize(deviceExtensionCount);
 
     // Enumerate device extensions that are provided by explicit layers.
-    for (const char *layerName : enabledDeviceLayerNames)
+    for (const char *layerName : mEnabledDeviceLayerNames)
     {
         uint32_t previousExtensionCount    = static_cast<uint32_t>(deviceExtensionProps.size());
         uint32_t deviceLayerExtensionCount = 0;
@@ -3228,7 +3227,7 @@ void RendererVk::initDeviceExtensionEntryPoints()
     initializeDeviceExtensionEntryPointsFromCore();
 }
 
-angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueFamilyIndex)
+angle::Result RendererVk::setupDevice(DisplayVk *displayVk)
 {
     uint32_t deviceLayerCount = 0;
     ANGLE_VK_TRY(displayVk,
@@ -3238,23 +3237,23 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     ANGLE_VK_TRY(displayVk, vkEnumerateDeviceLayerProperties(mPhysicalDevice, &deviceLayerCount,
                                                              deviceLayerProps.data()));
 
-    VulkanLayerVector enabledDeviceLayerNames;
+    mEnabledDeviceLayerNames.clear();
     if (mEnableValidationLayers)
     {
         mEnableValidationLayers =
-            GetAvailableValidationLayers(deviceLayerProps, false, &enabledDeviceLayerNames);
+            GetAvailableValidationLayers(deviceLayerProps, false, &mEnabledDeviceLayerNames);
     }
 
     const char *wsiLayer = displayVk->getWSILayer();
     if (wsiLayer)
     {
-        enabledDeviceLayerNames.push_back(wsiLayer);
+        mEnabledDeviceLayerNames.push_back(wsiLayer);
     }
 
     mEnabledFeatures       = {};
     mEnabledFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
 
-    ANGLE_TRY(enableDeviceExtensions(displayVk, enabledDeviceLayerNames));
+    ANGLE_TRY(enableDeviceExtensions(displayVk));
 
     // Used to support cubemap array:
     mEnabledFeatures.features.imageCubeArray = mFeatures.supportsImageCubeArray.enabled;
@@ -3320,20 +3319,11 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
         mEnabledFeatures.features.inheritedQueries = mPhysicalDeviceFeatures.inheritedQueries;
     }
 
-    // Setup device initialization struct
-    VkDeviceCreateInfo createInfo = {};
+    return angle::Result::Continue;
+}
 
-    if (mFeatures.logMemoryReportCallbacks.enabled || mFeatures.logMemoryReportStats.enabled)
-    {
-        ASSERT(mMemoryReportFeatures.deviceMemoryReport);
-
-        mMemoryReportCallback       = {};
-        mMemoryReportCallback.sType = VK_STRUCTURE_TYPE_DEVICE_DEVICE_MEMORY_REPORT_CREATE_INFO_EXT;
-        mMemoryReportCallback.pfnUserCallback = &MemoryReportCallback;
-        mMemoryReportCallback.pUserData       = this;
-        vk::AddToPNextChain(&createInfo, &mMemoryReportCallback);
-    }
-
+angle::Result RendererVk::createDeviceAndQueue(DisplayVk *displayVk, uint32_t queueFamilyIndex)
+{
     mCurrentQueueFamilyIndex = queueFamilyIndex;
 
     vk::QueueFamily queueFamily;
@@ -3358,13 +3348,14 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     queueCreateInfo[0].queueCount       = queueCount;
     queueCreateInfo[0].pQueuePriorities = vk::QueueFamily::kQueuePriorities;
 
-    // Create Device
+    // Setup device initialization struct
+    VkDeviceCreateInfo createInfo    = {};
     createInfo.sType                 = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
     createInfo.flags                 = 0;
     createInfo.queueCreateInfoCount  = queueCreateInfoCount;
     createInfo.pQueueCreateInfos     = queueCreateInfo;
-    createInfo.enabledLayerCount     = static_cast<uint32_t>(enabledDeviceLayerNames.size());
-    createInfo.ppEnabledLayerNames   = enabledDeviceLayerNames.data();
+    createInfo.enabledLayerCount     = static_cast<uint32_t>(mEnabledDeviceLayerNames.size());
+    createInfo.ppEnabledLayerNames   = mEnabledDeviceLayerNames.data();
     createInfo.enabledExtensionCount = static_cast<uint32_t>(mEnabledDeviceExtensions.size());
     createInfo.ppEnabledExtensionNames =
         mEnabledDeviceExtensions.empty() ? nullptr : mEnabledDeviceExtensions.data();
@@ -3378,6 +3369,17 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     if (mEnabledFeatures.pNext)
     {
         vk::AppendToPNextChain(&createInfo, mEnabledFeatures.pNext);
+    }
+
+    if (mFeatures.logMemoryReportCallbacks.enabled || mFeatures.logMemoryReportStats.enabled)
+    {
+        ASSERT(mMemoryReportFeatures.deviceMemoryReport);
+
+        mMemoryReportCallback       = {};
+        mMemoryReportCallback.sType = VK_STRUCTURE_TYPE_DEVICE_DEVICE_MEMORY_REPORT_CREATE_INFO_EXT;
+        mMemoryReportCallback.pfnUserCallback = &MemoryReportCallback;
+        mMemoryReportCallback.pUserData       = this;
+        vk::AddToPNextChain(&createInfo, &mMemoryReportCallback);
     }
 
     // Create the list of expected VVL messages to suppress.  Done before creating the device, as it
@@ -3442,6 +3444,8 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
         mSupportedVulkanShaderStageMask |= VK_SHADER_STAGE_GEOMETRY_BIT;
     }
     mSupportedVulkanPipelineStageMask = ~unsupportedStages;
+
+    ANGLE_TRY(initializeMemoryAllocator(displayVk));
 
     // Log the memory heap stats when the device has been initialized (when debugging).
     mMemoryAllocationTracker.onDeviceInit();
@@ -3549,7 +3553,7 @@ angle::Result RendererVk::selectPresentQueueForSurface(DisplayVk *displayVk,
     }
 
     ANGLE_VK_CHECK(displayVk, newPresentQueue.valid(), VK_ERROR_INITIALIZATION_FAILED);
-    ANGLE_TRY(initializeDevice(displayVk, newPresentQueue.value()));
+    ANGLE_TRY(createDeviceAndQueue(displayVk, newPresentQueue.value()));
 
     *presentQueueOut = newPresentQueue.value();
     return angle::Result::Continue;
@@ -3704,8 +3708,8 @@ gl::Version RendererVk::getMaxSupportedESVersion() const
     // If the Vulkan transform feedback extension is not present, we use an emulation path that
     // requires the vertexPipelineStoresAndAtomics feature. Without the extension or this feature,
     // we can't currently support transform feedback.
-    if (!mFeatures.supportsTransformFeedbackExtension.enabled &&
-        !mFeatures.emulateTransformFeedback.enabled)
+    if (!vk::CanSupportTransformFeedbackExtension(mTransformFeedbackFeatures) &&
+        !vk::CanSupportTransformFeedbackEmulation(mPhysicalDeviceFeatures))
     {
         maxVersion = LimitVersionTo(maxVersion, {2, 0});
     }
@@ -4134,7 +4138,7 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
         ExtensionFound(VK_KHR_FORMAT_FEATURE_FLAGS_2_EXTENSION_NAME, deviceExtensionNames));
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsTransformFeedbackExtension,
-                            mTransformFeedbackFeatures.transformFeedback == VK_TRUE);
+                            vk::CanSupportTransformFeedbackExtension(mTransformFeedbackFeatures));
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsGeometryStreamsCapability,
                             mFeatures.supportsTransformFeedbackExtension.enabled &&
@@ -4146,8 +4150,8 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
             mPrimitivesGeneratedQueryFeatures.primitivesGeneratedQuery == VK_TRUE);
 
     ANGLE_FEATURE_CONDITION(&mFeatures, emulateTransformFeedback,
-                            (!mFeatures.supportsTransformFeedbackExtension.enabled &&
-                             mPhysicalDeviceFeatures.vertexPipelineStoresAndAtomics == VK_TRUE));
+                            !mFeatures.supportsTransformFeedbackExtension.enabled &&
+                                vk::CanSupportTransformFeedbackEmulation(mPhysicalDeviceFeatures));
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsIndexTypeUint8,
                             mIndexTypeUint8Features.indexTypeUint8 == VK_TRUE);
