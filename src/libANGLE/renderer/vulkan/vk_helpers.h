@@ -854,7 +854,8 @@ class BufferHelper : public ReadWriteResource
     // normal usage we just use the actual allocation size and it is good enough. But when
     // robustResourceInit is enabled, mBufferWithUserSize is created to match the exact user
     // size. Thus when user size changes, we must clear and recreate this mBufferWithUserSize.
-    void onBufferUserSizeChange(RendererVk *renderer);
+    // Returns true if mBufferWithUserSize is released.
+    bool onBufferUserSizeChange(RendererVk *renderer);
 
     void initializeBarrierTracker(Context *context);
 
