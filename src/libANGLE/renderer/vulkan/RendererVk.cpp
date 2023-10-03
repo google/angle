@@ -1957,8 +1957,6 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
         ANGLE_TRY(initializeDevice(displayVk, firstGraphicsQueueFamily));
     }
 
-    WARN() << "ANGLE VMA version: " << ANGLE_VMA_VERSION;
-
     ANGLE_TRY(initializeMemoryAllocator(displayVk));
 
     // Initialize the format table.
