@@ -1462,7 +1462,6 @@ RendererVk::~RendererVk() {}
 
 bool RendererVk::hasSharedGarbage()
 {
-    std::unique_lock<std::mutex> lock(mGarbageMutex);
     return !mSharedGarbageList.empty() || !mSuballocationGarbageList.empty();
 }
 
@@ -5213,8 +5212,6 @@ bool RendererVk::haveSameFormatFeatureBits(angle::FormatID formatID1,
 
 void RendererVk::cleanupGarbage()
 {
-    std::unique_lock<std::mutex> lock(mGarbageMutex);
-
     // Clean up general garbage
     mSharedGarbageList.cleanupSubmittedGarbage(this);
     // Clean up suballocation garbages
@@ -5226,7 +5223,6 @@ void RendererVk::cleanupGarbage()
 
 void RendererVk::cleanupPendingSubmissionGarbage()
 {
-    std::unique_lock<std::mutex> lock(mGarbageMutex);
     // Check if pending garbage is still pending. If not, move them to the garbage list.
     mSharedGarbageList.cleanupUnsubmittedGarbage(this);
     mSuballocationGarbageList.cleanupUnsubmittedGarbage(this);

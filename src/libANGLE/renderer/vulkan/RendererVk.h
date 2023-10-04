@@ -362,7 +362,7 @@ class RendererVk : angle::NonCopyable
     {
         ASSERT(!sharedGarbage.empty());
         vk::SharedGarbage garbage(use, std::move(sharedGarbage));
-        mSharedGarbageList.add(this, mGarbageMutex, std::move(garbage));
+        mSharedGarbageList.add(this, std::move(garbage));
     }
 
     void collectSuballocationGarbage(const vk::ResourceUse &use,
@@ -370,7 +370,7 @@ class RendererVk : angle::NonCopyable
                                      vk::Buffer &&buffer)
     {
         vk::BufferSuballocationGarbage garbage(use, std::move(suballocation), std::move(buffer));
-        mSuballocationGarbageList.add(this, mGarbageMutex, std::move(garbage));
+        mSuballocationGarbageList.add(this, std::move(garbage));
     }
 
     angle::Result getPipelineCache(vk::PipelineCacheAccess *pipelineCacheOut);
@@ -605,11 +605,7 @@ class RendererVk : angle::NonCopyable
         return mSupportedFragmentShadingRates.test(shadingRate);
     }
 
-    void addBufferBlockToOrphanList(vk::BufferBlock *block)
-    {
-        std::unique_lock<std::mutex> lock(mGarbageMutex);
-        mOrphanedBufferBlockList.add(block);
-    }
+    void addBufferBlockToOrphanList(vk::BufferBlock *block) { mOrphanedBufferBlockList.add(block); }
 
     VkDeviceSize getSuballocationDestroyedSize() const
     {
@@ -627,7 +623,6 @@ class RendererVk : angle::NonCopyable
 
     VkDeviceSize getPendingSubmissionGarbageSize() const
     {
-        std::unique_lock<std::mutex> lock(mGarbageMutex);
         return mSharedGarbageList.getUnsubmittedGarbageSize();
     }
 
@@ -932,7 +927,6 @@ class RendererVk : angle::NonCopyable
 
     bool mDeviceLost;
 
-    mutable std::mutex mGarbageMutex;
     vk::SharedGarbageList<vk::SharedGarbage> mSharedGarbageList;
     // Suballocations have its own dedicated garbage list for performance optimization since they
     // tend to be the most common garbage objects.

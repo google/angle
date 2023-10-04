@@ -126,38 +126,48 @@ using BufferBlockPointerVector = std::vector<BufferBlockPointer>;
 class BufferBlockGarbageList final : angle::NonCopyable
 {
   public:
-    ~BufferBlockGarbageList() { ASSERT(mBufferBlocks.empty()); }
+    BufferBlockGarbageList() : mBufferBlockQueue(kInitialQueueCapacity) {}
+    ~BufferBlockGarbageList() { ASSERT(mBufferBlockQueue.empty()); }
 
-    void add(BufferBlock *bufferBlock) { mBufferBlocks.emplace_back(bufferBlock); }
+    void add(BufferBlock *bufferBlock)
+    {
+        std::unique_lock<std::mutex> lock(mMutex);
+        if (mBufferBlockQueue.full())
+        {
+            size_t newCapacity = mBufferBlockQueue.capacity() << 1;
+            mBufferBlockQueue.updateCapacity(newCapacity);
+        }
+        mBufferBlockQueue.push(bufferBlock);
+    }
 
     void pruneEmptyBufferBlocks(RendererVk *renderer)
     {
-        if (mBufferBlocks.empty())
+        if (!mBufferBlockQueue.empty())
         {
-            return;
-        }
-        BufferBlockPointerVector remainingBlocks;
-        remainingBlocks.reserve(mBufferBlocks.capacity());
-        for (BufferBlockPointer &block : mBufferBlocks)
-        {
-            if (block->isEmpty())
+            std::unique_lock<std::mutex> lock(mMutex);
+            size_t count = mBufferBlockQueue.size();
+            for (size_t i = 0; i < count; i++)
             {
-                block->destroy(renderer);
-                block.reset();
-            }
-            else
-            {
-                remainingBlocks.emplace_back(std::move(block));
+                BufferBlock *block = mBufferBlockQueue.front();
+                mBufferBlockQueue.pop();
+                if (block->isEmpty())
+                {
+                    block->destroy(renderer);
+                }
+                else
+                {
+                    mBufferBlockQueue.push(block);
+                }
             }
         }
-        mBufferBlocks.clear();
-        std::swap(mBufferBlocks, remainingBlocks);
     }
 
-    bool empty() const { return mBufferBlocks.empty(); }
+    bool empty() const { return mBufferBlockQueue.empty(); }
 
   private:
-    BufferBlockPointerVector mBufferBlocks;
+    static constexpr size_t kInitialQueueCapacity = 4;
+    std::mutex mMutex;
+    angle::FixedQueue<BufferBlock *> mBufferBlockQueue;
 };
 
 // BufferSuballocation
