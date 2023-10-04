@@ -135,9 +135,9 @@ const char *gTestExpectationsFiles[] = {
     "deqp_gles31_rotate_test_expectations.txt",
     "deqp_gles31_rotate_test_expectations.txt",
     "deqp_gles3_multisample_test_expectations.txt",
-    "deqp_gles3_565_no_depth_no_stencil_test_expectations.txt",
+    "deqp_gles3_565-no-depth-no-stencil_test_expectations.txt",
     "deqp_gles31_multisample_test_expectations.txt",
-    "deqp_gles31_565_no_depth_no_stencil_test_expectations.txt",
+    "deqp_gles31_565-no-depth-no-stencil_test_expectations.txt",
     "deqp_gl46_test_expectations.txt",
 };
 
