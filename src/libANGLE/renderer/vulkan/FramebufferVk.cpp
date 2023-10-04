@@ -309,6 +309,25 @@ bool IsAnyAttachment3DWithoutAllLayers(const RenderTargetCache<RenderTargetVk> &
 
     return false;
 }
+
+// Should be called when the image type is VK_IMAGE_TYPE_3D.  Typically, the subresource, offsets
+// and extents are filled in as if images are 2D layers (because depth slices of 3D images are also
+// specified through "layers" everywhere, particularly by gl::ImageIndex).  This function adjusts
+// the layer base/count and offsets.z/extents.z appropriately after these structs are set up.
+void AdjustLayersAndDepthFor3DImages(VkImageSubresourceLayers *subresource,
+                                     VkOffset3D *offsetsStart,
+                                     VkOffset3D *offsetsEnd)
+{
+    // The struct must be set up as if the image was 2D array.
+    ASSERT(offsetsStart->z == 0);
+    ASSERT(offsetsEnd->z == 1);
+
+    offsetsStart->z = subresource->baseArrayLayer;
+    offsetsEnd->z   = subresource->baseArrayLayer + subresource->layerCount;
+
+    subresource->baseArrayLayer = 0;
+    subresource->layerCount     = 1;
+}
 }  // anonymous namespace
 
 FramebufferVk::FramebufferVk(RendererVk *renderer, const gl::FramebufferState &state)
@@ -983,6 +1002,22 @@ angle::Result FramebufferVk::blitWithCommand(ContextVk *contextVk,
     blit.dstOffsets[0]                 = {destArea.x0(), destArea.y0(), 0};
     blit.dstOffsets[1]                 = {destArea.x1(), destArea.y1(), 1};
 
+    // Note: vkCmdBlitImage doesn't actually work between 3D and 2D array images due to Vulkan valid
+    // usage restrictions.
+
+    const bool isSrc3D = srcImage->getType() == VK_IMAGE_TYPE_3D;
+    const bool isDst3D = dstImage->getType() == VK_IMAGE_TYPE_3D;
+    if (isSrc3D)
+    {
+        AdjustLayersAndDepthFor3DImages(&blit.srcSubresource, &blit.srcOffsets[0],
+                                        &blit.srcOffsets[1]);
+    }
+    if (isDst3D)
+    {
+        AdjustLayersAndDepthFor3DImages(&blit.dstSubresource, &blit.dstOffsets[0],
+                                        &blit.dstOffsets[1]);
+    }
+
     commandBuffer->blitImage(srcImage->getImage(), VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
                              dstImage->getImage(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &blit,
                              gl_vk::GetFilter(filter));
@@ -1234,9 +1269,12 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
         // be hard to guarantee the image stretching remains perfect.  That also allows us not to
         // have to transform back the destination clipping to source.
         //
-        // Non-identity pre-rotation cases do not use Vulkan's builtin blit.
+        // Non-identity pre-rotation cases do not use Vulkan's builtin blit.  Additionally, blits
+        // between 3D and non-3D-non-layer-0 images are forbidden (possibly due to an oversight:
+        // https://gitlab.khronos.org/vulkan/vulkan/-/issues/3490)
         //
         // For simplicity, we either blit all render targets with a Vulkan command, or none.
+        const bool isSrc3D = readRenderTarget->is3DImage();
         bool canBlitWithCommand =
             !isColorResolve && noClip && (noFlip || !disableFlippingBlitWithCommand) &&
             HasSrcBlitFeature(renderer, readRenderTarget) && rotation == SurfaceRotation::Identity;
@@ -1248,8 +1286,11 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
         for (size_t colorIndexGL : mState.getEnabledDrawBuffers())
         {
             RenderTargetVk *drawRenderTarget = mRenderTargetCache.getColors()[colorIndexGL];
-            canBlitWithCommand =
-                canBlitWithCommand && HasDstBlitFeature(renderer, drawRenderTarget);
+            const bool isDst3D               = drawRenderTarget->is3DImage();
+            canBlitWithCommand               = canBlitWithCommand &&
+                                 HasDstBlitFeature(renderer, drawRenderTarget) &&
+                                 !(isSrc3D && drawRenderTarget->getLayerIndex() > 0) &&
+                                 !(isDst3D && readRenderTarget->getLayerIndex() > 0);
             areChannelsBlitCompatible =
                 areChannelsBlitCompatible &&
                 AreSrcAndDstColorChannelsBlitCompatible(readRenderTarget, drawRenderTarget);
