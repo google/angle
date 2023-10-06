@@ -1307,6 +1307,7 @@ if (build_angle_deqp_tests && !is_fuchsia) {
 
   config("angle_deqp_framework_opengl_config") {
     include_dirs = [
+      "$deqp_path/framework/egl/wrapper",
       "$deqp_path/framework/opengl",
       "$deqp_path/framework/opengl/simplereference",
       "$deqp_path/framework/opengl/wrapper",
