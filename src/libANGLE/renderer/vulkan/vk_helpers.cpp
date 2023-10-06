@@ -731,7 +731,7 @@ uint32_t GetImageLayerCountForView(const ImageHelper &image)
     return image.getExtents().depth > 1 ? image.getExtents().depth : image.getLayerCount();
 }
 
-void ReleaseImageViews(ImageViewVector *imageViewVector, GarbageList *garbage)
+void ReleaseImageViews(ImageViewVector *imageViewVector, GarbageObjects *garbage)
 {
     for (ImageView &imageView : *imageViewVector)
     {
@@ -3662,9 +3662,9 @@ void DescriptorPoolHelper::release(RendererVk *renderer)
 {
     mDescriptorSetGarbageList.clear();
 
-    GarbageList garbageList;
-    garbageList.emplace_back(GetGarbage(&mDescriptorPool));
-    renderer->collectGarbage(mUse, std::move(garbageList));
+    GarbageObjects garbageObjects;
+    garbageObjects.emplace_back(GetGarbage(&mDescriptorPool));
+    renderer->collectGarbage(mUse, std::move(garbageObjects));
     mUse.reset();
 }
 
@@ -10888,7 +10888,7 @@ void BufferViewHelper::release(ContextVk *contextVk)
 
     contextVk->flushDescriptorSetUpdates();
 
-    GarbageList garbage;
+    GarbageObjects garbage;
 
     for (auto &formatAndView : mViews)
     {
