@@ -1011,9 +1011,9 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 
 7085 : VulkanPerformanceCounterTest.DepthStencilInvalidateDrawDisable/* = SKIP
 
-// Flaking due to threading usage of the queue
-7204 : VulkanImageTest.PreInitializedOnGLImport/*AsyncCommandQueue = SKIP
-8174 : VulkanMemoryTest.*/*AsyncCommandQueue = SKIP
+// Flaking due to threading usage of the queue.  EGL_ANGLE_device_vulkan and asyncCommandQueue are incompatible.
+7204 : VulkanImageTest.*/*AsyncCommandQueue = SKIP
+7204 : VulkanMemoryTest.*/*AsyncCommandQueue = SKIP
 
 // Causes incompatible error in GL back-end.
 7218 OPENGL : TransformFeedbackTest.DrawAfterDeletingPausedBuffer/* = SKIP
