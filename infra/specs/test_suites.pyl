@@ -597,6 +597,9 @@
       'angle_deqp_khr_gles2_vulkan_tests': {
         'args': [
           '--use-angle=vulkan',
+          '--surface-height=64',
+          '--surface-width=64',
+          '--deqp-base-seed=1',
         ],
         'android_args': [
           '-v',
@@ -617,6 +620,9 @@
       'angle_deqp_khr_gles31_vulkan_tests': {
         'args': [
           '--use-angle=vulkan',
+          '--surface-height=64',
+          '--surface-width=64',
+          '--deqp-base-seed=1',
         ],
         'android_args': [
           '-v',
@@ -634,9 +640,74 @@
     },
 
     'angle_deqp_khr_gles32_vulkan_gtests': {
-      'angle_deqp_khr_gles32_vulkan_tests': {
+      'angle_deqp_khr_gles32_vulkan_tests_seed1_width64_height64': {
         'args': [
           '--use-angle=vulkan',
+          '--deqp-base-seed=1',
+          '--surface-height=64',
+          '--surface-width=64',
+        ],
+        'android_args': [
+          '-v',
+          '--shard-timeout=500',
+        ],
+        'linux_args': [
+          '--no-xvfb',
+        ],
+        'merge': {
+          'script': '//scripts/angle_deqp_test_merge.py',
+        },
+        'test': 'angle_deqp_khr_gles32_tests',
+        'use_isolated_scripts_api': True,
+      },
+      'angle_deqp_khr_gles32_vulkan_tests_seed2_width113_height47': {
+        'args': [
+          '--use-angle=vulkan',
+          '--deqp-base-seed=2',
+          '--surface-width=113',
+          '--surface-height=47',
+        ],
+        'android_args': [
+          '-v',
+          '--shard-timeout=500',
+        ],
+        'linux_args': [
+          '--no-xvfb',
+        ],
+        'merge': {
+          'script': '//scripts/angle_deqp_test_merge.py',
+        },
+        'test': 'angle_deqp_khr_gles32_tests',
+        'use_isolated_scripts_api': True,
+      },
+      'angle_deqp_khr_gles32_vulkan_tests_seed3_width-1_height64': {
+        'args': [
+          '--use-angle=vulkan',
+          '--deqp-base-seed=3',
+          '--surface-width=-1',
+          '--surface-height=64',
+          '--deqp-gl-config-name=rgba8888d24s8',
+        ],
+        'android_args': [
+          '-v',
+          '--shard-timeout=500',
+        ],
+        'linux_args': [
+          '--no-xvfb',
+        ],
+        'merge': {
+          'script': '//scripts/angle_deqp_test_merge.py',
+        },
+        'test': 'angle_deqp_khr_gles32_tests',
+        'use_isolated_scripts_api': True,
+      },
+      'angle_deqp_khr_gles32_vulkan_tests_seed3_width64_height-1': {
+        'args': [
+          '--use-angle=vulkan',
+          '--deqp-base-seed=3',
+          '--surface-width=64',
+          '--surface-height=-1',
+          '--deqp-gl-config-name=rgba8888d24s8',
         ],
         'android_args': [
           '-v',
@@ -657,6 +728,9 @@
       'angle_deqp_khr_gles3_vulkan_tests': {
         'args': [
           '--use-angle=vulkan',
+          '--surface-height=64',
+          '--surface-width=64',
+          '--deqp-base-seed=1',
         ],
         'android_args': [
           '-v',
@@ -1218,6 +1292,9 @@
       'angle_deqp_khr_gles2_tests': {
         'args': [
           '--use-angle=swiftshader',
+          '--surface-height=64',
+          '--surface-width=64',
+          '--deqp-base-seed=1',
         ],
         'use_isolated_scripts_api': True,
       },
@@ -1227,6 +1304,9 @@
       'angle_deqp_khr_gles31_tests': {
         'args': [
           '--use-angle=swiftshader',
+          '--surface-height=64',
+          '--surface-width=64',
+          '--deqp-base-seed=1',
         ],
         'use_isolated_scripts_api': True,
       },
@@ -1236,6 +1316,9 @@
       'angle_deqp_khr_gles3_tests': {
         'args': [
           '--use-angle=swiftshader',
+          '--surface-height=64',
+          '--surface-width=64',
+          '--deqp-base-seed=1',
         ],
         'use_isolated_scripts_api': True,
       },
