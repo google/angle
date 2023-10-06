@@ -1003,7 +1003,8 @@ angle::Result FramebufferVk::blitWithCommand(ContextVk *contextVk,
     blit.dstOffsets[1]                 = {destArea.x1(), destArea.y1(), 1};
 
     // Note: vkCmdBlitImage doesn't actually work between 3D and 2D array images due to Vulkan valid
-    // usage restrictions.
+    // usage restrictions (https://gitlab.khronos.org/vulkan/vulkan/-/issues/3490), but drivers seem
+    // to work as expected anyway.  ANGLE continues to use vkCmdBlitImage in that case.
 
     const bool isSrc3D = srcImage->getType() == VK_IMAGE_TYPE_3D;
     const bool isDst3D = dstImage->getType() == VK_IMAGE_TYPE_3D;
@@ -1274,7 +1275,6 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
         // https://gitlab.khronos.org/vulkan/vulkan/-/issues/3490)
         //
         // For simplicity, we either blit all render targets with a Vulkan command, or none.
-        const bool isSrc3D = readRenderTarget->is3DImage();
         bool canBlitWithCommand =
             !isColorResolve && noClip && (noFlip || !disableFlippingBlitWithCommand) &&
             HasSrcBlitFeature(renderer, readRenderTarget) && rotation == SurfaceRotation::Identity;
@@ -1286,11 +1286,8 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
         for (size_t colorIndexGL : mState.getEnabledDrawBuffers())
         {
             RenderTargetVk *drawRenderTarget = mRenderTargetCache.getColors()[colorIndexGL];
-            const bool isDst3D               = drawRenderTarget->is3DImage();
-            canBlitWithCommand               = canBlitWithCommand &&
-                                 HasDstBlitFeature(renderer, drawRenderTarget) &&
-                                 !(isSrc3D && drawRenderTarget->getLayerIndex() > 0) &&
-                                 !(isDst3D && readRenderTarget->getLayerIndex() > 0);
+            canBlitWithCommand =
+                canBlitWithCommand && HasDstBlitFeature(renderer, drawRenderTarget);
             areChannelsBlitCompatible =
                 areChannelsBlitCompatible &&
                 AreSrcAndDstColorChannelsBlitCompatible(readRenderTarget, drawRenderTarget);
