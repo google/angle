@@ -85,6 +85,15 @@ class CLBufferVk : public CLMemoryVk
     angle::Result create(void *hostPtr);
     angle::Result createStagingBuffer(size_t size);
 
+    angle::Result fillWithPattern(const void *pattern,
+                                  size_t patternSize,
+                                  size_t offset,
+                                  size_t size)
+    {
+        getBuffer().fillWithPattern(pattern, patternSize, offset, size);
+        return angle::Result::Continue;
+    }
+
     bool isSubBuffer() const { return mParent != nullptr; }
 
     bool isCurrentlyInUse() const override;

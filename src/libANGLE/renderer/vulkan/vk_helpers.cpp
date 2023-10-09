@@ -5753,6 +5753,28 @@ void BufferHelper::fillWithColor(const angle::Color<uint8_t> &color,
     }
 }
 
+void BufferHelper::fillWithPattern(const void *pattern,
+                                   size_t patternSize,
+                                   size_t offset,
+                                   size_t size)
+{
+    ASSERT(offset + size <= getSize());
+    ASSERT((size % patternSize) == 0);
+    ASSERT((offset % patternSize) == 0);
+
+    uint8_t *buffer = getMappedMemory() + offset;
+    std::memcpy(buffer, pattern, patternSize);
+    size_t remaining = size - patternSize;
+    while (remaining > patternSize)
+    {
+        std::memcpy(buffer + patternSize, buffer, patternSize);
+        remaining -= patternSize;
+        patternSize *= 2;
+    }
+    std::memcpy(buffer + patternSize, buffer, remaining);
+    return;
+}
+
 // Used for ImageHelper non-zero memory allocation when useVmaForImageSuballocation is disabled.
 angle::Result InitMappableDeviceMemory(Context *context,
                                        DeviceMemory *deviceMemory,
