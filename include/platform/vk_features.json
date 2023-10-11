@@ -1398,6 +1398,13 @@
                 "prefer host cached memory for non static buffer usage"
             ],
             "issue": "https://issuetracker.google.com/288119108"
+        },
+        {
+            "name": "supports_external_format_resolve",
+            "category": "Features",
+            "description": [
+                "VkDevice supports the VK_ANDROID_external_format_resolve extension"
+            ]
         }
     ]
 }

@@ -1293,6 +1293,13 @@ struct FeaturesVk : FeatureSetBase
         &members, "https://issuetracker.google.com/288119108"
     };
 
+    FeatureInfo supportsExternalFormatResolve = {
+        "supportsExternalFormatResolve",
+        FeatureCategory::VulkanFeatures,
+        "VkDevice supports the VK_ANDROID_external_format_resolve extension",
+        &members,
+    };
+
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

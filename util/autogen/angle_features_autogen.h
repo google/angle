@@ -274,6 +274,7 @@ enum class Feature
     SupportsExtendedDynamicState2,
     SupportsExternalFenceCapabilities,
     SupportsExternalFenceFd,
+    SupportsExternalFormatResolve,
     SupportsExternalMemoryDmaBufAndModifiers,
     SupportsExternalMemoryFd,
     SupportsExternalMemoryFuchsia,

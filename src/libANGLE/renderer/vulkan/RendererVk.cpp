@@ -2119,6 +2119,7 @@ angle::Result RendererVk::initializeMemoryAllocator(DisplayVk *displayVk)
 //                                                     pCopySrcLayouts (property),
 //                                                     pCopyDstLayouts (property),
 //                                                     identicalMemoryTypeRequirements (property)
+// - VK_ANDROID_external_format_resolve:               externalFormatResolve (feature)
 //
 void RendererVk::appendDeviceExtensionFeaturesNotPromoted(
     const vk::ExtensionNameList &deviceExtensionNames,
@@ -2273,6 +2274,14 @@ void RendererVk::appendDeviceExtensionFeaturesNotPromoted(
         vk::AddToPNextChain(deviceFeatures, &mHostImageCopyFeatures);
         vk::AddToPNextChain(deviceProperties, &mHostImageCopyProperties);
     }
+
+#if defined(ANGLE_PLATFORM_ANDROID)
+    if (ExtensionFound(VK_ANDROID_EXTERNAL_FORMAT_RESOLVE_EXTENSION_NAME, deviceExtensionNames))
+    {
+        vk::AddToPNextChain(deviceFeatures, &mExternalFormatResolveFeatures);
+        vk::AddToPNextChain(deviceProperties, &mExternalFormatResolveProperties);
+    }
+#endif
 }
 
 // The following features and properties used by ANGLE have been promoted to Vulkan 1.1:
@@ -2568,6 +2577,16 @@ void RendererVk::queryDeviceExtensionFeatures(const vk::ExtensionNameList &devic
     mHostImageCopyProperties.sType =
         VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_IMAGE_COPY_PROPERTIES_EXT;
 
+#if defined(ANGLE_PLATFORM_ANDROID)
+    mExternalFormatResolveFeatures = {};
+    mExternalFormatResolveFeatures.sType =
+        VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_FORMAT_RESOLVE_FEATURES_ANDROID;
+
+    mExternalFormatResolveProperties = {};
+    mExternalFormatResolveProperties.sType =
+        VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_FORMAT_RESOLVE_PROPERTIES_ANDROID;
+#endif
+
     // Query features and properties.
     VkPhysicalDeviceFeatures2KHR deviceFeatures = {};
     deviceFeatures.sType                        = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
@@ -2633,6 +2652,10 @@ void RendererVk::queryDeviceExtensionFeatures(const vk::ExtensionNameList &devic
     mTimelineSemaphoreFeatures.pNext                        = nullptr;
     mHostImageCopyFeatures.pNext                            = nullptr;
     mHostImageCopyProperties.pNext                          = nullptr;
+#if defined(ANGLE_PLATFORM_ANDROID)
+    mExternalFormatResolveFeatures.pNext   = nullptr;
+    mExternalFormatResolveProperties.pNext = nullptr;
+#endif
 }
 
 // See comment above appendDeviceExtensionFeaturesNotPromoted.  Additional extensions are enabled
@@ -2933,6 +2956,14 @@ void RendererVk::enableDeviceExtensionsNotPromoted(
         getFeatures().forceDisableFullScreenExclusive.enabled)
     {
         mEnabledDeviceExtensions.push_back(VK_EXT_FULL_SCREEN_EXCLUSIVE_EXTENSION_NAME);
+    }
+#endif
+
+#if defined(ANGLE_PLATFORM_ANDROID)
+    if (mFeatures.supportsExternalFormatResolve.enabled)
+    {
+        mEnabledDeviceExtensions.push_back(VK_ANDROID_EXTERNAL_FORMAT_RESOLVE_EXTENSION_NAME);
+        vk::AddToPNextChain(&mEnabledFeatures, &mExternalFormatResolveFeatures);
     }
 #endif
 }
@@ -4786,6 +4817,8 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsTimelineSemaphore,
                             mTimelineSemaphoreFeatures.timelineSemaphore == VK_TRUE);
+
+    ANGLE_FEATURE_CONDITION(&mFeatures, supportsExternalFormatResolve, false);
 
     // Disable memory report feature overrides if extension is not supported.
     if ((mFeatures.logMemoryReportCallbacks.enabled || mFeatures.logMemoryReportStats.enabled) &&
