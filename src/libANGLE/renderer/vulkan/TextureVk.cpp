@@ -231,6 +231,7 @@ void GetRenderTargetLayerCountAndIndex(vk::ImageHelper *image,
     {
         case gl::TextureType::_2D:
         case gl::TextureType::_2DMultisample:
+        case gl::TextureType::External:
             ASSERT(*layerIndex == 0 &&
                    (*layerCount == 1 ||
                     *layerCount == static_cast<GLuint>(gl::ImageIndex::kEntireLevel)));
@@ -2782,37 +2783,51 @@ void TextureVk::initSingleLayerRenderTargets(ContextVk *contextVk,
     const bool isMultisampledRenderToTexture =
         renderToTextureIndex != gl::RenderToTextureImageIndex::Default;
 
+    vk::ImageHelper *drawImage             = mImage;
+    vk::ImageViewHelper *drawImageViews    = &getImageViews();
+    vk::ImageHelper *resolveImage          = nullptr;
+    vk::ImageViewHelper *resolveImageViews = nullptr;
+
+    RenderTargetTransience transience = isMultisampledRenderToTexture
+                                            ? RenderTargetTransience::MultisampledTransient
+                                            : RenderTargetTransience::Default;
+
+    // If multisampled render to texture, use the multisampled image as draw image instead, and
+    // resolve into the texture's image automatically.
+    if (isMultisampledRenderToTexture)
+    {
+        ASSERT(mMultisampledImages[renderToTextureIndex].valid());
+
+        resolveImage      = drawImage;
+        resolveImageViews = drawImageViews;
+        drawImage         = &mMultisampledImages[renderToTextureIndex];
+        drawImageViews    = &mMultisampledImageViews[renderToTextureIndex];
+
+        // If the texture is depth/stencil, GL_EXT_multisampled_render_to_texture2 explicitly
+        // indicates that there is no need for the image to be resolved.  In that case, mark the
+        // render target as entirely transient.
+        if (mImage->getAspectFlags() != VK_IMAGE_ASPECT_COLOR_BIT)
+        {
+            transience = RenderTargetTransience::EntirelyTransient;
+        }
+    }
+
+    // If rendering to YUV, similar to multisampled render to texture
+    if (mImage->getExternalFormat())
+    {
+
+        // XXX: if not null color attachment, we need to populate drawImage here still
+        // but unclear where it should be stashed yet; either abuse mMultisampledImages etc
+        // or build something parallel to it. we don't have a vulkan implementation which
+        // wants this path yet, though.
+        resolveImage      = drawImage;
+        resolveImageViews = drawImageViews;
+
+        transience = RenderTargetTransience::YuvResolveTransient;
+    }
+
     for (uint32_t layerIndex = 0; layerIndex < layerCount; ++layerIndex)
     {
-        vk::ImageHelper *drawImage             = mImage;
-        vk::ImageViewHelper *drawImageViews    = &getImageViews();
-        vk::ImageHelper *resolveImage          = nullptr;
-        vk::ImageViewHelper *resolveImageViews = nullptr;
-
-        RenderTargetTransience transience = isMultisampledRenderToTexture
-                                                ? RenderTargetTransience::MultisampledTransient
-                                                : RenderTargetTransience::Default;
-
-        // If multisampled render to texture, use the multisampled image as draw image instead, and
-        // resolve into the texture's image automatically.
-        if (isMultisampledRenderToTexture)
-        {
-            ASSERT(mMultisampledImages[renderToTextureIndex].valid());
-
-            resolveImage      = drawImage;
-            resolveImageViews = drawImageViews;
-            drawImage         = &mMultisampledImages[renderToTextureIndex];
-            drawImageViews    = &mMultisampledImageViews[renderToTextureIndex];
-
-            // If the texture is depth/stencil, GL_EXT_multisampled_render_to_texture2 explicitly
-            // indicates that there is no need for the image to be resolved.  In that case, mark the
-            // render target as entirely transient.
-            if (mImage->getAspectFlags() != VK_IMAGE_ASPECT_COLOR_BIT)
-            {
-                transience = RenderTargetTransience::EntirelyTransient;
-            }
-        }
-
         renderTargets[layerIndex].init(drawImage, drawImageViews, resolveImage, resolveImageViews,
                                        mImageSiblingSerial, getNativeImageLevel(levelIndex),
                                        getNativeImageLayer(layerIndex), 1, transience);
@@ -2835,7 +2850,7 @@ RenderTargetVk *TextureVk::getMultiLayerRenderTarget(ContextVk *contextVk,
     }
 
     // Create the layered render target.  Note that multisampled render to texture is not
-    // allowed with layered render targets.
+    // allowed with layered render targets; nor is YUV rendering.
     std::unique_ptr<RenderTargetVk> &rt = mMultiLayerRenderTargets[range];
     if (!rt)
     {

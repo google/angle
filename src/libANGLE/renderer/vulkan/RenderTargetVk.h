@@ -36,6 +36,9 @@ enum class RenderTargetTransience
     // Multisampled-render-to-texture textures, where the implicit multisampled image is transient,
     // but the resolved image is persistent.
     MultisampledTransient,
+    // Renderable YUV textures, where the color attachment (if it exists at all) is transient,
+    // but the resolved image is persistent.
+    YuvResolveTransient,
     // Multisampled-render-to-texture depth/stencil textures.
     EntirelyTransient,
 };
@@ -135,6 +138,7 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
     {
         return mTransience == RenderTargetTransience::EntirelyTransient;
     }
+    bool isYuvResolve() const { return mTransience == RenderTargetTransience::YuvResolveTransient; }
 
     void onNewFramebuffer(const vk::SharedFramebufferCacheKey &sharedFramebufferCacheKey)
     {

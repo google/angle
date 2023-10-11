@@ -2188,8 +2188,19 @@ void FramebufferVk::updateRenderPassDesc(ContextVk *contextVk)
         {
             RenderTargetVk *colorRenderTarget = colorRenderTargets[colorIndexGL];
             ASSERT(colorRenderTarget);
-            mRenderPassDesc.packColorAttachment(
-                colorIndexGL, colorRenderTarget->getImageForRenderPass().getActualFormatID());
+
+            if (colorRenderTarget->isYuvResolve())
+            {
+                // If this is YUV resolve target, we use resolveImage's format since image maybe
+                // nullptr
+                auto const &resolveImage = colorRenderTarget->getResolveImageForRenderPass();
+                mRenderPassDesc.packColorAttachment(colorIndexGL, resolveImage.getActualFormatID());
+            }
+            else
+            {
+                mRenderPassDesc.packColorAttachment(
+                    colorIndexGL, colorRenderTarget->getImageForRenderPass().getActualFormatID());
+            }
 
             // Add the resolve attachment, if any.
             if (colorRenderTarget->hasResolveAttachment())
@@ -2267,11 +2278,19 @@ angle::Result FramebufferVk::getAttachmentsAndRenderTargets(
         RenderTargetVk *colorRenderTarget = colorRenderTargets[colorIndexGL];
         ASSERT(colorRenderTarget);
 
-        const vk::ImageView *imageView = nullptr;
-        ANGLE_TRY(colorRenderTarget->getImageViewWithColorspace(
-            contextVk, mCurrentFramebufferDesc.getWriteControlMode(), &imageView));
+        if (colorRenderTarget->isYuvResolve())
+        {
+            // XXX yuv: handle case without null color attachment
+            attachments->push_back(VK_NULL_HANDLE);
+        }
+        else
+        {
+            const vk::ImageView *imageView = nullptr;
+            ANGLE_TRY(colorRenderTarget->getImageViewWithColorspace(
+                contextVk, mCurrentFramebufferDesc.getWriteControlMode(), &imageView));
+            attachments->push_back(imageView->getHandle());
+        }
 
-        attachments->push_back(imageView->getHandle());
         renderTargetsInfoOut->emplace_back(
             RenderTargetInfo(colorRenderTarget, RenderTargetImage::AttachmentImage));
     }
@@ -2454,7 +2473,8 @@ angle::Result FramebufferVk::getFramebuffer(ContextVk *contextVk,
         for (auto const &info : renderTargetsInfo)
         {
             vk::ImageHelper *renderTargetImage =
-                (info.renderTargetImage == RenderTargetImage::ResolveImage)
+                (info.renderTargetImage == RenderTargetImage::ResolveImage ||
+                 info.renderTarget->isYuvResolve())
                     ? &info.renderTarget->getResolveImageForRenderPass()
                     : &info.renderTarget->getImageForRenderPass();
             uint32_t renderTargetLevel      = info.renderTarget->getLevelIndex().get();

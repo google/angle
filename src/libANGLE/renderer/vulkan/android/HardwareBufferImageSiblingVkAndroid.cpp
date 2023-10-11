@@ -325,7 +325,7 @@ angle::Result HardwareBufferImageSiblingVkAndroid::initImpl(DisplayVk *displayVk
         // VkImageCreateInfo struct: If the pNext chain includes a VkExternalFormatANDROID structure
         // whose externalFormat member is not 0, usage must not include any usages except
         // VK_IMAGE_USAGE_SAMPLED_BIT
-        if (!externalRenderTargetSupported)
+        if (externalFormat.externalFormat != 0)
         {
             // Clear all other bits except sampled
             usage = VK_IMAGE_USAGE_SAMPLED_BIT;

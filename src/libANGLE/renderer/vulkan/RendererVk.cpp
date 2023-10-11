@@ -4818,7 +4818,12 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsTimelineSemaphore,
                             mTimelineSemaphoreFeatures.timelineSemaphore == VK_TRUE);
 
+#if defined(ANGLE_PLATFORM_ANDROID)
+    ANGLE_FEATURE_CONDITION(&mFeatures, supportsExternalFormatResolve,
+                            mExternalFormatResolveFeatures.externalFormatResolve == VK_TRUE);
+#else
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsExternalFormatResolve, false);
+#endif
 
     // Disable memory report feature overrides if extension is not supported.
     if ((mFeatures.logMemoryReportCallbacks.enabled || mFeatures.logMemoryReportStats.enabled) &&
