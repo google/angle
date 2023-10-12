@@ -191,12 +191,11 @@ TEST(FixedQueue, ConcurrentPushPopWithResize)
         uint64_t value = 0;
         do
         {
-            // Note check full/empty/size does not require lock.
+            std::unique_lock<std::mutex> enqueueLock(enqueueMutex);
             if (q.full())
             {
                 // Take both lock to ensure no one will access while we try to double the
                 // storage. Note that under a well balanced system, this should happen infrequently.
-                std::unique_lock<std::mutex> enqueueLock(enqueueMutex);
                 std::unique_lock<std::mutex> dequeueLock(dequeueMutex);
                 // Check again to see if queue is still full after taking the dequeueMutex.
                 size_t newCapacity = q.capacity() * 2;
@@ -210,10 +209,11 @@ TEST(FixedQueue, ConcurrentPushPopWithResize)
             // If queue is still full, lets wait for dequeue thread to make some progress
             while (q.full() && !dequeueThreadFinished)
             {
+                enqueueLock.unlock();
                 std::this_thread::sleep_for(std::chrono::microseconds(1));
+                enqueueLock.lock();
             }
 
-            std::unique_lock<std::mutex> lock(enqueueMutex);
             q.push(value);
             value++;
         } while (difftime(std::time(nullptr), t1) < timeOut && value < kMaxLoop &&
@@ -226,12 +226,15 @@ TEST(FixedQueue, ConcurrentPushPopWithResize)
         uint64_t expectedValue = 0;
         do
         {
+            std::unique_lock<std::mutex> dequeueLock(dequeueMutex);
             if (q.size() < q.capacity() / 10 && q.capacity() > kInitialQueueCapacity)
             {
                 // Shrink the storage if we only used less than 10% of storage. We must take both
-                // lock to ensure no one is accessing it when we update storage.
+                // lock to ensure no one is accessing it when we update storage. And the lock must
+                // take in the same order as other thread to avoid deadlock.
+                dequeueLock.unlock();
                 std::unique_lock<std::mutex> enqueueLock(enqueueMutex);
-                std::unique_lock<std::mutex> dequeueLock(dequeueMutex);
+                dequeueLock.lock();
                 // Figure out what the new capacity should be
                 size_t newCapacity = q.capacity() / 2;
                 while (q.size() < newCapacity)
@@ -246,10 +249,11 @@ TEST(FixedQueue, ConcurrentPushPopWithResize)
 
             while (q.empty() && !enqueueThreadFinished)
             {
+                dequeueLock.unlock();
                 std::this_thread::sleep_for(std::chrono::microseconds(1));
+                dequeueLock.lock();
             }
 
-            std::unique_lock<std::mutex> lock(dequeueMutex);
             ASSERT(expectedValue == q.front());
             // test pop
             q.pop();
