@@ -3127,8 +3127,12 @@ angle::Result TextureVk::syncState(const gl::Context *context,
                                                     : ImageMipLevels::EnabledLevels));
 
     // Mask out the IMPLEMENTATION dirty bit to avoid unnecessary syncs.
+    // Keep it set when the border color is used and needs to be resynced.
     gl::Texture::DirtyBits localBits = dirtyBits;
-    localBits.reset(gl::Texture::DIRTY_BIT_IMPLEMENTATION);
+    if (!mState.getSamplerState().usesBorderColor())
+    {
+        localBits.reset(gl::Texture::DIRTY_BIT_IMPLEMENTATION);
+    }
     localBits.reset(gl::Texture::DIRTY_BIT_BASE_LEVEL);
     localBits.reset(gl::Texture::DIRTY_BIT_MAX_LEVEL);
 
