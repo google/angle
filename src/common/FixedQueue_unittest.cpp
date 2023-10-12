@@ -178,7 +178,6 @@ TEST(FixedQueue, ConcurrentPushPopWithResize)
 {
     static constexpr size_t kInitialQueueCapacity = 64;
     static constexpr size_t kMaxQueueCapacity     = 64 * 1024;
-    std::atomic<size_t> currentQueueCapacity      = kInitialQueueCapacity;
     FixedQueue<uint64_t> q(kInitialQueueCapacity);
     double timeOut    = 1.0;
     uint64_t kMaxLoop = 1000000ull;
@@ -199,17 +198,12 @@ TEST(FixedQueue, ConcurrentPushPopWithResize)
                 // storage. Note that under a well balanced system, this should happen infrequently.
                 std::unique_lock<std::mutex> enqueueLock(enqueueMutex);
                 std::unique_lock<std::mutex> dequeueLock(dequeueMutex);
-                // Check again once we take both lock.
-                if (q.full())
+                // Check again to see if queue is still full after taking the dequeueMutex.
+                size_t newCapacity = q.capacity() * 2;
+                if (q.full() && newCapacity < kMaxQueueCapacity)
                 {
-                    size_t newCapacity =
-                        std::min<size_t>(currentQueueCapacity * 2, kMaxQueueCapacity);
-                    if (newCapacity != currentQueueCapacity)
-                    {
-                        // Double the storage size while we took the lock
-                        q.updateCapacity(newCapacity);
-                        currentQueueCapacity = newCapacity;
-                    }
+                    // Double the storage size while we took the lock
+                    q.updateCapacity(newCapacity);
                 }
             }
 
@@ -232,32 +226,22 @@ TEST(FixedQueue, ConcurrentPushPopWithResize)
         uint64_t expectedValue = 0;
         do
         {
-            // This is just the trigger for us to reduce the queue size.
-            if (q.size() < currentQueueCapacity / 10 &&
-                currentQueueCapacity > kInitialQueueCapacity)
+            if (q.size() < q.capacity() / 10 && q.capacity() > kInitialQueueCapacity)
             {
                 // Shrink the storage if we only used less than 10% of storage. We must take both
                 // lock to ensure no one is accessing it when we update storage.
                 std::unique_lock<std::mutex> enqueueLock(enqueueMutex);
                 std::unique_lock<std::mutex> dequeueLock(dequeueMutex);
-                // Check again once we take both lock.
-                if (q.size() < currentQueueCapacity / 10 &&
-                    currentQueueCapacity > kInitialQueueCapacity)
+                // Figure out what the new capacity should be
+                size_t newCapacity = q.capacity() / 2;
+                while (q.size() < newCapacity)
                 {
-                    // Figure out what the new capacity should be
-                    size_t newCapacity = currentQueueCapacity / 2;
-                    while (q.size() < newCapacity)
-                    {
-                        newCapacity /= 2;
-                    }
-                    newCapacity *= 2;
-                    newCapacity = std::max(newCapacity, kInitialQueueCapacity);
-                    if (newCapacity != currentQueueCapacity)
-                    {
-                        q.updateCapacity(newCapacity);
-                        currentQueueCapacity = newCapacity;
-                    }
+                    newCapacity /= 2;
                 }
+                newCapacity *= 2;
+                newCapacity = std::max(newCapacity, kInitialQueueCapacity);
+
+                q.updateCapacity(newCapacity);
             }
 
             while (q.empty() && !enqueueThreadFinished)
