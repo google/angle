@@ -7349,11 +7349,10 @@ angle::Result ImageHelper::stageSubresourceUpdateImpl(ContextVk *contextVk,
         GLuint depthPitch;
         GLuint totalSize;
 
-        ANGLE_VK_CHECK_MATH(contextVk, storageFormatInfo.computeCompressedImageSize(
-                                           gl::Extents(glExtents.width, 1, 1), &rowPitch));
-        ANGLE_VK_CHECK_MATH(contextVk,
-                            storageFormatInfo.computeCompressedImageSize(
-                                gl::Extents(glExtents.width, glExtents.height, 1), &depthPitch));
+        ANGLE_VK_CHECK_MATH(contextVk, storageFormatInfo.computeCompressedImageRowPitch(
+                                           glExtents.width, &rowPitch));
+        ANGLE_VK_CHECK_MATH(contextVk, storageFormatInfo.computeCompressedImageDepthPitch(
+                                           glExtents.height, rowPitch, &depthPitch));
 
         ANGLE_VK_CHECK_MATH(contextVk,
                             storageFormatInfo.computeCompressedImageSize(glExtents, &totalSize));
