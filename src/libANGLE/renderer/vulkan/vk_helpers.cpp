@@ -10585,30 +10585,38 @@ angle::Result ImageViewHelper::initReadViewsImpl(ContextVk *contextVk,
                                            &getReadImageView(), baseLevel, levelCount, baseLayer,
                                            layerCount, gl::SrgbWriteControlMode::Default,
                                            gl::YuvSamplingMode::Default, imageUsageFlags));
-        ANGLE_TRY(image.initLayerImageView(
-            contextVk, viewType, aspectFlags, readSwizzle, &getSamplerExternal2DY2YEXTImageView(),
-            baseLevel, levelCount, baseLayer, layerCount, gl::SrgbWriteControlMode::Default,
-            gl::YuvSamplingMode::Y2Y, imageUsageFlags));
+
+        if (image.getActualFormat().isYUV)
+        {
+            ANGLE_TRY(image.initLayerImageView(contextVk, viewType, aspectFlags, readSwizzle,
+                                               &getSamplerExternal2DY2YEXTImageView(), baseLevel,
+                                               levelCount, baseLayer, layerCount,
+                                               gl::SrgbWriteControlMode::Default,
+                                               gl::YuvSamplingMode::Y2Y, imageUsageFlags));
+        }
     }
 
     gl::TextureType fetchType = viewType;
-
     if (viewType == gl::TextureType::CubeMap || viewType == gl::TextureType::_2DArray ||
         viewType == gl::TextureType::_2DMultisampleArray)
     {
         fetchType = Get2DTextureType(layerCount, image.getSamples());
+        if (contextVk->emulateSeamfulCubeMapSampling())
+        {
+            ANGLE_TRY(image.initLayerImageView(
+                contextVk, fetchType, aspectFlags, readSwizzle, &getFetchImageView(), baseLevel,
+                levelCount, baseLayer, layerCount, gl::SrgbWriteControlMode::Default,
+                gl::YuvSamplingMode::Default, imageUsageFlags));
+        }
+    }
 
-        ANGLE_TRY(image.initLayerImageView(contextVk, fetchType, aspectFlags, readSwizzle,
-                                           &getFetchImageView(), baseLevel, levelCount, baseLayer,
+    if (!image.getActualFormat().isBlock)
+    {
+        ANGLE_TRY(image.initLayerImageView(contextVk, fetchType, aspectFlags, formatSwizzle,
+                                           &getCopyImageView(), baseLevel, levelCount, baseLayer,
                                            layerCount, gl::SrgbWriteControlMode::Default,
                                            gl::YuvSamplingMode::Default, imageUsageFlags));
     }
-
-    ANGLE_TRY(image.initLayerImageView(contextVk, fetchType, aspectFlags, formatSwizzle,
-                                       &getCopyImageView(), baseLevel, levelCount, baseLayer,
-                                       layerCount, gl::SrgbWriteControlMode::Default,
-                                       gl::YuvSamplingMode::Default, imageUsageFlags));
-
     return angle::Result::Continue;
 }
 
@@ -10663,41 +10671,45 @@ angle::Result ImageViewHelper::initSRGBReadViewsImpl(ContextVk *contextVk,
         viewType == gl::TextureType::_2DMultisampleArray)
     {
         fetchType = Get2DTextureType(layerCount, image.getSamples());
-
-        if (!mPerLevelRangeLinearFetchImageViews[mCurrentBaseMaxLevelHash].valid())
+        if (contextVk->emulateSeamfulCubeMapSampling())
         {
+            if (!mPerLevelRangeLinearFetchImageViews[mCurrentBaseMaxLevelHash].valid())
+            {
 
+                ANGLE_TRY(image.initReinterpretedLayerImageView(
+                    contextVk, fetchType, aspectFlags, readSwizzle,
+                    &mPerLevelRangeLinearFetchImageViews[mCurrentBaseMaxLevelHash], baseLevel,
+                    levelCount, baseLayer, layerCount, imageUsageFlags, linearFormat));
+            }
+            if (srgbOverrideFormat != angle::FormatID::NONE &&
+                !mPerLevelRangeSRGBFetchImageViews[mCurrentBaseMaxLevelHash].valid())
+            {
+                ANGLE_TRY(image.initReinterpretedLayerImageView(
+                    contextVk, fetchType, aspectFlags, readSwizzle,
+                    &mPerLevelRangeSRGBFetchImageViews[mCurrentBaseMaxLevelHash], baseLevel,
+                    levelCount, baseLayer, layerCount, imageUsageFlags, srgbOverrideFormat));
+            }
+        }
+    }
+
+    if (!image.getActualFormat().isBlock)
+    {
+        if (!mPerLevelRangeLinearCopyImageViews[mCurrentBaseMaxLevelHash].valid())
+        {
             ANGLE_TRY(image.initReinterpretedLayerImageView(
-                contextVk, fetchType, aspectFlags, readSwizzle,
-                &mPerLevelRangeLinearFetchImageViews[mCurrentBaseMaxLevelHash], baseLevel,
+                contextVk, fetchType, aspectFlags, formatSwizzle,
+                &mPerLevelRangeLinearCopyImageViews[mCurrentBaseMaxLevelHash], baseLevel,
                 levelCount, baseLayer, layerCount, imageUsageFlags, linearFormat));
         }
         if (srgbOverrideFormat != angle::FormatID::NONE &&
-            !mPerLevelRangeSRGBFetchImageViews[mCurrentBaseMaxLevelHash].valid())
+            !mPerLevelRangeSRGBCopyImageViews[mCurrentBaseMaxLevelHash].valid())
         {
             ANGLE_TRY(image.initReinterpretedLayerImageView(
-                contextVk, fetchType, aspectFlags, readSwizzle,
-                &mPerLevelRangeSRGBFetchImageViews[mCurrentBaseMaxLevelHash], baseLevel, levelCount,
+                contextVk, fetchType, aspectFlags, formatSwizzle,
+                &mPerLevelRangeSRGBCopyImageViews[mCurrentBaseMaxLevelHash], baseLevel, levelCount,
                 baseLayer, layerCount, imageUsageFlags, srgbOverrideFormat));
         }
     }
-
-    if (!mPerLevelRangeLinearCopyImageViews[mCurrentBaseMaxLevelHash].valid())
-    {
-        ANGLE_TRY(image.initReinterpretedLayerImageView(
-            contextVk, fetchType, aspectFlags, formatSwizzle,
-            &mPerLevelRangeLinearCopyImageViews[mCurrentBaseMaxLevelHash], baseLevel, levelCount,
-            baseLayer, layerCount, imageUsageFlags, linearFormat));
-    }
-    if (srgbOverrideFormat != angle::FormatID::NONE &&
-        !mPerLevelRangeSRGBCopyImageViews[mCurrentBaseMaxLevelHash].valid())
-    {
-        ANGLE_TRY(image.initReinterpretedLayerImageView(
-            contextVk, fetchType, aspectFlags, formatSwizzle,
-            &mPerLevelRangeSRGBCopyImageViews[mCurrentBaseMaxLevelHash], baseLevel, levelCount,
-            baseLayer, layerCount, imageUsageFlags, srgbOverrideFormat));
-    }
-
     return angle::Result::Continue;
 }
 
