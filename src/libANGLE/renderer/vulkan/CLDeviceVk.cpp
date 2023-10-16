@@ -19,33 +19,39 @@ CLDeviceVk::~CLDeviceVk() = default;
 
 CLDeviceImpl::Info CLDeviceVk::createInfo(cl::DeviceType type) const
 {
+    UNIMPLEMENTED();
     Info info(type);
     return info;
 }
 
 angle::Result CLDeviceVk::getInfoUInt(cl::DeviceInfo name, cl_uint *value) const
 {
-    ANGLE_CL_RETURN_ERROR(CL_INVALID_VALUE);
+    UNIMPLEMENTED();
+    ANGLE_CL_RETURN_ERROR(CL_OUT_OF_RESOURCES);
 }
 
 angle::Result CLDeviceVk::getInfoULong(cl::DeviceInfo name, cl_ulong *value) const
 {
-    ANGLE_CL_RETURN_ERROR(CL_INVALID_VALUE);
+    UNIMPLEMENTED();
+    ANGLE_CL_RETURN_ERROR(CL_OUT_OF_RESOURCES);
 }
 
 angle::Result CLDeviceVk::getInfoSizeT(cl::DeviceInfo name, size_t *value) const
 {
-    ANGLE_CL_RETURN_ERROR(CL_INVALID_VALUE);
+    UNIMPLEMENTED();
+    ANGLE_CL_RETURN_ERROR(CL_OUT_OF_RESOURCES);
 }
 
 angle::Result CLDeviceVk::getInfoStringLength(cl::DeviceInfo name, size_t *value) const
 {
-    ANGLE_CL_RETURN_ERROR(CL_INVALID_VALUE);
+    UNIMPLEMENTED();
+    ANGLE_CL_RETURN_ERROR(CL_OUT_OF_RESOURCES);
 }
 
 angle::Result CLDeviceVk::getInfoString(cl::DeviceInfo name, size_t size, char *value) const
 {
-    ANGLE_CL_RETURN_ERROR(CL_INVALID_VALUE);
+    UNIMPLEMENTED();
+    ANGLE_CL_RETURN_ERROR(CL_OUT_OF_RESOURCES);
 }
 
 angle::Result CLDeviceVk::createSubDevices(const cl_device_partition_property *properties,
@@ -53,7 +59,8 @@ angle::Result CLDeviceVk::createSubDevices(const cl_device_partition_property *p
                                            CreateFuncs &subDevices,
                                            cl_uint *numDevicesRet)
 {
-    ANGLE_CL_RETURN_ERROR(CL_INVALID_VALUE);
+    UNIMPLEMENTED();
+    ANGLE_CL_RETURN_ERROR(CL_OUT_OF_RESOURCES);
 }
 
 }  // namespace rx
