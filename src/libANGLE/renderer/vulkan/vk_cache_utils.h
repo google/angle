@@ -147,6 +147,8 @@ class alignas(4) RenderPassDesc final
     void updateDepthStencilAccess(ResourceAccess access);
     // Indicate that a color attachment should have a corresponding resolve attachment.
     void packColorResolveAttachment(size_t colorIndexGL);
+    // Indicate that a YUV texture is attached to the resolve attachment.
+    void packYUVResolveAttachment(size_t colorIndexGL);
     // Remove the resolve attachment.  Used when optimizing blit through resolve attachment to
     // temporarily pack a resolve attachment and then remove it.
     void removeColorResolveAttachment(size_t colorIndexGL);

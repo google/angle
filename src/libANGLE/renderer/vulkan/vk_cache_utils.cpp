@@ -2434,6 +2434,13 @@ void RenderPassDesc::packColorResolveAttachment(size_t colorIndexGL)
     mColorResolveAttachmentMask.set(colorIndexGL);
 }
 
+void RenderPassDesc::packYUVResolveAttachment(size_t colorIndexGL)
+{
+    ASSERT(isColorAttachmentEnabled(colorIndexGL));
+    ASSERT(!mColorResolveAttachmentMask.test(colorIndexGL));
+    mColorResolveAttachmentMask.set(colorIndexGL);
+}
+
 void RenderPassDesc::removeColorResolveAttachment(size_t colorIndexGL)
 {
     ASSERT(mColorResolveAttachmentMask.test(colorIndexGL));

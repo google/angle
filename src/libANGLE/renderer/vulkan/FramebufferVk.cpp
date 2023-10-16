@@ -2195,17 +2195,17 @@ void FramebufferVk::updateRenderPassDesc(ContextVk *contextVk)
                 // nullptr
                 auto const &resolveImage = colorRenderTarget->getResolveImageForRenderPass();
                 mRenderPassDesc.packColorAttachment(colorIndexGL, resolveImage.getActualFormatID());
+                mRenderPassDesc.packYUVResolveAttachment(colorIndexGL);
             }
             else
             {
                 mRenderPassDesc.packColorAttachment(
                     colorIndexGL, colorRenderTarget->getImageForRenderPass().getActualFormatID());
-            }
-
-            // Add the resolve attachment, if any.
-            if (colorRenderTarget->hasResolveAttachment())
-            {
-                mRenderPassDesc.packColorResolveAttachment(colorIndexGL);
+                // Add the resolve attachment, if any.
+                if (colorRenderTarget->hasResolveAttachment())
+                {
+                    mRenderPassDesc.packColorResolveAttachment(colorIndexGL);
+                }
             }
         }
         else
