@@ -6550,6 +6550,14 @@ angle::Result RenderPassCache::MakeRenderPass(vk::Context *context,
         angle::FormatID attachmentFormatID = desc[colorIndexGL];
         ASSERT(attachmentFormatID != angle::FormatID::NONE);
 
+        bool isYUVExternalFormat = vk::IsYUVExternalFormat(attachmentFormatID);
+        if (isYUVExternalFormat &&
+            context->getRenderer()->nullColorAttachmentWithExternalFormatResolve())
+        {
+            colorAttachmentRefs.push_back(kUnusedAttachment);
+            continue;
+        }
+
         VkAttachmentReference2 colorRef = {};
         colorRef.sType                  = VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2;
         colorRef.attachment             = attachmentCount.get();
@@ -6576,7 +6584,6 @@ angle::Result RenderPassCache::MakeRenderPass(vk::Context *context,
             }
         }
 
-        bool isYUVExternalFormat = vk::IsYUVExternalFormat(attachmentFormatID);
         if (isYUVExternalFormat)
         {
             const vk::ExternalYuvFormatInfo &externalFormatInfo =

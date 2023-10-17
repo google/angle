@@ -296,6 +296,7 @@ class FramebufferVk : public FramebufferImpl
     gl::DrawBufferMask mAttachmentHasFrontBufferUsage;
 
     bool mIsCurrentFramebufferCached;
+    bool mIsYUVResolve;
 
     // Serial of the render pass this framebuffer has opened, if any.
     QueueSerial mLastRenderPassQueueSerial;
