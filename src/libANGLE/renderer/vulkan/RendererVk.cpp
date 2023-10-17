@@ -247,7 +247,7 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-vkCmdDraw-None-07845",
     "VUID-vkCmdDraw-None-07848",
     // https://anglebug.com/8128#c3
-    "VUID-VkBufferViewCreateInfo-buffer-08779",
+    "VUID-VkBufferViewCreateInfo-format-08779",
     // https://anglebug.com/8203
     "VUID-VkVertexInputBindingDivisorDescriptionEXT-divisor-01870",
     // https://anglebug.com/8237
