@@ -2442,7 +2442,7 @@ GLuint ProgramExecutable::getUniformIndex(const std::string &name) const
 
 bool ProgramExecutable::shouldIgnoreUniform(UniformLocation location) const
 {
-    if (location.value == -1)
+    if (location.value < 0 || static_cast<size_t>(location.value) > mUniformLocations.size())
     {
         return true;
     }
