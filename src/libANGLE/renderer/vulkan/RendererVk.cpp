@@ -267,6 +267,9 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-VkSamplerCreateInfo-pNext-pNext",
     // https://issuetracker.google.com/303441816
     "VUID-VkRenderPassBeginInfo-renderPass-00904",
+    // http://b/223456677 VK_ANDROID_external_format_resolve: remove once ARM/ VVL are fixed.
+    "VUID-VkImageViewCreateInfo-usage-08931",
+    "VUID-VkImageCreateInfo-pNext-02397",
 };
 
 // Validation messages that should be ignored only when VK_EXT_primitive_topology_list_restart is
