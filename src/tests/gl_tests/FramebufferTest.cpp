@@ -6167,6 +6167,145 @@ TEST_P(FramebufferExtensionsTest, ColorBufferFloatRgba)
     test("GL_CHROMIUM_color_buffer_float_rgba", GL_RGBA32F_EXT, true);
 }
 
+class DefaultFramebufferTest : public ANGLETest<>
+{
+  protected:
+    DefaultFramebufferTest()
+    {
+        setWindowWidth(kWidth);
+        setWindowHeight(kHeight);
+    }
+
+    static constexpr GLsizei kWidth  = 16;
+    static constexpr GLsizei kHeight = 16;
+};
+
+// glReadPixel from default FBO with format and type retrieved from
+// GL_IMPLEMENTATION_COLOR_READ_FORMAT and GL_IMPLEMENTATION_COLOR_READ_TYPE
+// should work
+TEST_P(DefaultFramebufferTest, ReadFromDefaultFBOOnDefaultEGLWindowSurface)
+{
+    // Bind the default framebuffer
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    // Create shader programs
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    constexpr char kVS1[] = R"(#version 300 es
+in highp vec2 a_position;
+in highp vec2 a_texcoord;
+out highp vec2 texcoord;
+void main()
+{
+    gl_Position = vec4(a_position, 0.0, 1.0);
+    texcoord = a_texcoord;
+})";
+
+    constexpr char kFS1[] = R"(#version 300 es
+precision highp float;
+in highp vec2 texcoord;
+out highp vec4 fragColor;
+uniform highp sampler2D texSampler;
+
+void main()
+{
+    fragColor = texture(texSampler, texcoord);
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS1, kFS1);
+    glUseProgram(program);
+    ASSERT_GL_NO_ERROR();
+
+    // Create Vertex data
+    const std::vector<float> positions = {-1.0f, -1.0f, -1.0f, 1.0f, 1.0f, -1.0f, 1.0f, 1.0f};
+    GLBuffer vertexBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer.get());
+    glBufferData(GL_ARRAY_BUFFER, sizeof(positions[0]) * positions.size(), positions.data(),
+                 GL_STATIC_DRAW);
+    GLint vertexPosLocation = glGetAttribLocation(program, "a_position");
+    ASSERT_NE(vertexPosLocation, -1);
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer.get());
+    glEnableVertexAttribArray(vertexPosLocation);
+    glVertexAttribPointer(vertexPosLocation, 2, GL_FLOAT, GL_FALSE, 0, 0);
+
+    const std::vector<float> texcoords = {0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f};
+    GLBuffer texcoordBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, texcoordBuffer.get());
+    glBufferData(GL_ARRAY_BUFFER, sizeof(texcoords[0]) * texcoords.size(), texcoords.data(),
+                 GL_STATIC_DRAW);
+    GLint texCoordLocation = glGetAttribLocation(program, "a_texcoord");
+    ASSERT_NE(texCoordLocation, -1);
+    glBindBuffer(GL_ARRAY_BUFFER, texcoordBuffer.get());
+    glEnableVertexAttribArray(texCoordLocation);
+    glVertexAttribPointer(texCoordLocation, 2, GL_FLOAT, GL_FALSE, 0, 0);
+
+    const std::vector<uint16_t> quadIndices = {0, 1, 2, 2, 1, 3};
+    GLBuffer indexBuffer;
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer.get());
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(quadIndices[0]) * quadIndices.size(),
+                 quadIndices.data(), GL_STATIC_DRAW);
+    ASSERT_GL_NO_ERROR();
+
+    // Create Texture
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
+
+    std::vector<uint8_t> texData;
+
+    constexpr size_t width               = 4;
+    constexpr size_t height              = 4;
+    constexpr size_t bytePerColorChannel = 4;
+    constexpr uint8_t texColorPerChannel = 125;
+
+    texData.resize(width * height * bytePerColorChannel);
+
+    for (size_t i = 0; i < width * height; ++i)
+    {
+        texData.push_back(texColorPerChannel);
+        texData.push_back(texColorPerChannel);
+        texData.push_back(texColorPerChannel);
+        texData.push_back(texColorPerChannel);
+    }
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 texData.data());
+    ASSERT_GL_NO_ERROR();
+
+    // Initialize uniform values
+    GLint uniformTextureSamplerLocation = glGetUniformLocation(program, "texSampler");
+    glUniform1i(uniformTextureSamplerLocation, 0);
+    ASSERT_GL_NO_ERROR();
+
+    // Disable Dither
+    glDisable(GL_DITHER);
+
+    // Draw quad
+    glDrawElements(GL_TRIANGLES, quadIndices.size(), GL_UNSIGNED_BYTE, 0);
+
+    // Get glReadPixel format and type
+    GLint readFormat;
+    glGetIntegerv(GL_IMPLEMENTATION_COLOR_READ_FORMAT, &readFormat);
+
+    GLint readType;
+    glGetIntegerv(GL_IMPLEMENTATION_COLOR_READ_TYPE, &readType);
+
+    // Read Pixel with glReadPixel
+    std::vector<uint8_t> renderResult;
+    renderResult.resize(width * height * 4);
+    glReadPixels(0, 0, width, height, readFormat, readType, renderResult.data());
+
+    // glReadPixel with format and type retrieved from
+    // GL_IMPLEMENTATION_COLOR_READ_FORMAT &
+    // GL_IMPLEMENTATION_COLOR_READ_TYPE
+    // should not trigger errors
+    ASSERT_GL_NO_ERROR();
+}
+
 ANGLE_INSTANTIATE_TEST_ES2_AND(AddMockTextureNoRenderTargetTest,
                                ES2_D3D9().enable(Feature::AddMockTextureNoRenderTarget),
                                ES2_D3D11().enable(Feature::AddMockTextureNoRenderTarget),
@@ -6192,3 +6331,4 @@ ANGLE_INSTANTIATE_TEST_ES31_AND(
     ES31_VULKAN().disable(Feature::SupportsImagelessFramebuffer),
     ES31_VULKAN().enable(Feature::ForceDelayedDeviceCreationForTesting));
 ANGLE_INSTANTIATE_TEST_ES3(FramebufferTestWithFormatFallback);
+ANGLE_INSTANTIATE_TEST_ES3(DefaultFramebufferTest);
