@@ -2439,6 +2439,7 @@ void RenderPassDesc::packYUVResolveAttachment(size_t colorIndexGL)
     ASSERT(isColorAttachmentEnabled(colorIndexGL));
     ASSERT(!mColorResolveAttachmentMask.test(colorIndexGL));
     mColorResolveAttachmentMask.set(colorIndexGL);
+    SetBitField(mIsYUVResolve, 1);
 }
 
 void RenderPassDesc::removeColorResolveAttachment(size_t colorIndexGL)

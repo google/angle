@@ -171,6 +171,7 @@ class alignas(4) RenderPassDesc final
     size_t depthStencilAttachmentIndex() const { return colorAttachmentRange(); }
 
     bool isColorAttachmentEnabled(size_t colorIndexGL) const;
+    bool hasYUVResolveAttachment() const { return mIsYUVResolve; }
     bool hasDepthStencilAttachment() const;
     gl::DrawBufferMask getColorResolveAttachmentMask() const { return mColorResolveAttachmentMask; }
     bool hasColorResolveAttachment(size_t colorIndexGL) const
@@ -245,8 +246,10 @@ class alignas(4) RenderPassDesc final
     // Dithering state when using VK_EXT_legacy_dithering
     uint8_t mLegacyDitherEnabled : 1;
 
+    // external_format_resolve
+    uint8_t mIsYUVResolve : 1;
+
     // Available space for expansion.
-    uint8_t mPadding1 : 1;
     uint8_t mPadding2;
 
     // Whether each color attachment has a corresponding resolve attachment.  Color resolve

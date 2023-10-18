@@ -2678,9 +2678,15 @@ angle::Result RenderPassCommandBufferHelper::flushToPrimary(Context *context,
     VkRenderPassAttachmentBeginInfoKHR rpAttachmentBeginInfo = {};
     if (mFramebuffer.isImageless())
     {
+        // If nullColorAttachmentWithExternalFormatResolve is true, there will be no color
+        // attachment even though mRenderPassDesc indicates so.
+        ASSERT((mRenderPassDesc.hasYUVResolveAttachment() &&
+                context->getRenderer()->nullColorAttachmentWithExternalFormatResolve()) ||
+               mFramebuffer.getImageViews().size() ==
+                   static_cast<uint32_t>(mRenderPassDesc.attachmentCount()));
         rpAttachmentBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_ATTACHMENT_BEGIN_INFO_KHR;
         rpAttachmentBeginInfo.attachmentCount =
-            static_cast<uint32_t>(mRenderPassDesc.attachmentCount());
+            static_cast<uint32_t>(mFramebuffer.getImageViews().size());
         rpAttachmentBeginInfo.pAttachments = mFramebuffer.getImageViews().data();
 
         AddToPNextChain(&beginInfo, &rpAttachmentBeginInfo);
