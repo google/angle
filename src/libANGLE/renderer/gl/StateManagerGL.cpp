@@ -1221,6 +1221,15 @@ void StateManagerGL::setClipControl(gl::ClipOrigin origin, gl::ClipDepthMode dep
     ASSERT(mFunctions->clipControl);
     mFunctions->clipControl(ToGLenum(mClipOrigin), ToGLenum(mClipDepthMode));
 
+    if (mFeatures.resyncDepthRangeOnClipControl.enabled)
+    {
+        // Change and restore depth range to trigger internal transformation
+        // state resync. This is needed to apply clip control on some drivers.
+        const float near = mNear;
+        setDepthRange(near == 0.0f ? 1.0f : 0.0f, mFar);
+        setDepthRange(near, mFar);
+    }
+
     mLocalDirtyBits.set(gl::state::DIRTY_BIT_EXTENDED);
     mLocalExtendedDirtyBits.set(gl::state::EXTENDED_DIRTY_BIT_CLIP_CONTROL);
 }

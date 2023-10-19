@@ -241,6 +241,7 @@ enum class Feature
     RequireMsl21,
     RescopeGlobalVariables,
     ResetTexImage2DBaseLevel,
+    ResyncDepthRangeOnClipControl,
     RetainSPIRVDebugInfo,
     RewriteFloatUnaryMinusOperator,
     RewriteRepeatedAssignToSwizzled,

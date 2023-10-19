@@ -241,6 +241,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::RequireMsl21, "requireMsl21"},
     {Feature::RescopeGlobalVariables, "rescopeGlobalVariables"},
     {Feature::ResetTexImage2DBaseLevel, "resetTexImage2DBaseLevel"},
+    {Feature::ResyncDepthRangeOnClipControl, "resyncDepthRangeOnClipControl"},
     {Feature::RetainSPIRVDebugInfo, "retainSPIRVDebugInfo"},
     {Feature::RewriteFloatUnaryMinusOperator, "rewriteFloatUnaryMinusOperator"},
     {Feature::RewriteRepeatedAssignToSwizzled, "rewriteRepeatedAssignToSwizzled"},
