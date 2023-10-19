@@ -662,6 +662,14 @@ bool TextureVk::isMutableTextureConsistentlySpecifiedForFlush()
         return false;
     }
 
+    // For performance, flushing is skipped if the number of staged updates in a mip level is not
+    // one. For a cubemap, this applies to each face of the cube instead.
+    size_t maxUpdatesPerMipLevel = (mState.getType() == gl::TextureType::CubeMap) ? 6 : 1;
+    if (mImage->getLevelUpdateCount(gl::LevelIndex(0)) != maxUpdatesPerMipLevel)
+    {
+        return false;
+    }
+
     // The mip levels that are already defined should have attributes compatible with those of the
     // base mip level. For each defined mip level, its size, format, number of samples, and depth
     // are checked before flushing the texture updates. For complete cubemaps, there are 6 images
@@ -700,7 +708,12 @@ bool TextureVk::isMutableTextureConsistentlySpecifiedForFlush()
                                    mipImageDesc.format.info->sizedInternalFormat);
         bool isNumberOfSamplesCompatible = (baseImageDesc.samples == mipImageDesc.samples);
 
-        if (!isSizeCompatible || !isFormatCompatible || !isNumberOfSamplesCompatible)
+        bool isUpdateCompatible =
+            (mImage->getLevelUpdateCount(gl::LevelIndex(static_cast<GLint>(image))) ==
+             maxUpdatesPerMipLevel);
+
+        if (!isSizeCompatible || !isFormatCompatible || !isNumberOfSamplesCompatible ||
+            !isUpdateCompatible)
         {
             return false;
         }
