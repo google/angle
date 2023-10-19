@@ -238,6 +238,7 @@ struct ExternalYuvFormatInfo
     // Format the driver wants us to use for a temporary color attachment in order to render into
     // this external format
     VkFormat colorAttachmentFormat;
+    VkFormatFeatureFlags formatFeatures;
 };
 
 class ExternalFormatTable final : angle::NonCopyable
@@ -246,7 +247,8 @@ class ExternalFormatTable final : angle::NonCopyable
     // Convert externalFormat to one of angle::FormatID::EXTERNALn so that we can pass around in
     // ANGLE
     angle::FormatID getOrAllocExternalFormatID(uint64_t externalFormat,
-                                               VkFormat colorAttachmentFormat);
+                                               VkFormat colorAttachmentFormat,
+                                               VkFormatFeatureFlags formatFeatures);
     const ExternalYuvFormatInfo &getExternalFormatInfo(angle::FormatID format) const;
 
   private:

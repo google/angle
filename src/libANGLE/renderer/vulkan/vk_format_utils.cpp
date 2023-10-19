@@ -308,7 +308,8 @@ void FormatTable::initialize(RendererVk *renderer, gl::TextureCapsMap *outTextur
 }
 
 angle::FormatID ExternalFormatTable::getOrAllocExternalFormatID(uint64_t externalFormat,
-                                                                VkFormat colorAttachmentFormat)
+                                                                VkFormat colorAttachmentFormat,
+                                                                VkFormatFeatureFlags formatFeatures)
 {
     std::unique_lock<std::mutex> lock(mExternalYuvFormatMutex);
     for (size_t index = 0; index < mExternalYuvFormats.size(); index++)
@@ -327,7 +328,7 @@ angle::FormatID ExternalFormatTable::getOrAllocExternalFormatID(uint64_t externa
         return angle::FormatID::NONE;
     }
 
-    mExternalYuvFormats.push_back({externalFormat, colorAttachmentFormat});
+    mExternalYuvFormats.push_back({externalFormat, colorAttachmentFormat, formatFeatures});
     return angle::FormatID(ToUnderlying(angle::FormatID::EXTERNAL0) + mExternalYuvFormats.size() -
                            1);
 }
