@@ -107,12 +107,24 @@ thread count to `ninja` based on your system configuration.
 
 ### Building with Goma (Google employees only)
 
-In addition, we highly recommend Google employees use goma, a distributed
-compilation system. Detailed information is available internally. To enable
-Goma set the GN arg:
+Deprecated, see Reclient.
+
+To enable Goma set the GN arg:
 
 ```
 use_goma = true
+```
+
+### Building with Reclient (Google employees only)
+
+Reclient is the recommended distributed compiler service to build ANGLE faster.
+
+Follow [Setup remote execution](https://g3doc.corp.google.com/company/teams/chrome/linux_build_instructions.md?cl=head#setup-remote-execution) to download the required configuration, and complete the authentication.
+
+Add below arg in GN arg:
+
+```
+use_remoteexec = true
 ```
 
 ### Building and Debugging with Visual Studio
