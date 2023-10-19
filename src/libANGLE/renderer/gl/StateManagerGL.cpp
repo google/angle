@@ -2356,7 +2356,7 @@ angle::Result StateManagerGL::syncState(const gl::Context *context,
             case gl::state::DIRTY_BIT_EXTENDED:
             {
                 const gl::state::ExtendedDirtyBits glAndLocalExtendedDirtyBits =
-                    extendedDirtyBits | mLocalExtendedDirtyBits;
+                    (extendedDirtyBits | mLocalExtendedDirtyBits) & extendedBitMask;
                 for (size_t extendedDirtyBit : glAndLocalExtendedDirtyBits)
                 {
                     switch (extendedDirtyBit)
@@ -2412,7 +2412,7 @@ angle::Result StateManagerGL::syncState(const gl::Context *context,
                             UNREACHABLE();
                             break;
                     }
-                    mLocalExtendedDirtyBits &= ~extendedDirtyBits;
+                    mLocalExtendedDirtyBits &= ~extendedBitMask;
                 }
                 break;
             }
