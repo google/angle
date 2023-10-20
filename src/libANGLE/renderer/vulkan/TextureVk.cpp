@@ -2801,15 +2801,14 @@ void TextureVk::initSingleLayerRenderTargets(ContextVk *contextVk,
     vk::ImageHelper *resolveImage          = nullptr;
     vk::ImageViewHelper *resolveImageViews = nullptr;
 
-    RenderTargetTransience transience = isMultisampledRenderToTexture
-                                            ? RenderTargetTransience::MultisampledTransient
-                                            : RenderTargetTransience::Default;
+    RenderTargetTransience transience = RenderTargetTransience::Default;
 
     // If multisampled render to texture, use the multisampled image as draw image instead, and
     // resolve into the texture's image automatically.
     if (isMultisampledRenderToTexture)
     {
         ASSERT(mMultisampledImages[renderToTextureIndex].valid());
+        ASSERT(!mImage->isYuvResolve());
 
         resolveImage      = drawImage;
         resolveImageViews = drawImageViews;
@@ -2823,20 +2822,32 @@ void TextureVk::initSingleLayerRenderTargets(ContextVk *contextVk,
         {
             transience = RenderTargetTransience::EntirelyTransient;
         }
+        else
+        {
+            transience = RenderTargetTransience::MultisampledTransient;
+        }
     }
-
-    // If rendering to YUV, similar to multisampled render to texture
-    if (mImage->getExternalFormat())
+    else if (mImage->isYuvResolve())
     {
-
-        // XXX: if not null color attachment, we need to populate drawImage here still
-        // but unclear where it should be stashed yet; either abuse mMultisampledImages etc
-        // or build something parallel to it. we don't have a vulkan implementation which
-        // wants this path yet, though.
+        // If rendering to YUV, similar to multisampled render to texture
         resolveImage      = drawImage;
         resolveImageViews = drawImageViews;
 
-        transience = RenderTargetTransience::YuvResolveTransient;
+        if (contextVk->getRenderer()->nullColorAttachmentWithExternalFormatResolve())
+        {
+            // If null color attachment, we still keep drawImage as is (the same as
+            // resolveImage) to avoid special treatment in many places where they assume there must
+            // be a color attachment if there is a resolve attachment. But when renderPass is
+            // created, color attachment will be ignored.
+        }
+        else
+        {
+            transience = RenderTargetTransience::YuvResolveTransient;
+            // Need to populate drawImage here; either abuse mMultisampledImages etc
+            // or build something parallel to it. we don't have a vulkan implementation which
+            // wants this path yet, though.
+            UNREACHABLE();
+        }
     }
 
     for (uint32_t layerIndex = 0; layerIndex < layerCount; ++layerIndex)

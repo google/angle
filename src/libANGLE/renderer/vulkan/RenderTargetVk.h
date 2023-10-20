@@ -138,7 +138,10 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
     {
         return mTransience == RenderTargetTransience::EntirelyTransient;
     }
-    bool isYuvResolve() const { return mTransience == RenderTargetTransience::YuvResolveTransient; }
+    bool isYuvResolve() const
+    {
+        return mResolveImage != nullptr ? mResolveImage->isYuvResolve() : false;
+    }
 
     void onNewFramebuffer(const vk::SharedFramebufferCacheKey &sharedFramebufferCacheKey)
     {

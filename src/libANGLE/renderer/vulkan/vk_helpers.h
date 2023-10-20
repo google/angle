@@ -2450,6 +2450,7 @@ class ImageHelper final : public Resource, public angle::Subject
                  VkImageAspectFlags aspectFlags);
     bool hasImmutableSampler() const { return mYcbcrConversionDesc.valid(); }
     uint64_t getExternalFormat() const { return mYcbcrConversionDesc.getExternalFormat(); }
+    bool isYuvResolve() const { return mYcbcrConversionDesc.getExternalFormat() != 0; }
     bool updateChromaFilter(RendererVk *rendererVk, VkFilter filter)
     {
         return mYcbcrConversionDesc.updateChromaFilter(rendererVk, filter);
