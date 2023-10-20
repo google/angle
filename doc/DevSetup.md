@@ -119,9 +119,45 @@ use_goma = true
 
 Reclient is the recommended distributed compiler service to build ANGLE faster.
 
-Follow [Setup remote execution](https://g3doc.corp.google.com/company/teams/chrome/linux_build_instructions.md?cl=head#setup-remote-execution) to download the required configuration, and complete the authentication.
+Step 1. Follow [Setup remote execution](https://g3doc.corp.google.com/company/teams/chrome/linux_build_instructions.md?cl=head#setup-remote-execution)
+to download the required configuration, and complete the authentication.
 
-Add below arg in GN arg:
+To download the required configuration:
+
+In .gclient, add `"download_remoteexec_cfg: True,"` in custom_vars:
+
+```
+solutions = [
+  {
+    # some other args
+    "custom_vars": {
+        "download_remoteexec_cfg": True,
+    },
+  },
+]
+
+```
+
+Then run
+
+```
+gclient sync
+```
+
+To complete authentication:
+
+1. Install gcloud SDK go/gcloud-cli#installing-and-using-the-cloud-sdk.
+Make sure the gcloud tool is available on your `$PATH`.
+
+2. Log into gcloud with your @google.com account:
+
+```
+gcloud auth login
+```
+
+If asked for a project ID, enter "0".
+
+Step 2. Enable the usage of reclient by adding below content in GN arg:
 
 ```
 use_remoteexec = true
