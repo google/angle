@@ -1353,6 +1353,13 @@ void DisplayMtl::initializeFeatures()
     // http://anglebug.com/8311: Rescope global variables which are only used in one function to be
     // function local. Disabled on AMD FirePro devices: http://anglebug.com/8317
     ANGLE_FEATURE_CONDITION((&mFeatures), rescopeGlobalVariables, !isAMDFireProDevice());
+
+    // On tile-based GPUs, always resolving MSAA render buffers to single-sampled
+    // is preferred. Because it would save bandwidth by avoiding the cost of storing the MSAA
+    // textures to memory. Traditional desktop GPUs almost always store MSAA textures to memory
+    // anyway, so this feature would have no benefit besides adding additional resolve step and
+    // memory overhead of the hidden single-sampled textures.
+    ANGLE_FEATURE_CONDITION((&mFeatures), alwaysResolveMultisampleRenderBuffers, isARM);
 }
 
 angle::Result DisplayMtl::initializeShaderLibrary()
