@@ -584,7 +584,7 @@ def main():
                 # Chrome and Android use different versions of Clang which support differnt warning options.
                 # Ignore errors about unrecognized warning flags.
                 '-Wno-unknown-warning-option',
-                '-Os',
+                '-O2',
                 # Override AOSP build flags to match ANGLE's CQ testing and reduce binary size
                 '-fno-unwind-tables',
             ],
