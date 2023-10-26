@@ -1561,6 +1561,16 @@ angle::Result ContextVk::setupDraw(const gl::Context *context,
         invalidateGraphicsDriverUniforms();
     }
 
+    // Process depth stencil dynamic state only if there is there depth stencil attachment
+    if (!mGraphicsPipelineDesc->getRenderPassDesc().hasDepthAttachment())
+    {
+        dirtyBitMask = dirtyBitMask & ~kDepthDynamicStateDirtyBits;
+    }
+    if (!mGraphicsPipelineDesc->getRenderPassDesc().hasStencilAttachment())
+    {
+        dirtyBitMask = dirtyBitMask & ~kStencilDynamicStateDirtyBits;
+    }
+
     DirtyBits dirtyBits = mGraphicsDirtyBits & dirtyBitMask;
 
     if (dirtyBits.none())

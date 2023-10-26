@@ -2508,6 +2508,18 @@ bool RenderPassDesc::hasDepthStencilAttachment() const
     return formatID != angle::FormatID::NONE;
 }
 
+bool RenderPassDesc::hasDepthAttachment() const
+{
+    angle::FormatID formatID = operator[](depthStencilAttachmentIndex());
+    return formatID != angle::FormatID::NONE && angle::Format::Get(formatID).depthBits > 0;
+}
+
+bool RenderPassDesc::hasStencilAttachment() const
+{
+    angle::FormatID formatID = operator[](depthStencilAttachmentIndex());
+    return formatID != angle::FormatID::NONE && angle::Format::Get(formatID).stencilBits > 0;
+}
+
 size_t RenderPassDesc::attachmentCount() const
 {
     size_t colorAttachmentCount = 0;
@@ -3292,14 +3304,47 @@ void GraphicsPipelineDesc::initializePipelineShadersState(
     }
 
     // Dynamic state
+    // Enable depth/stencil only if there is depth stencil attachment. This allows ContextVk/UtilsVk
+    // to skip update these state if there is no attachment.
+    const vk::RenderPassDesc renderPassDesc = getRenderPassDesc();
+    if (renderPassDesc.hasDepthAttachment())
+    {
+        dynamicStateListOut->push_back(VK_DYNAMIC_STATE_DEPTH_BIAS);
+        if (context->getRenderer()->useDepthTestEnableDynamicState())
+        {
+            dynamicStateListOut->push_back(VK_DYNAMIC_STATE_DEPTH_TEST_ENABLE);
+        }
+        if (context->getRenderer()->useDepthWriteEnableDynamicState())
+        {
+            dynamicStateListOut->push_back(VK_DYNAMIC_STATE_DEPTH_WRITE_ENABLE);
+        }
+        if (context->getRenderer()->useDepthCompareOpDynamicState())
+        {
+            dynamicStateListOut->push_back(VK_DYNAMIC_STATE_DEPTH_COMPARE_OP);
+        }
+        if (context->getRenderer()->useDepthBiasEnableDynamicState())
+        {
+            dynamicStateListOut->push_back(VK_DYNAMIC_STATE_DEPTH_BIAS_ENABLE);
+        }
+    }
+    if (renderPassDesc.hasStencilAttachment())
+    {
+        dynamicStateListOut->push_back(VK_DYNAMIC_STATE_STENCIL_COMPARE_MASK);
+        dynamicStateListOut->push_back(VK_DYNAMIC_STATE_STENCIL_WRITE_MASK);
+        dynamicStateListOut->push_back(VK_DYNAMIC_STATE_STENCIL_REFERENCE);
+        if (context->getRenderer()->useStencilTestEnableDynamicState())
+        {
+            dynamicStateListOut->push_back(VK_DYNAMIC_STATE_STENCIL_TEST_ENABLE);
+        }
+        if (context->getRenderer()->useStencilOpDynamicState())
+        {
+            dynamicStateListOut->push_back(VK_DYNAMIC_STATE_STENCIL_OP);
+        }
+    }
+
     dynamicStateListOut->push_back(VK_DYNAMIC_STATE_VIEWPORT);
     dynamicStateListOut->push_back(VK_DYNAMIC_STATE_SCISSOR);
     dynamicStateListOut->push_back(VK_DYNAMIC_STATE_LINE_WIDTH);
-    dynamicStateListOut->push_back(VK_DYNAMIC_STATE_DEPTH_BIAS);
-    dynamicStateListOut->push_back(VK_DYNAMIC_STATE_DEPTH_BOUNDS);
-    dynamicStateListOut->push_back(VK_DYNAMIC_STATE_STENCIL_COMPARE_MASK);
-    dynamicStateListOut->push_back(VK_DYNAMIC_STATE_STENCIL_WRITE_MASK);
-    dynamicStateListOut->push_back(VK_DYNAMIC_STATE_STENCIL_REFERENCE);
     if (context->getRenderer()->useCullModeDynamicState())
     {
         dynamicStateListOut->push_back(VK_DYNAMIC_STATE_CULL_MODE_EXT);
@@ -3308,33 +3353,9 @@ void GraphicsPipelineDesc::initializePipelineShadersState(
     {
         dynamicStateListOut->push_back(VK_DYNAMIC_STATE_FRONT_FACE_EXT);
     }
-    if (context->getRenderer()->useDepthTestEnableDynamicState())
-    {
-        dynamicStateListOut->push_back(VK_DYNAMIC_STATE_DEPTH_TEST_ENABLE);
-    }
-    if (context->getRenderer()->useDepthWriteEnableDynamicState())
-    {
-        dynamicStateListOut->push_back(VK_DYNAMIC_STATE_DEPTH_WRITE_ENABLE);
-    }
-    if (context->getRenderer()->useDepthCompareOpDynamicState())
-    {
-        dynamicStateListOut->push_back(VK_DYNAMIC_STATE_DEPTH_COMPARE_OP);
-    }
-    if (context->getRenderer()->useStencilTestEnableDynamicState())
-    {
-        dynamicStateListOut->push_back(VK_DYNAMIC_STATE_STENCIL_TEST_ENABLE);
-    }
-    if (context->getRenderer()->useStencilOpDynamicState())
-    {
-        dynamicStateListOut->push_back(VK_DYNAMIC_STATE_STENCIL_OP);
-    }
     if (context->getRenderer()->useRasterizerDiscardEnableDynamicState())
     {
         dynamicStateListOut->push_back(VK_DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE);
-    }
-    if (context->getRenderer()->useDepthBiasEnableDynamicState())
-    {
-        dynamicStateListOut->push_back(VK_DYNAMIC_STATE_DEPTH_BIAS_ENABLE);
     }
     if (context->getFeatures().supportsFragmentShadingRate.enabled)
     {
