@@ -81,6 +81,22 @@ int getAdrenoNumber(const FunctionsGL *functions)
     return number;
 }
 
+int GetQualcommVersion(const FunctionsGL *functions)
+{
+    static int version = -1;
+    if (version == -1)
+    {
+        const std::string nativeVersionString(GetString(functions, GL_VERSION));
+        const size_t pos = nativeVersionString.find("V@");
+        if (pos == std::string::npos ||
+            std::sscanf(nativeVersionString.c_str() + pos, "V@%d", &version) < 1)
+        {
+            version = 0;
+        }
+    }
+    return version;
+}
+
 int getMaliTNumber(const FunctionsGL *functions)
 {
     static int number = -1;
@@ -2209,6 +2225,12 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     std::array<int, 3> mesaVersion = {0, 0, 0};
     bool isMesa                    = IsMesa(functions, &mesaVersion);
 
+    int qualcommVersion = -1;
+    if (!isMesa && isQualcomm)
+    {
+        qualcommVersion = GetQualcommVersion(functions);
+    }
+
     // Don't use 1-bit alpha formats on desktop GL with AMD drivers.
     ANGLE_FEATURE_CONDITION(features, avoid1BitAlphaTextureFormats,
                             functions->standard == STANDARD_GL_DESKTOP && isAMD);
@@ -2540,6 +2562,11 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
 
     // https://anglebug.com/7880
     ANGLE_FEATURE_CONDITION(features, emulateClipDistanceState, isQualcomm);
+
+    // https://anglebug.com/8392
+    ANGLE_FEATURE_CONDITION(features, emulateClipOrigin,
+                            !isMesa && isQualcomm && qualcommVersion < 490 &&
+                                functions->hasGLESExtension("GL_EXT_clip_control"));
 
     // https://anglebug.com/8308
     ANGLE_FEATURE_CONDITION(features, explicitFragmentLocations, isQualcomm);

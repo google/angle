@@ -110,6 +110,7 @@ enum class Feature
     EmulateAlphaToCoverage,
     EmulateAtan2Float,
     EmulateClipDistanceState,
+    EmulateClipOrigin,
     EmulateCopyTexImage2D,
     EmulateCopyTexImage2DFromRenderbuffers,
     EmulateDithering,

@@ -110,6 +110,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::EmulateAlphaToCoverage, "emulateAlphaToCoverage"},
     {Feature::EmulateAtan2Float, "emulateAtan2Float"},
     {Feature::EmulateClipDistanceState, "emulateClipDistanceState"},
+    {Feature::EmulateClipOrigin, "emulateClipOrigin"},
     {Feature::EmulateCopyTexImage2D, "emulateCopyTexImage2D"},
     {Feature::EmulateCopyTexImage2DFromRenderbuffers, "emulateCopyTexImage2DFromRenderbuffers"},
     {Feature::EmulateDithering, "emulateDithering"},

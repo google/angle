@@ -288,6 +288,11 @@ std::shared_ptr<WaitableCompileEvent> ShaderGL::compile(const gl::Context *conte
         options->emulateClipDistanceState = true;
     }
 
+    if (features.emulateClipOrigin.enabled)
+    {
+        options->emulateClipOrigin = true;
+    }
+
     if (features.scalarizeVecAndMatConstructorArgs.enabled)
     {
         options->scalarizeVecAndMatConstructorArgs = true;

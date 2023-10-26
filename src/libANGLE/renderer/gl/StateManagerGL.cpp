@@ -1234,6 +1234,21 @@ void StateManagerGL::setClipControl(gl::ClipOrigin origin, gl::ClipDepthMode dep
     mLocalExtendedDirtyBits.set(gl::state::EXTENDED_DIRTY_BIT_CLIP_CONTROL);
 }
 
+void StateManagerGL::setClipControlWithEmulatedClipOrigin(const gl::ProgramExecutable *executable,
+                                                          GLenum frontFace,
+                                                          gl::ClipOrigin origin,
+                                                          gl::ClipDepthMode depth)
+{
+    ASSERT(mFeatures.emulateClipOrigin.enabled);
+    if (executable)
+    {
+        updateEmulatedClipOriginUniform(executable, origin);
+    }
+    static_assert((GL_CW ^ GL_CCW) == static_cast<GLenum>(gl::ClipOrigin::UpperLeft));
+    setFrontFace(frontFace ^ static_cast<GLenum>(origin));
+    setClipControl(gl::ClipOrigin::LowerLeft, depth);
+}
+
 void StateManagerGL::setBlendEnabled(bool enabled)
 {
     const gl::DrawBufferMask mask =
@@ -2104,6 +2119,14 @@ angle::Result StateManagerGL::syncState(const gl::Context *context,
                 setCullFace(state.getRasterizerState().cullMode);
                 break;
             case gl::state::DIRTY_BIT_FRONT_FACE:
+                if (mFeatures.emulateClipOrigin.enabled)
+                {
+                    static_assert((GL_CW ^ GL_CCW) ==
+                                  static_cast<GLenum>(gl::ClipOrigin::UpperLeft));
+                    setFrontFace(state.getRasterizerState().frontFace ^
+                                 static_cast<GLenum>(state.getClipOrigin()));
+                    break;
+                }
                 setFrontFace(state.getRasterizerState().frontFace);
                 break;
             case gl::state::DIRTY_BIT_POLYGON_OFFSET_FILL_ENABLED:
@@ -2290,6 +2313,11 @@ angle::Result StateManagerGL::syncState(const gl::Context *context,
                         iter.setLaterBit(gl::state::DIRTY_BIT_EXTENDED);
                         mLocalExtendedDirtyBits.set(gl::state::EXTENDED_DIRTY_BIT_CLIP_DISTANCES);
                     }
+
+                    if (mFeatures.emulateClipOrigin.enabled)
+                    {
+                        updateEmulatedClipOriginUniform(executable, state.getClipOrigin());
+                    }
                 }
 
                 if (!executable || !executable->hasLinkedShaderStage(gl::ShaderType::Compute))
@@ -2371,6 +2399,14 @@ angle::Result StateManagerGL::syncState(const gl::Context *context,
                     switch (extendedDirtyBit)
                     {
                         case gl::state::EXTENDED_DIRTY_BIT_CLIP_CONTROL:
+                            if (mFeatures.emulateClipOrigin.enabled)
+                            {
+                                setClipControlWithEmulatedClipOrigin(
+                                    state.getProgramExecutable(),
+                                    state.getRasterizerState().frontFace, state.getClipOrigin(),
+                                    state.getClipDepthMode());
+                                break;
+                            }
                             setClipControl(state.getClipOrigin(), state.getClipDepthMode());
                             break;
                         case gl::state::EXTENDED_DIRTY_BIT_CLIP_DISTANCES:
