@@ -15,13 +15,11 @@
 
 #include "common/android_util.h"
 
-#if defined(ANGLE_PLATFORM_ANDROID) && __ANDROID_API__ >= 26
+#if defined(ANGLE_PLATFORM_ANDROID) && __ANDROID_API__ >= 29
 #    define ANGLE_AHARDWARE_BUFFER_SUPPORT
 // NDK header file for access to Android Hardware Buffers
 #    include <android/hardware_buffer.h>
-#    if __ANDROID_API__ >= 29
-#        define ANGLE_AHARDWARE_BUFFER_LOCK_PLANES_SUPPORT
-#    endif
+#    define ANGLE_AHARDWARE_BUFFER_LOCK_PLANES_SUPPORT
 #endif
 
 #if defined(ANGLE_PLATFORM_ANDROID) && __ANDROID_API__ >= 33
