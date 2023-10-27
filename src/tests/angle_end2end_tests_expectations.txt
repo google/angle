@@ -1043,8 +1043,9 @@ b/305311693 PIXEL4ORXL GLES : FramebufferTest_ES31.ClearColorMorePrecisionThanFB
 // On D3D: readonly image2D handles don't return the texture's existing contents.
 7611 D3D11 : GLSLTest_ES31.ReadOnlyImage2DAsFunctionArg/* = SKIP
 
-// Flaky timeout on Windows SwANGLE
+// Flaky timeouts - SwiftShader hits a heavy emulation path in this test
 7900 WIN SWIFTSHADER : InstancingTestES3.LargeDivisor/* = SKIP
+7900 LINUX ASAN SWIFTSHADER : InstancingTestES3.LargeDivisor/* = SKIP
 
 // Timeout with SwiftShader and MAC OpenGL due to large workloads
 7389 SWIFTSHADER : Texture2DTest.ManySupersedingTextureUpdates/* = SKIP
