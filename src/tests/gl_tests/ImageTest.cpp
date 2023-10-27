@@ -4861,10 +4861,14 @@ TEST_P(ImageTestES31, SourceAHBCubeArrayTargetCubeArray)
                        !IsGLExtensionEnabled("GL_EXT_texture_cube_map_array"));
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
 
+    constexpr size_t kDepth = kCubeFaceCount * 2;
+    ANGLE_SKIP_TEST_IF(!isAndroidHardwareBufferConfigurationSupported(
+        1, 1, kDepth, AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM,
+        kDefaultAHBUsage | kAHBUsageGPUCubeMap));
+
     // Create the Image
     AHardwareBuffer *source;
     EGLImageKHR image;
-    constexpr size_t kDepth = kCubeFaceCount * 2;
     createEGLImageAndroidHardwareBufferSource(1, 1, kDepth, AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM,
                                               kDefaultAHBUsage | kAHBUsageGPUCubeMap,
                                               kDefaultAttribs, {}, &source, &image);
