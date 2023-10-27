@@ -665,19 +665,31 @@ void main()
     };
 
 #if defined(ANGLE_AHARDWARE_BUFFER_SUPPORT)
-    void writeAHBData(AHardwareBuffer *aHardwareBuffer,
+    bool writeAHBData(AHardwareBuffer *aHardwareBuffer,
                       size_t width,
                       size_t height,
                       size_t depth,
                       bool isYUV,
                       const std::vector<AHBPlaneData> &data)
     {
+        ASSERT(!data.empty());
 #    if defined(ANGLE_AHARDWARE_BUFFER_LOCK_PLANES_SUPPORT)
         AHardwareBuffer_Planes planeInfo;
         int res = AHardwareBuffer_lockPlanes(
             aHardwareBuffer, AHARDWAREBUFFER_USAGE_CPU_WRITE_RARELY, -1, nullptr, &planeInfo);
-        EXPECT_EQ(res, 0);
+        if (res != 0)
+        {
+            WARN() << "AHardwareBuffer_lockPlanes failed";
+            return false;
+        }
+
         EXPECT_EQ(data.size(), planeInfo.planeCount);
+
+        if (planeInfo.planes[0].data == nullptr)
+        {
+            WARN() << "Driver bug: AHardwareBuffer_lockPlanes succeed but data pointer is nullptr";
+            return false;
+        }
 
         for (size_t planeIdx = 0; planeIdx < data.size(); planeIdx++)
         {
@@ -741,6 +753,7 @@ void main()
         res = AHardwareBuffer_unlock(aHardwareBuffer, nullptr);
         EXPECT_EQ(res, 0);
 #    endif
+        return true;
     }
 #endif
 
@@ -893,7 +906,11 @@ void main()
             angle::android::ClientBufferToANativeWindowBuffer(eglClientBuffer));
         if (!data.empty())
         {
-            writeAHBData(pAHardwareBuffer, width, height, depth, false, data);
+            bool success = writeAHBData(pAHardwareBuffer, width, height, depth, false, data);
+            if (!success)
+            {
+                return;
+            }
         }
 #endif  // ANGLE_AHARDWARE_BUFFER_SUPPORT
 
@@ -5159,9 +5176,12 @@ void ImageTest::SourceNativeClientBufferTargetRenderbuffer_helper(const EGLint *
 
     // Create an Image backed by a native client buffer allocated using
     // EGL_ANDROID_create_native_client_buffer API
-    EGLImageKHR image;
+    EGLImageKHR image = EGL_NO_IMAGE_KHR;
     createEGLImageANWBClientBufferSource(1, 1, 1, kNativeClientBufferAttribs_RGBA8_Renderbuffer,
                                          attribs, {{kLinearColor, 4}}, &image);
+    // We are locking AHB to initialize AHB with data. The lock is allowed to fail, and may fail if
+    // driver decided to allocate with framebuffer compression enabled.
+    ANGLE_SKIP_TEST_IF(image == EGL_NO_IMAGE_KHR);
 
     // Create the target
     GLRenderbuffer target;
