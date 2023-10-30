@@ -565,6 +565,7 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 
 b/305292977 PIXEL4ORXL VULKAN : FramebufferTest_ES31.ClearWithColorMasksRGB5A1/* = SKIP
 b/305311693 PIXEL4ORXL GLES : FramebufferTest_ES31.ClearColorMorePrecisionThanFBOFormatShouldNotApplyDithering/* = SKIP
+b/308668391 PIXEL4ORXL VULKAN : ImageTest.SourceYUVAHBTargetExternalRGBSampleNoData/* = SKIP
 
 8310 PIXEL4ORXL VULKAN : VulkanImageTest.PreInitializedOnGLImportLinearTiling/* = SKIP
 8310 LINUX SWIFTSHADER : VulkanImageTest.PreInitializedOnGLImportLinearTiling/* = SKIP
@@ -1374,10 +1375,6 @@ b/266235549 D3D11 : ComputeShaderTest.SSBOAliasOverWrite/* = SKIP
 8212 MALIG710 VULKAN : VulkanPerformanceCounterTest.RenderToTextureDepthStencilTextureShouldNotLoad/* = SKIP
 8212 MALIG710 VULKAN : VulkanPerformanceCounterTest.RenderToTextureUninitializedAndUnusedDepthStencil/* = SKIP
 8212 MALIG710 VULKAN : WebGLCompatibilityTest.FramebufferFloatColorAttachmentMRT/* = SKIP
-
-
-// Pixel7 crashes:
-8212 PIXEL7 VULKAN : ImageTestES3.RGBXAHBImportMultipleLayers/* = SKIP
 
 // Pixel7 non-crash failures:
 8212 PIXEL7 VULKAN : MultithreadingTestES3.MultithreadFenceDraw/* = SKIP

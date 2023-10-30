@@ -3176,10 +3176,6 @@ TEST_P(ImageTest, SourceYUVAHBTargetExternalRGBSampleInitData)
 // sampling even if we can't verify the results.
 TEST_P(ImageTest, SourceYUVAHBTargetExternalRGBSampleNoData)
 {
-    // Multiple issues sampling AHARDWAREBUFFER_FORMAT_Y8Cb8Cr8_420 in the Vulkan backend:
-    // http://issuetracker.google.com/172649538
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     EGLWindow *window = getEGLWindow();
 
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
