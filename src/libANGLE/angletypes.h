@@ -949,6 +949,9 @@ using RenderToTextureImageMap = angle::PackedEnumMap<RenderToTextureImageIndex, 
 constexpr size_t kCubeFaceCount = 6;
 
 template <typename T>
+using CubeFaceArray = std::array<T, kCubeFaceCount>;
+
+template <typename T>
 using TextureTypeMap = angle::PackedEnumMap<TextureType, T>;
 using TextureMap     = TextureTypeMap<BindingPointer<Texture>>;
 
