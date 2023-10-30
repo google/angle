@@ -5490,6 +5490,65 @@ TEST_P(Texture2DBaseMaxTestES3, DepthRenderableWithColorRenderableBeyondMaxLevel
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 }
 
+// Test texture sampling while changing the base format from color-renderable
+// to (usually) not color-renderable by manipulating base and max levels.
+TEST_P(Texture2DBaseMaxTestES3, NotColorRenderableAfterColorRenderableBelowBaseLevel)
+{
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Texture2D(), essl1_shaders::fs::Texture2D());
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    std::array<GLColor, 4> data0;
+    data0.fill(GLColor::green);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, data0.data());
+
+    const GLuint data1[1] = {0xC0040200};
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGB9_E5, 1, 1, 0, GL_RGB, GL_UNSIGNED_INT_5_9_9_9_REV, data1);
+    ASSERT_GL_NO_ERROR();
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::cyan);
+}
+
+// Test texture sampling while changing the base format from color-renderable
+// to depth-renderable by manipulating base and max levels.
+TEST_P(Texture2DBaseMaxTestES3, DepthRenderableAfterColorRenderableBelowBaseLevel)
+{
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Texture2D(), essl1_shaders::fs::Texture2D());
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    std::array<GLColor, 4> data0;
+    data0.fill(GLColor::green);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, data0.data());
+
+    const GLfloat data1[1] = {1.0f};
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_DEPTH_COMPONENT32F, 1, 1, 0, GL_DEPTH_COMPONENT, GL_FLOAT,
+                 data1);
+    ASSERT_GL_NO_ERROR();
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+}
+
 // Test to check that texture completeness is determined correctly when the texture base level is
 // greater than 0, and also that level 0 is not sampled when base level is greater than 0.
 TEST_P(Texture2DTestES3, DrawWithBaseLevel1)

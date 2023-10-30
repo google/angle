@@ -1385,6 +1385,10 @@ b/266235549 D3D11 : ComputeShaderTest.SSBOAliasOverWrite/* = SKIP
 
 8378 VULKAN : Texture2DBaseMaxTestES3.NotColorRenderableWithColorRenderableBeyondMaxLevel/* = SKIP
 8378 VULKAN : Texture2DBaseMaxTestES3.DepthRenderableWithColorRenderableBeyondMaxLevel/* = SKIP
+8378 VULKAN : Texture2DBaseMaxTestES3.NotColorRenderableAfterColorRenderableBelowBaseLevel/* = SKIP
+8378 VULKAN : Texture2DBaseMaxTestES3.DepthRenderableAfterColorRenderableBelowBaseLevel/* = SKIP
+8378 WIN INTEL OPENGL : Texture2DBaseMaxTestES3.NotColorRenderableAfterColorRenderableBelowBaseLevel/* = SKIP
+8378 WIN INTEL OPENGL : Texture2DBaseMaxTestES3.DepthRenderableAfterColorRenderableBelowBaseLevel/* = SKIP
 
 // Slow tests, should appear last in this file
 5076 : GLSLTest.VerifyMaxVertexUniformVectors* = TIMEOUT
