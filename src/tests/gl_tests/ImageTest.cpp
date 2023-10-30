@@ -4287,7 +4287,11 @@ TEST_P(ImageTestES3, RGBXAHBImportMultipleLayers)
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
 
-    constexpr size_t kLayerCount = 3;
+    // Limit the test to singke layer for now. writeAHBData is assuming alignment between layers
+    // being 4096 which may not true on some GPUs. There is no API to retrieve such alignment from
+    // driver. For now just limit to single layer so that we can still test single layer behavior
+    // here.
+    constexpr size_t kLayerCount = 1;
 
     ANGLE_SKIP_TEST_IF(!isAndroidHardwareBufferConfigurationSupported(
         1, 1, kLayerCount, AHARDWAREBUFFER_FORMAT_R8G8B8X8_UNORM, kDefaultAHBUsage));
