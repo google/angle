@@ -148,7 +148,7 @@ vars = {
   # reclient CIPD package
   'reclient_package': 'infra/rbe/client/',
   # reclient CIPD package version
-  'reclient_version': 're_client_version:0.117.1.21520c6-gomaip',
+  'reclient_version': 're_client_version:0.118.1.ae3c3be-gomaip',
 
   # siso CIPD package version.
   'siso_version': 'git_revision:6af7e19f74a94ee61f1ddabc0d23b8e3c0d02e98',
