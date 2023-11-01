@@ -96,6 +96,11 @@ bool IsVulkan11(uint32_t apiVersion)
     return apiVersion >= VK_API_VERSION_1_1;
 }
 
+bool IsRADV(uint32_t driverId)
+{
+    return driverId == VK_DRIVER_ID_MESA_RADV;
+}
+
 bool IsVenus(uint32_t driverId, const char *deviceName)
 {
     // Where driver id is available, check against Venus driver id:
@@ -3922,6 +3927,9 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     const ARMDriverVersion armDriverVersion =
         ParseARMDriverVersion(mPhysicalDeviceProperties.driverVersion);
 
+    // Distinguish between the mesa and proprietary drivers
+    const bool isRADV = IsRADV(mDriverProperties.driverID);
+
     // Identify Google Pixel brand Android devices
     const bool isPixel = IsPixel();
 
@@ -4623,10 +4631,12 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
 
     // VK_EXT_graphics_pipeline_library is available on NVIDIA drivers earlier
     // than version 531, but there are transient visual glitches with rendering
-    // on those earlier versions.
+    // on those earlier versions.  http://anglebug.com/8218
+    //
+    // On RADV, creating graphics pipeline can crash in the driver.  http://crbug.com/1497512
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsGraphicsPipelineLibrary,
                             mGraphicsPipelineLibraryFeatures.graphicsPipelineLibrary == VK_TRUE &&
-                                (!isNvidia || nvidiaVersion.major >= 531));
+                                (!isNvidia || nvidiaVersion.major >= 531) && !isRADV);
 
     // The following drivers are known to key the pipeline cache blobs with vertex input and
     // fragment output state, causing draw-time pipeline creation to miss the cache regardless of
