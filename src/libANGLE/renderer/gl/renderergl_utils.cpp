@@ -45,7 +45,12 @@ namespace
 
 const char *GetString(const FunctionsGL *functions, GLenum name)
 {
-    return reinterpret_cast<const char *>(functions->getString(name));
+    const char *cStr = reinterpret_cast<const char *>(functions->getString(name));
+    if (cStr == nullptr)
+    {
+        return "";
+    }
+    return cStr;
 }
 
 bool IsMesa(const FunctionsGL *functions, std::array<int, 3> *version)
