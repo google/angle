@@ -16301,6 +16301,28 @@ void main() {
     ASSERT_GL_NO_ERROR();
 }
 
+// Test coverage of the mix(float, float, bool) overload which was missing in Metal translation
+TEST_P(GLSLTest_ES3, MixFloatFloatBool)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 fragColor;
+void main() {
+    vec4 testData = vec4(0.0, 1.0, 0.5, 0.25);
+    float scalar = mix(testData.x, testData.y, testData.x < 0.5);
+    vec2 vector = mix(testData.xy, testData.xw, bvec2(testData.x < 0.5, testData.y < 0.5));
+    fragColor = vec4(scalar, vector.x, vector.y, 1);
+}
+)";
+
+    ANGLE_GL_PROGRAM(testProgram, essl3_shaders::vs::Simple(), kFS);
+    ASSERT_GL_NO_ERROR();
+
+    drawQuad(testProgram, essl3_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor(255, 0, 255, 255));
+    ASSERT_GL_NO_ERROR();
+}
+
 // Test that aliasing function inout parameters work when more than one param is aliased.
 TEST_P(GLSLTest, AliasingFunctionInOutParamsMultiple)
 {
