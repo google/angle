@@ -1108,18 +1108,6 @@ class CompressAndStorePipelineCacheTask : public angle::Closure
     size_t mMaxTotalSize;
 };
 
-class WaitableCompressEventImpl : public WaitableCompressEvent
-{
-  public:
-    WaitableCompressEventImpl(std::shared_ptr<angle::WaitableEvent> waitableEvent,
-                              std::shared_ptr<CompressAndStorePipelineCacheTask> compressTask)
-        : WaitableCompressEvent(waitableEvent), mCompressTask(compressTask)
-    {}
-
-  private:
-    std::shared_ptr<CompressAndStorePipelineCacheTask> mCompressTask;
-};
-
 angle::Result GetAndDecompressPipelineCacheVk(VkPhysicalDeviceProperties physicalDeviceProperties,
                                               DisplayVk *displayVk,
                                               angle::MemoryBuffer *uncompressedData,
@@ -5052,12 +5040,9 @@ angle::Result RendererVk::syncPipelineCacheVk(DisplayVk *displayVk, const gl::Co
         constexpr size_t kMaxTotalSize = 64 * 1024 * 1024;
 
         // Create task to compress.
-        auto compressAndStorePipelineCacheTask =
+        mCompressEvent = context->getWorkerThreadPool()->postWorkerTask(
             std::make_shared<CompressAndStorePipelineCacheTask>(
-                displayVk, contextVk, std::move(pipelineCacheData), kMaxTotalSize);
-        mCompressEvent = std::make_shared<WaitableCompressEventImpl>(
-            context->getWorkerThreadPool()->postWorkerTask(compressAndStorePipelineCacheTask),
-            compressAndStorePipelineCacheTask);
+                displayVk, contextVk, std::move(pipelineCacheData), kMaxTotalSize));
     }
     else
     {
