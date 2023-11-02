@@ -2604,7 +2604,8 @@ void InitializeFrontendFeatures(const DXGI_ADAPTER_DESC &adapterDesc,
 
     ANGLE_FEATURE_CONDITION(features, forceDepthAttachmentInitOnClear, isAMD);
 
-    // The D3D backend's handling of link is thread-safe
+    // The D3D backend's handling of compile and link is thread-safe
+    ANGLE_FEATURE_CONDITION(features, compileJobIsThreadSafe, true);
     ANGLE_FEATURE_CONDITION(features, linkJobIsThreadSafe, true);
 }
 

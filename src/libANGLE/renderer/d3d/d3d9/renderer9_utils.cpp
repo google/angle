@@ -846,7 +846,8 @@ void InitializeFeatures(angle::FeaturesD3D *features, DWORD vendorID)
 
 void InitializeFrontendFeatures(angle::FrontendFeatures *features, DWORD vendorID)
 {
-    // The D3D backend's handling of link is thread-safe
+    // The D3D backend's handling of compile and link is thread-safe
+    ANGLE_FEATURE_CONDITION(features, compileJobIsThreadSafe, true);
     ANGLE_FEATURE_CONDITION(features, linkJobIsThreadSafe, true);
 }
 }  // namespace d3d9

@@ -64,6 +64,7 @@ enum class Feature
     ClampPointSize,
     ClearToZeroOrOneBroken,
     ClipSrcRegionForBlitFramebuffer,
+    CompileJobIsThreadSafe,
     CompileMetalShaders,
     CompressVertexData,
     CopyIOSurfaceToNonIOSurfaceForReadOptimization,

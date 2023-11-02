@@ -4941,7 +4941,8 @@ void RendererVk::initializeFrontendFeatures(angle::FrontendFeatures *features) c
     // https://issuetracker.google.com/292285899
     ANGLE_FEATURE_CONDITION(features, uncurrentEglSurfaceUponSurfaceDestroy, true);
 
-    // The Vulkan backend's handling of link is thread-safe
+    // The Vulkan backend's handling of compile and link is thread-safe
+    ANGLE_FEATURE_CONDITION(features, compileJobIsThreadSafe, true);
     ANGLE_FEATURE_CONDITION(features, linkJobIsThreadSafe, true);
 }
 

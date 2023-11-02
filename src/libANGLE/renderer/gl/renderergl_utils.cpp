@@ -2640,13 +2640,14 @@ void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFea
     // Disable shader program cache to workaround PowerVR Rogue issues.
     ANGLE_FEATURE_CONDITION(features, disableProgramBinary, IsPowerVrRogue(functions));
 
-    // The link job needs a context, and previous experiments showed setting up temp contexts in
-    // threads for the sake of program link triggers too many driver bugs.  See
+    // The compile and link jobs need a context, and previous experiments showed setting up temp
+    // contexts in threads for the sake of program link triggers too many driver bugs.  See
     // https://chromium-review.googlesource.com/c/angle/angle/+/4774785 for context.
     //
-    // As a result, the link job is done in the same thread as the link call.  If the native driver
-    // supports parallel link, it's still done internally by the driver, and ANGLE supports delaying
-    // post-link operations until that is done.
+    // As a result, the compile and link jobs are done in the same thread as the call.  If the
+    // native driver supports parallel compile/link, it's still done internally by the driver, and
+    // ANGLE supports delaying post-compile and post-link operations until that is done.
+    ANGLE_FEATURE_CONDITION(features, compileJobIsThreadSafe, false);
     ANGLE_FEATURE_CONDITION(features, linkJobIsThreadSafe, false);
 }
 
