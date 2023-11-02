@@ -201,6 +201,8 @@ VkResult VerifyExtensionsPresent(const vk::ExtensionNameList &haystack,
 
 // Array of Validation error/warning messages that will be ignored, should include bugID
 constexpr const char *kSkippedMessages[] = {
+    // http://anglebug.com/8401
+    "Undefined-Value-ShaderOutputNotConsumed",
     // http://anglebug.com/5304
     "VUID-vkCmdDraw-magFilter-04553", "VUID-vkCmdDrawIndexed-magFilter-04553",
     // http://anglebug.com/5309
