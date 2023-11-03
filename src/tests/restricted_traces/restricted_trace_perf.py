@@ -83,7 +83,7 @@ def run_command(args):
 
 
 def run_async_command(args):
-    logging.debug('Kicking off gpumem subprocess %s' % (args))
+    logging.debug('Kicking off subprocess %s' % (args))
 
     try:
         async_process = subprocess.Popen(
@@ -191,9 +191,10 @@ def run_trace(trace, args):
 
     # Kick off a subprocess that collects peak gpu memory periodically
     # Note the 0.25 below is the delay (in seconds) between memory checks
-    run_adb_command('push gpumem.sh /data/local/tmp')
-    memory_command = 'shell sh /data/local/tmp/gpumem.sh 0.25'
-    memory_process = run_async_adb_command(memory_command)
+    if args.memory:
+        run_adb_command('push gpumem.sh /data/local/tmp')
+        memory_command = 'shell sh /data/local/tmp/gpumem.sh 0.25'
+        memory_process = run_async_adb_command(memory_command)
 
     flags = [
         '--gtest_filter=TraceTest.' + trace, '--use-gl=native', '--verbose', '--verbose-logging'
@@ -229,8 +230,9 @@ shell am instrument -w \
 
     result = run_adb_command(adb_command)
 
-    logging.debug('Killing gpumem subprocess')
-    memory_process.kill()
+    if args.memory:
+        logging.debug('Killing gpumem subprocess')
+        memory_process.kill()
 
     return result.time
 
@@ -571,7 +573,12 @@ def main():
         action='store_true',
         default=False)
     parser.add_argument(
-        '--power', help='Include GPU power used per trace', action='store_true', default=False)
+        '--power', help='Include CPU/GPU power used per trace', action='store_true', default=False)
+    parser.add_argument(
+        '--memory',
+        help='Include CPU/GPU memory used per trace',
+        action='store_true',
+        default=False)
     parser.add_argument('--maxsteps', help='Run for fixed set of frames', default='')
     parser.add_argument('--fixedtime', help='Run for fixed set of time', default='')
     parser.add_argument(
@@ -665,7 +672,7 @@ def run_traces(args):
 
     if args.walltimeonly:
         print('%-*s' % (trace_width, 'wall_time_per_frame'))
-    elif args.power:
+    else:
         print('%-*s %-*s %-*s %-*s %-*s %-*s %-*s %-*s %-*s %-*s' %
               (column_width['trace'], 'trace', column_width['wall_time'], 'wall_time',
                column_width['gpu_time'], 'gpu_time', column_width['cpu_time'], 'cpu_time',
@@ -677,13 +684,6 @@ def run_traces(args):
             'trace', 'wall_time(ms)', 'gpu_time(ms)', 'cpu_time(ms)', 'gpu_power(W)',
             'cpu_power(W)', 'gpu_mem_sustained', 'gpu_mem_peak', 'proc_mem_median', 'proc_mem_peak'
         ])
-    else:
-        print('%-*s %-*s %-*s %-*s %-*s %-*s %-*s %-*s' %
-              (column_width['trace'], 'trace', column_width['wall_time'], 'wall_time',
-               column_width['gpu_time'], 'gpu_time', column_width['cpu_time'], 'cpu_time',
-               column_width['gpu_mem_sustained'], 'gpu_mem_sustained',
-               column_width['gpu_mem_peak'], 'gpu_mem_peak', column_width['proc_mem_median'],
-               'proc_mem_median', column_width['proc_mem_peak'], 'proc_mem_peak'))
 
     if args.power:
         starting_power = GPUPowerStats()
@@ -770,12 +770,15 @@ def run_traces(args):
 
                 cpu_time = get_cpu_time()
 
-                gpu_mem_sustained, gpu_mem_peak = get_gpu_memory(test_time)
-                logging.debug(
-                    '%s = %i, %s = %i' %
-                    ('gpu_mem_sustained', gpu_mem_sustained, 'gpu_mem_peak', gpu_mem_peak))
+                gpu_mem_sustained, gpu_mem_peak = 0, 0
+                proc_mem_peak, proc_mem_median = 0, 0
+                if args.memory:
+                    gpu_mem_sustained, gpu_mem_peak = get_gpu_memory(test_time)
+                    logging.debug(
+                        '%s = %i, %s = %i' %
+                        ('gpu_mem_sustained', gpu_mem_sustained, 'gpu_mem_peak', gpu_mem_peak))
 
-                proc_mem_peak, proc_mem_median = get_proc_memory()
+                    proc_mem_peak, proc_mem_median = get_proc_memory()
 
                 trace_name = mode + renderer + '_' + test
 
@@ -821,7 +824,7 @@ def run_traces(args):
 
                 if args.walltimeonly:
                     print('%-*s' % (trace_width, wall_time))
-                elif args.power:
+                else:
                     print(
                         '%-*s %-*s %-*s %-*s %-*s %-*s %-*i %-*i %-*i %-*i' %
                         (column_width['trace'], trace_name, column_width['wall_time'], wall_time,
@@ -835,14 +838,6 @@ def run_traces(args):
                         mode + renderer + '_' + test, wall_time, gpu_time, cpu_time, gpu_power,
                         cpu_power, gpu_mem_sustained, gpu_mem_peak, proc_mem_median, proc_mem_peak
                     ])
-                else:
-                    print('%-*s %-*s %-*s %-*s %-*i %-*i %-*i %-*i' %
-                          (column_width['trace'], trace_name, column_width['wall_time'], wall_time,
-                           column_width['gpu_time'], gpu_time, column_width['cpu_time'], cpu_time,
-                           column_width['gpu_mem_sustained'], gpu_mem_sustained,
-                           column_width['gpu_mem_peak'], gpu_mem_peak,
-                           column_width['proc_mem_median'], proc_mem_median,
-                           column_width['proc_mem_peak'], proc_mem_peak))
 
 
                 # Early exit for testing
