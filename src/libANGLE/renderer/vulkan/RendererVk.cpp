@@ -5024,14 +5024,11 @@ angle::Result RendererVk::syncPipelineCacheVk(DisplayVk *displayVk, const gl::Co
         ANGLE_VK_TRY(displayVk, result);
     }
 
-    // If vkGetPipelineCacheData ends up writing fewer bytes than requested, zero out the rest of
-    // the buffer to avoid leaking garbage memory.
+    // If vkGetPipelineCacheData ends up writing fewer bytes than requested, shrink the buffer to
+    // avoid leaking garbage memory and potential rejection of the data by subsequent
+    // vkCreatePipelineCache call.  Some drivers may ignore entire buffer if there padding present.
     ASSERT(pipelineCacheSize <= pipelineCacheData.size());
-    if (pipelineCacheSize < pipelineCacheData.size())
-    {
-        memset(pipelineCacheData.data() + pipelineCacheSize, 0,
-               pipelineCacheData.size() - pipelineCacheSize);
-    }
+    pipelineCacheData.resize(pipelineCacheSize);
 
     if (mFeatures.enableAsyncPipelineCacheCompression.enabled)
     {
