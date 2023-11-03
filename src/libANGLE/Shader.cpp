@@ -625,14 +625,6 @@ void Shader::compile(const Context *context)
         options.emulateGLBaseVertexBaseInstance = true;
     }
 
-    // Some targets (e.g. D3D11 Feature Level 9_3 and below) do not support non-constant loop
-    // indexes in fragment shaders. Shader compilation will fail. To provide a better error
-    // message we can instruct the compiler to pre-validate.
-    if (mRendererLimitations.shadersRequireIndexedLoopValidation)
-    {
-        options.validateLoopIndexing = true;
-    }
-
     if (context->getFrontendFeatures().forceInitShaderVariables.enabled)
     {
         options.initOutputVariables           = true;
