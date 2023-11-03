@@ -29,48 +29,86 @@ class ReswizzleYUVOpsTraverser : public TIntermTraverser
     {}
 
     bool visitAggregate(Visit visit, TIntermAggregate *node) override;
+    bool visitSwizzle(Visit visit, TIntermSwizzle *node) override;
     bool adjustOutput(TCompiler *compiler, TIntermBlock *root, const TIntermSymbol &yuvOutput);
 
   private:
 };
 
-bool ReswizzleYUVOpsTraverser::visitAggregate(Visit visit, TIntermAggregate *node)
+// OpenGLES and Vulkan has different color component mapping for YUV. OpenGL spec maps R_gl=y,
+// G_gl=u, B_gl=v, but Vulkan wants R_vulkan=u, G_vulkan=v, B_vulkan=y. We want all calculation to
+// be in OpenGLES  mapping during shader execution, but the actual buffer/image will be stored as
+// vulkan mapping. This means when we sample from VkImage, we need to map from vulkan order back to
+// GL order, which comes out to be {1, 2, 0, 3}. This function will check if the aggregate is a
+// texture{proj|fetch}(samplerExternal,...) and if yes it will compose and return a swizzle node.
+TIntermSwizzle *CheckTextureOpWithSamplerExternal2DY2YAndSwizzle(Visit visit,
+                                                                 TIntermAggregate *node)
 {
     if (visit != Visit::PreVisit)
     {
-        return true;
+        return nullptr;
     }
 
     if (!BuiltInGroup::IsBuiltIn(node->getOp()))
     {
-        return true;
+        return nullptr;
     }
 
     TOperator op = node->getFunction()->getBuiltInOp();
-    if (op != EOpTexture && op != EOpTextureProj && op != EOpTexelFetch)
+    if (op == EOpTexture || op == EOpTextureProj || op == EOpTexelFetch)
     {
-        return true;
+        TIntermSequence *arguments = node->getSequence();
+        TType const &samplerType   = (*arguments)[0]->getAsTyped()->getType();
+        if (samplerType.getBasicType() != EbtSamplerExternal2DY2YEXT)
+        {
+            return nullptr;
+        }
+
+        // texture(...).gbra
+        TIntermSwizzle *yuvSwizzle = new TIntermSwizzle(node, {1, 2, 0, 3});
+        return yuvSwizzle;
     }
 
-    TIntermSequence *arguments = node->getSequence();
-    TType const &samplerType   = (*arguments)[0]->getAsTyped()->getType();
-    if (samplerType.getBasicType() != EbtSamplerExternal2DY2YEXT)
-    {
-        return true;
-    }
+    return nullptr;
+}
 
-    // texture(...).gbra
-    TIntermTyped *replacement = new TIntermSwizzle(node, {1, 2, 0, 3});
-
-    if (replacement != nullptr)
+bool ReswizzleYUVOpsTraverser::visitAggregate(Visit visit, TIntermAggregate *node)
+{
+    TIntermSwizzle *yuvSwizze = CheckTextureOpWithSamplerExternal2DY2YAndSwizzle(visit, node);
+    if (yuvSwizze != nullptr)
     {
-        queueReplacement(replacement, OriginalNode::BECOMES_CHILD);
+        ASSERT(!getParentNode()->getAsSwizzleNode());
+        queueReplacement(yuvSwizze, OriginalNode::BECOMES_CHILD);
         return false;
     }
 
     return true;
 }
 
+bool ReswizzleYUVOpsTraverser::visitSwizzle(Visit visit, TIntermSwizzle *node)
+{
+    TIntermAggregate *aggregate = node->getOperand()->getAsAggregate();
+    if (aggregate == nullptr)
+    {
+        return true;
+    }
+
+    // There is swizzle on YUV texture sampler, and we need to apply YUV swizzle first and
+    // then followed by the original swizzle. Finally we fold the two swizzles into one.
+    TIntermSwizzle *yuvSwizzle = CheckTextureOpWithSamplerExternal2DY2YAndSwizzle(visit, aggregate);
+    if (yuvSwizzle != nullptr)
+    {
+        TIntermTyped *replacement = new TIntermSwizzle(yuvSwizzle, node->getSwizzleOffsets());
+        replacement               = replacement->fold(nullptr);
+        queueReplacement(replacement, OriginalNode::IS_DROPPED);
+        return false;
+    }
+
+    return true;
+}
+
+// OpenGLES and Vulkan has different color component mapping for YUV. When we write YUV data, we
+// need to convert OpenGL mapping to vulkan's mapping, which comes out to be {2, 0, 1, 3}.
 bool ReswizzleYUVOpsTraverser::adjustOutput(TCompiler *compiler,
                                             TIntermBlock *root,
                                             const TIntermSymbol &yuvOutput)
