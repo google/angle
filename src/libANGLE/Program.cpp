@@ -725,6 +725,7 @@ void Program::onDestroy(const Context *context)
         {
             shader->release(context);
         }
+        mState.mShaderCompileJobs[shaderType].reset();
         mState.mAttachedShaders[shaderType].reset();
         mAttachedShaders[shaderType] = nullptr;
     }
@@ -779,6 +780,7 @@ void Program::detachShader(const Context *context, Shader *shader)
     ASSERT(mAttachedShaders[shaderType] == shader);
     shader->release(context);
     mAttachedShaders[shaderType] = nullptr;
+    mState.mShaderCompileJobs[shaderType].reset();
     mState.mAttachedShaders[shaderType].reset();
 }
 
@@ -851,15 +853,13 @@ angle::Result Program::link(const Context *context)
 {
     // Create a new executable to hold the result of the link.  The previous executable may still be
     // referenced by the contexts the program is current on, and any program pipelines it may be
-    // used in.  Once link succeeds, the users of the program are notified to update thier
+    // used in.  Once link succeeds, the users of the program are notified to update their
     // executables.
     makeNewExecutable(context);
 
-    // Make sure no compile jobs are pending.
-    //
-    // For every attached shader, get the compiled state.  This is done at link time (instead of
-    // earlier, such as attachShader time), because the shader could get recompiled between attach
-    // and link.
+    // For every attached shader, get the compile job and compiled state.  This is done at link time
+    // (instead of earlier, such as attachShader time), because the shader could get recompiled
+    // between attach and link.
     //
     // Additionally, make sure the backend is also able to cache the compiled state of its own
     // ShaderImpl objects.
@@ -867,14 +867,15 @@ angle::Result Program::link(const Context *context)
     for (ShaderType shaderType : AllShaderTypes())
     {
         Shader *shader = mAttachedShaders[shaderType];
+        SharedCompileJob compileJob;
         SharedCompiledShaderState shaderCompiledState;
         if (shader != nullptr)
         {
-            shader->resolveCompile(context);
-            shaderCompiledState     = shader->getCompiledState();
+            compileJob              = shader->getCompileJob(&shaderCompiledState);
             shaderImpls[shaderType] = shader->getImplementation();
         }
-        mState.mAttachedShaders[shaderType] = std::move(shaderCompiledState);
+        mState.mShaderCompileJobs[shaderType] = std::move(compileJob);
+        mState.mAttachedShaders[shaderType]   = std::move(shaderCompiledState);
     }
     mProgram->prepareForLink(shaderImpls);
 
@@ -924,6 +925,9 @@ angle::Result Program::linkImpl(const Context *context)
 
         if (success)
         {
+            // No need to care about the compile jobs any more.
+            mState.mShaderCompileJobs = {};
+
             std::scoped_lock lock(mHistogramMutex);
             // Succeeded in loading the binaries in the front-end, back end may still be loading
             // asynchronously
@@ -1556,6 +1560,24 @@ void Program::setTransformFeedbackVaryings(GLsizei count,
 
 bool Program::linkValidateShaders()
 {
+    // Wait for attached shaders to finish compilation.  At this point, they need to be checked
+    // whether they successfully compiled.  This information is cached so that all compile jobs can
+    // be waited on and their corresponding objects released before the actual check.
+    //
+    // Note that this function is called from the link job, and is therefore not protected by any
+    // locks.
+    ShaderBitSet successfullyCompiledShaders;
+    for (ShaderType shaderType : AllShaderTypes())
+    {
+        const SharedCompileJob &compileJob = mState.mShaderCompileJobs[shaderType];
+        if (compileJob)
+        {
+            const bool success = WaitCompileJobUnlocked(compileJob);
+            successfullyCompiledShaders.set(shaderType, success);
+        }
+    }
+    mState.mShaderCompileJobs = {};
+
     const ShaderMap<SharedCompiledShaderState> &shaders = mState.mAttachedShaders;
 
     bool isComputeShaderAttached  = shaders[ShaderType::Compute].get() != nullptr;
@@ -1584,7 +1606,7 @@ bool Program::linkValidateShaders()
             continue;
         }
 
-        if (!shader->successfullyCompiled)
+        if (!successfullyCompiledShaders.test(shaderType))
         {
             mState.mInfoLog << ShaderTypeToString(shaderType) << " shader is not compiled.";
             return false;

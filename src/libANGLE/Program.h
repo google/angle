@@ -33,6 +33,7 @@
 #include "libANGLE/ProgramExecutable.h"
 #include "libANGLE/ProgramLinkedResources.h"
 #include "libANGLE/RefCountObject.h"
+#include "libANGLE/Shader.h"
 #include "libANGLE/Uniform.h"
 #include "libANGLE/angletypes.h"
 
@@ -53,7 +54,6 @@ class Context;
 struct Extensions;
 class Framebuffer;
 class ProgramExecutable;
-class Shader;
 class ShaderProgramManager;
 class State;
 struct UnusedUniform;
@@ -281,6 +281,7 @@ class ProgramState final : angle::NonCopyable
 
     std::string mLabel;
 
+    ShaderMap<SharedCompileJob> mShaderCompileJobs;
     ShaderMap<SharedCompiledShaderState> mAttachedShaders;
 
     std::vector<std::string> mTransformFeedbackVaryingNames;

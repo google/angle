@@ -645,30 +645,6 @@ angle::Result ProgramD3D::link(const gl::Context *context, std::shared_ptr<LinkT
     // Ensure the compiler is initialized to avoid race conditions.
     ANGLE_TRY(mRenderer->ensureHLSLCompilerInitialized(GetImplAs<ContextD3D>(context)));
 
-    ProgramExecutableD3D *executableD3D = getExecutable();
-
-    const gl::SharedCompiledShaderState &computeShader =
-        mState.getAttachedShader(gl::ShaderType::Compute);
-    if (!computeShader)
-    {
-        for (gl::ShaderType shaderType : gl::kAllGraphicsShaderTypes)
-        {
-            const SharedCompiledShaderStateD3D &shader =
-                executableD3D->mAttachedShaders[shaderType];
-            if (shader)
-            {
-                for (const std::string &slowBlock : shader->slowCompilingUniformBlockSet)
-                {
-                    ANGLE_PERF_WARNING(context->getState().getDebug(), GL_DEBUG_SEVERITY_MEDIUM,
-                                       "Uniform block '%s' will be slow to compile. "
-                                       "See UniformBlockToStructuredBufferTranslation.md "
-                                       "(https://shorturl.at/drFY7) for details.",
-                                       slowBlock.c_str());
-                }
-            }
-        }
-    }
-
     *linkTaskOut = std::shared_ptr<LinkTask>(new LinkTaskD3D(
         clientVersion, caps, clientType, this, context->getState().getProvokingVertex()));
 
@@ -734,6 +710,14 @@ angle::Result ProgramD3D::linkJobImpl(d3d::Context *context,
                 {
                     executableD3D->mImage2DUniforms[shaderType].push_back(uniform);
                 }
+            }
+
+            for (const std::string &slowBlock :
+                 executableD3D->mAttachedShaders[shaderType]->slowCompilingUniformBlockSet)
+            {
+                WARN() << "Uniform block '" << slowBlock << "' will be slow to compile. "
+                       << "See UniformBlockToStructuredBufferTranslation.md "
+                       << "(https://shorturl.at/drFY7) for details.";
             }
         }
     }

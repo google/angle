@@ -68,6 +68,11 @@ enum class CompileStatus
     COMPILED,
 };
 
+// A representation of the compile job.  The program's link job can wait on this while the shader is
+// free to recompile (and generate other compile jobs).
+struct CompileJob;
+using SharedCompileJob = std::shared_ptr<CompileJob>;
+
 class ShaderState final : angle::NonCopyable
 {
   public:
@@ -148,6 +153,11 @@ class Shader final : angle::NonCopyable, public LabeledObject
     bool isCompiled(const Context *context);
     bool isCompleted();
 
+    // Return the compilation job, which will be used by the program link job to wait for the
+    // completion of compilation.  If compilation has already finished, a placeholder job is
+    // returned which can be used to retrieve the status of compilation.
+    SharedCompileJob getCompileJob(SharedCompiledShaderState *compiledStateOut);
+
     // Return the compiled shader state for the program.  The program holds a reference to this
     // state, so the shader is free to recompile, get deleted, etc.
     const SharedCompiledShaderState &getCompiledState() const { return mState.getCompiledState(); }
@@ -162,7 +172,7 @@ class Shader final : angle::NonCopyable, public LabeledObject
 
     bool hasBeenDeleted() const { return mDeleteStatus; }
 
-    // Block until compiling is finished and resolve it.
+    // Block until compilation is finished and resolve it.
     void resolveCompile(const Context *context);
 
     // Writes a shader's binary to the output memory buffer.
@@ -182,7 +192,6 @@ class Shader final : angle::NonCopyable, public LabeledObject
     }
 
   private:
-    struct CompilingState;
     ~Shader() override;
     static std::string joinShaderSources(GLsizei count,
                                          const char *const *string,
@@ -212,7 +221,7 @@ class Shader final : angle::NonCopyable, public LabeledObject
 
     // We keep a reference to the translator in order to defer compiles while preserving settings.
     BindingPointer<Compiler> mBoundCompiler;
-    std::unique_ptr<CompilingState> mCompilingState;
+    SharedCompileJob mCompileJob;
     egl::BlobCache::Key mShaderHash;
 
     ShaderProgramManager *mResourceManager;
@@ -222,6 +231,10 @@ const char *GetShaderTypeString(ShaderType type);
 std::string GetShaderDumpFileDirectory();
 std::string GetShaderDumpFileName(size_t shaderHash);
 
+// Block until the compilation job is finished.  This can be used by the program link job to wait
+// for shader compilation.  As such, it may be called by multiple threads without holding a lock and
+// must therefore be thread-safe.  It returns true if shader compilation has succeeded.
+bool WaitCompileJobUnlocked(const SharedCompileJob &compileJob);
 }  // namespace gl
 
 #endif  // LIBANGLE_SHADER_H_
