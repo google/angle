@@ -3977,6 +3977,14 @@ void Context::initCaps()
     ANGLE_LIMIT_CAP(caps->maxRenderbufferSize, IMPLEMENTATION_MAX_RENDERBUFFER_SIZE);
     ANGLE_LIMIT_CAP(caps->maxColorAttachments, IMPLEMENTATION_MAX_DRAW_BUFFERS);
     ANGLE_LIMIT_CAP(caps->maxVertexAttributes, MAX_VERTEX_ATTRIBS);
+    if (mDisplay->getFrontendFeatures().forceMinimumMaxVertexAttributes.enabled &&
+        getClientVersion() <= Version(2, 0))
+    {
+        // Only limit GL_MAX_VERTEX_ATTRIBS on ES2 or lower, the ES3+ cap is already at the minimum
+        // (16)
+        static_assert(MAX_VERTEX_ATTRIBS == 16);
+        ANGLE_LIMIT_CAP(caps->maxVertexAttributes, 8);
+    }
     ANGLE_LIMIT_CAP(caps->maxVertexAttribStride,
                     static_cast<GLint>(limits::kMaxVertexAttribStride));
 
