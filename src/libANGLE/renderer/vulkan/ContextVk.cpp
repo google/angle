@@ -689,8 +689,10 @@ bool BlendModeSupportsDither(const gl::State &state, size_t colorIndex)
     // Specific combinations of color blend modes are known to work with our dithering emulation.
     // Note we specifically don't check alpha blend, as dither isn't applied to alpha.
     // See http://b/232574868 for more discussion and reasoning.
-    return state.getBlendStateExt().getSrcColorIndexed(colorIndex) == GL_SRC_ALPHA &&
-           state.getBlendStateExt().getDstColorIndexed(colorIndex) == GL_ONE_MINUS_SRC_ALPHA;
+    return state.getBlendStateExt().getSrcColorIndexed(colorIndex) ==
+               gl::BlendFactorType::SrcAlpha &&
+           state.getBlendStateExt().getDstColorIndexed(colorIndex) ==
+               gl::BlendFactorType::OneMinusSrcAlpha;
 }
 
 bool ShouldUseGraphicsDriverUniformsExtended(const vk::Context *context)
@@ -6865,8 +6867,8 @@ angle::Result ContextVk::handleDirtyGraphicsDriverUniforms(DirtyBits::Iterator *
         const gl::BlendStateExt &blendStateExt = mState.getBlendStateExt();
         if (blendStateExt.getUsesAdvancedBlendEquationMask().test(0))
         {
-            advancedBlendEquation = static_cast<uint32_t>(gl::FromGLenum<gl::BlendEquationType>(
-                getState().getBlendStateExt().getEquationColorIndexed(0)));
+            advancedBlendEquation =
+                static_cast<uint32_t>(getState().getBlendStateExt().getEquationColorIndexed(0));
         }
     }
 

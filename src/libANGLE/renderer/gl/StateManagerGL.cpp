@@ -1346,9 +1346,10 @@ void StateManagerGL::setBlendFuncs(const gl::BlendStateExt &blendStateExt)
 
     if (!mIndependentBlendStates)
     {
-        mFunctions->blendFuncSeparate(
-            blendStateExt.getSrcColorIndexed(0), blendStateExt.getDstColorIndexed(0),
-            blendStateExt.getSrcAlphaIndexed(0), blendStateExt.getDstAlphaIndexed(0));
+        mFunctions->blendFuncSeparate(ToGLenum(blendStateExt.getSrcColorIndexed(0)),
+                                      ToGLenum(blendStateExt.getDstColorIndexed(0)),
+                                      ToGLenum(blendStateExt.getSrcAlphaIndexed(0)),
+                                      ToGLenum(blendStateExt.getDstAlphaIndexed(0)));
     }
     else
     {
@@ -1408,11 +1409,12 @@ void StateManagerGL::setBlendFuncs(const gl::BlendStateExt &blendStateExt)
 
         for (size_t drawBufferIndex : diffMask)
         {
-            mFunctions->blendFuncSeparatei(static_cast<GLuint>(drawBufferIndex),
-                                           blendStateExt.getSrcColorIndexed(drawBufferIndex),
-                                           blendStateExt.getDstColorIndexed(drawBufferIndex),
-                                           blendStateExt.getSrcAlphaIndexed(drawBufferIndex),
-                                           blendStateExt.getDstAlphaIndexed(drawBufferIndex));
+            mFunctions->blendFuncSeparatei(
+                static_cast<GLuint>(drawBufferIndex),
+                ToGLenum(blendStateExt.getSrcColorIndexed(drawBufferIndex)),
+                ToGLenum(blendStateExt.getDstColorIndexed(drawBufferIndex)),
+                ToGLenum(blendStateExt.getSrcAlphaIndexed(drawBufferIndex)),
+                ToGLenum(blendStateExt.getDstAlphaIndexed(drawBufferIndex)));
         }
     }
     mBlendStateExt.setSrcColorBits(blendStateExt.getSrcColorBits());
@@ -1432,8 +1434,8 @@ void StateManagerGL::setBlendEquations(const gl::BlendStateExt &blendStateExt)
 
     if (!mIndependentBlendStates)
     {
-        mFunctions->blendEquationSeparate(blendStateExt.getEquationColorIndexed(0),
-                                          blendStateExt.getEquationAlphaIndexed(0));
+        mFunctions->blendEquationSeparate(ToGLenum(blendStateExt.getEquationColorIndexed(0)),
+                                          ToGLenum(blendStateExt.getEquationAlphaIndexed(0)));
     }
     else
     {
@@ -1487,8 +1489,8 @@ void StateManagerGL::setBlendEquations(const gl::BlendStateExt &blendStateExt)
         {
             mFunctions->blendEquationSeparatei(
                 static_cast<GLuint>(drawBufferIndex),
-                blendStateExt.getEquationColorIndexed(drawBufferIndex),
-                blendStateExt.getEquationAlphaIndexed(drawBufferIndex));
+                ToGLenum(blendStateExt.getEquationColorIndexed(drawBufferIndex)),
+                ToGLenum(blendStateExt.getEquationAlphaIndexed(drawBufferIndex)));
         }
     }
     mBlendStateExt.setEquationColorBits(blendStateExt.getEquationColorBits());

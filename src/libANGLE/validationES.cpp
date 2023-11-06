@@ -592,8 +592,8 @@ const char *ValidateProgramDrawAdvancedBlendState(const Context *context,
 
     for (size_t blendEnabledBufferIndex : enabledDrawBufferMask)
     {
-        const gl::BlendEquationType &enabledBlendEquation = gl::FromGLenum<gl::BlendEquationType>(
-            state.getBlendStateExt().getEquationColorIndexed(blendEnabledBufferIndex));
+        const gl::BlendEquationType &enabledBlendEquation =
+            state.getBlendStateExt().getEquationColorIndexed(blendEnabledBufferIndex);
 
         if (enabledBlendEquation < gl::BlendEquationType::Multiply ||
             enabledBlendEquation > gl::BlendEquationType::HslLuminosity)
