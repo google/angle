@@ -2382,13 +2382,14 @@ angle::Result StateManagerGL::syncState(const gl::Context *context,
             {
                 gl::AttributesMask combinedMask =
                     (state.getAndResetDirtyCurrentValues() | mLocalDirtyCurrentValues);
-                mLocalDirtyCurrentValues.reset();
 
                 for (auto attribIndex : combinedMask)
                 {
                     setAttributeCurrentData(attribIndex,
                                             state.getVertexAttribCurrentValue(attribIndex));
                 }
+
+                mLocalDirtyCurrentValues.reset();
                 break;
             }
             case gl::state::DIRTY_BIT_PROVOKING_VERTEX:
