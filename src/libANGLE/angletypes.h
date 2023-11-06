@@ -747,6 +747,11 @@ class BlendStateExt final
                     const GLenum srcAlpha,
                     const GLenum dstAlpha);
     void setFactorsIndexed(const size_t index,
+                           const gl::BlendFactorType srcColorFactor,
+                           const gl::BlendFactorType dstColorFactor,
+                           const gl::BlendFactorType srcAlphaFactor,
+                           const gl::BlendFactorType dstAlphaFactor);
+    void setFactorsIndexed(const size_t index,
                            const GLenum srcColor,
                            const GLenum dstColor,
                            const GLenum srcAlpha,
