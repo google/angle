@@ -153,6 +153,7 @@ enum class Feature
     FlushAfterStreamVertexData,
     FlushBeforeDeleteTextureIfCopiedTo,
     FlushOnFramebufferChange,
+    ForceAHBLayerCountToOne,
     ForceAtomicValueResolution,
     ForceBufferGPUStorage,
     ForceContinuousRefreshOnSharedPresent,

@@ -4828,7 +4828,12 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
 void RendererVk::appBasedFeatureOverrides(DisplayVk *display,
                                           const vk::ExtensionNameList &extensions)
 {
-    // NOOP for now.
+    // BUG: b/239181279 Android camera app sometimes uses an uninitialized value for layerCount of
+    // the ANativeWindowBuffer. Force layerCount to 1 until we can root cause and fix the AHB
+    // creation.
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, forceAHBLayerCountToOne,
+        strcmp(mApplicationInfo.pApplicationName, "com.google.android.GoogleCamera") == 0);
 }
 
 angle::Result RendererVk::initPipelineCache(DisplayVk *display,
