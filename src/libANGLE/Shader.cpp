@@ -247,9 +247,10 @@ angle::Result CompileTask::postTranslate()
 #if defined(ANGLE_ENABLE_ASSERTS)
     if (!isBinaryOutput)
     {
-        // Prefix translated shader with commented out un-translated shader.
+        // Suffix the translated shader with commented out un-translated shader.
         // Useful in diagnostics tools which capture the shader source.
         std::ostringstream shaderStream;
+        shaderStream << "\n";
         shaderStream << "// GLSL\n";
         shaderStream << "//\n";
 
@@ -270,9 +271,7 @@ angle::Result CompileTask::postTranslate()
 
             shaderStream << std::endl;
         }
-        shaderStream << "\n\n";
-        shaderStream << mCompiledState->translatedSource;
-        mCompiledState->translatedSource = shaderStream.str();
+        mCompiledState->translatedSource += shaderStream.str();
     }
 #endif  // defined(ANGLE_ENABLE_ASSERTS)
 
