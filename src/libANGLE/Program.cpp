@@ -849,8 +849,11 @@ void Program::makeNewExecutable(const Context *context)
     onStateChange(angle::SubjectMessage::ProgramUnlinked);
 }
 
-angle::Result Program::link(const Context *context)
+angle::Result Program::link(const Context *context, angle::JobResultExpectancy resultExpectancy)
 {
+    auto *platform   = ANGLEPlatformCurrent();
+    double startTime = platform->currentTime(platform);
+
     // Create a new executable to hold the result of the link.  The previous executable may still be
     // referenced by the contexts the program is current on, and any program pipelines it may be
     // used in.  Once link succeeds, the users of the program are notified to update their
@@ -884,17 +887,6 @@ angle::Result Program::link(const Context *context)
     {
         dumpProgramInfo(context);
     }
-
-    return linkImpl(context);
-}
-
-// The attached shaders are checked for linking errors by matching up their variables.
-// Uniform, input and output variables get collected.
-// The code gets compiled into binaries.
-angle::Result Program::linkImpl(const Context *context)
-{
-    auto *platform   = ANGLEPlatformCurrent();
-    double startTime = platform->currentTime(platform);
 
     // Make sure the executable state is in sync with the program.
     //
@@ -956,14 +948,11 @@ angle::Result Program::linkImpl(const Context *context)
 
     // While the subtasks are currently always thread-safe, the main task is not safe on all
     // backends.  A front-end feature selects whether the single-threaded pool must be used.
-    std::shared_ptr<angle::WorkerThreadPool> mainLinkWorkerPool =
-        context->getFrontendFeatures().linkJobIsThreadSafe.enabled
-            ? context->getShaderCompileThreadPool()
-            : context->getSingleThreadPool();
-
-    // TODO: add the possibility to perform this in an unlocked tail call.  http://anglebug.com/8297
+    const angle::JobThreadSafety threadSafety =
+        context->getFrontendFeatures().linkJobIsThreadSafe.enabled ? angle::JobThreadSafety::Safe
+                                                                   : angle::JobThreadSafety::Unsafe;
     std::shared_ptr<angle::WaitableEvent> mainLinkEvent =
-        mainLinkWorkerPool->postWorkerTask(mainLinkTask);
+        context->postCompileLinkTask(mainLinkTask, threadSafety, resultExpectancy);
 
     mLinkingState                    = std::move(linkingState);
     mLinkingState->linkingFromBinary = false;

@@ -1228,6 +1228,22 @@ class UnlockedTailCall final : angle::NonCopyable
     angle::FixedVector<CallType, kMaxCallCount> mCalls;
 };
 
+enum class JobThreadSafety
+{
+    Safe,
+    Unsafe,
+};
+
+enum class JobResultExpectancy
+{
+    // Whether the compile or link job's results are immediately needed.  This is the case for GLES1
+    // programs for example, or shader compilation in glCreateShaderProgramv.
+    Immediate,
+    // Whether the compile or link job's results are needed after the end of the current entry point
+    // call.  In this case, the job may be done in an unlocked tail call.
+    Future,
+};
+
 // Zero-based for better array indexing
 enum FramebufferBinding
 {

@@ -149,7 +149,7 @@ class Shader final : angle::NonCopyable, public LabeledObject
 
     size_t getSourceHash() const;
 
-    void compile(const Context *context);
+    void compile(const Context *context, angle::JobResultExpectancy resultExpectancy);
     bool isCompiled(const Context *context);
     bool isCompleted();
 

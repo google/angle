@@ -363,7 +363,7 @@ class Program final : public LabeledObject, public angle::Subject
     // KHR_parallel_shader_compile
     // Try to link the program asynchronously. As a result, background threads may be launched to
     // execute the linking tasks concurrently.
-    angle::Result link(const Context *context);
+    angle::Result link(const Context *context, angle::JobResultExpectancy resultExpectancy);
 
     // Peek whether there is any running linking tasks.
     bool isLinking() const;
@@ -502,7 +502,6 @@ class Program final : public LabeledObject, public angle::Subject
     void unlink();
     void deleteSelf(const Context *context);
 
-    angle::Result linkImpl(const Context *context);
     angle::Result linkJobImpl(const Caps &caps,
                               const Limitations &limitations,
                               const Version &clientVersion,
