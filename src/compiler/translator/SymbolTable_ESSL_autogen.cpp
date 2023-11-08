@@ -10195,7 +10195,7 @@ constexpr const TFunction dFdxExt_00B(BuiltInId::dFdxExt_Float1,
                                       1,
                                       StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                       EOpDFdx,
-                                      false);
+                                      true);
 constexpr const TFunction dFdxExt_10B(BuiltInId::dFdxExt_Float2,
                                       BuiltInName::dFdxExt,
                                       std::array<TExtension, 1u>{
@@ -10204,7 +10204,7 @@ constexpr const TFunction dFdxExt_10B(BuiltInId::dFdxExt_Float2,
                                       1,
                                       StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                       EOpDFdx,
-                                      false);
+                                      true);
 constexpr const TFunction dFdxExt_20B(BuiltInId::dFdxExt_Float3,
                                       BuiltInName::dFdxExt,
                                       std::array<TExtension, 1u>{
@@ -10213,7 +10213,7 @@ constexpr const TFunction dFdxExt_20B(BuiltInId::dFdxExt_Float3,
                                       1,
                                       StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
                                       EOpDFdx,
-                                      false);
+                                      true);
 constexpr const TFunction dFdxExt_30B(BuiltInId::dFdxExt_Float4,
                                       BuiltInName::dFdxExt,
                                       std::array<TExtension, 1u>{
@@ -10222,7 +10222,7 @@ constexpr const TFunction dFdxExt_30B(BuiltInId::dFdxExt_Float4,
                                       1,
                                       StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                       EOpDFdx,
-                                      false);
+                                      true);
 constexpr const TFunction dFdyExt_00B(BuiltInId::dFdyExt_Float1,
                                       BuiltInName::dFdyExt,
                                       std::array<TExtension, 1u>{
@@ -10231,7 +10231,7 @@ constexpr const TFunction dFdyExt_00B(BuiltInId::dFdyExt_Float1,
                                       1,
                                       StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                       EOpDFdy,
-                                      false);
+                                      true);
 constexpr const TFunction dFdyExt_10B(BuiltInId::dFdyExt_Float2,
                                       BuiltInName::dFdyExt,
                                       std::array<TExtension, 1u>{
@@ -10240,7 +10240,7 @@ constexpr const TFunction dFdyExt_10B(BuiltInId::dFdyExt_Float2,
                                       1,
                                       StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                       EOpDFdy,
-                                      false);
+                                      true);
 constexpr const TFunction dFdyExt_20B(BuiltInId::dFdyExt_Float3,
                                       BuiltInName::dFdyExt,
                                       std::array<TExtension, 1u>{
@@ -10249,7 +10249,7 @@ constexpr const TFunction dFdyExt_20B(BuiltInId::dFdyExt_Float3,
                                       1,
                                       StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
                                       EOpDFdy,
-                                      false);
+                                      true);
 constexpr const TFunction dFdyExt_30B(BuiltInId::dFdyExt_Float4,
                                       BuiltInName::dFdyExt,
                                       std::array<TExtension, 1u>{
@@ -10258,7 +10258,7 @@ constexpr const TFunction dFdyExt_30B(BuiltInId::dFdyExt_Float4,
                                       1,
                                       StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                       EOpDFdy,
-                                      false);
+                                      true);
 constexpr const TFunction fwidthExt_00B(BuiltInId::fwidthExt_Float1,
                                         BuiltInName::fwidthExt,
                                         std::array<TExtension, 1u>{
@@ -10267,7 +10267,7 @@ constexpr const TFunction fwidthExt_00B(BuiltInId::fwidthExt_Float1,
                                         1,
                                         StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                         EOpFwidth,
-                                        false);
+                                        true);
 constexpr const TFunction fwidthExt_10B(BuiltInId::fwidthExt_Float2,
                                         BuiltInName::fwidthExt,
                                         std::array<TExtension, 1u>{
@@ -10276,7 +10276,7 @@ constexpr const TFunction fwidthExt_10B(BuiltInId::fwidthExt_Float2,
                                         1,
                                         StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                         EOpFwidth,
-                                        false);
+                                        true);
 constexpr const TFunction fwidthExt_20B(BuiltInId::fwidthExt_Float3,
                                         BuiltInName::fwidthExt,
                                         std::array<TExtension, 1u>{
@@ -10285,7 +10285,7 @@ constexpr const TFunction fwidthExt_20B(BuiltInId::fwidthExt_Float3,
                                         1,
                                         StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
                                         EOpFwidth,
-                                        false);
+                                        true);
 constexpr const TFunction fwidthExt_30B(BuiltInId::fwidthExt_Float4,
                                         BuiltInName::fwidthExt,
                                         std::array<TExtension, 1u>{
@@ -10294,7 +10294,7 @@ constexpr const TFunction fwidthExt_30B(BuiltInId::fwidthExt_Float4,
                                         1,
                                         StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                         EOpFwidth,
-                                        false);
+                                        true);
 constexpr const TFunction dFdx_00B(BuiltInId::dFdx_Float1,
                                    BuiltInName::dFdx,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
@@ -10302,7 +10302,7 @@ constexpr const TFunction dFdx_00B(BuiltInId::dFdx_Float1,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                    EOpDFdx,
-                                   false);
+                                   true);
 constexpr const TFunction dFdx_10B(BuiltInId::dFdx_Float2,
                                    BuiltInName::dFdx,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
@@ -10310,7 +10310,7 @@ constexpr const TFunction dFdx_10B(BuiltInId::dFdx_Float2,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                    EOpDFdx,
-                                   false);
+                                   true);
 constexpr const TFunction dFdx_20B(BuiltInId::dFdx_Float3,
                                    BuiltInName::dFdx,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
@@ -10318,7 +10318,7 @@ constexpr const TFunction dFdx_20B(BuiltInId::dFdx_Float3,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
                                    EOpDFdx,
-                                   false);
+                                   true);
 constexpr const TFunction dFdx_30B(BuiltInId::dFdx_Float4,
                                    BuiltInName::dFdx,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
@@ -10326,7 +10326,7 @@ constexpr const TFunction dFdx_30B(BuiltInId::dFdx_Float4,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                    EOpDFdx,
-                                   false);
+                                   true);
 constexpr const TFunction dFdy_00B(BuiltInId::dFdy_Float1,
                                    BuiltInName::dFdy,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
@@ -10334,7 +10334,7 @@ constexpr const TFunction dFdy_00B(BuiltInId::dFdy_Float1,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                    EOpDFdy,
-                                   false);
+                                   true);
 constexpr const TFunction dFdy_10B(BuiltInId::dFdy_Float2,
                                    BuiltInName::dFdy,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
@@ -10342,7 +10342,7 @@ constexpr const TFunction dFdy_10B(BuiltInId::dFdy_Float2,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                    EOpDFdy,
-                                   false);
+                                   true);
 constexpr const TFunction dFdy_20B(BuiltInId::dFdy_Float3,
                                    BuiltInName::dFdy,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
@@ -10350,7 +10350,7 @@ constexpr const TFunction dFdy_20B(BuiltInId::dFdy_Float3,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
                                    EOpDFdy,
-                                   false);
+                                   true);
 constexpr const TFunction dFdy_30B(BuiltInId::dFdy_Float4,
                                    BuiltInName::dFdy,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
@@ -10358,7 +10358,7 @@ constexpr const TFunction dFdy_30B(BuiltInId::dFdy_Float4,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                    EOpDFdy,
-                                   false);
+                                   true);
 constexpr const TFunction fwidth_00B(BuiltInId::fwidth_Float1,
                                      BuiltInName::fwidth,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
@@ -10366,7 +10366,7 @@ constexpr const TFunction fwidth_00B(BuiltInId::fwidth_Float1,
                                      1,
                                      StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                      EOpFwidth,
-                                     false);
+                                     true);
 constexpr const TFunction fwidth_10B(BuiltInId::fwidth_Float2,
                                      BuiltInName::fwidth,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
@@ -10374,7 +10374,7 @@ constexpr const TFunction fwidth_10B(BuiltInId::fwidth_Float2,
                                      1,
                                      StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                      EOpFwidth,
-                                     false);
+                                     true);
 constexpr const TFunction fwidth_20B(BuiltInId::fwidth_Float3,
                                      BuiltInName::fwidth,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
@@ -10382,7 +10382,7 @@ constexpr const TFunction fwidth_20B(BuiltInId::fwidth_Float3,
                                      1,
                                      StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
                                      EOpFwidth,
-                                     false);
+                                     true);
 constexpr const TFunction fwidth_30B(BuiltInId::fwidth_Float4,
                                      BuiltInName::fwidth,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
@@ -10390,7 +10390,7 @@ constexpr const TFunction fwidth_30B(BuiltInId::fwidth_Float4,
                                      1,
                                      StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                      EOpFwidth,
-                                     false);
+                                     true);
 constexpr const TFunction interpolateAtCentroid_00B(
     BuiltInId::interpolateAtCentroid_Float1,
     BuiltInName::interpolateAtCentroid,

@@ -46,9 +46,6 @@
 //         previously given that operator have been marked as having side effect to preserve the
 //         prior behavior.  Many of these functions don't actually have side effects, and can be
 //         cleaned up.  http://anglebug.com/6061
-//         TODO: dFdx, dFdy and fwidth were explicitly marked as having side-effects by Olli.  They
-//         don't actually have side effects, and it may have been done to work around a bug.  Try
-//         and clean these up.  http://anglebug.com/6061
 //
 //   Function declarations:
 //   Lines that declare functions are in a similar format as in the GLSL spec:
@@ -947,15 +944,15 @@ GROUP BEGIN EXT_YUV_target
 GROUP END EXT_YUV_target
 
 GROUP BEGIN DerivativesFS {"queryFunction": true, "shader_type": "FRAGMENT"}
-  DEFAULT METADATA {"essl_level": "ESSL1_BUILTINS", "essl_extension": "OES_standard_derivatives", "hasSideEffects": "true", "suffix": "Ext"}
+  DEFAULT METADATA {"essl_level": "ESSL1_BUILTINS", "essl_extension": "OES_standard_derivatives", "suffix": "Ext"}
     genType dFdx(genType);
     genType dFdy(genType);
     genType fwidth(genType);
-  DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "glsl_level": "COMMON_BUILTINS", "hasSideEffects": "true"}
+  DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "glsl_level": "COMMON_BUILTINS"}
     genType dFdx(genType);
     genType dFdy(genType);
     genType fwidth(genType);
-  DEFAULT METADATA {"glsl_level": "GLSL4_5_BUILTINS", "hasSideEffects": "true"}
+  DEFAULT METADATA {"glsl_level": "GLSL4_5_BUILTINS"}
     genType dFdxFine(genType);
     genType dFdyFine(genType);
     genType dFdxCoarse(genType);
