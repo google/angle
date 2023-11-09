@@ -7064,17 +7064,20 @@ angle::Result ImageHelper::CopyImageSubData(const gl::Context *context,
     if (CanCopyWithTransferForCopyImage(contextVk->getRenderer(), srcImage, srcTilingMode, dstImage,
                                         destTilingMode))
     {
-        bool isSrc3D = srcImage->getType() == VK_IMAGE_TYPE_3D;
-        bool isDst3D = dstImage->getType() == VK_IMAGE_TYPE_3D;
+        bool isSrc3D                         = srcImage->getType() == VK_IMAGE_TYPE_3D;
+        bool isDst3D                         = dstImage->getType() == VK_IMAGE_TYPE_3D;
+        const VkImageAspectFlags aspectFlags = srcImage->getAspectFlags();
+
+        ASSERT(srcImage->getAspectFlags() == dstImage->getAspectFlags());
 
         VkImageCopy region = {};
 
-        region.srcSubresource.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
+        region.srcSubresource.aspectMask     = aspectFlags;
         region.srcSubresource.mipLevel       = srcImage->toVkLevel(srcLevelGL).get();
         region.srcSubresource.baseArrayLayer = isSrc3D ? 0 : srcZ;
         region.srcSubresource.layerCount     = isSrc3D ? 1 : srcDepth;
 
-        region.dstSubresource.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
+        region.dstSubresource.aspectMask     = aspectFlags;
         region.dstSubresource.mipLevel       = dstImage->toVkLevel(dstLevelGL).get();
         region.dstSubresource.baseArrayLayer = isDst3D ? 0 : dstZ;
         region.dstSubresource.layerCount     = isDst3D ? 1 : srcDepth;
@@ -7093,15 +7096,13 @@ angle::Result ImageHelper::CopyImageSubData(const gl::Context *context,
         if (srcImage == dstImage)
         {
             access.onImageSelfCopy(dstLevelGL, 1, region.dstSubresource.baseArrayLayer,
-                                   region.dstSubresource.layerCount, VK_IMAGE_ASPECT_COLOR_BIT,
-                                   srcImage);
+                                   region.dstSubresource.layerCount, aspectFlags, srcImage);
         }
         else
         {
-            access.onImageTransferRead(VK_IMAGE_ASPECT_COLOR_BIT, srcImage);
+            access.onImageTransferRead(aspectFlags, srcImage);
             access.onImageTransferWrite(dstLevelGL, 1, region.dstSubresource.baseArrayLayer,
-                                        region.dstSubresource.layerCount, VK_IMAGE_ASPECT_COLOR_BIT,
-                                        dstImage);
+                                        region.dstSubresource.layerCount, aspectFlags, dstImage);
         }
 
         OutsideRenderPassCommandBuffer *commandBuffer;
