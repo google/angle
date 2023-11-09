@@ -1505,8 +1505,25 @@ void GenerateCaps(const FunctionsGL *functions,
                                 functions->hasGLESExtension("GL_EXT_depth_clamp");
     extensions->polygonOffsetClampEXT = functions->hasExtension("GL_EXT_polygon_offset_clamp");
 
-    // Not currently exposed on native OpenGL ES due to driver bugs.
-    extensions->polygonModeNV    = functions->standard == STANDARD_GL_DESKTOP;
+    if (functions->standard == STANDARD_GL_DESKTOP)
+    {
+        extensions->polygonModeNV = true;
+    }
+    else if (functions->hasGLESExtension("GL_NV_polygon_mode"))
+    {
+        // Some drivers expose the extension string without supporting its caps.
+        ANGLE_GL_CLEAR_ERRORS();
+        functions->isEnabled(GL_POLYGON_OFFSET_LINE_NV);
+        if (functions->getError() != GL_NO_ERROR)
+        {
+            WARN() << "Not enabling GL_NV_polygon_mode because "
+                      "its native driver support is incomplete.";
+        }
+        else
+        {
+            extensions->polygonModeNV = true;
+        }
+    }
     extensions->polygonModeANGLE = extensions->polygonModeNV;
 
     // This functionality is provided by Shader Model 5 and should be available in GLSL 4.00
