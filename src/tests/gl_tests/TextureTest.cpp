@@ -8577,16 +8577,14 @@ class TextureLimitsTest : public ANGLETest<>
         vertexShaderStr << "}";
 
         std::stringstream fragmentShaderStr;
-        fragmentShaderStr << "varying mediump vec4 color;\n"
-                          << "varying mediump vec2 texCoord;\n";
+        fragmentShaderStr << "varying mediump vec4 color;\n" << "varying mediump vec2 texCoord;\n";
 
         for (GLint textureIndex = 0; textureIndex < fragmentTextureCount; ++textureIndex)
         {
             fragmentShaderStr << "uniform sampler2D " << fragPrefix << textureIndex << ";\n";
         }
 
-        fragmentShaderStr << "void main() {\n"
-                          << "  gl_FragColor = color;\n";
+        fragmentShaderStr << "void main() {\n" << "  gl_FragColor = color;\n";
 
         for (GLint textureIndex = 0; textureIndex < fragmentActiveTextureCount; ++textureIndex)
         {
@@ -12583,6 +12581,185 @@ TEST_P(CopyImageTestES31, CubeMapCopyImageSubData)
     // Swap again to end the capture
     swapBuffers();
 
+    ASSERT_GL_NO_ERROR();
+}
+
+// Verify that copies between texture layers works
+TEST_P(CopyImageTestES31, ArraySelfCopyImageSubData)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_copy_image"));
+
+    // Set up a texture with multiple layers, then verify we can copy between them
+    constexpr uint32_t kWidth  = 13;
+    constexpr uint32_t kHeight = 57;
+    constexpr uint32_t kLayers = 5;
+    constexpr uint32_t kLevels = 2;
+    std::vector<GLColor> pixelsRed(kWidth * kHeight, GLColor::red);
+    std::vector<GLColor> pixelsGreen(kWidth * kHeight, GLColor::green);
+    std::vector<GLColor> pixelsBlue(kWidth * kHeight, GLColor::blue);
+
+    const GLColor *colors[3] = {
+        pixelsRed.data(),
+        pixelsGreen.data(),
+        pixelsBlue.data(),
+    };
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D_ARRAY, tex);
+    glTexStorage3D(GL_TEXTURE_2D_ARRAY, kLevels, GL_RGBA8, kWidth, kHeight, kLayers);
+    for (uint32_t level = 0; level < kLevels; ++level)
+    {
+        for (uint32_t layer = 0; layer < kLayers; ++layer)
+        {
+            glTexSubImage3D(GL_TEXTURE_2D_ARRAY, level, 0, 0, layer, kWidth >> level,
+                            kHeight >> level, 1, GL_RGBA, GL_UNSIGNED_BYTE,
+                            colors[(level + layer) % 3]);
+        }
+    }
+    ASSERT_GL_NO_ERROR();
+
+    // The texture has the following colors:
+    //              Layer 0   Layer 1   Layer 2   Layer 3   Layer 4
+    // Level  0      Red       Green     Blue      Red       Green
+    // Level  1      Green     Blue      Red       Green     Blue
+
+    // Copy level 0, layer 0 to level 0, layer 2
+    glCopyImageSubDataEXT(tex, GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0, tex, GL_TEXTURE_2D_ARRAY, 0, 0, 0,
+                          2, kWidth, kHeight, 1);
+
+    // Copy level 1, layers 3, 4 to level 1, layers 1, 2
+    glCopyImageSubDataEXT(tex, GL_TEXTURE_2D_ARRAY, 1, 0, 0, 3, tex, GL_TEXTURE_2D_ARRAY, 1, 0, 0,
+                          1, kWidth >> 1, kHeight >> 1, 2);
+
+    // Partially copy level 1, layer 1 to level 0, layer 3
+    glCopyImageSubDataEXT(tex, GL_TEXTURE_2D_ARRAY, 1, kWidth / 8, kHeight / 8, 1, tex,
+                          GL_TEXTURE_2D_ARRAY, 0, kWidth / 4, kHeight / 4, 3, kWidth / 4,
+                          kHeight / 4, 1);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify colors
+    GLFramebuffer FBO;
+    glBindFramebuffer(GL_FRAMEBUFFER, FBO);
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex, 0, 0);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, GLColor::red);
+
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex, 0, 1);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, GLColor::green);
+
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex, 0, 2);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, GLColor::red);
+
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex, 0, 3);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight / 4, GLColor::red);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWidth / 4, kHeight, GLColor::red);
+    EXPECT_PIXEL_RECT_EQ(0, kHeight / 4 + kHeight / 4, kWidth,
+                         kHeight - (kHeight / 4 + kHeight / 4), GLColor::red);
+    EXPECT_PIXEL_RECT_EQ(kWidth / 4 + kWidth / 4, 0, kWidth - (kWidth / 4 + kWidth / 4), kHeight,
+                         GLColor::red);
+    EXPECT_PIXEL_RECT_EQ(kWidth / 4, kHeight / 4, kWidth / 4, kHeight / 4, GLColor::green);
+
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex, 0, 4);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, GLColor::green);
+
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex, 1, 0);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWidth >> 1, kHeight >> 1, GLColor::green);
+
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex, 1, 1);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWidth >> 1, kHeight >> 1, GLColor::green);
+
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex, 1, 2);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWidth >> 1, kHeight >> 1, GLColor::blue);
+
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex, 1, 3);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWidth >> 1, kHeight >> 1, GLColor::green);
+
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex, 1, 4);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWidth >> 1, kHeight >> 1, GLColor::blue);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Verify that copies between 3D texture slices work
+TEST_P(CopyImageTestES31, Texture3DSelfCopyImageSubData)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_copy_image"));
+
+    // Set up a texture with multiple layers, then verify we can copy between them
+    constexpr uint32_t kWidth  = 23;
+    constexpr uint32_t kHeight = 47;
+    constexpr uint32_t kDepth  = 5;
+    constexpr uint32_t kLevels = 2;
+    std::vector<GLColor> pixelsRed(kWidth * kHeight, GLColor::red);
+    std::vector<GLColor> pixelsGreen(kWidth * kHeight, GLColor::green);
+    std::vector<GLColor> pixelsBlue(kWidth * kHeight, GLColor::blue);
+
+    const GLColor *colors[3] = {
+        pixelsRed.data(),
+        pixelsGreen.data(),
+        pixelsBlue.data(),
+    };
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_3D, tex);
+    glTexStorage3D(GL_TEXTURE_3D, kLevels, GL_RGBA8, kWidth, kHeight, kDepth);
+    for (uint32_t level = 0; level < kLevels; ++level)
+    {
+        for (uint32_t depth = 0; depth < kDepth >> level; ++depth)
+        {
+            glTexSubImage3D(GL_TEXTURE_3D, level, 0, 0, depth, kWidth >> level, kHeight >> level, 1,
+                            GL_RGBA, GL_UNSIGNED_BYTE, colors[(level + depth) % 3]);
+        }
+    }
+    ASSERT_GL_NO_ERROR();
+
+    // The texture has the following colors:
+    //              Slice 0   Slice 1   Slice 2   Slice 3   Slice 4
+    // Level  0      Red       Green     Blue      Red       Green
+    // Level  1      Green     Blue
+
+    // Copy level 1, slice 1 to level 1, slice 0
+    glCopyImageSubDataEXT(tex, GL_TEXTURE_3D, 1, 0, 0, 1, tex, GL_TEXTURE_3D, 1, 0, 0, 0,
+                          kWidth >> 1, kHeight >> 1, 1);
+    ASSERT_GL_NO_ERROR();
+
+    // Copy level 0, slice 3, 4 to level 0, slice 1, 2
+    glCopyImageSubDataEXT(tex, GL_TEXTURE_3D, 0, 0, 0, 3, tex, GL_TEXTURE_3D, 0, 0, 0, 1, kWidth,
+                          kHeight, 2);
+    ASSERT_GL_NO_ERROR();
+
+    // Partially copy level 1, slice 1 to level 0, slice 3
+    glCopyImageSubDataEXT(tex, GL_TEXTURE_3D, 1, kWidth / 8, kHeight / 8, 1, tex, GL_TEXTURE_3D, 0,
+                          kWidth / 4, kHeight / 4, 3, kWidth / 4, kHeight / 4, 1);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify colors
+    GLFramebuffer FBO;
+    glBindFramebuffer(GL_FRAMEBUFFER, FBO);
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex, 0, 0);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, GLColor::red);
+
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex, 0, 1);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, GLColor::red);
+
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex, 0, 2);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, GLColor::green);
+
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex, 0, 3);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight / 4, GLColor::red);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWidth / 4, kHeight, GLColor::red);
+    EXPECT_PIXEL_RECT_EQ(0, kHeight / 4 + kHeight / 4, kWidth,
+                         kHeight - (kHeight / 4 + kHeight / 4), GLColor::red);
+    EXPECT_PIXEL_RECT_EQ(kWidth / 4 + kWidth / 4, 0, kWidth - (kWidth / 4 + kWidth / 4), kHeight,
+                         GLColor::red);
+    EXPECT_PIXEL_RECT_EQ(kWidth / 4, kHeight / 4, kWidth / 4, kHeight / 4, GLColor::blue);
+
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex, 0, 4);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, GLColor::green);
+
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex, 1, 0);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWidth >> 1, kHeight >> 1, GLColor::blue);
+
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex, 1, 1);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWidth >> 1, kHeight >> 1, GLColor::blue);
     ASSERT_GL_NO_ERROR();
 }
 
