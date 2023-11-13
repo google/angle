@@ -31,7 +31,6 @@ import logging
 import math
 import multiprocessing
 import os
-import psutil
 import queue
 import re
 import shutil
@@ -87,17 +86,6 @@ default_case_with_return_template = """\
 def winext(name, ext):
     return ("%s.%s" % (name, ext)) if sys.platform == "win32" else name
 
-
-def AutodetectGoma():
-    for p in psutil.process_iter():
-        try:
-            if winext('compiler_proxy', 'exe') == p.name():
-                return True
-        except:
-            pass
-    return False
-
-
 class SubProcess():
 
     def __init__(self, command, logger, env=os.environ, pipe_stdout=PIPE_STDOUT):
@@ -148,7 +136,6 @@ class ChildProcessesManager():
 
         self._gn_path = self._GetGnAbsolutePaths()
         self._autoninja_path = self._GetAutoNinjaAbsolutePaths()
-        self._use_goma = AutodetectGoma()
         self._logger = logger
         self._ninja_lock = ninja_lock
         self.runtimes = {}
@@ -214,11 +201,7 @@ class ChildProcessesManager():
 
     def RunGNGen(self, build_dir, pipe_stdout, extra_gn_args=[]):
         gn_args = [('angle_with_capture_by_default', 'true')] + extra_gn_args
-        if self._use_goma and not self._args.use_reclient:
-            gn_args.append(('use_goma', 'true'))
-            if self._args.goma_dir:
-                gn_args.append(('goma_dir', '"%s"' % self._args.goma_dir))
-        elif self._args.use_reclient:
+        if self._args.use_reclient:
             gn_args.append(('use_remoteexec', 'true'))
         if not self._args.debug:
             gn_args.append(('is_debug', 'false'))
@@ -1087,10 +1070,6 @@ if __name__ == '__main__':
         action='store_true',
         help='Whether to keep the temp files and folders. Off by default')
     parser.add_argument('--purge', help='Purge all build directories on exit.')
-    parser.add_argument(
-        '--goma-dir',
-        default='',
-        help='Set custom goma directory. Uses the goma in path by default.')
     parser.add_argument(
         '--use-reclient',
         default=False,
