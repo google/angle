@@ -45,7 +45,7 @@ vars = {
   'checkout_angle_mesa': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '3ce1fc718a19be7bcda974ace30bef7fa0bac8b0',
+  'chromium_revision': 'df1a4a20b09fea9bc11347406f1f760abe7b2f58',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -150,7 +150,7 @@ deps = {
   },
 
   'buildtools': {
-    'url': Var('chromium_git') + '/chromium/src/buildtools.git@fec65595276294f0cdd84885e3780a72f0a0a488',
+    'url': Var('chromium_git') + '/chromium/src/buildtools.git@b1425178e036f820c6c67ffd53438bc7c8ef237b',
     'condition': 'not build_with_chromium',
   },
 
@@ -204,7 +204,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@2ecbe124ae0b2bc01268b5c30604a1703a3e2edf',
+    'url': '{chromium_git}/chromium/src/testing@3e28c7af3bbac1f95f8c427fdfcf95ea444babe0',
     'condition': 'not build_with_chromium',
   },
 
@@ -375,7 +375,7 @@ deps = {
   },
 
   'third_party/depot_tools': {
-    'url': Var('chromium_git') + '/chromium/tools/depot_tools.git@ea9bf7f343d3510746a51313a20fb596cd7a6d58',
+    'url': Var('chromium_git') + '/chromium/tools/depot_tools.git@7f22330c69635441c9b3a5718a8490b162ddb739',
     'condition': 'not build_with_chromium',
   },
 
@@ -489,7 +489,7 @@ deps = {
    },
 
   'third_party/libc++/src': {
-    'url': Var('chromium_git') + '/external/github.com/llvm/llvm-project/libcxx.git@2a2315e69ab61cb488c18fbbb1cd502be049c122',
+    'url': Var('chromium_git') + '/external/github.com/llvm/llvm-project/libcxx.git@2acf65d77d13d1aa83b0243d3df99deee0eb4d67',
     'condition': 'not build_with_chromium',
   },
 
@@ -699,7 +699,7 @@ deps = {
   },
 
   'tools/mb': {
-    'url': Var('chromium_git') + '/chromium/src/tools/mb@39112f33f9f9cd5f9a7276910a782a4e5337c64f',
+    'url': Var('chromium_git') + '/chromium/src/tools/mb@3c83ca411091a4040a807b2d57a879463124e893',
     'condition': 'not build_with_chromium',
   },
 
