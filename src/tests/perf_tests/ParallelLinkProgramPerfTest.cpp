@@ -97,7 +97,13 @@ class ParallelLinkProgramBenchmark : public ANGLERenderTest,
 
 ParallelLinkProgramBenchmark::ParallelLinkProgramBenchmark()
     : ANGLERenderTest("ParallelLinkProgram", GetParam())
-{}
+{
+    if (IsWindows() && IsNVIDIA() &&
+        GetParam().eglParameters.renderer == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
+    {
+        skipTest("http://angle.com/8410 crashes in the driver");
+    }
+}
 
 void ParallelLinkProgramBenchmark::initializeBenchmark()
 {
