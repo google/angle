@@ -45,7 +45,7 @@ vars = {
   'checkout_angle_mesa': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '7b99529aa4946002b25d46608c132b59e49a1c6a',
+  'chromium_revision': '3ce1fc718a19be7bcda974ace30bef7fa0bac8b0',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -135,7 +135,7 @@ vars = {
   'reclient_version': 're_client_version:0.120.1.f75cfb7-gomaip',
 
   # siso CIPD package version.
-  'siso_version': 'git_revision:9aef05a1a1bddf2cf8e60bc7d9312c7afbfbe9a2',
+  'siso_version': 'git_revision:c4b451b1bbfc63c12459aba4960686f8a82417df',
 
   # 'magic' text to tell depot_tools that git submodules should be accepted but
   # but parity with DEPS file is expected.
@@ -145,12 +145,12 @@ vars = {
 deps = {
 
   'build': {
-    'url': Var('chromium_git') + '/chromium/src/build.git@eb1aaf3896f583c298fc487e7e31ef0c04b0271b',
+    'url': Var('chromium_git') + '/chromium/src/build.git@481e01d61aa1f7cd39b891abb99039cdf64871de',
     'condition': 'not build_with_chromium',
   },
 
   'buildtools': {
-    'url': Var('chromium_git') + '/chromium/src/buildtools.git@8c05271edf10cdfde452a5a99d7833294003b41c',
+    'url': Var('chromium_git') + '/chromium/src/buildtools.git@fec65595276294f0cdd84885e3780a72f0a0a488',
     'condition': 'not build_with_chromium',
   },
 
@@ -163,7 +163,7 @@ deps = {
     'packages': [
       {
         'package': 'gn/gn/linux-${{arch}}',
-        'version': 'git_revision:e4702d7409069c4f12d45ea7b7f0890717ca3f4b',
+        'version': 'git_revision:85bd0a62938bc84e1b8db0ef92be0e2bb634378d',
       }
     ],
     'dep_type': 'cipd',
@@ -174,7 +174,7 @@ deps = {
     'packages': [
       {
         'package': 'gn/gn/mac-${{arch}}',
-        'version': 'git_revision:e4702d7409069c4f12d45ea7b7f0890717ca3f4b',
+        'version': 'git_revision:85bd0a62938bc84e1b8db0ef92be0e2bb634378d',
       }
     ],
     'dep_type': 'cipd',
@@ -196,7 +196,7 @@ deps = {
     'packages': [
       {
         'package': 'gn/gn/windows-amd64',
-        'version': 'git_revision:e4702d7409069c4f12d45ea7b7f0890717ca3f4b',
+        'version': 'git_revision:85bd0a62938bc84e1b8db0ef92be0e2bb634378d',
       }
     ],
     'dep_type': 'cipd',
@@ -204,7 +204,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@e69e220dc68b2e31e3217ad8cf20ef4912c5fa8f',
+    'url': '{chromium_git}/chromium/src/testing@2ecbe124ae0b2bc01268b5c30604a1703a3e2edf',
     'condition': 'not build_with_chromium',
   },
 
