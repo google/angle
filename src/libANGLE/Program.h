@@ -496,8 +496,8 @@ class Program final : public LabeledObject, public angle::Subject
     struct LinkingState;
     ~Program() override;
 
-    // Loads program state according to the specified binary blob.
-    angle::Result deserialize(const Context *context, BinaryInputStream &stream);
+    // Loads program state according to the specified binary blob.  Returns true on success.
+    bool deserialize(const Context *context, BinaryInputStream &stream);
 
     void unlink();
     void deleteSelf(const Context *context);

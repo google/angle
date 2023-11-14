@@ -667,10 +667,7 @@ void Shader::compile(const Context *context, angle::JobResultExpectancy resultEx
     MemoryShaderCache *shaderCache = context->getMemoryShaderCache();
     if (shaderCache)
     {
-        angle::Result cacheResult =
-            shaderCache->getShader(context, this, options, compilerInstance, mShaderHash);
-
-        if (cacheResult == angle::Result::Continue)
+        if (shaderCache->getShader(context, this, options, compilerInstance, mShaderHash))
         {
             compilerInstance.destroy();
             return;
@@ -816,7 +813,7 @@ angle::Result Shader::serialize(const Context *context, angle::MemoryBuffer *bin
         ANGLE_PERF_WARNING(context->getState().getDebug(), GL_DEBUG_SEVERITY_LOW,
                            "Failed to allocate enough memory to serialize a shader. (%zu bytes)",
                            stream.length());
-        return angle::Result::Incomplete;
+        return angle::Result::Stop;
     }
 
     memcpy(binaryOut->data(), stream.data(), stream.length());
@@ -824,37 +821,37 @@ angle::Result Shader::serialize(const Context *context, angle::MemoryBuffer *bin
     return angle::Result::Continue;
 }
 
-angle::Result Shader::deserialize(BinaryInputStream &stream)
+bool Shader::deserialize(BinaryInputStream &stream)
 {
     mState.mCompiledState->deserialize(stream);
 
     if (stream.error())
     {
         // Error while deserializing binary stream
-        return angle::Result::Stop;
+        return false;
     }
 
     // Note: Currently, shader binaries are only supported on backends that don't happen to have any
     // additional state used at link time.  If other backends implement this functionality, this
     // function should call into the backend object to deserialize their part.
 
-    return angle::Result::Continue;
+    return true;
 }
 
-angle::Result Shader::loadBinary(const Context *context, const void *binary, GLsizei length)
+bool Shader::loadBinary(const Context *context, const void *binary, GLsizei length)
 {
     return loadBinaryImpl(context, binary, length, false);
 }
 
-angle::Result Shader::loadShaderBinary(const Context *context, const void *binary, GLsizei length)
+bool Shader::loadShaderBinary(const Context *context, const void *binary, GLsizei length)
 {
     return loadBinaryImpl(context, binary, length, true);
 }
 
-angle::Result Shader::loadBinaryImpl(const Context *context,
-                                     const void *binary,
-                                     GLsizei length,
-                                     bool generatedWithOfflineCompiler)
+bool Shader::loadBinaryImpl(const Context *context,
+                            const void *binary,
+                            GLsizei length,
+                            bool generatedWithOfflineCompiler)
 {
     BinaryInputStream stream(binary, length);
 
@@ -897,17 +894,20 @@ angle::Result Shader::loadBinaryImpl(const Context *context,
         // Load binary from shader cache.
         if (stream.readInt<uint32_t>() != kShaderCacheIdentifier)
         {
-            return angle::Result::Stop;
+            return false;
         }
     }
 
-    ANGLE_TRY(deserialize(stream));
+    if (!deserialize(stream))
+    {
+        return false;
+    }
 
     // Only successfully-compiled shaders are serialized. If deserialization is successful, we can
     // assume the CompileStatus.
     mState.mCompileStatus = CompileStatus::COMPILED;
 
-    return angle::Result::Continue;
+    return true;
 }
 
 void Shader::setShaderKey(const Context *context,

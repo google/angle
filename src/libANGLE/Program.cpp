@@ -1292,7 +1292,10 @@ angle::Result Program::loadBinary(const Context *context,
     unlink();
 
     BinaryInputStream stream(binary, length);
-    ANGLE_TRY(deserialize(context, stream));
+    if (!deserialize(context, stream))
+    {
+        return angle::Result::Continue;
+    }
     // Currently we require the full shader text to compute the program hash.
     // We could also store the binary in the internal program cache.
 
@@ -1303,18 +1306,17 @@ angle::Result Program::loadBinary(const Context *context,
         mState.mExecutable->mDirtyBits.set(uniformBlockIndex);
     }
 
-    // If load returns incomplete, we know for sure that the binary is not compatible with the
+    // If load does not succeed, we know for sure that the binary is not compatible with the
     // backend.  The loaded binary could have been read from the on-disk shader cache and be
     // corrupted or serialized with different revision and subsystem id than the currently loaded
-    // backend.  Returning 'Incomplete' to the caller results in link happening using the original
-    // shader sources.
+    // backend.  Returning to the caller results in link happening using the original shader
+    // sources.
     std::shared_ptr<rx::LinkTask> loadTask;
-    angle::Result result = mProgram->load(context, &stream, &loadTask);
-    if (result == angle::Result::Incomplete)
+    ANGLE_TRY(mProgram->load(context, &stream, &loadTask, successOut));
+    if (!*successOut)
     {
-        return angle::Result::Incomplete;
+        return angle::Result::Continue;
     }
-    ANGLE_TRY(result);
 
     std::unique_ptr<LinkEvent> loadEvent;
     if (loadTask)
@@ -2040,9 +2042,7 @@ void Program::initInterfaceBlockBindings()
 angle::Result Program::syncState(const Context *context)
 {
     ASSERT(!mLinkingState);
-    ANGLE_TRY(mProgram->syncState(context));
-
-    return angle::Result::Continue;
+    return mProgram->syncState(context);
 }
 
 angle::Result Program::serialize(const Context *context, angle::MemoryBuffer *binaryOut) const
@@ -2123,13 +2123,13 @@ angle::Result Program::serialize(const Context *context, angle::MemoryBuffer *bi
         ANGLE_PERF_WARNING(context->getState().getDebug(), GL_DEBUG_SEVERITY_LOW,
                            "Failed to allocate enough memory to serialize a program. (%zu bytes)",
                            stream.length());
-        return angle::Result::Incomplete;
+        return angle::Result::Stop;
     }
     memcpy(binaryOut->data(), stream.data(), stream.length());
     return angle::Result::Continue;
 }
 
-angle::Result Program::deserialize(const Context *context, BinaryInputStream &stream)
+bool Program::deserialize(const Context *context, BinaryInputStream &stream)
 {
     std::vector<uint8_t> angleShaderProgramVersionString(
         angle::GetANGLEShaderProgramVersionHashSize(), 0);
@@ -2139,28 +2139,28 @@ angle::Result Program::deserialize(const Context *context, BinaryInputStream &st
                angleShaderProgramVersionString.size()) != 0)
     {
         mState.mInfoLog << "Invalid program binary version.";
-        return angle::Result::Stop;
+        return false;
     }
 
     bool binaryIs64Bit = stream.readBool();
     if (binaryIs64Bit != angle::Is64Bit())
     {
         mState.mInfoLog << "cannot load program binaries across CPU architectures.";
-        return angle::Result::Stop;
+        return false;
     }
 
     int angleSHVersion = stream.readInt<int>();
     if (angleSHVersion != angle::GetANGLESHVersion())
     {
         mState.mInfoLog << "cannot load program binaries across different angle sh version.";
-        return angle::Result::Stop;
+        return false;
     }
 
     std::string rendererString = stream.readString();
     if (rendererString != context->getRendererString())
     {
         mState.mInfoLog << "Cannot load program binary due to changed renderer string.";
-        return angle::Result::Stop;
+        return false;
     }
 
     int majorVersion = stream.readInt<int>();
@@ -2169,7 +2169,7 @@ angle::Result Program::deserialize(const Context *context, BinaryInputStream &st
         minorVersion != context->getClientMinorVersion())
     {
         mState.mInfoLog << "Cannot load program binaries across different ES context versions.";
-        return angle::Result::Stop;
+        return false;
     }
 
     mState.mSeparable                   = stream.readBool();
@@ -2194,7 +2194,7 @@ angle::Result Program::deserialize(const Context *context, BinaryInputStream &st
         context->getFrontendFeatures().disableProgramCachingForTransformFeedback.enabled)
     {
         mState.mInfoLog << "Current driver does not support transform feedback in binary programs.";
-        return angle::Result::Stop;
+        return false;
     }
 
     if (!mState.mAttachedShaders[ShaderType::Compute])
@@ -2220,7 +2220,7 @@ angle::Result Program::deserialize(const Context *context, BinaryInputStream &st
                                                                              std::move(sources));
     }
 
-    return angle::Result::Continue;
+    return true;
 }
 
 void Program::postResolveLink(const Context *context)
