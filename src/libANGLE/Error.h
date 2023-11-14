@@ -169,9 +169,6 @@ enum class [[nodiscard]] Result
 {
     Continue,
     Stop,
-
-    // TODO: deprecated, and will be removed shortly.  http://anglebug.com/8414
-    Incomplete,
 };
 
 // TODO(jmadill): Remove this when refactor is complete. http://anglebug.com/3041
