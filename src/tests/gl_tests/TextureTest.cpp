@@ -9937,6 +9937,52 @@ TEST_P(Texture2DTestES3, UnpackSkipPixelsOutOfBounds)
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
+// Test unpacking to texture from a buffer with a compatible format but different type.
+// Compatible formats can be found in "Table 8.2: Valid combinations of format, type, and sized
+// internal format." of the OpenGL ES 3.2 spec.
+TEST_P(Texture2DTestES3, UnpackCompatibleFormatButDifferentType)
+{
+    glBindTexture(GL_TEXTURE_2D, mTexture2D);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    ASSERT_GL_NO_ERROR();
+
+    // Create texture with GL_RGBA4 format and fill with red
+    std::vector<GLColor> pixelsRed(128u * 128u, GLColor::red);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA4, 128, 128, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 pixelsRed.data());
+    ASSERT_GL_NO_ERROR();
+
+    // Call glTexSubImage2D with incompatible format and expect an error
+    std::array<GLubyte, 2> rgColor = {255, 255};
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RG, GL_UNSIGNED_BYTE, rgColor.data());
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    glUseProgram(mProgram);
+    drawQuad(mProgram, "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // Create unpack buffer with GL_RGBA8
+    GLBuffer buf;
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, buf.get());
+    std::vector<GLColor> pixelsGreen(128u * 128u, GLColor::green);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, pixelsGreen.size() * 4u, pixelsGreen.data(),
+                 GL_DYNAMIC_COPY);
+    ASSERT_GL_NO_ERROR();
+
+    // Unpack GL_RGBA8 buffer data to GL_RGBA4 texture
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 128, 128, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+    ASSERT_GL_NO_ERROR();
+
+    // Validate that the data was unpacked correctly
+    glUseProgram(mProgram);
+    drawQuad(mProgram, "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Test that unpacking rows that overlap in a pixel unpack buffer works as expected.
 TEST_P(Texture2DTestES3, UnpackOverlappingRowsFromUnpackBuffer)
 {

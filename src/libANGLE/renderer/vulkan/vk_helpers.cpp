@@ -7431,7 +7431,7 @@ angle::Result ImageHelper::stageSubresourceUpdateImpl(ContextVk *contextVk,
     else
     {
         ASSERT(storageFormat.pixelBytes != 0);
-        const bool stencilOnly = formatInfo.internalFormat == GL_STENCIL_INDEX8;
+        const bool stencilOnly = formatInfo.sizedInternalFormat == GL_STENCIL_INDEX8;
 
         if (!stencilOnly && storageFormat.id == angle::FormatID::D24_UNORM_S8_UINT)
         {
