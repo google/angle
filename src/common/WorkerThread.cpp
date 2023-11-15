@@ -11,6 +11,7 @@
 #include "common/WorkerThread.h"
 
 #include "common/angleutils.h"
+#include "common/system_utils.h"
 
 // Controls if our threading code uses std::async or falls back to single-threaded operations.
 // Note that we can't easily use std::async in UWPs due to UWP threading restrictions.
@@ -164,6 +165,8 @@ std::shared_ptr<WaitableEvent> AsyncWorkerPool::postWorkerTask(const std::shared
 
 void AsyncWorkerPool::threadLoop()
 {
+    angle::SetCurrentThreadName("ANGLE-Worker");
+
     while (true)
     {
         Task task;
