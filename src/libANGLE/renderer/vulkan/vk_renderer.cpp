@@ -5631,18 +5631,21 @@ angle::Result Renderer::flushRenderPassCommands(
     vk::ProtectionType protectionType,
     egl::ContextPriority priority,
     const vk::RenderPass &renderPass,
+    VkFramebuffer framebufferOverride,
     vk::RenderPassCommandBufferHelper **renderPassCommands)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "Renderer::flushRenderPassCommands");
     if (isAsyncCommandQueueEnabled())
     {
         ANGLE_TRY(mCommandProcessor.enqueueFlushRenderPassCommands(
-            context, protectionType, priority, renderPass, renderPassCommands));
+            context, protectionType, priority, renderPass, framebufferOverride,
+            renderPassCommands));
     }
     else
     {
         ANGLE_TRY(mCommandQueue.flushRenderPassCommands(context, protectionType, priority,
-                                                        renderPass, renderPassCommands));
+                                                        renderPass, framebufferOverride,
+                                                        renderPassCommands));
     }
 
     return angle::Result::Continue;

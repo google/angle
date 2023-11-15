@@ -462,6 +462,7 @@ class Renderer : angle::NonCopyable
                                           vk::ProtectionType protectionType,
                                           egl::ContextPriority priority,
                                           const vk::RenderPass &renderPass,
+                                          VkFramebuffer framebufferOverride,
                                           vk::RenderPassCommandBufferHelper **renderPassCommands);
     angle::Result flushOutsideRPCommands(
         vk::Context *context,

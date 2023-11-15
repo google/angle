@@ -4553,10 +4553,9 @@ FramebufferHelper &FramebufferHelper::operator=(FramebufferHelper &&other)
     return *this;
 }
 
-angle::Result FramebufferHelper::init(ContextVk *contextVk,
-                                      const VkFramebufferCreateInfo &createInfo)
+angle::Result FramebufferHelper::init(Context *context, const VkFramebufferCreateInfo &createInfo)
 {
-    ANGLE_VK_TRY(contextVk, mFramebuffer.init(contextVk->getDevice(), createInfo));
+    ANGLE_VK_TRY(context, mFramebuffer.init(context->getDevice(), createInfo));
     return angle::Result::Continue;
 }
 
@@ -6812,6 +6811,19 @@ angle::Result RenderPassCache::MakeRenderPass(vk::Context *context,
         ++attachmentCount;
     }
 
+    // Pack fragment shading rate attachment, if any
+    if (desc.hasFragmentShadingAttachment())
+    {
+        vk::UnpackFragmentShadingRateAttachmentDesc(&attachmentDescs[attachmentCount.get()]);
+
+        fragmentShadingRateAttachmentRef.sType      = VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2;
+        fragmentShadingRateAttachmentRef.attachment = attachmentCount.get();
+        fragmentShadingRateAttachmentRef.layout =
+            VK_IMAGE_LAYOUT_FRAGMENT_SHADING_RATE_ATTACHMENT_OPTIMAL_KHR;
+
+        ++attachmentCount;
+    }
+
     // Pack color resolve attachments
     const uint32_t nonResolveAttachmentCount = attachmentCount.get();
     for (uint32_t colorIndexGL = 0; colorIndexGL < desc.colorAttachmentRange(); ++colorIndexGL)
@@ -6917,19 +6929,6 @@ angle::Result RenderPassCache::MakeRenderPass(vk::Context *context,
             &attachmentDescs[attachmentCount.get()], attachmentFormatID,
             desc.hasDepthUnresolveAttachment(), desc.hasStencilUnresolveAttachment(),
             isDepthInvalidated, isStencilInvalidated);
-
-        ++attachmentCount;
-    }
-
-    // Pack fragment shading rate attachment, if any
-    if (desc.hasFragmentShadingAttachment())
-    {
-        vk::UnpackFragmentShadingRateAttachmentDesc(&attachmentDescs[attachmentCount.get()]);
-
-        fragmentShadingRateAttachmentRef.sType      = VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2;
-        fragmentShadingRateAttachmentRef.attachment = attachmentCount.get();
-        fragmentShadingRateAttachmentRef.layout =
-            VK_IMAGE_LAYOUT_FRAGMENT_SHADING_RATE_ATTACHMENT_OPTIMAL_KHR;
 
         ++attachmentCount;
     }

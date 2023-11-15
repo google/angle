@@ -437,8 +437,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         UpdateDepthFeedbackLoopReason depthReason,
         UpdateDepthFeedbackLoopReason stencilReason);
 
-    angle::Result optimizeRenderPassForPresent(VkFramebuffer framebufferHandle,
-                                               vk::ImageViewHelper *colorImageView,
+    angle::Result optimizeRenderPassForPresent(vk::ImageViewHelper *colorImageView,
                                                vk::ImageHelper *colorImage,
                                                vk::ImageHelper *colorImageMS,
                                                vk::PresentMode presentMode,
@@ -602,7 +601,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         return flushOutsideRenderPassCommands();
     }
 
-    angle::Result beginNewRenderPass(vk::MaybeImagelessFramebuffer &framebuffer,
+    angle::Result beginNewRenderPass(vk::RenderPassFramebuffer &&framebuffer,
                                      const gl::Rectangle &renderArea,
                                      const vk::RenderPassDesc &renderPassDesc,
                                      const vk::AttachmentOpsArray &renderPassAttachmentOps,
@@ -629,6 +628,15 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     {
         return mRenderPassCommands->started() &&
                mRenderPassCommands->getQueueSerial() == queueSerial;
+    }
+    bool hasStartedRenderPassWithSwapchainFramebuffer(const vk::Framebuffer &framebuffer) const
+    {
+        // WindowSurfaceVk caches its own framebuffers and guarantees that render passes are not
+        // kept open between frames (including when a swapchain is recreated and framebuffer handles
+        // change).  It is therefore safe to verify an open render pass by the framebuffer handle
+        return mRenderPassCommands->started() &&
+               mRenderPassCommands->getFramebuffer().getFramebuffer().getHandle() ==
+                   framebuffer.getHandle();
     }
 
     bool isRenderPassStartedAndUsesBuffer(const vk::BufferHelper &buffer) const

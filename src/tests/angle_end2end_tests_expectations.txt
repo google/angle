@@ -577,10 +577,11 @@ b/308668391 PIXEL4ORXL VULKAN : ImageTest.SourceYUVAHBTargetExternalRGBSampleNoD
 8537 PIXEL4ORXL GLES : PbufferTest.BindTexImageOverwriteReleasesOrphanedPbuffer/* = SKIP
 8537 PIXEL4ORXL GLES : PbufferTest.BindTexImageOverwrite/* = SKIP
 
-8626 PIXEL4ORXL GLES : FramebufferTest_ES31.MultisampleResolveBothAttachments/* = SKIP
 8626 PIXEL4ORXL GLES : FramebufferTest_ES31.MultisampleResolveMultipleTimes/* = SKIP
 8626 PIXEL4ORXL GLES : FramebufferTest_ES31.ResolveThenDrawWithoutResolveThenDrawWithResolve/* = SKIP
 8626 PIXEL4ORXL : FramebufferTest_ES31.MultisampleResolveMultipleTimesWithDrawInBetween/* = SKIP
+8626 PIXEL4ORXL : FramebufferTest_ES31.MultisampleResolveBothAttachments/* = SKIP
+8626 PIXEL4ORXL VULKAN : VulkanPerformanceCounterTest_ES31.MultisampleResolveBothAttachments/* = SKIP
 
 // Pixel 6 expectations.
 6931 PIXEL6 VULKAN : BlitFramebufferTest.OOBWrite/* = SKIP
