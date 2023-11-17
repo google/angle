@@ -96,9 +96,17 @@ bool IsVulkan11(uint32_t apiVersion)
     return apiVersion >= VK_API_VERSION_1_1;
 }
 
-bool IsRADV(uint32_t driverId)
+bool IsRADV(uint32_t vendorId, uint32_t driverId, const char *deviceName)
 {
-    return driverId == VK_DRIVER_ID_MESA_RADV;
+    // Check against RADV driver id first.
+    if (driverId == VK_DRIVER_ID_MESA_RADV)
+    {
+        return true;
+    }
+
+    // Otherwise, look for RADV in the device name.  This works for both RADV
+    // and Venus-over-RADV.
+    return IsAMD(vendorId) && strstr(deviceName, "RADV") != nullptr;
 }
 
 bool IsVenus(uint32_t driverId, const char *deviceName)
@@ -1147,8 +1155,8 @@ angle::Result GetAndDecompressPipelineCacheVk(VkPhysicalDeviceProperties physica
         // The data must not contain corruption.
         if (chunkIndex0 != 0 || numChunks == 0 || uncompressedCacheDataSize == 0)
         {
-            FATAL() << "Unexpected values while unpacking chunk index 0: "
-                    << "cacheVersion = " << cacheVersion << ", chunkIndex = " << chunkIndex0
+            FATAL() << "Unexpected values while unpacking chunk index 0: " << "cacheVersion = "
+                    << cacheVersion << ", chunkIndex = " << chunkIndex0
                     << ", numChunks = " << numChunks
                     << ", uncompressedCacheDataSize = " << uncompressedCacheDataSize;
         }
@@ -1168,9 +1176,8 @@ angle::Result GetAndDecompressPipelineCacheVk(VkPhysicalDeviceProperties physica
         }
         else
         {
-            WARN() << "Change in cache header version detected: "
-                   << "newVersion = " << kPipelineCacheVersion
-                   << ", existingVersion = " << cacheVersion;
+            WARN() << "Change in cache header version detected: " << "newVersion = "
+                   << kPipelineCacheVersion << ", existingVersion = " << cacheVersion;
         }
         return angle::Result::Continue;
     }
@@ -1218,10 +1225,9 @@ angle::Result GetAndDecompressPipelineCacheVk(VkPhysicalDeviceProperties physica
             (compressedData.size() < compressedSize + chunkSize);
         if (isHeaderDataCorrupted)
         {
-            WARN() << "Pipeline cache chunk header corrupted: "
-                   << "checkCacheVersion = " << checkCacheVersion
-                   << ", cacheVersion = " << cacheVersion << ", checkNumChunks = " << checkNumChunks
-                   << ", numChunks = " << numChunks
+            WARN() << "Pipeline cache chunk header corrupted: " << "checkCacheVersion = "
+                   << checkCacheVersion << ", cacheVersion = " << cacheVersion
+                   << ", checkNumChunks = " << checkNumChunks << ", numChunks = " << numChunks
                    << ", checkUncompressedCacheDataSize = " << checkUncompressedCacheDataSize
                    << ", uncompressedCacheDataSize = " << uncompressedCacheDataSize
                    << ", checkCompressedDataCRC = " << checkCompressedDataCRC
@@ -3904,7 +3910,8 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
         ParseARMDriverVersion(mPhysicalDeviceProperties.driverVersion);
 
     // Distinguish between the mesa and proprietary drivers
-    const bool isRADV = IsRADV(mDriverProperties.driverID);
+    const bool isRADV = IsRADV(mPhysicalDeviceProperties.vendorID, mDriverProperties.driverID,
+                               mPhysicalDeviceProperties.deviceName);
 
     // Identify Google Pixel brand Android devices
     const bool isPixel = IsPixel();
@@ -4789,8 +4796,9 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     // virtualized environment. https://issuetracker.google.com/246378938
     ANGLE_FEATURE_CONDITION(&mFeatures, preferLinearFilterForYUV, isVenus);
 
-    // Intel mesa drivers need depthBiasConstantFactor to be doubled to align with GL.
-    ANGLE_FEATURE_CONDITION(&mFeatures, doubleDepthBiasConstantFactor, isIntel && !IsWindows());
+    // Intel and AMD mesa drivers need depthBiasConstantFactor to be doubled to align with GL.
+    ANGLE_FEATURE_CONDITION(&mFeatures, doubleDepthBiasConstantFactor,
+                            (isIntel && !IsWindows()) || isRADV);
 
     // Required to pass android.media.codec.cts.EncodeDecodeTest with MESA Virtio-GPU Venus driver
     // in virtualized environment. https://issuetracker.google.com/246218584
