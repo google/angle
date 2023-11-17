@@ -1198,6 +1198,14 @@
             "issue": "https://anglebug.com/7369"
         },
         {
+            "name": "disable_pipeline_cache_load_for_testing",
+            "category": "Workarounds",
+            "description": [
+                "Disable loading the pipeline cache from the blob cache for testing"
+            ],
+            "issue": "https://anglebug.com/8417"
+        },
+        {
             "name": "sync_monolithic_pipelines_to_blob_cache",
             "category": "Workarounds",
             "description": [

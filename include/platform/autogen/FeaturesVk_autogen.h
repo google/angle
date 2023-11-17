@@ -1103,6 +1103,13 @@ struct FeaturesVk : FeatureSetBase
         &members, "https://anglebug.com/7369"
     };
 
+    FeatureInfo disablePipelineCacheLoadForTesting = {
+        "disablePipelineCacheLoadForTesting",
+        FeatureCategory::VulkanWorkarounds,
+        "Disable loading the pipeline cache from the blob cache for testing",
+        &members, "https://anglebug.com/8417"
+    };
+
     FeatureInfo syncMonolithicPipelinesToBlobCache = {
         "syncMonolithicPipelinesToBlobCache",
         FeatureCategory::VulkanWorkarounds,
