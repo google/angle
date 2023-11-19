@@ -549,8 +549,11 @@ class Program::MainLinkLoadTask : public angle::Closure
 
     bool areSubTasksLinking()
     {
-        return !mLinkTask->isLinkingInternally() &&
-               !angle::WaitableEvent::AllReady(&mSubTaskWaitableEvents);
+        if (mLinkTask->isLinkingInternally())
+        {
+            return true;
+        }
+        return !angle::WaitableEvent::AllReady(&mSubTaskWaitableEvents);
     }
 
   protected:
