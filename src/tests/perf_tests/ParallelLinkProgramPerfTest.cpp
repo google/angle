@@ -21,8 +21,15 @@ namespace
 
 enum class CompileLinkOrder
 {
+    // Most optimal behavior; all compiles are done first, then all links.
     AllCompilesFirst,
+    // Less optimal, but still decent; each program's shaders are first compiled, then the program
+    // is linked before moving on to the next program.
     Interleaved,
+    // Worst behavior, which unfortunately is what the large majority of applications do; each
+    // program's shaders are compiled, the program is linked, and the link status is immediately
+    // queried (causing the main thread to block on the link task).
+    InterleavedAndImmediateQuery,
 
     Unspecified,
 };
@@ -52,6 +59,18 @@ struct ParallelLinkProgramParams final : public RenderTestParams
         else if (compileLinkOrder == CompileLinkOrder::Interleaved)
         {
             strstr << "_interleaved_compile_and_link";
+        }
+        else if (compileLinkOrder == CompileLinkOrder::InterleavedAndImmediateQuery)
+        {
+            strstr << "_interleaved_compile_and_link_with_immediate_query";
+        }
+
+        if (std::find(eglParameters.disabledFeatureOverrides.begin(),
+                      eglParameters.disabledFeatureOverrides.end(),
+                      Feature::EnableParallelCompileAndLink) !=
+            eglParameters.disabledFeatureOverrides.end())
+        {
+            strstr << "_serial";
         }
 
         if (eglParameters.deviceType == EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE)
@@ -223,9 +242,16 @@ void ParallelLinkProgramBenchmark::drawBenchmark()
         // Compile the shaders, and if interleaved, link the corresponding programs.
         glCompileShader(mPrograms[i].vs);
         glCompileShader(mPrograms[i].fs);
-        if (params.compileLinkOrder == CompileLinkOrder::Interleaved)
+        if (params.compileLinkOrder != CompileLinkOrder::AllCompilesFirst)
         {
             glLinkProgram(mPrograms[i].program);
+
+            if (params.compileLinkOrder == CompileLinkOrder::InterleavedAndImmediateQuery)
+            {
+                GLint linkStatus = GL_TRUE;
+                glGetProgramiv(mPrograms[i].program, GL_LINK_STATUS, &linkStatus);
+                EXPECT_TRUE(linkStatus);
+            }
         }
     }
 
@@ -286,20 +312,33 @@ ParallelLinkProgramParams ParallelLinkProgramVulkanParams(CompileLinkOrder compi
     return params;
 }
 
+ParallelLinkProgramParams SerialLinkProgramVulkanParams(CompileLinkOrder compileLinkOrder)
+{
+    ParallelLinkProgramParams params(compileLinkOrder);
+    params.eglParameters = VULKAN();
+    params.disable(Feature::EnableParallelCompileAndLink);
+    return params;
+}
+
 // Test parallel link performance
 TEST_P(ParallelLinkProgramBenchmark, Run)
 {
     run();
 }
 
-ANGLE_INSTANTIATE_TEST(ParallelLinkProgramBenchmark,
-                       ParallelLinkProgramD3D11Params(CompileLinkOrder::AllCompilesFirst),
-                       ParallelLinkProgramD3D11Params(CompileLinkOrder::Interleaved),
-                       ParallelLinkProgramMetalParams(CompileLinkOrder::AllCompilesFirst),
-                       ParallelLinkProgramMetalParams(CompileLinkOrder::Interleaved),
-                       ParallelLinkProgramOpenGLOrGLESParams(CompileLinkOrder::AllCompilesFirst),
-                       ParallelLinkProgramOpenGLOrGLESParams(CompileLinkOrder::Interleaved),
-                       ParallelLinkProgramVulkanParams(CompileLinkOrder::AllCompilesFirst),
-                       ParallelLinkProgramVulkanParams(CompileLinkOrder::Interleaved));
+ANGLE_INSTANTIATE_TEST(
+    ParallelLinkProgramBenchmark,
+    ParallelLinkProgramD3D11Params(CompileLinkOrder::AllCompilesFirst),
+    ParallelLinkProgramD3D11Params(CompileLinkOrder::Interleaved),
+    ParallelLinkProgramMetalParams(CompileLinkOrder::AllCompilesFirst),
+    ParallelLinkProgramMetalParams(CompileLinkOrder::Interleaved),
+    ParallelLinkProgramOpenGLOrGLESParams(CompileLinkOrder::AllCompilesFirst),
+    ParallelLinkProgramOpenGLOrGLESParams(CompileLinkOrder::Interleaved),
+    ParallelLinkProgramVulkanParams(CompileLinkOrder::AllCompilesFirst),
+    ParallelLinkProgramVulkanParams(CompileLinkOrder::Interleaved),
+    ParallelLinkProgramVulkanParams(CompileLinkOrder::InterleavedAndImmediateQuery),
+    SerialLinkProgramVulkanParams(CompileLinkOrder::AllCompilesFirst),
+    SerialLinkProgramVulkanParams(CompileLinkOrder::Interleaved),
+    SerialLinkProgramVulkanParams(CompileLinkOrder::InterleavedAndImmediateQuery));
 
 }  // anonymous namespace
