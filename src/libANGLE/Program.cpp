@@ -557,10 +557,12 @@ class Program::MainLinkLoadTask : public angle::Closure
     }
 
   protected:
-    void scheduleSubTasks(const std::vector<std::shared_ptr<rx::LinkSubTask>> &subTasks)
+    void scheduleSubTasks(std::vector<std::shared_ptr<rx::LinkSubTask>> &&subTasks)
     {
-        mSubTaskWaitableEvents.reserve(subTasks.size());
-        for (const std::shared_ptr<rx::LinkSubTask> &subTask : subTasks)
+        mSubTasks = std::move(subTasks);
+
+        mSubTaskWaitableEvents.reserve(mSubTasks.size());
+        for (const std::shared_ptr<rx::LinkSubTask> &subTask : mSubTasks)
         {
             mSubTaskWaitableEvents.push_back(mSubTaskWorkerPool->postWorkerTask(subTask));
         }
@@ -681,7 +683,7 @@ angle::Result Program::MainLinkTask::linkImpl()
     mState.updateProgramInterfaceOutputs();
 
     // Schedule the subtasks
-    scheduleSubTasks(subTasks);
+    scheduleSubTasks(std::move(subTasks));
 
     return angle::Result::Continue;
 }
@@ -691,7 +693,7 @@ angle::Result Program::MainLoadTask::loadImpl()
     std::vector<std::shared_ptr<rx::LinkSubTask>> subTasks = mLinkTask->load();
 
     // Schedule the subtasks
-    scheduleSubTasks(subTasks);
+    scheduleSubTasks(std::move(subTasks));
 
     return angle::Result::Continue;
 }

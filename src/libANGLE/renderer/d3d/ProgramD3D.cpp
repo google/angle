@@ -109,7 +109,7 @@ class GetExecutableTask : public LinkSubTask, public d3d::Context
         ANGLE_TRY(checkTask(context, infoLog));
 
         // Append debug info
-        if (mShader)
+        if (mShader && mShaderExecutable != nullptr)
         {
             mShader->appendDebugInfo(mShaderExecutable->getDebugInfo());
         }
