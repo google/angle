@@ -551,9 +551,6 @@
 8425 MAC METAL AMD : dEQP-GLES3.functional.texture.specification.*.depth24_stencil8* = FAIL
 8425 MAC METAL AMD : dEQP-GLES3.functional.texture.specification.*.depth32f_stencil8* = FAIL
 
-8426 MAC METAL INTEL : dEQP-GLES3.functional.texture.specification.*.depth32f_stencil8* = FAIL
-8426 MAC METAL INTEL : dEQP-GLES3.functional.texture.specification.*.depth_component32f* = FAIL
-
 // FBO with distinct attachment's sizes is not supported yet
 6467 MAC METAL : dEQP-GLES3.functional.fbo.completeness.size.distinct = FAIL
 

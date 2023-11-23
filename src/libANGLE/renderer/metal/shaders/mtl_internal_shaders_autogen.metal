@@ -3144,6 +3144,21 @@ kernel void linearizeBlocks(ushort2 position [[thread_position_in_grid]],
     t = (t | (t << 1)) & 0x55555555;
     dstBuffer[position.y * (*dimensions).x + position.x] = srcBuffer[(t.x << 1) | t.y];
 }
+
+
+kernel void saturateDepth(uint2 position [[thread_position_in_grid]],
+                          constant uint3 *dimensions [[buffer(0)]],
+                          device float *srcBuffer [[buffer(1)]],
+                          device float *dstBuffer [[buffer(2)]])
+{
+    if (any(position >= (*dimensions).xy))
+    {
+        return;
+    }
+    const uint srcOffset = position.y * (*dimensions).z + position.x;
+    const uint dstOffset = position.y * (*dimensions).x + position.x;
+    dstBuffer[dstOffset] = saturate(srcBuffer[srcOffset]);
+}
 # 6 "temp_master_source.metal" 2
 # 1 "./visibility.metal" 1
 
