@@ -708,14 +708,6 @@
 8287 MAC METAL : dEQP-GLES3.functional.shaders.builtin_functions.precision.mix.mediump_fragment.scalar = FAIL
 8287 MAC METAL : dEQP-GLES3.functional.shaders.builtin_functions.precision.mix.mediump_vertex.scalar = FAIL
 8287 MAC METAL : dEQP-GLES3.functional.shaders.builtin_functions.precision.refract.lowp_vertex.scalar = FAIL
-8287 MAC METAL : dEQP-GLES3.functional.shaders.builtin_functions.precision.tanh.highp_fragment.scalar = FAIL
-8287 MAC METAL : dEQP-GLES3.functional.shaders.builtin_functions.precision.tanh.highp_fragment.vec2 = FAIL
-8287 MAC METAL : dEQP-GLES3.functional.shaders.builtin_functions.precision.tanh.highp_fragment.vec3 = FAIL
-8287 MAC METAL : dEQP-GLES3.functional.shaders.builtin_functions.precision.tanh.highp_fragment.vec4 = FAIL
-8287 MAC METAL : dEQP-GLES3.functional.shaders.builtin_functions.precision.tanh.highp_vertex.scalar = FAIL
-8287 MAC METAL : dEQP-GLES3.functional.shaders.builtin_functions.precision.tanh.highp_vertex.vec2 = FAIL
-8287 MAC METAL : dEQP-GLES3.functional.shaders.builtin_functions.precision.tanh.highp_vertex.vec3 = FAIL
-8287 MAC METAL : dEQP-GLES3.functional.shaders.builtin_functions.precision.tanh.highp_vertex.vec4 = FAIL
 8287 MAC METAL : dEQP-GLES3.functional.shaders.invariance.lowp.loop_2 = FAIL
 
 
