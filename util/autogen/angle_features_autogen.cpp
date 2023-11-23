@@ -236,6 +236,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::PreferSkippingInvalidateForEmulatedFormats, "preferSkippingInvalidateForEmulatedFormats"},
     {Feature::PreferSubmitAtFBOBoundary, "preferSubmitAtFBOBoundary"},
     {Feature::PreferSubmitOnAnySamplesPassedQueryEnd, "preferSubmitOnAnySamplesPassedQueryEnd"},
+    {Feature::PreTransformTextureCubeGradDerivatives, "preTransformTextureCubeGradDerivatives"},
     {Feature::PrintMetalShaders, "printMetalShaders"},
     {Feature::PromotePackedFormatsTo8BitPerChannel, "promotePackedFormatsTo8BitPerChannel"},
     {Feature::ProvokingVertex, "provokingVertex"},

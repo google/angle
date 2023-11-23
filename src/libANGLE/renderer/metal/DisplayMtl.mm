@@ -1359,6 +1359,10 @@ void DisplayMtl::initializeFeatures()
     // function local. Disabled on AMD FirePro devices: http://anglebug.com/8317
     ANGLE_FEATURE_CONDITION((&mFeatures), rescopeGlobalVariables, !isAMDFireProDevice());
 
+    // Apple-specific pre-transform for explicit cubemap derivatives
+    ANGLE_FEATURE_CONDITION((&mFeatures), preTransformTextureCubeGradDerivatives,
+                            supportsAppleGPUFamily(1));
+
     // On tile-based GPUs, always resolving MSAA render buffers to single-sampled
     // is preferred. Because it would save bandwidth by avoiding the cost of storing the MSAA
     // textures to memory. Traditional desktop GPUs almost always store MSAA textures to memory

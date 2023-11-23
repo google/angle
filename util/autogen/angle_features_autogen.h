@@ -236,6 +236,7 @@ enum class Feature
     PreferSkippingInvalidateForEmulatedFormats,
     PreferSubmitAtFBOBoundary,
     PreferSubmitOnAnySamplesPassedQueryEnd,
+    PreTransformTextureCubeGradDerivatives,
     PrintMetalShaders,
     PromotePackedFormatsTo8BitPerChannel,
     ProvokingVertex,
