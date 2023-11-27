@@ -355,7 +355,6 @@ PrivateState::PrivateState(const EGLenum clientType,
       mStencilBackRef(0),
       mLineWidth(0),
       mGenerateMipmapHint(GL_NONE),
-      mTextureFilteringHint(GL_NONE),
       mFragmentShaderDerivativeHint(GL_NONE),
       mNearZ(0),
       mFarZ(0),
@@ -426,7 +425,6 @@ void PrivateState::initialize(Context *context)
     mSampleMaskValues.fill(~GLbitfield(0));
 
     mGenerateMipmapHint           = GL_DONT_CARE;
-    mTextureFilteringHint         = GL_DONT_CARE;
     mFragmentShaderDerivativeHint = GL_DONT_CARE;
 
     mLineWidth = 1.0f;
@@ -1155,13 +1153,6 @@ void PrivateState::setGenerateMipmapHint(GLenum hint)
     mGenerateMipmapHint = hint;
     mDirtyBits.set(state::DIRTY_BIT_EXTENDED);
     mExtendedDirtyBits.set(state::EXTENDED_DIRTY_BIT_MIPMAP_GENERATION_HINT);
-}
-
-void PrivateState::setTextureFilteringHint(GLenum hint)
-{
-    mTextureFilteringHint = hint;
-    // Note: we don't add a dirty bit for this flag as it's not expected to be toggled at
-    // runtime.
 }
 
 void PrivateState::setFragmentShaderDerivativeHint(GLenum hint)
@@ -1918,9 +1909,6 @@ void PrivateState::getIntegerv(GLenum pname, GLint *params) const
             break;
         case GL_GENERATE_MIPMAP_HINT:
             *params = mGenerateMipmapHint;
-            break;
-        case GL_TEXTURE_FILTERING_HINT_CHROMIUM:
-            *params = mTextureFilteringHint;
             break;
         case GL_FRAGMENT_SHADER_DERIVATIVE_HINT_OES:
             *params = mFragmentShaderDerivativeHint;

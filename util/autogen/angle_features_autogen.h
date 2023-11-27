@@ -293,7 +293,6 @@ enum class Feature
     SupportsExternalSemaphoreCapabilities,
     SupportsExternalSemaphoreFd,
     SupportsExternalSemaphoreFuchsia,
-    SupportsFilteringPrecision,
     SupportsFormatFeatureFlags2,
     SupportsFragmentShaderInterlockARB,
     SupportsFragmentShaderInterlockNV,
