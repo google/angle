@@ -456,9 +456,9 @@ Optional<gl::Version> DisplayMtl::getMaxSupportedDesktopVersion() const
     return Optional<gl::Version>::Invalid();
 }
 
-EGLSyncImpl *DisplayMtl::createSync(const egl::AttributeMap &attribs)
+EGLSyncImpl *DisplayMtl::createSync()
 {
-    return new EGLSyncMtl(attribs);
+    return new EGLSyncMtl();
 }
 
 egl::Error DisplayMtl::makeCurrent(egl::Display *display,
