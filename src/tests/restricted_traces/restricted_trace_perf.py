@@ -468,12 +468,15 @@ class GPUPowerStats():
 
 
 def wait_for_test_warmup(done_event):
-    p = subprocess.Popen(['adb', 'logcat', '*:S', 'ANGLE:I'], stdout=subprocess.PIPE)
+    p = subprocess.Popen(['adb', 'logcat', '*:S', 'ANGLE:I'],
+                         stdout=subprocess.PIPE,
+                         text=True,
+                         bufsize=1)  # line-buffered
     os.set_blocking(p.stdout.fileno(), False)
 
     start_time = time.time()
     while True:
-        line = p.stdout.readline().decode()  # non-blocking as per set_blocking above
+        line = p.stdout.readline()  # non-blocking as per set_blocking above
 
         # Look for text logged by the harness when warmup is complete and a test is starting
         if 'running test name' in line:
