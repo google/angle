@@ -233,7 +233,7 @@ constexpr const char *kSkippedMessages[] = {
     // http://anglebug.com/7325
     "VUID-vkCmdBindVertexBuffers2-pStrides-06209",
     // http://anglebug.com/7729
-    "VUID-vkDestroySemaphore-semaphore-05149",
+    "VUID-vkDestroySemaphore-semaphore-01137", "VUID-vkDestroySemaphore-semaphore-05149",
     // https://issuetracker.google.com/303219657
     "VUID-VkGraphicsPipelineCreateInfo-pStages-00738",
     // http://anglebug.com/7861
