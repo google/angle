@@ -39,6 +39,15 @@
         }                                     \
     } while (0)
 
+#define ANGLE_VALIDATE_VERSION_OR_EXTENSION(version, major, minor, extension) \
+    do                                                                        \
+    {                                                                         \
+        if (version < CL_MAKE_VERSION(major##u, minor##u, 0u))                \
+        {                                                                     \
+            ANGLE_VALIDATE_EXTENSION(extension);                              \
+        }                                                                     \
+    } while (0)
+
 namespace cl
 {
 
@@ -675,7 +684,9 @@ cl_int ValidateGetDeviceInfo(cl_device_id device,
             break;
 
         case DeviceInfo::DoubleFpConfig:
-            ANGLE_VALIDATE_EXTENSION(info.khrFP64);
+            // This extension became a core query from OpenCL 1.2 onward.
+            // Only need to validate for OpenCL versions less than 1.2 here.
+            ANGLE_VALIDATE_VERSION_OR_EXTENSION(version, 1, 2, info.khrFP64);
             break;
 
         case DeviceInfo::InvalidEnum:
