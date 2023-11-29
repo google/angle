@@ -1421,6 +1421,14 @@
                 "Force AHB's layerCount to 1"
             ],
             "issue": "http://b/239181279"
+        },
+        {
+            "name": "disable_separate_shader_objects",
+            "category": "AppWorkarounds",
+            "description": [
+                "Disable GL_EXT_separate_shader_objects and cap core ES version to 3.0"
+            ],
+            "issue": "https://issuetracker.google.com/309028728"
         }
     ]
 }

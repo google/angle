@@ -1314,6 +1314,13 @@ struct FeaturesVk : FeatureSetBase
         &members, "http://b/239181279"
     };
 
+    FeatureInfo disableSeparateShaderObjects = {
+        "disableSeparateShaderObjects",
+        FeatureCategory::VulkanAppWorkarounds,
+        "Disable GL_EXT_separate_shader_objects and cap core ES version to 3.0",
+        &members, "https://issuetracker.google.com/309028728"
+    };
+
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

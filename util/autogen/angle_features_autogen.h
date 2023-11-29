@@ -92,6 +92,7 @@ enum class Feature
     DisableRenderSnorm,
     DisableRWTextureTier2Support,
     DisableSemaphoreFd,
+    DisableSeparateShaderObjects,
     DisableStagedInitializationOfPackedTextureFormats,
     DisableSyncControlSupport,
     DisableTextureClampToBorder,

@@ -3697,6 +3697,12 @@ gl::Version RendererVk::getMaxSupportedESVersion() const
         maxVersion = LimitVersionTo(maxVersion, {3, 0});
     }
 
+    // SSO is in ES3.1 core, so we have to cap to ES3.0 for SSO disablement.
+    if (mFeatures.disableSeparateShaderObjects.enabled)
+    {
+        maxVersion = LimitVersionTo(maxVersion, {3, 0});
+    }
+
     // Limit to ES2.0 if there are any blockers for 3.0.
     // TODO: http://anglebug.com/3972 Limit to GLES 2.0 if flat shading can't be emulated
 
