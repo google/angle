@@ -9,17 +9,18 @@
 
 #include "libANGLE/CLContext.h"
 #include "libANGLE/CLPlatform.h"
+#include "libANGLE/cl_utils.h"
 
 #include <cstring>
 
 namespace cl
 {
 
-cl_int Program::build(cl_uint numDevices,
-                      const cl_device_id *deviceList,
-                      const char *options,
-                      ProgramCB pfnNotify,
-                      void *userData)
+angle::Result Program::build(cl_uint numDevices,
+                             const cl_device_id *deviceList,
+                             const char *options,
+                             ProgramCB pfnNotify,
+                             void *userData)
 {
     DevicePtrs devices;
     devices.reserve(numDevices);
@@ -38,14 +39,14 @@ cl_int Program::build(cl_uint numDevices,
     return mImpl->build(devices, options, notify);
 }
 
-cl_int Program::compile(cl_uint numDevices,
-                        const cl_device_id *deviceList,
-                        const char *options,
-                        cl_uint numInputHeaders,
-                        const cl_program *inputHeaders,
-                        const char **headerIncludeNames,
-                        ProgramCB pfnNotify,
-                        void *userData)
+angle::Result Program::compile(cl_uint numDevices,
+                               const cl_device_id *deviceList,
+                               const char *options,
+                               cl_uint numInputHeaders,
+                               const cl_program *inputHeaders,
+                               const char **headerIncludeNames,
+                               ProgramCB pfnNotify,
+                               void *userData)
 {
     DevicePtrs devices;
     devices.reserve(numDevices);
@@ -70,7 +71,10 @@ cl_int Program::compile(cl_uint numDevices,
     return mImpl->compile(devices, options, programs, headerIncludeNames, notify);
 }
 
-cl_int Program::getInfo(ProgramInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const
+angle::Result Program::getInfo(ProgramInfo name,
+                               size_t valueSize,
+                               void *value,
+                               size_t *valueSizeRet) const
 {
     std::vector<cl_device_id> devices;
     cl_uint valUInt       = 0u;
@@ -120,7 +124,7 @@ cl_int Program::getInfo(ProgramInfo name, size_t valueSize, void *value, size_t 
         case ProgramInfo::ScopeGlobalDtorsPresent:
             return mImpl->getInfo(name, valueSize, value, valueSizeRet);
         default:
-            return CL_INVALID_VALUE;
+            ANGLE_CL_RETURN_ERROR(CL_INVALID_VALUE);
     }
 
     if (value != nullptr)
@@ -129,7 +133,7 @@ cl_int Program::getInfo(ProgramInfo name, size_t valueSize, void *value, size_t 
         // as described in the Program Object Queries table and param_value is not NULL.
         if (valueSize < copySize)
         {
-            return CL_INVALID_VALUE;
+            ANGLE_CL_RETURN_ERROR(CL_INVALID_VALUE);
         }
         if (copyValue != nullptr)
         {
@@ -140,14 +144,14 @@ cl_int Program::getInfo(ProgramInfo name, size_t valueSize, void *value, size_t 
     {
         *valueSizeRet = copySize;
     }
-    return CL_SUCCESS;
+    return angle::Result::Continue;
 }
 
-cl_int Program::getBuildInfo(cl_device_id device,
-                             ProgramBuildInfo name,
-                             size_t valueSize,
-                             void *value,
-                             size_t *valueSizeRet) const
+angle::Result Program::getBuildInfo(cl_device_id device,
+                                    ProgramBuildInfo name,
+                                    size_t valueSize,
+                                    void *value,
+                                    size_t *valueSizeRet) const
 {
     return mImpl->getBuildInfo(device->cast<Device>(), name, valueSize, value, valueSizeRet);
 }
@@ -157,33 +161,30 @@ cl_kernel Program::createKernel(const char *kernel_name, cl_int &errorCode)
     return Object::Create<Kernel>(errorCode, *this, kernel_name);
 }
 
-cl_int Program::createKernels(cl_uint numKernels, cl_kernel *kernels, cl_uint *numKernelsRet)
+angle::Result Program::createKernels(cl_uint numKernels, cl_kernel *kernels, cl_uint *numKernelsRet)
 {
     if (kernels == nullptr)
     {
         numKernels = 0u;
     }
     rx::CLKernelImpl::CreateFuncs createFuncs;
-    cl_int errorCode = mImpl->createKernels(numKernels, createFuncs, numKernelsRet);
-    if (errorCode == CL_SUCCESS)
+    ANGLE_TRY(mImpl->createKernels(numKernels, createFuncs, numKernelsRet));
+    KernelPtrs krnls;
+    krnls.reserve(createFuncs.size());
+    while (!createFuncs.empty())
     {
-        KernelPtrs krnls;
-        krnls.reserve(createFuncs.size());
-        while (!createFuncs.empty())
+        krnls.emplace_back(new Kernel(*this, createFuncs.front(), cl::gClErrorTls));
+        if (krnls.back()->mImpl == nullptr)
         {
-            krnls.emplace_back(new Kernel(*this, createFuncs.front(), errorCode));
-            if (errorCode != CL_SUCCESS)
-            {
-                return CL_INVALID_VALUE;
-            }
-            createFuncs.pop_front();
+            return angle::Result::Stop;
         }
-        for (KernelPtr &kernel : krnls)
-        {
-            *kernels++ = kernel.release();
-        }
+        createFuncs.pop_front();
     }
-    return errorCode;
+    for (KernelPtr &kernel : krnls)
+    {
+        *kernels++ = kernel.release();
+    }
+    return angle::Result::Continue;
 }
 
 Program::~Program() = default;

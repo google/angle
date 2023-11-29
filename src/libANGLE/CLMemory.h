@@ -26,9 +26,9 @@ class Memory : public _cl_mem, public Object
   public:
     // Front end entry functions, only called from OpenCL entry points
 
-    cl_int setDestructorCallback(MemoryCB pfnNotify, void *userData);
+    angle::Result setDestructorCallback(MemoryCB pfnNotify, void *userData);
 
-    cl_int getInfo(MemInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const;
+    angle::Result getInfo(MemInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const;
 
   public:
     using PropArray = std::vector<cl_mem_properties>;

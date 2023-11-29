@@ -112,6 +112,7 @@ CLMemoryImpl::Ptr CLContextCL::createBuffer(const cl::Buffer &buffer,
                                             cl_int &errorCode)
 {
     cl_mem nativeBuffer = nullptr;
+
     if (buffer.getProperties().empty())
     {
         nativeBuffer = mNative->getDispatch().clCreateBuffer(mNative, buffer.getFlags().get(), size,
@@ -181,11 +182,11 @@ CLMemoryImpl::Ptr CLContextCL::createImage(const cl::Image &image,
     return CLMemoryImpl::Ptr(nativeImage != nullptr ? new CLMemoryCL(image, nativeImage) : nullptr);
 }
 
-cl_int CLContextCL::getSupportedImageFormats(cl::MemFlags flags,
-                                             cl::MemObjectType imageType,
-                                             cl_uint numEntries,
-                                             cl_image_format *imageFormats,
-                                             cl_uint *numImageFormats)
+angle::Result CLContextCL::getSupportedImageFormats(cl::MemFlags flags,
+                                                    cl::MemObjectType imageType,
+                                                    cl_uint numEntries,
+                                                    cl_image_format *imageFormats,
+                                                    cl_uint *numImageFormats)
 {
     // Fetch available image formats for given flags and image type.
     cl_uint numFormats = 0u;
@@ -215,12 +216,13 @@ cl_int CLContextCL::getSupportedImageFormats(cl::MemFlags flags,
     {
         *numImageFormats = static_cast<cl_uint>(supportedFormats.size());
     }
-    return CL_SUCCESS;
+    return angle::Result::Continue;
 }
 
 CLSamplerImpl::Ptr CLContextCL::createSampler(const cl::Sampler &sampler, cl_int &errorCode)
 {
     cl_sampler nativeSampler = nullptr;
+
     if (!mContext.getPlatform().isVersionOrNewer(2u, 0u))
     {
         nativeSampler = mNative->getDispatch().clCreateSampler(
@@ -252,8 +254,9 @@ CLProgramImpl::Ptr CLContextCL::createProgramWithSource(const cl::Program &progr
                                                         const std::string &source,
                                                         cl_int &errorCode)
 {
-    const char *sourceStr          = source.c_str();
-    const size_t length            = source.length();
+    const char *sourceStr = source.c_str();
+    const size_t length   = source.length();
+
     const cl_program nativeProgram = mNative->getDispatch().clCreateProgramWithSource(
         mNative, 1u, &sourceStr, &length, &errorCode);
     return CLProgramImpl::Ptr(nativeProgram != nullptr ? new CLProgramCL(program, nativeProgram)
@@ -300,6 +303,7 @@ CLProgramImpl::Ptr CLContextCL::createProgramWithBuiltInKernels(const cl::Progra
     {
         nativeDevices.emplace_back(device->getImpl<CLDeviceCL>().getNative());
     }
+
     const cl_program nativeProgram = mNative->getDispatch().clCreateProgramWithBuiltInKernels(
         mNative, static_cast<cl_uint>(nativeDevices.size()), nativeDevices.data(), kernel_names,
         &errorCode);
@@ -344,11 +348,12 @@ CLEventImpl::Ptr CLContextCL::createUserEvent(const cl::Event &event, cl_int &er
     return CLEventImpl::Ptr(nativeEvent != nullptr ? new CLEventCL(event, nativeEvent) : nullptr);
 }
 
-cl_int CLContextCL::waitForEvents(const cl::EventPtrs &events)
+angle::Result CLContextCL::waitForEvents(const cl::EventPtrs &events)
 {
     const std::vector<cl_event> nativeEvents = CLEventCL::Cast(events);
-    return mNative->getDispatch().clWaitForEvents(static_cast<cl_uint>(nativeEvents.size()),
-                                                  nativeEvents.data());
+    ANGLE_CL_TRY(mNative->getDispatch().clWaitForEvents(static_cast<cl_uint>(nativeEvents.size()),
+                                                        nativeEvents.data()));
+    return angle::Result::Continue;
 }
 
 }  // namespace rx

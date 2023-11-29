@@ -47,11 +47,11 @@ class CLContextCL : public CLContextImpl
                                   void *hostPtr,
                                   cl_int &errorCode) override;
 
-    cl_int getSupportedImageFormats(cl::MemFlags flags,
-                                    cl::MemObjectType imageType,
-                                    cl_uint numEntries,
-                                    cl_image_format *imageFormats,
-                                    cl_uint *numImageFormats) override;
+    angle::Result getSupportedImageFormats(cl::MemFlags flags,
+                                           cl::MemObjectType imageType,
+                                           cl_uint numEntries,
+                                           cl_image_format *imageFormats,
+                                           cl_uint *numImageFormats) override;
 
     CLSamplerImpl::Ptr createSampler(const cl::Sampler &sampler, cl_int &errorCode) override;
 
@@ -83,7 +83,7 @@ class CLContextCL : public CLContextImpl
 
     CLEventImpl::Ptr createUserEvent(const cl::Event &event, cl_int &errorCode) override;
 
-    cl_int waitForEvents(const cl::EventPtrs &events) override;
+    angle::Result waitForEvents(const cl::EventPtrs &events) override;
 
   private:
     struct Mutable

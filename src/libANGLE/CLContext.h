@@ -23,7 +23,10 @@ class Context final : public _cl_context, public Object
 
     static bool IsValidAndVersionOrNewer(const _cl_context *context, cl_uint major, cl_uint minor);
 
-    cl_int getInfo(ContextInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const;
+    angle::Result getInfo(ContextInfo name,
+                          size_t valueSize,
+                          void *value,
+                          size_t *valueSizeRet) const;
 
     cl_command_queue createCommandQueueWithProperties(cl_device_id device,
                                                       const cl_queue_properties *properties,
@@ -64,11 +67,11 @@ class Context final : public _cl_context, public Object
                          void *hostPtr,
                          cl_int &errorCode);
 
-    cl_int getSupportedImageFormats(MemFlags flags,
-                                    MemObjectType imageType,
-                                    cl_uint numEntries,
-                                    cl_image_format *imageFormats,
-                                    cl_uint *numImageFormats);
+    angle::Result getSupportedImageFormats(MemFlags flags,
+                                           MemObjectType imageType,
+                                           cl_uint numEntries,
+                                           cl_image_format *imageFormats,
+                                           cl_uint *numImageFormats);
 
     cl_sampler createSamplerWithProperties(const cl_sampler_properties *properties,
                                            cl_int &errorCode);
@@ -108,7 +111,7 @@ class Context final : public _cl_context, public Object
 
     cl_event createUserEvent(cl_int &errorCode);
 
-    cl_int waitForEvents(cl_uint numEvents, const cl_event *eventList);
+    angle::Result waitForEvents(cl_uint numEvents, const cl_event *eventList);
 
   public:
     using PropArray = std::vector<cl_context_properties>;

@@ -29,16 +29,19 @@ class Platform final : public _cl_platform_id, public Object
     static Platform *CastOrDefault(cl_platform_id platform);
     static bool IsValidOrDefault(const _cl_platform_id *platform);
 
-    static cl_int GetPlatformIDs(cl_uint numEntries,
-                                 cl_platform_id *platforms,
-                                 cl_uint *numPlatforms);
+    static angle::Result GetPlatformIDs(cl_uint numEntries,
+                                        cl_platform_id *platforms,
+                                        cl_uint *numPlatforms);
 
-    cl_int getInfo(PlatformInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const;
+    angle::Result getInfo(PlatformInfo name,
+                          size_t valueSize,
+                          void *value,
+                          size_t *valueSizeRet) const;
 
-    cl_int getDeviceIDs(DeviceType deviceType,
-                        cl_uint numEntries,
-                        cl_device_id *devices,
-                        cl_uint *numDevices) const;
+    angle::Result getDeviceIDs(DeviceType deviceType,
+                               cl_uint numEntries,
+                               cl_device_id *devices,
+                               cl_uint *numDevices) const;
 
     static cl_context CreateContext(const cl_context_properties *properties,
                                     cl_uint numDevices,
@@ -53,7 +56,7 @@ class Platform final : public _cl_platform_id, public Object
                                             void *userData,
                                             cl_int &errorCode);
 
-    cl_int unloadCompiler();
+    angle::Result unloadCompiler();
 
   public:
     ~Platform() override;

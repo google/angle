@@ -19,7 +19,10 @@ class Sampler final : public _cl_sampler, public Object
   public:
     // Front end entry functions, only called from OpenCL entry points
 
-    cl_int getInfo(SamplerInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const;
+    angle::Result getInfo(SamplerInfo name,
+                          size_t valueSize,
+                          void *value,
+                          size_t *valueSizeRet) const;
 
   public:
     using PropArray = std::vector<cl_sampler_properties>;

@@ -33,7 +33,7 @@ class CLPlatformCL : public CLPlatformImpl
                                              bool userSync,
                                              cl_int &errorCode) override;
 
-    cl_int unloadCompiler() override;
+    angle::Result unloadCompiler() override;
 
     static void Initialize(CreateFuncs &createFuncs, bool isIcd);
 

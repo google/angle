@@ -25,32 +25,35 @@ class Program final : public _cl_program, public Object
   public:
     // Front end entry functions, only called from OpenCL entry points
 
-    cl_int build(cl_uint numDevices,
-                 const cl_device_id *deviceList,
-                 const char *options,
-                 ProgramCB pfnNotify,
-                 void *userData);
+    angle::Result build(cl_uint numDevices,
+                        const cl_device_id *deviceList,
+                        const char *options,
+                        ProgramCB pfnNotify,
+                        void *userData);
 
-    cl_int compile(cl_uint numDevices,
-                   const cl_device_id *deviceList,
-                   const char *options,
-                   cl_uint numInputHeaders,
-                   const cl_program *inputHeaders,
-                   const char **headerIncludeNames,
-                   ProgramCB pfnNotify,
-                   void *userData);
+    angle::Result compile(cl_uint numDevices,
+                          const cl_device_id *deviceList,
+                          const char *options,
+                          cl_uint numInputHeaders,
+                          const cl_program *inputHeaders,
+                          const char **headerIncludeNames,
+                          ProgramCB pfnNotify,
+                          void *userData);
 
-    cl_int getInfo(ProgramInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const;
+    angle::Result getInfo(ProgramInfo name,
+                          size_t valueSize,
+                          void *value,
+                          size_t *valueSizeRet) const;
 
-    cl_int getBuildInfo(cl_device_id device,
-                        ProgramBuildInfo name,
-                        size_t valueSize,
-                        void *value,
-                        size_t *valueSizeRet) const;
+    angle::Result getBuildInfo(cl_device_id device,
+                               ProgramBuildInfo name,
+                               size_t valueSize,
+                               void *value,
+                               size_t *valueSizeRet) const;
 
     cl_kernel createKernel(const char *kernel_name, cl_int &errorCode);
 
-    cl_int createKernels(cl_uint numKernels, cl_kernel *kernels, cl_uint *numKernelsRet);
+    angle::Result createKernels(cl_uint numKernels, cl_kernel *kernels, cl_uint *numKernelsRet);
 
   public:
     ~Program() override;

@@ -9,6 +9,7 @@
 
 #include "libANGLE/CLBuffer.h"
 #include "libANGLE/CLContext.h"
+#include "libANGLE/cl_utils.h"
 
 #include <cstring>
 
@@ -43,13 +44,16 @@ MemFlags InheritMemFlags(MemFlags flags, Memory *parent)
 
 }  // namespace
 
-cl_int Memory::setDestructorCallback(MemoryCB pfnNotify, void *userData)
+angle::Result Memory::setDestructorCallback(MemoryCB pfnNotify, void *userData)
 {
     mDestructorCallbacks->emplace(pfnNotify, userData);
-    return CL_SUCCESS;
+    return angle::Result::Continue;
 }
 
-cl_int Memory::getInfo(MemInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const
+angle::Result Memory::getInfo(MemInfo name,
+                              size_t valueSize,
+                              void *value,
+                              size_t *valueSizeRet) const
 {
     static_assert(
         std::is_same<cl_uint, cl_bool>::value && std::is_same<cl_uint, cl_mem_object_type>::value,
@@ -113,7 +117,7 @@ cl_int Memory::getInfo(MemInfo name, size_t valueSize, void *value, size_t *valu
             copySize  = mProperties.size() * sizeof(decltype(mProperties)::value_type);
             break;
         default:
-            return CL_INVALID_VALUE;
+            ANGLE_CL_RETURN_ERROR(CL_INVALID_VALUE);
     }
 
     if (value != nullptr)
@@ -122,7 +126,7 @@ cl_int Memory::getInfo(MemInfo name, size_t valueSize, void *value, size_t *valu
         // as described in the Memory Object Info table and param_value is not NULL.
         if (valueSize < copySize)
         {
-            return CL_INVALID_VALUE;
+            ANGLE_CL_RETURN_ERROR(CL_INVALID_VALUE);
         }
         if (copyValue != nullptr)
         {
@@ -133,7 +137,7 @@ cl_int Memory::getInfo(MemInfo name, size_t valueSize, void *value, size_t *valu
     {
         *valueSizeRet = copySize;
     }
-    return CL_SUCCESS;
+    return angle::Result::Continue;
 }
 
 Memory::~Memory()

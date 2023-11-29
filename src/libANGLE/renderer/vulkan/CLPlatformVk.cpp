@@ -83,9 +83,9 @@ CLContextImpl::Ptr CLPlatformVk::createContextFromType(cl::Context &context,
     return contextImpl;
 }
 
-cl_int CLPlatformVk::unloadCompiler()
+angle::Result CLPlatformVk::unloadCompiler()
 {
-    return CL_SUCCESS;
+    return angle::Result::Continue;
 }
 
 void CLPlatformVk::Initialize(CreateFuncs &createFuncs)

@@ -27,7 +27,7 @@ class CLPlatformImpl : angle::NonCopyable
         Info();
         ~Info();
 
-        Info(const Info &) = delete;
+        Info(const Info &)            = delete;
         Info &operator=(const Info &) = delete;
 
         Info(Info &&);
@@ -57,7 +57,7 @@ class CLPlatformImpl : angle::NonCopyable
                                                      bool userSync,
                                                      cl_int &errorCode) = 0;
 
-    virtual cl_int unloadCompiler() = 0;
+    virtual angle::Result unloadCompiler() = 0;
 
   protected:
     const cl::Platform &mPlatform;

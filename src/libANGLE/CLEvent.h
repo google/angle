@@ -24,16 +24,19 @@ class Event final : public _cl_event, public Object
   public:
     // Front end entry functions, only called from OpenCL entry points
 
-    cl_int setUserEventStatus(cl_int executionStatus);
+    angle::Result setUserEventStatus(cl_int executionStatus);
 
-    cl_int getInfo(EventInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const;
+    angle::Result getInfo(EventInfo name,
+                          size_t valueSize,
+                          void *value,
+                          size_t *valueSizeRet) const;
 
-    cl_int setCallback(cl_int commandExecCallbackType, EventCB pfnNotify, void *userData);
+    angle::Result setCallback(cl_int commandExecCallbackType, EventCB pfnNotify, void *userData);
 
-    cl_int getProfilingInfo(ProfilingInfo name,
-                            size_t valueSize,
-                            void *value,
-                            size_t *valueSizeRet);
+    angle::Result getProfilingInfo(ProfilingInfo name,
+                                   size_t valueSize,
+                                   void *value,
+                                   size_t *valueSizeRet);
 
   public:
     ~Event() override;

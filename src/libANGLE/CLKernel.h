@@ -19,21 +19,24 @@ class Kernel final : public _cl_kernel, public Object
   public:
     // Front end entry functions, only called from OpenCL entry points
 
-    cl_int setArg(cl_uint argIndex, size_t argSize, const void *argValue);
+    angle::Result setArg(cl_uint argIndex, size_t argSize, const void *argValue);
 
-    cl_int getInfo(KernelInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const;
+    angle::Result getInfo(KernelInfo name,
+                          size_t valueSize,
+                          void *value,
+                          size_t *valueSizeRet) const;
 
-    cl_int getWorkGroupInfo(cl_device_id device,
-                            KernelWorkGroupInfo name,
-                            size_t valueSize,
-                            void *value,
-                            size_t *valueSizeRet) const;
+    angle::Result getWorkGroupInfo(cl_device_id device,
+                                   KernelWorkGroupInfo name,
+                                   size_t valueSize,
+                                   void *value,
+                                   size_t *valueSizeRet) const;
 
-    cl_int getArgInfo(cl_uint argIndex,
-                      KernelArgInfo name,
-                      size_t valueSize,
-                      void *value,
-                      size_t *valueSizeRet) const;
+    angle::Result getArgInfo(cl_uint argIndex,
+                             KernelArgInfo name,
+                             size_t valueSize,
+                             void *value,
+                             size_t *valueSizeRet) const;
 
   public:
     ~Kernel() override;

@@ -20,7 +20,10 @@
 namespace cl
 {
 
-cl_int Context::getInfo(ContextInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const
+angle::Result Context::getInfo(ContextInfo name,
+                               size_t valueSize,
+                               void *value,
+                               size_t *valueSizeRet) const
 {
     std::vector<cl_device_id> devices;
     cl_uint valUInt       = 0u;
@@ -54,7 +57,7 @@ cl_int Context::getInfo(ContextInfo name, size_t valueSize, void *value, size_t 
             break;
         default:
             ASSERT(false);
-            return CL_INVALID_VALUE;
+            ANGLE_CL_RETURN_ERROR(CL_INVALID_VALUE);
     }
 
     if (value != nullptr)
@@ -63,7 +66,7 @@ cl_int Context::getInfo(ContextInfo name, size_t valueSize, void *value, size_t 
         // as specified in the Context Attributes table and param_value is not a NULL value.
         if (valueSize < copySize)
         {
-            return CL_INVALID_VALUE;
+            ANGLE_CL_RETURN_ERROR(CL_INVALID_VALUE);
         }
         if (copyValue != nullptr)
         {
@@ -74,7 +77,7 @@ cl_int Context::getInfo(ContextInfo name, size_t valueSize, void *value, size_t 
     {
         *valueSizeRet = copySize;
     }
-    return CL_SUCCESS;
+    return angle::Result::Continue;
 }
 
 cl_command_queue Context::createCommandQueueWithProperties(cl_device_id device,
@@ -174,11 +177,11 @@ cl_mem Context::createImage3D(MemFlags flags,
                                  nullptr, hostPtr);
 }
 
-cl_int Context::getSupportedImageFormats(MemFlags flags,
-                                         MemObjectType imageType,
-                                         cl_uint numEntries,
-                                         cl_image_format *imageFormats,
-                                         cl_uint *numImageFormats)
+angle::Result Context::getSupportedImageFormats(MemFlags flags,
+                                                MemObjectType imageType,
+                                                cl_uint numEntries,
+                                                cl_image_format *imageFormats,
+                                                cl_uint *numImageFormats)
 {
     return mImpl->getSupportedImageFormats(flags, imageType, numEntries, imageFormats,
                                            numImageFormats);
@@ -326,7 +329,7 @@ cl_event Context::createUserEvent(cl_int &errorCode)
     return Object::Create<Event>(errorCode, *this);
 }
 
-cl_int Context::waitForEvents(cl_uint numEvents, const cl_event *eventList)
+angle::Result Context::waitForEvents(cl_uint numEvents, const cl_event *eventList)
 {
     return mImpl->waitForEvents(Event::Cast(numEvents, eventList));
 }

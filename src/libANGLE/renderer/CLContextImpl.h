@@ -42,11 +42,11 @@ class CLContextImpl : angle::NonCopyable
                                           void *hostPtr,
                                           cl_int &errorCode) = 0;
 
-    virtual cl_int getSupportedImageFormats(cl::MemFlags flags,
-                                            cl::MemObjectType imageType,
-                                            cl_uint numEntries,
-                                            cl_image_format *imageFormats,
-                                            cl_uint *numImageFormats) = 0;
+    virtual angle::Result getSupportedImageFormats(cl::MemFlags flags,
+                                                   cl::MemObjectType imageType,
+                                                   cl_uint numEntries,
+                                                   cl_image_format *imageFormats,
+                                                   cl_uint *numImageFormats) = 0;
 
     virtual CLSamplerImpl::Ptr createSampler(const cl::Sampler &sampler, cl_int &errorCode) = 0;
 
@@ -78,7 +78,7 @@ class CLContextImpl : angle::NonCopyable
 
     virtual CLEventImpl::Ptr createUserEvent(const cl::Event &event, cl_int &errorCode) = 0;
 
-    virtual cl_int waitForEvents(const cl::EventPtrs &events) = 0;
+    virtual angle::Result waitForEvents(const cl::EventPtrs &events) = 0;
 
   protected:
     const cl::Context &mContext;

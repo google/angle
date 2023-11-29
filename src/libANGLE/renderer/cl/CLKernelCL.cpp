@@ -20,6 +20,7 @@
 #include "libANGLE/CLPlatform.h"
 #include "libANGLE/CLProgram.h"
 #include "libANGLE/CLSampler.h"
+#include "libANGLE/cl_utils.h"
 
 namespace rx
 {
@@ -71,7 +72,7 @@ bool GetArgString(cl_kernel kernel,
 {
     size_t size = 0u;
     errorCode   = kernel->getDispatch().clGetKernelArgInfo(kernel, index, cl::ToCLenum(name), 0u,
-                                                         nullptr, &size);
+                                                           nullptr, &size);
     if (errorCode == CL_KERNEL_ARG_INFO_NOT_AVAILABLE)
     {
         errorCode = CL_SUCCESS;
@@ -126,7 +127,7 @@ CLKernelCL::~CLKernelCL()
     }
 }
 
-cl_int CLKernelCL::setArg(cl_uint argIndex, size_t argSize, const void *argValue)
+angle::Result CLKernelCL::setArg(cl_uint argIndex, size_t argSize, const void *argValue)
 {
     void *value = nullptr;
     if (argValue != nullptr)
@@ -164,7 +165,8 @@ cl_int CLKernelCL::setArg(cl_uint argIndex, size_t argSize, const void *argValue
     {
         argValue = &value;
     }
-    return mNative->getDispatch().clSetKernelArg(mNative, argIndex, argSize, argValue);
+    ANGLE_CL_TRY(mNative->getDispatch().clSetKernelArg(mNative, argIndex, argSize, argValue));
+    return angle::Result::Continue;
 }
 
 CLKernelImpl::Info CLKernelCL::createInfo(cl_int &errorCode) const
