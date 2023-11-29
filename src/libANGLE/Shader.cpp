@@ -653,26 +653,23 @@ void Shader::compile(const Context *context, angle::JobResultExpectancy resultEx
     options.validateAST = true;
 #endif
 
-    mBoundCompiler.set(context, context->getCompiler());
+    // Find a shader in Blob Cache
+    Compiler *compiler = context->getCompiler();
+    setShaderKey(context, options, compiler->getShaderOutputType(),
+                 compiler->getBuiltInResources());
+    ASSERT(!mShaderHash.empty());
+    MemoryShaderCache *shaderCache = context->getMemoryShaderCache();
+    if (shaderCache && shaderCache->getShader(context, this, mShaderHash))
+    {
+        return;
+    }
 
+    mBoundCompiler.set(context, compiler);
     ASSERT(mBoundCompiler.get());
+
     ShCompilerInstance compilerInstance = mBoundCompiler->getInstance(mState.getShaderType());
     ShHandle compilerHandle             = compilerInstance.getHandle();
     ASSERT(compilerHandle);
-
-    // Find a shader in Blob Cache
-    setShaderKey(context, options, compilerInstance.getShaderOutputType(),
-                 compilerInstance.getBuiltInResources());
-    ASSERT(!mShaderHash.empty());
-    MemoryShaderCache *shaderCache = context->getMemoryShaderCache();
-    if (shaderCache)
-    {
-        if (shaderCache->getShader(context, this, options, compilerInstance, mShaderHash))
-        {
-            compilerInstance.destroy();
-            return;
-        }
-    }
 
     // Cache load failed, fall through normal compiling.
     mState.mCompileStatus = CompileStatus::COMPILE_REQUESTED;
