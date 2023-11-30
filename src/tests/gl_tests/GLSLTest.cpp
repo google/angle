@@ -18247,6 +18247,25 @@ void main() {
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 }
 
+// Test that Metal compiler doesn't inline non-const globals
+TEST_P(WebGLGLSLTest, InvalidGlobalsNotInlined)
+{
+    constexpr char kFS[] = R"(#version 100
+  precision highp float;
+  float v1 = 0.5;
+  float v2 = v1;
+
+  float f1() {
+    return v2;
+  }
+
+  void main() {
+    gl_FragColor = vec4(v1 + f1(),0.0,0.0, 1.0);
+  })";
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
+    ASSERT_GL_NO_ERROR();
+}
+
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(
