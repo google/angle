@@ -191,6 +191,8 @@ class TCompiler : public TShHandleBase
 
     bool hasPixelLocalStorageUniforms() const { return mHasPixelLocalStorageUniforms; }
 
+    ShPixelLocalStorageType getPixelLocalStorageType() const { return mCompileOptions.pls.type; }
+
     unsigned int getSharedMemorySize() const;
 
     sh::GLenum getShaderType() const { return mShaderType; }

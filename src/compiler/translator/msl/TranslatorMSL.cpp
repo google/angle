@@ -1276,8 +1276,6 @@ bool TranslatorMSL::translateImpl(TInfoSinkBase &sink,
             }
         }
 
-        ASSERT(!usesSampleMask || isSampleMaskAllowed());
-
         if (usesPointCoord)
         {
             TIntermTyped *flipNegXY =
@@ -1411,16 +1409,13 @@ bool TranslatorMSL::translateImpl(TInfoSinkBase &sink,
     }
     else if (getShaderType() == GL_FRAGMENT_SHADER)
     {
-        if (isSampleMaskAllowed())
+        mValidateASTOptions.validateVariableReferences = false;
+        if (!AddSampleMaskDeclaration(*this, *root, symbolTable, driverUniforms,
+                                      compileOptions.emulateAlphaToCoverage ||
+                                          compileOptions.metal.generateShareableShaders,
+                                      usesSampleMask))
         {
-            mValidateASTOptions.validateVariableReferences = false;
-            if (!AddSampleMaskDeclaration(*this, *root, symbolTable, driverUniforms,
-                                          compileOptions.emulateAlphaToCoverage ||
-                                              compileOptions.metal.generateShareableShaders,
-                                          usesSampleMask))
-            {
-                return false;
-            }
+            return false;
         }
     }
 

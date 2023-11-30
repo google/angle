@@ -1194,7 +1194,8 @@ void GenMetalTraverser::emitFieldDeclaration(const TField &field,
         case TQualifier::EvqFragmentOut:
         case TQualifier::EvqFragmentInOut:
         case TQualifier::EvqFragData:
-            if (mPipelineStructs.fragmentOut.external == &parent)
+            if (mPipelineStructs.fragmentOut.external == &parent ||
+                mPipelineStructs.fragmentOut.externalExtra == &parent)
             {
                 if ((type.isVector() &&
                      (basic == TBasicType::EbtInt || basic == TBasicType::EbtUInt ||
