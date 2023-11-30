@@ -4726,6 +4726,8 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
     const TVector<unsigned int> *arraySizes,
     const TSourceLoc &arraySizesLine)
 {
+    checkDoesNotHaveTooManyFields(blockName, fieldList, nameLine);
+
     // Ensure there are no duplicate field names
     checkDoesNotHaveDuplicateFieldNames(fieldList, nameLine);
 
@@ -6294,6 +6296,21 @@ void TParseContext::checkDoesNotHaveDuplicateFieldNames(const TFieldList *fields
     }
 }
 
+void TParseContext::checkDoesNotHaveTooManyFields(const ImmutableString &name,
+                                                  const TFieldList *fields,
+                                                  const TSourceLoc &location)
+{
+    // Check that there are not too many fields.  SPIR-V has a limit of 16383 fields, and it would
+    // be reasonable to apply that limit to all outputs.  For example, it was observed that 32768
+    // fields cause the Nvidia GL driver to fail compilation, so such a limit is not too specific to
+    // SPIR-V.
+    constexpr size_t kMaxFieldCount = 16383;
+    if (fields->size() > kMaxFieldCount)
+    {
+        error(location, "Too many fields in the struct (limit is 16383)", name);
+    }
+}
+
 TFieldList *TParseContext::addStructFieldList(TFieldList *fields, const TSourceLoc &location)
 {
     return fields;
@@ -6396,6 +6413,8 @@ TTypeSpecifierNonArray TParseContext::addStructure(const TSourceLoc &structLine,
             error(nameLine, "redefinition of a struct", structName);
         }
     }
+
+    checkDoesNotHaveTooManyFields(structName, fieldList, structLine);
 
     // Ensure there are no duplicate field names
     checkDoesNotHaveDuplicateFieldNames(fieldList, structLine);
