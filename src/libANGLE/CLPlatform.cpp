@@ -215,8 +215,7 @@ cl_context Platform::CreateContext(const cl_context_properties *properties,
                                    cl_uint numDevices,
                                    const cl_device_id *devices,
                                    ContextErrorCB notify,
-                                   void *userData,
-                                   cl_int &errorCode)
+                                   void *userData)
 {
     Platform *platform           = nullptr;
     bool userSync                = false;
@@ -228,22 +227,21 @@ cl_context Platform::CreateContext(const cl_context_properties *properties,
     {
         devs.emplace_back(&(*devices++)->cast<Device>());
     }
-    return Object::Create<Context>(errorCode, *platform, std::move(propArray), std::move(devs),
-                                   notify, userData, userSync);
+    return Object::Create<Context>(*platform, std::move(propArray), std::move(devs), notify,
+                                   userData, userSync);
 }
 
 cl_context Platform::CreateContextFromType(const cl_context_properties *properties,
                                            DeviceType deviceType,
                                            ContextErrorCB notify,
-                                           void *userData,
-                                           cl_int &errorCode)
+                                           void *userData)
 {
     Platform *platform           = nullptr;
     bool userSync                = false;
     Context::PropArray propArray = ParseContextProperties(properties, platform, userSync);
     ASSERT(platform != nullptr);
-    return Object::Create<Context>(errorCode, *platform, std::move(propArray), deviceType, notify,
-                                   userData, userSync);
+    return Object::Create<Context>(*platform, std::move(propArray), deviceType, notify, userData,
+                                   userSync);
 }
 
 angle::Result Platform::unloadCompiler()

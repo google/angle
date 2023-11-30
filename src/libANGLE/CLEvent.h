@@ -58,17 +58,16 @@ class Event final : public _cl_event, public Object
     using CallbackData = std::pair<EventCB, void *>;
     using Callbacks    = std::vector<CallbackData>;
 
-    Event(Context &context, cl_int &errorCode);
+    Event(Context &context);
 
     Event(CommandQueue &queue,
           cl_command_type commandType,
-          const rx::CLEventImpl::CreateFunc &createFunc,
-          cl_int &errorCode);
+          const rx::CLEventImpl::CreateFunc &createFunc);
 
     const ContextPtr mContext;
     const CommandQueuePtr mCommandQueue;
     const cl_command_type mCommandType;
-    const rx::CLEventImpl::Ptr mImpl;
+    rx::CLEventImpl::Ptr mImpl;
 
     bool mStatusWasChanged = false;
 

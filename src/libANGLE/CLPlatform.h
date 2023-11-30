@@ -47,14 +47,12 @@ class Platform final : public _cl_platform_id, public Object
                                     cl_uint numDevices,
                                     const cl_device_id *devices,
                                     ContextErrorCB notify,
-                                    void *userData,
-                                    cl_int &errorCode);
+                                    void *userData);
 
     static cl_context CreateContextFromType(const cl_context_properties *properties,
                                             DeviceType deviceType,
                                             ContextErrorCB notify,
-                                            void *userData,
-                                            cl_int &errorCode);
+                                            void *userData);
 
     angle::Result unloadCompiler();
 

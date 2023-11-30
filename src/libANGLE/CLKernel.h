@@ -48,12 +48,12 @@ class Kernel final : public _cl_kernel, public Object
     T &getImpl() const;
 
   private:
-    Kernel(Program &program, const char *name, cl_int &errorCode);
-    Kernel(Program &program, const rx::CLKernelImpl::CreateFunc &createFunc, cl_int &errorCode);
+    Kernel(Program &program, const char *name);
+    Kernel(Program &program, const rx::CLKernelImpl::CreateFunc &createFunc);
 
     const ProgramPtr mProgram;
-    const rx::CLKernelImpl::Ptr mImpl;
-    const rx::CLKernelImpl::Info mInfo;
+    rx::CLKernelImpl::Ptr mImpl;
+    rx::CLKernelImpl::Info mInfo;
 
     friend class Object;
     friend class Program;

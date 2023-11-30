@@ -27,6 +27,8 @@
         }                                                  \
     } while (0)
 
+#define ANGLE_CL_IMPL_TRY(EXPR) ANGLE_TRY_TEMPLATE(EXPR, (void))
+
 namespace cl
 {
 

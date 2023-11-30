@@ -43,6 +43,32 @@
         return cl::gClErrorTls;                                     \
     } while (0)
 
+#define CL_RETURN_OBJ(command)                                      \
+    do                                                              \
+    {                                                               \
+        cl::gClErrorTls = CL_SUCCESS;                               \
+        auto obj        = command;                                  \
+        if (cl::gClErrorTls != CL_SUCCESS)                          \
+        {                                                           \
+            ERR() << "failed with error code: " << cl::gClErrorTls; \
+            return nullptr;                                         \
+        }                                                           \
+        return obj;                                                 \
+    } while (0)
+
+#define CL_RETURN_PTR(ptrOut, command)                              \
+    do                                                              \
+    {                                                               \
+        cl::gClErrorTls = CL_SUCCESS;                               \
+        void *ptrOut    = nullptr;                                  \
+        if (IsError(command))                                       \
+        {                                                           \
+            ERR() << "failed with error code: " << cl::gClErrorTls; \
+            return nullptr;                                         \
+        }                                                           \
+        return ptrOut;                                              \
+    } while (0)
+
 namespace cl
 {
 
@@ -148,8 +174,7 @@ cl_context CreateContext(const cl_context_properties *properties,
                          void *user_data,
                          cl_int &errorCode)
 {
-    return Platform::CreateContext(properties, num_devices, devices, pfn_notify, user_data,
-                                   errorCode);
+    CL_RETURN_OBJ(Platform::CreateContext(properties, num_devices, devices, pfn_notify, user_data));
 }
 
 cl_context CreateContextFromType(const cl_context_properties *properties,
@@ -161,8 +186,7 @@ cl_context CreateContextFromType(const cl_context_properties *properties,
                                  void *user_data,
                                  cl_int &errorCode)
 {
-    return Platform::CreateContextFromType(properties, device_type, pfn_notify, user_data,
-                                           errorCode);
+    CL_RETURN_OBJ(Platform::CreateContextFromType(properties, device_type, pfn_notify, user_data));
 }
 
 cl_int RetainContext(cl_context context)
@@ -205,7 +229,7 @@ cl_command_queue CreateCommandQueueWithProperties(cl_context context,
                                                   const cl_queue_properties *properties,
                                                   cl_int &errorCode)
 {
-    return context->cast<Context>().createCommandQueueWithProperties(device, properties, errorCode);
+    CL_RETURN_OBJ(context->cast<Context>().createCommandQueueWithProperties(device, properties));
 }
 
 cl_int RetainCommandQueue(cl_command_queue command_queue)
@@ -240,7 +264,7 @@ cl_mem CreateBuffer(cl_context context,
                     void *host_ptr,
                     cl_int &errorCode)
 {
-    return context->cast<Context>().createBuffer(nullptr, flags, size, host_ptr, errorCode);
+    CL_RETURN_OBJ(context->cast<Context>().createBuffer(nullptr, flags, size, host_ptr));
 }
 
 cl_mem CreateBufferWithProperties(cl_context context,
@@ -250,7 +274,7 @@ cl_mem CreateBufferWithProperties(cl_context context,
                                   void *host_ptr,
                                   cl_int &errorCode)
 {
-    return context->cast<Context>().createBuffer(properties, flags, size, host_ptr, errorCode);
+    CL_RETURN_OBJ(context->cast<Context>().createBuffer(properties, flags, size, host_ptr));
 }
 
 cl_mem CreateSubBuffer(cl_mem buffer,
@@ -259,8 +283,8 @@ cl_mem CreateSubBuffer(cl_mem buffer,
                        const void *buffer_create_info,
                        cl_int &errorCode)
 {
-    return buffer->cast<Buffer>().createSubBuffer(flags, buffer_create_type, buffer_create_info,
-                                                  errorCode);
+    CL_RETURN_OBJ(
+        buffer->cast<Buffer>().createSubBuffer(flags, buffer_create_type, buffer_create_info));
 }
 
 cl_mem CreateImage(cl_context context,
@@ -270,8 +294,8 @@ cl_mem CreateImage(cl_context context,
                    void *host_ptr,
                    cl_int &errorCode)
 {
-    return context->cast<Context>().createImage(nullptr, flags, image_format, image_desc, host_ptr,
-                                                errorCode);
+    CL_RETURN_OBJ(
+        context->cast<Context>().createImage(nullptr, flags, image_format, image_desc, host_ptr));
 }
 
 cl_mem CreateImageWithProperties(cl_context context,
@@ -282,8 +306,8 @@ cl_mem CreateImageWithProperties(cl_context context,
                                  void *host_ptr,
                                  cl_int &errorCode)
 {
-    return context->cast<Context>().createImage(properties, flags, image_format, image_desc,
-                                                host_ptr, errorCode);
+    CL_RETURN_OBJ(context->cast<Context>().createImage(properties, flags, image_format, image_desc,
+                                                       host_ptr));
 }
 
 cl_mem CreatePipe(cl_context context,
@@ -376,7 +400,7 @@ cl_sampler CreateSamplerWithProperties(cl_context context,
                                        const cl_sampler_properties *sampler_properties,
                                        cl_int &errorCode)
 {
-    return context->cast<Context>().createSamplerWithProperties(sampler_properties, errorCode);
+    CL_RETURN_OBJ(context->cast<Context>().createSamplerWithProperties(sampler_properties));
 }
 
 cl_int RetainSampler(cl_sampler sampler)
@@ -411,7 +435,7 @@ cl_program CreateProgramWithSource(cl_context context,
                                    const size_t *lengths,
                                    cl_int &errorCode)
 {
-    return context->cast<Context>().createProgramWithSource(count, strings, lengths, errorCode);
+    CL_RETURN_OBJ(context->cast<Context>().createProgramWithSource(count, strings, lengths));
 }
 
 cl_program CreateProgramWithBinary(cl_context context,
@@ -422,8 +446,8 @@ cl_program CreateProgramWithBinary(cl_context context,
                                    cl_int *binary_status,
                                    cl_int &errorCode)
 {
-    return context->cast<Context>().createProgramWithBinary(num_devices, device_list, lengths,
-                                                            binaries, binary_status, errorCode);
+    CL_RETURN_OBJ(context->cast<Context>().createProgramWithBinary(
+        num_devices, device_list, lengths, binaries, binary_status));
 }
 
 cl_program CreateProgramWithBuiltInKernels(cl_context context,
@@ -432,13 +456,13 @@ cl_program CreateProgramWithBuiltInKernels(cl_context context,
                                            const char *kernel_names,
                                            cl_int &errorCode)
 {
-    return context->cast<Context>().createProgramWithBuiltInKernels(num_devices, device_list,
-                                                                    kernel_names, errorCode);
+    CL_RETURN_OBJ(context->cast<Context>().createProgramWithBuiltInKernels(num_devices, device_list,
+                                                                           kernel_names));
 }
 
 cl_program CreateProgramWithIL(cl_context context, const void *il, size_t length, cl_int &errorCode)
 {
-    return context->cast<Context>().createProgramWithIL(il, length, errorCode);
+    CL_RETURN_OBJ(context->cast<Context>().createProgramWithIL(il, length));
 }
 
 cl_int RetainProgram(cl_program program)
@@ -493,9 +517,9 @@ cl_program LinkProgram(cl_context context,
                        void *user_data,
                        cl_int &errorCode)
 {
-    return context->cast<Context>().linkProgram(num_devices, device_list, options,
-                                                num_input_programs, input_programs, pfn_notify,
-                                                user_data, errorCode);
+    CL_RETURN_OBJ(context->cast<Context>().linkProgram(num_devices, device_list, options,
+                                                       num_input_programs, input_programs,
+                                                       pfn_notify, user_data));
 }
 
 cl_int SetProgramReleaseCallback(cl_program program,
@@ -543,7 +567,7 @@ cl_int GetProgramBuildInfo(cl_program program,
 
 cl_kernel CreateKernel(cl_program program, const char *kernel_name, cl_int &errorCode)
 {
-    return program->cast<Program>().createKernel(kernel_name, errorCode);
+    CL_RETURN_OBJ(program->cast<Program>().createKernel(kernel_name));
 }
 
 cl_int CreateKernelsInProgram(cl_program program,
@@ -659,7 +683,7 @@ cl_int GetEventInfo(cl_event event,
 
 cl_event CreateUserEvent(cl_context context, cl_int &errorCode)
 {
-    return context->cast<Context>().createUserEvent(errorCode);
+    CL_RETURN_OBJ(context->cast<Context>().createUserEvent());
 }
 
 cl_int RetainEvent(cl_event event)
@@ -937,16 +961,9 @@ void *EnqueueMapBuffer(cl_command_queue command_queue,
                        cl_event *event,
                        cl_int &errorCode)
 {
-    void *mapPtr = nullptr;
-    if (IsError(command_queue->cast<CommandQueue>().enqueueMapBuffer(
-            buffer, blocking_map, map_flags, offset, size, num_events_in_wait_list, event_wait_list,
-            event, mapPtr)))
-    {
-        ERR() << "failed with error code: " << cl::gClErrorTls;
-        mapPtr = nullptr;
-    }
-    errorCode = cl::gClErrorTls;
-    return mapPtr;
+    CL_RETURN_PTR(ptrOut, command_queue->cast<CommandQueue>().enqueueMapBuffer(
+                              buffer, blocking_map, map_flags, offset, size,
+                              num_events_in_wait_list, event_wait_list, event, ptrOut));
 }
 
 void *EnqueueMapImage(cl_command_queue command_queue,
@@ -962,16 +979,10 @@ void *EnqueueMapImage(cl_command_queue command_queue,
                       cl_event *event,
                       cl_int &errorCode)
 {
-    void *mapPtr = nullptr;
-    if (IsError(command_queue->cast<CommandQueue>().enqueueMapImage(
-            image, blocking_map, map_flags, origin, region, image_row_pitch, image_slice_pitch,
-            num_events_in_wait_list, event_wait_list, event, mapPtr)))
-    {
-        ERR() << "failed with error code: " << cl::gClErrorTls;
-        mapPtr = nullptr;
-    }
-    errorCode = cl::gClErrorTls;
-    return mapPtr;
+    CL_RETURN_PTR(ptrOut,
+                  command_queue->cast<CommandQueue>().enqueueMapImage(
+                      image, blocking_map, map_flags, origin, region, image_row_pitch,
+                      image_slice_pitch, num_events_in_wait_list, event_wait_list, event, ptrOut));
 }
 
 cl_int EnqueueUnmapMemObject(cl_command_queue command_queue,
@@ -1147,8 +1158,8 @@ cl_mem CreateImage2D(cl_context context,
                      void *host_ptr,
                      cl_int &errorCode)
 {
-    return context->cast<Context>().createImage2D(flags, image_format, image_width, image_height,
-                                                  image_row_pitch, host_ptr, errorCode);
+    CL_RETURN_OBJ(context->cast<Context>().createImage2D(flags, image_format, image_width,
+                                                         image_height, image_row_pitch, host_ptr));
 }
 
 cl_mem CreateImage3D(cl_context context,
@@ -1162,9 +1173,9 @@ cl_mem CreateImage3D(cl_context context,
                      void *host_ptr,
                      cl_int &errorCode)
 {
-    return context->cast<Context>().createImage3D(flags, image_format, image_width, image_height,
-                                                  image_depth, image_row_pitch, image_slice_pitch,
-                                                  host_ptr, errorCode);
+    CL_RETURN_OBJ(context->cast<Context>().createImage3D(flags, image_format, image_width,
+                                                         image_height, image_depth, image_row_pitch,
+                                                         image_slice_pitch, host_ptr));
 }
 
 cl_int EnqueueMarker(cl_command_queue command_queue, cl_event *event)
@@ -1211,7 +1222,7 @@ cl_command_queue CreateCommandQueue(cl_context context,
                                     CommandQueueProperties properties,
                                     cl_int &errorCode)
 {
-    return context->cast<Context>().createCommandQueue(device, properties, errorCode);
+    CL_RETURN_OBJ(context->cast<Context>().createCommandQueue(device, properties));
 }
 
 cl_sampler CreateSampler(cl_context context,
@@ -1220,8 +1231,8 @@ cl_sampler CreateSampler(cl_context context,
                          FilterMode filter_mode,
                          cl_int &errorCode)
 {
-    return context->cast<Context>().createSampler(normalized_coords, addressing_mode, filter_mode,
-                                                  errorCode);
+    CL_RETURN_OBJ(
+        context->cast<Context>().createSampler(normalized_coords, addressing_mode, filter_mode));
 }
 
 cl_int EnqueueTask(cl_command_queue command_queue,

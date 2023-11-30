@@ -51,7 +51,7 @@ class Program final : public _cl_program, public Object
                                void *value,
                                size_t *valueSizeRet) const;
 
-    cl_kernel createKernel(const char *kernel_name, cl_int &errorCode);
+    cl_kernel createKernel(const char *kernel_name);
 
     angle::Result createKernels(cl_uint numKernels, cl_kernel *kernels, cl_uint *numKernelsRet);
 
@@ -72,25 +72,23 @@ class Program final : public _cl_program, public Object
     void callback();
 
   private:
-    Program(Context &context, std::string &&source, cl_int &errorCode);
-    Program(Context &context, const void *il, size_t length, cl_int &errorCode);
+    Program(Context &context, std::string &&source);
+    Program(Context &context, const void *il, size_t length);
 
     Program(Context &context,
             DevicePtrs &&devices,
             const size_t *lengths,
             const unsigned char **binaries,
-            cl_int *binaryStatus,
-            cl_int &errorCode);
+            cl_int *binaryStatus);
 
-    Program(Context &context, DevicePtrs &&devices, const char *kernelNames, cl_int &errorCode);
+    Program(Context &context, DevicePtrs &&devices, const char *kernelNames);
 
     Program(Context &context,
             const DevicePtrs &devices,
             const char *options,
             const cl::ProgramPtrs &inputPrograms,
             ProgramCB pfnNotify,
-            void *userData,
-            cl_int &errorCode);
+            void *userData);
 
     using CallbackData = std::pair<ProgramCB, void *>;
 
@@ -103,7 +101,7 @@ class Program final : public _cl_program, public Object
     angle::SynchronizedValue<CallbackData, angle::Spinlock> mCallback;
     std::atomic<cl_uint> mNumAttachedKernels;
 
-    const rx::CLProgramImpl::Ptr mImpl;
+    rx::CLProgramImpl::Ptr mImpl;
     const std::string mSource;
 
     friend class Kernel;

@@ -145,17 +145,8 @@ Image::Image(Context &context,
              const cl_image_format &format,
              const ImageDescriptor &desc,
              Memory *parent,
-             void *hostPtr,
-             cl_int &errorCode)
-    : Memory(*this,
-             context,
-             std::move(properties),
-             flags,
-             format,
-             desc,
-             parent,
-             hostPtr,
-             errorCode),
+             void *hostPtr)
+    : Memory(*this, context, std::move(properties), flags, format, desc, parent, hostPtr),
       mFormat(format),
       mDesc(desc)
 {}

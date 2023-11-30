@@ -65,22 +65,20 @@ CLDeviceImpl::CreateDatas CLPlatformVk::createDevices() const
     return createDatas;
 }
 
-CLContextImpl::Ptr CLPlatformVk::createContext(cl::Context &context,
-                                               const cl::DevicePtrs &devices,
-                                               bool userSync,
-                                               cl_int &errorCode)
+angle::Result CLPlatformVk::createContext(cl::Context &context,
+                                          const cl::DevicePtrs &devices,
+                                          bool userSync,
+                                          CLContextImpl::Ptr *contextOut)
 {
-    CLContextImpl::Ptr contextImpl;
-    return contextImpl;
+    return angle::Result::Continue;
 }
 
-CLContextImpl::Ptr CLPlatformVk::createContextFromType(cl::Context &context,
-                                                       cl::DeviceType deviceType,
-                                                       bool userSync,
-                                                       cl_int &errorCode)
+angle::Result CLPlatformVk::createContextFromType(cl::Context &context,
+                                                  cl::DeviceType deviceType,
+                                                  bool userSync,
+                                                  CLContextImpl::Ptr *contextOut)
 {
-    CLContextImpl::Ptr contextImpl;
-    return contextImpl;
+    return angle::Result::Continue;
 }
 
 angle::Result CLPlatformVk::unloadCompiler()

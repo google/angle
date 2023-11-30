@@ -25,7 +25,7 @@ class CLKernelCL : public CLKernelImpl
 
     angle::Result setArg(cl_uint argIndex, size_t argSize, const void *argValue) override;
 
-    Info createInfo(cl_int &errorCode) const override;
+    angle::Result createInfo(Info *infoOut) const override;
 
   private:
     const cl_kernel mNative;

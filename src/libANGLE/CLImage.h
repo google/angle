@@ -49,8 +49,7 @@ class Image final : public Memory
           const cl_image_format &format,
           const ImageDescriptor &desc,
           Memory *parent,
-          void *hostPtr,
-          cl_int &errorCode);
+          void *hostPtr);
 
     const cl_image_format mFormat;
     const ImageDescriptor mDesc;

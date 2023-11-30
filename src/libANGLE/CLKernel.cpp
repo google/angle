@@ -219,17 +219,22 @@ Kernel::~Kernel()
     --mProgram->mNumAttachedKernels;
 }
 
-Kernel::Kernel(Program &program, const char *name, cl_int &errorCode)
-    : mProgram(&program),
-      mImpl(program.getImpl().createKernel(*this, name, errorCode)),
-      mInfo(mImpl ? mImpl->createInfo(errorCode) : rx::CLKernelImpl::Info{})
+Kernel::Kernel(Program &program, const char *name) : mProgram(&program), mImpl(nullptr)
 {
+    if (!IsError(program.getImpl().createKernel(*this, name, &mImpl)))
+    {
+        ANGLE_CL_IMPL_TRY(mImpl->createInfo(&mInfo));
+    }
     ++mProgram->mNumAttachedKernels;
 }
 
-Kernel::Kernel(Program &program, const rx::CLKernelImpl::CreateFunc &createFunc, cl_int &errorCode)
-    : mProgram(&program), mImpl(createFunc(*this)), mInfo(mImpl->createInfo(errorCode))
+Kernel::Kernel(Program &program, const rx::CLKernelImpl::CreateFunc &createFunc)
+    : mProgram(&program), mImpl(createFunc(*this))
 {
+    if (mImpl)
+    {
+        ANGLE_CL_IMPL_TRY(mImpl->createInfo(&mInfo));
+    }
     ++mProgram->mNumAttachedKernels;
 }
 

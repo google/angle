@@ -47,15 +47,15 @@ class CLPlatformImpl : angle::NonCopyable
     virtual Info createInfo() const                         = 0;
     virtual CLDeviceImpl::CreateDatas createDevices() const = 0;
 
-    virtual CLContextImpl::Ptr createContext(cl::Context &context,
-                                             const cl::DevicePtrs &devices,
-                                             bool userSync,
-                                             cl_int &errorCode) = 0;
+    virtual angle::Result createContext(cl::Context &context,
+                                        const cl::DevicePtrs &devices,
+                                        bool userSync,
+                                        CLContextImpl::Ptr *contextOut) = 0;
 
-    virtual CLContextImpl::Ptr createContextFromType(cl::Context &context,
-                                                     cl::DeviceType deviceType,
-                                                     bool userSync,
-                                                     cl_int &errorCode) = 0;
+    virtual angle::Result createContextFromType(cl::Context &context,
+                                                cl::DeviceType deviceType,
+                                                bool userSync,
+                                                CLContextImpl::Ptr *contextOut) = 0;
 
     virtual angle::Result unloadCompiler() = 0;
 

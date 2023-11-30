@@ -379,11 +379,12 @@ CLDeviceImpl::CreateDatas CLPlatformCL::createDevices() const
     return createDatas;
 }
 
-CLContextImpl::Ptr CLPlatformCL::createContext(cl::Context &context,
-                                               const cl::DevicePtrs &devices,
-                                               bool userSync,
-                                               cl_int &errorCode)
+angle::Result CLPlatformCL::createContext(cl::Context &context,
+                                          const cl::DevicePtrs &devices,
+                                          bool userSync,
+                                          CLContextImpl::Ptr *contextOut)
 {
+    cl_int errorCode                   = CL_SUCCESS;
     cl_context_properties properties[] = {
         CL_CONTEXT_PLATFORM, reinterpret_cast<cl_context_properties>(mNative),
         userSync && mPlatform.isVersionOrNewer(1u, 2u) ? CL_CONTEXT_INTEROP_USER_SYNC : 0, CL_TRUE,
@@ -398,15 +399,19 @@ CLContextImpl::Ptr CLPlatformCL::createContext(cl::Context &context,
     cl_context nativeContext = mNative->getDispatch().clCreateContext(
         properties, static_cast<cl_uint>(nativeDevices.size()), nativeDevices.data(),
         cl::Context::ErrorCallback, &context, &errorCode);
-    return CLContextImpl::Ptr(nativeContext != nullptr ? new CLContextCL(context, nativeContext)
-                                                       : nullptr);
+    ANGLE_CL_TRY(errorCode);
+
+    *contextOut = CLContextImpl::Ptr(
+        nativeContext != nullptr ? new CLContextCL(context, nativeContext) : nullptr);
+    return angle::Result::Continue;
 }
 
-CLContextImpl::Ptr CLPlatformCL::createContextFromType(cl::Context &context,
-                                                       cl::DeviceType deviceType,
-                                                       bool userSync,
-                                                       cl_int &errorCode)
+angle::Result CLPlatformCL::createContextFromType(cl::Context &context,
+                                                  cl::DeviceType deviceType,
+                                                  bool userSync,
+                                                  CLContextImpl::Ptr *contextOut)
 {
+    cl_int errorCode                   = CL_SUCCESS;
     cl_context_properties properties[] = {
         CL_CONTEXT_PLATFORM, reinterpret_cast<cl_context_properties>(mNative),
         userSync && mPlatform.isVersionOrNewer(1u, 2u) ? CL_CONTEXT_INTEROP_USER_SYNC : 0, CL_TRUE,
@@ -414,8 +419,11 @@ CLContextImpl::Ptr CLPlatformCL::createContextFromType(cl::Context &context,
 
     cl_context nativeContext = mNative->getDispatch().clCreateContextFromType(
         properties, deviceType.get(), cl::Context::ErrorCallback, &context, &errorCode);
-    return CLContextImpl::Ptr(nativeContext != nullptr ? new CLContextCL(context, nativeContext)
-                                                       : nullptr);
+    ANGLE_CL_TRY(errorCode);
+
+    *contextOut = CLContextImpl::Ptr(
+        nativeContext != nullptr ? new CLContextCL(context, nativeContext) : nullptr);
+    return angle::Result::Continue;
 }
 
 angle::Result CLPlatformCL::unloadCompiler()

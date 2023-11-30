@@ -272,20 +272,16 @@ class CommandQueue final : public _cl_command_queue, public Object
                  Device &device,
                  PropArray &&propArray,
                  CommandQueueProperties properties,
-                 cl_uint size,
-                 cl_int &errorCode);
+                 cl_uint size);
 
-    CommandQueue(Context &context,
-                 Device &device,
-                 CommandQueueProperties properties,
-                 cl_int &errorCode);
+    CommandQueue(Context &context, Device &device, CommandQueueProperties properties);
 
     const ContextPtr mContext;
     const DevicePtr mDevice;
     const PropArray mPropArray;
     angle::SynchronizedValue<CommandQueueProperties> mProperties;
     const cl_uint mSize = kNoSize;
-    const rx::CLCommandQueueImpl::Ptr mImpl;
+    rx::CLCommandQueueImpl::Ptr mImpl;
 
     friend class Object;
 };
