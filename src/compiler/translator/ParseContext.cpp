@@ -4726,6 +4726,9 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
     const TVector<unsigned int> *arraySizes,
     const TSourceLoc &arraySizesLine)
 {
+    // Ensure there are no duplicate field names
+    checkDoesNotHaveDuplicateFieldNames(fieldList, nameLine);
+
     const bool isGLPerVertex = blockName == "gl_PerVertex";
     // gl_PerVertex is allowed to be redefined and therefore not reserved
     if (!isGLPerVertex)
@@ -6274,28 +6277,25 @@ TDeclarator *TParseContext::parseStructArrayDeclarator(const ImmutableString &id
     return new TDeclarator(identifier, arraySizes, loc);
 }
 
-void TParseContext::checkDoesNotHaveDuplicateFieldName(const TFieldList::const_iterator begin,
-                                                       const TFieldList::const_iterator end,
-                                                       const ImmutableString &name,
-                                                       const TSourceLoc &location)
+void TParseContext::checkDoesNotHaveDuplicateFieldNames(const TFieldList *fields,
+                                                        const TSourceLoc &location)
 {
-    for (auto fieldIter = begin; fieldIter != end; ++fieldIter)
+    TUnorderedMap<ImmutableString, uint32_t, ImmutableString::FowlerNollVoHash<sizeof(size_t)>>
+        fieldNames;
+    for (TField *field : *fields)
     {
-        if ((*fieldIter)->name() == name)
+        // Note: operator[] adds this name to the map if it doesn't already exist, and initializes
+        // its value to 0.
+        uint32_t count = ++fieldNames[field->name()];
+        if (count != 1)
         {
-            error(location, "duplicate field name in structure", name);
+            error(location, "Duplicate field name in structure", field->name());
         }
     }
 }
 
 TFieldList *TParseContext::addStructFieldList(TFieldList *fields, const TSourceLoc &location)
 {
-    for (TFieldList::const_iterator fieldIter = fields->begin(); fieldIter != fields->end();
-         ++fieldIter)
-    {
-        checkDoesNotHaveDuplicateFieldName(fields->begin(), fieldIter, (*fieldIter)->name(),
-                                           location);
-    }
     return fields;
 }
 
@@ -6303,12 +6303,8 @@ TFieldList *TParseContext::combineStructFieldLists(TFieldList *processedFields,
                                                    const TFieldList *newlyAddedFields,
                                                    const TSourceLoc &location)
 {
-    for (TField *field : *newlyAddedFields)
-    {
-        checkDoesNotHaveDuplicateFieldName(processedFields->begin(), processedFields->end(),
-                                           field->name(), location);
-        processedFields->push_back(field);
-    }
+    processedFields->insert(processedFields->end(), newlyAddedFields->begin(),
+                            newlyAddedFields->end());
     return processedFields;
 }
 
@@ -6401,7 +6397,10 @@ TTypeSpecifierNonArray TParseContext::addStructure(const TSourceLoc &structLine,
         }
     }
 
-    // ensure we do not specify any storage qualifiers on the struct members
+    // Ensure there are no duplicate field names
+    checkDoesNotHaveDuplicateFieldNames(fieldList, structLine);
+
+    // Ensure we do not specify any storage qualifiers on the struct members
     for (unsigned int typeListIndex = 0; typeListIndex < fieldList->size(); typeListIndex++)
     {
         TField &field              = *(*fieldList)[typeListIndex];

@@ -1053,6 +1053,8 @@ b/305311693 PIXEL4ORXL GLES : FramebufferTest_ES31.ClearColorMorePrecisionThanFB
 7389 SWIFTSHADER : Texture2DTest.ManySupersedingTextureUpdates/* = SKIP
 7389 MAC OPENGL : Texture2DTest.ManySupersedingTextureUpdates/* = SKIP
 
+8437 MAC OPENGL : GLSLTest_ES3.LotsOfFieldsInStruct/* = SKIP
+
 // GL, GLES run into issues with cleanup
 7495 WIN OpenGL : EGLMultiContextTest.ReuseUnterminatedDisplay/* = SKIP
 7495 WIN GLES : EGLMultiContextTest.ReuseUnterminatedDisplay/* = SKIP
