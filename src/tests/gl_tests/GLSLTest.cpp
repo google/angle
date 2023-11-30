@@ -18291,6 +18291,33 @@ void main() {
     ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), fs.str().c_str());
 }
 
+// Test that structs with too many fields are rejected.  In SPIR-V, the instruction that defines the
+// struct lists the fields which means the length of the instruction is a function of the field
+// count.  Since SPIR-V instruction sizes are limited to 16 bits, structs with more fields cannot be
+// represented.
+TEST_P(GLSLTest_ES3, TooManyFieldsInStruct)
+{
+    std::ostringstream fs;
+    fs << R"(#version 300 es
+precision highp float;
+struct TooManyFields
+{
+)";
+    for (uint32_t i = 0; i < (1 << 16); ++i)
+    {
+        fs << "    float field" << i << ";\n";
+    }
+    fs << R"(};
+uniform B { TooManyFields s; };
+out vec4 color;
+void main() {
+    color = vec4(s.field0, 0.0, 0.0, 1.0);
+})";
+
+    GLuint shader = CompileShader(GL_FRAGMENT_SHADER, fs.str().c_str());
+    EXPECT_EQ(0u, shader);
+}
+
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(
