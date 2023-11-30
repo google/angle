@@ -35,7 +35,6 @@
 #define CL_RETURN_ERROR(command)                                    \
     do                                                              \
     {                                                               \
-        cl::gClErrorTls = CL_SUCCESS;                               \
         if (IsError(command))                                       \
         {                                                           \
             ERR() << "failed with error code: " << cl::gClErrorTls; \
@@ -46,8 +45,7 @@
 #define CL_RETURN_OBJ(command)                                      \
     do                                                              \
     {                                                               \
-        cl::gClErrorTls = CL_SUCCESS;                               \
-        auto obj        = command;                                  \
+        auto obj = command;                                         \
         if (cl::gClErrorTls != CL_SUCCESS)                          \
         {                                                           \
             ERR() << "failed with error code: " << cl::gClErrorTls; \
@@ -59,8 +57,7 @@
 #define CL_RETURN_PTR(ptrOut, command)                              \
     do                                                              \
     {                                                               \
-        cl::gClErrorTls = CL_SUCCESS;                               \
-        void *ptrOut    = nullptr;                                  \
+        void *ptrOut = nullptr;                                     \
         if (IsError(command))                                       \
         {                                                           \
             ERR() << "failed with error code: " << cl::gClErrorTls; \
@@ -171,8 +168,7 @@ cl_context CreateContext(const cl_context_properties *properties,
                                                        const void *private_info,
                                                        size_t cb,
                                                        void *user_data),
-                         void *user_data,
-                         cl_int &errorCode)
+                         void *user_data)
 {
     CL_RETURN_OBJ(Platform::CreateContext(properties, num_devices, devices, pfn_notify, user_data));
 }
@@ -183,8 +179,7 @@ cl_context CreateContextFromType(const cl_context_properties *properties,
                                                                const void *private_info,
                                                                size_t cb,
                                                                void *user_data),
-                                 void *user_data,
-                                 cl_int &errorCode)
+                                 void *user_data)
 {
     CL_RETURN_OBJ(Platform::CreateContextFromType(properties, device_type, pfn_notify, user_data));
 }
@@ -226,8 +221,7 @@ cl_int SetContextDestructorCallback(cl_context context,
 
 cl_command_queue CreateCommandQueueWithProperties(cl_context context,
                                                   cl_device_id device,
-                                                  const cl_queue_properties *properties,
-                                                  cl_int &errorCode)
+                                                  const cl_queue_properties *properties)
 {
     CL_RETURN_OBJ(context->cast<Context>().createCommandQueueWithProperties(device, properties));
 }
@@ -258,11 +252,7 @@ cl_int GetCommandQueueInfo(cl_command_queue command_queue,
                                                                 param_value, param_value_size_ret));
 }
 
-cl_mem CreateBuffer(cl_context context,
-                    MemFlags flags,
-                    size_t size,
-                    void *host_ptr,
-                    cl_int &errorCode)
+cl_mem CreateBuffer(cl_context context, MemFlags flags, size_t size, void *host_ptr)
 {
     CL_RETURN_OBJ(context->cast<Context>().createBuffer(nullptr, flags, size, host_ptr));
 }
@@ -271,8 +261,7 @@ cl_mem CreateBufferWithProperties(cl_context context,
                                   const cl_mem_properties *properties,
                                   MemFlags flags,
                                   size_t size,
-                                  void *host_ptr,
-                                  cl_int &errorCode)
+                                  void *host_ptr)
 {
     CL_RETURN_OBJ(context->cast<Context>().createBuffer(properties, flags, size, host_ptr));
 }
@@ -280,8 +269,7 @@ cl_mem CreateBufferWithProperties(cl_context context,
 cl_mem CreateSubBuffer(cl_mem buffer,
                        MemFlags flags,
                        cl_buffer_create_type buffer_create_type,
-                       const void *buffer_create_info,
-                       cl_int &errorCode)
+                       const void *buffer_create_info)
 {
     CL_RETURN_OBJ(
         buffer->cast<Buffer>().createSubBuffer(flags, buffer_create_type, buffer_create_info));
@@ -291,8 +279,7 @@ cl_mem CreateImage(cl_context context,
                    MemFlags flags,
                    const cl_image_format *image_format,
                    const cl_image_desc *image_desc,
-                   void *host_ptr,
-                   cl_int &errorCode)
+                   void *host_ptr)
 {
     CL_RETURN_OBJ(
         context->cast<Context>().createImage(nullptr, flags, image_format, image_desc, host_ptr));
@@ -303,8 +290,7 @@ cl_mem CreateImageWithProperties(cl_context context,
                                  MemFlags flags,
                                  const cl_image_format *image_format,
                                  const cl_image_desc *image_desc,
-                                 void *host_ptr,
-                                 cl_int &errorCode)
+                                 void *host_ptr)
 {
     CL_RETURN_OBJ(context->cast<Context>().createImage(properties, flags, image_format, image_desc,
                                                        host_ptr));
@@ -314,8 +300,7 @@ cl_mem CreatePipe(cl_context context,
                   MemFlags flags,
                   cl_uint pipe_packet_size,
                   cl_uint pipe_max_packets,
-                  const cl_pipe_properties *properties,
-                  cl_int &errorCode)
+                  const cl_pipe_properties *properties)
 {
     WARN_NOT_SUPPORTED(CreatePipe);
     return 0;
@@ -397,8 +382,7 @@ void SVMFree(cl_context context, void *svm_pointer)
 }
 
 cl_sampler CreateSamplerWithProperties(cl_context context,
-                                       const cl_sampler_properties *sampler_properties,
-                                       cl_int &errorCode)
+                                       const cl_sampler_properties *sampler_properties)
 {
     CL_RETURN_OBJ(context->cast<Context>().createSamplerWithProperties(sampler_properties));
 }
@@ -432,8 +416,7 @@ cl_int GetSamplerInfo(cl_sampler sampler,
 cl_program CreateProgramWithSource(cl_context context,
                                    cl_uint count,
                                    const char **strings,
-                                   const size_t *lengths,
-                                   cl_int &errorCode)
+                                   const size_t *lengths)
 {
     CL_RETURN_OBJ(context->cast<Context>().createProgramWithSource(count, strings, lengths));
 }
@@ -443,8 +426,7 @@ cl_program CreateProgramWithBinary(cl_context context,
                                    const cl_device_id *device_list,
                                    const size_t *lengths,
                                    const unsigned char **binaries,
-                                   cl_int *binary_status,
-                                   cl_int &errorCode)
+                                   cl_int *binary_status)
 {
     CL_RETURN_OBJ(context->cast<Context>().createProgramWithBinary(
         num_devices, device_list, lengths, binaries, binary_status));
@@ -453,14 +435,13 @@ cl_program CreateProgramWithBinary(cl_context context,
 cl_program CreateProgramWithBuiltInKernels(cl_context context,
                                            cl_uint num_devices,
                                            const cl_device_id *device_list,
-                                           const char *kernel_names,
-                                           cl_int &errorCode)
+                                           const char *kernel_names)
 {
     CL_RETURN_OBJ(context->cast<Context>().createProgramWithBuiltInKernels(num_devices, device_list,
                                                                            kernel_names));
 }
 
-cl_program CreateProgramWithIL(cl_context context, const void *il, size_t length, cl_int &errorCode)
+cl_program CreateProgramWithIL(cl_context context, const void *il, size_t length)
 {
     CL_RETURN_OBJ(context->cast<Context>().createProgramWithIL(il, length));
 }
@@ -514,8 +495,7 @@ cl_program LinkProgram(cl_context context,
                        cl_uint num_input_programs,
                        const cl_program *input_programs,
                        void(CL_CALLBACK *pfn_notify)(cl_program program, void *user_data),
-                       void *user_data,
-                       cl_int &errorCode)
+                       void *user_data)
 {
     CL_RETURN_OBJ(context->cast<Context>().linkProgram(num_devices, device_list, options,
                                                        num_input_programs, input_programs,
@@ -565,7 +545,7 @@ cl_int GetProgramBuildInfo(cl_program program,
                                                           param_value, param_value_size_ret));
 }
 
-cl_kernel CreateKernel(cl_program program, const char *kernel_name, cl_int &errorCode)
+cl_kernel CreateKernel(cl_program program, const char *kernel_name)
 {
     CL_RETURN_OBJ(program->cast<Program>().createKernel(kernel_name));
 }
@@ -578,7 +558,7 @@ cl_int CreateKernelsInProgram(cl_program program,
     CL_RETURN_ERROR(program->cast<Program>().createKernels(num_kernels, kernels, num_kernels_ret));
 }
 
-cl_kernel CloneKernel(cl_kernel source_kernel, cl_int &errorCode)
+cl_kernel CloneKernel(cl_kernel source_kernel)
 {
     WARN_NOT_SUPPORTED(CloneKernel);
     return 0;
@@ -681,7 +661,7 @@ cl_int GetEventInfo(cl_event event,
                                                  param_value_size_ret));
 }
 
-cl_event CreateUserEvent(cl_context context, cl_int &errorCode)
+cl_event CreateUserEvent(cl_context context)
 {
     CL_RETURN_OBJ(context->cast<Context>().createUserEvent());
 }
@@ -958,8 +938,7 @@ void *EnqueueMapBuffer(cl_command_queue command_queue,
                        size_t size,
                        cl_uint num_events_in_wait_list,
                        const cl_event *event_wait_list,
-                       cl_event *event,
-                       cl_int &errorCode)
+                       cl_event *event)
 {
     CL_RETURN_PTR(ptrOut, command_queue->cast<CommandQueue>().enqueueMapBuffer(
                               buffer, blocking_map, map_flags, offset, size,
@@ -976,8 +955,7 @@ void *EnqueueMapImage(cl_command_queue command_queue,
                       size_t *image_slice_pitch,
                       cl_uint num_events_in_wait_list,
                       const cl_event *event_wait_list,
-                      cl_event *event,
-                      cl_int &errorCode)
+                      cl_event *event)
 {
     CL_RETURN_PTR(ptrOut,
                   command_queue->cast<CommandQueue>().enqueueMapImage(
@@ -1155,8 +1133,7 @@ cl_mem CreateImage2D(cl_context context,
                      size_t image_width,
                      size_t image_height,
                      size_t image_row_pitch,
-                     void *host_ptr,
-                     cl_int &errorCode)
+                     void *host_ptr)
 {
     CL_RETURN_OBJ(context->cast<Context>().createImage2D(flags, image_format, image_width,
                                                          image_height, image_row_pitch, host_ptr));
@@ -1170,8 +1147,7 @@ cl_mem CreateImage3D(cl_context context,
                      size_t image_depth,
                      size_t image_row_pitch,
                      size_t image_slice_pitch,
-                     void *host_ptr,
-                     cl_int &errorCode)
+                     void *host_ptr)
 {
     CL_RETURN_OBJ(context->cast<Context>().createImage3D(flags, image_format, image_width,
                                                          image_height, image_depth, image_row_pitch,
@@ -1219,8 +1195,7 @@ void *GetExtensionFunctionAddress(const char *func_name)
 
 cl_command_queue CreateCommandQueue(cl_context context,
                                     cl_device_id device,
-                                    CommandQueueProperties properties,
-                                    cl_int &errorCode)
+                                    CommandQueueProperties properties)
 {
     CL_RETURN_OBJ(context->cast<Context>().createCommandQueue(device, properties));
 }
@@ -1228,8 +1203,7 @@ cl_command_queue CreateCommandQueue(cl_context context,
 cl_sampler CreateSampler(cl_context context,
                          cl_bool normalized_coords,
                          AddressingMode addressing_mode,
-                         FilterMode filter_mode,
-                         cl_int &errorCode)
+                         FilterMode filter_mode)
 {
     CL_RETURN_OBJ(
         context->cast<Context>().createSampler(normalized_coords, addressing_mode, filter_mode));
