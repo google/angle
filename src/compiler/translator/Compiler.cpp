@@ -376,6 +376,7 @@ TCompiler::TCompiler(sh::GLenum type, ShShaderSpec spec, ShShaderOutput output)
       mHasAnyPreciseType(false),
       mAdvancedBlendEquations(0),
       mHasPixelLocalStorageUniforms(false),
+      mUsesDerivatives(false),
       mCompileOptions{}
 {}
 
@@ -593,6 +594,8 @@ void TCompiler::setASTMetadata(const TParseContext &parseContext)
     mNumViews = parseContext.getNumViews();
 
     mHasAnyPreciseType = parseContext.hasAnyPreciseType();
+
+    mUsesDerivatives = parseContext.usesDerivatives();
 
     if (mShaderType == GL_FRAGMENT_SHADER)
     {

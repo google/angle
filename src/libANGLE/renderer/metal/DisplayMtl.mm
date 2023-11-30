@@ -1304,6 +1304,8 @@ void DisplayMtl::initializeFeatures()
     ANGLE_FEATURE_CONDITION((&mFeatures), emulateAlphaToCoverage,
                             isSimulator || !supportsAppleGPUFamily(1));
 
+    ANGLE_FEATURE_CONDITION((&mFeatures), writeHelperSampleMask, supportsAppleGPUFamily(1));
+
     ANGLE_FEATURE_CONDITION((&mFeatures), multisampleColorFormatShaderReadWorkaround, isAMD());
     ANGLE_FEATURE_CONDITION((&mFeatures), copyIOSurfaceToNonIOSurfaceForReadOptimization,
                             isIntel() || isAMD());

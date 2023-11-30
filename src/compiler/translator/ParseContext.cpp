@@ -167,6 +167,61 @@ constexpr bool IsValidWithPixelLocalStorage(TLayoutImageInternalFormat internalF
             return false;
     }
 }
+
+bool UsesDerivatives(TIntermAggregate *functionCall)
+{
+    const TOperator op = functionCall->getOp();
+    if (BuiltInGroup::IsDerivativesFS(op))
+    {
+        return true;
+    }
+    switch (op)
+    {
+        // TextureFirstVersions with implicit LOD
+        case EOpTexture2D:
+        case EOpTexture2DProj:
+        case EOpTextureCube:
+        case EOpTexture1D:
+        case EOpTexture1DProj:
+        case EOpTexture3D:
+        case EOpTexture3DProj:
+        case EOpShadow1D:
+        case EOpShadow1DProj:
+        case EOpShadow2D:
+        case EOpShadow2DProj:
+        case EOpShadow2DEXT:
+        case EOpShadow2DProjEXT:
+        // TextureFirstVersionsBias
+        case EOpTexture2DBias:
+        case EOpTexture2DProjBias:
+        case EOpTextureCubeBias:
+        case EOpTexture3DBias:
+        case EOpTexture3DProjBias:
+        case EOpTexture1DBias:
+        case EOpTexture1DProjBias:
+        case EOpShadow1DBias:
+        case EOpShadow1DProjBias:
+        case EOpShadow2DBias:
+        case EOpShadow2DProjBias:
+        // TextureNoBias
+        case EOpTexture:
+        case EOpTextureProj:
+        // TextureBias
+        case EOpTextureBias:
+        case EOpTextureProjBias:
+        // TextureQueryLod
+        case EOpTextureQueryLod:
+        // TextureOffsetNoBias
+        case EOpTextureOffset:
+        case EOpTextureProjOffset:
+        // TextureOffsetBias
+        case EOpTextureOffsetBias:
+        case EOpTextureProjOffsetBias:
+            return true;
+        default:
+            return false;
+    }
+}
 }  // namespace
 
 // This tracks each binding point's current default offset for inheritance of subsequent
@@ -230,6 +285,7 @@ TParseContext::TParseContext(TSymbolTable &symt,
       mPositionRedeclaredForSeparateShaderObject(false),
       mPointSizeRedeclaredForSeparateShaderObject(false),
       mPositionOrPointSizeUsedForSeparateShaderObject(false),
+      mUsesDerivatives(false),
       mDefaultUniformMatrixPacking(EmpColumnMajor),
       mDefaultUniformBlockStorage(sh::IsWebGLBasedSpec(spec) ? EbsStd140 : EbsShared),
       mDefaultBufferMatrixPacking(EmpColumnMajor),
@@ -7682,6 +7738,11 @@ TIntermTyped *TParseContext::addNonConstructorFunctionCall(TFunctionLookup *fnCa
             TIntermAggregate *callNode =
                 TIntermAggregate::CreateBuiltInFunctionCall(*fnCandidate, &fnCall->arguments());
             callNode->setLine(loc);
+
+            if (UsesDerivatives(callNode))
+            {
+                mUsesDerivatives = true;
+            }
 
             checkAtomicMemoryBuiltinFunctions(callNode);
             checkTextureOffset(callNode);

@@ -229,6 +229,8 @@ class TCompiler : public TShHandleBase
 
     bool hasClipDistance() const { return mClipDistanceUsed; }
 
+    bool usesDerivatives() const { return mUsesDerivatives; }
+
   protected:
     // Add emulated functions to the built-in function emulator.
     virtual void initBuiltInFunctionEmulator(BuiltInFunctionEmulator *emu,
@@ -388,6 +390,9 @@ class TCompiler : public TShHandleBase
 
     // ANGLE_shader_pixel_local_storage.
     bool mHasPixelLocalStorageUniforms;
+
+    // Fragment shader uses screen-space derivatives
+    bool mUsesDerivatives;
 
     // name hashing.
     NameMap mNameMap;

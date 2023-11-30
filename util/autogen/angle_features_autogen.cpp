@@ -391,6 +391,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::VertexIDDoesNotIncludeBaseVertex, "vertexIDDoesNotIncludeBaseVertex"},
     {Feature::WaitIdleBeforeSwapchainRecreation, "waitIdleBeforeSwapchainRecreation"},
     {Feature::WarmUpPipelineCacheAtLink, "warmUpPipelineCacheAtLink"},
+    {Feature::WriteHelperSampleMask, "writeHelperSampleMask"},
     {Feature::ZeroMaxLodWorkaround, "zeroMaxLodWorkaround"},
 }};
 }  // anonymous namespace

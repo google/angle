@@ -1262,7 +1262,7 @@ void GenMetalTraverser::emitFieldDeclaration(const TField &field,
             if (field.symbolType() == SymbolType::AngleInternal)
             {
                 mOut << " [[sample_mask, function_constant("
-                     << sh::mtl::kMultisampledRenderingConstName << ")]]";
+                     << sh::mtl::kSampleMaskWriteEnabledConstName << ")]]";
             }
             break;
 
