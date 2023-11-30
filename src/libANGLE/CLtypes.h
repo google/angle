@@ -73,6 +73,16 @@ struct ImageDescriptor
     cl_uint numSamples;
 };
 
+struct MemOffsets
+{
+    size_t x, y, z;
+};
+
+struct Coordinate
+{
+    size_t x, y, z;
+};
+
 }  // namespace cl
 
 #endif  // LIBANGLE_CLTYPES_H_
