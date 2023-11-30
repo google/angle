@@ -1991,7 +1991,7 @@ egl::Error WindowSurfaceVk::prepareSwap(const gl::Context *context)
     }
     if (swapchainRecreated || isSharedPresentMode())
     {
-        // If swapchain is recreated or it is a shred present mode, acquire the image right away;
+        // If swapchain is recreated or it is in shared present mode, acquire the image right away;
         // it's not going to block.
         result = doDeferredAcquireNextImageWithUsableSwapchain(context);
         return angle::ToEGL(result, EGL_BAD_SURFACE);
@@ -2574,8 +2574,8 @@ angle::Result WindowSurfaceVk::doDeferredAcquireNextImageWithUsableSwapchain(
         // Note: TRACE_EVENT0 is put here instead of inside the function to workaround this issue:
         // http://anglebug.com/2927
         ANGLE_TRACE_EVENT0("gpu.angle", "acquireNextSwapchainImage");
-        // Get the next available swapchain image.
 
+        // Get the next available swapchain image.
         VkResult result = acquireNextSwapchainImage(contextVk);
 
         ASSERT(result != VK_SUBOPTIMAL_KHR);
