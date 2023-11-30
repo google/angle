@@ -23,8 +23,6 @@ class CLProgramCL : public CLProgramImpl
 
     cl_program getNative() const;
 
-    angle::Result getSource(std::string &source) const override;
-
     angle::Result build(const cl::DevicePtrs &devices,
                         const char *options,
                         cl::Program *notify) override;

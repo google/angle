@@ -21,8 +21,6 @@ class CLProgramImpl : angle::NonCopyable
     CLProgramImpl(const cl::Program &program);
     virtual ~CLProgramImpl();
 
-    virtual angle::Result getSource(std::string &source) const = 0;
-
     virtual angle::Result build(const cl::DevicePtrs &devices,
                                 const char *options,
                                 cl::Program *notify) = 0;

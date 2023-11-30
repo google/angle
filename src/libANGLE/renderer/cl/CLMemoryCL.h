@@ -21,8 +21,6 @@ class CLMemoryCL : public CLMemoryImpl
 
     cl_mem getNative() const;
 
-    angle::Result getSize(size_t &sizeRet) const override;
-
     angle::Result createSubBuffer(const cl::Buffer &buffer,
                                   cl::MemFlags flags,
                                   size_t size,

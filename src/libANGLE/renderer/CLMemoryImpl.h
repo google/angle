@@ -21,8 +21,6 @@ class CLMemoryImpl : angle::NonCopyable
     CLMemoryImpl(const cl::Memory &memory);
     virtual ~CLMemoryImpl();
 
-    virtual angle::Result getSize(size_t &sizeRet) const = 0;
-
     virtual angle::Result createSubBuffer(const cl::Buffer &buffer,
                                           cl::MemFlags flags,
                                           size_t size,

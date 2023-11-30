@@ -34,13 +34,6 @@ CLMemoryCL::~CLMemoryCL()
     }
 }
 
-angle::Result CLMemoryCL::getSize(size_t &sizeRet) const
-{
-    ANGLE_CL_TRY(mNative->getDispatch().clGetMemObjectInfo(mNative, CL_MEM_SIZE, sizeof(sizeRet),
-                                                           &sizeRet, nullptr));
-    return angle::Result::Continue;
-}
-
 angle::Result CLMemoryCL::createSubBuffer(const cl::Buffer &buffer,
                                           cl::MemFlags flags,
                                           size_t size,

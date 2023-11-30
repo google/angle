@@ -29,22 +29,6 @@ CLProgramCL::~CLProgramCL()
     }
 }
 
-angle::Result CLProgramCL::getSource(std::string &source) const
-{
-    size_t size = 0u;
-    ANGLE_CL_TRY(
-        mNative->getDispatch().clGetProgramInfo(mNative, CL_PROGRAM_SOURCE, 0u, nullptr, &size));
-    if (size != 0u)
-    {
-        std::vector<char> valString(size, '\0');
-        ANGLE_CL_TRY(mNative->getDispatch().clGetProgramInfo(mNative, CL_PROGRAM_SOURCE, size,
-                                                             valString.data(), nullptr));
-        source.resize(valString.size());
-        source.assign(valString.data());
-    }
-    return angle::Result::Continue;
-}
-
 angle::Result CLProgramCL::build(const cl::DevicePtrs &devices,
                                  const char *options,
                                  cl::Program *notify)

@@ -21,8 +21,6 @@ class CLMemoryVk : public CLMemoryImpl
     CLMemoryVk(const cl::Memory &memory);
     ~CLMemoryVk() override;
 
-    angle::Result getSize(size_t &sizeRet) const override;
-
     angle::Result createSubBuffer(const cl::Buffer &buffer,
                                   cl::MemFlags flags,
                                   size_t size,

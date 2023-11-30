@@ -21,9 +21,6 @@ class CLProgramVk : public CLProgramImpl
     CLProgramVk(const cl::Program &program);
     ~CLProgramVk() override;
 
-    // getSource override here is for returning CL source from: [ IL, Binary, BuiltinKernels ]
-    angle::Result getSource(std::string &source) const override { return angle::Result::Continue; }
-
     angle::Result build(const cl::DevicePtrs &devices,
                         const char *options,
                         cl::Program *notify) override;
