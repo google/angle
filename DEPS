@@ -3108,6 +3108,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_traces',
   },
+  'src/tests/restricted_traces/walking_dead_survivors': {
+      'packages': [
+        {
+            'package': 'angle/traces/walking_dead_survivors',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_traces',
+  },
   'src/tests/restricted_traces/war_planet_online': {
       'packages': [
         {
