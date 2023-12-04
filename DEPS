@@ -45,7 +45,7 @@ vars = {
   'checkout_angle_mesa': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': 'f38cb20b11bfc18aaa4e7715fa81434d5964c2bb',
+  'chromium_revision': '192be4e9edea33fabe7f81a6e84a9856723e4680',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -150,7 +150,7 @@ deps = {
   },
 
   'buildtools': {
-    'url': Var('chromium_git') + '/chromium/src/buildtools.git@f99b6dbc03f0c84b2b3d74f22329cd26a3c3aebc',
+    'url': Var('chromium_git') + '/chromium/src/buildtools.git@d11c27b4cb742354f5e49e5905f486e891a0faa8',
     'condition': 'not build_with_chromium',
   },
 
@@ -204,7 +204,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@0a6bb23039687c38edd8f0cda64f5c0e8de7a1a4',
+    'url': '{chromium_git}/chromium/src/testing@3fdf1cf4063b1110b6c1f0b92378d1d1c0a66c5a',
     'condition': 'not build_with_chromium',
   },
 
@@ -489,7 +489,7 @@ deps = {
    },
 
   'third_party/libc++/src': {
-    'url': Var('chromium_git') + '/external/github.com/llvm/llvm-project/libcxx.git@13c08122f7700c681d16a493071c6b69ee1d5a12',
+    'url': Var('chromium_git') + '/external/github.com/llvm/llvm-project/libcxx.git@caccdb0407e84357ca6490165e88dcad64e47d17',
     'condition': 'not build_with_chromium',
   },
 
