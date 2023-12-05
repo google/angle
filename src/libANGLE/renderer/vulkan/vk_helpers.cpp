@@ -9857,6 +9857,8 @@ angle::Result ImageHelper::readPixelsImpl(ContextVk *contextVk,
                                           uint32_t layer,
                                           void *pixels)
 {
+    ANGLE_TRACE_EVENT0("gpu.angle", "ImageHelper::readPixelsImpl");
+
     RendererVk *renderer = contextVk->getRenderer();
 
     bool isExternalFormat = getExternalFormat() != 0;
@@ -10002,6 +10004,8 @@ angle::Result ImageHelper::readPixelsImpl(ContextVk *contextVk,
     // If PBO and if possible, copy directly on the GPU.
     if (packPixelsParams.packBuffer)
     {
+        ANGLE_TRACE_EVENT0("gpu.angle", "ImageHelper::readPixelsImpl - PBO");
+
         const ptrdiff_t pixelsOffset = reinterpret_cast<ptrdiff_t>(pixels);
         if (canCopyWithTransformForReadPixels(packPixelsParams, readFormat, pixelsOffset))
         {
@@ -10035,6 +10039,8 @@ angle::Result ImageHelper::readPixelsImpl(ContextVk *contextVk,
                                          pixelsOffset, srcSubresource);
         }
     }
+
+    ANGLE_TRACE_EVENT0("gpu.angle", "ImageHelper::readPixelsImpl - CPU Readback");
 
     RendererScoped<vk::BufferHelper> readBuffer(renderer);
     vk::BufferHelper *stagingBuffer = &readBuffer.get();
@@ -10101,6 +10107,8 @@ angle::Result ImageHelper::packReadPixelBuffer(ContextVk *contextVk,
 
     if (readFormat.isBlock)
     {
+        ANGLE_TRACE_EVENT0("gpu.angle", "ImageHelper::packReadPixelBuffer - Block");
+
         ASSERT(readFormat == aspectFormat);
 
         const LevelIndex levelVk = toVkLevel(levelGL);
@@ -10115,6 +10123,8 @@ angle::Result ImageHelper::packReadPixelBuffer(ContextVk *contextVk,
     }
     else if (packPixelsParams.packBuffer)
     {
+        ANGLE_TRACE_EVENT0("gpu.angle", "ImageHelper::packReadPixelBuffer - PBO");
+
         // Must map the PBO in order to read its contents (and then unmap it later)
         BufferVk *packBufferVk = GetImpl(packPixelsParams.packBuffer);
         void *mapPtr           = nullptr;
