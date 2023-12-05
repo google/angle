@@ -29,6 +29,8 @@
 6989 GLES : BlitFramebufferTestES31.OOBResolve/* = SKIP
 7881 VULKAN : MultithreadingTestES3.UnsynchronizedTextureReads/* = SKIP
 7881 VULKAN : MultithreadingTestES3.UnsynchronizedTextureReads2/* = SKIP
+// Incorrectly handled pretty much in all backends
+8446 : CopyTexImageTestES3.RedefineSameLevel/* = SKIP
 
 6743 OPENGL : SimpleStateChangeTestES3.RespecifyBufferAfterBeginTransformFeedback/* = SKIP
 6743 GLES : SimpleStateChangeTestES3.RespecifyBufferAfterBeginTransformFeedback/* = SKIP
