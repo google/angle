@@ -322,13 +322,6 @@ bool ValidateGetCompressedTexImageANGLE(const Context *context,
         return false;
     }
 
-    if (texture->isCompressedFormatEmulated(context, target, level))
-    {
-        // TODO (anglebug.com/7464): We can't currently read back from an emulated format
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInvalidEmulatedFormat);
-        return false;
-    }
-
     return true;
 }
 

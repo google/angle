@@ -2947,13 +2947,6 @@ bool ValidateCompressedTexSubImage3D(const Context *context,
             ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kPixelDataNull);
             return false;
         }
-
-        if (context->getTextureByTarget(target)->isCompressedFormatEmulated(context, target, level))
-        {
-            // TODO (anglebug.com/7464): Can't populate from a buffer using emulated format
-            ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kInvalidEmulatedFormat);
-            return false;
-        }
     }
 
     return true;
