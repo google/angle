@@ -643,7 +643,7 @@ deps = {
   },
 
   'third_party/vulkan-deps': {
-    'url': Var('chromium_git') + '/vulkan-deps@299bb76847897b0ee965fe8db2e035fbe7f48363',
+    'url': Var('chromium_git') + '/vulkan-deps@bc34fe665e8478f92d64bd2f3d054a5bc838df34',
     'condition': 'not build_with_chromium',
   },
 
