@@ -516,6 +516,8 @@ void WriteGLFloatValue(std::ostream &out, GLfloat value)
     }
     else
     {
+        // Write a decimal point to preserve the zero sign on replay
+        out << (value == 0.0 ? std::showpoint : std::noshowpoint);
         out << std::setprecision(16);
         out << value;
     }
