@@ -2464,6 +2464,15 @@ bool GenMetalTraverser::visitDeclaration(Visit, TIntermDeclaration *declNode)
     {
         const TVariable &var = symbolNode->variable();
         emitVariableDeclaration(VarDecl(var), evdConfig);
+        if (var.getType().isArray() && var.getType().getQualifier() == EvqTemporary)
+        {
+            // The translator frontend injects a loop-based init for user arrays when the source
+            // shader is using ESSL 1.00. Some Metal drivers may fail to access elements of such
+            // arrays at runtime depending on the array size. An empty literal initializer added
+            // to the generated MSL bypasses the issue. The frontend may be further optimized to
+            // skip the loop-based init when targeting MSL.
+            mOut << "{}";
+        }
     }
     else if (TIntermBinary *initNode = node.getAsBinaryNode())
     {
