@@ -45,7 +45,7 @@ vars = {
   'checkout_angle_mesa': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': 'd6f0715fbaaf8489d7d6c45a6ee50233678f5318',
+  'chromium_revision': 'e567f1f8ed1db6872498748ac66332237e2da81f',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -90,7 +90,7 @@ vars = {
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling catapult
   # and whatever else without interference from each other.
-  'catapult_revision': '093f85fdf881a3136ccbde54828438814120af96',
+  'catapult_revision': '97b05366a493261f0324df00793eb836f2a6344f',
 
   # the commit queue can handle CLs rolling Fuchsia sdk
   # and whatever else without interference from each other.
@@ -145,12 +145,12 @@ vars = {
 deps = {
 
   'build': {
-    'url': Var('chromium_git') + '/chromium/src/build.git@7d0812ef48f15b342cee12535fcf7f8f7583b343',
+    'url': Var('chromium_git') + '/chromium/src/build.git@8b5921ef0c917e99be65feb265adce17268c0ad3',
     'condition': 'not build_with_chromium',
   },
 
   'buildtools': {
-    'url': Var('chromium_git') + '/chromium/src/buildtools.git@894e045303a623914a36c083d4df4fe70b24fc97',
+    'url': Var('chromium_git') + '/chromium/src/buildtools.git@a19d89f93987b42a7b9a1ab6cec80009552439a4',
     'condition': 'not build_with_chromium',
   },
 
@@ -204,12 +204,12 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@dbd7cb3e68da17567164a74b48a833db2e779819',
+    'url': '{chromium_git}/chromium/src/testing@eb3062b377159413c2f13e270b87a0adaeabe0f9',
     'condition': 'not build_with_chromium',
   },
 
   'third_party/abseil-cpp': {
-    'url': Var('chromium_git') + '/chromium/src/third_party/abseil-cpp@0764ad493e54a79c7e3e02fc3412ef55b4835b9e',
+    'url': Var('chromium_git') + '/chromium/src/third_party/abseil-cpp@025aa883df36d96e43b551dab5e96042e11b50d3',
     'condition': 'not build_with_chromium',
   },
 
@@ -380,7 +380,7 @@ deps = {
   },
 
   'third_party/depot_tools': {
-    'url': Var('chromium_git') + '/chromium/tools/depot_tools.git@916dda0a0b15bc08af8a8877593d9ddf94e8a610',
+    'url': Var('chromium_git') + '/chromium/tools/depot_tools.git@60f6c8a860f838a4af860bec31795a98e60f88d0',
     'condition': 'not build_with_chromium',
   },
 
@@ -499,12 +499,12 @@ deps = {
    },
 
   'third_party/libc++/src': {
-    'url': Var('chromium_git') + '/external/github.com/llvm/llvm-project/libcxx.git@7f2dd14f5de9f8de0c5380a048cf552288c83e2b',
+    'url': Var('chromium_git') + '/external/github.com/llvm/llvm-project/libcxx.git@df5952f59cc02873e4cf9cb98b975d775a36dabe',
     'condition': 'not build_with_chromium',
   },
 
   'third_party/libc++abi/src': {
-    'url': Var('chromium_git') + '/external/github.com/llvm/llvm-project/libcxxabi.git@4cb5c2cefedc025433f81735bacbc0f773fdcd8f',
+    'url': Var('chromium_git') + '/external/github.com/llvm/llvm-project/libcxxabi.git@e88fcc906fea94ef6a3c7e98bc795f547bffd74f',
     'condition': 'not build_with_chromium',
   },
 
@@ -586,7 +586,7 @@ deps = {
       'packages': [
           {
               'package': 'chromium/third_party/r8',
-              'version': 'ntZT6d-gLBdyTo-D6ie-hZXbQqDe_YNG3RK5ah85jBsC',
+              'version': 'g0IMQK-a9MiyqyQd6f26Ut45q36vivXE9UFtVa8mM38C',
           },
       ],
       'condition': 'checkout_android and not build_with_chromium',
@@ -678,7 +678,7 @@ deps = {
   },
 
   'tools/clang': {
-    'url': Var('chromium_git') + '/chromium/src/tools/clang.git@991b697d2c50e34d66e435ae5fbed21dbd140735',
+    'url': Var('chromium_git') + '/chromium/src/tools/clang.git@28cba3ec325c9ff378264198cef20fda89519c5d',
     'condition': 'not build_with_chromium',
   },
 
@@ -724,7 +724,7 @@ deps = {
   },
 
   'tools/perf': {
-    'url': Var('chromium_git') + '/chromium/src/tools/perf@3044fe1fd31cfc2713c45ea971f0b89032242240',
+    'url': Var('chromium_git') + '/chromium/src/tools/perf@85bbbfc3953bef31346fdfd92e22ac7388a7331a',
     'condition': 'not build_with_chromium',
   },
 
