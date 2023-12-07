@@ -402,7 +402,7 @@ bool ValidateDrawElementsInstancedBaseVertexEXT(const Context *context,
     }
 
     return ValidateDrawElementsInstancedBase(context, entryPoint, mode, count, type, indices,
-                                             instancecount);
+                                             instancecount, 0);
 }
 
 bool ValidateDrawRangeElementsBaseVertexEXT(const Context *context,
@@ -544,7 +544,8 @@ bool ValidateDrawArraysInstancedBaseInstanceEXT(const Context *context,
         return false;
     }
 
-    return ValidateDrawArraysInstancedBase(context, entryPoint, mode, first, count, instanceCount);
+    return ValidateDrawArraysInstancedBase(context, entryPoint, mode, first, count, instanceCount,
+                                           baseInstance);
 }
 
 bool ValidateDrawElementsInstancedBaseInstanceEXT(const Context *context,
@@ -563,7 +564,7 @@ bool ValidateDrawElementsInstancedBaseInstanceEXT(const Context *context,
     }
 
     return ValidateDrawElementsInstancedBase(context, entryPoint, mode, count, type, indices,
-                                             instancecount);
+                                             instancecount, baseinstance);
 }
 
 bool ValidateDrawElementsInstancedBaseVertexBaseInstanceEXT(const Context *context,
@@ -583,7 +584,7 @@ bool ValidateDrawElementsInstancedBaseVertexBaseInstanceEXT(const Context *conte
     }
 
     return ValidateDrawElementsInstancedBase(context, entryPoint, mode, count, typePacked, indices,
-                                             instancecount);
+                                             instancecount, baseinstance);
 }
 
 bool ValidateDrawElementsBaseVertexOES(const Context *context,
@@ -619,7 +620,7 @@ bool ValidateDrawElementsInstancedBaseVertexOES(const Context *context,
     }
 
     return ValidateDrawElementsInstancedBase(context, entryPoint, mode, count, type, indices,
-                                             instancecount);
+                                             instancecount, 0);
 }
 
 bool ValidateDrawRangeElementsBaseVertexOES(const Context *context,

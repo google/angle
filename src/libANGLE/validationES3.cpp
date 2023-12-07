@@ -3823,7 +3823,7 @@ bool ValidateDrawElementsInstanced(const Context *context,
     }
 
     return ValidateDrawElementsInstancedBase(context, entryPoint, mode, count, type, indices,
-                                             instanceCount);
+                                             instanceCount, 0);
 }
 
 bool ValidateMultiDrawArraysInstancedANGLE(const Context *context,
@@ -3854,7 +3854,7 @@ bool ValidateMultiDrawArraysInstancedANGLE(const Context *context,
     for (GLsizei drawID = 0; drawID < drawcount; ++drawID)
     {
         if (!ValidateDrawArraysInstancedBase(context, entryPoint, mode, firsts[drawID],
-                                             counts[drawID], instanceCounts[drawID]))
+                                             counts[drawID], instanceCounts[drawID], 0))
         {
             return false;
         }
@@ -3891,7 +3891,7 @@ bool ValidateMultiDrawElementsInstancedANGLE(const Context *context,
     for (GLsizei drawID = 0; drawID < drawcount; ++drawID)
     {
         if (!ValidateDrawElementsInstancedBase(context, entryPoint, mode, counts[drawID], type,
-                                               indices[drawID], instanceCounts[drawID]))
+                                               indices[drawID], instanceCounts[drawID], 0))
         {
             return false;
         }
@@ -3913,7 +3913,8 @@ bool ValidateDrawArraysInstancedBaseInstanceANGLE(const Context *context,
         return false;
     }
 
-    return ValidateDrawArraysInstancedBase(context, entryPoint, mode, first, count, instanceCount);
+    return ValidateDrawArraysInstancedBase(context, entryPoint, mode, first, count, instanceCount,
+                                           baseInstance);
 }
 
 bool ValidateDrawElementsInstancedBaseVertexBaseInstanceANGLE(const Context *context,
@@ -3933,7 +3934,7 @@ bool ValidateDrawElementsInstancedBaseVertexBaseInstanceANGLE(const Context *con
     }
 
     return ValidateDrawElementsInstancedBase(context, entryPoint, mode, count, type, indices,
-                                             instanceCount);
+                                             instanceCount, baseInstance);
 }
 
 bool ValidateMultiDrawArraysInstancedBaseInstanceANGLE(const Context *context,
@@ -3957,7 +3958,8 @@ bool ValidateMultiDrawArraysInstancedBaseInstanceANGLE(const Context *context,
     for (GLsizei drawID = 0; drawID < drawcount; ++drawID)
     {
         if (!ValidateDrawArraysInstancedBase(context, entryPoint, modePacked, firsts[drawID],
-                                             counts[drawID], instanceCounts[drawID]))
+                                             counts[drawID], instanceCounts[drawID],
+                                             baseInstances[drawID]))
         {
             return false;
         }
@@ -3988,7 +3990,8 @@ bool ValidateMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE(const Context
     for (GLsizei drawID = 0; drawID < drawcount; ++drawID)
     {
         if (!ValidateDrawElementsInstancedBase(context, entryPoint, modePacked, counts[drawID],
-                                               typePacked, indices[drawID], instanceCounts[drawID]))
+                                               typePacked, indices[drawID], instanceCounts[drawID],
+                                               baseInstances[drawID]))
         {
             return false;
         }
@@ -4728,7 +4731,7 @@ bool ValidateDrawArraysInstanced(const Context *context,
         return false;
     }
 
-    return ValidateDrawArraysInstancedBase(context, entryPoint, mode, first, count, primcount);
+    return ValidateDrawArraysInstancedBase(context, entryPoint, mode, first, count, primcount, 0);
 }
 
 bool ValidateFenceSync(const Context *context,

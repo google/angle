@@ -250,6 +250,7 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 5155 MAC NVIDIA OPENGL : CopyTextureTestES3.InvalidateCopyThenBlend/ES3_OpenGL = SKIP
 5155 MAC NVIDIA OPENGL : CopyTextureTestES3.InvalidateBlitThenBlend3Layers/ES3_OpenGL = SKIP
 7530 MAC NVIDIA OPENGL : TransformFeedbackTest.RenderOnceChangeXfbBufferRenderAgain/* = SKIP
+8448 MAC INTEL OPENGL : WebGL2CompatibilityTest.DrawWithInstancedAndNonInstancedAttributes/* = SKIP
 
 // BlitFramebufferTest.ScissoredMultisampleStencil failures
 3496 MAC INTEL OPENGL : BlitFramebufferTest.ScissoredMultisampleStencil/* = SKIP
@@ -1382,13 +1383,13 @@ b/266235549 D3D11 : ComputeShaderTest.SSBOAliasOverWrite/* = SKIP
 8453 WIN VULKAN : VulkanPerformanceCounterTest.SubmittingOutsideCommandBufferDoesNotBreakRenderPass/* = SKIP
 8453 LINUX VULKAN : VulkanPerformanceCounterTest.SubmittingOutsideCommandBufferDoesNotBreakRenderPass/* = SKIP
 
+// Workaround feature that is only supposed to be enabled on vulkan backend
+b/292285899 PIXEL4ORXL GLES : EGLSurfaceTest.DestroyAndRecreateWhileCurrent/* = SKIP
+
 // Slow tests, should appear last in this file
 5076 : GLSLTest.VerifyMaxVertexUniformVectors* = TIMEOUT
 5076 : GLSLTest.VerifyMaxFragmentUniformVectors* = TIMEOUT
 6261 : MultithreadingTest* = TIMEOUT
-
-// Workaround feature that is only supposed to be enabled on vulkan backend
-b/292285899 PIXEL4ORXL GLES : EGLSurfaceTest.DestroyAndRecreateWhileCurrent/* = SKIP
 
 // Please do not add expectations below this line,
 // so that TIMEOUT expectations above don't override more precise SKIP expectations

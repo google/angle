@@ -10002,13 +10002,13 @@ GLenum ErrorSet::getGraphicsResetStatus(rx::ContextImpl *contextImpl)
 
 // StateCache implementation.
 StateCache::StateCache()
-    : mCachedHasAnyEnabledClientAttrib(false),
-      mCachedNonInstancedVertexElementLimit(0),
+    : mCachedNonInstancedVertexElementLimit(0),
       mCachedInstancedVertexElementLimit(0),
       mCachedBasicDrawStatesErrorString(kInvalidPointer),
       mCachedBasicDrawStatesErrorCode(GL_NO_ERROR),
       mCachedBasicDrawElementsError(kInvalidPointer),
       mCachedProgramPipelineError(kInvalidPointer),
+      mCachedHasAnyEnabledClientAttrib(false),
       mCachedTransformFeedbackActiveUnpaused(false),
       mCachedCanDraw(false)
 {
@@ -10096,8 +10096,14 @@ void StateCache::updateVertexElementLimitsImpl(Context *context)
         GLint64 limit = attrib.getCachedElementLimit();
         if (binding.getDivisor() > 0)
         {
+            // For instanced draw calls, |divisor| times this limit is the limit for instance count
+            // (because every |divisor| instances accesses the same attribute)
+            angle::CheckedNumeric<GLint64> checkedLimit = limit;
+            checkedLimit *= binding.getDivisor();
+
             mCachedInstancedVertexElementLimit =
-                std::min(mCachedInstancedVertexElementLimit, limit);
+                std::min<GLint64>(mCachedInstancedVertexElementLimit,
+                                  checkedLimit.ValueOrDefault(VertexAttribute::kIntegerOverflow));
         }
         else
         {
