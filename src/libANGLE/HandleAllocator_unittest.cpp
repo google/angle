@@ -19,7 +19,7 @@ TEST(HandleAllocatorTest, ReservationsWithGaps)
     gl::HandleAllocator allocator;
 
     std::set<GLuint> allocationList;
-    for (GLuint id = 2; id < 50; id += 2)
+    for (GLuint id = 2; id < 200; id += 2)
     {
         allocationList.insert(id);
     }

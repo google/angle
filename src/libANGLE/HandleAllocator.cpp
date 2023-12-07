@@ -18,47 +18,31 @@
 namespace gl
 {
 
-struct HandleAllocator::HandleRangeComparator
-{
-    bool operator()(const HandleRange &range, GLuint handle) const { return (range.end < handle); }
-};
+static constexpr bool kEnableHandleAllocatorLogging = false;
 
-HandleAllocator::HandleAllocator()
-    : mBaseValue(1),
-      mNextValue(1),
-      mMaxValue(std::numeric_limits<GLuint>::max()),
-      mLoggingEnabled(false)
-{
-    mUnallocatedList.push_back(HandleRange(1, mMaxValue));
-}
+HandleAllocator::HandleAllocator() : HandleAllocator(std::numeric_limits<GLuint>::max()) {}
 
 HandleAllocator::HandleAllocator(GLuint maximumHandleValue)
-    : mBaseValue(1), mNextValue(1), mMaxValue(maximumHandleValue), mLoggingEnabled(false)
-{
-    mUnallocatedList.push_back(HandleRange(1, mMaxValue));
-}
+    : mNextValue(1), mMaxValue(maximumHandleValue)
+{}
 
 HandleAllocator::~HandleAllocator() {}
 
 void HandleAllocator::setBaseHandle(GLuint value)
 {
-    ASSERT(mBaseValue == mNextValue);
-    mBaseValue = value;
-    mNextValue = value;
+    mNextValue = std::max(mNextValue, value);
+    mReleasedList.remove_all_and_permute([value](GLuint x) { return x < value; });
 }
 
 GLuint HandleAllocator::allocate()
 {
-    ASSERT(!mUnallocatedList.empty() || !mReleasedList.empty());
-
-    // Allocate from released list, logarithmic time for pop_heap.
+    // Allocate from released list if possible
     if (!mReleasedList.empty())
     {
-        std::pop_heap(mReleasedList.begin(), mReleasedList.end(), std::greater<GLuint>());
         GLuint reusedHandle = mReleasedList.back();
         mReleasedList.pop_back();
 
-        if (mLoggingEnabled)
+        if (kEnableHandleAllocatorLogging)
         {
             WARN() << "HandleAllocator::allocate reusing " << reusedHandle << std::endl;
         }
@@ -66,128 +50,61 @@ GLuint HandleAllocator::allocate()
         return reusedHandle;
     }
 
-    // Allocate from unallocated list, constant time.
-    auto listIt = mUnallocatedList.begin();
-
-    GLuint freeListHandle = listIt->begin;
-    ASSERT(freeListHandle > 0);
-
-    if (listIt->begin == listIt->end)
+    // The next value may be reserved. Iterate until an unreserved value is found
+    if (!mReservedList.empty())
     {
-        mUnallocatedList.erase(listIt);
-    }
-    else
-    {
-        listIt->begin++;
+        while (std::find(mReservedList.begin(), mReservedList.end(), mNextValue) !=
+               mReservedList.end())
+        {
+            mNextValue++;
+        }
     }
 
-    if (mLoggingEnabled)
+    GLuint nextHandle = mNextValue++;
+
+    if (kEnableHandleAllocatorLogging)
     {
-        WARN() << "HandleAllocator::allocate allocating " << freeListHandle << std::endl;
+        WARN() << "HandleAllocator::allocate allocating " << nextHandle << std::endl;
     }
 
-    return freeListHandle;
+    return nextHandle;
 }
 
 void HandleAllocator::release(GLuint handle)
 {
-    if (mLoggingEnabled)
+    if (kEnableHandleAllocatorLogging)
     {
         WARN() << "HandleAllocator::release releasing " << handle << std::endl;
     }
 
-    // Try consolidating the ranges first.
-    for (HandleRange &handleRange : mUnallocatedList)
+    mReleasedList.remove_all_and_permute([handle](GLuint x) { return x == handle; });
+    if (handle <= mNextValue)
     {
-        if (handleRange.begin - 1 == handle)
-        {
-            handleRange.begin--;
-            return;
-        }
-
-        if (handleRange.end == handle - 1)
-        {
-            handleRange.end++;
-            return;
-        }
+        mReleasedList.push_back(handle);
     }
-
-    // Add to released list, logarithmic time for push_heap.
-    mReleasedList.push_back(handle);
-    std::push_heap(mReleasedList.begin(), mReleasedList.end(), std::greater<GLuint>());
 }
 
 void HandleAllocator::reserve(GLuint handle)
 {
-    if (mLoggingEnabled)
+    if (kEnableHandleAllocatorLogging)
     {
         WARN() << "HandleAllocator::reserve reserving " << handle << std::endl;
     }
 
-    // Clear from released list -- might be a slow operation.
-    if (!mReleasedList.empty())
-    {
-        auto releasedIt = std::find(mReleasedList.begin(), mReleasedList.end(), handle);
-        if (releasedIt != mReleasedList.end())
-        {
-            mReleasedList.erase(releasedIt);
-            std::make_heap(mReleasedList.begin(), mReleasedList.end(), std::greater<GLuint>());
-            return;
-        }
-    }
-
-    // Not in released list, reserve in the unallocated list.
-    auto boundIt = std::lower_bound(mUnallocatedList.begin(), mUnallocatedList.end(), handle,
-                                    HandleRangeComparator());
-
-    ASSERT(boundIt != mUnallocatedList.end());
-
-    GLuint begin = boundIt->begin;
-    GLuint end   = boundIt->end;
-
-    if (handle == begin || handle == end)
-    {
-        if (begin == end)
-        {
-            mUnallocatedList.erase(boundIt);
-        }
-        else if (handle == begin)
-        {
-            boundIt->begin++;
-        }
-        else
-        {
-            ASSERT(handle == end);
-            boundIt->end--;
-        }
-        return;
-    }
-
-    ASSERT(begin < handle && handle < end);
-
-    // need to split the range
-    auto placementIt = mUnallocatedList.erase(boundIt);
-    placementIt      = mUnallocatedList.insert(placementIt, HandleRange(handle + 1, end));
-    mUnallocatedList.insert(placementIt, HandleRange(begin, handle - 1));
+    mReservedList.push_back(handle);
+    mReleasedList.remove_all_and_permute([handle](GLuint x) { return x == handle; });
 }
 
 void HandleAllocator::reset()
 {
-    mUnallocatedList.clear();
-    mUnallocatedList.push_back(HandleRange(1, mMaxValue));
+    mReservedList.clear();
     mReleasedList.clear();
-    mBaseValue = 1;
     mNextValue = 1;
 }
 
 bool HandleAllocator::anyHandleAvailableForAllocation() const
 {
-    return !mUnallocatedList.empty() || !mReleasedList.empty();
-}
-
-void HandleAllocator::enableLogging(bool enabled)
-{
-    mLoggingEnabled = enabled;
+    return !mReleasedList.empty() || mNextValue < mMaxValue;
 }
 
 }  // namespace gl

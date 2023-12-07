@@ -278,6 +278,94 @@ TEST(FastVector, NonCopyable)
     EXPECT_EQ(3, copy[0].x);
 }
 
+// Tests of the remove_and_permute and remove_all_and_permute methods.
+TEST(FastVector, RemoveAndPermute)
+{
+    FastVector<int, 4> vec;
+
+    // remove_and_permute only removes one element
+    vec.push_back(0);  // vec = { 0 }
+    vec.push_back(0);  // vec = { 0, 0 }
+    EXPECT_EQ(2u, vec.size());
+    vec.remove_and_permute(0);  // vec = { 0 }
+    EXPECT_EQ(1u, vec.size());
+    vec.remove_and_permute(0);  // vec = { }
+    EXPECT_EQ(0u, vec.size());
+
+    // remove_and_permute removes the correct element
+    vec.push_back(10);
+    vec.push_back(15);
+    vec.push_back(7);
+    vec.push_back(999);
+    vec.push_back(-20);
+    vec.push_back(0);
+    vec.push_back(123);
+    EXPECT_EQ(7u, vec.size());
+    EXPECT_EQ(vec[0], 10);
+    EXPECT_EQ(vec[1], 15);
+    EXPECT_EQ(vec[2], 7);
+    EXPECT_EQ(vec[3], 999);
+    EXPECT_EQ(vec[4], -20);
+    EXPECT_EQ(vec[5], 0);
+    EXPECT_EQ(vec[6], 123);
+
+    vec.remove_and_permute(7);
+    EXPECT_EQ(6u, vec.size());
+    vec.remove_and_permute(-20);
+    EXPECT_EQ(5u, vec.size());
+    vec.remove_and_permute(10);
+    EXPECT_EQ(4u, vec.size());
+
+    EXPECT_NE(std::find(vec.begin(), vec.end(), 15), vec.end());
+    EXPECT_NE(std::find(vec.begin(), vec.end(), 999), vec.end());
+    EXPECT_NE(std::find(vec.begin(), vec.end(), 0), vec.end());
+    EXPECT_NE(std::find(vec.begin(), vec.end(), 123), vec.end());
+
+    EXPECT_EQ(std::find(vec.begin(), vec.end(), 7), vec.end());
+    EXPECT_EQ(std::find(vec.begin(), vec.end(), -20), vec.end());
+    EXPECT_EQ(std::find(vec.begin(), vec.end(), 10), vec.end());
+
+    // Remove an element with an iterator
+    vec.remove_and_permute(std::find(vec.begin(), vec.end(), 999));
+
+    EXPECT_NE(std::find(vec.begin(), vec.end(), 15), vec.end());
+    EXPECT_NE(std::find(vec.begin(), vec.end(), 0), vec.end());
+    EXPECT_NE(std::find(vec.begin(), vec.end(), 123), vec.end());
+
+    EXPECT_EQ(std::find(vec.begin(), vec.end(), 999), vec.end());
+
+    // Remove the last element with an iterator
+    vec.clear();
+    vec.push_back(100);
+    vec.push_back(-123);
+    vec.push_back(44);
+    EXPECT_EQ(3u, vec.size());
+    EXPECT_EQ(vec[2], 44);
+
+    vec.remove_and_permute(vec.begin() + 2);
+    EXPECT_EQ(2u, vec.size());
+
+    EXPECT_NE(std::find(vec.begin(), vec.end(), 100), vec.end());
+    EXPECT_NE(std::find(vec.begin(), vec.end(), -123), vec.end());
+
+    EXPECT_EQ(std::find(vec.begin(), vec.end(), 44), vec.end());
+
+    // remove_all_and_permute removes all elements matching
+    vec.clear();
+    vec.push_back(0);
+    vec.push_back(1);                                          // vec = { 0, 1 }
+    vec.push_back(0);                                          // vec = { 0, 1, 0 }
+    vec.remove_all_and_permute([](int x) { return x == 0; });  // vec = { 1 }
+    EXPECT_EQ(1u, vec.size());
+    EXPECT_EQ(1, vec[0]);
+
+    // remove_all_and_permute clears when everything matches
+    vec.push_back(1);                                      // vec = { 1, 1 }
+    vec.push_back(0);                                      // vec = { 1, 1, 0 }
+    vec.remove_all_and_permute([](int) { return true; });  // vec = { }
+    EXPECT_EQ(0u, vec.size());
+}
+
 // Basic functionality for FlatUnorderedMap
 TEST(FlatUnorderedMap, BasicUsage)
 {
@@ -388,4 +476,5 @@ TEST(FastMap, Basic)
         EXPECT_TRUE(testMap[i] == i);
     }
 }
+
 }  // namespace angle
