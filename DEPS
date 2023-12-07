@@ -369,7 +369,7 @@ deps = {
     'condition': 'checkout_android and not build_with_chromium',
   },
 
-  'third_party/clspv': {
+  'third_party/clspv/src': {
     'url': Var('chromium_git') + '/external/github.com/google/clspv@a173c052455434a422bcfe5c12ffe44d574fd6e1',
     'condition': 'not build_with_chromium',
   },

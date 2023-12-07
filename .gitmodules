@@ -50,8 +50,8 @@
 	path = third_party/colorama/src
 	url = https://chromium.googlesource.com/external/colorama
 	gclient-condition = checkout_android and not build_with_chromium
-[submodule "third_party/clspv"]
-	path = third_party/clspv
+[submodule "third_party/clspv/src"]
+	path = third_party/clspv/src
 	url = https://chromium.googlesource.com/external/github.com/google/clspv
 	gclient-condition = not build_with_chromium
 [submodule "third_party/cpu_features/src"]
