@@ -631,3 +631,8 @@ if (angle_standalone || build_with_chromium) {
     }
   }
 }
+
+if (angle_enable_cl) {
+  # need the llvm build flags
+  import("$angle_clspv_dir/gn/build/llvm_buildflags.gni")
+}
