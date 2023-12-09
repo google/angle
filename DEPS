@@ -3068,6 +3068,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_traces',
   },
+  'src/tests/restricted_traces/thimbleweed_park': {
+      'packages': [
+        {
+            'package': 'angle/traces/thimbleweed_park',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_traces',
+  },
   'src/tests/restricted_traces/tmnt_shredders_revenge': {
       'packages': [
         {
