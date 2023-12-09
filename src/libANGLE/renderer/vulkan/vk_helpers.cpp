@@ -4789,10 +4789,15 @@ BufferHelper::BufferHelper()
       mCurrentReadAccess(0),
       mCurrentWriteStages(0),
       mCurrentReadStages(0),
-      mSerial()
+      mSerial(),
+      mClientBuffer(nullptr)
 {}
 
-BufferHelper::~BufferHelper() = default;
+BufferHelper::~BufferHelper()
+{
+    // We must have released external buffer properly
+    ASSERT(mClientBuffer == nullptr);
+}
 
 BufferHelper::BufferHelper(BufferHelper &&other)
 {
@@ -4812,6 +4817,7 @@ BufferHelper &BufferHelper::operator=(BufferHelper &&other)
     mCurrentWriteStages      = other.mCurrentWriteStages;
     mCurrentReadStages       = other.mCurrentReadStages;
     mSerial                  = other.mSerial;
+    mClientBuffer            = std::move(other.mClientBuffer);
 
     return *this;
 }
@@ -4916,6 +4922,7 @@ angle::Result BufferHelper::initExternal(ContextVk *contextVk,
     ANGLE_TRY(InitAndroidExternalMemory(contextVk, clientBuffer, memoryProperties, &buffer.get(),
                                         &memoryPropertyFlagsOut, &memoryTypeIndex,
                                         &deviceMemory.get(), &allocatedSize));
+    mClientBuffer = clientBuffer;
 
     mSuballocation.initWithEntireBuffer(
         contextVk, buffer.get(), MemoryAllocationType::BufferExternal, memoryTypeIndex,
@@ -4925,7 +4932,6 @@ angle::Result BufferHelper::initExternal(ContextVk *contextVk,
         uint8_t *ptrOut;
         ANGLE_TRY(map(contextVk, &ptrOut));
     }
-
     return angle::Result::Continue;
 }
 
@@ -5090,6 +5096,11 @@ void BufferHelper::destroy(RendererVk *renderer)
     unmap(renderer);
     mBufferWithUserSize.destroy(renderer->getDevice());
     mSuballocation.destroy(renderer);
+    if (mClientBuffer != nullptr)
+    {
+        ReleaseAndroidExternalMemory(renderer, mClientBuffer);
+        mClientBuffer = nullptr;
+    }
 }
 
 void BufferHelper::release(RendererVk *renderer)
@@ -5111,6 +5122,12 @@ void BufferHelper::release(RendererVk *renderer)
     mUse.reset();
     mWriteUse.reset();
     ASSERT(!mBufferWithUserSize.valid());
+
+    if (mClientBuffer != nullptr)
+    {
+        ReleaseAndroidExternalMemory(renderer, mClientBuffer);
+        mClientBuffer = nullptr;
+    }
 }
 
 void BufferHelper::releaseBufferAndDescriptorSetCache(RendererVk *renderer)

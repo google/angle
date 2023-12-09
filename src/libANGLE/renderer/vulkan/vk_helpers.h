@@ -885,6 +885,8 @@ class BufferHelper : public ReadWriteResource
     BufferSerial mSerial;
     // Manages the descriptorSet cache that created with this BufferHelper object.
     DescriptorSetCacheManager mDescriptorSetCacheManager;
+    // For external buffer
+    GLeglClientBufferEXT mClientBuffer;
 };
 
 class BufferPool : angle::NonCopyable
