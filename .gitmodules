@@ -97,8 +97,8 @@
 	path = third_party/libpng/src
 	url = https://android.googlesource.com/platform/external/libpng
 	gclient-condition = not build_with_chromium
-[submodule "third_party/llvm"]
-	path = third_party/llvm
+[submodule "third_party/llvm/src"]
+	path = third_party/llvm/src
 	url = https://chromium.googlesource.com/external/github.com/llvm/llvm-project
 	gclient-condition = not build_with_chromium
 [submodule "third_party/jinja2"]
