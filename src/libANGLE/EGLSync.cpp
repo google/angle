@@ -19,7 +19,7 @@ namespace egl
 {
 
 Sync::Sync(rx::EGLImplFactory *factory, EGLenum type)
-    : mLabel(nullptr), mId(0), mType(type), mCondition(0), mNativeFenceFD(0)
+    : mLabel(nullptr), mId({0}), mType(type), mCondition(0), mNativeFenceFD(0)
 {
     switch (mType)
     {
