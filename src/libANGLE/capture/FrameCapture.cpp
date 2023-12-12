@@ -5750,8 +5750,10 @@ bool SkipCall(EntryPoint entryPoint)
         case EntryPoint::EGLGetConfigs:
         case EntryPoint::EGLGetSyncAttrib:
         case EntryPoint::EGLGetSyncAttribKHR:
+        case EntryPoint::EGLQueryContext:
         case EntryPoint::EGLQuerySurface:
             // Skip these calls because:
+            // - We don't use the return values.
             // - Some EGL types and pointer parameters aren't yet implemented in EGL capture.
             return true;
 
