@@ -1642,13 +1642,16 @@ void MaybeResetContextState(ReplayWriter &replayWriter,
             stateResetHelper.setDefaultResetCalls(context, entryPoint);
         }
 
-        // Emit the calls
-        for (const auto &call : resetCalls->at(entryPoint))
+        // Emit the calls, if we added any
+        if (resetCalls->find(entryPoint) != resetCalls->end())
         {
-            out << "    ";
-            WriteCppReplayForCall(call, replayWriter, out, header, binaryData,
-                                  maxResourceIDBufferSize);
-            out << ";\n";
+            for (const auto &call : resetCalls->at(entryPoint))
+            {
+                out << "    ";
+                WriteCppReplayForCall(call, replayWriter, out, header, binaryData,
+                                      maxResourceIDBufferSize);
+                out << ";\n";
+            }
         }
     }
 
