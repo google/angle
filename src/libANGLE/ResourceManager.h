@@ -210,6 +210,8 @@ class TextureManager : public TypedResourceManager<Texture, TextureManager, Text
                                       TextureType type);
     static void DeleteObject(const Context *context, Texture *texture);
 
+    void enableHandleAllocatorLogging();
+
   protected:
     ~TextureManager() override;
 };
