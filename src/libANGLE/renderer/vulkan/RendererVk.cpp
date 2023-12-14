@@ -339,10 +339,12 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
     },
     // From: TraceTest.manhattan_31 with SwiftShader and
     // VulkanPerformanceCounterTest.NewTextureDoesNotBreakRenderPass for both depth and stencil
-    // aspect. http://anglebug.com/6701
+    // aspect. http://anglebug.com/6701.
+    // Additionally hit in the asphalt_9 trace
+    // https://issuetracker.google.com/316337308
     {
         "SYNC-HAZARD-WRITE-AFTER-WRITE",
-        "Hazard WRITE_AFTER_WRITE in subpass 0 for attachment 1 aspect ",
+        "Hazard WRITE_AFTER_WRITE in subpass ",
         "during load with loadOp VK_ATTACHMENT_LOAD_OP_DONT_CARE. Access info (usage: "
         "SYNC_EARLY_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE, prior_usage: "
         "SYNC_IMAGE_LAYOUT_TRANSITION",
