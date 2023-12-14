@@ -220,6 +220,7 @@ class StateCache final : angle::NonCopyable
     // 2. onProgramExecutableChange.
     // 3. onVertexArrayStateChange.
     // 4. onGLES1ClientStateChange.
+    // 5. onGLES1TextureStateChange.
     AttributesMask getActiveBufferedAttribsMask() const { return mCachedActiveBufferedAttribsMask; }
     AttributesMask getActiveClientAttribsMask() const { return mCachedActiveClientAttribsMask; }
     AttributesMask getActiveDefaultAttribsMask() const { return mCachedActiveDefaultAttribsMask; }
@@ -368,6 +369,7 @@ class StateCache final : angle::NonCopyable
     void onVertexArrayBufferContentsChange(Context *context);
     void onVertexArrayStateChange(Context *context);
     void onVertexArrayBufferStateChange(Context *context);
+    void onGLES1TextureStateChange(Context *context);
     void onGLES1ClientStateChange(Context *context);
     void onDrawFramebufferChange(Context *context);
     void onActiveTextureChange(Context *context);
