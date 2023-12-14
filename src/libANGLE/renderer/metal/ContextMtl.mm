@@ -559,7 +559,7 @@ angle::Result ContextMtl::drawTriFanElements(const gl::Context *context,
         bool isNoOp = false;
         ANGLE_TRY(setupDraw(context, gl::PrimitiveMode::TriangleFan, 0, count, instances, type,
                             indices, false, &isNoOp));
-        if (!isNoOp)
+        if (!isNoOp && genIndicesCount > 0)
         {
             if (baseVertex == 0 && baseInstance == 0)
             {
@@ -638,7 +638,7 @@ angle::Result ContextMtl::drawLineLoopElements(const gl::Context *context,
         bool isNoOp = false;
         ANGLE_TRY(setupDraw(context, gl::PrimitiveMode::LineLoop, 0, count, instances, type,
                             indices, false, &isNoOp));
-        if (!isNoOp)
+        if (!isNoOp && genIndicesCount > 0)
         {
             if (baseVertex == 0 && baseInstance == 0)
             {

@@ -338,8 +338,6 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 
 6456 MAC METAL INTEL : Texture2DTest.TextureSizeCase1/* = SKIP
 
-6458 MAC METAL : TriangleFanDrawTest.DrawTriangleFanPrimitiveRestartAtBegin/* = SKIP
-
 5233 MAC METAL : WebGL2ValidationStateChangeTest.MultiAttachmentDrawFramebufferNegativeAPI/* = SKIP
 
 7451 MAC METAL INTEL : PointSpritesTest.PointSizeAboveMaxIsClamped/ES2_Metal = SKIP
@@ -885,9 +883,6 @@ b/308668391 PIXEL4ORXL VULKAN : ImageTest.SourceYUVAHBTargetExternalRGBSampleNoD
 7994 IOS METAL : Texture2DTest.ManySupersedingTextureUpdates/ES2_Metal = SKIP
 7994 IOS METAL : Texture2DTest.TextureSizeCase1/ES2_Metal = SKIP
 7994 IOS METAL : TextureUploadFormatTest.All/ES3_Metal = SKIP
-7994 IOS METAL : TriangleFanDrawTest.DrawTriangleFanPrimitiveRestartAtBegin/ES3_Metal = SKIP
-7994 IOS METAL : TriangleFanDrawTest.DrawTriangleFanPrimitiveRestartAtBegin/ES3_Metal_ForceBufferGPUStorage = SKIP
-7994 IOS METAL : TriangleFanDrawTest.DrawTriangleFanPrimitiveRestartAtBegin/ES3_Metal_NoHasExplicitMemBarrier_NoHasCheapRenderPass = SKIP
 7994 IOS METAL : UniformBlockWithOneLargeArrayMemberTest.MemberTypeIsMatrixAndInstanced/ES3_Metal = SKIP
 7994 IOS METAL : UniformBlockWithOneLargeArrayMemberTest.MemberTypeIsMixStructFloatAndMat4/ES3_Metal = SKIP
 7994 IOS METAL : UniformBlockWithOneLargeArrayMemberTest.MemberTypeIsMixStructMat4AndFloat/ES3_Metal = SKIP
