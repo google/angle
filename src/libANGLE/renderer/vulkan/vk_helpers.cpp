@@ -9395,12 +9395,13 @@ angle::Result ImageHelper::copyImageDataToBuffer(ContextVk *contextVk,
 
     const VkImageAspectFlags aspectFlags = getAspectFlags();
 
-    // Allocate coherent staging buffer
+    // Allocate staging buffer prefer coherent
     ASSERT(dstBuffer != nullptr && !dstBuffer->valid());
     VkDeviceSize dstOffset;
     ANGLE_TRY(contextVk->initBufferForImageCopy(dstBuffer, bufferSize,
-                                                MemoryCoherency::CachedCoherent, imageFormat.id,
-                                                &dstOffset, outDataPtr));
+                                                MemoryCoherency::CachedPreferCoherent,
+                                                imageFormat.id, &dstOffset, outDataPtr));
+    ANGLE_TRY(dstBuffer->invalidate(contextVk->getRenderer()));
     VkBuffer bufferHandle = dstBuffer->getBuffer().getHandle();
 
     LevelIndex sourceLevelVk = toVkLevel(sourceLevelGL);
@@ -10068,8 +10069,9 @@ angle::Result ImageHelper::readPixelsImpl(ContextVk *contextVk,
     size_t allocationSize      = readFormat->pixelBytes * area.width * area.height;
 
     ANGLE_TRY(contextVk->initBufferForImageCopy(stagingBuffer, allocationSize,
-                                                MemoryCoherency::CachedCoherent, readFormat->id,
-                                                &stagingOffset, &readPixelBuffer));
+                                                MemoryCoherency::CachedPreferCoherent,
+                                                readFormat->id, &stagingOffset, &readPixelBuffer));
+    ANGLE_TRY(stagingBuffer->invalidate(renderer));
     VkBuffer bufferHandle = stagingBuffer->getBuffer().getHandle();
 
     VkBufferImageCopy region = {};

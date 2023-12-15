@@ -1996,11 +1996,12 @@ angle::Result RendererVk::initializeMemoryAllocator(DisplayVk *displayVk)
     // Initialize staging buffer memory type index and alignment.
     // These buffers will only be used as transfer sources or transfer targets.
     createInfo.usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT;
-    VkMemoryPropertyFlags requiredFlags = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT;
-    bool persistentlyMapped             = mFeatures.persistentlyMappedBuffers.enabled;
+    VkMemoryPropertyFlags requiredFlags, preferredFlags;
+    bool persistentlyMapped = mFeatures.persistentlyMappedBuffers.enabled;
 
-    // Uncached coherent staging buffer
-    VkMemoryPropertyFlags preferredFlags = VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
+    // Uncached coherent staging buffer.
+    requiredFlags  = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT;
+    preferredFlags = VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
     ANGLE_VK_TRY(displayVk,
                  mAllocator.findMemoryTypeIndexForBufferInfo(
                      createInfo, requiredFlags, preferredFlags, persistentlyMapped,
@@ -2008,17 +2009,28 @@ angle::Result RendererVk::initializeMemoryAllocator(DisplayVk *displayVk)
     ASSERT(mStagingBufferMemoryTypeIndex[vk::MemoryCoherency::UnCachedCoherent] !=
            kInvalidMemoryTypeIndex);
 
-    // Cached coherent staging buffer
-    preferredFlags = VK_MEMORY_PROPERTY_HOST_CACHED_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
+    // Cached coherent staging buffer.  Note coherent is preferred but not required, which means we
+    // may get non-coherent memory type.
+    if (getFeatures().requireCachedBitForStagingBuffer.enabled)
+    {
+        requiredFlags  = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_CACHED_BIT;
+        preferredFlags = VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
+    }
+    else
+    {
+        requiredFlags  = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT;
+        preferredFlags = VK_MEMORY_PROPERTY_HOST_CACHED_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
+    }
     ANGLE_VK_TRY(displayVk,
                  mAllocator.findMemoryTypeIndexForBufferInfo(
                      createInfo, requiredFlags, preferredFlags, persistentlyMapped,
-                     &mStagingBufferMemoryTypeIndex[vk::MemoryCoherency::CachedCoherent]));
-    ASSERT(mStagingBufferMemoryTypeIndex[vk::MemoryCoherency::CachedCoherent] !=
+                     &mStagingBufferMemoryTypeIndex[vk::MemoryCoherency::CachedPreferCoherent]));
+    ASSERT(mStagingBufferMemoryTypeIndex[vk::MemoryCoherency::CachedPreferCoherent] !=
            kInvalidMemoryTypeIndex);
 
     // Cached Non-coherent staging buffer
-    preferredFlags = VK_MEMORY_PROPERTY_HOST_CACHED_BIT;
+    requiredFlags  = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_CACHED_BIT;
+    preferredFlags = 0;
     ANGLE_VK_TRY(displayVk,
                  mAllocator.findMemoryTypeIndexForBufferInfo(
                      createInfo, requiredFlags, preferredFlags, persistentlyMapped,
@@ -4532,6 +4544,11 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     ANGLE_FEATURE_CONDITION(
         &mFeatures, preferDeviceLocalMemoryHostVisible,
         canPreferDeviceLocalMemoryHostVisible(mPhysicalDeviceProperties.deviceType));
+
+    // For some reason, if we use cached staging buffer for read pixels, a lot of tests fail on ARM,
+    // even though we do have invlaid() call there. Temporary keep the old behavior for ARM until we
+    // can root cause it.
+    ANGLE_FEATURE_CONDITION(&mFeatures, requireCachedBitForStagingBuffer, !isARM);
 
     bool dynamicStateWorks = true;
     if (isARM)

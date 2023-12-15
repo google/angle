@@ -245,6 +245,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::RegenerateStructNames, "regenerateStructNames"},
     {Feature::RemoveDynamicIndexingOfSwizzledVector, "removeDynamicIndexingOfSwizzledVector"},
     {Feature::RemoveInvariantAndCentroidForESSL3, "removeInvariantAndCentroidForESSL3"},
+    {Feature::RequireCachedBitForStagingBuffer, "requireCachedBitForStagingBuffer"},
     {Feature::RequireGpuFamily2, "requireGpuFamily2"},
     {Feature::RequireMsl21, "requireMsl21"},
     {Feature::RescopeGlobalVariables, "rescopeGlobalVariables"},
