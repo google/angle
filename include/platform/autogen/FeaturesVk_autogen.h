@@ -1307,13 +1307,6 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
-    FeatureInfo forceAHBLayerCountToOne = {
-        "forceAHBLayerCountToOne",
-        FeatureCategory::VulkanWorkarounds,
-        "Force AHB's layerCount to 1",
-        &members, "http://b/239181279"
-    };
-
     FeatureInfo disableSeparateShaderObjects = {
         "disableSeparateShaderObjects",
         FeatureCategory::VulkanAppWorkarounds,

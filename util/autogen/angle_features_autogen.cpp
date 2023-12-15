@@ -156,7 +156,6 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::FlushAfterStreamVertexData, "flushAfterStreamVertexData"},
     {Feature::FlushBeforeDeleteTextureIfCopiedTo, "flushBeforeDeleteTextureIfCopiedTo"},
     {Feature::FlushOnFramebufferChange, "flushOnFramebufferChange"},
-    {Feature::ForceAHBLayerCountToOne, "forceAHBLayerCountToOne"},
     {Feature::ForceAtomicValueResolution, "forceAtomicValueResolution"},
     {Feature::ForceBufferGPUStorage, "forceBufferGPUStorage"},
     {Feature::ForceContinuousRefreshOnSharedPresent, "forceContinuousRefreshOnSharedPresent"},

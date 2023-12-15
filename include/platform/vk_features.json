@@ -1416,14 +1416,6 @@
             ]
         },
         {
-            "name": "force_AHB_layer_count_to_one",
-            "category": "Workarounds",
-            "description": [
-                "Force AHB's layerCount to 1"
-            ],
-            "issue": "http://b/239181279"
-        },
-        {
             "name": "disable_separate_shader_objects",
             "category": "AppWorkarounds",
             "description": [
