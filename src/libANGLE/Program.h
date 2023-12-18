@@ -488,6 +488,11 @@ class Program final : public LabeledObject, public angle::Subject
         getExecutable().mDirtyBits |= mUniformBlockBindingMasks[uniformBufferIndex];
     }
 
+    void onPPOUniformBufferStateChange(ShaderType shaderType,
+                                       size_t uniformBufferIndex,
+                                       ProgramExecutable *ppoExecutable,
+                                       const ProgramPipelineUniformBlockIndexMap &blockMap);
+
   private:
     class MainLinkLoadTask;
     class MainLoadTask;
