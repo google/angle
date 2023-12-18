@@ -452,7 +452,10 @@ class Program final : public LabeledObject, public angle::Subject
         return mState.getFragmentOutputIndexes();
     }
 
-    bool needsSync() { return !mOptionalLinkTasks.empty(); }
+    bool needsSync()
+    {
+        return !mOptionalLinkTasks.empty() || mState.getExecutable().hasAnyDirtyBit();
+    }
     angle::Result syncState(const Context *context);
 
     // Try to resolve linking. Inlined to make sure its overhead is as low as possible.
