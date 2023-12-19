@@ -461,6 +461,13 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
      "store with storeOp VK_ATTACHMENT_STORE_OP_STORE. Access info (usage: "
      "SYNC_LATE_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE, prior_usage: "
      "SYNC_FRAGMENT_SHADER_SHADER_"},
+    // b/316013423
+    {"SYNC-HAZARD-READ-AFTER-WRITE", "type = VK_OBJECT_TYPE_QUEUE",
+     "vkQueueSubmit():  Hazard READ_AFTER_WRITE for entry 0"},
+    {"SYNC-HAZARD-WRITE-AFTER-READ", "type = VK_OBJECT_TYPE_QUEUE",
+     "vkQueueSubmit():  Hazard WRITE_AFTER_READ for entry 0"},
+    {"SYNC-HAZARD-WRITE-AFTER-WRITE", "type = VK_OBJECT_TYPE_QUEUE",
+     "vkQueueSubmit():  Hazard WRITE_AFTER_WRITE for entry 0"},
 };
 
 // Messages that shouldn't be generated if storeOp=NONE is supported, otherwise they are expected.
