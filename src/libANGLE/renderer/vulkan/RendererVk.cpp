@@ -1613,18 +1613,20 @@ angle::Result RendererVk::enableInstanceExtensions(
     // Set ANGLE features that depend on instance extensions
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsSurfaceCapabilities2Extension,
-        ExtensionFound(VK_KHR_GET_SURFACE_CAPABILITIES_2_EXTENSION_NAME, instanceExtensionNames));
+        ExtensionFound(VK_KHR_GET_SURFACE_CAPABILITIES_2_EXTENSION_NAME, instanceExtensionNames) &&
+            displayVk->isUsingSwapchain());
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsSurfaceProtectedCapabilitiesExtension,
                             ExtensionFound(VK_KHR_SURFACE_PROTECTED_CAPABILITIES_EXTENSION_NAME,
-                                           instanceExtensionNames));
+                                           instanceExtensionNames) &&
+                                displayVk->isUsingSwapchain());
 
     // TODO: Validation layer has a bug when vkGetPhysicalDeviceSurfaceFormats2KHR is called
     // on Mock ICD with surface handle set as VK_NULL_HANDLE. http://anglebug.com/7631
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsSurfacelessQueryExtension,
         ExtensionFound(VK_GOOGLE_SURFACELESS_QUERY_EXTENSION_NAME, instanceExtensionNames) &&
-            !isMockICDEnabled());
+            displayVk->isUsingSwapchain() && !isMockICDEnabled());
 
     // VK_KHR_external_fence_capabilities and VK_KHR_extenral_semaphore_capabilities are promoted to
     // core in Vulkan 1.1
@@ -1647,6 +1649,11 @@ angle::Result RendererVk::enableInstanceExtensions(
         if (ExtensionFound(VK_EXT_SWAPCHAIN_COLOR_SPACE_EXTENSION_NAME, instanceExtensionNames))
         {
             mEnabledInstanceExtensions.push_back(VK_EXT_SWAPCHAIN_COLOR_SPACE_EXTENSION_NAME);
+        }
+
+        if (ExtensionFound(VK_EXT_SURFACE_MAINTENANCE_1_EXTENSION_NAME, instanceExtensionNames))
+        {
+            mEnabledInstanceExtensions.push_back(VK_EXT_SURFACE_MAINTENANCE_1_EXTENSION_NAME);
         }
     }
 
@@ -1676,11 +1683,6 @@ angle::Result RendererVk::enableInstanceExtensions(
     if (mFeatures.supportsSurfacelessQueryExtension.enabled)
     {
         mEnabledInstanceExtensions.push_back(VK_GOOGLE_SURFACELESS_QUERY_EXTENSION_NAME);
-    }
-
-    if (ExtensionFound(VK_EXT_SURFACE_MAINTENANCE_1_EXTENSION_NAME, instanceExtensionNames))
-    {
-        mEnabledInstanceExtensions.push_back(VK_EXT_SURFACE_MAINTENANCE_1_EXTENSION_NAME);
     }
 
     if (mFeatures.enablePortabilityEnumeration.enabled)
@@ -4485,7 +4487,8 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     // - Amortizing the cost of memory allocation for swapchain creation over multiple frames
     //
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsSwapchainMaintenance1,
-                            mSwapchainMaintenance1Features.swapchainMaintenance1 == VK_TRUE);
+                            mSwapchainMaintenance1Features.swapchainMaintenance1 == VK_TRUE &&
+                                displayVk->isUsingSwapchain());
 
     // The VK_EXT_legacy_dithering extension enables dithering support without emulation
     // Disable the usage of VK_EXT_legacy_dithering on ARM until the driver bug
